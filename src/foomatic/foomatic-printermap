@@ -154,6 +154,9 @@
 #gptofoo escp2-pm950c printer/Epson-PM_950C
 #gptofoo escp2-px7000 printer/Epson-PX_7000
 #gptofoo escp2-px9000 printer/Epson-PX_9000
+#gptofoo pcl-apple-4100 printer/Apple-Color_StyleWriter_4100
+#gptofoo pcl-apple-4500 printer/Apple-Color_StyleWriter_4500
+#gptofoo pcl-apple-6500 printer/Apple-Color_StyleWriter_6500
 #gptofoo pcl-340 printer/153056
 #gptofoo pcl-400 printer/63040
 #gptofoo pcl-500 printer/58363
