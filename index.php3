@@ -36,8 +36,8 @@ released!</font></h2>
 2001!</strong></em></font> Gimp-Print 4.1.99-a3, an alpha release in
 the 4.2 line, is out.  This offers many improvements and bug fixes.</p>
 
-<H2><font color="#ff0000"><blink>Gimp-Print 4.0.5 is
-released!</blink></font></h2>
+<H2><font color="#ff0000">Gimp-Print 4.0.5 is
+released!</font></h2>
 <P><strong><em><font color="#ff0000">New as of May 26,
 2001!</strong></em></font> Gimp-Print 4.0.5, expected to be the final
 stable release of 4.0, has been released.  This features support for
