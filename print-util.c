@@ -34,6 +34,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.4  1999/09/18 15:18:47  rlk
+ *   A bit more random
+ *
  *   Revision 1.3  1999/09/14 21:43:43  rlk
  *   Some hoped-for improvements
  *
@@ -1179,17 +1182,17 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 
     if ((oc <= (65536 * I_RATIO_C1 * 2 / 3)))
       {
-	if (c > (32767 + (((long long) ditherbit2 / 4) - 8192)) * I_RATIO_C1)
+	if (c > (32767 + (((long long) ditherbit2 / 1) - 32768)) * I_RATIO_C1)
 	  {
 #ifdef PRINT_DEBUG
 	    fprintf(dbg, "Case 1: oc %lld c %lld test %lld\n", oc, c,
-		    (32767 + (((long long) ditherbit2 / 4) - 8192)) * I_RATIO_C1);
+		    (32767 + (((long long) ditherbit2 / 1) - 32768)) * I_RATIO_C1);
 #endif
 	    *lcptr |= bit;
 	    c -= 65535 * I_RATIO_C1;
 	  }
       }
-    else if (c > ((32767 + (((long long) ditherbit2 / 4) - 8192)) * oc / 65536))
+    else if (c > ((32767 + (((long long) ditherbit2 / 1) - 32768)) * oc / 65536))
       {
 	if (ditherbit1 >
 	    ((oc - (65536 * I_RATIO_C1 * 2 / 3)) * 65536 /
@@ -1199,7 +1202,7 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 	    fprintf(dbg, "Case 2: oc %lld c %lld ditherbit1 %d ditherbit2 %d num %lld den %lld test1 %lld test2 %lld\n",
 		    oc, c, ditherbit1, ditherbit2,
 		    oc, 65536ll,
-		    ((32767 + (((long long) ditherbit2 / 4) - 8192)) * oc / 65536),
+		    ((32767 + (((long long) ditherbit2 / 1) - 32768)) * oc / 65536),
 		    ((oc - (65536 * I_RATIO_C1 * 2 / 3)) * 65536 /
 		     (65536 - (65536 * I_RATIO_C1 * 2 / 3))));
 #endif
@@ -1212,7 +1215,7 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 	    fprintf(dbg, "Case 3: oc %lld c %lld ditherbit1 %d ditherbit2 %d num %lld den %lld test1 %lld test2 %lld\n",
 		    oc, c, ditherbit1, ditherbit2,
 		    oc, 65536ll,
-		    ((32767 + (((long long) ditherbit2 / 4) - 8192)) * oc / 65536),
+		    ((32767 + (((long long) ditherbit2 / 1) - 32768)) * oc / 65536),
 		    ((oc - (65536 * I_RATIO_C1 * 2 / 3)) * 65536 /
 		     (65536 - (65536 * I_RATIO_C1 * 2 / 3))));
 #endif
@@ -1245,17 +1248,17 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 
     if ((om <= (65536 * I_RATIO_M1 * 2 / 3)))
       {
-	if (m > (32767 + (((long long) ditherbit2 / 4) - 8192)) * I_RATIO_M1)
+	if (m > (32767 + (((long long) ditherbit1 / 1) - 32768)) * I_RATIO_M1)
 	  {
 #ifdef PRINT_DEBUG
 	    fprintf(dbg, "Case 1: om %lld m %lld test %lld\n", om, m,
-		    (32767 + (((long long) ditherbit2 / 4) - 8192)) * I_RATIO_M1);
+		    (32767 + (((long long) ditherbit1 / 1) - 32768)) * I_RATIO_M1);
 #endif
 	    *lmptr |= bit;
 	    m -= 65535 * I_RATIO_M1;
 	  }
       }
-    else if (m > ((32767 + (((long long) ditherbit2 / 4) - 8192)) * om / 65536))
+    else if (m > ((32767 + (((long long) ditherbit1 / 1) - 32768)) * om / 65536))
       {
 	if (ditherbit1 >
 	    ((om - (65536 * I_RATIO_M1 * 2 / 3)) * 65536 /
@@ -1265,7 +1268,7 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 	    fprintf(dbg, "Case 2: om %lld m %lld ditherbit1 %d ditherbit2 %d num %lld den %lld test1 %lld test2 %lld\n",
 		    om, m, ditherbit1, ditherbit2,
 		    om, 65536ll,
-		    ((32767 + (((long long) ditherbit2 / 4) - 8192)) * om / 65536),
+		    ((32767 + (((long long) ditherbit1 / 1) - 32768)) * om / 65536),
 		    ((om - (65536 * I_RATIO_M1 * 2 / 3)) * 65536 /
 		     (65536 - (65536 * I_RATIO_M1 * 2 / 3))));
 #endif
@@ -1278,7 +1281,7 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 	    fprintf(dbg, "Case 3: om %lld m %lld ditherbit1 %d ditherbit2 %d num %lld den %lld test1 %lld test2 %lld\n",
 		    om, m, ditherbit1, ditherbit2,
 		    om, 65536ll,
-		    ((32767 + (((long long) ditherbit2 / 4) - 8192)) * om / 65536),
+		    ((32767 + (((long long) ditherbit1 / 1) - 32768)) * om / 65536),
 		    ((om - (65536 * I_RATIO_M1 * 2 / 3)) * 65536 /
 		     (65536 - (65536 * I_RATIO_M1 * 2 / 3))));
 #endif
@@ -1310,7 +1313,7 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
     /*****************************************************************
      * Yellow
      *****************************************************************/
-    if (y > (32767 + ((ditherbit3 / 2) - 16384)))
+    if (y > (32767 + ((ditherbit3 / 1) - 32768)))
     {
       *yptr |= bit;
       y -= 65535;
