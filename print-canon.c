@@ -63,10 +63,6 @@ typedef struct {
   int features;       /* special bjl settings */
 } canon_cap_t;
 
-
-
-
-
 static void canon_write_line(FILE *, canon_cap_t, int,
 			     unsigned char *, int,
 			     unsigned char *, int,
@@ -117,17 +113,6 @@ static void canon_write_line(FILE *, canon_cap_t, int,
 #define CANON_CAP_CMD70     1<<4    /* uses command #0x70         */
 #define CANON_CAP_CMD72     1<<5    /* uses command #0x72         */
 
-static double dot_sizes[] = { 0.5, 0.75, 1.0 };
-
-static simple_dither_range_t variable_dither_ranges[] =
-{
-  { 0.074, 0x1, 0, 1 },
-  { 0.111, 0x2, 0, 2 },
-  { 0.222, 0x3, 0, 3 },
-  { 0.333, 0x1, 1, 1 }, 
-  { 0.5,   0x2, 1, 2 },
-  { 1.0,   0x3, 1, 3 }
-};
 
 static canon_cap_t canon_model_capabilities[] =
 {
@@ -797,6 +782,7 @@ canon_print(const printer_t *printer,		/* I - Model */
                 image_bpp;
   int           use_dmt = 0;
   void *	dither;
+  double        the_levels[] = { 0.5, 0.75, 1.0 };
   vars_t	nv;
 
   canon_cap_t caps= canon_get_model_capabilities(model);
@@ -956,7 +942,7 @@ canon_print(const printer_t *printer,		/* I - Model */
     else
       black = NULL;
 
-    if (printhead>=3 && (caps.inks & (CANON_INK_PHOTO_MASK))) {
+    if (printhead==3 && (caps.inks & (CANON_INK_PHOTO_MASK))) {
       lcyan = canon_alloc_buffer(buf_length*(delay_lc+1));
       lmagenta = canon_alloc_buffer(buf_length*(delay_lm+1));
       if ((caps.inks & CANON_INK_CcMmYy))
@@ -984,24 +970,13 @@ canon_print(const printer_t *printer,		/* I - Model */
     nv.density = 1.0;
   compute_lut(256, &nv);
 
- /*
-  * Output the page...
-  */
-
   if (xdpi > ydpi)
     dither = init_dither(image_width, out_width, 1, xdpi / ydpi, &nv);
   else
     dither = init_dither(image_width, out_width, ydpi / xdpi, 1, &nv);
 
   dither_set_black_levels(dither, 1.0, 1.0, 1.0);
-
-  if (printhead>=3 && (caps.inks & (CANON_INK_PHOTO_MASK)))
-    dither_set_black_lower(dither, (use_dmt) ? .25 : .5 );
-  else
-    dither_set_black_lower(dither, (use_dmt) ? .125 : .25 );
-
-  /* dither_set_black_lower(dither, .8 / ((1 << (use_dmt+1)) - 1)); */
-
+  dither_set_black_lower(dither, .8 / ((1 << (use_dmt+1)) - 1));
   /*
   if (use_glossy_film)
   */
@@ -1011,35 +986,7 @@ canon_print(const printer_t *printer,		/* I - Model */
     dither_set_black_upper(dither, .999);
   */
 
-  if (use_dmt)
-    dither_set_adaptive_divisor(dither, 8);
-  else
-    dither_set_adaptive_divisor(dither, 2);
-
-  if (use_dmt) {
-
-    int dsize = (sizeof(variable_dither_ranges) /
-		 sizeof(simple_dither_range_t));
-
-    dither_set_k_ranges_simple(dither, 3, dot_sizes, nv.density);
-
-    if (!lyellow)
-      dither_set_y_ranges_simple(dither, 3, dot_sizes, nv.density);
-    else
-      dither_set_y_ranges(dither, dsize, variable_dither_ranges, nv.density);
-
-    if (!lmagenta)
-      dither_set_m_ranges_simple(dither, 3, dot_sizes, nv.density);
-    else
-      dither_set_m_ranges(dither, dsize, variable_dither_ranges, nv.density);
-
-    if (!lcyan)
-      dither_set_c_ranges_simple(dither, 3, dot_sizes, nv.density);
-    else
-      dither_set_c_ranges(dither, dsize, variable_dither_ranges, nv.density);
-
-    
-  } else {
+  if (!use_dmt) {
     dither_set_light_inks(dither,
 			  (lcyan)   ? (0.3333) : (0.0),
 			  (lmagenta)? (0.3333) : (0.0),
@@ -1060,6 +1007,13 @@ canon_print(const printer_t *printer,		/* I - Model */
     }
   dither_set_density(dither, nv.density);
 
+  if (use_dmt)
+    {
+      dither_set_c_ranges_simple(dither, 3, the_levels, nv.density);
+      dither_set_m_ranges_simple(dither, 3, the_levels, nv.density);
+      dither_set_y_ranges_simple(dither, 3, the_levels, nv.density);
+      dither_set_k_ranges_simple(dither, 3, the_levels, nv.density);
+    }
  /*
   * Output the page...
   */
