@@ -32,6 +32,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.16  2000/01/17 22:23:31  rlk
+ *   Print 3.1.0
+ *
  *   Revision 1.15  2000/01/17 02:05:47  rlk
  *   Much stuff:
  *
@@ -911,8 +914,8 @@ pcl_print(int       model,		/* I - Model */
 	}
 	else 
 	{
-          dither_cmyk4(out, x, image_height, out_width, cyan, magenta,
-			  yellow, black, 1);
+          dither_cmyk4(out, x, image_height, out_width, cyan, NULL, magenta,
+		       NULL, yellow, NULL, black, 1);
 
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 0);
@@ -1000,8 +1003,8 @@ pcl_print(int       model,		/* I - Model */
 	}
 	else 
 	{
-          dither_cmyk4(out, y, image_width, out_width, cyan, magenta,
-			  yellow, black, 1);
+          dither_cmyk4(out, y, image_width, out_width, cyan, NULL, magenta,
+		       NULL, yellow, NULL, black, 1);
 
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 0);

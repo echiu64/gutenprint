@@ -173,7 +173,8 @@ extern void	dither_black4(unsigned short *, int, int, int,
 
 extern void	dither_cmyk4(unsigned short *, int, int, int, unsigned char *,
 			     unsigned char *, unsigned char *,
-			     unsigned char *, int);
+			     unsigned char *, unsigned char *,
+			     unsigned char *, unsigned char *, int);
 
 extern void	gray_to_gray(unsigned char *, unsigned short *, int, int,
 			     lut_t *, unsigned char *, vars_t *);

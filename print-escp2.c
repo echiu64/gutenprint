@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.42  2000/01/17 22:23:31  rlk
+ *   Print 3.1.0
+ *
  *   Revision 1.41  2000/01/17 02:05:47  rlk
  *   Much stuff:
  *
@@ -325,12 +328,12 @@
  */
 
 static void escp2_write(FILE *, unsigned char *, int, int, int, int, int,
-			int, int);
+			int, int, int);
 static void escp2_write_all(FILE *, unsigned char *, unsigned char *,
 			    unsigned char *, unsigned char *, unsigned char *,
-			    unsigned char *, int, int, int, int, int);
-static void initialize_weave(int jets, int separation,
-			     int oversample, int horizontal, int monochrome);
+			    unsigned char *, int, int, int, int, int, int);
+static void initialize_weave(int jets, int separation, int oversample,
+			     int horizontal, int monochrome, int width);
 static void escp2_flush(int model, int width, int hoffset, int ydpi,
 			int xdpi, FILE *prn);
 static void
@@ -398,6 +401,15 @@ typedef model_cap_t model_class_t;
 #define MODEL_SEPARATION_MASK	0xf00000000l
 #define MODEL_MAKE_SEPARATION(x) 	(((long long) (x)) << 32)
 #define MODEL_GET_SEPARATION(x)	(((x) & MODEL_SEPARATION_MASK) >> 32)
+
+
+#define PHYSICAL_BPI 720
+#define MAX_OVERSAMPLED 4
+#define MAX_BPP 2
+#define MAX_CARRIAGE_WIDTH 14
+#define BITS_PER_BYTE 8
+#define COMPBUFWIDTH (PHYSICAL_BPI * MAX_OVERSAMPLED * MAX_BPP * \
+	MAX_CARRIAGE_WIDTH / BITS_PER_BYTE)
 
 /*
  * SUGGESTED SETTINGS FOR STYLUS PHOTO EX:
@@ -683,7 +695,7 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 		   int use_softweave, int page_length, int page_top,
 		   int page_bottom, int top, int nozzles,
 		   int nozzle_separation, int horizontal_passes,
-		   int vertical_passes)
+		   int vertical_passes, int bits)
 {
   int n;
   fputs("\033@", prn); 				/* ESC/P2 reset */
@@ -715,7 +727,7 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 
   if (use_softweave)
     initialize_weave(nozzles, nozzle_separation, horizontal_passes,
-		     vertical_passes, output_type == OUTPUT_GRAY);
+		     vertical_passes, output_type == OUTPUT_GRAY, bits);
   switch (escp2_cap(model, MODEL_INIT_MASK)) /* Printer specific initialization */
   {
     case MODEL_INIT_COLOR : /* ESC */
@@ -871,6 +883,7 @@ escp2_print(int       model,		/* I - Model */
   int		horizontal_passes = 1;
   int		vertical_passes = 1;
   res_t 	*res;
+  int		bits;
 
  /*
   * Setup a read-only pixel region for the entire image...
@@ -930,6 +943,10 @@ escp2_print(int       model,		/* I - Model */
 	  return;	  
 	}
     }
+  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
+    bits = 2;
+  else
+    bits = 1;
 
  /*
   * Compute the output size...
@@ -1064,7 +1081,7 @@ escp2_print(int       model,		/* I - Model */
 
   escp2_init_printer(prn, model, output_type, ydpi, use_softweave, page_length,
 		     page_top, page_bottom, top, nozzles, nozzle_separation,
-		     horizontal_passes, vertical_passes);
+		     horizontal_passes, vertical_passes, bits);
 
  /*
   * Convert image size to printer resolution...
@@ -1083,7 +1100,7 @@ escp2_print(int       model,		/* I - Model */
 
   if (output_type == OUTPUT_GRAY)
   {
-    black   = malloc(length * 2);
+    black   = malloc(length * bits);
     cyan    = NULL;
     magenta = NULL;
     lcyan    = NULL;
@@ -1092,17 +1109,17 @@ escp2_print(int       model,		/* I - Model */
   }
   else
   {
-    cyan    = malloc(length);
-    magenta = malloc(length);
-    yellow  = malloc(length);
+    cyan    = malloc(length * bits);
+    magenta = malloc(length * bits);
+    yellow  = malloc(length * bits);
   
     if (escp2_has_cap(model, MODEL_HASBLACK_MASK, MODEL_HASBLACK_YES))
-      black = malloc(length);
+      black = malloc(length * bits);
     else
       black = NULL;
     if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES)) {
-      lcyan = malloc(length);
-      lmagenta = malloc(length);
+      lcyan = malloc(length * bits);
+      lmagenta = malloc(length * bits);
     } else {
       lcyan = NULL;
       lmagenta = NULL;
@@ -1137,12 +1154,26 @@ escp2_print(int       model,		/* I - Model */
 
       (*colorfunc)(in, out, image_height, image_bpp, lut, cmap, v);
 
-      if (output_type == OUTPUT_GRAY)
-	  dither_black(out, x, image_height, out_width, black,
-		       horizontal_passes);
+      if (bits == 1)
+	{
+	  if (output_type == OUTPUT_GRAY)
+	    dither_black(out, x, image_height, out_width, black,
+			 horizontal_passes);
+	  else
+	    dither_cmyk(out, x, image_height, out_width, cyan, lcyan,
+			magenta, lmagenta, yellow, 0, black,
+			horizontal_passes);
+	}
       else
-	dither_cmyk(out, x, image_height, out_width, cyan, lcyan,
-		    magenta, lmagenta, yellow, 0, black, horizontal_passes);
+	{
+	  if (output_type == OUTPUT_GRAY)
+	    dither_black4(out, x, image_height, out_width, black,
+			  horizontal_passes);
+	  else
+	    dither_cmyk4(out, x, image_height, out_width, cyan, lcyan,
+			 magenta, lmagenta, yellow, 0, black,
+			 horizontal_passes);
+	}
 
       if (use_softweave)
 	escp2_write_weave(prn, length, ydpi, model, out_width, left, xdpi,
@@ -1150,7 +1181,7 @@ escp2_print(int       model,		/* I - Model */
       else
 	{
 	  escp2_write_all(prn, black, cyan, magenta, yellow, lcyan, lmagenta,
-			  length, ydpi, model, out_width, left);
+			  length, ydpi, model, out_width, left, bits);
 	  fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
 	}
 
@@ -1189,11 +1220,26 @@ escp2_print(int       model,		/* I - Model */
 
       (*colorfunc)(in, out, image_width, image_bpp, lut, cmap, v);
 
-      if (output_type == OUTPUT_GRAY)
-	dither_black(out, y, image_width, out_width, black, horizontal_passes);
+      if (bits == 1)
+	{
+	  if (output_type == OUTPUT_GRAY)
+	    dither_black(out, y, image_width, out_width, black,
+			 horizontal_passes);
+	  else
+	    dither_cmyk(out, y, image_width, out_width, cyan, lcyan,
+			magenta, lmagenta, yellow, 0, black,
+			horizontal_passes);
+	}
       else
-	dither_cmyk(out, y, image_width, out_width, cyan, lcyan,
-		    magenta, lmagenta, yellow, 0, black, horizontal_passes);
+	{
+	  if (output_type == OUTPUT_GRAY)
+	    dither_black4(out, y, image_width, out_width, black,
+			  horizontal_passes);
+	  else
+	    dither_cmyk4(out, y, image_width, out_width, cyan, lcyan,
+			 magenta, lmagenta, yellow, 0, black,
+			 horizontal_passes);
+	}
 
       if (use_softweave)
 	escp2_write_weave(prn, length, ydpi, model, out_width, left, xdpi,
@@ -1201,7 +1247,7 @@ escp2_print(int       model,		/* I - Model */
       else
 	{
 	  escp2_write_all(prn, black, cyan, magenta, yellow, lcyan, lmagenta,
-			  length, ydpi, model, out_width, left);
+			  length, ydpi, model, out_width, left, bits);
 	  fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
 	}
       errval += errmod;
@@ -1240,6 +1286,38 @@ escp2_print(int       model,		/* I - Model */
   putc('\014', prn);			/* Eject page */
   fputs("\033@", prn);			/* ESC/P2 reset */
 }
+
+static void
+escp2_fold(unsigned char *line,
+	   int single_length,
+	   unsigned char *outbuf)
+{
+  int i;
+  for (i = 0; i < single_length; i++)
+    {
+      outbuf[0] =
+	((line[0] & (1 << 7)) >> 1) +
+	((line[0] & (1 << 6)) >> 2) +
+	((line[0] & (1 << 5)) >> 3) +
+	((line[0] & (1 << 4)) >> 4) +
+	((line[single_length] & (1 << 7)) >> 0) +
+	((line[single_length] & (1 << 6)) >> 1) +
+	((line[single_length] & (1 << 5)) >> 2) +
+	((line[single_length] & (1 << 4)) >> 3);
+      outbuf[1] =
+	((line[0] & (1 << 3)) << 3) +
+	((line[0] & (1 << 2)) << 2) +
+	((line[0] & (1 << 1)) << 1) +
+	((line[0] & (1 << 0)) << 0) +
+	((line[single_length] & (1 << 3)) << 2) +
+	((line[single_length] & (1 << 2)) << 1) +
+	((line[single_length] & (1 << 1)) << 0) +
+	((line[single_length] & (1 << 0)) >> 1);
+      line++;
+      outbuf += 2;
+    }
+}
+      
 
 static void
 escp2_pack(unsigned char *line,
@@ -1344,20 +1422,21 @@ escp2_write_all(FILE          *prn,	/* I - Print file or command */
 		int           ydpi,	/* I - Vertical resolution */
 		int           model,	/* I - Printer model */
 		int           width,	/* I - Printed width */
-		int           offset)	/* I - Offset from left side */
+		int           offset,	/* I - Offset from left side */
+		int	      bits)
 {
   if (k)
-    escp2_write(prn, k, length, 0, 0, ydpi, model, width, offset);
+    escp2_write(prn, k, length, 0, 0, ydpi, model, width, offset, bits);
   if (c)
-    escp2_write(prn, c, length, 0, 2, ydpi, model, width, offset);
+    escp2_write(prn, c, length, 0, 2, ydpi, model, width, offset, bits);
   if (m)
-    escp2_write(prn, m, length, 0, 1, ydpi, model, width, offset);
+    escp2_write(prn, m, length, 0, 1, ydpi, model, width, offset, bits);
   if (y)
-    escp2_write(prn, y, length, 0, 4, ydpi, model, width, offset);
+    escp2_write(prn, y, length, 0, 4, ydpi, model, width, offset, bits);
   if (lc)
-    escp2_write(prn, lc, length, 1, 2, ydpi, model, width, offset);
+    escp2_write(prn, lc, length, 1, 2, ydpi, model, width, offset, bits);
   if (lm)
-    escp2_write(prn, lm, length, 1, 1, ydpi, model, width, offset);
+    escp2_write(prn, lm, length, 1, 1, ydpi, model, width, offset, bits);
 }
 	   
 /*
@@ -1365,17 +1444,19 @@ escp2_write_all(FILE          *prn,	/* I - Print file or command */
  */
 
 static void
-escp2_write(FILE          *prn,	/* I - Print file or command */
-	     unsigned char *line,	/* I - Output bitmap data */
-	     int           length,	/* I - Length of bitmap data */
-	     int	   density,     /* I - 0 for dark, 1 for light */
-	     int           plane,	/* I - Which color */
-	     int           ydpi,	/* I - Vertical resolution */
-	     int           model,	/* I - Printer model */
-	     int           width,	/* I - Printed width */
-	     int           offset)	/* I - Offset from left side */
+escp2_write(FILE          *prn,		/* I - Print file or command */
+	    unsigned char *line,	/* I - Output bitmap data */
+	    int           length,	/* I - Length of bitmap data */
+	    int	   	  density,      /* I - 0 for dark, 1 for light */
+	    int           plane,	/* I - Which color */
+	    int           ydpi,		/* I - Vertical resolution */
+	    int           model,	/* I - Printer model */
+	    int           width,	/* I - Printed width */
+	    int           offset,	/* I - Offset from left side */
+	    int	   	  bits)		/* I - bits/pixel */
 {
-  unsigned char	comp_buf[3072],		/* Compression buffer */
+  unsigned char pack_buf[COMPBUFWIDTH];
+  unsigned char	comp_buf[COMPBUFWIDTH],		/* Compression buffer */
     *comp_ptr;
   static int    last_density = 0;       /* Last density printed */
   static int	last_plane = 0;		/* Last color plane printed */
@@ -1385,10 +1466,16 @@ escp2_write(FILE          *prn,	/* I - Print file or command */
   * Don't send blank lines...
   */
 
-  if (line[0] == 0 && memcmp(line, line + 1, length - 1) == 0)
+  if (line[0] == 0 && memcmp(line, line + 1, (bits * length) - 1) == 0)
     return;
 
-  escp2_pack(line, length, comp_buf, &comp_ptr);
+  if (bits == 1)
+    escp2_pack(line, length, comp_buf, &comp_ptr);
+  else
+    {
+      escp2_fold(line, length, pack_buf);
+      escp2_pack(pack_buf, length * bits, comp_buf, &comp_ptr);
+    }
 
  /*
   * Set the print head position.
@@ -1624,6 +1711,7 @@ static int vertical_subpasses;	/* Number of passes per line (for better */
 static int vmod;		/* Number of banks of passes */
 static int oversample;		/* Excess precision per row */
 static int is_monochrome;	/* Printing monochrome? */
+static int bitwidth;		/* Bits per pixel */
 
 /*
  * Mapping between color and linear index.  The colors are
@@ -1650,7 +1738,7 @@ get_color_by_params(int plane, int density)
  */
 static void
 initialize_weave(int jets, int sep, int osample, int v_subpasses,
-		 int monochrome)
+		 int monochrome, int width)
 {
   int i;
   int k;
@@ -1676,11 +1764,12 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses,
   jetsleftover = njets - jetsused + 1;
   weavespan = (jetsused - 1) * separation;
   is_monochrome = monochrome;
+  bitwidth = width;
 
   last_pass_offset = 0;
   last_pass = -1;
 
-  linebufs = malloc(6 * 3072 * vmod * jets * horizontal_weave);
+  linebufs = malloc(6 * 3072 * vmod * jets * horizontal_weave * bitwidth);
   lineoffsets = malloc(vmod * sizeof(lineoff_t) * horizontal_weave);
   linebases = malloc(vmod * sizeof(linebufs_t) * horizontal_weave);
   passes = malloc(vmod * sizeof(pass_t));
@@ -1696,7 +1785,7 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses,
 	{
 	  for (j = 0; j < 6; j++)
 	    {
-	      linebases[k * vmod + i].v[j] = bufbase;
+	      linebases[bitwidth * k * vmod + i].v[j] = bufbase;
 	      bufbase += 3072 * jets;
 	    }
 	}
@@ -1821,7 +1910,7 @@ fillin_start_rows(int row, int subpass, int width, int missingstartrows)
   int k = 0;
   int j;
   int m;
-  width = (width + (oversample - 1)) / oversample;
+  width = bitwidth * (width + (oversample - 1)) / oversample;
   for (k = 0; k < missingstartrows; k++)
     {
       int bytes_to_fill = width;
@@ -2061,6 +2150,21 @@ escp2_split_2(int length,
 }
 
 static void
+escp2_split_2_2(int length,
+		const unsigned char *in,
+		unsigned char *outlo,
+		unsigned char *outhi)
+{
+  int i;
+  for (i = 0; i < length * 2; i++)
+    {
+      unsigned char inbyte = in[i];
+      outlo[i] = inbyte & 0x33;
+      outhi[i] = inbyte & 0xcc;
+    }
+}
+
+static void
 escp2_split_4(int length,
 	      const unsigned char *in,
 	      unsigned char *out0,
@@ -2076,6 +2180,25 @@ escp2_split_4(int length,
       out1[i] = inbyte & 0x22;
       out2[i] = inbyte & 0x44;
       out3[i] = inbyte & 0x88;
+    }
+}
+
+static void
+escp2_split_4_2(int length,
+		const unsigned char *in,
+		unsigned char *out0,
+		unsigned char *out1,
+		unsigned char *out2,
+		unsigned char *out3)
+{
+  int i;
+  for (i = 0; i < length * 2; i++)
+    {
+      unsigned char inbyte = in[i];
+      out0[i] = inbyte & 0x03;
+      out1[i] = inbyte & 0x0c;
+      out2[i] = inbyte & 0x30;
+      out3[i] = inbyte & 0xc0;
     }
 }
 
@@ -2115,6 +2238,40 @@ escp2_unpack_2(int length,
 	    ((inbyte & (1 << 2)) >> 1) +
 	    ((inbyte & (1 << 4)) >> 2) +
 	    ((inbyte & (1 << 6)) >> 3);
+	  outlo++;
+	  outhi++;
+	}
+      in++;
+    }
+}
+
+static void
+escp2_unpack_2_2(int length,
+		 const unsigned char *in,
+		 unsigned char *outlo,
+		 unsigned char *outhi)
+{
+  int i;
+  for (i = 0; i < length * 2; i++)
+    {
+      unsigned char inbyte = *in;
+      if (!(i & 1))
+	{
+	  *outlo =
+	    ((inbyte & (3 << 6)) << 0) +
+	    ((inbyte & (3 << 2)) << 2);
+	  *outhi =
+	    ((inbyte & (3 << 4)) << 2) +
+	    ((inbyte & (3 << 0)) << 4);
+	}
+      else
+	{
+	  *outlo +=
+	    ((inbyte & (3 << 6)) >> 4) +
+	    ((inbyte & (3 << 2)) >> 2);
+	  *outhi +=
+	    ((inbyte & (3 << 4)) >> 2) +
+	    ((inbyte & (3 << 0)) >> 0);
 	  outlo++;
 	  outhi++;
 	}
@@ -2202,6 +2359,53 @@ escp2_unpack_4(int length,
 }
 
 static void
+escp2_unpack_4_2(int length,
+		 const unsigned char *in,
+		 unsigned char *out0,
+		 unsigned char *out1,
+		 unsigned char *out2,
+		 unsigned char *out3)
+{
+  int i;
+  for (i = 0; i < length * 2; i++)
+    {
+      unsigned char inbyte = *in;
+      switch (i & 3)
+	{
+	case 0:
+	  *out0 = ((inbyte & (3 << 6)) << 0);
+	  *out1 = ((inbyte & (3 << 4)) << 2);
+	  *out2 = ((inbyte & (3 << 2)) << 4);
+	  *out3 = ((inbyte & (3 << 0)) << 6);
+	  break;
+	case 1:
+	  *out0 += ((inbyte & (3 << 6)) >> 2);
+	  *out1 += ((inbyte & (3 << 4)) << 0);
+	  *out2 += ((inbyte & (3 << 2)) << 2);
+	  *out3 += ((inbyte & (3 << 0)) << 4);
+	  break;
+	case 2:
+	  *out0 += ((inbyte & (3 << 6)) >> 4);
+	  *out1 += ((inbyte & (3 << 4)) >> 2);
+	  *out2 += ((inbyte & (3 << 2)) << 0);
+	  *out3 += ((inbyte & (3 << 0)) << 2);
+	  break;
+	case 3:
+	  *out0 += ((inbyte & (3 << 6)) >> 6);
+	  *out1 += ((inbyte & (3 << 4)) >> 4);
+	  *out2 += ((inbyte & (3 << 2)) >> 2);
+	  *out3 += ((inbyte & (3 << 0)) >> 0);
+	  out0++;
+	  out1++;
+	  out2++;
+	  out3++;
+	  break;
+	}
+      in++;
+    }
+}
+
+static void
 escp2_write_weave(FILE          *prn,	/* I - Print file or command */
 		  int           length,	/* I - Length of bitmap data */
 		  int           ydpi,	/* I - Vertical resolution */
@@ -2217,8 +2421,9 @@ escp2_write_weave(FILE          *prn,	/* I - Print file or command */
 		  unsigned char *M)
 {
   static int lineno = 0;
-  static unsigned char s[4][3072];
-  static unsigned char comp_buf[3072];
+  static unsigned char s[4][COMPBUFWIDTH];
+  static unsigned char fold_buf[COMPBUFWIDTH];
+  static unsigned char comp_buf[COMPBUFWIDTH];
   unsigned char *comp_ptr;
   int i, j;
   unsigned char *cols[6];
@@ -2235,37 +2440,67 @@ escp2_write_weave(FILE          *prn,	/* I - Print file or command */
     {
       if (cols[j])
 	{
+	  unsigned char *in;
+	  if (bitwidth == 2)
+	    {
+	      escp2_fold(cols[j], length, fold_buf);
+	      in = fold_buf;
+	    }
+	  else
+	    in = cols[j];
 	  if (vertical_subpasses > 1)
 	    {
 	      switch (oversample)
 		{
 		case 2:
-		  escp2_unpack_2(length, cols[j], s[0], s[1]);
+		  if (bitwidth == 1)
+		    escp2_unpack_2(length, cols[j], s[0], s[1]);
+		  else
+		    escp2_unpack_2_2(length, in, s[0], s[1]);
 		  break;
 		case 4:
-		  escp2_unpack_4(length, cols[j], s[0], s[1], s[2], s[3]);
+		  if (bitwidth == 1)
+		    escp2_unpack_4(length, in, s[0], s[1], s[2], s[3]);
+		  else
+		    escp2_unpack_4_2(length, in, s[0], s[1], s[2], s[3]);
 		  break;
 		}
 	      switch (vertical_subpasses / oversample)
 		{
 		case 4:
-		  escp2_split_4(length, cols[j], s[0], s[1], s[2], s[3]);
+		  if (bitwidth == 1)
+		    escp2_split_4(length, in, s[0], s[1], s[2], s[3]);
+		  else
+		    escp2_split_4_2(length, in, s[0], s[1], s[2], s[3]);
 		  break;
 		case 2:
 		  if (oversample == 1)
-		    {		    
-		      escp2_split_2(length, cols[j], s[0], s[1]);
+		    {
+		      if (bitwidth == 1)
+			escp2_split_2(length, in, s[0], s[1]);
+		      else
+			escp2_split_2_2(length, in, s[0], s[1]);
 		    }
 		  else
 		    {		    
-		      escp2_split_2(length, s[1], s[1], s[3]);
-		      escp2_split_2(length, s[0], s[0], s[2]);
+		      if (bitwidth == 1)
+			{
+			  escp2_split_2(length, s[1], s[1], s[3]);
+			  escp2_split_2(length, s[0], s[0], s[2]);
+			}
+		      else
+			{
+			  escp2_split_2_2(length, s[1], s[1], s[3]);
+			  escp2_split_2_2(length, s[0], s[0], s[2]);
+			}
 		    }
 		  break;
 		}
 	      for (i = 0; i < vertical_subpasses; i++)
 		{
-		  escp2_pack(s[i], ((length + oversample - 1) / oversample),
+		  escp2_pack(s[i],
+			     (bitwidth * (length + oversample - 1) /
+			      oversample),
 			     comp_buf, &comp_ptr);
 		  add_to_row(lineno, comp_buf, comp_ptr - comp_buf,
 			     colors[j], densities[j], i);
@@ -2273,7 +2508,10 @@ escp2_write_weave(FILE          *prn,	/* I - Print file or command */
 	    }
 	  else
 	    {
-	      escp2_pack(cols[j], length, comp_buf, &comp_ptr);
+	      if (bitwidth == 1)
+		escp2_pack(cols[j], length, comp_buf, &comp_ptr);
+	      else
+		escp2_pack(fold_buf, length * 2, comp_buf, &comp_ptr);
 	      add_to_row(lineno, comp_buf, comp_ptr - comp_buf,
 			 colors[j], densities[j], 0);
 	    }

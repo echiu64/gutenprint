@@ -1331,7 +1331,7 @@ do_print_dialog(void)
   gtk_widget_show(box);
 
   saturation_adjustment = scale_data =
-      gtk_adjustment_new((float)vars.saturation, 0.1, 10.0, 0.001, 0.01, 1.0);
+      gtk_adjustment_new((float)vars.saturation, 0.001, 10.0, 0.001, 0.01, 1.0);
 
   gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
 		     (GtkSignalFunc)saturation_update, NULL);
