@@ -8,11 +8,19 @@ if [ -z "$STP_DATA_PATH" ] ; then
 fi
 
 valgrind=0
+extra=''
+
+set_opt() {
+    opt=`echo $1 | awk -F= '{print $1}'`
+    val=`echo $1 | awk -F= '{print $2}'`
+    extra="`printf \"%s\nparameter %s %s\" \"$extra\" $opt $val`"
+}
 
 set_args() {
     while true ; do
 	case "$1" in
 	    -v) valgrind=`expr $valgrind + 1` ;;
+	    -p) shift; set_opt "$1" ;;
 	    --) shift; args="$@"; return ;;
 	    *) return ;;
 	esac
@@ -20,7 +28,7 @@ set_args() {
     done
 }
 
-set_args `getopt v "$@"`
+set_args `getopt vp: "$@"`
 
 if [ -z "$args" ] ; then
     args=`./printers`
@@ -30,12 +38,7 @@ for p in $args ; do
     echo -n "$p"
     cat > testpattern.test <<EOF
 printer $p
-#parameter Resolution 360sw
-#parameter InputSlot Standard
-#parameter MediaType Photo
-#parameter InkType PhotoCMYK
-#parameter PageSize A4
-parameter DitherAlgorithm Ordered
+$extra
 hsize 0.1
 vsize 0.1
 left 0.15
@@ -101,7 +104,7 @@ pattern 0.0 0.1 1.0 0.0 0.1 1.0 0.0 0.0 1.0 0.0 0.9 1.0 1.0 1.0 1.0 0.0 0.0
 EOF
     rm -f testp.out
     case "$valgrind" in
-	1) valgrind --num-callers=100 --leak-resolution=high --leak-check=yes ./testpattern < testpattern.test > testp.out ;;
+	1) valgrind -q --num-callers=100 --leak-resolution=high --leak-check=yes ./testpattern < testpattern.test > testp.out ;;
 	2) valgrind --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes ./testpattern < testpattern.test > testp.out ;;
 	*) ./testpattern < testpattern.test > testp.out ;;
     esac
