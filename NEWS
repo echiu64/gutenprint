@@ -121,14 +121,15 @@ Gimp-Print 4.2.5 contains the following major changes over Gimp-Print
      web site (http://gimp-print.sourceforge.net/MacOSX.php3) for a
      link to a user feedback forum regarding these cables.
 
-  3) Mac OS X users who use the Epson Printer Utility (provided by Epson
-     with their standard driver set) to check ink levels and perform
-     maintenance tasks, such as head cleaning or head alignment, may 
-     encounter print job failures when attempting to print with the 
-     Gimp-Print driver after using the Epson utility. The cause for this
-     failure is currently unknown, but the workaround is to completely 
-     power-cycle the printer, after which the Gimp-Print driver should 
-     again print normally.
+  3) Mac OS X users who use the Epson Printer Utility (provided by
+     Epson with their standard driver set) to check ink levels and
+     perform maintenance tasks, such as head cleaning or head
+     alignment, may encounter print job failures when attempting to
+     print with the Gimp-Print driver after using the Epson
+     utility. The cause for this failure is currently unknown, but the
+     workaround is to completely power-cycle the printer, after which
+     the Gimp-Print driver should again print normally.  Another
+     option is to disable the Epson Printer Utility.
 
   4) The Mac OS X print dialog may offer an "Autoselect" option as the
      default media source (input slot) on some printers.  This option
