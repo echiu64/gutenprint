@@ -39,6 +39,8 @@ IMAGES = \
 
 EPS_IMAGES = $(addsuffix .eps,$(basename $(IMAGES)))
 
+TEXT_IMAGES = $(addsuffix .txt,$(basename $(IMAGES)))
+
 if MAINTAINER_MODE
 MAINT_MODE = true
 else
@@ -186,6 +188,6 @@ mostlyclean-aminfo:
 
 MAINTAINERCLEANFILES = Makefile.in html-stamp
 
-EXTRA_DIST = $(DOCS) $(IMAGES) $(EPS_IMAGES) FAQ.html README.maintaining
+EXTRA_DIST = $(DOCS) $(IMAGES) $(EPS_IMAGES) $(TEXT_IMAGES) FAQ.html README.maintaining
 
 .PHONY: html ps pdf docs clean-manuals
