@@ -121,18 +121,27 @@ Gimp-Print 4.2.5 contains the following major changes over Gimp-Print
      web site (http://gimp-print.sourceforge.net/MacOSX.php3) for a
      link to a user feedback forum regarding these cables.
 
-  3) The Mac OS X print dialog may offer an "Autoselect" option as the
+  3) Mac OS X users who use the Epson Printer Utility (provided by Epson
+     with their standard driver set) to check ink levels and perform
+     maintenance tasks, such as head cleaning or head alignment, may 
+     encounter print job failures when attempting to print with the 
+     Gimp-Print driver after using the Epson utility. The cause for this
+     failure is currently unknown, but the workaround is to completely 
+     power-cycle the printer, after which the Gimp-Print driver should 
+     again print normally.
+
+  4) The Mac OS X print dialog may offer an "Autoselect" option as the
      default media source (input slot) on some printers.  This option
      may not be valid and can result in nothing being printed.  The
      workaround is to choose a different setting (explicitly select
      the input slot you wish to use).
 
-  4) The new HP DesignJets have not been fully tuned.  In particular,
+  5) The new HP DesignJets have not been fully tuned.  In particular,
      there are reports that they print too light.  This can be
      corrected with the Density adjustment (try 1.5~1.7 or
      thereabouts).
 
-  5) The list of compatible and potentially compatible Hewlett-Packard
+  6) The list of compatible and potentially compatible Hewlett-Packard
      printers has been updated with the latest available information.
      If a particular printer does not work with the recommended
      driver, we recommend that you try other similar drivers, check
@@ -141,14 +150,14 @@ Gimp-Print 4.2.5 contains the following major changes over Gimp-Print
      and if the printer is not listed please file a feature request
      (via the Submit New button).
 
-  6) Borderless (full-bleed) printing is not quite correct on the
+  7) Borderless (full-bleed) printing is not quite correct on the
      Epson Stylus Photo printers that support it (see bug 621668).
      Typically, the left or right margin is off by 1 mm or less,
      resulting in a very fine white strip on that edge.  This will not
      be fixed in 4.2; it is expected to be fixed in 4.3 and beyond.
      There is no workaround other than trimming the page.
 
-  7) Many Canon printers do not print correctly at 720x360 DPI.  The
+  8) Many Canon printers do not print correctly at 720x360 DPI.  The
      workaround is to use 360 or 720 DPI.
 
 
