@@ -394,8 +394,6 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   int		i, j;			/* Looping vars */
   gzFile	fp;			/* File to write to */
   char		filename[1024];		/* Filename */
-  char		pcfilename[13],		/* PCFileName attribute */
-		*pcptr;			/* Pointer into PCFileName */
   const char	*driverptr;		/* Pointer into driver name */
   char		manufacturer[64];	/* Manufacturer name */
   int		num_opts;		/* Number of printer options */
@@ -491,21 +489,9 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   * The following code generates a (hopefully unique) 8.3 filename from
   * the driver name, and makes the filename all UPPERCASE as well...
   */
-
-  for (driverptr = driver, pcptr = pcfilename;
-       pcptr < (pcfilename + 8) && *driverptr;)
-  {
-    *pcptr++ = toupper(*driverptr);
-
-    if (strchr(driverptr, '-') != NULL)
-      driverptr = strchr(driverptr, '-') + 1;
-    else
-      driverptr ++;
-  }
-
-  strcpy(pcptr, ".PPD");
     
-  gzprintf(fp, "*PCFileName:	\"%s\"\n", pcfilename);
+  gzprintf(fp, "*PCFileName:	\"STP%05d.PPD\"\n",
+	   stp_get_printer_index_by_driver(driver));
 
  /*
   * The Manufacturer, for now, is the first word of the long driver
