@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.41  1999/12/22 01:34:28  rlk
+ *   Reverse direction each pass
+ *
  *   Revision 1.40  1999/12/18 23:45:07  rlk
  *   typo
  *
@@ -551,43 +554,43 @@ do {									     \
 } while (0)
 
 #if 1
-#define UPDATE_DITHER(r, d2, x, width)		\
-do {						\
-  if (ditherbit##d2 & bit)			\
-    {						\
-      if (x > 0)				\
-	r##error1[-1] += r;			\
-      else					\
-	r##error1[0] = r;			\
-      r##error1[0] += 3 * r;			\
-      r##error1[1] = r;				\
-      dither##r    = r##error0[1] + 3 * r;	\
-    }						\
-  else						\
-    {						\
-      if (x > 0)				\
-	r##error1[-1] += r * 3 / 4;		\
-      else					\
-	r##error1[0] = r * 3 / 4;		\
-      r##error1[0] +=  r * 3 / 2;		\
-      r##error1[1] = r * 3 / 4;			\
-      dither##r    = r##error0[1] + 5 * r;	\
-    }						\
-} while (0)  
+#define UPDATE_DITHER(r, d2, x, width)			\
+do {							\
+  if (ditherbit##d2 & bit)				\
+    {							\
+      if (x > 0 && x < dst_width - 1)			\
+	r##error1[-direction] += r;			\
+      else						\
+	r##error1[0] = r;				\
+      r##error1[0] += 3 * r;				\
+      r##error1[direction] = r;				\
+      dither##r    = r##error0[direction] + 3 * r;	\
+    }							\
+  else							\
+    {							\
+      if (x > 0 && x < dst_width - 1)			\
+	r##error1[-direction] += r * 3 / 4;		\
+      else						\
+	r##error1[0] = r * 3 / 4;			\
+      r##error1[0] +=  r * 3 / 2;			\
+      r##error1[direction] = r * 3 / 4;			\
+      dither##r    = r##error0[direction] + 5 * r;	\
+    }							\
+} while (0)
 #else
-#define UPDATE_DITHER(r, d2, x, width)		\
-do {						\
-  if (ditherbit##d2 & bit)			\
-    {						\
-      r##error1[0] = 5 * r;			\
-      dither##r    = r##error0[1] + 3 * r;	\
-    }						\
-  else						\
-    {						\
-      r##error1[0] = 3 * r;			\
-      dither##r    = r##error0[1] + 5 * r;	\
-    }						\
-} while (0)  
+#define UPDATE_DITHER(r, d2, x, width)			\
+do {							\
+  if (ditherbit##d2 & bit)				\
+    {							\
+      r##error1[0] = 5 * r;				\
+      dither##r    = r##error0[direction] + 3 * r;	\
+    }							\
+  else							\
+    {							\
+      r##error1[0] = 3 * r;				\
+      dither##r    = r##error0[direction] + 5 * r;	\
+    }							\
+} while (0)
 #endif
 
 void
@@ -661,6 +664,12 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   FILE *dbg;
 #endif
 
+  int terminate;
+  int direction = row & 1 ? 1 : -1;
+  bit = (direction == 1) ? 128 : 1 << (7 - ((dst_width - 1) & 7));
+  x = (direction == 1) ? 0 : dst_width - 1;
+  terminate = (direction == 1) ? dst_width : -1;
+
   xstep  = 3 * (src_width / dst_width);
   xmod   = src_width % dst_width;
   length = (dst_width + 7) / 8;
@@ -676,6 +685,40 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
   kerror0 = error[row & 1][3];
   kerror1 = error[1 - (row & 1)][3];
+  cptr = cyan;
+  mptr = magenta;
+  yptr = yellow;
+  lcptr = lcyan;
+  lmptr = lmagenta;
+  lyptr = lyellow;
+  kptr = black;
+  xerror = 0;
+  if (direction == -1)
+    {
+      cerror0 += dst_width - 1;
+      cerror1 += dst_width - 1;
+      merror0 += dst_width - 1;
+      merror1 += dst_width - 1;
+      yerror0 += dst_width - 1;
+      yerror1 += dst_width - 1;
+      kerror0 += dst_width - 1;
+      kerror1 += dst_width - 1;
+      cptr = cyan + length - 1;
+      if (lcptr)
+	lcptr = lcyan + length - 1;
+      mptr = magenta + length - 1;
+      if (lmptr)
+	lmptr = lmagenta + length - 1;
+      yptr = yellow + length - 1;
+      if (lyptr)
+	lyptr = lyellow + length - 1;
+      if (kptr)
+	kptr = black + length - 1;
+      xstep = -xstep;
+      rgb += 3 * (src_width - 1);
+      xerror = ((dst_width - 1) * xmod) % dst_width;
+      xmod = -xmod;
+    }
 
   memset(cyan, 0, length);
   if (lcyan)
@@ -696,10 +739,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   /*
    * Main loop starts here!
    */
-  for (x = 0, bit = 128,
-	 cptr = cyan, mptr = magenta, yptr = yellow, lcptr = lcyan,
-	 lmptr = lmagenta, lyptr = lyellow, kptr = black, xerror = 0,
-	 ditherbit = rand(),
+  for (ditherbit = rand(),
 	 ditherc = cerror0[0], ditherm = merror0[0], dithery = yerror0[0],
 	 ditherk = kerror0[0],
 	 ditherbit0 = ditherbit & 0xffff,
@@ -708,9 +748,16 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		       ((ditherbit & 0x100) << 7)),
 	 ditherbit3 = (((ditherbit >> 24) & 0x7f) + ((ditherbit & 1) << 7) +
 		       ((ditherbit >> 8) & 0xff00));
-       x < dst_width;
-       x ++, cerror0 ++, cerror1 ++, merror0 ++, merror1 ++, yerror0 ++,
-           yerror1 ++, kerror0 ++, kerror1 ++)
+       x != terminate;
+       x += direction,
+	 cerror0 += direction,
+	 cerror1 += direction,
+	 merror0 += direction,
+	 merror1 += direction,
+	 yerror0 += direction,
+	 yerror1 += direction,
+	 kerror0 += direction,
+	 kerror1 += direction)
   {
 
    /*
@@ -872,22 +919,22 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       if (ditherbit0 & bit)
 	{
 	  if (x > 0)
-	    kerror1[-1] += k;
+	    kerror1[-direction] += k;
 	  else
 	    kerror1[0] = k;
 	  kerror1[0] += 2 * k;
-	  kerror1[1] = k;
-	  ditherk    = kerror0[1] + 3 * k;
+	  kerror1[direction] = k;
+	  ditherk    = kerror0[direction] + 3 * k;
 	}
       else
 	{
 	  if (x > 0)
-	    kerror1[-1] += k / 2;
+	    kerror1[-direction] += k / 2;
 	  else
 	    kerror1[0] = k / 2;
 	  kerror1[0] += k;
-	  kerror1[1] = k / 2;
-	  ditherk    = kerror0[1] + 5 * k;
+	  kerror1[direction] = k / 2;
+	  ditherk    = kerror0[direction] + 5 * k;
 	}
 #endif
     }
@@ -956,57 +1003,70 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	    (black && (*kptr & bit)) ? 'k' : ' ',
 	    odk, odc, odm, ody,
 	    kdarkness, ck, bk, nk, ub, lb);
+    fprintf(dbg, "x %d dir %d c %x %x m %x %x y %x %x k %x %x rgb %x bit %x\n",
+	    x, direction, cptr, cyan, mptr, magenta, yptr, yellow, kptr, black,
+	    rgb, bit);
 #endif
-	    
-    if (bit == 1)
+
+    ditherbit = rand();
+    ditherbit0 = ditherbit & 0xffff;
+    ditherbit1 = ((ditherbit >> 8) & 0xffff);
+    ditherbit2 = ((ditherbit >> 16) & 0x7fff) + ((ditherbit & 0x100) << 7);
+    ditherbit3 = ((ditherbit >> 24) & 0x7f) + ((ditherbit & 1) << 7) +
+      ((ditherbit >> 8) & 0xff00);
+    if (direction == 1)
       {
-	cptr ++;
-	if (lcptr)
-	  lcptr ++;
-	mptr ++;
-	if (lmptr)
-	  lmptr ++;
-	yptr ++;
-	if (lyptr)
-	  lyptr ++;
-	if (kptr)
-	  kptr ++;
-	ditherbit = rand();
-	ditherbit0 = ditherbit & 0xffff;
-	ditherbit1 = ((ditherbit >> 8) & 0xffff);
-	ditherbit2 = ((ditherbit >> 16) & 0x7fff) + ((ditherbit & 0x100) << 7);
-	ditherbit3 = ((ditherbit >> 24) & 0x7f) + ((ditherbit & 1) << 7) +
-	  ((ditherbit >> 8) & 0xff00);
-	bit       = 128;
+	if (bit == 1)
+	  {
+	    cptr ++;
+	    if (lcptr)
+	      lcptr ++;
+	    mptr ++;
+	    if (lmptr)
+	      lmptr ++;
+	    yptr ++;
+	    if (lyptr)
+	      lyptr ++;
+	    if (kptr)
+	      kptr ++;
+	    bit       = 128;
+	  }
+	else
+	  bit >>= 1;
       }
     else
       {
-	ditherbit = rand();
-	ditherbit0 = ditherbit & 0xffff;
-	ditherbit1 = ((ditherbit >> 8) & 0xffff);
-	ditherbit2 = ((ditherbit >> 16) & 0x7fff) + ((ditherbit & 0x100) << 7);
-	ditherbit3 = ((ditherbit >> 24) & 0x7f) + ((ditherbit & 1) << 7) +
-	  ((ditherbit >> 8) & 0xff00);
-#if 0
-	int dithertmp0 = (ditherbit1 >> 14) ^ ((ditherbit3 &0x3fff) << 2);
-	int dithertmp1 = (ditherbit2 >> 14) ^ ((ditherbit2 &0x3fff) << 2);
-	int dithertmp2 = (ditherbit3 >> 14) ^ ((ditherbit1 &0x3fff) << 2);
-	int dithertmp3 = (ditherbit0 >> 14) ^ ((ditherbit0 &0x3fff) << 2);
-	ditherbit0 = dithertmp0;
-	ditherbit1 = dithertmp1;
-	ditherbit2 = dithertmp2;
-	ditherbit3 = dithertmp3;
-#endif
-	bit >>= 1;
+	if (bit == 128)
+	  {
+	    cptr --;
+	    if (lcptr)
+	      lcptr --;
+	    mptr --;
+	    if (lmptr)
+	      lmptr --;
+	    yptr --;
+	    if (lyptr)
+	      lyptr --;
+	    if (kptr)
+	      kptr --;
+	    bit       = 1;
+	  }
+	else
+	  bit <<= 1;
       }
 
     rgb    += xstep;
     xerror += xmod;
     if (xerror >= dst_width)
-    {
-      xerror -= dst_width;
-      rgb    += 3;
-    }
+      {
+	xerror -= dst_width;
+	rgb    += 3 * direction;
+      }
+    else if (xerror < 0)
+      {
+	xerror += dst_width;
+	rgb    += 3 * direction;
+      }      
   }
   /*
    * Main loop ends here!
