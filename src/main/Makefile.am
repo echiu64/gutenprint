@@ -157,15 +157,15 @@ pkgxmldata_DATA = \
 all-local: xmli18n-tmp.h
 
 
-xmli18n-tmp.h:  papers.xml printers.xml
+xmli18n-tmp.h:  $(srcdir)/papers.xml $(srcdir)/printers.xml
 # Pull out translatable strings from XML files.  This is crude, but
 # works for now.
 	sed -e '/description.*value/!d' \
 	  -e 's/.*description.*value="\([^"]*\)".*/N_("\1");/' \
-	  < papers.xml > $@;
+	  < $(srcdir)/papers.xml > $@;
 	sed -e '/printer.*name/!d' \
 	  -e 's/.*printer.*name="\([^"]*\)".*/N_("\1");/' \
-	  < printers.xml >> $@;
+	  < $(srcdir)/printers.xml >> $@;
 
 dist-hook: xmli18n-tmp.h
 # xmli18n-tmp.h is needed by po/POTFILES.in at dist time
