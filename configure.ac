@@ -250,16 +250,16 @@ STP_ARG_WITH_DETAILED([modules],
                       [],
                       [enable loadable modules],
 	              [(options: ltdl, dlopen, static)],
-	              [ENABLE_MODULES],
+	              [WITH_MODULES],
 	              [(automatic)],[
-    yes) [ENABLE_MODULES]="yes";  AC_MSG_RESULT([yes]) ;;
-    no) [ENABLE_MODULES]="no";  AC_MSG_RESULT([no]) ;;
-    ltdl) [ENABLE_MODULES]="ltdl";  AC_MSG_RESULT([ltdl]) ;;
-    dlopen) [ENABLE_MODULES]="dlopen";  AC_MSG_RESULT([dlopen]) ;;
-    static) [ENABLE_MODULES]="static";  AC_MSG_RESULT([static]) ;;
+    yes) [WITH_MODULES]="yes";  AC_MSG_RESULT([yes]) ;;
+    no) [WITH_MODULES]="no";  AC_MSG_RESULT([no]) ;;
+    ltdl) [WITH_MODULES]="ltdl";  AC_MSG_RESULT([ltdl]) ;;
+    dlopen) [WITH_MODULES]="dlopen";  AC_MSG_RESULT([dlopen]) ;;
+    static) [WITH_MODULES]="static";  AC_MSG_RESULT([static]) ;;
     *) AC_MSG_ERROR([${withval}: not a valid module loader]) ;;
                       ],[
-    [ENABLE_MODULES]="yes"])
+    [WITH_MODULES]="yes"])
 
 STP_ARG_ENABLE([debug],
                [turn on debugging in build],
@@ -556,9 +556,9 @@ if test x${HAVE_READLINE_READLINE_H} = xtrue ; then
     LIBREADLINE_DEPS="-lreadline $EXTRA_LIBREADLINE_DEPS"
   fi
 fi
-AC_CHECK_HEADERS(dlfcn.h)
+AC_CHECK_HEADERS(dlfcn.h, [HAVE_DLFCN_H=true])
 AC_CHECK_HEADERS(fcntl.h)
-AC_CHECK_HEADERS(ltdl.h)
+AC_CHECK_HEADERS(ltdl.h, [HAVE_LTDL_H=true])
 AC_CHECK_HEADERS(stdarg.h)
 AC_CHECK_HEADERS(sys/time.h sys/types.h)
 AC_CHECK_HEADERS(time.h)
@@ -631,29 +631,29 @@ AM_CONDITIONAL(USE_NLS, test x${USE_NLS} = xyes)
 
 # loadable modules
 # portable sh has no AND test...
-if test -n $HAVE_LTDL_H; then
-  if test -n $LTDL_LIBS; then
-    LDTL_POSSIBLE="true";
+if test -n "$HAVE_LTDL_H"; then
+  if test -n "$LTDL_LIBS"; then
+    LTDL_POSSIBLE="true"
   fi
 fi
-if test -n $HAVE_DLFCN_H; then
-  if test -n $DLOPEN_LIBS; then
-    DLOPEN_POSSIBLE="true";
+if test -n "$HAVE_DLFCN_H"; then
+  if test -n "$DLOPEN_LIBS"; then
+    DLOPEN_POSSIBLE="true"
   fi
 fi
 # define what the user chose to build, if possible.
 # Prefer dlopen over ltdl.
-if test x$ENABLE_MODULES = xyes; then
+if test x$WITH_MODULES = xyes; then
   if test x$DLOPEN_POSSIBLE = xtrue; then
     USE_DLOPEN="true"
   elif test x$LDTL_POSSIBLE = xtrue; then
     USE_LTDL="true"
   fi
-elif test x$ENABLE_MODULES = xltdl; then
+elif test x$WITH_MODULES = xltdl; then
   if test x$LTDL_POSSIBLE = xtrue; then
     USE_LTDL="true"
   fi
-elif test x$ENABLE_MODULES = xdlopen; then
+elif test x$WITH_MODULES = xdlopen; then
   if test x$DLOPEN_POSSIBLE = xtrue; then
     USE_DLOPEN="true"
   fi
