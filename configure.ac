@@ -387,7 +387,10 @@ PKG_CHECK_MODULES([GTK2], [gtk+-2.0],
                    GUTENPRINTUI2_LIBDEPS="${GUTENPRINTUI2_LIBDEPS} ${GTK2_LIBS}"],
                   [HAVE_GTK2=no
 	           BUILD_LIBGUTENPRINTUI2=no])
-PKG_CHECK_MODULES([GIMP2], [gimpui-2.0], [HAVE_GTK2=yes], [HAVE_GTK2=no])
+# Require both gimptool and pkg-config to succeed
+if test x$BUILD_GIMP2 = xyes; then
+  PKG_CHECK_MODULES([GIMP2], [gimpui-2.0], [BUILD_GIMP2=yes], [BUILD_GIMP2=no])
+fi
 
 STP_ARG_WITH([gimp2],
              [build GIMP 2.0 Print plugin],
