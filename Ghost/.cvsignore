@@ -3,6 +3,5 @@ gdevstp-escp2.c
 gdevstp-util.c
 gdevstp-print.h
 gdevstp-printers.c
-gdevstp-quickmatrix199.h
-gdevstp-quickmatrix199-2.h
 gdevstp-quickmatrix257.h
+gdevstp-ran.367.179.h
