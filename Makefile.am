@@ -16,6 +16,7 @@ print_SOURCES = \
 	print-ps.c      	\
 	print-util.c		\
 	print-image-gimp.c	\
+	print-weave.c		\
 	print-intl.h		\
 	print.c			\
 	print.h			\

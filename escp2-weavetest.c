@@ -65,6 +65,7 @@
 #define DEBUG_SIGNAL
 #define MIN(x, y) ((x) <= (y) ? (x) : (y))
 #define WEAVETEST
+#include "print-weave.c"
 #include "print-escp2.c"
 
 const char header[] = "Legend:\n"
@@ -140,7 +141,7 @@ main(int argc, char **argv)
   logpassstarts = malloc(sizeof(int) * (nrows + physsep));
   passends = malloc(sizeof(int) * (nrows + physsep));
   passcounts = malloc(sizeof(int) * (nrows + physsep));
-  vmod = physsep * hpasses * vpasses * subpasses;
+  vmod = 2 * physsep * hpasses * vpasses * subpasses;
   current_slot = malloc(sizeof(int) * vmod);
   physpassstuff = malloc((nrows + physsep));
   rowdetail = malloc((nrows + physsep) * physjets);
@@ -163,31 +164,22 @@ main(int argc, char **argv)
     }
   for (i = 0; i < nrows; i++)
     {
-      if (i == footer(sw))
-	{
-	  for (j = 0; j < vmod; j++)
-	    current_slot[j] = -1;
-	  set_last_pass(sw, newestpass);
-	  lastpass = newestpass;
-	  for (j = newestpass - vmod + 1; j <= newestpass; j++)
-	    {
-	      if (j < 0)
-		continue;
-	      passends[j] = -2;
-	    }
-	}
       for (j = 0; j < hpasses * vpasses * subpasses; j++)
 	{
 	  int physrow;
-	  weave_parameters_by_row((escp2_softweave_t *)sw, i, j, &w);
+	  weave_parameters_by_row((escp2_softweave_t *)sw, i + first_line, j, &w);
 	  physrow = w.logicalpassstart + physsep * w.jet;
 	  printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%5d %5d %5d %10d %10d %10d %10d\n",
 		 (w.pass < 0 ? (errors++, 'A') : ' '),
 		 (w.jet < 0 || w.jet > physjets - 1 ? (errors++, 'B') : ' '),
 		 (w.physpassstart > w.row ? (errors++, 'C') : ' '),
 		 (w.physpassend < w.row ? (errors++, 'D') : ' '),
+#if 0
 		 (w.physpassend == w.row && lastpass + 1 != w.pass ?
 		  (errors++, 'E') : ' '),
+#else
+		 ' ',
+#endif
 		 (w.pass >= 0 && w.pass < nrows && passstarts[w.pass] != -1
 		  && passstarts[w.pass] !=w.physpassstart ?
 		  (errors++, 'F') : ' '),
@@ -211,8 +203,8 @@ main(int argc, char **argv)
 		  (errors++, 'N') : ' '),
 		 (w.physpassstart == w.row && w.jet != w.missingstartrows ?
 		  (errors++, 'O') : ' '),
-		 ((w.logicalpassstart + first_line < 0) ||
-		  (w.physpassend + first_line >= phys_lines) ?
+		 ((w.logicalpassstart < 0) ||
+		  (w.logicalpassstart + physsep * (physjets - 1) >= phys_lines) ?
 		  (errors++, 'P') : ' '),
 		 w.row, w.pass, w.jet,
 		 w.missingstartrows, w.logicalpassstart, w.physpassstart,

@@ -451,7 +451,6 @@ typedef struct escp_init
   int page_width;
   int page_top;
   int page_bottom;
-  int top;
   int nozzles;
   int nozzle_separation;
   int horizontal_passes;
@@ -947,31 +946,10 @@ escp2_set_printhead_resolution(FILE *prn, escp_init_t *init)
 }
 
 static void
-escp2_set_initial_vertical_position(FILE *prn, escp_init_t *init)
-{
-  if (!init->use_softweave || init->ydpi < 720)
-    {
-      if (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK,
-			  MODEL_VARIABLE_NORMAL)) && init->use_softweave)
-	fprintf(prn, "\033(v\004%c%c%c%c%c", 0,
-		init->top & 0xff,
-		(init->top >> 8) & 0xff,
-		(init->top >> 16) & 0xff,
-		(init->top >> 24) & 0xff);
-      else
-	fprintf(prn, "\033(v\002%c%c%c", 0, init->top & 0xff, init->top >> 8);
-    }
-}
-
-static void
 escp2_init_printer(FILE *prn, escp_init_t *init)
 {
-  int l, t;
   if (init->ydpi > 720)
     init->ydpi = 720;
-  l = init->ydpi * init->page_length / 72;
-  t = init->ydpi * init->page_top / 72;
-  init->top = init->ydpi * init->top / 72;
 
   escp2_reset_printer(prn, init);
   escp2_set_remote_sequence(prn, init);
@@ -985,9 +963,6 @@ escp2_init_printer(FILE *prn, escp_init_t *init)
   escp2_set_margins(prn, init);
   escp2_set_form_factor(prn, init);
   escp2_set_printhead_resolution(prn, init);
-
-  /* This really shouldn't be here */
-  escp2_set_initial_vertical_position(prn, init);
 }
 
 static void
@@ -1192,7 +1167,6 @@ escp2_print(const printer_t *printer,		/* I - Model */
   init.page_width = page_width;
   init.page_top = page_top;
   init.page_bottom = page_bottom;
-  init.top = top;
   init.horizontal_passes = horizontal_passes;
   init.vertical_passes = vertical_passes;
   init.vertical_oversample = vertical_oversample;
@@ -2568,26 +2542,15 @@ typedef struct {
   int *linecounts;		/* How many rows we've printed this pass */
   pass_t *passes;		/* Circular list of pass numbers */
   int last_pass_offset;		/* Starting row (offset from the start of */
-				/* the image) of the most recently printed */
+				/* the page) of the most recently printed */
 				/* pass (so we can determine how far to */
 				/* advance the paper) */
   int last_pass;		/* Number of the most recently printed pass */
 
-  int njets;			/* Number of jets in use */
-  int separation;		/* Separation between jets */
+  int jets;			/* Number of jets per color */
+  int separation;		/* Offset from one jet to the next in rows */
+  void *weaveparm;		/* Weave calculation parameter block */
 
-  int weavefactor;		/* Interleave factor (jets / separation) */
-  int jetsused;			/* How many jets we can actually use */
-  int initialoffset;		/* Distance between the first row we're */
-				/* printing and the logical first row */
-				/* (first nozzle of the first pass). */
-				/* Currently this is zero. */
-  int jetsleftover;		/* How many jets we're *not* using. */
-				/* This can be used to rotate exactly */
-				/* what jets we're using.  Currently this */
-				/* is not used. */
-  int weavespan;		/* How many rows total are bracketed by */
-				/* one pass (separation * (jets - 1) */
   int horizontal_weave;		/* Number of horizontal passes required */
 				/* This is > 1 for some of the ultra-high */
 				/* resolution modes */
@@ -2595,20 +2558,10 @@ typedef struct {
 				/* quality) */
   int vmod;			/* Number of banks of passes */
   int oversample;		/* Excess precision per row */
-  int realjets;			/* Actual number of jets */
-  int pass_adjustment;		/* Magical */
-  int post_pass_adjustment;	/* Even more magical */
   int ncolors;			/* How many colors (1, 4, or 6) */
   int horizontal_width;		/* Line width in output pixels */
   int vertical_height;		/* Image height in output pixels */
   int firstline;		/* Actual first line (referenced to paper) */
-  int page_lines;		/* Number of lines on the paper (physical) */
-  int header;			/* Number of initial lines that cannot be */
-				/* printed with normal weave */
-  int footer;			/* Number of trailing lines that cannot be */
-				/* printed with normal weave */
-  int header_passes;		/* Extra passes printed at the beginning */
-  int last_real_pass;		/* Do not touch this upon pain of death */
 
   int bitwidth;			/* Bits per pixel */
   int lineno;
@@ -2631,11 +2584,6 @@ get_color_by_params(int plane, int density)
 }
 #endif
 
-static int
-imin(int a, int b)
-{
-  return ((a < b) ? a : b);
-}
 
 /*
  * Initialize the weave parameters
@@ -2669,63 +2617,43 @@ initialize_weave(int jets,	/* Width of print head */
 		 int phys_lines) /* Total height of the page in rows */
 {
   int i;
-  int lastline;
   escp2_softweave_t *sw = malloc(sizeof (escp2_softweave_t));
-  if (jets <= 1)
-    sw->separation = 1;
-  if (sep <= 0)
-    sw->separation = 1;
-  else
-    sw->separation = sep;
-  sw->njets = jets;
-  sw->realjets = jets;
-  if (v_subpasses <= 0)
-    v_subpasses = 1;
-  sw->oversample = osample * v_subpasses * v_subsample;
-  sw->vertical_subpasses = v_subpasses;
-  sw->njets /= sw->oversample;
-  if (sw->njets == 0)
-    sw->njets = 1;
-  sw->vmod = sw->separation * sw->oversample;
-  sw->horizontal_weave = osample;
-  sw->pass_adjustment = (sw->oversample * sep + jets - 1) / jets;
-  sw->separation_rows = separation_rows;
-  sw->firstline = first_line;
-  if (first_line < sw->realjets * sw->separation)
-    {
-      sw->header = (sw->realjets * sw->separation) - first_line;
-      if (sw->header < sw->separation)
-	sw->header_passes = sw->header * sw->oversample;
-      else
-	sw->header_passes = sw->separation * sw->oversample;
-    }
-  else
-    {
-      sw->header = 0;
-      sw->header_passes = 0;
-    }
-  lastline = first_line + lineheight;
-  if (lastline > phys_lines)
-    phys_lines = lastline + 1;
-  sw->page_lines = phys_lines;
-  if (lastline > phys_lines - (sw->realjets * sw->separation))
-    sw->footer = phys_lines - first_line - (sw->realjets * sw->separation);
-  else
-    sw->footer = lastline;
+  if (sw == 0)
+    return sw;
 
-  sw->weavefactor = (sw->njets + sw->separation - 1) / sw->separation;
-  sw->jetsused = imin(((sw->weavefactor) * sw->separation), sw->njets);
-  sw->initialoffset = (sw->jetsused - sw->weavefactor - 1) * sw->separation;
-  if (sw->initialoffset < 0)
-    sw->initialoffset = 0;
-  sw->jetsleftover = sw->njets - sw->jetsused;
-  sw->weavespan = (sw->jetsused - 1) * sw->separation;
+  if (jets < 1)
+    jets = 1;
+  if (jets == 1 || sep < 1)
+    sep = 1;
+  if (v_subpasses < 1)
+    v_subpasses = 1;
+
+  sw->separation = sep;
+  sw->jets = jets;
+  sw->horizontal_weave = osample;
   sw->vertical_oversample = v_subsample;
-  if (sw->separation > sw->njets)
-    sw->post_pass_adjustment = (sw->separation / sw->njets);
-  else
-    sw->post_pass_adjustment = 0;
-  sw->last_real_pass = -1;
+  sw->vertical_subpasses = v_subpasses;
+  sw->oversample = osample * v_subpasses * v_subsample;
+  sw->firstline = first_line;
+  sw->lineno = first_line;
+
+  if (sw->oversample > jets) {
+    fprintf(stderr, "Weave error: oversample (%d) > jets (%d)\n",
+                    sw->oversample, jets);
+    free(sw);
+    return 0;
+  }
+  sw->weaveparm = initialize_weave_params(sw->separation, sw->jets,
+                                          sw->oversample, first_line,
+                                          first_line + lineheight - 1,
+                                          phys_lines);
+
+  /*
+   * The value of vmod limits how many passes may be unfinished at a time.
+   * If pass x is not yet printed, pass x+vmod cannot be started.
+   */
+  sw->vmod = 2 * sw->separation * sw->oversample;
+  sw->separation_rows = separation_rows;
 
   sw->bitwidth = width;
 
@@ -2762,7 +2690,6 @@ initialize_weave(int jets,	/* Width of print head */
   sw->passes = malloc(sw->vmod * sizeof(pass_t));
   sw->linecounts = malloc(sw->vmod * sizeof(int));
   memset(sw->linecounts, 0, sw->vmod * sizeof(int));
-  sw->lineno = 0;
 
   for (i = 0; i < sw->vmod; i++)
     {
@@ -2794,89 +2721,9 @@ destroy_weave(void *vsw)
 	}
     }
   free(sw->linebases);
+  destroy_weave_params(sw->weaveparm);
   free(vsw);
 }
-
-static int
-footer(void *vsw)
-{
-  escp2_softweave_t *sw = (escp2_softweave_t *) vsw;
-  return sw->footer;
-}
-
-#ifdef WEAVETEST
-
-static void
-set_last_pass(void *vsw, int pass)
-{
-  escp2_softweave_t *sw = (escp2_softweave_t *) vsw;
-  sw->last_pass = pass;
-}
-
-#endif
-
-/*
- * Compute the weave parameters for the given row.  This computation is
- * rather complex, and I need to go back and write down very carefully
- * what's going on here.
- */
-
-#ifdef DEBUG_SIGNAL
-static int
-divv(int x, int y)
-{
-  if (x < 0 || y < 0)
-    {
-      kill(getpid(), SIGFPE);
-      return 0;
-    }
-  else
-    return x / y;
-}
-
-static int
-modd(int x, int y)
-{
-  if (x < 0 || y < 0)
-    {
-      kill(getpid(), SIGFPE);
-      return 0;
-    }
-  else
-    return x % y;
-}
-#else
-
-#define divv(x, y) ((x) / (y))
-#define modd(x, y) ((x) % (y))
-
-#endif
-
-/*
- * Compute the weave parameters for the given row.  This computation is
- * rather complex, and I need to go back and write down very carefully
- * what's going on here.  That is, if I can figure it out myself :-)
- */
-
-static inline int
-rroundup(int x, int y)
-{
-  if (x < 0)
-    return -(y * divv(-x, y));
-  else
-    return y * divv((x + y - 1), y);
-}
-
-#if 0
-static inline int
-rrounddown(int x, int y)
-{
-  if (x < 0)
-    return -(y * divv((y - x - 1), y));
-  else
-    return y * divv(x, y);
-}
-#endif
 
 static void
 weave_parameters_by_row(const escp2_softweave_t *sw, int row,
@@ -2886,6 +2733,8 @@ weave_parameters_by_row(const escp2_softweave_t *sw, int row,
   static weave_t wcache;
   static int rcache = -2;
   static int vcache = -2;
+  int jetsused;
+
   if (scache == sw && rcache == row && vcache == vertical_subpass)
     {
       memcpy(w, &wcache, sizeof(weave_t));
@@ -2896,97 +2745,20 @@ weave_parameters_by_row(const escp2_softweave_t *sw, int row,
   vcache = vertical_subpass;
 
   w->row = row;
-  if (row < sw->header)
-    {
-      int passbase;
-      row = row + (sw->realjets * sw->separation) - sw->header;
-      passbase = row % sw->separation;
-      w->pass = passbase * sw->oversample + vertical_subpass;
-      w->logicalpassstart = passbase + sw->header -
-	(sw->realjets * sw->separation);
-      if (w->logicalpassstart >= 0)
-	w->physpassstart = w->logicalpassstart;
-      else
-	w->physpassstart = w->logicalpassstart +
-	  rroundup(-w->logicalpassstart, sw->separation);
-      w->jet = (w->row - w->logicalpassstart) / sw->separation;
-      if (w->logicalpassstart >= 0)
-	w->missingstartrows = 0;
-      else
-	w->missingstartrows = (sw->separation - w->logicalpassstart - 1) /
-	  sw->separation;
-      w->physpassend = w->logicalpassstart +
-	((sw->realjets - 1) * sw->separation);
-      if (sw->header_passes < sw->separation * sw->oversample)
-	w->pass -= ((sw->separation * sw->oversample) - sw->header_passes);
-      if (w->pass > sw->last_real_pass)
-	((escp2_softweave_t *) sw)->last_real_pass = w->pass;
-    }
-  else if (row >= sw->footer)
-    {
-      int passbase;
-      row -= sw->footer;
-      passbase = row % sw->separation;
-      w->pass = passbase * sw->oversample + vertical_subpass +
-	sw->last_real_pass + 1;
-      w->logicalpassstart = passbase + sw->footer;
-      w->physpassstart = w->logicalpassstart;
-      w->jet = row / sw->separation;
-      w->missingstartrows = 0;
-      w->physpassend = w->logicalpassstart +
-	(sw->realjets - 1) * sw->separation;
-    }
-  else
-    {
-      int passblockstart;
-      int internaljetsused = sw->jetsused * sw->oversample;
-      int subpass_adjustment;
-      row -= sw->header;
-      passblockstart = divv((row + sw->initialoffset), sw->jetsused);
-      w->pass = sw->pass_adjustment + (passblockstart - (sw->separation - 1)) +
-	modd((sw->separation + row - passblockstart), sw->separation);
-      subpass_adjustment = modd(divv((sw->separation + w->pass + 1),
-				     sw->separation), sw->oversample);
-      subpass_adjustment = sw->oversample - subpass_adjustment - 1;
-      vertical_subpass = modd((sw->oversample + vertical_subpass +
-			       subpass_adjustment), sw->oversample);
-      w->pass += sw->separation * vertical_subpass;
-      w->logicalpassstart = (w->pass * sw->jetsused) - sw->initialoffset -
-	(sw->weavefactor * sw->separation) +
-	modd((w->pass + sw->separation - 2), sw->separation);
-      w->jet = divv((row + (sw->realjets * sw->separation) -
-		     w->logicalpassstart), sw->separation) - sw->realjets;
-      w->jet += sw->jetsused * (sw->oversample - 1);
-      w->pass += sw->post_pass_adjustment;
-      if (w->jet >= sw->realjets)
-	{
-	  w->jet -= sw->realjets;
-	  w->pass += sw->vmod;
-	}
-      else if (w->jet < 0)
-	{
-	  w->jet += sw->realjets;
-	  w->pass -= sw->vmod;
-	}
-      w->logicalpassstart = row - (w->jet * sw->separation);
-      if (w->logicalpassstart >= 0)
-	w->physpassstart = w->logicalpassstart;
-      else
-	w->physpassstart = w->logicalpassstart +
-	  (sw->separation * divv((sw->separation - 1 - w->logicalpassstart),
-				 sw->separation));
-      w->physpassend = (internaljetsused - 1) * sw->separation +
-	w->logicalpassstart;
-      w->missingstartrows = divv((w->physpassstart - w->logicalpassstart),
-				 sw->separation);
-      w->logicalpassstart += sw->header;
-      w->physpassend += sw->header;
-      w->physpassstart += sw->header;
-      w->pass += sw->header_passes;
-      if (w->pass > sw->last_real_pass)
-	((escp2_softweave_t *) sw)->last_real_pass = w->pass;
-    }
+  calculate_row_parameters(sw->weaveparm, row, vertical_subpass,
+                           &w->pass, &w->jet, &w->logicalpassstart,
+                           &w->missingstartrows, &jetsused);
+
+  w->physpassstart = w->logicalpassstart + sw->separation * w->missingstartrows;
+  w->physpassend = w->physpassstart + sw->separation * (jetsused - 1);
+
   memcpy(&wcache, w, sizeof(weave_t));
+#if 0
+  printf("row %d, jet %d of pass %d "
+         "(pos %d, start %d, end %d, missing rows %d\n",
+         w->row, w->jet, w->pass, w->logicalpassstart, w->physpassstart,
+         w->physpassend, w->missingstartrows);
+#endif
 }
 
 #ifndef WEAVETEST
@@ -3181,12 +2953,6 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
   int microoffset = vertical_subpass & (sw->horizontal_weave - 1);
   if (ydpi > 720)
     ydpi = 720;
-  if (passno == 0)
-    {
-      sw->last_pass_offset = pass->logicalpassstart;
-      if (sw->firstline >= sw->realjets * sw->separation)
-	sw->last_pass_offset -= sw->firstline - sw->realjets * sw->separation;
-    }
   for (j = 0; j < sw->ncolors; j++)
     {
       if (lineactive[0].v[j] == 0)
@@ -3310,27 +3076,6 @@ add_to_row(escp2_softweave_t *sw, int row, unsigned char *buf, size_t nbytes,
 }
 
 static void
-finalize_row(escp2_softweave_t *sw, int row, int model, int width,
-	     int hoffset, int ydpi, int xdpi, FILE *prn)
-{
-  int i;
-  for (i = 0; i < sw->oversample; i++)
-    {
-      weave_t w;
-      int *lines = get_linecount(sw, row, i);
-      weave_parameters_by_row(sw, row, i, &w);
-      (*lines)++;
-      if (w.physpassend == row)
-	{
-	  if (w.pass >= 0)
-	    flush_pass(sw, w.pass, model, width, hoffset, ydpi, xdpi, prn, i);
-	}
-    }
-  if (row == footer(sw) - 1)
-    escp2_flush(sw, model, width, hoffset, ydpi, xdpi, prn);
-}
-
-static void
 escp2_flush(void *vsw, int model, int width, int hoffset,
 	    int ydpi, int xdpi, FILE *prn)
 {
@@ -3338,10 +3083,41 @@ escp2_flush(void *vsw, int model, int width, int hoffset,
   while (1)
     {
       pass_t *pass = get_pass_by_pass(sw, sw->last_pass + 1);
-      if (pass->pass < 0)
+#if 0
+printf("Flushing; trying next pass %d...\n", sw->last_pass + 1);
+#endif
+      /*
+       * This ought to be   pass->physpassend >  sw->lineno
+       * but that causes rubbish to be output for some reason.
+       */
+      if (pass->pass < 0 || pass->physpassend >= sw->lineno)
 	return;
       flush_pass(sw, pass->pass, model, width, hoffset, ydpi, xdpi, prn,
 		 pass->subpass);
+    }
+}
+
+static void
+finalize_row(escp2_softweave_t *sw, int row, int model, int width,
+	     int hoffset, int ydpi, int xdpi, FILE *prn)
+{
+  int i;
+#if 0
+printf("Finalizing row %d...\n", row);
+#endif
+  for (i = 0; i < sw->oversample; i++)
+    {
+      weave_t w;
+      int *lines = get_linecount(sw, row, i);
+      weave_parameters_by_row(sw, row, i, &w);
+      (*lines)++;
+      if (w.physpassend == row)
+       {
+#if 0
+printf("Pass=%d, physpassend=%d, row=%d, lineno=%d, trying to flush...\n", w.pass, w.physpassend, row, sw->lineno);
+#endif
+	escp2_flush(sw, model, width, hoffset, ydpi, xdpi, prn);
+       }
     }
 }
 
@@ -3352,7 +3128,7 @@ escp2_write_weave(void *        vsw,
 		  int           ydpi,	/* I - Vertical resolution */
 		  int           model,	/* I - Printer model */
 		  int           width,	/* I - Printed width */
-		  int           offset,
+		  int           offset,	/* I - Offset from left side of page */
 		  int		xdpi,
 		  const unsigned char *c,
 		  const unsigned char *m,

@@ -286,6 +286,16 @@ extern void	dither_set_adaptive_divisor(void *vd, unsigned divisor);
 
 extern void	free_dither(void *);
 
+
+extern void *	initialize_weave_params(int S, int J, int O,
+		                        int firstrow, int lastrow,
+		                        int pagelength);
+extern void	calculate_row_parameters(void *w, int row, int subpass,
+		                         int *pass, int *jet, int *startrow,
+					 int *phantomrows, int *jetsused);
+extern void	destroy_weave_params(void *vw);
+
+
 extern void	dither_fastblack(unsigned short *, int, void *, unsigned char *);
 
 extern void	dither_black(unsigned short *, int, void *, unsigned char *);
