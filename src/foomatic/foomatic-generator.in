@@ -118,7 +118,7 @@ $missing_drivers = 0;
 for (keys(%stpdata)) {
     if (!defined($mapstp{$_})) {
 	$missing_drivers = 1;
-	die "No foomatic printer IDs for gimp-print printer $_.\n";
+	warn "No foomatic printer IDs for gimp-print printer $_.\n";
     }
 }
 
