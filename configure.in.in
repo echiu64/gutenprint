@@ -17,17 +17,26 @@ dnl Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 dnl Process this file with autoconf to produce a configure script.
 
+PACKAGE="gimp-print"
+
 AC_INIT(src/main/print-dither.c)
 AC_CONFIG_AUX_DIR(scripts)
+
+PACKAGE="gimp-print"
 
 dnl In the following, there are a the following variants
 dnl of gimpprint cflags and libs variables
 dnl
 dnl GIMPPRINT_CFLAGS:  cflags for compiling libraries and example progs
-dnl GIMPPRINT_LIBS:    libraries for linking example programs
+dnl GIMPPRINT_LIBS:    libraries for linking programs. ONLY to be used
+dnl                    to generate ${gimpprint_libs}
 dnl GIMPPRINT_DEPLIBS: libraries for linking libraries against
 dnl gimpprint_cflags:  cflags to store in gimpprint-config
 dnl gimpprint_libs:    libs to store in gimpprint-config
+dnl LIBGIMPPRINT_LIBS  libs to link programs IN THIS PACKAGE ONLY against
+
+dnl initial default values
+GIMPPRINT_LIBS="-lgimpprint"
 
 dnl Save this value here, since automake will set cflags later
 cflags_set=${CFLAGS+set}
@@ -93,7 +102,7 @@ dnl Save this value here, since automake will set cflags later.
 cflags_set=${CFLAGS+set}
 
 dnl Initialize automake stuff.
-AM_INIT_AUTOMAKE(gimp-print, ${GIMPPRINT_VERSION})
+AM_INIT_AUTOMAKE(${PACKAGE}, ${GIMPPRINT_VERSION})
 
 dnl Specify a configuration file.
 AM_CONFIG_HEADER(config.h)
@@ -339,7 +348,10 @@ if test x${HAVE_LIBREADLINE} = xtrue ; then
 else
   AC_DEFINE(HAVE_LIBREADLINE,0)
 fi
-
+dnl check for libm, and also add to CUPS LIBS
+AC_CHECK_LIB(m,pow,
+  GIMPPRINT_DEPLIBS="${GIMPPRINT_DEPLIBS} -lm"
+  CUPS_LIBS="${CUPS_LIBS} -lm")
 dnl CUPS checks
 if test x${BUILD_CUPS} = xyes ; then
   AC_CHECK_LIB(socket,socket,
@@ -350,9 +362,6 @@ if test x${BUILD_CUPS} = xyes ; then
     if test x${OSTYPE} != xirix ; then
     CUPS_LIBS="${CUPS_LIBS} -lnsl"
   fi)
-  AC_CHECK_LIB(m,pow,
-    GIMPPRINT_LIBS="${GIMPPRINT_LIBS} -lm"
-    CUPS_LIBS="${CUPS_LIBS} -lm")
   AC_CHECK_LIB(z,gzgets,
     HAVE_LIBZ=true, HAVE_LIBZ=false)
   if test x${HAVE_LIBZ} = xtrue ; then
@@ -562,12 +571,12 @@ AC_SUBST(GIMP_LIBS)
 AC_SUBST(GIMP_PRINT_H)
 AC_SUBST(GIMPPRINT_CFLAGS)
 AC_SUBST(GIMPPRINT_LIBS)
-GIMPPRINT_DEPLIBS="${GIMPPRINT_LIBS}"
 AC_SUBST(GIMPPRINT_DEPLIBS)
 AC_SUBST(gimpprint_cflags)
-gimpprint_libs="${GIMPPRINT_LIBS}"
+gimpprint_libs="${GIMPPRINT_LIBS} ${GIMPPRINT_DEPLIBS}"
 AC_SUBST(gimpprint_libs)
 AC_SUBST(INCLUDES)
+LIBGIMPPRINT_LIBS="${LIBGIMPPRINT_LIBS} ${GIMPPRINT_DEPLIBS}"
 AC_SUBST(LIBGIMPPRINT_LIBS)
 AC_SUBST(LIBREADLINE_DEPS)
 AC_SUBST(LTLIBOBJS)

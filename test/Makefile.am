@@ -46,7 +46,7 @@ pcl_unprint_SOURCES = pcl-unprint.c
 bjc_unprint_SOURCES = bjc-unprint.c
 
 testdither_SOURCES = testdither.c
-testdither_LDADD = -lm $(LIBGIMPPRINT_LIBS)
+testdither_LDADD = $(LIBGIMPPRINT_LIBS)
 testdither_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 $(LIBGIMPPRINT_LIBS):
