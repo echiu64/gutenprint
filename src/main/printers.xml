@@ -691,6 +691,14 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Scan 2000" driver="escp2-scan2000">
+<color>
+<model value=12>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="HP DeskJet 340" driver="pcl-340">
 <color>
 <model value=340>
