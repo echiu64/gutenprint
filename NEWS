@@ -1,4 +1,4 @@
-Gimp-Print 4.3.14, released May 11, 2003, is a development release of
+Gimp-Print 4.3.15, released May 11, 2003, is a development release of
 this package.
 
 Gimp-Print is a suite of printer drivers that may be used with most
@@ -27,6 +27,37 @@ this package.
 
 Please read the README file for full instructions on installing this
 package.
+
+
+Gimp-Print 4.3.15 contains the following major changes over Gimp-Print
+4.3.14:
+
+1) The code for handling ink shades and drop sizes has been
+   extensively overhauled; results should be much more consistent.  In
+   particular, the same balance between ink shades is now used at all
+   resolutions for a given printer, and the driver always tries to use
+   the smallest ink drop size it usefully can.  The result is that
+   colors should be much more uniform across different resolutions
+   with the same printer (particularly with variable drop size
+   printers), and output should be smoother.  It is likely (although
+   this has not been verified) that printing is faster, too.
+
+   There may still be some issues; please report any problems.
+
+   Internally, this is implemented by means of a new "channel"
+   architecture, which is responsible for conversions of this type.
+
+2) An experimental driver for the Olympus P-300 has been added.  This
+   driver has significant limitations; the size of an image much
+   closely match the size of a print from this printer.
+
+3) The Fast and Very Fast dither algorithms are significantly
+   different from before.  The Fast dither algorithm now uses the same
+   dither pattern previously used by the Very Fast algorithm, and the
+   Very Fast algorithm only uses the largest drop size.  The Ordered
+   algorithm should now run as fast as the Fast algorithm did before.
+
+4) This package now uses gettext 0.11 internally.
 
 
 Gimp-Print 4.3.14 contains the following major changes over Gimp-Print
