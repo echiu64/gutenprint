@@ -1581,72 +1581,72 @@ static const physical_subchannel_t quadtone_subchannels[] =
 
 DECLARE_INK_CHANNEL(quadtone);
 
-static const escp2_inkname_t three_color_composite_ink = 
+static const escp2_inkname_t three_color_composite_inkset = 
 {
-  "RGB", N_ ("Three Color Composite"), 1, 0, 0, 0,
+  "RGB", N_ ("Three Color Composite"), 1, INKSET_CMYK, 0, 0,
   {
     NULL, &standard_cyan_channels,
     &standard_magenta_channels, &standard_yellow_channels
   }
 };
 
-static const escp2_inkname_t four_color_standard_ink =
+static const escp2_inkname_t four_color_standard_inkset =
 {
-  "CMYK", N_ ("Four Color Standard"), 1, 0, .25, 1.0,
+  "CMYK", N_ ("Four Color Standard"), 1, INKSET_CMYK, .25, 1.0,
   {
     &standard_black_channels, &standard_cyan_channels,
     &standard_magenta_channels, &standard_yellow_channels
   }
 };
 
-static const escp2_inkname_t six_color_photo_ink =
+static const escp2_inkname_t six_color_photo_inkset =
 {
-  "PhotoCMYK", N_ ("Six Color Photo"), 1, 1, .5, 1.0,
+  "PhotoCMYK", N_ ("Six Color Photo"), 1, INKSET_CcMmYK, .5, 1.0,
   {
     &photo_black_channels, &photo_cyan_channels,
     &photo_magenta_channels, &photo_yellow_channels
   }
 };
 
-static const escp2_inkname_t five_color_photo_composite_ink =
+static const escp2_inkname_t five_color_photo_composite_inkset =
 {
-  "PhotoCMY", N_ ("Five Color Photo Composite"), 1, 1, 0, 0,
+  "PhotoCMY", N_ ("Five Color Photo Composite"), 1, INKSET_CcMmYK, 0, 0,
   {
     NULL, &photo_cyan_channels,
     &photo_magenta_channels, &photo_yellow_channels
   }
 };
 
-static const escp2_inkname_t j_seven_color_enhanced_ink =
+static const escp2_inkname_t j_seven_color_enhanced_inkset =
 {
-  "Photo7J", N_ ("Seven Color Enhanced"), 1, 2, .5, 1.0,
+  "Photo7J", N_ ("Seven Color Enhanced"), 1, INKSET_CcMmYyK, .5, 1.0,
   {
     &photo_black_channels, &photo_cyan_channels,
     &photo_magenta_channels, &photo2_yellow_channels
   }
 };
 
-static const escp2_inkname_t j_six_color_enhanced_composite_ink =
+static const escp2_inkname_t j_six_color_enhanced_composite_inkset =
 {
-  "PhotoEnhanceJ", N_ ("Six Color Enhanced Composite"), 1, 2, .5, 1.0,
+  "PhotoEnhanceJ", N_ ("Six Color Enhanced Composite"), 1, INKSET_CcMmYyK, .5, 1.0,
   {
     NULL, &standard_cyan_channels,
     &standard_magenta_channels, &standard_yellow_channels
   }
 };
 
-static const escp2_inkname_t seven_color_photo_ink =
+static const escp2_inkname_t seven_color_photo_inkset =
 {
-  "PhotoCMYK", N_ ("Seven Color Photo"), 1, 3, .1, .25,
+  "PhotoCMYK", N_ ("Seven Color Photo"), 1, INKSET_CcMmYKk, .1, .25,
   {
     &photo2_black_channels, &photo_cyan_channels,
     &photo_magenta_channels, &photo_yellow_channels
   }
 };
 
-static const escp2_inkname_t quadtone_ink =
+static const escp2_inkname_t piezo_quadtone_inkset =
 {
-  "PiezoQuadtone", N_ ("Piezography (TM) Quadtone"), 0, 4, 0, 0,
+  "PiezoQuadtone", N_ ("Piezography (TM) Quadtone"), 0, INKSET_PIEZO_QUADTONE, 0, 0,
   {
     &quadtone_channels, NULL, NULL, NULL
   }
@@ -1662,50 +1662,50 @@ static const inklist_t name##_inklist =			\
 
 static const escp2_inkname_t *cmy_ink_types[] =
 {
-  &three_color_composite_ink
+  &three_color_composite_inkset
 };
 
 DECLARE_INKLIST(cmy);
 
 static const escp2_inkname_t *standard_ink_types[] =
 {
-  &four_color_standard_ink,
-  &three_color_composite_ink,
-  &quadtone_ink
+  &four_color_standard_inkset,
+  &three_color_composite_inkset,
+  &piezo_quadtone_inkset
 };
 
 DECLARE_INKLIST(standard);
 
 static const escp2_inkname_t *photo_ink_types[] =
 {
-  &six_color_photo_ink,
-  &five_color_photo_composite_ink,
-  &four_color_standard_ink,
-  &three_color_composite_ink,
-  &quadtone_ink
+  &six_color_photo_inkset,
+  &five_color_photo_composite_inkset,
+  &four_color_standard_inkset,
+  &three_color_composite_inkset,
+  &piezo_quadtone_inkset
 };
 
 DECLARE_INKLIST(photo);
 
 static const escp2_inkname_t *photo7_japan_ink_types[] =
 {
-  &j_seven_color_enhanced_ink,
-  &j_six_color_enhanced_composite_ink,
-  &four_color_standard_ink,
-  &three_color_composite_ink,
-  &quadtone_ink
+  &j_seven_color_enhanced_inkset,
+  &j_six_color_enhanced_composite_inkset,
+  &four_color_standard_inkset,
+  &three_color_composite_inkset,
+  &piezo_quadtone_inkset
 };
 
 DECLARE_INKLIST(photo7_japan);
 
 static const escp2_inkname_t *photo7_ink_types[] =
 {
-  &seven_color_photo_ink,
-  &six_color_photo_ink,
-  &five_color_photo_composite_ink,
-  &four_color_standard_ink,
-  &three_color_composite_ink,
-  &quadtone_ink
+  &seven_color_photo_inkset,
+  &six_color_photo_inkset,
+  &five_color_photo_composite_inkset,
+  &four_color_standard_inkset,
+  &three_color_composite_inkset,
+  &piezo_quadtone_inkset
 };
 
 DECLARE_INKLIST(photo7);

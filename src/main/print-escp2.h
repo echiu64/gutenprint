@@ -256,12 +256,21 @@ typedef struct
   int n_subchannels;
 } ink_channel_t;
 
+typedef enum
+{
+  INKSET_CMYK           = 0,
+  INKSET_CcMmYK         = 1,
+  INKSET_CcMmYyK        = 2,
+  INKSET_CcMmYKk        = 3,
+  INKSET_PIEZO_QUADTONE = 4
+} inkset_id_t;
+
 typedef struct
 {
   const char *name;
   const char *text;
   int is_color;
-  int inkset;
+  inkset_id_t inkset;
   double k_lower;
   double k_upper;
   const ink_channel_t *channels[NCOLORS];
