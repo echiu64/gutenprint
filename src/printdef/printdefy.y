@@ -48,7 +48,7 @@ const char *printfuncs[] =
 
 const size_t nprintfuncs = sizeof(printfuncs) / sizeof(const char *);
 
-static void
+void
 initialize_the_printer(const char *name, const char *driver)
 {
   strncpy(thePrinter.printvars.output_to, name, 63);
@@ -65,7 +65,7 @@ initialize_the_printer(const char *name, const char *driver)
   thePrinter.printvars.density = 1.0;
 }
 
-static void
+void
 output_the_printer(void)
 {
   printf("  {\n");

@@ -105,6 +105,7 @@ static gint	       old_top;		/* Previous position */
 static gint	       old_left;	/* Previous position */
 static gint	       buttons_pressed = 0;
 static gint	       preview_active = 0;
+static gint	       buttons_mask = 0;
 static gint            mouse_button = -1;	/* Button being dragged with */
 
 static gint            printable_left;	/* Left pixel column of page */
@@ -1024,6 +1025,7 @@ gimp_create_main_window (void)
 static void
 gimp_scaling_update (GtkAdjustment *adjustment)
 {
+  buttons_pressed = preview_active = 0;
   if (stp_get_scaling(vars) != adjustment->value)
     {
       if (GTK_TOGGLE_BUTTON (scaling_ppi)->active)
@@ -1048,6 +1050,7 @@ gimp_scaling_callback (GtkWidget *widget)
   gdouble max_ppi_scaling;
   gdouble min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
   gdouble current_scale;
+  buttons_pressed = preview_active = 0;
 
   if (suppress_scaling_callback)
     return;
@@ -1283,6 +1286,7 @@ gimp_do_misc_updates (void)
 static void
 gimp_position_callback (GtkWidget *widget)
 {
+  buttons_pressed = preview_active = 0;
   suppress_preview_update++;
   if (widget == recenter_button)
     {
@@ -1384,6 +1388,7 @@ gimp_plist_callback (GtkWidget *widget,
   gchar		**ink_types;		/* Ink type strings */
   gint		num_resolutions;	/* Number of resolutions */
   gchar		**resolutions;		/* Resolution strings */
+  buttons_pressed = preview_active = 0;
 
   if (widget)
     {
@@ -1540,6 +1545,7 @@ gimp_media_size_callback (GtkWidget *widget,
 			  gpointer   data)
 {
   gchar s[32];
+  buttons_pressed = preview_active = 0;
   if (widget == custom_size_width)
     {
       gint width_limit, height_limit;
@@ -1676,6 +1682,7 @@ gimp_media_type_callback (GtkWidget *widget,
 			  gpointer   data)
 {
   const gchar *new_media_type = Combo_get_text (media_type_combo);
+  buttons_pressed = preview_active = 0;
   stp_set_media_type(vars, new_media_type);
   stp_set_media_type(plist[plist_current].v, new_media_type);
   gimp_preview_update ();
@@ -1689,6 +1696,7 @@ gimp_media_source_callback (GtkWidget *widget,
 			    gpointer   data)
 {
   const gchar *new_media_source = Combo_get_text (media_source_combo);
+  buttons_pressed = preview_active = 0;
   stp_set_media_source(vars, new_media_source);
   stp_set_media_source(plist[plist_current].v, new_media_source);
   gimp_preview_update ();
@@ -1702,6 +1710,7 @@ gimp_ink_type_callback (GtkWidget *widget,
 			gpointer   data)
 {
   const gchar *new_ink_type = Combo_get_text (ink_type_combo);
+  buttons_pressed = preview_active = 0;
   stp_set_ink_type(vars, new_ink_type);
   stp_set_ink_type(plist[plist_current].v, new_ink_type);
   gimp_preview_update ();
@@ -1715,6 +1724,7 @@ gimp_resolution_callback (GtkWidget *widget,
 			  gpointer   data)
 {
   const gchar *new_resolution = Combo_get_text (resolution_combo);
+  buttons_pressed = preview_active = 0;
   stp_set_resolution(vars, new_resolution);
   stp_set_resolution(plist[plist_current].v, new_resolution);
   gimp_preview_update ();
@@ -1727,6 +1737,7 @@ static void
 gimp_orientation_callback (GtkWidget *widget,
 			   gpointer   data)
 {
+  buttons_pressed = preview_active = 0;
   if (stp_get_orientation(vars) != (gint) data)
     {
       stp_set_orientation(vars, (gint) data);
@@ -1746,6 +1757,7 @@ static void
 gimp_output_type_callback (GtkWidget *widget,
 			   gpointer   data)
 {
+  buttons_pressed = preview_active = 0;
   if (GTK_TOGGLE_BUTTON (widget)->active)
     {
       stp_set_output_type(vars, (gint) data);
@@ -1766,6 +1778,7 @@ static void
 gimp_unit_callback (GtkWidget *widget,
 			   gpointer   data)
 {
+  buttons_pressed = preview_active = 0;
   if (GTK_TOGGLE_BUTTON (widget)->active)
     {
       stp_set_unit(vars, (gint) data);
@@ -1781,6 +1794,7 @@ static void
 gimp_image_type_callback (GtkWidget *widget,
 			  gpointer   data)
 {
+  buttons_pressed = preview_active = 0;
   if (GTK_TOGGLE_BUTTON (widget)->active)
     {
       stp_set_image_type(vars, (gint) data);
@@ -1842,6 +1856,7 @@ gimp_printandsave_callback (void)
 static void
 gimp_save_callback (void)
 {
+  buttons_pressed = preview_active = 0;
   printrc_save ();
 }
 
@@ -1894,6 +1909,7 @@ gimp_setup_open_callback (void)
 {
   static int first_time = 1;
 
+  buttons_pressed = preview_active = 0;
   gimp_setup_update ();
 
   gtk_widget_show (setup_dialog);
@@ -1912,6 +1928,7 @@ gimp_setup_open_callback (void)
 static void
 gimp_new_printer_open_callback (void)
 {
+  buttons_pressed = preview_active = 0;
   gtk_entry_set_text(GTK_ENTRY(new_printer_entry), "");
   gtk_widget_show (new_printer_dialog);
 }
@@ -1922,6 +1939,7 @@ gimp_new_printer_open_callback (void)
 static void
 gimp_setup_ok_callback (void)
 {
+  buttons_pressed = preview_active = 0;
   stp_set_driver(vars, stp_printer_get_driver(current_printer));
   stp_set_driver(plist[plist_current].v,
 		 stp_printer_get_driver(current_printer));
@@ -1945,6 +1963,7 @@ gimp_new_printer_ok_callback (void)
 {
   const char *data = gtk_entry_get_text(GTK_ENTRY(new_printer_entry));
   gp_plist_t key;
+  buttons_pressed = preview_active = 0;
   initialize_printer(&key);
   (void) strncpy(key.name, data, sizeof(key.name) - 1);
   if (strlen(key.name))
@@ -1984,6 +2003,7 @@ gimp_print_driver_callback (GtkWidget      *widget, /* I - Driver list */
 			    gpointer        data)   /* I - Data */
 {
   stp_vars_t printvars;
+  buttons_pressed = preview_active = 0;
   data = gtk_clist_get_row_data (GTK_CLIST (widget), row);
   current_printer = stp_get_printer_by_index ((gint) data);
 
@@ -2013,6 +2033,7 @@ gimp_print_driver_callback (GtkWidget      *widget, /* I - Driver list */
 static void
 gimp_ppd_browse_callback (void)
 {
+  buttons_pressed = preview_active = 0;
   gtk_file_selection_set_filename (GTK_FILE_SELECTION (ppd_browser),
 				   gtk_entry_get_text (GTK_ENTRY (ppd_file)));
   gtk_widget_show (ppd_browser);
@@ -2024,6 +2045,7 @@ gimp_ppd_browse_callback (void)
 static void
 gimp_ppd_ok_callback (void)
 {
+  buttons_pressed = preview_active = 0;
   gtk_widget_hide (ppd_browser);
   gtk_entry_set_text
     (GTK_ENTRY (ppd_file),
@@ -2522,25 +2544,37 @@ gimp_preview_button_callback (GtkWidget      *widget,
 	  old_left = stp_get_left(vars);
 	  old_top = stp_get_top(vars);
 	  mouse_button = event->button;
+	  buttons_mask = 1 << event->button;
 	  buttons_pressed++;
 	  preview_active = 1;
 	}
       else if (preview_active == 1)
 	{
-	  preview_active = -1;
-	  stp_set_left(vars, old_left);
-	  stp_set_top(vars, old_top);
-	  stp_set_left(plist[plist_current].v, stp_get_left(vars));
-	  stp_set_top(plist[plist_current].v, stp_get_top(vars));
-	  gimp_preview_update ();
-	  buttons_pressed++;
+	  if ((buttons_mask & (1 << event->button)) == 0)
+	    {
+	      preview_active = -1;
+	      stp_set_left(vars, old_left);
+	      stp_set_top(vars, old_top);
+	      stp_set_left(plist[plist_current].v, stp_get_left(vars));
+	      stp_set_top(plist[plist_current].v, stp_get_top(vars));
+	      gimp_preview_update ();
+	      buttons_mask |= 1 << event->button;
+	      buttons_pressed++;
+	    }
 	}
       else
-	buttons_pressed++;
+	{
+	  if ((buttons_mask & (1 << event->button)) == 0)
+	    {
+	      buttons_mask |= 1 << event->button;
+	      buttons_pressed++;
+	    }
+	}
     }
   else
     {
       buttons_pressed--;
+      buttons_mask &= ~(1 << event->button);
       if (buttons_pressed == 0)
 	preview_active = 0;
     }
@@ -2562,16 +2596,7 @@ gimp_preview_motion_callback (GtkWidget      *widget,
       stp_set_top(vars, 72 * (printable_height - print_height) / 20);
     }
 
-  if (mouse_button == 1)
-    {
-      stp_set_left(vars, stp_get_left(vars) +
-		   72 * (event->x - mouse_x) / preview_ppi);
-      stp_set_top(vars, stp_get_top(vars) +
-		  72 * (event->y - mouse_y) / preview_ppi);
-      mouse_x = event->x;
-      mouse_y = event->y;
-    }
-  else if (mouse_button == 2)
+  if (mouse_button == 2)
     {
       int changes = 0;
       int x_threshold = MAX (1, (preview_ppi * print_width) / 72);
@@ -2627,20 +2652,50 @@ gimp_preview_motion_callback (GtkWidget      *widget,
     }
   else
     {
-      stp_set_left(vars, stp_get_left(vars) + event->x - mouse_x);
-      stp_set_top(vars, stp_get_top(vars) + event->y - mouse_y);
+      int old_top = stp_get_top(vars);
+      int old_left = stp_get_left(vars);
+      int new_top = old_top;
+      int new_left = old_left;
+      int changes = 0;
+      if (mouse_button == 1)
+	{
+	  new_top += 72 * (event->y - mouse_y) / preview_ppi;
+	  new_left += 72 * (event->x - mouse_x) / preview_ppi;
+	}
+      else
+	{
+	  new_top += event->y - mouse_y;
+	  new_left += event->x - mouse_x;
+	}
+      if (new_top < 0)
+	new_top = 0;
+      if (new_top > (bottom - top) - print_height)
+	new_top = (bottom - top) - print_height;
+      if (new_left < 0)
+	new_left = 0;
+      if (new_left > (right - left) - print_width)
+	new_left = (right - left) - print_width;
+
+      if (new_top != old_top)
+	{
+	  stp_set_top(vars, new_top);
+	  changes = 1;
+	}
+      if (new_left != old_left)
+	{
+	  stp_set_left(vars, new_left);
+	  changes = 1;
+	}
       mouse_x = event->x;
       mouse_y = event->y;
+      if (!changes)
+	return;
     }
 
-  if (stp_get_left(vars) < 0)
-    stp_set_left(vars, 0);
-
-  if (stp_get_top(vars) < 0)
-    stp_set_top(vars, 0);
   stp_set_left(plist[plist_current].v, stp_get_left(vars));
   stp_set_top(plist[plist_current].v, stp_get_top(vars));
 
   gimp_preview_update ();
 
 }
+

@@ -2234,6 +2234,9 @@ typedef struct
   double cyan;
   double magenta;
   double yellow;
+  double p_cyan;
+  double p_magenta;
+  double p_yellow;
   double saturation;
   double gamma;
   int feed_adjustment;
@@ -2246,37 +2249,52 @@ typedef struct
 
 static const paper_t escp2_paper_list[] =
 {
-  {N_("Plain Paper"),                1, 0, 0.80, .1, .5, 0, 0, 0, 1, 1.0,
-   0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
-  {N_("Plain Paper Fast Load"),      5, 0, 0.80, .1, .5, 0, 0, 0, 1, 1.0,
-   0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
-  {N_("Postcard"),                   2, 0, 0.83, .2, .6, 0, 0, 0, 1, 1.0,
-   0x00, 0x00, 0x02, NULL, plain_paper_lum_adjustment, NULL},
-  {N_("Glossy Film"),                3, 0, 1.00 ,1, .999, 0, 0, 0, 1, 1.0,
-   0x6d, 0x00, 0x01, NULL, plain_paper_lum_adjustment, NULL},
-  {N_("Transparencies"),             3, 0, 1.00, 1, .999, 0, 0, 0, 1.0, 1.0,
-   0x6d, 0x00, 0x02, NULL, plain_paper_lum_adjustment, NULL},
-  {N_("Envelopes"),                  4, 0, 0.80, .125, .5, 0, 0, 0, 1, 1.0,
-   0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
-  {N_("Back Light Film"),            6, 0, 1.00, 1, .999, 0, 0, 0, 1, 1.0,
-   0x6d, 0x00, 0x01, NULL, NULL, NULL},
-  {N_("Matte Paper"),                7, 0, 0.85, 1.0, .999, 0, 0, 0, 1, 1.0,
-   0x00, 0x00, 0x02, NULL, NULL, NULL},
-  {N_("Inkjet Paper"),               7, 0, 0.85, .25, .6, 0, 0, 0, 1, 1.0,
-   0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
-  {N_("Photo Quality Inkjet Paper"), 7, 0, 1.00, 1.0, .999, 0, 0, 0, 1, 1.0,
-   0x6b, 0x1a, 0x01, NULL, NULL, NULL},
-  {N_("Photo Paper"),                8, 0, 1.00, 1.0, .9, 0, 0, 0, 1, 1.0,
-   0x67, 0x00, 0x02, NULL, NULL, NULL},
-  {N_("Premium Glossy Photo Paper"), 8, 0, 1.10, 1, .999, 0, .03, 0, 1, 1.0,
-   0x80, 0x00, 0x02,
+  {N_("Plain Paper"),                1, 0, 0.80, .1, .5,
+   1.0, 1.0, 1.0, .9, 1.05, 1.15,
+   1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
+  {N_("Plain Paper Fast Load"),      5, 0, 0.80, .1, .5,
+   1.0, 1.0, 1.0, .9, 1.05, 1.15,
+   1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
+  {N_("Postcard"),                   2, 0, 0.83, .2, .6,
+   1.0, 1.0, 1.0, .9, 1.0, 1.1,
+   1, 1.0, 0x00, 0x00, 0x02, NULL, plain_paper_lum_adjustment, NULL},
+  {N_("Glossy Film"),                3, 0, 1.00 ,1, .999,
+   1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+   1, 1.0, 0x6d, 0x00, 0x01, NULL, plain_paper_lum_adjustment, NULL},
+  {N_("Transparencies"),             3, 0, 1.00, 1, .999,
+   1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+   1.0, 1.0, 0x6d, 0x00, 0x02, NULL, plain_paper_lum_adjustment, NULL},
+  {N_("Envelopes"),                  4, 0, 0.80, .125, .5,
+   1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+   1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
+  {N_("Back Light Film"),            6, 0, 1.00, 1, .999,
+   1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+   1, 1.0, 0x6d, 0x00, 0x01, NULL, NULL, NULL},
+  {N_("Matte Paper"),                7, 0, 0.85, 1.0, .999,
+   1.05, .9, 1.05, .9, 1.0, 1.1,
+   1, 1.0, 0x00, 0x00, 0x02, NULL, NULL, NULL},
+  {N_("Inkjet Paper"),               7, 0, 0.85, .25, .6,
+   1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+   1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
+  {N_("Photo Quality Inkjet Paper"), 7, 0, 1.00, 1.0, .999,
+   1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+   1, 1.0, 0x6b, 0x1a, 0x01, NULL, NULL, NULL},
+  {N_("Photo Paper"),                8, 0, 1.00, 1.0, .9,
+   1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+   1, 1.0, 0x67, 0x00, 0x02, NULL, NULL, NULL},
+  {N_("Premium Glossy Photo Paper"), 8, 0, 1.10, 1, .999,
+   1.0, 1.0, 1.0, 1.0, 1.03, 1.0,
+   1, 1.0, 0x80, 0x00, 0x02,
    pgpp_hue_adjustment, pgpp_lum_adjustment, pgpp_sat_adjustment},
-  {N_("Premium Luster Photo Paper"), 8, 0, 1.00, 1, .999, 0, 0, 0, 1.0, 1.0,
-   0x80, 0x00, 0x02, NULL, NULL, NULL},
-  {N_("Photo Quality Glossy Paper"), 6, 0, 1.00, 1, .999, 0, 0, 0, 1.0, 1.0,
-   0x6b, 0x1a, 0x01, NULL, NULL, NULL},
-  {N_("Other"),                      0, 0, 0.80, 0.125, .5, 0, 0, 0, 1, 1.0,
-   0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
+  {N_("Premium Luster Photo Paper"), 8, 0, 1.00, 1, .999,
+   1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+   1.0, 1.0, 0x80, 0x00, 0x02, NULL, NULL, NULL},
+  {N_("Photo Quality Glossy Paper"), 6, 0, 1.00, 1, .999,
+   1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+   1.0, 1.0, 0x6b, 0x1a, 0x01, NULL, NULL, NULL},
+  {N_("Other"),                      0, 0, 0.80, 0.125, .5,
+   1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+   1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
 };
 
 static const int paper_type_count = sizeof(escp2_paper_list) / sizeof(paper_t);
@@ -3521,9 +3539,18 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     stp_set_density(nv, 1.0);
   if (ncolors == 1)
     stp_set_gamma(nv, stp_get_gamma(nv) / .8);
-  stp_set_cyan(nv, stp_get_cyan(nv) + pt->cyan);
-  stp_set_magenta(nv, stp_get_magenta(nv) + pt->magenta);
-  stp_set_yellow(nv, stp_get_yellow(nv) + pt->yellow);
+  if (ncolors >= 5)
+    {
+      stp_set_cyan(nv, stp_get_cyan(nv) * pt->p_cyan);
+      stp_set_magenta(nv, stp_get_magenta(nv) * pt->p_magenta);
+      stp_set_yellow(nv, stp_get_yellow(nv) * pt->p_yellow);
+    }
+  else
+    {
+      stp_set_cyan(nv, stp_get_cyan(nv) * pt->cyan);
+      stp_set_magenta(nv, stp_get_magenta(nv) * pt->magenta);
+      stp_set_yellow(nv, stp_get_yellow(nv) * pt->yellow);
+    }
   stp_set_saturation(nv, stp_get_saturation(nv) * pt->saturation);
   stp_set_gamma(nv, stp_get_gamma(nv) * pt->gamma);
   stp_compute_lut(nv, 256);
