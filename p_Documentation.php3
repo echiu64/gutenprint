@@ -16,6 +16,6 @@ href="users-guide.pdf">here</a>.</p>
 
 <p>The <a href="developer-html/gimpprint.html">developer's reference
 manual</a> is available <a
-href="developer-html/gimp-print.html">here</a> (PDF version is <a href="gimpprint.pdf">here</a>).</p>
+href="developer-html/gimpprint.html">here</a> (PDF version is <a href="gimpprint.pdf">here</a>).</p>
 
 <?require('standard_html_footer.php3');?>
