@@ -41,10 +41,9 @@ pkgsysconfdir = $(cups_conf_serverroot)
 cupsexec_backenddir = $(pkglibdir)/backend
 cupsexec_filterdir = $(pkglibdir)/filter
 cups_modeldir = $(pkgdatadir)/model/gimp-print/
-CUPS_VERSION = @GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@
 CUPS_PPD_NICKNAME_STRING=$(empty)\ -\ CUPS+Gimp-Print\ v$(empty)
 
-DEFS = -I. -I$(srcdir) -I../.. $(AM_CFLAGS) -DGENPPD_PPD_PREFIX=\"$(cups_modeldir)\" -DGIMP_PRINT_VERSION=\"$(VERSION)\" @CUPS_CFLAGS@ @DEFS@ $(GIMPPRINT_CFLAGS) -DGIMPPRINT_CUPS_VERSION=\"$(CUPS_VERSION)\" -DPPD_NICKNAME_STRING=\"$(CUPS_PPD_NICKNAME_STRING)\"
+DEFS = -I. -I$(srcdir) -I../.. $(AM_CFLAGS) -DGENPPD_PPD_PREFIX=\"$(cups_modeldir)\" @CUPS_CFLAGS@ @DEFS@ $(GIMPPRINT_CFLAGS) -DPPD_NICKNAME_STRING=\"$(CUPS_PPD_NICKNAME_STRING)\"
 
 
 ## Programs

@@ -447,12 +447,16 @@ dnl GNU gettext checks.
 AM_GNU_GETTEXT_VERSION([0.11.5])
 AM_GNU_GETTEXT([external])
 
+GIMPPRINT_RELEASE_VERSION=${GIMPPRINT_MAJOR_VERSION}.${GIMPPRINT_MINOR_VERSION}
+AH_TEMPLATE(GIMPPRINT_RELEASE_VERSION,, [Gimp-Print release version])
+AC_DEFINE_UNQUOTED(GIMPPRINT_RELEASE_VERSION, "${GIMPPRINT_RELEASE_VERSION}")
+
 dnl Set PACKAGE_LOCALE_DIR in config.h
-AH_TEMPLATE(PACKAGE_LOCALE_DIR, [Package locale directory])
+AH_TEMPLATE(PACKAGE_LOCALE_DIR,, [Package locale directory])
 if test "x${prefix}" = "xNONE"; then
-  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, ["${ac_default_prefix}/${DATADIRNAME}/locale"])
+  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, ["${ac_default_prefix}/share/locale"])
 else
-  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, ["${prefix}/${DATADIRNAME}/locale"])
+  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, ["${prefix}/share/locale"])
 fi
 
 dnl Set PACKAGE_DATA_DIR in config.h.
@@ -813,10 +817,10 @@ AC_CONFIG_FILES([src/Makefile])
 AC_CONFIG_FILES([src/cups/Makefile])
 AC_CONFIG_FILES([src/cups/cups-genppdconfig],
                 [chmod +x src/cups/cups-genppdconfig;
-		 mv src/cups/cups-genppdconfig src/cups/cups-genppdconfig.${GIMPPRINT_CUPS_VERSION}])
+		 mv src/cups/cups-genppdconfig src/cups/cups-genppdconfig.${GIMPPRINT_RELEASE_VERSION}])
 AC_CONFIG_FILES([src/cups/cups-genppdupdate],
                 [chmod +x src/cups/cups-genppdupdate;
-		 mv src/cups/cups-genppdupdate src/cups/cups-genppdupdate.${GIMPPRINT_CUPS_VERSION}])
+		 mv src/cups/cups-genppdupdate src/cups/cups-genppdupdate.${GIMPPRINT_RELEASE_VERSION}])
 AC_CONFIG_FILES([src/escputil/Makefile])
 AC_CONFIG_FILES([src/foomatic/Makefile])
 AC_CONFIG_FILES([src/foomatic/foomatic-generator],
@@ -838,7 +842,7 @@ echo "Finished configuring."
 echo "Type 'make' to build the package"
 echo "then 'make install' to install it."
 ],
-[GIMPPRINT_CUPS_VERSION=${GIMPPRINT_MAJOR_VERSION}.${GIMPPRINT_MINOR_VERSION}]
+[GIMPPRINT_RELEASE_VERSION=${GIMPPRINT_RELEASE_VERSION}]
 )
 
 AC_OUTPUT

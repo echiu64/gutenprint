@@ -837,7 +837,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
   gzputs(fp, "*cupsVersion:	1.1\n");
   gzprintf(fp, "*cupsModelNumber: \"0\"\n");
   gzputs(fp, "*cupsManualCopies: True\n");
-  gzprintf(fp, "*cupsFilter:	\"application/vnd.cups-raster 100 rastertogimpprint.%s\"\n", GIMPPRINT_CUPS_VERSION);
+  gzprintf(fp, "*cupsFilter:	\"application/vnd.cups-raster 100 rastertogimpprint.%s\"\n", GIMPPRINT_RELEASE_VERSION);
   if (strcasecmp(manufacturer, "EPSON") == 0)
     gzputs(fp, "*cupsFilter:	\"application/vnd.cups-command 33 commandtoepson\"\n");
   gzputs(fp, "\n");
