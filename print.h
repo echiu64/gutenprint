@@ -173,6 +173,21 @@ typedef void 	(*convert_t)(unsigned char *in, unsigned short *out, int width,
 
 extern void *	init_dither(int in_width, int out_width,
 			    int horizontal_overdensity);
+extern void 	dither_set_black_lower(void *vd, double);
+extern void 	dither_set_black_upper(void *vd, double);
+extern void	dither_set_black_levels(void *vd, double, double, double);
+extern void 	dither_set_randomizers(void *vd, int, int, int, int);
+extern void 	dither_set_ink_darkness(void *vd, double, double, double);
+extern void 	dither_set_light_inks(void *vd, double, double, double);
+extern void	dither_set_c_levels(void *vd, int nlevels, double *levels);
+extern void	dither_set_lc_levels(void *vd, int nlevels, double *levels);
+extern void	dither_set_m_levels(void *vd, int nlevels, double *levels);
+extern void	dither_set_lm_levels(void *vd, int nlevels, double *levels);
+extern void	dither_set_y_levels(void *vd, int nlevels, double *levels);
+extern void	dither_set_ly_levels(void *vd, int nlevels, double *levels);
+extern void	dither_set_k_levels(void *vd, int nlevels, double *levels);
+
+
 extern void	free_dither(void *);
 extern void	dither_black(unsigned short *, int, void *, unsigned char *);
 

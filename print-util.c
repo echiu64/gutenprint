@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.67  2000/02/06 04:36:20  rlk
+ *   Fill in the setter functions for the dither stuff
+ *
  *   Revision 1.66  2000/02/06 03:59:09  rlk
  *   More work on the generalized dithering parameters stuff.  At this point
  *   it really looks like a proper object.  Also dynamically allocate the error
@@ -398,7 +401,7 @@ typedef struct dither
   int y_randomizer;
   int k_randomizer;
 
-  int k_clevel;			/* Amount of each ink (in 16ths) required */
+  int k_clevel;			/* Amount of each ink (in 64ths) required */
   int k_mlevel;			/* to create equivalent black */
   int k_ylevel;
 
@@ -484,9 +487,9 @@ init_dither(int in_width, int out_width, int horizontal_overdensity)
   d->m_randomizer = 0;
   d->y_randomizer = 0;
   d->k_randomizer = 4;
-  d->k_clevel = 32;
-  d->k_mlevel = 32;
-  d->k_ylevel = 32;
+  d->k_clevel = 128;
+  d->k_mlevel = 128;
+  d->k_ylevel = 128;
   d->c_darkness = 22;
   d->m_darkness = 16;
   d->y_darkness = 10;
@@ -571,6 +574,261 @@ init_dither(int in_width, int out_width, int horizontal_overdensity)
 }  
 
 void
+dither_set_black_lower(void *vd, double k_lower)
+{
+  dither_t *d = (dither_t *) vd;
+  d->k_lower = (int) (k_lower * 65536);
+}
+
+void
+dither_set_black_upper(void *vd, double k_upper)
+{
+  dither_t *d = (dither_t *) vd;
+  d->k_upper = (int) (k_upper * 65536);
+}
+
+void
+dither_set_black_levels(void *vd, double c, double m, double y)
+{
+  dither_t *d = (dither_t *) vd;
+  d->k_clevel = (int) (c * 64);
+  d->k_mlevel = (int) (m * 64);
+  d->k_ylevel = (int) (y * 64);
+}
+
+void
+dither_set_randomizers(void *vd, int c, int m, int y, int k)
+{
+  dither_t *d = (dither_t *) vd;
+  d->c_randomizer = c;
+  d->m_randomizer = m;
+  d->y_randomizer = y;
+  d->k_randomizer = k;
+}
+
+void
+dither_set_ink_darkness(void *vd, double c, double m, double y)
+{
+  dither_t *d = (dither_t *) vd;
+  d->c_darkness = (int) (c * 64);
+  d->m_darkness = (int) (m * 64);
+  d->y_darkness = (int) (y * 64);
+}
+
+void
+dither_set_light_inks(void *vd, double c, double m, double y)
+{
+  dither_t *d = (dither_t *) vd;
+  d->lc_level = (int) (c * 65536);
+  d->lm_level = (int) (m * 65536);
+  d->ly_level = (int) (y * 65536);
+}
+
+void
+dither_set_c_levels(void *vd, int nlevels, double *levels)
+{
+  int i;
+  dither_t *d = (dither_t *) vd;
+  if (d->c_transitions)
+    {
+      free(d->c_transitions);
+      free(d->c_levels);
+    }
+  d->c_transitions = malloc(nlevels * sizeof(int));
+  d->c_levels = malloc(nlevels * sizeof(int));
+  d->nc_l = nlevels;
+  for (i = 0; i < nlevels; i++)
+    {
+      d->c_levels[i] = (int) (levels[i] * 65536);
+      if (i > 0)
+	d->c_transitions[i] = (d->c_levels[i] + d->c_levels[i-1]) / 2;
+      else
+	d->c_transitions[i] = 0;
+    }
+  d->nc_log = 0;
+  while (nlevels > 1)
+    {
+      d->nc_log++;
+      nlevels >>= 1;
+    }
+}
+      
+
+void
+dither_set_lc_levels(void *vd, int nlevels, double *levels)
+{
+  int i;
+  dither_t *d = (dither_t *) vd;
+  if (d->lc_transitions)
+    {
+      free(d->lc_transitions);
+      free(d->lc_levels);
+    }
+  d->lc_transitions = malloc(nlevels * sizeof(int));
+  d->lc_levels = malloc(nlevels * sizeof(int));
+  d->nlc_l = nlevels;
+  for (i = 0; i < nlevels; i++)
+    {
+      d->lc_levels[i] = (int) (levels[i] * 65536);
+      if (i > 0)
+	d->lc_transitions[i] = (d->lc_levels[i] + d->lc_levels[i-1]) / 2;
+      else
+	d->lc_transitions[i] = 0;
+    }
+  d->nlc_log = 0;
+  while (nlevels > 1)
+    {
+      d->nlc_log++;
+      nlevels >>= 1;
+    }
+}
+
+void
+dither_set_m_levels(void *vd, int nlevels, double *levels)
+{
+  int i;
+  dither_t *d = (dither_t *) vd;
+  if (d->m_transitions)
+    {
+      free(d->m_transitions);
+      free(d->m_levels);
+    }
+  d->m_transitions = malloc(nlevels * sizeof(int));
+  d->m_levels = malloc(nlevels * sizeof(int));
+  d->nm_l = nlevels;
+  for (i = 0; i < nlevels; i++)
+    {
+      d->m_levels[i] = (int) (levels[i] * 65536);
+      if (i > 0)
+	d->m_transitions[i] = (d->m_levels[i] + d->m_levels[i-1]) / 2;
+      else
+	d->m_transitions[i] = 0;
+    }
+  d->nm_log = 0;
+  while (nlevels > 1)
+    {
+      d->nm_log++;
+      nlevels >>= 1;
+    }
+}
+
+void
+dither_set_lm_levels(void *vd, int nlevels, double *levels)
+{
+  int i;
+  dither_t *d = (dither_t *) vd;
+  if (d->lm_transitions)
+    {
+      free(d->lm_transitions);
+      free(d->lm_levels);
+    }
+  d->lm_transitions = malloc(nlevels * sizeof(int));
+  d->lm_levels = malloc(nlevels * sizeof(int));
+  d->nlm_l = nlevels;
+  for (i = 0; i < nlevels; i++)
+    {
+      d->lm_levels[i] = (int) (levels[i] * 65536);
+      if (i > 0)
+	d->lm_transitions[i] = (d->lm_levels[i] + d->lm_levels[i-1]) / 2;
+      else
+	d->lm_transitions[i] = 0;
+    }
+  d->nlm_log = 0;
+  while (nlevels > 1)
+    {
+      d->nlm_log++;
+      nlevels >>= 1;
+    }
+}
+      
+void
+dither_set_y_levels(void *vd, int nlevels, double *levels)
+{
+  int i;
+  dither_t *d = (dither_t *) vd;
+  if (d->y_transitions)
+    {
+      free(d->y_transitions);
+      free(d->y_levels);
+    }
+  d->y_transitions = malloc(nlevels * sizeof(int));
+  d->y_levels = malloc(nlevels * sizeof(int));
+  d->ny_l = nlevels;
+  for (i = 0; i < nlevels; i++)
+    {
+      d->y_levels[i] = (int) (levels[i] * 65536);
+      if (i > 0)
+	d->y_transitions[i] = (d->y_levels[i] + d->y_levels[i-1]) / 2;
+      else
+	d->y_transitions[i] = 0;
+    }
+  d->ny_log = 0;
+  while (nlevels > 1)
+    {
+      d->ny_log++;
+      nlevels >>= 1;
+    }
+}
+      
+void
+dither_set_ly_levels(void *vd, int nlevels, double *levels)
+{
+  int i;
+  dither_t *d = (dither_t *) vd;
+  if (d->ly_transitions)
+    {
+      free(d->ly_transitions);
+      free(d->ly_levels);
+    }
+  d->ly_transitions = malloc(nlevels * sizeof(int));
+  d->ly_levels = malloc(nlevels * sizeof(int));
+  d->nly_l = nlevels;
+  for (i = 0; i < nlevels; i++)
+    {
+      d->ly_levels[i] = (int) (levels[i] * 65536);
+      if (i > 0)
+	d->ly_transitions[i] = (d->ly_levels[i] + d->ly_levels[i-1]) / 2;
+      else
+	d->ly_transitions[i] = 0;
+    }
+  d->nly_log = 0;
+  while (nlevels > 1)
+    {
+      d->nly_log++;
+      nlevels >>= 1;
+    }
+}
+      
+void
+dither_set_k_levels(void *vd, int nlevels, double *levels)
+{
+  int i;
+  dither_t *d = (dither_t *) vd;
+  if (d->k_transitions)
+    {
+      free(d->k_transitions);
+      free(d->k_levels);
+    }
+  d->k_transitions = malloc(nlevels * sizeof(int));
+  d->k_levels = malloc(nlevels * sizeof(int));
+  d->nk_l = nlevels;
+  for (i = 0; i < nlevels; i++)
+    {
+      d->k_levels[i] = (int) (levels[i] * 65536);
+      if (i > 0)
+	d->k_transitions[i] = (d->k_levels[i] + d->k_levels[i-1]) / 2;
+      else
+	d->k_transitions[i] = 0;
+    }
+  d->nk_log = 0;
+  while (nlevels > 1)
+    {
+      d->nk_log++;
+      nlevels >>= 1;
+    }
+}
+
+void
 free_dither(void *vd)
 {
   dither_t *d = (dither_t *) vd;
@@ -589,18 +847,32 @@ free_dither(void *vd)
     }
   free(d->c_transitions);
   free(d->c_levels);
+  d->c_transitions = NULL;
+  d->c_levels = NULL;
   free(d->lc_transitions);
   free(d->lc_levels);
+  d->lc_transitions = NULL;
+  d->lc_levels = NULL;
   free(d->m_transitions);
   free(d->m_levels);
+  d->m_transitions = NULL;
+  d->m_levels = NULL;
   free(d->lm_transitions);
   free(d->lm_levels);
+  d->lm_transitions = NULL;
+  d->lm_levels = NULL;
   free(d->y_transitions);
   free(d->y_levels);
+  d->y_transitions = NULL;
+  d->y_levels = NULL;
   free(d->ly_transitions);
   free(d->ly_levels);
+  d->ly_transitions = NULL;
+  d->ly_levels = NULL;
   free(d->k_transitions);
   free(d->k_levels);
+  d->k_transitions = NULL;
+  d->k_levels = NULL;
   free(d);
 }
 
@@ -1326,9 +1598,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	}
       ck = nk - bk;
     
-      c += (d->k_clevel * ck) >> 4;
-      m += (d->k_mlevel * ck) >> 4;
-      y += (d->k_ylevel * ck) >> 4;
+      c += (d->k_clevel * ck) >> 6;
+      m += (d->k_mlevel * ck) >> 6;
+      y += (d->k_ylevel * ck) >> 6;
 
       /*
        * Don't allow cmy to grow without bound.
@@ -1635,27 +1907,27 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
  *                    and black.
  */
 
-#define DO_PRINT_COLOR_4(base, r, ratio)		\
-do {							\
-  int i;						\
-  for (i = d->n##r##_l; i > 0; i--)			\
-    {							\
-      if (base > d->r##_transitions[i])			\
-	{						\
+#define DO_PRINT_COLOR_4(base, r, ratio)			\
+do {								\
+  int i;							\
+  for (i = d->n##r##_l; i > 0; i--)				\
+    {								\
+      if (base > d->r##_transitions[i])				\
+	{							\
 	  if (d->r##bits++ == d->horizontal_overdensity)	\
-	    {						\
-	      int j;					\
-	      for (j = 0; j < d->n##r##_log; j++)	\
-		{					\
-		  if (j & i)				\
-		    r##ptr[j * length] |= bit;		\
-		}					\
-	      d->r##bits = 1;				\
-	    }						\
-	  base -= d->r##_levels[i];			\
-	  break;					\
-	}						\
-    }							\
+	    {							\
+	      int j;						\
+	      for (j = 0; j < d->n##r##_log; j++)		\
+		{						\
+		  if (j & i)					\
+		    r##ptr[j * length] |= bit;			\
+		}						\
+	      d->r##bits = 1;					\
+	    }							\
+	  base -= d->r##_levels[i];				\
+	  break;						\
+	}							\
+    }								\
 } while (0)
 
 #define PRINT_COLOR_4(color, r, R, d1, d2)				\
@@ -1948,9 +2220,9 @@ dither_cmyk4(unsigned short  *rgb,	/* I - RGB pixels */
        * with black.  As usual, this is very ad hoc and needs to be
        * generalized.
        */
-      c += (d->k_clevel * ck) >> 4;
-      m += (d->k_mlevel * ck) >> 4;
-      y += (d->k_ylevel * ck) >> 4;
+      c += (d->k_clevel * ck) >> 6;
+      m += (d->k_mlevel * ck) >> 6;
+      y += (d->k_ylevel * ck) >> 6;
 
       /*
        * Don't allow cmy to grow without bound.
