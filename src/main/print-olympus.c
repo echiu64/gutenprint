@@ -58,7 +58,7 @@ typedef struct
 {
 	int xdpi, ydpi;
 	int xsize, ysize;
-	char layer;
+	char plane;
 	int block_min_x, block_min_y;
 	int block_max_x, block_max_y;
 } olympus_privdata_t;
@@ -89,21 +89,20 @@ typedef struct /* printer specific parameters */
   int border_top;
   int border_bottom;
   const olympus_res_t_array *res;	/* list of possible resolutions */
-  const char *layers;
+  const char *planes;	/* name and order of ribbons */
   int block_size;
   int need_empty_cols;	/* must we print empty columns? */
   int need_empty_rows;	/* must we print empty rows? */
   void (*printer_init_func)(stp_vars_t);
-  void (*layer_init_func)(stp_vars_t);
-  void (*layer_end_func)(stp_vars_t);
+  void (*plane_init_func)(stp_vars_t);
+  void (*plane_end_func)(stp_vars_t);
   void (*block_init_func)(stp_vars_t);
   void (*block_end_func)(stp_vars_t);
+  const char *adj_cyan;		/* default color adjustment */
+  const char *adj_magenta;
+  const char *adj_yellow;
 } olympus_cap_t;
 
-static void null_func(stp_vars_t v)
-{
-	return;
-}
 
 static const olympus_res_t_array p300_resolution = 
 {
@@ -120,19 +119,58 @@ static void p300_printer_init_func(stp_vars_t v)
 	stpi_put16_be(privdata.ydpi, v);
 }
 
-static void p300_layer_end_func(stp_vars_t v)
+static void p300_plane_end_func(stp_vars_t v)
 {
-	stpi_zprintf(v, "\033\033\033P%cS", privdata.layer);
+	stpi_zprintf(v, "\033\033\033P%cS", privdata.plane);
 }
 
 static void p300_block_init_func(stp_vars_t v)
 {
-	stpi_zprintf(v, "\033\033\033W%c", privdata.layer);
+	stpi_zprintf(v, "\033\033\033W%c", privdata.plane);
 	stpi_put16_be(privdata.block_min_y, v);
 	stpi_put16_be(privdata.block_min_x, v);
 	stpi_put16_be(privdata.block_max_y, v);
 	stpi_put16_be(privdata.block_max_x, v);
 }
+
+static const char p300_adj_cyan[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
+"<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
+"0.078431 0.211765 0.250980 0.282353 0.309804 0.333333 0.352941 0.368627\n"
+"0.388235 0.403922 0.427451 0.443137 0.458824 0.478431 0.498039 0.513725\n"
+"0.529412 0.545098 0.556863 0.576471 0.592157 0.611765 0.627451 0.647059\n"
+"0.666667 0.682353 0.701961 0.713725 0.725490 0.729412 0.733333 0.737255\n"
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
+static const char p300_adj_magenta[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
+"<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
+"0.047059 0.211765 0.250980 0.278431 0.305882 0.333333 0.349020 0.364706\n"
+"0.380392 0.396078 0.415686 0.435294 0.450980 0.466667 0.482353 0.498039\n"
+"0.513725 0.525490 0.541176 0.556863 0.572549 0.592157 0.611765 0.631373\n"
+"0.650980 0.670588 0.694118 0.705882 0.721569 0.741176 0.745098 0.756863\n"
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
+static const char p300_adj_yellow[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
+"<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
+"0.047059 0.117647 0.203922 0.250980 0.274510 0.301961 0.321569 0.337255\n"
+"0.352941 0.364706 0.380392 0.396078 0.407843 0.423529 0.439216 0.450980\n"
+"0.466667 0.482353 0.498039 0.513725 0.533333 0.552941 0.572549 0.596078\n"
+"0.615686 0.635294 0.650980 0.666667 0.682353 0.690196 0.701961 0.713725\n"
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
 
 static const olympus_res_t_array p400_resolution =
 {
@@ -152,19 +190,19 @@ static void p400_printer_init_func(stp_vars_t v)
 	stpi_zprintf(v, "\033ZP"); stpi_zfwrite(zero, 1, 61, v);
 }
 
-static void p400_layer_init_func(stp_vars_t v)
+static void p400_plane_init_func(stp_vars_t v)
 {
 	stpi_zprintf(v, "\033ZC"); stpi_zfwrite(zero, 1, 61, v);
 }
 
-static void p400_layer_end_func(stp_vars_t v)
+static void p400_plane_end_func(stp_vars_t v)
 {
 	stpi_zprintf(v, "\033P"); stpi_zfwrite(zero, 1, 62, v);
 }
 
 static void p400_block_init_func(stp_vars_t v)
 {
-	stpi_zprintf(v, "\033Z%c", privdata.layer);
+	stpi_zprintf(v, "\033Z%c", privdata.plane);
 	stpi_put16_be(privdata.block_min_x, v);
 	stpi_put16_be(privdata.block_min_y, v);
 	stpi_put16_be(privdata.block_max_x - privdata.block_min_x + 1, v);
@@ -185,10 +223,10 @@ static void cpx00_printer_init_func(stp_vars_t v)
 	stpi_zfwrite(zero, 1, 8, v);
 }
 
-static void cpx00_layer_init_func(stp_vars_t v)
+static void cpx00_plane_init_func(stp_vars_t v)
 {
 	stpi_put16_be(0x4001, v);
-	stpi_put16_le(privdata.layer - '1', v);
+	stpi_put16_le(privdata.plane - '1', v);
 	stpi_put32_le(privdata.xsize * privdata.ysize, v);
 	stpi_zfwrite(zero, 1, 4, v);
 }
@@ -204,8 +242,9 @@ static const olympus_cap_t olympus_model_capabilities[] =
 		16,
 		1, 0,
 		&p300_printer_init_func,
-		&null_func, &p300_layer_end_func,
-		&p300_block_init_func, &null_func,
+		NULL, &p300_plane_end_func,
+		&p300_block_init_func, NULL,
+		p300_adj_cyan, p300_adj_magenta, p300_adj_yellow,
 	},
 	{ 1, 		/* model P400 */
 		595, 842,	/* A4 */
@@ -216,8 +255,9 @@ static const olympus_cap_t olympus_model_capabilities[] =
 		180,
 		1, 1,
 		&p400_printer_init_func,
-		&p400_layer_init_func, &p400_layer_end_func,
-		&p400_block_init_func, &null_func,
+		&p400_plane_init_func, &p400_plane_end_func,
+		&p400_block_init_func, NULL,
+		NULL, NULL, NULL,
 	},
 	{ 1000, 	/* canon CP100 */
 		283, 416, 	/* Postcard */
@@ -228,8 +268,9 @@ static const olympus_cap_t olympus_model_capabilities[] =
 		1808,
 		1, 1,
 		&cpx00_printer_init_func,
-		&cpx00_layer_init_func, &null_func,
-		&null_func, &null_func,
+		&cpx00_plane_init_func, NULL,
+		NULL, NULL,
+		NULL, NULL, NULL,
 	},
 };
 
@@ -534,6 +575,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   unsigned short *err_out;
   int status = 1;
   int ink_channels = 1;
+  stp_curve_t   adjustment = NULL;
 
   int r_errdiv, r_errmod;
   int r_errval  = 0;
@@ -646,6 +688,28 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 
   stpi_set_output_color_model(v, COLOR_MODEL_CMY);
   
+  if (caps->adj_cyan &&
+        !stp_check_curve_parameter(v, "CyanCurve", STP_PARAMETER_ACTIVE)) {
+    adjustment = stp_curve_create_from_string(caps->adj_cyan);
+    stp_set_curve_parameter(v, "CyanCurve", adjustment);
+    stp_set_curve_parameter_active(v, "CyanCurve", STP_PARAMETER_ACTIVE);
+    stp_curve_free(adjustment);
+  }
+  if (caps->adj_magenta &&
+        !stp_check_curve_parameter(v, "MagentaCurve", STP_PARAMETER_ACTIVE)) {
+    adjustment = stp_curve_create_from_string(caps->adj_magenta);
+    stp_set_curve_parameter(v, "MagentaCurve", adjustment);
+    stp_set_curve_parameter_active(v, "MagentaCurve", STP_PARAMETER_ACTIVE);
+    stp_curve_free(adjustment);
+  }
+  if (caps->adj_yellow &&
+        !stp_check_curve_parameter(v, "YellowCurve", STP_PARAMETER_ACTIVE)) {
+    adjustment = stp_curve_create_from_string(caps->adj_yellow);
+    stp_set_curve_parameter(v, "YellowCurve", adjustment);
+    stp_set_curve_parameter_active(v, "YellowCurve", STP_PARAMETER_ACTIVE);
+    stp_curve_free(adjustment);
+  }
+
   if (ink_type)
     {
       for (i = 0; i < ink_count; i++)
@@ -682,9 +746,11 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   zeros = stpi_zalloc(print_px_width+1);
   
   /* printer init */
-  stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->printer_init\n");
-  (*(caps->printer_init_func))(v);
-  
+  if (caps->printer_init_func) {
+    stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->printer_init\n");
+    (*(caps->printer_init_func))(v);
+  }
+
   min_y = (caps->need_empty_rows ? 0 : out_px_top 
        - (out_px_top % caps->block_size)); /* floor to multiple of block_size */
   max_y = (caps->need_empty_rows ? print_px_height - 1 : (out_px_bottom - 1)
@@ -700,17 +766,19 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   c_errdiv = image_px_width / out_px_width;
   c_errmod = image_px_width % out_px_width;
 
-  l = caps->layers;
+  l = caps->planes;
   while (*l)
     {
     r_errval  = 0;
     r_errlast = -1;
     r_errline = 0;
 
-    privdata.layer = *l;
-    /* layer init */
-    stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->layer_init\n");
-    (*(caps->layer_init_func))(v);
+    privdata.plane = *l;
+    /* plane init */
+    if (caps->plane_init_func) {
+      stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->plane_init\n");
+      (*(caps->plane_init_func))(v);
+    }
 
     for (y = min_y; y <= max_y; y++)
       {
@@ -718,22 +786,23 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
       int duplicate_line = 1;
       unsigned zero_mask;
 
-      if (((y - min_y) % caps->block_size) == 0)
-        {
+      if (((y - min_y) % caps->block_size) == 0) {
         /* block init */
         privdata.block_min_y = y;
         privdata.block_min_x = min_x;
         privdata.block_max_y = MIN(y + caps->block_size, print_px_height) - 1;
         privdata.block_max_x = max_x;
 
-        stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->block_init\n");
-        (*(caps->block_init_func))(v);
+	if (caps->block_init_func) {
+          stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->block_init\n");
+          (*(caps->block_init_func))(v);
 	}
+      }
       
 
       if ((y & 63) == 0)
         {
-        stpi_image_note_progress(image, max_progress/3 * (l - caps->layers) + y / 3,
+        stpi_image_note_progress(image, max_progress/3 * (l - caps->planes) + y / 3,
             max_progress);
         }
       if (y < out_px_top || y >= out_px_bottom)
@@ -807,7 +876,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   	}
   	char_out = (unsigned char *) real_out;
   	for (i = 0; i < out_px_width; i++)
-  	  char_out[i] = real_out[i * ink_channels + (caps->layers - l + 2)] / 257;
+  	  char_out[i] = real_out[i * ink_channels + (caps->planes - l + 2)] / 257;
   
 	stpi_zfwrite((char *) real_out, 1, out_px_width, v);
 /* stpi_erprintf("data %d ", out_px_width); */
@@ -827,17 +896,20 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 	  }
 	}
       
-      if (y == privdata.block_max_y)
-        {
+      if (y == privdata.block_max_y) {
         /* block end */
-        stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->block_end\n");
-        (*(caps->block_end_func))(v);
+        if (caps->block_end_func) {
+          stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->block_end\n");
+          (*(caps->block_end_func))(v);
 	}
+      }
       
       }
-      /* layer end */
-      stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->layer_end\n");
-      (*(caps->layer_end_func))(v);
+      /* plane end */
+      if (caps->plane_end_func) {
+        stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->plane_end\n");
+        (*(caps->plane_end_func))(v);
+      }
 
       l++;
     }
@@ -913,3 +985,4 @@ stpi_module_t stpi_module_data =
     print_olympus_module_exit,
     (void *) &print_olympus_module_data
   };
+
