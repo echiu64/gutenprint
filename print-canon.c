@@ -711,7 +711,7 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
 
   canon_cmd(prn,ESC5b,0x4b, 2, 0x00,0x0f);
   if (caps.features & CANON_CAP_CMD61)
-    canon_cmd(prn,ESC5b,0x61, 1, 0x00,0x01);
+    canon_cmd(prn,ESC28,0x61, 1, 0x00,0x01);
   canon_cmd(prn,ESC28,0x62, 1, 0x01);
   canon_cmd(prn,ESC28,0x71, 1, 0x01);
 
@@ -744,6 +744,20 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
   PUT("topskip ",top,ydpi);
   canon_cmd(prn,ESC28,0x65, 2, (top >> 8 ),(top & 255));
 }
+
+void canon_deinit_printer(FILE *prn, canon_cap_t caps)
+{
+  /* eject page */
+  fputc(0x0c,prn);
+
+  /* say goodbye */
+  canon_cmd(prn,ESC28,0x62,1,0);
+  if (caps.features & CANON_CAP_CMD61)
+    canon_cmd(prn,ESC28,0x61, 1, 0x00,0x00);
+  canon_cmd(prn,ESC40,0,0);
+  fflush(prn);
+}
+
 
 /*
  *  'alloc_buffer()' allocates buffer and fills it with 0
@@ -1207,15 +1221,7 @@ canon_print(const printer_t *printer,		/* I - Model */
   if (lmagenta != NULL) free(lmagenta);
   if (lyellow != NULL)  free(lyellow);
 
-  /* eject page */
-  fputc(0x0c,prn);
-
-  /* say goodbye */
-  canon_cmd(prn,ESC28,0x62,1,0);
-  if (caps.features & CANON_CAP_CMD61)
-    canon_cmd(prn,ESC5b,0x61, 1, 0x00,0x00);
-  canon_cmd(prn,ESC40,0,0);
-  fflush(prn);
+  canon_deinit_printer(prn, caps);
 }
 
 /*
