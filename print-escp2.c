@@ -230,7 +230,7 @@ static double dot_sizes[] = { 0.550, 0.700, 1.0 };
 
 static simple_dither_range_t variable_dither_ranges[] =
 {
-  { 0.183, 0x1, 0, 1 },
+  { 0.17, 0x1, 0, 1 },
 /*  { 0.233, 0x2, 0, 2 },
   { 0.333, 0x3, 0, 3 }, */
   { 0.550, 0x1, 1, 1 },
