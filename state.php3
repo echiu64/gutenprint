@@ -77,11 +77,12 @@ $supported_printers = array(
 		'EPSON Stylus Pro 7000' => 'Needs Testing (4.1 only)',
 		'EPSON Stylus Pro 7500' => 'Needs Testing (4.1 only)',
 		'EPSON Stylus Pro 9000' => 'Needs Testing (4.1 only)',
-		'EPSON Stylus Pro 9500' => 'Needs Testing (4.1 only)'
+		'EPSON Stylus Pro 9500' => 'Needs Testing (4.1 only)',
+		'EPSON Stylus Pro 10000' => 'Needs Testing (4.1 only)'
 		)
 	'Stylus Scan Range' => array(
 		'EPSON Stylus Scan 2000' => 'Fully Operational (4.1
-		only; use the 740 driver in 4.0)'
+		only; use the 740 driver in 4.0)',
 		'EPSON Stylus Scan 2500' => 'Fully Operational (4.1
 		only; use the 740 driver in 4.0)'
 		)
