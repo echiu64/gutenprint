@@ -68,9 +68,9 @@ extern const unsigned int gimpprint_micro_version;
 extern const unsigned int gimpprint_current_interface;
 extern const unsigned int gimpprint_binary_age;
 extern const unsigned int gimpprint_interface_age;
-extern const char* stp_check_version (unsigned int required_major,
-                               unsigned int required_minor,
-                               unsigned int required_micro);
+extern const char* stp_check_version(unsigned int required_major,
+				     unsigned int required_minor,
+				     unsigned int required_micro);
 
 
 /*
@@ -328,63 +328,55 @@ stp_print(const stp_printer_t printer,
 /*
  * stp_init() must be called prior to any other use of the library.
  */
-extern int stp_init (void);
+extern int stp_init(void);
 
 /*
  * Set the encoding that all translated strings are output in.
  */
 extern const char * stp_set_output_codeset(const char *codeset);
 
-extern const char * stp_printer_get_long_name (const stp_printer_t p);
-extern const char * stp_printer_get_driver (const stp_printer_t p);
-extern int stp_printer_get_model (const stp_printer_t p);
-extern const stp_vars_t stp_printer_get_printvars (const stp_printer_t p);
+extern const char * stp_printer_get_long_name(const stp_printer_t p);
+extern const char * stp_printer_get_driver(const stp_printer_t p);
+extern int stp_printer_get_model(const stp_printer_t p);
+extern const stp_vars_t stp_printer_get_printvars(const stp_printer_t p);
 extern void stp_set_printer_defaults(stp_vars_t, const stp_printer_t);
 
-extern stp_vars_t stp_allocate_vars (void);
-extern void stp_copy_vars (stp_vars_t vd, const stp_vars_t vs);
-extern stp_vars_t stp_allocate_copy (const stp_vars_t vs);
+extern stp_vars_t stp_allocate_vars(void);
+extern void stp_copy_vars(stp_vars_t vd, const stp_vars_t vs);
+extern stp_vars_t stp_allocate_copy(const stp_vars_t vs);
 
-extern void stp_free_vars (stp_vars_t vv);
+extern void stp_free_vars(stp_vars_t v);
 
-extern void stp_set_driver (stp_vars_t vv, const char *val);
-extern void stp_set_ppd_file (stp_vars_t vv, const char *val);
-extern void stp_set_resolution (stp_vars_t vv, const char *val);
-extern void stp_set_media_size (stp_vars_t vv, const char *val);
-extern void stp_set_media_type (stp_vars_t vv, const char *val);
-extern void stp_set_media_source (stp_vars_t vv, const char *val);
-extern void stp_set_ink_type (stp_vars_t vv, const char *val);
-extern void stp_set_dither_algorithm (stp_vars_t vv, const char *val);
+extern void stp_set_driver(stp_vars_t v, const char *val);
+extern void stp_set_ppd_file(stp_vars_t v, const char *val);
+extern void stp_set_resolution(stp_vars_t v, const char *val);
+extern void stp_set_media_size(stp_vars_t v, const char *val);
+extern void stp_set_media_type(stp_vars_t v, const char *val);
+extern void stp_set_media_source(stp_vars_t v, const char *val);
+extern void stp_set_ink_type(stp_vars_t v, const char *val);
+extern void stp_set_dither_algorithm(stp_vars_t v, const char *val);
 
 /*
  * The _n variants are used for strings that are not null-delimited.
  */
-extern void stp_set_driver_n (stp_vars_t vv, const char *val,
-                              int bytes);
-extern void stp_set_ppd_file_n (stp_vars_t vv, const char *val,
-                                int bytes);
-extern void stp_set_resolution_n (stp_vars_t vv, const char *val,
-                                  int bytes);
-extern void stp_set_media_size_n (stp_vars_t vv, const char *val,
-                                  int bytes);
-extern void stp_set_media_type_n (stp_vars_t vv, const char *val,
-                                  int bytes);
-extern void stp_set_media_source_n (stp_vars_t vv, const char *val,
-                                    int bytes);
-extern void stp_set_ink_type_n (stp_vars_t vv, const char *val,
-                                int bytes);
-extern void stp_set_dither_algorithm_n (stp_vars_t vv, const char *val,
-                                        int bytes);
+extern void stp_set_driver_n(stp_vars_t v, const char *val, int bytes);
+extern void stp_set_ppd_file_n(stp_vars_t v, const char *val, int bytes);
+extern void stp_set_resolution_n(stp_vars_t v, const char *val, int bytes);
+extern void stp_set_media_size_n(stp_vars_t v, const char *val, int bytes);
+extern void stp_set_media_type_n(stp_vars_t v, const char *val, int bytes);
+extern void stp_set_media_source_n(stp_vars_t v, const char *val, int bytes);
+extern void stp_set_ink_type_n(stp_vars_t v, const char *val, int bytes);
+extern void stp_set_dither_algorithm_n(stp_vars_t v, const char *val, int bytes);
 
-extern void stp_set_output_type (stp_vars_t vv, int val);
-extern void stp_set_orientation (stp_vars_t vv, int val);
-extern void stp_set_left (stp_vars_t vv, int val);
-extern void stp_set_top (stp_vars_t vv, int val);
-extern void stp_set_width (stp_vars_t vv, int val);
-extern void stp_set_height (stp_vars_t vv, int val);
-extern void stp_set_image_type (stp_vars_t vv, int val);
-extern void stp_set_page_width (stp_vars_t vv, int val);
-extern void stp_set_page_height (stp_vars_t vv, int val);
+extern void stp_set_output_type(stp_vars_t v, int val);
+extern void stp_set_orientation(stp_vars_t v, int val);
+extern void stp_set_left(stp_vars_t v, int val);
+extern void stp_set_top(stp_vars_t v, int val);
+extern void stp_set_width(stp_vars_t v, int val);
+extern void stp_set_height(stp_vars_t v, int val);
+extern void stp_set_image_type(stp_vars_t v, int val);
+extern void stp_set_page_width(stp_vars_t v, int val);
+extern void stp_set_page_height(stp_vars_t v, int val);
 
 /*
  * Input color model refers to how the data is being sent to the
@@ -395,78 +387,78 @@ extern void stp_set_page_height (stp_vars_t vv, int val);
  * the color machinery in Gimp-Print.  If this is done, normally
  * the output color model will be RGB.
  */
-extern void stp_set_input_color_model (stp_vars_t vv, int val);
-extern void stp_set_output_color_model (stp_vars_t vv, int val);
+extern void stp_set_input_color_model(stp_vars_t v, int val);
+extern void stp_set_output_color_model(stp_vars_t v, int val);
 
-extern void stp_set_brightness (stp_vars_t vv, float val);
-extern void stp_set_gamma (stp_vars_t vv, float val);
-extern void stp_set_contrast (stp_vars_t vv, float val);
-extern void stp_set_cyan (stp_vars_t vv, float val);
-extern void stp_set_magenta (stp_vars_t vv, float val);
-extern void stp_set_yellow (stp_vars_t vv, float val);
-extern void stp_set_saturation (stp_vars_t vv, float val);
-extern void stp_set_density (stp_vars_t vv, float val);
+extern void stp_set_brightness(stp_vars_t v, float val);
+extern void stp_set_gamma(stp_vars_t v, float val);
+extern void stp_set_contrast(stp_vars_t v, float val);
+extern void stp_set_cyan(stp_vars_t v, float val);
+extern void stp_set_magenta(stp_vars_t v, float val);
+extern void stp_set_yellow(stp_vars_t v, float val);
+extern void stp_set_saturation(stp_vars_t v, float val);
+extern void stp_set_density(stp_vars_t v, float val);
 
 /*
  * Application gamma is used to initially correct the input data
  * for the application's characteristics.  This cannot be done by the
  * application (except in 16-bit CMYK mode) without losing data.
  */
-extern void stp_set_app_gamma (stp_vars_t vv, float val);
+extern void stp_set_app_gamma(stp_vars_t v, float val);
 
 /*
  * Please see the source in print-color.c for an explanation of this.
  */
-extern void stp_set_lut (stp_vars_t vv, void * val);
+extern void stp_set_lut(stp_vars_t v, void * val);
 
 /*
  * For use with indexed color: the LUT should be an array of 256
  * RGB values.
  */
-extern void stp_set_cmap (stp_vars_t vv, unsigned char * val);
+extern void stp_set_cmap(stp_vars_t v, unsigned char * val);
 
 /*
  * These functions are used to print output and diagnostic information
  * respectively.  These must be supplied by the caller.
  */
-extern void stp_set_outfunc (const stp_vars_t vv, stp_outfunc_t val);
-extern void stp_set_errfunc (const stp_vars_t vv, stp_outfunc_t val);
-extern void stp_set_outdata (stp_vars_t vv, void * val);
-extern void stp_set_errdata (stp_vars_t vv, void * val);
+extern void stp_set_outfunc(const stp_vars_t v, stp_outfunc_t val);
+extern void stp_set_errfunc(const stp_vars_t v, stp_outfunc_t val);
+extern void stp_set_outdata(stp_vars_t v, void * val);
+extern void stp_set_errdata(stp_vars_t v, void * val);
 
-extern const char * stp_get_driver (const stp_vars_t vv);
-extern const char * stp_get_ppd_file (const stp_vars_t vv);
-extern const char * stp_get_resolution (const stp_vars_t vv);
-extern const char * stp_get_media_size (const stp_vars_t vv);
-extern const char * stp_get_media_type (const stp_vars_t vv);
-extern const char * stp_get_media_source (const stp_vars_t vv);
-extern const char * stp_get_ink_type (const stp_vars_t vv);
-extern const char * stp_get_dither_algorithm (const stp_vars_t vv);
-extern int stp_get_output_type (const stp_vars_t vv);
-extern int stp_get_left (const stp_vars_t vv);
-extern int stp_get_top (const stp_vars_t vv);
-extern int stp_get_width (const stp_vars_t vv);
-extern int stp_get_height (const stp_vars_t vv);
-extern int stp_get_image_type (const stp_vars_t vv);
-extern int stp_get_page_width (const stp_vars_t vv);
-extern int stp_get_page_height (const stp_vars_t vv);
-extern int stp_get_input_color_model (const stp_vars_t vv);
-extern int stp_get_output_color_model (const stp_vars_t vv);
-extern float stp_get_brightness (const stp_vars_t vv);
-extern float stp_get_gamma (const stp_vars_t vv);
-extern float stp_get_contrast (const stp_vars_t vv);
-extern float stp_get_cyan (const stp_vars_t vv);
-extern float stp_get_magenta (const stp_vars_t vv);
-extern float stp_get_yellow (const stp_vars_t vv);
-extern float stp_get_saturation (const stp_vars_t vv);
-extern float stp_get_density (const stp_vars_t vv);
-extern float stp_get_app_gamma (const stp_vars_t vv);
-extern void * stp_get_lut (const stp_vars_t vv);
-extern stp_outfunc_t stp_get_outfunc (const stp_vars_t vv);
-extern stp_outfunc_t stp_get_errfunc (const stp_vars_t vv);
-extern void * stp_get_outdata (const stp_vars_t vv);
-extern void * stp_get_errdata (const stp_vars_t vv);
-extern unsigned char * stp_get_cmap (const stp_vars_t vv);
+extern const char * stp_get_driver(const stp_vars_t v);
+extern const char * stp_get_ppd_file(const stp_vars_t v);
+extern const char * stp_get_resolution(const stp_vars_t v);
+extern const char * stp_get_media_size(const stp_vars_t v);
+extern const char * stp_get_media_type(const stp_vars_t v);
+extern const char * stp_get_media_source(const stp_vars_t v);
+extern const char * stp_get_ink_type(const stp_vars_t v);
+extern const char * stp_get_dither_algorithm(const stp_vars_t v);
+extern int stp_get_output_type(const stp_vars_t v);
+extern int stp_get_left(const stp_vars_t v);
+extern int stp_get_top(const stp_vars_t v);
+extern int stp_get_width(const stp_vars_t v);
+extern int stp_get_height(const stp_vars_t v);
+extern int stp_get_image_type(const stp_vars_t v);
+extern int stp_get_page_width(const stp_vars_t v);
+extern int stp_get_page_height(const stp_vars_t v);
+extern int stp_get_input_color_model(const stp_vars_t v);
+extern int stp_get_output_color_model(const stp_vars_t v);
+extern float stp_get_brightness(const stp_vars_t v);
+extern float stp_get_gamma(const stp_vars_t v);
+extern float stp_get_contrast(const stp_vars_t v);
+extern float stp_get_cyan(const stp_vars_t v);
+extern float stp_get_magenta(const stp_vars_t v);
+extern float stp_get_yellow(const stp_vars_t v);
+extern float stp_get_saturation(const stp_vars_t v);
+extern float stp_get_density(const stp_vars_t v);
+extern float stp_get_app_gamma(const stp_vars_t v);
+extern void * stp_get_lut(const stp_vars_t v);
+extern stp_outfunc_t stp_get_outfunc(const stp_vars_t v);
+extern stp_outfunc_t stp_get_errfunc(const stp_vars_t v);
+extern void * stp_get_outdata(const stp_vars_t v);
+extern void * stp_get_errdata(const stp_vars_t v);
+extern unsigned char * stp_get_cmap(const stp_vars_t v);
 
 
 /*
@@ -485,48 +477,47 @@ typedef void (*stp_convert_t) (const stp_vars_t vars, const unsigned char *in,
                                const double *hue_map, const double *lum_map,
                                const double *sat_map);
 
-extern void stp_merge_printvars (stp_vars_t user, const stp_vars_t print);
+extern void stp_merge_printvars(stp_vars_t user, const stp_vars_t print);
 
-extern size_t stp_dither_algorithm_count (void);
-extern const char * stp_dither_algorithm_name (int id);
-extern const char * stp_dither_algorithm_text (int id);
-extern const char * stp_default_dither_algorithm (void);
+extern size_t stp_dither_algorithm_count(void);
+extern const char * stp_dither_algorithm_name(int id);
+extern const char * stp_dither_algorithm_text(int id);
+extern const char * stp_default_dither_algorithm(void);
 
-extern int stp_known_papersizes (void);
-extern const stp_papersize_t stp_get_papersize_by_name (const char *name);
-extern const stp_papersize_t stp_get_papersize_by_size (int l, int w);
-extern const stp_papersize_t stp_get_papersize_by_index (int index);
-extern const char * stp_papersize_get_name (const stp_papersize_t pt);
-extern const char * stp_papersize_get_text (const stp_papersize_t pt);
-extern unsigned stp_papersize_get_width (const stp_papersize_t pt);
-extern unsigned stp_papersize_get_height (const stp_papersize_t pt);
-extern unsigned stp_papersize_get_top (const stp_papersize_t pt);
-extern unsigned stp_papersize_get_left (const stp_papersize_t pt);
-extern unsigned stp_papersize_get_bottom (const stp_papersize_t pt);
-extern unsigned stp_papersize_get_right (const stp_papersize_t pt);
-extern stp_papersize_unit_t stp_papersize_get_unit (const stp_papersize_t pt);
+extern int stp_known_papersizes(void);
+extern const stp_papersize_t stp_get_papersize_by_name(const char *name);
+extern const stp_papersize_t stp_get_papersize_by_size(int l, int w);
+extern const stp_papersize_t stp_get_papersize_by_index(int index);
+extern const char * stp_papersize_get_name(const stp_papersize_t pt);
+extern const char * stp_papersize_get_text(const stp_papersize_t pt);
+extern unsigned stp_papersize_get_width(const stp_papersize_t pt);
+extern unsigned stp_papersize_get_height(const stp_papersize_t pt);
+extern unsigned stp_papersize_get_top(const stp_papersize_t pt);
+extern unsigned stp_papersize_get_left(const stp_papersize_t pt);
+extern unsigned stp_papersize_get_bottom(const stp_papersize_t pt);
+extern unsigned stp_papersize_get_right(const stp_papersize_t pt);
+extern stp_papersize_unit_t stp_papersize_get_unit(const stp_papersize_t pt);
 
 
-extern int stp_known_printers (void);
-extern const stp_printer_t stp_get_printer_by_index (int idx);
-extern const stp_printer_t stp_get_printer_by_long_name (const char *long_name);
-extern const stp_printer_t stp_get_printer_by_driver (const char *driver);
-extern int stp_get_printer_index_by_driver (const char *driver);
+extern int stp_known_printers(void);
+extern const stp_printer_t stp_get_printer_by_index(int idx);
+extern const stp_printer_t stp_get_printer_by_long_name(const char *long_name);
+extern const stp_printer_t stp_get_printer_by_driver(const char *driver);
+extern int stp_get_printer_index_by_driver(const char *driver);
 
 /*
  * This is likely to change in the future.
  */
-extern stp_convert_t stp_choose_colorfunc (int output_type, int image_bpp,
-                                           const unsigned char *cmap,
-                                           int *out_bpp,
-                                           const stp_vars_t v);
-extern void stp_allocate_lut (stp_vars_t v, size_t steps);
-extern void stp_free_lut (stp_vars_t v);
-extern void stp_compute_lut (stp_vars_t v, size_t steps);
+extern stp_convert_t stp_choose_colorfunc(int output_type, int image_bpp,
+					  const unsigned char *cmap,
+					  int *out_bpp, const stp_vars_t v);
+extern void stp_allocate_lut(stp_vars_t v, size_t steps);
+extern void stp_free_lut(stp_vars_t v);
+extern void stp_compute_lut(stp_vars_t v, size_t steps);
 
-extern const stp_vars_t stp_default_settings (void);
-extern const stp_vars_t stp_maximum_settings (void);
-extern const stp_vars_t stp_minimum_settings (void);
+extern const stp_vars_t stp_default_settings(void);
+extern const stp_vars_t stp_maximum_settings(void);
+extern const stp_vars_t stp_minimum_settings(void);
 
 #ifdef __cplusplus
   }
