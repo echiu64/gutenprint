@@ -2,7 +2,7 @@
 
 # Get mapfile from command line
 use Getopt::Std;
-getopts("m:t:");
+getopts("m:t:d:");
 
 # Wherever we put it...
 my $mapfile;
@@ -11,6 +11,23 @@ $mapfile = $opt_m;
 
 my $templatedir;
 $templatedir = $opt_t;
+
+my @drivertypes = ("gs", "ijs");
+if (lc($opt_d) eq "gs") {
+    @drivertypes = ("gs");
+} elsif (lc($opt_d) eq "nogs") {
+    @drivertypes = ("ijs");
+} elsif (lc($opt_d) eq "ijs") {
+    @drivertypes = ("ijs");
+} elsif (lc($opt_d) eq "noijs") {
+    @drivertypes = ("gs");
+} elsif (lc($opt_d) eq "all") {
+    @drivertypes = ("gs", "ijs");
+} elsif (lc($opt_d) eq "both") {
+    @drivertypes = ("gs", "ijs");
+} elsif ($opt_d) {
+    die ("Invalid driver type \"$opt_d\"!\n");
+}
 
 # The following substitutions happen to the template XML files:
 # @@STPVER@@         - the version number (ie '4.1.5')
@@ -56,9 +73,15 @@ my $debug = 0;
 # Foomatic name => Gimp-print name
 %argnamemap = ('Quality' => 'Resolution');
 
-%colormap = ('Grayscale' => 0,
-	     'Color' => 1,
-	     'BlackAndWhite' => 2);
+$colormap = { 'gs' => { 'Grayscale' => '0',
+			'Color' => '1',
+			'BlackAndWhite' => '2' },
+	      'ijs' => { 'Grayscale' => 'DeviceGrayscale',
+			 'Color' => 'DeviceRGB',
+			 'BlackAndWhite' =>
+			     'DeviceGrayscale -dBitsPerSample=1',
+			 'RawCMYK' => 'DeviceCMYK' }
+	    };
 
 use Data::Dumper;
 
@@ -137,7 +160,6 @@ open PIPE, "./gimp-print-version|" or die "Cannot run gimp-print-version: $!\n";
 my $stpvers = <PIPE>;
 close PIPE or die "Cannot run gimp-print-version: $!\n";
 chomp $stpvers;
-print STDERR "Using drivername gimp-print\n";
 
 # Build <printers> clause...
 my @printerlist = ();
@@ -151,13 +173,14 @@ for $p1 (keys(%mapstp)) {
 }
 push (@printerlist, " </printers>\n");
 
+$drivernameprefix = "gimp-print";
+print STDERR "Using driver name prefix \"$drivernameprefix\"\n";
+
 my $generalsubs = { 'STPVER' => $stpvers,
-		    'DRVNAME' => "gimp-print",
+		    'DRVNAME' => $drivernameprefix,
 		    'STPRINTERS' => join('', @printerlist) };
 
 my @numericsubs = ('MINVAL', 'MAXVAL', 'DEFVAL');
-
-opendir TDIR, $templatedir or die "Cannot open templates directory: $!\n";
 
 # OK, make the db heirarchy alongside the templates one...
 mkdir 'foomatic-db', 0755 or die "Cannot create directory foomatic-db: $!\n"
@@ -169,71 +192,89 @@ mkdir 'foomatic-db/driver', 0755 or die "Cannot create directory foomatic-db/dri
 
 # Now do stuff, already.  Do the substitution into each file...
 my $tmpl;
-while ($tmpl=readdir(TDIR)) {
-    next if ($tmpl !~ m!.+\.xml$!);
+for $drivertype (@drivertypes) {
+    $drivertypesuffix = "-$drivertype";
+    $drivertypesuffix =~ s/-gs//;
+    my $drvname = "$drivernameprefix$drivertypesuffix";
+    $generalsubs->{'DRVNAME'} = $drvname;
+    print "Generating Foomatic data for driver \"$drvname\"...\n";
 
-    my $fooopt = $tmpl;
-    $fooopt =~ s!\.xml$!!;
-    my $stpopt = $argnamemap{$fooopt};
-    $stpopt = $fooopt if ! defined ($stpopt);
+    opendir TDIR, "$templatedir-$drivertype" or
+	die "Cannot open templates directory: $!\n";
 
-#    print STDERR "Argnamemap '$fooopt' => '$stpopt'\n";
+    while ($tmpl=readdir(TDIR)) {
+	next if ($tmpl !~ m!.+\.xml$!);
 
-    open TMPL, "$templatedir/$tmpl";
-    my @datafile = <TMPL>;
-    close TMPL;
+	my $fooopt = $tmpl;
+	$fooopt =~ s!\.xml$!!;
+	my $stpopt = $argnamemap{$fooopt};
+	$stpopt = $fooopt if ! defined ($stpopt);
 
-    print STDERR "Processing $tmpl...";
+#	print STDERR "Argnamemap '$fooopt' => '$stpopt'\n";
 
-    my $template = join('',@datafile);
+	open TMPL, "$templatedir-$drivertype/$tmpl";
+	my @datafile = <TMPL>;
+	close TMPL;
 
-    # First, do the generic substitutions.
+	print STDERR "Processing $tmpl...";
 
-    my ($substr);
-    for $substr (keys(%$generalsubs)) {
-	my $substitution = $generalsubs->{$substr};
-	$template =~ s!\@\@$substr\@\@!$substitution!g;
-    }
+	my $template = join('',@datafile);
 
-    # Now do the numeric substitutions
+	# First, do the generic substitutions.
 
-    for $substr (@numericsubs) {
-	my $substitution = $stp_values{$substr}{$stpopt};
-	$template =~ s!\@\@$substr\@\@!$substitution!g;
-    }
-
-    # Now do special-purpose substitutions
-
-    for $substr (keys(%{$funcs->{$fooopt}})) {
-	my $substitution = &{$funcs->{$fooopt}{$substr}}($stpopt);
-	if (defined($substitution)) {
+	my ($substr);
+	for $substr (keys(%$generalsubs)) {
+	    my $substitution = $generalsubs->{$substr};
 	    $template =~ s!\@\@$substr\@\@!$substitution!g;
 	}
+
+	# Now do the numeric substitutions
+
+	for $substr (@numericsubs) {
+	    my $substitution = $stp_values{$substr}{$stpopt};
+	    $template =~ s!\@\@$substr\@\@!$substitution!g;
+	}
+
+	# Now do special-purpose substitutions
+
+	for $substr (keys(%{$funcs->{$fooopt}})) {
+	    my $substitution = &{$funcs->{$fooopt}{$substr}}($stpopt);
+	    if (defined($substitution)) {
+		$template =~ s!\@\@$substr\@\@!$substitution!g;
+	    }
+	}
+
+	# Any more?
+	grep (m!\@\@([^\@]+)\@\@!g
+	      && do { warn "  Unknown substitution $1 in $tmpl!\n"; },
+	      split("\n",$template));
+
+	# Finally, write out the new file
+
+	# Options are under opt/
+	my $dbfilename = lc("foomatic-db/opt/$drvname-$tmpl");
+
+	# Special case the actual driver file under driver/
+	$dbfilename = "foomatic-db/driver/$drvname.xml"
+	    if ($tmpl eq 'gimp-print.xml');
+
+	open NEWF, "> $dbfilename" or die "Cannot create $dbfilename: $!";
+	print STDERR "writing $dbfilename...";
+	print NEWF $template;
+	print STDERR "done.\n";
+	close NEWF;
+
     }
 
-    # Any more?
-    grep (m!\@\@([^\@]+)\@\@!g
-	  && do { warn "  Unknown substitution $1 in $tmpl!\n"; },
-	  split("\n",$template));
+    closedir TDIR;
 
-    # Finally, write out the new file
-
-    # Options are under opt/
-    my $dbfilename = lc("foomatic-db/opt/gimp-print-$tmpl");
-
-    # Special case the actual driver file under driver/
-    $dbfilename = "foomatic-db/driver/gimp-print.xml"
-	if ($tmpl eq 'gimp-print.xml');
-
-    open NEWF, "> $dbfilename" or die "Cannot create $dbfilename: $!";
-    print STDERR "writing $dbfilename...";
-    print NEWF $template;
-    print STDERR "done.\n";
-    close NEWF;
+    # The paper size and resolution maps must be regenerated for the next
+    # driver, because the "driverval"s are different for the different 
+    # drivers. So delete the caches.
+    undef $pagemap;
+    undef %rescache;
 
 }
-
-
 
 sub get_ev_shortname {
     my ($val) = @_;
@@ -250,7 +291,7 @@ sub get_ev_key {
 
 sub build_ev {
     my ($stpopt) = @_;
-    my $drvname = $generalsubs->{'DRVNAME'};
+    my $drvname = "$drivernameprefix$drivertypesuffix";
 
     my @vals = ();
 
@@ -260,6 +301,11 @@ sub build_ev {
 	#  Put in the basic choice info: ev names, etc
 	my $ev_longname = @$ev[1];
 	my $ev_shortname = @$ev[0];
+
+	# The GhostScript driver has no "RawCMYK" output type setting
+	next if (($drivertype eq "gs") && ($stpopt eq "Color") &&
+		 ($ev_shortname eq "RawCMYK"));
+
 	my $ev_id = get_ev_key($ev_shortname, $drvname);
 	my $ev_driverval;
 
@@ -315,7 +361,7 @@ sub build_cons {
 
     my ($stpopt) = @_;
 
-    my $drvname = $generalsubs->{'DRVNAME'};
+    my $drvname = "$drivernameprefix$drivertypesuffix";
 
     my @PNCONS = ();
 
@@ -358,7 +404,7 @@ sub build_cons {
 
 		    push (@PNCONS,
 			  "    <constraint sense='true'>\n",
-			  "      <driver>gimp-print</driver>\n",
+			  "      <driver>$drvname</driver>\n",
 			  "      <printer>$fooname</printer><!-- gimp-print name: $stpname -->\n",
 			  "      <arg_defval>$foodefval</arg_defval>\n",
 			  "    </constraint>\n");
@@ -384,7 +430,11 @@ sub optmap_pagesize {
 	    $_ =~ m!^\s*(.+\S)\s+([0-9]+)\s+([0-9]+)\s*$!;
 	    my ($name, $width, $height) = ($1, $2, $3);
 	    if ($width >= 0 and $height >= 0) {
-		$pagemap->{$name} = "$width $height";
+		if ($drivertype eq "gs") {
+		    $pagemap->{$name} = "$width $height";
+		} else {
+		    $pagemap->{$name} = "-dDEVICEWIDTHPOINTS=$width -dDEVICEHEIGHTPOINTS=$height";
+		}
 #		print STDERR "PageSize '$name' driverval '$width $height'\n";
 	    }
 	}
@@ -396,8 +446,8 @@ sub optmap_pagesize {
 
 sub optmap_color {
     my ($value) = @_;
-    if (defined $colormap{$value}) {
-	return $colormap{$value};
+    if (defined $colormap->{$drivertype}{$value}) {
+	return $colormap->{$drivertype}{$value};
     } else {
 	die "Cannot map output type '$value'\n";
     }
@@ -405,7 +455,7 @@ sub optmap_color {
 
 sub build_model_cons {
     my ($stpopt) = @_;
-    my $drvname = $generalsubs->{'DRVNAME'};
+    my $drvname = "$drivernameprefix$drivertypesuffix";
 
 
     # OK, this is funky.  For each stp model, we have a choice.  That
@@ -451,7 +501,7 @@ sub build_model_cons {
 # See build_model_cons, above.
 sub build_model_ev {
     my ($stpopt) = @_;
-    my $drvname = $generalsubs->{'DRVNAME'};
+    my $drvname = "$drivernameprefix$drivertypesuffix";
 
     my @vals = ();
 
@@ -463,8 +513,24 @@ sub build_model_ev {
 	my $ev_longname = $printer_name{$ev};
 	my $ev_shortname = get_ev_shortname($ev);
 	my $ev_id = get_ev_key($ev, $drvname);
-	my $ev_driverval = $ev;
-
+	my $ev_driverval;
+	if ($drivertype eq "gs") {
+	    $ev_driverval = $ev;
+	} else {
+	    my $make;
+	    if ($ev =~ /^escp2/) {
+		$make = "EPSON";
+	    } elsif ($ev =~ /^bjc/) {
+		$make = "CANON";
+	    } elsif ($ev =~ /^pcl/) {
+		$make = "HEWLETT-PACKARD";
+	    } elsif ($ev =~ /^lexmark/) {
+		$make = "LEXMARK";
+	    } else {
+		die "Could not determine printer manufacturer from \"$ev\"!\n";
+	    }
+	    $ev_driverval = "-sDeviceManufacturer=$make -sDeviceModel=$ev";
+	}
 	push (@vals,
 	      "    <enum_val id='$ev_id'>\n",
 	      "      <ev_longname><en>$ev_longname</en></ev_longname>\n",
@@ -513,10 +579,14 @@ sub build_model_ev {
 #  - What are the legal resolutions?  Sort of parse and compute these
 #    from the Resolution values.
 #
-# The driverval is "x y", and gets passedin a /HWResolution ps clause
+# In the case of the GhostScript driver The driverval is "X Y", and gets
+# passed in a /HWResolution ps clause, for the IJS driver it is "XxY" and
+# gets passed via the "-r" command line option of GhostScript.
 
 sub compute_resolutions {
     my ($stpname) = @_;
+
+    my $drvname = "$drivernameprefix$drivertypesuffix";
 
     if (!defined($rescache{$stpname})) {
 
@@ -530,15 +600,24 @@ sub compute_resolutions {
 	    my ($x, $y) = ($1, $3);
 	    $y = $x if !defined($y);
 
-	    my $r = {'x' => $x,
-		     'y' => $y,
-		     'driverval' => "$x $y",
-		     'ev_key' => get_ev_key("res-$x-$y", "gimp-print")
-		     };
+	    my $r;
+	    if ($drivertype eq "gs") {
+		$r = {'x' => $x,
+		      'y' => $y,
+		      'driverval' => "$x $y",
+		      'ev_key' => get_ev_key("res-$x-$y", $drvname)
+		      };
+	    } else {
+		$r = {'x' => $x,
+		      'y' => $y,
+		      'driverval' => "${x}x${y}",
+		      'ev_key' => get_ev_key("res-$x-$y", $drvname)
+		      };
+	    }
 	    push (@reslist, $r);
 
 	    # Default?
-	    $defval = get_ev_key("res-$x-$y", "gimp-print")
+	    $defval = get_ev_key("res-$x-$y", $drvname)
 		if ($qual eq $defaults{$stpname}{'Resolution'});
 
 	    # Note that this resolution value exists
@@ -570,7 +649,7 @@ sub do_all_res {
 
 sub build_resolution_ev {
     my ($stpopt) = @_;
-    my $drvname = $generalsubs->{'DRVNAME'};
+    my $drvname = "$drivernameprefix$drivertypesuffix";
 
     my @vals = ();
 
@@ -586,7 +665,12 @@ sub build_resolution_ev {
 	my $ev_longname = "$x x $y DPI";
 	my $ev_shortname = get_ev_shortname($ev_longname);
 	my $ev_id = get_ev_key("res-$x-$y", $drvname);
-	my $ev_driverval = "$x $y";
+	my $ev_driverval;
+	if ($drivertype eq "gs") {
+	    $ev_driverval = "$x $y";
+	} else {
+	    $ev_driverval = "${x}x${y}";
+	}
 
 	push (@vals,
 	      "    <enum_val id='$ev_id'>\n",
@@ -639,7 +723,7 @@ sub build_resolution_ev {
 
 sub build_resolution_cons {
     my ($stpopt) = @_;
-    my $drvname = $generalsubs->{'DRVNAME'};
+    my $drvname = "$drivernameprefix$drivertypesuffix";
 
     my @PNCONS = ();
 
