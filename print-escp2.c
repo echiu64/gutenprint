@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.82  2000/02/17 01:41:26  rlk
+ *   Another try at the variable dot printers
+ *
  *   Revision 1.81  2000/02/16 12:11:18  rlk
  *   narrow-carriage printers can print 14" long, not just 11"
  *
@@ -604,28 +607,28 @@ model_cap_t model_capabilities[] =
   /* 12: Stylus Color 740 */
   (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_600 | MODEL_INIT_440
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(720)
+   | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
   /* 13: Stylus Color 900 */
   /* Dale Pontius thinks the spacing is 3 jets??? */
   (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_600 | MODEL_INIT_440
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(720)
+   | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(96) | MODEL_MAKE_SEPARATION(3)),
   /* 14: Stylus Photo 750, 870 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO2
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT
-   | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(720)
+   | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
   /* 15: Stylus Photo 1200, 1270 */
   (MODEL_PAPER_1319 | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO2
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
-   | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(720)
+   | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
   /* 16: Stylus Color 860 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_COLOR
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
+   | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(360)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
 };
 
@@ -921,11 +924,6 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
     case MODEL_INIT_440 : /* ESC 440, 640, 740, 900 */
 	if (output_type == OUTPUT_GRAY)
 	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black printing */
-	if (bits > 1)
-	  fwrite("\033(e\002\000\000\020", 7, 1, prn);	/* Default dots */
-	else
-	  fwrite("\033(e\002\000\000\000", 7, 1, prn);	/* Default dots */
-
         if (ydpi > 360)
 	  {
 	    fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
@@ -933,6 +931,10 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 	      fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
 	    else
 	      fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
+	    if (bits > 1)
+	      fwrite("\033(e\002\000\000\020", 7, 1, prn);	/* Default dots */
+	    else
+	      fwrite("\033(e\002\000\000\000", 7, 1, prn);	/* Default dots */
 	  }
         break;
 
@@ -1180,7 +1182,7 @@ escp2_print(int       model,		/* I - Model */
 	  horizontal_passes = res->horizontal_passes;
 	  vertical_passes = res->vertical_passes;
 	  if (use_softweave && escp2_xres(model) < 720)
-	    vertical_passes *= 720 / escp2_xres(model);
+	    horizontal_passes *= 720 / escp2_xres(model);
 	  xdpi = res->hres;
 	  ydpi = res->vres;
 	  nozzles = escp2_nozzles(model);
@@ -2009,6 +2011,7 @@ const static int color_indices[16] = { 0, 1, 2, -1,
 const static int colors[6] = { 0, 1, 2, 4, 1, 2 };
 const static int densities[6] = { 0, 0, 0, 0, 1, 1 };
 
+#ifndef WEAVETEST
 static int
 get_color_by_params(int plane, int density)
 {
@@ -2016,6 +2019,7 @@ get_color_by_params(int plane, int density)
     return -1;
   return color_indices[density * 8 + plane];
 }
+#endif
 
 /*
  * Initialize the weave parameters
