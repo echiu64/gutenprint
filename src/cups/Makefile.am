@@ -116,7 +116,7 @@ install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	    $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)/$$language; \
 	    cd ppd/$$language; \
 	    for ppdfile in * ; do \
-	      (cd ../..; $(INSTALL_DATA) ppd/$$language/$$ppdfile $(DESTDIR)$(cups_modeldir)/$$language ; \
+	      (cd ../..; $(INSTALL_DATA) ppd/$$language/$$ppdfile $(DESTDIR)$(cups_modeldir)/$$language) ; \
 	    done; \
 	  done \
 	fi
