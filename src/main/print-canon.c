@@ -43,8 +43,8 @@
 #include <config.h>
 #endif
 #include <gimp-print/gimp-print.h>
-#include <gimp-print-internal.h>
-#include <gimp-print-intl-internal.h>
+#include "gimp-print-internal.h"
+#include <gimp-print/gimp-print-intl-internal.h>
 #include <string.h>
 #include <stdio.h>
 #if defined(HAVE_VARARGS_H) && !defined(HAVE_STDARG_H)

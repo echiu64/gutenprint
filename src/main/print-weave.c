@@ -32,8 +32,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gimp-print/gimp-print.h>
-#include <gimp-print-internal.h>
-#include <gimp-print-intl-internal.h>
+#include "gimp-print-internal.h"
+#include <gimp-print/gimp-print-intl-internal.h>
 
 #if 0
 #define TEST_RAW

@@ -31,8 +31,8 @@
 #include <config.h>
 #endif
 #include <gimp-print/gimp-print.h>
-#include <gimp-print-internal.h>
-#include <gimp-print-intl-internal.h>
+#include "gimp-print-internal.h"
+#include <gimp-print/gimp-print-intl-internal.h>
 
 const unsigned int gimpprint_major_version = GIMPPRINT_MAJOR_VERSION;
 const unsigned int gimpprint_minor_version = GIMPPRINT_MINOR_VERSION;
