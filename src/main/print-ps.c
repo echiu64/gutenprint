@@ -3,7 +3,7 @@
  *
  *   Print plug-in Adobe PostScript driver for the GIMP.
  *
- *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
+ *   Copyright 1997-2002 Michael Sweet (mike@easysw.com) and
  *	Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
@@ -376,10 +376,12 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
   stp_convert_t	colorfunc;	/* Color conversion function... */
   int		zero_mask;
   char		*command;	/* PostScript command */
+  const char	*temp;		/* Temporary string pointer */
   int		order,		/* Order of command */
 		num_commands;	/* Number of commands */
   struct			/* PostScript commands... */
   {
+    const char	*keyword, *choice;
     char	*command;
     int		order;
   }		commands[4];
@@ -464,6 +466,7 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
   stp_zprintf(v, "%%%%Creator: %s/Gimp-Print\n", image->get_appname(image));
 #endif
   stp_zprintf(v, "%%%%CreationDate: %s", ctime(&curtime));
+  stp_puts("%Copyright: 1997-2002 by Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)\n", v);
   stp_zprintf(v, "%%%%BoundingBox: %d %d %d %d\n",
           left, top - out_height, left + out_width, top);
   stp_puts("%%DocumentData: Clean7Bit\n", v);
@@ -471,8 +474,6 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
   stp_puts("%%Pages: 1\n", v);
   stp_puts("%%Orientation: Portrait\n", v);
   stp_puts("%%EndComments\n", v);
-  stp_puts("%Copyright: 1997-2000 by Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)\n", v);
-  stp_puts("%%EndProlog\n", v);
 
  /*
   * Find any printer-specific commands...
@@ -482,6 +483,8 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 
   if ((command = ppd_find(ppd_file, "PageSize", media_size, &order)) != NULL)
   {
+    commands[num_commands].keyword = "PageSize";
+    commands[num_commands].choice  = media_size;
     commands[num_commands].command = stp_malloc(strlen(command) + 1);
     strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
@@ -490,6 +493,8 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 
   if ((command = ppd_find(ppd_file, "InputSlot", media_source, &order)) != NULL)
   {
+    commands[num_commands].keyword = "InputSlot";
+    commands[num_commands].choice  = media_source;
     commands[num_commands].command = stp_malloc(strlen(command) + 1);
     strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
@@ -498,6 +503,8 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 
   if ((command = ppd_find(ppd_file, "MediaType", media_type, &order)) != NULL)
   {
+    commands[num_commands].keyword = "MediaType";
+    commands[num_commands].choice  = media_type;
     commands[num_commands].command = stp_malloc(strlen(command) + 1);
     strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
@@ -506,6 +513,8 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 
   if ((command = ppd_find(ppd_file, "Resolution", resolution, &order)) != NULL)
   {
+    commands[num_commands].keyword = "Resolution";
+    commands[num_commands].choice  = resolution;
     commands[num_commands].command = stp_malloc(strlen(command) + 1);
     strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
@@ -520,12 +529,21 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
     for (j = i + 1; j < num_commands; j ++)
       if (commands[j].order < commands[i].order)
       {
+        temp                = commands[i].keyword;
+        commands[i].keyword = commands[j].keyword;
+        commands[j].keyword = temp;
+
+        temp                = commands[i].choice;
+        commands[i].choice  = commands[j].choice;
+        commands[j].choice  = temp;
+
         order               = commands[i].order;
+        commands[i].order   = commands[j].order;
+        commands[j].order   = order;
+
         command             = commands[i].command;
         commands[i].command = commands[j].command;
-        commands[i].order   = commands[j].order;
         commands[j].command = command;
-        commands[j].order   = order;
       }
 
  /*
@@ -534,16 +552,26 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 
   if (num_commands > 0)
   {
-    stp_puts("%%BeginProlog\n", v);
+    stp_puts("%%BeginSetup\n", v);
 
     for (i = 0; i < num_commands; i ++)
     {
-      stp_puts(commands[i].command, v);
-      stp_puts("\n", v);
+      stp_puts("[{\n", v);
+      stp_zprintf(v, "%%%%BeginFeature: *%s %s\n", commands[i].keyword,
+                  commands[i].choice);
+      if (commands[i].command[0])
+      {
+	stp_puts(commands[i].command, v);
+	if (commands[i].command[strlen(commands[i].command) - 1] != '\n')
+          stp_puts("\n", v);
+      }
+
+      stp_puts("%%EndFeature\n", v);
+      stp_puts("} stopped cleartomark\n", v);
       stp_free(commands[i].command);
     }
 
-    stp_puts("%%EndProlog\n", v);
+    stp_puts("%%EndSetup\n", v);
   }
 
  /*
@@ -665,10 +693,10 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 
 static void
 ps_hex(const stp_vars_t v,	/* I - File to print to */
-       unsigned short *data,	/* I - Data to print */
-       int    length)	/* I - Number of bytes to print */
+       unsigned short   *data,	/* I - Data to print */
+       int              length)	/* I - Number of bytes to print */
 {
-  int		col;	/* Current column */
+  int		col;		/* Current column */
   static const char	*hex = "0123456789ABCDEF";
 
 
@@ -677,7 +705,7 @@ ps_hex(const stp_vars_t v,	/* I - File to print to */
   {
     unsigned char pixel = (*data & 0xff00) >> 8;
    /*
-    * Put the hex chars out to the file; note that we don't use fprintf()
+    * Put the hex chars out to the file; note that we don't use stp_zprintf()
     * for speed reasons...
     */
 
@@ -687,9 +715,12 @@ ps_hex(const stp_vars_t v,	/* I - File to print to */
     data ++;
     length --;
 
-    col = (col + 1) & 31;
-    if (col == 0)
+    col += 2;
+    if (col >= 72)
+    {
+      col = 0;
       stp_putc('\n', v);
+    }
   }
 
   if (col > 0)
@@ -702,15 +733,15 @@ ps_hex(const stp_vars_t v,	/* I - File to print to */
  */
 
 static void
-ps_ascii85(const stp_vars_t v,		/* I - File to print to */
+ps_ascii85(const          stp_vars_t v,	/* I - File to print to */
 	   unsigned short *data,	/* I - Data to print */
-	   int    length,	/* I - Number of bytes to print */
-	   int    last_line)	/* I - Last line of raster data? */
+	   int            length,	/* I - Number of bytes to print */
+	   int            last_line)	/* I - Last line of raster data? */
 {
-  int		i;		/* Looping var */
-  unsigned	b;		/* Binary data word */
-  unsigned char	c[5];		/* ASCII85 encoded chars */
-  static int	column = 0;	/* Current column */
+  int		i;			/* Looping var */
+  unsigned	b;			/* Binary data word */
+  unsigned char	c[5];			/* ASCII85 encoded chars */
+  static int	column = 0;		/* Current column */
 
 
   while (length > 3)
@@ -783,8 +814,8 @@ ps_ascii85(const stp_vars_t v,		/* I - File to print to */
 
 static char *			/* O - Control string */
 ppd_find(const char *ppd_file,	/* I - Name of PPD file */
-         const char *name,		/* I - Name of parameter */
-         const char *option,		/* I - Value of parameter */
+         const char *name,	/* I - Name of parameter */
+         const char *option,	/* I - Value of parameter */
          int  *order)		/* O - Order of the control string */
 {
   char		line[1024],	/* Line from file */
