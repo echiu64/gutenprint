@@ -38,6 +38,7 @@
 #endif
 #include <string.h>
 #include <stdlib.h>
+#include "papers.h"
 
 static stpi_list_t *paper_list = NULL;
 

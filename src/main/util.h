@@ -173,6 +173,8 @@ extern stpi_list_item_t *stpi_list_item_next(stpi_list_item_t *item);
 extern void *stpi_list_item_get_data(const stpi_list_item_t *item);
 extern int stpi_list_item_set_data(stpi_list_item_t *item,
 				  void *data);
+extern void stpi_default_media_size(const stp_vars_t v,
+				    int *width, int *height);
 
 /* Uncomment the next line to get performance statistics:
  * look for QUANT(#) in the code. At the end of escp2-print

@@ -62,10 +62,6 @@ extern int stpi_paper_list_init(void);
 extern int stpi_paper_create(stp_papersize_t pt);
 extern int stpi_paper_destroy(stp_papersize_t pt);
 
-extern void stpi_default_media_size(const stp_vars_t v,
-				    int *width, int *height);
-
-
 #ifdef __cplusplus
   }
 #endif

@@ -45,6 +45,7 @@ extern "C" {
 #include "util.h"
 #include "vars.h"
 
+#define COOKIE_PRINTER    0x0722922c
 
 typedef struct
 {
