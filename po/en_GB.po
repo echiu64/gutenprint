@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
 "POT-Creation-Date: 2003-01-04 22:57-0500\n"
-"PO-Revision-Date: 2001-11-05 21:42+0100\n"
+"PO-Revision-Date: 2003-01-05 15:25+0000\n"
 "Last-Translator: Roger Leigh <roger@whinlatter.uklinux.net>\n"
 "Language-Team: British English\n"
 "MIME-Version: 1.0\n"
@@ -223,52 +223,46 @@ msgid "Six Color Enhanced Composite"
 msgstr "Six Colour Enhanced Composite"
 
 #: src/main/print-escp2-data.c:2905
-#, fuzzy
 msgid "Seven Color Photo"
-msgstr "Six Colour Photo"
+msgstr "Seven Colour Photo"
 
 #: src/main/print-escp2-data.c:2915
-#, fuzzy
 msgid "Two Level Grayscale"
-msgstr "Grayscale"
+msgstr "Two Level Grayscale"
 
 #: src/main/print-escp2-data.c:2924
 msgid "One Color Raw"
-msgstr ""
+msgstr "One Colour Raw"
 
 #: src/main/print-escp2-data.c:2933
 msgid "Two Color Raw"
-msgstr ""
+msgstr "Two Colour Raw"
 
 #: src/main/print-escp2-data.c:2942 src/main/print-escp2-data.c:2952
 #: src/main/print-escp2-data.c:2961
-#, fuzzy
 msgid "Three Color Raw"
-msgstr "Three Colour Composite"
+msgstr "Three Colour Raw"
 
 #: src/main/print-escp2-data.c:2970 src/main/print-escp2-data.c:2980
 #: src/main/print-escp2-data.c:2990
-#, fuzzy
 msgid "Four Color Raw"
-msgstr "Four Colour Standard"
+msgstr "Four Colour Raw"
 
 #: src/main/print-escp2-data.c:3000
 msgid "Five Color Raw"
-msgstr ""
+msgstr "Five Colour Raw"
 
 #: src/main/print-escp2-data.c:3011
-#, fuzzy
 msgid "Six Color Raw"
-msgstr "Six Colour Photo"
+msgstr "Six Colour Raw"
 
 #: src/main/print-escp2-data.c:3022
-#, fuzzy
 msgid "Seven Color Raw"
-msgstr "Six Colour Photo"
+msgstr "Seven Colour Raw"
 
 #: src/main/print-escp2-data.c:3033 src/main/print-escp2-data.c:3042
 msgid "Quadtone"
-msgstr ""
+msgstr "Quadtone"
 
 #: src/main/print-escp2-data.c:3160 src/main/print-escp2-data.c:3222
 #: src/main/print-escp2-data.c:3284 src/main/print-escp2-data.c:3346
@@ -347,9 +341,8 @@ msgstr "Ilford Heavy Paper"
 
 #: src/main/print-escp2-data.c:3203 src/main/print-escp2-data.c:3265
 #: src/main/print-escp2-data.c:3327 src/main/print-escp2-data.c:3389
-#, fuzzy
 msgid "ColorLife Paper"
-msgstr "Plain Paper"
+msgstr "ColorLife Paper"
 
 #: src/main/print-escp2-data.c:3645 src/main/print-escp2-data.c:3647
 #: src/main/print-escp2-data.c:3889 src/main/print-escp2-data.c:3891
@@ -603,94 +596,76 @@ msgid "1440 x 720 DPI Four Pass Unidirectional"
 msgstr "1440 × 720 DPI Four Pass Unidirectional"
 
 #: src/main/print-escp2-data.c:4047
-#, fuzzy
 msgid "2880 x 720 DPI Microweave"
-msgstr "1440 × 720 DPI Microweave"
+msgstr "2880 x 720 DPI Microweave"
 
 #: src/main/print-escp2-data.c:4049
-#, fuzzy
 msgid "2880 x 720 DPI Microweave Unidirectional"
-msgstr "1440 × 720 DPI Microweave Unidirectional"
+msgstr "2880 x 720 DPI Microweave Unidirectional"
 
 #: src/main/print-escp2-data.c:4051
-#, fuzzy
 msgid "2880 x 720 DPI FOL"
-msgstr "2880 × 720 DPI"
+msgstr "2880 x 720 DPI FOL"
 
 #: src/main/print-escp2-data.c:4053
-#, fuzzy
 msgid "2880 x 720 DPI FOL Unidirectional"
-msgstr "2880 × 720 DPI Unidirectional"
+msgstr "2880 x 720 DPI FOL Unidirectional"
 
 #: src/main/print-escp2-data.c:4055
-#, fuzzy
 msgid "2880 x 720 DPI Four Pass"
-msgstr "1440 × 720 DPI Four Pass"
+msgstr "2880 x 720 DPI Four Pass"
 
 #: src/main/print-escp2-data.c:4057
-#, fuzzy
 msgid "2880 x 720 DPI Four Pass Unidirectional"
-msgstr "1440 × 720 DPI Four Pass Unidirectional"
+msgstr "2880 x 720 DPI Four Pass Unidirectional"
 
 #: src/main/print-escp2-data.c:4060
-#, fuzzy
 msgid "1440 x 1440 DPI Microweave"
-msgstr "1440 × 720 DPI Microweave"
+msgstr "1440 x 1440 DPI Microweave"
 
 #: src/main/print-escp2-data.c:4062
-#, fuzzy
 msgid "1440 x 1440 DPI Microweave Unidirectional"
-msgstr "1440 × 720 DPI Microweave Unidirectional"
+msgstr "1440 x 1440 DPI Microweave Unidirectional"
 
 #: src/main/print-escp2-data.c:4064
-#, fuzzy
 msgid "1440 x 1440 DPI FOL"
-msgstr "1440 × 1440 DPI"
+msgstr "1440 x 1440 DPI FOL"
 
 #: src/main/print-escp2-data.c:4066
-#, fuzzy
 msgid "1440 x 1440 DPI FOL Unidirectional"
-msgstr "1440 × 720 DPI FOL Unidirectional"
+msgstr "1440 x 1440 DPI FOL Unidirectional"
 
 #: src/main/print-escp2-data.c:4068
-#, fuzzy
 msgid "1440 x 1440 DPI Four Pass"
-msgstr "1440 × 720 DPI Four Pass"
+msgstr "1440 x 1440 DPI Four Pass"
 
 #: src/main/print-escp2-data.c:4070
-#, fuzzy
 msgid "1440 x 1440 DPI Four Pass Unidirectional"
-msgstr "1440 × 720 DPI Four Pass Unidirectional"
+msgstr "1440 x 1440 DPI Four Pass Unidirectional"
 
 #: src/main/print-escp2-data.c:4073
-#, fuzzy
 msgid "2880 x 1440 DPI Microweave"
-msgstr "720 × 360 DPI Microweave"
+msgstr "2880 x 1440 DPI Microweave"
 
 #: src/main/print-escp2-data.c:4075
-#, fuzzy
 msgid "2880 x 1440 DPI Microweave Unidirectional"
-msgstr "720 × 360 DPI Microweave Unidirectional"
+msgstr "2880 x 1440 DPI Microweave Unidirectional"
 
 #: src/main/print-escp2-data.c:4077
-#, fuzzy
 msgid "2880 x 1440 DPI FOL"
-msgstr "2880 × 1440 DPI"
+msgstr "2880 x 1440 DPI FOL"
 
 #: src/main/print-escp2-data.c:4079
-#, fuzzy
 msgid "2880 x 1440 DPI FOL Unidirectional"
-msgstr "720 × 360 DPI FOL Unidirectional"
+msgstr "2880 x 1440 DPI FOL Unidirectional"
 
 #: src/main/print-escp2-data.c:4081
-#, fuzzy
 msgid "2880 x 1440 DPI Four Pass"
-msgstr "1440 × 720 DPI Four Pass"
+msgstr "2880 x 1440 DPI Four Pass"
 
 #: src/main/print-escp2-data.c:4083
-#, fuzzy
 msgid "2880 x 1440 DPI Four Pass Unidirectional"
-msgstr "720 DPI Four Pass Unidirectional"
+msgstr "2880 x 1440 DPI Four Pass Unidirectional"
 
 #: src/libgimpprintui/panel.c:1517 src/main/print-escp2-data.c:4093
 #: src/main/print-escp2-data.c:4119 src/main/print-escp2-data.c:4153
@@ -704,44 +679,43 @@ msgstr "Roll Feed"
 
 #: src/main/print-escp2-data.c:4127
 msgid "Roll Feed (cut each page)"
-msgstr ""
+msgstr "Roll Feed (cut each page)"
 
 #: src/main/print-escp2-data.c:4135
 msgid "Roll Feed (do not cut)"
-msgstr ""
+msgstr "Roll Feed (do not cut)"
 
 #: src/main/print-escp2-data.c:4179
 msgid "Cut Sheet Bin 1"
-msgstr ""
+msgstr "Cut Sheet Bin 1"
 
 #: src/main/print-escp2-data.c:4187
 msgid "Cut Sheet Bin 2"
-msgstr ""
+msgstr "Cut Sheet Bin 2"
 
 #: src/main/print-escp2-data.c:4195
-#, fuzzy
 msgid "Cut Sheet Autoselect"
-msgstr "Autoselect"
+msgstr "Cut Sheet Autoselect"
 
 #: src/main/print-escp2-data.c:4203
 msgid "Manual Selection"
-msgstr ""
+msgstr "Manual Selection"
 
 #: src/main/print-escp2.c:395 src/main/print-escp2.c:518
 #: src/main/print-escp2.c:563 src/main/print-escp2.c:580
 #: src/main/print-escp2.c:1212
-#, fuzzy, c-format
+#, c-format
 msgid "Model %d out of range.\n"
-msgstr "Number out of range!\n"
+msgstr "Model %d out of range.\n"
 
 #: src/main/print-escp2.c:1207 src/main/print-raw.c:184
 msgid "Print options not verified; cannot print.\n"
-msgstr ""
+msgstr "Print options not verified; cannot print.\n"
 
 #: src/main/print-escp2.c:1240
-#, fuzzy, c-format
+#, c-format
 msgid "This printer does not support raw printer output at depth %d\n"
-msgstr "Printer does not support colour output\n"
+msgstr "This printer does not support raw printer output at depth %d\n"
 
 #. name                                                    hres vres softw v_pass overs unidir resid
 #: src/main/print-lexmark.c:444 src/main/print-lexmark.c:530
@@ -899,11 +873,11 @@ msgstr "Colour + Photo Cartridges"
 
 #: src/main/print-raw.c:190
 msgid "Image dimensions must match paper dimensions"
-msgstr ""
+msgstr "Image dimensions must match paper dimensions"
 
 #: src/main/print-raw.c:210
 msgid "Internal error!  Output channels or input channels must be 1\n"
-msgstr ""
+msgstr "Internal error!  Output channels or input channels must be 1\n"
 
 #: src/main/print-vars.c:81 src/main/print-vars.c:101
 #: src/main/print-vars.c:121
@@ -911,14 +885,12 @@ msgid "ps2"
 msgstr "ps2"
 
 #: src/main/print-vars.c:141
-#, fuzzy
 msgid "Page Size"
-msgstr "Size"
+msgstr "Page Size"
 
 #: src/main/print-vars.c:142
-#, fuzzy
 msgid "Size of the paper being printed to"
-msgstr "Size of paper that you wish to print to"
+msgstr "Size of the paper being printed to"
 
 #: src/cups/genppd.c:854 src/main/print-vars.c:147
 msgid "Media Type"
@@ -926,16 +898,15 @@ msgstr "Media Type"
 
 #: src/main/print-vars.c:148
 msgid "Type of media (plain paper, photo paper, etc.)"
-msgstr ""
+msgstr "Type of media (plain paper, photo paper, etc.)"
 
 #: src/cups/genppd.c:879 src/main/print-vars.c:153
 msgid "Media Source"
 msgstr "Media Source"
 
 #: src/main/print-vars.c:154
-#, fuzzy
 msgid "Source (input slot) of the media"
-msgstr "Source (input slot) of media you're printing to"
+msgstr "Source (input slot) of the media"
 
 #: src/cups/genppd.c:984 src/main/print-vars.c:159
 msgid "Ink Type"
@@ -946,9 +917,8 @@ msgid "Type of ink in the printer"
 msgstr "Type of ink in the printer"
 
 #: src/main/print-vars.c:165
-#, fuzzy
 msgid "Resolutions"
-msgstr "Resolution"
+msgstr "Resolutions"
 
 #: src/libgimpprintui/panel.c:228 src/main/print-vars.c:166
 msgid "Resolution and quality of the print"
@@ -959,7 +929,6 @@ msgid "Dither Algorithm"
 msgstr "Dither Algorithm"
 
 #: src/libgimpprintui/panel.c:1172 src/main/print-vars.c:172
-#, fuzzy
 msgid ""
 "Choose the dither algorithm to be used.\n"
 "Adaptive Hybrid usually produces the best all-around quality.\n"
@@ -972,36 +941,30 @@ msgid ""
 msgstr ""
 "Choose the dither algorithm to be used.\n"
 "Adaptive Hybrid usually produces the best all-around quality.\n"
+"EvenTone is a new, experimental algorithm that often produces excellent results.\n"
 "Ordered is faster and produces almost as good quality on photographs.\n"
-"Fast and Very Fast are considerably faster, and work well for text and line "
-"art.\n"
+"Fast and Very Fast are considerably faster, and work well for text and line art.\n"
 "Hybrid Floyd-Steinberg generally produces inferior output."
 
 #: src/main/print-vars.c:182
-#, fuzzy
 msgid "Brightness"
-msgstr "Brightness:"
+msgstr "Brightness"
 
 #: src/main/print-vars.c:183
-#, fuzzy
 msgid "Brightness of the print (0 is solid black, 2 is solid white)"
-msgstr ""
-"Set the brightness of the print.\n"
-"0 is solid black, 2 is solid white"
+msgstr "Brightness of the print (0 is solid black, 2 is solid white)"
 
 #: src/main/print-vars.c:188
-#, fuzzy
 msgid "Contrast"
-msgstr "Contrast:"
+msgstr "Contrast"
 
 #: src/main/print-vars.c:189
 msgid "Contrast of the print (0 is solid gray)"
-msgstr ""
+msgstr "Contrast of the print (0 is solid gray)"
 
 #: src/main/print-vars.c:194
-#, fuzzy
 msgid "Density"
-msgstr "Density:"
+msgstr "Density"
 
 #: src/main/print-vars.c:195
 msgid ""
@@ -1014,9 +977,8 @@ msgstr ""
 "regions are not solid."
 
 #: src/main/print-vars.c:203
-#, fuzzy
 msgid "Gamma"
-msgstr "Gamma:"
+msgstr "Gamma"
 
 #: src/main/print-vars.c:204
 msgid ""
@@ -1029,45 +991,40 @@ msgstr ""
 "Black and white will remain the same, unlike with the brightness adjustment."
 
 #: src/main/print-vars.c:213
-#, fuzzy
 msgid "AppGamma"
-msgstr "Gamma:"
+msgstr "AppGamma"
 
 #: src/main/print-vars.c:214
 msgid "Gamma value assumed by application"
-msgstr ""
+msgstr "Gamma value assumed by application"
 
 #: src/escputil/escputil.c:616 src/main/print-vars.c:219
 msgid "Cyan"
 msgstr "Cyan"
 
 #: src/main/print-vars.c:220
-#, fuzzy
 msgid "Adjust the cyan balance"
-msgstr "Adjust the cyan balance of the print"
+msgstr "Adjust the cyan balance"
 
 #: src/escputil/escputil.c:617 src/main/print-vars.c:225
 msgid "Magenta"
 msgstr "Magenta"
 
 #: src/main/print-vars.c:226
-#, fuzzy
 msgid "Adjust the magenta balance"
-msgstr "Adjust the magenta balance of the print"
+msgstr "Adjust the magenta balance"
 
 #: src/escputil/escputil.c:618 src/main/print-vars.c:231
 msgid "Yellow"
 msgstr "Yellow"
 
 #: src/main/print-vars.c:232
-#, fuzzy
 msgid "Adjust the yellow balance"
-msgstr "Adjust the yellow balance of the print"
+msgstr "Adjust the yellow balance"
 
 #: src/main/print-vars.c:237
-#, fuzzy
 msgid "Saturation"
-msgstr "Saturation:"
+msgstr "Saturation"
 
 #: src/main/print-vars.c:238
 msgid ""
@@ -1080,27 +1037,27 @@ msgstr ""
 #: src/main/printers.c:348
 #, c-format
 msgid "Value must be set for %s\n"
-msgstr ""
+msgstr "Value must be set for %s\n"
 
 #: src/main/printers.c:361 src/main/printers.c:366
-#, fuzzy, c-format
+#, c-format
 msgid "`%s' is not a valid %s\n"
-msgstr "%s is not a valid parameter of type %s\n"
+msgstr "`%s' is not a valid %s\n"
 
 #: src/main/printers.c:378
 #, c-format
 msgid "%s must be between %f and %f\n"
-msgstr ""
+msgstr "%s must be between %f and %f\n"
 
 #: src/main/printers.c:393
 #, c-format
 msgid "%s must be between %d and %d\n"
-msgstr ""
+msgstr "%s must be between %d and %d\n"
 
 #: src/main/printers.c:428
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown type parameter %s (%d)\n"
-msgstr "Unknown printer %s\n"
+msgstr "Unknown type parameter %s (%d)\n"
 
 #: src/main/printers.c:443
 #, c-format
@@ -1108,7 +1065,6 @@ msgid "%s out of range (value %d, min %d, max %d)\n"
 msgstr "%s out of range (value %d, min %d, max %d)\n"
 
 #: src/main/printers.c:498
-#, fuzzy
 msgid "Printer does not support color output\n"
 msgstr "Printer does not support colour output\n"
 
@@ -1125,23 +1081,20 @@ msgid "Left margin must not be less than zero\n"
 msgstr "Left margin must not be less than zero\n"
 
 #: src/main/printers.c:534
-#, fuzzy
 msgid "Height must be greater than zero\n"
-msgstr "Left margin must not be less than zero\n"
+msgstr "Height must be greater than zero\n"
 
 #: src/main/printers.c:540
-#, fuzzy
 msgid "Width must be greater than zero\n"
-msgstr "Top margin must not be less than zero\n"
+msgstr "Width must be greater than zero\n"
 
 #: src/main/printers.c:546
-#, fuzzy
 msgid "Image is too wide for the page\n"
-msgstr "Scale the print to the size of the page"
+msgstr "Image is too wide for the page\n"
 
 #: src/main/printers.c:552
 msgid "Image is too long for the page\n"
-msgstr ""
+msgstr "Image is too long for the page\n"
 
 #: src/libgimpprintui/panel.c:215
 msgid "Media Type:"
@@ -1192,32 +1145,28 @@ msgid "Set the base unit of measurement to centimetres"
 msgstr "Set the base unit of measurement to centimetres"
 
 #: src/libgimpprintui/panel.c:241
-#, fuzzy
 msgid "Points"
-msgstr "Print"
+msgstr "Points"
 
 #: src/libgimpprintui/panel.c:241
-#, fuzzy
 msgid "Set the base unit of measurement to points (1/72\")"
-msgstr "Set the base unit of measurement to inches"
+msgstr "Set the base unit of measurement to points (1/72\")"
 
 #: src/libgimpprintui/panel.c:243
 msgid "mm"
-msgstr ""
+msgstr "mm"
 
 #: src/libgimpprintui/panel.c:243
-#, fuzzy
 msgid "Set the base unit of measurement to millimetres"
-msgstr "Set the base unit of measurement to centimetres"
+msgstr "Set the base unit of measurement to millimetres"
 
 #: src/libgimpprintui/panel.c:245
 msgid "Pica"
-msgstr ""
+msgstr "Pica"
 
 #: src/libgimpprintui/panel.c:245
-#, fuzzy
 msgid "Set the base unit of measurement to picas (1/12\")"
-msgstr "Set the base unit of measurement to inches"
+msgstr "Set the base unit of measurement to picas (1/12\")"
 
 #: src/libgimpprintui/panel.c:252
 msgid "Color"
@@ -1409,9 +1358,8 @@ msgid "Bottom:"
 msgstr "Bottom:"
 
 #: src/libgimpprintui/panel.c:532
-#, fuzzy
 msgid "Distance from the top of the paper to bottom of the image"
-msgstr "Distance from the top of the paper to the bottom of the image"
+msgstr "Distance from the top of the paper to bottom of the image"
 
 #: src/libgimpprintui/panel.c:534
 msgid "Bottom Border:"
@@ -1734,7 +1682,7 @@ msgstr "Dither Algorithm:"
 
 #: src/libgimpprintui/panel.c:1186
 msgid "Curve:"
-msgstr ""
+msgstr "Curve:"
 
 #: src/libgimpprintui/panel.c:1209
 msgid "Image / Output Settings"
@@ -2019,38 +1967,32 @@ msgid "Stylus C40ux"
 msgstr "Stylus C40ux"
 
 #: src/escputil/escputil.c:205
-#, fuzzy
 msgid "Stylus C41sx"
-msgstr "Stylus C40sx"
+msgstr "Stylus C41sx"
 
 #: src/escputil/escputil.c:206
-#, fuzzy
 msgid "Stylus C41ux"
-msgstr "Stylus C40ux"
+msgstr "Stylus C41ux"
 
 #: src/escputil/escputil.c:207
-#, fuzzy
 msgid "Stylus C42sx"
-msgstr "Stylus C40sx"
+msgstr "Stylus C42sx"
 
 #: src/escputil/escputil.c:208
-#, fuzzy
 msgid "Stylus C42ux"
-msgstr "Stylus C40ux"
+msgstr "Stylus C42ux"
 
 #: src/escputil/escputil.c:209
 msgid "Stylus C60"
 msgstr "Stylus C60"
 
 #: src/escputil/escputil.c:210
-#, fuzzy
 msgid "Stylus C61"
-msgstr "Stylus C60"
+msgstr "Stylus C61"
 
 #: src/escputil/escputil.c:211
-#, fuzzy
 msgid "Stylus C62"
-msgstr "Stylus C60"
+msgstr "Stylus C62"
 
 #: src/escputil/escputil.c:212
 msgid "Stylus C70"
@@ -2061,9 +2003,8 @@ msgid "Stylus C80"
 msgstr "Stylus C80"
 
 #: src/escputil/escputil.c:214
-#, fuzzy
 msgid "Stylus C82"
-msgstr "Stylus C80"
+msgstr "Stylus C82"
 
 #: src/escputil/escputil.c:215
 msgid "Stylus Color"
@@ -2218,9 +2159,8 @@ msgid "Stylus Photo 820"
 msgstr "Stylus Photo 820"
 
 #: src/escputil/escputil.c:253
-#, fuzzy
 msgid "Stylus Photo 830"
-msgstr "Stylus Photo 780"
+msgstr "Stylus Photo 830"
 
 #: src/escputil/escputil.c:254
 msgid "Stylus Photo 870"
@@ -2239,24 +2179,20 @@ msgid "Stylus Photo 895"
 msgstr "Stylus Photo 895"
 
 #: src/escputil/escputil.c:258
-#, fuzzy
 msgid "Stylus Photo 915"
-msgstr "Stylus Photo 895"
+msgstr "Stylus Photo 915"
 
 #: src/escputil/escputil.c:259
-#, fuzzy
 msgid "Stylus Photo 925"
-msgstr "Stylus Photo 895"
+msgstr "Stylus Photo 925"
 
 #: src/escputil/escputil.c:260
-#, fuzzy
 msgid "Stylus Photo 950"
-msgstr "Stylus Photo 750"
+msgstr "Stylus Photo 950"
 
 #: src/escputil/escputil.c:261
-#, fuzzy
 msgid "Stylus Photo 960"
-msgstr "Stylus Photo 790"
+msgstr "Stylus Photo 960"
 
 #: src/escputil/escputil.c:262
 msgid "Stylus Photo 1200"
@@ -2279,14 +2215,12 @@ msgid "Stylus Photo 2000P"
 msgstr "Stylus Photo 2000P"
 
 #: src/escputil/escputil.c:267
-#, fuzzy
 msgid "Stylus Photo 2100"
-msgstr "Stylus Photo 1200"
+msgstr "Stylus Photo 2100"
 
 #: src/escputil/escputil.c:268
-#, fuzzy
 msgid "Stylus Photo 2200"
-msgstr "Stylus Photo 1200"
+msgstr "Stylus Photo 2200"
 
 #: src/escputil/escputil.c:269
 msgid "Stylus Pro 5000"
@@ -2305,9 +2239,8 @@ msgid "Stylus Pro 7500"
 msgstr "Stylus Pro 7500"
 
 #: src/escputil/escputil.c:273
-#, fuzzy
 msgid "Stylus Pro 7600"
-msgstr "Stylus Pro 7000"
+msgstr "Stylus Pro 7600"
 
 #: src/escputil/escputil.c:274
 msgid "Stylus Pro 9000"
@@ -2318,9 +2251,8 @@ msgid "Stylus Pro 9500"
 msgstr "Stylus Pro 9500"
 
 #: src/escputil/escputil.c:276
-#, fuzzy
 msgid "Stylus Pro 9600"
-msgstr "Stylus Pro 9000"
+msgstr "Stylus Pro 9600"
 
 #: src/escputil/escputil.c:277
 msgid "Stylus Pro 10000"
@@ -2363,7 +2295,7 @@ msgstr "Unable to send command to printer\n"
 
 #: src/escputil/escputil.c:561
 msgid "Read from printer timed out\n"
-msgstr ""
+msgstr "Read from printer timed out\n"
 
 #: src/escputil/escputil.c:563
 #, c-format
@@ -2380,7 +2312,7 @@ msgstr "Light Magenta"
 
 #: src/escputil/escputil.c:621
 msgid "Black/Dark Yellow"
-msgstr ""
+msgstr "Black/Dark Yellow"
 
 #: src/escputil/escputil.c:635
 msgid "Obtaining ink levels requires using a raw device.\n"
@@ -2857,14 +2789,12 @@ msgid "Printer %s does not require color head alignment.\n"
 msgstr "Printer %s does not require colour head alignment.\n"
 
 #: src/escputil/escputil.c:1193
-#, fuzzy
 msgid ""
 "Please inspect the print, and choose the pattern in each set.\n"
 "Type a pattern number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
-"Please inspect the print, and choose the best pair of lines in each "
-"pattern.\n"
-"Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
+"Please inspect the print, and choose the pattern in each set.\n"
+"Type a pattern number, '?' for help, or 'r' to repeat the procedure.\n"
 
 #: src/escputil/escputil.c:1292
 msgid "Error in input\n"
@@ -2939,502 +2869,3 @@ msgstr "Bad parameters; cannot continue!\n"
 #, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr "Get next row failed at %.0f\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Cannot read from %s: %s\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Cannot read from %s: %s\n"
-
-#~ msgid "Letter"
-#~ msgstr "Letter"
-
-#~ msgid "Legal"
-#~ msgstr "Legal"
-
-#~ msgid "Tabloid"
-#~ msgstr "Tabloid"
-
-#~ msgid "Executive"
-#~ msgstr "Executive"
-
-#~ msgid "3x5"
-#~ msgstr "3×5"
-
-#~ msgid "4x6"
-#~ msgstr "4×6"
-
-#~ msgid "Epson 4x6 Photo Paper"
-#~ msgstr "Epson 4×6 Photo Paper"
-
-#~ msgid "5x7"
-#~ msgstr "5×7"
-
-#~ msgid "5x8"
-#~ msgstr "5×8"
-
-#~ msgid "6x8"
-#~ msgstr "6×8"
-
-#~ msgid "8x10"
-#~ msgstr "8×10"
-
-#~ msgid "12x18"
-#~ msgstr "12×18"
-
-#~ msgid "Super B 13x19"
-#~ msgstr "Super B 13×19"
-
-#~ msgid "8x12"
-#~ msgstr "8×12"
-
-#~ msgid "11x14"
-#~ msgstr "11×14"
-
-#~ msgid "16x20"
-#~ msgstr "16×20"
-
-#~ msgid "16x24"
-#~ msgstr "16×24"
-
-#~ msgid "20x24"
-#~ msgstr "20×24"
-
-#~ msgid "20x30"
-#~ msgstr "20×30"
-
-#, fuzzy
-#~ msgid "22x30"
-#~ msgstr "20×30"
-
-#~ msgid "24x30"
-#~ msgstr "24×30"
-
-#~ msgid "24x36"
-#~ msgstr "24×36"
-
-#~ msgid "30x40"
-#~ msgstr "30×40"
-
-#~ msgid "4A"
-#~ msgstr "4A"
-
-#~ msgid "2A"
-#~ msgstr "2A"
-
-#~ msgid "A0"
-#~ msgstr "A0"
-
-#~ msgid "A1"
-#~ msgstr "A1"
-
-#~ msgid "A2"
-#~ msgstr "A2"
-
-#~ msgid "A3"
-#~ msgstr "A3"
-
-#~ msgid "A4"
-#~ msgstr "A4"
-
-#~ msgid "A5"
-#~ msgstr "A5"
-
-#~ msgid "A6"
-#~ msgstr "A6"
-
-#~ msgid "A7"
-#~ msgstr "A7"
-
-#~ msgid "A8"
-#~ msgstr "A8"
-
-#~ msgid "A9"
-#~ msgstr "A9"
-
-#~ msgid "A10"
-#~ msgstr "A10"
-
-#~ msgid "RA0"
-#~ msgstr "RA0"
-
-#~ msgid "RA1"
-#~ msgstr "RA1"
-
-#~ msgid "RA2"
-#~ msgstr "RA2"
-
-#~ msgid "RA3"
-#~ msgstr "RA3"
-
-#~ msgid "RA4"
-#~ msgstr "RA4"
-
-#~ msgid "SRA0"
-#~ msgstr "SRA0"
-
-#~ msgid "SRA1"
-#~ msgstr "SRA1"
-
-#~ msgid "SRA2"
-#~ msgstr "SRA2"
-
-#~ msgid "SRA3"
-#~ msgstr "SRA3"
-
-#~ msgid "SRA4"
-#~ msgstr "SRA4"
-
-#~ msgid "4B ISO"
-#~ msgstr "4B ISO"
-
-#~ msgid "2B ISO"
-#~ msgstr "2B ISO"
-
-#~ msgid "B0 ISO"
-#~ msgstr "B0 ISO"
-
-#~ msgid "B1 ISO"
-#~ msgstr "B1 ISO"
-
-#~ msgid "B2 ISO"
-#~ msgstr "B2 ISO"
-
-#~ msgid "B3 ISO"
-#~ msgstr "B3 ISO"
-
-#~ msgid "B4 ISO"
-#~ msgstr "B4 ISO"
-
-#~ msgid "B5 ISO"
-#~ msgstr "B5 ISO"
-
-#~ msgid "B6 ISO"
-#~ msgstr "B6 ISO"
-
-#~ msgid "B7 ISO"
-#~ msgstr "B7 ISO"
-
-#~ msgid "B8 ISO"
-#~ msgstr "B8 ISO"
-
-#~ msgid "B9 ISO"
-#~ msgstr "B9 ISO"
-
-#~ msgid "B10 ISO"
-#~ msgstr "B10 ISO"
-
-#~ msgid "B0 JIS"
-#~ msgstr "B0 JIS"
-
-#~ msgid "B1 JIS"
-#~ msgstr "B1 JIS"
-
-#~ msgid "B2 JIS"
-#~ msgstr "B2 JIS"
-
-#~ msgid "B3 JIS"
-#~ msgstr "B3 JIS"
-
-#~ msgid "B4 JIS"
-#~ msgstr "B4 JIS"
-
-#~ msgid "B5 JIS"
-#~ msgstr "B5 JIS"
-
-#~ msgid "B6 JIS"
-#~ msgstr "B6 JIS"
-
-#~ msgid "B7 JIS"
-#~ msgstr "B7 JIS"
-
-#~ msgid "B8 JIS"
-#~ msgstr "B8 JIS"
-
-#~ msgid "B9 JIS"
-#~ msgstr "B9 JIS"
-
-#~ msgid "B10 JIS"
-#~ msgstr "B10 JIS"
-
-#~ msgid "C0"
-#~ msgstr "C0"
-
-#~ msgid "C1"
-#~ msgstr "C1"
-
-#~ msgid "C2"
-#~ msgstr "C2"
-
-#~ msgid "C3"
-#~ msgstr "C3"
-
-#~ msgid "C4"
-#~ msgstr "C4"
-
-#~ msgid "C5"
-#~ msgstr "C5"
-
-#~ msgid "B6-C4"
-#~ msgstr "B6-C4"
-
-#~ msgid "C6"
-#~ msgstr "C6"
-
-#~ msgid "DL"
-#~ msgstr "DL"
-
-#~ msgid "C7-6"
-#~ msgstr "C7-6"
-
-#~ msgid "C7"
-#~ msgstr "C7"
-
-#~ msgid "C8"
-#~ msgstr "C8"
-
-#~ msgid "C9"
-#~ msgstr "C9"
-
-#~ msgid "C10"
-#~ msgstr "C10"
-
-#~ msgid "ArchA"
-#~ msgstr "ArchA"
-
-#~ msgid "ArchB"
-#~ msgstr "ArchB"
-
-#~ msgid "ArchC"
-#~ msgstr "ArchC"
-
-#~ msgid "ArchD"
-#~ msgstr "ArchD"
-
-#~ msgid "ArchE"
-#~ msgstr "ArchE"
-
-#~ msgid "American foolscap"
-#~ msgstr "American foolscap"
-
-#~ msgid "European foolscap"
-#~ msgstr "European foolscap"
-
-#~ msgid "Crown Quarto"
-#~ msgstr "Crown Quarto"
-
-#~ msgid "Large Crown Quarto"
-#~ msgstr "Large Crown Quarto"
-
-#~ msgid "Demy Quarto"
-#~ msgstr "Demy Quarto"
-
-#~ msgid "Royal Quarto"
-#~ msgstr "Royal Quarto"
-
-#~ msgid "Crown Octavo"
-#~ msgstr "Crown Octavo"
-
-#~ msgid "Large Crown Octavo"
-#~ msgstr "Large Crown Octavo"
-
-#~ msgid "Demy Octavo"
-#~ msgstr "Demy Octavo"
-
-#~ msgid "Royal Octavo"
-#~ msgstr "Royal Octavo"
-
-#~ msgid "Small paperback"
-#~ msgstr "Small paperback"
-
-#~ msgid "Penguin small paperback"
-#~ msgstr "Penguin small paperback"
-
-#~ msgid "Penguin large paperback"
-#~ msgstr "Penguin large paperback"
-
-#~ msgid "Hagaki Card"
-#~ msgstr "Hagaki Card"
-
-#~ msgid "Oufuku Card"
-#~ msgstr "Oufuku Card"
-
-#~ msgid "Japanese long envelope #3"
-#~ msgstr "Japanese long envelope #3"
-
-#~ msgid "Japanese long envelope #4"
-#~ msgstr "Japanese long envelope #4"
-
-#~ msgid "Japanese Kaku envelope #4"
-#~ msgstr "Japanese Kaku envelope #4"
-
-#~ msgid "Commercial 10"
-#~ msgstr "Commercial 10"
-
-#~ msgid "A2 Invitation"
-#~ msgstr "A2 Invitation"
-
-#~ msgid "Monarch Envelope"
-#~ msgstr "Monarch Envelope"
-
-#~ msgid "Custom"
-#~ msgstr "Custom"
-
-#~ msgid "89 mm Roll Paper"
-#~ msgstr "89 mm Roll Paper"
-
-#~ msgid "4 Inch Roll Paper"
-#~ msgstr "4 Inch Roll Paper"
-
-#~ msgid "5 Inch Roll Paper"
-#~ msgstr "5 Inch Roll Paper"
-
-#~ msgid "210 mm Roll Paper"
-#~ msgstr "210 mm Roll Paper"
-
-#~ msgid "13 Inch Roll Paper"
-#~ msgstr "13 Inch Roll Paper"
-
-#~ msgid "22 Inch Roll Paper"
-#~ msgstr "22 Inch Roll Paper"
-
-#~ msgid "24 Inch Roll Paper"
-#~ msgstr "24 Inch Roll Paper"
-
-#~ msgid "36 Inch Roll Paper"
-#~ msgstr "36 Inch Roll Paper"
-
-#~ msgid "44 Inch Roll Paper"
-#~ msgstr "44 Inch Roll Paper"
-
-#~ msgid "%s out of range (value %f, min %f, max %f)\n"
-#~ msgstr "%s out of range (value %f, min %f, max %f)\n"
-
-#~ msgid "%s is not a valid dither algorithm\n"
-#~ msgstr "%s is not a valid dither algorithm\n"
-
-#~ msgid ""
-#~ "Please re-insert the same alignment sheet in the printer when it is\n"
-#~ "finished printing.\n"
-#~ msgstr ""
-#~ "Please re-insert the same alignment sheet in the printer when it is\n"
-#~ "finished printing.\n"
-
-#~ msgid ""
-#~ "Inspect the alignment sheet, and determine which pattern is the "
-#~ "smoothest.\n"
-#~ "This pattern will appear to have the least ``grain''.\n"
-#~ "If you cannot find a smooth pattern, please select the number for the\n"
-#~ "best pattern, and repeat the procedure.\n"
-#~ "Type a pattern number, or '?' for help.\n"
-#~ msgstr ""
-#~ "Inspect the alignment sheet, and determine which pattern is the "
-#~ "smoothest.\n"
-#~ "This pattern will appear to have the least ``grain''.\n"
-#~ "If you cannot find a smooth pattern, please select the number for the\n"
-#~ "best pattern, and repeat the procedure.\n"
-#~ "Type a pattern number, or '?' for help.\n"
-
-#~ msgid "The best pattern should be numbered between 1 and %d.\n"
-#~ msgstr "The best pattern should be numbered between 1 and %d.\n"
-
-#~ msgid "Set the contrast of the print"
-#~ msgstr "Set the contrast of the print"
-
-#~ msgid "Cyan:"
-#~ msgstr "Cyan:"
-
-#~ msgid "Magenta:"
-#~ msgstr "Magenta:"
-
-#~ msgid "Yellow:"
-#~ msgstr "Yellow:"
-
-#~ msgid "Parameter %s out of range (value %f, min %f, max %f)\n"
-#~ msgstr "Parameter %s out of range (value %f, min %f, max %f)\n"
-
-#~ msgid "Parameter %s out of range (value %d, min %d, max %d)\n"
-#~ msgstr "Parameter %s out of range (value %d, min %d, max %d)\n"
-
-#~ msgid "Unknown option %s\n"
-#~ msgstr "Unknown option %s\n"
-
-#~ msgid "1440 x 360 DPI"
-#~ msgstr "1440 × 360 DPI"
-
-#~ msgid "1440 x 360 DPI Unidirectional"
-#~ msgstr "1440 × 360 DPI Unidirectional"
-
-#~ msgid "1440 x 360 DPI High Quality"
-#~ msgstr "1440 × 360 DPI High Quality"
-
-#~ msgid "1440 x 360 DPI High Quality Uni"
-#~ msgstr "1440 × 360 DPI High Quality Uni"
-
-#~ msgid "1440 x 360 DPI Highest Quality"
-#~ msgstr "1440 × 360 DPI Highest Quality"
-
-#~ msgid "13x19"
-#~ msgstr "13×19"
-
-#~ msgid "Monarch"
-#~ msgstr "Monarch"
-
-#~ msgid "Long 3"
-#~ msgstr "Long 3"
-
-#~ msgid "Long 4"
-#~ msgstr "Long 4"
-
-#~ msgid "Kaku"
-#~ msgstr "Kaku"
-
-#~ msgid "HP Greeting Card"
-#~ msgstr "HP Greeting Card"
-
-#~ msgid ""
-#~ "Please insert your alignment test page in the printer once more\n"
-#~ "for the final save of your alignment settings.  When the printer\n"
-#~ "feeds the page through, your settings have been saved.\n"
-#~ msgstr ""
-#~ "Please insert your alignment test page in the printer once more\n"
-#~ "for the final save of your alignment settings.  When the printer\n"
-#~ "feeds the page through, your settings have been saved.\n"
-
-#~ msgid ""
-#~ "Please inspect the print, and choose the best pair of lines\n"
-#~ "in pattern #%d, and then insert a fresh page in the input tray.\n"
-#~ "Type a pair number, '?' for help, or 'r' to retry this pattern.\n"
-#~ msgstr ""
-#~ "Please inspect the print, and choose the best pair of lines\n"
-#~ "in pattern #%d, and then insert a fresh page in the input tray.\n"
-#~ "Type a pair number, '?' for help, or 'r' to retry this pattern.\n"
-
-#~ msgid ""
-#~ "Aligning phase %d, and performing final test.\n"
-#~ "Please insert a fresh sheet of paper.\n"
-#~ msgstr ""
-#~ "Aligning phase %d, and performing final test.\n"
-#~ "Please insert a fresh sheet of paper.\n"
-
-#~ msgid "Aligning phase %d, and starting phase %d.\n"
-#~ msgstr "Aligning phase %d, and starting phase %d.\n"
-
-#~ msgid "Center the image vertically on the paper!"
-#~ msgstr "Centre the image vertically on the paper!"
-
-#~ msgid "Center the image on the paper!"
-#~ msgstr "Centre the image on the paper!"
-
-#~ msgid "Black/Color"
-#~ msgstr "Black/Colour"
-
-#~ msgid "Photo/Color/Black"
-#~ msgstr "Photo/Colour/Black"
-
-#~ msgid "Photo/Color"
-#~ msgstr "Photo/Colour"
-
-#~ msgid "Black/Photo Color"
-#~ msgstr "Black/Photo Colour"
