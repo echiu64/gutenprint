@@ -1062,7 +1062,8 @@ main (int argc, char **argv)
       page++;
     }
   while (status == 0);
-  stp_end_job(img.v, &si);
+  if (status > 0)
+    stp_end_job(img.v, &si);
 
   if (f)
     {
