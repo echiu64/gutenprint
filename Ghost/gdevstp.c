@@ -556,12 +556,6 @@ int Image_height(Image image)
   return (int)tmp2;
 }
 
-/* get an image column */
-void Image_get_col(Image img,unsigned char *data,int column)
-{
- /* dummy function, Landscape printing unsupported atm */
-}
-
 void Image_rotate_ccw(Image img)
 {
  /* dummy function, Landscape printing unsupported atm */
