@@ -1565,9 +1565,7 @@ gimp_preview_update (void)
 {
   gint	        temp;
   gint          orient;		   /* True orientation of page */
-  gint          tw0, tw1;	   /* Temporary printable_widths */
-  gint          th0, th1;	   /* Temporary printable_heights */
-  gint          ta0 = 0, ta1 = 0;  /* Temporary areas */
+  gdouble	min_ppi_scaling;   /* Minimum PPI for current page size */
   static GdkGC	*gc = NULL,
 		*gcinv = NULL;
   gchar         s[255];
@@ -1586,6 +1584,9 @@ gimp_preview_update (void)
   }
 
 
+  (*current_printer->media_size) (current_printer->model, vars.ppd_file,
+				  vars.media_size, &paper_width, &paper_height);
+
   (*current_printer->imageable_area) (current_printer->model, vars.ppd_file,
 				      vars.media_size, &left, &right,
 				      &bottom, &top);
@@ -1597,89 +1598,16 @@ gimp_preview_update (void)
   printable_width  = right - left;
   printable_height = bottom - top;
 
-  (*current_printer->media_size) (current_printer->model, vars.ppd_file,
-				  vars.media_size, &paper_width, &paper_height);
-
-  if (vars.scaling < 0)
-    {
-      tw0 = 72 * -image_width / vars.scaling;
-      th0 = tw0 * image_height / image_width;
-      tw1 = tw0;
-      th1 = th0;
-    }
-  else
-    {
-      /* Portrait */
-
-     /* we do vars.scaling % of height or width, whatever is smaller*/
-     /* this is relative to printable size */
-
-      tw0 = printable_width * vars.scaling / 100;
-      th0 = tw0 * image_height / image_width;
-      if (th0 > printable_height * vars.scaling / 100)
-	{
-	  th0 = printable_height * vars.scaling / 100;
-	  tw0 = th0 * image_width / image_height;
-	}
-      ta0 = tw0 * th0;
-
-      /* Landscape */
-      tw1 = printable_height * vars.scaling / 100;
-      th1 = tw1 * image_height / image_width;
-      if (th1 > printable_width * vars.scaling / 100)
-	{
-	  th1 = printable_width * vars.scaling / 100;
-	  tw1 = th1 * image_width / image_height;
-	}
-      ta1 = tw1 * th1;
-    }
-
   if (vars.orientation == ORIENT_AUTO)
-    {
-      if (vars.scaling < 0)
-	{
-	  if ((printable_width > printable_height && tw0 > th0) ||
-	      (printable_height > printable_width && th0 > tw0))
-	    {
-	      orient = ORIENT_PORTRAIT;
-	      if (tw0 > printable_width)
-		{
-		  vars.scaling *= (double) printable_width / (double) tw0;
-		  th0 = th0 * printable_width / tw0;
-		}
-	      if (th0 > printable_height)
-		{
-		  vars.scaling *= (double) printable_height / (double) th0;
-		  tw0 = tw0 * printable_height / th0;
-		}
-	    }
-	  else
-	    {
-	      orient = ORIENT_LANDSCAPE;
-	      if (tw1 > printable_height)
-		{
-		  vars.scaling *= (double) printable_height / (double) tw1;
-		  th1 = th1 * printable_height / tw1;
-		}
-	      if (th1 > printable_width)
-		{
-		  vars.scaling *= (double) printable_width / (double) th1;
-		  tw1 = tw1 * printable_width / th1;
-		}
-	    }
-	}
-      else
-	{
-	  if (ta0 >= ta1)
-	    orient = ORIENT_PORTRAIT;
-	  else
-	    orient = ORIENT_LANDSCAPE;
-	}
-    }
+  {
+    if ((printable_width >= printable_height && image_width >= image_height)
+	|| (printable_height >= printable_width && image_height >= image_width))
+      orient = ORIENT_PORTRAIT;
+    else
+      orient = ORIENT_LANDSCAPE;
+  }
   else
-    {
-      orient = vars.orientation;
-    }
+    orient = vars.orientation;
 
   if (orient == ORIENT_LANDSCAPE)
     {
@@ -1701,15 +1629,39 @@ gimp_preview_update (void)
       bottom            = right;
       right             = paper_width - top;
       top               = temp;
+    }
 
-      print_width  = tw1;
-      print_height = th1;
-    }
+  if (orient == ORIENT_PORTRAIT)
+    min_ppi_scaling = 72.0 * (double) image_width / (double) printable_width;
   else
+    min_ppi_scaling = 72.0 * (double) image_height / (double) printable_height;
+
+  if (vars.scaling < -min_ppi_scaling)
+    vars.scaling = -min_ppi_scaling;
+
+  if (vars.scaling < 0)
+  {
+    print_width = 72 * -image_width / vars.scaling;
+    print_height = print_width * image_height / image_width;
+  }
+  else
+  {
+    /* we do vars.scaling % of height or width, whatever is smaller */
+    /* this is relative to printable size */
+    if (image_width * printable_height > printable_width * image_height)
+      /* i.e. if image_width/image_height > printable_width/printable_height */
+      /* i.e. if image is wider relative to its height than the width
+	 of the printable area relative to its height */
     {
-      print_width  = tw0;
-      print_height = th0;
+      print_width = printable_width * vars.scaling / 100;
+      print_height = print_width * image_height / image_width;
     }
+    else
+    {
+      print_height = printable_height * vars.scaling / 100;
+      print_width = print_height * image_width / image_height;
+    }
+  }
 
   paper_left = (PREVIEW_SIZE_HORIZ - PREVIEW_PPI * paper_width / 72) / 2;
   paper_top  = (PREVIEW_SIZE_VERT - PREVIEW_PPI * paper_height / 72) / 2;
