@@ -41,6 +41,36 @@ download links. The final release of Gimp-Print 4.2.6 for Mac OS X
 Jaguar is available now!</p>
 
 
+<H2><font color="#ff0000">Gimp-Print 5.0.0-beta2 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of August 25,
+2004!</strong></em></font> Gimp-Print 5.0.0-beta is released.  This
+is a beta release on the Gimp-Print 5.0 line.  This offers many bug
+fixes and improvements.  An OS X installer is not yet
+available. <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=263385">You
+can read the release notes and download it here</a>.  </p>
+
+
+<H2><font color="#ff0000">Gimp-Print 4.2.7 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of July 15,
+2004!</strong></em></font> Gimp-Print 4.2.7 is released.  This
+offers a number of bug fixes over 4.2.6. <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=253459">You
+can read the release notes and download it here</a>.  </p>
+
+
+<H2><font color="#ff0000">Gimp-Print 5.0.0-beta1 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of June 26,
+2004!</strong></em></font> Gimp-Print 5.0.0-beta is released.  This
+is a beta release on the Gimp-Print 5.0 line.  This offers many bug
+fixes and improvements. <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=248831">You
+can read the release notes and download it here</a>.  </p>
+
+
 <H2><font color="#ff0000">Gimp-Print 5.0.0-alpha3 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of May 12,
@@ -48,17 +78,7 @@ Jaguar is available now!</p>
 is an alpha release on the Gimp-Print 5.0 line.  This offers a number
 of fixes over 5.0.0-alpha2.  An OS X installer is not yet
 available. <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=209204">You
-can read the release notes and download it here</a>.  </p>
-
-
-<H2><font color="#ff0000">Gimp-Print 4.2.7-pre1 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of April 13,
-2004!</strong></em></font> Gimp-Print 4.2.7-pre1 is released.  This
-offers a number of bug fixes over 4.2.6.  At present, an OS X
-installation kit is not available. <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=209204">You
+href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=237881">You
 can read the release notes and download it here</a>.  </p>
 
 
@@ -70,7 +90,7 @@ is an alpha release on the Gimp-Print 5.0 line.  This release features
 major internal changes, and is expected to be relatively unstable.
 Therefore, no OS X installer will be provided.
  <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=209204">You
+href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=230386">You
 can read the release notes and download it here</a>.  </p>
 
 
