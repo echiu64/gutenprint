@@ -47,6 +47,7 @@ libgimpprint_la_SOURCES = \
 	print-canon.c \
 	print-dither.c \
 	print-escp2.c \
+	print-escp2-data.c \
 	print-pcl.c \
 	print-ps.c \
 	print-util.c \
