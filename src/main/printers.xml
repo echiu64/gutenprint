@@ -615,97 +615,97 @@
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX-3100" driver="escp2-cx3100" manufacturer="Epson" model="52">
+      <printer name="EPSON Stylus CX3100" driver="escp2-cx3100" manufacturer="Epson" model="52">
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX-3200" driver="escp2-cx3200" manufacturer="Epson" model="52">
+      <printer name="EPSON Stylus CX3200" driver="escp2-cx3200" manufacturer="Epson" model="52">
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX-3500" driver="escp2-cx3500" manufacturer="Epson" model="52">
+      <printer name="EPSON Stylus CX3500" driver="escp2-cx3500" manufacturer="Epson" model="52">
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX-3600" driver="escp2-cx3600" manufacturer="Epson" model="52">
+      <printer name="EPSON Stylus CX3600" driver="escp2-cx3600" manufacturer="Epson" model="52">
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX-3650" driver="escp2-cx3650" manufacturer="Epson" model="52">
+      <printer name="EPSON Stylus CX3650" driver="escp2-cx3650" manufacturer="Epson" model="52">
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX-4600" driver="escp2-cx4600" manufacturer="Epson" model="65">
+      <printer name="EPSON Stylus CX4600" driver="escp2-cx4600" manufacturer="Epson" model="65">
         <parameter type="float" name="CyanGamma">0.96</parameter>
         <parameter type="float" name="MagentaGamma">1.02</parameter>
         <parameter type="float" name="YellowGamma">1.02</parameter>
         <parameter type="float" name="Gamma">0.688</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX-5100" driver="escp2-cx5100" manufacturer="Epson" model="55">
+      <printer name="EPSON Stylus CX5100" driver="escp2-cx5100" manufacturer="Epson" model="55">
         <parameter type="float" name="CyanGamma">0.96</parameter>
         <parameter type="float" name="MagentaGamma">1.02</parameter>
         <parameter type="float" name="YellowGamma">1.02</parameter>
         <parameter type="float" name="Gamma">0.688</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX-5200" driver="escp2-cx5200" manufacturer="Epson" model="55">
+      <printer name="EPSON Stylus CX5200" driver="escp2-cx5200" manufacturer="Epson" model="55">
         <parameter type="float" name="CyanGamma">0.96</parameter>
         <parameter type="float" name="MagentaGamma">1.02</parameter>
         <parameter type="float" name="YellowGamma">1.02</parameter>
         <parameter type="float" name="Gamma">0.688</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX-5300" driver="escp2-cx5300" manufacturer="Epson" model="55">
+      <printer name="EPSON Stylus CX5300" driver="escp2-cx5300" manufacturer="Epson" model="55">
         <parameter type="float" name="CyanGamma">0.96</parameter>
         <parameter type="float" name="MagentaGamma">1.02</parameter>
         <parameter type="float" name="YellowGamma">1.02</parameter>
         <parameter type="float" name="Gamma">0.688</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX-5400" driver="escp2-cx5400" manufacturer="Epson" model="55">
+      <printer name="EPSON Stylus CX5400" driver="escp2-cx5400" manufacturer="Epson" model="55">
         <parameter type="float" name="CyanGamma">0.96</parameter>
         <parameter type="float" name="MagentaGamma">1.02</parameter>
         <parameter type="float" name="YellowGamma">1.02</parameter>
         <parameter type="float" name="Gamma">0.688</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX-6300" driver="escp2-cx6300" manufacturer="Epson" model="60">
+      <printer name="EPSON Stylus CX6300" driver="escp2-cx6300" manufacturer="Epson" model="60">
         <parameter type="float" name="CyanGamma">0.96</parameter>
         <parameter type="float" name="MagentaGamma">1.02</parameter>
         <parameter type="float" name="YellowGamma">1.02</parameter>
         <parameter type="float" name="Gamma">0.688</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX-6400" driver="escp2-cx6400" manufacturer="Epson" model="60">
+      <printer name="EPSON Stylus CX6400" driver="escp2-cx6400" manufacturer="Epson" model="60">
         <parameter type="float" name="CyanGamma">0.96</parameter>
         <parameter type="float" name="MagentaGamma">1.02</parameter>
         <parameter type="float" name="YellowGamma">1.02</parameter>
         <parameter type="float" name="Gamma">0.688</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX-6500" driver="escp2-cx6500" manufacturer="Epson" model="60">
+      <printer name="EPSON Stylus CX6500" driver="escp2-cx6500" manufacturer="Epson" model="60">
         <parameter type="float" name="CyanGamma">0.96</parameter>
         <parameter type="float" name="MagentaGamma">1.02</parameter>
         <parameter type="float" name="YellowGamma">1.02</parameter>
         <parameter type="float" name="Gamma">0.688</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX-6600" driver="escp2-cx6600" manufacturer="Epson" model="60">
+      <printer name="EPSON Stylus CX6600" driver="escp2-cx6600" manufacturer="Epson" model="60">
         <parameter type="float" name="CyanGamma">0.96</parameter>
         <parameter type="float" name="MagentaGamma">1.02</parameter>
         <parameter type="float" name="YellowGamma">1.02</parameter>
         <parameter type="float" name="Gamma">0.688</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX-8300" driver="escp2-cx8300" manufacturer="Epson" model="60">
+      <printer name="EPSON Stylus CX8300" driver="escp2-cx8300" manufacturer="Epson" model="60">
         <parameter type="float" name="CyanGamma">0.96</parameter>
         <parameter type="float" name="MagentaGamma">1.02</parameter>
         <parameter type="float" name="YellowGamma">1.02</parameter>
         <parameter type="float" name="Gamma">0.688</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX-8400" driver="escp2-cx8400" manufacturer="Epson" model="60">
+      <printer name="EPSON Stylus CX8400" driver="escp2-cx8400" manufacturer="Epson" model="60">
         <parameter type="float" name="CyanGamma">0.96</parameter>
         <parameter type="float" name="MagentaGamma">1.02</parameter>
         <parameter type="float" name="YellowGamma">1.02</parameter>
