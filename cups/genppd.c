@@ -23,17 +23,9 @@
  *
  * Contents:
  *
- *   main()            - Process files on the command-line...
- *   compare_sizes()   - Compare two page sizes...
- *   get_colororder()  - Get a color order value from a name...
- *   get_colorspace()  - Get a colorspace value...
- *   get_measurement() - Get a measurement value...
- *   get_param()       - Get option names for multiple languages...
- *   get_size()        - Get a page size...
- *   get_token()       - Get a token from a file...
- *   scan_file()       - Scan a file for driver definitions.
- *   usage()           - Show program usage...
- *   write_ppd()       - Write a PPD file.
+ *   main()      - Process files on the command-line...
+ *   usage()     - Show program usage...
+ *   write_ppd() - Write a PPD file.
  */
 
 /*
@@ -253,6 +245,15 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
 		  "hq2",
 		  "emul",
 		  "dmt"
+		};
+  static char	*dithers[][2] =
+		{
+		  { "Fast", "Fast" },
+		  { "Ordered", "Ordered" },
+		  { "AdaptHybrid", "Adaptive Hybrid" },
+		  { "AdaptRandom", "Adaptive Random" },
+		  { "FloydHybrid", "Hybrid Floyd-Steinberg" },
+		  { "FloydRandom", "Random Floyd-Steinberg" }
 		};
 
 
@@ -502,6 +503,20 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
 
     gzputs(fp, "*CloseUI: *InputSlot\n");
   }
+
+ /*
+  * Dithering algorithms...
+  */
+
+  gzputs(fp, "*OpenUI *Dither: PickOne\n");
+  gzputs(fp, "*OrderDependency: 10 AnySetup *Dither\n");
+  gzprintf(fp, "*DefaultDither: %s\n", dithers[0][0]);
+
+  for (i = 0; i < 6; i ++)
+    gzprintf(fp, "*Dither %s/%s: \"<</OutputType(%s)>>setpagedevice\"\n",
+             dithers[i][0], dithers[i][1], dithers[i][1]);
+
+  gzputs(fp, "*CloseUI: *Dither\n");
 
  /*
   * Resolutions...
