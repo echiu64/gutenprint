@@ -399,156 +399,135 @@ stpui_plist_add(const stpui_plist_t *key, int add_only)
   return 1;
 }
 
-/*
- * 'stpui_printrc_load()' - Load the printer resource configuration file.
- */
-void
-stpui_printrc_load(void)
+static void
+stpui_printrc_load_v0(FILE *fp)
 {
-  int		i;		/* Looping var */
-  FILE		*fp;		/* Printrc file */
-  char		line[1024],	/* Line in printrc file */
-		*lineptr,	/* Pointer in line */
-		*commaptr;	/* Pointer to next comma */
+  char		line[1024];	/* Line in printrc file */
+  char		*lineptr;	/* Pointer in line */
+  char		*commaptr;	/* Pointer to next comma */
   stpui_plist_t	key;		/* Search key */
-  int		format = 0;	/* rc file format version */
-  int		system_printers; /* printer count before reading printrc */
-  char *	current_printer = 0; /* printer to select */
-  const char *filename = stpui_get_printrc_file();
-
-  check_plist(1);
-
- /*
-  * Get the printer list...
-  */
-
-  stpui_get_system_printers();
-
-  system_printers = stpui_plist_count - 1;
-
-  if ((fp = fopen(filename, "r")) != NULL)
-  {
-   /*
-    * File exists - read the contents and update the printer list...
-    */
-
-    (void) memset(&key, 0, sizeof(stpui_plist_t));
-    stpui_printer_initialize(&key);
-    strcpy(key.name, _("File"));
-    key.active = 1;
-    (void) memset(line, 0, 1024);
-    while (fgets(line, sizeof(line), fp) != NULL)
+  int keepgoing = 1;
+  (void) memset(line, 0, 1024);
+  (void) memset(&key, 0, sizeof(stpui_plist_t));
+  stpui_printer_initialize(&key);
+  strcpy(key.name, _("File"));
+  key.active = 1;
+  while (fgets(line, sizeof(line), fp) != NULL)
     {
-      int keepgoing = 1;
-      if (line[0] == '#')
-      {
-	if (strncmp("#PRINTRCv", line, 9) == 0)
-	{
-#ifdef DEBUG
-          printf("Found printrc version tag: `%s'\n", line);
-          printf("Version number: `%s'\n", &(line[9]));
-#endif
-	  (void) sscanf(&(line[9]), "%d", &format);
-	}
-        continue;	/* Comment */
-      }
-      if (format == 0)
-      {
-       /*
-	* Read old format printrc lines...
-	*/
+      /*
+       * Read old format printrc lines...
+       */
 
-        stpui_printer_initialize(&key);
-	key.invalid_mask = 0;
-        lineptr = line;
+      stpui_printer_initialize(&key);
+      key.invalid_mask = 0;
+      lineptr = line;
 
-       /*
-        * Read the command-delimited printer definition data.  Note that
-        * we can't use sscanf because %[^,] fails if the string is empty...
-        */
+      /*
+       * Read the command-delimited printer definition data.  Note that
+       * we can't use sscanf because %[^,] fails if the string is empty...
+       */
 
-        GET_MANDATORY_INTERNAL_STRING_PARAM(name);
-        GET_MANDATORY_INTERNAL_STRING_PARAM(output_to);
-        GET_MANDATORY_STRING_PARAM(driver);
+      GET_MANDATORY_INTERNAL_STRING_PARAM(name);
+      GET_MANDATORY_INTERNAL_STRING_PARAM(output_to);
+      GET_MANDATORY_STRING_PARAM(driver);
 
-        if (! stp_get_printer(key.v))
-	  continue;
+      if (! stp_get_printer(key.v))
+	continue;
 
-        GET_MANDATORY_STRING_PARAM(ppd_file);
-        GET_MANDATORY_INT_PARAM(output_type);
-	if (!get_mandatory_string_param(key.v, "Resolution", &lineptr))
-	  continue;
-	if (!get_mandatory_string_param(key.v, "PageSize", &lineptr))
-	  continue;
-	if (!get_mandatory_string_param(key.v, "MediaType", &lineptr))
-	  continue;
+      GET_MANDATORY_STRING_PARAM(ppd_file);
+      GET_MANDATORY_INT_PARAM(output_type);
+      if (!get_mandatory_string_param(key.v, "Resolution", &lineptr))
+	continue;
+      if (!get_mandatory_string_param(key.v, "PageSize", &lineptr))
+	continue;
+      if (!get_mandatory_string_param(key.v, "MediaType", &lineptr))
+	continue;
 
-	get_optional_string_param(key.v, "InputSlot", &lineptr, &keepgoing);
-	get_optional_float_param(key.v, "Brightness", &lineptr, &keepgoing);
+      get_optional_string_param(key.v, "InputSlot", &lineptr, &keepgoing);
+      get_optional_float_param(key.v, "Brightness", &lineptr, &keepgoing);
 
-        GET_OPTIONAL_INTERNAL_FLOAT_PARAM(scaling);
-        GET_OPTIONAL_INTERNAL_INT_PARAM(orientation);
-        GET_OPTIONAL_INT_PARAM(left);
-        GET_OPTIONAL_INT_PARAM(top);
-	get_optional_float_param(key.v, "Gamma", &lineptr, &keepgoing);
-	get_optional_float_param(key.v, "Contrast", &lineptr, &keepgoing);
-	get_optional_float_param(key.v, "Cyan", &lineptr, &keepgoing);
-	get_optional_float_param(key.v, "Magenta", &lineptr, &keepgoing);
-	get_optional_float_param(key.v, "Yellow", &lineptr, &keepgoing);
-        IGNORE_OPTIONAL_PARAM(linear);
-        IGNORE_OPTIONAL_PARAM(image_type);
-	get_optional_float_param(key.v, "Saturation", &lineptr, &keepgoing);
-	get_optional_float_param(key.v, "Density", &lineptr, &keepgoing);
-	get_optional_string_param(key.v, "InkType", &lineptr, &keepgoing);
-	get_optional_string_param(key.v,"DitherAlgorithm",&lineptr,&keepgoing);
-        GET_OPTIONAL_INTERNAL_INT_PARAM(unit);
-	stpui_plist_add(&key, 0);
-      }
-      else if (format == 1)
-      {
-       /*
-	* Read new format printrc lines...
-	*/
+      GET_OPTIONAL_INTERNAL_FLOAT_PARAM(scaling);
+      GET_OPTIONAL_INTERNAL_INT_PARAM(orientation);
+      GET_OPTIONAL_INT_PARAM(left);
+      GET_OPTIONAL_INT_PARAM(top);
+      get_optional_float_param(key.v, "Gamma", &lineptr, &keepgoing);
+      get_optional_float_param(key.v, "Contrast", &lineptr, &keepgoing);
+      get_optional_float_param(key.v, "Cyan", &lineptr, &keepgoing);
+      get_optional_float_param(key.v, "Magenta", &lineptr, &keepgoing);
+      get_optional_float_param(key.v, "Yellow", &lineptr, &keepgoing);
+      IGNORE_OPTIONAL_PARAM(linear);
+      IGNORE_OPTIONAL_PARAM(image_type);
+      get_optional_float_param(key.v, "Saturation", &lineptr, &keepgoing);
+      get_optional_float_param(key.v, "Density", &lineptr, &keepgoing);
+      get_optional_string_param(key.v, "InkType", &lineptr, &keepgoing);
+      get_optional_string_param(key.v,"DitherAlgorithm",&lineptr,&keepgoing);
+      GET_OPTIONAL_INTERNAL_INT_PARAM(unit);
+      stpui_plist_add(&key, 0);
+    }
+  stpui_plist_current = 0;
+}
 
-	char *keyword, *end, *value;
+static void
+stpui_printrc_load_v1(FILE *fp)
+{
+  char		line[1024];	/* Line in printrc file */
+  stpui_plist_t	key;		/* Search key */
+  char *	current_printer = 0; /* printer to select */
+  (void) memset(line, 0, 1024);
+  (void) memset(&key, 0, sizeof(stpui_plist_t));
+  stpui_printer_initialize(&key);
+  strcpy(key.name, _("File"));
+  key.active = 1;
+  while (fgets(line, sizeof(line), fp) != NULL)
+    {
+      /*
+       * Read new format printrc lines...
+       */
 
-	keyword = line;
-	for (keyword = line; isspace(*keyword); keyword++)
+      char *keyword, *end, *value;
+
+      keyword = line;
+      for (keyword = line; isspace(*keyword); keyword++)
 	{
 	  /* skip initial spaces... */
 	}
-	if (!isalpha(*keyword))
-	  continue;
-	for (end = keyword; isalnum(*end) || *end == '-'; end++)
+      if (!isalpha(*keyword))
+	continue;
+      for (end = keyword; isalnum(*end) || *end == '-'; end++)
 	{
 	  /* find end of keyword... */
 	}
-	value = end;
-	while (isspace(*value)) {
+      value = end;
+      while (isspace(*value))
+	{
 	  /* skip over white space... */
 	  value++;
 	}
-	if (*value != ':')
-	  continue;
-	value++;
-	*end = '\0';
-	while (isspace(*value)) {
+      if (*value != ':')
+	continue;
+      value++;
+      *end = '\0';
+      while (isspace(*value))
+	{
 	  /* skip over white space... */
 	  value++;
 	}
-	for (end = value; *end && *end != '\n'; end++)
+      for (end = value; *end && *end != '\n'; end++)
 	{
 	  /* find end of line... */
 	}
-	*end = '\0';
+      *end = '\0';
 #ifdef DEBUG
-        printf("Keyword = `%s', value = `%s'\n", keyword, value);
+      printf("Keyword = `%s', value = `%s'\n", keyword, value);
 #endif
-	if (strcasecmp("current-printer", keyword) == 0) {
+      if (strcasecmp("current-printer", keyword) == 0)
+	{
 	  if (current_printer)
 	    free (current_printer);
 	  current_printer = g_strdup(value);
-	} else if (strcasecmp("printer", keyword) == 0) {
+	}
+      else if (strcasecmp("printer", keyword) == 0)
+	{
 	  /* Switch to printer named VALUE */
 	  stpui_plist_add(&key, 0);
 #ifdef DEBUG
@@ -558,44 +537,48 @@ stpui_printrc_load(void)
 	  stpui_printer_initialize(&key);
 	  key.invalid_mask = 0;
 	  stpui_plist_set_name(&key, value);
-	} else if (strcasecmp("destination", keyword) == 0) {
-	  stpui_plist_set_output_to(&key, value);
-	} else if (strcasecmp("driver", keyword) == 0) {
-	  stp_set_driver(key.v, value);
-	} else if (strcasecmp("ppd-file", keyword) == 0) {
-	  stp_set_ppd_file(key.v, value);
-	} else if (strcasecmp("output-type", keyword) == 0) {
-	  stp_set_output_type(key.v, atoi(value));
-	} else if (strcasecmp("media-size", keyword) == 0) {
-	  stp_set_string_parameter(key.v, "PageSize", value);
-	} else if (strcasecmp("media-type", keyword) == 0) {
-	  stp_set_string_parameter(key.v, "MediaType", value);
-	} else if (strcasecmp("media-source", keyword) == 0) {
-	  stp_set_float_parameter(key.v, "Brightness", atof(value));
-	} else if (strcasecmp("scaling", keyword) == 0) {
-	  key.scaling = atof(value);
-	} else if (strcasecmp("orientation", keyword) == 0) {
-	  key.orientation = atoi(value);
-	} else if (strcasecmp("left", keyword) == 0) {
-	  stp_set_left(key.v, atoi(value));
-	} else if (strcasecmp("top", keyword) == 0) {
-	  stp_set_top(key.v, atoi(value));
-	} else if (strcasecmp("linear", keyword) == 0) {
-	  /* Ignore linear */
-	} else if (strcasecmp("image-type", keyword) == 0) {
-	  /* Ignore image type */
-	} else if (strcasecmp("unit", keyword) == 0) {
-	  key.unit = atoi(value);
-	} else if (strcasecmp("custom-page-width", keyword) == 0) {
-	  stp_set_page_width(key.v, atoi(value));
-	} else if (strcasecmp("custom-page-height", keyword) == 0) {
-	  stp_set_page_height(key.v, atoi(value));
-	  /* Special case Ink-Type and Dither-Algorithm */
-	} else if (strcasecmp("ink-type", keyword) == 0) {
-	  stp_set_string_parameter(key.v, "InkType", value);
-	} else if (strcasecmp("dither-algorithm", keyword) == 0) {
-	  stp_set_string_parameter(key.v, "DitherAlgorithm", value);
-	} else {
+	}
+      else if (strcasecmp("destination", keyword) == 0)
+	stpui_plist_set_output_to(&key, value);
+      else if (strcasecmp("driver", keyword) == 0)
+	stp_set_driver(key.v, value);
+      else if (strcasecmp("ppd-file", keyword) == 0)
+	stp_set_ppd_file(key.v, value);
+      else if (strcasecmp("output-type", keyword) == 0)
+	stp_set_output_type(key.v, atoi(value));
+      else if (strcasecmp("media-size", keyword) == 0)
+	stp_set_string_parameter(key.v, "PageSize", value);
+      else if (strcasecmp("media-type", keyword) == 0)
+	stp_set_string_parameter(key.v, "MediaType", value);
+      else if (strcasecmp("media-source", keyword) == 0)
+	stp_set_float_parameter(key.v, "Brightness", atof(value));
+      else if (strcasecmp("scaling", keyword) == 0)
+	key.scaling = atof(value);
+      else if (strcasecmp("orientation", keyword) == 0)
+	key.orientation = atoi(value);
+      else if (strcasecmp("left", keyword) == 0)
+	stp_set_left(key.v, atoi(value));
+      else if (strcasecmp("top", keyword) == 0)
+	stp_set_top(key.v, atoi(value));
+      else if (strcasecmp("linear", keyword) == 0)
+	/* Ignore linear */
+	;
+      else if (strcasecmp("image-type", keyword) == 0)
+	/* Ignore image type */
+	;
+      else if (strcasecmp("unit", keyword) == 0)
+	key.unit = atoi(value);
+      else if (strcasecmp("custom-page-width", keyword) == 0)
+	stp_set_page_width(key.v, atoi(value));
+      else if (strcasecmp("custom-page-height", keyword) == 0)
+	stp_set_page_height(key.v, atoi(value));
+      /* Special case Ink-Type and Dither-Algorithm */
+      else if (strcasecmp("ink-type", keyword) == 0)
+	stp_set_string_parameter(key.v, "InkType", value);
+      else if (strcasecmp("dither-algorithm", keyword) == 0)
+	stp_set_string_parameter(key.v, "DitherAlgorithm", value);
+      else
+	{
 	  stp_parameter_t desc;
 	  stp_curve_t curve;
 	  stp_describe_parameter(key.v, keyword, &desc);
@@ -621,38 +604,73 @@ stpui_printrc_load(void)
 	      break;
 	    default:
 	      if (strlen(value))
-		printf("Unrecognized keyword `%s' in printrc; value `%s' (%d)\n",
-		       keyword, value, desc.p_type);
+		{
+		  char buf[1024];
+		  snprintf(buf, sizeof(buf),
+			   "Unrecognized keyword `%s' in printrc; value `%s' (%d)\n",
+			   keyword, value, desc.p_type);
+		}
 	    }
 	}
-      }
-      else
-      {
-       /*
-        * We cannot read this file format...
-        */
-      }
     }
-    if (format > 0)
-      stpui_plist_add(&key, 0);
-    fclose(fp);
-  }
+  if (strlen(key.name) > 0)
+    stpui_plist_add(&key, 0);
+  if (current_printer)
+    {
+      int i;
+      for (i = 0; i < stpui_plist_count; i ++)
+	if (strcmp(current_printer, stpui_plist[i].name) == 0)
+	  stpui_plist_current = i;
+    }
+}  
+
+/*
+ * 'stpui_printrc_load()' - Load the printer resource configuration file.
+ */
+void
+stpui_printrc_load(void)
+{
+  FILE		*fp;		/* Printrc file */
+  char		line[1024];	/* Line in printrc file */
+  int		format = 0;	/* rc file format version */
+  int		system_printers; /* printer count before reading printrc */
+  const char *filename = stpui_get_printrc_file();
+
+  check_plist(1);
 
  /*
-  * Select the current printer as necessary...
+  * Get the printer list...
   */
 
-  if (format == 1)
+  stpui_get_system_printers();
+
+  system_printers = stpui_plist_count - 1;
+
+  if ((fp = fopen(filename, "r")) != NULL)
     {
-      if (current_printer)
+      (void) memset(line, 0, 1024);
+      if (fgets(line, sizeof(line), fp) != NULL)
 	{
-	  for (i = 0; i < stpui_plist_count; i ++)
-	    if (strcmp(current_printer, stpui_plist[i].name) == 0)
-	      stpui_plist_current = i;
+	  if (strncmp("#PRINTRCv", line, 9) == 0)
+	    {
+#ifdef DEBUG
+	      printf("Found printrc version tag: `%s'\n", line);
+	      printf("Version number: `%s'\n", &(line[9]));
+#endif
+	      (void) sscanf(&(line[9]), "%d", &format);
+	    }
+	}
+      rewind(fp);
+      switch (format)
+	{
+	case 0:
+	  stpui_printrc_load_v0(fp);
+	  break;
+	case 1:
+	  stpui_printrc_load_v1(fp);
+	  break;
 	}
     }
-  else
-    stpui_plist_current = 0;
 }
 
 /*
@@ -668,90 +686,90 @@ stpui_printrc_save(void)
 
 
   if ((fp = fopen(filename, "w")) != NULL)
-  {
-   /*
-    * Write the contents of the printer list...
-    */
+    {
+      /*
+       * Write the contents of the printer list...
+       */
 
 #ifdef DEBUG
-    fprintf(stderr, "Number of printers: %d\n", stpui_plist_count);
+      fprintf(stderr, "Number of printers: %d\n", stpui_plist_count);
 #endif
 
-    fputs("#PRINTRCv1 written by GIMP-PRINT " PLUG_IN_VERSION "\n", fp);
+      fputs("#PRINTRCv1 written by GIMP-PRINT " PLUG_IN_VERSION "\n", fp);
 
-    fprintf(fp, "Current-Printer: %s\n", stpui_plist[stpui_plist_current].name);
+      fprintf(fp, "Current-Printer: %s\n", stpui_plist[stpui_plist_current].name);
 
-    for (i = 0, p = stpui_plist; i < stpui_plist_count; i ++, p ++)
-      {
-	int count;
-	int j;
-	stp_parameter_list_t *params = stp_list_parameters(p->v);
-	count = stp_parameter_list_count(params);
-	fprintf(fp, "\nPrinter: %s\n", p->name);
-	fprintf(fp, "Destination: %s\n", stpui_plist_get_output_to(p));
-	fprintf(fp, "Scaling: %.3f\n", p->scaling);
-	fprintf(fp, "Orientation: %d\n", p->orientation);
-	fprintf(fp, "Unit: %d\n", p->unit);
+      for (i = 0, p = stpui_plist; i < stpui_plist_count; i ++, p ++)
+	{
+	  int count;
+	  int j;
+	  stp_parameter_list_t *params = stp_list_parameters(p->v);
+	  count = stp_parameter_list_count(params);
+	  fprintf(fp, "\nPrinter: %s\n", p->name);
+	  fprintf(fp, "Destination: %s\n", stpui_plist_get_output_to(p));
+	  fprintf(fp, "Scaling: %.3f\n", p->scaling);
+	  fprintf(fp, "Orientation: %d\n", p->orientation);
+	  fprintf(fp, "Unit: %d\n", p->unit);
 
-	fprintf(fp, "Driver: %s\n", stp_get_driver(p->v));
-	fprintf(fp, "PPD-File: %s\n", stp_get_ppd_file(p->v));
+	  fprintf(fp, "Driver: %s\n", stp_get_driver(p->v));
+	  fprintf(fp, "PPD-File: %s\n", stp_get_ppd_file(p->v));
 
-	fprintf(fp, "Left: %d\n", stp_get_left(p->v));
-	fprintf(fp, "Top: %d\n", stp_get_top(p->v));
-	fprintf(fp, "Custom-Page-Width: %d\n", stp_get_page_width(p->v));
-	fprintf(fp, "Custom-Page-Height: %d\n", stp_get_page_height(p->v));
+	  fprintf(fp, "Left: %d\n", stp_get_left(p->v));
+	  fprintf(fp, "Top: %d\n", stp_get_top(p->v));
+	  fprintf(fp, "Custom-Page-Width: %d\n", stp_get_page_width(p->v));
+	  fprintf(fp, "Custom-Page-Height: %d\n", stp_get_page_height(p->v));
 
-	fprintf(fp, "Output-Type: %d\n", stp_get_output_type(p->v));
+	  fprintf(fp, "Output-Type: %d\n", stp_get_output_type(p->v));
 
-	for (j = 0; j < count; j++)
-	  {
-	    const stp_parameter_t *param = stp_parameter_list_param(params, j);
-	    if (strcmp(param->name, "AppGamma") == 0)
-	      continue;
-	    switch (param->p_type)
-	      {
-	      case STP_PARAMETER_TYPE_STRING_LIST:
-	      case STP_PARAMETER_TYPE_FILE:
-		if (stp_check_string_parameter(p->v, param->name))
-		  fprintf(fp, "%s: %s\n", param->name,
-			  stp_get_string_parameter(p->v, param->name));
-		break;
-	      case STP_PARAMETER_TYPE_DOUBLE:
-		if (stp_check_float_parameter(p->v, param->name))
-		  fprintf(fp, "%s: %f\n", param->name,
-			  stp_get_float_parameter(p->v, param->name));
-		break;
-	      case STP_PARAMETER_TYPE_INT:
-		if (stp_check_int_parameter(p->v, param->name))
-		  fprintf(fp, "%s: %d\n", param->name,
-			  stp_get_int_parameter(p->v, param->name));
-		break;
-	      case STP_PARAMETER_TYPE_CURVE:
-		if (stp_check_curve_parameter(p->v, param->name))
-		  {
-		    const stp_curve_t curve =
-		      stp_get_curve_parameter(p->v, param->name);
-		    if (curve)
-		      {
-			fprintf(fp, "%s: ", param->name);
-			stp_curve_print(fp, curve);
-			fprintf(fp, "\n");
-		      }
-		  }
-		break;
-	      default:
-		break;
-	      }
-	  }
-	stp_parameter_list_destroy(params);
+	  for (j = 0; j < count; j++)
+	    {
+	      const stp_parameter_t *param = stp_parameter_list_param(params, j);
+	      if (strcmp(param->name, "AppGamma") == 0)
+		continue;
+	      switch (param->p_type)
+		{
+		case STP_PARAMETER_TYPE_STRING_LIST:
+		case STP_PARAMETER_TYPE_FILE:
+		  if (stp_check_string_parameter(p->v, param->name))
+		    fprintf(fp, "%s: %s\n", param->name,
+			    stp_get_string_parameter(p->v, param->name));
+		  break;
+		case STP_PARAMETER_TYPE_DOUBLE:
+		  if (stp_check_float_parameter(p->v, param->name))
+		    fprintf(fp, "%s: %f\n", param->name,
+			    stp_get_float_parameter(p->v, param->name));
+		  break;
+		case STP_PARAMETER_TYPE_INT:
+		  if (stp_check_int_parameter(p->v, param->name))
+		    fprintf(fp, "%s: %d\n", param->name,
+			    stp_get_int_parameter(p->v, param->name));
+		  break;
+		case STP_PARAMETER_TYPE_CURVE:
+		  if (stp_check_curve_parameter(p->v, param->name))
+		    {
+		      const stp_curve_t curve =
+			stp_get_curve_parameter(p->v, param->name);
+		      if (curve)
+			{
+			  fprintf(fp, "%s: ", param->name);
+			  stp_curve_print(fp, curve);
+			  fprintf(fp, "\n");
+			}
+		    }
+		  break;
+		default:
+		  break;
+		}
+	    }
+	  stp_parameter_list_destroy(params);
 #ifdef DEBUG
-        fprintf(stderr, "Wrote printer %d: %s\n", i, param->name);
+	  fprintf(stderr, "Wrote printer %d: %s\n", i, param->name);
 #endif
-      }
-    fclose(fp);
-  } else {
+	}
+      fclose(fp);
+    }
+  else
     fprintf(stderr,"could not open printrc file \"%s\"\n",filename);
-  }
 }
 
 /*
