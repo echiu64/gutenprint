@@ -907,7 +907,7 @@ extern const char * stp_set_output_codeset(const char *codeset);
 
 /****************************************************************
 *                                                               *
-* MISCELLANY                                                    *
+* COLOR                                                         *
 *                                                               *
 * All of this is very likely to change in the future            *
 *                                                               *
@@ -925,26 +925,12 @@ extern stp_convert_t stp_choose_colorfunc(const stp_vars_t v, int image_bpp,
 					  int *out_bpp);
 
 /*
- * Please see the source in print-color.c for an explanation of this.
- */
-extern void stp_set_lut(stp_vars_t v, void * val);
-extern void * stp_get_lut(const stp_vars_t v);
-extern void stp_allocate_lut(stp_vars_t v, size_t steps);
-extern void stp_free_lut(stp_vars_t v);
-
-/*
  * hue_map, lum_map, and sat_map adjust the hue, luminosity, and saturation
  * of the print.
  */
 extern void stp_compute_lut(stp_vars_t v, size_t steps, stp_curve_t hue,
 			    stp_curve_t lum, stp_curve_t sat);
-
-/*
- * For use with indexed color: the colormap should be an array of 256
- * RGB values.
- */
-extern void stp_set_cmap(stp_vars_t v, const unsigned char * cmap);
-extern const unsigned char * stp_get_cmap(const stp_vars_t v);
+extern void stp_free_lut(stp_vars_t v);
 
 /*
  * Default global settings.  The main use of this is to provide a usable

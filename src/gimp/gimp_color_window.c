@@ -33,6 +33,7 @@
 #include <string.h>
 
 gint    thumbnail_w, thumbnail_h, thumbnail_bpp;
+guchar *internal_thumbnail_data;
 guchar *thumbnail_data;
 gint    adjusted_thumbnail_bpp;
 guchar *adjusted_thumbnail_data;
@@ -82,7 +83,6 @@ static GtkDrawingArea *swatch = NULL;
 static void
 dither_algo_callback (GtkWidget *widget, gpointer data)
 {
-  stp_string_list_t vec = NULL;
   stp_parameter_t desc;
   const gchar *new_algo;
   stp_describe_parameter(pv->v, "DitherAlgorithm", &desc);
@@ -167,7 +167,7 @@ create_color_adjust_window (void)
 
   thumbnail_w = THUMBNAIL_MAXW;
   thumbnail_h = THUMBNAIL_MAXH;
-  thumbnail_data =
+  internal_thumbnail_data =
     get_thumbnail_data (&thumbnail_w, &thumbnail_h, &thumbnail_bpp);
 
   /*
@@ -178,6 +178,41 @@ create_color_adjust_window (void)
 
   adjusted_thumbnail_data = g_malloc (3 * thumbnail_w * thumbnail_h);
   preview_thumbnail_data = g_malloc (3 * thumbnail_w * thumbnail_h);
+
+  switch (thumbnail_bpp)
+    {
+    case 1:
+    case 3:
+      thumbnail_data = internal_thumbnail_data;
+      break;
+    case 2:
+      thumbnail_data = g_malloc (thumbnail_w * thumbnail_h);
+      for (i = 0; i < thumbnail_w * thumbnail_h; i++)
+	{
+	  gint val = internal_thumbnail_data[2 * i];
+	  gint alpha = internal_thumbnail_data[(2 * i) + 1];
+	  thumbnail_data[i] = val * alpha / 255 + 255 - alpha;
+	}
+      thumbnail_bpp--;
+      break;
+    case 4:
+      thumbnail_data = g_malloc (3 * thumbnail_w * thumbnail_h);
+      for (i = 0; i < thumbnail_w * thumbnail_h; i++)
+	{
+	  gint r = internal_thumbnail_data[(4 * i)];
+	  gint g = internal_thumbnail_data[(4 * i) + 1];
+	  gint b = internal_thumbnail_data[(4 * i) + 2];
+	  gint alpha = internal_thumbnail_data[(4 * i) + 3];
+	  thumbnail_data[(3 * i) + 0] = r * alpha / 255 + 255 - alpha;
+	  thumbnail_data[(3 * i) + 1] = g * alpha / 255 + 255 - alpha;
+	  thumbnail_data[(3 * i) + 2] = b * alpha / 255 + 255 - alpha;
+	}
+      thumbnail_bpp--;
+      break;
+    default:
+      break;
+      /* Whatever */
+    }
 
   color_adjust_dialog =
     gimp_dialog_new (_("Print Color Adjust"), "print",

@@ -312,7 +312,6 @@ stp_free_vars(stp_vars_t vv)
   SAFE_FREE(v->media_source);
   SAFE_FREE(v->ink_type);
   SAFE_FREE(v->dither_algorithm);
-  SAFE_FREE(v->cmap);
   stp_free(v);
 }
 
@@ -424,27 +423,6 @@ DEF_FUNCS(yellow, float, static)
 DEF_FUNCS(saturation, float, static)
 DEF_FUNCS(density, float, static)
 DEF_FUNCS(app_gamma, float, static)
-
-void
-stp_set_cmap(stp_vars_t vv, const unsigned char *val)
-{
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
-  check_vars(v);
-  SAFE_FREE(v->cmap);
-  if (val)
-    {
-      v->cmap = stp_malloc(256 * 3);
-      (void) memcpy(v->cmap, val, 256 * 3);
-    }
-}
-
-const unsigned char *
-stp_get_cmap(const stp_vars_t vv)
-{
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
-  check_vars(v);
-  return(v->cmap);
-}
 
 void
 stp_set_verified(stp_vars_t vv, int val)
@@ -666,7 +644,6 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
   stp_set_lut(vd, stp_get_lut(vs));
   stp_set_outdata(vd, stp_get_outdata(vs));
   stp_set_errdata(vd, stp_get_errdata(vs));
-  stp_set_cmap(vd, stp_get_cmap(vs));
   stp_set_outfunc(vd, stp_get_outfunc(vs));
   stp_set_errfunc(vd, stp_get_errfunc(vs));
   params = stp_list_parameters(vs, &count);

@@ -885,7 +885,6 @@ main (int argc, char **argv)
       img.bytes_left = img.total_bytes;
 
       stp_set_float_parameter(img.v, "AppGamma", 1.7);
-      stp_set_cmap(img.v, NULL);
       stp_set_output_type(img.v, img.output_type); 
       stp_get_media_size(img.v, &w, &h);
       stp_get_imageable_area(img.v, &l, &r, &b, &t);

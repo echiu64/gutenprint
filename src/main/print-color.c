@@ -45,6 +45,7 @@
 typedef struct
 {
   unsigned steps;
+  int density_is_adjusted;
   stp_curve_t composite;
   stp_curve_t red;
   stp_curve_t green;
@@ -52,9 +53,6 @@ typedef struct
   stp_curve_t hue_map;
   stp_curve_t lum_map;
   stp_curve_t sat_map;
-  const unsigned char *cmap;
-  unsigned char *gray_cmap;
-  unsigned char *alpha_table;
 } lut_t;
 
 /*
@@ -70,40 +68,6 @@ typedef struct
 #define FMAX(a, b) ((a) > (b) ? (a) : (b))
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
 
-static void
-compute_indexed_alpha_table(lut_t *lut)
-{
-  if (! (lut->alpha_table))
-    {
-      unsigned val, alpha;
-      lut->alpha_table = stp_malloc(65536 * sizeof(unsigned char));
-      for (val = 0; val < 256; val++)
-	for (alpha = 0; alpha < 256; alpha++)
-	  lut->alpha_table[(val * 256) + alpha] =
-	    lut->gray_cmap[val] * alpha / 255 + 255 - alpha;
-    }
-}
-
-
-static void
-compute_alpha_table(lut_t *lut)
-{
-  if (! (lut->alpha_table))
-    {
-      unsigned val, alpha;
-      lut->alpha_table = stp_malloc(65536 * sizeof(unsigned char));
-      for (val = 0; val < 256; val++)
-	for (alpha = 0; alpha < 256; alpha++)
-	  lut->alpha_table[(val * 256) + alpha] =
-	    val * alpha / 255 + 255 - alpha;
-    }
-}
-
-static inline unsigned char
-alpha_lookup(lut_t *lut, int val, int alpha)
-{
-  return lut->alpha_table[(val * 256) + alpha];
-}
 
 static inline void
 calc_rgb_to_hsl(unsigned short *rgb, double *hue, double *sat,
@@ -274,6 +238,27 @@ update_cmyk(unsigned short *rgb)
   rgb[2] = 65535 - ny;
 }
 
+static void
+adjust_density(const stp_vars_t vars, lut_t *lut)
+{
+  if (! lut->density_is_adjusted)
+    {
+      stp_curve_rescale(lut->composite,
+			stp_get_float_parameter(vars, "Density"),
+			STP_CURVE_COMPOSE_MULTIPLY, STP_CURVE_BOUNDS_CLIP);
+      stp_curve_rescale(lut->red,
+			stp_get_float_parameter(vars, "Density"),
+			STP_CURVE_COMPOSE_MULTIPLY, STP_CURVE_BOUNDS_CLIP);
+      stp_curve_rescale(lut->green,
+			stp_get_float_parameter(vars, "Density"),
+			STP_CURVE_COMPOSE_MULTIPLY, STP_CURVE_BOUNDS_CLIP);
+      stp_curve_rescale(lut->blue,
+			stp_get_float_parameter(vars, "Density"),
+			STP_CURVE_COMPOSE_MULTIPLY, STP_CURVE_BOUNDS_CLIP);
+      lut->density_is_adjusted = 1;
+    }
+}
+
 
 /*
  * 'gray_to_gray()' - Convert grayscale image data to grayscale (brightness
@@ -295,6 +280,7 @@ gray_to_gray(const stp_vars_t vars,
   size_t count;
   const unsigned short *composite;
   stp_curve_resample(lut->composite, 256);
+  adjust_density(vars, lut);
   composite = stp_curve_get_ushort_data(lut->composite, &count);
 
   if (width <= 0)
@@ -309,46 +295,6 @@ gray_to_gray(const stp_vars_t vars,
 	}
       grayout[0] = o0;
       grayin ++;
-      grayout ++;
-      width --;
-    }
-  if (zero_mask)
-    *zero_mask = nz ? 0 : 1;
-}
-
-static void
-gray_alpha_to_gray(const stp_vars_t vars,
-		   const unsigned char *grayin,
-		   unsigned short *grayout,
-		   int *zero_mask,
-		   int width,
-		   int bpp)
-{
-  int i0 = -1;
-  int i1 = -1;
-  int o0 = 0;
-  int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
-  size_t count;
-  const unsigned short *composite;
-
-  stp_curve_resample(lut->composite, 256);
-  composite = stp_curve_get_ushort_data(lut->composite, &count);
-  compute_alpha_table(lut);
-
-  if (width <= 0)
-    return;
-  while (width)
-    {
-      if (i0 != grayin[0] || i1 != grayin[1])
-	{
-	  i0 = grayin[0];
-	  i1 = grayin[1];
-	  o0 = composite[alpha_lookup(lut, i0, i1)];
-	  nz |= o0;
-	}
-      grayout[0] = o0;
-      grayin += 2;
       grayout ++;
       width --;
     }
@@ -396,215 +342,6 @@ gray_to_monochrome(const stp_vars_t vars,
     *zero_mask = nz ? 0 : 1;
 }
 
-static void
-gray_alpha_to_monochrome(const stp_vars_t vars,
-			 const unsigned char *grayin,
-			 unsigned short *grayout,
-			 int *zero_mask,
-			 int width,
-			 int bpp)
-{
-  int i0 = -1;
-  int i1 = -1;
-  int o0 = 0;
-  int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
-  size_t count;
-  const unsigned short *composite;
-
-  stp_curve_resample(lut->composite, 256);
-  composite = stp_curve_get_ushort_data(lut->composite, &count);
-  compute_alpha_table(lut);
-
-  if (width <= 0)
-    return;
-  while (width)
-    {
-      if (i0 != grayin[0] || i1 != grayin[1])
-	{
-	  i0 = grayin[0];
-	  i1 = grayin[1];
-	  o0 = composite[alpha_lookup(lut, i0, i1)];
-	  if (o0 < 32768)
-	    o0 = 0;
-	  else
-	    o0  = 65535;
-	  nz |= o0;
-	}
-      grayout[0] = o0;
-      grayin += 2;
-      grayout ++;
-      width --;
-    }
-  if (zero_mask)
-    *zero_mask = nz ? 0 : 1;
-}
-
-/*
- * 'indexed_to_gray()' - Convert indexed image data to grayscale.
- */
-
-static void
-indexed_to_gray(const stp_vars_t vars,
-		const unsigned char *indexed,
-		unsigned short *gray,
-		int *zero_mask,
-		int width,
-		int bpp)
-{
-  int i0 = -1;
-  int o0 = 0;
-  int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
-  size_t count;
-  const unsigned short *composite;
-  stp_curve_resample(lut->composite, 256);
-  composite = stp_curve_get_ushort_data(lut->composite, &count);
-
-  if (width <= 0)
-    return;
-  while (width)
-    {
-      if (i0 != indexed[0])
-	{
-	  i0 = indexed[0];
-	  o0 = composite[lut->gray_cmap[i0]];
-	  nz |= o0;
-	}
-      gray[0] = o0;
-      gray ++;
-      indexed ++;
-      width --;
-    }
-  if (zero_mask)
-    *zero_mask = nz ? 0 : 1;
-}
-
-static void
-indexed_alpha_to_gray(const stp_vars_t vars,
-		      const unsigned char *indexed,
-		      unsigned short *gray,
-		      int *zero_mask,
-		      int width,
-		      int bpp)
-{
-  int i0 = -1;
-  int i1 = -1;
-  int o0 = 0;
-  int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
-  size_t count;
-  const unsigned short *composite;
-
-  stp_curve_resample(lut->composite, 256);
-  composite = stp_curve_get_ushort_data(lut->composite, &count);
-  compute_indexed_alpha_table(lut);
-
-  if (width <= 0)
-    return;
-
-  while (width)
-    {
-      if (i0 != indexed[0] || i1 != indexed[1])
-	{
-	  i0 = indexed[0];
-	  i1 = indexed[1];
-	  o0 = composite[alpha_lookup(lut, i0, i1)];
-	  nz |= o0;
-	}
-      gray[0] = o0;
-      gray ++;
-      indexed += 2;
-      width --;
-    }
-  if (zero_mask)
-    *zero_mask = nz ? 0 : 1;
-}
-
-static void
-indexed_to_monochrome(const stp_vars_t vars,
-		      const unsigned char *indexed,
-		      unsigned short *gray,
-		      int *zero_mask,
-		      int width,
-		      int bpp)
-{
-  int i0 = -1;
-  int o0 = 0;
-  int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
-  size_t count;
-  const unsigned short *composite;
-  stp_curve_resample(lut->composite, 256);
-  composite = stp_curve_get_ushort_data(lut->composite, &count);
-
-  if (width <= 0)
-    return;
-  while (width)
-    {
-      if (i0 != indexed[0])
-	{
-	  i0 = indexed[0];
-	  o0 = composite[lut->gray_cmap[i0]];
-	  if (o0 < 32768)
-	    o0 = 0;
-	  else
-	    o0  = 65535;
-	  nz |= o0;
-	}
-      gray[0] = o0;
-      indexed ++;
-      gray ++;
-      width --;
-    }
-  if (zero_mask)
-    *zero_mask = nz ? 0 : 1;
-}
-
-static void
-indexed_alpha_to_monochrome(const stp_vars_t vars,
-			    const unsigned char *indexed,
-			    unsigned short *gray,
-			    int *zero_mask,
-			    int width,
-			    int bpp)
-{
-  int i0 = -1;
-  int i1 = -1;
-  int o0 = 0;
-  int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
-  size_t count;
-  const unsigned short *composite;
-
-  stp_curve_resample(lut->composite, 256);
-  composite = stp_curve_get_ushort_data(lut->composite, &count);
-  compute_indexed_alpha_table(lut);
-
-  if (width <= 0)
-    return;
-  while (width)
-    {
-      if (i0 != indexed[0] || i1 != indexed[1])
-	{
-	  i0 = indexed[0];
-	  i1 = indexed[1];
-	  o0 = composite[alpha_lookup(lut, i0, i1)];
-	  if (o0 < 32768)
-	    o0 = 0;
-	  else
-	    o0  = 65535;
-	  nz |= o0;
-	}
-      gray[0] = o0;
-      indexed += 2;
-      gray ++;
-      width --;
-    }
-  if (zero_mask)
-    *zero_mask = nz ? 0 : 1;
-}
-
 /*
  * 'rgb_to_gray()' - Convert RGB image data to grayscale.
  */
@@ -626,6 +363,7 @@ rgb_to_gray(const stp_vars_t vars,
   size_t count;
   const unsigned short *composite;
   stp_curve_resample(lut->composite, 256);
+  adjust_density(vars, lut);
   composite = stp_curve_get_ushort_data(lut->composite, &count);
 
   if (width <= 0)
@@ -643,49 +381,6 @@ rgb_to_gray(const stp_vars_t vars,
 	}
       gray[0] = o0;
       rgb += 3;
-      gray ++;
-      width --;
-    }
-  if (zero_mask)
-    *zero_mask = nz ? 0 : 1;
-}
-
-static void
-rgb_alpha_to_gray(const stp_vars_t vars,
-		  const unsigned char *rgb,
-		  unsigned short *gray,
-		  int *zero_mask,
-		  int width,
-		  int bpp)
-{
-  int i0 = -1;
-  int i1 = -1;
-  int i2 = -1;
-  int i3 = -1;
-  int o0 = 0;
-  int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
-  size_t count;
-  const unsigned short *composite;
-  stp_curve_resample(lut->composite, 256);
-  composite = stp_curve_get_ushort_data(lut->composite, &count);
-
-  if (width <= 0)
-    return;
-  while (width)
-    {
-      if (i0 != rgb[0] || i1 != rgb[1] || i2 != rgb[2] || i3 != rgb[3])
-	{
-	  i0 = rgb[0];
-	  i1 = rgb[1];
-	  i2 = rgb[2];
-	  i3 = rgb[3];
-	  o0= composite[((i0 * LUM_RED + i1 * LUM_GREEN + i2 * LUM_BLUE) *
-			 i3 / 25500 + 255 - i3)];
-	  nz |= o0;
-	}
-      gray[0] = o0;
-      rgb += 4;
       gray ++;
       width --;
     }
@@ -738,53 +433,6 @@ rgb_to_monochrome(const stp_vars_t vars,
     *zero_mask = nz ? 0 : 1;
 }
 
-static void
-rgb_alpha_to_monochrome(const stp_vars_t vars,
-			const unsigned char *rgb,
-			unsigned short *gray,
-			int *zero_mask,
-			int width,
-			int bpp)
-{
-  int i0 = -1;
-  int i1 = -1;
-  int i2 = -1;
-  int i3 = -1;
-  int o0 = 0;
-  int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
-  size_t count;
-  const unsigned short *composite;
-  stp_curve_resample(lut->composite, 256);
-  composite = stp_curve_get_ushort_data(lut->composite, &count);
-
-  if (width <= 0)
-    return;
-  while (width)
-    {
-      if (i0 != rgb[0] || i1 != rgb[1] || i2 != rgb[2] || i3 != rgb[3])
-	{
-	  i0 = rgb[0];
-	  i1 = rgb[1];
-	  i2 = rgb[2];
-	  i3 = rgb[3];
-	  o0= composite[((i0 * LUM_RED + i1 * LUM_GREEN + i2 * LUM_BLUE) *
-			 i3 / 25500 + 255 - i3)];
-	  if (o0 < 32768)
-	    o0 = 0;
-	  else
-	    o0 = 65535;
-	  nz |= o0;
-	}
-      gray[0] = o0;
-      rgb += 4;
-      gray ++;
-      width --;
-    }
-  if (zero_mask)
-    *zero_mask = nz ? 0 : 1;
-}
-
 /*
  * 'rgb_to_rgb()' - Convert rgb image data to RGB.
  */
@@ -804,7 +452,6 @@ rgb_to_rgb(const stp_vars_t vars,
   int i0 = -1;
   int i1 = -1;
   int i2 = -1;
-  int i3 = -1;
   int o0 = 0;
   int o1 = 0;
   int o2 = 0;
@@ -827,8 +474,6 @@ rgb_to_rgb(const stp_vars_t vars,
     l_points = stp_curve_count_points(lut->lum_map);
   if (lut->sat_map)
     s_points = stp_curve_count_points(lut->sat_map);
-  if (bpp == 2 || bpp == 4)
-    compute_alpha_table(lut);
 
   if (split_saturation)
     ssat = sqrt(ssat);
@@ -836,133 +481,25 @@ rgb_to_rgb(const stp_vars_t vars,
     isat = 1.0 / ssat;
   while (width > 0)
     {
-      double h, s, l;
-      switch (bpp)
+      if (i0 == rgbin[0] && i1 == rgbin[1] && i2 == rgbin[2])
 	{
-	case 1:
-	  /*
-	   * No alpha in image, using colormap...
-	   */
-	  if (i0 == rgbin[0])
-	    {
-	      rgbout[0] = o0;
-	      rgbout[1] = o1;
-	      rgbout[2] = o2;
-	      goto out;
-	    }
-	  else
-	    {
-	      i0 = rgbin[0] * 3;
-	      i1 = lut->cmap[i0 + 1];
-	      i2 = lut->cmap[i0 + 2];
-	      i0 = lut->cmap[i0];
-	      rgbout[0] = i0 | (i0 << 8);
-	      rgbout[1] = i1 | (i1 << 8);
-	      rgbout[2] = i2 | (i2 << 8);
-	      i0 = rgbin[0];
-	    }
-	  break;
-	case 2:
-	  if (i0 == rgbin[0] && i1 == rgbin[1])
-	    {
-	      rgbout[0] = o0;
-	      rgbout[1] = o1;
-	      rgbout[2] = o2;
-	      goto out;
-	    }
-	  else
-	    {
-	      i0 = rgbin[0] * 3;
-	      i3 = rgbin[1];
-	      i1 = alpha_lookup(lut, lut->cmap[i0 + 1], i3);
-	      i2 = alpha_lookup(lut, lut->cmap[i0 + 2], i3);
-	      i0 = alpha_lookup(lut, i0, i3);
-
-	      rgbout[0] = i0 | (i0 << 8);
-	      rgbout[1] = i1 | (i1 << 8);
-	      rgbout[2] = i2 | (i2 << 8);
-	      i0 = rgbin[0];
-	      i1 = rgbin[1];
-	    }
-	  break;
-	case 3:
-	  /*
-	   * No alpha in image...
-	   */
-	  if (i0 == rgbin[0] && i1 == rgbin[1] && i2 == rgbin[2])
-	    {
-	      rgbout[0] = o0;
-	      rgbout[1] = o1;
-	      rgbout[2] = o2;
-	      goto out;
-	    }
-	  else
-	    {
-	      i0 = rgbin[0];
-	      i1 = rgbin[1];
-	      i2 = rgbin[2];
-	      rgbout[0] = i0 | (i0 << 8);
-	      rgbout[1] = i1 | (i1 << 8);
-	      rgbout[2] = i2 | (i2 << 8);
-	    }
-	  break;
-	case 4:
-	  if (i0 == rgbin[0] && i1 == rgbin[1] && i2 == rgbin[2] &&
-	      i3 == rgbin[3])
-	    {
-	      rgbout[0] = o0;
-	      rgbout[1] = o1;
-	      rgbout[2] = o2;
-	      goto out;
-	    }
-	  else
-	    {
-	      i3 = rgbin[3];
-	      i0 = alpha_lookup(lut, rgbin[0], i3);
-	      i1 = alpha_lookup(lut, rgbin[1], i3);
-	      i2 = alpha_lookup(lut, rgbin[2], i3);
-	      rgbout[0] = i0 | (i0 << 8);
-	      rgbout[1] = i1 | (i1 << 8);
-	      rgbout[2] = i2 | (i2 << 8);
-	    }
-	  break;
-	}
-      if ((compute_saturation) &&
-	  (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
-	{
-	  calc_rgb_to_hsl(rgbout, &h, &s, &l);
-	  if (ssat < 1)
-	    s *= ssat;
-	  else
-	    {
-	      double s1 = s * ssat;
-	      double s2 = 1.0 - ((1.0 - s) * isat);
-	      s = FMIN(s1, s2);
-	    }
-	  if (s > 1)
-	    s = 1.0;
-	  calc_hsl_to_rgb(rgbout, h, s, l);
-	}
-      update_cmyk(rgbout);	/* Fiddle with the INPUT */
-      if (lut->steps == 65536)
-	{
-	  rgbout[0] = red[rgbout[0]];
-	  rgbout[1] = green[rgbout[1]];
-	  rgbout[2] = blue[rgbout[2]];
+	  rgbout[0] = o0;
+	  rgbout[1] = o1;
+	  rgbout[2] = o2;
 	}
       else
 	{
-	  rgbout[0] = red[rgbout[0] / 256];
-	  rgbout[1] = green[rgbout[1] / 256];
-	  rgbout[2] = blue[rgbout[2] / 256];
-	}
-	
-      if ((split_saturation || lut->hue_map || lut->lum_map || lut->sat_map) &&
-	  (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
-	{
-	  calc_rgb_to_hsl(rgbout, &h, &s, &l);
-	  if (split_saturation)
+	  double h, s, l;
+	  i0 = rgbin[0];
+	  i1 = rgbin[1];
+	  i2 = rgbin[2];
+	  rgbout[0] = i0 | (i0 << 8);
+	  rgbout[1] = i1 | (i1 << 8);
+	  rgbout[2] = i2 | (i2 << 8);
+	  if ((compute_saturation) &&
+	      (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
 	    {
+	      calc_rgb_to_hsl(rgbout, &h, &s, &l);
 	      if (ssat < 1)
 		s *= ssat;
 	      else
@@ -971,65 +508,98 @@ rgb_to_rgb(const stp_vars_t vars,
 		  double s2 = 1.0 - ((1.0 - s) * isat);
 		  s = FMIN(s1, s2);
 		}
+	      if (s > 1)
+		s = 1.0;
+	      calc_hsl_to_rgb(rgbout, h, s, l);
 	    }
-	  if (s > 1)
-	    s = 1.0;
-	  if (lut->hue_map || lut->lum_map || lut->sat_map)
+	  update_cmyk(rgbout);	/* Fiddle with the INPUT */
+	  if (lut->steps == 65536)
 	    {
-	      if (lut->hue_map)
-		{
-		  double nh = h * h_points / 6.0;
-		  if (stp_curve_interpolate_value(lut->hue_map, nh, &tmp))
-		    {
-		      h += tmp;
-		      if (h < 0.0)
-			h += 6.0;
-		      else if (h >= 6.0)
-			h -= 6.0;
-		    }
-		}
-	      if (lut->lum_map && l > .0001 && l < .9999)
-		{
-		  double nh = h * l_points / 6.0;
-		  if (stp_curve_interpolate_value(lut->lum_map, nh, &tmp) &&
-		      (tmp < .9999 || tmp > 1.0001))
-		    {
-		      double el = tmp;
-		      el = 1.0 + (s * (el - 1.0));
-		      if (l > .5)
-			el = 1.0 + ((2.0 * (1.0 - l)) * (el - 1.0));
-		      l = 1.0 - pow(1.0 - l, el);
-		    }
-		}
-	      if (lut->sat_map)
-		{
-		  double nh = h * s_points / 6.0;
-		  if (stp_curve_interpolate_value(lut->sat_map, nh, &tmp) &&
-		      (tmp < .9999 || tmp > 1.0001))
-		    {
-		      s = 1.0 - pow(1.0 - s, tmp);
-		    }
-		}
+	      rgbout[0] = red[rgbout[0]];
+	      rgbout[1] = green[rgbout[1]];
+	      rgbout[2] = blue[rgbout[2]];
 	    }
-	  calc_hsl_to_rgb(rgbout, h, s, l);
-	}
-      if (ld < 65536)
-	{
-	  int i;
-	  for (i = 0; i < 3; i++)
+	  else
 	    {
-	      unsigned t = rgbout[i];
-	      t = t * ld / 65536;
-	      rgbout[i] = (unsigned short) t;
+	      rgbout[0] = red[rgbout[0] / 256];
+	      rgbout[1] = green[rgbout[1] / 256];
+	      rgbout[2] = blue[rgbout[2] / 256];
 	    }
+
+	  if ((split_saturation || lut->hue_map || lut->lum_map ||
+	       lut->sat_map) &&
+	      (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
+	    {
+	      calc_rgb_to_hsl(rgbout, &h, &s, &l);
+	      if (split_saturation)
+		{
+		  if (ssat < 1)
+		    s *= ssat;
+		  else
+		    {
+		      double s1 = s * ssat;
+		      double s2 = 1.0 - ((1.0 - s) * isat);
+		      s = FMIN(s1, s2);
+		    }
+		}
+	      if (s > 1)
+		s = 1.0;
+	      if (lut->hue_map || lut->lum_map || lut->sat_map)
+		{
+		  if (lut->hue_map)
+		    {
+		      double nh = h * h_points / 6.0;
+		      if (stp_curve_interpolate_value(lut->hue_map, nh, &tmp))
+			{
+			  h += tmp;
+			  if (h < 0.0)
+			    h += 6.0;
+			  else if (h >= 6.0)
+			    h -= 6.0;
+			}
+		    }
+		  if (lut->lum_map && l > .0001 && l < .9999)
+		    {
+		      double nh = h * l_points / 6.0;
+		      if (stp_curve_interpolate_value(lut->lum_map, nh, &tmp)&&
+			  (tmp < .9999 || tmp > 1.0001))
+			{
+			  double el = tmp;
+			  el = 1.0 + (s * (el - 1.0));
+			  if (l > .5)
+			    el = 1.0 + ((2.0 * (1.0 - l)) * (el - 1.0));
+			  l = 1.0 - pow(1.0 - l, el);
+			}
+		    }
+		  if (lut->sat_map)
+		    {
+		      double nh = h * s_points / 6.0;
+		      if (stp_curve_interpolate_value(lut->sat_map, nh, &tmp)&&
+			  (tmp < .9999 || tmp > 1.0001))
+			{
+			  s = 1.0 - pow(1.0 - s, tmp);
+			}
+		    }
+		}
+	      calc_hsl_to_rgb(rgbout, h, s, l);
+	    }
+	  if (ld < 65536)
+	    {
+	      int i;
+	      for (i = 0; i < 3; i++)
+		{
+		  unsigned t = rgbout[i];
+		  t = t * ld / 65536;
+		  rgbout[i] = (unsigned short) t;
+		}
+	    }
+	  o0 = rgbout[0];
+	  o1 = rgbout[1];
+	  o2 = rgbout[2];
+	  nz0 |= o0;
+	  nz1 |= o1;
+	  nz2 |= o2;
 	}
-      o0 = rgbout[0];
-      o1 = rgbout[1];
-      o2 = rgbout[2];
-      nz0 |= o0;
-      nz1 |= o1;
-      nz2 |= o2;
-    out:
       rgbin += bpp;
       rgbout += 3;
       width --;
@@ -1040,17 +610,6 @@ rgb_to_rgb(const stp_vars_t vars,
       *zero_mask |= nz1 ? 0 : 2;
       *zero_mask |= nz2 ? 0 : 4;
     }
-}
-
-static void
-indexed_to_rgb(const stp_vars_t vars,
-	       const unsigned char *indexed,
-	       unsigned short *rgb,
-	       int *zero_mask,
-	       int width,
-	       int bpp)
-{
-  rgb_to_rgb(vars, indexed, rgb, zero_mask, width, bpp);
 }
 
 static void
@@ -1069,7 +628,6 @@ solid_rgb_to_rgb(const stp_vars_t vars,
   int i0 = -1;
   int i1 = -1;
   int i2 = -1;
-  int i3 = -1;
   int o0 = 0;
   int o1 = 0;
   int o2 = 0;
@@ -1091,8 +649,6 @@ solid_rgb_to_rgb(const stp_vars_t vars,
     l_points = stp_curve_count_points(lut->lum_map);
   if (lut->sat_map)
     s_points = stp_curve_count_points(lut->sat_map);
-  if (bpp == 2 || bpp == 4)
-    compute_alpha_table(lut);
 
   if (split_saturation)
     ssat = sqrt(ssat);
@@ -1100,132 +656,25 @@ solid_rgb_to_rgb(const stp_vars_t vars,
     isat = 1.0 / ssat;
   while (width > 0)
     {
-      double h, s, l;
-      switch (bpp)
+      if (i0 == rgbin[0] && i1 == rgbin[1] && i2 == rgbin[2])
 	{
-	case 1:
-	  /*
-	   * No alpha in image, using colormap...
-	   */
-	  if (i0 == rgbin[0])
-	    {
-	      rgbout[0] = o0;
-	      rgbout[1] = o1;
-	      rgbout[2] = o2;
-	      goto out;
-	    }
-	  else
-	    {
-	      i0 = rgbin[0] * 3;
-	      i1 = lut->cmap[i0 + 1];
-	      i2 = lut->cmap[i0 + 2];
-	      i0 = lut->cmap[i0];
-	      rgbout[0] = i0 | (i0 << 8);
-	      rgbout[1] = i1 | (i1 << 8);
-	      rgbout[2] = i2 | (i2 << 8);
-	      i0 = rgbin[0];
-	    }
-	  break;
-	case 2:
-	  if (i0 == rgbin[0] && i1 == rgbin[1])
-	    {
-	      rgbout[0] = o0;
-	      rgbout[1] = o1;
-	      rgbout[2] = o2;
-	      goto out;
-	    }
-	  else
-	    {
-	      i0 = rgbin[0] * 3;
-	      i3 = rgbin[1];
-	      i1 = alpha_lookup(lut, lut->cmap[i0 + 1], i3);
-	      i2 = alpha_lookup(lut, lut->cmap[i0 + 2], i3);
-	      i0 = alpha_lookup(lut, i0, i3);
-
-	      rgbout[0] = i0 | (i0 << 8);
-	      rgbout[1] = i1 | (i1 << 8);
-	      rgbout[2] = i2 | (i2 << 8);
-	      i0 = rgbin[0];
-	      i1 = rgbin[1];
-	    }
-	  break;
-	case 3:
-	  /*
-	   * No alpha in image...
-	   */
-	  if (i0 == rgbin[0] && i1 == rgbin[1] && i2 == rgbin[2])
-	    {
-	      rgbout[0] = o0;
-	      rgbout[1] = o1;
-	      rgbout[2] = o2;
-	      goto out;
-	    }
-	  else
-	    {
-	      i0 = rgbin[0];
-	      i1 = rgbin[1];
-	      i2 = rgbin[2];
-	      rgbout[0] = i0 | (i0 << 8);
-	      rgbout[1] = i1 | (i1 << 8);
-	      rgbout[2] = i2 | (i2 << 8);
-	    }
-	  break;
-	case 4:
-	  if (i0 == rgbin[0] && i1 == rgbin[1] && i2 == rgbin[2] &&
-	      i3 == rgbin[3])
-	    {
-	      rgbout[0] = o0;
-	      rgbout[1] = o1;
-	      rgbout[2] = o2;
-	      goto out;
-	    }
-	  else
-	    {
-	      i3 = rgbin[3];
-	      i0 = alpha_lookup(lut, rgbin[0], i3);
-	      i1 = alpha_lookup(lut, rgbin[1], i3);
-	      i2 = alpha_lookup(lut, rgbin[2], i3);
-	      rgbout[0] = i0 | (i0 << 8);
-	      rgbout[1] = i1 | (i1 << 8);
-	      rgbout[2] = i2 | (i2 << 8);
-	    }
-	  break;
-	}
-      if ((compute_saturation) &&
-	  (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
-	{
-	  calc_rgb_to_hsl(rgbout, &h, &s, &l);
-	  if (ssat < 1)
-	    s *= ssat;
-	  else
-	    {
-	      double s1 = s * ssat;
-	      double s2 = 1.0 - ((1.0 - s) * isat);
-	      s = FMIN(s1, s2);
-	    }
-	  if (s > 1)
-	    s = 1.0;
-	  calc_hsl_to_rgb(rgbout, h, s, l);
-	}
-      update_cmyk(rgbout);	/* Fiddle with the INPUT */
-      if (lut->steps == 65536)
-	{
-	  rgbout[0] = red[rgbout[0]];
-	  rgbout[1] = green[rgbout[1]];
-	  rgbout[2] = blue[rgbout[2]];
+	  rgbout[0] = o0;
+	  rgbout[1] = o1;
+	  rgbout[2] = o2;
 	}
       else
 	{
-	  rgbout[0] = red[rgbout[0] / 256];
-	  rgbout[1] = green[rgbout[1] / 256];
-	  rgbout[2] = blue[rgbout[2] / 256];
-	}
-      if ((split_saturation || lut->hue_map || lut->sat_map) &&
-	  (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
-	{
-	  calc_rgb_to_hsl(rgbout, &h, &s, &l);
-	  if (split_saturation)
+	  double h, s, l;
+	  i0 = rgbin[0];
+	  i1 = rgbin[1];
+	  i2 = rgbin[2];
+	  rgbout[0] = i0 | (i0 << 8);
+	  rgbout[1] = i1 | (i1 << 8);
+	  rgbout[2] = i2 | (i2 << 8);
+	  if ((compute_saturation) &&
+	      (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
 	    {
+	      calc_rgb_to_hsl(rgbout, &h, &s, &l);
 	      if (ssat < 1)
 		s *= ssat;
 	      else
@@ -1234,52 +683,83 @@ solid_rgb_to_rgb(const stp_vars_t vars,
 		  double s2 = 1.0 - ((1.0 - s) * isat);
 		  s = FMIN(s1, s2);
 		}
+	      if (s > 1)
+		s = 1.0;
+	      calc_hsl_to_rgb(rgbout, h, s, l);
 	    }
-	  if (s > 1)
-	    s = 1.0;
-	  if (lut->hue_map || lut->sat_map)
+	  update_cmyk(rgbout);	/* Fiddle with the INPUT */
+	  if (lut->steps == 65536)
 	    {
-	      if (lut->hue_map)
+	      rgbout[0] = red[rgbout[0]];
+	      rgbout[1] = green[rgbout[1]];
+	      rgbout[2] = blue[rgbout[2]];
+	    }
+	  else
+	    {
+	      rgbout[0] = red[rgbout[0] / 256];
+	      rgbout[1] = green[rgbout[1] / 256];
+	      rgbout[2] = blue[rgbout[2] / 256];
+	    }
+	  if ((split_saturation || lut->hue_map || lut->sat_map) &&
+	      (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
+	    {
+	      calc_rgb_to_hsl(rgbout, &h, &s, &l);
+	      if (split_saturation)
 		{
-		  double nh = h * h_points / 6.0;
-		  if (stp_curve_interpolate_value(lut->hue_map, nh, &tmp))
+		  if (ssat < 1)
+		    s *= ssat;
+		  else
 		    {
-		      h += tmp;
-		      if (h < 0.0)
-			h += 6.0;
-		      else if (h >= 6.0)
-			h -= 6.0;
+		      double s1 = s * ssat;
+		      double s2 = 1.0 - ((1.0 - s) * isat);
+		      s = FMIN(s1, s2);
 		    }
 		}
-	      if (lut->sat_map)
+	      if (s > 1)
+		s = 1.0;
+	      if (lut->hue_map || lut->sat_map)
 		{
-		  double nh = h * s_points / 6.0;
-		  if (stp_curve_interpolate_value(lut->sat_map, nh, &tmp) &&
-		      (tmp < .9999 || tmp > 1.0001))
+		  if (lut->hue_map)
 		    {
-		      s = 1.0 - pow(1.0 - s, tmp);
+		      double nh = h * h_points / 6.0;
+		      if (stp_curve_interpolate_value(lut->hue_map, nh, &tmp))
+			{
+			  h += tmp;
+			  if (h < 0.0)
+			    h += 6.0;
+			  else if (h >= 6.0)
+			    h -= 6.0;
+			}
+		    }
+		  if (lut->sat_map)
+		    {
+		      double nh = h * s_points / 6.0;
+		      if (stp_curve_interpolate_value(lut->sat_map, nh, &tmp)&&
+			  (tmp < .9999 || tmp > 1.0001))
+			{
+			  s = 1.0 - pow(1.0 - s, tmp);
+			}
 		    }
 		}
+	      calc_hsl_to_rgb(rgbout, h, s, l);
 	    }
-	  calc_hsl_to_rgb(rgbout, h, s, l);
-	}
-      if (ld < 65536)
-	{
-	  int i;
-	  for (i = 0; i < 3; i++)
+	  if (ld < 65536)
 	    {
-	      unsigned t = rgbout[i];
-	      t = t * ld / 65536;
-	      rgbout[i] = (unsigned short) t;
+	      int i;
+	      for (i = 0; i < 3; i++)
+		{
+		  unsigned t = rgbout[i];
+		  t = t * ld / 65536;
+		  rgbout[i] = (unsigned short) t;
+		}
 	    }
+	  o0 = rgbout[0];
+	  o1 = rgbout[1];
+	  o2 = rgbout[2];
+	  nz0 |= o0;
+	  nz1 |= o1;
+	  nz2 |= o2;
 	}
-      o0 = rgbout[0];
-      o1 = rgbout[1];
-      o2 = rgbout[2];
-      nz0 |= o0;
-      nz1 |= o1;
-      nz2 |= o2;
-    out:
       rgbin += bpp;
       rgbout += 3;
       width --;
@@ -1290,17 +770,6 @@ solid_rgb_to_rgb(const stp_vars_t vars,
       *zero_mask |= nz1 ? 0 : 2;
       *zero_mask |= nz2 ? 0 : 4;
     }
-}
-
-static void
-solid_indexed_to_rgb(const stp_vars_t vars,
-		     const unsigned char *indexed,
-		     unsigned short *rgb,
-		     int *zero_mask,
-		     int width,
-		     int bpp)
-{
-  solid_rgb_to_rgb(vars, indexed, rgb, zero_mask, width, bpp);
 }
 
 /*
@@ -1316,104 +785,6 @@ gray_to_rgb(const stp_vars_t vars,
 	    int bpp)
 {
   int i0 = -1;
-  int i1 = -1;
-  int o0 = 0;
-  int o1 = 0;
-  int o2 = 0;
-  int nz0 = 0;
-  int nz1 = 0;
-  int nz2 = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
-  size_t count;
-  const unsigned short *red = stp_curve_get_ushort_data(lut->red, &count);
-  const unsigned short *green = stp_curve_get_ushort_data(lut->green, &count);
-  const unsigned short *blue = stp_curve_get_ushort_data(lut->blue, &count);
-
-  if (bpp == 2)
-    compute_indexed_alpha_table(lut);
-
-  while (width > 0)
-    {
-      unsigned short trgb[3];
-      if (bpp == 1)
-	{
-	  /*
-	   * No alpha in image...
-	   */
-	  if (i0 == grayin[0])
-	    {
-	      rgbout[0] = o0;
-	      rgbout[1] = o1;
-	      rgbout[2] = o2;
-	      goto out;
-	    }
-	  else
-	    {
-	      i0 = grayin[0];
-	      trgb[0] =
-	      trgb[1] =
-	      trgb[2] = i0 | (i0 << 8);
-	    }
-	}
-      else
-	{
-	  if (i0 == grayin[0] && i1 == grayin[1])
-	    {
-	      rgbout[0] = o0;
-	      rgbout[1] = o1;
-	      rgbout[2] = o2;
-	      goto out;
-	    }
-	  else
-	    {
-	      i0 = alpha_lookup(lut, grayin[0], grayin[1]);
-	      trgb[0] =
-	      trgb[1] =
-	      trgb[2] = i0 | (i0 << 8);
-	    }
-	}
-      update_cmyk(trgb);
-      if (lut->steps == 65536)
-	{
-	  rgbout[0] = red[trgb[0]];
-	  rgbout[1] = green[trgb[1]];
-	  rgbout[2] = blue[trgb[2]];
-	}
-      else
-	{
-	  rgbout[0] = red[trgb[0] / 256];
-	  rgbout[1] = green[trgb[1] / 256];
-	  rgbout[2] = blue[trgb[2] / 256];
-	}
-      o0 = rgbout[0];
-      o1 = rgbout[1];
-      o2 = rgbout[2];
-      nz0 |= o0;
-      nz1 |= o1;
-      nz2 |= o2;
-    out:
-      grayin += bpp;
-      rgbout += 3;
-      width --;
-    }
-  if (zero_mask)
-    {
-      *zero_mask = nz0 ? 0 : 1;
-      *zero_mask |= nz1 ? 0 : 2;
-      *zero_mask |= nz2 ? 0 : 4;
-    }
-}
-
-static void
-fast_indexed_to_rgb(const stp_vars_t vars,
-		    const unsigned char *indexed,
-		    unsigned short *rgb,
-		    int *zero_mask,
-		    int width,
-		    int bpp)
-{
-  int i0 = -1;
-  int i1 = -1;
   int o0 = 0;
   int o1 = 0;
   int o2 = 0;
@@ -1425,92 +796,48 @@ fast_indexed_to_rgb(const stp_vars_t vars,
   const unsigned short *red;
   const unsigned short *green;
   const unsigned short *blue;
-  double isat = 1.0;
-  double saturation = stp_get_float_parameter(vars, "Saturation");
-  double density = stp_get_float_parameter(vars, "Density");
-
-  stp_curve_resample(lut->red, 256);
-  stp_curve_resample(lut->green, 256);
-  stp_curve_resample(lut->blue, 256);
+  adjust_density(vars, lut);
   red = stp_curve_get_ushort_data(lut->red, &count);
   green = stp_curve_get_ushort_data(lut->green, &count);
   blue = stp_curve_get_ushort_data(lut->blue, &count);
-  if (bpp == 2)
-    compute_alpha_table(lut);
 
-  if (saturation > 1)
-    isat = 1.0 / saturation;
   while (width > 0)
     {
-      double h, s, l;
-      if (bpp == 1)
+      unsigned short trgb[3];
+      if (i0 == grayin[0])
 	{
-	  /*
-	   * No alpha in image...
-	   */
-	  if (i0 == indexed[0])
-	    {
-	      rgb[0] = o0;
-	      rgb[1] = o1;
-	      rgb[2] = o2;
-	      goto out;
-	    }
-	  else
-	    {
-	      i0 = indexed[0];
-	      rgb[0] = red[lut->cmap[i0 * 3 + 0]];
-	      rgb[1] = green[lut->cmap[i0 * 3 + 1]];
-	      rgb[2] = blue[lut->cmap[i0 * 3 + 2]];
-	    }
+	  rgbout[0] = o0;
+	  rgbout[1] = o1;
+	  rgbout[2] = o2;
 	}
       else
 	{
-	  if (i0 == indexed[0] && i1 == indexed[1])
+	  i0 = grayin[0];
+	  trgb[0] =
+	    trgb[1] =
+	    trgb[2] = i0 | (i0 << 8);
+	  update_cmyk(trgb);
+	  if (lut->steps == 65536)
 	    {
-	      rgb[0] = o0;
-	      rgb[1] = o1;
-	      rgb[2] = o2;
-	      goto out;
+	      rgbout[0] = red[trgb[0]];
+	      rgbout[1] = green[trgb[1]];
+	      rgbout[2] = blue[trgb[2]];
 	    }
 	  else
 	    {
-	      i0 = indexed[0];
-	      i1 = indexed[1];
-	      rgb[0] = alpha_lookup(lut, lut->cmap[i0 * 3 + 0], i1);
-	      rgb[1] = alpha_lookup(lut, lut->cmap[i0 * 3 + 1], i1);
-	      rgb[2] = alpha_lookup(lut, lut->cmap[i0 * 3 + 2], i1);
+	      rgbout[0] = red[trgb[0] / 256];
+	      rgbout[1] = green[trgb[1] / 256];
+	      rgbout[2] = blue[trgb[2] / 256];
 	    }
+	  o0 = rgbout[0];
+	  o1 = rgbout[1];
+	  o2 = rgbout[2];
+	  nz0 |= o0;
+	  nz1 |= o1;
+	  nz2 |= o2;
 	}
-      if (saturation != 1.0)
-	{
-	  calc_rgb_to_hsl(rgb, &h, &s, &l);
-	  if (saturation < 1)
-	    s *= saturation;
-	  else if (saturation > 1)
-	    {
-	      double s1 = s * saturation;
-	      double s2 = 1.0 - ((1.0 - s) * isat);
-	      s = FMIN(s1, s2);
-	    }
-	  if (s > 1)
-	    s = 1.0;
-	  calc_hsl_to_rgb(rgb, h, s, l);
-	}
-      if (density != 1.0)
-	{
-	  int i;
-	  for (i = 0; i < 3; i++)
-	    rgb[i] = .5 + (rgb[i] * density);
-	}
-    out:
-      o0 = rgb[0];
-      o1 = rgb[1];
-      o2 = rgb[2];
-      nz0 |= o0;
-      nz1 |= o1;
-      nz2 |= o2;
-      indexed += bpp;
-      rgb += 3;
+      grayin += bpp;
+      rgbout += 3;
       width --;
     }
   if (zero_mask)
@@ -1537,7 +864,6 @@ fast_rgb_to_rgb(const stp_vars_t vars,
   int i0 = -1;
   int i1 = -1;
   int i2 = -1;
-  int i3 = -1;
   int o0 = 0;
   int o1 = 0;
   int o2 = 0;
@@ -1558,85 +884,54 @@ fast_rgb_to_rgb(const stp_vars_t vars,
   red = stp_curve_get_ushort_data(lut->red, &count);
   green = stp_curve_get_ushort_data(lut->green, &count);
   blue = stp_curve_get_ushort_data(lut->blue, &count);
-  if (bpp == 4)
-    compute_alpha_table(lut);
 
   if (saturation > 1)
     isat = 1.0 / saturation;
   while (width > 0)
     {
       double h, s, l;
-      if (bpp == 3)
+      if (i0 == rgbin[0] && i1 == rgbin[1] && i2 == rgbin[2])
 	{
-	  /*
-	   * No alpha in image...
-	   */
-	  if (i0 == rgbin[0] && i1 == rgbin[1] && i2 == rgbin[2])
-	    {
-	      rgbout[0] = o0;
-	      rgbout[1] = o1;
-	      rgbout[2] = o2;
-	      goto out;
-	    }
-	  else
-	    {
-	      i0 = rgbin[0];
-	      i1 = rgbin[1];
-	      i2 = rgbin[2];
-	      rgbout[0] = red[rgbin[0]];
-	      rgbout[1] = green[rgbin[1]];
-	      rgbout[2] = blue[rgbin[2]];
-	    }
+	  rgbout[0] = o0;
+	  rgbout[1] = o1;
+	  rgbout[2] = o2;
 	}
       else
 	{
-	  if (i0 == rgbin[0] && i1 == rgbin[1] && i2 == rgbin[2] &&
-	      i3 == rgbin[3])
+	  i0 = rgbin[0];
+	  i1 = rgbin[1];
+	  i2 = rgbin[2];
+	  rgbout[0] = red[rgbin[0]];
+	  rgbout[1] = green[rgbin[1]];
+	  rgbout[2] = blue[rgbin[2]];
+	  if (saturation != 1.0)
 	    {
-	      rgbout[0] = o0;
-	      rgbout[1] = o1;
-	      rgbout[2] = o2;
-	      goto out;
+	      calc_rgb_to_hsl(rgbout, &h, &s, &l);
+	      if (saturation < 1)
+		s *= saturation;
+	      else if (saturation > 1)
+		{
+		  double s1 = s * saturation;
+		  double s2 = 1.0 - ((1.0 - s) * isat);
+		  s = FMIN(s1, s2);
+		}
+	      if (s > 1)
+		s = 1.0;
+	      calc_hsl_to_rgb(rgbout, h, s, l);
 	    }
-	  else
+	  if (ld < 65536)
 	    {
-	      i0 = rgbin[0];
-	      i1 = rgbin[1];
-	      i2 = rgbin[2];
-	      i3 = rgbin[3];
-	      rgbout[0] = red[alpha_lookup(lut, i0, i3)];
-	      rgbout[1] = green[alpha_lookup(lut, i1, i3)];
-	      rgbout[2] = blue[alpha_lookup(lut, i2, i3)];
+	      int i;
+	      for (i = 0; i < 3; i++)
+		rgbout[i] = rgbout[i] * ld / 65536;
 	    }
+	  o0 = rgbout[0];
+	  o1 = rgbout[1];
+	  o2 = rgbout[2];
+	  nz0 |= o0;
+	  nz1 |= o1;
+	  nz2 |= o2;
 	}
-      if (saturation != 1.0)
-	{
-	  calc_rgb_to_hsl(rgbout, &h, &s, &l);
-	  if (saturation < 1)
-	    s *= saturation;
-	  else if (saturation > 1)
-	    {
-	      double s1 = s * saturation;
-	      double s2 = 1.0 - ((1.0 - s) * isat);
-	      s = FMIN(s1, s2);
-	    }
-	  if (s > 1)
-	    s = 1.0;
-	  calc_hsl_to_rgb(rgbout, h, s, l);
-	}
-      if (ld < 65536)
-	{
-	  int i;
-	  for (i = 0; i < 3; i++)
-	    rgbout[i] = rgbout[i] * ld / 65536;
-	}
-      o0 = rgbout[0];
-      o1 = rgbout[1];
-      o2 = rgbout[2];
-      nz0 |= o0;
-      nz1 |= o1;
-      nz2 |= o2;
-    out:
       rgbin += bpp;
       rgbout += 3;
       width --;
@@ -1662,7 +957,6 @@ fast_gray_to_rgb(const stp_vars_t vars,
 		 int bpp)
 {
   int i0 = -1;
-  int i1 = -1;
   int o0 = 0;
   int o1 = 0;
   int o2 = 0;
@@ -1674,71 +968,36 @@ fast_gray_to_rgb(const stp_vars_t vars,
   const unsigned short *red;
   const unsigned short *green;
   const unsigned short *blue;
-  double density = stp_get_float_parameter(vars, "Density");
 
   stp_curve_resample(lut->red, 256);
   stp_curve_resample(lut->green, 256);
   stp_curve_resample(lut->blue, 256);
+  adjust_density(vars, lut);
   red = stp_curve_get_ushort_data(lut->red, &count);
   green = stp_curve_get_ushort_data(lut->green, &count);
   blue = stp_curve_get_ushort_data(lut->blue, &count);
-  if (bpp == 2)
-    compute_alpha_table(lut);
 
   while (width > 0)
     {
-      if (bpp == 1)
+      if (i0 == grayin[0])
 	{
-	  /*
-	   * No alpha in image...
-	   */
-	  if (i0 == grayin[0])
-	    {
-	      rgbout[0] = o0;
-	      rgbout[1] = o1;
-	      rgbout[2] = o2;
-	      goto out;
-	    }
-	  else
-	    {
-	      i0 = grayin[0];
-	      rgbout[0] = red[grayin[0]];
-	      rgbout[1] = green[grayin[0]];
-	      rgbout[2] = blue[grayin[0]];
-	    }
+	  rgbout[0] = o0;
+	  rgbout[1] = o1;
+	  rgbout[2] = o2;
 	}
       else
 	{
-	  if (i0 == grayin[0] && i1 == grayin[1])
-	    {
-	      rgbout[0] = o0;
-	      rgbout[1] = o1;
-	      rgbout[2] = o2;
-	      goto out;
-	    }
-	  else
-	    {
-	      int lookup = alpha_lookup(lut, grayin[0], grayin[1]);
-	      i0 = grayin[0];
-	      i1 = grayin[1];
-	      rgbout[0] = red[lookup];
-	      rgbout[1] = green[lookup];
-	      rgbout[2] = blue[lookup];
-	    }
+	  i0 = grayin[0];
+	  rgbout[0] = red[grayin[0]];
+	  rgbout[1] = green[grayin[0]];
+	  rgbout[2] = blue[grayin[0]];
+	  o0 = rgbout[0];
+	  o1 = rgbout[1];
+	  o2 = rgbout[2];
+	  nz0 |= o0;
+	  nz1 |= o1;
+	  nz2 |= o2;
 	}
-      if (density != 1.0)
-	{
-	  int i;
-	  for (i = 0; i < 3; i++)
-	    rgbout[i] = .5 + (rgbout[i] * density);
-	}
-      o0 = rgbout[0];
-      o1 = rgbout[1];
-      o2 = rgbout[2];
-      nz0 |= o0;
-      nz1 |= o1;
-      nz2 |= o2;
-    out:
       grayin += bpp;
       rgbout += 3;
       width --;
@@ -1887,9 +1146,7 @@ allocate_lut(void)
   ret->hue_map = NULL;
   ret->lum_map = NULL;
   ret->sat_map = NULL;
-  ret->cmap = NULL;
-  ret->gray_cmap = NULL;
-  ret->alpha_table = NULL;
+  ret->density_is_adjusted = 0;
   return ret;
 }
 
@@ -1913,10 +1170,6 @@ stp_free_lut(stp_vars_t v)
 	stp_curve_destroy(lut->lum_map);
       if (lut->sat_map)
 	stp_curve_destroy(lut->sat_map);
-      if (lut->gray_cmap)
-	stp_free(lut->gray_cmap);
-      if (lut->alpha_table)
-	stp_free(lut->alpha_table);
       memset(lut, 0, sizeof(lut_t));
       stp_free(lut);
       stp_set_lut(v, NULL);
@@ -1961,17 +1214,6 @@ stp_compute_lut(stp_vars_t v, size_t steps,
 
   lut = allocate_lut();
 
-  if (stp_get_cmap(v))
-    {
-      int i;
-      lut->cmap = stp_get_cmap(v);
-      lut->gray_cmap = stp_malloc(256);
-      for (i = 0; i < 256; i++)
-	lut->gray_cmap[i] = (lut->cmap[(i * 3) + 0] * LUM_RED +
-			     lut->cmap[(i * 3) + 1] * LUM_GREEN +
-			     lut->cmap[(i * 3) + 2] * LUM_BLUE) / 100;
-    }
-
   /*
    * TODO check that these are wraparound curves and all that
    */
@@ -1981,13 +1223,13 @@ stp_compute_lut(stp_vars_t v, size_t steps,
     lut->lum_map = stp_curve_allocate_copy(lum);
   if (sat)
     lut->sat_map = stp_curve_allocate_copy(sat);
-    
+
   red = stp_malloc(sizeof(double) * steps);
   green = stp_malloc(sizeof(double) * steps);
   blue = stp_malloc(sizeof(double) * steps);
   composite = stp_malloc(sizeof(double) * steps);
   lut->steps = steps;
-  
+
   stp_set_lut(v, lut);
   stp_dprintf(STP_DBG_LUT, v, "stp_compute_lut\n");
   stp_dprintf(STP_DBG_LUT, v, " cyan %.3f\n", cyan);
@@ -2126,13 +1368,13 @@ stp_compute_lut(stp_vars_t v, size_t steps,
   stp_curve_set_data(lut->blue, steps, blue);
 }
 
-#define RETURN_COLORFUNC(x)						   \
-do									   \
-{									   \
-  stp_dprintf(STP_DBG_COLORFUNC, v,					   \
-	      "stp_choose_colorfunc(type %d bpp %d cmap %d) ==> %s, %d\n", \
-	      stp_get_output_type(v), image_bpp, cmap, #x, *out_bpp);	   \
-  return (x);								   \
+#define RETURN_COLORFUNC(x)						\
+do									\
+{									\
+  stp_dprintf(STP_DBG_COLORFUNC, v,					\
+	      "stp_choose_colorfunc(type %d bpp %d) ==> %s, %d\n",	\
+	      stp_get_output_type(v), image_bpp, #x, *out_bpp);		\
+  return (x);								\
 } while (0)
 
 stp_convert_t
@@ -2140,7 +1382,6 @@ stp_choose_colorfunc(const stp_vars_t v,
 		     int image_bpp,
 		     int *out_bpp)
 {
-  const unsigned char *cmap = stp_get_cmap(v);
   switch (stp_get_output_type(v))
     {
     case OUTPUT_MONOCHROME:
@@ -2148,19 +1389,9 @@ stp_choose_colorfunc(const stp_vars_t v,
       switch (image_bpp)
 	{
 	case 1:
-	  if (cmap)
-	    RETURN_COLORFUNC(indexed_to_monochrome);
-	  else
-	    RETURN_COLORFUNC(gray_to_monochrome);
-	case 2:
-	  if (cmap)
-	    RETURN_COLORFUNC(indexed_alpha_to_monochrome);
-	  else
-	    RETURN_COLORFUNC(gray_alpha_to_monochrome);
+	  RETURN_COLORFUNC(gray_to_monochrome);
 	case 3:
 	  RETURN_COLORFUNC(rgb_to_monochrome);
-	case 4:
-	  RETURN_COLORFUNC(rgb_alpha_to_monochrome);
 	default:
 	  RETURN_COLORFUNC(NULL);
 	}
@@ -2182,31 +1413,31 @@ stp_choose_colorfunc(const stp_vars_t v,
       switch (stp_get_image_type(v))
 	{
 	case IMAGE_CONTINUOUS:
-	  if (image_bpp >= 3)
+	  if (image_bpp == 3)
 	    RETURN_COLORFUNC(rgb_to_rgb);
-	  else if (cmap == NULL)
+	  else if (image_bpp == 1)
 	    RETURN_COLORFUNC(gray_to_rgb);
 	  else
-	    RETURN_COLORFUNC(indexed_to_rgb);
+	    RETURN_COLORFUNC(NULL);
 	case IMAGE_SOLID_TONE:
-	  if (image_bpp >= 3)
+	  if (image_bpp == 3)
 	    RETURN_COLORFUNC(solid_rgb_to_rgb);
-	  else if (cmap == NULL)
+	  else if (image_bpp == 1)
 	    RETURN_COLORFUNC(gray_to_rgb);
 	  else
-	    RETURN_COLORFUNC(solid_indexed_to_rgb);
+	    RETURN_COLORFUNC(NULL);
 	case IMAGE_LINE_ART:
-	  if (image_bpp >= 3)
+	  if (image_bpp == 3)
 	    RETURN_COLORFUNC(fast_rgb_to_rgb);
-	  else if (cmap == NULL)
+	  else if (image_bpp == 1)
 	    RETURN_COLORFUNC(fast_gray_to_rgb);
 	  else
-	    RETURN_COLORFUNC(fast_indexed_to_rgb);
+	    RETURN_COLORFUNC(NULL);
 	default:
 	  RETURN_COLORFUNC(NULL);
 	}
     case OUTPUT_RAW_PRINTER:
-      if (image_bpp & 1 || image_bpp > 64)
+      if ((image_bpp & 1) || image_bpp > 64)
 	RETURN_COLORFUNC(NULL);
       *out_bpp = image_bpp / 2;
       RETURN_COLORFUNC(raw_to_raw);
@@ -2216,19 +1447,9 @@ stp_choose_colorfunc(const stp_vars_t v,
       switch (image_bpp)
 	{
 	case 1:
-	  if (cmap)
-	    RETURN_COLORFUNC(indexed_to_gray);
-	  else
-	    RETURN_COLORFUNC(gray_to_gray);
-	case 2:
-	  if (cmap)
-	    RETURN_COLORFUNC(indexed_alpha_to_gray);
-	  else
-	    RETURN_COLORFUNC(gray_alpha_to_gray);
+	  RETURN_COLORFUNC(gray_to_gray);
 	case 3:
 	  RETURN_COLORFUNC(rgb_to_gray);
-	case 4:
-	  RETURN_COLORFUNC(rgb_alpha_to_gray);
 	default:
 	  RETURN_COLORFUNC(NULL);
 	}

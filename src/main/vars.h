@@ -76,7 +76,6 @@ typedef struct					/* Plug-in variables */
   stp_job_mode_t job_mode;
   void  *lut;			/* Look-up table */
   void  *driver_data;		/* Private data of the driver */
-  unsigned char *cmap;		/* Color map */
   void (*outfunc)(void *data, const char *buffer, size_t bytes);
   void *outdata;
   void (*errfunc)(void *data, const char *buffer, size_t bytes);
@@ -85,6 +84,8 @@ typedef struct					/* Plug-in variables */
   int verified;			/* Ensure that params are OK! */
 } stp_internal_vars_t;
 
+extern void stp_set_lut(stp_vars_t v, void * val);
+extern void * stp_get_lut(const stp_vars_t v);
 
 extern void     stp_set_driver_data (stp_vars_t vv, void * val);
 extern void *   stp_get_driver_data (const stp_vars_t vv);

@@ -283,7 +283,7 @@ usr1_handler (int signal)
   usr1_interrupt = 1;
 }
 
-static void
+void
 gimp_writefunc(void *file, const char *buf, size_t bytes)
 {
   FILE *prn = (FILE *)file;
@@ -597,19 +597,10 @@ run (char   *name,		/* I - Name of print program. */
       if (prn != NULL)
 	{
 	  int orientation;
-	  stp_image_t *image = Image_GimpDrawable_new(drawable);
+	  stp_image_t *image = Image_GimpDrawable_new(drawable, image_ID);
 	  stp_set_float_parameter(gimp_vars.v, "AppGamma", gimp_gamma());
 	  stp_merge_printvars(gimp_vars.v,
 			      stp_printer_get_printvars(current_printer));
-
-	  /*
-	   * Is the image an Indexed type?  If so we need the colormap...
-	   */
-
-	  if (gimp_image_base_type (image_ID) == GIMP_INDEXED)
-	    stp_set_cmap(gimp_vars.v, gimp_image_get_cmap(image_ID, &ncolors));
-	  else
-	    stp_set_cmap(gimp_vars.v, NULL);
 
 	  /*
 	   * Set up the orientation

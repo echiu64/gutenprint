@@ -162,6 +162,7 @@ static gint left, right, top, bottom; /* Imageable region */
 static gint image_width, image_height; /* Image size (possibly rotated) */
 static gint image_true_width, image_true_height; /* Original image */
 static gdouble image_xres, image_yres; /* Original image resolution */
+static gint do_update_thumbnail = 0;
 
 static void scaling_update        (GtkAdjustment *adjustment);
 static void scaling_callback      (GtkWidget *widget);
@@ -1293,6 +1294,7 @@ create_main_window (void)
 
   build_printer_combo ();
   plist_callback (NULL, (gpointer) plist_current);
+  do_update_thumbnail = 1;
   update_adjusted_thumbnail ();
 
   gtk_widget_show (print_dialog);
@@ -2238,6 +2240,8 @@ file_cancel_callback (void)
   dialogs_set_sensitive (TRUE);
 }
 
+extern void gimp_writefunc(void *file, const char *buf, size_t bytes);
+
 /*
  * update_adjusted_thumbnail()
  */
@@ -2251,9 +2255,12 @@ update_adjusted_thumbnail (void)
   gfloat         old_density = stp_get_float_parameter(pv->v, "Density");
   gint preview_limit = (thumbnail_h * thumbnail_w) - 1;
 
-  if (thumbnail_data == 0 || adjusted_thumbnail_data == 0)
+  if (thumbnail_data == 0 || adjusted_thumbnail_data == 0 ||
+      do_update_thumbnail == 0)
     return;
 
+  stp_set_errfunc(pv->v, gimp_writefunc);
+  stp_set_errdata(pv->v, stderr);
   stp_set_float_parameter (pv->v, "Density", 1.0);
   stp_compute_lut (pv->v, 256, NULL, NULL, NULL);
   colorfunc = stp_choose_colorfunc (pv->v, thumbnail_bpp,

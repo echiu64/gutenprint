@@ -336,7 +336,6 @@ main(int  argc,				/* I - Number of command-line arguments */
 	for (i = 0; i < stp_option_count; i++)
 	  stp_set_float_parameter(v, stp_options[i].iname,
 				  stp_options[i].defval / 1000.0);
-	stp_set_cmap(v, NULL);
 	stp_set_page_width(v, cups.header.PageSize[0]);
 	stp_set_page_height(v, cups.header.PageSize[1]);
 	stp_set_left(v, 0);
