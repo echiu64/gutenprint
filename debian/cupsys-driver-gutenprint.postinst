@@ -26,14 +26,14 @@ set -e
 
 if [ "$1" = "configure" ]; then
 # Upgrade in-use PPD files
-  /usr/sbin/cups-genppdconfig.5.0 -u
-  /usr/sbin/cups-genppdupdate.5.0
+    /usr/sbin/cups-genppdconfig.5.0 -u
+    /usr/sbin/cups-genppdupdate.5.0
 # Restart CUPSys (to register new and updated PPDs)
-  /etc/init.d/cupsys reload
+    [ -x /etc/init.d/cupsys ] && /etc/init.d/cupsys force-reload
 elif [ "$1" = "abort-upgrade" -o "$1" = "abort-remove" -o "$1" = "abort-deconfigure" ]; then :
 else
-  echo "postinst called with unknown argument \`$1'" >&2
-  exit 0
+    echo "postinst called with unknown argument \`$1'" >&2
+    exit 0
 fi
 
 # dh_installdeb will replace this with shell code automatically

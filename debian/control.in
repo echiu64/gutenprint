@@ -52,7 +52,7 @@ Description: Gutenprint printer drivers for CUPS
 Package: libgutenprint#LIBRARY_VERSION#-dev
 Architecture: any
 Section: libdevel
-Depends: libgutenprint#LIBRARY_VERSION# (= ${Source-Version})
+Depends: libgutenprint#LIBRARY_VERSION# (= ${Source-Version}), pkg-config (>= 0.14.0)
 Provides: libgutenprint-dev
 Conflicts: libgutenprint-dev
 Replaces: libgutenprint-dev
@@ -119,7 +119,7 @@ Description: The Gutenprint printer driver library
 Package: libgutenprintui#LIBRARY_VERSION#-dev
 Architecture: any
 Section: devel
-Depends: libgutenprintui#LIBRARY_VERSION# (= ${Source-Version})
+Depends: libgutenprintui#LIBRARY_VERSION# (= ${Source-Version}), pkg-config (>= 0.14.0)
 Provides: libgutenprintui-dev
 Conflicts: libgutenprintui-dev
 Replaces: libgutenprintui-dev
@@ -166,7 +166,7 @@ Description: The Gutenprint printer driver user interface library
 Package: libgutenprintui2#LIBRARY_VERSION#-dev
 Architecture: any
 Section: devel
-Depends: libgutenprintui#LIBRARY_VERSION# (= ${Source-Version})
+Depends: libgutenprintui#LIBRARY_VERSION# (= ${Source-Version}), pkg-config (>= 0.14.0)
 Provides: libgutenprintui2-dev
 Conflicts: libgutenprintui2-dev
 Replaces: libgutenprintui2-dev
