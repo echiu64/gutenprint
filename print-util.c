@@ -181,9 +181,9 @@ update_cmyk(unsigned short *rgb)
    * Soften up the CMY primaries
    */
 
-  nc = (c + FMIN(c, FMAX(m, y))) / 2;
-  nm = (m + FMIN(m, FMAX(c, y))) / 2;
-  ny = (y + FMIN(y, FMAX(c, m))) / 2;
+  nc = (c * 4 + FMIN(c, FMAX(m, y)) * 3 + k) / 8;
+  nm = (m * 4 + FMIN(m, FMAX(c, y)) * 3 + k) / 8;
+  ny = (y * 4 + FMIN(y, FMAX(c, m)) * 3 + k) / 8;
 
   /*
    * Make sure we didn't go overboard.  We don't want to go too
@@ -419,7 +419,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 {
   unsigned ld = vars->density * 65536;
   double isat = 1.0;
-  double ssat = sqrt(vars->saturation * 1.25);
+  double ssat = sqrt(vars->saturation * 2);
   if (ssat > 1)
     isat = 1.0 / ssat;
   while (width > 0)

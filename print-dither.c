@@ -1758,11 +1758,11 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
     ok = k;
   if ( ok > lb )
     kl = (unsigned) ( ok - lb ) * (unsigned) d->density /
-      ( d->density - lb );
+      (unsigned) ( d->density - lb );
   else
     kl = 0;
-  if (kl > 65535)
-    kl = 65535;
+  if (kl > d->density)
+    kl = d->density;
 
   /*
    * We have a second value, ks, that will be the scaler.
@@ -1775,10 +1775,10 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
   else if ( k < lb )
     ks = 0;
   else
-    ks = (unsigned) ( k - lb ) * (unsigned) d->density /
-      ( ub - lb );
-  if (ks > 65535)
-    ks = 65535;
+    ks = (unsigned) (k - lb) * (unsigned) d->density /
+      (ub - lb);
+  if (ks > d->density)
+    ks = d->density;
 
   /*
    * ks is then processed by a second order function that produces
@@ -1792,11 +1792,13 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
 #else
   ak = ks;
 #endif
-  k = kl * (unsigned) ak / d->density;
+  k = (unsigned) kl * (unsigned) ak / (unsigned) d->density;
+  if (k > d->density)
+    k = d->density;
   ok = k;
   bk = k;
 
-  if (k > 0)
+  if (k > 0 && ak > 0)
     {
       /*
        * Because black is always fairly neutral, we do not have to
@@ -1808,9 +1810,10 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
        * dull.
        */
 
-      c -= (unsigned) k * (unsigned) ak / d->density;
-      m -= (unsigned) k * (unsigned) ak / d->density;
-      y -= (unsigned) k * (unsigned) ak / d->density;
+      c -= (unsigned) k * (unsigned) ak / (unsigned) d->density;
+      m -= (unsigned) k * (unsigned) ak / (unsigned) d->density;
+      y -= (unsigned) k * (unsigned) ak / (unsigned) d->density;
+
       if (c < 0)
 	c = 0;
       if (m < 0)
@@ -1974,7 +1977,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   for (; x != terminate; x += direction)
     {
       int printed_black = 0;
+#if 0
       int omd, oyd, ocd;
+#endif
       int ink_budget = d->ink_limit;
 
       /*
@@ -2051,9 +2056,11 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	  y = update_color(y, dithery);
 	}
 
+#if 0
       ocd = oc * d->c_darkness;
       omd = om * d->m_darkness;
       oyd = oy * d->y_darkness;
+#endif
 
       if (black)
 	{
@@ -2064,6 +2071,14 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	    printed_black = k - tk;
 	  k = tk;
 	}
+
+      /*
+       * If the printed density is high, ink reduction loses too much
+       * ink.  However, at low densities it seems to be safe.  Of course,
+       * at low densities it won't do as much.
+       */
+      if (d->density > .5)
+	printed_black = 0;
 
       /*
        * Uh oh spaghetti-o!
@@ -2080,21 +2095,21 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       else if (first_color == ECOLOR_Y)
 	goto ecy;
     ecc:
-      c = print_color(d, &(d->c_dither), oc, oc /* + ((omd + oyd) >> 7) */,
+      c = print_color(d, &(d->c_dither), oc, oc + (c - oc) / 2,
 		      c, x, row, cptr, lcptr, bit, length,
 		      d->c_randomizer, printed_black, &ink_budget,
 		      &(d->c_pick), &(d->c_dithermat), d->dither_type);
       if (first_color == ECOLOR_M)
 	goto out;
     ecm:
-      m = print_color(d, &(d->m_dither), om, om /* + ((ocd + oyd) >> 7) */,
+      m = print_color(d, &(d->m_dither), om, om + (m - om) / 2,
 		      m, x, row, mptr, lmptr, bit, length,
 		      d->m_randomizer, printed_black, &ink_budget,
 		      &(d->m_pick), &(d->m_dithermat), d->dither_type);
       if (first_color == ECOLOR_Y)
 	goto out;
     ecy:
-      y = print_color(d, &(d->y_dither), oy, oy /* + ((ocd + omd) >> 7) */,
+      y = print_color(d, &(d->y_dither), oy, oy + (y - oy) / 2,
 		      y, x, row, yptr, lyptr, bit, length,
 		      d->y_randomizer, printed_black, &ink_budget,
 		      &(d->y_pick), &(d->y_dithermat), d->dither_type);

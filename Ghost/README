@@ -75,10 +75,11 @@ INSTALLATION AND COMPILATION:
  this by calling "gs -h" with the newly compiled ghostscript.
 
 Debian users can try the following (contributed by Stuart Miles):
+versions are current as of 12th August 2000:
 
 Download the debianised sources for gs-aladdin and libjpeg:
 
-# apt-get source gs-aladdin libjpeg
+# apt-get source gs libjpeg
 
 (Make sure you have a deb-src entry in /etc/apt/sources.list first!
 See the sources.list(5) man page for more info on setting up apt.)
@@ -86,19 +87,28 @@ See the sources.list(5) man page for more info on setting up apt.)
 This will download the .dsc, orig.tar.gz and diff.gz files, unpack and
 patch the files for you.
 
-Rename the libjpegxxx directory to libjpeg.
+Rename the libjpegxxx (currently libjpeg62) directory to libjpeg.
+
+To compile gs you _may_ also need the following installed:
+
+zlib1g-dev_1%3a1.1.3-5_i386.deb
+svgalibg1-dev_0.96-5_i386.deb
+libpng0-dev_0.96-5_i386.deb
+vflib2-dev_2.25.1-4_i386.deb
+
+or their current equivalent.
 
 Under the gs contrib directory make an stp subdir and copy in the
 gdevstp* files, copy in the README file and rename it README.stp, in
-the same directory you'll also need a contrib.mak.diff file. I'll have
-to send that to you seperately, I'm at work at the moment and don't
-have the files with me.
+the same directory you'll also need a contrib.mak.addon file.
 
 Under the gs/debian directory is a file called rules, this file is a
 script which controls the compilation of gs and the building of the
 debian package, this needs to be amended to add the actions required
-to build the stp driver. Again, I'll have to send you a copy of the
-file tonight, I'll also include a .diff against the original.
+to build the stp driver. Copy the debian-patch file into the /debian 
+directory and use this file to patch the /rules and /control files.
+Copy the debian-patch-stp file to /debian/patches and rename the file
+/stp.
 
 Once all the files are in place go into the gs directory and:
 
@@ -107,12 +117,12 @@ Once all the files are in place go into the gs directory and:
 The script will copy the sourcefiles and README.stp into the main gs
 directory, patch contrib.mak, add the stp entry to unix-gcc.mak,
 compile gs, package it all up as a .deb package
-(gs-aladdin_5.50-8.deb) and put the resulting file in the directory
+(gs-stp_5.10-9.1_i386.deb) and put the resulting file in the directory
 above gs.
 
 To install it:
 
-# dpkg -i gs-aladdin_5.50-8.deb
+# dpkg -i gs-stp_5.10-9.1_i386.deb
 
 NB.
 #include <standard disclaimers>

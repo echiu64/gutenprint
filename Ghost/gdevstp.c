@@ -134,21 +134,21 @@ typedef struct
 private void
 stp_dbg(const char *msg, const privdata_t *stp_data)
 {
-  fprintf(stderr,"%s Settings: r: %d  g: %d  b: %d\n",
+  fprintf(gs_stderr,"%s Settings: r: %d  g: %d  b: %d\n",
 	  msg, stp_data->v.red, stp_data->v.green, stp_data->v.blue);
-  fprintf(stderr, "Ink type %s\n", stp_data->v.ink_type);
+  fprintf(gs_stderr, "Ink type %s\n", stp_data->v.ink_type);
 
-  fprintf(stderr,"Settings: bright: %d  contrast: %d\n",
+  fprintf(gs_stderr,"Settings: bright: %d  contrast: %d\n",
 	  stp_data->v.brightness, stp_data->v.contrast);
 
-  fprintf(stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
+  fprintf(gs_stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
 	  stp_data->v.gamma, stp_data->v.saturation, stp_data->v.density);
-  fprintf(stderr, "Settings: Quality %s\n", stp_data->v.resolution);
-  fprintf(stderr, "Settings: Dither %s\n", stp_data->v.dither_algorithm);
-  fprintf(stderr, "Settings: MediaSource %s\n", stp_data->v.media_source);
-  fprintf(stderr, "Settings: MediaType %s\n", stp_data->v.media_type);
-  fprintf(stderr, "Settings: Model %s\n", stp_data->v.driver);
-  fprintf(stderr, "Settings: InkType %s\n", stp_data->v.ink_type);
+  fprintf(gs_stderr, "Settings: Quality %s\n", stp_data->v.resolution);
+  fprintf(gs_stderr, "Settings: Dither %s\n", stp_data->v.dither_algorithm);
+  fprintf(gs_stderr, "Settings: MediaSource %s\n", stp_data->v.media_source);
+  fprintf(gs_stderr, "Settings: MediaType %s\n", stp_data->v.media_type);
+  fprintf(gs_stderr, "Settings: Model %s\n", stp_data->v.driver);
+  fprintf(gs_stderr, "Settings: InkType %s\n", stp_data->v.ink_type);
 }
 
 private void
@@ -156,7 +156,7 @@ stp_print_dbg(const char *msg, gx_device_printer *pdev,
 	      const privdata_t *stp_data)
 {
   STP_DEBUG(if (pdev)
-	    fprintf(stderr,"%s Image: %d x %d pixels, %f x %f dpi\n",
+	    fprintf(gs_stderr,"%s Image: %d x %d pixels, %f x %f dpi\n",
 		    msg, pdev->width, pdev->height, pdev->x_pixels_per_inch,
 		    pdev->y_pixels_per_inch));
   STP_DEBUG(stp_dbg(msg, stp_data));
@@ -167,7 +167,7 @@ stp_print_debug(const char *msg, gx_device *pdev,
 		const privdata_t *stp_data)
 {
   STP_DEBUG(if (pdev)
-	    fprintf(stderr,"%s Image: %d x %d pixels, %f x %f dpi\n",
+	    fprintf(gs_stderr,"%s Image: %d x %d pixels, %f x %f dpi\n",
 		    msg, pdev->width, pdev->height, pdev->x_pixels_per_inch,
 		    pdev->y_pixels_per_inch));
   STP_DEBUG(stp_dbg(msg, stp_data));
@@ -186,18 +186,18 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
   stp_print_dbg("stp_print_page", pdev, &stp_data);
   code = 0;
   stp_raster = gdev_prn_raster(pdev);
+  printer = get_printer_by_driver(stp_data.v.driver);
+  if (printer == NULL)
+    {
+      fprintf(gs_stderr, "Printer %s is not a known printer model\n",
+	      stp_data.v.driver);
+      return_error(gs_error_rangecheck);
+    }
+
   stp_row = gs_alloc_bytes(pdev->memory, stp_raster, "stp file buffer");
 
   if (stp_row == 0)		/* can't allocate row buffer */
     return_error(gs_error_VMerror);
-
-  printer = get_printer_by_driver(stp_data.v.driver);
-  if (printer == NULL)
-    {
-      gs_free_object(pdev->memory, stp_row, "stp row buffer");
-      code = 1;
-      return code;
-    }
 
   if (strlen(stp_data.v.resolution) == 0)
     strcpy(stp_data.v.resolution, (*printer->default_resolution)(printer));
@@ -229,7 +229,10 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
   gs_free_object(pdev->memory, stp_row, "stp row buffer");
   stp_row = NULL;
 
-  return code;
+  if (code)
+    return_error(gs_error_rangecheck);
+  else
+    return 0;
 }
 
 /* 24-bit color mappers (taken from gdevmem2.c). */
@@ -460,7 +463,14 @@ stp_open(gx_device *pdev)
   int left,right,bottom,top,width,length;
   const printer_t *printer = get_printer_by_driver(stp_data.v.driver);
   if (!printer)
-    return (-1);
+    {
+      if (strlen(stp_data.v.driver) == 0)
+	fprintf(gs_stderr, "Printer must be specified with -sModel\n");
+      else
+	fprintf(gs_stderr, "Printer %s is not a known model\n",
+		stp_data.v.driver);
+      return_error(gs_error_undefined);
+    }
 
   stp_data.v.page_width = pdev->MediaSize[0];
   stp_data.v.page_height = pdev->MediaSize[1];
@@ -486,7 +496,7 @@ stp_open(gx_device *pdev)
   stp_data.v.top    = length-top;
   stp_data.bottom = bottom;
 
-  STP_DEBUG(fprintf(stderr, "margins:  l %f  b %f  r %f  t %f\n",
+  STP_DEBUG(fprintf(gs_stderr, "margins:  l %f  b %f  r %f  t %f\n",
 		    st[0], st[1], st[2], st[3]));
 
   gx_device_set_margins(pdev, st, true);
@@ -567,7 +577,7 @@ Image_height(Image image)
   /* calculate new image height */
   tmp2 *= (float)(im->dev->x_pixels_per_inch) / 72.;
 
-  STP_DEBUG(fprintf(stderr,"corrected page length %f\n",tmp2));
+  STP_DEBUG(fprintf(gs_stderr,"corrected page length %f\n",tmp2));
 
   return (int)tmp2;
 }
@@ -594,13 +604,13 @@ Image_progress_init(Image image)
 void
 Image_note_progress(Image image, double current, double total)
 {
-  STP_DEBUG(fprintf(stderr, "."));
+  STP_DEBUG(fprintf(gs_stderr, "."));
 }
 
 void
 Image_progress_conclude(Image image)
 {
-  STP_DEBUG(fprintf(stderr, "\n"));
+  STP_DEBUG(fprintf(gs_stderr, "\n"));
 }
 
 const char *

@@ -93,6 +93,7 @@ static GtkWidget *printandsave_button;
 static GtkWidget *adjust_color_button;
 
 static GtkObject *scaling_adjustment;	/* Adjustment object for scaling */
+static int suppress_scaling_adjustment = 0;
 
 static gint    num_media_types = 0;	/* Number of media types */
 static gchar **media_types;		/* Media type strings */
@@ -886,7 +887,9 @@ gimp_scaling_update (GtkAdjustment *adjustment)
       plist[plist_current].v.scaling = vars.scaling;
     }
 
+  suppress_scaling_adjustment = 1;
   gimp_preview_update ();
+  suppress_scaling_adjustment = 0;
 }
 
 /*
@@ -1125,8 +1128,8 @@ gimp_do_misc_updates (void)
       GTK_ADJUSTMENT (scaling_adjustment)->lower = min_ppi_scaling;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = max_ppi_scaling;
       GTK_ADJUSTMENT (scaling_adjustment)->value = tmp;
-      gtk_signal_emit_by_name (scaling_adjustment, "changed");
-      gtk_signal_emit_by_name (scaling_adjustment, "value_changed");
+      gtk_adjustment_changed (GTK_ADJUSTMENT (scaling_adjustment));
+      gtk_adjustment_value_changed (GTK_ADJUSTMENT (scaling_adjustment));
       plist[plist_current].v.scaling = vars.scaling;
     }
   else
@@ -1737,6 +1740,7 @@ gimp_preview_update (void)
 {
   gint	        temp;
   gint          orient;		   /* True orientation of page */
+  gdouble	max_ppi_scaling;   /* Maximum PPI for current page size */
   gdouble	min_ppi_scaling;   /* Minimum PPI for current page size */
   gdouble	min_ppi_scaling1;   /* Minimum PPI for current page size */
   gdouble	min_ppi_scaling2;   /* Minimum PPI for current page size */
@@ -1792,20 +1796,28 @@ gimp_preview_update (void)
       top               = temp;
     }
 
-  min_ppi_scaling1 = 72.0 * (double) image_width / (double) printable_width;
-  min_ppi_scaling2 = 72.0 * (double) image_height / (double) printable_height;
-  if (min_ppi_scaling1 > min_ppi_scaling2)
-    min_ppi_scaling = min_ppi_scaling1;
-  else
-    min_ppi_scaling = min_ppi_scaling2;
-
-  if (vars.scaling < 0 && vars.scaling > -min_ppi_scaling)
-    vars.scaling = -min_ppi_scaling;
-
   if (vars.scaling < 0)
   {
+    min_ppi_scaling1 = 72.0 * (double) image_width / (double) printable_width;
+    min_ppi_scaling2 = 72.0 * (double) image_height / (double) printable_height;
+    if (min_ppi_scaling1 > min_ppi_scaling2)
+      min_ppi_scaling = min_ppi_scaling1;
+    else
+      min_ppi_scaling = min_ppi_scaling2;
+
+    max_ppi_scaling = min_ppi_scaling * 20;
+    if (vars.scaling < 0 && vars.scaling > -min_ppi_scaling)
+      vars.scaling = -min_ppi_scaling;
     print_width = 72 * image_width / -vars.scaling;
     print_height = print_width * image_height / image_width;
+    GTK_ADJUSTMENT (scaling_adjustment)->lower = min_ppi_scaling;
+    GTK_ADJUSTMENT (scaling_adjustment)->upper = max_ppi_scaling;
+    GTK_ADJUSTMENT (scaling_adjustment)->value = -vars.scaling;
+    if (!suppress_scaling_adjustment)
+      {
+	gtk_adjustment_changed (GTK_ADJUSTMENT (scaling_adjustment));
+	gtk_adjustment_value_changed (GTK_ADJUSTMENT (scaling_adjustment));
+      }
   }
   else
   {
