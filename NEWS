@@ -720,11 +720,14 @@ Apollo P-2500                  pcl-690         HP DeskJet 690 series
 Apollo P-2550                  pcl-690         HP DeskJet 690 series
 Apollo P-2600                  pcl-690         HP DeskJet 690 series
 Apollo P-2650                  pcl-690         HP DeskJet 690 series
+Apple Color StyleWriter 4100   pcl-apple-4100  HP LaserJet II series
+Apple Color StyleWriter 4500   pcl-apple-4500  HP LaserJet II series
+Apple Color StyleWriter 6500   pcl-apple-6500  HP LaserJet II series
 Apple LaserWriter Select 360   pcl-2           HP LaserJet II series
 Brother DCP-1200               pcl-2           HP LaserJet II series
 Brother HL-4Ve                 pcl-2           HP LaserJet II series
-Brother HL-10V                 pcl-3           HP LaserJet III series
 Brother HL-10h                 pcl-4           HP LaserJet 4 series
+Brother HL-10V                 pcl-3           HP LaserJet III series
 Brother HL-630                 pcl-2           HP LaserJet II series
 Brother HL-660                 pcl-4           HP LaserJet 4 series
 Brother HL-760                 pcl-4           HP LaserJet 4 series
@@ -768,8 +771,8 @@ Canon BJC-7000                 bjc-7000        CANON BJC 7000
 Canon BJC-7100                 bjc-7100        CANON BJC 7100
 Canon BJC-8200                 bjc-8200        CANON BJC 8200
 Canon GP 335                   pcl-4           HP LaserJet 4 series
-Canon LBP-430                  pcl-4l          HP LaserJet 4L
 Canon LBP-4sx                  pcl-3           HP LaserJet III series
+Canon LBP-430                  pcl-4l          HP LaserJet 4L
 Canon LBP-1000                 pcl-6           HP LaserJet 6 series
 Canon LBP-1260                 pcl-6           HP LaserJet 6 series
 Canon LBP-1760                 pcl-6           HP LaserJet 6 series
@@ -792,11 +795,18 @@ Epson AcuLaser C2000           pcl-4           HP LaserJet 4 series
 Epson AcuLaser C2000PS         pcl-4           HP LaserJet 4 series
 Epson AcuLaser C8500           pcl-4           HP LaserJet 4 series
 Epson AcuLaser C8500PS         pcl-4           HP LaserJet 4 series
+Epson AcuLaser C8600           pcl-4           HP LaserJet 4 series
+Epson AcuLaser C8600PS         pcl-4           HP LaserJet 4 series
 Epson EPL-5200                 pcl-3           HP LaserJet III series
 Epson EPL-5200+                pcl-3           HP LaserJet III series
 Epson EPL-5700                 pcl-4           HP LaserJet 4 series
+Epson EPL-5700PS               pcl-4           HP LaserJet 4 series
 Epson EPL-5800                 pcl-4           HP LaserJet 4 series
+Epson EPL-5800PS               pcl-4           HP LaserJet 4 series
 Epson EPL-5900                 pcl-4           HP LaserJet 4 series
+Epson EPL-5900PS               pcl-4           HP LaserJet 4 series
+Epson EPL-6100                 pcl-4           HP LaserJet 4 series
+Epson EPL-6100PS               pcl-4           HP LaserJet 4 series
 Epson EPL-7100                 pcl-2           HP LaserJet II series
 Epson Stylus C20SX             escp2-c20sx     EPSON Stylus C20SX
 Epson Stylus C20UX             escp2-c20ux     EPSON Stylus C20UX
@@ -858,6 +868,7 @@ Epson Stylus Photo 870         escp2-870       EPSON Stylus Photo 870
 Epson Stylus Photo 875         escp2-875       EPSON Stylus Photo 875
 Epson Stylus Photo 890         escp2-890       EPSON Stylus Photo 890
 Epson Stylus Photo 895         escp2-895       EPSON Stylus Photo 895
+Epson Stylus Photo 900         escp2-ph900     EPSON Stylus Photo 900
 Epson Stylus Photo 915         escp2-915       EPSON Stylus Photo 915
 Epson Stylus Photo 925         escp2-925       EPSON Stylus Photo 925
 Epson Stylus Photo 950         escp2-950       EPSON Stylus Photo 950
@@ -880,7 +891,7 @@ Epson Stylus Pro 9000          escp2-9000      EPSON Stylus Pro 9000
 Epson Stylus Pro 9500          escp2-9500      EPSON Stylus Pro 9500
 Epson Stylus Pro 9600          escp2-9600      EPSON Stylus Pro 9600
 Epson Stylus Pro 10000         escp2-10000     EPSON Stylus Pro 10000
-Epson Stylus Pro XL            escp2-pro-xl    EPSON Stylus Color Pro XL
+Epson Stylus Color Pro XL      escp2-pro-xl    EPSON Stylus Color Pro XL
 Epson Stylus Scan 2000         escp2-scan2000  EPSON Stylus Scan 2000
 Epson Stylus Scan 2500         escp2-scan2500  EPSON Stylus Scan 2500
 Epson Stylus CX3200            escp2-cx3200    EPSON Stylus CX-3200
@@ -954,6 +965,7 @@ HP DesignJet 750C              pcl-750         HP DesignJet 750C
 HP DesignJet 750C Plus         pcl-750         HP DesignJet 750C
 HP DesignJet 2500CP            pcl-desnj-2500  HP DesignJet 2500
 HP DesignJet 3500CP            pcl-desnj-3500  HP DesignJet 3500
+HP DesignJet ColorPro CAD      pcl-2500        HP DesignJet ColorPro CAD
 HP DeskJet 340C                pcl-340         HP DeskJet 340
 HP DeskJet 400                 pcl-400         HP DeskJet 400
 HP DeskJet 400C                pcl-540         HP DeskJet 540C
@@ -1061,14 +1073,17 @@ HP LaserJet 5L                 pcl-4           HP LaserJet 4 series
 HP LaserJet 5P                 pcl-5           HP LaserJet 5 series
 HP LaserJet 5Si                pcl-5si         HP LaserJet 5Si
 HP LaserJet 6                  pcl-6           HP LaserJet 6 series
-HP LaserJet 6L                 pcl-6           HP LaserJet 6 series
+HP LaserJet 6L                 pcl-4           HP LaserJet 4 series
 HP LaserJet 6P                 pcl-4           HP LaserJet 4 series
 HP LaserJet 1100               pcl-6           HP LaserJet 6 series
 HP LaserJet 1100A              pcl-6           HP LaserJet 6 series
+HP LaserJet 1150               pcl-6           HP LaserJet 6 series
 HP LaserJet 1200               pcl-6           HP LaserJet 6 series
 HP LaserJet 1220               pcl-6           HP LaserJet 6 series
+HP LaserJet 1300               pcl-6           HP LaserJet 6 series
 HP LaserJet 2100               pcl-6           HP LaserJet 6 series
 HP LaserJet 2200               pcl-6           HP LaserJet 6 series
+HP LaserJet 2300               pcl-6           HP LaserJet 6 series
 HP LaserJet 3200               pcl-6           HP LaserJet 6 series
 HP LaserJet 3200m              pcl-6           HP LaserJet 6 series
 HP LaserJet 3200se             pcl-6           HP LaserJet 6 series
@@ -1102,6 +1117,10 @@ HP OfficeJet 710               pcl-690         HP DeskJet 690 series
 HP OfficeJet 720               pcl-690         HP DeskJet 690 series
 HP OfficeJet 725               pcl-690         HP DeskJet 690 series
 HP OfficeJet 6110              pcl-900         HP DeskJet 900 series
+HP OfficeJet D125              pcl-900         HP DeskJet 900 series
+HP OfficeJet D135              pcl-900         HP DeskJet 900 series
+HP OfficeJet D145              pcl-900         HP DeskJet 900 series
+HP OfficeJet D155              pcl-900         HP DeskJet 900 series
 HP OfficeJet G55               pcl-900         HP DeskJet 900 series
 HP OfficeJet G85               pcl-900         HP DeskJet 900 series
 HP OfficeJet G95               pcl-900         HP DeskJet 900 series
@@ -1119,10 +1138,6 @@ HP OfficeJet R80               pcl-810         HP DeskJet 810C
 HP OfficeJet T45               pcl-810         HP DeskJet 810C
 HP OfficeJet T65               pcl-810         HP DeskJet 810C
 HP OfficeJet V40               pcl-900         HP DeskJet 900 series
-HP OfficeJet D125              pcl-900         HP DeskJet 900 series
-HP OfficeJet D135              pcl-900         HP DeskJet 900 series
-HP OfficeJet D145              pcl-900         HP DeskJet 900 series
-HP OfficeJet D155              pcl-900         HP DeskJet 900 series
 HP PhotoSmart P1000            pcl-P1000       HP PhotoSmart P1000
 HP PhotoSmart P1100            pcl-P1100       HP PhotoSmart P1100
 HP PhotoSmart P1115            pcl-900         HP DeskJet 900 series
@@ -1226,8 +1241,9 @@ Xerox DocuPrint N4512          pcl-4           HP LaserJet 4 series
 Xerox DocuPrint N4512 PS       pcl-4           HP LaserJet 4 series
 Xerox Document Centre 400      pcl-4           HP LaserJet 4 series
 Generic PCL 4 Printer          pcl-2           HP LaserJet II series
-Generic PCL 5/5e Printer       pcl-4           HP LaserJet 4 series
+Generic PCL 5 Printer          pcl-4           HP LaserJet 4 series
 Generic PCL 5c Printer         pcl-4           HP LaserJet 4 series
+Generic PCL 5e Printer         pcl-4           HP LaserJet 4 series
 Generic PCL 6/PCL XL Printer   pcl-6           HP LaserJet 6 series
 
 
@@ -1305,6 +1321,7 @@ Printer-Specific Notes:
       EPSON Stylus C41UX
       EPSON Stylus C42SX
       EPSON Stylus C42UX
+      EPSON Stylus C50
       EPSON Stylus C60
       EPSON Stylus C61
       EPSON Stylus C62
@@ -1335,6 +1352,7 @@ Printer-Specific Notes:
       EPSON Stylus Photo 825/830
       EPSON Stylus Photo 870/875
       EPSON Stylus Photo 890/895
+      EPSON Stylus Photo 900
       EPSON Stylus Photo 915
       EPSON Stylus Photo 925
       EPSON Stylus Photo 950
