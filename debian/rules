@@ -27,11 +27,12 @@ LIBRARY_VERSION =  -$(UPSTREAM_VERSION)
 #LIBRARY_VERSION = 1
 
 autoconfigure: autoconfigure-stamp
-autoconfigure-stamp: debian/control debian/libgimpprint-doc.doc-base debian/libgimpprint-doc.install
+autoconfigure-stamp: debian/control debian/libgimpprint.install debian/libgimpprint-doc.doc-base debian/libgimpprint-doc.install
 	dh_testdir
+# Create versioned symlinks
 	cd debian; \
 	for file in libgimpprint*; do \
-	  ln -sf $$file `echo $$file | sed -e 's/libgimpprint/libgimpprint$(LIBRARY_VERSION)/'`; \
+	ln -sfv $$file `echo $$file | sed -e 's/\(libgimpprint[[:alpha:]]*\)\(.*\)/\1$(LIBRARY_VERSION)\2/'`; \
 	done
 	rm debian/libgimpprint$(LIBRARY_VERSION)*.in
 	mkdir debian/build; \
@@ -60,12 +61,12 @@ clean: debian/control
 	  cp -f /usr/share/misc/config.guess config.guess
 
 	rm -rf debian/build debian/install
-	rm -rf debian/libgimpprint-doc.doc-base debian/libgimpprint-doc.install
+	rm -rf debian/libgimpprint.install debian/libgimpprint-doc.doc-base debian/libgimpprint-doc.install
 	rm -rf debian/libgimpprint$(LIBRARY_VERSION).files
 	rm -rf debian/libgimpprint$(LIBRARY_VERSION).postinst
 	-$(MAKE) distclean
 
-	rm -rf $(CURDIR)/debian/libgimpprint$(LIBRARY_VERSION)*
+	rm -rf $(CURDIR)/debian/libgimpprint*$(LIBRARY_VERSION)*
 	dh_clean
 
 install: DH_OPTIONS=
@@ -123,6 +124,7 @@ binary-arch: build install ChangeLog
 #	dh_installdebconf -a
 	dh_installdocs -a
 	  cp src/cups/README debian/cupsys-driver-gimpprint/usr/share/doc/cupsys-driver-gimpprint/README.cups
+	rm -f debian/libgimpprint-dev/usr/include/gimp-print/gimp-print-ui*
 	dh_installexamples -a
 #	dh_installmenu -a
 #	dh_installlogrotate -a
@@ -142,7 +144,7 @@ binary-arch: build install ChangeLog
 	dh_makeshlibs -a -V
 	dh_installdeb -a
 #	dh_perl -a
-	dh_shlibdeps -a -l`pwd`/debian/libgimpprint$(LIBRARY_VERSION)/usr/lib
+	dh_shlibdeps -a -l`pwd`/debian/libgimpprint$(LIBRARY_VERSION)/usr/lib:`pwd`/debian/libgimpprintui$(LIBRARY_VERSION)/usr/lib
 	dh_gencontrol -a
 	dh_md5sums -a
 	dh_builddeb -a
@@ -163,6 +165,10 @@ debian/control: debian/changelog debian/control.in
 # Make sure debian/libgimpprint-doc.doc-base is up-to-date.
 debian/libgimpprint-doc.doc-base: debian/changelog debian/libgimpprint-doc.doc-base.in
 	sed $(SEDPATTERN) <debian/libgimpprint-doc.doc-base.in >debian/libgimpprint-doc.doc-base
+
+# Make sure debian/libgimpprint-doc.install is up-to-date.
+debian/libgimpprint.install: debian/changelog debian/libgimpprint.install.in
+	sed $(SEDPATTERN) <debian/libgimpprint.install.in >debian/libgimpprint.install
 
 # Make sure debian/libgimpprint-doc.install is up-to-date.
 debian/libgimpprint-doc.install: debian/changelog debian/libgimpprint-doc.install.in

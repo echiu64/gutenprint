@@ -1,0 +1,5 @@
+debian/install/usr/lib/libgimpprintui.so                usr/lib
+debian/install/usr/lib/libgimpprintui.la                usr/lib
+debian/install/usr/lib/libgimpprintui.a                 usr/lib
+debian/install/usr/lib/pkgconfig/gimpprint-ui.pc        usr/lib
+debian/install/usr/include/gimp-print/gimp-print-ui.h   usr/include

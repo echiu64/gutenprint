@@ -1,3 +1,13 @@
+gimp-print (4.3.7-1) unstable; urgency=low
+
+  * New upstream development release (4.3.7).
+  * Add new library packages libgimpprintui and libgimpprintui-dev.
+  * Add modules and XML data to libgimpprint.
+  * Add cups-genppdupdate to cupsys-driver-gimpprint, and run in in
+    postinst.
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Sun, 12 Jan 2003 20:03:01 +0000
+
 gimp-print (4.3.6-1) unstable; urgency=low
 
   * New upstream development release (4.3.6)
