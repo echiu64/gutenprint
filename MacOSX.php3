@@ -32,7 +32,7 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <b>October 21, 2002 -</b> Gimp-Print 4.2.3, the newest stable release, is now available for download.
+ <a href="#4.2.3"><b>October 21, 2002 -</b></a> Gimp-Print 4.2.3, the newest stable release, is now available for download.
  </p>
  <br>
  </td>
@@ -98,7 +98,7 @@ require('standard_html_header.php3');
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/Gimp-Print-4.2.3-0.ppc.dmg?download"
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.3-0.ppc.dmg?download"
  >gimp-print-4.2.3-0.ppc.dmg</a>&nbsp;(5.3 MB)
  </td>
  <td align="right" >
