@@ -2806,6 +2806,9 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	value = cmy[i-1];
 	CHANNEL(d, i).o = value;				/* Remember value we want printed here */
 
+	if (i == 1 || value < CHANNEL(d, ECOLOR_K).o)
+	  CHANNEL(d, ECOLOR_K).o = value;			/* Set black amount to minimum of CMY */
+
 	if (r_sq[i] + dx[i] < et->r_sq[i][x]) {			/* Do our eventone calculations */
 	  r_sq[i] += dx[i];					/* Nearest pixel same as last one */
 	  dx[i] += et->d2x;
@@ -2822,17 +2825,15 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	if (value < 0) value = 0;
 	CHANNEL(d, i).v = value;				/* Colour to print at this pixel location */
 
-	if (i == 1 || value < CHANNEL(d, ECOLOR_K).o)
-	  CHANNEL(d, ECOLOR_K).o = value;			/* Set black amount to minimum of CMY */
+	if (i == 1 || value < CHANNEL(d, ECOLOR_K).v)
+	  CHANNEL(d, ECOLOR_K).v = value;			/* Set black amount to minimum of CMY */
       }
 
 
       /* Adjust black amount based on black density */
       if (d->density != d->black_density) {
         CHANNEL(d, ECOLOR_K).v =
-          (unsigned)CHANNEL(d, ECOLOR_K).o * (unsigned)d->black_density / d->density;
-      } else {
-        CHANNEL(d, ECOLOR_K).v = CHANNEL(d, ECOLOR_K).o;
+          (unsigned)CHANNEL(d, ECOLOR_K).v * (unsigned)d->black_density / d->density;
       }
 
       { int ri[NCOLORS];
@@ -2864,9 +2865,9 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	}
         /* Now we can find out what to really print */
 
-        { unsigned int k = CHANNEL(d, ECOLOR_K).o;
+        { int k = CHANNEL(d, ECOLOR_K).o;
 	  if (k > d->k_upper) blackmod += 65536;
-          else if (k > d->k_lower) blackmod += 65536 * k / d->bound_range;
+          else if (k > d->k_lower) blackmod += 65536 * (k - d->k_lower) / d->bound_range;
 	}
         if (blackmod > 65536) {
           ri[ECOLOR_M] = 65535 - ri[ECOLOR_M];
