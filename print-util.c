@@ -31,7 +31,7 @@
  *
  * Revision History:
  *
- * See bottom
+ *   See ChangeLog
  */
 
 /* #define PRINT_DEBUG */

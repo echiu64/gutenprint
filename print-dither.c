@@ -22,7 +22,7 @@
  *
  * Revision History:
  *
- * See bottom
+ *   See ChangeLog
  */
 
 

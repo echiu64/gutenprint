@@ -30,7 +30,7 @@
  *
  * Revision History:
  *
- * See bottom of file
+ *   See ChangeLog
  */
 
 /*

@@ -35,7 +35,7 @@
  *
  * Revision History:
  *
- * See bottom
+ *   See ChangeLog
  */
 
 #include "print.h"

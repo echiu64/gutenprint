@@ -31,8 +31,8 @@
  *   ps_ascii85()        - Print binary data as a series of base-85 numbers.
  *
  * Revision History:
- * See bottom
  *
+ *   See ChangeLog
  */
 
 #include "print.h"
