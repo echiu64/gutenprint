@@ -473,6 +473,16 @@
 <language value=escp2>
 </printer>
 
+# Note that the 785EPX has a roll feed holder.  It's more like the 890
+# than the 780, despite the name.
+<printer name="EPSON Stylus Photo 785EPX" driver="escp2-785">
+<color>
+<model value=36>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Photo 790" driver="escp2-790">
 <color>
 <model value=35>
@@ -489,7 +499,23 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Photo 875" driver="escp2-875">
+<color>
+<model value=22>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Photo 890" driver="escp2-890">
+<color>
+<model value=36>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Photo 895" driver="escp2-895">
 <color>
 <model value=36>
 <gamma value=0.585>
@@ -580,6 +606,14 @@
 <printer name="EPSON Stylus Pro 9500" driver="escp2-9500">
 <color>
 <model value=31>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Pro 10000" driver="escp2-10000">
+<color>
+<model value=41>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>

@@ -22,19 +22,36 @@ Gimp-Print 4.1.99a2 contains the following changes over 4.1.99a1:
    properly if the scaling was set to pixels per inch (PPI) rather
    than percent.
 
-3) The stp driver has been qualified against GhostScript 6.51 (the
+3) A crash or data corruption problem (depending upon circumstances)
+   with the Epson Stylus Color 480 and 580 is fixed.
+
+4) Pure black and white (monochrome) printing now works properly on
+   grayscale printers.  Previously it was converted silently to
+   grayscale.
+
+5) The stp driver has been qualified against GhostScript 6.51 (the
    newest GNU release).
 
-4) The stp driver (in GhostScript) can now be built against an
+6) The stp driver (in GhostScript) can now be built against an
    installed libgimpprint.  This is a much less invasive build
    procedure, and results in a smaller GhostScript binary when lined
    dynamically.
 
-5) Pure black and white (monochrome) printing now works properly on
-   grayscale printers.  Previously it was converted silently to
-   grayscale.
+7) Some improvements for the Canon BJC-7000.
 
-6) Some improvements for the Canon BJC-7000.
+8) Preliminary support for the Epson Stylus Pro 10000.  This printer
+   is definitely *not* tuned!
+
+9) Explicit support for the Epson Stylus Photo 875, 785, and 895
+   (which are variants on the 870, 890, and 890 respectively).  No
+   driver-level changes are required for these printers, but there has
+   been some confusion due to the fact that these printers were not
+   listed explicitly.
+
+10) Some changes to the Gimp plugin.  In particular, there are new
+   buttons to permit centering in the horizontal or vertical (rather
+   than just centering on the page), and other controls have been
+   reorganized.
 
 
 Gimp-Print 4.1.99a1 contains the following changes over 4.1.10:
