@@ -83,7 +83,16 @@ ChangeLog: ChangeLogStamp
 configure.in:
 	$(LN_S) $(srcdir)/configure.ac $(srcdir)/configure.in
 
-dist-hook:
+dist-time-check:
+	@current_date=`date +%Y%m%d`; \
+	configure_date=`ls -l --time-style=+%Y%m%d $(top_builddir)/configure | awk '{print $$6}'`; \
+	echo "Checking that 'configure' was built today."; \
+	if test "$$current_date" != "$$configure_date" ; then \
+	  echo "configure is out of date -- rerun ./autogen.sh first!"; \
+	  exit 1; \
+	fi
+
+dist-hook: dist-time-check
 	for dir in $(DISTDIRS) ; do \
 	  if test -d $(srcdir)/$$dir ; then \
 	    mkdir $(distdir)/$$dir; \
@@ -209,4 +218,4 @@ MAINTAINERCLEANFILES = \
 
 EXTRA_DIST = autogen.sh ChangeLogStamp
 
-.PHONY: deb html install-cups install-gimp install-ghost snapshot ChangeLogPhony
+.PHONY: deb html install-cups install-gimp install-ghost snapshot ChangeLogPhony dist-time-check
