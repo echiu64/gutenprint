@@ -38,6 +38,17 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.18  1999/10/28 02:01:15  rlk
+ *   One bug, two effects:
+ *
+ *   1) Handle 4-color correctly (it was treating the 4-color too much like the
+ *   6-color).
+ *
+ *   2) An attempt to handle both cases with the same code path led to a
+ *   discontinuity that depending upon the orientation of a color gradient would
+ *   lead to either white or dark lines at the point that the dark version of
+ *   the color would kick in.
+ *
  *   Revision 1.17  1999/10/26 23:58:31  rlk
  *   indentation
  *
@@ -600,46 +611,13 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
     dc = c;
 #endif
 
-    if (lcyan && oc <= (65536 * I_RATIO_C1 * 2 / 3))
+    if (!lcyan)
       {
 	if (c > (32767 + (((long long) ditherbit2 / C_RANDOMIZER) -
-			  (32768 / C_RANDOMIZER))) * I_RATIO_C1)
+			  (32768 / C_RANDOMIZER))))
 	  {
 #ifdef PRINT_DEBUG
-	    fprintf(dbg, "Case 1: oc %lld c %lld test %lld\n", oc, c,
-		    (32767 + (((long long) ditherbit2 / 1) - 32768)) *
-		    I_RATIO_C1);
-#endif
-	    if (! (*kptr & bit))
-	      *lcptr |= bit;
-	    c -= 65535 * I_RATIO_C1;
-	  }
-      }
-    else if (c > (32767 + (((long long) ditherbit2 / C_RANDOMIZER) -
-			   (32768 / C_RANDOMIZER))))
-      {
-	if (lcyan && ditherbit1 >
-	    ((oc - (65536 * I_RATIO_C1 * 2 / 3)) * 65536 /
-	     (65536 - (65536 * I_RATIO_C1 * 2 / 3))))
-	  {
-#ifdef PRINT_DEBUG
-	    fprintf(dbg, "Case 2: oc %lld c %lld ditherbit1 %d ditherbit2 %d "
-		    "num %lld den %lld test1 %lld test2 %lld\n",
-		    oc, c, ditherbit1, ditherbit2,
-		    oc, 65536ll,
-		    ((32767 + (((long long) ditherbit2 / 1) - 32768)) * oc /
-		     65536),
-		    ((oc - (65536 * I_RATIO_C1 * 2 / 3)) * 65536 /
-		     (65536 - (65536 * I_RATIO_C1 * 2 / 3))));
-#endif
-	    if (! (*kptr & bit))
-	      *lcptr |= bit;
-	    c -= 65535 * I_RATIO_C1;
-	  }
-	else
-	  {
-#ifdef PRINT_DEBUG
-	    fprintf(dbg, "Case 3: oc %lld c %lld ditherbit1 %d ditherbit2 %d "
+	    fprintf(dbg, "Case 4: oc %lld c %lld ditherbit1 %d ditherbit2 %d "
 		    "num %lld den %lld test1 %lld test2 %lld\n",
 		    oc, c, ditherbit1, ditherbit2,
 		    oc, 65536ll,
@@ -651,6 +629,62 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	    if (! (*kptr & bit))
 	      *cptr |= bit;
 	    c -= 65535;
+	  }
+      }
+    else
+      {
+	if (oc <= (65536 * I_RATIO_C1 * 2 / 3))
+	  {
+	    if (c > (32767 + (((long long) ditherbit2 / C_RANDOMIZER) -
+			      (32768 / C_RANDOMIZER))) * I_RATIO_C1)
+	      {
+#ifdef PRINT_DEBUG
+		fprintf(dbg, "Case 1: oc %lld c %lld test %lld\n", oc, c,
+			(32767 + (((long long) ditherbit2 / 1) - 32768)) *
+			I_RATIO_C1);
+#endif
+		if (! (*kptr & bit))
+		  *lcptr |= bit;
+		c -= 65535 * I_RATIO_C1;
+	      }
+	  }
+	else if (c > (32767 + (((long long) ditherbit2 / C_RANDOMIZER) -
+			       (32768 / C_RANDOMIZER))) * I_RATIO_C1)
+	  {
+	    if (ditherbit1 >
+		((oc - (65536 * I_RATIO_C1 * 2 / 3)) * 65536 /
+		 (65536 - (65536 * I_RATIO_C1 * 2 / 3))))
+	      {
+#ifdef PRINT_DEBUG
+		fprintf(dbg, "Case 2: oc %lld c %lld ditherbit1 %d ditherbit2 %d "
+			"num %lld den %lld test1 %lld test2 %lld\n",
+			oc, c, ditherbit1, ditherbit2,
+			oc, 65536ll,
+			((32767 + (((long long) ditherbit2 / 1) - 32768)) * oc /
+			 65536),
+			((oc - (65536 * I_RATIO_C1 * 2 / 3)) * 65536 /
+			 (65536 - (65536 * I_RATIO_C1 * 2 / 3))));
+#endif
+		if (! (*kptr & bit))
+		  *lcptr |= bit;
+		c -= 65535 * I_RATIO_C1;
+	      }
+	    else
+	      {
+#ifdef PRINT_DEBUG
+		fprintf(dbg, "Case 3: oc %lld c %lld ditherbit1 %d ditherbit2 %d "
+			"num %lld den %lld test1 %lld test2 %lld\n",
+			oc, c, ditherbit1, ditherbit2,
+			oc, 65536ll,
+			((32767 + (((long long) ditherbit2 / 1) - 32768)) * oc /
+			 65536),
+			((oc - (65536 * I_RATIO_C1 * 2 / 3)) * 65536 /
+			 (65536 - (65536 * I_RATIO_C1 * 2 / 3))));
+#endif
+		if (! (*kptr & bit))
+		  *cptr |= bit;
+		c -= 65535;
+	      }
 	  }
       }
 
@@ -676,46 +710,13 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
     dm = m;
 #endif
 
-    if (lmagenta && om <= (65536 * I_RATIO_M1 * 2 / 3))
+    if (!lmagenta)
       {
 	if (m > (32767 + (((long long) ditherbit1 / M_RANDOMIZER) -
-			  (32768 / M_RANDOMIZER))) * I_RATIO_M1)
+			  (32768 / M_RANDOMIZER))))
 	  {
 #ifdef PRINT_DEBUG
-	    fprintf(dbg, "Case 1: om %lld m %lld test %lld\n", om, m,
-		    (32767 + (((long long) ditherbit1 / 1) - 32768)) *
-		    I_RATIO_M1);
-#endif
-	    if (! (*kptr & bit))
-	      *lmptr |= bit;
-	    m -= 65535 * I_RATIO_M1;
-	  }
-      }
-    else if (m > (32767 + (((long long) ditherbit1 / M_RANDOMIZER) -
-			   (32768 / M_RANDOMIZER))))
-      {
-	if (lmagenta && ditherbit3 >
-	    ((om - (65536 * I_RATIO_M1 * 2 / 3)) * 65536 /
-	     (65536 - (65536 * I_RATIO_M1 * 2 / 3))))
-	  {
-#ifdef PRINT_DEBUG
-	    fprintf(dbg, "Case 2: om %lld m %lld ditherbit1 %d ditherbit3 %d "
-		    "num %lld den %lld test1 %lld test2 %lld\n",
-		    om, m, ditherbit1, ditherbit3,
-		    om, 65536ll,
-		    ((32767 + (((long long) ditherbit1 / 1) - 32768)) * om /
-		     65536),
-		    ((om - (65536 * I_RATIO_M1 * 2 / 3)) * 65536 /
-		     (65536 - (65536 * I_RATIO_M1 * 2 / 3))));
-#endif
-	    if (! (*kptr & bit))
-	      *lmptr |= bit;
-	    m -= 65535 * I_RATIO_M1;
-	  }
-	else
-	  {
-#ifdef PRINT_DEBUG
-	    fprintf(dbg, "Case 3: om %lld m %lld ditherbit1 %d ditherbit3 %d "
+	    fprintf(dbg, "Case 4: om %lld m %lld ditherbit1 %d ditherbit2 %d "
 		    "num %lld den %lld test1 %lld test2 %lld\n",
 		    om, m, ditherbit1, ditherbit3,
 		    om, 65536ll,
@@ -727,6 +728,62 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	    if (! (*kptr & bit))
 	      *mptr |= bit;
 	    m -= 65535;
+	  }
+      }
+    else
+      {
+	if (lmagenta && om <= (65536 * I_RATIO_M1 * 2 / 3))
+	  {
+	    if (m > (32767 + (((long long) ditherbit1 / M_RANDOMIZER) -
+			      (32768 / M_RANDOMIZER))) * I_RATIO_M1)
+	      {
+#ifdef PRINT_DEBUG
+		fprintf(dbg, "Case 1: om %lld m %lld test %lld\n", om, m,
+			(32767 + (((long long) ditherbit1 / 1) - 32768)) *
+			I_RATIO_M1);
+#endif
+		if (! (*kptr & bit))
+		  *lmptr |= bit;
+		m -= 65535 * I_RATIO_M1;
+	      }
+	  }
+	else if (m > (32767 + (((long long) ditherbit1 / M_RANDOMIZER) -
+			       (32768 / M_RANDOMIZER))) * I_RATIO_M1)
+	  {
+	    if (lmagenta && ditherbit3 >
+		((om - (65536 * I_RATIO_M1 * 2 / 3)) * 65536 /
+		 (65536 - (65536 * I_RATIO_M1 * 2 / 3))))
+	      {
+#ifdef PRINT_DEBUG
+		fprintf(dbg, "Case 2: om %lld m %lld ditherbit1 %d ditherbit3 %d "
+			"num %lld den %lld test1 %lld test2 %lld\n",
+			om, m, ditherbit1, ditherbit3,
+			om, 65536ll,
+			((32767 + (((long long) ditherbit1 / 1) - 32768)) * om /
+			 65536),
+			((om - (65536 * I_RATIO_M1 * 2 / 3)) * 65536 /
+			 (65536 - (65536 * I_RATIO_M1 * 2 / 3))));
+#endif
+		if (! (*kptr & bit))
+		  *lmptr |= bit;
+		m -= 65535 * I_RATIO_M1;
+	      }
+	    else
+	      {
+#ifdef PRINT_DEBUG
+		fprintf(dbg, "Case 3: om %lld m %lld ditherbit1 %d ditherbit3 %d "
+			"num %lld den %lld test1 %lld test2 %lld\n",
+			om, m, ditherbit1, ditherbit3,
+			om, 65536ll,
+			((32767 + (((long long) ditherbit1 / 1) - 32768)) * om /
+			 65536),
+			((om - (65536 * I_RATIO_M1 * 2 / 3)) * 65536 /
+			 (65536 - (65536 * I_RATIO_M1 * 2 / 3))));
+#endif
+		if (! (*kptr & bit))
+		  *mptr |= bit;
+		m -= 65535;
+	      }
 	  }
       }
 
@@ -754,48 +811,15 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
      * Yellow
      *****************************************************************/
 
-    if (lyellow && oy <= (65536 * I_RATIO_Y1 * 2 / 3))
+    if (!lyellow)
       {
-	if (y > (32767 + (((long long) ditherbit3 / Y_RANDOMIZER) -
-			  (32768 / Y_RANDOMIZER))) * I_RATIO_Y1)
+	if (y > (32767 + (((long long) ditherbit1 / Y_RANDOMIZER) -
+			  (32768 / Y_RANDOMIZER))))
 	  {
 #ifdef PRINT_DEBUG
-	    fprintf(dbg, "Case 1: oy %lld y %lld test %lld\n", oy, y,
-		    (32767 + (((long long) ditherbit3 / 1) - 32768)) *
-		    I_RATIO_Y1);
-#endif
-	    if (! (*kptr & bit))
-	      *lyptr |= bit;
-	    y -= 65535 * I_RATIO_Y1;
-	  }
-      }
-    else if (y > (32767 + (((long long) ditherbit3 / Y_RANDOMIZER) -
-			   (32768 / Y_RANDOMIZER))))
-      {
-	if (lyellow && ditherbit1 >
-	    ((oy - (65536 * I_RATIO_Y1 * 2 / 3)) * 65536 /
-	     (65536 - (65536 * I_RATIO_Y1 * 2 / 3))))
-	  {
-#ifdef PRINT_DEBUG
-	    fprintf(dbg, "Case 2: oy %lld y %lld ditherbit3 %d ditherbit1 %d "
+	    fprintf(dbg, "Case 4: oy %lld y %lld ditherbit1 %d ditherbit2 %d "
 		    "num %lld den %lld test1 %lld test2 %lld\n",
-		    oy, y, ditherbit3, ditherbit2,
-		    oy, 65536ll,
-		    ((32767 + (((long long) ditherbit3 / 1) - 32768)) * oy /
-		     65536),
-		    ((oy - (65536 * I_RATIO_Y1 * 2 / 3)) * 65536 /
-		     (65536 - (65536 * I_RATIO_Y1 * 2 / 3))));
-#endif
-	    if (! (*kptr & bit))
-	      *lyptr |= bit;
-	    y -= 65535 * I_RATIO_Y1;
-	  }
-	else
-	  {
-#ifdef PRINT_DEBUG
-	    fprintf(dbg, "Case 3: oy %lld y %lld ditherbit3 %d ditherbit1 %d "
-		    "num %lld den %lld test1 %lld test2 %lld\n",
-		    oy, y, ditherbit3, ditherbit2,
+		    oy, y, ditherbit1, ditherbit3,
 		    oy, 65536ll,
 		    ((32767 + (((long long) ditherbit3 / 1) - 32768)) * oy /
 		     65536),
@@ -805,6 +829,62 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	    if (! (*kptr & bit))
 	      *yptr |= bit;
 	    y -= 65535;
+	  }
+      }
+    else
+      {
+	if (lyellow && oy <= (65536 * I_RATIO_Y1 * 2 / 3))
+	  {
+	    if (y > (32767 + (((long long) ditherbit3 / Y_RANDOMIZER) -
+			      (32768 / Y_RANDOMIZER))) * I_RATIO_Y1)
+	      {
+#ifdef PRINT_DEBUG
+		fprintf(dbg, "Case 1: oy %lld y %lld test %lld\n", oy, y,
+			(32767 + (((long long) ditherbit3 / 1) - 32768)) *
+			I_RATIO_Y1);
+#endif
+		if (! (*kptr & bit))
+		  *lyptr |= bit;
+		y -= 65535 * I_RATIO_Y1;
+	      }
+	  }
+	else if (y > (32767 + (((long long) ditherbit3 / Y_RANDOMIZER) -
+			       (32768 / Y_RANDOMIZER))) * I_RATIO_Y1)
+	  {
+	    if (lyellow && ditherbit1 >
+		((oy - (65536 * I_RATIO_Y1 * 2 / 3)) * 65536 /
+		 (65536 - (65536 * I_RATIO_Y1 * 2 / 3))))
+	      {
+#ifdef PRINT_DEBUG
+		fprintf(dbg, "Case 2: oy %lld y %lld ditherbit3 %d ditherbit1 %d "
+			"num %lld den %lld test1 %lld test2 %lld\n",
+			oy, y, ditherbit3, ditherbit2,
+			oy, 65536ll,
+			((32767 + (((long long) ditherbit3 / 1) - 32768)) * oy /
+			 65536),
+			((oy - (65536 * I_RATIO_Y1 * 2 / 3)) * 65536 /
+			 (65536 - (65536 * I_RATIO_Y1 * 2 / 3))));
+#endif
+		if (! (*kptr & bit))
+		  *lyptr |= bit;
+		y -= 65535 * I_RATIO_Y1;
+	      }
+	    else
+	      {
+#ifdef PRINT_DEBUG
+		fprintf(dbg, "Case 3: oy %lld y %lld ditherbit3 %d ditherbit1 %d "
+			"num %lld den %lld test1 %lld test2 %lld\n",
+			oy, y, ditherbit3, ditherbit2,
+			oy, 65536ll,
+			((32767 + (((long long) ditherbit3 / 1) - 32768)) * oy /
+			 65536),
+			((oy - (65536 * I_RATIO_Y1 * 2 / 3)) * 65536 /
+			 (65536 - (65536 * I_RATIO_Y1 * 2 / 3))));
+#endif
+		if (! (*kptr & bit))
+		  *yptr |= bit;
+		y -= 65535;
+	      }
 	  }
       }
 
