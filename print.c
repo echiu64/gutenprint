@@ -49,7 +49,7 @@
  */
 #include <gtk/gtk.h>
 #include <libgimp/gimp.h>
-#define PLUG_IN_VERSION		"3.1.0 - 16 Feb 2000"
+#define PLUG_IN_VERSION		"3.1.0 - 21 Feb 2000"
 #define PLUG_IN_NAME		"Print"
 
 #include <math.h>

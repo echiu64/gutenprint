@@ -23,6 +23,13 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.5  2000/02/21 20:32:37  rlk
+ *   Important dithering bug fixes:
+ *
+ *   1) Avoid runaway black buildup.
+ *
+ *   2) Some conversion functions weren't doing density
+ *
  *   Revision 1.4  2000/02/18 02:30:01  rlk
  *   A few more dithering bugs
  *
@@ -171,16 +178,16 @@ init_dither(int in_width, int out_width, int horizontal_overdensity)
   d->kbits = 1;
   d->k_lower = 12 * 256;
   d->k_upper = 128 * 256;
-  d->lc_level = 32768;
-  d->lm_level = 32768;
-  d->ly_level = 32768;
+  d->lc_level = 24576;
+  d->lm_level = 24576;
+  d->ly_level = 24576;
   d->c_randomizer = 0;
   d->m_randomizer = 0;
   d->y_randomizer = 0;
   d->k_randomizer = 4;
-  d->k_clevel = 128;
-  d->k_mlevel = 128;
-  d->k_ylevel = 128;
+  d->k_clevel = 64;
+  d->k_mlevel = 64;
+  d->k_ylevel = 64;
   d->c_darkness = 22;
   d->m_darkness = 16;
   d->y_darkness = 10;
@@ -821,19 +828,25 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
 
     if (ditherbit & bit)
     {
-      kerror1[-offset] += k;
-      kerror1[0] += 3 * k;
-      kerror1[offset] += k;
+      int tmpk = k;
+      if (tmpk > 65535)
+	tmpk = 65535;
+      kerror1[-offset] += tmpk;
+      kerror1[0] += 3 * tmpk;
+      kerror1[offset] += tmpk;
       if (x > 0 && x < (d->dst_width - 1))
-	ditherk    = kerror0[direction] + 3 * k;
+	ditherk    = kerror0[direction] + 3 * tmpk;
     }
     else
     {
-      kerror1[-offset] += k;
-      kerror1[0] += k;
-      kerror1[offset] += k;
+      int tmpk = k;
+      if (tmpk > 65535)
+	tmpk = 65535;
+      kerror1[-offset] += tmpk;
+      kerror1[0] += tmpk;
+      kerror1[offset] += tmpk;
       if (x > 0 && x < (d->dst_width - 1))
-	ditherk    = kerror0[direction] + 5 * k;
+	ditherk    = kerror0[direction] + 5 * tmpk;
     }
 
     if (direction == 1)
@@ -954,7 +967,7 @@ do {								\
       if (r > comp0)						\
 	{							\
 	  DO_PRINT_COLOR(r);					\
-	  r -= 65535;						\
+	  r -= 65536;						\
 	}							\
     }								\
   else								\
@@ -990,37 +1003,40 @@ do {								\
 	  if (sub < d->l##r##_level)				\
 	    r -= d->l##r##_level;				\
 	  else if (sub > 65535)					\
-	    r -= 65535;						\
+	    r -= 65536;						\
 	  else							\
 	    r -= sub;						\
 	}							\
     }								\
 } while (0)
 
-#define UPDATE_DITHER(r, d2, x, width)					      \
-do {									      \
-  int offset = ((15 - (((o##r & 0xf000) >> 12))) * d->horizontal_overdensity) \
-					>> 1;				      \
-  if (x < offset)							      \
-    offset = x;								      \
-  else if (x > d->dst_width - offset - 1)				      \
-    offset = d->dst_width - x - 1;					      \
-  if (ditherbit##d2 & bit)						      \
-    {									      \
-      r##error1[-offset] += r;						      \
-      r##error1[0] += 3 * r;						      \
-      r##error1[offset] += r;						      \
-      if (x > 0 && x < (d->dst_width - 1))				      \
-	dither##r    = r##error0[direction] + 3 * r;			      \
-    }									      \
-  else									      \
-    {									      \
-      r##error1[-offset] += r;						      \
-      r##error1[0] +=  r;						      \
-      r##error1[offset] += r;						      \
-      if (x > 0 && x < (d->dst_width - 1))				      \
-	dither##r    = r##error0[direction] + 5 * r;			      \
-    }									      \
+#define UPDATE_DITHER(r, d2, x, width)						\
+do {										\
+  int offset = ((15 - (((o##r & 0xf000) >> 12))) * d->horizontal_overdensity)	\
+					>> 1;					\
+  int tmp##r = r;								\
+  if (tmp##r > 65535)								\
+    tmp##r = 65535;								\
+  if (x < offset)								\
+    offset = x;									\
+  else if (x > d->dst_width - offset - 1)					\
+    offset = d->dst_width - x - 1;						\
+  if (ditherbit##d2 & bit)							\
+    {										\
+      r##error1[-offset] += tmp##r;						\
+      r##error1[0] += 3 * tmp##r;						\
+      r##error1[offset] += tmp##r;						\
+      if (x > 0 && x < (d->dst_width - 1))					\
+	dither##r    = r##error0[direction] + 3 * tmp##r;			\
+    }										\
+  else										\
+    {										\
+      r##error1[-offset] += tmp##r;						\
+      r##error1[0] +=  tmp##r;							\
+      r##error1[offset] += tmp##r;						\
+      if (x > 0 && x < (d->dst_width - 1))					\
+	dither##r    = r##error0[direction] + 5 * tmp##r;			\
+    }										\
 } while (0)
 
 void
@@ -1551,19 +1567,25 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
 
     if (ditherbit & bit)
     {
-      kerror1[-offset] += k;
-      kerror1[0] += 3 * k;
-      kerror1[offset] += k;
+      int tmpk = k;
+      if (tmpk > 65535)
+	tmpk = 65535;
+      kerror1[-offset] += tmpk;
+      kerror1[0] += 3 * tmpk;
+      kerror1[offset] += tmpk;
       if (x > 0 && x < (d->dst_width - 1))
-	ditherk    = kerror0[direction] + 3 * k;
+	ditherk    = kerror0[direction] + 3 * tmpk;
     }
     else
     {
-      kerror1[-offset] += k;
-      kerror1[0] += k;
-      kerror1[offset] += k;
+      int tmpk = k;
+      if (tmpk > 65535)
+	tmpk = 65535;
+      kerror1[-offset] += tmpk;
+      kerror1[0] += tmpk;
+      kerror1[offset] += tmpk;
       if (x > 0 && x < (d->dst_width - 1))
-	ditherk    = kerror0[direction] + 5 * k;
+	ditherk    = kerror0[direction] + 5 * tmpk;
     }
 
     if (direction == 1)

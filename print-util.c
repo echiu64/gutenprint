@@ -38,6 +38,13 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.76  2000/02/21 20:32:37  rlk
+ *   Important dithering bug fixes:
+ *
+ *   1) Avoid runaway black buildup.
+ *
+ *   2) Some conversion functions weren't doing density
+ *
  *   Revision 1.75  2000/02/21 15:12:57  rlk
  *   Minor release prep
  *
@@ -556,7 +563,14 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
       while (width > 0)
 	{
 	  *grayout = vars->lut.composite[*grayin];
-
+	  if (vars->density != 1.0)
+	    {
+	      float t = ((float) *grayout) / 65536.0;
+	      t = (1.0 + ((t - 1.0) * vars->density));
+	      if (t < 0.0)
+		t = 0.0;
+	      *grayout = (unsigned short) (t * 65536.0);
+	    }
 	  grayin ++;
 	  grayout ++;
 	  width --;
@@ -572,7 +586,14 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 	{
 	  *grayout = vars->lut.composite[grayin[0] * grayin[1] / 255 +
 					255 - grayin[1]];
-
+	  if (vars->density != 1.0)
+	    {
+	      float t = ((float) *grayout) / 65536.0;
+	      t = (1.0 + ((t - 1.0) * vars->density));
+	      if (t < 0.0)
+		t = 0.0;
+	      *grayout = (unsigned short) (t * 65536.0);
+	    }
 	  grayin += bpp;
 	  grayout ++;
 	  width --;
@@ -612,6 +633,14 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
       while (width > 0)
 	{
 	  *gray = vars->lut.composite[gray_cmap[*indexed]];
+	  if (vars->density != 1.0)
+	    {
+	      float t = ((float) *gray) / 65536.0;
+	      t = (1.0 + ((t - 1.0) * vars->density));
+	      if (t < 0.0)
+		t = 0.0;
+	      *gray = (unsigned short) (t * 65536.0);
+	    }
 	  indexed ++;
 	  gray ++;
 	  width --;
@@ -627,6 +656,14 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 	{
 	  *gray = vars->lut.composite[gray_cmap[indexed[0] * indexed[1] / 255]
 				     + 255 - indexed[1]];
+	  if (vars->density != 1.0)
+	    {
+	      float t = ((float) *gray) / 65536.0;
+	      t = (1.0 + ((t - 1.0) * vars->density));
+	      if (t < 0.0)
+		t = 0.0;
+	      *gray = (unsigned short) (t * 65536.0);
+	    }
 	  indexed += bpp;
 	  gray ++;
 	  width --;
@@ -662,6 +699,19 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	      s = pow(s, 1.0 / vars->saturation);
 	      calc_hsv_to_rgb(rgb, h, s, v);
 	    }
+	  if (vars->density != 1.0)
+	    {
+	      float t;
+	      int i;
+	      for (i = 0; i < 3; i++)
+		{
+		  t = ((float) rgb[i]) / 65536.0;
+		  t = (1.0 + ((t - 1.0) * vars->density));
+		  if (t < 0.0)
+		    t = 0.0;
+		  rgb[i] = (unsigned short) (t * 65536.0);
+		}
+	    }
 	  rgb += 3;
 	  indexed ++;
 	  width --;
@@ -687,6 +737,19 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	      calc_rgb_to_hsv(rgb, &h, &s, &v);
 	      s = pow(s, 1.0 / vars->saturation);
 	      calc_hsv_to_rgb(rgb, h, s, v);
+	    }
+	  if (vars->density != 1.0)
+	    {
+	      float t;
+	      int i;
+	      for (i = 0; i < 3; i++)
+		{
+		  t = ((float) rgb[i]) / 65536.0;
+		  t = (1.0 + ((t - 1.0) * vars->density));
+		  if (t < 0.0)
+		    t = 0.0;
+		  rgb[i] = (unsigned short) (t * 65536.0);
+		}
 	    }
 	  rgb += 3;
 	  indexed += bpp;
@@ -821,8 +884,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 				     255 - rgbin[3]];
 	  rgbout[2] = vars->lut.blue[rgbin[2] * rgbin[3] / 255 +
 				    255 - rgbin[3]];
-	  if (vars->saturation != 1.0 || vars->contrast != 100 ||
-	      vars->density != 1.0)
+	  if (vars->saturation != 1.0 || vars->contrast != 100)
 	    {
 	      calc_rgb_to_hsv(rgbout, &h, &s, &v);
 	      if (vars->saturation != 1.0)

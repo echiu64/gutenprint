@@ -31,6 +31,13 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.92  2000/02/21 20:32:37  rlk
+ *   Important dithering bug fixes:
+ *
+ *   1) Avoid runaway black buildup.
+ *
+ *   2) Some conversion functions weren't doing density
+ *
  *   Revision 1.91  2000/02/21 15:12:57  rlk
  *   Minor release prep
  *
@@ -2465,8 +2472,13 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	      fwrite("\033.\001\012\012\001", 6, 1, prn);
 	      break;
 	    case 720 :
-	      fprintf(prn, "\033.%c%c%c%c", 1, 5, 5,
-		      *linecount + pass->missingstartrows);
+	      if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK,
+				MODEL_720DPI_600))
+		fprintf(prn, "\033.%c%c%c%c", 1, 8 * 5, 5,
+			*linecount + pass->missingstartrows);
+	      else
+		fprintf(prn, "\033.%c%c%c%c", 1, 5, 5,
+			*linecount + pass->missingstartrows);
 	      break;
 	    }
 	  putc(lwidth & 255, prn);	/* Width of raster line in pixels */
