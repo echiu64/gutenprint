@@ -150,7 +150,7 @@ typedef enum
   STP_JOB_MODE_JOB
 } stp_job_mode_t;
 
-typedef enum stp_image_status
+typedef enum
 {
   STP_IMAGE_STATUS_OK,
   STP_IMAGE_STATUS_ABORT
@@ -204,7 +204,7 @@ typedef void *stp_vars_t;
  * The following types are permitted for a printer setting.  Not all
  * are currently implemented.
  */
-typedef enum stp_parameter_type
+typedef enum
 {
   STP_PARAMETER_TYPE_STRING_LIST, /* Single string choice from a list */
   STP_PARAMETER_TYPE_INT,	/* Integer */
@@ -219,7 +219,7 @@ typedef enum stp_parameter_type
 /*
  * What kind of setting this is, for purpose of user interface.
  */
-typedef enum stp_parameter_class
+typedef enum
 {
   STP_PARAMETER_CLASS_FEATURE,	/* Printer feature */
   STP_PARAMETER_CLASS_OUTPUT,	/* Output control */
@@ -230,7 +230,7 @@ typedef enum stp_parameter_class
 /*
  * What "level" a setting is at, for UI design.
  */
-typedef enum stp_parameter_level
+typedef enum
 {
   STP_PARAMETER_LEVEL_BASIC,
   STP_PARAMETER_LEVEL_ADVANCED,
@@ -247,7 +247,7 @@ typedef enum stp_parameter_level
  * should be used by the driver or not).  All parameters default to being
  * active unless explicitly "turned off".
  */
-typedef enum stp_parameter_activity
+typedef enum
 {
   STP_PARAMETER_INACTIVE,
   STP_PARAMETER_DEFAULTED,
@@ -356,7 +356,7 @@ typedef void *stp_parameter_list_t;
 /*
  * Paper size
  */
-typedef enum stp_papersize_unit
+typedef enum
 {
   PAPERSIZE_ENGLISH_STANDARD,
   PAPERSIZE_METRIC_STANDARD,
