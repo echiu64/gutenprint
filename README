@@ -63,8 +63,8 @@ and this driver may not be distributed with such a version.
 CUPS
 
 This package includes a CUPS driver that may be built, allowing use of
-this software for general printing purposes.  To build the CUPS
-driver, you must run:
+this software for general printing purposes.  To build and install the
+CUPS driver, you must run:
 
 ./configure --with-cups
 make
@@ -73,6 +73,18 @@ make install
 
 The last command varies with OS.  It may be /etc/init.d/cups,
 /etc/rc.d/cups, or even /etc/rc.d/init.d/cups.
+
+Following this, you must reinstall any printers that you are using
+Gimp-Print PPD's with.  Such printers may be identified in any CUPS
+front end (e. g. KUPS, or via the web interface) because they look
+something like this:
+
+                EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.8
+
+If the version number (in this case, 4.1.8) does not match the version
+of Gimp-Print that you are installing, you must use Modify Printer to
+force the new PPD file to get installed.  Failure to do so may lead to
+incorrect output and/or other errors.
 
 If you do not wish to build the Gimp Print plugin, you must run
 
