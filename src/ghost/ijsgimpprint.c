@@ -36,8 +36,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <ijs/ijs.h>
-#include <ijs/ijs_server.h>
+#include <ijs.h>
+#include <ijs_server.h>
 #include <errno.h>
 #include <gimp-print/gimp-print-intl-internal.h>
 
@@ -105,28 +105,37 @@ image_init(IMAGE *img, IjsPageHeader *ph)
   img->row = 0;
   img->row_width = (ph->n_chan * ph->bps * ph->width + 7) >> 3;
   img->row_buf = (char *)malloc(img->row_width);
+  STP_DEBUG(fprintf(stderr, "image_init\n"));
+  STP_DEBUG(fprintf(stderr,
+		    "ph width %d height %d bps %d n_chan %d xres %f yres %f\n",
+		    ph->width, ph->height, ph->bps, ph->n_chan, ph->xres,
+		    ph->yres));
 
   if ((img->bps == 1) && (img->n_chan == 1) &&
       (strncmp(ph->cs, DeviceGray, strlen(DeviceGray)) == 0))
     {
+      STP_DEBUG(fprintf(stderr, "output monochrome\n"));
       img->output_type = OUTPUT_MONOCHROME;
       /* 8-bit greyscale */
     }
   else if ((img->bps == 8) && (img->n_chan == 1) &&
       (strncmp(ph->cs, DeviceGray, strlen(DeviceGray)) == 0))
     {
+      STP_DEBUG(fprintf(stderr, "output gray\n"));
       img->output_type = OUTPUT_GRAY;
       /* 8-bit greyscale */
     }
   else if ((img->bps == 8) && (img->n_chan == 3) &&
 	   (strncmp(ph->cs, DeviceRGB, strlen(DeviceRGB)) == 0))
     {
+      STP_DEBUG(fprintf(stderr, "output color\n"));
       img->output_type = OUTPUT_COLOR;
       /* 24-bit colour */
     }
   else if ((img->bps == 8) && (img->n_chan == 4) && 
 	   (strncmp(ph->cs, DeviceCMYK, strlen(DeviceCMYK)) == 0))
     {
+      STP_DEBUG(fprintf(stderr, "output CMYK\n"));
       img->output_type = OUTPUT_RAW_CMYK;
       /* 32-bit CMYK colour */
     }
@@ -625,7 +634,7 @@ static int
 gimp_image_height(stp_image_t *image)
 {
   IMAGE *img = (IMAGE *)(image->rep);
-  return img->height;
+  return img->height * img->xres / img->yres;
 }
 
 static int
@@ -662,23 +671,19 @@ static stp_image_status_t
 gimp_image_get_row(stp_image_t *image, unsigned char *data, int row)
 {
   IMAGE *img = (IMAGE *)(image->rep);
+  int physical_row = row * img->yres / img->xres;
 
-  if ((row < 0) || (row >= img->height))
+  if ((physical_row < 0) || (physical_row >= img->height))
     return STP_IMAGE_ABORT;
-  if (row < img->row)
-    {
-      STP_DEBUG(fprintf(stderr, "ijsgimp: You must ask for lines in order\n"));
-      return STP_IMAGE_ABORT;
-    }
 
   /* Read until we reach the requested row. */
-  while (row > img->row)
+  while (physical_row > img->row)
     {
       if (image_next_row(img))
 	return STP_IMAGE_ABORT;
     }
 
-  if (row == img->row)
+  if (physical_row == img->row)
     memcpy(data, img->row_buf, img->row_width);
   else
     return STP_IMAGE_ABORT;
