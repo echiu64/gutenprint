@@ -36,6 +36,16 @@ version.
 .PP
 This manual page was written by Roger Leigh (roger@whinlatter.uklinux.net)
 .SH SEE ALSO
+.BR gimpprint-color (7),
+.BR gimpprint-dithers (7),
+.BR gimpprint-imagetypes (7),
+.BR gimpprint-inktypes (7),
+.BR gimpprint-mediasizes (7),
+.BR gimpprint-mediasources (7),
+.BR gimpprint-mediatypes (7),
+.BR gimpprint-models (7),
+.BR gimpprint-resolutions (7).
+.PP
 The full documentation for
 .B Gimp-Print
 is maintained as a Texinfo manual.  If the
