@@ -40,7 +40,8 @@ else
 all-local:
 endif
 
-gimpprint-stamp: gimpprint.dox.in
+# Rerun doxygen whenever autogen is run
+gimpprint-stamp: gimpprint.dox.in $(top_srcdir)/configure
 	$(DOXYGEN) gimpprint.dox
 	touch $@
 
