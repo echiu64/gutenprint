@@ -275,8 +275,10 @@ gimp_build_printer_combo(void)
 	}
       else
 	{
-	  printer_list[i].name = c_strdup(plist[i].name);
+	  printer_list[i].name = malloc(strlen(plist[i].name) + 2);
 	  printer_list[i].text = malloc(strlen(plist[i].name) + 2);
+	  strcpy((char *)printer_list[i].name + 1, plist[i].name);
+	  ((char *)printer_list[i].name)[0] = '*';
 	  strcpy((char *)printer_list[i].text + 1, plist[i].name);
 	  ((char *)printer_list[i].text)[0] = '*';
 	}
