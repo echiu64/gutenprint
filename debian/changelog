@@ -1,3 +1,9 @@
+gutenprint (5.0.0-beta3-1) unstable; urgency=low
+
+  * New upstream beta release.
+
+ -- Roger Leigh <rleigh@debian.org>  Sat, 23 Oct 2004 23:56:07 +0100 
+
 gutenprint (5.0.0-beta2-1) unstable; urgency=low
 
   * New upstream beta release.
