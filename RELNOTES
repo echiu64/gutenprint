@@ -33,47 +33,68 @@ Gimp-Print 4.0a3 contains the following improvements over Gimp-Print
    InputSlot, to conform to the PPD standard.  Therefore, any
    uses of Ghostscript that use this argument must change.
 
-3) Density is now computed correctly in 1440x720 mode on Canon
+3) There is a new Fast dither algorithm.  This produces greatly
+   improved speed at some cost in image quality.  It gives poor
+   results on 6-color printers when used in 6-color mode.  In black
+   and white mode, the results are generally quite acceptable.
+
+4) Performance has been improved to some degree in all modes.  This
+   will probably be most noticeable when printing text, and when
+   printing at a higher resolution than the source image is sampled at.
+
+5) Density is now computed correctly in 1440x720 mode on Canon
    printers.
 
-4) Positioning should now be correct on the Epson Stylus Color 850 and
+6) Positioning should now be correct on the Epson Stylus Color 850 and
    similar printers.
 
-5) The inlining problems with egcs 1.1.2 are now fixed properly, so
+7) The inlining problems with egcs 1.1.2 are now fixed properly, so
    inlining is re-enabled.
 
-6) The problem with blank splotches is now fixed.  It was closely
+8) The problem with blank splotches is now fixed.  It was closely
    related to the other inlining problems (which weren't really
    inlining problems at all).
 
-7) Ink densities and other color parameters have been tuned for
+9) Ink densities and other color parameters have been tuned for
    additional paper types.  In particular, plain paper and generic ink
    jet paper should now work reasonably well.
 
-8) Monochrome mode prints with correct density on variable dot size
+10) Monochrome mode prints with correct density on variable dot size
    printers (it was printing too light or entirely incorrectly).
 
-9) The Gimp-based GUI (usable only with Gimp 1.1.22+) has been
+11) The Gimp-based GUI (usable only with Gimp 1.1.22+) has been
    extensively reorganized.
 
-10) Monochrome (fast black-only) mode works correctly on variable dot
+12) Monochrome (fast black-only) mode works correctly on variable dot
    size printers.
 
-11) HP printers with multiple input sources now print correctly by
+13) HP printers with multiple input sources now print correctly by
    default (using the standard paper source rather than the manual
    feed).
 
-12) Bug fixes to the Canon driver for certain printers.
+14) Bug fixes to the Canon driver for certain printers.
 
-13) Preliminary support for the Epson Stylus Photo 2000P, Stylus Color
+15) Preliminary support for the Epson Stylus Photo 2000P, Stylus Color
    880, and Stylus Color 980.  The 880 and 980 should work reasonably
    well.  The 2000P has not been tuned.
 
-14) Performance and print quality on the Epson Stylus Color 900 is
+16) Performance and print quality on the Epson Stylus Color 900 is
    improved.
 
-15) There have been some miscellaneous improvements (or at least
+17) There have been some miscellaneous improvements (or at least
    changes) in color generation.
+
+18) Images will now print to their exact specified size.  In previous
+   versions, if percentage scaling was used, the scale was effectively
+   rounded down to the next percentage point.
+
+19) The height/width entries are more accurate, and do not
+   automatically set the scaling mode to PPI.
+
+20) Preliminary support for the Epson Stylus Color 880 and 980
+   printers.
+
+21) Miscellaneous bug fixes for certain Epson Stylus printers.
 
 ERRATA:
 
