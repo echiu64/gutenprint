@@ -431,8 +431,8 @@ static const escp2_variable_ink_t photo_multishot_ink =
 static const stp_simple_dither_range_t standard_multishot_dither_ranges[] =
 {
   { 0.28,  0x1, 0, 2 },
-  { 0.58,  0x2, 0, 5 },
-  { 1.0,   0x3, 0, 8 }
+  { 0.58,  0x2, 0, 4 },
+  { 1.0,   0x3, 0, 7 }
 };
 
 static const escp2_variable_ink_t standard_multishot_ink =
