@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 1.0\n"
-"POT-Creation-Date: 2001-09-28 15:50+0200\n"
+"POT-Creation-Date: 2002-04-27 22:44-0400\n"
 "PO-Revision-Date: 2001-12-29 20:10+0000\n"
 "Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -83,12 +83,12 @@ msgstr "%s: η επιλογή `-W %s' είναι ασαφής\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: η επιλογή `-W %s' δεν επιτρέπει όρισμα\n"
 
-#: src/main/print-canon.c:1310 src/main/print-escp2.c:1660 src/main/print-escp2.c:1719 src/main/print-lexmark.c:854
+#: src/main/print-canon.c:1310 src/main/print-lexmark.c:909
 #, fuzzy
 msgid "Plain Paper"
 msgstr "Κύρια Σελίδα"
 
-#: src/main/print-canon.c:1311 src/main/print-escp2.c:1672 src/main/print-escp2.c:1731 src/main/print-lexmark.c:860
+#: src/main/print-canon.c:1311 src/main/print-lexmark.c:915
 #, fuzzy
 msgid "Transparencies"
 msgstr "Διαφανές"
@@ -136,25 +136,26 @@ msgid "Photo Paper Pro"
 msgstr ""
 
 #
-#: src/main/print-canon.c:1321 src/main/print-escp2.c:1706 src/main/print-escp2.c:1765 src/main/print-lexmark.c:890
+#: src/main/print-canon.c:1321 src/main/print-lexmark.c:945
 msgid "Other"
 msgstr "Άλλα"
 
-#: src/main/print-canon.c:1594 src/main/print-lexmark.c:1105
+#: src/main/print-canon.c:1594 src/main/print-lexmark.c:1160
 #, fuzzy
 msgid "Auto Sheet Feeder"
 msgstr "Αυτόματη απόκρυψη"
 
-#: src/main/print-canon.c:1595 src/main/print-lexmark.c:1106
+#: src/main/print-canon.c:1595 src/main/print-lexmark.c:1161
 #, fuzzy
 msgid "Manual with Pause"
 msgstr "Σελίδα εγχειριδίου"
 
-#: src/main/print-canon.c:1596 src/main/print-lexmark.c:1107
+#: src/main/print-canon.c:1596 src/main/print-lexmark.c:1162
 msgid "Manual without Pause"
 msgstr ""
 
-#: src/escputil/escputil.c:577 src/main/print-canon.c:1689 src/main/print-lexmark.c:629
+#: src/escputil/escputil.c:584 src/main/print-canon.c:1689
+#: src/main/print-lexmark.c:666
 msgid "Black"
 msgstr "Μαύρο"
 
@@ -178,736 +179,500 @@ msgstr "Επιλογή Ειδικού Χρώματος"
 msgid "Photo CcMmYK Color"
 msgstr "Επιλογή Ειδικού Χρώματος"
 
-#: src/main/print-dither.c:62
+#. Note to translators: "EvenTone" is the proper name, rather than a
+#. descriptive name, of this algorithm.
+#: src/main/print-dither.c:66
+#, fuzzy
+msgid "EvenTone"
+msgstr "Εκτύπωση Φακέλου"
+
+#: src/main/print-dither.c:67
 msgid "Adaptive Hybrid"
 msgstr ""
 
-#: src/main/print-dither.c:63
+#: src/main/print-dither.c:68
 #, fuzzy
 msgid "Ordered"
 msgstr "Διάταξη"
 
-#: src/main/print-dither.c:64
+#: src/main/print-dither.c:69
 msgid "Fast"
 msgstr "Ταχεία"
 
-#: src/main/print-dither.c:65
+#: src/main/print-dither.c:70
 #, fuzzy
 msgid "Very Fast"
 msgstr "Ταχεία"
 
-#: src/main/print-dither.c:66
+#: src/main/print-dither.c:71
 msgid "Hybrid Floyd-Steinberg"
 msgstr ""
 
-#: src/main/print-escp2.c:1663 src/main/print-escp2.c:1722
-msgid "Plain Paper Fast Load"
-msgstr ""
-
-#. 7.25 * 10.5in
-#: src/main/print-escp2.c:1666 src/main/print-escp2.c:1725 src/main/print-util.c:549
-#, fuzzy
-msgid "Postcard"
-msgstr "Τελευταία καρτέλα"
-
-#: src/main/print-escp2.c:1669 src/main/print-escp2.c:1728 src/main/print-lexmark.c:857
-msgid "Glossy Film"
-msgstr ""
-
-#: src/main/print-escp2.c:1675 src/main/print-escp2.c:1734 src/main/print-lexmark.c:863
-#, fuzzy
-msgid "Envelopes"
-msgstr "Προγραμματιστές"
-
-#: src/main/print-escp2.c:1678 src/main/print-escp2.c:1737
-#, fuzzy
-msgid "Back Light Film"
-msgstr "Ελαφρύ χαλάζι"
-
-#: src/main/print-escp2.c:1681 src/main/print-escp2.c:1740 src/main/print-lexmark.c:866
-#, fuzzy
-msgid "Matte Paper"
-msgstr "Χαρτί Μανίλα"
-
-#: src/main/print-escp2.c:1684 src/main/print-escp2.c:1743 src/main/print-lexmark.c:869
-msgid "Inkjet Paper"
-msgstr ""
-
-#: src/main/print-escp2.c:1687 src/main/print-escp2.c:1746 src/main/print-lexmark.c:872
-msgid "Photo Quality Inkjet Paper"
-msgstr ""
-
-#: src/main/print-escp2.c:1690 src/main/print-escp2.c:1749 src/main/print-lexmark.c:875
-#, fuzzy
-msgid "Photo Paper"
-msgstr "Κείμενα"
-
-#: src/main/print-escp2.c:1693 src/main/print-escp2.c:1752 src/main/print-lexmark.c:878
-msgid "Premium Glossy Photo Paper"
-msgstr ""
-
-#: src/main/print-escp2.c:1697 src/main/print-escp2.c:1756 src/main/print-lexmark.c:881
-msgid "Premium Luster Photo Paper"
-msgstr ""
-
-#: src/main/print-escp2.c:1700 src/main/print-escp2.c:1759 src/main/print-lexmark.c:884
-msgid "Photo Quality Glossy Paper"
-msgstr ""
-
-#: src/main/print-escp2.c:1703 src/main/print-escp2.c:1762 src/main/print-lexmark.c:887
-msgid "Ilford Heavy Paper"
-msgstr ""
-
-#: src/main/print-escp2.c:2784 src/main/print-escp2.c:2786
-msgid "360 x 90 DPI Fast Economy Draft"
-msgstr ""
-
-#: src/main/print-escp2.c:2789 src/main/print-escp2.c:2791
-msgid "360 x 120 DPI Economy Draft"
-msgstr ""
-
-#: src/main/print-escp2.c:2794 src/main/print-escp2.c:2796
-msgid "180 DPI Economy Draft"
-msgstr ""
-
-#: src/main/print-escp2.c:2799 src/main/print-escp2.c:2801
-msgid "360 x 240 DPI Draft"
-msgstr ""
-
-#: src/main/print-escp2.c:2804 src/main/print-escp2.c:2806
-msgid "360 x 180 DPI Draft"
-msgstr ""
-
-#: src/main/print-escp2.c:2809 src/main/print-escp2.c:2817
-msgid "360 DPI"
-msgstr "360 DPI"
-
-#: src/main/print-escp2.c:2811 src/main/print-escp2.c:2819
-msgid "360 DPI Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2813
-msgid "360 DPI Microweave"
-msgstr ""
-
-#: src/main/print-escp2.c:2815
-msgid "360 DPI Microweave Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2821
-msgid "360 DPI Full Overlap"
-msgstr ""
-
-#: src/main/print-escp2.c:2823
-msgid "360 DPI Full Overlap Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2825
-msgid "360 DPI FOL2"
-msgstr "360 DPI FOL2"
-
-#: src/main/print-escp2.c:2827
-msgid "360 DPI FOL2 Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2829
-msgid "360 DPI MW2"
-msgstr ""
-
-#: src/main/print-escp2.c:2831
-msgid "360 DPI MW2 Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2834 src/main/print-escp2.c:2838
-msgid "720 x 360 DPI"
-msgstr "720 x 360 DPI"
-
-#: src/main/print-escp2.c:2836 src/main/print-escp2.c:2840
-msgid "720 x 360 DPI Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2842
-msgid "720 x 360 DPI Microweave"
-msgstr ""
-
-#: src/main/print-escp2.c:2844
-msgid "720 x 360 DPI Microweave Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2846
-msgid "720 x 360 DPI FOL"
-msgstr ""
-
-#: src/main/print-escp2.c:2848
-msgid "720 x 360 DPI FOL Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2850
-msgid "720 x 360 DPI FOL2"
-msgstr ""
-
-#: src/main/print-escp2.c:2852
-msgid "720 x 360 DPI FOL2 Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2854
-msgid "720 x 360 DPI MW2"
-msgstr ""
-
-#: src/main/print-escp2.c:2856
-msgid "720 x 360 DPI MW2 Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2859 src/main/print-escp2.c:2875
-msgid "720 DPI"
-msgstr "720 DPI"
-
-#: src/main/print-escp2.c:2861 src/main/print-escp2.c:2877
-msgid "720 DPI Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2863
-msgid "720 DPI Microweave"
-msgstr ""
-
-#: src/main/print-escp2.c:2865
-msgid "720 DPI Microweave Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2867
-msgid "720 DPI Full Overlap"
-msgstr ""
-
-#: src/main/print-escp2.c:2869
-msgid "720 DPI Full Overlap Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2871
-msgid "720 DPI Four Pass"
-msgstr ""
-
-#: src/main/print-escp2.c:2873
-msgid "720 DPI Four Pass Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2879
-msgid "720 DPI High Quality"
-msgstr ""
-
-#: src/main/print-escp2.c:2881
-msgid "720 DPI High Quality Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2883
-msgid "720 DPI Highest Quality"
-msgstr ""
-
-#: src/main/print-escp2.c:2886 src/main/print-escp2.c:2902
-msgid "1440 x 720 DPI"
-msgstr "1440 x 720 DPI"
-
-#: src/main/print-escp2.c:2888 src/main/print-escp2.c:2904
-msgid "1440 x 720 DPI Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2890
-msgid "1440 x 720 DPI Microweave"
-msgstr ""
-
-#: src/main/print-escp2.c:2892
-msgid "1440 x 720 DPI Microweave Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2894
-msgid "1440 x 720 DPI FOL"
-msgstr "1440 x 720 DPI FOL"
-
-#: src/main/print-escp2.c:2896
-msgid "1440 x 720 DPI FOL Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2898
-msgid "1440 x 720 DPI Four Pass"
-msgstr ""
-
-#: src/main/print-escp2.c:2900
-msgid "1440 x 720 DPI Four Pass Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2906
-msgid "1440 x 720 DPI Highest Quality"
-msgstr ""
-
-#: src/main/print-escp2.c:2909
-msgid "2880 x 720 DPI"
-msgstr "2880 x 720 DPI"
-
-#: src/main/print-escp2.c:2911
-msgid "2880 x 720 DPI Unidirectional"
-msgstr ""
-
-#.
-#. * Nothing thus far supports 1440 DPI vertical resolution
-#.
-#: src/main/print-escp2.c:2917
-msgid "1440 x 1440 DPI"
-msgstr "1440 x 1440 DPI"
-
-#: src/main/print-escp2.c:2919
-msgid "1440 x 1440 DPI Highest Quality"
-msgstr ""
-
-#: src/main/print-escp2.c:2922
-msgid "2880 x 1440 DPI"
-msgstr "2880 x 1440 DPI"
-
-#.
-#. * These resolutions have no practical use; they're neither as good as
-#. * nor any faster than 720x720 DPI.  They exist to permit testing
-#. * 2880x720 (4:1 aspect) on 1440x720 printers.
-#.
-#: src/main/print-escp2.c:2930
-msgid "1440 x 360 DPI"
-msgstr "1440 x 360 DPI"
-
-#: src/main/print-escp2.c:2932
-msgid "1440 x 360 DPI Unidirectional"
-msgstr ""
-
-#: src/main/print-escp2.c:2934
-msgid "1440 x 360 DPI High Quality"
-msgstr ""
-
-#: src/main/print-escp2.c:2936
-msgid "1440 x 360 DPI High Quality Uni"
-msgstr ""
-
-#: src/main/print-escp2.c:2938
-msgid "1440 x 360 DPI Highest Quality"
-msgstr ""
-
-#: src/main/print-escp2.c:2954
-msgid "Seven Color Enhanced"
-msgstr ""
-
-#: src/main/print-escp2.c:2955
-msgid "Six Color Enhanced Composite"
-msgstr ""
-
-#: src/main/print-escp2.c:2956 src/main/print-lexmark.c:619 src/main/print-lexmark.c:699
-msgid "Six Color Photo"
-msgstr ""
-
-#: src/main/print-escp2.c:2957 src/main/print-lexmark.c:624 src/main/print-lexmark.c:704
-msgid "Five Color Photo Composite"
-msgstr ""
-
-#. output_type   ncolors used_colors   pass_length  v_top_head_offset
-#. *                                                        h_catridge_offset
-#. *                                                           h_direction_offset
-#. *                                                               head_offset
-#: src/main/print-escp2.c:2958 src/main/print-lexmark.c:609 src/main/print-lexmark.c:689
-msgid "Four Color Standard"
-msgstr ""
-
-#: src/main/print-escp2.c:2959 src/main/print-lexmark.c:614 src/main/print-lexmark.c:694
-msgid "Three Color Composite"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2.c:3268 src/main/print-pcl.c:198
+#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2.c:481
+#: src/main/print-pcl.c:200
 msgid "Standard"
 msgstr "Κανονικό"
 
-#: src/main/print-escp2.c:3270
+#: src/main/print-escp2.c:483
 #, fuzzy
 msgid "Roll Feed"
 msgstr "Ρόλος"
 
 #. name                                                    hres vres softw v_pass overs unidir resid
-#: src/main/print-lexmark.c:585 src/main/print-lexmark.c:671
+#: src/main/print-lexmark.c:622 src/main/print-lexmark.c:708
 msgid "300 DPI x 600 DPI"
 msgstr ""
 
-#: src/main/print-lexmark.c:586 src/main/print-lexmark.c:672
+#: src/main/print-lexmark.c:623 src/main/print-lexmark.c:709
 msgid "600 DPI"
 msgstr "600 DPI"
 
-#: src/main/print-lexmark.c:587 src/main/print-lexmark.c:673
+#: src/main/print-lexmark.c:624 src/main/print-lexmark.c:710
 msgid "600 DPI high quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:588 src/main/print-lexmark.c:674
+#: src/main/print-lexmark.c:625 src/main/print-lexmark.c:711
 msgid "600 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-lexmark.c:589 src/main/print-lexmark.c:675
+#: src/main/print-lexmark.c:626 src/main/print-lexmark.c:712
 msgid "1200 DPI"
 msgstr "1200 DPI"
 
-#: src/main/print-lexmark.c:590 src/main/print-lexmark.c:676
+#: src/main/print-lexmark.c:627 src/main/print-lexmark.c:713
 msgid "1200 DPI high quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:591 src/main/print-lexmark.c:677
+#: src/main/print-lexmark.c:628 src/main/print-lexmark.c:714
 msgid "1200 DPI highest quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:592 src/main/print-lexmark.c:678
+#: src/main/print-lexmark.c:629 src/main/print-lexmark.c:715
 msgid "1200 DPI  Unidirectional"
 msgstr ""
 
-#: src/main/print-lexmark.c:593
+#: src/main/print-lexmark.c:630
 msgid "2400 DPI x 1200 DPI"
 msgstr ""
 
-#: src/main/print-lexmark.c:594
+#: src/main/print-lexmark.c:631
 msgid "2400 DPI x 1200 DPI high quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:595
+#: src/main/print-lexmark.c:632
 msgid "2400 DPI x 1200 DPI highest quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:597
+#: src/main/print-lexmark.c:634
 #, fuzzy
 msgid "test print"
 msgstr "Τίτλοι προς εκτύπωση"
 
+#. output_type   ncolors used_colors   pass_length  v_top_head_offset
+#. *                                                        h_catridge_offset
+#. *                                                           h_direction_offset
+#. *                                                               head_offset
+#: src/main/print-lexmark.c:646 src/main/print-lexmark.c:726
+msgid "Four Color Standard"
+msgstr ""
+
+#: src/main/print-lexmark.c:651 src/main/print-lexmark.c:731
+msgid "Three Color Composite"
+msgstr ""
+
+#: src/main/print-lexmark.c:656 src/main/print-lexmark.c:736
+msgid "Six Color Photo"
+msgstr ""
+
+#: src/main/print-lexmark.c:661 src/main/print-lexmark.c:741
+msgid "Five Color Photo Composite"
+msgstr ""
+
+#: src/main/print-lexmark.c:912
+msgid "Glossy Film"
+msgstr ""
+
+#: src/main/print-lexmark.c:918
+#, fuzzy
+msgid "Envelopes"
+msgstr "Προγραμματιστές"
+
+#: src/main/print-lexmark.c:921
+#, fuzzy
+msgid "Matte Paper"
+msgstr "Χαρτί Μανίλα"
+
+#: src/main/print-lexmark.c:924
+msgid "Inkjet Paper"
+msgstr ""
+
+#: src/main/print-lexmark.c:927
+msgid "Photo Quality Inkjet Paper"
+msgstr ""
+
+#: src/main/print-lexmark.c:930
+#, fuzzy
+msgid "Photo Paper"
+msgstr "Κείμενα"
+
+#: src/main/print-lexmark.c:933
+msgid "Premium Glossy Photo Paper"
+msgstr ""
+
+#: src/main/print-lexmark.c:936
+msgid "Premium Luster Photo Paper"
+msgstr ""
+
+#: src/main/print-lexmark.c:939
+msgid "Photo Quality Glossy Paper"
+msgstr ""
+
+#: src/main/print-lexmark.c:942
+msgid "Ilford Heavy Paper"
+msgstr ""
+
 #. 11in x 17in
-#: src/main/print-pcl.c:108 src/main/print-util.c:547
+#: src/main/print-pcl.c:110 src/main/print-util.c:529
 #, fuzzy
 msgid "Executive"
 msgstr "Εκτέλεση"
 
 #
 #. US Exec (7.25 x 10.5 in)
-#: src/main/print-pcl.c:109 src/main/print-util.c:541
+#: src/main/print-pcl.c:111 src/main/print-util.c:523
 msgid "Letter"
 msgstr "Διαστάσεις Letter"
 
 #
 #. US Letter (8.5 x 11 in)
-#: src/main/print-pcl.c:110 src/main/print-util.c:543
+#: src/main/print-pcl.c:112 src/main/print-util.c:525
 msgid "Legal"
 msgstr "Διαστάσεις Legal"
 
 #. US Legal (8.5 x 14 in)
-#: src/main/print-pcl.c:111 src/main/print-util.c:545
+#: src/main/print-pcl.c:113 src/main/print-util.c:527
 #, fuzzy
 msgid "Tabloid"
 msgstr "Πίνακας"
 
 # Revise translation of "manual" (as in opposite of "automatic", not synonym of "documentation")
 #. US Tabloid (11 x 17 in)
-#: src/main/print-pcl.c:112 src/main/print-pcl.c:199 src/main/print-util.c:565
+#: src/main/print-pcl.c:114 src/main/print-pcl.c:201 src/main/print-util.c:547
 msgid "Manual"
 msgstr "Εγχειρίδιο"
 
 #. US Manual/Statement (5.5 x 8.5 in)
-#: src/main/print-pcl.c:113
+#: src/main/print-pcl.c:115
 msgid "13x19"
 msgstr "13x19"
 
 #. US 13x19/Super B (13 x 19 in)
-#: src/main/print-pcl.c:114 src/main/print-util.c:616
+#: src/main/print-pcl.c:116 src/main/print-util.c:598
 msgid "A5"
 msgstr "A5"
 
 #
 #. ISO/JIS A5 (148 x 210 mm)
-#: src/main/print-pcl.c:115 src/main/print-util.c:614
+#: src/main/print-pcl.c:117 src/main/print-util.c:596
 msgid "A4"
 msgstr "Διαστάσεις Α4"
 
 #. ISO/JIS A4 (210 x 297 mm)
-#: src/main/print-pcl.c:116 src/main/print-util.c:612
+#: src/main/print-pcl.c:118 src/main/print-util.c:594
 msgid "A3"
 msgstr "A3"
 
 #. ISO/JIS A3 (297 x 420 mm)
-#: src/main/print-pcl.c:117 src/main/print-util.c:698
+#: src/main/print-pcl.c:119 src/main/print-util.c:680
 msgid "B5 JIS"
 msgstr "B5 JIS"
 
 #. JIS B5 (182 x 257 mm).
-#: src/main/print-pcl.c:118 src/main/print-util.c:696
+#: src/main/print-pcl.c:120 src/main/print-util.c:678
 msgid "B4 JIS"
 msgstr "B4 JIS"
 
 #. JIS B4 (257 x 364 mm).
-#: src/main/print-pcl.c:119 src/main/print-util.c:800
+#: src/main/print-pcl.c:121 src/main/print-util.c:782
 #, fuzzy
 msgid "Hagaki Card"
 msgstr "Αναζήτηση καρτέλας"
 
 #. Japanese Hagaki Card (100 x 148 mm)
-#: src/main/print-pcl.c:120 src/main/print-util.c:802
+#: src/main/print-pcl.c:122 src/main/print-util.c:784
 msgid "Oufuku Card"
 msgstr ""
 
 #. Japanese Oufuku Card (148 x 200 mm)
-#: src/main/print-pcl.c:121 src/main/print-util.c:618
+#: src/main/print-pcl.c:123 src/main/print-util.c:600
 msgid "A6"
 msgstr "A6"
 
 #. ISO/JIS A6 card
-#: src/main/print-pcl.c:122 src/main/print-util.c:553
+#: src/main/print-pcl.c:124 src/main/print-util.c:535
 msgid "4x6"
 msgstr "4x6"
 
 #. US Index card (4 x 6 in)
-#: src/main/print-pcl.c:123 src/main/print-util.c:559
+#: src/main/print-pcl.c:125 src/main/print-util.c:541
 msgid "5x8"
 msgstr "5x8"
 
 #. US Index card (5 x 8 in)
-#: src/main/print-pcl.c:124 src/main/print-util.c:551
+#: src/main/print-pcl.c:126 src/main/print-util.c:533
 msgid "3x5"
 msgstr "3x5"
 
 #. US Index card (3 x 5 in)
-#: src/main/print-pcl.c:125
+#: src/main/print-pcl.c:127
 #, fuzzy
 msgid "Monarch"
 msgstr "Μάρτιος"
 
 #. Monarch Envelope (3 7/8 x 7 1/2 in)
-#: src/main/print-pcl.c:126 src/main/print-util.c:810
+#: src/main/print-pcl.c:128 src/main/print-util.c:792
 msgid "Commercial 10"
 msgstr ""
 
 #. US Commercial 10 Envelope (4.125 x 9.5 in) Portrait
-#: src/main/print-pcl.c:127 src/main/print-util.c:730
+#: src/main/print-pcl.c:129 src/main/print-util.c:712
 #, fuzzy
 msgid "DL"
 msgstr "Τεκμηρίωση"
 
 #. DL envelope (110 x 220 mm) Portrait
-#: src/main/print-pcl.c:128 src/main/print-util.c:724
+#: src/main/print-pcl.c:130 src/main/print-util.c:706
 msgid "C5"
 msgstr "C5"
 
 #. C5 envelope (162 x 229 mm)
-#: src/main/print-pcl.c:129 src/main/print-util.c:728
+#: src/main/print-pcl.c:131 src/main/print-util.c:710
 msgid "C6"
 msgstr "C6"
 
 #. C6 envelope (114 x 162 mm)
-#: src/main/print-pcl.c:130 src/main/print-util.c:812
+#: src/main/print-pcl.c:132 src/main/print-util.c:794
 #, fuzzy
 msgid "A2 Invitation"
 msgstr "Κινούμενα σχέδια"
 
 #. US A2 Invitation envelope (4 3/8 x 5 3/4 in)
-#: src/main/print-pcl.c:131
+#: src/main/print-pcl.c:133
 #, fuzzy
 msgid "Long 3"
 msgstr "Μεγάλη"
 
 #. Japanese Long Envelope #3 (120 x 235 mm)
-#: src/main/print-pcl.c:132
+#: src/main/print-pcl.c:134
 #, fuzzy
 msgid "Long 4"
 msgstr "Μεγάλη"
 
 #. Japanese Long Envelope #4 (90 x 205 mm)
-#: src/main/print-pcl.c:133
+#: src/main/print-pcl.c:135
 #, fuzzy
 msgid "Kaku"
 msgstr "Αντίγραφο ασφαλείας"
 
 #. Japanese Kaku Envelope (240 x 332.1 mm)
 #. *** MRS: this size not supported by print-util funcs! ***
-#: src/main/print-pcl.c:135
+#: src/main/print-pcl.c:137
 #, fuzzy
 msgid "HP Greeting Card"
 msgstr "Χαιρετισμός SMTP"
 
-#: src/main/print-pcl.c:153
+#: src/main/print-pcl.c:155
 #, fuzzy
 msgid "Plain"
 msgstr "Σε αναπαραγωγή"
 
 #
-#: src/main/print-pcl.c:154
+#: src/main/print-pcl.c:156
 #, fuzzy
 msgid "Bond"
 msgstr "Έντονη Γραφή"
 
-#: src/main/print-pcl.c:155
+#: src/main/print-pcl.c:157
 #, fuzzy
 msgid "Premium"
 msgstr "Πρωτ"
 
-#: src/main/print-pcl.c:156
+#: src/main/print-pcl.c:158
 msgid "Glossy Photo"
 msgstr ""
 
-#: src/main/print-pcl.c:157
+#: src/main/print-pcl.c:159
 #, fuzzy
 msgid "Transparency"
 msgstr "Διαφανές"
 
-#: src/main/print-pcl.c:158
+#: src/main/print-pcl.c:160
 msgid "Quick-dry Photo"
 msgstr ""
 
-#: src/main/print-pcl.c:159
+#: src/main/print-pcl.c:161
 #, fuzzy
 msgid "Quick-dry Transparency"
 msgstr "Διαφάνεια Χροιάς"
 
 #. {"Envelope", PCL_PAPERSOURCE_ENVELOPE},
-#: src/main/print-pcl.c:201
+#: src/main/print-pcl.c:203
 #, fuzzy
 msgid "Tray 1"
 msgstr "Δοκιμή"
 
-#: src/main/print-pcl.c:202 src/main/print-pcl.c:208
+#: src/main/print-pcl.c:204 src/main/print-pcl.c:210
 #, fuzzy
 msgid "Tray 2"
 msgstr "Δοκιμή"
 
-#: src/main/print-pcl.c:203
+#: src/main/print-pcl.c:205
 #, fuzzy
 msgid "Tray 3"
 msgstr "Δοκιμή"
 
-#: src/main/print-pcl.c:204
+#: src/main/print-pcl.c:206
 #, fuzzy
 msgid "Tray 4"
 msgstr "Δοκιμή"
 
-#: src/main/print-pcl.c:205
+#: src/main/print-pcl.c:207
 msgid "Portable Sheet Feeder"
 msgstr ""
 
-#: src/main/print-pcl.c:206
+#: src/main/print-pcl.c:208
 #, fuzzy
 msgid "Desktop Sheet Feeder"
 msgstr "Ρυθμίσεις επιφάνειας εργασίας"
 
-#: src/main/print-pcl.c:207
+#: src/main/print-pcl.c:209
 #, fuzzy
 msgid "Tray"
 msgstr "Δοκιμή"
 
-#: src/main/print-pcl.c:209
+#: src/main/print-pcl.c:211
 #, fuzzy
 msgid "Optional Source"
 msgstr "Ανοικτό Λογισμικό"
 
-#: src/main/print-pcl.c:210
+#: src/main/print-pcl.c:212
 #, fuzzy
 msgid "Autoselect"
 msgstr "Απεπιλογή"
 
-#: src/main/print-pcl.c:224
+#: src/main/print-pcl.c:226
 msgid "150x150 DPI"
 msgstr "150x150 DPI"
 
-#: src/main/print-pcl.c:225
+#: src/main/print-pcl.c:227
 msgid "300x300 DPI"
 msgstr ""
 
-#: src/main/print-pcl.c:226
+#: src/main/print-pcl.c:228
 msgid "600x300 DPI"
 msgstr "600x300 DPI"
 
-#: src/main/print-pcl.c:227
+#: src/main/print-pcl.c:229
 #, fuzzy
 msgid "600x600 DPI monochrome"
 msgstr "μονόχρωμο"
 
-#: src/main/print-pcl.c:228
+#: src/main/print-pcl.c:230
 msgid "600x600 DPI"
 msgstr "600x600 DPI"
 
-#: src/main/print-pcl.c:229
+#: src/main/print-pcl.c:231
 msgid "1200x600 DPI"
 msgstr "1200x600 DPI"
 
-#: src/main/print-pcl.c:230
+#: src/main/print-pcl.c:232
 msgid "2400x600 DPI"
 msgstr "2400x600 DPI"
 
-#: src/main/print-pcl.c:1563
+#: src/main/print-pcl.c:1565
 msgid "Color + Black Cartridges"
 msgstr ""
 
-#: src/main/print-pcl.c:1564
+#: src/main/print-pcl.c:1566
 msgid "Color + Photo Cartridges"
 msgstr ""
 
 #. Name of file or command to print to
-#: src/main/print-util.c:125 src/main/print-util.c:159 src/main/print-util.c:193
+#: src/main/print-util.c:125 src/main/print-util.c:159
+#: src/main/print-util.c:193
 #, fuzzy
 msgid "ps2"
 msgstr "στιγ."
 
-#: src/main/print-util.c:555
+#. 7.25 * 10.5in
+#: src/main/print-util.c:531
+#, fuzzy
+msgid "Postcard"
+msgstr "Τελευταία καρτέλα"
+
+#: src/main/print-util.c:537
 msgid "Epson 4x6 Photo Paper"
 msgstr ""
 
-#: src/main/print-util.c:557
+#: src/main/print-util.c:539
 msgid "5x7"
 msgstr "5x7"
 
-#: src/main/print-util.c:561
+#: src/main/print-util.c:543
 msgid "6x8"
 msgstr "6x8"
 
-#: src/main/print-util.c:563
+#: src/main/print-util.c:545
 msgid "8x10"
 msgstr "8x10"
 
 #. 5.5in x 8.5in
-#: src/main/print-util.c:567
+#: src/main/print-util.c:549
 msgid "12x18"
 msgstr "12x18"
 
-#: src/main/print-util.c:569
+#: src/main/print-util.c:551
 msgid "Super B 13x19"
 msgstr "Super B 13x19"
 
 #. Other common photographic paper sizes
-#: src/main/print-util.c:573
+#: src/main/print-util.c:555
 msgid "8x12"
 msgstr "8x12"
 
 #. Sometimes used for 35 mm
-#: src/main/print-util.c:575
+#: src/main/print-util.c:557
 msgid "11x14"
 msgstr "11x14"
 
-#: src/main/print-util.c:577
+#: src/main/print-util.c:559
 msgid "16x20"
 msgstr "16x20"
 
-#: src/main/print-util.c:579
+#: src/main/print-util.c:561
 msgid "16x24"
 msgstr "16x24"
 
 #. 20x24 for 35 mm
-#: src/main/print-util.c:581
+#: src/main/print-util.c:563
 msgid "20x24"
 msgstr "20x24"
 
-#: src/main/print-util.c:583
+#: src/main/print-util.c:565
 msgid "20x30"
 msgstr "20x30"
 
 #. 24x30 for 35 mm
-#: src/main/print-util.c:585
+#: src/main/print-util.c:567
 msgid "24x30"
 msgstr "24x30"
 
-#: src/main/print-util.c:587
+#: src/main/print-util.c:569
 msgid "24x36"
 msgstr "24x36"
 
 #. Sometimes used for 35 mm
-#: src/main/print-util.c:589
+#: src/main/print-util.c:571
 msgid "30x40"
 msgstr "30x40"
 
@@ -920,47 +685,47 @@ msgstr "30x40"
 #. * millimetre.  Thus, A0 is 841mm x 1189mm.  Every other A
 #. * size is obtained by doubling or halving another A size.
 #.
-#: src/main/print-util.c:602
+#: src/main/print-util.c:584
 msgid "4A"
 msgstr "4A"
 
 #. 1682mm x 2378mm
-#: src/main/print-util.c:604
+#: src/main/print-util.c:586
 msgid "2A"
 msgstr "2A"
 
 #. 1189mm x 1682mm
-#: src/main/print-util.c:606
+#: src/main/print-util.c:588
 msgid "A0"
 msgstr "A0"
 
 #. 841mm x 1189mm
-#: src/main/print-util.c:608
+#: src/main/print-util.c:590
 msgid "A1"
 msgstr "A1"
 
 #. 594mm x  841mm
-#: src/main/print-util.c:610
+#: src/main/print-util.c:592
 msgid "A2"
 msgstr "A2"
 
 #. 105mm x  148mm
-#: src/main/print-util.c:620
+#: src/main/print-util.c:602
 msgid "A7"
 msgstr "A7"
 
 #. 74mm x  105mm
-#: src/main/print-util.c:622
+#: src/main/print-util.c:604
 msgid "A8"
 msgstr "A8"
 
 #. 52mm x   74mm
-#: src/main/print-util.c:624
+#: src/main/print-util.c:606
 msgid "A9"
 msgstr "A9"
 
 #. 37mm x   52mm
-#: src/main/print-util.c:626
+#: src/main/print-util.c:608
 msgid "A10"
 msgstr "A10"
 
@@ -970,35 +735,35 @@ msgstr "A10"
 #. * Stock sizes for normal trims.
 #. * Allowance for trim is 3 millimetres.
 #.
-#: src/main/print-util.c:633
+#: src/main/print-util.c:615
 #, fuzzy
 msgid "RA0"
 msgstr "RAD"
 
 #
 #. 860mm x 1220mm
-#: src/main/print-util.c:635
+#: src/main/print-util.c:617
 #, fuzzy
 msgid "RA1"
 msgstr "RAD"
 
 #
 #. 610mm x  860mm
-#: src/main/print-util.c:637
+#: src/main/print-util.c:619
 #, fuzzy
 msgid "RA2"
 msgstr "RAD"
 
 #
 #. 430mm x  610mm
-#: src/main/print-util.c:639
+#: src/main/print-util.c:621
 #, fuzzy
 msgid "RA3"
 msgstr "RAD"
 
 #
 #. 305mm x  430mm
-#: src/main/print-util.c:641
+#: src/main/print-util.c:623
 #, fuzzy
 msgid "RA4"
 msgstr "Διαστάσεις Α4"
@@ -1007,28 +772,28 @@ msgstr "Διαστάσεις Α4"
 #.
 #. * Stock sizes for bled work or extra trims.
 #.
-#: src/main/print-util.c:647
+#: src/main/print-util.c:629
 msgid "SRA0"
 msgstr "SRA0"
 
 #. 900mm x 1280mm
-#: src/main/print-util.c:649
+#: src/main/print-util.c:631
 msgid "SRA1"
 msgstr "SRA1"
 
 #. 640mm x  900mm
-#: src/main/print-util.c:651
+#: src/main/print-util.c:633
 msgid "SRA2"
 msgstr "SRA2"
 
 #. 450mm x  640mm
-#: src/main/print-util.c:653
+#: src/main/print-util.c:635
 msgid "SRA3"
 msgstr "SRA3"
 
 #
 #. 320mm x  450mm
-#: src/main/print-util.c:655
+#: src/main/print-util.c:637
 #, fuzzy
 msgid "SRA4"
 msgstr "Διαστάσεις Α4"
@@ -1037,161 +802,161 @@ msgstr "Διαστάσεις Α4"
 #.
 #. * "B" series: Posters, wall charts and similar items.
 #.
-#: src/main/print-util.c:661
+#: src/main/print-util.c:643
 msgid "4B ISO"
 msgstr "4B ISO"
 
 #. 2000mm x 2828mm
-#: src/main/print-util.c:663
+#: src/main/print-util.c:645
 msgid "2B ISO"
 msgstr "2B ISO"
 
 #. 1414mm x 2000mm
-#: src/main/print-util.c:665
+#: src/main/print-util.c:647
 msgid "B0 ISO"
 msgstr "B0 ISO"
 
 #. 1000mm x 1414mm
-#: src/main/print-util.c:667
+#: src/main/print-util.c:649
 msgid "B1 ISO"
 msgstr "B1 ISO"
 
 #. 707mm x 1000mm
-#: src/main/print-util.c:669
+#: src/main/print-util.c:651
 msgid "B2 ISO"
 msgstr "B2 ISO"
 
 #. 500mm x  707mm
-#: src/main/print-util.c:671
+#: src/main/print-util.c:653
 msgid "B3 ISO"
 msgstr "B3 ISO"
 
 #. 353mm x  500mm
-#: src/main/print-util.c:673
+#: src/main/print-util.c:655
 msgid "B4 ISO"
 msgstr "B4 ISO"
 
 #. 250mm x  353mm
-#: src/main/print-util.c:675
+#: src/main/print-util.c:657
 msgid "B5 ISO"
 msgstr "B5 ISO"
 
 #. 176mm x  250mm
-#: src/main/print-util.c:677
+#: src/main/print-util.c:659
 msgid "B6 ISO"
 msgstr "B6 ISO"
 
 #. 125mm x  176mm
-#: src/main/print-util.c:679
+#: src/main/print-util.c:661
 msgid "B7 ISO"
 msgstr "B7 ISO"
 
 #. 88mm x  125mm
-#: src/main/print-util.c:681
+#: src/main/print-util.c:663
 msgid "B8 ISO"
 msgstr "B8 ISO"
 
 #. 62mm x   88mm
-#: src/main/print-util.c:683
+#: src/main/print-util.c:665
 msgid "B9 ISO"
 msgstr "B9 ISO"
 
 #. 44mm x   62mm
-#: src/main/print-util.c:685
+#: src/main/print-util.c:667
 msgid "B10 ISO"
 msgstr "B10 ISO"
 
 #. 31mm x   44mm
-#: src/main/print-util.c:688
+#: src/main/print-util.c:670
 msgid "B0 JIS"
 msgstr "B0 JIS"
 
-#: src/main/print-util.c:690
+#: src/main/print-util.c:672
 msgid "B1 JIS"
 msgstr "B1 JIS"
 
-#: src/main/print-util.c:692
+#: src/main/print-util.c:674
 msgid "B2 JIS"
 msgstr "B2 JIS"
 
-#: src/main/print-util.c:694
+#: src/main/print-util.c:676
 msgid "B3 JIS"
 msgstr "B3 JIS"
 
-#: src/main/print-util.c:700
+#: src/main/print-util.c:682
 msgid "B6 JIS"
 msgstr "B6 JIS"
 
-#: src/main/print-util.c:702
+#: src/main/print-util.c:684
 msgid "B7 JIS"
 msgstr "B7 JIS"
 
-#: src/main/print-util.c:704
+#: src/main/print-util.c:686
 msgid "B8 JIS"
 msgstr "B8 JIS"
 
-#: src/main/print-util.c:706
+#: src/main/print-util.c:688
 msgid "B9 JIS"
 msgstr "B9 JIS"
 
-#: src/main/print-util.c:708
+#: src/main/print-util.c:690
 msgid "B10 JIS"
 msgstr "B10 JIS"
 
 #.
 #. * "C" series: Envelopes or folders suitable for A size stationery.
 #.
-#: src/main/print-util.c:714
+#: src/main/print-util.c:696
 msgid "C0"
 msgstr "C0"
 
 #. 917mm x 1297mm
-#: src/main/print-util.c:716
+#: src/main/print-util.c:698
 msgid "C1"
 msgstr "C1"
 
 #. 648mm x  917mm
-#: src/main/print-util.c:718
+#: src/main/print-util.c:700
 msgid "C2"
 msgstr "C2"
 
 #. 458mm x  648mm
-#: src/main/print-util.c:720
+#: src/main/print-util.c:702
 msgid "C3"
 msgstr "C3"
 
 #. 324mm x  458mm
-#: src/main/print-util.c:722
+#: src/main/print-util.c:704
 msgid "C4"
 msgstr "C4"
 
 #. 162mm x  229mm
-#: src/main/print-util.c:726
+#: src/main/print-util.c:708
 msgid "B6-C4"
 msgstr "B6-C4"
 
 #. 110mm x  220mm
-#: src/main/print-util.c:732
+#: src/main/print-util.c:714
 msgid "C7-6"
 msgstr "C7-6"
 
 #. 81mm x  162mm
-#: src/main/print-util.c:734
+#: src/main/print-util.c:716
 msgid "C7"
 msgstr "C7"
 
 #. 81mm x  114mm
-#: src/main/print-util.c:736
+#: src/main/print-util.c:718
 msgid "C8"
 msgstr "C8"
 
 #. 57mm x   81mm
-#: src/main/print-util.c:738
+#: src/main/print-util.c:720
 msgid "C9"
 msgstr "C9"
 
 #. 40mm x   57mm
-#: src/main/print-util.c:740
+#: src/main/print-util.c:722
 msgid "C10"
 msgstr "C10"
 
@@ -1199,27 +964,27 @@ msgstr "C10"
 #.
 #. * US CAD standard paper sizes
 #.
-#: src/main/print-util.c:746
+#: src/main/print-util.c:728
 #, fuzzy
 msgid "ArchA"
 msgstr "Τόξο"
 
-#: src/main/print-util.c:748
+#: src/main/print-util.c:730
 #, fuzzy
 msgid "ArchB"
 msgstr "Τόξο"
 
-#: src/main/print-util.c:750
+#: src/main/print-util.c:732
 #, fuzzy
 msgid "ArchC"
 msgstr "Τόξο"
 
-#: src/main/print-util.c:752
+#: src/main/print-util.c:734
 #, fuzzy
 msgid "ArchD"
 msgstr "Τόξο"
 
-#: src/main/print-util.c:754
+#: src/main/print-util.c:736
 #, fuzzy
 msgid "ArchE"
 msgstr "Τόξο"
@@ -1227,13 +992,13 @@ msgstr "Τόξο"
 #.
 #. * Foolscap
 #.
-#: src/main/print-util.c:760
+#: src/main/print-util.c:742
 #, fuzzy
 msgid "American foolscap"
 msgstr "Αμερικανική Σαμόα"
 
 #. American foolscap
-#: src/main/print-util.c:762
+#: src/main/print-util.c:744
 msgid "European foolscap"
 msgstr ""
 
@@ -1243,45 +1008,45 @@ msgstr ""
 #. * The BPIF and the Publishers Association jointly recommend ten
 #. * standard metric sizes for case-bound titles as follows:
 #.
-#: src/main/print-util.c:770
+#: src/main/print-util.c:752
 msgid "Crown Quarto"
 msgstr ""
 
 #. 189mm x 246mm
-#: src/main/print-util.c:772
+#: src/main/print-util.c:754
 msgid "Large Crown Quarto"
 msgstr ""
 
 #. 201mm x 258mm
-#: src/main/print-util.c:774
+#: src/main/print-util.c:756
 #, fuzzy
 msgid "Demy Quarto"
 msgstr "προσομοίωση"
 
 #. 219mm x 276mm
-#: src/main/print-util.c:776
+#: src/main/print-util.c:758
 msgid "Royal Quarto"
 msgstr ""
 
 #. 237mm x 312mm
 #. { "ISO A4",             595,
 #. 841, PAPERSIZE_METRIC, 0, 0, 0, 0 },    210mm x 297mm
-#: src/main/print-util.c:780
+#: src/main/print-util.c:762
 msgid "Crown Octavo"
 msgstr ""
 
 #. 123mm x 186mm
-#: src/main/print-util.c:782
+#: src/main/print-util.c:764
 msgid "Large Crown Octavo"
 msgstr ""
 
 #. 129mm x 198mm
-#: src/main/print-util.c:784
+#: src/main/print-util.c:766
 msgid "Demy Octavo"
 msgstr ""
 
 #. 138mm x 216mm
-#: src/main/print-util.c:786
+#: src/main/print-util.c:768
 msgid "Royal Octavo"
 msgstr ""
 
@@ -1289,76 +1054,112 @@ msgstr ""
 #. { N_ ("ISO A5"),             419,
 #. 595, 0, 0, 0, 0, PAPERSIZE_METRIC },    148mm x 210mm
 #. Paperback sizes in common usage
-#: src/main/print-util.c:792
+#: src/main/print-util.c:774
 #, fuzzy
 msgid "Small paperback"
 msgstr "Επένδυση"
 
 #. 111mm x 178mm
-#: src/main/print-util.c:794
+#: src/main/print-util.c:776
 msgid "Penguin small paperback"
 msgstr ""
 
 #. 111mm x 181mm
-#: src/main/print-util.c:796
+#: src/main/print-util.c:778
 msgid "Penguin large paperback"
 msgstr ""
 
 #. 148 x 200 mm
-#: src/main/print-util.c:804
+#: src/main/print-util.c:786
 msgid "Japanese long envelope #3"
 msgstr ""
 
 #. Japanese long envelope #3
-#: src/main/print-util.c:806
+#: src/main/print-util.c:788
 msgid "Japanese long envelope #4"
 msgstr ""
 
 #. Japanese long envelope #4
-#: src/main/print-util.c:808
+#: src/main/print-util.c:790
 msgid "Japanese Kaku envelope #4"
 msgstr ""
 
 # Translation of "custom" sucks!  ("kata paraggelia"???  nah!)
 #. US A2 invitation
-#: src/main/print-util.c:814
+#: src/main/print-util.c:796
 msgid "Custom"
 msgstr "Ορισμένο από το χρήστη"
 
-#: src/main/print-util.c:817
+#: src/main/print-util.c:799
 msgid "89 mm Roll Paper"
 msgstr ""
 
-#: src/main/print-util.c:819
+#: src/main/print-util.c:801
 msgid "4 Inch Roll Paper"
 msgstr ""
 
-#: src/main/print-util.c:821
+#: src/main/print-util.c:803
 msgid "5 Inch Roll Paper"
 msgstr ""
 
-#: src/main/print-util.c:823
+#: src/main/print-util.c:805
 msgid "210 mm Roll Paper"
 msgstr ""
 
-#: src/main/print-util.c:825
+#: src/main/print-util.c:807
 msgid "13 Inch Roll Paper"
 msgstr ""
 
-#: src/main/print-util.c:827
+#: src/main/print-util.c:809
 msgid "22 Inch Roll Paper"
 msgstr ""
 
-#: src/main/print-util.c:829
+#: src/main/print-util.c:811
 msgid "24 Inch Roll Paper"
 msgstr ""
 
-#: src/main/print-util.c:831
+#: src/main/print-util.c:813
 msgid "36 Inch Roll Paper"
 msgstr ""
 
-#: src/main/print-util.c:833
+#: src/main/print-util.c:815
 msgid "44 Inch Roll Paper"
+msgstr ""
+
+#: src/main/print-util.c:1262 src/main/print-util.c:1271
+#, c-format
+msgid "%s is not a valid parameter of type %s\n"
+msgstr ""
+
+#: src/main/print-util.c:1287
+#, c-format
+msgid "%s out of range (value %f, min %f, max %f)\n"
+msgstr ""
+
+#: src/main/print-util.c:1302
+#, c-format
+msgid "%s out of range (value %d, min %d, max %d)\n"
+msgstr ""
+
+#: src/main/print-util.c:1328
+msgid "Printer does not support color output\n"
+msgstr ""
+
+#: src/main/print-util.c:1346
+msgid "Image size is not valid\n"
+msgstr ""
+
+#: src/main/print-util.c:1353
+msgid "Top margin must not be less than zero\n"
+msgstr ""
+
+#: src/main/print-util.c:1359
+msgid "Left margin must not be less than zero\n"
+msgstr ""
+
+#: src/main/print-util.c:1416
+#, c-format
+msgid "%s is not a valid dither algorithm\n"
 msgstr ""
 
 #. Specify language of PPD translation
@@ -1366,48 +1167,48 @@ msgstr ""
 #. * Use the English name of your language here, e.g. "Swedish" instead of
 #. * "Svenska".
 #.
-#: src/cups/genppd.c:431
+#: src/cups/genppd.c:438
 msgid "English"
 msgstr "Αγγλικά"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
-#: src/cups/genppd.c:433
+#: src/cups/genppd.c:440
 #, fuzzy
 msgid "ISOLatin1"
 msgstr "Λάτιν"
 
-#: src/cups/genppd.c:609
+#: src/cups/genppd.c:616
 #, fuzzy
 msgid "Media Type"
 msgstr "Είδος MIME"
 
-#: src/cups/genppd.c:635
+#: src/cups/genppd.c:642
 #, fuzzy
 msgid "Media Source"
 msgstr "Ανοικτό Λογισμικό"
 
-#: src/cups/genppd.c:659
+#: src/cups/genppd.c:666
 msgid "Resolution"
 msgstr "Ανάλυση"
 
 #.
 #. * Image types...
 #.
-#: src/cups/genppd.c:699
+#: src/cups/genppd.c:706
 #, fuzzy
 msgid "Image Type"
 msgstr "Είδος MIME"
 
-#: src/cups/genppd.c:704 src/gimp/gimp_main_window.c:1314
+#: src/cups/genppd.c:711 src/gimp/gimp_main_window.c:1314
 #, fuzzy
 msgid "Line Art"
 msgstr "Γραμμή"
 
-#: src/cups/genppd.c:706 src/gimp/gimp_main_window.c:1328
+#: src/cups/genppd.c:713 src/gimp/gimp_main_window.c:1328
 msgid "Solid Colors"
 msgstr ""
 
-#: src/cups/genppd.c:708 src/gimp/gimp_main_window.c:1343
+#: src/cups/genppd.c:715 src/gimp/gimp_main_window.c:1343
 #, fuzzy
 msgid "Photograph"
 msgstr "Κρυπτογραφία"
@@ -1415,11 +1216,11 @@ msgstr "Κρυπτογραφία"
 #.
 #. * Dithering algorithms...
 #.
-#: src/cups/genppd.c:716
+#: src/cups/genppd.c:723
 msgid "Dither Algorithm"
 msgstr ""
 
-#: src/cups/genppd.c:735
+#: src/cups/genppd.c:742
 #, fuzzy
 msgid "Ink Type"
 msgstr "Τύπος MIME"
@@ -1479,10 +1280,12 @@ msgid ""
 "                       utility may result in poor print quality and/or\n"
 "                       damage to the printer.\n"
 "    -o|--align-color   Align the color print head (Stylus Color 480 and 580\n"
-"                       only).  CAUTION: Misuse of this utility may result in\n"
+"                       only).  CAUTION: Misuse of this utility may result "
+"in\n"
 "                       poor print quality and/or damage to the printer.\n"
 "    -s|--status        Retrieve printer status.\n"
-"    -i|--ink-level     Obtain the ink level from the printer.  This requires\n"
+"    -i|--ink-level     Obtain the ink level from the printer.  This "
+"requires\n"
 "                       read/write access to the raw printer device.\n"
 "    -d|--identify      Query the printer for make and model information.\n"
 "                       This requires read/write access to the raw printer\n"
@@ -1498,7 +1301,8 @@ msgid ""
 "    -u|--new           The printer is a new printer (Stylus Color 740 or\n"
 "                       newer).\n"
 "    -q|--quiet         Suppress the banner.\n"
-"    -m|--model         Specify the precise printer model for head alignment.\n"
+"    -m|--model         Specify the precise printer model for head "
+"alignment.\n"
 msgstr ""
 
 #: src/escputil/escputil.c:148
@@ -1793,111 +1597,114 @@ msgstr "Stylus Scan 2000"
 msgid "Stylus Scan 2500"
 msgstr "Stylus Scan 2500"
 
-#: src/escputil/escputil.c:341 src/escputil/escputil.c:350
+#: src/escputil/escputil.c:348 src/escputil/escputil.c:357
 #, fuzzy
 msgid "You may only specify one printer or raw device."
 msgstr "Μπορείτε να αποθηκεύσετε μια μόνο διεύθυνση τη φορά.\n"
 
-#: src/escputil/escputil.c:359
+#: src/escputil/escputil.c:366
 #, fuzzy
 msgid "You may only specify one printer model."
 msgstr "Μπορείτε να αποθηκεύσετε μια μόνο διεύθυνση τη φορά.\n"
 
-#: src/escputil/escputil.c:379
+#: src/escputil/escputil.c:386
 #, fuzzy, c-format
 msgid "Unknown option %c\n"
 msgstr "Άγνωστος κωδικός op %u"
 
-#: src/escputil/escputil.c:439
+#: src/escputil/escputil.c:446
 #, fuzzy, c-format
 msgid "Cannot open device %s: %s\n"
 msgstr "Άνοιγμα αρχείου %s αδύνατον\n"
 
-#: src/escputil/escputil.c:462
+#: src/escputil/escputil.c:469
 #, fuzzy, c-format
 msgid "Cannot print to printer %s with %s\n"
 msgstr "Δεν είναι δυνατό να γίνει καταχώρηση αποθήκευσης με κέλυφος"
 
-#: src/escputil/escputil.c:475 src/escputil/escputil.c:485
+#: src/escputil/escputil.c:482 src/escputil/escputil.c:492
 #, fuzzy
 msgid "Unable to send command to printer\n"
 msgstr "Ανεπιτυχής σύνδεση στο πιλότο"
 
-#: src/escputil/escputil.c:578
+#: src/escputil/escputil.c:585
 msgid "Cyan"
 msgstr "Κυανό"
 
-#: src/escputil/escputil.c:579
+#: src/escputil/escputil.c:586
 #, fuzzy
 msgid "Magenta"
 msgstr "μώβ"
 
-#: src/escputil/escputil.c:580
+#: src/escputil/escputil.c:587
 msgid "Yellow"
 msgstr "Κίτρινο"
 
-#: src/escputil/escputil.c:581
+#: src/escputil/escputil.c:588
 #, fuzzy
 msgid "Light Cyan"
 msgstr "Ψιλή Βροχή"
 
-#: src/escputil/escputil.c:582
+#: src/escputil/escputil.c:589
 #, fuzzy
 msgid "Light Magenta"
 msgstr "Ψιλή Βροχή"
 
-#: src/escputil/escputil.c:596
+#: src/escputil/escputil.c:603
 msgid "Obtaining ink levels requires using a raw device.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:602 src/escputil/escputil.c:677 src/escputil/escputil.c:720
+#: src/escputil/escputil.c:609 src/escputil/escputil.c:684
+#: src/escputil/escputil.c:727
 #, fuzzy, c-format
 msgid "Cannot open %s read/write: %s\n"
 msgstr "Άνοιγμα αρχείου %s αδύνατον\n"
 
-#: src/escputil/escputil.c:611 src/escputil/escputil.c:688 src/escputil/escputil.c:729
+#: src/escputil/escputil.c:618 src/escputil/escputil.c:695
+#: src/escputil/escputil.c:736
 #, fuzzy, c-format
 msgid "Cannot write to %s: %s\n"
 msgstr "Εγγραφή αδύνατη: %s"
 
-#: src/escputil/escputil.c:618 src/escputil/escputil.c:695 src/escputil/escputil.c:736
+#: src/escputil/escputil.c:625 src/escputil/escputil.c:702
+#: src/escputil/escputil.c:743
 #, fuzzy, c-format
 msgid "Cannot read from %s: %s\n"
 msgstr "Δεν είναι δυνατό να ελεγχθεί ο φάκελος: %s: %s"
 
-#: src/escputil/escputil.c:628
+#: src/escputil/escputil.c:635
 #, fuzzy
 msgid "Cannot parse output from printer\n"
 msgstr "Αδυναμία ανοίγματος αρχείου εξόδου: %s\n"
 
-#: src/escputil/escputil.c:632
+#: src/escputil/escputil.c:639
 #, fuzzy
 msgid "Ink color"
 msgstr " χρώμα"
 
-#: src/escputil/escputil.c:632
+#: src/escputil/escputil.c:639
 #, fuzzy
 msgid "Percent remaining"
 msgstr "Επί τοις εκατό ελεύθερο"
 
-#: src/escputil/escputil.c:671
+#: src/escputil/escputil.c:678
 msgid "Printer identification requires using a raw device.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:714
+#: src/escputil/escputil.c:721
 msgid "Printer status requires using a raw device.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:757
+#: src/escputil/escputil.c:764
 #, fuzzy
 msgid "Cleaning heads...\n"
 msgstr "Ανάγνωση επικεφαλίδων..."
 
-#: src/escputil/escputil.c:766
+#: src/escputil/escputil.c:773
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:770
+#: src/escputil/escputil.c:777
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -1936,7 +1743,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/escputil/escputil.c:805
+#: src/escputil/escputil.c:812
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -1965,61 +1772,61 @@ msgid ""
 "You will then be offered the choices of (s)aving the result in the printer,\n"
 "(r)epeating the process, or (q)uitting without saving.  Quitting will not\n"
 "restore the previous settings, but powering the printer off and back on "
-"will.\nIf you quit, you must repeat the entire process if you wish to later "
-"save\n"
+"will.\n"
+"If you quit, you must repeat the entire process if you wish to later save\n"
 "the results.  It is essential that you not turn off your printer during\n"
 "this procedure.\n"
 "\n"
 msgstr ""
 
-#: src/escputil/escputil.c:849
+#: src/escputil/escputil.c:856
 msgid "Unable to send command to the printer, exiting.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:867
+#: src/escputil/escputil.c:874
 msgid ""
 "Printer alignment must be done with a raw device or else\n"
 "the -m option must be used to specify a printer.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:871
+#: src/escputil/escputil.c:878
 msgid "Attempting to detect printer model..."
 msgstr ""
 
-#: src/escputil/escputil.c:876
+#: src/escputil/escputil.c:883
 #, fuzzy, c-format
 msgid ""
 "\n"
 "Cannot open %s read/write: %s\n"
 msgstr "Άνοιγμα αρχείου %s αδύνατον\n"
 
-#: src/escputil/escputil.c:884
+#: src/escputil/escputil.c:891
 #, fuzzy, c-format
 msgid ""
 "\n"
 "Cannot write to %s: %s\n"
 msgstr "Εγγραφή αδύνατη: %s"
 
-#: src/escputil/escputil.c:890
+#: src/escputil/escputil.c:897
 #, fuzzy, c-format
 msgid ""
 "\n"
 "Cannot read from %s: %s\n"
 msgstr "Δεν είναι δυνατό να ελεγχθεί ο φάκελος: %s: %s"
 
-#: src/escputil/escputil.c:903
+#: src/escputil/escputil.c:910
 msgid ""
 "\n"
 "Cannot detect printer type.\n"
 "Please use -m to specify your printer model.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:920
+#: src/escputil/escputil.c:927
 #, c-format
 msgid "Printer model %s is not known.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:931
+#: src/escputil/escputil.c:938
 msgid ""
 "Please inspect the final output very carefully to ensure that your\n"
 "printer is in proper alignment. You may now:\n"
@@ -2030,33 +1837,35 @@ msgid ""
 "What do you want to do (s, q, r)?\n"
 msgstr ""
 
-#: src/escputil/escputil.c:939 src/escputil/escputil.c:946 src/escputil/escputil.c:959 src/escputil/escputil.c:975 src/escputil/escputil.c:1046 src/escputil/escputil.c:1187
+#: src/escputil/escputil.c:946 src/escputil/escputil.c:953
+#: src/escputil/escputil.c:966 src/escputil/escputil.c:982
+#: src/escputil/escputil.c:1049 src/escputil/escputil.c:1190
 msgid "> "
 msgstr "> "
 
-#: src/escputil/escputil.c:944
+#: src/escputil/escputil.c:951
 msgid ""
 "Please confirm by typing 'q' again that you wish to quit without saving:\n"
 msgstr ""
 
-#: src/escputil/escputil.c:949
+#: src/escputil/escputil.c:956
 msgid ""
 "OK, your printer is aligned, but the alignment has not been saved.\n"
 "If you wish to save the alignment, you must repeat this process.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:956
+#: src/escputil/escputil.c:963
 msgid ""
 "Please confirm by typing 'r' again that you wish to repeat the\n"
 "alignment process:\n"
 msgstr ""
 
-#: src/escputil/escputil.c:962
+#: src/escputil/escputil.c:969
 #, fuzzy
 msgid "Repeating the alignment process.\n"
 msgstr "Εκκίνηση των Έξυπνων Εισαγωγέων"
 
-#: src/escputil/escputil.c:968
+#: src/escputil/escputil.c:975
 msgid ""
 "This will permanently alter the configuration of your printer.\n"
 "WARNING: this procedure has not been approved by Seiko Epson, and\n"
@@ -2065,23 +1874,38 @@ msgid ""
 "to your printer:\n"
 msgstr ""
 
-#: src/escputil/escputil.c:978
-msgid ""
-"Please insert your alignment test page in the printer once more\n"
-"for the final save of your alignment settings.  When the printer\n"
-"feeds the page through, your settings have been saved.\n"
+#: src/escputil/escputil.c:985
+msgid "About to save settings..."
+msgstr ""
+
+#: src/escputil/escputil.c:991
+msgid "failed!\n"
 msgstr ""
 
 #: src/escputil/escputil.c:992
+msgid ""
+"Your settings were not saved successfully.  You must repeat the\n"
+"alignment procedure.\n"
+msgstr ""
+
+#: src/escputil/escputil.c:996
+msgid "succeeded!\n"
+msgstr ""
+
+#: src/escputil/escputil.c:997
+msgid "Your alignment settings have been saved to the printer.\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1002
 #, fuzzy
 msgid "Unrecognized command.\n"
 msgstr "άγνωστο χρώμα: %s"
 
-#: src/escputil/escputil.c:995
+#: src/escputil/escputil.c:1005
 msgid "Final command was not confirmed.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1000
+#: src/escputil/escputil.c:1010
 #, c-format
 msgid ""
 "This procedure assumes that your printer is an Epson %s.\n"
@@ -2092,66 +1916,71 @@ msgid ""
 "alignment procedure.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1025 src/escputil/escputil.c:1054 src/escputil/escputil.c:1090 src/escputil/escputil.c:1166 src/escputil/escputil.c:1177
+#: src/escputil/escputil.c:1035 src/escputil/escputil.c:1057
+#: src/escputil/escputil.c:1100 src/escputil/escputil.c:1169
+#: src/escputil/escputil.c:1180
 #, fuzzy
 msgid "Press enter to continue > "
 msgstr "Παρακαλώ εισαγάγετε μια γραμμή εντολών παρακάτω."
 
-#: src/escputil/escputil.c:1036
-#, c-format
+#: src/escputil/escputil.c:1042
 msgid ""
-"Please inspect the print, and choose the best pair of lines\n"
-"in pattern #%d, and then insert a fresh page in the input tray.\n"
-"Type a pair number, '?' for help, or 'r' to retry this pattern.\n"
+"Please inspect the print, and choose the best pair of lines in each "
+"pattern.\n"
+"Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1041
+#: src/escputil/escputil.c:1048
 #, c-format
-msgid ""
-"Please inspect the print, and choose the best pair of lines\n"
-"in pattern #%d, and then reinsert the page in the input tray.\n"
-"Type a pair number, '?' for help, or 'r' to retry this pattern.\n"
+msgid "Pass #%d"
 msgstr ""
 
 #
-#: src/escputil/escputil.c:1051
+#: src/escputil/escputil.c:1054 src/escputil/escputil.c:1099
 #, fuzzy
 msgid "Please insert a fresh sheet of paper.\n"
 msgstr "Παρακαλώ εισάγετε 200 δραχμές για να συνεχίσετε."
 
-#: src/escputil/escputil.c:1070 src/escputil/escputil.c:1206
+#: src/escputil/escputil.c:1073 src/escputil/escputil.c:1209
 #, fuzzy
 msgid "Number out of range!\n"
 msgstr "Αριθμός Σελίδων"
 
-#: src/escputil/escputil.c:1075 src/escputil/escputil.c:1211
+#: src/escputil/escputil.c:1078 src/escputil/escputil.c:1214
 #, fuzzy
 msgid "I cannot understand what you typed!\n"
 msgstr "Δεν καταλαβαίνω την εντολή σου. "
 
-#: src/escputil/escputil.c:1081
+#: src/escputil/escputil.c:1084
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1088
+#: src/escputil/escputil.c:1091
+#, fuzzy
+msgid "Attempting to set alignment..."
+msgstr "Εκκίνηση των Έξυπνων Εισαγωγέων"
+
+#: src/escputil/escputil.c:1094
+msgid "succeeded.\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1095
 #, c-format
 msgid ""
-"Aligning phase %d, and performing final test.\n"
-"Please insert a fresh sheet of paper.\n"
+"Please verify that the alignment is correct.  After the alignment pattern\n"
+"is printed again, please ensure that the best pattern for each line is\n"
+"pattern %d.  If it is not, you should repeat the process to get the best\n"
+"quality printing.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1093
-#, c-format
-msgid "Aligning phase %d, and starting phase %d.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1107
+#: src/escputil/escputil.c:1110
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
 "\n"
-"This utility lets you align the color print head of your Epson Stylus inkjet\n"
+"This utility lets you align the color print head of your Epson Stylus "
+"inkjet\n"
 "printer.  Misuse of this utility may cause your print quality to degrade\n"
 "and possibly damage your printer.  This utility has not been reviewed by\n"
 "Seiko Epson for correctness, and is offered with no warranty at all.  The\n"
@@ -2179,18 +2008,18 @@ msgid ""
 "damage your printer!\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1157
+#: src/escputil/escputil.c:1160
 #, c-format
 msgid "Printer %s does not require color head alignment.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1175
+#: src/escputil/escputil.c:1178
 msgid ""
 "Please re-insert the same alignment sheet in the printer when it is\n"
 "finished printing.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1181
+#: src/escputil/escputil.c:1184
 msgid ""
 "Inspect the alignment sheet, and determine which pattern is the smoothest.\n"
 "This pattern will appear to have the least ``grain''.\n"
@@ -2199,12 +2028,12 @@ msgid ""
 "Type a pattern number, or '?' for help.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1217
+#: src/escputil/escputil.c:1220
 #, c-format
 msgid "The best pattern should be numbered between 1 and %d.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1261
+#: src/escputil/escputil.c:1264
 #, fuzzy
 msgid "Error in input\n"
 msgstr "Σφάλμα προσθήκης λίστας"
@@ -2299,8 +2128,8 @@ msgstr "Πυκνότητα"
 #: src/gimp/gimp_color_window.c:365
 msgid ""
 "Adjust the density (amount of ink) of the print. Reduce the density if the "
-"ink bleeds through the paper or smears; increase the density if black regions "
-"are not solid."
+"ink bleeds through the paper or smears; increase the density if black "
+"regions are not solid."
 msgstr ""
 
 #
@@ -2363,7 +2192,8 @@ msgid "Print"
 msgstr "Εκτύπωση"
 
 #
-#: src/gimp/gimp_main_window.c:344 src/gimp/gimp_main_window.c:626 src/gimp/gimp_main_window.c:795
+#: src/gimp/gimp_main_window.c:344 src/gimp/gimp_main_window.c:626
+#: src/gimp/gimp_main_window.c:795
 msgid "Cancel"
 msgstr "Ακύρωση"
 
@@ -2376,8 +2206,8 @@ msgstr "Προεπισκόπηση"
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer precision; "
-"each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the second button to move the image with finer "
+"precision; each unit of motion moves the image one point (1/72\")\n"
 "Click and drag with the third (middle) button to move the image in units of "
 "the image size.\n"
 "Holding down the shift key while clicking and dragging constrains the image "
@@ -2417,8 +2247,8 @@ msgstr "Tοπίο"
 
 #: src/gimp/gimp_main_window.c:464
 msgid ""
-"Select the orientation: portrait, landscape, upside down, or seascape (upside "
-"down landscape)"
+"Select the orientation: portrait, landscape, upside down, or seascape "
+"(upside down landscape)"
 msgstr ""
 
 #: src/gimp/gimp_main_window.c:469
@@ -2516,7 +2346,8 @@ msgid "Setup Printer"
 msgstr "Ρύθμιση Εκτυπωτή"
 
 #
-#: src/gimp/gimp_main_window.c:624 src/gimp/gimp_main_window.c:793 src/gimp/gimp_main_window.c:830
+#: src/gimp/gimp_main_window.c:624 src/gimp/gimp_main_window.c:793
+#: src/gimp/gimp_main_window.c:830
 msgid "OK"
 msgstr "Εντάξει"
 
@@ -2566,8 +2397,8 @@ msgstr "Εντολή:"
 #: src/gimp/gimp_main_window.c:746
 msgid ""
 "Enter the correct command to print to your printer. Note: Please do not "
-"remove the `-l' or `-oraw' from the command string, or printing will probably "
-"fail!"
+"remove the `-l' or `-oraw' from the command string, or printing will "
+"probably fail!"
 msgstr ""
 
 #.
@@ -2657,8 +2488,8 @@ msgstr "Ρύθμιση Εκτυπωτή"
 
 #: src/gimp/gimp_main_window.c:919
 msgid ""
-"Choose the printer model, PPD file, and command that is used to print to this "
-"printer"
+"Choose the printer model, PPD file, and command that is used to print to "
+"this printer"
 msgstr ""
 
 #
@@ -2860,8 +2691,8 @@ msgstr ""
 
 #: src/gimp/gimp_main_window.c:1351
 msgid ""
-"Slowest, but most accurate and smoothest color for continuous tone images and "
-"photographs"
+"Slowest, but most accurate and smoothest color for continuous tone images "
+"and photographs"
 msgstr ""
 
 #: src/gimp/gimp_main_window.c:1377
@@ -2924,7 +2755,113 @@ msgid "<Image>/File/Print..."
 msgstr "<Image>/Φίλτρα/Κείμενο/FreeType..."
 
 #
-#: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:833 src/gimp/print.c:1184
+#: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:833
+#: src/gimp/print.c:1184
 msgid "File"
 msgstr "Αρχείο"
 
+#: src/ghost/ijsgimpprint.c:144
+#, c-format
+msgid "Bad color space: bps %d channels %d space %s\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:152
+msgid "No row buffer\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:181
+#, c-format
+msgid "Parameter %s out of range (value %f, min %f, max %f)\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:185 src/ghost/ijsgimpprint.c:207
+#, c-format
+msgid "Unable to parse parameter %s=%s (expect a number)\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:203
+#, c-format
+msgid "Parameter %s out of range (value %d, min %d, max %d)\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:345
+msgid "Printer must be specified with -sModel\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:347
+#, c-format
+msgid "Printer %s is not a known model\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:589
+#, fuzzy, c-format
+msgid "Unknown option %s\n"
+msgstr "Άγνωστος κωδικός op %u"
+
+#: src/ghost/ijsgimpprint.c:732
+#, c-format
+msgid "%.0f of %.0f\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:844
+#, c-format
+msgid "image_init failed %d\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:855
+#, c-format
+msgid "Unable to open file descriptor: %s\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:867
+#, fuzzy, c-format
+msgid "Unable to open %s: %s\n"
+msgstr "Άνοιγμα αρχείου %s αδύνατον\n"
+
+#: src/ghost/ijsgimpprint.c:879
+#, fuzzy, c-format
+msgid "Unknown printer %s\n"
+msgstr "Άγνωστος κωδικός op %u"
+
+#: src/ghost/ijsgimpprint.c:910
+msgid "Bad parameters; cannot continue!\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:920
+#, c-format
+msgid "Get next row failed at %d\n"
+msgstr ""
+
+#, fuzzy
+#~ msgid "Back Light Film"
+#~ msgstr "Ελαφρύ χαλάζι"
+
+#~ msgid "360 DPI"
+#~ msgstr "360 DPI"
+
+#~ msgid "360 DPI FOL2"
+#~ msgstr "360 DPI FOL2"
+
+#~ msgid "720 x 360 DPI"
+#~ msgstr "720 x 360 DPI"
+
+#~ msgid "720 DPI"
+#~ msgstr "720 DPI"
+
+#~ msgid "1440 x 720 DPI"
+#~ msgstr "1440 x 720 DPI"
+
+#~ msgid "1440 x 720 DPI FOL"
+#~ msgstr "1440 x 720 DPI FOL"
+
+#~ msgid "2880 x 720 DPI"
+#~ msgstr "2880 x 720 DPI"
+
+#~ msgid "1440 x 1440 DPI"
+#~ msgstr "1440 x 1440 DPI"
+
+#~ msgid "2880 x 1440 DPI"
+#~ msgstr "2880 x 1440 DPI"
+
+#~ msgid "1440 x 360 DPI"
+#~ msgstr "1440 x 360 DPI"
