@@ -322,20 +322,11 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   v = stp_allocate_copy(stp_printer_get_printvars(printer));
 
-  stp_set_app_gamma(v, 1.0);
-  stp_set_brightness(v, stp_brightness);
-  stp_set_contrast(v, stp_contrast);
-  stp_set_cyan(v, stp_cyan);
-  stp_set_magenta(v, stp_magenta);
-  stp_set_yellow(v, stp_yellow);
-  stp_set_saturation(v, stp_saturation);
-  stp_set_density(v, stp_density);
   stp_set_scaling(v, 0); /* No scaling */
   stp_set_cmap(v, NULL);
   stp_set_left(v, 0);
   stp_set_top(v, 0);
   stp_set_orientation(v, ORIENT_PORTRAIT);
-  stp_set_gamma(v, stp_gamma);
   stp_set_outfunc(v, cups_writefunc);
   stp_set_errfunc(v, cups_writefunc);
   stp_set_outdata(v, stdout);
@@ -462,6 +453,15 @@ main(int  argc,				/* I - Number of command-line arguments */
     else
       stp_set_resolution(v, res[cups.header.cupsCompression].name);
 
+    stp_set_app_gamma(v, 1.0);
+    stp_set_brightness(v, stp_brightness);
+    stp_set_contrast(v, stp_contrast);
+    stp_set_cyan(v, stp_cyan);
+    stp_set_magenta(v, stp_magenta);
+    stp_set_yellow(v, stp_yellow);
+    stp_set_saturation(v, stp_saturation);
+    stp_set_density(v, stp_density);
+    stp_set_gamma(v, stp_gamma);
     stp_merge_printvars(v, stp_printer_get_printvars(printer));
 
     fprintf(stderr, "DEBUG: stp_get_output_to(v) |%s|\n", stp_get_output_to(v));
