@@ -4,6 +4,8 @@ libexecdir = $(gimpplugindir)/plug-ins
 
 libexec_PROGRAMS = print
 
+bin_PROGRAMS = unprint
+
 print_SOURCES = \
 	print-canon.c   \
 	print-escp2.c	\
@@ -13,10 +15,14 @@ print_SOURCES = \
 	print.c		\
 	print.h   
 
+unprint_SOURCES = unprint.c
+
 INCLUDES = \
 	-I$(top_srcdir)			\
 	$(GTK_CFLAGS)			\
 	-I$(includedir)
+
+#        -I@GLIBINCLUDE@
 
 AM_CPPFLAGS = \
         -DLOCALEDIR=\""$(localedir)"\"	\
@@ -25,11 +31,11 @@ AM_CPPFLAGS = \
 	@LPR_DEF@			\
 	@LPC_DEF@
 
-LDADD = \
-	$(top_builddir)/libgimp/libgimp.la	\
-	$(top_builddir)/libgimp/libgimpui.la	\
-	$(GTK_LIBS)				\
-	$(INTLLIBS)
+print_LDADD = $(GTK_LIBS) $(GIMP_LIBS)
+
+#	$(top_builddir)/libgimp/libgimp.la	\
+#	$(top_builddir)/libgimp/libgimpui.la	\
+#	$(INTLLIBS)
 
 .PHONY: files
 
