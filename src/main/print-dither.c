@@ -171,6 +171,7 @@ typedef struct dither
   int d_cutoff;			/* When ordered dither is used, threshold */
 				/* above which no randomness is used. */
   double adaptive_input;
+  int adaptive_input_set;
   int adaptive_limit;
 
   int x_aspect;			/* Aspect ratio numerator */
@@ -200,40 +201,26 @@ typedef struct dither
   stp_vars_t v;
 } dither_t;
 
-static void stp_dither_monochrome(const unsigned short *, int, dither_t *,
-				  int, int);
-static void stp_dither_monochrome_very_fast(const unsigned short *, int,
-					    dither_t *, int, int);
-static void stp_dither_black_fast(const unsigned short *, int, dither_t *,
-				  int, int);
-static void stp_dither_black_very_fast(const unsigned short *, int, dither_t *,
-				       int, int);
-static void stp_dither_black_ordered(const unsigned short *, int, dither_t *,
-				     int, int);
-static void stp_dither_black_ed(const unsigned short *, int, dither_t *,
-				int, int);
-static void stp_dither_black_et(const unsigned short *, int, dither_t *,
-				int, int);
-static void stp_dither_cmyk_fast(const unsigned short *, int, dither_t *,
-				 int, int);
-static void stp_dither_cmyk_very_fast(const unsigned short *, int, dither_t *,
-				      int, int);
-static void stp_dither_cmyk_ordered(const unsigned short *, int, dither_t *,
-				    int, int);
-static void stp_dither_cmyk_ed(const unsigned short *, int, dither_t *,
-			       int, int);
-static void stp_dither_cmyk_et(const unsigned short *, int, dither_t *,
-				   int, int);
-static void stp_dither_raw_cmyk_fast(const unsigned short *, int, dither_t *,
-				     int, int);
-static void stp_dither_raw_cmyk_very_fast(const unsigned short *, int,
-					  dither_t *, int, int);
-static void stp_dither_raw_cmyk_ordered(const unsigned short *, int,
-					dither_t *, int, int);
-static void stp_dither_raw_cmyk_ed(const unsigned short *, int, dither_t *,
-				   int, int);
-static void stp_dither_raw_cmyk_et(const unsigned short *, int, dither_t *,
-				   int, int);
+#define DECLARE_DITHERFUNC(f) \
+static void f(const unsigned short *, int, dither_t *, int, int)
+
+DECLARE_DITHERFUNC(stp_dither_monochrome);
+DECLARE_DITHERFUNC(stp_dither_monochrome_very_fast);
+DECLARE_DITHERFUNC(stp_dither_black_fast);
+DECLARE_DITHERFUNC(stp_dither_black_very_fast);
+DECLARE_DITHERFUNC(stp_dither_black_ordered);
+DECLARE_DITHERFUNC(stp_dither_black_ed);
+DECLARE_DITHERFUNC(stp_dither_black_et);
+DECLARE_DITHERFUNC(stp_dither_cmyk_fast);
+DECLARE_DITHERFUNC(stp_dither_cmyk_very_fast);
+DECLARE_DITHERFUNC(stp_dither_cmyk_ordered);
+DECLARE_DITHERFUNC(stp_dither_cmyk_ed);
+DECLARE_DITHERFUNC(stp_dither_cmyk_et);
+DECLARE_DITHERFUNC(stp_dither_raw_cmyk_fast);
+DECLARE_DITHERFUNC(stp_dither_raw_cmyk_very_fast);
+DECLARE_DITHERFUNC(stp_dither_raw_cmyk_ordered);
+DECLARE_DITHERFUNC(stp_dither_raw_cmyk_ed);
+DECLARE_DITHERFUNC(stp_dither_raw_cmyk_et);
 
 
 #define CHANNEL(d, c) ((d)->channel[(c)])
@@ -516,6 +503,7 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
   d->y_aspect = vertical_aspect;
   d->transition = 1.0;
   d->adaptive_input = .75;
+  d->adaptive_input_set = 0;
 
   if (d->dither_type == D_VERY_FAST)
     stp_dither_set_iterated_matrix(d, 2, DITHER_FAST_STEPS, sq2, 0, 2, 4);
@@ -701,6 +689,7 @@ stp_dither_set_adaptive_limit(void *vd, double limit)
 {
   dither_t *d = (dither_t *) vd;
   d->adaptive_input = limit;
+  d->adaptive_input_set = 1;
   d->adaptive_limit = d->density * limit;
 }
 
@@ -824,8 +813,10 @@ stp_dither_finalize_ranges(dither_t *d, dither_channel_t *s)
       else
 	s->ranges[i].is_equal = 1;
 
-      if (s->ranges[i].lower->dot_size > s->maxdot) s->maxdot = s->ranges[i].lower->dot_size;
-      if (s->ranges[i].upper->dot_size > s->maxdot) s->maxdot = s->ranges[i].upper->dot_size;
+      if (s->ranges[i].lower->dot_size > s->maxdot)
+	s->maxdot = s->ranges[i].lower->dot_size;
+      if (s->ranges[i].upper->dot_size > s->maxdot)
+	s->maxdot = s->ranges[i].upper->dot_size;
 
       stp_dprintf(STP_DBG_INK, d->v,
 		  "    level %d value[0] %d value[1] %d range[0] %d range[1] %d\n",
@@ -839,6 +830,17 @@ stp_dither_finalize_ranges(dither_t *d, dither_channel_t *s)
 		  "       rangespan %d valuespan %d same_ink %d equal %d\n",
 		  s->ranges[i].range_span, s->ranges[i].value_span,
 		  s->ranges[i].is_same_ink, s->ranges[i].is_equal);
+      if (!d->adaptive_input_set && i > 0 &&
+	  s->ranges[i].lower->range >= d->adaptive_limit)
+	{
+	  d->adaptive_limit = s->ranges[i].lower->range + 1;
+	  if (d->adaptive_limit > 65535)
+	    d->adaptive_limit = 65535;
+	  d->adaptive_input = (double) d->adaptive_limit / (double) d->density;
+	  stp_dprintf(STP_DBG_INK, d->v,
+		      "Setting adaptive limit to %d, input %f\n",
+		      d->adaptive_limit, d->adaptive_input);
+	}
     }
   if (s->nlevels == 1 && s->ranges[0].upper->bits == 1 &&
       s->ranges[0].upper->subchannel == 0)
