@@ -1,3 +1,105 @@
+2000-10-18	<rlk@sourceforge.net>
+
+	Files:	Ghost/README (1.52) (+35 -26)
+	
+	Clarifications
+	
+2000-10-18	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.265) (+6 -6)
+	
+	116864 Part of bottom edge goes onto second page (still)
+	
+2000-10-17	<rlk@sourceforge.net>
+
+	Files:	gimp.m4 (1.1) ( )
+	
+	A (hopefully) safe gimp.m4 for use with aclocal
+	
+2000-10-17	<easysw@sourceforge.net>
+
+	Files:	cups/epson.c (1.7) (+32 -7)
+		cups/genppd.c (1.13) (+7 -7)
+	
+	Fixed PPD file generation - sscanf() commands didn't work right.
+	
+	The epson backend would error out on backchannel read errors, resulting
+	in no output.
+	
+	The epson backend didn't handle Mandrake 7.x's incorrect /dev/usb/usblp#
+	filenames.
+	
+2000-10-17	<rlk@sourceforge.net>
+
+	Files:	print-weave.c (1.7) (+2 -2)
+	
+	Remove C++ comment
+	
+2000-10-16	<easysw@sourceforge.net>
+
+	Files:	cups/calibrate.c (1.7) (+68 -3)
+		cups/rastertoprinter.c (1.8) (+4 -3)
+	
+	Added patch from Till for calibrate utility, with corrected grammer,
+	spelling, and code...
+	
+	Added cast to buffer in call to cupsRasterReadPixels()...
+	
+2000-10-16	<easysw@sourceforge.net>
+
+	Files:	cups/README.txt (1.7) (+3 -3)
+	
+	Updated README to indicate requirement for CUPS 1.1.4.
+	
+2000-10-16	<rlk@sourceforge.net>
+
+	Files:	printers.xml (1.28) (+402 -402)
+	
+	Sort the printers in a slightly different order (alphabetic by
+	manufacturer, and then by printer type name).
+	
+2000-10-16	<rlk@sourceforge.net>
+
+	Files:	print-pcl.c (1.87) (+8 -2)
+	
+	116841 LaserJet 4 output offset upwards
+	
+2000-10-14	<rlk@sourceforge.net>
+
+	Files:	print-pcl.c (1.86) (+3 -3)
+	
+	116840 LaserJet 4 can do 600 DPI
+	cpbs code review comment
+	
+2000-10-14	<rlk@sourceforge.net>
+
+	Files:	escputil.c (1.15) (+4 -4)
+	
+	116851 escputil has unnecessary GNU getopt dependency
+	
+2000-10-14	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.70) (+1 -1)
+		printers.xml (1.27) (+8 -0)
+		print.c (1.128) (+21 -6)
+		gtk_main_window.c (1.58) (+14 -1)
+		gimp_main_window.c (1.68) (+14 -1)
+		escputil.c (1.14) (+4 -2)
+	
+	Proposed fixes for:
+	
+	116840 LaserJet 4 can do 600 DPI
+	116842 bsearch not called correctly
+	116843 cups files not getting cleaned properly
+	116846 scaling doesn't reload properly in PPI mode
+	116851 escputil has unnecessary GNU library dependency
+	
+2000-10-13	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.54) (+6 -0)
+	
+	4.0b3 changelog
+	
 2000-10-12	<rlk@sourceforge.net>
 
 	Files:	ChangeLog (1.53) (+60 -0)
