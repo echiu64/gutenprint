@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.106  2000/03/02 03:12:20  khk
+ *   Cleaned up some compiler warnings in print-escp2.c
+ *
  *   Revision 1.105  2000/03/02 03:07:27  rlk
  *   Clean up options a bit
  *
@@ -777,10 +780,10 @@ typedef struct {
   int vertical_passes;
 } res_t;
 
-const 
 #ifndef ESCP2_GHOST
 static
 #endif
+const 
 res_t escp2_reslist[] = {
   { "360 DPI", 360, 360, 0, 1, 1 },
   { "720 DPI Microweave", 720, 720, 0, 1, 1 },
@@ -872,7 +875,7 @@ escp2_parameters(int  model,		/* I - Printer model */
 
   if (strcmp(name, "PageSize") == 0)
     {
-      int length_limit, width_limit;
+      unsigned int length_limit, width_limit;
       const papersize_t *papersizes = get_papersizes();
       valptrs = malloc(sizeof(char *) * known_papersizes());
       *count = 0;
@@ -2397,12 +2400,12 @@ typedef struct {
  * black, magenta, cyan, yellow, light magenta, light cyan
  */
 
-const static int color_indices[16] = { 0, 1, 2, -1,
+static const int color_indices[16] = { 0, 1, 2, -1,
 				       3, -1, -1, -1,
 				       -1, 4, 5, -1,
 				       -1, -1, -1, -1 };
-const static int colors[6] = { 0, 1, 2, 4, 1, 2 };
-const static int densities[6] = { 0, 0, 0, 0, 1, 1 };
+static const int colors[6] = { 0, 1, 2, 4, 1, 2 };
+static const int densities[6] = { 0, 0, 0, 0, 1, 1 };
 
 #ifndef WEAVETEST
 static int

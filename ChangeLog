@@ -1,3 +1,7 @@
+2000-03-01	Karl Heinz Kremer <khk@khk.net>
+
+		Cleaned up some compiler warnings in print-escp2.c
+
 2000-02-26	Karl Heinz Kremer <khk@khk.net>
 
 		Fixed a bug in print-ps.c where newlines were missing
