@@ -184,32 +184,31 @@ ESC . COMPRESS1 VSEP1 HSEP1 LINES1 WIDTH2 data...
 
 ESC i COLOR1 COMPRESS1 BITS1 BYTES2 LINES2 data...
 	Print data in the newer printers (that support variable dot
-	size).  COLOR is the color: 0=black, 1=magenta, 2=cyan,
-	4=yellow, 17=light magenta, 18=light cyan.  COMPRESS signifies
-	the compression mode: 0=no compression, 1=TIFF compression
-	(incorrectly documented as "run length encoded"), 2=TIFF
-	compression with a special command set.  BITS is the number of
-	bits per pixel.  BYTES is the number of bytes wide for each
-	row (ceiling(BITS * width_of_row, 8)) -- note that this is
-	different from the ESC. command above.  LINES is the number of
-	lines to be printed.  This command is the only way to get
-	variable dot size printing.  In variable dot mode, the size of
-	the dots increases as the value (1, 2, or 3) increases.
+	size), and Stylus Pro models.  COLOR is the color: 0=black,
+	1=magenta, 2=cyan, 4=yellow, 17=light magenta, 18=light cyan.
+	COMPRESS signifies the compression mode: 0=no compression,
+	1=TIFF compression (incorrectly documented as "run length
+	encoded"), 2=TIFF compression with a special command set.
+	BITS is the number of bits per pixel.  BYTES is the number of
+	bytes wide for each row (ceiling(BITS * width_of_row, 8)) --
+	note that this is different from the ESC. command above.
+	LINES is the number of lines to be printed.  This command is
+	the only way to get variable dot size printing.  In variable
+	dot mode, the size of the dots increases as the value (1, 2,
+	or 3) increases.
 
 ESC (D BC=4 BASE2 VERTICAL1 HORIZONTAL1
-	Set printer horizontal and vertical spacing.  This command is
-	not documented except in the Stylus Pro 9000 manual.  It only
-	applies to variable dot size printers in softweave mode (and
-	possibly other high end printers).  BASE is the base unit for
-	this command; it must be 14400.  VERTICAL is the distance in
-	these units between printed rows; it should be
+	Set printer horizontal and vertical spacing.  It only applies
+	to variable dot size printers in softweave mode (and possibly
+	other high end printers).  BASE is the base unit for this
+	command; it must be 14400.  VERTICAL is the distance in these
+	units between printed rows; it should be
 	(separation_in_nozzles * BASE / 720).  HORIZONTAL is the
 	horizontal separation between dots in a row.  Depending upon
 	the printer, this should be either (14400 / 720) or (14400 /
-	360).  It is not entirely clear why this command exists.  The
-	Stylus Pro 9000 manual suggests that the settings should match
-	the chosen resolution, but that is apparently not the case (or
-	not always the case) on other printers.
+	360).  The Stylus Pro 9000 manual suggests that the settings
+	should match the chosen resolution, but that is apparently not
+	the case (or not always the case) on other printers.
 
 ESC (R BC=8 00 R E M O T E 1
 	Enters "remote mode".  This is a special, undocumented command set
@@ -282,15 +281,23 @@ ESC @
 Remote Mode Commands
 ====================
 
-The following description of remote commands comes out of an examination of
-the sequences used by the printer utilities bundled with the Windows drivers
-for the ESC740.  It is largely speculative as these commands are not
-documented in the Epson documentation we have access to.
+The following description of remote commands comes out of an
+examination of the sequences used by the printer utilities bundled
+with the Windows drivers for the ESC740, and from other sources (some
+Epson manuals, experimentation, analysis of print files).  It is
+largely speculative as these commands are not all documented in the
+Epson documentation we have access to.  Generally, newer manuals
+provide more thorough documentation.
 
 Remote command mode is entered when the printer is sent the following
 sequence:
 
      ESC (R BC=8 00 R E M O T E 1
+
+Remote mode commands are then sent, and terminated with the following
+sequence:
+
+     ESC 00 00 00
 
 All remote mode commands must be sent before the initial ESC (G
 command is sent. 
@@ -298,25 +305,13 @@ command is sent.
 This introductory sequence is then followed by a sequence of commands.
 Each command is constructed as follows:
 
-   * Two bytes indicating the function.  The sequence is terminated by
-     a command with function ESC 00 00 00; all other commands are two
-     capital letters in ASCII.
+   * Two ASCII bytes indicating the function
 
-   * a byte count for the parameters
+   * a byte count (two bytes, little-endian) for the parameters
 
    * binary parameters, if any
 
-Note that this makes the sequence terminator:
-
-   ESC 00 BC=0
-
-... or in other words ...
-
-   ESC 00 00 00
-
 This is a list of all remote commands we have seen:
-
-   * ESC 00 BC=0                     exit from remote mode
 
    * NC BC=2 00 00                   print a nozzle check pattern
 
@@ -346,35 +341,54 @@ This is a list of all remote commands we have seen:
 
 					00 = clean all heads
 					01 = clean black head
-					02 = clean colour heads
+					02 = clean color heads
 
 				     While xx = 00 is probably supported
 				     by all printers, xx = 01 and 02
 				     may well not be.
 
-   * DT BC=3 00 xx 00                print an alignment pattern.
+   * DT BC=3 00 xx 00                Print an alignment pattern.
 				     There are three patterns, which
 				     are picked via the choice of xx.
 				     Pattern 0 is coarse, pattern 1 is
 				     medium, and pattern 2 is fine.
 
-   * DA BC=4 00 xx 00 yy             results of alignment pattern was that
-                                     group yy was the one that was
-				     closest to aligned.  xx refers to
-				     the choice of pattern, from above.
+   * DU BC=6 00 xx 00 09 00 yy	     Print another alignment pattern.
+				     It isn't entirely clear what xx
+				     and yy are, but it appears that
+				     xx takes on the values 1 and 2,
+				     and yy takes on the values 0 and
+				     1.  This may only work on the 580
+				     and/or 480.
 
-   * SV BC=0                         This one is used when you say "finished"
-                                     to a series of alignment checks once
-                                     you are satisfied.  I bet it means
-                                     "SaVe" the alignment in NVRAM.
+   * DA BC=4 00 xx 00 yy             Set results for the first
+				     alignment pattern.  xx is the
+				     pattern (1-3); yy is the best
+				     choice from the set (1-7 or
+				     1-15).  This does not save to
+				     NVRAM, so when the printer is
+				     powered off, the setting will be
+				     lost.
+
+   * DA BC=6 00 xx 00 yy 09 00	     Set results for alternate
+				     alignment pattern.  xx appears to
+				     be the pass, and yy appears to be
+				     the optimum pattern.  This does
+				     not save to NVRAM, so when the
+				     printer is powered off, the
+				     setting will be lost.
+
+   * SV BC=0                         Save the current settings to NVRAM.
 
    * RS BC=1 01			     Reset the printer.
 
    * IQ BC=1 01			     Get ink quantity.  This requires
 				     direct access to the printer
 				     port.  The return looks like
-				     IQ:KKCCMMYYccmm, where each pair
-				     of digits are hexadecimal
+				     IQ:KKCCMMYY or IQ:KKCCMMYYccmm
+				     (for 4-color and 6-color printers
+				     respectively), where each pair of
+				     digits are hexadecimal
 				     representations of percent.
 
 The following two commands have been observed on an STP 870.
@@ -705,23 +719,24 @@ and the job finishes with
      IR 00 02
      LD
 
-For different paper type settings on the STP 870, the arguments to
-SN vary.  The arguments to the first and third SN commands are as
-outlined in the description of the SN command above; the arguments to the
-second ("platten gap") are "00 01 01" for thick papers ("matte paper -
-heavyweight", "photo paper" and "premium glossy photo paper") and "00
-01 00" for all others.
+For different paper type settings on the STP 870, the arguments to SN
+vary.  The arguments to the first and third SN commands are as
+outlined in the description of the SN command above; the arguments to
+the second ("platen gap") are "00 01 01" for thick papers ("matte
+paper - heavyweight", "photo paper" and "premium glossy photo paper")
+and "00 01 00" for all others.
 
 For roll-mode printing, the STP 870's sequence changes as follows.
-IR's arguments become "00 01" in the header, and "00 00" after the job,
-and EX's last argument changes from 00 to 01.
+IR's arguments become "00 01" in the header, and "00 00" after the
+job, and EX's last argument changes from 00 to 01.
 
 For zero-margin printing on the STP 870, the arguments to FP become
-"00 0xb0 0xff".  This moves the origin about 5.5mm to the left, to
-a point one tenth of an inch to the left of the left-hand edge of the
-paper, allowing printing right up to (and beyond) the edge of the paper.
-Some printers (at least the STP 870) include white absorbent pads at the
-left margin position and other positions (89mm and 100mm on the STP 870)
-to soak up ink which misses the edge of the paper.  Printing off the edge
-of paper of a width not aligned with a pad could result in making a mess
-of the inside of the printer and ink getting on the reverse of the paper.
+"00 0xb0 0xff".  This moves the origin about 5.5mm to the left, to a
+point one tenth of an inch to the left of the left-hand edge of the
+paper, allowing printing right up to (and beyond) the edge of the
+paper.  Some printers (at least the STP 870) include white absorbent
+pads at the left margin position and other positions (89mm and 100mm
+on the STP 870) to soak up ink which misses the edge of the paper.
+Printing off the edge of paper of a width not aligned with a pad could
+result in making a mess of the inside of the printer and ink getting
+on the reverse of the paper.
