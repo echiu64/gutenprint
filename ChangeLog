@@ -1,5 +1,11 @@
 2000-11-02	<rlk@sourceforge.net>
 
+	Files:	ChangeLog (1.56.2.5) (+554 -0)
+	
+	print 4.0.1 reissue
+	
+2000-11-02	<rlk@sourceforge.net>
+
 	Files:	Makefile.am (1.70.2.3) (+1 -1)
 	
 	Need the source for the man page, not the man page itself, at top level.
