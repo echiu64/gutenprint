@@ -122,6 +122,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
   },
   {
+    "AdjustDotsize", N_("Adjust dot size as necessary"),
+    N_("Adjust dot size as necessary to achieve desired density"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_OUTPUT,
+    STP_PARAMETER_LEVEL_ADVANCED4, 1, 1, -1
+  },
+  {
     "LightCyanTransition", N_("Light Cyan Transition"),
     N_("Light Cyan Transition"),
     STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
@@ -667,6 +673,10 @@ escp2_parameters(stp_const_vars_t v, const char *name,
       else
 	description->is_active = 0;
     }
+  else if (strcmp(name, "AdjustDotsize") == 0)
+    {
+      description->deflt.boolean = 1;
+    }
   else if (strcmp(name, "LightCyanTransition") == 0 ||
 	   strcmp(name, "LightMagentaTransition") == 0 ||
 	   strcmp(name, "DarkYellowTransition") == 0 ||
@@ -697,10 +707,16 @@ escp2_parameters(stp_const_vars_t v, const char *name,
       /* For now, work around a problem with the GUI */
       /* whereby we can't activate or deactivate an option based on a */
       /* combo box setting -- rlk 20030317 */
-      description->is_active = 1;
-      description->bounds.dbl.lower = 0;
-      description->bounds.dbl.upper = 5.0;
-      description->deflt.dbl = 1.0;
+      if (stp_get_output_type(v) == OUTPUT_GRAY &&
+	  strcmp(name, "GrayTransition") != 0)
+	description->is_active = 0;
+      else
+	{
+	  description->is_active = 1;
+	  description->bounds.dbl.lower = 0;
+	  description->bounds.dbl.upper = 5.0;
+	  description->deflt.dbl = 1.0;
+	}
 #endif
     }
 }
@@ -892,7 +908,10 @@ adjust_density_and_ink_type(stp_vars_t v, stp_image_t *image)
     {
       if (stp_check_int_parameter(v, "escp2_ink_type", STP_PARAMETER_ACTIVE) ||
 	  stp_check_int_parameter(v, "escp2_density", STP_PARAMETER_ACTIVE) ||
-	  stp_check_int_parameter(v, "escp2_bits", STP_PARAMETER_ACTIVE))
+	  stp_check_int_parameter(v, "escp2_bits", STP_PARAMETER_ACTIVE) ||
+	  (stp_check_boolean_parameter(v, "AdjustDotsize",
+				       STP_PARAMETER_ACTIVE) &&
+	   ! stp_get_boolean_parameter(v, "AdjustDotsize")))
 	{
 	  stp_set_float_parameter(v, "Density", 1.0);
 	}

@@ -107,7 +107,7 @@ static float_param_t float_parameters[] =
       "LinearContrast", N_("Linear Contrast Adjustment"),
       N_("Use linear vs. fixed end point contrast adjustment"),
       STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1
+      STP_PARAMETER_LEVEL_ADVANCED3, 1, 1, -1
     }, 0.0, 0.0, 0.0, 0
   },
   {

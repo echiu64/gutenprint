@@ -2432,6 +2432,15 @@ do_color_updates (void)
 	      break;
 	    case STP_PARAMETER_TYPE_STRING_LIST:
 	      if (stp_check_string_parameter(pv->v, opt->fast_desc->name,
+					     STP_PARAMETER_INACTIVE))
+		plist_build_combo(opt->info.list.combo, opt->info.list.label,
+				  opt->info.list.params, opt->is_active,
+				  (stp_get_string_parameter
+				   (pv->v, opt->fast_desc->name)),
+				  opt->info.list.default_val, combo_callback,
+				  &(opt->info.list.callback_id),
+				  NULL, opt);
+	      if (stp_check_string_parameter(pv->v, opt->fast_desc->name,
 					     STP_PARAMETER_ACTIVE) ||
 		  opt->fast_desc->is_mandatory)
 		set_combo_active(opt, TRUE, TRUE);
@@ -2439,6 +2448,11 @@ do_color_updates (void)
 		set_combo_active(opt, FALSE, TRUE);
 	      break;
 	    case STP_PARAMETER_TYPE_BOOLEAN:
+	      if (stp_check_boolean_parameter(pv->v, opt->fast_desc->name,
+					      STP_PARAMETER_INACTIVE))
+		gtk_toggle_button_set_active
+		  (GTK_TOGGLE_BUTTON(opt->info.bool.checkbox),
+		   stp_get_boolean_parameter(pv->v, opt->fast_desc->name));
 	      if (stp_check_boolean_parameter(pv->v, opt->fast_desc->name,
 					      STP_PARAMETER_ACTIVE) ||
 		  opt->fast_desc->is_mandatory)
@@ -4068,15 +4082,44 @@ set_color_defaults (void)
   for (i = 0; i < current_option_count; i++)
     {
       option_t *opt = &(current_options[i]);
-      if (opt->fast_desc->p_type == STP_PARAMETER_TYPE_DOUBLE &&
-	  opt->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL &&
-	  opt->fast_desc->p_class == STP_PARAMETER_CLASS_OUTPUT)
+      if (opt->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL &&
+	  opt->fast_desc->p_class == STP_PARAMETER_CLASS_OUTPUT &&
+	  opt->is_active)
 	{
-	  stp_parameter_activity_t active =
-	    stp_get_float_parameter_active(pv->v, opt->fast_desc->name);
-	  stp_set_float_parameter(pv->v, opt->fast_desc->name,
-				  opt->info.flt.deflt);
-	  stp_set_float_parameter_active(pv->v, opt->fast_desc->name, active);
+	  stp_parameter_activity_t active;
+	  switch (opt->fast_desc->p_type)
+	    {
+	    case STP_PARAMETER_TYPE_DOUBLE:
+	      active =
+		stp_get_float_parameter_active(pv->v, opt->fast_desc->name);
+	      stp_set_float_parameter(pv->v, opt->fast_desc->name,
+				      opt->info.flt.deflt);
+	      stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
+					     active);
+	      break;
+	    case STP_PARAMETER_TYPE_BOOLEAN:
+	      active =
+		stp_get_boolean_parameter_active(pv->v, opt->fast_desc->name);
+	      fprintf(stderr, "Setting boolean %s to %d\n",
+		      opt->fast_desc->name, opt->info.bool.deflt);
+	      stp_set_boolean_parameter(pv->v, opt->fast_desc->name,
+					opt->info.bool.deflt);
+	      stp_set_boolean_parameter_active(pv->v, opt->fast_desc->name,
+					       active);
+	      break;
+	    case STP_PARAMETER_TYPE_STRING_LIST:
+	      active =
+		stp_get_string_parameter_active(pv->v, opt->fast_desc->name);
+	      fprintf(stderr, "Setting string %s to %s\n",
+		      opt->fast_desc->name, opt->info.list.default_val);
+	      stp_set_string_parameter(pv->v, opt->fast_desc->name,
+				       opt->info.list.default_val);
+	      stp_set_string_parameter_active(pv->v, opt->fast_desc->name,
+					      active);
+	      break;
+	    default:
+	      break;
+	    }
 	}
     }
 
