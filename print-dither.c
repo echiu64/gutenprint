@@ -1245,7 +1245,7 @@ static inline int
 print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	    int adjusted, int x, int y, unsigned char *c, unsigned char *lc,
 	    unsigned char bit, int length, unsigned randomizer, int dontprint,
-	    unsigned *ink_budget, dither_matrix_t *pick_matrix,
+	    int *ink_budget, dither_matrix_t *pick_matrix,
 	    dither_matrix_t *dither_matrix, int dither_type)
 {
   int i;
@@ -1488,7 +1488,7 @@ static inline int
 print_color_fast(dither_t *d, dither_color_t *rv, int base, int density,
 		 int adjusted, int x, int y, unsigned char *c,
 		 unsigned char *lc, unsigned char bit, int length,
-		 unsigned randomizer, int dontprint, unsigned *ink_budget,
+		 unsigned randomizer, int dontprint, int *ink_budget,
 		 dither_matrix_t *pick_matrix, dither_matrix_t *dither_matrix,
 		 int dither_type)
 {
@@ -1655,7 +1655,7 @@ dither_black_fast(const unsigned short   *gray,	/* I - Grayscale pixels */
 
   for (x = 0; x < d->dst_width; x++)
     {
-      unsigned ink_budget = d->ink_limit;
+      int ink_budget = d->ink_limit;
 
       k = 65535 - *gray;
       print_color_fast(d, &(d->k_dither), k, k, k, x, row, kptr, NULL, bit,
@@ -1742,7 +1742,7 @@ dither_black(const unsigned short   *gray,	/* I - Grayscale pixels */
 	 kerror0 += direction,
 	 kerror1 += direction)
     {
-      unsigned ink_budget = d->ink_limit;
+      int ink_budget = d->ink_limit;
 
       k = 65535 - *gray;
       ok = k;

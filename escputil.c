@@ -233,7 +233,7 @@ do_print_cmd(void)
   FILE *pfile;
   int bytes = 0;
   int retries = 0;
-  char *command;
+  char command[1024];
   memcpy(printer_cmd + bufpos, "\f\033\000\033\000", 5);
   bufpos += 5;
   if (raw_device)
@@ -248,29 +248,20 @@ do_print_cmd(void)
     }
   else
     {
-#if defined(LPR_COMMAND)
-      if (printer == NULL)
-	{
-	  command = malloc(strlen(LPR_COMMAND) + 32);
-	  sprintf(command, "%s -l", LPR_COMMAND);
-	}
+      if (!access("/bin/lpr", X_OK) ||
+          !access("/usr/bin/lpr", X_OK) ||
+          !access("/usr/bsd/lpr", X_OK))
+        {
+        if (printer == NULL)
+          strcpy(command, "lpr -l");
+	else
+          sprintf(command, "lpr -P%s -l", printer);
+        }
+      else if (printer == NULL)
+	strcpy(command, "lp -s -oraw");
       else
-	{
-	  command = malloc(strlen(LPR_COMMAND) + strlen(printer) + 32);
-	  sprintf(command, "%s -P%s -l", LPR_COMMAND, printer);
-	}
-#elif defined(LP_COMMAND)
-      if (printer == NULL)
-	{
-	  command = malloc(strlen(LP_COMMAND) + 32);
-	  sprintf(command, "%s -s -oraw", LP_COMMAND);
-	}
-      else
-	{
-	  command = malloc(strlen(LP_COMMAND) + 32);
-	  sprintf(command, "%s -s -oraw -d%s", LP_COMMAND, printer);
-	}
-#endif
+	sprintf(command, "lp -s -oraw -d%s", printer);
+
       if ((pfile = popen(command, "w")) == NULL)
 	{
 	  fprintf(stderr, "Cannot print to printer %s with %s\n", printer,
@@ -630,7 +621,6 @@ do_align(void)
       {
       case 'r':
 	goto one;
-	break;
       case 'h':
       case '?':
 	do_align_help();
@@ -638,7 +628,6 @@ do_align(void)
       case '\n':
       case '\000':
 	goto reread1;
-	break;
       default:
 	break;
       }
@@ -694,7 +683,6 @@ do_align(void)
 	fgets(inbuf, 15, stdin);
 	putc('\n', stdout);
 	goto two;
-	break;
       case 'h':
       case 'H':
       case '?':
@@ -703,7 +691,6 @@ do_align(void)
       case '\n':
       case '\000':
 	goto reread2;
-	break;
       default:
 	break;
       }
@@ -752,7 +739,6 @@ do_align(void)
 	fgets(inbuf, 15, stdin);
 	putc('\n', stdout);
 	goto three;
-	break;
       case 'h':
       case 'H':
       case '?':
@@ -761,7 +747,6 @@ do_align(void)
       case '\n':
       case '\000':
 	goto reread3;
-	break;
       default:
 	break;
       }
@@ -866,7 +851,6 @@ do_align(void)
     default:
       printf("Unrecognized command.\n");
       goto read_final;
-      break;
     }
   printf("Final command was not confirmed.\n");
   goto read_final;

@@ -1271,11 +1271,11 @@ pcl_print(const printer_t *printer,		/* I - Model */
 {
   unsigned char *cmap = v->cmap;
   int		model = printer->model;
-  char 		*resolution = v->resolution;
+  const char	*resolution = v->resolution;
   const char	*media_size;
-  char 		*media_type = v->media_type;
-  char 		*media_source = v->media_source;
-  char 		*ink_type = v->ink_type;
+  const char	*media_type = v->media_type;
+  const char	*media_source = v->media_source;
+  const char	*ink_type = v->ink_type;
   int 		output_type = v->output_type;
   int		orientation = v->orientation;
   double 	scaling = v->scaling;

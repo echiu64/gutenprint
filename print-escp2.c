@@ -1138,16 +1138,12 @@ escp2_ink_type(int model, int resolution, int microweave)
 	{
 	case 180:
 	  return model_capabilities[model].dot_sizes.dot_180;
-	  break;
 	case 360:
 	  return model_capabilities[model].dot_sizes.dot_360_microweave;
-	  break;
 	case 720:
 	  return model_capabilities[model].dot_sizes.dot_720_microweave;
-	  break;
 	case 1440:
 	  return model_capabilities[model].dot_sizes.dot_1440_microweave;
-	  break;
 	default:
 	  return -1;
 	}
@@ -1158,16 +1154,12 @@ escp2_ink_type(int model, int resolution, int microweave)
 	{
 	case 180:
 	  return model_capabilities[model].dot_sizes.dot_180;
-	  break;
 	case 360:
 	  return model_capabilities[model].dot_sizes.dot_360;
-	  break;
 	case 720:
 	  return model_capabilities[model].dot_sizes.dot_720;
-	  break;
 	case 1440:
 	  return model_capabilities[model].dot_sizes.dot_1440;
-	  break;
 	default:
 	  return -1;
 	}
@@ -1183,41 +1175,31 @@ escp2_density(int model, int xdpi, int ydpi, int microweave)
 	{	
 	case 180:
 	  return model_capabilities[model].densities.d_180_180;
-	  break;
 	case 360:
 	  return model_capabilities[model].densities.d_360_360_micro;
-	  break;
 	case 720:
 	  return model_capabilities[model].densities.d_720_720_micro;
-	  break;
 	case 1440:
 	  return model_capabilities[model].densities.d_1440_720_micro;
-	  break;
 	}
     }
   switch (xdpi)
     {
     case 180:
       return model_capabilities[model].densities.d_180_180;
-      break;
     case 360:
       return model_capabilities[model].densities.d_360_360;
-      break;
     case 720:
       return model_capabilities[model].densities.d_720_720;
-      break;
     case 1440:
       switch (ydpi)
 	{
 	case 720:
 	  return model_capabilities[model].densities.d_1440_720;
-	  break;
 	case 1440:
 	  return model_capabilities[model].densities.d_1440_1440;
-	  break;
 	case 2880:
 	  return model_capabilities[model].densities.d_1440_2880;
-	  break;
 	}
     }
   return 0;
@@ -1238,32 +1220,24 @@ escp2_inks(int model, int xdpi, int colors, int bits)
 	    {
 	    case 180:
 	      return inks->s_180_4;
-	      break;
 	    case 360:
 	      return inks->s_360_4;
-	      break;
 	    case 720:
 	      return inks->s_720_4;
-	      break;
 	    case 1440:
 	      return inks->s_1440_4;
-	      break;
 	    }
 	case 6:
 	  switch (xdpi)
 	    {
 	    case 180:
 	      return inks->s_180_6;
-	      break;
 	    case 360:
 	      return inks->s_360_6;
-	      break;
 	    case 720:
 	      return inks->s_720_6;
-	      break;
 	    case 1440:
 	      return inks->s_1440_6;
-	      break;
 	    }
 	}
     case 2:
@@ -1275,32 +1249,24 @@ escp2_inks(int model, int xdpi, int colors, int bits)
 	    {
 	    case 180:
 	      return inks->v_180_4;
-	      break;
 	    case 360:
 	      return inks->v_360_4;
-	      break;
 	    case 720:
 	      return inks->v_720_4;
-	      break;
 	    case 1440:
 	      return inks->v_1440_4;
-	      break;
 	    }
 	case 6:
 	  switch (xdpi)
 	    {
 	    case 180:
 	      return inks->v_180_6;
-	      break;
 	    case 360:
 	      return inks->v_360_6;
-	      break;
 	    case 720:
 	      return inks->v_720_6;
-	      break;
 	    case 1440:
 	      return inks->v_1440_6;
-	      break;
 	    }
 	}
     }
@@ -1759,11 +1725,11 @@ escp2_print(const printer_t *printer,		/* I - Model */
 {
   unsigned char *cmap = v->cmap;
   int		model = printer->model;
-  char 		*resolution = v->resolution;
-  char		*media_type = v->media_type;
+  const char	*resolution = v->resolution;
+  const char	*media_type = v->media_type;
   int 		output_type = v->output_type;
   int		orientation = v->orientation;
-  char          *ink_type = v->ink_type;
+  const char	*ink_type = v->ink_type;
   double	scaling = v->scaling;
   int		top = v->top;
   int		left = v->left;

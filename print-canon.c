@@ -601,9 +601,9 @@ canon_cmd(FILE *prn, /* I - the printer         */
 
 static void
 canon_init_printer(FILE *prn, canon_cap_t caps,
-		   int output_type, char *media_str,
+		   int output_type, const char *media_str,
 		   const vars_t *v, int print_head,
-		   char *source_str,
+		   const char *source_str,
 		   int xdpi, int ydpi,
 		   int page_width, int page_height,
 		   int top, int left,
@@ -787,12 +787,12 @@ canon_print(const printer_t *printer,		/* I - Model */
 {
   unsigned char *cmap = v->cmap;
   int		model = printer->model;
-  char 		*resolution = v->resolution;
-  char          *media_type = v->media_type;
-  char          *media_source = v->media_source;
+  const char	*resolution = v->resolution;
+  const char	*media_type = v->media_type;
+  const char	*media_source = v->media_source;
   int 		output_type = v->output_type;
   int		orientation = v->orientation;
-  char          *ink_type = v->ink_type;
+  const char	*ink_type = v->ink_type;
   double 	scaling = v->scaling;
   int		top = v->top;
   int		left = v->left;

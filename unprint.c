@@ -110,6 +110,7 @@ void *mycalloc(size_t count,size_t size){
 
   fprintf(stderr,"Buy some RAM, dude!\n");
   exit(-1);
+  return (NULL); /* MRS: Suppress compiler warnings... */
 }
 
 void *mymalloc(size_t size){
@@ -120,6 +121,7 @@ void *mymalloc(size_t size){
 
   fprintf(stderr,"Buy some RAM, dude!\n");
   exit(-1);
+  return (NULL); /* MRS: Suppress compiler warnings... */
 }
 
 void *myrealloc(void *ptr, size_t size){
@@ -131,6 +133,7 @@ void *myrealloc(void *ptr, size_t size){
 
   fprintf(stderr,"Buy some RAM, dude!\n");
   exit(-1);
+  return (NULL); /* MRS: Suppress compiler warnings... */
 }
 
 int get_bits(unsigned char *p,int index) {
@@ -901,7 +904,6 @@ void parse_escp2(FILE *fp_r){
                 i=(buf[3]<<24)|(buf[2]<<16)|(buf[1]<<8)|buf[0];
                 pstate.xposition=i*(pstate.relative_horizontal_units/
                                      pstate.absolute_horizontal_units);
-            break;
                 break;
               case 'C': /* set page length */
                 break;
@@ -949,8 +951,8 @@ void reverse_bit_order(unsigned char *buf, int n)
 int rle_decode(unsigned char *inbuf, int n, int max)
 {
   unsigned char outbuf[1440*3];
-  char *ib= (char *)inbuf;
-  char cnt;
+  signed char *ib= (signed char *)inbuf;
+  signed char cnt;
   int num;
   int i= 0, j;
   int o= 0;
@@ -1020,12 +1022,12 @@ void parse_canon(FILE *fp_r){
      continue;
    }
    if (ch=='B') {
-     fgets(buf,256*256,fp_r);
-     counter+= strlen(buf);
-     if (!strncmp(buf,"JLSTART",7)) {
-       while (strncmp(buf,"BJLEND",6)) {
-	 fgets(buf,256*256,fp_r);
-	 counter+= strlen(buf);
+     fgets((char *)buf,sizeof(buf),fp_r);
+     counter+= strlen((char *)buf);
+     if (!strncmp((char *)buf,"JLSTART",7)) {
+       while (strncmp((char *)buf,"BJLEND",6)) {
+	 fgets((char *)buf,sizeof(buf),fp_r);
+	 counter+= strlen((char *)buf);
 	 fprintf(stderr,"got BJL-plaintext-command %s",buf);
        }
      } else {
@@ -1117,7 +1119,7 @@ void parse_canon(FILE *fp_r){
 	 /* exit(-1); */
        }
        pstate.current_color= currentcolor;
-       m= rle_decode(buf+1,bufsize-1,256*256-1);
+       m= rle_decode(buf+1,bufsize-1,sizeof(buf)-1);
        /* reverse_bit_order(buf+1,m); */
        pstate.yposition+= currentdelay;
        if (m) update_page(buf+1,m,1,(m*8)/pstate.bpp,currentcolor,
