@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.45  2000/01/25 18:59:24  rlk
+ *   Try to make 440/640/740/900/750/1200 work
+ *
  *   Revision 1.44  2000/01/25 03:19:47  rlk
  *   1) Weaving code for Stylus Photo 1200 and friends (the multi-bit printers).
  *   I don't expect printing to actually work, although it's not impossible that
@@ -377,7 +380,7 @@ typedef model_cap_t model_class_t;
 #define MODEL_PAPER_SIZE_MASK	0x3
 #define MODEL_PAPER_SMALL 	0x0
 #define MODEL_PAPER_LARGE 	0x1
-#define MODEL_PAPER_1200	0x2
+#define MODEL_PAPER_TABLOID	0x2
 
 #define MODEL_IMAGEABLE_MASK	0xc
 #define MODEL_IMAGEABLE_DEFAULT	0x0
@@ -391,6 +394,7 @@ typedef model_cap_t model_class_t;
 #define MODEL_INIT_600		0x30
 #define MODEL_INIT_PHOTO	0x40
 #define MODEL_INIT_440		0x50
+#define MODEL_INIT_PHOTO2	0x60
 
 #define MODEL_HASBLACK_MASK	0x100
 #define MODEL_HASBLACK_YES	0x000
@@ -507,32 +511,32 @@ model_cap_t model_capabilities[] =
    | MODEL_VARIABLE_NORMAL
    | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
   /* Stylus Color 440 */
-  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_COLOR
+  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_440
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL
    | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(21) | MODEL_MAKE_SEPARATION(7)),
   /* Stylus Color 640 */
-  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_COLOR
+  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_440
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
   /* Stylus Color 740 */
-  (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_600 | MODEL_INIT_COLOR
+  (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_600 | MODEL_INIT_440
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_4
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
   /* Stylus Color 900 */
-  (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_600 | MODEL_INIT_COLOR
+  (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_600 | MODEL_INIT_440
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_4
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(96) | MODEL_MAKE_SEPARATION(8)),
   /* Stylus Photo 750 */
-  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO
-   | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
+  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO2
+   | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_4
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(8)),
   /* Stylus Photo 1200 */
-  (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO
+  (MODEL_PAPER_TABLOID | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO2
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
    | MODEL_VARIABLE_4
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(8)),
@@ -714,8 +718,8 @@ escp2_imageable_area(int  model,	/* I - Printer model */
 
 static void
 escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
-		   int use_softweave, int page_length, int page_top,
-		   int page_bottom, int top, int nozzles,
+		   int use_softweave, int page_length, int page_width,
+		   int page_top, int page_bottom, int top, int nozzles,
 		   int nozzle_separation, int horizontal_passes,
 		   int vertical_passes, int bits)
 {
@@ -793,6 +797,7 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 
         if (ydpi > 360 && !use_softweave)
       	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
+	fwrite("\033(S\010\000", 5, 1, prn);
         break;
 
     case MODEL_INIT_PHOTO:
@@ -805,40 +810,91 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 	    fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
 	    if (!use_softweave)
 	      fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
+	    else
+	      fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
 	    fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Microdots */
 	  }
 	else
 	  fwrite("\033(e\002\000\000\003", 7, 1, prn);	/* Whatever dots */
         break;
+    case MODEL_INIT_PHOTO2:
+	if (output_type == OUTPUT_GRAY)
+	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black printing */
+	else
+	  fwrite("\033(K\002\000\000\002", 7, 1, prn);	/* Color printing */
+        if (ydpi > 360)
+	  {
+	    fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
+	    if (!use_softweave)
+	      fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
+	    else
+	      fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
+	    fwrite("\033(e\002\000\000\020", 7, 1, prn);	/* Microdots */
+	  }
+	else
+	  fwrite("\033(e\002\000\000\002", 7, 1, prn);	/* Whatever dots */
+        break;
   }
-
-  fwrite("\033(C\002\000", 5, 1, prn);		/* Page length */
-  n = ydpi * page_length / 72;
-  putc(n & 255, prn);
-  putc(n >> 8, prn);
-
-  fwrite("\033(c\004\000", 5, 1, prn);		/* Top/bottom margins */
-  n = ydpi * (page_length - page_top) / 72;
-  putc(n & 255, prn);
-  putc(n >> 8, prn);
-  n = ydpi * (page_length - page_bottom) / 72;
-  if (use_softweave)
-    n += 320 * ydpi / 720;
-  putc(n & 255, prn);
-  putc(n >> 8, prn);
 
   if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
     {
-      fwrite("\033(V\004\000", 5, 1, prn);	/* Absolute vertical position */
+      fwrite("\033(C\004\000", 5, 1, prn);	/* Page length */
+      n = ydpi * page_length / 72;
+      putc(n & 255, prn);
+      putc(n >> 8, prn);
+      putc(0, prn);
+      putc(0, prn);
+
+      fwrite("\033(c\010\000", 5, 1, prn);	/* Top/bottom margins */
+      n = ydpi * (page_length - page_top) / 72;
+      putc(n & 255, prn);
+      putc(n >> 8, prn);
+      putc(0, prn);
+      putc(0, prn);
+      n = ydpi * (page_length - page_bottom) / 72;
+      if (use_softweave)
+	n += 320 * ydpi / 720;
+      putc(n & 255, prn);
+      putc(n >> 8, prn);
+      putc(0, prn);
+      putc(0, prn);
+
+      fwrite("\033(V\004\000", 5, 1, prn);     /* Absolute vertical position */
       n = ydpi * (page_length - top) / 72;
       putc(n & 255, prn);
       putc(n >> 8, prn);
       putc(0, prn);
       putc(0, prn);
+
+      fwrite("\033(S\010\000", 5, 1, prn);
+      fprintf(prn, "%c%c%c%c%c%c%c%c",
+	      (((page_width * 720 / 72) >> 0) && 0xff),
+	      (((page_width * 720 / 72) >> 8) && 0xff),
+	      (((page_width * 720 / 72) >> 16) && 0xff),
+	      (((page_width * 720 / 72) >> 24) && 0xff),
+	      (((page_length * 720 / 72) >> 0) && 0xff),
+	      (((page_length * 720 / 72) >> 8) && 0xff),
+	      (((page_length * 720 / 72) >> 16) && 0xff),
+	      (((page_length * 720 / 72) >> 24) && 0xff));
     }
   else
     {
-      fwrite("\033(V\002\000", 5, 1, prn);	/* Absolute vertical position */
+      fwrite("\033(C\002\000", 5, 1, prn);	/* Page length */
+      n = ydpi * page_length / 72;
+      putc(n & 255, prn);
+      putc(n >> 8, prn);
+
+      fwrite("\033(c\004\000", 5, 1, prn);	/* Top/bottom margins */
+      n = ydpi * (page_length - page_top) / 72;
+      putc(n & 255, prn);
+      putc(n >> 8, prn);
+      n = ydpi * (page_length - page_bottom) / 72;
+      if (use_softweave)
+	n += 320 * ydpi / 720;
+      putc(n & 255, prn);
+      putc(n >> 8, prn);
+
+      fwrite("\033(V\002\000", 5, 1, prn);    /* Absolute vertical position */
       n = ydpi * (page_length - top) / 72;
       putc(n & 255, prn);
       putc(n >> 8, prn);
@@ -1102,8 +1158,9 @@ escp2_print(int       model,		/* I - Model */
   */
 
   escp2_init_printer(prn, model, output_type, ydpi, use_softweave, page_length,
-		     page_top, page_bottom, top, nozzles, nozzle_separation,
-		     horizontal_passes, vertical_passes, bits);
+		     page_width, page_top, page_bottom, top, nozzles,
+		     nozzle_separation, horizontal_passes, vertical_passes,
+		     bits);
 
  /*
   * Convert image size to printer resolution...
@@ -2075,13 +2132,14 @@ flush_pass(int passno, int model, int width, int hoffset, int ydpi,
 	continue;
       if (lineoffs[0].v[j] == 0)
 	continue;
+      if (!escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES) &&
+	  (densities[j] > 0))
+	continue;
       if (ydpi >= 720 &&
 	  escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
 	;
       else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
 	fprintf(prn, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
-      else if (densities[j] > 0)
-	continue;
       else
 	fprintf(prn, "\033r%c", colors[j]);
       if (escp2_has_cap(model, MODEL_1440DPI_MASK, MODEL_1440DPI_YES))
