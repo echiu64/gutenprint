@@ -1414,19 +1414,43 @@ static void gtk_do_misc_updates(void)
   vars.top = plist[plist_current].v.top;
   vars.unit = plist[plist_current].v.unit;
 
+  gtk_preview_update();
+
   if (plist[plist_current].v.scaling < 0)
     {
       float tmp = -plist[plist_current].v.scaling;
-      plist[plist_current].v.scaling = -plist[plist_current].v.scaling;
+      double max_ppi_scaling;
+      double min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
+      min_ppi_scaling1 = 72.0 * (double) image_width /
+	(double) printable_width;
+      min_ppi_scaling2 = 72.0 * (double) image_height /
+	(double) printable_height;
+      if (min_ppi_scaling1 > min_ppi_scaling2)
+	min_ppi_scaling = min_ppi_scaling1;
+      else
+	min_ppi_scaling = min_ppi_scaling2;
+      max_ppi_scaling = min_ppi_scaling * 20;
+      if (tmp < min_ppi_scaling)
+	{
+	  tmp = min_ppi_scaling;
+	  vars.scaling = -tmp;
+	}
+      else if (tmp > max_ppi_scaling)
+	{
+	  tmp = max_ppi_scaling;
+	  vars.scaling = -tmp;
+	}
+      plist[plist_current].v.scaling = tmp;
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_ppi), TRUE);
-      GTK_ADJUSTMENT(scaling_adjustment)->lower = 36.0;
-      GTK_ADJUSTMENT(scaling_adjustment)->upper = 1201.0;
+      GTK_ADJUSTMENT(scaling_adjustment)->lower = min_ppi_scaling;
+      GTK_ADJUSTMENT(scaling_adjustment)->upper = max_ppi_scaling + 1;
       sprintf(s, "%.1f", tmp);
       GTK_ADJUSTMENT(scaling_adjustment)->value = tmp;
       gtk_signal_handler_block_by_data(GTK_OBJECT(scaling_entry), NULL);
       gtk_entry_set_text(GTK_ENTRY(scaling_entry), s);
       gtk_signal_handler_unblock_by_data(GTK_OBJECT(scaling_entry), NULL);
       gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
+      plist[plist_current].v.scaling = vars.scaling;
     }
   else
     {
@@ -2109,18 +2133,6 @@ static void gtk_preview_update(void)
   char s[255];
   double unit_scaler;
 
-  if (preview->widget.window == NULL)
-    return;
-
-  gdk_window_clear(preview->widget.window);
-
-  if (gc == NULL)
-  {
-    gc = gdk_gc_new(preview->widget.window);
-    gcinv = gdk_gc_new(preview->widget.window);
-    gdk_gc_set_function (gcinv, GDK_INVERT);
-  }
-
 
   (*current_printer->media_size)(current_printer, vars.ppd_file,
 				 vars.media_size, &paper_width, &paper_height);
@@ -2183,7 +2195,7 @@ static void gtk_preview_update(void)
 
   if (vars.scaling < 0)
   {
-    print_width = 72 * -image_width / vars.scaling;
+    print_width = 72 * image_width / -vars.scaling;
     print_height = print_width * image_height / image_width;
   }
   else
@@ -2220,6 +2232,18 @@ static void gtk_preview_update(void)
   paper_top  = (PREVIEW_SIZE_VERT - preview_ppi * paper_height / 72) / 2;
   printable_left = paper_left +  preview_ppi * left / 72;
   printable_top  = paper_top + preview_ppi * top / 72 ;
+
+  if (preview->widget.window == NULL)
+    return;
+
+  gdk_window_clear(preview->widget.window);
+
+  if (gc == NULL)
+  {
+    gc = gdk_gc_new(preview->widget.window);
+    gcinv = gdk_gc_new(preview->widget.window);
+    gdk_gc_set_function (gcinv, GDK_INVERT);
+  }
 
   /* draw paper frame */
 
