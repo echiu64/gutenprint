@@ -38,7 +38,7 @@ libexecdir = $(gimptool_prefix)/plug-ins
 
 GIMP_BIN = print
 
-libexec_PROGRAMS = @GIMP_BIN@
+gimp_plug_in_PROGRAMS = @GIMP_BIN@
 
 EXTRA_PROGRAMS = print
 
@@ -51,32 +51,6 @@ print_SOURCES = \
 	print_gimp.h
 print_LDADD = $(LIBPRINTUT) $(GIMP_LIBS) $(LIBGIMPPRINT_LIBS)
 print_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
-
-
-## Rules
-
-install-libexecPROGRAMS: $(libexec_PROGRAMS)
-	@DESTDIR='$(DESTDIR)'; export DESTDIR;\
-	list='$(libexec_PROGRAMS)'; for p in $$list; do \
-	  if test -f $$p; then \
-	    echo $(LIBTOOL) --mode=install `$(GIMPTOOL) --just-print --install-@PLUG_IN_PATH@ $$p`; \
-            $(LIBTOOL) --mode=install `$(GIMPTOOL) --just-print --install-@PLUG_IN_PATH@ $$p`; \
-	  else :; fi; \
-	done
-
-uninstall-libexecPROGRAMS:
-	@DESTDIR='$(DESTDIR)'; export DESTDIR;\
-	list='$(libexec_PROGRAMS)'; for p in $$list; do \
-	    echo $(GIMPTOOL) --uninstall-@PLUG_IN_PATH@ "$$p"; \
-            $(GIMPTOOL) --uninstall-@PLUG_IN_PATH@ "$$p"; \
-	    echo $(GIMPTOOL) --uninstall-admin-bin "$$p"; \
-	    $(GIMPTOOL) --uninstall-admin-bin "$$p"; \
-	done; \
-	exit 0
-
-$(LIBGIMPPRINT_LIBS):
-	cd ../main ; \
-	$(MAKE)
 
 
 ## Clean

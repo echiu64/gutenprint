@@ -621,6 +621,21 @@ if test x${BUILD_GIMP} = xyes -o -n "${BUILD_PACKAGE}" ; then
   fi
 fi
 
+# Locate the GIMP plugin directory using libtool
+# Extract directory using --dry-run and sed
+if test x${BUILD_GIMP} = xyes ; then
+  AC_MSG_CHECKING([for GIMP plug-in directory])
+# create temporary "plug-in" to install
+  touch print
+  chmod 755 print
+  GIMPTOOL_OUTPUT=`$GIMPTOOL --dry-run --install-${PLUG_IN_PATH} print`
+  rm print
+  gimp_plug_indir=`echo "$GIMPTOOL_OUTPUT" | sed -e 's/.* \(.*\)\/print/\1/'`
+  AC_MSG_RESULT([$gimp_plug_indir])
+else
+  gimp_plug_indir="$libdir/gimp/1.2/plug-ins"
+fi
+
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS(unistd.h)
@@ -859,6 +874,7 @@ AC_SUBST(ESCPUTIL_MAN)
 AC_SUBST(GIMP_BIN)
 AC_SUBST(GIMP_CFLAGS)
 AC_SUBST(GIMP_LIBS)
+AC_SUBST(gimp_plug_indir)
 AC_SUBST(GIMP_PRINT_H)
 AC_SUBST(GIMPPRINT_CFLAGS)
 AC_SUBST(GIMPPRINT_LIBS)
