@@ -26,7 +26,6 @@
 #endif
 #include "../../lib/libprintut.h"
 
-#include <gimp-print/gimp-print-intl.h>
 #include <gimp-print/gimp-print-intl-internal.h>
 #include <gimp-print/gimp-print-ui.h>
 #include "gimp-print-ui-internal.h"
@@ -45,7 +44,6 @@ static int	compare_printers (stpui_plist_t *p1, stpui_plist_t *p2);
 int		stpui_plist_current = 0,	/* Current system printer */
 		stpui_plist_count = 0;	/* Number of system printers */
 stpui_plist_t	*stpui_plist;			/* System printers */
-stp_printer_t current_printer = 0;	/* Current printer index */
 static char *printrc_name = NULL;
 
 #define SAFE_FREE(x)				\

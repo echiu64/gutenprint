@@ -196,6 +196,7 @@ extern GtkObject *stpui_scale_entry_new(GtkTable    *table,
 
 /* Thumbnails -- keep it simple! */
 
-stp_image_t *Image_Thumbnail_new(const guchar *data, gint w, gint h, gint bpp);
+stp_image_t *stpui_image_thumbnail_new(const guchar *data, gint w, gint h,
+				       gint bpp);
 
 #endif  /* __GIMP_PRINT_UI_INTERNAL_H__ */

@@ -70,7 +70,7 @@ static stp_image_t theImage =
 };
 
 stp_image_t *
-Image_Thumbnail_new(const guchar *data, gint w, gint h, gint bpp)
+stpui_image_thumbnail_new(const guchar *data, gint w, gint h, gint bpp)
 {
   thumbnail_image_t *im;
   if (! theImage.rep)

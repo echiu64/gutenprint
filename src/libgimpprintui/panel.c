@@ -2490,8 +2490,8 @@ update_adjusted_thumbnail (void)
       guchar        *adjusted_data = adjusted_thumbnail_data;
       gint preview_limit = (thumbnail_h * thumbnail_w) - 1;
       priv_t priv;
-      stp_image_t *im = Image_Thumbnail_new(thumbnail_data, thumbnail_w,
-					    thumbnail_h, thumbnail_bpp);
+      stp_image_t *im = stpui_image_thumbnail_new(thumbnail_data, thumbnail_w,
+						  thumbnail_h, thumbnail_bpp);
       stp_vars_t nv = stp_allocate_copy(pv->v);
       stp_set_printer_defaults(nv, stp_get_printer_by_driver("raw-data-8"));
       stp_set_top(nv, 0);
