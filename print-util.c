@@ -671,7 +671,7 @@ compute_lut(size_t steps, vars_t *uv)
  */
 
 /*
- * Sizes are converted to 1|72in, then rounded down so that we don't
+ * Sizes are converted to 1/72in, then rounded down so that we don't
  * print off the edge of the paper.
  */
 const static papersize_t paper_sizes[] =
@@ -689,6 +689,17 @@ const static papersize_t paper_sizes[] =
   { "Tabloid",  792, 1224, PAPERSIZE_ENGLISH },	/*  11in x 17in */
   { "12x18",    864, 1296, PAPERSIZE_ENGLISH },
   { "13x19",    936, 1368, PAPERSIZE_ENGLISH },
+
+  /* Other common photographic paper sizes */
+  { "8x12",	576,  864, PAPERSIZE_ENGLISH }, /* Sometimes used for 35 mm */
+  { "11x14",    792, 1008, PAPERSIZE_ENGLISH },
+  { "16x20",   1152, 1440, PAPERSIZE_ENGLISH },
+  { "16x24",   1152, 1728, PAPERSIZE_ENGLISH }, /* 20x24 for 35 mm */
+  { "20x24",   1440, 1728, PAPERSIZE_ENGLISH },
+  { "20x30",   1440, 2160, PAPERSIZE_ENGLISH },	/* 24x30 for 35 mm */
+  { "24x30",   1728, 2160, PAPERSIZE_ENGLISH },
+  { "24x36",   1728, 2592, PAPERSIZE_ENGLISH }, /* Sometimes used for 35 mm */
+  { "30x40",   2160, 2880, PAPERSIZE_ENGLISH },
 
   /* International Paper Sizes (mostly taken from BS4000:1968) */
 
