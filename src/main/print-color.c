@@ -95,6 +95,14 @@ static float_param_t float_parameters[] =
   },
   {
     {
+      "LinearContrast", N_("Linear Contrast Adjustment"),
+      N_("Use linear vs. fixed end point contrast adjustment"),
+      STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+    }, 0.0, 0.0, 0.0, 0
+  },
+  {
+    {
       "Gamma", N_("Gamma"),
       N_("Adjust the gamma of the print. Larger values will "
 	 "produce a generally brighter print, while smaller "
@@ -1464,7 +1472,7 @@ static stp_curve_t
 compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
 		double print_gamma, double contrast, double app_gamma,
 		double brightness, double screen_gamma, int input_color_model,
-		int output_color_model)
+		int output_color_model, int linear_contrast_adjustment)
 {
   double *tmp = stpi_malloc(sizeof(double) * steps);
   double pivot = .25;
@@ -1502,8 +1510,14 @@ compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
       else if (temp_pixel > 1)
 	temp_pixel = .5 * pow(2 * temp_pixel, xcontrast);
       else if (temp_pixel < 1)
-	temp_pixel = 0.5 -
-	  ((0.5 - .5 * pow(2 * temp_pixel, contrast)) * contrast);
+	{
+	  if (linear_contrast_adjustment)
+	    temp_pixel = 0.5 -
+	      ((0.5 - .5 * pow(2 * temp_pixel, contrast)) * contrast);
+	  else
+	    temp_pixel = 0.5 -
+	      ((0.5 - .5 * pow(2 * temp_pixel, contrast)));
+	}
       if (temp_pixel > .5)
 	temp_pixel = .5;
       else if (temp_pixel < 0)
@@ -1611,6 +1625,8 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
    * Got an output file/command, now compute a brightness lookup table...
    */
 
+  int linear_contrast_adjustment =
+    stp_get_boolean_parameter(v, "LinearContrast");
   double cyan = stp_get_float_parameter(v, "Cyan");
   double magenta = stp_get_float_parameter(v, "Magenta");
   double yellow = stp_get_float_parameter(v, "Yellow");
@@ -1684,7 +1700,8 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
     {
       compute_a_curve(lut->composite, steps, 1.0, print_gamma, contrast,
 		      app_gamma, brightness, screen_gamma,
-		      input_color_model, output_color_model);
+		      input_color_model, output_color_model,
+		      linear_contrast_adjustment);
     }
   if (black_curve)
     stp_curve_copy(lut->black, black_curve);
@@ -1704,7 +1721,8 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
   else
     compute_a_curve(lut->cyan, steps, cyan, print_gamma, contrast,
 		    app_gamma, brightness, screen_gamma,
-		    input_color_model, output_color_model);
+		    input_color_model, output_color_model,
+		    linear_contrast_adjustment);
   if (magenta_curve)
     {
       stp_curve_copy(lut->magenta, magenta_curve);
@@ -1716,7 +1734,8 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
   else
     compute_a_curve(lut->magenta, steps, magenta, print_gamma, contrast,
 		    app_gamma, brightness, screen_gamma,
-		    input_color_model, output_color_model);
+		    input_color_model, output_color_model,
+		    linear_contrast_adjustment);
   if (yellow_curve)
     {
       stp_curve_copy(lut->yellow, yellow_curve);
@@ -1728,7 +1747,8 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
   else
     compute_a_curve(lut->yellow, steps, yellow, print_gamma, contrast,
 		    app_gamma, brightness, screen_gamma,
-		    input_color_model, output_color_model);
+		    input_color_model, output_color_model,
+		    linear_contrast_adjustment);
 }
 
 static void
@@ -1942,6 +1962,8 @@ stpi_color_describe_parameter(const stp_vars_t v, const char *name,
 	    description->is_active = 1;
 	  switch (param->param.p_type)
 	    {
+	    case STP_PARAMETER_TYPE_BOOLEAN:
+	      description->deflt.boolean = (int) param->defval;
 	    case STP_PARAMETER_TYPE_DOUBLE:
 	      description->bounds.dbl.upper = param->max;
 	      description->bounds.dbl.lower = param->min;
