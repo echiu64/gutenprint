@@ -3,7 +3,7 @@ Section: graphics
 Priority: optional
 Maintainer: Eric Sharkey <sharkey@debian.org>
 Standards-Version: 3.1.1
-Build-Depends: libc6-dev, libcupsys2-dev, libgimp1.2-dev, libglib1.2-dev, libgtk1.2-dev, libreadline4-dev, debhelper (>= 2.2.18), xlibs-dev, zlib1g-dev, flex
+Build-Depends: libcupsys2-dev, libgimp1.2-dev, libglib1.2-dev, libgtk1.2-dev, libreadline4-dev, debhelper (>= 2.2.18), xlibs-dev, zlib1g-dev, flex, texi2html
 
 Package: gimp1.2-print
 Architecture: any
@@ -55,7 +55,7 @@ Description: header files for compiling programs with libgimpprint
 Package: libgimpprint-doc
 Architecture: all
 Section: doc
-Depends: libgimpprint#UPSTREAM_VERSION# (= ${Source-Version})
+Suggests: libgimpprint#UPSTREAM_VERSION# (= ${Source-Version})
 Description: Documentation and example code for the gimpprint library
  This package contains lots of info-files, DVI docs and other
  documentation about the gimpprint library for photo-quality

@@ -11,7 +11,7 @@ export DH_COMPAT=2
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
-UPSTREAM_VERSION = $(shell dpkg-parsechangelog | grep ^Version | sed "s/.* //" | sed "s/-[^-]*//")
+UPSTREAM_VERSION = $(shell dpkg-parsechangelog | grep ^Version | sed "s/.* //" | sed "s/-[^-]*$$//")
 
 build: build-stamp debian/control
 build-stamp: configure
@@ -61,13 +61,13 @@ install: build debian/control
 
 # Build architecture-independent files here.
 binary-indep: build install ChangeLog
-	dh_testversion 2
 	dh_testdir -i
 	dh_testroot -i
 #	dh_installdebconf -i
 	dh_installdocs -i
 	  cp debian/gimp-print-build/doc/*.dvi debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc
-	  cp -r debian/gimp-print-build/doc/manual-html debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html
+#	  cp -r debian/gimp-print-build/doc/manual-html debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html
+	  cp -r doc/manual-html debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html
 	dh_installexamples -i
 #	dh_installmenu -i
 #	dh_installlogrotate -i
@@ -91,7 +91,6 @@ binary-indep: build install ChangeLog
 
 # Build architecture-dependent files here.
 binary-arch: build install ChangeLog
-	dh_testversion 2
 	dh_testdir -a
 	dh_testroot -a
 #	dh_installdebconf -a
