@@ -933,6 +933,19 @@ static canon_cap_t canon_model_capabilities[] =
     &variable_6pl_6color_inks
   },
 
+  { /* Canon BJC 6500 */
+    6500,
+    11*72, 17*72,
+    180, 1440, 720, 2,
+    11, 9, 10, 18,
+    CANON_INK_CMYK | CANON_INK_CcMmYK,
+    CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
+    CANON_CAP_DMT | CANON_CAP_CMD6d | CANON_CAP_CMD70,
+    { -1, 1, 0, 0, -1, -1 },
+    {  0, 1.8, 1, .5, 0, 0 },
+    &variable_6pl_6color_inks
+  },
+
   { /* Canon BJC 8200 */
     8200,
     11*72, 17*72,
