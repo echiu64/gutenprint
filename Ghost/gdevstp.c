@@ -208,12 +208,6 @@ private int stp_print_page(gx_device_printer * pdev, FILE * file)
     stp_vars.top  = 0;                     /* */
     stp_vars.left = 0;
 
-#if 0
-    stp_vars.scaling = 100;                 /* 100% scaling */
-    stp_vars.scaling = -360;                /* 360 dpi */
-    stp_vars.scaling = -720;                /* 720 dpi */
-#endif
-
     stp_vars.scaling = -pdev->x_pixels_per_inch; /* resolution of image to print */
 
     if(stp_data.color == 1)
@@ -254,13 +248,12 @@ private int stp_print_page(gx_device_printer * pdev, FILE * file)
     }
 #endif
 
-    escp2_print(model,						/* I - Model */
-                1,							/* I - Number of copies */
-                file,						/* I - File to print to */
-                NULL,						/* I - Image to print (dummy) */
-                NULL,						/* unsigned char *cmap,	
-                                    		   I - Colormap (for indexed images) */
-                &stp_vars);					/* vars_t * */
+    escp2_print(model,		/* I - Model */
+                1,		/* I - Number of copies */
+                file,		/* I - File to print to */
+                NULL,		/* I - Image to print (dummy) */
+                NULL,		/* I - Colormap (for indexed images) */
+                &stp_vars);	/* vars_t * */
 
     gs_free_object(pdev->memory, stp_row, "stp row buffer");
     stp_row = NULL;

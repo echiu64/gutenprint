@@ -102,7 +102,7 @@ xx: 0...15 (6)
 7   Stylus Photo 700
 8   Stylus Photo EX
 9   Stylus Photo
-10  Stylus Color 440
+10  Stylus Color 440/460
 11  Stylus Color 640
 12  Stylus Color 740
 13  Stylus Color 900
@@ -110,18 +110,20 @@ xx: 0...15 (6)
 15  Stylus Photo 1200
 16  Stylus Photo 860
 
+Note that not all printers are fully functional yet.
+
 Print Resolution Selection:
 -dQuality=x
 
 x: 0..7 (0)
-0  360 DPI                               (works, gray+color)
-1  720 DPI Microweave                    (works, gray+color)
-2  720 DPI Softweave                     (works)
-3  720 DPI High Quality                  (works)
-4  720 DPI Highest Quality               (works)
-5  1440 x 720 DPI Softweave              (works)
-6  1440 x 720 DPI Highest Quality        (works)
-7  1440 x 720 DPI Two-pass               (untested)
+0  360 DPI                               (works on all functioning printers)
+1  720 DPI Microweave                    (works on all functioning printers)
+2  720 DPI Softweave                     (works on most printers)
+3  720 DPI High Quality                  (works on most printers)
+4  720 DPI Highest Quality               (works on most printers)
+5  1440 x 720 DPI Softweave              (works on selected printers)
+6  1440 x 720 DPI Highest Quality        (works on selected printers)
+7  1440 x 720 DPI Two-pass               (works on some printers)
 
 currently supported Media Selection:
 (important: always use lower case names)
