@@ -191,10 +191,15 @@ STP_ARG_WITH_DETAILED(
      cups_prefix="${prefix}"
   ])
 
-STP_ARG_ENABLE([translated-ppds],
+STP_ARG_ENABLE([cups-ppds],
                [build translated CUPS PPD files],
-               [BUILD_TRANSLATED_PPDS],
+               [BUILD_CUPS_PPDS],
                [yes])
+
+STP_ARG_ENABLE([translated-cups-ppds],
+               [build translated CUPS PPD files],
+               [BUILD_TRANSLATED_CUPS_PPDS],
+               [no])
 
 STP_ARG_ENABLE([cups-level3-ppds],
                [generate PostScript level 3 PPD files],
@@ -353,6 +358,9 @@ if test x${USE_MAINTAINER_MODE} = xyes ; then
   fi
 fi
 
+dnl CUPS checks
+STP_CUPS_PROGS
+
 dnl foomatic checks
 if test x${BUILD_FOOMATIC} = xyes ; then
   AC_PATH_PROG(FOOMATIC_KITLOAD, foomatic-kitload, , $PATH:/usr/sbin:/usr/local/sbin)
@@ -476,6 +484,7 @@ else
 fi
 
 STP_CUPS_LIBS
+
 if test x$BUILD_LEXMARKUTIL = xyes ; then
 AM_PATH_GTK(1.2.0, ,
             AC_MSG_ERROR(Cannot find GTK: Is gtk-config in path?))
@@ -535,7 +544,9 @@ AM_CONDITIONAL(BUILD_LEXMARKUTIL, test x${BUILD_LEXMARKUTIL} = xyes)
 
 AM_CONDITIONAL(BUILD_CUPS, test x${BUILD_CUPS} = xyes)
 
-AM_CONDITIONAL(BUILD_TRANSLATED_PPDS, test x${BUILD_TRANSLATED_PPDS} = xyes)
+AM_CONDITIONAL(BUILD_CUPS_PPDS, test x${BUILD_CUPS_PPDS} = xyes)
+
+AM_CONDITIONAL(BUILD_TRANSLATED_CUPS_PPDS, test x${BUILD_TRANSLATED_CUPS_PPDS} = xyes)
 
 if test x${USE_LEVEL3_PS} = xyes ; then
   CUPS_PPD_PS_LEVEL=3
@@ -564,7 +575,7 @@ AM_CONDITIONAL(USE_NLS, test x${USE_NLS} = xyes)
 
 dnl Define LTLIBOBJS
 AC_CONFIG_COMMANDS_PRE(
-[LTLIBOBJS=`echo "$LIBOBJS" | sed 's/\.o/.lo/g'`
+[LTLIBOBJS=`echo "$LIB@&t@OBJS" | sed 's/\.o/.lo/g'`
 AC_SUBST(LTLIBOBJS)
 LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
 AC_SUBST(LTALLOCA)])
@@ -659,12 +670,14 @@ AC_CONFIG_FILES([man/Makefile])
 AC_CONFIG_FILES([man/escputil.1])
 AC_CONFIG_FILES([man/cups-calibrate.8])
 AC_CONFIG_FILES([man/cups-genppd.8])
+AC_CONFIG_FILES([man/cups-genppdconfig.8])
 AC_CONFIG_FILES([man/gimpprint.3])
 AC_CONFIG_FILES([man/gimpprint-config.1])
 AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([samples/Makefile])
 AC_CONFIG_FILES([src/Makefile])
 AC_CONFIG_FILES([src/cups/Makefile])
+AC_CONFIG_FILES([src/cups/cups-genppdconfig], [chmod +x src/cups/cups-genppdconfig])
 AC_CONFIG_FILES([src/escputil/Makefile])
 AC_CONFIG_FILES([src/foomatic/Makefile])
 AC_CONFIG_FILES([src/foomatic/foomatic-generator], [chmod +x src/foomatic/foomatic-generator])

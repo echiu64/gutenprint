@@ -36,10 +36,10 @@ pkgsysconfdir = $(cups_conf_serverroot)
 
 cupsexec_backenddir = $(pkglibdir)/backend
 cupsexec_filterdir = $(pkglibdir)/filter
-cups_modeldir = $(pkgdatadir)/model
+cups_modeldir = $(pkgdatadir)/model/gimp-print
 
 AM_CFLAGS = $(GNUCFLAGS)
-DEFS = @CUPS_CFLAGS@ @DEFS@ -I. -I$(srcdir) -I../.. -DCUPS_DATADIR=\"$(pkgdatadir)\" -DGENPPD_PPD_PREFIX=\"$(cups_modeldir)/gimp-print\" -DGIMP_PRINT_VERSION=\"$(VERSION)\"
+DEFS = @CUPS_CFLAGS@ @DEFS@ -I. -I$(srcdir) -I../.. -DGENPPD_PPD_PREFIX=\"$(cups_modeldir)/gimp-print\" -DGIMP_PRINT_VERSION=\"$(VERSION)\"
 INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS)
 GIMPPRINT_LIBS = $(top_builddir)/src/main/libgimpprint.la
 GIMPPRINT_DEPLIBS = -lm
@@ -51,6 +51,9 @@ LIBS = $(INTLLIBS) @LIBS@
 
 if BUILD_CUPS
 bin_PROGRAMS = cups-calibrate cups-genppd
+endif
+if BUILD_CUPS
+bin_SCRIPTS = cups-genppdconfig
 endif
 if BUILD_CUPS
 cupsexec_backend_PROGRAMS = epson canon
@@ -91,11 +94,11 @@ endif
 pkgdata_DATA = $(CUPS_PKG)
 pkgsysconf_DATA = $(CUPS_CONF)
 
-if BUILD_CUPS
+if BUILD_CUPS_PPDS
 INSTALL_DATA_LOCAL_DEPS = ppd
 endif
 
-if BUILD_TRANSLATED_PPDS
+if BUILD_TRANSLATED_CUPS_PPDS
 PPD_NLS = $(PPD_NLS_1)
 LINGUAS = $(ALL_LINGUAS)
 endif
@@ -103,6 +106,9 @@ endif
 if USE_NLS
 PPD_NLS_1 = ppd-nls
 endif
+
+
+## Rules
 
 install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
@@ -120,34 +126,20 @@ install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	fi
 
 uninstall-local: $(INSTALL_DATA_LOCAL_DEPS)
+#	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
+#	  for language in en $(LINGUAS) ; do \
+#	    echo "Removing $$language locale PPD files..." ; \
+#	    for ppdfile in ppd/$$language/* ; do \
+#	      if test -f "$(DESTDIR)$(cups_modeldir)/$$language/`basename $$ppdfile`" ; then \
+#	        $(RM) -f $(DESTDIR)$(cups_modeldir)/$$language/`basename $$ppdfile` ; \
+#	      fi ; \
+#	    done; \
+#	  done \
+#	fi
+# Remove PPDs installed in new PPD location
 	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
-	  for language in C $(LINGUAS) ; do \
-	    echo "Removing $$language locale PPD files..." ; \
-	    for ppdfile in ppd/$$language/* ; do \
-	      if test -f "$(DESTDIR)$(cups_modeldir)/$$language/`basename $$ppdfile`" ; then \
-	        $(RM) -f $(DESTDIR)$(cups_modeldir)/$$language/`basename $$ppdfile` ; \
-	      fi ; \
-	    done; \
-	  done \
+	  $(RM) -fr $(DESTDIR)$(cups_modeldir)/* ; \
 	fi
-
-refresh-data-local: ppd
-	cd ppd ; \
-	files=`find . -name '*.ppd*' -exec basename '{}' \; | sort | uniq` ; \
-	for language in . de en es fr it ; do \
-	  for f in $$files ; do \
-	    ff="$(DESTDIR)/$(cups_modeldir)/$$language/$$f" ; \
-	    if [ -f "$$ff" ] ; then \
-	      echo "Removing $$ff" ; \
-	      $(RM) "$$ff" ; \
-	    fi ; \
-	    if [ -f "$$ff" ] ; then \
-	      echo "Unable to remove $$ff" 1>&2 ; \
-	      exit 1 ; \
-	    fi ; \
-	  done; \
-	done
-
 
 install-data-hook:
 # Remove unused directories in install tree
@@ -163,9 +155,6 @@ install-data-hook:
 	-rmdir `dirname $(DESTDIR)$(pkgdatadir)`
 	-rmdir `dirname $(DESTDIR)$(pkglibdir)`
 	-rmdir `dirname $(DESTDIR)$(pkgsysconfdir)`
-
-
-## Rules
 
 .PHONY: ppd ppd-stamp-pre ppd-stamp-nonls ppd-stamp-nls ppd-stamp-phony
 
@@ -184,7 +173,7 @@ ppd-stamp-pre:
 	-mkdir ppd
 
 ppd-nonls: cups-genppd
-	for language in C ; do \
+	for language in en ; do \
 	  mkdir ppd/$$language ; \
 	  echo "$$language:" ; \
 	 ./cups-genppd -p ppd/$$language ; \
@@ -225,6 +214,7 @@ clean-local:
 ## Clean
 
 CLEANFILES = ppd-stamp
+DISTCLEANFILES = cups-genppdconfig
 MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = \

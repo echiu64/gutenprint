@@ -29,7 +29,7 @@ MAINT_CHARSET = latin1
 # Conditional installation of manpages is currently broken in automake...
 
 if BUILD_CUPS
-CUPS_MAN = cups-calibrate.8 cups-genppd.8
+CUPS_MAN = cups-calibrate.8 cups-genppd.8 cups-genppdconfig.8
 endif
 
 if BUILD_ESCPUTIL
@@ -40,12 +40,28 @@ MAIN_MAN = gimpprint.3 gimpprint-config.1
 
 man_MANS = $(CUPS_MAN) $(ESCPUTIL_MAN) $(MAIN_MAN)
 
-EXTRA_man_MANS = cups-calibrate.8 escputil.1 gimpprint.3 gimpprint-config.1
+EXTRA_man_MANS = \
+	cups-calibrate.8 \
+	cups-genppd.8 \
+	cups-genppdconfig.8 \
+	escputil.1 \
+	gimpprint.3 \
+	gimpprint-config.1
 
+
+## Rules
+
+install-data-local:
+	$(mkinstalldirs) $(DESTDIR)$(man8dir)
+	cd $(DESTDIR)$(man8dir); \
+	$(LN_S) -f cups-genppdconfig.8 update-cups-genppd.8
+
+uninstall-local:
+	$(RM) $(DESTDIR)$(man8dir)/update-cups-genppd.8
 
 ## Clean
 
-DISTCLEANFILES = cups-calibrate.8 cups-genppd.8 escputil.1 gimpprint-config.1
+DISTCLEANFILES = $(EXTRA_man_MANS)
 MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = $(man_MANS)
