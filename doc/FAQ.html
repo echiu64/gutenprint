@@ -25,9 +25,21 @@ have the user package, but not the development package, installed.
 You will need to install the latter from your installation media; it's
 usually named gimp-devel.
 
-<p><li>If you don't have the Gimp installed on your system, you need
-to pass <tt>configure</tt> the option <tt>--with-gimp=no</tt>, so it
-won't try to look for the Gimp and fail.
+<p><li>If you do have the Gimp installed, and you've installed the
+gimp-devel package, you may also need to install the gtk-devel and
+glib-devel packages.
+
+<p><li>If you've installed the Gimp from source, you may need to run
+<tt>ldconfig</tt> as root.  The installation procedure for the Gimp
+doesn't run ldconfig, which is needed on many systems to tell the
+system about the shared libraries that are installed.  If you don't
+understand this, don't worry; just do it.  If you're nervous about
+doing that, reboot.
+
+<p><li>If you don't have the Gimp installed on your system, and just
+want to compile Gimp-Print for CUPS (for example), you need to pass
+<tt>configure</tt> the option <tt>--with-gimp=no</tt>, so it won't try
+to look for the Gimp and fail.
 
 </ul>
 
@@ -35,16 +47,39 @@ won't try to look for the Gimp and fail.
 Photo mode (or ImageType in Ghostscript)?</h3>
 
 <p>Photo mode does a lot of work to make colors as similar to screen
-presentation as possible.  This takes time. The other modes are
-faster, but colors may be off.  B/W mode does not use color ink when
-printing.
+presentation as possible.  This takes time.  Line art is faster, but
+colors may be off.  Solid Colors is somewhere in between.  B/W mode
+does not use color ink when printing, and is much faster.
 
-<p><li><h3>I selected my printer and it doesn't work at all</h3>
+<p><li><h3>I selected my printer and it doesn't work at all!</h3>
 
 <p>Please check your printing system (lpd, CUPS, LPRng, etc.)
-configuration.
+configuration.  You may also have a problem with your parallel port
+or USB connection, so take a look at <tt>/var/log/messages</tt> (or
+wherever your system logs are kept).
 
-<p><li><h3>I selected the right printer and nonsense gets printed</h3>
+<p><li><h3>I selected my printer and it simply feeds paper without
+printing</h3>
+
+<p>Many Epson printers (in particular) do this if they encounter an
+error in the command stream.  This usually indicates a bug in
+Gimp-Print; please report it to <a
+mailto="gimp-print-devel@sourceforge.net">gimp-print-devel@sourceforge.net</a>
+or via the bug tracking system at <a
+href="http://gimp-print.sourceforge.net">http://gimp-print.sourceforge.net</a>.
+Make sure you report the printer you have and all of the settings that
+you used.  But first, triple check that you're using the right printer
+model!
+
+<p><li><h3>I selected my printer, and it prints the image badly
+distorted, or at completely the wrong place on the page</h3>
+
+<p>This usually indicates a bug in the package.  Please report it as
+described above.  Also as described above, make sure you've set the
+right printer.
+
+<p><li><h3>I selected the right printer and nonsense, or only part of
+the page, gets printed</h3>
 
 <p>Printers for which support just has been added may not have been
 tested, as the developers do not have access to the printer. It is
@@ -55,11 +90,29 @@ what doesn't, file a bug report.
 
 <p>One common cause of this is not using "raw" mode when printing from
 the Gimp plugin.  Depending upon your printing system, you will need
-to use either -l (traditional BSD lpd), -oraw (CUPS lpr), or -d (most
-versions of System V lp, including CUPS).  Otherwise the printing
-system attempts to interpret the output as something else, and tries
-to apply a filter to it to convert it to something else (usually
-PostScript).
+to use either <tt>-l</tt> (traditional BSD lpd), <tt>-oraw</tt> (CUPS
+lpr), or <tt>-d</tt> (most versions of System V lp, including CUPS).
+Otherwise the printing system attempts to interpret the output as
+something else, and tries to apply a filter to it to convert it to
+something else (usually PostScript).
+
+<p>Another less common cause of this (it usually causes other
+symptoms, like printing only part of a page) is lack of space
+somewhere.  This is most commonly an issue when using the Gimp Print
+plugin.  The plugin creates a huge temporary file that gets sent to
+the printing system.  The size of the file varies; it's proportional
+to the page size and the resolution setting chosen.  Full-page, high
+resolution photographs can result in 100 MB of output.  The system may
+need to have 2 or 3 copies of this file for short periods of time.  If
+your /tmp, /var, or wherever your spooler keeps its temporary files is
+too small, you'll have problems.
+
+<p>Finally, problems with your parallel or USB port may be the cause
+of problems here.  Certain Epson printers in particular are known to
+be very sensitive to the quality of connecting cables, and may have
+trouble with long or low quality cables, or USB hubs.  If nothing else
+works, and you're certain you've tried everything else, try a better
+cable or a direct USB connection.
   
 <p><li><h3>What's up with the HP Deskjet 1200?</h3>
 
@@ -73,25 +126,32 @@ one???
 
 <p>Try selecting a different resolution or quality setting. Especially
 lower resolutions have a problem putting enough ink on paper. Also,
-use Photo mode.  If you find settings that do not work, report these
-as bugs.  High resolutions should produce a similar (but smoother)
-result than medium resolutions. Resolutions under a certain printer
-dependent figure are seen as draft-only - for example lower than 360
-DPI on Epsons with standard paper or lower than 300 DPI on HP.
+use Photo mode.  If you find settings that do not work at all (you get
+garbage or no output, but other settings work), report these as bugs.
+High resolutions should produce a similar (but smoother) result than
+medium resolutions. Resolutions under a certain printer dependent
+figure are seen as draft-only - for example lower than 360 DPI on
+Epsons with standard paper or lower than 300 DPI on HP.
+
+<p>Also make sure that you have the right kind of paper selected.
+Selecting plain paper when you're printing on high quality photo paper
+is certain to result in a light, grainy image.  Selecting photo paper
+when you're printing on plain paper will result in a dark, muddy image
+that bleeds through the paper.  There are differences between
+different kinds of paper; you may need to tweak the density and color
+settings slightly.
+
+<p>In addition, certain printers don't work well on certain kinds of
+paper.  Epson printers work well on Epson printers, but don't work
+well on many third party papers (particularly the high quality photo
+papers made by other vendors).  This isn't a conspiracy to lock you
+into their paper, it's because they've formulated the paper and ink to
+work well together.
 
 <p>If you use Ghostscript, make sure the Ghostscript resolution is not
 set higher than the driver resolution. If it is higher, the driver has
 to throw away part of the pixels, leading to uneven strokes in text
 and slanted lines with interruptions.
-
-<p><li><h3>What is 'interpolated' resolution?</h3>
-
-<p>Interpolated resolution is an experimental way of simulating higher
-resolution than the printer offers by calculating the result at high
-resolution but printing at the maximum resolution offered by the
-printer.  In our experience, when the dither algorithm is working
-properly this merely results in longer processing time and more
-voluminous output with little or no improvement in quality.
 
 <p><li><h3>How do I start setting options for Ghostscript?</h3>
 
