@@ -1,6 +1,6 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.2.1-pre2, released February 26, 2002, is a pre-release of
+Gimp-Print 4.2.1-pre2, released March 2, 2002, is a pre-release of
 Gimp-Print 4.2.1.  This prerelease offers a number of fixes and
 improvements over 4.2.0
 
@@ -18,6 +18,18 @@ later GNU Ghostscript release based on 6.51 (e. g. 6.52).
 
 Please read the README file for full instructions on building and
 installing this package.
+
+Gimp-Print 4.2.1-pre2 contains the following major changes and fixes
+over Gimp-Print 4.2.1-pre2:
+
+  1) Canon printers should now print with correct scaling at all
+     supported resolutions.  This is the first stage in fixing the
+     Canon driver.
+
+The following bug is fixed in 4.2.1-pre2:
+
+493838 canon print scaling broken
+
 
 Gimp-Print 4.2.1-pre2 contains the following major changes and fixes
 over Gimp-Print 4.2.1-pre1:
