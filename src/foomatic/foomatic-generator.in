@@ -343,6 +343,8 @@ sub build_ev {
 	} else {
 	    $ev_driverval = $ev_shortname;
 	}
+	# Remove "Roll" paper sizes, user has to use "Custom" instead.
+	next if (($stpopt eq "PageSize") && ($ev_driverval eq ""));
 	push (@vals,
 	      "    <enum_val id='$ev_id'>\n",
 	      "      <ev_longname><en>$ev_longname</en></ev_longname>\n",
@@ -454,14 +456,15 @@ sub optmap_pagesize {
 	    chomp;
 	    $_ =~ m!^\s*(.+\S)\s+([0-9]+)\s+([0-9]+)\s*$!;
 	    my ($name, $width, $height) = ($1, $2, $3);
-	    if ($width >= 0 and $height >= 0) {
+	    if (($width > 0 and $height > 0) or
+		($name eq "Custom")) {
 		if ($drivertype eq "gs") {
 		    $pagemap->{$name} = "$width $height";
 		} else {
 		    $pagemap->{$name} = "-dDEVICEWIDTHPOINTS=$width -dDEVICEHEIGHTPOINTS=$height";
 		}
 #		print STDERR "PageSize '$name' driverval '$width $height'\n";
-	    }
+	    }	
 	}
 	close PUTIL;
     }
