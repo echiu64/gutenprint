@@ -1119,10 +1119,10 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   int page_pt_width  = stp_get_page_width(v);
   int page_pt_height = stp_get_page_height(v);
 #endif
-  int page_pt_left   = 0,
-      page_pt_right  = stp_get_page_width(v),
-      page_pt_top    = 0,
-      page_pt_bottom = stp_get_page_height(v);
+  int page_pt_left = 0;
+  int page_pt_right = 0;
+  int page_pt_top = 0;
+  int page_pt_bottom = 0;
 
   /* page w/out borders in pixels (according to selected dpi) */
   int print_px_width;
@@ -1140,7 +1140,9 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   stp_describe_resolution(v, &xdpi, &ydpi);
   olympus_printsize(v, &max_print_px_width, &max_print_px_height);
 
-  if (! olympus_feature(caps, OLYMPUS_FEATURE_WHITE_BORDER))
+  if (olympus_feature(caps, OLYMPUS_FEATURE_WHITE_BORDER))
+    stpi_default_media_size(v, &page_pt_right, &page_pt_bottom);
+  else
     olympus_imageable_area(v, &page_pt_left, &page_pt_right,
 	&page_pt_bottom, &page_pt_top);
   

@@ -202,8 +202,10 @@ stpi_xml_parse_file_named(const char *name)
   if (!(dir_list = stpi_list_create()))
     return;
   stpi_list_set_freefunc(dir_list, stpi_list_node_free_data);
-  stpi_path_split(dir_list, getenv("STP_DATA_PATH"));
-  stpi_path_split(dir_list, PKGXMLDATADIR);
+  if (getenv("STP_DATA_PATH"))
+    stpi_path_split(dir_list, getenv("STP_DATA_PATH"));
+  else
+    stpi_path_split(dir_list, PKGXMLDATADIR);
   file_list = stpi_path_search(dir_list, name);
   stpi_list_destroy(dir_list);
   item = stpi_list_get_start(file_list);

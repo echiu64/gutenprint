@@ -147,13 +147,22 @@ int stpi_module_load(void)
   if (!(dir_list = stpi_list_create()))
     return 1;
   stpi_list_set_freefunc(dir_list, stpi_list_node_free_data);
-  stpi_path_split(dir_list, getenv("STP_MODULE_PATH"));
+  if (getenv("STP_MODULE_PATH"))
+    {
+      stpi_path_split(dir_list, getenv("STP_MODULE_PATH"));
+    }
+  else
+    {
 #ifdef USE_LTDL
-  stpi_path_split(dir_list, getenv("LTDL_LIBRARY_PATH"));
-  stpi_path_split(dir_list, lt_dlgetsearchpath());
+      stpi_path_split(dir_list, getenv("LTDL_LIBRARY_PATH"));
+      stpi_path_split(dir_list, lt_dlgetsearchpath());
+#else
+      stpi_path_split(dir_list, PKGMODULEDIR);
+#endif
+    }
+#ifdef USE_LTDL
   file_list = stpi_path_search(dir_list, ".la");
 #else
-  stpi_path_split(dir_list, PKGMODULEDIR);
   file_list = stpi_path_search(dir_list, ".so");
 #endif
   stpi_list_destroy(dir_list);
