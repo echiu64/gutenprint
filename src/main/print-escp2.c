@@ -119,6 +119,7 @@ typedef struct escp2_init
   int use_fast_360;
   const res_t *res;
   const escp2_inkname_t *inkname;
+  const input_slot_t *input_slot;
   stp_vars_t v;
 } escp2_init_t;
 
@@ -638,8 +639,7 @@ escp2_set_remote_sequence(const escp2_init_t *init)
       print_remote_int_param(init->v, "  inkset", init->inkname->inkset);
       stp_puts("\033@", init->v);
     }
-  if (escp2_has_advanced_command_set(init->model, init->v) ||
-      strlen(stp_get_string_parameter(init->v, "InputSlot")) > 0)
+  if (escp2_has_advanced_command_set(init->model, init->v) || init->input_slot)
     {
       int feed_sequence = 0;
       const paper_t *p =
@@ -651,11 +651,6 @@ escp2_set_remote_sequence(const escp2_init_t *init)
       if (escp2_has_cap(init->model, MODEL_COMMAND,
 			MODEL_COMMAND_PRO, init->v))
 	{
-	  /* Set Roll Feed mode */
-	  if (strcmp(stp_get_string_parameter(init->v, "InputSlot"), "Roll") == 0)
-	    stp_zprintf(init->v, "PP%c%c%c%c%c", 3, 0, 0, 3, 0);
-	  else
-	    stp_zprintf(init->v, "PP%c%c%c%c%c", 3, 0, 0, 2, 0);
 	  if (p)
 	    {
 	      stp_zprintf(init->v, "PH%c%c%c%c", 2, 0, 0, p->paper_thickness);
@@ -678,32 +673,11 @@ escp2_set_remote_sequence(const escp2_init_t *init)
 	  if (escp2_has_cap(init->model, MODEL_XZEROMARGIN,
 			    MODEL_XZEROMARGIN_YES, init->v))
 	    stp_zprintf(init->v, "FP%c%c%c%c%c", 3, 0, 0, 0260, 0xff);
-	  if (strcmp(stp_get_string_parameter(init->v, "InputSlot"), "CutSheet1"))
-	    stp_zprintf(init->v, "PP%c%c%c%c%c", 3, 0, 0, 1, 1);
-	  else if (strcmp(stp_get_string_parameter(init->v, "InputSlot"), "CutSheet2"))
-	    stp_zprintf(init->v, "PP%c%c%c%c%c", 3, 0, 0, 1, 2);
-	  else if (strcmp(stp_get_string_parameter(init->v, "InputSlot"), "CutSheetAuto"))
-	    stp_zprintf(init->v, "PP%c%c%c%c%c", 3, 0, 0, 1, 0xff);
-
-	  /* set up Roll-Feed options on appropriate printers
-	     (tested for STP 870, which has no cutter) */
-	  if (escp2_has_cap(init->model, MODEL_ROLLFEED,
-			    MODEL_ROLLFEED_YES, init->v))
-	    {
-	      if (strcmp(stp_get_string_parameter(init->v, "InputSlot"), "Roll") == 0)
-		stp_zprintf(init->v, /* Set Roll Feed mode */
-			    "IR%c%c%c%c"
-			    "EX%c%c%c%c%c%c%c%c",
-			    2, 0, 0, 1,
-			    6, 0, 0, 0, 0, 0, 5, 1);
-	      else
-		stp_zprintf(init->v, /* Set non-Roll Feed mode */
-			    "IR%c%c%c%c"
-			    "EX%c%c%c%c%c%c%c%c",
-			    2, 0, 0, 3,
-			    6, 0, 0, 0, 0, 0, 5, 0);
-	    }
 	}
+      if (init->input_slot && init->input_slot->init_sequence.length)
+	stp_zfwrite(init->input_slot->init_sequence.data,
+		    init->input_slot->init_sequence.length, 1, init->v);
+
       /* Exit remote mode */
       stp_zprintf(init->v, "\033%c%c%c", 0, 0, 0);
     }
@@ -871,23 +845,15 @@ escp2_deinit_printer(const escp2_init_t *init, int printed_something)
 	   "\014"
 	   /* ESC/P2 reset */
 	   "\033@", init->v);
-  if (escp2_has_advanced_command_set(init->model, init->v))
+  if (escp2_has_advanced_command_set(init->model, init->v) || init->input_slot)
     {
       const init_sequence_t *deinit =
 	escp2_postinit_remote_sequence(init->model, init->v);
       stp_zprintf(init->v, /* Enter remote mode */
 		  "\033(R\010%c%cREMOTE1", 0, 0);
-      /* set up Roll-Feed options on appropriate printers
-	 (tested for STP 870, which has no cutter) */
-      if (escp2_has_cap(init->model, MODEL_ROLLFEED,
-			MODEL_ROLLFEED_YES, init->v))
-	{
-	  /* End Roll Feed mode */
-	  if (strcmp(stp_get_string_parameter(init->v, "InputSlot"), "Roll") == 0)
-	    stp_zprintf(init->v, "IR\002%c%c%c", 0, 0, 0);
-	  else
-	    stp_zprintf(init->v, "IR\002%c%c%c", 0, 0, 2);
-	}
+      if (init->input_slot && init->input_slot->deinit_sequence.length)
+	stp_zfwrite(init->input_slot->deinit_sequence.data,
+		    init->input_slot->deinit_sequence.length, 1, init->v);
       /* Load settings from NVRAM */
       stp_zprintf(init->v, "LD%c%c", 0, 0);
 
@@ -1134,7 +1100,7 @@ escp2_print(const stp_vars_t v, stp_image_t *image)
   int		n;		/* Output number */
   unsigned short *out;	/* Output pixels (16-bit) */
   unsigned char	*in;		/* Input pixels */
-  int		page_left,	/* Left margin of page */ 
+  int		page_left,	/* Left margin of page */
 		page_right,	/* Right margin of page */
 		page_top,	/* Top of page */
 		page_bottom,	/* Bottom of page */
@@ -1174,6 +1140,7 @@ escp2_print(const stp_vars_t v, stp_image_t *image)
   int 		total_channels;
   int 		channels_in_use;
   int 		channel_limit;
+  const char *input_slot = stp_get_string_parameter(v, "InputSlot");
 
   if (!stp_verify(nv))
     {
@@ -1185,7 +1152,7 @@ escp2_print(const stp_vars_t v, stp_image_t *image)
       stp_eprintf(nv, _("Model %d out of range.\n"), model);
       return 0;
     }
-    
+
 
   if (output_type == OUTPUT_RAW_PRINTER)
     {
@@ -1450,6 +1417,21 @@ escp2_print(const stp_vars_t v, stp_image_t *image)
   init.total_channels = total_channels;
   init.channel_limit = channel_limit;
 
+  init.input_slot = NULL;
+  if (input_slot && strlen(input_slot) > 0)
+    {
+      const input_slot_list_t *slots = escp2_input_slots(model, v);
+      for (i = 0; i < slots->n_input_slots; i++)
+	{
+	  if (slots->slots[i].name &&
+	      strcmp(input_slot, slots->slots[i].name) == 0)
+	    {
+	      init.input_slot = &(slots->slots[i]);
+	      break;
+	    }
+	}
+    }
+
   escp2_init_printer(&init);
 
  /*
@@ -1670,7 +1652,7 @@ send_print_command(stp_softweave_t *sw, stp_pass_t *pass, int model, int color,
 	ygap *= escp2_pseudo_separation_rows(model, v);
       else
 	ygap *= escp2_separation_rows(model, v);
-      stp_zprintf(v, "\033.%c%c%c%c%c%c", COMPRESSION, ygap, xgap, nlines, 
+      stp_zprintf(v, "\033.%c%c%c%c%c%c", COMPRESSION, ygap, xgap, nlines,
 		  BYTE(lwidth, 0), BYTE(lwidth, 1));
     }
   else
