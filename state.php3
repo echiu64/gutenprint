@@ -14,6 +14,7 @@ $supported_printers = array(
 		'EPSON Stylus Photo EX' => 'Fully Operational',
 		'EPSON Stylus Photo 720' => 'Needs Testing',
 		'EPSON Stylus Photo 750' => 'Fully Operational',
+		'EPSON Stylus Photo 780' => 'Needs Testing (4.1 only)',
 		'EPSON Stylus Photo 790' => 'Needs Testing (4.1 only)',
 		'EPSON Stylus Photo 870' => 'Fully Operational',
 		'EPSON Stylus Photo 890' => 'Needs Testing (4.1 only)',
@@ -32,7 +33,7 @@ $supported_printers = array(
 		'EPSON Stylus Color 460' => 'Needs Testing',
 		'EPSON Stylus Color 480' => 'Operational, cannot change cartridge (4.1 only)',
 		'EPSON Stylus Color 500' => 'Fully Operational',
-		'EPSON Stylus Color 580' => 'Operational, cannot change cartridge (4.1 only)',
+		'EPSON Stylus Color 580' => 'Needs Testing, cannot change cartridge (4.1 only)',
 		'EPSON Stylus Color 600' => 'Fully Operational',
 		'EPSON Stylus Color 640' => 'Fully Operational',
 		'EPSON Stylus Color 660' => 'Fully Operational',
@@ -104,6 +105,7 @@ $supported_printers = array(
        'Ink Jet Printers' => array(
 	       '3200' => 'Operational (4.1 only)',
 	       '4076' => 'Operational',
+	       'Z31' => 'Needs Testing (4.1 only),
 	       'Z52' => 'Operational (4.1 only)'
 	       )
        ),
