@@ -110,21 +110,24 @@ typedef unsigned long long model_featureset_t;
 
 typedef struct escp2_printer
 {
-  model_cap_t	flags;
-  int 		nozzles;
-  int		nozzle_separation;
-  int		black_nozzles;
-  int		xres;
-  int		softweave_dot_size;
-  int		microweave_dot_size;
-  int		max_paper_width;
-  int		max_paper_height;
-  int		left_margin;
-  int		right_margin;
-  int		top_margin;
-  int		bottom_margin;
-  int		separation_rows;
-  int		pseudo_separation_rows;
+  model_cap_t	flags;		/* Bitmask of flags, see below */
+  int 		nozzles;	/* Number of nozzles per color */
+  int		nozzle_separation; /* Separation between rows, in 1/720" */
+  int		black_nozzles;	/* Number of black nozzles (may be extra) */
+  int		xres;		/* Normal distance between dots in */
+				/* softweave mode (inverse inches) */
+  int		softweave_dot_size;/* Dot size to use in softweave mode */
+  int		microweave_dot_size; /* Dot size to use in microweave mode */
+  int		max_paper_width; /* Maximum paper width, in points*/
+  int		max_paper_height; /* Maximum paper height, in points */
+  int		left_margin;	/* Left margin, points */
+  int		right_margin;	/* Right margin, points */
+  int		top_margin;	/* Absolute top margin, points */
+  int		bottom_margin;	/* Absolute bottom margin, points */
+  int		separation_rows; /* Some printers require funky spacing */
+				/* arguments in microweave mode. */
+  int		pseudo_separation_rows;/* Some printers require funky */
+				/* spacing arguments in softweave mode */
 } escp2_printer_t;
 
 #define MODEL_INIT_MASK		0xf
@@ -199,9 +202,9 @@ static double dot_sizes[] = { 0.333, 0.5, 1.0 };
 
 static simple_dither_range_t variable_dither_ranges[] =
 {
-  { 0.083, 0x1, 0, 1 },
-  { 0.125, 0x2, 0, 2 },
-/*  { 0.25,  0x3, 0, 3 }, */
+  { 0.074, 0x1, 0, 1 },
+  { 0.111, 0x2, 0, 2 },
+  { 0.222, 0x3, 0, 3 },
   { 0.333, 0x1, 1, 1 },
   { 0.5,   0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
@@ -243,7 +246,7 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO),
-    48, 6, 48, 720, -1, 1, INCH_8_5, INCH_14, 14, 14, 0, 20, 1, 0
+    48, 6, 48, 720, -1, 1, INCH_8_5, INCH_14, 14, 14, 0, 24, 1, 0
   },
   /* 2: Stylus Color 1500 */
   {
@@ -257,21 +260,21 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    32, 8, 32, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 20, 1, 0
+    32, 8, 32, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 24, 1, 0
   },
   /* 4: Stylus Color 800 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    64, 4, 64, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 20, 1, 0
+    64, 4, 64, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 24, 1, 4
   },
   /* 5: Stylus Color 850 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    64, 4, 128, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 20, 1, 0
+    64, 4, 128, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 24, 1, 4
   },
   /* 6: Stylus Color 1520/3000 */
   {
@@ -287,21 +290,21 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES),
-    32, 8, 32, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
+    32, 8, 32, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 24, 1, 0
   },
   /* 8: Stylus Photo EX */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES),
-    32, 8, 32, 720, 0, 3, INCH_11, INCH_17, 9, 9, 0, 20, 1, 0
+    32, 8, 32, 720, 0, 3, INCH_11, INCH_17, 9, 9, 0, 24, 1, 0
   },
   /* 9: Stylus Photo */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO),
-    32, 8, 32, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
+    32, 8, 32, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 24, 1, 0
   },
 
   /* THIRD GENERATION PRINTERS */
@@ -313,21 +316,21 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_NO),
-    21, 8, 64, 720, 2, 3, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
+    21, 8, 64, 720, 2, 3, INCH_8_5, INCH_14, 9, 9, 0, 24, 1, 0
   },
   /* 11: Stylus Color 640 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    32, 8, 64, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
+    32, 8, 64, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 24, 1, 0
   },
   /* 12: Stylus Color 740 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    48, 6, 144, 360, 0, 3, INCH_11, INCH_17, 9, 9, 0, 20, 1, 0
+    48, 6, 144, 360, 0, 3, INCH_11, INCH_17, 9, 9, 0, 24, 1, 0
   },
   /* 13: Stylus Color 900 */
   /* Dale Pontius thinks the spacing is 3 jets??? */
@@ -620,23 +623,27 @@ escp2_parameters(int  model,		/* I - Printer model */
 	return NULL;
       else
 	{
-	  valptrs = malloc(sizeof(char *) * 2);
-	  valptrs[0] = malloc(strlen(ink_types[0]) + 1);
-	  strcpy(valptrs[0], ink_types[0]);
-	  valptrs[1] = malloc(strlen(ink_types[1]) + 1);
-	  strcpy(valptrs[1], ink_types[1]);
-	  *count = 2;
+	  int ninktypes = sizeof(ink_types) / sizeof(char *);
+	  valptrs = malloc(sizeof(char *) * ninktypes);
+	  for (i = 0; i < ninktypes; i++)
+	    {
+	      valptrs[i] = malloc(strlen(ink_types[i]) + 1);
+	      strcpy(valptrs[i], ink_types[i]);
+	    }
+	  *count = ninktypes;
 	  return valptrs;
 	}
     }
   else if (strcmp(name, "MediaType") == 0)
     {
-      valptrs = malloc(sizeof(char *) * 2);
-      valptrs[0] = malloc(strlen(media_types[0]) + 1);
-      strcpy(valptrs[0], media_types[0]);
-      valptrs[1] = malloc(strlen(media_types[1]) + 1);
-      strcpy(valptrs[1], media_types[1]);
-      *count = 2;
+      int nmediatypes = sizeof(media_types) / sizeof(char *);
+      valptrs = malloc(sizeof(char *) * nmediatypes);
+      for (i = 0; i < nmediatypes; i++)
+	{
+	  valptrs[i] = malloc(strlen(media_types[i]) + 1);
+	  strcpy(valptrs[i], media_types[i]);
+	}
+      *count = nmediatypes;
       return valptrs;
     }
   else

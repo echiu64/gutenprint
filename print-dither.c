@@ -1164,7 +1164,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	      v = dd->value_h;
 	      dot_size = dd->dot_size_h;
 	    }
-	  else if (rangepoint >= DITHERPOINT(d, x, y, 3))
+	  else if (rangepoint >= DITHERPOINT(d, x + y / 3, y + x / 3, 3))
 	    {
 	      isdark = dd->isdark_h;
 	      bits = dd->bits_h;
@@ -1192,7 +1192,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 		}
 	      *ink_budget -= dot_size;
 	    }
-	  adjusted -= virtual_value;
+	  adjusted -= v;
 	}
       return adjusted;
     }
@@ -1612,15 +1612,20 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	    }
 
 	  k = bk;
-	  UPDATE_COLOR(k);
-	  tk = print_color(d, &(d->k_dither), bk, bk, k, x, row, kptr,
-			   NULL, bit, length, 0, 0, 0, 0, &ink_budget);
-	  if (tk != k)
-	    printed_black = 1;
-	  k = tk;
-	  if (!(d->dither_type & D_ORDERED_BASE))
-	    ditherk = update_dither(k, ok, d->src_width, odb, odb_mask,
-				    direction, kerror0, kerror1, d);
+	  {
+	    int dd = d->dither_type;
+	    d->dither_type = D_ORDERED;
+	    UPDATE_COLOR(k);
+	    tk = print_color(d, &(d->k_dither), bk, bk, k, x, row, kptr,
+			     NULL, bit, length, 0, 0, 0, 0, &ink_budget);
+	    if (tk != k)
+	      printed_black = 1;
+	    k = tk;
+	    if (!(d->dither_type & D_ORDERED_BASE))
+	      ditherk = update_dither(k, ok, d->src_width, odb, odb_mask,
+				      direction, kerror0, kerror1, d);
+	    d->dither_type = dd;
+	  }
 	}
       else
 	{
