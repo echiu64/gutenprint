@@ -55,6 +55,7 @@ extern "C" {
 #define D_UNITONE 64
 #define D_HYBRID_EVENTONE (D_ORDERED_BASE | D_EVENTONE)
 #define D_HYBRID_UNITONE (D_ORDERED_BASE | D_UNITONE)
+#define D_PREDITHERED 128
 
 #define DITHER_FAST_STEPS (6)
 
@@ -177,6 +178,7 @@ typedef struct dither
 #define USMIN(a, b) ((a) < (b) ? (a) : (b))
 
 
+extern stpi_ditherfunc_t stpi_dither_predithered;
 extern stpi_ditherfunc_t stpi_dither_very_fast;
 extern stpi_ditherfunc_t stpi_dither_ordered;
 extern stpi_ditherfunc_t stpi_dither_ed;

@@ -52,7 +52,8 @@ static const stpi_dither_algorithm_t dither_algos[] =
   { "Ordered",	      N_ ("Ordered"),                D_ORDERED },
   { "Fast",	      N_ ("Fast"),                   D_FAST },
   { "VeryFast",	      N_ ("Very Fast"),              D_VERY_FAST },
-  { "Floyd",	      N_ ("Hybrid Floyd-Steinberg"), D_FLOYD_HYBRID }
+  { "Floyd",	      N_ ("Hybrid Floyd-Steinberg"), D_FLOYD_HYBRID },
+  { "Predithered",    N_ ("Predithered Input"),      D_PREDITHERED }
 };
 
 static const int num_dither_algos = sizeof(dither_algos)/sizeof(stpi_dither_algorithm_t);
@@ -164,6 +165,7 @@ stpi_set_dither_function(stp_vars_t *v)
 {
   const stpi_quality_t *quality = NULL;
   const char *image_type = stp_get_string_parameter(v, "ImageType");
+  const char *color_correction = stp_get_string_parameter(v,"ColorCorrection");
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   int i;
   const char *algorithm = stp_get_string_parameter(v, "DitherAlgorithm");
@@ -171,7 +173,12 @@ stpi_set_dither_function(stp_vars_t *v)
   if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE))
     quality = stpi_get_quality_by_name(stp_get_string_parameter(v, "Quality"));
 
-  if (image_type)
+  if (color_correction)
+    {
+      if (strcmp(color_correction, "Predithered") == 0)
+	d->stpi_dither_type = D_PREDITHERED;
+    }
+  if (image_type && d->stpi_dither_type == -1)
     {
       if (strcmp(image_type, "Text") == 0)
 	d->stpi_dither_type = D_VERY_FAST;
@@ -249,6 +256,8 @@ stpi_set_dither_function(stp_vars_t *v)
     }
   switch (d->stpi_dither_type)
     {
+    case D_PREDITHERED:
+      RETURN_DITHERFUNC(stpi_dither_predithered, v);
     case D_VERY_FAST:
       RETURN_DITHERFUNC(stpi_dither_very_fast, v);
     case D_ORDERED:
@@ -361,8 +370,8 @@ stp_dither_init(stp_vars_t *v, stp_image_t *image, int out_width,
    * EvenTone, we don't need to pay the cost.
    */
   
-  if (d->stpi_dither_type == D_VERY_FAST || d->stpi_dither_type == D_FAST ||
-      d->stpi_dither_type == D_EVENTONE)
+  if (d->stpi_dither_type == D_VERY_FAST || d->stpi_dither_type ==D_EVENTONE ||
+      d->stpi_dither_type == D_FAST || d->stpi_dither_type == D_PREDITHERED)
     {
       if (stp_check_int_parameter(v, "DitherVeryFastSteps",
 				  STP_PARAMETER_ACTIVE))

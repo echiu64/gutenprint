@@ -125,6 +125,7 @@ libgimpprint_la_SOURCES =			\
 	dither-main.c				\
 	dither-ordered.c			\
 	dither-very-fast.c			\
+	dither-predithered.c			\
 	generic-options.c			\
 	image.c					\
 	module.c				\
