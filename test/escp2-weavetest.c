@@ -98,8 +98,10 @@ const char header[] = "Legend:\n"
 "M  The same physical row is being printed more than once.\n"
 "N  Two different active passes are in the same slot.\n"
 "O  Number of missing start rows is incorrect.\n"
-"P  Physical row number out of bounds.\n";
+"P  Physical row number out of bounds.\n"
+"Q  Pass starts earlier than a prior pass.\n";
 
+stp_vars_t v;
 
 static void
 print_header(void)
@@ -112,6 +114,13 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	   int hoffset, int ydpi, int xdpi, int physical_xdpi,
 	   int vertical_subpass)
 {
+}
+
+static void
+writefunc(void *file, const char *buf, size_t bytes)
+{
+  FILE *prn = (FILE *)file;
+  fwrite(buf, 1, bytes, prn);
 }
 
 int
@@ -139,36 +148,42 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
   int head_offset[8];
 
   memset(errors, 0, sizeof(int) * 26);
+#if 0
   if (physjets < hpasses * vpasses * subpasses)
     {
       return 0;
     }
-  passstarts = xmalloc(sizeof(int) * (nrows + physsep));
-  logpassstarts = xmalloc(sizeof(int) * (nrows + physsep));
-  passends = xmalloc(sizeof(int) * (nrows + physsep));
-  passcounts = xmalloc(sizeof(int) * (nrows + physsep));
-  vmod = 2 * physsep * hpasses * vpasses * subpasses;
-  current_slot = xmalloc(sizeof(int) * vmod);
-  physpassstuff = xmalloc((nrows + physsep));
-  rowdetail = xmalloc((nrows + physsep) * physjets);
-  memset(rowdetail, 0, (nrows + physsep) * physjets);
-  memset(physpassstuff, -1, (nrows + physsep));
-  memset(current_slot, 0, (sizeof(int) * vmod));
+#endif
 
   for(i=0; i<8; i++)
     head_offset[i] = 0;
 
   if(color_jet_arrangement != 0)
     {
-    head_offset[0] = (physjets+1)*physsep;
-    head_offset[1] = (physjets+1)*physsep;
-    head_offset[2] = 2*(physjets+1)*physsep;
+      head_offset[0] = (physjets+1)*physsep;
+      head_offset[1] = (physjets+1)*physsep;
+      head_offset[2] = 2*(physjets+1)*physsep;
     }
 
   sw = stp_initialize_weave(physjets, physsep, hpasses, vpasses, subpasses,
 			    1, 1, 128, nrows, 1, first_line,
-			    phys_lines, strategy, head_offset,
-			    NULL, flush_pass);
+			    phys_lines, strategy, head_offset, v, flush_pass);
+  if (!sw)
+    return 1;
+
+  passstarts = xmalloc(sizeof(int) * (nrows + physsep));
+  logpassstarts = xmalloc(sizeof(int) * (nrows + physsep));
+  passends = xmalloc(sizeof(int) * (nrows + physsep));
+  passcounts = xmalloc(sizeof(int) * (nrows + physsep));
+  vmod = 2 * physsep * hpasses * vpasses * subpasses;
+  if (vmod == 0)
+    vmod = 1;
+  current_slot = xmalloc(sizeof(int) * vmod);
+  physpassstuff = xmalloc((nrows + physsep));
+  rowdetail = xmalloc((nrows + physsep) * physjets);
+  memset(rowdetail, 0, (nrows + physsep) * physjets);
+  memset(physpassstuff, -1, (nrows + physsep));
+  memset(current_slot, 0, (sizeof(int) * vmod));
   if (!quiet)
     {
       print_header();
@@ -318,6 +333,12 @@ main(int argc, char **argv)
   int quiet = 0;
   int status = 0;
 
+  v = stp_allocate_vars();
+  stp_set_outfunc(v, writefunc);
+  stp_set_errfunc(v, writefunc);
+  stp_set_outdata(v, stdout);
+  stp_set_errdata(v, stdout);
+
   if (argc == 1)
     {
       int total_cases = 0;
@@ -329,6 +350,9 @@ main(int argc, char **argv)
 	  (void) sscanf(linebuf, "%d%d%d%d%d%d%d%d%d", &physjets, &physsep,
 			&hpasses, &vpasses, &subpasses, &nrows, &first_line,
 			&phys_lines, &color_jet_arrangement);
+	  fflush(stdout);
+	  if (hpasses * subpasses > physjets)
+	    continue;
 	  printf("%d %d %d %d %d %d %d %d %d ", physjets, physsep, hpasses,
 			vpasses, subpasses, nrows, first_line, phys_lines,
 			color_jet_arrangement);
@@ -361,11 +385,13 @@ main(int argc, char **argv)
   first_line = atoi(argv[7]);
   phys_lines = atoi(argv[8]);
   color_jet_arrangement = atoi(argv[9]);
+#if 0
   if (physjets < hpasses * vpasses * subpasses)
     {
       fprintf(stderr, "Oversample exceeds jets\n");
       return 1;
     }
+#endif
   if (getenv("QUIET"))
     quiet = 2;
   return (run_one_weavetest(physjets, physsep, hpasses, vpasses,

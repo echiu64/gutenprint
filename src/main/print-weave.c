@@ -121,6 +121,8 @@ initialize_raw_weave(raw_t *w,	/* I - weave struct to be filled in */
 	w->jets = J;
 	w->oversampling = H;
 	w->advancebasis = J / H;
+	if (w->advancebasis == 0)
+	  w->advancebasis++;
 	w->subblocksperpassblock = gcd(S, w->advancebasis);
 	w->passespersubblock = S / w->subblocksperpassblock;
 	w->strategy = strat;
@@ -288,7 +290,8 @@ calculate_raw_row_parameters(raw_t *w,		/* I - weave parameters */
 	      }
 	    else
 	      {
-		const int roundedjets = w->advancebasis * w->oversampling;
+		const int roundedjets =
+		  (w->advancebasis * w->oversampling) % w->jets;
 		band--;
 		passinband += w->separation * w->oversampling;
 		offset += w->separation * (w->jets - roundedjets);
@@ -299,7 +302,7 @@ calculate_raw_row_parameters(raw_t *w,		/* I - weave parameters */
 	  }
 
 	*pass = band * w->oversampling * w->separation + passinband;
-	*jet = offset / w->separation;
+	*jet = (offset / w->separation) % w->jets;
 	*startrow = row - (*jet * w->separation);
 }
 
@@ -588,9 +591,11 @@ stp_calculate_row_parameters(void *vw,		/* I - weave parameters */
 	phantomrows = 0;
 
 	if (raw_pass < w->first_normal_pass) {
+	        assert(raw_pass >= w->first_premapped_pass);
 		*pass = w->pass_premap[raw_pass - w->first_premapped_pass];
 		stagger = w->stagger_premap[raw_pass - w->first_premapped_pass];
 	} else if (raw_pass >= w->first_postmapped_pass) {
+	        assert(raw_pass >= w->first_postmapped_pass);
 		*pass = w->pass_postmap[raw_pass - w->first_postmapped_pass];
 		stagger = w->stagger_postmap[raw_pass
 		                             - w->first_postmapped_pass];
@@ -1762,11 +1767,35 @@ stp_initialize_weave(int jets,	/* Width of print head */
     sep = 1;
   if (v_subpasses < 1)
     v_subpasses = 1;
+  if (v_subsample < 1)
+    v_subsample = 1;
 
   sw->v = v;
   sw->separation = sep;
   sw->jets = jets;
   sw->horizontal_weave = osample;
+  sw->oversample = osample * v_subpasses * v_subsample;
+  if (sw->oversample > jets)
+    {
+      for (i = 2; i <= v_subpasses; i++)
+	{
+	  if ((v_subpasses % i == 0) && (sw->oversample / i <= jets))
+	    {
+	      sw->repeat_count = i;
+	      v_subpasses /= i;
+	      goto found;
+	    }
+	}
+      stp_eprintf((const stp_vars_t) v,
+		  "Weave error: oversample (%d) > jets (%d)\n",
+		  sw->oversample, jets);
+      free(sw);
+      return 0;
+    }
+  else
+    sw->repeat_count = 1;
+ found:
+
   sw->vertical_oversample = v_subsample;
   sw->vertical_subpasses = v_subpasses;
   sw->oversample = osample * v_subpasses * v_subsample;
@@ -1774,13 +1803,14 @@ stp_initialize_weave(int jets,	/* Width of print head */
   sw->lineno = first_line;
   sw->flushfunc = flushfunc;
 
-  if (sw->oversample > jets) {
-    stp_eprintf((const stp_vars_t) v,
-		"Weave error: oversample (%d) > jets (%d)\n",
-		sw->oversample, jets);
-    free(sw);
-    return 0;
-  }
+  if (sw->oversample > jets)
+    {
+      stp_eprintf((const stp_vars_t) v,
+		  "Weave error: oversample (%d) > jets (%d)\n",
+		  sw->oversample, jets);
+      free(sw);
+      return 0;
+    }
 
   /*
    * setup printhead offsets.
@@ -1806,8 +1836,10 @@ stp_initialize_weave(int jets,	/* Width of print head */
   /*
    * The value of vmod limits how many passes may be unfinished at a time.
    * If pass x is not yet printed, pass x+vmod cannot be started.
+   *
+   * rlk 20010227: why the 6?
    */
-  sw->vmod = 6 * sw->separation * sw->oversample;
+  sw->vmod = 6 * sw->separation * sw->oversample * sw->repeat_count;
   sw->separation_rows = separation_rows;
 
   sw->bitwidth = width;
@@ -1877,10 +1909,13 @@ weave_parameters_by_row(const stp_softweave_t *sw, int row,
   static int rcache = -2;
   static int vcache = -2;
   int jetsused;
+  int sub_repeat_count = vertical_subpass % sw->repeat_count;
+  vertical_subpass /= sw->repeat_count;
 
   if (scache == sw && rcache == row && vcache == vertical_subpass)
     {
       memcpy(w, &wcache, sizeof(stp_weave_t));
+      w->pass = (w->pass * sw->repeat_count) + sub_repeat_count;
       return;
     }
   scache = sw;
@@ -1896,6 +1931,7 @@ weave_parameters_by_row(const stp_softweave_t *sw, int row,
   w->physpassend = w->physpassstart + sw->separation * (jetsused - 1);
 
   memcpy(&wcache, w, sizeof(stp_weave_t));
+  w->pass = (w->pass * sw->repeat_count) + sub_repeat_count;
 #if 0
   printf("row %d, jet %d of pass %d "
          "(pos %d, start %d, end %d, missing rows %d\n",

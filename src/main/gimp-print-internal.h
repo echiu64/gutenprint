@@ -196,6 +196,7 @@ typedef struct stp_softweave
 				/* quality) */
   int vmod;			/* Number of banks of passes */
   int oversample;		/* Excess precision per row */
+  int repeat_count;		/* How many times a pass is repeated */
   int ncolors;			/* How many colors (1, 4, or 6) */
   int horizontal_width;		/* Line width in output pixels */
   int vertical_height;		/* Image height in output pixels */
