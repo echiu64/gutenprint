@@ -111,6 +111,42 @@ There are four principal ways of requesting support for this package:
    list.  This is recommended as a last resort only.
 
 
+DEBIAN:
+
+The Debian packaging has been rewritten from scratch as of 4.1.4. It
+is compliant with Standards-Version 3.1.1, and is lintian-clean. It
+should build from source on potato, woody and sid (the packages should
+also work).  There are five separate packages:
+
+gimp1.2-print		The GIMP Print plugin. Also contains HTML and SGML
+			documentation that is registered with doc-base.
+cupsys-driver-gimpprint The CUPS driver and PPD files.
+libgimpprint		The libgimpprint library (GIMP-Print core).
+libgimpprint-dev	Headers, symlinks, m4 macro (AM_PATH_GIMPPRINT)
+			and gimpprint-config needed to develop programs
+			that link with libgimpprint.
+escputil		The escputil printer tool.
+
+The library symlinks will get packaged without any modification needed
+to the debian packaging whatever library versioning scheme is
+used. Most packages depend on libgimpprint as this will provide
+translations for i18n in the future that they will use, or they
+require libgimpprint anyway.
+
+
+INTERNATIONALIZATION
+
+All translatable strings are marked in the source for libgimpprint.
+Two translations are available: en_GB and en_TEST (the latter for
+testing only).
+
+TODO: make sure that the tagged strings are actually translated. This
+will involve some modifications to the source such as dynamically
+allocating memory to hold translated structures, instead of passing
+back pointers to static data. Most things are now actually translated,
+but there are a few bits left to do (some of which might be obscure).
+
+
 USE OF THE CVS REPOSITORY
 
 If you have a copy of the source from the CVS repository, then prior

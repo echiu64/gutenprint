@@ -10,9 +10,13 @@ The Gimp Print plugin requires the Gimp 1.2.
 
 Gimp-Print 4.1.4 contains the following fixes and improvements over 4.1.3:
 
-1) Major improvements in the Debian packaging yada yada yada.
+1) Major improvements to the Debian packaging.  It is compliant with
+   Standards-Version 3.1.1, and is lintian-clean.  It should build
+   from source on potato, woody and sid.  Please see the README for
+   more information.
 
-2) Initial internationalization yada yada yada.
+2) First cut at internationalization.  Please see the README for more
+   information.
 
 3) The Ghostscript driver should now compile on all systems.
 
@@ -57,6 +61,11 @@ Gimp-Print 4.1.4 contains the following fixes and improvements over 4.1.3:
    printers.
 
 17) Cleaned up some black speckling problems.
+
+18) New --disable-libgimpprint option to configure inhibits building
+   of libgimpprint.  This can be used to build just the programs (GIMP
+   plugin and/or CUPS driver) against an installed copy of
+   libgimpprint (if the installed copy is current).
 
 
 Print 4.1.3 contains the following fixes and improvements over 4.1.2:
