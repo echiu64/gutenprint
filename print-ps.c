@@ -33,6 +33,11 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.20  2000/02/27 01:53:04  khk
+ *   Fixed problem with missing linefeed character after options from PPD
+ *   file. Depending on the format of the option the PostScript file was
+ *   not conform with the Adobe DSC specification.
+ *
  *   Revision 1.19  2000/02/16 00:59:19  rlk
  *   1) Use correct convert functions (canon, escp2, pcl, ps).
  *
@@ -696,6 +701,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     for (i = 0; i < num_commands; i ++)
     {
       fputs(commands[i].command, prn);
+      fputs("\n", prn);
       free(commands[i].command);
     }
 
