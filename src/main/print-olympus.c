@@ -46,6 +46,12 @@
 #define OLYMPUS_INTERLACE_LINE	1
 #define OLYMPUS_INTERLACE_PLANE	2
 
+#define OLYMPUS_FEATURE_FULL_WIDTH	0x00000001
+#define OLYMPUS_FEATURE_FULL_HEIGHT	0x00000002
+#define OLYMPUS_FEATURE_BLOCK_ALIGN	0x00000004
+#define OLYMPUS_FEATURE_BORDERLESS	0x00000008
+#define OLYMPUS_FEATURE_WHITE_BORDER	0x00000010
+
 #define MIN(a,b)	(((a) < (b)) ? (a) : (b))
 #define MAX(a,b)	(((a) > (b)) ? (a) : (b))
 
@@ -127,8 +133,7 @@ typedef struct /* printer specific parameters */
   int interlacing;	/* color interlacing scheme */
   const char *planes;	/* name and order of ribbons */
   int block_size;
-  int need_empty_cols;	/* must we print empty columns? */
-  int need_empty_rows;	/* must we print empty rows? */
+  int features;		
   void (*printer_init_func)(stp_vars_t);
   void (*printer_end_func)(stp_vars_t);
   void (*plane_init_func)(stp_vars_t);
@@ -139,7 +144,6 @@ typedef struct /* printer specific parameters */
   const char *adj_magenta;
   const char *adj_yellow;
   const laminate_list_t *laminate;
-  const int borderless;
 } olympus_cap_t;
 
 static const olympus_cap_t* olympus_get_model_capabilities(int model);
@@ -352,14 +356,9 @@ static const char p400_adj_yellow[] =
 static const olymp_pagesize_t cpx00_page[] =
 {
   { "Custom", NULL, -1, -1, 13, 13, 16, 18},
-  { "Postcard", "Postcard 148x100mm", -1, -1, 0, 0, 0, 0},
-  { "ISOB7", "CP_L 89x119mm", 253, 334, 0, 0, 0, 0},
-  { "ISOB8", "Card 54x86mm", 155, 239, 0, 0, 0, 0},
-/*
   { "Postcard", "Postcard 148x100mm", -1, -1, 13, 13, 16, 18},
   { "ISOB7", "CP_L 89x119mm", 253, 334, 13, 13, 15, 15},
   { "ISOB8", "Card 54x86mm", 155, 239, 13, 13, 15, 15},
-*/
 };
 
 static const olymp_pagesize_list_t cpx00_page_list =
@@ -448,11 +447,6 @@ static const olymp_resolution_list_t updp10_res_list =
 static const olymp_pagesize_t updp10_page[] =
 {
   { "Custom", NULL, -1, -1, 12, 12, 0, 0},
-/*
-  { "w288h432", "UPC-10P23", -1, -1, 0, 0, 0, 0},
-  { "Postcard", "UPC-10P34", 288, 384, 0, 0, 0, 0},
-  { "A6", "UPC-10S01", 288, 432, 0, 0, 0, 0},
-*/
   { "w288h432", "UPC-10P23", -1, -1, 12, 12, 18, 18},
   { "Postcard", "UPC-10P34", 288, 384, 12, 12, 16, 16},
   { "A6", "UPC-10S01", 288, 432, 12, 12, 18, 18},
@@ -540,13 +534,12 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &p300_printsize_list,
     OLYMPUS_INTERLACE_PLANE, "YMC",
     16,
-    1, 0,
+    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_BLOCK_ALIGN,
     &p300_printer_init_func, NULL,
     NULL, &p300_plane_end_func,
     &p300_block_init_func, NULL,
     p300_adj_cyan, p300_adj_magenta, p300_adj_yellow,
     NULL,
-    0,
   },
   { /* Olympus P400 */
     1,
@@ -555,13 +548,12 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &p400_printsize_list,
     OLYMPUS_INTERLACE_PLANE, "123",
     180,
-    1, 1,
+    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT,
     &p400_printer_init_func, NULL,
     &p400_plane_init_func, &p400_plane_end_func,
     &p400_block_init_func, NULL,
     p400_adj_cyan, p400_adj_magenta, p400_adj_yellow,
     NULL,
-    0,
   },
   { /* Canon CP100 */
     1000,
@@ -570,13 +562,13 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &cpx00_printsize_list,
     OLYMPUS_INTERLACE_PLANE, "123",
     1808,
-    1, 1,
+    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
+      | OLYMPUS_FEATURE_BORDERLESS | OLYMPUS_FEATURE_WHITE_BORDER,
     &cpx00_printer_init_func, NULL,
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
-    0,
   },
   { /* Sony UP-DP10  */
     2000,
@@ -585,13 +577,13 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &updp10_printsize_list,
     OLYMPUS_INTERLACE_NONE, "123",
     1800,
-    1, 1,
+    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
+      | OLYMPUS_FEATURE_BORDERLESS,
     &updp10_printer_init_func, &updp10_printer_end_func,
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
     &updp10_laminate_list,
-    1,
   },
 };
 
@@ -756,6 +748,12 @@ olympus_printsize(stp_const_vars_t v,
 		  page, resolution);
 }
 
+static int
+olympus_feature(const olympus_cap_t *caps, int feature)
+{
+  return ((caps->features & feature) == feature);
+}
+
 static stp_parameter_list_t
 olympus_list_parameters(stp_const_vars_t v)
 {
@@ -874,7 +872,7 @@ olympus_parameters(stp_const_vars_t v, const char *name,
     }
   else if (strcmp(name, "Borderless") == 0)
     {
-      if (caps->borderless) 
+      if (olympus_feature(caps, OLYMPUS_FEATURE_BORDERLESS)) 
         description->is_active = 1;
     }
   else
@@ -909,7 +907,8 @@ olympus_imageable_area(stp_const_vars_t v,
           stpi_default_media_size(v, &width, &height);
     
           
-	  if (caps->borderless && stp_get_boolean_parameter(v, "Borderless"))
+	  if (olympus_feature(caps, OLYMPUS_FEATURE_BORDERLESS)
+	    && stp_get_boolean_parameter(v, "Borderless"))
             {
               *left = 0;
               *top  = 0;
@@ -1006,7 +1005,10 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   int page_pt_width  = stp_get_page_width(v);
   int page_pt_height = stp_get_page_height(v);
 #endif
-  int page_pt_left, page_pt_right, page_pt_top, page_pt_bottom;
+  int page_pt_left   = 0,
+      page_pt_right  = stp_get_page_width(v),
+      page_pt_top    = 0,
+      page_pt_bottom = stp_get_page_height(v);
 
   /* page w/out borders in pixels (according to selected dpi) */
   int print_px_width;
@@ -1022,10 +1024,12 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
     }
 
   stp_describe_resolution(v, &xdpi, &ydpi);
-  olympus_imageable_area(v, &page_pt_left, &page_pt_right,
-	&page_pt_bottom, &page_pt_top);
   olympus_printsize(v, &max_print_px_width, &max_print_px_height);
 
+  if (! olympus_feature(caps, OLYMPUS_FEATURE_WHITE_BORDER))
+    olympus_imageable_area(v, &page_pt_left, &page_pt_right,
+	&page_pt_bottom, &page_pt_top);
+  
   print_px_width  = MIN(max_print_px_width,
 		  	(page_pt_right - page_pt_left) * xdpi / 72);
   print_px_height = MIN(max_print_px_height,
@@ -1153,14 +1157,36 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
       (*(caps->printer_init_func))(v);
     }
 
-  min_y = (caps->need_empty_rows ? 0 : out_px_top 
-       - (out_px_top % caps->block_size)); /* floor to multiple of block_size */
-  max_y = (caps->need_empty_rows ? print_px_height - 1 : (out_px_bottom - 1)
-       + (caps->block_size - 1) - ((out_px_bottom - 1) % caps->block_size));
-                                           /* ceil to multiple of block_size */
-  min_x = (caps->need_empty_cols ? 0 : out_px_left);
-  max_x = (caps->need_empty_cols ? print_px_width - 1 : out_px_right);
-
+  if (olympus_feature(caps, OLYMPUS_FEATURE_FULL_HEIGHT))
+    {
+      min_y = 0;
+      max_y = print_px_height - 1;
+    }
+  else if (olympus_feature(caps, OLYMPUS_FEATURE_BLOCK_ALIGN))
+    {
+      min_y = out_px_top - (out_px_top % caps->block_size);
+      				/* floor to multiple of block_size */
+      max_y = (out_px_bottom - 1) + (caps->block_size - 1)
+      		- ((out_px_bottom - 1) % caps->block_size);
+				/* ceil to multiple of block_size */
+    }
+  else
+    {
+      min_y = out_px_top;
+      max_y = out_px_bottom - 1;
+    }
+  
+  if (olympus_feature(caps, OLYMPUS_FEATURE_FULL_WIDTH))
+    {
+      min_x = 0;
+      max_x = print_px_width - 1;
+    }
+  else
+    {
+      min_x = out_px_left;
+      max_x = out_px_right;
+    }
+      
   max_progress = (caps->interlacing == OLYMPUS_INTERLACE_PLANE ?
 		  	(max_y - min_y) * ink_channels : max_y - min_y) / 63;
 
@@ -1196,8 +1222,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
               /* block init */
               privdata.block_min_y = y;
               privdata.block_min_x = min_x;
-              privdata.block_max_y = MIN(y + caps->block_size, print_px_height)
-		      			- 1;
+              privdata.block_max_y = MIN(y + caps->block_size - 1, max_y);
               privdata.block_max_x = max_x;
     
               if (caps->block_init_func)
@@ -1215,7 +1240,8 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   	    stpi_zfwrite((char *) zeros, out_bytes, print_px_width, v);
           else
             {
-              if (caps->need_empty_cols && out_px_left > 0)
+              if (olympus_feature(caps, OLYMPUS_FEATURE_FULL_WIDTH)
+	        && out_px_left > 0)
   	        {
                   stpi_zfwrite((char *) zeros, out_bytes, out_px_left, v);
                   /* stpi_erprintf("left %d ", out_px_left); */
@@ -1296,7 +1322,8 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 	      
   	      stpi_zfwrite((char *) real_out, 1, char_out_width, v);
               /* stpi_erprintf("data %d ", out_px_width); */
-              if (caps->need_empty_cols && out_px_right < print_px_width)
+              if (olympus_feature(caps, OLYMPUS_FEATURE_FULL_WIDTH)
+	        && out_px_right < print_px_width)
   	        {
                   stpi_zfwrite((char *) zeros, out_bytes,
 				  print_px_width - out_px_right, v);
