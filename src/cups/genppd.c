@@ -134,10 +134,17 @@ static struct				/**** STP numeric options ****/
   { "stpContrast",	"Contrast" },
   { "stpGamma",		"Gamma" },
   { "stpDensity",	"Density" },
+#ifndef __APPLE__
   { "stpCyan",		"Cyan" },
   { "stpMagenta",	"Magenta" },
   { "stpYellow",	"Yellow" },
   { "stpSaturation",	"Saturation" }
+#else
+  { "stpSaturation",	"Saturation" },
+  { "stpCyan",		"Cyan" },
+  { "stpMagenta",	"Magenta" },
+  { "stpYellow",	"Yellow" }
+#endif /* __APPLE__ */
 };
 
 
@@ -316,6 +323,7 @@ initialize_stp_options(void)
   stp_options[3].defval = 1000 * stp_get_density(defvars);
   stp_options[3].step = 50;
 
+#ifndef __APPLE__
   stp_options[4].low = 1000 * stp_get_cyan(lower);
   stp_options[4].high = 1000 * stp_get_cyan(upper);
   stp_options[4].defval = 1000 * stp_get_cyan(defvars);
@@ -335,6 +343,27 @@ initialize_stp_options(void)
   stp_options[7].high = 1000 * stp_get_saturation(upper);
   stp_options[7].defval = 1000 * stp_get_saturation(defvars);
   stp_options[7].step = 50;
+#else
+  stp_options[4].low = 1000 * stp_get_saturation(lower);
+  stp_options[4].high = 1000 * stp_get_saturation(upper);
+  stp_options[4].defval = 1000 * stp_get_saturation(defvars);
+  stp_options[4].step = 50;
+  
+  stp_options[5].low = 1000 * stp_get_cyan(lower);
+  stp_options[5].high = 1000 * stp_get_cyan(upper);
+  stp_options[5].defval = 1000 * stp_get_cyan(defvars);
+  stp_options[5].step = 50;
+
+  stp_options[6].low = 1000 * stp_get_magenta(lower);
+  stp_options[6].high = 1000 * stp_get_magenta(upper);
+  stp_options[6].defval = 1000 * stp_get_magenta(defvars);
+  stp_options[6].step = 50;
+
+  stp_options[7].low = 1000 * stp_get_yellow(lower);
+  stp_options[7].high = 1000 * stp_get_yellow(upper);
+  stp_options[7].defval = 1000 * stp_get_yellow(defvars);
+  stp_options[7].step = 50;
+#endif /* __APPLE__ */
 }
 
 
@@ -675,6 +704,10 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   if (the_papers)
     free(the_papers);
 
+#ifdef __APPLE__
+  gzputs(fp, "*OpenGroup: MAIN/Basic settings\n");
+#endif
+
  /*
   * Do we support color?
   */
@@ -807,7 +840,9 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   * STP option group...
   */
 
+#ifndef __APPLE__
   gzprintf(fp, "*OpenGroup: STP/%s\n", _("GIMP-print"));
+#endif
 
    /*
     * Image types...
@@ -869,17 +904,29 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
       gzputs(fp, "*CloseUI: *stpInkType\n\n");
     }
+    
+#ifdef __APPLE__
+  gzputs(fp, "*CloseGroup: MAIN\n\n");
+  gzputs(fp, "*OpenGroup: STP/Expert adjustments\n");
+#endif /* __APPLE__ */
 
    /*
     * Advanced STP options...
     */
 
     if (stp_get_output_type(printvars) == OUTPUT_COLOR)
+#ifndef __APPLE__
       num_opts = 8;
     else
       num_opts = 4;
 
     for (i = 0; i < num_opts; i ++)
+#else
+    {
+      num_opts = 8;
+
+      for (i = 0; i < 5; i ++)
+#endif /* __APPLE__ */
     {
       gzprintf(fp, "*OpenUI *%s/%s: PickOne\n", stp_options[i].name,
                stp_options[i].text);
@@ -895,7 +942,43 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   * End of STP option group...
   */
 
-  gzputs(fp, "*CloseGroup: STP\n\n");
+    gzputs(fp, "*CloseGroup: STP\n\n");
+#ifdef __APPLE__
+      gzputs(fp, "*OpenGroup: STPC/Expert color\n");
+
+      for (i = 5; i < num_opts; i ++)
+      {
+      gzprintf(fp, "*OpenUI *%s/%s: PickOne\n", stp_options[i].name,
+               stp_options[i].text);
+      gzprintf(fp, "*Default%s: 1000\n", stp_options[i].name);
+      for (j = stp_options[i].low;
+           j <= stp_options[i].high;
+           j += stp_options[i].step)
+      gzprintf(fp, "*%s %d/%.3f: \"\"\n", stp_options[i].name, j, j * 0.001);
+      gzprintf(fp, "*CloseUI: *%s\n", stp_options[i].name);
+      }
+       
+      gzputs(fp, "*CloseGroup: STPC\n\n");
+    }
+    else
+    {
+      num_opts = 4;
+ 
+      for (i = 0; i < num_opts; i ++)
+      {
+      gzprintf(fp, "*OpenUI *%s/%s: PickOne\n", stp_options[i].name,
+               stp_options[i].text);
+      gzprintf(fp, "*Default%s: 1000\n", stp_options[i].name);
+      for (j = stp_options[i].low;
+           j <= stp_options[i].high;
+           j += stp_options[i].step)
+      gzprintf(fp, "*%s %d/%.3f: \"\"\n", stp_options[i].name, j, j * 0.001);
+      gzprintf(fp, "*CloseUI: *%s\n", stp_options[i].name);
+      }
+       
+      gzputs(fp, "*CloseGroup: STP\n\n");
+    }
+#endif /* __APPLE__ */
 
  /*
   * Fonts...
