@@ -1000,7 +1000,8 @@ gcd(unsigned a, unsigned b)
 }
 
 /*
- * This is limited to 65536.
+ * a and be must be < 65536.  However, in the context in which this
+ * is used this will always be true.
  */
 static unsigned
 lcm(unsigned a, unsigned b)
@@ -1069,6 +1070,8 @@ stp_curve_compose(stp_curve_t *retval,
   double alo, ahi, blo, bhi;
 
   if (mode != STP_CURVE_COMPOSE_ADD && mode != STP_CURVE_COMPOSE_MULTIPLY)
+    return 0;
+  if (stp_curve_get_wrap(a) != stp_curve_get_wrap(b))
     return 0;
   stp_curve_get_bounds(a, &alo, &ahi);
   stp_curve_get_bounds(b, &blo, &bhi);
