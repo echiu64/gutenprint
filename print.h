@@ -247,6 +247,7 @@ extern void	dither_set_ink_spread(void *vd, int spread);
 extern void	dither_set_x_oversample(void *vd, int os);
 extern void	dither_set_y_oversample(void *vd, int os);
 extern void	dither_set_ink_budget(void *vd, unsigned budget);
+extern void	dither_set_adaptive_divisor(void *vd, unsigned divisor);
 
 
 extern void	free_dither(void *);

@@ -1,3 +1,170 @@
+2000-05-25	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.10)
+		gtk_main_window.c (1.14)
+	
+	Use offsets from origin consistently
+	
+2000-05-24	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.50)
+	
+	Try to fix a few more overflow problems
+	
+2000-05-24	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.49)
+	
+	Fix overflow problems
+	
+2000-05-24	<ttonino@sourceforge.net>
+
+	Files:	print-dither.c (1.48)
+	
+	Removed superfluous matrix optimizations and chenged 'invert' behaviour.
+	
+2000-05-24	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.150)
+	
+	Expand printable region on newer Epson printers
+	
+2000-05-24	<rlk@sourceforge.net>
+
+	Files:	Ghost/.cvsignore (1.2)
+	
+	New files
+	
+2000-05-24	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.149)
+	
+	Save memory on the variable dot size printers.
+	
+2000-05-24	<cpbs@sourceforge.net>
+
+	Files:	print.c (1.94)
+	
+	Spawn a "monitor" process to kill off lpr if the plugin dies before
+	completing the print.  This helps in the case of crashes, and also when
+	the Gimp SIGKILLs the plugin when the user hits "Cancel".
+	
+2000-05-24	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.10)
+		Ghost/gdevstp.h (1.3)
+		Ghost/gdevstp.c (1.13)
+		quickmatrix257.h (1.1)
+		quickmatrix199.h (1.1)
+		quickmatrix199-2.h (1.1)
+		printers.xml (1.9)
+		print_gimp.h (1.14)
+		print-escp2.c (1.148)
+		print-dither.c (1.47)
+		gtk_main_window.c (1.13)
+		gimp_main_window.c (1.9)
+		README (1.16)
+		Makefile.am (1.35)
+	
+	Incorporate Thomas Tonino's dither matrices.
+	
+2000-05-23	<cpbs@sourceforge.net>
+
+	Files:	debian/README.building.from.CVS (1.1)
+		debian/packages (1.1)
+		debian/changelog (1.1)
+	
+	Added Debianisation files in debian/. subdirectory.
+	
+2000-05-23	<jmv@sourceforge.net>
+
+	Files:	jmv/README (1.1)
+	
+	
+	This is experimental stuff for the epson stylus photo 870
+	
+2000-05-23	<jmv@sourceforge.net>
+
+	Files:	jmv/print-escp2.c (1.1)
+	
+	
+	Experimental for epson stylus photo 870
+	
+	This is based on rlk's print-escp2.c v 1.145
+	
+2000-05-23	<jmv@sourceforge.net>
+
+	Files:	jmv/print.h (1.1)
+	
+	
+	Experimental for epson 870
+	
+2000-05-23	<jmv@sourceforge.net>
+
+	Files:	jmv/print-dither.c (1.1)
+	
+	*** empty log message ***
+	
+2000-05-23	<ttonino@sourceforge.net>
+
+	Files:	print-dither.c (1.46)
+	
+	Made density curve smoother. Before, dark areas could could look
+	rather weak. Added more contrast by not subtracting all K from CMY, but
+	a fraction dependent on K level and black limits.
+	
+2000-05-23	<ttonino@sourceforge.net>
+
+	Files:	print-dither.c (1.45)
+	
+	Black lines in dark colors removed.
+	
+2000-05-23	<smiller@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.8)
+	
+	
+		Patch to use a printable area in preview for gimp gui.
+	
+2000-05-22	<ttonino@sourceforge.net>
+
+	Files:	print-dither.c (1.44)
+	
+	Black generation revised again. All scaled to actual density now.
+	'plain paper' setting is really suitable for plain paper now.
+	'coated' should maybe be split: normal coated and photo style paper
+	coated.
+	
+2000-05-22	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.46)
+	
+	* fixed resolutions list generation (offered unsupported xdpi!=ydpi resolutions
+	  for some printers)
+	* added outputmedia "Photo Paper Pro"
+	* enabled 6color printing on models supporting this
+	* trying same dither_set_black_*() calls as in print-escp2.c
+	* trying to fix density problem with xdpi!=ydpi (was way too dark)
+	
+2000-05-22	<ttonino@sourceforge.net>
+
+	Files:	Matgen/quickdistance.c (1.2)
+	
+	Output format slightky changed. Added parameter sections for 2 useful
+	199x199 matrices and an (untetsed) 257x257 matrix.
+	
+2000-05-22	<ttonino@sourceforge.net>
+
+	Files:	Matgen/quickmatrix257.i (1.1)
+	
+	Untested 257x257 dither matrix.
+	
+2000-05-21	<rlk@sourceforge.net>
+
+	Files:	mkchlog (1.2)
+	
+	Record revision number along with each file
+	
 2000-05-21	<ttonino@sourceforge.net>
 
 	Files:	print-escp2.c (1.147)

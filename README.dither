@@ -494,6 +494,11 @@ dither_set_ink_spread() takes a small integer representing the amount
    printed; less spread is desirable).
 
 
+dither_set_adaptive_divisor() takes an integer representing the
+   upper limit of the transition zone between error diffusion and
+   ordered dither if adaptive dithering is used.
+
+
 dither_set_X_ranges_simple (X=c, m, y, or k) describes the ink choices
    available for each color.  This is useful in typical cases where a
    four color printer with variable dot sizes is in use.  It is passed

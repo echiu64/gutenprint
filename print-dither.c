@@ -175,6 +175,7 @@ typedef struct dither
 				/* above which no randomness is used. */
   int adaptive_divisor;
   int adaptive_limit;
+  int adaptive_lower_limit;
 
   dither_color_t c_dither;
   dither_color_t m_dither;
@@ -343,6 +344,7 @@ init_dither(int in_width, int out_width, vars_t *v)
 
   d->src_width = in_width;
   d->dst_width = out_width;
+  d->adaptive_divisor = 2;
 
   dither_set_ink_budget(d, INT_MAX);
   dither_set_ink_spread(d, 13);
@@ -367,8 +369,17 @@ dither_set_density(void *vd, double density)
   d->k_lower = d->k_lower * density;
   d->density = (int) ((65536 * density) + .5);
   d->d_cutoff = d->density / 16;
-  d->adaptive_divisor = 128 << ((16 - d->spread) >> 1);
   d->adaptive_limit = d->density / d->adaptive_divisor;
+  d->adaptive_lower_limit = d->adaptive_limit / 4;
+}
+
+void
+dither_set_adaptive_divisor(void *vd, unsigned divisor)
+{
+  dither_t *d = (dither_t *) vd;
+  d->adaptive_divisor = divisor;
+  d->adaptive_limit = d->density / d->adaptive_divisor;
+  d->adaptive_lower_limit = d->adaptive_limit / 4;
 }
 
 void
@@ -425,8 +436,8 @@ dither_set_ink_spread(void *vd, int spread)
 	}
     }
 
-  d->adaptive_divisor = 128 << ((16 - d->spread) >> 1);
   d->adaptive_limit = d->density / d->adaptive_divisor;
+  d->adaptive_lower_limit = d->adaptive_limit / 4;
 }
 
 void
@@ -984,9 +995,15 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
       if (dither_type & D_ADAPTIVE_BASE)
 	{
 	  dither_type -= D_ADAPTIVE_BASE;
-	  if (base < d->adaptive_limit)
+	  if (base <= d->adaptive_lower_limit)
 	    {
-	      unsigned dtmp = base * d->adaptive_divisor * 65536 / d->density;
+	      dither_type = D_ORDERED;
+	      dither_value = base;
+	    }
+	  else if (base < d->adaptive_limit)
+	    {
+	      unsigned dtmp = (base - d->adaptive_lower_limit) * 65536 /
+		(d->adaptive_limit - d->adaptive_lower_limit);
 	      if (((xrand() & 0xffff000) >> 12) > dtmp)
 		{
 		  dither_type = D_ORDERED;
@@ -1193,7 +1210,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	      v = dd->value_h;
 	      dot_size = dd->dot_size_h;
 	    }
-	  else if (rangepoint >= DITHERPOINT(d, y, x, 6))
+	  else if (rangepoint >= DITHERPOINT(d, x, y, 5))
 	    {
 	      isdark = dd->isdark_h;
 	      bits = dd->bits_h;

@@ -1179,6 +1179,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
     dither = init_dither(image_height, out_width, v);
   else
     dither = init_dither(image_width, out_width, v);
+
   dither_set_black_levels(dither, 1.0, 1.0, 1.0);
   if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
     dither_set_black_lower(dither, .5 / bits);
@@ -1188,6 +1189,10 @@ escp2_print(const printer_t *printer,		/* I - Model */
     dither_set_black_upper(dither, .999);
   else
     dither_set_black_upper(dither, .6);
+  if (bits == 2)
+    dither_set_adaptive_divisor(dither, 8);
+  else
+    dither_set_adaptive_divisor(dither, 2);
   if (bits == 2)
     {
       int dsize = (sizeof(variable_dither_ranges) /
@@ -1210,12 +1215,6 @@ escp2_print(const printer_t *printer,		/* I - Model */
   else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
     dither_set_light_inks(dither, .25, .25, 0.0, v->density);
 
-#if 0
-  if (bits == 1)
-    dither_set_ink_budget(dither, 2);
-  else
-    dither_set_ink_budget(dither, 6);
-#endif
   switch (v->image_type)
     {
     case IMAGE_LINE_ART:
