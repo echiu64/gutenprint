@@ -321,6 +321,7 @@ typedef struct
   stp_parameter_level_t p_level;
   int is_mandatory;
   int is_active;
+  int channel;
   union				/* Limits on the values */
   {				/* the parameter may take */
     stp_curve_t curve;

@@ -81,7 +81,7 @@ static float_param_t float_parameters[] =
       "Brightness", N_("Brightness"),
       N_("Brightness of the print (0 is solid black, 2 is solid white)"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
     }, 0.0, 2.0, 1.0, 0
   },
   {
@@ -89,7 +89,7 @@ static float_param_t float_parameters[] =
       "Contrast", N_("Contrast"),
       N_("Contrast of the print (0 is solid gray)"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
     }, 0.0, 4.0, 1.0, 0
   },
   {
@@ -101,7 +101,7 @@ static float_param_t float_parameters[] =
 	 "Black and white will remain the same, unlike with "
 	 "the brightness adjustment."),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
     }, 0.1, 4.0, 1.0, 0
   },
   {
@@ -109,7 +109,7 @@ static float_param_t float_parameters[] =
       "AppGamma", N_("AppGamma"),
       N_("Gamma value assumed by application"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 1, 1
+      STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1
     }, 0.1, 4.0, 1.0, 0
   },
   {
@@ -117,7 +117,7 @@ static float_param_t float_parameters[] =
       "Cyan", N_("Cyan"),
       N_("Adjust the cyan gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, 1
     }, 0.0, 4.0, 1.0, 1
   },
   {
@@ -125,7 +125,7 @@ static float_param_t float_parameters[] =
       "Magenta", N_("Magenta"),
       N_("Adjust the magenta gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, 2
     }, 0.0, 4.0, 1.0, 1
   },
   {
@@ -133,7 +133,7 @@ static float_param_t float_parameters[] =
       "Yellow", N_("Yellow"),
       N_("Adjust the yellow gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, 3
     }, 0.0, 4.0, 1.0, 1
   },
   {
@@ -141,7 +141,7 @@ static float_param_t float_parameters[] =
       "Black", N_("Black"),
       N_("Adjust the black gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, 0
     }, 0.0, 4.0, 1.0, 1
   },
   {
@@ -149,7 +149,7 @@ static float_param_t float_parameters[] =
       "CyanDensity", N_("Cyan Balance"),
       N_("Adjust the cyan balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, 1
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -157,7 +157,7 @@ static float_param_t float_parameters[] =
       "MagentaDensity", N_("Magenta Balance"),
       N_("Adjust the magenta balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, 2
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -165,7 +165,7 @@ static float_param_t float_parameters[] =
       "YellowDensity", N_("Yellow Balance"),
       N_("Adjust the yellow balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, 3
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -173,7 +173,7 @@ static float_param_t float_parameters[] =
       "BlackDensity", N_("Black Balance"),
       N_("Adjust the black balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, 0
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -183,7 +183,7 @@ static float_param_t float_parameters[] =
 	 "Use zero saturation to produce grayscale output "
 	 "using color and black inks"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
     }, 0.0, 9.0, 1.0, 1
   },
   {
@@ -191,7 +191,7 @@ static float_param_t float_parameters[] =
       "ImageOptimization", N_("Image Type"),
       N_("Optimize the settings for the type of image to be printed"),
       STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 0, 1
+      STP_PARAMETER_LEVEL_BASIC, 0, 1, -1
     }, 0.0, 0.0, 0.0, 1
   },
   {
@@ -199,7 +199,7 @@ static float_param_t float_parameters[] =
       "GCRLower", N_("GCR Lower Bound"),
       N_("Lower bound of gray component reduction"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 0
     }, 0.0, 1.0, 0.2, 1
   },
   {
@@ -207,7 +207,7 @@ static float_param_t float_parameters[] =
       "GCRUpper", N_("GCR Upper Bound"),
       N_("Upper bound of gray component reduction"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 0
     }, 0.0, 5.0, 0.5, 1
   },
 };
@@ -237,7 +237,7 @@ static curve_param_t curve_parameters[] =
       "CompositeCurve", N_("Composite Curve"),
       N_("Composite (Grayscale) curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, -1
     }, &color_curve_bounds, 0
   },
   {
@@ -245,7 +245,7 @@ static curve_param_t curve_parameters[] =
       "CyanCurve", N_("Cyan Curve"),
       N_("Cyan curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1
     }, &color_curve_bounds, 1
   },
   {
@@ -253,7 +253,7 @@ static curve_param_t curve_parameters[] =
       "MagentaCurve", N_("Magenta Curve"),
       N_("Magenta curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2
     }, &color_curve_bounds, 1
   },
   {
@@ -261,7 +261,7 @@ static curve_param_t curve_parameters[] =
       "YellowCurve", N_("Yellow Curve"),
       N_("Yellow curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3
     }, &color_curve_bounds, 1
   },
   {
@@ -269,7 +269,7 @@ static curve_param_t curve_parameters[] =
       "HueMap", N_("Hue Map"),
       N_("Hue adjustment curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, -1
     }, &hue_map_bounds, 1
   },
   {
@@ -277,7 +277,7 @@ static curve_param_t curve_parameters[] =
       "SatMap", N_("Saturation Map"),
       N_("Saturation adjustment curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, -1
     }, &sat_map_bounds, 1
   },
   {
@@ -285,7 +285,7 @@ static curve_param_t curve_parameters[] =
       "LumMap", N_("Luminosity Map"),
       N_("Luminosity adjustment curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, -1
     }, &lum_map_bounds, 1
   },
   {
@@ -293,7 +293,7 @@ static curve_param_t curve_parameters[] =
       "GCRCurve", N_("Gray Component Reduction"),
       N_("Gray component reduction curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 0
     }, &gcr_curve_bounds, 1
   },
 };

@@ -159,31 +159,31 @@ static const stp_parameter_t the_parameters[] =
     "PageSize", N_("Page Size"),
     N_("Size of the paper being printed to"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
   },
   {
     "MediaType", N_("Media Type"),
     N_("Type of media (plain paper, photo paper, etc.)"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
   },
   {
     "InputSlot", N_("Media Source"),
     N_("Source (input slot) of the media"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
   },
   {
     "InkType", N_("Ink Type"),
     N_("Type of ink in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
   },
   {
     "Resolution", N_("Resolution"),
     N_("Resolution and quality of the print"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
   },
   PARAMETER_INT(max_hres),
   PARAMETER_INT(max_vres),
@@ -752,69 +752,73 @@ print_remote_float_param(const stp_vars_t v, const char *param, double value)
 }
 
 static void
+print_debug_params(const escp2_init_t *init)
+{
+  print_remote_param(init->v, "Package", PACKAGE);
+  print_remote_param(init->v, "Version", VERSION);
+  print_remote_param(init->v, "Release Date", RELEASE_DATE);
+  print_remote_param(init->v, "Driver", stp_get_driver(init->v));
+  print_remote_param(init->v, "Resolution", stp_get_string_parameter(init->v, "Resolution"));
+  print_remote_param(init->v, "Media Size", stp_get_string_parameter(init->v, "PageSize"));
+  print_remote_param(init->v, "Media Type", stp_get_string_parameter(init->v, "MediaType"));
+  print_remote_param(init->v, "Media Source", stp_get_string_parameter(init->v, "InputSlot"));
+  print_remote_param(init->v, "Ink Type", stp_get_string_parameter(init->v, "InkType"));
+  print_remote_param(init->v, "Dither", stp_get_string_parameter(init->v, "DitherAlgorithm"));
+  print_remote_int_param(init->v, "Output Type", stp_get_output_type(init->v));
+  print_remote_int_param(init->v, "Left", stp_get_left(init->v));
+  print_remote_int_param(init->v, "Top", stp_get_top(init->v));
+  print_remote_param(init->v, "Image Type", stp_get_string_parameter(init->v, "ImageOptimization"));
+  print_remote_int_param(init->v, "Page Width", stp_get_page_width(init->v));
+  print_remote_int_param(init->v, "Page Height", stp_get_page_height(init->v));
+  print_remote_int_param(init->v, "Input Model", stp_get_input_color_model(init->v));
+  print_remote_int_param(init->v, "Output Model", stpi_get_output_color_model(init->v));
+  print_remote_float_param(init->v, "Brightness", stp_get_float_parameter(init->v, "Brightness"));
+  print_remote_float_param(init->v, "Gamma", stp_get_float_parameter(init->v, "Gamma"));
+  print_remote_float_param(init->v, "App Gamma", stp_get_float_parameter(init->v, "AppGamma"));
+  print_remote_float_param(init->v, "Contrast", stp_get_float_parameter(init->v, "Contrast"));
+  print_remote_float_param(init->v, "Cyan", stp_get_float_parameter(init->v, "Cyan"));
+  print_remote_float_param(init->v, "Magenta", stp_get_float_parameter(init->v, "Magenta"));
+  print_remote_float_param(init->v, "Yellow", stp_get_float_parameter(init->v, "Yellow"));
+  print_remote_float_param(init->v, "Saturation", stp_get_float_parameter(init->v, "Saturation"));
+  print_remote_float_param(init->v, "Density", stp_get_float_parameter(init->v, "Density"));
+  print_remote_int_param(init->v, "Model", init->model);
+  print_remote_int_param(init->v, "Output_type", init->output_type);
+  print_remote_int_param(init->v, "Ydpi", init->ydpi);
+  print_remote_int_param(init->v, "Xdpi", init->xdpi);
+  print_remote_int_param(init->v, "Physical_xdpi", init->physical_xdpi);
+  print_remote_int_param(init->v, "Use_softweave", init->res->softweave);
+  print_remote_int_param(init->v, "Use_microweave", init->res->microweave);
+  print_remote_int_param(init->v, "Page_true_height", init->page_true_height);
+  print_remote_int_param(init->v, "Page_width", init->page_width);
+  print_remote_int_param(init->v, "Page_top", init->page_top);
+  print_remote_int_param(init->v, "Page_bottom", init->page_bottom);
+  print_remote_int_param(init->v, "Nozzles", init->nozzles);
+  print_remote_int_param(init->v, "Nozzle_separation", init->nozzle_separation);
+  print_remote_int_param(init->v, "Horizontal_passes", init->horizontal_passes);
+  print_remote_int_param(init->v, "Vertical_passes", init->res->vertical_passes);
+  print_remote_int_param(init->v, "Vertical_oversample", init->res->vertical_oversample);
+  print_remote_int_param(init->v, "Bits", init->bits);
+  print_remote_int_param(init->v, "Unidirectional", init->res->unidirectional);
+  print_remote_int_param(init->v, "Resid", init->res->resid);
+  print_remote_int_param(init->v, "Initial_vertical_offset", init->initial_vertical_offset);
+  print_remote_int_param(init->v, "Total_channels", init->total_channels);
+  print_remote_int_param(init->v, "Use_black_parameters", init->use_black_parameters);
+  print_remote_int_param(init->v, "Channel_limit", init->channel_limit);
+  print_remote_int_param(init->v, "Use_fast_360", init->use_fast_360);
+  print_remote_param(init->v, "Ink name", init->inkname->name);
+  print_remote_int_param(init->v, "  is_color", init->inkname->is_color);
+  print_remote_int_param(init->v, "  channels", init->inkname->channel_limit);
+  print_remote_int_param(init->v, "  inkset", init->inkname->inkset);
+  stpi_send_command(init->v, "\033", "c", 0);
+}
+
+static void
 escp2_set_remote_sequence(const escp2_init_t *init)
 {
   /* Magic remote mode commands, whatever they do */
 
   if (stpi_debug_level & STPI_DBG_MARK_FILE)
-    {
-      print_remote_param(init->v, "Package", PACKAGE);
-      print_remote_param(init->v, "Version", VERSION);
-      print_remote_param(init->v, "Release Date", RELEASE_DATE);
-      print_remote_param(init->v, "Driver", stp_get_driver(init->v));
-      print_remote_param(init->v, "Resolution", stp_get_string_parameter(init->v, "Resolution"));
-      print_remote_param(init->v, "Media Size", stp_get_string_parameter(init->v, "PageSize"));
-      print_remote_param(init->v, "Media Type", stp_get_string_parameter(init->v, "MediaType"));
-      print_remote_param(init->v, "Media Source", stp_get_string_parameter(init->v, "InputSlot"));
-      print_remote_param(init->v, "Ink Type", stp_get_string_parameter(init->v, "InkType"));
-      print_remote_param(init->v, "Dither", stp_get_string_parameter(init->v, "DitherAlgorithm"));
-      print_remote_int_param(init->v, "Output Type", stp_get_output_type(init->v));
-      print_remote_int_param(init->v, "Left", stp_get_left(init->v));
-      print_remote_int_param(init->v, "Top", stp_get_top(init->v));
-      print_remote_param(init->v, "Image Type", stp_get_string_parameter(init->v, "ImageOptimization"));
-      print_remote_int_param(init->v, "Page Width", stp_get_page_width(init->v));
-      print_remote_int_param(init->v, "Page Height", stp_get_page_height(init->v));
-      print_remote_int_param(init->v, "Input Model", stp_get_input_color_model(init->v));
-      print_remote_int_param(init->v, "Output Model", stpi_get_output_color_model(init->v));
-      print_remote_float_param(init->v, "Brightness", stp_get_float_parameter(init->v, "Brightness"));
-      print_remote_float_param(init->v, "Gamma", stp_get_float_parameter(init->v, "Gamma"));
-      print_remote_float_param(init->v, "App Gamma", stp_get_float_parameter(init->v, "AppGamma"));
-      print_remote_float_param(init->v, "Contrast", stp_get_float_parameter(init->v, "Contrast"));
-      print_remote_float_param(init->v, "Cyan", stp_get_float_parameter(init->v, "Cyan"));
-      print_remote_float_param(init->v, "Magenta", stp_get_float_parameter(init->v, "Magenta"));
-      print_remote_float_param(init->v, "Yellow", stp_get_float_parameter(init->v, "Yellow"));
-      print_remote_float_param(init->v, "Saturation", stp_get_float_parameter(init->v, "Saturation"));
-      print_remote_float_param(init->v, "Density", stp_get_float_parameter(init->v, "Density"));
-      print_remote_int_param(init->v, "Model", init->model);
-      print_remote_int_param(init->v, "Output_type", init->output_type);
-      print_remote_int_param(init->v, "Ydpi", init->ydpi);
-      print_remote_int_param(init->v, "Xdpi", init->xdpi);
-      print_remote_int_param(init->v, "Physical_xdpi", init->physical_xdpi);
-      print_remote_int_param(init->v, "Use_softweave", init->res->softweave);
-      print_remote_int_param(init->v, "Use_microweave", init->res->microweave);
-      print_remote_int_param(init->v, "Page_true_height", init->page_true_height);
-      print_remote_int_param(init->v, "Page_width", init->page_width);
-      print_remote_int_param(init->v, "Page_top", init->page_top);
-      print_remote_int_param(init->v, "Page_bottom", init->page_bottom);
-      print_remote_int_param(init->v, "Nozzles", init->nozzles);
-      print_remote_int_param(init->v, "Nozzle_separation", init->nozzle_separation);
-      print_remote_int_param(init->v, "Horizontal_passes", init->horizontal_passes);
-      print_remote_int_param(init->v, "Vertical_passes", init->res->vertical_passes);
-      print_remote_int_param(init->v, "Vertical_oversample", init->res->vertical_oversample);
-      print_remote_int_param(init->v, "Bits", init->bits);
-      print_remote_int_param(init->v, "Unidirectional", init->res->unidirectional);
-      print_remote_int_param(init->v, "Resid", init->res->resid);
-      print_remote_int_param(init->v, "Initial_vertical_offset", init->initial_vertical_offset);
-      print_remote_int_param(init->v, "Total_channels", init->total_channels);
-      print_remote_int_param(init->v, "Use_black_parameters", init->use_black_parameters);
-      print_remote_int_param(init->v, "Channel_limit", init->channel_limit);
-      print_remote_int_param(init->v, "Use_fast_360", init->use_fast_360);
-      print_remote_param(init->v, "Ink name", init->inkname->name);
-      print_remote_int_param(init->v, "  is_color", init->inkname->is_color);
-      print_remote_int_param(init->v, "  channels", init->inkname->channel_limit);
-      print_remote_int_param(init->v, "  inkset", init->inkname->inkset);
-      stpi_send_command(init->v, "\033", "c", 0);
-    }
+    print_debug_params();
   if (escp2_has_advanced_command_set(init->model, init->v) || init->input_slot)
     {
       int feed_sequence = 0;

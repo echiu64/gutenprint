@@ -944,6 +944,7 @@ stpi_fill_parameter_settings(stp_parameter_t *desc,
       desc->p_class = param->p_class;
       desc->is_mandatory = param->is_mandatory;
       desc->is_active = param->is_active;
+      desc->channel = param->channel;
       desc->name = param->name;
       desc->text = param->text;
       desc->help = param->help;
