@@ -144,29 +144,6 @@ These release notes contain the following sections:
 
   12) More header files have been documented with Doxygen.
 
-  13) Duplex printing is now supported in the PCL driver for the HP
-     LaserJet 4, 5, 6 series (and other equivalents that use the "pcl-4"
-     driver) and HP DeskJet 900 series (and other equivalents that use
-     the "pcl-900" driver). These two drivers cover a large number of
-     equivalent printers.
-
-     There is a choice of 2 duplex settings "Long Edge" and "Short
-     Edge" as well as "Simplex" (which is the default). Note that
-     attempting to print duplex to a non-equipped printer will be
-     ignored by the hardware, but the job should still print.
-
-     The Duplex option is not shown by the Gimp plugin as it only
-     outputs one page.
-
-     The cups PPD files and the foomatic data now reflect the additional
-     option, but these have not been exhaustively tested.
-
-     The "pcl-4" driver has been tested on an HP 8550, an HP 4550 (both
-     color printers supported in monochrome), an HP 4100TN, an HP 2200dn
-     and a LexMark Optra T.
-
-     The "pcl-900" driver has not been tested on a real printer.
-
 ================================================================
 
 * Major changes between Gimp-Print 5.0.0 alpha 1 and 5.0.0 alpha 2:
