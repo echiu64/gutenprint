@@ -301,10 +301,6 @@ if test "$CC" = "gcc" ; then
 fi
 AC_SUBST(GNUCFLAGS)
 
-if test x${USE_MAINTAINER_MODE} = xtrue ; then
-  AC_DEFINE(GIMP_PRINT_MAINT)
-fi
-
 dnl Checks for libraries.
 AC_CHECK_LIB(readline, readline, HAVE_LIBREADLINE=true, HAVE_LIBREADLINE=false)
 if test x${HAVE_LIBREADLINE} = xtrue ; then

@@ -29,9 +29,6 @@
 /* Package release date*/
 #undef RELEASE_DATE
 
-/* Enable maintainer-specific code */
-#undef GIMP_PRINT_MAINT
-
 /* CUPS data directory */
 #undef CUPS_DATADIR
 
