@@ -518,9 +518,9 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
   int i;
   double z;
   IMAGE *img = (IMAGE *)set_cb_data;
-  STP_DEBUG(fprintf (stderr, "gimp_set_cb: %s=", key));
+  STP_DEBUG(fprintf (stderr, "gimp_set_cb: %s='", key));
   STP_DEBUG(fwrite (value, 1, value_size, stderr));
-  STP_DEBUG(fputs ("\n", stderr));
+  STP_DEBUG(fputs ("'\n", stderr));
   if (value_size > sizeof(vbuf)-1)
     return -1;
   memset(vbuf, 0, sizeof(vbuf));
@@ -635,14 +635,17 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	      if (code == 0)
 		stp_set_float_parameter(img->v, key, z);
 	    }
+	  break;
 	case STP_PARAMETER_TYPE_INT:
 	  code = get_int(vbuf, key, &i);
 	  if (code == 0)
 	    stp_set_int_parameter(img->v, key, i);
+	  break;
 	case STP_PARAMETER_TYPE_BOOLEAN:
 	  code = get_int(vbuf, key, &i);
 	  if (code == 0)
 	    stp_set_boolean_parameter(img->v, key, i);
+	  break;
 	default:
 	  STP_DEBUG(fprintf(stderr, "Bad parameter %s %d\n", key, desc.p_type));
 	}
@@ -963,9 +966,15 @@ main (int argc, char **argv)
       stp_set_float_parameter(img.v, "AppGamma", 1.7);
       stp_get_media_size(img.v, &w, &h);
       stp_get_imageable_area(img.v, &l, &r, &b, &t);
-      width = r - l;
+      if (l < 0)
+	width = r;
+      else
+	width = r - l;
       stp_set_width(img.v, width);
-      height = b - t;
+      if (t < 0)
+	height = b;
+      else
+	height = b - t;
       stp_set_height(img.v, height);
       stp_set_page_number(img.v, page);
       stp_set_string_parameter(img.v, "JobMode", "Job");
