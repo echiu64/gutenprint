@@ -218,6 +218,15 @@
 #gptofoo pcl-2500 printer/HP-2500CM
 #gptofoo pcl-P1000 printer/131424
 #gptofoo pcl-P1100 printer/259689
+#gptofoo pcl-desnj-230 printer/108128
+#gptofoo pcl-desnj-250 printer/HP-DesignJet_250C
+#gptofoo pcl-desnj-2500 printer/HP-DesignJet_2500CP
+#gptofoo pcl-desnj-3500 printer/134880
+#gptofoo pcl-desnj-430 printer/HP-DesignJet_430
+#gptofoo pcl-desnj-450 printer/HP-DesignJet_450C
+#gptofoo pcl-desnj-455 printer/HP-DesignJet_455CA
+#gptofoo pcl-desnj-488 printer/HP-DesignJet_488CA
+#gptofoo pcl-desnj-700 printer/HP-DesignJet_700
 #gptofoo pcl-2 printer/114592
 #gptofoo pcl-2 printer/234953
 #gptofoo pcl-2 printer/48064
