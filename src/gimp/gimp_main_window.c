@@ -37,8 +37,8 @@
 /*
  * Constants for GUI...
  */
-#define PREVIEW_SIZE_VERT  320 /* Assuming max media size of 24" A2 */
-#define PREVIEW_SIZE_HORIZ 280 /* Assuming max media size of 24" A2 */
+#define PREVIEW_SIZE_VERT  380
+#define PREVIEW_SIZE_HORIZ 280
 
 /*
  *  Main window widgets
@@ -169,7 +169,7 @@ static void gimp_position_callback           (GtkWidget      *widget);
 static void gimp_image_type_callback         (GtkWidget      *widget,
 					      gpointer        data);
 
-static gint preview_ppi = 10;
+static gdouble preview_ppi = 10;
 
 #define THUMBNAIL_MAXW	(128)
 #define THUMBNAIL_MAXH	(128)
@@ -306,7 +306,10 @@ gimp_create_main_window (void)
                       NULL);
 
   /*
-   * Top-level vbox for dialog...
+   * Top-level container.  This will contain, from top to bottom, a
+   * container holding the preview (left), printer settings,
+   * and position (right); the image scaling; and image settings
+   * controls.
    */
 
   main_vbox = gtk_vbox_new (FALSE, 4);
@@ -315,9 +318,22 @@ gimp_create_main_window (void)
                       FALSE, FALSE, 0);
   gtk_widget_show (main_vbox);
 
+  /*
+   * Container holding the preview (left) and printer settings and position
+   * (right) controls
+   */
+
   hbox = gtk_hbox_new (FALSE, 6);
   gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
   gtk_widget_show (hbox);
+
+  ppvbox = gtk_vbox_new (FALSE, 7);
+  gtk_box_pack_end (GTK_BOX (hbox), GTK_WIDGET (ppvbox), FALSE, FALSE, 0);
+  gtk_widget_show (ppvbox);
+
+  /*
+   * Preview
+   */
 
   frame = gtk_frame_new (_("Preview"));
   gtk_box_pack_start (GTK_BOX (hbox), frame, FALSE, FALSE, 0);
@@ -327,14 +343,6 @@ gimp_create_main_window (void)
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
   gtk_container_add (GTK_CONTAINER (frame), vbox);
   gtk_widget_show (vbox);
-
-  ppvbox = gtk_vbox_new (FALSE, 7);
-  gtk_box_pack_end (GTK_BOX (hbox), GTK_WIDGET (ppvbox), FALSE, FALSE, 0);
-  gtk_widget_show (ppvbox);
-
-  /*
-   * Drawing area for page preview...
-   */
 
   preview = (GtkDrawingArea *) gtk_drawing_area_new ();
   gtk_drawing_area_size (preview, PREVIEW_SIZE_HORIZ + 1,
@@ -359,6 +367,10 @@ gimp_create_main_window (void)
                          GDK_BUTTON_MOTION_MASK |
                          GDK_BUTTON_PRESS_MASK |
                          GDK_BUTTON_RELEASE_MASK);
+
+  /*
+   * Positioning frame
+   */
 
   frame = gtk_frame_new (_("Position"));
   gtk_box_pack_end (GTK_BOX (ppvbox), frame, TRUE, TRUE, 0);
@@ -2183,8 +2195,8 @@ gimp_preview_update (void)
 
   if (stp_get_orientation(vars) == ORIENT_AUTO)
     {
-      if ((printable_width >= printable_height && image_width >= image_height)
-	  || (printable_height >= printable_width && image_height >= image_width))
+      if ((printable_width >= printable_height && image_width>=image_height) ||
+	  (printable_height >= printable_width && image_height >= image_width))
 	orient = ORIENT_PORTRAIT;
       else
 	orient = ORIENT_LANDSCAPE;
@@ -2293,9 +2305,9 @@ gimp_preview_update (void)
 	}
     }
 
-  preview_ppi = PREVIEW_SIZE_HORIZ * 72 / paper_width;
+  preview_ppi = PREVIEW_SIZE_HORIZ * 72.0 / (gdouble) paper_width;
   if (PREVIEW_SIZE_VERT * 72 / paper_height < preview_ppi)
-    preview_ppi = PREVIEW_SIZE_VERT * 72 / paper_height;
+    preview_ppi = PREVIEW_SIZE_VERT * 72.0 / (gdouble) paper_height;
   if (preview_ppi > MAX_PREVIEW_PPI)
     preview_ppi = MAX_PREVIEW_PPI;
 
