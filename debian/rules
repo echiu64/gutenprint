@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
-# Sample debian/rules that uses debhelper. 
-# GNU copyright 1997 by Joey Hess.
+# rules to package GIMP-Print
+# $Id$
 #
 # Uncomment this to turn on verbose mode. 
 #export DH_VERBOSE=1
@@ -30,7 +30,6 @@ build-stamp: configure
 
 clean:
 	dh_testdir
-	dh_testroot
 	rm -f build-stamp 
 
 	# Add here commands to clean up after the build process.
@@ -110,6 +109,7 @@ binary-arch: build install
 binary-%: build install
 	make -f debian/rules binary-common DH_OPTIONS=-p$*
 
+# Make sure that configure is up-to-date.
 configure: configure.in
 	if test -f configure.in ; then \
           autoconf ; \

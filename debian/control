@@ -9,7 +9,7 @@ Package: gimp1.2-print
 Architecture: any
 Depends: ${shlibs:Depends}, gimp1.2, libgimpprint (>= ${Source-Version})
 Description: print plugin for the GIMP
- This is Gimp-Print version 4.1.4, a development release in the 4.1
+ This is Gimp-Print version 4.1.5, a development release in the 4.1
  line.  Gimp-print is the print facility for the Gimp, and in addition
  a suite of drivers that may be used with common UNIX spooling systems
  using GhostScript or CUPS.  These drivers provide printing quality for
@@ -22,7 +22,7 @@ Package: cupsys-driver-gimpprint
 Architecture: any
 Depends: ${shlibs:Depends}, cupsys (>= 1.1.4), libgimpprint (>= ${Source-Version})
 Description: gimp-print printer driver for CUPS
- This is Gimp-Print version 4.1.4, a development release in the 4.1
+ This is Gimp-Print version 4.1.5, a development release in the 4.1
  line.  Gimp-print is the print facility for the Gimp, and in addition
  a suite of drivers that may be used with common UNIX spooling systems
  using GhostScript or CUPS.  These drivers provide printing quality for

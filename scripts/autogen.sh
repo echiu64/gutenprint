@@ -126,8 +126,12 @@ do
 	libtoolize --force --copy
       fi
       echo "Running aclocal $aclocalinclude ..."
-      if ! aclocal $aclocalinclude -I src/main ; then
+      if aclocal $aclocalinclude -I src/main ; then
+        echo "added local version of AM_PATH_GIMPPRINT"
+      else
+        echo "aclocal returned error status; running again without '-I src/main' ..."
         aclocal $aclocalinclude
+	echo "using installed version of AM_PATH_GIMPPRINT"
       fi
       if grep "^AM_CONFIG_HEADER" configure.in >/dev/null; then
 	echo "Running autoheader..."
