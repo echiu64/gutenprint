@@ -60,6 +60,12 @@
 #define COMPBUFWIDTH (MAX_PHYSICAL_BPI * MAX_OVERSAMPLED * MAX_BPP * \
 	MAX_CARRIAGE_WIDTH / BITS_PER_BYTE)
 
+typedef enum
+  {
+  COLOR_JET_ARRANGEMENT_DEFAULT = 0,
+  COLOR_JET_ARRANGEMENT_NEW_X80
+  } color_jet_arrangement_t;
+
 typedef struct
 {
   double value;
@@ -145,6 +151,20 @@ typedef union {			/* Is this line active? */
   } p;
 } stp_lineactive_t;
 
+typedef union {		/* number of rows for a pass */
+  int v[7];		/* (really pass) */
+  struct {
+    int k;
+    int m;
+    int c;
+    int y;
+    int M;
+    int C;
+    int Y;
+  } p;
+} stp_linecount_t;
+
+
 typedef union {			/* Base pointers for each pass */
   unsigned char *v[6];
   struct {
@@ -163,7 +183,7 @@ typedef struct stp_softweave
   stp_linebufs_t *linebases;	/* Base address of each row buffer */
   stp_lineoff_t *lineoffsets;	/* Offsets within each row buffer */
   stp_lineactive_t *lineactive;	/* Does this line have anything printed? */
-  int *linecounts;		/* How many rows we've printed this pass */
+  stp_linecount_t *linecounts;	/* How many rows we've printed this pass */
   stp_pass_t *passes;		/* Circular list of pass numbers */
   int last_pass_offset;		/* Starting row (offset from the start of */
 				/* the page) of the most recently printed */
@@ -196,6 +216,7 @@ typedef struct stp_softweave
 				/* use a funny value for the "print density */
 				/* in the vertical direction". */
   int last_color;
+  int head_offset[8];		/* offset of printheads */
   const void *v;
   void (*flushfunc)(struct stp_softweave *sw,
 		    int passno, int model,
@@ -254,13 +275,19 @@ extern void	stp_dither_set_adaptive_divisor(void *vd, unsigned divisor);
 
 extern void	stp_free_dither(void *);
 
+
+extern void	stp_dither_monochrome(const unsigned short *, int, void *,
+				      unsigned char *, int duplicate_line);
+
+extern void	stp_dither_black(const unsigned short *, int, void *,
+				 unsigned char *, int duplicate_line);
+
 extern void	stp_dither(const unsigned short *, int, void *,
 			   unsigned char *,
 			   unsigned char *, unsigned char *,
 			   unsigned char *, unsigned char *,
 			   unsigned char *, unsigned char *,
 			   int duplicate_line);
-
 
 extern void *	stp_initialize_weave_params(int S, int J, int O,
 					    int firstrow, int lastrow,
@@ -302,6 +329,7 @@ extern void *stp_initialize_weave(int jets, int separation, int oversample,
 				  int ncolors, int width, int linewidth,
 				  int lineheight, int vertical_row_separation,
 				  int first_line, int phys_lines, int strategy,
+                                  int color_jet_arrangement,  /* Get from model - used for 480/580 printers */
 				  const void *v,
 				  void (*flushfunc)(stp_softweave_t *sw,
 						    int passno, int model,
@@ -325,19 +353,19 @@ stp_write_weave(void *        vsw,
 		const unsigned char *cols[]);
 
 stp_lineoff_t *
-stp_get_lineoffsets(const stp_softweave_t *sw, int row, int subpass);
+stp_get_lineoffsets(const stp_softweave_t *sw, int row, int subpass, int offset);
 
 stp_lineactive_t *
-stp_get_lineactive(const stp_softweave_t *sw, int row, int subpass);
+stp_get_lineactive(const stp_softweave_t *sw, int row, int subpass, int offset);
 
-int *
-stp_get_linecount(const stp_softweave_t *sw, int row, int subpass);
+stp_linecount_t *
+stp_get_linecount(const stp_softweave_t *sw, int row, int subpass, int offset);
 
 const stp_linebufs_t *
-stp_get_linebases(const stp_softweave_t *sw, int row, int subpass);
+stp_get_linebases(const stp_softweave_t *sw, int row, int subpass, int offset);
 
 stp_pass_t *
-stp_get_pass_by_row(const stp_softweave_t *sw, int row, int subpass);
+stp_get_pass_by_row(const stp_softweave_t *sw, int row, int subpass, int offset);
 
 stp_lineoff_t *
 stp_get_lineoffsets_by_pass(const stp_softweave_t *sw, int pass);
@@ -345,7 +373,7 @@ stp_get_lineoffsets_by_pass(const stp_softweave_t *sw, int pass);
 stp_lineactive_t *
 stp_get_lineactive_by_pass(const stp_softweave_t *sw, int pass);
 
-int *
+stp_linecount_t *
 stp_get_linecount_by_pass(const stp_softweave_t *sw, int pass);
 
 const stp_linebufs_t *
