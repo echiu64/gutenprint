@@ -36,6 +36,7 @@ pkgsysconfdir = $(sysconfdir)/$(PACKAGE)
 
 cupsexec_backenddir = $(pkglibdir)/backend
 cupsexec_filterdir = $(pkglibdir)/filter
+cups_modeldir = $(pkgdatadir)/model
 
 CFLAGS = @CFLAGS@ $(CUPS_CFLAGS)
 DEFS = @DEFS@ -I. -I$(srcdir) -I../.. -DCUPS_DATADIR=\"$(pkgdatadir)\" -DGIMP_PRINT_VERSION=\"$(VERSION)\"
@@ -74,13 +75,24 @@ pkgsysconf_DATA = @CUPS_CONF@
 if CUPS_INSTALL
 install-data-local: ppd
 endif
-	$(mkinstalldirs) $(DESTDIR)$(datadir)
-	$(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)
-	$(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)/model
+	$(mkinstalldirs) $(DESTDIR)$(cups_modeldir)
 	cd ppd ; \
 	for ppdfile in * ; do \
-	  $(INSTALL_DATA) $$ppdfile $(DESTDIR)$(datadir)/$(PACKAGE)/model/ ; \
+	  $(INSTALL_DATA) $$ppdfile $(DESTDIR)$(cups_modeldir) ; \
 	done
+
+install-data-hook:
+# Remove unused directories in install tree
+	-rmdir $(DESTDIR)$(cups_modeldir)
+	-rmdir $(DESTDIR)$(pkgdatadir)
+	-rmdir $(DESTDIR)$(datadir)
+	-rmdir $(DESTDIR)$(cupsexec_backenddir)
+	-rmdir $(DESTDIR)$(cupsexec_filterdir)
+	-rmdir $(DESTDIR)$(pkglibdir)
+	-rmdir $(DESTDIR)$(libdir)
+	-rmdir $(DESTDIR)$(pkgsysconfdir)
+	-rmdir $(DESTDIR)$(sysconfdir)
+	-rmdir $(DESTDIR)$(bindir)
 
 ## Rules
 
