@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <locale.h>
 
 #include <sys/types.h>
 #include <signal.h>
@@ -800,6 +801,8 @@ stpui_printrc_load(void)
       (void) memset(line, 0, 1024);
       if (fgets(line, sizeof(line), fp) != NULL)
 	{
+	  /* Force locale to "C", so that numbers scan correctly */
+	  setlocale(LC_ALL, "C");
 	  if (strncmp("#PRINTRCv", line, 9) == 0)
 	    {
 #ifdef DEBUG
@@ -808,6 +811,7 @@ stpui_printrc_load(void)
 #endif
 	      (void) sscanf(&(line[9]), "%d", &format);
 	    }
+	  setlocale(LC_ALL, "");
 	}
       rewind(fp);
       switch (format)
@@ -844,11 +848,13 @@ stpui_printrc_save(void)
        * Write the contents of the printer list...
        */
 
+      /* Force locale to "C", so that numbers print correctly */
+      setlocale(LC_ALL, "C");
 #ifdef DEBUG
       fprintf(stderr, "Number of printers: %d\n", stpui_plist_count);
 #endif
 
-      fputs("#PRINTRCv2 written by GIMP-PRINT " PLUG_IN_VERSION "\n", fp);
+      fputs("#PRINTRCv2 written by Gimp-Print " PLUG_IN_VERSION "\n", fp);
 
       fprintf(fp, "Current-Printer: \"%s\"\n",
 	      stpui_plist[stpui_plist_current].name);
@@ -955,6 +961,7 @@ stpui_printrc_save(void)
 	  fprintf(stderr, "Wrote printer %d: %s\n", i, p->name);
 #endif
 	}
+      setlocale(LC_ALL, "");
       fclose(fp);
     }
   else
