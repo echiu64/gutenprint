@@ -1173,7 +1173,9 @@ escp2_print(const printer_t *printer,		/* I - Model */
   */
 
   nv.density = nv.density * printer->printvars.density /
-    (real_horizontal_passes * vertical_subsample);
+    (horizontal_passes * vertical_subsample);
+  if (bits == 2)
+    nv.density *= 3.3;
   if (nv.density > 1.0)
     nv.density = 1.0;
   nv.saturation *= printer->printvars.saturation;
