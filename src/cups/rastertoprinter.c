@@ -55,7 +55,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <gimp-print.h>
-#include <gimp-print-internal.h>
 
 
 /*
