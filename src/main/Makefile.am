@@ -93,14 +93,19 @@ pkgxmldata_DATA = printers.xml
 
 ## Rules
 
-$(srcdir)/printers-oldlist.h: ../printdef/printdef $(srcdir)/printers.xml
-	../printdef/printdef $(srcdir)/printers.xml > $(srcdir)/printers-oldlist.h
-
 printers.c: $(srcdir)/printers-oldlist.h
 
-../printdef/printdef: $(addprefix ../printdef/, printdef.c printdef.h)
+$(srcdir)/printers-oldlist.h: ../printdef/xmldef $(srcdir)/printers.xml
+	../printdef/xmldef printers $(srcdir)/printers.xml > $(srcdir)/printers-oldlist.h
+
+print-papers.c: $(srcdir)/papers-oldlist.h
+
+$(srcdir)/papers-oldlist.h: ../printdef/xmldef $(srcdir)/papers.xml
+	../printdef/xmldef papers $(srcdir)/papers.xml > $(srcdir)/papers-oldlist.h
+
+../printdef/xmldef: $(addprefix ../printdef/, printdef.c printdef.h)
 	cd ../printdef ; \
-	$(MAKE) printdef
+	$(MAKE) xmldef
 
 
 ## Clean

@@ -32,9 +32,9 @@ INCLUDES = @INCLUDES@
 
 ## Programs
 
-noinst_PROGRAMS = printdef
-printdef_SOURCES = printdef.c printdef.h
-printdef_LDADD = @LIBXML_LIBS@
+noinst_PROGRAMS = xmldef
+xmldef_SOURCES = printdef.c printdef.h
+xmldef_LDADD = @LIBXML_LIBS@
 
 
 

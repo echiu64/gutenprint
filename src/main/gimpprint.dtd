@@ -42,7 +42,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 <!--                    Gimp-Print                                 -->
 <!--                    Root element                               -->
-<!ELEMENT  gimp-print   (printdef)                                   >
+<!ELEMENT  gimp-print   (paperdef*, printdef*)                       >
 <!--         xmlns      XML default namespace
              xmlns:xsi  XML Schema Instance namespace
              xsi:schemaLocation
@@ -52,6 +52,55 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
              xmlns:xsi  CDATA                              #REQUIRED
              xsi:schemaLocation
                         CDATA                              #REQUIRED >
+
+
+<!--                    Paperdef                                   -->
+<!--                    Paper definitions                          -->
+<!ELEMENT  paperdef     (paper*)                                     >
+
+
+<!--                    Paper                                      -->
+<!--                    Paper definitions                          -->
+<!ELEMENT  paper            (description, comment?,
+                             width, height, unit)                    >
+<!--         name       Paper identification string                -->
+<!ATTLIST  paper
+             name       ID                                 #REQUIRED >
+
+<!--                    Description                                -->
+<!--                    Paper long name                            -->
+<!ELEMENT  description  EMPTY                                        >
+<!--         value      Paper long name                            -->
+<!ATTLIST  description
+             value      CDATA                              #REQUIRED >
+
+<!--                    Comment                                    -->
+<!--                    Paper comments or extra description        -->
+<!ELEMENT  comment      EMPTY                                        >
+<!--         value      Paper comments                             -->
+<!ATTLIST  comment
+             value      CDATA                              #REQUIRED >
+
+<!--                    Width                                      -->
+<!--                    Paper width                                -->
+<!ELEMENT  width        EMPTY                                        >
+<!--         value      Paper dimension                            -->
+<!ATTLIST  width
+             value      NMTOKEN                            #REQUIRED >
+
+<!--                    Height                                     -->
+<!--                    Paper height                               -->
+<!ELEMENT  height       EMPTY                                        >
+<!--         value      Paper dimension                            -->
+<!ATTLIST  height
+             value      NMTOKEN                            #REQUIRED >
+
+<!--                    Unit                                       -->
+<!--                    Unit of Measurement                        -->
+<!ELEMENT  unit         EMPTY                                        >
+<!--         value      Unit Name                                  -->
+<!ATTLIST  unit
+             value      NMTOKEN                            #REQUIRED >
 
 
 <!--                    Printdef                                   -->
