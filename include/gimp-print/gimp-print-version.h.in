@@ -25,7 +25,7 @@
  */
 
 /**
- * @file version.h
+ * @file gimp-print-version.h
  * @brief Version functions.
  */
 
