@@ -81,13 +81,13 @@ Description: library necessary to use gimp-print programs
 Package: gimpprint-locales
 Architecture: all
 Section: libs
-Conflicts: libgimpprint1 (<= 4.2.0-1)
-Description: Locales files for util-linux
+Replaces: libgimpprint1
+Description: Locales files for gimp-print
  This package contains the i18n files of gimp-print, used by libgimpprint,
  gimp1.2-print, cupsys-driver-gimpprint and escputil.  It will be used by
  any programs which link with libgimpprint
  .
- They are needed when you want the programs in util-linux to print their
+ They are needed when you want the programs in gimp-print to print their
  messages in other languages than US English.
 
 Package: gimpprint-doc

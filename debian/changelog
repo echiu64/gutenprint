@@ -10,8 +10,12 @@ gimp-print (4.3.0-1) unstable; urgency=low
     added to CVS!)
   * Update package descriptions for 4.3
   * Add pkgconfig definition file to libgimpprint-dev
+  * Merge fixes from debian-branch:
+    - Fix locales package description (Eric Sharkey)
+    - Change conflicts to replaces (Eric Sharkey)
+    - Fix build dependencies (Eric Sharkey) 
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>  Wed,  5 Dec 2001 00:09:43 +0000
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Sun, 30 Dec 2001 00:15:52 +0000
 
 gimp-print (4.2.0-1) unstable; urgency=low
 
