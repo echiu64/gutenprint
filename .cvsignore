@@ -9,6 +9,7 @@ config.log
 config.status
 configure
 escp2-weavetest
+escputil
 pcl-unprint
 print
 print-printers.c
