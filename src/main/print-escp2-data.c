@@ -3514,4 +3514,20 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     &standard_paper_list, pro_reslist, &photo7_inklist,
     variable_bits, pro_base_res, &roll_feed_input_slot_list
   },
+  /* 50: Stylus C42UX */
+  {
+    (MODEL_INIT_NEW | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4 |
+     MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES | MODEL_MICROWEAVE_YES |
+     MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO |
+     MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
+     MODEL_DEINITIALIZE_JE_NO),
+    45, 45, 3, 48, 48, 3,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
+    9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
+    0, 1, 0, 0, 0, 0,
+    sc480_dotsizes, sc480_densities, &variable_x80_6pl_inks,
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    variable_bits, variable_base_res, &default_input_slot_list
+  },
 };
