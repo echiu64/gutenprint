@@ -26,8 +26,8 @@ set -e
 
 if [ "$1" = "configure" ]; then
 # Upgrade in-use PPD files
-  /usr/sbin/cups-genppdconfig.4.3 -u
-  /usr/sbin/cups-genppdupdate.4.3
+  /usr/sbin/cups-genppdconfig.5.0 -u
+  /usr/sbin/cups-genppdupdate.5.0
 # Restart CUPSys (to register new and updated PPDs)
   /etc/init.d/cupsys reload
 elif [ "$1" = "abort-upgrade" -o "$1" = "abort-remove" -o "$1" = "abort-deconfigure" ]; then :

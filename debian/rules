@@ -123,9 +123,9 @@ binary-arch: build install ChangeLog
 	dh_testroot -a
 	dh_installdocs -a
 	  cp src/cups/README debian/cupsys-driver-gimpprint/usr/share/doc/cupsys-driver-gimpprint/README.cups
-	  mv debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppd.8 debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppd.4.3.8
-	  mv debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppdconfig.8 debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppdconfig.4.3.8
-	  mv debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppdupdate.8 debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppdupdate.4.3.8
+	  mv debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppd.8 debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppd.5.0.8
+	  mv debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppdconfig.8 debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppdconfig.5.0.8
+	  mv debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppdupdate.8 debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppdupdate.5.0.8
 	dh_installexamples -a
 	dh_installchangelogs -a NEWS
 	dh_strip -a
@@ -134,7 +134,7 @@ binary-arch: build install ChangeLog
 	dh_fixperms -a
 # Strip DT_RPATH from CUPS binaries.
 	find debian/cupsys-driver-gimpprint/usr/lib -type f -perm +0111 -print0 | xargs -0 chrpath --delete
-	chrpath --delete debian/cupsys-driver-gimpprint/usr/sbin/cups-genppd.4.3
+	chrpath --delete debian/cupsys-driver-gimpprint/usr/sbin/cups-genppd.5.0
 	dh_makeshlibs -a -V -X usr/lib/gimp-print
 	dh_installdeb -a
 	dh_shlibdeps -a -X usr/lib/gimp-print -l`pwd`/debian/libgimpprint$(LIBRARY_VERSION)/usr/lib:`pwd`/debian/libgimpprintui$(LIBRARY_VERSION)/usr/lib

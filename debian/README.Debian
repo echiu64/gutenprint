@@ -1,7 +1,7 @@
 Gimp-Print for Debian
 ---------------------
 
-This is Gimp-Print version 4.3.25, a development release in the 4.3
+This is Gimp-Print version 5.0.0-alpha1, an alpha release in the 5.0
 series.  Gimp-print is the print facility for the Gimp, and in
 addition a suite of drivers that may be used with common UNIX spooling
 systems using Ghostscript or CUPS.  These drivers provide printing
@@ -16,4 +16,4 @@ Documentation can be found in the gimpprint-doc package, which covers
 the use of libgimpprint-based programs, and the libgimpprint-doc
 package, which covers developing programs using libgimpprint.
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>,  Wed,  9 Oct 2002 21:19:59 +0100
+ -- Roger Leigh <rleigh@debian.org>,  Sun, 08 Feb 2004 19:41:38 +0000

@@ -1,7 +1,7 @@
 Source: gimp-print
 Section: graphics
 Priority: optional
-Maintainer: Roger Leigh <roger@whinlatter.uklinux.net>
+Maintainer: Roger Leigh <rleigh@debian.org>
 Standards-Version: 3.5.7
 Build-Depends: libcupsys2-dev, libcupsimage2-dev, libgimp1.2-dev, libglib1.2-dev, libgtk1.2-dev, libreadline4-dev, libijs-0.34-dev, debhelper (>= 4.0.2), xlibs-dev, zlib1g-dev, flex, gettext (>= 0.11.5), bison, foomatic-db-engine (>= 3.0.0)
 
@@ -13,8 +13,8 @@ Suggests: gimpprint-doc (>= ${Source-Version})
 Description: The Print plugin for the GIMP
  This package includes the Print plugin for the GIMP.
  .
- This is Gimp-Print version #UPSTREAM_VERSION#, an unstable
- development release in the 4.3 line.
+ This is Gimp-Print version #UPSTREAM_VERSION#, an alpha release
+ in the 5.0 series.
  .
  Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
@@ -39,8 +39,8 @@ Description: Gimp-Print printer drivers for CUPS
  .
    http://www.cups.org
  .
- This is Gimp-Print version #UPSTREAM_VERSION#, an unstable
- development release in the 4.3 line.
+ This is Gimp-Print version #UPSTREAM_VERSION#, an alpha release
+ in the 5.0 series.
  .
  Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
@@ -64,8 +64,8 @@ Description: Development files for the Gimp-Print library
  Install this package if you wish to develop programs that use
  libgimpprint.
  .
- This is Gimp-Print version #UPSTREAM_VERSION#, an unstable
- development release in the 4.3 line.
+ This is Gimp-Print version #UPSTREAM_VERSION#, an alpha release
+ in the 5.0 series.
  .
  Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
@@ -87,8 +87,8 @@ Description: Documentation for the Gimp-Print printer driver library
  Install this package if you want to have lots of info about the
  Gimp-Print library when you're programming.
  .
- This is Gimp-Print version #UPSTREAM_VERSION#, an unstable
- development release in the 4.3 line.
+ This is Gimp-Print version #UPSTREAM_VERSION#, an alpha release
+ in the 5.0 series.
  .
  Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
@@ -106,8 +106,8 @@ Description: The Gimp-Print printer driver library
  This package includes the Gimp-Print shared library, needed to
  run programs using Gimp-Print drivers.
  .
- This is Gimp-Print version #UPSTREAM_VERSION#, an unstable
- development release in the 4.3 line.
+ This is Gimp-Print version #UPSTREAM_VERSION#, an alpha release
+ in the 5.0 series.
  .
  Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
@@ -133,8 +133,8 @@ Description: Header files and extras for compiling programs with libgimpprintui
  Install this package if you wish to develop packages that use
  libgimpprintui.
  .
- This is Gimp-Print version #UPSTREAM_VERSION#, an unstable
- development release in the 4.3 line.
+ This is Gimp-Print version #UPSTREAM_VERSION#, an alpha release
+ in the 5.0 series.
  .
  Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
@@ -153,8 +153,8 @@ Description: Gimp-Print printer drivers - user interface library
  gimp-print.  libgimpprintui contains GTK+ widgets which may be
  used for print dialogs etc. for use with libgimpprint.
  .
- This is Gimp-Print version #UPSTREAM_VERSION#, an unstable
- development release in the 4.3 line.
+ This is Gimp-Print version #UPSTREAM_VERSION#, an alpha release
+ in the 5.0 series.
  .
  Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
@@ -176,8 +176,8 @@ Description: Locale data files for Gimp-Print
  They are needed when you want the programs in Gimp-Print to print
  their messages in other languages than US English.
  .
- This is Gimp-Print version #UPSTREAM_VERSION#, an unstable
- development release in the 4.3 line.
+ This is Gimp-Print version #UPSTREAM_VERSION#, an alpha release
+ in the 5.0 series.
  .
  Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
@@ -199,8 +199,8 @@ Description: Users' Guide for Gimp-Print and CUPS
  The documentation is available in both HTML and PDF formats for
  on-line viewing and hardcopy.
  .
- This is Gimp-Print version #UPSTREAM_VERSION#, an unstable
- development release in the 4.3 line.
+ This is Gimp-Print version #UPSTREAM_VERSION#, an alpha release
+ in the 5.0 series.
  .
  Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
@@ -218,9 +218,9 @@ Description: A maintenance utility for Epson Stylus printers
  escputil is a utility to clean and align the heads of Epson Stylus
  printers.  It can also check the current ink levels in the printer.
  .
- This is Gimp-Print version #UPSTREAM_VERSION#, an unstable
- development release in the 4.3 line.
- .
+ This is Gimp-Print version #UPSTREAM_VERSION#, an alpha release
+ in the 5.0 series.
+  .
  Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
  using GhostScript or CUPS.  These drivers provide printing quality
@@ -237,8 +237,8 @@ Description: Inkjet Server - Ghostscript driver for Gimp-Print
  Ghostscript with a Gimp-Print driver, including all printers
  supported by Gimp-Print.
  .
- This is Gimp-Print version #UPSTREAM_VERSION#, an unstable
- development release in the 4.3 line.
+ This is Gimp-Print version #UPSTREAM_VERSION#, an alpha release
+ in the 5.0 series.
  .
  Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
@@ -264,8 +264,8 @@ Description: linuxprinting.org printer support - database for Gimp-Print printer
  .
  Home Page: http://www.linuxprinting.org/
  .
- This is Gimp-Print version #UPSTREAM_VERSION#, an unstable
- development release in the 4.3 line.
+ This is Gimp-Print version #UPSTREAM_VERSION#, an alpha release
+ in the 5.0 series.
  .
  Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
