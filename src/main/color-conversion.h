@@ -146,6 +146,7 @@ typedef struct
   const color_description_t *input_color_description;
   const color_description_t *output_color_description;
   const color_correction_t *color_correction;
+  stp_cached_curve_t user_color_correction;
   stp_cached_curve_t channel_curves[STP_CHANNEL_LIMIT];
   double gamma_values[STP_CHANNEL_LIMIT];
   double print_gamma;

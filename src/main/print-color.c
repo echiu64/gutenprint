@@ -214,7 +214,7 @@ static const float_param_t float_parameters[] =
   {
     {
       "Brightness", N_("Brightness"), N_("Basic Image Adjustment"),
-      N_("Brightness of the print (0 is solid black, 2 is solid white)"),
+      N_("Brightness of the print"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
     }, 0.0, 2.0, 1.0, CMASK_ALL, 0
@@ -240,9 +240,7 @@ static const float_param_t float_parameters[] =
       "Gamma", N_("Gamma"), N_("Gamma"),
       N_("Adjust the gamma of the print. Larger values will "
 	 "produce a generally brighter print, while smaller "
-	 "values will produce a generally darker print. "
-	 "Black and white will remain the same, unlike with "
-	 "the brightness adjustment."),
+	 "values will produce a generally darker print. "),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
     }, 0.1, 4.0, 1.0, CMASK_EVERY, 0
@@ -681,6 +679,8 @@ copy_lut(void *vlut)
       stp_curve_cache_copy(&(dest->channel_curves[i]), &(src->channel_curves[i]));
       dest->gamma_values[i] = src->gamma_values[i];
     }
+  stp_curve_cache_copy(&(dest->user_color_correction),
+		       &(src->user_color_correction));
   dest->print_gamma = src->print_gamma;
   dest->app_gamma = src->app_gamma;
   dest->screen_gamma = src->screen_gamma;
@@ -691,6 +691,7 @@ copy_lut(void *vlut)
   stp_curve_cache_copy(&(dest->lum_map), &(src->lum_map));
   stp_curve_cache_copy(&(dest->sat_map), &(src->sat_map));
   stp_curve_cache_copy(&(dest->gcr_curve), &(src->gcr_curve));
+  stp_curve_cache_copy(&(dest->user_color_correction), &(src->gcr_curve));
   /* Don't copy gray_tmp */
   /* Don't copy cmy_tmp */
   /* Don't copy cmyk_tmp */
@@ -707,6 +708,7 @@ free_lut(void *vlut)
 {
   lut_t *lut = (lut_t *)vlut;
   free_channels(lut);
+  stp_curve_free_curve_cache(&(lut->user_color_correction));
   stp_curve_free_curve_cache(&(lut->hue_map));
   stp_curve_free_curve_cache(&(lut->lum_map));
   stp_curve_free_curve_cache(&(lut->sat_map));
@@ -863,27 +865,29 @@ channel_is_synthesized(lut_t *lut, int channel)
 }
 
 static void
-compute_a_curve_full(lut_t *lut, int channel)
+compute_user_correction(lut_t *lut)
 {
   double *tmp;
-  double pivot = .25;
-  double ipivot = 1.0 - pivot;
   double xcontrast = pow(lut->contrast, lut->contrast);
-  double xgamma = pow(pivot, lut->screen_gamma);
-  stp_curve_t *curve = stp_curve_cache_get_curve(&(lut->channel_curves[channel]));
+  stp_curve_t *curve = stp_curve_cache_get_curve(&(lut->user_color_correction));
+  double brightness = lut->brightness;
   int i;
   int isteps = lut->steps;
   if (isteps > 256)
     isteps = 256;
   tmp = stp_malloc(sizeof(double) * lut->steps);
+  if (brightness < .001)
+    brightness = 1000;
+  else if (brightness > 1.999)
+    brightness = .001;
+  else if (brightness > 1)
+    brightness = 2.0 - brightness;
+  else
+    brightness = 1.0 / brightness;
   for (i = 0; i < isteps; i ++)
     {
       double temp_pixel, pixel;
       pixel = (double) i / (double) (isteps - 1);
-
-      if (lut->input_color_description->color_model == COLOR_BLACK)
-	pixel = 1.0 - pixel;
-
       /*
        * First, correct contrast
        */
@@ -906,7 +910,8 @@ compute_a_curve_full(lut_t *lut, int channel)
 	{
 	  if (lut->linear_contrast_adjustment)
 	    temp_pixel = 0.5 -
-	      ((0.5 - .5 * pow(2 * temp_pixel, lut->contrast)) * lut->contrast);
+	      ((0.5 - .5 * pow(2 * temp_pixel, lut->contrast)) *
+	       lut->contrast);
 	  else
 	    temp_pixel = 0.5 -
 	      ((0.5 - .5 * pow(2 * temp_pixel, lut->contrast)));
@@ -923,21 +928,53 @@ compute_a_curve_full(lut_t *lut, int channel)
       /*
        * Second, do brightness
        */
-      if (lut->brightness < 1)
-	pixel = pixel * lut->brightness;
-      else
-	pixel = 1 - ((1 - pixel) * (2 - lut->brightness));
+      pixel = pow(pixel, brightness);
 
       /*
        * Third, correct for the screen gamma
        */
+
+      pixel = pixel * 65535.0;
+      if (pixel <= 0.0)
+	tmp[i] = 0;
+      else if (pixel >= 65535.0)
+	tmp[i] = 65535;
+      else
+	tmp[i] = (pixel);
+      tmp[i] = floor(tmp[i] + 0.5);		/* rounding is done here */
+    }  
+  stp_curve_set_data(curve, isteps, tmp);
+  if (isteps != lut->steps)
+    stp_curve_resample(curve, lut->steps);
+  stp_free(tmp);
+}
+
+static void
+compute_a_curve_full(lut_t *lut, int channel)
+{
+  double *tmp;
+  double pivot = .25;
+  double ipivot = 1.0 - pivot;
+  double xgamma = pow(pivot, lut->screen_gamma);
+  stp_curve_t *curve = stp_curve_cache_get_curve(&(lut->channel_curves[channel]));
+  int i;
+  int isteps = lut->steps;
+  if (isteps > 256)
+    isteps = 256;
+  tmp = stp_malloc(sizeof(double) * lut->steps);
+  for (i = 0; i < isteps; i ++)
+    {
+      double pixel = (double) i / (double) (isteps - 1);
+
+      if (lut->input_color_description->color_model == COLOR_BLACK)
+	pixel = 1.0 - pixel;
 
       pixel = 1.0 -
 	(1.0 / (1.0 - xgamma)) *
 	(pow(pivot + ipivot * pixel, lut->screen_gamma) - xgamma);
 
       /*
-       * Third, fix up cyan, magenta, yellow values
+       * Fourth, fix up cyan, magenta, yellow values
        */
       if (pixel < 0.0)
 	pixel = 0.0;
@@ -948,7 +985,6 @@ compute_a_curve_full(lut_t *lut, int channel)
 	pixel = 0;
       else
 	pixel = 1 - pow(1 - pixel, lut->gamma_values[channel]);
-
       /*
        * Finally, fix up print gamma and scale
        */
@@ -1093,6 +1129,7 @@ stpi_compute_lut(stp_vars_t *v)
 {
   int i;
   lut_t *lut = (lut_t *)(stp_get_component_data(v, "Color"));
+  stp_curve_t *curve;
   stp_dprintf(STP_DBG_LUT, v, "stpi_compute_lut\n");
 
   if (lut->input_color_description->color_model == COLOR_UNKNOWN ||
@@ -1122,6 +1159,11 @@ stpi_compute_lut(stp_vars_t *v)
   if (stp_check_float_parameter(v, "AppGamma", STP_PARAMETER_ACTIVE))
     lut->app_gamma = stp_get_float_parameter(v, "AppGamma");
   lut->screen_gamma = lut->app_gamma / 4.0; /* "Empirical" */
+  curve = stp_curve_create_copy(color_curve_bounds);
+  stp_curve_rescale(curve, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
+		    STP_CURVE_BOUNDS_RESCALE);
+  stp_curve_cache_set_curve(&(lut->user_color_correction), curve);
+  compute_user_correction(lut);
 
   /*
    * TODO check that these are wraparound curves and all that
