@@ -159,9 +159,8 @@ msgstr "Photo CcMmYK Colour"
 #. Note to translators: "EvenTone" is the proper name, rather than a
 #. descriptive name, of this algorithm.
 #: src/main/print-dither.c:66
-#, fuzzy
 msgid "EvenTone"
-msgstr "Envelope"
+msgstr "EvenTone"
 
 #: src/main/print-dither.c:67
 msgid "Adaptive Hybrid"
@@ -965,9 +964,8 @@ msgstr "A2 Invitation"
 
 #. US A2 invitation
 #: src/main/print-util.c:796
-#, fuzzy
 msgid "Monarch Envelope"
-msgstr "Envelope"
+msgstr "Monarch Envelope"
 
 #. Monarch envelope (3.875 * 7.5)
 #: src/main/print-util.c:798
@@ -1013,39 +1011,38 @@ msgstr "44 Inch Roll Paper"
 #: src/main/print-util.c:1274 src/main/print-util.c:1283
 #, c-format
 msgid "%s is not a valid parameter of type %s\n"
-msgstr ""
+msgstr "%s is not a valid parameter of type %s\n"
 
 #: src/main/print-util.c:1299
 #, c-format
 msgid "%s out of range (value %f, min %f, max %f)\n"
-msgstr ""
+msgstr "%s out of range (value %f, min %f, max %f)\n"
 
 #: src/main/print-util.c:1314
 #, c-format
 msgid "%s out of range (value %d, min %d, max %d)\n"
-msgstr ""
+msgstr "%s out of range (value %d, min %d, max %d)\n"
 
 #: src/main/print-util.c:1340
-#, fuzzy
 msgid "Printer does not support color output\n"
-msgstr "Printer %s does not require colour head alignment.\n"
+msgstr "Printer does not support colour output\n"
 
 #: src/main/print-util.c:1358
 msgid "Image size is not valid\n"
-msgstr ""
+msgstr "Image size is not valid\n"
 
 #: src/main/print-util.c:1365
 msgid "Top margin must not be less than zero\n"
-msgstr ""
+msgstr "Top margin must not be less than zero\n"
 
 #: src/main/print-util.c:1371
 msgid "Left margin must not be less than zero\n"
-msgstr ""
+msgstr "Left margin must not be less than zero\n"
 
 #: src/main/print-util.c:1428
 #, c-format
 msgid "%s is not a valid dither algorithm\n"
-msgstr ""
+msgstr "%s is not a valid dither algorithm\n"
 
 #. Specify language of PPD translation
 #. Translators: Specify the language of the PPD translation.
@@ -1922,25 +1919,27 @@ msgstr ""
 
 #: src/escputil/escputil.c:985
 msgid "About to save settings..."
-msgstr ""
+msgstr "About to save settings..."
 
 #: src/escputil/escputil.c:991
 msgid "failed!\n"
-msgstr ""
+msgstr "failed!\n"
 
 #: src/escputil/escputil.c:992
 msgid ""
 "Your settings were not saved successfully.  You must repeat the\n"
 "alignment procedure.\n"
 msgstr ""
+"Your settings were not saved successfully.  You must repeat the\n"
+"alignment procedure.\n"
 
 #: src/escputil/escputil.c:996
 msgid "succeeded!\n"
-msgstr ""
+msgstr "succeeded!\n"
 
 #: src/escputil/escputil.c:997
 msgid "Your alignment settings have been saved to the printer.\n"
-msgstr ""
+msgstr "Your alignment settings have been saved to the printer.\n"
 
 #: src/escputil/escputil.c:1002
 msgid "Unrecognized command.\n"
@@ -1974,20 +1973,18 @@ msgid "Press enter to continue > "
 msgstr "Press enter to continue > "
 
 #: src/escputil/escputil.c:1042
-#, fuzzy
 msgid ""
 "Please inspect the print, and choose the best pair of lines in each "
 "pattern.\n"
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
-"Please inspect the print, and choose the best pair of lines\n"
-"in pattern #%d, and then reinsert the page in the input tray.\n"
-"Type a pair number, '?' for help, or 'r' to retry this pattern.\n"
+"Please inspect the print, and choose the best pair of lines in each pattern.\n"
+"Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 
 #: src/escputil/escputil.c:1048 src/escputil/escputil.c:1182
 #, c-format
 msgid "Pass #%d"
-msgstr ""
+msgstr "Pass #%d"
 
 #: src/escputil/escputil.c:1054 src/escputil/escputil.c:1099
 #: src/escputil/escputil.c:1188 src/escputil/escputil.c:1233
@@ -2008,13 +2005,12 @@ msgid "The best pair of lines should be numbered between 1 and %d.\n"
 msgstr "The best pair of lines should be numbered between 1 and %d.\n"
 
 #: src/escputil/escputil.c:1091 src/escputil/escputil.c:1225
-#, fuzzy
 msgid "Attempting to set alignment..."
-msgstr "Attempting to detect printer model..."
+msgstr "Attempting to set alignment..."
 
 #: src/escputil/escputil.c:1094 src/escputil/escputil.c:1228
 msgid "succeeded.\n"
-msgstr ""
+msgstr "succeeded.\n"
 
 #: src/escputil/escputil.c:1095 src/escputil/escputil.c:1229
 #, c-format
@@ -2024,9 +2020,13 @@ msgid ""
 "pattern %d.  If it is not, you should repeat the process to get the best\n"
 "quality printing.\n"
 msgstr ""
+"Please verify that the alignment is correct.  After the alignment pattern\n"
+"is printed again, please ensure that the best pattern for each line is\n"
+"pattern %d.  If it is not, you should repeat the process to get the best\n"
+"quality printing.\n"
 
 #: src/escputil/escputil.c:1110
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
 "\n"
@@ -2060,8 +2060,7 @@ msgid ""
 msgstr ""
 "Please read these instructions very carefully before proceeding.\n"
 "\n"
-"This utility lets you align the colour print head of your Epson Stylus "
-"inkjet\n"
+"This utility lets you align the colour print head of your Epson Stylus inkjet\n"
 "printer.  Misuse of this utility may cause your print quality to degrade\n"
 "and possibly damage your printer.  This utility has not been reviewed by\n"
 "Seiko Epson for correctness, and is offered with no warranty at all.  The\n"
@@ -2094,14 +2093,12 @@ msgid "Printer %s does not require color head alignment.\n"
 msgstr "Printer %s does not require colour head alignment.\n"
 
 #: src/escputil/escputil.c:1176
-#, fuzzy
 msgid ""
 "Please inspect the print, and choose the pattern in each set.\n"
 "Type a pattern number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
-"Please inspect the print, and choose the best pair of lines\n"
-"in pattern #%d, and then reinsert the page in the input tray.\n"
-"Type a pair number, '?' for help, or 'r' to retry this pattern.\n"
+"Please inspect the print, and choose the pattern in each set.\n"
+"Type a pattern number, '?' for help, or 'r' to repeat the procedure.\n"
 
 #: src/escputil/escputil.c:1275
 msgid "Error in input\n"
@@ -2812,79 +2809,79 @@ msgstr "File"
 #: src/ghost/ijsgimpprint.c:144
 #, c-format
 msgid "Bad color space: bps %d channels %d space %s\n"
-msgstr ""
+msgstr "Bad colour space: bps %d channels %d space %s\n"
 
 #: src/ghost/ijsgimpprint.c:152
 msgid "No row buffer\n"
-msgstr ""
+msgstr "No row buffer\n"
 
 #: src/ghost/ijsgimpprint.c:181
 #, c-format
 msgid "Parameter %s out of range (value %f, min %f, max %f)\n"
-msgstr ""
+msgstr "Parameter %s out of range (value %f, min %f, max %f)\n"
 
 #: src/ghost/ijsgimpprint.c:185 src/ghost/ijsgimpprint.c:207
 #, c-format
 msgid "Unable to parse parameter %s=%s (expect a number)\n"
-msgstr ""
+msgstr "Unable to parse parameter %s=%s (expect a number)\n"
 
 #: src/ghost/ijsgimpprint.c:203
 #, c-format
 msgid "Parameter %s out of range (value %d, min %d, max %d)\n"
-msgstr ""
+msgstr "Parameter %s out of range (value %d, min %d, max %d)\n"
 
 #: src/ghost/ijsgimpprint.c:345
 msgid "Printer must be specified with -sModel\n"
-msgstr ""
+msgstr "Printer must be specified with -sModel\n"
 
 #: src/ghost/ijsgimpprint.c:347
-#, fuzzy, c-format
+#, c-format
 msgid "Printer %s is not a known model\n"
-msgstr "Printer model %s is not known.\n"
+msgstr "Printer %s is not a known model\n"
 
 #: src/ghost/ijsgimpprint.c:589
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown option %s\n"
-msgstr "Unknown option %c\n"
+msgstr "Unknown option %s\n"
 
 #: src/ghost/ijsgimpprint.c:732
 #, c-format
 msgid "%.0f of %.0f\n"
-msgstr ""
+msgstr "%.0f of %.0f\n"
 
 #: src/ghost/ijsgimpprint.c:838
 #, c-format
 msgid "ijs_server_get_page_header failed %d\n"
-msgstr ""
+msgstr "ijs_server_get_page_header failed %d\n"
 
 #: src/ghost/ijsgimpprint.c:849
 #, c-format
 msgid "image_init failed %d\n"
-msgstr ""
+msgstr "image_init failed %d\n"
 
 #: src/ghost/ijsgimpprint.c:860
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
-msgstr ""
+msgstr "Unable to open file descriptor: %s\n"
 
 #: src/ghost/ijsgimpprint.c:872
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to open %s: %s\n"
-msgstr "Cannot open device %s: %s\n"
+msgstr "Unable to open %s: %s\n"
 
 #: src/ghost/ijsgimpprint.c:884
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown printer %s\n"
-msgstr "Unknown option %c\n"
+msgstr "Unknown printer %s\n"
 
 #: src/ghost/ijsgimpprint.c:915
 msgid "Bad parameters; cannot continue!\n"
-msgstr ""
+msgstr "Bad parameters; cannot continue!\n"
 
 #: src/ghost/ijsgimpprint.c:925
 #, c-format
 msgid "Get next row failed at %.0f\n"
-msgstr ""
+msgstr "Get next row failed at %.0f\n"
 
 #~ msgid "Roll Feed"
 #~ msgstr "Roll Feed"
