@@ -1428,7 +1428,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		*kerror0,	/* Pointer to current error row */
 		*kerror1;	/* Pointer to next error row */
   int		ditherbit;	/* Random dither bitmask */
-  int		kc, kl, ks, bf;
+  unsigned	ks, kl;
   int		bk = 0;
   int		ub, lb;
   dither_t	*d = (dither_t *) vd;
@@ -1567,7 +1567,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	  else
 	    ok = k;
 	  if ( ok > lb )
-	    kl = ( ok - lb ) * d->density / ( d->density - lb );
+	    kl = (unsigned) ( ok - lb ) * d->density / ( d->density - lb );
 	  else
 	    kl = 0;
 	    
@@ -1582,7 +1582,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	  else if ( k < lb )
 	    ks = 0;
 	  else
-	    ks = ( k - lb ) * d->density / ( ub - lb );
+	    ks = (unsigned) ( k - lb ) * d->density / ( ub - lb );
 	    
 	/*
 	 * ks is then processed by a second order function that produces
