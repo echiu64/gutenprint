@@ -70,7 +70,6 @@ libgimpprint_modules = $(EXTRA_libgimpprint_la_SOURCES)
 endif
 
 libgimpprint_la_SOURCES = \
-	$(libgimpprint_modules) \
 	color.h \
 	curve.c \
 	dither.h \
@@ -103,7 +102,8 @@ libgimpprint_la_SOURCES = \
 	vars.h \
 	weave.h \
 	xml.c \
-	xml.h
+	xml.h \
+	$(libgimpprint_modules)
 
 EXTRA_libgimpprint_la_SOURCES = \
 	print-canon.c \
