@@ -1417,26 +1417,29 @@ escp2_density(int model, int xdpi, int ydpi, int microweave)
 	  return model_capabilities[model].densities.d_2880_720_micro;
 	}
     }
-  switch (xdpi)
+  else
     {
-    case 180:
-      return model_capabilities[model].densities.d_180_180;
-    case 360:
-      return model_capabilities[model].densities.d_360_360;
-    case 720:
-      return model_capabilities[model].densities.d_720_720;
-    case 1440:
-      switch (ydpi)
+      switch (xdpi)
 	{
+	case 180:
+	  return model_capabilities[model].densities.d_180_180;
+	case 360:
+	  return model_capabilities[model].densities.d_360_360;
 	case 720:
-	  return model_capabilities[model].densities.d_1440_720;
+	  return model_capabilities[model].densities.d_720_720;
 	case 1440:
-	  return model_capabilities[model].densities.d_1440_1440;
+	  switch (ydpi)
+	    {
+	    case 720:
+	      return model_capabilities[model].densities.d_1440_720;
+	    case 1440:
+	      return model_capabilities[model].densities.d_1440_1440;
+	    case 2880:
+	      return model_capabilities[model].densities.d_1440_2880;
+	    }
 	case 2880:
-	  return model_capabilities[model].densities.d_1440_2880;
+	  return model_capabilities[model].densities.d_2880_720;
 	}
-    case 2880:
-      return model_capabilities[model].densities.d_2880_720;
     }
   return 0;
 }
@@ -3320,18 +3323,15 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	{
 	  int advance = pass->logicalpassstart - sw->last_pass_offset -
 	    (sw->separation_rows - 1);
-	  int alo = advance % 256;
-	  int ahi = advance / 256;
+	  int a0 = advance         % 256;
+	  int a1 = (advance >> 8)  % 256;
+	  int a2 = (advance >> 16) % 256;
+	  int a3 = (advance >> 24) % 256;
 	  if (!escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
 			     MODEL_VARIABLE_NORMAL))
-	    {
-	      int a3 = (advance >> 16) % 256;
-	      int a4 = (advance >> 24) % 256;
-	      ahi = ahi % 256;
-	      fprintf(prn, "\033(v\004%c%c%c%c%c", 0, alo, ahi, a3, a4);
-	    }
+	    fprintf(prn, "\033(v\004%c%c%c%c%c", 0, a0, a1, a2, a3);
 	  else
-	    fprintf(prn, "\033(v\002%c%c%c", 0, alo, ahi);
+	    fprintf(prn, "\033(v\002%c%c%c", 0, a0, a1);
 	  sw->last_pass_offset = pass->logicalpassstart;
 	}
       if (last_color != j)
@@ -3374,21 +3374,11 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	  if (pos > 0)
 	    fprintf(prn, "\033\\%c%c", pos & 255, pos >> 8);
 	}
-      if (!escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
-			 MODEL_VARIABLE_NORMAL))
-	{
-	  int ncolor = (densities[j] << 4) | colors[j];
-	  int nlines = *linecount + pass->missingstartrows;
-	  int nwidth = sw->bitwidth * ((lwidth + 7) / 8);
-	  fprintf(prn, "\033i%c%c%c%c%c%c%c", ncolor, 1, sw->bitwidth,
-		  nwidth & 255, nwidth >> 8, nlines & 255, nlines >> 8);
-	}
-      else
+      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_NORMAL))
 	{
 	  int ydotsep = 3600 / ydpi;
 	  int xdotsep = 3600 / physical_xdpi;
-	  if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK,
-			    MODEL_720DPI_600))
+	  if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK, MODEL_720DPI_600))
 	    fprintf(prn, "\033.%c%c%c%c", 1, 8 * ydotsep, xdotsep,
 		    *linecount + pass->missingstartrows);
 	  else if (escp2_pseudo_separation_rows(model) > 0)
@@ -3400,6 +3390,14 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 		    xdotsep, *linecount + pass->missingstartrows);
 	  putc(lwidth & 255, prn);	/* Width of raster line in pixels */
 	  putc(lwidth >> 8, prn);
+	}
+      else
+	{
+	  int ncolor = (densities[j] << 4) | colors[j];
+	  int nlines = *linecount + pass->missingstartrows;
+	  int nwidth = sw->bitwidth * ((lwidth + 7) / 8);
+	  fprintf(prn, "\033i%c%c%c%c%c%c%c", ncolor, 1, sw->bitwidth,
+		  nwidth & 255, nwidth >> 8, nlines & 255, nlines >> 8);
 	}
 
       fwrite(bufs[0].v[j], lineoffs[0].v[j], 1, prn);
