@@ -125,6 +125,56 @@ require('standard_html_header.php3');
  such as Adobe applications cause the second filter chain to run.
  </p>
  <li>
+  <h3>
+  I'm trying to set up TCP/IP printing for my Epson 1520 (900N, etc...) with
+ type-B ethernet card. HELP!!!</h3>
+  <p>  
+  The Epson type-B ethernet card is a curious thing; typically you can
+ generate a page describing the printer's network interface settings if you
+ press and release the small black button on the back of the printer's network
+ card. You need to use a Mac OS 9 (or Windows) application to configure the
+ card's TCP/IP settings.  Epson shipped <a href=
+ "http://support.epson.com/hardware/printer/option/c8232a/index.html"
+ >multiple</a> <a href=
+ "http://support.epson.com/hardware/printer/option/c8233a/index.html"
+ >models</a> of this card and the particular <a href=
+ "ftp://ftp.epson.com/drivers/MNET2102.SEA.hqx">configuration</a> <a href=
+ "ftp://ftp.epson.com/drivers/EpsonNet_MacAssist.SEA.hqx" >application</a>
+ that you need will depend upon which <a href=
+ "http://support.epson.com/cgi/find_product.pl?product=epson+net&amp;tab=index.html&amp;x=0&amp;y=0"
+ >model of card</a> you own. You can use the configuration
+ applications to set the printer's IP address, default gateway (router), and
+ subnet mask. If you are on a managed network (such as in an office or school)
+ then you need to get the proper settings from the network administrator.  If
+ it's just your Mac, your printer, and you then you can follow these
+ guidelines: for simple networks (non-routed) the network interfaces for the
+ printer and computer need unique addresses on the same network (subnet). You
+ can achieve this by using TCP/IP settings for your printer that are very
+ similar to those of your Mac. <b>System Preferences/Network</b> will show you
+ your Mac's settings. Here's an example:<pre>
+  Mac network settings                    Printer network settings
+       IP Address: 192.168.0.100                   IP Address: 192.168.0.95
+      Subnet Mask: 255.255.255.0                  Subnet Mask: 255.255.255.0
+           Router: 192.168.0.1                Default gateway: 192.168.0.1
+ </pre>
+ <p>It would be prudent to open <b>/Applications/Utilities/Network Utility</b>
+ and Ping the new address before you assign it to your printer, just to make
+ sure that the address is not already in use. Start the ping and wait; after a
+ brief delay you should get <pre>ping: sendto: Host is down</pre> which
+ indicates that the address is probably available. Set the Epson with the new
+ TCP/IP settings and run Ping again to the same address. This time you should
+ get an almost immediate response: 
+ 
+ <pre>PING 192.168.0.95 (192.168.0.95): 56 data bytes 
+ 64 bytes from 192.168.0.95: icmp_seq=0 ttl=64 time=3.304 ms 
+ </pre>
+ If you don't get a response from Ping you won't be able to print; go back and
+ try a different IP Address.
+ As soon as you can ping the printer from your Mac go to the page 3 of <em>How
+ to Print with Gimp-Print</em> (or the set up section in this FAQ) and follow
+ the instructions for TCP/IP setup.
+ </p>
+ <li>
  <h3>
  I can not print to my Epson Stylus Pro 7600, but it's supposed to be supported.
  </h3>
