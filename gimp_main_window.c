@@ -399,14 +399,15 @@ gimp_create_main_window (void)
    */
 
   option = gimp_option_menu_new (FALSE,
-
                                  _("Auto"), gimp_orientation_callback,
-                                 (gpointer) -1, NULL, NULL, TRUE,
+                                 (gpointer) -1, NULL, NULL,
+				 vars.orientation == ORIENT_AUTO,
                                  _("Portrait"), gimp_orientation_callback,
-                                 (gpointer) 0, NULL, NULL, FALSE,
+                                 (gpointer) 0, NULL, NULL,
+				 vars.orientation == ORIENT_PORTRAIT,
                                  _("Landscape"), gimp_orientation_callback,
-                                 (gpointer) 1, NULL, NULL, FALSE,
-
+                                 (gpointer) 1, NULL, NULL,
+				 vars.orientation == ORIENT_LANDSCAPE,
                                  NULL);
   gimp_table_attach_aligned (GTK_TABLE (table), 0, 5,
                              _("Orientation:"), 1.0, 0.5,
@@ -553,7 +554,7 @@ gimp_create_main_window (void)
       scaling_adjustment =
         gimp_scale_entry_new (GTK_TABLE (table), 0, 0,
                               _("Scaling:"), 200, 0,
-                              -vars.scaling, 36.0, 1201.0, 1.0, 10.0, 1,
+                              -vars.scaling, 36.0, 1200.0, 1.0, 10.0, 1,
                               TRUE, 0, 0,
                               NULL, NULL);
     }
@@ -845,7 +846,7 @@ gimp_scaling_callback (GtkWidget *widget)
       gimp_image_get_resolution (image_ID, &xres, &yres);
 
       GTK_ADJUSTMENT (scaling_adjustment)->lower = 36.0;
-      GTK_ADJUSTMENT (scaling_adjustment)->upper = 1201.0;
+      GTK_ADJUSTMENT (scaling_adjustment)->upper = 1200.0;
       GTK_ADJUSTMENT (scaling_adjustment)->value = yres;
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi), TRUE);
       vars.scaling = 0.0;
@@ -949,7 +950,7 @@ gimp_do_misc_updates (void)
       plist[plist_current].v.scaling = -plist[plist_current].v.scaling;
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi), TRUE);
       GTK_ADJUSTMENT (scaling_adjustment)->lower = 36.0;
-      GTK_ADJUSTMENT (scaling_adjustment)->upper = 1201.0;
+      GTK_ADJUSTMENT (scaling_adjustment)->upper = 1200.0;
       GTK_ADJUSTMENT (scaling_adjustment)->value = tmp;
       gtk_signal_emit_by_name (scaling_adjustment, "changed");
       gtk_signal_emit_by_name (scaling_adjustment, "value_changed");
@@ -959,7 +960,7 @@ gimp_do_misc_updates (void)
       float tmp = plist[plist_current].v.scaling;
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_percent), TRUE);
       GTK_ADJUSTMENT (scaling_adjustment)->lower = 5.0;
-      GTK_ADJUSTMENT (scaling_adjustment)->upper = 101.0;
+      GTK_ADJUSTMENT (scaling_adjustment)->upper = 100.0;
       GTK_ADJUSTMENT (scaling_adjustment)->value = tmp;
       gtk_signal_emit_by_name (scaling_adjustment, "changed");
       gtk_signal_emit_by_name (scaling_adjustment, "value_changed");
