@@ -2356,23 +2356,20 @@ setup_page(stp_vars_t *v)
     {
       int left_center = escp2_cd_x_offset(v);
       int top_center = escp2_cd_y_offset(v);
-      if (escp2_cd_page_width(v))
-	pd->page_right = escp2_cd_page_width(v);
-      else
-	extra_left = left_center - (pd->page_right / 2);
-      if (escp2_cd_page_height(v))
-	{
-	  pd->page_bottom = escp2_cd_page_height(v);
-	  pd->page_true_height = escp2_cd_page_height(v);
-	}
-      else
-	extra_top = top_center - (pd->page_bottom / 2);
+      extra_top = top_center - (pd->page_bottom / 2);
+      extra_left = left_center - (pd->page_right / 2);
       pd->cd_inner_radius = 43 * pd->micro_units * 10 / 254 / 2;
       pd->cd_outer_radius = pd->page_right * pd->micro_units / 72 / 2;
       pd->cd_x_offset =
 	((pd->page_right / 2) - stp_get_left(v)) * pd->micro_units / 72;
       pd->cd_y_offset =
 	((pd->page_bottom / 2) - stp_get_top(v)) * pd->micro_units / 72;
+      if (escp2_cd_page_height(v))
+	{
+	  pd->page_right = escp2_cd_page_width(v);
+	  pd->page_bottom = escp2_cd_page_height(v);
+	  pd->page_true_height = escp2_cd_page_height(v);
+	}
     }
 
   pd->page_right += extra_left + 1;
@@ -2484,7 +2481,7 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
       if (cd_mask)
 	{
 	  int y_distance_from_center =
-	    pd->cd_y_offset - (y * pd->micro_units / pd->res->printed_vres);
+	    pd->cd_outer_radius - (y * pd->micro_units / pd->res->printed_vres);
 	  if (y_distance_from_center < 0)
 	    y_distance_from_center = -y_distance_from_center;
 	  memset(cd_mask, 0, (pd->image_printed_width + 7) / 8);
