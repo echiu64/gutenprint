@@ -6,34 +6,21 @@ libexec_PROGRAMS = print
 
 bin_PROGRAMS = unprint escp2-weavetest pcl-unprint
 
-noinst_PROGRAMS = printdef
-
 print_SOURCES = \
-	print-canon.c   \
-	print-dither.c	\
-	print-escp2.c	\
-	print-pcl.c	\
-	print-ps.c	\
-	print-util.c	\
-	print.c		\
+	print-canon.c       \
+	print-dither.c	    \
+	print-escp2.c	    \
+	print-pcl.c	    \
+	print-ps.c	    \
+	print-util.c        \
+	print.c		    \
+	gtk_main_window.c   \
+        gtk_color_window.c  \
 	print.h
-
-print-util.c: print-printers.c
-
-print-printers.c: printdef printers.xml
-	./printdef < printers.xml > print-printers.c
-
-printdef_SOURCES = printdefl.l printdefy.y printdef.h
-
-LFLAGS = -i
-YFLAGS = -d
 
 unprint_SOURCES = unprint.c
 escp2_weavetest_SOURCES = escp2-weavetest.c
 pcl_unprint_SOURCES = pcl-unprint.c
-
-clean-generic:
-	-rm -f printdefl.c printdefy.c printdefy.h
 
 INCLUDES = \
 	-I$(top_srcdir)			\
@@ -50,11 +37,10 @@ AM_CPPFLAGS = \
 
 print_LDADD = $(GIMP_LIBS)
 
-EXTRA_DIST=print-printers.c parse-escp2 RELNOTES README.dither \
+EXTRA_DIST=parse-escp2 RELNOTES \
 	Ghost/COPYING Ghost/ChangeLog Ghost/README Ghost/contrib.mak.addon \
 	Ghost/gdevstp-dither.c Ghost/gdevstp-escp2.c Ghost/gdevstp-print.h \
-	Ghost/gdevstp-util.c Ghost/gdevstp.c Ghost/gdevstp.h \
-	Ghost/gdevstp-printers.c
+	Ghost/gdevstp-util.c Ghost/gdevstp.c Ghost/gdevstp.h
 
 install-libexecPROGRAMS: $(libexec_PROGRAMS)
 	@list='$(libexec_PROGRAMS)'; for p in $$list; do \
@@ -79,10 +65,10 @@ files:
 	  echo $$p; \
 	done
 
-ghost: $(addprefix Ghost/gdevstp-, dither.c escp2.c util.c printers.c) Ghost/gdevstp-print.h
+ghost: $(addprefix Ghost/gdevstp-, dither.c escp2.c util.c) Ghost/gdevstp-print.h
 
 Ghost/gdevstp-%: print-% Makefile
-	sed -e 's/print.h/gdevstp-print.h/' -e 's/print-printers.c/gdevstp-printers.c/' $< > $@
+	sed 's/print.h/gdevstp-print.h/' $< > $@
 
 Ghost/gdevstp-print.h: print.h Makefile
-	sed -e 's/print.h/gdevstp-print.h/' -e 's/print-printers.c/gdevstp-printers.c/' $< > $@
+	sed 's/print.h/gdevstp-print.h/' $< > $@
