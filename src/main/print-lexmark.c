@@ -61,11 +61,13 @@
 #include <gimp-print-intl-internal.h>
 #include <string.h>
 
+
 #define false 0
 #define true  1
 
 typedef struct lexm_privdata_weave {
-  int           bidirectional;
+  int           bidirectional; /* tells us if we are allowed to print bidirectional */
+  int           direction;     /* stores the last direction or print head */
   unsigned char *outbuf;
 } lexm_privdata_weave;
 
@@ -677,12 +679,10 @@ lexmark_head_offset(int model,                      /* i */
 
     if (photo) 
       {
-	printf("\n with photo\n");
 	memcpy(lineoff_buffer, lexmark_model_capabilities[im].head_offset_CcMmYK, sizeof(*lineoff_buffer));
       } 
     else 
       {
-	printf("\n without photo\n");
 	memcpy(lineoff_buffer, lexmark_model_capabilities[im].head_offset_CMYK, sizeof(*lineoff_buffer));
       }
 
@@ -785,15 +785,15 @@ typedef struct {
 static const lexmark_res_t lexmark_reslist[LEXM_RES_COUNT] =
 {
   /*     name                                  hres vres softw v_pass overs unidir resid     */
-  { "300x600dpi",	N_ ("300 DPI x 600 DPI"),	       	       300,  600,  0,    1,    1,    0,    DPI300 },
+  { "300x600dpi",	N_ ("300 DPI x 600 DPI"),	       300,  600,  0,    1,    1,    0,    DPI300 },
   { "600dpi",		N_ ("600 DPI"),		      	       600,  600,  0,    1,    1,    0,    DPI600 },
   { "600hq",		N_ ("600 DPI high quality"),	       600,  600,  1,    4,    1,    0,    DPI600 },
   { "600uni",		N_ ("600 DPI Unidirectional"),	       600,  600,  0,    1,    1,    1,    DPI600 },
-  { "1200dpi",		N_ ("1200 DPI"),		      	      1200, 1200,  1,    1,    1,    0,    DPI1200},
+  { "1200dpi",		N_ ("1200 DPI"),		          1200, 1200,  1,    1,    1,    0,    DPI1200},
   { "1200hq",		N_ ("1200 DPI high quality"),             1200, 1200,  1,    1,    1,    0,    DPI300 },
   { "1200hq2",		N_ ("1200 DPI highest quality"),          1200, 1200,  1,    1,    1,    0,    DPI600 },
   { "1200uni",		N_ ("1200 DPI  Unidirectional"),          1200, 1200,  0,    1,    1,    1,    DPI1200},
-  { "2400x1200dpi",	N_ ("2400 DPI x 1200 DPI"),	      	      2400, 1200,  1,    1,    1,    0,    DPI1200},
+  { "2400x1200dpi",	N_ ("2400 DPI x 1200 DPI"),	          2400, 1200,  1,    1,    1,    0,    DPI1200},
   { "2400x1200hq",	N_ ("2400 DPI x 1200 DPI high quality"),  2400, 1200,  1,    1,    1,    0,    DPI600 },
   { "2400x1200hq2",	N_ ("2400 DPI x 1200 DPI highest quality"),2400, 1200,  1,    1,    1,    0,    DPI300},
 #ifdef DEBUG
@@ -1693,7 +1693,6 @@ densityDivisor /= 1.2;
   privdata.outbuf = stp_malloc((((((pass_length/8)*11))+40) * out_width)+2000);
   stp_set_driver_data(nv, &privdata);
   /*  lxm_nozzles_used = 1;*/
-	printf("\n ncolors %d\n", ncolors);
 
   weave = stp_initialize_weave(lxm_nozzles_used,                   /* jets */
 			       nozzle_separation,                  /* separation */
@@ -2510,7 +2509,6 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 
   int prn_mode;
   int j; /* color counter */
-  int direction = 0;
   const lexm_privdata_weave *privdata_weave = stp_get_driver_data(nv);
   const lexmark_cap_t * caps= lexmark_get_model_capabilities(model);
   int paperShift;
@@ -2561,7 +2559,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
   /* calculate paper shift and adapt actual resoution to physical positioning resolution */
   paperShift = (pass->logicalpassstart - sw->last_pass_offset) * (caps->y_raster_res/ydpi);
 
-
+  /*** do we have to print something with the color cartridge ? ***/
   if (lineactive[0].p.c || lineactive[0].p.m || lineactive[0].p.y) 
     {    
       if (lineactive[0].p.c) 
@@ -2625,7 +2623,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
       lexmark_write(nv,		/* I - Print file or command */
 		    privdata_weave->outbuf,/*unsigned char *prnBuf,   mem block to buffer output */
 		    &paperShift,           /* int *paperShift, */
-		    direction,                     /* int direction, */
+		    privdata_weave->direction,                     /* int direction, */
 		    sw->jets,       /* num of inks to print */
 		    caps,                  /* const lexmark_cap_t *   caps,	    I - Printer model */
 		    xdpi,                  /* int xresolution, */
@@ -2638,10 +2636,10 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 		    hoffset+microoffset,   /* offset  I - Offset from left side in x_raster_res DPI */
 		    0                      /* dmt */);
       if (privdata_weave->bidirectional)
-	direction = (direction +1) & 1;
+	privdata_weave->direction = (privdata_weave->direction +1) & 1;
     }
   
-  
+  /*** do we have to print somthing with black or photo cartridge ? ***/
   if (lineactive[0].p.C || lineactive[0].p.M || lineactive[0].p.k) 
     {
       /* we print with the photo or black cartidge */
@@ -2704,7 +2702,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
     lexmark_write(nv,		/* I - Print file or command */
 		  privdata_weave->outbuf,/*unsigned char *prnBuf,   mem block to buffer output */
 		  &paperShift,           /* int *paperShift, */
-		  direction,             /* int direction, */
+		  privdata_weave->direction,             /* int direction, */
 		  sw->jets,              /* num of inks to print */
 		  caps,                  /* const lexmark_cap_t *   caps,     I - Printer model */
 		  xdpi,                  /* int xresolution, */
@@ -2718,7 +2716,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 		  0                      /* dmt */);
     if (privdata_weave->bidirectional) 
       {
-	direction = (direction +1) & 1;
+	privdata_weave->direction = (privdata_weave->direction +1) & 1;
       }
     }
   /* store paper position in respect if there was a paper shift */
