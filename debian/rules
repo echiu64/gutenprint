@@ -13,12 +13,8 @@ export DH_OPTIONS
 
 UPSTREAM_VERSION = $(shell dpkg-parsechangelog | grep ^Version | sed "s/.* //" | sed "s/-[^-]*//")
 
-# Set LD_LIBRARY_PATH for dh_shlibdeps
-LD_LIBRARY_PATH = $(shell pwd)/debian/libgimpprint$(UPSTREAM_VERSION)/usr/lib
-export LD_LIBRARY_PATH
-
-build: build-stamp
-build-stamp: configure
+build: build-stamp debian/control
+build-stamp: configure 
 	dh_testdir
 	
 	cd debian ; \
@@ -34,7 +30,7 @@ build-stamp: configure
 
 	touch build-stamp
 
-clean:
+clean: debian/control
 	dh_testdir
 	rm -f build-stamp 
 
@@ -47,7 +43,7 @@ clean:
 	dh_clean
 
 install: DH_OPTIONS=
-install: build
+install: build debian/control
 	dh_testdir
 	dh_testroot
 	dh_clean -k
@@ -95,7 +91,7 @@ binary-common:
 	dh_installdeb
 #	dh_perl
 	dh_shlibdeps -l`pwd`/debian/libgimpprint$(UPSTREAM_VERSION)/usr/lib
-	dh_gencontrol -- -VUpstream-Version=$(UPSTREAM_VERSION)
+	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
 
@@ -111,6 +107,10 @@ binary-arch: build install
 # Any other binary targets build just one binary package at a time.
 binary-%: build install
 	make -f debian/rules binary-common DH_OPTIONS=-p$*
+
+# Make sure an/that  is up-to-date.
+debian/control: debian/changelog debian/control.in
+	sed -e "s/#UPSTREAM_VERSION#/$(UPSTREAM_VERSION)/g" <debian/control.in >debian/control
 
 # Make sure that configure is up-to-date.
 configure: configure.in

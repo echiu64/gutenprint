@@ -26,9 +26,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-void *xmalloc (size_t);
-void *stp_realloc (void *, size_t);
+void *xmalloc (size_t size);
+void *xrealloc (void *ptr, size_t size);
+void *xcalloc (size_t count, size_t size);
 
 
 /******************************************************************************
