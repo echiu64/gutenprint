@@ -1190,7 +1190,7 @@ static const ink_channel_t default_black_channels =
 
 static const escp2_inkname_t default_black_ink =
 {
-  NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, NULL,
+  NULL, NULL, 0, 1, 0, 0, 0, NULL, NULL, NULL,
   {
     &default_black_channels
   }
@@ -1270,7 +1270,6 @@ setup_head_offset(stp_vars_t v)
   int channel_id = 0;
   const escp2_inkname_t *ink_type = pd->inkname;
   pd->head_offset = stpi_zalloc(sizeof(int) * pd->channels_in_use);
-  memset(pd->head_offset, 0, sizeof(pd->head_offset));
   for (i = 0; i < pd->logical_channels; i++)
     {
       const ink_channel_t *channel = ink_type->channels[i];

@@ -263,7 +263,7 @@ DECLARE_INK_CHANNEL(c80_quadtone);
 
 static const escp2_inkname_t three_color_composite_inkset =
 {
-  "RGB", N_("Three Color Composite"), 1, INKSET_CMYK, 0, 0, 4,
+  "RGB", N_("Three Color Composite"), 1, 4, INKSET_CMYK, 0, 0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &standard_cyan_channels,
@@ -273,7 +273,7 @@ static const escp2_inkname_t three_color_composite_inkset =
 
 static const escp2_inkname_t x80_three_color_composite_inkset =
 {
-  "RGB", N_("Three Color Composite"), 1, INKSET_CMYK, 0, 0, 4,
+  "RGB", N_("Three Color Composite"), 1, 4, INKSET_CMYK, 0, 0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &x80_cyan_channels,
@@ -283,7 +283,7 @@ static const escp2_inkname_t x80_three_color_composite_inkset =
 
 static const escp2_inkname_t c80_three_color_composite_inkset =
 {
-  "RGB", N_("Three Color Composite"), 1, INKSET_CMYK, 0, 0, 4,
+  "RGB", N_("Three Color Composite"), 1, 4, INKSET_CMYK, 0, 0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &c80_cyan_channels,
@@ -293,7 +293,7 @@ static const escp2_inkname_t c80_three_color_composite_inkset =
 
 static const escp2_inkname_t four_color_standard_inkset =
 {
-  "CMYK", N_("Four Color Standard"), 1, INKSET_CMYK, .25, 1.0, 4,
+  "CMYK", N_("Four Color Standard"), 1, 4, INKSET_CMYK, .25, 1.0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &standard_black_channels, &standard_cyan_channels,
@@ -303,7 +303,7 @@ static const escp2_inkname_t four_color_standard_inkset =
 
 static const escp2_inkname_t x80_four_color_standard_inkset =
 {
-  "CMYK", N_("Four Color Standard"), 1, INKSET_CMYK, .25, 1.0, 4,
+  "CMYK", N_("Four Color Standard"), 1, 4, INKSET_CMYK, .25, 1.0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &x80_black_channels, &x80_cyan_channels,
@@ -313,7 +313,7 @@ static const escp2_inkname_t x80_four_color_standard_inkset =
 
 static const escp2_inkname_t c80_four_color_standard_inkset =
 {
-  "CMYK", N_("Four Color Standard"), 1, INKSET_CMYK, .25, 1.0, 4,
+  "CMYK", N_("Four Color Standard"), 1, 4, INKSET_CMYK, .25, 1.0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &c80_black_channels, &c80_cyan_channels,
@@ -323,7 +323,7 @@ static const escp2_inkname_t c80_four_color_standard_inkset =
 
 static const escp2_inkname_t six_color_photo_inkset =
 {
-  "PhotoCMYK", N_("Six Color Photo"), 1, INKSET_CcMmYK, .5, 1.0, 4,
+  "PhotoCMYK", N_("Six Color Photo"), 1, 4, INKSET_CcMmYK, .5, 1.0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &photo_black_channels, &photo_cyan_channels,
@@ -333,7 +333,7 @@ static const escp2_inkname_t six_color_photo_inkset =
 
 static const escp2_inkname_t five_color_photo_composite_inkset =
 {
-  "PhotoCMY", N_("Five Color Photo Composite"), 1, INKSET_CcMmYK, 0, 0, 4,
+  "PhotoCMY", N_("Five Color Photo Composite"), 1, 4, INKSET_CcMmYK, 0, 0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &photo_cyan_channels,
@@ -343,7 +343,7 @@ static const escp2_inkname_t five_color_photo_composite_inkset =
 
 static const escp2_inkname_t j_seven_color_enhanced_inkset =
 {
-  "Photo7J", N_("Seven Color Enhanced"), 1, INKSET_CcMmYyK, .5, 1.0, 4,
+  "Photo7J", N_("Seven Color Enhanced"), 1, 4, INKSET_CcMmYyK, .5, 1.0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &photo_black_channels, &photo_cyan_channels,
@@ -353,7 +353,7 @@ static const escp2_inkname_t j_seven_color_enhanced_inkset =
 
 static const escp2_inkname_t j_six_color_enhanced_composite_inkset =
 {
-  "PhotoEnhanceJ", N_("Six Color Enhanced Composite"), 1, INKSET_CcMmYyK, .5, 1.0, 4,
+  "PhotoEnhanceJ", N_("Six Color Enhanced Composite"), 1, 4, INKSET_CcMmYyK, .5, 1.0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &standard_cyan_channels,
@@ -363,7 +363,7 @@ static const escp2_inkname_t j_six_color_enhanced_composite_inkset =
 
 static const escp2_inkname_t seven_color_photo_inkset =
 {
-  "PhotoCMYK7", N_("Seven Color Photo"), 1, INKSET_CcMmYKk, .05 , 1.0, 4,
+  "PhotoCMYK7", N_("Seven Color Photo"), 1, 4, INKSET_CcMmYKk, .05 , 1.0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &photo2_black_channels, &photo_cyan_channels,
@@ -373,7 +373,7 @@ static const escp2_inkname_t seven_color_photo_inkset =
 
 static const escp2_inkname_t two_color_grayscale_inkset =
 {
-  "Gray2", N_("Two Level Grayscale"), 0, INKSET_CcMmYKk, 0, 0, 1,
+  "Gray2", N_("Two Level Grayscale"), 0, 1, INKSET_CcMmYKk, 0, 0,
   NULL, NULL, NULL,
   {
     &photo2_black_channels
@@ -382,7 +382,7 @@ static const escp2_inkname_t two_color_grayscale_inkset =
 
 static const escp2_inkname_t one_color_extended_inkset =
 {
-  "PhysicalBlack", N_("One Color Raw"), 0, INKSET_EXTENDED, 0, 0, 1,
+  "PhysicalBlack", N_("One Color Raw"), 0, 1, INKSET_EXTENDED, 0, 0,
   NULL, NULL, NULL,
   {
     &standard_black_channels
@@ -391,7 +391,7 @@ static const escp2_inkname_t one_color_extended_inkset =
 
 static const escp2_inkname_t two_color_extended_inkset =
 {
-  "PhysicalBlack2", N_("Two Color Raw"), 1, INKSET_EXTENDED, 0, 0, 2,
+  "PhysicalBlack2", N_("Two Color Raw"), 1, 2, INKSET_EXTENDED, 0, 0,
   NULL, NULL, NULL,
   {
     &photo_black_channels, &extended_black_channels,
@@ -400,7 +400,7 @@ static const escp2_inkname_t two_color_extended_inkset =
 
 static const escp2_inkname_t three_color_extended_inkset =
 {
-  "PhysicalCMY", N_("Three Color Raw"), 1, INKSET_EXTENDED, 0, 0, 3,
+  "PhysicalCMY", N_("Three Color Raw"), 1, 3, INKSET_EXTENDED, 0, 0,
   NULL, NULL, NULL,
   {
     &standard_cyan_channels, &standard_magenta_channels,
@@ -410,7 +410,7 @@ static const escp2_inkname_t three_color_extended_inkset =
 
 static const escp2_inkname_t x80_three_color_extended_inkset =
 {
-  "PhysicalCMY", N_("Three Color Raw"), 1, INKSET_EXTENDED, 0, 0, 3,
+  "PhysicalCMY", N_("Three Color Raw"), 1, 3, INKSET_EXTENDED, 0, 0,
   NULL, NULL, NULL,
   {
     &x80_cyan_channels, &x80_magenta_channels, &x80_yellow_channels
@@ -419,7 +419,7 @@ static const escp2_inkname_t x80_three_color_extended_inkset =
 
 static const escp2_inkname_t c80_three_color_extended_inkset =
 {
-  "PhysicalCMY", N_("Three Color Raw"), 1, INKSET_EXTENDED, 0, 0, 3,
+  "PhysicalCMY", N_("Three Color Raw"), 1, 3, INKSET_EXTENDED, 0, 0,
   NULL, NULL, NULL,
   {
     &c80_cyan_channels, &c80_magenta_channels, &c80_yellow_channels
@@ -428,7 +428,7 @@ static const escp2_inkname_t c80_three_color_extended_inkset =
 
 static const escp2_inkname_t four_color_extended_inkset =
 {
-  "PhysicalCMYK", N_("Four Color Raw"), 1, INKSET_EXTENDED, 0, 0, 4,
+  "PhysicalCMYK", N_("Four Color Raw"), 1, 4, INKSET_EXTENDED, 0, 0,
   NULL, NULL, NULL,
   {
     &standard_black_channels, &standard_cyan_channels,
@@ -438,7 +438,7 @@ static const escp2_inkname_t four_color_extended_inkset =
 
 static const escp2_inkname_t x80_four_color_extended_inkset =
 {
-  "PhysicalCMYK", N_("Four Color Raw"), 1, INKSET_EXTENDED, 0, 0, 4,
+  "PhysicalCMYK", N_("Four Color Raw"), 1, 4, INKSET_EXTENDED, 0, 0,
   NULL, NULL, NULL,
   {
     &x80_black_channels, &x80_cyan_channels,
@@ -448,7 +448,7 @@ static const escp2_inkname_t x80_four_color_extended_inkset =
 
 static const escp2_inkname_t c80_four_color_extended_inkset =
 {
-  "PhysicalCMYK", N_("Four Color Raw"), 1, INKSET_EXTENDED, 0, 0, 4,
+  "PhysicalCMYK", N_("Four Color Raw"), 1, 4, INKSET_EXTENDED, 0, 0,
   NULL, NULL, NULL,
   {
     &c80_black_channels, &c80_cyan_channels,
@@ -458,7 +458,7 @@ static const escp2_inkname_t c80_four_color_extended_inkset =
 
 static const escp2_inkname_t five_color_extended_inkset =
 {
-  "PhysicalCcMmY", N_("Five Color Raw"), 1, INKSET_EXTENDED, 0, 0, 5,
+  "PhysicalCcMmY", N_("Five Color Raw"), 1, 5, INKSET_EXTENDED, 0, 0,
   NULL, NULL, NULL,
   {
     &standard_cyan_channels, &extended_cyan_channels,
@@ -469,7 +469,7 @@ static const escp2_inkname_t five_color_extended_inkset =
 
 static const escp2_inkname_t six_color_extended_inkset =
 {
-  "PhysicalCcMmYK", N_("Six Color Raw"), 1, INKSET_EXTENDED, 0, 0, 6,
+  "PhysicalCcMmYK", N_("Six Color Raw"), 1, 6, INKSET_EXTENDED, 0, 0,
   NULL, NULL, NULL,
   {
     &photo_black_channels, &standard_cyan_channels, &extended_cyan_channels,
@@ -480,7 +480,7 @@ static const escp2_inkname_t six_color_extended_inkset =
 
 static const escp2_inkname_t seven_color_extended_inkset =
 {
-  "PhysicalCcMmYKk", N_("Seven Color Raw"), 1, INKSET_EXTENDED, 0, 0, 7,
+  "PhysicalCcMmYKk", N_("Seven Color Raw"), 1, 7, INKSET_EXTENDED, 0, 0,
   NULL, NULL, NULL,
   {
     &photo_black_channels, &extended_black_channels, &standard_cyan_channels,
@@ -491,7 +491,7 @@ static const escp2_inkname_t seven_color_extended_inkset =
 
 static const escp2_inkname_t piezo_quadtone_inkset =
 {
-  "Quadtone", N_("Quadtone"), 0, INKSET_PIEZO_QUADTONE, 0, 0, 1,
+  "Quadtone", N_("Quadtone"), 0, 1, INKSET_PIEZO_QUADTONE, 0, 0,
   NULL, NULL, NULL,
   {
     &quadtone_channels
@@ -500,7 +500,7 @@ static const escp2_inkname_t piezo_quadtone_inkset =
 
 static const escp2_inkname_t c80_piezo_quadtone_inkset =
 {
-  "Quadtone", N_("Quadtone"), 0, INKSET_PIEZO_QUADTONE, 0, 0, 1,
+  "Quadtone", N_("Quadtone"), 0, 1, INKSET_PIEZO_QUADTONE, 0, 0,
   NULL, NULL, NULL,
   {
     &c80_quadtone_channels

@@ -209,10 +209,10 @@ DECLARE_INK(piezo_980_6pl_quadtone, standard, standard_980_6pl, 1.0);
 /* Stylus Photo 960, PM-970C */
 
 DECLARE_INK(standard_2pl_2880, standard, standard_2pl_2880, 1.0);
-DECLARE_INK(photo_2pl_2880, photo, standard_2pl_2880, 0.5);
-DECLARE_INK(photo_2pl_2880_c, photo_c, standard_2pl_2880, 0.5);
-DECLARE_INK(photo_2pl_2880_m, photo_m, standard_2pl_2880, 0.5);
-DECLARE_INK(photo_2pl_2880_y, photo_y, standard_2pl_2880, 0.5);
+DECLARE_INK(photo_2pl_2880, photo, standard_2pl_2880, 1.0);
+DECLARE_INK(photo_2pl_2880_c, photo_c, standard_2pl_2880, 1.0);
+DECLARE_INK(photo_2pl_2880_m, photo_m, standard_2pl_2880, 1.0);
+DECLARE_INK(photo_2pl_2880_y, photo_y, standard_2pl_2880, 1.0);
 DECLARE_INK(piezo_2pl_2880_quadtone, piezo_quadtone, standard_2pl_2880, 1.0);
 DECLARE_INK(standard_2pl_1440, standard, standard_2pl_1440, 1.0);
 DECLARE_INK(photo_2pl_1440, photo, standard_2pl_1440, 1.0);
@@ -257,29 +257,29 @@ DECLARE_INK(piezo_pigment_quadtone, piezo_quadtone, standard_pigment, 1.0);
 
 /* Ultrachrome (Stylus Photo 2200, Stylus Pro 7600/9600) */
 
-DECLARE_INK(standard_4pl_pigment_low, standard, standard_4pl_pigment_low, 0.5);
-DECLARE_INK(photo_4pl_pigment_low_m, photo_pigment_m, standard_4pl_pigment_low, 0.5);
-DECLARE_INK(photo_4pl_pigment_low_c, photo_pigment_c, standard_4pl_pigment_low, 0.5);
-DECLARE_INK(photo_4pl_pigment_low_y, photo_pigment_y, standard_4pl_pigment_low, 1.5);
-DECLARE_INK(photo_4pl_pigment_low_k, photo_pigment_k, standard_4pl_pigment_low, 0.5);
+DECLARE_INK(standard_4pl_pigment_low, standard, standard_4pl_pigment_low, 1.0);
+DECLARE_INK(photo_4pl_pigment_low_m, photo_pigment_m, standard_4pl_pigment_low, 1.0);
+DECLARE_INK(photo_4pl_pigment_low_c, photo_pigment_c, standard_4pl_pigment_low, 1.0);
+DECLARE_INK(photo_4pl_pigment_low_y, photo_pigment_y, standard_4pl_pigment_low, 1.0);
+DECLARE_INK(photo_4pl_pigment_low_k, photo_pigment_k, standard_4pl_pigment_low, 1.0);
 
 DECLARE_INK(standard_4pl_pigment, standard, standard_4pl_pigment, 1.0);
 DECLARE_INK(photo_4pl_pigment_m, photo_pigment_m, standard_4pl_pigment, 1.0);
 DECLARE_INK(photo_4pl_pigment_c, photo_pigment_c, standard_4pl_pigment, 1.0);
-DECLARE_INK(photo_4pl_pigment_y, photo_pigment_y, standard_4pl_pigment, 1.5);
-DECLARE_INK(photo_4pl_pigment_k, photo_pigment_k, standard_4pl_pigment, 0.75);
+DECLARE_INK(photo_4pl_pigment_y, photo_pigment_y, standard_4pl_pigment, 1.0);
+DECLARE_INK(photo_4pl_pigment_k, photo_pigment_k, standard_4pl_pigment, 1.0);
 
 DECLARE_INK(standard_4pl_pigment_1440, standard, standard_4pl_pigment_1440, 1.0);
 DECLARE_INK(photo_4pl_pigment_1440_m, photo_pigment_m, standard_4pl_pigment_1440, 1.0);
 DECLARE_INK(photo_4pl_pigment_1440_c, photo_pigment_c, standard_4pl_pigment_1440, 1.0);
-DECLARE_INK(photo_4pl_pigment_1440_y, photo_pigment_y, standard_4pl_pigment_1440, 1.5);
-DECLARE_INK(photo_4pl_pigment_1440_k, photo_pigment_k, standard_4pl_pigment_1440, 0.75);
+DECLARE_INK(photo_4pl_pigment_1440_y, photo_pigment_y, standard_4pl_pigment_1440, 1.0);
+DECLARE_INK(photo_4pl_pigment_1440_k, photo_pigment_k, standard_4pl_pigment_1440, 1.0);
 
 DECLARE_INK(standard_4pl_pigment_2880, standard, standard_4pl_pigment_2880, 1.0);
-DECLARE_INK(photo_4pl_pigment_2880_m, photo_pigment_m, standard_4pl_pigment_2880, 0.75);
-DECLARE_INK(photo_4pl_pigment_2880_c, photo_pigment_c, standard_4pl_pigment_2880, 0.75);
-DECLARE_INK(photo_4pl_pigment_2880_y, photo_pigment_y, standard_4pl_pigment_2880, 1.5);
-DECLARE_INK(photo_4pl_pigment_2880_k, photo_pigment_k, standard_4pl_pigment_2880, 0.75);
+DECLARE_INK(photo_4pl_pigment_2880_m, photo_pigment_m, standard_4pl_pigment_2880, 1.0);
+DECLARE_INK(photo_4pl_pigment_2880_c, photo_pigment_c, standard_4pl_pigment_2880, 1.0);
+DECLARE_INK(photo_4pl_pigment_2880_y, photo_pigment_y, standard_4pl_pigment_2880, 1.0);
+DECLARE_INK(photo_4pl_pigment_2880_k, photo_pigment_k, standard_4pl_pigment_2880, 1.0);
 
 
 /* Stylus Pro 10000 */
