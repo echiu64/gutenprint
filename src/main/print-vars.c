@@ -38,7 +38,6 @@
 #endif
 #include "vars.h"
 #include <string.h>
-#include <stdlib.h>
 
 #define COOKIE_VARS      0x1a18376c
 
