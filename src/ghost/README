@@ -518,14 +518,13 @@ see the notes at the end of this section.
     500, 580, 680, 740, 760, 777, 860, 880, 83, and 1160, and the
     Stylus Photo 750, 780, 790, 870, 890, 1270, 1280, 1290, and 2000P.
 
-(4) Works on all printers that do not support variable drop sizes.
-    This includes the Stylus Color, Stylus Color 400, 440, 460, 500,
-    600, 640, 660, 800, 850, 1500, 1520, and 3000, and Stylus Color
-    Pro, and Stylus Photo, Stylus Photo 700, and EX.
+(4) Works on printers prior to the 1999 series.  This includes the
+    Stylus Color, Stylus Color 400, 460, 500, 600, 660, 800, 850,
+    1500, 1520, and 3000, and Stylus Color Pro, and Stylus Photo,
+    Stylus Photo 700, and EX.
 
-(5) Works on all printers that do support variable drop sizes.  This
-    includes all supported Epson Stylus printers except for those
-    listed in note (1).
+(5) Works on all printers from 1999 on.  This includes all supported
+    Epson Stylus printers except for those listed in note (4).
 
 (6) Recommended only on processors slower than 200 MHz, the system is
     heavily loaded with a faster processor, or if problems are
