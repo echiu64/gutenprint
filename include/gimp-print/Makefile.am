@@ -35,7 +35,8 @@ pkginclude_HEADERS = \
 	array.h \
 	curve.h \
 	sequence.h \
-	gimp-print-ui.h
+	gimp-print-ui.h \
+	color.h
 
 nodist_pkginclude_HEADERS = gimp-print-version.h
 
