@@ -13,8 +13,9 @@
 </td>
 </tr>
 </table>
-<P>Canon is a trademark of Canon USA. Epson and ESCP are trademarks of Epson
-Seiko Ltd. HP and (probably) PCL are trademarks of Hewlett-Packard,
-Inc. Linux is a trademark of Linus Torvalds.</P>
+<P>Canon is a trademark of Canon USA. Epson and (probably) ESCP are
+trademarks of Epson Seiko Ltd. HP and (probably) PCL are trademarks of
+Hewlett-Packard, Inc. Linux is a trademark of Linus Torvalds. Other
+trademarks are the property of their respective owners.</P>
 </BODY>
 </HTML>
