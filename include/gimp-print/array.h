@@ -49,7 +49,7 @@ extern "C" {
 
   /** The array opaque data type. */
 typedef void *stp_array_t;
-  /** The contant array opaque data type. */
+  /** The constant array opaque data type. */
 typedef const void *stp_const_array_t;
 
   /**
