@@ -276,7 +276,7 @@ require('standard_html_header.php3');
    introduced in 4.2.6-pre1, and is not present in 4.2.5.</li>
    <li>The CUPS driver now offers normal and reversed paper order,
    permitting printing documents in the correct order on inkjet
-   printers.<./li>
+   printers.</li>
    <li>The Postscript driver in the GIMP plug-in now works correctly in
    non-US locales.</li>
    <li>Preliminary support for the Epson Stylus C83 and C84.</li>
@@ -289,11 +289,11 @@ require('standard_html_header.php3');
    <li>The Swedish and German translations have been updated.</li>
    <li>The man pages have been updated.</li>
    <li>On Mac OS X when using the provided installer package the PPDs are
-    now stored in the standard PPD location<pre>
-          /Library/Printers/PPDs/Contents/Resources/en.lproj
-    </pre>rather than in<pre>
-          /usr/share/cups/model/C
-    </pre>which is different from all previous releases. This change was
+    now stored in the standard PPD location
+   <pre>/Library/Printers/PPDs/Contents/Resources/en.lproj</pre>
+   rather than in
+   <pre>/usr/share/cups/model/C</pre>
+   which is different from all previous releases. This change was
     made for performance reasons (memory usage).  As a consequence,
     the PPDs will no longer be available for printer setup when
     using the CUPS web admin. The Apple provided Print Center application
