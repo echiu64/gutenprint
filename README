@@ -82,7 +82,8 @@ THE GIMP
 
     Gimp-Print may be used as a plug-in for the GIMP, providing the
     ability to print images.  If you wish to do so, you must use the
-    GIMP 1.2; it is not currently compatible with the GIMP 1.3.
+    GIMP 1.2.3 or above on the 1.2 line; it is not currently
+    compatible with the GIMP 1.3 or 2.0.
 
     To build and install the Gimp Print plug-in:
 

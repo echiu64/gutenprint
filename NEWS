@@ -23,12 +23,13 @@ drivers, as well as Foomatic data.
 Gimp-Print currently contains over 200 drivers supporting in excess of
 600 printer models.
 
-The Print plug-in for the GIMP requires the GIMP 1.2 (more recent
-versions of the GIMP, such as 1.3, are not supported at present).  You
-may need to install packages named "gimp-devel", "gtk-devel", and
-"glib-devel" (or similar equivalents) on many systems.  This plug-in
-will work with any printing system, and offers a comprehensive user
-interface to control all aspects of the printing process.
+The Print plug-in for the GIMP requires the GIMP 1.2.3 or above on the
+1.2 line (more recent versions of the GIMP, such as 1.3 and 2.0, are
+not supported at present).  You may need to install packages named
+"gimp-devel", "gtk-devel", and "glib-devel" (or similar equivalents)
+on many systems.  This plug-in will work with any printing system, and
+offers a comprehensive user interface to control all aspects of the
+printing process.
 
 The CUPS driver requires CUPS 1.1.15 or higher.  You may need to
 install a package named "cups-devel" or similar on many systems.
