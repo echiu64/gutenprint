@@ -30,139 +30,7 @@
  *
  * Revision History:
  *
- *   $Log$
- *   Revision 1.32  2000/03/06 01:32:05  rlk
- *   more rearrangement
- *
- *   Revision 1.31  2000/02/26 00:14:44  rlk
- *   Rename dither_{black,cmyk}4 to dither_{black,cmyk}_n, and add argument to specify how levels are to be encoded
- *
- *   Revision 1.30  2000/02/23 19:09:56  gandy
- *   small fix for delayed lines
- *
- *   Revision 1.29  2000/02/23 17:43:22  gandy
- *   Fixed a bug in canon_write
- *
- *   Revision 1.28  2000/02/22 08:18:17  gandy
- *   Fixed bug introduced with last commit (thou shall never prettify your source...)
- *
- *   Revision 1.27  2000/02/22 08:08:39  gandy
- *   Some minor cosmethics
- *
- *   Revision 1.26  2000/02/21 15:12:57  rlk
- *   Minor release prep
- *
- *   Revision 1.25  2000/02/16 00:59:19  rlk
- *   1) Use correct convert functions (canon, escp2, pcl, ps).
- *
- *   2) Fix gray_to_rgb increment (print-util)
- *
- *   3) Fix dither update (print-dither)
- *
- *   Revision 1.24  2000/02/15 03:51:40  rlk
- *
- *   1) It wasn't possible to print to the edge of the page (as defined by
- *      the printer).
- *
- *   2) The page top/bottom/left/right (particularly bottom and right) in
- *      the size boxes wasn't displayed accurately (it *had* been coded in
- *      1/10", because that's the units used to print out the pager --
- *      really sillyl, that -- now it's all in points, which is more
- *      reasonable if still not all that precise).
- *
- *   3) The behavior of landscape mode was weird, to say the least.
- *
- *   4) Calculating the size based on scaling was also weird -- in portrait
- *      mode it just looked at the height of the page vs. the height of the
- *      image, and in landscape it just looked at width of the page and
- *      height of the image.  Now it looks at both axes and scales so that
- *      the larger of the two ratios (widths and heights) is set equal to
- *      the scale factor.  That seems more intuitive to me, at any rate.
- *      It avoids flipping between landscape and portrait mode as you
- *      rescale the image in auto mode (which seems just plain bizarre to
- *      me).
- *
- *   5) I changed the escp2 stuff so that the distance from the paper edge
- *      will be identical in softweave and in microweave mode.  Henryk,
- *      that might not quite be what you intended (it's the opposite of
- *      what you actually did), but at least microweave and softweave
- *      should generate stuff that looks consistent.
- *
- *   Revision 1.23  2000/02/13 08:47:52  gandy
- *   Fixed maximum paper size for BJC-6000
- *
- *   Revision 1.22  2000/02/13 03:14:26  rlk
- *   Bit of an oops here about printer models; also start on print-gray-using-color mode for better quality
- *
- *   Revision 1.21  2000/02/10 02:46:25  rlk
- *   initialization
- *
- *   Revision 1.20  2000/02/10 00:28:32  rlk
- *   Fix landscape vs. portrait problem
- *
- *   Revision 1.19  2000/02/09 02:56:27  rlk
- *   Put lut inside vars
- *
- *   Revision 1.18  2000/02/08 20:25:17  gandy
- *   Small fix that makes variable drop sizes work (in B/W)
- *
- *   Revision 1.17  2000/02/08 17:55:25  gandy
- *   Added call to dither_cmyk_n()
- *
- *   Revision 1.16  2000/02/08 17:39:48  gandy
- *   Got support for variable drop sizes ready for testing
- *
- *   Revision 1.15  2000/02/08 14:12:17  gandy
- *   Next step in supporting variable dot sizes (still experimental)
- *
- *   Revision 1.14  2000/02/08 12:24:50  gandy
- *   Beginning support for variable drop sizes (experimental stage)
- *
- *   Revision 1.13  2000/02/07 17:03:19  gandy
- *   Major code-cleanups, prettified model capabilities
- *
- *   Revision 1.12  2000/02/06 22:08:19  rlk
- *   Remove calls to non-POSIX strdup
- *
- *   Revision 1.11  2000/02/06 03:59:09  rlk
- *   More work on the generalized dithering parameters stuff.  At this point
- *   it really looks like a proper object.  Also dynamically allocate the error
- *   buffers.  This segv'd a lot, which forced me to efence it, which was just
- *   as well because I found a few problems as a result...
- *
- *   Revision 1.10  2000/02/04 09:40:28  gandy
- *   Models BJC-1000/2000/3000/6000/6100/7000/7100 ready for testing.
- *
- *   Revision 1.9  2000/02/03 18:11:18  gandy
- *   Preparations for some more printer models (to be continued...)
- *
- *   Revision 1.8  2000/02/03 17:40:34  gandy
- *   Dirty left-border-treatment leaving an uncertainty of -4..+4 dots
- *
- *   Revision 1.7  2000/02/03 08:53:07  gandy
- *   Honours the new ink-type setting
- *
- *   Revision 1.6  2000/02/03 01:12:27  rlk
- *   Ink type
- *
- *   Revision 1.5  2000/02/02 18:36:25  gandy
- *   Minor cleanups of code and debugging messages
- *
- *   Revision 1.4  2000/02/02 18:25:27  gandy
- *   Prepared the driver for one of K/CMY/CMYK/CcMmYK/CcMmYy printing
- *
- *   Revision 1.3  2000/02/02 16:00:31  gandy
- *   Removed remnants from the original escp/2 source not needed for BJL
- *
- *   Revision 1.2  2000/02/02 15:53:09  gandy
- *   1) reworked printer capabilities handling
- *   2) initilization sends media type, paper format and printable area
- *   3) works fine with new dithering stuff
- *
- *   Revision 1.1  2000/02/01 09:01:40  gandy
- *   Add print-canon.c: Support for the BJC 6000 and possibly others
- *
- *   
+ * See bottom
  */
 
 
@@ -1644,5 +1512,140 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
 }
 
 /*
+ *   $Log$
+ *   Revision 1.33  2000/03/07 02:54:05  rlk
+ *   Move CVS history logs to the end of the file
+ *
+ *   Revision 1.32  2000/03/06 01:32:05  rlk
+ *   more rearrangement
+ *
+ *   Revision 1.31  2000/02/26 00:14:44  rlk
+ *   Rename dither_{black,cmyk}4 to dither_{black,cmyk}_n, and add argument to specify how levels are to be encoded
+ *
+ *   Revision 1.30  2000/02/23 19:09:56  gandy
+ *   small fix for delayed lines
+ *
+ *   Revision 1.29  2000/02/23 17:43:22  gandy
+ *   Fixed a bug in canon_write
+ *
+ *   Revision 1.28  2000/02/22 08:18:17  gandy
+ *   Fixed bug introduced with last commit (thou shall never prettify your source...)
+ *
+ *   Revision 1.27  2000/02/22 08:08:39  gandy
+ *   Some minor cosmethics
+ *
+ *   Revision 1.26  2000/02/21 15:12:57  rlk
+ *   Minor release prep
+ *
+ *   Revision 1.25  2000/02/16 00:59:19  rlk
+ *   1) Use correct convert functions (canon, escp2, pcl, ps).
+ *
+ *   2) Fix gray_to_rgb increment (print-util)
+ *
+ *   3) Fix dither update (print-dither)
+ *
+ *   Revision 1.24  2000/02/15 03:51:40  rlk
+ *
+ *   1) It wasn't possible to print to the edge of the page (as defined by
+ *      the printer).
+ *
+ *   2) The page top/bottom/left/right (particularly bottom and right) in
+ *      the size boxes wasn't displayed accurately (it *had* been coded in
+ *      1/10", because that's the units used to print out the pager --
+ *      really sillyl, that -- now it's all in points, which is more
+ *      reasonable if still not all that precise).
+ *
+ *   3) The behavior of landscape mode was weird, to say the least.
+ *
+ *   4) Calculating the size based on scaling was also weird -- in portrait
+ *      mode it just looked at the height of the page vs. the height of the
+ *      image, and in landscape it just looked at width of the page and
+ *      height of the image.  Now it looks at both axes and scales so that
+ *      the larger of the two ratios (widths and heights) is set equal to
+ *      the scale factor.  That seems more intuitive to me, at any rate.
+ *      It avoids flipping between landscape and portrait mode as you
+ *      rescale the image in auto mode (which seems just plain bizarre to
+ *      me).
+ *
+ *   5) I changed the escp2 stuff so that the distance from the paper edge
+ *      will be identical in softweave and in microweave mode.  Henryk,
+ *      that might not quite be what you intended (it's the opposite of
+ *      what you actually did), but at least microweave and softweave
+ *      should generate stuff that looks consistent.
+ *
+ *   Revision 1.23  2000/02/13 08:47:52  gandy
+ *   Fixed maximum paper size for BJC-6000
+ *
+ *   Revision 1.22  2000/02/13 03:14:26  rlk
+ *   Bit of an oops here about printer models; also start on print-gray-using-color mode for better quality
+ *
+ *   Revision 1.21  2000/02/10 02:46:25  rlk
+ *   initialization
+ *
+ *   Revision 1.20  2000/02/10 00:28:32  rlk
+ *   Fix landscape vs. portrait problem
+ *
+ *   Revision 1.19  2000/02/09 02:56:27  rlk
+ *   Put lut inside vars
+ *
+ *   Revision 1.18  2000/02/08 20:25:17  gandy
+ *   Small fix that makes variable drop sizes work (in B/W)
+ *
+ *   Revision 1.17  2000/02/08 17:55:25  gandy
+ *   Added call to dither_cmyk_n()
+ *
+ *   Revision 1.16  2000/02/08 17:39:48  gandy
+ *   Got support for variable drop sizes ready for testing
+ *
+ *   Revision 1.15  2000/02/08 14:12:17  gandy
+ *   Next step in supporting variable dot sizes (still experimental)
+ *
+ *   Revision 1.14  2000/02/08 12:24:50  gandy
+ *   Beginning support for variable drop sizes (experimental stage)
+ *
+ *   Revision 1.13  2000/02/07 17:03:19  gandy
+ *   Major code-cleanups, prettified model capabilities
+ *
+ *   Revision 1.12  2000/02/06 22:08:19  rlk
+ *   Remove calls to non-POSIX strdup
+ *
+ *   Revision 1.11  2000/02/06 03:59:09  rlk
+ *   More work on the generalized dithering parameters stuff.  At this point
+ *   it really looks like a proper object.  Also dynamically allocate the error
+ *   buffers.  This segv'd a lot, which forced me to efence it, which was just
+ *   as well because I found a few problems as a result...
+ *
+ *   Revision 1.10  2000/02/04 09:40:28  gandy
+ *   Models BJC-1000/2000/3000/6000/6100/7000/7100 ready for testing.
+ *
+ *   Revision 1.9  2000/02/03 18:11:18  gandy
+ *   Preparations for some more printer models (to be continued...)
+ *
+ *   Revision 1.8  2000/02/03 17:40:34  gandy
+ *   Dirty left-border-treatment leaving an uncertainty of -4..+4 dots
+ *
+ *   Revision 1.7  2000/02/03 08:53:07  gandy
+ *   Honours the new ink-type setting
+ *
+ *   Revision 1.6  2000/02/03 01:12:27  rlk
+ *   Ink type
+ *
+ *   Revision 1.5  2000/02/02 18:36:25  gandy
+ *   Minor cleanups of code and debugging messages
+ *
+ *   Revision 1.4  2000/02/02 18:25:27  gandy
+ *   Prepared the driver for one of K/CMY/CMYK/CcMmYK/CcMmYy printing
+ *
+ *   Revision 1.3  2000/02/02 16:00:31  gandy
+ *   Removed remnants from the original escp/2 source not needed for BJL
+ *
+ *   Revision 1.2  2000/02/02 15:53:09  gandy
+ *   1) reworked printer capabilities handling
+ *   2) initilization sends media type, paper format and printable area
+ *   3) works fine with new dithering stuff
+ *
+ *   Revision 1.1  2000/02/01 09:01:40  gandy
+ *   Add print-canon.c: Support for the BJC 6000 and possibly others
+ *
  * End of "$Id$".
  */

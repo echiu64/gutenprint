@@ -35,218 +35,7 @@
  *
  * Revision History:
  *
- *   $Log$
- *   Revision 1.35  2000/03/06 01:32:05  rlk
- *   more rearrangement
- *
- *   Revision 1.34  2000/02/28 18:37:31  davehill
- *   Fixed the "configure data" command again!
- *
- *   Revision 1.33  2000/02/26 00:14:44  rlk
- *   Rename dither_{black,cmyk}4 to dither_{black,cmyk}_n, and add argument to specify how levels are to be encoded
- *
- *   Revision 1.32  2000/02/25 22:13:08  davehill
- *   Added Paper size database to handle more of the new paper sizes
- *   added a while ago, anything else is handled as "custom".
- *
- *   Revision 1.31  2000/02/23 20:29:08  davehill
- *   Replaced all "model ==" code with a capabilities database.
- *   According to the ghostscript driver (and the HP windows driver), the
- *   "new" end raster graphics command is *rC, not *rbC.
- *   Use correct commands to set high quality output if dpi >= 300
- *
- *   Revision 1.30  2000/02/19 12:45:27  davehill
- *   Fixed OUTPUT_COLOR vs OUTPUT_GRAY.
- *   Fixed number of planes output for DJ600 in 600dpi mode.
- *
- *   Revision 1.29  2000/02/16 00:59:19  rlk
- *   1) Use correct convert functions (canon, escp2, pcl, ps).
- *
- *   2) Fix gray_to_rgb increment (print-util)
- *
- *   3) Fix dither update (print-dither)
- *
- *   Revision 1.28  2000/02/15 22:04:08  davehill
- *   Added fix when (left < 0)
- *
- *   Revision 1.27  2000/02/15 03:51:40  rlk
- *
- *   1) It wasn't possible to print to the edge of the page (as defined by
- *      the printer).
- *
- *   2) The page top/bottom/left/right (particularly bottom and right) in
- *      the size boxes wasn't displayed accurately (it *had* been coded in
- *      1/10", because that's the units used to print out the pager --
- *      really sillyl, that -- now it's all in points, which is more
- *      reasonable if still not all that precise).
- *
- *   3) The behavior of landscape mode was weird, to say the least.
- *
- *   4) Calculating the size based on scaling was also weird -- in portrait
- *      mode it just looked at the height of the page vs. the height of the
- *      image, and in landscape it just looked at width of the page and
- *      height of the image.  Now it looks at both axes and scales so that
- *      the larger of the two ratios (widths and heights) is set equal to
- *      the scale factor.  That seems more intuitive to me, at any rate.
- *      It avoids flipping between landscape and portrait mode as you
- *      rescale the image in auto mode (which seems just plain bizarre to
- *      me).
- *
- *   5) I changed the escp2 stuff so that the distance from the paper edge
- *      will be identical in softweave and in microweave mode.  Henryk,
- *      that might not quite be what you intended (it's the opposite of
- *      what you actually did), but at least microweave and softweave
- *      should generate stuff that looks consistent.
- *
- *   Revision 1.26  2000/02/13 03:14:26  rlk
- *   Bit of an oops here about printer models; also start on print-gray-using-color mode for better quality
- *
- *   Revision 1.25  2000/02/10 00:28:32  rlk
- *   Fix landscape vs. portrait problem
- *
- *   Revision 1.24  2000/02/09 02:56:27  rlk
- *   Put lut inside vars
- *
- *   Revision 1.23  2000/02/08 12:09:22  davehill
- *   Deskjet 600C is CMY, the rest of the 6xxC series are CMYK.
- *
- *   Revision 1.22  2000/02/06 22:31:04  rlk
- *   1) Use old methods only for microweave printing.
- *
- *   2) remove MAX_DPI from print.h since it's no longer necessary.
- *
- *   3) Remove spurious CVS logs that were just clutter.
- *
- *   Revision 1.21  2000/02/06 21:25:10  davehill
- *   Fixed max paper sizes.
- *
- *   Revision 1.20  2000/02/06 03:59:09  rlk
- *   More work on the generalized dithering parameters stuff.  At this point
- *   it really looks like a proper object.  Also dynamically allocate the error
- *   buffers.  This segv'd a lot, which forced me to efence it, which was just
- *   as well because I found a few problems as a result...
- *
- *   Revision 1.19  2000/02/02 03:03:55  rlk
- *   Move all the constants into members of a struct.  This will eventually permit
- *   us to use different dithering constants for each printer, or even vary them
- *   on the fly.  Currently there's a static dither_t that contains constants,
- *   but that's the easy part to fix...
- *
- *   Revision 1.18  2000/01/29 02:34:30  rlk
- *   1) Remove globals from everything except print.c.
- *
- *   2) Remove broken 1440x720 and 2880x720 microweave modes.
- *
- *   Revision 1.17  2000/01/25 19:51:27  rlk
- *   1) Better attempt at supporting newer Epson printers.
- *
- *   2) Generalized paper size support.
- *
- *   Revision 1.16  2000/01/17 22:23:31  rlk
- *   Print 3.1.0
- *
- *   Revision 1.15  2000/01/17 02:05:47  rlk
- *   Much stuff:
- *
- *   1) Fixes from 3.0.5
- *
- *   2) First cut at enhancing monochrome and four-level printing with stuff from
- *   the color print function.
- *
- *   3) Preliminary support (pre-support) for 440/640/740/900/750/1200.
- *
- *   Revision 1.14.2.1  2000/01/15 14:33:02  rlk
- *   PCL and Gimp 1.0 patches from Dave Hill
- *
- *   Revision 1.14  2000/01/08 23:30:56  rlk
- *   Y2K copyright
- *
- *   Revision 1.13  1999/11/23 02:11:37  rlk
- *   Rationalize variables, pass 3
- *
- *   Revision 1.12  1999/11/23 01:45:00  rlk
- *   Rationalize variables -- pass 2
- *
- *   Revision 1.11  1999/11/10 01:13:44  rlk
- *   multi-pass
- *
- *   Revision 1.10  1999/10/26 23:36:51  rlk
- *   Comment out all remaining 16-bit code, and rename 16-bit functions to "standard" names
- *
- *   Revision 1.9  1999/10/26 02:10:30  rlk
- *   Mostly fix save/load
- *
- *   Move all gimp, glib, gtk stuff into print.c (take it out of everything else).
- *   This should help port it to more general purposes later.
- *
- *   Revision 1.8  1999/10/25 23:31:59  rlk
- *   16-bit clean
- *
- *   Revision 1.7  1999/10/21 01:27:37  rlk
- *   More progress toward full 16-bit rendering
- *
- *   Revision 1.6  1999/10/19 02:04:59  rlk
- *   Merge all of the single-level print_cmyk functions
- *
- *   Revision 1.5  1999/10/17 23:44:07  rlk
- *   16-bit everything (untested)
- *
- *   Revision 1.4  1999/10/17 23:01:01  rlk
- *   Move various dither functions into print-utils.c
- *
- *   Revision 1.3  1999/10/14 01:59:59  rlk
- *   Saturation
- *
- *   Revision 1.2  1999/09/12 00:12:24  rlk
- *   Current best stuff
- *
- *   Revision 1.12  1998/05/16  18:27:59  mike
- *   Added support for 4-level "CRet" mode of 800/1100 series printers.
- *
- *   Revision 1.11  1998/05/15  21:01:51  mike
- *   Updated image positioning code (invert top and center left/top independently)
- *
- *   Revision 1.10  1998/05/08  21:22:00  mike
- *   Added quality mode command for DeskJet printers (high quality for 300
- *   DPI or higher).
- *
- *   Revision 1.9  1998/05/08  19:20:50  mike
- *   Updated to support media size, imageable area, and parameter functions.
- *   Added support for scaling modes - scale by percent or scale by PPI.
- *
- *   Revision 1.8  1998/01/21  21:33:47  mike
- *   Updated copyright.
- *
- *   Revision 1.7  1997/11/12  15:57:48  mike
- *   Minor changes for clean compiles under Digital UNIX.
- *
- *   Revision 1.7  1997/11/12  15:57:48  mike
- *   Minor changes for clean compiles under Digital UNIX.
- *
- *   Revision 1.6  1997/10/02  17:57:26  mike
- *   Updated positioning code to use "decipoint" commands.
- *
- *   Revision 1.5  1997/07/30  20:33:05  mike
- *   Final changes for 1.1 release.
- *
- *   Revision 1.4  1997/07/30  18:47:39  mike
- *   Added scaling, orientation, and offset options.
- *
- *   Revision 1.3  1997/07/03  13:24:12  mike
- *   Updated documentation for 1.0 release.
- *
- *   Revision 1.2  1997/07/02  18:48:14  mike
- *   Added mode 2 compression code.
- *   Fixed bug in pcl_mode0 and pcl_mode2 - wasn't sending 'V' or 'W' at
- *   the right times.
- *
- *   Revision 1.2  1997/07/02  18:48:14  mike
- *   Added mode 2 compression code.
- *   Fixed bug in pcl_mode0 and pcl_mode2 - wasn't sending 'V' or 'W' at
- *   the right times.
- *
- *   Revision 1.1  1997/07/02  13:51:53  mike
- *   Initial revision
+ * See bottom
  */
 
 #include "print.h"
@@ -1691,5 +1480,221 @@ pcl_mode2(FILE          *prn,		/* I - Print file or command */
 
 
 /*
+ *   $Log$
+ *   Revision 1.36  2000/03/07 02:54:05  rlk
+ *   Move CVS history logs to the end of the file
+ *
+ *   Revision 1.35  2000/03/06 01:32:05  rlk
+ *   more rearrangement
+ *
+ *   Revision 1.34  2000/02/28 18:37:31  davehill
+ *   Fixed the "configure data" command again!
+ *
+ *   Revision 1.33  2000/02/26 00:14:44  rlk
+ *   Rename dither_{black,cmyk}4 to dither_{black,cmyk}_n, and add argument to specify how levels are to be encoded
+ *
+ *   Revision 1.32  2000/02/25 22:13:08  davehill
+ *   Added Paper size database to handle more of the new paper sizes
+ *   added a while ago, anything else is handled as "custom".
+ *
+ *   Revision 1.31  2000/02/23 20:29:08  davehill
+ *   Replaced all "model ==" code with a capabilities database.
+ *   According to the ghostscript driver (and the HP windows driver), the
+ *   "new" end raster graphics command is *rC, not *rbC.
+ *   Use correct commands to set high quality output if dpi >= 300
+ *
+ *   Revision 1.30  2000/02/19 12:45:27  davehill
+ *   Fixed OUTPUT_COLOR vs OUTPUT_GRAY.
+ *   Fixed number of planes output for DJ600 in 600dpi mode.
+ *
+ *   Revision 1.29  2000/02/16 00:59:19  rlk
+ *   1) Use correct convert functions (canon, escp2, pcl, ps).
+ *
+ *   2) Fix gray_to_rgb increment (print-util)
+ *
+ *   3) Fix dither update (print-dither)
+ *
+ *   Revision 1.28  2000/02/15 22:04:08  davehill
+ *   Added fix when (left < 0)
+ *
+ *   Revision 1.27  2000/02/15 03:51:40  rlk
+ *
+ *   1) It wasn't possible to print to the edge of the page (as defined by
+ *      the printer).
+ *
+ *   2) The page top/bottom/left/right (particularly bottom and right) in
+ *      the size boxes wasn't displayed accurately (it *had* been coded in
+ *      1/10", because that's the units used to print out the pager --
+ *      really sillyl, that -- now it's all in points, which is more
+ *      reasonable if still not all that precise).
+ *
+ *   3) The behavior of landscape mode was weird, to say the least.
+ *
+ *   4) Calculating the size based on scaling was also weird -- in portrait
+ *      mode it just looked at the height of the page vs. the height of the
+ *      image, and in landscape it just looked at width of the page and
+ *      height of the image.  Now it looks at both axes and scales so that
+ *      the larger of the two ratios (widths and heights) is set equal to
+ *      the scale factor.  That seems more intuitive to me, at any rate.
+ *      It avoids flipping between landscape and portrait mode as you
+ *      rescale the image in auto mode (which seems just plain bizarre to
+ *      me).
+ *
+ *   5) I changed the escp2 stuff so that the distance from the paper edge
+ *      will be identical in softweave and in microweave mode.  Henryk,
+ *      that might not quite be what you intended (it's the opposite of
+ *      what you actually did), but at least microweave and softweave
+ *      should generate stuff that looks consistent.
+ *
+ *   Revision 1.26  2000/02/13 03:14:26  rlk
+ *   Bit of an oops here about printer models; also start on print-gray-using-color mode for better quality
+ *
+ *   Revision 1.25  2000/02/10 00:28:32  rlk
+ *   Fix landscape vs. portrait problem
+ *
+ *   Revision 1.24  2000/02/09 02:56:27  rlk
+ *   Put lut inside vars
+ *
+ *   Revision 1.23  2000/02/08 12:09:22  davehill
+ *   Deskjet 600C is CMY, the rest of the 6xxC series are CMYK.
+ *
+ *   Revision 1.22  2000/02/06 22:31:04  rlk
+ *   1) Use old methods only for microweave printing.
+ *
+ *   2) remove MAX_DPI from print.h since it's no longer necessary.
+ *
+ *   3) Remove spurious CVS logs that were just clutter.
+ *
+ *   Revision 1.21  2000/02/06 21:25:10  davehill
+ *   Fixed max paper sizes.
+ *
+ *   Revision 1.20  2000/02/06 03:59:09  rlk
+ *   More work on the generalized dithering parameters stuff.  At this point
+ *   it really looks like a proper object.  Also dynamically allocate the error
+ *   buffers.  This segv'd a lot, which forced me to efence it, which was just
+ *   as well because I found a few problems as a result...
+ *
+ *   Revision 1.19  2000/02/02 03:03:55  rlk
+ *   Move all the constants into members of a struct.  This will eventually permit
+ *   us to use different dithering constants for each printer, or even vary them
+ *   on the fly.  Currently there's a static dither_t that contains constants,
+ *   but that's the easy part to fix...
+ *
+ *   Revision 1.18  2000/01/29 02:34:30  rlk
+ *   1) Remove globals from everything except print.c.
+ *
+ *   2) Remove broken 1440x720 and 2880x720 microweave modes.
+ *
+ *   Revision 1.17  2000/01/25 19:51:27  rlk
+ *   1) Better attempt at supporting newer Epson printers.
+ *
+ *   2) Generalized paper size support.
+ *
+ *   Revision 1.16  2000/01/17 22:23:31  rlk
+ *   Print 3.1.0
+ *
+ *   Revision 1.15  2000/01/17 02:05:47  rlk
+ *   Much stuff:
+ *
+ *   1) Fixes from 3.0.5
+ *
+ *   2) First cut at enhancing monochrome and four-level printing with stuff from
+ *   the color print function.
+ *
+ *   3) Preliminary support (pre-support) for 440/640/740/900/750/1200.
+ *
+ *   Revision 1.14.2.1  2000/01/15 14:33:02  rlk
+ *   PCL and Gimp 1.0 patches from Dave Hill
+ *
+ *   Revision 1.14  2000/01/08 23:30:56  rlk
+ *   Y2K copyright
+ *
+ *   Revision 1.13  1999/11/23 02:11:37  rlk
+ *   Rationalize variables, pass 3
+ *
+ *   Revision 1.12  1999/11/23 01:45:00  rlk
+ *   Rationalize variables -- pass 2
+ *
+ *   Revision 1.11  1999/11/10 01:13:44  rlk
+ *   multi-pass
+ *
+ *   Revision 1.10  1999/10/26 23:36:51  rlk
+ *   Comment out all remaining 16-bit code, and rename 16-bit functions to "standard" names
+ *
+ *   Revision 1.9  1999/10/26 02:10:30  rlk
+ *   Mostly fix save/load
+ *
+ *   Move all gimp, glib, gtk stuff into print.c (take it out of everything else).
+ *   This should help port it to more general purposes later.
+ *
+ *   Revision 1.8  1999/10/25 23:31:59  rlk
+ *   16-bit clean
+ *
+ *   Revision 1.7  1999/10/21 01:27:37  rlk
+ *   More progress toward full 16-bit rendering
+ *
+ *   Revision 1.6  1999/10/19 02:04:59  rlk
+ *   Merge all of the single-level print_cmyk functions
+ *
+ *   Revision 1.5  1999/10/17 23:44:07  rlk
+ *   16-bit everything (untested)
+ *
+ *   Revision 1.4  1999/10/17 23:01:01  rlk
+ *   Move various dither functions into print-utils.c
+ *
+ *   Revision 1.3  1999/10/14 01:59:59  rlk
+ *   Saturation
+ *
+ *   Revision 1.2  1999/09/12 00:12:24  rlk
+ *   Current best stuff
+ *
+ *   Revision 1.12  1998/05/16  18:27:59  mike
+ *   Added support for 4-level "CRet" mode of 800/1100 series printers.
+ *
+ *   Revision 1.11  1998/05/15  21:01:51  mike
+ *   Updated image positioning code (invert top and center left/top independently)
+ *
+ *   Revision 1.10  1998/05/08  21:22:00  mike
+ *   Added quality mode command for DeskJet printers (high quality for 300
+ *   DPI or higher).
+ *
+ *   Revision 1.9  1998/05/08  19:20:50  mike
+ *   Updated to support media size, imageable area, and parameter functions.
+ *   Added support for scaling modes - scale by percent or scale by PPI.
+ *
+ *   Revision 1.8  1998/01/21  21:33:47  mike
+ *   Updated copyright.
+ *
+ *   Revision 1.7  1997/11/12  15:57:48  mike
+ *   Minor changes for clean compiles under Digital UNIX.
+ *
+ *   Revision 1.7  1997/11/12  15:57:48  mike
+ *   Minor changes for clean compiles under Digital UNIX.
+ *
+ *   Revision 1.6  1997/10/02  17:57:26  mike
+ *   Updated positioning code to use "decipoint" commands.
+ *
+ *   Revision 1.5  1997/07/30  20:33:05  mike
+ *   Final changes for 1.1 release.
+ *
+ *   Revision 1.4  1997/07/30  18:47:39  mike
+ *   Added scaling, orientation, and offset options.
+ *
+ *   Revision 1.3  1997/07/03  13:24:12  mike
+ *   Updated documentation for 1.0 release.
+ *
+ *   Revision 1.2  1997/07/02  18:48:14  mike
+ *   Added mode 2 compression code.
+ *   Fixed bug in pcl_mode0 and pcl_mode2 - wasn't sending 'V' or 'W' at
+ *   the right times.
+ *
+ *   Revision 1.2  1997/07/02  18:48:14  mike
+ *   Added mode 2 compression code.
+ *   Fixed bug in pcl_mode0 and pcl_mode2 - wasn't sending 'V' or 'W' at
+ *   the right times.
+ *
+ *   Revision 1.1  1997/07/02  13:51:53  mike
+ *   Initial revision
+ *
  * End of "$Id$".
  */

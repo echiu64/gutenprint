@@ -22,39 +22,7 @@
  *
  * Revision History:
  *
- *   $Log$
- *   Revision 1.8  2000/03/02 03:09:03  rlk
- *   Performance, by replacing long long with int
- *
- *   Revision 1.7  2000/02/28 01:26:11  rlk
- *   Try to improve high resolution quality
- *
- *   Revision 1.6  2000/02/26 00:14:44  rlk
- *   Rename dither_{black,cmyk}4 to dither_{black,cmyk}_n, and add argument to specify how levels are to be encoded
- *
- *   Revision 1.5  2000/02/21 20:32:37  rlk
- *   Important dithering bug fixes:
- *
- *   1) Avoid runaway black buildup.
- *
- *   2) Some conversion functions weren't doing density
- *
- *   Revision 1.4  2000/02/18 02:30:01  rlk
- *   A few more dithering bugs
- *
- *   Revision 1.3  2000/02/16 00:59:19  rlk
- *   1) Use correct convert functions (canon, escp2, pcl, ps).
- *
- *   2) Fix gray_to_rgb increment (print-util)
- *
- *   3) Fix dither update (print-dither)
- *
- *   Revision 1.2  2000/02/07 01:35:05  rlk
- *   Try to improve variable dot stuff
- *
- *   Revision 1.1  2000/02/06 18:40:53  rlk
- *   Split out dither stuff from print-util
- *
+ * See bottom
  */
 
 
@@ -2196,3 +2164,43 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
    * Main loop ends here!
    */
 }
+
+/*
+ *   $Log$
+ *   Revision 1.9  2000/03/07 02:54:05  rlk
+ *   Move CVS history logs to the end of the file
+ *
+ *   Revision 1.8  2000/03/02 03:09:03  rlk
+ *   Performance, by replacing long long with int
+ *
+ *   Revision 1.7  2000/02/28 01:26:11  rlk
+ *   Try to improve high resolution quality
+ *
+ *   Revision 1.6  2000/02/26 00:14:44  rlk
+ *   Rename dither_{black,cmyk}4 to dither_{black,cmyk}_n, and add argument to specify how levels are to be encoded
+ *
+ *   Revision 1.5  2000/02/21 20:32:37  rlk
+ *   Important dithering bug fixes:
+ *
+ *   1) Avoid runaway black buildup.
+ *
+ *   2) Some conversion functions weren't doing density
+ *
+ *   Revision 1.4  2000/02/18 02:30:01  rlk
+ *   A few more dithering bugs
+ *
+ *   Revision 1.3  2000/02/16 00:59:19  rlk
+ *   1) Use correct convert functions (canon, escp2, pcl, ps).
+ *
+ *   2) Fix gray_to_rgb increment (print-util)
+ *
+ *   3) Fix dither update (print-dither)
+ *
+ *   Revision 1.2  2000/02/07 01:35:05  rlk
+ *   Try to improve variable dot stuff
+ *
+ *   Revision 1.1  2000/02/06 18:40:53  rlk
+ *   Split out dither stuff from print-util
+ *
+ * End of "$Id$".
+ */

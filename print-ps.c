@@ -31,175 +31,8 @@
  *   ps_ascii85()        - Print binary data as a series of base-85 numbers.
  *
  * Revision History:
+ * See bottom
  *
- *   $Log$
- *   Revision 1.21  2000/03/06 01:32:05  rlk
- *   more rearrangement
- *
- *   Revision 1.20  2000/02/27 01:53:04  khk
- *   Fixed problem with missing linefeed character after options from PPD
- *   file. Depending on the format of the option the PostScript file was
- *   not conform with the Adobe DSC specification.
- *
- *   Revision 1.19  2000/02/16 00:59:19  rlk
- *   1) Use correct convert functions (canon, escp2, pcl, ps).
- *
- *   2) Fix gray_to_rgb increment (print-util)
- *
- *   3) Fix dither update (print-dither)
- *
- *   Revision 1.18  2000/02/15 03:51:41  rlk
- *
- *   1) It wasn't possible to print to the edge of the page (as defined by
- *      the printer).
- *
- *   2) The page top/bottom/left/right (particularly bottom and right) in
- *      the size boxes wasn't displayed accurately (it *had* been coded in
- *      1/10", because that's the units used to print out the pager --
- *      really sillyl, that -- now it's all in points, which is more
- *      reasonable if still not all that precise).
- *
- *   3) The behavior of landscape mode was weird, to say the least.
- *
- *   4) Calculating the size based on scaling was also weird -- in portrait
- *      mode it just looked at the height of the page vs. the height of the
- *      image, and in landscape it just looked at width of the page and
- *      height of the image.  Now it looks at both axes and scales so that
- *      the larger of the two ratios (widths and heights) is set equal to
- *      the scale factor.  That seems more intuitive to me, at any rate.
- *      It avoids flipping between landscape and portrait mode as you
- *      rescale the image in auto mode (which seems just plain bizarre to
- *      me).
- *
- *   5) I changed the escp2 stuff so that the distance from the paper edge
- *      will be identical in softweave and in microweave mode.  Henryk,
- *      that might not quite be what you intended (it's the opposite of
- *      what you actually did), but at least microweave and softweave
- *      should generate stuff that looks consistent.
- *
- *   Revision 1.17  2000/02/13 03:14:26  rlk
- *   Bit of an oops here about printer models; also start on print-gray-using-color mode for better quality
- *
- *   Revision 1.16  2000/02/10 03:01:52  rlk
- *   Turn on warnings
- *
- *   Revision 1.15  2000/02/09 02:56:27  rlk
- *   Put lut inside vars
- *
- *   Revision 1.14  2000/02/06 22:31:04  rlk
- *   1) Use old methods only for microweave printing.
- *
- *   2) remove MAX_DPI from print.h since it's no longer necessary.
- *
- *   3) Remove spurious CVS logs that were just clutter.
- *
- *   Revision 1.13  2000/01/25 19:51:27  rlk
- *   1) Better attempt at supporting newer Epson printers.
- *
- *   2) Generalized paper size support.
- *
- *   Revision 1.12  2000/01/08 23:30:56  rlk
- *   Y2K copyright
- *
- *   Revision 1.11  2000/01/03 13:25:13  rlk
- *   Fix from Salvador Pinto Abreu <spa@khromeleque.dmat.uevora.pt>
- *
- *   Revision 1.10  1999/11/23 02:11:37  rlk
- *   Rationalize variables, pass 3
- *
- *   Revision 1.9  1999/11/23 01:45:00  rlk
- *   Rationalize variables -- pass 2
- *
- *   Revision 1.8  1999/10/26 23:36:51  rlk
- *   Comment out all remaining 16-bit code, and rename 16-bit functions to "standard" names
- *
- *   Revision 1.7  1999/10/26 02:10:30  rlk
- *   Mostly fix save/load
- *
- *   Move all gimp, glib, gtk stuff into print.c (take it out of everything else).
- *   This should help port it to more general purposes later.
- *
- *   Revision 1.6  1999/10/25 23:31:59  rlk
- *   16-bit clean
- *
- *   Revision 1.5  1999/10/21 01:27:37  rlk
- *   More progress toward full 16-bit rendering
- *
- *   Revision 1.4  1999/10/17 23:44:07  rlk
- *   16-bit everything (untested)
- *
- *   Revision 1.3  1999/10/14 01:59:59  rlk
- *   Saturation
- *
- *   Revision 1.2  1999/09/12 00:12:24  rlk
- *   Current best stuff
- *
- *   Revision 1.13  1999/05/27 19:11:33  asbjoer
- *   use g_strncasecmp()
- *
- *   Revision 1.12  1999/05/01 17:54:09  asbjoer
- *   os2 printing
- *
- *   Revision 1.11  1999/04/15 21:49:01  yosh
- *   * applied gimp-lecorfec-99041[02]-0, changes follow
- *
- *   Revision 1.13  1998/05/15  21:01:51  mike
- *   Updated image positioning code (invert top and center left/top independently)
- *   Updated ps_imageable_area() to return a default imageable area when no PPD
- *   file is available.
- *
- *   Revision 1.12  1998/05/11  23:56:56  mike
- *   Removed unused outptr variable.
- *
- *   Revision 1.11  1998/05/08  19:20:50  mike
- *   Updated to support PPD files, media size, imageable area, and parameter
- *   functions.
- *   Added support for scaling modes - scale by percent or scale by PPI.
- *   Updated Ascii85 output - some Level 2 printers are buggy and won't accept
- *   whitespace in the data stream.
- *   Now use image dictionaries with Level 2 printers - allows interpolation
- *   flag to be sent (not all printers use this flag).
- *
- *   Revision 1.10  1998/01/22  15:38:46  mike
- *   Updated copyright notice.
- *   Whoops - wasn't encoding correctly for portrait output to level 2 printers!
- *
- *   Revision 1.9  1998/01/21  21:33:47  mike
- *   Added support for Level 2 filters; images are now sent in hex or
- *   base-85 ASCII as necessary (faster printing).
- *
- *   Revision 1.8  1997/11/12  15:57:48  mike
- *   Minor changes for clean compiles under Digital UNIX.
- *
- *   Revision 1.8  1997/11/12  15:57:48  mike
- *   Minor changes for clean compiles under Digital UNIX.
- *
- *   Revision 1.7  1997/07/30  20:33:05  mike
- *   Final changes for 1.1 release.
- *
- *   Revision 1.7  1997/07/30  20:33:05  mike
- *   Final changes for 1.1 release.
- *
- *   Revision 1.6  1997/07/30  18:47:39  mike
- *   Added scaling, orientation, and offset options.
- *
- *   Revision 1.5  1997/07/26  18:38:55  mike
- *   Bug - was using asctime instead of ctime...  D'oh!
- *
- *   Revision 1.4  1997/07/26  18:19:54  mike
- *   Fixed positioning/scaling bug.
- *
- *   Revision 1.3  1997/07/03  13:26:46  mike
- *   Updated documentation for 1.0 release.
- *
- *   Revision 1.2  1997/07/02  18:49:36  mike
- *   Forgot to free memory buffers...
- *
- *   Revision 1.2  1997/07/02  18:49:36  mike
- *   Forgot to free memory buffers...
- *
- *   Revision 1.1  1997/07/02  13:51:53  mike
- *   Initial revision
  */
 
 #include "print.h"
@@ -1026,7 +859,178 @@ ppd_find(char *ppd_file,	/* I - Name of PPD file */
   return (NULL);
 }
 
-
 /*
+ *   $Log$
+ *   Revision 1.22  2000/03/07 02:54:05  rlk
+ *   Move CVS history logs to the end of the file
+ *
+ *   Revision 1.21  2000/03/06 01:32:05  rlk
+ *   more rearrangement
+ *
+ *   Revision 1.20  2000/02/27 01:53:04  khk
+ *   Fixed problem with missing linefeed character after options from PPD
+ *   file. Depending on the format of the option the PostScript file was
+ *   not conform with the Adobe DSC specification.
+ *
+ *   Revision 1.19  2000/02/16 00:59:19  rlk
+ *   1) Use correct convert functions (canon, escp2, pcl, ps).
+ *
+ *   2) Fix gray_to_rgb increment (print-util)
+ *
+ *   3) Fix dither update (print-dither)
+ *
+ *   Revision 1.18  2000/02/15 03:51:41  rlk
+ *
+ *   1) It wasn't possible to print to the edge of the page (as defined by
+ *      the printer).
+ *
+ *   2) The page top/bottom/left/right (particularly bottom and right) in
+ *      the size boxes wasn't displayed accurately (it *had* been coded in
+ *      1/10", because that's the units used to print out the pager --
+ *      really sillyl, that -- now it's all in points, which is more
+ *      reasonable if still not all that precise).
+ *
+ *   3) The behavior of landscape mode was weird, to say the least.
+ *
+ *   4) Calculating the size based on scaling was also weird -- in portrait
+ *      mode it just looked at the height of the page vs. the height of the
+ *      image, and in landscape it just looked at width of the page and
+ *      height of the image.  Now it looks at both axes and scales so that
+ *      the larger of the two ratios (widths and heights) is set equal to
+ *      the scale factor.  That seems more intuitive to me, at any rate.
+ *      It avoids flipping between landscape and portrait mode as you
+ *      rescale the image in auto mode (which seems just plain bizarre to
+ *      me).
+ *
+ *   5) I changed the escp2 stuff so that the distance from the paper edge
+ *      will be identical in softweave and in microweave mode.  Henryk,
+ *      that might not quite be what you intended (it's the opposite of
+ *      what you actually did), but at least microweave and softweave
+ *      should generate stuff that looks consistent.
+ *
+ *   Revision 1.17  2000/02/13 03:14:26  rlk
+ *   Bit of an oops here about printer models; also start on print-gray-using-color mode for better quality
+ *
+ *   Revision 1.16  2000/02/10 03:01:52  rlk
+ *   Turn on warnings
+ *
+ *   Revision 1.15  2000/02/09 02:56:27  rlk
+ *   Put lut inside vars
+ *
+ *   Revision 1.14  2000/02/06 22:31:04  rlk
+ *   1) Use old methods only for microweave printing.
+ *
+ *   2) remove MAX_DPI from print.h since it's no longer necessary.
+ *
+ *   3) Remove spurious CVS logs that were just clutter.
+ *
+ *   Revision 1.13  2000/01/25 19:51:27  rlk
+ *   1) Better attempt at supporting newer Epson printers.
+ *
+ *   2) Generalized paper size support.
+ *
+ *   Revision 1.12  2000/01/08 23:30:56  rlk
+ *   Y2K copyright
+ *
+ *   Revision 1.11  2000/01/03 13:25:13  rlk
+ *   Fix from Salvador Pinto Abreu <spa@khromeleque.dmat.uevora.pt>
+ *
+ *   Revision 1.10  1999/11/23 02:11:37  rlk
+ *   Rationalize variables, pass 3
+ *
+ *   Revision 1.9  1999/11/23 01:45:00  rlk
+ *   Rationalize variables -- pass 2
+ *
+ *   Revision 1.8  1999/10/26 23:36:51  rlk
+ *   Comment out all remaining 16-bit code, and rename 16-bit functions to "standard" names
+ *
+ *   Revision 1.7  1999/10/26 02:10:30  rlk
+ *   Mostly fix save/load
+ *
+ *   Move all gimp, glib, gtk stuff into print.c (take it out of everything else).
+ *   This should help port it to more general purposes later.
+ *
+ *   Revision 1.6  1999/10/25 23:31:59  rlk
+ *   16-bit clean
+ *
+ *   Revision 1.5  1999/10/21 01:27:37  rlk
+ *   More progress toward full 16-bit rendering
+ *
+ *   Revision 1.4  1999/10/17 23:44:07  rlk
+ *   16-bit everything (untested)
+ *
+ *   Revision 1.3  1999/10/14 01:59:59  rlk
+ *   Saturation
+ *
+ *   Revision 1.2  1999/09/12 00:12:24  rlk
+ *   Current best stuff
+ *
+ *   Revision 1.13  1999/05/27 19:11:33  asbjoer
+ *   use g_strncasecmp()
+ *
+ *   Revision 1.12  1999/05/01 17:54:09  asbjoer
+ *   os2 printing
+ *
+ *   Revision 1.11  1999/04/15 21:49:01  yosh
+ *   * applied gimp-lecorfec-99041[02]-0, changes follow
+ *
+ *   Revision 1.13  1998/05/15  21:01:51  mike
+ *   Updated image positioning code (invert top and center left/top independently)
+ *   Updated ps_imageable_area() to return a default imageable area when no PPD
+ *   file is available.
+ *
+ *   Revision 1.12  1998/05/11  23:56:56  mike
+ *   Removed unused outptr variable.
+ *
+ *   Revision 1.11  1998/05/08  19:20:50  mike
+ *   Updated to support PPD files, media size, imageable area, and parameter
+ *   functions.
+ *   Added support for scaling modes - scale by percent or scale by PPI.
+ *   Updated Ascii85 output - some Level 2 printers are buggy and won't accept
+ *   whitespace in the data stream.
+ *   Now use image dictionaries with Level 2 printers - allows interpolation
+ *   flag to be sent (not all printers use this flag).
+ *
+ *   Revision 1.10  1998/01/22  15:38:46  mike
+ *   Updated copyright notice.
+ *   Whoops - wasn't encoding correctly for portrait output to level 2 printers!
+ *
+ *   Revision 1.9  1998/01/21  21:33:47  mike
+ *   Added support for Level 2 filters; images are now sent in hex or
+ *   base-85 ASCII as necessary (faster printing).
+ *
+ *   Revision 1.8  1997/11/12  15:57:48  mike
+ *   Minor changes for clean compiles under Digital UNIX.
+ *
+ *   Revision 1.8  1997/11/12  15:57:48  mike
+ *   Minor changes for clean compiles under Digital UNIX.
+ *
+ *   Revision 1.7  1997/07/30  20:33:05  mike
+ *   Final changes for 1.1 release.
+ *
+ *   Revision 1.7  1997/07/30  20:33:05  mike
+ *   Final changes for 1.1 release.
+ *
+ *   Revision 1.6  1997/07/30  18:47:39  mike
+ *   Added scaling, orientation, and offset options.
+ *
+ *   Revision 1.5  1997/07/26  18:38:55  mike
+ *   Bug - was using asctime instead of ctime...  D'oh!
+ *
+ *   Revision 1.4  1997/07/26  18:19:54  mike
+ *   Fixed positioning/scaling bug.
+ *
+ *   Revision 1.3  1997/07/03  13:26:46  mike
+ *   Updated documentation for 1.0 release.
+ *
+ *   Revision 1.2  1997/07/02  18:49:36  mike
+ *   Forgot to free memory buffers...
+ *
+ *   Revision 1.2  1997/07/02  18:49:36  mike
+ *   Forgot to free memory buffers...
+ *
+ *   Revision 1.1  1997/07/02  13:51:53  mike
+ *   Initial revision
+ *
  * End of "$Id$".
  */
