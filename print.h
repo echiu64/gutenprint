@@ -123,6 +123,11 @@ extern void	dither_cmyk6(guchar *, int, int, int, unsigned char *,
 extern void	dither_cmyk6_16(gushort *, int, int, int, unsigned char *,
 				unsigned char *, unsigned char *, unsigned char *,
 				unsigned char *, unsigned char *);
+
+extern void	dither_black4(guchar *, int, int, int, unsigned char *);
+extern void	dither_cmyk4(guchar *, int, int, int, unsigned char *,
+		             unsigned char *, unsigned char *, unsigned char *);
+
 extern void	gray_to_gray(guchar *, guchar *, int, int, lut_t *, guchar *,
 			     float);
 extern void	indexed_to_gray(guchar *, guchar *, int, int, lut_t *, guchar *,
