@@ -73,7 +73,7 @@ line_type **page=NULL;
  */
 
 /* convert either Epson1 or Epson2 color encoding into a sequential encoding */
-#define seqcolor(c) (((c)&3)+((c)&276)?3:0)  /* Intuitive, huh? */
+#define seqcolor(c) (((c)&3)+(((c)&276)?3:0))  /* Intuitive, huh? */
 /* sequential to Epson1 */
 #define ep1color(c)  ({0,1,2,4,17,18}[c])
 /* sequential to Epson2 */
@@ -82,8 +82,9 @@ line_type **page=NULL;
 
 void *mycalloc(size_t count,size_t size){
   void *p;
-  if (p=calloc(count,size))
+  if (p=calloc(count,size)) {
     return(p);
+  }
 
   fprintf(stderr,"Buy some RAM, dude!");
   exit(-1);
@@ -91,8 +92,9 @@ void *mycalloc(size_t count,size_t size){
 
 void *mymalloc(size_t size){
   void *p;
-  if (p=malloc(size))
+  if (p=malloc(size)) {
     return(p);
+  }
 
   fprintf(stderr,"Buy some RAM, dude!");
   exit(-1);
@@ -100,8 +102,10 @@ void *mymalloc(size_t size){
 
 void *myrealloc(void *ptr, size_t size){
   void *p;
-  if ((p=realloc(ptr,size))||(size==0))
+  
+  if ((p=realloc(ptr,size))||(size==0)) {
     return(p);
+  }
 
   fprintf(stderr,"Buy some RAM, dude!");
   exit(-1);
@@ -149,9 +153,10 @@ void mix_ink(ppmpixel p, int c, unsigned int a) {
 
 void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color){
 
-  int temp,shift,length,bpp,lvalue,pvalue;
+  int temp,shift,length,bpp,lvalue,pvalue,oldstop;
   unsigned char *tempp;
 
+  fprintf(stderr,"alloc p (%d-%d) l (%d-%d)\n",p->startx[color],p->stopx[color],startl,stopl);
   if (startl<p->startx[color]) { /* l should be to the right of p */
     temp=p->startx[color];
     p->startx[color]=startl;
@@ -164,11 +169,17 @@ void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color
     l=tempp;
   }
   shift=startl-p->startx[color];
-  length=stopl-startl;
+  length=stopl-startl+1;
   
+  fprintf(stderr,"alloc p (%d-%d) l (%d-%d)\n",p->startx[color],p->stopx[color],startl,stopl);
+  oldstop=p->stopx[color];
   p->stopx[color]=(stopl>p->stopx[color])?stopl:p->stopx[color];
+  fprintf(stderr,"alloc Start %d stop %d size %d\n",p->startx[color],p->stopx[color],
+             ((p->stopx[color]-p->startx[color]+1)*bpp+7)/8);
   p->line[color]=myrealloc(p->line[color],((p->stopx[color]-p->startx[color]+1)*bpp+7)/8);
-
+  memset(p->line[color]+((oldstop-p->startx[color]+1)*bpp+7)/8,0,
+          ((p->stopx[color]-p->startx[color]+1)*bpp+7)/8-
+          ((oldstop-p->startx[color]+1)*bpp+7)/8);
  bpp=pstate.dotsize&0x16?2:1;
  for (i=0;i<length;i++) {
    lvalue=get_bits(l,i,bpp);
@@ -195,6 +206,7 @@ void expand_line (unsigned char *src, unsigned char *dst, int length, int bpp, i
    * We want to copy each field from the src to the dst, spacing the fields
    * out every skip fields.
    */
+  fprintf(stderr,"Expanding bpp=%d skip=%d\n",bpp,skip);
   if (skip==1) { /* the trivial case, this should be faster */
     memcpy(dst,src,(length*bpp+7)/8);
     return;
@@ -265,6 +277,7 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
   unsigned char *oldline;
 
   skip=pstate.relative_horizontal_units/density;
+  fprintf(stderr,"Density=%d RHU=%d skip=%d\n",density,pstate.relative_horizontal_units,skip);
 
   if (skip==0) {
     fprintf(stderr,"Warning!  Attempting to print at %d DPI but units are set to %d DPI.\n",density,pstate.relative_horizontal_units);
@@ -290,16 +303,19 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
     } else {
       oldline=NULL;
     }
+    fprintf(stderr,"n=%d Simple=%d Better=%d\n",n,bufsize*skip,(n*skip*bpp+7)/8);
     page[y]->line[color]=(unsigned char *) mycalloc(sizeof(unsigned char),
-                                                    bufsize*skip);
+                                                    (n*skip*bpp+7)/8);
     page[y]->startx[color]=pstate.xposition;
-    page[y]->stopx[color]=pstate.xposition+n*skip;
-    expand_line(buf,page[y]->line[color],n,bpp,skip);
+    page[y]->stopx[color]=pstate.xposition+(n?((n-1)*skip+1):0);
+    fprintf(stderr,"alloc new line of %d color %d pix from %d to %d every %d pixels\n",n,color,page[y]->startx[color],page[y]->stopx[color],skip);
+    expand_line(buf+(y-pstate.yposition)*((n*skip*bpp+7)/8),
+                   page[y]->line[color],n,bpp,skip);
     if (oldline) {
       merge_line(page[y],oldline,oldstart,oldstop,color);
     }
   }
-  pstate.xposition+=n;
+  pstate.xposition+=n?(n-1)*skip+1:0;
 }
 
 main(int argc,char *argv[]){
@@ -330,6 +346,7 @@ int currentcolor,currentbpp,density,eject,got_graphics;
                        fprintf(stderr,error);exit(-1);}\
                        sh=minibuf[0]+minibuf[1]*256;}
 #define getn(n,error) if (!fread(buf,1,n,fp_r)){fprintf(stderr,error);exit(-1);}
+#define getnoff(n,offset,error) if (!fread(buf+offset,1,n,fp_r)){fprintf(stderr,error);exit(-1);}
 
     eject=0;
     got_graphics=0;
@@ -393,7 +410,13 @@ int currentcolor,currentbpp,density,eject,got_graphics;
               m=ch;
               get2("Error reading number of horizontal dots!\n");
               n=sh;
-              currentbpp=1;
+              if (pstate.dotsize&16) {
+                fprintf(stderr,"WARNING!  ESC . printer command not supported in variable dot size mode!!!\n");
+                fprintf(stderr,"Doing what you mean, not what you say...");
+                currentbpp=2;
+              } else {
+                currentbpp=1;
+              }
               currentcolor=pstate.current_color;
             }
             switch (c) {
@@ -407,15 +430,21 @@ int currentcolor,currentbpp,density,eject,got_graphics;
                   get1("Error reading counter!\n");
                   if (ch<128) {
                     bufsize=ch+1;
-                    getn(bufsize,"Error reading RLE raster data!\n");
+                    getnoff(bufsize,i,"Error reading RLE raster data!\n");
                   } else {
-                    bufsize=257-(int)ch;
+                    bufsize=257-(unsigned int)ch;
                     get1("Error reading compressed RLE raster data!\n");
-                    memset(buf,ch,bufsize);
+                    memset(buf+i,ch,bufsize);
                   }
                   i+=bufsize;
-                  update_page(buf,bufsize,m,n,currentcolor,currentbpp,density);
                 }
+                if (i!=(m*((n*currentbpp+7)/8))) {
+                  fprintf(stderr,"Error decoding RLE data.\n");
+                  fprintf(stderr,"Total bufsize %d, expected %d\n",i,
+                        (m*((n*currentbpp+7)/8)));
+                  exit(-1);
+                }
+                update_page(buf,i,m,n,currentcolor,currentbpp,density);
                 break;
               case 2: /* TIFF compression */
                 fprintf(stderr,"TIFF mode not yet supported!\n");
