@@ -27,7 +27,7 @@ MAINT_CHARSET = latin1
 ## Variables
 
 MANUAL = gimpprint
-HTMLDIR = programmer-html
+HTMLDIR = developer-html
 DOCS = $(MANUAL).dvi $(MANUAL).ps html
 
 IMAGES =

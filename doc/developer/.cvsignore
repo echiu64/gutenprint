@@ -1,5 +1,6 @@
 Makefile
 Makefile.in
+developer-html
 gimpprint.aux
 gimpprint.cp
 gimpprint.cps
@@ -21,6 +22,5 @@ gimpprint.tp
 gimpprint.vr
 gimpprint.vrs
 html-stamp
-programmer-html
 stamp-vti
 version.texi
