@@ -147,17 +147,12 @@ stp_path_merge(const char *path, /* Path */
 	       const char *file) /* Filename */
 {
   char *filename;                /* Filename to return */
-  int
-    namelen,                     /* Filename length */
-    nameidx;                     /* Index into filename */
-
-  namelen = strlen(path) + strlen(file) + 2;
+  int namelen = strlen(path) + strlen(file) + 2;
   filename = (char *) stp_malloc(namelen * sizeof(char));
-  strncpy (filename, path, strlen(path));
-  nameidx = strlen(path);
-  filename[nameidx++] = '/';
-  strcpy ((filename+nameidx), file);
-
+  strcpy (filename, path);
+  strcat (filename, "/");
+  strcat (filename, file);
+  filename[namelen - 1] = '\0';
   return filename;
 }
 
