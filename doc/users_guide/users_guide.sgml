@@ -3,7 +3,8 @@
 
  <bookinfo>
   <title>The User's Guide to the Gimp-Print Top Quality Printer Drivers</title>
-  <date>October 26, 2001</date>
+  <date>October 27, 2001</date>
+  <pubdate>October 27, 2001</pubdate>
   <author>
     <firstname>Andy</firstname>
     <surname>Stewart</surname>
@@ -13,13 +14,15 @@
     <holder>Andy Stewart</holder>
   </copyright>
   <legalnotice>
-    <para>The User's Guide to the Gimp-Print Top Quality Printer Drivers, Copyright 2001, Andy
-Stewart</para>
-
-    <para>Permission is granted to copy, distribute and/or modify this
+    <para>The User's Guide to the Gimp-Print Top Quality Printer
+Drivers, Copyright 2001, Andy Stewart.
+    </para>
+    <para>
+    Permission is granted to copy, distribute and/or modify this
 document under the terms of the GNU Free Documentation License,
 Version 1.1 or any later version published by the Free Software
-Foundation.  A copy of the license is included in <xref linkend="gfdl">.</para>
+Foundation.  A copy of the license is included in <xref linkend="gfdl">.
+    </para>
 
   </legalnotice>
 
@@ -37,10 +40,16 @@ Manipulation Program) and
 System).
   </para>
   <para>
-    Please note that the Gimp-Print software can also be compiled and used
-with
-<ulink url="http://www.ghostscript.com">Ghostscript</ulink> and
-<ulink url="http://www.linuxprinting.org/foomatic.html">Foomatic</ulink>.
+    Please note that in addition to using the Gimp-Print software as a
+print plugin for the GIMP, and as a set of printer drivers for CUPS, this
+software can also be compiled and used with the 
+<ulink url="http://www.ghostscript.com">Ghostscript</ulink> software
+and with the 
+<ulink
+url="http://www.linuxprinting.org/foomatic.html">Foomatic</ulink> 
+software.
+   </para>
+   <para>
 Regardless of whether the Gimp-Print software is used with the GIMP,
 CUPS, Ghostscript, or Foomatic, the print quality and printer settings
 remain the same.  However, use of the Gimp-Print with Ghostscript and
@@ -116,7 +125,7 @@ over what the software could do at the Printing Summit.
   </para>
   <para>
 The team started serious work on version 4.1 in December
-2000, and version 4.2 was released in November 2001.  Despite the fact
+2000, and version 4.2 was released in October 2001.  Despite the fact
 that version 4.2 is a "minor" release over version 4.0, there are vast
 improvements:
   <itemizedlist>
