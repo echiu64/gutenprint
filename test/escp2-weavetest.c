@@ -106,7 +106,7 @@ print_header(void)
 static void
 flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	   int hoffset, int ydpi, int xdpi, int physical_xdpi,
-	   FILE *prn, int vertical_subpass)
+	   int vertical_subpass)
 {
 }
 
