@@ -476,22 +476,16 @@ main(int  argc,				/* I - Number of command-line arguments */
       cups.row = 0;
       fprintf(stderr, "PAGE: %d 1\n", cups.page);
       print_debug_block(&cups);
+      if (!stp_verify(v))
+        goto cups_abort;
+
       if (cups.page == 0)
 	stp_start_job(v, &theImage);
 
-      if (stp_verify(v) && stp_print(v, &theImage))
-	fflush(stdout);
-      else
-	{
-	  fputs("ERROR: Invalid printer settings!\n", stderr);
-	  stp_end_job(v, &theImage);
-	  stp_vars_free(v);
-	  cupsRasterClose(cups.ras);
-	  if (fd != 0)
-	    close(fd);
-	  fputs("ERROR: No pages found!\n", stderr);
-	  return 1;
-	}
+      if (!stp_print(v, &theImage))
+        goto cups_abort;
+
+      fflush(stdout);
 
       /*
        * Purge any remaining bitmap data...
@@ -510,6 +504,16 @@ main(int  argc,				/* I - Number of command-line arguments */
     close(fd);
   fputs("INFO: Ready to print.\n", stderr);
   return 0;
+
+cups_abort:
+  fputs("ERROR: Invalid printer settings!\n", stderr);
+  stp_end_job(v, &theImage);
+  stp_vars_free(v);
+  cupsRasterClose(cups.ras);
+  if (fd != 0)
+    close(fd);
+  fputs("ERROR: No pages found!\n", stderr);
+  return 1;
 }
 
 
