@@ -302,18 +302,21 @@ X     + Update of the Foomatic data to the new data scheme.  The
 
     * Critical:
 
-      + Piecewise linear curves.  This is a more economical storage
+      + Resolution of all OS X printing issues.  There are a number of
+        OS X problems (mostly related to the USB output driver, but
+        some are also utility-related).  It is not clear whether we
+        would hold the release indefinitely for this.  We will have to
+        respond to individual issues.
+
+X     + Piecewise linear curves.  This is a more economical storage
         format for typical cases, and is much more useful for cubic
         spline interpolation than a dense curve is.
 
 	Needed during ALPHA unless these can be added compatibly
 	later.
 
-      + Resolution of all OS X printing issues.  There are a number of
-        OS X problems (mostly related to the USB output driver, but
-        some are also utility-related).  It is not clear whether we
-        would hold the release indefinitely for this.  We will have to
-        respond to individual issues.
+	This is COMPLETE in coding and first pass testing.  It needs
+	to be integrated into the GIMP plugin.
 
 X     + Exposure of printer characteristics to the application level.
         This would allow printers to specify read-only parameters,
@@ -643,7 +646,7 @@ This is the complete list of potential tasks.
 	would be to assist testing and tuning activities.  It could
 	perhaps be done as a back door.
 
-      + Header file reorganization, to expose internal API's intended for
+X     + Header file reorganization, to expose internal API's intended for
 	developers to write modules against.
 
 	This is moderate effort, moderate risk, moderate return..  The
@@ -734,6 +737,8 @@ This is the complete list of potential tasks.
 	We need a use case for 8-bit pre-linearized inputs (which
 	would seem to be useless from a quality perspective) and
 	16-bit non-linearized inputs (which looks more likely).
+
+	Currently 8 and 16 bit inputs in all of these modes exist.
 
 	Moderate-high effort, moderate risk, likely moderate return..
 	Large testing effort.
