@@ -163,6 +163,9 @@ Gimp-Print 4.0.0 contains the following fixes over Gimp-Print 4.0b3:
    reports of overrunning pages.  This is presumably due to paper size
    or printers not being perfectly in spec.
 
+7) Canon printers at 1440x720 DPI positioned the image too far to the
+   left edge of the paper.
+
 Errata:
 
 1) PostScript files (and PPD's) with embedded .setpagedevice commands
