@@ -4385,26 +4385,170 @@ const stp_printfuncs_t stp_escp2_printfuncs =
 };
 
 static void
+set_vertical_position(stp_softweave_t *sw, stp_pass_t *pass, int model,
+		      const stp_vars_t v)
+{
+  escp2_privdata_t *pd = (escp2_privdata_t *) stp_get_driver_data(v);
+  int advance = pass->logicalpassstart - sw->last_pass_offset -
+    (sw->separation_rows - 1);
+  advance *= pd->undersample;
+  if (pass->logicalpassstart > sw->last_pass_offset ||
+      pd->initial_vertical_offset != 0)
+    {
+      int a0, a1, a2, a3;
+      advance += pd->initial_vertical_offset;
+      pd->initial_vertical_offset = 0;
+      a0 = advance         & 0xff;
+      a1 = (advance >> 8)  & 0xff;
+      a2 = (advance >> 16) & 0xff;
+      a3 = (advance >> 24) & 0xff;
+      if (!escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO, v) &&
+	  (sw->jets == 1 || escp2_has_cap(model, MODEL_VARIABLE_DOT,
+					  MODEL_VARIABLE_NORMAL, v)))
+	stp_zprintf(v, "\033(v%c%c%c%c", 2, 0, a0, a1);
+      else
+	stp_zprintf(v, "\033(v%c%c%c%c%c%c", 4, 0, a0, a1, a2, a3);
+      sw->last_pass_offset = pass->logicalpassstart;
+    }
+}
+
+static void
+set_color(stp_softweave_t *sw, stp_pass_t *pass, int model, const stp_vars_t v,
+	  int color)
+{
+  if (sw->last_color != color &&
+      !escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO, v) &&
+      (sw->jets == 1 || escp2_has_cap(model, MODEL_VARIABLE_DOT,
+				      MODEL_VARIABLE_NORMAL, v)))
+    {
+      if (!escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_4, v))
+	stp_zprintf(v, "\033(r%c%c%c%c", 2, 0, densities[color],
+		    colors[color]);
+      else
+	stp_zprintf(v, "\033r%c", colors[color]);
+      sw->last_color = color;
+    }
+}
+
+static void
+set_horizontal_position(stp_softweave_t *sw, stp_pass_t *pass, int model,
+			const stp_vars_t v, int hoffset, int ydpi,
+			int xdpi, int vertical_subpass)
+{
+  int microoffset = vertical_subpass & (sw->horizontal_weave - 1);
+  int pos;
+  if (!escp2_has_advanced_command_set(model, v) &&
+      (xdpi <= escp2_base_resolution(model, v) ||
+       escp2_max_hres(model, v) < 1440))
+    {
+      pos = (hoffset + microoffset);
+      if (pos > 0)
+	stp_zprintf(v, "\033\\%c%c", pos & 255, pos >> 8);
+    }
+  else if (escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO,v) ||
+	   (escp2_has_advanced_command_set(model, v) &&
+	    !(escp2_has_cap(model, MODEL_VARIABLE_DOT,
+			    MODEL_VARIABLE_NORMAL, v))))
+    {
+      pos = ((hoffset * xdpi / ydpi) + microoffset);
+      if (pos > 0)
+	stp_zprintf(v, "\033($%c%c%c%c%c%c", 4, 0,
+		    pos & 255, (pos >> 8) & 255,
+		    (pos >> 16) & 255, (pos >> 24) & 255);
+    }
+  else
+    {
+      pos = ((hoffset * escp2_max_hres(model, v) / ydpi) + microoffset);
+      if (pos > 0)
+	stp_zprintf(v, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
+		    pos & 255, pos >> 8);
+    }
+}
+
+static void
+send_print_command(stp_softweave_t *sw, stp_pass_t *pass, int model, int color,
+		   int lwidth, const stp_vars_t v, int hoffset, int ydpi,
+		   int xdpi, int physical_xdpi, int nlines)
+{
+  if (!escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO,v) &&
+      sw->jets == 1 && sw->bitwidth == 1)
+    {
+      int ygap = 3600 / ydpi;
+      int xgap = 3600 / xdpi;
+      if (ydpi == 720 &&
+	  escp2_has_cap(model, MODEL_720DPI_MODE, MODEL_720DPI_600, v))
+	ygap *= 8;
+      stp_zprintf(v, "\033.%c%c%c%c%c%c", COMPRESSION, ygap, xgap,
+		  1, lwidth & 255, (lwidth >> 8) & 255);
+    }
+  else if (!escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO,v) &&
+	   escp2_has_cap(model, MODEL_VARIABLE_DOT, MODEL_VARIABLE_NORMAL, v))
+    {
+      int ygap = 3600 / ydpi;
+      int xgap = 3600 / physical_xdpi;
+      if (escp2_has_cap(model, MODEL_720DPI_MODE, MODEL_720DPI_600, v))
+	ygap *= 8;
+      else if (escp2_pseudo_separation_rows(model, v) > 0)
+	ygap *= escp2_pseudo_separation_rows(model, v);
+      else
+	ygap *= sw->separation_rows;
+      stp_zprintf(v, "\033.%c%c%c%c%c%c", COMPRESSION, ygap, xgap,
+		  nlines, lwidth & 255, (lwidth >> 8) & 255);
+    }
+  else
+    {
+      int ncolor = (densities[color] << 4) | colors[color];
+      int nwidth = sw->bitwidth * ((lwidth + 7) / 8);
+      stp_zprintf(v, "\033i%c%c%c%c%c%c%c", ncolor, COMPRESSION,
+		  sw->bitwidth, nwidth & 255, (nwidth >> 8) & 255,
+		  nlines & 255, (nlines >> 8) & 255);
+    }
+}
+
+static void
+send_extra_data(stp_softweave_t *sw, stp_vars_t v, int extralines, int lwidth)
+{
+  int k = 0;
+  for (k = 0; k < extralines; k++)
+    {
+      int bytes_to_fill = sw->bitwidth * ((lwidth + 7) / 8);
+      int full_blocks = bytes_to_fill / 128;
+      int leftover = bytes_to_fill % 128;
+      int l = 0;
+      while (l < full_blocks)
+	{
+	  stp_putc(129, v);
+	  stp_putc(0, v);
+	  l++;
+	}
+      if (leftover == 1)
+	{
+	  stp_putc(1, v);
+	  stp_putc(0, v);
+	}
+      else if (leftover > 0)
+	{
+	  stp_putc(257 - leftover, v);
+	  stp_putc(0, v);
+	}
+    }
+}
+
+static void
 flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	   int hoffset, int ydpi, int xdpi, int physical_xdpi,
 	   int vertical_subpass)
 {
   int j;
   const stp_vars_t v = (sw->v);
-  escp2_privdata_t *pd =
-    (escp2_privdata_t *) stp_get_driver_data(v);
+  escp2_privdata_t *pd = (escp2_privdata_t *) stp_get_driver_data(v);
   stp_lineoff_t *lineoffs = stp_get_lineoffsets_by_pass(sw, passno);
   stp_lineactive_t *lineactive = stp_get_lineactive_by_pass(sw, passno);
   const stp_linebufs_t *bufs = stp_get_linebases_by_pass(sw, passno);
   stp_pass_t *pass = stp_get_pass_by_pass(sw, passno);
   stp_linecount_t *linecount = stp_get_linecount_by_pass(sw, passno);
   int lwidth = (width + (sw->horizontal_weave - 1)) / sw->horizontal_weave;
-  int microoffset = vertical_subpass & (sw->horizontal_weave - 1);
-  int advance = pass->logicalpassstart - sw->last_pass_offset -
-    (sw->separation_rows - 1);
-  int pos;
 
-  advance *= pd->undersample;
   ydpi *= pd->undersample;
 
   if (ydpi > escp2_max_vres(model, v))
@@ -4423,143 +4567,19 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	      extralines = minlines - nlines;
 	      nlines = minlines;
 	    }
-	  /*
-	   * Set vertical position
-	   */
-	  if (pass->logicalpassstart > sw->last_pass_offset ||
-	      pd->initial_vertical_offset != 0)
-	    {
-	      int a0, a1, a2, a3;
-	      advance += pd->initial_vertical_offset;
-	      pd->initial_vertical_offset = 0;
-	      a0 = advance         & 0xff;
-	      a1 = (advance >> 8)  & 0xff;
-	      a2 = (advance >> 16) & 0xff;
-	      a3 = (advance >> 24) & 0xff;
-	      if (!escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO, v) &&
-		  (sw->jets == 1 || escp2_has_cap(model, MODEL_VARIABLE_DOT,
-						  MODEL_VARIABLE_NORMAL, v)))
-		stp_zprintf(v, "\033(v%c%c%c%c", 2, 0, a0, a1);
-	      else
-		stp_zprintf(v, "\033(v%c%c%c%c%c%c", 4, 0, a0, a1, a2, a3);
-	      sw->last_pass_offset = pass->logicalpassstart;
-	    }
-
-	  /*
-	   * Set color where appropriate
-	   */
-	  if (sw->last_color != j &&
-	      !escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO, v) &&
-	      (sw->jets == 1 || escp2_has_cap(model, MODEL_VARIABLE_DOT,
-					      MODEL_VARIABLE_NORMAL, v)))
-	    {
-	      if (!escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_4, v))
-		stp_zprintf(v, "\033(r%c%c%c%c", 2, 0, densities[j],colors[j]);
-	      else
-		stp_zprintf(v, "\033r%c", colors[j]);
-	      sw->last_color = j;
-	    }
-
-	  /*
-	   * Set horizontal position
-	   */
-	  if (!escp2_has_advanced_command_set(model, v) &&
-	      (xdpi <= escp2_base_resolution(model, v) ||
-	       escp2_max_hres(model, v) < 1440))
-	    {
-	      pos = (hoffset + microoffset);
-	      if (pos > 0)
-		stp_zprintf(v, "\033\\%c%c", pos & 255, pos >> 8);
-	    }
-	  else if (escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO,v) ||
-		   (escp2_has_advanced_command_set(model, v) &&
-		    !(escp2_has_cap(model, MODEL_VARIABLE_DOT,
-				    MODEL_VARIABLE_NORMAL, v))))
-	    {
-	      pos = ((hoffset * xdpi / ydpi) + microoffset);
-	      if (pos > 0)
-		stp_zprintf(v, "\033($%c%c%c%c%c%c", 4, 0,
-			    pos & 255, (pos >> 8) & 255,
-			    (pos >> 16) & 255, (pos >> 24) & 255);
-	    }
-	  else
-	    {
-	      pos = ((hoffset * escp2_max_hres(model, v) / ydpi) +
-		     microoffset);
-	      if (pos > 0)
-		stp_zprintf(v, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
-			    pos & 255, pos >> 8);
-	    }
-
-	  /*
-	   * Issue print command
-	   */
-	  if (!escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO,v) &&
-	      sw->jets == 1 && sw->bitwidth == 1)
-	    {
-	      int ygap = 3600 / ydpi;
-	      int xgap = 3600 / xdpi;
-	      if (ydpi == 720 &&
-		  escp2_has_cap(model, MODEL_720DPI_MODE, MODEL_720DPI_600, v))
-		ygap *= 8;
-	      stp_zprintf(v, "\033.%c%c%c%c%c%c", COMPRESSION, ygap, xgap,
-			  1, lwidth & 255, (lwidth >> 8) & 255);
-	    }
-	  else if (!escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO,v) &&
-		   escp2_has_cap(model, MODEL_VARIABLE_DOT,
-				 MODEL_VARIABLE_NORMAL,v))
-	    {
-	      int ygap = 3600 / ydpi;
-	      int xgap = 3600 / physical_xdpi;
-	      if (escp2_has_cap(model, MODEL_720DPI_MODE, MODEL_720DPI_600, v))
-		ygap *= 8;
-	      else if (escp2_pseudo_separation_rows(model, v) > 0)
-		ygap *= escp2_pseudo_separation_rows(model, v);
-	      else
-		ygap *= sw->separation_rows;
-	      stp_zprintf(v, "\033.%c%c%c%c%c%c", COMPRESSION, ygap, xgap,
-			  nlines, lwidth & 255, (lwidth >> 8) & 255);
-	    }
-	  else
-	    {
-	      int ncolor = (densities[j] << 4) | colors[j];
-	      int nwidth = sw->bitwidth * ((lwidth + 7) / 8);
-	      stp_zprintf(v, "\033i%c%c%c%c%c%c%c", ncolor, COMPRESSION,
-			  sw->bitwidth, nwidth & 255, (nwidth >> 8) & 255,
-			  nlines & 255, (nlines >> 8) & 255);
-	    }
+	  set_vertical_position(sw, pass, model, v);
+	  set_color(sw, pass, model, v, j);
+	  set_horizontal_position(sw, pass, model, v, hoffset, ydpi, xdpi,
+				  vertical_subpass);
+	  send_print_command(sw, pass, model, j, lwidth, v, hoffset, ydpi,
+			     xdpi, physical_xdpi, nlines);
 
 	  /*
 	   * Send the data
 	   */
 	  stp_zfwrite((const char *)bufs[0].v[j], lineoffs[0].v[j], 1, v);
 	  if (extralines)
-	    {
-	      int k = 0;
-	      for (k = 0; k < extralines; k++)
-		{
-		  int bytes_to_fill = sw->bitwidth * ((lwidth + 7) / 8);
-		  int full_blocks = bytes_to_fill / 128;
-		  int leftover = bytes_to_fill % 128;
-		  int l = 0;
-		  while (l < full_blocks)
-		    {
-		      stp_putc(129, v);
-		      stp_putc(0, v);
-		      l++;
-		    }
-		  if (leftover == 1)
-		    {
-		      stp_putc(1, v);
-		      stp_putc(0, v);
-		    }
-		  else if (leftover > 0)
-		    {
-		      stp_putc(257 - leftover, v);
-		      stp_putc(0, v);
-		    }
-		}
-	    }
+	    send_extra_data(sw, v, extralines, lwidth);
 	  stp_putc('\r', v);
 	}
       lineoffs[0].v[j] = 0;
