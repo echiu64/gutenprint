@@ -8,9 +8,15 @@
 
 errstatus=0
 
-base=`dirname $1`/
 
-extras=`find Ghost/stp-interfaces -type d -print | sed "s,^,$base,"`
+# A really nasty hack to allow 'make gdist' to work properly while
+# not confusing make install
+# I take full responsibility for this botch --rlk
+
+if [ -n "$1" -a -z "`echo $1 | grep '^/'`" ] ; then
+   base=`dirname $1`/
+   extras=`find Ghost/stp-interfaces -type d -print | sed "s,^,$base,"`
+fi
 
 for file in "$@" $extras
 do
