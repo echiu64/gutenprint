@@ -1481,7 +1481,7 @@ msgstr "%s no es un algoritmo de entramado válido\n"
 #.
 #: src/cups/genppd.c:438
 msgid "English"
-msgstr "Inglés"
+msgstr "Spanish"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
 #: src/cups/genppd.c:440

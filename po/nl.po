@@ -1476,7 +1476,7 @@ msgstr ""
 #.
 #: src/cups/genppd.c:438
 msgid "English"
-msgstr "Engels"
+msgstr "Dutch"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
 #: src/cups/genppd.c:440
