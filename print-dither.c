@@ -73,11 +73,13 @@
 ((d)->ordered_dither_matrix##m[MODOP##m((x), MATRIX_SIZE##m)][MODOP##m((y), MATRIX_SIZE##m)])
 
 #define D_FLOYD_HYBRID 0
-#define D_ORDERED 1
-#define D_FLOYD 2
-#define D_ADAPTIVE_BASE 4
+#define D_FLOYD 1
+#define D_ADAPTIVE_BASE 2
 #define D_ADAPTIVE_HYBRID (D_ADAPTIVE_BASE | D_FLOYD_HYBRID)
 #define D_ADAPTIVE_RANDOM (D_ADAPTIVE_BASE | D_FLOYD)
+#define D_ORDERED_BASE 4
+#define D_ORDERED (D_ORDERED_BASE)
+#define D_ORDERED_PERTURBED (D_ORDERED_BASE + 1)
 
 char *dither_algo_names[] =
 {
@@ -86,6 +88,7 @@ char *dither_algo_names[] =
   "Random Floyd-Steinberg",
   "Adaptive Hybrid",
   "Adaptive Random",
+  "Perturbed Ordered",
 };
 
 int num_dither_algos = sizeof(dither_algo_names) / sizeof(char *);
@@ -309,6 +312,8 @@ init_dither(int in_width, int out_width, vars_t *v)
     d->dither_type = D_FLOYD;
   else if (!strcmp(v->dither_algorithm, "Ordered"))
     d->dither_type = D_ORDERED;
+  else if (!strcmp(v->dither_algorithm, "Perturbed Ordered"))
+    d->dither_type = D_ORDERED_PERTURBED;
   else if (!strcmp(v->dither_algorithm, "Adaptive Hybrid"))
     d->dither_type = D_ADAPTIVE_HYBRID;
   else if (!strcmp(v->dither_algorithm, "Adaptive Random"))
@@ -735,7 +740,7 @@ do {						\
 
 #define UPDATE_DITHER(r, x, width)					   \
 do {									   \
-  if (d->dither_type != D_ORDERED)					   \
+  if (!(d->dither_type & D_ORDERED_BASE))				   \
     {									   \
       int tmp##r = r;							   \
       int i, dist;							   \
@@ -832,7 +837,7 @@ do {									  \
 
 #define UPDATE_COLOR(r)				\
 do {						\
-  if (d->dither_type != D_ORDERED)		\
+  if (!(d->dither_type & D_ORDERED_BASE))	\
     {						\
       if (dither##r >= 0)			\
 	r += dither##r >> 3;			\
@@ -867,7 +872,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	      dither_type -= D_ADAPTIVE_BASE;
 	      if (base < d->density / 128)
 		{
-		  dither_type = D_ORDERED;
+		  dither_type = D_ORDERED_PERTURBED;
 		  dither_value = base;
 		}
 	      else if (base < d->density / 64)
@@ -876,7 +881,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 		    / d->density;
 		  if (((rand() & 0xffff000) >> 12) > dtmp)
 		    {
-		      dither_type = D_ORDERED;
+		      dither_type = D_ORDERED_PERTURBED;
 		      dither_value = base;
 		    }
 		}
@@ -913,7 +918,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	   * smoother output in the midtones.  Idea suggested by
 	   * Thomas Tonino.
 	   */
-	  if (dither_type != D_ORDERED)
+	  if (!(d->dither_type & D_ORDERED_BASE))
 	    {
 	      if (base > d->d_cutoff)
 		randomizer = 0;
@@ -941,8 +946,32 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	      else if (dither_type == D_FLOYD_HYBRID)
 		vmatrix = DITHERPOINT(x, y, 1, d) ^ DITHERPOINT(x, y, 2, d);
 	      else
-		vmatrix = DITHERPOINT((x + (y / 3)), (y + (x / 3)), 0, d);
-
+		{
+		  int imatrix;
+		  int rand0 = rand();
+		  int ix, iy;
+		  if (dither_type == D_ORDERED_PERTURBED)
+		    {
+		      ix = x + y / (((x / 11) % 7) + 3);
+		      iy = y + x / (((y / 11) % 7) + 3);
+		    }
+		  else
+		    {
+		      ix = x + y / 3;
+		      iy = y + x / 3;
+		    }
+		  imatrix = DITHERPOINT(ix, iy, 0, d);
+		  rand0 = rand();
+		  imatrix += (rand0 + (rand0 >> 7) +
+			      (rand0 >> 14) + (rand0 >> 21)) & 127;
+		  imatrix -= 63;
+		  if (imatrix < 0)
+		    vmatrix = 0;
+		  else if (imatrix > 65536)
+		    vmatrix = 65536;
+		  else
+		    vmatrix = imatrix;
+		}
 	      if (invert_x)
 		vmatrix = 65536 - vmatrix;
 	      if (vmatrix == 65536 && virtual_value == 65536)
@@ -1126,7 +1155,7 @@ dither_black(unsigned short   *gray,		/* I - Grayscale pixels */
 
     k = 65535 - *gray;
     ok = k;
-    if (d->dither_type == D_ORDERED)
+    if (d->dither_type & D_ORDERED_BASE)
       print_color(d, &(d->k_dither), k, k, k, x, row, kptr, NULL, bit,
 		  length, 0, 0, d->k_randomizer);
     else
@@ -1466,6 +1495,15 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.29  2000/04/24 01:04:26  rlk
+ *   fix warning in gtk_main_window.c
+ *
+ *   Add perturbed ordered dither (perturbed to break up the fine diagonal
+ *   lines characteristic of the matrix used).
+ *
+ *   Improve transfer function for Epson photo printers (change the
+ *   constants).
+ *
  *   Revision 1.28  2000/04/22 23:28:55  rlk
  *   Adaptive algorithms.  These are the normal random and hybrid Floyd-Steinberg
  *   algorithms except in very pale regions, where ordered dithering is used to

@@ -201,12 +201,18 @@ Dithering Algorithms:
 2  Random Floyd-Steinberg
 3  Adaptive Hybrid Floyd-Steinberg
 4  Adaptive Random Floyd-Steinberg
+5  Perturbed Ordered
 
 Hybrid algorithms use error diffusion, but a matrix is used when a
 random number is required.  Adaptive algorithms use error diffusion
 except in very light regions, where ordered dithering is used.
 
 Ordered dithering typically works best in solid-color graphics.
+
+Perturbed ordered is similar to ordered, except that the matrix is
+"twisted" to break up the fine diagonal lines characteristic of the
+matrix used.  This option is generally less smooth than the ordered
+dither option, but in some cases it may yield better results.
 
 
 Currently supported Media Selection:

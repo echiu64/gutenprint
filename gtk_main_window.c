@@ -1223,7 +1223,7 @@ static void gtk_plist_build_menu(GtkWidget*  option,  /* I - Option button */
  * gtk_do_misc_updates() - Build an option menu for the given parameters...
  *
  ****************************************************************************/
-static void gtk_do_misc_updates()
+static void gtk_do_misc_updates(void)
 {
   char s[255];
   vars.scaling = plist[plist_current].v.scaling;

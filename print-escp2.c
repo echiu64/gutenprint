@@ -197,8 +197,9 @@ static double dot_sizes[] = { 0.5, 0.832, 1.0 };
 
 static simple_dither_range_t variable_dither_ranges[] =
 {
-  { 0.25,  0x1, 0 },
-  { 0.416, 0x2, 0 },
+  { 0.125, 0x1, 0 },
+  { 0.208, 0x2, 0 },
+  { 0.25,  0x3, 0 },
   { 0.5,   0x1, 1 },
   { 0.832, 0x2, 1 },
   { 1.0,   0x3, 1 }
@@ -1141,7 +1142,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	}
     }
   else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
-    dither_set_light_inks(dither, .5, .5, 0.0, v->density);
+    dither_set_light_inks(dither, .25, .25, 0.0, v->density);
 	  
   switch (v->image_type)
     {
@@ -2929,6 +2930,15 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.129  2000/04/24 01:04:26  rlk
+ *   fix warning in gtk_main_window.c
+ *
+ *   Add perturbed ordered dither (perturbed to break up the fine diagonal
+ *   lines characteristic of the matrix used).
+ *
+ *   Improve transfer function for Epson photo printers (change the
+ *   constants).
+ *
  *   Revision 1.128  2000/04/22 23:27:18  rlk
  *   Code cleanup
  *
