@@ -59,6 +59,10 @@ typedef struct {
   int nozzles;
   int extraskip;
   int got_graphics;
+  int left_edge;
+  int right_edge;
+  int top_edge;
+  int bottom_edge;
 } pstate_t;
 
 /* We'd need about a gigabyte of ram to hold a ppm file of an 8.5 x 11
@@ -329,6 +333,7 @@ merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color)
 	  set_bits(p->line[color], i + shift, pvalue);
 	}
     }
+  free(l);
 }
 
 void
@@ -378,54 +383,17 @@ write_output(FILE *fp_w)
 
   fprintf(stderr, "Margins: top: %d bottom: top+%d\n", pstate.top_margin,
           pstate.bottom_margin);
-  /*
-   * Search for the first printed line
-   */
-  for (first = 0;
-      (first < pstate.bottom_margin) && (!page[first]);
-      first++)
-    ;
 
-  /*
-   * Search for the last printed line
-   */
-  for (last = pstate.bottom_margin-1;
-       (last > first) && (!page[last]);
-       last--)
-    ;
-
-  if ((first < pstate.bottom_margin) && (page[first]))
-    height = oversample * (last-first+1);
-  else
-    height = 0;
-
-  /*
-   * Find the left and right margins
-   */
-  left = INT_MAX;
-  right = 0;
-  for (l = first; l <= last; l++)
-    {
-      line_type *lt = page[l];
-      if (lt)
-	{
-	  for (c = 0; c < MAX_INKS; c++)
-	    {
-	      if (lt->line[c])
-		{
-		  if (left > lt->startx[c])
-		    left = lt->startx[c];
-		  if (right < lt->startx[c])
-		    right = lt->startx[c];
-		}
-	    }
-	}
-  }
+  first = pstate.top_edge;
+  last = pstate.bottom_edge;
+  left = pstate.left_edge;
+  right = pstate.right_edge;
+  height = oversample * (last - first + 1);
 
   fprintf(stderr, "Image from (%d,%d) to (%d,%d).\n",
 	  left, first, right, last);
   width = right - left + 1;
-  if (width<0)
+  if (width < 0)
     width=0;
 
   out_row = malloc(sizeof(ppmpixel) * width);
@@ -604,7 +572,13 @@ update_page(unsigned char *buf, /* I - pixel data               */
       if (left_white == n)
 	continue; /* ignore blank lines */
       if (!(page[y]))
-	page[y] = (line_type *) xcalloc(sizeof(line_type), 1);
+	{
+	  page[y] = (line_type *) xcalloc(sizeof(line_type), 1);
+	  if (y < pstate.top_edge)
+	    pstate.top_edge = y;
+	  if (y > pstate.bottom_edge)
+	    pstate.bottom_edge = y;
+	}
       if ((left_white * pstate.bpp < 8) && (skip == 1))
 	{
 	  left_white=0; /* if it's just a few bits, don't bother cropping */
@@ -623,6 +597,10 @@ update_page(unsigned char *buf, /* I - pixel data               */
 	}
       page[y]->startx[color] = pstate.xposition + left_white * skip;
       page[y]->stopx[color] =pstate.xposition + ((n - 1 - right_white) * skip);
+      if (page[y]->startx[color] < pstate.left_edge)
+	pstate.left_edge = page[y]->startx[color];
+      if (page[y]->stopx[color] > pstate.right_edge)
+	pstate.right_edge = page[y]->stopx[color];
       width = page[y]->stopx[color] - page[y]->startx[color];
       page[y]->line[color] =
 	xcalloc(((width * skip + 1) * pstate.bpp + 7) / 8, 1);
@@ -632,7 +610,7 @@ update_page(unsigned char *buf, /* I - pixel data               */
 	merge_line(page[y], oldline, oldstart, oldstop, color);
     }
   if (n)
-    pstate.xposition += (n-1)*skip+1;
+    pstate.xposition += (n - 1) * skip + 1;
   return(0);
 }
 
@@ -1129,6 +1107,10 @@ parse_escp2_command(FILE *fp_r)
 	  pstate.bottom_margin =
 	    pstate.page_height = 22 * 360; /* 22 inches is default ??? */
 	  pstate.monomode = 0;
+	  pstate.left_edge = INT_MAX;
+	  pstate.right_edge = 0;
+	  pstate.top_edge = INT_MAX;
+	  pstate.bottom_edge = 0;
 	}
       break;
     case 'U': /* turn unidirectional mode on/off */
@@ -1372,6 +1354,10 @@ parse_canon(FILE *fp_r)
 	 pstate.monomode=0;
 	 pstate.xposition= 0;
 	 pstate.yposition= 0;
+	 pstate.left_edge = INT_MAX;
+	 pstate.right_edge = 0;
+	 pstate.top_edge = INT_MAX;
+	 pstate.bottom_edge = 0;
 	 fprintf(stderr,"canon: init printer\n");
        }
      } else {
