@@ -28,8 +28,6 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <gimp-print/gimp-print.h>
 #include "gimp-print-internal.h"
@@ -63,7 +61,7 @@ do									\
     {									\
       stp_eprintf(v, "Assertion %s failed! file %s, line %d.\n",	\
 		  #x, __FILE__, __LINE__);				\
-      exit(1);								\
+      stp_abort();							\
     }									\
 } while (0)
 #else
@@ -2316,7 +2314,7 @@ add_to_row(stp_softweave_t *sw, int row, unsigned char *buf, size_t nbytes,
       stp_eprintf(sw->v, "Buffer overflow: limit %d, actual %d, count %d\n",
 		  sw->virtual_jets * sw->bitwidth * sw->horizontal_width,
 		  place + nbytes, count);
-      exit(1);
+      stp_abort();
     }
   memcpy(bufs[0].v[color] + lineoffs[0].v[color], buf, nbytes);
   lineoffs[0].v[color] += nbytes;

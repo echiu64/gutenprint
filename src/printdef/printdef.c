@@ -31,13 +31,12 @@
 #include <libxml/parser.h>
 #include <gimp-print/gimp-print.h>
 #include "../main/papers.h"
+#include "../main/util.h"
 #include "../main/vars.h"
-#include "printdef.h"
 
 
 void printer_output_start(void);
 void paper_output_start(void);
-void output_printer(stp_printdef_printer_t* printer);
 void output_paper(stp_internal_papersize_t *paper);
 void printer_output_end(void);
 void paper_output_end(void);
@@ -47,9 +46,10 @@ float xmlstrtof(xmlChar *textval);
 void stp_xml_process_gimpprint(xmlNodePtr gimpprint, int mode);
 void stp_xml_process_printdef(xmlNodePtr printdef);
 void stp_xml_process_family(xmlNodePtr family);
-stp_printdef_printer_t *stp_xml_process_printer(xmlNodePtr printer, xmlChar *family);
+void stp_xml_process_printer(xmlNodePtr printer, xmlChar *family);
 void stp_xml_process_paperdef(xmlNodePtr paperdef);
 stp_internal_papersize_t *stp_xml_process_paper(xmlNodePtr paper);
+xmlNodePtr stp_xml_get_node(xmlNodePtr prop, const xmlChar *name);
 
 /* Available "family" drivers */
 const char *family_names[] =
@@ -163,7 +163,7 @@ void printer_output_start(void)
 	      (const char *) family_names[i]);
       i++;
     }
-  fputs("\nstatic const stp_internal_printer_t stp_old_printer_list[] =\n"
+  fputs("\nstatic const stp_old_printer_t stp_old_printer_list[] =\n"
 	"{\n",
 	stdout);
 }
@@ -176,44 +176,6 @@ void paper_output_start(void)
   fputs("\nstatic stp_internal_papersize_t paper_sizes[] =\n"
 	"{\n",
 	stdout);
-}
-
-void output_printer(stp_printdef_printer_t *printer)
-{
-  if (printer)
-    {
-      fprintf(stdout, "  {\n");
-      fprintf(stdout, "    COOKIE_PRINTER,\n");
-      fprintf(stdout, "    \"%s\",\n", printer->long_name);
-      fprintf(stdout, "    \"%s\",\n", printer->driver);
-      fprintf(stdout, "    %d,\n", printer->model);
-      fprintf(stdout, "    &stp_%s_printfuncs,\n", printer->family);
-      fprintf(stdout, "    {\n");
-      fprintf(stdout, "      COOKIE_VARS,\n");
-      fprintf(stdout, "      \"%s\",\n", printer->printvars.driver);   /* driver */
-      fprintf(stdout, "      \"\",\n");      /* ppd_file */
-      fprintf(stdout, "      \"\",\n");      /* resolution */
-      fprintf(stdout, "      \"\",\n");      /* media_size */
-      fprintf(stdout, "      \"\",\n");      /* media_type */
-      fprintf(stdout, "      \"\",\n");      /* media_source */
-      fprintf(stdout, "      \"\",\n");      /* ink_type */
-      fprintf(stdout, "      \"\",\n");      /* dither_algorithm */
-      fprintf(stdout, "      %d,\n", printer->printvars.output_type);
-      fprintf(stdout, "      %.3f,\n", printer->printvars.brightness);
-      fprintf(stdout, "      0,\n");         /* left */
-      fprintf(stdout, "      0,\n");         /* top */
-      fprintf(stdout, "      0,\n");         /* width */
-      fprintf(stdout, "      0,\n");         /* height */
-      fprintf(stdout, "      %.3f,\n", printer->printvars.gamma);
-      fprintf(stdout, "      %.3f,\n", printer->printvars.contrast);
-      fprintf(stdout, "      %.3f,\n", printer->printvars.cyan);
-      fprintf(stdout, "      %.3f,\n", printer->printvars.magenta);
-      fprintf(stdout, "      %.3f,\n", printer->printvars.yellow);
-      fprintf(stdout, "      %.3f,\n", printer->printvars.saturation);
-      fprintf(stdout, "      %.3f,\n", printer->printvars.density);
-      fprintf(stdout, "    }\n");
-      fprintf(stdout, "  },\n");
-    }
 }
 
 void output_paper(stp_internal_papersize_t *paper)
@@ -364,122 +326,75 @@ stp_xml_process_family(xmlNodePtr family)
   while (family_valid && printer)
     {
       if (!xmlStrcmp(printer->name, (const xmlChar *) "printer"))
-	output_printer(stp_xml_process_printer(printer, family_name));
+	stp_xml_process_printer(printer, family_name);
       printer = printer->next;
     }
 }
 
+const char *keylist[] =
+{
+  "Cyan",
+  "Magenta",
+  "Yellow",
+  "Brightness",
+  "Contrast",
+  "Gamma",
+  "Density",
+  "Saturation",
+  NULL
+};
 
-stp_printdef_printer_t*
+xmlNodePtr
+stp_xml_get_node(xmlNodePtr prop, const xmlChar *name)
+{
+  while (prop)
+    {
+      if (!xmlStrcmp(prop->name, name))
+	return prop;
+      prop = prop->next;
+    }
+  return (xmlNodePtr) NULL;
+}
+
+void
 stp_xml_process_printer(xmlNodePtr printer, xmlChar *family)
 {
   xmlNodePtr prop;
-  /* props[] (unused) is the correct tag sequence */
-  /*  const char *props[] =
-    {
-      "color",
-      "model",
-      "cyan",
-      "yellow",
-      "magenta",
-      "brightness",
-      "gamma",
-      "density",
-      "saturation",
-      NULL
-      };*/
-  static stp_printdef_printer_t outprinter;
 
-  /* Default values */
-  outprinter.printvars.top = -1;
-  outprinter.model = -1;
-  outprinter.printvars.brightness = 1.0;
-  outprinter.printvars.gamma = 1.0;
-  outprinter.printvars.contrast = 1.0;
-  outprinter.printvars.cyan = 1.0;
-  outprinter.printvars.magenta = 1.0;
-  outprinter.printvars.yellow = 1.0;
-  outprinter.printvars.saturation = 1.0;
-  outprinter.printvars.density = 1.0;
-
-#ifdef DEBUG
-  fprintf(stderr, "    %s\n",
-	  xmlGetProp(printer, (const xmlChar*) "driver"));
-#endif
-
-  outprinter.long_name =
-    (const char *) xmlGetProp(printer, (const xmlChar *) "name");
-  outprinter.driver =
-    (const char *) xmlGetProp(printer, (const xmlChar *) "driver");
-  outprinter.printvars.driver =
-    (const char *) xmlGetProp(printer, (const xmlChar *) "driver");
-
-  outprinter.family =
-    (const char *) family;
-
+  printf("  {\n");
+  printf("    \"%s\",\n",
+	 (const char *) xmlGetProp(printer, (const xmlChar *) "name"));
+  printf("    \"%s\",\n",
+	 (const char *) xmlGetProp(printer, (const xmlChar *) "driver"));
+  prop = stp_xml_get_node(printer->children, (const xmlChar *) "model");
+  printf("    %d,\n",
+	 xmlstrtol(xmlGetProp(prop, (const xmlChar *) "value")));
+  prop = stp_xml_get_node(printer->children, (const xmlChar *) "color");
+  printf("    %d,\n",
+	 xmlStrcmp(xmlGetProp(prop, (const xmlChar *) "value"),
+		   (const xmlChar *) "true") == 0 ?
+	 OUTPUT_COLOR : OUTPUT_GRAY);
+  printf("    &stp_%s_printfuncs,\n", family);
 
   prop = printer->children;
   while(prop)
     {
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "color"))
+      const char **key = &(keylist[0]);
+      while (*key)
 	{
-	  if (!xmlStrcmp(xmlGetProp(prop, (const xmlChar *) "value"),
-			 (const xmlChar *) "true"))
-	    outprinter.printvars.output_type = OUTPUT_COLOR;
-	  else
-	    outprinter.printvars.output_type = OUTPUT_GRAY;
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "model"))
-	{
-	  outprinter.model =
-	    xmlstrtol(xmlGetProp(prop,
-				 (const xmlChar *) "value"));
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "cyan"))
-	{
-	  outprinter.printvars.cyan =
-	    xmlstrtof(xmlGetProp(prop,
-				 (const xmlChar *) "value"));
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "yellow"))
-	{
-	  outprinter.printvars.yellow =
-	    xmlstrtof(xmlGetProp(prop,
-				 (const xmlChar *) "value"));
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "magenta"))
-	{
-	  outprinter.printvars.magenta =
-	    xmlstrtof(xmlGetProp(prop,
-				 (const xmlChar *) "value"));
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "brightness"))
-	{
-	  outprinter.printvars.brightness =
-	    xmlstrtof(xmlGetProp(prop,
-				 (const xmlChar *) "value"));
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "gamma"))
-	{
-	  outprinter.printvars.gamma =
-	    xmlstrtof(xmlGetProp(prop,
-				 (const xmlChar *) "value"));
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "density"))
-	{
-	  outprinter.printvars.density =
-	    xmlstrtof(xmlGetProp(prop,
-				 (const xmlChar *) "value"));
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "saturation"))
-	{
-	  outprinter.printvars.saturation =
-	    xmlstrtof(xmlGetProp(prop,
-				 (const xmlChar *) "value"));
+	  if (strcasecmp((const char *) (prop->name), *key) == 0)
+	    {
+	      float val =
+		xmlstrtof(xmlGetProp(prop, (const xmlChar *) "value"));
+	      if (val > 0 && val != 1.0)
+		printf("    \"%s=%f;\"\n", *key, val);
+	      break;
+	    }
+	  key++;
 	}
       prop = prop->next;
     }
-  return &outprinter;
+  printf("  },\n");
 }
 
 

@@ -29,69 +29,30 @@
 extern "C" {
 #endif
 
-
 #include <sys/types.h>
 
-typedef struct stp_internal_option
-{
-  int	cookie;
-  char *name;
-  size_t length;
-  char *data;
-  struct stp_internal_option *next;
-  struct stp_internal_option *prev;
-} stp_internal_option_t;
+extern void	stp_set_color_data(stp_vars_t v, void * val);
+extern void	*stp_get_color_data(const stp_vars_t);
 
-typedef struct					/* Plug-in variables */
-{
-  int	cookie;
-  const char	*driver,		/* Name of printer "driver" */
-	*ppd_file,		/* PPD file */
-        *resolution,		/* Resolution */
-	*media_size_name,	/* Media size */
-	*media_type,		/* Media type */
-	*media_source,		/* Media source */
-	*ink_type,		/* Ink or cartridge */
-	*dither_algorithm;	/* Dithering algorithm */
-  int	output_type;		/* Color or grayscale output */
-  float	brightness;		/* Output brightness */
-  int	left,			/* Offset from left-upper corner, points */
-	top,			/* ... */
-        width,			/* Width of the image, points */
-	height;			/* ... */
-  float gamma;                  /* Gamma */
-  float contrast,		/* Output Contrast */
-	cyan,			/* Output red level */
-	magenta,		/* Output green level */
-	yellow;			/* Output blue level */
-  float	saturation;		/* Output saturation */
-  float	density;		/* Maximum output density */
-  int	image_type;		/* Image type (line art etc.) */
-  float app_gamma;		/* Application gamma */
-  int	page_width;		/* Width of page in points */
-  int	page_height;		/* Height of page in points */
-  int	input_color_model;	/* Color model for this device */
-  int	output_color_model;	/* Color model for this device */
-  int	page_number;
-  stp_job_mode_t job_mode;
-  void  *lut;			/* Look-up table */
-  void  *driver_data;		/* Private data of the driver */
-  void (*outfunc)(void *data, const char *buffer, size_t bytes);
-  void *outdata;
-  void (*errfunc)(void *data, const char *buffer, size_t bytes);
-  void *errdata;
-  stp_internal_option_t *options;
-  int verified;			/* Ensure that params are OK! */
-} stp_internal_vars_t;
+extern void     stp_set_driver_data (stp_vars_t, void * val);
+extern void	*stp_get_driver_data (const stp_vars_t);
 
-extern void stp_set_lut(stp_vars_t v, void * val);
-extern void * stp_get_lut(const stp_vars_t v);
+extern void	stp_set_copy_color_data_func(stp_vars_t, copy_data_func_t);
+extern copy_data_func_t stp_get_copy_color_data_func(const stp_vars_t);
 
-extern void     stp_set_driver_data (stp_vars_t vv, void * val);
-extern void *   stp_get_driver_data (const stp_vars_t vv);
+extern void	stp_set_destroy_color_data_func(stp_vars_t,
+						destroy_data_func_t);
+extern destroy_data_func_t stp_get_destroy_color_data_func(const stp_vars_t);
 
-extern void     stp_set_verified(stp_vars_t vv, int value);
-extern int      stp_get_verified(stp_vars_t vv);
+extern void	stp_set_copy_driver_data_func(stp_vars_t, copy_data_func_t);
+extern copy_data_func_t stp_get_copy_driver_data_func(const stp_vars_t);
+
+extern void	stp_set_destroy_driver_data_func(stp_vars_t,
+						 destroy_data_func_t);
+extern destroy_data_func_t stp_get_destroy_driver_data_func(const stp_vars_t);
+
+extern void     stp_set_verified(stp_vars_t, int value);
+extern int      stp_get_verified(const stp_vars_t);
 
 extern void     stp_copy_options(stp_vars_t vd, const stp_vars_t vs);
 

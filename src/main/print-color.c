@@ -271,7 +271,7 @@ gray_to_monochrome(const stp_vars_t vars,
   int i0 = -1;
   int o0 = 0;
   int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
+  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
   size_t count;
   const unsigned short *composite;
   stp_curve_resample(lut->composite, 256);
@@ -311,7 +311,7 @@ rgb_to_monochrome(const stp_vars_t vars,
   int i2 = -1;
   int o0 = 0;
   int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
+  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
   size_t count;
   const unsigned short *composite;
   stp_curve_resample(lut->composite, 256);
@@ -357,7 +357,7 @@ gray_to_gray(const stp_vars_t vars,
   int i0 = -1;
   int o0 = 0;
   int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
+  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
   size_t count;
   const unsigned short *composite;
   stp_curve_resample(lut->composite, 256);
@@ -398,7 +398,7 @@ rgb_to_gray(const stp_vars_t vars,
   int i2 = -1;
   int o0 = 0;
   int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
+  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
   size_t count;
   const unsigned short *composite;
   stp_curve_resample(lut->composite, 256);
@@ -452,7 +452,7 @@ rgb_to_rgb(const stp_vars_t vars,
   int nz0 = 0;
   int nz1 = 0;
   int nz2 = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
+  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
   int compute_saturation = ssat <= .99999 || ssat >= 1.00001;
   int split_saturation = ssat > 1.4;
   const unsigned short *red = stp_curve_get_ushort_data(lut->red, &count);
@@ -628,7 +628,7 @@ solid_rgb_to_rgb(const stp_vars_t vars,
   int nz0 = 0;
   int nz1 = 0;
   int nz2 = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
+  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
   size_t count;
   const unsigned short *red = stp_curve_get_ushort_data(lut->red, &count);
   const unsigned short *green = stp_curve_get_ushort_data(lut->green, &count);
@@ -785,7 +785,7 @@ gray_to_rgb(const stp_vars_t vars,
   int nz0 = 0;
   int nz1 = 0;
   int nz2 = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
+  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
   size_t count;
   const unsigned short *red;
   const unsigned short *green;
@@ -864,7 +864,7 @@ fast_rgb_to_rgb(const stp_vars_t vars,
   int nz0 = 0;
   int nz1 = 0;
   int nz2 = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
+  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
   size_t count;
   const unsigned short *red;
   const unsigned short *green;
@@ -957,7 +957,7 @@ fast_gray_to_rgb(const stp_vars_t vars,
   int nz0 = 0;
   int nz1 = 0;
   int nz2 = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
+  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
   size_t count;
   const unsigned short *red;
   const unsigned short *green;
@@ -1140,16 +1140,40 @@ allocate_lut(void)
   ret->hue_map = NULL;
   ret->lum_map = NULL;
   ret->sat_map = NULL;
+  ret->steps = 0;
   ret->density_is_adjusted = 0;
   return ret;
+}
+
+static void *
+copy_lut(const stp_vars_t v)
+{
+  const lut_t *src = (const lut_t *)(stp_get_color_data(v));
+  lut_t *dest;
+  if (!src)
+    return NULL;
+  dest = allocate_lut();
+  dest->composite = stp_curve_allocate_copy(src->composite);
+  dest->red = stp_curve_allocate_copy(src->red);
+  dest->green = stp_curve_allocate_copy(src->green);
+  dest->blue = stp_curve_allocate_copy(src->blue);
+  if (src->hue_map)
+    dest->hue_map = stp_curve_allocate_copy(src->hue_map);
+  if (src->lum_map)
+    dest->lum_map = stp_curve_allocate_copy(src->lum_map);
+  if (src->sat_map)
+    dest->sat_map = stp_curve_allocate_copy(src->sat_map);
+  dest->density_is_adjusted = src->density_is_adjusted;
+  dest->steps = src->steps;
+  return dest;
 }
 
 void
 stp_free_lut(stp_vars_t v)
 {
-  if (stp_get_lut(v))
+  if (stp_get_color_data(v))
     {
-      lut_t *lut = (lut_t *)(stp_get_lut(v));
+      lut_t *lut = (lut_t *)(stp_get_color_data(v));
       if (lut->composite)
 	stp_curve_destroy(lut->composite);
       if (lut->red)
@@ -1166,7 +1190,7 @@ stp_free_lut(stp_vars_t v)
 	stp_curve_destroy(lut->sat_map);
       memset(lut, 0, sizeof(lut_t));
       stp_free(lut);
-      stp_set_lut(v, NULL);
+      stp_set_color_data(v, NULL);
     }
 }
 
@@ -1224,7 +1248,9 @@ stp_compute_lut(stp_vars_t v, size_t steps,
   composite = stp_malloc(sizeof(double) * steps);
   lut->steps = steps;
 
-  stp_set_lut(v, lut);
+  stp_set_color_data(v, lut);
+  stp_set_copy_color_data_func(v, copy_lut);
+  stp_set_destroy_color_data_func(v, stp_free_lut);
   stp_dprintf(STP_DBG_LUT, v, "stp_compute_lut\n");
   stp_dprintf(STP_DBG_LUT, v, " cyan %.3f\n", cyan);
   stp_dprintf(STP_DBG_LUT, v, " magenta %.3f\n", magenta);

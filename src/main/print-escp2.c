@@ -1531,7 +1531,6 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
        */
       stp_destroy_weave(weave);
       stp_free_dither(dither);
-      stp_free_lut(nv);
       stp_free(in);
       stp_free(out);
       if (!privdata.printed_something)

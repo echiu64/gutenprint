@@ -37,27 +37,29 @@
 #include <limits.h>
 #endif
 #include <string.h>
+#include <stdlib.h>
 
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
 
 typedef struct stp_internal_printer
 {
   int        cookie;		/* Magic number */
-  const char *long_name,	/* Long name for UI */
-             *driver;	/* Short name for printrc file */
-  int        model;			/* Model number */
+  const char *long_name;	/* Long name for UI */
+  int        model;		/* Model number */
+  int	     color;
   const stp_printfuncs_t *printfuncs;
-  stp_internal_vars_t printvars;
+  stp_vars_t printvars;
 } stp_internal_printer_t;
 
 
+#include "printlist.h"
 #include "printers-oldlist.h"
 
 
 static const char* stp_printer_namefunc(const stp_list_item_t *item);
 static const char* stp_printer_long_namefunc(const stp_list_item_t *item);
 
-stp_list_t *stp_printer_list;
+static stp_list_t *stp_printer_list;
 
 
 int
@@ -66,7 +68,7 @@ stp_init_printer_list(void)
   int i, len;
   stp_internal_printer_t *printer;
 
-  len = sizeof(stp_old_printer_list)/sizeof(stp_internal_printer_t);
+  len = sizeof(stp_old_printer_list)/sizeof(stp_old_printer_t);
 
   if(stp_printer_list)
     stp_list_destroy(stp_printer_list);
@@ -78,8 +80,38 @@ stp_init_printer_list(void)
 
   for (i=0; i < len; i++)
     {
+      const stp_old_printer_t *src = &(stp_old_printer_list[i]);
+      stp_vars_t v = stp_allocate_vars();
+      const char *item = src->printer_data;
       printer = stp_malloc(sizeof(stp_internal_printer_t));
-      memcpy(printer, &stp_old_printer_list[i], sizeof(stp_internal_printer_t));
+      printer->cookie = COOKIE_PRINTER;
+      printer->long_name = stp_strdup(src->long_name);
+      printer->model = src->model;
+      printer->printfuncs = src->printfuncs;
+      printer->printvars = v;
+      stp_set_driver(v, src->short_name);
+      stp_set_output_type(v, src->color);
+      while (item && *item)
+	{
+	  const char *dptr = index(item, '=');
+	  if (dptr && (dptr - item) > 0)
+	    {
+	      char *endptr;
+	      double val = strtod(dptr + 1, &endptr);
+	      if (endptr && endptr > dptr + 1)
+		{
+		  char *name = stp_strndup(item, dptr - item);
+		  stp_set_float_parameter(v, name, val);
+		  item = index(endptr, ';');
+		  if (item)
+		    item++;
+		  stp_free(name);
+		}
+	    }
+	  else
+	    break;
+	}
+
       stp_list_item_create(stp_printer_list,
 			   stp_list_get_end(stp_printer_list),
 			   (void *) printer);
@@ -127,8 +159,7 @@ stp_printer_get_long_name(const stp_printer_t p)
 const char *
 stp_printer_get_driver(const stp_printer_t p)
 {
-  const stp_internal_printer_t *val = (const stp_internal_printer_t *) p;
-  return val->driver;
+  return stp_get_driver(stp_printer_get_printvars(p));
 }
 
 int
@@ -149,7 +180,7 @@ const stp_vars_t
 stp_printer_get_printvars(const stp_printer_t p)
 {
   const stp_internal_printer_t *val = (const stp_internal_printer_t *) p;
-  return (stp_vars_t) &(val->printvars);
+  return (stp_vars_t) (val->printvars);
 }
 
 

@@ -86,7 +86,7 @@ check_curve(const stp_internal_curve_t *v)
   if (v->cookie != COOKIE_CURVE)
     {
       stp_erprintf("Bad curve!\n");
-      exit(2);
+      stp_abort();
     }
 }
 

@@ -1,11 +1,10 @@
 /*
  * "$Id$"
  *
- *   printdef XML parser header
+ *   Print plug-in driver utility functions for the GIMP.
  *
- *   Copyright 1997-2000 Michael Sweet (mike@easysw.com),
- *	Robert Krawitz (rlk@alum.mit.edu) and Michael Natterer (mitch@gimp.org)
- *   Copyright 2002 Roger Leigh (roger@whinlatter.uklinux.net)
+ *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
+ *	Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -23,13 +22,20 @@
  */
 
 
-typedef struct stp_printdef_printer
-{
-  const char	*long_name,			/* Long name for UI */
-	        *driver,			/* Short name for printrc file */
-                *family;                        /* Family driver name */
-  int	        model;				/* Model number */
-  const char    *printfuncs;
-  stp_internal_vars_t printvars;
-} stp_printdef_printer_t;
+#ifndef GIMP_PRINT_PRINTLIST_H
+#define GIMP_PRINT_PRINTLIST_H
 
+typedef struct stp_old_printer
+{
+  const char *long_name;	/* Long name for UI */
+  const char *short_name;
+  int        model;		/* Model number */
+  int	     color;
+  const stp_printfuncs_t *printfuncs;
+  const char *printer_data;
+} stp_old_printer_t;
+
+#endif /* GIMP_PRINT_PRINTLIST_H */
+/*
+ * End of "$Id$".
+ */

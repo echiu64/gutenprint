@@ -584,7 +584,6 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   }
   image->progress_conclude(image);
 
-  stp_free_lut(nv);
   stp_free(in);
   stp_free(out);
 

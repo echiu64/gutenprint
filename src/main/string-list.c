@@ -42,7 +42,7 @@ check_param_list(const stp_internal_param_list_t *v)
   if (v->cookie != COOKIE_PARAM_LIST)
     {
       stp_erprintf("Bad string list!\n");
-      exit(2);
+      stp_abort();
     }
 }
 

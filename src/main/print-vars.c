@@ -39,23 +39,70 @@
 #include "vars.h"
 #include <string.h>
 
+#define COOKIE_VARS      0x1a18376c
+
+typedef struct stp_internal_option
+{
+  int	cookie;
+  char *name;
+  size_t length;
+  char *data;
+  struct stp_internal_option *next;
+  struct stp_internal_option *prev;
+} stp_internal_option_t;
+
+typedef struct					/* Plug-in variables */
+{
+  int	cookie;
+  const char *driver;		/* Name of printer "driver" */
+  int	output_type;		/* Color or grayscale output */
+  float	brightness;		/* Output brightness */
+  float gamma;                  /* Gamma */
+  float contrast;		/* Output Contrast */
+  float	cyan;			/* Output red level */
+  float	magenta;		/* Output green level */
+  float	yellow;			/* Output blue level */
+  float	saturation;		/* Output saturation */
+  float	density;		/* Maximum output density */
+  const char *ppd_file;		/* PPD file */
+  const char *resolution;	/* Resolution */
+  const char *media_size_name;	/* Media size */
+  const char *media_type;	/* Media type */
+  const char *media_source;	/* Media source */
+  const char *ink_type;		/* Ink or cartridge */
+  const char *dither_algorithm;	/* Dithering algorithm */
+  int	left;			/* Offset from left-upper corner, points */
+  int	top;			/* ... */
+  int	width;			/* Width of the image, points */
+  int	height;			/* ... */
+  int	image_type;		/* Image type (line art etc.) */
+  float app_gamma;		/* Application gamma */
+  int	page_width;		/* Width of page in points */
+  int	page_height;		/* Height of page in points */
+  int	input_color_model;	/* Color model for this device */
+  int	output_color_model;	/* Color model for this device */
+  int	page_number;
+  stp_job_mode_t job_mode;
+  void  *color_data;		/* Private data of the color module */
+  void	*(*copy_color_data_func)(const stp_vars_t);
+  void	(*destroy_color_data_func)(stp_vars_t);
+  void  *driver_data;		/* Private data of the family driver module */
+  void	*(*copy_driver_data_func)(const stp_vars_t);
+  void	(*destroy_driver_data_func)(stp_vars_t);
+  void (*outfunc)(void *data, const char *buffer, size_t bytes);
+  void *outdata;
+  void (*errfunc)(void *data, const char *buffer, size_t bytes);
+  void *errdata;
+  stp_internal_option_t *options;
+  int verified;			/* Ensure that params are OK! */
+} stp_internal_vars_t;
+
 static const stp_internal_vars_t default_vars =
 {
 	COOKIE_VARS,
 	N_ ("ps2"),	       	/* Name of printer "driver" */
-	"",			/* Name of PPD file */
-	"",			/* Output resolution */
-	"",			/* Size of output media */
-	"",			/* Type of output media */
-	"",			/* Source of output media */
-	"",			/* Ink type */
-	"",			/* Dither algorithm */
 	OUTPUT_COLOR,		/* Color or grayscale output */
 	1.0,			/* Output brightness */
-	-1,			/* left */
-	-1,			/* top */
-	-1,			/* width */
-	-1,			/* height */
 	1.0,			/* Screen gamma */
 	1.0,			/* Contrast */
 	1.0,			/* Cyan */
@@ -63,6 +110,17 @@ static const stp_internal_vars_t default_vars =
 	1.0,			/* Yellow */
 	1.0,			/* Output saturation */
 	1.0,			/* Density */
+	"",			/* Name of PPD file */
+	"",			/* Output resolution */
+	"",			/* Size of output media */
+	"",			/* Type of output media */
+	"",			/* Source of output media */
+	"",			/* Ink type */
+	"",			/* Dither algorithm */
+	-1,			/* left */
+	-1,			/* top */
+	-1,			/* width */
+	-1,			/* height */
 	IMAGE_CONTINUOUS,	/* Image type */
 	1.0,			/* Application gamma placeholder */
 	0,			/* Page width */
@@ -77,19 +135,8 @@ static const stp_internal_vars_t min_vars =
 {
 	COOKIE_VARS,
 	N_ ("ps2"),		/* Name of printer "driver" */
-	"",			/* Name of PPD file */
-	"",			/* Output resolution */
-	"",			/* Size of output media */
-	"",			/* Type of output media */
-	"",			/* Source of output media */
-	"",			/* Ink type */
-	"",			/* Dither algorithm */
 	0,			/* Color or grayscale output */
 	0,			/* Output brightness */
-	-1,			/* left */
-	-1,			/* top */
-	-1,			/* width */
-	-1,			/* height */
 	0.1,			/* Screen gamma */
 	0,			/* Contrast */
 	0,			/* Cyan */
@@ -97,6 +144,17 @@ static const stp_internal_vars_t min_vars =
 	0,			/* Yellow */
 	0,			/* Output saturation */
 	.1,			/* Density */
+	"",			/* Name of PPD file */
+	"",			/* Output resolution */
+	"",			/* Size of output media */
+	"",			/* Type of output media */
+	"",			/* Source of output media */
+	"",			/* Ink type */
+	"",			/* Dither algorithm */
+	-1,			/* left */
+	-1,			/* top */
+	-1,			/* width */
+	-1,			/* height */
 	0,			/* Image type */
 	1.0,			/* Application gamma placeholder */
 	0,			/* Page width */
@@ -111,19 +169,8 @@ static const stp_internal_vars_t max_vars =
 {
 	COOKIE_VARS,
 	N_ ("ps2"),		/* Name of printer "driver" */
-	"",			/* Name of PPD file */
-	"",			/* Output resolution */
-	"",			/* Size of output media */
-	"",			/* Type of output media */
-	"",			/* Source of output media */
-	"",			/* Ink type */
-	"",			/* Dither algorithm */
 	OUTPUT_RAW_PRINTER,	/* Color or grayscale output */
 	2.0,			/* Output brightness */
-	-1,			/* left */
-	-1,			/* top */
-	-1,			/* width */
-	-1,			/* height */
 	4.0,			/* Screen gamma */
 	4.0,			/* Contrast */
 	4.0,			/* Cyan */
@@ -131,6 +178,17 @@ static const stp_internal_vars_t max_vars =
 	4.0,			/* Yellow */
 	9.0,			/* Output saturation */
 	2.0,			/* Density */
+	"",			/* Name of PPD file */
+	"",			/* Output resolution */
+	"",			/* Size of output media */
+	"",			/* Type of output media */
+	"",			/* Source of output media */
+	"",			/* Ink type */
+	"",			/* Dither algorithm */
+	-1,			/* left */
+	-1,			/* top */
+	-1,			/* width */
+	-1,			/* height */
 	NIMAGE_TYPES - 1,	/* Image type */
 	1.0,			/* Application gamma placeholder */
 	0,			/* Page width */
@@ -295,7 +353,7 @@ check_vars(const stp_internal_vars_t *v)
   if (v->cookie != COOKIE_VARS)
     {
       stp_erprintf("Bad stp_vars_t!\n");
-      exit(2);
+      stp_abort();
     }
 }
 
@@ -304,6 +362,10 @@ stp_free_vars(stp_vars_t vv)
 {
   stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
   check_vars(v);
+  if (stp_get_destroy_color_data_func(vv))
+    (*stp_get_destroy_color_data_func(vv))(vv);
+  if (stp_get_destroy_driver_data_func(vv))
+    (*stp_get_destroy_driver_data_func(vv))(vv);
   SAFE_FREE(v->driver);
   SAFE_FREE(v->ppd_file);
   SAFE_FREE(v->resolution);
@@ -401,10 +463,14 @@ DEF_FUNCS(input_color_model, int, )
 DEF_FUNCS(output_color_model, int, )
 DEF_FUNCS(page_number, int, )
 DEF_FUNCS(job_mode, stp_job_mode_t, )
-DEF_FUNCS(lut, void *, )
 DEF_FUNCS(outdata, void *, )
 DEF_FUNCS(errdata, void *, )
+DEF_FUNCS(color_data, void *, )
+DEF_FUNCS(copy_color_data_func, copy_data_func_t, )
+DEF_FUNCS(destroy_color_data_func, destroy_data_func_t, )
 DEF_FUNCS(driver_data, void *, )
+DEF_FUNCS(copy_driver_data_func, copy_data_func_t, )
+DEF_FUNCS(destroy_driver_data_func, destroy_data_func_t, )
 DEF_FUNCS(outfunc, stp_outfunc_t, )
 DEF_FUNCS(errfunc, stp_outfunc_t, )
 
@@ -629,7 +695,16 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
   if (vs == vd)
     return;
   stp_set_driver(vd, stp_get_driver(vs));
-  stp_set_driver_data(vd, stp_get_driver_data(vs));
+  if (stp_get_copy_driver_data_func(vs))
+    stp_set_driver_data(vd, (stp_get_copy_driver_data_func(vs))(vs));
+  else
+    stp_set_driver_data(vd, stp_get_driver_data(vs));
+  if (stp_get_copy_color_data_func(vs))
+    stp_set_color_data(vd, (stp_get_copy_color_data_func(vs))(vs));
+  else
+    stp_set_color_data(vd, stp_get_color_data(vs));
+  stp_set_copy_driver_data_func(vd, stp_get_copy_driver_data_func(vs));
+  stp_set_copy_color_data_func(vd, stp_get_copy_color_data_func(vs));
   stp_set_ppd_file(vd, stp_get_ppd_file(vs));
   stp_set_output_type(vd, stp_get_output_type(vs));
   stp_set_left(vd, stp_get_left(vs));
@@ -641,7 +716,6 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
   stp_set_page_height(vd, stp_get_page_height(vs));
   stp_set_input_color_model(vd, stp_get_input_color_model(vd));
   stp_set_output_color_model(vd, stp_get_output_color_model(vd));
-  stp_set_lut(vd, stp_get_lut(vs));
   stp_set_outdata(vd, stp_get_outdata(vs));
   stp_set_errdata(vd, stp_get_errdata(vs));
   stp_set_outfunc(vd, stp_get_outfunc(vs));

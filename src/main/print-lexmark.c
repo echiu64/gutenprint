@@ -1916,7 +1916,6 @@ densityDivisor /= 1.2;
   /*
   * Cleanup...
   */
-  stp_free_lut(nv);
   stp_free(in);
   stp_free(out);
   stp_destroy_weave(weave);
@@ -2454,7 +2453,7 @@ const stp_vars_t lex_open_tmp_file() {
   if (ofile == NULL)
     {
       stp_erprintf("Can't create file !\n");
-      exit(2);
+      stp_abort();
     }
   return ofile;
 }

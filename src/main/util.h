@@ -58,6 +58,8 @@ typedef struct
   int   (*end_job)(const stp_vars_t v, stp_image_t *image);
 } stp_printfuncs_t;
 
+typedef void *(*copy_data_func_t)(const stp_vars_t);
+typedef void (*destroy_data_func_t)(stp_vars_t);
 
 extern void stp_zprintf(const stp_vars_t v, const char *format, ...);
 
@@ -98,6 +100,7 @@ extern char *stp_strndup(const char *s, int n);
 extern char *stp_strdup(const char *s);
 extern stp_curve_t stp_read_and_compose_curves(const char *s1, const char *s2,
 					       stp_curve_compose_t comp);
+extern void stp_abort(void);
 
 
 /* Uncomment the next line to get performance statistics:
