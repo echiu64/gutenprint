@@ -17,8 +17,8 @@
 # Locations of various and sundry items.  Edit to taste.
 
 PREFIX = /usr/local
-LIBRARIES = /Libraries
-HEADERS = /Headers
+LIBRARIES = /lib
+HEADERS = /include
 GIMPVERSION = 1.1
 BINDIR = $(PREFIX)/$(LIBRARIES)/gimp/$(GIMPVERSION)/plug-ins
 GIMPINCLUDE = -I$(PREFIX)$(HEADERS)/libgimp
@@ -26,9 +26,8 @@ GLIBINCLUDE = -I/usr/local/glib/include -I/usr/lib/glib/include
 LOCALEDIR=/usr/local/share/locale
 X11DIR = /usr/X11R6
 
-#OPTLEVEL = -O6 -funroll-all-loops -mstack-align-double -march=pentiumpro -Wall
-OPTLEVEL = -g
-CC = /opt/pgcc-2.95.1/bin/gcc
+OPTLEVEL = -O6 -funroll-all-loops -Wall
+CC = gcc
 
 G_LIBS= -L$(PREFIX)$(LIBRARIES) -lgimp -lgimpui -lgtk -lgdk -lglib -lgmodule
 X_LIBS= -L$(X11DIR)/lib -lXext -lX11
