@@ -594,6 +594,8 @@ stp_open(gx_device *pdev)
   st[2] = (float)(width-right) / 72; /* right margin  */
 
   stp_set_top(stp_data.v, 0);
+  stp_set_left(stp_data.v, 0);
+  stp_set_orientation(stp_data.v, ORIENT_PORTRAIT);
   stp_data.bottom = bottom + height-top;
 
   stp_print_debug("stp_open", pdev, &stp_data);
