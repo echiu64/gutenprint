@@ -16,12 +16,32 @@ else
   mkdir m4local
 fi
 
-echo "Making \`configure.in' a symbolic link to \`configure.ac'"
-echo "to work around a bug in libtool < 1.4.2a"
 if test -f configure.in ; then
   rm -f configure.in
 fi
-ln -s configure.ac configure.in
+
+libtoolv=`libtool --version | head -1 | sed 's,.*[        ]\([0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)*\)[a-z]*[   ].*,\1,'`
+libtool_major=`echo $libtoolv | awk -F. '{print $1}'`
+libtool_minor=`echo $libtoolv | awk -F. '{print $2}'`
+libtool_point=`echo $libtoolv | awk -F. '{print $3}'`
+
+test "$libtool_major" -le 1 && {
+  test "$libtool_minor" -lt 4 || {
+    test "$libtool_minor" -eq 4 && {
+      test "$libtool_point" -lt 3
+    }
+  }
+} && {
+  echo
+  echo "**Warning**: You should have \`libtool' 1.4.3 or newer installed to"
+  echo "create a gimp-print distribution.  Earlier versions of gettext do"
+  echo "not generate correct code for all platforms."
+  echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.4.3.tar.gz"
+  echo "(or a newer version if it is available)"
+  echo "For now, making \`configure.in' a symbolic link to \`configure.ac'"
+  echo "to work around a bug in libtool < 1.4.2a"
+  ln -s configure.ac configure.in
+}
 
 (autoconf --version) < /dev/null > /dev/null 2>&1 || {
   echo
@@ -45,28 +65,10 @@ test -f $srcdir/ChangeLog || echo > $srcdir/ChangeLog
   }
 }
 
-libtoolv=`libtool --version | head -1 | sed 's,.*[        ]\([0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)*\)[a-z]*[   ].*,\1,'`
-libtool_major=`echo $libtoolv | awk -F. '{print $1}'`
-libtool_minor=`echo $libtoolv | awk -F. '{print $2}'`
-libtool_point=`echo $libtoolv | awk -F. '{print $3}'`
-
 gettextizev=`gettextize --version | head -1 | sed 's,.*[        ]\([0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)*\)[a-z]*[   ]*.*,\1,'`
 gettextize_major=`echo $gettextizev | awk -F. '{print $1}'`
 gettextize_minor=`echo $gettextizev | awk -F. '{print $2}'`
 gettextize_point=`echo $gettextizev | awk -F. '{print $3}'`
-
-test "$libtool_major" -le 1 && {
-  test "$libtool_minor" -lt 4 || {
-    test "$libtool_minor" -eq 4 -a "$libtool_point" -lt 3
-  }
-} && {
-  echo
-  echo "**Warning**: You should have \`libtool' 1.4.3 or newer installed to"
-  echo "create a gimp-print distribution.  Earlier versions of gettext do"
-  echo "not generate correct code for all platforms."
-  echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.4.3.tar.gz"
-  echo "(or a newer version if it is available)"
-}
 
 
 grep "^AM_GNU_GETTEXT" $srcdir/configure.ac >/dev/null && {
