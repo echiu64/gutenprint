@@ -72,10 +72,10 @@ c_strdup(const char *s)
  */
 
 static stp_param_t *				/* O - Parameter values */
-ps_parameters(const stp_printer_t printer,	/* I - Printer model */
-              const char *ppd_file,		/* I - PPD file (not used) */
-              const char *name,		/* I - Name of parameter */
-              int  *count)		/* O - Number of values */
+ps_parameters_internal(const stp_printer_t printer,	/* I - Printer model */
+		       const char *ppd_file,	/* I - PPD file (not used) */
+		       const char *name,	/* I - Name of parameter */
+		       int  *count)		/* O - Number of values */
 {
   int		i;
   char		line[1024],
@@ -165,10 +165,23 @@ ps_parameters(const stp_printer_t printer,	/* I - Printer model */
     return (valptrs);
 }
 
+static stp_param_t *				/* O - Parameter values */
+ps_parameters(const stp_printer_t printer,	/* I - Printer model */
+              const char *ppd_file,		/* I - PPD file (not used) */
+              const char *name,		/* I - Name of parameter */
+              int  *count)		/* O - Number of values */
+{
+  stp_param_t *answer;
+  setlocale(LC_ALL, "C");
+  answer = ps_parameters_internal(printer, ppd_file, name, count);
+  setlocale(LC_ALL, "");
+  return answer;
+}
+
 static const char *
-ps_default_parameters(const stp_printer_t printer,
-		      const char *ppd_file,
-		      const char *name)
+ps_default_parameters_internal(const stp_printer_t printer,
+			       const char *ppd_file,
+			       const char *name)
 {
   int		i;
   char		line[1024],
@@ -237,16 +250,27 @@ ps_default_parameters(const stp_printer_t printer,
   return NULL;
 }
 
+static const char *
+ps_default_parameters(const stp_printer_t printer,
+		      const char *ppd_file,
+		      const char *name)
+{
+  const char *answer;
+  setlocale(LC_ALL, "C");
+  answer = ps_default_parameters_internal(printer, ppd_file, name);
+  setlocale(LC_ALL, "");
+  return answer;
+}
 
 /*
  * 'ps_media_size()' - Return the size of the page.
  */
 
 static void
-ps_media_size(const stp_printer_t printer,	/* I - Printer model */
-	      const stp_vars_t v,		/* I */
-              int  *width,		/* O - Width in points */
-              int  *height)		/* O - Height in points */
+ps_media_size_internal(const stp_printer_t printer,	/* I - Printer model */
+		       const stp_vars_t v,		/* I */
+		       int  *width,		/* O - Width in points */
+		       int  *height)		/* O - Height in points */
 {
   char	*dimensions;			/* Dimensions of media size */
 
@@ -264,18 +288,28 @@ ps_media_size(const stp_printer_t printer,	/* I - Printer model */
     stp_default_media_size(printer, v, width, height);
 }
 
+static void
+ps_media_size(const stp_printer_t printer,	/* I - Printer model */
+	      const stp_vars_t v,		/* I */
+              int  *width,		/* O - Width in points */
+              int  *height)		/* O - Height in points */
+{
+  setlocale(LC_ALL, "C");
+  ps_media_size_internal(printer, v, width, height);
+  setlocale(LC_ALL, "");
+}
 
 /*
  * 'ps_imageable_area()' - Return the imageable area of the page.
  */
 
 static void
-ps_imageable_area(const stp_printer_t printer,	/* I - Printer model */
-		  const stp_vars_t v,      /* I */
-                  int  *left,		/* O - Left position in points */
-                  int  *right,		/* O - Right position in points */
-                  int  *bottom,		/* O - Bottom position in points */
-                  int  *top)		/* O - Top position in points */
+ps_imageable_area_internal(const stp_printer_t printer,	/* I - Printer model */
+			   const stp_vars_t v,      /* I */
+			   int  *left,	/* O - Left position in points */
+			   int  *right,	/* O - Right position in points */
+			   int  *bottom, /* O - Bottom position in points */
+			   int  *top)	/* O - Top position in points */
 {
   char	*area;				/* Imageable area of media */
   float	fleft,				/* Floating point versions */
@@ -310,6 +344,19 @@ ps_imageable_area(const stp_printer_t printer,	/* I - Printer model */
 }
 
 static void
+ps_imageable_area(const stp_printer_t printer,	/* I - Printer model */
+		  const stp_vars_t v,      /* I */
+                  int  *left,		/* O - Left position in points */
+                  int  *right,		/* O - Right position in points */
+                  int  *bottom,		/* O - Bottom position in points */
+                  int  *top)		/* O - Top position in points */
+{
+  setlocale(LC_ALL, "C");
+  ps_imageable_area_internal(printer, v, left, right, bottom, top);
+  setlocale(LC_ALL, "");
+}
+
+static void
 ps_limit(const stp_printer_t printer,	/* I - Printer model */
 	    const stp_vars_t v,  		/* I */
 	    int *width,
@@ -327,8 +374,8 @@ ps_limit(const stp_printer_t printer,	/* I - Printer model */
  * This is really bogus...
  */
 static void
-ps_describe_resolution(const stp_printer_t printer,
-			const char *resolution, int *x, int *y)
+ps_describe_resolution_internal(const stp_printer_t printer,
+				const char *resolution, int *x, int *y)
 {
   *x = -1;
   *y = -1;
@@ -336,14 +383,23 @@ ps_describe_resolution(const stp_printer_t printer,
   return;
 }
 
+static void
+ps_describe_resolution(const stp_printer_t printer,
+			const char *resolution, int *x, int *y)
+{
+  setlocale(LC_ALL, "C");
+  ps_describe_resolution_internal(printer, resolution, x, y);
+  setlocale(LC_ALL, "");
+}
+
 /*
  * 'ps_print()' - Print an image to a PostScript printer.
  */
 
 static void
-ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
-         stp_image_t *image,		/* I - Image to print */
-	 const stp_vars_t v)
+ps_print_internal(const stp_printer_t printer,	/* I - Model (Level 1 or 2) */
+		  stp_image_t *image,		/* I - Image to print */
+		  const stp_vars_t v)
 {
   unsigned char *cmap = stp_get_cmap(v);
   int		model = stp_printer_get_model(printer);
@@ -691,6 +747,16 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
   stp_puts("%%Trailer\n", v);
   stp_puts("%%EOF\n", v);
   stp_free_vars(nv);
+}
+
+static void
+ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
+         stp_image_t *image,		/* I - Image to print */
+	 const stp_vars_t v)
+{
+  setlocale(LC_ALL, "C");
+  ps_print_internal(printer, image, v);
+  setlocale(LC_ALL, "");
 }
 
 
