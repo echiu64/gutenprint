@@ -1275,7 +1275,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   ink_type = get_inktype(printer, nv, model);
   total_channels = count_channels(ink_type);
   if (output_type != OUTPUT_GRAY && output_type != OUTPUT_MONOCHROME &&
-      !ink_type->is_color)
+      output_type != OUTPUT_RAW_PRINTER && !ink_type->is_color)
     {
       output_type = OUTPUT_GRAY;
       stp_set_output_type(nv, OUTPUT_GRAY);
