@@ -39,6 +39,31 @@ OS X</a> that answers most questions on how to use Gimp-Print with OS X 10.2
 "Jaguar" and provides direct download links. The final release of Gimp-Print 4.2.4 for Mac OS X Jaguar is available now!</p>
 
 
+<H2><font color="#ff0000">Gimp-Print 4.3.21 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of September 24,
+2003!</strong></em></font> Gimp-Print 4.3.21 is released.  This is an
+unstable development release on the Gimp-Print 4.3 line.  This release
+offers major print quality improvements, but as with all development
+releases, it is not as stable as the 4.2 releases and is not
+recommended for production use.<a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=186791">You
+can read the release notes and download it here</a>.  </p>
+
+
+<H2><font color="#ff0000">Gimp-Print 4.2.6-pre2 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of September 15,
+2003!</strong></em></font> Gimp-Print 4.2.5 is released.  This is a
+beta prerelease on the Gimp-Print 4.2 line.  This release offers
+preliminary support for a number of Epson printers that have been
+released this year, and fixes some problems with the PPD files in the
+CUPS driver.  In addition to the source, an installation kit for
+Macintosh OS X 10.2 is available! <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=184896">You
+can read the release notes and download it here</a>.  </p>
+
+
 <H2><font color="#ff0000">Gimp-Print 4.2.5 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of January 25,
@@ -46,7 +71,7 @@ OS X</a> that answers most questions on how to use Gimp-Print with OS X 10.2
 stable release on the Gimp-Print 4.2 line.  This release offers major
 improvements particularly for users of the Epson Stylus Photo 925,
 950, 960, 2100, and 2200, and the Stylus Pro 5000.  In addition to the
-source, an installation kit for Macintosh OS X 10.2 will shortly be
+source, an installation kit for Macintosh OS X 10.2 is
 available! <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=136002">You
 can read the release notes and download it here</a>.  </p>
