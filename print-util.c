@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.64  2000/02/05 20:02:10  rlk
+ *   some more silly problems
+ *
  *   Revision 1.63  2000/02/05 14:56:41  rlk
  *   1) print-util.c: decrement rather than increment counter!
  *
@@ -367,84 +370,7 @@ typedef union error
 
 error_t *nerror = 0;
 
-typedef struct dither
-{
-  int error[ERROR_ROWS][NCOLORS][MAX_CARRIAGE_WIDTH*MAX_BPI+1];
-
-  int cbits;			/* Oversample counters for the various inks */
-  int lcbits;
-  int mbits;
-  int lmbits;
-  int ybits;
-  int lybits;
-  int kbits;
-
-  int k_lower;			/* Transition range (lower/upper) for CMY */
-  int k_upper;			/* vs. K */
-
-  int lc_level;			/* Relative levels (0-65536) for light */
-  int lm_level;			/* inks vs. full-strength inks */
-  int ly_level;
-
-  int c_randomizer;		/* Randomizers.  MORE EXPLANATION */
-  int m_randomizer;
-  int y_randomizer;
-  int k_randomizer;
-
-  int k_clevel;			/* Amount of each ink (in 16ths) required */
-  int k_mlevel;			/* to create equivalent black */
-  int k_ylevel;
-
-  int c_darkness;		/* Perceived "darkness" of each ink, */
-  int m_darkness;		/* in 64ths, to calculate CMY-K transitions */
-  int y_darkness;
-
-  int nc_l;			/* Number of levels of each color available */
-  int nc_log;			/* Log of number of levels (how many bits) */
-  int *c_transitions;		/* Vector of transition points between */
-  int *c_levels;		/* Vector of actual levels */
-
-  int nlc_l;
-  int nlc_log;
-  int *lc_transitions;
-  int *lc_levels;
-
-  int nm_l;
-  int nm_log;
-  int *m_transitions;
-  int *m_levels;
-
-  int nlm_l;
-  int nlm_log;
-  int *lm_transitions;
-  int *lm_levels;
-
-  int ny_l;
-  int ny_log;
-  int *y_transitions;
-  int *y_levels;
-
-  int nly_l;
-  int nly_log;
-  int *ly_transitions;
-  int *ly_levels;
-
-  int nk_l;
-  int nk_log;
-  int *k_transitions;
-  int *k_levels;
-
-} dither_t;
-
-
 static int error[ERROR_ROWS][NCOLORS][MAX_CARRIAGE_WIDTH*MAX_BPI+1];
-static int cbits = 1;
-static int lcbits = 1;
-static int mbits = 1;
-static int lmbits = 1;
-static int ybits = 1;
-static int lybits = 1;
-static int kbits = 1;
 
 /*
  * Dithering functions!
@@ -605,7 +531,7 @@ static dither_t dither_info;
 void
 init_dither(void)
 {
-  (void) memset(dither_info.error, 0, sizeof(error));
+  (void) memset(error, 0, sizeof(error));
   dither_info.cbits = 1;
   dither_info.lcbits = 1;
   dither_info.mbits = 1;
@@ -776,8 +702,8 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
   xmod   = src_width % dst_width;
   length = (dst_width + 7) / 8;
 
-  kerror0 = d->error[row & 1][3];
-  kerror1 = d->error[1 - (row & 1)][3];
+  kerror0 = error[row & 1][3];
+  kerror1 = error[1 - (row & 1)][3];
   memset(kerror1, 0, dst_width * sizeof(int));
 
   memset(black, 0, length);
@@ -811,10 +737,10 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
 
     if (k > ditherbit)
     {
-      if (kbits++ == horizontal_overdensity)
+      if (d->kbits++ == horizontal_overdensity)
 	{
 	  *kptr |= bit;
-	  kbits = 1;
+	  d->kbits = 1;
 	}
       k -= 65535;
     }
@@ -1113,17 +1039,17 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   xmod   = src_width % dst_width;
   length = (dst_width + 7) / 8;
 
-  cerror0 = d->error[row & 1][0];
-  cerror1 = d->error[1 - (row & 1)][0];
+  cerror0 = error[row & 1][0];
+  cerror1 = error[1 - (row & 1)][0];
 
-  merror0 = d->error[row & 1][1];
-  merror1 = d->error[1 - (row & 1)][1];
+  merror0 = error[row & 1][1];
+  merror1 = error[1 - (row & 1)][1];
 
-  yerror0 = d->error[row & 1][2];
-  yerror1 = d->error[1 - (row & 1)][2];
+  yerror0 = error[row & 1][2];
+  yerror1 = error[1 - (row & 1)][2];
 
-  kerror0 = d->error[row & 1][3];
-  kerror1 = d->error[1 - (row & 1)][3];
+  kerror0 = error[row & 1][3];
+  kerror1 = error[1 - (row & 1)][3];
   memset(kerror1, 0, dst_width * sizeof(int));
   memset(cerror1, 0, dst_width * sizeof(int));
   memset(merror1, 0, dst_width * sizeof(int));
@@ -1499,7 +1425,6 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
 		*kerror1;	/* Pointer to next error row */
   int		ditherbit;	/* Random dithering bitmask */
   dither_t      *d = &dither_info;
-  static int kbits = 1;
   int overdensity_bits = 0;
   int terminate;
   int direction = row & 1 ? 1 : -1;
@@ -1529,8 +1454,8 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
   xmod   = src_width % dst_width;
   length = (dst_width + 7) / 8;
 
-  kerror0 = d->error[row & 1][3];
-  kerror1 = d->error[1 - (row & 1)][3];
+  kerror0 = error[row & 1][3];
+  kerror1 = error[1 - (row & 1)][3];
   memset(kerror1, 0, dst_width * sizeof(int));
 
   memset(black, 0, length);
@@ -1567,7 +1492,7 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
       {
 	if (k > d->k_transitions[i])
 	  {
-	    if (kbits++ == horizontal_overdensity)
+	    if (d->kbits++ == horizontal_overdensity)
 	      {
 		int j;
 		for (j = 0; j < d->nm_log; j++)
@@ -1575,7 +1500,7 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
 		    if (j & i)
 		      kptr[j * length] |= bit;
 		  }
-		kbits = 1;
+		d->kbits = 1;
 	      }
 	    k -= d->k_levels[i];
 	    break;
@@ -1645,17 +1570,17 @@ do {							\
     {							\
       if (base > d->r##_transitions[i])			\
 	{						\
-	  if (kbits++ == horizontal_overdensity)	\
+	  if (d->r##bits++ == horizontal_overdensity)	\
 	    {						\
 	      int j;					\
 	      for (j = 0; j < d->n##r##_log; j++)	\
 		{					\
 		  if (j & i)				\
-		    kptr[j * length] |= bit;		\
+		    r##ptr[j * length] |= bit;		\
 		}					\
-	      kbits = 1;				\
+	      d->r##bits = 1;				\
 	    }						\
-	  k -= d->k_levels[i];				\
+	  base -= d->r##_levels[i];			\
 	  break;					\
 	}						\
     }							\
@@ -1791,17 +1716,17 @@ dither_cmyk4(unsigned short  *rgb,	/* I - RGB pixels */
   xmod   = src_width % dst_width;
   length = (dst_width + 7) / 8;
 
-  cerror0 = d->error[row & 1][0];
-  cerror1 = d->error[1 - (row & 1)][0];
+  cerror0 = error[row & 1][0];
+  cerror1 = error[1 - (row & 1)][0];
 
-  merror0 = d->error[row & 1][1];
-  merror1 = d->error[1 - (row & 1)][1];
+  merror0 = error[row & 1][1];
+  merror1 = error[1 - (row & 1)][1];
 
-  yerror0 = d->error[row & 1][2];
-  yerror1 = d->error[1 - (row & 1)][2];
+  yerror0 = error[row & 1][2];
+  yerror1 = error[1 - (row & 1)][2];
 
-  kerror0 = d->error[row & 1][3];
-  kerror1 = d->error[1 - (row & 1)][3];
+  kerror0 = error[row & 1][3];
+  kerror1 = error[1 - (row & 1)][3];
   memset(kerror1, 0, dst_width * sizeof(int));
   memset(cerror1, 0, dst_width * sizeof(int));
   memset(merror1, 0, dst_width * sizeof(int));
