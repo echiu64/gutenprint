@@ -168,7 +168,6 @@ query (void)
 			  args, NULL);
 }
 
-
 #ifdef __EMX__
 static char *
 get_tmp_filename()
@@ -213,7 +212,6 @@ gimp_writefunc(void *file, const char *buf, size_t bytes)
  */
 
 /* #define DEBUG_STARTUP */
-
 
 #ifdef DEBUG_STARTUP
 volatile int SDEBUG = 1;
@@ -327,6 +325,7 @@ run (char   *name,		/* I - Name of print program. */
 
       if (!do_print_dialog (name))
 	goto cleanup;
+      stp_copy_vars(vars, plist[plist_current].v);
       break;
 
     case GIMP_RUN_NONINTERACTIVE:
@@ -575,7 +574,6 @@ run (char   *name,		/* I - Name of print program. */
    */
   gimp_drawable_detach (drawable);
 
-
  cleanup:
   if (export == GIMP_EXPORT_EXPORT)
     gimp_image_delete (image_ID);
@@ -779,7 +777,7 @@ add_printer(const gp_plist_t *key, int add_only)
 	}
     }
   return 1;
-}  
+}
 
 /*
  * 'printrc_load()' - Load the printer resource configuration file.
@@ -1020,7 +1018,6 @@ printrc_load(void)
 
   g_free (filename);
 
-
  /*
   * Select the current printer as necessary...
   */
@@ -1039,8 +1036,7 @@ printrc_load(void)
     if (stp_get_output_to(vars)[0] != '\0')
     {
       for (i = 0; i < plist_count; i ++)
-        if (strcmp(stp_get_output_to(vars), stp_get_output_to(plist[i].v))
-	    == 0)
+        if (strcmp(stp_get_output_to(vars), stp_get_output_to(plist[i].v))== 0)
           break;
 
       if (i < plist_count)
@@ -1048,7 +1044,6 @@ printrc_load(void)
     }
   }
 }
-
 
 /*
  * 'printrc_save()' - Save the current printer resource configuration.
@@ -1131,7 +1126,6 @@ printrc_save(void)
   g_free (filename);
 }
 
-
 /*
  * 'compare_printers()' - Compare system printer names for qsort().
  */
@@ -1142,7 +1136,6 @@ compare_printers(gp_plist_t *p1,	/* I - First printer to compare */
 {
   return (strcmp(p1->name, p2->name));
 }
-
 
 /*
  * 'get_system_printers()' - Get a complete list of printers from the spooler.
@@ -1176,7 +1169,6 @@ get_system_printers(void)
 		  "/usr/libexec",
 		  "/usr/sbin"
 		};
-
 
  /*
   * Setup defaults...
