@@ -79,7 +79,7 @@ AM_CPPFLAGS =\
 
 print_LDADD = $(GIMP_LIBS)
 
-GHOST_DIST= COPYING ChangeLog README contrib.mak.addon \
+GHOST_DIST= COPYING ChangeLog README README.bsd contrib.mak.addon \
 	gdevstp.c devs.mak.addon-5.10 escputil.c Makefile \
 	debian-patch debian-patch-stp $(GCOPY)
 
