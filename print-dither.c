@@ -174,6 +174,7 @@ calc_ordered_point_3(unsigned x, unsigned y, int steps, int multiplier)
       for (j = i; j < steps - 1; j++)
 	div1 *= 9;
       retval += base * div1;
+      divisor *= 3;
     }
   return retval * multiplier;
 }
@@ -254,7 +255,7 @@ init_dither(int in_width, int out_width, vars_t *v)
 	d->ordered_dither_matrix0[x][y] =
 	  calc_ordered_point(x, y, MATRIX_NB0, 1);
 	d->ordered_dither_matrix0[x][y] =
-	  d->ordered_dither_matrix0[x][y] * 65536 / (MATRIX_SIZE0_2 - 1);
+	  d->ordered_dither_matrix0[x][y] * 65536 / (MATRIX_SIZE0_2);
       }
   for (x = 0; x < MATRIX_SIZE1; x++)
     for (y = 0; y < MATRIX_SIZE1; y++)
@@ -262,7 +263,7 @@ init_dither(int in_width, int out_width, vars_t *v)
 	d->ordered_dither_matrix1[x][y] =
 	  calc_ordered_point_3(x, y, MATRIX_NB1, 1);
 	d->ordered_dither_matrix1[x][y] =
-	  d->ordered_dither_matrix1[x][y] * 65536 / (MATRIX_SIZE1_2 - 1);
+	  d->ordered_dither_matrix1[x][y] * 65536 / (MATRIX_SIZE1_2);
       }
   for (x = 0; x < MATRIX_SIZE2; x++)
     for (y = 0; y < MATRIX_SIZE2; y++)
@@ -270,7 +271,7 @@ init_dither(int in_width, int out_width, vars_t *v)
 	d->ordered_dither_matrix2[x][y] =
 	  calc_ordered_point_5(x, y, MATRIX_NB2, 1, msq1);
 	d->ordered_dither_matrix2[x][y] =
-	  d->ordered_dither_matrix2[x][y] * 65536 / (MATRIX_SIZE2_2 - 1);
+	  d->ordered_dither_matrix2[x][y] * 65536 / (MATRIX_SIZE2_2);
       }
 
   if (!strcmp(v->dither_algorithm, "Modified Floyd-Steinberg"))
@@ -417,6 +418,7 @@ dither_set_ranges(dither_color_t *s, int nlevels,
   s->nlevels = nlevels > 1 ? nlevels + 1 : nlevels;
   s->ranges = (dither_segment_t *)
     malloc(s->nlevels * sizeof(dither_segment_t));
+  s->bit_max = 0;
 #if 0
   fprintf(stderr, "dither_set_ranges nlevels %d density %f\n", nlevels, density);
   for (i = 0; i < nlevels; i++)
@@ -464,7 +466,7 @@ dither_set_ranges(dither_color_t *s, int nlevels,
 	    s->ranges[l].value_h = 65536;
 	  s->ranges[l].bits_h = ranges[l].bit_pattern;
 	  if (ranges[l].bit_pattern > s->bit_max)
-	    s->bit_max = ranges[i].bit_pattern;
+	    s->bit_max = ranges[l].bit_pattern;
 	  s->ranges[l].isdark_h = ranges[l].is_dark;
 	  s->ranges[l].range_span =
 	    s->ranges[l].range_h - s->ranges[l].range_l;
@@ -483,6 +485,13 @@ dither_set_ranges(dither_color_t *s, int nlevels,
       s->ranges[i].range_span = s->ranges[i].range_h - s->ranges[i].range_l;
       s->ranges[i].value_span = s->ranges[i].value_h - s->ranges[i].value_l;
     }
+  lbit = s->bit_max;
+  s->signif_bits = 0;
+  while (lbit > 0)
+    {
+      s->signif_bits++;
+      lbit >>= 1;
+    }
 #if 0
   for (i = 0; i < s->nlevels; i++)
     {
@@ -495,14 +504,8 @@ dither_set_ranges(dither_color_t *s, int nlevels,
       fprintf(stderr, "       rangespan %d valuespan %d\n",
 	      s->ranges[i].range_span, s->ranges[i].value_span);
     }
+  fprintf(stderr, "  bit_max %d signif_bits %d\n", s->bit_max, s->signif_bits);
 #endif
-  lbit = s->bit_max;
-  s->signif_bits = 0;
-  while (lbit > 0)
-    {
-      s->signif_bits++;
-      lbit >>= 1;
-    }
 }
 
 void
@@ -521,7 +524,7 @@ dither_set_c_ranges_simple(void *vd, int nlevels, const double *levels,
   int i;
   for (i = 0; i < nlevels; i++)
     {
-      r[i].bit_pattern = i;
+      r[i].bit_pattern = i + 1;
       r[i].value = levels[i];
       r[i].is_dark = 1;
     }
@@ -545,7 +548,7 @@ dither_set_m_ranges_simple(void *vd, int nlevels, const double *levels,
   int i;
   for (i = 0; i < nlevels; i++)
     {
-      r[i].bit_pattern = i;
+      r[i].bit_pattern = i + 1;
       r[i].value = levels[i];
       r[i].is_dark = 1;
     }
@@ -569,7 +572,7 @@ dither_set_y_ranges_simple(void *vd, int nlevels, const double *levels,
   int i;
   for (i = 0; i < nlevels; i++)
     {
-      r[i].bit_pattern = i;
+      r[i].bit_pattern = i + 1;
       r[i].value = levels[i];
       r[i].is_dark = 1;
     }
@@ -593,7 +596,7 @@ dither_set_k_ranges_simple(void *vd, int nlevels, const double *levels,
   int i;
   for (i = 0; i < nlevels; i++)
     {
-      r[i].bit_pattern = i;
+      r[i].bit_pattern = i + 1;
       r[i].value = levels[i];
       r[i].is_dark = 1;
     }
@@ -926,7 +929,7 @@ dither_fastblack(unsigned short     *gray,	/* I - Grayscale pixels */
   xmod   = d->src_width % d->dst_width;
   length = (d->dst_width + 7) / 8;
 
-  memset(black, 0, length);
+  memset(black, 0, length * d->k_dither.signif_bits);
   kptr = black;
   xerror = 0;
   if (direction == -1)
@@ -1357,6 +1360,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.24  2000/04/18 12:21:52  rlk
+ *   Fix incorrect printing for variable drop sizes
+ *
  *   Revision 1.23  2000/04/17 13:22:25  rlk
  *   Better matrix for ordered dither
  *

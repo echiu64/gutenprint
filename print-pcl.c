@@ -1615,22 +1615,22 @@ pcl_print(const printer_t *printer,		/* I - Model */
 	if (output_type == OUTPUT_GRAY)
 	{
           dither_black(out, x, dither, black);
-          (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 1);
+          (*writefunc)(prn, black, length / 2, 0);
 	}
 	else 
 	{
           dither_cmyk(out, x, dither, cyan, NULL, magenta, NULL,
 		      yellow, NULL, black);
 
-          (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 0);
-          (*writefunc)(prn, cyan, length / 2, 0);
+          (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, cyan + length / 2, length / 2, 0);
-          (*writefunc)(prn, magenta, length / 2, 0);
+          (*writefunc)(prn, cyan, length / 2, 0);
           (*writefunc)(prn, magenta + length / 2, length / 2, 0);
-          (*writefunc)(prn, yellow, length / 2, 0);
+          (*writefunc)(prn, magenta, length / 2, 0);
           (*writefunc)(prn, yellow + length / 2, length / 2, 1);
+          (*writefunc)(prn, yellow, length / 2, 0);
 	}
       }
       else
@@ -1707,22 +1707,22 @@ pcl_print(const printer_t *printer,		/* I - Model */
 	if (output_type == OUTPUT_GRAY)
 	{
           dither_black(out, y, dither, black);
-          (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 1);
+          (*writefunc)(prn, black, length / 2, 0);
 	}
 	else 
 	{
           dither_cmyk(out, y, dither, cyan, NULL, magenta, NULL,
 		      yellow, NULL, black);
 
-          (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 0);
-          (*writefunc)(prn, cyan, length / 2, 0);
+          (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, cyan + length / 2, length / 2, 0);
-          (*writefunc)(prn, magenta, length / 2, 0);
+          (*writefunc)(prn, cyan, length / 2, 0);
           (*writefunc)(prn, magenta + length / 2, length / 2, 0);
-          (*writefunc)(prn, yellow, length / 2, 0);
+          (*writefunc)(prn, magenta, length / 2, 0);
           (*writefunc)(prn, yellow + length / 2, length / 2, 1);
+          (*writefunc)(prn, yellow, length / 2, 0);
 	}
       }
       else
@@ -1913,6 +1913,9 @@ pcl_mode2(FILE          *prn,		/* I - Print file or command */
 
 /*
  *   $Log$
+ *   Revision 1.44  2000/04/18 12:21:53  rlk
+ *   Fix incorrect printing for variable drop sizes
+ *
  *   Revision 1.43  2000/04/16 21:31:32  rlk
  *   Choice of dithering algorithms
  *

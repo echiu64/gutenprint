@@ -1,3 +1,36 @@
+2000-04-16	<rlk@sourceforge.net>
+
+	Files:	gimp_color_window.c
+		Ghost/gdevstp.c
+		Ghost/README
+		printdefy.y
+		print.h
+		print.c
+		print-util.c
+		print-pcl.c
+		print-escp2.c
+		print-dither.c
+		print-canon.c
+		gtk_main_window.c
+		gtk_color_window.c
+		gimp_main_window.c
+	
+	Choice of dithering algorithms
+	
+2000-04-16	<mitsch@sourceforge.net>
+
+	Files:	gimp_color_window.c
+	
+	Added the dither algo option menu (mostly cut & paste from
+	Steve's changes).
+	
+2000-04-16	<rlk@sourceforge.net>
+
+	Files:	ChangeLog
+		mkchlog
+	
+	Updated change log
+	
 2000-04-16	<smiller@sourceforge.net>
 
 	Files:	gtk_color_window.c

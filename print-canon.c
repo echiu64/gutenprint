@@ -1422,9 +1422,9 @@ canon_write(FILE          *prn,		/* I - Print file or command */
   if (dmt) {
     if (1) {
       if (caps.features & CANON_CAP_MSB_FIRST) 
-	canon_fold_msb_lsb(line,length,in_fold);
-      else
 	canon_fold_lsb_msb(line,length,in_fold);
+      else
+	canon_fold_msb_lsb(line,length,in_fold);
       in_ptr= in_fold;
     }
     length*= 2;
@@ -1521,6 +1521,9 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
 
 /*
  *   $Log$
+ *   Revision 1.38  2000/04/18 12:21:52  rlk
+ *   Fix incorrect printing for variable drop sizes
+ *
  *   Revision 1.37  2000/04/16 21:31:32  rlk
  *   Choice of dithering algorithms
  *

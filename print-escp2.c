@@ -1302,23 +1302,23 @@ escp2_fold(const unsigned char *line,
   for (i = 0; i < single_length; i++)
     {
       outbuf[0] =
-	((line[0] & (1 << 7)) >> 0) +
-	((line[0] & (1 << 6)) >> 1) +
-	((line[0] & (1 << 5)) >> 2) +
-	((line[0] & (1 << 4)) >> 3) +
-	((line[single_length] & (1 << 7)) >> 1) +
-	((line[single_length] & (1 << 6)) >> 2) +
-	((line[single_length] & (1 << 5)) >> 3) +
-	((line[single_length] & (1 << 4)) >> 4);
+	((line[0] & (1 << 7)) >> 1) +
+	((line[0] & (1 << 6)) >> 2) +
+	((line[0] & (1 << 5)) >> 3) +
+	((line[0] & (1 << 4)) >> 4) +
+	((line[single_length] & (1 << 7)) >> 0) +
+	((line[single_length] & (1 << 6)) >> 1) +
+	((line[single_length] & (1 << 5)) >> 2) +
+	((line[single_length] & (1 << 4)) >> 3);
       outbuf[1] =
-	((line[0] & (1 << 3)) << 4) +
-	((line[0] & (1 << 2)) << 3) +
-	((line[0] & (1 << 1)) << 2) +
-	((line[0] & (1 << 0)) << 1) +
-	((line[single_length] & (1 << 3)) << 3) +
-	((line[single_length] & (1 << 2)) << 2) +
-	((line[single_length] & (1 << 1)) << 1) +
-	((line[single_length] & (1 << 0)) << 0);
+	((line[0] & (1 << 3)) << 3) +
+	((line[0] & (1 << 2)) << 2) +
+	((line[0] & (1 << 1)) << 1) +
+	((line[0] & (1 << 0)) << 0) +
+	((line[single_length] & (1 << 3)) << 4) +
+	((line[single_length] & (1 << 2)) << 3) +
+	((line[single_length] & (1 << 1)) << 2) +
+	((line[single_length] & (1 << 0)) << 1);
       line++;
       outbuf += 2;
     }
@@ -1966,6 +1966,8 @@ escp2_write_microweave(FILE          *prn,	/* I - Print file or command */
     {
       for (j = 0; j < 6; j++)
 	{
+	  if (!microweave_setactive[j][i])
+	    continue;
 	  /*
 	   * Set the print head position.
 	   */
@@ -1987,8 +1989,6 @@ escp2_write_microweave(FILE          *prn,	/* I - Print file or command */
 	    }
 	  else
 	    fprintf(prn, "\033\\%c%c", offset & 255, offset >> 8);
-	  if (!microweave_setactive[j][i])
-	    continue;
 	  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
 	    fprintf(prn, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
 	  else
@@ -2890,6 +2890,9 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.123  2000/04/18 12:21:52  rlk
+ *   Fix incorrect printing for variable drop sizes
+ *
  *   Revision 1.122  2000/04/16 21:31:32  rlk
  *   Choice of dithering algorithms
  *
