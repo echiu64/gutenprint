@@ -60,7 +60,7 @@ $supported_printers = array(
 		'HP LaserJet 6 series' => 'Fully Operational'
 		)
 	),
-'Canon (<strong><em>New!</em></strong>) => array(
+'Canon (<strong><em>New!</em></strong>)' => array(
        'BJC 1000' => 'Untested',
        'BJC 2000' => 'Untested',
        'BJC 3000' => 'Untested',
