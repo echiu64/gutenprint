@@ -258,9 +258,13 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
     return_error(gs_error_VMerror);
 
   if (strlen(stp_data.v.resolution) == 0)
-    strcpy(stp_data.v.resolution, (*printer->printfuncs->default_resolution)(printer));
+    strncpy(stp_data.v.resolution,
+	    (*printer->printfuncs->default_resolution)(printer),
+	    sizeof(stp_data.v.resolution) - 1);
   if (strlen(stp_data.v.dither_algorithm) == 0)
-    strcpy(stp_data.v.dither_algorithm, stp_default_dither_algorithm());
+    strncpy(stp_data.v.dither_algorithm,
+	    stp_default_dither_algorithm(),
+	    sizeof(stp_data.v.dither_algorithm) - 1);
 
   stp_data.v.scaling = -pdev->x_pixels_per_inch; /* resolution of image */
 
@@ -275,7 +279,7 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
   if ((p =
        stp_get_papersize_by_size(stp_data.v.page_height, stp_data.v.page_width)) !=
       NULL)
-    strcpy(stp_data.v.media_size, p->name);
+    strncpy(stp_data.v.media_size, p->name, sizeof(stp_data.v.media_size) - 1);
   stp_print_dbg("stp_print_page", pdev, &stp_data);
 
   gsImage.dev = pdev;
