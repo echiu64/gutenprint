@@ -272,7 +272,7 @@
 <printer name="EPSON Stylus C70" driver="escp2-c70">
 <color>
 <model value=44>
-<gamma value=0.585>
+<gamma value=0.688>
 <density value=1.0>
 <cyan value=0.96>
 <magenta value=1.02>
@@ -283,7 +283,7 @@
 <printer name="EPSON Stylus C80" driver="escp2-c80">
 <color>
 <model value=44>
-<gamma value=0.585>
+<gamma value=0.688>
 <density value=1.0>
 <cyan value=0.96>
 <magenta value=1.02>
