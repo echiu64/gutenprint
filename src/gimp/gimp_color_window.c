@@ -99,6 +99,7 @@ gimp_build_dither_combo (void)
 			  stp_dither_algorithm_count(),
 			  vec,
 			  stp_get_dither_algorithm(plist[plist_current].v),
+			  stp_default_dither_algorithm(),
 			  &gimp_dither_algo_callback,
 			  &dither_algo_callback_id);
   for (i = 0; i < stp_dither_algorithm_count(); i++)

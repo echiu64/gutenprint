@@ -100,6 +100,7 @@ extern void gimp_plist_build_combo         (GtkWidget      *combo,
 					    gint            num_items,
 					    gchar         **items,
 					    const gchar          *cur_item,
+					    const gchar		*def_value,
 					    GtkSignalFunc   callback,
 					    gint           *callback_id);
 
@@ -109,13 +110,6 @@ extern void gimp_build_dither_combo  (void);
 extern void gimp_build_printer_combo (void);
 extern void gimp_create_color_adjust_window  (void);
 extern void gimp_update_adjusted_thumbnail   (void);
-extern void
-gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
-			gint            num_items,   /* I - Number of items */
-			gchar    **items,       /* I - Menu items */
-			const gchar     *cur_item,    /* I - Current item */
-			GtkSignalFunc   callback,    /* I - Callback */
-			gint           *callback_id); /* IO - Callback ID (init to -1) */
 extern void gimp_create_main_window (void);
 extern void gimp_set_color_sliders_active(int active);
 extern void gimp_writefunc (void *file, const char *buf, size_t bytes);
