@@ -25,12 +25,29 @@ installing this package.
 Gimp-Print 4.2.1-pre5 contains the following major changes and fixes
 over Gimp-Print 4.2.1-pre4:
 
-  1) Attempts to print in grayscale with the new IJS driver in
-     Foomatic fail with a rangecheck error.
+  1) A number of bug fixes to the IJS driver (please see below for
+     details).
 
-The following bug is fixed in 4.2.1-pre5:
+  2) Under some circumstances, the PCL driver could overflow an
+     internal buffer, potentially causing a crash.
 
-537293 Wrong parameter for grayscale
+The following bugs are fixed in 4.2.1-pre5:
+
+539013 IJS driver mispositions image on page
+538500 PCL driver crash
+538497 IJS driver sets incorrect paper size
+537293 IJS/foomatic driver crashes printing grayscale
+
+The following critical bug has been reported against all 4.2 releases
+to date and is unresolved in this release.  The symptoms are that
+prints to Windows-hosted printers are incomplete: the bottom of the
+last page will not be printed.  Some people have reported success when
+the host is an NT-based system rather than a Windows 95/98/ME-based
+system.  The only definitive workaround is to physically host the
+printer on a UNIX/Linux system.  It is not known at this time if the
+underlying problem is in Gimp-print or in other software.
+
+510185 Incomplete print to Windows-hosted printers
 
 
 Gimp-Print 4.2.1-pre4 contains the following major changes and fixes
@@ -68,15 +85,6 @@ The following bugs are fixed in 4.2.1-pre4:
 525779 Buffering bug in epson cups backend
 528922 rastertoprinter doesn't log pages
 537248 IJS driver mis-handles -r option
-
-The following critical bug has been reported against all 4.2 releases
-to date and is believed to be unresolved in this release.  It is
-possible that the fix for bug 525779 has partially solved this.  The
-symptoms are that prints to Windows shared printers are incomplete:
-the bottom of the last page will not be printed.  There is no known
-workaround for this issue.
-
-510185 Incomplete print using CUPS->Samba
 
 
 Gimp-Print 4.2.1-pre3 contains the following major changes and fixes
