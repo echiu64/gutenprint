@@ -29,6 +29,7 @@ include $(top_srcdir)/scripts/global.mk
 ## Variables
 
 DISTDIRS = foomatic-templates-ijs
+INCLUDES = $(GIMPPRINT_CFLAGS)
 
 if BUILD_FOOMATIC_3
 BUILD_FOOMATIC = 1

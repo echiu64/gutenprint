@@ -33,6 +33,7 @@
 #include <gimp-print/gimp-print.h>
 #include <gimp-print/gimp-print-intl-internal.h>
 #include "gimp-print-internal.h"
+#include "xml.h"
 #include "module.h"
 #include <stdio.h>
 #include <string.h>
@@ -1447,31 +1448,49 @@ static const pcl_cap_t pcl_model_capabilities[] =
 
 
 static const char standard_sat_adjustment[] =
-"STP_CURVE;Wrap ;Linear ; 48;0;0.0;4.0:"
-"1.00;1.10;1.20;1.30;1.40;1.50;1.60;1.70;"  /* C */
-"1.80;1.90;1.90;1.90;1.70;1.50;1.30;1.10;"  /* B */
-"1.00;1.00;1.00;1.00;1.00;1.00;1.00;1.00;"  /* M */
-"1.00;1.00;1.00;1.00;1.00;1.00;1.00;1.00;"  /* R */
-"1.00;1.00;1.00;1.10;1.20;1.30;1.40;1.50;"  /* Y */
-"1.50;1.40;1.30;1.20;1.10;1.00;1.00;1.00;"; /* G */
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+"1.00 1.10 1.20 1.30 1.40 1.50 1.60 1.70 "  /* C */
+"1.80 1.90 1.90 1.90 1.70 1.50 1.30 1.10 "  /* B */
+"1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* M */
+"1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* R */
+"1.00 1.00 1.00 1.10 1.20 1.30 1.40 1.50 "  /* Y */
+"1.50 1.40 1.30 1.20 1.10 1.00 1.00 1.00 "  /* G */
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
 
 static const char standard_lum_adjustment[] =
-"STP_CURVE;Wrap ;Linear ; 48;0;0.0;4.0:"
-"0.50;0.60;0.70;0.80;0.90;0.86;0.82;0.79;"  /* C */
-"0.78;0.80;0.83;0.87;0.90;0.95;1.05;1.15;"  /* B */
-"1.30;1.25;1.20;1.15;1.12;1.09;1.06;1.03;"  /* M */
-"1.00;1.00;1.00;1.00;1.00;1.00;1.00;1.00;"  /* R */
-"1.00;0.90;0.80;0.70;0.65;0.60;0.55;0.52;"  /* Y */
-"0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;"; /* G */
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+"0.50 0.60 0.70 0.80 0.90 0.86 0.82 0.79 "  /* C */
+"0.78 0.80 0.83 0.87 0.90 0.95 1.05 1.15 "  /* B */
+"1.30 1.25 1.20 1.15 1.12 1.09 1.06 1.03 "  /* M */
+"1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* R */
+"1.00 0.90 0.80 0.70 0.65 0.60 0.55 0.52 "  /* Y */
+"0.48 0.47 0.47 0.49 0.49 0.49 0.52 0.51 "  /* G */
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
 
 static const char standard_hue_adjustment[] =
-"STP_CURVE;Wrap ;Linear ; 48;0;-6.0;6.0:"
-"0.00;0.05;0.04;0.01;-.03;-.10;-.18;-.26;"  /* C */
-"-.35;-.43;-.40;-.32;-.25;-.18;-.10;-.07;"  /* B */
-"0.00;-.04;-.09;-.13;-.18;-.23;-.27;-.31;"  /* M */
-"-.35;-.38;-.30;-.23;-.15;-.08;0.00;-.02;"  /* R */
-"0.00;0.08;0.10;0.08;0.05;0.03;-.03;-.12;"  /* Y */
-"-.20;0.17;-.20;-.17;-.15;-.12;-.10;-.08;"; /* G */
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
+"0.00 0.05 0.04 0.01 -.03 -.10 -.18 -.26 "  /* C */
+"-.35 -.43 -.40 -.32 -.25 -.18 -.10 -.07 "  /* B */
+"0.00 -.04 -.09 -.13 -.18 -.23 -.27 -.31 "  /* M */
+"-.35 -.38 -.30 -.23 -.15 -.08 0.00 -.02 "  /* R */
+"0.00 0.08 0.10 0.08 0.05 0.03 -.03 -.12 "  /* Y */
+"-.20 0.17 -.20 -.17 -.15 -.12 -.10 -.08 "  /* G */
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
 
 static const stp_parameter_t the_parameters[] =
 {
@@ -2603,13 +2622,13 @@ pcl_do_print(const stp_vars_t v, stp_image_t *image)
 
   if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE))
     {
-      hue_adjustment = stp_curve_create_read_string(standard_hue_adjustment);
+      hue_adjustment = stp_curve_create_from_string(standard_hue_adjustment);
       stp_set_curve_parameter(v, "HueMap", hue_adjustment);
       stp_curve_free(hue_adjustment);
     }
   if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE))
     {
-      lum_adjustment = stp_curve_create_read_string(standard_lum_adjustment);
+      lum_adjustment = stp_curve_create_from_string(standard_lum_adjustment);
       stp_curve_free(lum_adjustment);
     }
   if (output_type == OUTPUT_COLOR && black)

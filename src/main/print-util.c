@@ -608,7 +608,7 @@ stp_init(void)
       if (stpi_module_load())
 	return 1;
       /* Load XML data */
-      if (stpi_xml_init())
+      if (stpi_xml_init_defaults())
 	return 1;
       /* Initialise modules */
       if (stpi_module_init())
@@ -651,7 +651,7 @@ stpi_strdup(const char *s)
   if (!s)
     {
       ret = stpi_malloc(1);
-      ret[0] = 0;
+      ret[0] = '\0';
       return ret;
     }
   else
@@ -676,9 +676,9 @@ stpi_read_and_compose_curves(const char *s1, const char *s2,
   stp_curve_t t1 = NULL;
   stp_curve_t t2 = NULL;
   if (s1)
-    t1 = stp_curve_create_read_string(s1);
+    t1 = stp_curve_create_from_string(s1);
   if (s2)
-    t2 = stp_curve_create_read_string(s2);
+    t2 = stp_curve_create_from_string(s2);
   if (t1 && t2)
     stp_curve_compose(&ret, t1, t2, comp, -1);
   if (ret)

@@ -40,6 +40,7 @@
 #include <signal.h>
 #include <sys/wait.h>
 
+
 static int	compare_printers (stpui_plist_t *p1, stpui_plist_t *p2);
 
 int		stpui_plist_current = 0,	/* Current system printer */
@@ -640,7 +641,7 @@ stpui_printrc_load_v1(FILE *fp)
 	      stp_set_boolean_parameter(key.v, keyword, atoi(value));
 	      break;
 	    case STP_PARAMETER_TYPE_CURVE:
-	      curve = stp_curve_create_read_string(value);
+	      curve = stp_curve_create_from_string(value);
 	      if (curve)
 		{
 		  stp_set_curve_parameter(key.v, keyword, curve);
@@ -871,7 +872,7 @@ stpui_printrc_save(void)
 				    (p->v, param->name) ==
 				    STP_PARAMETER_ACTIVE) ?
 				   "True" : "False"));
-			  stp_curve_print(fp, curve);
+			  stp_curve_write(fp, curve);
 			  fprintf(fp, "\"\n");
 			}
 		    }

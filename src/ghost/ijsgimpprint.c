@@ -43,7 +43,9 @@
 #include <gimp-print/gimp-print-intl-internal.h>
 #include <glib.h>
 
+
 static int stp_debug = 0;
+volatile int SDEBUG = 1;
 
 #define STP_DEBUG(x) do { if (stp_debug || getenv("STP_DEBUG")) x; } while (0)
 
@@ -102,6 +104,8 @@ image_init(IMAGE *img, IjsPageHeader *ph)
 
   img->row = -1;
   img->row_width = (ph->n_chan * ph->bps * ph->width + 7) >> 3;
+  if (img->row_buf)
+    free(img->row_buf);
   img->row_buf = (char *)malloc(img->row_width);
   STP_DEBUG(fprintf(stderr, "image_init\n"));
   STP_DEBUG(fprintf(stderr,
@@ -632,7 +636,7 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  stp_set_file_parameter(img->v, key, vbuf);
 	  break;
 	case STP_PARAMETER_TYPE_CURVE:
-	  curve = stp_curve_create_read_string(vbuf);
+	  curve = stp_curve_create_from_string(vbuf);
 	  if (curve)
 	    stp_set_curve_parameter(img->v, key, curve);
 	  stp_curve_free(curve);
@@ -877,6 +881,10 @@ main (int argc, char **argv)
   int l, t, r, b, w, h;
   int width, height;
 
+  if (getenv("STP_DEBUG_STARTUP"))
+    while (SDEBUG)
+      ;
+    
   memset(&img, 0, sizeof(img));
 
   img.ctx = ijs_server_init();

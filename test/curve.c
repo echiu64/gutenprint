@@ -34,6 +34,31 @@
 #include <gimp-print/gimp-print.h>
 #endif
 
+
+int global_test_count = 0;
+int global_error_count = 0;
+int verbose = 0;
+
+static void
+TEST(const char *name)
+{
+  global_test_count++;
+  printf("%d: Checking %s... ", global_test_count, name);
+}
+
+static void
+TEST_PASS(void)
+{
+  fprintf(stdout, "PASS\n");
+}
+
+static void
+TEST_FAIL(void)
+{
+  global_error_count++;
+  fprintf(stdout, "FAIL\n");
+}
+
 static const double standard_sat_adjustment[] =
 {
   0.50, 0.6,  0.7,  0.8,  0.9,  0.86, 0.82, 0.79, /* C */
@@ -46,257 +71,437 @@ static const double standard_sat_adjustment[] =
 
 const char *good_curves[] =
   {
-    "STP_CURVE;Wrap ;Linear ;48;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE; Wrap  ; Linear  ; 48 ; 0 ; 0 ; 4:0.5 ; 0.6 ; 0.7 ; 0.8 ; 0.9 ; 0.86 ; 0.82 ; 0.79 ; 0.78 ; 0.8 ; 0.83 ; 0.87 ; 0.9 ; 0.95 ; 1.05 ; 1.15 ; 1.3 ; 1.25 ; 1.2 ; 1.15 ; 1.12 ; 1.09 ; 1.06 ; 1.03 ; 1 ; 1 ; 1 ; 1 ; 1 ; 1 ; 1 ; 1 ; 1 ; 0.9 ; 0.8 ; 0.7 ; 0.65 ; 0.6 ; 0.55 ; 0.52 ; 0.48 ; 0.47 ; 0.47 ; 0.49 ; 0.49 ; 0.49 ; 0.52 ; 0.51 ; ",
-    "STP_CURVE;Nowrap ;Linear ;48;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE;Nowrap ;Linear ;48;1.0;0;4:",
-    "STP_CURVE;Nowrap ;Linear ;2;1.0;0;4:",
+    /* Space separated, in same layout as output for comparison */
+    "<?xml version=\"1.0\"?>\n"
+    "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+    "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+    "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+    "0.5 0.6 0.7 0.8 0.9 0.86 0.82 0.79 0.78 0.8 0.83 0.87\n"
+    "0.9 0.95 1.05 1.15 1.3 1.25 1.2 1.15 1.12 1.09 1.06 1.03\n"
+    "1 1 1 1 1 1 1 1 1 0.9 0.8 0.7\n"
+    "0.65 0.6 0.55 0.52 0.48 0.47 0.47 0.49 0.49 0.49 0.52 0.51\n"
+    "</sequence>\n"
+    "</curve>\n"
+    "</gimp-print>\n",
+    /* Gamma curve 1 */
+    "<?xml version=\"1.0\"?>\n"
+    "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+    "<curve wrap=\"nowrap\" type=\"linear\" gamma=\"1\">\n"
+    "<sequence count=\"2\" lower-bound=\"0\" upper-bound=\"4\">\n"
+    "0 0\n"
+    "</sequence>\n"
+    "</curve>\n"
+    "</gimp-print>\n",
+    /* Gamma curve 2 */
+    "<?xml version=\"1.0\"?>\n"
+    "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+    "<curve wrap=\"nowrap\" type=\"linear\" gamma=\"1\">\n"
+    "<sequence count=\"2\" lower-bound=\"0\" upper-bound=\"4\">\n"
+    "0 0\n"
+    "</sequence>\n"
+    "</curve>\n"
+    "</gimp-print>\n"
   };
 
 static const int good_curve_count = sizeof(good_curves) / sizeof(const char *);
 
 const char *bad_curves[] =
   {
-    "STP_CURV;Wrap ;Linear ;48;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE;Warp ;Linear ;48;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE;Warp ;Lunatic ;48;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE;Warp ;LunaticLunaticLunaticLunaticLunatic ;48;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE;Wrap ;Linear ;-1;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE;Wrap ;Linear ;0;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE;Wrap ;Linear ;1;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE;Wrap ;Linear ;-1;1.0;0;4:",
-    "STP_CURVE;Wrap ;Linear ;1;1.0;0;4:",
-    "STP_CURVE;Wrap ;Linear ;48;1.0;0;4:",
-    "STP_CURVE;Wrap ;Linear ;0;1.0;0;4:",
+    /* Bad point count */
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+    "<gimp-print><curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+    "<sequence count=\"-1\" lower-bound=\"0\" upper-bound=\"4\">\n"
+    "0.5 0.6 0.7 0.8 0.9 0.86 0.82 0.79 0.78 0.8\n"
+    "0.83 0.87 0.9 0.95 1.05 1.15 1.3 1.25 1.2 1.15\n"
+    "1.12 1.09 1.06 1.03 1 1 1 1 1 1\n"
+    "1 1 1 0.9 0.8 0.7 0.65 0.6 0.55 0.52\n"
+    "0.48 0.47 0.47 0.49 0.49 0.49 0.52 0.51\n"
+    "</sequence></curve></gimp-print>\n",
+    /* Bad point count */
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+    "<gimp-print><curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+    "<sequence count=\"200\" lower-bound=\"0\" upper-bound=\"4\">\n"
+    "0.5 0.6 0.7 0.8 0.9 0.86 0.82 0.79 0.78 0.8\n"
+    "0.83 0.87 0.9 0.95 1.05 1.15 1.3 1.25 1.2 1.15\n"
+    "1.12 1.09 1.06 1.03 1 1 1 1 1 1\n"
+    "1 1 1 0.9 0.8 0.7 0.65 0.6 0.55 0.52\n"
+    "0.48 0.47 0.47 0.49 0.49 0.49 0.52 0.51\n"
+    "</sequence></curve></gimp-print>\n",
+    /* Gamma curves */
+    /* Incorrect wrap mode */
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+    "<gimp-print><curve wrap=\"wrap\" type=\"linear\" gamma=\"1.0\">\n"
+    "<sequence count=\"-1\" lower-bound=\"0\" upper-bound=\"4\">\n"
+    "</sequence></curve></gimp-print>\n",
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+    "<gimp-print><curve wrap=\"wrap\" type=\"linear\" gamma=\"1.0\">\n"
+    "<sequence count=\"1\" lower-bound=\"0\" upper-bound=\"4\">\n"
+    "</sequence></curve></gimp-print>\n",
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+    "<gimp-print><curve wrap=\"wrap\" type=\"linear\" gamma=\"1.0\">\n"
+    "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+    "</sequence></curve></gimp-print>\n",
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+    "<gimp-print><curve wrap=\"wrap\" type=\"linear\" gamma=\"1.0\">\n"
+    "<sequence count=\"0\" lower-bound=\"0\" upper-bound=\"4\">\n"
+    "</sequence></curve></gimp-print>\n"
   };
-
-const char *linear_curve_1 = "STP_CURVE;Nowrap ;Linear ;6;0;0;1:0;0;0;1;1;1;";
-const char *linear_curve_2 = "STP_CURVE;Wrap ;Linear ;6;0;0;1:0;0;0;1;1;1;";
-const char *spline_curve_1 = "STP_CURVE;Nowrap ;Spline ;6;0;0;1:0;0;0;1;1;1;";
-const char *spline_curve_2 = "STP_CURVE;Wrap ;Spline ;6;0;0;1:0;0;0;1;1;1;";
-
 
 static const int bad_curve_count = sizeof(bad_curves) / sizeof(const char *);
 
-int global_error_count = 0;
+const char *linear_curve_1 =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print><curve wrap=\"nowrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"6\" lower-bound=\"0\" upper-bound=\"1\">\n"
+"0 0 0 1 1 1"
+"</sequence></curve></gimp-print>";
+
+const char *linear_curve_2 =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print><curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"6\" lower-bound=\"0\" upper-bound=\"1\">\n"
+"0 0 0 1 1 1"
+"</sequence></curve></gimp-print>";
+
+const char *spline_curve_1 =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print><curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
+"<sequence count=\"6\" lower-bound=\"0\" upper-bound=\"1\">\n"
+"0 0 0 1 1 1"
+"</sequence></curve></gimp-print>";
+
+const char *spline_curve_2 =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print><curve wrap=\"wrap\" type=\"spline\" gamma=\"0\">\n"
+"<sequence count=\"6\" lower-bound=\"0\" upper-bound=\"1\">\n"
+"0 0 0 1 1 1"
+"</sequence></curve></gimp-print>";
+
 
 int
 main(int argc, char **argv)
 {
-  char *tmp1, tmp2;
+  xmlChar *tmp;
   int i;
-  stp_curve_t curve1 = stp_curve_create(STP_CURVE_WRAP_AROUND);
-  stp_curve_t curve2 = stp_curve_create(STP_CURVE_WRAP_NONE);
+
+  stp_curve_t curve1;
+  stp_curve_t curve2;
   stp_curve_t curve3;
+
+  stp_init(); /* Why does this cause a segfault? */
+
+  TEST("creation of XML string from curve");
+  curve1 = stp_curve_create(STP_CURVE_WRAP_AROUND);
   stp_curve_set_bounds(curve1, 0.0, 4.0);
   stp_curve_set_data(curve1, 48, standard_sat_adjustment);
-  tmp1 = stp_curve_print_string(curve1);
-  fprintf(stdout, "%s\n\n", tmp1);
-  if (! stp_curve_read_string(tmp1, curve2))
-    {
-      fprintf(stderr, "stp_curve_read_string failed\n");
-      global_error_count++;
-    }
-  free(tmp1);
-  if (stp_curve_resample(curve2, 95) == 0)
-    {
-      fprintf(stderr, "stp_curve_resample failed\n");
-      global_error_count++;
-    }
-  stp_curve_print(stdout, curve2);
+  tmp = stp_curve_write_string(curve1);
   stp_curve_free(curve1);
-  fprintf(stdout, "\n");
+  curve1 = NULL;
+  if (tmp)
+    TEST_PASS();
+  else
+    TEST_FAIL();
+  if (verbose)
+    fprintf(stdout, "%s\n", tmp);
+
+
+  TEST("creation of curve from XML string (stp_curve_create_from_string)");
+  if ((curve2 = stp_curve_create_from_string((const char *) tmp)) == NULL)
+    TEST_FAIL();
+  else
+    TEST_PASS();
+  xmlFree(tmp);
+
+  TEST("stp_curve_resample");
+  if (curve2 != NULL && stp_curve_resample(curve2, 95) == 0)
+    {
+      TEST_FAIL();
+    }
+  else
+    {
+      TEST_PASS();
+      if (verbose)
+	stp_curve_write(stdout, curve2);
+    }
+  if (curve2)
+    {
+      stp_curve_free(curve2);
+      curve2 = NULL;
+    }
+
   for (i = 0; i < bad_curve_count; i++)
     {
-      printf("SHOULD FAIL: %s\n", bad_curves[i]);
-      if (stp_curve_read_string(bad_curves[i], curve2))
+      stp_curve_t bad = NULL;
+      TEST("BAD curve (PASS is an expected failure)");
+      if ((bad = stp_curve_create_from_string(bad_curves[i])) != NULL)
 	{
-	  printf("curve %d should have failed!\n", i);
-	  global_error_count++;
+	  TEST_FAIL();
+	  stp_curve_write(stdout, bad);
+	  fprintf(stdout, "\n");
+	  stp_curve_free(bad);
+	  bad = NULL;
+	}
+      else
+	{
+	  TEST_PASS();
 	}
     }
-  stp_curve_print(stdout, curve2);
-  fprintf(stdout, "\n");
+
   for (i = 0; i < good_curve_count; i++)
     {
-      printf("SHOULD PASS: %s\n", good_curves[i]);
-      if (!stp_curve_read_string(good_curves[i], curve2))
+      if (curve2)
 	{
-	  printf("curve %d should have passed!\n", i);
-	  global_error_count++;
-	  tmp1 = stp_curve_print_string(curve2);
-	  if (strcmp(tmp1, good_curves[i]))
-	    {
-	      printf("curve read/write miscompare\n");
-	      global_error_count++;
-	    }
-	  free(tmp1);
+	  stp_curve_free(curve2);
+	  curve2 = NULL;
 	}
+      TEST("GOOD curve");
+      if ((curve2 = stp_curve_create_from_string(good_curves[i])) != NULL)
+	{
+	  TEST_PASS();
+	  tmp = stp_curve_write_string(curve2);
+	  TEST("whether XML curve is identical to original");
+	  if (tmp && strcmp((const char *) tmp, good_curves[i]))
+	    {
+	      TEST_FAIL();
+	      printf("%s", tmp);
+	    }
+	  else
+	    TEST_PASS();
+	  xmlFree(tmp);
+	}
+      else
+	TEST_FAIL();
     }
-  stp_curve_free(curve2);
-  printf("allocate 1\n");
+  if (curve2)
+    {
+      stp_curve_free(curve2);
+      curve2 = NULL;
+    }
+  if (verbose)
+    printf("Allocate 1\n");
   curve1 = stp_curve_create(STP_CURVE_WRAP_NONE);
-  printf("allocate 2\n");
+  if (verbose)
+    printf("Allocate 2\n");
   curve2 = stp_curve_create(STP_CURVE_WRAP_NONE);
-  printf("set gamma 1\n");
+  TEST("set curve 1 gamma");
   if (!stp_curve_set_gamma(curve1, 1.2))
-    {
-      printf("set_gamma failed!\n");
-      global_error_count++;
-    }
-  stp_curve_print(stdout, curve1);
-  fprintf(stdout, "\n");
-  printf("set gamma 2\n");
+    TEST_FAIL();
+  else
+    TEST_PASS();
+  if (verbose)
+    stp_curve_write(stdout, curve1);
+  TEST("set curve 1 gamma");
   if (!stp_curve_set_gamma(curve2, -1.2))
-    {
-      printf("set_gamma failed!\n");
-      global_error_count++;
-    }
-  stp_curve_print(stdout, curve2);
-  fprintf(stdout, "\n");
-  printf("compose add\n");
+    TEST_FAIL();
+  else
+    TEST_PASS();
+  if (verbose)
+    stp_curve_write(stdout, curve2);
+  TEST("compose add");
   if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_ADD, 64))
-    {
-      printf("add compose failed!\n");
-      global_error_count++;
-    }
+    TEST_FAIL();
   else
-    stp_curve_print(stdout, curve3);
-  fprintf(stdout, "\n");
-  printf("resample 1\n");
+    {
+      TEST_PASS();
+      if (verbose)
+	stp_curve_write(stdout, curve3);
+    }
+  TEST("resample curve 1");
   if (!stp_curve_resample(curve1, 64))
-    {
-      printf("resample failed!\n");
-      global_error_count++;
-    }
+    TEST_FAIL();
   else
-    stp_curve_print(stdout, curve1);
-  fprintf(stdout, "\n");
-  stp_curve_free(curve3);
-  printf("compose multiply\n");
+    {
+      TEST_PASS();
+      if (verbose)
+	stp_curve_write(stdout, curve1);
+    }
+  /*  if (curve3)
+    {
+      stp_curve_free(curve3);
+      curve3 = NULL;
+      }*/
+  TEST("compose multiply");
   if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_MULTIPLY, 64))
-    {
-      printf("multiply compose failed!\n");
-      global_error_count++;
-    }
+    TEST_FAIL();
   else
-    stp_curve_print(stdout, curve3);
-  fprintf(stdout, "\n");
-  stp_curve_free(curve3);
+    {
+      TEST_PASS();
+      if (verbose)
+	stp_curve_write(stdout, curve3);
+    }
+  /*  if (curve3)
+      stp_curve_free(curve3);
+      curve3 = NULL; */
+  if (verbose)
+    stp_curve_write(stdout, curve2);
 
-  stp_curve_print(stdout, curve2);
-  fprintf(stdout, "\n");
-
+  TEST("multiply rescale");
   if (!stp_curve_rescale(curve2, -1, STP_CURVE_COMPOSE_MULTIPLY,
 			 STP_CURVE_BOUNDS_RESCALE))
-    {
-      printf("multiply rescale failed!\n");
-      global_error_count++;
-    }
+    TEST_FAIL();
   else
-    stp_curve_print(stdout, curve2);
-  fprintf(stdout, "\n");
+    {
+      TEST_PASS();
+      if(verbose)
+	stp_curve_write(stdout, curve2);
+    }
+  TEST("subtract compose");
   if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_ADD, 64))
-    {
-      printf("subtract compose failed!\n");
-      global_error_count++;
-    }
+    TEST_FAIL();
   else
-    stp_curve_print(stdout, curve3);
-  fprintf(stdout, "\n");
-  stp_curve_free(curve3);
-  stp_curve_free(curve1);
-  stp_curve_free(curve2);
+    {
+      TEST_PASS();
+      if (verbose)
+	stp_curve_write(stdout, curve3);
+    }
+
+  /*  if (curve3)
+    {
+      stp_curve_free(curve3);
+      curve3 = NULL;
+      }*/
+  if (curve1)
+    {
+      stp_curve_free(curve1);
+      curve1 = NULL;
+    }
+  if (curve2)
+    {
+      stp_curve_free(curve2);
+      curve2 = NULL;
+    }
 
   curve1 = stp_curve_create(STP_CURVE_WRAP_NONE);
   curve2 = stp_curve_create(STP_CURVE_WRAP_AROUND);
-  if (!stp_curve_read_string(spline_curve_1, curve1))
+  TEST("spline curve 1 creation");
+  if ((curve1 =stp_curve_create_from_string(spline_curve_1)) == NULL)
+    TEST_FAIL();
+  else
+    TEST_PASS();
+  TEST("spline curve 2 creation");
+  if ((curve2 = stp_curve_create_from_string(spline_curve_2)) == NULL)
+    TEST_FAIL();
+  else
+    TEST_PASS();
+  if (curve1)
     {
-      fprintf(stderr, "stp_curve_read_string failed\n");
-      global_error_count++;
+      if (verbose)
+	stp_curve_write(stdout, curve1);
+      TEST("spline curve 1 resample 1");
+      if (stp_curve_resample(curve1, 41) == 0)
+	TEST_FAIL();
+      else
+	{
+	  TEST_PASS();
+	  if (verbose)
+	    stp_curve_write(stdout, curve1);
+	}
+      TEST("spline curve 1 resample 2");
+      if (stp_curve_resample(curve1, 83) == 0)
+	TEST_FAIL();
+      else
+	{
+	  TEST_PASS();
+	  if (verbose)
+	    stp_curve_write(stdout, curve1);
+	}
     }
-  if (!stp_curve_read_string(spline_curve_2, curve2))
+  if (curve2)
     {
-      fprintf(stderr, "stp_curve_read_string failed\n");
-      global_error_count++;
+      if (verbose)
+	stp_curve_write(stdout, curve2);
+      TEST("spline curve 2 resample");
+      if (stp_curve_resample(curve2, 48) == 0)
+	TEST_FAIL();
+      else
+	{
+	  TEST_PASS();
+	  if (verbose)
+	    stp_curve_write(stdout, curve2);
+	}
     }
-  stp_curve_print(stdout, curve1);
-  fprintf(stdout, "\n");
-  if (stp_curve_resample(curve1, 41) == 0)
+  TEST("compose add (PASS is an expected failure)");
+  if (curve1 && curve2 &&
+      stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_MULTIPLY, -1))
     {
-      fprintf(stderr, "stp_curve_resample failed\n");
-      global_error_count++;
-    }
-  stp_curve_print(stdout, curve1);
-  fprintf(stdout, "\n");
-  if (stp_curve_resample(curve1, 83) == 0)
-    {
-      fprintf(stderr, "stp_curve_resample failed\n");
-      global_error_count++;
-    }
-  stp_curve_print(stdout, curve1);
-  fprintf(stdout, "\n");
-  stp_curve_print(stdout, curve2);
-  fprintf(stdout, "\n");
-  if (stp_curve_resample(curve2, 48) == 0)
-    {
-      fprintf(stderr, "stp_curve_resample failed\n");
-      global_error_count++;
-    }
-  stp_curve_print(stdout, curve2);
-  fprintf(stdout, "\n");
-  printf("compose add (should fail)\n");
-  if (stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_MULTIPLY, -1))
-    {
+      TEST_FAIL();
       printf("compose with different wrap mode should fail!\n");
-      global_error_count++;
     }
-  if (!stp_curve_read_string(linear_curve_1, curve1))
+  else
+    TEST_PASS();
+
+  TEST("linear curve 1 creation");
+  if ((curve1 = stp_curve_create_from_string(linear_curve_1)) == NULL)
+    TEST_FAIL();
+  else
+    TEST_PASS();
+  TEST("linear curve 2 creation");
+  if ((curve2 = stp_curve_create_from_string(linear_curve_2)) == NULL)
+    TEST_FAIL();
+  else
+    TEST_PASS();
+  if (curve1)
     {
-      fprintf(stderr, "stp_curve_read_string failed\n");
-      global_error_count++;
+      if (verbose)
+	stp_curve_write(stdout, curve1);
+      TEST("linear curve 1 resample");
+      if (stp_curve_resample(curve1, 41) == 0)
+	TEST_FAIL();
+      else
+	{
+	  TEST_PASS();
+	  if (verbose)
+	    stp_curve_write(stdout, curve1);
+	}
+      stp_curve_free(curve1);
+      curve1 = NULL;
     }
-  if (!stp_curve_read_string(linear_curve_2, curve2))
+  if (curve2)
     {
-      fprintf(stderr, "stp_curve_read_string failed\n");
-      global_error_count++;
+      if (verbose)
+	stp_curve_write(stdout, curve2);
+      TEST("linear curve 2 resample");
+      if (stp_curve_resample(curve2, 48) == 0)
+	TEST_FAIL();
+      else
+	{
+	  TEST_PASS();
+	  if (verbose)
+	    stp_curve_write(stdout, curve2);
+	}
+      stp_curve_free(curve2);
+      curve2 = NULL;
     }
-  stp_curve_print(stdout, curve1);
-  fprintf(stdout, "\n");
-  if (stp_curve_resample(curve1, 41) == 0)
-    {
-      fprintf(stderr, "stp_curve_resample failed\n");
-      global_error_count++;
-    }
-  stp_curve_print(stdout, curve1);
-  fprintf(stdout, "\n");
-  stp_curve_print(stdout, curve2);
-  fprintf(stdout, "\n");
-  if (stp_curve_resample(curve2, 48) == 0)
-    {
-      fprintf(stderr, "stp_curve_resample failed\n");
-      global_error_count++;
-    }
-  stp_curve_print(stdout, curve2);
-  fprintf(stdout, "\n");
-  stp_curve_free(curve1);
-  stp_curve_free(curve2);
 
   curve1 = stp_curve_create(STP_CURVE_WRAP_AROUND);
   stp_curve_set_interpolation_type(curve1, STP_CURVE_TYPE_SPLINE);
   stp_curve_set_bounds(curve1, 0.0, 4.0);
   stp_curve_set_data(curve1, 48, standard_sat_adjustment);
-  stp_curve_print(stdout, curve1);
-  fprintf(stdout, "\n");
+  TEST("setting curve data");
+  if (curve1 && (stp_curve_count_points(curve1) == 48))
+    TEST_PASS();
+  else
+    TEST_FAIL();
+  if (verbose)
+    stp_curve_write(stdout, curve1);
+  TEST("curve resample");
   if (stp_curve_resample(curve1, 384) == 0)
+    TEST_FAIL();
+  else
     {
-      fprintf(stderr, "stp_curve_resample failed\n");
-      global_error_count++;
+      TEST_PASS();
+      if (verbose)
+	stp_curve_write(stdout, curve1);
     }
-  stp_curve_print(stdout, curve1);
-  fprintf(stdout, "\n");
-  stp_curve_free(curve1);
+  if (curve1)
+    {
+      stp_curve_free(curve1);
+      curve1 = NULL;
+    }
 
-  printf("%d total errors\n", global_error_count);
+  if (global_error_count)
+    printf("%d/%d tests FAILED.\n", global_error_count, global_test_count);
+  else
+    printf("All tests passed successfully.\n");
   return global_error_count ? 1 : 0;
 }

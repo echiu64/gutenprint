@@ -37,6 +37,8 @@
 #include <limits.h>
 #endif
 #include <string.h>
+#include "curve.h"
+#include "xml.h"
 
 #ifdef __GNUC__
 #define inline __inline__
@@ -1911,16 +1913,50 @@ initialize_standard_curves(void)
   if (!standard_curves_initialized)
     {
       int i;
-      hue_map_bounds = stp_curve_create_read_string
-	("STP_CURVE;Wrap ;Linear ;2;0.0;-6.0;6.0:0;0;");
-      lum_map_bounds = stp_curve_create_read_string
-	("STP_CURVE;Wrap ;Linear ;2;0.0;0.0;4.0:1;1;");
-      sat_map_bounds = stp_curve_create_read_string
-	("STP_CURVE;Wrap ;Linear ;2;0.0;0.0;4.0:1;1;");
-      color_curve_bounds = stp_curve_create_read_string
-	("STP_CURVE;Nowrap ;Linear ;2;1.0;0.0;1.0:");
-      gcr_curve_bounds = stp_curve_create_read_string
-	("STP_CURVE;Nowrap ;Linear ;2;0.0;0.0;1.0:1;1;");
+      hue_map_bounds = stp_curve_create_from_string
+	("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+	 "<gimp-print>\n"
+	 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+	 "<sequence count=\"2\" lower-bound=\"-6\" upper-bound=\"6\">\n"
+	 "0 0\n"
+	 "</sequence>\n"
+	 "</curve>\n"
+	 "</gimp-print>");
+      lum_map_bounds = stp_curve_create_from_string
+	("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+	 "<gimp-print>\n"
+	 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+	 "<sequence count=\"2\" lower-bound=\"0\" upper-bound=\"4\">\n"
+	 "1 1\n"
+	 "</sequence>\n"
+	 "</curve>\n"
+	 "</gimp-print>");
+      sat_map_bounds = stp_curve_create_from_string
+	("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+	 "<gimp-print>\n"
+	 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+	 "<sequence count=\"2\" lower-bound=\"0\" upper-bound=\"4\">\n"
+	 "1 1\n"
+	 "</sequence>\n"
+	 "</curve>\n"
+	 "</gimp-print>");
+      color_curve_bounds = stp_curve_create_from_string
+	("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+	 "<gimp-print>\n"
+	 "<curve wrap=\"nowrap\" type=\"linear\" gamma=\"1.0\">\n"
+	 "<sequence count=\"0\" lower-bound=\"0\" upper-bound=\"1\">\n"
+	 "</sequence>\n"
+	 "</curve>\n"
+	 "</gimp-print>");
+      gcr_curve_bounds = stp_curve_create_from_string
+	("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+	 "<gimp-print>\n"
+	 "<curve wrap=\"nowrap\" type=\"linear\" gamma=\"0.0\">\n"
+	 "<sequence count=\"2\" lower-bound=\"0\" upper-bound=\"1\">\n"
+	 "1 1\n"
+	 "</sequence>\n"
+	 "</curve>\n"
+	 "</gimp-print>");
       for (i = 0; i < curve_parameter_count; i++)
 	curve_parameters[i].param.deflt.curve =
 	 *(curve_parameters[i].defval);

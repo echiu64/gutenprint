@@ -123,6 +123,9 @@ value_freefunc(stpi_list_item_t *item)
     case STP_PARAMETER_TYPE_CURVE:
       stp_curve_free(v->value.cval);
       break;
+    case STP_PARAMETER_TYPE_ARRAY:
+      stp_array_destroy(v->value.cval);
+      break;
     default:
       break;
     }
@@ -152,6 +155,9 @@ value_copy(const stpi_list_item_t *item)
     {
     case STP_PARAMETER_TYPE_CURVE:
       ret->value.cval = stp_curve_create_copy(v->value.cval);
+      break;
+    case STP_PARAMETER_TYPE_ARRAY:
+      ret->value.cval = stp_array_create_copy(v->value.cval);
       break;
     case STP_PARAMETER_TYPE_STRING_LIST:
     case STP_PARAMETER_TYPE_FILE:
@@ -670,6 +676,83 @@ stp_get_curve_parameter(const stp_vars_t v, const char *parameter)
 }
 
 void
+stp_set_array_parameter(stp_vars_t v, const char *parameter,
+			const stp_array_t array)
+{
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_ARRAY];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
+  if (array)
+    {
+      value_t *val;
+      if (item)
+	{
+	  val = (value_t *) stpi_list_item_get_data(item);
+	  if (val->active == STP_PARAMETER_DEFAULTED)
+	    val->active = STP_PARAMETER_ACTIVE;
+	  stp_array_destroy(val->value.cval);
+	}
+      else
+	{
+	  val = stpi_malloc(sizeof(value_t));
+	  val->name = stpi_strdup(parameter);
+	  val->typ = STP_PARAMETER_TYPE_ARRAY;
+	  val->active = STP_PARAMETER_ACTIVE;
+	  stpi_list_item_create(list, NULL, val);
+	}
+      val->value.cval = stp_array_create_copy(array);
+    }
+  else if (item)
+    stpi_list_item_destroy(list, item);
+  stpi_set_verified(v, 0);
+}
+
+void
+stp_set_default_array_parameter(stp_vars_t v, const char *parameter,
+				const stp_array_t array)
+{
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_ARRAY];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
+  if (!item)
+    {
+      if (array)
+	{
+	  value_t *val;
+	  val = stpi_malloc(sizeof(value_t));
+	  val->name = stpi_strdup(parameter);
+	  val->typ = STP_PARAMETER_TYPE_ARRAY;
+	  val->active = STP_PARAMETER_DEFAULTED;
+	  stpi_list_item_create(list, NULL, val);
+	  val->value.cval = stp_array_create_copy(array);
+	}
+    }
+  stpi_set_verified(v, 0);
+}
+
+void
+stp_clear_array_parameter(stp_vars_t v, const char *parameter)
+{
+  stp_set_array_parameter(v, parameter, NULL);
+}
+
+const stp_array_t
+stp_get_array_parameter(const stp_vars_t v, const char *parameter)
+{
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_ARRAY];
+  value_t *val;
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
+  if (item)
+    {
+      val = (value_t *) stpi_list_item_get_data(item);
+      return val->value.cval;
+    }
+  else
+    return NULL;
+}
+
+void
 stp_set_int_parameter(stp_vars_t v, const char *parameter, int ival)
 {
   stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
@@ -977,6 +1060,7 @@ CHECK_FUNCTION(float, STP_PARAMETER_TYPE_DOUBLE)
 CHECK_FUNCTION(int, STP_PARAMETER_TYPE_INT)
 CHECK_FUNCTION(boolean, STP_PARAMETER_TYPE_BOOLEAN)
 CHECK_FUNCTION(curve, STP_PARAMETER_TYPE_CURVE)
+CHECK_FUNCTION(array, STP_PARAMETER_TYPE_ARRAY)
 CHECK_FUNCTION(raw, STP_PARAMETER_TYPE_RAW)
 
 static stp_parameter_activity_t
@@ -1005,6 +1089,7 @@ GET_PARAMETER_ACTIVE_FUNCTION(float, STP_PARAMETER_TYPE_DOUBLE)
 GET_PARAMETER_ACTIVE_FUNCTION(int, STP_PARAMETER_TYPE_INT)
 GET_PARAMETER_ACTIVE_FUNCTION(boolean, STP_PARAMETER_TYPE_BOOLEAN)
 GET_PARAMETER_ACTIVE_FUNCTION(curve, STP_PARAMETER_TYPE_CURVE)
+GET_PARAMETER_ACTIVE_FUNCTION(array, STP_PARAMETER_TYPE_ARRAY)
 GET_PARAMETER_ACTIVE_FUNCTION(raw, STP_PARAMETER_TYPE_RAW)
 
 static void
@@ -1034,6 +1119,7 @@ SET_PARAMETER_ACTIVE_FUNCTION(float, STP_PARAMETER_TYPE_DOUBLE)
 SET_PARAMETER_ACTIVE_FUNCTION(int, STP_PARAMETER_TYPE_INT)
 SET_PARAMETER_ACTIVE_FUNCTION(boolean, STP_PARAMETER_TYPE_BOOLEAN)
 SET_PARAMETER_ACTIVE_FUNCTION(curve, STP_PARAMETER_TYPE_CURVE)
+SET_PARAMETER_ACTIVE_FUNCTION(array, STP_PARAMETER_TYPE_ARRAY)
 SET_PARAMETER_ACTIVE_FUNCTION(raw, STP_PARAMETER_TYPE_RAW)
 
 void
@@ -1203,6 +1289,9 @@ stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p)
 	    case STP_PARAMETER_TYPE_CURVE:
 	      stp_set_curve_parameter(v, p->name, desc.deflt.curve);
 	      break;
+	    case STP_PARAMETER_TYPE_ARRAY:
+	      stp_set_array_parameter(v, p->name, desc.deflt.array);
+	      break;
 	    default:
 	      break;
 	    }
@@ -1292,6 +1381,11 @@ stp_parameter_description_free(stp_parameter_t *desc)
       if (desc->bounds.curve)
 	stp_curve_free(desc->bounds.curve);
       desc->bounds.curve = NULL;
+      break;
+    case STP_PARAMETER_TYPE_ARRAY:
+      if (desc->bounds.array)
+	stp_array_destroy(desc->bounds.array);
+      desc->bounds.array = NULL;
       break;
     case STP_PARAMETER_TYPE_STRING_LIST:
       if (desc->bounds.str)

@@ -28,7 +28,7 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
-INCLUDES = -I$(top_srcdir)/src/main
+INCLUDES = -I$(top_srcdir)/src/main $(GIMPPRINT_CFLAGS)
 
 TESTS = curve run-testdither run-weavetest
 
@@ -36,7 +36,7 @@ TESTS = curve run-testdither run-weavetest
 ## Programs
 
 if BUILD_TEST
-noinst_PROGRAMS = testdither escp2-weavetest unprint pcl-unprint bjc-unprint curve
+noinst_PROGRAMS = testdither escp2-weavetest unprint pcl-unprint bjc-unprint curve xml-curve
 endif
 
 escp2_weavetest_SOURCES = escp2-weavetest.c
@@ -57,6 +57,8 @@ bjc_unprint_LDADD = $(LIBPRINTUT)
 testdither_SOURCES = testdither.c
 testdither_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
 
+xml_curve_SOURCES = xml-curve.c
+xml_curve_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
 
 ## Rules
 

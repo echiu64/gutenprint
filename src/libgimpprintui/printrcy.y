@@ -215,7 +215,7 @@ Boolean_Param: tWORD pBOOLEAN tBOOLEAN tBOOLEAN
 
 Curve_Param: tWORD pCURVE tBOOLEAN tSTRING
 	{
-	  stp_curve_t curve = stp_curve_create_read_string($4);
+	  stp_curve_t curve = stp_curve_create_from_string($4);
 	  if (curve)
 	    {
 	      stp_set_curve_parameter(current_printer->v, $1, curve);

@@ -28,6 +28,7 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
+INCLUDES = $(GIMPPRINT_CFLAGS)
 PACKAGE = cups
 
 bindir = @cups_bindir@

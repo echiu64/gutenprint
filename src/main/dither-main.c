@@ -36,6 +36,8 @@
 #endif
 #include <math.h>
 #include <string.h>
+#include "array.h"
+#include "sequence.h"
 #include "dither-impl.h"
 
 static const stpi_dither_algorithm_t dither_algos[] =
@@ -313,23 +315,24 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
       else
 	stpi_dither_set_iterated_matrix(v, 2, DITHER_FAST_STEPS, sq2, 0, 2, 4);
     }
-  else if (stp_check_curve_parameter(v, "DitherMatrix",
+  else if (stp_check_array_parameter(v, "DitherMatrix",
 				     STP_PARAMETER_ACTIVE) &&
-	   (stpi_dither_matrix_validate_curve
-	    (stp_get_curve_parameter(v, "DitherMatrix"))))
+	   (stpi_dither_matrix_validate_array
+	    (stp_get_array_parameter(v, "DitherMatrix"))))
     {
-      stpi_dither_set_matrix_from_curve
-	(v, stp_get_curve_parameter(v, "DitherMatrix"), 0);
+      stpi_dither_set_matrix_from_dither_array
+	(v, stp_get_array_parameter(v, "DitherMatrix"), 0);
     }
   else
     {
-      stp_curve_t the_curve =
-	stpi_find_standard_dither_matrix(d->y_aspect, d->x_aspect);
-      int transposed = d->y_aspect < d->x_aspect ? 1 : 0;
-      if (the_curve)
+      stp_array_t array;
+      int transposed;
+	array = stpi_find_standard_dither_array(d->y_aspect, d->x_aspect);
+      transposed = d->y_aspect < d->x_aspect ? 1 : 0;
+      if (array)
 	{
-	  stpi_dither_set_matrix_from_curve(v, the_curve, transposed);
-	  stp_curve_free(the_curve);
+	  stpi_dither_set_matrix_from_dither_array(v, array, transposed);
+	  stp_array_destroy(array);
 	}
       else
 	{

@@ -41,6 +41,22 @@ extern "C" {
 #include <config.h>
 #endif
 
+
+typedef struct
+{
+  char *name;
+  char *text;
+  char *comment;
+  unsigned width;
+  unsigned height;
+  unsigned top;
+  unsigned left;
+  unsigned bottom;
+  unsigned right;
+  stp_papersize_unit_t paper_unit;
+} stpi_internal_papersize_t;
+
+
 extern int stpi_paper_list_init(void);
 
 extern int stpi_paper_create(stp_papersize_t *pt);

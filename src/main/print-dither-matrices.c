@@ -31,63 +31,18 @@
 #include "gimp-print-internal.h"
 #include <math.h>
 #include <string.h>
-#include "path.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "array.h"
 #include "dither-impl.h"
+#include "path.h"
+#include "sequence.h"
+#include "xml.h"
 
 #ifdef __GNUC__
 #define inline __inline__
 #endif
 
-static stp_curve_t
-read_matrix_from_file(const char *pathname)
-{
-  stp_curve_t the_curve;
-  FILE *fp = fopen(pathname, "r");
-  if (!fp)
-    return NULL;
-  the_curve = stp_curve_create_read(fp);
-  (void) fclose(fp);
-  if (!the_curve)
-    return NULL;
-  if (stpi_dither_matrix_validate_curve(the_curve))
-    return the_curve;
-  else
-    {
-      stp_curve_free(the_curve);
-      return NULL;
-    }
-}
-
-static stp_curve_t
-try_file(const char *name, stpi_list_t *file_list)
-{
-  stpi_list_item_t *item = stpi_list_get_start(file_list);
-  while (item)
-    {
-      const char *pathname = stpi_list_item_get_data(item);
-      if (pathname)
-	{
-	  const char *filename = rindex(pathname, '/');
-	  if (!filename)
-	    filename = pathname;
-	  else
-	    filename++;
-	  if (strcmp(name, filename) == 0)
-	    {
-	      stp_curve_t answer = read_matrix_from_file(pathname);
-	      if (answer)
-		{
-		  stpi_list_destroy(file_list); /* WATCH OUT! */
-		  return answer;
-		}
-	    }
-	}
-      item = stpi_list_item_next(item);
-    }
-  return NULL;
-}
 
 static unsigned
 gcd(unsigned a, unsigned b)
@@ -109,54 +64,37 @@ gcd(unsigned a, unsigned b)
     }
 }
 
-stp_curve_t
-stpi_find_standard_dither_matrix(int x_aspect, int y_aspect)
+stp_array_t
+stpi_find_standard_dither_array(int x_aspect, int y_aspect)
 {
-  stpi_list_t *dir_list;                   /* List of directories to scan */
-  stpi_list_t *file_list;                  /* List of files to load */
-  stp_curve_t answer;
+  stp_array_t answer;
   int divisor = gcd(x_aspect, y_aspect);
-  char filename[64];
 
-  if (!(dir_list = stpi_list_create()))
-    return NULL;
   x_aspect /= divisor;
   y_aspect /= divisor;
-  stpi_list_set_freefunc(dir_list, stpi_list_node_free_data);
-  stpi_path_split(dir_list, getenv("STP_DATA_PATH"));
-  stpi_path_split(dir_list, PKGMISCDATADIR);
-  file_list = stpi_path_search(dir_list, ".mat");
-  stpi_list_destroy(dir_list);
-  (void) snprintf(filename, 64, "%dx%d.mat", x_aspect, y_aspect);
-  answer = try_file(filename, file_list);
+
+  answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
   if (answer)
     return answer;
-  (void) snprintf(filename, 64, "%dx%d.mat", y_aspect, x_aspect);
-  answer = try_file(filename, file_list);
+  answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
   if (answer)
     return answer;
-  (void) snprintf(filename, 64, "%dx%d.mat", x_aspect + 1, y_aspect);
-  answer = try_file(filename, file_list);
+  answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
   if (answer)
     return answer;
-  (void) snprintf(filename, 64, "%dx%d.mat", y_aspect + 1, x_aspect);
-  answer = try_file(filename, file_list);
+  answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
   if (answer)
     return answer;
-  (void) snprintf(filename, 64, "%dx%d.mat", x_aspect - 1, y_aspect);
-  answer = try_file(filename, file_list);
+  answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
   if (answer)
     return answer;
-  (void) snprintf(filename, 64, "%dx%d.mat", y_aspect - 1, x_aspect);
-  answer = try_file(filename, file_list);
+  answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
   if (answer)
     return answer;
-  (void) snprintf(filename, 64, "%dx%d.mat", x_aspect - 1, y_aspect - 1);
-  answer = try_file(filename, file_list);
+  answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
   if (answer)
     return answer;
-  (void) snprintf(filename, 64, "%dx%d.mat", y_aspect - 1, x_aspect - 1);
-  answer = try_file(filename, file_list);
+  answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
   if (answer)
     return answer;
   return NULL;
@@ -249,43 +187,47 @@ stpi_dither_matrix_shear(dither_matrix_t *mat, int x_shear, int y_shear)
 }
 
 int
-stpi_dither_matrix_validate_curve(const stp_curve_t curve)
+stpi_dither_matrix_validate_array(const stp_array_t array)
 {
   double low, high;
-  stp_curve_get_bounds(curve, &low, &high);
+  stp_sequence_t seq;
+
+  seq = stp_array_get_sequence(array);
+  stp_sequence_get_bounds(seq, &low, &high);
   if (low < 0 || high > 65535)
-    return 0;
-  if (!stp_curve_get_point(curve, 0, &low))
-    return 0;
-  if (!stp_curve_get_point(curve, 1, &high))
-    return 0;
-  if (low * high != stp_curve_count_points(curve) - 2)
     return 0;
   return 1;
 }
 
+
 void
-stpi_dither_matrix_init_from_curve(dither_matrix_t *mat,
-				  const stp_curve_t curve,
+stpi_dither_matrix_init_from_dither_array(dither_matrix_t *mat,
+				  const stp_array_t array,
 				  int transpose)
-				  
 {
   int x, y;
   size_t count;
-  const unsigned short *vec = stp_curve_get_ushort_data(curve, &count);
-  mat->base = vec[0];
+  stp_sequence_t seq;
+  const unsigned short *vec;
+  int x_size, y_size;
+
+  seq = stp_array_get_sequence(array);
+  stp_array_get_size(array, &x_size, &y_size);
+
+  vec = stp_sequence_get_ushort_data(seq, &count);
+  mat->base = x_size;;
   mat->exp = 1;
-  mat->x_size = vec[0];
-  mat->y_size = vec[1];
+  mat->x_size = x_size;
+  mat->y_size = y_size;
   mat->total_size = mat->x_size * mat->y_size;
   mat->matrix = stpi_malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
   for (x = 0; x < mat->x_size; x++)
     for (y = 0; y < mat->y_size; y++)
       {
 	if (transpose)
-	  mat->matrix[x + y * mat->x_size] = vec[2 + y + x * mat->y_size];
+	  mat->matrix[x + y * mat->x_size] = vec[y + x * mat->y_size];
 	else
-	  mat->matrix[x + y * mat->x_size] = vec[2 + x + y * mat->x_size];
+	  mat->matrix[x + y * mat->x_size] = vec[x + y * mat->x_size];
       }
   mat->last_x = mat->last_x_mod = 0;
   mat->last_y = mat->last_y_mod = 0;
@@ -296,6 +238,7 @@ stpi_dither_matrix_init_from_curve(dither_matrix_t *mat,
   else
     mat->fast_mask = 0;
 }
+
 
 void
 stpi_dither_matrix_init(dither_matrix_t *mat, int x_size, int y_size,
@@ -507,12 +450,13 @@ stpi_dither_set_matrix(stp_vars_t v, const stpi_dither_matrix_t *matrix,
 }
 
 void
-stpi_dither_set_matrix_from_curve(stp_vars_t v, const stp_curve_t curve,
-				 int transpose)
+stpi_dither_set_matrix_from_dither_array(stp_vars_t v,
+					 const stp_array_t array,
+					 int transpose)
 {
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   preinit_matrix(v);
-  stpi_dither_matrix_init_from_curve(&(d->dither_matrix), curve, transpose);
+  stpi_dither_matrix_init_from_dither_array(&(d->dither_matrix), array, transpose);
   postinit_matrix(v, 0, 0);
 }
 

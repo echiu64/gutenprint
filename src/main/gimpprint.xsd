@@ -1,8 +1,8 @@
 <?xml version="1.0"?>                  <!-- -*- mode: xml -*- -->
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-targetNamespace="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
 xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+targetNamespace="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
 elementFormDefault="qualified">
 
   <xsd:annotation>
@@ -18,10 +18,15 @@ elementFormDefault="qualified">
   <xsd:element name="gimp-print">
     <xsd:complexType>
       <xsd:sequence>
-	<xsd:element ref="printdef" minOccurs="0" maxOccurs="1"/>
-	<xsd:element ref="paperdef" minOccurs="0" maxOccurs="1"/>
+	<xsd:element ref="printdef" minOccurs="0" maxOccurs="unbounded"/>
+	<xsd:element ref="paperdef" minOccurs="0" maxOccurs="unbounded"/>
+	<xsd:element ref="curve" minOccurs="0" maxOccurs="unbounded"/>
+	<xsd:element ref="dither-matrix" minOccurs="0" maxOccurs="unbounded"/>
       </xsd:sequence>
     </xsd:complexType>
+    <xsd:attributeGroup>
+      <xsd:attribute name="" type="normalizedString" use="required"/>
+    </xsd:attributeGroup>
   </xsd:element>
 
   <xsd:element name="printdef">
@@ -40,7 +45,9 @@ elementFormDefault="qualified">
       </xsd:sequence>
     </xsd:complexType>
     <xsd:attributeGroup>
-      <xsd:attribute name="name" type="normalizedString" use="required"/>
+      <xsd:attribute name="xmlns" type="normalizedString" use="required"/>
+      <xsd:attribute name="xmlns:xsi" type="normalizedString" use="required"/>
+      <xsd:attribute name="xsi:schemaLocation" type="normalizedString" use="required"/>
     </xsd:attributeGroup>
   </xsd:element>
   <xsd:element name="printer">
@@ -266,5 +273,98 @@ elementFormDefault="qualified">
       </xsd:simpleType>
     </xsd:attribute>
   </xsd:attributeGroup>
+
+
+  <xsd:simpleType name="sequencecontent">
+    <xsd:list itemType="double"/>
+  </xsd:simpleType>
+
+  <xsd:element name="sequence" type="sequencecontent">
+    <xsd:annotation>
+      <xsd:documentation>
+	The "sequence" class stores a list of numbers, based upon the
+	stp_sequence_t type.  It has a defined length, and lower and
+	upper bounds.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attributeGroup>
+      <xsd:attribute name="count" type="positiveInteger" use="required"/>
+      <xsd:attribute name="lower-bound" type="xsd:float" use="required"/>
+      <xsd:attribute name="upper-bound" type="xsd:float" use="required"/>
+    </xsd:attributeGroup>
+  </xsd:element>
+
+  <xsd:element name="curve">
+    <xsd:annotation>
+      <xsd:documentation>
+	The "curve" class stores a complete stp_curve_t curve
+	representation.  It is derived from the stp_sequence_t type,
+	and contains a sequence element.
+      </xsd:documentation>
+    </xsd:annotation>
+   <xsd:complexType>
+      <xsd:sequence>
+	<xsd:element ref="sequence" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:attributeGroup>
+      <xsd:attribute name="type" use="required">
+	<xsd:simpleType>
+	  <xsd:restriction type="normalizedString">
+	    <xsd:enumeration value="linear"/>
+	    <xsd:enumeration value="spline"/>
+	  </xsd:restriction>
+	</xsd:simpleType>
+      </xsd:attribute>
+      <xsd:attribute name="wrap" use="required">
+	<xsd:simpleType>
+	  <xsd:restriction type="normalizedString">
+	    <xsd:enumeration value="nowrap"/>
+	    <xsd:enumeration value="wrap"/>
+	  </xsd:restriction>
+	</xsd:simpleType>
+      </xsd:attribute>
+      <xsd:attribute name="gamma" type="xsd:float" use="required"/>
+    </xsd:attributeGroup>
+  </xsd:element>
+
+  <xsd:element name="array">
+    <xsd:annotation>
+      <xsd:documentation>
+	The "array" class stores a complete stp_array_t array
+	representation.  It is derived from the stp_sequence_t type,
+	and contains a sequence element.
+      </xsd:documentation>
+    </xsd:annotation>
+   <xsd:complexType>
+      <xsd:sequence>
+	<xsd:element ref="sequence" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:attributeGroup>
+      <xsd:attribute name="x-size" type="positiveInteger" use="required"/>
+      <xsd:attribute name="y-size" type="positiveInteger" use="required"/>
+    </xsd:attributeGroup>
+  </xsd:element>
+
+
+  <xsd:element name="dither-matrix">
+    <xsd:documentation>
+      The "dither-matrix" class stores an array representation for use
+      as a dither matrix, together with the x and y aspect of the
+      matrix.
+    </xsd:documentation>
+    <xsd:complexType>
+      <xsd:sequence>
+	<xsd:element ref="array" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:attributeGroup>
+      <xsd:attribute name="x-aspect" type="positiveInteger" use="required"/>
+      <xsd:attribute name="y-aspect" type="positiveInteger" use="required"/>
+    </xsd:attributeGroup>
+  </xsd:element>
+
+
 
 </xsd:schema>

@@ -41,6 +41,9 @@ extern "C" {
 #include <config.h>
 #endif
 
+#include "array.h"
+
+
 typedef struct stpi_dither_matrix_short
 {
   int x;
@@ -98,10 +101,10 @@ extern void stpi_dither_matrix_init_short(dither_matrix_t *mat, int x_size,
 					  int y_size,
 					  const unsigned short *array,
 					  int transpose, int prescaled);
-extern int stpi_dither_matrix_validate_curve(const stp_curve_t curve);
-extern void stpi_dither_matrix_init_from_curve(dither_matrix_t *mat,
-					       const stp_curve_t curve,
-					       int transpose);
+extern int stpi_dither_matrix_validate_array(const stp_array_t array);
+extern void stpi_dither_matrix_init_from_dither_array(dither_matrix_t *mat,
+						      const stp_array_t array,
+						      int transpose);
 extern void stpi_dither_matrix_destroy(dither_matrix_t *mat);
 extern void stpi_dither_matrix_clone(const dither_matrix_t *src,
 				     dither_matrix_t *dest,
@@ -111,7 +114,7 @@ extern void stpi_dither_matrix_copy(const dither_matrix_t *src,
 extern void stpi_dither_matrix_scale_exponentially(dither_matrix_t *mat,
 						   double exponent);
 extern void stpi_dither_matrix_set_row(dither_matrix_t *mat, int y);
-extern stp_curve_t stpi_find_standard_dither_matrix(int x_aspect, int y_aspect);
+extern stp_array_t stpi_find_standard_dither_array(int x_aspect, int y_aspect);
 
 
 
@@ -169,9 +172,9 @@ extern void stpi_dither_set_iterated_matrix(stp_vars_t v, size_t edge,
 					    int x_shear, int y_shear);
 extern void stpi_dither_set_matrix(stp_vars_t v, const stpi_dither_matrix_t *mat,
 				   int transpose, int x_shear, int y_shear);
-extern void stpi_dither_set_matrix_from_curve(stp_vars_t v,
-					      const stp_curve_t curve,
-					      int transpose);
+extern void stpi_dither_set_matrix_from_dither_array(stp_vars_t v,
+						     const stp_array_t array,
+						     int transpose);
 extern void stpi_dither_set_transition(stp_vars_t v, double);
 extern void stpi_dither_set_randomizer(stp_vars_t v, int color, double);
 extern void stpi_dither_set_ranges(stp_vars_t v, int color, int nlevels,

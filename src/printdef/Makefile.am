@@ -28,7 +28,7 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
-LOCAL_CFLAGS = $(GNUCFLAGS) @LIBXML_CFLAGS@
+LOCAL_CFLAGS = $(GNUCFLAGS) $(GIMPPRINT_CFLAGS)
 
 
 ## Programs

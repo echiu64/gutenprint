@@ -25,27 +25,43 @@
  * compile on generic platforms that don't support glib, gimp, gimpprint, etc.
  */
 
-#ifndef GIMP_PRINT_INTERNAL_ARRAY_H
-#define GIMP_PRINT_INTERNAL_ARRAY_H
+#ifndef GIMP_PRINT_ARRAY_H
+#define GIMP_PRINT_ARRAY_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+
 #include <gimp-print/sequence.h>
 
 
-typedef struct
-{
-  int cookie;
-  int x_size;
-  int y_size;
-  stp_sequence_t data;
-} stpi_internal_array_t;
+typedef void *stp_array_t;
+
+
+extern stp_array_t stp_array_create(int x_size, int y_size);
+extern void stp_array_destroy(stp_array_t array);
+
+extern void stp_array_copy(stp_array_t dest, const stp_array_t source);
+extern stp_array_t stp_array_create_copy(const stp_array_t array);
+
+extern int stp_array_set_size(stp_array_t array, int x_size, int y_size);
+extern void stp_array_get_size(const stp_array_t array, int *x_size, int *y_size);
+
+extern int stp_array_set_data(stp_array_t array, const double *data);
+extern void stp_array_get_data(const stp_array_t array, size_t *size,
+			       const double **data);
+
+extern int stp_array_set_point(stp_array_t array, int x, int y,
+			       double data);
+extern int stp_array_get_point(const stp_array_t array, int x, int y,
+			       double *data);
+
+extern const stp_sequence_t stp_array_get_sequence(const stp_array_t array);
 
 
 #ifdef __cplusplus
   }
 #endif
 
-#endif /* GIMP_PRINT_INTERNAL_ARRAY_H */
+#endif /* GIMP_PRINT_ARRAY_H */

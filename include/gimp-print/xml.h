@@ -23,25 +23,26 @@
  */
 
 
-#ifndef GIMP_PRINT_INTERNAL_XML_H
-#define GIMP_PRINT_INTERNAL_XML_H
+#ifndef GIMP_PRINT_XML_H
+#define GIMP_PRINT_XML_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <libxml/tree.h>
-#include "array.h"
+#include <gimp-print/array.h>
+#include <gimp-print/curve.h>
 
+extern stp_curve_t stp_curve_create_from_file(const char* file);
+extern stp_curve_t stp_curve_create_from_xmltree(xmlNodePtr curve);
+extern stp_curve_t stp_curve_create_from_file(const char* file);
+extern stp_curve_t stp_curve_create_from_string(const char* string);
+extern xmlNodePtr stp_xmltree_create_from_curve(stp_curve_t curve);
+extern int stp_curve_write(FILE *file, stp_curve_t curve);
+extern xmlChar *stp_curve_write_string(stp_curve_t curve);
 
-extern int stpi_xml_init_defaults(void);
-extern int stpi_xml_parse_file(const char *file);
-
-extern stp_array_t stpi_xml_get_dither_array(int x, int y);
-extern stp_array_t stpi_dither_array_create_from_file(const char* file);
-
-
-#endif /* GIMP_PRINT_INTERNAL_XML_H */
+#endif /* GIMP_PRINT_XML_H */
 /*
  * End of "$Id$".
  */

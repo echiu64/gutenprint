@@ -30,7 +30,13 @@ include $(top_srcdir)/scripts/global.mk
 
 noinst_HEADERS = gimp-print-intl.h gimp-print-intl-internal.h
 
-pkginclude_HEADERS = gimp-print.h gimp-print-ui.h
+pkginclude_HEADERS = \
+	gimp-print.h \
+	array.h \
+	curve.h \
+	sequence.h \
+	xml.h \
+	gimp-print-ui.h
 
 nodist_pkginclude_HEADERS = gimp-print-version.h
 
