@@ -25,6 +25,10 @@ href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 <H2><font color="#ff0000"><blink>Gimp-Print 4.0 is
 released!</blink></font></h2>
 
+<P><strong><em><font color="#ff0000">New as of November 7
+2000:</strong></em></font> The 4.0.2 release somehow got corrupted.
+Please download a fresh copy.</p>
+
 <P><strong><em><font color="#ff0000">New as of November 6,
 2000!</strong></em></font> Gimp-Print 4.0.2 is out.  All GhostScript
 and CUPS users should upgrade.  This fixes some important print
