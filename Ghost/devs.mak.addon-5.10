@@ -15,7 +15,7 @@ $(DD)stp.dev:	$(stp_) $(DD)page.dev
 gdevstp.$(OBJ) : gdevstp.c $(PDEVH)
 	$(CCC) gdevstp.c
 
-gdevstp-util.$(OBJ) : gdevstp-util.c $(PDEVH)
+gdevstp-util.$(OBJ) : gdevstp-util.c gdevstp-printers.c $(PDEVH)
 	$(CCC) gdevstp-util.c
 
 gdevstp-weave.$(OBJ) : gdevstp-weave.c $(PDEVH)

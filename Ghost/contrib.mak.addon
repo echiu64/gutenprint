@@ -15,7 +15,7 @@ $(DD)stp.dev:	$(stp_) $(DD)page.dev
 $(GLOBJ)gdevstp.$(OBJ) : $(GLSRC)gdevstp.c $(PDEVH)
 	$(GLCC) $(GLO_)gdevstp.$(OBJ) $(C_) $(GLSRC)gdevstp.c
 
-$(GLOBJ)gdevstp-util.$(OBJ) : $(GLSRC)gdevstp-util.c $(PDEVH)
+$(GLOBJ)gdevstp-util.$(OBJ) : $(GLSRC)gdevstp-util.c $(GLSRC)gdevstp-printers.c $(PDEVH)
 	$(GLCC) $(GLO_)gdevstp-util.$(OBJ) $(C_) $(GLSRC)gdevstp-util.c
 
 $(GLOBJ)gdevstp-weave.$(OBJ) : $(GLSRC)gdevstp-weave.c $(PDEVH)
