@@ -164,10 +164,13 @@ DEF_SIMPLE_ACCESSOR(min_hres, int)
 DEF_SIMPLE_ACCESSOR(min_vres, int)
 DEF_SIMPLE_ACCESSOR(nozzles, unsigned)
 DEF_SIMPLE_ACCESSOR(black_nozzles, unsigned)
+DEF_SIMPLE_ACCESSOR(fast_nozzles, unsigned)
 DEF_SIMPLE_ACCESSOR(min_nozzles, unsigned)
 DEF_SIMPLE_ACCESSOR(min_black_nozzles, unsigned)
+DEF_SIMPLE_ACCESSOR(min_fast_nozzles, unsigned)
 DEF_SIMPLE_ACCESSOR(nozzle_separation, unsigned)
 DEF_SIMPLE_ACCESSOR(black_nozzle_separation, unsigned)
+DEF_SIMPLE_ACCESSOR(fast_nozzle_separation, unsigned)
 DEF_SIMPLE_ACCESSOR(separation_rows, unsigned)
 DEF_SIMPLE_ACCESSOR(max_paper_width, unsigned)
 DEF_SIMPLE_ACCESSOR(max_paper_height, unsigned)
@@ -1314,7 +1317,13 @@ escp2_print(const stp_vars_t v, stp_image_t *image)
 	init.use_black_parameters = 1;
       else
 	init.use_black_parameters = 0;
-      if (init.use_black_parameters)
+      if (init.use_fast_360)
+	{
+	  nozzles = escp2_fast_nozzles(model, nv);
+	  nozzle_separation = escp2_fast_nozzle_separation(model, nv);
+	  privdata.min_nozzles = escp2_min_fast_nozzles(model, nv);
+	}
+      else if (init.use_black_parameters)
 	{
 	  nozzles = escp2_black_nozzles(model, nv);
 	  nozzle_separation = escp2_black_nozzle_separation(model, nv);
@@ -1325,13 +1334,6 @@ escp2_print(const stp_vars_t v, stp_image_t *image)
 	  nozzles = escp2_nozzles(model, nv);
 	  nozzle_separation = escp2_nozzle_separation(model, nv);
 	  privdata.min_nozzles = escp2_min_nozzles(model, nv);
-	}
-      if (init.use_fast_360)
-	{
-	  nozzles *= 2;
-	  nozzle_separation /= 2;
-	  if (privdata.min_nozzles == nozzles)
-	    privdata.min_nozzles *= 2;
 	}
       init.nozzle_separation = nozzle_separation;
       nozzle_separation =

@@ -296,6 +296,9 @@ typedef struct escp2_printer
   int		black_nozzles;	/* Number of black nozzles (may be extra) */
   int		min_black_nozzles;	/* # of black nozzles (may be extra) */
   int		black_nozzle_separation; /* Separation between rows */
+  int		fast_nozzles;	/* Number of fast nozzles */
+  int		min_fast_nozzles;	/* # of fast nozzles (may be extra) */
+  int		fast_nozzle_separation; /* Separation between rows */
   int		physical_channels; /* Number of ink channels */
 /*****************************************************************************/
   /* Print head resolution */
