@@ -174,3 +174,8 @@ force_aclocal: Ghost/stp-interfaces.tar.gz
 
 print_gimp.h: Makefile
 	touch print_gimp.h
+
+testdither:	testdither.o print-dither.o
+	$(CC) $(CFLAGS) -o testdither testdither.o print-dither.o -lm
+
+testdither.o:	print.h
