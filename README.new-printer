@@ -292,14 +292,16 @@ black.  The first thing to do is to pick the appropriate
 simple_dither_range_t (or create a whole new escp2_variable_inklist_t)
 and comment out all but the darkest ink (this means you'll be using
 the largest dots of dark ink).  At 8.5" width (the width of a
-letter-size piece of paper), the bar will be 1/8" wide.  Print it
-width-wise across a piece of photo quality paper in line art mode (do
-NOT use photographic mode, as it does funny things to the color that
-distort what you're trying to do here) using ordered dither.  Make
-sure that all the color adjustments are set to defaults (1.0 or 100).
-Use the highest quality version of the print mode you're testing to
-reduce banding and other artifacts.  This is much easier to do with
-the Gimp than with Ghostscript.
+letter-size piece of paper), the bar will be 1/8" high.  Printing it
+on wider or narrower paper will change the height accordingly.  Print
+it width-wise across a piece of photo quality paper in line art mode
+using ordered or adaptive hybrid dither.  Do not use photographic
+mode; the colors in photographic mode vary non-linearly depending upon
+the presence of the three color components, while in line art mode the
+colors are much purer.  Make sure that all the color adjustments are
+set to defaults (1.0).  Use the highest quality version of the print
+mode you're testing to reduce banding and other artifacts.  This is
+much easier to do with the Gimp than with Ghostscript.
 
 At this stage, you want to look for four things:
 

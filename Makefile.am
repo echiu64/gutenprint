@@ -4,7 +4,7 @@ libexecdir = $(gimptool_prefix)/plug-ins
 
 libexec_PROGRAMS = print
 
-bin_PROGRAMS = unprint escp2-weavetest pcl-unprint escputil
+bin_PROGRAMS = unprint escp2-weavetest pcl-unprint escputil printer_options
 
 noinst_PROGRAMS = printdef
 
@@ -42,6 +42,10 @@ print-printers.c: printdef printers.xml
 	./printdef < printers.xml > print-printers.c
 
 printdef_SOURCES = printdefl.l printdefy.y printdef.h
+
+printer_options_SOURCES = printer_options.c $(COMMON_SOURCE)
+
+printer_options_LDADD = -lm
 
 printdefl.o: printdefy.o
 
