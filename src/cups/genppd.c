@@ -147,6 +147,26 @@ static struct				/**** STP numeric options ****/
 #endif /* __APPLE__ */
 };
 
+/*
+ * Mapping between manufacturer names embedded in the printer name and
+ * manufacturer names authorized in the PPD specification.
+ * If printers of other manufacturers are added, this table must
+ * be extended.
+ */
+static struct
+{
+  const char *manufacturer_embedded_name;
+  const char *manufacturer_real_name;
+} stp_manufacturers[] =
+{
+  { "CANON",   "Canon" },
+  { "EPSON",   "Epson" },
+  { "HP",      "HP" },
+  { "LEXMARK", "Lexmark" },
+  { "APPLE",   "Apple" },
+  { NULL,      NULL }
+};
+
 
 /*
  * Local functions...
@@ -156,6 +176,7 @@ void	initialize_stp_options(void);
 void	usage(void);
 int	write_ppd(const stp_printer_t p, const char *prefix,
 	          const char *language, int verbose);
+const char *find_manufacturer_from_name(const char *name);
 
 
 /*
@@ -380,6 +401,22 @@ usage(void)
   exit(EXIT_FAILURE);
 }
 
+const char *
+find_manufacturer_from_name(const char *name)
+{
+  int i = 0;
+  while (stp_manufacturers[i].manufacturer_real_name)
+    {
+      if (strncasecmp(name, stp_manufacturers[i].manufacturer_embedded_name,
+		      strlen(stp_manufacturers[i].manufacturer_embedded_name)) == 0)
+	return stp_manufacturers[i].manufacturer_real_name;
+      i++;
+    }
+  fprintf(stderr, "Cannot determine manufacturer of %s\n!", name);
+  abort();
+  return NULL;
+}
+
 
 /*
  * 'write_ppd()' - Write a PPD file.
@@ -395,7 +432,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzFile	fp;			/* File to write to */
   char		filename[1024];		/* Filename */
   const char	*driverptr;		/* Pointer into driver name */
-  char		manufacturer[64];	/* Manufacturer name */
+  const char	*manufacturer;		/* Manufacturer name */
   int		num_opts;		/* Number of printer options */
   stp_param_t	*opts;			/* Printer options */
   const char	*defopt;		/* Default printer option */
@@ -460,7 +497,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   * Write a standard header...
   */
 
-  sscanf(long_name, "%63s", manufacturer);
+  manufacturer = find_manufacturer_from_name(long_name);
 
   if (verbose)
     fprintf(stderr, "Writing %s...\n", filename);
@@ -492,11 +529,6 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     
   gzprintf(fp, "*PCFileName:	\"STP%05d.PPD\"\n",
 	   stp_get_printer_index_by_driver(driver));
-
- /*
-  * The Manufacturer, for now, is the first word of the long driver
-  * name.
-  */
 
   gzprintf(fp, "*Manufacturer:	\"%s\"\n", manufacturer);
 
