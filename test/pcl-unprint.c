@@ -1299,6 +1299,33 @@ int main(int argc, char *argv[])
 		}
 		break;
 
+	    case PCL_RELATIVE_VERTICAL_PIXEL_MOVEMENT :
+		fprintf(stderr, "%s: %d\n", pcl_commands[command_index].description, numeric_arg);
+
+/* Check that we are in raster mode */
+
+		if (expected_data_rows_per_row == -1)
+		    fprintf(stderr, "ERROR: raster data without start raster!\n");
+
+/*
+  What we need to do now is to write out "N" rows of all-white data to
+  simulate the vertical slew
+*/
+
+		for (i=0; i<expected_data_rows_per_row; i++)
+		{
+		    memset(received_rows[i], 0, (size_t) MAX_DATA * sizeof(char));
+		}
+		for (i=0; i<numeric_arg; i++)
+		{
+		    if (image_data.colour_type == PCL_MONO)
+			write_grey(&output_data, &image_data);
+		    else
+			write_colour(&output_data, &image_data);
+		    image_row_counter++;
+		}
+		break;
+
 	    case PCL_PERF_SKIP :
 	    case PCL_TOP_MARGIN :
 	    case PCL_RESOLUTION :
@@ -1306,7 +1333,6 @@ int main(int argc, char *argv[])
 	    case PCL_TOPRASTER_POS :
 	    case PCL_VERTICAL_CURSOR_POSITIONING_BY_DOTS :
 	    case PCL_HORIZONTAL_CURSOR_POSITIONING_BY_DOTS :
-	    case PCL_RELATIVE_VERTICAL_PIXEL_MOVEMENT :
 	    case PCL_PALETTE_CONFIGURATION :
 	    case PCL_UNIT_OF_MEASURE :
 	    case PCL_GRAY_BALANCE :

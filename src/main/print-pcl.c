@@ -36,6 +36,7 @@
 
 /* #define DEBUG */
 /* #define PCL_DEBUG_DISABLE_COMPRESSION */
+/* #define PCL_DEBUG_DISABLE_BLANKLINE_REMOVAL */
 
 /*
  * Local functions...
@@ -1637,6 +1638,13 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   const double *dot_sizes_use,dot_sizes_cret[]={1.0,1.0,1.0};         /* The dot size used */
   stp_vars_t	nv = stp_allocate_copy(v);
   stp_papersize_t pp;
+  int		len_c,		/* Active length of Cyan buffers */
+		len_lc,		/* Ditto Light Cyan */
+		len_m,		/* Ditto Magenta */
+		len_lm,		/* Ditto Light Magenta */
+		len_y, 		/* Ditto Cyan */
+		len_k;		/* Ditto Black */
+  int		blank_lines;	/* Accumulated blank lines */
 
   caps = pcl_get_model_capabilities(model);
 
@@ -2113,6 +2121,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   errval  = 0;
   errlast = -1;
   errline  = 0;
+  blank_lines = 0;
 
   for (y = 0; y < out_height; y ++)
   {
@@ -2136,68 +2145,99 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
     stp_dither(out, y, dither, cyan, lcyan, magenta, lmagenta,
 		yellow, NULL, black, duplicate_line, zero_mask);
 
-    if (do_cret)
+    len_c = stp_dither_get_last_position(dither, ECOLOR_C, 1);
+    len_lc = stp_dither_get_last_position(dither, ECOLOR_C, 0);
+    len_m = stp_dither_get_last_position(dither, ECOLOR_M, 1);
+    len_lm = stp_dither_get_last_position(dither, ECOLOR_M, 0);
+    len_y = stp_dither_get_last_position(dither, ECOLOR_Y, 1);
+    len_k = stp_dither_get_last_position(dither, ECOLOR_K, 1);
+
+#ifndef PCL_DEBUG_DISABLE_BLANKLINE_REMOVAL
+    if ((len_c == -1) && (len_lc == -1) && (len_m == -1) && (len_lm == -1)
+	&& (len_y == -1) && (len_k == -1))
     {
-     /*
-      * 4-level (CRet) dithers...
-      */
-      if (output_type == OUTPUT_GRAY)
-      {
-        (*writefunc)(v, black + height / 2, height / 2, 0);
-        (*writefunc)(v, black, height / 2, 1);
-      }
-      else
-      {
-	if(do_cretb){
-/*	  (*writefunc)(v, black + height / 2, 0, 0); */
-	  (*writefunc)(v, black, height/2, 0);
-	}else{
-	  (*writefunc)(v, black + height / 2, height / 2, 0);
-	  (*writefunc)(v, black, height / 2, 0);
-	}
-        (*writefunc)(v, cyan + height / 2, height / 2, 0);
-        (*writefunc)(v, cyan, height / 2, 0);
-        (*writefunc)(v, magenta + height / 2, height / 2, 0);
-        (*writefunc)(v, magenta, height / 2, 0);
-        (*writefunc)(v, yellow + height / 2, height / 2, 0);
-        if (do_6color)
-        {
-          (*writefunc)(v, yellow, height / 2, 0);
-          (*writefunc)(v, lcyan + height / 2, height / 2, 0);
-          (*writefunc)(v, lcyan, height / 2, 0);
-          (*writefunc)(v, lmagenta + height / 2, height / 2, 0);
-          (*writefunc)(v, lmagenta, height / 2, 1);		/* Last plane set on light magenta */
-        }
-        else
-          (*writefunc)(v, yellow, height / 2, 1);		/* Last plane set on yellow */
-      }
+      blank_lines++;
     }
     else
     {
-     /*
-      * Standard 2-level dithers...
-      */
-
-      if (output_type == OUTPUT_GRAY)
+      if (blank_lines != 0)		/* Output accumulated lines */
       {
-        (*writefunc)(v, black, height, 1);
+#ifdef DEBUG
+	fprintf(stderr, "Blank Lines = %d\n", blank_lines);
+#endif
+	stp_zprintf(v, "\033*b%dY", blank_lines);
+	blank_lines=0;
+      }
+#endif		/* blankline removal */
+
+      if (do_cret)
+      {
+       /*
+        * 4-level (CRet) dithers...
+        */
+        if (output_type == OUTPUT_GRAY)
+        {
+          (*writefunc)(v, black + height / 2, height / 2, 0);
+          (*writefunc)(v, black, height / 2, 1);
+        }
+        else
+        {
+	  if(do_cretb)
+	  {
+/*	    (*writefunc)(v, black + height / 2, 0, 0); */
+	    (*writefunc)(v, black, height/2, 0);
+	  }
+	  else
+	  {
+	    (*writefunc)(v, black + height / 2, height / 2, 0);
+	    (*writefunc)(v, black, height / 2, 0);
+	  }
+          (*writefunc)(v, cyan + height / 2, height / 2, 0);
+          (*writefunc)(v, cyan, height / 2, 0);
+          (*writefunc)(v, magenta + height / 2, height / 2, 0);
+          (*writefunc)(v, magenta, height / 2, 0);
+          (*writefunc)(v, yellow + height / 2, height / 2, 0);
+          if (do_6color)
+          {
+            (*writefunc)(v, yellow, height / 2, 0);
+            (*writefunc)(v, lcyan + height / 2, height / 2, 0);
+            (*writefunc)(v, lcyan, height / 2, 0);
+            (*writefunc)(v, lmagenta + height / 2, height / 2, 0);
+            (*writefunc)(v, lmagenta, height / 2, 1);		/* Last plane set on light magenta */
+          }
+          else
+            (*writefunc)(v, yellow, height / 2, 1);		/* Last plane set on yellow */
+        }
       }
       else
       {
-        if (black != NULL)
-          (*writefunc)(v, black, height, 0);
-        (*writefunc)(v, cyan, height, 0);
-        (*writefunc)(v, magenta, height, 0);
-        if (do_6color)
+       /*
+        * Standard 2-level dithers...
+        */
+
+        if (output_type == OUTPUT_GRAY)
         {
-          (*writefunc)(v, yellow, height, 0);
-          (*writefunc)(v, lcyan, height, 0);
-          (*writefunc)(v, lmagenta, height, 1);		/* Last plane set on light magenta */
+          (*writefunc)(v, black, height, 1);
         }
         else
-          (*writefunc)(v, yellow, height, 1);		/* Last plane set on yellow */
+        {
+          if (black != NULL)
+            (*writefunc)(v, black, height, 0);
+          (*writefunc)(v, cyan, height, 0);
+          (*writefunc)(v, magenta, height, 0);
+          if (do_6color)
+          {
+            (*writefunc)(v, yellow, height, 0);
+            (*writefunc)(v, lcyan, height, 0);
+            (*writefunc)(v, lmagenta, height, 1);		/* Last plane set on light magenta */
+          }
+          else
+            (*writefunc)(v, yellow, height, 1);		/* Last plane set on yellow */
+        }
       }
+#ifndef PCL_DEBUG_DISABLE_BLANKLINE_REMOVAL
     }
+#endif
 
     errval += errmod;
     errline += errdiv;
@@ -2207,6 +2247,21 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
       errline ++;
     }
   }
+
+#ifndef PCL_DEBUG_DISABLE_BLANKLINE_REMOVAL
+
+/* Output trailing blank lines (may not be required?) */
+
+  if (blank_lines != 0)
+  {
+#ifdef DEBUG
+    fprintf(stderr, "Blank Lines = %d\n", blank_lines);
+#endif
+    stp_zprintf(v, "\033*b%dY", blank_lines);
+    blank_lines=0;
+  }
+#endif
+
   image->progress_conclude(image);
 
   stp_free_dither(dither);
