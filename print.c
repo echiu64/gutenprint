@@ -3252,21 +3252,40 @@ printrc_load(void)
 	  key.v.ink_type[strlen(key.v.ink_type) - 1] = '\0';  /* Drop NL */
 	}
 
-
-      /* bsearch is WRONG!!! -- rlk */
-      if ((p = bsearch(&key, plist, plist_count, sizeof(plist_t),
-                       (int (*)(const void *, const void *))compare_printers))
-	  != NULL)
+/*
+ * The format of the list is the File printer followed by a qsort'ed list
+ * of system printers. So, if we want to update the file printer, it is
+ * always first in the list, else call bsearch.
+ */
+      if ((strcmp(key.name, _("File")) == 0) && (strcmp(plist[0].name,
+	   _("File")) == 0))
 	{
+#ifdef DEBUG
+	  printf("Updated File printer directly\n");
+#endif
+	  p = &plist[0];
 	  memcpy(p, &key, sizeof(plist_t));
 	  p->active = 1;
 	}
-      else if (plist_count < MAX_PLIST - 1)
+      else
 	{
-	  p = plist + plist_count;
-	  memcpy(p, &key, sizeof(plist_t));
-	  p->active = 0;
-	  plist_count++;
+          if ((p = bsearch(&key, plist + 1, plist_count - 1, sizeof(plist_t),
+                       (int (*)(const void *, const void *))compare_printers))
+	      != NULL)
+	    {
+#ifdef DEBUG
+	      printf("Updating printer %s.\n", key.name);
+#endif
+	      memcpy(p, &key, sizeof(plist_t));
+	      p->active = 1;
+	    }
+          else if (plist_count < MAX_PLIST - 1)
+    	    {
+	      p = plist + plist_count;
+	      memcpy(p, &key, sizeof(plist_t));
+	      p->active = 0;
+	      plist_count++;
+	    }
 	}
     }
 
