@@ -28,9 +28,9 @@ SUBDIRS = users_guide
 
 ## Variables
 
-DOCS = \
- FAQ.html \
- README.maintaining
+MANUAL_L = gimpprint
+HTMLDIR = manual-html
+DOCS = $(MANUAL_L).pdf $(MANUAL_L).ps $(MANUAL_L).dvi html
 
 IMAGES = \
  print-color.png \
@@ -45,6 +45,12 @@ else
 MAINT_MODE = false
 endif
 
+if MAINTAINER_MODE
+ALL_LOCAL_TARGETS = docs
+else
+ALL_LOCAL_TARGETS = $(STANDARD_TARGETS)
+endif
+
 
 ## Data
 
@@ -55,71 +61,42 @@ gimpprint_TEXINFOS = overview.texi copying.texi gpl.texi introduction.texi using
 
 ## Rules
 
-all-local: html
+all-local: $(DOCS)
 
-docs: html ps pdf
-	cd users_guide ; \
-	$(MAKE) html ps pdf
+docs: $(DOCS)
 
-gimpprint.dvi: $(EPS_IMAGES)
+gimpprint.dvi: $(EPS_IMAGES) $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS) $(info_TEXINFOS))
 
 %.eps:
 	$(CONVERT) $(srcdir)/$(basename $@).png EPS2:$@
 
 html: html-stamp
-	cd users_guide ; \
-	$(MAKE) html
 
 ## Note the rather weird way of setting the exit status; this is because
 ## texi2html doesn't set the exit status.
-html-stamp: $(srcdir)/gimpprint.texi $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS))
-	if test '$(srcdir)' = '.' ; then \
-	  : ; \
+html-stamp: $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS) $(info_TEXINFOS))
+	$(RM) -r $(HTMLDIR)-tmp
+	mkdir $(HTMLDIR)-tmp
+	for image in $(addprefix $(srcdir)/, $(IMAGES)) ; do \
+	  cp -p $$image $(HTMLDIR)-tmp ; \
+	done
+	cd $(HTMLDIR)-tmp ; \
+	if test $(srcdir) = '.' ; then \
+	  SOURCE='..' ; \
 	else \
-	  if test -f $(srcdir)/html-stamp ; then \
-	    $(LN_S) $(srcdir)/html-stamp html-stamp ; \
-	  fi ; \
+	  SOURCE=$(srcdir) ; \
 	fi ; \
-	if test -f html-stamp -o -L html-stamp ; then \
-	  : ; \
-	else \
-	  if test x$(TEXI2HTML) = x ; then \
-	    echo "html-stamp: texi2html not found: not regenerating HTML manual" ; \
-	  else \
-	    stat=1; \
-	    rm -rf manual-html-tmp ; \
-	    mkdir manual-html-tmp ; \
-	    cd manual-html-tmp ; \
-	    if test $(srcdir) = '.' ; then \
-	      SOURCE='..' ; \
-	    else \
-	      SOURCE=$(srcdir) ; \
-	    fi ; \
-	    cp $${SOURCE}/*.png . ; \
-	    $(TEXI2HTML) -menu -split_node -number -expandinfo \
-	      -I $(srcdir) $${SOURCE}/gimpprint.texi 2>&1 | grep . ; \
-	      stat=$$? ; stat=`expr 1 - $$stat` ; \
-	  fi ; \
-	  cd .. ; \
-	  rm -rf manual-html ; \
-	  mv manual-html-tmp manual-html ; \
-	  touch html-stamp ; \
-	fi ; \
-	exit $$stat
+	$(TEXI2HTML) -menu -split_node -number -expandinfo \
+	      -I $(srcdir) $${SOURCE}/$(MANUAL_L).texi 2>&1
+	$(RM) -r $(HTMLDIR)
+	mv $(HTMLDIR)-tmp $(HTMLDIR)
+	touch html-stamp
 
-ps: gimpprint.ps
-	cd users_guide ; \
-	$(MAKE) ps
+$(MANUAL_L).ps: $(MANUAL_L).dvi
+	$(DVIPS) $(MANUAL_L).dvi
 
-gimpprint.ps: gimpprint.dvi
-	$(DVIPS) -o gimpprint.ps gimpprint.dvi
-
-pdf: gimpprint.pdf
-	cd users_guide ; \
-	$(MAKE) pdf
-
-gimpprint.pdf: gimpprint.ps
-	$(PS2PDF) gimpprint.ps gimpprint.pdf
+$(MANUAL_L).pdf: $(MANUAL_L).dvi
+	$(DVIPDF) $(MANUAL_L).dvi
 
 dist-hook: html
 	for dir in manual-html ; do \
@@ -133,26 +110,43 @@ dist-hook: html
 	  fi \
 	done
 
-CLEAN_MANUALS = $(RM) -r html-stamp manual-html
+CLEAN_MANUALS = \
+	$(RM) -r html-stamp manual-html ; \
+	$(RM) $(MANUAL_L).pdf $(MANUAL_L).ps $(MANUAL_L).dvi ; \
+	$(RM) $(EPS_IMAGES)
 
 clean-local:
 	if test $(srcdir) = '.' -a $(MAINT_MODE) = false ; then \
 	  echo 'clean-local: Not removing manual-html' ; \
+	  echo 'clean-local: Not removing $(MANUAL_L).pdf' ; \
+	  echo 'clean-local: Not removing $(MANUAL_L).ps' ; \
+	  echo 'clean-local: Not removing $(MANUAL_L).dvi' ; \
+	  echo 'clean-local: Not removing EPS figures' ; \
 	else \
 	  $(CLEAN_MANUALS) ; \
 	fi
+	$(RM) -r *.tex *.log *.aux *.gz *.out *.junk *.fot
+	$(RM) -r *.ky *.pg *.toc *.tp *.vr *.vrs
 	$(RM) -r manual-html-tmp
+
+veryclean:
+	$(MAKE) MAINT_MODE=true clean
 
 maintainer-clean-local:
 	$(CLEAN_MANUALS)
 
+mostlyclean-aminfo:
+	-rm -f gimpprint.aux gimpprint.cp gimpprint.cps \
+	  gimpprint.fn gimpprint.fns gimpprint.ky gimpprint.kys \
+	  gimpprint.log gimpprint.pg gimpprint.toc \
+	  gimpprint.tp gimpprint.tps gimpprint.vr gimpprint.vrs \
+	  gimpprint.op gimpprint.tr gimpprint.cv gimpprint.cn
+
 
 ## Clean
 
-CLEANFILES = $(EPS_IMAGES) $(TXT_IMAGES) gimpprint.pdf
-
 MAINTAINERCLEANFILES = Makefile.in html-stamp
 
-EXTRA_DIST = $(DOCS) $(IMAGES) html-stamp
+EXTRA_DIST = $(DOCS) $(IMAGES) $(EPS_IMAGES) html-stamp FAQ.html README.maintaining
 
 .PHONY: html ps pdf docs clean-manuals
