@@ -763,23 +763,25 @@ escp2_set_page_height(const escp2_init_t *init)
 static void
 escp2_set_margins(const escp2_init_t *init)
 {
-  int l = init->ydpi * (init->page_true_height - init->page_bottom) / 72;
-  int t = init->ydpi * (init->page_true_height - init->page_top) / 72;
+  int left = init->ydpi * (init->page_true_height - init->page_bottom) / 72;
+  int top = init->ydpi * (init->page_true_height - init->page_top) / 72;
 
-  t += init->initial_vertical_offset;
+  top += init->initial_vertical_offset;
   if (escp2_use_extended_commands(init->model, init->v, init->use_softweave))
     {
       if (escp2_has_cap(init->model, MODEL_COMMAND,MODEL_COMMAND_2000,init->v))
 	stp_zprintf(init->v, "\033(c\010%c%c%c%c%c%c%c%c%c", 0,
-		    t & 0xff, t >> 8, (t >> 16) & 0xff, (t >> 24) & 0xff,
-		    l & 0xff, l >> 8, (l >> 16) & 0xff, (l >> 24) & 0xff);
+		    top & 0xff, (top >> 8) & 0xff,
+		    (top >> 16) & 0xff, (top >> 24) & 0xff,
+		    left & 0xff, (left >> 8) & 0xff,
+		    (left >> 16) & 0xff, (left >> 24) & 0xff);
       else
 	stp_zprintf(init->v, "\033(c\004%c%c%c%c%c", 0,
-		    t & 0xff, t >> 8, l & 0xff, l >> 8);
+		    top & 0xff, top >> 8, left & 0xff, left >> 8);
     }
   else
     stp_zprintf(init->v, "\033(c\004%c%c%c%c%c", 0,
-		t & 0xff, t >> 8, l & 0xff, l >> 8);
+		top & 0xff, top >> 8, left & 0xff, left >> 8);
 }
 
 static void
@@ -811,29 +813,26 @@ escp2_set_printhead_resolution(const escp2_init_t *init)
       int xres;
       int yres;
       int nozzle_separation;
+      int scale = escp2_resolution_scale(init->model, init->v);
 
-      xres = init->physical_xdpi;
-      xres = escp2_resolution_scale(init->model, init->v) / xres;
+      xres = scale / init->physical_xdpi;
 
       if (init->use_black_parameters)
-	nozzle_separation = escp2_black_nozzle_separation(init->model,
-							  init->v);
+	nozzle_separation =
+	  escp2_black_nozzle_separation(init->model, init->v);
       else
 	nozzle_separation = escp2_nozzle_separation(init->model, init->v);
 
       if (escp2_has_cap(init->model, MODEL_COMMAND, MODEL_COMMAND_PRO,
 			init->v) && !init->use_softweave)
-	yres = escp2_resolution_scale(init->model, init->v) / init->ydpi;
+	yres = scale / init->ydpi;
       else
-	yres = (nozzle_separation *
-		escp2_resolution_scale(init->model, init->v) /
+	yres = (nozzle_separation * scale /
 		escp2_base_separation(init->model, init->v));
 
       /* Magic resolution cookie */
       stp_zprintf(init->v, "\033(D%c%c%c%c%c%c", 4, 0,
-		  escp2_resolution_scale(init->model, init->v) % 256,
-		  escp2_resolution_scale(init->model, init->v) / 256,
-		  yres, xres);
+		  scale % 256, scale / 256, yres, xres);
     }
 }
 
