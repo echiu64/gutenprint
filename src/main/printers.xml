@@ -825,3 +825,14 @@
 <yellow value=1.0>
 <language value=lexmark>
 </printer>
+
+<printer name="LEXMARK Z31" driver="lexmark-z31">
+<color>
+<model value=3200>
+<gamma value=0.5>
+<density value=2.0>
+<magenta value=0.95>
+<yellow value=1.0>
+<language value=lexmark>
+</printer>
+
