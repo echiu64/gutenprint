@@ -1104,9 +1104,8 @@ canon_print(const printer_t *printer,		/* I - Model */
     {
       errlast = errline;
       Image_get_row(image, in, errline);
+      (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv);
     }
-
-    (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv);
 
     if (output_type == OUTPUT_GRAY)
       {

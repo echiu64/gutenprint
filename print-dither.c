@@ -1491,7 +1491,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
  */
 
 void
-dither_fastblack(unsigned short     *gray,	/* I - Grayscale pixels */
+dither_fastblack(const unsigned short  *gray,	/* I - Grayscale pixels */
 		 int           	    row,	/* I - Current Y coordinate */
 		 void 		    *vd,
 		 unsigned char 	    *black)	/* O - Black bitmap pixels */
@@ -1546,7 +1546,7 @@ dither_fastblack(unsigned short     *gray,	/* I - Grayscale pixels */
  */
 
 void
-dither_black(unsigned short   *gray,		/* I - Grayscale pixels */
+dither_black(const unsigned short   *gray,	/* I - Grayscale pixels */
 	     int           	row,		/* I - Current Y coordinate */
 	     void 		*vd,
 	     unsigned char 	*black)		/* O - Black bitmap pixels */
@@ -1676,7 +1676,7 @@ usmin(unsigned short a, unsigned short b)
 
 static void
 generate_cmy(dither_t *d,
-	     unsigned short *rgb,
+	     const unsigned short *rgb,
 	     int *nonzero,
 	     int row)
 {
@@ -1839,7 +1839,7 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
 
 
 void
-dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
+dither_cmyk(const unsigned short  *rgb,	/* I - RGB pixels */
 	    int           row,	/* I - Current Y coordinate */
 	    void 	    *vd,
 	    unsigned char *cyan,	/* O - Cyan bitmap pixels */

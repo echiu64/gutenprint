@@ -302,11 +302,14 @@ extern void	calculate_row_parameters(void *w, int row, int subpass,
 extern void	destroy_weave_params(void *vw);
 
 
-extern void	dither_fastblack(unsigned short *, int, void *, unsigned char *);
+extern void	dither_fastblack(const unsigned short *, int, void *,
+				 unsigned char *);
 
-extern void	dither_black(unsigned short *, int, void *, unsigned char *);
+extern void	dither_black(const unsigned short *, int, void *,
+			     unsigned char *);
 
-extern void	dither_cmyk(unsigned short *, int, void *, unsigned char *,
+extern void	dither_cmyk(const unsigned short *, int, void *,
+			    unsigned char *,
 			    unsigned char *, unsigned char *,
 			    unsigned char *, unsigned char *,
 			    unsigned char *, unsigned char *);
