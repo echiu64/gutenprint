@@ -120,6 +120,7 @@ typedef struct {
 #define PCL_HORIZONTAL_CURSOR_POSITIONING_BY_DOTS 29
 #define PCL_UNK3 30
 #define PCL_RELATIVE_VERTICAL_PIXEL_MOVEMENT 31
+#define PCL_PALETTE_CONFIGURATION 32
 
 typedef struct{
     char *initial_command;		/* First part of command */
@@ -162,6 +163,7 @@ commands_t pcl_commands[] =
 	{ "*p", 'X', 0, PCL_HORIZONTAL_CURSOR_POSITIONING_BY_DOTS, "Horizontal Cursor Positioning by Dots" },
 	{ "&u", 'D', 0, PCL_UNK3, "Unknown 3" },
 	{ "*b", 'Y', 0, PCL_RELATIVE_VERTICAL_PIXEL_MOVEMENT, "Relative Vertical Pixel Movement" },
+	{ "*d", 'W', 1, PCL_PALETTE_CONFIGURATION, "Palette Configuration" },
    };
 
 /*
@@ -1046,20 +1048,23 @@ int main(int argc, char *argv[]) {
 		case 0 :
 		    fprintf(stderr, "EJECT\n");
 		    break;
+		case 1 :
+		    fprintf(stderr, "Tray 2\n");
+		    break;
 		case 2 :
 		    fprintf(stderr, "Manual\n");
 		    break;
-		case 8 :
-		    fprintf(stderr, "Tray 1\n");
-		    break;
-		case 1 :
-		    fprintf(stderr, "Tray 2\n");
+		case 3 :
+		    fprintf(stderr, "Envelope\n");
 		    break;
 		case 4 :
 		    fprintf(stderr, "Tray 3\n");
 		    break;
 		case 5 :
 		    fprintf(stderr, "Tray 4\n");
+		    break;
+		case 8 :
+		    fprintf(stderr, "Tray 1\n");
 		    break;
 		default :
 		    fprintf(stderr, "Unknown (%d)\n", numeric_arg);
@@ -1146,11 +1151,18 @@ int main(int argc, char *argv[]) {
 	    case PCL_RESOLUTION :
 	    case PCL_LEFTRASTER_POS :
 	    case PCL_TOPRASTER_POS :
-	    case PCL_PAGE_ORIENTATION :
 	    case PCL_VERTICAL_CURSOR_POSITIONING_BY_DOTS :
 	    case PCL_HORIZONTAL_CURSOR_POSITIONING_BY_DOTS :
 	    case PCL_RELATIVE_VERTICAL_PIXEL_MOVEMENT :
-		fprintf(stderr, "%s: %d (ignored)\n", pcl_commands[command_index].description, numeric_arg);
+	    case PCL_PALETTE_CONFIGURATION :
+		fprintf(stderr, "%s: %d (ignored)", pcl_commands[command_index].description, numeric_arg);
+		if (pcl_commands[command_index].has_data == 1) {
+		    fprintf(stderr, " Data: ");
+		    for (i=0; i < numeric_arg; i++) {
+			fprintf(stderr, "%02x ", (unsigned char) data_buffer[i]);
+		    }
+		}
+		fprintf(stderr, "\n");
 		break;
 
 	    case PCL_COLOURTYPE :
@@ -1225,8 +1237,8 @@ int main(int argc, char *argv[]) {
 			if (numeric_arg != 8)
 			    fprintf(stderr, "ERROR: Expected 8 bytes of data, got %d\n", numeric_arg);
 
-			fprintf(stderr, "\tBlack: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[2]<<8)+data_buffer[3],
-			    (data_buffer[4]<<8)+data_buffer[5], data_buffer[7]);
+			fprintf(stderr, "\tBlack: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[2]<<8)+(unsigned char)data_buffer[3],
+			    ((unsigned char) data_buffer[4]<<8)+(unsigned char) data_buffer[5], data_buffer[7]);
 			image_data.black_depth = data_buffer[7];	/* Black levels */
 			image_data.cyan_depth = 0;
 			image_data.magenta_depth = 0;
@@ -1240,12 +1252,12 @@ int main(int argc, char *argv[]) {
 			if (numeric_arg != 20)
 			    fprintf(stderr, "ERROR: Expected 8 bytes of data, got %d\n", numeric_arg);
 
-			fprintf(stderr, "\tCyan: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[2]<<8)+data_buffer[3],
-			    (data_buffer[4]<<8)+data_buffer[5], data_buffer[7]);
-			fprintf(stderr, "\tMagenta: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[8]<<8)+data_buffer[9],
-			    (data_buffer[10]<<8)+data_buffer[11], data_buffer[13]);
-			fprintf(stderr, "\tYellow: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[14]<<8)+data_buffer[15],
-			    (data_buffer[16]<<8)+data_buffer[17], data_buffer[19]);
+			fprintf(stderr, "\tCyan: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[2]<<8)+(unsigned char) data_buffer[3],
+			    ((unsigned char) data_buffer[4]<<8)+(unsigned char) data_buffer[5], data_buffer[7]);
+			fprintf(stderr, "\tMagenta: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[8]<<8)+(unsigned char) data_buffer[9],
+			    ((unsigned char) data_buffer[10]<<8)+(unsigned char) data_buffer[11], data_buffer[13]);
+			fprintf(stderr, "\tYellow: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[14]<<8)+(unsigned char) data_buffer[15],
+			    ((unsigned char) data_buffer[16]<<8)+(unsigned char) data_buffer[17], data_buffer[19]);
 			image_data.black_depth = 0;
 			image_data.cyan_depth = data_buffer[7];		/* Cyan levels */
 			image_data.magenta_depth = data_buffer[13];	/* Magenta levels */
@@ -1259,14 +1271,14 @@ int main(int argc, char *argv[]) {
 			if (numeric_arg != 26)
 			    fprintf(stderr, "ERROR: Expected 8 bytes of data, got %d\n", numeric_arg);
 
-			fprintf(stderr, "\tBlack: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[2]<<8)+data_buffer[3],
-			    (data_buffer[4]<<8)+data_buffer[5], data_buffer[7]);
-			fprintf(stderr, "\tCyan: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[8]<<8)+data_buffer[9],
-			    (data_buffer[10]<<8)+data_buffer[11], data_buffer[13]);
-			fprintf(stderr, "\tMagenta: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[14]<<8)+data_buffer[15],
-			    (data_buffer[16]<<8)+data_buffer[17], data_buffer[19]);
-			fprintf(stderr, "\tYellow: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[20]<<8)+data_buffer[21],
-			    (data_buffer[22]<<8)+data_buffer[23], data_buffer[25]);
+			fprintf(stderr, "\tBlack: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[2]<<8)+(unsigned char) data_buffer[3],
+			    ((unsigned char) data_buffer[4]<<8)+(unsigned char) data_buffer[5], data_buffer[7]);
+			fprintf(stderr, "\tCyan: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[8]<<8)+(unsigned char) data_buffer[9],
+			    ((unsigned char) data_buffer[10]<<8)+(unsigned char) data_buffer[11], data_buffer[13]);
+			fprintf(stderr, "\tMagenta: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[14]<<8)+(unsigned char) data_buffer[15],
+			    ((unsigned char) data_buffer[16]<<8)+(unsigned char) data_buffer[17], data_buffer[19]);
+			fprintf(stderr, "\tYellow: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[20]<<8)+(unsigned char) data_buffer[21],
+			    ((unsigned char) data_buffer[22]<<8)+(unsigned char) data_buffer[23], data_buffer[25]);
 			image_data.black_depth = data_buffer[7];	/* Black levels */
 			image_data.cyan_depth = data_buffer[13];	/* Cyan levels */
 			image_data.magenta_depth = data_buffer[19];	/* Magenta levels */
@@ -1356,6 +1368,28 @@ int main(int argc, char *argv[]) {
 		}
 		break;
 
+	    case PCL_PAGE_ORIENTATION :
+		fprintf(stderr, "%s: ", pcl_commands[command_index].description);
+		switch (numeric_arg) {
+		case 0 :
+		    fprintf(stderr, "Portrait");
+		    break;
+		case 1 :
+		    fprintf(stderr, "Landscape");
+		    break;
+		case 2 :
+		    fprintf(stderr, "Reverse Portrait");
+		    break;
+		case 3 :
+		    fprintf(stderr, "Reverse Landscape");
+		    break;
+		default :
+		    fprintf(stderr, "Unknown (%d)", numeric_arg);
+		    break;
+		}
+		fprintf(stderr, " (ignored)\n");
+		break;
+
 	    case PCL_UNK1 :
 	    case PCL_UNK2 :
 	    case PCL_UNK3 :
@@ -1382,6 +1416,9 @@ int main(int argc, char *argv[]) {
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.7  2000/03/21 19:10:37  davehill
+ *   Use unsigned when calculating resolutions. Updated some commands.
+ *
  *   Revision 1.6  2000/03/20 21:03:30  davehill
  *   Added "Bond" and "Photo" paper types to pcl-unprint and print-pcl.
  *   Corrected Depletion output for old Deskjets in print-pcl.
