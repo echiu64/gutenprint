@@ -29,11 +29,11 @@ site</a> for quick and easy setup.</p>
 UNIX Printing System) for the easiest setup.</p>
 
 </p>
-<H2><font color="#ff0000">Gimp-Print 4.1.99-b1 is
+<H2><font color="#ff0000">Gimp-Print 4.1.99-b2 is
 released!</font></h2>
 
-<P><strong><em><font color="#ff0000">New as of September 3
-2001!</strong></em></font> Gimp-Print 4.1.99-b1, a beta release in
+<P><strong><em><font color="#ff0000">New as of September 20,
+2001!</strong></em></font> Gimp-Print 4.1.99-b2, a beta release in
 the 4.2 line, is out.  This offers some important bug fixes and some
 improvements, and is quite close to the final release of 4.2.</p>
 
