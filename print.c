@@ -769,7 +769,7 @@ printrc_load(void)
   * Generate the filename for the current user...
   */
 
-#ifdef GIMP_1_0
+#if (GIMP_MINOR_VERSION == 0)
   home = getenv("HOME");
   if (home == NULL)
     filename=g_strdup("/.gimp/printrc");
@@ -916,7 +916,7 @@ printrc_save(void)
   * Generate the filename for the current user...
   */
 
-#ifdef GIMP_1_0  
+#if (GIMP_MINOR_VERSION == 0)
   home = getenv("HOME");
   if (home == NULL)
     filename=g_strdup("/.gimp/printrc");
