@@ -464,8 +464,8 @@ static escp2_variable_inklist_t variable_6pl_4color_inks =
   NULL,
   NULL,
   NULL,
-  &escp2_multishot_standard_inks,
-  &escp2_multishot_standard_inks,
+  &escp2_6pl_standard_inks,
+  &escp2_6pl_standard_inks,
   &escp2_6pl_standard_inks,
   &escp2_6pl_standard_inks,
   NULL,
@@ -484,12 +484,12 @@ static escp2_variable_inklist_t variable_6pl_6color_inks =
   &photo_inks,
   &photo_inks,
   &photo_inks,
-  &escp2_multishot_standard_inks,
-  &escp2_multishot_standard_inks,
   &escp2_6pl_standard_inks,
   &escp2_6pl_standard_inks,
-  &escp2_multishot_photo_inks,
-  &escp2_multishot_photo_inks,
+  &escp2_6pl_standard_inks,
+  &escp2_6pl_standard_inks,
+  &escp2_6pl_photo_inks,
+  &escp2_6pl_photo_inks,
   &escp2_6pl_photo_inks,
   &escp2_6pl_photo_inks
 };
@@ -777,7 +777,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 144, 2, 360, INCH(11), INCH(17), 9, 9, 0, 9, 1, 0,
-    { -1, 3, 0x11, 3, 0x10, 3, 0x10 },
+    { -1, 3, 0x10, 3, 0x10, 3, 0x10 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_4color_inks
   },
@@ -800,7 +800,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 48, 6, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
-    { -1, 2, 0x11, 4, 0x10, -1, 0x10 },
+    { -1, 2, 0x10, 4, 0x10, -1, 0x10 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_6color_inks
   },
@@ -811,7 +811,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     48, 6, 48, 6, 360, INCH(13), INCH(44), 9, 9, 0, 9, 1, 0,
-    { -1, 2, 0x11, 4, 0x10, -1, 0x10 },
+    { -1, 2, 0x10, 4, 0x10, -1, 0x10 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_6color_inks
   },
@@ -866,7 +866,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 48, 8, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
-    { -1, 2, 0x11, 4, 0x10, -1, 0x10 },
+    { -1, 2, 0x10, 4, 0x10, -1, 0x10 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_6color_inks
   },
@@ -877,7 +877,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     15, 8, 15, 8, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
-    { -1, 3, 0x11, 3, 0x10, -1, -1 },
+    { -1, 3, 0x10, 3, 0x10, -1, -1 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_4color_inks
   },
