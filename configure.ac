@@ -218,6 +218,17 @@ STP_ARG_WITH([foomatic],
              [(automatic)])
 
 
+AC_PATH_PROG(FOOMATIC_PPDFILE, foomatic-ppdfile)
+if test -z "${FOOMATIC_PPDFILE}" ; then
+  BUILD_FOOMATIC_3="no"
+else
+  BUILD_FOOMATIC_3="yes"
+fi
+STP_ARG_WITH([foomatic3],
+             [make use of foomatic 3 extra features],
+             [BUILD_FOOMATIC_3],
+             [(automatic)])
+
 AC_PATH_PROG(IJS_CONFIG, ijs-config)
 if test -z "${IJS_CONFIG}" ; then
   BUILD_GHOSTSCRIPT="no"
@@ -537,6 +548,8 @@ AC_CHECK_FUNC(getopt_long,
 
 dnl Define what has to be built
 AM_CONDITIONAL(BUILD_FOOMATIC, test x${BUILD_FOOMATIC} = xyes)
+
+AM_CONDITIONAL(BUILD_FOOMATIC_3, test x${BUILD_FOOMATIC_3} = xyes)
 
 AM_CONDITIONAL(BUILD_GHOSTSCRIPT, test x${BUILD_GHOSTSCRIPT} = xyes)
 

@@ -5,6 +5,7 @@ use Getopt::Long;
 Getopt::Long::Configure("no_ignore_case", "pass_through");
 GetOptions("m=s" => \$opt_m,         # Map file
            "t=s" => \$opt_t,         # Template directory
+	   "f=s" => \$opt_f,         # Foomatic version
            "d=s" => \@opt_d);        # which Drivers?
 
 # Wherever we put it...
@@ -18,6 +19,9 @@ $templatedir = $opt_t;
 my @drivertypes = (ijs);
 
 exit 0 if ($#drivertypes < 0); # Nothing to be done, exit silently
+
+# Do we have Foomatic 2.9 or newer
+my $foomatic3 = ((defined($opt_f)) && ($opt_f >= 2.9));
 
 # The following substitutions happen to the template XML files:
 # @@STPVER@@         - the version number (ie '4.1.5')
@@ -52,6 +56,10 @@ my $funcs = { 'InputSlot' => { 'OPTCONSTRAINTS' => \&build_cons,
 			     'ENUMVALS' => \&build_ev },
 	      'Resolution' => { 'OPTCONSTRAINTS' => \&build_resolution_cons,
 				'ENUMVALS' => \&build_resolution_ev },
+	      'PrintoutMode' => { 'OPTCONSTRAINTS' => 
+				      \&build_printoutmode_cons,
+				  'ENUMVALS' => 
+				      \&build_printoutmode_ev },
 	  };
 
 my $drivervals = { 'PageSize' => \&optmap_pagesize,
@@ -114,6 +122,31 @@ for $a (keys(%stpdata)) {
     }
 }
 
+if ($foomatic3) {
+    # Generate data for "PrintoutMode" option, only needed for 
+    # Foomatic 2.9.x or newer
+    print STDERR "Generating data for \"PrintoutMode\" option...";
+    ($printoutmode, $printoutmodechoices) = getprintoutmode();
+    print STDERR "done.\n";
+    # Foomatic >= 2.9: Make a list of all choice entries needed in the
+    # "PrintoutMode" option XML file. Note: every choice ("Draft",
+    # "Normal", ...) will appear several times, but with different
+    # strings in "<ev_driverval>". Constraints will make only the
+    # right choices getting into the PPD file. Assign a unique ID to
+    # each entry.
+    for $a (keys(%{$printoutmode})) {
+	for $vtmp (keys %{$printoutmode->{$a}}) {
+	    my $mode = $printoutmode->{$a}{$vtmp};
+	    if (!$seen_modes{$vtmp}{$mode}++) {
+		if (!defined($nums{$vtmp})) {
+		    $nums{$vtmp} = 0;
+		}
+		$nums{$vtmp} ++;
+		$modes{$vtmp}{$mode} = "$vtmp-$nums{$vtmp}";
+	    }
+	}
+    }
+}
 
 # Step 1: construct a map from Model= values to Foomatic model id's
 # this map is %mapstp.  The inverse from model to Model is %mapdb
@@ -174,6 +207,25 @@ my $generalsubs = { 'STPVER' => $stpvers,
 		    'DRVNAME' => $drivernameprefix,
 		    'STPRINTERS' => join('', @printerlist) };
 
+my $optiongroups = { 'PageSize' => 'General',
+		     'InputSlot' => 'General',
+		     'MediaType' => 'General',
+		     'InkType' => 'General',
+		     'PrintoutMode' => 'General',
+		     'Resolution' => 'PrintoutMode',
+		     'Quality' => 'PrintoutMode',
+		     'Color' => 'PrintoutMode',
+		     'ImageType' => 'PrintoutMode',
+		     'DitherAlgorithm' => 'PrintoutMode',
+		     'Gamma' => 'Adjustment',
+		     'Density' => 'Adjustment',
+		     'Brightness' => 'Adjustment',
+		     'Contrast' => 'Adjustment',
+		     'Saturation' => 'Adjustment',
+		     'Cyan' => 'Adjustment',
+		     'Magenta' => 'Adjustment',
+		     'Yellow' => 'Adjustment' };
+
 my @numericsubs = ('MINVAL', 'MAXVAL', 'DEFVAL');
 
 # OK, make the db directory...
@@ -205,7 +257,12 @@ for $drivertype (@drivertypes) {
 	die "Cannot open templates directory: $!\n";
 
     while ($tmpl=readdir(TDIR)) {
+
+	# Only XML files
 	next if ($tmpl !~ m!.+\.xml$!);
+	# The "PrintoutMode" option is only supported by Foomatic 2.9.x or
+	# newer
+	next if ((!$foomatic3) && ($tmpl eq "PrintoutMode.xml"));
 
 	my $fooopt = $tmpl;
 	$fooopt =~ s!\.xml$!!;
@@ -228,6 +285,16 @@ for $drivertype (@drivertypes) {
 	for $substr (keys(%$generalsubs)) {
 	    my $substitution = $generalsubs->{$substr};
 	    $template =~ s!\@\@$substr\@\@!$substitution!g;
+	}
+
+	# Put the options into PPD groups (Foomatic >= 2.9)
+
+	if ($foomatic3) {
+	    my $substitution = "\n   <arg_group>" . 
+		$optiongroups->{$fooopt} . "</arg_group>";
+	    $template =~ s!\@\@GROUP\@\@!$substitution!g;
+	} else {
+	    $template =~ s!\@\@GROUP\@\@!!g;
 	}
 
 	# Now do the numeric substitutions
@@ -329,13 +396,13 @@ sub build_ev {
 	      "          <driver>$drvname</driver>\n",
 	      "        </constraint>\n");
 
-	#   Build constraints for this particular ev
+	#   Build constraints for this particular choice
 	my $stpprn;
 	for $stpprn (keys(%stpdata)) {
 	    my $fooprn;
 	    for $fooprn (@{$mapstp{$stpprn}}) {
 		if ($stpdata{$stpprn}{$stpopt}{$ev_shortname}) {
-		    # OK, this choice applies to this enum
+		    # OK, this choice applies to this printer
 		    push (@vals,
 			  "        <constraint sense='true'>\n",
 			  "          <!-- $fooprn == $stpprn -->\n",
@@ -459,8 +526,8 @@ sub build_model_cons {
     # choice is valid for only the foo printers that correspond.  For
     # any given foo printer, there is *exactly one* available choice.
     # The defval is the one available choice.  Backends and
-    # applications do not show choices with only one option; they just
-    # select that option.  So we don't bother to make pretty option
+    # applications do not show options with only one choice; they just
+    # select that choice.  So we don't bother to make pretty option
     # names or anything.
     #
     # See also build_model_ev()
@@ -722,6 +789,439 @@ sub build_resolution_cons {
 		"  </constraints>\n");
 }
 
+sub build_printoutmode_ev {
+    my ($stpopt) = @_;
+    my $drvname = "$drivernameprefix$drivertypesuffix";
+
+    my @vals = ();
+
+    # OK, now for each choice ("Draft", "Normal", ...) ...
+    my $choice;
+    for $choice (keys %modes) {
+	# ... and each possible "<ev_driverval>" for it
+	my $ev_driverval;
+	for $ev_driverval (keys %{$modes{$choice}}) {
+	    #  Put in the basic choice info: ev names, etc
+	    my $ev_longname = $printoutmodechoices->{$choice};
+	    my $ev_shortname = $choice;
+
+	    my $ev_id = 
+		get_ev_key($modes{$choice}{$ev_driverval}, $drvname);
+
+	    push (@vals,
+		  "    <enum_val id='$ev_id'>\n",
+		  "      <ev_longname><en>$ev_longname</en></ev_longname>\n",
+		  "      <ev_shortname><en>$ev_shortname</en></ev_shortname>\n",
+		  "      <ev_driverval>$ev_driverval</ev_driverval>\n",
+		  "      <constraints>\n",
+		  "        <!-- Assume the option doesn't apply... -->\n",
+		  "        <constraint sense='false'>\n",
+		  "          <driver>$drvname</driver>\n",
+		  "        </constraint>\n");
+
+	    #   Build constraints for this particular ev_driverval
+	    my $stpprn;
+	    for $stpprn (keys(%stpdata)) {
+		my $fooprn;
+		for $fooprn (@{$mapstp{$stpprn}}) {
+		    if ($printoutmode->{$stpprn}{$choice} eq 
+			$ev_driverval) {
+			# OK, this choice applies to this printer
+			push (@vals,
+			      "        <constraint sense='true'>\n",
+			      "          <!-- $fooprn == $stpprn -->\n",
+			      "          <driver>$drvname</driver>\n",
+			      "          <printer>$fooprn</printer>\n",
+			      "        </constraint>\n");
+		    }
+		}
+	    }
+
+	    push (@vals,
+		  "      </constraints>\n",
+		  "    </enum_val>\n");
+	}
+    }
+
+    return join('',
+		"<enum_vals>\n",
+		@vals,
+		"  </enum_vals>\n");
+}
+
+sub build_printoutmode_cons {
+    my ($stpopt) = @_;
+    my $drvname = "$drivernameprefix$drivertypesuffix";
+
+    my @PNCONS = ();
+
+    # For each stp printer...
+    my $stpname;
+    for $stpname (keys(%mapstp)) {
+
+	# For each possible foo name
+	my $fooname;
+	for $fooname (@{$mapstp{$stpname}}) {
+
+	    # What's the default value (always the "Normal" mode)?
+	    my $normalmode = $printoutmode->{$stpname}{'Normal'};
+	    my $foodefval = get_ev_key($modes{'Normal'}{$normalmode}, 
+				       $drvname);
+
+	    push (@PNCONS,
+		  "    <constraint sense='true'>\n",
+		  "      <driver>$drvname</driver>\n",
+		  "      <printer>$fooname</printer>\n",
+		  "      <arg_defval>$foodefval</arg_defval>\n",
+		  "    </constraint>\n");
+	}
+    }
+
+    return join('',
+		"<constraints>\n",
+		@PNCONS,
+		"  </constraints>\n");
+}
+
+sub qualityorder {
+    # List of suffixes of the Quality choices
+    my @suffixes = (
+		    # General
+		    "",
+		    "dpi",
+		    # Epson/Lexmark
+		    "mw",
+		    "mw2",
+		    "sw",
+		    "fol",
+		    "fol2",
+		    "fourp",
+		    "uni",
+		    "mwuni",
+		    "mw2uni",
+		    "swuni",
+		    "foluni",
+		    "fol2uni",
+		    "fourpuni",
+		    "hq",
+		    "hquni",
+		    "hq2",
+		    "hq2uni",
+		    # Canon
+		    "dmt",
+		    # HP
+		    "mono",
+		    );
+    my ($a, $b) = @_;
+    # Bring the suffixes to lower case
+    my $first = lc($a);
+    my $second = lc($b);
+    # Check whether they are in the @suffixes list
+    my $i;
+    for ($i = 0; $i <= $#suffixes; $i++) {
+	my $firstinlist = ($first eq $suffixes[$i]);
+	my $secondinlist = ($second eq $suffixes[$i]);
+	if (($firstinlist) && (!$secondinlist)) {return -1};
+	if (($secondinlist) && (!$firstinlist)) {return 1};
+	if (($firstinlist) && ($secondinlist)) {return 0};
+    }
+
+    # Equal quality
+    die "The quality choice suffixes $a and $b are unknown!\n";
+    return 0;
+
+}
+
+sub getprintoutmode {
+    my $choicelongnames = {
+	'Draft' => 'Draft (Economy)',
+	'Draft.Gray' => 'Draft Grayscale (Economy)',
+	'Normal' => 'Normal',
+	'Normal.Gray' => 'Normal Grayscale',
+	'High' => 'High Quality',
+	'High.Gray' => 'High Quality Grayscale',
+	'VeryHigh' => 'Very High Quality',
+	'VeryHigh.Gray' => 'Very High Quality Grayscale',
+	'Photo' => 'Photo',
+	'Photo.Gray' => 'Photo Grayscale',
+    };
+
+    ### BASIC RULES
+
+    # See mode-specific rules below
+
+    # There must be always a "Normal" mode, this will be the default.
+
+    # On black-and-white printers there are no modes with ".Gray"
+    # specifier, the standard modes are already grayscale.
+
+    # No "Photo" mode on laser printers.
+
+    # If on a PCL printer "600mono" is the chose quality, it will be
+    # replaced by "300dpi" in color mode (This can lead to a mode being
+    # removed by the following two rules).
+
+    # If "VeryHigh" has exactly the same settings as "High", "VeryHigh"
+    # is left out.
+
+    # If "High" has exactly the same settings as "Normal", "High"
+    # is left out.
+
+    # If nothing is found for a certain mode, this mode is left out.
+
+    my $modes = {};
+    # Treat all printers
+    my $stpprn;
+    for $stpprn (keys(%stpdata)) {
+	my $modeinfo = {};
+	my ($draftminres, $draftbestsymmetry, $draftlowestqualstr) = 
+	    (99999999, 99999999, "xxx");
+	my $normaldefaultqual = $defaults{$stpprn}{'Resolution'};
+	my ($highmaxres, $highbestsymmetry, $highbestqualstr) = 
+	    (0, 99999999, "");
+	my ($veryhighmaxres, $veryhighbestsymmetry, $veryhighbestqualstr) = 
+	    (0, 99999999, "");
+	my ($photomaxres, $photobestsymmetry, $photobestqualstr) = 
+	    (0, 99999999, "");
+	# Go through all choices of the "Quality" option and find the
+	# best values for the "PrintoutMode" option
+	my $quality;
+	for $quality (keys(%{$stpdata{$stpprn}{'Resolution'}})) {
+	    my ($xres, $yres, $qualstr);
+	    if ($quality =~ /^(\d+)x(\d+)(\D.*)$/) {
+		$xres = $1;
+		$yres = $2;
+		$qualstr = $3;
+	    } elsif ($quality =~ /^(\d+)(\D.*)$/) {
+		$xres = $1;
+		$yres = $1;
+		$qualstr = $2;
+	    } else {
+		die "Invalid quality: $quality\n";
+	    }
+	    # Resolution in dots per square inch
+	    my $respersquareinch = $xres * $yres;
+	    # Symmetry: Shows how far from symmetric a resolution is,
+	    # the smaller, the more symmetric, symmetric resolutions (as
+	    # 300x300 dpi) give zero.
+	    my $symmetry = abs(log($yres/$xres));
+
+	    ### Mode: DRAFT
+
+	    # Use always the lowest available resolution/quality, 
+	    # preferrably symmetric resolutions,
+
+	    # Do not use resolutions with less than 150 dpi in both
+	    # demensions.
+
+	    # VeryFast dithering, ImageType LineArt
+
+	    if (($respersquareinch < $draftminres) ||
+		(($respersquareinch == $draftminres) && 
+		 ($symmetry < $draftbestsymmetry)) ||
+		(($respersquareinch == $draftminres) &&
+		 ($symmetry == $draftbestsymmetry) &&
+		 (qualityorder($qualstr, $draftlowestqualstr) < 0))) {
+		$draftbestsymmetry = $symmetry;
+		$draftminres = $respersquareinch;
+		$draftlowestqualstr = $qualstr;
+		next if (($xres < 150) && # Resolution not lower than
+			 ($yres < 150));  # 150x150, 360x120 allowed
+		$modeinfo->{'Draft'} = {
+		    'quality' => $quality,
+		    'xres' => $xres,
+		    'yres' => $yres,
+		    'dither' => 'VeryFast',
+		    'image' => 'LineArt'
+		}
+	    }
+
+	    ### Mode: NORMAL
+
+	    # Default resolution/quality of GIMP-Print, upgrade to 
+	    # unidirectional if possible, use 600x600 dpi for
+	    # Lexmark Z..
+
+	    # Adaptive Hybrid dithering, ImageType Photographs
+
+	    if ((($stpprn =~ /^lexmark\-z/) &&
+		 ($xres == 600) && ($yres == 600) && ($qualstr eq "uni")) ||
+		(($stpprn !~ /^lexmark\-z/) &&
+		 (($quality eq "${normaldefaultqual}uni") ||
+		  (($quality eq $normaldefaultqual) &&
+		   (!defined($normal->{'quality'})))))) {
+		$modeinfo->{'Normal'} = {
+		    'quality' => $quality,
+		    'xres' => $xres,
+		    'yres' => $yres,
+		    'dither' => 'Adaptive',
+		    'image' => 'Photographs'
+		}
+	    }
+
+	    ### Mode: HIGH
+
+	    # High: The highest resolution which is not higher than
+	    # 720x720 dpi (Lexmark Z..: 1200x1200 dpi),
+	    # unidirectional if possible, 
+	    # not "fol", "fourp", "hq", "hq2"
+
+	    # Adaptive Hybrid dithering, ImageType Photographs
+
+	    if (($respersquareinch > $highmaxres) ||
+		(($respersquareinch == $highmaxres) && 
+		 ($symmetry < $highbestsymmetry)) ||
+		(($respersquareinch == $highmaxres) &&
+		 ($symmetry == $highbestsymmetry) &&
+		 (qualityorder($qualstr, $highbestqualstr) > 0))) {
+		unless ((($stpprn !~ /^lexmark\-z/) && 
+			 (($xres > 720) || # Resolution not higher than
+			  ($yres > 720))) || # 720x720 for non Lexmark
+			($xres > 1200) || # not bigger than 1200x1200
+			($yres > 1200) || # in general
+			($qualstr =~ /^(hq.*|fo.*)$/)) { # Not "hq", "hq2",
+		                                         # "fol", "fourp"
+		    $highbestsymmetry = $symmetry;
+		    $highmaxres = $respersquareinch;
+		    $highbestqualstr = $qualstr;
+		    $modeinfo->{'High'} = {
+			'quality' => $quality,
+			'xres' => $xres,
+			'yres' => $yres,
+			'dither' => 'Adaptive',
+			'image' => 'Photographs'
+		    }
+		}
+	    }
+
+	    ### Mode: VERY HIGH
+
+	    # Use always the highest available resolution/quality, 
+	    # preferrably symmetric resolutions,
+
+	    # On Epsons: Maximum 1440x720, not "hq2".
+
+	    # Adaptive Hybrid dithering, ImageType Photographs
+
+	    if (($respersquareinch > $veryhighmaxres) ||
+		(($respersquareinch == $veryhighmaxres) && 
+		 ($symmetry < $veryhighbestsymmetry)) ||
+		(($respersquareinch == $veryhighmaxres) &&
+		 ($symmetry == $veryhighbestsymmetry) &&
+		 (qualityorder($qualstr, $veryhighbestqualstr) > 0))) {
+		unless (($stpprn =~ /^escp2/) && # Epson
+			(($xres > 1440) || # Resolution not higher than
+			 ($yres > 720) ||  # 1440x720
+			 ($qualstr eq "hq2"))) {  # Not "hq2"
+		    $veryhighbestsymmetry = $symmetry;
+		    $veryhighmaxres = $respersquareinch;
+		    $veryhighbestqualstr = $qualstr;
+		    $modeinfo->{'VeryHigh'} = {
+			'quality' => $quality,
+			'xres' => $xres,
+			'yres' => $yres,
+			'dither' => 'Adaptive',
+			'image' => 'Photographs'
+		    }
+		}
+	    }
+
+	    ### Mode: PHOTO
+
+	    # Use always the highest available resolution/quality, 
+	    # preferrably symmetric resolutions,
+
+	    # On Epsons: Maximum 2880x720
+
+	    # EvenTone dithering, ImageType Photographs
+
+	    if (($respersquareinch > $photomaxres) ||
+		(($respersquareinch == $photomaxres) && 
+		 ($symmetry < $photobestsymmetry)) ||
+		(($respersquareinch == $photomaxres) &&
+		 ($symmetry == $photobestsymmetry) &&
+		 (qualityorder($qualstr, $photobestqualstr) > 0))) {
+		unless (($stpprn =~ /^escp2/) && # Epson
+			(($xres > 2880) || # Resolution not higher than
+			 ($yres > 720))) {  # 2880x720
+		    $photobestsymmetry = $symmetry;
+		    $photomaxres = $respersquareinch;
+		    $photobestqualstr = $qualstr;
+		    $modeinfo->{'Photo'} = {
+			'quality' => $quality,
+			'xres' => $xres,
+			'yres' => $yres,
+			'dither' => 'EvenTone',
+			'image' => 'Photographs'
+		    }
+		}
+	    }
+	}
+
+	# We must have a "Normal" mode for every printer.
+	if (!defined($modeinfo->{'Normal'}{'quality'})) {
+	    die "No 'Normal' mode for $stpprn!\n";
+	}
+
+	# Build the strings with the settings for the "PrintoutMode"
+	# option
+	for my $m (keys(%{$modeinfo})) {
+	    # If we didn't find anything for a certain mode, skip this
+	    # mode
+	    next if (!defined($modeinfo->{$m}{'quality'}));
+	    my $modestr =
+		"GSResolution=$modeinfo->{$m}{'xres'}x" .
+		"$modeinfo->{$m}{'yres'}DPI " .
+		"Quality=$modeinfo->{$m}{'quality'} " .
+		"DitherAlgorithm=$modeinfo->{$m}{'dither'} " .
+		"ImageType=$modeinfo->{$m}{'image'}";
+	    if (defined($stpdata{$stpprn}{'Color'}{'Color'})) { 
+		# Color printer
+		$modes->{$stpprn}{$m} = $modestr . " OutputType=Color";
+		$modes->{$stpprn}{"$m.Gray"} = 
+		    $modestr . " OutputType=Grayscale";
+		# Some HP inkjets have a "600mono" quality mode which
+		# is only available in Grayscale, replace this mode by
+		# "300dpi" in the settings for color printing
+		if ($modes->{$stpprn}{$m} =~ /600mono/) {
+		    if(!defined($stpdata{$stpprn}{'Resolution'}{'300dpi'})){
+			die "No '300dpi' mode for $stpprn!";
+		    }
+		    $modes->{$stpprn}{$m} =~ s/600x600DPI/300x300DPI/;
+		    $modes->{$stpprn}{$m} =~ s/600mono/300dpi/;
+		}
+	    } else {
+		# bw printer
+		# No 'Photo' mode on laser printers
+		next if (($m eq 'Photo') && 
+			 ($stpprn =~ /^pcl\-[2-6][vls]?i?$/));
+		$modes->{$stpprn}{$m} = $modestr . " OutputType=Grayscale";
+	    }
+	}
+	# Remove 'VeryHigh' and 'High' if they are identical to lower
+	# quality modes
+	if ($modes->{$stpprn}{'VeryHigh'} eq 
+	    $modes->{$stpprn}{'High'}) {
+	    delete($modes->{$stpprn}{'VeryHigh'});
+	}
+	if ($modes->{$stpprn}{'High'} eq 
+	    $modes->{$stpprn}{'Normal'}) {
+	    delete($modes->{$stpprn}{'High'});
+	}
+	if (defined($stpdata{$stpprn}{'Color'}{'Color'})) { 
+	    # Color printer
+	    if ($modes->{$stpprn}{'VeryHigh.Gray'} eq 
+		$modes->{$stpprn}{'High.Gray'}) {
+		delete($modes->{$stpprn}{'VeryHigh.Gray'});
+	    }
+	    if ($modes->{$stpprn}{'High.Gray'} eq 
+		$modes->{$stpprn}{'Normal.Gray'}) {
+		delete($modes->{$stpprn}{'High.Gray'});
+	    }
+	}
+    }
+
+    return ($modes, $choicelongnames)
+}
 
 exit(0);
-
