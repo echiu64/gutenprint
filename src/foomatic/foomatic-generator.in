@@ -61,6 +61,22 @@ $colormap = { 'ijs' => { 'Grayscale' => 'DeviceGray',
 			 'RawCMYK' => 'DeviceCMYK' }
 	    };
 
+my $groupname_prefix = "Gimp-Print";
+
+my @parameter_class_names = (
+			     "Printer Features",
+			     "Output Control"
+			     );
+
+my @parameter_level_names = (
+			     "Common",
+			     "Extra 1",
+			     "Extra 2",
+			     "Extra 3",
+			     "Extra 4",
+			     "Extra 5"
+			     );
+
 use Data::Dumper;
 
 open PIPE, "./printer_options|" or die "Cannot run printer_options: $!\n";
@@ -309,13 +325,11 @@ my $generalsubs = { 'STPVER' => $stpvers,
 my $optiongroups = { 'PageSize' => 'General',
 		     'InputSlot' => 'General',
 		     'MediaType' => 'General',
-		     'InkType' => 'General',
 		     'PrintoutMode' => 'General',
 		     'Resolution' => 'General',
 		     'Quality' => 'General',
 		     'Color' => 'General',
-		     'ImageOptimization' => 'General',
-		     'DitherAlgorithm' => 'General' };
+		     'ImageType' => 'General'};
 
 my @numericsubs = ('MINVAL', 'MAXVAL');
 
@@ -410,11 +424,24 @@ for $drivertype (@drivertypes) {
 
 	if ($foomatic3) {
 	    my $group;
-	    if (defined($optiongroups->{$fooopt})) {
-		$group = $optiongroups->{$fooopt};
-	    } elsif ($num_opt) {
-		$group = "Adjustment";
+	    if (defined($optiongroups->{$shortname})) {
+		# Group names given by table (esp. "General" for special
+		# Options)
+		$group = $optiongroups->{$shortname};
+	    } elsif (defined($param_classes{$shortname}) &&
+		     defined($param_levels{$shortname}) &&
+		     $parameter_class_names[$param_classes{$shortname}] &&
+		     $parameter_level_names[$param_levels{$shortname}]) {
+		# Group names given by libgimpprint
+		$group = $groupname_prefix . " " .
+		    $parameter_class_names[$param_classes{$shortname}] . " " .
+		    $parameter_level_names[$param_levels{$shortname}];
+		# Remove the spaces (the name with spaces Foomatic will
+		# generate automatically)
+		$group =~ s! !!g;
 	    } else {
+		# All the above did not assign a group name? Use 
+		# "Miscellaneous" (Should usually not happen)
 		$group = "Miscellaneous";
 	    }
 	    my $substitution = "\n   <arg_group>" . 
@@ -440,7 +467,7 @@ for $drivertype (@drivertypes) {
 	    $template =~ s!\@\@LONGNAME\@\@!$longnames{$shortname}!g;
 	    $template =~ s!\@\@SHORTNAME\@\@!$shortname!g;
 	    $template =~ s!\@\@ORDER\@\@!$order!g;
-	    $order += 10;
+	    #$order += 10;
 	    $template =~ s!\@\@SPOT\@\@!"B"!g;
 	    $template =~ s!\@\@PROTO\@\@!"$stpopt=\%s,"!g;
 	}
@@ -965,7 +992,7 @@ sub build_resolution_ev {
 		    push (@vals,
 			  "        <constraint sense='true'>\n",
 			  "          <driver>$drvname</driver>\n",
-			  "          <printer>$fooprn</printer><!-- stpname: $stpprn -->\n",
+			  "          <printer>$fooprn</printer><!-- gimp-print name: $stpprn -->\n",
 			  "        </constraint>\n");
 		}
 	    }
@@ -1006,7 +1033,7 @@ sub build_resolution_cons {
 	    push (@PNCONS,
 		  "    <constraint sense='true'>\n",
 		  "      <driver>$drvname</driver>\n",
-		  "      <printer>$fooname</printer><!-- stpname: $stpname -->\n",
+		  "      <printer>$fooname</printer><!-- gimp-print name: $stpname -->\n",
 		  "      <arg_defval>$foodefval</arg_defval>\n",
 		  "    </constraint>\n");
 	}
@@ -1248,7 +1275,7 @@ sub getprintoutmode {
 	    # Do not use resolutions with less than 150 dpi in both
 	    # demensions.
 
-	    # ImageOptimization Text
+	    # ImageType Text
 
 	    my $qualitysetting = 
 		(defined($stpdata{$stpprn}{'Quality'}) ?
@@ -1306,7 +1333,7 @@ sub getprintoutmode {
 	    # for Lexmark Z..), low quality level, unidirectional if
 	    # possible, 
 
-	    # ImageOptimization TextGraphics
+	    # ImageType TextGraphics
 
 	    $qualitysetting = 
 		(defined($stpdata{$stpprn}{'Quality'}) ?
@@ -1370,7 +1397,7 @@ sub getprintoutmode {
 	    # unidirectional if possible, 
 	    # not "fol", "fourp", "hq", "hq2"
 
-	    # ImageOptimization TextGraphics
+	    # ImageType TextGraphics
 
 	    $qualitysetting = 
 		(defined($stpdata{$stpprn}{'Quality'}) ?
@@ -1434,7 +1461,7 @@ sub getprintoutmode {
 
 	    # On Epsons: Maximum 1440x720, not "hq2".
 
-	    # ImageOptimization TextGraphics
+	    # ImageType TextGraphics
 
 	    $qualitysetting = 
 		(defined($stpdata{$stpprn}{'Quality'}) ?
@@ -1494,7 +1521,7 @@ sub getprintoutmode {
 	    # 720x720 dpi (Lexmark Z..: 1200x1200 dpi),
 	    # unidirectional if possible, 
 
-	    # ImageOptimization Photographs
+	    # ImageType Photographs
 
 	    $qualitysetting = 
 		(defined($stpdata{$stpprn}{'Quality'}) ?
@@ -1568,7 +1595,7 @@ sub getprintoutmode {
 	    next if (!defined($modeinfo->{$m}{'quality'}));
 	    my $modestr =
 		(defined($stpdata{$stpprn}{'ImageType'}) ?
-		 "ImageOptimization=$modeinfo->{$m}{'image'} " : "") .
+		 "ImageType=$modeinfo->{$m}{'image'} " : "") .
 		(defined($stpdata{$stpprn}{'Quality'}) ? 
 		 "Quality=$modeinfo->{$m}{'quality'} " : "") .
 		"GSResolution=$modeinfo->{$m}{'xres'}x" .
