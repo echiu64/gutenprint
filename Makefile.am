@@ -41,7 +41,16 @@ libtool: $(LIBTOOL_DEPS)
 	cd $(srcdir); \
 	$(SHELL) ./config.status --recheck
 
-ChangeLog:
+ChangeLogStamp:
+	for f in `find . -name Entries -print | grep CVS` ; do \
+	  if /usr/bin/test ! -f ChangeLogStamp -o ChangeLogStamp -ot $$f ; then \
+	    rm -f ChangeLogStamp ; \
+	    ls -l ChangeLogStamp $$f ; \
+	    touch ChangeLogStamp ; \
+	  fi ; \
+	done
+
+ChangeLog: ChangeLogStamp
 	@cd $(top_srcdir) ; \
 	if test -f $(top_builddir)/.noupdate ; then \
 	  echo "ChangeLog: .noupdate found: NOT updating ChangeLog from CVS" ; \
@@ -193,4 +202,4 @@ MAINTAINERCLEANFILES = \
 
 EXTRA_DIST = autogen.sh
 
-.PHONY: deb html install-cups install-gimp install-ghost snapshot ChangeLog
+.PHONY: deb html install-cups install-gimp install-ghost snapshot
