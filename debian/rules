@@ -1,0 +1,120 @@
+#!/usr/bin/make -f
+# Sample debian/rules that uses debhelper. 
+# GNU copyright 1997 by Joey Hess.
+#
+# Uncomment this to turn on verbose mode. 
+#export DH_VERBOSE=1
+
+# This is the debhelper compatability version to use.
+export DH_COMPAT=2
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+# Set LD_LIBRARY_PATH for dh_shlibdeps
+LD_LIBRARY_PATH = $(shell pwd)/debian/libgimpprint/usr/lib
+export LD_LIBRARY_PATH
+
+build: build-stamp
+build-stamp: configure
+	dh_testdir
+	
+	mkdir debian/gimp-print-build ; \
+	cd debian/gimp-print-build ; \
+	BUILD_PACKAGE=true ../../configure --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --enable-static --enable-shared --without-gimp --with-cups --disable-test --disable-nls ; \
+	$(MAKE) ; \
+	cd src/gimp ; \
+	$(MAKE) print
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp 
+
+	# Add here commands to clean up after the build process.
+	rm -rf debian/gimp-print-build debian/gimp-print-install
+	-$(MAKE) distclean
+
+	dh_clean
+
+install: DH_OPTIONS=
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	cd debian/gimp-print-build ; \
+	$(MAKE) DESTDIR=`pwd`/../gimp-print-install install
+	
+	scripts/mkinstalldirs debian/gimp1.2-print/usr/lib/gimp/1.2/plug-ins
+	/usr/bin/install -c debian/gimp-print-build/src/gimp/.libs/print debian/gimp1.2-print/usr/lib/gimp/1.2/plug-ins/print
+	
+	dh_movefiles --sourcedir=debian/gimp-print-install
+
+# This single target is used to build all the packages, all at once, or
+# one at a time. So keep in mind: any options passed to commands here will
+# affect _all_ packages. Anything you want to only affect one package
+# should be put in another target, such as the install target.
+binary-common:
+# Need this version of debhelper for DH_OPTIONS to work.
+	dh_testversion 1.1.17
+	dh_testdir
+	dh_testroot
+#	dh_installdebconf
+	dh_installdocs
+	  mkdir debian/gimp1.2-print/usr/share/doc/gimp1.2-print/html ; \
+	  cp doc/*.html doc/*.png debian/gimp1.2-print/usr/share/doc/gimp1.2-print/html ; \
+	  cp doc/*.sgml debian/gimp1.2-print/usr/share/doc/gimp1.2-print
+	dh_installexamples
+#	dh_installmenu
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+#	dh_installinit
+#	dh_installcron
+#	dh_installinfo
+	dh_undocumented
+	dh_installchangelogs
+	cd debian/libgimpprint-dev/usr/share/doc ; \
+	  mv libgimpprint-dev libgimpprint ; \
+	  ln -s libgimpprint libgimpprint-dev ; \
+	  rm -r libgimpprint
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+# dh_suidregister is obsolete
+#	dh_suidregister
+	dh_makeshlibs
+	dh_installdeb
+#	dh_perl
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+# Build architecture independant packages using the common target.
+binary-indep:
+# (Uncomment this next line if you have such packages.)
+#        $(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
+
+# Build architecture dependant packages using the common target.
+binary-arch: build install
+	$(MAKE) -f debian/rules DH_OPTIONS=-a binary-common
+
+# Any other binary targets build just one binary package at a time.
+binary-%: build install
+	make -f debian/rules binary-common DH_OPTIONS=-p$*
+
+configure:
+	if test -f configure.in.in ; then \
+	  ./autogen.sh --version ; \
+	elif test -f configure.in ; then \
+	  autoconf ; \
+	fi
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

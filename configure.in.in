@@ -332,9 +332,11 @@ if test x${BUILD_CUPS} = xyes ; then
   fi
 dnl Require CUPS 1.1...
   AC_CHECK_LIB(cups,cupsPrintFiles,
-    CUPS_LIBS="${CUPS_LIBS} -lcups")
+    CUPS_LIBS="${CUPS_LIBS} -lcups",
+    AC_MSG_ERROR([Cannot find CUPS libraries (libcups)]))
   AC_CHECK_LIB(cupsimage,cupsRasterOpen,
-    CUPS_LIBS="${CUPS_LIBS} -lcupsimage",,
+    CUPS_LIBS="${CUPS_LIBS} -lcupsimage",
+    AC_MSG_ERROR([Cannot find CUPS libraries (libcupsimage)]),
     -lcups)
 
 fi

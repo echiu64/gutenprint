@@ -1,0 +1,72 @@
+Source: gimp-print
+Section: graphics
+Priority: optional
+Maintainer: Roger Leigh <roger@whinlatter.uklinux.net>
+Standards-Version: 3.1.1
+Build-Depends: libc6-dev, libcupsys2-dev, libgimp1.2-dev, libglib1.2-dev, libgtk1.2-dev, libreadline4-dev, xlibs-dev, zlib1g-dev
+
+Package: gimp1.2-print
+Architecture: any
+Depends: ${shlibs:Depends}, libgimpprint (>= ${Source-Version})
+Description: print plugin for the GIMP
+ This is Gimp-Print version 4.1.4, a development release in the 4.1
+ line.  Gimp-print is the print facility for the Gimp, and in addition
+ a suite of drivers that may be used with common UNIX spooling systems
+ using GhostScript or CUPS.  These drivers provide printing quality for
+ UNIX/Linux on a par with proprietary vendor-supplied drivers in many
+ cases, and can be used for many of the most demanding printing tasks.
+ .
+ This package includes the print plugin for the GIMP.
+ 
+Package: cupsys-driver-gimpprint
+Architecture: any
+Depends: ${shlibs:Depends}, libgimpprint (>= ${Source-Version})
+Description: gimp-print printer driver for CUPS
+ This is Gimp-Print version 4.1.4, a development release in the 4.1
+ line.  Gimp-print is the print facility for the Gimp, and in addition
+ a suite of drivers that may be used with common UNIX spooling systems
+ using GhostScript or CUPS.  These drivers provide printing quality for
+ UNIX/Linux on a par with proprietary vendor-supplied drivers in many
+ cases, and can be used for many of the most demanding printing tasks.
+ .
+ This package includes a CUPS driver based on gimp-print.
+ .
+ The CUPS drivers contain all of the files needed to support
+ photo-quality printing on any printer supported by the GIMP
+ Print plug-in. You can find out more about the Common UNIX
+ Printing System ("CUPS"), an IPP-based printing system for
+ UNIX/Linux, at:
+ .
+ http://www.cups.org
+
+Package: libgimpprint-dev
+Architecture: any
+Section: devel
+Depends: libgimpprint (= ${Source-Version})
+Description: header files for compiling programs with libgimpprint
+ This package contains the header files for the gimp-print package, along with
+ a static version of libgimpprint.
+ .
+ Install this package if you wish to develop packages that use libgimpprint.
+ .
+ This is the unstable 4.1 branch of gimp-print. It is not intended for use with
+ stable projects!
+
+Package: libgimpprint
+Architecture: any
+Section: libs
+Depends: ${shlibs:Depends}
+Description: library necessary to use gimp-print programs
+ This package includes the libgimpprint library, necessary to run gimp1.2-print
+ and cupsys-driver-gimpprint.
+ .
+ It has been split off from the main gimp-print package in order to facilitate
+ easy development for other packages that require it.
+
+Package: escputil
+Architecture: any
+Section: misc
+Depends: ${shlibs:Depends}, libgimpprint (>= ${Source-Version})
+Description: a utility for Epson Stylus printers
+ escputil is a utility to clean and align the heads of Epson Sytlus printers.
+ It can also check the current ink levels in the printer.
