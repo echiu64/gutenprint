@@ -233,7 +233,6 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
   theImage.dev = pdev;
   theImage.data = &stp_data;
   theImage.raster = stp_raster;
-  merge_printvars(&(stp_data.v), &(printer->printvars));
   if (verify_printer_params(printer, &(stp_data.v)))
     (*printer->print)(printer,		/* I - Model */
 		      1,		/* I - Number of copies */
@@ -500,7 +499,6 @@ stp_open(gx_device *pdev)
 
   stp_data.v.page_width = pdev->MediaSize[0];
   stp_data.v.page_height = pdev->MediaSize[1];
-  stp_print_debug("stp_open", pdev, &stp_data);
 
   (*printer->media_size)(printer,
 			 &(stp_data.v),
@@ -522,6 +520,8 @@ stp_open(gx_device *pdev)
   stp_data.v.top    = 0;
   stp_data.bottom = bottom + length-top;
 
+  merge_printvars(&(stp_data.v), &(printer->printvars));
+  stp_print_debug("stp_open", pdev, &stp_data);
   STP_DEBUG(fprintf(gs_stderr, "margins:  l %f  b %f  r %f  t %f\n",
 		    st[0], st[1], st[2], st[3]));
 
