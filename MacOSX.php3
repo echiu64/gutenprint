@@ -266,10 +266,7 @@ require('standard_html_header.php3');
  <TR>
  <TD colspan="2" >
  <p>
-Gimp-Print 4.3.18 is the latest Mac OS X release in the developmental line (4.3.x) of Gimp-Print. Curre
-ntly, the 4.3.x line is not entirely functional in Mac OS X Jaguar. Almost all u
-sers should continue to use the 4.2.x line until the current issues with 4.3.x a
-re resolved. Additionally, if you ever installed 4.3.17 and you can answer "yes" to both of the following questions:
+Gimp-Print 4.3.18 is the latest Mac OS X release in the developmental line (4.3.x) of Gimp-Print. Currently, the 4.3.x line is not entirely functional in Mac OS X Jaguar. Almost all users should continue to use the 4.2.x line until the current issues with 4.3.x are resolved. Additionally, if you ever installed 4.3.17 and you can answer "yes" to both of the following questions:
 
  <ol>
 <li>Have you ever previously installed an earlier version of Gimp-Print?</li>
