@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-02-09 17:23+0000\n"
+"POT-Creation-Date: 2001-02-09 22:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -200,6 +200,23 @@ msgstr ""
 msgid "Black/Photo Color"
 msgstr "Black/Photo Color"
 
+#. used internally: do not translate
+#. built ins:
+#: src/main/print-canon.c:1227 src/main/print-lexmark.c:593
+#: src/main/print-util.c:231
+msgid "A5"
+msgstr ""
+
+#. 297mm x  420mm
+#: src/main/print-canon.c:1228 src/main/print-lexmark.c:594
+#: src/main/print-util.c:230
+msgid "A4"
+msgstr ""
+
+#: src/main/print-canon.c:1229 src/main/print-lexmark.c:595
+msgid "B5"
+msgstr ""
+
 #. US Exec (7.25 x 10.5 in)
 #: src/main/print-canon.c:1230 src/main/print-lexmark.c:596
 #: src/main/print-pcl.c:103 src/main/print-util.c:185
@@ -222,6 +239,10 @@ msgstr ""
 
 #: src/main/print-canon.c:1234 src/main/print-lexmark.c:600
 msgid "Letter+"
+msgstr ""
+
+#: src/main/print-canon.c:1235 src/main/print-lexmark.c:601
+msgid "A4+"
 msgstr ""
 
 #: src/main/print-canon.c:1236
@@ -814,16 +835,6 @@ msgstr ""
 #. 420mm x  594mm
 #: src/main/print-util.c:229
 msgid "A3"
-msgstr ""
-
-#. 297mm x  420mm
-#: src/main/print-util.c:230
-msgid "A4"
-msgstr ""
-
-#. 210mm x  297mm
-#: src/main/print-util.c:231
-msgid "A5"
 msgstr ""
 
 #. 105mm x  148mm

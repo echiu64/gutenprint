@@ -158,6 +158,7 @@ main ()
           AC_TRY_LINK([
 #include <gimp-print/gimp-print.h>
 #include <stdio.h>
+#include <string.h>
 ],      [ return ((gimpprint_major_version) || (gimpprint_minor_version) || (gimpprint_micro_version)); ],
         [ echo "*** The test program compiled, but did not run. This usually means"
           echo "*** that the run-time linker is not finding GIMPPRINT or finding the wrong"

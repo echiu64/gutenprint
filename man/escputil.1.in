@@ -1,4 +1,4 @@
-.TH ESCPUTIL 1 @RELDATE@ "Version @VERSION@" "GIMP Manual Pages"
+.TH ESCPUTIL 1 "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "GIMP Manual Pages"
 .SH NAME
 escputil - maintain Epson Stylus inkjet printers
 .SH SYNOPSIS

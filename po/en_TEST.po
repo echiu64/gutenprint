@@ -5,7 +5,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2001-02-09 17:23+0000\n"
+"POT-Creation-Date: 2001-02-09 22:37+0000\n"
 "PO-Revision-Date: 2001-02-07 21:33+0\n"
 "Last-Translator: Roger Leigh <roger@whinlatter.uklinux.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -203,6 +203,23 @@ msgstr "TEST: Photograph"
 msgid "Black/Photo Color"
 msgstr "TEST: Black/Photo Color"
 
+#. used internally: do not translate
+#. built ins:
+#: src/main/print-canon.c:1227 src/main/print-lexmark.c:593
+#: src/main/print-util.c:231
+msgid "A5"
+msgstr "TEST: A5"
+
+#. 297mm x  420mm
+#: src/main/print-canon.c:1228 src/main/print-lexmark.c:594
+#: src/main/print-util.c:230
+msgid "A4"
+msgstr "TEST: A4"
+
+#: src/main/print-canon.c:1229 src/main/print-lexmark.c:595
+msgid "B5"
+msgstr ""
+
 #. US Exec (7.25 x 10.5 in)
 #: src/main/print-canon.c:1230 src/main/print-lexmark.c:596
 #: src/main/print-pcl.c:103 src/main/print-util.c:185
@@ -229,6 +246,11 @@ msgstr "TEST: Envelope"
 #, fuzzy
 msgid "Letter+"
 msgstr "TEST: Letter"
+
+#: src/main/print-canon.c:1235 src/main/print-lexmark.c:601
+#, fuzzy
+msgid "A4+"
+msgstr "TEST: A4"
 
 #: src/main/print-canon.c:1236
 msgid "Canon 4x2"
@@ -827,16 +849,6 @@ msgstr "TEST: A2"
 #: src/main/print-util.c:229
 msgid "A3"
 msgstr "TEST: A3"
-
-#. 297mm x  420mm
-#: src/main/print-util.c:230
-msgid "A4"
-msgstr "TEST: A4"
-
-#. 210mm x  297mm
-#: src/main/print-util.c:231
-msgid "A5"
-msgstr "TEST: A5"
 
 #. 105mm x  148mm
 #: src/main/print-util.c:233

@@ -23,9 +23,9 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
-man_MANS = escputil.1
+man_MANS = escputil.1 gimpprint-config.1
 
-DISTCLEANFILES = escputil.1
+DISTCLEANFILES = escputil.1 gimpprint-config.1
 MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = $(man_MANS)

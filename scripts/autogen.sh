@@ -12,7 +12,7 @@ DIE=0
   DIE=1
 }
 
-test -f $srcdir/configure.in.in && sed "s/AC_DEFINE_UNQUOTED[(]RELEASE_DATE, XXX/AC_DEFINE_UNQUOTED(RELEASE_DATE, \"`date '+%d %b %Y'`\"/" $srcdir/configure.in.in > $srcdir/configure.in
+test -f $srcdir/configure.in.in && sed "s/XXXRELEASE_DATE=XXX/RELEASE_DATE=\"`date '+%d %b %Y'`\"/" $srcdir/configure.in.in > $srcdir/configure.in
 
 test -f $srcdir/ChangeLog || echo > $srcdir/ChangeLog
 

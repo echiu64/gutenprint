@@ -84,4 +84,4 @@ CLEANFILES = print-printers.c
 DISTCLEANFILES = gimpprint-config
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = gimpprint.m4 printers.xml
+EXTRA_DIST = gimpprint.m4 gimpprint-config.in printers.xml

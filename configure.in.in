@@ -340,7 +340,7 @@ dnl Require CUPS 1.1...
 fi
 
 dnl GIMP checks
-if test x${BUILD_GIMP} = xyes ; then
+if test x${BUILD_GIMP} = xyes -o -n ${BUILD_PACKAGE} ; then
   AM_PATH_GIMP(1.0.0,
     [SAVE_GTK_LIBS="$GIMP_LIBS"
     SAVE_GTK_CFLAGS="$GIMP_CFLAGS"],
@@ -459,7 +459,8 @@ LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
 
 dnl Definitions
 AC_DEFINE_UNQUOTED(CUPS_DATADIR, "${cups_exec_prefix}/share/cups")
-AC_DEFINE_UNQUOTED(RELEASE_DATE, XXX)
+XXXRELEASE_DATE=XXX
+AC_DEFINE_UNQUOTED(RELEASE_DATE, "${RELEASE_DATE}")
 
 dnl Substitutions
 AC_SUBST(cups_prefix)
@@ -489,6 +490,7 @@ AC_SUBST(LTALLOCA)
 AC_SUBST(MAIN_BIN)
 AC_SUBST(MAINTAINER_CFLAGS)
 AC_SUBST(PLUG_IN_PATH)
+AC_SUBST(RELEASE_DATE)
 AC_SUBST(TEST_BIN)
 
 dnl Output files
@@ -498,6 +500,7 @@ intl/Makefile
 lib/Makefile
 man/Makefile
 man/escputil.1
+man/gimpprint-config.1
 po/Makefile.in
 src/Makefile
 src/cups/Makefile
