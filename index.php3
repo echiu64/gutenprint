@@ -30,7 +30,14 @@ site</a> for quick and easy setup.</p>
 <p>We recommend <a href="http://www.cups.org">CUPS</a> (the Common
 UNIX Printing System) for the easiest setup.</p>
 
-<H2><font color="#ff0000">Gimp-Print 4.2-pre1 is released!</font></h2>
+<H2><font color="#ff0000">Gimp-Print 4.2.1-pre3 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of March 2,
+2002!</strong></em></font> Gimp-Print 4.2.1-pre3 is released.  This is
+a pre-release of 4.2.1.  This contains a fix for Canon print scaling;
+all Canon users should test this release.  Please read the release notes <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
+</p>
 
 <P><strong><em><font color="#ff0000">New as of February 16,
 2002!</strong></em></font> Gimp-Print 4.2.1-pre1 is released.  This is
