@@ -1583,7 +1583,7 @@ dither_monochrome(const unsigned short  *gray,	/* I - Grayscale pixels */
   matrix_set_row(d, kdither, row);
   for (x = 0; x < dst_width; x++)
     {
-      if (gray[0] < 32768)
+      if (!gray[0])
 	{
 	  if (d->density >= ditherpoint_fast(d, kdither, x))
 	    {

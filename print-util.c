@@ -406,13 +406,74 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 	}
       else
 	{
-	  if (vars->density != 1.0 && vars->image_type != IMAGE_MONOCHROME)
+	  if (vars->density != 1.0)
 	    {
 	      double t = (65535.0 + ((grayout[0] - 65535.0) * vars->density));
 	      if (t < 0.0)
 		t = 0.0;
 	      grayout[0] = t + .5;
 	    }
+	  o0 = grayout[0];
+	}
+      grayin += bpp;
+      grayout ++;
+      width --;
+    }
+}
+
+static void
+gray_to_monochrome(unsigned char *grayin,	/* I - RGB pixels */
+		   unsigned short *grayout,	/* O - RGB pixels */
+		   int    	width,		/* I - Width of row */
+		   int    	bpp,		/* I - Bytes-per-pixel in grayin */
+		   unsigned char *cmap,		/* I - Colormap (unused) */
+		   const vars_t	*vars
+		   )
+{
+  int i0 = -1;
+  int i1 = -1;
+  int use_previous = 0;
+  int o0 = 0;
+  lut_t *lut = (lut_t *)(vars->lut);
+  while (width > 0)
+    {
+      if (bpp == 1)
+	{
+	  /*
+	   * No alpha in image...
+	   */
+	  if (i0 == grayin[0])
+	    use_previous = 1;
+	  else
+	    {
+	      use_previous = 0;
+	      i0 = grayin[0];
+	      grayout[0] = lut->composite[grayin[0]];
+	    }
+	}
+      else
+	{
+	  if (i0 == grayin[0] && i1 == grayin[1])
+	    use_previous = 1;
+	  else
+	    {
+	      use_previous = 0;
+	      i0 = grayin[0];
+	      i1 = grayin[1];
+	      grayout[0] = lut->composite[grayin[0] * grayin[1] / 255 +
+					       255 - grayin[1]];
+	    }
+	}
+      if (use_previous)
+	{
+	  grayout[0] = o0;
+	}
+      else
+	{
+	  if (grayout[0] < 32768)
+	    grayout[0] = 0;
+	  else
+	    grayout[0] = 65535;
 	  o0 = grayout[0];
 	}
       grayin += bpp;
@@ -483,13 +544,83 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 	}
       else
 	{
-	  if (vars->density != 1.0 && vars->image_type != IMAGE_MONOCHROME)
+	  if (vars->density != 1.0)
 	    {
 	      double t = (65535.0 + ((gray[0] - 65535.0) * vars->density));
 	      if (t < 0.0)
 		t = 0.0;
 	      gray[0] = t + .5;
 	    }
+	  o0 = gray[0];
+	}
+      indexed += bpp;
+      gray ++;
+      width --;
+    }
+}
+
+static void
+indexed_to_monochrome(unsigned char *indexed,	/* I - Indexed pixels */
+		      unsigned short *gray,	/* O - Grayscale pixels */
+		      int    width,		/* I - Width of row */
+		      int    bpp,		/* I - bpp in indexed */
+		      unsigned char *cmap,	/* I - Colormap */
+		      const vars_t   *vars
+		      )
+{
+  int i0 = -1;
+  int i1 = -1;
+  int o0 = 0;
+  int use_previous = 0;
+  int i;
+  lut_t *lut = (lut_t *)(vars->lut);
+  unsigned char	gray_cmap[256];		/* Grayscale colormap */
+
+  /* Really should precompute this silly thing... */
+  for (i = 0; i < 256; i ++, cmap += 3)
+    gray_cmap[i] = (cmap[0] * LUM_RED +
+		    cmap[1] * LUM_GREEN +
+		    cmap[2] * LUM_BLUE) / 100;
+
+  while (width > 0)
+    {
+      if (bpp == 1)
+	{
+	  /*
+	   * No alpha in image...
+	   */
+	  if (i0 == indexed[0])
+	    use_previous = 1;
+	  else
+	    {
+	      use_previous = 0;
+	      i0 = indexed[0];
+	      gray[0] = lut->composite[gray_cmap[i0]];
+	    }
+	}
+      else
+	{
+	  if (i0 == indexed[0] && i1 == indexed[1])
+	    use_previous = 1;
+	  else
+	    {
+	      use_previous = 0;
+	      i0 = indexed[0];
+	      i1 = indexed[1];
+	      gray[0] = lut->composite[gray_cmap[i0 * i1 / 255]
+				      + 255 - i1];
+	    }
+	}
+      if (use_previous)
+	{
+	  gray[0] = o0;
+	}
+      else
+	{
+	  if (gray[0] < 32768)
+	    gray[0] = 0;
+	  else
+	    gray[0] = 65535;
 	  o0 = gray[0];
 	}
       indexed += bpp;
@@ -534,8 +665,8 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	      i1 = rgb[1];
 	      i2 = rgb[2];
 	      gray[0] = lut->composite[(rgb[0] * LUM_RED +
-					    rgb[1] * LUM_GREEN +
-					    rgb[2] * LUM_BLUE) / 100];
+					rgb[1] * LUM_GREEN +
+					rgb[2] * LUM_BLUE) / 100];
 	    }
 	}
       else
@@ -551,9 +682,9 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	      i3 = rgb[3];
 	  
 	      gray[0] = lut->composite[((rgb[0] * LUM_RED +
-					     rgb[1] * LUM_GREEN +
-					     rgb[2] * LUM_BLUE) *
-					    rgb[3] / 25500 + 255 - rgb[3])];
+					 rgb[1] * LUM_GREEN +
+					 rgb[2] * LUM_BLUE) *
+					rgb[3] / 25500 + 255 - rgb[3])];
 	    }
 	}
       if (use_previous)
@@ -562,13 +693,85 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	}
       else
 	{
-	  if (vars->density != 1.0 && vars->image_type != IMAGE_MONOCHROME)
+	  if (vars->density != 1.0)
 	    {
 	      double t = (65535.0 + ((gray[0] - 65535.0) * vars->density));
 	      if (t < 0.0)
 		t = 0.0;
 	      gray[0] = t + .5;
 	    }
+	  o0 = gray[0];
+	}
+      rgb += bpp;
+      gray ++;
+      width --;
+    }
+}
+
+static void
+rgb_to_monochrome(unsigned char *rgb,	/* I - RGB pixels */
+		  unsigned short *gray,	/* O - Grayscale pixels */
+		  int    width,		/* I - Width of row */
+		  int    bpp,		/* I - Bytes-per-pixel in RGB */
+		  unsigned char *cmap,	/* I - Colormap (unused) */
+		  const vars_t   *vars
+		  )
+{
+  int i0 = -1;
+  int i1 = -1;
+  int i2 = -1;
+  int i3 = -1;
+  int o0 = 0;
+  int use_previous = 0;
+  lut_t *lut = (lut_t *)(vars->lut);
+  while (width > 0)
+    {
+      if (bpp == 3)
+	{
+	  /*
+	   * No alpha in image...
+	   */
+	  if (i0 == rgb[0] && i1 == rgb[1] && i2 == rgb[2])
+	    use_previous = 1;
+	  else
+	    {
+	      use_previous = 0;
+	      i0 = rgb[0];
+	      i1 = rgb[1];
+	      i2 = rgb[2];
+	      gray[0] = lut->composite[(rgb[0] * LUM_RED +
+					rgb[1] * LUM_GREEN +
+					rgb[2] * LUM_BLUE) / 100];
+	    }
+	}
+      else
+	{
+	  if (i0 == rgb[0] && i1 == rgb[1] && i2 == rgb[2] && i3 == rgb[3])
+	    use_previous = 1;
+	  else
+	    {
+	      use_previous = 0;
+	      i0 = rgb[0];
+	      i1 = rgb[1];
+	      i2 = rgb[2];
+	      i3 = rgb[3];
+	  
+	      gray[0] = lut->composite[((rgb[0] * LUM_RED +
+					 rgb[1] * LUM_GREEN +
+					 rgb[2] * LUM_BLUE) *
+					rgb[3] / 25500 + 255 - rgb[3])];
+	    }
+	}
+      if (use_previous)
+	{
+	  gray[0] = o0;
+	}
+      else
+	{
+	  if (gray[0] < 32768)
+	    gray[0] = 0;
+	  else
+	    gray[0] = 65535;
 	  o0 = gray[0];
 	}
       rgb += bpp;
@@ -1259,6 +1462,16 @@ compute_lut(size_t steps, vars_t *uv)
   double screen_gamma = app_gamma / 1.7;	/* Why 1.7??? */
   lut_t *lut;
 
+  /*
+   * Monochrome mode simply thresholds the input
+   * to decide whether to print at all.  The printer gamma
+   * is intended to represent the analog response of the printer.
+   * Using it shifts the threshold, which is not the intent
+   * of how this works.
+   */
+  if (uv->image_type == IMAGE_MONOCHROME)
+    print_gamma = 1.0;
+
   uv->lut = allocate_lut(steps);
   lut = (lut_t *)(uv->lut);
   for (i = 0; i < steps; i ++)
@@ -1666,7 +1879,18 @@ choose_colorfunc(int output_type,
 		 int *out_bpp,
 		 const vars_t *v)
 {
-  if (output_type == OUTPUT_COLOR)
+  if (v->image_type == IMAGE_MONOCHROME)
+    {
+      *out_bpp = 1;
+
+      if (image_bpp >= 3)
+	return rgb_to_monochrome;
+      else if (cmap == NULL)
+	return gray_to_monochrome;
+      else
+	return indexed_to_monochrome;
+    }
+  else if (output_type == OUTPUT_COLOR)
     {
       *out_bpp = 3;
 

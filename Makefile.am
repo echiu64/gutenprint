@@ -4,9 +4,9 @@ libexecdir = $(gimptool_prefix)/plug-ins
 
 libexec_PROGRAMS = print
 
-bin_PROGRAMS = unprint pcl-unprint escputil @MAINTAINER_PROGRAMS@
+bin_PROGRAMS = escputil @MAINTAINER_PROGRAMS@
 
-EXTRA_PROGRAMS=escp2-weavetest printer_options
+EXTRA_PROGRAMS=escp2-weavetest printer_options unprint pcl-unprint
 
 noinst_PROGRAMS = printdef
 
@@ -80,13 +80,14 @@ AM_CPPFLAGS =\
 print_LDADD = $(GIMP_LIBS)
 
 GHOST_DIST= COPYING ChangeLog README contrib.mak.addon \
-	gdevstp.c devs.mak.addon-5.10 \
+	gdevstp.c devs.mak.addon-5.10 escputil.c Makefile \
 	debian-patch debian-patch-stp $(GCOPY)
 
 CUPS_DIST = CHANGES.txt LICENSE.txt Makefile.in README.txt configure \
-		commandtoepson.c epson.c genppd.c rastertoprinter.c $(CUPSCOPY)
+	commandtoepson.c epson.c genppd.c rastertoprinter.c $(CUPSCOPY)
 
-DOC_DIST = color.png docbook.css main.png print.html setup.png print.sgml
+DOC_DIST = print-color.png docbook.css print-main.png print.html \
+	print-setup.png print.sgml
 
 EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
 	README.dither quickmatrix257.h ran.367.179.h make-deb.sh README.escp2 \
@@ -126,6 +127,7 @@ files:
 GHCODE=-e 's/^\\\#include "\(.*\)\.h"$$/\\\#include "gdevstp-\1.h"/'
 
 ghost: $(addprefix Ghost/, $(GCOPY))
+	cp escputil.c Ghost/escputil.c
 
 Ghost/gdevstp-%.h: %.h Makefile
 	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $@

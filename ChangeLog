@@ -1,3 +1,81 @@
+2000-09-17	<rlk@sourceforge.net>
+
+	Files:	print.c (1.124) (+14 -8)
+	
+	Don't "initialize" the file driver if it's not a legal driver type.
+	
+2000-09-17	<rlk@sourceforge.net>
+
+	Files:	print.c (1.123) (+3 -2)
+	
+	One more little bit of initialization
+	
+2000-09-17	<rlk@sourceforge.net>
+
+	Files:	print.c (1.122) (+85 -41)
+	
+	Change how the plugin decides if it already knows about a printer.
+	It used to do it by the command, but that just causes confusion out
+	the wazoo.  Now do it by printer name.
+	
+2000-09-17	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.42) (+24 -0)
+		Documentation/setup.png (1.2) (+0 -0)
+		Documentation/print.sgml (1.1) ( )
+		Documentation/print.html (1.2) (+584 -197)
+		Documentation/print-setup.png (1.1) ( )
+		Documentation/print-main.png (1.1) ( )
+		Documentation/print-color.png (1.1) ( )
+		Documentation/main.png (1.2) (+0 -0)
+		Documentation/color.png (1.2) (+0 -0)
+		print.c (1.121) (+272 -71)
+		print-util.c (1.141) (+11 -6)
+		print-escp2.c (1.257) (+2 -2)
+		gimp_main_window.c (1.62) (+60 -15)
+		gimp_color_window.c (1.19) (+7 -4)
+		RELNOTES (1.23) (+42 -7)
+		README (1.28) (+9 -2)
+		Makefile.am (1.64) (+1 -1)
+	
+	Be more specific about which signals to disconnect when updating combo
+	boxes -- this fixes some odd behaviour whereby the item selected in the
+	combo's drop-down box didn't match the text in the combo's entry field.
+	
+	Update the orientation menu and the dither combo when the plugin starts
+	and whenever a different printer is selected.  Update the driver setup
+	dialog when a different printer is selected.
+	
+	Fix the saturation control to remove a discontinuity at around
+	saturation=1.225.  (ssat was getting square-rooted whether or not a
+	second dose of saturation would be applied.)
+	
+	Change printrc file format to be keyword-value pairs.  Can read old
+	printrc files and convert them to new format.
+	
+	Adjust paper tuning constants for Premium Glossy paper.
+	
+	Above changes all per Charles Briscoe-Smith <cpbs@sourceforge.net>
+	
+	Update README and release notes.
+	
+	Update documentation per Daniel Egger.
+	
+2000-09-17	<rlk@sourceforge.net>
+
+	Files:	cups/Makefile.in (1.11) (+7 -17)
+		cups/epson.c (1.5) (+4 -2)
+		cups/configure.in (1.5) (+2 -2)
+		cups/configure (1.4) (+26 -26)
+		cups/commandtoepson.c (1.6) (+4 -2)
+		cups/calibrate.c (1.3) (+2 -3)
+	
+	Remove -fno-rtti, since we're not using C++ and it breaks gcc (2.7.2.3).
+	
+	Clean up some warnings.
+	
+	.SILENT in makefiles is simply too unpleasant to debug.
+	
 2000-09-16	<easysw@sourceforge.net>
 
 	Files:	configure.in (1.33) (+30 -3)

@@ -20,6 +20,12 @@ To build and install the Gimp Print plug-in:
 make
 make install
 
+This installs two programs: the print plugin itself (named "print") in
+your system Gimp plugin directory, and a utility named "escputil" for
+performing head cleaning, nozzle alignment, and other tasks on Epson
+Stylus inkjet printers.  Type "escputil" for a description of the
+options and functionality.
+
 Please check our web site at http://gimp-print.sourceforge.net for
 details about what is and is not supported.
 

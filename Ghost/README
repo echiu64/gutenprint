@@ -40,7 +40,28 @@ LICENSE:
 INSTALLATION AND COMPILATION:
 -----------------------------
 
- - If you downloaded a CVS snapshot of this software, this directory
+ - Get a recent Ghostscript (5.10 or better) and prepare the sources as
+   described in the documentation (don`t forget zlib, libpng and libjpeg
+   when downloading the source) for compiling
+
+ - Copy all "*.c" and "*.h" files to the "src/" subdirectory of ghostscript's
+   distribution.
+
+ - If you are using Ghostscript 5.50 or newer: edit the file
+   "contrib.mak" in the "src/" subdirectory by adding the contents of
+   "contrib.mak.addon"
+
+ - If you are using Ghostscript 5.10: edit the file "devs.mak" in the
+   "src/" subdirectory by adding the contents of "devs.mak.addon-5.10".
+
+ - Add "$(DD)stp.dev" to the line "DEVICE_DEVS6=..." in "unix-gcc.mak"
+
+ - The distribution includes a utility named "escputil" that performs
+   many utility functions, such as head cleaning, nozzle alignment,
+   and the like.  To compile this program, type "make".  Type
+   "escputil" for a description of the options and functionality.
+
+ - IF YOU DOWNLOADED A CVS SNAPSHOT OF THIS SOFTWARE, this directory
    will not include many of the source files that are generated from
    the gimp-print source.  To create these files, you must run the
    following commands from the parent directory:
@@ -57,22 +78,6 @@ INSTALLATION AND COMPILATION:
 
    configure --disable-gimptest
    make ghost
-
- - Get a recent Ghostscript (5.10 or better) and prepare the sources as
-   described in the documentation (don`t forget zlib, libpng and libjpeg
-   when downloading the source) for compiling
-
- - Copy all "*.c" and "*.h" files to the "src/" subdirectory of ghostscript's
-   distribution.
-
- - If you are using Ghostscript 5.50 or newer: edit the file
-   "contrib.mak" in the "src/" subdirectory by adding the contents of
-   "contrib.mak.addon"
-
- - If you are using Ghsotscript 5.10: edit the file "devs.mak" in the
-   "src/" subdirectory by adding the contents of "devs.mak.addon-5.10".
-
- - Add "$(DD)stp.dev" to the line "DEVICE_DEVS6=..." in "unix-gcc.mak"
 
  Compile and install gs as described in the documentation, after a
  successful compiler run you got a new driver named "stp". Check 
