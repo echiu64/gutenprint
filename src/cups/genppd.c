@@ -136,18 +136,18 @@ const char *special_options[] =
 
 const char *parameter_class_names[] =
 {
-  N_("Printer_Features"),
-  N_("Output_Control")
+  N_("Printer Features"),
+  N_("Output Control")
 };
 
 const char *parameter_level_names[] =
 {
   N_("Common"),
-  N_("Extra_1"),
-  N_("Extra_2"),
-  N_("Extra_3"),
-  N_("Extra_4"),
-  N_("Extra_5")
+  N_("Extra 1"),
+  N_("Extra 2"),
+  N_("Extra 3"),
+  N_("Extra 4"),
+  N_("Extra 5")
 };
 
 
@@ -188,7 +188,7 @@ static void
 print_group_open(FILE *fp, stp_parameter_class_t p_class,
 		 stp_parameter_level_t p_level)
 {
-  gzprintf(fp, "*OpenGroup: %s_%s_%s\n\n", _("Gimp-Print"),
+  gzprintf(fp, "*OpenGroup: %s %s %s\n\n", _("Gimp-Print"),
 	   _(parameter_level_names[p_level]),
 	   _(parameter_class_names[p_class]));
 }
@@ -197,7 +197,7 @@ static void
 print_group_close(FILE *fp, stp_parameter_class_t p_class,
 		 stp_parameter_level_t p_level)
 {
-  gzprintf(fp, "*CloseGroup: %s_%s_%s\n\n", _("Gimp-Print"),
+  gzprintf(fp, "*CloseGroup: %s %s %s\n\n", _("Gimp-Print"),
 	   _(parameter_level_names[p_level]),
 	   _(parameter_class_names[p_class]));
 }
