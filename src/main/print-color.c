@@ -167,6 +167,17 @@ static const float_param_t float_parameters[] =
       STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
     }, 0.0, 9.0, 1.0, 1
   },
+#if 0
+  /* Need to think this through a bit more -- rlk 20030712 */
+  {
+    {
+      "InkLimit", N_("Ink Limit"),
+      N_("Limit the total ink printed to the page"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 0
+    }, 0.0, 32.0, 32.0, 1
+  },
+#endif
   {
     {
       "Black", N_("GCR Transition"),
@@ -1670,6 +1681,8 @@ static void
 initialize_channels(stp_vars_t v, stp_image_t *image)
 {
   lut_t *lut = (lut_t *)(stpi_get_component_data(v, "Color"));
+  if (stp_check_float_parameter(v, "InkLimit", STP_PARAMETER_ACTIVE))
+    stpi_channel_set_ink_limit(v, stp_get_float_parameter(v, "InkLimit"));
   stpi_channel_initialize(v, image, lut->out_channels);
   lut->channels_are_initialized = 1;
 }

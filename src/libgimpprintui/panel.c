@@ -1758,6 +1758,7 @@ static void
 create_color_adjust_window (void)
 {
   GtkWidget *table;
+  GtkWidget *label;
   GtkWidget *event_box;
 
   initialize_thumbnail();
@@ -1812,6 +1813,10 @@ create_color_adjust_window (void)
   output_color_vbox = gtk_vbox_new(TRUE, 0);
   gtk_container_add(GTK_CONTAINER(event_box), output_color_vbox);
   gtk_widget_show(GTK_WIDGET(output_color_vbox));
+
+  label = gtk_label_new(_("View Output Channels:"));
+  gtk_box_pack_start(GTK_BOX(output_color_vbox), label, TRUE, TRUE, 0);
+  gtk_widget_show(GTK_WIDGET(label));
 
   cyan_button = gtk_toggle_button_new_with_label(_("Cyan"));
   gtk_box_pack_start(GTK_BOX(output_color_vbox), cyan_button, TRUE, TRUE, 0);
@@ -3487,7 +3492,8 @@ compute_thumbnail(stp_const_vars_t v)
     }
   stp_set_page_height(nv, thumbnail_h);
   stp_set_page_width(nv, thumbnail_w);
-  stp_set_float_parameter (nv, "Density", 1.0);
+  stp_set_float_parameter(nv, "Density", 1.0);
+  stp_set_float_parameter(nv, "InkLimit", 0);
 
   priv.base_addr = adjusted_thumbnail_data;
   priv.offset = 0;

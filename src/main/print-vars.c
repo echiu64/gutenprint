@@ -1321,13 +1321,16 @@ stp_merge_printvars(stp_vars_t user, stp_const_vars_t print)
       const stp_parameter_t *p = stp_parameter_list_param(params, i);
       if (p->p_type == STP_PARAMETER_TYPE_DOUBLE &&
 	  p->p_class == STP_PARAMETER_CLASS_OUTPUT &&
-	  stp_check_float_parameter(user, p->name, STP_PARAMETER_ACTIVE) &&
 	  stp_check_float_parameter(print, p->name, STP_PARAMETER_DEFAULTED))
 	{
 	  stp_parameter_t desc;
-	  double usrval = stp_get_float_parameter(user, p->name);
 	  double prnval = stp_get_float_parameter(print, p->name);
+	  double usrval;
 	  stp_describe_parameter(print, p->name, &desc);
+	  if (stp_check_float_parameter(user, p->name, STP_PARAMETER_ACTIVE))
+	    usrval = stp_get_float_parameter(user, p->name);
+	  else
+	    usrval = desc.deflt.dbl;
 	  if (strcmp(p->name, "Gamma") == 0)
 	    usrval /= prnval;
 	  else

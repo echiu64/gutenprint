@@ -1073,15 +1073,15 @@ static const shade_set_t quadtone_shades =	/* Some kind of quadtone ink */
   { 1, { 1.0 }},
 };
 
-#define DECLARE_INKLIST(name, inks, text, papers, shades)	\
-static const inklist_t name##_inklist =				\
-{								\
-  #name,							\
-  text,								\
-  inks##_ink_types,						\
-  &stpi_escp2_##papers##_paper_list,				\
-  &shades##_shades,						\
-  sizeof(inks##_ink_types) / sizeof(escp2_inkname_t *),		\
+#define DECLARE_INKLIST(tname, name, inks, text, papers, shades)	\
+static const inklist_t name##_inklist =					\
+{									\
+  tname,								\
+  text,									\
+  inks##_ink_types,							\
+  &stpi_escp2_##papers##_paper_list,					\
+  &shades##_shades,							\
+  sizeof(inks##_ink_types) / sizeof(escp2_inkname_t *),			\
 }
 
 
@@ -1090,7 +1090,8 @@ static const escp2_inkname_t *const cmy_ink_types[] =
   &three_color_composite_inkset
 };
 
-DECLARE_INKLIST(cmy, cmy, N_("EPSON Standard Inks"), standard, standard);
+DECLARE_INKLIST("None", cmy, cmy, N_("EPSON Standard Inks"),
+		standard, standard);
 
 
 static const escp2_inkname_t *const standard_ink_types[] =
@@ -1102,14 +1103,16 @@ static const escp2_inkname_t *const standard_ink_types[] =
   &four_color_extended_inkset,
 };
 
-DECLARE_INKLIST(standard, standard, N_("EPSON Standard Inks"), standard, standard);
+DECLARE_INKLIST("None", standard, standard, N_("EPSON Standard Inks"),
+		standard, standard);
 
 static const escp2_inkname_t *const quadtone_ink_types[] =
 {
   &generic_quadtone_inkset,
 };
 
-DECLARE_INKLIST(quadtone, quadtone, N_("Quadtone"), standard, quadtone);
+DECLARE_INKLIST("quadtone", quadtone, quadtone, N_("Quadtone"),
+		standard, quadtone);
 
 static const escp2_inkname_t *const c80_ink_types[] =
 {
@@ -1120,14 +1123,15 @@ static const escp2_inkname_t *const c80_ink_types[] =
   &c80_four_color_extended_inkset,
 };
 
-DECLARE_INKLIST(c80, c80, N_("EPSON Standard Inks"), c80, standard);
+DECLARE_INKLIST("None", c80, c80, N_("EPSON Standard Inks"), c80, standard);
 
 static const escp2_inkname_t *const c80_quadtone_ink_types[] =
 {
   &c80_generic_quadtone_inkset,
 };
 
-DECLARE_INKLIST(c80_quadtone, c80_quadtone, N_("Quadtone"), standard, quadtone);
+DECLARE_INKLIST("Quadtone", c80_quadtone, c80_quadtone, N_("Quadtone"),
+		standard, quadtone);
 
 static const escp2_inkname_t *const x80_ink_types[] =
 {
@@ -1138,7 +1142,8 @@ static const escp2_inkname_t *const x80_ink_types[] =
   &x80_four_color_extended_inkset,
 };
 
-DECLARE_INKLIST(x80, x80, N_("EPSON Standard Inks"), standard, standard);
+DECLARE_INKLIST("None", x80, x80, N_("EPSON Standard Inks"),
+		standard, standard);
 
 static const escp2_inkname_t *const photo_ink_types[] =
 {
@@ -1153,9 +1158,12 @@ static const escp2_inkname_t *const photo_ink_types[] =
   &six_color_extended_inkset,
 };
 
-DECLARE_INKLIST(gen1, photo, N_("EPSON Standard Inks"), standard, gen1);
-DECLARE_INKLIST(gen2, photo, N_("EPSON Standard Inks"), standard, gen2);
-DECLARE_INKLIST(pigment, photo, N_("EPSON Standard Inks"), standard, stp2200);
+DECLARE_INKLIST("None", gen1, photo, N_("EPSON Standard Inks"),
+		standard, gen1);
+DECLARE_INKLIST("None", gen2, photo, N_("EPSON Standard Inks"),
+		standard, gen2);
+DECLARE_INKLIST("None", pigment, photo, N_("EPSON Standard Inks"),
+		standard, stp2200);
 
 static const escp2_inkname_t *const f360_photo_ink_types[] =
 {
@@ -1170,7 +1178,8 @@ static const escp2_inkname_t *const f360_photo_ink_types[] =
   &f360_six_color_extended_inkset,
 };
 
-DECLARE_INKLIST(f360_photo, f360_photo, N_("EPSON Standard Inks"), standard, esp960);
+DECLARE_INKLIST("None", f360_photo, f360_photo, N_("EPSON Standard Inks"),
+		standard, esp960);
 
 static const escp2_inkname_t *const f360_photo7_japan_ink_types[] =
 {
@@ -1188,7 +1197,7 @@ static const escp2_inkname_t *const f360_photo7_japan_ink_types[] =
   &f360_seven_color_extended_inkset,
 };
 
-DECLARE_INKLIST(f360_photo7_japan, f360_photo7_japan,
+DECLARE_INKLIST("None", f360_photo7_japan, f360_photo7_japan,
 		N_("EPSON Standard Inks"), standard, esp960);
 
 static const escp2_inkname_t *const f360_ultra_photo7_ink_types[] =
@@ -1208,7 +1217,7 @@ static const escp2_inkname_t *const f360_ultra_photo7_ink_types[] =
   &f360_seven_color_extended_inkset,
 };
 
-DECLARE_INKLIST(f360_ultra_photo7, f360_ultra_photo7,
+DECLARE_INKLIST("ultraphoto", f360_ultra_photo7, f360_ultra_photo7,
 		N_("UltraChrome Photo Black"), ultrachrome, ultrachrome_photo);
 
 static const escp2_inkname_t *const f360_ultra_matte7_ink_types[] =
@@ -1228,7 +1237,7 @@ static const escp2_inkname_t *const f360_ultra_matte7_ink_types[] =
   &f360_seven_color_extended_inkset,
 };
 
-DECLARE_INKLIST(f360_ultra_matte7, f360_ultra_matte7,
+DECLARE_INKLIST("ultramatte", f360_ultra_matte7, f360_ultra_matte7,
 		N_("UltraChrome Matte Black"), ultrachrome, ultrachrome_matte);
 
 static const escp2_inkname_t *const ultra_photo7_ink_types[] =
@@ -1248,7 +1257,7 @@ static const escp2_inkname_t *const ultra_photo7_ink_types[] =
   &seven_color_extended_inkset,
 };
 
-DECLARE_INKLIST(ultra_photo7, ultra_photo7,
+DECLARE_INKLIST("ultraphoto", ultra_photo7, ultra_photo7,
 		N_("UltraChrome Photo Black"), ultrachrome, ultrachrome_photo);
 
 static const escp2_inkname_t *const ultra_matte7_ink_types[] =
@@ -1268,7 +1277,7 @@ static const escp2_inkname_t *const ultra_matte7_ink_types[] =
   &seven_color_extended_inkset,
 };
 
-DECLARE_INKLIST(ultra_matte7, ultra_matte7,
+DECLARE_INKLIST("ultramatte", ultra_matte7, ultra_matte7,
 		N_("UltraChrome Matte Black"), ultrachrome, ultrachrome_matte);
 
 static const inklist_t *cmy_group[] =

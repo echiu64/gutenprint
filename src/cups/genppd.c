@@ -92,10 +92,11 @@
  * File handling stuff...
  */
 
-#ifdef HAVE_LIBZ
-static const char *ppdext = ".ppd.gz";
-#else
 static const char *ppdext = ".ppd";
+#ifdef HAVE_LIBZ
+static const char *gzext = ".gz";
+#else
+static const char *gzext = "";
 #  define gzFile FILE *
 #  define gzopen fopen
 #  define gzclose fclose
@@ -663,6 +664,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
   stp_parameter_t desc;
   stp_parameter_list_t param_list;
   const stp_param_string_t *opt;
+  int has_quality_parameter = 0;
 
  /*
   * Initialize driver-specific variables...
@@ -696,7 +698,8 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	  exit (EXIT_FAILURE);
 	}
     }
-  snprintf(filename, sizeof(filename) - 1, "%s/%s%s", prefix, driver, ppdext);
+  snprintf(filename, sizeof(filename) - 1, "%s/%s%s%s",
+	   prefix, driver, ppdext, gzext);
 
  /*
   * Open the PPD file...
@@ -721,10 +724,24 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
     fprintf(stderr, ".");
 
   gzputs(fp, "*PPD-Adobe: \"4.3\"\n");
-  gzputs(fp, "*%PPD file for CUPS/GIMP-print.\n");
-  gzputs(fp, "*%Copyright 1993-2003 by Easy Software Products, All Rights Reserved.\n");
-  gzputs(fp, "*%This PPD file may be freely used and distributed under the terms of\n");
-  gzputs(fp, "*%the GNU GPL.\n");
+  gzputs(fp, "*%PPD file for CUPS/Gimp-Print.\n");
+  gzputs(fp, "*%Copyright 1993-2003 by Easy Software Products and Robert Krawitz.\n");
+  gzputs(fp, "*%This program is free software; you can redistribute it and/or\n");
+  gzputs(fp, "*%modify it under the terms of the GNU General Public License,\n");
+  gzputs(fp, "*%version 2, as published by the Free Software Foundation.\n");
+  gzputs(fp, "*%\n");
+  gzputs(fp, "*%This program is distributed in the hope that it will be useful, but\n");
+  gzputs(fp, "*%WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY\n");
+  gzputs(fp, "*%or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License\n");
+  gzputs(fp, "*%for more details.\n");
+  gzputs(fp, "*%\n");
+  gzputs(fp, "*%You should have received a copy of the GNU General Public License\n");
+  gzputs(fp, "*%along with this program; if not, write to the Free Software\n");
+  gzputs(fp, "*%Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n");
+  gzputs(fp, "*%\n");
+  gzputs(fp, "*%Magic cookie for cups-genppdupdate\n");
+  gzprintf(fp, "*%%Gimp-Print Filename: %s%s\n", driver, ppdext);
+  gzputs(fp, "*%\n");
   gzputs(fp, "*FormatVersion:	\"4.3\"\n");
   gzputs(fp, "*FileVersion:	\"" VERSION "\"\n");
   /* Specify language of PPD translation */
@@ -1103,6 +1120,8 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	      stp_describe_parameter(v, lparam->name, &desc);
 	      if (desc.is_active)
 		{
+		  if (strcmp(lparam->name, "Quality") == 0)
+		    has_quality_parameter = 1;
 		  if (!printed_open_group)
 		    {
 		      print_group_open(fp, j, k);
@@ -1118,9 +1137,9 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 #endif
 		  if (!desc.is_mandatory)
 		    {
-		      gzprintf(fp, "*DefaultStp%s: DEFAULT\n", desc.name);
+		      gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
 		      gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
-			       "DEFAULT", _("Default"));
+			       "None", _("None"));
 		    }
 		  switch (desc.p_type)
 		    {
@@ -1147,8 +1166,12 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 		      break;
 		    case STP_PARAMETER_TYPE_DOUBLE:
 		      if (desc.is_mandatory)
-			gzprintf(fp, "*DefaultStp%s: %d\n", desc.name,
-				 (int) (desc.deflt.dbl * 1000));
+			{
+			  gzprintf(fp, "*DefaultStp%s: %d\n", desc.name,
+				   (int) (desc.deflt.dbl * 1000));
+			  gzprintf(fp, "*Stp%s: None/%.3f: ""\n", desc.name,
+				   desc.deflt.dbl);
+			}
 		      for (i = desc.bounds.dbl.lower * 1000;
 			   i <= desc.bounds.dbl.upper * 1000 ; i += 100)
 			gzprintf(fp, "*Stp%s %d/%.3f: \"\"\n",
@@ -1157,7 +1180,8 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 		      gzprintf(fp, "*OpenUI *StpFine%s/%s %s: PickOne\n",
 			       desc.name, _(desc.text), _("Fine Adjustment"));
 		      gzprintf(fp, "*DefaultStpFine%s: 0\n", desc.name);
-		      for (i = 0; i < 100; i += 5)
+		      gzprintf(fp, "*StpFine%s: None/0.000: ""\n", desc.name);
+		      for (i = 5; i < 100; i += 5)
 			gzprintf(fp, "*StpFine%s %d/%.3f: \"\"\n",
 				 desc.name, i, ((double) i) * .001);
 		      gzprintf(fp, "*CloseUI: *StpFine%s\n\n", desc.name);
@@ -1176,6 +1200,112 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	    print_group_close(fp, j, k);
 	}
     }
+  if (has_quality_parameter)
+    {
+      stp_parameter_t qdesc;
+      const char *tname = NULL;
+      stp_describe_parameter(v, "Quality", &qdesc);
+      if (qdesc.p_type == STP_PARAMETER_TYPE_STRING_LIST &&
+	  stp_string_list_count(qdesc.bounds.str) > 1)
+	{
+	  for (l = 0; l < stp_string_list_count(qdesc.bounds.str); l++)
+	    {
+	      opt = stp_string_list_param(qdesc.bounds.str, l);
+	      if (opt && strcmp(opt->name, "None") != 0)
+		{
+		  tname = opt->name;
+		  break;
+		}
+	    }
+	}
+      for (l = 0; l < stp_parameter_list_count(param_list); l++)
+	{
+	  const stp_parameter_t *lparam =
+	    stp_parameter_list_param(param_list, l);
+	  if (lparam->p_class > STP_PARAMETER_CLASS_OUTPUT ||
+	      lparam->p_level > STP_PARAMETER_LEVEL_ADVANCED4 ||
+	      strcmp(lparam->name, "Quality") == 0 ||
+	      is_special_option(lparam->name) ||
+	      (lparam->p_type != STP_PARAMETER_TYPE_STRING_LIST &&
+	       lparam->p_type != STP_PARAMETER_TYPE_BOOLEAN &&
+	       lparam->p_type != STP_PARAMETER_TYPE_DOUBLE))
+	    continue;
+	  stp_clear_string_parameter(v, "Quality");
+	  stp_describe_parameter(v, lparam->name, &desc);
+	  if (desc.is_active)
+	    {
+	      stp_parameter_description_free(&desc);
+	      stp_set_string_parameter(v, "Quality", tname);
+	      stp_describe_parameter(v, lparam->name, &desc);
+	      if (!desc.is_active)
+		{
+		  gzprintf(fp, "*UIConstraints: *StpQuality *Stp%s\n",
+			   lparam->name);
+		  gzprintf(fp, "*UIConstraints: *Stp%s *StpQuality\n\n",
+			   lparam->name);
+		  if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
+		    {
+		      gzprintf(fp, "*UIConstraints: *StpQuality *StpFine%s\n",
+			       lparam->name);
+		      gzprintf(fp, "*UIConstraints: *StpFine%s *StpQuality\n\n",
+			       lparam->name);
+		    }		      
+		}
+	    }
+	  stp_clear_string_parameter(v, "Quality");
+	  stp_parameter_description_free(&desc);
+	}
+      stp_parameter_description_free(&qdesc);
+    }
+  if (stp_get_output_type(printvars) == OUTPUT_COLOR)
+    {
+      for (l = 0; l < stp_parameter_list_count(param_list); l++)
+	{
+	  const stp_parameter_t *lparam =
+	    stp_parameter_list_param(param_list, l);
+	  if (lparam->p_class > STP_PARAMETER_CLASS_OUTPUT ||
+	      lparam->p_level > STP_PARAMETER_LEVEL_ADVANCED4 ||
+	      strcmp(lparam->name, "Quality") == 0 ||
+	      is_special_option(lparam->name) ||
+	      (lparam->p_type != STP_PARAMETER_TYPE_STRING_LIST &&
+	       lparam->p_type != STP_PARAMETER_TYPE_BOOLEAN &&
+	       lparam->p_type != STP_PARAMETER_TYPE_DOUBLE))
+	    continue;
+	  stp_set_output_type(v, OUTPUT_COLOR);
+	  stp_describe_parameter(v, lparam->name, &desc);
+	  if (desc.is_active)
+	    {
+	      stp_parameter_description_free(&desc);
+	      stp_set_output_type(v, OUTPUT_GRAY);
+	      stp_describe_parameter(v, lparam->name, &desc);
+	      if (!desc.is_active)
+		{
+		  gzprintf(fp, "*UIConstraints: *ColorModel Gray *Stp%s\n",
+			   lparam->name);
+		  gzprintf(fp, "*UIConstraints: *ColorModel Black *Stp%s\n",
+			   lparam->name);
+		  gzprintf(fp, "*UIConstraints: *Stp%s *ColorModel Gray\n",
+			   lparam->name);
+		  gzprintf(fp, "*UIConstraints: *Stp%s *ColorModel Black\n\n",
+			   lparam->name);
+		  if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
+		    {
+		      gzprintf(fp, "*UIConstraints: *ColorModel Gray *StpFine%s\n",
+			       lparam->name);
+		      gzprintf(fp, "*UIConstraints: *ColorModel Black *StpFine%s\n",
+			       lparam->name);
+		      gzprintf(fp, "*UIConstraints: *StpFine%s *ColorModel Gray\n",
+			       lparam->name);
+		      gzprintf(fp, "*UIConstraints: *StpFine%s *ColorModel Black\n\n",
+			       lparam->name);
+		    }
+		}
+	    }
+	  stp_parameter_description_free(&desc);
+	}
+      stp_set_output_type(v, OUTPUT_COLOR);
+    }
+  stp_parameter_list_free(param_list);
 
  /*
   * Fonts...

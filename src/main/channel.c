@@ -36,6 +36,10 @@
 #include <math.h>
 #include <string.h>
 
+#ifdef __GNUC__
+#define inline __inline__
+#endif
+
 typedef struct
 {
   double value;
@@ -57,11 +61,13 @@ typedef struct
   unsigned channel_count;
   unsigned total_channels;
   unsigned input_channels;
-  stpi_channel_t *c;
   size_t width;
+  int initialized;
+  unsigned ink_limit;
+  unsigned max_density;
+  stpi_channel_t *c;
   unsigned short *input_data;
   unsigned short *data;
-  int initialized;
 } stpi_channel_group_t;
 
 
@@ -183,6 +189,16 @@ stpi_channel_set_density_adjustment(stp_vars_t v, int color, int subchannel,
 }
 
 void
+stpi_channel_set_ink_limit(stp_vars_t v, double limit)
+{
+  stpi_channel_group_t *cg =
+    ((stpi_channel_group_t *) stpi_get_component_data(v, "Channel"));
+  stpi_dprintf(STPI_DBG_INK, v, "ink_limit %f\n", limit);
+  if (limit > 0)
+    cg->ink_limit = 65535 * limit;
+}
+
+void
 stpi_channel_set_cutoff_adjustment(stp_vars_t v, int color, int subchannel,
 				    double adjustment)
 {
@@ -221,7 +237,7 @@ stpi_channel_initialize(stp_vars_t v, stp_image_t *image,
   stpi_channel_group_t *cg =
     ((stpi_channel_group_t *) stpi_get_component_data(v, "Channel"));
   int width = stpi_image_width(image);
-  int i;
+  int i, j, k;
   if (!cg)
     {
       cg = stpi_zalloc(sizeof(stpi_channel_group_t));
@@ -230,13 +246,13 @@ stpi_channel_initialize(stp_vars_t v, stp_image_t *image,
   if (cg->initialized)
     return;
   cg->initialized = 1;
+  cg->max_density = 0;
   for (i = 0; i < cg->channel_count; i++)
     {
       stpi_channel_t *c = &(cg->c[i]);
       int sc = c->subchannel_count;
       if (sc > 1)
 	{
-	  int k;
 	  int val = 0;
 	  int next_breakpoint;
 	  c->lut = stpi_zalloc(sizeof(unsigned short) * sc * 65536);
@@ -282,6 +298,8 @@ stpi_channel_initialize(stp_vars_t v, stp_image_t *image,
 	    }
 	}     
       cg->total_channels += c->subchannel_count;
+      for (j = 0; j < c->subchannel_count; j++)
+	cg->max_density += 65535 * c->sc[j].density;
     }
   cg->input_channels = input_channel_count;
   cg->width = width;
@@ -337,6 +355,46 @@ scan_channel(unsigned short *data, unsigned width, unsigned depth)
     }
   return 0;
 }
+
+static inline unsigned
+ink_sum(const unsigned short *data, int total_channels)
+{
+  int j;
+  unsigned total_ink = 0;
+  for (j = 0; j < total_channels; j++)
+    total_ink += data[j];
+  return total_ink;
+}
+
+static int
+limit_ink(stp_const_vars_t v)
+{
+  int i;
+  int retval = 0;
+  stpi_channel_group_t *cg =
+    ((stpi_channel_group_t *) stpi_get_component_data(v, "Channel"));
+  unsigned short *ptr = cg->data;
+  if (cg->ink_limit == 0 || cg->ink_limit >= cg->max_density)
+    return 0;
+  for (i = 0; i < cg->width; i++)
+    {
+      int total_ink = ink_sum(ptr, cg->total_channels);
+      if (total_ink > cg->ink_limit) /* Need to limit ink? */
+	{
+	  int j;
+	  /*
+	   * FIXME we probably should first try to convert light ink to dark
+	   */
+	  double ratio = (double) cg->ink_limit / (double) total_ink;
+	  for (j = 0; j < cg->total_channels; j++)
+	    ptr[j] *= ratio;
+	  retval = 1;
+	}
+      ptr += cg->total_channels;
+   }
+  return retval;
+}
+
 
 void
 stpi_channel_convert(stp_const_vars_t v, unsigned *zero_mask)
@@ -405,6 +463,7 @@ stpi_channel_convert(stp_const_vars_t v, unsigned *zero_mask)
 	    physical_channel++;
 	  }
     }
+  (void) limit_ink(v);
 }
 
 unsigned short *

@@ -309,6 +309,10 @@ typedef enum
 #define MODEL_FAST_360_NO	0x000ul
 #define MODEL_FAST_360_YES	0x200ul
 
+#define MODEL_SEND_ZERO_ADVANCE_MASK	0x400ul
+#define MODEL_SEND_ZERO_ADVANCE_NO	0x000ul
+#define MODEL_SEND_ZERO_ADVANCE_YES	0x400ul
+
 typedef enum
 {
   MODEL_COMMAND,
@@ -318,6 +322,7 @@ typedef enum
   MODEL_GRAYMODE,
   MODEL_VACUUM,
   MODEL_FAST_360,
+  MODEL_SEND_ZERO_ADVANCE,
   MODEL_LIMIT
 } escp2_model_option_t;
 
@@ -476,6 +481,7 @@ typedef struct
   int horizontal_units;		/* Horizontal units (dpi) */
   int micro_units;		/* Micro-units for horizontal positioning */
   int unit_scale;		/* Scale factor for units */
+  int send_zero_pass_advance;	/* Send explicit command for zero advance */
 
   /* Ink parameters */
   int bitwidth;			/* Number of bits per ink drop */
@@ -544,6 +550,7 @@ typedef struct
   int printing_initial_vertical_offset;	/* Vertical offset, for print cmd */
   int last_color;		/* Last color we printed */
   int last_pass_offset;		/* Starting row of last pass we printed */
+  int last_pass;		/* Last pass printed */
 
 } escp2_privdata_t;
 

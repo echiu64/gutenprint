@@ -1491,7 +1491,6 @@ pcl_parameters(stp_const_vars_t v, const char *name,
 	description->deflt.dbl = float_parameters[i].defval;
 	description->bounds.dbl.upper = float_parameters[i].max;
 	description->bounds.dbl.lower = float_parameters[i].min;
-	return;
       }
 
   for (i = 0; i < the_parameter_count; i++)
@@ -1590,6 +1589,26 @@ pcl_parameters(stp_const_vars_t v, const char *name,
     else
       description->is_active = 0;
   }
+  else if (strcmp(name, "CyanDensity") == 0 ||
+	   strcmp(name, "MagentaDensity") == 0 ||
+	   strcmp(name, "YellowDensity") == 0 ||
+	   strcmp(name, "BlackDensity") == 0)
+    {
+      if (caps->color_type != PCL_COLOR_NONE &&
+	  stp_get_output_type(v) != OUTPUT_GRAY)
+	description->is_active = 1;
+      else
+	description->is_active = 0;
+    }
+  else if (strcmp(name, "LightCyanTransition") == 0 ||
+	   strcmp(name, "LightMagentaTransition") == 0)
+    {
+      if (caps->color_type & PCL_COLOR_CMYKcm &&
+	  stp_get_output_type(v) != OUTPUT_GRAY)
+	description->is_active = 1;
+      else
+	description->is_active = 0;
+    }
 }
 
 

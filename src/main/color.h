@@ -90,6 +90,7 @@ extern void stpi_channel_add(stp_vars_t v, unsigned channel,
 extern void stpi_channel_set_density_adjustment(stp_vars_t v,
 						int color, int subchannel,
 						double adjustment);
+extern void stpi_channel_set_ink_limit(stp_vars_t v, double limit);
 extern void stpi_channel_set_cutoff_adjustment(stp_vars_t v,
 					       int color, int subchannel,
 					       double adjustment);

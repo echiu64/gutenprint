@@ -353,7 +353,7 @@ set_all_options(stp_vars_t v, cups_option_t *options, int num_options,
 	      if (ppd_option)
 		val = ppd_option->defchoice;
 	    }
-	  if (val && strcmp(val, "DEFAULT") != 0)
+	  if (val && strcmp(val, "None") != 0)
 	    {
 	      double coarse_val = atof(val) * 0.001;
 	      double fine_val = 0;
@@ -365,7 +365,7 @@ set_all_options(stp_vars_t v, cups_option_t *options, int num_options,
 		  if (ppd_option)
 		    val = ppd_option->defchoice;
 		}
-	      if (val && strcmp(val, "DEFAULT") != 0)
+	      if (val && strcmp(val, "None") != 0)
 		fine_val = atof(val) * 0.001;
 	      fprintf(stderr, "DEBUG: Gimp-Print set float %s to %f + %f\n",
 		      desc.name, coarse_val, fine_val);
@@ -385,7 +385,7 @@ set_all_options(stp_vars_t v, cups_option_t *options, int num_options,
 	      if (ppd_option)
 		val = ppd_option->defchoice;
 	    }
-	  if (val && strcmp(val, "DEFAULT") != 0)
+	  if (val && strcmp(val, "None") != 0)
 	    {
 	      switch (desc.p_type)
 		{
