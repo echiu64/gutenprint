@@ -114,6 +114,7 @@ typedef struct dither_channel
   int subchannels;
 
   dither_segment_t *ranges;
+  dither_segment_t temp_range;
   int **errs;
   unsigned short *vals;
 
@@ -1679,18 +1680,24 @@ pick_vertex(const int cmy[])
 	return best;
 }
 
-static inline dither_segment_t *find_segment(dither_t *d, dither_channel_t *dc, int color, int density)
+static inline dither_segment_t *find_segment(dither_t *d, dither_channel_t *dc, int dark_only, int density)
 {
 	int i;
 	dither_segment_t *dd;
 
 	for (i = dc->nlevels-1; i > 0; i--) {
 		dd = &(dc->ranges[i]);
-		if (density <= dd->value[0]) continue;
+		if (dd->subchannel[0] != 0 && dark_only) {
+		  dc->temp_range = *dd;
+		  dd = &dc->temp_range;
+		  goto clear_lower;
+		}
+		if (density < dd->value[0]) continue;
 		return dd;
 	}
 	/* I want the bottom of the first range to say "no ink to print" */
 	dd = &dc->ranges[0];
+clear_lower:
 	dd->range[0] = 0; dd->range_span = dd->range[1];
 	dd->value[0] = 0; dd->value_span = dd->value[1];
 	dd->bits[0] = 0;
@@ -2717,7 +2724,7 @@ stp_setup_et(dither_t *d)
   
   { int i;
     int x;
-    for (i=1; i < d->n_channels; i++) {
+    for (i=0; i < d->n_channels; i++) {
       et->dx[i] = stp_zalloc(sizeof(int) * d->dst_width);
       et->dy[i] = stp_zalloc(sizeof(int) * d->dst_width);
       et->r_sq[i] = stp_zalloc(sizeof(int) * d->dst_width);
@@ -2776,7 +2783,7 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
     if (!et) return;
   }
 
-  for (i = 1; i < NCOLORS; i++)
+  for (i = 0; i < NCOLORS; i++)
     {
       ndither[i] = 0;
       dx[i] = et->dx2;
@@ -2798,17 +2805,11 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 
   QUANT(6);
   for (; x != terminate; x += direction)
-    { int pick, print_inks;
+    { int pick, print_inks, kc = 0;
       dither_segment_t *dr[NCOLORS];
+      int ri[NCOLORS];
       
-      for (i=1; i < NCOLORS; i++) {
-        int value;
-	value = cmy[i-1];
-	CHANNEL(d, i).o = value;				/* Remember value we want printed here */
-
-	if (i == 1 || value < CHANNEL(d, ECOLOR_K).o)
-	  CHANNEL(d, ECOLOR_K).o = value;			/* Set black amount to minimum of CMY */
-
+      for (i=0; i < NCOLORS; i++) {
 	if (r_sq[i] + dx[i] < et->r_sq[i][x]) {			/* Do our eventone calculations */
 	  r_sq[i] += dx[i];					/* Nearest pixel same as last one */
 	  dx[i] += et->d2x;
@@ -2817,75 +2818,87 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	  dy[i] = et->dy[i][x];
 	  r_sq[i] = et->r_sq[i][x];
 	}
+      }
+
+      for (i=1; i < NCOLORS; i++) {
+        int value = cmy[i-1];
+
+	CHANNEL(d, i).o = value;				/* Remember value we want printed here */
+	if (i == 1 || value < CHANNEL(d, ECOLOR_K).o)
+	    CHANNEL(d, ECOLOR_K).o = value;			/* Set black to minimum of C,M,Y */
+      }
+
+      if (CHANNEL(d, ECOLOR_K).o < d->k_lower) {
+	CHANNEL(d, ECOLOR_K).o = 0;
+      } else {
+	if (CHANNEL(d, ECOLOR_K).o < d->k_upper) {
+	  CHANNEL(d, ECOLOR_K).o = d->k_upper * (CHANNEL(d, ECOLOR_K).o - d->k_lower) / d->bound_range;
+	}
+	for (i=1; i < NCOLORS; i++) {
+	  CHANNEL(d, i).o -= CHANNEL(d, ECOLOR_K).o;
+	}
+	/* Adjust black amount based on black density */
+	if (d->density != d->black_density) {
+	  CHANNEL(d, ECOLOR_K).o =
+	    (unsigned)CHANNEL(d, ECOLOR_K).o * (unsigned)d->black_density / d->density;
+	}
+      }
+
+      for (i=0; i < NCOLORS; i++) {
+        int value;
+	int dark_only;
 
         ndither[i] += error[i][0][0];
-	value = ndither[i] + CHANNEL(d, i).o / 2;
-								/* Compute colour for this pixel */
-								/* Only use half of cmy[] to avoid dark->light problems */
-	if (value < 0) value = 0;
+
+	value = ndither[i] + CHANNEL(d, i).o / 2;		/* Only use half of cmy[] to avoid dark->light problems */
+//	value += kc;						/* If black is present, this dot needs to be bigger to show */
+	
+	if (value < 0) value = 0;				/* Dither can make this value negative */
 	CHANNEL(d, i).v = value;				/* Colour to print at this pixel location */
 
-	if (i == 1 || value < CHANNEL(d, ECOLOR_K).v)
-	  CHANNEL(d, ECOLOR_K).v = value;			/* Set black amount to minimum of CMY */
-      }
+        dark_only = (r_sq[i] * et->aspect < et->recip[d->density/5]) ? 1 : 0;
 
-
-      /* Adjust black amount based on black density */
-      if (d->density != d->black_density) {
-        CHANNEL(d, ECOLOR_K).v =
-          (unsigned)CHANNEL(d, ECOLOR_K).v * (unsigned)d->black_density / d->density;
-      }
-
-      { int ri[NCOLORS];
-
-        /* Find the dither segments which bound our pixel */
-        for (i=0; i < NCOLORS; i++) {
-          dr[i] = find_segment(d, &CHANNEL(d, i), i, CHANNEL(d, i).v);
-        }
-
-        /* Now compute relative indices into cube of colour we have created */
-        /* Ignore amount of black at this stage */
+        dr[i] = find_segment(d, &CHANNEL(d, i), dark_only, CHANNEL(d, i).v);
 	
-        for (i=1; i < NCOLORS; i++) {
-	  if (CHANNEL(d, i).v > dr[i]->value[1]) {
-	    ri[i] = 65535;
-	  } else if (CHANNEL(d, i).v < dr[i]->value[0]) {
-	    ri[i] = 0;
-	  } else if (dr[i]->value_span != 0) {
-	    ri[i] = (65535 * (CHANNEL(d, i).v - dr[i]->value[0])) / dr[i]->value_span;
-	    /* Adjust for Eventone here */
-	    if (dr[i]->value[0] == 0) {
-	      int t;
-	      if (CHANNEL(d, i).o > dr[i]->value[1]) {
-	        t = 0;
-	      } else if (CHANNEL(d, i).o < dr[i]->value[0]) {
-	        t = et->recip[0];
-	      } else {
-	        t = et->recip[65535 * (CHANNEL(d, i).o - dr[i]->value[0]) / dr[i]->value_span];
-	      }
-	    
-	      ri[i] += r_sq[i] * et->aspect - t;
-	      if (ri[i] > 65535) ri[i] = 65535;
-	      else if (ri[i] < 0) ri[i] = 0;
+	if (CHANNEL(d, i).v > dr[i]->value[1]) {
+	  ri[i] = 65535;
+	} else if (CHANNEL(d, i).v < dr[i]->value[0]) {
+	  ri[i] = 0;
+	} else if (dr[i]->value_span != 0) {
+	  ri[i] = (65535 * (CHANNEL(d, i).v - dr[i]->value[0])) / dr[i]->value_span;
+	  /* Adjust for Eventone here */
+	  if (dr[i]->value[0] == 0) {
+	    int t;
+	    if (CHANNEL(d, i).o > dr[i]->value[1]) {
+	      t = 0;
+	    } else if (CHANNEL(d, i).o < dr[i]->value[0]) {
+	      t = et->recip[0];
+	    } else {
+	      t = et->recip[65535 * (CHANNEL(d, i).o - dr[i]->value[0]) / dr[i]->value_span];
 	    }
-	  } else {
+
+	    ri[i] += r_sq[i] * et->aspect - t;
+	    if (ri[i] > 65535) ri[i] = 65535;
+	    else if (ri[i] < 0) ri[i] = 0;
+	  }
+	} else {
 	    ri[i] = 32768;  /* doesn't matter really */
+	}
+
+	if (i == ECOLOR_K) {
+	  kc = dr[ECOLOR_K]->value[0];
+	  if (ri[ECOLOR_K] >= 32768) {
+	    kc = dr[ECOLOR_K]->value[1];
+	    dr[ECOLOR_K] = find_segment(d, &CHANNEL(d, i), i, kc);
+	  }
+	  CHANNEL(d, ECOLOR_K).b = kc;
+	  if (d->black_density != d->density) {
+	    kc = kc * (unsigned)d->density / d->black_density;
 	  }
 	}
-        /* Now we can find out what to really print */
-
-        { int k = CHANNEL(d, ECOLOR_K).o;
-	  if (k > d->k_upper) blackmod += 65536;
-          else if (k > d->k_lower) blackmod += 65536 * (k - d->k_lower) / d->bound_range;
-	}
-        if (blackmod > 65536) {
-          ri[ECOLOR_M] = 65535 - ri[ECOLOR_M];
-          pick = pick_vertex(ri) ^ V_MAGENTA;
-          blackmod -= 65536;
-        } else {
-          pick = pick_vertex(ri);
-        }
       }
+
+      pick = pick_vertex(ri);
 
       /* Compute the values we're going to use (ignoring black's influence) */
       /* And find out whether the bigger black dot would be more suitable than the small one */
@@ -2911,7 +2924,17 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	      blacksize = 0;		/* Use small black instead */
 	    }
 	  }
-	  if (point[i] > 0) {
+	}
+
+        if (blacksize == 0) {
+	  point[ECOLOR_K] = dr[ECOLOR_K]->value[blacksize];
+	  if (d->black_density != d->density) {
+	    point[ECOLOR_K] = (unsigned)point[ECOLOR_K] * (unsigned)d->density / d->black_density;
+	  }
+	}
+
+	for (i=0; i < NCOLORS; i++) {
+	  if ((CHANNEL(d, ECOLOR_K).b > 0) || ((i != 0) && (point[i] > 0))) {
 	    r_sq[i] = 0;
 	    dx[i] = et->dx2;
 	    dy[i] = et->dy2;
@@ -2920,13 +2943,6 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	  et->dx[i][x] = dx[i];
 	  et->dy[i][x] = dy[i] + et->d2y;
         }
-
-        if (blacksize == 0) {
-	  point[ECOLOR_K] = dr[ECOLOR_K]->value[blacksize];
-	  if (d->black_density != d->density) {
-	    point[ECOLOR_K] = (unsigned)point[ECOLOR_K] * (unsigned)d->density / d->black_density;
-	  }
-	}
 
         /* We know which sizes of each colour we want to use, and also the size of the black ink. */
         /* Only print the black ink if it means we can avoid printing another ink, otherwise we're just wasting ink */
@@ -2955,8 +2971,9 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
         }
 
         /* Adjust error values for dither */
+	ndither[ECOLOR_K] += CHANNEL(d, ECOLOR_K).o - CHANNEL(d, ECOLOR_K).b;
         for (i=1; i < NCOLORS; i++) {
-	  ndither[i] += CHANNEL(d, i).o - point[i];
+	  ndither[i] += CHANNEL(d, i).o + CHANNEL(d, ECOLOR_K).b - point[i];
         }
       }
 
@@ -2982,23 +2999,22 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
       /* Diffuse the error round a bit */
       /* At the moment do a simple diffusion directly down and across */
      
-      /*
-      for (i=1; i < NCOLORS; i++) {
+      for (i=0; i < NCOLORS; i++) {
         int fraction = ndither[i] / 2;
         error[i][1][0] += fraction;
         ndither[i] -= fraction;
       }
-      */
 
       /* Other spreading around try - Thomas Tonino */
-     
-      for (i=1; i < NCOLORS; i++) {
+      /*
+      for (i=0; i < NCOLORS; i++) {
         int fraction = ndither[i] / divisor;
         error[i][1][0] += 1*fraction;
         error[i][1][-2*direction] += 1*fraction;
         error[i][1][direction] += 2*fraction;
 	ndither[i] -= 4*fraction;
       }
+      */
       /* End of new try */    
       
       QUANT(12);
@@ -3007,12 +3023,12 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
       QUANT(13);
     }
     /* Save the resulting error for the next line */
-    for (i=1; i < NCOLORS; i++) {
+    for (i=0; i < NCOLORS; i++) {
       error[i][1][-direction] += ndither[i];
     }
 
     stp_free(ndither);
-    for (i = 1; i < d->n_channels; i++)
+    for (i = 0; i < d->n_channels; i++)
       stp_free(error[i]);
     stp_free(error);
 }
