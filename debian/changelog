@@ -2,8 +2,12 @@ gimp-print (4.1.99-rc1-1) unstable; urgency=low
 
   * New upstream release
   * Update to new Standards-Version 3.5.6.0 (no changes)
+  * Disable building of translated PPD files
+  * Enable PostScript level 3 PPD files, and add a Recommends to
+    cupsys-driver-gimpprint for gs (>= 6.51) as earlier versions
+    have problems with level 3.
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>  Tue, 30 Oct 2001 09:18:26 +0000
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Mon, 12 Nov 2001 18:29:21 +0000
 
 gimp-print (4.1.99-b4-6) unstable; urgency=low
 
