@@ -153,7 +153,13 @@ void mix_ink(ppmpixel p, int c, unsigned int a) {
   /* this is pretty crude */
 
   float ink[3];
+  float size;
 
+  if (pstate.dotsize&0x10) {
+    size=(float)a/3.0;
+  } else {
+    size=1.0;
+  }
   if (a) {
     switch (c) {
       case 0: ink[0]=ink[1]=ink[2]=0;break; /* black */
@@ -165,6 +171,7 @@ void mix_ink(ppmpixel p, int c, unsigned int a) {
       default:fprintf(stderr,"unknown ink %d\n",c);return;
     }
     for (i=0;i<3;i++) {
+      ink[i]=(1-size)+size*ink[i];
       p[i]*=ink[i];
     }
   }
@@ -196,16 +203,15 @@ void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color
   memset(p->line[color]+((oldstop-p->startx[color]+1)*bpp+7)/8,0,
           ((p->stopx[color]-p->startx[color]+1)*bpp+7)/8-
           ((oldstop-p->startx[color]+1)*bpp+7)/8);
- bpp=pstate.dotsize&0x16?2:1;
- for (i=0;i<length;i++) {
-   lvalue=get_bits(l,i,bpp);
-   pvalue=get_bits(p->line[color],i+shift,bpp);
-   pvalue+=lvalue;
-   if (pvalue>(1<<bpp)-1) {
-     pvalue=(1<<bpp)-1;
-   }
-   set_bits(p->line[color],i+shift,bpp,pvalue);
- }
+  for (i=0;i<length;i++) {
+    lvalue=get_bits(l,i,bpp);
+    pvalue=get_bits(p->line[color],i+shift,bpp);
+    pvalue+=lvalue;
+    if (pvalue>(1<<bpp)-1) {
+      pvalue=(1<<bpp)-1;
+    }
+    set_bits(p->line[color],i+shift,bpp,pvalue);
+  }
 }
 
 void expand_line (unsigned char *src, unsigned char *dst, int length, int bpp, int skip) {
@@ -368,11 +374,14 @@ int main(int argc,char *argv[]){
 #define getn(n,error) if (!fread(buf,1,n,fp_r)){fprintf(stderr,error);eject=1;continue;}
 #define getnoff(n,offset,error) if (!fread(buf+offset,1,n,fp_r)){fprintf(stderr,error);eject=1;continue;}
 
-    eject=0;
-    got_graphics=0;
+    eject=got_graphics=currentbpp=currentcolor=density=0;
     while ((!eject)&&(fread(&ch,1,1,fp_r))){
       if (ch==0xd) { /* carriage return */
         pstate.xposition=0;
+        continue;
+      }
+      if (ch==0xc) { /* form feed */
+        eject=1;
         continue;
       }
       if (ch!=0x1b) {
