@@ -504,7 +504,7 @@ stp_set_string_parameter(stp_vars_t v, const char *parameter,
 
 void
 stp_set_curve_parameter(stp_vars_t v, const char *parameter,
-			const stp_curve_t *curve)
+			const stp_curve_t curve)
 {
   stp_eprintf(v, "WARNING: Attempt to retrieve unknown parameter %s\n",
 	      parameter);
@@ -562,7 +562,7 @@ stp_get_float_parameter(stp_vars_t v, const char *parameter)
     }
 }
 
-const stp_curve_t *
+const stp_curve_t
 stp_get_curve_parameter(stp_vars_t v, const char *parameter)
 {
   stp_eprintf(v, "WARNING: Attempt to retrieve unknown parameter %s\n",

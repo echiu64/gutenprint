@@ -316,21 +316,13 @@ static int
 verify_curve_param(const stp_vars_t v, const char *parameter,
 		    stp_parameter_t *desc)
 {
-  const stp_curve_t *curve = stp_get_curve_parameter(v, parameter);
+  const stp_curve_t curve = stp_get_curve_parameter(v, parameter);
   size_t i;
-  if (curve->count == 0)
+  if (curve == 0)
     {
       stp_eprintf(v, _("No points present for curve %s\n"), parameter);
       return 0;
     }
-  for (i = 0; i < curve->count; i++)
-    if (curve->value[i] < desc->bounds.dbl.lower ||
-	curve->value[i] > desc->bounds.dbl.upper)
-      {
-	stp_eprintf(v, _("%s must be between %f and %f\n"),
-		    parameter, desc->bounds.dbl.lower, desc->bounds.dbl.upper);
-	return 0;
-      }
   return 1;
 }
 

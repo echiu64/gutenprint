@@ -38,6 +38,7 @@
  */
 
 #include <stddef.h>     /* For size_t */
+#include <stdio.h>		/* For FILE */
 
 #ifdef __cplusplus
 extern "C" {
@@ -230,6 +231,21 @@ typedef enum stp_parameter_level
 } stp_parameter_level_t;
 
 /*
+ * Curve code borrowed from GTK+, http://www.gtk.org/
+ */
+typedef enum
+{
+  STP_CURVE_TYPE_LINEAR,       /* linear interpolation */
+  STP_CURVE_TYPE_SPLINE        /* spline interpolation */
+} stp_curve_type_t;
+
+typedef enum
+{
+  STP_CURVE_WRAP_NONE,		/* curve doesn't wrap */
+  STP_CURVE_WRAP_AROUND		/* curve wraps to its starting point */
+} stp_curve_wrap_mode_t;
+
+/*
  * Representation of a choice list of strings.  The choices themselves
  * consist of a key and a human-readable name.  The list object is
  * opaque.
@@ -246,11 +262,7 @@ typedef void *stp_string_list_t;
  * Other parameter types
  */
 
-typedef struct
-{
-  size_t count;
-  double *value;		/* List of doubles comprising the curve */
-} stp_curve_t;
+typedef void *stp_curve_t;
 
 typedef char *stp_param_file_t;
 
@@ -285,7 +297,7 @@ typedef struct
   } bounds;
   union				/* Default value of the parameter */
   {
-    stp_curve_t *curve;
+    stp_curve_t curve;
     double dbl;
     const char *str;
   } deflt;
@@ -442,7 +454,7 @@ extern void stp_set_string_parameter_n(stp_vars_t v, const char *parameter,
 extern void stp_set_float_parameter(stp_vars_t v, const char *parameter,
 				    double value);
 extern void stp_set_curve_parameter(stp_vars_t v, const char *parameter,
-				     const stp_curve_t *value);
+				     const stp_curve_t value);
 extern void stp_set_raw_parameter(stp_vars_t v, const char *parameter,
 				     const stp_raw_t *value);
 
@@ -450,8 +462,8 @@ extern const char *stp_get_string_parameter(const stp_vars_t v,
 					    const char *param);
 extern const double stp_get_float_parameter(const stp_vars_t v,
 					    const char *param);
-extern const stp_curve_t *stp_get_curve_parameter(const stp_vars_t v,
-						  const char *param);
+extern const stp_curve_t stp_get_curve_parameter(const stp_vars_t v,
+						 const char *param);
 extern const stp_raw_t *stp_get_raw_parameter(const stp_vars_t v,
 					      const char *param);
 
@@ -473,6 +485,159 @@ stp_string_list_duplicate(const stp_string_list_t list);
 
 extern stp_string_list_t
 stp_string_list_duplicate_params(const stp_param_string_t *list, size_t count);
+
+/*
+ * Manipulate curves
+ */
+
+/*
+ * Allocate a new curve.  Curves have y=lower..upper.
+ * Default bounds are 0..1.  Default interpolation type is
+ * linear.  There are no points allocated, and the gamma is defaulted
+ * to 1.
+ *
+ * A wrapped curve has the same value at x=0 and x=1.
+ */
+
+extern stp_curve_t stp_curve_allocate(stp_curve_wrap_mode_t wrap);
+extern stp_curve_t stp_curve_allocate_copy(const stp_curve_t curve);
+extern void stp_curve_copy(stp_curve_t dest, const stp_curve_t source);
+extern void stp_curve_destroy(stp_curve_t curve);
+
+/*
+ * Set the lower and upper bounds on a curve.  If any existing points
+ * on the curve are outside of the bounds, FALSE is returned.
+ */
+extern int stp_curve_set_bounds(stp_curve_t curve, double low, double high);
+extern void stp_curve_get_bounds(const stp_curve_t curve,
+				 double *low, double *high);
+
+extern stp_curve_wrap_mode_t stp_curve_get_wrap(const stp_curve_t curve);
+
+/*
+ * Get the lowest and highest value of points in the curve.
+ * This does not account for any interpolation that may place
+ * intermediate points outside of the curve.
+ */
+extern void stp_curve_get_range(const stp_curve_t curve,
+				double *low, double *high);
+
+/*
+ * Return the number of allocated points in the curve.
+ */
+extern size_t stp_curve_count_points(const stp_curve_t curve);
+
+extern int stp_curve_set_interpolation_type(stp_curve_t curve,
+					    stp_curve_type_t itype);
+extern stp_curve_type_t stp_curve_get_interpolation_type(const stp_curve_t curve);
+
+/*
+ * Set all data points of the curve.  If any of the data points fall outside
+ * the bounds, the operation is not performed and FALSE is returned.  Count
+ * (number of points) must be at least two.  Zero points destroys any
+ * data of the curve.
+ */
+extern int stp_curve_set_data(stp_curve_t curve, size_t count, double *data);
+
+/*
+ * If the curve is a pure gamma curve (no associated points),
+ * a null pointer is returned and the count is 0.
+ */
+extern const double *stp_curve_get_data(const stp_curve_t curve,
+					size_t *count);
+
+/*
+ * Set the gamma of a curve.  This replaces all existing points along
+ * the curve.  The bounds are set to 0..1.  If the gamma value is positive,
+ * the function is increasing; if negative, the function is decreasing.
+ * Count must be either 0 or at least 2.  If the count is zero, the gamma
+ * of the curve is set for interpolation purposes, but points cannot be
+ * assigned to.
+ *
+ * If the gamma value is illegal (0, infinity, or NaN), FALSE is returned.
+ * It is also illegal, and FALSE is returned, to set gamma on a wrap-mode
+ * curve.
+ */
+extern int stp_curve_set_gamma(stp_curve_t curve, size_t count, double gamma);
+
+/*
+ * Return the gamma value of the curve.  A returned value of NaN indicates
+ * that the curve does not have a valid gamma value.
+ */
+extern double stp_curve_get_gamma(const stp_curve_t curve);
+
+/*
+ * Set a point along the curve.  Return FALSE if data is outside the valid
+ * bounds or 'where' is outside the number of valid points.
+ *
+ * This call destroys any gamma value assigned to the curve.
+ */
+extern int stp_curve_set_point(stp_curve_t curve, size_t where, double data);
+
+/*
+ * Get a point along the curve.  If 'where' is outside of the number of valid
+ * points, FALSE is returned and the value of data is not changed.
+ */
+extern int stp_curve_get_point(const stp_curve_t curve, size_t where,
+			       double *data);
+
+/*
+ * Interpolate a point along the curve.  If 'where' is less than 0 or
+ * greater than 1, an error is returned.  If interpolation would
+ * produce a value outside of the allowed range (as could happen with
+ * spline interpolation), the value is clipped to the range.
+ */
+extern int stp_curve_interpolate_value(const stp_curve_t curve,
+				       double where, double *result);
+
+/*
+ * Resample a curve (change the number of points).  Returns FALSE if the
+ * number of points is invalid (less than two, except that zero points is
+ * permitted for a gamma curve).  This does not destroy the gamma
+ * value of a curve.  Points are interpolated as required; any interpolation
+ * that would place points outside of the bounds of the curve will be clipped
+ * to the bounds.
+ */
+extern int stp_curve_resample(stp_curve_t curve, size_t points);
+
+/*
+ * Rescale a curve (multiply all points by a scaling constant).  This
+ * also rescales the bounds.  Returns false if this would exceed floating
+ * point limits.
+ */
+extern int stp_curve_rescale(stp_curve_t curve, double scale);
+
+/*
+ * Print and read back the value of a curve.  The printable
+ * representation is guaranteed to contain only 7-bit printable ASCII
+ * characters, and is null-terminated.  The curve will not contain any
+ * space, newline, or comma characters.  Furthermore, a printed curve
+ * will be read back correctly in all locales.
+ *
+ * Return of a NULL pointer indicates an error occurred.  This should
+ * never happen unless the curve has been overwritten with invalid
+ * data.
+ *
+ * These calls are not guaranteed to provide more than 6 decimal places
+ * of precision or +/-0.5e-6 accuracy, whichever is less.
+ *
+ * The printable representation is allocated on the heap; the caller must
+ * free it.
+ *
+ * NOTE that these calls are not thread-safe!  These routines may
+ * manipulate the locale to achieve a safe representation.
+ */
+extern char *stp_curve_print_string(const stp_curve_t curve);
+extern void stp_curve_print(FILE *f, const stp_curve_t curve);
+
+/*
+ * If reading the curve fails, the existing curve will not be changed.
+ *
+ * stp_curve_read_string returns the number of bytes read.  If that
+ * number is -1, the read failed.
+ */
+extern int stp_curve_read(FILE *f, stp_curve_t curve);
+extern int stp_curve_read_string(const char *text, stp_curve_t curve);
 
 
 /****************************************************************

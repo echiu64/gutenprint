@@ -41,6 +41,7 @@ lib_LTLIBRARIES = libgimpprint.la
 bin_SCRIPTS = gimpprint-config
 
 libgimpprint_la_SOURCES = \
+	curve.c \
 	dither.h \
 	dither-matrices.h \
 	gimp-print-internal.h \

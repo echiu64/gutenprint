@@ -49,8 +49,8 @@ extern int stp_get_model(const stp_vars_t v);
 
 extern const stp_printfuncs_t *stp_printer_get_printfuncs(const stp_printer_t p);
 
-extern int
-stp_verify_printer_params(const stp_vars_t);
+extern int stp_verify_printer_params(const stp_vars_t);
+extern int stp_init_printer_list(void);
 
 
 #ifdef __cplusplus

@@ -1207,8 +1207,8 @@ printrc_save(void)
     for (i = 0, p = plist; i < plist_count; i ++, p ++)
       {
 	int count;
-	int j, k;
-	const stp_curve_t *curve;
+	int j;
+	const stp_curve_t curve;
 	const stp_parameter_t *params = stp_list_parameters(p->v, &count);
 	fprintf(fp, "\nPrinter: %s\n", p->name);
 	fprintf(fp, "Destination: %s\n", plist_get_output_to(p));
@@ -1244,9 +1244,7 @@ printrc_save(void)
 		break;
 	      case STP_PARAMETER_TYPE_CURVE:
 		curve = stp_get_curve_parameter(p->v, params[j].name);
-		fprintf(fp, "%s: %d", params[j].name, curve->count);
-		for (k = 0; k < curve->count; k++)
-		  fprintf(fp, ";%f", curve->value[k]);
+		stp_curve_print(fp, curve);
 		fprintf(fp, "\n");
 		break;
 	      default:
