@@ -135,6 +135,18 @@ static const stp_dotsize_t single_dotsize[] =
   { 0x1, 1.0 }
 };
 
+static const stp_dither_range_simple_t standard_dither_ranges[] =
+{
+  { 1.0,  0x1, 0, 1 }
+};
+
+static const stp_shade_t standard_shades[] =
+{
+  SHADE(1.0,  0, single_dotsize)
+};
+
+DECLARE_INK2(standard, 1.0);
+
 static const stp_dither_range_simple_t photo_cyan_dither_ranges[] =
 {
   { 0.27, 0x1, 1, 1 },
@@ -1789,38 +1801,35 @@ DECLARE_INK(spro10000_photo, 1.0);
 
 static const escp2_variable_inkset_t standard_inks =
 {
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  &standard_ink,
+  &standard_ink,
+  &standard_ink,
+  &standard_ink
 };
 
 static const escp2_variable_inkset_t photo_inks =
 {
-  NULL,
+  &standard_ink,
   &photo_cyan_ink,
   &photo_magenta_ink,
-  NULL
+  &standard_ink
 };
 
 static const escp2_variable_inkset_t extended_inks =
 {
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  &standard_ink,
+  &standard_ink,
+  &standard_ink,
+  &standard_ink,
+  &standard_ink,
+  &standard_ink,
+  &standard_ink
 };
 
 
 static const escp2_variable_inkset_t piezo_quadtone_inks =
 {
   &piezo_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
 };
 
 static const escp2_variable_inkset_t escp2_multishot_standard_inks =
@@ -1868,10 +1877,7 @@ static const escp2_variable_inkset_t escp2_multishot_photoj_inks =
 
 static const escp2_variable_inkset_t piezo_multishot_quadtone_inks =
 {
-  &piezo_multishot_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_multishot_quadtone_ink
 };
 
 
@@ -1920,10 +1926,7 @@ static const escp2_variable_inkset_t escp2_6pl_photoj_inks =
 
 static const escp2_variable_inkset_t piezo_6pl_quadtone_inks =
 {
-  &piezo_6pl_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_6pl_quadtone_ink
 };
 
 
@@ -1956,10 +1959,7 @@ static const escp2_variable_inkset_t escp2_6pl_1440_photo_inks =
 
 static const escp2_variable_inkset_t piezo_6pl_1440_quadtone_inks =
 {
-  &piezo_6pl_1440_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_6pl_1440_quadtone_ink
 };
 
 
@@ -1992,10 +1992,7 @@ static const escp2_variable_inkset_t escp2_6pl_2880_photo_inks =
 
 static const escp2_variable_inkset_t piezo_6pl_2880_quadtone_inks =
 {
-  &piezo_6pl_2880_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_6pl_2880_quadtone_ink
 };
 
 
@@ -2017,18 +2014,12 @@ static const escp2_variable_inkset_t escp2_680_6pl_standard_inks =
 
 static const escp2_variable_inkset_t piezo_680_multishot_quadtone_inks =
 {
-  &piezo_680_multishot_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_680_multishot_quadtone_ink
 };
 
 static const escp2_variable_inkset_t piezo_680_6pl_quadtone_inks =
 {
-  &piezo_680_6pl_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_680_6pl_quadtone_ink
 };
 
 
@@ -2069,10 +2060,7 @@ static const escp2_variable_inkset_t escp2_4pl_photoj_inks =
 
 static const escp2_variable_inkset_t piezo_4pl_quadtone_inks =
 {
-  &piezo_4pl_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_4pl_quadtone_ink
 };
 
 static const escp2_variable_inkset_t escp2_4pl_2880_standard_inks =
@@ -2112,10 +2100,7 @@ static const escp2_variable_inkset_t escp2_4pl_2880_photoj_inks =
 
 static const escp2_variable_inkset_t piezo_4pl_2880_quadtone_inks =
 {
-  &piezo_4pl_2880_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_4pl_2880_quadtone_ink
 };
 
 
@@ -2129,10 +2114,7 @@ static const escp2_variable_inkset_t escp2_6pl_standard_980_inks =
 
 static const escp2_variable_inkset_t piezo_6pl_quadtone_980_inks =
 {
-  &piezo_980_6pl_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_980_6pl_quadtone_ink
 };
 
 static const escp2_variable_inkset_t escp2_3pl_standard_inks =
@@ -2161,26 +2143,17 @@ static const escp2_variable_inkset_t escp2_3pl_2880_standard_inks =
 
 static const escp2_variable_inkset_t piezo_3pl_quadtone_inks =
 {
-  &piezo_3pl_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_3pl_quadtone_ink
 };
 
 static const escp2_variable_inkset_t piezo_3pl_1440_quadtone_inks =
 {
-  &piezo_3pl_1440_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_3pl_1440_quadtone_ink
 };
 
 static const escp2_variable_inkset_t piezo_3pl_2880_quadtone_inks =
 {
-  &piezo_3pl_2880_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_3pl_2880_quadtone_ink
 };
 
 
@@ -2229,10 +2202,7 @@ static const escp2_variable_inkset_t escp2_2pl_2880_photoj_inks =
 
 static const escp2_variable_inkset_t piezo_2pl_2880_quadtone_inks =
 {
-  &piezo_2pl_2880_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_2pl_2880_quadtone_ink
 };
 
 static const escp2_variable_inkset_t escp2_2pl_1440_standard_inks =
@@ -2272,10 +2242,7 @@ static const escp2_variable_inkset_t escp2_2pl_1440_photoj_inks =
 
 static const escp2_variable_inkset_t piezo_2pl_1440_quadtone_inks =
 {
-  &piezo_2pl_1440_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_2pl_1440_quadtone_ink
 };
 
 static const escp2_variable_inkset_t escp2_2pl_720_standard_inks =
@@ -2323,10 +2290,7 @@ static const escp2_variable_inkset_t escp2_2pl_720_photoj_inks =
 
 static const escp2_variable_inkset_t piezo_2pl_720_quadtone_inks =
 {
-  &piezo_2pl_720_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_2pl_720_quadtone_ink
 };
 
 static const escp2_variable_inkset_t escp2_2pl_360_standard_inks =
@@ -2374,10 +2338,7 @@ static const escp2_variable_inkset_t escp2_2pl_360_photoj_inks =
 
 static const escp2_variable_inkset_t piezo_2pl_360_quadtone_inks =
 {
-  &piezo_2pl_360_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_2pl_360_quadtone_ink
 };
 
 
@@ -2415,34 +2376,22 @@ static const escp2_variable_inkset_t escp2_x80_2880_6pl_standard_inks =
 
 static const escp2_variable_inkset_t piezo_x80_multishot_quadtone_inks =
 {
-  &piezo_x80_multishot_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_x80_multishot_quadtone_ink
 };
 
 static const escp2_variable_inkset_t piezo_x80_6pl_quadtone_inks =
 {
-  &piezo_x80_6pl_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_x80_6pl_quadtone_ink
 };
 
 static const escp2_variable_inkset_t piezo_x80_1440_6pl_quadtone_inks =
 {
-  &piezo_x80_1440_6pl_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_x80_1440_6pl_quadtone_ink
 };
 
 static const escp2_variable_inkset_t piezo_x80_2880_6pl_quadtone_inks =
 {
-  &piezo_x80_2880_6pl_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_x80_2880_6pl_quadtone_ink
 };
 
 
@@ -2464,10 +2413,7 @@ static const escp2_variable_inkset_t escp2_pigment_photo_inks =
 
 static const escp2_variable_inkset_t piezo_pigment_quadtone_inks =
 {
-  &piezo_pigment_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_pigment_quadtone_ink
 };
 
 
@@ -2481,10 +2427,7 @@ static const escp2_variable_inkset_t escp2_multishot_pigment_standard_inks =
 
 static const escp2_variable_inkset_t piezo_multishot_pigment_quadtone_inks =
 {
-  &piezo_multishot_pigment_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_multishot_pigment_quadtone_ink
 };
 
 static const escp2_variable_inkset_t escp2_economy_pigment_standard_inks =
@@ -2497,10 +2440,7 @@ static const escp2_variable_inkset_t escp2_economy_pigment_standard_inks =
 
 static const escp2_variable_inkset_t piezo_economy_pigment_quadtone_inks =
 {
-  &piezo_economy_pigment_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_economy_pigment_quadtone_ink
 };
 
 
@@ -2525,10 +2465,7 @@ static const escp2_variable_inkset_t escp2_6pl_pigment_extended_inks =
 
 static const escp2_variable_inkset_t piezo_6pl_pigment_quadtone_inks =
 {
-  &piezo_6pl_pigment_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_6pl_pigment_quadtone_ink
 };
 
 
@@ -2715,10 +2652,7 @@ static const escp2_variable_inkset_t escp2_3pl_pigment_standard_inks =
 
 static const escp2_variable_inkset_t piezo_3pl_pigment_quadtone_inks =
 {
-  &piezo_3pl_pigment_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_3pl_pigment_quadtone_ink
 };
 
 static const escp2_variable_inkset_t escp2_3pl_pigment_2880_standard_inks =
@@ -2731,10 +2665,7 @@ static const escp2_variable_inkset_t escp2_3pl_pigment_2880_standard_inks =
 
 static const escp2_variable_inkset_t piezo_3pl_pigment_2880_quadtone_inks =
 {
-  &piezo_3pl_pigment_2880_quadtone_ink,
-  NULL,
-  NULL,
-  NULL
+  &piezo_3pl_pigment_2880_quadtone_ink
 };
 
 
