@@ -616,6 +616,59 @@ static const stp_simple_dither_range_t standard_3pl_pigment_2880_dither_ranges[]
 
 DECLARE_INK(standard_3pl_pigment_2880, 1.0);
 
+static const stp_simple_dither_range_t piezo_economy_pigment_quadtone_dither_ranges[]=
+{
+  { PIEZO_0, 0x3, 0, 1 },
+  { PIEZO_1, 0x3, 1, 1 },
+  { PIEZO_2, 0x3, 2, 1 },
+  { PIEZO_3, 0x3, 3, 1 },
+};
+
+DECLARE_INK(piezo_economy_pigment_quadtone, 1.0);
+
+static const stp_simple_dither_range_t piezo_multishot_pigment_quadtone_dither_ranges[]=
+{
+  { PIEZO_0 * .410, 0x1, 0, 2 },
+  { PIEZO_1 * .410, 0x1, 1, 2 },
+  { PIEZO_2 * .410, 0x1, 2, 2 },
+  { PIEZO_3 * .410, 0x1, 3, 2 },
+  { PIEZO_3 * 1.00, 0x3, 3, 5 },
+};
+
+DECLARE_INK(piezo_multishot_pigment_quadtone, 1.0);
+
+static const stp_simple_dither_range_t piezo_6pl_pigment_quadtone_dither_ranges[]=
+{
+  { PIEZO_0 * .300, 0x1, 0, 3 },
+  { PIEZO_1 * .300, 0x1, 1, 3 },
+  { PIEZO_2 * .300, 0x1, 2, 3 },
+  { PIEZO_3 * .300, 0x1, 3, 3 },
+  { PIEZO_3 * 1.00, 0x3, 3, 10 },
+};
+
+DECLARE_INK(piezo_6pl_pigment_quadtone, 1.0);
+
+static const stp_simple_dither_range_t piezo_3pl_pigment_quadtone_dither_ranges[]=
+{
+  { PIEZO_0 * .650, 0x1, 0, 2 },
+  { PIEZO_1 * .650, 0x1, 1, 2 },
+  { PIEZO_2 * .650, 0x1, 2, 2 },
+  { PIEZO_3 * .650, 0x1, 3, 2 },
+  { PIEZO_3 * 1.00, 0x2, 3, 3 },
+};
+
+DECLARE_INK(piezo_3pl_pigment_quadtone, 1.0);
+
+static const stp_simple_dither_range_t piezo_3pl_pigment_2880_quadtone_dither_ranges[]=
+{
+  { PIEZO_0, 0x1, 0, 1 },
+  { PIEZO_1, 0x1, 1, 1 },
+  { PIEZO_2, 0x1, 2, 1 },
+  { PIEZO_3, 0x1, 3, 1 },
+};
+
+DECLARE_INK(piezo_3pl_pigment_2880_quadtone, 1.0);
+
 
 /***************************************************************\
 *                                                               *
@@ -640,6 +693,17 @@ static const stp_simple_dither_range_t photo_pigment_dither_ranges[] =
 };
 
 DECLARE_INK(photo_pigment, 1.0);
+
+static const stp_simple_dither_range_t piezo_pigment_quadtone_dither_ranges[]=
+{
+  { PIEZO_0 * .550, 0x1, 0, 1 },
+  { PIEZO_1 * .550, 0x1, 1, 1 },
+  { PIEZO_2 * .550, 0x1, 2, 1 },
+  { PIEZO_3 * .550, 0x1, 3, 1 },
+  { PIEZO_3 * 1.00, 0x2, 3, 2 },
+};
+
+DECLARE_INK(piezo_pigment_quadtone, 1.0);
 
 
 /***************************************************************\
@@ -1091,6 +1155,14 @@ static const escp2_variable_inkset_t escp2_pigment_photo_inks =
   &standard_pigment_ink
 };
 
+static const escp2_variable_inkset_t piezo_pigment_quadtone_inks =
+{
+  &piezo_pigment_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
+
 
 static const escp2_variable_inkset_t escp2_multishot_pigment_standard_inks =
 {
@@ -1098,6 +1170,14 @@ static const escp2_variable_inkset_t escp2_multishot_pigment_standard_inks =
   &standard_multishot_pigment_ink,
   &standard_multishot_pigment_ink,
   &standard_multishot_pigment_ink
+};
+
+static const escp2_variable_inkset_t piezo_multishot_pigment_quadtone_inks =
+{
+  &piezo_multishot_pigment_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
 };
 
 static const escp2_variable_inkset_t escp2_economy_pigment_standard_inks =
@@ -1108,6 +1188,14 @@ static const escp2_variable_inkset_t escp2_economy_pigment_standard_inks =
   &standard_economy_pigment_ink
 };
 
+static const escp2_variable_inkset_t piezo_economy_pigment_quadtone_inks =
+{
+  &piezo_economy_pigment_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
+
 
 static const escp2_variable_inkset_t escp2_6pl_pigment_standard_inks =
 {
@@ -1115,6 +1203,14 @@ static const escp2_variable_inkset_t escp2_6pl_pigment_standard_inks =
   &standard_6pl_pigment_ink,
   &standard_6pl_pigment_ink,
   &standard_6pl_pigment_ink
+};
+
+static const escp2_variable_inkset_t piezo_6pl_pigment_quadtone_inks =
+{
+  &piezo_6pl_pigment_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
 };
 
 
@@ -1191,12 +1287,28 @@ static const escp2_variable_inkset_t escp2_3pl_pigment_standard_inks =
   &standard_3pl_pigment_ink
 };
 
+static const escp2_variable_inkset_t piezo_3pl_pigment_quadtone_inks =
+{
+  &piezo_3pl_pigment_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
+
 static const escp2_variable_inkset_t escp2_3pl_pigment_2880_standard_inks =
 {
   &standard_3pl_pigment_2880_ink,
   &standard_3pl_pigment_2880_ink,
   &standard_3pl_pigment_2880_ink,
   &standard_3pl_pigment_2880_ink
+};
+
+static const escp2_variable_inkset_t piezo_3pl_pigment_2880_quadtone_inks =
+{
+  &piezo_3pl_pigment_2880_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
 };
 
 
@@ -1484,7 +1596,20 @@ static const escp2_variable_inklist_t variable_pigment_inks =
     &escp2_pigment_photo_inks,
     &escp2_pigment_photo_inks,
     &escp2_pigment_photo_inks
-  }
+  },
+  { NULL, },
+  { NULL, },
+  {
+    &piezo_pigment_quadtone_inks,
+    &piezo_pigment_quadtone_inks,
+    &piezo_pigment_quadtone_inks,
+    &piezo_pigment_quadtone_inks,
+    &piezo_pigment_quadtone_inks,
+    &piezo_pigment_quadtone_inks,
+    &piezo_pigment_quadtone_inks,
+    &piezo_pigment_quadtone_inks,
+    &piezo_pigment_quadtone_inks
+  },
 };
 
 static const escp2_variable_inklist_t variable_4pl_pigment_inks =
@@ -1521,7 +1646,7 @@ static const escp2_variable_inklist_t variable_4pl_pigment_inks =
     &escp2_4pl_pigment_photo2_inks,
     &escp2_4pl_pigment_photo2_inks,
     &escp2_4pl_pigment_2880_photo2_inks
-  }
+  },
 };
 
 static const escp2_variable_inklist_t variable_3pl_pigment_inks =
@@ -1536,6 +1661,20 @@ static const escp2_variable_inklist_t variable_3pl_pigment_inks =
     &escp2_3pl_pigment_2880_standard_inks,
     &escp2_3pl_pigment_2880_standard_inks,
     &escp2_3pl_pigment_2880_standard_inks,
+  },
+  { NULL, },
+  { NULL, },
+  { NULL, },
+  {
+    &piezo_economy_pigment_quadtone_inks,
+    &piezo_economy_pigment_quadtone_inks,
+    &piezo_multishot_pigment_quadtone_inks,
+    &piezo_multishot_pigment_quadtone_inks,
+    &piezo_6pl_pigment_quadtone_inks,
+    &piezo_3pl_pigment_quadtone_inks,
+    &piezo_3pl_pigment_2880_quadtone_inks,
+    &piezo_3pl_pigment_2880_quadtone_inks,
+    &piezo_3pl_pigment_2880_quadtone_inks,
   }
 };
 
@@ -1789,8 +1928,7 @@ static const escp2_inkname_t *photo7_ink_types[] =
   &six_color_photo_inkset,
   &five_color_photo_composite_inkset,
   &four_color_standard_inkset,
-  &three_color_composite_inkset,
-  &piezo_quadtone_inkset
+  &three_color_composite_inkset
 };
 
 DECLARE_INKLIST(photo7);
