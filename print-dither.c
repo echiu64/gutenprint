@@ -1776,8 +1776,8 @@ dither_black_ed(const unsigned short   *gray,	/* I - Grayscale pixels */
       k = UPDATE_COLOR(k, ditherk);
       k = print_color(d, &(d->dither[ECOLOR_K]), ok, ok, k, x, row, kptr, NULL,
 		      bit, length, d->randomizer[ECOLOR_K], 0, &ink_budget,
-		      &(d->pick[ECOLOR_K]), &(d->dithermat[ECOLOR_K])
-		      , d->dither_type);
+		      &(d->pick[ECOLOR_K]), &(d->dithermat[ECOLOR_K]),
+		      d->dither_type);
       ditherk = update_dither(k, ok, d->src_width, odb, odb_mask,
 			      direction, kerror0, kerror1, d);
 
@@ -2022,6 +2022,7 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
   const unsigned short *cline = get_valueline(d, ECOLOR_C);
   const unsigned short *mline = get_valueline(d, ECOLOR_M);
   const unsigned short *yline = get_valueline(d, ECOLOR_Y);
+  int i;
   int nonzero;
 
   dither_color_t *cd = &(d->dither[ECOLOR_C]);
@@ -2099,10 +2100,8 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
 
   k = 0;			/* Shut up the compiler */
   ok = 0;
-  matrix_set_row(d, &(d->dithermat[ECOLOR_K]), row);
-  matrix_set_row(d, &(d->dithermat[ECOLOR_C]), row);
-  matrix_set_row(d, &(d->dithermat[ECOLOR_M]), row);
-  matrix_set_row(d, &(d->dithermat[ECOLOR_Y]), row);
+  for (i = 0; i < NCOLORS; i++)
+    matrix_set_row(d, &(d->dithermat[i]), row);
 
   /*
    * Main loop starts here!
@@ -2146,17 +2145,13 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
 	  QUANT(15);
 
 	  if (black)
-	    print_color_fast(d, kd, ok,
-			     k, x, row, kptr, NULL, bit, length,
+	    print_color_fast(d, kd, ok, k, x, row, kptr, NULL, bit, length,
 			     kdither, kdither_very_fast);
-	  print_color_fast(d, kd, oc,
-			   c, x, row, cptr, lcptr, bit, length,
+	  print_color_fast(d, cd, oc, c, x, row, cptr, lcptr, bit, length,
 			   cdither, cdither_very_fast);
-	  print_color_fast(d, kd, om,
-			   m, x, row, mptr, lmptr, bit, length,
+	  print_color_fast(d, md, om, m, x, row, mptr, lmptr, bit, length,
 			   mdither, mdither_very_fast);
-	  print_color_fast(d, kd, oy,
-			   y, x, row, yptr, lyptr, bit, length,
+	  print_color_fast(d, yd, oy, y, x, row, yptr, lyptr, bit, length,
 			   ydither, ydither_very_fast);
 	  QUANT(16);
 	}
@@ -2215,6 +2210,7 @@ dither_cmyk_ordered(const unsigned short  *rgb,
   const unsigned short *mline = get_valueline(d, ECOLOR_M);
   const unsigned short *yline = get_valueline(d, ECOLOR_Y);
   int nonzero;
+  int i;
 
   int		terminate;
   int		first_color = row % 3;
@@ -2262,14 +2258,11 @@ dither_cmyk_ordered(const unsigned short  *rgb,
   lyptr = lyellow;
   kptr = black;
 
-  matrix_set_row(d, &(d->dithermat[ECOLOR_K]), row);
-  matrix_set_row(d, &(d->dithermat[ECOLOR_C]), row);
-  matrix_set_row(d, &(d->dithermat[ECOLOR_M]), row);
-  matrix_set_row(d, &(d->dithermat[ECOLOR_Y]), row);
-  matrix_set_row(d, &(d->pick[ECOLOR_K]), row);
-  matrix_set_row(d, &(d->pick[ECOLOR_C]), row);
-  matrix_set_row(d, &(d->pick[ECOLOR_M]), row);
-  matrix_set_row(d, &(d->pick[ECOLOR_Y]), row);
+  for (i = 0; i < NCOLORS; i++)
+    {
+      matrix_set_row(d, &(d->dithermat[i]), row);
+      matrix_set_row(d, &(d->pick[i]), row);
+    }
    QUANT(6);
   /*
    * Main loop starts here!
@@ -2344,7 +2337,7 @@ dither_cmyk_ordered(const unsigned short  *rgb,
 	  int tk = print_color(d, &(d->dither[ECOLOR_K]), bk, bk, k, x, row,
 			       kptr, NULL, bit, length, 0, 0, &ink_budget,
 			       &(d->pick[ECOLOR_K]), &(d->dithermat[ECOLOR_K]),
-			       D_ORDERED);
+			       d->dither_type);
 	  printed_black = k - tk;
 	  k = tk;
 	}
@@ -2375,27 +2368,24 @@ dither_cmyk_ordered(const unsigned short  *rgb,
       else if (first_color == ECOLOR_Y)
 	goto ecy;
     ecc:
-      c = print_color(d, &(d->dither[ECOLOR_C]), oc, oc,
-		      c, x, row, cptr, lcptr, bit, length,
-		      d->randomizer[ECOLOR_C], printed_black, &ink_budget,
-		      &(d->pick[ECOLOR_C]), &(d->dithermat[ECOLOR_C]),
-		      d->dither_type);
+      print_color(d, &(d->dither[ECOLOR_C]), oc, oc, c, x, row, cptr, lcptr,
+		  bit, length, d->randomizer[ECOLOR_C], printed_black,
+		  &ink_budget, &(d->pick[ECOLOR_C]), &(d->dithermat[ECOLOR_C]),
+		  d->dither_type);
       if (first_color == ECOLOR_M)
 	goto out;
     ecm:
-      m = print_color(d, &(d->dither[ECOLOR_M]), om, om,
-		      m, x, row, mptr, lmptr, bit, length,
-		      d->randomizer[ECOLOR_M], printed_black, &ink_budget,
-		      &(d->pick[ECOLOR_M]), &(d->dithermat[ECOLOR_M]),
-		      d->dither_type);
+      print_color(d, &(d->dither[ECOLOR_M]), om, om, m, x, row, mptr, lmptr,
+		  bit, length, d->randomizer[ECOLOR_M], printed_black,
+		  &ink_budget, &(d->pick[ECOLOR_M]), &(d->dithermat[ECOLOR_M]),
+		  d->dither_type);
       if (first_color == ECOLOR_Y)
 	goto out;
     ecy:
-      y = print_color(d, &(d->dither[ECOLOR_Y]), oy, oy,
-		      y, x, row, yptr, lyptr, bit, length,
-		      d->randomizer[ECOLOR_Y], printed_black, &ink_budget,
-		      &(d->pick[ECOLOR_Y]), &(d->dithermat[ECOLOR_Y]),
-		      d->dither_type);
+      print_color(d, &(d->dither[ECOLOR_Y]), oy, oy, y, x, row, yptr, lyptr,
+		  bit, length, d->randomizer[ECOLOR_Y], printed_black,
+		  &ink_budget, &(d->pick[ECOLOR_Y]), &(d->dithermat[ECOLOR_Y]),
+		  d->dither_type);
       if (first_color != ECOLOR_C)
 	goto ecc;
     out:
@@ -2455,18 +2445,9 @@ dither_cmyk_ed(const unsigned short  *rgb,	/* I - RGB pixels */
     		*lcptr,		/* Current light cyan pixel */
     		*lyptr,		/* Current light yellow pixel */
     		*kptr;		/* Current black pixel */
-  int		ditherc = 0,	/* Next error value in buffer */
-    		*cerror0 = 0,	/* Pointer to current error row */
-    		*cerror1 = 0;	/* Pointer to next error row */
-  int		dithery = 0,	/* Next error value in buffer */
-    		*yerror0 = 0,	/* Pointer to current error row */
-    		*yerror1 = 0;	/* Pointer to next error row */
-  int		ditherm = 0,	/* Next error value in buffer */
-    		*merror0 = 0,	/* Pointer to current error row */
-    		*merror1 = 0;	/* Pointer to next error row */
-  int		ditherk = 0,	/* Next error value in buffer */
-    		*kerror0 = 0,	/* Pointer to current error row */
-    		*kerror1 = 0;	/* Pointer to next error row */
+  int		i, j;
+  int		ndither[NCOLORS];
+  int		*error[NCOLORS][ERROR_ROWS];
   int		bk = 0;
   dither_t	*d = (dither_t *) vd;
   const unsigned short *cline = get_valueline(d, ECOLOR_C);
@@ -2521,29 +2502,21 @@ dither_cmyk_ed(const unsigned short  *rgb,	/* I - RGB pixels */
   x = (direction == 1) ? 0 : d->dst_width - 1;
   terminate = (direction == 1) ? d->dst_width : -1;
 
-  cerror0 = get_errline(d, row, ECOLOR_C);
-  cerror1 = get_errline(d, row + 1, ECOLOR_C);
-
-  merror0 = get_errline(d, row, ECOLOR_M);
-  merror1 = get_errline(d, row + 1, ECOLOR_M);
-
-  yerror0 = get_errline(d, row, ECOLOR_Y);
-  yerror1 = get_errline(d, row + 1, ECOLOR_Y);
-
-  kerror0 = get_errline(d, row, ECOLOR_K);
-  kerror1 = get_errline(d, row + 1, ECOLOR_K);
-  memset(kerror1, 0, d->dst_width * sizeof(int));
-  memset(cerror1, 0, d->dst_width * sizeof(int));
-  memset(merror1, 0, d->dst_width * sizeof(int));
-  memset(yerror1, 0, d->dst_width * sizeof(int));
+  for (i = 0; i < NCOLORS; i++)
+    {
+      for (j = 0; j < ERROR_ROWS; j++)
+	error[i][j] = get_errline(d, row + j, i);
+      memset(error[i][j - 1], 0, d->dst_width * sizeof(int));
+    }
   if (d->last_line_was_empty >= 4)
     {
       if (d->last_line_was_empty == 4)
 	{
-	  memset(kerror0, 0, d->dst_width * sizeof(int));
-	  memset(cerror0, 0, d->dst_width * sizeof(int));
-	  memset(merror0, 0, d->dst_width * sizeof(int));
-	  memset(yerror0, 0, d->dst_width * sizeof(int));
+	  for (i = 0; i < NCOLORS; i++)
+	    {
+	      for (j = 0; j < ERROR_ROWS - 1; j++)
+		memset(error[i][j], 0, d->dst_width * sizeof(int));
+	    }
 	}
       return;
     }
@@ -2556,14 +2529,11 @@ dither_cmyk_ed(const unsigned short  *rgb,	/* I - RGB pixels */
   kptr = black;
   if (direction == -1)
     {
-      cerror0 += d->dst_width - 1;
-      cerror1 += d->dst_width - 1;
-      merror0 += d->dst_width - 1;
-      merror1 += d->dst_width - 1;
-      yerror0 += d->dst_width - 1;
-      yerror1 += d->dst_width - 1;
-      kerror0 += d->dst_width - 1;
-      kerror1 += d->dst_width - 1;
+      for (i = 0; i < NCOLORS; i++)
+	{
+	  for (j = 0; j < ERROR_ROWS; j++)
+	    error[i][j] += d->dst_width - 1;
+	}
       cptr = cyan + length - 1;
       lcptr = lcyan + length - 1;
       mptr = magenta + length - 1;
@@ -2573,19 +2543,12 @@ dither_cmyk_ed(const unsigned short  *rgb,	/* I - RGB pixels */
       kptr = black + length - 1;
       first_color = (first_color + d->dst_width - 1) % 3;
     }
-
-  ditherc = cerror0[0];
-  ditherm = merror0[0];
-  dithery = yerror0[0];
-  ditherk = kerror0[0];
-  matrix_set_row(d, &(d->dithermat[ECOLOR_K]), row);
-  matrix_set_row(d, &(d->dithermat[ECOLOR_C]), row);
-  matrix_set_row(d, &(d->dithermat[ECOLOR_M]), row);
-  matrix_set_row(d, &(d->dithermat[ECOLOR_Y]), row);
-  matrix_set_row(d, &(d->pick[ECOLOR_K]), row);
-  matrix_set_row(d, &(d->pick[ECOLOR_C]), row);
-  matrix_set_row(d, &(d->pick[ECOLOR_M]), row);
-  matrix_set_row(d, &(d->pick[ECOLOR_Y]), row);
+  for (i = 0; i < NCOLORS; i++)
+    {
+      ndither[i] = error[i][0][0];
+      matrix_set_row(d, &(d->dithermat[i]), row);
+      matrix_set_row(d, &(d->pick[i]), row);
+    }
   QUANT(6);
   /*
    * Main loop starts here!
@@ -2609,10 +2572,10 @@ dither_cmyk_ed(const unsigned short  *rgb,	/* I - RGB pixels */
        */
       if (c == 0 && m == 0 && y == 0)
 	{
-	  c = UPDATE_COLOR(c, ditherc);
-	  m = UPDATE_COLOR(m, ditherm);
-	  y = UPDATE_COLOR(y, dithery);
-	  k = UPDATE_COLOR(0, ditherk);
+	  c = UPDATE_COLOR(c, ndither[ECOLOR_C]);
+	  m = UPDATE_COLOR(m, ndither[ECOLOR_M]);
+	  y = UPDATE_COLOR(y, ndither[ECOLOR_Y]);
+	  k = UPDATE_COLOR(k, ndither[ECOLOR_K]);
 	  goto out;
 	}
 
@@ -2658,10 +2621,10 @@ dither_cmyk_ed(const unsigned short  *rgb,	/* I - RGB pixels */
        * for variable dot sizes, too.
        */
 
-      c = UPDATE_COLOR(c, ditherc);
-      m = UPDATE_COLOR(m, ditherm);
-      y = UPDATE_COLOR(y, dithery);
-      k = UPDATE_COLOR(k, ditherk);
+      c = UPDATE_COLOR(c, ndither[ECOLOR_C]);
+      m = UPDATE_COLOR(m, ndither[ECOLOR_M]);
+      y = UPDATE_COLOR(y, ndither[ECOLOR_Y]);
+      k = UPDATE_COLOR(k, ndither[ECOLOR_K]);
 
       QUANT(9);
 
@@ -2729,14 +2692,18 @@ dither_cmyk_ed(const unsigned short  *rgb,	/* I - RGB pixels */
     out:
 
       QUANT(11);
-      ditherc = update_dither(c, oc, d->src_width, odb, odb_mask,
-			      direction, cerror0, cerror1, d);
-      ditherm = update_dither(m, om, d->src_width, odb, odb_mask,
-			      direction, merror0, merror1, d);
-      dithery = update_dither(y, oy, d->src_width, odb, odb_mask,
-			      direction, yerror0, yerror1, d);
-      ditherk = update_dither(k, bk, d->src_width, odb, odb_mask,
-			      direction, kerror0, kerror1, d);
+      ndither[ECOLOR_C] = update_dither(c, oc, d->src_width, odb, odb_mask,
+					direction, error[ECOLOR_C][0],
+					error[ECOLOR_C][1], d);
+      ndither[ECOLOR_M] = update_dither(m, om, d->src_width, odb, odb_mask,
+					direction, error[ECOLOR_M][0],
+					error[ECOLOR_M][1], d);
+      ndither[ECOLOR_Y] = update_dither(y, oy, d->src_width, odb, odb_mask,
+					direction, error[ECOLOR_Y][0],
+					error[ECOLOR_Y][1], d);
+      ndither[ECOLOR_K] = update_dither(k, bk, d->src_width, odb, odb_mask,
+					direction, error[ECOLOR_K][0],
+					error[ECOLOR_K][1], d);
 
       /*****************************************************************
        * Advance the loop
@@ -2780,14 +2747,9 @@ dither_cmyk_ed(const unsigned short  *rgb,	/* I - RGB pixels */
 	  if (first_color <= 0)
 	    first_color = 2;
 	}
-      cerror0 += direction;
-      cerror1 += direction;
-      merror0 += direction;
-      merror1 += direction;
-      yerror0 += direction;
-      yerror1 += direction;
-      kerror0 += direction;
-      kerror1 += direction;
+      for (i = 0; i < NCOLORS; i++)
+	for (j = 0; j < ERROR_ROWS; j++)
+	  error[i][j] += direction;
       QUANT(13);
     }
   /*

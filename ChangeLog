@@ -1,3 +1,29 @@
+2000-12-16	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.104) (+12 -11)
+		print.h (1.97) (+20 -44)
+		print-util.c (1.154) (+2 -2)
+		print-pcl.c (1.102) (+9 -7)
+		print-lexmark.c (1.10) (+5 -5)
+		print-escp2.c (1.281) (+9 -9)
+		print-dither.c (1.107) (+235 -345)
+	
+	Start collapsing the per-color data structures and functions in
+	the dither code into arrays.
+	
+2000-12-14	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.62) (+54 -0)
+		Ghost/README (1.57) (+47 -16)
+		print-escp2.c (1.280) (+31 -23)
+		print-dither.c (1.106) (+54 -52)
+		README (1.37) (+1 -1)
+		Makefile.am (1.78) (+9 -4)
+	
+	Add higher quality 360 DPI printing modes.
+	
+	Try to improve ordered dither on 6 color printers.
+	
 2000-12-11	<rlk@sourceforge.net>
 
 	Files:	print-dither.c (1.105) (+74 -99)
