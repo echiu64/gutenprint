@@ -291,7 +291,7 @@
 
 <printer name="HP LaserJet 5 series" driver="pcl-5">
 <nocolor>
-<model value=4>
+<model value=6>
 <gamma value=1.000>
 <density value=0.615>
 <language value=pcl>
@@ -299,7 +299,7 @@
 
 <printer name="HP LaserJet 5Si" driver="pcl-5si">
 <nocolor>
-<model value=5>
+<model value=7>
 <gamma value=1.000>
 <density value=0.615>
 <language value=pcl>
@@ -307,7 +307,7 @@
 
 <printer name="HP LaserJet 6 series" driver="pcl-6">
 <nocolor>
-<model value=4>
+<model value=6>
 <gamma value=1.000>
 <density value=0.615>
 <language value=pcl>
