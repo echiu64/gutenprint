@@ -2914,6 +2914,9 @@ static const escp2_dot_size_t c2pl_dotsizes =
 static const escp2_dot_size_t c4pl_pigment_dotsizes =
 { -1,   0x12,   -1, 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x11,   -1, 0x10, 0x10 };
 
+static const escp2_dot_size_t spro_c4pl_pigment_dotsizes =
+{ 0x12,   -1, 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x11,   -1, 0x10, 0x10, 0x10 };
+
 /*
  * Bits are for:
  *
@@ -4127,7 +4130,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     INCH(24), INCH(1200), INCH(7), INCH(7),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 0, 0, 0, 0,
-    c4pl_pigment_dotsizes, c4pl_pigment_densities, &variable_4pl_pigment_inks,
+    spro_c4pl_pigment_dotsizes, c4pl_pigment_densities, &variable_4pl_pigment_inks,
     &standard_paper_list, pro_reslist, &photo7_inklist,
     ultrachrome_bits, pro_base_res, &roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
@@ -4142,7 +4145,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     INCH(44), INCH(1200), INCH(7), INCH(7),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 0, 0, 0, 0,
-    c4pl_pigment_dotsizes, c4pl_pigment_densities, &variable_4pl_pigment_inks,
+    spro_c4pl_pigment_dotsizes, c4pl_pigment_densities, &variable_4pl_pigment_inks,
     &standard_paper_list, pro_reslist, &photo7_inklist,
     ultrachrome_bits, pro_base_res, &roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
