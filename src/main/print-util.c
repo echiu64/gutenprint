@@ -1449,6 +1449,11 @@ stp_minimum_settings()
   return (stp_vars_t) &min_vars;
 }
 
+/*
+ * We cannot avoid use of the (non-ANSI) vsnprintf here; ANSI does
+ * not provide a safe, length-limited sprintf function.
+ */
+
 #define STP_VASPRINTF(result, bytes, format)				\
 {									\
   int current_allocation = 64;						\
