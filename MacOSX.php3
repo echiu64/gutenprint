@@ -32,6 +32,9 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
+ <a href="MacOSX.php3#downloadESPGS"><b>Aug 17, 2004 -</b></a> ESP Ghostscript version 7.07.1 (ESPGS) is now available as a Mac OS X installer package in the downloads section.  This release fixes security problems related to libPNG.  ESP Ghostscript is not necessary for Gimp-Print users running Mac OS X Panther (10.3.x), but anyone who has ever installed an earlier release of ESP Ghostscript should either upgrade to this version or use the included uninstaller to remove the software.
+ </p>
+ <p>
  <a href="MacOSX.php3#5.0.0-beta1"><b>July 30, 2004 -</b></a> Gimp-Print 
  5.0.0-beta1 is now available for download. Gimp-Print 5.0.0-beta1 is the
  first beta release in the Gimp-Print 5.0 line.
@@ -40,9 +43,6 @@ require('standard_html_header.php3');
  <a href="MacOSX.php3#4.2.7"><b>July 14, 2004 -</b></a> Gimp-Print 4.2.7 is now available for download. This is the most recent stable release of Gimp-Print, and very likely the last version to be released in the 4.2.x series.
  </p>
 <p>
- </p>
- <p>
- <a href="MacOSX.php3#downloadESPGS"><b>April 30, 2003 -</b></a> ESP Ghostscript version 7.05.6 (ESPGS) is now available as a Mac OS X installer package in the downloads section. All Gimp-Print users running Mac OS X Jaguar (10.2.x) should update to this version of ESPGS. This software is not necessary for users running Mac OS X Panther (10.3.x).
  </p>
  <br>
  </td>
@@ -127,8 +127,7 @@ require('standard_html_header.php3');
  drivers supporting over 600 printers. The disk-image file includes an OS X
  installer package, an uninstaller package, plus illustrated documentation to easily guide you through the printer set-up process.
 </p><p>
- <em>Please note</em>: Mac OS X Jaguar users need ESP Ghostscript (see below). ESP
- Ghostscript 7.05.6 for Mac OS X is a required installation <b>only</b> for Mac OS X "Jaguar" (version 10.2.x); later versions of Mac OS X do not require this companion software! 
+ <em>Please note</em>: Mac OS X Jaguar (10.2.x) users need ESP Ghostscript (see below); later versions of Mac OS X do not require this companion software! 
  </p>
 <!--
  <b>Gimp-Print 4.2.6-rc2</b>
@@ -195,18 +194,18 @@ it includes bug fixes and new features over 4.2.5. On Mac OS X "Jaguar" this
 The Gimp-Print uninstaller will completely remove any version of Gimp-Print that was installed with an official Mac OS X installer package provided by the Gimp-Print project. It will also remove the version of Gimp-Print that is included by default with Mac OS X "Panther" (Mac OS X version 10.3.0). This uninstaller is included with all current Gimp-Print installer packages and does not need to be downloaded separately. It it being made available here as a convenience.
  </p>
  <a name="downloadESPGS"></a>
- <b>ESP Ghostscript 7.05.6</b>
+ <b>ESP Ghostscript 7.07.1</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
-"http://prdownloads.sourceforge.net/gimp-print/espgs-7.05.6.ppc.dmg?download"
- >espgs-7.05.6-0.ppc.dmg</a>&nbsp;(5.3 MB)
+"http://prdownloads.sourceforge.net/gimp-print/espgs-7.07.1.ppc.dmg?download"
+ >espgs-7.07.1-0.ppc.dmg</a>&nbsp;(5.4 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/espgs/espgs-7.05.6-source.tar.gz?download"
+ "http://prdownloads.sourceforge.net/espgs/espgs-7.07.1-source.tar.gz?download"
  >source</a>)
  </td>
  </tr>
@@ -214,7 +213,7 @@ The Gimp-Print uninstaller will completely remove any version of Gimp-Print that
  <td colspan="2" >
  <p>
  ESP Ghostscript (ESPGS) is an open-source PostScript interpreter derived from
- GNU Ghostscript. This package is required; it provides full support for
+ GNU Ghostscript. This package is required for users on Mac OS X &quot;Jaguar&quot;; it provides full support for
  printing from Carbon applications in Mac OS X (<b>there is no need to install
  the same version of this package more than once</b>).
  </p>
