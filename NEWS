@@ -53,6 +53,7 @@ The following bugs are fixed in 4.2.1-pre4:
 533400 Very fast dithering works incorrectly
 525779 Buffering bug in epson cups backend
 528922 rastertoprinter doesn't log pages
+537248 IJS driver mis-handles -r option
 
 The following critical bug has been reported against all 4.2 releases
 to date and is believed to be unresolved in this release.  It is
