@@ -35,6 +35,7 @@
 
 # Directories
 $prefix=@cups_prefix@
+$sbindir=@cups_sbindir@
 $bindir=@cups_bindir@
 $datadir=@cups_datadir@
 $libdir=@cups_libdir@
@@ -52,6 +53,9 @@ f 0444 root sys $datadir/cups/data/calibrate.ppm src/cups/calibrate.ppm
 
 # User commands...
 f 0555 root sys $bindir/cups-calibrate src/cups/cups-calibrate
+f 0555 root sys $sbindir/cups-genppd.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@ src/cups/cups-genppd.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@
+f 0555 root sys $sbindir/cups-genppdupdate.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@ src/cups/cups-genppdupdate.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@
+f 0555 root sys $bindir/cups-genppdconfig.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@ src/cups/cups-genppdconfig.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@
 
 # Backends for printer drivers...
 f 0555 root sys $libdir/cups/backend/canon src/cups/canon
@@ -60,7 +64,7 @@ f 0555 root sys $libdir/cups/backend/epson src/cups/epson
 # Filters for printer drivers...
 f 0555 root sys $libdir/cups/filter/commandtocanon src/cups/commandtocanon
 f 0555 root sys $libdir/cups/filter/commandtoepson src/cups/commandtoepson
-f 0555 root sys $libdir/cups/filter/rastertoprinter src/cups/rastertoprinter
+f 0555 root sys $libdir/cups/filter/rastertogimpprint.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@ src/cups/rastertogimpprint.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@
 
 # Reload PPD database after installation...
 %postinstall /etc/software/init.d/cups restart
