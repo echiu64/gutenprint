@@ -1399,7 +1399,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		*kerror0,	/* Pointer to current error row */
 		*kerror1;	/* Pointer to next error row */
   int		ditherbit;	/* Random dither bitmask */
-  int		ck;
+  int		kc, kl, ks, bf;
   int		bk = 0;
   int		ub, lb;
   dither_t	*d = (dither_t *) vd;
@@ -1531,8 +1531,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	   * k already contains the grey contained in CMY.
 	   */
 
-	  kdarkness = ((c + m + y) - 65535 ) / 2;
-
+	  kdarkness = ((c + m + y) - d->density ) / 2;
 	  if (kdarkness > k)
 	    ok = kdarkness;
 	  else
@@ -1541,27 +1540,29 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	   /* 
 	    * ok will be our index in determining how much of the black
 	    * available will be printed as CMY vs K. First we calculate where
-	    * it lies in the range between upper and lower bounds. Using 16K
-	    * as scaling to avoind those irritating overflows.
+	    * it lies in the range between upper and lower bounds. We put
+	    * that in ks.
 	    */
+
+	  if ( ok > ub )
+	    ks = d->density;
+	  else if ( ok < lb )
+	    ks = 0;
+	  else
+	    ks = ( ok - lb ) * d->density / ( ub - lb );
 	    
-	  bk = (ok - lb) * 16384 / (ub - lb);
-	  
-	  if ( bk < 0)
-	    bk = 0;
-	  if ( bk > 16384 )
-	    bk = 16384;
-	    
-	   /*
-	    * bk now contains the scale factor.There is a possibility to
-	    * replace excess color (say in a full C + M color) by some
-	    * black by adding something to k here. Could be good for
-	    * plain paper printing and low values of black bounds.
-	    */
-	    
-	  k = bk * k / 16384;
+	  if ( ok > lb )
+	    kl = ( ok - lb ) * d->density / ( d->density - lb );
+	  else
+	    kl = 0;
+	/*
+	 * This function can be used instead of the one following    
+         * k = ks * kl / d->density;
+	 */
+	  k = (2*ks-ks*ks/d->density) * kl / d->density;
+	  ok = k;
 	  bk = k;
-	 
+
 	  if (k > 0)
 	    {
 	    /*
@@ -1581,7 +1582,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		y = 0;
 	    }
 
-	  k = bk;
 	  {
 	    int dd = d->dither_type;
 	    d->dither_type = D_ORDERED;
