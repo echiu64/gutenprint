@@ -39,11 +39,13 @@
 
 int mylineno = 1;
 
-#if 0
-#define DBG(x) fprintf(stderr, "'%s'%s\n", yytext, #x);
-#else
-#define DBG(x)
-#endif
+#define DBG(x)						\
+do							\
+  {							\
+    if (getenv("STP_DEBUG_PRINTRC"))			\
+      fprintf(stderr, "'%s' => %s\n", yytext, #x);	\
+  }							\
+ while (0)
 
 static char *
 q_strdup(const char *s)
@@ -65,7 +67,7 @@ integer		[-+]?{digit}+
 float		[-+]?{digit}+(\.{digit}+)?([eE][-+]?{digit}+)?
 string         ([\"][^\"\n]*[\"])|([\'][^\']*[\'])
 ws		[ \t]+
-printrc_hdr	#PRINTRCv2.*\n
+printrc_hdr	#PRINTRCv[23].*\n
 word		[a-zA-Z][a-zA-Z0-9_]*
 
 %%
@@ -101,12 +103,12 @@ Double			DBG(pDOUBLE); return pDOUBLE;
 Boolean			DBG(pBOOLEAN); return pBOOLEAN;
 Curve			DBG(pCURVE); return pCURVE;
 
-{integer}		yylval.ival = atoi(yytext); DBG(tINT) return tINT;
-{float}			yylval.dval = strtod(yytext, NULL); DBG(tDOUBLE) return tDOUBLE;
-{string}		yylval.sval = q_strdup(yytext); DBG(tSTRING) return tSTRING;
-{boolean}		yylval.sval = g_strdup(yytext); DBG(tBOOLEAN) return tBOOLEAN;
-{word}			yylval.sval = g_strdup(yytext); DBG(tWORD) return tWORD;
-{printrc_hdr}		DBG(PRINTRC_HDR) return PRINTRC_HDR;
-{ws}			DBG(whitespace1) 	/* Skip blanks/tabs */
-#[^\n]*			DBG(comment1) 	/* Skip comments */
-\n			DBG(newline) mylineno++;
+{integer}		yylval.ival = atoi(yytext); DBG(tINT); return tINT;
+{float}			yylval.dval = strtod(yytext, NULL); DBG(tDOUBLE); return tDOUBLE;
+{string}		yylval.sval = q_strdup(yytext); DBG(tSTRING); return tSTRING;
+{boolean}		yylval.sval = g_strdup(yytext); DBG(tBOOLEAN); return tBOOLEAN;
+{word}			yylval.sval = g_strdup(yytext); DBG(tWORD); return tWORD;
+{printrc_hdr}		DBG(PRINTRC_HDR); return PRINTRC_HDR;
+{ws}			DBG(whitespace1); 	/* Skip blanks/tabs */
+#[^\n]*			DBG(comment1); 	/* Skip comments */
+\n			DBG(newline); mylineno++;
