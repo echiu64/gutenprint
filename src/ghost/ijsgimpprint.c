@@ -41,7 +41,6 @@
 #include <ijs_server.h>
 #include <errno.h>
 #include <gimp-print/gimp-print-intl-internal.h>
-#include <glib.h>
 
 
 static int stp_debug = 0;
@@ -292,52 +291,28 @@ gimp_status_cb (void *status_cb_data,
   return 0;
 }
 
-static void
-increment_parameter_length(gpointer key, gpointer value, gpointer udata)
-{
-  const char *name = (const char *) key;
-  size_t *parameter_list_length = (size_t *) udata;
-  *parameter_list_length += strlen(name) + 1;
-}
-
-typedef struct
-{
-  char *buf;
-  off_t offset;
-} counted_string_t;
-
-static void
-add_param_to_string(gpointer key, gpointer value, gpointer udata)
-{
-  const char *name = (const char *) key;
-  counted_string_t *cs = (counted_string_t *) udata;
-  strcpy(cs->buf + cs->offset, name);
-  cs->offset += strlen(name) + 1;
-  cs->buf[cs->offset - 1] = ',';
-}
-
 static const char *
 list_all_parameters(void)
 {
   static char *param_string = NULL;
   size_t param_length = 0;
+  size_t offset = 0;
   if (param_length == 0)
     {
-      counted_string_t cs;
-      GHashTable *hash = g_hash_table_new(g_str_hash, g_str_equal);
+      stp_string_list_t sl = stp_string_list_create();
       int printer_count = stp_printer_model_count();
       int i;
-      g_hash_table_insert(hash, g_strdup("PrintableArea"), (gpointer) 1);
-      g_hash_table_insert(hash, g_strdup("Dpi"), (gpointer) 1);
-      g_hash_table_insert(hash, g_strdup("PrintableTopLeft"), (gpointer) 1);
-      g_hash_table_insert(hash, g_strdup("DeviceManufacturer"), (gpointer) 1);
-      g_hash_table_insert(hash, g_strdup("DeviceModel"), (gpointer) 1);
-      g_hash_table_insert(hash, g_strdup("PageImageFormat"), (gpointer) 1);
-      g_hash_table_insert(hash, g_strdup("OutputFile"), (gpointer) 1);
-      g_hash_table_insert(hash, g_strdup("OutputFd"), (gpointer) 1);
-      g_hash_table_insert(hash, g_strdup("Quality"), (gpointer) 1);
-      g_hash_table_insert(hash, g_strdup("PaperSize"), (gpointer) 1);
-      g_hash_table_insert(hash, g_strdup("MediaName"), (gpointer) 1);
+      stp_string_list_add_string(sl, "PrintableArea", NULL);
+      stp_string_list_add_string(sl, "Dpi", NULL);
+      stp_string_list_add_string(sl, "PrintableTopLeft", NULL);
+      stp_string_list_add_string(sl, "DeviceManufacturer", NULL);
+      stp_string_list_add_string(sl, "DeviceModel", NULL);
+      stp_string_list_add_string(sl, "PageImageFormat", NULL);
+      stp_string_list_add_string(sl, "OutputFile", NULL);
+      stp_string_list_add_string(sl, "OutputFd", NULL);
+      stp_string_list_add_string(sl, "Quality", NULL);
+      stp_string_list_add_string(sl, "PaperSize", NULL);
+      stp_string_list_add_string(sl, "MediaName", NULL);
       for (i = 0; i < printer_count; i++)
 	{
 	  stp_const_printer_t printer = stp_get_printer_by_index(i);
@@ -357,25 +332,29 @@ list_all_parameters(void)
 		  (param->p_type != STP_PARAMETER_TYPE_FILE) &&
 		  (strcmp(param->name, "Resolution") != 0) &&
 		  (strcmp(param->name, "PageSize") != 0) &&
-		  (g_hash_table_lookup(hash, param->name) == NULL))
-		g_hash_table_insert(hash, g_strdup(param->name), (gpointer) 1);
+		  (!stp_string_list_is_present(sl, param->name)))
+		stp_string_list_add_string(sl, param->name, NULL);
 	    }
 	  stp_parameter_list_free(params);
 	}
-      g_hash_table_foreach(hash, increment_parameter_length, &param_length);
-      param_string = g_malloc(param_length);
-      cs.buf = param_string;
-      cs.offset = 0;
-      g_hash_table_foreach(hash, add_param_to_string, &cs);
-      if (cs.offset != param_length)
+      for (i = 0; i < stp_string_list_count(sl); i++)
+	param_length += strlen(stp_string_list_param(sl, i)->name) + 1;
+      param_string = malloc(param_length);
+      for (i = 0; i < stp_string_list_count(sl); i++)
 	{
-	  fprintf(stderr, "Bad string length %lud != %lud!\n",
-		  (unsigned long) cs.offset,
+	  stp_param_string_t *param = stp_string_list_param(sl, i);
+	  strcpy(param_string + offset, param->name);
+	  offset += strlen(param->name) + 1;
+	  param_string[offset - 1] = ',';
+	}
+      if (offset != param_length)
+	{
+	  fprintf(stderr, "Bad string length %lu != %lu!\n",
+		  (unsigned long) offset,
 		  (unsigned long) param_length);
 	  exit(1);
 	}
       param_string[param_length - 1] = '\0';
-      g_hash_table_destroy(hash);
     }
   return param_string;
 }

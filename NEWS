@@ -31,8 +31,7 @@ advantage of.
 
 The IJS-based GhostScript plugin driver requires GNU Ghostscript 6.53
 or later, ESP Ghostscript 7.05 or later, or APFL GhostScript 7.04 or
-later.  It also requires that glib 1.2 be installed.  You may need to
-install a package named "glib-devel" or the like on many distributions.
+later.
 
 Users of Macintosh OS X 10.2 and above can use this package, as the
 printing system is based on CUPS, which is supported by Gimp-print.

@@ -235,10 +235,9 @@ STP_ARG_WITH([foomatic3],
              [BUILD_FOOMATIC_3],
              [(automatic)])
 
-AM_PATH_GLIB(1.2.0)
 AC_PATH_PROG(IJS_CONFIG, ijs-config)
 
-if test -z "${IJS_CONFIG}" -o -z "${GLIB_LIBS}"  ; then
+if test -z "${IJS_CONFIG}"  ; then
   BUILD_GHOSTSCRIPT="no"
 else
   BUILD_GHOSTSCRIPT="yes"
@@ -437,9 +436,6 @@ dnl ijs checks
 if test x${BUILD_GHOSTSCRIPT} = xyes ; then
   if test -z "$IJS_CONFIG" ; then
     AC_MSG_ERROR(Cannot find ijs-config; please ensure Ghostscript 6.53 or above is installed);
-  fi
-  if test -z "$GLIB_LIBS" ; then
-    AC_MSG_ERROR(Cannot find GLib; please ensure that GLib 1.2 or above is installed);
   fi
   IJS_CFLAGS=`$IJS_CONFIG --cflags`
   IJS_LIBS=`$IJS_CONFIG --libs`
