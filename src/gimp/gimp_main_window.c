@@ -101,8 +101,8 @@ static GtkWidget *image_monochrome;
 static GtkWidget *setup_dialog;         /* Setup dialog window */
 static GtkWidget *printer_driver;       /* Printer driver widget */
 static GtkWidget *printer_crawler;      /* Scrolled Window for menu */
-static GtkWidget *printer_menu;		/* Scrolled Window for menu */
-static GtkWidget *printer_option;	/* Scrolled Window for menu */
+static GtkWidget *printer_combo;	/* Combo for menu */
+static gint plist_callback_id	   = -1;
 static GtkWidget *ppd_file;             /* PPD file entry */
 static GtkWidget *ppd_button;           /* PPD file browse button */
 static GtkWidget *output_cmd;           /* Output command text entry */
@@ -187,11 +187,20 @@ static void gimp_image_type_callback         (GtkWidget      *widget,
 
 extern void gimp_create_color_adjust_window  (void);
 extern void gimp_update_adjusted_thumbnail   (void);
+extern void
+gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
+			gint            num_items,   /* I - Number of items */
+			gchar    **items,       /* I - Menu items */
+			const gchar     *cur_item,    /* I - Current item */
+			GtkSignalFunc   callback,    /* I - Callback */
+			gint           *callback_id); /* IO - Callback ID (init to -1) */
 
 static gint preview_ppi = 10;
 
 #define THUMBNAIL_MAXW	(128)
 #define THUMBNAIL_MAXH	(128)
+#define Combo_get_text(combo) \
+	(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo)->entry)))
 
 gint    thumbnail_w, thumbnail_h, thumbnail_bpp;
 guchar *thumbnail_data;
@@ -204,6 +213,43 @@ c_strdup(const gchar *s)
   gchar *ret = xmalloc(strlen(s) + 1);
   strcpy(ret, s);
   return ret;
+}
+
+static char **printer_list = 0;
+static int printer_count = 0;
+
+void
+gimp_build_printer_combo(void)
+{
+  int i;
+  if (printer_list)
+    {
+      for (i = 0; i < printer_count; i++)
+	free(printer_list[i]);
+      free(printer_list);
+    }
+  printer_list = malloc(sizeof(char *) * plist_count);
+  for (i = 0; i < plist_count; i++)
+    {
+      if (plist[i].active)
+	{
+	  printer_list[i] = malloc(strlen(plist[i].name) + 1);
+	  strcpy(printer_list[i], plist[i].name);
+	}
+      else
+	{
+	  printer_list[i] = malloc(strlen(plist[i].name) + 2);
+	  strcpy(printer_list[i] + 1, plist[i].name);
+	  printer_list[i][0] = '*';
+	}
+    }
+  printer_count = plist_count;
+  gimp_plist_build_combo(printer_combo,
+			 printer_count,
+			 printer_list,
+			 printer_list[plist_current],
+			 gimp_plist_callback,
+			 &plist_callback_id);
 }
 
 /*
@@ -225,9 +271,7 @@ gimp_create_main_window (void)
   GtkWidget *label;
   GtkWidget *button;
   GtkWidget *entry;
-  GtkWidget *menu;
   GtkWidget *list;       /* List of drivers */
-  GtkWidget *item;
   GtkWidget *option;
   GtkWidget *combo;      /* Combo box */
   GtkWidget *box;
@@ -511,29 +555,9 @@ gimp_create_main_window (void)
    * Printer option menu...
    */
 
-  menu = printer_menu = gtk_menu_new ();
-  for (i = 0; i < plist_count; i ++)
-  {
-    if (plist[i].active)
-      item = gtk_menu_item_new_with_label (gettext (plist[i].name));
-    else
-      {
-        gchar buf[257];
-        buf[0] = '*';
-	strncpy(buf + 1, plist[i].name, 256);
-        item = gtk_menu_item_new_with_label (gettext (buf));
-      }
-    gtk_menu_append (GTK_MENU (menu), item);
-    gtk_signal_connect (GTK_OBJECT (item), "activate",
-                        GTK_SIGNAL_FUNC (gimp_plist_callback), (gpointer) i);
-    gtk_widget_show (item);
-  }
-
-  option = printer_option = gtk_option_menu_new ();
-  gtk_box_pack_start (GTK_BOX (box), option, FALSE, FALSE, 0);
-  gtk_option_menu_set_menu (GTK_OPTION_MENU (option), menu);
-  gtk_option_menu_set_history (GTK_OPTION_MENU (option), plist_current);
-  gtk_widget_show (option);
+  combo = printer_combo = gtk_combo_new ();
+  gtk_box_pack_start (GTK_BOX (box), combo, FALSE, FALSE, 0);
+  gtk_widget_show(combo);
 
   button = gtk_button_new_with_label (_("Setup..."));
   gtk_misc_set_padding (GTK_MISC (GTK_BIN (button)->child), 2, 0);
@@ -1014,6 +1038,7 @@ gimp_create_main_window (void)
    * Show the main dialog and wait for the user to do something...
    */
 
+  gimp_build_printer_combo();
   gimp_plist_callback (NULL, (gpointer) plist_current);
   gimp_update_adjusted_thumbnail ();
 
@@ -1380,7 +1405,20 @@ gimp_plist_callback (GtkWidget *widget,
   gint		num_resolutions;	/* Number of resolutions */
   gchar		**resolutions;		/* Resolution strings */
 
-  plist_current = (gint) data;
+  if (widget)
+    {
+      const gchar *result = Combo_get_text(printer_combo);
+      for (i = 0; i < plist_count; i++)
+	{
+	  if (!strcmp(result, printer_list[i]))
+	    {
+	      plist_current = i;
+	      break;
+	    }
+	}
+    }
+  else
+    plist_current = (gint) data;
   p             = plist + plist_current;
 
   if (strcmp(stp_get_driver(p->v), ""))
@@ -1513,9 +1551,6 @@ gimp_plist_callback (GtkWidget *widget,
   suppress_preview_update--;
   gimp_preview_update();
 }
-
-#define Combo_get_text(combo) \
-	(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo)->entry)))
 
 /*
  *  gimp_media_size_callback() - Update the current media size...
@@ -1920,7 +1955,6 @@ gimp_setup_ok_callback (void)
 static void
 gimp_new_printer_ok_callback (void)
 {
-  GtkWidget *item;
   const char *data = gtk_entry_get_text(GTK_ENTRY(new_printer_entry));
   gp_plist_t key;
   initialize_printer(&key);
@@ -1932,23 +1966,7 @@ gimp_new_printer_ok_callback (void)
       if (add_printer(&key, 1))
 	{
 	  plist_current = plist_count - 1;
-	  if (plist[plist_current].active)
-	    item =
-	      gtk_menu_item_new_with_label(gettext(plist[plist_current].name));
-	  else
-	    {
-	      gchar buf[257];
-	      buf[0] = '*';
-	      strncpy(buf + 1, plist[plist_current].name, 256);
-	      item = gtk_menu_item_new_with_label (gettext (buf));
-	    }
-	  gtk_menu_append (GTK_MENU (printer_menu), item);
-	  gtk_signal_connect (GTK_OBJECT (item), "activate",
-			      GTK_SIGNAL_FUNC (gimp_plist_callback),
-			      (gpointer) plist_current);
-	  gtk_widget_show (item);
-	  gtk_option_menu_set_history (GTK_OPTION_MENU (printer_option),
-				       plist_current);
+	  gimp_build_printer_combo();
 
 	  stp_set_driver(vars, stp_printer_get_driver(current_printer));
 	  stp_set_driver(plist[plist_current].v,
