@@ -45,7 +45,7 @@ Please read the README file for full instructions on installing this
 package from source code.
 
 Gimp-Print 4.2.6-rc2 contains the following major changes over
-Gimp-Print 4.2.6-pre3:
+Gimp-Print 4.2.6-rc1:
 
 1) The definitions of the Epson Stylus CX-6300 and CX-6400 have been
    fixed.
