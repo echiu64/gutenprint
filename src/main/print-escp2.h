@@ -399,6 +399,13 @@ typedef struct escp2_printer
   short		m_roll_top_margin;	/* Absolute top margin, points */
   short		m_roll_bottom_margin;	/* Absolute bottom margin, points */
 /*****************************************************************************/
+  /* Parameters for escputil */
+  short		alignment_passes;
+  short		alignment_choices;
+  short		supports_ink_change;
+  short		alternate_alignment_passes;
+  short		alternate_alignment_choices;
+/*****************************************************************************/
   const short *dot_sizes;	/* Vector of dot sizes for resolutions */
   const float *densities;	/* List of densities for each printer */
   const escp2_drop_list_t *drops; /* Drop sizes */

@@ -109,12 +109,6 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0
   },
   {
-    "OutputOrder", N_("Output Order"),
-    N_("Output Order"),
-    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 0, 0, -1, 0
-  },
-  {
     "PageSize", N_("Page Size"),
     N_("Size of the paper being printed to"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
@@ -173,6 +167,42 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_ADVANCED4, 1, 1, -1, 1
   },
+  {
+    "OutputOrder", N_("Output Order"),
+    N_("Output Order"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 0, 0, -1, 0
+  },
+  {
+    "AlignmentPasses", N_("Alignment Passes"),
+    N_("Alignment Passes"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 0, 0, -1, 0
+  },
+  {
+    "AlignmentChoices", N_("Alignment Choices"),
+    N_("Alignment Choices"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 0, 0, -1, 0
+  },
+  {
+    "InkChange", N_("Ink change command"),
+    N_("Ink change command"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 0, 0, -1, 0
+  },
+  {
+    "AlternateAlignmentPasses", N_("Alignment Passes"),
+    N_("Alternate Alignment Passes"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 0, 0, -1, 0
+  },
+  {
+    "AlternateAlignmentChoices", N_("Alignment Choices"),
+    N_("Alternate Alignment Choices"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 0, 0, -1, 0
+  },
   PARAMETER_INT(max_hres),
   PARAMETER_INT(max_vres),
   PARAMETER_INT(min_hres),
@@ -205,6 +235,11 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(right_margin),
   PARAMETER_INT(top_margin),
   PARAMETER_INT(bottom_margin),
+  PARAMETER_INT(alignment_passes),
+  PARAMETER_INT(alignment_choices),
+  PARAMETER_INT(supports_ink_change),
+  PARAMETER_INT(alternate_alignment_passes),
+  PARAMETER_INT(alternate_alignment_choices),
   PARAMETER_RAW(preinit_sequence),
   PARAMETER_RAW(postinit_remote_sequence)
 };
@@ -437,6 +472,11 @@ DEF_SIMPLE_ACCESSOR(max_black_resolution, int)
 DEF_SIMPLE_ACCESSOR(zero_margin_offset, int)
 DEF_SIMPLE_ACCESSOR(extra_720dpi_separation, int)
 DEF_SIMPLE_ACCESSOR(physical_channels, int)
+DEF_SIMPLE_ACCESSOR(alignment_passes, int)
+DEF_SIMPLE_ACCESSOR(alignment_choices, int)
+DEF_SIMPLE_ACCESSOR(supports_ink_change, int)
+DEF_SIMPLE_ACCESSOR(alternate_alignment_passes, int)
+DEF_SIMPLE_ACCESSOR(alternate_alignment_choices, int)
 
 DEF_ROLL_ACCESSOR(left_margin, unsigned)
 DEF_ROLL_ACCESSOR(right_margin, unsigned)
@@ -1197,6 +1237,36 @@ escp2_parameters(stp_const_vars_t v, const char *name,
     set_color_transition_parameter(v, description, ECOLOR_M);
   else if (strcmp(name, "DarkYellowTransition") == 0)
     set_color_transition_parameter(v, description, ECOLOR_Y);
+  else if (strcmp(name, "AlignmentPasses") == 0)
+    {
+      description->deflt.integer = escp2_alignment_passes(v);
+      description->bounds.integer.lower = -1;
+      description->bounds.integer.upper = -2;
+    }
+  else if (strcmp(name, "AlignmentChoices") == 0)
+    {
+      description->deflt.integer = escp2_alignment_choices(v);
+      description->bounds.integer.lower = -1;
+      description->bounds.integer.upper = -2;
+    }
+  else if (strcmp(name, "SupportsInkChange") == 0)
+    {
+      description->deflt.integer = escp2_supports_ink_change(v);
+      description->bounds.integer.lower = -1;
+      description->bounds.integer.upper = -2;
+    }
+  else if (strcmp(name, "AlternateAlignmentPasses") == 0)
+    {
+      description->deflt.integer = escp2_alternate_alignment_passes(v);
+      description->bounds.integer.lower = -1;
+      description->bounds.integer.upper = -2;
+    }
+  else if (strcmp(name, "AlternateAlignmentChoices") == 0)
+    {
+      description->deflt.integer = escp2_alternate_alignment_choices(v);
+      description->bounds.integer.lower = -1;
+      description->bounds.integer.upper = -2;
+    }
 }
 
 static const res_t *
