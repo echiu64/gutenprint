@@ -59,8 +59,6 @@ PNG_IMAGES = figures/cups_admin.png			\
 	figures/gimp_startup.png
 
 EPS_IMAGES = $(addsuffix .eps,$(basename $(PNG_IMAGES)))
-PDF_IMAGES = $(addsuffix .pdf,$(basename $(PNG_IMAGES)))
-
 
 ## Rules
 
@@ -85,23 +83,7 @@ dist-hook: $(STANDARD_TARGETS)
 	done
 
 $(MANUAL).pdf:  $(MANUAL).sgml
-	$(JADE)	-V tex-backend \
-		-t tex \
-		-c /usr/share/sgml/CATALOG.jade_dsl \
-		-c /usr/share/sgml/CATALOG.docbook-dsssl-stylesheets \
-		-c /usr/share/sgml/CATALOG.gnome \
-		-c /usr/share/sgml/CATALOG.docbook_4 \
-		-c /usr/share/sgml/CATALOG.docbook_3 \
-		-D /usr/share/sgml/docbook/docbook-dsssl-stylesheets-1.64 \
-		-d /usr/share/sgml/docbook-toys/suse-both.dsl \
-		-o ./$(MANUAL).tex \
-		./$(MANUAL).sgml
-
-	cat $(MANUAL).tex | sed -e s/\.eps/\.png/g >> $(MANUAL).tmp.tex
-	$(PDFJADETEX) $(MANUAL).tmp
-	$(PDFJADETEX) $(MANUAL).tmp
-	$(PDFJADETEX) $(MANUAL).tmp
-	mv $(MANUAL).tmp.pdf $(MANUAL).pdf
+	$(DB2PDF) $(srcdir)/$(MANUAL).sgml
 
 docs: html-stamp ps pdf
 
@@ -109,15 +91,15 @@ all-local: docs
 
 pdf: $(MANUAL).pdf
 
-%.pdf:
-	$(CONVERT) $(srcdir)/$(basename $@).png EPDF:$@
-
 ps: $(MANUAL).ps
 
 ps.gz: $(MANUAL).ps.gz
 
 $(MANUAL).ps:  $(MANUAL).sgml $(EPS_IMAGES)
-	$(DB2PS) $(srcdir)/$(MANUAL).sgml
+	sed -e 's/\.png"/.eps"/g' -e 's/FORMAT="PNG"/FORMAT="EPS"/g' $(srcdir)/$(MANUAL).sgml > $(MANUAL)_eps.sgml 
+	$(DB2PS) $(MANUAL)_eps.sgml
+	mv $(MANUAL)_eps.ps $(MANUAL).ps
+	$(RM) $(MANUAL)_eps.*
 
 %.eps:
 	$(CONVERT) $(srcdir)/$(basename $@).png EPS2:$@
@@ -137,12 +119,10 @@ html-stamp: $(MANUAL).sgml $(PNG_IMAGES)
 	  SOURCE='$(srcdir)/' ; \
 	fi ; \
 	$(DB2HTML) $${SOURCE}$(MANUAL).sgml
-	if test ! -d $(MANUAL)/figures  ; then \
-	  mkdir $(MANUAL)/figures ; \
-	  for image in $(srcdir)/figures/*.png ; do \
-	    cp -p $$image $(MANUAL)/figures ; \
-	  done ; \
-	fi
+	-mkdir $(MANUAL)/figures
+	for image in $(addprefix $(srcdir)/, $(PNG_IMAGES)) ; do \
+	  cp -p $$image $(MANUAL)/figures/`basename $$image` ; \
+	done
 	$(RM) -rf $(HTMLDIR)
 	mv $(MANUAL) $(HTMLDIR)
 	chmod a+rx $(HTMLDIR)
@@ -177,7 +157,7 @@ clean-local: clean-figures
 	  $(RM) html-stamp $(HTMLDIR) ; \
 	fi
 	$(RM) -r $(MANUAL).pdf $(MANUAL).ps
-	$(RM) *.tex *.log *.aux *.dvi *.gz *.out *.junk *.out
+	$(RM) *.tex *.log *.aux *.dvi *.gz *.out *.junk *.out *.fot
 	$(RM) -r db2html*
 	$(RM) -r DB2HTML*
 

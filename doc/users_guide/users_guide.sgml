@@ -209,9 +209,6 @@ look something like this:
    <figure><title>The Startup Window for The GIMP</title>
    <mediaobject>
    <imageobject>
-   <imagedata fileref="figures/gimp_startup.eps" FORMAT="EPS">
-   </imageobject>
-   <imageobject>
    <imagedata fileref="figures/gimp_startup.png" FORMAT="PNG">
    </imageobject>
    <textobject>
@@ -236,9 +233,6 @@ anybody the secret!):
 
    <figure><title>A Sample Image Displayed by The GIMP</title>
    <mediaobject>
-   <imageobject>
-   <imagedata scale="50" fileref="figures/gimp_image.eps" FORMAT="EPS">
-   </imageobject>
    <imageobject>
    <imagedata scale="50" fileref="figures/gimp_image.png" FORMAT="PNG">
    </imageobject>
@@ -304,9 +298,6 @@ the major sections of this document:
    <figure id="fig_gimp_print_gui"><title>The Gimp-Print Graphical User Interface 1 (GUI)</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="40" fileref="figures/gimp-print-gui.eps" FORMAT="EPS">
-   </imageobject>
-   <imageobject>
    <imagedata scale="40" fileref="figures/gimp-print-gui.png" FORMAT="PNG">
    </imageobject>
    <textobject>
@@ -317,9 +308,6 @@ the major sections of this document:
 
    <figure id="fig_gimp_print_gui_1"><title>The Gimp-Print Graphical User Interface 2 (GUI)</title>
    <mediaobject>
-   <imageobject>
-   <imagedata scale="40" fileref="figures/gimp-print-gui-1.eps" FORMAT="EPS">
-   </imageobject>
    <imageobject>
    <imagedata scale="40" fileref="figures/gimp-print-gui-1.png" FORMAT="PNG">
    </imageobject>
@@ -369,9 +357,6 @@ following window appears:
    <figure><title>The Setup Printer Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="60" fileref="figures/gimp-print-setup.eps" FORMAT="EPS">
-   </imageobject>
-   <imageobject>
    <imagedata scale="60" fileref="figures/gimp-print-setup.png" FORMAT="PNG">
    </imageobject>
    <textobject>
@@ -419,9 +404,6 @@ appear thus:
 
    <figure><title>The New Printer Window</title>
    <mediaobject>
-   <imageobject>
-   <imagedata fileref="figures/gimp-print-new-printer.eps" FORMAT="EPS">
-   </imageobject>
    <imageobject>
    <imagedata fileref="figures/gimp-print-new-printer.png" FORMAT="PNG">
    </imageobject>
@@ -842,9 +824,6 @@ box on the right side of each slider bar.
    <figure id="fig_gimp-print-color-adjust"><title>The Print Color Adjust Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="50" fileref="figures/gimp-print-print-color-adjust.eps" FORMAT="EPS">
-   </imageobject>
-   <imageobject>
    <imagedata scale="50" fileref="figures/gimp-print-print-color-adjust.png" FORMAT="PNG">
    </imageobject>
    <textobject>
@@ -1040,9 +1019,6 @@ following screen should appear within your browser.
    <figure><title>The CUPS Startup Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="45" fileref="figures/cups_startup.eps" FORMAT="EPS">
-   </imageobject>
-   <imageobject>
    <imagedata scale="45" fileref="figures/cups_startup.png" FORMAT="PNG">
    </imageobject>
    <textobject>
@@ -1061,9 +1037,6 @@ have not yet configured any printers.
    <figure><title>The CUPS Printers Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="45" fileref="figures/cups_printers.eps" FORMAT="EPS">
-   </imageobject>
-   <imageobject>
    <imagedata scale="45" fileref="figures/cups_printers.png" FORMAT="PNG">
    </imageobject>
    <textobject>
@@ -1079,9 +1052,6 @@ You will then see the Admin screen (shown below).
 
    <figure><title>The CUPS Admin Window</title>
    <mediaobject>
-   <imageobject>
-   <imagedata scale="45" fileref="figures/cups_admin.eps" FORMAT="EPS">
-   </imageobject>
    <imageobject>
    <imagedata scale="45" fileref="figures/cups_admin.png" FORMAT="PNG">
    </imageobject>
@@ -1101,9 +1071,6 @@ the <guibutton>Continue</guibutton> button, and then this screen will appear.
 
    <figure><title>The CUPS Admin Device Window</title>
    <mediaobject>
-   <imageobject>
-   <imagedata scale="35" fileref="figures/cups_admin_device.eps" FORMAT="EPS">
-   </imageobject>
    <imageobject>
    <imagedata scale="35" fileref="figures/cups_admin_device.png" FORMAT="PNG">
    </imageobject>
@@ -1125,9 +1092,6 @@ which to choose.  Once the selection is made, click the
    <figure><title>The CUPS Admin Model/Driver Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="35" fileref="figures/cups_admin_make.eps" FORMAT="EPS">
-   </imageobject>
-   <imageobject>
    <imagedata scale="35" fileref="figures/cups_admin_make.png" FORMAT="PNG">
    </imageobject>
    <textobject>
@@ -1144,9 +1108,6 @@ asks you to select the specific model number for your printer.
 
    <figure><title>The 2nd CUPS Admin Model/Driver Window</title>
    <mediaobject>
-   <imageobject>
-   <imagedata scale="30" fileref="figures/cups_admin_model.eps" FORMAT="EPS">
-   </imageobject>
    <imageobject>
    <imagedata scale="30" fileref="figures/cups_admin_model.png" FORMAT="PNG">
    </imageobject>
@@ -1172,9 +1133,6 @@ Once you have made the proper selection, click on the
    <figure><title>The CUPS Admin Success Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="30" fileref="figures/cups_admin_success.eps" FORMAT="EPS">
-   </imageobject>
-   <imageobject>
    <imagedata scale="30" fileref="figures/cups_admin_success.png" FORMAT="PNG">
    </imageobject>
    <textobject>
@@ -1194,9 +1152,6 @@ After doing so, your window will appear something
 
    <figure id="fig_cups_my_printer"><title>The CUPS Window for Your Printer</title>
    <mediaobject>
-   <imageobject>
-   <imagedata scale="45" fileref="figures/cups_my_printer.eps" FORMAT="EPS">
-   </imageobject>
    <imageobject>
    <imagedata scale="45" fileref="figures/cups_my_printer.png" FORMAT="PNG">
    </imageobject>
@@ -1234,9 +1189,6 @@ detail in various sections of <xref linkend="ch_gimp_and_gimp-print">.
 
    <figure id="fig_cups_printer_config_window"><title>The CUPS Printer Cofiguration Window</title>
    <mediaobject>
-   <imageobject>
-   <imagedata scale="30" fileref="figures/cups_config_printer.eps" FORMAT="EPS">
-   </imageobject>
    <imageobject>
    <imagedata scale="30" fileref="figures/cups_config_printer.png" FORMAT="PNG">
    </imageobject>
