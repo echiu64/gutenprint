@@ -1013,6 +1013,48 @@ lcm(unsigned a, unsigned b)
     return a * b / gcd(a, b);
 }
 
+static int
+create_gamma_curve(stp_curve_t *retval, double lo, double hi, double gamma,
+		   int points)
+{
+  *retval = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  if (stp_curve_set_bounds(*retval, lo, hi) &&
+      stp_curve_set_gamma(*retval, gamma) &&
+      stp_curve_resample(*retval, points))
+    return 1;
+  stp_curve_destroy(*retval);
+  *retval = 0;
+  return 0;
+}
+
+static int
+interpolate_points(const stp_curve_t a, const stp_curve_t b,
+		   stp_curve_compose_t mode,
+		   int points, double *tmp_data)
+{
+  double pa, pb;
+  int i;
+  unsigned points_a = stp_curve_count_points(a);
+  unsigned points_b = stp_curve_count_points(b);
+  for (i = 0; i < points; i++)
+    {
+      if (!stp_curve_interpolate_value
+	  (a, (double) i * (points_a - 1) / (points - 1), &pa))
+	return 0;
+      if (!stp_curve_interpolate_value
+	  (b, (double) i * (points_b - 1) / (points - 1), &pb))
+	return 0;
+      if (mode == STP_CURVE_COMPOSE_ADD)
+	pa += pb;
+      else
+	pa *= pb;
+      if (! finite(pa))
+	return 0;
+      tmp_data[i] = pa;
+    }
+  return 1;
+}
+
 int
 stp_curve_compose(stp_curve_t *retval,
 		  const stp_curve_t a, const stp_curve_t b,
@@ -1025,16 +1067,14 @@ stp_curve_compose(stp_curve_t *retval,
   unsigned points_a = stp_curve_count_points(a);
   unsigned points_b = stp_curve_count_points(b);
   double alo, ahi, blo, bhi;
-  double pa, pb;
-  int i;
 
   if (mode != STP_CURVE_COMPOSE_ADD && mode != STP_CURVE_COMPOSE_MULTIPLY)
     return 0;
   stp_curve_get_bounds(a, &alo, &ahi);
   stp_curve_get_bounds(b, &blo, &bhi);
-
-  if (stp_curve_get_wrap(a) != stp_curve_get_wrap(b))
+  if (mode == STP_CURVE_COMPOSE_MULTIPLY && (alo < 0 || blo < 0))
     return 0;
+
   if (stp_curve_get_wrap(a) == STP_CURVE_WRAP_AROUND)
     {
       points_a++;
@@ -1046,71 +1086,34 @@ stp_curve_compose(stp_curve_t *retval,
       if (stp_curve_get_wrap(a) == STP_CURVE_WRAP_AROUND)
 	points--;
     }
-  if (points > 65536 ||
+  if (points < 2 || points > 65536 ||
       ((stp_curve_get_wrap(a) == STP_CURVE_WRAP_AROUND) && points > 65535))
-    return 0;
-  if (mode == STP_CURVE_COMPOSE_MULTIPLY && (alo < 0 || blo < 0))
     return 0;
 
   if (gamma_a && gamma_b && gamma_a * gamma_b > 0 &&
       mode == STP_CURVE_COMPOSE_MULTIPLY)
+    return create_gamma_curve(retval, alo * blo, ahi * bhi, gamma_a + gamma_b,
+			      points);
+  tmp_data = stp_malloc(sizeof(double) * points);
+  if (!interpolate_points(a, b, mode, points, tmp_data))
     {
-      ret = stp_curve_allocate(STP_CURVE_WRAP_NONE);
-      if (!stp_curve_set_bounds(ret, alo * blo, ahi * bhi))
-	goto bad2;
-      if (!stp_curve_set_gamma(retval, gamma_a + gamma_b))
-	goto bad2;
-      if (!stp_curve_resample(retval, points))
-	goto bad2;
-      *retval = ret;
-      return 1;
-    bad2:
-      stp_curve_destroy(ret);
+      stp_free(tmp_data);
       return 0;
     }
-  if (points < 2)
-    return 0;
-  tmp_data = stp_malloc(sizeof(double) * points);
-  for (i = 0; i < points; i++)
-    {
-      if (!stp_curve_interpolate_value
-	  (a, (double) i * (points_a - 1) / (points - 1), &pa))
-	goto bad;
-      if (!stp_curve_interpolate_value
-	  (b, (double) i * (points_b - 1) / (points - 1), &pb))
-	goto bad;
-      switch (mode)
-	{
-	case STP_CURVE_COMPOSE_ADD:
-	  pa += pb;
-	  break;
-	case STP_CURVE_COMPOSE_MULTIPLY:
-	  pa *= pb;
-	  break;
-	default:
-	  goto bad;
-	}
-      if (! finite(pa))
-	goto bad;
-      tmp_data[i] = pa;
-    }
   ret = stp_curve_allocate(stp_curve_get_wrap(a));
-  switch (mode)
+  if (mode == STP_CURVE_COMPOSE_ADD)
     {
-    case STP_CURVE_COMPOSE_ADD:
       stp_curve_rescale(ret, (ahi - alo) + (bhi - blo),
 			STP_CURVE_COMPOSE_MULTIPLY, STP_CURVE_BOUNDS_RESCALE);
       stp_curve_rescale(ret, alo + blo,
 			STP_CURVE_COMPOSE_ADD, STP_CURVE_BOUNDS_RESCALE);
-      break;
-    case STP_CURVE_COMPOSE_MULTIPLY:
+    }
+  else
+    {
       stp_curve_rescale(ret, (ahi - alo) * (bhi - blo),
 			STP_CURVE_COMPOSE_MULTIPLY, STP_CURVE_BOUNDS_RESCALE);
       stp_curve_rescale(ret, alo * blo,
 			STP_CURVE_COMPOSE_ADD, STP_CURVE_BOUNDS_RESCALE);
-      break;
-    default:
-      goto bad1;
     }
   if (! stp_curve_set_data(ret, points, tmp_data))
     goto bad1;
@@ -1119,7 +1122,6 @@ stp_curve_compose(stp_curve_t *retval,
   return 1;
  bad1:
   stp_curve_destroy(ret);
- bad:
   stp_free(tmp_data);
   return 0;
 }
