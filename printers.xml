@@ -41,17 +41,17 @@
 <language value=pcl>
 </printer>
 
-<printer name="HP DeskJet 520" driver="pcl-520">
-<nocolor>
-<model value=500>
+<printer name="HP DeskJet 500C" driver="pcl-501">
+<color>
+<model value=501>
 <gamma value=0.818>
 <density value=0.786>
 <language value=pcl>
 </printer>
 
-<printer name="HP DeskJet 500C" driver="pcl-501">
-<color>
-<model value=501>
+<printer name="HP DeskJet 520" driver="pcl-520">
+<nocolor>
+<model value=500>
 <gamma value=0.818>
 <density value=0.786>
 <language value=pcl>
@@ -105,9 +105,73 @@
 <language value=pcl>
 </printer>
 
-<printer name="HP DeskJet 800 series" driver="pcl-800">
+<printer name="HP DeskJet 810C" driver="pcl-810">
+<color>
+<model value=601>	# Uses 6XX driver
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 812C" driver="pcl-812">
+<color>
+<model value=601>	# Uses 6XX driver
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 840C" driver="pcl-840">
+<color>
+<model value=601>	# Uses 6XX driver
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 842C" driver="pcl-842">
+<color>
+<model value=601>	# Uses 6XX driver
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 850C" driver="pcl-850">
 <color>
 <model value=800>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 855C" driver="pcl-855">
+<color>
+<model value=800>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 870C" driver="pcl-870">
+<color>
+<model value=800>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 890C" driver="pcl-890">
+<color>
+<model value=800>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 895C" driver="pcl-895">
+<color>
+<model value=601>	# Uses 6XX driver
 <gamma value=0.818>
 <density value=0.786>
 <language value=pcl>
@@ -121,9 +185,25 @@
 <language value=pcl>
 </printer>
 
+<printer name="HP PhotoSmart P1000" driver="pcl-P1000">
+<color>
+<model value=900>	# Uses 900 series driver
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
 <printer name="HP DeskJet 1100C" driver="pcl-1100">
 <color>
 <model value=1100>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP PhotoSmart P1100" driver="pcl-P1100">
+<color>
+<model value=900>	# Uses 900 series driver
 <gamma value=0.818>
 <density value=0.786>
 <language value=pcl>
@@ -137,17 +217,17 @@
 <language value=pcl>
 </printer>
 
-<printer name="HP DeskJet, 1220C" driver="pcl-1220">
+<printer name="HP DeskJet 1200C" driver="pcl-1200">
 <color>
-<model value=1100>
+<model value=1200>
 <gamma value=0.818>
 <density value=0.786>
 <language value=pcl>
 </printer>
 
-<printer name="HP DeskJet 1200C" driver="pcl-1200">
+<printer name="HP DeskJet 1220C" driver="pcl-1220">
 <color>
-<model value=1200>
+<model value=900>	# Uses 900 series driver
 <gamma value=0.818>
 <density value=0.786>
 <language value=pcl>

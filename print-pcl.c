@@ -3,8 +3,9 @@
  *
  *   Print plug-in HP PCL driver for the GIMP.
  *
- *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
- *	Robert Krawitz (rlk@alum.mit.edu)
+ *   Copyright 1997-2000 Michael Sweet (mike@easysw.com),
+ *	Robert Krawitz (rlk@alum.mit.edu) and
+ *      Dave Hill (dave@minnie.demon.co.uk)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -197,9 +198,9 @@ const static pcl_t pcl_media_sources[] =
 #define PCL_RES_300_300		2
 #define PCL_RES_600_300		4	/* DJ 600 series */
 #define PCL_RES_600_600_MONO	8	/* DJ 600/800/1100/2000 b/w only */
-#define PCL_RES_600_600		16	/* DJ 9xx ??*/
-#define PCL_RES_1200_1200	32	/* DJ 9xx ??*/
-#define PCL_RES_2400_1200	64	/* DJ 9xx */
+#define PCL_RES_600_600		16	/* DJ 9xx/1220C/PhotoSmart */
+#define PCL_RES_1200_600	32	/* DJ 9xx/1220C/PhotoSmart */
+#define PCL_RES_2400_600	64	/* DJ 9xx/1220C/PhotoSmart */
 
 const static pcl_t pcl_resolutions[] =
 {
@@ -208,8 +209,8 @@ const static pcl_t pcl_resolutions[] =
     {"600x300 DPI", PCL_RES_600_300},
     {"600x600 DPI monochrome", PCL_RES_600_600_MONO},
     {"600x600 DPI", PCL_RES_600_600},
-    {"1200x1200 DPI", PCL_RES_1200_1200},
-    {"2400x1200 DPI", PCL_RES_2400_1200},
+    {"1200x600 DPI", PCL_RES_1200_600},
+    {"2400x600 DPI", PCL_RES_2400_600},
 };
 #define NUM_RESOLUTIONS		(sizeof(pcl_resolutions) / sizeof (pcl_t))
 
@@ -312,6 +313,7 @@ static pcl_cap_t pcl_model_capabilities[] =
       -1,
     },
     {
+      PCL_PAPERSOURCE_STANDARD,
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_340_PCSF,
       PCL_PAPERSOURCE_340_DCSF,
@@ -509,7 +511,7 @@ static pcl_cap_t pcl_model_capabilities[] =
     { -1,			/* No selectable paper sources */
     },
   },
-  /* Deskjet 6xx series */
+  /* Deskjet 6xx series, plus 810/812/840/842/895 */
   { 601,
     17 * 72 / 2, 14 * 72,
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300 | PCL_RES_600_600_MONO,
@@ -545,7 +547,7 @@ static pcl_cap_t pcl_model_capabilities[] =
       -1,
     },
   },
-  /* Deskjet 69x series */
+  /* Deskjet 69x series (Photo Capable) */
   { 690,
     17 * 72 / 2, 14 * 72,
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300 | PCL_RES_600_600,
@@ -581,10 +583,10 @@ static pcl_cap_t pcl_model_capabilities[] =
       -1,
     },
   },
-  /* Deskjet 800 series */
+  /* Deskjet 850/855/870/890 (C-RET) */
   { 800,
     17 * 72 / 2, 14 * 72,
-    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO | PCL_RES_600_600_MONO,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO,
     3, 33, 18, 18,
     PCL_COLOR_CMYK | PCL_COLOR_CMYK4,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
@@ -617,12 +619,12 @@ static pcl_cap_t pcl_model_capabilities[] =
       -1,
     },
   },
-  /* Deskjet 900 series */
+  /* Deskjet 900 series, 1220C, PhotoSmart P1000/P1100 */
   { 900,
     17 * 72 / 2, 14 * 72,
-    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600 | PCL_RES_1200_1200 | PCL_RES_2400_1200,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600 /* | PCL_RES_1200_600 | PCL_RES_2400_600 */,
     3, 33, 18, 18,
-    PCL_COLOR_CMYK | PCL_COLOR_CMYK4,
+    PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
     {
@@ -652,7 +654,7 @@ static pcl_cap_t pcl_model_capabilities[] =
     { -1,			/* No selectable paper sources */
     },
   },
-  /* Deskjet 1100C, 1120C, 1220C */
+  /* Deskjet 1100C, 1120C */
   { 1100,
     13 * 72, 19 * 72,
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO,
@@ -673,16 +675,11 @@ static pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERSIZE_JIS_B5,
       PCL_PAPERSIZE_JIS_B4,
       PCL_PAPERSIZE_HAGAKI_CARD,
-/*    PCL_PAPERSIZE_OUFUKU_CARD,	1220C supports, rest don't */
       PCL_PAPERSIZE_A6_CARD,
       PCL_PAPERSIZE_4x6,
       PCL_PAPERSIZE_5x8,
-/*    PCL_PAPERSIZE_3x5,		1220C supports, rest don't */
-/*    PCL_PAPERSIZE_HP_CARD,		1220C supports, rest don't */
-/*    PCL_PAPERSIZE_MONARCH_ENV,	1220C supports, rest don't */
       PCL_PAPERSIZE_COMMERCIAL10_ENV,
       PCL_PAPERSIZE_DL_ENV,
-/*    PCL_PAPERSIZE_C5_ENV,		1220C supports, rest don't */
       PCL_PAPERSIZE_C6_ENV,
       PCL_PAPERSIZE_INVITATION_ENV,
       PCL_PAPERSIZE_JAPANESE_3_ENV,
@@ -743,7 +740,7 @@ static pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 2000 */
   { 2000,
     17 * 72 / 2, 14 * 72,
-    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
     12, 12, 18, 18,
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
@@ -785,7 +782,7 @@ static pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 2500 */
   { 2500,
     13 * 72, 19 * 72,
-    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
     12, 12, 18, 18,
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
