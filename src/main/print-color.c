@@ -1238,7 +1238,8 @@ stpi_compute_lut(stp_vars_t *v)
 	setup_channel(v, i, &(channel_params[i]));
     }
   if (((lut->output_color_description->channels & CMASK_CMYK) == CMASK_CMYK) &&
-      (lut->input_color_description->color_id == COLOR_ID_GRAY ||
+      (lut->color_correction->correction == COLOR_CORRECTION_DESATURATED ||
+       lut->input_color_description->color_id == COLOR_ID_GRAY ||
        lut->input_color_description->color_id == COLOR_ID_WHITE ||
        lut->input_color_description->color_id == COLOR_ID_RGB ||
        lut->input_color_description->color_id == COLOR_ID_CMY))

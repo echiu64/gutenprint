@@ -169,9 +169,9 @@ get_next_testpattern(void)
 static void
 writefunc(void *file, const char *buf, size_t bytes)
 {
-  if (!global_suppress_output)
+  FILE *prn = (FILE *)file;
+  if (!global_suppress_output || (file == stderr))
     {
-      FILE *prn = (FILE *)file;
       fwrite(buf, 1, bytes, prn);
     }
 }

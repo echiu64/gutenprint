@@ -350,9 +350,9 @@ adjust_hsl_bright(unsigned short *rgbout, lut_t *lut, double ssat, double isat,
 static inline void
 lookup_rgb(lut_t *lut, unsigned short *rgbout,
 	   const unsigned short *red, const unsigned short *green,
-	   const unsigned short *blue)
+	   const unsigned short *blue, unsigned steps)
 {
-  if (lut->steps == 65536)
+  if (steps == 65536)
     {
       rgbout[0] = red[rgbout[0]];
       rgbout[1] = green[rgbout[1]];
@@ -600,11 +600,11 @@ color_##bits##_to_color(const stp_vars_t *vars, const unsigned char *in,     \
 									     \
   for (i = CHANNEL_C; i <= CHANNEL_Y; i++)				     \
     stp_curve_resample(stp_curve_cache_get_curve(&(lut->channel_curves[i])), \
-		       lut->steps);					     \
+		       1 << bits);					     \
   stp_curve_resample							     \
     (stp_curve_cache_get_curve(&(lut->brightness_correction)), 65536);	     \
   stp_curve_resample							     \
-    (stp_curve_cache_get_curve(&(lut->contrast_correction)), lut->steps);    \
+    (stp_curve_cache_get_curve(&(lut->contrast_correction)), 1 << bits);     \
   red =									     \
     stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_C]));	     \
   green =								     \
@@ -639,7 +639,7 @@ color_##bits##_to_color(const stp_vars_t *vars, const unsigned char *in,     \
 	  out[0] = i0 * (65535u / (unsigned) ((1 << bits) - 1));	     \
 	  out[1] = i1 * (65535u / (unsigned) ((1 << bits) - 1));	     \
 	  out[2] = i2 * (65535u / (unsigned) ((1 << bits) - 1));	     \
-	  lookup_rgb(lut, out, contrast, contrast, contrast);		     \
+	  lookup_rgb(lut, out, contrast, contrast, contrast, 1 << bits);     \
 	  if ((compute_saturation))					     \
 	    update_saturation_from_rgb(out, brightness, ssat, isat,	     \
 				       do_user_adjustment);		     \
@@ -647,7 +647,7 @@ color_##bits##_to_color(const stp_vars_t *vars, const unsigned char *in,     \
 	    adjust_hsl_bright(out, lut, ssat, isat, split_saturation);	     \
 	  else								     \
 	    adjust_hsl(out, lut, ssat, isat, split_saturation);		     \
-	  lookup_rgb(lut, out, red, green, blue);			     \
+	  lookup_rgb(lut, out, red, green, blue, 1 << bits);		     \
 	  o0 = out[0];							     \
 	  o1 = out[1];							     \
 	  o2 = out[2];							     \
@@ -705,7 +705,7 @@ color_##bits##_to_color_fast(const stp_vars_t *vars, const unsigned char *in, \
   stp_curve_resample							      \
     (stp_curve_cache_get_curve(&(lut->brightness_correction)), 65536);	      \
   stp_curve_resample							      \
-    (stp_curve_cache_get_curve(&(lut->contrast_correction)), lut->steps);     \
+    (stp_curve_cache_get_curve(&(lut->contrast_correction)), 1 << bits);      \
   red =									      \
     stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_C]));	      \
   green =								      \
@@ -886,16 +886,21 @@ GRAY_TO_COLOR_RAW_FUNC(unsigned char, 8)
 GRAY_TO_COLOR_RAW_FUNC(unsigned short, 16)
 GENERIC_COLOR_FUNC(gray, color_raw)
 
-#define COLOR_TO_KCMY_FUNC(name, name2, name3, name4, bits)		   \
-static unsigned								   \
-name##_##bits##_to_##name2(const stp_vars_t *vars, const unsigned char *in,\
-			   unsigned short *out)				   \
-{									   \
-  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	   \
-  if (!lut->cmy_tmp)							   \
-    lut->cmy_tmp = stp_malloc(4 * 2 * lut->image_width);		   \
-  name##_##bits##_to_##name3(vars, in, lut->cmy_tmp);			   \
-  return name4##_cmy_to_kcmy(vars, lut->cmy_tmp, out);			   \
+#define COLOR_TO_KCMY_FUNC(name, name2, name3, name4, bits)		    \
+static unsigned								    \
+name##_##bits##_to_##name2(const stp_vars_t *vars, const unsigned char *in, \
+			   unsigned short *out)				    \
+{									    \
+  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	    \
+  size_t real_steps = lut->steps;					    \
+  unsigned status;							    \
+  if (!lut->cmy_tmp)							    \
+    lut->cmy_tmp = stp_malloc(4 * 2 * lut->image_width);		    \
+  name##_##bits##_to_##name3(vars, in, lut->cmy_tmp);			    \
+  lut->steps = 65536;							    \
+  status = name4##_cmy_to_kcmy(vars, lut->cmy_tmp, out);		    \
+  lut->steps = real_steps;						    \
+  return status;							    \
 }
 
 COLOR_TO_KCMY_FUNC(gray, kcmy, color, generic, 8)
@@ -1194,44 +1199,50 @@ COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned char, gray_8, 1, 1)
 COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned short, gray_16, 1, 1)
 GENERIC_COLOR_FUNC(gray, gray_threshold)
 
-#define CMYK_TO_COLOR_FUNC(namein, name2, T, bits, offset)		     \
-static unsigned								     \
-namein##_##bits##_to_##name2(const stp_vars_t *vars, const unsigned char *in,\
-			   unsigned short *out)				     \
-{									     \
-  int i;								     \
-  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	     \
-  const T *s_in = (const T *) in;					     \
-  unsigned short *tmp = lut->cmy_tmp;					     \
-  int width = lut->image_width;						     \
-  unsigned mask = 0;							     \
-									     \
-  if (!lut->cmy_tmp)							     \
-    lut->cmy_tmp = stp_malloc(3 * 2 * lut->image_width);		     \
-  memset(lut->cmy_tmp, 0, width * 3 * sizeof(unsigned short));		     \
-  if (lut->invert_output)						     \
-    mask = 0xffff;							     \
-									     \
-  for (i = 0; i < width; i++, tmp += 3, s_in += 4)			     \
-    {									     \
-      unsigned c = (s_in[0 + offset] + s_in[(3 + offset) % 4]) *	     \
-	(65535 / ((1 << bits) - 1));					     \
-      unsigned m = (s_in[1 + offset] + s_in[(3 + offset) % 4]) *	     \
-	(65535 / ((1 << bits) - 1));					     \
-      unsigned y = (s_in[2 + offset] + s_in[(3 + offset) % 4]) *	     \
-	(65535 / ((1 << bits) - 1));					     \
-      if (c > 65535)							     \
-	c = 65535;							     \
-      if (m > 65535)							     \
-	m = 65535;							     \
-      if (y > 65535)							     \
-	y = 65535;							     \
-      tmp[0] = c ^ mask;						     \
-      tmp[1] = m ^ mask;						     \
-      tmp[2] = y ^ mask;						     \
-    }									     \
-  return color_16_to_##name2						     \
-    (vars, (const unsigned char *) lut->cmy_tmp, out);			     \
+#define CMYK_TO_COLOR_FUNC(namein, name2, T, bits, offset)		      \
+static unsigned								      \
+namein##_##bits##_to_##name2(const stp_vars_t *vars, const unsigned char *in, \
+			   unsigned short *out)				      \
+{									      \
+  int i;								      \
+  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	      \
+  unsigned status;							      \
+  size_t real_steps = lut->steps;					      \
+  const T *s_in = (const T *) in;					      \
+  unsigned short *tmp;							      \
+  int width = lut->image_width;						      \
+  unsigned mask = 0;							      \
+									      \
+  if (!lut->cmy_tmp)							      \
+    lut->cmy_tmp = stp_malloc(3 * 2 * lut->image_width);		      \
+  tmp = lut->cmy_tmp;							      \
+  memset(lut->cmy_tmp, 0, width * 3 * sizeof(unsigned short));		      \
+  if (lut->invert_output)						      \
+    mask = 0xffff;							      \
+									      \
+  for (i = 0; i < width; i++, tmp += 3, s_in += 4)			      \
+    {									      \
+      unsigned c = (s_in[0 + offset] + s_in[(3 + offset) % 4]) *	      \
+	(65535 / ((1 << bits) - 1));					      \
+      unsigned m = (s_in[1 + offset] + s_in[(3 + offset) % 4]) *	      \
+	(65535 / ((1 << bits) - 1));					      \
+      unsigned y = (s_in[2 + offset] + s_in[(3 + offset) % 4]) *	      \
+	(65535 / ((1 << bits) - 1));					      \
+      if (c > 65535)							      \
+	c = 65535;							      \
+      if (m > 65535)							      \
+	m = 65535;							      \
+      if (y > 65535)							      \
+	y = 65535;							      \
+      tmp[0] = c ^ mask;						      \
+      tmp[1] = m ^ mask;						      \
+      tmp[2] = y ^ mask;						      \
+    }									      \
+  lut->steps = 65536;							      \
+  status =								      \
+    color_16_to_##name2(vars, (const unsigned char *) lut->cmy_tmp, out);     \
+  lut->steps = real_steps;						      \
+  return status;							      \
 }
 
 CMYK_TO_COLOR_FUNC(cmyk, color, unsigned char, 8, 0)
@@ -1827,7 +1838,7 @@ kcmy_##bits##_to_kcmy_raw(const stp_vars_t *vars,			\
     {									\
       for (j = 0; j < 4; j++)						\
 	{								\
-	  out[i] = s_in[i] * (65535 / ((1 << bits) - 1));		\
+	  out[j] = s_in[j] * (65535 / ((1 << bits) - 1));		\
 	  nz[j] |= out[j];						\
 	}								\
       s_in += 4;							\
@@ -1859,7 +1870,7 @@ generic_kcmy_to_cmykrb(const stp_vars_t *vars, const unsigned short *in,
 
   for (i = 0; i < width; i++, out += 6, in += 4)
     {
-      if (input_cache && short_eq(input_cache, in, 6))
+      if (input_cache && short_eq(input_cache, in, 4))
 	short_copy(out, output_cache, 6);
       else
 	{
@@ -1921,7 +1932,7 @@ raw_kcmy_to_cmykrb(const stp_vars_t *vars, const unsigned short *in,
 
   for (i = 0; i < width; i++, out += 6, in += 4)
     {
-      if (input_cache && short_eq(input_cache, in, 6))
+      if (input_cache && short_eq(input_cache, in, 4))
 	short_copy(out, output_cache, 6);
       else
 	{
@@ -1967,16 +1978,21 @@ raw_kcmy_to_cmykrb(const stp_vars_t *vars, const unsigned short *in,
   return retval;
 }
 
-#define COLOR_TO_CMYKRB_FUNC(name, name2, name3, name4, bits)		   \
-static unsigned								   \
-name##_##bits##_to_##name2(const stp_vars_t *vars, const unsigned char *in,\
-			  unsigned short *out)				   \
-{									   \
-  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	   \
-  if (!lut->cmyk_tmp)							   \
-    lut->cmyk_tmp = stp_malloc(4 * 2 * lut->image_width);		   \
-  name##_##bits##_to_##name3(vars, in, lut->cmyk_tmp);			   \
-  return name4##_kcmy_to_cmykrb(vars, lut->cmyk_tmp, out);		   \
+#define COLOR_TO_CMYKRB_FUNC(name, name2, name3, name4, bits)		    \
+static unsigned								    \
+name##_##bits##_to_##name2(const stp_vars_t *vars, const unsigned char *in, \
+			  unsigned short *out)				    \
+{									    \
+  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	    \
+  size_t real_steps = lut->steps;					    \
+  unsigned status;							    \
+  if (!lut->cmyk_tmp)							    \
+    lut->cmyk_tmp = stp_malloc(4 * 2 * lut->image_width);		    \
+  name##_##bits##_to_##name3(vars, in, lut->cmyk_tmp);			    \
+  lut->steps = 65536;							    \
+  status = name4##_kcmy_to_cmykrb(vars, lut->cmyk_tmp, out);		    \
+  lut->steps = real_steps;						    \
+  return status;							    \
 }
 
 COLOR_TO_CMYKRB_FUNC(gray, cmykrb, kcmy, generic, 8)
@@ -2028,17 +2044,22 @@ COLOR_TO_CMYKRB_FUNC(kcmy, cmykrb_raw, kcmy_raw, raw, 8)
 COLOR_TO_CMYKRB_FUNC(kcmy, cmykrb_raw, kcmy_raw, raw, 16)
 GENERIC_COLOR_FUNC(kcmy, cmykrb_raw)
 
-#define DESATURATED_FUNC(name, name2, bits)				 \
-static unsigned								 \
-name##_##bits##_to_##name2##_desaturated(const stp_vars_t *vars,	 \
-				         const unsigned char *in,	 \
-				         unsigned short *out)		 \
-{									 \
-  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	 \
-  if (!lut->gray_tmp)							 \
-    lut->gray_tmp = stp_malloc(2 * lut->image_width);			 \
-  name##_##bits##_to_gray_noninvert(vars, in, lut->gray_tmp);		 \
-  return gray_16_to_##name2(vars, (unsigned char *) lut->gray_tmp, out); \
+#define DESATURATED_FUNC(name, name2, bits)				   \
+static unsigned								   \
+name##_##bits##_to_##name2##_desaturated(const stp_vars_t *vars,	   \
+				         const unsigned char *in,	   \
+				         unsigned short *out)		   \
+{									   \
+  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	   \
+  size_t real_steps = lut->steps;					   \
+  unsigned status;							   \
+  if (!lut->gray_tmp)							   \
+    lut->gray_tmp = stp_malloc(2 * lut->image_width);			   \
+  name##_##bits##_to_gray_noninvert(vars, in, lut->gray_tmp);		   \
+  lut->steps = 65536;							   \
+  status = gray_16_to_##name2(vars, (unsigned char *) lut->gray_tmp, out); \
+  lut->steps = real_steps;						   \
+  return status;							   \
 }
 
 DESATURATED_FUNC(color, color, 8)

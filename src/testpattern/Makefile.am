@@ -31,7 +31,7 @@ include $(top_srcdir)/scripts/global.mk
 INCLUDES = $(AM_CFLAGS)
 pkgdatadir = $(datadir)/$(PACKAGE)/samples
 
-TESTS = run-testpattern
+TESTS = run-testpattern run-testpattern-1
 
 
 ## Programs
@@ -62,5 +62,5 @@ pkgdata_DATA = testpattern.sample extended.sample
 
 MAINTAINERCLEANFILES = Makefile.in testpatternl.c testpatterny.c testpatterny.h
 
-EXTRA_DIST =  testpatterny.h $(pkgdata_DATA) run-testpattern
+EXTRA_DIST =  testpatterny.h $(pkgdata_DATA) run-testpattern run-testpattern-1
 
