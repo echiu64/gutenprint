@@ -1,0 +1,15 @@
+.deps
+.libs
+Makefile
+Makefile.in
+libgimpprint.la
+print-lexmark.lo
+print-canon.lo
+print-dither.lo
+print-escp2.lo
+print-pcl.lo
+print-ps.lo
+print-printers.c
+print-util.lo
+print-color.lo
+print-weave.lo

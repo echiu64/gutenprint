@@ -77,7 +77,7 @@ AC_ARG_ENABLE(debug,
 
 AC_MSG_CHECKING([whether to build CUPS driver])
 AC_ARG_WITH(cups,
-[  --with-cups[=PREFIX]    build CUPS driver [default=no]],
+[  --with-cups[=PREFIX]    build CUPS driver [default=no, default PREFIX=PREFIX]],
   [case "${withval}" in
     yes) BUILD_CUPS="yes" ; AC_MSG_RESULT([yes]) ; cups_prefix="${prefix}" ;;
     no) BUILD_CUPS="no" ; AC_MSG_RESULT([no]) ; cups_prefix="${prefix}" ;;
@@ -86,9 +86,9 @@ AC_ARG_WITH(cups,
          cups_prefix="${withval}"
        else
          AC_MSG_RESULT([unknown])
-         AC_MSG_ERROR([bad value ${withval} for --with-cups])
+         AC_MSG_ERROR([${withval}: no such directory for --with-cups])
        fi ;;
-  esac],[AC_MSG_RESULT([${BUILD_CUPS} ; cups_prefix="/usr"])])
+  esac],[AC_MSG_RESULT([${BUILD_CUPS} ; cups_prefix="${prefix}"])])
 
 AC_MSG_CHECKING([whether to build GIMP plugin])
 AC_ARG_WITH(gimp,

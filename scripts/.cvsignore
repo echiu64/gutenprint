@@ -1,0 +1,8 @@
+config.guess
+config.sub
+install-sh
+ltconfig
+ltmain.sh
+missing
+mkchlog
+mkinstalldirs
