@@ -475,15 +475,13 @@ static int get_lr_shift(int mode)
  *
  */
 
-static const int head_offset_cmyk_ori[] =
-{70, 184, 368, 0, 184, 368, 0};  /* k, m, c, y, M, C, Y */
 static const int head_offset_cmyk[] =
-{70, 368, 184, 0, 184, 368, 0};  /* k, m, c, y, M, C, Y */
+{70, 368, 184, 0, 368, 184, 0};  /* k, m, c, y, M, C, Y */
 /* the head_offset_cmy is needed because the dithering code is going into troubles if there is an offset different from 0 for the unused black color */
 static const int head_offset_cmy[] =
-{0, 184, 368, 0, 184, 368, 0};  /* k, m, c, y, M, C, Y */
+{0, 368, 184, 0, 368, 184, 0};  /* k, m, c, y, M, C, Y */
 static const int head_offset_cCmMyk[] =
-{0, 184, 368, 0, 184, 368, 0};  /* k, m, c, y, M, C, Y */
+{0, 368, 184, 0, 368, 184, 0};  /* k, m, c, y, M, C, Y */
 
 
 
