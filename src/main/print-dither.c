@@ -113,6 +113,9 @@ typedef struct dither_channel
   int very_fast;
   int subchannels;
 
+  int photomax;			/* Maximum photo ink density */
+  int darkmin;			/* Minimum dark ink density */
+
   dither_segment_t *ranges;
   dither_segment_t temp_range;
   int **errs;
@@ -777,6 +780,10 @@ stp_dither_finalize_ranges(dither_t *d, dither_channel_t *s)
       s->signif_bits++;
       lbit >>= 1;
     }
+
+  s->photomax = 0;
+  s->darkmin = 65535;
+
   for (i = 0; i < s->nlevels; i++)
     {
       if (s->ranges[i].subchannel[0] > max_subchannel)
@@ -794,6 +801,16 @@ stp_dither_finalize_ranges(dither_t *d, dither_channel_t *s)
 	s->ranges[i].is_equal = 0;
       else
 	s->ranges[i].is_equal = 1;
+
+      if  (s->ranges[i].subchannel[0] == 0) {
+        if (s->ranges[i].value[0] < s->darkmin) {
+	  s->darkmin = s->ranges[i].value[0];
+	}
+      } else {
+        if (s->ranges[i].value[0] > s->photomax) {
+	  s->photomax = s->ranges[i].value[0];
+	}
+      }
       stp_dprintf(STP_DBG_INK, d->v,
 		  "    level %d value[0] %d value[1] %d range[0] %d range[1] %d\n",
 		  i, s->ranges[i].value[0], s->ranges[i].value[1],
@@ -2749,6 +2766,14 @@ stp_setup_et(dither_t *d)
   return et;
 }
 
+/* This code uses the Eventone dither algorithm. This is described
+ * at the website http://www.artofcode.com/eventone/
+ * This algorithm is covered by US Patents 5,055,942 and 5,917,614
+ * and was invented by Raph Levien <raph@acm.org>
+ * It was made available to be used free of charge in open source
+ * code.
+ */
+
 static void
 stp_dither_cmyk_ed2(const unsigned short  *cmy,
 		   int           row,
@@ -2829,10 +2854,12 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
       }
 
       if (CHANNEL(d, ECOLOR_K).o < d->k_lower) {
-	CHANNEL(d, ECOLOR_K).o = 0;
+	CHANNEL(d, ECOLOR_K).o = 0;				/* Use CMY for black instead */
       } else {
 	if (CHANNEL(d, ECOLOR_K).o < d->k_upper) {
-	  CHANNEL(d, ECOLOR_K).o = d->k_upper * (CHANNEL(d, ECOLOR_K).o - d->k_lower) / d->bound_range;
+	  int k_frac =  CHANNEL(d, ECOLOR_K).o - d->k_lower;	/* Quadratic in this region */
+	  CHANNEL(d, ECOLOR_K).o = d->k_upper * k_frac / d->bound_range;
+	  CHANNEL(d, ECOLOR_K).o = CHANNEL(d, ECOLOR_K).o * k_frac / d->bound_range;
 	}
 	for (i=1; i < NCOLORS; i++) {
 	  CHANNEL(d, i).o -= CHANNEL(d, ECOLOR_K).o;
@@ -2847,6 +2874,8 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
       for (i=0; i < NCOLORS; i++) {
         int value;
 	int dark_only;
+	int dark_density;
+	int photoh;
 
         ndither[i] += error[i][0][0];
 
@@ -2856,7 +2885,15 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	if (value < 0) value = 0;				/* Dither can make this value negative */
 	CHANNEL(d, i).v = value;				/* Colour to print at this pixel location */
 
-        dark_only = (r_sq[i] * et->aspect < et->recip[d->density/5]) ? 1 : 0;
+        photoh = CHANNEL(d, i).photomax / 2;
+	dark_density = d->densityh;
+	if (CHANNEL(d, i).o < CHANNEL(d, i).darkmin) {
+	  if (CHANNEL(d, i).o > photoh) {
+	    dark_density += d->densityh * (CHANNEL(d, i).o - photoh) / (CHANNEL(d, i).darkmin - photoh);
+	  }
+	} else dark_density = d->density;
+
+        dark_only = (r_sq[i] * et->aspect < et->recip[dark_density]) ? 1 : 0;
 
         dr[i] = find_segment(d, &CHANNEL(d, i), dark_only, CHANNEL(d, i).v);
 	
