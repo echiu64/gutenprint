@@ -827,6 +827,41 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 		}
 	      if (s > 1)
 		s = 1.0;
+	      calc_hsl_to_rgb(rgbout, h, s, v);
+	      rgbout[0] = 65535 - rgbout[0];
+	      rgbout[1] = 65535 - rgbout[1];
+	      rgbout[2] = 65535 - rgbout[2];
+	    }
+	  update_cmyk(rgbout);	/* Fiddle with the INPUT */
+	  rgbout[0] = lookup_value(rgbout[0], lut->steps,
+				   lut->red, lut->shiftval,
+				   lut->bin_size, lut->bin_shift);
+	  rgbout[1] = lookup_value(rgbout[1], lut->steps,
+				   lut->green, lut->shiftval,
+				   lut->bin_size, lut->bin_shift);
+	  rgbout[2] = lookup_value(rgbout[2], lut->steps,
+				   lut->blue, lut->shiftval,
+				   lut->bin_size, lut->bin_shift);
+	  if ((split_saturation || hue_map || lum_map) &&
+	      (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
+	    {
+	      rgbout[0] = 65535 - rgbout[0];
+	      rgbout[1] = 65535 - rgbout[1];
+	      rgbout[2] = 65535 - rgbout[2];
+	      calc_rgb_to_hsl(rgbout, &h, &s, &v);
+	      if (split_saturation)
+		{
+		  if (ssat < 1)
+		    s *= ssat;
+		  else
+		    {
+		      double s1 = s * ssat;
+		      double s2 = 1.0 - ((1.0 - s) * isat);
+		      s = FMIN(s1, s2);
+		    }
+		}
+	      if (s > 1)
+		s = 1.0;
 	      if (hue_map || lum_map)
 		{
 		  if (hue_map)
@@ -858,41 +893,6 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 			}
 		    }
 		}
-	      calc_hsl_to_rgb(rgbout, h, s, v);
-	      rgbout[0] = 65535 - rgbout[0];
-	      rgbout[1] = 65535 - rgbout[1];
-	      rgbout[2] = 65535 - rgbout[2];
-	    }
-	  update_cmyk(rgbout);	/* Fiddle with the INPUT */
-	  rgbout[0] = lookup_value(rgbout[0], lut->steps,
-				   lut->red, lut->shiftval,
-				   lut->bin_size, lut->bin_shift);
-	  rgbout[1] = lookup_value(rgbout[1], lut->steps,
-				   lut->green, lut->shiftval,
-				   lut->bin_size, lut->bin_shift);
-	  rgbout[2] = lookup_value(rgbout[2], lut->steps,
-				   lut->blue, lut->shiftval,
-				   lut->bin_size, lut->bin_shift);
-	  if (split_saturation &&
-	      (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
-	    {
-	      rgbout[0] = 65535 - rgbout[0];
-	      rgbout[1] = 65535 - rgbout[1];
-	      rgbout[2] = 65535 - rgbout[2];
-	      calc_rgb_to_hsl(rgbout, &h, &s, &v);
-	      if (split_saturation)
-		{
-		  if (ssat < 1)
-		    s *= ssat;
-		  else
-		    {
-		      double s1 = s * ssat;
-		      double s2 = 1.0 - ((1.0 - s) * isat);
-		      s = FMIN(s1, s2);
-		    }
-		}
-	      if (s > 1)
-		s = 1.0;
 	      calc_hsl_to_rgb(rgbout, h, s, v);
 	      rgbout[0] = 65535 - rgbout[0];
 	      rgbout[1] = 65535 - rgbout[1];
