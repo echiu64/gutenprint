@@ -248,8 +248,8 @@ static const escp2_variable_ink_t photo_magenta_ink =
 
 static const stp_simple_dither_range_t photo_6pl_dither_ranges[] =
 {
-  { 0.15,  0x1, 0, 1 },
-  { 0.227, 0x2, 0, 2 },
+  { 0.135,  0x1, 0, 1 },
+  { 0.200, 0x2, 0, 2 },
 /*  { 0.333, 0x3, 0, 3 }, */
   { 0.45,  0x1, 1, 1 },
   { 0.68,  0x2, 1, 2 },
@@ -266,7 +266,7 @@ static const escp2_variable_ink_t photo_6pl_ink =
 
 static const stp_simple_dither_range_t photo_6pl_1440_dither_ranges[] =
 {
-  { 0.30,  0x1, 0, 1 },
+  { 0.26,  0x1, 0, 1 },
   { 0.90,  0x1, 1, 1 },
   { 1.36,  0x2, 1, 2 }
 };
@@ -297,7 +297,8 @@ static const escp2_variable_ink_t photo_pigment_ink =
 
 static const stp_simple_dither_range_t photo_4pl_dither_ranges[] =
 {
-  { 0.22,  0x1, 0, 1 },
+  { 0.17,  0x1, 0, 1 },
+  { 0.26,  0x2, 0, 2 },
   { 0.661, 0x1, 1, 1 },
   { 1.00,  0x2, 1, 2 }
 };
@@ -311,7 +312,8 @@ static const escp2_variable_ink_t photo_4pl_ink =
 
 static const stp_simple_dither_range_t photo_4pl_1440_dither_ranges[] =
 {
-  { 0.30,  0x1, 0, 1 },
+  { 0.26,  0x1, 0, 1 },
+  { 0.393, 0x2, 0, 2 },
   { 0.90,  0x1, 1, 1 },
   { 1.36,  0x2, 1, 2 }
 };
@@ -982,15 +984,15 @@ static const double standard_lum_adjustment[49] =
   0.55,
   0.6,
   0.65,
-  0.65,
-  0.6,
-  0.55,
-  0.53,
-  0.5,				/* B */
-  0.55,
-  0.65,
   0.7,
+  0.69,
+  0.68,
+  0.67,
+  0.65,				/* B */
+  0.68,
+  0.74,
   0.8,
+  0.86,
   0.909,
   1.0,
   1.15,
@@ -1015,69 +1017,16 @@ static const double standard_lum_adjustment[49] =
   0.8,
   0.7,
   0.6,
-  0.55,
-  0.5,
-  0.45,
-  0.36,				/* G */
-  0.4,
-  0.45,
+  0.56,
+  0.52,
   0.48,
-  0.48,
-  0.48,
-  0.51,
-  0.51,
-  0.50				/* C */
-};
-
-static const double x70_lum_adjustment[49] =
-{
-  0.50,				/* C */
-  0.55,
-  0.65,
-  0.85,
-  0.95,
-  0.85,
-  0.59,
-  0.60,
-  0.55,				/* B */
-  0.6,
-  0.65,
-  0.75,
-  0.9,
-  1.05,
-  1.15,
-  1.25,
-  1.35,				/* M */
-  1.25,
-  1.25,
-  1.25,
-  1.25,
-  1.25,
-  1.25,
-  1.25,
-  1.25,				/* R */
-  1.2,
-  1.15,
-  1.1,
-  1.05,
-  1.0,
-  1.0,
-  1.0,
-  1.0,				/* Y */
-  0.93,
-  0.8,
-  0.8,
-  0.72,
-  0.65,
-  0.55,
+  0.4,				/* G */
+  0.43,
   0.47,
-  0.38,				/* G */
-  0.42,
-  0.45,
-  0.48,
-  0.48,
-  0.48,
-  0.51,
+  0.49,
+  0.49,
+  0.49,
+  0.52,
   0.51,
   0.50				/* C */
 };
@@ -1648,7 +1597,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
     48, 3, 48, 3, 360, 360, INCH(17 / 2), INCH(44), 0, 0, 0, 9, 0, 1, 0,
     default_head_offset, 1440, 720, p4pl_dotsizes, c4pl_densities,
-    &variable_4pl_6color_inks, x70_lum_adjustment, standard_hue_adjustment,
+    &variable_4pl_6color_inks, standard_lum_adjustment, standard_hue_adjustment,
     standard_sat_adjustment
   },
   /* 23: Stylus Photo 1270 */
@@ -1659,7 +1608,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
     48, 3, 48, 3, 360, 360, INCH(13), INCH(44), 0, 0, 0, 9, 0, 1, 0,
     default_head_offset, 1440, 720, p4pl_dotsizes, c4pl_densities,
-    &variable_4pl_6color_inks, x70_lum_adjustment, standard_hue_adjustment,
+    &variable_4pl_6color_inks, standard_lum_adjustment, standard_hue_adjustment,
     standard_sat_adjustment
   },
   /* 24: Stylus Color 3000 */
@@ -1791,7 +1740,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_YES),
     48, 3, 48, 3, 360, 360, INCH(17 / 2), INCH(44), 0, 0, 0, 0, 0, 1, 0,
     default_head_offset, 2880, 720, p4pl_2880_dotsizes, c4pl_densities,
-    &variable_4pl_6color_inks, x70_lum_adjustment, standard_hue_adjustment,
+    &variable_4pl_6color_inks, standard_lum_adjustment, standard_hue_adjustment,
     standard_sat_adjustment
   },
   /* 36: Stylus Photo 890 */
@@ -1802,7 +1751,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
     48, 3, 48, 3, 360, 360, INCH(17 / 2), INCH(44), 0, 0, 0, 0, 0, 1, 0,
     default_head_offset, 2880, 720, p4pl_2880_dotsizes, c4pl_densities,
-    &variable_4pl_6color_inks, x70_lum_adjustment, standard_hue_adjustment,
+    &variable_4pl_6color_inks, standard_lum_adjustment, standard_hue_adjustment,
     standard_sat_adjustment
   },
   /* 37: Stylus Photo 1280/1290 */
@@ -1813,7 +1762,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
     48, 3, 48, 3, 360, 360, INCH(13), INCH(44), 0, 0, 0, 0, 0, 1, 0,
     default_head_offset, 2880, 720, p4pl_2880_dotsizes, c4pl_densities,
-    &variable_4pl_6color_inks, x70_lum_adjustment, standard_hue_adjustment,
+    &variable_4pl_6color_inks, standard_lum_adjustment, standard_hue_adjustment,
     standard_sat_adjustment
   },
   /* 38: Stylus Color 580 */
@@ -3154,15 +3103,22 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 
   if (!strcmp(stp_get_dither_algorithm(nv), _("Ordered")))
     stp_dither_set_transition(dither, 1);
-  else if (bits == 2)
-    {
-      if (use_6color || use_7color)
-	stp_dither_set_transition(dither, .7);
-      else
-	stp_dither_set_transition(dither, .5);
-    }
   else
-    stp_dither_set_transition(dither, .6);
+    {
+      double transition;
+      if (bits == 2)
+	{
+	  if (use_6color || use_7color)
+	    transition = .7;
+	  else
+	    transition = .5;
+	}
+      else
+	transition = .6;
+      if (transition < stp_get_density(nv))
+	transition = stp_get_density(nv);
+      stp_dither_set_transition(dither, transition);
+    }
 
   switch (stp_get_image_type(nv))
     {
