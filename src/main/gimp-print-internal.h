@@ -41,7 +41,6 @@ extern "C" {
 
 #include "color.h"
 #include "dither.h"
-#include "dither-matrices.h"
 #include "papers.h"
 #include "printers.h"
 #include "util.h"

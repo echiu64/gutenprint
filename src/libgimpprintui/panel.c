@@ -252,14 +252,19 @@ static const gint output_type_count = (sizeof(output_types) /
 
 static color_option_t color_options[] =
   {
-    { "Brightness", NULL, 10,  1, 1 },
-    { "Contrast",   NULL, 10,  1, 1 },
-    { "Cyan",       NULL, 10,  1, 1 },
-    { "Magenta",    NULL, 10,  1, 1 },
-    { "Yellow",     NULL, 10,  1, 1 },
-    { "Saturation", NULL, 100, 1, 1 },
-    { "Density",    NULL, 100, 1, 0 },
-    { "Gamma",      NULL, 100, 1, 1 }
+    { "Brightness",     NULL, 10,  1, 1 },
+    { "Contrast",       NULL, 10,  1, 1 },
+    { "Cyan",           NULL, 10,  1, 1 },
+    { "Magenta",        NULL, 10,  1, 1 },
+    { "Yellow",         NULL, 10,  1, 1 },
+    { "Black",          NULL, 10,  1, 0 },
+    { "Saturation",     NULL, 100, 1, 1 },
+    { "Density",        NULL, 100, 1, 0 },
+    { "BlackDensity",   NULL, 100, 1, 0 },
+    { "CyanDensity",    NULL, 100, 1, 0 },
+    { "MagentaDensity", NULL, 100, 1, 0 },
+    { "YellowDensity",  NULL, 100, 1, 0 },
+    { "Gamma",          NULL, 100, 1, 1 }
   };
 const static gint color_option_count = (sizeof(color_options) /
 					sizeof(color_option_t));

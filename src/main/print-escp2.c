@@ -128,6 +128,7 @@ typedef struct escp2_init
   int channel_limit;
   int use_fast_360;
   int print_op;
+  int rescale_density;
   const res_t *res;
   const escp2_inkname_t *inkname;
   const input_slot_t *input_slot;
@@ -1038,8 +1039,7 @@ escp2_deinit_printer(const escp2_init_t *init)
 }
 
 static int
-adjust_print_quality(const escp2_init_t *init, void *dither,
-		     stp_image_t *image)
+adjust_print_quality(const escp2_init_t *init, stp_image_t *image)
 {
   int cols;
   stp_curve_t   lum_adjustment = NULL;
@@ -1047,10 +1047,9 @@ adjust_print_quality(const escp2_init_t *init, void *dither,
   stp_curve_t   hue_adjustment = NULL;
   const paper_t *pt;
   const stp_vars_t nv = init->v;
-  int i;
-  const escp2_variable_inkset_t *inks;
   double k_upper, k_lower;
   double paper_k_upper;
+  double paper_density;
   /*
    * Compute the LUT.  For now, it's 8 bit, but that may eventually
    * sometimes change.
@@ -1058,108 +1057,73 @@ adjust_print_quality(const escp2_init_t *init, void *dither,
   k_lower = init->inkname->k_lower;
   k_upper = init->inkname->k_upper;
 
-  pt = get_media_type(init->model, stp_get_string_parameter(nv, "MediaType"), nv);
+  pt = get_media_type(init->model,
+		      stp_get_string_parameter(nv, "MediaType"), nv);
   if (pt)
     {
-      if (init->output_type != OUTPUT_RAW_PRINTER &&
-	  init->output_type != OUTPUT_RAW_CMYK)
-	stp_set_float_parameter(nv, "Density",
-			  stp_get_float_parameter(nv, "Density") *
-			  pt->base_density *
-			  escp2_density(init->model, init->res->resid, nv));
-      if (init->total_channels >= 5)
-	{
-	  stp_set_float_parameter(nv, "Cyan",
-			    stp_get_float_parameter(nv, "Cyan") * pt->p_cyan);
-	  stp_set_float_parameter(nv, "Magenta",
-			    stp_get_float_parameter(nv,"Magenta")*pt->p_magenta);
-	  stp_set_float_parameter(nv, "Yellow",
-			    stp_get_float_parameter(nv,"Yellow") * pt->p_yellow);
-	}
-      else
-	{
-	  stp_set_float_parameter(nv, "Cyan",
-			    stp_get_float_parameter(nv, "Cyan") * pt->cyan);
-	  stp_set_float_parameter(nv, "Magenta",
-			    stp_get_float_parameter(nv,"Magenta") * pt->magenta);
-	  stp_set_float_parameter(nv, "Yellow",
-			    stp_get_float_parameter(nv, "Yellow") * pt->yellow);
-	}
-      stp_set_float_parameter(nv, "Saturation",
-			stp_get_float_parameter(nv,"Saturation")*pt->saturation);
-      stp_set_float_parameter(nv, "Gamma",
-			stp_get_float_parameter(nv, "Gamma") * pt->gamma);
+      paper_density = pt->base_density;
       k_lower *= pt->k_lower_scale;
       paper_k_upper = pt->k_upper;
       k_upper *= pt->k_upper;
+      if (init->total_channels >= 5)
+	{
+	  stp_scale_float_parameter(nv, "Cyan", pt->p_cyan);
+	  stp_scale_float_parameter(nv, "Magenta", pt->p_magenta);
+	  stp_scale_float_parameter(nv, "Yellow", pt->p_yellow);
+	}
+      else
+	{
+	  stp_scale_float_parameter(nv, "Cyan", pt->cyan);
+	  stp_scale_float_parameter(nv, "Magenta", pt->magenta);
+	  stp_scale_float_parameter(nv, "Yellow", pt->yellow);
+	}
+      stp_scale_float_parameter(nv, "Saturation", pt->saturation);
+      stp_scale_float_parameter(nv, "Gamma", pt->gamma);
     }
-  else				/* Can't find paper type? Assume plain */
+  else				/* Assume some kind of plain paper */
     {
-      if (init->output_type != OUTPUT_RAW_PRINTER &&
-	  init->output_type != OUTPUT_RAW_CMYK)
-	stp_set_float_parameter(nv, "Density",
-			  stp_get_float_parameter(nv, "Density") * .8 *
-			escp2_density(init->model, init->res->resid, nv));
+      paper_density = .8;
       k_lower *= .1;
       paper_k_upper = .5;
       k_upper *= .5;
     }
+
+  if (init->rescale_density)
+    stp_scale_float_parameter
+      (nv, "Density",
+       paper_density * escp2_density(init->model, init->res->resid, nv));
+
   if (stp_get_float_parameter(nv, "Density") > 1.0)
     stp_set_float_parameter(nv, "Density", 1.0);
-  if (init->output_type == OUTPUT_GRAY)
-    stp_set_float_parameter(nv, "Gamma", stp_get_float_parameter(nv, "Gamma") / .8);
 
-  for (i = 0; i <= NCOLORS; i++)
-    stp_dither_set_black_level(dither, i, 1.0);
-  stp_dither_set_black_lower(dither, k_lower);
-  stp_dither_set_black_upper(dither, k_upper);
+  stp_set_default_float_parameter(nv, "GCRLower", k_lower);
+  stp_set_default_float_parameter(nv, "GCRUpper", k_upper);
 
-  inks = escp2_inks(init->model, init->res->resid, init->inkname->inkset, nv);
-  if (inks) {
-    for (i = 0; i < init->channel_limit; i++) {
-      if ((*inks)[i]) {
-	stp_dither_set_ranges(dither, i, (*inks)[i]->numranges, (*inks)[i]->range,
-			      (*inks)[i]->density * paper_k_upper *
-			      stp_get_float_parameter(nv, "Density"));
-
-        stp_dither_set_shades(dither, i, (*inks)[i]->numshades, (*inks)[i]->shades,
-			      (*inks)[i]->density * paper_k_upper *
-			      stp_get_float_parameter(nv, "Density"));
-      }
+  if (!stp_check_curve_parameter(nv, "HueMap"))
+    {
+      hue_adjustment = stp_read_and_compose_curves
+	(init->inkname->hue_adjustment, pt ? pt->hue_adjustment : NULL,
+	 STP_CURVE_COMPOSE_ADD);
+      stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
+      stp_curve_destroy(hue_adjustment);
     }
-  }
-
-  stp_dither_set_density(dither, stp_get_float_parameter(nv, "Density"));
-
-  sat_adjustment = stp_read_and_compose_curves(init->inkname->sat_adjustment,
-					       pt ? pt->sat_adjustment : NULL,
-					       STP_CURVE_COMPOSE_MULTIPLY);
-  lum_adjustment = stp_read_and_compose_curves(init->inkname->lum_adjustment,
-					       pt ? pt->lum_adjustment : NULL,
-					       STP_CURVE_COMPOSE_MULTIPLY);
-  hue_adjustment = stp_read_and_compose_curves(init->inkname->hue_adjustment,
-					       pt ? pt->hue_adjustment : NULL,
-					       STP_CURVE_COMPOSE_ADD);
-  if (stp_get_curve_parameter(nv, "HueMap"))
-    stp_curve_compose(&hue_adjustment, hue_adjustment,
-		      stp_get_curve_parameter(nv, "HueMap"),
-		      STP_CURVE_COMPOSE_ADD, -1);
-  if (stp_get_curve_parameter(nv, "LumMap"))
-    stp_curve_compose(&lum_adjustment, lum_adjustment,
-		      stp_get_curve_parameter(nv, "LumMap"),
-		      STP_CURVE_COMPOSE_MULTIPLY, -1);
-  if (stp_get_curve_parameter(nv, "SatMap"))
-    stp_curve_compose(&sat_adjustment, sat_adjustment,
-		      stp_get_curve_parameter(nv, "SatMap"),
-		      STP_CURVE_COMPOSE_MULTIPLY, -1);
-  stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
-  stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
-  stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
-
+  if (!stp_check_curve_parameter(nv, "SatMap"))
+    {
+      sat_adjustment = stp_read_and_compose_curves
+	(init->inkname->sat_adjustment, pt ? pt->sat_adjustment : NULL,
+	 STP_CURVE_COMPOSE_MULTIPLY);
+      stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
+      stp_curve_destroy(sat_adjustment);
+    }
+  if (!stp_check_curve_parameter(nv, "LumMap"))
+    {
+      lum_adjustment = stp_read_and_compose_curves
+	(init->inkname->lum_adjustment, pt ? pt->lum_adjustment : NULL,
+	 STP_CURVE_COMPOSE_MULTIPLY);
+      stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
+      stp_curve_destroy(lum_adjustment);
+    }
   cols = stp_color_init(nv, image, 65536);
-  stp_curve_destroy(lum_adjustment);
-  stp_curve_destroy(sat_adjustment);
-  stp_curve_destroy(hue_adjustment);
   return cols;
 }
 
@@ -1225,12 +1189,45 @@ compute_channel_count(const escp2_inkname_t *ink_type,
   return channels_in_use;
 }
 
+static void
+setup_inks(const escp2_init_t *init)
+{
+  int i;
+  const escp2_variable_inkset_t *inks;
+  const stp_vars_t nv = init->v;
+  const paper_t *pt;
+  double paper_k_upper = 0.5;
+
+  pt = get_media_type(init->model,
+		      stp_get_string_parameter(nv, "MediaType"), nv);
+  if (pt)
+    paper_k_upper = pt->k_upper;
+  inks = escp2_inks(init->model, init->res->resid, init->inkname->inkset, nv);
+  if (inks)
+    {
+      stp_init_debug_messages(nv);
+      for (i = 0; i < init->channel_limit; i++)
+	{
+	  const escp2_variable_ink_t *ink = (*inks)[i];
+	  if (ink)
+	    {
+	      stp_dither_set_ranges(nv, i, ink->numranges, ink->range,
+				    ink->density * paper_k_upper);
+
+	      stp_dither_set_shades(nv, i, ink->numshades, ink->shades,
+				    ink->density * paper_k_upper);
+	    }
+	}
+      stp_flush_debug_messages(nv);
+    }
+}
+
 static int
 setup_ink_types(const escp2_inkname_t *ink_type,
 		escp2_privdata_t *privdata,
 		unsigned char **cols,
 		int *head_offset,
-		stp_dither_data_t *dt,
+		stp_vars_t v,
 		int channel_limit,
 		int line_length)
 {
@@ -1246,7 +1243,7 @@ setup_ink_types(const escp2_inkname_t *ink_type,
 	    {
 	      cols[channels_in_use] = stp_zalloc(line_length);
 	      privdata->channels[channels_in_use] = &(channel->channels[j]);
-	      stp_dither_add_channel(dt, cols[channels_in_use], i, j);
+	      stp_dither_add_channel(v, cols[channels_in_use], i, j);
 	      head_offset[channels_in_use] = channel->channels[j].head_offset;
 	      channels_in_use++;
 	    }
@@ -1298,7 +1295,6 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 
   int		bits;
   void *	weave;
-  void *	dither;
   stp_vars_t	nv = stp_allocate_copy(v);
   escp2_init_t	init;
   int		max_vres;
@@ -1356,6 +1352,10 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 	}
     }
 
+  if (output_type == OUTPUT_RAW_CMYK || output_type == OUTPUT_RAW_PRINTER)
+    init.rescale_density = 0;
+  else
+    init.rescale_density = 1;
 
   privdata.undersample = 1;
   privdata.denominator = 1;
@@ -1371,6 +1371,11 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
     {
       output_type = OUTPUT_GRAY;
       stp_set_output_type(nv, OUTPUT_GRAY);
+    }
+  if (output_type == OUTPUT_COLOR && ink_type->channels[0] != NULL)
+    {
+      output_type = OUTPUT_RAW_CMYK;
+      stp_set_output_type(nv, OUTPUT_RAW_CMYK);
     }
 
  /*
@@ -1586,7 +1591,6 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
       int out_height;		/* Height of image on page */
       int out_channels;		/* Output bytes per pixel */
       int length;		/* Length of raster data */
-      stp_dither_data_t *dt = stp_dither_data_allocate();
       unsigned char **cols =
 	stp_zalloc(sizeof(unsigned char *) * total_channels);
 
@@ -1606,9 +1610,6 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
       out_height = ydpi * out_height / 72;
       length = (out_width + 7) / 8;
 
-      channels_in_use = setup_ink_types(ink_type, &privdata, cols, head_offset,
-					dt, channel_limit, length * bits);
-
       /*
        * Allocate memory for the raster data...
        */
@@ -1616,8 +1617,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
       weave = stp_initialize_weave(nozzles, nozzle_separation,
 				   horizontal_passes, res->vertical_passes,
 				   res->vertical_oversample, total_channels,
-				   bits,
-				   out_width, out_height,
+				   bits, out_width, out_height,
 				   top * physical_ydpi / 72,
 				   (page_height * physical_ydpi / 72 +
 				    escp2_extra_feed(model, nv) *
@@ -1627,9 +1627,12 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 				   FILLFUNC, PACKFUNC, COMPUTEFUNC);
 
       stp_set_output_color_model(nv, COLOR_MODEL_CMY);
-      dither = stp_dither_init(nv, image, out_width, xdpi, ydpi);
 
-      out_channels = adjust_print_quality(&init, dither, image);
+      out_channels = adjust_print_quality(&init, image);
+      stp_dither_init(nv, image, out_width, xdpi, ydpi);
+      channels_in_use = setup_ink_types(ink_type, &privdata, cols, head_offset,
+					nv, channel_limit, length * bits);
+      setup_inks(&init);
 
       out = stp_malloc(stp_image_width(image) * out_channels * 2);
 
@@ -1665,7 +1668,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 	    }
 	  QUANT(1);
 
-	  stp_dither(out, y, dither, dt, duplicate_line, zero_mask);
+	  stp_dither(nv, y, out, duplicate_line, zero_mask);
 	  QUANT(2);
 
 	  stp_write_weave(weave, length, ydpi, model, out_width, left,
@@ -1688,7 +1691,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
        * Cleanup...
        */
       stp_destroy_weave(weave);
-      stp_dither_free(dither);
+      stp_dither_free(nv);
       stp_free(out);
       if (!privdata.printed_something)
 	stp_send_command(nv, "\n", "");
@@ -1697,7 +1700,6 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 	if (cols[i])
 	  stp_free((unsigned char *) cols[i]);
       stp_free(cols);
-      stp_dither_data_free(dt);
       stp_free(privdata.channels);
     }
   if (print_op & OP_JOB_END)

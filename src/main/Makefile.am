@@ -73,7 +73,6 @@ libgimpprint_la_SOURCES = \
 	color.h \
 	curve.c \
 	dither.h \
-	dither-matrices.h \
 	gimp-print-internal.h \
 	list.h \
 	module.c \

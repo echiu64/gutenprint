@@ -2051,7 +2051,6 @@ canon_advance_buffer(unsigned char *buf, int len, int num)
 static int
 canon_print(const stp_vars_t v, stp_image_t *image)
 {
-  int i;
   int		status = 1;
   int		model = stp_get_model(v);
   const char	*resolution = stp_get_string_parameter(v, "Resolution");
@@ -2101,8 +2100,6 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   int           image_height,
                 image_width,
                 image_bpp;
-  int		ink_spread;
-  void *	dither;
   int           res_code;
   int           use_6color= 0;
   double        k_upper, k_lower;
@@ -2118,7 +2115,6 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   colormode_t colormode = canon_printhead_colors(ink_type,caps);
   const paper_t *pt;
   const canon_variable_inkset_t *inks;
-  stp_dither_data_t *dt;
   const canon_res_t *res = canon_resolutions;
 
   if (!stp_verify(nv))
@@ -2319,18 +2315,15 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   if (output_type != OUTPUT_RAW_PRINTER && output_type != OUTPUT_RAW_CMYK)
     {
       if (pt)
-	stp_set_float_parameter(nv, "Density",
-			  stp_get_float_parameter(nv, "Density") * pt->base_density);
+	stp_scale_float_parameter(nv, "Density", pt->base_density);
       else			/* Can't find paper type? Assume plain */
-	stp_set_float_parameter(nv, "Density",
-			  stp_get_float_parameter(nv, "Density") * .5);
-      stp_set_float_parameter(nv, "Density",
-			stp_get_float_parameter(nv, "Density") * canon_density(caps, res_code));
+	stp_scale_float_parameter(nv, "Density", .5);
+      stp_scale_float_parameter(nv, "Density", canon_density(caps, res_code));
     }
   if (stp_get_float_parameter(nv, "Density") > 1.0)
     stp_set_float_parameter(nv, "Density", 1.0);
   if (colormode == COLOR_MONOCHROME)
-    stp_set_float_parameter(nv, "Gamma", stp_get_float_parameter(nv, "Gamma") / .8);
+    stp_scale_float_parameter(nv, "Gamma", 1.25);
 
   stp_deprintf(STP_DBG_CANON,"density is %f\n",
 	       stp_get_float_parameter(nv, "Density"));
@@ -2339,10 +2332,6 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   * Output the page...
   */
 
-  dither = stp_dither_init(nv, image, out_width, xdpi, ydpi);
-
-  for (i = 0; i <= NCOLORS; i++)
-    stp_dither_set_black_level(dither, i, 1.0);
 
   if (use_6color)
     k_lower = .4 / bits + .1;
@@ -2358,29 +2347,29 @@ canon_print(const stp_vars_t v, stp_image_t *image)
       k_lower *= .5;
       k_upper = .5;
     }
-  stp_dither_set_black_lower(dither, k_lower);
-  stp_dither_set_black_upper(dither, k_upper);
+  stp_set_default_float_parameter(nv, "GCRLower", k_lower);
+  stp_set_default_float_parameter(nv, "GCRUpper", k_upper);
+  stp_dither_init(nv, image, out_width, xdpi, ydpi);
 
   if ((inks = canon_inks(caps, res_code, colormode, bits))!=0)
     {
       if (inks->c)
-	stp_dither_set_ranges(dither, ECOLOR_C, inks->c->count, inks->c->range,
+	stp_dither_set_ranges(nv, ECOLOR_C, inks->c->count, inks->c->range,
 			      inks->c->density *
 			      stp_get_float_parameter(nv, "Density"));
       if (inks->m)
-	stp_dither_set_ranges(dither, ECOLOR_M, inks->m->count, inks->m->range,
+	stp_dither_set_ranges(nv, ECOLOR_M, inks->m->count, inks->m->range,
 			      inks->m->density *
 			      stp_get_float_parameter(nv, "Density"));
       if (inks->y)
-	stp_dither_set_ranges(dither, ECOLOR_Y, inks->y->count, inks->y->range,
+	stp_dither_set_ranges(nv, ECOLOR_Y, inks->y->count, inks->y->range,
 			      inks->y->density *
 			      stp_get_float_parameter(nv, "Density"));
       if (inks->k)
-	stp_dither_set_ranges(dither, ECOLOR_K, inks->k->count, inks->k->range,
+	stp_dither_set_ranges(nv, ECOLOR_K, inks->k->count, inks->k->range,
 			      inks->k->density *
 			      stp_get_float_parameter(nv, "Density"));
     }
-  stp_dither_set_density(dither, stp_get_float_parameter(nv, "Density"));
 
   errdiv  = image_height / out_height;
   errmod  = image_height % out_height;
@@ -2388,46 +2377,46 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   errlast = -1;
   errline  = 0;
 
-  lum_adjustment = stp_read_and_compose_curves(canon_lum_adjustment(model),
-					       pt ? pt->lum_adjustment : NULL,
-					       STP_CURVE_COMPOSE_MULTIPLY);
-  hue_adjustment = stp_read_and_compose_curves(canon_hue_adjustment(model),
-					       pt ? pt->hue_adjustment : NULL,
-					       STP_CURVE_COMPOSE_ADD);
-  sat_adjustment = stp_read_and_compose_curves(canon_sat_adjustment(model),
-					       pt ? pt->sat_adjustment : NULL,
-					       STP_CURVE_COMPOSE_MULTIPLY);
-
-  if (stp_get_curve_parameter(nv, "HueMap"))
-    stp_curve_compose(&hue_adjustment, hue_adjustment,
-		      stp_get_curve_parameter(nv, "HueMap"),
-		      STP_CURVE_COMPOSE_ADD, -1);
-  if (stp_get_curve_parameter(nv, "LumMap"))
-    stp_curve_compose(&lum_adjustment, lum_adjustment,
-		      stp_get_curve_parameter(nv, "LumMap"),
-		      STP_CURVE_COMPOSE_MULTIPLY, -1);
-  if (stp_get_curve_parameter(nv, "SatMap"))
-    stp_curve_compose(&sat_adjustment, sat_adjustment,
-		      stp_get_curve_parameter(nv, "SatMap"),
-		      STP_CURVE_COMPOSE_MULTIPLY, -1);
-  stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
-  stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
-  stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
+  if (!stp_check_curve_parameter(nv, "HueMap"))
+    {
+      hue_adjustment = stp_read_and_compose_curves
+	(canon_hue_adjustment(model),
+	 pt ? pt->hue_adjustment : NULL, STP_CURVE_COMPOSE_ADD);
+      stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
+      stp_curve_destroy(hue_adjustment);
+    }
+  if (!stp_check_curve_parameter(nv, "LumMap"))
+    {
+      lum_adjustment = stp_read_and_compose_curves
+	(canon_lum_adjustment(model),
+	 pt ? pt->lum_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY);
+      stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
+      stp_curve_destroy(lum_adjustment);
+    }
+  if (!stp_check_curve_parameter(nv, "SatMap"))
+    {
+      sat_adjustment = stp_read_and_compose_curves
+	(canon_sat_adjustment(model),
+	 pt ? pt->sat_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY);
+      stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
+      stp_curve_destroy(sat_adjustment);
+    }
+  if (output_type == OUTPUT_COLOR && black)
+    {
+      output_type = OUTPUT_RAW_CMYK;
+      stp_set_output_type(nv, OUTPUT_RAW_CMYK);
+    }
 
   out_channels = stp_color_init(nv, image, 65536);
-  stp_curve_destroy(lum_adjustment);
-  stp_curve_destroy(sat_adjustment);
-  stp_curve_destroy(hue_adjustment);
 
   out = stp_zalloc(image_width * out_channels * 2);
 
-  dt = stp_dither_data_allocate();
-  stp_dither_add_channel(dt, black, ECOLOR_K, 0);
-  stp_dither_add_channel(dt, cyan, ECOLOR_C, 0);
-  stp_dither_add_channel(dt, lcyan, ECOLOR_C, 1);
-  stp_dither_add_channel(dt, magenta, ECOLOR_M, 0);
-  stp_dither_add_channel(dt, lmagenta, ECOLOR_M, 1);
-  stp_dither_add_channel(dt, yellow, ECOLOR_Y, 0);
+  stp_dither_add_channel(nv, black, ECOLOR_K, 0);
+  stp_dither_add_channel(nv, cyan, ECOLOR_C, 0);
+  stp_dither_add_channel(nv, lcyan, ECOLOR_C, 1);
+  stp_dither_add_channel(nv, magenta, ECOLOR_M, 0);
+  stp_dither_add_channel(nv, lmagenta, ECOLOR_M, 1);
+  stp_dither_add_channel(nv, yellow, ECOLOR_Y, 0);
 
   for (y = 0; y < out_height; y ++)
   {
@@ -2446,7 +2435,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
 	}
     }
 
-    stp_dither(out, y, dither, dt, duplicate_line, zero_mask);
+    stp_dither(nv, y, out, duplicate_line, zero_mask);
 
     canon_write_line(nv, caps, ydpi,
 		     black,    delay_k,
@@ -2474,10 +2463,6 @@ canon_print(const stp_vars_t v, stp_image_t *image)
       errline ++;
     }
   }
-  stp_image_progress_conclude(image);
-
-  stp_dither_data_free(dt);
-  stp_dither_free(dither);
 
   /*
    * Flush delayed buffers...
@@ -2507,6 +2492,10 @@ canon_print(const stp_vars_t v, stp_image_t *image)
       canon_advance_buffer(lyellow, buf_length,delay_ly);
     }
   }
+
+  stp_image_progress_conclude(image);
+
+  stp_dither_free(nv);
 
  /*
   * Cleanup...

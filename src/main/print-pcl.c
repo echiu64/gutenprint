@@ -1930,7 +1930,6 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   int           image_height,
                 image_width,
                 image_bpp;
-  void *	dither;
   const pcl_cap_t *caps;		/* Printer capabilities */
   int		do_cret = 0,	/* 300 DPI CRet printing */
   		do_cretb = 0,	/* 600 DPI CRet printing HP 840C*/
@@ -1951,7 +1950,6 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   int		blank_lines,	/* Accumulated blank lines */
 		is_blank,	/* Current line is blank */
 		do_blank;	/* Blank line removal required */
-  stp_dither_data_t *dt;
   unsigned char *comp_buf;	/* Scratch buffer for pcl_mode2 */
   int		the_top_margin,	/* Corrected top margin */
 		the_left_margin;	/* Corrected left margin */
@@ -2379,16 +2377,13 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
     writefunc = pcl_mode0;
   }
 
-  dither = stp_dither_init(nv, image, out_width, xdpi, ydpi);
-
 /* Set up dithering for special printers. */
 
 #if 1		/* Leave alone for now */
-  for (i = 0; i <= NCOLORS; i++)
-    stp_dither_set_black_level(dither, i, 1.2);
-  stp_dither_set_black_lower(dither, .3);
-  stp_dither_set_black_upper(dither, .999);
+  stp_set_default_float_parameter(nv, "GCRLower", .3);
+  stp_set_default_float_parameter(nv, "GCRUpper", .999);
 #endif
+  stp_dither_init(nv, image, out_width, xdpi, ydpi);
 
 /* Ensure that density does not exceed 1.0 */
 
@@ -2398,54 +2393,51 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 
   if (do_cret)				/* 4-level printing for 800/1120 */
     {
-      stp_dither_set_ranges_simple(dither, ECOLOR_Y, 3, dot_sizes_use, stp_get_float_parameter(nv, "Density"));
+      stp_dither_set_ranges_simple(nv, ECOLOR_Y, 3, dot_sizes_use, stp_get_float_parameter(nv, "Density"));
       if (!do_cretb)
-        stp_dither_set_ranges_simple(dither, ECOLOR_K, 3, dot_sizes_use, stp_get_float_parameter(nv, "Density"));
+        stp_dither_set_ranges_simple(nv, ECOLOR_K, 3, dot_sizes_use, stp_get_float_parameter(nv, "Density"));
 
 /* Note: no printer I know of does both CRet (4-level) and 6 colour, but
    what the heck. variable_dither_ranges copied from print-escp2.c */
 
       if (do_6color)			/* Photo for 69x */
 	{
-	  stp_dither_set_ranges(dither, ECOLOR_C, 6, variable_dither_ranges,
+	  stp_dither_set_ranges(nv, ECOLOR_C, 6, variable_dither_ranges,
 			    stp_get_float_parameter(nv, "Density"));
-	  stp_dither_set_ranges(dither, ECOLOR_M, 6, variable_dither_ranges,
+	  stp_dither_set_ranges(nv, ECOLOR_M, 6, variable_dither_ranges,
 			    stp_get_float_parameter(nv, "Density"));
 	}
       else
 	{
-	  stp_dither_set_ranges_simple(dither, ECOLOR_C, 3, dot_sizes_use, stp_get_float_parameter(nv, "Density"));
-	  stp_dither_set_ranges_simple(dither, ECOLOR_M, 3, dot_sizes_use, stp_get_float_parameter(nv, "Density"));
+	  stp_dither_set_ranges_simple(nv, ECOLOR_C, 3, dot_sizes_use, stp_get_float_parameter(nv, "Density"));
+	  stp_dither_set_ranges_simple(nv, ECOLOR_M, 3, dot_sizes_use, stp_get_float_parameter(nv, "Density"));
 	}
     }
   else if (do_6color)
     {
 /* Set light inks for 6 colour printers. Numbers copied from print-escp2.c */
-      stp_dither_set_light_ink(dither, ECOLOR_C, .25, stp_get_float_parameter(nv, "Density"));
-      stp_dither_set_light_ink(dither, ECOLOR_M, .25, stp_get_float_parameter(nv, "Density"));
+      stp_dither_set_light_ink(nv, ECOLOR_C, .25, stp_get_float_parameter(nv, "Density"));
+      stp_dither_set_light_ink(nv, ECOLOR_M, .25, stp_get_float_parameter(nv, "Density"));
     }
 
-  if (output_type != OUTPUT_RAW_PRINTER && output_type != OUTPUT_RAW_CMYK)
-    stp_dither_set_density(dither, stp_get_float_parameter(nv, "Density"));
-
-  lum_adjustment = stp_read_and_compose_curves(standard_lum_adjustment, NULL,
-					       STP_CURVE_COMPOSE_MULTIPLY);
-  hue_adjustment = stp_read_and_compose_curves(standard_hue_adjustment, NULL,
-					       STP_CURVE_COMPOSE_ADD);
-  if (stp_get_curve_parameter(nv, "HueMap"))
-    stp_curve_compose(&hue_adjustment, hue_adjustment,
-		      stp_get_curve_parameter(nv, "HueMap"),
-		      STP_CURVE_COMPOSE_ADD, -1);
-  if (stp_get_curve_parameter(nv, "LumMap"))
-    stp_curve_compose(&lum_adjustment, lum_adjustment,
-		      stp_get_curve_parameter(nv, "LumMap"),
-		      STP_CURVE_COMPOSE_MULTIPLY, -1);
-  stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
-  stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
+  if (!stp_check_curve_parameter(nv, "HueMap"))
+    {
+      hue_adjustment = stp_curve_allocate_read_string(standard_hue_adjustment);
+      stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
+      stp_curve_destroy(hue_adjustment);
+    }
+  if (!stp_check_curve_parameter(nv, "LumMap"))
+    {
+      lum_adjustment = stp_curve_allocate_read_string(standard_lum_adjustment);
+      stp_curve_destroy(lum_adjustment);
+    }
+  if (output_type == OUTPUT_COLOR && black)
+    {
+      output_type = OUTPUT_RAW_CMYK;
+      stp_set_output_type(nv, OUTPUT_RAW_CMYK);
+    }
 
   out_channels = stp_color_init(nv, image, 65536);
-  stp_curve_destroy(lum_adjustment);
-  stp_curve_destroy(hue_adjustment);
 
   out = stp_malloc(image_width * out_channels * 2);
 
@@ -2463,13 +2455,12 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   do_blank = 0;
 #endif
 
-  dt = stp_dither_data_allocate();
-  stp_dither_add_channel(dt, black, ECOLOR_K, 0);
-  stp_dither_add_channel(dt, cyan, ECOLOR_C, 0);
-  stp_dither_add_channel(dt, lcyan, ECOLOR_C, 1);
-  stp_dither_add_channel(dt, magenta, ECOLOR_M, 0);
-  stp_dither_add_channel(dt, lmagenta, ECOLOR_M, 1);
-  stp_dither_add_channel(dt, yellow, ECOLOR_Y, 0);
+  stp_dither_add_channel(nv, black, ECOLOR_K, 0);
+  stp_dither_add_channel(nv, cyan, ECOLOR_C, 0);
+  stp_dither_add_channel(nv, lcyan, ECOLOR_C, 1);
+  stp_dither_add_channel(nv, magenta, ECOLOR_M, 0);
+  stp_dither_add_channel(nv, lmagenta, ECOLOR_M, 1);
+  stp_dither_add_channel(nv, yellow, ECOLOR_Y, 0);
 
   for (y = 0; y < out_height; y ++)
   {
@@ -2486,13 +2477,13 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 	  break;
 	}
     }
-    stp_dither(out, y, dither, dt, duplicate_line, zero_mask);
-    len_c = stp_dither_get_last_position(dither, ECOLOR_C, 0);
-    len_lc = stp_dither_get_last_position(dither, ECOLOR_C, 1);
-    len_m = stp_dither_get_last_position(dither, ECOLOR_M, 0);
-    len_lm = stp_dither_get_last_position(dither, ECOLOR_M, 1);
-    len_y = stp_dither_get_last_position(dither, ECOLOR_Y, 0);
-    len_k = stp_dither_get_last_position(dither, ECOLOR_K, 0);
+    stp_dither(nv, y, out, duplicate_line, zero_mask);
+    len_c = stp_dither_get_last_position(nv, ECOLOR_C, 0);
+    len_lc = stp_dither_get_last_position(nv, ECOLOR_C, 1);
+    len_m = stp_dither_get_last_position(nv, ECOLOR_M, 0);
+    len_lm = stp_dither_get_last_position(nv, ECOLOR_M, 1);
+    len_y = stp_dither_get_last_position(nv, ECOLOR_Y, 0);
+    len_k = stp_dither_get_last_position(nv, ECOLOR_K, 0);
 
 /*
  * Blank line removal. If multiple lines are blank then they can be replaced
@@ -2619,8 +2610,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 
   stp_image_progress_conclude(image);
 
-  stp_dither_data_free(dt);
-  stp_dither_free(dither);
+  stp_dither_free(nv);
 
 
  /*

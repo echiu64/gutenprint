@@ -35,7 +35,7 @@ printer $p
 #parameter MediaType Photo
 #parameter InkType PhotoCMYK
 #parameter PageSize A4
-#parameter DitherAlgorithm Ordered
+parameter DitherAlgorithm Ordered
 hsize 0.1
 vsize 0.1
 left 0.15

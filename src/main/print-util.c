@@ -47,6 +47,14 @@
 
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
 
+typedef struct
+{
+  stp_outfunc_t ofunc;
+  void *odata;
+  char *data;
+  size_t bytes;
+} debug_msgbuf_t;
+
 /*
  * We cannot avoid use of the (non-ANSI) vsnprintf here; ANSI does
  * not provide a safe, length-limited sprintf function.
@@ -299,6 +307,49 @@ stp_deprintf(unsigned long level, const char *format, ...)
   if (level & stp_debug_level)
     vfprintf(stderr, format, args);
   va_end(args);
+}
+
+static void
+fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
+{
+  debug_msgbuf_t *msgbuf = (debug_msgbuf_t *) priv;
+  if (msgbuf->bytes == 0)
+    msgbuf->data = stp_malloc(bytes + 1);
+  else
+    msgbuf->data = stp_realloc(msgbuf->data, msgbuf->bytes + bytes + 1);
+  memcpy(msgbuf->data + msgbuf->bytes, buffer, bytes);
+  msgbuf->bytes += bytes;
+  msgbuf->data[msgbuf->bytes] = '\0';
+}
+
+void
+stp_init_debug_messages(const stp_vars_t v)
+{
+  int verified_flag = stp_get_verified(v);
+  debug_msgbuf_t *msgbuf = stp_malloc(sizeof(debug_msgbuf_t));
+  msgbuf->ofunc = stp_get_errfunc(v);
+  msgbuf->odata = stp_get_errdata(v);
+  msgbuf->data = NULL;
+  msgbuf->bytes = 0;
+  stp_set_errfunc((stp_vars_t) v, fill_buffer_writefunc);
+  stp_set_errdata((stp_vars_t) v, msgbuf);
+  stp_set_verified(v, verified_flag);
+}
+
+void
+stp_flush_debug_messages(const stp_vars_t v)
+{
+  int verified_flag = stp_get_verified(v);
+  debug_msgbuf_t *msgbuf = (debug_msgbuf_t *)stp_get_errdata(v);
+  stp_set_errfunc((stp_vars_t) v, msgbuf->ofunc);
+  stp_set_errdata((stp_vars_t) v, msgbuf->odata);
+  stp_set_verified(v, verified_flag);
+  if (msgbuf->bytes > 0)
+    {
+      stp_eprintf(v, "%s", msgbuf->data);
+      stp_free(msgbuf->data);
+    }
+  stp_free(msgbuf);
 }
 
 /* pointers to the allocation functions to use, which may be set by

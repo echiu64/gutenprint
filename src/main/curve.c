@@ -472,9 +472,9 @@ stp_curve_set_data(stp_curve_t curve, size_t count, const double *data)
   set_curve_points(icurve, count);
   icurve->data = stp_zalloc(icurve->real_point_count * sizeof(double));
   icurve->gamma = 0.0;
-  memcpy(icurve->data, data, (sizeof(double) * icurve->real_point_count));
+  memcpy(icurve->data, data, (sizeof(double) * count));
   if (icurve->wrap_mode == STP_CURVE_WRAP_AROUND)
-    icurve->data[icurve->point_count] = icurve->data[0];
+    icurve->data[count] = icurve->data[0];
   icurve->recompute_interval = 1;
   icurve->recompute_range = 1;
   return 1;
@@ -494,14 +494,14 @@ stp_curve_get_data(const stp_curve_t curve, size_t *count)
   return icurve->data;
 }
 
-#define DEFINE_DATA_ACCESSOR(t, ub, lb, name)				 \
+#define DEFINE_DATA_ACCESSOR(t, lb, ub, name)				 \
 const t *								 \
 stp_curve_get_##name##_data(const stp_curve_t curve, size_t *count)	 \
 {									 \
   int i;								 \
   stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;	 \
   check_curve(icurve);							 \
-  if (icurve->blo < (double) lb || icurve->blo > (double) ub)		 \
+  if (icurve->blo < (double) lb || icurve->bhi > (double) ub)		 \
     return NULL;							 \
   if (!icurve->name##_data)						 \
     {									 \
@@ -513,12 +513,12 @@ stp_curve_get_##name##_data(const stp_curve_t curve, size_t *count)	 \
   return icurve->name##_data;						 \
 }
 
-DEFINE_DATA_ACCESSOR(long, LONG_MAX, LONG_MIN, long)
-DEFINE_DATA_ACCESSOR(unsigned long, ULONG_MAX, 0, ulong)
-DEFINE_DATA_ACCESSOR(int, INT_MAX, INT_MIN, int)
-DEFINE_DATA_ACCESSOR(unsigned int, UINT_MAX, 0, uint)
-DEFINE_DATA_ACCESSOR(short, SHRT_MAX, SHRT_MIN, short)
-DEFINE_DATA_ACCESSOR(unsigned short, USHRT_MAX, 0, ushort)
+DEFINE_DATA_ACCESSOR(long, LONG_MIN, LONG_MAX, long)
+DEFINE_DATA_ACCESSOR(unsigned long, 0, ULONG_MAX, ulong)
+DEFINE_DATA_ACCESSOR(int, INT_MIN, INT_MAX, int)
+DEFINE_DATA_ACCESSOR(unsigned int, 0, UINT_MAX, uint)
+DEFINE_DATA_ACCESSOR(short, SHRT_MIN, SHRT_MAX, short)
+DEFINE_DATA_ACCESSOR(unsigned short, 0, USHRT_MAX, ushort)
 
 stp_curve_t
 stp_curve_get_subrange(const stp_curve_t curve, size_t start, size_t count)
@@ -1106,7 +1106,6 @@ stp_curve_resample(stp_curve_t curve, size_t points)
   icurve->data = new_vec;
   icurve->recompute_interval = 1;
   icurve->recompute_range = 1;
-  invalidate_auxiliary_data(icurve);
   return 1;
 }
 

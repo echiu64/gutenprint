@@ -524,20 +524,56 @@ extern void stp_set_curve_parameter(stp_vars_t v, const char *parameter,
 extern void stp_set_raw_parameter(stp_vars_t v, const char *parameter,
 				  const void *value, int bytes);
 
+extern void stp_set_default_string_parameter(stp_vars_t v,
+					     const char *parameter,
+					     const char *value);
+extern void stp_set_default_string_parameter_n(stp_vars_t v,
+					       const char *parameter,
+					       const char *value, int bytes);
+extern void stp_set_default_file_parameter(stp_vars_t v,
+					   const char *parameter,
+					   const char *value);
+extern void stp_set_default_file_parameter_n(stp_vars_t v,
+					     const char *parameter,
+					     const char *value, int bytes);
+extern void stp_set_default_float_parameter(stp_vars_t v,
+					    const char *parameter,
+					    double value);
+extern void stp_set_default_int_parameter(stp_vars_t v,
+					  const char *parameter,
+					  int value);
+extern void stp_set_default_boolean_parameter(stp_vars_t v,
+					      const char *parameter,
+					      int value);
+extern void stp_set_default_curve_parameter(stp_vars_t v,
+					    const char *parameter,
+					    const stp_curve_t value);
+extern void stp_set_default_raw_parameter(stp_vars_t v,
+					  const char *parameter,
+					  const void *value, int bytes);
+
 extern const char *stp_get_string_parameter(const stp_vars_t v,
 					    const char *param);
 extern const char *stp_get_file_parameter(const stp_vars_t v,
 					  const char *param);
-extern const double stp_get_float_parameter(const stp_vars_t v,
+extern double stp_get_float_parameter(const stp_vars_t v,
 					    const char *param);
-extern const int stp_get_int_parameter(const stp_vars_t v,
-				       const char *param);
-extern const int stp_get_boolean_parameter(const stp_vars_t v,
-					   const char *param);
+extern int stp_get_int_parameter(const stp_vars_t v,
+				 const char *param);
+extern int stp_get_boolean_parameter(const stp_vars_t v,
+				     const char *param);
 extern const stp_curve_t stp_get_curve_parameter(const stp_vars_t v,
 						 const char *param);
 extern const stp_raw_t *stp_get_raw_parameter(const stp_vars_t v,
 					      const char *param);
+
+extern void stp_clear_string_parameter(const stp_vars_t v, const char *param);
+extern void stp_clear_file_parameter(const stp_vars_t v, const char *param);
+extern void stp_clear_float_parameter(const stp_vars_t v, const char *param);
+extern void stp_clear_int_parameter(const stp_vars_t v, const char *param);
+extern void stp_clear_boolean_parameter(const stp_vars_t v, const char *param);
+extern void stp_clear_curve_parameter(const stp_vars_t v, const char *param);
+extern void stp_clear_raw_parameter(const stp_vars_t v, const char *param);
 
 extern int stp_check_string_parameter(const stp_vars_t v, const char *param);
 extern int stp_check_file_parameter(const stp_vars_t v, const char *param);
@@ -547,10 +583,15 @@ extern int stp_check_boolean_parameter(const stp_vars_t v, const char *param);
 extern int stp_check_curve_parameter(const stp_vars_t v, const char *param);
 extern int stp_check_raw_parameter(const stp_vars_t v, const char *param);
 
-/*
- * Manipulate lists of strings.  This will likely be subsumed by a more
- * general list manipulation technology.
- */
+extern void stp_scale_float_parameter(const stp_vars_t v, const char *param,
+				      double scale);
+
+
+/****************************************************************
+*                                                               *
+* LISTS OF STRINGS                                              *
+*                                                               *
+****************************************************************/
 
 extern stp_string_list_t stp_string_list_allocate(void);
 extern void stp_string_list_free(stp_string_list_t list);
@@ -569,9 +610,12 @@ extern void stp_string_list_add_param(stp_string_list_t list,
 extern stp_string_list_t
 stp_string_list_duplicate_params(const stp_param_string_t *list, size_t count);
 
-/*
- * Manipulate curves
- */
+
+/****************************************************************
+*                                                               *
+* CURVES                                                        *
+*                                                               *
+****************************************************************/
 
 /*
  * Allocate a new curve.  Curves have y=lower..upper.

@@ -1392,7 +1392,6 @@ clean_color(unsigned char *line, int len)
 static int
 lexmark_print(const stp_vars_t v, stp_image_t *image)
 {
-  int i;
   int		status = 1;
   int		y;		/* Looping vars */
   int		xdpi, ydpi;	/* Resolution */
@@ -1420,7 +1419,6 @@ lexmark_print(const stp_vars_t v, stp_image_t *image)
                 image_width,
                 image_bpp;
   int           use_dmt = 0;
-  void *	dither;
   int pass_length=0;              /* count of inkjets for one pass */
   int add_top_offset=0;              /* additional top offset */
   int printMode = 0;
@@ -1442,7 +1440,6 @@ lexmark_print(const stp_vars_t v, stp_image_t *image)
   int  ncolors;
   lexm_privdata_weave privdata;
   void *	weave = NULL;
-  stp_dither_data_t *dt;
 
   lexmark_lineoff_t lineoff_buffer;  /* holds the line offsets of each color */
   int doTestPrint = 0;
@@ -1754,8 +1751,7 @@ densityDivisor /= 1.2;
 #endif
 
       /* Lexmark do not have differnet pixel sizes. We have to correct the density according the print resolution. */
-      stp_set_float_parameter
-	(nv, "Density", stp_get_float_parameter(nv, "Density") /densityDivisor);
+      stp_scale_float_parameter(nv, "Density", 1.0 / densityDivisor);
     }
 
 
@@ -1768,57 +1764,34 @@ densityDivisor /= 1.2;
   else
     k_lower = .25;
 
-
-
-
-
-
   if (media)
     {
       if (output_type != OUTPUT_RAW_PRINTER && output_type != OUTPUT_RAW_CMYK)
-	stp_set_float_parameter(nv, "Density", stp_get_float_parameter(nv, "Density") * media->base_density);
-      stp_set_float_parameter(nv, "Cyan",
-			stp_get_float_parameter(nv, "Cyan") * media->p_cyan);
-      stp_set_float_parameter(nv, "Magenta",
-			stp_get_float_parameter(nv, "Magenta") * media->p_magenta);
-      stp_set_float_parameter(nv, "Yellow",
-			stp_get_float_parameter(nv, "Yellow") * media->p_yellow);
+	stp_scale_float_parameter(nv, "Density", media->base_density);
+      stp_scale_float_parameter(nv, "Cyan", media->p_cyan);
+      stp_scale_float_parameter(nv, "Magenta", media->p_magenta);
+      stp_scale_float_parameter(nv, "Yellow", media->p_yellow);
       k_lower *= media->k_lower_scale;
       k_upper  = media->k_upper;
     }
   else
     {
       if (output_type != OUTPUT_RAW_PRINTER && output_type != OUTPUT_RAW_CMYK)
-	stp_set_float_parameter(nv, "Density", stp_get_float_parameter(nv, "Density") * .8);
+	stp_scale_float_parameter(nv, "Density", .8);
       k_lower *= .1;
       k_upper = .5;
     }
   if (stp_get_float_parameter(nv, "Density") > 1.0)
     stp_set_float_parameter(nv, "Density", 1.0);
 
-  lum_adjustment =
-    stp_read_and_compose_curves(lexmark_lum_adjustment(caps, nv),
-				media ? media->lum_adjustment : NULL,
-				STP_CURVE_COMPOSE_MULTIPLY);
-  hue_adjustment =
-    stp_read_and_compose_curves(lexmark_hue_adjustment(caps, nv),
-				media ? media->hue_adjustment : NULL,
-				STP_CURVE_COMPOSE_ADD);
-  sat_adjustment =
-    stp_read_and_compose_curves(lexmark_sat_adjustment(caps, nv),
-				media ? media->sat_adjustment : NULL,
-				STP_CURVE_COMPOSE_MULTIPLY);
-
 #ifdef DEBUG
   stp_erprintf("density is %f\n",stp_get_float_parameter(nv, "Density"));
 #endif
 
-  dither = stp_dither_init(nv, image, out_width, xdpi, ydpi);
 
-  for (i = 0; i <= NCOLORS; i++)
-    stp_dither_set_black_level(dither, i, 1.0);
-  stp_dither_set_black_lower(dither, k_lower);
-  stp_dither_set_black_upper(dither, k_upper);
+  stp_set_default_float_parameter(nv, "GCRLower", k_lower);
+  stp_set_default_float_parameter(nv, "GCRUpper", k_upper);
+  stp_dither_init(nv, image, out_width, xdpi, ydpi);
 
 	/*
 	  stp_dither_set_black_lower(dither, .8 / ((1 << (use_dmt+1)) - 1));*/
@@ -1827,43 +1800,51 @@ densityDivisor /= 1.2;
   /*
     if (use_glossy_film)
   */
-  stp_dither_set_black_upper(dither, .8);
 
   if (!use_dmt) {
     if (cols.p.C)
-      stp_dither_set_light_ink(dither, ECOLOR_C, .3333, stp_get_float_parameter(nv, "Density"));
+      stp_dither_set_light_ink(nv, ECOLOR_C, .3333, stp_get_float_parameter(nv, "Density"));
     if (cols.p.M)
-      stp_dither_set_light_ink(dither, ECOLOR_M, .3333, stp_get_float_parameter(nv, "Density"));
+      stp_dither_set_light_ink(nv, ECOLOR_M, .3333, stp_get_float_parameter(nv, "Density"));
     if (cols.p.Y)
-      stp_dither_set_light_ink(dither, ECOLOR_Y, .3333, stp_get_float_parameter(nv, "Density"));
+      stp_dither_set_light_ink(nv, ECOLOR_Y, .3333, stp_get_float_parameter(nv, "Density"));
   }
-
-  stp_dither_set_density(dither, stp_get_float_parameter(nv, "Density"));
 
   /*
    * Output the page...
   */
 
-  if (stp_get_curve_parameter(nv, "HueMap"))
-    stp_curve_compose(&hue_adjustment, hue_adjustment,
-		      stp_get_curve_parameter(nv, "HueMap"),
-		      STP_CURVE_COMPOSE_ADD, -1);
-  if (stp_get_curve_parameter(nv, "LumMap"))
-    stp_curve_compose(&lum_adjustment, lum_adjustment,
-		      stp_get_curve_parameter(nv, "LumMap"),
-		      STP_CURVE_COMPOSE_MULTIPLY, -1);
-  if (stp_get_curve_parameter(nv, "SatMap"))
-    stp_curve_compose(&sat_adjustment, sat_adjustment,
-		      stp_get_curve_parameter(nv, "SatMap"),
-		      STP_CURVE_COMPOSE_MULTIPLY, -1);
-  stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
-  stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
-  stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
+  if (!stp_check_curve_parameter(nv, "HueMap"))
+    {
+      hue_adjustment = stp_read_and_compose_curves
+	(lexmark_hue_adjustment(caps, nv),
+	 media ? media->hue_adjustment : NULL, STP_CURVE_COMPOSE_ADD);
+      stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
+      stp_curve_destroy(hue_adjustment);
+    }
+  if (!stp_check_curve_parameter(nv, "LumMap"))
+    {
+      lum_adjustment = stp_read_and_compose_curves
+	(lexmark_lum_adjustment(caps, nv),
+	 media ? media->lum_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY);
+      stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
+      stp_curve_destroy(lum_adjustment);
+    }
+  if (!stp_check_curve_parameter(nv, "SatMap"))
+    {
+      sat_adjustment = stp_read_and_compose_curves
+	(lexmark_sat_adjustment(caps, nv),
+	 media ? media->sat_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY);
+      stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
+      stp_curve_destroy(sat_adjustment);
+    }
+  if (output_type == OUTPUT_COLOR && cols.p.k)
+    {
+      output_type = OUTPUT_RAW_CMYK;
+      stp_set_output_type(nv, OUTPUT_RAW_CMYK);
+    }
 
   out_channels = stp_color_init(nv, image, 65536);
-  stp_curve_destroy(lum_adjustment);
-  stp_curve_destroy(sat_adjustment);
-  stp_curve_destroy(hue_adjustment);
 
   out = stp_malloc(image_width * out_channels * 2);
 
@@ -1878,14 +1859,13 @@ densityDivisor /= 1.2;
   errlast = -1;
   errline  = 0;
 
-  dt = stp_dither_data_allocate();
-  stp_dither_add_channel(dt, cols.p.k, ECOLOR_K, 0);
-  stp_dither_add_channel(dt, cols.p.c, ECOLOR_C, 0);
-  stp_dither_add_channel(dt, cols.p.C, ECOLOR_C, 1);
-  stp_dither_add_channel(dt, cols.p.m, ECOLOR_M, 0);
-  stp_dither_add_channel(dt, cols.p.M, ECOLOR_M, 1);
-  stp_dither_add_channel(dt, cols.p.y, ECOLOR_Y, 0);
-  stp_dither_add_channel(dt, cols.p.Y, ECOLOR_Y, 1);
+  stp_dither_add_channel(nv, cols.p.k, ECOLOR_K, 0);
+  stp_dither_add_channel(nv, cols.p.c, ECOLOR_C, 0);
+  stp_dither_add_channel(nv, cols.p.C, ECOLOR_C, 1);
+  stp_dither_add_channel(nv, cols.p.m, ECOLOR_M, 0);
+  stp_dither_add_channel(nv, cols.p.M, ECOLOR_M, 1);
+  stp_dither_add_channel(nv, cols.p.y, ECOLOR_Y, 0);
+  stp_dither_add_channel(nv, cols.p.Y, ECOLOR_Y, 1);
 
   for (y = 0; y < out_height; y ++)   /* go through every pixle line of image */
     {
@@ -1910,7 +1890,7 @@ densityDivisor /= 1.2;
 	}
       /*      stp_erprintf("Let's dither   %d    %d  %d\n", ((y)), buf_length, length);*/
       if (doTestPrint == 0) {
-	stp_dither(out, y, dither, dt, duplicate_line, zero_mask);
+	stp_dither(nv, y, out, duplicate_line, zero_mask);
       } else {
 #ifdef DEBUG
 	readtestprintline(&td, &cols);
@@ -1947,10 +1927,8 @@ densityDivisor /= 1.2;
 
   lexmark_deinit_printer(nv, caps);
 
-  stp_dither_data_free(dt);
-
   if (doTestPrint == 0) {
-    stp_dither_free(dither);
+    stp_dither_free(nv);
   }
 
 
