@@ -2148,7 +2148,19 @@ canon_deinit_printer(const stp_vars_t v, canon_init_t *init)
   canon_cmd(v,ESC28,0x62,1,0);
   if (init->caps->features & CANON_CAP_a)
     canon_cmd(v,ESC28,0x61, 1, 0);
+}
+
+static int
+canon_end_job(const stp_printer_t printer,		/* I - Model */
+	      stp_image_t     *image,		/* I - Image to print */
+	      const stp_vars_t    v)
+{
+  if (!stp_get_verified(v))
+    return 0;
+  if (stp_get_job_mode(v) != STP_JOB_MODE_JOB)
+    return 0;
   canon_cmd(v,ESC40,0,0);
+  return 1;
 }
 
 /*
@@ -2800,7 +2812,7 @@ const stp_printfuncs_t stp_canon_printfuncs =
   canon_describe_resolution,
   stp_verify_printer_params,
   stp_start_job,
-  stp_end_job
+  canon_end_job
 };
 
 /*
