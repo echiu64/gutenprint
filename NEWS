@@ -1,6 +1,6 @@
-Gimp-Print 4.3.24, released November 21, 2003, is a development
-release of this package.  Like all development releases, this version
-is considered unstable and should only be used by those individuals
+Gimp-Print 4.3.25, released December 2, 2003, is a development release
+of this package.  Like all development releases, this version is
+considered unstable and should only be used by those individuals
 tolerant of the likelihood of problems.  Individuals desiring a stable
 release of Gimp-Print should use the latest 4.2 release.
 
@@ -42,6 +42,25 @@ after the release of this package.
 
 Please read the README file for full instructions on installing this
 package.
+
+Gimp-Print 4.3.25 contains the following major changes over Gimp-Print
+4.3.24:
+
+1) The module loader and XML subsystems no longer use built-in paths
+   if the user has specified STP_MODULE_PATH and STP_DATA_PATH
+   respectively.
+
+2) CD's now print correctly at 1440x1440 DPI on the Epson Stylus Photo
+   2100/2200.
+
+3) Performance of the color and dither code has been improved
+   somewhat.
+
+4) The definitions for the Epson Stylus CX-6300 and CX-6400 have been
+   fixed.
+
+5) The resolution and weave settings have been reorganized.
+
 
 Gimp-Print 4.3.24 contains the following major changes over Gimp-Print
 4.3.23:
