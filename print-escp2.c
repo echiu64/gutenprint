@@ -160,6 +160,361 @@ typedef struct escp2_densities
   double d_1440_2880;
 } escp2_densities_t;
 
+typedef struct escp2_variable_ink
+{
+  simple_dither_range_t *range;
+  int count;
+  double density;
+} escp2_variable_ink_t;
+
+typedef struct escp2_variable_inkset
+{
+  escp2_variable_ink_t *c;
+  escp2_variable_ink_t *m;
+  escp2_variable_ink_t *y;
+  escp2_variable_ink_t *k;
+} escp2_variable_inkset_t;
+
+typedef struct escp2_variable_inklist
+{
+  escp2_variable_inkset_t *s_360_4;
+  escp2_variable_inkset_t *s_720_4;
+  escp2_variable_inkset_t *s_1440_4;
+  escp2_variable_inkset_t *s_360_6;
+  escp2_variable_inkset_t *s_720_6;
+  escp2_variable_inkset_t *s_1440_6;
+  escp2_variable_inkset_t *v_360_4;
+  escp2_variable_inkset_t *v_720_4;
+  escp2_variable_inkset_t *v_1440_4;
+  escp2_variable_inkset_t *v_360_6;
+  escp2_variable_inkset_t *v_720_6;
+  escp2_variable_inkset_t *v_1440_6;
+} escp2_variable_inklist_t;
+
+static simple_dither_range_t photo_dither_ranges[] =
+{
+  { 0.33, 0x1, 0, 1 },
+  { 1.0,  0x1, 1, 1 }
+};
+
+static escp2_variable_ink_t photo_ink =
+{
+  photo_dither_ranges,
+  sizeof(photo_dither_ranges) / sizeof(simple_dither_range_t),
+  .75
+};
+
+
+static simple_dither_range_t photo_6pl_dither_ranges[] =
+{
+  { 0.15,  0x1, 0, 1 },
+  { 0.227, 0x2, 0, 2 },
+/*  { 0.333, 0x3, 0, 3 }, */
+  { 0.45,  0x1, 1, 1 },
+  { 0.68,  0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static escp2_variable_ink_t photo_6pl_ink =
+{
+  photo_6pl_dither_ranges,
+  sizeof(photo_6pl_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static simple_dither_range_t photo_4pl_dither_ranges[] =
+{
+  { 0.15,  0x1, 0, 1 },
+  { 0.227, 0x2, 0, 2 },
+/*  { 0.333, 0x3, 0, 3 }, */
+  { 0.45,  0x1, 1, 1 },
+  { 0.68,  0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static escp2_variable_ink_t photo_4pl_ink =
+{
+  photo_4pl_dither_ranges,
+  sizeof(photo_4pl_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static simple_dither_range_t standard_6pl_dither_ranges[] =
+{
+  { 0.45,  0x1, 1, 1 },
+  { 0.68,  0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static escp2_variable_ink_t standard_6pl_ink =
+{
+  standard_6pl_dither_ranges,
+  sizeof(standard_6pl_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static simple_dither_range_t standard_4pl_dither_ranges[] =
+{
+  { 0.45,  0x1, 1, 1 },
+  { 0.68,  0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static escp2_variable_ink_t standard_4pl_ink =
+{
+  standard_4pl_dither_ranges,
+  sizeof(standard_4pl_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static simple_dither_range_t standard_3pl_dither_ranges[] =
+{
+  { 0.45,  0x1, 1, 1 },
+  { 0.68,  0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static escp2_variable_ink_t standard_3pl_ink =
+{
+  standard_3pl_dither_ranges,
+  sizeof(standard_3pl_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static simple_dither_range_t photo_multishot_dither_ranges[] =
+{
+  { 0.1097, 0x1, 0, 1 },
+  { 0.227,  0x2, 0, 2 },
+/*  { 0.333, 0x3, 0, 3 }, */
+  { 0.28,   0x1, 1, 1 },
+  { 0.58,   0x2, 1, 2 },
+  { 0.85,   0x3, 1, 3 },
+  { 1.0,    0x3, 1, 3 }
+};
+
+static escp2_variable_ink_t photo_multishot_ink =
+{
+  photo_multishot_dither_ranges,
+  sizeof(photo_multishot_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static simple_dither_range_t standard_multishot_dither_ranges[] =
+{
+  { 0.28,  0x1, 1, 1 },
+  { 0.58,  0x2, 1, 2 },
+  { 0.85,  0x3, 1, 3 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static escp2_variable_ink_t standard_multishot_ink =
+{
+  standard_multishot_dither_ranges,
+  sizeof(standard_multishot_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+static simple_dither_range_t mis_sixtone_ranges[] =
+{
+  { 0.15, 0x01, 1, 1 },	/* LC */
+  { 0.25, 0x02, 1, 1 },	/* C */
+  { 0.45, 0x04, 1, 1 },	/* LM */
+  { 0.50, 0x08, 1, 1 },	/* Y */
+  { 0.75, 0x10, 1, 1 },	/* M */
+  { 1.00, 0x20, 1, 1 }	/* K */
+};
+
+static escp2_variable_inkset_t standard_inks =
+{
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};
+
+static escp2_variable_inkset_t photo_inks =
+{
+  &photo_ink,
+  &photo_ink,
+  NULL,
+  NULL
+};
+
+static escp2_variable_inkset_t escp2_6pl_standard_inks =
+{
+  &standard_6pl_ink,
+  &standard_6pl_ink,
+  &standard_6pl_ink,
+  &standard_6pl_ink
+};
+
+static escp2_variable_inkset_t escp2_6pl_photo_inks =
+{
+  &photo_6pl_ink,
+  &photo_6pl_ink,
+  &standard_6pl_ink,
+  &standard_6pl_ink
+};
+
+static escp2_variable_inkset_t escp2_4pl_standard_inks =
+{
+  &standard_4pl_ink,
+  &standard_4pl_ink,
+  &standard_4pl_ink,
+  &standard_4pl_ink
+};
+
+static escp2_variable_inkset_t escp2_4pl_photo_inks =
+{
+  &photo_4pl_ink,
+  &photo_4pl_ink,
+  &standard_4pl_ink,
+  &standard_4pl_ink
+};
+
+static escp2_variable_inkset_t escp2_3pl_standard_inks =
+{
+  &standard_3pl_ink,
+  &standard_3pl_ink,
+  &standard_3pl_ink,
+  &standard_3pl_ink
+};
+
+static escp2_variable_inkset_t escp2_multishot_standard_inks =
+{
+  &standard_multishot_ink,
+  &standard_multishot_ink,
+  &standard_multishot_ink,
+  &standard_multishot_ink
+};
+
+static escp2_variable_inkset_t escp2_multishot_photo_inks =
+{
+  &photo_multishot_ink,
+  &photo_multishot_ink,
+  &standard_multishot_ink,
+  &standard_multishot_ink
+};
+
+static escp2_variable_inklist_t simple_4color_inks =
+{
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};
+
+static escp2_variable_inklist_t simple_6color_inks =
+{
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};
+
+static escp2_variable_inklist_t variable_6pl_4color_inks =
+{
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  NULL,
+  NULL,
+  NULL,
+  &escp2_multishot_standard_inks,
+  &escp2_6pl_standard_inks,
+  &escp2_6pl_standard_inks,
+  NULL,
+  NULL,
+  NULL
+};
+
+static escp2_variable_inklist_t variable_6pl_6color_inks =
+{
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  &escp2_multishot_standard_inks,
+  &escp2_6pl_standard_inks,
+  &escp2_6pl_standard_inks,
+  &escp2_multishot_photo_inks,
+  &escp2_6pl_photo_inks,
+  &escp2_6pl_photo_inks
+};
+
+static escp2_variable_inklist_t variable_3pl_inks =
+{
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  NULL,
+  NULL,
+  NULL,
+  &escp2_multishot_standard_inks,
+  &escp2_3pl_standard_inks,
+  &escp2_3pl_standard_inks,
+  NULL,
+  NULL,
+  NULL
+};
+
+static escp2_variable_inklist_t variable_4pl_4color_inks =
+{
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  NULL,
+  NULL,
+  NULL,
+  &escp2_multishot_standard_inks,
+  &escp2_4pl_standard_inks,
+  &escp2_4pl_standard_inks,
+  NULL,
+  NULL,
+  NULL
+};
+
+static escp2_variable_inklist_t variable_4pl_6color_inks =
+{
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  &escp2_multishot_standard_inks,
+  &escp2_4pl_standard_inks,
+  &escp2_4pl_standard_inks,
+  &escp2_multishot_photo_inks,
+  &escp2_4pl_photo_inks,
+  &escp2_4pl_photo_inks
+};
+
+
 typedef struct escp2_printer
 {
   model_cap_t	flags;		/* Bitmask of flags, see below */
@@ -180,6 +535,7 @@ typedef struct escp2_printer
 				/* spacing arguments in softweave mode */
   escp2_dot_size_t dot_sizes;	/* Vector of dot sizes for resolutions */
   escp2_densities_t densities;	/* List of densities for each printer */
+  escp2_variable_inklist_t *inks; /* Choices of inks for this printer */
 } escp2_printer_t;
 
 #define MODEL_INIT_MASK		0xf
@@ -241,7 +597,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     1, 1, 1, 720, INCH(17 / 2), INCH(14), 14, 14, 9, 49, 1, 0,
     { -1, 1, -1, 1, -1, -1, -1 },
-    { 1, 1, 1, .568, 0, 0, 0, 0, 0 }
+    { 1, 1, 1, .568, 0, 0, 0, 0, 0 },
+    &simple_4color_inks
   },
   /* 1: Stylus Color Pro/Pro XL/400/500 */
   {
@@ -251,7 +608,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 48, 720, INCH(17 / 2), INCH(14), 14, 14, 0, 24, 1, 0,
     { -1, 1, -1, 1, -1, -1, -1 },
-    { 1, 1, 1, .631, 0, 0, 0, 0, 0 }
+    { 1, 1, 1, .631, 0, 0, 0, 0, 0 },
+    &simple_4color_inks
   },
   /* 2: Stylus Color 1500 */
   {
@@ -261,7 +619,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     1, 1, 1, 720, INCH(11), INCH(17), 14, 14, 9, 49, 1, 0,
     { -1, 1, -1, 1, -1, -1, -1 },
-    { 1, 1, 1, .631, 0, 0, 0, 0, 0 }
+    { 1, 1, 1, .631, 0, 0, 0, 0, 0 },
+    &simple_4color_inks
   },
   /* 3: Stylus Color 600 */
   {
@@ -271,7 +630,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(17 / 2), INCH(14), 8, 9, 0, 24, 1, 0,
     { -1, 2, -1, 2, 0, 2, 0 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 }
+    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    &simple_4color_inks
   },
   /* 4: Stylus Color 800 */
   {
@@ -281,7 +641,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 720, INCH(17 / 2), INCH(14), 8, 9, 0, 24, 1, 4,
     { -1, 2, -1, 2, 0, 2, 0 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 }
+    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    &simple_4color_inks
   },
   /* 5: Stylus Color 850 */
   {
@@ -291,7 +652,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     64, 4, 128, 720, INCH(17 / 2), INCH(14), 8, 9, 24, 24, 1, 4,
     { -1, 2, -1, 0, 0, -1, 0 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 }
+    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    &simple_4color_inks
   },
   /* 6: Stylus Color 1520 */
   {
@@ -301,7 +663,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     1, 1, 128, 720, INCH(17), INCH(55), 8, 9, 9, 49, 4, 0,
     { -1, 2, -1, 2, -1, 2, -1 },
-    { 1, 1, 1, .646, 0, .646, 0, 0, 0 }
+    { 1, 1, 1, .646, 0, .646, 0, 0, 0 },
+    &simple_4color_inks
   },
 
   /* SECOND GENERATION PRINTERS */
@@ -313,7 +676,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 24, 1, 0,
     { -1, 3, -1, -1, 1, -1, 1 },
-    { 1, 1, 1, .775, .775, .387, .387, .193, .0966 }
+    { 1, 1, 1, .775, .775, .387, .387, .193, .0966 },
+    &simple_6color_inks
   },
   /* 8: Stylus Photo EX */
   {
@@ -322,8 +686,9 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(11), INCH(17), 9, 9, 0, 24, 1, 0,
-    { 3, 3, -1, -1, 1, -1, 1 },
-    { 1, 1, 1, .775, .775, .387, .387, .193, .0966 }
+    { -1, 3, -1, -1, 1, -1, 1 },
+    { 1, 1, 1, .775, .775, .387, .387, .193, .0966 },
+    &simple_6color_inks
   },
   /* 9: Stylus Photo */
   {
@@ -332,8 +697,9 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 24, 1, 0,
-    { 3, 3, -1, -1, 0, -1, -1 },
-    { 1, 1, 1, .646, .646, 0, 0, 0, 0 }
+    { -1, 3, -1, -1, 0, -1, -1 },
+    { 1, 1, 1, .646, .646, 0, 0, 0, 0 },
+    &simple_6color_inks
   },
 
   /* THIRD GENERATION PRINTERS */
@@ -348,7 +714,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     21, 8, 64, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 3, 3, 1, 1, -1, -1 },
-    { 1, 1, 1, .900, .900, 0, 0, 0, 0 }
+    { 1, 1, 1, .900, .900, 0, 0, 0, 0 },
+    &simple_4color_inks
   },
   /* 11: Stylus Color 640 */
   {
@@ -358,7 +725,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 64, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 3, 3, 1, 1, 1, 1 },
-    { 1, 1, 1, .900, .900, .45, .45, .225, .113 }
+    { 1, 1, 1, .900, .900, .45, .45, .225, .113 },
+    &simple_4color_inks
   },
   /* 12: Stylus Color 740 */
   {
@@ -368,11 +736,11 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 144, 360, INCH(11), INCH(17), 9, 9, 0, 9, 1, 0,
     { -1, 3, 0x11, 3, 0x10, 3, 0x10 },
-    { 1, 1, 1, .646, 1.0, .323, .533, .2665, .1333 }
+    { 1, 1, 1, .646, .710, .323, .365, .1825, .0913 },
+    &variable_6pl_4color_inks
   },
   /* 13: Stylus Color 900 */
-  /* Dale Pontius thinks the spacing is 3 jets??? */
-  /* No, Eric Sharkey verified that it's 2! */
+  /* Still need to figure out density for 3 pl drops! */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
@@ -380,7 +748,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     96, 2, 192, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 1, 0x11, 1, 0x10, 1, 0x10 },
-    { 1, 1, 1, .646, 1.0, .323, .533, .2665, .1333 }
+    { 1, 1, 1, .646, .710, .323, .365, .1825, .0913 },
+    &variable_3pl_inks
   },
   /* 14: Stylus Photo 750 */
   {
@@ -390,7 +759,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 48, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 2, 0x11, 4, 0x10, -1, 0x10 },
-    { 1, 1, 1, .646, 1.0, .323, .533, .2665, .1333 }
+    { 1, 1, 1, .646, .710, .323, .365, .1825, .0913 },
+    &variable_6pl_6color_inks
   },
   /* 15: Stylus Photo 1200 */
   {
@@ -400,7 +770,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     48, 6, 48, 360, INCH(13), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 2, 0x11, 4, 0x10, -1, 0x10 },
-    { 1, 1, 1, .646, 1.0, .323, .533, .2665, .1333 }
+    { 1, 1, 1, .646, .710, .323, .365, .1825, .0913 },
+    &variable_6pl_6color_inks
   },
   /* 16: Stylus Color 860 */
   {
@@ -410,7 +781,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 144, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 0, 0x12, 0, 0x11, -1, 0x10 },
-    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 }
+    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 },
+    &variable_4pl_4color_inks
   },
   /* 17: Stylus Color 1160 */
   {
@@ -420,7 +792,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 144, 360, INCH(13), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 0, 0x12, 0, 0x11, -1, 0x10 },
-    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 }
+    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 },
+    &variable_4pl_4color_inks
   },
   /* 18: Stylus Color 660 */
   {
@@ -430,7 +803,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 64, 720, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 8,
     { -1, 3, 3, 3, 0, 3, 0 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 }
+    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    &simple_4color_inks
   },
   /* 19: Stylus Color 760 */
   {
@@ -440,7 +814,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 144, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 0, 0x12, 0, 0x11, -1, 0x10 },
-    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 }
+    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 },
+    &variable_4pl_4color_inks
   },
   /* 20: Stylus Photo 720 (Australia) */
   {
@@ -450,7 +825,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 48, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 2, 0x11, 4, 0x10, -1, 0x10 },
-    { 1, 1, 1, .646, 1.0, .323, .533, .2665, .1333 }
+    { 1, 1, 1, .646, .710, .323, .365, .1825, .0913 },
+    &variable_6pl_6color_inks
   },
   /* 21: Stylus Color 480 */
   {
@@ -460,7 +836,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     15, 8, 48, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 3, 0x11, 3, 0x10, -1, -1 },
-    { 1, 1, 1, .646, 1.0, .323, .533, .2665, .1333 }
+    { 1, 1, 1, .646, .710, .323, .365, .1825, .0913 },
+    &variable_6pl_4color_inks
   },
   /* 22: Stylus Photo 870 */
   {
@@ -470,7 +847,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
     48, 6, 48, 360, INCH(17 / 2), INCH(44), 0, 0, 0, 9, 1, 0,
     { -1, 4, 0x12, 2, 0x11, -1, 0x10 },
-    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 }
+    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 },
+    &variable_4pl_6color_inks
   },
   /* 23: Stylus Photo 1270 */
   {
@@ -480,7 +858,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
     48, 6, 48, 360, INCH(13), INCH(44), 0, 0, 0, 9, 1, 0,
     { -1, 4, 0x12, 2, 0x11, -1, 0x10 },
-    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 }
+    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 },
+    &variable_4pl_6color_inks
   },
   /* 24: Stylus Color 3000 */
   {
@@ -490,7 +869,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     1, 1, 128, 720, INCH(17), INCH(55), 8, 9, 9, 49, 4, 0,
     { -1, 2, 2, 2, -1, 2, -1 },
-    { 1, 1, 1, .646, 0, .646, 0, 0, 0 }
+    { 1, 1, 1, .646, 0, .646, 0, 0, 0 },
+    &simple_4color_inks
   },
   /* 25: Stylus Color 670 */
   {
@@ -500,7 +880,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 8, 144, 720, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 8,
     { -1, 3, 0x12, 3, 0x11, -1, 0x10 },
-    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 }
+    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 },
+    &variable_4pl_4color_inks
   },
   /* 26: Stylus Pro 5000 */
   {
@@ -510,7 +891,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 360, INCH(13), INCH(1200), 9, 9, 0, 9, 1, 0,
     { -1, 2, 2, 4, 0, 4, 0 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 }
+    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    &simple_6color_inks
   },
   /* 27: Stylus Pro 7000 */
   {
@@ -520,7 +902,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 360, INCH(24), INCH(1200), 9, 9, 0, 9, 1, 0,
     { -1, 2, 2, 4, 0, 4, 0 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 }
+    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    &simple_6color_inks
   },
   /* 28: Stylus Pro 7500 */
   {
@@ -530,7 +913,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 360, INCH(24), INCH(1200), 9, 9, 0, 9, 1, 0,
     { -1, 2, 2, 4, 0, 4, 0 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 }
+    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    &simple_6color_inks
   },
   /* 29: Stylus Pro 9000 */
   {
@@ -540,7 +924,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 360, INCH(44), INCH(1200), 9, 9, 0, 9, 1, 0,
     { -1, 2, 2, 4, 0, 4, 0 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 }
+    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    &simple_6color_inks
   },
   /* 30: Stylus Pro 9500 */
   {
@@ -550,7 +935,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 360, INCH(44), INCH(1200), 9, 9, 0, 9, 1, 0,
     { -1, 2, 2, 4, 0, 4, 0 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 }
+    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    &simple_6color_inks
   },
 
 };
@@ -574,52 +960,6 @@ typedef struct escp_init
   int bits;
   const char *paper_type;
 } escp_init_t;
-
-static simple_dither_range_t variable_dither_ranges[] =
-{
-  { 0.15,  0x1, 0, 1 },
-  { 0.227, 0x2, 0, 2 },
-/*  { 0.333, 0x3, 0, 3 }, */
-  { 0.45,  0x1, 1, 1 },
-  { 0.68,  0x2, 1, 2 },
-  { 1.0,   0x3, 1, 3 }
-};
-
-static simple_dither_range_t standard_dither_ranges[] =
-{
-  { 0.45,  0x1, 1, 1 },
-  { 0.68,  0x2, 1, 2 },
-  { 1.0,   0x3, 1, 3 }
-};
-
-static simple_dither_range_t multishot_variable_dither_ranges[] =
-{
-  { 0.1097, 0x1, 0, 1 },
-  { 0.227,  0x2, 0, 2 },
-/*  { 0.333, 0x3, 0, 3 }, */
-  { 0.28,   0x1, 1, 1 },
-  { 0.58,   0x2, 1, 2 },
-  { 0.85,   0x3, 1, 3 },
-  { 1.0,    0x3, 1, 3 }
-};
-
-static simple_dither_range_t multishot_standard_dither_ranges[] =
-{
-  { 0.28,  0x1, 1, 1 },
-  { 0.58,  0x2, 1, 2 },
-  { 0.85,  0x3, 1, 3 },
-  { 1.0,   0x3, 1, 3 }
-};
-
-static simple_dither_range_t mis_sixtone_ranges[] =
-{
-  { 0.15, 0x01, 1, 1 },	/* LC */
-  { 0.25, 0x02, 1, 1 },	/* C */
-  { 0.45, 0x04, 1, 1 },	/* LM */
-  { 0.50, 0x08, 1, 1 },	/* Y */
-  { 0.75, 0x10, 1, 1 },	/* M */
-  { 1.00, 0x20, 1, 1 }	/* K */
-};
 
 typedef struct {
   const char name[65];
@@ -655,12 +995,6 @@ typedef struct {
   simple_dither_range_t *standard_dither;
   simple_dither_range_t *photo_dither;
 } ink_t;
-
-static const ink_t escp2_inklist[] = {
-  { "Variable Dot Size", 1, 1, 2, standard_dither_ranges, variable_dither_ranges },
-  { "Single Dot Size", 1, 1, 1, NULL, NULL },
-  { "MIS Six Tone Monochrome", 0, 0, 1, NULL, mis_sixtone_ranges }
-};
 
 typedef struct {
   const char name[65];
@@ -827,7 +1161,78 @@ escp2_density(int model, int xdpi, int ydpi, int microweave)
     }
   return 0;
 }
-	
+
+static escp2_variable_inkset_t *
+escp2_inks(int model, int xdpi, int colors, int bits)
+{
+  escp2_variable_inklist_t *inks = model_capabilities[model].inks;
+  switch (bits)
+    {
+    case 1:
+      switch (colors)
+	{
+	case 1:
+	case 4:
+	  switch (xdpi)
+	    {
+	    case 360:
+	      return inks->s_360_4;
+	      break;
+	    case 720:
+	      return inks->s_720_4;
+	      break;
+	    case 1440:
+	      return inks->s_1440_4;
+	      break;
+	    }
+	case 6:
+	  switch (xdpi)
+	    {
+	    case 360:
+	      return inks->s_360_6;
+	      break;
+	    case 720:
+	      return inks->s_720_6;
+	      break;
+	    case 1440:
+	      return inks->s_1440_6;
+	      break;
+	    }
+	}
+    case 2:
+      switch (colors)
+	{
+	case 1:
+	case 4:
+	  switch (xdpi)
+	    {
+	    case 360:
+	      return inks->v_360_4;
+	      break;
+	    case 720:
+	      return inks->v_720_4;
+	      break;
+	    case 1440:
+	      return inks->v_1440_4;
+	      break;
+	    }
+	case 6:
+	  switch (xdpi)
+	    {
+	    case 360:
+	      return inks->v_360_6;
+	      break;
+	    case 720:
+	      return inks->v_720_6;
+	      break;
+	    case 1440:
+	      return inks->v_1440_6;
+	      break;
+	    }
+	}
+    }
+  return NULL;
+}
 
 static unsigned
 escp2_max_paper_width(int model)
@@ -1310,6 +1715,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   int		ink_spread;
   vars_t	nv;
   escp_init_t	init;
+  escp2_variable_inkset_t *inks;
 
   memcpy(&nv, v, sizeof(vars_t));
 
@@ -1545,70 +1951,28 @@ escp2_print(const printer_t *printer,		/* I - Model */
     }  
   else
     dither_set_adaptive_divisor(dither, 4);
+
+  inks = escp2_inks(model, xdpi, use_6color ? 6 : 4, bits);
+  if (inks->c)
+    dither_set_c_ranges(dither, inks->c->count, inks->c->range,
+			inks->c->density * nv.density);
+  if (inks->m)
+    dither_set_m_ranges(dither, inks->m->count, inks->m->range,
+			inks->m->density * nv.density);
+  if (inks->y)
+    dither_set_y_ranges(dither, inks->y->count, inks->y->range,
+			inks->y->density * nv.density);
+  if (inks->k)
+    dither_set_k_ranges(dither, inks->k->count, inks->k->range,
+			inks->k->density * nv.density);
+
   if (bits == 2)
     {
-      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_MULTI)
-	  && escp2_ink_type(model, xdpi, !use_softweave) == 0x12)
-	{
-	  int dsize6 = (sizeof(multishot_variable_dither_ranges) /
-			sizeof(simple_dither_range_t));
-	  int dsize4 = (sizeof(multishot_standard_dither_ranges) /
-			sizeof(simple_dither_range_t));
-	  dither_set_y_ranges(dither, dsize4, multishot_standard_dither_ranges,
-			      nv.density);
-	  dither_set_k_ranges(dither, dsize4, multishot_standard_dither_ranges,
-			      nv.density);
-	  if (use_6color)
-	    {
-	      dither_set_transition(dither, .7);
-	      dither_set_c_ranges(dither, dsize6,
-				  multishot_variable_dither_ranges,
-				  nv.density);
-	      dither_set_m_ranges(dither, dsize6,
-				  multishot_variable_dither_ranges,
-				  nv.density);
-	    }
-	  else
-	    {
-	      dither_set_transition(dither, .5);
-	      dither_set_c_ranges(dither, dsize4,
-				  multishot_standard_dither_ranges,
-				  nv.density);
-	      dither_set_m_ranges(dither, dsize4,
-				  multishot_standard_dither_ranges,
-				  nv.density);
-	    }
-	}
+      if (use_6color)
+	dither_set_transition(dither, .7);
       else
-	{
-	  int dsize6 = (sizeof(variable_dither_ranges) /
-			sizeof(simple_dither_range_t));
-	  int dsize4 = (sizeof(standard_dither_ranges) /
-			sizeof(simple_dither_range_t));
-	  dither_set_y_ranges(dither, dsize4, standard_dither_ranges,
-			      nv.density);
-	  dither_set_k_ranges(dither, dsize4, standard_dither_ranges,
-			      nv.density);
-	  if (use_6color)
-	    {
-	      dither_set_transition(dither, .7);
-	      dither_set_c_ranges(dither, dsize6, variable_dither_ranges,
-				  nv.density);
-	      dither_set_m_ranges(dither, dsize6, variable_dither_ranges,
-				  nv.density);
-	    }
-	  else
-	    {
-	      dither_set_transition(dither, .5);
-	      dither_set_c_ranges(dither, dsize4, standard_dither_ranges,
-				  nv.density);
-	      dither_set_m_ranges(dither, dsize4, standard_dither_ranges,
-				  nv.density);
-	    }
-	}
+	dither_set_transition(dither, .5);
     }
-  else if (use_6color)
-    dither_set_light_inks(dither, .33, .33, 0.0, nv.density * .75);
   if (!strcmp(nv.dither_algorithm, "Ordered"))
     dither_set_transition(dither, 1);
 
