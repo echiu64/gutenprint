@@ -2045,6 +2045,7 @@ typedef struct
 typedef struct
 {
   int undersample;
+  int initial_vertical_offset;
 } escp2_privdata_t;
 
 static const res_t escp2_reslist[] =
@@ -2448,6 +2449,7 @@ typedef struct escp2_init
   int bits;
   int unidirectional;
   int resid;
+  int initial_vertical_offset;
   const char *paper_type;
   const char *media_source;
   stp_vars_t v;
@@ -3011,6 +3013,17 @@ static void
 escp2_set_remote_sequence(const escp2_init_t *init)
 {
   /* Magic remote mode commands, whatever they do */
+  
+#if 0
+  stp_zprintf(init->v, "\033(R%c%c%c%s", 1 + strlen(PACKAGE), 0, 0, PACKAGE);
+  stp_zprintf(init->v, "\033%c%c%c", 0, 0, 0);
+  stp_zprintf(init->v, "\033(R%c%c%c%s", 1 + strlen(VERSION), 0, 0, VERSION);
+  stp_zprintf(init->v, "\033%c%c%c", 0, 0, 0);
+  stp_zprintf(init->v, "\033(R%c%c%c%s", 1 + strlen(stp_get_driver(init->v)),
+	      0, 0, stp_get_driver(init->v));
+  stp_zprintf(init->v, "\033%c%c%c", 0, 0, 0);
+  stp_puts("\033@", init->v);
+#endif
   if (escp2_has_advanced_command_set(init->model, init->v))
     {
       int feed_sequence = 0;
@@ -3150,6 +3163,7 @@ escp2_set_margins(const escp2_init_t *init)
   int l = init->ydpi * (init->page_height - init->page_bottom) / 72;
   int t = init->ydpi * (init->page_height - init->page_top) / 72;
 
+  t += init->initial_vertical_offset;
   if (escp2_has_cap(init->model, MODEL_COMMAND, MODEL_COMMAND_PRO, init->v) ||
       (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT,
 		       MODEL_VARIABLE_NORMAL, init->v)) &&
@@ -3375,6 +3389,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     }
 
   privdata.undersample = 1;
+  privdata.initial_vertical_offset = 0;
   stp_set_driver_data(nv, &privdata);
 
   separation_rows = escp2_separation_rows(model, nv);
@@ -3514,11 +3529,6 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	  max_head_offset = head_offset[i];
       }
 
-  /*
-   * Factor of 2 divisor determined by Jason Pearce.  Need to understand
-   * why theoretically.
-   */
-  top += max_head_offset * nozzle_separation * (72 / 2) / ydpi;
 
  /*
   * Let the user know what we're doing...
@@ -3543,6 +3553,8 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   init.page_height = page_true_height;
   init.page_width = page_width;
   init.page_top = page_top;
+  init.initial_vertical_offset =
+    -max_head_offset * nozzle_separation * 72 / ydpi;
 
    /* adjust bottom margin for a 480 like head configuration */
   init.page_bottom = page_bottom - max_head_offset * 72 / ydpi;
@@ -3830,8 +3842,8 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 {
   int j;
   const stp_vars_t v = (sw->v);
-  const escp2_privdata_t *pd =
-    (const escp2_privdata_t *) stp_get_driver_data(v);
+  escp2_privdata_t *pd =
+    (escp2_privdata_t *) stp_get_driver_data(v);
   stp_lineoff_t *lineoffs = stp_get_lineoffsets_by_pass(sw, passno);
   stp_lineactive_t *lineactive = stp_get_lineactive_by_pass(sw, passno);
   const stp_linebufs_t *bufs = stp_get_linebases_by_pass(sw, passno);
@@ -3855,12 +3867,16 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	  /*
 	   * Set vertical position
 	   */
-	  if (pass->logicalpassstart > sw->last_pass_offset)
+	  if (pass->logicalpassstart > sw->last_pass_offset ||
+	      pd->initial_vertical_offset != 0)
 	    {
-	      int a0 = advance         % 256;
-	      int a1 = (advance >> 8)  % 256;
-	      int a2 = (advance >> 16) % 256;
-	      int a3 = (advance >> 24) % 256;
+	      int a0, a1, a2, a3;
+	      advance += pd->initial_vertical_offset;
+	      pd->initial_vertical_offset = 0;
+	      a0 = advance         & 0xff;
+	      a1 = (advance >> 8)  & 0xff;
+	      a2 = (advance >> 16) & 0xff;
+	      a3 = (advance >> 24) & 0xff;
 	      if (!escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO, v) &&
 		  (sw->jets == 1 || escp2_has_cap(model, MODEL_VARIABLE_DOT,
 						  MODEL_VARIABLE_NORMAL, v)))
