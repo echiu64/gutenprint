@@ -142,6 +142,14 @@ stpui_printer_initialize(stpui_plist_t *printer)
   printer->invalid_mask = INVALID_TOP | INVALID_LEFT;
 }
 
+static void
+stpui_plist_destroy(stpui_plist_t *printer)
+{
+  SAFE_FREE(printer->name);
+  SAFE_FREE(printer->output_to);
+  stp_vars_free(printer->v);
+}
+
 void
 stpui_plist_copy(stpui_plist_t *vd, const stpui_plist_t *vs)
 {
@@ -700,7 +708,7 @@ stpui_printrc_load_v2(FILE *fp)
 					   STP_PARAMETER_ACTIVE))
 	    stp_set_boolean_parameter(stpui_plist[i].v, "PageSizeExtended", 0);
 	}
-					   
+      SAFE_FREE(stpui_printrc_current_printer);
     }
 }
 
@@ -938,7 +946,7 @@ stpui_get_system_printers(void)
 
   check_plist(1);
   stpui_plist_count = 1;
-  stpui_plist[0].name = g_strdup(_("File"));
+  stpui_plist_set_name(&(stpui_plist[0]), _("File"));
   stpui_plist[0].active = 1;
   stp_set_driver(stpui_plist[0].v, "ps2");
   stp_set_output_type(stpui_plist[0].v, OUTPUT_COLOR);
@@ -1329,8 +1337,8 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
       stp_set_errdata(np->v, stpui_get_errdata());
       if (stp_print(np->v, image) != 1)
 	{
-	  stp_vars_free(np->v);
-	  free(np);
+	  stpui_plist_destroy(np);
+	  g_free(np);
 	  return 0;
 	}
 
@@ -1347,8 +1355,8 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
 	  char buf[8];
 	  (void) read(syncfd[0], buf, 8);
 	}
-      stp_vars_free(np->v);
-      free(np);
+      stpui_plist_destroy(np);
+      g_free(np);
       return 1;
     }
   return 0;

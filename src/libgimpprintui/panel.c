@@ -3045,6 +3045,22 @@ new_printer_ok_callback (void)
   gtk_widget_hide (new_printer_dialog);
 }
 
+static void
+pop_ppd_box(void)
+{
+  const stp_vars_t v = stp_printer_get_defaults(tmp_printer);
+  if (stp_parameter_find_in_settings(v, "PPDFile")) 
+    {
+      gtk_widget_show (ppd_label);
+      gtk_widget_show (ppd_box);
+    } 
+  else
+    {
+      gtk_widget_hide (ppd_label);
+      gtk_widget_hide (ppd_box);
+    }
+}
+
 /*
  *  print_driver_callback() - Update the current printer driver.
  */
@@ -3065,15 +3081,7 @@ print_driver_callback (GtkWidget      *widget, /* I - Driver list */
   data = gtk_clist_get_row_data (GTK_CLIST (widget), row);
   tmp_printer = stp_get_printer_by_index ((gint) data);
 
-  { const stp_vars_t v = stp_printer_get_defaults(tmp_printer);
-    if (stp_parameter_find_in_settings(v, "PPDFile")) {
-      gtk_widget_show (ppd_label);
-      gtk_widget_show (ppd_box);
-    } else {
-      gtk_widget_hide (ppd_label);
-      gtk_widget_hide (ppd_box);
-    }
-  }
+  pop_ppd_box();
   calling_print_driver_callback--;
 }
 
