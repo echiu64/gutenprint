@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.100  2000/02/29 00:39:25  rlk
+ *   Improve printing to the bottom, and do memory allocation the way intended
+ *
  *   Revision 1.99  2000/02/28 01:26:11  rlk
  *   Try to improve high resolution quality
  *
@@ -1050,7 +1053,7 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 	  fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
         if (ydpi > 360)
 	  {
-	    fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
+	    fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
 	    fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Microdots */
 	  }
 	else
@@ -1440,8 +1443,8 @@ escp2_print(int       model,		/* I - Model */
  /*
   * Send ESC/P2 initialization commands...
   */
-  page_length += (4 + (escp2_nozzles(model) - 1) *
-		  escp2_nozzle_separation(model)) / 5; /* Top and bottom */
+  page_length += (9 + (escp2_nozzles(model) * 2) *
+		  escp2_nozzle_separation(model)) / 10; /* Top and bottom */
   page_top = 0;
 
   escp2_init_printer(prn, model, output_type, ydpi, use_softweave,
@@ -2341,7 +2344,6 @@ typedef union {			/* Base pointers for each pass */
 } linebufs_t;
 
 typedef struct {
-  unsigned char *linebufs;	/* Actual data buffers */
   linebufs_t *linebases;	/* Base address of each row buffer */
   lineoff_t *lineoffsets;	/* Offsets within each row buffer */
   lineactive_t *lineactive;	/* Does this line have anything printed? */
@@ -2416,7 +2418,6 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses,
   int i;
   int k;
   escp2_softweave_t *sw = malloc(sizeof (escp2_softweave_t));
-  char *bufbase;
   if (jets <= 1)
     sw->separation = 1;
   if (sep <= 0)
@@ -2467,8 +2468,6 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses,
    */
 
   sw->horizontal_width = (linewidth + 128 + 7) * 129 / 128;
-  sw->linebufs = malloc(sw->ncolors * (sw->horizontal_width / 8) * sw->vmod *
-			jets * sw->oversample * sw->bitwidth);
   sw->lineoffsets = malloc(sw->vmod * sizeof(lineoff_t) * sw->oversample);
   sw->lineactive = malloc(sw->vmod * sizeof(lineactive_t) * sw->oversample);
   sw->linebases = malloc(sw->vmod * sizeof(linebufs_t) * sw->oversample);
@@ -2476,7 +2475,6 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses,
   sw->linecounts = malloc(sw->vmod * sizeof(int));
   sw->lineno = 0;
 
-  bufbase = sw->linebufs;
   for (i = 0; i < sw->vmod; i++)
     {
       int j;
@@ -2485,8 +2483,8 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses,
 	{
 	  for (j = 0; j < sw->ncolors; j++)
 	    {
-	      sw->linebases[k * sw->vmod + i].v[j] = bufbase;
-	      bufbase += (sw->horizontal_width / 8) * jets * sw->bitwidth;
+	      sw->linebases[k * sw->vmod + i].v[j] =
+		malloc(jets * sw->bitwidth * sw->horizontal_width / 8);
 	    }
 	}
     }
@@ -2496,13 +2494,23 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses,
 static void
 destroy_weave(void *vsw)
 {
+  int i, j, k;
   escp2_softweave_t *sw = (escp2_softweave_t *) vsw;
   free(sw->linecounts);
   free(sw->passes);
-  free(sw->linebases);
   free(sw->lineactive);
   free(sw->lineoffsets);
-  free(sw->linebufs);
+  for (i = 0; i < sw->vmod; i++)
+    {
+      for (k = 0; k < sw->oversample; k++)
+	{
+	  for (j = 0; j < sw->ncolors; j++)
+	    {
+	      free(sw->linebases[k * sw->vmod + i].v[j]);
+	    }
+	}
+    }
+  free(sw->linebases);
   free(vsw);
 }
 
