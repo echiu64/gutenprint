@@ -1522,47 +1522,50 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	  lb = d->k_lower;    /* Lower bound */
 	  
 	  /*
-	   * Calculate total ink amount over that of 100% of a single color.
+	   * Calculate total ink amount.
 	   * If there is a lot of ink, black gets added sooner. Saves ink
 	   * and with a lot of ink the black doesn't show as speckles.
-	   * Colors have equal weight now so it is primarily preventing too
-	   * much ink from being used.
 	   *
 	   * k already contains the grey contained in CMY.
+	   * First we find out if the color is darker than the K amount
+	   * suggests, and we look up where is value is between
+	   * lowerbound and density:
 	   */
 
-	  kdarkness = ((c + m + y) - d->density ) / 2;
+	  kdarkness = ((c*2 + m*2 +y ) - 2 * d->density )/3;
 	  if (kdarkness > k)
 	    ok = kdarkness;
 	  else
 	    ok = k;
-	    
-	   /* 
-	    * ok will be our index in determining how much of the black
-	    * available will be printed as CMY vs K. First we calculate where
-	    * it lies in the range between upper and lower bounds. We put
-	    * that in ks.
-	    */
-
-	  if ( ok > ub )
-	    ks = d->density;
-	  else if ( ok < lb )
-	    ks = 0;
-	  else
-	    ks = ( ok - lb ) * d->density / ( ub - lb );
-	    
 	  if ( ok > lb )
 	    kl = ( ok - lb ) * d->density / ( d->density - lb );
 	  else
 	    kl = 0;
+	    
+	   /*
+	    * We have a second value, ks, that will be the scaler.
+	    * ks is initially showing where the original black
+	    * amount is between upper and lower bounds:
+	    */
+
+	  if ( k > ub )
+	    ks = d->density;
+	  else if ( k < lb )
+	    ks = 0;
+	  else
+	    ks = ( k - lb ) * d->density / ( ub - lb );
+	    
 	/*
-	 * This function can be used instead of the one following    
+	 * ks is then processed by a second order function that produces
+	 * an S curve: 2ks - ks^2. This is then multiplied by the darkness
+	 * value in kl. If we think this is too complex the following line
+	 * can be tried instead:    
          * k = ks * kl / d->density;
 	 */
 	  k = (2*ks-ks*ks/d->density) * kl / d->density;
 	  ok = k;
 	  bk = k;
-
+ 
 	  if (k > 0)
 	    {
 	    /*
