@@ -426,17 +426,29 @@ typedef void (*stp_convert_t)(const stp_vars_t vars, const unsigned char *in,
 @cindex dither functions
 
 @deftypefun size_t stp_dither_algorithm_count (void)
-
+This function returns the total number of available dither algorithms.
 @end deftypefun
 
 @deftypefun {const char *} stp_dither_algorithm_name (int @var{id})
+This function is used to obtain a pointer to the name string of a
+given dither algorithm number @var{id}.  @var{id} must be less than
+the number returned by @code{stp_dither_algorithm_count}.  If @var{id}
+is out of the allowed range, @code{NULL} is returned.
+@end deftypefun
 
+@deftypefun {const char *} stp_dither_algorithm_text (int @var{id})
+This function is used to obtain a pointer to the long name string of a
+given dither algorithm number @var{id}.  The string is translated and
+encoded according to the current locale.  Otherwise, its behaviour is
+identical to @code{stp_dither_algorithm_name}.
 @end deftypefun
 
 @deftypefun {const char *} stp_default_dither_algorithm (void)
-
+This function returns a pointer to the name string of the default
+dither algorithm.
 @end deftypefun
 
+None of the pointers returned may be freed with @code{free}.
 
 
 @node Options functions, Paper functions, Dither functions, Functions
@@ -491,7 +503,8 @@ user.
 
 @deftypevr {Data type} {void *} stp_papersize_t
 This is an opaque data type, whose structure is not visible to the
-user.
+user.  It describes a papersize, with a short name, long name, width,
+height, and top, bottom, left and right edges.
 @end deftypevr
 
 @deftypevr {Data type} {} stp_papersize_unit_t
@@ -502,55 +515,74 @@ typedef enum papersize_unit
   PAPERSIZE_METRIC
 @} stp_papersize_unit_t;
 @end example
+This data type is used to select either English (Imperial) or metric
+units of measurement.
 @end deftypevr
 
 @deftypefun int stp_known_papersizes (void)
-
+This function returns the total number of available paper sizes.
 @end deftypefun
 
 @deftypefun {const stp_papersize_t} stp_get_papersize_by_name (const char *@var{name})
-
+This function returns the papersize with name @var{name}.  If
+@var{name} is @code{NULL} or nonexistant, then @code{NULL} is
+returned.
 @end deftypefun
 
 @deftypefun {const stp_papersize_t} stp_get_papersize_by_size (int @var{l}, int @var{w})
-
+This function returns the papersize with height @var{l} and width
+@var{w}.  If a matching papersize cannot be found, the nearest
+matching size will be returned, providing the difference between the
+requested and nearest papersizes does is less than 20 points (height
+difference plus width difference).  If a match cannot be made,
+@code{NULL} is returned.
 @end deftypefun
 
 @deftypefun {const stp_papersize_t} stp_get_papersize_by_index (int @var{index})
-
+This function returns the papersize of a given papersize number
+@var{index}.  @var{index} must be less than the number returned by
+@code{stp_known_papersizes}.  If @var{index} is out of the allowed
+range, @code{NULL} is returned.
 @end deftypefun
 
 @deftypefun {const char *} stp_papersize_get_name (const stp_papersize_t @var{pt})
+This function is used to obtain a pointer to the name string of a
+given papersize @var{pt}.
+@end deftypefun
 
+@deftypefun {const char *} stp_papersize_get_text (const stp_papersize_t @var{pt})
+This function is used to obtain a pointer to the long name string of a
+given papersize @var{pt}.  The string is translated and
+encoded according to the current locale.  Otherwise, its behaviour is
+identical to @code{stp_papersize_get_name}.
 @end deftypefun
 
 @deftypefun unsigned stp_papersize_get_width (const stp_papersize_t @var{pt})
-
+Get the width of papersize @var{pt}.
 @end deftypefun
 
 @deftypefun unsigned stp_papersize_get_height (const stp_papersize_t @var{pt})
-
+Get the height of papersize @var{pt}.
 @end deftypefun
 
 @deftypefun unsigned stp_papersize_get_top (const stp_papersize_t @var{pt})
-
+Get the top edge of papersize @var{pt}.
 @end deftypefun
 
 @deftypefun unsigned stp_papersize_get_left (const stp_papersize_t @var{pt})
-
+Get the width of papersize @var{pt}.
 @end deftypefun
 
 @deftypefun unsigned stp_papersize_get_bottom (const stp_papersize_t @var{pt})
-
+Get the bottom edge of papersize @var{pt}.
 @end deftypefun
 
 @deftypefun unsigned stp_papersize_get_right (const stp_papersize_t @var{pt})
-
+Get the right edge of papersize @var{pt}.
 @end deftypefun
 
-
 @deftypefun stp_papersize_unit_t stp_papersize_get_unit (const stp_papersize_t @var{pt})
-
+Get the measurement unit of papersize @var{pt}.
 @end deftypefun
 
 
@@ -712,12 +744,13 @@ created the image.
 @deftypefun {const char *} stp_check_version (unsigned int @var{required_major},
 unsigned int @var{required_minor}, unsigned int @var{required_micro})
 
-This function checks whether the version of libgimpprint that the program
-is linked with is equal to the version number passed to it. If the version
-is the same, the function returns @code{NULL}. If any of the version
-numbers do not match (i.e. the library version is too old or too new), a string containing a desription of the difference is
-returned. The first error found is returned. The function checks in the order
-major, minor, micro.
+This function checks whether the version of libgimpprint that the
+program is linked with is equal to the version number passed to it. If
+the version is the same, the function returns @code{NULL}. If any of
+the version numbers do not match (i.e. the library version is too old
+or too new), a string containing a desription of the difference is
+returned. The first error found is returned. The function checks in
+the order major, minor, micro.
 @end deftypefun
 
 @subsection Version macros
