@@ -303,11 +303,16 @@ This is a list of all remote commands we have seen:
 
    * CH BC=2 00 00                   perform a head cleaning cycle
 
-   * DT BC=3 00 00 00                print an alignment pattern
+   * DT BC=3 00 xx 00                print an alignment pattern.
+				     There are three patterns, which
+				     are picked via the choice of xx.
+				     Pattern 0 is coarse, pattern 1 is
+				     medium, and pattern 2 is fine.
 
-   * DA BC=4 00 00 00 xx             results of alignment pattern was that
-                                     group xx (binary) was the one that
-                                     was closest to aligned
+   * DA BC=4 00 xx 00 yy             results of alignment pattern was that
+                                     group yy was the one that was
+				     closest to aligned.  xx refers to
+				     the choice of pattern, from above.
 
    * SV BC=0                         This one is used when you say "finished"
                                      to a series of alignment checks once
