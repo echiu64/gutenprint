@@ -31,6 +31,12 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.55  2000/02/06 03:59:09  rlk
+ *   More work on the generalized dithering parameters stuff.  At this point
+ *   it really looks like a proper object.  Also dynamically allocate the error
+ *   buffers.  This segv'd a lot, which forced me to efence it, which was just
+ *   as well because I found a few problems as a result...
+ *
  *   Revision 1.54  2000/02/05 23:54:58  rlk
  *   Do horizontal positioning correctly in microweave
  *
@@ -777,7 +783,7 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 		   int vertical_passes, int bits)
 {
   int n;
-  void *weave;
+  void *weave = 0;
   fputs("\033@", prn); 				/* ESC/P2 reset */
 
   fwrite("\033(G\001\000\001", 6, 1, prn);	/* Enter graphics mode */
@@ -1031,6 +1037,7 @@ escp2_print(int       model,		/* I - Model */
   const res_t 	*res;
   int		bits;
   void *	weave;
+  void *	dither;
 
  /*
   * Setup a read-only pixel region for the entire image...
@@ -1273,7 +1280,7 @@ escp2_print(int       model,		/* I - Model */
       lmagenta = NULL;
     }
   }
-  init_dither();
+  dither = init_dither(image_width, out_width, horizontal_passes);
     
  /*
   * Output the page, rotating as necessary...
@@ -1306,22 +1313,18 @@ escp2_print(int       model,		/* I - Model */
       if (bits == 1)
 	{
 	  if (output_type == OUTPUT_GRAY)
-	    dither_black(out, x, image_height, out_width, black,
-			 horizontal_passes);
+	    dither_black(out, x, dither, black);
 	  else
-	    dither_cmyk(out, x, image_height, out_width, cyan, lcyan,
-			magenta, lmagenta, yellow, 0, black,
-			horizontal_passes);
+	    dither_cmyk(out, x, dither, cyan, lcyan, magenta, lmagenta,
+			yellow, 0, black);
 	}
       else
 	{
 	  if (output_type == OUTPUT_GRAY)
-	    dither_black4(out, x, image_height, out_width, black,
-			  horizontal_passes);
+	    dither_black4(out, x, dither, black);
 	  else
-	    dither_cmyk4(out, x, image_height, out_width, cyan, lcyan,
-			 magenta, lmagenta, yellow, 0, black,
-			 horizontal_passes);
+	    dither_cmyk4(out, x, dither, cyan, lcyan, magenta, lmagenta,
+			 yellow, 0, black);
 	}
 
       if (use_softweave)
@@ -1372,22 +1375,18 @@ escp2_print(int       model,		/* I - Model */
       if (bits == 1)
 	{
 	  if (output_type == OUTPUT_GRAY)
-	    dither_black(out, y, image_width, out_width, black,
-			 horizontal_passes);
+	    dither_black(out, y, dither, black);
 	  else
-	    dither_cmyk(out, y, image_width, out_width, cyan, lcyan,
-			magenta, lmagenta, yellow, 0, black,
-			horizontal_passes);
+	    dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
+			yellow, 0, black);
 	}
       else
 	{
 	  if (output_type == OUTPUT_GRAY)
-	    dither_black4(out, y, image_width, out_width, black,
-			  horizontal_passes);
+	    dither_black4(out, y, dither, black);
 	  else
-	    dither_cmyk4(out, y, image_width, out_width, cyan, lcyan,
-			 magenta, lmagenta, yellow, 0, black,
-			 horizontal_passes);
+	    dither_cmyk4(out, y, dither, cyan, lcyan, magenta, lmagenta,
+			 yellow, 0, black);
 	}
 
       if (use_softweave)
@@ -1410,7 +1409,7 @@ escp2_print(int       model,		/* I - Model */
     if (use_softweave)
       escp2_flush(weave, model, out_width, left, ydpi, xdpi, prn);
   }
-  free_dither();
+  free_dither(dither);
 
  /*
   * Cleanup...
@@ -1669,10 +1668,6 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
     case 720 :
         if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK, MODEL_720DPI_600))
           fwrite("\033.\001\050\005\001", 6, 1, prn);
-#if 0
-        else if (model == 7)
-          fwrite("\033.\000\050\005\040", 6, 1, prn);
-#endif
 	else
           fwrite("\033.\001\005\005\001", 6, 1, prn);
         break;

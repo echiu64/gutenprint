@@ -167,94 +167,26 @@ typedef void 	(*convert_t)(unsigned char *in, unsigned short *out, int width,
 			     int bpp, lut_t *lut, unsigned char *cmap,
 			     vars_t *vars);
 
-typedef struct dither
-{
-  int cbits;			/* Oversample counters for the various inks */
-  int lcbits;
-  int mbits;
-  int lmbits;
-  int ybits;
-  int lybits;
-  int kbits;
-
-  int k_lower;			/* Transition range (lower/upper) for CMY */
-  int k_upper;			/* vs. K */
-
-  int lc_level;			/* Relative levels (0-65536) for light */
-  int lm_level;			/* inks vs. full-strength inks */
-  int ly_level;
-
-  int c_randomizer;		/* Randomizers.  MORE EXPLANATION */
-  int m_randomizer;
-  int y_randomizer;
-  int k_randomizer;
-
-  int k_clevel;			/* Amount of each ink (in 16ths) required */
-  int k_mlevel;			/* to create equivalent black */
-  int k_ylevel;
-
-  int c_darkness;		/* Perceived "darkness" of each ink, */
-  int m_darkness;		/* in 64ths, to calculate CMY-K transitions */
-  int y_darkness;
-
-  int nc_l;			/* Number of levels of each color available */
-  int nc_log;			/* Log of number of levels (how many bits) */
-  int *c_transitions;		/* Vector of transition points between */
-  int *c_levels;		/* Vector of actual levels */
-
-  int nlc_l;
-  int nlc_log;
-  int *lc_transitions;
-  int *lc_levels;
-
-  int nm_l;
-  int nm_log;
-  int *m_transitions;
-  int *m_levels;
-
-  int nlm_l;
-  int nlm_log;
-  int *lm_transitions;
-  int *lm_levels;
-
-  int ny_l;
-  int ny_log;
-  int *y_transitions;
-  int *y_levels;
-
-  int nly_l;
-  int nly_log;
-  int *ly_transitions;
-  int *ly_levels;
-
-  int nk_l;
-  int nk_log;
-  int *k_transitions;
-  int *k_levels;
-
-} dither_t;
-
 /*
  * Prototypes...
  */
 
-extern void	init_dither(void);
-extern void	free_dither(void);
-extern void	dither_black(unsigned short *, int, int, int, unsigned char *,
-			     int);
+extern void *	init_dither(int in_width, int out_width,
+			    int horizontal_overdensity);
+extern void	free_dither(void *);
+extern void	dither_black(unsigned short *, int, void *, unsigned char *);
 
-extern void	dither_cmyk(unsigned short *, int, int, int, unsigned char *,
+extern void	dither_cmyk(unsigned short *, int, void *, unsigned char *,
 			    unsigned char *, unsigned char *,
 			    unsigned char *, unsigned char *,
-			    unsigned char *, unsigned char *, int);
+			    unsigned char *, unsigned char *);
 
-extern void	dither_black4(unsigned short *, int, int, int,
-			      unsigned char *, int);
+extern void	dither_black4(unsigned short *, int, void *, unsigned char *);
 
-extern void	dither_cmyk4(unsigned short *, int, int, int, unsigned char *,
+extern void	dither_cmyk4(unsigned short *, int, void *, unsigned char *,
 			     unsigned char *, unsigned char *,
 			     unsigned char *, unsigned char *,
-			     unsigned char *, unsigned char *, int);
+			     unsigned char *, unsigned char *);
 
 extern void	gray_to_gray(unsigned char *, unsigned short *, int, int,
 			     lut_t *, unsigned char *, vars_t *);

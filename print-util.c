@@ -38,6 +38,12 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.66  2000/02/06 03:59:09  rlk
+ *   More work on the generalized dithering parameters stuff.  At this point
+ *   it really looks like a proper object.  Also dynamically allocate the error
+ *   buffers.  This segv'd a lot, which forced me to efence it, which was just
+ *   as well because I found a few problems as a result...
+ *
  *   Revision 1.65  2000/02/05 20:57:39  rlk
  *   Minor reorg
  *
@@ -359,30 +365,258 @@
 #define ERROR_ROWS 2
 #define NCOLORS (4)
 
-typedef int errline_t[MAX_CARRIAGE_WIDTH*MAX_BPI+1];
-
-typedef struct {
-  int *errs[ERROR_ROWS][NCOLORS];
-} error_t;
-
 #define ECOLOR_C 0
 #define ECOLOR_M 1
 #define ECOLOR_Y 2
 #define ECOLOR_K 3
 
+typedef struct dither
+{
+  int *errs[ERROR_ROWS][NCOLORS];
+  int src_width;
+  int dst_width;
+  int horizontal_overdensity;
+  int overdensity_bits;
+
+  int cbits;			/* Oversample counters for the various inks */
+  int lcbits;
+  int mbits;
+  int lmbits;
+  int ybits;
+  int lybits;
+  int kbits;
+
+  int k_lower;			/* Transition range (lower/upper) for CMY */
+  int k_upper;			/* vs. K */
+
+  int lc_level;			/* Relative levels (0-65536) for light */
+  int lm_level;			/* inks vs. full-strength inks */
+  int ly_level;
+
+  int c_randomizer;		/* Randomizers.  MORE EXPLANATION */
+  int m_randomizer;
+  int y_randomizer;
+  int k_randomizer;
+
+  int k_clevel;			/* Amount of each ink (in 16ths) required */
+  int k_mlevel;			/* to create equivalent black */
+  int k_ylevel;
+
+  int c_darkness;		/* Perceived "darkness" of each ink, */
+  int m_darkness;		/* in 64ths, to calculate CMY-K transitions */
+  int y_darkness;
+
+  int nc_l;			/* Number of levels of each color available */
+  int nc_log;			/* Log of number of levels (how many bits) */
+  int *c_transitions;		/* Vector of transition points between */
+  int *c_levels;		/* Vector of actual levels */
+
+  int nlc_l;
+  int nlc_log;
+  int *lc_transitions;
+  int *lc_levels;
+
+  int nm_l;
+  int nm_log;
+  int *m_transitions;
+  int *m_levels;
+
+  int nlm_l;
+  int nlm_log;
+  int *lm_transitions;
+  int *lm_levels;
+
+  int ny_l;
+  int ny_log;
+  int *y_transitions;
+  int *y_levels;
+
+  int nly_l;
+  int nly_log;
+  int *ly_transitions;
+  int *ly_levels;
+
+  int nk_l;
+  int nk_log;
+  int *k_transitions;
+  int *k_levels;
+
+} dither_t;
+
+void *
+init_dither(int in_width, int out_width, int horizontal_overdensity)
+{
+  dither_t *d = malloc(sizeof(dither_t));
+  memset(d, 0, sizeof(dither_t));
+
+  d->horizontal_overdensity = horizontal_overdensity;
+  switch (horizontal_overdensity)
+    {
+    case 0:
+    case 1:
+      d->overdensity_bits = 0;
+      break;
+    case 2:
+      d->overdensity_bits = 1;
+      break;
+    case 4:
+      d->overdensity_bits = 2;
+      break;
+    case 8:
+      d->overdensity_bits = 3;
+      break;
+    }
+  d->src_width = in_width;
+  d->dst_width = out_width;
+  d->cbits = 1;
+  d->lcbits = 1;
+  d->mbits = 1;
+  d->lmbits = 1;
+  d->ybits = 1;
+  d->lybits = 1;
+  d->kbits = 1;
+  d->k_lower = 12 * 256;
+  d->k_upper = 128 * 256;
+  d->lc_level = 32768;
+  d->lm_level = 32768;
+  d->ly_level = 32768;
+  d->c_randomizer = 0;
+  d->m_randomizer = 0;
+  d->y_randomizer = 0;
+  d->k_randomizer = 4;
+  d->k_clevel = 32;
+  d->k_mlevel = 32;
+  d->k_ylevel = 32;
+  d->c_darkness = 22;
+  d->m_darkness = 16;
+  d->y_darkness = 10;
+  d->nc_l = 4;
+  d->c_transitions = malloc(4 * sizeof(int));
+  d->c_levels = malloc(4 * sizeof(int));
+  d->nlc_l = 4;
+  d->lc_transitions = malloc(4 * sizeof(int));
+  d->lc_levels = malloc(4 * sizeof(int));
+  d->nm_l = 4;
+  d->m_transitions = malloc(4 * sizeof(int));
+  d->m_levels = malloc(4 * sizeof(int));
+  d->nlm_l = 4;
+  d->lm_transitions = malloc(4 * sizeof(int));
+  d->lm_levels = malloc(4 * sizeof(int));
+  d->ny_l = 4;
+  d->y_transitions = malloc(4 * sizeof(int));
+  d->y_levels = malloc(4 * sizeof(int));
+  d->nly_l = 4;
+  d->ly_transitions = malloc(4 * sizeof(int));
+  d->ly_levels = malloc(4 * sizeof(int));
+  d->nk_l = 4;
+  d->k_transitions = malloc(4 * sizeof(int));
+  d->k_levels = malloc(4 * sizeof(int));
+  d->c_levels[0] = 0;
+  d->c_transitions[0] = 0;
+  d->c_levels[1] = 32767;
+  d->c_transitions[1] = (32767 + 0) / 2;
+  d->c_levels[2] = 213 * 256;
+  d->c_transitions[2] = ((213 * 256) + 32767) / 2;
+  d->c_levels[3] = 65535;
+  d->c_transitions[3] = (65535 + (213 * 256)) / 2;
+  d->lc_levels[0] = 0;
+  d->lc_transitions[0] = 0;
+  d->lc_levels[1] = 32767;
+  d->lc_transitions[1] = (32767 + 0) / 2;
+  d->lc_levels[2] = 213 * 256;
+  d->lc_transitions[2] = ((213 * 256) + 32767) / 2;
+  d->lc_levels[3] = 65535;
+  d->lc_transitions[3] = (65535 + (213 * 256)) / 2;
+  d->m_levels[0] = 0;
+  d->m_transitions[0] = 0;
+  d->m_levels[1] = 32767;
+  d->m_transitions[1] = (32767 + 0) / 2;
+  d->m_levels[2] = 213 * 256;
+  d->m_transitions[2] = ((213 * 256) + 32767) / 2;
+  d->m_levels[3] = 65535;
+  d->m_transitions[3] = (65535 + (213 * 256)) / 2;
+  d->lm_levels[0] = 0;
+  d->lm_transitions[0] = 0;
+  d->lm_levels[1] = 32767;
+  d->lm_transitions[1] = (32767 + 0) / 2;
+  d->lm_levels[2] = 213 * 256;
+  d->lm_transitions[2] = ((213 * 256) + 32767) / 2;
+  d->lm_levels[3] = 65535;
+  d->lm_transitions[3] = (65535 + (213 * 256)) / 2;
+  d->y_levels[0] = 0;
+  d->y_transitions[0] = 0;
+  d->y_levels[1] = 32767;
+  d->y_transitions[1] = (32767 + 0) / 2;
+  d->y_levels[2] = 213 * 256;
+  d->y_transitions[2] = ((213 * 256) + 32767) / 2;
+  d->y_levels[3] = 65535;
+  d->y_transitions[3] = (65535 + (213 * 256)) / 2;
+  d->ly_levels[0] = 0;
+  d->ly_transitions[0] = 0;
+  d->ly_levels[1] = 32767;
+  d->ly_transitions[1] = (32767 + 0) / 2;
+  d->ly_levels[2] = 213 * 256;
+  d->ly_transitions[2] = ((213 * 256) + 32767) / 2;
+  d->ly_levels[3] = 65535;
+  d->ly_transitions[3] = (65535 + (213 * 256)) / 2;
+  d->k_levels[0] = 0;
+  d->k_transitions[0] = 0;
+  d->k_levels[1] = 32767;
+  d->k_transitions[1] = (32767 + 0) / 2;
+  d->k_levels[2] = 213 * 256;
+  d->k_transitions[2] = ((213 * 256) + 32767) / 2;
+  d->k_levels[3] = 65535;
+  d->k_transitions[3] = (65535 + (213 * 256)) / 2;
+  return d;
+}  
+
+void
+free_dither(void *vd)
+{
+  dither_t *d = (dither_t *) vd;
+  int i;
+  int j;
+  for (i = 0; i < ERROR_ROWS; i++)
+    {
+      for (j = 0; j < NCOLORS; j++)
+	{
+	  if (d->errs[i][j])
+	    {
+	      free(d->errs[i][j]);
+	      d->errs[i][j] = NULL;
+	    }
+	}
+    }
+  free(d->c_transitions);
+  free(d->c_levels);
+  free(d->lc_transitions);
+  free(d->lc_levels);
+  free(d->m_transitions);
+  free(d->m_levels);
+  free(d->lm_transitions);
+  free(d->lm_levels);
+  free(d->y_transitions);
+  free(d->y_levels);
+  free(d->ly_transitions);
+  free(d->ly_levels);
+  free(d->k_transitions);
+  free(d->k_levels);
+  free(d);
+}
 
 static int *
-get_errline(int row, int color)
+get_errline(dither_t *d, int row, int color)
 {
-  static error_t error;
   if (row < 0 || color < 0 || color >= NCOLORS)
     return NULL;
-  if (error.errs[row & 1][color])
-    return error.errs[row & 1][color];
+  if (d->errs[row & 1][color])
+    return d->errs[row & 1][color];
   else
     {
-      error.errs[row & 1][color] = malloc(sizeof(errline_t));
-      return error.errs[row & 1][color];
+      int size = (16 * ((d->dst_width + 7) / 8));
+      d->errs[row & 1][color] = malloc(size * sizeof(int));
+      memset(d->errs[row & 1][color], 0, size * sizeof(int));
+      return d->errs[row & 1][color];
     }
 }
 
@@ -540,142 +774,11 @@ get_errline(int row, int color)
  * 'dither_black()' - Dither grayscale pixels to black.
  */
 
-static dither_t dither_info;
-
-void
-init_dither(void)
-{
-  int i, j;
-  for (i = 0; i < 2; i++)
-    for (j = 0; j < 4; j++)
-      memset(get_errline(i, j), 0, sizeof(errline_t));
-  dither_info.cbits = 1;
-  dither_info.lcbits = 1;
-  dither_info.mbits = 1;
-  dither_info.lmbits = 1;
-  dither_info.ybits = 1;
-  dither_info.lybits = 1;
-  dither_info.kbits = 1;
-  dither_info.k_lower = 12 * 256;
-  dither_info.k_upper = 128 * 256;
-  dither_info.lc_level = 32768;
-  dither_info.lm_level = 32768;
-  dither_info.ly_level = 32768;
-  dither_info.c_randomizer = 0;
-  dither_info.m_randomizer = 0;
-  dither_info.y_randomizer = 0;
-  dither_info.k_randomizer = 4;
-  dither_info.k_clevel = 32;
-  dither_info.k_mlevel = 32;
-  dither_info.k_ylevel = 32;
-  dither_info.c_darkness = 22;
-  dither_info.m_darkness = 16;
-  dither_info.y_darkness = 10;
-  dither_info.nc_l = 4;
-  dither_info.c_transitions = malloc(4 * sizeof(int));
-  dither_info.c_levels = malloc(4 * sizeof(int));
-  dither_info.nlc_l = 4;
-  dither_info.lc_transitions = malloc(4 * sizeof(int));
-  dither_info.lc_levels = malloc(4 * sizeof(int));
-  dither_info.nm_l = 4;
-  dither_info.m_transitions = malloc(4 * sizeof(int));
-  dither_info.m_levels = malloc(4 * sizeof(int));
-  dither_info.nlm_l = 4;
-  dither_info.lm_transitions = malloc(4 * sizeof(int));
-  dither_info.lm_levels = malloc(4 * sizeof(int));
-  dither_info.ny_l = 4;
-  dither_info.y_transitions = malloc(4 * sizeof(int));
-  dither_info.y_levels = malloc(4 * sizeof(int));
-  dither_info.nly_l = 4;
-  dither_info.ly_transitions = malloc(4 * sizeof(int));
-  dither_info.ly_levels = malloc(4 * sizeof(int));
-  dither_info.nk_l = 4;
-  dither_info.k_transitions = malloc(4 * sizeof(int));
-  dither_info.k_levels = malloc(4 * sizeof(int));
-  dither_info.c_levels[0] = 0;
-  dither_info.c_transitions[0] = 0;
-  dither_info.c_levels[1] = 32767;
-  dither_info.c_transitions[1] = (32767 + 0) / 2;
-  dither_info.c_levels[2] = 213 * 256;
-  dither_info.c_transitions[2] = ((213 * 256) + 32767) / 2;
-  dither_info.c_levels[3] = 65535;
-  dither_info.c_transitions[3] = (65535 + (213 * 256)) / 2;
-  dither_info.lc_levels[0] = 0;
-  dither_info.lc_transitions[0] = 0;
-  dither_info.lc_levels[1] = 32767;
-  dither_info.lc_transitions[1] = (32767 + 0) / 2;
-  dither_info.lc_levels[2] = 213 * 256;
-  dither_info.lc_transitions[2] = ((213 * 256) + 32767) / 2;
-  dither_info.lc_levels[3] = 65535;
-  dither_info.lc_transitions[3] = (65535 + (213 * 256)) / 2;
-  dither_info.m_levels[0] = 0;
-  dither_info.m_transitions[0] = 0;
-  dither_info.m_levels[1] = 32767;
-  dither_info.m_transitions[1] = (32767 + 0) / 2;
-  dither_info.m_levels[2] = 213 * 256;
-  dither_info.m_transitions[2] = ((213 * 256) + 32767) / 2;
-  dither_info.m_levels[3] = 65535;
-  dither_info.m_transitions[3] = (65535 + (213 * 256)) / 2;
-  dither_info.lm_levels[0] = 0;
-  dither_info.lm_transitions[0] = 0;
-  dither_info.lm_levels[1] = 32767;
-  dither_info.lm_transitions[1] = (32767 + 0) / 2;
-  dither_info.lm_levels[2] = 213 * 256;
-  dither_info.lm_transitions[2] = ((213 * 256) + 32767) / 2;
-  dither_info.lm_levels[3] = 65535;
-  dither_info.lm_transitions[3] = (65535 + (213 * 256)) / 2;
-  dither_info.y_levels[0] = 0;
-  dither_info.y_transitions[0] = 0;
-  dither_info.y_levels[1] = 32767;
-  dither_info.y_transitions[1] = (32767 + 0) / 2;
-  dither_info.y_levels[2] = 213 * 256;
-  dither_info.y_transitions[2] = ((213 * 256) + 32767) / 2;
-  dither_info.y_levels[3] = 65535;
-  dither_info.y_transitions[3] = (65535 + (213 * 256)) / 2;
-  dither_info.ly_levels[0] = 0;
-  dither_info.ly_transitions[0] = 0;
-  dither_info.ly_levels[1] = 32767;
-  dither_info.ly_transitions[1] = (32767 + 0) / 2;
-  dither_info.ly_levels[2] = 213 * 256;
-  dither_info.ly_transitions[2] = ((213 * 256) + 32767) / 2;
-  dither_info.ly_levels[3] = 65535;
-  dither_info.ly_transitions[3] = (65535 + (213 * 256)) / 2;
-  dither_info.k_levels[0] = 0;
-  dither_info.k_transitions[0] = 0;
-  dither_info.k_levels[1] = 32767;
-  dither_info.k_transitions[1] = (32767 + 0) / 2;
-  dither_info.k_levels[2] = 213 * 256;
-  dither_info.k_transitions[2] = ((213 * 256) + 32767) / 2;
-  dither_info.k_levels[3] = 65535;
-  dither_info.k_transitions[3] = (65535 + (213 * 256)) / 2;
-}  
-
-void
-free_dither()
-{
-  free(dither_info.c_transitions);
-  free(dither_info.c_levels);
-  free(dither_info.lc_transitions);
-  free(dither_info.lc_levels);
-  free(dither_info.m_transitions);
-  free(dither_info.m_levels);
-  free(dither_info.lm_transitions);
-  free(dither_info.lm_levels);
-  free(dither_info.y_transitions);
-  free(dither_info.y_levels);
-  free(dither_info.ly_transitions);
-  free(dither_info.ly_levels);
-  free(dither_info.k_transitions);
-  free(dither_info.k_levels);
-}
-
 void
 dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
 	     int           	row,		/* I - Current Y coordinate */
-	     int           	src_width,	/* I - Width of input row */
-	     int           	dst_width,	/* I - Width of output row */
-	     unsigned char 	*black,		/* O - Black bitmap pixels */
-	     int horizontal_overdensity)
+	     void *vd,
+	     unsigned char 	*black)		/* O - Black bitmap pixels */
 {
   int		x,		/* Current X coordinate */
 		xerror,		/* X error count */
@@ -689,51 +792,33 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
 		*kerror0,	/* Pointer to current error row */
 		*kerror1;	/* Pointer to next error row */
   int		ditherbit;	/* Random dithering bitmask */
-  dither_t     *d = &dither_info;
-  int overdensity_bits = 0;
+  dither_t *d = (dither_t *) vd;
   int terminate;
   int direction = row & 1 ? 1 : -1;
 
-  switch (horizontal_overdensity)
-    {
-    case 0:
-    case 1:
-      overdensity_bits = 0;
-      break;
-    case 2:
-      overdensity_bits = 1;
-      break;
-    case 4:
-      overdensity_bits = 2;
-      break;
-    case 8:
-      overdensity_bits = 3;
-      break;
-    }
+  bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
+  x = (direction == 1) ? 0 : d->dst_width - 1;
+  terminate = (direction == 1) ? d->dst_width : -1;
 
-  bit = (direction == 1) ? 128 : 1 << (7 - ((dst_width - 1) & 7));
-  x = (direction == 1) ? 0 : dst_width - 1;
-  terminate = (direction == 1) ? dst_width : -1;
+  xstep  = d->src_width / d->dst_width;
+  xmod   = d->src_width % d->dst_width;
+  length = (d->dst_width + 7) / 8;
 
-  xstep  = src_width / dst_width;
-  xmod   = src_width % dst_width;
-  length = (dst_width + 7) / 8;
-
-  kerror0 = get_errline(row, ECOLOR_K);
-  kerror1 = get_errline(row + 1, ECOLOR_K);
-  memset(kerror1, 0, dst_width * sizeof(int));
+  kerror0 = get_errline(d, row, ECOLOR_K);
+  kerror1 = get_errline(d, row + 1, ECOLOR_K);
+  memset(kerror1, 0, d->dst_width * sizeof(int));
 
   memset(black, 0, length);
   kptr = black;
   xerror = 0;
   if (direction == -1)
     {
-      kerror0 += dst_width - 1;
-      kerror1 += dst_width - 1;
+      kerror0 += d->dst_width - 1;
+      kerror1 += d->dst_width - 1;
       kptr = black + length - 1;
       xstep = -xstep; 
-      gray += src_width - 1;
-      xerror = ((dst_width - 1) * xmod) % dst_width;
+      gray += d->src_width - 1;
+      xerror = ((d->dst_width - 1) * xmod) % d->dst_width;
       xmod = -xmod;
     }
 
@@ -745,16 +830,17 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
 	 kerror1 += direction)
   {
     int offset;
-    k = 65535 - *gray + ditherk / 8;
-    offset = (15 - (((k & 0xf000) >> 12)) * horizontal_overdensity) >> 1;
+    k = 65535 - *gray;
+    offset = ((15 - (((k & 0xf000) >> 12))) * d->horizontal_overdensity) >> 1;
+    k += ditherk / 8;
     if (x < offset)
       offset = x;
-    else if (x > dst_width - offset - 1)
-      offset = dst_width - x - 1;
+    else if (x > d->dst_width - offset - 1)
+      offset = d->dst_width - x - 1;
 
     if (k > ditherbit)
     {
-      if (d->kbits++ == horizontal_overdensity)
+      if (d->kbits++ == d->horizontal_overdensity)
 	{
 	  *kptr |= bit;
 	  d->kbits = 1;
@@ -766,15 +852,17 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
     {
       kerror1[-offset] += k;
       kerror1[0] += 3 * k;
-      kerror1[0] += k;
-      ditherk    = kerror0[1] + 3 * k;
+      kerror1[offset] += k;
+      if (x > 0 && x < (d->dst_width - 1))
+	ditherk    = kerror0[1] + 3 * k;
     }
     else
     {
       kerror1[-offset] += k;
       kerror1[0] += k;
-      kerror1[0] += k;
-      ditherk    = kerror0[1] + 5 * k;
+      kerror1[offset] += k;
+      if (x > 0 && x < (d->dst_width - 1))
+	ditherk    = kerror0[1] + 5 * k;
     }
 
     if (direction == 1)
@@ -800,14 +888,14 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
 
     gray   += xstep;
     xerror += xmod;
-    if (xerror >= dst_width)
+    if (xerror >= d->dst_width)
       {
-	xerror -= dst_width;
+	xerror -= d->dst_width;
 	gray   += direction;
       }
     else if (xerror < 0)
       {
-	xerror += dst_width;
+	xerror += d->dst_width;
 	gray   += direction;
       }      
   }
@@ -879,7 +967,7 @@ do {						\
 
 #define DO_PRINT_COLOR(color)				\
 do {							\
-  if (d->color##bits++ == horizontal_overdensity)	\
+  if (d->color##bits++ == d->horizontal_overdensity)	\
     {							\
       *color##ptr |= bit;				\
       d->color##bits = 1;				\
@@ -938,43 +1026,43 @@ do {								\
     }								\
 } while (0)
 
-#define UPDATE_DITHER(r, d2, x, width)					 \
-do {									 \
-  int offset = (15 - (((o##r & 0xf000) >> 12)) * horizontal_overdensity) \
-				       >> 1;				 \
-  if (x < offset)							 \
-    offset = x;								 \
-  else if (x > dst_width - offset - 1)					 \
-    offset = dst_width - x - 1;						 \
-  if (ditherbit##d2 & bit)						 \
-    {									 \
-      r##error1[-offset] += r;						 \
-      r##error1[0] += 3 * r;						 \
-      r##error1[offset] += r;						 \
-      dither##r    = r##error0[direction] + 3 * r;			 \
-    }									 \
-  else									 \
-    {									 \
-      r##error1[-offset] += r;						 \
-      r##error1[0] +=  r;						 \
-      r##error1[offset] += r;						 \
-      dither##r    = r##error0[direction] + 5 * r;			 \
-    }									 \
+#define UPDATE_DITHER(r, d2, x, width)					      \
+do {									      \
+  int offset = ((15 - (((o##r & 0xf000) >> 12))) * d->horizontal_overdensity) \
+					>> 1;				      \
+  if (x < offset)							      \
+    offset = x;								      \
+  else if (x > d->dst_width - offset - 1)				      \
+    offset = d->dst_width - x - 1;					      \
+  if (ditherbit##d2 & bit)						      \
+    {									      \
+      r##error1[-offset] += r;						      \
+      r##error1[0] += 3 * r;						      \
+      r##error1[offset] += r;						      \
+      if (x > 0 && x < (d->dst_width - 1))				      \
+	dither##r    = r##error0[direction] + 3 * r;			      \
+    }									      \
+  else									      \
+    {									      \
+      r##error1[-offset] += r;						      \
+      r##error1[0] +=  r;						      \
+      r##error1[offset] += r;						      \
+      if (x > 0 && x < (d->dst_width - 1))				      \
+	dither##r    = r##error0[direction] + 5 * r;			      \
+    }									      \
 } while (0)
 
 void
 dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	    int           row,		/* I - Current Y coordinate */
-	    int           src_width,	/* I - Width of input row */
-	    int           dst_width,	/* I - Width of output rows */
+	    void *vd,
 	    unsigned char *cyan,	/* O - Cyan bitmap pixels */
 	    unsigned char *lcyan,	/* O - Light cyan bitmap pixels */
 	    unsigned char *magenta,	/* O - Magenta bitmap pixels */
 	    unsigned char *lmagenta,	/* O - Light magenta bitmap pixels */
 	    unsigned char *yellow,	/* O - Yellow bitmap pixels */
 	    unsigned char *lyellow,	/* O - Light yellow bitmap pixels */
-	    unsigned char *black,	/* O - Black bitmap pixels */
-	    int horizontal_overdensity)
+	    unsigned char *black)	/* O - Black bitmap pixels */
 {
   int		x,		/* Current X coordinate */
 		xerror,		/* X error count */
@@ -1012,16 +1100,15 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   int ub, lb;
   int ditherbit0, ditherbit1, ditherbit2, ditherbit3;
   long long	density;
-  dither_t      *d = &dither_info;
+  dither_t *d = (dither_t *) vd;
 
   /*
-   * If horizontal_overdensity is > 1, we want to output a bit only so many
+   * If d->horizontal_overdensity is > 1, we want to output a bit only so many
    * times that a bit would be generated.  These serve as counters for making
    * that decision.  We make these variable static rather than reinitializing
    * at zero each line to avoid having a line of bits near the edge of the
    * image.
    */
-  int overdensity_bits = 0;
 
 #ifdef PRINT_DEBUG
   long long odk, odc, odm, ody, dk, dc, dm, dy, xk, xc, xm, xy, yc, ym, yy;
@@ -1031,46 +1118,29 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   int terminate;
   int direction = row & 1 ? 1 : -1;
 
-  switch (horizontal_overdensity)
-    {
-    case 0:
-    case 1:
-      overdensity_bits = 0;
-      break;
-    case 2:
-      overdensity_bits = 1;
-      break;
-    case 4:
-      overdensity_bits = 2;
-      break;
-    case 8:
-      overdensity_bits = 3;
-      break;
-    }
+  bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
+  x = (direction == 1) ? 0 : d->dst_width - 1;
+  terminate = (direction == 1) ? d->dst_width : -1;
 
-  bit = (direction == 1) ? 128 : 1 << (7 - ((dst_width - 1) & 7));
-  x = (direction == 1) ? 0 : dst_width - 1;
-  terminate = (direction == 1) ? dst_width : -1;
+  xstep  = 3 * (d->src_width / d->dst_width);
+  xmod   = d->src_width % d->dst_width;
+  length = (d->dst_width + 7) / 8;
 
-  xstep  = 3 * (src_width / dst_width);
-  xmod   = src_width % dst_width;
-  length = (dst_width + 7) / 8;
+  cerror0 = get_errline(d, row, ECOLOR_C);
+  cerror1 = get_errline(d, row + 1, ECOLOR_C);
 
-  cerror0 = get_errline(row, ECOLOR_C);
-  cerror1 = get_errline(row + 1, ECOLOR_C);
+  merror0 = get_errline(d, row, ECOLOR_M);
+  merror1 = get_errline(d, row + 1, ECOLOR_M);
 
-  merror0 = get_errline(row, ECOLOR_M);
-  merror1 = get_errline(row + 1, ECOLOR_M);
+  yerror0 = get_errline(d, row, ECOLOR_Y);
+  yerror1 = get_errline(d, row + 1, ECOLOR_Y);
 
-  yerror0 = get_errline(row, ECOLOR_Y);
-  yerror1 = get_errline(row + 1, ECOLOR_Y);
-
-  kerror0 = get_errline(row, ECOLOR_K);
-  kerror1 = get_errline(row + 1, ECOLOR_K);
-  memset(kerror1, 0, dst_width * sizeof(int));
-  memset(cerror1, 0, dst_width * sizeof(int));
-  memset(merror1, 0, dst_width * sizeof(int));
-  memset(yerror1, 0, dst_width * sizeof(int));
+  kerror0 = get_errline(d, row, ECOLOR_K);
+  kerror1 = get_errline(d, row + 1, ECOLOR_K);
+  memset(kerror1, 0, d->dst_width * sizeof(int));
+  memset(cerror1, 0, d->dst_width * sizeof(int));
+  memset(merror1, 0, d->dst_width * sizeof(int));
+  memset(yerror1, 0, d->dst_width * sizeof(int));
   cptr = cyan;
   mptr = magenta;
   yptr = yellow;
@@ -1081,14 +1151,14 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   xerror = 0;
   if (direction == -1)
     {
-      cerror0 += dst_width - 1;
-      cerror1 += dst_width - 1;
-      merror0 += dst_width - 1;
-      merror1 += dst_width - 1;
-      yerror0 += dst_width - 1;
-      yerror1 += dst_width - 1;
-      kerror0 += dst_width - 1;
-      kerror1 += dst_width - 1;
+      cerror0 += d->dst_width - 1;
+      cerror1 += d->dst_width - 1;
+      merror0 += d->dst_width - 1;
+      merror1 += d->dst_width - 1;
+      yerror0 += d->dst_width - 1;
+      yerror1 += d->dst_width - 1;
+      kerror0 += d->dst_width - 1;
+      kerror1 += d->dst_width - 1;
       cptr = cyan + length - 1;
       if (lcptr)
 	lcptr = lcyan + length - 1;
@@ -1101,8 +1171,8 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       if (kptr)
 	kptr = black + length - 1;
       xstep = -xstep;
-      rgb += 3 * (src_width - 1);
-      xerror = ((dst_width - 1) * xmod) % dst_width;
+      rgb += 3 * (d->src_width - 1);
+      xerror = ((d->dst_width - 1) * xmod) % d->dst_width;
       xmod = -xmod;
     }
 
@@ -1281,7 +1351,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	  k -= 65535;
 	}
 
-      UPDATE_DITHER(k, 1, x, src_width);
+      UPDATE_DITHER(k, 1, x, d->src_width);
     }
     else
     {
@@ -1296,11 +1366,11 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       y  = (65535 - rgb[0] / 4) * (y - k) / 65535 + k;
     }
 
-    density = (c + m + y) >> overdensity_bits;
+    density = (c + m + y) >> d->overdensity_bits;
     UPDATE_COLOR(c);
     UPDATE_COLOR(m);
     UPDATE_COLOR(y);
-    density += (c + m + y) >> overdensity_bits;
+    density += (c + m + y) >> d->overdensity_bits;
 /*     density >>= 1; */
 
     if (!kptr || !(*kptr & bit))
@@ -1310,9 +1380,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	PRINT_COLOR(yellow, y, Y, 3, 0);
       }
 
-    UPDATE_DITHER(c, 2, x, dst_width);
-    UPDATE_DITHER(m, 3, x, dst_width);
-    UPDATE_DITHER(y, 0, x, dst_width);
+    UPDATE_DITHER(c, 2, x, d->dst_width);
+    UPDATE_DITHER(m, 3, x, d->dst_width);
+    UPDATE_DITHER(y, 0, x, d->dst_width);
 
     /*****************************************************************
      * Advance the loop
@@ -1391,14 +1461,14 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
     rgb    += xstep;
     xerror += xmod;
-    if (xerror >= dst_width)
+    if (xerror >= d->dst_width)
       {
-	xerror -= dst_width;
+	xerror -= d->dst_width;
 	rgb    += 3 * direction;
       }
     else if (xerror < 0)
       {
-	xerror += dst_width;
+	xerror += d->dst_width;
 	rgb    += 3 * direction;
       }      
   }
@@ -1424,10 +1494,8 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 void
 dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
 	      int           	row,		/* I - Current Y coordinate */
-	      int           	src_width,	/* I - Width of input row */
-	      int           	dst_width,	/* I - Width of output row */
-	      unsigned char 	*black,		/* O - Black bitmap pixels */
-	      int horizontal_overdensity)
+	      void *vd,
+	      unsigned char 	*black)		/* O - Black bitmap pixels */
 {
   int		x,		/* Current X coordinate */
 		xerror,		/* X error count */
@@ -1441,51 +1509,33 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
 		*kerror0,	/* Pointer to current error row */
 		*kerror1;	/* Pointer to next error row */
   int		ditherbit;	/* Random dithering bitmask */
-  dither_t      *d = &dither_info;
-  int overdensity_bits = 0;
+  dither_t *d = (dither_t *) vd;
   int terminate;
   int direction = row & 1 ? 1 : -1;
 
-  switch (horizontal_overdensity)
-    {
-    case 0:
-    case 1:
-      overdensity_bits = 0;
-      break;
-    case 2:
-      overdensity_bits = 1;
-      break;
-    case 4:
-      overdensity_bits = 2;
-      break;
-    case 8:
-      overdensity_bits = 3;
-      break;
-    }
+  bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
+  x = (direction == 1) ? 0 : d->dst_width - 1;
+  terminate = (direction == 1) ? d->dst_width : -1;
 
-  bit = (direction == 1) ? 128 : 1 << (7 - ((dst_width - 1) & 7));
-  x = (direction == 1) ? 0 : dst_width - 1;
-  terminate = (direction == 1) ? dst_width : -1;
+  xstep  = d->src_width / d->dst_width;
+  xmod   = d->src_width % d->dst_width;
+  length = (d->dst_width + 7) / 8;
 
-  xstep  = src_width / dst_width;
-  xmod   = src_width % dst_width;
-  length = (dst_width + 7) / 8;
-
-  kerror0 = get_errline(row, ECOLOR_K);
-  kerror1 = get_errline(row + 1, ECOLOR_K);
-  memset(kerror1, 0, dst_width * sizeof(int));
+  kerror0 = get_errline(d, row, ECOLOR_K);
+  kerror1 = get_errline(d, row + 1, ECOLOR_K);
+  memset(kerror1, 0, d->dst_width * sizeof(int));
 
   memset(black, 0, length);
   kptr = black;
   xerror = 0;
   if (direction == -1)
     {
-      kerror0 += dst_width - 1;
-      kerror1 += dst_width - 1;
+      kerror0 += d->dst_width - 1;
+      kerror1 += d->dst_width - 1;
       kptr = black + length - 1;
       xstep = -xstep;
-      gray += src_width - 1;
-      xerror = ((dst_width - 1) * xmod) % dst_width;
+      gray += d->src_width - 1;
+      xerror = ((d->dst_width - 1) * xmod) % d->dst_width;
       xmod = -xmod;
     }
 
@@ -1496,20 +1546,23 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
 	 kerror0 += direction,
 	 kerror1 += direction)
   {
+    int ok;
     int i;
     int offset;
-    k = 65535 - *gray + ditherk / 8;
-    offset = (15 - (((k & 0xf000) >> 12)) * horizontal_overdensity) >> 1;
+    k = 65535 - *gray;
+    offset = ((15 - (((k & 0xf000) >> 12))) * d->horizontal_overdensity) >> 1;
+    ok = k;
+    k += ditherk / 8;
     if (x < offset)
       offset = x;
-    else if (x > dst_width - offset - 1)
-      offset = dst_width - x - 1;
+    else if (x > d->dst_width - offset - 1)
+      offset = d->dst_width - x - 1;
 
     for (i = d->nk_l; i > 0; i--)
       {
 	if (k > d->k_transitions[i])
 	  {
-	    if (d->kbits++ == horizontal_overdensity)
+	    if (d->kbits++ == d->horizontal_overdensity)
 	      {
 		int j;
 		for (j = 0; j < d->nm_log; j++)
@@ -1528,15 +1581,17 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
     {
       kerror1[-offset] += k;
       kerror1[0] += 3 * k;
-      kerror1[0] += k;
-      ditherk    = kerror0[1] + 3 * k;
+      kerror1[offset] += k;
+      if (x > 0 && x < (d->dst_width - 1))
+	ditherk    = kerror0[1] + 3 * k;
     }
     else
     {
       kerror1[-offset] += k;
       kerror1[0] += k;
-      kerror1[0] += k;
-      ditherk    = kerror0[1] + 5 * k;
+      kerror1[offset] += k;
+      if (x > 0 && x < (d->dst_width - 1))
+	ditherk    = kerror0[1] + 5 * k;
     }
 
     if (direction == 1)
@@ -1562,14 +1617,14 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
 
     gray   += xstep;
     xerror += xmod;
-    if (xerror >= dst_width)
+    if (xerror >= d->dst_width)
       {
-	xerror -= dst_width;
+	xerror -= d->dst_width;
 	gray   += direction;
       }
     else if (xerror < 0)
       {
-	xerror += dst_width;
+	xerror += d->dst_width;
 	gray   += direction;
       }      
   }
@@ -1587,7 +1642,7 @@ do {							\
     {							\
       if (base > d->r##_transitions[i])			\
 	{						\
-	  if (d->r##bits++ == horizontal_overdensity)	\
+	  if (d->r##bits++ == d->horizontal_overdensity)	\
 	    {						\
 	      int j;					\
 	      for (j = 0; j < d->n##r##_log; j++)	\
@@ -1647,16 +1702,14 @@ do {									\
 void
 dither_cmyk4(unsigned short  *rgb,	/* I - RGB pixels */
 	     int           row,		/* I - Current Y coordinate */
-	     int           src_width,	/* I - Width of input row */
-	     int           dst_width,	/* I - Width of output rows */
+	     void *vd,
 	     unsigned char *cyan,	/* O - Cyan bitmap pixels */
 	     unsigned char *lcyan,	/* O - Light cyan bitmap pixels */
 	     unsigned char *magenta,	/* O - Magenta bitmap pixels */
 	     unsigned char *lmagenta,	/* O - Light magenta bitmap pixels */
 	     unsigned char *yellow,	/* O - Yellow bitmap pixels */
 	     unsigned char *lyellow,	/* O - Light yellow bitmap pixels */
-	     unsigned char *black,	/* O - Black bitmap pixels */
-	     int horizontal_overdensity)
+	     unsigned char *black)	/* O - Black bitmap pixels */
 {
   int		x,		/* Current X coordinate */
 		xerror,		/* X error count */
@@ -1694,60 +1747,41 @@ dither_cmyk4(unsigned short  *rgb,	/* I - RGB pixels */
   int ub, lb;
   int ditherbit0, ditherbit1, ditherbit2, ditherbit3;
   long long	density;
-  dither_t      *d = &dither_info;
+  dither_t *d = (dither_t *) vd;
 
   /*
-   * If horizontal_overdensity is > 1, we want to output a bit only so many
+   * If d->horizontal_overdensity is > 1, we want to output a bit only so many
    * times that a bit would be generated.  These serve as counters for making
    * that decision.  We make these variable static rather than reinitializing
    * at zero each line to avoid having a line of bits near the edge of the
    * image.
    */
-  int overdensity_bits = 0;
-
   int terminate;
   int direction = row & 1 ? 1 : -1;
 
-  switch (horizontal_overdensity)
-    {
-    case 0:
-    case 1:
-      overdensity_bits = 0;
-      break;
-    case 2:
-      overdensity_bits = 1;
-      break;
-    case 4:
-      overdensity_bits = 2;
-      break;
-    case 8:
-      overdensity_bits = 3;
-      break;
-    }
+  bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
+  x = (direction == 1) ? 0 : d->dst_width - 1;
+  terminate = (direction == 1) ? d->dst_width : -1;
 
-  bit = (direction == 1) ? 128 : 1 << (7 - ((dst_width - 1) & 7));
-  x = (direction == 1) ? 0 : dst_width - 1;
-  terminate = (direction == 1) ? dst_width : -1;
+  xstep  = 3 * (d->src_width / d->dst_width);
+  xmod   = d->src_width % d->dst_width;
+  length = (d->dst_width + 7) / 8;
 
-  xstep  = 3 * (src_width / dst_width);
-  xmod   = src_width % dst_width;
-  length = (dst_width + 7) / 8;
+  cerror0 = get_errline(d, row, ECOLOR_C);
+  cerror1 = get_errline(d, row + 1, ECOLOR_C);
 
-  cerror0 = get_errline(row, ECOLOR_C);
-  cerror1 = get_errline(row + 1, ECOLOR_C);
+  merror0 = get_errline(d, row, ECOLOR_M);
+  merror1 = get_errline(d, row + 1, ECOLOR_M);
 
-  merror0 = get_errline(row, ECOLOR_M);
-  merror1 = get_errline(row + 1, ECOLOR_M);
+  yerror0 = get_errline(d, row, ECOLOR_Y);
+  yerror1 = get_errline(d, row + 1, ECOLOR_Y);
 
-  yerror0 = get_errline(row, ECOLOR_Y);
-  yerror1 = get_errline(row + 1, ECOLOR_Y);
-
-  kerror0 = get_errline(row, ECOLOR_K);
-  kerror1 = get_errline(row + 1, ECOLOR_K);
-  memset(kerror1, 0, dst_width * sizeof(int));
-  memset(cerror1, 0, dst_width * sizeof(int));
-  memset(merror1, 0, dst_width * sizeof(int));
-  memset(yerror1, 0, dst_width * sizeof(int));
+  kerror0 = get_errline(d, row, ECOLOR_K);
+  kerror1 = get_errline(d, row + 1, ECOLOR_K);
+  memset(kerror1, 0, d->dst_width * sizeof(int));
+  memset(cerror1, 0, d->dst_width * sizeof(int));
+  memset(merror1, 0, d->dst_width * sizeof(int));
+  memset(yerror1, 0, d->dst_width * sizeof(int));
   cptr = cyan;
   mptr = magenta;
   yptr = yellow;
@@ -1758,14 +1792,14 @@ dither_cmyk4(unsigned short  *rgb,	/* I - RGB pixels */
   xerror = 0;
   if (direction == -1)
     {
-      cerror0 += dst_width - 1;
-      cerror1 += dst_width - 1;
-      merror0 += dst_width - 1;
-      merror1 += dst_width - 1;
-      yerror0 += dst_width - 1;
-      yerror1 += dst_width - 1;
-      kerror0 += dst_width - 1;
-      kerror1 += dst_width - 1;
+      cerror0 += d->dst_width - 1;
+      cerror1 += d->dst_width - 1;
+      merror0 += d->dst_width - 1;
+      merror1 += d->dst_width - 1;
+      yerror0 += d->dst_width - 1;
+      yerror1 += d->dst_width - 1;
+      kerror0 += d->dst_width - 1;
+      kerror1 += d->dst_width - 1;
       cptr = cyan + length - 1;
       if (lcptr)
 	lcptr = lcyan + length - 1;
@@ -1778,8 +1812,8 @@ dither_cmyk4(unsigned short  *rgb,	/* I - RGB pixels */
       if (kptr)
 	kptr = black + length - 1;
       xstep = -xstep;
-      rgb += 3 * (src_width - 1);
-      xerror = ((dst_width - 1) * xmod) % dst_width;
+      rgb += 3 * (d->src_width - 1);
+      xerror = ((d->dst_width - 1) * xmod) % d->dst_width;
       xmod = -xmod;
     }
 
@@ -1931,7 +1965,7 @@ dither_cmyk4(unsigned short  *rgb,	/* I - RGB pixels */
       if (k > (32767 + ((ditherbit0 >> d->k_randomizer) -
 			(32768 >> d->k_randomizer))))
 	DO_PRINT_COLOR_4(k, k, 1);
-      UPDATE_DITHER(k, 1, x, src_width);
+      UPDATE_DITHER(k, 1, x, d->src_width);
     }
     else
     {
@@ -1946,11 +1980,11 @@ dither_cmyk4(unsigned short  *rgb,	/* I - RGB pixels */
       y  = (65535 - rgb[0] / 4) * (y - k) / 65535 + k;
     }
 
-    density = (c + m + y) >> overdensity_bits;
+    density = (c + m + y) >> d->overdensity_bits;
     UPDATE_COLOR(c);
     UPDATE_COLOR(m);
     UPDATE_COLOR(y);
-    density += (c + m + y) >> overdensity_bits;
+    density += (c + m + y) >> d->overdensity_bits;
 /*     density >>= 1; */
 
     if (!kptr || !(*kptr & bit))
@@ -1960,9 +1994,9 @@ dither_cmyk4(unsigned short  *rgb,	/* I - RGB pixels */
 	PRINT_COLOR_4(yellow, y, Y, 3, 0);
       }
 
-    UPDATE_DITHER(c, 2, x, dst_width);
-    UPDATE_DITHER(m, 3, x, dst_width);
-    UPDATE_DITHER(y, 0, x, dst_width);
+    UPDATE_DITHER(c, 2, x, d->dst_width);
+    UPDATE_DITHER(m, 3, x, d->dst_width);
+    UPDATE_DITHER(y, 0, x, d->dst_width);
 
     /*****************************************************************
      * Advance the loop
@@ -2017,14 +2051,14 @@ dither_cmyk4(unsigned short  *rgb,	/* I - RGB pixels */
 
     rgb    += xstep;
     xerror += xmod;
-    if (xerror >= dst_width)
+    if (xerror >= d->dst_width)
       {
-	xerror -= dst_width;
+	xerror -= d->dst_width;
 	rgb    += 3 * direction;
       }
     else if (xerror < 0)
       {
-	xerror += dst_width;
+	xerror += d->dst_width;
 	rgb    += 3 * direction;
       }      
   }

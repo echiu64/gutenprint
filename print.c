@@ -429,7 +429,6 @@ run(char   *name,		/* I - Name of print program. */
   GDrawable	*drawable;	/* Drawable for image */
   GRunModeType	run_mode;	/* Current run mode */
   FILE		*prn;		/* Print file/command */
-  int		i;		/* Looping var */
   lut_t		lut;		/* 16-bit lookup table for brightness */
   guchar	*cmap;		/* Colormap (indexed images only) */
   int		ncolors;	/* Number of colors in colormap */
