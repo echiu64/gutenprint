@@ -199,12 +199,25 @@ eventone_update(stpi_dither_channel_t *dc, eventone_t *et,
 static inline void
 diffuse_error(stpi_dither_channel_t *dc, eventone_t *et, int x, int direction)
 {
-  int fraction = (dc->v + (et->diff_factor>>1)) / et->diff_factor;
-  int frac_2 = fraction + fraction;
-  int frac_3 = frac_2 + fraction;
+  /*
+   * Tests to date show that the second diffusion pattern works better
+   * than the first in most cases.  The previous code is being left here
+   * in case it is later determined that the original code works better.
+   * -- rlk 20031101
+   */
+#if 0
+/*  int fraction = (dc->v + (et->diff_factor>>1)) / et->diff_factor; */
+  int frac_2 = dc->v + dc->v;
+  int frac_3 = frac_2 + dc->v;
   dc->errs[0][x + MAX_SPREAD] = frac_3;
   dc->errs[0][x + MAX_SPREAD - direction] += frac_2;
-  dc->v -= (frac_2 + frac_3);
+  dc->v -= (frac_2 + frac_3) / 16;
+#else
+  dc->errs[0][x + MAX_SPREAD] = dc->v * 3;
+  dc->errs[0][x + MAX_SPREAD - direction] += dc->v * 5;
+  dc->errs[0][x + MAX_SPREAD - (direction * 2)] += dc->v * 1;
+  dc->v -= dc->v * 9 / 16;
+#endif
 }
 
 static inline int
@@ -371,7 +384,7 @@ stpi_dither_et(stp_vars_t v,
 	    find_segment_and_ditherpoint(dc, raw[i], &lower, &upper);
 
 	  /* Incorporate error data from previous line */
-	  dc->v += 2 * range_point + dc->errs[0][x + MAX_SPREAD];
+	  dc->v += 2 * range_point + (dc->errs[0][x + MAX_SPREAD] + 8) / 16;
 	  inkspot = dc->v - range_point;
 
 	  point_error += eventone_adjust(dc, et, inkspot, range_point);
