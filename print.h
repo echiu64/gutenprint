@@ -69,6 +69,40 @@ typedef struct
   unsigned short blue[256];
 } lut_t;
 
+
+typedef struct					/* Plug-in variables */
+{
+  char	output_to[255],		/* Name of file or command to print to */
+	driver[33],		/* Name of printer "driver" */
+	ppd_file[255];		/* PPD file */
+  int	output_type;		/* Color or grayscale output */
+  char	resolution[33],		/* Resolution */
+	media_size[33],		/* Media size */
+	media_type[33],		/* Media type */
+	media_source[33];	/* Media source */
+  int	brightness;		/* Output brightness */
+  float	scaling;		/* Scaling, percent of printable area */
+  int	orientation,		/* Orientation - 0 = port., 1 = land.,
+				   -1 = auto */
+	left,			/* Offset from lower-lefthand corner, points */
+	top;			/* ... */
+  float gamma;                  /* Gamma */
+  int   contrast,		/* Output Contrast */
+	red,			/* Output red level */
+	green,			/* Output green level */
+	blue;			/* Output blue level */
+  int	linear;			/* Linear density (mostly for testing!) */
+  float	saturation;		/* Output saturation */
+  float	density;		/* Maximum output density */
+} vars_t;
+
+typedef struct		/**** Printer List ****/
+{
+  int	active;			/* Do we know about this printer? */
+  char	name[17];		/* Name of printer */
+  vars_t v;
+} plist_t;
+
 /*
  * Abstract data type for interfacing with the image creation program
  * (in this case, the Gimp).
@@ -89,7 +123,7 @@ extern void Image_note_progress(Image image, double current, double total);
 typedef struct
 {
   char	*long_name,			/* Long name for UI */
-	*short_name;			/* Short name for printrc file */
+	*driver;			/* Short name for printrc file */
   int	color,				/* TRUE if supports color */
 	model;				/* Model number */
   float	gamma,				/* Gamma correction */
@@ -142,12 +176,8 @@ extern void	rgb_to_gray(unsigned char *, unsigned short *, int, int,
 extern void	rgb_to_rgb(unsigned char *, unsigned short *, int, int,
 			   lut_t *, unsigned char *, float);
 
-extern void	compute_lut(lut_t *lut, int icontrast,
-			    float red, float green, float blue,
-			    int ibrightness, float print_gamma,
-			    float gimp_gamma, float user_gamma, int linear,
-			    float printer_density, float user_density);
-
+extern void	compute_lut(lut_t *lut, float print_gamma, float print_density,
+			    float app_gamma, vars_t *v);
 
 
 extern void	default_media_size(int model, char *ppd_file, char *media_size,

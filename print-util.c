@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.31  1999/11/23 01:33:37  rlk
+ *   First stage of simplifying the variable stuff
+ *
  *   Revision 1.30  1999/11/16 00:59:00  rlk
  *   More fine tuning
  *
@@ -1853,17 +1856,10 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 
 void
 compute_lut(lut_t *lut,
-	    int icontrast,
-	    float red,
-	    float green,
-	    float blue,
-	    int ibrightness,
 	    float print_gamma,
-	    float gimp_gamma,
-	    float user_gamma,
-	    int linear,
 	    float printer_density,
-	    float user_density)
+	    float app_gamma,
+	    vars_t *v)
 {
   float		brightness,	/* Computed brightness */
 		screen_gamma,	/* Screen gamma correction */
@@ -1880,33 +1876,33 @@ compute_lut(lut_t *lut,
    */
 
   float contrast;
-  contrast = icontrast / 100.0;
-  red = 100.0 / red ;
-  green = 100.0 / green;
-  blue = 100.0 / blue;
-  if (red < 0.01)
-    red = 0.01;
-  if (green < 0.01)
-    green = 0.01;
-  if (blue < 0.01)
-    blue = 0.01;
+  contrast = v->contrast / 100.0;
+  v->red = 100.0 / v->red ;
+  v->green = 100.0 / v->green;
+  v->blue = 100.0 / v->blue;
+  if (v->red < 0.01)
+    v->red = 0.01;
+  if (v->green < 0.01)
+    v->green = 0.01;
+  if (v->blue < 0.01)
+    v->blue = 0.01;
       
-  if (linear)
+  if (v->linear)
     {
-      screen_gamma = gimp_gamma / 1.7;
-      brightness   = ibrightness / 100.0;
+      screen_gamma = app_gamma / 1.7;
+      brightness   = v->brightness / 100.0;
     }
   else
     {
-      brightness   = 100.0 / ibrightness;
-      screen_gamma = gimp_gamma * brightness / 1.7;
+      brightness   = 100.0 / v->brightness;
+      screen_gamma = app_gamma * brightness / 1.7;
     }
 
-  print_gamma = user_gamma / print_gamma;
+  print_gamma = v->gamma / print_gamma;
 
   for (i = 0; i < 256; i ++)
     {
-      if (linear)
+      if (v->linear)
 	{
 	  double adjusted_pixel;
 	  pixel = adjusted_pixel = (float) i / 255.0;
@@ -1952,7 +1948,7 @@ compute_lut(lut_t *lut,
 	  pixel = 1.0 - pow(pixel, screen_gamma);
 
 	  /*
-	   * Third, fix up red, green, blue values
+	   * Third, fix up v->red, v->green, v->blue values
 	   *
 	   * I don't know how to do this correctly.  I think that what I'll do
 	   * is if the correction is less than 1 to multiply it by the
@@ -1964,38 +1960,38 @@ compute_lut(lut_t *lut,
 	  else if (pixel > 1.0)
 	    pixel = 1.0;
 
-	  red_pixel = pow(pixel, 1.0 / (red * red));
-	  green_pixel = pow(pixel, 1.0 / (green * green));
-	  blue_pixel = pow(pixel, 1.0 / (blue * blue));
+	  red_pixel = pow(pixel, 1.0 / (v->red * v->red));
+	  green_pixel = pow(pixel, 1.0 / (v->green * v->green));
+	  blue_pixel = pow(pixel, 1.0 / (v->blue * v->blue));
 
 	  /*
 	   * Finally, fix up print gamma and scale
 	   */
 
-	  pixel = 256.0 * (256.0 - 256.0 * printer_density * user_density *
+	  pixel = 256.0 * (256.0 - 256.0 * printer_density * v->density *
 			   pow(brightness * pixel, print_gamma));
-	  red_pixel = 256.0 * (256.0 - 256.0 * printer_density * user_density *
+	  red_pixel = 256.0 * (256.0 - 256.0 * printer_density * v->density *
 			       pow(brightness * red_pixel, print_gamma));
 	  green_pixel = 256.0 * (256.0 - 256.0 * printer_density *
-				 user_density *
+				 v->density *
 				 pow(brightness * green_pixel, print_gamma));
 	  blue_pixel = 256.0 * (256.0 - 256.0 * printer_density *
-				user_density *
+				v->density *
 				pow(brightness * blue_pixel, print_gamma));
 
 #if 0
-	  if (red > 1.0)
-	    red_pixel = 65536.0 + ((pixel - 65536.0) / red);
+	  if (v->red > 1.0)
+	    red_pixel = 65536.0 + ((pixel - 65536.0) / v->red);
 	  else
-	    red_pixel = pixel * red;
-	  if (green > 1.0)
-	    green_pixel = 65536.0 + ((pixel - 65536.0) / green);
+	    red_pixel = pixel * v->red;
+	  if (v->green > 1.0)
+	    green_pixel = 65536.0 + ((pixel - 65536.0) / v->green);
 	  else
-	    green_pixel = pixel * green;
-	  if (blue > 1.0)
-	    blue_pixel = 65536.0 + ((pixel - 65536.0) / blue);
+	    green_pixel = pixel * v->green;
+	  if (v->blue > 1.0)
+	    blue_pixel = 65536.0 + ((pixel - 65536.0) / v->blue);
 	  else
-	    blue_pixel = pixel * blue;
+	    blue_pixel = pixel * v->blue;
 #endif
 
 	  if (pixel <= 0.0)
