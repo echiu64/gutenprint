@@ -292,6 +292,8 @@ create_color_adjust_window (void)
                            _("Choose the dither algorithm to be used.\n"
                              "Adaptive Hybrid usually produces the best "
                              "all-around quality.\n"
+			     "EvenTone is a new, experimental algorithm "
+			     "that often produces excellent results.\n"
                              "Ordered is faster and produces almost as good "
                              "quality on photographs.\n"
                              "Fast and Very Fast are considerably faster, and "
