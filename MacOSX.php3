@@ -173,7 +173,7 @@ require('standard_html_header.php3');
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 4.3.17 is the first Mac OS X release in the 4.3.x develeopmental line.
+ Gimp-Print 4.3.17 is the first Mac OS X release in the 4.3.x developmental line.
  This release represents the state-of-the-art in current Gimp-Print development. As
  such, while it contains many new and exciting features over the mainline branch (4.2.x), 
  it may also provide unexpected behavior.  This package requires (but does
