@@ -331,7 +331,7 @@ gimp_create_main_window (void)
   gtk_widget_show (table);
 
   recenter_button = button = gtk_button_new_with_label (_("Center Image"));
-  gtk_misc_set_padding (GTK_MISC (GTK_BIN (button)->child), 2, 0);
+  gtk_misc_set_padding (GTK_MISC (GTK_BIN (button)->child), 16, 8);
   gtk_signal_connect(GTK_OBJECT (button), "clicked",
                      GTK_SIGNAL_FUNC (gimp_position_callback),
 		     NULL);
