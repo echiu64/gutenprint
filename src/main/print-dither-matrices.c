@@ -27,7 +27,8 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "print-dither.h"
+#include <gimp-print/gimp-print.h>
+#include "gimp-print-internal.h"
 #include <math.h>
 
 #ifdef __GNUC__
