@@ -48,7 +48,9 @@
 #include <gimp-print-internal.h>
 #include <gimp-print-intl-internal.h>
 
-/* #define DEBUG 1 */
+#if (0)
+#define DEBUG 1 
+#endif
 
 /*
  * For each printer, we can select from a variety of dot sizes.
@@ -446,6 +448,7 @@ static void canon_write_line(const stp_vars_t, const canon_cap_t *, int,
 #define CANON_CAP_l         0x400ull
 #define CANON_CAP_r         0x800ull
 #define CANON_CAP_g         0x1000ull
+#define CANON_CAP_ACKSHORT  0x2000ull
 
 #define CANON_CAP_STD1 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|CANON_CAP_l|\
                         CANON_CAP_m|CANON_CAP_p|CANON_CAP_q|CANON_CAP_t)
@@ -557,7 +560,7 @@ static const canon_cap_t canon_model_capabilities[] =
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
-    CANON_CAP_STD1 | CANON_CAP_r | CANON_CAP_DMT,
+    CANON_CAP_STD1 | CANON_CAP_r | CANON_CAP_DMT | CANON_CAP_ACKSHORT,
     {-1,0,0,-1,0,-1},
     { 1,1,1,1,1,1 },
     &variable_6pl_6color_inks
@@ -1242,6 +1245,14 @@ canon_cmd(const stp_vars_t v, /* I - the printer         */
 static void
 canon_init_resetPrinter(const stp_vars_t v, canon_init_t *init)
 {
+  long long f=init->caps->features;
+  if (f & (CANON_CAP_ACKSHORT)) 
+    {
+      canon_cmd(v,ESC5b,0x4b, 2, 0x00,0x1f);
+      stp_puts("BJLSTART\nControlMode=Common\n",v);
+      if (f & CANON_CAP_ACKSHORT) stp_puts("AckTime=Short\n",v);
+      stp_puts("BJLEND\n",v);
+    }
   canon_cmd(v,ESC5b,0x4b, 2, 0x00,0x0f);
 }
 
@@ -1466,7 +1477,7 @@ canon_init_setImage(const stp_vars_t v, canon_init_t *init)
     arg_74_2= 0x90;
     arg_74_3= 0x04;
     if (init->colormode==COLOR_CCMMYK) {
-      init->bits=2; init->use_dmt=1;
+      init->bits=3; init->use_dmt=1;
     }
   }
 
