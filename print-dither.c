@@ -31,6 +31,7 @@
 
 #include "print.h"
 #include <limits.h>
+#include <math.h>
 
 #define D_FLOYD_HYBRID 0
 #define D_FLOYD 1
@@ -171,6 +172,7 @@ typedef struct dither
   dither_matrix_t mat5;
 #endif
   dither_matrix_t mat6;
+  dither_matrix_t mat7;
 
   dither_matrix_t c_pick;
   dither_matrix_t c_dithermat;
@@ -426,6 +428,7 @@ ditherpoint(const dither_t *d, dither_matrix_t *mat, int x, int y)
 void *
 init_dither(int in_width, int out_width, vars_t *v)
 {
+  int i;
   dither_t *d = malloc(sizeof(dither_t));
   simple_dither_range_t r;
   memset(d, 0, sizeof(dither_t));
@@ -449,16 +452,23 @@ init_dither(int in_width, int out_width, vars_t *v)
   init_matrix_short(&(d->mat5), 199, quic1);
 #endif
   init_matrix(&(d->mat6), 257, 1, quic2);
+  init_matrix(&(d->mat7), 257, 1, quic2);
+  for (i = 0; i < 257 * 257; i++)
+    {
+      double dd = d->mat7.matrix[i] / 65535.0;
+      dd = sqrt(dd);
+      d->mat7.matrix[i] = 65535 * dd;
+    }
 
   clone_matrix(&(d->mat6), &(d->c_dithermat), 171, 85);
   clone_matrix(&(d->mat6), &(d->m_dithermat), 85, 171);
   clone_matrix(&(d->mat6), &(d->y_dithermat), 0, 85);
   clone_matrix(&(d->mat6), &(d->k_dithermat), 0, 0);
 
-  clone_matrix(&(d->mat6), &(d->c_pick), 85, 0);
-  clone_matrix(&(d->mat6), &(d->m_pick), 0, 171);
-  clone_matrix(&(d->mat6), &(d->y_pick), 171, 0);
-  clone_matrix(&(d->mat6), &(d->k_pick), 85, 171);
+  clone_matrix(&(d->mat7), &(d->c_pick), 85, 0);
+  clone_matrix(&(d->mat7), &(d->m_pick), 0, 171);
+  clone_matrix(&(d->mat7), &(d->y_pick), 171, 0);
+  clone_matrix(&(d->mat7), &(d->k_pick), 85, 171);
 
   if (!strcmp(v->dither_algorithm, "Hybrid Floyd-Steinberg"))
     d->dither_type = D_FLOYD_HYBRID;
@@ -1019,6 +1029,7 @@ free_dither(void *vd)
   destroy_matrix(&(d->mat5));
 #endif
   destroy_matrix(&(d->mat6));
+  destroy_matrix(&(d->mat7));
   free(d);
 }
 
@@ -1091,7 +1102,8 @@ update_dither(int r, int o, int width, int odb, int odb_mask,
       int dist1;
       int offset;
       int delta, delta1;
-      int myspread = 4;
+      int nextspread = 4;
+      int thisspread = 8 - nextspread;
       if (tmp > 65535)
 	tmp = 65535;
       if (odb >= 16 || o >= 2048)
@@ -1107,14 +1119,14 @@ update_dither(int r, int o, int width, int odb, int odb_mask,
 	}
       if (offset == 0)
 	{
-	  dist = myspread * tmp;
+	  dist = nextspread * tmp;
 	  error1[0] += dist;
-	  return error0[direction] + (8 - myspread) * tmp;
+	  return error0[direction] + thisspread * tmp;
 	}
       else
 	{
-	  dist = myspread * tmp / d->offset0_table[offset];
-	  dist1 = (8 - myspread) * tmp / d->offset1_table[offset];
+	  dist = nextspread * tmp / d->offset0_table[offset];
+	  dist1 = thisspread * tmp / d->offset1_table[offset];
 	  delta1 = dist1 * offset;
 	}
       delta = dist;
@@ -1282,7 +1294,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	       */
 	    case D_ORDERED:
 	    default:
-	      vmatrix = ditherpoint(d, pick_matrix, x, y);
+	      vmatrix = ditherpoint(d, dither_matrix, x, y);
 	    }
 
 	  if (vmatrix == 65536 && virtual_value == 65536)
@@ -1341,7 +1353,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	      v = dd->value_h;
 	      dot_size = dd->dot_size_h;
 	    }
-	  else if (rangepoint >= ditherpoint(d, dither_matrix, x, y))
+	  else if (rangepoint >= ditherpoint(d, pick_matrix, x, y))
 	    {
 	      isdark = dd->isdark_h;
 	      bits = dd->bits_h;
