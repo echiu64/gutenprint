@@ -209,7 +209,7 @@
 
 <printer name="EPSON Stylus C40SX" driver="escp2-c40sx">
 <color>
-<model value=42>
+<model value=43>
 <gamma value=0.585>
 <density value=1.0>
 <magenta value=0.95>
@@ -219,7 +219,7 @@
 
 <printer name="EPSON Stylus C20UX" driver="escp2-c20ux">
 <color>
-<model value=43>
+<model value=42>
 <gamma value=0.585>
 <density value=1.0>
 <magenta value=0.95>
