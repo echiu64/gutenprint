@@ -93,7 +93,7 @@ escp2_write_weave(void *, FILE *, int, int, int, int, int, int,
 		  const unsigned char *c, const unsigned char *m,
 		  const unsigned char *y, const unsigned char *k,
 		  const unsigned char *C, const unsigned char *M);
-static void escp2_init_microweave(void);
+static void escp2_init_microweave(int);
 static void escp2_free_microweave(void);
 
 static void destroy_weave(void *);
@@ -1239,7 +1239,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 			     out_height, separation_rows,
 			     top * 720 / 72, page_height * 720 / 72);
   else
-    escp2_init_microweave();
+    escp2_init_microweave(top * ydpi / 72);
 
   /*
    * Compute the LUT.  For now, it's 8 bit, but that may eventually
@@ -2075,11 +2075,11 @@ static int last_color = -1;
 #define MICRO_S(c, l) (microweave_s + COMPBUFWIDTH * (l) + COMPBUFWIDTH * (c) * 4)
 
 static void
-escp2_init_microweave()
+escp2_init_microweave(int top)
 {
   if (!microweave_s)
     microweave_s = malloc(6 * 4 * COMPBUFWIDTH);
-  accumulated_spacing = 0;
+  accumulated_spacing = top;
 }
 
 static void
