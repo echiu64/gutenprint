@@ -3,7 +3,7 @@
  *
  *   Main window code for Print plug-in for the GIMP.
  *
- *   Copyright 1997-2000 Michael Sweet (mike@easysw.com),
+ *   Copyright 1997-2003 Michael Sweet (mike@easysw.com),
  *	Robert Krawitz (rlk@alum.mit.edu), Steve Miller (smiller@rni.net)
  *      and Michael Natterer (mitch@gimp.org)
  *
@@ -1511,7 +1511,7 @@ create_about_dialog (void)
   label = gtk_label_new
     (_("Gimp-Print Version " PLUG_IN_VERSION "\n"
        "\n"
-       "Copyright (C) 1997-2001 Michael Sweet, Robert Krawitz,\n"
+       "Copyright (C) 1997-2003 Michael Sweet, Robert Krawitz,\n"
        "and the rest of the Gimp-Print Development Team.\n"
        "\n"
        "Please visit our web site at http://gimp-print.sourceforge.net.\n"
@@ -3891,11 +3891,11 @@ preview_update (void)
     }
   else if (auto_paper_size)
     {
-      gdouble twidth = .5 + printable_width * pv->scaling / 100;
+      gdouble twidth = printable_width * pv->scaling / 100;
 
-      print_width = twidth;
-      print_height = twidth * (gdouble) image_height /
-	(gdouble) image_width;
+      print_width = twidth + .5;
+      print_height =
+	(twidth * (gdouble) image_height / (gdouble) image_width) + .5;
     }
   else
     {
@@ -3906,19 +3906,19 @@ preview_update (void)
 	/* i.e. if image is wider relative to its height than the width
 	   of the printable area relative to its height */
 	{
-	  gdouble twidth = .5 + printable_width * pv->scaling / 100;
+	  gdouble twidth = printable_width * pv->scaling / 100;
 
-	  print_width = twidth;
-	  print_height = twidth * (gdouble) image_height /
-	    (gdouble) image_width;
+	  print_width = twidth + .5;
+	  print_height =
+	    (twidth * (gdouble) image_height / (gdouble) image_width) + .5;
 	}
       else
 	{
-	  gdouble theight = .5 + printable_height * pv->scaling /100;
+	  gdouble theight = printable_height * pv->scaling /100;
 
-	  print_height = theight;
-	  print_width = theight * (gdouble) image_width /
-	    (gdouble) image_height;
+	  print_height = theight + .5;
+	  print_width =
+	    (theight * (gdouble) image_width / (gdouble) image_height) + .5;
 	}
     }
 
