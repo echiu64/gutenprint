@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 0.3\n"
-"POT-Creation-Date: 2003-02-15 11:42-0500\n"
+"POT-Creation-Date: 2003-02-15 19:19-0500\n"
 "PO-Revision-Date: 2002-07-01 19:36+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian/Bokmaal <no@li.org>\n"
@@ -406,7 +406,7 @@ msgstr "Manuell med pause"
 msgid "Manual without Pause"
 msgstr "Manuell uten pause"
 
-#: src/escputil/escputil.c:616 src/libgimpprintui/panel.c:1658
+#: src/escputil/escputil.c:616 src/libgimpprintui/panel.c:1684
 #: src/main/print-canon.c:1597 src/main/print-lexmark.c:525
 msgid "Black"
 msgstr "Sort"
@@ -466,7 +466,7 @@ msgstr "Gamma:"
 msgid "Gamma value assumed by application"
 msgstr ""
 
-#: src/escputil/escputil.c:617 src/libgimpprintui/panel.c:1637
+#: src/escputil/escputil.c:617 src/libgimpprintui/panel.c:1663
 #: src/main/print-color.c:118
 msgid "Cyan"
 msgstr "Cyan"
@@ -475,7 +475,7 @@ msgstr "Cyan"
 msgid "Adjust the cyan gamma"
 msgstr ""
 
-#: src/escputil/escputil.c:618 src/libgimpprintui/panel.c:1644
+#: src/escputil/escputil.c:618 src/libgimpprintui/panel.c:1670
 #: src/main/print-color.c:126
 msgid "Magenta"
 msgstr "Magenta"
@@ -484,7 +484,7 @@ msgstr "Magenta"
 msgid "Adjust the magenta gamma"
 msgstr ""
 
-#: src/escputil/escputil.c:619 src/libgimpprintui/panel.c:1651
+#: src/escputil/escputil.c:619 src/libgimpprintui/panel.c:1677
 #: src/main/print-color.c:134
 msgid "Yellow"
 msgstr "Gul"
@@ -574,99 +574,99 @@ msgstr ""
 msgid "Upper bound of gray component reduction"
 msgstr ""
 
-#: src/main/print-color.c:238
+#: src/main/print-color.c:239
 msgid "Composite Curve"
 msgstr ""
 
-#: src/main/print-color.c:239
+#: src/main/print-color.c:240
 msgid "Composite (Grayscale) curve"
 msgstr ""
 
-#: src/main/print-color.c:246
+#: src/main/print-color.c:247
 msgid "Cyan Curve"
 msgstr ""
 
-#: src/main/print-color.c:247
+#: src/main/print-color.c:248
 #, fuzzy
 msgid "Cyan curve"
 msgstr "Avbryt"
 
-#: src/main/print-color.c:254
+#: src/main/print-color.c:255
 #, fuzzy
 msgid "Magenta Curve"
 msgstr "Magenta"
 
-#: src/main/print-color.c:255
+#: src/main/print-color.c:256
 #, fuzzy
 msgid "Magenta curve"
 msgstr "Magenta"
 
-#: src/main/print-color.c:262
+#: src/main/print-color.c:263
 #, fuzzy
 msgid "Yellow Curve"
 msgstr "Gul"
 
-#: src/main/print-color.c:263
+#: src/main/print-color.c:264
 #, fuzzy
 msgid "Yellow curve"
 msgstr "Gul"
 
-#: src/main/print-color.c:270
+#: src/main/print-color.c:271
 #, fuzzy
 msgid "Black Curve"
 msgstr "Sort"
 
-#: src/main/print-color.c:271
+#: src/main/print-color.c:272
 #, fuzzy
 msgid "Black curve"
 msgstr "Sort"
 
-#: src/main/print-color.c:278
+#: src/main/print-color.c:279
 msgid "Hue Map"
 msgstr ""
 
-#: src/main/print-color.c:279
+#: src/main/print-color.c:280
 msgid "Hue adjustment curve"
 msgstr ""
 
-#: src/main/print-color.c:286
+#: src/main/print-color.c:287
 #, fuzzy
 msgid "Saturation Map"
 msgstr "Metning:"
 
-#: src/main/print-color.c:287
+#: src/main/print-color.c:288
 msgid "Saturation adjustment curve"
 msgstr ""
 
-#: src/main/print-color.c:294
+#: src/main/print-color.c:295
 msgid "Luminosity Map"
 msgstr ""
 
-#: src/main/print-color.c:295
+#: src/main/print-color.c:296
 msgid "Luminosity adjustment curve"
 msgstr ""
 
-#: src/main/print-color.c:302
+#: src/main/print-color.c:303
 msgid "Gray Component Reduction"
 msgstr ""
 
-#: src/main/print-color.c:303
+#: src/main/print-color.c:304
 msgid "Gray component reduction curve"
 msgstr ""
 
-#: src/cups/genppd.c:1022 src/main/print-color.c:2070
+#: src/cups/genppd.c:1022 src/main/print-color.c:1952
 msgid "Line Art"
 msgstr "Lineær"
 
-#: src/main/print-color.c:2072
+#: src/main/print-color.c:1954
 msgid "HSL-corrected"
 msgstr ""
 
-#: src/cups/genppd.c:1024 src/main/print-color.c:2074
+#: src/cups/genppd.c:1024 src/main/print-color.c:1956
 msgid "Solid Colors"
 msgstr "Farge"
 
-#: src/main/print-color.c:2076
+#: src/main/print-color.c:1958
 #, fuzzy
 msgid "Photographs"
 msgstr "Fotografi"
@@ -755,7 +755,7 @@ msgstr "Skaler utskriften til størrelsen på papiret"
 msgid "Image is too long for the page\n"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:1982 src/main/print-escp2-data.c:276
+#: src/libgimpprintui/panel.c:2008 src/main/print-escp2-data.c:276
 #: src/main/print-escp2-data.c:302 src/main/print-escp2-data.c:336
 #: src/main/print-pcl.c:209
 msgid "Standard"
@@ -792,16 +792,16 @@ msgstr ""
 
 #: src/main/print-escp2.c:502 src/main/print-escp2.c:635
 #: src/main/print-escp2.c:680 src/main/print-escp2.c:697
-#: src/main/print-escp2.c:1437
+#: src/main/print-escp2.c:1452
 #, fuzzy, c-format
 msgid "Model %d out of range.\n"
 msgstr "Tallet er utenfor gyldig område!\n"
 
-#: src/main/print-escp2.c:1432 src/main/print-raw.c:210
+#: src/main/print-escp2.c:1447 src/main/print-raw.c:211
 msgid "Print options not verified; cannot print.\n"
 msgstr ""
 
-#: src/main/print-escp2.c:1466
+#: src/main/print-escp2.c:1481
 #, fuzzy, c-format
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "Skriver støtter ikke fargeutskrift\n"
@@ -1010,11 +1010,11 @@ msgstr "PPD fil:"
 msgid "PPD File"
 msgstr "PPD/Fil?"
 
-#: src/main/print-raw.c:216
+#: src/main/print-raw.c:217
 msgid "Image dimensions must match paper dimensions"
 msgstr ""
 
-#: src/main/print-raw.c:239
+#: src/main/print-raw.c:240
 msgid "Internal error!  Output channels or input channels must be 1\n"
 msgstr ""
 
@@ -1095,29 +1095,29 @@ msgstr "Sett til standardverdier"
 msgid "Restore Previous"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:468 src/libgimpprintui/panel.c:1072
-#: src/libgimpprintui/panel.c:1226 src/libgimpprintui/panel.c:1259
+#: src/libgimpprintui/panel.c:468 src/libgimpprintui/panel.c:1098
+#: src/libgimpprintui/panel.c:1252 src/libgimpprintui/panel.c:1285
 msgid "OK"
 msgstr "OK"
 
-#: src/libgimpprintui/panel.c:470 src/libgimpprintui/panel.c:859
-#: src/libgimpprintui/panel.c:1074 src/libgimpprintui/panel.c:1228
+#: src/libgimpprintui/panel.c:470 src/libgimpprintui/panel.c:885
+#: src/libgimpprintui/panel.c:1100 src/libgimpprintui/panel.c:1254
 msgid "Cancel"
 msgstr "Avbryt"
 
 #.
 #. * Create the main dialog
 #.
-#: src/libgimpprintui/panel.c:842
+#: src/libgimpprintui/panel.c:868
 #, c-format
 msgid "%s -- Print v%s"
 msgstr "%s -- Skriv ut v%s"
 
-#: src/libgimpprintui/panel.c:851
+#: src/libgimpprintui/panel.c:877
 msgid "About"
 msgstr "Om"
 
-#: src/libgimpprintui/panel.c:853
+#: src/libgimpprintui/panel.c:879
 msgid ""
 "Print and\n"
 "Save Settings"
@@ -1125,7 +1125,7 @@ msgstr ""
 "Skriv ut og\n"
 "lagre innstillinger"
 
-#: src/libgimpprintui/panel.c:855
+#: src/libgimpprintui/panel.c:881
 msgid ""
 "Save\n"
 "Settings"
@@ -1133,15 +1133,15 @@ msgstr ""
 "Lagre\n"
 "innstillinger"
 
-#: src/libgimpprintui/panel.c:857
+#: src/libgimpprintui/panel.c:883
 msgid "Print"
 msgstr "Skriv ut"
 
-#: src/libgimpprintui/panel.c:910
+#: src/libgimpprintui/panel.c:936
 msgid "Preview"
 msgstr "Forhåndsvisning"
 
-#: src/libgimpprintui/panel.c:935
+#: src/libgimpprintui/panel.c:961
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
@@ -1155,159 +1155,159 @@ msgid ""
 "to its original position."
 msgstr ""
 
-#: src/libgimpprintui/panel.c:981
+#: src/libgimpprintui/panel.c:1007
 msgid "Position"
 msgstr "Posisjon"
 
-#: src/libgimpprintui/panel.c:998
+#: src/libgimpprintui/panel.c:1024
 msgid "Auto"
 msgstr "Auto"
 
-#: src/libgimpprintui/panel.c:1000
+#: src/libgimpprintui/panel.c:1026
 msgid "Portrait"
 msgstr "Portrett"
 
-#: src/libgimpprintui/panel.c:1002
+#: src/libgimpprintui/panel.c:1028
 msgid "Landscape"
 msgstr "Landskap"
 
-#: src/libgimpprintui/panel.c:1004
+#: src/libgimpprintui/panel.c:1030
 msgid "Upside down"
 msgstr "Opp-ned"
 
-#: src/libgimpprintui/panel.c:1006
+#: src/libgimpprintui/panel.c:1032
 msgid "Seascape"
 msgstr "Landskap"
 
-#: src/libgimpprintui/panel.c:1010
+#: src/libgimpprintui/panel.c:1036
 msgid ""
 "Select the orientation: portrait, landscape, upside down, or seascape "
 "(upside down landscape)"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:1012
+#: src/libgimpprintui/panel.c:1038
 msgid "Orientation:"
 msgstr "Orientering:"
 
-#: src/libgimpprintui/panel.c:1023
+#: src/libgimpprintui/panel.c:1049
 msgid "Left:"
 msgstr "Venstre:"
 
-#: src/libgimpprintui/panel.c:1024
+#: src/libgimpprintui/panel.c:1050
 msgid "Distance from the left of the paper to the image"
 msgstr "Avstand fra venstre kant av arket til bildet"
 
-#: src/libgimpprintui/panel.c:1026
+#: src/libgimpprintui/panel.c:1052
 msgid "Right:"
 msgstr "Høyre:"
 
-#: src/libgimpprintui/panel.c:1027
+#: src/libgimpprintui/panel.c:1053
 msgid "Distance from the left of the paper to the right of the image"
 msgstr "Avstand fra venstre kant av arket til høyre kant av bildet"
 
-#: src/libgimpprintui/panel.c:1029
+#: src/libgimpprintui/panel.c:1055
 msgid "Right Border:"
 msgstr "Kant:"
 
-#: src/libgimpprintui/panel.c:1030
+#: src/libgimpprintui/panel.c:1056
 msgid "Distance from the right of the paper to the image"
 msgstr "Avstand fra høyre kant av arket til bildet"
 
-#: src/libgimpprintui/panel.c:1032
+#: src/libgimpprintui/panel.c:1058
 msgid "Top:"
 msgstr "Øverst:"
 
-#: src/libgimpprintui/panel.c:1033
+#: src/libgimpprintui/panel.c:1059
 msgid "Distance from the top of the paper to the image"
 msgstr "Avstand fra toppen av arket til bildet"
 
-#: src/libgimpprintui/panel.c:1035
+#: src/libgimpprintui/panel.c:1061
 msgid "Bottom:"
 msgstr "Nederst:"
 
-#: src/libgimpprintui/panel.c:1036
+#: src/libgimpprintui/panel.c:1062
 #, fuzzy
 msgid "Distance from the top of the paper to bottom of the image"
 msgstr "Avstand fra toppen av arket til nedre kant av bildet"
 
-#: src/libgimpprintui/panel.c:1038
+#: src/libgimpprintui/panel.c:1064
 msgid "Bottom Border:"
 msgstr "Nedre kant"
 
-#: src/libgimpprintui/panel.c:1039
+#: src/libgimpprintui/panel.c:1065
 msgid "Distance from the bottom of the paper to the image"
 msgstr "Avstand fra nedre kant av arket til bildet"
 
-#: src/libgimpprintui/panel.c:1049
+#: src/libgimpprintui/panel.c:1075
 msgid "Center:"
 msgstr "Sentrer:"
 
-#: src/libgimpprintui/panel.c:1052
+#: src/libgimpprintui/panel.c:1078
 msgid "Vertically"
 msgstr "Vertikalt"
 
-#: src/libgimpprintui/panel.c:1053
+#: src/libgimpprintui/panel.c:1079
 msgid "Center the image vertically on the paper"
 msgstr "Sentrer bildet vertikalt på arket"
 
-#: src/libgimpprintui/panel.c:1055
+#: src/libgimpprintui/panel.c:1081
 msgid "Both"
 msgstr "Begge"
 
-#: src/libgimpprintui/panel.c:1056
+#: src/libgimpprintui/panel.c:1082
 msgid "Center the image on the paper"
 msgstr "Sentrer bildet på arket"
 
-#: src/libgimpprintui/panel.c:1058
+#: src/libgimpprintui/panel.c:1084
 msgid "Horizontally"
 msgstr "Horisontalt"
 
-#: src/libgimpprintui/panel.c:1059
+#: src/libgimpprintui/panel.c:1085
 msgid "Center the image horizontally on the paper"
 msgstr "Sentrer bildet horisontalt på arket"
 
-#: src/libgimpprintui/panel.c:1070
+#: src/libgimpprintui/panel.c:1096
 msgid "Setup Printer"
 msgstr "Sett opp skriver"
 
 #.
 #. * Printer driver option menu.
 #.
-#: src/libgimpprintui/panel.c:1096 src/libgimpprintui/panel.c:1331
+#: src/libgimpprintui/panel.c:1122 src/libgimpprintui/panel.c:1357
 msgid "Printer Model:"
 msgstr "Raskt heltall"
 
-#: src/libgimpprintui/panel.c:1107
+#: src/libgimpprintui/panel.c:1133
 msgid "Select your printer model"
 msgstr "Velg din skrivermodell"
 
 #.
 #. * PPD file.
 #.
-#: src/libgimpprintui/panel.c:1143
+#: src/libgimpprintui/panel.c:1169
 msgid "PPD File:"
 msgstr "PPD fil:"
 
-#: src/libgimpprintui/panel.c:1157
+#: src/libgimpprintui/panel.c:1183
 msgid "Enter the correct PPD filename for your printer"
 msgstr "Skriv inn korrekt PPD-filnavn for din skriver"
 
-#: src/libgimpprintui/panel.c:1159
+#: src/libgimpprintui/panel.c:1185
 msgid "Browse"
 msgstr "Bla gjennom"
 
-#: src/libgimpprintui/panel.c:1166
+#: src/libgimpprintui/panel.c:1192
 msgid "Choose the correct PPD filename for your printer"
 msgstr "Velg korrekt PPD-filnavn for din skriver"
 
 #.
 #. * Print command.
 #.
-#: src/libgimpprintui/panel.c:1174
+#: src/libgimpprintui/panel.c:1200
 msgid "Command:"
 msgstr "Kommando:"
 
-#: src/libgimpprintui/panel.c:1186
+#: src/libgimpprintui/panel.c:1212
 msgid ""
 "Enter the correct command to print to your printer. Note: Please do not "
 "remove the `-l' or `-oraw' from the command string, or printing will "
@@ -1317,38 +1317,38 @@ msgstr ""
 #.
 #. * Output file selection dialog.
 #.
-#: src/libgimpprintui/panel.c:1194
+#: src/libgimpprintui/panel.c:1220
 msgid "Print To File?"
 msgstr "Skriv ut til fil?"
 
 #.
 #. * PPD file selection dialog.
 #.
-#: src/libgimpprintui/panel.c:1207
+#: src/libgimpprintui/panel.c:1233
 msgid "PPD File?"
 msgstr "PPD/Fil?"
 
-#: src/libgimpprintui/panel.c:1224
+#: src/libgimpprintui/panel.c:1250
 msgid "Define New Printer"
 msgstr "Definer ny skriver"
 
-#: src/libgimpprintui/panel.c:1243 src/libgimpprintui/panel.c:1328
+#: src/libgimpprintui/panel.c:1269 src/libgimpprintui/panel.c:1354
 msgid "Printer Name:"
 msgstr "Skrivernavn:"
 
-#: src/libgimpprintui/panel.c:1247
+#: src/libgimpprintui/panel.c:1273
 msgid "Enter the name you wish to give this logical printer"
 msgstr "Skriv inn navnet du ønsker å gi til denne logiske skriveren"
 
-#: src/libgimpprintui/panel.c:1257
+#: src/libgimpprintui/panel.c:1283
 msgid "About Gimp-Print "
 msgstr "Om Gimp-Print"
 
-#: src/libgimpprintui/panel.c:1265
+#: src/libgimpprintui/panel.c:1291
 msgid "Gimp-Print Version "
 msgstr "Gimp-Print versjon "
 
-#: src/libgimpprintui/panel.c:1265
+#: src/libgimpprintui/panel.c:1291
 msgid ""
 "\n"
 "\n"
@@ -1372,11 +1372,11 @@ msgid ""
 "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:1313
+#: src/libgimpprintui/panel.c:1339
 msgid "Printer Settings"
 msgstr "Innstillinger for parametere"
 
-#: src/libgimpprintui/panel.c:1326
+#: src/libgimpprintui/panel.c:1352
 msgid ""
 "Select the name of the printer (not the type, or model, of printer) that you "
 "wish to print to"
@@ -1385,11 +1385,11 @@ msgstr ""
 #.
 #. * Setup printer button
 #.
-#: src/libgimpprintui/panel.c:1343
+#: src/libgimpprintui/panel.c:1369
 msgid "Setup Printer..."
 msgstr "Sett opp skriver..."
 
-#: src/libgimpprintui/panel.c:1345
+#: src/libgimpprintui/panel.c:1371
 msgid ""
 "Choose the printer model, PPD file, and command that is used to print to "
 "this printer"
@@ -1398,82 +1398,82 @@ msgstr ""
 #.
 #. * New printer button
 #.
-#: src/libgimpprintui/panel.c:1358
+#: src/libgimpprintui/panel.c:1384
 msgid "New Printer..."
 msgstr "Ny skriver..."
 
-#: src/libgimpprintui/panel.c:1359
+#: src/libgimpprintui/panel.c:1385
 msgid ""
 "Define a new logical printer. This can be used to name a collection of "
 "settings that you wish to remember for future use."
 msgstr ""
 
-#: src/libgimpprintui/panel.c:1390
+#: src/libgimpprintui/panel.c:1416
 msgid "Dimensions:"
 msgstr "Størrelse:"
 
-#: src/libgimpprintui/panel.c:1393 src/libgimpprintui/panel.c:1514
+#: src/libgimpprintui/panel.c:1419 src/libgimpprintui/panel.c:1540
 msgid "Width:"
 msgstr "Bredde:"
 
-#: src/libgimpprintui/panel.c:1394
+#: src/libgimpprintui/panel.c:1420
 msgid "Width of the paper that you wish to print to"
 msgstr "Bredde på papiret du skal skrive ut på"
 
-#: src/libgimpprintui/panel.c:1398 src/libgimpprintui/panel.c:1516
+#: src/libgimpprintui/panel.c:1424 src/libgimpprintui/panel.c:1542
 msgid "Height:"
 msgstr "Høyde:"
 
-#: src/libgimpprintui/panel.c:1399
+#: src/libgimpprintui/panel.c:1425
 msgid "Height of the paper that you wish to print to"
 msgstr "Høyde på papiret du skal skrive ut på"
 
-#: src/libgimpprintui/panel.c:1424
+#: src/libgimpprintui/panel.c:1450
 msgid "Size"
 msgstr "Størrelse"
 
-#: src/libgimpprintui/panel.c:1444
+#: src/libgimpprintui/panel.c:1470
 msgid "Scaling:"
 msgstr "Skalering"
 
-#: src/libgimpprintui/panel.c:1448
+#: src/libgimpprintui/panel.c:1474
 msgid "Set the scale (size) of the image"
 msgstr "Sett skalering (størrelse) på bildet"
 
-#: src/libgimpprintui/panel.c:1479
+#: src/libgimpprintui/panel.c:1505
 msgid ""
 "Select whether scaling is measured as percent of available page size or "
 "number of output dots per inch"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:1482
+#: src/libgimpprintui/panel.c:1508
 msgid "Percent"
 msgstr "Prosent"
 
-#: src/libgimpprintui/panel.c:1487
+#: src/libgimpprintui/panel.c:1513
 msgid "Scale the print to the size of the page"
 msgstr "Skaler utskriften til størrelsen på papiret"
 
-#: src/libgimpprintui/panel.c:1491
+#: src/libgimpprintui/panel.c:1517
 msgid "PPI"
 msgstr "PPI"
 
-#: src/libgimpprintui/panel.c:1496
+#: src/libgimpprintui/panel.c:1522
 msgid "Scale the print to the number of dots per inch"
 msgstr "Skaler utskriften til antall punkter per tomme"
 
-#: src/libgimpprintui/panel.c:1514
+#: src/libgimpprintui/panel.c:1540
 msgid "Set the width of the print"
 msgstr "Sett bredde på utskriften"
 
-#: src/libgimpprintui/panel.c:1516
+#: src/libgimpprintui/panel.c:1542
 msgid "Set the height of the print"
 msgstr "Sett høyde for utskriften"
 
 #.
 #. * The "image size" button
 #.
-#: src/libgimpprintui/panel.c:1522
+#: src/libgimpprintui/panel.c:1548
 msgid ""
 "Use Original\n"
 "Image Size"
@@ -1481,51 +1481,51 @@ msgstr ""
 "Bruk opprinnelig\n"
 "bildestørrelse"
 
-#: src/libgimpprintui/panel.c:1528
+#: src/libgimpprintui/panel.c:1554
 msgid "Set the print size to the size of the image"
 msgstr "Sett størrelsen på utskriften til størrelsen på bildet"
 
-#: src/libgimpprintui/panel.c:1550
+#: src/libgimpprintui/panel.c:1576
 msgid "Units:"
 msgstr "Enheter:"
 
-#: src/libgimpprintui/panel.c:1555
+#: src/libgimpprintui/panel.c:1581
 msgid "Select the base unit of measurement for printing"
 msgstr "Velg basis måleenhet for utskrift"
 
-#: src/libgimpprintui/panel.c:1587
+#: src/libgimpprintui/panel.c:1613
 msgid "Print Color Adjust"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:1590
+#: src/libgimpprintui/panel.c:1616
 msgid "Set Defaults"
 msgstr "Sett til standardverdier"
 
-#: src/libgimpprintui/panel.c:1592
+#: src/libgimpprintui/panel.c:1618
 msgid "Close"
 msgstr "Lukk"
 
-#: src/libgimpprintui/panel.c:1623
+#: src/libgimpprintui/panel.c:1649
 msgid "Image preview"
 msgstr "Forhåndsvisning av bilde"
 
-#: src/libgimpprintui/panel.c:1691
+#: src/libgimpprintui/panel.c:1717
 msgid "Image / Output Settings"
 msgstr "Innstillinger for bilde / utskrift"
 
-#: src/libgimpprintui/panel.c:1719
+#: src/libgimpprintui/panel.c:1745
 msgid "Output Type:"
 msgstr "Utskriftstype:"
 
-#: src/libgimpprintui/panel.c:1723
+#: src/libgimpprintui/panel.c:1749
 msgid "Select the desired output type"
 msgstr "Velg ønsket type for utdata"
 
-#: src/libgimpprintui/panel.c:1744
+#: src/libgimpprintui/panel.c:1770
 msgid "Adjust Output..."
 msgstr "Juster utskrift..."
 
-#: src/libgimpprintui/panel.c:1753
+#: src/libgimpprintui/panel.c:1779
 msgid ""
 "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
 msgstr ""

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GIMP Print\n"
-"POT-Creation-Date: 2003-02-15 11:42-0500\n"
+"POT-Creation-Date: 2003-02-15 19:19-0500\n"
 "PO-Revision-Date: 2002-05-20 18:08+0100\n"
 "Last-Translator: Zdenko Podobný <zdpo@mailbox.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -421,7 +421,7 @@ msgstr "Manuálne s preru¹ením"
 msgid "Manual without Pause"
 msgstr "Manuálne bez preru¹enia"
 
-#: src/escputil/escputil.c:616 src/libgimpprintui/panel.c:1658
+#: src/escputil/escputil.c:616 src/libgimpprintui/panel.c:1684
 #: src/main/print-canon.c:1597 src/main/print-lexmark.c:525
 msgid "Black"
 msgstr "Èierna"
@@ -487,7 +487,7 @@ msgstr "Gama:"
 msgid "Gamma value assumed by application"
 msgstr ""
 
-#: src/escputil/escputil.c:617 src/libgimpprintui/panel.c:1637
+#: src/escputil/escputil.c:617 src/libgimpprintui/panel.c:1663
 #: src/main/print-color.c:118
 msgid "Cyan"
 msgstr "Azúrová"
@@ -497,7 +497,7 @@ msgstr "Azúrová"
 msgid "Adjust the cyan gamma"
 msgstr "Prispôsobenie vyvá¾enie azúrovej farby pre tlaè"
 
-#: src/escputil/escputil.c:618 src/libgimpprintui/panel.c:1644
+#: src/escputil/escputil.c:618 src/libgimpprintui/panel.c:1670
 #: src/main/print-color.c:126
 msgid "Magenta"
 msgstr "Purpurová"
@@ -507,7 +507,7 @@ msgstr "Purpurová"
 msgid "Adjust the magenta gamma"
 msgstr "Prispôsobenie vyvá¾enie purpurovej farby pre tlaè"
 
-#: src/escputil/escputil.c:619 src/libgimpprintui/panel.c:1651
+#: src/escputil/escputil.c:619 src/libgimpprintui/panel.c:1677
 #: src/main/print-color.c:134
 msgid "Yellow"
 msgstr "®ltá"
@@ -607,99 +607,99 @@ msgstr ""
 msgid "Upper bound of gray component reduction"
 msgstr ""
 
-#: src/main/print-color.c:238
+#: src/main/print-color.c:239
 msgid "Composite Curve"
 msgstr ""
 
-#: src/main/print-color.c:239
+#: src/main/print-color.c:240
 msgid "Composite (Grayscale) curve"
 msgstr ""
 
-#: src/main/print-color.c:246
+#: src/main/print-color.c:247
 msgid "Cyan Curve"
 msgstr ""
 
-#: src/main/print-color.c:247
+#: src/main/print-color.c:248
 #, fuzzy
 msgid "Cyan curve"
 msgstr "Storno"
 
-#: src/main/print-color.c:254
+#: src/main/print-color.c:255
 #, fuzzy
 msgid "Magenta Curve"
 msgstr "Purpurová"
 
-#: src/main/print-color.c:255
+#: src/main/print-color.c:256
 #, fuzzy
 msgid "Magenta curve"
 msgstr "Purpurová"
 
-#: src/main/print-color.c:262
+#: src/main/print-color.c:263
 #, fuzzy
 msgid "Yellow Curve"
 msgstr "®ltá"
 
-#: src/main/print-color.c:263
+#: src/main/print-color.c:264
 #, fuzzy
 msgid "Yellow curve"
 msgstr "®ltá"
 
-#: src/main/print-color.c:270
+#: src/main/print-color.c:271
 #, fuzzy
 msgid "Black Curve"
 msgstr "Èierna"
 
-#: src/main/print-color.c:271
+#: src/main/print-color.c:272
 #, fuzzy
 msgid "Black curve"
 msgstr "Èierna"
 
-#: src/main/print-color.c:278
+#: src/main/print-color.c:279
 msgid "Hue Map"
 msgstr ""
 
-#: src/main/print-color.c:279
+#: src/main/print-color.c:280
 msgid "Hue adjustment curve"
 msgstr ""
 
-#: src/main/print-color.c:286
+#: src/main/print-color.c:287
 #, fuzzy
 msgid "Saturation Map"
 msgstr "Sýtos»:"
 
-#: src/main/print-color.c:287
+#: src/main/print-color.c:288
 msgid "Saturation adjustment curve"
 msgstr ""
 
-#: src/main/print-color.c:294
+#: src/main/print-color.c:295
 msgid "Luminosity Map"
 msgstr ""
 
-#: src/main/print-color.c:295
+#: src/main/print-color.c:296
 msgid "Luminosity adjustment curve"
 msgstr ""
 
-#: src/main/print-color.c:302
+#: src/main/print-color.c:303
 msgid "Gray Component Reduction"
 msgstr ""
 
-#: src/main/print-color.c:303
+#: src/main/print-color.c:304
 msgid "Gray component reduction curve"
 msgstr ""
 
-#: src/cups/genppd.c:1022 src/main/print-color.c:2070
+#: src/cups/genppd.c:1022 src/main/print-color.c:1952
 msgid "Line Art"
 msgstr "Èiarová grafika"
 
-#: src/main/print-color.c:2072
+#: src/main/print-color.c:1954
 msgid "HSL-corrected"
 msgstr ""
 
-#: src/cups/genppd.c:1024 src/main/print-color.c:2074
+#: src/cups/genppd.c:1024 src/main/print-color.c:1956
 msgid "Solid Colors"
 msgstr "Jednoliate farby"
 
-#: src/main/print-color.c:2076
+#: src/main/print-color.c:1958
 #, fuzzy
 msgid "Photographs"
 msgstr "Fotografia"
@@ -788,7 +788,7 @@ msgstr "Zmeni» veµkos» tlaèe podµa rozmerov strany"
 msgid "Image is too long for the page\n"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:1982 src/main/print-escp2-data.c:276
+#: src/libgimpprintui/panel.c:2008 src/main/print-escp2-data.c:276
 #: src/main/print-escp2-data.c:302 src/main/print-escp2-data.c:336
 #: src/main/print-pcl.c:209
 msgid "Standard"
@@ -825,16 +825,16 @@ msgstr ""
 
 #: src/main/print-escp2.c:502 src/main/print-escp2.c:635
 #: src/main/print-escp2.c:680 src/main/print-escp2.c:697
-#: src/main/print-escp2.c:1437
+#: src/main/print-escp2.c:1452
 #, fuzzy, c-format
 msgid "Model %d out of range.\n"
 msgstr "Èíslo je mimo rozsahu!\n"
 
-#: src/main/print-escp2.c:1432 src/main/print-raw.c:210
+#: src/main/print-escp2.c:1447 src/main/print-raw.c:211
 msgid "Print options not verified; cannot print.\n"
 msgstr ""
 
-#: src/main/print-escp2.c:1466
+#: src/main/print-escp2.c:1481
 #, fuzzy, c-format
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "Tlaèiareò nepodporuje farebný výstup\n"
@@ -1043,11 +1043,11 @@ msgstr "PPD súbor:"
 msgid "PPD File"
 msgstr "PPD súbor?"
 
-#: src/main/print-raw.c:216
+#: src/main/print-raw.c:217
 msgid "Image dimensions must match paper dimensions"
 msgstr ""
 
-#: src/main/print-raw.c:239
+#: src/main/print-raw.c:240
 msgid "Internal error!  Output channels or input channels must be 1\n"
 msgstr ""
 
@@ -1128,29 +1128,29 @@ msgstr "Nastavi» ¹tandardné"
 msgid "Restore Previous"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:468 src/libgimpprintui/panel.c:1072
-#: src/libgimpprintui/panel.c:1226 src/libgimpprintui/panel.c:1259
+#: src/libgimpprintui/panel.c:468 src/libgimpprintui/panel.c:1098
+#: src/libgimpprintui/panel.c:1252 src/libgimpprintui/panel.c:1285
 msgid "OK"
 msgstr "OK"
 
-#: src/libgimpprintui/panel.c:470 src/libgimpprintui/panel.c:859
-#: src/libgimpprintui/panel.c:1074 src/libgimpprintui/panel.c:1228
+#: src/libgimpprintui/panel.c:470 src/libgimpprintui/panel.c:885
+#: src/libgimpprintui/panel.c:1100 src/libgimpprintui/panel.c:1254
 msgid "Cancel"
 msgstr "Storno"
 
 #.
 #. * Create the main dialog
 #.
-#: src/libgimpprintui/panel.c:842
+#: src/libgimpprintui/panel.c:868
 #, c-format
 msgid "%s -- Print v%s"
 msgstr "%s -- Tlaè v%s"
 
-#: src/libgimpprintui/panel.c:851
+#: src/libgimpprintui/panel.c:877
 msgid "About"
 msgstr "O programe"
 
-#: src/libgimpprintui/panel.c:853
+#: src/libgimpprintui/panel.c:879
 msgid ""
 "Print and\n"
 "Save Settings"
@@ -1158,7 +1158,7 @@ msgstr ""
 "Ulo¾i» nastavenia\n"
 "a vytlaèi»"
 
-#: src/libgimpprintui/panel.c:855
+#: src/libgimpprintui/panel.c:881
 msgid ""
 "Save\n"
 "Settings"
@@ -1166,15 +1166,15 @@ msgstr ""
 "Ulo¾i»\n"
 "nastavenia"
 
-#: src/libgimpprintui/panel.c:857
+#: src/libgimpprintui/panel.c:883
 msgid "Print"
 msgstr "Tlaèi»"
 
-#: src/libgimpprintui/panel.c:910
+#: src/libgimpprintui/panel.c:936
 msgid "Preview"
 msgstr "Náhµad"
 
-#: src/libgimpprintui/panel.c:935
+#: src/libgimpprintui/panel.c:961
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
@@ -1198,160 +1198,160 @@ msgstr ""
 "Ak poèas »ahania obrázku my¹ou kliknete iným tlaèítkom, obrázok sa vráti na "
 "pôvodnú pozíciu."
 
-#: src/libgimpprintui/panel.c:981
+#: src/libgimpprintui/panel.c:1007
 msgid "Position"
 msgstr "Pozícia"
 
-#: src/libgimpprintui/panel.c:998
+#: src/libgimpprintui/panel.c:1024
 msgid "Auto"
 msgstr "Automaticky"
 
-#: src/libgimpprintui/panel.c:1000
+#: src/libgimpprintui/panel.c:1026
 msgid "Portrait"
 msgstr "Na vý¹ku"
 
-#: src/libgimpprintui/panel.c:1002
+#: src/libgimpprintui/panel.c:1028
 msgid "Landscape"
 msgstr "Na ¹írku"
 
-#: src/libgimpprintui/panel.c:1004
+#: src/libgimpprintui/panel.c:1030
 msgid "Upside down"
 msgstr "Hore nohami"
 
-#: src/libgimpprintui/panel.c:1006
+#: src/libgimpprintui/panel.c:1032
 msgid "Seascape"
 msgstr "Na ¹írku"
 
-#: src/libgimpprintui/panel.c:1010
+#: src/libgimpprintui/panel.c:1036
 msgid ""
 "Select the orientation: portrait, landscape, upside down, or seascape "
 "(upside down landscape)"
 msgstr ""
 "Zvoµte orientáciu: na vý¹ku, na ¹írku, hore nohami, na ¹írku hore nohami "
 
-#: src/libgimpprintui/panel.c:1012
+#: src/libgimpprintui/panel.c:1038
 msgid "Orientation:"
 msgstr "Orientácia:"
 
-#: src/libgimpprintui/panel.c:1023
+#: src/libgimpprintui/panel.c:1049
 msgid "Left:"
 msgstr "¥avý:"
 
-#: src/libgimpprintui/panel.c:1024
+#: src/libgimpprintui/panel.c:1050
 msgid "Distance from the left of the paper to the image"
 msgstr "Vzdialenos» od µavého okraja papiera k obrázku"
 
-#: src/libgimpprintui/panel.c:1026
+#: src/libgimpprintui/panel.c:1052
 msgid "Right:"
 msgstr "Pravý:"
 
-#: src/libgimpprintui/panel.c:1027
+#: src/libgimpprintui/panel.c:1053
 msgid "Distance from the left of the paper to the right of the image"
 msgstr "Vzdialenos» od µavého okraja papiera k pravému okraju obrázku"
 
-#: src/libgimpprintui/panel.c:1029
+#: src/libgimpprintui/panel.c:1055
 msgid "Right Border:"
 msgstr "Pravý okraj:"
 
-#: src/libgimpprintui/panel.c:1030
+#: src/libgimpprintui/panel.c:1056
 msgid "Distance from the right of the paper to the image"
 msgstr "Vzdialenos» od pravého okraja papiera k obrázku"
 
-#: src/libgimpprintui/panel.c:1032
+#: src/libgimpprintui/panel.c:1058
 msgid "Top:"
 msgstr "Horný:"
 
-#: src/libgimpprintui/panel.c:1033
+#: src/libgimpprintui/panel.c:1059
 msgid "Distance from the top of the paper to the image"
 msgstr "Vzdialenos» od horného okraja papiera k obrázku"
 
-#: src/libgimpprintui/panel.c:1035
+#: src/libgimpprintui/panel.c:1061
 msgid "Bottom:"
 msgstr "Dolný:"
 
-#: src/libgimpprintui/panel.c:1036
+#: src/libgimpprintui/panel.c:1062
 #, fuzzy
 msgid "Distance from the top of the paper to bottom of the image"
 msgstr "Vzdialenos» od horného okraja papiera k dolnému okraju obrázku"
 
-#: src/libgimpprintui/panel.c:1038
+#: src/libgimpprintui/panel.c:1064
 msgid "Bottom Border:"
 msgstr "Dolný okraj:"
 
-#: src/libgimpprintui/panel.c:1039
+#: src/libgimpprintui/panel.c:1065
 msgid "Distance from the bottom of the paper to the image"
 msgstr "Vzdialenos» od dolného okraja papiera k obrázku"
 
-#: src/libgimpprintui/panel.c:1049
+#: src/libgimpprintui/panel.c:1075
 msgid "Center:"
 msgstr "Centrovanie:"
 
-#: src/libgimpprintui/panel.c:1052
+#: src/libgimpprintui/panel.c:1078
 msgid "Vertically"
 msgstr "Zvislo"
 
-#: src/libgimpprintui/panel.c:1053
+#: src/libgimpprintui/panel.c:1079
 msgid "Center the image vertically on the paper"
 msgstr "Vycentrova» obrázok zvisle na papieri"
 
-#: src/libgimpprintui/panel.c:1055
+#: src/libgimpprintui/panel.c:1081
 msgid "Both"
 msgstr "Oboje"
 
-#: src/libgimpprintui/panel.c:1056
+#: src/libgimpprintui/panel.c:1082
 msgid "Center the image on the paper"
 msgstr "Vycentrova» obrázok na papieri"
 
-#: src/libgimpprintui/panel.c:1058
+#: src/libgimpprintui/panel.c:1084
 msgid "Horizontally"
 msgstr "Vodorovne"
 
-#: src/libgimpprintui/panel.c:1059
+#: src/libgimpprintui/panel.c:1085
 msgid "Center the image horizontally on the paper"
 msgstr "Vycentrova» vodorovne obrázok na papieri"
 
-#: src/libgimpprintui/panel.c:1070
+#: src/libgimpprintui/panel.c:1096
 msgid "Setup Printer"
 msgstr "Nastavi» tlaèiareò"
 
 #.
 #. * Printer driver option menu.
 #.
-#: src/libgimpprintui/panel.c:1096 src/libgimpprintui/panel.c:1331
+#: src/libgimpprintui/panel.c:1122 src/libgimpprintui/panel.c:1357
 msgid "Printer Model:"
 msgstr "Model tlaèiarne:"
 
-#: src/libgimpprintui/panel.c:1107
+#: src/libgimpprintui/panel.c:1133
 msgid "Select your printer model"
 msgstr "Vyberte model va¹ej tlaèiarne"
 
 #.
 #. * PPD file.
 #.
-#: src/libgimpprintui/panel.c:1143
+#: src/libgimpprintui/panel.c:1169
 msgid "PPD File:"
 msgstr "PPD súbor:"
 
-#: src/libgimpprintui/panel.c:1157
+#: src/libgimpprintui/panel.c:1183
 msgid "Enter the correct PPD filename for your printer"
 msgstr "Vlo¾te správny PPD názov súboru pre va¹u tlaèiareò"
 
-#: src/libgimpprintui/panel.c:1159
+#: src/libgimpprintui/panel.c:1185
 msgid "Browse"
 msgstr "Prechádza»"
 
-#: src/libgimpprintui/panel.c:1166
+#: src/libgimpprintui/panel.c:1192
 msgid "Choose the correct PPD filename for your printer"
 msgstr "Zvoµte správny PPD názov súboru pre va¹u tlaèiareò"
 
 #.
 #. * Print command.
 #.
-#: src/libgimpprintui/panel.c:1174
+#: src/libgimpprintui/panel.c:1200
 msgid "Command:"
 msgstr "Príkaz:"
 
-#: src/libgimpprintui/panel.c:1186
+#: src/libgimpprintui/panel.c:1212
 msgid ""
 "Enter the correct command to print to your printer. Note: Please do not "
 "remove the `-l' or `-oraw' from the command string, or printing will "
@@ -1364,38 +1364,38 @@ msgstr ""
 #.
 #. * Output file selection dialog.
 #.
-#: src/libgimpprintui/panel.c:1194
+#: src/libgimpprintui/panel.c:1220
 msgid "Print To File?"
 msgstr "Tlaèi» do súboru?"
 
 #.
 #. * PPD file selection dialog.
 #.
-#: src/libgimpprintui/panel.c:1207
+#: src/libgimpprintui/panel.c:1233
 msgid "PPD File?"
 msgstr "PPD súbor?"
 
-#: src/libgimpprintui/panel.c:1224
+#: src/libgimpprintui/panel.c:1250
 msgid "Define New Printer"
 msgstr "Definovanie novej tlaèiarne"
 
-#: src/libgimpprintui/panel.c:1243 src/libgimpprintui/panel.c:1328
+#: src/libgimpprintui/panel.c:1269 src/libgimpprintui/panel.c:1354
 msgid "Printer Name:"
 msgstr "Názov tlaèiarne:"
 
-#: src/libgimpprintui/panel.c:1247
+#: src/libgimpprintui/panel.c:1273
 msgid "Enter the name you wish to give this logical printer"
 msgstr "Vlo¾te oznaèenie, ktoré chcete da» tejto logickej tlaèiarni"
 
-#: src/libgimpprintui/panel.c:1257
+#: src/libgimpprintui/panel.c:1283
 msgid "About Gimp-Print "
 msgstr "O Gimp-Print "
 
-#: src/libgimpprintui/panel.c:1265
+#: src/libgimpprintui/panel.c:1291
 msgid "Gimp-Print Version "
 msgstr "Verzia Gimp-Print"
 
-#: src/libgimpprintui/panel.c:1265
+#: src/libgimpprintui/panel.c:1291
 msgid ""
 "\n"
 "\n"
@@ -1440,11 +1440,11 @@ msgstr ""
 "Foundation, Inc., 59 Temple Place - Suite 330, Boston,\n"
 "MA 02111-1307, USA.\n"
 
-#: src/libgimpprintui/panel.c:1313
+#: src/libgimpprintui/panel.c:1339
 msgid "Printer Settings"
 msgstr "Nastavenie tlaèiarne"
 
-#: src/libgimpprintui/panel.c:1326
+#: src/libgimpprintui/panel.c:1352
 msgid ""
 "Select the name of the printer (not the type, or model, of printer) that you "
 "wish to print to"
@@ -1455,11 +1455,11 @@ msgstr ""
 #.
 #. * Setup printer button
 #.
-#: src/libgimpprintui/panel.c:1343
+#: src/libgimpprintui/panel.c:1369
 msgid "Setup Printer..."
 msgstr "Nastavenie tlaèiarne..."
 
-#: src/libgimpprintui/panel.c:1345
+#: src/libgimpprintui/panel.c:1371
 msgid ""
 "Choose the printer model, PPD file, and command that is used to print to "
 "this printer"
@@ -1470,11 +1470,11 @@ msgstr ""
 #.
 #. * New printer button
 #.
-#: src/libgimpprintui/panel.c:1358
+#: src/libgimpprintui/panel.c:1384
 msgid "New Printer..."
 msgstr "Nová tlaèiareò..."
 
-#: src/libgimpprintui/panel.c:1359
+#: src/libgimpprintui/panel.c:1385
 msgid ""
 "Define a new logical printer. This can be used to name a collection of "
 "settings that you wish to remember for future use."
@@ -1482,39 +1482,39 @@ msgstr ""
 "Definovanie novej logickej tlaèiarne. Toto mô¾e by» pou¾ité na pomenovanie "
 "zbierky nastavení, ktoré si prajete zapamäta» a v budúcnosti pou¾íva»."
 
-#: src/libgimpprintui/panel.c:1390
+#: src/libgimpprintui/panel.c:1416
 msgid "Dimensions:"
 msgstr "Rozmery:"
 
-#: src/libgimpprintui/panel.c:1393 src/libgimpprintui/panel.c:1514
+#: src/libgimpprintui/panel.c:1419 src/libgimpprintui/panel.c:1540
 msgid "Width:"
 msgstr "©írka:"
 
-#: src/libgimpprintui/panel.c:1394
+#: src/libgimpprintui/panel.c:1420
 msgid "Width of the paper that you wish to print to"
 msgstr "©írka papiera, na ktorý chcete tlaèi»"
 
-#: src/libgimpprintui/panel.c:1398 src/libgimpprintui/panel.c:1516
+#: src/libgimpprintui/panel.c:1424 src/libgimpprintui/panel.c:1542
 msgid "Height:"
 msgstr "Vý¹ka:"
 
-#: src/libgimpprintui/panel.c:1399
+#: src/libgimpprintui/panel.c:1425
 msgid "Height of the paper that you wish to print to"
 msgstr "Vý¹ka papiera, na ktorý chcete tlaèi»"
 
-#: src/libgimpprintui/panel.c:1424
+#: src/libgimpprintui/panel.c:1450
 msgid "Size"
 msgstr "Veµkos»"
 
-#: src/libgimpprintui/panel.c:1444
+#: src/libgimpprintui/panel.c:1470
 msgid "Scaling:"
 msgstr "Zmena:"
 
-#: src/libgimpprintui/panel.c:1448
+#: src/libgimpprintui/panel.c:1474
 msgid "Set the scale (size) of the image"
 msgstr "Nastavi» zväè¹enie (veµkos») obrázku"
 
-#: src/libgimpprintui/panel.c:1479
+#: src/libgimpprintui/panel.c:1505
 msgid ""
 "Select whether scaling is measured as percent of available page size or "
 "number of output dots per inch"
@@ -1522,34 +1522,34 @@ msgstr ""
 "Zvoµte, èi zmena veµkosti bude vyjadrená ako percento dostupnej veµkosti "
 "stránky, alebo ako èíslo výstupného DPI"
 
-#: src/libgimpprintui/panel.c:1482
+#: src/libgimpprintui/panel.c:1508
 msgid "Percent"
 msgstr "Percentá"
 
-#: src/libgimpprintui/panel.c:1487
+#: src/libgimpprintui/panel.c:1513
 msgid "Scale the print to the size of the page"
 msgstr "Zmeni» veµkos» tlaèe podµa rozmerov strany"
 
-#: src/libgimpprintui/panel.c:1491
+#: src/libgimpprintui/panel.c:1517
 msgid "PPI"
 msgstr "PPI"
 
-#: src/libgimpprintui/panel.c:1496
+#: src/libgimpprintui/panel.c:1522
 msgid "Scale the print to the number of dots per inch"
 msgstr "Zmeni» veµkos» tlaèe podµa poètu bodov na palec"
 
-#: src/libgimpprintui/panel.c:1514
+#: src/libgimpprintui/panel.c:1540
 msgid "Set the width of the print"
 msgstr "Nastavi» ¹írku tlaèe"
 
-#: src/libgimpprintui/panel.c:1516
+#: src/libgimpprintui/panel.c:1542
 msgid "Set the height of the print"
 msgstr "Nastavi» vý¹ku tlaèe"
 
 #.
 #. * The "image size" button
 #.
-#: src/libgimpprintui/panel.c:1522
+#: src/libgimpprintui/panel.c:1548
 msgid ""
 "Use Original\n"
 "Image Size"
@@ -1557,51 +1557,51 @@ msgstr ""
 "Pou¾i» pôvodnú\n"
 "veµkos» obrázka"
 
-#: src/libgimpprintui/panel.c:1528
+#: src/libgimpprintui/panel.c:1554
 msgid "Set the print size to the size of the image"
 msgstr "Nastavenie veµkosti tlaèe na veµkos» obrázku"
 
-#: src/libgimpprintui/panel.c:1550
+#: src/libgimpprintui/panel.c:1576
 msgid "Units:"
 msgstr "Jednotky:"
 
-#: src/libgimpprintui/panel.c:1555
+#: src/libgimpprintui/panel.c:1581
 msgid "Select the base unit of measurement for printing"
 msgstr "Zvoli» základnú mernú jednotku pre tlaè"
 
-#: src/libgimpprintui/panel.c:1587
+#: src/libgimpprintui/panel.c:1613
 msgid "Print Color Adjust"
 msgstr "Prispôsobenie farieb pre tlaè"
 
-#: src/libgimpprintui/panel.c:1590
+#: src/libgimpprintui/panel.c:1616
 msgid "Set Defaults"
 msgstr "Nastavi» ¹tandardné"
 
-#: src/libgimpprintui/panel.c:1592
+#: src/libgimpprintui/panel.c:1618
 msgid "Close"
 msgstr "Zatvori»"
 
-#: src/libgimpprintui/panel.c:1623
+#: src/libgimpprintui/panel.c:1649
 msgid "Image preview"
 msgstr "Náhµad obrázku"
 
-#: src/libgimpprintui/panel.c:1691
+#: src/libgimpprintui/panel.c:1717
 msgid "Image / Output Settings"
 msgstr "Obrázok / Výstupné nastavenia"
 
-#: src/libgimpprintui/panel.c:1719
+#: src/libgimpprintui/panel.c:1745
 msgid "Output Type:"
 msgstr "Typ výstupu:"
 
-#: src/libgimpprintui/panel.c:1723
+#: src/libgimpprintui/panel.c:1749
 msgid "Select the desired output type"
 msgstr "Zvoµte vytú¾ený typ výstupu"
 
-#: src/libgimpprintui/panel.c:1744
+#: src/libgimpprintui/panel.c:1770
 msgid "Adjust Output..."
 msgstr "Prispôsobi» výstup..."
 
-#: src/libgimpprintui/panel.c:1753
+#: src/libgimpprintui/panel.c:1779
 msgid ""
 "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
 msgstr ""

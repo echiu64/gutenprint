@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 4.2.1-pre4\n"
-"POT-Creation-Date: 2003-02-15 11:42-0500\n"
+"POT-Creation-Date: 2003-02-15 19:19-0500\n"
 "PO-Revision-Date: 2002-09-15 16:07+0200\n"
 "Last-Translator: Raymond Ostertag <r.ostertag@caramail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -420,7 +420,7 @@ msgstr "Manuel avec pause"
 msgid "Manual without Pause"
 msgstr "Manuel sans pause"
 
-#: src/escputil/escputil.c:616 src/libgimpprintui/panel.c:1658
+#: src/escputil/escputil.c:616 src/libgimpprintui/panel.c:1684
 #: src/main/print-canon.c:1597 src/main/print-lexmark.c:525
 msgid "Black"
 msgstr "Noir"
@@ -487,7 +487,7 @@ msgstr "Gamma :"
 msgid "Gamma value assumed by application"
 msgstr ""
 
-#: src/escputil/escputil.c:617 src/libgimpprintui/panel.c:1637
+#: src/escputil/escputil.c:617 src/libgimpprintui/panel.c:1663
 #: src/main/print-color.c:118
 msgid "Cyan"
 msgstr "Cyan"
@@ -497,7 +497,7 @@ msgstr "Cyan"
 msgid "Adjust the cyan gamma"
 msgstr "Ajuste le niveau de cyan de l'impression"
 
-#: src/escputil/escputil.c:618 src/libgimpprintui/panel.c:1644
+#: src/escputil/escputil.c:618 src/libgimpprintui/panel.c:1670
 #: src/main/print-color.c:126
 msgid "Magenta"
 msgstr "Magenta"
@@ -507,7 +507,7 @@ msgstr "Magenta"
 msgid "Adjust the magenta gamma"
 msgstr "Ajuste le niveau de majenta de l'impression"
 
-#: src/escputil/escputil.c:619 src/libgimpprintui/panel.c:1651
+#: src/escputil/escputil.c:619 src/libgimpprintui/panel.c:1677
 #: src/main/print-color.c:134
 msgid "Yellow"
 msgstr "Jaune"
@@ -607,99 +607,99 @@ msgstr ""
 msgid "Upper bound of gray component reduction"
 msgstr ""
 
-#: src/main/print-color.c:238
+#: src/main/print-color.c:239
 msgid "Composite Curve"
 msgstr ""
 
-#: src/main/print-color.c:239
+#: src/main/print-color.c:240
 msgid "Composite (Grayscale) curve"
 msgstr ""
 
-#: src/main/print-color.c:246
+#: src/main/print-color.c:247
 msgid "Cyan Curve"
 msgstr ""
 
-#: src/main/print-color.c:247
+#: src/main/print-color.c:248
 #, fuzzy
 msgid "Cyan curve"
 msgstr "Annuler"
 
-#: src/main/print-color.c:254
+#: src/main/print-color.c:255
 #, fuzzy
 msgid "Magenta Curve"
 msgstr "Magenta"
 
-#: src/main/print-color.c:255
+#: src/main/print-color.c:256
 #, fuzzy
 msgid "Magenta curve"
 msgstr "Magenta"
 
-#: src/main/print-color.c:262
+#: src/main/print-color.c:263
 #, fuzzy
 msgid "Yellow Curve"
 msgstr "Jaune"
 
-#: src/main/print-color.c:263
+#: src/main/print-color.c:264
 #, fuzzy
 msgid "Yellow curve"
 msgstr "Jaune"
 
-#: src/main/print-color.c:270
+#: src/main/print-color.c:271
 #, fuzzy
 msgid "Black Curve"
 msgstr "Noir"
 
-#: src/main/print-color.c:271
+#: src/main/print-color.c:272
 #, fuzzy
 msgid "Black curve"
 msgstr "Noir"
 
-#: src/main/print-color.c:278
+#: src/main/print-color.c:279
 msgid "Hue Map"
 msgstr ""
 
-#: src/main/print-color.c:279
+#: src/main/print-color.c:280
 msgid "Hue adjustment curve"
 msgstr ""
 
-#: src/main/print-color.c:286
+#: src/main/print-color.c:287
 #, fuzzy
 msgid "Saturation Map"
 msgstr "Saturation :"
 
-#: src/main/print-color.c:287
+#: src/main/print-color.c:288
 msgid "Saturation adjustment curve"
 msgstr ""
 
-#: src/main/print-color.c:294
+#: src/main/print-color.c:295
 msgid "Luminosity Map"
 msgstr ""
 
-#: src/main/print-color.c:295
+#: src/main/print-color.c:296
 msgid "Luminosity adjustment curve"
 msgstr ""
 
-#: src/main/print-color.c:302
+#: src/main/print-color.c:303
 msgid "Gray Component Reduction"
 msgstr ""
 
-#: src/main/print-color.c:303
+#: src/main/print-color.c:304
 msgid "Gray component reduction curve"
 msgstr ""
 
-#: src/cups/genppd.c:1022 src/main/print-color.c:2070
+#: src/cups/genppd.c:1022 src/main/print-color.c:1952
 msgid "Line Art"
 msgstr "Crayon"
 
-#: src/main/print-color.c:2072
+#: src/main/print-color.c:1954
 msgid "HSL-corrected"
 msgstr ""
 
-#: src/cups/genppd.c:1024 src/main/print-color.c:2074
+#: src/cups/genppd.c:1024 src/main/print-color.c:1956
 msgid "Solid Colors"
 msgstr "Tons continus"
 
-#: src/main/print-color.c:2076
+#: src/main/print-color.c:1958
 #, fuzzy
 msgid "Photographs"
 msgstr "Photographie"
@@ -788,7 +788,7 @@ msgstr "Dimensionne l'impression par rapport à la taille de la page"
 msgid "Image is too long for the page\n"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:1982 src/main/print-escp2-data.c:276
+#: src/libgimpprintui/panel.c:2008 src/main/print-escp2-data.c:276
 #: src/main/print-escp2-data.c:302 src/main/print-escp2-data.c:336
 #: src/main/print-pcl.c:209
 msgid "Standard"
@@ -825,16 +825,16 @@ msgstr ""
 
 #: src/main/print-escp2.c:502 src/main/print-escp2.c:635
 #: src/main/print-escp2.c:680 src/main/print-escp2.c:697
-#: src/main/print-escp2.c:1437
+#: src/main/print-escp2.c:1452
 #, fuzzy, c-format
 msgid "Model %d out of range.\n"
 msgstr "Nombre hors-intervalle !\n"
 
-#: src/main/print-escp2.c:1432 src/main/print-raw.c:210
+#: src/main/print-escp2.c:1447 src/main/print-raw.c:211
 msgid "Print options not verified; cannot print.\n"
 msgstr ""
 
-#: src/main/print-escp2.c:1466
+#: src/main/print-escp2.c:1481
 #, fuzzy, c-format
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "L'imprimante ne supporte pas les sorties en couleur\n"
@@ -1043,11 +1043,11 @@ msgstr "Fichier PPD :"
 msgid "PPD File"
 msgstr "Fichier PPD ?"
 
-#: src/main/print-raw.c:216
+#: src/main/print-raw.c:217
 msgid "Image dimensions must match paper dimensions"
 msgstr ""
 
-#: src/main/print-raw.c:239
+#: src/main/print-raw.c:240
 msgid "Internal error!  Output channels or input channels must be 1\n"
 msgstr ""
 
@@ -1128,29 +1128,29 @@ msgstr "Valeurs par défaut"
 msgid "Restore Previous"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:468 src/libgimpprintui/panel.c:1072
-#: src/libgimpprintui/panel.c:1226 src/libgimpprintui/panel.c:1259
+#: src/libgimpprintui/panel.c:468 src/libgimpprintui/panel.c:1098
+#: src/libgimpprintui/panel.c:1252 src/libgimpprintui/panel.c:1285
 msgid "OK"
 msgstr "Valider"
 
-#: src/libgimpprintui/panel.c:470 src/libgimpprintui/panel.c:859
-#: src/libgimpprintui/panel.c:1074 src/libgimpprintui/panel.c:1228
+#: src/libgimpprintui/panel.c:470 src/libgimpprintui/panel.c:885
+#: src/libgimpprintui/panel.c:1100 src/libgimpprintui/panel.c:1254
 msgid "Cancel"
 msgstr "Annuler"
 
 #.
 #. * Create the main dialog
 #.
-#: src/libgimpprintui/panel.c:842
+#: src/libgimpprintui/panel.c:868
 #, c-format
 msgid "%s -- Print v%s"
 msgstr "%s -- Print v%s"
 
-#: src/libgimpprintui/panel.c:851
+#: src/libgimpprintui/panel.c:877
 msgid "About"
 msgstr "À propos"
 
-#: src/libgimpprintui/panel.c:853
+#: src/libgimpprintui/panel.c:879
 msgid ""
 "Print and\n"
 "Save Settings"
@@ -1158,7 +1158,7 @@ msgstr ""
 "Imprimer et enregistrer\n"
 "les réglages"
 
-#: src/libgimpprintui/panel.c:855
+#: src/libgimpprintui/panel.c:881
 msgid ""
 "Save\n"
 "Settings"
@@ -1166,15 +1166,15 @@ msgstr ""
 "Enregistrer\n"
 "les réglages"
 
-#: src/libgimpprintui/panel.c:857
+#: src/libgimpprintui/panel.c:883
 msgid "Print"
 msgstr "Imprimer"
 
-#: src/libgimpprintui/panel.c:910
+#: src/libgimpprintui/panel.c:936
 msgid "Preview"
 msgstr "Aperçu"
 
-#: src/libgimpprintui/panel.c:935
+#: src/libgimpprintui/panel.c:961
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
@@ -1199,31 +1199,31 @@ msgstr ""
 "Si vous cliquez un autre bouton tandis que vous bougez la souris, l'image "
 "retournera à sa position originale."
 
-#: src/libgimpprintui/panel.c:981
+#: src/libgimpprintui/panel.c:1007
 msgid "Position"
 msgstr "Position"
 
-#: src/libgimpprintui/panel.c:998
+#: src/libgimpprintui/panel.c:1024
 msgid "Auto"
 msgstr "Auto"
 
-#: src/libgimpprintui/panel.c:1000
+#: src/libgimpprintui/panel.c:1026
 msgid "Portrait"
 msgstr "Portrait"
 
-#: src/libgimpprintui/panel.c:1002
+#: src/libgimpprintui/panel.c:1028
 msgid "Landscape"
 msgstr "Paysage"
 
-#: src/libgimpprintui/panel.c:1004
+#: src/libgimpprintui/panel.c:1030
 msgid "Upside down"
 msgstr "Retourner"
 
-#: src/libgimpprintui/panel.c:1006
+#: src/libgimpprintui/panel.c:1032
 msgid "Seascape"
 msgstr "Panoramique"
 
-#: src/libgimpprintui/panel.c:1010
+#: src/libgimpprintui/panel.c:1036
 msgid ""
 "Select the orientation: portrait, landscape, upside down, or seascape "
 "(upside down landscape)"
@@ -1231,130 +1231,130 @@ msgstr ""
 "Sélectionnez l'orientation : portrait, paysage, tête-bèche, ou tête-bèche "
 "paysage"
 
-#: src/libgimpprintui/panel.c:1012
+#: src/libgimpprintui/panel.c:1038
 msgid "Orientation:"
 msgstr "Orientation :"
 
-#: src/libgimpprintui/panel.c:1023
+#: src/libgimpprintui/panel.c:1049
 msgid "Left:"
 msgstr "Gauche :"
 
-#: src/libgimpprintui/panel.c:1024
+#: src/libgimpprintui/panel.c:1050
 msgid "Distance from the left of the paper to the image"
 msgstr "Distance entre le bord gauche du papier et l'image"
 
-#: src/libgimpprintui/panel.c:1026
+#: src/libgimpprintui/panel.c:1052
 msgid "Right:"
 msgstr "Droite :"
 
-#: src/libgimpprintui/panel.c:1027
+#: src/libgimpprintui/panel.c:1053
 msgid "Distance from the left of the paper to the right of the image"
 msgstr "Distance entre le bord gauche du papier et le bord droit de l'image"
 
-#: src/libgimpprintui/panel.c:1029
+#: src/libgimpprintui/panel.c:1055
 msgid "Right Border:"
 msgstr "Bordure droite :"
 
-#: src/libgimpprintui/panel.c:1030
+#: src/libgimpprintui/panel.c:1056
 msgid "Distance from the right of the paper to the image"
 msgstr "Distance entre le bord droit du papier et l'image"
 
-#: src/libgimpprintui/panel.c:1032
+#: src/libgimpprintui/panel.c:1058
 msgid "Top:"
 msgstr "Dessus :"
 
-#: src/libgimpprintui/panel.c:1033
+#: src/libgimpprintui/panel.c:1059
 msgid "Distance from the top of the paper to the image"
 msgstr "Distance entre le bord supérieur du papier et l'image"
 
-#: src/libgimpprintui/panel.c:1035
+#: src/libgimpprintui/panel.c:1061
 msgid "Bottom:"
 msgstr "Bas :"
 
-#: src/libgimpprintui/panel.c:1036
+#: src/libgimpprintui/panel.c:1062
 #, fuzzy
 msgid "Distance from the top of the paper to bottom of the image"
 msgstr ""
 "Distance entre le bord supérieur du papier et le bord inférieur de l'image"
 
-#: src/libgimpprintui/panel.c:1038
+#: src/libgimpprintui/panel.c:1064
 msgid "Bottom Border:"
 msgstr "Bordure basse :"
 
-#: src/libgimpprintui/panel.c:1039
+#: src/libgimpprintui/panel.c:1065
 msgid "Distance from the bottom of the paper to the image"
 msgstr "Distance entre le bord inférieur du papier et l'image"
 
-#: src/libgimpprintui/panel.c:1049
+#: src/libgimpprintui/panel.c:1075
 msgid "Center:"
 msgstr "Centrer :"
 
-#: src/libgimpprintui/panel.c:1052
+#: src/libgimpprintui/panel.c:1078
 msgid "Vertically"
 msgstr "Verticalement"
 
-#: src/libgimpprintui/panel.c:1053
+#: src/libgimpprintui/panel.c:1079
 msgid "Center the image vertically on the paper"
 msgstr "Centrer l'image verticalement sur le papier"
 
-#: src/libgimpprintui/panel.c:1055
+#: src/libgimpprintui/panel.c:1081
 msgid "Both"
 msgstr "Les deux"
 
-#: src/libgimpprintui/panel.c:1056
+#: src/libgimpprintui/panel.c:1082
 msgid "Center the image on the paper"
 msgstr "Centrer l'image sur le papier"
 
-#: src/libgimpprintui/panel.c:1058
+#: src/libgimpprintui/panel.c:1084
 msgid "Horizontally"
 msgstr "Horizontalement"
 
-#: src/libgimpprintui/panel.c:1059
+#: src/libgimpprintui/panel.c:1085
 msgid "Center the image horizontally on the paper"
 msgstr "Centrer l'image horizontalement sur le papier"
 
-#: src/libgimpprintui/panel.c:1070
+#: src/libgimpprintui/panel.c:1096
 msgid "Setup Printer"
 msgstr "Configuration de l'imprimante"
 
 #.
 #. * Printer driver option menu.
 #.
-#: src/libgimpprintui/panel.c:1096 src/libgimpprintui/panel.c:1331
+#: src/libgimpprintui/panel.c:1122 src/libgimpprintui/panel.c:1357
 msgid "Printer Model:"
 msgstr "Modèle d'imprimante :"
 
-#: src/libgimpprintui/panel.c:1107
+#: src/libgimpprintui/panel.c:1133
 msgid "Select your printer model"
 msgstr "Sélectionnez le modèle de votre imprimante"
 
 #.
 #. * PPD file.
 #.
-#: src/libgimpprintui/panel.c:1143
+#: src/libgimpprintui/panel.c:1169
 msgid "PPD File:"
 msgstr "Fichier PPD :"
 
-#: src/libgimpprintui/panel.c:1157
+#: src/libgimpprintui/panel.c:1183
 msgid "Enter the correct PPD filename for your printer"
 msgstr "Entrez le nom de fichier PPD correct pour votre imprimante"
 
-#: src/libgimpprintui/panel.c:1159
+#: src/libgimpprintui/panel.c:1185
 msgid "Browse"
 msgstr "Parcourir"
 
-#: src/libgimpprintui/panel.c:1166
+#: src/libgimpprintui/panel.c:1192
 msgid "Choose the correct PPD filename for your printer"
 msgstr "Choisissez le fichier PPD correct pour votre imprimante"
 
 #.
 #. * Print command.
 #.
-#: src/libgimpprintui/panel.c:1174
+#: src/libgimpprintui/panel.c:1200
 msgid "Command:"
 msgstr "Commande :"
 
-#: src/libgimpprintui/panel.c:1186
+#: src/libgimpprintui/panel.c:1212
 msgid ""
 "Enter the correct command to print to your printer. Note: Please do not "
 "remove the `-l' or `-oraw' from the command string, or printing will "
@@ -1367,38 +1367,38 @@ msgstr ""
 #.
 #. * Output file selection dialog.
 #.
-#: src/libgimpprintui/panel.c:1194
+#: src/libgimpprintui/panel.c:1220
 msgid "Print To File?"
 msgstr "Imprimer dans un fichier ?"
 
 #.
 #. * PPD file selection dialog.
 #.
-#: src/libgimpprintui/panel.c:1207
+#: src/libgimpprintui/panel.c:1233
 msgid "PPD File?"
 msgstr "Fichier PPD ?"
 
-#: src/libgimpprintui/panel.c:1224
+#: src/libgimpprintui/panel.c:1250
 msgid "Define New Printer"
 msgstr "Définir une nouvelle imprimante"
 
-#: src/libgimpprintui/panel.c:1243 src/libgimpprintui/panel.c:1328
+#: src/libgimpprintui/panel.c:1269 src/libgimpprintui/panel.c:1354
 msgid "Printer Name:"
 msgstr "Nom de l'imprimante :"
 
-#: src/libgimpprintui/panel.c:1247
+#: src/libgimpprintui/panel.c:1273
 msgid "Enter the name you wish to give this logical printer"
 msgstr "Saisissez le nom que vous voulez donner à cette imprimante logique"
 
-#: src/libgimpprintui/panel.c:1257
+#: src/libgimpprintui/panel.c:1283
 msgid "About Gimp-Print "
 msgstr "À propos de Gimp-Print"
 
-#: src/libgimpprintui/panel.c:1265
+#: src/libgimpprintui/panel.c:1291
 msgid "Gimp-Print Version "
 msgstr "Version de Gimp-Print"
 
-#: src/libgimpprintui/panel.c:1265
+#: src/libgimpprintui/panel.c:1291
 msgid ""
 "\n"
 "\n"
@@ -1446,11 +1446,11 @@ msgstr ""
 "avec le programme; si ce n'est pas le cas, écrivez à la Free Software\n"
 "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
 
-#: src/libgimpprintui/panel.c:1313
+#: src/libgimpprintui/panel.c:1339
 msgid "Printer Settings"
 msgstr "Paramètres de l'imprimante"
 
-#: src/libgimpprintui/panel.c:1326
+#: src/libgimpprintui/panel.c:1352
 msgid ""
 "Select the name of the printer (not the type, or model, of printer) that you "
 "wish to print to"
@@ -1461,11 +1461,11 @@ msgstr ""
 #.
 #. * Setup printer button
 #.
-#: src/libgimpprintui/panel.c:1343
+#: src/libgimpprintui/panel.c:1369
 msgid "Setup Printer..."
 msgstr "Configurer l'imprimante..."
 
-#: src/libgimpprintui/panel.c:1345
+#: src/libgimpprintui/panel.c:1371
 msgid ""
 "Choose the printer model, PPD file, and command that is used to print to "
 "this printer"
@@ -1476,11 +1476,11 @@ msgstr ""
 #.
 #. * New printer button
 #.
-#: src/libgimpprintui/panel.c:1358
+#: src/libgimpprintui/panel.c:1384
 msgid "New Printer..."
 msgstr "Nouvelle imprimante..."
 
-#: src/libgimpprintui/panel.c:1359
+#: src/libgimpprintui/panel.c:1385
 msgid ""
 "Define a new logical printer. This can be used to name a collection of "
 "settings that you wish to remember for future use."
@@ -1488,39 +1488,39 @@ msgstr ""
 "Crée une nouvelle imprimante logique. Cela peut être utilisé pour nommer un "
 "ensemble de réglage que vous souhaitez réutiliser plus tard."
 
-#: src/libgimpprintui/panel.c:1390
+#: src/libgimpprintui/panel.c:1416
 msgid "Dimensions:"
 msgstr "Dimensions :"
 
-#: src/libgimpprintui/panel.c:1393 src/libgimpprintui/panel.c:1514
+#: src/libgimpprintui/panel.c:1419 src/libgimpprintui/panel.c:1540
 msgid "Width:"
 msgstr "Largeur :"
 
-#: src/libgimpprintui/panel.c:1394
+#: src/libgimpprintui/panel.c:1420
 msgid "Width of the paper that you wish to print to"
 msgstr "Largeur du papier sur lequel vous souhaitez imprimer"
 
-#: src/libgimpprintui/panel.c:1398 src/libgimpprintui/panel.c:1516
+#: src/libgimpprintui/panel.c:1424 src/libgimpprintui/panel.c:1542
 msgid "Height:"
 msgstr "Hauteur :"
 
-#: src/libgimpprintui/panel.c:1399
+#: src/libgimpprintui/panel.c:1425
 msgid "Height of the paper that you wish to print to"
 msgstr "Hauteur du papier sur lequel vous souhaitez imprimer"
 
-#: src/libgimpprintui/panel.c:1424
+#: src/libgimpprintui/panel.c:1450
 msgid "Size"
 msgstr "Taille"
 
-#: src/libgimpprintui/panel.c:1444
+#: src/libgimpprintui/panel.c:1470
 msgid "Scaling:"
 msgstr "Échelle :"
 
-#: src/libgimpprintui/panel.c:1448
+#: src/libgimpprintui/panel.c:1474
 msgid "Set the scale (size) of the image"
 msgstr "Régler l'échelle (taille) de l'image"
 
-#: src/libgimpprintui/panel.c:1479
+#: src/libgimpprintui/panel.c:1505
 msgid ""
 "Select whether scaling is measured as percent of available page size or "
 "number of output dots per inch"
@@ -1528,34 +1528,34 @@ msgstr ""
 "Sélectionnez si l'échelle est mesurée en pourcentage de la taille de la page "
 "ou en nombre de points par pouces"
 
-#: src/libgimpprintui/panel.c:1482
+#: src/libgimpprintui/panel.c:1508
 msgid "Percent"
 msgstr "Pourcentage"
 
-#: src/libgimpprintui/panel.c:1487
+#: src/libgimpprintui/panel.c:1513
 msgid "Scale the print to the size of the page"
 msgstr "Dimensionne l'impression par rapport à la taille de la page"
 
-#: src/libgimpprintui/panel.c:1491
+#: src/libgimpprintui/panel.c:1517
 msgid "PPI"
 msgstr "points par pouce"
 
-#: src/libgimpprintui/panel.c:1496
+#: src/libgimpprintui/panel.c:1522
 msgid "Scale the print to the number of dots per inch"
 msgstr "Dimensionne l'impression en nombre de points par pouce"
 
-#: src/libgimpprintui/panel.c:1514
+#: src/libgimpprintui/panel.c:1540
 msgid "Set the width of the print"
 msgstr "Défini la largeur de l'impression"
 
-#: src/libgimpprintui/panel.c:1516
+#: src/libgimpprintui/panel.c:1542
 msgid "Set the height of the print"
 msgstr "Défini la hauteur de l'impression"
 
 #.
 #. * The "image size" button
 #.
-#: src/libgimpprintui/panel.c:1522
+#: src/libgimpprintui/panel.c:1548
 msgid ""
 "Use Original\n"
 "Image Size"
@@ -1563,51 +1563,51 @@ msgstr ""
 "Utiliser la taille \n"
 "de l'image originale"
 
-#: src/libgimpprintui/panel.c:1528
+#: src/libgimpprintui/panel.c:1554
 msgid "Set the print size to the size of the image"
 msgstr "Utiliser la taille de l'image comme taille d'impression"
 
-#: src/libgimpprintui/panel.c:1550
+#: src/libgimpprintui/panel.c:1576
 msgid "Units:"
 msgstr "Unités :"
 
-#: src/libgimpprintui/panel.c:1555
+#: src/libgimpprintui/panel.c:1581
 msgid "Select the base unit of measurement for printing"
 msgstr "Sélectionne l'unité de base de mesure pour l'impression"
 
-#: src/libgimpprintui/panel.c:1587
+#: src/libgimpprintui/panel.c:1613
 msgid "Print Color Adjust"
 msgstr "Ajustez les couleurs d'impression"
 
-#: src/libgimpprintui/panel.c:1590
+#: src/libgimpprintui/panel.c:1616
 msgid "Set Defaults"
 msgstr "Valeurs par défaut"
 
-#: src/libgimpprintui/panel.c:1592
+#: src/libgimpprintui/panel.c:1618
 msgid "Close"
 msgstr "Fermer"
 
-#: src/libgimpprintui/panel.c:1623
+#: src/libgimpprintui/panel.c:1649
 msgid "Image preview"
 msgstr "Aperçu de l'image"
 
-#: src/libgimpprintui/panel.c:1691
+#: src/libgimpprintui/panel.c:1717
 msgid "Image / Output Settings"
 msgstr "Image / Paramètres de sortie"
 
-#: src/libgimpprintui/panel.c:1719
+#: src/libgimpprintui/panel.c:1745
 msgid "Output Type:"
 msgstr "Type de sortie :"
 
-#: src/libgimpprintui/panel.c:1723
+#: src/libgimpprintui/panel.c:1749
 msgid "Select the desired output type"
 msgstr "Sélectionnez le type de sortie désiré"
 
-#: src/libgimpprintui/panel.c:1744
+#: src/libgimpprintui/panel.c:1770
 msgid "Adjust Output..."
 msgstr "Ajuster la sortie..."
 
-#: src/libgimpprintui/panel.c:1753
+#: src/libgimpprintui/panel.c:1779
 msgid ""
 "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
 msgstr ""
