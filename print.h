@@ -138,7 +138,7 @@ typedef struct					/* Plug-in variables */
 typedef struct		/**** Printer List ****/
 {
   int	active;			/* Do we know about this printer? */
-  char	name[17];		/* Name of printer */
+  char	name[128];		/* Name of printer */
   vars_t v;
 } plist_t;
 

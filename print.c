@@ -1083,11 +1083,11 @@ get_system_printers(void)
   int   i;			/* Looping var */
   int	type;			/* 0 = none, 1 = lpc, 2 = lpstat */
   char	command[255];		/* Command to run */
-  char  defname[255];		/* Default printer name */
+  char  defname[128];		/* Default printer name */
   FILE *pfile;			/* Pipe to status command */
   char  line[255];		/* Line from status command */
   char	*ptr;			/* Pointer into line */
-  char  name[255];		/* Printer name from status command */
+  char  name[128];		/* Printer name from status command */
 #ifdef __EMX__
   BYTE  pnum;
 #endif
@@ -1172,7 +1172,8 @@ get_system_printers(void)
 		check_plist(plist_count + 1);
 		*ptr = '\0';
 		initialize_printer(&plist[plist_count]);
-		strcpy(plist[plist_count].name, line);
+		strncpy(plist[plist_count].name, line, sizeof(plist[0].name) - 1);
+		plist[plist_count].name[sizeof(plist[0].name) - 1] = '\0';
 		sprintf(plist[plist_count].v.output_to, "lpr -P%s -l", line);
 		strcpy(plist[plist_count].v.driver, "ps2");
 		plist_count ++;
@@ -1180,8 +1181,8 @@ get_system_printers(void)
 	      break;
 
 	  case PRINTERS_LPSTAT :
-	      if ((sscanf(line, "printer %s", name) == 1) ||
-		  (sscanf(line, "Printer: %s", name) == 1))
+	      if ((sscanf(line, "printer %127s", name) == 1) ||
+		  (sscanf(line, "Printer: %127s", name) == 1))
 	      {
 		check_plist(plist_count + 1);
 		initialize_printer(&plist[plist_count]);
@@ -1191,7 +1192,7 @@ get_system_printers(void)
         	plist_count ++;
 	      }
 	      else
-        	sscanf(line, "system default destination: %s", defname);
+        	sscanf(line, "system default destination: %127s", defname);
 	      break;
 	}
 
