@@ -440,7 +440,7 @@ void gtk_create_color_adjust_window(void)
 
     saturation_adjustment = scale_data =
 	gtk_adjustment_new((float)vars.saturation,
-			   0.001,
+			   0,
 			   10.0,
 			   0.001,
 			   0.01,

@@ -173,7 +173,7 @@ gimp_create_color_adjust_window (void)
   saturation_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 5,
                           _("Saturation:"), 200, 0,
-                          vars.saturation, 0.001, 10.0, 0.001, 0.01, 3,
+                          vars.saturation, 0, 10.0, 0.001, 0.01, 3,
                           TRUE, 0, 0,
                           NULL, NULL);
   gtk_signal_connect (GTK_OBJECT (saturation_adjustment), "value_changed",

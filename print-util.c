@@ -55,11 +55,15 @@
 /* rgb/hsv conversions taken from Gimp common/autostretch_hsv.c */
 
 
+#define FMAX(a, b) ((a) > (b) ? (a) : (b))
+#define FMIN(a, b) ((a) < (b) ? (a) : (b))
+
 static inline void
-calc_rgb_to_hsv(unsigned short *rgb, double *hue, double *sat, double *val)
+calc_rgb_to_hsl(unsigned short *rgb, double *hue, double *sat,
+		double *lightness)
 {
   double red, green, blue;
-  double h, s, v;
+  double h, s, l;
   double min, max;
   double delta;
 
@@ -67,51 +71,38 @@ calc_rgb_to_hsv(unsigned short *rgb, double *hue, double *sat, double *val)
   green = rgb[1] / 65535.0;
   blue  = rgb[2] / 65535.0;
 
-  h = 0.0; /* Shut up -Wall */
-
   if (red > green)
     {
-      if (red > blue)
-	max = red;
-      else
-	max = blue;
-
-      if (green < blue)
-	min = green;
-      else
-	min = blue;
+      max = FMAX(red, blue);
+      min = FMIN(green, blue);
     }
   else
     {
-      if (green > blue)
-	max = green;
-      else
-	max = blue;
-
-      if (red < blue)
-	min = red;
-      else
-	min = blue;
+      max = FMAX(green, blue);
+      min = FMIN(red, blue);
     }
 
-  v = max;
+  l = (max + min) / 2.0;
 
-  if (max != 0.0)
-    s = (max - min) / max;
-  else
-    s = 0.0;
-
-  if (s == 0.0)
-    h = 0.0;
+  if (max == min)
+    {
+      s = 0.0;
+      h = 0.0;
+    }
   else
     {
       delta = max - min;
+
+      if (l <= .5)
+	s = delta / (max + min);
+      else
+	s = delta / (2 - max - min);
 
       if (red == max)
 	h = (green - blue) / delta;
       else if (green == max)
 	h = 2 + (blue - red) / delta;
-      else if (blue == max)
+      else
 	h = 4 + (red - green) / delta;
 
       h /= 6.0;
@@ -124,79 +115,52 @@ calc_rgb_to_hsv(unsigned short *rgb, double *hue, double *sat, double *val)
 
   *hue = h;
   *sat = s;
-  *val = v;
+  *lightness = l;
+}
+
+static inline double
+hsl_value(double n1, double n2, double hue)
+{
+  if (hue < 0)
+    hue += 1.0;
+  else if (hue > 1)
+    hue -= 1.0;
+  if (hue < (1.0 / 6.0))
+    return (n1 + (n2 - n1) * (hue * 6.0));
+  else if (hue < .5)
+    return (n2);
+  else if (hue < (4.0 / 6.0))
+    return (n1 + (n2 - n1) * (((4.0 / 6.0) - hue) * 6.0));
+  else
+    return (n1);
 }
 
 static inline void
-calc_hsv_to_rgb(unsigned short *rgb, double h, double s, double v)
+calc_hsl_to_rgb(unsigned short *rgb, double h, double s, double l)
 {
-  double hue, saturation, value;
-  double f, p, q, t;
-
   if (s == 0.0)
     {
-      h = v;
-      s = v;
-      v = v; /* heh */
+      if (l > 1)
+	l = 1;
+      else if (l < 0)
+	l = 0;
+      rgb[0] = l * 65535;
+      rgb[1] = l * 65535;
+      rgb[2] = l * 65535;
     }
   else
     {
-      hue        = h * 6.0;
-      saturation = s;
-      value      = v;
+      double m1, m2;
 
-      if (hue == 6.0)
-	hue = 0.0;
-
-      f = hue - (int) hue;
-      p = value * (1.0 - saturation);
-      q = value * (1.0 - saturation * f);
-      t = value * (1.0 - saturation * (1.0 - f));
-
-      switch ((int) hue)
-	{
-	case 0:
-	  h = value;
-	  s = t;
-	  v = p;
-	  break;
-
-	case 1:
-	  h = q;
-	  s = value;
-	  v = p;
-	  break;
-
-	case 2:
-	  h = p;
-	  s = value;
-	  v = t;
-	  break;
-
-	case 3:
-	  h = p;
-	  s = q;
-	  v = value;
-	  break;
-
-	case 4:
-	  h = t;
-	  s = p;
-	  v = value;
-	  break;
-
-	case 5:
-	  h = value;
-	  s = p;
-	  v = q;
-	  break;
-	}
+      if (l < .5)
+	m2 = l * (1 + s);
+      else
+	m2 = l + s - (l * s);
+      m1 = (l * 2) - m2;
+      rgb[0] = 65535 * hsl_value(m1, m2, h + (2.0 / 6.0));
+      rgb[1] = 65535 * hsl_value(m1, m2, h);
+      rgb[2] = 65535 * hsl_value(m1, m2, h - (2.0 / 6.0));
     }
-
-  rgb[0] = h*65535;
-  rgb[1] = s*65535;
-  rgb[2] = v*65535;
-
 }
 
 
@@ -248,7 +212,7 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 		int    width,			/* I - Width of row */
 		int    bpp,			/* I - bpp in indexed */
 		unsigned char *cmap,		/* I - Colormap */
-		const vars_t   *vars			/* I - Saturation */
+		const vars_t   *vars
 		)
 {
   int		i;
@@ -291,7 +255,7 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	       int    width,		/* I - Width of row */
 	       int    bpp,		/* I - Bytes-per-pixel in indexed */
 	       unsigned char *cmap,	/* I - Colormap */
-	       const vars_t   *vars		/* I - Saturation */
+	       const vars_t   *vars
 	       )
 {
   while (width > 0)
@@ -318,9 +282,11 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	}
       if (vars->saturation != 1.0)
 	{
-	  calc_rgb_to_hsv(rgb, &h, &s, &v);
-	  s = pow(s, 1.0 / vars->saturation);
-	  calc_hsv_to_rgb(rgb, h, s, v);
+	  calc_rgb_to_hsl(rgb, &h, &s, &v);
+	  s *= vars->saturation;
+	  if (s > 1)
+	    s = 1.0;
+	  calc_hsl_to_rgb(rgb, h, s, v);
 	}
       if (vars->density != 1.0)
 	{
@@ -351,7 +317,7 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	    int    width,		/* I - Width of row */
 	    int    bpp,			/* I - Bytes-per-pixel in RGB */
 	    unsigned char *cmap,	/* I - Colormap (unused) */
-	    const vars_t   *vars		/* I - Saturation */
+	    const vars_t   *vars
 	    )
 {
   while (width > 0)
@@ -392,11 +358,10 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	   int    		width,		/* I - Width of row */
 	   int    		bpp,		/* I - Bytes/pix in indexed */
 	   unsigned char 	*cmap,		/* I - Colormap */
-	   const vars_t  		*vars		/* I - Saturation */
+	   const vars_t  	*vars
 	   )
 {
   unsigned ld = vars->density * 65536;
-  double is = 1.0 / vars->saturation;
   while (width > 0)
     {
       double h, s, v;
@@ -418,11 +383,13 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	  rgbout[2] = vars->lut->blue[rgbin[2] * rgbin[3] / 255 +
 				    255 - rgbin[3]];
 	}
-      if (is != 1.0)
+      if (vars->saturation != 1.0)
 	{
-	  calc_rgb_to_hsv(rgbout, &h, &s, &v);
-	  s = pow(s, is);
-	  calc_hsv_to_rgb(rgbout, h, s, v);
+	  calc_rgb_to_hsl(rgbout, &h, &s, &v);
+	  s *= vars->saturation;
+	  if (s > 1)
+	    s = 1.0;
+	  calc_hsl_to_rgb(rgbout, h, s, v);
 	}
       if (ld < 65536)
 	{
@@ -450,7 +417,7 @@ gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 	    int    		width,		/* I - Width of row */
 	    int    		bpp,		/* I - Bytes/pix in indexed */
 	    unsigned char 	*cmap,		/* I - Colormap */
-	    const vars_t  		*vars		/* I - Saturation */
+	    const vars_t  	*vars
 	    )
 {
   while (width > 0)
