@@ -112,7 +112,7 @@ Description: a utility for Epson Stylus printers
  escputil is a utility to clean and align the heads of Epson Stylus printers.
  It can also check the current ink levels in the printer.
 
-Package: foomatic-db-gimpprint
+Package: foomatic-db-gimp-print
 Architecture: all
 Section: text
 Depends: libgimpprint#UPSTREAM_VERSION# (= ${Source-Version}), foomatic-db
