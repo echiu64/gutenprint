@@ -249,7 +249,9 @@ GtkWidget	*print_dialog,		/* Print dialog window */
 		*scaling_entry,		/* Text entry widget for scaling */
 		*scaling_percent,	/* Scale by percent */
 		*scaling_ppi,		/* Scale by pixels-per-inch */
+#ifndef GIMP_1_0
 		*scaling_image,		/* Scale to the image */
+#endif
 		*brightness_scale,	/* Scale for brightness */
 		*brightness_entry,	/* Text entry widget for brightness */
 		*saturation_scale,	/* Scale for saturation */
@@ -1141,11 +1143,13 @@ do_print_dialog(void)
   gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
   gtk_widget_show(button);
 
+#ifndef GIMP_1_0
   scaling_image = button = gtk_toggle_button_new_with_label(_("Set Image Scale"));
   gtk_signal_connect(GTK_OBJECT(button), "clicked",
                      (GtkSignalFunc)scaling_callback, NULL);
   gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
   gtk_widget_show(button);
+#endif
 
 
  /*
@@ -2146,6 +2150,7 @@ scaling_callback(GtkWidget *widget)	/* I - Entry widget */
     plist[plist_current].v.scaling = vars.scaling;
     gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
   }
+#ifndef GIMP_1_0
   else if (widget == scaling_image)
   {
     double xres, yres;
@@ -2159,6 +2164,7 @@ scaling_callback(GtkWidget *widget)	/* I - Entry widget */
     plist[plist_current].v.scaling = vars.scaling;
     gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
   }
+#endif
 }
 
 static void
