@@ -167,9 +167,9 @@ typedef struct
   stp_parameter_type_t p_type;   /*!< Parameter type. */
   stp_parameter_class_t p_class; /*!< Parameter class. */
   stp_parameter_level_t p_level; /*!< Parameter level. */
-  unsigned char is_mandatory;              /*!< The parameter is required, even when set inactive. */
-  unsigned char is_active;                 /*!< Is the parameter active? */
-  unsigned char channel;                   /*!< UNUSED? */
+  unsigned char is_mandatory;    /*!< The parameter is required, even when set inactive. */
+  unsigned char is_active;       /*!< Is the parameter active? */
+  unsigned char channel;         /*!< The channel to which this parameter applies */
   unsigned char verify_this_parameter;	 /*!< Should the verify system check this parameter? */
   unsigned char read_only;
   union
@@ -198,8 +198,10 @@ typedef const void *stp_const_parameter_list_t;
 
 /**
  * Output function supplied by the calling application.
- * This is used to report error information.
- * @param data the output data to store buffer in.
+ * There are two output functions supplied by the caller, one to send
+ * output data and one to report errors.
+ * @param data a pointer to an opaque object owned by the calling
+ *             application.
  * @param buffer the data to output.
  * @param bytes the size of buffer (in bytes).
  */
