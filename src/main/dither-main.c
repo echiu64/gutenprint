@@ -37,7 +37,6 @@
 #include <math.h>
 #include <string.h>
 #include "dither-impl.h"
-#include "vars.h"
 
 static const stpi_dither_algorithm_t dither_algos[] =
 {
