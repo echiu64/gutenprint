@@ -1,8 +1,10 @@
 /etc/cups
 /usr/bin/cups-calibrate
 /usr/bin/cups-genppd
+/usr/bin/cups-genppdconfig
 /usr/lib/cups
 /usr/share/cups/calibrate.ppm
-/usr/share/cups/model/C
+/usr/share/cups/model/gimp-print
 /usr/share/man/man8/cups-calibrate.8
 /usr/share/man/man8/cups-genppd.8
+/usr/share/man/man8/cups-genppdconfig.8
