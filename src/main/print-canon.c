@@ -655,6 +655,7 @@ typedef enum {
 
 typedef struct canon_caps {
   int model;          /* model number as used in printers.xml */
+  int model_id;       /* model ID code for use in commands */
   int max_width;      /* maximum printable paper size */
   int max_height;
   int base_res;       /* base resolution - shall be 150 or 180 */
@@ -820,7 +821,7 @@ static const canon_cap_t canon_model_capabilities[] =
 
 
   { /* Canon  BJ 30   *//* heads: BC-10 */
-    30,
+    30, 1,
     9.5*72, 14*72,
     90, 360, 360, 2,
     11, 9, 10, 18,
@@ -839,7 +840,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon  BJC 85  *//* heads: BC-20 BC-21 BC-22 */
-    85,
+    85, 1,
     9.5*72, 14*72,
     90, 720, 360, 2,
     11, 9, 10, 18,
@@ -858,7 +859,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 4300 *//* heads: BC-20 BC-21 BC-22 BC-29 */
-    4300,
+    4300, 1,
     618, 936,      /* 8.58" x 13 " */
     180, 1440, 720, 2,
     11, 9, 10, 18,
@@ -877,7 +878,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 4400 *//* heads: BC-20 BC-21 BC-22 BC-29 */
-    4400,
+    4400, 1,
     9.5*72, 14*72,
     90, 720, 360, 2,
     11, 9, 10, 18,
@@ -896,7 +897,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 6000 *//* heads: BC-30/BC-31 BC-32/BC-31 */
-    6000,
+    6000, 3,
     618, 936,      /* 8.58" x 13 " */
     180, 1440, 720, 2,
     11, 9, 10, 18,
@@ -915,7 +916,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 6200 *//* heads: BC-30/BC-31 BC-32/BC-31 */
-    6200,
+    6200, 3,
     618, 936,      /* 8.58" x 13 " */
     180, 1440, 720, 2,
     11, 9, 10, 18,
@@ -934,7 +935,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 6500 *//* heads: BC-30/BC-31 BC-32/BC-31 */
-    6500,
+    6500, 3,
     11*72, 17*72,
     180, 1440, 720, 2,
     11, 9, 10, 18,
@@ -953,7 +954,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 8200 *//* heads: BC-50 */
-    8200,
+    8200, 3,
     11*72, 17*72,
     150, 1200,1200, 4,
     11, 9, 10, 18,
@@ -980,7 +981,7 @@ static const canon_cap_t canon_model_capabilities[] =
 
 
   { /* Canon BJC 210 *//* heads: BC-02 BC-05 BC-06 */
-    210,
+    210, 1,
     11*72, 17*72,
     90, 720, 360, 2,
     11, 9, 10, 18,
@@ -998,7 +999,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 240 *//* heads: BC-02 BC-05 BC-06 */
-    240,
+    240, 1,
     11*72, 17*72,
     90, 720, 360, 2,
     11, 9, 10, 18,
@@ -1016,7 +1017,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 250 *//* heads: BC-02 BC-05 BC-06 */
-    250,
+    250, 1,
     11*72, 17*72,
     90, 720, 360, 2,
     11, 9, 10, 18,
@@ -1034,7 +1035,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 1000 *//* heads: BC-02 BC-05 BC-06 */
-    1000,
+    1000, 1,
     11*72, 17*72,
     90, 720, 360, 2,
     11, 9, 10, 18,
@@ -1052,7 +1053,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 2000 *//* heads: BC-20 BC-21 BC-22 BC-29 */
-    2000,
+    2000, 1,
     11*72, 17*72,
     180, 720, 360, 2,
     11, 9, 10, 18,
@@ -1070,7 +1071,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 3000 *//* heads: BC-30 BC-33 BC-34 */
-    3000,
+    3000, 3,
     11*72, 17*72,
     180, 1440, 720, 2,
     11, 9, 10, 18,
@@ -1088,7 +1089,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 6100 *//* heads: BC-30/BC-31 BC-32/BC-31 */
-    6100,
+    6100, 3,
     11*72, 17*72,
     180, 1440, 720, 2,
     11, 9, 10, 18,
@@ -1106,7 +1107,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 7000 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
-    7000,
+    7000, 3,
     11*72, 17*72,
     150, 1200, 600, 2,
     11, 9, 10, 18,
@@ -1124,7 +1125,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 7100 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
-    7100,
+    7100, 3,
     11*72, 17*72,
     150, 1200, 600, 2,
     11, 9, 10, 18,
@@ -1150,7 +1151,7 @@ static const canon_cap_t canon_model_capabilities[] =
   /*****************************/
 
   { /* Canon BJC 5100 *//* heads: BC-20 BC-21 BC-22 BC-23 BC-29 */
-    5100,
+    5100, 1,
     17*72, 22*72,
     180, 1440, 720, 2,
     11, 9, 10, 18,
@@ -1168,7 +1169,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 5500 *//* heads: BC-20 BC-21 BC-29 */
-    5500,
+    5500, 1,
     22*72, 34*72,
     180, 720, 360, 2,
     11, 9, 10, 18,
@@ -1186,7 +1187,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 6500 *//* heads: BC-30/BC-31 BC-32/BC-31 */
-    6500,
+    6500, 3,
     17*72, 22*72,
     180, 1440, 720, 2,
     11, 9, 10, 18,
@@ -1204,7 +1205,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 8500 *//* heads: BC-80/BC-81 BC-82/BC-81 */
-    8500,
+    8500, 3,
     17*72, 22*72,
     150, 1200,1200, 2,
     11, 9, 10, 18,
@@ -1958,15 +1959,12 @@ canon_init_setColor(const stp_vars_t v, canon_init_t *init)
   unsigned char
     arg_63_1 = 0x00,
     arg_63_2 = 0x00, /* plain paper */
-    arg_63_3 = init->caps->max_quality; /* output quality  */
+    arg_63_3 = 0x00; /* output quality, hardcoded to Normal for now */
 
   if (!(init->caps->features & CANON_CAP_c))
     return;
 
-  if (init->caps->model<3000)
-    arg_63_1= 0x10;
-  else
-    arg_63_1= 0x30;
+  arg_63_1 = init->caps->model_id << 4;
 
   if (init->output_type==OUTPUT_GRAY || init->output_type == OUTPUT_MONOCHROME)
     arg_63_1|= 0x01;
@@ -2031,10 +2029,7 @@ canon_init_setTray(const stp_vars_t v, canon_init_t *init)
   if (!(init->caps->features & CANON_CAP_l))
     return;
 
-  if (init->caps->model<3000)
-    arg_6c_1= 0x10;
-  else
-    arg_6c_1= 0x30;
+  arg_6c_1 = init->caps->model_id << 4;
 
   arg_6c_1|= (source & 0x0f);
 
