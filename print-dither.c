@@ -735,6 +735,7 @@ do {									   \
 
 #define INCREMENT_COLOR()						  \
 do {									  \
+  ditherbit = rand();							  \
   if (direction == 1)							  \
     {									  \
       if (bit == 1)							  \
@@ -1354,6 +1355,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.22  2000/04/16 21:55:20  rlk
+ *   We really do need to randomize the black transition
+ *
  *   Revision 1.21  2000/04/16 21:31:32  rlk
  *   Choice of dithering algorithms
  *
