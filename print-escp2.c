@@ -67,9 +67,9 @@ static void *initialize_weave(int jets, int separation, int oversample,
 			      int lineheight, int vertical_row_separation,
 			      int first_line, int phys_lines, int strategy);
 static void escp2_flush_all(void *, int model, int width, int hoffset,
-			    int ydpi, int xdpi, FILE *prn);
+			    int ydpi, int xdpi, int physical_xdpi, FILE *prn);
 static void
-escp2_write_weave(void *, FILE *, int, int, int, int, int, int,
+escp2_write_weave(void *, FILE *, int, int, int, int, int, int, int,
 		  const unsigned char *c, const unsigned char *m,
 		  const unsigned char *y, const unsigned char *k,
 		  const unsigned char *C, const unsigned char *M);
@@ -552,6 +552,8 @@ typedef struct escp2_printer
   int		black_nozzle_separation; /* Separation between rows */
   int		xres;		/* Normal distance between dots in */
 				/* softweave mode (inverse inches) */
+  int		enhanced_xres;	/* Distance between dots in highest */
+				/* quality modes */
   int		max_paper_width; /* Maximum paper width, in points*/
   int		max_paper_height; /* Maximum paper height, in points */
   int		left_margin;	/* Left margin, points */
@@ -625,7 +627,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    1, 1, 1, 1, 720, INCH(17 / 2), INCH(14), 14, 14, 9, 49, 1, 0,
+    1, 1, 1, 1, 720, 720, INCH(17 / 2), INCH(14), 14, 14, 9, 49, 1, 0,
     { -2, -2, -1, -2, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .568, 0, 0, 0, 0, 0 },
     &simple_4color_inks
@@ -636,7 +638,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    48, 6, 48, 6, 720, INCH(17 / 2), INCH(14), 14, 14, 0, 24, 1, 0,
+    48, 6, 48, 6, 720, 720, INCH(17 / 2), INCH(14), 14, 14, 0, 24, 1, 0,
     { -2, -2, -1, -2, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .631, 0, 0, 0, 0, 0 },
     &simple_4color_inks
@@ -647,7 +649,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
-    1, 1, 1, 1, 720, INCH(11), INCH(17), 14, 14, 9, 49, 1, 0,
+    1, 1, 1, 1, 720, 720, INCH(11), INCH(17), 14, 14, 9, 49, 1, 0,
     { -2, -2, -1, -2, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .631, 0, 0, 0, 0, 0 },
     &simple_4color_inks
@@ -658,7 +660,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    32, 8, 32, 8, 720, INCH(17 / 2), INCH(14), 8, 9, 0, 24, 1, 0,
+    32, 8, 32, 8, 720, 720, INCH(17 / 2), INCH(14), 8, 9, 0, 24, 1, 0,
     { 4, 4, -1, 2, 2, -1, 2 },
     { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
     &simple_4color_inks
@@ -669,7 +671,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    64, 4, 64, 4, 720, INCH(17 / 2), INCH(14), 8, 9, 9, 40, 1, 4,
+    64, 4, 64, 4, 720, 720, INCH(17 / 2), INCH(14), 8, 9, 9, 40, 1, 4,
     { 3, 3, -1, 1, 1, -1, 1 },
     { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
     &simple_4color_inks
@@ -680,7 +682,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    64, 4, 128, 2, 720, INCH(17 / 2), INCH(14), 9, 9, 9, 40, 1, 4,
+    64, 4, 128, 2, 720, 720, INCH(17 / 2), INCH(14), 9, 9, 9, 40, 1, 4,
     { 3, 3, -1, 1, 1, -1, 1 },
     { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
     &simple_4color_inks
@@ -691,7 +693,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
-    1, 1, 1, 1, 720, INCH(17), INCH(55), 8, 9, 9, 49, 4, 0,
+    1, 1, 1, 1, 720, 720, INCH(17), INCH(55), 8, 9, 9, 49, 4, 0,
     { 3, 3, -1, 1, 1, -1, 1 },
     { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
     &simple_4color_inks
@@ -704,9 +706,9 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_YES | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    32, 8, 32, 8, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 24, 1, 0,
-    { 3, 3, -1, -1, 1, -1, 1 },
-    { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
+    32, 8, 32, 8, 720, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 24, 1, 0,
+    { 3, 3, -1, -1, 1, -1, 4 },
+    { 2.0, 1.3, 1.3, .775, .775, .55, .55, .275, .138 },
     &simple_6color_inks
   },
   /* 8: Stylus Photo EX */
@@ -715,9 +717,9 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_YES | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    32, 8, 32, 8, 720, INCH(11), INCH(17), 9, 9, 0, 24, 1, 0,
-    { 3, 3, -1, -1, 1, -1, 1 },
-    { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
+    32, 8, 32, 8, 720, 360, INCH(11), INCH(17), 9, 9, 0, 24, 1, 0,
+    { 3, 3, -1, -1, 1, -1, 4 },
+    { 2.0, 1.3, 1.3, .775, .775, .55, .55, .275, .138 },
     &simple_6color_inks
   },
   /* 9: Stylus Photo */
@@ -726,7 +728,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_YES | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    32, 8, 32, 8, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 24, 1, 0,
+    32, 8, 32, 8, 720, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 24, 1, 0,
     { 3, 3, -1, -1, 1, -1, -1 },
     { 2.0, 1.3, 1.3, .775, .775, 0, 0, 0, 0 },
     &simple_6color_inks
@@ -742,7 +744,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    21, 8, 21, 8, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
+    21, 8, 21, 8, 720, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 3, -1, 1, 1, -1, -1 },
     { 3.0, 2.0, 2.0, .900, .900, 0, 0, 0, 0 },
     &simple_4color_inks
@@ -753,7 +755,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    32, 8, 64, 4, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
+    32, 8, 64, 4, 720, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 3, -1, 1, 1, 1, 1 },
     { 3.0, 2.0, 2.0, .900, .900, .45, .45, .225, .113 },
     &simple_4color_inks
@@ -764,7 +766,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    48, 6, 144, 2, 360, INCH(11), INCH(17), 9, 9, 0, 9, 1, 0,
+    48, 6, 144, 2, 360, 360, INCH(11), INCH(17), 9, 9, 0, 9, 1, 0,
     { -1, 4, 0x10, 3, 0x10, 3, 0x10 },
     { 2.0, 1.3, 2.0, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_4color_inks
@@ -776,7 +778,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    96, 4, 192, 2, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
+    96, 4, 192, 2, 360, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 1, 0x11, 1, 0x10, 1, 0x10 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_3pl_inks
@@ -787,7 +789,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    48, 6, 48, 6, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
+    48, 6, 48, 6, 360, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 2, 0x10, 4, 0x10, -1, 0x10 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_6color_inks
@@ -798,7 +800,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
-    48, 6, 48, 6, 360, INCH(13), INCH(44), 9, 9, 0, 9, 1, 0,
+    48, 6, 48, 6, 360, 360, INCH(13), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 2, 0x10, 4, 0x10, -1, 0x10 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_6color_inks
@@ -809,7 +811,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    48, 6, 144, 2, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
+    48, 6, 144, 2, 360, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 0, 0x12, 0, 0x11, -1, 0x10 },
     { 2.0, 1.3, 1.3, .431, .710, .216, .533, .2665, .1333 },
     &variable_4pl_4color_inks
@@ -820,7 +822,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    48, 6, 144, 2, 360, INCH(13), INCH(44), 9, 9, 0, 9, 1, 0,
+    48, 6, 144, 2, 360, 360, INCH(13), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 0, 0x12, 0, 0x11, -1, 0x10 },
     { 2.0, 1.3, 1.3, .431, .710, .216, .533, .2665, .1333 },
     &variable_4pl_4color_inks
@@ -831,7 +833,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    32, 8, 64, 4, 720, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 8,
+    32, 8, 64, 4, 720, 720, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 8,
     { -1, 3, -1, 3, 0, 3, 0 },
     { 3.0, 2.0, 2.0, .646, .646, .323, .323, .1615, .0808 },
     &simple_4color_inks
@@ -842,7 +844,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    48, 6, 144, 2, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
+    48, 6, 144, 2, 360, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 0, 0x12, 0, 0x11, -1, 0x10 },
     { 2.0, 1.3, 1.3, .431, .710, .216, .533, .2665, .1333 },
     &variable_4pl_4color_inks
@@ -853,7 +855,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    32, 8, 32, 8, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
+    32, 8, 32, 8, 360, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 2, 0x11, 4, 0x11, -1, 0x11 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_6color_inks
@@ -864,7 +866,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    15, 8, 15, 8, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
+    15, 8, 15, 8, 720, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 3, 0x10, 3, 0x10, -1, -1 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_4color_inks
@@ -875,7 +877,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
-    48, 6, 48, 6, 360, INCH(17 / 2), INCH(44), 0, 0, 0, 9, 1, 0,
+    48, 6, 48, 6, 360, 360, INCH(17 / 2), INCH(44), 0, 0, 0, 9, 1, 0,
     { -1, 4, 0x12, 2, 0x11, -1, 0x10 },
     { 2.0, 1.3, 1.3, .431, .710, .216, .533, .2665, .1333 },
     &variable_4pl_6color_inks
@@ -886,7 +888,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
-    48, 6, 48, 6, 360, INCH(13), INCH(44), 0, 0, 0, 9, 1, 0,
+    48, 6, 48, 6, 360, 360, INCH(13), INCH(44), 0, 0, 0, 9, 1, 0,
     { -1, 4, 0x12, 2, 0x11, -1, 0x10 },
     { 2.0, 1.3, 1.3, .431, .710, .216, .533, .2665, .1333 },
     &variable_4pl_6color_inks
@@ -897,7 +899,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
-    1, 1, 1, 1, 720, INCH(17), INCH(55), 8, 9, 9, 49, 4, 0,
+    1, 1, 1, 1, 720, 720, INCH(17), INCH(55), 8, 9, 9, 49, 4, 0,
     { 3, 3, -1, 1, 1, -1, 1 },
     { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
     &simple_4color_inks
@@ -908,7 +910,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    32, 8, 64, 4, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
+    32, 8, 64, 4, 360, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 3, 0x12, 3, 0x11, -1, 0x11 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_4color_inks
@@ -919,7 +921,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    48, 6, 144, 2, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
+    48, 6, 144, 2, 360, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 2, 0x11, 4, 0x10, -1, 0x10 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_6color_inks
@@ -930,7 +932,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    64, 4, 64, 4, 360, INCH(13), INCH(1200), 9, 9, 0, 9, 1, 0,
+    64, 4, 64, 4, 360, 360, INCH(13), INCH(1200), 9, 9, 0, 9, 1, 0,
     { -1, 2, -1, 4, 0, 4, 0 },
     { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_6color_inks
@@ -941,7 +943,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
-    64, 4, 64, 4, 360, INCH(24), INCH(1200), 9, 9, 0, 9, 1, 0,
+    64, 4, 64, 4, 360, 360, INCH(24), INCH(1200), 9, 9, 0, 9, 1, 0,
     { -1, 2, -1, 4, 0, 4, 0 },
     { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_6color_inks
@@ -952,7 +954,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
-    64, 4, 64, 4, 360, INCH(24), INCH(1200), 9, 9, 0, 9, 1, 0,
+    64, 4, 64, 4, 360, 360, INCH(24), INCH(1200), 9, 9, 0, 9, 1, 0,
     { -1, 2, -1, 4, 0, 4, 0 },
     { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_6color_inks
@@ -963,7 +965,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
-    64, 4, 64, 4, 360, INCH(44), INCH(1200), 9, 9, 0, 9, 1, 0,
+    64, 4, 64, 4, 360, 360, INCH(44), INCH(1200), 9, 9, 0, 9, 1, 0,
     { -1, 2, -1, 4, 0, 4, 0 },
     { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_6color_inks
@@ -974,7 +976,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
-    64, 4, 64, 4, 360, INCH(44), INCH(1200), 9, 9, 0, 9, 1, 0,
+    64, 4, 64, 4, 360, 360, INCH(44), INCH(1200), 9, 9, 0, 9, 1, 0,
     { -1, 2, -1, 4, 0, 4, 0 },
     { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_6color_inks
@@ -1119,6 +1121,12 @@ static unsigned
 escp2_xres(int model)
 {
   return (model_capabilities[model].xres);
+}
+
+static unsigned
+escp2_enhanced_xres(int model)
+{
+  return (model_capabilities[model].enhanced_xres);
 }
 
 static int
@@ -1744,6 +1752,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   int		y;		/* Looping vars */
   int		xdpi, ydpi;	/* Resolution */
   int		physical_ydpi;
+  int		physical_xdpi;
   int		n;		/* Output number */
   unsigned short *out;	/* Output pixels (16-bit) */
   unsigned char	*in,		/* Input pixels */
@@ -1856,14 +1865,18 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	  use_softweave = res->softweave;
 	  xdpi = res->hres;
 	  ydpi = res->vres;
+	  vertical_passes = res->vertical_passes;
+	  vertical_oversample = res->vertical_oversample;
+	  if (xdpi > 720)
+	    physical_xdpi = escp2_enhanced_xres(model);
+	  else
+	    physical_xdpi = escp2_xres(model);
 	  if (use_softweave)
-	    horizontal_passes = xdpi / escp2_xres(model);
+	    horizontal_passes = xdpi / physical_xdpi;
 	  else
 	    horizontal_passes = xdpi / 720;
 	  if (horizontal_passes == 0)
 	    horizontal_passes = 1;
-	  vertical_passes = res->vertical_passes;
-	  vertical_oversample = res->vertical_oversample;
 	  if (output_type == OUTPUT_GRAY)
 	    {
 	      nozzles = escp2_black_nozzles(model);
@@ -2138,7 +2151,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
 
     if (use_softweave)
       escp2_write_weave(weave, prn, length, ydpi, model, out_width, left,
-			xdpi, cyan, magenta, yellow, black, lcyan, lmagenta);
+			xdpi, physical_xdpi,
+			cyan, magenta, yellow, black, lcyan, lmagenta);
     else
       escp2_write_microweave(prn, black, cyan, magenta, yellow, lcyan,
 			     lmagenta, length, xdpi, ydpi, model,
@@ -2155,7 +2169,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
   }
   Image_progress_conclude(image);
   if (use_softweave)
-    escp2_flush_all(weave, model, out_width, left, ydpi, xdpi, prn);
+    escp2_flush_all(weave, model, out_width, left, ydpi, xdpi, physical_xdpi,
+		    prn);
   else
     escp2_free_microweave();
   QUANT(5);
@@ -3721,7 +3736,8 @@ initialize_row(const escp2_softweave_t *sw, int row, int width)
  */
 static void
 flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
-	   int hoffset, int ydpi, int xdpi, FILE *prn, int vertical_subpass)
+	   int hoffset, int ydpi, int xdpi, int physical_xdpi,
+	   FILE *prn, int vertical_subpass)
 {
   int j;
   lineoff_t *lineoffs = get_lineoffsets_by_pass(sw, passno);
@@ -3808,18 +3824,19 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	}
       else
 	{
-	  int dotsep = 3600 / ydpi;
+	  int ydotsep = 3600 / ydpi;
+	  int xdotsep = 3600 / physical_xdpi;
 	  if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK,
 			    MODEL_720DPI_600))
-	    fprintf(prn, "\033.%c%c%c%c", 1, 8 * dotsep, dotsep,
+	    fprintf(prn, "\033.%c%c%c%c", 1, 8 * ydotsep, xdotsep,
 		    *linecount + pass->missingstartrows);
 	  else if (escp2_pseudo_separation_rows(model) > 0)
 	    fprintf(prn, "\033.%c%c%c%c", 1,
-		    dotsep * escp2_pseudo_separation_rows(model) , dotsep,
+		    ydotsep * escp2_pseudo_separation_rows(model) , xdotsep,
 		    *linecount + pass->missingstartrows);
 	  else
-	    fprintf(prn, "\033.%c%c%c%c", 1, dotsep * sw->separation_rows,
-		    dotsep, *linecount + pass->missingstartrows);
+	    fprintf(prn, "\033.%c%c%c%c", 1, ydotsep * sw->separation_rows,
+		    xdotsep, *linecount + pass->missingstartrows);
 	  putc(lwidth & 255, prn);	/* Width of raster line in pixels */
 	  putc(lwidth >> 8, prn);
 	}
@@ -3848,7 +3865,7 @@ add_to_row(escp2_softweave_t *sw, int row, unsigned char *buf, size_t nbytes,
 
 static void
 escp2_flush(void *vsw, int model, int width, int hoffset,
-	    int ydpi, int xdpi, FILE *prn)
+	    int ydpi, int xdpi, int physical_xdpi, FILE *prn)
 {
   escp2_softweave_t *sw = (escp2_softweave_t *) vsw;
   while (1)
@@ -3860,14 +3877,14 @@ escp2_flush(void *vsw, int model, int width, int hoffset,
        */
       if (pass->pass < 0 || pass->physpassend >= sw->lineno)
 	return;
-      flush_pass(sw, pass->pass, model, width, hoffset, ydpi, xdpi, prn,
-		 pass->subpass);
+      flush_pass(sw, pass->pass, model, width, hoffset, ydpi, xdpi,
+		 physical_xdpi, prn, pass->subpass);
     }
 }
 
 static void
 escp2_flush_all(void *vsw, int model, int width, int hoffset,
-		int ydpi, int xdpi, FILE *prn)
+		int ydpi, int xdpi, int physical_xdpi, FILE *prn)
 {
   escp2_softweave_t *sw = (escp2_softweave_t *) vsw;
   while (1)
@@ -3879,14 +3896,15 @@ escp2_flush_all(void *vsw, int model, int width, int hoffset,
        */
       if (pass->pass < 0)
 	return;
-      flush_pass(sw, pass->pass, model, width, hoffset, ydpi, xdpi, prn,
-		 pass->subpass);
+      flush_pass(sw, pass->pass, model, width, hoffset, ydpi, xdpi,
+		 physical_xdpi, prn, pass->subpass);
     }
 }
 
 static void
 finalize_row(escp2_softweave_t *sw, int row, int model, int width,
-	     int hoffset, int ydpi, int xdpi, FILE *prn)
+	     int hoffset, int ydpi, int xdpi, int physical_xdpi,
+	     FILE *prn)
 {
   int i;
 #if 0
@@ -3903,7 +3921,7 @@ printf("Finalizing row %d...\n", row);
 #if 0
 printf("Pass=%d, physpassend=%d, row=%d, lineno=%d, trying to flush...\n", w.pass, w.physpassend, row, sw->lineno);
 #endif
-	escp2_flush(sw, model, width, hoffset, ydpi, xdpi, prn);
+	escp2_flush(sw, model, width, hoffset, ydpi, xdpi, physical_xdpi, prn);
        }
     }
 }
@@ -3917,6 +3935,7 @@ escp2_write_weave(void *        vsw,
 		  int           width,	/* I - Printed width */
 		  int           offset,	/* I - Offset from left side of page */
 		  int		xdpi,
+		  int		physical_xdpi,
 		  const unsigned char *c,
 		  const unsigned char *m,
 		  const unsigned char *y,
@@ -4044,7 +4063,8 @@ escp2_write_weave(void *        vsw,
   sw->current_vertical_subpass++;
   if (sw->current_vertical_subpass >= sw->vertical_oversample)
     {
-      finalize_row(sw, sw->lineno, model, width, offset, ydpi, xdpi, prn);
+      finalize_row(sw, sw->lineno, model, width, offset, ydpi, xdpi,
+		   physical_xdpi, prn);
       sw->lineno++;
       sw->current_vertical_subpass = 0;
     }
