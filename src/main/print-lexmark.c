@@ -29,13 +29,15 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
-/* !!! IMPORTANT !!!
- * Some short information:
- * Border and page offsets are defined in 1/72 DPI. This mean, that the parameter defined at
- * lexmark_cap_t which defines positions are in 1/72 DPI. At lexmark_print the unit will be
- * changed dependent on the printer, according to the value defined at lexmark_cap_t.x_raster_res
- * and lexmark_cap_t.y_raster_res. These two parameters are specifing the resolution used
- * for positioning the printer head (it is not the resolution used for printing!).
+/*
+ * !!! IMPORTANT !!!  Some short information: Border and page offsets
+ * are defined in 1/72 DPI. This mean, that the parameter defined at
+ * lexmark_cap_t which defines positions are in 1/72 DPI. At
+ * lexmark_print the unit will be changed dependent on the printer,
+ * according to the value defined at lexmark_cap_t.x_raster_res and
+ * lexmark_cap_t.y_raster_res. These two parameters are specifing the
+ * resolution used for positioning the printer head (it is not the
+ * resolution used for printing!).
  */
 
 /* TODO-LIST
@@ -197,7 +199,8 @@ static const int IDX_SEQLEN=3;
 #define LX_Z52_PRINT_DIRECTION_POS  0x8
 
 #define LXM_Z52_HEADERSIZE 34
-static const char outbufHeader_z52[LXM_Z52_HEADERSIZE]={
+static const char outbufHeader_z52[LXM_Z52_HEADERSIZE]=
+{
   0x1B,0x2A,0x24,0x00,0x00,0xFF,0xFF,         /* number of packets ----     vvvvvvvvv */
   0x01,0x01,0x01,0x1a,0x03,0x01,              /* 0x7-0xc: resolution, direction, head */
   0x03,0x60,                                  /* 0xd-0xe HE */
@@ -352,7 +355,8 @@ static const int lr_shift_color[10] = { 9, 18, 2*18 }; /* vertical distance betw
 static const int lr_shift_black[10] = { 9, 18, 2*18 }; /* vertical distance between ever 2nd  inkjet (related to resolution) */
 
 /* returns the offset of the first jet when printing in the other direction */
-static int get_lr_shift(int mode) {
+static int get_lr_shift(int mode)
+{
 
   const int *ptr_lr_shift;
 
@@ -379,14 +383,6 @@ static int get_lr_shift(int mode) {
       }
       return 0;
 }
-
-
-
-
-
-
-
-
 
 /* Codes for possible ink-tank combinations.
  * Each combo is represented by the colors that can be used with
@@ -506,7 +502,8 @@ static const lexmark_cap_t lexmark_model_capabilities[] =
 };
 
 
-static const int model_to_index(int model) {
+static const int model_to_index(int model)
+{
   int i;
   int models= sizeof(lexmark_model_capabilities) / sizeof(lexmark_cap_t);
   for (i=0; i<models; i++) {
@@ -720,7 +717,8 @@ typedef struct {
 } lexmark_res_t;
 
 #define LEXM_RES_COUNT 30
-static const lexmark_res_t lexmark_reslist[LEXM_RES_COUNT] = {
+static const lexmark_res_t lexmark_reslist[LEXM_RES_COUNT] =
+{
   /*     name                                  hres vres softw v_pass overs unidir resid     */
   { N_ ("300 DPI x 600 DPI"),	       	       300,  600,  0,    1,    1,    0,    DPI300 },
   { N_ ("600 DPI"),		      	       600,  600,  0,    1,    1,    0,    DPI600 },
@@ -786,8 +784,6 @@ lexmark_describe_resolution(const stp_printer_t printer,
   *x = -1;
   *y = -1;
 }
-
-
 
 
 /*
@@ -1701,18 +1697,6 @@ lexmark_describe_resolution(printer,
   stp_dither_set_black_lower(dither, k_lower);
   stp_dither_set_black_upper(dither, k_upper);
 
-  /*
-  if(bits == 2)
-    {
-      if(use_6color)
-        stp_dither_set_adaptive_divisor(dither, 8);
-      else
-        stp_dither_set_adaptive_divisor(dither, 4);
-    }
-  else
-    stp_dither_set_adaptive_divisor(dither, 4);
-	*/
-
 	/*
 	  stp_dither_set_black_lower(dither, .8 / ((1 << (use_dmt+1)) - 1));*/
   /*stp_dither_set_black_levels(dither, 0.5, 0.5, 0.5);
@@ -1730,7 +1714,6 @@ lexmark_describe_resolution(printer,
     if (cols.p.Y)
       stp_dither_set_light_ink(dither, ECOLOR_Y, .3333, stp_get_density(nv));
   }
-  stp_dither_set_transition(dither, .6);
 
   switch (stp_get_image_type(nv))
     {
@@ -2323,7 +2306,8 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 
 
 #ifdef DEBUG
-const stp_vars_t lex_show_init(int x, int y) {
+const stp_vars_t lex_show_init(int x, int y)
+{
   const stp_vars_t ofile;
 
   ofile = fopen("/tmp/xx.ppm", "wb");
@@ -2343,7 +2327,11 @@ const stp_vars_t lex_show_init(int x, int y) {
   return ofile;
 }
 
-void lex_show_dither(const stp_vars_t file, unsigned char *y, unsigned char *c, unsigned char *m, unsigned char *ly, unsigned char *lc, unsigned char *lm, unsigned char *k, int length) {
+void lex_show_dither(const stp_vars_t file, unsigned char *y,
+		     unsigned char *c, unsigned char *m, unsigned char *ly,
+		     unsigned char *lc, unsigned char *lm, unsigned char *k,
+		     int length)
+{
   int i;
   unsigned char col[3];
   unsigned char col1[3];
@@ -2636,7 +2624,8 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 
 #ifdef DEBUG
 
-static void testprint(testdata *td) {
+static void testprint(testdata *td)
+{
   int icol, i;
   char dummy1[256], dummy2[256];
   stp_linebufs_t linebufs;
@@ -2688,7 +2677,8 @@ static void testprint(testdata *td) {
 }
 
 
-static void readtestprintline(testdata *td, stp_linebufs_t *linebufs) {
+static void readtestprintline(testdata *td, stp_linebufs_t *linebufs)
+{
   char dummy1[256];
   int icol, ix;
 

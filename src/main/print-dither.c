@@ -31,7 +31,7 @@
  */
 
 
-/* #define PRINT_DEBUG */
+#define PRINT_DEBUG
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -122,6 +122,7 @@ typedef struct dither_color
   int nlevels;
   unsigned bit_max;
   unsigned signif_bits;
+  unsigned density;
   int first_position_light;
   int first_position_dark;
   int last_position_light;
@@ -195,9 +196,8 @@ typedef struct dither
 
   int d_cutoff;			/* When ordered dither is used, threshold */
 				/* above which no randomness is used. */
-  int adaptive_divisor;
+  double adaptive_input;
   int adaptive_limit;
-  int adaptive_lower_limit;
 
   int x_aspect;			/* Aspect ratio numerator */
   int y_aspect;			/* Aspect ratio denominator */
@@ -573,6 +573,7 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
 	}
     }
   d->transition = 1.0;
+  d->adaptive_input = .75;
 
   if (d->dither_type == D_VERY_FAST)
     stp_dither_set_iterated_matrix(d, 2, DITHER_FAST_STEPS, sq2, 0, 2, 4);
@@ -597,7 +598,6 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
 
   d->src_width = in_width;
   d->dst_width = out_width;
-  d->adaptive_divisor = 2;
 
   stp_dither_set_max_ink(d, INT_MAX, 1.0);
   stp_dither_set_ink_spread(d, 13);
@@ -701,12 +701,15 @@ stp_dither_set_transition(void *vd, double exponent)
   d->transition = exponent;
   if (exponent < .999 || exponent > 1.001)
     exponential_scale_matrix(&(d->mat7), exponent);
+#if 0
   if (d->dither_type & D_ORDERED_BASE)
     {
+#endif
       clone_matrix(&(d->mat7), &(d->channel[ECOLOR_C].pick), 2 * x_3, y_3);
       clone_matrix(&(d->mat7), &(d->channel[ECOLOR_M].pick), x_3, 2 * y_3);
       clone_matrix(&(d->mat7), &(d->channel[ECOLOR_Y].pick), 0, y_3);
       clone_matrix(&(d->mat7), &(d->channel[ECOLOR_K].pick), 0, 0);
+#if 0
     }
   else
     {
@@ -715,6 +718,7 @@ stp_dither_set_transition(void *vd, double exponent)
       clone_matrix(&(d->mat7), &(d->channel[ECOLOR_Y].pick), 2 * x_3, 0);
       clone_matrix(&(d->mat7), &(d->channel[ECOLOR_K].pick), x_3, 2 * y_3);
     }
+#endif
   if (exponent < .999 || exponent > 1.001)
     for (i = 0; i < 65536; i++)
       {
@@ -743,8 +747,7 @@ stp_dither_set_density(void *vd, double density)
   d->dlb_range = d->density - d->k_lower;
   d->bound_range = d->k_upper - d->k_lower;
   d->d_cutoff = d->density / 16;
-  d->adaptive_limit = d->density / d->adaptive_divisor;
-  d->adaptive_lower_limit = d->adaptive_limit / 4;
+  d->adaptive_limit = d->density * d->adaptive_input;
   stp_dither_set_black_density(vd, density);
 }
 
@@ -771,18 +774,17 @@ stp_dither_set_max_ink(void *vd, int levels, double max_ink)
   dither_t *d = (dither_t *) vd;
   d->ink_limit = imax(max_ink, 1)*levels;
   d->ink_limit = max_ink*levels+0.5;
-#ifdef VERBOSE
+#ifdef PRINT_DEBUG
   fprintf(stderr, "Maxink: %f %d\n", max_ink, d->ink_limit);
 #endif
 }
 
 void
-stp_dither_set_adaptive_divisor(void *vd, unsigned divisor)
+stp_dither_set_adaptive_limit(void *vd, double limit)
 {
   dither_t *d = (dither_t *) vd;
-  d->adaptive_divisor = divisor;
-  d->adaptive_limit = d->density / d->adaptive_divisor;
-  d->adaptive_lower_limit = d->adaptive_limit / 4;
+  d->adaptive_input = limit;
+  d->adaptive_limit = d->density * limit;
 }
 
 void
@@ -832,8 +834,7 @@ stp_dither_set_ink_spread(void *vd, int spread)
 	}
     }
 
-  d->adaptive_limit = d->density / d->adaptive_divisor;
-  d->adaptive_lower_limit = d->adaptive_limit / 4;
+  d->adaptive_limit = d->density * d->adaptive_input;
 }
 
 void
@@ -893,7 +894,8 @@ stp_dither_set_generic_ranges(dither_color_t *s, int nlevels,
   s->ranges = (dither_segment_t *)
     stp_malloc(s->nlevels * sizeof(dither_segment_t));
   s->bit_max = 0;
-#ifdef VERBOSE
+  s->density = density * 65536;
+#ifdef PRINT_DEBUG
   fprintf(stderr, "stp_dither_set_generic_ranges nlevels %d density %f\n",
 	  nlevels, density);
   for (i = 0; i < nlevels; i++)
@@ -972,7 +974,7 @@ stp_dither_set_generic_ranges(dither_color_t *s, int nlevels,
       s->signif_bits++;
       lbit >>= 1;
     }
-#ifdef VERBOSE
+#ifdef PRINT_DEBUG
   for (i = 0; i < s->nlevels; i++)
     {
       fprintf(stderr,
@@ -1003,7 +1005,8 @@ stp_dither_set_generic_ranges_full(dither_color_t *s, int nlevels,
   s->ranges = (dither_segment_t *)
     stp_malloc(s->nlevels * sizeof(dither_segment_t));
   s->bit_max = 0;
-#ifdef VERBOSE
+  s->density = density * 65536;
+#ifdef PRINT_DEBUG
   fprintf(stderr,
 	  "stp_dither_set_ranges nlevels %d density %f\n", nlevels, density);
   for (i = 0; i < nlevels; i++)
@@ -1052,7 +1055,7 @@ stp_dither_set_generic_ranges_full(dither_color_t *s, int nlevels,
       s->signif_bits++;
       lbit >>= 1;
     }
-#ifdef VERBOSE
+#ifdef PRINT_DEBUG
   for (i = 0; i < s->nlevels; i++)
     {
       fprintf(stderr,
@@ -1474,19 +1477,24 @@ print_color(const dither_t *d, dither_channel_t *dc, int base, int density,
 	      v = dd->value_h;
 	      dot_size = dd->dot_size_h;
 	    }
-	  else if (rangepoint >= ditherpoint(d, pick_matrix, x))
-	    {
-	      isdark = dd->isdark_h;
-	      bits = dd->bits_h;
-	      v = dd->value_h;
-	      dot_size = dd->dot_size_h;
-	    }
 	  else
 	    {
-	      isdark = dd->isdark_l;
-	      bits = dd->bits_l;
-	      v = dd->value_l;
-	      dot_size = dd->dot_size_l;
+	      if (dither_type & D_ORDERED_BASE)
+		rangepoint = rangepoint * rv->density / 65536u;
+	      if (rangepoint >= ditherpoint(d, pick_matrix, x))
+		{
+		  isdark = dd->isdark_h;
+		  bits = dd->bits_h;
+		  v = dd->value_h;
+		  dot_size = dd->dot_size_h;
+		}
+	      else
+		{
+		  isdark = dd->isdark_l;
+		  bits = dd->bits_l;
+		  v = dd->value_l;
+		  dot_size = dd->dot_size_l;
+		}
 	    }
 	  tptr = isdark ? c : lc;
 

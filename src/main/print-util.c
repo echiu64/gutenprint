@@ -93,9 +93,9 @@ typedef struct					/* Plug-in variables */
 
 typedef struct stp_internal_printer
 {
-  const char	*long_name,			/* Long name for UI */
-	*driver;			/* Short name for printrc file */
-  int	model;				/* Model number */
+  const char	*long_name,	/* Long name for UI */
+		*driver;	/* Short name for printrc file */
+  int	model;			/* Model number */
   const stp_printfuncs_t *printfuncs;
   stp_internal_vars_t printvars;
 } stp_internal_printer_t;
@@ -142,7 +142,7 @@ static const stp_internal_vars_t default_vars =
 	1.0,			/* Application gamma placeholder */
 	0,			/* Page width */
 	0,			/* Page height */
-	COLOR_MODEL_RGB,		/* Input color model */
+	COLOR_MODEL_RGB,	/* Input color model */
 	COLOR_MODEL_RGB		/* Output color model */
 };
 

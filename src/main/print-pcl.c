@@ -2196,7 +2196,6 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
       stp_dither_set_light_ink(dither, ECOLOR_C, .25, stp_get_density(nv));
       stp_dither_set_light_ink(dither, ECOLOR_M, .25, stp_get_density(nv));
     }
-  stp_dither_set_transition(dither, .6);
 
   switch (stp_get_image_type(nv))
     {

@@ -279,7 +279,7 @@ extern void	stp_dither_set_ink_spread(void *vd, int spread);
 extern void	stp_dither_set_max_ink(void *vd, int, double);
 extern void	stp_dither_set_x_oversample(void *vd, int os);
 extern void	stp_dither_set_y_oversample(void *vd, int os);
-extern void	stp_dither_set_adaptive_divisor(void *vd, unsigned divisor);
+extern void	stp_dither_set_adaptive_limit(void *vd, double limit);
 extern int	stp_dither_get_first_position(void *vd, int color, int dark);
 extern int	stp_dither_get_last_position(void *vd, int color, int dark);
 

@@ -2310,15 +2310,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
     }
   stp_dither_set_black_lower(dither, k_lower);
   stp_dither_set_black_upper(dither, k_upper);
-  if (bits > 1)
-    {
-      if (use_6color)
-	stp_dither_set_adaptive_divisor(dither, 8);
-      else
-	stp_dither_set_adaptive_divisor(dither, 4);
-    }
-  else
-    stp_dither_set_adaptive_divisor(dither, 4);
+  stp_dither_set_adaptive_limit(dither, .75);
 
   if ((inks = canon_inks(caps, res_code, colormode, bits))!=0)
     {
@@ -2335,20 +2327,6 @@ canon_print(const stp_printer_t printer,		/* I - Model */
 	stp_dither_set_ranges(dither, ECOLOR_K, inks->k->count, inks->k->range,
 			  inks->k->density * stp_get_density(nv));
     }
-
-  if (bits > 1)
-    {
-      if (use_6color)
-	stp_dither_set_transition(dither, .7);
-      else
-	stp_dither_set_transition(dither, .5);
-    }
-  else
-    stp_dither_set_transition(dither, .6);
-
-  /* used internally: do not translate */
-  if (!strcmp(stp_get_dither_algorithm(nv), _("Ordered")))
-    stp_dither_set_transition(dither, 1);
 
   switch (stp_get_image_type(nv))
     {
