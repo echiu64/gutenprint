@@ -465,6 +465,7 @@
 #gptofoo pcl-900 printer/HP-PSC_2210
 #gptofoo pcl-2 printer/IBM-4019
 #gptofoo pcl-3 printer/IBM-4029_030_LaserPrinter_10
+#gptofoo pcl-2 printer/IBM-4312
 #gptofoo pcl-6 printer/IBM-Infoprint_12
 #gptofoo pcl-4 printer/IBM-Page_Printer_3112
 #gptofoo pcl-6 printer/Infotec-4651_MF
