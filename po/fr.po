@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 4.1.99-b2\n"
-"POT-Creation-Date: 2002-06-29 10:01-0400\n"
+"POT-Creation-Date: 2002-07-14 18:26-0400\n"
 "PO-Revision-Date: 2001-11-09 13:17+0100\n"
 "Last-Translator: Christophe Fergeau <teuf@users.sourceforge.net>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -2599,7 +2599,7 @@ msgid "<Image>/File/Print..."
 msgstr "<Image>/Ficher/Imprimer..."
 
 #: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:833
-#: src/gimp/print.c:1184
+#: src/gimp/print.c:1182
 msgid "File"
 msgstr "Fichier"
 

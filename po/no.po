@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 0.3\n"
-"POT-Creation-Date: 2002-06-29 10:01-0400\n"
+"POT-Creation-Date: 2002-07-14 18:26-0400\n"
 "PO-Revision-Date: 2001-10-14 20:53+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian/Bokmaal <no@li.org>\n"
@@ -2506,7 +2506,7 @@ msgid "<Image>/File/Print..."
 msgstr "<Image>/Filter/Farger/Alien Map"
 
 #: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:833
-#: src/gimp/print.c:1184
+#: src/gimp/print.c:1182
 msgid "File"
 msgstr "Fil"
 
