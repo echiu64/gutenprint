@@ -129,6 +129,7 @@ static privdata_t stp_data =
     1.0,			/* density */
     0,				/* image type */
     0,				/* unit */
+    1.0,			/* application gamma */
     NULL,			/* lookup table */
     NULL			/* Color map */
   }
@@ -190,7 +191,7 @@ private int stp_print_page(gx_device_printer * pdev, FILE * file)
 {
   int code;			/* return code */
   int model;
-  const printer_t *printer;
+  const printer_t *printer = NULL;
   int i;
 
   stp_print_dbg("stp_print_page", pdev, &stp_data);
