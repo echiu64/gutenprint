@@ -18,6 +18,9 @@ require('standard_html_header.php3');
 including a working download link.</strong>.  We've also added a
 GhostScript driver for Epson Stylus inkjet printers.</p>
 
+<P><strong><em><font color="#ff0000">New as of March 5,
+2000!</em></strong> Version 3.1.1 is now released.
+
 <P>Please check out <a
 href="https://sourceforge.net/project/?group_id=1537">our
 project page</a>, which contains a lot more information about us!</p>
@@ -40,11 +43,5 @@ user more control over the output.</p>
 version 1.2, we started work on version 3.1.  This developers' version
 will form the basis for version 3.2, which will be the next stable
 release.<p>
-
-<p>Bookmark this site, and keep checking back for more stuff! While we
-have not done a public release of version 3.1 yet, due to the rapid
-change of the source base, we hope to do one in the fairly near
-future. Our CVS repository is publicly readable, so you're welcome to
-download it and experiment.</p>
 
 <?require('standard_html_footer.php3');?>
