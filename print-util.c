@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.26  1999/11/13 02:31:29  rlk
+ *   Finally!  Good settings!
+ *
  *   Revision 1.25  1999/11/12 03:34:40  rlk
  *   More tweaking
  *
@@ -331,11 +334,11 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  */
 
 #define NU_C 1
-#define DE_C 3
+#define DE_C 5
 #define NU_M 1
-#define DE_M 3
+#define DE_M 5
 #define NU_Y 1
-#define DE_Y 3
+#define DE_Y 5
 
 #define I_RATIO_C NU_C / DE_C
 #define I_RATIO_C1 NU_C / (DE_C + NU_C)
@@ -352,7 +355,7 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
 #define RATIO_Y DE_Y / NU_Y
 #define RATIO_Y1 (DE_Y + NU_Y) / NU_Y
 
-#define KDARKNESS_LOWER (64 * 256)
+#define KDARKNESS_LOWER (96 * 256)
 #define KDARKNESS_UPPER (224 * 256)
 
 #define C_RANDOMIZER 1
