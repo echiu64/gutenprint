@@ -64,6 +64,10 @@ iii. GNU libtool (at least 1.4.3; 1.5 recommended)
 iv.  GNU gettext (at least 0.11.x)
 v.   GNU make (any recent version)
 
+and also
+
+vi.  pkg-config (at least 0.15.0)
+
 GNU autoconf made some incompatible changes between the 2.13 and 2.50
 stable releases.  You cannot use a configure.in written for 2.13 with
 2.5x releases.  This means that to build the 4.2-branch and the
