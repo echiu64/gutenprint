@@ -242,7 +242,7 @@ stpi_set_dither_function(stp_vars_t v, int image_bpp)
 	{
 	  d->stpi_dither_type = D_EVENTONE;
 	  /* EvenTone performs poorly if the aspect ratio is greater than 2 */
-	  if (d->stpi_dither_type == D_EVENTONE &&
+	  if (d->stpi_dither_type & D_EVENTONE &&
 	      (d->x_aspect > 2 || d->y_aspect > 2))
 	    d->stpi_dither_type = D_ADAPTIVE_HYBRID;
 	}	
@@ -256,6 +256,8 @@ stpi_set_dither_function(stp_vars_t v, int image_bpp)
       RETURN_DITHERFUNC(stpi_dither_ordered, v);
     case D_HYBRID_EVENTONE:
     case D_EVENTONE:
+    case D_HYBRID_SINGLE_EVENTONE:
+    case D_SINGLE_EVENTONE:
       RETURN_DITHERFUNC(stpi_dither_et, v);
     default:
       RETURN_DITHERFUNC(stpi_dither_ed, v);
@@ -461,6 +463,8 @@ stpi_dither_internal(stp_vars_t v, int row, const unsigned short *input,
   int i;
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   stpi_dither_finalize(v);
+  stpi_dither_matrix_set_row(&(d->dither_matrix), row);
+  stpi_dither_matrix_set_row(&(d->transition_matrix), row);
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     {
       CHANNEL(d, i).ptr = CHANNEL(d, i).ptr;

@@ -401,6 +401,10 @@ stpi_dither_et_standard(stp_vars_t v,
   for (; x != terminate; x += direction) {
 
     int point_error = 0;
+    int comparison = 32768;
+
+    if (d->stpi_dither_type & D_ORDERED_BASE)
+      comparison += (ditherpoint(d, &(d->dither_matrix), x) / 16) - 2048;
 
     for (i=0; i < channel_count; i++) {
       if (CHANNEL(d, i).ptr)
@@ -411,7 +415,6 @@ stpi_dither_et_standard(stp_vars_t v,
 	  shade_distance_t *sp = (shade_distance_t *) dc->aux_data;
 	  stpi_ink_defn_t *inkp;
 	  stpi_ink_defn_t lower, upper;
-	  int comparison = 32768;
 
 	  advance_eventone_pre(sp, et, x);
 
@@ -429,11 +432,6 @@ stpi_dither_et_standard(stp_vars_t v,
 	  inkspot = dc->v - range_point;
 
 	  point_error += eventone_adjust(dc, et, inkspot, range_point);
-
-	  if ((d->stpi_dither_type & D_ORDERED_BASE) &&
-	      point_error > 32768 - 2048 &&
-	      point_error < 32768 + 2048)
-	    comparison += (ditherpoint(d, &(dc->dithermat), x) / 16) - 2048;
 
 	  /* Determine whether to print the larger or smaller dot */
 	  inkp = &lower;
@@ -523,6 +521,10 @@ stpi_dither_et_single(stp_vars_t v,
     int total_error = 0;
     int channels_to_print = 0;
     int channels_printed = 0;
+    int comparison = 32768;
+
+    if (d->stpi_dither_type & D_ORDERED_BASE)
+      comparison += (ditherpoint(d, &(d->dither_matrix), x) / 16) - 2048;
 
     ddc->b = 0;
     advance_eventone_pre(ssp, et, x);
@@ -547,24 +549,23 @@ stpi_dither_et_single(stp_vars_t v,
 	}
     }
 
+    channels_to_print = ddc->b / 65535;
+    if (ddc->b > 65535)
+      ddc->b = 65535;
     ddc->v += 2 * ddc->b + (ddc->errs[0][x + MAX_SPREAD] + 8) / 16;
     total_inkspot = ddc->v - ddc->b;
     total_error += eventone_adjust(ddc, et, total_inkspot, ddc->b);
-    if (total_error > 32768 - 2048) {
-      int total_comparison = (ditherpoint(d, &(ddc->dithermat), x) / 16) -2048;
-
-      total_comparison += total_error + 32768;
-      channels_to_print = total_comparison / 65535;
-    }
+    if (total_error >= comparison)
+      channels_to_print++;
 
     for (i=0; i < channel_count; i++) {
-      if (CHANNEL(d, i).ptr)
+      stpi_dither_channel_t *dc = &CHANNEL(d, i);
+      
+      if (dc->ptr)
 	{
 	  int inkspot;
-	  stpi_dither_channel_t *dc = &CHANNEL(d, i);
 	  shade_distance_t *sp = (shade_distance_t *) dc->aux_data;
 	  stpi_ink_defn_t *inkp;
-	  int comparison = 32768;
 
 	  /* Incorporate error data from previous line */
 	  dc->v += 2 * dc->b + (dc->errs[0][x + MAX_SPREAD] + 8) / 16;
@@ -572,15 +573,10 @@ stpi_dither_et_single(stp_vars_t v,
 
 	  point_error += eventone_adjust(dc, et, inkspot, dc->b);
 
-	  if ((d->stpi_dither_type & D_ORDERED_BASE) &&
-	      point_error > 32768 - 2048 &&
-	      point_error < 32768 + 2048)
-	    comparison += (ditherpoint(d, &(dc->dithermat), x) / 16) - 2048;
-
 	  /* Determine whether to print the larger or smaller dot */
 	  inkp = &(sp->lower);
 	  if (point_error >= comparison &&
-	      channels_printed < channels_to_print) {
+	      (channels_printed < channels_to_print)) {
 	    point_error -= 65535;
 	    inkp = &(sp->upper);
 	    dc->v -= 131070;
@@ -603,10 +599,9 @@ stpi_dither_et_single(stp_vars_t v,
 	  diffuse_error(dc, et, x, direction);
 	}
     }
-    if (channels_to_print > 0) {
-      int new_error = 65535 * channels_printed;
-      total_error -= new_error;
-      ddc->v -= 2 * new_error;
+    if (channels_printed > 0) {
+      total_error -= 65535;
+      ddc->v -= 131070;
       ssp->dis = et->d_sq;
     }
     eventone_update(ddc, et, x, direction);
