@@ -292,6 +292,8 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
 
   int y,skip,oldstart,oldstop;
   unsigned char *oldline;
+  oldstart = -2;
+  oldstop = -3;
 
   skip=pstate.relative_horizontal_units/density;
 
@@ -334,7 +336,7 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
 
 int main(int argc,char *argv[]){
 
-int currentcolor,currentbpp,density,eject,got_graphics;
+  int currentcolor,currentbpp,density,eject,got_graphics;
 
     if(argc == 1){
         fp_r = stdin;
@@ -412,7 +414,7 @@ int currentcolor,currentbpp,density,eject,got_graphics;
               fprintf(stderr,"Warning! Excessively deep color detected.\n");
             }
             get2("Error reading number of horizontal dots!\n");
-            n=sh;
+            n=sh * 8 / currentbpp;
             get2("Error reading number of vertical dots!\n");
             m=sh;
             density=pstate.relative_horizontal_units;
