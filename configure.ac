@@ -635,6 +635,7 @@ AC_SUBST(literal_libdir)
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([debian/Makefile])
+AC_CONFIG_FILES([debian/control])
 AC_CONFIG_FILES([doc/Makefile])
 AC_CONFIG_FILES([doc/developer/Makefile])
 AC_CONFIG_FILES([doc/users_guide/Makefile])
