@@ -625,9 +625,8 @@ create_printer_dialog(void)
   gtk_clist_set_selection_mode(GTK_CLIST(printer_driver),GTK_SELECTION_SINGLE);
   gtk_signal_connect(GTK_OBJECT(printer_driver), "select_row",
 		     (GtkSignalFunc)gimp_print_driver_callback, NULL);
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (printer_crawler),
-					printer_driver);
-  gtk_widget_set_usize(printer_crawler, 200, 0);
+  gtk_container_add(GTK_CONTAINER (printer_crawler), printer_driver);
+  gtk_widget_set_usize(printer_driver, 200, 0);
   gtk_widget_show (printer_driver);
   for (i = 0; i < stp_known_printers(); i ++)
     {
@@ -2271,10 +2270,11 @@ gimp_setup_update (void)
   else
     gtk_widget_show (output_cmd);
 
-  adjustment =
-    gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW (printer_crawler));
-  adjustment->step_increment = GTK_CLIST(printer_driver)->row_height;
-  gtk_adjustment_set_value(adjustment, idx * adjustment->step_increment);
+  adjustment = GTK_CLIST(printer_driver)->vadjustment;
+  gtk_adjustment_set_value(adjustment,
+			   adjustment->lower +
+			   idx * (adjustment->upper - adjustment->lower) /
+			   GTK_CLIST(printer_driver)->rows);
 }
 
 /*
