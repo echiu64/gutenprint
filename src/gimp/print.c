@@ -618,7 +618,7 @@ initialize_printer(gp_plist_t *printer)
 {
   printer->name[0] = '\0';
   printer->active=0;
-  printer->v = stp_allocate_copy(stp_default_settings());
+  printer->v = stp_allocate_vars();
 }
 
 #define GET_MANDATORY_INTERNAL_STRING_PARAM(param)	\
