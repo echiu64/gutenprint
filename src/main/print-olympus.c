@@ -45,6 +45,7 @@
 #define OLYMPUS_INTERLACE_LINE	1
 #define OLYMPUS_INTERLACE_PLANE	2
 
+#define OLYMPUS_FEATURE_NONE		0x00000000
 #define OLYMPUS_FEATURE_FULL_WIDTH	0x00000001
 #define OLYMPUS_FEATURE_FULL_HEIGHT	0x00000002
 #define OLYMPUS_FEATURE_BLOCK_ALIGN	0x00000004
@@ -308,6 +309,20 @@ static void p200_printer_end_func(stp_vars_t *v)
 {
   stp_zprintf(v, "P000001\1");
 }
+
+static const char p200_adj_any[] =
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+  "<gimp-print>\n"
+  "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
+  "<sequence count=\"33\" lower-bound=\"0\" upper-bound=\"1\">\n"
+  "0.000000 0.039216 0.078431 0.117647 0.152941 0.192157 0.231373 0.266667\n"
+  "0.301961 0.341176 0.376471 0.411765 0.447059 0.482353 0.513725 0.549020\n"
+  "0.580392 0.615686 0.647059 0.678431 0.709804 0.741176 0.768627 0.796078\n"
+  "0.827451 0.854902 0.878431 0.905882 0.929412 0.949020 0.972549 0.988235\n"
+  "1.000000\n"
+  "</sequence>\n"
+  "</curve>\n"
+  "</gimp-print>\n";
 
 
 /* Olympus P-300 series */
@@ -850,6 +865,48 @@ static const laminate_list_t updp10_laminate_list =
   updp10_laminate, sizeof(updp10_laminate) / sizeof(laminate_t)
 };
 
+static const char updp10_adj_cyan[] =
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+  "<gimp-print>\n"
+  "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
+  "<sequence count=\"33\" lower-bound=\"0\" upper-bound=\"1\">\n"
+  "0.113725 0.188235 0.247059 0.286275 0.317647 0.345098 0.368627 0.384314\n"
+  "0.400000 0.407843 0.423529 0.439216 0.450980 0.466667 0.482353 0.498039\n"
+  "0.509804 0.525490 0.545098 0.560784 0.580392 0.596078 0.619608 0.643137\n"
+  "0.662745 0.686275 0.709804 0.729412 0.756863 0.780392 0.811765 0.843137\n"
+  "1.000000\n"
+  "</sequence>\n"
+  "</curve>\n"
+  "</gimp-print>\n";
+  
+static const char updp10_adj_magenta[] =
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+  "<gimp-print>\n"
+  "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
+  "<sequence count=\"33\" lower-bound=\"0\" upper-bound=\"1\">\n"
+  "0.105882 0.211765 0.286275 0.333333 0.364706 0.388235 0.403922 0.415686\n"
+  "0.427451 0.439216 0.450980 0.462745 0.478431 0.494118 0.505882 0.521569\n"
+  "0.537255 0.552941 0.568627 0.584314 0.600000 0.619608 0.643137 0.662745\n"
+  "0.682353 0.709804 0.733333 0.760784 0.792157 0.823529 0.858824 0.890196\n"
+  "1.000000\n"
+  "</sequence>\n"
+  "</curve>\n"
+  "</gimp-print>\n";
+  
+static const char updp10_adj_yellow[] =
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+  "<gimp-print>\n"
+  "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
+  "<sequence count=\"33\" lower-bound=\"0\" upper-bound=\"1\">\n"
+  "0.101961 0.160784 0.196078 0.227451 0.243137 0.254902 0.266667 0.286275\n"
+  "0.309804 0.337255 0.368627 0.396078 0.423529 0.443137 0.462745 0.478431\n"
+  "0.501961 0.517647 0.537255 0.556863 0.576471 0.596078 0.619608 0.643137\n"
+  "0.666667 0.690196 0.709804 0.737255 0.760784 0.780392 0.796078 0.803922\n"
+  "1.000000\n"
+  "</sequence>\n"
+  "</curve>\n"
+  "</gimp-print>\n";
+
 
 /* Fujifilm CX-400 */
 static const olymp_resolution_t cx400_res[] =
@@ -963,7 +1020,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &p200_printer_init_func, &p200_printer_end_func,
     &p200_plane_init_func, NULL,
     NULL, NULL,
-    NULL, NULL, NULL,
+    p200_adj_any, p200_adj_any, p200_adj_any,
     NULL,
   },
   { /* Olympus P-300 */
@@ -1056,7 +1113,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &updp10_printer_init_func, &updp10_printer_end_func,
     NULL, NULL,
     NULL, NULL,
-    NULL, NULL, NULL,
+    updp10_adj_cyan, updp10_adj_magenta, updp10_adj_yellow,
     &updp10_laminate_list,
   },
   { /* Fujifilm Printpix CX-400  */
@@ -1072,7 +1129,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &cx400_printer_init_func, NULL,
     NULL, NULL,
     NULL, NULL,
-    NULL, NULL, NULL,
+    NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
     NULL,
   },
   { /* Fujifilm Printpix CX-550  */
@@ -1088,7 +1145,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &cx400_printer_init_func, NULL,
     NULL, NULL,
     NULL, NULL,
-    NULL, NULL, NULL,
+    NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
     NULL,
   },
 };
