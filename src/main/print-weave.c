@@ -952,37 +952,53 @@ stp_unpack_2_1(int length,
 		 unsigned char *out0,
 		 unsigned char *out1)
 {
-  unsigned char ti0, ti1;
-  unsigned char to0, to1;
+  unsigned char	tempin, bit, temp0, temp1;
 
   if (length <= 0)
     return;
-
-  length = (length + 1) / 2;
-
-  for (;length; length --)
+  for (bit = 128, temp0 = 0, temp1 = 0;
+       length > 0;
+       length --)
     {
-      ti0 = *in++;
-      ti1 = *in++;
+      tempin = *in++;
 
-      to0  = (ti0 & 0x80) << 0;
-      to1  = (ti0 & 0x40) << 1;
-      to0 |= (ti0 & 0x20) << 1;
-      to1 |= (ti0 & 0x10) << 2;
-      to0 |= (ti0 & 0x08) << 2;
-      to1 |= (ti0 & 0x04) << 3;
-      to0 |= (ti0 & 0x02) << 3;
-      to1 |= (ti0 & 0x01) << 4;
-      to0 |= (ti1 & 0x80) >> 4;
-      to1 |= (ti1 & 0x40) >> 3;
-      to0 |= (ti1 & 0x20) >> 3;
-      to1 |= (ti1 & 0x10) >> 2;
-      to0 |= (ti1 & 0x08) >> 2;
-      to1 |= (ti1 & 0x04) >> 1;
-      to0 |= (ti1 & 0x02) >> 1;
-      to1 |= (ti1 & 0x01) >> 0;
-      *out0++ = to0;
-      *out1++ = to1;
+      if (tempin & 128)
+        temp0 |= bit;
+      if (tempin & 64)
+        temp1 |= bit;
+      bit >>= 1;
+      if (tempin & 32)
+        temp0 |= bit;
+      if (tempin & 16)
+        temp1 |= bit;
+      bit >>= 1;
+      if (tempin & 8)
+        temp0 |= bit;
+      if (tempin & 4)
+        temp1 |= bit;
+      bit >>= 1;
+      if (tempin & 2)
+        temp0 |= bit;
+      if (tempin & 1)
+        temp1 |= bit;
+
+      if (bit > 1)
+        bit >>= 1;
+      else
+      {
+        bit     = 128;
+	*out0++ = temp0;
+	*out1++ = temp1;
+
+	temp0   = 0;
+	temp1   = 0;
+      }
+    }
+
+  if (bit < 128)
+    {
+      *out0++ = temp0;
+      *out1++ = temp1;
     }
 }
 
@@ -1046,61 +1062,57 @@ stp_unpack_4_1(int length,
 		 unsigned char *out2,
 		 unsigned char *out3)
 {
-  unsigned char ti0, ti1, ti2, ti3;
-  unsigned char to0, to1, to2, to3;
+  unsigned char	tempin, bit, temp0, temp1, temp2, temp3;
 
   if (length <= 0)
     return;
-
-  length = (length + 3) / 4;
-
-  for (;length; length --)
+  for (bit = 128, temp0 = 0, temp1 = 0, temp2 = 0, temp3 = 0;
+       length > 0;
+       length --)
     {
-      ti0 = *in++;
-      ti1 = *in++;
-      ti2 = *in++;
-      ti3 = *in++;
+      tempin = *in++;
 
-      to0  = (ti0 & 0x80) << 0;
-      to1  = (ti0 & 0x40) << 1;
-      to2  = (ti0 & 0x20) << 2;
-      to3  = (ti0 & 0x10) << 3;
-      to0 |= (ti0 & 0x08) << 3;
-      to1 |= (ti0 & 0x04) << 4;
-      to2 |= (ti0 & 0x02) << 5;
-      to3 |= (ti0 & 0x01) << 6;
+      if (tempin & 128)
+        temp0 |= bit;
+      if (tempin & 64)
+        temp1 |= bit;
+      if (tempin & 32)
+        temp2 |= bit;
+      if (tempin & 16)
+        temp3 |= bit;
+      bit >>= 1;
+      if (tempin & 8)
+        temp0 |= bit;
+      if (tempin & 4)
+        temp1 |= bit;
+      if (tempin & 2)
+        temp2 |= bit;
+      if (tempin & 1)
+        temp3 |= bit;
 
-      to0 |= (ti1 & 0x80) >> 2;
-      to1 |= (ti1 & 0x40) >> 1;
-      to2 |= (ti1 & 0x20) >> 0;
-      to3 |= (ti1 & 0x10) << 1;
-      to0 |= (ti1 & 0x08) << 1;
-      to1 |= (ti1 & 0x04) << 2;
-      to2 |= (ti1 & 0x02) << 3;
-      to3 |= (ti1 & 0x01) << 4;
+      if (bit > 1)
+        bit >>= 1;
+      else
+      {
+        bit     = 128;
+	*out0++ = temp0;
+	*out1++ = temp1;
+	*out2++ = temp2;
+	*out3++ = temp3;
 
-      to0 |= (ti2 & 0x80) >> 4;
-      to1 |= (ti2 & 0x40) >> 3;
-      to2 |= (ti2 & 0x20) >> 2;
-      to3 |= (ti2 & 0x10) >> 1;
-      to0 |= (ti2 & 0x08) >> 1;
-      to1 |= (ti2 & 0x04) >> 0;
-      to2 |= (ti2 & 0x02) << 1;
-      to3 |= (ti2 & 0x01) << 2;
+	temp0   = 0;
+	temp1   = 0;
+	temp2   = 0;
+	temp3   = 0;
+      }
+    }
 
-      to0 |= (ti3 & 0x80) >> 6;
-      to1 |= (ti3 & 0x40) >> 5;
-      to2 |= (ti3 & 0x20) >> 4;
-      to3 |= (ti3 & 0x10) >> 3;
-      to0 |= (ti3 & 0x08) >> 3;
-      to1 |= (ti3 & 0x04) >> 2;
-      to2 |= (ti3 & 0x02) >> 1;
-      to3 |= (ti3 & 0x01) >> 0;
-
-      *out0++ = to0;
-      *out1++ = to1;
-      *out2++ = to2;
-      *out3++ = to3;
+  if (bit < 128)
+    {
+      *out0++ = temp0;
+      *out1++ = temp1;
+      *out2++ = temp2;
+      *out3++ = temp3;
     }
 }
 
@@ -1197,6 +1209,8 @@ stp_unpack_8_1(int length,
   unsigned char	tempin, bit, temp0, temp1, temp2, temp3, temp4, temp5, temp6,
     temp7;
 
+  if (length <= 0)
+    return;
 
   for (bit = 128, temp0 = 0, temp1 = 0, temp2 = 0,
        temp3 = 0, temp4 = 0, temp5 = 0, temp6 = 0, temp7 = 0;
