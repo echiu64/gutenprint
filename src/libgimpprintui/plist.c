@@ -1120,7 +1120,7 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
 		errfd[2],	/* Message logger from lp command */
 		syncfd[2];	/* Sync the logger */
   FILE		*prn = NULL;	/* Print file/command */
-  int		do_sync = 1;
+  int		do_sync = 0;
   int		dummy;
 
   /*
@@ -1134,6 +1134,7 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
        * plugins with SIGKILL if its "Cancel" button is pressed; this
        * gives the plugin no chance whatsoever to clean up after itself.
        */
+      do_sync = 1;
       usr1_interrupt = 0;
       signal (SIGUSR1, usr1_handler);
       if (pipe (syncfd) != 0)
@@ -1162,7 +1163,7 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
 		  /* Errors will cause the plugin to get a SIGPIPE.  */
 		  exit (1);
 		}
-	      else if (opid == 0) /* Child 2 (error monitor) */
+	      else if (opid == 0) /* Child 2 (printer command) */
 		{
 		  dup2 (pipefd[0], 0);
 		  close (pipefd[0]);
@@ -1184,26 +1185,29 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
 			  while (1)
 			    {
 			      ssize_t bytes = read(errfd[0], buf, 4095);
-			      if (bytes == 0)
-				break;
-			      else if (bytes > 0)
+			      if (bytes > 0)
 				{
 				  buf[bytes] = '\0';
 				  (*errfunc)(errdata, buf, bytes);
 				}
 			      else
 				{
-				  snprintf(buf, 4095,
-					   "Read messages failed: %s\n",
-					   strerror(errno));
-				  (*errfunc)(errdata, buf, strlen(buf));
-				  break;
+				  if (bytes < 0)
+				    {
+				      snprintf(buf, 4095,
+					       "Read messages failed: %s\n",
+					       strerror(errno));
+				      (*errfunc)(errdata, buf, strlen(buf));
+				    }
+				  write(syncfd[1], "Done", 5);
+				  _exit(0);
 				}
 			    }
+			  /* NOTREACHED */
 			  write(syncfd[1], "Done", 5);
 			  _exit(0);
 			}
-		      else	/* lpr monitor */
+		      else	/* Child 2 (printer command) */
 			{
 			  (void) close(2);
 			  (void) close(1);
@@ -1212,15 +1216,21 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
 			  close(errfd[1]);
 			  close (pipefd[0]);
 			  close (pipefd[1]);
+			  close(syncfd[1]);
+			  execl("/bin/sh", "/bin/sh", "-c",
+				stpui_plist_get_output_to(printer), NULL);
+			  /* NOTREACHED */
+			  _exit (1);
 			}
+		      /* NOTREACHED */
+		      _exit(1);
 		    }
-		  close(syncfd[1]);
-		  execl("/bin/sh", "/bin/sh", "-c",
-			stpui_plist_get_output_to(printer), NULL);
-		  /* NOTREACHED */
-		  exit (1);
+		  else		/* pipe() failed! */
+		    {
+		      _exit(1);
+		    }
 		}
-	      else
+	      else		/* Child 1 (lpr monitor) */
 		{
 		  /*
 		   * If the print plugin gets SIGKILLed by gimp, we kill lpr
@@ -1262,7 +1272,7 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
 		  _exit (0);
 		}
 	    }
-	  else
+	  else			/* Parent (actually generates the output) */
 	    {
 	      close (syncfd[1]);
 	      close (pipefd[0]);
