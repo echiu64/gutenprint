@@ -455,6 +455,10 @@ Resolutions for those printers are listed in a later section.
                                             variable dot sizes, such as
                                             the Epson Stylus Color 740
                                             and newer)
+'360 DPI Softweave Unidirectional'         (works on printers that support
+                                            variable dot sizes, such as
+                                            the Epson Stylus Color 740
+                                            and newer)
 '360 DPI High Quality'                     (works on printers that support
                                             variable dot sizes, such as
                                             the Epson Stylus Color 740
