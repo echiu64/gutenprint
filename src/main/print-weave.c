@@ -2230,8 +2230,6 @@ stp_write_weave(void *        vsw,
 	    {
 	      setactive = stp_pack(in, length * sw->bitwidth,
 				   comp_buf, &comp_ptr);
-	      stp_eprintf((const stp_vars_t *) (sw->v),
-			  "add_to_row length %d\n", comp_ptr - comp_buf);
 	      add_to_row(sw, sw->lineno, comp_buf, comp_ptr - comp_buf, j,
 			 setactive, lineoffs[0], lineactives[0], bufs[0]);
 	    }
