@@ -382,7 +382,7 @@ The driver will not permit use of invalid settings.
 The options for this driver are very complex.  We strongly recommend
 use of a printer management system such as Foomatic rather than
 configuring a spooler manually with this driver. The driver name used
-by Foomatic is "gimp-print",
+by Foomatic is "gimp-print".
 
 Overview for the IJS Driver:
 -------- --- --- --- -------
@@ -413,7 +413,8 @@ and so forth.
 The options for this driver are very complex. We strongly recommend
 use of a printer management system such as Foomatic rather than
 configuring a spooler manually with this driver. The driver name used
-by Foomatic is "gimp-print-ijs",
+by Foomatic is "gimp-print-ijs".
+
 
 Printer Model Selection:
 ------- ----- ----------
