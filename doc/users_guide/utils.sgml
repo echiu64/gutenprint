@@ -92,11 +92,12 @@ will vary depending on the precise printer model.
    <sect2><title>Error During Ink Level Determination</title>
      <para>
        What?  The example above did not work?  An error message was
-printed?  What does it mean?  It is quite likely that the wrong raw
-printer device was specified.  Since the author has no printer at
-/dev/lp0, specifying this as the raw printer device elicits the following
-response from <emphasis>escputil</emphasis>.
+printed?  What does it mean?  There are several possibilities,
+depending on the specific error message.  If the error message is
+"Invalid argument" (see following example), the problem is that the
+kernel is not configured with the CONFIG_PRINTER_READBACK option enabled.
      </para>
+
   <programlisting>
   <![ CDATA [
 # escputil -r /dev/lp0 -i
@@ -114,7 +115,10 @@ Cannot read from /dev/lp0: Invalid argument
    <para>
      Another possibile cause for error is that the raw printer device
 does not have both read and write permission for the user attempting
-to access the device.  
+to access the device.  In this case, the error message will read
+"Permission denied".  A final possibility is that the raw printer
+device specified is incorrect, in which case the error message will
+read "No such device".
    </para>
 
    </sect2>
