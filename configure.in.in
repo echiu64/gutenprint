@@ -97,17 +97,6 @@ dnl Available languages (translations)
 ALL_LINGUAS="en_GB sv no fr da"
 AC_SUBST(ALL_LINGUAS)
 
-dnl Set up libtool scripts.
-dnl Disable static library building to speed up the build
-dnl MRS: This causes problems with --disable-shared
-# AC_DISABLE_STATIC
-AM_PROG_LIBTOOL
-AC_SUBST(LIBTOOL_DEPS)
-dnl define HAVE_GNU_LD if GNU ld is present
-if test "$ac_cv_prog_gnu_ld" = "yes" ; then
-  AC_DEFINE(HAVE_GNU_LD,, [Define if GNU ld is present.])
-fi
-
 dnl Compiler options and definitions
 INCLUDES="${INCLUDES} -I\$(top_srcdir)/include -I\$(top_builddir)/include -I\$(top_srcdir)/intl"
 
@@ -344,6 +333,18 @@ if test x${BUILD_FOOMATIC} = xyes ; then
   fi
 fi
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
+
+dnl Set up libtool scripts.
+dnl Disable static library building to speed up the build
+dnl MRS: This causes problems with --disable-shared
+# AC_DISABLE_STATIC
+AM_PROG_LIBTOOL
+AC_SUBST(LIBTOOL_DEPS)
+dnl define HAVE_GNU_LD if GNU ld is present
+if test "$ac_cv_prog_gnu_ld" = "yes" ; then
+  AC_DEFINE(HAVE_GNU_LD,, [Define if GNU ld is present.])
+fi
+  
 
 dnl GNU gettext checks.
 AM_GNU_GETTEXT

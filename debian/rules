@@ -28,7 +28,6 @@ build-stamp: configure
 	cd debian/gimp-print-build ; \
 	BUILD_PACKAGE=true ../../configure --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --enable-static --enable-shared --without-gimp --with-cups --disable-test ; \
 	$(MAKE) ; \
-	$(MAKE) ps ; \
 	cd src/gimp ; \
 	$(MAKE) print
 
@@ -68,7 +67,7 @@ binary-indep: build install ChangeLog
 	dh_testroot -i
 #	dh_installdebconf -i
 	dh_installdocs -i
-	  cp debian/gimp-print-build/doc/*.ps debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc
+	  cp doc/gimpprint.ps debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc
 #	  cp -r debian/gimp-print-build/doc/manual-html debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html
 	  cp -r doc/manual-html debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html
 	  cd debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html ; \

@@ -147,7 +147,7 @@ BUILD AND INSTALLATION:
    may add it to any other DEVICE_DEVSx line that is present.
 
 12) Compile and install gs as described in the Ghostscript
-   documentation.  After a successful compiler run you got a new
+   documentation.  After a successful compiler run you get a new
    driver named "stp".  Check this by calling "gs -h" with the newly
    compiled Ghostscript.
 
@@ -164,6 +164,17 @@ Debian users can try the following (contributed by Stuart Miles and
 updated by Dan Christensen <jdc@julian.uwo.ca>): versions are current
 as of 5 October 2000.  The Debian installation procedure is being
 extensively redone as of February 2001.
+
+As of version 5.50 and 6.61, the current Debian packages in testing
+(woody) and unstable (sid) are linked with libgimpprint, thus
+saving you the effort of doing any patching yourself!  Because it
+uses a shared object (libgimpprint.so), you may upgrade the
+gimp-print drivers simply by installing a newer version of the
+libgimpprint library.
+
+NOTE: the script 'scripts/make-deb.sh' does the following for you.
+      It is probably better to upgrade to a new 5.50 or 6.51 release;
+      only use this if you are running stable (potato) or earlier.
 
 Download the debianised sources for gs-aladdin and libjpeg to the
 directory containing the print-x.xxx directory:

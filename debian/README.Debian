@@ -9,8 +9,8 @@ provide printing quality for UNIX/Linux on a par with proprietary
 vendor-supplied drivers in many cases, and can be used for many of the
 most demanding printing tasks.
 
-Documentation can be found in the libgimpprint-doc package, which covers
-the use of libgimpprint-based programs, and developing programs using
-libgimpprint.
+Documentation can be found in the gimpprint-doc package, which covers
+the use of libgimpprint-based programs, and the libgimpprint-doc
+package, which covers developing programs using libgimpprint.
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>, Tue, 18 Sep 2001 12:01:57 +0100
+ -- Roger Leigh <roger@whinlatter.uklinux.net>,  Thu, 25 Oct 2001 22:44:08 +0100

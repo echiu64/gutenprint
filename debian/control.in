@@ -10,7 +10,7 @@ Architecture: any
 Depends: ${shlibs:Depends}, gimp1.2
 Suggests: libgimpprint-doc (= ${Source-Version}), gimpprint-doc (= ${Source-Version})
 Description: print plugin for the GIMP
- This is Gimp-Print version #UPSTREAM_VERSION#, a development release in the 4.1
+ This is Gimp-Print version #UPSTREAM_VERSION#, a stable release in the 4.2
  line.  Gimp-print is the print facility for the Gimp, and in addition
  a suite of drivers that may be used with common UNIX spooling systems
  using GhostScript or CUPS.  These drivers provide printing quality for
@@ -24,7 +24,7 @@ Architecture: any
 Depends: ${shlibs:Depends}, cupsys (>= 1.1.4) | cups (>= 1.1.4)
 Suggests: gimpprint-doc (= ${Source-Version})
 Description: gimp-print printer driver for CUPS
- This is Gimp-Print version #UPSTREAM_VERSION#, a development release in the 4.1
+ This is Gimp-Print version #UPSTREAM_VERSION#, a stable release in the 4.2
  line.  Gimp-print is the print facility for the Gimp, and in addition
  a suite of drivers that may be used with common UNIX spooling systems
  using GhostScript or CUPS.  These drivers provide printing quality for
@@ -51,8 +51,7 @@ Description: header files for compiling programs with libgimpprint
  .
  Install this package if you wish to develop packages that use libgimpprint.
  .
- This is the unstable 4.1 branch of gimp-print. It is not intended for use with
- stable projects!
+ This is the stable 4.2 branch of gimp-print.
 
 Package: libgimpprint-doc
 Architecture: all
@@ -80,6 +79,7 @@ Description: library necessary to use gimp-print programs
 Package: gimpprint-doc
 Architecture: all
 Section: doc
+Suggests: libgimpprint1 (= ${Source-Version})
 Description: User Guide for GIMP-Print and CUPS
  This package contains a user guide for programs using the
  libgimpprint library for photographic quality printing.  Currently
@@ -92,7 +92,7 @@ Description: User Guide for GIMP-Print and CUPS
 Package: escputil
 Architecture: any
 Section: misc
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, libgimpprint1
 Description: a utility for Epson Stylus printers
- escputil is a utility to clean and align the heads of Epson Sytlus printers.
+ escputil is a utility to clean and align the heads of Epson Stylus printers.
  It can also check the current ink levels in the printer.
