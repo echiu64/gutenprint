@@ -134,6 +134,11 @@ main(int argc, char **argv)
   hpasses = atoi(argv[3]);
   vpasses = atoi(argv[4]);
   subpasses = atoi(argv[5]);
+  if (physjets < hpasses * vpasses * subpasses)
+    {
+      fprintf(stderr, "Oversample exceeds jets\n");
+      return 1;
+    }
   nrows = atoi(argv[6]);
   first_line = atoi(argv[7]);
   phys_lines = atoi(argv[8]);

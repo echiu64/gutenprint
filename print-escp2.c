@@ -462,8 +462,8 @@ typedef struct escp_init
 static simple_dither_range_t variable_dither_ranges[] =
 {
   { 0.15,  0x1, 0, 1 },
-/*  { 0.227, 0x2, 0, 2 },
-  { 0.333, 0x3, 0, 3 }, */
+  { 0.227, 0x2, 0, 2 },
+/*  { 0.333, 0x3, 0, 3 }, */
   { 0.45,  0x1, 1, 1 },
   { 0.68,  0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
