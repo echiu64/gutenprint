@@ -701,8 +701,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_K,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a,
-    {-1,0,0,0,-1,-1}, /* max res of 720x360 !! */
-    {1,1,1,1,1,1},
+    {-1,0,0,0,-1,-1}, /*090x090 180x180 360x360 720x360 720x720 1440x1440*/ 
+    {1,1,1,1,1,1},    /*------- 180x180 360x360 720x360 ------- ---------*/ 
     CANON_INK(canon_ink_standard),
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -717,8 +717,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_DMT,
-    {-1,1,0,0,-1,-1}, /* max res of 720x360 !! */
-    {1,1,1,1,1,1},
+    {-1,-1,1,0,-1,-1},/*090x090 180x180 360x360 720x360 720x720 1440x1440*/ 
+    {1,1,1,1,1,1},    /*------- ------- 360x360 720x360 ------- ---------*/ 
     CANON_INK(canon_ink_standard),
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -733,8 +733,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
     CANON_CAP_STD0 | CANON_CAP_DMT,
-    {-1,1,0,0,-1,-1}, /* ??? */
-    {1,1,1,1,1,1},
+    {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
+    {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standard),
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -749,8 +749,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_DMT,
-    {-1,-1,0,0,-1,-1}, /* max res of 720x360 !! */
-    {1,1,1,1,1,1},
+    {-1,-1,0,0,-1,-1},/*090x090 180x180 360x360 720x360 720x720 1440x1440*/ 
+    {1,1,1,1,1,1},    /*------- ------- 360x360 720x360 ------- ---------*/ 
     CANON_INK(canon_ink_standard),
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -765,8 +765,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
     CANON_CAP_STD1 | CANON_CAP_DMT | CANON_CAP_ACKSHORT,
-    {-1,1,0,0,-1,-1},
-    {1,1.8,1,0.5,1,1},
+    {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
+    {1,1.8,1,0.5,1,1},/*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -781,8 +781,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
     CANON_CAP_STD1 | CANON_CAP_DMT | CANON_CAP_ACKSHORT,
-    {-1,1,0,0,-1,-1},
-    {0,1.8,1,.5,0,0},
+    {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
+    {0,1.8,1,.5,0,0}, /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -797,8 +797,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
     CANON_CAP_STD1 | CANON_CAP_DMT,
-    {-1,1,0,0,-1,-1},
-    {0,1.8,1,.5,0,0},
+    {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
+    {0,1.8,1,.5,0,0}, /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -813,8 +813,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD1 | CANON_CAP_r | CANON_CAP_DMT | CANON_CAP_ACKSHORT,
-    {-1,0,0,-1,-1,-1},
-    {1,1,1,1,1,1},
+    {-1,0,0,-1,0,-1}, /*150x150 300x300 600x600 1200x600 1200x1200 2400x2400*/
+    {1,1,1,1,1,1},    /*------- 300x300 600x600 -------- 1200x1200 ---------*/
     CANON_INK(canon_ink_superphoto),
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -837,8 +837,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_K | CANON_INK_CMY,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a,
-    {0,0,-1,-1,-1,-1},
-    {1,1,1,1,1,1},
+    {0,0,-1,-1,-1,-1},/*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
+    {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
     CANON_INK(canon_ink_standard),
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -852,8 +852,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a,
-    {0,0,-1,-1,-1,-1},
-    {1,1,1,1,1,1},
+    {0,0,-1,-1,-1,-1},/*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
+    {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
     CANON_INK(canon_ink_standard),
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -867,8 +867,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_DMT, /*FIX? should have _r? */
-    {-1,1,0,0,-1,-1},
-    {1,1,1,1,1,1},
+    {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
+    {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standard),
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -882,8 +882,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD1 | CANON_CAP_a | CANON_CAP_r | CANON_CAP_DMT,
-    {-1,1,0,0,-1,-1},
-    {1,1,1,1,1,1},
+    {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
+    {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standard),
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -897,8 +897,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYyK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD1,
-    {-1,0,0,0,-1,-1},
-    {1,1,1,1,1,1},
+    {-1,0,0,0,-1,-1}, /*150x150 300x300 600x600 1200x600 1200x1200 2400x2400*/
+    {1,1,1,1,1,1},    /*------- 300x300 600x600 1200x600 --------- ---------*/
     CANON_INK(canon_ink_standard),
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -912,8 +912,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYyK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0,
-    {-1,0,0,0,-1,-1},
-    {1,1,1,1,1,1},
+    {-1,0,0,0,-1,-1}, /*150x150 300x300 600x600 1200x600 1200x1200 2400x2400*/
+    {1,1,1,1,1,1},    /*------- 300x300 600x600 1200x600 --------- ---------*/
     CANON_INK(canon_ink_standard),
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -935,8 +935,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_DMT,
-    {-1,1,0,0,-1,-1},
-    {1,1,1,1,1,1},
+    {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
+    {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standard),
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -950,8 +950,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a,
-    {0,0,-1,-1,-1,-1},
-    {1,1,1,1,1,1},
+    {0,0,-1,-1,-1,-1},/*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
+    {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
     CANON_INK(canon_ink_standard),
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -965,8 +965,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD1 | CANON_CAP_a | CANON_CAP_DMT,
-    {-1,1,0,0,-1,-1},
-    {1,1,1,1,1,1},
+    {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
+    {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standard),
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -980,8 +980,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0,
-    {-1,0,0,-1,0,-1},
-    {1,1,1,1,1,1},
+    {-1,0,0,-1,0,-1}, /*150x150 300x300 600x600 1200x600 1200x1200 2400x2400*/
+    {1,1,1,1,1,1},    /*------- 300x300 600x600 -------- 1200x1200 ---------*/
     CANON_INK(canon_ink_standard),
     standard_lum_adjustment,
     standard_hue_adjustment,
