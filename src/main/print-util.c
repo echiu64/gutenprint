@@ -177,7 +177,7 @@ static const stp_internal_vars_t min_vars =
 	0,			/* Magenta */
 	0,			/* Yellow */
 	0,			/* Output saturation */
-	.1,			/* Density */
+	.01,			/* Density */
 	0,			/* Image type */
 	0,			/* Unit 0=Inch */
 	1.0,			/* Application gamma placeholder */
@@ -1259,7 +1259,8 @@ verify_param(const char *checkval, stp_param_t *vptr,
 	    break;
 	  }
       if (!answer)
-	stp_eprintf(v, _("%s is not a valid %s\n"), checkval, what);
+	stp_eprintf(v, _("%s is not a valid parameter of type %s\n"),
+		    checkval, what);
       for (i = 0; i < count; i++)
 	{
 	  stp_free((void *)vptr[i].name);
@@ -1267,7 +1268,8 @@ verify_param(const char *checkval, stp_param_t *vptr,
 	}
     }
   else
-    stp_eprintf(v, _("%s is not a valid %s\n"), checkval, what);
+    stp_eprintf(v, _("%s is not a valid parameter of type %s\n"),
+		checkval, what);
   if (vptr)
     free(vptr);
   return answer;
