@@ -165,3 +165,194 @@ stp_print(const stp_printer_t printer,
   return (printfuncs->print)(printer, v, image);
 }
 
+static int
+verify_param(const char *checkval, stp_param_t *vptr,
+	     int count, const char *what, const stp_vars_t v)
+{
+  int answer = 0;
+  int i;
+  if (count > 0)
+    {
+      for (i = 0; i < count; i++)
+	if (!strcmp(checkval, vptr[i].name))
+	  {
+	    answer = 1;
+	    break;
+	  }
+      if (!answer)
+	stp_eprintf(v, _("`%s' is not a valid %s\n"), checkval, what);
+      for (i = 0; i < count; i++)
+	{
+	  stp_free((void *)vptr[i].name);
+	  stp_free((void *)vptr[i].text);
+	}
+    }
+  else
+    stp_eprintf(v, _("`%s' is not a valid %s\n"), checkval, what);
+  if (vptr)
+    stp_free(vptr);
+  return answer;
+}
+
+#define CHECK_FLOAT_RANGE(v, component)					\
+do									\
+{									\
+  const stp_vars_t max = stp_maximum_settings();			\
+  const stp_vars_t min = stp_minimum_settings();			\
+  if (stp_get_##component((v)) < stp_get_##component(min) ||		\
+      stp_get_##component((v)) > stp_get_##component(max))		\
+    {									\
+      answer = 0;							\
+      stp_eprintf(v, _("%s out of range (value %f, min %f, max %f)\n"),	\
+		  #component, stp_get_##component(v),			\
+		  stp_get_##component(min), stp_get_##component(max));	\
+    }									\
+} while (0)
+
+#define CHECK_INT_RANGE(v, component)					\
+do									\
+{									\
+  const stp_vars_t max = stp_maximum_settings();			\
+  const stp_vars_t min = stp_minimum_settings();			\
+  if (stp_get_##component((v)) < stp_get_##component(min) ||		\
+      stp_get_##component((v)) > stp_get_##component(max))		\
+    {									\
+      answer = 0;							\
+      stp_eprintf(v, _("%s out of range (value %d, min %d, max %d)\n"),	\
+		  #component, stp_get_##component(v),			\
+		  stp_get_##component(min), stp_get_##component(max));	\
+    }									\
+} while (0)
+
+int
+stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
+{
+  stp_param_t *vptr;
+  int count;
+  int i;
+  int answer = 1;
+  int left, top, bottom, right, width, height;
+  const stp_vars_t printvars = stp_printer_get_printvars(p);
+
+  /*
+   * Note that in raw CMYK mode the user is responsible for not sending
+   * color output to black & white printers!
+   */
+  if (stp_get_output_type(printvars) == OUTPUT_GRAY &&
+      (stp_get_output_type(v) == OUTPUT_COLOR ||
+       stp_get_output_type(v) == OUTPUT_RAW_CMYK))
+    {
+      answer = 0;
+      stp_eprintf(v, _("Printer does not support color output\n"));
+    }
+  if (strlen(stp_get_media_size(v)) > 0)
+    {
+      const char *checkval = stp_get_media_size(v);
+      vptr = stp_printer_get_parameters(p, v, "PageSize", &count);
+      answer &= verify_param(checkval, vptr, count, "page size", v);
+    }
+  else
+    {
+      int min_height, min_width;
+      stp_printer_get_size_limit(p, v, &width, &height,
+				 &min_width, &min_height);
+      if (stp_get_page_height(v) <= min_height ||
+	  stp_get_page_height(v) > height ||
+	  stp_get_page_width(v) <= min_width || stp_get_page_width(v) > width)
+	{
+	  answer = 0;
+	  stp_eprintf(v, _("Image size is not valid\n"));
+	}
+    }
+
+  stp_printer_get_imageable_area(p, v, &left, &right, &bottom, &top);
+
+  if (stp_get_top(v) < top)
+    {
+      answer = 0;
+      stp_eprintf(v, _("Top margin must not be less than zero\n"));
+    }
+
+  if (stp_get_left(v) < left)
+    {
+      answer = 0;
+      stp_eprintf(v, _("Left margin must not be less than zero\n"));
+    }
+
+  if (stp_get_height(v) <= 0)
+    {
+      answer = 0;
+      stp_eprintf(v, _("Height must be greater than zero\n"));
+    }
+
+  if (stp_get_width(v) <= 0)
+    {
+      answer = 0;
+      stp_eprintf(v, _("Width must be greater than zero\n"));
+    }
+
+  if (stp_get_left(v) + stp_get_width(v) > right)
+    {
+      answer = 0;
+      stp_eprintf(v, _("Image is too wide for the page\n"));
+    }
+
+  if (stp_get_top(v) + stp_get_height(v) > bottom)
+    {
+      answer = 0;
+      stp_eprintf(v, _("Image is too long for the page\n"));
+    }
+
+  CHECK_FLOAT_RANGE(v, gamma);
+  CHECK_FLOAT_RANGE(v, contrast);
+  CHECK_FLOAT_RANGE(v, cyan);
+  CHECK_FLOAT_RANGE(v, magenta);
+  CHECK_FLOAT_RANGE(v, yellow);
+  CHECK_FLOAT_RANGE(v, brightness);
+  CHECK_FLOAT_RANGE(v, density);
+  CHECK_FLOAT_RANGE(v, saturation);
+  CHECK_INT_RANGE(v, image_type);
+  CHECK_INT_RANGE(v, output_type);
+  CHECK_INT_RANGE(v, input_color_model);
+  CHECK_INT_RANGE(v, output_color_model);
+
+  if (strlen(stp_get_media_type(v)) > 0)
+    {
+      const char *checkval = stp_get_media_type(v);
+      vptr = stp_printer_get_parameters(p, v, "MediaType", &count);
+      answer &= verify_param(checkval, vptr, count, "media type", v);
+    }
+
+  if (strlen(stp_get_media_source(v)) > 0)
+    {
+      const char *checkval = stp_get_media_source(v);
+      vptr = stp_printer_get_parameters(p, v, "InputSlot", &count);
+      answer &= verify_param(checkval, vptr, count, "media source", v);
+    }
+
+  if (strlen(stp_get_resolution(v)) > 0)
+    {
+      const char *checkval = stp_get_resolution(v);
+      vptr = stp_printer_get_parameters(p, v, "Resolution", &count);
+      answer &= verify_param(checkval, vptr, count, "resolution", v);
+    }
+
+  if (strlen(stp_get_ink_type(v)) > 0)
+    {
+      const char *checkval = stp_get_ink_type(v);
+      vptr = stp_printer_get_parameters(p, v, "InkType", &count);
+      answer &= verify_param(checkval, vptr, count, "ink type", v);
+    }
+
+  for (i = 0; i < stp_dither_algorithm_count(); i++)
+    if (!strcmp(stp_get_dither_algorithm(v), stp_dither_algorithm_name(i)))
+      {
+	stp_set_verified(v, answer);
+	return answer;
+      }
+
+  stp_eprintf(v, _("%s is not a valid dither algorithm\n"),
+	      stp_get_dither_algorithm(v));
+  stp_set_verified(v, 0);
+  return 0;
+}

@@ -418,6 +418,18 @@ stp_merge_printvars(stp_vars_t user, const stp_vars_t print)
     stp_set_output_type(user, OUTPUT_GRAY);
 }
 
+void
+stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p)
+{
+  stp_set_resolution(v, stp_printer_get_default_parameter(p, v, "Resolution"));
+  stp_set_ink_type(v, stp_printer_get_default_parameter(p, v, "InkType"));
+  stp_set_media_type(v, stp_printer_get_default_parameter(p, v, "MediaType"));
+  stp_set_media_source(v, stp_printer_get_default_parameter(p, v,"InputSlot"));
+  stp_set_media_size(v, stp_printer_get_default_parameter(p, v, "PageSize"));
+  stp_set_dither_algorithm(v, stp_default_dither_algorithm());
+  stp_set_driver(v, stp_printer_get_driver(p));
+}
+
 const stp_vars_t
 stp_default_settings()
 {
