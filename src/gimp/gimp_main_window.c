@@ -239,7 +239,7 @@ static unit_t units[] =
       72.0 / 12.0, NULL, "%.1f" },
   };
 
-static const gint unit_count = sizeof(units) / sizeof(unit_t);    
+static const gint unit_count = sizeof(units) / sizeof(unit_t);
 
 typedef struct
 {
@@ -274,6 +274,9 @@ static radio_group_t image_types[] =
   };
 
 static const gint image_type_count = sizeof(image_types) / sizeof(radio_group_t);
+
+static stp_param_t *printer_list = 0;
+static int printer_count = 0;
 
 static list_option_t *
 get_list_option_by_name(const char *name)
@@ -331,85 +334,12 @@ Combo_get_name(GtkWidget   *combo,
   return (NULL);
 }
 
-static void
-set_orientation(int orientation)
-{
-  pv->orientation = orientation;
-  if (orientation == ORIENT_AUTO)
-    {
-      if ((printable_width >= printable_height &&
-	   image_true_width >= image_true_height) ||
-	  (printable_height >= printable_width &&
-	   image_true_height >= image_true_width))
-	orientation = ORIENT_PORTRAIT;
-      else
-	orientation = ORIENT_LANDSCAPE;
-    }
-  physical_orientation = orientation;
-  switch (orientation)
-    {
-    case ORIENT_PORTRAIT:
-      image_height = image_true_height;
-      image_width = image_true_width;
-      preview_thumbnail_h = thumbnail_h;
-      preview_thumbnail_w = thumbnail_w;
-      break;
-    case ORIENT_LANDSCAPE:
-      image_height = image_true_width;
-      image_width = image_true_height;
-      preview_thumbnail_h = thumbnail_w;
-      preview_thumbnail_w = thumbnail_h;
-      break;
-    case ORIENT_UPSIDEDOWN:
-      image_height = image_true_height;
-      image_width = image_true_width;
-      preview_thumbnail_h = thumbnail_h;
-      preview_thumbnail_w = thumbnail_w;
-      break;
-    case ORIENT_SEASCAPE:
-      image_height = image_true_width;
-      image_width = image_true_height;
-      preview_thumbnail_h = thumbnail_w;
-      preview_thumbnail_w = thumbnail_h;
-      break;
-    }
-  update_adjusted_thumbnail();
-}
-
 static gchar *
 c_strdup(const gchar *s)
 {
   gchar *ret = xmalloc(strlen(s) + 1);
   strcpy(ret, s);
   return ret;
-}
-
-static stp_param_t *printer_list = 0;
-static int printer_count = 0;
-
-static void
-reset_preview(void)
-{
-  if (!suppress_preview_reset)
-    {
-      gimp_help_enable_tooltips();
-      buttons_pressed = preview_active = 0;
-    }
-}
-
-static void
-set_entry_value(GtkWidget *entry, double value, int block)
-{
-  gchar s[255];
-  gdouble unit_scaler = units[pv->unit].scale;
-  const gchar *format = units[pv->unit].format;
-
-  g_snprintf(s, sizeof(s), format, value / unit_scaler);
-  if (block)
-    gtk_signal_handler_block_by_data (GTK_OBJECT (entry), NULL);
-  gtk_entry_set_text (GTK_ENTRY (entry), s);
-  if (block)
-    gtk_signal_handler_unblock_by_data (GTK_OBJECT (entry), NULL);
 }
 
 static void
@@ -593,6 +523,21 @@ create_positioning_button(GtkWidget *box, const char *text, const char *help)
   gtk_signal_connect(GTK_OBJECT(button), "clicked",
 		     GTK_SIGNAL_FUNC(position_callback), NULL);
   return button;
+}
+
+static GSList *
+create_radio_button(radio_group_t *radio, GSList *group,
+		    GtkWidget *table, int hpos, int vpos,
+		    GtkSignalFunc callback)
+{
+  radio->button = gtk_radio_button_new_with_label(group, _(radio->name));
+  group = gtk_radio_button_group(GTK_RADIO_BUTTON(radio->button));
+  gimp_table_attach_aligned(GTK_TABLE(table), hpos, vpos, NULL, 0.5, 0.5,
+			    radio->button, 1, FALSE);
+  gimp_help_set_help_data(radio->button, _(radio->help), NULL);
+  gtk_signal_connect(GTK_OBJECT(radio->button), "toggled",
+		     GTK_SIGNAL_FUNC(callback), (gpointer) radio->value);
+  return group;
 }
 
 static void
@@ -1273,18 +1218,8 @@ create_image_settings_frame (void)
 
   group = NULL;
   for (i = 0; i < image_type_count; i++)
-    {
-      image_types[i].button =
-	gtk_radio_button_new_with_label(group, _(image_types[i].name));
-      group = gtk_radio_button_group(GTK_RADIO_BUTTON(image_types[i].button));
-      gimp_table_attach_aligned(GTK_TABLE(table), 0, i, NULL, 0.5, 0.5,
-				image_types[i].button, 1, FALSE);
-      gimp_help_set_help_data(image_types[i].button, _(image_types[i].help),
-			      NULL);
-      gtk_signal_connect(GTK_OBJECT(image_types[i].button), "toggled",
-			 GTK_SIGNAL_FUNC(image_type_callback),
-			 (gpointer) image_types[i].value);
-    }
+    group = create_radio_button(&(image_types[i]), group, table, 0, i,
+				image_type_callback);
 
   sep = gtk_hseparator_new ();
   gtk_box_pack_start (GTK_BOX (vbox), sep, FALSE, FALSE, 0);
@@ -1315,18 +1250,8 @@ create_image_settings_frame (void)
 
   group = NULL;
   for (i = 0; i < output_type_count; i++)
-    {
-      output_types[i].button =
-	gtk_radio_button_new_with_label(group, _(output_types[i].name));
-      group = gtk_radio_button_group(GTK_RADIO_BUTTON(output_types[i].button));
-      gimp_table_attach_aligned(GTK_TABLE(table), 0, i, NULL, 0.5, 0.5,
-				output_types[i].button, 1, FALSE);
-      gimp_help_set_help_data(output_types[i].button, _(output_types[i].help),
-			      NULL);
-      gtk_signal_connect(GTK_OBJECT(output_types[i].button), "toggled",
-			 GTK_SIGNAL_FUNC(output_type_callback),
-			 (gpointer) output_types[i].value);
-    }
+    group = create_radio_button(&(output_types[i]), group, table, 0, i,
+				output_type_callback);
 
   /*
    *  Color adjust button
@@ -1334,7 +1259,7 @@ create_image_settings_frame (void)
 
   adjust_color_button = gtk_button_new_with_label (_("Adjust Output..."));
   gtk_misc_set_padding (GTK_MISC (GTK_BIN (adjust_color_button)->child), 4, 0);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 3,
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, output_type_count,
                              NULL, 0.5, 0.5,
                              adjust_color_button, 1, TRUE);
 
@@ -1379,6 +1304,31 @@ create_main_window (void)
   update_adjusted_thumbnail ();
 
   gtk_widget_show (print_dialog);
+}
+
+static void
+set_entry_value(GtkWidget *entry, double value, int block)
+{
+  gchar s[255];
+  gdouble unit_scaler = units[pv->unit].scale;
+  const gchar *format = units[pv->unit].format;
+
+  g_snprintf(s, sizeof(s), format, value / unit_scaler);
+  if (block)
+    gtk_signal_handler_block_by_data (GTK_OBJECT (entry), NULL);
+  gtk_entry_set_text (GTK_ENTRY (entry), s);
+  if (block)
+    gtk_signal_handler_unblock_by_data (GTK_OBJECT (entry), NULL);
+}
+
+static void
+reset_preview(void)
+{
+  if (!suppress_preview_reset)
+    {
+      gimp_help_enable_tooltips();
+      buttons_pressed = preview_active = 0;
+    }
 }
 
 static void
@@ -1561,6 +1511,41 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
   gtk_combo_set_value_in_list (GTK_COMBO (combo), TRUE, FALSE);
   gtk_widget_set_sensitive (combo, TRUE);
   gtk_widget_show (combo);
+}
+
+static void
+set_orientation(int orientation)
+{
+  pv->orientation = orientation;
+  if (orientation == ORIENT_AUTO)
+    {
+      if ((printable_width >= printable_height &&
+	   image_true_width >= image_true_height) ||
+	  (printable_height >= printable_width &&
+	   image_true_height >= image_true_width))
+	orientation = ORIENT_PORTRAIT;
+      else
+	orientation = ORIENT_LANDSCAPE;
+    }
+  physical_orientation = orientation;
+  switch (orientation)
+    {
+    case ORIENT_PORTRAIT:
+    case ORIENT_UPSIDEDOWN:
+      image_height = image_true_height;
+      image_width = image_true_width;
+      preview_thumbnail_h = thumbnail_h;
+      preview_thumbnail_w = thumbnail_w;
+      break;
+    case ORIENT_LANDSCAPE:
+    case ORIENT_SEASCAPE:
+      image_height = image_true_width;
+      image_width = image_true_height;
+      preview_thumbnail_h = thumbnail_w;
+      preview_thumbnail_w = thumbnail_h;
+      break;
+    }
+  update_adjusted_thumbnail();
 }
 
 /*
@@ -1896,7 +1881,6 @@ orientation_callback (GtkWidget *widget,
 
   if (pv->orientation != (gint) data)
     {
-      invalidate_frame ();
       invalidate_preview_thumbnail ();
       set_orientation((gint) data);
     }
@@ -1915,7 +1899,6 @@ output_type_callback (GtkWidget *widget,
   if (GTK_TOGGLE_BUTTON (widget)->active)
     {
       stp_set_output_type (pv->v, (gint) data);
-      invalidate_frame ();
       invalidate_preview_thumbnail ();
       update_adjusted_thumbnail ();
     }
@@ -1956,7 +1939,6 @@ image_type_callback (GtkWidget *widget,
   if (GTK_TOGGLE_BUTTON (widget)->active)
     {
       stp_set_image_type (pv->v, (gint) data);
-      invalidate_frame ();
       invalidate_preview_thumbnail ();
       update_adjusted_thumbnail ();
     }
