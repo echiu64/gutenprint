@@ -151,8 +151,34 @@ static char outbufHeader_z52[LXM_Z52_HEADERSIZE]={
      5 .. ? like 1
 */
 
-
-
+static double hue_adjustment[25] =
+{
+  0,				/* C */
+  0.125,
+  0.25,
+  0.4,
+  0.65,				/* B */
+  0.9,
+  1.25,
+  1.625,
+  2.0,				/* M */
+  2.125,
+  2.25,
+  2.45,
+  2.7,				/* R */
+  2.95,
+  3.25,
+  3.625,
+  4.0,				/* Y */
+  4.2,
+  4.4,
+  4.65,
+  4.9,				/* G */
+  5.15,
+  5.4,
+  5.7,
+  6.0				/* C */
+};
 
 static int lr_shift[10] = { 9, 18, 2*18 }; /* vertical distance between ever 2nd  inkjet (related to resolution) */
 
@@ -1137,7 +1163,8 @@ lexmark_print(const printer_t *printer,		/* I - Model */
 	  duplicate_line = 0;
 	  Image_get_row(image, in, errline);
 	  /*	  printf("errline %d ,   image height %d\n", errline, image_height);*/
-	  (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv, NULL);
+	  (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv,
+		       hue_adjustment);
 	}
       /*      printf("Let's dither   %d    %d  %d\n", ((y%interlace)), buf_length, length);*/
       if (nv.image_type == IMAGE_MONOCHROME)

@@ -1,3 +1,96 @@
+2000-11-19	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.96) (+2 -93)
+		print.h (1.93) (+37 -11)
+		print-weave.c (1.8) (+881 -1)
+		print-pcl.c (1.95) (+3 -84)
+		print-escp2.c (1.269) (+33 -915)
+	
+	Split out all the bit twiddling functions into print-weave.c.
+	
+2000-11-19	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.76) (+6 -4)
+		cups/Makefile.in (1.20) (+8 -5)
+		cups/.cvsignore (1.5) (+3 -1)
+		Ghost/devs.mak.addon-5.10 (1.6) (+4 -0)
+		Ghost/contrib.mak.addon (1.11) (+4 -0)
+		Ghost/.cvsignore (1.5) (+5 -0)
+		print-util.c (1.153) (+2 -1537)
+		print-color.c (1.1) ( )
+	
+	Split print-util into print-util.c and print-color.c.
+	
+2000-11-19	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.69) (+2 -2)
+		print.h (1.92) (+9 -3)
+		print-util.c (1.152) (+84 -30)
+		print-ps.c (1.45) (+4 -3)
+		print-pcl.c (1.94) (+2 -2)
+		print-lexmark.c (1.3) (+2 -2)
+		print-escp2.c (1.268) (+32 -2)
+		print-canon.c (1.95) (+2 -2)
+	
+	Hue mapping to improve color
+	
+2000-11-18	<davehill@sourceforge.net>
+
+	Files:	print-pcl.c (1.93) (+5 -0)
+	
+	Divided density by 2 for 840 CRET mode. This is Robert's version of
+	Tommy's latest patch.
+	
+2000-11-18	<davehill@sourceforge.net>
+
+	Files:	print-pcl.c (1.92) (+37 -2)
+		printers.xml (1.36) (+1 -1)
+	
+	Although the 1200C has CMYK ink, it cannot use K at the same time as
+	CMY! Split it off from the 1600 (which *may* be able to do this). Thanks
+	to Dieter Schollmeyer for noting this.
+	
+2000-11-18	<rlk@sourceforge.net>
+
+	Files:	Ghost/gdevstp.c (1.45) (+7 -2)
+	
+	122776 Ghostscript still ignores printer variables
+	
+2000-11-18	<rlk@sourceforge.net>
+
+	Files:	Ghost/contrib.mak.addon (1.10) (+4 -0)
+		Ghost/devs.mak.addon-5.10 (1.5) (+4 -0)
+	
+	Lexmark driver
+	
+2000-11-18	<rlk@sourceforge.net>
+
+	Files:	cups/.cvsignore (1.4) (+10 -8)
+	
+	Add new stuff
+	
+2000-11-18	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.57) (+200 -0)
+		Ghost/README (1.54) (+4 -0)
+		printers.xml (1.35) (+18 -1)
+		print-util.c (1.151) (+3 -1)
+		print-escp2.c (1.267) (+14 -3)
+		escputil.c (1.18) (+4 -2)
+	
+	1) Support for the Stylus Photo 790 (new printer on the Epson HK web site,
+	   not currently on the US site).  Also list the 680, which appears to
+	   be the 777.
+	
+	2) In update_cmyk in print-util.c, don't bail out if it's all black.
+	   However, there may be another error which I need to look at.
+	
+2000-11-18	<rwisi@sourceforge.net>
+
+	Files:	cups/Makefile.in (1.19) (+3 -3)
+	
+	Inserted missing cups-lexmark.o
+	
 2000-11-18	<rlk@sourceforge.net>
 
 	Files:	Makefile.am (1.75) (+4 -3)
