@@ -23,7 +23,7 @@ function includeImage ($imageName,$altString = "Image",$border="0",$misc="") {
 
 function includeTHISImage($imageName,$altString,$border,$misc) {
 	$size = GetImageSize($imageName);
-	printf('<IMG SRC="%s" %s ALT="%s [%.02f KB]" BORDER="%i" %s>',$imageName,$size[3],$altString,filesize($imageName) / 1024,$border,$misc);
+	printf('<IMG SRC="%s" %s ALT="%s [%.02f KB]" BORDER="%s" %s>',$imageName,$size[3],$altString,filesize($imageName) / 1024,$border,$misc);
 }
 
 
