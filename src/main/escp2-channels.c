@@ -1280,62 +1280,62 @@ static const escp2_inkname_t *const ultra_matte7_ink_types[] =
 DECLARE_INKLIST("ultramatte", ultra_matte7, ultra_matte7,
 		N_("UltraChrome Matte Black"), ultrachrome, ultrachrome_matte);
 
-static const inklist_t *cmy_group[] =
+static const inklist_t *const cmy_group[] =
 {
   &cmy_inklist
 };
 
-static const inklist_t *standard_group[] =
+static const inklist_t *const standard_group[] =
 {
   &standard_inklist,
   &quadtone_inklist
 };
 
-static const inklist_t *c80_group[] =
+static const inklist_t *const c80_group[] =
 {
   &c80_inklist,
   &c80_quadtone_inklist
 };
 
-static const inklist_t *x80_group[] =
+static const inklist_t *const x80_group[] =
 {
   &x80_inklist
 };
 
-static const inklist_t *photo_gen1_group[] =
+static const inklist_t *const photo_gen1_group[] =
 {
   &gen1_inklist,
   &quadtone_inklist
 };
 
-static const inklist_t *photo_gen2_group[] =
+static const inklist_t *const photo_gen2_group[] =
 {
   &gen2_inklist,
   &quadtone_inklist
 };
 
-static const inklist_t *photo_pigment_group[] =
+static const inklist_t *const photo_pigment_group[] =
 {
   &pigment_inklist
 };
 
-static const inklist_t *f360_photo_group[] =
+static const inklist_t *const f360_photo_group[] =
 {
   &f360_photo_inklist
 };
 
-static const inklist_t *f360_photo7_japan_group[] =
+static const inklist_t *const f360_photo7_japan_group[] =
 {
   &f360_photo7_japan_inklist
 };
 
-static const inklist_t *f360_ultrachrome_group[] =
+static const inklist_t *const f360_ultrachrome_group[] =
 {
   &f360_ultra_photo7_inklist,
   &f360_ultra_matte7_inklist
 };
 
-static const inklist_t *ultrachrome_group[] =
+static const inklist_t *const ultrachrome_group[] =
 {
   &ultra_photo7_inklist,
   &ultra_matte7_inklist
