@@ -37,6 +37,11 @@
 #  define inline
 #endif /* __GNUC__ */
 
+/* If you don't want detailed performance numbers in this file, 
+ * uncomment this:
+ */
+/*#define QUANT(x) */
+
 #define D_FLOYD_HYBRID 0
 #define D_FLOYD 1
 #define D_FAST 2
@@ -1156,14 +1161,10 @@ get_valueline(dither_t *d, int color)
  * to save a division when appropriate.
  */
 
-static inline int
-update_color(int color, int dither)
-{
-  if (dither >= 0)
-    return color + (dither >> 3);
-  else
-    return color - ((-dither) >> 3);
-}
+#define update_color(color, dither) (\
+        ((dither) >= 0)? \
+                (color) + ((dither) >> 3): \
+                (color) - ((-(dither)) >> 3))
 
 static inline unsigned
 xrand(void)
@@ -1248,6 +1249,9 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	    int *ink_budget, dither_matrix_t *pick_matrix,
 	    dither_matrix_t *dither_matrix, int dither_type)
 {
+  unsigned rangepoint;
+  unsigned virtual_value;
+  unsigned vmatrix;
   int i;
   int levels = rv->nlevels - 1;
   int dither_value = adjusted;
@@ -1268,9 +1272,6 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
   for (i = levels; i >= 0; i--)
     {
       dither_segment_t *dd = &(rv->ranges[i]);
-      unsigned rangepoint;
-      unsigned virtual_value;
-      unsigned vmatrix;
       if (density <= dd->range_l)
 	continue;
 
@@ -1810,11 +1811,7 @@ iabs(int a)
     return -a;
 }
 
-static inline unsigned short
-usmin(unsigned short a, unsigned short b)
-{
-  return (a < b ? a : b);
-}
+#define USMIN(a, b) ((a) < (b) ? (a) : (b))
 
 static void
 generate_cmy(dither_t *d,
@@ -2070,6 +2067,7 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
   /*
    * Main loop starts here!
    */
+  QUANT(14);
   for (; x != terminate; x++)
     {
       /*
@@ -2077,24 +2075,24 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
        */
 
       c = cline[x];
-      m = mline[x];
-      y = yline[x];
       oc = c;
+      m = mline[x];
       om = m;
+      y = yline[x];
       oy = y;
 
       /*
        * If we're doing ordered dither, and there's no ink, we aren't
        * going to print anything.
        */
-      if (c == 0 && m == 0 && y == 0)
+      if ((c | m | y) == 0)
 	{
 	  goto advance;
 	}
 
       if (black)
-	{
-	  k = usmin(c, usmin(m, y));
+      {
+	  k = USMIN(c, USMIN(m, y));
 	  if (k < 32768)
 	    k = 0;
 	  else
@@ -2103,7 +2101,8 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
 	  m -= k;
 	  y -= k;
 	  ok = k;
-	}
+      }
+QUANT(15);
 
       if (black)
 	k = print_color_fast(d, &(d->k_dither), ok, ok,
@@ -2122,7 +2121,7 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
 			   y, x, row, yptr, lyptr, bit, length,
 			   0, 0, NULL,
 			   &(d->y_pick), &(d->y_dithermat), d->dither_type);
-
+QUANT(16);
       /*****************************************************************
        * Advance the loop
        *****************************************************************/
@@ -2145,6 +2144,7 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
 	}
       else
 	bit >>= 1;
+QUANT(17);
     }
   /*
    * Main loop ends here!
@@ -2363,7 +2363,7 @@ dither_cmyk(const unsigned short  *rgb,	/* I - RGB pixels */
 
       QUANT(7);
 
-      k = usmin(c, usmin(m, y));
+      k = USMIN(c, USMIN(m, y));
 
       /*
        * At this point we've computed the basic CMYK separations.
