@@ -1284,8 +1284,8 @@ stp_vars_copy(stp_vars_t vd, stp_const_vars_t vs)
   stp_set_height(vd, stp_get_height(vs));
   stp_set_page_width(vd, stp_get_page_width(vs));
   stp_set_page_height(vd, stp_get_page_height(vs));
-  stp_set_input_color_model(vd, stp_get_input_color_model(vd));
-  stpi_set_output_color_model(vd, stpi_get_output_color_model(vd));
+  stp_set_input_color_model(vd, stp_get_input_color_model(vs));
+  stpi_set_output_color_model(vd, stpi_get_output_color_model(vs));
   stp_set_outdata(vd, stp_get_outdata(vs));
   stp_set_errdata(vd, stp_get_errdata(vs));
   stp_set_outfunc(vd, stp_get_outfunc(vs));
