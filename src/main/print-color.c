@@ -1802,26 +1802,16 @@ cmyk_to_cmyk(const stp_vars_t vars,
   int j;
   int nz[4];
   const unsigned short *scmykin = (const unsigned short *) cmykin;
-  double density = stp_get_density(vars) * 65535.0;
-  double print_gamma = stp_get_gamma(vars);
 
   for (i = 0; i < width; i++)
     {
-      j = *scmykin++;
-      nz[0] |= j;
-      *cmykout++ = density * pow((double)j / 65535.0, print_gamma) + 0.5;
-
-      j = *scmykin++;
-      nz[1] |= j;
-      *cmykout++ = density * pow((double)j / 65535.0, print_gamma) + 0.5;
-
-      j = *scmykin++;
-      nz[2] |= j;
-      *cmykout++ = density * pow((double)j / 65535.0, print_gamma) + 0.5;
-
-      j = *scmykin++;
-      nz[3] |= j;
-      *cmykout++ = density * pow((double)j / 65535.0, print_gamma) + 0.5;
+      for (j = 0; j < 4; j++)
+	{
+	  nz[j] |= scmykin[j];
+	  cmykout[j] = scmykin[j];
+	}
+      scmykin += 4;
+      cmykout += 4;
     }
   if (zero_mask)
     {

@@ -34,10 +34,10 @@ TESTS = testdither run-weavetest
 
 
 ## Programs
-TEST_BIN = testdither escp2-weavetest unprint escp2-unprint pcl-unprint bjc-unprint
+TEST_BIN = testdither escp2-weavetest unprint escp2-unprint pcl-unprint bjc-unprint testpattern
 
 noinst_PROGRAMS = @TEST_BIN@
-EXTRA_PROGRAMS = escp2-weavetest unprint escp2-unprint pcl-unprint bjc-unprint testdither
+EXTRA_PROGRAMS = escp2-weavetest unprint escp2-unprint pcl-unprint bjc-unprint testdither testpattern
 
 escp2_weavetest_SOURCES = escp2-weavetest.c
 
@@ -56,6 +56,10 @@ bjc_unprint_SOURCES = bjc-unprint.c
 testdither_SOURCES = testdither.c
 testdither_LDADD = $(LIBGIMPPRINT_LIBS)
 testdither_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
+
+testpattern_SOURCES = testpattern.c
+testpattern_LDADD = $(LIBGIMPPRINT_LIBS)
+testpattern_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 $(LIBGIMPPRINT_LIBS):
 	$(MAKE) -C ../src/main
