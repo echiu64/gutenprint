@@ -226,28 +226,30 @@ described in the next section.
           reduce microbanding if needed.  While this will work on plain
           paper, it usually offers little improvement over 720 DPI.
 
-2880x720  Highest quality on photo paper.  While this may yield
-          slightly improved quality, it will generally not be markedly
-          superior to 1440x720 Highest Quality, except on the Stylus
-          Color 980 and Stylus C70 and C80, where it may yield a
+2880x720  Highest quality on photo paper on most printers.  While this
+          may yield slightly improved quality, it will generally not
+          be markedly superior to 1440x720 Highest Quality, except on
+          the Stylus Color 980 and Stylus C70 and C80, where it may
+          yield a noticeable improvement.  It takes as long to print
+          as 1440x720 highest quality, but twice as long to generate
+          the output.
+
+1440x1440 An unsupported mode offered on a few printers that offers
+          higher quality than 2880x720 for certain types of images on
+          very high quality paper.  It does not appear to offer any
+          advantage on smooth tones, but fine detail (particularly
+          vertical, and to a lesser extent near-horizontal) it shows
           noticeable improvement.  It takes as long to print as
-          1440x720 highest quality, but twice as long to generate the
-          output.
+          2880x720.  1440x1440 highest quality takes twice as long to
+          print.
 
-1440x1440 An unsupported mode that offers higher quality than 2880x720
-          for certain types of images on very high quality paper.  It
-          does not appear to offer any advantage on smooth tones, but
-          fine detail (particularly vertical, and to a lesser extent
-          near-horizontal) it shows noticeable improvement.  It takes
-          as long to print as 2880x720.  1440x1440 highest quality
-          takes twice as long to print.
+2880x1440 Highest quality on photo paper on the Epson Stylus Photo
+	  950/960/PM-950C (2 picolitre drops) and Epson Stylus Photo
+	  2100/2200 and Stylus Pro 7600 and 9600 (4 picolitre
+	  UltraChrome ink drops).
 
-2880x1440 An unsupported mode that may offer higher quality than
-          2880x720 for certain types of images on very high quality
-          paper.  Experiments conducted thus far demonstrate little if
-          any improvement over 1440x1440.  It takes twice as long to
-          print as 2880x720 or 1440x1440, and as long to print as
-          1440x1440 highest quality.
+2880x2880 Highest quality on glossy photo papers on the Epson PM-930C
+	  and PM-970C (1.8 picolitre drops).
 
 
 The following Quality settings are supported on printers other than
@@ -269,36 +271,22 @@ section.  Please see the notes at the end of this section.
 360x240sw        360 x 240 DPI Draft                      (5)
 
 360dpi           360 DPI                                  (6)
-360uni           360 DPI Unidirectional                   (6)
 360mw            360 DPI Microweave                       (6, *)
-360mwuni         360 DPI Microweave Unidirectional        (6)
 360sw            360 DPI                                  (7, 17, *)
-360swuni         360 DPI Unidirectional                   (7, 17)
-360hq            360 DPI High Quality                     (7, 8, 17)
-360hquni         360 DPI High Quality Unidirectional      (7, 8, 17)
 
 720x360sw        720 x 360 DPI                            (9, 10)
-720x360swuni     720 x 360 DPI Unidirectional             (9, 10)
 
 720mw            720 DPI Microweave                       (11)
-720mwuni         720 DPI Microweave Unidirectional        (11)
 720sw            720 DPI                                  (9)
-720swuni         720 DPI Unidirectional                   (9)
 720hq            720 DPI High Quality                     (9)
-720hquni         720 DPI High Quality Unidirectional      (9)
 720hq2           720 DPI Highest Quality                  (9)
 
-1440x720mw       1440 x 720 DPI Microweave                (12)
-1440x720mwuni    1440 x 720 DPI Microweave Unidirectional (12)
 1440x720sw       1440 x 720 DPI                           (13)
-1440x720swuni    1440 x 720 DPI Unidirectional            (13, 14)
 1440x720hq       1440 x 720 DPI Highest Quality           (13)
 
 2880x720sw       2880 x 720 DPI                           (15)
-2880x720swuni    2880 x 720 DPI Unidirectional            (15)
 
 1440x1440sw      1440 x 1440 DPI                          (16)
-1440x1440hq2     1440 x 1440 DPI Highest Quality          (16)
 
 2880x1440sw      2880 x 1440 DPI                          (16)
 
@@ -401,72 +389,43 @@ printers support the following Quality settings:
 180dpi            180 DPI
 
 360dpi            360 DPI
-360uni            360 DPI Unidirectional
 360mw             360 DPI Microweave
-360mwuni          360 DPI Microweave Unidirectional
 360fol            360 DPI Full Overlap
-360foluni         360 DPI Full Overlap Unidirectional
 360fol2           360 DPI FOL2
-360fol2uni        360 DPI FOL2 Unidirectional
 360mw2            360 DPI MW2
-360mw2uni         360 DPI MW2 Unidirectional
 
 720x360dpi        720 x 360 DPI
-720x360uni        720 x 360 DPI Unidirectional
 720x360fol        720 x 360 DPI FOL
-720x360foluni     720 x 360 DPI FOL Unidirectional
 720x360fol2       720 x 360 DPI FOL2
-720x360fol2uni    720 x 360 DPI FOL2 Unidirectional
 720x360mw2        720 x 360 DPI MW2
-720x360mw2uni     720 x 360 DPI MW2 Unidirectional
 
 720dpi            720 DPI
-720uni            720 DPI Unidirectional
 720mw             720 DPI Microweave
-720mwuni          720 DPI Microweave Unidirectional
 720fol            720 DPI Full Overlap
-720foluni         720 DPI Full Overlap Unidirectional
 720fourp          720 DPI Four Pass
-720fourpuni       720 DPI Four Pass Unidirectional
 
 1440x720dpi       1440 x 720 DPI
-1440x720uni       1440 x 720 DPI Unidirectional
 1440x720mw        1440 x 720 DPI Microweave
-1440x720mwuni     1440 x 720 DPI Microweave Unidirectional
 1440x720fol       1440 x 720 DPI FOL
-1440x720foluni    1440 x 720 DPI FOL Unidirectional
 1440x720fourp     1440 x 720 DPI Four Pass
-1440x720fourpuni  1440 x 720 DPI Four Pass Unidirectional
 
 In addition, the Stylus Pro 7600 and 9600 printers support the
 following Quality settings:
 
 2880x720dpi       2880 x 720 DPI
-2880x720uni       2880 x 720 DPI Unidirectional
 2880x720mw        2880 x 720 DPI Microweave
-2880x720mwuni     2880 x 720 DPI Microweave Unidirectional
 2880x720fol       2880 x 720 DPI FOL
-2880x720foluni    2880 x 720 DPI FOL Unidirectional
 2880x720fourp     2880 x 720 DPI Four Pass
-2880x720fourpuni  2880 x 720 DPI Four Pass Unidirectional
 
 1440x1440dpi      1440 x 1440 DPI
-1440x1440uni      1440 x 1440 DPI Unidirectional
 1440x1440mw       1440 x 1440 DPI Microweave
-1440x1440mwuni    1440 x 1440 DPI Microweave Unidirectional
 1440x1440fol      1440 x 1440 DPI FOL
-1440x1440foluni   1440 x 1440 DPI FOL Unidirectional
 1440x1440fourp    1440 x 1440 DPI Four Pass
-1440x1440fourpuni 1440 x 1440 DPI Four Pass Unidirectional
 
 2880x1440dpi      2880 x 1440 DPI
-2880x1440uni      2880 x 1440 DPI Unidirectional
 2880x1440mw       2880 x 1440 DPI Microweave
-2880x1440mwuni    2880 x 1440 DPI Microweave Unidirectional
 2880x1440fol      2880 x 1440 DPI FOL
-2880x1440foluni   2880 x 1440 DPI FOL Unidirectional
 2880x1440fourp    2880 x 1440 DPI Four Pass
-2880x1440fourpuni 2880 x 1440 DPI Four Pass Unidirectional
 
 
 For PCL printers (including Hewlett-Packard and Lexmark 4076):
