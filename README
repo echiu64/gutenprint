@@ -1,14 +1,22 @@
 INTRODUCTION
 
     This is Gimp-Print version 4.3.5, a development release in the 4.3
-    line.  Gimp-print is the print facility for the Gimp, and in
-    addition a suite of drivers that may be used with common UNIX
-    spooling systems using Ghostscript or CUPS.  These drivers provide
-    printing quality for UNIX/Linux in many cases equal to or better
-    than proprietary vendor-supplied drivers, and can be used for many
-    of the most demanding printing tasks.
+    line.  Gimp-Print is a suite of printer drivers that may be used
+    with most common UNIX print spooling systems, including CUPS, lpr,
+    LPRng, or others.  These drivers provide high quality printing for
+    UNIX (including Macintosh OS X 10.2 and newer) and Linux systems
+    in many cases equal to or better than proprietary vendor-supplied
+    drivers, and can be used for many of the most demanding printing
+    tasks.  A complete list of supported printers may be found in the
+    NEWS file.
 
-    Please read this README, and the NEWS file carefully!
+    Gimp-Print also includes a plug-in for the GIMP image editor.
+    This plug-in is also distributed with the GIMP.
+
+    Please read this README, and the NEWS file carefully!  Many things
+    have changed from previous releases.  The package is quite
+    different in many ways from Gimp-Print 4.0, and you should read
+    these instructions carefully.
 
     A user's manual exists in doc/users_guide; it is normally
     installed in PDF and HTML form in /usr/local/share/gimp-print/doc.
@@ -49,6 +57,13 @@ BASIC INSTALLATION
     make
     make install
 
+    If you do not have the GIMP installed (or if you have only the
+    user package installed, and not the development package that most
+    distributions include separately), the attempt to run configure
+    will fail.  To build other components (such as the IJS or CUPS
+    drivers) without the GIMP being present, you must use the
+    --without-gimp option to configure.
+
     Note: This package requires the use of GNU Make to compile.  On
     systems with both GNU make and another make installed, GNU make
     may be named `gmake' or `gnumake'.  BSD users in particular will
@@ -58,8 +73,8 @@ BASIC INSTALLATION
 THE GIMP
 
     Gimp-Print may be used as a plug-in for the GIMP, providing the
-    ability to print images.  Gimp-print 4.3 requires the GIMP 1.2; it
-    is not currently compatible with the GIMP 1.3.
+    ability to print images.  If you wish to do so, you must use the
+    GIMP 1.2; it is not currently compatible with the GIMP 1.3.
 
     To build and install the Gimp Print plug-in:
 
@@ -356,123 +371,6 @@ IJS
 
     Detailed instructions for building and using the IJS driver is
     described in src/ghost/README.
-
-
-PRINTER-SPECIFIC NOTES:
-
-    * The Epson Stylus C70, C80, and C82 will give better results
-      using Three Color Composite printing on Premium Glossy Photo
-      Paper and Premium Semigloss.  Epson's proprietary drivers do
-      this on these papers.  The black ink is formulated differently
-      from the others, and does not adhere properly to these special
-      papers.
-
-    * The Epson Stylus C70, C80, and C82 appear to support resolutions
-      of 1440x1440 and 2880x1440, but these resolutions may not yield
-      any improvement over 2880x720.  Experiments suggest that
-      1440x1440 yields slightly better results than 2880x720 on Epson
-      Photo Paper, but somewhat inferior results on Premium Glossy
-      Photo Paper.  2880x1440 yields essentially no additional
-      improvement on Photo Paper, and intermediate results on Premium
-      Glossy Photo Paper.
-
-      We expect that 1440x1440 would yield maximum improvement over
-      2880x720 on line art with very fine detail.  It is unlikely that
-      2880x1440 would yield any significant additional improvement.
-
-      Note that these resolutions are not officially supported by Epson,
-      and may not work on all C70, C80, and C82 printers.
-
-    * Many Epson printers (specifically, the Epson Stylus Color 740
-      and all newer printers) will not respond to ASCII text without a
-      special "activation" sequence (specifically, this command takes
-      the printers out of "packet mode").  A brand new printer, or one
-      that has been connected to a Windows system, may or may not work
-      in packet mode.  Therefore, the common suggestion to test a
-      printer port by sending plain text to it may not work for these
-      printers; failure to print in this fashion is not a positive
-      indication that the printer or the connection is malfunctioning.
-      These printers are, however, able to print plain text *after*
-      the activation sequence is sent.
-
-      A suggestion would be to use the escputil command to print a
-      test pattern:
-
-      escputil -n -u -P printer
-
-      or
-
-      escputil -n -u -r /dev/lp0
-
-      The `-u' option will send the activation sequence.  In addition
-      to printing the test pattern (if at least unidirectional
-      communication is set up), this will enable printing plain ASCII
-      text, at least until the printer is powered off (or used under
-      Windows).
-
-      To test bidirectional communication, the command
-
-      escputil -i -u -r /dev/lp0
-
-      is a good choice, as it will print (to the screen) the amount of
-      ink in the printer.
-
-      Note that this activation sequence is both unnecessary and
-      incorrect on older printers.
-
-      The current list of printers for which the activation sequence
-      must be sent is:
-
-      EPSON Stylus C20SX
-      EPSON Stylus C20UX
-      EPSON Stylus C40SX
-      EPSON Stylus C40UX
-      EPSON Stylus C41SX
-      EPSON Stylus C41UX
-      EPSON Stylus C42SX
-      EPSON Stylus C42UX
-      EPSON Stylus C60
-      EPSON Stylus C61
-      EPSON Stylus C62
-      EPSON Stylus C70
-      EPSON Stylus C80
-      EPSON Stylus C82
-      EPSON Stylus Color 440
-      EPSON Stylus Color 460
-      EPSON Stylus Color 480
-      EPSON Stylus Color 580
-      EPSON Stylus Color 640
-      EPSON Stylus Color 660
-      EPSON Stylus Color 670
-      EPSON Stylus Color 680
-      EPSON Stylus Color 740
-      EPSON Stylus Color 760
-      EPSON Stylus Color 777
-      EPSON Stylus Color 860
-      EPSON Stylus Color 880
-      EPSON Stylus Color 83
-      EPSON Stylus Color 900
-      EPSON Stylus Color 980
-      EPSON Stylus Color 1160
-      EPSON Stylus Photo 720
-      EPSON Stylus Photo 750
-      EPSON Stylus Photo 780/785/790
-      EPSON Stylus Photo 810/820
-      EPSON Stylus Photo 830
-      EPSON Stylus Photo 870/875
-      EPSON Stylus Photo 890/895
-      EPSON Stylus Photo 915
-      EPSON Stylus Photo 925
-      EPSON Stylus Photo 950
-      EPSON Stylus Photo 960
-      EPSON Stylus Photo 1200
-      EPSON Stylus Photo 1270
-      EPSON Stylus Photo 1280/1290
-      EPSON Stylus Photo 2000P
-      EPSON Stylus Photo 2100
-      EPSON Stylus Photo 2200
-      EPSON Stylus Scan 2000
-      EPSON Stylus Scan 2500
 
 
 RECOMMENDED SETTINGS
