@@ -76,25 +76,7 @@ stpi_find_standard_dither_array(int x_aspect, int y_aspect)
   answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
   if (answer)
     return answer;
-  answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
-  if (answer)
-    return answer;
-  answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
-  if (answer)
-    return answer;
-  answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
-  if (answer)
-    return answer;
-  answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
-  if (answer)
-    return answer;
-  answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
-  if (answer)
-    return answer;
-  answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
-  if (answer)
-    return answer;
-  answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
+  answer = stpi_xml_get_dither_array(y_aspect, x_aspect);
   if (answer)
     return answer;
   return NULL;
