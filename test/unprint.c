@@ -804,11 +804,11 @@ void parse_escp2(FILE *fp_r)
                     pstate.relative_horizontal_units=
 		    pstate.horizontal_spacing=
                     pstate.absolute_horizontal_units=(buf[4]*256+buf[3])/buf[2];
-		    fprintf(stderr, "Setting page management to 1/%d\n",
+		    fprintf(stderr, "Setting page management units to 1/%d\n",
 			    pstate.page_management_units);
-		    fprintf(stderr, "Setting vertical to 1/%d\n",
+		    fprintf(stderr, "Setting vertical units to 1/%d\n",
 			    pstate.relative_vertical_units);
-		    fprintf(stderr, "Setting horizontal to 1/%d\n",
+		    fprintf(stderr, "Setting horizontal units to 1/%d\n",
 			    pstate.relative_horizontal_units);
                     break;
                 }
@@ -821,12 +821,8 @@ void parse_escp2(FILE *fp_r)
                     case 0x00:
                     case 0x30:pstate.microweave=0;
                         break;
-                    case 0x01:
-                    case 0x31:pstate.microweave=1;
-                         break;
-                    default:fprintf(stderr,"Unknown Microweave mode 0x%X.\n",
-                                    buf[0]);
-
+		    default:pstate.microweave=1;
+                        break;
                   }
                 }
                 break;
@@ -843,6 +839,8 @@ void parse_escp2(FILE *fp_r)
                     } else {
                       pstate.bpp=1;
                     }
+		    fprintf(stderr, "Setting dot size to 0x%x (bits %d)\n",
+			    pstate.dotsize, pstate.bpp);
                   }
                 }
                 break;
@@ -857,7 +855,6 @@ void parse_escp2(FILE *fp_r)
                     pstate.bottom_margin=buf[3]*256+buf[2];
                     break;
                   case 8:
-                    fprintf(stderr,"Warning!  Using undocumented 8 byte page format command.\n");
                     pstate.top_margin=buf[3]<<24|buf[2]<<16|buf[1]<<8|buf[0];
                     pstate.bottom_margin=buf[7]<<24|buf[6]<<16|buf[5]<<8|buf[4];
                     break;
@@ -872,6 +869,12 @@ void parse_escp2(FILE *fp_r)
                   }
                   page=(line_type **)xcalloc(pstate.bottom_margin,
                                   sizeof(line_type *));
+		  fprintf(stderr, "Setting top margin to %d (%.3f)\n",
+			  pstate.top_margin,
+			  (double) pstate.top_margin / pstate.page_management_units);
+		  fprintf(stderr, "Setting bottom margin to %d (%.3f)\n",
+			  pstate.bottom_margin,
+			  (double) pstate.bottom_margin / pstate.page_management_units);
                   /* FIXME: what is cut sheet paper??? */
                 }
                 break;
@@ -929,6 +932,25 @@ void parse_escp2(FILE *fp_r)
 	      case 's':		/* Set print speed */
 		break;
               case 'S': /* set paper dimensions */
+		switch (bufsize) {
+		case 4:
+		  i = (buf[1] << 16) | buf[0];
+		  fprintf(stderr, "Setting paper width to %d (%.3f)\n", i,
+			  (double) i / pstate.page_management_units);
+		  i = (buf[3] << 16) | buf[2];
+		  fprintf(stderr, "Setting paper height to %d (%.3f)\n", i,
+			  (double) i / pstate.page_management_units);
+		  break;
+		case 8:
+		  i=(buf[3]<<24)|(buf[2]<<16)|(buf[1]<<8)|buf[0];
+		  fprintf(stderr, "Setting paper width to %d (%.3f)\n", i,
+			  (double) i / pstate.page_management_units);
+		  fprintf(stderr, "Setting paper height to %d (%.3f)\n", i,
+			  (double) i / pstate.page_management_units);
+		  break;
+		default:
+		  fprintf(stderr, "Invalid set paper dimensions command.\n");
+		}
                 break;
 	      case 'D':
 		if (bufsize != 4)
@@ -941,9 +963,11 @@ void parse_escp2(FILE *fp_r)
 		    pstate.nozzle_separation =
 		      pstate.absolute_vertical_units / (res_base / buf[2]);
 		    pstate.horizontal_spacing = res_base / buf[3];
-		    fprintf(stderr, "Setting vertical spacing to %d\n",
+		    fprintf(stderr, "Setting nozzle separation to %d\n",
 			    pstate.nozzle_separation);
-		    fprintf(stderr, "Setting horizontal spacing to %d\n",
+		    fprintf(stderr, "Setting vertical spacing to 1/%d\n",
+			    res_base / buf[2]);
+		    fprintf(stderr, "Setting horizontal spacing to 1/%d\n",
 			    pstate.horizontal_spacing);
 		  }
 		break;
@@ -975,6 +999,20 @@ void parse_escp2(FILE *fp_r)
                                      pstate.absolute_horizontal_units);
                 break;
               case 'C': /* set page height */
+		switch (bufsize) {
+		case 2:
+		  i = (buf[1] << 16) | buf[0];
+		  fprintf(stderr, "Setting page height to %d (%.3f)\n", i,
+			  (double) i / pstate.page_management_units);
+		  break;
+		case 4:
+		  i=(buf[3]<<24)|(buf[2]<<16)|(buf[1]<<8)|buf[0];
+		  fprintf(stderr, "Setting page height to %d (%.3f)\n", i,
+			  (double) i / pstate.page_management_units);
+		  break;
+		default:
+		  fprintf(stderr, "Invalid set page height command.\n");
+		}
                 break;
               default:
                 fprintf(stderr,"Warning: Unknown command ESC ( 0x%X at 0x%08X.\n",ch,counter-5-bufsize);
