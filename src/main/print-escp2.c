@@ -1669,6 +1669,7 @@ setup_inks(stp_vars_t v)
   int i, j;
   const escp2_dropsize_t *drops;
   const escp2_inkname_t *ink_type = pd->inkname;
+  const paper_adjustment_t *paper = pd->paper_adjustment;
 
   drops = escp2_dropsizes(v, pd->ink_resid);
   stpi_init_debug_messages(v);
@@ -1696,6 +1697,9 @@ setup_inks(stp_vars_t v)
 	      double scale = userval * get_double_param(v, subparam);
 	      scale *= get_double_param(v, "Density");
 	      stpi_channel_set_density_adjustment(v, i, j, scale);
+	      if (paper)
+		stpi_channel_set_cutoff_adjustment(v, i, j,
+						   paper->subchannel_cutoff);
 	    }
 	}
     }

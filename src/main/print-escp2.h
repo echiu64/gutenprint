@@ -80,6 +80,7 @@ typedef struct
 {
   const char *name;
   float base_density;
+  float subchannel_cutoff;
   float k_transition;
   float k_lower;
   float k_upper;

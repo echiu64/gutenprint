@@ -204,7 +204,7 @@ static const escp2_densities_t g1_densities =
 { 2.6, 1.3,  1.3,  0.568, 0.0,   0.0,   0.0,   0.0 };
 
 static const escp2_densities_t g3_densities =
-{ 2.6, 1.3,  1.3,  0.775, 0.388, 0.194, 0.097, 0.049 };
+{ 2.6, 1.3,  0.65,  0.775, 0.388, 0.194, 0.097, 0.049 };
 
 static const escp2_densities_t c6pl_densities =
 { 4.0, 2.0,  1.0,  0.568, 0.568, 0.568, 0.284, 0.142 };
