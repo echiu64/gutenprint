@@ -305,8 +305,8 @@ Supported Printers:
 
 Many variations on these printers are also supported.  Generally, the
 Epson printers are fully supported, although not fully tuned in all
-cases; the Canon, Compaq, HP, and Lexmark printers vary.  Many
-printers previously supported have greatly improved support.
+cases; the Canon, HP, and Lexmark printers vary.  Many printers
+previously supported have greatly improved support.
 
 PostScript level 1
 PostScript level 2
@@ -332,7 +332,6 @@ CANON S400                              (NEW)
 CANON S450                              (NEW)
 CANON S800                              (NEW)
 CANON S4500                             (NEW)
-COMPAQ IJ750                            (NEW)
 EPSON Stylus C20SX                      (NEW)
 EPSON Stylus C20UX                      (NEW)
 EPSON Stylus C40SX                      (NEW)
@@ -428,9 +427,7 @@ HP LaserJet 4V, 4Si
 HP LaserJet 5 series
 HP LaserJet 5Si
 HP LaserJet 6 series
-Lexmark 3200                            (NEW, partially functional)
 Lexmark 4076
-Lexmark Z31                             (NEW, partially functional)
 Lexmark Z42                             (NEW)
 Lexmark Z43                             (NEW)
 Lexmark Z52                             (NEW)

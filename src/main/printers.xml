@@ -211,16 +211,6 @@
 <language value=canon>
 </printer>
 
-<printer name="COMPAQ IJ750" driver="compaq-ij750">
-<color>
-<model value=3200>
-<gamma value=0.5>
-<density value=2.0>
-<magenta value=0.95>
-<yellow value=1.0>
-<language value=lexmark>
-</printer>
-
 <printer name="EPSON Stylus C20SX" driver="escp2-c20sx">
 <color>
 <model value=42>
@@ -1065,32 +1055,12 @@
 <language value=pcl>
 </printer>
 
-<printer name="LEXMARK 3200" driver="lexmark-3200">
-<color>
-<model value=3200>
-<gamma value=0.5>
-<density value=2.0>
-<magenta value=0.95>
-<yellow value=1.0>
-<language value=lexmark>
-</printer>
-
 <printer name="LEXMARK 4076" driver="lexmark-4076">
 <nocolor>
 <model value=500>
 <gamma value=0.818>
 <density value=0.786>
 <language value=pcl>
-</printer>
-
-<printer name="LEXMARK Z31" driver="lexmark-z31">
-<color>
-<model value=3200>
-<gamma value=0.5>
-<density value=2.0>
-<magenta value=0.95>
-<yellow value=1.0>
-<language value=lexmark>
 </printer>
 
 <printer name="LEXMARK Z42" driver="lexmark-z42">

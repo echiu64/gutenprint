@@ -22,7 +22,6 @@
 #gptofoo bjc-s450 printer/479986
 #gptofoo bjc-s800 printer/Canon-S800
 #gptofoo bjc-s4500 printer/602386
-#gptofoo compaq-ij750 printer/132864
 #gptofoo escp2-c20sx printer/Epson-Stylus_C20SX
 #gptofoo escp2-c20ux printer/Epson-Stylus_C20UX
 #gptofoo escp2-c40sx printer/Epson-Stylus_C40SX
@@ -289,9 +288,7 @@
 #gptofoo pcl-6 printer/HP-LaserJet_4100
 #gptofoo pcl-6 printer/HP-LaserJet_8150
 #gptofoo pcl-6 printer/HP-LaserJet_9000
-#gptofoo lexmark-3200 printer/70912
 #gptofoo lexmark-4076 printer/Lexmark-4076
-#gptofoo lexmark-z31 printer/618706
 #gptofoo lexmark-z42 printer/593266
 #gptofoo lexmark-z43 printer/Lexmark-Z43
 #gptofoo lexmark-z52 printer/328553
