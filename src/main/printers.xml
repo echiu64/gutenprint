@@ -721,6 +721,14 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Pro 7600" driver="escp2-7600">
+<color>
+<model value=48>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Pro 9000" driver="escp2-9000">
 <color>
 <model value=30>
@@ -733,6 +741,14 @@
 <color>
 <model value=31>
 <cyan value=0.8>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Pro 9600" driver="escp2-9600">
+<color>
+<model value=49>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>
