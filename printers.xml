@@ -196,6 +196,14 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Color 680" driver="escp2-680">
+<color>
+<model value=32>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Color 740" driver="escp2-740">
 <color>
 <model value=12>
@@ -207,6 +215,14 @@
 <printer name="EPSON Stylus Color 760" driver="escp2-760">
 <color>
 <model value=19>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Color 777" driver="escp2-777">
+<color>
+<model value=32>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>
