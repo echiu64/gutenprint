@@ -4,6 +4,7 @@
  * useful?
  *
  * Copyright 2000 Eric Sharkey <sharkey@superk.physics.sunysb.edu>
+ *                Andy Thaller <thaller@ph.tum.de>
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -60,7 +61,7 @@ typedef struct {
  * time.  2 bits per color of KCMYcm is half the size of 8 bits per color
  * of RBG.
  */
-#define MAX_INKS 6
+#define MAX_INKS 7
 typedef struct {
    unsigned char *line[MAX_INKS];
    int startx[MAX_INKS];
@@ -89,6 +90,7 @@ line_type **page=NULL;
    Yellow   4       4        3
    L.Mag.   17      257      4
    L.Cyan   18      258      5
+   L.Yellow NA      NA       6
  */
 
 /* convert either Epson1 or Epson2 color encoding into a sequential encoding */
@@ -183,6 +185,7 @@ void mix_ink(ppmpixel p, int c, unsigned int a) {
       case 3: ink[0]=ink[1]=1; ink[2]=0;break; /* yellow */
       case 4: ink[0]=1; ink[1]=0.5; ink[2]=1;break; /* lmagenta */
       case 5: ink[0]=0.5; ink[1]=ink[2]=1;break; /* lcyan */
+      case 6: ink[0]=ink[1]=1; ink[2]=0.5;break; /* lyellow */
       default:fprintf(stderr,"unknown ink %d\n",c);return;
     }
     for (i=0;i<3;i++) {
@@ -924,16 +927,16 @@ void parse_canon(FILE *fp_r){
 	 break;
        case 'm': currentcolor= 4;
 	 break;
-       case 'y': currentcolor= 3; /* FIXME: change this to 6? */
+       case 'y': currentcolor= 6;
 	 break;
        default:
 	 fprintf(stderr,"Error: unsupported color type 0x%02x.\n",*buf);
 	 /* exit(-1); */
        }
        pstate.current_color= currentcolor;
-       m= rle_decode(buf+1,sh-1,256*256-1);
+       m= rle_decode(buf+1,bufsize-1,256*256-1);
        /* reverse_bit_order(buf+1,m); */
-       if (m) update_page(buf+1,m,1,m*8,currentcolor,
+       if (m) update_page(buf+1,m,1,(m*8)/pstate.bpp,currentcolor,
 			  /*currentbpp,*/pstate.absolute_vertical_units);
 #ifdef DEBUG_CANON
        fprintf(stderr,"%c:%d>%d  ",*buf,sh-1,m); 
@@ -1009,7 +1012,6 @@ int main(int argc,char *argv[]){
 
     unweave=0;
     pstate.nozzle_separation=6;
-    pstate.extraskip=2;
     fp_r = fp_w = NULL;
     for (arg=1;arg<argc;arg++) {
       if (argv[arg][0]=='-') {
@@ -1062,10 +1064,13 @@ int main(int argc,char *argv[]){
     pstate.nozzles=96;
 
     UNPRINT= getenv("UNPRINT");
-    if (!strcmp(UNPRINT,"canon"))
+    if (!strcmp(UNPRINT,"canon")) {
+      pstate.extraskip=1;
       parse_canon(fp_r);
-    else
+    } else {
+      pstate.extraskip=2;
       parse_escp2(fp_r);
+    }
     fprintf(stderr,"Done reading.\n");
     write_output(fp_w);
     fclose(fp_w);
