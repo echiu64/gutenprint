@@ -429,7 +429,6 @@ run(char   *name,		/* I - Name of print program. */
   GDrawable	*drawable;	/* Drawable for image */
   GRunModeType	run_mode;	/* Current run mode */
   FILE		*prn;		/* Print file/command */
-  lut_t		lut;		/* 16-bit lookup table for brightness */
   guchar	*cmap;		/* Colormap (indexed images only) */
   int		ncolors;	/* Number of colors in colormap */
   GParam	*values;	/* Return values */
@@ -660,7 +659,7 @@ run(char   *name,		/* I - Name of print program. */
 	Gimp_Image_t image;
 	image.drawable = drawable;
 	vars.density *= current_printer->density;
-	compute_lut(&lut, current_printer->gamma, gimp_gamma(), &vars);
+	compute_lut(current_printer->gamma, gimp_gamma(), &vars);
 	/*
 	 * Is the image an Indexed type?  If so we need the colormap...
 	 */
@@ -678,7 +677,8 @@ run(char   *name,		/* I - Name of print program. */
 	 * close the output file/command...
 	 */
 
-	(*current_printer->print)(current_printer->model, 1, prn, &image, cmap, &lut, &vars);
+	(*current_printer->print)(current_printer->model, 1, prn, &image, cmap,
+				  &vars);
 
 	if (plist_current > 0)
 #ifndef __EMX__

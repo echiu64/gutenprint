@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.70  2000/02/09 02:56:27  rlk
+ *   Put lut inside vars
+ *
  *   Revision 1.69  2000/02/08 12:09:23  davehill
  *   Deskjet 600C is CMY, the rest of the 6xxC series are CMYK.
  *
@@ -521,7 +524,6 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 	     unsigned short *grayout,	/* O - RGB pixels */
 	     int    	width,		/* I - Width of row */
 	     int    	bpp,		/* I - Bytes-per-pixel in grayin */
-	     lut_t  	*lut,		/* I - Brightness lookup table */
 	     unsigned char *cmap,	/* I - Colormap (unused) */
 	     vars_t	*vars
 	     )
@@ -534,7 +536,7 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 
     while (width > 0)
     {
-      *grayout = lut->composite[*grayin];
+      *grayout = vars->lut.composite[*grayin];
 
       grayin ++;
       grayout ++;
@@ -549,7 +551,7 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 
     while (width > 0)
     {
-      *grayout = lut->composite[grayin[0] * grayin[1] / 255] + 255 - grayin[1];
+      *grayout = vars->lut.composite[grayin[0] * grayin[1] / 255] + 255 - grayin[1];
 
       grayin += bpp;
       grayout ++;
@@ -568,7 +570,6 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 		  unsigned short *gray,		/* O - Grayscale pixels */
 		  int    width,			/* I - Width of row */
 		  int    bpp,			/* I - bpp in indexed */
-		  lut_t  *lut,			/* I - Brightness LUT */
 		  unsigned char *cmap,		/* I - Colormap */
 		  vars_t   *vars		/* I - Saturation */
 		  )
@@ -590,7 +591,7 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 
     while (width > 0)
     {
-      *gray = lut->composite[gray_cmap[*indexed]];
+      *gray = vars->lut.composite[gray_cmap[*indexed]];
       indexed ++;
       gray ++;
       width --;
@@ -604,7 +605,7 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 
     while (width > 0)
     {
-      *gray = lut->composite[gray_cmap[indexed[0] * indexed[1] / 255] +
+      *gray = vars->lut.composite[gray_cmap[indexed[0] * indexed[1] / 255] +
 			    255 - indexed[1]];
       indexed += bpp;
       gray ++;
@@ -619,7 +620,6 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 		 unsigned short *rgb,	/* O - RGB pixels */
 		 int    width,		/* I - Width of row */
 		 int    bpp,		/* I - Bytes-per-pixel in indexed */
-		 lut_t  *lut,		/* I - Brightness lookup table */
 		 unsigned char *cmap,	/* I - Colormap */
 		 vars_t   *vars	/* I - Saturation */
 		 )
@@ -633,9 +633,9 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
     while (width > 0)
     {
       double h, s, v;
-      rgb[0] = lut->red[cmap[*indexed * 3 + 0]];
-      rgb[1] = lut->green[cmap[*indexed * 3 + 1]];
-      rgb[2] = lut->blue[cmap[*indexed * 3 + 2]];
+      rgb[0] = vars->lut.red[cmap[*indexed * 3 + 0]];
+      rgb[1] = vars->lut.green[cmap[*indexed * 3 + 1]];
+      rgb[2] = vars->lut.blue[cmap[*indexed * 3 + 2]];
       if (vars->saturation != 1.0)
 	{
 	  calc_rgb_to_hsv(rgb, &h, &s, &v);
@@ -656,11 +656,11 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
     while (width > 0)
     {
       double h, s, v;
-      rgb[0] = lut->red[cmap[indexed[0] * 3 + 0] * indexed[1] / 255 +
+      rgb[0] = vars->lut.red[cmap[indexed[0] * 3 + 0] * indexed[1] / 255 +
 		       255 - indexed[1]];
-      rgb[1] = lut->green[cmap[indexed[0] * 3 + 1] * indexed[1] / 255 +
+      rgb[1] = vars->lut.green[cmap[indexed[0] * 3 + 1] * indexed[1] / 255 +
 			 255 - indexed[1]];
-      rgb[2] = lut->blue[cmap[indexed[0] * 3 + 2] * indexed[1] / 255 +
+      rgb[2] = vars->lut.blue[cmap[indexed[0] * 3 + 2] * indexed[1] / 255 +
 			255 - indexed[1]];
       if (vars->saturation != 1.0)
 	{
@@ -686,7 +686,6 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	      unsigned short *gray,	/* O - Grayscale pixels */
 	      int    width,		/* I - Width of row */
 	      int    bpp,		/* I - Bytes-per-pixel in RGB */
-	      lut_t  *lut,		/* I - Brightness lookup table */
 	      unsigned char *cmap,	/* I - Colormap (unused) */
 	      vars_t   *vars		/* I - Saturation */
 	      )
@@ -699,7 +698,7 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 
     while (width > 0)
     {
-      *gray = lut->composite[(rgb[0] * LUM_RED +
+      *gray = vars->lut.composite[(rgb[0] * LUM_RED +
 			      rgb[1] * LUM_GREEN +
 			      rgb[2] * LUM_BLUE) / 100];
       gray ++;
@@ -715,7 +714,7 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 
     while (width > 0)
     {
-      *gray = lut->composite[((rgb[0] * LUM_RED +
+      *gray = vars->lut.composite[((rgb[0] * LUM_RED +
 			       rgb[1] * LUM_GREEN +
 			       rgb[2] * LUM_BLUE) *
 			      rgb[3] / 25500 + 255 - rgb[3])];
@@ -735,7 +734,6 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	   unsigned short 	*rgbout,	/* O - RGB pixels */
 	   int    		width,		/* I - Width of row */
 	   int    		bpp,		/* I - Bytes/pix in indexed */
-	   lut_t 		*lut,		/* I - Brightness LUT */
 	   unsigned char 	*cmap,		/* I - Colormap */
 	   vars_t  		*vars		/* I - Saturation */
 	   )
@@ -749,9 +747,9 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
     while (width > 0)
     {
       double h, s, v;
-      rgbout[0] = lut->red[rgbin[0]];
-      rgbout[1] = lut->green[rgbin[1]];
-      rgbout[2] = lut->blue[rgbin[2]];
+      rgbout[0] = vars->lut.red[rgbin[0]];
+      rgbout[1] = vars->lut.green[rgbin[1]];
+      rgbout[2] = vars->lut.blue[rgbin[2]];
       if (vars->saturation != 1.0 || vars->contrast != 100)
 	{
 	  calc_rgb_to_hsv(rgbout, &h, &s, &v);
@@ -797,9 +795,9 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
     while (width > 0)
     {
       double h, s, v;
-      rgbout[0] = lut->red[rgbin[0] * rgbin[3] / 255 + 255 - rgbin[3]];
-      rgbout[1] = lut->green[rgbin[1] * rgbin[3] / 255 + 255 - rgbin[3]];
-      rgbout[2] = lut->blue[rgbin[2] * rgbin[3] / 255 + 255 - rgbin[3]];
+      rgbout[0] = vars->lut.red[rgbin[0] * rgbin[3] / 255 + 255 - rgbin[3]];
+      rgbout[1] = vars->lut.green[rgbin[1] * rgbin[3] / 255 + 255 - rgbin[3]];
+      rgbout[2] = vars->lut.blue[rgbin[2] * rgbin[3] / 255 + 255 - rgbin[3]];
       if (vars->saturation != 1.0 || vars->contrast != 100 ||
 	  vars->density != 1.0)
 	{
@@ -842,8 +840,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 /* #define PRINT_LUT */
 
 void
-compute_lut(lut_t *lut,
-	    float print_gamma,
+compute_lut(float print_gamma,
 	    float app_gamma,
 	    vars_t *v)
 {
@@ -909,10 +906,10 @@ compute_lut(lut_t *lut,
 	  adjusted_pixel *= 65535.0;
 
 	  red_pixel = green_pixel = blue_pixel = adjusted_pixel;
-	  lut->composite[i] = adjusted_pixel;
-	  lut->red[i] = adjusted_pixel;
-	  lut->green[i] = adjusted_pixel;
-	  lut->blue[i] = adjusted_pixel;
+	  v->lut.composite[i] = adjusted_pixel;
+	  v->lut.red[i] = adjusted_pixel;
+	  v->lut.green[i] = adjusted_pixel;
+	  v->lut.blue[i] = adjusted_pixel;
 	}
       else
 	{
@@ -964,38 +961,39 @@ compute_lut(lut_t *lut,
 				pow(blue_pixel, print_gamma));
 
 	  if (pixel <= 0.0)
-	    lut->composite[i] = 0;
+	    v->lut.composite[i] = 0;
 	  else if (pixel >= 65535.0)
-	    lut->composite[i] = 65535;
+	    v->lut.composite[i] = 65535;
 	  else
-	    lut->composite[i] = (unsigned)(pixel);
+	    v->lut.composite[i] = (unsigned)(pixel);
 
 	  if (red_pixel <= 0.0)
-	    lut->red[i] = 0;
+	    v->lut.red[i] = 0;
 	  else if (red_pixel >= 65535.0)
-	    lut->red[i] = 65535;
+	    v->lut.red[i] = 65535;
 	  else
-	    lut->red[i] = (unsigned)(red_pixel);
+	    v->lut.red[i] = (unsigned)(red_pixel);
 
 	  if (green_pixel <= 0.0)
-	    lut->green[i] = 0;
+	    v->lut.green[i] = 0;
 	  else if (green_pixel >= 65535.0)
-	    lut->green[i] = 65535;
+	    v->lut.green[i] = 65535;
 	  else
-	    lut->green[i] = (unsigned)(green_pixel);
+	    v->lut.green[i] = (unsigned)(green_pixel);
 
 	  if (blue_pixel <= 0.0)
-	    lut->blue[i] = 0;
+	    v->lut.blue[i] = 0;
 	  else if (blue_pixel >= 65535.0)
-	    lut->blue[i] = 65535;
+	    v->lut.blue[i] = 65535;
 	  else
-	    lut->blue[i] = (unsigned)(blue_pixel);
+	    v->lut.blue[i] = (unsigned)(blue_pixel);
 	}
 #ifdef PRINT_LUT
       fprintf(ltfile, "%3i  %5d  %5d  %5d  %5d  %f %f %f %f  %f %f %f  %f\n",
-	      i, lut->composite[i], lut->red[i], lut->green[i],
-	      lut->blue[i], pixel, red_pixel, green_pixel, blue_pixel,
-	      print_gamma, screen_gamma, print_gamma, app_gamma);
+	      i, v->lut.composite[i], v->lut.red[i],
+	      v->lut.green[i], v->lut.blue[i], pixel, red_pixel,
+	      green_pixel, blue_pixel, print_gamma, screen_gamma,
+	      print_gamma, app_gamma);
 #endif
     }
 

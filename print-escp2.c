@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.66  2000/02/09 02:56:27  rlk
+ *   Put lut inside vars
+ *
  *   Revision 1.65  2000/02/08 13:00:07  rlk
  *   Correct dot size for variable bits
  *
@@ -960,7 +963,6 @@ escp2_print(int       model,		/* I - Model */
             FILE      *prn,		/* I - File to print to */
 	    Image     image,		/* I - Image to print */
             unsigned char    *cmap,	/* I - Colormap (for indexed images) */
-	    lut_t     *lut,		/* I - Brightness lookup table */
 	    vars_t    *v)
 {
   char 		*ppd_file = v->ppd_file;
@@ -1286,7 +1288,7 @@ escp2_print(int       model,		/* I - Model */
 	Image_get_col(image, in, errline);
       }
 
-      (*colorfunc)(in, out, image_height, image_bpp, lut, cmap, v);
+      (*colorfunc)(in, out, image_height, image_bpp, cmap, v);
 
       if (bits == 1)
 	{
@@ -1348,7 +1350,7 @@ escp2_print(int       model,		/* I - Model */
 	Image_get_row(image, in, errline);
       }
 
-      (*colorfunc)(in, out, image_width, image_bpp, lut, cmap, v);
+      (*colorfunc)(in, out, image_width, image_bpp, cmap, v);
 
       if (bits == 1)
 	{

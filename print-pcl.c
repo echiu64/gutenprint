@@ -32,6 +32,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.24  2000/02/09 02:56:27  rlk
+ *   Put lut inside vars
+ *
  *   Revision 1.23  2000/02/08 12:09:22  davehill
  *   Deskjet 600C is CMY, the rest of the 6xxC series are CMYK.
  *
@@ -377,7 +380,6 @@ pcl_print(int       model,		/* I - Model */
           FILE      *prn,		/* I - File to print to */
           Image     image,		/* I - Image to print */
 	  unsigned char    *cmap,	/* I - Colormap (for indexed images) */
-	  lut_t     *lut,		/* I - Brightness lookup table */
 	  vars_t    *v)
 {
   char 		*ppd_file = v->ppd_file;
@@ -842,7 +844,7 @@ pcl_print(int       model,		/* I - Model */
 	Image_get_col(image, in, errline);
       }
 
-      (*colorfunc)(in, out, image_height, image_bpp, lut, cmap, v);
+      (*colorfunc)(in, out, image_height, image_bpp, cmap, v);
 
       if (xdpi == 300 && model == 800)
       {
@@ -931,7 +933,7 @@ pcl_print(int       model,		/* I - Model */
 	Image_get_row(image, in, errline);
       }
 
-      (*colorfunc)(in, out, image_width, image_bpp, lut, cmap, v);
+      (*colorfunc)(in, out, image_width, image_bpp, cmap, v);
 
       if (xdpi == 300 && model == 800)
       {

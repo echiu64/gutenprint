@@ -110,6 +110,7 @@ typedef struct					/* Plug-in variables */
   int	linear;			/* Linear density (mostly for testing!) */
   float	saturation;		/* Output saturation */
   float	density;		/* Maximum output density */
+  lut_t lut;			/* Look-up table */
 } vars_t;
 
 typedef struct		/**** Printer List ****/
@@ -159,12 +160,11 @@ typedef struct
                           int *left, int *right, int *bottom, int *top);
   /* Print function */
   void	(*print)(int model, int copies, FILE *prn, Image image,
-		 unsigned char *cmap, lut_t *lut, vars_t *v);
+		 unsigned char *cmap, vars_t *v);
 } printer_t;
 
 typedef void 	(*convert_t)(unsigned char *in, unsigned short *out, int width,
-			     int bpp, lut_t *lut, unsigned char *cmap,
-			     vars_t *vars);
+			     int bpp, unsigned char *cmap, vars_t *vars);
 
 /*
  * Prototypes...
@@ -203,18 +203,17 @@ extern void	dither_cmyk4(unsigned short *, int, void *, unsigned char *,
 			     unsigned char *, unsigned char *);
 
 extern void	gray_to_gray(unsigned char *, unsigned short *, int, int,
-			     lut_t *, unsigned char *, vars_t *);
+			     unsigned char *, vars_t *);
 extern void	indexed_to_gray(unsigned char *, unsigned short *, int, int,
-				lut_t *, unsigned char *, vars_t *);
+				unsigned char *, vars_t *);
 extern void	indexed_to_rgb(unsigned char *, unsigned short *, int, int,
-			       lut_t *, unsigned char *, vars_t *);
+			       unsigned char *, vars_t *);
 extern void	rgb_to_gray(unsigned char *, unsigned short *, int, int,
-			    lut_t *, unsigned char *, vars_t *);
+			    unsigned char *, vars_t *);
 extern void	rgb_to_rgb(unsigned char *, unsigned short *, int, int,
-			   lut_t *, unsigned char *, vars_t *);
+			   unsigned char *, vars_t *);
 
-extern void	compute_lut(lut_t *lut, float print_gamma,
-			    float app_gamma, vars_t *v);
+extern void	compute_lut(float print_gamma, float app_gamma, vars_t *v);
 
 
 extern void	default_media_size(int model, char *ppd_file, char *media_size,
@@ -227,8 +226,7 @@ extern void	canon_imageable_area(int model, char *ppd_file,
 				     char *media_size, int *left, int *right,
 				     int *bottom, int *top);
 extern void	canon_print(int model, int copies, FILE *prn,
-			    Image image, unsigned char *cmap,
-			    lut_t *lut, vars_t *v);
+			    Image image, unsigned char *cmap, vars_t *v);
 
 
 extern char	**escp2_parameters(int model, char *ppd_file, char *name,
@@ -237,8 +235,7 @@ extern void	escp2_imageable_area(int model, char *ppd_file,
 				     char *media_size, int *left, int *right,
 				     int *bottom, int *top);
 extern void	escp2_print(int model, int copies, FILE *prn,
-			    Image image, unsigned char *cmap,
-			    lut_t *lut, vars_t *v);
+			    Image image, unsigned char *cmap, vars_t *v);
 
 
 extern char	**pcl_parameters(int model, char *ppd_file, char *name,
@@ -247,8 +244,7 @@ extern void	pcl_imageable_area(int model, char *ppd_file, char *media_size,
 		                   int *left, int *right, int *bottom,
 				   int *top);
 extern void	pcl_print(int model, int copies, FILE *prn,
-			  Image image, unsigned char *cmap,
-			  lut_t *lut, vars_t *v);
+			  Image image, unsigned char *cmap, vars_t *v);
 
 
 extern char	**ps_parameters(int model, char *ppd_file, char *name,
@@ -259,8 +255,7 @@ extern void	ps_imageable_area(int model, char *ppd_file, char *media_size,
 		                  int *left, int *right, int *bottom,
 				  int *top);
 extern void	ps_print(int model, int copies, FILE *prn,
-			 Image image, unsigned char *cmap,
-			 lut_t *lut, vars_t *v);
+			 Image image, unsigned char *cmap, vars_t *v);
 
 int		      known_papersizes(void);
 const papersize_t    *get_papersizes(void);

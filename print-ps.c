@@ -33,6 +33,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.15  2000/02/09 02:56:27  rlk
+ *   Put lut inside vars
+ *
  *   Revision 1.14  2000/02/06 22:31:04  rlk
  *   1) Use old methods only for microweave printing.
  *
@@ -476,7 +479,6 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
          FILE      *prn,		/* I - File to print to */
          Image     image,		/* I - Image to print */
 	 unsigned char    *cmap,	/* I - Colormap (for indexed images) */
-	 lut_t     *lut,		/* I - Brightness lookup table */
 	 vars_t    *v)
 {
   char 		*ppd_file = v->ppd_file;
@@ -831,7 +833,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
 	Image_note_progress(image, y, image_height);
 
       Image_get_row(image, in, y);
-      (*colorfunc)(in, out, image_width, image_bpp, lut, cmap, v);
+      (*colorfunc)(in, out, image_width, image_bpp, cmap, v);
 
       ps_hex(prn, out, image_width * out_bpp);
     }
@@ -874,7 +876,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
 	Image_note_progress(image, y, image_height);
 
       Image_get_row(image, in, y);
-      (*colorfunc)(in, out + out_offset, image_width, image_bpp, lut, cmap, v);
+      (*colorfunc)(in, out + out_offset, image_width, image_bpp, cmap, v);
 
       out_length = out_offset + image_width * out_bpp;
 

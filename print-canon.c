@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.19  2000/02/09 02:56:27  rlk
+ *   Put lut inside vars
+ *
  *   Revision 1.18  2000/02/08 20:25:17  gandy
  *   Small fix that makes variable drop sizes work (in B/W)
  *
@@ -717,7 +720,6 @@ canon_print(int       model,		/* I - Model */
             FILE      *prn,		/* I - File to print to */
 	    Image     image,		/* I - Image to print */
             unsigned char    *cmap,	/* I - Colormap (for indexed images) */
-	    lut_t     *lut,		/* I - Brightness lookup table */
 	    vars_t    *v)
 {
   char 		*ppd_file = v->ppd_file;
@@ -1091,7 +1093,7 @@ canon_print(int       model,		/* I - Model */
 	Image_get_col(image, in, errline);
       }
 
-      (*colorfunc)(in, out, image_height, image_bpp, lut, cmap, v);
+      (*colorfunc)(in, out, image_height, image_bpp, cmap, v);
       
       if (output_type == OUTPUT_GRAY && use_dmt)
 	dither_black4(out, x, dither, black);
@@ -1159,7 +1161,7 @@ canon_print(int       model,		/* I - Model */
 	Image_get_row(image, in, errline);
       }
 
-      (*colorfunc)(in, out, image_width, image_bpp, lut, cmap, v);
+      (*colorfunc)(in, out, image_width, image_bpp, cmap, v);
 
       if (output_type == OUTPUT_GRAY && use_dmt)
 	dither_black4(out, y, dither, black);
