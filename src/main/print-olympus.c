@@ -49,19 +49,50 @@ typedef struct
   const char *name;
 } ink_t;
 
-typedef struct olympus_printer /* printer specific parameters */
+typedef struct {
+  const char *name;
+  const char *text;
+  int xdpi;
+  int ydpi;
+  int x_max_res;	/* maximum width in pixels */
+  int y_max_res;	/* maximum height in pixels */
+} olympus_res_t;
+
+#define OLYMPUS_RES_COUNT	5
+typedef olympus_res_t olympus_res_t_array[OLYMPUS_RES_COUNT];
+
+typedef struct /* printer specific parameters */
 {
-  int model;		/* printer model */
-  const char *papersize;
-  int border_left;	/* unit 1/72"  */
+  int model;		/* printer model number from printers.xml*/
+  int max_paper_width;  /* maximum printable paper size in 1/72 inch */
+  int max_paper_height;
+  int min_paper_width;	/* minimum printable paper size in 1/72 inch */
+  int min_paper_height;
+  int border_left;	/* unprintable borders - unit 1/72"  */
   int border_right;
   int border_top;
   int border_bottom;
-} olympus_printer_t;
+  const olympus_res_t_array *res;	/* list of possible resolutions */
+  int need_empty_cols;	/* must we print empty columns? */
+  int need_empty_rows;	/* must we print empty rows? */
+} olympus_cap_t;
 
-static const olympus_printer_t olympus_model_capabilities[] =
+static const olympus_res_t_array resolution_p300 = 
 {
-	{ 0, "A6", 28, 28, 49, 48},	/* model P300 */
+	{ "306x306", N_ ("306x306 DPI"), 306, 306, 1024, 1376 },
+	{ "153x153", N_ ("153x153 DPI"), 153, 153, 512, 688 },
+	{ "", "", 0, 0, 0, 0 }
+};
+
+static const olympus_cap_t olympus_model_capabilities[] =
+{
+	{ 0, 		/* model P300 */
+		297, 432,	/* "A6", "4x6" */
+		288, 420,	
+		28, 28, 49, 48,
+		&resolution_p300,
+		1, 0,
+	},
 };
 
 static const ink_t inks[] =
@@ -172,6 +203,38 @@ static const float_param_t float_parameters[] =
 static const int float_parameter_count =
 sizeof(float_parameters) / sizeof(const float_param_t);
 
+static const olympus_cap_t* olympus_get_model_capabilities(int model)
+{
+  int i;
+  int models = sizeof(olympus_model_capabilities) / sizeof(olympus_cap_t);
+
+  for (i=0; i<models; i++) {
+    if (olympus_model_capabilities[i].model == model) {
+      return &(olympus_model_capabilities[i]);
+    }
+  }
+  stpi_deprintf(STPI_DBG_OLYMPUS,
+  	"olympus: model %d not found in capabilities list.\n", model);
+  return &(olympus_model_capabilities[0]);
+}
+
+static const olympus_res_t*
+olympus_get_res_params(int model, const char *resolution)
+{
+  const olympus_cap_t *caps = olympus_get_model_capabilities(model);
+  const olympus_res_t *res  = *(caps->res);
+
+  if (resolution) {
+    while (res->xdpi) {
+      if (strcmp(resolution, res->name) == 0) {
+	return res;
+      }
+      res++;
+    }
+  }
+  stpi_erprintf("olympus_get_res_params: resolution not found (%s)\n", resolution);
+  return NULL;
+}
 
 static stp_parameter_list_t
 olympus_list_parameters(stp_const_vars_t v)
@@ -190,6 +253,9 @@ olympus_parameters(stp_const_vars_t v, const char *name,
 	       stp_parameter_t *description)
 {
   int		i;
+  const olympus_cap_t *caps = olympus_get_model_capabilities(
+		  				stpi_get_model_id(v));
+
   description->p_type = STP_PARAMETER_TYPE_INVALID;
   if (name == NULL)
     return;
@@ -214,18 +280,20 @@ olympus_parameters(stp_const_vars_t v, const char *name,
   if (strcmp(name, "PageSize") == 0)
     {
       int papersizes = stp_known_papersizes();
-      int model = stpi_get_model_id(v);
+
       description->bounds.str = stp_string_list_create();
       for (i = 0; i < papersizes; i++)
 	{
 	  const stp_papersize_t *pt = stp_get_papersize_by_index(i);
-	  if (strcmp(pt->name,
-	        olympus_model_capabilities[model].papersize) == 0 ||
-		(pt->width == 0 && pt->height == 0))
+	  if (strlen(pt->name) > 0 &&
+	      pt->width <= caps->max_paper_width &&
+	      pt->height <= caps->max_paper_height &&
+	      (pt->width >= caps->min_paper_width || pt->width == 0) &&
+	      (pt->height >= caps->min_paper_height || pt->height == 0))
 	    {
+/* stpi_erprintf("olympus: pagesize %s, %s\n", pt->name, pt->text); */
 	      stp_string_list_add_string(description->bounds.str,
 					pt->name, pt->text);
-	      break;
 	    }
 	}
       description->deflt.str =
@@ -243,11 +311,17 @@ olympus_parameters(stp_const_vars_t v, const char *name,
   }
   else if (strcmp(name, "Resolution") == 0)
     {
+      const olympus_res_t *res;
       description->bounds.str = stp_string_list_create();
-      stp_string_list_add_string(description->bounds.str, "306x306",
-        "306x306 DPI"); 
-      stp_string_list_add_string(description->bounds.str, "153x153",
-        "153x153 DPI"); 
+
+      res =  *(caps->res); /* get resolution specific parameters of printer */
+      while (res->xdpi)
+        {
+/* stpi_erprintf("olympus: resolution %s, %s\n", res->name, res->text); */
+          stp_string_list_add_string(description->bounds.str,
+	  	res->name, _(res->text)); 
+	  res++;
+	}
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
     }
@@ -273,13 +347,14 @@ olympus_imageable_area(stp_const_vars_t v,
 		   int  *top)
 {
   int width, height;
-  int model = stpi_get_model_id(v);
-  stpi_default_media_size(v, &width, &height);
+  const olympus_cap_t *caps = olympus_get_model_capabilities(
+  						stpi_get_model_id(v));
   
-  *left = olympus_model_capabilities[model].border_left;
-  *top = olympus_model_capabilities[model].border_top;
-  *right = width - olympus_model_capabilities[model].border_right;
-  *bottom = height - olympus_model_capabilities[model].border_bottom;
+  stpi_default_media_size(v, &width, &height);
+  *left = caps->border_left;
+  *top = caps->border_top;
+  *right = width - caps->border_right;
+  *bottom = height - caps->border_bottom;
 }
 
 static void
@@ -299,8 +374,9 @@ olympus_describe_resolution(stp_const_vars_t v, int *x, int *y)
   const char *resolution = stp_get_string_parameter(v, "Resolution");
   *x = -1;
   *y = -1;
-  if (resolution)
+  if (resolution) {
     sscanf(resolution, "%dx%d", x, y);
+  }
   return;
 }
 
@@ -311,7 +387,8 @@ static int
 olympus_print(stp_const_vars_t v, stp_image_t *image)
 {
   int i, j;
-  int y;		/* Looping vars */
+  int y, min_y, max_y, max_progress;		/* Looping vars */
+  int min_x, max_x;
   stp_vars_t	nv = stp_vars_create_copy(v);
   int out_channels;
   unsigned short *final_out = NULL;
@@ -319,8 +396,12 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
   unsigned short *real_out;
   int status = 1;
   int ink_channels = 1;
-  const char *ink_type = stp_get_string_parameter(nv, "InkType");
-  unsigned zero_mask;
+
+  const int model           = stpi_get_model_id(v); 
+  const char *ink_type      = stp_get_string_parameter(v, "InkType");
+  const olympus_cap_t *caps = olympus_get_model_capabilities(model);
+  const char *res_param     = stp_get_string_parameter(v, "Resolution");
+  const olympus_res_t *res  = olympus_get_res_params(model, res_param);
 
   int xdpi, ydpi;	/* Resolution */
 
@@ -341,7 +422,8 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
   int page_left, page_right, page_top, page_bottom;
 
   /* page w/out borders in pixels (according to selected dpi) */
-  int print_width, print_height;
+  int print_width  = res->x_max_res;
+  int print_height = res->y_max_res;
   
   unsigned char  copies = 1;
   unsigned short hi_speed = 1;
@@ -358,9 +440,6 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
   stp_describe_resolution(nv, &xdpi, &ydpi);
   olympus_imageable_area(v, &page_left, &page_right,
     &page_bottom, &page_top);
-
-  print_width  = (page_right - page_left) * xdpi/72;
-  print_height = (((page_bottom - page_top) * ydpi/72) | 0x000f) + 1;
 
   image_left   = (left - page_left) * xdpi / 72;
   image_left   = (image_left + image_width > print_width ?
@@ -461,22 +540,21 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
   l = layers;
   while (*l)
     {
-#if 1
-    /* old style - full 4MB prn file */
-#define MAX_PROGRESS (print_height)
-    for (y = 0; y < print_height; y++)
-		  
-#else
-    /*
-     * new style - only used lines (mod 16)
-     * the same idea for columns does not work - we must print
-     * all columns (include empty ones) :(
-     */
-#define MAX_PROGRESS (((image_bottom - 1) | 0x000f) - (image_top & 0xfff0))
-    for (y = (image_top & 0xfff0); y <= ((image_bottom - 1) | 0x000f); y++)
-#endif
+    if (caps->need_empty_rows) {
+      min_y = 0;
+      max_y = print_height - 1;
+    } else {
+      min_y = image_top & 0xfff0;
+      max_y = ((image_bottom - 1) | 0x000f);
+    }
+    
+    max_progress = max_y - min_y;
+
+    for (y = min_y; y <= max_y; y++)
       {
       unsigned short *out;
+      unsigned zero_mask;
+
       if ((y % 16) == 0)
         {
         /* block init */
@@ -484,12 +562,17 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
 	stpi_putc(*l, nv);
 	stpi_putc(y >> 8, nv);
 	stpi_putc(y & 0xff, nv);
-	stpi_putc(0 >> 8, nv);
-	stpi_putc(0 & 0xff, nv);
+
+	min_x = (caps->need_empty_cols ? 0 : image_left);
+	stpi_putc(min_x >> 8, nv);
+	stpi_putc(min_x & 0xff, nv);
+	
 	stpi_putc((y + 15) >> 8, nv);
 	stpi_putc((y + 15) & 0xff, nv);
-	stpi_putc((print_width - 1) >> 8, nv);
-	stpi_putc((print_width - 1) & 0xff, nv);
+	
+	max_x = (caps->need_empty_cols ? print_width - 1 : image_right);
+	stpi_putc(max_x >> 8, nv);
+	stpi_putc(max_x & 0xff, nv);
 	}
       
 
@@ -499,15 +582,15 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
 	}
       else
         {
-        if (image_left > 0)
+        if (caps->need_empty_cols && image_left > 0)
 	  {
           stpi_zfwrite((char *) zeros, 1, image_left, nv);
 /* stpi_erprintf("left %d ", image_left); */
 	  }
         if ((y & 63) == 0)
           {
-    	  stpi_image_note_progress(image, MAX_PROGRESS/3 * (l - layers) + y / 3,
-            MAX_PROGRESS);
+    	  stpi_image_note_progress(image, max_progress/3 * (l - layers) + y / 3,
+            max_progress);
           }
 
         if (stpi_color_get_row(nv, image, y - image_top, &zero_mask))
@@ -545,7 +628,7 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
   
 	stpi_zfwrite((char *) real_out, 1, image_width, nv);
 /* stpi_erprintf("data %d ", image_width); */
-        if (image_right < print_width)
+        if (caps->need_empty_cols && image_right < print_width)
 	  {
           stpi_zfwrite((char *) zeros, 1, print_width - image_right, nv);
 /* stpi_erprintf("right %d ", print_width - image_right); */
