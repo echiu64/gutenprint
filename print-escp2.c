@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.88  2000/02/19 20:58:19  rlk
+ *   Try one more time to fix 740
+ *
  *   Revision 1.87  2000/02/19 16:01:36  rlk
  *   A bit more cleanup to non-softweave
  *
@@ -471,6 +474,7 @@ typedef model_cap_t model_class_t;
 #define MODEL_IMAGEABLE_MASK	0xc
 #define MODEL_IMAGEABLE_DEFAULT	0x0
 #define MODEL_IMAGEABLE_PHOTO	0x4
+#define MODEL_IMAGEABLE_NEW	0x4
 #define MODEL_IMAGEABLE_600	0x8
 
 #define MODEL_INIT_MASK		0xf0
@@ -610,24 +614,24 @@ model_cap_t model_capabilities[] =
 
   /* THIRD GENERATION PRINTERS */
   /* 10: Stylus Color 440 */
-  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_440
+  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_NEW | MODEL_INIT_440
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(21) | MODEL_MAKE_SEPARATION(7)),
   /* 11: Stylus Color 640 */
-  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_440
+  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_NEW | MODEL_INIT_440
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
   /* 12: Stylus Color 740 */
-  (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_600 | MODEL_INIT_440
+  (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_NEW | MODEL_INIT_440
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
   /* 13: Stylus Color 900 */
   /* Dale Pontius thinks the spacing is 3 jets??? */
   /* No, Eric Sharkey verified that it's 2! */
-  (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_600 | MODEL_INIT_440
+  (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_NEW | MODEL_INIT_440
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(96) | MODEL_MAKE_SEPARATION(2)),
@@ -642,7 +646,7 @@ model_cap_t model_capabilities[] =
    | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
   /* 16: Stylus Color 860 */
-  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_COLOR
+  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_NEW | MODEL_INIT_COLOR
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(360)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
@@ -834,29 +838,30 @@ escp2_imageable_area(int  model,	/* I - Printer model */
   default_media_size(model, ppd_file, media_size, &width, &length);
 
   switch (escp2_cap(model, MODEL_IMAGEABLE_MASK))
-  {
-  case MODEL_IMAGEABLE_PHOTO:
-        *left   = 9;
-        *right  = width - 9;
-        *top    = length;
-        *bottom = 64;
-        break;
+    {
+    case MODEL_IMAGEABLE_PHOTO:
+/*    case MODEL_IMAGEABLE_NEW: */
+      *left   = 9;
+      *right  = width - 9;
+      *top    = length;
+      *bottom = 64;
+      break;
 
-  case MODEL_IMAGEABLE_600:
-        *left   = 8;
-        *right  = width - 9;
-        *top    = length - 32;
-        *bottom = 40;
-        break;
+    case MODEL_IMAGEABLE_600:
+      *left   = 8;
+      *right  = width - 9;
+      *top    = length - 32;
+      *bottom = 40;
+      break;
 
-  case MODEL_IMAGEABLE_DEFAULT:
-  default:
-        *left   = 14;
-        *right  = width - 14;
-        *top    = length - 14;
-        *bottom = 40;
-        break;
-  }
+    case MODEL_IMAGEABLE_DEFAULT:
+    default:
+      *left   = 14;
+      *right  = width - 14;
+      *top    = length - 14;
+      *bottom = 40;
+      break;
+    }
 }
 
 
@@ -2409,10 +2414,10 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
 			    MODEL_VARIABLE_4))
 	    fprintf(prn, "\033($%c%c%c%c%c%c", 4, 0,
-		    ((hoffset * 1440 / ydpi) + microoffset) & 255,
-		    (((hoffset * 1440 / ydpi) + microoffset) >> 8) & 255,
-		    (((hoffset * 1440 / ydpi) + microoffset) >> 16) & 255,
-		    (((hoffset * 1440 / ydpi) + microoffset) >> 24) & 255);
+		    ((hoffset * xdpi / 720) + microoffset) & 255,
+		    (((hoffset * xdpi / 720) + microoffset) >> 8) & 255,
+		    (((hoffset * xdpi / 720) + microoffset) >> 16) & 255,
+		    (((hoffset * xdpi / 720) + microoffset) >> 24) & 255);
 	  else
 	    fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
 		    ((hoffset * 1440 / ydpi) + microoffset) & 255,
