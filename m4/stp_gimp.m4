@@ -21,6 +21,7 @@
 ## Table of Contents:
 ## 1. GIMP source tree support
 ## 2. GIMP library checks
+## 3. gimptool support
 
 
 ## --------------------------- ##
@@ -48,7 +49,7 @@ m4_if(GIMP_SOURCE_TREE, [no], [$1], [$2])dnl
 # GIMP library checks
 AC_DEFUN([STP_GIMP_LIBS],
 [dnl GIMP library checks
-if test x${BUILD_GIMP} = xyes -o -n "${BUILD_PACKAGE}" ; then
+if test x${BUILD_GIMP} = xyes ; then
   if test x$GIMP_SOURCE_TREE_SUBDIR = xyes ; then
     AM_PATH_GTK
     AM_PATH_GLIB
@@ -63,3 +64,30 @@ if test x${BUILD_GIMP} = xyes -o -n "${BUILD_PACKAGE}" ; then
 fi
 
 ])
+
+
+
+
+## ------------------- ##
+## 3. gimptool support ##
+## ------------------- ##
+
+
+# STP_GIMP_PLUG_IN_DIR
+# --------------------
+# Locate the GIMP plugin directory using libtool
+AC_DEFUN([STP_GIMP_PLUG_IN_DIR],
+[dnl Extract directory using --dry-run and sed
+if test x${BUILD_GIMP} = xyes ; then
+  AC_MSG_CHECKING([for GIMP plug-in directory])
+# create temporary "plug-in" to install
+  touch print
+  chmod 755 print
+  GIMPTOOL_OUTPUT=`$GIMPTOOL --dry-run --install-${PLUG_IN_PATH} print`
+  rm print
+  gimp_plug_indir=`echo "$GIMPTOOL_OUTPUT" | sed -e 's/.* \(.*\)\/print/\1/'`
+  AC_MSG_RESULT([$gimp_plug_indir])
+else
+  gimp_plug_indir="$libdir/gimp/1.2/plug-ins"
+fi
+])  

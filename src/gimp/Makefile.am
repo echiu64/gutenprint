@@ -34,8 +34,6 @@ LIBGIMPPRINT_LIBS = $(GIMPPRINT_LIBS) $(GIMPPRINT_DEPLIBS)
 LIBPRINTUT = $(top_builddir)/lib/libprintut.la
 LIBS = $(INTLLIBS) @LIBS@
 
-gimp_plug_indir = $(gimptool_prefix)/plug-ins
-
 
 ## Programs
 
@@ -54,25 +52,6 @@ print_LDADD = $(LIBPRINTUT) $(GIMP_LIBS) $(LIBGIMPPRINT_LIBS)
 
 
 ## Rules
-
-install-gimp_plug_inPROGRAMS: $(gimp_plug_in_PROGRAMS)
-	@DESTDIR='$(DESTDIR)'; export DESTDIR;\
-	list='$(gimp_plug_in_PROGRAMS)'; for p in $$list; do \
-	  if test -f $$p; then \
-	    echo $(LIBTOOL) --mode=install `$(GIMPTOOL) --just-print --install-@PLUG_IN_PATH@ $$p`; \
-            $(LIBTOOL) --mode=install `$(GIMPTOOL) --just-print --install-@PLUG_IN_PATH@ $$p`; \
-	  else :; fi; \
-	done
-
-uninstall-gimp_plug_inPROGRAMS:
-	@DESTDIR='$(DESTDIR)'; export DESTDIR;\
-	list='$(gimp_plug_in_PROGRAMS)'; for p in $$list; do \
-	    echo $(GIMPTOOL) --uninstall-@PLUG_IN_PATH@ "$$p"; \
-            $(GIMPTOOL) --uninstall-@PLUG_IN_PATH@ "$$p"; \
-	    echo $(GIMPTOOL) --uninstall-admin-bin "$$p"; \
-	    $(GIMPTOOL) --uninstall-admin-bin "$$p"; \
-	done; \
-	exit 0
 
 $(GIMPPRINT_LIBS):
 	cd ../main ; \
