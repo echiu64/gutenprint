@@ -11,17 +11,11 @@ require('standard_html_header.php3');
 ### Content Below  ###
 # Please remember to use <P> </P> tags !  ?>
 
+<p>Please download gimp-print from <a
+href="https://sourceforge.net/project/?group_id=1537>our project page.</a></p>
 
 
-<p>The source for release 3.0.3 may be found <a
-href="http://www.tiac.net/users/rlk/print-3.0.3.tar.gz">here</a>.
-
-<p>The source for release 3.0.5 may be found <a href="http://download.sourceforge.net/gimp-print/print-3.0.5.tar.gz">here</a>.
-This is the stable version of the gimp-print plugin that will ship
-with the Gimp 1.2.
-
-
-<p>You may view the <a href="http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/?cvsroot=gimp-print">CVS web interface</a>.
+<p>You may view the <a href="http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/?cvsroot=gimp-print">CVS web interface</a>.</p>
 
 <p>If you want to use CVS source code, these are the commands (assuming you have CVS installed.) ;
 
