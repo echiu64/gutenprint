@@ -63,6 +63,7 @@ typedef struct {
   int right_edge;
   int top_edge;
   int bottom_edge;
+  int quadtone;
 } pstate_t;
 
 /* We'd need about a gigabyte of ram to hold a ppm file of an 8.5 x 11
@@ -234,10 +235,12 @@ static float ink_colors[8][4] =
  { 1,   1, .7,  1 },		/* y */
  { 1,   1,  1,  1 }};
 
+static float quadtone_inks[] = { 0.0, .5, .25, .75 };
+
 static float bpp_shift[] = { 0, 1, 3, 7, 15, 31, 63, 127, 255 };
 
 static inline void
-mix_ink(ppmpixel p, int color, unsigned int amount, float *ink)
+mix_ink(ppmpixel p, int color, unsigned int amount, float *ink, int quadtone)
 {
   /* this is pretty crude */
 
@@ -247,8 +250,12 @@ mix_ink(ppmpixel p, int color, unsigned int amount, float *ink)
       float size;
 
       size = (float) amount / bpp_shift[pstate.bpp];
-      for (i = 0; i < 3; i++)
-	p[i] *= (1 - size) + size * ink[i];
+      if (quadtone)
+	for (i = 0; i < 3; i++)
+	  p[i] *= (1 - size) + size * quadtone_inks[color];
+      else
+	for (i = 0; i < 3; i++)
+	  p[i] *= (1 - size) + size * ink[i];
     }
 }
 
@@ -406,7 +413,8 @@ write_output(FILE *fp_w, int dontwrite)
 		      for (p = lt->startx[c]; p <= lt->stopx[c]; p++)
 			{
 			  amount = get_bits(lt->line[c], p - lt->startx[c]);
-			  mix_ink(out_row[p - left], c, amount, ink);
+			  mix_ink(out_row[p - left], c, amount, ink,
+				  pstate.quadtone);
 			}
 		    }
 		}
@@ -1552,6 +1560,9 @@ main(int argc,char *argv[])
 	      break;
 	    case 'q':
 	      no_output = 1;
+	      break;
+	    case 'Q':
+	      pstate.quadtone = 1;
 	      break;
 	    case 'u':
 	      unweave = 1;

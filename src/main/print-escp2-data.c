@@ -37,6 +37,11 @@ static const escp2_variable_ink_t name##_ink =				\
   density								\
 }
 
+#define PIEZO_0  .25
+#define PIEZO_1  .5
+#define PIEZO_2  .75
+#define PIEZO_3 1.0
+
 /***************************************************************\
 *                                                               *
 *                        SINGLE DOT SIZE                        *
@@ -75,6 +80,15 @@ static const stp_simple_dither_range_t photo2_black_dither_ranges[] =
 
 DECLARE_INK(photo2_black, 1.0);
 
+static const stp_simple_dither_range_t piezo_quadtone_dither_ranges[] =
+{
+  { PIEZO_0, 0x1, 0, 1 },
+  { PIEZO_1, 0x1, 1, 1 },
+  { PIEZO_2, 0x1, 2, 1 },
+  { PIEZO_3, 0x1, 3, 1 },
+};
+
+DECLARE_INK(piezo_quadtone, 1.0);
 
 /***************************************************************\
 *                                                               *
@@ -101,6 +115,17 @@ static const stp_simple_dither_range_t photo_multishot_dither_ranges[] =
 
 DECLARE_INK(photo_multishot, 1.0);
 
+static const stp_simple_dither_range_t piezo_multishot_quadtone_dither_ranges[] =
+{
+  { PIEZO_0 * .28, 0x1, 0, 2 },
+  { PIEZO_0 * .58, 0x2, 0, 4 },
+  { PIEZO_1 * .58, 0x2, 1, 4 },
+  { PIEZO_2 * .58, 0x2, 2, 4 },
+  { PIEZO_3 * .58, 0x2, 3, 4 },
+  { PIEZO_3 * 1.0, 0x3, 3, 7 },
+};
+
+DECLARE_INK(piezo_multishot_quadtone, 1.0);
 
 /***************************************************************\
 *                                                               *
@@ -148,6 +173,30 @@ static const stp_simple_dither_range_t photo_6pl_1440_dither_ranges[] =
 
 DECLARE_INK(photo_6pl_1440, 1.0);
 
+static const stp_simple_dither_range_t piezo_6pl_quadtone_dither_ranges[] =
+{
+  { PIEZO_0 * .25, 0x1, 0, 1 },
+  { PIEZO_0 * .50, 0x2, 0, 2 },
+  { PIEZO_1 * .50, 0x2, 1, 2 },
+  { PIEZO_2 * .50, 0x2, 2, 2 },
+  { PIEZO_3 * .50, 0x2, 3, 2 },
+  { PIEZO_3 * 1.0, 0x3, 3, 4 },
+};
+
+DECLARE_INK(piezo_6pl_quadtone, 1.0);
+
+static const stp_simple_dither_range_t piezo_6pl_1440_quadtone_dither_ranges[] =
+{
+  { PIEZO_0 * .25, 0x1, 0, 1 },
+  { PIEZO_0 * .50, 0x2, 0, 2 },
+  { PIEZO_1 * .50, 0x2, 1, 2 },
+  { PIEZO_2 * .50, 0x2, 2, 2 },
+  { PIEZO_3 * .50, 0x2, 3, 2 },
+  { PIEZO_3 * 1.0, 0x3, 3, 4 },
+};
+
+DECLARE_INK(piezo_6pl_1440_quadtone, 1.0);
+
 
 /***************************************************************\
 *                                                               *
@@ -181,6 +230,41 @@ static const stp_simple_dither_range_t standard_x80_1440_6pl_dither_ranges[] =
 
 DECLARE_INK(standard_x80_1440_6pl, 1.0);
 
+static const stp_simple_dither_range_t piezo_x80_multishot_quadtone_dither_ranges[] =
+{
+  { PIEZO_0 * .163, 0x1, 0, 1 },
+  { PIEZO_0 * .500, 0x2, 0, 3 },
+  { PIEZO_1 * .500, 0x2, 1, 3 },
+  { PIEZO_2 * .500, 0x2, 2, 3 },
+  { PIEZO_3 * .500, 0x2, 3, 3 },
+  { PIEZO_3 * 1.00, 0x3, 3, 6 },
+};
+
+DECLARE_INK(piezo_x80_multishot_quadtone, 1.0);
+
+static const stp_simple_dither_range_t piezo_x80_6pl_quadtone_dither_ranges[] =
+{
+  { PIEZO_0 * .325, 0x1, 0, 2 },
+  { PIEZO_0 * .500, 0x2, 0, 3 },
+  { PIEZO_1 * .500, 0x2, 1, 3 },
+  { PIEZO_2 * .500, 0x2, 2, 3 },
+  { PIEZO_3 * .500, 0x2, 3, 3 },
+  { PIEZO_3 * 1.00, 0x3, 3, 6 },
+};
+
+DECLARE_INK(piezo_x80_6pl_quadtone, 1.0);
+
+static const stp_simple_dither_range_t piezo_x80_1440_6pl_quadtone_dither_ranges[] =
+{
+  { PIEZO_0 * .650, 0x2, 0, 2 },
+  { PIEZO_1 * .650, 0x2, 1, 2 },
+  { PIEZO_2 * .650, 0x2, 2, 2 },
+  { PIEZO_3 * .650, 0x2, 3, 2 },
+  { PIEZO_3 * 1.00, 0x3, 3, 3 },
+};
+
+DECLARE_INK(piezo_x80_1440_6pl_quadtone, 1.0);
+
 
 /***************************************************************\
 *                                                               *
@@ -205,6 +289,30 @@ static const stp_simple_dither_range_t standard_680_6pl_dither_ranges[] =
 };
 
 DECLARE_INK(standard_680_6pl, 1.0);
+
+static const stp_simple_dither_range_t piezo_680_multishot_quadtone_dither_ranges[] =
+{
+  { PIEZO_0 * .375, 0x1, 0, 3 },
+  { PIEZO_0 * .750, 0x2, 0, 6 },
+  { PIEZO_1 * .750, 0x2, 1, 6 },
+  { PIEZO_2 * .750, 0x2, 2, 6 },
+  { PIEZO_3 * .750, 0x2, 3, 6 },
+  { PIEZO_3 * 1.00, 0x3, 3, 8 },
+};
+
+DECLARE_INK(piezo_680_multishot_quadtone, 1.0);
+
+static const stp_simple_dither_range_t piezo_680_6pl_quadtone_dither_ranges[] =
+{
+  { PIEZO_0 * .500, 0x1, 0, 3 },
+  { PIEZO_0 * .660, 0x2, 0, 4 },
+  { PIEZO_1 * .660, 0x2, 1, 4 },
+  { PIEZO_2 * .660, 0x2, 2, 4 },
+  { PIEZO_3 * .660, 0x2, 3, 4 },
+  { PIEZO_3 * 1.00, 0x3, 3, 6 },
+};
+
+DECLARE_INK(piezo_680_6pl_quadtone, 1.0);
 
 
 /***************************************************************\
@@ -245,6 +353,27 @@ static const stp_simple_dither_range_t photo_4pl_2880_dither_ranges[] =
 };
 
 DECLARE_INK(photo_4pl_2880, 1.0);
+
+static const stp_simple_dither_range_t piezo_4pl_quadtone_dither_ranges[] =
+{
+  { PIEZO_0 * .661, 0x2, 0, 2 },
+  { PIEZO_1 * .661, 0x2, 1, 2 },
+  { PIEZO_2 * .661, 0x2, 2, 2 },
+  { PIEZO_3 * .661, 0x2, 3, 2 },
+  { PIEZO_3 * 1.00, 0x3, 3, 3 },
+};
+
+DECLARE_INK(piezo_4pl_quadtone, 1.0);
+
+static const stp_simple_dither_range_t piezo_4pl_2880_quadtone_dither_ranges[] =
+{
+  { PIEZO_0, 0x1, 0, 1 },
+  { PIEZO_1, 0x1, 1, 1 },
+  { PIEZO_2, 0x1, 2, 1 },
+  { PIEZO_3, 0x1, 3, 1 },
+};
+
+DECLARE_INK(piezo_4pl_2880_quadtone, 1.0);
 
 
 /***************************************************************\
@@ -288,6 +417,51 @@ static const stp_simple_dither_range_t standard_980_6pl_dither_ranges[] =
 
 DECLARE_INK(standard_980_6pl, 1.0);
 
+static const stp_simple_dither_range_t piezo_3pl_quadtone_dither_ranges[] =
+{
+  { PIEZO_0 * .25, 0x1, 0, 2 },
+  { PIEZO_0 * .61, 0x2, 0, 5 },
+  { PIEZO_1 * .61, 0x2, 1, 5 },
+  { PIEZO_2 * .61, 0x2, 2, 5 },
+  { PIEZO_3 * .61, 0x2, 3, 5 },
+  { PIEZO_3 * 1.0, 0x3, 3, 8 },
+};
+
+DECLARE_INK(piezo_3pl_quadtone, 1.0);
+
+static const stp_simple_dither_range_t piezo_3pl_1440_quadtone_dither_ranges[]=
+{
+  { PIEZO_0 * .390, 0x2, 0, 2 },
+  { PIEZO_1 * .390, 0x2, 1, 2 },
+  { PIEZO_2 * .390, 0x2, 2, 2 },
+  { PIEZO_3 * .390, 0x2, 3, 2 },
+  { PIEZO_3 * 1.00, 0x3, 3, 5 },
+};
+
+DECLARE_INK(piezo_3pl_1440_quadtone, 1.0);
+
+static const stp_simple_dither_range_t piezo_3pl_2880_quadtone_dither_ranges[]=
+{
+  { PIEZO_0, 0x1, 0, 1 },
+  { PIEZO_1, 0x1, 1, 1 },
+  { PIEZO_2, 0x1, 2, 1 },
+  { PIEZO_3, 0x1, 3, 1 },
+};
+
+DECLARE_INK(piezo_3pl_2880_quadtone, 1.0);
+
+static const stp_simple_dither_range_t piezo_980_6pl_quadtone_dither_ranges[] =
+{
+  { PIEZO_0 * .400, 0x1, 0, 4 },
+  { PIEZO_0 * .675, 0x2, 0, 7 },
+  { PIEZO_1 * .675, 0x2, 1, 7 },
+  { PIEZO_2 * .675, 0x2, 2, 7 },
+  { PIEZO_3 * .675, 0x2, 3, 7 },
+  { PIEZO_3 * 1.00, 0x3, 3, 10 },
+};
+
+DECLARE_INK(piezo_980_6pl_quadtone, 1.0);
+
 
 /***************************************************************\
 *                                                               *
@@ -297,7 +471,7 @@ DECLARE_INK(standard_980_6pl, 1.0);
 
 static const stp_simple_dither_range_t standard_2pl_2880_dither_ranges[] =
 {
-  { 1.00,  0x1, 0, 1 },
+  { 1.00, 0x1, 0, 1 },
 };
 
 DECLARE_INK(standard_2pl_2880, 1.0);
@@ -305,10 +479,20 @@ DECLARE_INK(standard_2pl_2880, 1.0);
 static const stp_simple_dither_range_t photo_2pl_2880_dither_ranges[] =
 {
   { 0.21, 0x1, 1, 1 },
-  { 1.00,  0x1, 0, 1 },
+  { 1.00, 0x1, 0, 1 },
 };
 
 DECLARE_INK(photo_2pl_2880, 0.75);
+
+static const stp_simple_dither_range_t piezo_2pl_2880_quadtone_dither_ranges[]=
+{
+  { PIEZO_0, 0x1, 0, 1 },
+  { PIEZO_1, 0x1, 1, 1 },
+  { PIEZO_2, 0x1, 2, 1 },
+  { PIEZO_3, 0x1, 3, 1 },
+};
+
+DECLARE_INK(piezo_2pl_2880_quadtone, 1.0);
 
 
 /***************************************************************\
@@ -462,7 +646,13 @@ static const escp2_variable_inkset_t photo_inks =
   NULL
 };
 
-
+static const escp2_variable_inkset_t piezo_quadtone_inks =
+{
+  &piezo_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
 
 static const escp2_variable_inkset_t escp2_multishot_standard_inks =
 {
@@ -494,6 +684,14 @@ static const escp2_variable_inkset_t escp2_multishot_photoj_inks =
   &photo_multishot_ink,
   &photo_multishot_ink,
   &photo_multishot_ink
+};
+
+static const escp2_variable_inkset_t piezo_multishot_quadtone_inks =
+{
+  &piezo_multishot_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
 };
 
 
@@ -529,6 +727,14 @@ static const escp2_variable_inkset_t escp2_6pl_photoj_inks =
   &photo_6pl_ink
 };
 
+static const escp2_variable_inkset_t piezo_6pl_quadtone_inks =
+{
+  &piezo_6pl_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
+
 
 static const escp2_variable_inkset_t escp2_6pl_1440_standard_inks =
 {
@@ -544,6 +750,14 @@ static const escp2_variable_inkset_t escp2_6pl_1440_photo_inks =
   &photo_6pl_1440_ink,
   &photo_6pl_1440_ink,
   &standard_6pl_1440_ink
+};
+
+static const escp2_variable_inkset_t piezo_6pl_1440_quadtone_inks =
+{
+  &piezo_6pl_1440_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
 };
 
 
@@ -563,6 +777,22 @@ static const escp2_variable_inkset_t escp2_680_6pl_standard_inks =
   &standard_680_6pl_ink
 };
 
+static const escp2_variable_inkset_t piezo_680_multishot_quadtone_inks =
+{
+  &piezo_680_multishot_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
+
+static const escp2_variable_inkset_t piezo_680_6pl_quadtone_inks =
+{
+  &piezo_680_6pl_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
+
 
 static const escp2_variable_inkset_t escp2_4pl_standard_inks =
 {
@@ -578,6 +808,14 @@ static const escp2_variable_inkset_t escp2_4pl_photo_inks =
   &photo_4pl_ink,
   &photo_4pl_ink,
   &standard_4pl_ink
+};
+
+static const escp2_variable_inkset_t piezo_4pl_quadtone_inks =
+{
+  &piezo_4pl_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
 };
 
 static const escp2_variable_inkset_t escp2_4pl_2880_standard_inks =
@@ -596,6 +834,14 @@ static const escp2_variable_inkset_t escp2_4pl_2880_photo_inks =
   &standard_4pl_2880_ink
 };
 
+static const escp2_variable_inkset_t piezo_4pl_2880_quadtone_inks =
+{
+  &piezo_4pl_2880_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
+
 
 static const escp2_variable_inkset_t escp2_6pl_standard_980_inks =
 {
@@ -603,6 +849,14 @@ static const escp2_variable_inkset_t escp2_6pl_standard_980_inks =
   &standard_980_6pl_ink,
   &standard_980_6pl_ink,
   &standard_980_6pl_ink
+};
+
+static const escp2_variable_inkset_t piezo_6pl_quadtone_980_inks =
+{
+  &piezo_980_6pl_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
 };
 
 static const escp2_variable_inkset_t escp2_3pl_standard_inks =
@@ -627,6 +881,30 @@ static const escp2_variable_inkset_t escp2_3pl_2880_standard_inks =
   &standard_3pl_2880_ink,
   &standard_3pl_2880_ink,
   &standard_3pl_2880_ink
+};
+
+static const escp2_variable_inkset_t piezo_3pl_quadtone_inks =
+{
+  &piezo_3pl_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
+
+static const escp2_variable_inkset_t piezo_3pl_1440_quadtone_inks =
+{
+  &piezo_3pl_1440_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
+
+static const escp2_variable_inkset_t piezo_3pl_2880_quadtone_inks =
+{
+  &piezo_3pl_2880_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
 };
 
 
@@ -662,6 +940,14 @@ static const escp2_variable_inkset_t escp2_2pl_2880_photoj_inks =
   &photo_2pl_2880_ink
 };
 
+static const escp2_variable_inkset_t piezo_2pl_2880_quadtone_inks =
+{
+  &piezo_2pl_2880_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
+
 
 static const escp2_variable_inkset_t escp2_x80_multishot_standard_inks =
 {
@@ -685,6 +971,30 @@ static const escp2_variable_inkset_t escp2_x80_1440_6pl_standard_inks =
   &standard_x80_1440_6pl_ink,
   &standard_x80_1440_6pl_ink,
   &standard_x80_1440_6pl_ink
+};
+
+static const escp2_variable_inkset_t piezo_x80_multishot_quadtone_inks =
+{
+  &piezo_x80_multishot_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
+
+static const escp2_variable_inkset_t piezo_x80_6pl_quadtone_inks =
+{
+  &piezo_x80_6pl_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
+
+static const escp2_variable_inkset_t piezo_x80_1440_6pl_quadtone_inks =
+{
+  &piezo_x80_1440_6pl_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
 };
 
 
@@ -854,6 +1164,19 @@ static const escp2_variable_inklist_t simple_inks =
     &photo_inks,
     &photo_inks,
     &photo_inks,
+  },
+  { NULL, },
+  { NULL, },
+  {
+    &piezo_quadtone_inks,
+    &piezo_quadtone_inks,
+    &piezo_quadtone_inks,
+    &piezo_quadtone_inks,
+    &piezo_quadtone_inks,
+    &piezo_quadtone_inks,
+    &piezo_quadtone_inks,
+    &piezo_quadtone_inks,
+    &piezo_quadtone_inks,
   }
 };
 
@@ -880,6 +1203,19 @@ static const escp2_variable_inklist_t variable_6pl_inks =
     &escp2_6pl_1440_photo_inks,
     &escp2_6pl_photo_inks,
     &escp2_6pl_photo_inks
+  },
+  { NULL, },
+  { NULL, },
+  {
+    &piezo_6pl_quadtone_inks,
+    &piezo_6pl_quadtone_inks,
+    &piezo_6pl_quadtone_inks,
+    &piezo_6pl_quadtone_inks,
+    &piezo_6pl_quadtone_inks,
+    &piezo_6pl_1440_quadtone_inks,
+    &piezo_6pl_1440_quadtone_inks,
+    &piezo_6pl_quadtone_inks,
+    &piezo_6pl_quadtone_inks
   }
 };
 
@@ -895,6 +1231,20 @@ static const escp2_variable_inklist_t variable_x80_6pl_inks =
     &escp2_x80_1440_6pl_standard_inks,
     &escp2_x80_1440_6pl_standard_inks,
     &escp2_x80_1440_6pl_standard_inks,
+  },
+  { NULL, },
+  { NULL, },
+  { NULL, },
+  {
+    &piezo_x80_multishot_quadtone_inks,
+    &piezo_x80_multishot_quadtone_inks,
+    &piezo_x80_multishot_quadtone_inks,
+    &piezo_x80_multishot_quadtone_inks,
+    &piezo_x80_6pl_quadtone_inks,
+    &piezo_x80_1440_6pl_quadtone_inks,
+    &piezo_x80_1440_6pl_quadtone_inks,
+    &piezo_x80_1440_6pl_quadtone_inks,
+    &piezo_x80_1440_6pl_quadtone_inks,
   }
 };
 
@@ -921,6 +1271,19 @@ static const escp2_variable_inklist_t variable_4pl_inks =
     &escp2_4pl_2880_photo_inks,
     &escp2_4pl_2880_photo_inks,
     &escp2_4pl_2880_photo_inks
+  },
+  { NULL, },
+  { NULL, },
+  {
+    &piezo_multishot_quadtone_inks,
+    &piezo_multishot_quadtone_inks,
+    &piezo_multishot_quadtone_inks,
+    &piezo_multishot_quadtone_inks,
+    &piezo_6pl_quadtone_inks,
+    &piezo_4pl_quadtone_inks,
+    &piezo_4pl_2880_quadtone_inks,
+    &piezo_4pl_2880_quadtone_inks,
+    &piezo_4pl_2880_quadtone_inks,
   }
 };
 
@@ -936,6 +1299,20 @@ static const escp2_variable_inklist_t variable_680_4pl_inks =
     &escp2_4pl_2880_standard_inks,
     &escp2_4pl_2880_standard_inks,
     &escp2_4pl_2880_standard_inks,
+  },
+  { NULL, },
+  { NULL, },
+  { NULL, },
+  {
+    &piezo_680_multishot_quadtone_inks,
+    &piezo_680_multishot_quadtone_inks,
+    &piezo_680_multishot_quadtone_inks,
+    &piezo_680_multishot_quadtone_inks,
+    &piezo_680_6pl_quadtone_inks,
+    &piezo_4pl_quadtone_inks,
+    &piezo_4pl_2880_quadtone_inks,
+    &piezo_4pl_2880_quadtone_inks,
+    &piezo_4pl_2880_quadtone_inks,
   }
 };
 
@@ -951,6 +1328,20 @@ static const escp2_variable_inklist_t variable_3pl_inks =
     &escp2_3pl_1440_standard_inks,
     &escp2_3pl_2880_standard_inks,
     &escp2_3pl_2880_standard_inks,
+  },
+  { NULL, },
+  { NULL, },
+  { NULL, },
+  {
+    &piezo_multishot_quadtone_inks,
+    &piezo_multishot_quadtone_inks,
+    &piezo_6pl_quadtone_980_inks,
+    &piezo_6pl_quadtone_980_inks,
+    &piezo_3pl_quadtone_inks,
+    &piezo_3pl_1440_quadtone_inks,
+    &piezo_3pl_1440_quadtone_inks,
+    &piezo_3pl_2880_quadtone_inks,
+    &piezo_3pl_2880_quadtone_inks,
   }
 };
 
@@ -977,6 +1368,19 @@ static const escp2_variable_inklist_t variable_2pl_inks =
     &escp2_4pl_2880_photo_inks,
     &escp2_4pl_2880_photo_inks,
     &escp2_2pl_2880_photo_inks
+  },
+  { NULL, },
+  { NULL, },
+  {
+    &piezo_multishot_quadtone_inks,
+    &piezo_multishot_quadtone_inks,
+    &piezo_multishot_quadtone_inks,
+    &piezo_multishot_quadtone_inks,
+    &piezo_6pl_quadtone_inks,
+    &piezo_4pl_quadtone_inks,
+    &piezo_4pl_2880_quadtone_inks,
+    &piezo_4pl_2880_quadtone_inks,
+    &piezo_2pl_2880_quadtone_inks,
   }
 };
 
@@ -1167,7 +1571,6 @@ static const physical_subchannel_t photo2_black_subchannels[] =
 
 DECLARE_INK_CHANNEL(photo2_black);
 
-#ifdef QUADTONE
 static const physical_subchannel_t quadtone_subchannels[] =
 {
   { 4, -1 },
@@ -1177,7 +1580,6 @@ static const physical_subchannel_t quadtone_subchannels[] =
 };
 
 DECLARE_INK_CHANNEL(quadtone);
-#endif
 
 static const escp2_inkname_t three_color_composite_ink = 
 {
@@ -1242,8 +1644,6 @@ static const escp2_inkname_t seven_color_photo_ink =
   }
 };
 
-#ifdef QUADTONE
-
 static const escp2_inkname_t quadtone_ink =
 {
   "Quadtone", N_ ("Quadtone"), 0, 4, 0, 0,
@@ -1251,8 +1651,6 @@ static const escp2_inkname_t quadtone_ink =
     &quadtone_channels, NULL, NULL, NULL
   }
 };
-
-#endif
 
 #define DECLARE_INKLIST(name)				\
 static const inklist_t name##_inklist =			\
@@ -1273,9 +1671,7 @@ static const escp2_inkname_t *standard_ink_types[] =
 {
   &four_color_standard_ink,
   &three_color_composite_ink,
-#ifdef QUADTONE
   &quadtone_ink
-#endif
 };
 
 DECLARE_INKLIST(standard);
@@ -1286,9 +1682,7 @@ static const escp2_inkname_t *photo_ink_types[] =
   &five_color_photo_composite_ink,
   &four_color_standard_ink,
   &three_color_composite_ink,
-#ifdef QUADTONE
   &quadtone_ink
-#endif
 };
 
 DECLARE_INKLIST(photo);
@@ -1299,9 +1693,7 @@ static const escp2_inkname_t *photo7_japan_ink_types[] =
   &j_six_color_enhanced_composite_ink,
   &four_color_standard_ink,
   &three_color_composite_ink,
-#ifdef QUADTONE
   &quadtone_ink
-#endif
 };
 
 DECLARE_INKLIST(photo7_japan);
@@ -1313,9 +1705,7 @@ static const escp2_inkname_t *photo7_ink_types[] =
   &five_color_photo_composite_ink,
   &four_color_standard_ink,
   &three_color_composite_ink,
-#ifdef QUADTONE
   &quadtone_ink
-#endif
 };
 
 DECLARE_INKLIST(photo7);
