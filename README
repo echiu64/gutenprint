@@ -143,6 +143,20 @@ CUPS
     You may also wish to do this to reduce the number of PPD files
     installed on your system
 
+    The PPD files associated with this driver are for Level 2
+    PostScript.  CUPS implements most level 3 PostScript, but there
+    are a few constructs that are not implemented.  For this reason,
+    we have chosen to define a LanguageLevel of 2 rather than 3.
+    PostScript level 3 files are smaller in some cases, and can
+    produce smoother gradients, but few applications generate Level 3
+    PostScript.  If you would like to use level 3 PostScript, you may
+    do
+
+    ./configure --with-cups --enable-cups-level3-ppds
+
+    Unless you fully understand what you are doing, we recommend not
+    doing this.
+
     If you do not wish to build the Gimp Print plugin, you must run
 
     ./configure --with-cups --without-gimp
