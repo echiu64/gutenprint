@@ -44,7 +44,8 @@ Known limitations of this release:
 
 2) The "align color" (-o) command to escputil does not currently work
    on the printers that should support it (Epson Stylus Color 480 and
-   580, and C20SX, C20UX, C40SX, and C40UX).
+   580, and C20SX, C20UX, C40SX, and C40UX).  We do not know if this
+   is a bug in the software or a limitation of the printers.
 
 3) Changing ink cartridges on the Epson Stylus Color 480/580 is not
    supported.
