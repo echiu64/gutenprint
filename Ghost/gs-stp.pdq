@@ -46,7 +46,6 @@ driver epson-gs-and-gimp-driver-0.1 {
       }
       choice "COLOR1520" {
          desc = "Color 1520/3000"
-         help = "The Stylus Color 1520 or Stylus Color 3000"
          value = "6"
       }
       choice "PHOTO700" {
@@ -79,11 +78,11 @@ driver epson-gs-and-gimp-driver-0.1 {
       }
       choice "PHOTO750" {
          value = "14"
-         desc = "Photo 750"
+         desc = "Photo 750/870"
       }
       choice "PHOTO1200" {
          value = "15"
-         desc = "Photo 1200"
+         desc = "Photo 1200/1270"
       }
       choice "PHOTO860" {
          value = "16"
@@ -131,11 +130,7 @@ driver epson-gs-and-gimp-driver-0.1 {
       }
       choice "DPISPECIALA" {
          value = "8"
-         desc = "Emulated 1440x1440dpi Two-pass"
-      }
-      choice "DPISPECIALB" {
-         value = "9"
-         desc = "Emulated 2880x720dpi Two-pass"
+         desc = "1440x720dpi Enhanced"
       }
    }
 
