@@ -34,6 +34,18 @@
 #include <gimp-print-intl-internal.h>
 #include <string.h>
 
+#ifdef TEST_UNCOMPRESSED
+#define COMPRESSION (0)
+#define FILLFUNC stp_fill_uncompressed
+#define COMPUTEFUNC stp_compute_uncompressed_linewidth
+#define PACKFUNC stp_pack_uncompressed
+#else
+#define COMPRESSION (1)
+#define FILLFUNC stp_fill_tiff
+#define COMPUTEFUNC stp_compute_tiff_linewidth
+#define PACKFUNC stp_pack_tiff
+#endif
+
 static void flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 		       int hoffset, int ydpi, int xdpi, int physical_xdpi,
 		       int vertical_subpass);
@@ -3493,8 +3505,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 				escp2_extra_feed(model, nv) * physical_ydpi /
 				escp2_base_resolution(model, nv)),
 			       1, head_offset, nv, flush_pass,
-			       stp_fill_tiff, stp_pack_tiff,
-			       stp_compute_tiff_linewidth);
+			       FILLFUNC, PACKFUNC, COMPUTEFUNC);
 
   /*
    * Compute the LUT.  For now, it's 8 bit, but that may eventually
@@ -3790,7 +3801,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	      if (ydpi == 720 &&
 		  escp2_has_cap(model, MODEL_720DPI_MODE, MODEL_720DPI_600, v))
 		ygap *= 8;
-	      stp_zprintf(v, "\033.%c%c%c%c%c%c", 1, ygap, xgap, 1,
+	      stp_zprintf(v, "\033.%c%c%c%c%c%c", COMPRESSION, ygap, xgap, 1,
 			  lwidth & 255, (lwidth >> 8) & 255);
 	    }
 	  else if (!escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO,v) &&
@@ -3805,7 +3816,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 		ygap *= escp2_pseudo_separation_rows(model, v);
 	      else
 		ygap *= sw->separation_rows;
-	      stp_zprintf(v, "\033.%c%c%c%c%c%c", 1, ygap, xgap,
+	      stp_zprintf(v, "\033.%c%c%c%c%c%c", COMPRESSION, ygap, xgap,
 			  linecount[0].v[j],
 			  lwidth & 255, (lwidth >> 8) & 255);
 	    }
@@ -3814,8 +3825,8 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	      int ncolor = (densities[j] << 4) | colors[j];
 	      int nlines = linecount[0].v[j];
 	      int nwidth = sw->bitwidth * ((lwidth + 7) / 8);
-	      stp_zprintf(v, "\033i%c%c%c%c%c%c%c", ncolor, 1, sw->bitwidth,
-			  nwidth & 255, (nwidth >> 8) & 255,
+	      stp_zprintf(v, "\033i%c%c%c%c%c%c%c", ncolor, COMPRESSION,
+			  sw->bitwidth, nwidth & 255, (nwidth >> 8) & 255,
 			  nlines & 255, (nlines >> 8) & 255);
 	    }
 

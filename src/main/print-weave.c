@@ -1727,7 +1727,6 @@ stp_initialize_weave(int jets,	/* Width of print head */
 {
   int i;
   int last_line, maxHeadOffset;
-  int horizontal_width;
   stp_softweave_t *sw = stp_malloc(sizeof (stp_softweave_t));
 
   (void) memset(sw, 0, sizeof(stp_softweave_t));
@@ -1837,7 +1836,8 @@ stp_initialize_weave(int jets,	/* Width of print head */
   sw->vcache = -2;
   sw->fill_start = fill_start;
   sw->pack = pack;
-  horizontal_width = (compute_linewidth)(sw);
+  sw->horizontal_width = (compute_linewidth)(sw);
+  sw->horizontal_width = 8 * ((sw->horizontal_width + 7) / 8);
 
   for (i = 0; i < sw->vmod; i++)
     {
@@ -1846,7 +1846,7 @@ stp_initialize_weave(int jets,	/* Width of print head */
       for (j = 0; j < sw->ncolors; j++)
 	{
 	  sw->linebases[i].v[j] =
-	    stp_malloc(jets * sw->bitwidth * horizontal_width / 8);
+	    stp_malloc(jets * sw->bitwidth * sw->horizontal_width / 8);
 	}
     }
   return (void *) sw;
@@ -2236,9 +2236,9 @@ stp_write_weave(void *        vsw,
   int cpass = sw->current_vertical_subpass * h_passes;
 
   if (!sw->fold_buf)
-    sw->fold_buf = stp_malloc(COMPBUFWIDTH);
+    sw->fold_buf = stp_malloc(sw->bitwidth * sw->horizontal_width / 8);
   if (!sw->comp_buf)
-    sw->comp_buf = stp_malloc(COMPBUFWIDTH);
+    sw->comp_buf = stp_malloc(sw->bitwidth * sw->horizontal_width / 8);
   if (sw->current_vertical_subpass == 0)
     initialize_row(sw, sw->lineno, xlength);
 
@@ -2251,7 +2251,7 @@ stp_write_weave(void *        vsw,
         for (i = 0; i < h_passes; i++)
 	  {
 	    if (!sw->s[i])
-	      sw->s[i] = stp_malloc(COMPBUFWIDTH);
+	      sw->s[i] = stp_malloc(sw->bitwidth * sw->horizontal_width / 8);
 	    lineoffs[i] = stp_get_lineoffsets(sw, sw->lineno, cpass + i, sw->head_offset[j]);
 	    lineactives[i] = stp_get_lineactive(sw, sw->lineno, cpass + i, sw->head_offset[j]);
 	    bufs[i] = stp_get_linebases(sw, sw->lineno, cpass + i, sw->head_offset[j]);

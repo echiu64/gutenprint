@@ -53,6 +53,18 @@
 #define DEBUG 1 
 #endif
 
+#define MAX_CARRIAGE_WIDTH	13 /* This really needs to go away */
+
+/*
+ * We really need to get away from this silly static nonsense...
+ */
+#define MAX_PHYSICAL_BPI 1440
+#define MAX_OVERSAMPLED 8
+#define MAX_BPP 4
+#define BITS_PER_BYTE 8
+#define COMPBUFWIDTH (MAX_PHYSICAL_BPI * MAX_OVERSAMPLED * MAX_BPP * \
+	MAX_CARRIAGE_WIDTH / BITS_PER_BYTE)
+
 #define USE_3BIT_FOLD_TYPE 323
 
 /*

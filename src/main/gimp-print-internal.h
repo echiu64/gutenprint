@@ -49,19 +49,6 @@
 #define ECOLOR_Y 3
 #define NCOLORS (4)
 
-#define MAX_CARRIAGE_WIDTH	80 /* This really needs to go away */
-				/* For now, this is wide enough for 4B ISO */
-
-/*
- * We really need to get away from this silly static nonsense...
- */
-#define MAX_PHYSICAL_BPI 2880
-#define MAX_OVERSAMPLED 8
-#define MAX_BPP 2
-#define BITS_PER_BYTE 8
-#define COMPBUFWIDTH (MAX_PHYSICAL_BPI * MAX_OVERSAMPLED * MAX_BPP * \
-	MAX_CARRIAGE_WIDTH / BITS_PER_BYTE)
-
 typedef struct
 {
   double value;
@@ -209,6 +196,7 @@ typedef struct stp_softweave
 				/* This is used for the 1520/3000, which */
 				/* use a funny value for the "print density */
 				/* in the vertical direction". */
+  int horizontal_width;		/* Horizontal width, in bits */
   int last_color;
   int head_offset[8];		/* offset of printheads */
   unsigned char *s[8];
