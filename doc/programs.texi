@@ -34,7 +34,10 @@ image is moved in points@footnote{The output resolution of the plugin.}.
 The arrow resizes depending upon the media size chosen; the shaft of the
 arrow is always equal to one inch on the output.
 
-@c @image{print-main,,}
+@iftex
+@image{print-main,,4in}
+@end iftex
+
 
 @subsection Printer Settings
 
@@ -50,9 +53,11 @@ printer supports.  Below that are dropdown menus for choosing media type
 (what kind of paper), media source (what input tray), ink type, and
 resolution.  All of these settings are printer-specific.
 
-@c @image{print-setup,,}
+@iftex
+@image{print-setup,,2in}
+@end iftex
 
-          
+
 @subsection Position
 
 The Position pane contains various widgets to place the image on the
@@ -67,13 +72,13 @@ two additional boxes that allow specification of the right margin and
 bottom margin if you prefer; these are relative to the bottom right
 corner of the paper.  Any of these may have values entered into them;
 the preview image will be moved appropriately.
-          
+
 @strong{Note}: These entries do not resize the image.
-     
+
 Finally, there is a pick box for orientation (landscape or portrait).
 There is an @samp{Auto} mode that picks the orientation that yields the
 orientation that best matches that of the image to be printed.
-          
+
 @subsection Scaling
 
 The Scaling pane contains a slider that allows scaling of the image.
@@ -96,7 +101,7 @@ needed to prevent it from falling off the edge of the page.
 
 To its right is a button group that allows choosing English (inch)
 units or metric (centimeter) units.
-          
+
 @subsection Image Settings
 
 The Image Settings pane allows choice of Line Art, Solid Colors, or
@@ -117,34 +122,36 @@ The Adjust Output button button pops up a non-modal dialog that allows
 adjustment of various parameters related to the print quality.  These
 are independent of the controls within the GIMP itself and only affect
 the print.
-   
-@c @image{print-color,,}
-   
+
+@iftex
+@image{print-color,,2in}
+@end iftex
+
 At the top of the window is a thumbnail of the image that changes to
 reflect the color settings of the image.  This enables you to get an
 idea of how the image will print out as you adjust settings.
-   
+
 Below that there are eight sliders:
-   
+
 @table @emph
 @item Brightness
 (0--2.0, default 1.0) Adjust the brightness of the image.
 
 @item Contrast
 (0--4.0, default 1.0) Adjust the output contrast.
-          
+
 @item Cyan, Magenta, Yellow
 (0--4.0, default 1.0) Adjust the cyan, magenta, and yellow in the
 output.  These should not normally need to be adjusted very much; even
 very small adjustments can go quite a long way to restoring color
 balance.
-          
+
 @item Saturation
 (0--9.0, default 1.0) Adjust the color brilliance (saturation) of the
 output.  Saturation of 0 means pure gray scale, with no color.
 Saturation of 9.0 will make just about anything but pure grays
 brilliantly colored.
-          
+
 @item Density
 (0.1--2.0, default 1.0) Adjust the density (amount of ink) in the print.
 The density is automatically corrected for the particular printer,
@@ -152,17 +159,17 @@ resolution, and in some cases paper choices.  If solid black in the
 input is not solid in the print, the density needs to be increased; if
 there is excessive ink bleed-through and muddy dark colors, the density
 should be decreased.
-          
+
 @strong{Note}: the density will not increase beyond a certain amount no
 matter what the slider is set to.
-     
+
 @item Gamma
 (0.1--4.0, default 1.0) Adjust the output gamma.  The gamma value is
 automatically corrected for the choice of printer; this is used if you
 believe the automatic setting is incorrect.
 @end table
 
-          
+
 @subsubsection Dither Algorithm
 There is also a selection box for the dither algorithm to be used in the
 pop-up dialog.  There are currently seven choices:
@@ -212,12 +219,12 @@ Random Floyd-Steinberg uses the modified Floyd-Steinberg algorithm of
 Adaptive Random on the entire image.  Generally, the results are poor in
 pale regions.
 @end table
-            
+
           
 @subsection Action Buttons
 
 The last pane contains four action buttons:
-          
+
 @table @emph
 @item Print and Save Settings
 Immediately print the image (or, if the File printer is chosen, display
