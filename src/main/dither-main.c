@@ -46,8 +46,14 @@ static const stpi_dither_algorithm_t dither_algos[] =
   { "None",           N_ ("Default"),                -1 },
   { "EvenTone",       N_ ("EvenTone"),               D_EVENTONE },
   { "HybridEvenTone", N_ ("Hybrid EvenTone"),        D_HYBRID_EVENTONE },
+  /*
+   * Unitone dithering seems to have some numerical stability problems
+   * -- rlk 20050113
+   */
+#if UNITONE_WORKS
   { "UniTone",        N_ ("UniTone"),                D_UNITONE },
   { "HybridUniTone",  N_ ("Hybrid UniTone"),         D_HYBRID_UNITONE },
+#endif
   { "Adaptive",	      N_ ("Adaptive Hybrid"),        D_ADAPTIVE_HYBRID },
   { "Ordered",	      N_ ("Ordered"),                D_ORDERED },
   { "Fast",	      N_ ("Fast"),                   D_FAST },

@@ -92,16 +92,20 @@ These release notes contain the following sections:
 
   2) The package now compiles on all GIMP 2.x releases.
 
-  3) Color correction has been tweaked to improve tonality and hue.
+  3) Unitone and Hybrid Unitone dithering have been disabled in this
+     release due to some output problems that have been discovered.
+     We recommend use of EvenTone or Hybrid EvenTone dithering instead.  
 
-  4) Shared libraries now build correctly on AIX.
+  4) Color correction has been tweaked to improve tonality and hue.
 
-  5) The Print plugin for the GIMP now handles unnamed images
+  5) Shared libraries now build correctly on AIX.
+
+  6) The Print plugin for the GIMP now handles unnamed images
      correctly.
 
-  6) Various minor compilation problems have been fixed.
+  7) Various minor compilation problems have been fixed.
 
-  7) The Epson Stylus C65 and C66 has been retuned to improve quality
+  8) The Epson Stylus C65 and C66 has been retuned to improve quality
      at 720x360 DPI.  On these printers, the 720x360 DPI mode produces
      significantly better output quality than on most other printers.
 

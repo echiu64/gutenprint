@@ -134,7 +134,9 @@ if [ -z "$args" ] ; then
     args=`./printers`
 fi
 
-StandardDithers="EvenTone HybridEvenTone UniTone HybridUniTone Adaptive Ordered Fast VeryFast Floyd Predithered"
+#StandardDithers="EvenTone HybridEvenTone UniTone HybridUniTone Adaptive Ordered Fast VeryFast Floyd Predithered"
+
+StandardDithers="EvenTone HybridEvenTone Adaptive Ordered Fast VeryFast Floyd Predithered"
 
 the_message=''
 
