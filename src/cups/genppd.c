@@ -65,6 +65,10 @@
 #include <gimp-print/gimp-print-intl.h>
 #include "../../lib/libprintut.h"
 
+#ifndef CUPS_PPD_PS_LEVEL
+#define CUPS_PPD_PS_LEVEL 2
+#endif
+
 
 /*
  * File handling stuff...
@@ -458,7 +462,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzprintf(fp, "*ShortNickName: \"%s\"\n", long_name);
   gzprintf(fp, "*NickName:      \"%s, CUPS+GIMP-print v" VERSION "\"\n", long_name);
   gzputs(fp, "*PSVersion:	\"(3010.000) 550\"\n");
-  gzputs(fp, "*LanguageLevel:	\"3\"\n");
+  gzprintf(fp, "*LanguageLevel:	\"%d\"\n", CUPS_PPD_PS_LEVEL);
   gzprintf(fp, "*ColorDevice:	%s\n",
            stp_get_output_type(printvars) == OUTPUT_COLOR ? "True" : "False");
   gzprintf(fp, "*DefaultColorSpace: %s\n",
