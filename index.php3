@@ -127,21 +127,20 @@ by the team.  The quality was already tremendously improved over what
 we could do at the Printing Summit.</p>
 
 <p>We started serious work on 4.1 in December, 2000.  Despite the fact
-that 4.2 will be a "minor" release over 4.0, there are vast
-improvements: the driver is built as a shared library, making it much
-easier to write higher layer software to, the packaging system follows
-GNU standards, the print quality (in particular, color accuracy, a
+that 4.2 is a "minor" release over 4.0, there are vast improvements:
+the driver is built as a shared library, making it much easier to
+write higher layer software to, the packaging system follows GNU
+standards, the print quality (in particular, color accuracy, a
 well-known weakness in 4.0) is even better, performance is better,
 there are more options, and more printers supported.  <a
 href="http://www.linuxplanet.com/linuxplanet/opinions/3689/1/">This
 article in LinuxPlanet</a> is one user's take on it.</a>
 
-<p>We're not done.  We're approaching 4.2, and then we're going to
-start work on 4.3, which will become 5.0.  We hope to implement proper
-color management, improved dithering, and improve the performance
-(which is another known weak point, although there are a lot of
-tradeoffs between performance and quality that you can choose
-from).</p>
+<p>We're not done.  We're going to start work on 4.3, which will
+become 5.0.  We hope to implement proper color management, improved
+dithering, and improve the performance (which is another known weak
+point, although there are a lot of tradeoffs between performance and
+quality that you can choose from).</p>
 
 <p>We think you'll really enjoy using gimp-print!</p>
 
