@@ -58,12 +58,12 @@ typedef enum {
  */
 
 static void escp2_write(FILE *, const unsigned char *, int, int, int, int, int,
-			int, int, int);
+			int, int, int, int);
 static void escp2_write_all(FILE *, const unsigned char *,
 			    const unsigned char *, const unsigned char *,
 			    const unsigned char *, const unsigned char *,
 			    const unsigned char *, int, int, int, int, int,
-			    int);
+			    int, int);
 static void *initialize_weave(int jets, int separation, int oversample,
 			      int horizontal, int vertical,
 			      colormode_t colormode, int width, int linewidth);
@@ -198,7 +198,7 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO),
-    48, 8, 48, 720, -1, 1, INCH_8_5, INCH_14, 14, 14, 9, 49
+    48, 6, 48, 720, -1, 1, INCH_8_5, INCH_14, 14, 14, 9, 49
   },
   /* 2: Stylus Color 1500 */
   {
@@ -219,21 +219,21 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    64, 8, 64, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 9, 49
+    64, 4, 64, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 9, 49
   },
   /* 5: Stylus Color 850 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    64, 8, 128, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 9, 49
+    64, 4, 128, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 9, 49
   },
   /* 6: Stylus Color 1520/3000 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    64, 8, 128, 720, 0, 2, INCH_16_5, INCH_24, 8, 9, 9, 49
+    1, 1, 128, 720, -1, 2, INCH_16_5, INCH_24, 8, 9, 9, 49
   },
 
   /* SECOND GENERATION PRINTERS */
@@ -341,7 +341,7 @@ res_t escp2_reslist[] = {
   { "720 DPI Softweave", 720, 720, 1, 1, 1, 1 },
   { "720 DPI High Quality", 720, 720, 1, 1, 2, 1 },
   { "720 DPI Highest Quality", 720, 720, 1, 1, 4, 1 },
-  /* { "1440 x 720 DPI Microweave", 1440, 720, 0, 1, 1, 1 }, */
+  { "1440 x 720 DPI Microweave", 1440, 720, 0, 1, 1, 1 },
   { "1440 x 720 DPI Softweave", 1440, 720, 1, 2, 1, 1 },
   { "1440 x 720 DPI Highest Quality", 1440, 720, 1, 2, 2, 1 },
   { "1440 x 1440 DPI Two-pass", 1440, 1440, 1, 2, 1, 2 },
@@ -1150,7 +1150,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
       else
 	{
 	  escp2_write_all(prn, black, cyan, magenta, yellow, lcyan, lmagenta,
-			  length, ydpi, model, out_width, left, bits);
+			  length, xdpi, ydpi, model, out_width, left, bits);
 	  fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
 	}
 
@@ -1214,7 +1214,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
       else
 	{
 	  escp2_write_all(prn, black, cyan, magenta, yellow, lcyan, lmagenta,
-			  length, ydpi, model, out_width, left, bits);
+			  length, xdpi, ydpi, model, out_width, left, bits);
 	  fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
 	}
       errval += errmod;
@@ -1665,6 +1665,7 @@ escp2_write_all(FILE          *prn,	/* I - Print file or command */
 		const unsigned char *lc,	/* I - Output bitmap data */
 		const unsigned char *lm,	/* I - Output bitmap data */
 		int           length,	/* I - Length of bitmap data */
+		int           xdpi,	/* I - Horizontal resolution */
 		int           ydpi,	/* I - Vertical resolution */
 		int           model,	/* I - Printer model */
 		int           width,	/* I - Printed width */
@@ -1672,17 +1673,17 @@ escp2_write_all(FILE          *prn,	/* I - Print file or command */
 		int	      bits)
 {
   if (k)
-    escp2_write(prn, k, length, 0, 0, ydpi, model, width, offset, bits);
+    escp2_write(prn, k, length, 0, 0, xdpi, ydpi, model, width, offset, bits);
   if (c)
-    escp2_write(prn, c, length, 0, 2, ydpi, model, width, offset, bits);
+    escp2_write(prn, c, length, 0, 2, xdpi, ydpi, model, width, offset, bits);
   if (m)
-    escp2_write(prn, m, length, 0, 1, ydpi, model, width, offset, bits);
+    escp2_write(prn, m, length, 0, 1, xdpi, ydpi, model, width, offset, bits);
   if (y)
-    escp2_write(prn, y, length, 0, 4, ydpi, model, width, offset, bits);
+    escp2_write(prn, y, length, 0, 4, xdpi, ydpi, model, width, offset, bits);
   if (lc)
-    escp2_write(prn, lc, length, 1, 2, ydpi, model, width, offset, bits);
+    escp2_write(prn, lc, length, 1, 2, xdpi, ydpi, model, width, offset, bits);
   if (lm)
-    escp2_write(prn, lm, length, 1, 1, ydpi, model, width, offset, bits);
+    escp2_write(prn, lm, length, 1, 1, xdpi, ydpi, model, width, offset, bits);
 }
 	   
 /*
@@ -1695,16 +1696,21 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
 	    int           length,	/* I - Length of bitmap data */
 	    int	   	  density,      /* I - 0 for dark, 1 for light */
 	    int           plane,	/* I - Which color */
+	    int           xdpi,		/* I - Horizontal resolution */
 	    int           ydpi,		/* I - Vertical resolution */
 	    int           model,	/* I - Printer model */
 	    int           width,	/* I - Printed width */
 	    int           offset,	/* I - Offset from left side */
 	    int	   	  bits)		/* I - bits/pixel */
 {
-  unsigned char pack_buf[COMPBUFWIDTH];
-  unsigned char	comp_buf[COMPBUFWIDTH],		/* Compression buffer */
-    *comp_ptr;
-  int setactive = 1;
+  static unsigned char s[4][COMPBUFWIDTH];
+  static unsigned char comp_buf[COMPBUFWIDTH];
+  static unsigned char pack_buf[COMPBUFWIDTH];
+  unsigned char *comp_ptr;
+  const unsigned char *in;
+  int setactive = 0;
+  int oversample = 1;
+  int i;
 
   /*
    * Don't send blank lines...
@@ -1714,21 +1720,35 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
     return;
 
   if (bits == 1)
-    setactive = escp2_pack(line, length, comp_buf, &comp_ptr);
+    in = line;
   else
     {
       escp2_fold(line, length, pack_buf);
-      setactive = escp2_pack(pack_buf, length * bits, comp_buf, &comp_ptr);
+      in = pack_buf;
     }
-  if (!setactive)		/* Short circuit */
-    return;
+  if (xdpi > 720)
+    oversample = xdpi / 720;
+  switch (oversample)
+    {
+    case 1:
+      memcpy(s[0], in, length);
+      break;
+    case 2:
+      if (bits == 1)
+	escp2_unpack_2(length, in, s[0], s[1]);
+      else
+	escp2_unpack_2_2(length, in, s[0], s[1]);
+      break;
+    case 4:
+      if (bits == 1)
+	escp2_unpack_4(length, in, s[0], s[1], s[2], s[3]);
+      else
+	escp2_unpack_4_2(length, in, s[0], s[1], s[2], s[3]);
+      break;
+    }
 
   /*
-   * Set the print head position.
-   */
-
-  /*
-   * Set the color if necessary...
+   * Set the color
    */
 
   if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
@@ -1736,47 +1756,58 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
   else
     fprintf(prn, "\033r%c", plane);
 
-  if (escp2_has_cap(model, MODEL_1440DPI_MASK, MODEL_1440DPI_YES) &&
-      ydpi > 720)
+  for (i = 0; i < oversample; i++)
     {
-      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
-			MODEL_VARIABLE_4))
-	fprintf(prn, "\033($%c%c%c%c%c%c", 4, 0,
-		(offset * 1440 / ydpi) & 255,
-		((offset * 1440 / ydpi) >> 8) & 255,
-		((offset * 1440 / ydpi) >> 16) & 255,
-		((offset * 1440 / ydpi) >> 24) & 255);
+      setactive = escp2_pack(s[i], length * bits, comp_buf, &comp_ptr);
+      if (!setactive)
+	continue;
+      /*
+       * Set the print head position.
+       */
+
+      if (escp2_has_cap(model, MODEL_1440DPI_MASK, MODEL_1440DPI_YES) &&
+	  xdpi > 720)
+	{
+	  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
+			    MODEL_VARIABLE_4))
+	    fprintf(prn, "\033($%c%c%c%c%c%c", 4, 0,
+		    ((offset * 1440 / ydpi) + i) & 255,
+		    (((offset * 1440 / ydpi) >> 8) + i) & 255,
+		    (((offset * 1440 / ydpi) >> 16) + i) & 255,
+		    (((offset * 1440 / ydpi) >> 24) + i) & 255);
+	  else
+	    fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
+		    ((offset * 1440 / ydpi) + i) & 255,
+		    ((offset * 1440 / ydpi) + i) >> 8);
+	}
       else
-	fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
-		(offset * 1440 / ydpi) & 255, (offset * 1440 / ydpi) >> 8);
+	fprintf(prn, "\033\\%c%c", offset & 255, offset >> 8);
+
+      /*
+       * Send a line of raster graphics...
+       */
+
+      switch (ydpi)				/* Raster graphics header */
+	{
+	case 180 :
+	  fwrite("\033.\001\024\024\001", 6, 1, prn);
+	  break;
+	case 360 :
+	  fwrite("\033.\001\012\012\001", 6, 1, prn);
+	  break;
+	case 720 :
+	  if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK, MODEL_720DPI_600))
+	    fwrite("\033.\001\050\005\001", 6, 1, prn);
+	  else
+	    fwrite("\033.\001\005\005\001", 6, 1, prn);
+	  break;
+	}
+      putc(width & 255, prn);		/* Width of raster line in pixels */
+      putc(width >> 8, prn);
+
+      fwrite(comp_buf, comp_ptr - comp_buf, 1, prn);
+      putc('\r', prn);
     }
-  else
-    fprintf(prn, "\033\\%c%c", offset & 255, offset >> 8);
-
-  /*
-   * Send a line of raster graphics...
-   */
-
-  switch (ydpi)				/* Raster graphics header */
-    {
-    case 180 :
-      fwrite("\033.\001\024\024\001", 6, 1, prn);
-      break;
-    case 360 :
-      fwrite("\033.\001\012\012\001", 6, 1, prn);
-      break;
-    case 720 :
-      if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK, MODEL_720DPI_600))
-	fwrite("\033.\001\050\005\001", 6, 1, prn);
-      else
-	fwrite("\033.\001\005\005\001", 6, 1, prn);
-      break;
-    }
-  putc(width & 255, prn);		/* Width of raster line in pixels */
-  putc(width >> 8, prn);
-
-  fwrite(comp_buf, comp_ptr - comp_buf, 1, prn);
-  putc('\r', prn);
 }
 
 
@@ -2651,6 +2682,9 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.118  2000/03/27 02:38:23  rlk
+ *   Reactivate 1440x720 microweave
+ *
  *   Revision 1.117  2000/03/20 12:20:12  rlk
  *   Try to maintain dependency order of lex on yacc stuff
  *
