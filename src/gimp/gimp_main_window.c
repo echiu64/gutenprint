@@ -112,7 +112,6 @@ static gboolean   suppress_scaling_callback   = FALSE;
 
 static gint   suppress_preview_update = 0;
 
-static guchar *preview_data = NULL;
 static gint preview_valid = 0;
 static gint frame_valid = 0;
 
@@ -2470,8 +2469,7 @@ gimp_update_adjusted_thumbnail (void)
   if (thumbnail_data == 0 || adjusted_thumbnail_data == 0)
     return;
 
-  stp_set_density(*pv, 1.0);
-
+  stp_set_density (*pv, 1.0);
   stp_compute_lut (*pv, 256);
   colorfunc = stp_choose_colorfunc (stp_get_output_type(*pv), thumbnail_bpp,
 				    NULL, &adjusted_thumbnail_bpp, *pv);
@@ -2479,8 +2477,8 @@ gimp_update_adjusted_thumbnail (void)
   for (y = 0; y < thumbnail_h; y++)
     {
       (*colorfunc) (*pv, thumbnail_data + thumbnail_bpp * thumbnail_w * y,
-		     out, NULL, thumbnail_w, thumbnail_bpp, NULL, NULL, NULL,
-		     NULL);
+		    out, NULL, thumbnail_w, thumbnail_bpp, NULL, NULL, NULL,
+		    NULL);
       for (x = 0; x < adjusted_thumbnail_bpp * thumbnail_w; x++)
 	{
 	  *adjusted_data++ = out[x] / 0x0101U;
@@ -2562,6 +2560,7 @@ gimp_do_preview_thumbnail(gint paper_left, gint paper_top, gint orient)
   static GdkGC	*gc    = NULL;
   static GdkGC  *gcinv = NULL;
   static GdkGC  *gcset = NULL;
+  static guchar *preview_data = NULL;
   static gint opx = 0;
   static gint opy = 0;
   static gint oph = 0;
@@ -2586,69 +2585,54 @@ gimp_do_preview_thumbnail(gint paper_left, gint paper_top, gint orient)
       gint v_denominator = preview_h > 1 ? preview_h - 1 : 1;
       gint v_numerator = (thumbnail_h - 1) % v_denominator;
       gint v_whole = (thumbnail_h - 1) / v_denominator;
+      gint h_denominator = preview_w > 1 ? preview_w - 1 : 1;
+      gint h_numerator = (thumbnail_w - 1) % h_denominator;
+      gint h_whole = (thumbnail_w - 1) / h_denominator;
+      gint adjusted_preview_width = adjusted_thumbnail_bpp * preview_w;
+      gint adjusted_thumbnail_width = adjusted_thumbnail_bpp * thumbnail_w;
       gint v_cur = 0;
       gint v_last = -1;
       gint v_error = v_denominator / 2;
-      gint y = 0;
+      gint y;
+      gint i;
 
       if (preview_data)
 	free(preview_data);
       preview_data = g_malloc(3 * preview_h * preview_w);
-      while (y < preview_h)
+      for (y = 0; y < preview_h; y++)
 	{
+	  guchar *outbuf = preview_data + adjusted_preview_width * y;
 	  if (v_cur == v_last)
 	    {
-	      memcpy(preview_data + adjusted_thumbnail_bpp * preview_w * y,
-		     preview_data + adjusted_thumbnail_bpp * preview_w *(y- 1),
-		     adjusted_thumbnail_bpp * preview_w);
+	      memcpy(outbuf, outbuf - adjusted_preview_width,
+		     adjusted_preview_width);
 	    }
 	  else
 	    {
 	      guchar *inbuf = adjusted_thumbnail_data - adjusted_thumbnail_bpp
-		+ adjusted_thumbnail_bpp * thumbnail_w * v_cur;
-	      guchar *outbuf = preview_data
-		+ adjusted_thumbnail_bpp * preview_w * y;
+		+ adjusted_thumbnail_width * v_cur;
 
-	      gint h_denominator = preview_w > 1 ? preview_w - 1 : 1;
-	      gint h_numerator = (thumbnail_w - 1) % h_denominator;
-	      gint h_whole = (thumbnail_w - 1) / h_denominator;
 	      gint h_cur = 0;
 	      gint h_last = -1;
 	      gint h_error = h_denominator / 2;
-	      gint x = 0;
+	      gint x;
 
 	      v_last = v_cur;
-	      while (x < preview_w)
+	      for (x = 0; x < preview_w; x++)
 		{
 		  if (h_cur == h_last)
 		    {
-		      if (adjusted_thumbnail_bpp == 1)
-			{
-			  outbuf[0] = outbuf[-1];
-			  outbuf++;
-			}
-		      else
-			{
-			  outbuf[0] = outbuf[-3];
-			  outbuf[1] = outbuf[-2];
-			  outbuf[2] = outbuf[-1];
-			  outbuf += 3;
-			}
+		      for (i = 0; i < adjusted_thumbnail_bpp; i++)
+			outbuf[i] = outbuf[i - adjusted_thumbnail_bpp];
 		    }
 		  else
 		    {
 		      inbuf += adjusted_thumbnail_bpp * (h_cur - h_last);
 		      h_last = h_cur;
-		      outbuf[0] = inbuf[0];
-		      outbuf++;
-		      if (adjusted_thumbnail_bpp == 3)
-			{
-			  outbuf[0] = inbuf[1];
-			  outbuf[1] = inbuf[2];
-			  outbuf += 2;
-			}
+		      for (i = 0; i < adjusted_thumbnail_bpp; i++)
+			outbuf[i] = inbuf[i];
 		    }
-		  x++;
+		  outbuf += adjusted_thumbnail_bpp;
 		  h_cur += h_whole;
 		  h_error += h_numerator;
 		  if (h_error >= h_denominator)
@@ -2658,7 +2642,6 @@ gimp_do_preview_thumbnail(gint paper_left, gint paper_top, gint orient)
 		    }
 		}
 	    }
-	  y++;
 	  v_cur += v_whole;
 	  v_error += v_numerator;
 	  if (v_error >= v_denominator)
