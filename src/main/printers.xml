@@ -799,7 +799,7 @@
       </printer>
       <printer name="EPSON Stylus CX-6300" driver="escp2-cx6300">
         <color value="true"/>
-        <model value="61"/>
+        <model value="60"/>
         <cyan value="0.96"/>
         <magenta value="1.02"/>
         <yellow value="1.02"/>
@@ -808,7 +808,7 @@
       </printer>
       <printer name="EPSON Stylus CX-6400" driver="escp2-cx6400">
         <color value="true"/>
-        <model value="61"/>
+        <model value="60"/>
         <cyan value="0.96"/>
         <magenta value="1.02"/>
         <yellow value="1.02"/>
