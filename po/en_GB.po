@@ -3762,7 +3762,7 @@ msgstr "English-GB"
 
 #: src/cups/genppd.c:872
 msgid "ISOLatin1"
-msgstr "ISOLatin1"
+msgstr "UTF-8"
 
 #: src/cups/genppd.c:1376 src/cups/genppd.c:1391 src/cups/genppd.c:1439
 msgid "None"
