@@ -850,7 +850,8 @@ escp2_set_margins(const escp2_init_t *init)
   top += init->initial_vertical_offset;
   if (escp2_use_extended_commands(init->model, init->v, init->use_softweave))
     {
-      if (escp2_has_cap(init->model, MODEL_COMMAND,MODEL_COMMAND_2000,init->v))
+      if (escp2_has_cap(init->model,MODEL_COMMAND,MODEL_COMMAND_2000,init->v)||
+	  escp2_has_cap(init->model,MODEL_COMMAND,MODEL_COMMAND_PRO,init->v))
 	stp_zprintf(init->v, "\033(c\010%c%c%c%c%c%c%c%c%c", 0,
 		    top & 0xff, (top >> 8) & 0xff,
 		    (top >> 16) & 0xff, (top >> 24) & 0xff,
