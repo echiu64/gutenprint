@@ -10,7 +10,11 @@ The Gimp Print plugin requires the Gimp 1.2.
 
 Gimp-Print 4.1.7 contains the following changes over 4.1.6:
 
-1) Significant dither improvements, as follows:
+1) A bug in the internationalization code that prevented compiling
+   on systems not based on GNU libc (for example, Solaris, BSD) is now
+   fixed.
+
+2) Significant dither improvements, as follows:
 
    * The Adaptive Random and Random Floyd-Steinberg dither methods
      have been removed.  There is no evidence that they offer any
@@ -37,24 +41,24 @@ Gimp-Print 4.1.7 contains the following changes over 4.1.6:
    * Variable drop size Epson printers will exhibit a smoother black
      transition.
 
-2) The Epson driver offers more choices of ink types, including 3 and
-   5 color composite-only inks (black is produced by composition of
-   CMY only; no black ink is used).  This may be useful in some cases.
-
 3) PCL printers will print pages with a lot of vertical white space
    much more efficiently.
 
-4) Tentative support for vertical zero margin printing has been added
+4) The Epson driver offers more choices of ink types, including 3 and
+   5 color composite-only inks (black is produced by composition of
+   CMY only; no black ink is used).  This may be useful in some cases.
+
+5) Tentative support for vertical zero margin printing has been added
    for Epson printers that support it (notably the Stylus Photo
    780/790, 890, and 1280/1290 printers).  This feature is
    experimental.
 
-5) The Gimp plugin name was incorrect in 4.1.6.
+6) The Gimp plugin name was incorrect in 4.1.6.
 
-6) The CUPS driver no longer offers the Custom page size as the
+7) The CUPS driver no longer offers the Custom page size as the
    default; it now offers Letter size as default on most printers.
 
-7) The CUPS driver no longer allows printing in color to black and
+8) The CUPS driver no longer allows printing in color to black and
    white printers (such as laser printers).
 
 
