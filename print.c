@@ -58,6 +58,63 @@
 
 #include "print-intl.h"
 
+#ifdef GIMP_1_0
+#ifndef GIMP_PDB_STRING
+#define GIMP_PDB_STRING PARAM_STRING
+#endif
+#ifndef GIMP_PDB_INT32
+#define GIMP_PDB_INT32 PARAM_INT32
+#endif
+#ifndef GIMP_PDB_FLOAT
+#define GIMP_PDB_FLOAT PARAM_FLOAT
+#endif
+#ifndef GIMP_PDB_IMAGE
+#define GIMP_PDB_IMAGE PARAM_IMAGE
+#endif
+#ifndef GIMP_PDB_DRAWABLE
+#define GIMP_PDB_DRAWABLE PARAM_DRAWABLE
+#endif
+#ifndef GIMP_PDB_STATUS
+#define GIMP_PDB_STATUS PARAM_STATUS
+#endif
+#ifndef GIMP_PDB_SUCCESS
+#define GIMP_PDB_SUCCESS STATUS_SUCCESS
+#endif
+#ifndef GIMP_PDB_EXECUTION_ERROR
+#define GIMP_PDB_EXECUTION_ERROR STATUS_EXECUTION_ERROR
+#endif
+#ifndef GIMP_PDB_CALLING_ERROR
+#define GIMP_PDB_CALLING_ERROR STATUS_CALLING_ERROR
+#endif
+#ifndef GIMP_PLUGIN
+#define GIMP_PLUGIN PROC_PLUG_IN
+#endif
+#ifndef GIMP_INDEXED
+#define GIMP_INDEXED INDEXED
+#endif
+#ifndef GIMP_RUN_INTERACTIVE
+#define GIMP_RUN_INTERACTIVE RUN_INTERACTIVE
+#endif
+#ifndef GIMP_RUN_NONINTERACTIVE
+#define GIMP_RUN_NONINTERACTIVE RUN_NONINTERACTIVE
+#endif
+#ifndef GIMP_RUN_WITH_LAST_VALS
+#define GIMP_RUN_WITH_LAST_VALS RUN_WITH_LAST_VALS
+#endif
+#ifndef GimpParam
+#define GimpParam GParam
+#endif
+#ifndef GimpPlugInInfo
+#define GimpPlugInInfo GPlugInInfo
+#endif
+#ifndef GimpDrawable
+#define GimpDrawable GDrawable
+#endif
+#ifndef GimpRunModeType
+#define GimpRunModeType GRunModeType
+#endif
+
+#endif
 
 /*
  * Local functions...
@@ -642,7 +699,7 @@ run (char   *name,		/* I - Name of print program. */
 	   * Is the image an Indexed type?  If so we need the colormap...
 	   */
 
-	  if (gimp_image_base_type (image_ID) == INDEXED)
+	  if (gimp_image_base_type (image_ID) == GIMP_INDEXED)
 	    vars.cmap = gimp_image_get_cmap (image_ID, &ncolors);
 	  else
 	    vars.cmap    = NULL;
