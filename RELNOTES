@@ -9,6 +9,8 @@ printers.  The support for Epson Stylus printers in the GhostScript
 driver is identical to the support for these printers in the Print
 plugin -- they use the identical code base.
 
+This plugin can be compiled against either Gimp 1.1 or 1.0.
+
 Print 3.1.2 contains the following improvements over Print 3.1.1:
 
 1) Better dither quality.
@@ -17,12 +19,14 @@ Print 3.1.2 contains the following improvements over Print 3.1.1:
    (photographs, continuous-tone images such as charts, line art, and
    very fast pure black/white rendering).
 
-3) Tweaking of the GhostScript driver
+3) Tweaking of the GhostScript driver.
 
-4) Some improvements for some Epson printers.
+4) Epson Stylus Color 440 prints in softweave.  In general, most Epson
+   printers are more reliable.
+
+5) Preliminary support for more Hewlett-Packard printers.
 
 
-This plugin can be compiled against either Gimp 1.1 or 1.0.
 
 Print 3.1.1 contains the following improvements over Print 3.1.0:
 
