@@ -61,18 +61,20 @@ $supported_printers = array(
 		)
 	),
 'Canon (<strong><em>New!</em></strong>)' => array(
-       'BJC 1000' => 'Untested',
-       'BJC 2000' => 'Untested',
-       'BJC 3000' => 'Untested',
-       'BJC 5100' => 'Under Development',
-       'BJC 5500' => 'Under Development',
-       'BJC 6000' => 'Operational but incomplete',
-       'BJC 6100' => 'Untested',
-       'BJC 6500' => 'Under Development',
-       'BJC 7000' => 'Untested',
-       'BJC 7100' => 'Untested',
-       'BJC 8200' => 'Under Development',
-       'BJC 8500' => 'Under Development'
+       'BJC Range' => array(
+	       'BJC 1000' => 'Untested',
+	       'BJC 2000' => 'Untested',
+	       'BJC 3000' => 'Untested',
+	       'BJC 5100' => 'Under Development',
+	       'BJC 5500' => 'Under Development',
+	       'BJC 6000' => 'Operational but incomplete',
+	       'BJC 6100' => 'Untested',
+	       'BJC 6500' => 'Under Development',
+	       'BJC 7000' => 'Untested',
+	       'BJC 7100' => 'Untested',
+	       'BJC 8200' => 'Under Development',
+	       'BJC 8500' => 'Under Development'
+	       )
        ),
 'Postscript' => array(
 	'Postscript' => array(
