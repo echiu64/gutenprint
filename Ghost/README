@@ -177,21 +177,6 @@ OPTIONS:
  dpi (see below for driver parameter). The result is a somewhat faster
  operation of the driver.
 
-
-Color Balancing Values: (min,max,default)
------ --------- ------- -----------------
-
--dCyan=xxx       xxx: 0.0 ... 4.0  (1.0)
--dMagenta=xxx    xxx: 0.0 ... 4.0  (1.0)
--dYellow=xxx     xxx: 0.0 ... 4.0  (1.0)
--dBrightness=xxx xxx: 0.0 ... 2.0  (1.0)
--dContrast=xxx   xxx: 0.0 ... 4.0  (1.0)
--dGamma=xxx      xxx: 0.1 ... 4.0  (1.0)
--dDensity=xxx    xxx: 0.1 ... 2.0  (1.0)
--dSaturation=xxx xxx: 0.0 ... 9.0  (1.0)
--dColor=x          x:   0 ...   1  (1) (0==gray, 1==color) 
-
-
 Printer Model Selection:
 ------- ----- ----------
 
@@ -385,6 +370,70 @@ For Canon printers:
 '1440x1440 DPI'
 
 
+Color Balancing Values: (min,max,default)
+----- --------- ------- -----------------
+
+All of the values below are interpreted as being relative to norms for
+a particular printer established through testing, not "absolute"
+values of any kind.
+
+-dCyan=xxx       xxx: 0.0 ... 4.0  (1.0)
+-dMagenta=xxx    xxx: 0.0 ... 4.0  (1.0)
+-dYellow=xxx     xxx: 0.0 ... 4.0  (1.0)
+
+ These three options allow specification of the cyan, magenta, and
+ yellow levels independently, for rebalancing the levels.  Normally,
+ these should be adjusted to yield neutral gray, but they can be used
+ for other effects.
+
+-dBrightness=xxx xxx: 0.0 ... 2.0  (1.0)
+
+ Adjust the brightness of the image.  0.0 gives a fully black image;
+ 2.0 gives a fully white image.  Values greater than 1 will result in
+ black not being solid and highlights turning white; values less than
+ 1 will result in white not being perfectly clear and shadows turning
+ black.
+
+-dContrast=xxx   xxx: 0.0 ... 4.0  (1.0)
+
+ Adjust the contrast of the image.  0.0 gives a solid gray for the
+ entire image, the exact gray depending upon the brightness chosen.
+
+-dGamma=xxx      xxx: 0.1 ... 4.0  (1.0)
+
+ Adjust the gamma of the image, over and above the printer-specific
+ correction.  Gamma less than 1.0 will result in a darker image; gamma
+ greater than 1.0 will result in a lighter image.  Unlike brightness,
+ gamma adjustment does not change the endpoints; it merely changes the
+ shape of the input->output curve.
+
+-dDensity=xxx    xxx: 0.1 ... 2.0  (1.0)
+
+ Adjust the amount of ink deposited on the paper.  If you've chosen
+ the correct paper type and you're getting ink bleeding through the
+ paper or puddling, try reducing the density to the lowest value you
+ can while still achieving solid black.  If you're not getting solid
+ black, even with the contrast and brightness at 1.0, try increasing
+ the density.
+
+ All of the printers supported here actually need less than 100% ink
+ density in most cases, so the actual density is something other than
+ the nominal density setting.  The effective density setting cannot go
+ above 100%, so if a value specified will result in an excessively
+ high density level, it will be silently limited to 1.0.
+
+-dSaturation=xxx xxx: 0.0 ... 9.0  (1.0)
+
+ Adjust the brilliance of colors.  0.0 results in pure grayscale;
+ using this with -dColor=1 is one way of getting grayscale (see below
+ under -dColor for a full discussion).  Saturation of less than 1.0
+ results in more muted colors; saturation of greater than 1.0 results
+ in more vibrant colors.  Very high saturation often results in very
+ strange effects, including posterization and banding that might not
+ be expected.  For normal purposes, the saturation should generally be
+ less than 1.5.
+
+
 Dithering Algorithms:
 --------- -----------
 
@@ -404,20 +453,44 @@ except in very light regions, where ordered dithering is used.
 
 Ordered dithering typically works best in solid-color graphics on four
 color printers, and in very pale regions.  The results on six color
-printers tend to be poor.  The adaptive algorithms do perform well on
-six color printers.
+and variable dot size printers tend to be poor, with considerable
+clumping.  It uses an array lookup to decide whether to print, and if
+it is decided to print, what sub-color (in 6 color printers) and dot
+size (in variable dot size) to use.  Ordered dither performs poorly on
+certain kinds of very fine detail, such as fine lines.
 
-Adaptive hybrid dithering usually gives the best results overall.
+Error diffusion algorithms (Hybrid Floyd-Steinberg and Random
+Floyd-Steinberg, both of which are modifications on pure
+Floyd-Steinberg) perform very well at high densities, and are capable
+of rendering very fine detail well, but they tend to exhibit artifacts
+in the form of "waves" or "worms" of dots which results in noticeable
+texturing in pale areas.  Furthermore, pale areas immediately adjacent
+to white take a while to "build up" sufficient error to print at all.
+The only difference between the algorithms is that Hybrid
+Floyd-Steinberg uses an array lookup where Random Floyd-Steinberg uses
+a random number generator.  Hybrid Floyd-Steinberg is faster, and
+probably slightly better.
+
+Adaptive dithering usually gives the best results overall.  It uses
+pure ordered dither at low densities, and Floyd-Steinberg at high
+densities.  Adaptive random seldom if ever has any advantages over
+adaptive hybrid, and is considerably slower due to the use of a random
+number generator for each point.  Adaptive hybrid dithering uses an
+array lookup for each point, which is considerably faster.
 
 The Fast algorithm gives the fastest results at the expense of color
-accuracy.  On simple four color printers (or other printers used in
-four color mode), the quality is similar to Ordered, although dark
-gray rendition is not as good.  It generally gives poor results in six
-color mode.  In black and white, it is an efficient way to render
-grayscale, but it may not give best results when used with variable
-dot size printers.
+accuracy.  It is a simplified ordered dither.  On simple four color
+printers (or other printers used in four color mode), the quality is
+similar to Ordered, although dark gray rendition is not as good due to
+a simpler transfer between black and colored ink.  It generally gives
+very poor results in six color mode.  In black and white, it is an
+efficient way to render grayscale, but it may not give best results
+when used with variable dot size printers.  On rare three color
+printers (CMY only) the results should be identical to ordered dither.
 
 Very Fast is even faster than Fast, with even more loss of quality.
+It uses a power of 2 matrix that can be looked up more quickly and
+performs certain other optimizations.
 
 
 Ink Types
@@ -539,9 +612,23 @@ For PCL (Hewlett-Packard and Lexmark) printers:
 'Autoselect'
 
 
-
 Image type (to optimize the dither):
 ----- ---- --- -------- --- --------
+
+-dColor=x          x:   0 ...   1  (1)
+
+ Choose color vs. grayscale output.  Color output is the default.
+ Choosing -dColor=0 results in only black ink (no color ink) being
+ used, which is faster and usually results in the most accurate
+ grayscale, but at the expense of smoothness.  If you want composite
+ color (using a mixture of color and black inks to produce gray), use
+ -dColor=1 and -dSaturation=0.0 (see -dSaturation above).
+
+ In addition, using -dColor=0 uses luminance (perceived brightness) of
+ red, green, and blue to choose output levels.  Blue of a given
+ intensity is perceived to be much darker than red, which in turn
+ appears darker than green.  -dColor=1 and -dSaturation=0.0 does not
+ use luminance.
 
 -dImageType=x x:   0 ...   3  (0)
 Select the image type most representative of what's being printed.  
@@ -552,12 +639,14 @@ Select the image type most representative of what's being printed.
 3  Pure black and white or pre-screened (currently black only)
 
 For mixed documents, options 0 or 1 will probably work best.  Option 0
-will dither faster and yield sharper text, but images will be
-grainier.  Option 1 will yield smoother images, but text will not be
-as sharp and the dither process will be slower.  Option 2 will yield
-the best natural images, but is quite slow.  Option 3 is very fast and
+will dither faster and yield sharper text, but at some possible cost
+to color accuracy and/or smoothness.  Option 1 may yield smoother
+images and/or more accurate color.  Option 2 will yield the best
+natural images, but is quite slow.  Option 3 is very fast and
 accurate, but should not be used if there are any tones other than
 pure black and white (or you want absolute black and white contrast).
+Option 3 combined with Very Fast dithering results in extremely fast
+rendering.
 
 Note that any of the modes (except monochrome) may be used with either
 color or black & white output.  If black and white output is
