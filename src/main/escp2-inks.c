@@ -71,9 +71,9 @@ static const escp2_dropsize_t escp2_4pl_dropsizes =
 static const escp2_dropsize_t escp2_3pl_dropsizes =
   { "3pl", 3, { 0.25, 0.61, 1.0 } };
 static const escp2_dropsize_t escp2_3pl_1440_dropsizes =
-  { "3pl_1440", 3, { 0.39, 1.0 } };
+  { "3pl_1440", 2, { 0.39, 1.0 } };
 static const escp2_dropsize_t escp2_3pl_2880_dropsizes =
-  { "3pl_2880", 3, { 1.0 } };
+  { "3pl_2880", 1, { 1.0 } };
 static const escp2_dropsize_t escp2_980_6pl_dropsizes =
   { "980_6pl", 3, { 0.40, 0.675, 1.0 } };
 
