@@ -1731,7 +1731,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL
   },
-  /* 65: Stylus Photo RX4600 */
+  /* 65: Stylus Photo CX4600 */
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
