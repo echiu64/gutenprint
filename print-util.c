@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.29  1999/11/14 21:37:13  rlk
+ *   Revamped contrast
+ *
  *   Revision 1.28  1999/11/14 18:59:22  rlk
  *   Final preparations for release to Olof
  *
@@ -1928,15 +1931,22 @@ compute_lut(lut_t *lut,
 	}
       else
 	{
-	  /*
-	   * First, perform screen gamma correction
-	   */
-	  pixel = 1.0 - pow((float)i / 255.0, screen_gamma);
+	  float temp_pixel;
+	  pixel = (float) i / 255.0;
 
 	  /*
-	   * Second, correct contrast
+	   * First, correct contrast
 	   */
-	  pixel = 0.5 + ((pixel - 0.5) * contrast);
+	  temp_pixel = fabs((pixel - .5) * 2.0);
+	  temp_pixel = pow(temp_pixel, 1.0 / (contrast * contrast));
+	  if (pixel < .5)
+	    temp_pixel = -temp_pixel;
+	  pixel = (temp_pixel / 2.0) + .5;
+
+	  /*
+	   * Second, perform screen gamma correction
+	   */
+	  pixel = 1.0 - pow(pixel, screen_gamma);
 
 	  /*
 	   * Third, fix up red, green, blue values

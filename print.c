@@ -1179,7 +1179,7 @@ do_print_dialog(void)
   gtk_widget_show(box);
 
   contrast_adjustment = scale_data =
-      gtk_adjustment_new((float)vars.contrast, 0.0, 201.0, 1.0, 1.0, 1.0);
+      gtk_adjustment_new((float)vars.contrast, 25.0, 401.0, 1.0, 1.0, 1.0);
 
   gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
 		     (GtkSignalFunc)contrast_update, NULL);
