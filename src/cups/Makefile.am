@@ -47,7 +47,7 @@ else
 cups_modeldir = $(pkgdatadir)/model/gimp-print/@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@/
 endif
 
-DEFS = -I. -I$(srcdir) -I../.. $(AM_CFLAGS) @CUPS_CFLAGS@ @DEFS@ $(GIMPPRINT_CFLAGS)
+LOCAL_CPPFLAGS = $(GIMPPRINT_CFLAGS) $(CUPS_CFLAGS)
 
 
 ## Programs

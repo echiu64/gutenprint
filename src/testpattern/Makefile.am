@@ -28,7 +28,6 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
-INCLUDES = $(AM_CFLAGS)
 pkgdatadir = $(datadir)/$(PACKAGE)/samples
 
 TESTS = run-testpattern run-testpattern-1
