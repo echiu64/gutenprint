@@ -112,7 +112,7 @@ Recommends: gimpprint-locales (>= ${Source-Version})
 Description: a utility for Epson Stylus printers
  escputil is a utility to clean and align the heads of Epson Stylus printers.
 
-Package: foomatic-db-gimpprint
+Package: foomatic-db-gimp-print
 Architecture: all
 Section: text
 Depends: libgimpprint1 (= ${Source-Version}), foomatic-db

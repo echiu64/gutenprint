@@ -26,7 +26,7 @@ build-stamp: configure
 	cd .. ; \
 	mkdir debian/gimp-print-build ; \
 	cd debian/gimp-print-build ; \
-	BUILD_PACKAGE=true ../../configure --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --enable-static --enable-shared --without-gimp --with-cups --with-foomatic --disable-test --without-translated-ppds --disable-cups-level3-ps --enable-maintainer-mode ; \
+	BUILD_PACKAGE=true ../../configure --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --enable-static --enable-shared --without-gimp --with-cups --without-ijs --with-foomatic --disable-test --without-translated-ppds --disable-cups-level3-ps --enable-maintainer-mode ; \
 	$(MAKE) ; \
 	cd src/gimp ; \
 	$(MAKE) print
@@ -59,7 +59,7 @@ install: build debian/control
 	/usr/bin/install -c debian/gimp-print-build/src/gimp/.libs/print debian/gimp1.2-print/usr/lib/gimp/1.2/plug-ins/print
 	
 	dh_movefiles --sourcedir=debian/gimp-print-install
-	rm debian/foomatic-db-gimpprint/usr/share/foomatic/kitload.log
+	rm debian/foomatic-db-gimp-print/usr/share/foomatic/kitload.log
 
 
 # Build architecture-independent files here.
