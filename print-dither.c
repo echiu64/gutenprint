@@ -117,6 +117,7 @@ typedef struct dither
   int src_width;
   int dst_width;
   int density;
+  int d_cutoff;
   int spread;
 
   int k_lower;			/* Transition range (lower/upper) for CMY */
@@ -310,6 +311,7 @@ init_dither(int in_width, int out_width, vars_t *v)
   d->src_width = in_width;
   d->dst_width = out_width;
   d->density = 65536;
+  d->d_cutoff = d->density / 16;
   d->k_lower = 26214;		/* .4 */
   d->k_upper = 45875;		/* .7 */
   d->lc_level = 32768;
@@ -355,6 +357,7 @@ dither_set_density(void *vd, double density)
   d->k_upper = d->k_upper * density;
   d->k_lower = d->k_lower * density;
   d->density = (int) ((65536 * density) + .5);
+  d->d_cutoff = d->density / 16;
 }
 
 void
@@ -745,7 +748,7 @@ do {									   \
 	  else								   \
 	    dist = myspread * tmp##r / ((offset + 1) * (offset + 1));	   \
 	  if (x > 0 && 0 < xdw1)					   \
-	    dither##r    = r##error0[direction] + (8 - myspread) * tmp##r; \
+	    dither##r  = r##error0[direction] + (8 - myspread) * tmp##r;   \
 	  delta = dist;							   \
 	  for (i = -offset; i <= offset; i++)				   \
 	    {								   \
@@ -830,23 +833,19 @@ do {						\
 } while (0)
 
 static int
-print_color(dither_t *d, dither_color_t *rv, int base, int adjusted,
-	    int x, int y, unsigned char *c, unsigned char *lc,
+print_color(dither_t *d, dither_color_t *rv, int base, int density,
+	    int adjusted, int x, int y, unsigned char *c, unsigned char *lc,
 	    unsigned char bit, int length, int invert_x, int invert_y,
 	    unsigned randomizer)
 {
-  static int lastx = 0;
-  static int lasty = 0;
-  static int lastxy = 0;
-  static int lastyx = 0;
   int i;
   int levels = rv->nlevels - 1;
-  if (adjusted <= 0 || base == 0)
+  if (adjusted <= 0 || base == 0 || density == 0)
     return adjusted;    
   for (i = levels; i >= 0; i--)
     {
       dither_segment_t *dd = &(rv->ranges[i]);
-      if (base > dd->range_l)
+      if (density > dd->range_l)
 	{
 	  unsigned rangepoint;
 	  unsigned virtual_value;
@@ -863,7 +862,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int adjusted,
 	    rangepoint = 32768;
 	  else
 	    rangepoint =
-	      ((unsigned) (base - dd->range_l)) * 65536 / dd->range_span;
+	      ((unsigned) (density - dd->range_l)) * 65536 / dd->range_span;
 
 	  /*
 	   * Compute the virtual dot size that we're going to print.
@@ -878,26 +877,55 @@ print_color(dither_t *d, dither_color_t *rv, int base, int adjusted,
 	    virtual_value = dd->value_l +
 	      (dd->value_span * rangepoint / 65536);
 
+	  /*
+	   * Reduce the randomness as the base value increases, to get
+	   * smoother output in the midtones.  Idea suggested by
+	   * Thomas Tonino.
+	   */
+	  if (d->dither_type != D_ORDERED)
+	    {
+	      if (base > d->d_cutoff)
+		randomizer = 0;
+	      else if (base > d->d_cutoff / 2)
+		randomizer = randomizer * 2 * (d->d_cutoff - base)
+		  / d->d_cutoff;
+	    }
+
 	  if (randomizer == 0)
 	    vmatrix = virtual_value / 2;
 	  else
 	    {
 	      if (d->dither_type == D_FLOYD)
-		vmatrix = (rand() & 0xffff000) >> 12;
+		vmatrix = ((rand() & 0xffff000) +
+			   (rand() & 0xffff000) +
+			   (rand() & 0xffff000) +
+			   (rand() & 0xffff000)) >> 14;
 	      else if (d->dither_type == D_FLOYD_HYBRID)
 		vmatrix = DITHERPOINT(x, y, 1, d) ^ DITHERPOINT(x, y, 2, d)>>2;
 	      else
 		vmatrix = DITHERPOINT((x + y / 3), (y + x / 3), 0, d);
+
 	      if (vmatrix == 65536 && virtual_value == 65536)
-		vmatrix = 65536;
+		vmatrix = 32768;
 	      else
-		vmatrix = vmatrix * virtual_value / 65536;
-	      if (randomizer != 65536)
 		{
-		  unsigned vbase = virtual_value * (65536 - randomizer) /
-		    65536;
-		  vmatrix = (unsigned long long) vmatrix * randomizer / 65536;
-		  vmatrix += vbase;
+		  vmatrix = vmatrix * virtual_value / 65536;
+		  if (randomizer != 65536)
+		    {
+		      /*
+		       * We want vmatrix to be scaled between 0 and
+		       * virtual_value when randomizer is 65536 (fully random).
+		       * When it's less, we want it to scale through part of
+		       * that range. In all cases, it should center around
+		       * virtual_value / 2.
+		       *
+		       * vbase is the bottom of the scaling range.
+		       */
+		      unsigned vbase = virtual_value * (65536u - randomizer) /
+			131072u;
+		      vmatrix = vmatrix * randomizer / 65536;
+		      vmatrix += vbase;
+		    }
 		}
 	    }
 
@@ -1063,12 +1091,12 @@ dither_black(unsigned short   *gray,		/* I - Grayscale pixels */
     k = 65535 - *gray;
     ok = k;
     if (d->dither_type == D_ORDERED)
-      print_color(d, &(d->k_dither), k, k, x, row, kptr, NULL, bit,
+      print_color(d, &(d->k_dither), k, k, k, x, row, kptr, NULL, bit,
 		  length, 0, 0, d->k_randomizer);
     else
       {
 	UPDATE_COLOR(k);
-	k = print_color(d, &(d->k_dither), ok, k, x, row, kptr, NULL, bit,
+	k = print_color(d, &(d->k_dither), ok, ok, k, x, row, kptr, NULL, bit,
 			length, 0, 0, d->k_randomizer);
 	UPDATE_DITHER(k, x, d->src_width);
       }
@@ -1282,7 +1310,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
        * empirically determined.
        */
       ok = k;
-      UPDATE_COLOR(k);
       oc = c;
       om = m;
       oy = y;
@@ -1326,12 +1353,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	}
       ck = ok - bk;
     
-      /*
-       * These constants are empirically determined to produce a CMY value
-       * that looks reasonably gray and is reasonably well balanced tonally
-       * with black.  As usual, this is very ad hoc and needs to be
-       * generalized.
-       */
       c += (d->k_clevel * ck) >> 6;
       m += (d->k_mlevel * ck) >> 6;
       y += (d->k_ylevel * ck) >> 6;
@@ -1346,7 +1367,8 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       if (y > 65535)
 	y = 65535;
       k = bk;
-      tk = print_color(d, &(d->k_dither), bk, k, x, row, kptr, NULL, bit,
+      UPDATE_COLOR(k);
+      tk = print_color(d, &(d->k_dither), bk, bk, k, x, row, kptr, NULL, bit,
 		       length, 0, 0, 65536);
       if (tk != k)
 	printed_black = 1;
@@ -1381,13 +1403,13 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
     if (!printed_black)
       {
-	c = print_color(d, &(d->c_dither), (oc / 3 + density / 4), c,
+	c = print_color(d, &(d->c_dither), oc, (oc / 3 + density / 4), c,
 			x, row, cptr, lcptr, bit, length, 0, 1,
 			d->c_randomizer);
-	m = print_color(d, &(d->m_dither), (om / 3 + density / 4), m,
+	m = print_color(d, &(d->m_dither), om, (om / 3 + density / 4), m,
 			x, row, mptr, lmptr, bit, length, 1, 0,
 			d->m_randomizer);
-	y = print_color(d, &(d->y_dither), (oy / 3 + density / 4), y,
+	y = print_color(d, &(d->y_dither), oy, (oy / 3 + density / 4), y,
 			x, row, yptr, lyptr, bit, length, 1, 1,
 			d->y_randomizer);
       }
@@ -1409,6 +1431,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.26  2000/04/22 03:29:50  rlk
+ *   Try to vary the randomness -- more random at paler colors.
+ *
  *   Revision 1.25  2000/04/20 02:42:54  rlk
  *   Reduce initial memory footprint.
  *
