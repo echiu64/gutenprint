@@ -1987,9 +1987,9 @@ adjust_print_quality(stp_vars_t *v, stp_image_t *image)
     stp_set_default_float_parameter(v, "GCRLower", k_lower);
   if (!stp_check_float_parameter(v, "GCRUpper", STP_PARAMETER_ACTIVE))
     stp_set_default_float_parameter(v, "GCRUpper", k_upper);
-  if (!stp_check_float_parameter(v, "BlackGamma", STP_PARAMETER_ACTIVE))
-    stp_set_default_float_parameter(v, "BlackGamma", k_transition);
-    
+  if (!stp_check_float_parameter(v, "BlackTrans", STP_PARAMETER_ACTIVE))
+    stp_set_default_float_parameter(v, "BlackTrans", k_transition);
+
 
   if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE) &&
       pt->hue_adjustment)

@@ -60,7 +60,6 @@ static const color_correction_t color_corrections[] =
 static const int color_correction_count =
 sizeof(color_corrections) / sizeof(color_correction_t);
 
-
 static const channel_param_t channel_params[] =
 {
   { CMASK_K, "BlackGamma",   "BlackCurve",   "WhiteGamma",   "WhiteCurve"   },
@@ -304,6 +303,14 @@ static const float_param_t float_parameters[] =
   },
   {
     {
+      "BlackGamma", N_("Black"), N_("Gamma"),
+      N_("Adjust the black gamma"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 3, 1, 0
+    }, 0.0, 4.0, 1.0, CMASK_K, 1
+  },
+  {
+    {
       "Saturation", N_("Saturation"), N_("Basic Image Adjustment"),
       N_("Adjust the saturation (color balance) of the print\n"
 	 "Use zero saturation to produce grayscale output "
@@ -323,7 +330,7 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "BlackGamma", N_("GCR Transition"), N_("Advanced Output Control"),
+      "BlackTrans", N_("GCR Transition"), N_("Advanced Output Control"),
       N_("Adjust the gray component transition rate"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 0, 1, 0
@@ -734,8 +741,8 @@ compute_gcr_curve(const stp_vars_t *vars)
   lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));
   double k_lower = 0.0;
   double k_upper = 1.0;
-  double k_gamma = 1.0;
-  double i_k_gamma = 1.0;
+  double k_trans = 1.0;
+  double i_k_trans = 1.0;
   double *tmp_data = stp_malloc(sizeof(double) * lut->steps);
   int i;
 
@@ -743,8 +750,8 @@ compute_gcr_curve(const stp_vars_t *vars)
     k_upper = stp_get_float_parameter(vars, "GCRUpper");
   if (stp_check_float_parameter(vars, "GCRLower", STP_PARAMETER_DEFAULTED))
     k_lower = stp_get_float_parameter(vars, "GCRLower");
-  if (stp_check_float_parameter(vars, "BlackGamma", STP_PARAMETER_DEFAULTED))
-    k_gamma = stp_get_float_parameter(vars, "BlackGamma");
+  if (stp_check_float_parameter(vars, "BlackTrans", STP_PARAMETER_DEFAULTED))
+    k_trans = stp_get_float_parameter(vars, "BlackTrans");
   k_upper *= lut->steps;
   k_lower *= lut->steps;
 
@@ -752,7 +759,7 @@ compute_gcr_curve(const stp_vars_t *vars)
     k_lower = lut->steps;
   if (k_upper < k_lower)
     k_upper = k_lower + 1;
-  i_k_gamma = 1.0 / k_gamma;
+  i_k_trans = 1.0 / k_trans;
 
   for (i = 0; i < k_lower; i ++)
     tmp_data[i] = 0;
@@ -761,8 +768,8 @@ compute_gcr_curve(const stp_vars_t *vars)
       for (i = ceil(k_lower); i < k_upper; i ++)
 	{
 	  double where = (i - k_lower) / (k_upper - k_lower);
-	  double g1 = pow(where, i_k_gamma);
-	  double g2 = 1.0 - pow(1.0 - where, k_gamma);
+	  double g1 = pow(where, i_k_trans);
+	  double g2 = 1.0 - pow(1.0 - where, k_trans);
 	  double value = (g1 > g2 ? g1 : g2);
 	  tmp_data[i] = 65535.0 * k_upper * value / (double) (lut->steps - 1);
 	  tmp_data[i] = floor(tmp_data[i] + .5);
@@ -774,8 +781,8 @@ compute_gcr_curve(const stp_vars_t *vars)
     for (i = ceil(k_lower); i < lut->steps; i ++)
       {
 	double where = (i - k_lower) / (k_upper - k_lower);
-	double g1 = pow(where, i_k_gamma);
-	double g2 = 1.0 - pow(1.0 - where, k_gamma);
+	double g1 = pow(where, i_k_trans);
+	double g2 = 1.0 - pow(1.0 - where, k_trans);
 	double value = (g1 > g2 ? g1 : g2);
 	tmp_data[i] = 65535.0 * lut->steps * value / (double) (lut->steps - 1);
 	tmp_data[i] = floor(tmp_data[i] + .5);
