@@ -515,8 +515,9 @@ if test x${HAVE_READLINE_READLINE_H} = xtrue ; then
     LIBREADLINE_DEPS="-lreadline $EXTRA_LIBREADLINE_DEPS"
   fi
 fi
+AC_CHECK_HEADERS(fcntl.h)
 AC_CHECK_HEADERS(stdarg.h)
-AC_CHECK_HEADERS(sys/fcntl.h sys/time.h sys/types.h)
+AC_CHECK_HEADERS(sys/time.h sys/types.h)
 AC_CHECK_HEADERS(time.h)
 AC_CHECK_HEADERS(unistd.h)
 AC_CHECK_HEADERS(varargs.h)
