@@ -1251,19 +1251,19 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
   return 0;
 }
 
-stp_vars_t
+const stp_vars_t
 stp_default_settings()
 {
   return (stp_vars_t) &default_vars;
 }
 
-stp_vars_t
+const stp_vars_t
 stp_maximum_settings()
 {
   return (stp_vars_t) &max_vars;
 }
 
-stp_vars_t
+const stp_vars_t
 stp_minimum_settings()
 {
   return (stp_vars_t) &min_vars;

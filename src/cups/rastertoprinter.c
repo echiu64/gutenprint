@@ -30,6 +30,8 @@
  * Contents:
  *
  *   main()                    - Main entry and processing of driver.
+ *   cups_writefunc()          - Write data to a file...
+ *   cancel_job()              - Cancel the current job...
  *   Image_bpp()               - Return the bytes-per-pixel of an image.
  *   Image_get_appname()       - Get the application we are running.
  *   Image_get_row()           - Get one row of the image.
@@ -74,19 +76,21 @@ typedef struct
   cups_page_header_t	header;		/* Page header from file */
 } cups_image_t;
 
+static void	cups_writefunc(void *file, const char *buf, size_t bytes);
+static void	cancel_job(int sig);
 static const char *Image_get_appname(stp_image_t *image);
-static void Image_progress_conclude(stp_image_t *image);
-static void Image_note_progress(stp_image_t *image,
+static void	 Image_progress_conclude(stp_image_t *image);
+static void	Image_note_progress(stp_image_t *image,
 				double current, double total);
-static void Image_progress_init(stp_image_t *image);
-static void Image_get_row(stp_image_t *image, unsigned char *data, int row);
-static int Image_height(stp_image_t *image);
-static int Image_width(stp_image_t *image);
-static int Image_bpp(stp_image_t *image);
-static void Image_rotate_180(stp_image_t *image);
-static void Image_rotate_cw(stp_image_t *image);
-static void Image_rotate_ccw(stp_image_t *image);
-static void Image_init(stp_image_t *image);
+static void	Image_progress_init(stp_image_t *image);
+static void	Image_get_row(stp_image_t *image, unsigned char *data, int row);
+static int	Image_height(stp_image_t *image);
+static int	Image_width(stp_image_t *image);
+static int	Image_bpp(stp_image_t *image);
+static void	Image_rotate_180(stp_image_t *image);
+static void	Image_rotate_cw(stp_image_t *image);
+static void	Image_rotate_ccw(stp_image_t *image);
+static void	Image_init(stp_image_t *image);
 
 static stp_image_t theImage =
 {
@@ -112,68 +116,6 @@ static stp_image_t theImage =
 
 
 /*
- * 'cups_writefunc()' - Write data to a file...
- */
-
-static void
-cups_writefunc(void *file, const char *buf, size_t bytes)
-{
-  FILE *prn = (FILE *)file;
-  fwrite(buf, 1, bytes, prn);
-}
-
-
-/*
- * 'CancelJob()' - Cancel the current job...
- */
-
-void
-CancelJob(int sig)			/* I - Signal */
-{
-  int	i;				/* Looping var */
-
-
-  (void)sig;
-
- /*
-  * WARNING:
-  *
-  * The code you are about to see is a hack.  In the event a real
-  * cancel method is provided with each printer driver, this code
-  * will be replaced with the appropriate printer driver call to
-  * eject the current page and reset the printer to a known state.
-  *
-  * This is only a hack.
-  *
-  * This code will likely only work for HP and EPSON printers.
-  * It *may* work with Canon printers.  It almost certainly will
-  * not work with Lexmark printers.
-  */
-
- /*
-  * Send out lots of NUL bytes to clear out any pending raster data...
-  */
-
-  for (i = 0; i < 2000; i ++)
-    putchar(0);
-
- /*
-  * Send both the PCL and EPSON reset sequences...
-  */
-
-  printf("\033@\033E");
-
- /*
-  * Flush buffers and exit...
-  */
-
-  fflush(stdout);
-
-  exit(0);
-}
-
-
-/*
  * 'main()' - Main entry and processing of driver.
  */
 
@@ -185,6 +127,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   cups_image_t		cups;		/* CUPS image */
   const char		*ppdfile;	/* PPD environment variable */
   ppd_file_t		*ppd;		/* PPD file */
+  ppd_option_t		*option;	/* PPD option */
   stp_printer_t		printer;	/* Printer driver */
   stp_vars_t		v;		/* Printer driver variables */
   stp_papersize_t	size;		/* Paper size */
@@ -228,53 +171,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   }
 
  /*
-  * Get the STP options, if any...
-  */
-
-  num_options = cupsParseOptions(argv[5], 0, &options);
-
-  if ((val = cupsGetOption("stpGamma", num_options, options)) != NULL)
-    stp_gamma = atof(val) * 0.001;
-  else
-    stp_gamma = 1.0;
-
-  if ((val = cupsGetOption("stpBrightness", num_options, options)) != NULL)
-    stp_brightness = atof(val) * 0.001;
-  else
-    stp_brightness = 1.0;
-
-  if ((val = cupsGetOption("stpCyan", num_options, options)) != NULL)
-    stp_cyan = atof(val) * 0.001;
-  else
-    stp_cyan = 1.0;
-
-  if ((val = cupsGetOption("stpMagenta", num_options, options)) != NULL)
-    stp_magenta = atof(val) * 0.001;
-  else
-    stp_magenta = 1.0;
-
-  if ((val = cupsGetOption("stpYellow", num_options, options)) != NULL)
-    stp_yellow = atof(val) * 0.001;
-  else
-    stp_yellow = 1.0;
-
-  if ((val = cupsGetOption("stpContrast", num_options, options)) != NULL)
-    stp_contrast = atof(val) * 0.001;
-  else
-    stp_contrast = 1.0;
-
-  if ((val = cupsGetOption("stpSaturation", num_options, options)) != NULL)
-    stp_saturation = atof(val) * 0.001;
-  else
-    stp_saturation = 1.0;
-
-  if ((val = cupsGetOption("stpDensity", num_options, options)) != NULL)
-    stp_density = atof(val) * 0.001;
-  else
-    stp_density = 1.0;
-
- /*
-  * Get the PPD file and figure out which driver to use...
+  * Get the PPD file...
   */
 
   if ((ppdfile = getenv("PPD")) == NULL)
@@ -297,6 +194,72 @@ main(int  argc,				/* I - Number of command-line arguments */
     ppdClose(ppd);
     return (1);
   }
+
+ /*
+  * Get the STP options, if any...
+  */
+
+  num_options = cupsParseOptions(argv[5], 0, &options);
+
+  if ((val = cupsGetOption("stpGamma", num_options, options)) != NULL)
+    stp_gamma = atof(val) * 0.001;
+  else if ((option = ppdFindOption(ppd, "stpGamma")) != NULL)
+    stp_gamma = atof(option->defchoice) * 0.001;
+  else
+    stp_gamma = 1.0;
+
+  if ((val = cupsGetOption("stpBrightness", num_options, options)) != NULL)
+    stp_brightness = atof(val) * 0.001;
+  else if ((option = ppdFindOption(ppd, "stpBrightness")) != NULL)
+    stp_brightness = atof(option->defchoice) * 0.001;
+  else
+    stp_brightness = 1.0;
+
+  if ((val = cupsGetOption("stpCyan", num_options, options)) != NULL)
+    stp_cyan = atof(val) * 0.001;
+  else if ((option = ppdFindOption(ppd, "stpCyan")) != NULL)
+    stp_cyan = atof(option->defchoice) * 0.001;
+  else
+    stp_cyan = 1.0;
+
+  if ((val = cupsGetOption("stpMagenta", num_options, options)) != NULL)
+    stp_magenta = atof(val) * 0.001;
+  else if ((option = ppdFindOption(ppd, "stpMagenta")) != NULL)
+    stp_magenta = atof(option->defchoice) * 0.001;
+  else
+    stp_magenta = 1.0;
+
+  if ((val = cupsGetOption("stpYellow", num_options, options)) != NULL)
+    stp_yellow = atof(val) * 0.001;
+  else if ((option = ppdFindOption(ppd, "stpYellow")) != NULL)
+    stp_yellow = atof(option->defchoice) * 0.001;
+  else
+    stp_yellow = 1.0;
+
+  if ((val = cupsGetOption("stpContrast", num_options, options)) != NULL)
+    stp_contrast = atof(val) * 0.001;
+  else if ((option = ppdFindOption(ppd, "stpContrast")) != NULL)
+    stp_contrast = atof(option->defchoice) * 0.001;
+  else
+    stp_contrast = 1.0;
+
+  if ((val = cupsGetOption("stpSaturation", num_options, options)) != NULL)
+    stp_saturation = atof(val) * 0.001;
+  else if ((option = ppdFindOption(ppd, "stpSaturation")) != NULL)
+    stp_saturation = atof(option->defchoice) * 0.001;
+  else
+    stp_saturation = 1.0;
+
+  if ((val = cupsGetOption("stpDensity", num_options, options)) != NULL)
+    stp_density = atof(val) * 0.001;
+  else if ((option = ppdFindOption(ppd, "stpDensity")) != NULL)
+    stp_density = atof(option->defchoice) * 0.001;
+  else
+    stp_density = 1.0;
+
+ /*
+  * Figure out which driver to use...
+  */
 
   if ((printer = stp_get_printer_by_driver(ppd->modelname)) == NULL)
   {
@@ -425,16 +388,27 @@ main(int  argc,				/* I - Number of command-line arguments */
     stp_set_outdata(v, stdout);
     stp_set_errdata(v, stderr);
 
-    if (cups.header.cupsColorSpace == CUPS_CSPACE_W)
-      stp_set_output_type(v, OUTPUT_GRAY);
-    else
-      stp_set_output_type(v, OUTPUT_COLOR);
+    switch (cups.header.cupsColorSpace)
+    {
+      case CUPS_CSPACE_W :
+          stp_set_output_type(v, OUTPUT_GRAY);
+	  break;
+      case CUPS_CSPACE_K :
+          stp_set_output_type(v, OUTPUT_MONOCHROME);
+	  break;
+      case CUPS_CSPACE_RGB :
+          stp_set_output_type(v, OUTPUT_COLOR);
+	  break;
+      case CUPS_CSPACE_CMYK :
+          stp_set_output_type(v, OUTPUT_RAW_CMYK);
+	  break;
+    }
 
     if (cups.header.cupsRowStep >= stp_dither_algorithm_count())
       fprintf(stderr, "ERROR: Unable to set dither algorithm!\n");
     else
-    stp_set_dither_algorithm(v,
-                             stp_dither_algorithm_name(cups.header.cupsRowStep));
+      stp_set_dither_algorithm(v,
+                               stp_dither_algorithm_name(cups.header.cupsRowStep));
 
     stp_set_media_source(v, cups.header.MediaClass);
     stp_set_media_type(v, cups.header.MediaType);
@@ -490,7 +464,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: stp_get_app_gamma(v) |%.3f|\n", stp_get_app_gamma(v));
     if (stp_printer_get_printfuncs(printer)->verify(printer, v))
     {
-      signal(SIGTERM, CancelJob);
+      signal(SIGTERM, cancel_job);
       stp_printer_get_printfuncs(printer)->print(printer, &theImage, v);
     }
     else
@@ -538,6 +512,68 @@ main(int  argc,				/* I - Number of command-line arguments */
 
 
 /*
+ * 'cups_writefunc()' - Write data to a file...
+ */
+
+static void
+cups_writefunc(void *file, const char *buf, size_t bytes)
+{
+  FILE *prn = (FILE *)file;
+  fwrite(buf, 1, bytes, prn);
+}
+
+
+/*
+ * 'cancel_job()' - Cancel the current job...
+ */
+
+void
+cancel_job(int sig)			/* I - Signal */
+{
+  int	i;				/* Looping var */
+
+
+  (void)sig;
+
+ /*
+  * WARNING:
+  *
+  * The code you are about to see is a hack.  In the event a real
+  * cancel method is provided with each printer driver, this code
+  * will be replaced with the appropriate printer driver call to
+  * eject the current page and reset the printer to a known state.
+  *
+  * This is only a hack.
+  *
+  * This code will likely only work for HP and EPSON printers.
+  * It *may* work with Canon printers.  It almost certainly will
+  * not work with Lexmark printers.
+  */
+
+ /*
+  * Send out lots of NUL bytes to clear out any pending raster data...
+  */
+
+  for (i = 0; i < 2000; i ++)
+    putchar(0);
+
+ /*
+  * Send both the PCL and EPSON reset sequences...
+  */
+
+  printf("\033@\033E");
+
+ /*
+  * Flush buffers and exit...
+  */
+
+  fflush(stdout);
+
+  exit(0);
+}
+
+
+/*
  * 'Image_bpp()' - Return the bytes-per-pixel of an image.
  */
 
@@ -555,10 +591,15 @@ Image_bpp(stp_image_t *image)		/* I - Image */
   * raster filters.
   */
 
-  if (cups->header.cupsColorSpace == CUPS_CSPACE_RGB)
-    return (3);
-  else
-    return (1);
+  switch (cups->header.cupsColorSpace)
+  {
+    default :
+        return (1);
+    case CUPS_CSPACE_RGB :
+        return (3);
+    case CUPS_CSPACE_CMYK :
+        return (4);
+  }
 }
 
 
@@ -585,6 +626,7 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
 	      int           row)	/* I - Row number (unused) */
 {
   cups_image_t	*cups;			/* CUPS image */
+  int		i;			/* Looping var */
 
 
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
@@ -594,6 +636,14 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
   {
     cupsRasterReadPixels(cups->ras, data, cups->header.cupsBytesPerLine);
     cups->row ++;
+
+   /*
+    * Invert black data for monochrome output...
+    */
+
+    if (cups->header.cupsColorSpace == CUPS_CSPACE_K)
+      for (i = cups->header.cupsBytesPerLine; i > 0; i --, data ++)
+        *data = 255 - *data;
   }
   else
     memset(data, 255, cups->header.cupsBytesPerLine);
@@ -730,6 +780,7 @@ Image_width(stp_image_t *image)	/* I - Image */
 
   return (cups->header.cupsWidth);
 }
+
 
 /*
  * End of "$Id$".
