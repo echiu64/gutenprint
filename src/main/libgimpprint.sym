@@ -96,8 +96,8 @@ stp_get_errdata
 stp_get_errfunc
 stp_get_float_parameter
 stp_get_height
-stp_get_image_type
 stp_get_imageable_area
+stp_get_image_type
 stp_get_input_color_model
 stp_get_job_mode
 stp_get_left
@@ -132,11 +132,11 @@ stp_get_verified
 stp_get_width
 stp_init
 stp_init_dither
+stp_initialize_weave
 stp_init_iterated_matrix
 stp_init_matrix
 stp_init_matrix_short
 stp_init_printer_list
-stp_initialize_weave
 stp_known_papersizes
 stp_known_printers
 stp_lexmark_printfuncs
