@@ -43,6 +43,7 @@
 extern "C" {
 #endif
 
+
 /*
  * Library versioning details
  */
@@ -545,6 +546,39 @@ extern void stp_compute_lut(stp_vars_t v, size_t steps);
 extern const stp_vars_t stp_default_settings(void);
 extern const stp_vars_t stp_maximum_settings(void);
 extern const stp_vars_t stp_minimum_settings(void);
+
+
+/*
+ * List functions
+ */
+typedef void stp_list_item_t;
+typedef void stp_list_t;
+
+void stp_list_node_free_data(stp_list_item_t *item);
+stp_list_t *stp_list_create(void);
+int stp_list_destroy(stp_list_t *list);
+stp_list_item_t *stp_list_get_start(stp_list_t *list);
+stp_list_item_t *stp_list_get_end(stp_list_t *list);
+stp_list_item_t *stp_list_get_item_by_index(stp_list_t *list, int index);
+stp_list_item_t *stp_list_get_item_by_name(stp_list_t *list, const char *name);
+stp_list_item_t *stp_list_get_item_by_long_name(stp_list_t *list, const char *long_name);
+int stp_list_get_length(stp_list_t *list);
+void stp_list_set_freefunc(stp_list_t *list,
+			   void (*node_freefunc)(stp_list_item_t *item));
+void stp_list_set_namefunc(stp_list_t *list,
+			   const char *(*namefunc)(const stp_list_item_t *item));
+void stp_list_set_long_namefunc(stp_list_t *list,
+				const char *(*long_namefunc)(const stp_list_item_t *item));
+void stp_list_set_sortfunc(stp_list_t *list, 
+			   int (*sortfunc)(const stp_list_item_t *item1,
+					   const stp_list_item_t *item2));
+int stp_list_item_create(stp_list_t *list, stp_list_item_t *prev, void *data);
+int stp_list_item_destroy(stp_list_t *list, stp_list_item_t *item);
+stp_list_item_t *stp_list_item_prev(stp_list_item_t *item);
+stp_list_item_t *stp_list_item_next(stp_list_item_t *item);
+void *stp_list_item_get_data(const stp_list_item_t *item);
+int stp_list_item_set_data(stp_list_item_t *item, void *data);
+
 
 #ifdef __cplusplus
   }

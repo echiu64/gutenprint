@@ -49,6 +49,8 @@ libgimpprint_la_SOURCES = \
 	print-escp2-data.c \
 	print-pcl.c \
 	print-ps.c \
+	print-list.c \
+	print-list.h \
 	print-util.c \
 	print-vars.c \
 	print-papers.c \
