@@ -766,7 +766,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 144, 2, 360, INCH(11), INCH(17), 9, 9, 0, 9, 1, 0,
     { -1, 4, 0x10, 3, 0x10, 3, 0x10 },
-    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
+    { 2.0, 1.3, 2.0, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_4color_inks
   },
   /* 13: Stylus Color 900 */
@@ -1059,6 +1059,7 @@ static const paper_t escp2_paper_list[] = {
   { "Photo Quality Inkjet Paper", 7, 0, 1, 1.0, .999 },
   { "Photo Paper", 8, 0, 1, 1.0, .999 },
   { "Premium Glossy Photo Paper", 8, 0, 1.1, 1.0, .999 },
+  { "Photo Quality Glossy Paper", 6, 0, 1.0, 1.0, .999 },
   { "Other", 0, 0, .5, .25, .5 },
 };
 
