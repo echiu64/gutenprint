@@ -431,30 +431,30 @@ static int get_lr_shift(int mode)
  *    cartridge   cartridge      cartridge     cartridge
  *      mode I     mode II
  *
- *              v                 +-----+ --    +-----+ --- 
- * --- +-----+ ---             v  |     | ^     |     |  ^  
- *  ^  |     | --- +-----+ --- -- |  C  | 64    | LC  |  |  
- *  |  |     |  ^  |     |  ^  40 |     | v  v  |     |  |  
- *  |  |     |     |     |  |  -- +-----+ -- -- +-----+  |  
- *  |  |     |     |     |  |  ^             24          |  
- *  |  |     |     |     |  |     +-----+ -- -- +-----+  |  
- *     |     |     |     |  |     |     | ^  ^  |     |  |  
- * 208 |  K  |     |  K  | 192    |  M  | 64    | LM  | 240 
- *     |     |     |     |  |     |     | v  v  |     |  |  
- *  |  |     |     |     |  |     +-----+ -- -- +-----+  |  
- *  |  |     |     |     |  |  v             24          |  
- *  |  |     |     |     |  |  -- +-----+ -- -- +-----+  |  
- *  |  |     |     |     |  v  40 |     | ^  ^  |     |  |  
- *  v  |     |     +-----+ --- -- |  Y  | 64    |  K  |  |  
- * --- +-----+                 ^  |     | v     |     |  v  
- *                                +-----+ --    +-----+ --- 
+ *              v                 +-----+ --    +-----+ ---
+ * --- +-----+ ---             v  |     | ^     |     |  ^
+ *  ^  |     | --- +-----+ --- -- |  C  | 64    | LC  |  |
+ *  |  |     |  ^  |     |  ^  40 |     | v  v  |     |  |
+ *  |  |     |     |     |  |  -- +-----+ -- -- +-----+  |
+ *  |  |     |     |     |  |  ^             24          |
+ *  |  |     |     |     |  |     +-----+ -- -- +-----+  |
+ *     |     |     |     |  |     |     | ^  ^  |     |  |
+ * 208 |  K  |     |  K  | 192    |  M  | 64    | LM  | 240
+ *     |     |     |     |  |     |     | v  v  |     |  |
+ *  |  |     |     |     |  |     +-----+ -- -- +-----+  |
+ *  |  |     |     |     |  |  v             24          |
+ *  |  |     |     |     |  |  -- +-----+ -- -- +-----+  |
+ *  |  |     |     |     |  v  40 |     | ^  ^  |     |  |
+ *  v  |     |     +-----+ --- -- |  Y  | 64    |  K  |  |
+ * --- +-----+                 ^  |     | v     |     |  v
+ *                                +-----+ --    +-----+ ---
  *
  */
 
 static const int head_offset_cmyk[] =
 {70, 184, 368, 0, 184, 368, 0};  /* k, m, c, y, M, C, Y */
 /* the head_offset_cmy is needed because the dithering code is going into troubles if there is an offset different from 0 for the unused black color */
-static const int head_offset_cmy[] = 
+static const int head_offset_cmy[] =
 {0, 184, 368, 0, 184, 368, 0};  /* k, m, c, y, M, C, Y */
 static const int head_offset_cCmMyk[] =
 {0, 184, 368, 0, 184, 368, 0};  /* k, m, c, y, M, C, Y */
@@ -536,8 +536,8 @@ typedef struct {
 /*****************************************************************/
 /**** initialize printer specific data structures ****/
 
-/* 
- * z52 specific parameters 
+/*
+ * z52 specific parameters
  */
 #define LX_Z52_300_DPI  1
 #define LX_Z52_600_DPI  3
@@ -605,16 +605,16 @@ static const lexmark_res_t_array lexmark_reslist_z52 =  /* LEXM_RES_COUNT entrie
 
 static const lexmark_inkname_t ink_types_z52[] =
 {
-  /*   output_type   ncolors used_colors   pass_length  v_top_head_offset 
-   *                                                        h_catridge_offset 
-   *                                                           h_direction_offset 
+  /*   output_type   ncolors used_colors   pass_length  v_top_head_offset
+   *                                                        h_catridge_offset
+   *                                                           h_direction_offset
    *                                                               head_offset */
-  { "CMYK",     N_("Four Color Standard"),     
+  { "CMYK",     N_("Four Color Standard"),
     {{ OUTPUT_GRAY,       1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },
      { OUTPUT_COLOR,      4, COLOR_MODE_CMYK,   192/3,   0, 0, 10, head_offset_cmyk },
      { OUTPUT_MONOCHROME, 1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },
      { OUTPUT_RAW_CMYK,   4, COLOR_MODE_CMYK,   192/3,   0, 0, 10, head_offset_cmyk }}},
-  { "RGB",      N_("Three Color Composite"),   
+  { "RGB",      N_("Three Color Composite"),
     {{ OUTPUT_GRAY,       1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },  /* we ignor CMY, use black */
      { OUTPUT_COLOR,      4, COLOR_MODE_CMY,    192/3,   0, 0, 10, head_offset_cmy },
      { OUTPUT_MONOCHROME, 1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },  /* we ignor CMY, use black */
@@ -624,12 +624,12 @@ static const lexmark_inkname_t ink_types_z52[] =
      { OUTPUT_COLOR,      6, COLOR_MODE_CcMcYK, 192/3,   0, 0, 10, head_offset_cCmMyk },
      { OUTPUT_GRAY,       1, COLOR_MODE_K,      192/3,   0, 0, 10, head_offset_cCmMyk },
      { OUTPUT_RAW_CMYK,   6, COLOR_MODE_CcMcYK, 192/3,   0, 0, 10, head_offset_cCmMyk }}},
-  { "PhotoCMY", N_("Five Color Photo Composite"),  
+  { "PhotoCMY", N_("Five Color Photo Composite"),
     {{ OUTPUT_MONOCHROME, 1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cCmMyk }, /* we ignor CMY, use black */
      { OUTPUT_COLOR,      5, COLOR_MODE_CcMcY,  192/3,   0, 0, 10, head_offset_cCmMyk },
      { OUTPUT_GRAY,       1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cCmMyk }, /* we ignor CMY, use black */
      { OUTPUT_RAW_CMYK,   5, COLOR_MODE_CcMcY,  192/3,   0, 0, 10, head_offset_cCmMyk }}},
-  { "Gray",     N_("Black"),     
+  { "Gray",     N_("Black"),
     {{ OUTPUT_GRAY,       1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },
      { OUTPUT_COLOR,      1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },
      { OUTPUT_MONOCHROME, 1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },
@@ -685,16 +685,16 @@ static const lexmark_res_t_array lexmark_reslist_3200 =   /* LEXM_RES_COUNT entr
 
 static const lexmark_inkname_t ink_types_3200[] =
 {
-  /*   output_type   ncolors used_colors   pass_length  v_top_head_offset 
-   *                                                        h_catridge_offset 
-   *                                                           h_direction_offset 
+  /*   output_type   ncolors used_colors   pass_length  v_top_head_offset
+   *                                                        h_catridge_offset
+   *                                                           h_direction_offset
    *                                                               head_offset */
-  { "CMYK",     N_("Four Color Standard"),     
+  { "CMYK",     N_("Four Color Standard"),
     {{ OUTPUT_GRAY,       1, COLOR_MODE_K,        208,  20, 0, 12, head_offset_cmyk },
      { OUTPUT_COLOR,      4, COLOR_MODE_CMYK,   192/3,   0, 0, 12, head_offset_cmyk },
      { OUTPUT_MONOCHROME, 1, COLOR_MODE_K,        208,  20, 0, 12, head_offset_cmyk },
      { OUTPUT_RAW_CMYK,   4, COLOR_MODE_CMYK,   192/3,   0, 0, 12, head_offset_cmyk }}},
-  { "RGB",      N_("Three Color Composite"),   
+  { "RGB",      N_("Three Color Composite"),
     {{ OUTPUT_GRAY,       1, COLOR_MODE_K,        208,  20, 0, 12, head_offset_cmyk },  /* we ignor CMY, use black */
      { OUTPUT_COLOR,      4, COLOR_MODE_CMY,    192/3,   0, 0, 12, head_offset_cmy },
      { OUTPUT_MONOCHROME, 1, COLOR_MODE_K,        208,  20, 0, 12, head_offset_cmyk },  /* we ignor CMY, use black */
@@ -704,7 +704,7 @@ static const lexmark_inkname_t ink_types_3200[] =
      { OUTPUT_COLOR,      6, COLOR_MODE_CcMcYK, 192/3,   0, 0, 12, head_offset_cCmMyk },
      { OUTPUT_GRAY,       1, COLOR_MODE_K,      192/3,   0, 0, 12, head_offset_cCmMyk },
      { OUTPUT_RAW_CMYK,   6, COLOR_MODE_CcMcYK, 192/3,   0, 0, 12, head_offset_cCmMyk }}},
-  { "PhotoCMY", N_("Five Color Photo Composite"),  
+  { "PhotoCMY", N_("Five Color Photo Composite"),
     {{ OUTPUT_MONOCHROME, 1, COLOR_MODE_K,        208,  20, 0, 12, head_offset_cCmMyk }, /* we ignor CMY, use black */
      { OUTPUT_COLOR,      5, COLOR_MODE_CcMcY,  192/3,   0, 0, 12, head_offset_cCmMyk },
      { OUTPUT_GRAY,       1, COLOR_MODE_K,        208,  20, 0, 12, head_offset_cCmMyk }, /* we ignor CMY, use black */
@@ -794,7 +794,7 @@ typedef struct lexm_privdata_weave {
 
 
 /*
- * internal functions 
+ * internal functions
  */
 static int model_to_index(int model)
 {
@@ -903,7 +903,7 @@ lexmark_get_ink_type(const char *name, int output_type, const lexmark_cap_t * ca
   int i;
   const lexmark_inkname_t *ink_type = caps->ink_types;
 
-  for (i=0; ((ink_type[i].name != NULL) && 
+  for (i=0; ((ink_type[i].name != NULL) &&
 	     (strcmp(name, ink_type[i].name)  != 0)); i++) ;
   return &(ink_type[i]);
 }
@@ -961,12 +961,12 @@ lexmark_head_offset(int ydpi,                       /* i */
 		    stp_lineoff_t *lineoff_buffer)  /* o */
 {
   int i;
-  
+
 #ifdef DEBUG
   stp_erprintf("  sizie %d,  size_v %d, size_v[0] %d\n", sizeof(*lineoff_buffer), sizeof(lineoff_buffer->v), sizeof(lineoff_buffer->v[0]));
 #endif
   memcpy(lineoff_buffer, ink_parameter->head_offset, sizeof(*lineoff_buffer));
-  
+
   for (i=0; i < (sizeof(lineoff_buffer->v) / sizeof(lineoff_buffer->v[0])); i++) {
     lineoff_buffer->v[i] /= (caps->y_raster_res / ydpi);
   }
@@ -1677,7 +1677,7 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
    *                 or single black cartridge installed
    */
 
-  if ((ink_parameter->used_colors == COLOR_MODE_K) || 
+  if ((ink_parameter->used_colors == COLOR_MODE_K) ||
       ((caps->inks == LEXMARK_INK_K) &&
        output_type != OUTPUT_MONOCHROME))
     {
@@ -1702,7 +1702,7 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
   /*
    * Figure out the output resolution...
    */
-  
+
   lexmark_describe_resolution(printer,
 			      resolution, &xdpi,&ydpi);
 #ifdef DEBUG
@@ -1954,8 +1954,8 @@ densityDivisor /= 1.2;
 
 
 
-  
-  if (media) 
+
+  if (media)
     {
       stp_set_density(nv, stp_get_density(nv) * media->base_density);
       stp_set_cyan(nv, stp_get_cyan(nv) * media->p_cyan);
@@ -1972,13 +1972,13 @@ densityDivisor /= 1.2;
     }
   if (stp_get_density(nv) > 1.0)
     stp_set_density(nv, 1.0);
-  
+
   stp_compute_lut(nv, 256);
-  
+
 #ifdef DEBUG
   stp_erprintf("density is %f\n",stp_get_density(nv));
 #endif
-  
+
   if (xdpi > ydpi)
     dither = stp_init_dither(image_width, out_width, 1, xdpi / ydpi, nv);
   else
@@ -2640,10 +2640,10 @@ const stp_vars_t lex_open_tmp_file() {
   char tmpstr[256];
 
       stp_erprintf(" create file !\n");
-  for (i=0, sprintf(tmpstr, "/tmp/xx%d.prn", i), ofile = fopen(tmpstr, "r"); 
-       ofile != NULL; 
+  for (i=0, sprintf(tmpstr, "/tmp/xx%d.prn", i), ofile = fopen(tmpstr, "r");
+       ofile != NULL;
        i++, sprintf(tmpstr, "/tmp/xx%d.prn", i), ofile = fopen(tmpstr, "r")) {
-    if (ofile != NULL) 
+    if (ofile != NULL)
       {
 	fclose(ofile);
       }
@@ -2849,42 +2849,42 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
   paperShift = (pass->logicalpassstart - sw->last_pass_offset) * (caps->y_raster_res/ydpi);
 
   /*** do we have to print something with the color cartridge ? ***/
-  if (lineactive[0].p.c || lineactive[0].p.m || lineactive[0].p.y) 
-    {    
-      if (lineactive[0].p.c) 
+  if (lineactive[0].p.c || lineactive[0].p.m || lineactive[0].p.y)
+    {
+      if (lineactive[0].p.c)
 	{
 	  head_colors[0].line = bufs[0].p.c;
 	  head_colors[0].used_jets = linecount[0].p.c;
-	} 
-      else 
+	}
+      else
 	{
 	  head_colors[0].line = NULL;
 	  head_colors[0].used_jets = 0;
 	}
-      
-      if (lineactive[0].p.m) 
+
+      if (lineactive[0].p.m)
 	{
 	  head_colors[1].line = bufs[0].p.m;
 	  head_colors[1].used_jets = linecount[0].p.m;
-	} 
-      else 
+	}
+      else
 	{
 	  head_colors[1].line = 0;
 	  head_colors[1].used_jets = 0;
 	}
-      
-      if (lineactive[0].p.y) 
+
+      if (lineactive[0].p.y)
 	{
 	  head_colors[2].line = bufs[0].p.y;
 	  head_colors[2].used_jets = linecount[0].p.y;
-	} 
-      else 
+	}
+      else
 	{
 	  head_colors[2].line = 0;
 	  head_colors[2].used_jets = 0;
 	}
-      
-      
+
+
 #ifdef DEBUGxx
 #define lineoffcalc(n) ((((lwidth+7)/8)*i))
     /*#define lineoffcalc(n) (lineoffs[0].v[n]*i)*/
@@ -2905,7 +2905,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	}
       }
 #endif
-      
+
 #ifdef DEBUG
       stp_erprintf("lexmark_write: lwidth %d\n", lwidth);
 #endif
@@ -2928,55 +2928,55 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
       if (privdata_weave->bidirectional)
 	privdata_weave->direction = (privdata_weave->direction +1) & 1;
     }
-  
+
   /*** do we have to print somthing with black or photo cartridge ? ***/
-  if (lineactive[0].p.C || lineactive[0].p.M || lineactive[0].p.k) 
+  if (lineactive[0].p.C || lineactive[0].p.M || lineactive[0].p.k)
     {
       /* we print with the photo or black cartidge */
-      
-    if (sw->jets != 208) 
+
+    if (sw->jets != 208)
       {
 	/* we have photo or black cartridge */
-	if (lineactive[0].p.C) 
+	if (lineactive[0].p.C)
 	  {
 	    head_colors[0].line = bufs[0].p.C;
 	    head_colors[0].used_jets = linecount[0].p.C;
-	  } 
-	else 
+	  }
+	else
 	  {
 	    head_colors[0].line = 0;
 	    head_colors[0].used_jets = 0;
 	  }
-	
-	if (lineactive[0].p.M) 
+
+	if (lineactive[0].p.M)
 	  {
 	    head_colors[1].line = bufs[0].p.M;
 	    head_colors[1].used_jets = linecount[0].p.M;
-	  } 
-	else 
+	  }
+	else
 	  {
 	    head_colors[1].line = 0;
 	    head_colors[1].used_jets = 0;
 	  }
-	
-	if (lineactive[0].p.k) 
+
+	if (lineactive[0].p.k)
 	  {
 	    head_colors[2].line = bufs[0].p.k;
 	    head_colors[2].used_jets = linecount[0].p.k;
-	  } 
-	else 
+	  }
+	else
 	  {
 	    head_colors[2].line = 0;
 	    head_colors[2].used_jets = 0;
 	  }
-      } 
-    else 
+      }
+    else
       {
 	/* we have black cartridge; we have to print with all 208 jets at once */
 	head_colors[0].line = bufs[0].p.k;
 	head_colors[0].used_jets = linecount[0].p.k;
 	head_colors[0].head_nozzle_start = 0;
-	head_colors[0].head_nozzle_end = sw->jets/2;	
+	head_colors[0].head_nozzle_end = sw->jets/2;
 	head_colors[2].line = NULL;
 	head_colors[2].used_jets = 0;
 	head_colors[2].head_nozzle_start = 0;
@@ -2986,9 +2986,9 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	head_colors[1].head_nozzle_start = 0;
 	head_colors[1].head_nozzle_end = 0;
       }
-    
-    
-    
+
+
+
     lexmark_write(nv,		/* I - Print file or command */
 		  privdata_weave->outbuf,/*unsigned char *prnBuf,   mem block to buffer output */
 		  &paperShift,           /* int *paperShift, */
@@ -3005,7 +3005,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 		  lwidth,      /* width, 	 I - Printed width in pixles*/
 		  hoffset+microoffset,   /* offset  I - Offset from left side in x_raster_res DPI */
 		  0                      /* dmt */);
-    if (privdata_weave->bidirectional) 
+    if (privdata_weave->bidirectional)
       {
 	privdata_weave->direction = (privdata_weave->direction +1) & 1;
       }
@@ -3013,17 +3013,17 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
   /* store paper position in respect if there was a paper shift */
   sw->last_pass_offset = pass->logicalpassstart - (paperShift / (caps->y_raster_res/ydpi));
   }
-  
-  for (j = 0; j < sw->ncolors; j++) 
+
+  for (j = 0; j < sw->ncolors; j++)
     {
       lineoffs[0].v[j]  = 0;
       linecount[0].v[j] = 0;
     }
-  
+
 #ifdef DEBUG
   stp_erprintf("lexmark_write finished\n");
 #endif
-  
+
   sw->last_pass = pass->pass;
   pass->pass = -1;
 }

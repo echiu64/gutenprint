@@ -39,7 +39,7 @@ $verbose = 1;
 while ($stuff ne "") {
       if ($stuff=~ s/^(BJLSTART.+BJLEND?)//sm) {
 
-	printf "\n$1"; 
+	printf "\n$1";
 	$curpos+= length($1);
 
       } elsif (substr($stuff, 0, 1) eq "\xa") {
@@ -73,7 +73,7 @@ while ($stuff ne "") {
 		    $nhchar = unpack("C", $hchar);
 		    $skipchars = ($nhchar * 256) + $nlchar;
 		    $startoff = 2;
-		    
+
 		    if ($GRX) {
 		      for ($i = 0;
 			 $i < $skipchars + (length $key) + $startoff;
@@ -92,7 +92,7 @@ while ($stuff ne "") {
 		    $found = 1;
 		} else {
 		    print "\n";
-		    printf "%08x ", $curpos if ($OFFS); 
+		    printf "%08x ", $curpos if ($OFFS);
 		    print "1b ";
 		    $startoff = 0;
 		    if ($skipchars eq "VARIABLE") {

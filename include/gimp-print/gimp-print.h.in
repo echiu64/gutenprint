@@ -138,15 +138,15 @@ typedef enum stp_image_status
  * of the input:
  *
  * Output_type is OUTPUT_MONOCHROME, OUTPUT_COLOR, or OUTPUT_GRAY:
- * 
+ *
  *    bpp           No color map                Color map present
  *     1            grayscale                   indexed color (256 colors)
  *     2            grayscale w/alpha           indexed color w/alpha
  *     3            RGB                         N/A
  *     4            N/A                         RGB w/alpha (RGBA)
- * 
+ *
  * Output_type is OUTPUT_CMYK:
- * 
+ *
  *    bpp           No color map                Color map present
  *     4            8 bits/plane CMYK           N/A
  *     8            16 bits/plane CMYK          N/A

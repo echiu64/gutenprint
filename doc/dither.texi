@@ -22,7 +22,7 @@ slightly different way.
 We currently have three dithering functions:
 
 @enumerate
-@item 
+@item
 @code{dither_fastblack} produces pure black or white from a pre-dithered
 input.  This is used for two purposes: for printing pure black and white
 very quickly (e. g. text), and for printing pre-screened monochrome

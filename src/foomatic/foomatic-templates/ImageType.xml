@@ -28,7 +28,7 @@
          it should be treated as documentation for the user. -->
     <ev_shortname>
      <en>LineArt</en>
-     <!-- Until someone tells me how to learn the user locale in 
+     <!-- Until someone tells me how to learn the user locale in
           backends, the shortname must be monolingual in <en>! -->
     </ev_shortname>
     <ev_driverval>0</ev_driverval>
@@ -41,7 +41,7 @@
          it should be treated as documentation for the user. -->
     <ev_shortname>
      <en>Solids</en>
-     <!-- Until someone tells me how to learn the user locale in 
+     <!-- Until someone tells me how to learn the user locale in
           backends, the shortname must be monolingual in <en>! -->
     </ev_shortname>
     <ev_driverval>1</ev_driverval>
@@ -54,7 +54,7 @@
          it should be treated as documentation for the user. -->
     <ev_shortname>
      <en>Photographs</en>
-     <!-- Until someone tells me how to learn the user locale in 
+     <!-- Until someone tells me how to learn the user locale in
           backends, the shortname must be monolingual in <en>! -->
     </ev_shortname>
     <ev_driverval>2</ev_driverval>

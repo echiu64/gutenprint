@@ -15,15 +15,15 @@ diff -u -r /home/sharkey/gstemp/gs-5.10/debian/control ./control
  lexmark-support		= $(INCLUDE_GPL)
  hpdj-support		= $(INCLUDE_LGPL)
 +stp-support		= $(INCLUDE_GPL)
- 
- # Uncomment following line for conflicted jpdrivers support. 
+
+ # Uncomment following line for conflicted jpdrivers support.
  # Be sure to disable hp8xx-support and enable jpdrivers support.
 @@ -68,6 +69,7 @@
  include debian/patches/jpdrivers
  include debian/patches/lexmark
  include debian/patches/hpdj
 +include debian/patches/stp
- 
+
  patch-contrib:		$(APPLY_PATCHES)
  unpatch-contrib:	$(UNAPPLY_PATCHES)
 --- gs-5.10/debian/changelog      Sun Nov 12 18:31:32 2000

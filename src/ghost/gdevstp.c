@@ -520,7 +520,7 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
       free(pinktypestr);
       free(palgorithmstr);
       free(pqualitystr);
-      
+
       return code;
     }
 

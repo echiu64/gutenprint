@@ -72,7 +72,7 @@ sub do_remote_command {
 	substr($stuff, 0, $skipchars) = "";
 	$curpos += $skipchars;
     }
-}    
+}
 
 sub do_special_command {
     print "\n";

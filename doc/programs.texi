@@ -27,7 +27,7 @@ examines the features offered by the Print plugin.
 
 The main window is divided into five panes:
 
-   
+
 @subsection Preview
 
 The Preview pane contains a positioning widget that allows interactively
@@ -176,7 +176,7 @@ believe the automatic setting is incorrect.
 There is also a selection box for the dither algorithm to be used in the
 pop-up dialog.  There are currently seven choices:
 
-@table @emph              
+@table @emph
 @item Adaptive Hybrid
 Adaptive Hybrid usually yields the best output quality; it chooses a
 modified Floyd-Steinberg error diffusion algorithm or ordered dithering
@@ -222,7 +222,7 @@ Adaptive Random on the entire image.  Generally, the results are poor in
 pale regions.
 @end table
 
-          
+
 @subsection Action Buttons
 
 The last pane contains four action buttons:

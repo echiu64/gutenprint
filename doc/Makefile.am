@@ -36,7 +36,7 @@ IMAGES = \
  print-color.png \
  print-main.png \
  print-setup.png
-   
+
 EPS_IMAGES = $(addsuffix .eps,$(basename $(IMAGES)))
 
 if MAINTAINER_MODE

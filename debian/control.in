@@ -18,7 +18,7 @@ Description: print plugin for the GIMP
  cases, and can be used for many of the most demanding printing tasks.
  .
  This package includes the print plugin for the GIMP.
- 
+
 Package: cupsys-driver-gimpprint
 Architecture: any
 Depends: ${shlibs:Depends}, cupsys (>= 1.1.4) | cups (>= 1.1.4)

@@ -13,7 +13,7 @@ CUPS command file MUST contain:
 
     #CUPS-COMMAND
 
-After that, each line is either a command or a comment. 
+After that, each line is either a command or a comment.
 Comments begin with the # character, e.g.:
 
     # This is a comment

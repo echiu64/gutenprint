@@ -17,7 +17,7 @@
 @include version.texi
 
 @c Macro definitions
-@set BUGADDR @email{gimp-print-devel@@lists.sourceforge.net} 
+@set BUGADDR @email{gimp-print-devel@@lists.sourceforge.net}
 @set MAILLIST @email{gimp-print-devel@@lists.sourceforge.net}
 
 @dircategory Libraries
@@ -102,7 +102,7 @@ GIMP-Print.
 @c All the menus can be updated with the EMACS command
 @c texinfo-all-menus-update, which is normally bound to C-c C-u C-a.
 @menu
-* Instructions::                How to read this manual. 
+* Instructions::                How to read this manual.
 * Copying::                     Your rights.
 * Overview::                    Preliminary information.
 * Using libgimpprint::          Examples of how to use libgimpprint.

@@ -11,10 +11,10 @@ patching must be done.
 
 	cd /usr/ports/print/ghostscript6
 	make patch
-	
+
 After this, download print-4.0b2 (or another version, i did it with this
 one) from
-	
+
 	http://download.sourceforge.net/gimp-print/print-4.0b2.tar.gz
 
 Place the file into the workdir of the ghostscript6 port and unzip it:
@@ -22,14 +22,14 @@ Place the file into the workdir of the ghostscript6 port and unzip it:
 	cp print-4.0b2.tar.gz /usr/ports/print/ghostscript6/work/gs6.01
 	cd /usr/ports/print/ghostscript6/work/gs6.01
 	tar xzf print-4.0b2.tar.gz
-	
+
 Follow the directions as described in "Ghost/README":
 First, copy all *.c and *.h files into the ghostscript src directory.
 
 	cd print-4.0b2/Ghost
 	cp *.c ../../src/
 	cp *.h ../../src/
-	
+
 Edit "contrib.mak" in the src directory of ghosts
 cript (where the *.c and
 *.h files where copied to in the previous step). Add the contents of the
@@ -45,7 +45,7 @@ After all these changes have been made, do a
 All should compile fine, and after that you have ghostscript6 with the
 stp driver compiled in. Run "gs -h" to be absolutely sure :)
 
-Don't forget to update or adjust your filters! 
+Don't forget to update or adjust your filters!
 See print-4.0b2/Ghost/README for further details and examples.
 
 All this should work with NetBSD and OpenBSD as well, but i didn't

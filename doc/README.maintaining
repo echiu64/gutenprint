@@ -49,7 +49,7 @@ that you would like covering, please let me know!
  -- Roger Leigh <roger@whinlatter.uklinux.net>
 
  $Id$
- 
+
 
 1. Integration of the autotools
 -------------------------------
@@ -74,21 +74,21 @@ During package setup (from CVS), running autogen.sh:
 
 	                           autogen.sh
 	          configure.in.in ------------> configure.in
-	
+
 	gettext files added
 	libtool files added
 	                           aclocal
 	             configure.in ------------> aclocal.m4
-	
+
 	                           autoheader
 	acconfig.h + configure.in ------------> config.h.in
-	
+
 	                           automake
 	              Makefile.am ------------> Makefile.in
-	
+
 	                           autoconf
 	aclocal.m4 + configure.in ------------> configure
-	
+
 Running configure:
 	                           configure
 	              Makefile.in ------------> Makefile
@@ -105,7 +105,7 @@ This section describes how to use the scripts for basic day-to-day working.
 2.1 Using CVS
 -------------
 The latest working copy of GIMP-Print (HEAD) and all prior releases are
-available from CVS either anonymously (read-only with CVS pserver) or 
+available from CVS either anonymously (read-only with CVS pserver) or
 authenticated (read-write with SSH).  The modulename for GIMP-Print is 'print'.
 
 Anonymous CVS access:
@@ -113,8 +113,8 @@ The module you wish to check out must be specified as the modulename.  When
 prompted for a password for anonymous, simply press the Enter key.
 
 	$ cvs -d:pserver:anonymous@cvs.gimp-print.sourceforge.net:/cvsroot/gimp-
-	print login 
-	$ cvs -z3 
+	print login
+	$ cvs -z3
 	-d:pserver:anonymous@cvs.gimp-print.sourceforge.net:/cvsroot/gimp-print
 	co modulename
 
@@ -122,13 +122,13 @@ Developer CVS access via SSH:
 Only project developers can access the CVS tree via this method.  SSH1 must be
 installed on your client machine.  Substitute modulename and developername with
 the proper values.  Enter your site password when prompted.  See the sourceforge
-documentation for more details, including how to use RSA keys for 
+documentation for more details, including how to use RSA keys for
 authentication.
 
-	$ export CVS_RSH=ssh 
+	$ export CVS_RSH=ssh
 	$ cvs -z3
 	-ddevelopername@cvs.gimp-print.sourceforge.net:/cvsroot/gimp-print
-	co modulename 
+	co modulename
 
 The CVS info documentation has very detailed explanations of everything that
 can be done with CVS.
@@ -250,7 +250,7 @@ will replace any instance of @ESCPUTIL_BIN@ in a template file (ending in
 These macros are used to insert a #define in config.h.
 
 	AC_DEFINE(MACRO)
-	
+
 will cause '#define MACRO 1' to appear in config.h (this will be of the form
 '#undef MACRO' in config.h.in)
 
@@ -310,7 +310,7 @@ standard locations: bindir, sbindir, mandir, datadir, pkgdatadir.  You can
 define your own quite easily.  They are used together as follows:
 
 	bin_PROGRAMS = myprog 	[where bindir=$(prefix)/bin]
-	pkgdata_DATA = datafile1 datafile2 
+	pkgdata_DATA = datafile1 datafile2
 				[where pkgdatadir=$(prefix)/share/$(PACKAGE)]
 
 Note! the 'dir' postfix is stripped off the location. I.e. bindir -> bin.
@@ -385,7 +385,7 @@ not get distributed.
 ----------------------------------
 When one wants to do something that is not within the scope of the facilities
 automake provides, one can write one's own rules, just like in any other
-Makefile. 
+Makefile.
 
 4.4.1 Rule syntax
 Make rules take the following form:

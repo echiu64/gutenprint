@@ -3206,7 +3206,7 @@ verify_resolution(const res_t *res,
     }
   return 0;
 }
-  
+
 
 /*
  * 'escp2_parameters()' - Return the parameter values for the given parameter.

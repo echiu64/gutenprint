@@ -158,7 +158,7 @@ snapshot:
 
 DEBUILD_OPTIONS = -us -uc
 deb: debian/changelog debian/control debian/rules
-	$(MAKE) dist 
+	$(MAKE) dist
 	-$(RM) -r debian-build
 	-mkdir debian-build
 	cd debian-build ; \

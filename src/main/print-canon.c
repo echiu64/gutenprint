@@ -343,7 +343,7 @@ static const canon_variable_inkset_t ci_CMY_1 =
 {
   NULL,
   NULL,
-  NULL, 
+  NULL,
   NULL
 };
 

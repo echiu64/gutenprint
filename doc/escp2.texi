@@ -9,7 +9,7 @@
 * ESC/P2 Appropriate Remote Commands:: Useful remote command sequences
 @end menu
 
-@node ESC/P2 Introduction, ESC/P2 Standard Commands, , ESC/P2  
+@node ESC/P2 Introduction, ESC/P2 Standard Commands, , ESC/P2
 @appendixsection Introduction to ESC/P2
 @cindex ESC/P2 introduction
 
@@ -425,7 +425,7 @@ ESC 00 00 00
 @end example
 
 All remote mode commands must be sent before the initial @samp{ESC (G}
-command is sent. 
+command is sent.
 
 This introductory sequence is then followed by a sequence of commands.
 Each command is constructed as follows:
@@ -531,7 +531,7 @@ IQ:KKCCMMYY
 @end example
 
 @noindent
-or 
+or
 
 @example
 IQ:KKCCMMYYccmm

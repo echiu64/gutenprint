@@ -201,7 +201,7 @@ AC_ARG_WITH(foomatic,
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 AC_MSG_CHECKING([whether to turn on debugging in build])
-AC_ARG_ENABLE(debug, 
+AC_ARG_ENABLE(debug,
 [  --enable-debug          turn on debugging [default=no]],
   [case "${enableval}" in
     yes) CFLAGS="${CFLAGS:=} -g" ; AC_MSG_RESULT([yes]) ;;

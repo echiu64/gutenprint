@@ -58,7 +58,7 @@ The correct @env{CFLAGS} to use can be obtained with the @option{--cflags}
 option:
 
 @example
-roger@@whinlatter:~/gimpprint/devel$ gimpprint-config --cflags 
+roger@@whinlatter:~/gimpprint/devel$ gimpprint-config --cflags
 
 @end example
 
@@ -67,7 +67,7 @@ In this case, there are no special @env{CFLAGS} required to compile programs.
 The correct @env{LIBS} to use can the obtained with the @option{--libs} option:
 
 @example
-roger@@whinlatter:~/gimpprint/devel$ gimpprint-config --libs  
+roger@@whinlatter:~/gimpprint/devel$ gimpprint-config --libs
 -L/usr/lib -lgimpprint -lm
 @end example
 

@@ -6,7 +6,7 @@ dnl AM_PATH_GIMP([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
 dnl Test for GIMP, and define GIMP_CFLAGS and GIMP_LIBS
 dnl
 AC_DEFUN(AM_PATH_GIMP,
-[dnl 
+[dnl
 dnl Get the cflags and libraries from the gimptool script
 dnl
 AC_ARG_WITH(gimp-prefix,[  --with-gimp-prefix=PFX  Prefix where GIMP is installed (optional)],
@@ -138,7 +138,7 @@ int main ()
   fi
   if test "x$no_gimp" = x ; then
      AC_MSG_RESULT(yes)
-     ifelse([$2], , :, [$2])     
+     ifelse([$2], , :, [$2])
   else
      AC_MSG_RESULT(no)
      if test "$GIMPTOOL" = "no" ; then

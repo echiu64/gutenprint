@@ -30,16 +30,16 @@ called Gimp-Print) are a set of printer drivers written to
 take advantage of the full capabilities of a wide range of
 printers. These drivers should work on any POSIX compliant operating
 system (e.g. Linux, Solaris, IRIX, etc).  This document will explain how to
-use the Gimp-Print software to achieve high quality printouts from the 
+use the Gimp-Print software to achieve high quality printouts from the
 <ulink url="http://www.gimp.org">GIMP</ulink> (GNU Image
-Manipulation Program) and 
+Manipulation Program) and
 <ulink url="http://www.cups.org">CUPS</ulink> (Common Unix Printing
-System). 
+System).
   </para>
   <para>
     Please note that the Gimp-Print software can also be compiled and used
-with 
-<ulink url="http://www.ghostscript.com">Ghostscript</ulink> and 
+with
+<ulink url="http://www.ghostscript.com">Ghostscript</ulink> and
 <ulink url="http://www.linuxprinting.org/foomatic.html">Foomatic</ulink>.
 Regardless of whether the Gimp-Print software is used with the GIMP,
 CUPS, Ghostscript, or Foomatic, the print quality and printer settings
@@ -55,18 +55,18 @@ Foomatic, or any other related software.
   </para>
 
   <para>
-    Andy Stewart, the author, is the founder of the 
+    Andy Stewart, the author, is the founder of the
 <ulink url="http://www.wlug.org">Worcester Linux Users' Group</ulink> in
 Worcester, Massachusetts, USA.  The group was founded in July 1997 and has
 approximately 140 people on its mailing list.  Monthly meetings are
 held and all are invited.
   </para>
 
-  <para> 
+  <para>
     In terms of "code", this is the author's first contribution to the
 open source community, and definitely his first experience with DocBook.
 Constructive comments, praise, words of encouragement, and the like
-will be most appreciated if e-mailed to the 
+will be most appreciated if e-mailed to the
 <ulink url="mailto:andystewart@mediaone.net">author</ulink>.
   </para>
   </abstract>
@@ -74,7 +74,7 @@ will be most appreciated if e-mailed to the
 
   <chapter><title>Project History</title>
   <para>
-This software package was first written by Michael Sweet of 
+This software package was first written by Michael Sweet of
 <ulink url="http://www.easysw.com">Easy Software Products</ulink> and
 initially worked only as a print plugin to the GIMP (GNU Image
 Manipulation Program).  In the summer of 1999,
@@ -115,7 +115,7 @@ of work by the team.  The quality was already tremendously improved
 over what the software could do at the Printing Summit.
   </para>
   <para>
-The team started serious work on version 4.1 in December 
+The team started serious work on version 4.1 in December
 2000, and version 4.2 was released in November 2001.  Despite the fact
 that version 4.2 is a "minor" release over version 4.0, there are vast
 improvements:
@@ -123,7 +123,7 @@ improvements:
     <listitem>
       <para>
       The driver is built as a shared library, making it much easier
-to use by higher layers of software 
+to use by higher layers of software
       </para>
     </listitem>
     <listitem>
@@ -194,7 +194,7 @@ window.  At the $ prompt, type:
   <programlisting>
   <![ CDATA [
      $ gimp &
-    ]]>  
+    ]]>
   </programlisting>
 
    This should start the GIMP for you. If it does not, check that
@@ -261,11 +261,11 @@ These small boxes are called "tooltips" and are intended to remind you
 about the function of each part of the graphical interface.
     </para>
     <para>
-The next several sections will continuously refer to 
-<xref linkend="fig_gimp_print_gui"> and 
+The next several sections will continuously refer to
+<xref linkend="fig_gimp_print_gui"> and
 <xref linkend="fig_gimp_print_gui_1">.  The difference between
 the two figures can be seen in the top right corner of the window.
-Notice that there are two tabs, one which reads 
+Notice that there are two tabs, one which reads
 <guilabel>Printer Settings</guilabel> and another which reads
 <guilabel>Image/Output Settings</guilabel>.  Notice also that the
 window is divided into several major sections which directly map to
@@ -320,7 +320,7 @@ the major sections of this document:
     <sect3><title>Printer</title>
     <para>
       Click on the <guilabel>Printer Settings</guilabel> tab near the
-top right hand corner of the window (see 
+top right hand corner of the window (see
 <xref linkend="fig_gimp_print_gui">).  Then, click on the downward
 facing arrow to the right of the <guilabel>Printer</guilabel> combo
 box to see a list of the system printer queues.  Select the queue to which
@@ -328,7 +328,7 @@ you would like the printed image to be sent.  One may also print the
 image directly to a file by selecting <guimenuitem>File</guimenuitem>.
 In this event, the user will be prompted for the filename when either the
 <guibutton>Print</guibutton> button or the <guibutton>Print and Save
-Settings</guibutton> button is clicked.  
+Settings</guibutton> button is clicked.
      </para>
      <para>
 When either the <guibutton>Print and Save Settings</guibutton> button
@@ -428,7 +428,7 @@ printing the photo.  By selecting the proper scaling percentage,
 printing can be constrained to the 4x6 part of the paper which will
 remain after the perforated sections are removed.  The author has
 saved this setting using this feature of the Gimp-Print software.
-    </para> 
+    </para>
 
     </sect3>
 
@@ -747,7 +747,7 @@ the units by clicking the <guibutton>Inch</guibutton> or
 these GUI boxes.
    </para>
    </sect4>
-   
+
    <sect4><title>Bottom Border</title>
    <para>
      The number appearing in the <guimenuitem>Bottom Border</guimenuitem> box denotes
@@ -772,7 +772,7 @@ that while sliding this bar, the preview image changes accordingly.
 One will also note that several boxes in the Gimp-Print GUI change values when this bar is moved.
 These boxes are the six position boxes (left, right, right border,
 top, bottom, bottom border), the two size boxes (width and height),
-and the spin box to the right of the slider bar.  
+and the spin box to the right of the slider bar.
    </para>
    <para>
    This slider bar is used to scale the image to a desirable size, but the same effect can
@@ -851,9 +851,9 @@ top, bottom, bottom border) and the two size boxes (width and height).
   <sect2><title id="sec_image_settings">Image/Output Settings</title>
    <para>
    By clicking on the tab labeled <guilabel>Image/Output
-Settings</guilabel>, the Gimp-Print window will appear as shown in 
+Settings</guilabel>, the Gimp-Print window will appear as shown in
 <xref linkend="fig_gimp_print_gui_1">.  Notice that there are
-two sections to this portion of the window, namely, 
+two sections to this portion of the window, namely,
 <guilabel>Image Type</guilabel> and
 <guilabel>Output Type</guilabel>.
 
@@ -945,7 +945,7 @@ entire image, the exact gray depending upon the brightness chosen.
 These three options allow specification of the cyan, magenta, and
 yellow levels independently, for rebalancing the levels.  Normally,
 these should be adjusted to yield neutral gray, but they can be used
-for other effects.   
+for other effects.
     </para>
     </sect4>
 
@@ -1020,7 +1020,7 @@ screening, although it isn't.  On laser printers, and possibly on
 certain kinds of text and line art, <guimenuitem>Very
 Fast</guimenuitem> dithering may actually yield the best quality.
     </para>
-    <para> 
+    <para>
 Error diffusion algorithms (<guimenuitem>Hybrid
 Floyd-Steinberg</guimenuitem> is such an algorithm) perform very well
 at high densities, and are capable of
@@ -1058,7 +1058,7 @@ and <guibutton>Cancel</guibutton>.  The <guibutton>About</guibutton>
 button will show information about the Gimp-Print software, such as
 the version number, authors names, project web site, and software
 licensing.  After clicking on the <guibutton>About</guibutton>, read
-the information, and then close the window by pressing the 
+the information, and then close the window by pressing the
 <guibutton>OK</guibutton> button.
     </para>
     <para>
@@ -1081,7 +1081,7 @@ Gimp-Print GUI window.
      <para>
        CUPS is an acronym which stands for <emphasis>C</emphasis>ommon
 <emphasis>U</emphasis>nix <emphasis>P</emphasis>rinting
-<emphasis>S</emphasis>ystem. 
+<emphasis>S</emphasis>ystem.
      </para>
      <para>
 It is assumed that the reader has properly installed the CUPS
@@ -1097,7 +1097,7 @@ the CUPS documentation here.
    <sect1><title>CUPS Printer Installation</title>
      <para>
 This explanation will use the web interface provided by CUPS. First,
-aim your favorite web browser at 
+aim your favorite web browser at
 <ulink url="http://localhost:631">the CUPS server</ulink>.  The
 following screen should appear within your browser.
     </para>
@@ -1172,7 +1172,7 @@ Click on the drop down menu next to the word
 appears.  Select the device appropriate for your printer.  Note that
 there are a range of serial, parallel, USB, and other devices from
 which to choose.  Once the selection is made, click the
-<guibutton>Continue</guibutton> button.  Now, this screen appears. 
+<guibutton>Continue</guibutton> button.  Now, this screen appears.
    </para>
 
    <figure><title>The CUPS Admin Model/Driver Window</title>
@@ -1189,7 +1189,7 @@ which to choose.  Once the selection is made, click the
    <para>
 Select the manufacturer of your printer and click the
 <guibutton>Continue</guibutton> button.  A window will appear which
-asks you to select the specific model number for your printer.  
+asks you to select the specific model number for your printer.
    </para>
 
    <figure><title>The 2nd CUPS Admin Model/Driver Window</title>
@@ -1232,7 +1232,7 @@ Congratulations!  You should now see the CUPS window indicating that
 your printer was successfully installed.  Notice the sentence which
 reads "Printer your_printer has been added successfully".  Click on
 your_printer, which will be the underlined name for your printer.
-After doing so, your window will appear something 
+After doing so, your window will appear something
 <xref linkend="fig_cups_my_printer">.
    </para>
 
@@ -1262,8 +1262,8 @@ revision.
      <para>
 With reference to <xref linkend="fig_cups_my_printer">, click
 on the <guibutton>Configure Printer</guibutton> button.  A partial
-screenshot of the printer configuration window appears in 
-<xref linkend="fig_cups_printer_config_window">.  
+screenshot of the printer configuration window appears in
+<xref linkend="fig_cups_printer_config_window">.
 The contents of this window will vary depending on precisely which
 printer you selected when you configured CUPS for your printer.  The
 screenshot shows the selections made by the author for his printer.
@@ -1625,7 +1625,7 @@ of this license document, but changing it is not allowed.</para>
       any Invariant Section.</para>
       </listitem>
     </orderedlist>
-    
+
     <para>If the Modified Version includes new front-matter sections
     or appendices that qualify as Secondary Sections and contain no
     material copied from the Document, you may at your option
@@ -1702,7 +1702,7 @@ of this license document, but changing it is not allowed.</para>
 
   <sect1 label="7">
     <title>AGGREGATION WITH INDEPENDENT WORKS</title>
-    
+
     <para>A compilation of the Document or its derivatives with other
     separate and independent documents or works, in or on a volume of
     a storage or distribution medium, does not as a whole count as a
@@ -1739,7 +1739,7 @@ of this license document, but changing it is not allowed.</para>
 
   <sect1 label="9">
     <title>TERMINATION</title>
-    
+
     <para>You may not copy, modify, sublicense, or distribute the
     Document except as expressly provided for under this License.  Any
     other attempt to copy, modify, sublicense or distribute the

@@ -6,7 +6,7 @@ dnl AM_PATH_GIMPPRINT([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND 
 dnl Test for GIMP-PRINT, and define GIMPPRINT_CFLAGS and GIMPPRINT_LIBS
 dnl
 AC_DEFUN(AM_PATH_GIMPPRINT,
-[dnl 
+[dnl
 dnl Get the cflags and libraries from the gimpprint-config script
 dnl
 AC_ARG_WITH(gimpprint-prefix,[  --with-gimpprint-prefix=PFX Prefix where GIMP-PRINT is installed (optional)],
@@ -61,7 +61,7 @@ dnl
 #include <stdio.h>
 #include <stdlib.h>
 
-int 
+int
 main ()
 {
   int major, minor, micro;
@@ -83,7 +83,7 @@ main ()
       (gimpprint_minor_version != $gimpprint_config_minor_version) ||
       (gimpprint_micro_version != $gimpprint_config_micro_version))
     {
-      printf("\n*** 'gimpprint-config --version' returned %d.%d.%d, but GIMP-PRINT (%d.%d.%d)\n", 
+      printf("\n*** 'gimpprint-config --version' returned %d.%d.%d, but GIMP-PRINT (%d.%d.%d)\n",
              $gimpprint_config_major_version, $gimpprint_config_minor_version, $gimpprint_config_micro_version,
              gimpprint_major_version, gimpprint_minor_version, gimpprint_micro_version);
       printf ("*** was found! If gimpprint-config was correct, then it is best\n");
@@ -94,7 +94,7 @@ main ()
       printf("*** If gimpprint-config was wrong, set the environment variable GIMPPRINT_CONFIG\n");
       printf("*** to point to the correct copy of gimpprint-config, and remove the file\n");
       printf("*** config.cache before re-running configure\n");
-    } 
+    }
 #if defined (GIMPPRINT_MAJOR_VERSION) && defined (GIMPPRINT_MINOR_VERSION) && defined (GIMPPRINT_MICRO_VERSION)
   else if ((gimpprint_major_version != GIMPPRINT_MAJOR_VERSION) ||
 	   (gimpprint_minor_version != GIMPPRINT_MINOR_VERSION) ||
@@ -141,7 +141,7 @@ main ()
   fi
   if test "x$no_gimpprint" = x ; then
      AC_MSG_RESULT(yes)
-     ifelse([$2], , :, [$2])     
+     ifelse([$2], , :, [$2])
   else
      AC_MSG_RESULT(no)
      if test "$GIMPPRINT_CONFIG" = "no" ; then

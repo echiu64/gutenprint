@@ -257,8 +257,8 @@ stp_printer_t printer_list[] =
   { "9000",	N_("Stylus Pro 9000"),	1,	7,	0,	0,	0 },
   { "9500",	N_("Stylus Pro 9500"),	1,	7,	0,	0,	0 },
   { "10000",	N_("Stylus Pro 10000"),	3,	15,	0,	0,	0 },
-  { "scan2000",	N_("Stylus Scan 2000"),	3,	15,	0,	0,	0 },  
-  { "scan2500",	N_("Stylus Scan 2500"),	3,	15,	0,	0,	0 },  
+  { "scan2000",	N_("Stylus Scan 2000"),	3,	15,	0,	0,	0 },
+  { "scan2500",	N_("Stylus Scan 2500"),	3,	15,	0,	0,	0 },
   { NULL,	NULL,			0,	0,	0,	0,	0 },
 };
 
@@ -1035,12 +1035,12 @@ do_align(void)
 	  if (curpass == passes)
 	    printf(_("Please inspect the print, and choose the best pair of lines\n"
 		     "in pattern #%d, and then insert a fresh page in the input tray.\n"
-		     "Type a pair number, '?' for help, or 'r' to retry this pattern.\n"), 
+		     "Type a pair number, '?' for help, or 'r' to retry this pattern.\n"),
 		   curpass);
 	  else
 	    printf(_("Please inspect the print, and choose the best pair of lines\n"
 		     "in pattern #%d, and then reinsert the page in the input tray.\n"
-		     "Type a pair number, '?' for help, or 'r' to retry this pattern.\n"), 
+		     "Type a pair number, '?' for help, or 'r' to retry this pattern.\n"),
 		   curpass);
 	  fflush(stdout);
 	  inbuf = do_get_input(_("> "));

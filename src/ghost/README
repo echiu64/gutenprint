@@ -438,28 +438,28 @@ We generally recommend the following resolutions for the following
 purposes:
 
 360x90   Fast economy draft output on plain paper (output will be very
-360x120  banded and not very dark). 
-	 
+360x120  banded and not very dark).
+
 180      Economy draft output on plain paper (output will not be very
 	 dark).
-	 
+
 360x180  Draft output on plain paper (output will not be solidly
 360x240  black); economy draft output on good quality inkjet paper.
-	 
+
 360      Standard quality output on plain paper (output will be
 	 solidly black); draft output on good quality inkjet paper.
-	 
+
 720x360  High quality output on plain paper; standard output on good
-	 quality inkjet paper; fast proofs on photo-quality paper. 
-	 
+	 quality inkjet paper; fast proofs on photo-quality paper.
+
 720      Maximum quality on plain paper; high quality on good inkjet
 	 paper; proofs on photo-quality paper.  Generally, there will
 	 be little difference between this and 720x360 on plain paper.
-	 
+
 1440x720 High quality on photo paper.  Use 1440x720 Highest Quality to
          reduce microbanding if needed.  While this will work on plain
          paper, it usually offers little improvement over 720 DPI.
-	 
+
 2880x720 Highest quality on photo paper.  While this may yield
          slightly improved quality, it will generally not be markedly
          superior to 1440x720 Highest Quality, except on the Stylus

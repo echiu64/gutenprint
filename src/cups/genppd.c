@@ -220,8 +220,8 @@ main(int  argc,			/* I - Number of command-line arguments */
  */
 
   stp_init();
-    
-  
+
+
  /*
   * Set the language...
   */
@@ -254,7 +254,7 @@ main(int  argc,			/* I - Number of command-line arguments */
 #endif
   }
 
-  
+
  /*
   * Write PPD files...
   */
