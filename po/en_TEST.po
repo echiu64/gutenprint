@@ -5,7 +5,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2001-06-04 20:25+0100\n"
+"POT-Creation-Date: 2001-06-07 19:52-0400\n"
 "PO-Revision-Date: 2001-02-07 21:33+0\n"
 "Last-Translator: Roger Leigh <roger@whinlatter.uklinux.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -74,14 +74,14 @@ msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "TEST: %s: option `-W %s' doesn't allow an argument\n"
 
 #: src/main/print-canon.c:1055 src/main/print-canon.c:1347
-#: src/main/print-canon.c:1479 src/main/print-escp2.c:2249
+#: src/main/print-canon.c:1479 src/main/print-escp2.c:2252
 #: src/main/print-lexmark.c:608 src/main/print-lexmark.c:861
 #: src/main/print-lexmark.c:981
 msgid "Plain Paper"
 msgstr "TEST: Plain Paper"
 
 #: src/main/print-canon.c:1056 src/main/print-canon.c:1348
-#: src/main/print-canon.c:1480 src/main/print-escp2.c:2257
+#: src/main/print-canon.c:1480 src/main/print-escp2.c:2264
 #: src/main/print-lexmark.c:609 src/main/print-lexmark.c:862
 #: src/main/print-lexmark.c:982
 msgid "Transparencies"
@@ -156,7 +156,7 @@ msgstr "TEST: Photo Paper Pro"
 #. { N_ ("Premium Glossy Photo Paper"), 0x00, 0.90, 1.00, .9 },
 #. { N_ ("Photo Quality Glossy Paper"), 0x00, 1.00, 1.00, .9 },
 #.
-#: src/main/print-canon.c:1081 src/main/print-escp2.c:2278
+#: src/main/print-canon.c:1081 src/main/print-escp2.c:2295
 msgid "Other"
 msgstr "TEST: Other"
 
@@ -187,7 +187,7 @@ msgstr "TEST: Manual without Pause"
 msgid "Black"
 msgstr "TEST: Black"
 
-#: src/gimp/gimp_main_window.c:827 src/main/print-canon.c:1134
+#: src/gimp/gimp_main_window.c:828 src/main/print-canon.c:1134
 #: src/main/print-canon.c:1157 src/main/print-canon.c:1439
 #: src/main/print-canon.c:1550 src/main/print-lexmark.c:645
 #: src/main/print-lexmark.c:940 src/main/print-lexmark.c:1046
@@ -590,91 +590,91 @@ msgstr "TEST: 1440 x 720 DPI Highest Quality"
 msgid "1440 x 360 DPI Highest Quality"
 msgstr "TEST: 1440 x 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:2251
+#: src/main/print-escp2.c:2255
 msgid "Plain Paper Fast Load"
 msgstr "TEST: Plain Paper Fast Load"
 
 #. 7.25 * 10.5in
-#: src/main/print-escp2.c:2253 src/main/print-util.c:668
+#: src/main/print-escp2.c:2258 src/main/print-util.c:668
 msgid "Postcard"
 msgstr "TEST: Postcard"
 
-#: src/main/print-escp2.c:2255
+#: src/main/print-escp2.c:2261
 msgid "Glossy Film"
 msgstr "TEST: Glossy Film"
 
-#: src/main/print-escp2.c:2259
+#: src/main/print-escp2.c:2267
 msgid "Envelopes"
 msgstr "TEST: Envelopes"
 
-#: src/main/print-escp2.c:2261
+#: src/main/print-escp2.c:2270
 msgid "Back Light Film"
 msgstr "TEST: Back Light Film"
 
-#: src/main/print-escp2.c:2263
+#: src/main/print-escp2.c:2273
 msgid "Matte Paper"
 msgstr "TEST: Matte Paper"
 
-#: src/main/print-escp2.c:2265
+#: src/main/print-escp2.c:2276
 msgid "Inkjet Paper"
 msgstr "TEST: Inkjet Paper"
 
-#: src/main/print-escp2.c:2267
+#: src/main/print-escp2.c:2279
 msgid "Photo Quality Inkjet Paper"
 msgstr "TEST: Photo Quality Inkjet Paper"
 
-#: src/main/print-escp2.c:2269
+#: src/main/print-escp2.c:2282
 msgid "Photo Paper"
 msgstr "TEST: Photo Paper"
 
-#: src/main/print-escp2.c:2271
+#: src/main/print-escp2.c:2285
 msgid "Premium Glossy Photo Paper"
 msgstr "TEST: Premium Glossy Photo Paper"
 
-#: src/main/print-escp2.c:2274
+#: src/main/print-escp2.c:2289
 msgid "Premium Luster Photo Paper"
 msgstr "TEST: Premium Luster Photo Paper"
 
-#: src/main/print-escp2.c:2276
+#: src/main/print-escp2.c:2292
 msgid "Photo Quality Glossy Paper"
 msgstr "TEST: Photo Quality Glossy Paper"
 
-#: src/main/print-escp2.c:2293
+#: src/main/print-escp2.c:2311
 msgid "Seven Color Enhanced"
 msgstr "TEST: Seven Color Enhanced"
 
-#: src/main/print-escp2.c:2294
+#: src/main/print-escp2.c:2312
 #, fuzzy
 msgid "Six Color Enhanced Composite"
 msgstr "TEST: Seven Color Enhanced"
 
-#: src/main/print-escp2.c:2295
+#: src/main/print-escp2.c:2313
 msgid "Six Color Photo"
 msgstr "TEST: Six Color Photo"
 
-#: src/main/print-escp2.c:2296
+#: src/main/print-escp2.c:2314
 #, fuzzy
 msgid "Five Color Photo Composite"
 msgstr "TEST: Six Color Photo"
 
-#: src/main/print-escp2.c:2297
+#: src/main/print-escp2.c:2315
 msgid "Four Color Standard"
 msgstr "TEST: Four Color Standard"
 
-#: src/main/print-escp2.c:2298
+#: src/main/print-escp2.c:2316
 msgid "Three Color Composite"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1149 src/main/print-escp2.c:2681
-#: src/main/print-escp2.c:2824 src/main/print-pcl.c:193
+#: src/gimp/gimp_main_window.c:1152 src/main/print-escp2.c:2699
+#: src/main/print-escp2.c:2842 src/main/print-pcl.c:193
 msgid "Standard"
 msgstr "TEST: Standard"
 
 #. Size of page
 #. Roll feed selected
-#: src/main/print-escp2.c:2682 src/main/print-escp2.c:2706
-#: src/main/print-escp2.c:2892 src/main/print-escp2.c:2926
-#: src/main/print-escp2.c:3150
+#: src/main/print-escp2.c:2700 src/main/print-escp2.c:2724
+#: src/main/print-escp2.c:2910 src/main/print-escp2.c:2944
+#: src/main/print-escp2.c:3168
 msgid "Roll Feed"
 msgstr "TEST: Roll Feed"
 
@@ -1504,12 +1504,12 @@ msgstr "TEST: Dither Algorithm:"
 #.
 #. * Create the main dialog
 #.
-#: src/gimp/gimp_main_window.c:280
+#: src/gimp/gimp_main_window.c:281
 #, c-format
 msgid "%s -- Print v%s"
 msgstr "TEST: %s -- Print v%s"
 
-#: src/gimp/gimp_main_window.c:289
+#: src/gimp/gimp_main_window.c:290
 msgid ""
 "Print and\n"
 "Save Settings"
@@ -1517,7 +1517,7 @@ msgstr ""
 "TEST: Print and\n"
 "Save Settings"
 
-#: src/gimp/gimp_main_window.c:291
+#: src/gimp/gimp_main_window.c:292
 msgid ""
 "Save\n"
 "Settings"
@@ -1525,99 +1525,99 @@ msgstr ""
 "TEST: Save\n"
 "Settings"
 
-#: src/gimp/gimp_main_window.c:293
+#: src/gimp/gimp_main_window.c:294
 msgid "Print"
 msgstr "TEST: Print"
 
-#: src/gimp/gimp_main_window.c:295 src/gimp/gimp_main_window.c:869
-#: src/gimp/gimp_main_window.c:992
+#: src/gimp/gimp_main_window.c:296 src/gimp/gimp_main_window.c:870
+#: src/gimp/gimp_main_window.c:993
 msgid "Cancel"
 msgstr "TEST: Cancel"
 
-#: src/gimp/gimp_main_window.c:320
+#: src/gimp/gimp_main_window.c:321
 msgid "Preview"
 msgstr "TEST: Preview"
 
-#: src/gimp/gimp_main_window.c:361
+#: src/gimp/gimp_main_window.c:362
 msgid "Position"
 msgstr "TEST: Position"
 
-#: src/gimp/gimp_main_window.c:372
+#: src/gimp/gimp_main_window.c:373
 msgid "Center Image"
 msgstr "TEST: Center Image"
 
-#: src/gimp/gimp_main_window.c:383
+#: src/gimp/gimp_main_window.c:384
 msgid "Units:"
 msgstr "TEST: Units:"
 
-#: src/gimp/gimp_main_window.c:386
+#: src/gimp/gimp_main_window.c:387
 msgid "Inch"
 msgstr "TEST: Inch"
 
-#: src/gimp/gimp_main_window.c:395
+#: src/gimp/gimp_main_window.c:396
 msgid "cm"
 msgstr "TEST: cm"
 
-#: src/gimp/gimp_main_window.c:412
+#: src/gimp/gimp_main_window.c:413
 msgid "Left:"
 msgstr "TEST: Left:"
 
-#: src/gimp/gimp_main_window.c:423
+#: src/gimp/gimp_main_window.c:424
 msgid "Top:"
 msgstr "TEST: Top:"
 
-#: src/gimp/gimp_main_window.c:434
+#: src/gimp/gimp_main_window.c:435
 msgid "Right:"
 msgstr "TEST: Right:"
 
-#: src/gimp/gimp_main_window.c:446
+#: src/gimp/gimp_main_window.c:447
 msgid "Right Border:"
 msgstr "TEST: Right Border:"
 
-#: src/gimp/gimp_main_window.c:457
+#: src/gimp/gimp_main_window.c:458
 msgid "Bottom:"
 msgstr "TEST: Bottom:"
 
-#: src/gimp/gimp_main_window.c:469
+#: src/gimp/gimp_main_window.c:470
 msgid "Bottom Border:"
 msgstr "TEST: Bottom Border:"
 
-#: src/gimp/gimp_main_window.c:478
+#: src/gimp/gimp_main_window.c:479
 msgid "Auto"
 msgstr "TEST: Auto"
 
-#: src/gimp/gimp_main_window.c:481
+#: src/gimp/gimp_main_window.c:482
 msgid "Portrait"
 msgstr "TEST: Portrait"
 
-#: src/gimp/gimp_main_window.c:484
+#: src/gimp/gimp_main_window.c:485
 msgid "Landscape"
 msgstr "TEST: Landscape"
 
-#: src/gimp/gimp_main_window.c:487
+#: src/gimp/gimp_main_window.c:488
 msgid "Upside down"
 msgstr "TEST: Upside down"
 
-#: src/gimp/gimp_main_window.c:490
+#: src/gimp/gimp_main_window.c:491
 msgid "Seascape"
 msgstr "TEST: Seascape"
 
-#: src/gimp/gimp_main_window.c:495
+#: src/gimp/gimp_main_window.c:496
 msgid "Orientation:"
 msgstr "TEST: Orientation:"
 
 #.
 #. *  Printer settings frame...
 #.
-#: src/gimp/gimp_main_window.c:502
+#: src/gimp/gimp_main_window.c:503
 msgid "Printer Settings"
 msgstr "TEST: Printer Settings"
 
-#: src/gimp/gimp_main_window.c:519
+#: src/gimp/gimp_main_window.c:520
 msgid "Printer:"
 msgstr "TEST: Printer:"
 
-#: src/gimp/gimp_main_window.c:533
+#: src/gimp/gimp_main_window.c:534
 #, fuzzy
 msgid "Setup..."
 msgstr "TEST: Setup"
@@ -1625,85 +1625,85 @@ msgstr "TEST: Setup"
 #.
 #. * Define new printer dialog
 #.
-#: src/gimp/gimp_main_window.c:544
+#: src/gimp/gimp_main_window.c:545
 msgid "New..."
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:556
+#: src/gimp/gimp_main_window.c:557
 msgid "Media Size:"
 msgstr "TEST: Media Size:"
 
-#: src/gimp/gimp_main_window.c:563 src/gimp/gimp_main_window.c:718
+#: src/gimp/gimp_main_window.c:564 src/gimp/gimp_main_window.c:719
 msgid "Width:"
 msgstr "TEST: Width:"
 
-#: src/gimp/gimp_main_window.c:576 src/gimp/gimp_main_window.c:731
+#: src/gimp/gimp_main_window.c:577 src/gimp/gimp_main_window.c:732
 msgid "Height:"
 msgstr "TEST: Height:"
 
-#: src/gimp/gimp_main_window.c:596
+#: src/gimp/gimp_main_window.c:597
 msgid "Media Type:"
 msgstr "TEST: Media Type:"
 
-#: src/gimp/gimp_main_window.c:604
+#: src/gimp/gimp_main_window.c:605
 msgid "Media Source:"
 msgstr "TEST: Media Source:"
 
-#: src/gimp/gimp_main_window.c:612
+#: src/gimp/gimp_main_window.c:613
 msgid "Ink Type:"
 msgstr "TEST: Ink Type:"
 
-#: src/gimp/gimp_main_window.c:620
+#: src/gimp/gimp_main_window.c:621
 msgid "Resolution:"
 msgstr "TEST: Resolution:"
 
 #.
 #. * Scaling...
 #.
-#: src/gimp/gimp_main_window.c:625
+#: src/gimp/gimp_main_window.c:626
 msgid "Scaling"
 msgstr "TEST: Scaling"
 
-#: src/gimp/gimp_main_window.c:664 src/gimp/gimp_main_window.c:673
+#: src/gimp/gimp_main_window.c:665 src/gimp/gimp_main_window.c:674
 msgid "Scaling:"
 msgstr "TEST: Scaling:"
 
-#: src/gimp/gimp_main_window.c:687
+#: src/gimp/gimp_main_window.c:688
 msgid "Percent"
 msgstr "TEST: Percent"
 
-#: src/gimp/gimp_main_window.c:696
+#: src/gimp/gimp_main_window.c:697
 msgid "PPI"
 msgstr "TEST: PPI"
 
-#: src/gimp/gimp_main_window.c:704
+#: src/gimp/gimp_main_window.c:705
 msgid "Set Image Scale"
 msgstr "TEST: Set Image Scale"
 
 #.
 #. * Image type
 #.
-#: src/gimp/gimp_main_window.c:747
+#: src/gimp/gimp_main_window.c:748
 msgid "Image Settings"
 msgstr "TEST: Image Settings"
 
-#: src/gimp/gimp_main_window.c:756
+#: src/gimp/gimp_main_window.c:757
 msgid "Image Type:"
 msgstr "TEST: Image Type:"
 
-#: src/gimp/gimp_main_window.c:767
+#: src/gimp/gimp_main_window.c:768
 msgid "Line Art"
 msgstr "TEST: Line Art"
 
-#: src/gimp/gimp_main_window.c:778
+#: src/gimp/gimp_main_window.c:779
 msgid "Solid Colors"
 msgstr "TEST: Solid Colors"
 
-#: src/gimp/gimp_main_window.c:789
+#: src/gimp/gimp_main_window.c:790
 msgid "Photograph"
 msgstr "TEST: Photograph"
 
-#: src/gimp/gimp_main_window.c:805
+#: src/gimp/gimp_main_window.c:806
 #, fuzzy
 msgid "Adjust Color..."
 msgstr "TEST: Adjust Color"
@@ -1711,70 +1711,70 @@ msgstr "TEST: Adjust Color"
 #.
 #. * Output type toggles...
 #.
-#: src/gimp/gimp_main_window.c:817
+#: src/gimp/gimp_main_window.c:818
 msgid "Output Type:"
 msgstr "TEST: Output Type:"
 
-#: src/gimp/gimp_main_window.c:837
+#: src/gimp/gimp_main_window.c:838
 msgid "Grayscale"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:848
+#: src/gimp/gimp_main_window.c:849
 msgid "Black and White"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:863
+#: src/gimp/gimp_main_window.c:864
 msgid "Setup"
 msgstr "TEST: Setup"
 
-#: src/gimp/gimp_main_window.c:867 src/gimp/gimp_main_window.c:990
+#: src/gimp/gimp_main_window.c:868 src/gimp/gimp_main_window.c:991
 msgid "OK"
 msgstr "TEST: OK"
 
 #.
 #. * Printer driver option menu...
 #.
-#: src/gimp/gimp_main_window.c:889
+#: src/gimp/gimp_main_window.c:890
 msgid "Printer Model:"
 msgstr "TEST: Printer Model:"
 
 #.
 #. * PPD file...
 #.
-#: src/gimp/gimp_main_window.c:925
+#: src/gimp/gimp_main_window.c:926
 msgid "PPD File:"
 msgstr "TEST: PPD File:"
 
-#: src/gimp/gimp_main_window.c:940
+#: src/gimp/gimp_main_window.c:941
 msgid "Browse"
 msgstr "TEST: Browse"
 
 #.
 #. * Print command...
 #.
-#: src/gimp/gimp_main_window.c:951
+#: src/gimp/gimp_main_window.c:952
 msgid "Command:"
 msgstr "TEST: Command:"
 
 #.
 #. * Output file selection dialog...
 #.
-#: src/gimp/gimp_main_window.c:966
+#: src/gimp/gimp_main_window.c:967
 msgid "Print To File?"
 msgstr "TEST: Print To File?"
 
 #.
 #. * PPD file selection dialog...
 #.
-#: src/gimp/gimp_main_window.c:977
+#: src/gimp/gimp_main_window.c:978
 msgid "PPD File?"
 msgstr "TEST: PPD File?"
 
-#: src/gimp/gimp_main_window.c:986
+#: src/gimp/gimp_main_window.c:987
 msgid "Define New Printer"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1008
+#: src/gimp/gimp_main_window.c:1009
 #, fuzzy
 msgid "Printer Name:"
 msgstr "TEST: Printer:"
