@@ -66,7 +66,7 @@ $supported_printers = array(
 		'HP DeskJet 900 series' => 'Operational',
 		'HP PhotoSmart P1000, P1100' => 'Operational',
 		'HP DeskJet 1100C, 1120C' => 'Operational',
-		'HP DeskJet 1200C, 1220C, 1600C' => 'Operational'
+		'HP DeskJet 1200C, 1220C, 1600C' => 'Operational',
 		'HP DeskJet 2000 series' => 'Operational',
 		'HP DeskJet 2500 series' => 'Operational',
 		),
