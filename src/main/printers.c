@@ -285,8 +285,10 @@ stp_start_job(const stp_vars_t v, stp_image_t *image)
     stp_printer_get_printfuncs(stp_get_printer(v));
   if (!stp_get_verified(v))
     return 0;
+#if 0
   if (stp_get_job_mode(v) == STP_JOB_MODE_JOB)
     return 1;
+#endif
   if (printfuncs->start_job)
     return (printfuncs->start_job)(v, image);
   else
