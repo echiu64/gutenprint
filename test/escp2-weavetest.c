@@ -110,13 +110,20 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 {
 }
 
+#if 0
+#define E_ERROR_CODE (w.physpassend == w.row && lastpass + 1 != w.pass ? (errors[4]++, 'E') : ' ')
+#else
+#define E_ERROR_CODE ' '
+#endif
+
 int
 main(int argc, char **argv)
 {
   int i;
   int j;
   stp_weave_t w;
-  int errors = 0;
+  int errors[26];
+  int total_errors = 0;
   int lastpass = -1;
   int newestpass = -1;
   int *passstarts;
@@ -134,6 +141,7 @@ main(int argc, char **argv)
   int first_line, phys_lines;
   int strategy = 1;
   void *sw;
+  memset(errors, 0, sizeof(int) * 26);
   if (argc != 9)
     {
       fprintf(stderr, "Usage: %s jets separation hpasses vpasses subpasses rows start end\n",
@@ -186,42 +194,38 @@ main(int argc, char **argv)
 	  stp_weave_parameters_by_row((stp_softweave_t *)sw, i+first_line, j, &w);
 	  physrow = w.logicalpassstart + physsep * w.jet;
 	  printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%5d %5d %5d %10d %10d %10d %10d\n",
-		 (w.pass < 0 ? (errors++, 'A') : ' '),
-		 (w.jet < 0 || w.jet > physjets - 1 ? (errors++, 'B') : ' '),
-		 (w.physpassstart > w.row ? (errors++, 'C') : ' '),
-		 (w.physpassend < w.row ? (errors++, 'D') : ' '),
-#if 0
-		 (w.physpassend == w.row && lastpass + 1 != w.pass ?
-		  (errors++, 'E') : ' '),
-#else
-		 ' ',
-#endif
+		 (w.pass < 0 ? (errors[0]++, 'A') : ' '),
+		 (w.jet < 0 || w.jet > physjets - 1 ?
+		  (errors[1]++, 'B') : ' '),
+		 (w.physpassstart > w.row ? (errors[2]++, 'C') : ' '),
+		 (w.physpassend < w.row ? (errors[3]++, 'D') : ' '),
+		 E_ERROR_CODE,
 		 (w.pass >= 0 && w.pass < nrows && passstarts[w.pass] != -1
 		  && passstarts[w.pass] !=w.physpassstart ?
-		  (errors++, 'F') : ' '),
+		  (errors[5]++, 'F') : ' '),
 		 (w.pass >= 0 && w.pass < nrows && passends[w.pass] != -1 &&
 		  passends[w.pass] !=w.physpassend ?
-		  (errors++, 'G') : ' '),
-		 (w.row != physrow ? (errors++, 'H') : ' '),
+		  (errors[6]++, 'G') : ' '),
+		 (w.row != physrow ? (errors[7]++, 'H') : ' '),
 		 (w.missingstartrows < 0 || w.missingstartrows > physjets - 1 ?
-		  (errors++, 'I') : ' '),
-		 (w.physpassstart < 0 ? (errors++, 'J') : ' '),
-		 (w.missingstartrows > w.jet ? (errors++, 'K') : ' '),
+		  (errors[8]++, 'I') : ' '),
+		 (w.physpassstart < 0 ? (errors[9]++, 'J') : ' '),
+		 (w.missingstartrows > w.jet ? (errors[10]++, 'K') : ' '),
 		 (w.pass >= 0 && w.pass < nrows &&
 		  physpassstuff[w.pass] >= 0 && physpassstuff[w.pass] != j ?
-		  (errors++, 'L') : ' '),
+		  (errors[11]++, 'L') : ' '),
 		 (w.pass >= 0 && w.pass < nrows && w.jet >= 0 &&
 		  w.jet < physjets &&
 		  rowdetail[w.pass * physjets + w.jet] == 1 ?
-		  (errors++, 'M') : ' '),
+		  (errors[12]++, 'M') : ' '),
 		 (current_slot[w.pass % vmod] != -1 &&
 		  current_slot[w.pass % vmod] != w.pass ?
-		  (errors++, 'N') : ' '),
+		  (errors[13]++, 'N') : ' '),
 		 (w.physpassstart == w.row && w.jet != w.missingstartrows ?
-		  (errors++, 'O') : ' '),
+		  (errors[14]++, 'O') : ' '),
 		 ((w.logicalpassstart < 0) ||
 		  (w.logicalpassstart + physsep * (physjets - 1) >= phys_lines) ?
-		  (errors++, 'P') : ' '),
+		  (errors[15]++, 'P') : ' '),
 		 w.row, w.pass, w.jet,
 		 w.missingstartrows, w.logicalpassstart, w.physpassstart,
 		 w.physpassend);
@@ -254,7 +258,7 @@ main(int argc, char **argv)
     if (passends[i] >= -1 && passends[i] < nrows)
       {
 	printf("%d %d\n", i, passends[i]);
-	errors++;
+	errors[16]++;
       }
   printf("Last terminated pass: %d\n", lastpass);
   printf("Pass starts:\n");
@@ -264,13 +268,15 @@ main(int argc, char **argv)
 	printf("%c %d %d\n", ' ', i, logpassstarts[i]);
       else
 	printf("%c %d %d\n",
-	       logpassstarts[i] < logpassstarts[i - 1] ? (errors++, 'Q') : ' ',
+	       logpassstarts[i] < logpassstarts[i - 1] ? (errors[17]++, 'Q') : ' ',
 	       i, logpassstarts[i]);
     }
-  printf("%d total errors\n", errors);
+  for (i = 0; i < 26; i++)
+    total_errors += errors[i];
+  printf("%d total errors\n", total_errors);
   fflush(stdout);
   stp_destroy_weave(sw);
-  if (errors > 0)
+  if (total_errors > 0)
     return 1;
   else
     return 0;
