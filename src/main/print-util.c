@@ -411,8 +411,6 @@ stp_init(void)
       bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 #endif
       stp_init_debug();
-      stp_init_printer_list();
-      stp_init_paper_list();
       /* Load modules */
       if (stp_module_load())
 	return 1;

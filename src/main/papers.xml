@@ -697,7 +697,7 @@
       <height value="3456"/>
       <unit value="english"/>
     </paper>
-    <paper name="ARCHE_trasn">
+    <paper name="ARCHE_trans">
       <description value="ArchE transposed"/>
       <comment value="48in x 36in"/>
       <width value="3456"/>

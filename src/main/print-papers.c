@@ -44,7 +44,7 @@ static void stp_paper_freefunc(stp_list_item_t *item);
 static const char *stp_paper_namefunc(const stp_list_item_t *item);
 static const char *stp_paper_long_namefunc(const stp_list_item_t *item);
 
-static stp_list_t *paper_list;
+static stp_list_t *paper_list = NULL;
 
 
 int
@@ -94,6 +94,9 @@ int stp_paper_create(stp_papersize_t pt)
   const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
   stp_list_item_t *paper_item;
 
+  if (paper_list == NULL)
+      stp_init_paper_list();
+
   /* Check the paper does not already exist */
   paper_item = stp_list_get_start(paper_list);
   while (paper_item)
@@ -116,6 +119,13 @@ int stp_paper_destroy(stp_papersize_t pt)
   const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
   stp_list_item_t *paper_item;
 
+  if (paper_list == NULL)
+    {
+      stp_erprintf("No papers found: "
+		   "is STP_MODULE_PATH correct?\n");
+      stp_init_paper_list();
+    }
+
   /* Check if paper exists */
   paper_item = stp_list_get_start(paper_list);
   while (paper_item)
@@ -137,6 +147,13 @@ int stp_paper_destroy(stp_papersize_t pt)
 int
 stp_known_papersizes(void)
 {
+  if (paper_list == NULL)
+    {
+      stp_erprintf("No papers found: "
+		   "is STP_MODULE_PATH correct?\n");
+      stp_init_paper_list();
+    }
+
   return stp_list_get_length(paper_list);
 }
 
@@ -207,6 +224,14 @@ const stp_papersize_t
 stp_get_papersize_by_name(const char *name)
 {
   stp_list_item_t *paper;
+
+  if (paper_list == NULL)
+    {
+      stp_erprintf("No papers found: "
+		   "is STP_MODULE_PATH correct?\n");
+      stp_init_paper_list();
+    }
+
   paper = stp_list_get_item_by_name(paper_list, name);
   if (!paper)
     return NULL;
@@ -217,6 +242,14 @@ const stp_papersize_t
 stp_get_papersize_by_index(int index)
 {
   stp_list_item_t *paper;
+
+  if (paper_list == NULL)
+    {
+      stp_erprintf("No papers found: "
+		   "is STP_MODULE_PATH correct?\n");
+      stp_init_paper_list();
+    }
+
   paper = stp_list_get_item_by_index(paper_list, index);
   if (!paper)
     return NULL;

@@ -48,7 +48,7 @@ static const char* stp_printer_namefunc(const stp_list_item_t *item);
 static const char* stp_printer_long_namefunc(const stp_list_item_t *item);
 
 
-static stp_list_t *printer_list;
+static stp_list_t *printer_list = NULL;
 
 
 int
@@ -68,6 +68,12 @@ stp_init_printer_list(void)
 int
 stp_known_printers(void)
 {
+  if (printer_list == NULL)
+    {
+      stp_erprintf("No printer drivers found: "
+		   "are STP_DATA_PATH and STP_MODULE_PATH correct?\n");
+      stp_init_printer_list();
+    }
   return stp_list_get_length(printer_list);
 }
 
@@ -85,6 +91,12 @@ const stp_printer_t
 stp_get_printer_by_index(int idx)
 {
   stp_list_item_t *printer;
+  if (printer_list == NULL)
+    {
+      stp_erprintf("No printer drivers found: "
+		   "re STP_DATA_PATH and STP_MODULE_PATH correct?\n");
+      stp_init_printer_list();
+    }
   printer = stp_list_get_item_by_index(printer_list, idx);
   if (printer == NULL)
     return NULL;
@@ -168,6 +180,12 @@ const stp_printer_t
 stp_get_printer_by_long_name(const char *long_name)
 {
   stp_list_item_t *printer;
+  if (printer_list == NULL)
+    {
+      stp_erprintf("No printer drivers found: "
+		   "re STP_DATA_PATH and STP_MODULE_PATH correct?\n");
+      stp_init_printer_list();
+    }
   printer = stp_list_get_item_by_long_name(printer_list, long_name);
   if (!printer)
     return NULL;
@@ -178,6 +196,12 @@ const stp_printer_t
 stp_get_printer_by_driver(const char *driver)
 {
   stp_list_item_t *printer;
+  if (printer_list == NULL)
+    {
+      stp_erprintf("No printer drivers found: "
+		   "re STP_DATA_PATH and STP_MODULE_PATH correct?\n");
+      stp_init_printer_list();
+    }
   printer = stp_list_get_item_by_name(printer_list, driver);
   if (!printer)
     return NULL;
@@ -607,6 +631,11 @@ stp_family_register(stp_list_t *family)
   stp_list_item_t *printer_item;
   stp_internal_printer_t *printer;
 
+  if (printer_list == NULL)
+    {
+      stp_init_printer_list();
+    }
+
   if (family)
     {
       printer_item = stp_list_get_start(family);
@@ -632,6 +661,11 @@ stp_family_unregister(stp_list_t *family)
   stp_list_item_t *printer_item;
   stp_list_item_t *old_printer_item;
   stp_internal_printer_t *printer;
+
+  if (printer_list == NULL)
+    {
+      stp_init_printer_list();
+    }
 
   if (family)
     {
