@@ -30,6 +30,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.8  1999/10/19 02:04:59  rlk
+ *   Merge all of the single-level print_cmyk functions
+ *
  *   Revision 1.7  1999/10/18 01:37:19  rlk
  *   Add Stylus Photo 700 and switch to printer capabilities
  *
@@ -800,8 +803,8 @@ escp2_print(int       model,		/* I - Model */
       }
       else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
       {
-        dither_cmyk6_16(out, x, drawable->height, out_width, cyan, magenta,
-			lcyan, lmagenta, yellow, black);
+        dither_cmyk16(out, x, drawable->height, out_width, cyan, lcyan,
+		      magenta, lmagenta, yellow, 0, black);
 
 	escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
         escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width, left);
@@ -812,8 +815,8 @@ escp2_print(int       model,		/* I - Model */
       }
       else
       {
-        dither_cmyk16(out, x, drawable->height, out_width, cyan, magenta,
-                    yellow, black);
+        dither_cmyk16(out, x, drawable->height, out_width, cyan, 0, magenta, 0,
+		      yellow, 0, black);
 
         escp2_write(prn, cyan, length, 2, 0, ydpi, model, out_width, left);
         escp2_write(prn, magenta, length, 1, 0, ydpi, model, out_width, left);
@@ -870,8 +873,8 @@ escp2_print(int       model,		/* I - Model */
       }
       else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
       {
-        dither_cmyk6_16(out, y, drawable->width, out_width, cyan, magenta,
-			lcyan, lmagenta, yellow, black);
+        dither_cmyk16(out, y, drawable->width, out_width, cyan, lcyan,
+		      magenta, lmagenta, yellow, 0, black);
 
         escp2_write(prn, lcyan, length, 1, 2, ydpi, model, out_width, left);
         escp2_write(prn, lmagenta, length, 1, 1, ydpi, model, out_width, left);
@@ -882,8 +885,8 @@ escp2_print(int       model,		/* I - Model */
       }
       else
       {
-        dither_cmyk16(out, y, drawable->width, out_width, cyan, magenta,
-		      yellow, black);
+        dither_cmyk16(out, y, drawable->width, out_width, cyan, 0, magenta, 0,
+		      yellow, 0, black);
 
         escp2_write(prn, cyan, length, 2, 0, ydpi, model, out_width, left);
         escp2_write(prn, magenta, length, 1, 0, ydpi, model, out_width, left);

@@ -447,8 +447,7 @@ run(char   *name,		/* I - Name of print program. */
 		pixel,		/* Pixel value */
 		red_pixel,	/* Pixel value */
 		green_pixel,	/* Pixel value */
-		blue_pixel,	/* Pixel value */
-		pixel_0;	/* Zero-value pixel -- scale to zero */
+		blue_pixel;	/* Pixel value */
   lut_t		lut;		/* Lookup table for brightness */
   lut16_t	lut16;		/* 16-bit lookup table for brightness */
   guchar	*cmap;		/* Colormap (indexed images only) */
@@ -792,12 +791,6 @@ run(char   *name,		/* I - Name of print program. */
 	      blue_pixel = pixel * blue;
 #endif
 
-#if 0
-	    if (i == 0)
-	      pixel_0 = pixel;
-	    pixel = (pixel - pixel_0) * 65536.0 / (65536.0 - pixel_0);
-#endif
-
 	    if (pixel <= 0.0)
 	      {
 		lut.composite[i] = 0;
@@ -974,8 +967,6 @@ do_print_dialog(void)
   GtkObject	*scale_data;	/* Scale data (limits) */
   GSList	*group;		/* Grouping for output type */
   GSList	*linear_group;	/* Grouping for linear scale */
-  gint		argc;		/* Fake argc for GUI */
-  gchar		**argv;		/* Fake argv for GUI */
   static char	*orients[] =	/* Orientation strings */
   {
     N_("Auto"),
@@ -2148,7 +2139,7 @@ plist_build_menu(GtkWidget *option,				/* I - Option button */
 {
   int		i;	/* Looping var */
   GtkWidget	*item,	/* Menu item */
-		*item0;	/* First menu item */
+		*item0 = 0;	/* First menu item */
 
 
   if (*menu != NULL)
@@ -2590,7 +2581,7 @@ preview_update(void)
 		orient,		/* True orientation of page */
 		tw0, tw1,	/* Temporary page_widths */
 		th0, th1,	/* Temporary page_heights */
-		ta0, ta1;	/* Temporary areas */
+		ta0 = 0, ta1 = 0;	/* Temporary areas */
   int		left, right,	/* Imageable area */
 		top, bottom,
 		width, length;	/* Physical width */
@@ -2966,8 +2957,7 @@ get_printers(void)
 {
   int	i;
   FILE	*pfile;
-  char	command[255],
-	line[129],
+  char	line[129],
 	name[17],
 	defname[17];
 #ifdef __EMX__

@@ -25,15 +25,15 @@
  *                          parameter.
  *   pcl_imageable_area() - Return the imageable area of the page.
  *   pcl_print()          - Print an image to an HP printer.
- *   dither_black4()      - Dither grayscale pixels to 4 levels of black.
- *   dither_cmyk4()       - Dither RGB pixels to 4 levels of cyan, magenta,
- *                          yellow, and black.
  *   pcl_mode0()          - Send PCL graphics using mode 0 (no) compression.
  *   pcl_mode2()          - Send PCL graphics using mode 2 (TIFF) compression.
  *
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.6  1999/10/19 02:04:59  rlk
+ *   Merge all of the single-level print_cmyk functions
+ *
  *   Revision 1.5  1999/10/17 23:44:07  rlk
  *   16-bit everything (untested)
  *
@@ -894,8 +894,8 @@ pcl_print(int       model,		/* I - Model */
 	}
 	else
 	{
-          dither_cmyk16(out, x, drawable->height, out_width, cyan, magenta,
-			yellow, black);
+          dither_cmyk16(out, x, drawable->height, out_width, cyan, 0, magenta,
+			0, yellow, 0, black);
 
           if (black != NULL)
             (*writefunc)(prn, black, length, 0);
@@ -979,13 +979,13 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black16(out, x, drawable->width, out_width, black);
+          dither_black16(out, y, drawable->width, out_width, black);
           (*writefunc)(prn, black, length, 1);
 	}
 	else
 	{
-          dither_cmyk16(out, x, drawable->width, out_width, cyan, magenta,
-			yellow, black);
+          dither_cmyk16(out, y, drawable->width, out_width, cyan, 0, magenta,
+			0, yellow, 0, black);
 
           if (black != NULL)
             (*writefunc)(prn, black, length, 0);
