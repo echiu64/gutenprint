@@ -1156,18 +1156,18 @@ compute_gcr_curve(const stp_vars_t vars)
       for (i = ceil(k_lower); i < k_upper; i ++)
 	{
 	  double where = (i - k_lower) / (k_upper - k_lower);
-	  tmp_data[i] = 65535 *  k_upper * (1.0 - pow(1.0 - where, k_gamma)) /
-	    (lut->steps - 1);
+	  tmp_data[i] = 65535.0 * k_upper * (1.0 - pow(1.0 - where, k_gamma)) /
+	    (double) (lut->steps - 1);
 	}
       for (i = ceil(k_upper); i < lut->steps; i ++)
-	tmp_data[i] = 65535 * i / (double) (lut->steps - 1);
+	tmp_data[i] = 65535.0 * i / (double) (lut->steps - 1);
     }
   else if (k_lower < lut->steps)
     for (i = ceil(k_lower); i < lut->steps; i ++)
       {
 	double where = (i - k_lower) / (k_upper - k_lower);
-	tmp_data[i] = 65535 * k_upper * pow(where, k_gamma) /
-	  (lut->steps - 1);
+	tmp_data[i] = 65535.0 * k_upper * pow(where, k_gamma) /
+	  (double) (lut->steps - 1);
       }
   curve = stp_curve_create(STP_CURVE_WRAP_NONE);
   stp_curve_set_bounds(curve, 0, 65535);
