@@ -391,7 +391,8 @@ set_curve_callback(GtkObject *button, gpointer xopt)
   gtk_widget_set_sensitive(GTK_WIDGET(opt->checkbox), TRUE);
   opt->info.curve.is_visible = FALSE;
   set_stp_curve_values(gcurve, opt);
-  stp_curve_free(opt->info.curve.current);
+  if (opt->info.curve.current)
+    stp_curve_free(opt->info.curve.current);
   opt->info.curve.current = NULL;
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail();
