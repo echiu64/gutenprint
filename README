@@ -45,8 +45,10 @@ GHOSTSCRIPT
 
 This package includes a Ghostscript driver that may be built, allowing
 use of this software for general printing purposes.  Please read
-src/ghost/README for more information, including how to build and install
-it.  To build the Ghostscript driver, you must run:
+src/ghost/README for more information, including how to build and
+install it; the build procedure here merely creates the necessary
+source files that you must add to your Ghostscript source.  To build
+the Ghostscript driver, you must run:
 
 ./configure --with-ghost
 make
@@ -79,17 +81,36 @@ If you do not wish to build the Gimp Print plugin, you must run
 FOOMATIC
 
 This package includes support for the Foomatic meta-driver package.
+This requires the foomatic-xml distribution.  Foomatic is available
+from http://www.linuxprinting.org/foomatic.html.  It also will soon
+(as of April 2001) be available in Debian unstable.  For best results,
+use the version in cvs.
+
 To build the Foomatic data, you must run:
 
 ./configure --with-foomatic
 make
 make install
 
-Note that it almost never makes sense to build the Foomatic driver
-without also building the Ghostscript driver, so you will normally
-want to run
+The "make install" step will add the necessary data to your Foomatic
+installation.  It will not create the spooler-specific data files; to
+do that, you must follow this procedure:
 
-./configure --with-foomatic --with-ghost
+     - examine the output of `foomatic-configure -O', and find the
+       foomatic ID for your printer.
+
+     - Run foomatic-datafile with that printer ID, the driver name
+       'gimp-print', and the spooler type you wish to use.
+       foomatic-datafile -h explains how to run this program.  It will
+       generate a foomatic filter datafile on stdout.
+
+     - This datafile may then be used instead of the ones from the
+       linxuprinting.org website.  Follow the instructions for your
+       spooler from the website to install the data file and filter.
+
+Note that it almost never makes sense to build the Foomatic driver
+without also building the Ghostscript driver.  Please read the
+instructions above in the GHOSTSCRIPT section.
 
 If you do not wish to build the Gimp Print plugin, you must run
 
