@@ -195,7 +195,7 @@ static const stp_internal_vars_t max_vars =
 stp_vars_t
 stp_allocate_vars()
 {
-  void *retval = xmalloc(sizeof(stp_internal_vars_t));
+  void *retval = stp_malloc(sizeof(stp_internal_vars_t));
   memset(retval, 0, sizeof(stp_internal_vars_t));
   stp_copy_vars(retval, (const stp_vars_t) &default_vars);
   return (retval);
@@ -215,13 +215,13 @@ c_strdup(const char *s)
   char *ret;
   if (!s)
     {
-      ret = xmalloc(1);
+      ret = stp_malloc(1);
       ret[0] = 0;
       return ret;
     }
   else
     {
-      ret = xmalloc(strlen(s) + 1);
+      ret = stp_malloc(strlen(s) + 1);
       strcpy(ret, s);
       return ret;
     }
@@ -233,13 +233,13 @@ c_strndup(const char *s, int n)
   char *ret;
   if (!s || n < 0)
     {
-      ret = xmalloc(1);
+      ret = stp_malloc(1);
       ret[0] = 0;
       return ret;
     }
   else
     {
-      ret = xmalloc(n + 1);
+      ret = stp_malloc(n + 1);
       strncpy(ret, s, n);
       ret[n] = 0;
       return ret;
@@ -1118,15 +1118,18 @@ stp_minimum_settings()
   return (stp_vars_t) &min_vars;
 }
 
-#ifdef DISABLE_NLS
+#if defined DISABLE_NLS || !defined HAVE_VASPRINTF
 #if __STDC__
 # include <stdarg.h>
 #else
 # include <varargs.h>
 #endif
 
+static int stp_vasprintf (char **result, const char *format, va_list args);
+static int int_stp_vasprintf (char **result, const char *format, va_list *args);
+
 static int
-int_vasprintf (char **result, const char *format, va_list *args)
+int_stp_vasprintf (char **result, const char *format, va_list *args)
 {
   const char *p = format;
   /* Add one to make sure that it is never zero, which might cause malloc
@@ -1203,9 +1206,9 @@ int_vasprintf (char **result, const char *format, va_list *args)
 }
 
 static int
-vasprintf (char **result, const char *format, va_list args)
+stp_vasprintf (char **result, const char *format, va_list args)
 {
-  return int_vasprintf (result, format, &args);
+  return int_stp_vasprintf (result, format, &args);
 }
 #else
 extern int vasprintf (char **result, const char *format, va_list args);
@@ -1256,6 +1259,18 @@ stp_eprintf(const stp_vars_t v, const char *format, ...)
   free(result);
 }
 
+void *
+stp_malloc (size_t size)
+{
+  register void *memptr = NULL;
+
+  if ((memptr = malloc (size)) == NULL)
+    {
+      fprintf (stderr, "Virtual memory exhausted.\n");
+      exit (EXIT_FAILURE);
+    }
+  return (memptr);
+}
 
 
 #ifdef QUANTIFY

@@ -372,8 +372,8 @@ invert_map(int *map, int *stagger, int count, int oldfirstpass,
 {
 	int i;
 	int *newmap, *newstagger;
-	newmap = xmalloc(count * sizeof(int));
-	newstagger = xmalloc(count * sizeof(int));
+	newmap = stp_malloc(count * sizeof(int));
+	newstagger = stp_malloc(count * sizeof(int));
 
 	for (i = 0; i < count; i++) {
 		newmap[map[i] - oldfirstpass] = i + newfirstpass;
@@ -399,8 +399,8 @@ make_passmap(raw_t *w, int **map, int **starts, int first_pass_number,
 	assert(first_pass_to_map <= first_pass_after_map, w->v);
 	assert(first_pass_to_stagger <= first_pass_after_stagger, w->v);
 
-	*map = passmap = xmalloc(passes_to_map * sizeof(int));
-	*starts = startrows = xmalloc(passes_to_map * sizeof(int));
+	*map = passmap = stp_malloc(passes_to_map * sizeof(int));
+	*starts = startrows = stp_malloc(passes_to_map * sizeof(int));
 
 	for (i = 0; i < passes_to_map; i++) {
 		int startrow, subpass;
@@ -548,7 +548,7 @@ initialize_weave_params(int S,		/* I - jet separation */
                         int strategy,	/* I - weave pattern variant to use */
 			stp_vars_t v)
 {
-	cooked_t *w = xmalloc(sizeof(cooked_t));
+	cooked_t *w = stp_malloc(sizeof(cooked_t));
 	if (w) {
 		initialize_raw_weave(&w->rw, S, J, H, strategy, v);
 		calculate_pass_map(w, pageheight, firstrow, lastrow);
@@ -1759,7 +1759,7 @@ stp_initialize_weave(int jets,	/* Width of print head */
 {
   int i;
   int last_line, maxHeadOffset;
-  stp_softweave_t *sw = xmalloc(sizeof (stp_softweave_t));
+  stp_softweave_t *sw = stp_malloc(sizeof (stp_softweave_t));
 
   (void) memset(sw, 0, sizeof(stp_softweave_t));
   if (jets < 1)
@@ -1855,14 +1855,14 @@ stp_initialize_weave(int jets,	/* Width of print head */
 
   sw->horizontal_width = (linewidth + 128 + 7) * 129 / 128;
   sw->vertical_height = lineheight;
-  sw->lineoffsets = xmalloc(sw->vmod * sizeof(stp_lineoff_t));
+  sw->lineoffsets = stp_malloc(sw->vmod * sizeof(stp_lineoff_t));
   memset(sw->lineoffsets, 0, sw->vmod * sizeof(stp_lineoff_t));
-  sw->lineactive = xmalloc(sw->vmod * sizeof(stp_lineactive_t));
+  sw->lineactive = stp_malloc(sw->vmod * sizeof(stp_lineactive_t));
   memset(sw->lineactive, 0, sw->vmod * sizeof(stp_lineactive_t));
-  sw->linebases = xmalloc(sw->vmod * sizeof(stp_linebufs_t));
-  sw->passes = xmalloc(sw->vmod * sizeof(stp_pass_t));
+  sw->linebases = stp_malloc(sw->vmod * sizeof(stp_linebufs_t));
+  sw->passes = stp_malloc(sw->vmod * sizeof(stp_pass_t));
   memset(sw->passes, 0, sw->vmod * sizeof(stp_pass_t));
-  sw->linecounts = xmalloc(sw->vmod * sizeof(stp_linecount_t));
+  sw->linecounts = stp_malloc(sw->vmod * sizeof(stp_linecount_t));
   memset(sw->linecounts, 0, sw->vmod * sizeof(stp_linecount_t));
   sw->rcache = -2;
   sw->vcache = -2;
@@ -1874,7 +1874,7 @@ stp_initialize_weave(int jets,	/* Width of print head */
       for (j = 0; j < sw->ncolors; j++)
 	{
 	  sw->linebases[i].v[j] =
-	    xmalloc(jets * sw->bitwidth * sw->horizontal_width / 8);
+	    stp_malloc(jets * sw->bitwidth * sw->horizontal_width / 8);
 	}
     }
   return (void *) sw;
@@ -2235,9 +2235,9 @@ stp_write_weave(void *        vsw,
   int cpass = sw->current_vertical_subpass * h_passes;
 
   if (!sw->fold_buf)
-    sw->fold_buf = xmalloc(COMPBUFWIDTH);
+    sw->fold_buf = stp_malloc(COMPBUFWIDTH);
   if (!sw->comp_buf)
-    sw->comp_buf = xmalloc(COMPBUFWIDTH);
+    sw->comp_buf = stp_malloc(COMPBUFWIDTH);
   if (sw->current_vertical_subpass == 0)
     initialize_row(sw, sw->lineno, xlength);
 
@@ -2250,7 +2250,7 @@ stp_write_weave(void *        vsw,
         for (i = 0; i < h_passes; i++)
 	  {
 	    if (!sw->s[i])
-	      sw->s[i] = xmalloc(COMPBUFWIDTH);
+	      sw->s[i] = stp_malloc(COMPBUFWIDTH);
 	    lineoffs[i] = stp_get_lineoffsets(sw, sw->lineno, cpass + i, sw->head_offset[j]);
 	    lineactives[i] = stp_get_lineactive(sw, sw->lineno, cpass + i, sw->head_offset[j]);
 	    bufs[i] = stp_get_linebases(sw, sw->lineno, cpass + i, sw->head_offset[j]);

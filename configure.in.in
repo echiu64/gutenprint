@@ -387,10 +387,14 @@ dnl GNU libc memcmp.c is too glibc-dependent to include.
 AC_CHECK_FUNC(random, AC_DEFINE(HAVE_RANDOM))
 AC_CHECK_FUNC(poll, AC_DEFINE(HAVE_POLL))
 dnl The following is used to build a "utility library" in lib/
-AC_REPLACE_FUNCS(vasprintf xgetcwd xmalloc)
+AC_REPLACE_FUNCS(xgetcwd xmalloc)
 AC_CHECK_FUNC(asprintf,
   AC_DEFINE(HAVE_ASPRINTF),
   LIBOBJS="${LIBOBJS} vasprintf.o")
+AC_CHECK_FUNC(vasprintf,
+  AC_DEFINE(HAVE_VASPRINTF),
+  LIBOBJS="${LIBOBJS} vasprintf.o")
+AC_SUBST(PRINT_VASPRINTF)
 AC_CHECK_FUNC(getopt_long,
   AC_DEFINE(HAVE_GETOPT_LONG),
   LIBOBJS="${LIBOBJS} getopt.o getopt1.o")

@@ -1338,7 +1338,7 @@ pcl_get_model_capabilities(int model)	/* I: Model */
 static char *
 c_strdup(const char *s)
 {
-  char *ret = xmalloc(strlen(s) + 1);
+  char *ret = stp_malloc(strlen(s) + 1);
   strcpy(ret, s);
   return ret;
 }
@@ -1439,7 +1439,7 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
       int use_custom = ((caps->stp_printer_type & PCL_PRINTER_CUSTOM_SIZE)
                          == PCL_PRINTER_CUSTOM_SIZE);
 #endif
-      valptrs = xmalloc(sizeof(char *) * papersizes);
+      valptrs = stp_malloc(sizeof(char *) * papersizes);
       *count = 0;
       for (i = 0; i < papersizes; i++)
 	{
@@ -1452,7 +1452,7 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
 		(pcl_convert_media_size(stp_papersize_get_name(pt), model)
 		 != -1))))
 	    {
-	      valptrs[*count] = xmalloc(strlen(stp_papersize_get_name(pt)) +1);
+	      valptrs[*count] = stp_malloc(strlen(stp_papersize_get_name(pt)) +1);
 	      strcpy(valptrs[*count], stp_papersize_get_name(pt));
 	      (*count)++;
 	    }
@@ -1468,7 +1468,7 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
     }
     else
     {
-      valptrs = xmalloc(sizeof(char *) * NUM_PRINTER_PAPER_TYPES);
+      valptrs = stp_malloc(sizeof(char *) * NUM_PRINTER_PAPER_TYPES);
       *count = 0;
       for (i=0; (i < NUM_PRINTER_PAPER_TYPES) && (caps->paper_types[i] != -1); i++) {
         valptrs[i] = c_strdup(pcl_val_to_string(caps->paper_types[i], pcl_media_types,
@@ -1487,7 +1487,7 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
     }
     else
     {
-      valptrs = xmalloc(sizeof(char *) * NUM_PRINTER_PAPER_SOURCES);
+      valptrs = stp_malloc(sizeof(char *) * NUM_PRINTER_PAPER_SOURCES);
       *count = 0;
       for (i=0; (i < NUM_PRINTER_PAPER_SOURCES) && (caps->paper_sources[i] != -1); i++) {
         valptrs[i] = c_strdup(pcl_val_to_string(caps->paper_sources[i], pcl_media_sources,
@@ -1500,7 +1500,7 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
   else if (strcmp(name, "Resolution") == 0)
   {
     *count = 0;
-    valptrs = xmalloc(sizeof(char *) * NUM_RESOLUTIONS);
+    valptrs = stp_malloc(sizeof(char *) * NUM_RESOLUTIONS);
     for (i = 0; i < NUM_RESOLUTIONS; i++)
     {
       if (caps->resolutions & pcl_resolutions[i].pcl_code)
@@ -1516,7 +1516,7 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
   {
     if (caps->color_type & PCL_COLOR_CMYKcm)
     {
-      valptrs = xmalloc(sizeof(char *) * 2);
+      valptrs = stp_malloc(sizeof(char *) * 2);
       valptrs[0] = c_strdup(ink_types[0]);
       valptrs[1] = c_strdup(ink_types[1]);
       *count = 2;
@@ -2004,7 +2004,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
 
   if (output_type == OUTPUT_GRAY)
   {
-    black   = xmalloc(height);
+    black   = stp_malloc(height);
     cyan    = NULL;
     magenta = NULL;
     yellow  = NULL;
@@ -2013,18 +2013,18 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   }
   else
   {
-    cyan    = xmalloc(height);
-    magenta = xmalloc(height);
-    yellow  = xmalloc(height);
+    cyan    = stp_malloc(height);
+    magenta = stp_malloc(height);
+    yellow  = stp_malloc(height);
 
     if ((caps->color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
       black = NULL;
     else
-      black = xmalloc(height);
+      black = stp_malloc(height);
     if (do_6color)
     {
-      lcyan    = xmalloc(height);
-      lmagenta = xmalloc(height);
+      lcyan    = stp_malloc(height);
+      lmagenta = stp_malloc(height);
     }
     else
     {
@@ -2095,8 +2095,8 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
     }
   stp_dither_set_density(dither, stp_get_density(nv));
 
-  in  = xmalloc(image_width * image_bpp);
-  out = xmalloc(image_width * out_bpp * 2);
+  in  = stp_malloc(image_width * image_bpp);
+  out = stp_malloc(image_width * out_bpp * 2);
 
   errdiv  = image_height / out_height;
   errmod  = image_height % out_height;

@@ -98,7 +98,7 @@ ps_parameters(const stp_printer_t printer,	/* I - Printer model */
       if (strcmp(name, "PageSize") == 0)
 	{
 	  int papersizes = stp_known_papersizes();
-	  valptrs = xmalloc(sizeof(char *) * papersizes);
+	  valptrs = stp_malloc(sizeof(char *) * papersizes);
 	  *count = 0;
 	  for (i = 0; i < papersizes; i++)
 	    {
@@ -106,7 +106,7 @@ ps_parameters(const stp_printer_t printer,	/* I - Printer model */
 	      if (strlen(stp_papersize_get_name(pt)) > 0)
 		{
 		  valptrs[*count] =
-		    xmalloc(strlen(stp_papersize_get_name(pt)) +1 );
+		    stp_malloc(strlen(stp_papersize_get_name(pt)) +1 );
 		  strcpy(valptrs[*count], stp_papersize_get_name(pt));
 		  (*count)++;
 		}
@@ -120,7 +120,7 @@ ps_parameters(const stp_printer_t printer,	/* I - Printer model */
   rewind(ps_ppd);
   *count = 0;
 
-  valptrs = xmalloc(100 * sizeof(char *));
+  valptrs = stp_malloc(100 * sizeof(char *));
 
   while (fgets(line, sizeof(line), ps_ppd) != NULL)
   {
@@ -132,7 +132,7 @@ ps_parameters(const stp_printer_t printer,	/* I - Printer model */
 
     if (strcasecmp(lname, name) == 0)
     {
-      valptrs[(*count)] = xmalloc(strlen(loption) + 1);
+      valptrs[(*count)] = stp_malloc(strlen(loption) + 1);
       strcpy(valptrs[(*count)], loption);
       (*count) ++;
     }
@@ -386,7 +386,7 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 
   if ((command = ppd_find(ppd_file, "PageSize", media_size, &order)) != NULL)
   {
-    commands[num_commands].command = xmalloc(strlen(command) + 1);
+    commands[num_commands].command = stp_malloc(strlen(command) + 1);
     strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
     num_commands ++;
@@ -394,7 +394,7 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 
   if ((command = ppd_find(ppd_file, "InputSlot", media_source, &order)) != NULL)
   {
-    commands[num_commands].command = xmalloc(strlen(command) + 1);
+    commands[num_commands].command = stp_malloc(strlen(command) + 1);
     strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
     num_commands ++;
@@ -402,7 +402,7 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 
   if ((command = ppd_find(ppd_file, "MediaType", media_type, &order)) != NULL)
   {
-    commands[num_commands].command = xmalloc(strlen(command) + 1);
+    commands[num_commands].command = stp_malloc(strlen(command) + 1);
     strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
     num_commands ++;
@@ -410,7 +410,7 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 
   if ((command = ppd_find(ppd_file, "Resolution", resolution, &order)) != NULL)
   {
-    commands[num_commands].command = xmalloc(strlen(command) + 1);
+    commands[num_commands].command = stp_malloc(strlen(command) + 1);
     strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
     num_commands ++;
@@ -462,8 +462,8 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
           (double)out_width / ((double)image_width),
           (double)out_height / ((double)image_height));
 
-  in  = xmalloc(image_width * image_bpp);
-  out = xmalloc((image_width * out_bpp + 3) * 2);
+  in  = stp_malloc(image_width * image_bpp);
+  out = stp_malloc((image_width * out_bpp + 3) * 2);
 
   stp_compute_lut(256, nv);
 
@@ -686,7 +686,7 @@ ppd_find(const char *ppd_file,	/* I - Name of PPD file */
   if (ppd_file == NULL || name == NULL || option == NULL)
     return (NULL);
   if (!value)
-    value = xmalloc(32768);
+    value = stp_malloc(32768);
 
   if (ps_ppd_file == NULL || strcmp(ps_ppd_file, ppd_file) != 0)
   {

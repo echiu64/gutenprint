@@ -2129,7 +2129,7 @@ escp2_head_offset(int model)
 static void *
 xzmalloc(size_t bytes)
 {
-  void *retval = xmalloc(bytes);
+  void *retval = stp_malloc(bytes);
   if (retval)
     memset(retval, 0, bytes);
   return (retval);
@@ -2162,7 +2162,7 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
     {
       unsigned int height_limit, width_limit;
       int papersizes = stp_known_papersizes();
-      valptrs = xmalloc(sizeof(char *) * papersizes);
+      valptrs = stp_malloc(sizeof(char *) * papersizes);
       *count = 0;
       width_limit = escp2_max_paper_width(model, v);
       height_limit = escp2_max_paper_height(model, v);
@@ -2173,7 +2173,7 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
 	      stp_papersize_get_width(pt) <= width_limit &&
 	      stp_papersize_get_height(pt) <= height_limit)
 	    {
-	      valptrs[*count] = xmalloc(strlen(stp_papersize_get_name(pt)) +1);
+	      valptrs[*count] = stp_malloc(strlen(stp_papersize_get_name(pt)) +1);
 	      strcpy(valptrs[*count], stp_papersize_get_name(pt));
 	      (*count)++;
 	    }
@@ -2186,7 +2186,7 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
       int nozzle_width =
 	(escp2_base_separation / escp2_nozzle_separation(model, v));
       valptrs =
-	xmalloc(sizeof(char *) * sizeof(escp2_reslist) / sizeof(res_t));
+	stp_malloc(sizeof(char *) * sizeof(escp2_reslist) / sizeof(res_t));
       *count = 0;
       while(res->hres)
 	{
@@ -2211,7 +2211,7 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
 	      if (((horizontal_passes * res->vertical_passes) <= 8) &&
 		  (! res->softweave || (nozzles > 1 && nozzles > oversample)))
 		{
-		  valptrs[*count] = xmalloc(strlen(_(res->name)) + 1);
+		  valptrs[*count] = stp_malloc(strlen(_(res->name)) + 1);
 		  strcpy(valptrs[*count], _(res->name));
 		  (*count)++;
 		}
@@ -2227,10 +2227,10 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
       else
 	{
 	  int ninktypes = sizeof(ink_types) / sizeof(char *);
-	  valptrs = xmalloc(sizeof(char *) * ninktypes);
+	  valptrs = stp_malloc(sizeof(char *) * ninktypes);
 	  for (i = 0; i < ninktypes; i++)
 	    {
-	      valptrs[i] = xmalloc(strlen(_(ink_types[i])) + 1);
+	      valptrs[i] = stp_malloc(strlen(_(ink_types[i])) + 1);
 	      strcpy(valptrs[i], _(ink_types[i]));
 	    }
 	  *count = ninktypes;
@@ -2240,10 +2240,10 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
   else if (strcmp(name, "MediaType") == 0)
     {
       int nmediatypes = paper_type_count;
-      valptrs = xmalloc(sizeof(char *) * nmediatypes);
+      valptrs = stp_malloc(sizeof(char *) * nmediatypes);
       for (i = 0; i < nmediatypes; i++)
 	{
-	  valptrs[i] = xmalloc(strlen(_(escp2_paper_list[i].name)) + 1);
+	  valptrs[i] = stp_malloc(strlen(_(escp2_paper_list[i].name)) + 1);
 	  strcpy(valptrs[i], _(escp2_paper_list[i].name));
 	}
       *count = nmediatypes;
@@ -2256,7 +2256,7 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
 	return NULL;
       else
 	{      /* Roll Feed capable printers */
-		valptrs = xmalloc(sizeof(char *) * 2);
+		valptrs = stp_malloc(sizeof(char *) * 2);
 		valptrs[0] = strdup(_("Standard"));
 		valptrs[1] = strdup(_("Roll Feed"));
 		*count = 2;
@@ -3089,8 +3089,8 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     }
   stp_dither_set_density(dither, stp_get_density(nv));
 
-  in  = xmalloc(image_width * image_bpp);
-  out = xmalloc(image_width * out_bpp * 2);
+  in  = stp_malloc(image_width * image_bpp);
+  out = stp_malloc(image_width * out_bpp * 2);
 
   errdiv  = image_height / out_height;
   errmod  = image_height % out_height;

@@ -1357,12 +1357,12 @@ static lut_t *
 allocate_lut(size_t steps)
 {
   int i;
-  lut_t *ret = xmalloc(sizeof(lut_t));
+  lut_t *ret = stp_malloc(sizeof(lut_t));
   ret->steps = steps;
-  ret->composite = xmalloc(sizeof(unsigned short) * steps);
-  ret->red = xmalloc(sizeof(unsigned short) * steps);
-  ret->green = xmalloc(sizeof(unsigned short) * steps);
-  ret->blue = xmalloc(sizeof(unsigned short) * steps);
+  ret->composite = stp_malloc(sizeof(unsigned short) * steps);
+  ret->red = stp_malloc(sizeof(unsigned short) * steps);
+  ret->green = stp_malloc(sizeof(unsigned short) * steps);
+  ret->blue = stp_malloc(sizeof(unsigned short) * steps);
   ret->shiftval = 0;
   for (i = 1; i < steps; i += i)
     ret->shiftval++;

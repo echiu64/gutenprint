@@ -49,6 +49,7 @@
 
 /* Define if libc does no provide */
 #undef HAVE_ASPRINTF
+#undef HAVE_VASPRINTF
 #undef HAVE_GETOPT_LONG
 #undef HAVE_RANDOM
 #undef HAVE_POLL

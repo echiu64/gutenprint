@@ -634,7 +634,7 @@ static int lexmark_get_nozzle_resolution(const stp_printer_t printer)
 static char *
 c_strdup(const char *s)
 {
-  char *ret = xmalloc(strlen(s) + 1);
+  char *ret = stp_malloc(strlen(s) + 1);
   strcpy(ret, s);
   return ret;
 }
@@ -768,7 +768,7 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
   if (strcmp(name, "PageSize") == 0) {
     int height_limit, width_limit;
     int papersizes = stp_known_papersizes();
-    valptrs = xmalloc(sizeof(char *) * papersizes);
+    valptrs = stp_malloc(sizeof(char *) * papersizes);
     *count = 0;
 
     width_limit = caps->max_width;
@@ -781,7 +781,7 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
 	    stp_papersize_get_width(pt) <= width_limit &&
 	    stp_papersize_get_height(pt) <= height_limit)
 	  {
-	    valptrs[*count] = xmalloc(strlen(stp_papersize_get_name(pt)) +1);
+	    valptrs[*count] = stp_malloc(strlen(stp_papersize_get_name(pt)) +1);
 	    strcpy(valptrs[*count], stp_papersize_get_name(pt));
 	    (*count)++;
 	  }
@@ -793,7 +793,7 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
       unsigned int supported_resolutions = caps->supp_res;
       int c= 0;
       const lexmark_res_t *res;
-      valptrs = xmalloc(sizeof(char *) * 10);
+      valptrs = stp_malloc(sizeof(char *) * 10);
 
       res = &(lexmark_reslist[0]);
       /* check for allowed resolutions */
@@ -811,7 +811,7 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
   else if (strcmp(name, "InkType") == 0)
     {
       int c= 0;
-      valptrs = xmalloc(sizeof(char *) * 5);
+      valptrs = stp_malloc(sizeof(char *) * 5);
       if ((caps->inks & LEXMARK_INK_K))
 	valptrs[c++]= c_strdup(_("Black"));
       if ((caps->inks & LEXMARK_INK_CMY))
@@ -839,7 +839,7 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
   else
     return (NULL);
 
-  valptrs = xmalloc(*count * sizeof(char *));
+  valptrs = stp_malloc(*count * sizeof(char *));
   for (i = 0; i < *count; i ++)
     /* translate media_types and media_sources */
     valptrs[i] = c_strdup(_(p[i]));
@@ -1066,7 +1066,7 @@ static void paper_shift(const stp_vars_t v, int offset, const lexmark_cap_t * ca
 static unsigned char *
 lexmark_alloc_buffer(int size)
 {
-  unsigned char *buf= xmalloc(size);
+  unsigned char *buf= stp_malloc(size);
   if (buf) memset(buf,0,size);
   return buf;
 }
@@ -1602,14 +1602,14 @@ lexmark_describe_resolution(printer,
   elinescount=0;
 
 
-  in  = xmalloc(image_width * image_bpp);
-  out = xmalloc(image_width * out_bpp * 2);
+  in  = stp_malloc(image_width * image_bpp);
+  out = stp_malloc(image_width * out_bpp * 2);
 
   /* calculate the memory we need for one line of the printer image (hopefully we are right) */
 #ifdef DEBUG
   fprintf(stderr,"---------- buffer mem size = %d\n", (((((pass_length/8)*11)/10)+40) * out_width)+200);
 #endif
-  outbuf = xmalloc((((((pass_length/8)*11)/10)+40) * out_width)+200);
+  outbuf = stp_malloc((((((pass_length/8)*11)/10)+40) * out_width)+200);
 
   errdiv  = image_height / out_length;
   errmod  = image_height % out_length;
