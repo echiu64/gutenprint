@@ -11,9 +11,9 @@ require('standard_html_header.php3');
 ### Content Below  ###
 # Please remember to use <P> </P> tags !  ?>
 <H2>Gimp-Print FAQ for Mac OS X Jaguar and Darwin</H2>
+<p>
 <ol>
 <li>
-<p>
 <h3>
 What is Gimp-Print for Jaguar and Darwin? Why would I want
 to install it?
