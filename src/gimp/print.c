@@ -259,6 +259,7 @@ run (char   *name,		/* I - Name of print program. */
       stpui_set_image_type("Whitescale");
       break;
     default:
+      break;
     }
 
   image = Image_GimpDrawable_new(drawable, image_ID);
