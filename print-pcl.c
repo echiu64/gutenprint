@@ -32,6 +32,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.10  1999/10/26 23:36:51  rlk
+ *   Comment out all remaining 16-bit code, and rename 16-bit functions to "standard" names
+ *
  *   Revision 1.9  1999/10/26 02:10:30  rlk
  *   Mostly fix save/load
  *
@@ -473,20 +476,20 @@ pcl_print(int       model,		/* I - Model */
     out_bpp = 3;
 
     if (image_bpp >= 3)
-      colorfunc = rgb_to_rgb16;
+      colorfunc = rgb_to_rgb;
     else
-      colorfunc = indexed_to_rgb16;
+      colorfunc = indexed_to_rgb;
   }
   else
   {
     out_bpp = 1;
 
     if (image_bpp >= 3)
-      colorfunc = rgb_to_gray16;
+      colorfunc = rgb_to_gray;
     else if (cmap == NULL)
-      colorfunc = gray_to_gray16;
+      colorfunc = gray_to_gray;
     else
-      colorfunc = indexed_to_gray16;
+      colorfunc = indexed_to_gray;
   }
 
  /*
@@ -879,13 +882,13 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black4_16(out, x, image_height, out_width, black);
+          dither_black4(out, x, image_height, out_width, black);
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 1);
 	}
 	else 
 	{
-          dither_cmyk4_16(out, x, image_height, out_width, cyan, magenta,
+          dither_cmyk4(out, x, image_height, out_width, cyan, magenta,
 			  yellow, black);
 
           (*writefunc)(prn, black, length / 2, 0);
@@ -906,12 +909,12 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black16(out, x, image_height, out_width, black);
+          dither_black(out, x, image_height, out_width, black);
           (*writefunc)(prn, black, length, 1);
 	}
 	else
 	{
-          dither_cmyk16(out, x, image_height, out_width, cyan, 0, magenta,
+          dither_cmyk(out, x, image_height, out_width, cyan, 0, magenta,
 			0, yellow, 0, black);
 
           if (black != NULL)
@@ -969,13 +972,13 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black4_16(out, y, image_width, out_width, black);
+          dither_black4(out, y, image_width, out_width, black);
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 1);
 	}
 	else 
 	{
-          dither_cmyk4_16(out, y, image_width, out_width, cyan, magenta,
+          dither_cmyk4(out, y, image_width, out_width, cyan, magenta,
 			  yellow, black);
 
           (*writefunc)(prn, black, length / 2, 0);
@@ -996,12 +999,12 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black16(out, y, image_width, out_width, black);
+          dither_black(out, y, image_width, out_width, black);
           (*writefunc)(prn, black, length, 1);
 	}
 	else
 	{
-          dither_cmyk16(out, y, image_width, out_width, cyan, 0, magenta,
+          dither_cmyk(out, y, image_width, out_width, cyan, 0, magenta,
 			0, yellow, 0, black);
 
           if (black != NULL)

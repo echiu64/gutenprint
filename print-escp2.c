@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.13  1999/10/26 23:36:51  rlk
+ *   Comment out all remaining 16-bit code, and rename 16-bit functions to "standard" names
+ *
  *   Revision 1.12  1999/10/26 02:10:30  rlk
  *   Mostly fix save/load
  *
@@ -491,20 +494,20 @@ escp2_print(int       model,		/* I - Model */
     out_bpp = 3;
 
     if (image_bpp >= 3)
-      colorfunc = rgb_to_rgb16;
+      colorfunc = rgb_to_rgb;
     else
-      colorfunc = indexed_to_rgb16;
+      colorfunc = indexed_to_rgb;
   }
   else
   {
     out_bpp = 1;
 
     if (image_bpp >= 3)
-      colorfunc = rgb_to_gray16;
+      colorfunc = rgb_to_gray;
     else if (cmap == NULL)
-      colorfunc = gray_to_gray16;
+      colorfunc = gray_to_gray;
     else
-      colorfunc = indexed_to_gray16;
+      colorfunc = indexed_to_gray;
   }
 
  /*
@@ -819,12 +822,12 @@ escp2_print(int       model,		/* I - Model */
 
       if (output_type == OUTPUT_GRAY)
       {
-        dither_black16(out, x, image_height, out_width, black);
+        dither_black(out, x, image_height, out_width, black);
         escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
       }
       else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
       {
-        dither_cmyk16(out, x, image_height, out_width, cyan, lcyan,
+        dither_cmyk(out, x, image_height, out_width, cyan, lcyan,
 		      magenta, lmagenta, yellow, 0, black);
 
 	escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
@@ -836,7 +839,7 @@ escp2_print(int       model,		/* I - Model */
       }
       else
       {
-        dither_cmyk16(out, x, image_height, out_width, cyan, 0, magenta, 0,
+        dither_cmyk(out, x, image_height, out_width, cyan, 0, magenta, 0,
 		      yellow, 0, black);
 
         escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width, left);
@@ -889,12 +892,12 @@ escp2_print(int       model,		/* I - Model */
 
       if (output_type == OUTPUT_GRAY)
       {
-        dither_black16(out, y, image_width, out_width, black);
+        dither_black(out, y, image_width, out_width, black);
         escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
       }
       else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
       {
-        dither_cmyk16(out, y, image_width, out_width, cyan, lcyan,
+        dither_cmyk(out, y, image_width, out_width, cyan, lcyan,
 		      magenta, lmagenta, yellow, 0, black);
 
         escp2_write(prn, lcyan, length, 1, 2, ydpi, model, out_width, left);
@@ -906,7 +909,7 @@ escp2_print(int       model,		/* I - Model */
       }
       else
       {
-        dither_cmyk16(out, y, image_width, out_width, cyan, 0, magenta, 0,
+        dither_cmyk(out, y, image_width, out_width, cyan, 0, magenta, 0,
 		      yellow, 0, black);
 
         escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width, left);

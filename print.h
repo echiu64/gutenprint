@@ -101,40 +101,29 @@ typedef void (*convert_t)(unsigned char *in, unsigned short *out, int width, int
  * Prototypes...
  */
 
-extern void	dither_black16(unsigned short *, int, int, int, unsigned char *);
+extern void	dither_black(unsigned short *, int, int, int, unsigned char *);
 
-extern void	dither_cmyk16(unsigned short *, int, int, int, unsigned char *,
-			      unsigned char *, unsigned char *,
-			      unsigned char *, unsigned char *,
-			      unsigned char *, unsigned char *);
+extern void	dither_cmyk(unsigned short *, int, int, int, unsigned char *,
+			    unsigned char *, unsigned char *,
+			    unsigned char *, unsigned char *,
+			    unsigned char *, unsigned char *);
 
-extern void	dither_black4(unsigned char *, int, int, int, unsigned char *);
-extern void	dither_black4_16(unsigned short *, int, int, int, unsigned char *);
+extern void	dither_black4(unsigned short *, int, int, int, unsigned char *);
 
-extern void	dither_cmyk4(unsigned char *, int, int, int, unsigned char *,
-		             unsigned char *, unsigned char *,
+extern void	dither_cmyk4(unsigned short *, int, int, int, unsigned char *,
+			     unsigned char *, unsigned char *,
 			     unsigned char *);
-extern void	dither_cmyk4_16(unsigned short *, int, int, int, unsigned char *,
-				unsigned char *, unsigned char *,
-				unsigned char *);
 
 
-#if 0
-extern void	gray_to_gray(unsigned char *, unsigned char *, int, int,
-			     lut_t *, unsigned char *, float);
-extern void	indexed_to_gray(unsigned char *, unsigned char *, int, int,
-				lut_t *, unsigned char *, float);
-#endif
-
-extern void	gray_to_gray16(unsigned char *, unsigned short *, int, int, lut_t *,
+extern void	gray_to_gray(unsigned char *, unsigned short *, int, int, lut_t *,
 			       unsigned char *, float);
-extern void	indexed_to_gray16(unsigned char *, unsigned short *, int, int,
+extern void	indexed_to_gray(unsigned char *, unsigned short *, int, int,
 				  lut_t *, unsigned char *, float);
-extern void	indexed_to_rgb16(unsigned char *, unsigned short *, int, int, lut_t *,
+extern void	indexed_to_rgb(unsigned char *, unsigned short *, int, int, lut_t *,
 				 unsigned char *, float);
-extern void	rgb_to_gray16(unsigned char *, unsigned short *, int, int, lut_t *,
+extern void	rgb_to_gray(unsigned char *, unsigned short *, int, int, lut_t *,
 			      unsigned char *, float);
-extern void	rgb_to_rgb16(unsigned char *, unsigned short *, int, int, lut_t *,
+extern void	rgb_to_rgb(unsigned char *, unsigned short *, int, int, lut_t *,
 			     unsigned char *, float);
 
 
@@ -182,12 +171,9 @@ extern void	ps_print(int model, char *ppd_file, char *resolution,
 			 int copies, FILE *prn, Image image,
 			 unsigned char *cmap, lut_t *lut, float saturation);
 
-extern void calc_hsv_to_rgb16(unsigned short *rgb, double h, double s, double v);
-extern void calc_rgb16_to_hsv(unsigned short *rgb, double *hue, double *sat,
+extern void calc_hsv_to_rgb(unsigned short *rgb, double h, double s, double v);
+extern void calc_rgb_to_hsv(unsigned short *rgb, double *hue, double *sat,
 			      double *val);
-extern void calc_hsv_to_rgb(unsigned char *rgb, double h, double s, double v);
-extern void calc_rgb_to_hsv(unsigned char *rgb, double *hue, double *sat,
-			    double *val);
 
 extern void compute_lut(lut_t *lut, int icontrast,
 			float red, float green, float blue, int ibrightness,
@@ -203,6 +189,18 @@ extern void Image_get_col(Image image, unsigned char *data, int column);
 extern void Image_get_row(Image image, unsigned char *data, int row);
 extern void Image_progress_init(Image image);
 extern void Image_note_progress(Image image, double current, double total);
+
+
+#ifdef LEFTOVER_8_BIT
+extern void	dither_cmyk4(unsigned char *, int, int, int, unsigned char *,
+		             unsigned char *, unsigned char *,
+			     unsigned char *);
+extern void	dither_black4(unsigned char *, int, int, int, unsigned char *);
+extern void	gray_to_gray(unsigned char *, unsigned char *, int, int,
+			     lut_t *, unsigned char *, float);
+extern void	indexed_to_gray(unsigned char *, unsigned char *, int, int,
+				lut_t *, unsigned char *, float);
+#endif
 
 /*
  * End of "$Id$".
