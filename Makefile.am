@@ -62,7 +62,7 @@ GCOPY=	$(addprefix gdevstp-, $(patsubst print-%,%, $(ALL_COMMON_SOURCE)))
 CUPSCOPY = $(addprefix cups-, $(patsubst print-%,%, $(ALL_COMMON_SOURCE)))
 
 CLEANFILES = printdefl.c printdefy.c printdefy.h print-printers.c \
-	$(addprefix Ghost/, $(GCOPY))
+	$(addprefix Ghost/, $(GCOPY)) $(addprefix cups/, $(CUPSCOPY))
 
 MAINTAINERCLEANFILES = configure Makefile.in aclocal.m4
 MAINTAINERdir = $(bindir)

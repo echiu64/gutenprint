@@ -548,6 +548,19 @@ gimp_create_main_window (void)
   gtk_container_add (GTK_CONTAINER (frame), table);
   gtk_widget_show (table);
 
+  (*current_printer->media_size) (current_printer, &vars, &paper_width,
+				  &paper_height);
+
+  (*current_printer->imageable_area) (current_printer, &vars, &left, &right,
+				      &bottom, &top);
+
+  /* Rationalise things a bit by measuring everything from the top left */
+  top = paper_height - top;
+  bottom = paper_height - bottom;
+
+  printable_width  = right - left;
+  printable_height = bottom - top;
+
   if (vars.scaling < 0.0)
     {
       const vars_t *lower = print_minimum_settings();

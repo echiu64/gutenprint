@@ -275,6 +275,14 @@
 
 <printer name="HP LaserJet 4 series" driver="pcl-4">
 <nocolor>
+<model value=6>
+<gamma value=1.000>
+<density value=0.615>
+<language value=pcl>
+</printer>
+
+<printer name="HP LaserJet 4L" driver="pcl-4l">
+<nocolor>
 <model value=4>
 <gamma value=1.000>
 <density value=0.615>

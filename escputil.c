@@ -20,7 +20,9 @@
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <getopt.h> /* Note: this must be GNU getopt(), not the standard one! */
+#ifdef __GNU_LIBRARY__
+#include <getopt.h>
+#endif
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
