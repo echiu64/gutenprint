@@ -1,18 +1,21 @@
 Type of program:
 ----------------
 
- Epson Stylus Photo / Photo EX and Photo 700 colour printer driver for
- Ghostscript version 5.x/6.x offering CMYKcm 6 colour HQ prints.
+ Epson Stylus Color/Photo color printer driver for
+ Ghostscript version 5.x/6.x offering CMYK 4 color and  CMYKcm 6 color HQ prints.
 
 
 Author:
 -------
 
- This Ghostscript frontend is written by 
+ This Ghostscript frontend is written by
  Henryk Richter (buggs@comlab.uni-rostock.de).
 
  Used Escp2 driver for Epson printers by Michael Sweet (mike@easysw.com) and
  Robert Krawitz (rlk@alum.mit.edu).
+
+ Currently maintained by the Gimp-Print development team
+ (http://gimp-print.sourceforge.net).
 
 
 License:
@@ -50,12 +53,10 @@ Installation and Compilation:
    If this fails (because you do not have the Gimp or any of the
    autoconfigure tools installed on your system), please download the
    latest release snapshot from gimp-print.sourceforge.net.
- - Get a recent Ghostscript (5.5 or better) and prepare the sources as
+ - Get a recent Ghostscript (5.10 or better) and prepare the sources as
    described in the documentation (don`t forget zlib, libpng and libjpeg
    when downloading the source) for compiling
- - copy "gdevstp-escp2.c", "gdevstp-print.h", "gdevstp-util.c",
-   "gdevstp-dither.c", "gdevstp-printers.c, "gdevstp.c" and
-   "gdevstp.h" to the "src/" subdirectory of ghostscript`s
+ - copy all "*.c" and "*.h" files to the "src/" subdirectory of ghostscript`s
    distribution.
  - edit the file "contrib.mak" in the "src/" subdirectory by adding
    the contents of "contrib.mak.addon"
@@ -85,11 +86,6 @@ the same directory you'll also need a contrib.mak.diff file. I'll have
 to send that to you seperately, I'm at work at the moment and don't
 have the files with me.
 
-BTW, I had to modify your contrib.mak.addon by stripping out all the
-$(DD) parts, I also removed the $(DD) from the unix-gcc.mak entry, I
-don't know what they tie up with in your version of the source but
-they don't match anything in mine.
-
 Under the gs/debian directory is a file called rules, this file is a
 script which controls the compilation of gs and the building of the
 debian package, this needs to be amended to add the actions required
@@ -113,22 +109,22 @@ To install it:
 NB.
 #include <standard disclaimers>
 
-What I've done works for me, to be really neat and tidy other files
-need modifying to ensure that this custom package gets marked as such
-and _not_ an official package. 
+This is not an official Debian package.  This method works for at
+least one person.  To be really neat and tidy other files need
+modifying to ensure that this custom package gets marked as such and
+_not_ an official package.
 
 
 
 Options:
 --------
 
-
- Options for Stylus Photo Printer driver are given in normal
- ghostscript manner. The resolution of the image calculated by
- ghostscript is not bound to the resolution of the printer output. It
- is for example possible to specify "-r360" to gs and print the output
- in 1440x720 dpi (see below for driver parameter). The result is a
- somewhat faster operation of the driver.
+ Options for the stp driver are given in normal ghostscript
+ manner. The resolution of the image calculated by ghostscript is not
+ bound to the resolution of the printer output. It is for example
+ possible to specify "-r360" to gs and print the output in 1440x720
+ dpi (see below for driver parameter). The result is a somewhat faster
+ operation of the driver.
 
 
 Color Balancing Values: (min,max,default)
@@ -169,7 +165,8 @@ Printer Model Selection:
 16  Stylus Photo 860
 17  Stylus Color 1160
 
-Note that not all printers are fully functional yet.
+Most or all of these printers are fully functional.
+
 
 Print Resolution Selection:
 ----- ---------- ----------
@@ -188,8 +185,18 @@ Print Resolution Selection:
 9  Emulated 2880 x 720 DPI               (works on selected printers)
 
 Modes 8 and 9 use oversampling to emulate higher resolutions than the
-printers support.
+printers support.  In some cases they may yield improved output
+quality, but they are slower than the lower resolution modes.  Modes
+1, 2, 3, and 4 all dither the same way, but use the printer
+differently to obtain different tradeoffs between printing time and
+banding reduction.  Likewise with modes 5, 6, and 7.
 
+Modes 1 and 5 are extremely slow on many printers.  Not all printers
+can do Microweave properly, particularly at 1440x720 DPI.  If
+Microweave is used with these printers, the printing will be done one
+row at a time.  In addition to being extremely slow (but often
+extremely high quality), this may be harmful to the print head and may
+cause clogging.
 
 Dithering Algorithms:
 --------- -----------
@@ -206,12 +213,10 @@ Hybrid algorithms use error diffusion, but a matrix is used when a
 random number is required.  Adaptive algorithms use error diffusion
 except in very light regions, where ordered dithering is used.
 
-Ordered dithering typically works best in solid-color graphics.
-
-Perturbed ordered is similar to ordered, except that the matrix is
-"twisted" to break up the fine diagonal lines characteristic of the
-matrix used.  This option is generally less smooth than the ordered
-dither option, but in some cases it may yield better results.
+Ordered dithering typically works best in solid-color graphics on four
+color printers, and in very pale regions.  The results on six color
+printers tend to be poor.  The adaptive algorithms do perform well on
+six color printers.
 
 
 Currently supported Media Selection:
@@ -240,7 +245,7 @@ For mixed documents, options 0 or 1 will probably work best.  Option 0
 will dither faster and yield sharper text, but images will be
 grainier.  Option 1 will yield smoother images, but text will not be
 as sharp and the dither process will be slower.  Option 2 will yield
-the best natural images, but text will be noticeably fuzzy.  Option 3
+the best natural images, but text may be noticeably fuzzy.  Option 3
 is very fast and accurate, but should not be used if there are any
 tones other than pure black and white.
 
@@ -258,13 +263,6 @@ Example 3 (print pure black text to stdout)
 gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -dModel=6 -dDensity=0.8 -r720 -dQuality=2 -dImageType=3 -sOutputFile=- foo.ps
 
 
-Settings you might try:
------------------------
-
-720dpi, plain paper, original Epson ink:
--dQuality=3 -dDensity=0.7 -dRed=105 -dGreen=90 -dBrightness=110
-
-
 PDQ and CUPS
 ------------
 
@@ -279,10 +277,25 @@ The PPD file com-stp.ppd can be used with CUPS.
 For more information, see the Printing HOWTO
 http://www.picante.com/~gtaylor/pht/
 
+A new, experimental printer configuration method may be found at the
+following locations, depending upon the printing method that you
+currently use:
+
+LPD: http://www.picante.com/~gtaylor/pht/lpd-doc.html
+PDQ: http://www.picante.com/~gtaylor/pht/pdq-doc.html
+CUPS: http://www.picante.com/~gtaylor/pht/cups-doc.html
+
 
 Bugs and Limitations:
 ---------------------
 
-- The top margin is too large.
-- The escp2 driver isn`t optimized at the moment so be patient when trying
-  the 720 and 1440x720 dpi color modes.
+- This driver is relatively slow, and memory-hungry with large paper
+  sizes and high quality settings.  As of release 3.1.7, it should be
+  considerably faster on sparse files, which is typical of
+  primarily-text output.
+- In some cases (the Epson Stylus Color 850 is a known example), the
+  top margin on the paper will be somewhat wider than desired
+  (typically by about 1 cm or 3/8").  This is more likely to happen
+  with older printers.
+- 360 dpi output tends to be pale and somewhat rough.  Increasing the
+  density to 1.6 or thereabouts may help to some degree.
