@@ -1214,11 +1214,11 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
   xmlChar *stmp;                          /* Temporary string */
   xmlNodePtr child;                       /* Child sequence node */
   stp_curve_t ret = NULL;                 /* Curve to return */
-  stpi_internal_curve_t *iret;            /* Internal curve pointer */
   stp_curve_type_t curve_type;            /* Type of curve */
   stp_curve_wrap_mode_t wrap_mode;        /* Curve wrap mode */
   double gamma;                           /* Gamma value */
   size_t extra_points = 0;                /* real point count - point count */
+  stp_sequence_t seq = NULL;              /* Sequence data */
 
   stpi_xml_init();
 
@@ -1281,55 +1281,43 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
     }
   /* Set up the curve */
   ret = stp_curve_create(wrap_mode);
-  iret = (stpi_internal_curve_t *) ret;
   stp_curve_set_interpolation_type(ret, curve_type);
-
-  /* Get the sequence data */
-  stp_sequence_destroy(iret->seq); /* Replace with new da */
-  iret->seq = NULL;
-
 
   child = curve->children;
   while (child)
     {
       if (!xmlStrcmp(child->name, (const xmlChar *) "sequence"))
 	{
-	  iret->seq =
-	    stp_sequence_create_from_xmltree(child, extra_points);
+	  seq = stp_sequence_create_from_xmltree(child, extra_points);
 	  break;
 	}
       child = child->next;
     }
 
-  if (iret->seq == NULL)
+  if (seq == NULL)
     goto error;
-  iret->point_count = stp_sequence_get_size(iret->seq);
-  iret->point_count -= extra_points; /* remove extra wrap around points */
 
-  if (stpi_curve_check_parameters(iret, iret->point_count) == 0)
+  if (gamma)
+    {
+      size_t points = stp_curve_count_points(ret);
+      stp_curve_set_gamma(ret, gamma);
+      stp_curve_resample(ret, points);
+    }
+  else /* Not a gamma curve, so set points */
+    {
+      size_t seq_count;
+      const double* data;
+
+      stp_sequence_get_data(seq, &seq_count, &data);
+      stp_curve_set_data(ret, seq_count, data);
+    }
+
+    /* Validate curve */
+  if (stpi_curve_check_parameters(ret, stp_curve_count_points(ret)) == 0)
     {
       fprintf(stderr, "stp-curve-create: parameter check failed\n");
       goto error;
     }
-  if (gamma)
-    {
-      size_t points = iret->point_count;
-      stp_curve_set_gamma(ret, gamma);
-      stp_curve_resample(ret, points);
-    }
-  else /* Not a gamma curve */
-    if (wrap_mode == STP_CURVE_WRAP_AROUND)
-      {
-	double tmpval;
-	if ((stp_sequence_get_point(iret->seq, 0, &tmpval)) == 0)
-	  {
-	    fprintf(stderr, "stp-curve-create: sequence point read failed\n");
-	    goto error;
-	  }
-	stp_sequence_set_point(iret->seq, iret->point_count, tmpval);
-      }
-
-  iret->recompute_interval = 1;
 
   stpi_xml_exit();
 

@@ -229,14 +229,6 @@ typedef struct dither
 #define CHANNEL_COUNT(d) ((d)->n_channels - (d)->n_ghost_channels)
 #define PHYSICAL_CHANNEL_COUNT(d) ((d)->n_channels)
 
-#define SAFE_FREE(x)				\
-do						\
-{						\
-  if ((x))					\
-    stpi_free((char *)(x));			\
-  ((x)) = NULL;					\
-} while (0)
-
 #define USMIN(a, b) ((a) < (b) ? (a) : (b))
 
 

@@ -188,6 +188,14 @@ extern void stpi_default_media_size(const stp_vars_t v,
 extern void stpi_prune_inactive_options(stp_vars_t v);
 
 
+#define SAFE_FREE(x)				\
+do						\
+{						\
+  if ((x))					\
+    stpi_free((char *)(x));			\
+  ((x)) = NULL;					\
+} while (0)
+
 /* Uncomment the next line to get performance statistics:
  * look for QUANT(#) in the code. At the end of escp2-print
  * run, it will print out how long and how many time did

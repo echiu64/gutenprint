@@ -225,14 +225,6 @@ stp_vars_create(void)
   return (retval);
 }
 
-#define SAFE_FREE(x)				\
-do						\
-{						\
-  if ((x))					\
-    stpi_free((char *)(x));			\
-  ((x)) = NULL;					\
-} while (0)
-
 static void
 check_vars(const stpi_internal_vars_t *v)
 {

@@ -74,14 +74,6 @@ stp_sequence_create(void)
   return (stp_sequence_t) ret;
 }
 
-#define SAFE_FREE(x)				\
-do						\
-{						\
-  if ((x))					\
-    stpi_free((char *)(x));			\
-  ((x)) = NULL;					\
-} while (0)
-
 static void
 invalidate_auxilliary_data(stpi_internal_sequence_t *iseq)
 {
@@ -147,8 +139,6 @@ stp_sequence_set_bounds(stp_sequence_t sequence, double low, double high)
   stpi_internal_sequence_t *iseq = (stpi_internal_sequence_t *) sequence;
   check_sequence(iseq);
   if (low > high)
-    return 0;
-  if (low > iseq->blo || high < iseq->bhi)
     return 0;
   iseq->rlo = iseq->blo = low;
   iseq->rhi = iseq->bhi = high;

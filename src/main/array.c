@@ -75,14 +75,6 @@ stp_array_create(int x_size, int y_size)
   return (stp_array_t) ret;
 }
 
-#define SAFE_FREE(x)				\
-do						\
-{						\
-  if ((x))					\
-    stpi_free((char *)(x));			\
-  ((x)) = NULL;					\
-} while (0)
-
 
 static void
 array_dtor(stpi_internal_array_t *ia)
