@@ -33,6 +33,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.10  1999/11/23 02:11:37  rlk
+ *   Rationalize variables, pass 3
+ *
  *   Revision 1.9  1999/11/23 01:45:00  rlk
  *   Rationalize variables -- pass 2
  *
@@ -541,7 +544,6 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
   int 		output_type = v->output_type;
   int		orientation = v->orientation;
   float 	scaling = v->scaling;
-  float 	saturation = v->saturation;
   int		top = v->top;
   int		left = v->left;
   int		i, j;		/* Looping vars */
@@ -886,8 +888,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
 	Image_note_progress(image, y, image_height);
 
       Image_get_row(image, in, y);
-      (*colorfunc)(in, out, image_width, image_bpp, lut, cmap,
-		   saturation);
+      (*colorfunc)(in, out, image_width, image_bpp, lut, cmap, v);
 
       ps_hex(prn, out, image_width * out_bpp);
     }
@@ -930,8 +931,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
 	Image_note_progress(image, y, image_height);
 
       Image_get_row(image, in, y);
-      (*colorfunc)(in, out + out_offset, image_width, image_bpp, lut,
-		   cmap, saturation);
+      (*colorfunc)(in, out + out_offset, image_width, image_bpp, lut, cmap, v);
 
       out_length = out_offset + image_width * out_bpp;
 

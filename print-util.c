@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.32  1999/11/23 02:11:37  rlk
+ *   Rationalize variables, pass 3
+ *
  *   Revision 1.31  1999/11/23 01:33:37  rlk
  *   First stage of simplifying the variable stuff
  *
@@ -1589,7 +1592,7 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 	     int    	bpp,		/* I - Bytes-per-pixel in grayin */
 	     lut_t  	*lut,		/* I - Brightness lookup table */
 	     unsigned char *cmap,	/* I - Colormap (unused) */
-	     float  	saturation	/* I - Saturation */
+	     vars_t	*vars
 	     )
 {
   if (bpp == 1)
@@ -1636,7 +1639,7 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 		  int    bpp,			/* I - bpp in indexed */
 		  lut_t  *lut,			/* I - Brightness LUT */
 		  unsigned char *cmap,		/* I - Colormap */
-		  float  saturation		/* I - Saturation */
+		  vars_t   *vars		/* I - Saturation */
 		  )
 {
   int		i;			/* Looping var */
@@ -1687,7 +1690,7 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 		 int    bpp,		/* I - Bytes-per-pixel in indexed */
 		 lut_t  *lut,		/* I - Brightness lookup table */
 		 unsigned char *cmap,	/* I - Colormap */
-		 float  saturation	/* I - Saturation */
+		 vars_t   *vars	/* I - Saturation */
 		 )
 {
   if (bpp == 1)
@@ -1702,10 +1705,10 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
       rgb[0] = lut->red[cmap[*indexed * 3 + 0]];
       rgb[1] = lut->green[cmap[*indexed * 3 + 1]];
       rgb[2] = lut->blue[cmap[*indexed * 3 + 2]];
-      if (saturation != 1.0)
+      if (vars->saturation != 1.0)
 	{
 	  calc_rgb_to_hsv(rgb, &h, &s, &v);
-	  s = pow(s, 1.0 / saturation);
+	  s = pow(s, 1.0 / vars->saturation);
 	  calc_hsv_to_rgb(rgb, h, s, v);
 	}
       rgb += 3;
@@ -1728,10 +1731,10 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 			 255 - indexed[1]];
       rgb[2] = lut->blue[cmap[indexed[0] * 3 + 2] * indexed[1] / 255 +
 			255 - indexed[1]];
-      if (saturation != 1.0)
+      if (vars->saturation != 1.0)
 	{
 	  calc_rgb_to_hsv(rgb, &h, &s, &v);
-	  s = pow(s, 1.0 / saturation);
+	  s = pow(s, 1.0 / vars->saturation);
 	  calc_hsv_to_rgb(rgb, h, s, v);
 	}
       rgb += 3;
@@ -1754,7 +1757,7 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	      int    bpp,		/* I - Bytes-per-pixel in RGB */
 	      lut_t  *lut,		/* I - Brightness lookup table */
 	      unsigned char *cmap,	/* I - Colormap (unused) */
-	      float  saturation		/* I - Saturation */
+	      vars_t   *vars		/* I - Saturation */
 	      )
 {
   if (bpp == 3)
@@ -1803,7 +1806,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	   int    		bpp,		/* I - Bytes/pix in indexed */
 	   lut_t 		*lut,		/* I - Brightness LUT */
 	   unsigned char 	*cmap,		/* I - Colormap */
-	   float  		saturation	/* I - Saturation */
+	   vars_t  		*vars		/* I - Saturation */
 	   )
 {
   if (bpp == 3)
@@ -1818,10 +1821,10 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
       rgbout[0] = lut->red[rgbin[0]];
       rgbout[1] = lut->green[rgbin[1]];
       rgbout[2] = lut->blue[rgbin[2]];
-      if (saturation != 1.0)
+      if (vars->saturation != 1.0)
 	{
 	  calc_rgb_to_hsv(rgbout, &h, &s, &v);
-	  s = pow(s, 1.0 / saturation);
+	  s = pow(s, 1.0 / vars->saturation);
 	  calc_hsv_to_rgb(rgbout, h, s, v);
 	}
       rgbin += 3;
@@ -1841,10 +1844,10 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
       rgbout[0] = lut->red[rgbin[0] * rgbin[3] / 255 + 255 - rgbin[3]];
       rgbout[1] = lut->green[rgbin[1] * rgbin[3] / 255 + 255 - rgbin[3]];
       rgbout[2] = lut->blue[rgbin[2] * rgbin[3] / 255 + 255 - rgbin[3]];
-      if (saturation != 1.0)
+      if (vars->saturation != 1.0)
 	{
 	  calc_rgb_to_hsv(rgbout, &h, &s, &v);
-	  s = pow(s, 1.0 / saturation);
+	  s = pow(s, 1.0 / vars->saturation);
 	  calc_hsv_to_rgb(rgbout, h, s, v);
 	}
       rgbin += bpp;
@@ -1875,18 +1878,18 @@ compute_lut(lut_t *lut,
    * Got an output file/command, now compute a brightness lookup table...
    */
 
+  float red = 100.0 / v->red ;
+  float green = 100.0 / v->green;
+  float blue = 100.0 / v->blue;
   float contrast;
   contrast = v->contrast / 100.0;
-  v->red = 100.0 / v->red ;
-  v->green = 100.0 / v->green;
-  v->blue = 100.0 / v->blue;
-  if (v->red < 0.01)
-    v->red = 0.01;
-  if (v->green < 0.01)
-    v->green = 0.01;
-  if (v->blue < 0.01)
-    v->blue = 0.01;
-      
+  if (red < 0.01)
+    red = 0.01;
+  if (green < 0.01)
+    green = 0.01;
+  if (blue < 0.01)
+    blue = 0.01;
+
   if (v->linear)
     {
       screen_gamma = app_gamma / 1.7;
@@ -1948,7 +1951,7 @@ compute_lut(lut_t *lut,
 	  pixel = 1.0 - pow(pixel, screen_gamma);
 
 	  /*
-	   * Third, fix up v->red, v->green, v->blue values
+	   * Third, fix up red, green, blue values
 	   *
 	   * I don't know how to do this correctly.  I think that what I'll do
 	   * is if the correction is less than 1 to multiply it by the
@@ -1960,9 +1963,9 @@ compute_lut(lut_t *lut,
 	  else if (pixel > 1.0)
 	    pixel = 1.0;
 
-	  red_pixel = pow(pixel, 1.0 / (v->red * v->red));
-	  green_pixel = pow(pixel, 1.0 / (v->green * v->green));
-	  blue_pixel = pow(pixel, 1.0 / (v->blue * v->blue));
+	  red_pixel = pow(pixel, 1.0 / (red * red));
+	  green_pixel = pow(pixel, 1.0 / (green * green));
+	  blue_pixel = pow(pixel, 1.0 / (blue * blue));
 
 	  /*
 	   * Finally, fix up print gamma and scale
@@ -1980,18 +1983,18 @@ compute_lut(lut_t *lut,
 				pow(brightness * blue_pixel, print_gamma));
 
 #if 0
-	  if (v->red > 1.0)
-	    red_pixel = 65536.0 + ((pixel - 65536.0) / v->red);
+	  if (red > 1.0)
+	    red_pixel = 65536.0 + ((pixel - 65536.0) / red);
 	  else
-	    red_pixel = pixel * v->red;
-	  if (v->green > 1.0)
-	    green_pixel = 65536.0 + ((pixel - 65536.0) / v->green);
+	    red_pixel = pixel * red;
+	  if (green > 1.0)
+	    green_pixel = 65536.0 + ((pixel - 65536.0) / green);
 	  else
-	    green_pixel = pixel * v->green;
-	  if (v->blue > 1.0)
-	    blue_pixel = 65536.0 + ((pixel - 65536.0) / v->blue);
+	    green_pixel = pixel * green;
+	  if (blue > 1.0)
+	    blue_pixel = 65536.0 + ((pixel - 65536.0) / blue);
 	  else
-	    blue_pixel = pixel * v->blue;
+	    blue_pixel = pixel * blue;
 #endif
 
 	  if (pixel <= 0.0)

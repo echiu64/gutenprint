@@ -32,6 +32,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.13  1999/11/23 02:11:37  rlk
+ *   Rationalize variables, pass 3
+ *
  *   Revision 1.12  1999/11/23 01:45:00  rlk
  *   Rationalize variables -- pass 2
  *
@@ -420,11 +423,9 @@ pcl_print(int       model,		/* I - Model */
   char 		*resolution = v->resolution;
   char 		*media_size = v->media_size;
   char 		*media_type = v->media_type;
-  char 		*media_source = v->media_source;
   int 		output_type = v->output_type;
   int		orientation = v->orientation;
   float 	scaling = v->scaling;
-  float 	saturation = v->saturation;
   int		top = v->top;
   int		left = v->left;
   int		x, y;		/* Looping vars */
@@ -877,8 +878,7 @@ pcl_print(int       model,		/* I - Model */
 	Image_get_col(image, in, errline);
       }
 
-      (*colorfunc)(in, out, image_height, image_bpp, lut, cmap,
-		   saturation);
+      (*colorfunc)(in, out, image_height, image_bpp, lut, cmap, v);
 
       if (xdpi == 300 && model == 800)
       {
@@ -967,8 +967,7 @@ pcl_print(int       model,		/* I - Model */
 	Image_get_row(image, in, errline);
       }
 
-      (*colorfunc)(in, out, image_width, image_bpp, lut, cmap,
-		   saturation);
+      (*colorfunc)(in, out, image_width, image_bpp, lut, cmap, v);
 
       if (xdpi == 300 && model == 800)
       {
