@@ -10,7 +10,7 @@ elementFormDefault="qualified">
       Schema for Gimp-Print XML data
       Requires Gimp-Print 4.3 or later
       Based on printers.xml and printdef
-      Author: Roger Leigh (roger@whinlatter.uklinux.net)
+      Author: Roger Leigh (rleigh@debian.org)
       $Id$
     </xsd:documentation>
   </xsd:annotation>

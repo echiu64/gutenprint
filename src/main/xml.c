@@ -3,7 +3,7 @@
  *
  *   XML parser - process gimp-print XML data with mxml.
  *
- *   Copyright 2002-2003 Roger Leigh (roger@whinlatter.uklinux.net)
+ *   Copyright 2002-2003 Roger Leigh (rleigh@debian.org)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free

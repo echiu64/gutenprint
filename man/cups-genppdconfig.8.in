@@ -1,5 +1,5 @@
 .\" $Id$
-.\" Copyright (C) 2000 Roger Leigh <rl117@york.ac.uk>
+.\" Copyright (C) 2000 Roger Leigh <rleigh@debian.org>
 .\"
 .\" This program is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -49,13 +49,13 @@ directory.  By default, the base directory is
 gimpprint.info,
 CUPS Software Administrators Manual, http://localhost:631/documentation.html
 .SH COPYRIGHT
-Copyright \(co  2002\-2003 Roger Leigh (roger@whinlatter.uklinux.net)
+Copyright \(co  2002\-2003 Roger Leigh (rleigh@debian.org)
 .PP
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
 published by the Free Software Foundation.
 .PP
-This manual page was written by Roger Leigh (roger@whinlatter.uklinux.net).
+This manual page was written by Roger Leigh (rleigh@debian.org).
 .\"#
 .\"# The following sets edit modes for GNU EMACS
 .\"# Local Variables:

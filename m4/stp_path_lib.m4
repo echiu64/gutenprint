@@ -69,7 +69,7 @@ dnl (ac_path_generic.m4) by Angus Lees <gusl@cse.unsw.edu.au>.
 dnl pkg-config support based on AM_PATH_GTK_2_0 (gtk-2.0.m4) by Owen Taylor.
 dnl
 dnl @version $Id$
-dnl @author Roger Leigh <roger@whinlatter.uklinux.net>
+dnl @author Roger Leigh <rleigh@debian.org>
 dnl
 
 

@@ -1,7 +1,7 @@
 #! @PERL@ -w
 # $Id$
 # A user-friendly dialog-based wrapper for cups-genppd(8).
-# Copyright (C) 2002 Roger Leigh
+# Copyright (C) 2002 Roger Leigh <rleigh@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

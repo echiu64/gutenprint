@@ -62,7 +62,7 @@ dnl              GIMPPRINT_LIBDEPS="${GIMPPRINT_LIBDEPS} -lm")
 dnl STP_CONFIG_PKGCONFIG_IN([gimpprint], [Gimp-Print], [GIMP Print Top Quality Printer Drivers], [src/main])
 dnl
 dnl @version $Id$
-dnl @author Roger Leigh <roger@whinlatter.uklinux.net>
+dnl @author Roger Leigh <rleigh@debian.org>
 dnl
 ## STP_CONFIG_PKGCONFIG_IN(LIBRARY, DESCRIPTION, DESTINATION)
 ## -----------------------

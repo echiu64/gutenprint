@@ -47,7 +47,7 @@ This file is split into the following sections:
 I hope you find this useful. If any part was not clear, or there was
 something that you would like covering, please let me know!
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>
+ -- Roger Leigh <rleigh@debian.org>
 
  $Id$
 
@@ -68,7 +68,7 @@ GNU autoconf made some incompatible changes between the 2.13 and 2.50
 stable releases.  You cannot use a configure.in written for 2.13 with
 2.5x releases.  This means that to build the 4.2-branch and the
 mainline on the same machine, you need to install multiple versions of
-the autotools.  You can to this by running configure with the same
+the autotools.  You can do this by running configure with the same
 --prefix, but also use --program-suffix=VERSION where VERSION is the
 autoconf version you are building.
 
@@ -92,7 +92,7 @@ using the old and new versions together very easy.  To get it,
 Similar problems may be seen with GNU automake, but you can again
 configure with a program suffix.  You will, however, need to update a
 symlink manually, perhaps using one in your home bindir.  automake 1.4
-works with autoconf2.13; autoconf1.5 works with autoconf2.13 and 2.5x
+works with autoconf2.13; automake1.5 works with autoconf2.13 and 2.5x
 but is old; automake1.6+ will only work with new 2.5x autoconf
 versions but are the current releases.  I suggest using 1.4 and 1.7
 together.  Different versions of autoconf need separate aclocal
