@@ -24,7 +24,9 @@ AUTOMAKE_OPTIONS = 1.5 dist-bzip2 check-news gnu no-dependencies
 
 MAINT_CHARSET = latin1
 ACLOCAL_AMFLAGS = -I m4 -I m4local
-DISTCHECK_CONFIGURE_FLAGS = --enable-non-native-prefix=\$$\{prefix\}
+
+include $(top_srcdir)/scripts/global.mk
+
 
 ## Variables
 

@@ -23,13 +23,11 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+include $(top_srcdir)/scripts/global.mk
+
 
 ## Variables
 
-AM_CFLAGS = $(GNUCFLAGS)
-INCLUDES = @INCLUDES@
-
-m4datadir = $(datadir)/aclocal
 pkgconfigdatadir = $(prefix)/lib/pkgconfig
 pkgxmldatadir = $(pkgdatadir)/$(VERSION)/xml
 
@@ -79,7 +77,7 @@ nodist_libgimpprint_la_SOURCES = \
 	printers-oldlist.h \
 	papers-oldlist.h
 
-libgimpprint_la_LIBADD = $(GIMPPRINT_DEPLIBS)
+libgimpprint_la_LIBADD = $(GIMPPRINT_LIBDEPS)
 # Uncommment to build an unversioned library (version in soname)
 libgimpprint_la_LDFLAGS = -release $(GIMPPRINT_VERSION) -rpath $(libdir)
 # Uncomment to build a versioned library
@@ -89,8 +87,6 @@ libgimpprint_la_LDFLAGS = -release $(GIMPPRINT_VERSION) -rpath $(libdir)
 
 
 ## Data
-
-m4data_DATA = gimpprint.m4
 
 pkgconfigdata_DATA = gimpprint.pc
 
@@ -124,7 +120,7 @@ dist-hook:
 ## Clean
 
 CLEANFILES = printers-oldlist.h papers-oldlist.h 
-DISTCLEANFILES = gimpprint-config gimpprint-config.in gimpprint.pc gimpprint.pc.in gimpprint.m4
+DISTCLEANFILES = gimpprint.pc gimpprint.pc.in
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = gimpprint.m4.top $(pkgxmldata_DATA)
+EXTRA_DIST = $(pkgxmldata_DATA)

@@ -23,6 +23,8 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+include $(top_srcdir)/scripts/global.mk
+
 
 ## Clean
 
@@ -32,13 +34,8 @@ EXTRA_DIST = README
 
 ## Variables
 
-AM_CFLAGS = $(GNUCFLAGS)
-INCLUDES = @IJS_CFLAGS@ @INCLUDES@ $(LIBGIMPPRINT_CFLAGS)
-GIMPPRINT_LIBS = $(top_builddir)/src/main/libgimpprint.la
-GIMPPRINT_DEPLIBS = -lm
-LIBGIMPPRINT_LIBS = $(GIMPPRINT_LIBS) $(GIMPPRINT_DEPLIBS)
-LIBPRINTUT = $(top_builddir)/lib/libprintut.la
-LIBS = @IJS_LIBS@ $(INTLLIBS) @LIBS@
+LOCAL_CFLAGS = @IJS_CFLAGS@
+
 
 ## Programs
 
@@ -46,8 +43,4 @@ if BUILD_GHOSTSCRIPT
 bin_PROGRAMS = ijsgimpprint
 endif
 
-ijsgimpprint_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
-
-$(GIMPPRINT_LIBS):
-	cd ../main ; \
-	$(MAKE)
+ijsgimpprint_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS) $(IJS_LIBS)

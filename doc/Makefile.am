@@ -25,6 +25,8 @@ MAINT_CHARSET = latin1
 
 SUBDIRS = developer users_guide
 
+include $(top_srcdir)/scripts/global.mk
+
 
 ## Data
 

@@ -23,13 +23,7 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
-
-## Variables
-
-AM_CFLAGS = $(GNUCFLAGS)
-INCLUDES = @INCLUDES@
-LIBPRINTUT = $(top_builddir)/lib/libprintut.la
-LIBS = $(INTLLIBS) @LIBS@
+include $(top_srcdir)/scripts/global.mk
 
 
 ## Programs

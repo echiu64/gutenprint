@@ -21,6 +21,10 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 @SET_MAKE@
 
+include $(top_srcdir)/scripts/global.mk
+
+
+## Programs
 
 noinst_LTLIBRARIES = libprintut.la
 
@@ -31,6 +35,8 @@ libprintut_la_LIBADD = @LTALLOCA@ @LTLIBOBJS@
 
 noinst_HEADERS = getopt.h libprintut.h pathmax.h xmalloc.h
 
+
+## CLean
 
 MAINTAINERCLEANFILES = Makefile.in
 

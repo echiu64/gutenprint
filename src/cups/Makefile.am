@@ -23,6 +23,8 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+include $(top_srcdir)/scripts/global.mk
+
 
 ## Variables
 
@@ -38,14 +40,8 @@ cupsexec_backenddir = $(pkglibdir)/backend
 cupsexec_filterdir = $(pkglibdir)/filter
 cups_modeldir = $(pkgdatadir)/model/gimp-print
 
-AM_CFLAGS = $(GNUCFLAGS)
 DEFS = @CUPS_CFLAGS@ @DEFS@ -I. -I$(srcdir) -I../.. -DGENPPD_PPD_PREFIX=\"$(cups_modeldir)/gimp-print\" -DGIMP_PRINT_VERSION=\"$(VERSION)\"
-INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS)
-GIMPPRINT_LIBS = $(top_builddir)/src/main/libgimpprint.la
-GIMPPRINT_DEPLIBS = -lm
-LIBGIMPPRINT_LIBS = $(GIMPPRINT_LIBS) $(GIMPPRINT_DEPLIBS)
-LIBPRINTUT = $(top_builddir)/lib/libprintut.la
-LIBS = $(INTLLIBS) @LIBS@
+
 
 ## Programs
 
@@ -76,10 +72,10 @@ epson_SOURCES = epson.c
 epson_LDADD = $(LIBPRINTUT) $(CUPS_LIBS)
 
 cups_genppd_SOURCES = genppd.c gimp-print-cups.c gimp-print-cups.h
-cups_genppd_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(GENPPD_LIBS) $(LIBGIMPPRINT_LIBS)
+cups_genppd_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(GENPPD_LIBS) $(GIMPPRINT_LIBS)
 
 rastertoprinter_SOURCES = rastertoprinter.c gimp-print-cups.c gimp-print-cups.h
-rastertoprinter_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(LIBGIMPPRINT_LIBS)
+rastertoprinter_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(GIMPPRINT_LIBS)
 
 
 ## Data
@@ -190,10 +186,6 @@ ppd-nls: cups-genppd
 	  LANGUAGE=$$language ./cups-genppd -p ppd/$$language -c `pwd`/catalog/share/locale ; \
 	done
 	$(RM) -r catalog
-
-$(GIMPPRINT_LIBS):
-	cd ../main ; \
-	$(MAKE)
 
 dist-hook:
 	for dir in commands ; do \

@@ -23,16 +23,12 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+include $(top_srcdir)/scripts/global.mk
+
 
 ## Variables
 
-AM_CFLAGS = $(GNUCFLAGS)
-INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
-GIMPPRINT_LIBS = $(top_builddir)/src/main/libgimpprint.la
-GIMPPRINT_DEPLIBS = -lm
-LIBGIMPPRINT_LIBS = $(GIMPPRINT_LIBS) $(GIMPPRINT_DEPLIBS)
-LIBPRINTUT = $(top_builddir)/lib/libprintut.la
-LIBS = $(INTLLIBS) @LIBS@
+INCLUDES = -I$(top_srcdir)/src/main
 
 TESTS = curve run-testdither run-weavetest
 
@@ -44,13 +40,13 @@ noinst_PROGRAMS = testdither escp2-weavetest unprint pcl-unprint bjc-unprint cur
 endif
 
 escp2_weavetest_SOURCES = escp2-weavetest.c
-escp2_weavetest_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
+escp2_weavetest_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
 
 unprint_SOURCES = unprint.c
 unprint_LDADD = $(LIBPRINTUT)
 
 curve_SOURCES = curve.c
-curve_LDADD = $(LIBGIMPPRINT_LIBS)
+curve_LDADD = $(GIMPPRINT_LIBS)
 
 pcl_unprint_SOURCES = pcl-unprint.c
 pcl_unprint_LDADD = $(LIBPRINTUT)
@@ -59,11 +55,7 @@ bjc_unprint_SOURCES = bjc-unprint.c
 bjc_unprint_LDADD = $(LIBPRINTUT)
 
 testdither_SOURCES = testdither.c
-testdither_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
-
-$(GIMPPRINT_LIBS):
-	cd ../src/main ; \
-	$(MAKE)
+testdither_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
 
 
 ## Rules

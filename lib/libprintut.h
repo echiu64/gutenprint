@@ -37,13 +37,9 @@ extern int vasprintf (char **result, const char *format, va_list args);
 extern int asprintf (char **result, const char *format, ...);
 #endif
 
-#ifndef HAVE_XMALLOC
 #include "xmalloc.h"
-#endif
 
-#ifndef HAVE_XGETCWD
 extern char *xgetcwd (void);
-#endif
 
 #ifndef HAVE_GETOPT_LONG
 #include "getopt.h"

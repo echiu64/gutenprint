@@ -68,22 +68,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 ])
 
-dnl In the following script, there are a the following variants
-dnl of gimpprint cflags and libs variables
-dnl
-dnl GIMPPRINT_CFLAGS:  cflags for compiling libraries and example progs
-dnl GIMPPRINT_LIBS:    libraries for linking programs. ONLY to be used
-dnl                    to generate ${gimpprint_libs}
-dnl GIMPPRINT_DEPLIBS: libraries for linking libraries against
-dnl gimpprint_cflags:  cflags to store in gimpprint-config
-dnl gimpprint_libs:    libs to store in gimpprint-config
-
-dnl initial default values
-GIMPPRINT_LIBS="-lgimpprint"
-GIMPPRINT_UI_LIBS="-lgimpprintui"
-INCLUDE_GIMP_PRINT_H="\"gimp-print/gimp-print.h\""
-INCLUDE_GIMP_PRINT_UI_H="\"gimp-print/gimp-print-ui.h\""
-
 [GIMPPRINT_MAJOR_VERSION]=GIMPPRINT_MAJOR_VERSION
 [GIMPPRINT_MINOR_VERSION]=GIMPPRINT_MINOR_VERSION
 [GIMPPRINT_MICRO_VERSION]=GIMPPRINT_MICRO_VERSION
@@ -123,6 +107,25 @@ AM_INIT_AUTOMAKE(GIMPPRINT_NAME, GIMPPRINT_VERSION)
 popdef([GIMPPRINT_NAME])
 popdef([GIMPPRINT_VERSION])
 
+
+dnl In the following script, there are a the following variants
+dnl of cflags and variables
+dnl
+dnl *_CFLAGS:   cflags for compiling libraries and example progs
+dnl *_LIBS:     libraries for linking programs. ONLY to be used
+dnl             to generate ${gimpprint_libs}
+dnl *_LIBDEPS:  libraries for linking libraries against
+dnl *_requires: package depdendencies for pkg-config
+dnl *_libdeps:  library dependencies for pkg-config
+dnl *_cflags:   cflags for pkg-config
+dnl *_libs:     libs for pkg-config
+
+GIMPPRINT_LIBS="-lgimpprint"
+GIMPPRINT_UI_LIBS="-lgimpprintui"
+gimpprint_version=${GIMPPRINT_VERSION}
+gimpprint_ui_version=${GIMPPRINT_VERSION}
+
+
 dnl Specify a configuration file.
 AM_CONFIG_HEADER([config.h])
 
@@ -139,9 +142,6 @@ dnl define HAVE_GNU_LD if GNU ld is present
 if test "$ac_cv_prog_gnu_ld" = "yes" ; then
   AC_DEFINE(HAVE_GNU_LD,, [Define if GNU ld is present.])
 fi
-
-dnl Compiler options and definitions
-INCLUDES="${INCLUDES} -I\$(top_srcdir)/include -I\$(top_builddir)/include -I\$(top_srcdir)/intl"
 
 dnl Set up maintainer mode
 AM_MAINTAINER_MODE
@@ -277,7 +277,9 @@ else
 fi
 
 AM_PATH_GTK(1.2.0,
-  BUILD_LIBGIMPPRINTUI="yes",
+  BUILD_LIBGIMPPRINT_UI="yes"
+  GIMPPRINT_UI_LIBDEPS="${GIMPPRINT_UI_LIBDEPS} ${GTK_LIBS}"
+  gimpprint_ui_libdeps="${gimpprint_ui_libdeps} ${GTK_LIBS}",
   BUILD_LIBGIMPPRINTUI="no")
 
 STP_ARG_WITH([gimp],
@@ -504,6 +506,10 @@ else
   AC_DEFINE(HAVE_LIBREADLINE, [0])
 fi
 
+AC_CHECK_LIB(m,pow,
+             GIMPPRINT_LIBDEPS="${GIMPPRINT_LIBDEPS} -lm"
+             gimpprint_libdeps="${gimpprint_libdeps} -lm")
+
 PKG_CHECK_MODULES(LIBXML, libxml-2.0)
 
 STP_CUPS_LIBS
@@ -610,7 +616,6 @@ AC_SUBST(LTALLOCA)])
 dnl Definitions
 AC_DEFINE_UNQUOTED(CUPS_DATADIR, "${cups_conf_datadir}/share/cups", [CUPS data directory.])
 AC_DEFINE_UNQUOTED(CUPS_PPD_PS_LEVEL, ${CUPS_PPD_PS_LEVEL}, [CUPS PPD PostScript level])
-AC_DEFINE_UNQUOTED(INCLUDE_GIMP_PRINT_H, ${INCLUDE_GIMP_PRINT_H}, [GIMP-Print header to include.])
 STP_RELEASE_DATE
 
 dnl Some versions of make get very grouchy about $(RM)
@@ -636,14 +641,18 @@ AC_SUBST(GIMP_LIBS)
 AC_SUBST(gimp_plug_indir)
 AC_SUBST(GIMPPRINT_CFLAGS)
 AC_SUBST(GIMPPRINT_LIBS)
-AC_SUBST(GIMPPRINT_UI_LIBS)
-AC_SUBST(GIMPPRINT_DEPLIBS)
-AC_SUBST(GIMPPRINT_UI_DEPLIBS)
+AC_SUBST(GIMPPRINT_LIBDEPS)
 AC_SUBST(GIMPPRINT_VERSION)
+AC_SUBST(GIMPPRINT_UI_CFLAGS)
+AC_SUBST(GIMPPRINT_UI_LIBS)
+AC_SUBST(GIMPPRINT_UI_LIBDEPS)
+AC_SUBST(GIMPPRINT_UI_VERSION)
 AC_SUBST(gimpprint_cflags)
-gimpprint_libs="${GIMPPRINT_LIBS} ${GIMPPRINT_DEPLIBS}"
+gimpprint_libs="${GIMPPRINT_LIBS} ${gimpprint_libdeps}"
 AC_SUBST(gimpprint_libs)
-AC_SUBST(INCLUDES)
+AC_SUBST(gimpprint_ui_cflags)
+gimpprint_ui_libs="${GIMPPRINT_UI_LIBS} ${gimpprint_ui_libdeps}"
+AC_SUBST(gimpprint_ui_libs)
 AC_SUBST(LIBREADLINE_DEPS)
 AC_SUBST(MAINTAINER_CFLAGS)
 AC_SUBST(PLUG_IN_PATH)
@@ -653,16 +662,15 @@ dnl po/Makefile.in *MUST* be surrounded by spaces to work with buggy
 dnl gettext 0.10.36.  Do not move this file to the beginning or end
 dnl of a line.
 
-STP_CONFIG_LIBCONFIG_IN_PKGCONFIG
-STP_CONFIG_LIBCONFIG_IN([gimpprint], [src/main])
-STP_CONFIG_PKGCONFIG_IN([gimpprint], [GIMP Print Top Quality Printer Drivers], [src/main])
-STP_CONFIG_GIMPPRINT_M4
+STP_CONFIG_PKGCONFIG_IN([gimpprint],
+                        [Gimp-Print],
+                        [GIMP Print Top Quality Printer Drivers],
+                        [src/main])
+STP_CONFIG_PKGCONFIG_IN([gimpprint-ui],
+                        [Gimp-Print-UI],
+                        [GIMP Print Top Quality Printer Drivers - User Interface],
+			[src/libgimpprintui])
 
-literal_includedir=`eval echo $includedir`
-literal_libdir=`eval echo $libdir`
-
-AC_SUBST(literal_includedir)
-AC_SUBST(literal_libdir)
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([debian/Makefile])
@@ -695,18 +703,21 @@ AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([samples/Makefile])
 AC_CONFIG_FILES([src/Makefile])
 AC_CONFIG_FILES([src/cups/Makefile])
-AC_CONFIG_FILES([src/cups/cups-genppdconfig], [chmod +x src/cups/cups-genppdconfig])
+AC_CONFIG_FILES([src/cups/cups-genppdconfig],
+                [chmod +x src/cups/cups-genppdconfig])
 AC_CONFIG_FILES([src/escputil/Makefile])
 AC_CONFIG_FILES([src/foomatic/Makefile])
-AC_CONFIG_FILES([src/foomatic/foomatic-generator], [chmod +x src/foomatic/foomatic-generator])
-AC_CONFIG_FILES([src/foomatic/mk_printerlist], [chmod +x src/foomatic/mk_printerlist])
+AC_CONFIG_FILES([src/foomatic/foomatic-generator],
+                [chmod +x src/foomatic/foomatic-generator])
+AC_CONFIG_FILES([src/foomatic/mk_printerlist],
+                [chmod +x src/foomatic/mk_printerlist])
 AC_CONFIG_FILES([src/ghost/Makefile])
 AC_CONFIG_FILES([src/testpattern/Makefile])
 AC_CONFIG_FILES([src/gimp/Makefile])
 AC_CONFIG_FILES([src/main/Makefile])
-AC_CONFIG_FILES([src/main/gimpprint-config], [chmod +x src/main/gimpprint-config])
 AC_CONFIG_FILES([src/main/gimpprint.pc])
 AC_CONFIG_FILES([src/libgimpprintui/Makefile])
+AC_CONFIG_FILES([src/libgimpprintui/gimpprint-ui.pc])
 AC_CONFIG_FILES([src/printdef/Makefile])
 AC_CONFIG_FILES([cups-gimpprint.list])
 AC_CONFIG_FILES([test/Makefile])

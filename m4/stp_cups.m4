@@ -30,7 +30,6 @@ AC_DEFUN([STP_CUPS_LIBS],
 [dnl CUPS library checks
 dnl check for libm, and also add to CUPS LIBS
 AC_CHECK_LIB(m,pow,
-  GIMPPRINT_DEPLIBS="${GIMPPRINT_DEPLIBS} -lm"
   CUPS_LIBS="${CUPS_LIBS} -lm")
 dnl CUPS library checks
 if test x${BUILD_CUPS} = xyes ; then

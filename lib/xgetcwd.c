@@ -22,33 +22,31 @@
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <errno.h>
 #ifndef errno
 extern int errno;
 #endif
-
 #include <sys/types.h>
 #include "pathmax.h"
+#include <unistd.h>
+#include "libprintut.h"
 
-#if HAVE_GETCWD
-char *getcwd ();
-#else
-char *getwd ();
+
+#ifndef HAVE_GETCWD
 # define getcwd(Buf, Max) getwd (Buf)
 #endif
+
 
 /* Amount to increase buffer size by in each try. */
 #define PATH_INCR 32
 
-char *xmalloc ();
-char *xrealloc ();
-void free ();
 
 /* Return the current directory, newly allocated, arbitrarily long.
    Return NULL and set errno on error. */
 
 char *
-xgetcwd ()
+xgetcwd (void)
 {
   char *cwd;
   char *ret;

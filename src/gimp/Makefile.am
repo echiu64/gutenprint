@@ -23,18 +23,12 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+include $(top_srcdir)/scripts/global.mk
+
 
 ## Variables
 
-AM_CFLAGS = $(GNUCFLAGS)
-INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS)
-GIMPPRINT_LIBS = $(top_builddir)/src/main/libgimpprint.la
-GIMPPRINTUI_LIBS = $(top_builddir)/src/libgimpprintui/libgimpprintui.la
-GIMPPRINT_DEPLIBS = -lm
-GIMPPRINTUI_DEPLIBS = @GTK_LIBS@
-LIBGIMPPRINT_LIBS = $(GIMPPRINT_LIBS) $(GIMPPRINT_DEPLIBS)
-LIBPRINTUT = $(top_builddir)/lib/libprintut.la
-LIBS = $(INTLLIBS) @LIBS@
+LOCAL_CFLAGS = $(GIMP_CFLAGS)
 
 
 ## Programs
@@ -49,14 +43,8 @@ print_SOURCES = \
 	print.c \
 	print_gimp.h
 
-print_LDADD = $(LIBPRINTUT) $(GIMP_LIBS) $(GIMPPRINTUI_LIBS) $(GIMPPRINTUI_DEPLIBS) $(LIBGIMPPRINT_LIBS)
-
-
-## Rules
-
-$(GIMPPRINT_LIBS):
-	cd ../main ; \
-	$(MAKE)
+print_LDADD = $(LIBPRINTUT) $(GIMP_LIBS) $(GIMPPRINTUI_LIBS) $(GIMPPRINT_LIBS)
+print_DEPENDENCIES = $(GIMPPRINTUI_LIBS) $(GIMPPRINT_LIBS)
 
 
 ## Clean

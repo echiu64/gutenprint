@@ -25,6 +25,8 @@ MAINT_CHARSET = latin1
 
 SUBDIRS = gimp-print
 
+include $(top_srcdir)/scripts/global.mk
+
 
 ## Clean
 

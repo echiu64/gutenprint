@@ -23,6 +23,8 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+include $(top_srcdir)/scripts/global.mk
+
 SUBDIRS = 					\
 	printdef 				\
 	main					\
@@ -33,5 +35,8 @@ SUBDIRS = 					\
 	foomatic				\
 	ghost					\
 	testpattern
+
+
+## Clean
 
 MAINTAINERCLEANFILES = Makefile.in

@@ -23,17 +23,12 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+include $(top_srcdir)/scripts/global.mk
+
 
 ## Variables
 
 DISTDIRS = foomatic-templates-ijs
-AM_CFLAGS = $(GNUCFLAGS)
-INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
-GIMPPRINT_LIBS = $(top_builddir)/src/main/libgimpprint.la
-GIMPPRINT_DEPLIBS = -lm
-LIBGIMPPRINT_LIBS = $(GIMPPRINT_LIBS) $(GIMPPRINT_DEPLIBS)
-LIBPRINTUT = $(top_builddir)/lib/libprintut.la
-LIBS = $(INTLLIBS) @LIBS@
 
 if BUILD_FOOMATIC_3
 BUILD_FOOMATIC = 1
@@ -48,19 +43,19 @@ noinst_PROGRAMS = printer_options paper_sizes gimp-print-version \
 endif
 
 printer_options_SOURCES = printer_options.c
-printer_options_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
+printer_options_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
 
 gimp_print_version_SOURCES = gimp-print-version.c
-gimp_print_version_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
+gimp_print_version_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
 
 paper_sizes_SOURCES = paper_sizes.c
-paper_sizes_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
+paper_sizes_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
 
 stp_limits_SOURCES = stp_limits.c
-stp_limits_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
+stp_limits_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
 
 printers_SOURCES = printers.c
-printers_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
+printers_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
 
 
 ## Rules
@@ -101,10 +96,6 @@ foomatic-stamp: foomatic-generator foomatic-printermap $(noinst_PROGRAMS) mk_pri
 	-$(RM) -r foomatic-db
 	./foomatic-generator -m $(srcdir)/foomatic-printermap -t $(srcdir)/foomatic-templates $(FOOMATIC_GENERATOR_EXTRA_OPTS) $(FOOMATIC_GENERATOR_FOOMATIC_3_OPTS)
 	touch foomatic-stamp
-
-$(GIMPPRINT_LIBS):
-	cd ../main ; \
-	$(MAKE)
 
 dist-hook:
 	for dir in $(DISTDIRS) ; do \
