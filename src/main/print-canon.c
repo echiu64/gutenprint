@@ -2083,7 +2083,7 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
       if (use_6color)
 	stp_dither_set_adaptive_divisor(dither, 8);
       else
-	stp_dither_set_adaptive_divisor(dither, 16);
+	stp_dither_set_adaptive_divisor(dither, 4);
     }  
   else
     stp_dither_set_adaptive_divisor(dither, 4);

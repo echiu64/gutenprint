@@ -93,6 +93,8 @@
 /* Define as 1 if you have the stpcpy function.  */
 #undef HAVE_STPCPY
 
+#undef HAVE_MAINTAINER_MODE
+
 /* Gnome definitions (from glade acconfig.h) */
 #undef HAVE_LIBSM
 #undef PACKAGE_LOCALE_DIR

@@ -119,6 +119,7 @@ AM_MAINTAINER_MODE
 if test x${USE_MAINTAINER_MODE} = xyes ; then
   MAINTAINER_MODE=true
   BUILD_TEST=yes
+  AC_DEFINE(HAVE_MAINTAINER_MODE)
 fi
 
 dnl Check canonical system/host (a kludge: replace me with something better).

@@ -1757,6 +1757,13 @@ static const res_t escp2_reslist[] = {
   { N_ ("2880 x 720 DPI Softweave"),                 2880, 720,  1, 0, 1, 1, 0, 13},
   { N_ ("2880 x 720 DPI Softweave Unidirectional"),  2880, 720,  1, 0, 1, 1, 1, 13},
   { N_ ("2880 x 1440 DPI Softweave"),                2880, 1440, 1, 0, 1, 1, 1, 13},
+#ifdef HAVE_MAINTAINER_MODE
+  { N_ ("1440 x 360 DPI Softweave"),                 1440, 360,  1, 0, 1, 1, 0, 7 },
+  { N_ ("1440 x 360 DPI Softweave Unidirectional"),  1440, 360,  1, 0, 1, 1, 1, 7 },
+  { N_ ("1440 x 360 DPI High Quality"),              1440, 360,  1, 0, 2, 1, 0, 7 },
+  { N_ ("1440 x 360 DPI High Quality Uni"),          1440, 360,  1, 0, 2, 1, 1, 7 },
+  { N_ ("1440 x 360 DPI Highest Quality"),           1440, 360,  1, 0, 4, 1, 1, 7 },
+#endif
   { "", 0, 0, 0, 0, 0, -1 }
 };
 
@@ -2854,8 +2861,8 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
       if (use_6color || use_7color)
 	stp_dither_set_adaptive_divisor(dither, 8);
       else
-	stp_dither_set_adaptive_divisor(dither, 16);
-    }  
+	stp_dither_set_adaptive_divisor(dither, 4);
+    }
   else
     stp_dither_set_adaptive_divisor(dither, 4);
 
