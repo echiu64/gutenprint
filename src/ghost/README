@@ -1228,8 +1228,8 @@ STP: -dColor=x          x:   0 ...   2  (1 on color printers, 0 otherwise)
 
 IJS:
 
-Black and white: -sProcessColorModel=DeviceGrayscale -dBitsPerSample=1
-Grayscale:       -sProcessColorModel=DeviceGrayscale
+Black and white: -sProcessColorModel=DeviceGray -dBitsPerSample=1
+Grayscale:       -sProcessColorModel=DeviceGray
 Color (RGB):     -sProcessColorModel=DeviceRGB
 Color (CMYK):    -sProcessColorModel=DeviceCMYK
 
@@ -1328,5 +1328,5 @@ gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-660 -dDensity=0.8 -r720 \
 
 gs -sDEVICE=ijs -sIjsServer=/usr/local/bin/ijsgimpprint \
    -sDeviceManufacturer=EPSON -sDeviceModel=escp2-660 -dIjsUseOutputFD
-   -sProcessColorModel=DeviceGrayscale -dBitsPerSample=1 -sOutputFile=-
+   -sProcessColorModel=DeviceGray -dBitsPerSample=1 -sOutputFile=-
    -sIjsParams='Quality=720sw,Density=0.8' foo.ps
