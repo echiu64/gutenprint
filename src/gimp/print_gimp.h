@@ -87,7 +87,6 @@ extern gint             saveme;
 
 extern GtkWidget *gimp_color_adjust_dialog;
 extern GtkWidget *dither_algo_combo;
-extern GtkTooltips *tooltips;
 extern stp_vars_t *pv;
 
 /*
@@ -119,8 +118,7 @@ extern void gimp_update_adjusted_thumbnail   (void);
 extern void gimp_create_main_window (void);
 extern void gimp_set_color_sliders_active(int active);
 extern void gimp_writefunc (void *file, const char *buf, size_t bytes);
-extern void set_adjustment_tooltip(GtkTooltips *tooltips,
-				   GtkObject *adjustment,
+extern void set_adjustment_tooltip(GtkObject *adjustment,
 				   const gchar *tip, const gchar *private);
 
 #endif  /* __PRINT_GIMP_H__ */

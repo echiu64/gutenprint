@@ -77,7 +77,6 @@ Known limitations of this release:
    systems.
 
 
-
 Gimp-Print 4.1.99a3 contains the following changes over 4.1.99a2:
 
 1) The arguments to the Ghostscript `stp' driver have changed

@@ -114,6 +114,7 @@ static gint   suppress_preview_update = 0;
 
 static gint preview_valid = 0;
 static gint frame_valid = 0;
+static gint need_exposure = 0;
 
 static GtkDrawingArea *preview = NULL;	/* Preview drawing area widget */
 static gint            mouse_x;		/* Last mouse X */
@@ -202,19 +203,17 @@ static void gimp_image_type_callback         (GtkWidget      *widget,
 					      gpointer        data);
 
 static gdouble preview_ppi = 10;
-GtkTooltips *tooltips;
 stp_vars_t *pv;
 
 #define Combo_get_text(combo) \
 	(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo)->entry)))
 
 void
-set_adjustment_tooltip(GtkTooltips *tooltips, GtkObject *adj,
-		       const gchar *tip, const gchar *private)
+set_adjustment_tooltip(GtkObject *adj, const gchar *tip, const gchar *private)
 {
-  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(GIMP_SCALE_ENTRY_SCALE(adj)),
+  gimp_help_set_help_data(GTK_WIDGET(GIMP_SCALE_ENTRY_SCALE(adj)),
 		       tip, private);
-  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(GIMP_SCALE_ENTRY_SPINBUTTON(adj)),
+  gimp_help_set_help_data(GTK_WIDGET(GIMP_SCALE_ENTRY_SPINBUTTON(adj)),
 		       tip, private);
 }
 
@@ -257,7 +256,7 @@ reset_preview(void)
 {
   if (!suppress_preview_reset)
     {
-      gtk_tooltips_enable(tooltips);
+      gimp_help_enable_tooltips();
       buttons_pressed = preview_active = 0;
     }
 }
@@ -404,27 +403,27 @@ create_preview(void)
                       GTK_SIGNAL_FUNC (gimp_preview_motion_callback), NULL);
   gtk_widget_show (GTK_WIDGET (preview));
 
-  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(event_box),
-		       "Position the image on the page.\n"
-		       "Click and drag with the primary button to position the image.\n"
-		       "Click and drag with the second button to move the image with finer precision; "
-		       "each unit of motion moves the image one point (1/72\")\n"
-		       "Click and drag with the third (middle) button to move the image in units of "
-		       "the image size.\n"
-		       "Holding down the shift key while clicking and dragging constrains the image to "
-		       "only horizontal or vertical motion.\n"
-		       "If you click another button while dragging the mouse, the image will return "
-		       "to its original position.",
-		       "Position the image on the page.\n"
-		       "Click and drag with the primary button to position the image.\n"
-		       "Click and drag with the second button to move the image with finer precision; "
-		       "each unit of motion moves the image one point (1/72\")\n"
-		       "Click and drag with the third (middle) button to move the image in units of "
-		       "the image size.\n"
-		       "Holding down the shift key while clicking and dragging constrains the image to "
-		       "only horizontal or vertical motion.\n"
-		       "If you click another button while dragging the mouse, the image will return "
-		       "to its original position.");
+  gimp_help_set_help_data(GTK_WIDGET(event_box),
+			  _("Position the image on the page.\n"
+			  "Click and drag with the primary button to position the image.\n"
+			  "Click and drag with the second button to move the image with finer precision; "
+			  "each unit of motion moves the image one point (1/72\")\n"
+			  "Click and drag with the third (middle) button to move the image in units of "
+			  "the image size.\n"
+			  "Holding down the shift key while clicking and dragging constrains the image to "
+			  "only horizontal or vertical motion.\n"
+			  "If you click another button while dragging the mouse, the image will return "
+			  "to its original position."),
+			  _("Position the image on the page.\n"
+			  "Click and drag with the primary button to position the image.\n"
+			  "Click and drag with the second button to move the image with finer precision; "
+			  "each unit of motion moves the image one point (1/72\")\n"
+			  "Click and drag with the third (middle) button to move the image in units of "
+			  "the image size.\n"
+			  "Holding down the shift key while clicking and dragging constrains the image to "
+			  "only horizontal or vertical motion.\n"
+			  "If you click another button while dragging the mouse, the image will return "
+			  "to its original position."));
 
   gtk_widget_set_events (GTK_WIDGET (preview),
                          GDK_EXPOSURE_MASK |
@@ -457,18 +456,18 @@ create_positioning_frame(void)
 
   recenter_vertical_button =
     gtk_button_new_with_label (_("Center\nVertically"));
-  gtk_tooltips_set_tip(tooltips, recenter_vertical_button,
-		       "Center the image vertically on the paper",
-		       "Center the image vertically on the paper!");
+  gimp_help_set_help_data(recenter_vertical_button,
+			  _("Center the image vertically on the paper"),
+			  _("Center the image vertically on the paper!"));
   gtk_signal_connect(GTK_OBJECT (recenter_vertical_button), "clicked",
                      GTK_SIGNAL_FUNC (gimp_position_callback), NULL);
   gtk_widget_show(recenter_vertical_button);
   gtk_box_pack_start(GTK_BOX(box), recenter_vertical_button, FALSE, TRUE, 0);
 
   recenter_button = gtk_button_new_with_label (_("Center\nImage"));
-  gtk_tooltips_set_tip(tooltips, recenter_button,
-		       "Center the image on the paper",
-		       "Center the image on the paper!");
+  gimp_help_set_help_data(recenter_button,
+			  _("Center the image on the paper"),
+			  _("Center the image on the paper!"));
   gtk_signal_connect(GTK_OBJECT (recenter_button), "clicked",
                      GTK_SIGNAL_FUNC (gimp_position_callback), NULL);
   gtk_widget_show(recenter_button);
@@ -476,18 +475,18 @@ create_positioning_frame(void)
 
   recenter_horizontal_button =
     gtk_button_new_with_label (_("Center\nHorizontally"));
-  gtk_tooltips_set_tip(tooltips, recenter_horizontal_button,
-		       "Center the image horizontally on the paper",
-		       "Center the image vertically on the paper!");
+  gimp_help_set_help_data(recenter_horizontal_button,
+			  _("Center the image horizontally on the paper"),
+			  _("Center the image vertically on the paper!"));
   gtk_signal_connect(GTK_OBJECT (recenter_horizontal_button), "clicked",
                      GTK_SIGNAL_FUNC (gimp_position_callback), NULL);
   gtk_widget_show(recenter_horizontal_button);
   gtk_box_pack_start(GTK_BOX(box), recenter_horizontal_button, FALSE, TRUE, 0);
 
   left_entry = gtk_entry_new ();
-  gtk_tooltips_set_tip(tooltips, left_entry,
-		       "Distance from the left of the paper to the image",
-		       "Distance from the left of the paper to the image");
+  gimp_help_set_help_data(left_entry,
+			  _("Distance from the left of the paper to the image"),
+			  _("Distance from the left of the paper to the image"));
   gtk_signal_connect (GTK_OBJECT (left_entry), "activate",
                       GTK_SIGNAL_FUNC (gimp_position_callback), NULL);
   gtk_widget_set_usize (left_entry, 60, 0);
@@ -495,9 +494,9 @@ create_positioning_frame(void)
 			     0.5, left_entry, 1, TRUE);
 
   top_entry = gtk_entry_new ();
-  gtk_tooltips_set_tip(tooltips, top_entry,
-		       "Distance from the top of the paper to the image",
-		       "Distance from the top of the paper to the image");
+  gimp_help_set_help_data(top_entry,
+			  _("Distance from the top of the paper to the image"),
+			  _("Distance from the top of the paper to the image"));
   gtk_signal_connect (GTK_OBJECT (top_entry), "activate",
                       GTK_SIGNAL_FUNC (gimp_position_callback), NULL);
   gtk_widget_set_usize (top_entry, 60, 0);
@@ -505,9 +504,9 @@ create_positioning_frame(void)
 			     0.5, top_entry, 1, TRUE);
 
   right_entry = gtk_entry_new ();
-  gtk_tooltips_set_tip(tooltips, right_entry,
-		       "Distance from the left of the paper to the right of the image",
-		       "Distance from the left of the paper to the right of the image");
+  gimp_help_set_help_data(right_entry,
+			  _("Distance from the left of the paper to the right of the image"),
+			  _("Distance from the left of the paper to the right of the image"));
   gtk_signal_connect (GTK_OBJECT (right_entry), "activate",
                       GTK_SIGNAL_FUNC (gimp_position_callback), NULL);
   gtk_widget_set_usize (right_entry, 60, 0);
@@ -516,9 +515,9 @@ create_positioning_frame(void)
 
 
   right_border_entry = gtk_entry_new ();
-  gtk_tooltips_set_tip(tooltips, right_border_entry,
-		       "Distance from the right of the paper to the image",
-		       "Distance from the right of the paper to the image");
+  gimp_help_set_help_data(right_border_entry,
+			  _("Distance from the right of the paper to the image"),
+			  _("Distance from the right of the paper to the image"));
   gtk_signal_connect (GTK_OBJECT (right_border_entry), "activate",
                       GTK_SIGNAL_FUNC (gimp_position_callback), NULL);
   gtk_widget_set_usize (right_border_entry, 60, 0);
@@ -526,9 +525,9 @@ create_positioning_frame(void)
 			     0.5, right_border_entry, 1, TRUE);
 
   bottom_entry = gtk_entry_new ();
-  gtk_tooltips_set_tip(tooltips, bottom_entry,
-		       "Distance from the top of the paper to the bottom of the image",
-		       "Distance from the top of the paper to the bottom of the image");
+  gimp_help_set_help_data(bottom_entry,
+			  _("Distance from the top of the paper to the bottom of the image"),
+			  _("Distance from the top of the paper to the bottom of the image"));
   gtk_signal_connect (GTK_OBJECT (bottom_entry), "activate",
                       GTK_SIGNAL_FUNC (gimp_position_callback), NULL);
   gtk_widget_set_usize (bottom_entry, 60, 0);
@@ -537,9 +536,9 @@ create_positioning_frame(void)
 
 
   bottom_border_entry = gtk_entry_new ();
-  gtk_tooltips_set_tip(tooltips, bottom_border_entry,
-		       "Distance from the bottom of the paper to the image",
-		       "Distance from the bottom of the paper to the image");
+  gimp_help_set_help_data(bottom_border_entry,
+			  _("Distance from the bottom of the paper to the image"),
+			  _("Distance from the bottom of the paper to the image"));
   gtk_signal_connect (GTK_OBJECT (bottom_border_entry), "activate",
                       GTK_SIGNAL_FUNC (gimp_position_callback), NULL);
   gtk_widget_set_usize (bottom_border_entry, 60, 0);
@@ -562,10 +561,10 @@ create_positioning_frame(void)
 			  _("Seascape"), gimp_orientation_callback,
 			  (gpointer) ORIENT_SEASCAPE, NULL, NULL, 0,
 			  NULL);
-  gtk_tooltips_set_tip(tooltips, orientation_menu,
-		       "Select the orientation of the image",
-		       "Select the orientation: portrait, landscape, "
-		       "upside down, or seascape (upside down landscape)");
+  gimp_help_set_help_data(orientation_menu,
+			  _("Select the orientation of the image"),
+			  _("Select the orientation: portrait, landscape, "
+			  "upside down, or seascape (upside down landscape)"));
   gimp_table_attach_aligned (GTK_TABLE (table), 0, 5,
                              _("Orientation:"), 1.0, 0.5,
                              orientation_menu, 2, FALSE);
@@ -603,7 +602,7 @@ create_printer_dialog(void)
                       FALSE, FALSE, 0);
   gtk_widget_show (table);
 
-   /*
+  /*
    * Printer driver option menu.
    */
 
@@ -617,9 +616,9 @@ create_printer_dialog(void)
   event_box = gtk_event_box_new();
   gtk_widget_show(GTK_WIDGET(event_box));
   gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(printer_crawler));
-  gtk_tooltips_set_tip(tooltips, event_box,
-		       "Select your printer model",
-		       "Select your printer model");
+  gimp_help_set_help_data(event_box,
+			  _("Select your printer model"),
+			  _("Select your printer model"));
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (printer_crawler),
 				 GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   printer_driver = gtk_clist_new(1);
@@ -661,16 +660,16 @@ create_printer_dialog(void)
   gtk_widget_show (box);
 
   ppd_file = gtk_entry_new ();
-  gtk_tooltips_set_tip(tooltips, ppd_file,
-		       "Enter the correct PPD filename for your printer",
-		       "Enter the correct PPD filename for your printer");
+  gimp_help_set_help_data(ppd_file,
+			  _("Enter the correct PPD filename for your printer"),
+			  _("Enter the correct PPD filename for your printer"));
   gtk_box_pack_start (GTK_BOX (box), ppd_file, TRUE, TRUE, 0);
   gtk_widget_show (ppd_file);
 
   ppd_button = gtk_button_new_with_label (_("Browse"));
-  gtk_tooltips_set_tip(tooltips, ppd_button,
-		       "Choose the correct PPD filename for your printer",
-		       "Choose the correct PPD filename for your printer");
+  gimp_help_set_help_data(ppd_button,
+			  _("Choose the correct PPD filename for your printer"),
+			  _("Choose the correct PPD filename for your printer"));
   gtk_misc_set_padding (GTK_MISC (GTK_BIN (ppd_button)->child), 2, 0);
   gtk_box_pack_start (GTK_BOX (box), ppd_button, FALSE, FALSE, 0);
   gtk_signal_connect (GTK_OBJECT (ppd_button), "clicked",
@@ -688,13 +687,13 @@ create_printer_dialog(void)
   gtk_widget_show (label);
 
   output_cmd = gtk_entry_new ();
-  gtk_tooltips_set_tip(tooltips, output_cmd,
-		       "Enter the correct command to print to your printer. "
-		       "Note: Please do not remove the `-l' or `-oraw' from "
-		       "the command string, or printing will probably fail!",
-		       "Enter the correct command to print to your printer. "
-		       "Note: Please do not remove the `-l' or `-oraw' from "
-		       "the command string, or printing will probably fail!");
+  gimp_help_set_help_data(output_cmd,
+			  _("Enter the correct command to print to your printer. "
+			  "Note: Please do not remove the `-l' or `-oraw' from "
+			  "the command string, or printing will probably fail!"),
+			  _("Enter the correct command to print to your printer. "
+			  "Note: Please do not remove the `-l' or `-oraw' from "
+			  "the command string, or printing will probably fail!"));
   gtk_table_attach (GTK_TABLE (table), output_cmd, 1, 2, 2, 3,
                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (output_cmd);
@@ -747,9 +746,9 @@ create_new_printer_dialog(void)
   gtk_widget_show (table);
 
   new_printer_entry = gtk_entry_new();
-  gtk_tooltips_set_tip(tooltips, new_printer_entry,
-		       "Enter the name you wish to give this logical printer",
-		       "Enter the name you wish to give this logical printer");
+  gimp_help_set_help_data(new_printer_entry,
+			  _("Enter the name you wish to give this logical printer"),
+			  _("Enter the name you wish to give this logical printer"));
   gtk_entry_set_max_length(GTK_ENTRY(new_printer_entry), 127);
   gtk_signal_connect (GTK_OBJECT (new_printer_entry), "activate",
                       GTK_SIGNAL_FUNC (gimp_new_printer_ok_callback), NULL);
@@ -832,11 +831,11 @@ create_printer_settings_frame(void)
   event_box = gtk_event_box_new();
   gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(printer_combo));
   gtk_widget_show(GTK_WIDGET(event_box));
-  gtk_tooltips_set_tip(tooltips, event_box,
-		       "Select the name of the printer (not the type, "
-		       "or model, of printer) that you wish to print to",
-		       "Select the name of the printer (not the type, or "
-		       "model, of printer) that you wish to print to");
+  gimp_help_set_help_data(event_box,
+			  _("Select the name of the printer (not the type, "
+			  "or model, of printer) that you wish to print to"),
+			  _("Select the name of the printer (not the type, or "
+			  "model, of printer) that you wish to print to"));
   gimp_table_attach_aligned (GTK_TABLE (table), 0, 0, _("Printer Name:"), 1.0,
 			     0.5, event_box, 2, TRUE);
 
@@ -855,11 +854,11 @@ create_printer_settings_frame(void)
   event_box = gtk_event_box_new();
   gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(button));
   gtk_widget_show(GTK_WIDGET(event_box));
-  gtk_tooltips_set_tip(tooltips, event_box,
-		       "Choose the printer model, PPD file, and command that "
-		       "is used to print to this printer",
-		       "Choose the printer model, PPD file, and command that "
-		       "is used to print to this printer");
+  gimp_help_set_help_data(event_box,
+			  _("Choose the printer model, PPD file, and command that "
+			  "is used to print to this printer"),
+			  _("Choose the printer model, PPD file, and command that "
+			  "is used to print to this printer"));
   gtk_misc_set_padding (GTK_MISC (GTK_BIN (button)->child), 2, 0);
   gtk_box_pack_start (GTK_BOX (printer_hbox), event_box, FALSE, TRUE, 0);
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
@@ -874,13 +873,13 @@ create_printer_settings_frame(void)
   event_box = gtk_event_box_new();
   gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(button));
   gtk_widget_show(GTK_WIDGET(event_box));
-  gtk_tooltips_set_tip(tooltips, button,
-		       "Define a new logical printer. This can be used to "
-		       "name a collection of settings that you wish to "
-		       "remember for future use.",
-		       "Define a new logical printer. This can be used to "
-		       "name a collection of settings that you wish to "
-		       "remember for future use.");
+  gimp_help_set_help_data(button,
+			  _("Define a new logical printer. This can be used to "
+			  "name a collection of settings that you wish to "
+			  "remember for future use."),
+			  _("Define a new logical printer. This can be used to "
+			  "name a collection of settings that you wish to "
+			  "remember for future use."));
   gtk_box_pack_start (GTK_BOX (printer_hbox), event_box, FALSE, TRUE, 0);
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
                       GTK_SIGNAL_FUNC (gimp_new_printer_open_callback), NULL);
@@ -894,9 +893,9 @@ create_printer_settings_frame(void)
   event_box = gtk_event_box_new();
   gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(media_size_combo));
   gtk_widget_show(GTK_WIDGET(event_box));
-  gtk_tooltips_set_tip(tooltips, event_box,
-		       "Size of paper that you wish to print to",
-		       "Size of paper that you wish to print to");
+  gimp_help_set_help_data(event_box,
+			  _("Size of paper that you wish to print to"),
+			  _("Size of paper that you wish to print to"));
   gimp_table_attach_aligned (GTK_TABLE (table), 0, 3, _("Media Size:"), 1.0,
 			     0.5, event_box, 1, TRUE);
 
@@ -917,9 +916,9 @@ create_printer_settings_frame(void)
   gtk_widget_show (label);
 
   custom_size_width = gtk_entry_new();
-  gtk_tooltips_set_tip(tooltips, custom_size_width,
-		       "Width of the paper that you wish to print to",
-		       "Width of the paper that you wish to print to");
+  gimp_help_set_help_data(custom_size_width,
+			  _("Width of the paper that you wish to print to"),
+			  _("Width of the paper that you wish to print to"));
   gtk_widget_set_usize (custom_size_width, 40, 0);
   gtk_signal_connect(GTK_OBJECT(custom_size_width), "activate",
 		     GTK_SIGNAL_FUNC(gimp_media_size_callback), NULL);
@@ -932,9 +931,9 @@ create_printer_settings_frame(void)
   gtk_widget_show (label);
 
   custom_size_height = gtk_entry_new();
-  gtk_tooltips_set_tip(tooltips, custom_size_height,
-		       "Height of the paper that you wish to print to",
-		       "Height of the paper that you wish to print to");
+  gimp_help_set_help_data(custom_size_height,
+			  _("Height of the paper that you wish to print to"),
+			  _("Height of the paper that you wish to print to"));
   gtk_widget_set_usize (custom_size_height, 50, 0);
   gtk_signal_connect(GTK_OBJECT(custom_size_height), "activate",
 		     GTK_SIGNAL_FUNC(gimp_media_size_callback), NULL);
@@ -951,9 +950,9 @@ create_printer_settings_frame(void)
   event_box = gtk_event_box_new();
   gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(media_type_combo));
   gtk_widget_show(GTK_WIDGET(event_box));
-  gtk_tooltips_set_tip(tooltips, event_box,
-		       "Type of media you're printing to",
-		       "Type of media you're printing to");
+  gimp_help_set_help_data(event_box,
+			  _("Type of media you're printing to"),
+			  _("Type of media you're printing to"));
   gimp_table_attach_aligned (GTK_TABLE (table), 0, 5, _("Media Type:"), 1.0,
 			     0.5, event_box, 2, TRUE);
 
@@ -965,9 +964,9 @@ create_printer_settings_frame(void)
   event_box = gtk_event_box_new();
   gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(media_source_combo));
   gtk_widget_show(GTK_WIDGET(event_box));
-  gtk_tooltips_set_tip(tooltips, event_box,
-		       "Source (input slot) of media you're printing to",
-		       "Source (input slot) of media you're printing to");
+  gimp_help_set_help_data(event_box,
+			  _("Source (input slot) of media you're printing to"),
+			  _("Source (input slot) of media you're printing to"));
   gimp_table_attach_aligned (GTK_TABLE (table), 0, 6, _("Media Source:"), 1.0,
 			     0.5, event_box, 2, TRUE);
 
@@ -979,9 +978,9 @@ create_printer_settings_frame(void)
   event_box = gtk_event_box_new();
   gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(ink_type_combo));
   gtk_widget_show(GTK_WIDGET(event_box));
-  gtk_tooltips_set_tip(tooltips, event_box,
-		       "Type of ink in the printer",
-		       "Type of ink in the printer");
+  gimp_help_set_help_data(event_box,
+			  _("Type of ink in the printer"),
+			  _("Type of ink in the printer"));
   gimp_table_attach_aligned (GTK_TABLE (table), 0, 7, _("Ink Type:"), 1.0,
 			     0.5, event_box, 2, TRUE);
 
@@ -993,9 +992,9 @@ create_printer_settings_frame(void)
   event_box = gtk_event_box_new();
   gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(resolution_combo));
   gtk_widget_show(GTK_WIDGET(event_box));
-  gtk_tooltips_set_tip(tooltips, event_box,
-		       "Resolution and quality of the print",
-		       "Resolution and quality of the print");
+  gimp_help_set_help_data(event_box,
+			  _("Resolution and quality of the print"),
+			  _("Resolution and quality of the print"));
   gimp_table_attach_aligned (GTK_TABLE (table), 0, 8, _("Resolution:"), 1.0,
 			     0.5, event_box, 2, TRUE);
 }
@@ -1034,9 +1033,9 @@ create_scaling_frame(void)
 			  stp_get_scaling(stp_minimum_settings()),
 			  stp_get_scaling(stp_maximum_settings()),
 			  1.0, 10.0, 1, TRUE, 0, 0, NULL, NULL);
-  set_adjustment_tooltip(tooltips, scaling_adjustment,
-			 "Set the scale (size) of the image",
-			 "Set the scale (size) of the image");
+  set_adjustment_tooltip(scaling_adjustment,
+			 _("Set the scale (size) of the image"),
+			 _("Set the scale (size) of the image"));
   gtk_signal_connect (GTK_OBJECT (scaling_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_scaling_update), NULL);
 
@@ -1048,13 +1047,13 @@ create_scaling_frame(void)
   event_box = gtk_event_box_new();
   gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(label));
   gtk_widget_show(GTK_WIDGET(event_box));
-  gtk_tooltips_set_tip(tooltips, event_box,
-		       "Select whether scaling is measured as percent of "
-		       "available page size or number of output dots per "
-		       "inch",
-		       "Select whether scaling is measured as percent of "
-		       "available page size or number of output dots per "
-		       "inch");
+  gimp_help_set_help_data(event_box,
+			  _("Select whether scaling is measured as percent of "
+			  "available page size or number of output dots per "
+			  "inch"),
+			  _("Select whether scaling is measured as percent of "
+			  "available page size or number of output dots per "
+			  "inch"));
   gtk_box_pack_start (GTK_BOX(box), event_box, FALSE, TRUE, 0);
 
   vbox = gtk_vbox_new (FALSE, 0);
@@ -1062,9 +1061,9 @@ create_scaling_frame(void)
   gtk_box_pack_start (GTK_BOX(box), vbox, FALSE, FALSE, 0);
 
   scaling_percent = gtk_radio_button_new_with_label (NULL, _("Percent"));
-  gtk_tooltips_set_tip(tooltips, scaling_percent,
-		       "Scale the print to the size of the page",
-		       "Scale the print to the size of the page");
+  gimp_help_set_help_data(scaling_percent,
+			  _("Scale the print to the size of the page"),
+			  _("Scale the print to the size of the page"));
   group = gtk_radio_button_group (GTK_RADIO_BUTTON (scaling_percent));
   gtk_signal_connect (GTK_OBJECT (scaling_percent), "toggled",
                       GTK_SIGNAL_FUNC (gimp_scaling_callback), NULL);
@@ -1072,18 +1071,18 @@ create_scaling_frame(void)
   gtk_widget_show (scaling_percent);
 
   scaling_ppi = gtk_radio_button_new_with_label (group, _("PPI"));
-  gtk_tooltips_set_tip(tooltips, scaling_ppi,
-		       "Scale the print to the number of dots per inch",
-		       "Scale the print to the number of dots per inch");
+  gimp_help_set_help_data(scaling_ppi,
+			  _("Scale the print to the number of dots per inch"),
+			  _("Scale the print to the number of dots per inch"));
   gtk_signal_connect (GTK_OBJECT (scaling_ppi), "toggled",
                       GTK_SIGNAL_FUNC (gimp_scaling_callback), NULL);
   gtk_box_pack_start (GTK_BOX (vbox), scaling_ppi, FALSE, FALSE, 0);
   gtk_widget_show (scaling_ppi);
 
   scaling_image = gtk_button_new_with_label (_("Image Size"));
-  gtk_tooltips_set_tip(tooltips, scaling_image,
-		       "Set the print size to the size of the image",
-		       "Set the print size to the size of the image");
+  gimp_help_set_help_data(scaling_image,
+			  _("Set the print size to the size of the image"),
+			  _("Set the print size to the size of the image"));
   gtk_misc_set_padding (GTK_MISC (GTK_BIN (scaling_image)->child), 8, 4);
   gtk_signal_connect (GTK_OBJECT (scaling_image), "clicked",
                       GTK_SIGNAL_FUNC (gimp_scaling_callback), NULL);
@@ -1110,9 +1109,9 @@ create_scaling_frame(void)
   gtk_widget_show (label);
 
   width_entry = gtk_entry_new ();
-  gtk_tooltips_set_tip(tooltips, width_entry,
-		       "Set the width of the print",
-		       "Set the width of the print");
+  gimp_help_set_help_data(width_entry,
+			  _("Set the width of the print"),
+			  _("Set the width of the print"));
   gtk_signal_connect (GTK_OBJECT (width_entry), "activate",
                       GTK_SIGNAL_FUNC (gimp_position_callback), NULL);
   gtk_widget_set_usize (width_entry, 60, 0);
@@ -1128,9 +1127,9 @@ create_scaling_frame(void)
   gtk_widget_show (label);
 
   height_entry = gtk_entry_new ();
-  gtk_tooltips_set_tip(tooltips, height_entry,
-		       "Set the height of the print",
-		       "Set the height of the print");
+  gimp_help_set_help_data(height_entry,
+			  _("Set the height of the print"),
+			  _("Set the height of the print"));
   gtk_signal_connect (GTK_OBJECT (height_entry), "activate",
                       GTK_SIGNAL_FUNC (gimp_position_callback), NULL);
   gtk_widget_set_usize (height_entry, 60, 0);
@@ -1149,9 +1148,9 @@ create_scaling_frame(void)
   event_box = gtk_event_box_new();
   gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(label));
   gtk_widget_show(GTK_WIDGET(event_box));
-  gtk_tooltips_set_tip(tooltips, event_box,
-		       "Select the base unit of measurement for printing",
-		       "Select the base unit of measurement for printing");
+  gimp_help_set_help_data(event_box,
+			  _("Select the base unit of measurement for printing"),
+			  _("Select the base unit of measurement for printing"));
   gtk_box_pack_start (GTK_BOX (box), event_box, FALSE, FALSE, 0);
 
   vbox = gtk_vbox_new (FALSE, 0);
@@ -1159,9 +1158,9 @@ create_scaling_frame(void)
   gtk_box_pack_end (GTK_BOX(box), vbox, FALSE, FALSE, 0);
 
   unit_inch = gtk_radio_button_new_with_label (NULL, _("Inch"));
-  gtk_tooltips_set_tip(tooltips, unit_inch,
-		       "Set the base unit of measurement to inches",
-		       "Set the base unit of measurement to inches");
+  gimp_help_set_help_data(unit_inch,
+			  _("Set the base unit of measurement to inches"),
+			  _("Set the base unit of measurement to inches"));
   group = gtk_radio_button_group (GTK_RADIO_BUTTON (unit_inch));
   gtk_signal_connect (GTK_OBJECT (unit_inch), "toggled",
                       GTK_SIGNAL_FUNC (gimp_unit_callback), (gpointer) 0);
@@ -1169,9 +1168,9 @@ create_scaling_frame(void)
   gtk_widget_show (unit_inch);
 
   unit_cm = gtk_radio_button_new_with_label (group, _("cm"));
-  gtk_tooltips_set_tip(tooltips, unit_cm,
-		       "Set the base unit of measurement to centimetres",
-		       "Set the base unit of measurement to centimetres");
+  gimp_help_set_help_data(unit_cm,
+			  _("Set the base unit of measurement to centimetres"),
+			  _("Set the base unit of measurement to centimetres"));
   gtk_signal_connect (GTK_OBJECT (unit_cm), "toggled",
                       GTK_SIGNAL_FUNC (gimp_unit_callback), (gpointer) 1);
   gtk_box_pack_end (GTK_BOX (vbox), unit_cm, FALSE, TRUE, 0);
@@ -1205,9 +1204,9 @@ create_image_settings_frame(void)
   event_box = gtk_event_box_new();
   gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(label));
   gtk_widget_show(GTK_WIDGET(event_box));
-  gtk_tooltips_set_tip(tooltips, event_box,
-		       "Optimize the output for the type of image being printed",
-		       "Optimize the output for the type of image being printed");
+  gimp_help_set_help_data(event_box,
+		       _("Optimize the output for the type of image being printed"),
+		       _("Optimize the output for the type of image being printed"));
   gtk_box_pack_start (GTK_BOX (hbox), event_box, TRUE, TRUE, 0);
   gtk_widget_show (label);
 
@@ -1218,9 +1217,9 @@ create_image_settings_frame(void)
   gtk_widget_show (vbox);
 
   image_line_art = gtk_radio_button_new_with_label (NULL, _("Line Art"));
-  gtk_tooltips_set_tip(tooltips, image_line_art,
-		       "Fastest and brightest color for text and line art",
-		       "Fastest and brightest color for text and line art");
+  gimp_help_set_help_data(image_line_art,
+		       _("Fastest and brightest color for text and line art"),
+		       _("Fastest and brightest color for text and line art"));
   image_type_group = gtk_radio_button_group (GTK_RADIO_BUTTON(image_line_art));
   gtk_signal_connect (GTK_OBJECT (image_line_art), "toggled",
 		      GTK_SIGNAL_FUNC (gimp_image_type_callback),
@@ -1230,9 +1229,9 @@ create_image_settings_frame(void)
 
   image_solid_tone =
     gtk_radio_button_new_with_label (image_type_group, _("Solid Colors"));
-  gtk_tooltips_set_tip(tooltips, image_solid_tone,
-		       "Best for images dominated by regions of solid color",
-		       "Best for images dominated by regions of solid color");
+  gimp_help_set_help_data(image_solid_tone,
+		       _("Best for images dominated by regions of solid color"),
+		       _("Best for images dominated by regions of solid color"));
   image_type_group =gtk_radio_button_group(GTK_RADIO_BUTTON(image_solid_tone));
   gtk_signal_connect (GTK_OBJECT (image_solid_tone), "toggled",
 		      GTK_SIGNAL_FUNC (gimp_image_type_callback),
@@ -1242,11 +1241,11 @@ create_image_settings_frame(void)
 
   image_continuous_tone =
     gtk_radio_button_new_with_label (image_type_group, _("Photograph"));
-  gtk_tooltips_set_tip(tooltips, image_continuous_tone,
-		       "Slowest, but most accurate and smoothest color for "
-		       "continuous tone images and photographs",
-		       "Slowest, but most accurate and smoothest color for "
-		       "continuous tone images and photographs");
+  gimp_help_set_help_data(image_continuous_tone,
+		       _("Slowest, but most accurate and smoothest color for "
+		       "continuous tone images and photographs"),
+		       _("Slowest, but most accurate and smoothest color for "
+		       "continuous tone images and photographs"));
   image_type_group =
     gtk_radio_button_group (GTK_RADIO_BUTTON (image_continuous_tone));
   gtk_signal_connect (GTK_OBJECT (image_continuous_tone), "toggled",
@@ -1264,11 +1263,11 @@ create_image_settings_frame(void)
   gtk_widget_show (label);
 
   adjust_color_button = gtk_button_new_with_label (_("Adjust Output..."));
-  gtk_tooltips_set_tip(tooltips, adjust_color_button,
-		       "Adjust color balance, brightness, contrast, "
-		       "saturation, and dither algorithm",
-		       "Adjust color balance, brightness, contrast, "
-		       "saturation, and dither algorithm");
+  gimp_help_set_help_data(adjust_color_button,
+		       _("Adjust color balance, brightness, contrast, "
+		       "saturation, and dither algorithm"),
+		       _("Adjust color balance, brightness, contrast, "
+		       "saturation, and dither algorithm"));
   gtk_misc_set_padding (GTK_MISC (GTK_BIN (adjust_color_button)->child), 2, 0);
   gtk_signal_connect_object (GTK_OBJECT (adjust_color_button), "clicked",
 			     GTK_SIGNAL_FUNC (gtk_widget_show),
@@ -1294,14 +1293,14 @@ create_image_settings_frame(void)
   event_box = gtk_event_box_new();
   gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(label));
   gtk_widget_show(GTK_WIDGET(event_box));
-  gtk_tooltips_set_tip(tooltips, event_box,
-		       "Select the desired output type",
-		       "Select the desired output type");
+  gimp_help_set_help_data(event_box,
+		       _("Select the desired output type"),
+		       _("Select the desired output type"));
   gtk_box_pack_end (GTK_BOX (hbox), event_box, FALSE, FALSE, 0);
   gtk_widget_show (label);
 
   output_color = gtk_radio_button_new_with_label (NULL, _("Color"));
-  gtk_tooltips_set_tip(tooltips, output_color, "Color output", "Color output");
+  gimp_help_set_help_data(output_color, _("Color output"), _("Color output"));
   output_type_group = gtk_radio_button_group (GTK_RADIO_BUTTON (output_color));
   gtk_signal_connect (GTK_OBJECT (output_color), "toggled",
                       GTK_SIGNAL_FUNC (gimp_output_type_callback),
@@ -1311,9 +1310,9 @@ create_image_settings_frame(void)
 
   output_gray =
     gtk_radio_button_new_with_label (output_type_group, _("Grayscale"));
-  gtk_tooltips_set_tip(tooltips, output_gray,
-		       "Print in shades of gray using black ink",
-		       "Print in shades of gray using black ink");
+  gimp_help_set_help_data(output_gray,
+		       _("Print in shades of gray using black ink"),
+		       _("Print in shades of gray using black ink"));
   output_type_group = gtk_radio_button_group (GTK_RADIO_BUTTON (output_gray));
   gtk_signal_connect (GTK_OBJECT (output_gray), "toggled",
                       GTK_SIGNAL_FUNC (gimp_output_type_callback),
@@ -1323,11 +1322,11 @@ create_image_settings_frame(void)
 
   output_monochrome =
     gtk_radio_button_new_with_label (output_type_group, _("Black and White"));
-  gtk_tooltips_set_tip(tooltips, output_monochrome,
-		       "Print in black and white (no color, and no shades "
-		       "of gray)",
-		       "Print in black and white (no color, and no shades "
-		       "of gray)");
+  gimp_help_set_help_data(output_monochrome,
+		       _("Print in black and white (no color, and no shades "
+		       "of gray)"),
+		       _("Print in black and white (no color, and no shades "
+		       "of gray)"));
   output_type_group =
     gtk_radio_button_group (GTK_RADIO_BUTTON (output_monochrome));
   gtk_signal_connect (GTK_OBJECT (output_monochrome), "toggled",
@@ -1350,7 +1349,7 @@ gimp_create_main_window (void)
    * actually initializing the values at this point; that will be done after
    * the UI is fully created.
    */
-  tooltips = gtk_tooltips_new();
+  gimp_help_init();
 
   create_top_level_structure();
 
@@ -2653,7 +2652,22 @@ gimp_do_preview_thumbnail(gint paper_left, gint paper_top, gint orient)
       preview_valid = 1;
     }
 
-  if (!frame_valid)
+  if (need_exposure)
+    {
+      /* draw paper frame */
+      gdk_draw_rectangle (preview->widget.window, gc, 0,
+			  paper_left, paper_top,
+			  MAX(2, preview_ppi * paper_width / 72),
+			  MAX(2, preview_ppi * paper_height / 72));
+
+      /* draw printable frame */
+      gdk_draw_rectangle (preview->widget.window, gc, 0,
+			  printable_left, printable_top,
+			  MAX(2, preview_ppi * printable_width / 72),
+			  MAX(2, preview_ppi * printable_height / 72));
+      need_exposure = 0;
+    }
+  else if (!frame_valid)
     {
       gdk_window_clear (preview->widget.window);
       /* draw paper frame */
@@ -2716,7 +2730,7 @@ gimp_do_preview_thumbnail(gint paper_left, gint paper_top, gint orient)
 static void
 gimp_preview_expose(void)
 {
-  gimp_invalidate_frame();
+  need_exposure = 1;
   gimp_preview_update();
 }
 
@@ -2942,7 +2956,7 @@ gimp_preview_button_callback (GtkWidget      *widget,
 	  buttons_mask = 1 << event->button;
 	  buttons_pressed++;
 	  preview_active = 1;
-	  gtk_tooltips_disable(tooltips);
+	  gimp_help_disable_tooltips();
 	  if (event->state & GDK_SHIFT_MASK)
 	    move_constraint = MOVE_CONSTRAIN;
 	  else
@@ -2952,7 +2966,7 @@ gimp_preview_button_callback (GtkWidget      *widget,
 	{
 	  if ((buttons_mask & (1 << event->button)) == 0)
 	    {
-	      gtk_tooltips_enable(tooltips);
+	      gimp_help_enable_tooltips();
 	      preview_active = -1;
 	      stp_set_left(*pv, old_left);
 	      stp_set_top(*pv, old_top);
@@ -2976,7 +2990,7 @@ gimp_preview_button_callback (GtkWidget      *widget,
       buttons_mask &= ~(1 << event->button);
       if (buttons_pressed == 0)
 	{
-	  gtk_tooltips_enable(tooltips);
+	  gimp_help_enable_tooltips();
 	  preview_active = 0;
 	}
     }
