@@ -168,7 +168,7 @@ use in a @file{configure.in}. It defines the environment variables
 optionally specify a minimum version of the library to use, and shell script to
 run if the test suceeds or fails.
 
-@defmac AM_PATH_GIMPPRINT (@r{[}@var{minimum-version} @r{[}, @var{action-if-found} @r{[}, @var{action-if-not-found}@r{]]})
+@defmac AM_PATH_GIMPPRINT (@r{[}@var{minimum-version} @r{[}, @var{action-if-found} @r{[}, @var{action-if-not-found}@r{]]]})
 Check for an installed version of GIMP-Print greater than or equal to
 @var{minimum-version}.
 
