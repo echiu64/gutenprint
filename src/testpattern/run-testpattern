@@ -18,7 +18,7 @@ extra=''
 set_opt() {
     opt=`echo $1 | awk -F= '{print $1}'`
     val=`echo $1 | awk -F= '{print $2}'`
-    extra="`printf \"%s\nparameter %s %s\" \"$extra\" $opt $val`"
+    extra="`printf \'%s\nparameter \"%s\" \"%s\"\;' \"$extra\" $opt $val`"
 }
 
 usage() {
@@ -47,24 +47,24 @@ run_one_testpattern() {
     shift
     stuff="$@"
     cat > testpattern.test <<EOF
-printer $printer
+printer "$printer";
 $stuff
-hsize 0.1
-vsize 0.1
-left 0.15
-top 0.15
-gamma 1.0
-gamma cyan 1.0
-gamma magenta 1.0
-gamma yellow 1.0
-gamma black 1.0
-level cyan 1.0
-level magenta 1.0
-level yellow 1.0
-ink_limit 1.0
-density 1.0
-blackline 0
-steps 16
+hsize 0.1;
+vsize 0.1;
+left 0.15;
+top 0.15;
+gamma 1.0;
+gamma cyan 1.0;
+gamma magenta 1.0;
+gamma yellow 1.0;
+gamma black 1.0;
+level cyan 1.0;
+level magenta 1.0;
+level yellow 1.0;
+ink_limit 1.0;
+density 1.0;
+blackline 0;
+steps 16;
 pattern 0.0 0.0 0.0 0.0 0.0 0.0 0.0 1.0  0.0 0.0 1.0  0.0 0.0 1.0  0.0 0.0 1.0 ;
 pattern 1.0 1.0 1.0 1.0 1.0 0.0 0.0 1.0  0.0 1.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0;
 pattern 1.0 1.0 1.0 1.0 1.0 0.0 0.0 1.0  0.0 0.0 1.0 0.0 1.0 1.0 0.0 0.0 1.0;
@@ -137,7 +137,7 @@ if [ -z "`echo $extra |grep DitherAlgorithm`" ] ; then
 	echo "$p"
 	for d in $StandardDithers ; do
 	    echo -n "    $d"
-	    run_one_testpattern "$p" "`printf '%s\n' \"parameter DitherAlgorithm $d\"`" "$extra"
+	    run_one_testpattern "$p" "`printf '%s\n' \"parameter \\\"DitherAlgorithm\\\" \\\"$d\\\";\"`" "$extra"
 	done
     done
 else

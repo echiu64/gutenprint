@@ -116,6 +116,13 @@ find_color(const char *name)
 %token GRID
 %token SEMI
 %token CHANNEL
+%token CMYK
+%token RGB
+%token GRAY
+%token WHITE
+%token RAW
+%token MODE
+%token PAGESIZE
 
 %start Thing
 
@@ -125,8 +132,66 @@ COLOR: CYAN | L_CYAN | MAGENTA | L_MAGENTA
 	| YELLOW | D_YELLOW | BLACK | L_BLACK
 ;
 
-extended: EXTENDED tINT
-	{ global_ink_depth = $2; }
+rawspec: /* empty */ | RAW
+	{
+	  global_use_raw_cmyk = 1;
+	  global_image_type = OUTPUT_RAW_CMYK;
+	}
+;
+
+cmykspec: CMYK rawspec tINT
+	{
+	  if (global_use_raw_cmyk)
+	    global_image_type = OUTPUT_RAW_CMYK;
+	  else
+	    global_image_type = OUTPUT_COLOR;
+	  global_color_model = COLOR_MODEL_CMY;
+	  if ($3 == 8 || $3 == 16)
+	    global_bit_depth = $3;
+	}
+;
+
+rgbspec: RGB tINT
+	{
+	  global_image_type = OUTPUT_COLOR;
+	  global_color_model = COLOR_MODEL_RGB;
+	  global_ink_depth = 3;
+	  if ($2 == 8 || $2 == 16)
+	    global_bit_depth = $2;
+	}
+;
+
+grayspec: GRAY tINT
+	{
+	  global_image_type = OUTPUT_GRAY;
+	  global_color_model = COLOR_MODEL_CMY;
+	  global_ink_depth = 1;
+	  if ($2 == 8 || $2 == 16)
+	    global_bit_depth = $2;
+	}
+;
+
+whitespec: WHITE tINT
+	{
+	  global_image_type = OUTPUT_GRAY;
+	  global_color_model = COLOR_MODEL_RGB;
+	  global_ink_depth = 1;
+	  if ($2 == 8 || $2 == 16)
+	    global_bit_depth = $2;
+	}
+;
+
+extendedspec: EXTENDED tINT
+	{
+	  global_image_type = OUTPUT_RAW_PRINTER;
+	  global_ink_depth = $2;
+	}
+;
+
+modespec: cmykspec | rgbspec | grayspec | whitespec | extendedspec
+;
+
+inputspec: MODE modespec
 ;
 
 level: LEVEL COLOR tDOUBLE
@@ -169,29 +234,46 @@ ink_limit: INK_LIMIT tDOUBLE
 	{ global_ink_limit = $2; }
 ;
 printer: PRINTER tSTRING
-	{ printer = $2; }
+	{ global_printer = $2; }
 ;
+
+page_size_name: PAGESIZE tSTRING
+	{
+	  stp_set_string_parameter(global_vars, "PageSize", $2);
+	}
+;
+
+page_size_custom: PAGESIZE tINT tINT
+	{
+	  stp_set_page_width(global_vars, $2);
+	  stp_set_page_width(global_vars, $3);
+	}
+;
+
+page_size: page_size_name | page_size_custom
+;
+
 parameter: PARAMETER tSTRING tSTRING
 	{
-	  stp_set_string_parameter(tv, $2, $3);
+	  stp_set_string_parameter(global_vars, $2, $3);
 	  free($2);
 	  free($3);
 	}
 ;
 density: DENSITY tDOUBLE
-	{ density = $2; }
+	{ global_density = $2; }
 ;
 top: TOP tDOUBLE
-	{ xtop = $2; }
+	{ global_xtop = $2; }
 ;
 left: LEFT tDOUBLE
-	{ xleft = $2; }
+	{ global_xleft = $2; }
 ;
 hsize: HSIZE tDOUBLE
-	{ hsize = $2; }
+	{ global_hsize = $2; }
 ;
 vsize: VSIZE tDOUBLE
-	{ vsize = $2; }
+	{ global_vsize = $2; }
 ;
 blackline: BLACKLINE tINT
 	{ global_noblackline = !($2); }
@@ -256,20 +338,20 @@ color_blocks: color_blocks1 | color_blocks2
 patvars: tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE
 	{
 	  current_testpattern->t = E_PATTERN;
-	  current_index = 0;
 	  current_testpattern->d.p.lower = $1;
 	  current_testpattern->d.p.upper = $2;
 	  current_testpattern->d.p.levels[1] = $3;
 	  current_testpattern->d.p.levels[2] = $4;
 	  current_testpattern->d.p.levels[3] = $5;
 	  current_testpattern = get_next_testpattern();
+	  current_index = 0;
 	}
 ;
 
-pattern: PATTERN patvars color_blocks SEMI
+pattern: PATTERN patvars color_blocks
 ;
 
-xpattern: XPATTERN color_blocks SEMI
+xpattern: XPATTERN color_blocks
 	{
 	  if (global_ink_depth == 0)
 	    {
@@ -277,16 +359,17 @@ xpattern: XPATTERN color_blocks SEMI
 	      exit(1);
 	    }
 	  current_testpattern->t = E_XPATTERN;
-	  current_index = 0;
 	  current_testpattern = get_next_testpattern();
+	  current_index = 0;
 	}
 ;
 
-grid: GRID tINT SEMI
+grid: GRID tINT
 	{
 	  current_testpattern->t = E_GRID;
 	  current_testpattern->d.g.ticks = $2;
 	  current_testpattern = get_next_testpattern();
+	  current_index = 0;
 	}
 ;
 
@@ -305,15 +388,21 @@ image: IMAGE tINT tINT
 	}
 ;
 
-Rule:   gamma | channel_gamma | level | channel_level | global_gamma | steps
+A_Rule: gamma | channel_gamma | level | channel_level | global_gamma | steps
 	| ink_limit | printer | parameter | density | top | left | hsize
-	| vsize | blackline | extended
+	| vsize | blackline | inputspec | page_size
+;
+
+Rule: A_Rule SEMI
 ;
 
 A_Pattern: pattern | xpattern | grid
 ;
 
-Patterns: /* empty */ | Patterns A_Pattern
+Pattern: A_Pattern SEMI
+;
+
+Patterns: /* empty */ | Patterns Pattern
 ;
 
 Image: image

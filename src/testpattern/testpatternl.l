@@ -35,6 +35,21 @@
 
 int mylineno = 1;
 
+static char *
+c_strstrip(const char *s)
+{
+  size_t len = strlen(s);
+  if (len >= 2 && s[0] == '"' && s[len - 1] == '"')
+    {
+      char *sn = malloc(len - 1);
+      memcpy(sn, s + 1, len - 2);
+      sn[len - 2] = '\0';
+      return sn;
+    }
+  else
+    return c_strdup(s);
+}
+
 #define DBG(x)						\
 do							\
   {							\
@@ -42,6 +57,7 @@ do							\
       fprintf(stderr, "'%s' => %s\n", yytext, #x);	\
   }							\
  while (0)
+
 
 %}
 
@@ -81,11 +97,20 @@ image			DBG(IMAGE); return IMAGE;
 extended		DBG(EXTENDED); return EXTENDED;
 grid			DBG(GRID); return GRID;
 channel			DBG(CHANNEL); return CHANNEL;
+page_size		DBG(PAGESIZE); return PAGESIZE;
 ;			DBG(SEMI); return SEMI;
+mode			DBG(MODE); return MODE;
+cmyk			yylval.ival = CMYK;DBG(CMYK); return CMYK;
+rgb			yylval.ival = RGB;DBG(RGB); return RGB;
+grey			yylval.ival = GRAY;DBG(GRAY); return GRAY;
+gray			yylval.ival = GRAY;DBG(GRAY); return GRAY;
+white			yylval.ival = WHITE;DBG(WHITE); return WHITE;
+raw			yylval.ival = RAW;DBG(RAW); return RAW;
+
 
 {integer}		yylval.ival = atoi(yytext); DBG(tINT); return tINT;
 {float}			yylval.dval = strtod(yytext, NULL); DBG(tDOUBLE); return tDOUBLE;
-{string}		yylval.sval = c_strdup(yytext); DBG(tSTRING); return tSTRING;
+{string}		yylval.sval = c_strstrip(yytext); DBG(tSTRING); return tSTRING;
 {ws}			DBG(whitespace); 	/* Skip blanks/tabs */
 #[^\n]*			DBG(comment); 	/* Skip comments */
 \n			DBG(newline); mylineno++;
