@@ -20,18 +20,37 @@ test -f $srcdir/ChangeLog || echo > $srcdir/ChangeLog
   (libtool --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "**Error**: You must have \`libtool' installed to compile gimp-print."
-    echo "Get ftp://ftp.gnu.org/pub/gnu/libtool-1.2d.tar.gz"
+    echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.4.2.tar.gz"
     echo "(or a newer version if it is available)"
     DIE=1
   }
 }
+
+libtoolv=`libtool --version | sed 's,.*[        ]\([0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)\)[a-z]*[   ].*,\1,'`
+libtool_major=`echo $libtoolv | awk -F. '{print $1}'`
+libtool_minor=`echo $libtoolv | awk -F. '{print $2}'`
+libtool_point=`echo $libtoolv | awk -F. '{print $3}'`
+
+test "$libtool_major" -le 1 && {
+  test "$libtool_minor" -lt 4 || {
+    test "$libtool_minor" -eq 4 -a "$libtool_point" -lt 2
+  }
+} && {
+  echo
+  echo "**Warning**: You must have \`libtool' 1.4.2 or newer installed to"
+  echo "create a gimp-print distribution.  Earlier versions of gettext do"
+  echo "not generate the correct 'make uninstall' code."
+  echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.4.2.tar.gz"
+  echo "(or a newer version if it is available)"
+}
+
 
 grep "^AM_GNU_GETTEXT" $srcdir/configure.in >/dev/null && {
   grep "sed.*POTFILES" $srcdir/configure.in >/dev/null || \
   (gettext --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "**Error**: You must have \`gettext' installed to compile gimp-print."
-    echo "Get ftp://alpha.gnu.org/gnu/gettext-0.10.38.tar.gz"
+    echo "Get ftp://ftp.gnu.org/pub/gnu/gettext/gettext-0.10.40.tar.gz"
     echo "(or a newer version if it is available)"
     DIE=1
   }
@@ -55,14 +74,14 @@ test "$gettext_major" -eq 0 && {
   echo "**Warning**: You must have \`gettext' 0.10.38 or newer installed to"
   echo "create a gimp-print distribution.  Earlier versions of gettext do"
   echo "not generate the correct 'make uninstall' code."
-  echo "Get ftp://alpha.gnu.org/gnu/gettext-0.10.38.tar.gz"
+  echo "Get ftp://ftp.gnu.org/gnu/gettext/gettext-0.10.40.tar.gz"
   echo "(or a newer version if it is available)"
 }
 
 (automake --version) < /dev/null > /dev/null 2>&1 || {
   echo
   echo "**Error**: You must have \`automake' installed to compile gimp-print."
-  echo "Get ftp://ftp.gnu.org/pub/gnu/automake-1.3.tar.gz"
+  echo "Get ftp://ftp.gnu.org/pub/gnu/automake/automake-1.3.tar.gz"
   echo "(or a newer version if it is available)"
   DIE=1
   NO_AUTOMAKE=yes
@@ -74,7 +93,7 @@ test -n "$NO_AUTOMAKE" || (aclocal --version) < /dev/null > /dev/null 2>&1 || {
   echo
   echo "**Error**: Missing \`aclocal'.  The version of \`automake'"
   echo "installed doesn't appear recent enough."
-  echo "Get ftp://ftp.gnu.org/pub/gnu/automake-1.3.tar.gz"
+  echo "Get ftp://ftp.gnu.org/pub/gnu/automake/automake-1.3.tar.gz"
   echo "(or a newer version if it is available)"
   DIE=1
 }
@@ -221,7 +240,7 @@ test -z "$convertloc" && {
   echo "***Warning***: You must have \"convert\" installed to"
   echo "build the Gimp-Print user's guide."
   echo "\"convert\" comes from the ImageMagick software package."
-  echo "Go to http://sourceforge.imagemagick.net/http and get"
+  echo "Go to http://imagemagick.sourceforge.net/http and get"
   echo "the file ImageMagick-5.3.1.tar.gz"
   echo "(or a newer version if available)"
   echo " "
