@@ -32,9 +32,9 @@
 int mylineno = 1;
 
 #if 0
-#define DBG(x) fprintf(stderr, "'%s'%s\n", yytext, #x)
+#define DBG(x) fprintf(stderr, "'%s'%s\n", yytext, #x);
 #else
-#define DBG(x) 0
+#define DBG(x)
 #endif
 
 %}
@@ -50,34 +50,34 @@ ws		[ \t]+
 
 %%
 
-\<			DBG(tBEGIN);return tBEGIN;
-\>			DBG(tEND);return tEND;
-=			DBG(ASSIGN);return ASSIGN;
-printer			DBG(PRINTER);return PRINTER;
-\/printer		DBG(ENDPRINTER);return ENDPRINTER;
-name			DBG(NAME);return NAME;
-driver			DBG(DRIVER);return DRIVER;
-color			DBG(COLOR);return COLOR;
-nocolor			DBG(NOCOLOR);return NOCOLOR;
-model			DBG(MODEL);return MODEL;
-paramfunc		DBG(PARAMFUNC);return PARAMFUNC;
-mediasizefunc		DBG(MEDIASIZEFUNC);return MEDIASIZEFUNC;
-imageableareafunc	DBG(IMAGEABLEAREAFUNC);return IMAGEABLEAREAFUNC;
-printfunc		DBG(PRINTFUNC);return PRINTFUNC;
-brightness		DBG(BRIGHTNESS);return BRIGHTNESS;
-gamma			DBG(GAMMA);return GAMMA;
-contrast		DBG(CONTRAST);return CONTRAST;
-red			DBG(RED);return RED;
-green			DBG(GREEN);return GREEN;
-blue			DBG(BLUE);return BLUE;
-saturation		DBG(SATURATION);return SATURATION;
-density			DBG(DENSITY);return DENSITY;
-value			DBG(VALUE);return VALUE;
+\<			DBG(tBEGIN) return tBEGIN;
+\>			DBG(tEND) return tEND;
+=			DBG(ASSIGN) return ASSIGN;
+printer			DBG(PRINTER) return PRINTER;
+\/printer		DBG(ENDPRINTER) return ENDPRINTER;
+name			DBG(NAME) return NAME;
+driver			DBG(DRIVER) return DRIVER;
+color			DBG(COLOR) return COLOR;
+nocolor			DBG(NOCOLOR) return NOCOLOR;
+model			DBG(MODEL) return MODEL;
+paramfunc		DBG(PARAMFUNC) return PARAMFUNC;
+mediasizefunc		DBG(MEDIASIZEFUNC) return MEDIASIZEFUNC;
+imageableareafunc	DBG(IMAGEABLEAREAFUNC) return IMAGEABLEAREAFUNC;
+printfunc		DBG(PRINTFUNC) return PRINTFUNC;
+brightness		DBG(BRIGHTNESS) return BRIGHTNESS;
+gamma			DBG(GAMMA) return GAMMA;
+contrast		DBG(CONTRAST) return CONTRAST;
+red			DBG(RED) return RED;
+green			DBG(GREEN) return GREEN;
+blue			DBG(BLUE) return BLUE;
+saturation		DBG(SATURATION) return SATURATION;
+density			DBG(DENSITY) return DENSITY;
+value			DBG(VALUE) return VALUE;
 
-{integer}		yylval.ival = atoi(yytext); DBG(tINT);return tINT;
-{float}			yylval.dval = strtod(yytext, NULL); DBG(tDOUBLE);return tDOUBLE;
-{string}		yylval.sval = strdup(yytext); DBG(tSTRING);return tSTRING;
-{class}			yylval.sval = strdup(yytext); DBG(tCLASS);return tCLASS;
-{ws}			DBG(whitespace1);	/* Skip blanks/tabs */
-#[^\n]*			DBG(comment1);	/* Skip comments */
-\n			DBG(newline);mylineno++;
+{integer}		yylval.ival = atoi(yytext); DBG(tINT) return tINT;
+{float}			yylval.dval = strtod(yytext, NULL); DBG(tDOUBLE) return tDOUBLE;
+{string}		yylval.sval = strdup(yytext); DBG(tSTRING) return tSTRING;
+{class}			yylval.sval = strdup(yytext); DBG(tCLASS) return tCLASS;
+{ws}			DBG(whitespace1) 	/* Skip blanks/tabs */
+#[^\n]*			DBG(comment1) 	/* Skip comments */
+\n			DBG(newline) mylineno++;

@@ -47,5 +47,5 @@ typedef union yylv {
 extern YYSTYPE yylval;
 extern printer_t thePrinter;
 
-#include "printdef.tab.h"
+#include "printdefy.h"
 

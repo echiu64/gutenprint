@@ -30,6 +30,9 @@ unprint_SOURCES = unprint.c
 escp2_weavetest_SOURCES = escp2-weavetest.c
 pcl_unprint_SOURCES = pcl-unprint.c
 
+clean-generic:
+	-rm -f printdefl.c printdefy.c printdefy.h
+
 INCLUDES = \
 	-I$(top_srcdir)			\
 	$(GIMP_CFLAGS)			\
