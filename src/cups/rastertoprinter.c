@@ -384,6 +384,8 @@ main(int  argc,				/* I - Number of command-line arguments */
     stp_set_cmap(v, NULL);
     stp_set_page_width(v, cups.header.PageSize[0]);
     stp_set_page_height(v, cups.header.PageSize[1]);
+    stp_set_left(v, 0);
+    stp_set_top(v, 0);
     stp_set_orientation(v, ORIENT_PORTRAIT);
     stp_set_gamma(v, stp_gamma);
     stp_set_image_type(v, cups.header.cupsRowCount);
