@@ -1530,7 +1530,7 @@ set_vertical_position(stp_softweave_t *sw, stp_pass_t *pass, int model,
 {
   escp2_privdata_t *pd = (escp2_privdata_t *) stp_get_driver_data(v);
   int advance = pass->logicalpassstart - sw->last_pass_offset -
-    escp2_separation_rows(model, v) - 1;
+    (escp2_separation_rows(model, v) - 1);
   advance *= pd->undersample;
   if (pass->logicalpassstart > sw->last_pass_offset ||
       pd->initial_vertical_offset != 0)
