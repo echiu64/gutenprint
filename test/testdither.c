@@ -228,11 +228,11 @@ main(int  argc,				/* I - Number of command-line arguments */
       continue;
     }
 
-    for (j = 0; j < 6; j ++)
+    for (j = 0; j < 5; j ++)
       if (strcmp(argv[i], stpi_dither_types[j]) == 0)
         break;
 
-    if (j < 6)
+    if (j < 5)
     {
       stpi_dither_type = j;
       continue;
