@@ -32,14 +32,14 @@ all aspects of the printing process.
 
 The CUPS driver requires CUPS 1.1.15 or higher.  You may need to
 install a package named "cups-devel" or similar on many systems.
-Please the rest of the release notes for full details on installation,
-as there is an important caveat.  CUPS is the printing system used on
-Macintosh OS X 10.2 and above, and many other systems use it.  The
-combination of CUPS and Gimp-Print provides a flexible, general
-purpose printing system capable of producing the highest quality
-output with any of the printers supported by this package.  We
-strongly recommend using CUPS with Gimp-Print as a general-purpose
-printing solution.
+Please the rest of the release notes, in particular the Exceptions and
+Workarounds, for full details on installation, as there is an
+important caveat.  CUPS is the printing system used on Macintosh OS X
+10.2 and above, and many other systems use it.  The combination of
+CUPS and Gimp-Print provides a flexible, general purpose printing
+system capable of producing the highest quality output with any of the
+printers supported by this package.  We strongly recommend using CUPS
+with Gimp-Print as a general-purpose printing solution.
 
 The Ghostscript driver requires GNU Ghostscript 6.53 or higher, ESP
 Ghostscript 7.05 or higher, or AFPL Ghostscript 7.04 or higher.  It
