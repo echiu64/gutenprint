@@ -253,7 +253,7 @@
 
 <printer name="EPSON Stylus C42UX" driver="escp2-c42ux">
 <color>
-<model value=50>
+<model value=43>
 <gamma value=0.585>
 <density value=1.0>
 <magenta value=0.95>
