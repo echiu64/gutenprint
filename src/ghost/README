@@ -541,6 +541,7 @@ lexmark-4076            Lexmark 4076 (PCL printer)
 lexmark-z42             Lexmark Z42
 lexmark-z43             Lexmark Z43
 lexmark-z52             Lexmark Z52
+lexmark-z53             Lexmark Z53
 
 Most or all of the Epson Stylus printers are fully functional.  The
 others vary.  In particular, all of the listed Epson Stylus Photo
@@ -696,13 +697,13 @@ see the notes at the end of this section.
 
 (1) Works on printers that have a basic vertical spacing of 1/90".
     This includes the Stylus Color, Stylus Color 440, 460, 600, 640,
-    660, 670, and 1500, and Stylus Photo, Stylus Photo 700, 720, and
+    660, and 1500, and Stylus Photo, Stylus Photo 700, 720, and
     EX.
 
 (2) Works on most printers that have a basic vertical spacing of 1/90,
     1/180, or 1/360 inch.  This includes Stylus Color, Stylus Color
-    440, 460, 600, 640, 660, 670, 800, 850, 900, 980, 1500, 1520,
-    3000, and Stylus Photo, Stylus Photo 700, 720 and EX.
+    440, 460, 600, 640, 660, 800, 850, 900, 1500, 1520, 3000, and
+    Stylus Photo, Stylus Photo 700, 720 and EX.
 
 (3) Works on Stylus C70 and C80.
 
@@ -716,9 +717,9 @@ see the notes at the end of this section.
     1290, and 2000P, and the Stylus Scan 2000.
 
 (6) Works on all printers that do not support variable drop sizes.
-    This includes the Stylus Color, Stylus Color 400, 440, 460, 500,
-    600, 640, 660, 800, 850, 1500, 1520, and 3000, Stylus Color Pro,
-    Stylus Color Pro XL, and Stylus Photo, Stylus Photo 700, and EX.
+    This includes the Stylus Color, Stylus Color 400, 460, 500, 600,
+    640, 660, 800, 850, 1500, 1520, and 3000, Stylus Color Pro, Stylus
+    Color Pro XL, and Stylus Photo, Stylus Photo 700, and EX.
 
 (7) Works on all printers that do support variable drop sizes.  This
     includes all supported Epson Stylus printers except for those
@@ -729,7 +730,7 @@ see the notes at the end of this section.
     experienced at 720x360.
 
 (9) Works on all supported printers except for Stylus Color, Stylus
-    Color Pro, Stylus Color Pro XL, Stylus Color 1500, 1520, and 3000.
+    Color Pro, Stylus Color Pro XL, Stylus Color 1500 and 1520.
 
 (10) On printers that do not support variable drop size (see note (4)),
     this will print as fast as 360 DPI, and faster than 360 DPI High
