@@ -57,6 +57,7 @@ escp2_weavetest_SOURCES = escp2-weavetest.c
 pcl_unprint_SOURCES = pcl-unprint.c
 
 GCOPY=	$(addprefix gdevstp-, $(patsubst print-%,%, $(ALL_COMMON_SOURCE)))
+CUPSCOPY = $(addprefix cups-, $(patsubst print-%,%, $(ALL_COMMON_SOURCE)))
 
 CLEANFILES = printdefl.c printdefy.c printdefy.h print-printers.c \
 	$(addprefix Ghost/, $(GCOPY))
@@ -70,7 +71,6 @@ INCLUDES = \
 
 AM_CPPFLAGS =\
  -DLOCALEDIR=\""$(localedir)"\"\
- -Wall -Wcast-align -Wstrict-prototypes\
  @LP_DEF@\
  @LPSTAT_DEF@\
  @LPR_DEF@\
@@ -83,9 +83,13 @@ GHOST_DIST= COPYING ChangeLog README contrib.mak.addon \
 	gdevstp.c devs.mak.addon-5.10 \
 	debian-patch debian-patch-stp $(GCOPY)
 
+CUPS_DIST = CHANGES.txt LICENSE.txt Makefile.in README.txt configure \
+		commandtoepson.c epson.c genppd.c rastertoprinter.c $(CUPSCOPY)
+
 EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
 	README.dither quickmatrix257.h ran.367.179.h make-deb.sh README.escp2 \
 	$(addprefix Ghost/, $(GHOST_DIST)) \
+	$(addprefix cups/, $(CUPS_DIST)) \
 	$(FORCE_ACLOCAL)
 
 install-libexecPROGRAMS: $(libexec_PROGRAMS)
@@ -124,6 +128,14 @@ Ghost/gdevstp-%.h: %.h Makefile
 
 Ghost/gdevstp-%: print-% Makefile
 	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $@
+
+cups: $(addprefix cups/, $(CUPSCOPY))
+
+cups/cups-%.h: %.h Makefile
+	sed -e 's/print-printers.c/cups-printers.c/' $(CUPSCODE) $< > $@
+
+cups/cups-%: print-% Makefile
+	sed -e 's/print-printers.c/cups-printers.c/' $(CUPSCODE) $< > $@
 
 FORCE_ACLOCAL=PLEASE\ RUN\ make\ gdist\ rather\ than\ make\ dist
 
