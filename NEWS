@@ -1,4 +1,4 @@
-Gimp-Print 4.3.18, released July 6, 2003, is a development release of
+Gimp-Print 4.3.19, released August 8, 2003, is a development release of
 this package.  Like all development releases, this version is
 considered unstable and should only be used by those individuals
 tolerant of the likelihood of problems.  Individuals desiring a stable
@@ -37,6 +37,67 @@ this package.
 
 Please read the README file for full instructions on installing this
 package.
+
+Gimp-Print 4.3.19 contains the following major changes over Gimp-Print
+4.3.18:
+
+1) An ImageType setting has been added, with several settings for
+   common types of image (text, graphics, photograph, mixed).  This
+   setting controls a bundle of other options, considerably
+   simplifying the available choices.  The Manual Control setting
+   enables setting the individual options.
+
+2) The ImageOptimization setting has been renamed ColorCorrection.
+   The main effect of this is that settings for the ImageOptimization
+   control in the GIMP plugin will not be carried forward from 4.3.18;
+   they will need to be changed back.
+
+3) The Cyan, Magenta, Yellow, and Black controls have been renamed
+   CyanGamma, MagentaGamma, YellowGamma, and BlackGamma to avoid
+   technically illegal constructs in the PPD files.
+
+4) Preliminary support for the Epson Stylus Photo 935, C43SX, C43UX,
+   C44SX, and C44UX.
+
+5) The cups-genppdupdate script and PPD files are fixed such that
+   cups-genppdupdate will work in future releases.  The script relies
+   upon new information in the PPD files, so the script will not
+   correctly update PPD files from 4.3.18.  However, going forward the
+   script will operate correctly.
+
+   In addition, the cups-genppdupdate script no longer requires the
+   non-standard Compress:Zlib perl module.
+
+6) Color quality has been improved substantially for Epson printers.
+
+7) The CUPS driver (rastertoprinter) now prefixes all messages with
+   "Gimp-Print: " to simplify recognition of messages in the CUPS
+   error log.
+
+8) The Quality setting now controls additional options in the core
+   (dithering and color correction).
+
+9) The escputil utility has been changed to use the core package for
+   its printer information database, so all Epson printers recognized
+   by the core package will now be recognized by escputil.  In
+   addition, the -d option now prints out only the printer model name
+   rather than the entire status line, and adds an option to print out
+   only the short name.  Finally, certain cases where escputil did not
+   wait correctly for output from the printer have been fixed.
+
+10) The XML code has been updated to mxml 1.1.2.
+
+11) A bug in the curve code whereby rescaling wraparound curves
+   increases the number of points has been fixed.
+
+12) Constraints have been added to the PPD files such that using
+   grayscale or black and white mode, or using the Quality or Image
+   Type settings, will disable certain options.
+
+13) Support and tuning for Epson Watercolor - Radiant White paper has
+   been added for printers using Ultrachrome ink (matte black).  In
+   addition, Premium Luster and Premium Semigloss papers have been
+   tuned on most printers.
 
 
 Gimp-Print 4.3.18 contains the following major changes over Gimp-Print

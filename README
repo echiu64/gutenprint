@@ -1,6 +1,6 @@
 INTRODUCTION
 
-    This is Gimp-Print version 4.3.18, a development release in the
+    This is Gimp-Print version 4.3.19, a development release in the
     4.3 line.  Gimp-Print is a suite of printer drivers that may be
     used with most common UNIX print spooling systems, including CUPS,
     lpr, LPRng, or others.  These drivers provide high quality
@@ -154,9 +154,9 @@ CUPS
     CUPS front end (e. g. KUPS, or via the web interface) because they
     look something like this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.3.6(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v4.3.19(en)
 
-    If the version number (in this case, 4.3.6) does not match
+    If the version number (in this case, 4.3.19) does not match
     the version of Gimp-Print that you are installing, you must use
     Modify Printer to force the new PPD file to get installed.
     Failure to do so may lead to incorrect output and/or other errors!
@@ -187,15 +187,15 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     apparent when you use a CUPS front end to select a PPD file and
     you see something like this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.3.6(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.3.6(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.3.6(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v4.3.19(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v4.3.19(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v4.3.19(en)
 
     rather than this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.3.6(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.3.6(sv)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.3.6(fr)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v4.3.19(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v4.3.19(sv)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v4.3.19(fr)
 
     you may wish to turn off the translation of PPD files:
 
@@ -255,6 +255,10 @@ FOOMATIC
     driver.  In 4.3 only the "gimp-print-ijs" data is present.  The
     data for the Gimp-Print 4.0 driver is not compatible with the 4.3
     driver.
+
+    Note that at this time the Foomatic support in Gimp-Print 4.3 is
+    very minimal; it is being rewritten to enable the additional
+    options available with Gimp-Print 4.3.
 
     To verify that you have an appropriate version of Foomatic, please
     run
