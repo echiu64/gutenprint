@@ -1246,7 +1246,7 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
   int printMode = 0;
   int media, source;
   /* Lexmark do not have differnet pixel sizes. We have to correct the density according the print resolution. */
-  int  densityDivisor;            /* This parameter is will adapt the density according the resolution */
+  double  densityDivisor;            /* This parameter is will adapt the density according the resolution */
   double k_lower, k_upper;
   int  physical_xdpi = 0;
   int  physical_ydpi = 0;
@@ -1326,7 +1326,7 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
     }
     if ((printhead==3 || printhead==5) && (caps->inks & (LEXMARK_INK_PHOTO_MASK))) {
       printMode |= COLOR_MODE_C | COLOR_MODE_Y | COLOR_MODE_M | COLOR_MODE_LC | COLOR_MODE_LM | COLOR_MODE_K;
-      ncolors += 3; /* only 2 because we have the black already */
+      ncolors += 3;
 #ifdef DEBUG
       fprintf(stderr,"lexmark: print in photo mode !!.\n");
 #endif
@@ -1348,26 +1348,24 @@ lexmark_describe_resolution(printer,
 
   switch (res_para_ptr->resid) {
   case DPI300:
-    densityDivisor = 1;
     physical_xdpi = 300;
     physical_ydpi = lexmark_get_phys_resolution_vertical(printer);
     break;
   case DPI600:
-    densityDivisor = 2;
     physical_xdpi = 600;
     physical_ydpi = lexmark_get_phys_resolution_vertical(printer);
     break;
   case DPI1200:
   case DPItest:
     physical_xdpi = 1200;
-    densityDivisor = 4 * (xdpi/physical_xdpi); /* adapt if we have 2400 DPI */
     physical_ydpi = lexmark_get_phys_resolution_vertical(printer);
     break;
   default:
     return;
     break;
   }
-  densityDivisor = (xdpi / 300);
+  /* adapt the density */
+  densityDivisor = ((xdpi / 300)*(ydpi/ 600)); 
 
 #ifdef DEBUG
   if (res_para_ptr->resid == DPItest) {
@@ -1378,7 +1376,7 @@ lexmark_describe_resolution(printer,
 
   if ((printMode & COLOR_MODE_PHOTO) == COLOR_MODE_PHOTO) {
     /* in case of photo mode we have to go a bit ligther */
-    densityDivisor *= 2;
+    densityDivisor /= 1.2;
   }
 
   nozzle_separation = ydpi / physical_ydpi;
@@ -1540,14 +1538,17 @@ lexmark_describe_resolution(printer,
   /* initialize soft weaveing */
 
   privdata.bidirectional = lexmark_print_bidirectional(printer, resolution);
-  privdata.outbuf = stp_malloc((((((pass_length/8)*11))+40) * out_width)+200);
+  privdata.outbuf = stp_malloc((((((pass_length/8)*11))+40) * out_width)+2000);
   stp_set_driver_data(nv, &privdata);
   /*  lxm_nozzles_used = 1;*/
-  weave = stp_initialize_weave(lxm_nozzles_used, nozzle_separation,
-			       horizontal_passes, res_para_ptr->vertical_passes,
-			       res_para_ptr->vertical_oversample, ncolors, 
-			       1, /* variable dot size */
-			       (out_width * physical_xdpi) / physical_ydpi,
+  weave = stp_initialize_weave(lxm_nozzles_used,                   /* jets */
+			       nozzle_separation,                  /* separation */
+			       horizontal_passes,                  /* h overample */
+			       res_para_ptr->vertical_passes,      /* v passes */
+			       res_para_ptr->vertical_oversample,  /* v oversample */
+			       ncolors,                            /* colors */
+			       1,                                  /* bits/pixel */
+			       out_width,                          /* line width */
 			       out_height, 0,
 			       ((top * ydpi) / 72)+(((caps->offset_top_border+add_top_offset)*ydpi)
 						     /caps->y_raster_res),
@@ -1567,8 +1568,8 @@ lexmark_describe_resolution(printer,
   fprintf(stderr,"density is %f\n",stp_get_density(nv));
 #endif
 
-#ifdef DEBUG
-  fprintf(stderr,"density is %f and will be changed to %f\n",stp_get_density(nv), stp_get_density(nv)/densityDivisor);
+#ifndef DEBUG
+  fprintf(stderr,"density is %f and will be changed to %f  (%f)\n",stp_get_density(nv), stp_get_density(nv)/densityDivisor, densityDivisor);
 #endif
   /* Lexmark do not have differnet pixel sizes. We have to correct the density according the print resolution. */
   stp_set_density(nv, stp_get_density(nv) / densityDivisor);
