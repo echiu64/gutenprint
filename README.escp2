@@ -319,6 +319,15 @@ This is a list of all remote commands we have seen:
                                      you are satisfied.  I bet it means
                                      "SaVe" the alignment in NVRAM.
 
+   * RS BC=1 01			     Reset the printer
+
+   * IQ BC=1 01			     Get ink quantity.  This requires
+				     direct access to the printer
+				     port.  The return looks like
+				     IQ:KKCCMMYYccmm, where each pair
+				     of digits are hexadecimal
+				     representations of percent.
+
 
 Appropriate Remote Command Sequences
 ====================================
