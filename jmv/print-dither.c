@@ -1,4 +1,5 @@
 #define RASTER 0
+#define DEBUG 0
 unsigned char RASTERP[16], *rasterp;
 /*
  * "$Id$"
@@ -316,7 +317,7 @@ init_dither(int in_width, int out_width, vars_t *v)
   dither_set_black_upper(d, .7);
   dither_set_black_levels(d, 1.0, 1.0, 1.0);
   dither_set_randomizers(d, 1.0, 1.0, 1.0, 1.0);
-  dither_set_ink_darkness(d, .4, .3, .2);
+  dither_set_ink_darkness(d, .5, .3, .2);
   dither_set_density(d, 1, 1.0);
   return d;
 }  
@@ -599,8 +600,8 @@ dither_set_ranges_full(dither_color_t *s, int nlevels,
       s->bit_max = ranges[i].bits_l;
     s->ranges[j].dot_size_l = ranges[i].bits_l; /* FIXME */
     s->ranges[j].dot_size_h = ranges[i].bits_h;
-	if(s->ranges[j].dot_size_l > max_ink || s->ranges[j].dot_size_l > max_ink)
-		   continue;
+	/*if(s->ranges[j].dot_size_l > max_ink || s->ranges[j].dot_size_h > max_ink)
+		   continue;*/
     s->ranges[j].value_l = ranges[i].value_l * 65535;
     s->ranges[j].value_h = ranges[i].value_h * 65535;
     s->ranges[j].range_l = s->ranges[j].value_l*density;
@@ -1042,8 +1043,8 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
   if (density > 65536)
     density = 65536;
 
-  comp=1.0+(double)(xrand()&0xffff)/65536*(d->oversampling-1);
-  density *= comp;
+  i = d->oversampling -1;
+  comp=1.0+(double)(xrand()&0xffff)/65536*i;
 
   /*
    * Look for the appropriate range into which the input value falls.
@@ -1060,7 +1061,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
       unsigned virtual_value;
       unsigned vmatrix;
 
-      if (density <= dd->range_l || *ink_budget < dd->dot_size_h || *ink_budget < dd->dot_size_l)
+      if (density < dd->range_l || *ink_budget < dd->dot_size_h || *ink_budget < dd->dot_size_l)
 	continue;
 
       /*
@@ -1273,7 +1274,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 		}
 	    }
 	} /* randomizer != 0 */
-	  fprintf(stderr, "rd %d %d %d %d ", randomizer, base/100, adjusted/100, density/100);
+	  if(DEBUG) fprintf(stderr, "rd %d %d %d %d ", randomizer, base/100, adjusted/100, density/100);
 
       /*
        * After all that, printing is almost an afterthought.
@@ -1297,7 +1298,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	    }
 	  else if (rangepoint >= DITHERPOINT(d, x, y, 3))
 	    {
-				fprintf(stderr, "u");
+				if(DEBUG) fprintf(stderr, "u");
 	      isdark = dd->isdark_h;
 	      bits = dd->bits_h;
 	      v = dd->value_h;
@@ -1326,12 +1327,12 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 		}
 		  *rasterp++='0'+bits;
 	      *ink_budget -= dot_size;
-		  fprintf(stderr, "%s%d o", (isdark?"":"l"), bits);
+		  if(DEBUG) fprintf(stderr, "%s%d o", (isdark?"":"l"), bits);
 	    }
 	  adjusted -= v;
 	  }
 	}
-	  fprintf(stderr, "\n");
+	  if(DEBUG) fprintf(stderr, "\n");
       return adjusted;
     }
   return adjusted;
@@ -1547,6 +1548,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   int		odb = d->spread;
   int		odb_mask = (1 << odb) - 1;
   int		first_color = row % 3;
+  int		ink_budget=0;
 
   bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
   x = (direction == 1) ? 0 : d->dst_width - 1;
@@ -1640,7 +1642,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       int tk;
       int printed_black = 0;
       int omd, oyd, ocd;
-      int ink_budget = d->ink_limit;
+      
+	  if(ink_budget) ink_budget=1;
+	  ink_budget += d->ink_limit;
 
 	  rasterp = RASTERP;
       /*
@@ -1828,59 +1832,66 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       if (first_color != ECOLOR_C)
 	goto ecc;
 #else
+      ocd = oc * d->c_darkness;
+      ocd += om * d->m_darkness;
+      ocd += oy * d->y_darkness;
+	  omd = ocd/d->m_darkness;
+	  oyd = ocd/d->y_darkness;
+	  ocd = ocd/d->c_darkness;
+	  /*ocd=oc, omd=om, oyd=oy;*/
 	if(c>m) {
 		if(c>y) {
 		*rasterp++='c';
-	  c = print_color(d, &(d->c_dither), oc, oc /* + ((omd + oyd) >> 7) */,
+	  c = print_color(d, &(d->c_dither), oc, ocd,
 			  c, x, row, cptr, lcptr, bit, length, 0, 1,
 			  d->c_randomizer, printed_black, &ink_budget);
 		*rasterp++='m';
-	  m = print_color(d, &(d->m_dither), om, om /* + ((ocd + oyd) >> 7) */,
+	  m = print_color(d, &(d->m_dither), om, omd,
 			  m, x, row, mptr, lmptr, bit, length, 1, 0,
 			  d->m_randomizer, printed_black, &ink_budget);
 		*rasterp++='y';
-	  y = print_color(d, &(d->y_dither), oy, oy /* + ((ocd + omd) >> 7) */,
+	  y = print_color(d, &(d->y_dither), oy, oyd,
 			  y, x, row, yptr, lyptr, bit, length, 1, 1,
 			  d->y_randomizer, printed_black, &ink_budget);
 		} else {
 		*rasterp++='y';
-	  y = print_color(d, &(d->y_dither), oy, oy /* + ((ocd + omd) >> 7) */,
+	  y = print_color(d, &(d->y_dither), oy, oyd,
 			  y, x, row, yptr, lyptr, bit, length, 1, 1,
 			  d->y_randomizer, printed_black, &ink_budget);
 		*rasterp++='c';
-	  c = print_color(d, &(d->c_dither), oc, oc /* + ((omd + oyd) >> 7) */,
+	  c = print_color(d, &(d->c_dither), oc, ocd,
 			  c, x, row, cptr, lcptr, bit, length, 0, 1,
 			  d->c_randomizer, printed_black, &ink_budget);
 		*rasterp++='m';
-	  m = print_color(d, &(d->m_dither), om, om /* + ((ocd + oyd) >> 7) */,
+	  m = print_color(d, &(d->m_dither), om, omd,
 			  m, x, row, mptr, lmptr, bit, length, 1, 0,
 			  d->m_randomizer, printed_black, &ink_budget);
 		}
 	} else {
 		if(m>y) {
 		*rasterp++='m';
-	  m = print_color(d, &(d->m_dither), om, om /* + ((ocd + oyd) >> 7) */,
+	  m = print_color(d, &(d->m_dither), om, omd,
 			  m, x, row, mptr, lmptr, bit, length, 1, 0,
 			  d->m_randomizer, printed_black, &ink_budget);
 		*rasterp++='c';
-	  c = print_color(d, &(d->c_dither), oc, oc /* + ((omd + oyd) >> 7) */,
+	  c = print_color(d, &(d->c_dither), oc, ocd,
 			  c, x, row, cptr, lcptr, bit, length, 0, 1,
 			  d->c_randomizer, printed_black, &ink_budget);
 		*rasterp++='y';
-	  y = print_color(d, &(d->y_dither), oy, oy /* + ((ocd + omd) >> 7) */,
+	  y = print_color(d, &(d->y_dither), oy, oyd,
 			  y, x, row, yptr, lyptr, bit, length, 1, 1,
 			  d->y_randomizer, printed_black, &ink_budget);
 		} else {
 		*rasterp++='y';
-	  y = print_color(d, &(d->y_dither), oy, oy /* + ((ocd + omd) >> 7) */,
+	  y = print_color(d, &(d->y_dither), oy, oyd,
 			  y, x, row, yptr, lyptr, bit, length, 1, 1,
 			  d->y_randomizer, printed_black, &ink_budget);
 		*rasterp++='m';
-	  m = print_color(d, &(d->m_dither), om, om /* + ((ocd + oyd) >> 7) */,
+	  m = print_color(d, &(d->m_dither), om, omd,
 			  m, x, row, mptr, lmptr, bit, length, 1, 0,
 			  d->m_randomizer, printed_black, &ink_budget);
 		*rasterp++='c';
-	  c = print_color(d, &(d->c_dither), oc, oc /* + ((omd + oyd) >> 7) */,
+	  c = print_color(d, &(d->c_dither), oc, ocd,
 			  c, x, row, cptr, lcptr, bit, length, 0, 1,
 			  d->c_randomizer, printed_black, &ink_budget);
 	 }
