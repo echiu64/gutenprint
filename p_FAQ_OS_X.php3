@@ -73,7 +73,7 @@ require('standard_html_header.php3');
  </p>
  <li>
  <h3>
- Printing does not work from "carbon" applications (Adobe Phtotshop, Acrobat,
+ Printing does not work from "carbon" applications (Adobe Photoshop, Acrobat,
  Appleworks, etc...), but I can print from "Cocoa" applications (Preview,
  TextEdit, etc...) just fine. How can I fix this ?
  </h3>
