@@ -588,51 +588,52 @@ typedef struct escp2_printer
   escp2_variable_inklist_t *inks; /* Choices of inks for this printer */
 } escp2_printer_t;
 
-#define MODEL_INIT_MASK		0xf
-#define MODEL_INIT_STANDARD	0x0
-#define MODEL_INIT_900		0x1
+#define MODEL_INIT_MASK		0xf /* Is a special initialization sequence */
+#define MODEL_INIT_STANDARD	0x0 /* required for this printer, and if */
+#define MODEL_INIT_900		0x1 /* so, what */
 
-#define MODEL_HASBLACK_MASK	0x10
-#define MODEL_HASBLACK_YES	0x00
-#define MODEL_HASBLACK_NO	0x10
+#define MODEL_HASBLACK_MASK	0x10 /* Can this printer print black ink */
+#define MODEL_HASBLACK_YES	0x00 /* when it is also printing color? */
+#define MODEL_HASBLACK_NO	0x10 /* Only the 1500 can't. */
 
-#define MODEL_6COLOR_MASK	0x20
+#define MODEL_6COLOR_MASK	0x20 /* Is this a 6-color printer? */
 #define MODEL_6COLOR_NO		0x00
 #define MODEL_6COLOR_YES	0x20
 
-#define MODEL_1440DPI_MASK	0x40
+#define MODEL_1440DPI_MASK	0x40 /* Can this printer do 1440x720 dpi? */
 #define MODEL_1440DPI_NO	0x00
 #define MODEL_1440DPI_YES	0x40
 
-#define MODEL_GRAYMODE_MASK	0x80
-#define MODEL_GRAYMODE_NO	0x00
+#define MODEL_GRAYMODE_MASK	0x80 /* Does this printer support special */
+#define MODEL_GRAYMODE_NO	0x00 /* fast black printing? */
 #define MODEL_GRAYMODE_YES	0x80
 
-#define MODEL_720DPI_MODE_MASK	0x300
-#define MODEL_720DPI_DEFAULT	0x000
-#define MODEL_720DPI_600	0x100
+#define MODEL_720DPI_MODE_MASK	0x300 /* Does this printer require old */
+#define MODEL_720DPI_DEFAULT	0x000 /* or new setting for printing */
+#define MODEL_720DPI_600	0x100 /* 720 dpi?  Only matters for */
+				      /* single dot size printers */
 
-#define MODEL_VARIABLE_DOT_MASK	0xc00
-#define MODEL_VARIABLE_NORMAL	0x000
-#define MODEL_VARIABLE_4	0x400
-#define MODEL_VARIABLE_MULTI	0x800
+#define MODEL_VARIABLE_DOT_MASK	0xc00 /* Does this printer support variable */
+#define MODEL_VARIABLE_NORMAL	0x000 /* dot size printing? The newest */
+#define MODEL_VARIABLE_4	0x400 /* printers support multiple modes */
+#define MODEL_VARIABLE_MULTI	0x800 /* of variable dot sizes. */
 
-#define MODEL_COMMAND_MASK	0xf000
-#define MODEL_COMMAND_GENERIC	0x0000
+#define MODEL_COMMAND_MASK	0xf000 /* What general command set does */
+#define MODEL_COMMAND_GENERIC	0x0000 /* this printer use? */
 #define MODEL_COMMAND_1998	0x1000
 #define MODEL_COMMAND_1999	0x2000 /* The 1999 series printers */
 
-#define MODEL_INK_MASK		0x10000
-#define MODEL_INK_NORMAL	0x00000
-#define MODEL_INK_SELECTABLE	0x10000
+#define MODEL_INK_MASK		0x10000	/* Does this printer support */
+#define MODEL_INK_NORMAL	0x00000	/* different types of inks? */
+#define MODEL_INK_SELECTABLE	0x10000	/* Only the Stylus Pro's do */
 
-#define MODEL_ROLLFEED_MASK	0x20000
-#define MODEL_ROLLFEED_NO	0x00000
+#define MODEL_ROLLFEED_MASK	0x20000	/* Does this printer support */
+#define MODEL_ROLLFEED_NO	0x00000	/* a roll feed? */
 #define MODEL_ROLLFEED_YES	0x20000
 
-#define MODEL_ZEROMARGIN_MASK	0x40000
-#define MODEL_ZEROMARGIN_NO	0x00000
-#define MODEL_ZEROMARGIN_YES	0x40000
+#define MODEL_ZEROMARGIN_MASK	0x40000	/* Does this printer support */
+#define MODEL_ZEROMARGIN_NO	0x00000	/* zero margin mode? */
+#define MODEL_ZEROMARGIN_YES	0x40000	/* (print to the edge of the paper) */
 
 #define INCH(x)		(72 * x)
 
@@ -700,7 +701,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    64, 4, 128, 720, INCH(17 / 2), INCH(14), 8, 9, 24, 24, 1, 4,
+    64, 4, 128, 720, INCH(17 / 2), INCH(14), 9, 9, 9, 40, 1, 4,
     { -1, 2, -1, 0, 0, -1, 0 },
     { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
     &simple_4color_inks
@@ -760,9 +761,9 @@ static escp2_printer_t model_capabilities[] =
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
-     | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_NO
+     | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    21, 8, 64, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
+    21, 8, 21, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 3, 3, 1, 1, -1, -1 },
     { 1, 1, 1, .900, .900, 0, 0, 0, 0 },
     &simple_4color_inks
@@ -848,7 +849,7 @@ static escp2_printer_t model_capabilities[] =
   /* 18: Stylus Color 660 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
+     | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 64, 720, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 8,
@@ -1624,8 +1625,8 @@ escp2_set_page_length(FILE *prn, escp_init_t *init)
 static void
 escp2_set_margins(FILE *prn, escp_init_t *init)
 {
-  int l = init->ydpi * init->page_length / 72;
-  int t = init->ydpi * init->page_top / 72;
+  int l = init->ydpi * (init->page_length - init->page_bottom) / 72;
+  int t = init->ydpi * (init->page_length - init->page_top) / 72;
   if (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK,
 		      MODEL_VARIABLE_NORMAL)) &&
       init->use_softweave)
@@ -1888,10 +1889,21 @@ escp2_print(const printer_t *printer,		/* I - Model */
   * Send ESC/P2 initialization commands...
   */
   default_media_size(printer, &nv, &n, &page_length);
+#if 0
+  /*
+   * I believe that this code is no longer needed.  I think I put it in
+   * a while back because our softweave pattern couldn't handle the top
+   * and bottom of the page.  Lying to the printer about the length of
+   * the page would allow us to print the entire image.  With our current
+   * weave code able to use the entire width of the permitted region,
+   * this hack shouldn't be needed any more.
+   */
   page_length += (39 + (escp2_nozzles(model) * 2) *
 		  escp2_nozzle_separation(model)) / 10; /* Top and bottom */
-  page_top = 0;
 
+  page_top += (39 + (escp2_nozzles(model) * 2) *
+	       escp2_nozzle_separation(model)) / 10;
+#endif
   init.model = model;
   init.output_type = output_type;
   init.ydpi = ydpi;
@@ -1968,6 +1980,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
       lmagenta = NULL;
     }
   }
+  top = 0;
   if (use_softweave)
     /* Epson printers are all 720 physical dpi */
     weave = initialize_weave(nozzles, nozzle_separation, horizontal_passes,
