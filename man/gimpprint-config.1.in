@@ -14,7 +14,7 @@
 .\" You should have received a copy of the GNU General Public License
 .\" along with this program; if not, write to the Free Software
 .\" Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-.TH GIMP-PRINT 1 "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "GIMP-Print Manual Pages"
+.TH GIMP-PRINT 1 "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "Gimp-Print Manual Pages"
 .SH NAME
 gimpprint-config - script to get information about the installed version of
 gimpprint
@@ -25,8 +25,8 @@ gimpprint
 .PP
 \fBgimpprint-config\fP is a tool that is used to determine the compiler and
 linker flags that should be used to compile and link programs that use
-\fIGIMP-Print\fP. It is also used internally to the .m4 macros for GNU autoconf
-that are included with \fIGIMP-Print\fP (\fIAM_PATH_GIMPPRINT\fP).
+\fIGimp-Print\fP. It is also used internally to the .m4 macros for GNU autoconf
+that are included with \fIGimp-Print\fP (\fIAM_PATH_GIMPPRINT\fP).
 .PP
 .B gimpprint-config is OBSOLETE!
 .B gimpprint-config
@@ -43,24 +43,24 @@ instead.
 \fBgimpprint-config\fP accepts the following options:
 .TP 8
 .B  \-\-version
-Print the currently installed version of \fIGIMP-Print\fP on the standard output.
+Print the currently installed version of \fIGimp-Print\fP on the standard output.
 .TP 8
 .B  \-\-libs
-Print the linker flags that are necessary to link a \fIGIMP-Print\fP program.
+Print the linker flags that are necessary to link a \fIGimp-Print\fP program.
 .TP 8
 .B  \-\-cflags
-Print the compiler flags that are necessary to compile a \fIGIMP-Print\fP program.
+Print the compiler flags that are necessary to compile a \fIGimp-Print\fP program.
 .TP 8
 .B  \-\-prefix=\fIprefix\fP
 If specified, use \fIprefix\fP instead of the installation prefix that
-\fIGIMP-Print\fP was built with when computing the output for the \-\-cflags
+\fIGimp-Print\fP was built with when computing the output for the \-\-cflags
 and \-\-libs options. This option is also used for the exec prefix if
 \-\-exec\-prefix was not specified. This option must be specified before any
 \-\-libs or \-\-cflags options.
 .TP 8
 .B  \-\-exec\-prefix=\fIprefix\fP
 If specified, use \fIprefix\fP instead of the installation exec prefix that
-\fIGIMP-Print\fP was built with when computing the output for the \-\-cflags
+\fIGimp-Print\fP was built with when computing the output for the \-\-cflags
 and \-\-libs options.  This option must be specified before any
 \-\-libs or \-\-cflags options.
 .SH COPYRIGHT

@@ -28,7 +28,7 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-non-native-prefix=\$$\{prefix\}
 
 ## Variables
 
-SUBDIRS = include intl lib man src samples test po doc debian scripts
+SUBDIRS = include intl lib src samples test po man doc debian scripts
 DISTDIRS = m4 m4extra
 
 

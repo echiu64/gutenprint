@@ -14,7 +14,7 @@
 .\" You should have received a copy of the GNU General Public License
 .\" along with this program; if not, write to the Free Software
 .\" Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-.TH GIMPPRINT 3 "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "GIMP-Print Manual Pages"
+.TH GIMPPRINT 3 "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "Gimp-Print Manual Pages"
 .SH NAME
 \fBgimpprint\fR - High quality raster image printing library
 .SH SYNOPSIS
@@ -37,11 +37,11 @@ version.
 This manual page was written by Roger Leigh (roger@whinlatter.uklinux.net)
 .SH SEE ALSO
 The full documentation for
-.B GIMP-Print
+.B Gimp-Print
 is maintained as a Texinfo manual.  If the
 .B info
 and
-.B GIMP-Print
+.B Gimp-Print
 programs are properly installed at your site, the command
 .IP
 .B info gimp-print
