@@ -38,6 +38,11 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.57  2000/01/29 02:34:30  rlk
+ *   1) Remove globals from everything except print.c.
+ *
+ *   2) Remove broken 1440x720 and 2880x720 microweave modes.
+ *
  *   Revision 1.56  2000/01/28 03:59:53  rlk
  *   Move printers to print-util; also add top/left/bottom/right boxes to the UI
  *
@@ -339,7 +344,14 @@ typedef union error
 error_t *nerror = 0;
 
 
-int	error[ERROR_ROWS][NCOLORS][MAX_CARRIAGE_WIDTH*MAX_BPI+1];
+static int error[ERROR_ROWS][NCOLORS][MAX_CARRIAGE_WIDTH*MAX_BPI+1];
+static int cbits = 1;
+static int lcbits = 1;
+static int mbits = 1;
+static int lmbits = 1;
+static int ybits = 1;
+static int lybits = 1;
+static int kbits = 1;
 
 /*
  * Dithering functions!
@@ -494,6 +506,19 @@ int	error[ERROR_ROWS][NCOLORS][MAX_CARRIAGE_WIDTH*MAX_BPI+1];
 /*
  * 'dither_black()' - Dither grayscale pixels to black.
  */
+
+void
+init_dither(void)
+{
+  (void) memset(error, 0, sizeof(error));
+  cbits = 1;
+  lcbits = 1;
+  mbits = 1;
+  lmbits = 1;
+  ybits = 1;
+  lybits = 1;
+  kbits = 1;
+}  
 
 void
 dither_black(unsigned short     *gray,		/* I - Grayscale pixels */

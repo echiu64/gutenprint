@@ -171,7 +171,9 @@ typedef void 	(*convert_t)(unsigned char *in, unsigned short *out, int width,
  * Prototypes...
  */
 
-extern void	dither_black(unsigned short *, int, int, int, unsigned char *, int);
+extern void	init_dither(void);
+extern void	dither_black(unsigned short *, int, int, int, unsigned char *,
+			     int);
 
 extern void	dither_cmyk(unsigned short *, int, int, int, unsigned char *,
 			    unsigned char *, unsigned char *,
@@ -189,7 +191,7 @@ extern void	dither_cmyk4(unsigned short *, int, int, int, unsigned char *,
 extern void	gray_to_gray(unsigned char *, unsigned short *, int, int,
 			     lut_t *, unsigned char *, vars_t *);
 extern void	indexed_to_gray(unsigned char *, unsigned short *, int, int,
-				  lut_t *, unsigned char *, vars_t *);
+				lut_t *, unsigned char *, vars_t *);
 extern void	indexed_to_rgb(unsigned char *, unsigned short *, int, int,
 			       lut_t *, unsigned char *, vars_t *);
 extern void	rgb_to_gray(unsigned char *, unsigned short *, int, int,

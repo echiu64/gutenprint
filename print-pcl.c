@@ -32,6 +32,11 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.18  2000/01/29 02:34:30  rlk
+ *   1) Remove globals from everything except print.c.
+ *
+ *   2) Remove broken 1440x720 and 2880x720 microweave modes.
+ *
  *   Revision 1.17  2000/01/25 19:51:27  rlk
  *   1) Better attempt at supporting newer Epson printers.
  *
@@ -255,8 +260,6 @@
 static void	pcl_mode0(FILE *, unsigned char *, int, int);
 static void	pcl_mode2(FILE *, unsigned char *, int, int);
 
-extern int	error[2][4][14*720+4];
-
 
 /*
  * 'pcl_parameters()' - Return the parameter values for the given parameter.
@@ -269,16 +272,16 @@ pcl_parameters(int  model,	/* I - Printer model */
                int  *count)	/* O - Number of values */
 {
   int		i;
-  char		**p,
-		**valptrs;
-  static char	*media_types[] =
+  const char    **p;
+  char		**valptrs;
+  const static char	*media_types[] =
 		{
 		  ("Plain"),
 		  ("Premium"),
 		  ("Glossy"),
 		  ("Transparency")
 		};
-  static char	*media_sources[] =
+  const static char	*media_sources[] =
 		{
 		  ("Manual"),
 		  ("Tray 1"),
@@ -286,7 +289,7 @@ pcl_parameters(int  model,	/* I - Printer model */
 		  ("Tray 3"),
 		  ("Tray 4"),
 		};
-  static char	*resolutions[] =
+  const static char	*resolutions[] =
 		{
 		  ("150 DPI"),
 		  ("300 DPI"),
@@ -887,6 +890,7 @@ pcl_print(int       model,		/* I - Model */
   else
     writefunc = pcl_mode2;
 
+  init_dither();
   if (landscape)
   {
     in  = malloc(image_height * image_bpp);
