@@ -1,3 +1,17 @@
+2000-10-31	<rlk@sourceforge.net>
+
+	Files:	.cvsignore (1.10) (+1 -0)
+		configure.in (1.38) (+7 -1)
+		Makefile.am (1.72) (+3 -0)
+	
+	escputil man page
+	
+2000-10-31	<rlk@sourceforge.net>
+
+	Files:	escputil.1.in (1.1) ( )
+	
+	Man page for escputil.
+	
 2000-10-29	<davehill@sourceforge.net>
 
 	Files:	print-pcl.c (1.91) (+15 -13)
