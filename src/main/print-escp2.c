@@ -146,7 +146,8 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
 
 #define INCH(x)		(72 * x)
 
-static const res_t *escp2_find_resolution(const char *resolution);
+static const res_t *escp2_find_resolution(int model, const stp_vars_t v,
+					  const char *resolution);
 
 typedef struct
 {
@@ -224,15 +225,15 @@ escp2_##f(int model, const stp_vars_t v)		\
   return (stp_escp2_model_capabilities[model].f);	\
 }
 
-#define DEF_MICROWEAVE_ACCESSOR(f, t)					\
-static t								\
-escp2_##f(int model, const stp_vars_t v)				\
-{									\
-  const res_t *res = escp2_find_resolution(stp_get_resolution(v));	\
-  if (res && !(res->softweave))						\
-    return (stp_escp2_model_capabilities[model].m_##f);			\
-  else									\
-    return (stp_escp2_model_capabilities[model].f);			\
+#define DEF_MICROWEAVE_ACCESSOR(f, t)					     \
+static t								     \
+escp2_##f(int model, const stp_vars_t v)				     \
+{									     \
+  const res_t *res = escp2_find_resolution(model, v, stp_get_resolution(v)); \
+  if (res && !(res->softweave))						     \
+    return (stp_escp2_model_capabilities[model].m_##f);			     \
+  else									     \
+    return (stp_escp2_model_capabilities[model].f);			     \
 }
 
 DEF_SIMPLE_ACCESSOR(max_hres, int)
@@ -267,11 +268,24 @@ DEF_SIMPLE_ACCESSOR(black_initial_vertical_offset, int)
 DEF_SIMPLE_ACCESSOR(max_black_resolution, int)
 DEF_SIMPLE_ACCESSOR(zero_margin_offset, int)
 DEF_SIMPLE_ACCESSOR(paperlist, const paperlist_t *)
+DEF_SIMPLE_ACCESSOR(reslist, const res_t *)
 
 DEF_MICROWEAVE_ACCESSOR(left_margin, unsigned)
 DEF_MICROWEAVE_ACCESSOR(right_margin, unsigned)
 DEF_MICROWEAVE_ACCESSOR(top_margin, unsigned)
 DEF_MICROWEAVE_ACCESSOR(bottom_margin, unsigned)
+
+static int
+reslist_count(const res_t *rt)
+{
+  int i = 0;
+  while (rt->hres)
+    {
+      i++;
+      rt++;
+    }
+  return i;
+}
 
 static int
 escp2_ink_type(int model, int resid, const stp_vars_t v)
@@ -436,9 +450,8 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
   }
   else if (strcmp(name, "Resolution") == 0)
   {
-    const res_t *res = &(stp_escp2_reslist[0]);
-    valptrs =
-      stp_malloc(sizeof(stp_param_t) * stp_escp2_nres);
+    const res_t *res = escp2_reslist(model, v);
+    valptrs = stp_malloc(sizeof(stp_param_t) * reslist_count(res));
     *count = 0;
     while (res->hres)
       {
@@ -506,12 +519,12 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
 }
 
 static const res_t *
-escp2_find_resolution(const char *resolution)
+escp2_find_resolution(int model, const stp_vars_t v, const char *resolution)
 {
   const res_t *res;
   if (!resolution || !strcmp(resolution, ""))
     return NULL;
-  for (res = &stp_escp2_reslist[0];;res++)
+  for (res = escp2_reslist(model, v);;res++)
     {
       if (!strcmp(resolution, res->name))
 	return res;
@@ -611,7 +624,7 @@ escp2_default_parameters(const stp_printer_t printer,
     {
       int model = stp_printer_get_model(printer);
       stp_vars_t v = stp_printer_get_printvars(printer);
-      const res_t *res = &(stp_escp2_reslist[0]);
+      const res_t *res = escp2_reslist(model, v);
       while (res->hres)
 	{
 	  if (res->vres >= 360 && res->hres >= 360 &&
@@ -663,7 +676,7 @@ escp2_describe_resolution(const stp_printer_t printer,
 {
   int model = stp_printer_get_model(printer);
   stp_vars_t v = stp_printer_get_printvars(printer);
-  const res_t *res = &(stp_escp2_reslist[0]);
+  const res_t *res = escp2_reslist(model, v);
   int nozzle_width =
     escp2_base_separation(model, v) / escp2_nozzle_separation(model, v);
   while (res->hres)
@@ -1157,7 +1170,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
  /*
   * Figure out the output resolution...
   */
-  res = escp2_find_resolution(resolution);
+  res = escp2_find_resolution(model, nv, resolution);
   if (!res)
     return;
   use_softweave = res->softweave;
