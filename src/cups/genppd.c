@@ -162,11 +162,11 @@ main(int  argc,			/* I - Number of command-line arguments */
   static struct option long_options[] =
 		{		/* Command-line options */
 		  /* name,	has_arg,		flag	val */
-		  {"help",	no_argument,		0,	0},
-		  {"verbose",	no_argument,		0,	0},
-		  {"quiet",	no_argument,		0,	0},
-		  {"catalog",	required_argument,	0,	0},
-		  {"prefix",	required_argument,	0,	0},
+		  {"help",	no_argument,		0,	(int) 'h'},
+		  {"verbose",	no_argument,		0,	(int) 'v'},
+		  {"quiet",	no_argument,		0,	(int) 'q'},
+		  {"catalog",	required_argument,	0,	(int) 'c'},
+		  {"prefix",	required_argument,	0,	(int) 'p'},
 		  {0,		0,			0,	0}
 		};
 
@@ -183,55 +183,36 @@ main(int  argc,			/* I - Number of command-line arguments */
 
   for (;;)
   {
-    if ((i = getopt_long_only(argc, argv, "", long_options,
-                              &option_index)) == -1)
+    if ((i = getopt_long(argc, argv, "hvqc:p:", long_options,
+			 &option_index)) == -1)
       break;
 
     switch (i)
     {
-      case 0:
-	  /* option already dealt with, so skip to next argv entry */
-          if (long_options[option_index].flag != 0)
-            break;
-
-	  if (strncmp(long_options[option_index].name, "help", 4) == 0)
-          {
-	    usage();
-	    break;
-          }
-	  if (strncmp(long_options[option_index].name, "verbose", 7) == 0)
-          {
-	    verbose = 1;
-	    break;
-          }
-
-	  if (strncmp(long_options[option_index].name, "quiet", 5) == 0)
-          {
-	    verbose = 0;
-	    break;
-          }
-
-	  if (strncmp(long_options[option_index].name, "catalog", 7) == 0)
-          {
-	    catalog = optarg;
+    case 'h':
+      usage();
+      break;
+    case 'v':
+      verbose = 1;
+      break;
+    case 'q':
+      verbose = 0;
+      break;
+    case 'c':
+      catalog = optarg;
 #ifdef DEBUG
-	    fprintf (stderr, "DEBUG: catalog: %s\n", catalog);
+      fprintf (stderr, "DEBUG: catalog: %s\n", catalog);
 #endif
-	    break;
-          }
-
-	  if (strncmp(long_options[option_index].name, "prefix", 6) == 0)
-          {
-	    prefix = optarg;
+      break;
+    case 'p':
+      prefix = optarg;
 #ifdef DEBUG
-	    fprintf (stderr, "DEBUG: prefix: %s\n", prefix);
+      fprintf (stderr, "DEBUG: prefix: %s\n", prefix);
 #endif
-	    break;
-	  }
-
-      default:
-          usage();
-	  break;
+      break;
+    default:
+      usage();
+      break;
     }
   }
 
