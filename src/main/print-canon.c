@@ -2033,8 +2033,8 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   * Setup a read-only pixel region for the entire image...
   */
 
-  image->init(image);
-  image_bpp = image->bpp(image);
+  stp_image_init(image);
+  image_bpp = stp_image_bpp(image);
 
   /* force grayscale if image is grayscale
    *                 or single black cartridge installed
@@ -2091,8 +2091,8 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   page_width = page_right - page_left;
   page_height = page_bottom - page_top;
 
-  image_height = image->height(image);
-  image_width = image->width(image);
+  image_height = stp_image_height(image);
+  image_width = stp_image_width(image);
 
   stp_default_media_size(nv, &n, &page_true_height);
 
@@ -2102,7 +2102,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   PUT("out_width ", out_width,xdpi);
   PUT("out_height", out_height,ydpi);
 
-  image->progress_init(image);
+  stp_image_progress_init(image);
 
   PUT("top     ",top,72);
   PUT("left    ",left,72);
@@ -2338,13 +2338,14 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   {
     int duplicate_line = 1;
     if ((y & 63) == 0)
-      image->note_progress(image, y, out_height);
+      stp_image_note_progress(image, y, out_height);
 
     if (errline != errlast)
     {
       errlast = errline;
       duplicate_line = 0;
-      if (image->get_row(image, in, errline) != STP_IMAGE_OK)
+      if (stp_image_get_row(image, in, image_width * image_bpp, errline) !=
+	  STP_IMAGE_OK)
 	{
 	  status = 2;
 	  break;
@@ -2380,7 +2381,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
       errline ++;
     }
   }
-  image->progress_conclude(image);
+  stp_image_progress_conclude(image);
 
   stp_dither_data_free(dt);
   stp_dither_free(dither);

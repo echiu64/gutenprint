@@ -47,22 +47,25 @@
  * All Gimp-specific code is in this file.
  */
 
-#define ORIENT_AUTO             -1      /* Best orientation */
-#define ORIENT_PORTRAIT         0       /* Portrait orientation */
-#define ORIENT_LANDSCAPE        1       /* Landscape orientation */
-#define ORIENT_UPSIDEDOWN       2       /* Reverse portrait orientation */
-#define ORIENT_SEASCAPE         3       /* Reverse landscape orientation */
+typedef enum
+{
+  ORIENT_AUTO,
+  ORIENT_PORTRAIT,
+  ORIENT_LANDSCAPE,
+  ORIENT_UPSIDEDOWN,
+  ORIENT_SEASCAPE
+} orient_t;
 
 typedef struct		/**** Printer List ****/
 {
-  int	active;			/* Do we know about this printer? */
-  char	*name;			/* Name of printer */
-  char  *output_to;
-  float	scaling;		/* Scaling, percent of printable area */
-  int   orientation;
-  int	unit;			/* Units for preview area 0=Inch 1=Metric */
-  int	invalid_mask;
-  stp_vars_t v;
+  int		active;		/* Do we know about this printer? */
+  char		*name;		/* Name of printer */
+  char		*output_to;
+  float		scaling;      /* Scaling, percent of printable area */
+  orient_t	orientation;
+  int		unit;	  /* Units for preview area 0=Inch 1=Metric */
+  int		invalid_mask;
+  stp_vars_t	v;
 } gp_plist_t;
 
 extern gint             plist_count;	   /* Number of system printers */
@@ -71,9 +74,6 @@ extern gp_plist_t         *plist;		  /* System printers */
 extern stp_printer_t current_printer;
 extern gint             runme;
 extern gint             saveme;
-
-extern gp_plist_t *pv;
-extern gp_plist_t gimp_vars;
 
 /*
  * Function prototypes
@@ -112,5 +112,7 @@ extern void set_thumbnail_func(get_thumbnail_func_t);
 extern get_thumbnail_func_t get_thumbnail_func(void);
 extern void set_thumbnail_data(void *);
 extern void *get_thumbnail_data(void);
+
+extern int do_print(const gp_plist_t *printer, stp_image_t *im);
 
 #endif  /* __GIMP_PRINT_UI_H__ */

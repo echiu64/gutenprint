@@ -551,9 +551,9 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  if (code == 0)
 	    stp_set_float_parameter(img->v, key, z);
 	case STP_PARAMETER_TYPE_INT:
-	  code = get_int(vbuf, key, &z);
+	  code = get_int(vbuf, key, &i);
 	  if (code == 0)
-	    stp_set_int_parameter(img->v, key, z);
+	    stp_set_int_parameter(img->v, key, i);
 	default:
 	  STP_DEBUG(fprintf(stderr, "Bad parameter %s %d\n", key, desc.type));
 	}
@@ -594,16 +594,6 @@ gimp_outfunc(void *data, const char *buffer, size_t bytes)
 
 /**********************************************************/
 /* stp_image_t functions */
-
-static void
-gimp_image_init(stp_image_t *image)
-{
-}
-
-static void
-gimp_image_reset(stp_image_t *image)
-{
-}
 
 /* bytes per pixel (NOT bits per pixel) */
 static int
@@ -660,7 +650,8 @@ image_next_row(IMAGE *img)
 }
 
 static stp_image_status_t 
-gimp_image_get_row(stp_image_t *image, unsigned char *data, int row)
+gimp_image_get_row(stp_image_t *image, unsigned char *data, size_t byte_limit,
+		   int row)
 {
   IMAGE *img = (IMAGE *)(image->rep);
   int physical_row = row * img->yres / img->xres;
@@ -721,21 +712,11 @@ gimp_image_get_appname(stp_image_t *image)
 }
 
 static void
-gimp_image_progress_init(stp_image_t *image)
-{
-}
-
-static void
 gimp_image_note_progress(stp_image_t *image, double current, double total)
 {
   char buf[256];
   sprintf(buf, _("%.0f of %.0f\n"), current, total);
   STP_DEBUG(gimp_outfunc(stderr, buf, strlen(buf)));
-}
-
-static void
-gimp_image_progress_conclude(stp_image_t *image)
-{
 }
 
 /**********************************************************/
@@ -811,16 +792,12 @@ main (int argc, char **argv)
   stp_set_outdata(img.v, NULL);
 
   memset(&si, 0, sizeof(si));
-  si.init = gimp_image_init;
-  si.reset = gimp_image_reset;
   si.bpp = gimp_image_bpp;
   si.width = gimp_image_width;
   si.height = gimp_image_height;
   si.get_row = gimp_image_get_row;
   si.get_appname = gimp_image_get_appname;
-  si.progress_init = gimp_image_progress_init;
   si.note_progress = gimp_image_note_progress;
-  si.progress_conclude = gimp_image_progress_conclude;
   si.rep = &img;
 
   ijs_server_install_status_cb (img.ctx, gimp_status_cb, &img);

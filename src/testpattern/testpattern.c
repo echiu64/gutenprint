@@ -48,7 +48,8 @@ static void Image_note_progress(stp_image_t *image,
 				double current, double total);
 static void Image_progress_init(stp_image_t *image);
 static stp_image_status_t Image_get_row(stp_image_t *image,
-					unsigned char *data, int row);
+					unsigned char *data,
+					size_t byte_limit, int row);
 static int Image_height(stp_image_t *image);
 static int Image_width(stp_image_t *image);
 static int Image_bpp(stp_image_t *image);
@@ -658,7 +659,8 @@ fill_colors_extended(unsigned short *data, size_t len,
 extern FILE *yyin;
 
 static stp_image_status_t
-Image_get_row(stp_image_t *image, unsigned char *data, int row)
+Image_get_row(stp_image_t *image, unsigned char *data,
+	      size_t byte_limit, int row)
 {
   int depth = 4;
   if (global_ink_depth)

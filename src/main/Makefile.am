@@ -65,6 +65,7 @@ libgimpprint_la_SOURCES = \
 	print-version.c \
 	print-raw.c \
 	printers.c \
+	image.c \
 	printers.h \
 	string-list.c \
 	quickmatrix257.h \

@@ -314,8 +314,8 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   * Setup a read-only pixel region for the entire image...
   */
 
-  image->init(image);
-  image_bpp = image->bpp(image);
+  stp_image_init(image);
+  image_bpp = stp_image_bpp(image);
 
  /*
   * Choose the correct color conversion function...
@@ -336,14 +336,14 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   page_width = page_right - page_left;
   page_height = page_bottom - page_top;
 
-  image_height = image->height(image);
-  image_width = image->width(image);
+  image_height = stp_image_height(image);
+  image_width = stp_image_width(image);
 
  /*
   * Let the user know what we're doing...
   */
 
-  image->progress_init(image);
+  stp_image_progress_init(image);
 
  /*
   * Output a standard PostScript header with DSC comments...
@@ -365,9 +365,9 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   stp_puts("%!PS-Adobe-3.0\n", v);
 #ifdef HAVE_CONFIG_H
   stp_zprintf(v, "%%%%Creator: %s/Gimp-Print %s (%s)\n",
-	      image->get_appname(image), VERSION, RELEASE_DATE);
+	      stp_image_get_appname(image), VERSION, RELEASE_DATE);
 #else
-  stp_zprintf(v, "%%%%Creator: %s/Gimp-Print\n", image->get_appname(image));
+  stp_zprintf(v, "%%%%Creator: %s/Gimp-Print\n", stp_image_get_appname(image));
 #endif
   stp_zprintf(v, "%%%%CreationDate: %s", ctime(&curtime));
   stp_puts("%Copyright: 1997-2002 by Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)\n", v);
@@ -511,9 +511,10 @@ ps_print(const stp_vars_t v, stp_image_t *image)
     for (y = 0; y < image_height; y ++)
     {
       if ((y & 15) == 0)
-	image->note_progress(image, y, image_height);
+	stp_image_note_progress(image, y, image_height);
 
-      if (image->get_row(image, in, y) != STP_IMAGE_OK)
+      if (stp_image_get_row(image, in, image_width * image_bpp, y) !=
+	  STP_IMAGE_OK)
 	{
 	  status = 2;
 	  break;
@@ -555,9 +556,10 @@ ps_print(const stp_vars_t v, stp_image_t *image)
     for (y = 0, out_offset = 0; y < image_height; y ++)
     {
       if ((y & 15) == 0)
-	image->note_progress(image, y, image_height);
+	stp_image_note_progress(image, y, image_height);
 
-      if (image->get_row(image, in, y) != STP_IMAGE_OK)
+      if (stp_image_get_row(image, in, image_width * image_bpp, y) !=
+	  STP_IMAGE_OK)
 	{
 	  status = 2;
 	  break;
@@ -582,7 +584,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
         memcpy(out, out + out_ps_height - out_offset, out_offset);
     }
   }
-  image->progress_conclude(image);
+  stp_image_progress_conclude(image);
 
   stp_free(in);
   stp_free(out);

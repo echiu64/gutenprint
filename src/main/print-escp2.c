@@ -1477,7 +1477,9 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 	    {
 	      errlast = errline;
 	      duplicate_line = 0;
-	      if (stp_image_get_row(image, in, errline) != STP_IMAGE_OK)
+	      if (stp_image_get_row(image, in,
+				    stp_image_width(image) * stp_image_bpp(image),
+				    errline) != STP_IMAGE_OK)
 		{
 		  status = 2;
 		  break;

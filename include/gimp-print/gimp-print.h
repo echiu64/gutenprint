@@ -170,12 +170,21 @@ typedef struct stp_image
   int  (*width)(struct stp_image *image);
   int  (*height)(struct stp_image *image);
   stp_image_status_t (*get_row)(struct stp_image *image, unsigned char *data,
-                                int row);
+                                size_t byte_limit, int row);
   const char *(*get_appname)(struct stp_image *image);
   void (*progress_init)(struct stp_image *image);
   void (*note_progress)(struct stp_image *image, double current, double total);
   void (*progress_conclude)(struct stp_image *image);
   void *rep;
+  /* Optional extensions for user interface below */
+  void (*transpose)(struct stp_image *image);
+  void (*hflip)(struct stp_image *image);
+  void (*vflip)(struct stp_image *image);
+  void (*rotate_ccw)(struct stp_image *image);
+  void (*rotate_cw)(struct stp_image *image);
+  void (*rotate_180)(struct stp_image *image);
+  void (*crop)(struct stp_image *image, int left, int top,
+	       int right, int bottom);
 } stp_image_t;
 
 
@@ -923,6 +932,27 @@ extern int stp_end_job(const stp_vars_t, stp_image_t *image);
  */
 extern const char * stp_set_output_codeset(const char *codeset);
 
+extern void stp_image_init(stp_image_t *image);
+extern void stp_image_reset(stp_image_t *image);
+extern int stp_image_bpp(stp_image_t *image);
+extern int stp_image_width(stp_image_t *image);
+extern int stp_image_height(stp_image_t *image);
+extern stp_image_status_t stp_image_get_row(stp_image_t *image,
+					    unsigned char *data,
+					    size_t limit, int row);
+extern const char *stp_image_get_appname(stp_image_t *image);
+extern void stp_image_progress_init(stp_image_t *image);
+extern void stp_image_note_progress(stp_image_t *image,
+				    double current, double total);
+extern void stp_image_progress_conclude(stp_image_t *image);
+extern void stp_image_transpose(stp_image_t *image);
+extern void stp_image_hflip(stp_image_t *image);
+extern void stp_image_vflip(stp_image_t *image);
+extern void stp_image_rotate_ccw(stp_image_t *image);
+extern void stp_image_rotate_cw(stp_image_t *image);
+extern void stp_image_rotate_180(stp_image_t *image);
+extern void stp_image_crop(stp_image_t *image, int left, int top,
+			   int right, int bottom);
 
 #ifdef __cplusplus
   }

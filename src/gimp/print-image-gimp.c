@@ -98,12 +98,20 @@ static void Image_note_progress(stp_image_t *image,
 				double current, double total);
 static void Image_progress_init(stp_image_t *image);
 static stp_image_status_t Image_get_row(stp_image_t *image,
-					unsigned char *data, int row);
+					unsigned char *data,
+					size_t byte_limit, int row);
 static int Image_height(stp_image_t *image);
 static int Image_width(stp_image_t *image);
 static int Image_bpp(stp_image_t *image);
 static void Image_reset(stp_image_t *image);
 static void Image_init(stp_image_t *image);
+static void Image_transpose(stp_image_t *image);
+static void Image_hflip(stp_image_t *image);
+static void Image_vflip(stp_image_t *image);
+static void Image_rotate_ccw(stp_image_t *image);
+static void Image_rotate_cw(stp_image_t *image);
+static void Image_rotate_180(stp_image_t *image);
+static void Image_crop(stp_image_t *image, int, int, int, int);
 
 static stp_image_t theImage =
 {
@@ -117,7 +125,14 @@ static stp_image_t theImage =
   Image_progress_init,
   Image_note_progress,
   Image_progress_conclude,
-  NULL
+  NULL,
+  Image_transpose,
+  Image_hflip,
+  Image_vflip,
+  Image_rotate_ccw,
+  Image_rotate_cw,
+  Image_rotate_180,
+  Image_crop
 };
 
 static void
@@ -186,7 +201,7 @@ Image_reset(stp_image_t *image)
   im->mirror = FALSE;
 }
 
-void
+static void
 Image_transpose(stp_image_t *image)
 {
   Gimp_Image_t *im = (Gimp_Image_t *) (image->rep);
@@ -211,14 +226,14 @@ Image_transpose(stp_image_t *image)
   if (im->mirror) im->ox -= im->w - 1;
 }
 
-void
+static void
 Image_hflip(stp_image_t *image)
 {
   Gimp_Image_t *im = (Gimp_Image_t *) (image->rep);
   im->mirror = !im->mirror;
 }
 
-void
+static void
 Image_vflip(stp_image_t *image)
 {
   Gimp_Image_t *im = (Gimp_Image_t *) (image->rep);
@@ -233,7 +248,7 @@ Image_vflip(stp_image_t *image)
  * of the image.
  */
 
-void
+static void
 Image_crop(stp_image_t *image, int left, int top, int right, int bottom)
 {
   Gimp_Image_t *im = (Gimp_Image_t *) (image->rep);
@@ -269,21 +284,21 @@ Image_crop(stp_image_t *image, int left, int top, int right, int bottom)
   im->h = nh;
 }
 
-void
+static void
 Image_rotate_ccw(stp_image_t *image)
 {
   Image_transpose(image);
   Image_vflip(image);
 }
 
-void
+static void
 Image_rotate_cw(stp_image_t *image)
 {
   Image_transpose(image);
   Image_hflip(image);
 }
 
-void
+static void
 Image_rotate_180(stp_image_t *image)
 {
   Image_vflip(image);
@@ -312,7 +327,8 @@ Image_height(stp_image_t *image)
 }
 
 static stp_image_status_t
-Image_get_row(stp_image_t *image, unsigned char *data, int row)
+Image_get_row(stp_image_t *image, unsigned char *data, size_t byte_limit,
+	      int row)
 {
   Gimp_Image_t *im = (Gimp_Image_t *) (image->rep);
   guchar *inter;

@@ -34,6 +34,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <sys/types.h>
+#include <signal.h>
+#include <sys/wait.h>
+
 #include "print-intl.h"
 
 static int	compare_printers (gp_plist_t *p1, gp_plist_t *p2);
@@ -151,7 +155,16 @@ copy_printer(gp_plist_t *vd, const gp_plist_t *vs)
   plist_set_name(vd, plist_get_name(vs));
   plist_set_output_to(vd, plist_get_output_to(vs));
 }
-  
+
+static gp_plist_t *
+allocate_copy_printer(const gp_plist_t *vs)
+{
+  gp_plist_t *rep = xmalloc(sizeof(gp_plist_t));
+  memset(rep, 0, sizeof(gp_plist_t));
+  rep->v = stp_allocate_vars();
+  copy_printer(rep, vs);
+  return rep;
+}
 
 static void
 check_plist(int count)
@@ -627,27 +640,16 @@ printrc_load(void)
   */
 
   if (format == 1)
-  {
-    if (current_printer)
     {
-      for (i = 0; i < plist_count; i ++)
-        if (strcmp(current_printer, plist[i].name) == 0)
-	  plist_current = i;
+      if (current_printer)
+	{
+	  for (i = 0; i < plist_count; i ++)
+	    if (strcmp(current_printer, plist[i].name) == 0)
+	      plist_current = i;
+	}
     }
-  }
   else
-  {
-    if (plist_get_output_to(&gimp_vars)[0] != '\0')
-    {
-      for (i = 0; i < plist_count; i ++)
-	if (strcmp(plist_get_output_to(&gimp_vars),
-		   plist_get_output_to(&(plist[i]))) == 0)
-          break;
-
-      if (i < plist_count)
-        plist_current = i;
-    }
-  }
+    plist_current = 0;
 }
 
 /*
@@ -916,7 +918,7 @@ get_system_printers(void)
     qsort(plist + 1, plist_count - 1, sizeof(gp_plist_t),
           (int (*)(const void *, const void *))compare_printers);
 
-  if (defname[0] != '\0' && plist_get_output_to(&gimp_vars)[0] == '\0')
+  if (defname[0] != '\0')
   {
     for (i = 0; i < plist_count; i ++)
       if (strcmp(defname, plist[i].name) == 0)
@@ -925,6 +927,171 @@ get_system_printers(void)
     if (i < plist_count)
       plist_current = i;
   }
+}
+
+/*
+ * 'usr1_handler()' - Make a note when we receive SIGUSR1.
+ */
+
+static volatile int usr1_interrupt;
+
+static void
+usr1_handler (int signal)
+{
+  usr1_interrupt = 1;
+}
+
+static void
+writefunc(void *file, const char *buf, size_t bytes)
+{
+  FILE *prn = (FILE *)file;
+  fwrite(buf, 1, bytes, prn);
+}
+
+int
+do_print(const gp_plist_t *printer, stp_image_t *image)
+{
+  int		ppid = getpid (), /* PID of plugin */
+		opid,		/* PID of output process */
+		cpid = 0,	/* PID of control/monitor process */
+		pipefd[2];	/* Fds of the pipe connecting all the above */
+  FILE		*prn = NULL;	/* Print file/command */
+  int		dummy;
+
+  /*
+   * Open the file/execute the print command...
+   */
+
+  if (plist_current > 0)
+    {
+      /*
+       * The following IPC code is only necessary because the GIMP kills
+       * plugins with SIGKILL if its "Cancel" button is pressed; this
+       * gives the plugin no chance whatsoever to clean up after itself.
+       */
+      usr1_interrupt = 0;
+      signal (SIGUSR1, usr1_handler);
+      if (pipe (pipefd) != 0) {
+	prn = NULL;
+      } else {
+	cpid = fork ();
+	if (cpid < 0) {
+	  prn = NULL;
+	} else if (cpid == 0) {
+	  /* LPR monitor process.  Printer output is piped to us. */
+	  opid = fork ();
+	  if (opid < 0) {
+	    /* Errors will cause the plugin to get a SIGPIPE.  */
+	    exit (1);
+	  } else if (opid == 0) {
+	    dup2 (pipefd[0], 0);
+	    close (pipefd[0]);
+	    close (pipefd[1]);
+	    execl("/bin/sh", "/bin/sh", "-c", plist_get_output_to(printer),
+		  NULL);
+	    /* NOTREACHED */
+	    exit (1);
+	  } else {
+	    /*
+	     * If the print plugin gets SIGKILLed by gimp, we kill lpr
+	     * in turn.  If the plugin signals us with SIGUSR1 that it's
+	     * finished printing normally, we close our end of the pipe,
+	     * and go away.
+	     */
+	    close (pipefd[0]);
+	    while (usr1_interrupt == 0) {
+	      if (kill (ppid, 0) < 0) {
+		/* The print plugin has been killed!  */
+		kill (opid, SIGTERM);
+		waitpid (opid, &dummy, 0);
+		close (pipefd[1]);
+		/*
+		 * We do not want to allow cleanup before exiting.
+		 * The exiting parent has already closed the connection
+		 * to the X server; if we try to clean up, we'll notice
+		 * that fact and complain.
+		 */
+		_exit (0);
+	      }
+	      sleep (5);
+	    }
+	    /* We got SIGUSR1.  */
+	    close (pipefd[1]);
+	    /*
+	     * We do not want to allow cleanup before exiting.
+	     * The exiting parent has already closed the connection
+	     * to the X server; if we try to clean up, we'll notice
+	     * that fact and complain.
+	     */
+	    _exit (0);
+	  }
+	} else {
+	  close (pipefd[0]);
+	  /* Parent process.  We generate the printer output. */
+	  prn = fdopen (pipefd[1], "w");
+	  /* and fall through... */
+	}
+      }
+    }
+  else
+    prn = fopen (plist_get_output_to(printer), "wb");
+
+  if (prn != NULL)
+    {
+      gp_plist_t *np = allocate_copy_printer(printer);
+      int orientation;
+      stp_merge_printvars(np->v, stp_printer_get_printvars(current_printer));
+
+      /*
+       * Set up the orientation
+       */
+      orientation = np->orientation;
+      if (orientation == ORIENT_AUTO)
+	orientation = compute_orientation();
+      switch (orientation)
+	{
+	case ORIENT_PORTRAIT:
+	  break;
+	case ORIENT_LANDSCAPE:
+	  stp_image_rotate_cw(image);
+	  break;
+	case ORIENT_UPSIDEDOWN:
+	  stp_image_rotate_180(image);
+	  break;
+	case ORIENT_SEASCAPE:
+	  stp_image_rotate_ccw(image);
+	  break;
+	}
+
+      /*
+       * Finally, call the print driver to send the image to the printer
+       * and close the output file/command...
+       */
+
+      stp_set_outfunc(np->v, writefunc);
+      stp_set_errfunc(np->v, get_errfunc());
+      stp_set_outdata(np->v, prn);
+      stp_set_errdata(np->v, get_errdata());
+      if (stp_print(np->v, image) != 1)
+	{
+	  stp_vars_free(np->v);
+	  free(np);
+	  return 0;
+	}
+
+      if (plist_current > 0)
+	{
+	  fclose (prn);
+	  kill (cpid, SIGUSR1);
+	  waitpid (cpid, &dummy, 0);
+	}
+      else
+	fclose (prn);
+      stp_vars_free(np->v);
+      free(np);
+      return 1;
+    }
+  return 0;
 }
 
 /*

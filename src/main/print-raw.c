@@ -184,7 +184,7 @@ raw_print(const stp_vars_t v, stp_image_t *image)
       stp_vars_free(nv);
       return 0;
     }
-  if (width != image->width(image) || height != image->height(image))
+  if (width != stp_image_width(image) || height != stp_image_height(image))
     {
       stp_eprintf(nv, _("Image dimensions must match paper dimensions"));
       stp_vars_free(nv);
@@ -197,7 +197,7 @@ raw_print(const stp_vars_t v, stp_image_t *image)
 	ink_channels = inks[i].output_channels;
 	break;
       }
-  colorfunc = stp_choose_colorfunc(nv, image->bpp(image), &out_channels);
+  colorfunc = stp_choose_colorfunc(nv, stp_image_bpp(image), &out_channels);
   if (out_channels != ink_channels && out_channels != 1 && ink_channels != 1)
     {
       stp_eprintf(nv, _("Internal error!  Output channels or input channels must be 1\n"));
@@ -205,7 +205,7 @@ raw_print(const stp_vars_t v, stp_image_t *image)
       return 0;
     }
 
-  in  = stp_malloc(width * image->bpp(image));
+  in  = stp_malloc(width * stp_image_bpp(image));
   out = stp_malloc(width * out_channels * 2);
   if (out_channels != ink_channels)
     final_out = stp_malloc(width * ink_channels * 2);
@@ -213,20 +213,21 @@ raw_print(const stp_vars_t v, stp_image_t *image)
   stp_set_float_parameter(nv, "Density", 1.0);
   stp_compute_lut(nv, 256, NULL, NULL, NULL);
 
-  image->progress_init(image);
+  stp_image_progress_init(image);
 
   for (y = 0; y < height; y++)
     {
       unsigned short *real_out = out;
       int zero_mask;
       if ((y & 63) == 0)
-	image->note_progress(image, y, height);
-      if (image->get_row(image, in, y) != STP_IMAGE_OK)
+	stp_image_note_progress(image, y, height);
+      if (stp_image_get_row(image, in, width * stp_image_bpp(image), y) !=
+	  STP_IMAGE_OK)
 	{
 	  status = 2;
 	  break;
 	}
-      (*colorfunc)(nv, in, out, &zero_mask, width, image->bpp(image));
+      (*colorfunc)(nv, in, out, &zero_mask, width, stp_image_bpp(image));
       if (out_channels != ink_channels)
 	{
 	  real_out = final_out;
@@ -258,7 +259,7 @@ raw_print(const stp_vars_t v, stp_image_t *image)
       stp_zfwrite((char *) real_out,
 		  width * ink_channels * bytes_per_channel, 1, nv);
     }
-  image->progress_conclude(image);
+  stp_image_progress_conclude(image);
   if (final_out)
     stp_free(final_out);
   stp_free(out);

@@ -68,7 +68,7 @@ GimpPlugInInfo	PLUG_IN_INFO =		/* Plug-in information */
   run,   /* run_proc   */
 };
 
-gp_plist_t gimp_vars;
+static gp_plist_t gimp_vars;
 
 int		saveme = FALSE;		/* True if print should proceed */
 int		runme = FALSE;		/* True if print should proceed */
@@ -142,25 +142,6 @@ query (void)
 			  args, NULL);
 }
 
-/*
- * 'usr1_handler()' - Make a note when we receive SIGUSR1.
- */
-
-static volatile int usr1_interrupt;
-
-static void
-usr1_handler (int signal)
-{
-  usr1_interrupt = 1;
-}
-
-static void
-gimp_writefunc(void *file, const char *buf, size_t bytes)
-{
-  FILE *prn = (FILE *)file;
-  fwrite(buf, 1, bytes, prn);
-}
-
 static guchar *
 get_thumbnail_data_function(void *image_ID, gint *width, gint *height,
 			    gint *bpp, gint page)
@@ -187,17 +168,12 @@ run (char   *name,		/* I - Name of print program. */
 {
   GimpDrawable	*drawable;	/* Drawable for image */
   GimpRunModeType	 run_mode;	/* Current run mode */
-  FILE		*prn = NULL;	/* Print file/command */
   GimpParam	*values;	/* Return values */
   gint32         drawable_ID;   /* drawable ID */
   GimpExportReturnType export = GIMP_EXPORT_CANCEL;    /* return value of gimp_export_image() */
-  int		ppid = getpid (), /* PID of plugin */
-		opid,		/* PID of output process */
-		cpid = 0,	/* PID of control/monitor process */
-		pipefd[2];	/* Fds of the pipe connecting all the above */
-  int		dummy;
   gdouble xres, yres;
   const char *image_filename;
+  stp_image_t *image;
 #ifdef DEBUG_STARTUP
   while (SDEBUG)
     ;
@@ -277,6 +253,8 @@ run (char   *name,		/* I - Name of print program. */
   set_image_dimensions(drawable->width, drawable->height);
   gimp_image_get_resolution (image_ID, &xres, &yres);
   set_image_resolution(xres, yres);
+  image = Image_GimpDrawable_new(drawable, image_ID);
+  stp_set_float_parameter(gimp_vars.v, "AppGamma", gimp_gamma());
 
   /*
    * See how we will run
@@ -389,136 +367,8 @@ run (char   *name,		/* I - Name of print program. */
 	gimp_tile_cache_ntiles ((drawable->width + gimp_tile_width () - 1) /
 				gimp_tile_width () + 1);
 
-      /*
-       * Open the file/execute the print command...
-       */
-
-      if (plist_current > 0)
-      {
-	/*
-	 * The following IPC code is only necessary because the GIMP kills
-	 * plugins with SIGKILL if its "Cancel" button is pressed; this
-	 * gives the plugin no chance whatsoever to clean up after itself.
-	 */
-	usr1_interrupt = 0;
-	signal (SIGUSR1, usr1_handler);
-	if (pipe (pipefd) != 0) {
-	  prn = NULL;
-	} else {
-	  cpid = fork ();
-	  if (cpid < 0) {
-	    prn = NULL;
-	  } else if (cpid == 0) {
-	    /* LPR monitor process.  Printer output is piped to us. */
-	    opid = fork ();
-	    if (opid < 0) {
-	      /* Errors will cause the plugin to get a SIGPIPE.  */
-	      exit (1);
-	    } else if (opid == 0) {
-	      dup2 (pipefd[0], 0);
-	      close (pipefd[0]);
-	      close (pipefd[1]);
-	      execl("/bin/sh", "/bin/sh", "-c",plist_get_output_to(&gimp_vars),
-		    NULL);
-	      /* NOTREACHED */
-	      exit (1);
-	    } else {
-	      /*
-	       * If the print plugin gets SIGKILLed by gimp, we kill lpr
-	       * in turn.  If the plugin signals us with SIGUSR1 that it's
-	       * finished printing normally, we close our end of the pipe,
-	       * and go away.
-	       */
-	      close (pipefd[0]);
-	      while (usr1_interrupt == 0) {
-	        if (kill (ppid, 0) < 0) {
-		  /* The print plugin has been killed!  */
-		  kill (opid, SIGTERM);
-		  waitpid (opid, &dummy, 0);
-		  close (pipefd[1]);
-		  /*
-		   * We do not want to allow cleanup before exiting.
-		   * The exiting parent has already closed the connection
-		   * to the X server; if we try to clean up, we'll notice
-		   * that fact and complain.
-		   */
-		  _exit (0);
-	        }
-	        sleep (5);
-	      }
-	      /* We got SIGUSR1.  */
-	      close (pipefd[1]);
-	      /*
-	       * We do not want to allow cleanup before exiting.
-	       * The exiting parent has already closed the connection
-	       * to the X server; if we try to clean up, we'll notice
-	       * that fact and complain.
-	       */
-	      _exit (0);
-	    }
-	  } else {
-	    close (pipefd[0]);
-	    /* Parent process.  We generate the printer output. */
-	    prn = fdopen (pipefd[1], "w");
-	    /* and fall through... */
-	  }
-	}
-      }
-      else
-	prn = fopen (plist_get_output_to(&gimp_vars), "wb");
-
-      if (prn != NULL)
-	{
-	  int orientation;
-	  stp_image_t *image = Image_GimpDrawable_new(drawable, image_ID);
-	  stp_set_float_parameter(gimp_vars.v, "AppGamma", gimp_gamma());
-	  stp_merge_printvars(gimp_vars.v,
-			      stp_printer_get_printvars(current_printer));
-
-	  /*
-	   * Set up the orientation
-	   */
-	  orientation = gimp_vars.orientation;
-	  if (orientation == ORIENT_AUTO)
-	    orientation = compute_orientation();
-	  switch (orientation)
-	    {
-	    case ORIENT_PORTRAIT:
-	      break;
-	    case ORIENT_LANDSCAPE:
-	      Image_rotate_cw(image);
-	      break;
-	    case ORIENT_UPSIDEDOWN:
-	      Image_rotate_180(image);
-	      break;
-	    case ORIENT_SEASCAPE:
-	      Image_rotate_ccw(image);
-	      break;
-	    }
-
-	  /*
-	   * Finally, call the print driver to send the image to the printer
-	   * and close the output file/command...
-	   */
-
-	  stp_set_outfunc(gimp_vars.v, gimp_writefunc);
-	  stp_set_errfunc(gimp_vars.v, gimp_writefunc);
-	  stp_set_outdata(gimp_vars.v, prn);
-	  stp_set_errdata(gimp_vars.v, stderr);
-	  if (stp_print(gimp_vars.v, image) != 1)
-	    values[0].data.d_status = GIMP_PDB_EXECUTION_ERROR;
-
-	  if (plist_current > 0)
-	  {
-	    fclose (prn);
-	    kill (cpid, SIGUSR1);
-	    waitpid (cpid, &dummy, 0);
-	  }
-	  else
-	    fclose (prn);
-	}
-      else
-	values[0].data.d_status = GIMP_PDB_EXECUTION_ERROR;
+      if (! do_print(&gimp_vars, image))
+	  values[0].data.d_status = GIMP_PDB_EXECUTION_ERROR;
 
       /*
        * Store data...
@@ -545,6 +395,13 @@ run (char   *name,		/* I - Name of print program. */
 /*
  * 'do_print_dialog()' - Pop up the print dialog...
  */
+
+static void
+gimp_writefunc(void *file, const char *buf, size_t bytes)
+{
+  FILE *prn = (FILE *)file;
+  fwrite(buf, 1, bytes, prn);
+}
 
 static gint
 do_print_dialog (gchar *proc_name)

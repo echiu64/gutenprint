@@ -1439,8 +1439,8 @@ lexmark_print(const stp_vars_t v, stp_image_t *image)
   * Setup a read-only pixel region for the entire image...
   */
 
-  image->init(image);
-  image_bpp = image->bpp(image);
+  stp_image_init(image);
+  image_bpp = stp_image_bpp(image);
 
 
   source= lexmark_source_type(media_source,caps);
@@ -1551,13 +1551,13 @@ densityDivisor /= 1.2;
   stp_erprintf("page_right %d, page_left %d, page_top %d, page_bottom %d, left %d, top %d\n",page_right, page_left, page_top, page_bottom,left, top);
 #endif
 
-  image_height = image->height(image);
-  image_width = image->width(image);
+  image_height = stp_image_height(image);
+  image_width = stp_image_width(image);
 
   stp_default_media_size(nv, &n, &page_true_height);
 
 
-  image->progress_init(image);
+  stp_image_progress_init(image);
 
 
   if (!lexmark_init_printer(nv, caps, output_type,
@@ -1848,13 +1848,14 @@ densityDivisor /= 1.2;
 #endif
 
       if ((y & 63) == 0)
-	image->note_progress(image, y, out_height);
+	stp_image_note_progress(image, y, out_height);
 
       if (errline != errlast)
 	{
 	  errlast = errline;
 	  duplicate_line = 0;
-	  if (image->get_row(image, in, errline) != STP_IMAGE_OK)
+	  if (stp_image_get_row(image, in, image_width * image_bpp, errline) !=
+	      STP_IMAGE_OK)
 	    {
 	      status = 2;
 	      break;
@@ -1896,7 +1897,7 @@ densityDivisor /= 1.2;
 	}
 
     }
-  image->progress_conclude(image);
+  stp_image_progress_conclude(image);
 
   stp_flush_all(weave, model, out_width, left,
 		      ydpi, xdpi, physical_xdpi);

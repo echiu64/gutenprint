@@ -95,7 +95,8 @@ static void	Image_note_progress(stp_image_t *image,
 				    double current, double total);
 static void	Image_progress_init(stp_image_t *image);
 static stp_image_status_t Image_get_row(stp_image_t *image,
-					unsigned char *data, int row);
+					unsigned char *data,
+					size_t byte_limit, int row);
 static int	Image_height(stp_image_t *image);
 static int	Image_width(stp_image_t *image);
 static int	Image_bpp(stp_image_t *image);
@@ -589,6 +590,7 @@ throwaway_data(int amount, cups_image_t *cups)
 stp_image_status_t
 Image_get_row(stp_image_t   *image,	/* I - Image */
 	      unsigned char *data,	/* O - Row */
+	      size_t	    byte_limit,	/* I - how many bytes in data */
 	      int           row)	/* I - Row number (unused) */
 {
   cups_image_t	*cups;			/* CUPS image */

@@ -1910,10 +1910,10 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   * Setup a read-only pixel region for the entire image...
   */
 
-  image->init(image);
-  image_height = image->height(image);
-  image_width = image->width(image);
-  image_bpp = image->bpp(image);
+  stp_image_init(image);
+  image_height = stp_image_height(image);
+  image_width = stp_image_width(image);
+  image_bpp = stp_image_bpp(image);
 
  /*
   * Figure out the output resolution...
@@ -1989,14 +1989,14 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   page_width = page_right - page_left;
   page_height = page_bottom - page_top;
 
-  image_height = image->height(image);
-  image_width = image->width(image);
+  image_height = stp_image_height(image);
+  image_width = stp_image_width(image);
 
  /*
   * Let the user know what we're doing...
   */
 
-  image->progress_init(image);
+  stp_image_progress_init(image);
 
  /*
   * Send PCL initialization commands...
@@ -2426,13 +2426,14 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
     stp_deprintf(STP_DBG_PCL,"pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
            y, errline, errval, errmod, out_height);
     if ((y & 63) == 0)
-      image->note_progress(image, y, out_height);
+      stp_image_note_progress(image, y, out_height);
 
     if (errline != errlast)
     {
       errlast = errline;
       duplicate_line = 0;
-      if (image->get_row(image, in, errline) != STP_IMAGE_OK)
+      if (stp_image_get_row(image, in, image_width * image_bpp, errline) !=
+	  STP_IMAGE_OK)
 	{
 	  status = 2;
 	  break;
@@ -2568,7 +2569,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
     blank_lines=0;
   }
 
-  image->progress_conclude(image);
+  stp_image_progress_conclude(image);
 
   stp_dither_data_free(dt);
   stp_dither_free(dither);

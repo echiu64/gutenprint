@@ -62,6 +62,8 @@ extern guchar *preview_thumbnail_data;
 extern GtkWidget *color_adjust_dialog;
 extern GtkWidget *dither_algo_combo;
 
+extern gp_plist_t *pv;
+
 /*
  * Function prototypes
  */
