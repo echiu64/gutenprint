@@ -32,6 +32,11 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.79  2000/02/29 02:59:14  rlk
+ *   1) Should be able to speed up black printing quite a bit for some models.
+ *
+ *   2) Add support for 1160 (tentative!)
+ *
  *   Revision 1.78  2000/02/26 00:14:44  rlk
  *   Rename dither_{black,cmyk}4 to dither_{black,cmyk}_n, and add argument to specify how levels are to be encoded
  *
@@ -1310,6 +1315,8 @@ printer_t	printers[] =	/* List of supported printer types */
   { "EPSON Stylus Color 860",	"escp2-860",	1,	16,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { "EPSON Stylus Color 900",	"escp2-900",	1,	13,	0.585,	0.646,
+    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
+  { "EPSON Stylus Color 1160",	"escp2-1160",	1,	17,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { "EPSON Stylus Color 1520",	"escp2-1520",	1,	6,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },

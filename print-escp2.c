@@ -31,6 +31,11 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.102  2000/02/29 02:59:14  rlk
+ *   1) Should be able to speed up black printing quite a bit for some models.
+ *
+ *   2) Add support for 1160 (tentative!)
+ *
  *   Revision 1.101  2000/02/29 02:33:45  rlk
  *   Rationalize the printer options a bit
  *
@@ -570,21 +575,24 @@ typedef model_cap_t model_class_t;
 #define MODEL_NOZZLES_MASK	0xff000000
 #define MODEL_MAKE_NOZZLES(x) 	((long long) ((x)) << 24)
 #define MODEL_GET_NOZZLES(x) 	(((x) & MODEL_NOZZLES_MASK) >> 24)
-#define MODEL_SEPARATION_MASK	0xf00000000ll
-#define MODEL_MAKE_SEPARATION(x) 	(((long long) (x)) << 32)
-#define MODEL_GET_SEPARATION(x)	(((x) & MODEL_SEPARATION_MASK) >> 32)
+#define MODEL_KNOZZLES_MASK	0xff00000000ll
+#define MODEL_MAKE_KNOZZLES(x) 	((long long) ((x)) << 32)
+#define MODEL_GET_KNOZZLES(x) 	(((x) & MODEL_NOZZLES_MASK) >> 32)
+#define MODEL_SEPARATION_MASK	0xf0000000000ll
+#define MODEL_MAKE_SEPARATION(x) 	(((long long) (x)) << 40)
+#define MODEL_GET_SEPARATION(x)	(((x) & MODEL_SEPARATION_MASK) >> 40)
 
-#define MODEL_XRES_MASK		0xfff000000000ll
-#define MODEL_MAKE_XRES(x) 	(((long long) (x)) << 36)
-#define MODEL_GET_XRES(x)	((((long long) x) & MODEL_XRES_MASK) >> 36)
+#define MODEL_XRES_MASK		0xfff00000000000ll
+#define MODEL_MAKE_XRES(x) 	(((long long) (x)) << 44)
+#define MODEL_GET_XRES(x)	((((long long) x) & MODEL_XRES_MASK) >> 44)
 
-#define MODEL_SOFT_INK_MASK	0xf000000000000ll
-#define MODEL_MAKE_SOFT_INK(x)	(((long long) (x)) << 40)
-#define MODEL_GET_SOFT_INK(x)	((((long long) x) & MODEL_SOFT_INK_MASK) >> 40)
+#define MODEL_SOFT_INK_MASK	0xf00000000000000ll
+#define MODEL_MAKE_SOFT_INK(x)	(((long long) (x)) << 48)
+#define MODEL_GET_SOFT_INK(x)	((((long long) x) & MODEL_SOFT_INK_MASK) >> 48)
 
-#define MODEL_MICRO_INK_MASK	0xf0000000000000ll
-#define MODEL_MAKE_MICRO_INK(x)	(((long long) (x)) << 44)
-#define MODEL_GET_MICRO_INK(x)	((((long long) x) & MODEL_MICRO_INK_MASK) >>44)
+#define MODEL_MICRO_INK_MASK	0xf000000000000000ll
+#define MODEL_MAKE_MICRO_INK(x)	(((long long) (x)) << 52)
+#define MODEL_GET_MICRO_INK(x)	((((long long) x) & MODEL_MICRO_INK_MASK) >>52)
 
 #define PHYSICAL_BPI 720
 #define MAX_OVERSAMPLED 4
@@ -662,13 +670,15 @@ static model_cap_t model_capabilities[] =
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720) | MODEL_COMMAND_GENERIC
    | MODEL_MAKE_MICRO_INK(2) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
-   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(64) | MODEL_MAKE_SEPARATION(8)),
+   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(64) | MODEL_MAKE_SEPARATION(8)
+   | MODEL_MAKE_KNOZZLES(128)),
   /* 6: Stylus Color 1520/3000 */
   (MODEL_PAPER_A2 | MODEL_IMAGEABLE_600 | MODEL_INIT_600
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720) | MODEL_COMMAND_GENERIC
    | MODEL_MAKE_MICRO_INK(2) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
-   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(64) | MODEL_MAKE_SEPARATION(8)),
+   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(64) | MODEL_MAKE_SEPARATION(8)
+   | MODEL_MAKE_KNOZZLES(128)),
 
   /* SECOND GENERATION PRINTERS */
   /* 7: Stylus Photo 700 */
@@ -696,19 +706,22 @@ static model_cap_t model_capabilities[] =
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720) | MODEL_COMMAND_1999
    | MODEL_MAKE_MICRO_INK(3) | MODEL_MAKE_SOFT_INK(2) | MODEL_GRAYMODE_YES
-   | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(21) | MODEL_MAKE_SEPARATION(7)),
+   | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(21) | MODEL_MAKE_SEPARATION(7)
+   | MODEL_MAKE_KNOZZLES(64)),
   /* 11: Stylus Color 640 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_NEW | MODEL_INIT_X40
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720) | MODEL_COMMAND_1999
    | MODEL_MAKE_MICRO_INK(3) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
-   | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
+   | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)
+   | MODEL_MAKE_KNOZZLES(64)),
   /* 12: Stylus Color 740 */
   (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_NEW | MODEL_INIT_X40
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360) | MODEL_COMMAND_1999
    | MODEL_MAKE_MICRO_INK(3) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
-   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
+   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)
+   | MODEL_MAKE_KNOZZLES(144)),
   /* 13: Stylus Color 900 */
   /* Dale Pontius thinks the spacing is 3 jets??? */
   /* No, Eric Sharkey verified that it's 2! */
@@ -716,25 +729,34 @@ static model_cap_t model_capabilities[] =
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360) | MODEL_COMMAND_1999
    | MODEL_MAKE_MICRO_INK(1) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
-   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(96) | MODEL_MAKE_SEPARATION(2)),
+   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(96) | MODEL_MAKE_SEPARATION(2)
+   | MODEL_MAKE_KNOZZLES(192)),
   /* 14: Stylus Photo 750, 870 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_NEW | MODEL_INIT_PHOTO2
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360) | MODEL_COMMAND_1999
-   | MODEL_MAKE_MICRO_INK(4) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
+   | MODEL_MAKE_MICRO_INK(4) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_NO
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
   /* 15: Stylus Photo 1200, 1270 */
   (MODEL_PAPER_1319 | MODEL_IMAGEABLE_NEW | MODEL_INIT_PHOTO2
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
    | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360) | MODEL_COMMAND_1999
-   | MODEL_MAKE_MICRO_INK(4) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
+   | MODEL_MAKE_MICRO_INK(4) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_NO
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
   /* 16: Stylus Color 860 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_NEW | MODEL_INIT_COLOR
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(360) | MODEL_COMMAND_1999
    | MODEL_MAKE_MICRO_INK(2) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
-   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
+   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)
+   | MODEL_MAKE_KNOZZLES(144)),
+  /* 17: Stylus Color 1160 */
+  (MODEL_PAPER_1319 | MODEL_IMAGEABLE_NEW | MODEL_INIT_COLOR
+   | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
+   | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(360) | MODEL_COMMAND_1999
+   | MODEL_MAKE_MICRO_INK(2) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
+   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)
+   | MODEL_MAKE_KNOZZLES(144)),
 };
 
 typedef struct {
@@ -776,31 +798,37 @@ escp2_cap(int model, model_featureset_t featureset)
   return (model_capabilities[model] & featureset);
 }
 
-static int
+static unsigned
 escp2_nozzles(int model)
 {
   return MODEL_GET_NOZZLES(model_capabilities[model]);
 }
 
-static int
+static unsigned
+escp2_black_nozzles(int model)
+{
+  return MODEL_GET_KNOZZLES(model_capabilities[model]);
+}
+
+static unsigned
 escp2_nozzle_separation(int model)
 {
   return MODEL_GET_SEPARATION(model_capabilities[model]);
 }
 
-static int
+static unsigned
 escp2_xres(int model)
 {
   return MODEL_GET_XRES(model_capabilities[model]);
 }
 
-static int
+static unsigned
 escp2_soft_ink(int model)
 {
   return MODEL_GET_SOFT_INK(model_capabilities[model]);
 }
 
-static int
+static unsigned
 escp2_micro_ink(int model)
 {
   return MODEL_GET_MICRO_INK(model_capabilities[model]);
@@ -1288,6 +1316,12 @@ escp2_print(int       model,		/* I - Model */
 	    horizontal_passes *= 720 / escp2_xres(model);
 	  xdpi = res->hres;
 	  ydpi = res->vres;
+	  if (output_type == OUTPUT_GRAY)
+	    {
+	      nozzles = escp2_black_nozzles(model);
+	      if (nozzles == 0)
+		nozzles = escp2_nozzles(model);
+	    }
 	  nozzles = escp2_nozzles(model);
 	  nozzle_separation = escp2_nozzle_separation(model);
 	  break;
