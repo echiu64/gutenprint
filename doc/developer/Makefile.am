@@ -149,7 +149,7 @@ uninstall-local:
 
 CLEAN_MANUALS = \
 	$(RM) -f gimpprint.pdf gimpprint.ps;	\
-	$(RM) -rf *html-stamp $(HTMLDIR);
+	$(RM) -rf *html-stamp $(HTMLDIR)
 
 clean-local:
 	if test $(srcdir) = "." -a $(MAINT_MODE) = false ; then \
