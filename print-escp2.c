@@ -311,7 +311,7 @@ static escp2_variable_ink_t standard_4pl_ink =
 
 static simple_dither_range_t standard_3pl_dither_ranges[] =
 {
-  { 0.45,  0x1, 1, 1 },
+  { 0.225, 0x1, 1, 1 },
   { 0.68,  0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
@@ -560,7 +560,7 @@ static escp2_variable_inklist_t variable_3pl_inks =
   NULL,
   &escp2_multishot_standard_inks,
   &escp2_multishot_standard_inks,
-  &escp2_3pl_standard_inks,
+  &escp2_6pl_standard_inks,
   &escp2_3pl_standard_inks,
   NULL,
   NULL,

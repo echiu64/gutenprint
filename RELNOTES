@@ -1,12 +1,43 @@
-This is the Print plugin for the Gimp, version 4.0a3.  This is the
-second pre-release of the 4.0 stable release.  It is not 4.0.
+This is the Print plugin for the Gimp, version 4.0b1.  This is the
+first beta of the 4.0 stable release.  It is not 4.0.
 
-This software also comes with a GhostScript driver.  The support for
-printers in the GhostScript driver is identical to the support for
-these printers in the Print plugin -- they use the identical code
-base.  Please read Ghost/README for more information on this.
+This software also comes with GhostScript and CUPS drivers.  The
+support for printers in GhostScript and CUPS is identical to the
+support for these printers in the Print plugin -- they use the
+identical code base.  Please read Ghost/README and CUPS/README.txt for
+more information on this.
 
 This plugin can be compiled against either Gimp 1.1 or 1.0.
+
+Gimp-Print 4.0b1 contains the following improvements and changes over
+Gimp-Print 4.0a3:
+
+1) Support for CUPS, through a choice of a native CUPS driver or
+   Cups-o-Matic.
+
+2) Support for the Foomatic printer configuration system, greatly
+   simplifying configuration and use with lpd, CUPS, and PDQ.
+
+3) The preview window in the plugin now shows a low-resolution
+   representation of the actual image.  The color adjustment window
+   shows an thumbnail that reflects the effect that color adjustments
+   have on the output.
+
+4) The old GTK-based interface is now disabled by default when used
+   with the Gimp 1.1.  It can be enabled by running configure with
+   --enable-maintainer-mode.
+
+5) The plugin now detects the spooling system at runtime, so it need
+   not be compiled specifically for use with Berkeley lpd, System V
+   lp, CUPS, or LPRng.
+
+6) Substantial quality improvement for the Epson Stylus Photo 700/EX
+   in 1440x720 DPI modes.  The price is that printing takes much
+   longer.  If you need high quality with better performance, use
+   720x720 DPI Highest Quality.
+
+7) A number of miscellaneous bugs have been fixed.
+
 
 Gimp-Print 4.0a3 contains the following improvements over Gimp-Print
 4.0a2:

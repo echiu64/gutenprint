@@ -106,6 +106,7 @@ typedef struct dither_matrix
   int exp;
   int x_size;
   int y_size;
+  int total_size;
   int last_x;
   int last_x_mod;
   int last_y;
@@ -298,6 +299,7 @@ init_iterated_matrix(dither_matrix_t *mat, int size, int exp,
   for (i = 0; i < exp; i++)
     mat->x_size *= mat->base;
   mat->y_size = mat->x_size;
+  mat->total_size = mat->x_size * mat->y_size;
   mat->matrix = malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
   for (x = 0; x < mat->x_size; x++)
     for (y = 0; y < mat->y_size; y++)
@@ -324,6 +326,7 @@ init_matrix(dither_matrix_t *mat, int x_size, int y_size,
   mat->exp = 1;
   mat->x_size = x_size;
   mat->y_size = y_size;
+  mat->total_size = mat->x_size * mat->y_size;
   mat->matrix = malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
   for (x = 0; x < mat->x_size; x++)
     for (y = 0; y < mat->y_size; y++)
@@ -352,6 +355,7 @@ init_matrix_short(dither_matrix_t *mat, int x_size, int y_size,
   mat->exp = 1;
   mat->x_size = x_size;
   mat->y_size = y_size;
+  mat->total_size = mat->x_size * mat->y_size;
   mat->matrix = malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
   for (x = 0; x < mat->x_size; x++)
     for (y = 0; y < mat->y_size; y++)
@@ -381,6 +385,7 @@ destroy_matrix(dither_matrix_t *mat)
   mat->exp = 0;
   mat->x_size = 0;
   mat->y_size = 0;
+  mat->total_size = 0;
   mat->i_own = 0;
 }
 
@@ -392,14 +397,15 @@ clone_matrix(const dither_matrix_t *src, dither_matrix_t *dest,
   dest->exp = src->exp;
   dest->x_size = src->x_size;
   dest->y_size = src->y_size;
+  dest->total_size = src->total_size;
   dest->matrix = src->matrix;
   dest->x_offset = x_offset;
   dest->y_offset = y_offset;
   dest->last_x = 0;
   dest->last_x_mod = dest->x_offset % dest->x_size;
   dest->last_y = 0;
-  dest->last_y_mod = dest->y_offset % dest->y_size;
-  dest->index = dest->last_x_mod + dest->x_size * dest->last_y_mod;
+  dest->last_y_mod = dest->x_size * (dest->y_offset % dest->y_size);
+  dest->index = dest->last_x_mod + dest->last_y_mod;
   dest->i_own = 0;
 }
 
@@ -411,6 +417,7 @@ copy_matrix(const dither_matrix_t *src, dither_matrix_t *dest)
   dest->exp = src->exp;
   dest->x_size = src->x_size;
   dest->y_size = src->y_size;
+  dest->total_size = src->total_size;
   dest->matrix = malloc(sizeof(unsigned) * dest->x_size * dest->y_size);
   for (x = 0; x < dest->x_size * dest->y_size; x++)
     dest->matrix[x] = src->matrix[x];
@@ -444,7 +451,6 @@ ditherpoint(const dither_t *d, dither_matrix_t *mat, int x, int y)
    * of modulus and multiplication operations, which are typically slow.
    */
 
-  int recompute = 0;
   if (x == mat->last_x)
     {
     }
@@ -474,7 +480,7 @@ ditherpoint(const dither_t *d, dither_matrix_t *mat, int x, int y)
     {
       mat->last_x = x;
       mat->last_x_mod = (x + mat->x_offset) % mat->x_size;
-      recompute = 1;
+      mat->index = mat->last_x_mod + mat->last_y_mod;
     }
   if (y == mat->last_y)
     {
@@ -482,33 +488,31 @@ ditherpoint(const dither_t *d, dither_matrix_t *mat, int x, int y)
   else if (y == mat->last_y + 1)
     {
       mat->last_y = y;
-      mat->last_y_mod++;
+      mat->last_y_mod += mat->x_size;
       mat->index += mat->x_size;
-      if (mat->last_y_mod >= mat->y_size)
+      if (mat->last_y_mod >= mat->total_size)
 	{
-	  mat->last_y_mod -= mat->y_size;
-	  mat->index -= (mat->x_size * mat->y_size);
+	  mat->last_y_mod -= mat->total_size;
+	  mat->index -= mat->total_size;
 	}
     }
   else if (y == mat->last_y - 1)
     {
       mat->last_y = y;
-      mat->last_y_mod--;
+      mat->last_y_mod -= mat->x_size;
       mat->index -= mat->x_size;
       if (mat->last_y_mod < 0)
 	{
-	  mat->last_y_mod += mat->y_size;
-	  mat->index += (mat->x_size * mat->y_size);
+	  mat->last_y_mod += mat->total_size;
+	  mat->index += mat->total_size;
 	}
     }
   else
     {
       mat->last_y = y;
-      mat->last_y_mod = (y + mat->y_offset) % mat->y_size;
-      recompute = 1;
+      mat->last_y_mod = mat->x_size * ((y + mat->y_offset) % mat->y_size);
+      mat->index = mat->last_x_mod + mat->last_y_mod;
     }
-  if (recompute)
-    mat->index = mat->last_x_mod + mat->x_size * mat->last_y_mod;
   return mat->matrix[mat->index];
 }
 
@@ -1161,7 +1165,7 @@ get_valueline(dither_t *d, int color)
  * to save a division when appropriate.
  */
 
-#define update_color(color, dither) (\
+#define UPDATE_COLOR(color, dither) (\
         ((dither) >= 0)? \
                 (color) + ((dither) >> 3): \
                 (color) - ((-(dither)) >> 3))
@@ -1753,7 +1757,7 @@ dither_black(const unsigned short   *gray,	/* I - Grayscale pixels */
 		    &(d->k_pick), &(d->k_dithermat), d->dither_type);
       else
 	{
-	  k = update_color(k, ditherk);
+	  k = UPDATE_COLOR(k, ditherk);
 	  k = print_color(d, &(d->k_dither), ok, ok, k, x, row, kptr, NULL,
 			  bit, length, d->k_randomizer, 0, &ink_budget,
 			  &(d->k_pick), &(d->k_dithermat), d->dither_type);
@@ -2354,9 +2358,9 @@ dither_cmyk(const unsigned short  *rgb,	/* I - RGB pixels */
 	    goto advance;
 	  else
 	    {
-	      c = update_color(c, ditherc);
-	      m = update_color(m, ditherm);
-	      y = update_color(y, dithery);
+	      c = UPDATE_COLOR(c, ditherc);
+	      m = UPDATE_COLOR(m, ditherm);
+	      y = UPDATE_COLOR(y, dithery);
 	      goto out;
 	    }
 	}
@@ -2405,9 +2409,9 @@ dither_cmyk(const unsigned short  *rgb,	/* I - RGB pixels */
 
       if (!(d->dither_type & D_ORDERED_BASE))
 	{
-	  c = update_color(c, ditherc);
-	  m = update_color(m, ditherm);
-	  y = update_color(y, dithery);
+	  c = UPDATE_COLOR(c, ditherc);
+	  m = UPDATE_COLOR(m, ditherm);
+	  y = UPDATE_COLOR(y, dithery);
 	}
 
       QUANT(9);

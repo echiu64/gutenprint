@@ -21,6 +21,7 @@ Andy Thaller		<thaller@ph.tum.de>
 Charles Briscoe-Smith	<cpbs@debian.org>
 	Epson driver
 	Internals
+	UI
 
 Dave Hill		<dave@minnie.demon.co.uk>
 	PCL driver
@@ -57,6 +58,7 @@ Michael Natterer	<mitschel@cs.tu-berlin.de>
 Mike Sweet		<mike@easysw.com>
 	CUPS work
 	Portability
+	Lots o'details
 
 Robert Krawitz		<rlk@alum.mit.edu>
 	Epson driver

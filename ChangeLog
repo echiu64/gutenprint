@@ -1,3 +1,258 @@
+2000-09-13	<rlk@sourceforge.net>
+
+	Files:	print-util.c (1.138) (+4 -4)
+	
+	Make letter be the default paper size.
+	
+2000-09-13	<rlk@sourceforge.net>
+
+	Files:	mkinstalldirs (1.3) (+9 -3)
+	
+	Really brutal hack to allow make gdist to work while not blowing out
+	make install
+	
+2000-09-13	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.61) (+1 -0)
+	
+	Set up MAINTAINERdir correctly
+	
+2000-09-12	<easysw@sourceforge.net>
+
+	Files:	print.c (1.117) (+9 -8)
+		print.h (1.87) (+3 -3)
+	
+	Allow printer names up to 127 characters.
+	
+2000-09-12	<easysw@sourceforge.net>
+
+	Files:	escputil.c (1.10) (+15 -31)
+		unprint.c (1.42) (+13 -11)
+		print.c (1.116) (+5 -3)
+		print-ps.c (1.43) (+6 -6)
+		print-pcl.c (1.80) (+5 -5)
+		print-escp2.c (1.253) (+4 -38)
+		print-dither.c (1.89) (+5 -5)
+		print-canon.c (1.87) (+7 -7)
+	
+	Fixed some signed character issues in unprint.c - default char type is
+	undefined (signed for some compilers, unsigned for others); added
+	"signed" to the ones that needed it to be sure.
+	
+	escputil.c still used the LP_COMMAND and LPR_COMMAND definitions; changed
+	to simple run-time detection.
+	
+	Added lots of casts to fix compiler warnings.
+	
+	Removed extraneous break statements after return's
+	
+	break; break; can just be break;...
+	
+	Ink budget was defined as int in some spots, unsigned int in others.
+	Changed to int (signed) in all places since it seems to be OK.
+	
+	This hopefully will result in a clean compile (no warnings) on all
+	platforms, less some YY_BREAK warnings I get under IRIX which can't
+	be suppressed from printdefl.l...
+	
+2000-09-12	<rlk@sourceforge.net>
+
+	Files:	quickmatrix257.h (1.3) (+22 -0)
+		ran.367.179.h (1.2) (+22 -0)
+	
+	Add copyright notice
+	
+2000-09-12	<rlk@sourceforge.net>
+
+	Files:	printdef.h (1.4) (+23 -0)
+	
+	Apply the GPL.
+	
+2000-09-12	<rlk@sourceforge.net>
+
+	Files:	quickmatrix199-2.h (1.3) (+0 -0)
+		quickmatrix199.h (1.3) (+0 -0)
+	
+	Remove big unused files from sandboxes (they're still in the repository
+	if needed).
+	
+2000-09-11	<rlk@sourceforge.net>
+
+	Files:	jmv/README (1.3) (+3 -0)
+		jmv/print.h (1.3) (+2 -2)
+		jmv/print-escp2.c (1.32) (+1 -1)
+		jmv/print-dither.c (1.32) (+1 -1)
+	
+	Remove some extraneous files to clean up sandboxes.
+	
+2000-09-11	<rlk@sourceforge.net>
+
+	Files:	Matgen/73dither-distance.i (1.2) (+0 -0)
+		Matgen/ran.367.179.h (1.2) (+0 -0)
+	
+	No good reason to clutter everyone's sandbox with these, because they're big.
+	
+2000-09-11	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.252) (+3 -3)
+	
+	Drop support for 1440x720 microweave on 740 and 900.
+	
+2000-09-11	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.251) (+9 -8)
+	
+	Fix x8 unpack functions
+	
+2000-09-11	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.60) (+1 -1)
+	
+	Try again
+	
+2000-09-11	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.59) (+24 -4)
+	
+	Silence a non-useful warning
+	
+2000-09-10	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.250) (+15 -15)
+	
+	Backout premature checkin for boosted resolution on some printers
+	
+2000-09-10	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.249) (+8 -4)
+	
+	Cannot use 1440 HQ with 900
+	
+2000-09-10	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.248) (+291 -24)
+		run-weavetest (1.19) (+1 -1)
+	
+	Try to support ESC 900 3 pl dots
+	
+2000-09-10	<easysw@sourceforge.net>
+
+	Files:	cups/LICENSE.txt (1.2) (+0 -523)
+	
+	Forgot this file...
+	
+2000-09-10	<easysw@sourceforge.net>
+
+	Files:	cups/genppd.c (1.7) (+4 -4)
+	
+	Didn't include setpagedevice after color stuff...
+	
+2000-09-10	<easysw@sourceforge.net>
+
+	Files:	cups/Makefile.in (1.10) (+8 -3)
+		cups/genppd.c (1.6) (+36 -10)
+		cups/configure (1.3) (+26 -26)
+		cups/command.types (1.2) (+16 -10)
+	
+	Updated copyright notice on other files.
+	
+	Added installation of command.types file.
+	
+	No longer generate PPD files for the PS drivers.
+	
+2000-09-10	<easysw@sourceforge.net>
+
+	Files:	Makefile.am (1.58) (+0 -5)
+		cups/rastertoprinter.c (1.5) (+14 -8)
+		cups/epson.c (1.4) (+16 -10)
+		cups/configure.in (1.4) (+14 -8)
+		cups/commandtoepson.c (1.5) (+15 -9)
+		cups/command.txt (1.2) (+30 -25)
+		cups/calibrate.c (1.2) (+16 -10)
+		cups/README.txt (1.5) (+30 -16)
+		cups/Makefile.in (1.9) (+16 -10)
+		print.c (1.115) (+101 -58)
+		configure.in (1.31) (+0 -59)
+	
+	Run-time detection of lpc/lpstat.  Still need to add LPRng support to it.
+	
+	Updated all of the CUPS driver stuff with the standard GPL and a more-or-
+	less standard banner on each file.
+	
+2000-09-10	<easysw@sourceforge.net>
+
+	Files:	cups/.cvsignore (1.3) (+0 -4)
+	
+	Can't ignore Makefile.in in the CUPS directory - remember, we're not using
+	automake with the CUPS drivers.
+	
+	Dropped some of the other files that aren't in this directory.
+	
+2000-09-10	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.247) (+79 -59)
+	
+	Use super microdot size at 1440x720 on the EX and 700.
+	
+2000-09-09	<rlk@sourceforge.net>
+
+	Files:	configure.in (1.30) (+6 -2)
+		print_gimp.h (1.29) (+5 -1)
+		print.c (1.114) (+25 -12)
+		gtk_main_window.c (1.55) (+6 -1)
+		gtk_color_window.c (1.20) (+5 -1)
+	
+	Disable the GTK plugin with Gimp 1.1 except in maintenance mode
+	
+2000-09-09	<rlk@sourceforge.net>
+
+	Files:	cups/.cvsignore (1.2) (+13 -0)
+	
+	Copies of files that should be ignored.
+	
+2000-09-09	<easysw@sourceforge.net>
+
+	Files:	cups/genppd.c (1.5) (+28 -13)
+	
+	Added dithering algorithms to PPD files...
+	
+2000-09-09	<easysw@sourceforge.net>
+
+	Files:	cups/rastertoprinter.c (1.4) (+3 -2)
+	
+	Default to gamma of 1.7 to match sRGB; looks much better now...
+	
+2000-09-09	<rlk@sourceforge.net>
+
+	Files:	AUTHORS (1.5) (+3 -0)
+		Ghost/gdevstp.c (1.40) (+13 -1)
+		Ghost/README (1.46) (+11 -20)
+		mkinstalldirs (1.2) (+6 -2)
+		configure.in (1.29) (+5 -1)
+		Makefile.am (1.57) (+5 -0)
+		ChangeLog (1.38) (+45 -0)
+	
+	Add full foomatic support
+	
+2000-09-09	<easysw@sourceforge.net>
+
+	Files:	print-util.c (1.137) (+7 -2)
+		cups/rastertoprinter.c (1.3) (+11 -5)
+		cups/genppd.c (1.4) (+6 -6)
+		cups/Makefile.in (1.8) (+12 -5)
+	
+	Updated compute_page_parameters to support scaling == 0 (means to scale
+	to the full page regardless of aspect ratio)
+	
+	Added ppd target to CUPS makefile to separate PPD generation and genppd
+	linking.
+	
+	genppd output PageDimension attributes instead of PaperDimension.
+	
+	rastertoprinter was passing the width and length backwards.
+	
+	changed rastertoprinter to use a scaling of 0.
+	
 2000-09-09	<easysw@sourceforge.net>
 
 	Files:	configure.in (1.28) (+8 -2)
