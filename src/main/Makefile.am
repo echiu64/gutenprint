@@ -23,10 +23,20 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+
+## Variables
+
 AM_CFLAGS = @MAINTAINER_CFLAGS@
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS)
 
-bin_SCRIPTS = gimpprint-config
+
+## Programs
+
+MAIN_BIN = libgimpprint.la
+MAIN_SCR = gimpprint-config
+
+bin_SCRIPTS = @MAIN_SCR@
+EXTRA_SCRIPTS = gimpprint-config
 
 lib_LTLIBRARIES = @MAIN_BIN@
 EXTRA_LTLIBRARIES = libgimpprint.la
@@ -57,8 +67,16 @@ libgimpprint_la_LDFLAGS = -release $(VERSION) -rpath $(libdir)
 ##	-export-dynamic                                         \
 ##	-rpath $(libdir)
 
+
+## Data
+
+MAIN_DAT = gimpprint.m4
+
 m4datadir = $(datadir)/aclocal
 m4data_DATA = @MAIN_DAT@
+
+
+## Rules
 
 print-util.lo: print-printers.c $(srcdir)/print-util.c
 
@@ -69,6 +87,9 @@ printdefl.o: printdefy.o
 
 ../printdef/printdef: $(addprefix ../printdef/, printdefl.l printdefy.y printdef.h)
 	$(MAKE) -C ../printdef
+
+
+## Clean
 
 CLEANFILES = print-printers.c
 DISTCLEANFILES = gimpprint-config

@@ -23,9 +23,17 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+
+## Variables
+
 AM_CFLAGS = @MAINTAINER_CFLAGS@
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
 LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
+
+
+## Programs
+
+FOOMATIC_NOINST_BIN="printer_options paper_sizes gimp-print-version"
 
 noinst_PROGRAMS = @FOOMATIC_NOINST_BIN@
 
@@ -43,19 +51,19 @@ paper_sizes_SOURCES = paper_sizes.c
 paper_sizes_LDADD = $(LIBGIMPPRINT_LIBS)
 paper_sizes_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
-$(LIBGIMPPRINT_LIBS):
-	$(MAKE) -C ../../src/main
 
-EXTRA_DIST = foomatic-printermap foomatic-templates/*.xml
-CLEANFILES = $(noinst_PROGRAMS)
-MAINTAINERCLEANFILES = Makefile.in
+## Rules
 
 if BUILD_FOOMATIC
-install-data-local: foomatic-data
+INSTALL_DATA_LOCAL_DEPS = foomatic-data
+else
+INSTALL_DATA_LOCAL_DEPS =
 endif
-	foomatic-kitload -k foomatic-db
 
-install: @FOOMATIC_INSTALL@
+install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
+	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
+	  foomatic-kitload -k foomatic-db ; \
+	fi
 
 clean-local:
 	-rm -rf foomatic-db
@@ -63,3 +71,15 @@ clean-local:
 foomatic-data: printer_options gimp-print-version paper_sizes
 	-rm -rf foomatic-db
 	./foomatic-generator
+
+$(LIBGIMPPRINT_LIBS):
+	$(MAKE) -C ../../src/main
+
+
+## Clean
+
+CLEANFILES = $(noinst_PROGRAMS)
+MAINTAINERCLEANFILES = Makefile.in
+
+EXTRA_DIST = foomatic-printermap foomatic-templates/*.xml
+

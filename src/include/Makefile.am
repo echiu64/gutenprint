@@ -23,11 +23,17 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+
+## Data
+
 noinst_HEADERS = gimp-print-intl.h
 
 pkginclude_HEADERS = @GIMP_PRINT_H@
 
 EXTRA_HEADERS = gimp-print.h.in
+
+
+## Clean
 
 DISTCLEANFILES = gimp-print.h
 MAINTAINERCLEANFILES = Makefile.in

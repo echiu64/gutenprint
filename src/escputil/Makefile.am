@@ -23,14 +23,26 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+
+## Variables
+
 AM_CFLAGS = @MAINTAINER_CFLAGS@
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS)
 LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
 
+
+## Programs
+
+ESCPUTIL_BIN = escputil
+
 bin_PROGRAMS = @ESCPUTIL_BIN@
+
 EXTRA_PROGRAMS = escputil
 
 escputil_LDADD = $(LIBREADLINE_DEPS)
+
+
+## Clean
 
 CLEANFILES = $(EXTRA_PROGRAMS)
 MAINTAINERCLEANFILES = Makefile.in

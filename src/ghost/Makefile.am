@@ -23,7 +23,9 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
-# Use old compatability method for now...
+## Use old compatability method for now...
+
+## Variables
 
 MAINCODE = canon.c color.c dither.c escp2.c lexmark.c pcl.c printers.c ps.c util.c weave.c dither-matrices.c
 
@@ -36,6 +38,9 @@ ALL_LOCAL_DEPS = $(srcdir)/$(addprefix gdevstp-,$(MAINCODE)) $(srcdir)/$(addpref
 else
 ALL_LOCAL_DEPS =
 endif
+
+
+## Rules
 
 all-local: $(ALL_LOCAL_DEPS)
 
@@ -68,6 +73,9 @@ printdefl.o: printdefy.o
 
 ../printdef/printdef: $(addprefix ../printdef/, printdefl.l printdefy.y printdef.h)
 	        $(MAKE) -C ../printdef
+
+
+## Clean
 
 CLEANFILES = \
  $(srcdir)/gdevstp-printers.c \

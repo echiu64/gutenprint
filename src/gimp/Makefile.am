@@ -23,11 +23,19 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+
+## Variables
+
 AM_CFLAGS = @MAINTAINER_CFLAGS@
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS)
 LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
 
 libexecdir = $(gimptool_prefix)/plug-ins
+
+
+## Programs
+
+GIMP_BIN = print
 
 libexec_PROGRAMS = @GIMP_BIN@
 
@@ -40,13 +48,11 @@ print_SOURCES = \
 	gimp_color_window.c \
 	gimp_main_window.c \
 	print_gimp.h
-
 print_LDADD = $(GIMP_LIBS) $(LIBGIMPPRINT_LIBS) ../../lib/libprintut.la
-
 print_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
-$(LIBGIMPPRINT_LIBS):
-	$(MAKE) -C ../main
+
+## Rules
 
 install-libexecPROGRAMS: $(libexec_PROGRAMS)
 	@DESTDIR='$(DESTDIR)'; export DESTDIR;\
@@ -70,6 +76,12 @@ uninstall-libexecPROGRAMS: $(libexec_PROGRAMS)
 	    $(GIMPTOOL) --uninstall-admin-bin "$$p"; \
 	  else :; fi; \
 	done
+
+$(LIBGIMPPRINT_LIBS):
+	$(MAKE) -C ../main
+
+
+## Clean
 
 CLEANFILES = $(EXTRA_PROGRAMS)
 MAINTAINERCLEANFILES = Makefile.in

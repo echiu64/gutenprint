@@ -23,16 +23,25 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+
+## Variables
+
 AM_CFLAGS = @CFLAGS@ @MAINTAINER_CFLAGS@
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS)
 
 LFLAGS = -i
 YFLAGS = -d
 
+
+## Programs
+
 noinst_PROGRAMS = printdef
 printdef_SOURCES = printdefl.l printdefy.y printdef.h
 
 printdefl.o: printdefy.o
+
+
+## Clean
 
 DISTCLEANFILES = printdefl.c printdefy.c printdefy.h
 MAINTAINERCLEANFILES = Makefile.in

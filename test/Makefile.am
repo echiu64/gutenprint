@@ -23,12 +23,18 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+
+## Variables
+
 AM_CFLAGS = @MAINTAINER_CFLAGS@
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
 LIBS = @LIBS@ ../lib/libprintut.la $(INTLLIBS) ../lib/libprintut.la
 
-noinst_PROGRAMS = @TEST_BIN@
 
+## Programs
+TEST_BIN = testdither escp2-weavetest unprint escp2-unprint pcl-unprint bjc-unprint
+
+noinst_PROGRAMS = @TEST_BIN@
 EXTRA_PROGRAMS = escp2-weavetest unprint escp2-unprint pcl-unprint bjc-unprint testdither
 
 escp2_weavetest_SOURCES = escp2-weavetest.c
@@ -52,6 +58,10 @@ testdither_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 $(LIBGIMPPRINT_LIBS):
 	$(MAKE) -C ../src/main
 
-EXTRA_DIST = cyan-sweep.tif parse-escp2 run-weavetest
+
+## Clean
+
 CLEANFILES = $(EXTRA_PROGRAMS)
 MAINTAINERCLEANFILES = Makefile.in
+
+EXTRA_DIST = cyan-sweep.tif mixed-color-1bit.ppm parse-escp2 run-weavetest
