@@ -1305,6 +1305,9 @@
       </printer>
     </family>
     <family name="olympus">
+      <printer name="Olympus P10" driver="olympus-p10" manufacturer="Olympus">
+        <model value="2"/>
+      </printer>
       <printer name="Olympus P300" driver="olympus-p300" manufacturer="Olympus">
         <model value="0"/>
       </printer>
@@ -1313,6 +1316,9 @@
       </printer>
       <printer name="Canon CP100" driver="canon-cp100" manufacturer="Canon">
         <model value="1000"/>
+      </printer>
+      <printer name="Canon CP220" driver="canon-cp220" manufacturer="Canon">
+        <model value="1001"/>
       </printer>
       <printer name="Sony UP-DP10" driver="sony-updp10" manufacturer="Sony">
         <model value="2000"/>

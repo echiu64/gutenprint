@@ -184,6 +184,88 @@ static const ink_list_t rgb_ink_list =
 };
 
 
+/* Olympus P-10 */
+static const olymp_resolution_t res_320dpi[] =
+{
+  { "320x320", 320, 320},
+};
+
+static const olymp_resolution_list_t res_320dpi_list =
+{
+  res_320dpi, sizeof(res_320dpi) / sizeof(olymp_resolution_t)
+};
+
+static const olymp_pagesize_t p10_page[] =
+{
+  { "w288h432", "4 x 6", -1, -1, 0, 0, 16, 0},	/* 4x6" */
+  { "B7", "3.5 x 5", -1, -1, 0, 0, 4, 0},	/* 3.5x5" */
+  { "Custom", NULL, -1, -1, 28, 28, 48, 48},
+};
+
+static const olymp_pagesize_list_t p10_page_list =
+{
+  p10_page, sizeof(p10_page) / sizeof(olymp_pagesize_t)
+};
+
+static const olymp_printsize_t p10_printsize[] =
+{
+  { "320x320", "w288h432", 1280, 1848},
+  { "320x320", "B7",  1144,  1591},
+  { "320x320", "Custom", 1280, 1848},
+};
+
+static const olymp_printsize_list_t p10_printsize_list =
+{
+  p10_printsize, sizeof(p10_printsize) / sizeof(olymp_printsize_t)
+};
+
+static void p10_printer_init_func(stp_vars_t *v)
+{
+  const char *lpar = stp_get_string_parameter(v, "Laminate");
+  const olympus_cap_t *caps = olympus_get_model_capabilities(
+		  				stp_get_model_id(v));
+  const laminate_list_t *llist = caps->laminate;
+  const laminate_t *l = NULL;
+  int i;
+
+  for (i = 0; i < llist->n_items; i++)
+    {
+      l = &(llist->item[i]);
+      if (strcmp(l->name, lpar) == 0)
+	 break;
+    }
+
+  stp_zfwrite("\033R\033M\033S\2\033N\1\033D\1\033Y", 1, 15, v);
+  stp_zfwrite((l->seq).data, 1, (l->seq).bytes, v); /* laminate */
+  stp_zfwrite("\033Z\0", 1, 3, v);
+}
+
+static void p10_printer_end_func(stp_vars_t *v)
+{
+  stp_zfwrite("\033P", 1, 2, v);
+}
+
+static void p10_block_init_func(stp_vars_t *v)
+{
+  stp_zprintf(v, "\033T%c", privdata.plane);
+  stp_put16_le(privdata.block_min_x, v);
+  stp_put16_le(privdata.block_min_y, v);
+  stp_put16_le(privdata.block_max_x + 1, v);
+  stp_put16_le(privdata.block_max_y + 1, v);
+}
+
+static const laminate_t p10_laminate[] =
+{
+  {"Coated",  N_("Coated"),  {1, "\x00"}},
+  {"None",    N_("None"),    {1, "\x02"}},
+};
+
+static const laminate_list_t p10_laminate_list =
+{
+  p10_laminate, sizeof(p10_laminate) / sizeof(laminate_t)
+};
+
+
 /* Olympus P-300 series */
 static const olymp_resolution_t p300_res[] =
 {
@@ -429,7 +511,7 @@ static const olymp_pagesize_t cpx00_page[] =
 {
   { "Postcard", "Postcard 148x100mm", -1, -1, 13, 13, 16, 18},
   { "w253h337", "CP_L 89x119mm", -1, -1, 13, 13, 15, 15},
-  { "w155h244", "Card 54x86mm", -1, -1, 13, 13, 15, 15},
+  { "w244h155", "Card 54x86mm", -1, -1, 15, 15, 13, 13},
   { "Custom", NULL, -1, -1, 13, 13, 16, 18},
 };
 
@@ -442,7 +524,7 @@ static const olymp_printsize_t cpx00_printsize[] =
 {
   { "314x314", "Postcard", 1232, 1808},
   { "314x314", "w253h337", 1100, 1456},
-  { "314x314", "w155h244", 672, 1040},
+  { "314x314", "w244h155", 1040, 672},
   { "314x314", "Custom", 1232, 1808},
 };
 
@@ -453,8 +535,16 @@ static const olymp_printsize_list_t cpx00_printsize_list =
 
 static void cpx00_printer_init_func(stp_vars_t *v)
 {
+  const char *p = stp_get_string_parameter(v, "PageSize");
+  char pg = (strcmp(p, "Postcard") == 0 ? '\1' :
+		(strcmp(p, "w253h337") == 0 ? '\2' :
+		(strcmp(p, "w244h155") == 0 ? '\3' :
+		(strcmp(p, "w283h566") == 0 ? '\4' : 
+		 '\1' ))));
+
   stp_put16_be(0x4000, v);
-  stp_put16_be(0x0001, v);
+  stp_putc('\0', v);
+  stp_putc(pg, v);
   stp_zfwrite(zero, 1, 8, v);
 }
 
@@ -504,6 +594,36 @@ static const char cpx00_adj_yellow[] =
   "</sequence>\n"
   "</curve>\n"
   "</gimp-print>\n";
+
+
+/* Canon CP-220 series */
+static const olymp_pagesize_t cp220_page[] =
+{
+  { "Postcard", "Postcard 148x100mm", -1, -1, 13, 13, 16, 18},
+  { "w253h337", "CP_L 89x119mm", -1, -1, 13, 13, 15, 15},
+  { "w244h155", "Card 54x86mm", -1, -1, 15, 15, 13, 13},
+  { "w283h566", "Wide 200x100mm", -1, -1, 13, 13, 20, 20},
+  { "Custom", NULL, -1, -1, 13, 13, 16, 18},
+};
+
+static const olymp_pagesize_list_t cp220_page_list =
+{
+  cp220_page, sizeof(cp220_page) / sizeof(olymp_pagesize_t)
+};
+
+static const olymp_printsize_t cp220_printsize[] =
+{
+  { "314x314", "Postcard", 1232, 1808},
+  { "314x314", "w253h337", 1100, 1456},
+  { "314x314", "w244h155", 1040, 672},
+  { "314x314", "w283h566", 1232, 2416},
+  { "314x314", "Custom", 1232, 1808},
+};
+
+static const olymp_printsize_list_t cp220_printsize_list =
+{
+  cp220_printsize, sizeof(cp220_printsize) / sizeof(olymp_printsize_t)
+};
 
 
 /* Sony UP-DP10 */
@@ -674,6 +794,7 @@ static const olymp_resolution_t all_resolutions[] =
   { "314x314", 314, 314},
   { "300x300", 300, 300},
   { "317x316", 317, 316},
+  { "320x320", 320, 320},
 };
 
 static const olymp_resolution_list_t all_res_list =
@@ -683,7 +804,22 @@ static const olymp_resolution_list_t all_res_list =
 
 static const olympus_cap_t olympus_model_capabilities[] =
 {
-  { /* Olympus P300 */
+  { /* Olympus P-10 */
+    2, 		
+    &rgb_ink_list,
+    &res_320dpi_list,
+    &p10_page_list,
+    &p10_printsize_list,
+    OLYMPUS_INTERLACE_PLANE, OLYMPUS_PLANEORDER_RGB,
+    1848,
+    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT,
+    &p10_printer_init_func, &p10_printer_end_func,
+    NULL, NULL, 
+    &p10_block_init_func, NULL,
+    NULL, NULL, NULL,
+    &p10_laminate_list,
+  },
+  { /* Olympus P-300 */
     0, 		
     &cmy_ink_list,
     &p300_res_list,
@@ -698,7 +834,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     p300_adj_cyan, p300_adj_magenta, p300_adj_yellow,
     NULL,
   },
-  { /* Olympus P400 */
+  { /* Olympus P-400 */
     1,
     &cmy_ink_list,
     &res_314dpi_list,
@@ -713,12 +849,28 @@ static const olympus_cap_t olympus_model_capabilities[] =
     p400_adj_cyan, p400_adj_magenta, p400_adj_yellow,
     NULL,
   },
-  { /* Canon CP100 */
+  { /* Canon CP-100, CP-200, CP-300 */
     1000,
     &cmy_ink_list,
     &res_314dpi_list,
     &cpx00_page_list,
     &cpx00_printsize_list,
+    OLYMPUS_INTERLACE_PLANE, OLYMPUS_PLANEORDER_YMC,
+    1808,
+    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
+      | OLYMPUS_FEATURE_BORDERLESS | OLYMPUS_FEATURE_WHITE_BORDER,
+    &cpx00_printer_init_func, NULL,
+    &cpx00_plane_init_func, NULL,
+    NULL, NULL,
+    cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
+    NULL,
+  },
+  { /* Canon CP-220, CP-330 */
+    1001,
+    &cmy_ink_list,
+    &res_314dpi_list,
+    &cp220_page_list,
+    &cp220_printsize_list,
     OLYMPUS_INTERLACE_PLANE, OLYMPUS_PLANEORDER_YMC,
     1808,
     OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
@@ -1219,8 +1371,8 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   int xdpi, ydpi;	/* Resolution */
 
   /* image in pixels */
-  unsigned short image_px_width;
-  unsigned short image_px_height;
+  int image_px_width;
+  int image_px_height;
 
   /* output in 1/72" */
   int out_pt_width  = stp_get_width(v);
