@@ -1,0 +1,241 @@
+driver epson-gs-and-gimp-driver-0.1 {
+   
+   help "This driver supports the use of Ghostscript with the Gimp
+   Print Plugin's Ghostscript driver for the Epson Stylus line of
+   printers, including the Color, Color Pro, Pro XL, 400, 440, 500,
+   1500, 600, 640, 740, 800, 850, 900, 1520, 3000, and Photo, Photo
+   700, EX, 860, and 1200.  This driver is rather slow, but the output
+   quality is quite good.  A few printers are untested; consult
+   http://gimp-print.sourceforge.net."
+
+
+   requires "gs"
+
+   verify_exec {
+     (gs -h |grep -q stp) || 
+     (echo "Ghostscript driver stp is required; see http://gimp-print.sourceforge.net"; exit 1)
+   }
+
+   option {
+      var = "MODEL"
+      desc = "Epson Stylus Model"
+      choice "COLOR" {
+         value = "0"
+         desc = "Color"
+         help = "The original Stylus Color"
+      }
+      choice "COLORPRO" {
+         value = "1"
+         desc = "Color Pro/Pro XL/400/500"
+      }
+      choice "COLOR1500" {
+         value = "2"
+         desc = "Color 1500"
+      }
+      choice "COLOR600" {
+         value = "3"
+         desc = "Color 600"
+      }
+      choice "COLOR800" {
+         value = "4"
+         desc = "Color 800"
+      }
+      choice "COLOR850" {
+         value = "5"
+         desc = "Color 850"
+      }
+      choice "COLOR1520" {
+         desc = "Color 1520/3000"
+         help = "The Stylus Color 1520 or Stylus Color 3000"
+         value = "6"
+      }
+      choice "PHOTO700" {
+         value = "7"
+         desc = "Photo 700"
+      }
+      choice "PHOTOEX" {
+         value = "8"
+         desc = "Photo EX"
+      }
+      choice "PHOTO" {
+         desc = "Photo"
+         value = "9"
+         help = "The Stylus Photo"
+      }
+      choice "COLOR440" {
+         value = "10"
+         desc = "Color 440"
+      }
+      choice "COLOR640" {
+         value = "11"
+         desc = "Color 640"
+      }
+      choice "COLOR740" {
+         value = "12"
+         desc = "Color 740"
+      }
+      choice "COLOR900" {
+         value = "13"
+         desc = "Color 900"
+      }
+      choice "PHOTO750" {
+         value = "14"
+         desc = "Photo 750"
+      }
+      choice "PHOTO1200" {
+         value = "15"
+         desc = "Photo 1200"
+      }
+      choice "PHOTO860" {
+         value = "16"
+         desc = "Photo 860"
+      }
+   }
+
+   option {
+      var = "QUALITY"
+      choice "DPI360" {
+         value = "0"
+         desc = "360dpi"
+      }
+      choice "DPI720A" {
+         value = "1"
+         desc = "720dpi Microweave"
+      }
+      choice "DPI720B" {
+         value = "2"
+         desc = "720dpi Softweave"
+      }
+      choice "DPI720C" {
+         value = "3"
+         desc = "720dpi High Quality"
+      }
+      choice "DPI720D" {
+         value = "4"
+         desc = "720dpi Highest Quality"
+      }
+      choice "DPI1440A" {
+         value = "5"
+         desc = "1220x720dpi Softweave"
+      }
+      choice "DPI1440A" {
+         value = "6"
+         desc = "1220x720dpi Highest Quality"
+      }
+      choice "DPI1440A" {
+         value = "7"
+         desc = "1220x720dpi Two-pass"
+         help = "untested"
+      }
+   }
+
+   option {
+      var = "PAPERSIZE"
+      choice "LETTER" {
+         value = "letter"
+         desc = "Letter"
+      }
+      choice "LEGAL" {
+         value = "legal"
+         desc = "Legal"
+      }
+      choice "A4" {
+         value = "a4"
+         desc = "A4"
+      }
+      choice "A3" {
+         value = "a3"
+         desc = "a3"
+      }
+   }
+
+   option {
+      var = "COLOR"
+      choice "COLOR" {
+          value = "1"
+          desc = "Color"
+      }
+      choice "GREYSCALE" {
+          value = "0"
+          desc = "Greyscale"
+      }
+   }
+
+   argument {
+      var = "RED"
+      def_value = "100"
+      desc = "Red Balance"
+      help = "Relative value of red from 0 to 200 (default 100)"
+   }
+
+   argument {
+      var = "GREEN"
+      def_value = "100"
+      desc = "Green Balance"
+      help = "Relative value of green from 0 to 200 (default 100)"
+   }
+
+   argument {
+      var = "BLUE"
+      def_value = "100"
+      desc = "Blue Balance"
+      help = "Relative value of blue from 0 to 200 (default 100)"
+   }
+
+   argument {
+      var = "BRIGHTNESS"
+      def_value = "100"
+      desc = "Brightness"
+      help = "Brightness from 0 to 400 (default 100)"
+   }
+
+   argument {
+      var = "CONTRAST"
+      def_value = "100"
+      desc = "Contrast"
+      help = "Contrast from 25 to 400"
+   }
+
+   argument {
+      var = "GAMMA"
+      def_value = "1.0"
+      desc = "Gamma"
+      help = "Gamma value from 0.1 to 3.0 (default 1.0)"
+   }
+
+   argument {
+      var = "DENSITY"
+      def_value = "0.8"
+      desc = "Density"
+      help = "Density from 0.1 to 2.0 (default 0.8)"
+   }
+
+   argument {
+      var = "SATURATION"
+      def_value = "1.0"
+      desc = "Saturation"
+      help = "Saturation from 0.1 to 9.0 (default 1.0)"
+   }
+
+   language_driver ps { 
+      filetype_regx = "postscript"
+      convert_exec {
+         gs -q -dBATCH -dSAFER -dNOPAUSE \
+	     -sDEVICE=stp \
+             -dRed=$RED \
+	     -dGreen=$GREEN \
+	     -dBlue=$BLUE \
+	     -dBrightness=$BRIGHTNESS \
+	     -dContrast=$CONTRAST \
+	     -dGamma=$GAMMA \
+	     -dDensity=$DENSITY \
+	     -dSaturation=$SATURATION \
+	     -dColor=$COLOR \
+	     -dModel=$MODEL \
+	     -dQuality=$QUALITY \
+             -sOutputFile=$OUTPUT $INPUT
+      }
+   }
+
+   language_driver text { }
+}
