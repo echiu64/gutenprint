@@ -1181,7 +1181,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 			       desc.name, _(desc.text), _("Fine Adjustment"));
 		      gzprintf(fp, "*DefaultStpFine%s: 0\n", desc.name);
 		      gzprintf(fp, "*StpFine%s: None/0.000: ""\n", desc.name);
-		      for (i = 5; i < 100; i += 5)
+		      for (i = 0; i < 100; i += 5)
 			gzprintf(fp, "*StpFine%s %d/%.3f: \"\"\n",
 				 desc.name, i, ((double) i) * .001);
 		      gzprintf(fp, "*CloseUI: *StpFine%s\n\n", desc.name);
