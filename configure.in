@@ -9,7 +9,7 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_LN_S
 
-AM_PATH_GIMP(1.1.9,
+AM_PATH_GIMP(1.0.0,
         [SAVE_GTK_LIBS="$GIMP_LIBS"
         SAVE_GTK_CFLAGS="$GIMP_CFLAGS"],
         AC_MSG_ERROR(Cannot find GIMP libs: Is gimptool in executable path?))
