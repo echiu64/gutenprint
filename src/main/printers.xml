@@ -274,6 +274,9 @@
 <model value=44>
 <gamma value=0.585>
 <density value=1.0>
+<cyan value=0.94>
+<magenta value=1.03>
+<yellow value=1.03>
 <language value=escp2>
 </printer>
 
@@ -282,9 +285,9 @@
 <model value=44>
 <gamma value=0.585>
 <density value=1.0>
-<cyan value=0.92>
-<magenta value=1.04>
-<yellow value=1.04>
+<cyan value=0.94>
+<magenta value=1.03>
+<yellow value=1.03>
 <language value=escp2>
 </printer>
 

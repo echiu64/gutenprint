@@ -37,9 +37,9 @@ test "$libtool_major" -le 1 && {
   }
 } && {
   echo
-  echo "**Warning**: You must have \`libtool' 1.4.2 or newer installed to"
+  echo "**Warning**: You should have \`libtool' 1.4.2 or newer installed to"
   echo "create a gimp-print distribution.  Earlier versions of gettext do"
-  echo "not generate the correct 'make uninstall' code."
+  echo "not generate correct code for all platforms."
   echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.4.2.tar.gz"
   echo "(or a newer version if it is available)"
 }

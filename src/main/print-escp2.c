@@ -564,7 +564,7 @@ static escp2_variable_ink_t standard_6pl_pigment_ink =
 
 static const stp_simple_dither_range_t standard_3pl_pigment_dither_ranges[] =
 {
-  { 0.500, 0x1, 1, 1 },
+  { 0.650, 0x1, 1, 1 },
   { 1.000, 0x2, 1, 2 },
 };
 
@@ -1902,7 +1902,7 @@ static const escp2_densities_t spro10000_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.710, 0.216, 0.784, 0.392, 0.392, 0.196 };
 
 static const escp2_densities_t c3pl_pigment_densities =
-{ 2.0, 2.0, 1.3, 1.3, 0.98, 0.98, 0.73,  0.73,  0.9,   0.9,   0.9,   0.9,   0.110 };
+{ 2.0, 2.0, 1.3, 1.3, 0.69, 0.69, 0.511, 0.511, 0.765, 0.765, 0.585, 0.585, 0.110 };
 
 /*
  For each printhead (=color), the offset in escp2_base_separation (1/360")

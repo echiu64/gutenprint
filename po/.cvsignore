@@ -3,11 +3,8 @@ Makefile.in
 Makefile.in.in
 POTFILES
 cat-id-tbl.c
-en_GB.gmo
-sv.gmo
-fr.gmo
-no.gmo
-da.gmo
+*.gmo
 gimp-print.pot
 stamp-cat-id
 ChangeLog
+messages
