@@ -133,16 +133,6 @@ static int		left, right;	        /* Imageable area */
 static int              top, bottom;
 static int		paper_width, paper_height;	/* Physical width */
 
-
-extern GtkObject* brightness_adjustment; /* Adjustment object for brightness */
-extern GtkObject* saturation_adjustment; /* Adjustment object for saturation */
-extern GtkObject* density_adjustment;	 /* Adjustment object for density */
-extern GtkObject* contrast_adjustment;	 /* Adjustment object for contrast */
-extern GtkObject* red_adjustment;	 /* Adjustment object for red */
-extern GtkObject* green_adjustment;	 /* Adjustment object for green */
-extern GtkObject* blue_adjustment;	 /* Adjustment object for blue */
-extern GtkObject* gamma_adjustment;	 /* Adjustment object for gamma */
-
 static void gtk_scaling_update(GtkAdjustment *);
 static void gtk_scaling_callback(GtkWidget *);
 static void gtk_plist_callback(GtkWidget *, gint);
@@ -1405,29 +1395,7 @@ static void gtk_do_misc_updates(void)
       gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
     }
 
-  GTK_ADJUSTMENT(brightness_adjustment)->value = plist[plist_current].v.brightness;
-  gtk_signal_emit_by_name(brightness_adjustment, "value_changed");
-
-  GTK_ADJUSTMENT(gamma_adjustment)->value = plist[plist_current].v.gamma;
-  gtk_signal_emit_by_name(gamma_adjustment, "value_changed");
-
-  GTK_ADJUSTMENT(contrast_adjustment)->value = plist[plist_current].v.contrast;
-  gtk_signal_emit_by_name(contrast_adjustment, "value_changed");
-
-  GTK_ADJUSTMENT(red_adjustment)->value = plist[plist_current].v.red;
-  gtk_signal_emit_by_name(red_adjustment, "value_changed");
-
-  GTK_ADJUSTMENT(green_adjustment)->value = plist[plist_current].v.green;
-  gtk_signal_emit_by_name(green_adjustment, "value_changed");
-
-  GTK_ADJUSTMENT(blue_adjustment)->value = plist[plist_current].v.blue;
-  gtk_signal_emit_by_name(blue_adjustment, "value_changed");
-
-  GTK_ADJUSTMENT(saturation_adjustment)->value = plist[plist_current].v.saturation;
-  gtk_signal_emit_by_name(saturation_adjustment, "value_changed");
-
-  GTK_ADJUSTMENT(density_adjustment)->value = plist[plist_current].v.density;
-  gtk_signal_emit_by_name(density_adjustment, "value_changed");
+  gtk_do_color_updates();
 
   if (plist[plist_current].v.output_type == OUTPUT_GRAY)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_gray), TRUE);

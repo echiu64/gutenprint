@@ -39,6 +39,7 @@ extern int plist_current;    /* Current system printer */
 extern plist_t  *plist;       /* System printers */
 
 GtkWidget* gtk_color_adjust_dialog;
+extern void gimp_do_color_updates(void);
 
 static GtkWidget* brightness_scale;	/* Scale for brightness */
 static GtkWidget* brightness_entry;	/* Text entry widget for brightness */
@@ -60,14 +61,14 @@ static GtkWidget* dismiss_button;      /* Action area dismiss button */
 static GtkWidget* dither_algo_button;  /* Button for dither type menu */
 static GtkWidget* dither_algo_menu = NULL;  /* dither menu */
 
-extern GtkObject* brightness_adjustment;  /* Adjustment object for brightness */
-extern GtkObject* saturation_adjustment;  /* Adjustment object for saturation */
-extern GtkObject* density_adjustment;	   /* Adjustment object for density */
-extern GtkObject* contrast_adjustment;	   /* Adjustment object for contrast */
-extern GtkObject* red_adjustment;	   /* Adjustment object for red */
-extern GtkObject* green_adjustment;	   /* Adjustment object for green */
-extern GtkObject* blue_adjustment;	   /* Adjustment object for blue */
-extern GtkObject* gamma_adjustment;	   /* Adjustment object for gamma */
+static GtkObject* brightness_adjustment;  /* Adjustment object for brightness */
+static GtkObject* saturation_adjustment;  /* Adjustment object for saturation */
+static GtkObject* density_adjustment;	   /* Adjustment object for density */
+static GtkObject* contrast_adjustment;	   /* Adjustment object for contrast */
+static GtkObject* red_adjustment;	   /* Adjustment object for red */
+static GtkObject* green_adjustment;	   /* Adjustment object for green */
+static GtkObject* blue_adjustment;	   /* Adjustment object for blue */
+static GtkObject* gamma_adjustment;	   /* Adjustment object for gamma */
 
 
 static void gtk_brightness_update(GtkAdjustment *);
@@ -632,6 +633,34 @@ void gtk_create_color_adjust_window(void)
     /***
      * Don't realize this dialog just yet, just return
      ***/
+}
+
+void
+gtk_do_color_updates(void)
+{
+  GTK_ADJUSTMENT(brightness_adjustment)->value = plist[plist_current].v.brightness;
+  gtk_signal_emit_by_name(brightness_adjustment, "value_changed");
+
+  GTK_ADJUSTMENT(gamma_adjustment)->value = plist[plist_current].v.gamma;
+  gtk_signal_emit_by_name(gamma_adjustment, "value_changed");
+
+  GTK_ADJUSTMENT(contrast_adjustment)->value = plist[plist_current].v.contrast;
+  gtk_signal_emit_by_name(contrast_adjustment, "value_changed");
+
+  GTK_ADJUSTMENT(red_adjustment)->value = plist[plist_current].v.red;
+  gtk_signal_emit_by_name(red_adjustment, "value_changed");
+
+  GTK_ADJUSTMENT(green_adjustment)->value = plist[plist_current].v.green;
+  gtk_signal_emit_by_name(green_adjustment, "value_changed");
+
+  GTK_ADJUSTMENT(blue_adjustment)->value = plist[plist_current].v.blue;
+  gtk_signal_emit_by_name(blue_adjustment, "value_changed");
+
+  GTK_ADJUSTMENT(saturation_adjustment)->value = plist[plist_current].v.saturation;
+  gtk_signal_emit_by_name(saturation_adjustment, "value_changed");
+
+  GTK_ADJUSTMENT(density_adjustment)->value = plist[plist_current].v.density;
+  gtk_signal_emit_by_name(density_adjustment, "value_changed");
 }
 
 /***************************************************************************

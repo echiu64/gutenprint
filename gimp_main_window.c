@@ -45,9 +45,9 @@ extern const printer_t *current_printer;
 extern gint             runme;
 extern gint             saveme;
 
-extern GtkWidget *gimp_color_adjust_dialog;
-
 void  printrc_save (void);
+extern GtkWidget *gimp_color_adjust_dialog;
+extern void gimp_do_color_updates(void);
 
 /*
  *  Main window widgets
@@ -118,15 +118,6 @@ static gint            print_height;	/* Printed height of image */
 static gint	       left, right;	        /* Imageable area */
 static gint            top, bottom;
 static gint	       paper_width, paper_height;	/* Physical width */
-
-extern GtkObject *brightness_adjustment; /* Adjustment object for brightness */
-extern GtkObject *saturation_adjustment; /* Adjustment object for saturation */
-extern GtkObject *density_adjustment;	 /* Adjustment object for density */
-extern GtkObject *contrast_adjustment;	 /* Adjustment object for contrast */
-extern GtkObject *red_adjustment;	 /* Adjustment object for red */
-extern GtkObject *green_adjustment;	 /* Adjustment object for green */
-extern GtkObject *blue_adjustment;	 /* Adjustment object for blue */
-extern GtkObject *gamma_adjustment;	 /* Adjustment object for gamma */
 
 static void gimp_scaling_update        (GtkAdjustment *adjustment);
 static void gimp_scaling_callback      (GtkWidget     *widget);
@@ -1094,29 +1085,7 @@ gimp_do_misc_updates (void)
       gtk_signal_emit_by_name (scaling_adjustment, "value_changed");
     }
 
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (brightness_adjustment),
-			    plist[plist_current].v.brightness);
-
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (gamma_adjustment),
-			    plist[plist_current].v.gamma);
-
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (contrast_adjustment),
-			    plist[plist_current].v.contrast);
-
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (red_adjustment),
-			    plist[plist_current].v.red);
-
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (green_adjustment),
-			    plist[plist_current].v.green);
-
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (blue_adjustment),
-			    plist[plist_current].v.blue);
-
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (saturation_adjustment),
-			    plist[plist_current].v.saturation);
-
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (density_adjustment),
-			    plist[plist_current].v.density);
+  gimp_do_color_updates();
 
   if (plist[plist_current].v.output_type == OUTPUT_GRAY)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (output_gray), TRUE);

@@ -35,14 +35,14 @@ extern plist_t  *plist;		/* System printers */
 
 GtkWidget *gimp_color_adjust_dialog;
 
-extern GtkObject *brightness_adjustment;
-extern GtkObject *saturation_adjustment;
-extern GtkObject *density_adjustment;
-extern GtkObject *contrast_adjustment;
-extern GtkObject *red_adjustment;
-extern GtkObject *green_adjustment;
-extern GtkObject *blue_adjustment;
-extern GtkObject *gamma_adjustment;
+static GtkObject *brightness_adjustment;
+static GtkObject *saturation_adjustment;
+static GtkObject *density_adjustment;
+static GtkObject *contrast_adjustment;
+static GtkObject *red_adjustment;
+static GtkObject *green_adjustment;
+static GtkObject *blue_adjustment;
+static GtkObject *gamma_adjustment;
 
 static GtkWidget *dither_algo_button = NULL;
 static GtkWidget *dither_algo_menu   = NULL;
@@ -297,6 +297,34 @@ gimp_gamma_update (GtkAdjustment *adjustment)
       vars.gamma = adjustment->value;
       plist[plist_current].v.gamma = adjustment->value;
     }
+}
+
+void
+gimp_do_color_updates(void)
+{
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (brightness_adjustment),
+			    plist[plist_current].v.brightness);
+
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (gamma_adjustment),
+			    plist[plist_current].v.gamma);
+
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (contrast_adjustment),
+			    plist[plist_current].v.contrast);
+
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (red_adjustment),
+			    plist[plist_current].v.red);
+
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (green_adjustment),
+			    plist[plist_current].v.green);
+
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (blue_adjustment),
+			    plist[plist_current].v.blue);
+
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (saturation_adjustment),
+			    plist[plist_current].v.saturation);
+
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (density_adjustment),
+			    plist[plist_current].v.density);
 }
 
 void

@@ -1,3 +1,88 @@
+2000-07-16	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.30) (+5 -1)
+		gtk_main_window.c (1.39) (+5 -1)
+	
+	Maintain correct scaling value across restarts
+	
+2000-07-15	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.187) (+89 -102)
+	
+	Improve 720 dpi on 870/860 class printers
+	
+2000-07-15	<rlk@sourceforge.net>
+
+	Files:	escputil.c (1.6) (+12 -5)
+		print.h (1.69) (+3 -2)
+		print-escp2.c (1.186) (+8 -3)
+		print-dither.c (1.72) (+21 -16)
+	
+	More minor tweaks
+	
+2000-07-14	<cpbs@sourceforge.net>
+
+	Files:	Ghost/gdevstp.c (1.28) (+23 -21)
+	
+	New function, get_escp2_printer_by_model().  Use it in stp_print_page()
+	and stp_open().  stp_open() previously used get_printer_by_index()
+	which can't have been right.
+	
+2000-07-14	<rlk@sourceforge.net>
+
+	Files:	README.dither (1.6) (+42 -110)
+	
+	Some updates.
+	
+2000-07-14	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.71) (+2 -2)
+		print-escp2.c (1.185) (+2 -2)
+	
+	Minor parameter tweaking
+	
+2000-07-14	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.184) (+8 -4)
+	
+	Set adaptive level correctly for single dot size 6-color printers.
+	
+2000-07-14	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.70) (+12 -3)
+		print-escp2.c (1.183) (+10 -71)
+	
+	Improve quality on variable dot size printers, and possibly on others
+	as well:
+	
+	1) Change adaptive thresholding to be hard rather than soft.  It now
+	uses a brick wall threshold.  To simulate error diffusion properly,
+	we set the error to -(value / 2), which is consistent with normal
+	error diffusion operation.
+	
+	2) Retune the drop size constants.  They are now the same as
+	Jean-Marc Verbavatz's constants.  However, we only use the smallest
+	droplet size of light ink.  This gives very smooth color gradations,
+	while actually using less ink (because we now use the small drop size
+	of dark ink).
+	
+	3) Slightly increase the black threshold for 6-color, variable drop
+	size printers.
+	
+	4) Switch back to linear transition for black.
+	
+2000-07-13	<rlk@sourceforge.net>
+
+	Files:	README.escp2 (1.9) (+25 -0)
+	
+	(slightly) More info on remote mode.
+	
+2000-07-12	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.23) (+12 -0)
+	
+	3.1.8 redo
+	
 2000-07-12	<rlk@sourceforge.net>
 
 	Files:	Makefile.am (1.42) (+1 -1)

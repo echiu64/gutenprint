@@ -277,7 +277,7 @@ calc_ordered_point(unsigned x, unsigned y, int steps, int multiplier,
   return retval * multiplier;
 }
 
-void
+static void
 init_iterated_matrix(dither_matrix_t *mat, int size, int exp,
 		     unsigned *array)
 {
@@ -305,7 +305,7 @@ init_iterated_matrix(dither_matrix_t *mat, int size, int exp,
   mat->i_own = 1;
 }
 
-void
+static void
 init_matrix(dither_matrix_t *mat, int x_size, int y_size,
 	    unsigned int *array, int transpose)
 {
@@ -332,7 +332,7 @@ init_matrix(dither_matrix_t *mat, int x_size, int y_size,
   mat->i_own = 1;
 }
 
-void
+static void
 init_matrix_short(dither_matrix_t *mat, int x_size, int y_size,
 		  unsigned short *array, int transpose)
 {
@@ -359,7 +359,7 @@ init_matrix_short(dither_matrix_t *mat, int x_size, int y_size,
   mat->i_own = 1;
 }
 
-void
+static void
 destroy_matrix(dither_matrix_t *mat)
 {
   if (mat->i_own && mat->matrix)
@@ -372,7 +372,7 @@ destroy_matrix(dither_matrix_t *mat)
   mat->i_own = 0;
 }
 
-void
+static void
 clone_matrix(const dither_matrix_t *src, dither_matrix_t *dest,
 	     int x_offset, int y_offset)
 {
@@ -391,7 +391,7 @@ clone_matrix(const dither_matrix_t *src, dither_matrix_t *dest,
   dest->i_own = 0;
 }
 
-void
+static void
 copy_matrix(const dither_matrix_t *src, dither_matrix_t *dest)
 {
   int x;
@@ -412,7 +412,7 @@ copy_matrix(const dither_matrix_t *src, dither_matrix_t *dest)
   dest->i_own = 1;
 }
 
-void
+static void
 exponential_scale_matrix(dither_matrix_t *mat, double exponent)
 {
   int i;

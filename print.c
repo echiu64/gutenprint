@@ -81,15 +81,6 @@ extern void     gtk_create_main_window (void);
 static void	cleanupfunc(void);
 #endif
 
-GtkObject* brightness_adjustment; /* Adjustment object for brightness */
-GtkObject* saturation_adjustment; /* Adjustment object for saturation */
-GtkObject* density_adjustment;    /* Adjustment object for density */
-GtkObject* contrast_adjustment;   /* Adjustment object for contrast */
-GtkObject* red_adjustment;        /* Adjustment object for red */
-GtkObject* green_adjustment;      /* Adjustment object for green */
-GtkObject* blue_adjustment;       /* Adjustment object for blue */
-GtkObject* gamma_adjustment;      /* Adjustment object for gamma */
-
 /*
  * Globals...
  */
