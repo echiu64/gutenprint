@@ -121,6 +121,8 @@ install-data-hook:
 
 .PHONY: ppd
 
+all-local: $(INSTALL_DATA_LOCAL_DEPS)
+
 ppd: ppd-stamp
 ppd-stamp: genppd
 	-rm -rf ppd

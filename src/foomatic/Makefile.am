@@ -64,6 +64,8 @@ else
 INSTALL_DATA_LOCAL_DEPS =
 endif
 
+all-local: $(INSTALL_DATA_LOCAL_DEPS)
+
 install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
 	  foomatic-kitload -k foomatic-db ; \
@@ -72,9 +74,12 @@ install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 clean-local:
 	-rm -rf foomatic-db
 
-foomatic-data: stp_limits foomatic-generator
+foomatic-data: foomatic-stamp
+
+foomatic-stamp: foomatic-generator $(EXTRA_PROGRAMS)
 	-rm -rf foomatic-db
 	./foomatic-generator
+	touch foomatic-stamp
 
 $(LIBGIMPPRINT_LIBS):
 	$(MAKE) -C ../../src/main
