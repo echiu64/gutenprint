@@ -45,8 +45,7 @@ LIBPRINTUT = $(top_builddir)/lib/libprintut.la
 LIBS = $(INTLLIBS) @LIBS@
 
 if BUILD_GENPPD_STATIC
-GPPD_EXTRA_LD1=-
-GPPD_EXTRA_LD2=static
+STATIC_LDOPTS=-static
 endif
 
 ## Programs
@@ -78,11 +77,13 @@ epson_SOURCES = epson.c
 epson_LDADD = $(LIBPRINTUT) $(CUPS_LIBS)
 
 genppd_SOURCES = genppd.c
-genppd_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(LIBGIMPPRINT_LIBS) $(GPPD_EXTRA_LD1)$(GPPD_EXTRA_LD2)
+genppd_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(LIBGIMPPRINT_LIBS)
+genppd_LDFLAGS= $(STATIC_LDOPTS)
 genppd_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 rastertoprinter_SOURCES = rastertoprinter.c
 rastertoprinter_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(LIBGIMPPRINT_LIBS)
+rastertoprinter_LDFLAGS= $(STATIC_LDOPTS)
 rastertoprinter_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 
