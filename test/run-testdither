@@ -7,7 +7,7 @@ if [ -z "$bits" ] ; then
 fi
 
 if [ -z "$dither_types" ] ; then
-    dither_types='monochrome gray color photo cmyk photocmyk'
+    dither_types='gray color photo cmyk photocmyk'
 fi
 
 if [ -z "$image_types" ] ; then
