@@ -426,6 +426,19 @@ static escp2_variable_ink_t standard_3pl_1440_ink =
 };
 
 
+static stp_simple_dither_range_t standard_3pl_2880_dither_ranges[] =
+{
+  { 1.0,   0x1, 1, 1 },
+};
+
+static escp2_variable_ink_t standard_3pl_2880_ink =
+{
+  standard_3pl_2880_dither_ranges,
+  sizeof(standard_3pl_2880_dither_ranges) / sizeof(stp_simple_dither_range_t),
+  1.0
+};
+
+
 static stp_simple_dither_range_t photo_multishot_dither_ranges[] =
 {
   { 0.1097, 0x1, 0, 1 },
@@ -571,6 +584,14 @@ static escp2_variable_inkset_t escp2_3pl_1440_standard_inks =
   &standard_3pl_1440_ink,
   &standard_3pl_1440_ink,
   &standard_3pl_1440_ink
+};
+
+static escp2_variable_inkset_t escp2_3pl_2880_standard_inks =
+{
+  &standard_3pl_2880_ink,
+  &standard_3pl_2880_ink,
+  &standard_3pl_2880_ink,
+  &standard_3pl_2880_ink
 };
 
 static escp2_variable_inkset_t escp2_multishot_standard_inks =
@@ -763,8 +784,8 @@ static escp2_variable_inklist_t variable_3pl_4color_inks =
       &escp2_6pl_standard_inks,
       &escp2_3pl_standard_inks,
       &escp2_3pl_1440_standard_inks,
-      &escp2_3pl_1440_standard_inks,
-      &escp2_3pl_1440_standard_inks,
+      &escp2_3pl_2880_standard_inks,
+      &escp2_3pl_2880_standard_inks,
     }
   }
 };
@@ -1082,6 +1103,13 @@ typedef struct escp2_printer
   double *sat_adjustment;
 } escp2_stp_printer_t;
 
+typedef struct escp2_printer_attribute
+{
+  const char *attr_name;
+  int shift;
+  int bits;
+} escp2_printer_attr_t;
+
 #define MODEL_INIT_MASK		0xfull /* Is a special init sequence */
 #define MODEL_INIT_STANDARD	0x0ull /* required for this printer, and if */
 #define MODEL_INIT_900		0x1ull /* so, what */
@@ -1125,6 +1153,32 @@ typedef struct escp2_printer
 #define MODEL_ZEROMARGIN_MASK	0x40000ull /* Does this printer support */
 #define MODEL_ZEROMARGIN_NO	0x00000ull /* zero margin mode? */
 #define MODEL_ZEROMARGIN_YES	0x40000ull /* (print to the edge of the paper) */
+
+#define MODEL_INIT		(0)
+#define MODEL_HASBLACK		(1)
+#define MODEL_COLOR		(2)
+#define MODEL_GRAYMODE		(3)
+#define MODEL_720DPI_MODE	(4)
+#define MODEL_VARIABLE_DOT	(5)
+#define MODEL_COMMAND		(6)
+#define MODEL_INK		(7)
+#define MODEL_ROLLFEED		(8)
+#define MODEL_ZEROMARGIN	(9)
+#define MODEL_LIMIT		(10)
+
+static const escp2_printer_attr_t escp2_printer_attrs[] =
+{
+  { "init_sequence",	 0, 4 },
+  { "has_black",	 4, 1 },
+  { "color",		 5, 2 },
+  { "graymode",		 7, 1 },
+  { "720dpi_mode",	 8, 2 },
+  { "variable_mode",	10, 2 },
+  { "command_mode",	12, 4 },
+  { "ink_types",	16, 1 },
+  { "rollfeed", 	17, 1 },
+  { "zero_margin",	18, 1 }
+};
 
 #define INCH(x)		(72 * x)
 
@@ -1757,10 +1811,18 @@ get_media_type(const char *name)
 }
 
 static int
-escp2_has_cap(int model, model_featureset_t featureset,
+escp2_has_cap(int model, int feature,
 	      model_featureset_t class, const stp_vars_t *v)
 {
-  return ((model_capabilities[model].flags & featureset) == class);
+  if (feature < 0 || feature >= MODEL_LIMIT)
+    return -1;
+  else
+    {
+      model_featureset_t featureset =
+	(((1ull << escp2_printer_attrs[feature].bits) - 1ull) <<
+	 escp2_printer_attrs[feature].shift);
+      return ((model_capabilities[model].flags & featureset) == class);
+    }
 }
 
 static int
@@ -1901,6 +1963,15 @@ escp2_sat_adjustment(int model, const stp_vars_t *v)
   return (model_capabilities[model].sat_adjustment);
 }
 
+static void *
+xzmalloc(size_t bytes)
+{
+  void *retval = xmalloc(bytes);
+  if (retval)
+    memset(retval, 0, bytes);
+  return (retval);
+}
+
 /*
  * 'escp2_parameters()' - Return the parameter values for the given parameter.
  */
@@ -1991,7 +2062,7 @@ escp2_parameters(const stp_printer_t *printer,	/* I - Printer model */
     }
   else if (strcmp(name, "InkType") == 0)
     {
-      if (escp2_has_cap(model, MODEL_COLOR_MASK, MODEL_COLOR_4, &printer->printvars))
+      if (escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_4, &printer->printvars))
 	return NULL;
       else
 	{
@@ -2020,7 +2091,7 @@ escp2_parameters(const stp_printer_t *printer,	/* I - Printer model */
     }
   else if (strcmp(name, "InputSlot") == 0)
     {
-      if (escp2_has_cap(model, MODEL_ROLLFEED_MASK, MODEL_ROLLFEED_NO,
+      if (escp2_has_cap(model, MODEL_ROLLFEED, MODEL_ROLLFEED_NO,
 			&printer->printvars))
 	return NULL;
       else
@@ -2139,7 +2210,7 @@ escp2_reset_printer(const stp_vars_t *v, escp2_init_t *init)
    * the input.  It only needs to be done once per printer evidently, but
    * it needs to be done.
    */
-  if (escp2_has_cap(init->model, MODEL_INIT_MASK, MODEL_INIT_900, init->v))
+  if (escp2_has_cap(init->model, MODEL_INIT, MODEL_INIT_900, init->v))
     stp_zprintf(v, "%c%c%c\033\001@EJL 1284.4\n@EJL     \n\033@", 0, 0, 0);
 
   stp_puts("\033@", v); 				/* ESC/P2 reset */
@@ -2149,7 +2220,7 @@ static void
 escp2_set_remote_sequence(const stp_vars_t *v, escp2_init_t *init)
 {
   /* Magic remote mode commands, whatever they do */
-  if (escp2_has_cap(init->model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999,
+  if (escp2_has_cap(init->model, MODEL_COMMAND, MODEL_COMMAND_1999,
 		    init->v))
     {
       int feed_sequence = 0;
@@ -2165,14 +2236,14 @@ escp2_set_remote_sequence(const stp_vars_t *v, escp2_init_t *init)
 	      0, 0,
 	      0, 0, 0,
 	      0, 0, 0, feed_sequence);
-      if (escp2_has_cap(init->model, MODEL_ZEROMARGIN_MASK,
+      if (escp2_has_cap(init->model, MODEL_ZEROMARGIN,
 			MODEL_ZEROMARGIN_YES, init->v))
 	stp_zprintf(v, /* Set zero-margin print mode */
 		"FP\003%c%c\260\377", 0, 0);
 
       /* set up Roll-Feed options on appropriate printers 
 	 (tested for STP 870, which has no cutter) */
-      if (escp2_has_cap(init->model, MODEL_ROLLFEED_MASK,
+      if (escp2_has_cap(init->model, MODEL_ROLLFEED,
 			MODEL_ROLLFEED_YES, init->v))
 	{
 	  if(strcmp(init->media_source,_("Roll Feed")) == 0)
@@ -2203,7 +2274,7 @@ escp2_set_graphics_mode(const stp_vars_t *v, escp2_init_t *init)
 static void
 escp2_set_resolution(const stp_vars_t *v, escp2_init_t *init)
 {
-  if (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK,
+  if (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT,
 		     MODEL_VARIABLE_NORMAL, init->v)) &&
       init->use_softweave)
     {
@@ -2218,7 +2289,7 @@ escp2_set_resolution(const stp_vars_t *v, escp2_init_t *init)
 static void
 escp2_set_color(const stp_vars_t *v, escp2_init_t *init)
 {
-  if (escp2_has_cap(init->model, MODEL_GRAYMODE_MASK, MODEL_GRAYMODE_YES,
+  if (escp2_has_cap(init->model, MODEL_GRAYMODE, MODEL_GRAYMODE_YES,
 		    init->v))
     stp_zprintf(v, "\033(K\002%c%c%c", 0, 0,
 	    (init->output_type == OUTPUT_GRAY ? 1 : 2));
@@ -2256,7 +2327,7 @@ static void
 escp2_set_page_height(const stp_vars_t *v, escp2_init_t *init)
 {
   int l = init->ydpi * init->page_height / 72;
-  if (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK,
+  if (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT,
 		      MODEL_VARIABLE_NORMAL, init->v)) &&
       init->use_softweave)
     stp_zprintf(v, "\033(C\004%c%c%c%c%c", 0,
@@ -2270,11 +2341,11 @@ escp2_set_margins(const stp_vars_t *v, escp2_init_t *init)
 {
   int l = init->ydpi * (init->page_height - init->page_bottom) / 72;
   int t = init->ydpi * (init->page_height - init->page_top) / 72;
-  if (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK,
+  if (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT,
 		      MODEL_VARIABLE_NORMAL, init->v)) &&
       init->use_softweave)
     {
-      if (escp2_has_cap(init->model, MODEL_COLOR_MASK, MODEL_COLOR_6, init->v))
+      if (escp2_has_cap(init->model, MODEL_COLOR, MODEL_COLOR_6, init->v))
 	stp_zprintf(v, "\033(c\010%c%c%c%c%c%c%c%c%c", 0,
 		t & 0xff, t >> 8, (t >> 16) & 0xff, (t >> 24) & 0xff,
 		l & 0xff, l >> 8, (l >> 16) & 0xff, (l >> 24) & 0xff);
@@ -2293,12 +2364,12 @@ escp2_set_form_factor(const stp_vars_t *v, escp2_init_t *init)
   int page_width = init->page_width * init->ydpi / 72;
   int page_height = init->page_height * init->ydpi / 72;
 
-  if (escp2_has_cap(init->model, MODEL_ZEROMARGIN_MASK, MODEL_ZEROMARGIN_YES,
+  if (escp2_has_cap(init->model, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_YES,
 		    init->v))
       /* Make the page 2/10" wider (probably ignored by the printer anyway) */
       page_width += 144 * 720 / init->xdpi;
 
-  if (escp2_has_cap(init->model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999,
+  if (escp2_has_cap(init->model, MODEL_COMMAND, MODEL_COMMAND_1999,
 		    init->v))
     stp_zprintf(v, "\033(S\010%c%c%c%c%c%c%c%c%c", 0,
 	    ((page_width >> 0) & 0xff), ((page_width >> 8) & 0xff),
@@ -2310,7 +2381,7 @@ escp2_set_form_factor(const stp_vars_t *v, escp2_init_t *init)
 static void
 escp2_set_printhead_resolution(const stp_vars_t *v, escp2_init_t *init)
 {
-  if (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK,
+  if (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT,
 		      MODEL_VARIABLE_NORMAL, init->v)) &&
       init->use_softweave)
     {
@@ -2360,14 +2431,14 @@ escp2_deinit_printer(const stp_vars_t *v, escp2_init_t *init)
         "\014"
         /* ESC/P2 reset */
         "\033@", v);
-  if (escp2_has_cap(init->model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999,
+  if (escp2_has_cap(init->model, MODEL_COMMAND, MODEL_COMMAND_1999,
 		    init->v))
     {
       stp_zprintf(v, /* Enter remote mode */
 	      "\033(R\010%c%cREMOTE1", 0, 0);
       /* set up Roll-Feed options on appropriate printers 
 	 (tested for STP 870, which has no cutter) */
-      if (escp2_has_cap(init->model, MODEL_ROLLFEED_MASK,
+      if (escp2_has_cap(init->model, MODEL_ROLLFEED,
 			MODEL_ROLLFEED_YES, init->v))
 	{
 	  if(strcmp(init->media_source,_("Roll Feed")) == 0)
@@ -2469,12 +2540,12 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
 
   separation_rows = escp2_separation_rows(model, &nv);
   max_vres = escp2_max_vres(model, &nv);
-  if (escp2_has_cap(model, MODEL_COLOR_MASK, MODEL_COLOR_6, &nv) &&
+  if (escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_6, &nv) &&
       strcmp(ink_type, _("Four Color Standard")) != 0 &&
       nv.image_type != IMAGE_MONOCHROME)
     use_6color = 1;
 
-  if (escp2_has_cap(model, MODEL_COLOR_MASK, MODEL_COLOR_7, &nv) &&
+  if (escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_7, &nv) &&
       nv.image_type != IMAGE_MONOCHROME)
     {
       if (strcmp(ink_type, _("Six Color Photo")) == 0)
@@ -2585,7 +2656,7 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
 	  return;
 	}
     }
-  if (!(escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_NORMAL,
+  if (!(escp2_has_cap(model, MODEL_VARIABLE_DOT, MODEL_VARIABLE_NORMAL,
 		      &nv))
       && use_softweave)
     bits = 2;
@@ -2641,7 +2712,7 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
   * Adjust for zero-margin printing...
   */
 
-  if (escp2_has_cap(model, MODEL_ZEROMARGIN_MASK, MODEL_ZEROMARGIN_YES, &nv))
+  if (escp2_has_cap(model, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_YES, &nv))
     {
      /*
       * In zero-margin mode, the origin is about 3/20" to the left of the
@@ -2658,7 +2729,7 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
 
   if (output_type == OUTPUT_GRAY)
   {
-    black   = xmalloc(length * bits);
+    black   = xzmalloc(length * bits);
     cyan    = NULL;
     magenta = NULL;
     lcyan    = NULL;
@@ -2668,24 +2739,24 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
   }
   else
   {
-    cyan    = xmalloc(length * bits);
-    magenta = xmalloc(length * bits);
-    yellow  = xmalloc(length * bits);
+    cyan    = xzmalloc(length * bits);
+    magenta = xzmalloc(length * bits);
+    yellow  = xzmalloc(length * bits);
 
-    if (escp2_has_cap(model, MODEL_HASBLACK_MASK, MODEL_HASBLACK_YES, &nv))
-      black = xmalloc(length * bits);
+    if (escp2_has_cap(model, MODEL_HASBLACK, MODEL_HASBLACK_YES, &nv))
+      black = xzmalloc(length * bits);
     else
       black = NULL;
     switch (colormode)
       {
       case COLOR_CCMMYYK:
-	lcyan = xmalloc(length * bits);
-	lmagenta = xmalloc(length * bits);
-	dyellow = xmalloc(length * bits);
+	lcyan = xzmalloc(length * bits);
+	lmagenta = xzmalloc(length * bits);
+	dyellow = xzmalloc(length * bits);
 	break;
       case COLOR_CCMMYK:
-	lcyan = xmalloc(length * bits);
-	lmagenta = xmalloc(length * bits);
+	lcyan = xzmalloc(length * bits);
+	lmagenta = xzmalloc(length * bits);
 	dyellow = NULL;
 	break;
       default:
@@ -3062,7 +3133,7 @@ escp2_write_microweave(const unsigned char *k,	/* I - Output bitmap data */
 
 	  if (escp2_max_hres(model, v) >= 1440 && xdpi > escp2_base_resolution)
 	    {
-	      if (!escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
+	      if (!escp2_has_cap(model, MODEL_VARIABLE_DOT,
 				 MODEL_VARIABLE_NORMAL, v))
 		{
 		  if (((offset * xdpi / 1440) + i) > 0)
@@ -3087,7 +3158,7 @@ escp2_write_microweave(const unsigned char *k,	/* I - Output bitmap data */
 	    }
 	  if (j != last_color)
 	    {
-	      if (!escp2_has_cap(model, MODEL_COLOR_MASK, MODEL_COLOR_4, v))
+	      if (!escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_4, v))
 		stp_zprintf(v, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
 	      else
 		stp_zprintf(v, "\033r%c", colors[j]);
@@ -3099,7 +3170,7 @@ escp2_write_microweave(const unsigned char *k,	/* I - Output bitmap data */
 
 	  if (ydpi == 720)
 	    {
-	      if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK,
+	      if (escp2_has_cap(model, MODEL_720DPI_MODE,
 				MODEL_720DPI_600, v))
 		stp_zfwrite("\033.\001\050\005\001", 6, 1, v);
 	      else
@@ -3155,7 +3226,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	  int a1 = (advance >> 8)  % 256;
 	  int a2 = (advance >> 16) % 256;
 	  int a3 = (advance >> 24) % 256;
-	  if (!escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
+	  if (!escp2_has_cap(model, MODEL_VARIABLE_DOT,
 			     MODEL_VARIABLE_NORMAL, v))
 	    stp_zprintf(v, "\033(v\004%c%c%c%c%c", 0, a0, a1, a2, a3);
 	  else
@@ -3164,10 +3235,10 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	}
       if (last_color != j)
 	{
-	  if (!escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
+	  if (!escp2_has_cap(model, MODEL_VARIABLE_DOT,
 			     MODEL_VARIABLE_NORMAL, v))
 	    ;
-	  else if (!escp2_has_cap(model, MODEL_COLOR_MASK, MODEL_COLOR_4,
+	  else if (!escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_4,
 				  v))
 	    stp_zprintf(v, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
 	  else
@@ -3178,9 +3249,9 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	{
 	  /* FIXME need a more general way of specifying column */
 	  /* separation */
-	  if (escp2_has_cap(model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999,
+	  if (escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_1999,
 			    v) &&
-	      !(escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
+	      !(escp2_has_cap(model, MODEL_VARIABLE_DOT,
 			      MODEL_VARIABLE_NORMAL, v)))
 	    {
 	      int pos = ((hoffset * xdpi / ydpi) + microoffset);
@@ -3204,13 +3275,11 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	  if (pos > 0)
 	    stp_zprintf(v, "\033\\%c%c", pos & 255, pos >> 8);
 	}
-      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_NORMAL,
-			v))
+      if (escp2_has_cap(model, MODEL_VARIABLE_DOT, MODEL_VARIABLE_NORMAL, v))
 	{
 	  int ydotsep = 3600 / ydpi;
 	  int xdotsep = 3600 / physical_xdpi;
-	  if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK, MODEL_720DPI_600,
-			    v))
+	  if (escp2_has_cap(model, MODEL_720DPI_MODE, MODEL_720DPI_600, v))
 	    stp_zprintf(v, "\033.%c%c%c%c", 1, 8 * ydotsep, xdotsep,
 		    *linecount + pass->missingstartrows);
 	  else if (escp2_pseudo_separation_rows(model, v) > 0)
