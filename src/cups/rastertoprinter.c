@@ -385,7 +385,9 @@ set_all_options(stp_vars_t v, cups_option_t *options, int num_options,
 	      if (ppd_option)
 		val = ppd_option->defchoice;
 	    }
-	  if (val && strcmp(val, "None") != 0)
+	  if (val && (strcmp(val, "None") != 0 ||
+		      (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST &&
+		       stp_string_list_is_present(desc.bounds.str, val))))
 	    {
 	      switch (desc.p_type)
 		{
@@ -714,12 +716,15 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
   {
     fprintf(stderr, "DEBUG2: GIMP-PRINT reading %d %d\n",
 	    bytes_per_line, cups->row);
-    cupsRasterReadPixels(cups->ras, data, bytes_per_line);
-    cups->row ++;
-    if (margin > 0)
+    while (cups->row < row)
       {
-	fprintf(stderr, "DEBUG2: GIMP-PRINT tossing right %d\n", margin);
-	throwaway_data(margin, cups);
+	cupsRasterReadPixels(cups->ras, data, bytes_per_line);
+	cups->row ++;
+	if (margin > 0)
+	  {
+	    fprintf(stderr, "DEBUG2: GIMP-PRINT tossing right %d\n", margin);
+	    throwaway_data(margin, cups);
+	  }
       }
 
    /*
