@@ -56,15 +56,19 @@
 
 
 /*
- * Languages...
+ * File handling stuff...
  */
 
-#define LANG_ENGLISH	0
-#define LANG_FRENCH	1
-#define LANG_ITALIAN	2
-#define LANG_GERMAN	3
-#define LANG_SPANISH	4
-#define NUM_LANG	5
+#ifdef HAVE_LIBZ
+#  define PPDEXT ".ppd.gz"
+#else
+#  define PPDEXT ".ppd"
+#  define gzFile FILE *
+#  define gzopen fopen
+#  define gzclose fclose
+#  define gzprintf fprintf
+#  define gzputs(f,s) fputs((s),(f))
+#endif /* HAVE_LIBZ */
 
 
 /*

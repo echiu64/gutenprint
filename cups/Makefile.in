@@ -55,11 +55,12 @@ RANLIB	=	:
 # Files...
 #
 
-TARGETS	=	calibrate commandtoepson epson epson.dep genppd \
+TARGETS	=	libdrv.a calibrate commandtoepson epson genppd \
 		rastertoprinter
 DRVOBJS	=	cups-canon.o cups-dither.o cups-escp2.o cups-pcl.o \
-		cups-ps.o cups-util.o cups-weave.o rastertoprinter.o
-OBJS	=	$(DRVOBJS) calibrate.o commandtoepson.o epson.o genppd.o
+		cups-ps.o cups-util.o cups-weave.o
+OBJS	=	$(DRVOBJS) calibrate.o commandtoepson.o epson.o genppd.o \
+		rastertoprinter.o
 
 
 #
@@ -74,8 +75,8 @@ all:	$(TARGETS)
 #
 
 clean:
-	
 	$(RM) $(OBJS) $(TARGETS)
+	$(RM) ppd/*
 
 
 #
@@ -100,8 +101,8 @@ install:
 	$(CHMOD) 755 $(PREFIX)/lib/cups/filter/commandtoepson
 
 	-$(MKDIR) $(PREFIX)/share/cups/model
-	$(CP) -r ppd/* $(PREFIX)/share/cups/model
-	$(CHMOD) 644 $(PREFIX)/share/cups/model/*/*.ppd.gz
+	$(CP) ppd/* $(PREFIX)/share/cups/model
+	$(CHMOD) a+r $(PREFIX)/share/cups/model/*
 
 
 #
@@ -132,32 +133,43 @@ epson:	epson.o
 
 
 #
-# epson.dep (for PPD files)
-#
-
-epson.dep:	epson.drv genppd
-	echo Generating EPSON PPDs...
-	./genppd epson.drv
-
-
-#
 # genppd
 #
 
-genppd:	genppd.o
+genppd:	genppd.o libdrv.a
 	echo Linking $@...
-	$(CC) $(LDFLAGS) -o genppd genppd.o $(LIBS)
+	$(CC) $(LDFLAGS) -o genppd genppd.o libdrv.a $(LIBS)
+	echo Cleaning old PPD files...
+	$(RM) ppd/*
+	echo Running $@...
+	genppd
+
+genppd.o:	cups-print.h cups-printers.c
+
+
+#
+# libdrv.a
+#
+
+libdrv.a:	$(DRVOBJS)
+	echo Archiving $@...
+	$(RM) $@
+	$(AR) $(ARFLAGS) $@ $(DRVOBJS)
+	$(RANLIB) $@
+
+$(DRVOBJS):	cups-print.h cups-quickmatrix257.h cups-ran.367.179.h
+cups-util.c:	cups-printers.c
 
 
 #
 # rastertoprinter
 #
 
-rastertoprinter:	$(DRVOBJS)
+rastertoprinter:	rastertoprinter.o libdrv.a
 	echo Linking $@...
-	$(CC) $(LDFLAGS) -o rastertoprinter $(DRVOBJS) $(LIBS) -lm
+	$(CC) $(LDFLAGS) -o rastertoprinter rastertoprinter.o libdrv.a $(LIBS)
 
-$(DRVOBJS):	cups-print.h cups-quickmatrix257.h cups-ran.367.179.h
+rastertoprinter.o:	cups-print.h cups-quickmatrix257.h cups-ran.367.179.h
 
 
 #

@@ -1,7 +1,7 @@
 dnl
 dnl "$Id$"
 dnl
-dnl   Makefile for the CUPS driver development kit.
+dnl   Configuration script for the CUPS drivers.
 dnl
 dnl   Copyright 1997-2000 by Easy Software Products, all rights reserved.
 dnl
@@ -52,6 +52,7 @@ else
 	echo "Not using -lnsl since you are running IRIX."
 fi)
 
+AC_CHECK_LIB(m,pow)
 AC_CHECK_LIB(z,gzgets)
 
 dnl Require CUPS 1.1...
@@ -62,14 +63,13 @@ dnl add warnings to compiler switches:
 dnl do this last so messing with switches does not break tests
 if test -n "$GXX"; then
     CFLAGS="-Wall -fno-rtti $CFLAGS"
-    CXXFLAGS="-Wall -Wno-return-type -fno-rtti $CXXFLAGS"
 
     # See if GCC supports -fno-exceptions...
     echo "Testing if GCC supports -fno-exceptions..."
     OLDCFLAGS="$CFLAGS"
     CFLAGS="$CFLAGS -fno-exceptions"
     AC_TRY_COMPILE(,,
-	echo "Congratulations - your GCC supports exceptions; disabling them for FLTK...",
+	echo "Congratulations - your GCC supports exceptions; disabling them for CUPS...",
 	CFLAGS="$OLDCFLAGS"
 	echo "GCC does not support exceptions...")
 fi

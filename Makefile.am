@@ -129,6 +129,8 @@ Ghost/gdevstp-%.h: %.h Makefile
 Ghost/gdevstp-%: print-% Makefile
 	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $@
 
+CUPSCODE=-e 's/^\\\#include "\(.*\)\.h"$$/\\\#include "cups-\1.h"/'
+
 cups: $(addprefix cups/, $(CUPSCOPY))
 
 cups/cups-%.h: %.h Makefile
