@@ -51,13 +51,16 @@ AC_ARG_WITH($1,
               [$3 ]m4_if([$4], , , [$4 ])[@<:@]$6[@:>@])],
             [case "${withval}" in
             m4_if([$7], ,[
-                yes) [$5]="yes" ; AC_MSG_RESULT([yes]) ;;
-                no) [$5]="no" ; AC_MSG_RESULT([no]) ;;
+                yes) [$5]="yes" ; AC_MSG_RESULT(${[$5]}) ;;
+                no) [$5]="no" ; AC_MSG_RESULT(${[$5]}) ;;
                 *) AC_MSG_RESULT([unknown])
                    AC_MSG_ERROR([bad value ${withval} for --with-$1]) ;;
 	    ], [$7])
 	    esac],
-            [AC_MSG_RESULT($6) ; m4_if([$8], , , [$8])])
+            [if test -z "${[$5]}" ; then
+               [$5]="$6"
+             fi
+             AC_MSG_RESULT(${[$5]}) ; m4_if([$8], , , [$8])])
 if test -z "${[$5]}" ; then
   [$5]="$6"
 fi
@@ -77,13 +80,16 @@ AC_ARG_ENABLE($1,
               [$3 ]m4_if([$4], , , [$4 ])[@<:@]$6[@:>@])],
             [case "${enableval}" in
             m4_if([$7], ,[
-                yes) [$5]="yes" ; AC_MSG_RESULT([yes]) ;;
-                no) [$5]="no" ; AC_MSG_RESULT([no]) ;;
+                yes) [$5]="yes" ; AC_MSG_RESULT(${[$5]}) ;;
+                no) [$5]="no" ; AC_MSG_RESULT(${[$5]}) ;;
                 *) AC_MSG_RESULT([unknown])
                    AC_MSG_ERROR([bad value ${enableval} for --enable-$1]) ;;
 	    ], [$7])
 	    esac],
-            [AC_MSG_RESULT($6) ; m4_if([$8], , , [$8])])
+            [if test -z "${[$5]}" ; then
+               [$5]="$6"
+             fi
+             AC_MSG_RESULT(${[$5]}) ; m4_if([$8], , , [$8])])
 if test -z "${[$5]}" ; then
   [$5]="$6"
 fi
