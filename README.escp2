@@ -205,14 +205,14 @@ ESC (D BC=4 BASE2 VERTICAL1 HORIZONTAL1
 	clear why this command exists.  Perhaps in future printers it
 	will be of real use.
 
-ESC (R commands ESC 00
-	Send "remote mode" commands to the printer.  This is a
-	special, undocumented command set that is used to set up
-	various printer options, such as paper feed tray.  It is
-	probably also how ink levels can be read at the host.  It does
-	not appear that anything here is actually required to make the
-	printer print.  Remote mode commands are terminated with ESC 0
-	(a null byte, not a '0' character).
+ESC (R BC=8 00 R E M O T E 1
+	Enters "remote mode".  This is a special, undocumented command set
+	that is used to set up various printer options, such as paper feed
+	tray, and perform utility functions such as head cleaning and
+	alignment.  It does not appear that anything here is actually
+	required to make the printer print.  Our best understanding of
+	what is in a remote command sequence is described in a separate
+	section below.
 
 In addition, there is one special command required to enable the USB
 port on the ESC 900 and apparently other new printers.  This must be
@@ -253,3 +253,87 @@ To terminate a page:
 
 <formfeed> (0C hex)
 ESC @
+
+
+Remote Mode Commands
+====================
+
+The following description of remote commands comes out of an examination of
+the sequences used by the printer utilities bundled with the Windows drivers
+for the ESC740.  It is largely speculative as these commands are not
+documented in the Epson documentation we have access to.
+
+Remote command mode is entered when the printer is sent the following
+sequence:
+
+     ESC (R BC=8 00 R E M O T E 1
+
+This introductory sequence is then followed by a sequence of commands.
+Each command is constructed as follows:
+
+   * Two bytes indicating the function.  The sequence is terminated
+     by a command with function ESC 00; all other commands are two capital
+     letters in ASCII.
+
+   * a byte count for the parameters
+
+   * binary parameters, if any
+
+Note that this makes the sequence terminator:
+
+   ESC 00 BC=0
+
+... or in other words ...
+
+   ESC 00 00 00
+
+This is a list of all remote commands we have seen:
+
+   * ESC 00 BC=0                     exit from remote mode
+
+   * NC BC=2 00 00                   print a nozzle check pattern
+
+   * VI BC=2 00 00                   on my 740, prints the following:
+                                          W01286 I02382\n
+                                     probably "version information"
+
+   * LD BC=0                         doesn't seem to do anything, but is
+                                     used after a nozzle check / version
+                                     information on the ESC740
+
+   * CH BC=2 00 00                   perform a head cleaning cycle
+
+   * DT BC=3 00 00 00                print an alignment pattern
+
+   * DA BC=4 00 00 00 xx             results of alignment pattern was that
+                                     group xx (binary) was the one that
+                                     was closest to aligned
+
+   * SV BC=0                         This one is used when you say "finished"
+                                     to a series of alignment checks once
+                                     you are satisfied.  I bet it means
+                                     "SaVe" the alignment in NVRAM.
+
+
+Appropriate Remote Command Sequences
+====================================
+
+All of the remote commands described above are wrapped up with the usual
+boilerplate.  The files always start with 00 00 00 and the "magic"
+command described above, then two ESC @s to reset the printer.  The
+remote command sequences come next; if they print anything that is usually
+followed by a FF (0C hex) character to feed the page, then the file ends
+with another two ESC @s to get back to the ground state.
+
+An alignment sequence goes like this:
+
+   1. Host uses DT to print an alignment sheet
+
+   2. User eyeballs the sheet to see which is the best aligned pattern.
+
+   3. Host sends a DA command indicating which pattern the user chose
+
+   4. If the user said "realign", meaning he isn't done yet, go to step 1.
+
+   5. We are done: host sends a SV command and exits.
+
