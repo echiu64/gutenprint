@@ -73,6 +73,9 @@ Known limitations of this release:
 
 5) The Canon BJC-8200 and S800 do not produce optimum quality.
 
+6) The Gimp Print plugin tooltips may not work properly on all
+   systems.
+
 
 
 Gimp-Print 4.1.99a3 contains the following changes over 4.1.99a2:
