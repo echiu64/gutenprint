@@ -42,6 +42,7 @@ typedef struct
   int   d2y;
   stpi_dis_t	d_sq;
   int	aspect;
+  int   ditherval;
 } eventone_t;
 
 
@@ -294,7 +295,6 @@ stpi_dither_et(stp_vars_t v,
   int		xerror, xstep, xmod;
   int		aspect = d->y_aspect / d->x_aspect;
   int		diff_factor;
-  int		range;
   int		channel_count = CHANNEL_COUNT(d);
 
   if (!et_initializer(d, duplicate_line, zero_mask)) return;
@@ -324,7 +324,6 @@ stpi_dither_et(stp_vars_t v,
   xstep  = channel_count * (d->src_width / d->dst_width);
   xmod   = d->src_width % d->dst_width;
   xerror = (xmod * x) % d->dst_width;
-  range = 0;
 
   for (; x != terminate; x += direction) {
     for (i=0; i < channel_count; i++) {
@@ -344,13 +343,13 @@ stpi_dither_et(stp_vars_t v,
 	  inkspot = dc->v - base;
 
 	  /* Find which are the two candidate dot sizes */
-	  range += find_segment(dc, et, inkspot, base, &lower, &upper);
+	  et->ditherval += find_segment(dc, et, inkspot, base, &lower, &upper);
 
 	  /* Determine whether to print the larger or smaller dot */
 
 	  inkp = &lower;
-	  if (range >= 32768) {
-	    range -= 65536;
+	  if (et->ditherval >= 32768) {
+	    et->ditherval -= 65536;
 	    inkp = &upper;
 	  }
 
