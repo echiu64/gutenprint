@@ -101,6 +101,9 @@ static const res_t r_1440x720hq2 =
 static const res_t r_2880x720sw =
 { "2880x720sw",    N_("2880 x 720 DPI"),
   2880, 720,  1, 0, 1};
+static const res_t r_2880x720hq2 =
+{ "2880x720hq2",   N_("2880 x 720 DPI Highest Quality"),
+  2880, 720,  1, 0, 2 };
 
 static const res_t r_1440x1440sw =
 { "1440x1440sw",   N_("1440 x 1440 DPI"),
@@ -162,7 +165,33 @@ const res_t *const stpi_escp2_1440dpi_reslist[] =
   NULL
 };
 
-const res_t *const stpi_escp2_standard_reslist[] =
+const res_t *const stpi_escp2_2880dpi_reslist[] =
+{
+  &r_360x90sw,
+
+  &r_360x120sw,
+
+  &r_180sw,
+
+  &r_360x240sw,
+
+  &r_360x180sw,
+
+  &r_360sw,
+
+  &r_720x360sw,
+
+  &r_720sw,
+
+  &r_1440x720sw,
+
+  &r_2880x720sw,
+  &r_2880x720hq2,
+
+  NULL
+};
+
+const res_t *const stpi_escp2_2880_1440dpi_reslist[] =
 {
   &r_360x90sw,
 

@@ -198,16 +198,15 @@ For Epson Stylus printers:
     Unlike typical OEM drivers, Gimp-Print allows any choice of
     resolution with any paper, so it is possible to select extremely
     high resolution with plain paper or very low resolution with high
-    quality photo paper.  Some common sense should be used; there's
-    rarely any reason to print above 720 DPI on plain paper, and
-    resolutions below 720 DPI will generally yield grossly inferior
-    results on photo papers.
-
-    The list here is currently not up to date.
+    quality photo paper.  As a general rule of thumb, we suggest
+    printing on plain paper at resolutions of 720 DPI or lower; on
+    coated inkjet paper at 360 DPI to 1440x720 DPI; on high quality
+    photo papers we recommend printing at resolutions not lower than
+    720 DPI and for best quality using the highest resolution offered
+    by the printer.
 
 Within each specified resolution, the quality is generally listed from
-worst to best (and generally higher quality means lower speed).  For
-example, 360 DPI Unidirectional is usually better than 360 DPI.
+worst to best (and generally higher quality means lower speed).
 Characteristics of specific models and individual printers may affect
 the orderings to some degree; on many printers, with certain papers,
 unidirectional printing will improve quality substantially more than
@@ -226,8 +225,9 @@ of printing at resolutions of 720 DPI and above, and some printers
 that do actually print just one row (using just one nozzle per color)
 at a time.  While this particular use will produce extremely high
 quality (no banding whatsoever, normally), it is extremely slow and
-may eventually damage the print head due to ink pooling.  All printers
-that we are aware of have no such trouble at 360 DPI.
+may eventually damage the print head due to ink pooling.  If you find
+printing at 720 DPI microweave to be excessively slow, please try a
+different mode.
 
 We generally recommend the following resolutions for the following
 purposes.  The available Quality settings for each resolution are
@@ -237,7 +237,9 @@ described in the next section.
 360x120   banded and not very dark).
 
 180       Economy draft output on plain paper (output will not be very
-          dark).
+          dark, but with less banding than 360x90).  This resolution
+          usually prints more slowly than 360x90, but renders in the
+          same amount of time.
 
 360x180   Draft output on plain paper (output will not be solidly
 360x240   black); economy draft output on good quality inkjet paper.
@@ -246,24 +248,28 @@ described in the next section.
           solidly black); draft output on good quality inkjet paper.
 
 720x360   High quality output on plain paper; standard output on good
-          quality inkjet paper.
+          quality inkjet paper.  On single drop size printers, this
+          mode prints as fast as 360 DPI (but renders more slowly); it
+          is often an excellent choice for plain paper.
 
 720       Maximum quality on plain paper; high quality on good inkjet
           paper; proofs on photo-quality paper.  On many printers,
           there will be little difference between this and 720x360 on
-          plain paper.
+          plain paper.  On older printers that do not offer 1440x720
+          DPI, we recommend use of either 720 DPI Microweave or 720
+          DPI Highest Quality to minimize microbanding.
 
-1440x720  High quality on photo paper; use 1440x720 Highest Quality to
-          reduce microbanding if needed.  While this will work on plain
-          paper, it usually offers little improvement over 720 DPI.
+1440x720  Very high quality on good inkjet paper; high quality on
+          photo paper; use 1440x720 Highest Quality to reduce
+          microbanding if needed.  It usually offers little
+          improvement over 720 DPI on plain paper.  On printers that
+          do not offer 2880x720, we recommend use of 1440x720 Highest
+          Quality to minimize microbanding.
 
-2880x720  Highest quality on photo paper on most printers.  While this
-          may yield slightly improved quality, it will generally not
-          be markedly superior to 1440x720 Highest Quality, except on
-          the Stylus Color 980 and Stylus C70 and C80, where it may
-          yield a noticeable improvement.  It takes as long to print
-          as 1440x720 highest quality, but twice as long to generate
-          the output.
+2880x720  Highest quality on photo paper on many printers.  In most
+	  cases, the quality improvement over 1440x720 DPI will be
+	  modest, as generally the smallest droplet size is used at
+	  both resolutions.
 
 1440x1440 An unsupported mode offered on a few printers that offers
           higher quality than 2880x720 for certain types of images on
@@ -271,8 +277,7 @@ described in the next section.
           advantage on smooth tones, but fine detail (particularly
           vertical, and to a lesser extent near-horizontal) it shows
           noticeable improvement.  It takes as long to print as
-          2880x720.  1440x1440 highest quality takes twice as long to
-          print.
+          2880x720.
 
 2880x1440 Highest quality on photo paper on the Epson Stylus Photo
 	  950/960/PM-950C (2 picolitre drops) and Epson Stylus Photo
@@ -289,39 +294,42 @@ printers.  Quality settings for those printers are listed in a later
 section.  Please see the notes at the end of this section.
 
 360x90dpi        360 x 90 DPI Fast Economy Draft          (1)
+360x90sw         360 x 90 DPI Fast Economy Draft          (2)
 
-180dpi           180 DPI Economy Draft                    (2)
+180dpi           180 DPI Economy Draft                    (3)
+180sw            180 DPI Economy Draft                    (2)
 
-360x180dpi       360 x 180 DPI Draft                      (2)
-360x180sw        360 x 180 DPI Draft                      (3)
+360x180dpi       360 x 180 DPI Draft                      (3)
+360x180sw        360 x 180 DPI Draft                      (4)
 
-360x120dpi       360 x 120 DPI Economy Draft              (4)
-360x120sw        360 x 120 DPI Economy Draft              (5)
+360x120dpi       360 x 120 DPI Economy Draft              (5)
+360x120sw        360 x 120 DPI Economy Draft              (6)
 
-360x240dpi       360 x 240 DPI Draft                      (4)
-360x240sw        360 x 240 DPI Draft                      (5)
+360x240dpi       360 x 240 DPI Draft                      (5)
+360x240sw        360 x 240 DPI Draft                      (6)
 
-360dpi           360 DPI                                  (6)
-360mw            360 DPI Microweave                       (6, *)
-360sw            360 DPI                                  (7, 17, *)
+360dpi           360 DPI                                  (7)
+360mw            360 DPI Microweave                       (7, *)
+360sw            360 DPI                                  (8, 9, *)
 
-720x360sw        720 x 360 DPI                            (9, 10)
+720x360sw        720 x 360 DPI                            (10, 11, 12)
 
-720mw            720 DPI Microweave                       (11)
-720sw            720 DPI                                  (9)
-720hq            720 DPI High Quality                     (9)
-720hq2           720 DPI Highest Quality                  (9)
+720sw            720 DPI                                  (13)
+720hq            720 DPI High Quality                     (13)
+720hq2           720 DPI Highest Quality                  (13)
+720mw            720 DPI Microweave                       (14)
 
-1440x720sw       1440 x 720 DPI                           (13)
-1440x720hq       1440 x 720 DPI Highest Quality           (13)
+1440x720sw       1440 x 720 DPI                           (15)
+1440x720hq       1440 x 720 DPI Highest Quality           (16)
 
-2880x720sw       2880 x 720 DPI                           (15)
+2880x720sw       2880 x 720 DPI                           (17)
+2880x720hq       2880 x 720 DPI Highest Quality           (18)
 
-1440x1440sw      1440 x 1440 DPI                          (16)
+1440x1440sw      1440 x 1440 DPI                          (19)
 
-2880x1440sw      2880 x 1440 DPI                          (16)
+2880x1440sw      2880 x 1440 DPI                          (20)
 
-2880x2880sw      2880 x 2880 DPI                          (18)
+2880x2880sw      2880 x 2880 DPI                          (21)
 
 (*) This setting is the default on all printers supporting this
     setting.
@@ -331,83 +339,101 @@ section.  Please see the notes at the end of this section.
     660, 670, and 1500, and Stylus Photo, Stylus Photo 700, 720, and
     EX.
 
-(2) Works on most printers that have a basic vertical spacing of 1/90,
+(2) Works on the Stylus Color 640 and 660.
+
+(3) Works on most printers that have a basic vertical spacing of 1/90,
     1/180, or 1/360 inch.  This includes Stylus Color, Stylus Color
     440, 460, 600, 640, 660, 670, 800, 850, 900, 980, 1500, 1520,
     3000, and Stylus Photo, Stylus Photo 700, 720 and EX.
 
-(3) Works on Stylus C70, C80, and C82; and Stylus Photo 950, 960,
-    2100, 2200, and PM-950C and PM-970C
+(4) Works on Stylus Color 640 and 660; Stylus C70, C80, and C82; and
+    Stylus Photo 950, 960, 2100, 2200, and PM-950C
 
-(4) Works on older printers with dot spacing of 1/120 inch.  This
+(5) Works on older printers with dot spacing of 1/120 inch.  This
     includes the Stylus Color Pro, Pro XL, 400, and 500.
 
-(5) Works on newer printers with dot spacing of 1/120 inch.  This
+(6) Works on newer printers with dot spacing of 1/120 inch.  This
     includes the Stylus C20, C40, C41, C42, C60, C61, and C62; the
     Stylus Color 480, 580, 680, 740, 760, 777, 860, 880, 83, and 1160,
     and the Stylus Photo 750, 780, 785, 790, 810, 820, 825, 830, 870,
     875, 890, 895, 900, 915, 925, 1270, 1280, 1290, and 2000P, and the
     Stylus Scan 2000 and 2500.
 
-(6) Works on all printers that do not support variable drop sizes.
+(7) Works on all printers that do not support variable drop sizes.
     This includes the Stylus Color, Stylus Color 400, 440, 460, 500,
     600, 640, 660, 800, 850, 1500, 1520, and 3000, Stylus Color Pro,
     Stylus Color Pro XL, and Stylus Photo, Stylus Photo 700, and EX.
 
-(7) Works on all printers that do support variable drop sizes.  This
+(8) Works on all printers that do support variable drop sizes.  This
     includes all supported Epson Stylus printers except for those
     listed in note (6).
 
-(8) Recommended only on processors slower than 200 MHz, the system is
-    heavily loaded with a faster processor, or if problems are
-    experienced at 720x360.
+(9) This setting prints at particularly high speed on the Epson Stylus
+    Photo 950, 960, 2100, and 2200, and the PM-950C when used in color
+    with three or four color mode, or with grayscale in any mode other
+    than two or seven color.
 
-(9) Works on all supported printers except for Stylus Color, Stylus
+(10) Works on all supported printers except for Stylus Color, Stylus
     Color Pro, Stylus Color Pro XL, Stylus Color 1500, 1520, and 3000.
-
-(10) On printers that do not support variable drop size (see note (4)),
+    On printers that do not support variable drop size (see note (4)),
     this will print as fast as 360 DPI, and faster than 360 DPI High
     Quality.  It will take twice as long to generate output, which may
     be important on a heavily loaded system or a processor slower than
     200 MHz.
 
-(11) Works on some older printers, including the Stylus Color, Stylus
+(11) This is the default resolution on the PM-930C and PM-970C.
+
+(12) This setting prints at particularly high speed on the Epson
+    PM-930C and PM-970C when used in color with three or four color
+    mode, or with grayscale in any mode other than two or seven
+    color.
+
+(13) Works on certain printers that do not support 1440x720 DPI: Stylus
+    Photo (original), Stylus Color 440, 460, 480, Stylus C20SX, and
+    Stylus C20UX.
+
+(14) Works on some older printers, including the Stylus Color, Stylus
     Color 400, 500, 600, 800, 850, 1500, 1520, and 3000, Stylus Color
     Pro, and Stylus Color Pro XL.  Not recommended except for the
     Stylus Color, Stylus Color 1500, 1520, and 3000.
 
-(12) Works on Stylus Color 600, 800, 850, 1520, and 3000.  Not
-    recommended unless other 1440x720 modes do not work.
-
-(13) Works on all printers that support 1440x720 DPI.  This includes
+(15) Works on all printers that support 1440x720 DPI.  This includes
     all supported printers except for the Stylus Color, Stylus Color
     Pro, Pro XL, 400, 440, 460, 480, 500, and 1500, and Stylus Photo.
     In addition, this may not work correctly on Stylus Color 1520 and
     Stylus Color 3000.
 
-(14) This is identical to 1440 x 720 Highest Quality (1440x720hq) on
-    the Stylus Color 900.
+(16) Works on printers that support 1440x720 DPI, but not any higher
+    resolution.  This includes the Stylus Color 580, 670 740, 760,
+    860, 900, and 1160, Stylus Photo EX, EX3, 700, 720, 750, 870, 875,
+    1200, 1270, and 2000P, Stylus C40, C41, C42, and C50, and Stylus
+    Scan 2000 and 2500.
 
-(15) Works on all printers that support 2880x720 DPI.  This includes
+(17) Works on all printers that support 2880x720 DPI.  This includes
     the Stylus C60, C61, C62, C70, C80, and C82, the Stylus Color 680,
-    777, 880, 83, and 980, and Stylus Photo 780, 790, 810, 820, 825,
-    830, 890, 900, 915, 925, 950, 960, 1280, and 1290.  This
-    resolution is offered on the Stylus Photo 2100 and 2200, but it
-    actually prints at 2880x1440 DPI.
+    777, 880, 83, and 980, and Stylus Photo 780, 785, 790, 810, 820,
+    825, 830, 890, 895, 900, 915, 925, 950, 960, 1280, and 1290.  It
+    specifically does not include the Stylus Photo 950, 960, 2100, and
+    2200, and the PM-930C, PM-950C, and PM-970C.
 
-(16) Works on Epson Stylus Photo 825, 830, 925, 950, 960, 2100, 2200;
-    Stylus C61, C62, C70, C80, C82 ; Stylus Pro 7600 and 9600.  This
-    resolution is not supported by Epson on the C70 and C80, but it
-    works correctly on at least some such printers.
+(18) Works on printers that support 2880x720 DPI, but not any higher
+    resolution.  This includes the Stylus C60, the Stylus Color 680,
+    777, 880, 83, and 980, and Stylus Photo 780, 785, 790, 810, 820,
+    890, 895, 900, 915, 1280, and 1290.
 
-(17) These settings print at particularly high speed on the Epson
-    Stylus Photo 950, 960, 2100, and 2200, and PM-950C and PM-970C
-    when printing in Four Color Standard or Three Color Composite
-    modes, or when printing in monochrome or grayscale with any ink
-    type other than Two Level Grayscale, Seven Color Photo, or
-    Quadtone.
+(19) Works on Epson Stylus Photo 825, 830, and 925, and Stylus C61,
+    C62, C70, C80, C82.  This resolution is not listed by Epson, but
+    experimentally has been verified to work on at least some
+    printers.  It offers the same total resolution as 2880x720, but
+    the more even distribution of dots may yield better results in
+    some cases.
 
-(18) Works on the Epson PM-970C
+(20) Works on all printers that support 2880x1440 DPI.  This includes
+    the Stylus C62, Stylus Photo 825, 830, 925, 950, 960, 2100, and
+    2200, and the PM-930C, PM-950C, and PM-970C.
+
+(21) Works on all printers that support 2880x2880 DPI.  This includes
+    the PM-930C and PM-970C.
 
 
 The Stylus Pro printers (Stylus Pro 5000, 5500, 7000, 7500, 7600,
