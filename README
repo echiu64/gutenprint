@@ -679,6 +679,7 @@ PACKAGING
     following settings to build the package:
 
     --with-foomatic
+    --with-ijs  (distros with GhostScript 6.53 or newer)
     --with-user-guide
     --with-samples
     --with-escputil
@@ -690,6 +691,7 @@ PACKAGING
 
       /usr/lib/libgimpprint.so.1.0 (the core shared library)
       /usr/bin/escputil (Epson Stylus utility)
+      /usr/bin/ijsgimpprint (GIMP-Print IJS plug-in driver)
       /usr/share/gimp-print/doc/html (HTML documentation)
       /usr/share/gimp-print/doc/users-guide.pdf
       /usr/share/gimp-print/doc/users-guide.ps
@@ -727,11 +729,12 @@ PACKAGING
       test/bjc-unprint; test/parse-escp2; and test/parse-bjc in this
       package.
 
-    * Ghostscript should be built with the stp driver using the "new"
-      instructions (requiring only gdevstp.c, and linking dynamically
-      against libgimpprint).  This will allow Ghostscript to operate
-      with future 4.2 upgrade releases without requiring
-      recompilation.
+    * Ghostscript should be built with the stp driver using either the
+      "new" instructions (requiring only gdevstp.c, and linking
+      dynamically against libgimpprint) for Ghostscript 6.52 or
+      earlier, or the IJS driver for Ghostscript 6.53 or newer.  This
+      will allow Ghostscript to operate with future 4.2 upgrade
+      releases without requiring recompilation.
 
     * CUPS packages should include the Gimp-print PPD's in
       /usr/share/cups/model, and the following utilities:
@@ -756,11 +759,12 @@ PACKAGING
       Please see KNOWN BUILD ISSUES above for more discussion about
       build issues related to the PPD files.
 
-    * A gimp-print-foomatic package, containing
-      src/foomatic/foomatic-db, should be provided to allow people who
-      wish to use foomatic to install the corresponding data files.
-      The packaging should arrange to call "foomatic-kitload" (or the
-      equivalent) on this tree when it is installed.
+    * A gimp-print-foomatic package, containing the
+      src/foomatic/foomatic-db/gimp-print*/ directories, should be 
+      provided to allow people who wish to use foomatic to install the
+      corresponding data files. The packaging should arrange to call
+      "foomatic-kitload" (or the equivalent) on this tree when it is
+      installed.
 
     * We recommend that you replace the Print plugin bundled with the
       Gimp (1.2.0~1.2.2) with the Gimp Print plugin in this
