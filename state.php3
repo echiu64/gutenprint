@@ -1,8 +1,8 @@
 <?
 
-$plugin_version_number = '4.1.9';
+$plugin_version_number = '4.1.99a1';
 
-$maintainer = '<a href="https://sourceforge.net/developer/index.php?form_dev=5436">Robert Krawitz</a>';
+$maintainer = '<a href="http://sourceforge.net/developer/index.php?form_dev=5436">Robert Krawitz</a>';
 
 $navbar_text = 'Welcome to Gimp-Print.';
 
