@@ -136,6 +136,7 @@ BUILD_FOOMATIC=no
 BUILD_ESCPUTIL=yes
 BUILD_LIBGIMPPRINT=yes
 BUILD_TEST=no
+INSTALL_SAMPLES=yes
 PLUG_IN_PATH="admin-bin"
 AC_DIVERT_POP()dnl
 
@@ -217,6 +218,16 @@ AC_ARG_WITH(foomatic,
     *) AC_MSG_RESULT([unknown])
        AC_MSG_ERROR([bad value ${withval} for --with-foomatic]) ;;
   esac],[AC_MSG_RESULT([${BUILD_FOOMATIC}])])
+
+AC_MSG_CHECKING([whether to install sample images])
+AC_ARG_WITH(samples,
+[  --with-samples          install sample images [default=${INSTALL_SAMPLES}]],
+  [case "${withval}" in
+    yes) INSTALL_SAMPLES="yes" ; AC_MSG_RESULT([yes]) ;;
+    no) INSTALL_SAMPLES="no" ; AC_MSG_RESULT([no]) ;;
+    *) AC_MSG_RESULT([unknown])
+       AC_MSG_ERROR([bad value ${withval} for --with-samples]) ;;
+  esac],[AC_MSG_RESULT([${BUILD_GIMP}])])
 
 AC_MSG_CHECKING([whether to build escputil])
 AC_ARG_ENABLE(escputil,
@@ -453,6 +464,11 @@ if test x${BUILD_TEST} = xyes ; then
 fi
 AM_CONDITIONAL(BUILD_TEST, test x${BUILD_TEST} = xyes)
 
+if test x${INSTALL_SAMPLES} = xyes ; then
+  SAMPLE_IMAGES='$(SAMPLE_IMAGES)'
+fi
+AM_CONDITIONAL(INSTALL_SAMPLES, test x${INSTALL_SAMPLES} = xyes)
+
 dnl CUPS path setup
 dnl Fix "prefix" variable if it hasn't been specified...
 if test x${cups_prefix} = xNONE ; then
@@ -545,6 +561,7 @@ AC_SUBST(MAIN_SCR)
 AC_SUBST(MAINTAINER_CFLAGS)
 AC_SUBST(PLUG_IN_PATH)
 AC_SUBST(RELEASE_DATE)
+AC_SUBST(SAMPLE_IMAGES)
 AC_SUBST(TEST_BIN)
 
 AC_OUTPUT_COMMANDS([],[
@@ -565,7 +582,7 @@ src/escputil/Makefile src/foomatic/Makefile
 src/foomatic/foomatic-generator src/ghost/Makefile src/ghost/contrib.mak.addon 
 src/gimp/Makefile src/include/Makefile src/include/gimp-print.h
 src/main/Makefile src/main/gimpprint-config src/printdef/Makefile
-test/Makefile
+test/Makefile samples/Makefile
 ],[
 chmod +x src/main/gimpprint-config
 chmod +x src/foomatic/foomatic-generator

@@ -24,7 +24,7 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
-SUBDIRS = doc intl lib man src test po
+SUBDIRS = doc intl lib man src test po samples
 
 if MAINTAINER_MODE
 MAINT_MODE = true

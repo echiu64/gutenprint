@@ -37,42 +37,52 @@ Gimp-Print 4.1.99a2 contains the following changes over 4.1.99a1:
    procedure, and results in a smaller GhostScript binary when lined
    dynamically.
 
-7) The native CUPS driver now supports all options supported by the
+7) The Epson Stylus Color 600, 800, 850, and 1520 will now print
+   correctly in grayscale and black and white modes.
+
+8) The Epson Stylus Photo 780/785/790, 890/895, and 1280/1290 now
+   print much closer to the margins of the page.  It still does not
+   print closer than about 3 mm (1/8") from the bottom of the page.
+
+9) The native CUPS driver now supports all options supported by the
    package, including color adjustments, in addition to direct CMYK
    output, which is also new.  Also, the default output type for this
    driver is now Line Art rather than Photograph.  This will yield
    significantly better performance, and is in accord with the rest of
    the package.
 
-8) The Foomatic data has been updated for the current state of the
+10) The fast economy mode (360x120 DPI) has been fixed and should now
+   work correctly (i. e. very fast) on printers that support it.
+
+11) The Foomatic data has been updated for the current state of the
    driver.  In addition, there are some improvements in the data
    generation process to make it more general.
 
-9) Some improvements for the Canon BJC-7000.
+12) Some improvements for the Canon BJC-7000.
 
-10) Preliminary support for the Epson Stylus Pro 10000.  This printer
+13) Preliminary support for the Epson Stylus Pro 10000.  This printer
    is definitely *not* tuned!
 
-11) Explicit support for the Epson Stylus Photo 875, 785, and 895
+14) Explicit support for the Epson Stylus Photo 875, 785, and 895
    (which are variants on the 870, 890, and 890 respectively).  No
    driver-level changes are required for these printers, but there has
    been some confusion due to the fact that these printers were not
    listed explicitly.
 
-12) The GIMP plugin has buttons to permit centering horizontally or
+15) The GIMP plugin has buttons to permit centering horizontally or
    vertically on the page, in addition to the existing button to
    center the image both horizontally and vertically.
 
-13) A number of the controls in the GIMP plugin have been
+16) A number of the controls in the GIMP plugin have been
    reorganized.
 
-14) Holding down the shift key while dragging the mouse in the preview
+17) Holding down the shift key while dragging the mouse in the preview
    window constrains the image to moving horizontally or vertically
    only on the page.
 
-15) Preliminary support for the Epson Stylus C20 and C40 printers.
+18) Preliminary support for the Epson Stylus C20 and C40 printers.
 
-16) Preliminary support has been added for ink cartridge changing on
+19) Preliminary support has been added for ink cartridge changing on
    the Epson Stylus Color 480 and 580 printers, and preliminary
    support for color head alignment has been added for the 480 and
    580, as well as the Stylus C20 and C40 printers.  These functions
@@ -80,8 +90,14 @@ Gimp-Print 4.1.99a2 contains the following changes over 4.1.99a1:
    damage your printer!  If you wish to experiment with these, be
    careful!  These will be fixed before final release.
 
-17) A new 'status' sub-command has been added to the escputil
+20) A new 'status' sub-command has been added to the escputil
    utility.  This enables you to retrieve status from the printer.
+
+22) A new directory, samples, has been added.  This contains various
+   sample images that will be installed in
+   /usr/local/share/gimp-print/samples (or as appropriate for your
+   system).  You can run "configure --without-samples" if you would
+   prefer the sample images not be installed.
 
 
 Gimp-Print 4.1.99a1 contains the following changes over 4.1.10:

@@ -84,7 +84,7 @@ rastertoprinter_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 ## Data
 
-CUPS_PKG = calibrate.ppm profile.jpg
+CUPS_PKG = calibrate.ppm
 CUPS_CONF = command.types
 
 pkgdata_DATA = @CUPS_PKG@
