@@ -1,14 +1,15 @@
 # German translation for gimp-print.
-# Copyright (C)2002  Free Software Foundation, Inc.
-# Olaf Klemke <olke@users.sourceforge.net>;2002
+# Copyright (C) 2002  Free Software Foundation, Inc.
+# Roland Stigge <stigge@antcom.de>, 2003
+# Olaf Klemke <olke@users.sourceforge.net>, 2002
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gimpprint 4.3.6\n"
+"Project-Id-Version: gimp-print 4.2.6-pre1\n"
 "POT-Creation-Date: 2003-04-18 19:10-0400\n"
-"PO-Revision-Date: 2003-01-02 19:56MET\n"
-"Last-Translator: Olaf Klemke <olke@users.sourceforge.net>\n"
-"Language-Team: deutsch <gnome-de@gnome.org>\n"
+"PO-Revision-Date: 2003-07-11 18:50MET\n"
+"Last-Translator: Roland Stigge <stigge@antcom.de>\n"
+"Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17,7 +18,7 @@ msgstr ""
 #: lib/getopt.c:681
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
-msgstr "%s: Option `%s'ist nicht definiert\n"
+msgstr "%s: Option `%s' ist nicht definiert\n"
 
 #: lib/getopt.c:706
 #, c-format
@@ -27,7 +28,7 @@ msgstr "%s: Option `--%s' erlaubt keine Argumente\n"
 #: lib/getopt.c:711
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
-msgstr "%s: Option `%c%s'erlaubt keine Argumente\n"
+msgstr "%s: Option `%c%s' erlaubt keine Argumente\n"
 
 #: lib/getopt.c:729 lib/getopt.c:902
 #, c-format
@@ -55,7 +56,7 @@ msgstr "%s: nicht erlaubte Option -- %c\n"
 #: lib/getopt.c:791
 #, c-format
 msgid "%s: invalid option -- %c\n"
-msgstr "%s: unvollständige Option -- %c\n"
+msgstr "%s: ungültige Option -- %c\n"
 
 #. 1003.2 specifies the format of this message.
 #: lib/getopt.c:821 lib/getopt.c:951
@@ -87,11 +88,11 @@ msgstr "Folie"
 
 #: src/main/print-canon.c:1312
 msgid "Back Print Film"
-msgstr "Transferfolie"
+msgstr "Rückseitenfolie"
 
 #: src/main/print-canon.c:1313
 msgid "Fabric Sheets"
-msgstr "Schreibmaschinenpapier"
+msgstr "Textilblatt"
 
 #: src/main/print-canon.c:1314
 msgid "Envelope"
@@ -103,23 +104,23 @@ msgstr "Spezialpapier"
 
 #: src/main/print-canon.c:1316
 msgid "T-Shirt Transfers"
-msgstr "T-Shirt Transfers"
+msgstr "T-Shirt-Transferpapier"
 
 #: src/main/print-canon.c:1317
 msgid "High Gloss Film"
-msgstr "High Gloss Film"
+msgstr "Hochglanzfilm"
 
 #: src/main/print-canon.c:1318
 msgid "Glossy Photo Paper"
-msgstr "Glossy Foto Papier"
+msgstr "Glänzendes Fotopapier"
 
 #: src/main/print-canon.c:1319
 msgid "Glossy Photo Cards"
-msgstr "Glossy Foto Karten"
+msgstr "Glänzende Fotokarten"
 
 #: src/main/print-canon.c:1320
 msgid "Photo Paper Pro"
-msgstr "Foto Papier Pro"
+msgstr "Fotopapier Pro"
 
 #: src/main/print-canon.c:1321 src/main/print-escp2-data.c:2738
 #: src/main/print-escp2-data.c:2800 src/main/print-escp2-data.c:2862
@@ -166,7 +167,7 @@ msgstr "Adaptive Hybrid"
 
 #: src/main/print-dither.c:65
 msgid "Ordered"
-msgstr "Abgestuft"
+msgstr "Sortiert"
 
 #: src/main/print-dither.c:66
 msgid "Fast"
@@ -190,7 +191,7 @@ msgstr "EvenTone"
 #: src/main/print-escp2-data.c:2493 src/main/print-lexmark.c:651
 #: src/main/print-lexmark.c:731
 msgid "Three Color Composite"
-msgstr "Aus drei Farben gemischt"
+msgstr "Dreifarbmischung"
 
 #. output_type   ncolors used_colors   pass_length  v_top_head_offset
 #. *                                                        h_catridge_offset
@@ -210,7 +211,7 @@ msgstr "Sechs Farben Foto"
 #: src/main/print-escp2-data.c:2543 src/main/print-lexmark.c:661
 #: src/main/print-lexmark.c:741
 msgid "Five Color Photo Composite"
-msgstr "Foto aus fünf Farben gemischt "
+msgstr "Foto aus fünf Farben gemischt"
 
 #: src/main/print-escp2-data.c:2553
 msgid "Seven Color Enhanced"
@@ -218,19 +219,19 @@ msgstr "Aus sieben Farben gemischt"
 
 #: src/main/print-escp2-data.c:2563
 msgid "Six Color Enhanced Composite"
-msgstr "Aus sechs Farben gemischt "
+msgstr "Aus sechs Farben gemischt"
 
 #: src/main/print-escp2-data.c:2573
 msgid "Seven Color Photo"
-msgstr "Sieben Farb Foto"
+msgstr "Sieben Farben Foto"
 
 #: src/main/print-escp2-data.c:2583
 msgid "Two Level Grayscale"
-msgstr "zweistufig Grau"
+msgstr "Zweistufig Grau"
 
 #: src/main/print-escp2-data.c:2592 src/main/print-escp2-data.c:2601
 msgid "Quadtone"
-msgstr "Quadtone"
+msgstr "Vierton"
 
 #: src/main/print-escp2-data.c:2692 src/main/print-escp2-data.c:2754
 #: src/main/print-escp2-data.c:2816 src/main/print-escp2-data.c:2878
@@ -248,7 +249,7 @@ msgstr "Postkarte"
 #: src/main/print-escp2-data.c:2822 src/main/print-escp2-data.c:2884
 #: src/main/print-lexmark.c:912
 msgid "Glossy Film"
-msgstr "Glossy Film"
+msgstr "Glanzfilm"
 
 #: src/main/print-escp2-data.c:2704 src/main/print-escp2-data.c:2766
 #: src/main/print-escp2-data.c:2828 src/main/print-escp2-data.c:2890
@@ -271,37 +272,37 @@ msgstr "Mattes Papier"
 #: src/main/print-escp2-data.c:2837 src/main/print-escp2-data.c:2899
 #: src/main/print-lexmark.c:924
 msgid "Inkjet Paper"
-msgstr "Inkjet Papier"
+msgstr "Tintenstrahlpapier"
 
 #: src/main/print-escp2-data.c:2716 src/main/print-escp2-data.c:2778
 #: src/main/print-escp2-data.c:2840 src/main/print-escp2-data.c:2902
 #: src/main/print-lexmark.c:927
 msgid "Photo Quality Inkjet Paper"
-msgstr "Photo Quality Inkjet Papier"
+msgstr "Foto-Tintenstrahlpapier"
 
 #: src/main/print-escp2-data.c:2719 src/main/print-escp2-data.c:2781
 #: src/main/print-escp2-data.c:2843 src/main/print-escp2-data.c:2905
 #: src/main/print-lexmark.c:930
 msgid "Photo Paper"
-msgstr "Foto Papier"
+msgstr "Fotopapier"
 
 #: src/main/print-escp2-data.c:2722 src/main/print-escp2-data.c:2784
 #: src/main/print-escp2-data.c:2846 src/main/print-escp2-data.c:2908
 #: src/main/print-lexmark.c:933
 msgid "Premium Glossy Photo Paper"
-msgstr "Premium Glossy Foto Papier"
+msgstr "Glattes Fotopapier Premium"
 
 #: src/main/print-escp2-data.c:2726 src/main/print-escp2-data.c:2788
 #: src/main/print-escp2-data.c:2850 src/main/print-escp2-data.c:2912
 #: src/main/print-lexmark.c:936
 msgid "Premium Luster Photo Paper"
-msgstr "Premium Glanz Foto Papier"
+msgstr "Glänzendes Fotopapier Premium"
 
 #: src/main/print-escp2-data.c:2729 src/main/print-escp2-data.c:2791
 #: src/main/print-escp2-data.c:2853 src/main/print-escp2-data.c:2915
 #: src/main/print-lexmark.c:939
 msgid "Photo Quality Glossy Paper"
-msgstr "Photo Quality Glossy Papier"
+msgstr "Glänzendes Papier (Fotoqualität)"
 
 #: src/main/print-escp2-data.c:2732 src/main/print-escp2-data.c:2794
 #: src/main/print-escp2-data.c:2856 src/main/print-escp2-data.c:2918
@@ -318,7 +319,7 @@ msgstr "ColorLife Papier"
 #: src/main/print-escp2-data.c:3446 src/main/print-escp2-data.c:3448
 #: src/main/print-escp2-data.c:3521
 msgid "360 x 90 DPI Fast Economy Draft"
-msgstr "360 x 90 DPI Entwurfsqualität schnell"
+msgstr "360 x 90 DPI Schnellentwurfsqualität"
 
 #: src/main/print-escp2-data.c:3192 src/main/print-escp2-data.c:3194
 #: src/main/print-escp2-data.c:3451 src/main/print-escp2-data.c:3453
@@ -358,7 +359,7 @@ msgstr "360 DPI"
 #: src/main/print-escp2-data.c:3402 src/main/print-escp2-data.c:3473
 #: src/main/print-escp2-data.c:3477 src/main/print-escp2-data.c:3542
 msgid "360 DPI Unidirectional"
-msgstr "360 DPI Unidirectional"
+msgstr "360 DPI Gleichlaufend"
 
 #: src/main/print-escp2-data.c:3216 src/main/print-escp2-data.c:3536
 msgid "360 DPI Microweave"
@@ -366,7 +367,7 @@ msgstr "360 DPI Microweave"
 
 #: src/main/print-escp2-data.c:3218 src/main/print-escp2-data.c:3538
 msgid "360 DPI Microweave Unidirectional"
-msgstr "360 DPI Microweave Unidirectional"
+msgstr "360 DPI Microweave, gleichlaufend"
 
 #: src/main/print-escp2-data.c:3225 src/main/print-escp2-data.c:3285
 #: src/main/print-escp2-data.c:3323 src/main/print-escp2-data.c:3364
@@ -380,7 +381,7 @@ msgstr "720 x 360 DPI"
 #: src/main/print-escp2-data.c:3407 src/main/print-escp2-data.c:3482
 #: src/main/print-escp2-data.c:3559
 msgid "720 x 360 DPI Unidirectional"
-msgstr "720 x 360 DPI Unidirectional"
+msgstr "720 x 360 DPI Gleichlaufend"
 
 #: src/main/print-escp2-data.c:3230 src/main/print-escp2-data.c:3578
 msgid "720 DPI Microweave"
@@ -388,7 +389,7 @@ msgstr "720 DPI Microweave"
 
 #: src/main/print-escp2-data.c:3232 src/main/print-escp2-data.c:3580
 msgid "720 DPI Microweave Unidirectional"
-msgstr "720 DPI Microweave Unidirectional"
+msgstr "720 DPI Microweave, gleichlaufend"
 
 #: src/main/print-escp2-data.c:3234 src/main/print-escp2-data.c:3290
 #: src/main/print-escp2-data.c:3328 src/main/print-escp2-data.c:3369
@@ -400,25 +401,25 @@ msgstr "720 DPI"
 #: src/main/print-escp2-data.c:3330 src/main/print-escp2-data.c:3371
 #: src/main/print-escp2-data.c:3412 src/main/print-escp2-data.c:3487
 msgid "720 DPI Unidirectional"
-msgstr "720 DPI Unidirectional"
+msgstr "720 DPI Gleichlaufend"
 
 #: src/main/print-escp2-data.c:3238 src/main/print-escp2-data.c:3294
 #: src/main/print-escp2-data.c:3332 src/main/print-escp2-data.c:3373
 #: src/main/print-escp2-data.c:3414 src/main/print-escp2-data.c:3489
 msgid "720 DPI High Quality"
-msgstr "720 DPI hohe Qualität"
+msgstr "720 DPI Hohe Qualität"
 
 #: src/main/print-escp2-data.c:3240 src/main/print-escp2-data.c:3296
 #: src/main/print-escp2-data.c:3334 src/main/print-escp2-data.c:3375
 #: src/main/print-escp2-data.c:3416 src/main/print-escp2-data.c:3491
 msgid "720 DPI High Quality Unidirectional"
-msgstr "720 DPI hohe Qualität Unidirectional"
+msgstr "720 DPI Hohe Qualität, gleichlaufend"
 
 #: src/main/print-escp2-data.c:3242 src/main/print-escp2-data.c:3298
 #: src/main/print-escp2-data.c:3336 src/main/print-escp2-data.c:3377
 #: src/main/print-escp2-data.c:3418 src/main/print-escp2-data.c:3493
 msgid "720 DPI Highest Quality"
-msgstr "720 DPI höchste Qualität"
+msgstr "720 DPI Höchste Qualität"
 
 #: src/main/print-escp2-data.c:3245 src/main/print-escp2-data.c:3591
 msgid "1440 x 720 DPI Microweave"
@@ -426,7 +427,7 @@ msgstr "1440 x 720 DPI Microweave"
 
 #: src/main/print-escp2-data.c:3247 src/main/print-escp2-data.c:3593
 msgid "1440 x 720 DPI Microweave Unidirectional"
-msgstr "1440 x 720 DPI Microweave Unidirectional"
+msgstr "1440 x 720 DPI Microweave, gleichlaufend"
 
 #: src/main/print-escp2-data.c:3249 src/main/print-escp2-data.c:3301
 #: src/main/print-escp2-data.c:3339 src/main/print-escp2-data.c:3380
@@ -438,13 +439,13 @@ msgstr "1440 x 720 DPI"
 #: src/main/print-escp2-data.c:3341 src/main/print-escp2-data.c:3382
 #: src/main/print-escp2-data.c:3423 src/main/print-escp2-data.c:3498
 msgid "1440 x 720 DPI Unidirectional"
-msgstr "1440 x 720 DPI Unidirectional"
+msgstr "1440 x 720 DPI Gleichlaufend"
 
 #: src/main/print-escp2-data.c:3253 src/main/print-escp2-data.c:3305
 #: src/main/print-escp2-data.c:3343 src/main/print-escp2-data.c:3384
 #: src/main/print-escp2-data.c:3425 src/main/print-escp2-data.c:3500
 msgid "1440 x 720 DPI Highest Quality"
-msgstr "1440 x 720 DPI höchste Qualität"
+msgstr "1440 x 720 DPI Höchste Qualität"
 
 #: src/main/print-escp2-data.c:3256 src/main/print-escp2-data.c:3346
 #: src/main/print-escp2-data.c:3428 src/main/print-escp2-data.c:3503
@@ -454,7 +455,7 @@ msgstr "2880 x 720 DPI"
 #: src/main/print-escp2-data.c:3258 src/main/print-escp2-data.c:3348
 #: src/main/print-escp2-data.c:3430 src/main/print-escp2-data.c:3505
 msgid "2880 x 720 DPI Unidirectional"
-msgstr "2880 x 720 DPI Unidirectional"
+msgstr "2880 x 720 DPI Gleichlaufend"
 
 #: src/main/print-escp2-data.c:3261 src/main/print-escp2-data.c:3351
 #: src/main/print-escp2-data.c:3433 src/main/print-escp2-data.c:3508
@@ -464,7 +465,7 @@ msgstr "1440 x 1440 DPI"
 #: src/main/print-escp2-data.c:3263 src/main/print-escp2-data.c:3353
 #: src/main/print-escp2-data.c:3435 src/main/print-escp2-data.c:3510
 msgid "1440 x 1440 DPI Highest Quality"
-msgstr "1440 x 1440 DPI höchste Qualität"
+msgstr "1440 x 1440 DPI Höchste Qualität"
 
 #: src/main/print-escp2-data.c:3266 src/main/print-escp2-data.c:3356
 #: src/main/print-escp2-data.c:3387 src/main/print-escp2-data.c:3438
@@ -478,7 +479,7 @@ msgstr "360 DPI voll überlappt"
 
 #: src/main/print-escp2-data.c:3546
 msgid "360 DPI Full Overlap Unidirectional"
-msgstr "360 DPI voll überlappt Unidirectional"
+msgstr "360 DPI voll überlappt, gleichlaufend"
 
 #: src/main/print-escp2-data.c:3548
 msgid "360 DPI FOL2"
@@ -486,7 +487,7 @@ msgstr "360 DPI FOL2"
 
 #: src/main/print-escp2-data.c:3550
 msgid "360 DPI FOL2 Unidirectional"
-msgstr "360 DPI FOL2 Unidirectional"
+msgstr "360 DPI FOL2 Gleichlaufend"
 
 #: src/main/print-escp2-data.c:3552
 msgid "360 DPI MW2"
@@ -494,7 +495,7 @@ msgstr "360 DPI MW2"
 
 #: src/main/print-escp2-data.c:3554
 msgid "360 DPI MW2 Unidirectional"
-msgstr "360 DPI MW2 Unidirectional"
+msgstr "360 DPI MW2 Gleichlaufend"
 
 #: src/main/print-escp2-data.c:3561
 msgid "720 x 360 DPI Microweave"
@@ -502,7 +503,7 @@ msgstr "720 x 360 DPI Microweave"
 
 #: src/main/print-escp2-data.c:3563
 msgid "720 x 360 DPI Microweave Unidirectional"
-msgstr "720 x 360 DPI Microweave Unidirectional"
+msgstr "720 x 360 DPI Microweave, gleichlaufend"
 
 #: src/main/print-escp2-data.c:3565
 msgid "720 x 360 DPI FOL"
@@ -510,7 +511,7 @@ msgstr "720 x 360 DPI FOL"
 
 #: src/main/print-escp2-data.c:3567
 msgid "720 x 360 DPI FOL Unidirectional"
-msgstr "720 x 360 DPI FOL Unidirectional"
+msgstr "720 x 360 DPI FOL Gleichlaufend"
 
 #: src/main/print-escp2-data.c:3569
 msgid "720 x 360 DPI FOL2"
@@ -518,7 +519,7 @@ msgstr "720 x 360 DPI FOL2"
 
 #: src/main/print-escp2-data.c:3571
 msgid "720 x 360 DPI FOL2 Unidirectional"
-msgstr "720 x 360 DPI FOL2 Unidirectional"
+msgstr "720 x 360 DPI FOL2 Gleichlaufend"
 
 #: src/main/print-escp2-data.c:3573
 msgid "720 x 360 DPI MW2"
@@ -526,7 +527,7 @@ msgstr "720 x 360 DPI MW2"
 
 #: src/main/print-escp2-data.c:3575
 msgid "720 x 360 DPI MW2 Unidirectional"
-msgstr "720 x 360 DPI MW2 Unidirectional"
+msgstr "720 x 360 DPI MW2 Gleichlaufend"
 
 #: src/main/print-escp2-data.c:3582
 msgid "720 DPI Full Overlap"
@@ -534,7 +535,7 @@ msgstr "720 DPI voll überlappt"
 
 #: src/main/print-escp2-data.c:3584
 msgid "720 DPI Full Overlap Unidirectional"
-msgstr "720 DPI voll überlappt Unidirectional"
+msgstr "720 DPI voll überlappt, gleichlaufend"
 
 #: src/main/print-escp2-data.c:3586
 msgid "720 DPI Four Pass"
@@ -542,7 +543,7 @@ msgstr "720 DPI Vierfachdruck"
 
 #: src/main/print-escp2-data.c:3588
 msgid "720 DPI Four Pass Unidirectional"
-msgstr "720 DPI Vierfachdruck Unidirectional"
+msgstr "720 DPI Vierfachdruck, gleichlaufend"
 
 #: src/main/print-escp2-data.c:3595
 msgid "1440 x 720 DPI FOL"
@@ -550,7 +551,7 @@ msgstr "1440 x 720 DPI FOL"
 
 #: src/main/print-escp2-data.c:3597
 msgid "1440 x 720 DPI FOL Unidirectional"
-msgstr "1440 x 720 DPI FOL Unidirectional"
+msgstr "1440 x 720 DPI FOL Gleichlaufend"
 
 #: src/main/print-escp2-data.c:3599
 msgid "1440 x 720 DPI Four Pass"
@@ -558,7 +559,7 @@ msgstr "1440 x 720 DPI Vierfachdruck"
 
 #: src/main/print-escp2-data.c:3601
 msgid "1440 x 720 DPI Four Pass Unidirectional"
-msgstr "1440 x 720 DPI Vierfachdruck Unidirectional"
+msgstr "1440 x 720 DPI Vierfachdruck, gleichlaufend"
 
 #: src/main/print-escp2-data.c:3604
 msgid "2880 x 720 DPI Microweave"
@@ -566,7 +567,7 @@ msgstr "2880 x 720 DPI Microweave"
 
 #: src/main/print-escp2-data.c:3606
 msgid "2880 x 720 DPI Microweave Unidirectional"
-msgstr "2880 x 720 DPI Microweave Unidirectional"
+msgstr "2880 x 720 DPI Microweave, gleichlaufend"
 
 #: src/main/print-escp2-data.c:3608
 msgid "2880 x 720 DPI FOL"
@@ -574,7 +575,7 @@ msgstr "2880 x 720 DPI FOL"
 
 #: src/main/print-escp2-data.c:3610
 msgid "2880 x 720 DPI FOL Unidirectional"
-msgstr "2880 x 720 DPI FOL Unidirectional"
+msgstr "2880 x 720 DPI FOL Gleichlaufend"
 
 #: src/main/print-escp2-data.c:3612
 msgid "2880 x 720 DPI Four Pass"
@@ -582,7 +583,7 @@ msgstr "2880 x 720 DPI Vierfachdruck"
 
 #: src/main/print-escp2-data.c:3614
 msgid "2880 x 720 DPI Four Pass Unidirectional"
-msgstr "2880 x 720 DPI Vierfachdruck Unidirectional"
+msgstr "2880 x 720 DPI Vierfachdruck, gleichlaufend"
 
 #: src/main/print-escp2-data.c:3617
 msgid "1440 x 1440 DPI Microweave"
@@ -590,7 +591,7 @@ msgstr "1440 x 1440 DPI Microweave"
 
 #: src/main/print-escp2-data.c:3619
 msgid "1440 x 1440 DPI Microweave Unidirectional"
-msgstr "1440 x 1440 DPI Microweave Unidirectional"
+msgstr "1440 x 1440 DPI Microweave, gleichlaufend"
 
 #: src/main/print-escp2-data.c:3621
 msgid "1440 x 1440 DPI FOL"
@@ -598,7 +599,7 @@ msgstr "1440 x 1440 DPI FOL"
 
 #: src/main/print-escp2-data.c:3623
 msgid "1440 x 1440 DPI FOL Unidirectional"
-msgstr "1440 x 1440 DPI FOL Unidirectional"
+msgstr "1440 x 1440 DPI FOL Gleichlaufend"
 
 #: src/main/print-escp2-data.c:3625
 msgid "1440 x 1440 DPI Four Pass"
@@ -606,7 +607,7 @@ msgstr "1440 x 1440 DPI Vierfachdruck"
 
 #: src/main/print-escp2-data.c:3627
 msgid "1440 x 1440 DPI Four Pass Unidirectional"
-msgstr "1440 x 1440 DPI Vierfachdruck Unidirectional"
+msgstr "1440 x 1440 DPI Vierfachdruck, gleichlaufend"
 
 #: src/main/print-escp2-data.c:3630
 msgid "2880 x 1440 DPI Microweave"
@@ -614,7 +615,7 @@ msgstr "2880 x 1440 DPI Microweave"
 
 #: src/main/print-escp2-data.c:3632
 msgid "2880 x 1440 DPI Microweave Unidirectional"
-msgstr "2880 x 1440 DPI Microweave Unidirectional"
+msgstr "2880 x 1440 DPI Microweave, gleichlaufend"
 
 #: src/main/print-escp2-data.c:3634
 msgid "2880 x 1440 DPI FOL"
@@ -622,7 +623,7 @@ msgstr "2880 x 1440 DPI FOL"
 
 #: src/main/print-escp2-data.c:3636
 msgid "2880 x 1440 DPI FOL Unidirectional"
-msgstr "2880 x 1440 DPI FOL Unidirectional"
+msgstr "2880 x 1440 DPI FOL Gleichlaufend"
 
 #: src/main/print-escp2-data.c:3638
 msgid "2880 x 1440 DPI Four Pass"
@@ -630,7 +631,7 @@ msgstr "2880 x 1440 DPI Vierfachdruck"
 
 #: src/main/print-escp2-data.c:3640
 msgid "2880 x 1440 DPI Four Pass Unidirectional"
-msgstr "2880 x 1440 DPI Vierfachdruck Unidirectional"
+msgstr "2880 x 1440 DPI Vierfachdruck, gleichlaufend"
 
 #: src/gimp/gimp_main_window.c:1616 src/main/print-escp2-data.c:3650
 #: src/main/print-escp2-data.c:3676 src/main/print-escp2-data.c:3710
@@ -644,27 +645,27 @@ msgstr "Walzeneinzug"
 
 #: src/main/print-escp2-data.c:3684
 msgid "Roll Feed (cut each page)"
-msgstr "Walzeneinzug (mit Zuschnitt )"
+msgstr "Walzeneinzug (mit Zuschnitt)"
 
 #: src/main/print-escp2-data.c:3692
 msgid "Roll Feed (do not cut)"
-msgstr "Walzeneinzug (ohne Zuschnitt )"
+msgstr "Walzeneinzug (ohne Zuschnitt)"
 
 #: src/main/print-escp2-data.c:3736
 msgid "Cut Sheet Bin 1"
-msgstr "Ablage 1"
+msgstr "Schneideablage 1"
 
 #: src/main/print-escp2-data.c:3744
 msgid "Cut Sheet Bin 2"
-msgstr "Ablage 2"
+msgstr "Schneideablage 2"
 
 #: src/main/print-escp2-data.c:3752
 msgid "Cut Sheet Autoselect"
-msgstr "autom. Auswahl der Ablage"
+msgstr "autom. Auswahl der Schneideablage"
 
 #: src/main/print-escp2-data.c:3760
 msgid "Manual Selection"
-msgstr "manuelle Auswahl der Ablage"
+msgstr "manuelle Auswahl der Schneideablage"
 
 #. name                                                    hres vres softw v_pass overs unidir resid
 #: src/main/print-lexmark.c:622 src/main/print-lexmark.c:708
@@ -681,7 +682,7 @@ msgstr "600 DPI hohe Qualität"
 
 #: src/main/print-lexmark.c:625 src/main/print-lexmark.c:711
 msgid "600 DPI Unidirectional"
-msgstr "600 DPI Unidirectional"
+msgstr "600 DPI Gleichlaufend"
 
 #: src/main/print-lexmark.c:626 src/main/print-lexmark.c:712
 msgid "1200 DPI"
@@ -697,7 +698,7 @@ msgstr "1200 DPI höchste Qualität"
 
 #: src/main/print-lexmark.c:629 src/main/print-lexmark.c:715
 msgid "1200 DPI  Unidirectional"
-msgstr "1200 DPI  Unidirectional"
+msgstr "1200 DPI Gleichlaufend"
 
 #: src/main/print-lexmark.c:630
 msgid "2400 DPI x 1200 DPI"
@@ -729,7 +730,7 @@ msgstr "Premium"
 
 #: src/main/print-pcl.c:160
 msgid "Glossy Photo"
-msgstr "Hochglanz"
+msgstr "Hochglanzfoto"
 
 #: src/main/print-pcl.c:161
 msgid "Transparency"
@@ -737,7 +738,7 @@ msgstr "Folie"
 
 #: src/main/print-pcl.c:162
 msgid "Quick-dry Photo"
-msgstr "Schnelltrocknendes Glossy"
+msgstr "Schnelltrocknendes Foto"
 
 #: src/main/print-pcl.c:163
 msgid "Quick-dry Transparency"
@@ -798,7 +799,7 @@ msgstr "600×300 DPI"
 
 #: src/main/print-pcl.c:231
 msgid "600x600 DPI monochrome"
-msgstr "600×600 DPI monochrome"
+msgstr "600×600 DPI monochrom"
 
 #: src/main/print-pcl.c:232
 msgid "600x600 DPI"
@@ -814,7 +815,7 @@ msgstr "2400×600 DPI"
 
 #: src/main/print-pcl.c:1737
 msgid "Color + Black Cartridges"
-msgstr "Farbe+Schwarz Patrone"
+msgstr "Farb + Schwarz Patronen"
 
 #: src/main/print-pcl.c:1738
 msgid "Color + Photo Cartridges"
@@ -857,7 +858,7 @@ msgstr "4×6"
 
 #: src/main/print-util.c:547
 msgid "Epson 4x6 Photo Paper"
-msgstr "Epson 4×6 Photo Paper"
+msgstr "Epson 4×6 Photopapier"
 
 #: src/main/print-util.c:549
 msgid "5x7"
@@ -913,9 +914,8 @@ msgstr "20×30"
 
 #. 24x30 for 35 mm
 #: src/main/print-util.c:577
-#, fuzzy
 msgid "22x30"
-msgstr "20×30"
+msgstr "22×30"
 
 #. Common watercolor paper
 #: src/main/print-util.c:579
@@ -1255,45 +1255,40 @@ msgid "ArchA"
 msgstr "ArchA"
 
 #: src/main/print-util.c:742
-#, fuzzy
 msgid "ArchA Transverse"
-msgstr "T-Shirt Transfers"
+msgstr "ArchA quer"
 
 #: src/main/print-util.c:744
 msgid "ArchB"
 msgstr "ArchB"
 
 #: src/main/print-util.c:746
-#, fuzzy
 msgid "ArchB Transverse"
-msgstr "T-Shirt Transfers"
+msgstr "ArchB quer"
 
 #: src/main/print-util.c:748
 msgid "ArchC"
 msgstr "ArchC"
 
 #: src/main/print-util.c:750
-#, fuzzy
 msgid "ArchC Transverse"
-msgstr "T-Shirt Transfers"
+msgstr "ArchC quer"
 
 #: src/main/print-util.c:752
 msgid "ArchD"
 msgstr "ArchD"
 
 #: src/main/print-util.c:754
-#, fuzzy
 msgid "ArchD Transverse"
-msgstr "T-Shirt Transfers"
+msgstr "ArchD quer"
 
 #: src/main/print-util.c:756
 msgid "ArchE"
 msgstr "ArchE"
 
 #: src/main/print-util.c:758
-#, fuzzy
 msgid "ArchE Transverse"
-msgstr "T-Shirt Transfers"
+msgstr "ArchE quer"
 
 #.
 #. * Foolscap
@@ -1315,44 +1310,44 @@ msgstr "Europäische Narrenmütze"
 #.
 #: src/main/print-util.c:774
 msgid "Crown Quarto"
-msgstr ""
+msgstr "Crown Quarto"
 
 #. 189mm x 246mm
 #: src/main/print-util.c:776
 msgid "Large Crown Quarto"
-msgstr ""
+msgstr "Crown Quarto, groß"
 
 #. 201mm x 258mm
 #: src/main/print-util.c:778
 msgid "Demy Quarto"
-msgstr ""
+msgstr "Demy Quarto"
 
 #. 219mm x 276mm
 #: src/main/print-util.c:780
 msgid "Royal Quarto"
-msgstr ""
+msgstr "Royal Quarto"
 
 #. 237mm x 312mm
 #. { "ISO A4",             595,
 #. 841, PAPERSIZE_METRIC, 0, 0, 0, 0 },    210mm x 297mm
 #: src/main/print-util.c:784
 msgid "Crown Octavo"
-msgstr ""
+msgstr "Crown Octavo"
 
 #. 123mm x 186mm
 #: src/main/print-util.c:786
 msgid "Large Crown Octavo"
-msgstr ""
+msgstr "Crown Octavo, groß"
 
 #. 129mm x 198mm
 #: src/main/print-util.c:788
 msgid "Demy Octavo"
-msgstr ""
+msgstr "Demy Octavo"
 
 #. 138mm x 216mm
 #: src/main/print-util.c:790
 msgid "Royal Octavo"
-msgstr ""
+msgstr "Royal Octavo"
 
 #. 156mm x 234mm
 #. { N_ ("ISO A5"),             419,
@@ -1360,44 +1355,43 @@ msgstr ""
 #. Paperback sizes in common usage
 #: src/main/print-util.c:796
 msgid "Small paperback"
-msgstr ""
+msgstr "Kleines Taschenbuch"
 
 #. 111mm x 178mm
 #: src/main/print-util.c:798
 msgid "Penguin small paperback"
-msgstr ""
+msgstr "Kleines Pinguin-Taschenbuch"
 
 #. 111mm x 181mm
 #: src/main/print-util.c:800
 msgid "Penguin large paperback"
-msgstr ""
+msgstr "Großes Pinguin-Taschenbuch"
 
 #. 129mm x 198mm
 #. Miscellaneous sizes
 #: src/main/print-util.c:804
 msgid "Hagaki Card"
-msgstr "Hagaki Card"
+msgstr "Hagaki-Karte"
 
 #. 100 x 148 mm
 #: src/main/print-util.c:806
 msgid "Oufuku Card"
-msgstr "Oufuku Card"
+msgstr "Oufuku-Karte"
 
 #. 148 x 200 mm
 #: src/main/print-util.c:808
 msgid "Japanese long envelope #3"
-msgstr "Japanese langer Umschlag #3"
+msgstr "Langer japan. Umschlag #3"
 
 #. Japanese long envelope #3
 #: src/main/print-util.c:810
 msgid "Japanese long envelope #4"
-msgstr "Japanese langer Umschlag #4"
+msgstr "Langer japan. Umschlag #4"
 
 #. Japanese long envelope #4
 #: src/main/print-util.c:812
-#, fuzzy
 msgid "Japanese Kaku envelope #4"
-msgstr "Japanese langer Umschlag #4"
+msgstr "Japan. Kaku-Umschlag #4"
 
 #. Japanese Kaku envelope #4
 #: src/main/print-util.c:814
@@ -1407,7 +1401,7 @@ msgstr "Commercial 10"
 #. US Commercial 10 env
 #: src/main/print-util.c:816
 msgid "A2 Invitation"
-msgstr "A2 Invitation"
+msgstr "A2 Einladung"
 
 #. US A2 invitation
 #: src/main/print-util.c:818
@@ -1416,9 +1410,8 @@ msgstr "Briefumschlag (Monarch)"
 
 #. Monarch envelope (3.875 * 7.5)
 #: src/main/print-util.c:820
-#, fuzzy
 msgid "Custom"
-msgstr "Auto"
+msgstr "Kundenspezifisch"
 
 #: src/main/print-util.c:823
 msgid "89 mm Roll Paper"
@@ -1477,7 +1470,7 @@ msgstr "Drucker unterstützt keine Farbausgabe\n"
 
 #: src/main/print-util.c:1404
 msgid "Image size is not valid\n"
-msgstr "Die Bildgröße stimmt nicht\n"
+msgstr "Die Bildgröße ist ungültig\n"
 
 #: src/main/print-util.c:1411
 msgid "Top margin must not be less than zero\n"
@@ -1490,7 +1483,7 @@ msgstr "Der linke Rand darf nicht kleiner Null sein\n"
 #: src/main/print-util.c:1474
 #, c-format
 msgid "%s is not a valid dither algorithm\n"
-msgstr "%s ist kein Rasteralgorythmus\n"
+msgstr "%s ist kein gültiger Rasteralgorithmus\n"
 
 #. Specify language of PPD translation
 #. Translators: Specify the language of the PPD translation.
@@ -1508,11 +1501,11 @@ msgstr "ISOLatin1"
 
 #: src/cups/genppd.c:718
 msgid "Media Type"
-msgstr "Medium Type"
+msgstr "Medientyp"
 
 #: src/cups/genppd.c:744
 msgid "Media Source"
-msgstr "Medium Quelle"
+msgstr "Medienquelle"
 
 #: src/cups/genppd.c:768
 msgid "Resolution"
@@ -1522,16 +1515,15 @@ msgstr "Auflösung"
 #. * STP option group...
 #.
 #: src/cups/genppd.c:802
-#, fuzzy
 msgid "GIMP-print"
-msgstr "Drucken"
+msgstr "GIMP-Druck"
 
 #.
 #. * Image types...
 #.
 #: src/cups/genppd.c:808
 msgid "Image Type"
-msgstr "Bild Type"
+msgstr "Bildtyp"
 
 #: src/cups/genppd.c:813 src/gimp/gimp_main_window.c:1314
 msgid "Line Art"
@@ -1550,11 +1542,11 @@ msgstr "Foto"
 #.
 #: src/cups/genppd.c:825
 msgid "Dither Algorithm"
-msgstr "Raster Algorythmus"
+msgstr "Raster Algorithmus"
 
 #: src/cups/genppd.c:844
 msgid "Ink Type"
-msgstr "Tintentype"
+msgstr "Tintentyp"
 
 #: src/escputil/escputil.c:64
 msgid "Escputil version "
@@ -1568,11 +1560,9 @@ msgid ""
 "under certain conditions; type 'escputil -l' for details.\n"
 msgstr ""
 ", Copyright © 2000-2001 Robert Krawitz\n"
-"Escputil erhalten sie OHNE JEGLICHE GARANTIE; für Einzelheiten geben sie "
-"'escputil -l' ein\n"
-"Dies ist freie Software und sie dürfen sie gern, unter den genannten "
-"Bedingungen, \n"
-"weitergeben; für Einzelheiten geben sie 'escputil -l' ein.\n"
+"Escputil erhalten Sie OHNE JEGLICHE GARANTIE; für Einzelheiten geben Sie 'escputil -l' ein\n"
+"Dies ist freie Software, und Sie dürfen sie gern, unter den genannten Bedingungen, \n"
+"weitergeben; für Einzelheiten geben Sie 'escputil -l' ein.\n"
 
 #: src/escputil/escputil.c:70
 msgid ""
@@ -1595,19 +1585,21 @@ msgstr ""
 "Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
 "Dieses Programm ist freie Software. Sie können es unter\n"
-"    den Bedingungen der GNU General Public License, wie von der\n"
-"    Free Software Foundation herausgegeben, weitergeben und/oder\n"
-"    modifizieren, entweder unter Version 2 der Lizenz oder (wenn\n"
-"    Sie es wünschen) jeder späteren Version.\n"
-"    Die Veröffentlichung dieses Programms erfolgt in der\n"
-"    Hoffnung, daß es Ihnen von Nutzen sein wird, aber OHNE JEDE\n"
-"    GEWÄHRLEISTUNG - sogar ohne die implizite Gewährleistung\n"
-"    der MARKTREIFE oder der EIGNUNG FÜR EINEN BESTIMMTEN ZWECK\n"
-".    Details finden Sie in der GNU General Public License.\n"
-"    Sie sollten eine Kopie der GNU General Public License zusammen\n"
-"    mit diesem Programm erhalten haben. Falls nicht, schreiben Sie\n"
-"    an die Free Software Foundation, Inc., 675 Mass Ave, Cambridge,\n"
-"    MA 02139, USA.\n"
+"den Bedingungen der GNU General Public License, wie von der\n"
+"Free Software Foundation herausgegeben, weitergeben und/oder\n"
+"modifizieren, entweder unter Version 2 der Lizenz oder (wenn\n"
+"Sie es wünschen) jeder späteren Version.\n"
+"\n"
+"Die Veröffentlichung dieses Programms erfolgt in der\n"
+"Hoffnung, dass es Ihnen von Nutzen sein wird, aber OHNE JEDE\n"
+"GEWÄHRLEISTUNG - sogar ohne die implizite Gewährleistung\n"
+"der MARKTREIFE oder der EIGNUNG FÜR EINEN BESTIMMTEN ZWECK\n"
+"Details finden Sie in der GNU General Public License.\n"
+"\n"
+"Sie sollten eine Kopie der GNU General Public License zusammen\n"
+"mit diesem Programm erhalten haben. Falls nicht, schreiben Sie\n"
+"an die Free Software Foundation, Inc., 59 Temple Place - Suite 330,\n"
+"Boston, MA 02111-1307, USA.\n"
 
 #: src/escputil/escputil.c:110
 msgid ""
@@ -1627,12 +1619,10 @@ msgid ""
 "                       utility may result in poor print quality and/or\n"
 "                       damage to the printer.\n"
 "    -o|--align-color   Align the color print head (Stylus Color 480 and 580\n"
-"                       only).  CAUTION: Misuse of this utility may result "
-"in\n"
+"                       only).  CAUTION: Misuse of this utility may result in\n"
 "                       poor print quality and/or damage to the printer.\n"
 "    -s|--status        Retrieve printer status.\n"
-"    -i|--ink-level     Obtain the ink level from the printer.  This "
-"requires\n"
+"    -i|--ink-level     Obtain the ink level from the printer.  This requires\n"
 "                       read/write access to the raw printer device.\n"
 "    -d|--identify      Query the printer for make and model information.\n"
 "                       This requires read/write access to the raw printer\n"
@@ -1648,49 +1638,45 @@ msgid ""
 "    -u|--new           The printer is a new printer (Stylus Color 740 or\n"
 "                       newer).\n"
 "    -q|--quiet         Suppress the banner.\n"
-"    -m|--model         Specify the precise printer model for head "
-"alignment.\n"
+"    -m|--model         Specify the precise printer model for head alignment.\n"
 msgstr ""
-"Benutzung: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
-"                [-P Drucker| -r device] [-u] [-q] [-m model]\n"
-"Perform maintenance on EPSON Stylus ® printers \n"
-" Beispiel: escputil --clean-head --printer stpex-on-third-floor\n"
-"          escputil --ink-level --new --raw-device /dev/lp0\n"
+"Aufruf: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
+"                 [-P Drucker| -r Gerät] [-u] [-q] [-m Modell]\n"
+"Wartung für EPSON Stylus ® Drucker durchführen\n"
+"Beispiele: escputil --clean-head --printer stpex-on-third-floor\n"
+"           escputil --ink-level --new --raw-device /dev/lp0\n"
 "\n"
 "   Kommandos:\n"
-"    -c|--clean-head    Druckköpfe reinigen.\n"
-"    -n|--nozzle-check  Testausdruck.\n"
+"    -c|--clean-head    Druckkopf reinigen.\n"
+"    -n|--nozzle-check  Düsen-Testdruck.\n"
 "                       Schmutzige oder verklebte Düsen sind\n"
-"                         als Aussetzer erkennbar. Wenn diese auftreten, \n"
-"                        sollten sie die Köpfe reinigen\n"
-"    -a|--align-head    Richtet die Köpfe aus. VORSICHT: Die unnötige\n"
-"                       Benutzung dieser Option kann eine schlechte "
-"Druckqualität\n"
-"                       oder Druckerschäden verursachen.\n"
-"    -o|--align-color    Richtet den Farb-Kopf aus.(nur Stylus Color 480 \n"
-"                       580 ).  VORSICHT: Die unnötige Benutzung dieser \n"
+"                       als Aussetzer erkennbar. Wenn diese auftreten, \n"
+"                       sollten Sie den Druckkopf reinigen.\n"
+"    -a|--align-head    Druckkopf ausrichten. VORSICHT: Die unnötige\n"
+"                       Benutzung dieser Option kann eine schlechte Druck-\n"
+"                       qualität oder Druckerschäden verursachen.\n"
+"    -o|--align-color   Farb-Kopf ausrichten (nur Stylus Color 480 und\n"
+"                       580). VORSICHT: Die unnötige Benutzung dieser\n"
 "                       Option kann eine schlechte Druckqualität oder\n"
 "                       Druckerschäden verursachen.\n"
-"    -s|--status        Zeigt den Drucker Status.\n"
-"    -i|--ink-level     Fragt den Tintenstand ab. Benötigt Schreib- und\n"
-"                         Leserechte auf die Drucker-Schnittstelle. \n"
-"    -d|--identify      Fragt die Modelinformationen ab.\n"
-"                       Benötigt Schreib- und Leserechte auf die Drucker-"
-"Schnittstelle \n"
+"    -s|--status        Druckerstatus ermitteln\n"
+"    -i|--ink-level     Tintenstand abfragen. Benötigt Schreib- und\n"
+"                       Leserechte auf die Drucker-Schnittstelle.\n"
+"    -d|--identify      Hersteller- und Modellinformationen abfragen.\n"
+"                       Benötigt Schreib- und Leserechte auf die\n"
 "                       Drucker-Schnittstelle.\n"
-"    -l|--license       Zeigt die Lizenz- und Garantiebedingungen dieses "
-"Programmes\n"
-"    -M|--list-models   Zeigt die unterstützen Drucker an..\n"
-"    -h|--help          Zeigt diese Informationen an.\n"
+"    -l|--license       Lizenz- und Garantiebedingungen dieses Programmes\n"
+"                       anzeigen\n"
+"    -M|--list-models   Unterstützte Drucker auflisten\n"
+"    -h|--help          Diese Hilfeinformation anzeigen\n"
 "  Optionen:\n"
-"    -P|--printer-name  Gibt die ausgewählte Drucker-Schleife an.\n"
-"                       ohne Angabe = Systemdrucker lp\n"
-"    -r|--raw-device    Gibt die Druckerschnittstelle an.\n"
-"                       Vorsicht-geht nicht durch die Schleife\n"
-"    -u|--new           Der Drucker ist neu (Stylus Colour 740 or\n"
-"                       neuer).\n"
-"    -q|--quiet         Unterdrücke die Programmausgaben.\n"
-"    -m|--model         Gibt den präzisen Druckertyp zur Kopfausrichtung an.\n"
+"    -P|--printer-name  Namen der Druckerwarteschlange anzeigen.\n"
+"                       Standard: Systemdrucker lp\n"
+"    -r|--raw-device    Druckerschnittstelle angeben.\n"
+"                       Vorsicht: Geht nicht durch die Druckerwarteschlange\n"
+"    -u|--new           Der Drucker ist neu (Stylus Color 740 oder neuer).\n"
+"    -q|--quiet         Programmausgaben unterdrücken\n"
+"    -m|--model         Das präzise Druckermodell zur Kopfausrichtung angeben.\n"
 
 #: src/escputil/escputil.c:148
 msgid ""
@@ -1730,46 +1716,39 @@ msgid ""
 "    -q Suppress the banner.\n"
 "    -m Specify the precise printer model for head alignment.\n"
 msgstr ""
-"Benutzung: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
-"                [-P Drucker| -r device] [-u] [-q] [-m model]\n"
-"Perform maintenance on EPSON Stylus ® printers \n"
-" Beispiel: escputil --clean-head --printer stpex-on-third-floor\n"
-"          escputil --ink-level --new --raw-device /dev/lp0\n"
+"Aufruf: escputil [OPTIONS] [COMMAND]\n"
+"Aufruf: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
+"                 [-P Drucker| -r Gerät] [-u] [-q] [-m Modell]\n"
+"Wartung für EPSON Stylus ® Drucker durchführen\n"
+"Beispiele: escputil --clean-head --printer stpex-on-third-floor\n"
+"           escputil --ink-level --new --raw-device /dev/lp0\n"
 "\n"
 "   Kommandos:\n"
-"    -c|--clean-head    Druckköpfe reinigen.\n"
-"    -n|--nozzle-check  Testausdruck.\n"
-"                       Schmutzige oder verklebte Düsen sind\n"
-"                         als Aussetzer erkennbar. Wenn diese auftreten, \n"
-"                        sollten sie die Köpfe reinigen\n"
-"    -a|--align-head    Richtet die Köpfe aus. VORSICHT: Die unnötige\n"
-"                       Benutzung dieser Option kann eine schlechte "
-"Druckqualität\n"
-"                       oder Druckerschäden verursachen.\n"
-"    -o|--align-color    Richtet den Farb-Kopf aus.(nur Stylus Color 480 \n"
-"                       580 ).  VORSICHT: Die unnötige Benutzung dieser \n"
-"                       Option kann eine schlechte Druckqualität oder\n"
-"                       Druckerschäden verursachen.\n"
-"    -s|--status        Zeigt den Drucker Status.\n"
-"    -i|--ink-level     Fragt den Tintenstand ab. Benötigt Schreib- und\n"
-"                         Leserechte auf die Drucker-Schnittstelle. \n"
-"    -d|--identify      Fragt die Modelinformationen ab.\n"
-"                       Benötigt Schreib- und Leserechte auf die Drucker-"
-"Schnittstelle \n"
-"                       Drucker-Schnittstelle.\n"
-"    -l|--license       Zeigt die Lizenz- und Garantiebedingungen dieses "
-"Programmes\n"
-"    -M|--list-models   Zeigt die unterstützen Drucker an..\n"
-"    -h|--help          Zeigt diese Informationen an.\n"
+"    -c   Druckkopf reinigen.\n"
+"    -n   Düsen-Testdruck.\n"
+"         Schmutzige oder verklebte Düsen sind als Aussetzer erkennbar.\n"
+"         Wenn diese auftreten, sollten Sie den Druckkopf reinigen.\n"
+"    -a   Druckkopf ausrichten. VORSICHT: Die unnötige Benutzung dieser Option\n"
+"         kann eine schlechte Druckqualität oder Druckerschäden verursachen.\n"
+"    -o   Farb-Kopf ausrichten (nur Stylus Color 480 und 580).\n"
+"         VORSICHT: Die unnötige Benutzung dieser Option kann eine schlechte\n"
+"         Druckqualität oder Druckerschäden verursachen.\n"
+"    -s   Druckerstatus ermitteln\n"
+"    -i   Tintenstand abfragen. Benötigt Schreib- und\n"
+"         Leserechte auf die Drucker-Schnittstelle.\n"
+"    -d   Hersteller- und Modellinformationen abfragen. Benötigt Schreib- und\n"
+"         Leserechte auf die Drucker-Schnittstelle.\n"
+"    -l   Lizenz- und Garantiebedingungen dieses Programmes anzeigen\n"
+"    -M   Unterstützte Drucker auflisten\n"
+"    -h   Diese Hilfeinformation anzeigen\n"
 "  Optionen:\n"
-"    -P|--printer-name  Gibt die ausgewählte Drucker-Schleife an.\n"
-"                       ohne Angabe = Systemdrucker lp\n"
-"    -r|--raw-device    Gibt die Druckerschnittstelle an.\n"
-"                       Vorsicht-geht nicht durch die Schleife\n"
-"    -u|--new           Der Drucker ist neu (Stylus Colour 740 or\n"
-"                       neuer).\n"
-"    -q|--quiet         Unterdrücke die Programmausgaben.\n"
-"    -m|--model         Gibt den präzisen Druckertyp zur Kopfausrichtung an.\n"
+"    -P   Namen der Druckerwarteschlange anzeigen.\n"
+"         Standard: Systemdrucker lp\n"
+"    -r   Druckerschnittstelle angeben.\n"
+"         Vorsicht: Geht nicht durch die Druckerwarteschlange\n"
+"    -u   Der Drucker ist neu (Stylus Color 740 oder neuer).\n"
+"    -q   Programmausgaben unterdrücken\n"
+"    -m   Das präzise Druckermodell zur Kopfausrichtung angeben.\n"
 
 #: src/escputil/escputil.c:199
 msgid "Stylus C20sx"
@@ -1804,9 +1783,8 @@ msgid "Stylus C42ux"
 msgstr "Stylus C42ux"
 
 #: src/escputil/escputil.c:207
-#, fuzzy
 msgid "Stylus C50"
-msgstr "Stylus C60"
+msgstr "Stylus C50"
 
 #: src/escputil/escputil.c:208
 msgid "Stylus C60"
@@ -2113,7 +2091,7 @@ msgstr "Kann die Schnittstelle nicht öffnen %s: %s\n"
 #: src/escputil/escputil.c:486
 #, c-format
 msgid "Cannot print to printer %s with %s\n"
-msgstr "Kann auf den Drucker nicht drucken. %s with %s\n"
+msgstr "Kann auf den Drucker nicht drucken: %s mit %s\n"
 
 #: src/escputil/escputil.c:499 src/escputil/escputil.c:509
 msgid "Unable to send command to printer\n"
@@ -2121,7 +2099,7 @@ msgstr "Kann keine Befehle an den Drucker senden\n"
 
 #: src/escputil/escputil.c:602
 msgid "Cyan"
-msgstr "Cyan"
+msgstr "Zyan"
 
 #: src/escputil/escputil.c:603
 msgid "Magenta"
@@ -2133,11 +2111,11 @@ msgstr "Gelb"
 
 #: src/escputil/escputil.c:605
 msgid "Light Cyan"
-msgstr "helles Cyan"
+msgstr "Helles Zyan"
 
 #: src/escputil/escputil.c:606
 msgid "Light Magenta"
-msgstr "helles Magenta"
+msgstr "Helles Magenta"
 
 #: src/escputil/escputil.c:607
 msgid "Black/Dark Yellow"
@@ -2171,7 +2149,7 @@ msgstr "Kann die Meldungen vom Drucker nicht deuten.\n"
 
 #: src/escputil/escputil.c:657
 msgid "Ink color"
-msgstr "Farbtinte"
+msgstr "Tintenfarbe"
 
 #: src/escputil/escputil.c:657
 msgid "Percent remaining"
@@ -2179,13 +2157,11 @@ msgstr "Prozent verbleibend"
 
 #: src/escputil/escputil.c:696
 msgid "Printer identification requires using a raw device.\n"
-msgstr ""
-"Zur Druckererkennung bedarf es des Zugriffs auf die direkte Schnittstelle.\n"
+msgstr "Zur Druckererkennung bedarf es des Zugriffs auf die direkte Schnittstelle.\n"
 
 #: src/escputil/escputil.c:739
 msgid "Printer status requires using a raw device.\n"
-msgstr ""
-"Zur Druckerabfrage  bedarf es des Zugriffs auf die direkte Schnittstelle.\n"
+msgstr "Zur Druckerabfrage bedarf es des Zugriffs auf die direkte Schnittstelle.\n"
 
 #: src/escputil/escputil.c:782
 msgid "Cleaning heads...\n"
@@ -2193,7 +2169,7 @@ msgstr "Reinige die Köpfe...\n"
 
 #: src/escputil/escputil.c:791
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
-msgstr "Teste die Köpfe. Ist Papier im Drucker?\n"
+msgstr "Reinige die Düsen, stellen Sie bitte sicher, dass Papier im Drucker ist\n"
 
 #: src/escputil/escputil.c:795
 #, c-format
@@ -2233,42 +2209,37 @@ msgid ""
 "It is essential that you not turn your printer off during this procedure.\n"
 "\n"
 msgstr ""
-"Bitte lesen sie diese Anweisungen sorgfältig bevor sie fortfahren.\n"
+"Bitte lesen Sie diese Anweisungen sorgfältig, bevor Sie fortfahren.\n"
 "\n"
-"Mit diesem Programm können sie die Druckköpfe ihres Epson-Stylus\n"
-"Druckers ausrichten. Der falsche Gebrauch dieses Programmes kann \n"
-"die Druckqualtät beeinträchtigen und möglicherweise den Drucker \n"
+"Mit diesem Programm können Sie den Druckkopf Ihres Epson-Stylus\n"
+"Druckers ausrichten. Der falsche Gebrauch dieses Programmes kann\n"
+"die Druckqualtät beeinträchtigen und möglicherweise den Drucker\n"
 "beschädigen. Dieses Programm wurde von Seiko Epson nicht getestet\n"
-"oder zugelassen, es besteht keine Garantie, das es funktioniert. Das volle\n"
-"Risiko seines Einsatzes liegt bei Ihnen.\n"
-" \n"
+"oder zugelassen, es besteht keine Garantie, dass es funktioniert. Das\n"
+"volle Risiko seines Einsatzes liegt bei Ihnen.\n"
+"\n"
 "Es werden %d Testmuster gedruckt. Alle Muster ähneln sich.\n"
 "Sie bestehen aus Paaren von senkrechten Linien, welche sich überlappen.\n"
-"Zwischen jedem Linienpaar steht eine Zahl von %d bis %d.\n"
+"Unter jedem Linienpaar steht eine Zahl von %d bis %d.\n"
 "\n"
-"Wenn sie die Linienpaare untersuchen, sollten sie eines finden, welches am\n"
-"beßsten zusammen paßt, optimal ist eine durchgehende Linie. Benutzen sie \n"
-"ruhig hochwertiges Papier und eine Lupe um ganz sicher zu gehen, das "
-"pefekteste Paar zu erkennen. Nachdem sie nun das schönste Paar ausgewählt \n"
-"und sich die Zahl gemerkt haben; legen sie das Blatt wieder in den Drucker "
-"ein\n"
-"bevor sie die Zahl eingeben.\n"
+"Wenn Sie die Linienpaare untersuchen, sollten Sie eines finden, welches am\n"
+"besten zusammen passt, optimal ist eine durchgehende Linie. Benutzen Sie\n"
+"ruhig hochwertiges Papier und eine Lupe, um ganz sicher zu gehen, das\n"
+"beste Paar zu erkennen. Nachdem Sie nun das schönste Paar ausgewählt\n"
+"und sich die Zahl gemerkt haben, legen Sie das Blatt wieder in den Drucker\n"
+"ein, bevor sie die Zahl eingeben.\n"
 "\n"
-"Jedes Muster ist gleich, aber die späteren werden feiner gedruckt um die "
-"Unterschiede\n"
-"noch mehr hervorzuheben. Sie müssen zur richtigen Ausrichtung der Druckköpfe "
-"alle\n"
-"Durchgänge ausführen. Nach erfolgreicher Ausrichtung wird noch ein "
-"Musterausdruck\n"
-"erzeugt. Sie werden erkennen, daß das beßste Paar (#%d von %d) ist.\n"
+"Jedes Muster ist gleich, aber die späteren werden feiner gedruckt um die\n"
+"Unterschiede noch mehr hervorzuheben. Sie müssen zur richtigen Ausrichtung\n"
+"der Druckköpfe alle Durchgänge ausführen. Nach erfolgreicher Ausrichtung\n"
+"wird noch ein Musterausdruck erzeugt. Sie sollten erkennen, dass das\n"
+"mittlere (#%d von %d) das beste Paar für alle Muster ist.\n"
 "\n"
-"Nach der letzten Ausgabe werden sie gefragt ob sie die Ausrichtung im "
-"Drucker sichern (s),\n"
-"den Vorgang wiederholen(r) oder ohne Sicherung abbrechen möchten. Beim "
-"Abbruch  \n"
-"bleiben die Einstellungen bis zum Ausschalten des Druckers erhalten, aber "
-"nicht länger.\n"
-"Es ist wichtigt, den Drucker während der Ausrichtung nicht Auszuschalten.\n"
+"Nach der letzten Ausgabe werden Sie gefragt, ob Sie die Ausrichtung im\n"
+"Drucker sichern (s), den Vorgang wiederholen (r) oder ohne Sicherung\n"
+"abbrechen möchten (q). Beim Abbruch bleiben die Einstellungen bis zum\n"
+"Ausschalten des Druckers erhalten, aber nicht länger. Es ist wichtigt, den\n"
+"Drucker während der Ausrichtung nicht Auszuschalten.\n"
 "\n"
 
 #: src/escputil/escputil.c:830
@@ -2299,66 +2270,59 @@ msgid ""
 "should find that the middle-most pair (#%d out of the %d) is the best.\n"
 "You will then be offered the choices of (s)aving the result in the printer,\n"
 "(r)epeating the process, or (q)uitting without saving.  Quitting will not\n"
-"restore the previous settings, but powering the printer off and back on "
-"will.\n"
+"restore the previous settings, but powering the printer off and back on will.\n"
 "If you quit, you must repeat the entire process if you wish to later save\n"
 "the results.  It is essential that you not turn off your printer during\n"
 "this procedure.\n"
 "\n"
 msgstr ""
-"Bitte lesen sie diese Anweisungen sorgfältig bevor sie fortfahren.\n"
+"Bitte lesen sie diese Anweisungen sorgfältig, bevor Sie fortfahren.\n"
 "\n"
-"Mit diesem Programm können sie die Druckköpfe ihres Epson-Stylus\n"
-"Druckers ausrichten. Der falsche Gebrauch dieses Programmes kann \n"
-"die Druckqualtät beeinträchtigen und möglicherweise den Drucker \n"
+"Mit diesem Programm können Sie den Druckkopf Ihres Epson-Stylus\n"
+"Druckers ausrichten. Der falsche Gebrauch dieses Programmes kann\n"
+"die Druckqualtät beeinträchtigen und möglicherweise den Drucker\n"
 "beschädigen. Dieses Programm wurde von Seiko Epson nicht getestet\n"
-"oder zugelassen, es besteht keine Garantie, das es funktioniert. Das volle\n"
-"Risiko seines Einsatzes liegt bei Ihnen.\n"
-" \n"
-"Dieses Programm druckt Testmuster.\n"
-"Sie bestehen aus Paaren von senkrechten Linien, welche sich überlappen.\n"
-"Zwischen jedem Linienpaar steht eine Zahl von %d bis %d.\n"
+"oder zugelassen, es besteht keine Garantie, dass es funktioniert. Das\n"
+"volle Risiko seines Einsatzes liegt bei Ihnen.\n"
 "\n"
-"Wenn sie die Linienpaare untersuchen, sollten sie eines finden, welches am\n"
-"beßsten zusammen paßt, optimal ist eine durchgehende Linie. Benutzen sie \n"
-"ruhig hochwertiges Papier und eine Lupe um ganz sicher zu gehen, das "
-"pefekteste Paar zu erkennen. Nachdem sie nun das schönste Paar ausgewählt \n"
-"und sich die Zahl gemerkt haben; legen sie das Blatt wieder in den Drucker "
-"ein\n"
-"bevor sie die Zahl eingeben.\n"
+"Dieses Programm druckt Testmuster. Sie bestehen aus Paaren senkrechter\n"
+"Linien, welche sich überlappen. Unter jedem Linienpaar steht eine Zahl\n"
+"von %d bis %d.\n"
 "\n"
-"Jedes Muster ist gleich, aber die späteren werden feiner gedruckt um die "
-"Unterschiede\n"
-"noch mehr hervorzuheben. Sie müssen zur richtigen Ausrichtung der Druckköpfe "
-"alle\n"
-"Durchgänge ausführen. Nach erfolgreicher Ausrichtung wird noch ein "
-"Musterausdruck\n"
-"erzeugt. Sie werden erkennen, daß das beßste Paar (#%d von %d) ist.\n"
+"Wenn Sie die Linienpaare untersuchen, sollten Sie eines finden, welches am\n"
+"besten zusammen passt, optimal ist eine durchgehende Linie. Benutzen Sie\n"
+"ruhig hochwertiges Papier und eine Lupe um ganz sicher zu gehen, das\n"
+"beste Paar zu erkennen. Nachdem Sie nun das schönste Paar ausgewählt\n"
+"und sich die Zahl gemerkt haben, legen Sie das Blatt wieder in den Drucker\n"
+"ein, bevor Sie die Zahl eingeben.\n"
 "\n"
-"Nach der letzten Ausgabe werden sie gefragt ob sie die Ausrichtung im "
-"Drucker sichern (s),\n"
-"den Vorgang wiederholen(r) oder ohne Sicherung abbrechen möchten. Beim "
-"Abbruch  \n"
-"bleiben die Einstellungen bis zum Ausschalten des Druckers erhalten, aber "
-"nicht länger.\n"
-"Es ist wichtigt, den Drucker während der Ausrichtung nicht Auszuschalten.\n"
+"Nach erfolgreicher Ausrichtung wird noch ein Musterausdruck\n"
+"erzeugt. Sie sollten erkennen, dass das beste Paar (#%d von %d) ist.\n"
+"Dann werden Sie gefragt, ob Sie die Ausrichtung im Drucker sichern (s),\n"
+"den Vorgang wiederholen (r) oder ohne Sicherung abbrechen möchten (q).\n"
+"Beim Abbruch bleiben die Einstellungen bis zum Ausschalten des Druckers\n"
+"erhalten, aber nicht länger.\n"
+"\n"
+"Wenn Sie das Programm abbrechen, müssen Sie den gesamten Vorgang wiederholen,\n"
+"um die Ergebnisse zu sichern. Es ist wichtig, den Drucker während des\n"
+"Verfahrens nicht auszuschalten.\n"
 "\n"
 
 #: src/escputil/escputil.c:874
 msgid "Unable to send command to the printer, exiting.\n"
-msgstr "Kann keinen Befehl an den Drucken senden, beende mich.\n"
+msgstr "Kann keinen Befehl an den Drucken senden, Abbruch.\n"
 
 #: src/escputil/escputil.c:892
 msgid ""
 "Printer alignment must be done with a raw device or else\n"
 "the -m option must be used to specify a printer.\n"
 msgstr ""
-"Zur Druckerausrichtung muß die Schnittstelle bzw.\n"
-"mit der \"-m\"- Option das Druckermodel angegeben werden.\n"
+"Zur Druckerausrichtung muss die Schnittstelle bzw.\n"
+"mit der \"-m\"- Option das Druckermodell angegeben werden.\n"
 
 #: src/escputil/escputil.c:896
 msgid "Attempting to detect printer model..."
-msgstr "Versuche das Druckermodell zu erkennen..."
+msgstr "Versuche, das Druckermodell zu erkennen..."
 
 #: src/escputil/escputil.c:901
 #, c-format
@@ -2394,13 +2358,13 @@ msgid ""
 "Please use -m to specify your printer model.\n"
 msgstr ""
 "\n"
-"Kann den Druckertype nicht feststellen.\n"
-"Bitte nutzen sie die -m Option um das Model mitzuteilen.\n"
+"Kann den Druckertyp nicht feststellen.\n"
+"Bitte nutzen sie die -m Option um das Modell mitzuteilen.\n"
 
 #: src/escputil/escputil.c:945
 #, c-format
 msgid "Printer model %s is not known.\n"
-msgstr "Das Druckermodel %s ist unbekannt.\n"
+msgstr "Das Druckermodell %s ist unbekannt.\n"
 
 #: src/escputil/escputil.c:956
 msgid ""
@@ -2412,13 +2376,13 @@ msgid ""
 "You will then be asked to confirm your choice.\n"
 "What do you want to do (s, q, r)?\n"
 msgstr ""
-"Bitte kontrollieren sie den letzten Ausdruck sehr genau, ob ihr\n"
-"Drucker pefekt ausgerichtet ist. Sie können nun:\n"
-"  (s) die Einstellungen im Drucker sichern ,\n"
+"Bitte kontrollieren Sie den letzten Ausdruck sehr genau, ob Ihr\n"
+"Drucker perfekt ausgerichtet ist. Sie können nun:\n"
+"  (s) die Einstellungen im Drucker sichern,\n"
 "  (q) das Programm ohne Sicherung verlassen, oder\n"
 "  (r) Den Vorgang von Anfang an wiederholen.\n"
 "Sie werden um eine Bestätigung gebeten.\n"
-"Was möchten sie tun  (s, q, r)?\n"
+"Was möchten sie tun (s, q, r)?\n"
 
 #: src/escputil/escputil.c:964 src/escputil/escputil.c:971
 #: src/escputil/escputil.c:984 src/escputil/escputil.c:1000
@@ -2427,26 +2391,23 @@ msgid "> "
 msgstr "> "
 
 #: src/escputil/escputil.c:969
-msgid ""
-"Please confirm by typing 'q' again that you wish to quit without saving:\n"
-msgstr ""
-"Bitte bestätigen sie mit der Taste 'q' das sie die Einstellungen nicht "
-"sichern möchten\n"
+msgid "Please confirm by typing 'q' again that you wish to quit without saving:\n"
+msgstr "Bitte bestätigen sie mit der Taste 'q', dass Sie die Einstellungen nicht sichern möchten:\n"
 
 #: src/escputil/escputil.c:974
 msgid ""
 "OK, your printer is aligned, but the alignment has not been saved.\n"
 "If you wish to save the alignment, you must repeat this process.\n"
 msgstr ""
-"Gut, Die Köpfe sind ausgerichtet aber die Einstellung noch nicht gesichert.\n"
-"Wenn sie die Sicherung wünschen, müssen sie den Prozeß wiederholen.\n"
+"Gut, der Drucker ist ausgerichtet, aber die Einstellung noch nicht gesichert.\n"
+"Wenn Sie die Sicherung wünschen, müssen Sie den Prozess wiederholen.\n"
 
 #: src/escputil/escputil.c:981
 msgid ""
 "Please confirm by typing 'r' again that you wish to repeat the\n"
 "alignment process:\n"
 msgstr ""
-"Bitte bestätigen sie mit der Taste 'r', daß sie die Kopf-Ausrichtung\n"
+"Bitte bestätigen Sie mit der Taste 'r', dass Sie die Kopf-Ausrichtung\n"
 "wiederholen möchten:\n"
 
 #: src/escputil/escputil.c:987
@@ -2461,10 +2422,10 @@ msgid ""
 "Please confirm by typing 's' again that you wish to save the settings\n"
 "to your printer:\n"
 msgstr ""
-"Dies wird die Einstellungen ihres Druckers dauerhaft verändern.\n"
-"WARNUNG:diser Vorgang wurde von Seiko Epson nicht geprüft\n"
+"Dies wird die Einstellungen Ihres Druckers dauerhaft verändern.\n"
+"WARNUNG: dieser Vorgang wurde von Seiko Epson nicht geprüft\n"
 "und könnte den Drucker beschädigen. Weiter?\n"
-"Bitte bestätigen sie mit der Taste 's' , wenn sie die Einstellungen im\n"
+"Bitte bestätigen Sie wieder mit der Taste 's', wenn Sie die Einstellungen im\n"
 "Drucker sichern möchten.\n"
 
 #: src/escputil/escputil.c:1003
@@ -2480,8 +2441,8 @@ msgid ""
 "Your settings were not saved successfully.  You must repeat the\n"
 "alignment procedure.\n"
 msgstr ""
-"Die Sicherung ihrer Einstellungen scheiterte. Sie sollten \n"
-"die Kopf-Ausrichtung wiederholen. \n"
+"Die Sicherung Ihrer Einstellungen scheiterte. Sie sollten\n"
+"die Kopf-Ausrichtung wiederholen.\n"
 
 #: src/escputil/escputil.c:1014
 msgid "succeeded!\n"
@@ -2509,11 +2470,11 @@ msgid ""
 "Please place a sheet of paper in your printer to begin the head\n"
 "alignment procedure.\n"
 msgstr ""
-"Diese Routine geht davon aus, daß ihr Drucker ein Epson %s ist.\n"
-"Wenn nicht drücken sie bitte jetzt control-C und \n"
-"wählen ihr Modell.\n"
+"Diese Routine geht davon aus, dass Ihr Drucker ein Epson %s ist.\n"
+"Wenn nicht, drücken Sie jetzt bitte control-C und\n"
+"wählen Ihr tatsächliches Modell.\n"
 "\n"
-"Bitte legen sie ein Blatt Papier ein, um die Kopf-Ausrichtung zu beginnen.\n"
+"Bitte legen Sie ein Blatt Papier ein, um die Kopf-Ausrichtung zu beginnen.\n"
 
 #: src/escputil/escputil.c:1053 src/escputil/escputil.c:1075
 #: src/escputil/escputil.c:1118 src/escputil/escputil.c:1187
@@ -2523,14 +2484,12 @@ msgstr "Drücken sie Eingabe um fortzufahren > "
 
 #: src/escputil/escputil.c:1060
 msgid ""
-"Please inspect the print, and choose the best pair of lines in each "
-"pattern.\n"
+"Please inspect the print, and choose the best pair of lines in each pattern.\n"
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
-"Bitte betrachten sie den Ausdruck und entscheiden sie sich für \n"
-"die beßsten Übereinstimmungen der Muster-Paare .\n"
-"Geben sie die Nummer ein, '?' für Hilfe, oder 'r' um den Druck zu "
-"wiederholen\n"
+"Bitte betrachten Sie den Ausdruck und entscheiden Sie sich für\n"
+"die besten Übereinstimmungen der Muster-Paare.\n"
+"Geben sie die Nummer ein, '?' für Hilfe, oder 'r' um den Druck zu wiederholen\n"
 
 #: src/escputil/escputil.c:1066
 #, c-format
@@ -2539,7 +2498,7 @@ msgstr "Durchgang #%d"
 
 #: src/escputil/escputil.c:1072 src/escputil/escputil.c:1117
 msgid "Please insert a fresh sheet of paper.\n"
-msgstr "Bitte legen sie ein neues Blatt ein.\n"
+msgstr "Bitte legen Sie ein neues Blatt ein.\n"
 
 #: src/escputil/escputil.c:1091 src/escputil/escputil.c:1227
 msgid "Number out of range!\n"
@@ -2547,20 +2506,20 @@ msgstr "Die Zahl ist ungültig!\n"
 
 #: src/escputil/escputil.c:1096 src/escputil/escputil.c:1232
 msgid "I cannot understand what you typed!\n"
-msgstr "Wie bitte ?????\n"
+msgstr "Ich verstehe Ihre Eingabe nicht!\n"
 
 #: src/escputil/escputil.c:1102
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
-msgstr "Die Nummer des beßten Paares sollte zwischen 1 und %d liegen.\n"
+msgstr "Die Nummer des besten Paares sollte zwischen 1 und %d liegen.\n"
 
 #: src/escputil/escputil.c:1109
 msgid "Attempting to set alignment..."
-msgstr "Beginne die Köpfe einzurichten..."
+msgstr "Beginne, die Köpfe auszurichten..."
 
 #: src/escputil/escputil.c:1112
 msgid "succeeded.\n"
-msgstr "erledigt. \n"
+msgstr "erledigt.\n"
 
 #: src/escputil/escputil.c:1113
 #, c-format
@@ -2570,9 +2529,9 @@ msgid ""
 "pattern %d.  If it is not, you should repeat the process to get the best\n"
 "quality printing.\n"
 msgstr ""
-"Bitte kontrollieren sie die Ausrichtung. Nachdem die Ausrichtungs-\n"
-"muster nochmal gedruckt wurden, sollten die beßsten Übereinstim-\n"
-"mungen jeder Zeile im Muster %d sein. Wenn nicht, sollten sie diesen\n"
+"Bitte kontrollieren Sie die Ausrichtung. Nachdem die Ausrichtungs-\n"
+"muster nochmal gedruckt wurden, sollten die besten Übereinstim-\n"
+"mungen jeder Zeile im Muster %d sein. Wenn nicht, sollten Sie diesen\n"
 "Vorgang wiederholen.\n"
 
 #: src/escputil/escputil.c:1128
@@ -2580,8 +2539,7 @@ msgstr ""
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
 "\n"
-"This utility lets you align the color print head of your Epson Stylus "
-"inkjet\n"
+"This utility lets you align the color print head of your Epson Stylus inkjet\n"
 "printer.  Misuse of this utility may cause your print quality to degrade\n"
 "and possibly damage your printer.  This utility has not been reviewed by\n"
 "Seiko Epson for correctness, and is offered with no warranty at all.  The\n"
@@ -2608,38 +2566,35 @@ msgid ""
 "WARNING: THIS FUNCTION IS NOT YET TESTED!  It may not work, and it may\n"
 "damage your printer!\n"
 msgstr ""
-"Bitte lesen sie diese Anweisungen sorgfältig bevor sie fortfahren.\n"
+"Bitte lesen Sie diese Anweisungen sorgfältig, bevor sie fortfahren.\n"
 "\n"
-"Mit diesem Programm können sie die Druckköpfe ihres Epson-Stylus\n"
-"Druckers ausrichten. Der falsche Gebrauch dieses Programmes kann \n"
-"die Druckqualtät beeinträchtigen und möglicherweise den Drucker \n"
+"Mit diesem Programm können Sie den Druckkopf Ihres Epson-Stylus\n"
+"Druckers ausrichten. Der falsche Gebrauch dieses Programmes kann\n"
+"die Druckqualtät beeinträchtigen und möglicherweise den Drucker\n"
 "beschädigen. Dieses Programm wurde von Seiko Epson nicht getestet\n"
-"oder zugelassen, es besteht keine Garantie, das es funktioniert. Das volle\n"
+"oder zugelassen, es besteht keine Garantie, dass es funktioniert. Das volle\n"
 "Risiko seines Einsatzes liegt bei Ihnen.\n"
 " \n"
-"Es werden %d Testmuster auf einem Blastt Papier gedruckt.\n"
-"Das Blatt muß vor jedem Durchgang wieder eingelegt werden.\n"
-"Bei jedem Muster steht eine Zahl von %d bis %d.\n"
+"Es werden %d übereinander gedruckte Testmuster auf einem Blatt Papier\n"
+"ausgegeben. Das Blatt muss vor jedem Durchgang wieder eingelegt werden.\n"
+"An jedem Muster steht eine Zahl von %d bis %d.\n"
 "\n"
-"Wenn sie die Muster untersuchen, sollten sie eines finden, welches am\n"
-"beßsten zusammen paßt, optimal ist eine durchgehende Linie. Benutzen sie \n"
-"ruhig hochwertiges Papier und eine Lupe um ganz sicher zu gehen, das "
-"pefekteste Paar zu erkennen. Nachdem sie nun das schönste Paar ausgewählt \n"
-"und sich die Zahl gemerkt haben; legen sie das Blatt wieder in den Drucker "
-"ein\n"
-"bevor sie die Zahl eingeben.\n"
-"Sollten sie nicht sicher sein, wiederholen sie diesen Durchgang.\n"
+"Wenn Sie die Muster untersuchen, sollten Sie eines finden, welches das\n"
+"glatteste Muster aufweist (die geringste ``Maserung''). Wir empfehlen Foto-\n"
+"Papier für Tintenstrahldrucker oder ein ähnlich hochqualitatives Papier für\n"
+"diesen Test. Wenn Sie kein glattes Muster finden, wiederholen Sie diesen\n"
+"Test.\n"
 "\n"
-"Nach der letzten Ausgabe werden sie gefragt ob sie die Ausrichtung im "
-"Drucker sichern (s),\n"
-"den Vorgang wiederholen(r) oder ohne Sicherung abbrechen möchten. Beim "
-"Abbruch  \n"
-"bleiben die Einstellungen bis zum Ausschalten des Druckers erhalten, aber "
-"nicht länger.\n"
-"Es ist wichtigt, den Drucker während der Ausrichtung nicht Auszuschalten.\n"
+"Nachdem Sie nun das schönste Muster ausgewählt haben, werden Sie gefragt,\n"
+"ob Sie die Ausrichtung im Drucker sichern (s), den Vorgang wiederholen (r)\n"
+"oder ohne Sicherung abbrechen möchten (q). Beim Abbruch bleiben die\n"
+"Einstellungen bis zum Ausschalten des Druckers erhalten, aber nicht länger.\n"
+"Wenn Sie den Vorgang abbrechen, müssen Sie den gesamten Prozess wiederholen,\n"
+"wenn Sie die Ergebnisse dauerhaft sichern wollen. Es ist wichtig, den Drucker\n"
+"während der Ausrichtung nicht Auszuschalten.\n"
 "\n"
-"WARNUNG: DIESE FUNKTION WURDE NOCH NICHT GETEST !! \n"
-" es könnte nicht funktioniert oder ihren Drucker schädigen.\n"
+"WARNUNG: DIESE FUNKTION WURDE NOCH NICHT GETESTET! Sie könnte nicht\n"
+"funktionieren oder Ihren Drucker schädigen.\n"
 
 #: src/escputil/escputil.c:1178
 #, c-format
@@ -2650,7 +2605,9 @@ msgstr "Drucker %s benötigt keine Kopfausrichtung.\n"
 msgid ""
 "Please re-insert the same alignment sheet in the printer when it is\n"
 "finished printing.\n"
-msgstr "Bitte legen sie das selbe Blatt ein, nachdem der Druck beendet ist.\n"
+msgstr ""
+"Bitte legen sie dasselbe Blatt noch einmal ein, nachdem der Druck beendet\n"
+"ist.\n"
 
 #: src/escputil/escputil.c:1202
 msgid ""
@@ -2660,16 +2617,16 @@ msgid ""
 "best pattern, and repeat the procedure.\n"
 "Type a pattern number, or '?' for help.\n"
 msgstr ""
-"Betrachten sie den Musterausdruck und finden sie herraus, welches Muster \n"
-"am beßsten zusammen paßt, optimal ist eine durchgehende Linie.\n"
-"Wenn sie keine gute Übereinstimmung finden, wählen sie die annehm-\n"
+"Betrachten sie den Musterausdruck und finden sie heraus, welches Muster\n"
+"am glattesten aussieht (am wenigsten ``Maserung'' aufweist).\n"
+"Wenn Sie keine gute Übereinstimmung finden, wählen Sie die annehm-\n"
 "barste und wiederholen den Vorgang.\n"
-"Geben sie die Musternummer ein oder \"?\" für Hilfe.\n"
+"Geben Sie die Musternummer ein oder \"?\" für Hilfe.\n"
 
 #: src/escputil/escputil.c:1238
 #, c-format
 msgid "The best pattern should be numbered between 1 and %d.\n"
-msgstr "Die Nummer des beßsten Musters sollte zwischen 1 und %d liegen.\n"
+msgstr "Die Nummer des besten Musters sollte zwischen 1 und %d liegen.\n"
 
 #: src/escputil/escputil.c:1282
 msgid "Error in input\n"
@@ -2677,7 +2634,7 @@ msgstr "Eingabefehler\n"
 
 #: src/gimp/gimp_color_window.c:193
 msgid "Print Color Adjust"
-msgstr "Farbabstimmung"
+msgstr "Druckfarben-Abstimmung"
 
 #: src/gimp/gimp_color_window.c:197
 msgid "Set Defaults"
@@ -2700,8 +2657,8 @@ msgid ""
 "Set the brightness of the print.\n"
 "0 is solid black, 2 is solid white"
 msgstr ""
-"Stellen sie die Helligkeit ein.\n"
-"0 ist völlig Schwarz, 2 ist völlige Weiß"
+"Stellen Sie die Helligkeit ein.\n"
+"0 ist völlig schwarz, 2 ist völlig weiß"
 
 #: src/gimp/gimp_color_window.c:260
 msgid "Contrast:"
@@ -2709,15 +2666,15 @@ msgstr "Kontrast:"
 
 #: src/gimp/gimp_color_window.c:268
 msgid "Set the contrast of the print"
-msgstr "Stellen sie den Kontrast ein"
+msgstr "Stellen Sie den Kontrast für den Druck ein"
 
 #: src/gimp/gimp_color_window.c:279
 msgid "Cyan:"
-msgstr "Cyan: "
+msgstr "Zyan:"
 
 #: src/gimp/gimp_color_window.c:287
 msgid "Adjust the cyan balance of the print"
-msgstr "Stellen sie die Cyan-Balance ein"
+msgstr "Stellen Sie die Zyan-Balance für den Druck ein"
 
 #: src/gimp/gimp_color_window.c:298
 msgid "Magenta:"
@@ -2725,7 +2682,7 @@ msgstr "Magenta:"
 
 #: src/gimp/gimp_color_window.c:306
 msgid "Adjust the magenta balance of the print"
-msgstr "Stellen sie die Magenta-Balance ein"
+msgstr "Stellen Sie die Magenta-Balance für den Druck ein"
 
 #: src/gimp/gimp_color_window.c:317
 msgid "Yellow:"
@@ -2733,70 +2690,53 @@ msgstr "Gelb:"
 
 #: src/gimp/gimp_color_window.c:325
 msgid "Adjust the yellow balance of the print"
-msgstr "Stellen sie die Gelb-Balance ein"
+msgstr "Stellen Sie die Gelb-Balance für den Druck ein"
 
 #: src/gimp/gimp_color_window.c:336
 msgid "Saturation:"
-msgstr "Farbbalance:"
+msgstr "Sättigung:"
 
 #: src/gimp/gimp_color_window.c:344
 msgid ""
 "Adjust the saturation (color balance) of the print\n"
 "Use zero saturation to produce grayscale output using color and black inks"
 msgstr ""
-"Stellen sie die Farbbalance des Druckes ein.\n"
-"Stellen sie den Wert auf Null um einen Graustufenausdruck mit farbiger und "
-"schwarzer Tinte zu erzeugen. "
+"Stellen Sie die Sättigung (Farbbalance) des Druckes ein.\n"
+"Stellen Sie den Wert auf Null um einen Graustufenausdruck mit farbiger und\n"
+"schwarzer Tinte zu erzeugen."
 
 #: src/gimp/gimp_color_window.c:357
 msgid "Density:"
-msgstr "Empfindlichkeit:"
+msgstr "Dichte:"
 
 #: src/gimp/gimp_color_window.c:365
-msgid ""
-"Adjust the density (amount of ink) of the print. Reduce the density if the "
-"ink bleeds through the paper or smears; increase the density if black "
-"regions are not solid."
-msgstr ""
-"Stellen sie die Empfindlichkeit (Tintenmenge) des Druckes ein. Eine "
-"Verringerung läßt die Tinte durch das Papierdringen oder verschmieren, eine "
-"Erhöhung kann zu schlecht gedeckten Bereichen führen."
+msgid "Adjust the density (amount of ink) of the print. Reduce the density if the ink bleeds through the paper or smears; increase the density if black regions are not solid."
+msgstr "Stellen sie die Dichte (Tintenmenge) des Druckes ein. Verringern Sie sie, falls Tinte durch das Papier dringt oder verschmiert, erhöhen Sie entsprechend, wenn Bereiche zu schlecht gedeckt sind."
 
 #: src/gimp/gimp_color_window.c:379
 msgid "Gamma:"
 msgstr "Gamma:"
 
 #: src/gimp/gimp_color_window.c:387
-msgid ""
-"Adjust the gamma of the print. Larger values will produce a generally "
-"brighter print, while smaller values will produce a generally darker print. "
-"Black and white will remain the same, unlike with the brightness adjustment."
-msgstr ""
-"Stellen sie den Gamma-Parameter des Bildes ein. Größere Werte ergeben "
-"hellere Ausdrucke, kleinere dunkelere. Schwarz-Weiß bleibt gleich, nicht wie "
-"bei  der Helligkeitseinstellung."
+msgid "Adjust the gamma of the print. Larger values will produce a generally brighter print, while smaller values will produce a generally darker print. Black and white will remain the same, unlike with the brightness adjustment."
+msgstr "Stellen sie den Gamma-Parameter des Bildes ein. Größere Werte ergeben hellere Ausdrucke, kleinere dunkelere. Schwarz-Weiß bleibt gleich, nicht wie bei der Helligkeitseinstellung."
 
 #: src/gimp/gimp_color_window.c:403
 msgid "Dither Algorithm:"
 msgstr "Raster-Algorithmus:"
 
 #: src/gimp/gimp_color_window.c:411
-#, fuzzy
 msgid ""
 "Choose the dither algorithm to be used.\n"
 "Adaptive Hybrid usually produces the best all-around quality.\n"
 "Ordered is faster and produces almost as good quality on photographs.\n"
-"Fast and Very Fast are considerably faster, and work well for text and line "
-"art.\n"
+"Fast and Very Fast are considerably faster, and work well for text and line art.\n"
 "Hybrid Floyd-Steinberg generally produces inferior output."
 msgstr ""
-"Wählen sie den Raster-Algorithmus aus\n"
-"Adaptive Hybrid ist gut für alles.\n"
-"EvenTone ist ein neuer experimenteller Algorithmus, welcher meistens "
-"ausgezeichnete Drucke liefert.\n"
-"Abgestuft ist schnell und für Fotos geeignet.\n"
-"Schnell und Sehr Schnell sind am schnellsten und gut für Zeichnungen und "
-"Texte.\n"
+"Wählen Sie den Raster-Algorithmus aus.\n"
+"Adaptive Hybrid ist normalerweise für alles geeignet.\n"
+"Ordered ist schneller und erzeugt auf Fotos annähernd so gute Qualität.\n"
+"Schnell und Sehr Schnell sind am schnellsten und gut für Zeichnungen und Texte.\n"
 "Hybrid Floyd-Steinberg bringt im allgemeinen weniger gute Resultate."
 
 #.
@@ -2844,24 +2784,17 @@ msgstr "Vorschau"
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer "
-"precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of "
-"the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image "
-"to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return "
-"to its original position."
+"Click and drag with the second button to move the image with finer precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return to its original position."
 msgstr ""
-"Position des Bildes in der Seite.\n"
-"Mit der linken Maustaste verschieben sie das Bild.\n"
-"Mit der rechten geht es feiner; jede Bewegung verschiebt das Bild um einen "
-"Punkt (1/72\")\n"
-"Die mittlere verschiebt das Bild in Relation zur seiner Größe\n"
-"Wenn sie dabei die Umschalttaste (Shift) gedrückt halten, verschieben sie "
-"entweder nur waagerecht oder nur senkrecht\n"
-"Das Drücken einer anderen Taste, während des Verschiebens, bringt das Bild "
-"in seine Ausgangsposition zurück."
+"Positionieren Sie das Bild auf der Seite.\n"
+"Mit der linken Maustaste verschieben Sie das Bild.\n"
+"Mit der zweiten geht es feiner; jede Bewegung verschiebt das Bild um einen Punkt (1/72\")\n"
+"Die mittlere verschiebt das Bild in Einheiten seiner Größe\n"
+"Wenn Sie dabei die Umschalttaste (Shift) gedrückt halten, verschieben Sie entweder nur waagerecht oder nur senkrecht\n"
+"Das Drücken einer anderen Taste während des Verschiebens, bringt das Bild in seine Ausgangsposition zurück."
 
 #: src/gimp/gimp_main_window.c:434
 msgid "Position"
@@ -2885,15 +2818,11 @@ msgstr "umgekehrt Aufrecht"
 
 #: src/gimp/gimp_main_window.c:460
 msgid "Seascape"
-msgstr "umgekehrt Querformat"
+msgstr "umgekehrtes Querformat"
 
 #: src/gimp/gimp_main_window.c:464
-msgid ""
-"Select the orientation: portrait, landscape, upside down, or seascape "
-"(upside down landscape)"
-msgstr ""
-"wählen sie die Ausrichtung: Aufrecht, Querformat, umgekehrt Aufrecht, "
-"umgekehrt Querformat"
+msgid "Select the orientation: portrait, landscape, upside down, or seascape (upside down landscape)"
+msgstr "Wählen Sie die Ausrichtung: Aufrecht, Querformat, umgekehrt Aufrecht, umgekehrt Querformat"
 
 #: src/gimp/gimp_main_window.c:469
 msgid "Orientation:"
@@ -2901,11 +2830,11 @@ msgstr "Ausrichtung:"
 
 #: src/gimp/gimp_main_window.c:483
 msgid "Left:"
-msgstr "links:"
+msgstr "Links:"
 
 #: src/gimp/gimp_main_window.c:487
 msgid "Distance from the left of the paper to the image"
-msgstr "Entfernung vom linken Blattrand Bildrand"
+msgstr "Entfernung vom linken Blattrand zum Bild"
 
 #: src/gimp/gimp_main_window.c:496
 msgid "Top:"
@@ -2913,11 +2842,11 @@ msgstr "Oben:"
 
 #: src/gimp/gimp_main_window.c:500
 msgid "Distance from the top of the paper to the image"
-msgstr "Entfernung vom oberen Blattrand zum Bildrand"
+msgstr "Entfernung vom oberen Blattrand zum Bild"
 
 #: src/gimp/gimp_main_window.c:509
 msgid "Right:"
-msgstr "rechts:"
+msgstr "Rechts:"
 
 #: src/gimp/gimp_main_window.c:513
 msgid "Distance from the left of the paper to the right of the image"
@@ -2925,7 +2854,7 @@ msgstr "Entfernung vom linken Blattrand zum rechten Bildrand"
 
 #: src/gimp/gimp_main_window.c:523
 msgid "Right Border:"
-msgstr "rechter Rand:"
+msgstr "Rechter Rand:"
 
 #: src/gimp/gimp_main_window.c:527
 msgid "Distance from the right of the paper to the image"
@@ -2933,16 +2862,15 @@ msgstr "Entfernung vom rechten Blattrand zum Bildrand"
 
 #: src/gimp/gimp_main_window.c:537
 msgid "Bottom:"
-msgstr "unten:"
+msgstr "Unten:"
 
 #: src/gimp/gimp_main_window.c:541
-#, fuzzy
 msgid "Distance from the top of the paper to the bottom of the image"
 msgstr "Entfernung vom oberen Blattrand zum unteren Bildrand"
 
 #: src/gimp/gimp_main_window.c:551
 msgid "Bottom Border:"
-msgstr "unterer Rand:"
+msgstr "Unterer Rand:"
 
 #: src/gimp/gimp_main_window.c:555
 msgid "Distance from the bottom of the paper to the image"
@@ -2950,11 +2878,11 @@ msgstr "Entfernung vom unteren Blattrand zum Bild"
 
 #: src/gimp/gimp_main_window.c:572
 msgid "Center:"
-msgstr "Zentrieren:"
+msgstr "Mittelpunkt:"
 
 #: src/gimp/gimp_main_window.c:576
 msgid "Vertically"
-msgstr "senkrecht"
+msgstr "Senkrecht"
 
 #: src/gimp/gimp_main_window.c:581
 msgid "Center the image vertically on the paper"
@@ -2990,30 +2918,30 @@ msgstr "OK"
 #.
 #: src/gimp/gimp_main_window.c:648 src/gimp/gimp_main_window.c:906
 msgid "Printer Model:"
-msgstr "Druckermodel:"
+msgstr "Druckermodell:"
 
 #: src/gimp/gimp_main_window.c:660
 msgid "Select your printer model"
-msgstr "Wählen sie ihr Druckermodel"
+msgstr "Wählen Sie ihr Druckermodell"
 
 #.
 #. * PPD file.
 #.
 #: src/gimp/gimp_main_window.c:698
 msgid "PPD File:"
-msgstr "PPD Datei:"
+msgstr "PPD-Datei:"
 
 #: src/gimp/gimp_main_window.c:714
 msgid "Enter the correct PPD filename for your printer"
-msgstr "Wählen sie die, für ihren Drucker, richtige PPD-Datei."
+msgstr "Wählen Sie die für Ihren Drucker passende PPD-Datei."
 
 #: src/gimp/gimp_main_window.c:717
 msgid "Browse"
-msgstr "Suchen"
+msgstr "Blättern"
 
 #: src/gimp/gimp_main_window.c:723
 msgid "Choose the correct PPD filename for your printer"
-msgstr "Wählen sie die, für ihren Drucker, richtige PPD-Datei."
+msgstr "Wählen Sie die für ihren Drucker passende PPD-Datei."
 
 #.
 #. * Print command.
@@ -3023,40 +2951,34 @@ msgid "Command:"
 msgstr "Befehl:"
 
 #: src/gimp/gimp_main_window.c:746
-msgid ""
-"Enter the correct command to print to your printer. Note: Please do not "
-"remove the `-l' or `-oraw' from the command string, or printing will "
-"probably fail!"
-msgstr ""
-"Geben sie den richtigen Druckbefehl für ihren Drucker ein. ( Bitte löschen "
-"sie nicht die -l bzw. -oraw Option von der Befehlszeile, sonst kann der Duck "
-"scheitern!)"
+msgid "Enter the correct command to print to your printer. Note: Please do not remove the `-l' or `-oraw' from the command string, or printing will probably fail!"
+msgstr "Geben Sie den richtigen Druckbefehl für Ihren Drucker ein. (Bitte löschen Sie nicht die Optionen -l bzw. -oraw von der Befehlszeile, sonst kann der Druck scheitern!)"
 
 #.
 #. * Output file selection dialog.
 #.
 #: src/gimp/gimp_main_window.c:755
 msgid "Print To File?"
-msgstr "Drucke in Datei?"
+msgstr "In Datei drucken?"
 
 #.
 #. * PPD file selection dialog.
 #.
 #: src/gimp/gimp_main_window.c:770
 msgid "PPD File?"
-msgstr "PPD Datei?"
+msgstr "PPD-Datei?"
 
 #: src/gimp/gimp_main_window.c:789
 msgid "Define New Printer"
-msgstr "Neuen Printer einrichten"
+msgstr "Neuen Drucker einrichten"
 
 #: src/gimp/gimp_main_window.c:810 src/gimp/gimp_main_window.c:901
 msgid "Printer Name:"
-msgstr "Drucker Name:"
+msgstr "Druckername:"
 
 #: src/gimp/gimp_main_window.c:814
 msgid "Enter the name you wish to give this logical printer"
-msgstr "Bitte geben sie einen Pseudonym für diesen Drucker an."
+msgstr "Bitte geben Sie einen logischen Namen für diesen Drucker an."
 
 #: src/gimp/gimp_main_window.c:826
 msgid "About Gimp-Print "
@@ -3092,9 +3014,9 @@ msgstr ""
 "\n"
 "\n"
 "Copyright © 1997-2001 Michael Sweet, Robert Krawitz,\n"
-"und dem Rest der Gimp-Print Entwicklergruppe.\n"
+"und dem Rest der Gimp-Print-Entwicklergruppe.\n"
 "\n"
-"Bitte besuchen sie unsere Internetseite: http://gimp-print.sourceforge.net.\n"
+"Bitte besuchen Sie unsere Webseite: http://gimp-print.sourceforge.net.\n"
 "\n"
 "Dieses Programm ist freie Software. Sie können es unter\n"
 "den Bedingungen der GNU General Public License, wie von der\n"
@@ -3103,27 +3025,23 @@ msgstr ""
 "Sie es wünschen) jeder späteren Version.\n"
 "\n"
 "Die Veröffentlichung dieses Programms erfolgt in der\n"
-"Hoffnung, daß es Ihnen von Nutzen sein wird, aber OHNE JEDE\n"
+"Hoffnung, dass es von Nutzen sein wird, aber OHNE JEDE\n"
 "GEWÄHRLEISTUNG - sogar ohne die implizite Gewährleistung\n"
 "der MARKTREIFE oder der EIGNUNG FÜR EINEN BESTIMMTEN ZWECK.\n"
 "Details finden Sie in der GNU General Public License.\n"
 "\n"
 "Sie sollten eine Kopie der GNU General Public License zusammen\n"
 "mit diesem Programm erhalten haben. Falls nicht, schreiben Sie\n"
-"an die Free Software Foundation, Inc., 675 Mass Ave, Cambridge,\n"
-"MA 02139, USA.\n"
+"an die Free Software Foundation, Inc., 59 Temple Place, Suite 330,\n"
+"Boston, MA 02111-1307, USA.\n"
 
 #: src/gimp/gimp_main_window.c:884
 msgid "Printer Settings"
-msgstr "Drucker Einstellungen"
+msgstr "Druckereinstellungen"
 
 #: src/gimp/gimp_main_window.c:897
-msgid ""
-"Select the name of the printer (not the type, or model, of printer) that you "
-"wish to print to"
-msgstr ""
-"Bitte geben sie das Pseudonym des Druckers ihrer Wahl an. (kein Type, "
-"Modell...)"
+msgid "Select the name of the printer (not the type, or model, of printer) that you wish to print to"
+msgstr "Bitte geben Sie den Namen des Druckers, auf den Sie drucken möchten, an (nicht den Typ oder das Modell)"
 
 #.
 #. * Setup printer button
@@ -3133,35 +3051,27 @@ msgid "Setup Printer..."
 msgstr "Drucker einrichten..."
 
 #: src/gimp/gimp_main_window.c:919
-msgid ""
-"Choose the printer model, PPD file, and command that is used to print to "
-"this printer"
-msgstr ""
-"Wählen sie ein Druckermodel, eine PPD-Datei und einen Befehl zum Drucken auf "
-"diesem Drucker"
+msgid "Choose the printer model, PPD file, and command that is used to print to this printer"
+msgstr "Wählen Sie ein Druckermodell, eine PPD-Datei und einen Befehl zum Drucken mit diesem Drucker"
 
 #.
 #. * New printer button
 #.
 #: src/gimp/gimp_main_window.c:934
 msgid "New Printer..."
-msgstr "neuer Drucker..."
+msgstr "Neuer Drucker..."
 
 #: src/gimp/gimp_main_window.c:936
-msgid ""
-"Define a new logical printer. This can be used to name a collection of "
-"settings that you wish to remember for future use."
-msgstr ""
-"neuer logischer Drucker. Hier können sie einer besonderen Druckereinstellung "
-"einen Namen geben und später unter diesem einfach aufrufen."
+msgid "Define a new logical printer. This can be used to name a collection of settings that you wish to remember for future use."
+msgstr "Neuen logischen Drucker definieren. Hier können Sie einer besonderen Druckereinstellung einen Namen geben und sie später unter diesem einfach aufrufen."
 
 #: src/gimp/gimp_main_window.c:957
 msgid "Size of paper that you wish to print to"
-msgstr "Größe des Papiers "
+msgstr "Größe des Papiers, worauf gedruckt werden soll"
 
 #: src/gimp/gimp_main_window.c:960
 msgid "Media Size:"
-msgstr "Papier Größe:"
+msgstr "Papiergröße:"
 
 #: src/gimp/gimp_main_window.c:969
 msgid "Dimensions:"
@@ -3189,11 +3099,11 @@ msgstr "Art des Druckmediums"
 
 #: src/gimp/gimp_main_window.c:1019
 msgid "Media Type:"
-msgstr "Druckmedium: "
+msgstr "Druckmedium:"
 
 #: src/gimp/gimp_main_window.c:1032
 msgid "Source (input slot) of media you're printing to"
-msgstr "in welchem Schacht ist das Druckmedium"
+msgstr "Schacht des Druckmediums"
 
 #: src/gimp/gimp_main_window.c:1035
 msgid "Media Source:"
@@ -3228,12 +3138,8 @@ msgid "Set the scale (size) of the image"
 msgstr "Einstellung der Bildgröße"
 
 #: src/gimp/gimp_main_window.c:1142
-msgid ""
-"Select whether scaling is measured as percent of available page size or "
-"number of output dots per inch"
-msgstr ""
-"Wählen sie ob die Einstellungen in Prozent der Seitengröße oder in Punkten "
-"per Zoll erfolgen sollen"
+msgid "Select whether scaling is measured as percent of available page size or number of output dots per inch"
+msgstr "Wählen Sie, ob die Einstellungen in Prozent der Seitengröße oder in Ausgabepunkten je Zoll erfolgen sollen"
 
 #: src/gimp/gimp_main_window.c:1147
 msgid "Percent"
@@ -3249,7 +3155,7 @@ msgstr "PPI"
 
 #: src/gimp/gimp_main_window.c:1166
 msgid "Scale the print to the number of dots per inch"
-msgstr "Wählen sie die Druckauflösung (Punkte per Zoll)"
+msgstr "Druck auf die Druckauflösung (Punkte je Zoll) skalieren"
 
 #: src/gimp/gimp_main_window.c:1192
 msgid "Set the width of the print"
@@ -3265,7 +3171,7 @@ msgstr "Einheiten:"
 
 #: src/gimp/gimp_main_window.c:1230
 msgid "Select the base unit of measurement for printing"
-msgstr "Wählen sie die Basismaßeinheit für das Drucken"
+msgstr "Wählen Sie die Basismaßeinheit für das Drucken"
 
 #: src/gimp/gimp_main_window.c:1233
 msgid "Inch"
@@ -3273,7 +3179,7 @@ msgstr "Zoll"
 
 #: src/gimp/gimp_main_window.c:1240
 msgid "Set the base unit of measurement to inches"
-msgstr "Stelle die Basismaßeinheit auf Zoll"
+msgstr "Die Basismaßeinheit auf Zoll einstellen"
 
 #: src/gimp/gimp_main_window.c:1246
 msgid "cm"
@@ -3281,7 +3187,7 @@ msgstr "cm"
 
 #: src/gimp/gimp_main_window.c:1252
 msgid "Set the base unit of measurement to centimetres"
-msgstr "Die Basiseinheit auf Zentimeter einstellen"
+msgstr "Die Basismaßeinheit auf Zentimeter einstellen"
 
 #.
 #. * The "image size" button
@@ -3296,41 +3202,39 @@ msgstr ""
 
 #: src/gimp/gimp_main_window.c:1268
 msgid "Set the print size to the size of the image"
-msgstr "Ausdruckgröße gleich Bildgröße"
+msgstr "Ausdruckgröße auf Bildgröße setzen"
 
 #: src/gimp/gimp_main_window.c:1292
 msgid "Image / Output Settings"
-msgstr "Bild-/ Ausgabeeinstellungen"
+msgstr "Bild- / Ausgabeeinstellungen"
 
 #: src/gimp/gimp_main_window.c:1305
 msgid "Image Type:"
-msgstr "Bildtype:"
+msgstr "Bildtyp:"
 
 #: src/gimp/gimp_main_window.c:1310
 msgid "Optimize the output for the type of image being printed"
-msgstr "Den Ausdruck auf die Art des Bildes optimieren."
+msgstr "Den Ausdruck auf die Art des Bildes optimieren"
 
 #: src/gimp/gimp_main_window.c:1321
 msgid "Fastest and brightest color for text and line art"
-msgstr "Schnellste und hellste Farbe für Text und Strichzeichnung."
+msgstr "Schnellste und hellste Farbe für Text und Strichzeichnung"
 
 #: src/gimp/gimp_main_window.c:1335
 msgid "Best for images dominated by regions of solid color"
-msgstr "Beste Qualität für Bilder mit einfarbigen Flächen."
+msgstr "Beste Qualität für Bilder mit einfarbigen Flächen"
 
 #: src/gimp/gimp_main_window.c:1351
-msgid ""
-"Slowest, but most accurate and smoothest color for continuous tone images "
-"and photographs"
-msgstr "Langsamste aber beste Qualität für Farbverläufe und Fotografien."
+msgid "Slowest, but most accurate and smoothest color for continuous tone images and photographs"
+msgstr "Langsamste aber beste Qualität für Farbverläufe und Fotografien"
 
 #: src/gimp/gimp_main_window.c:1377
 msgid "Output Type:"
-msgstr "Ausgabeart:"
+msgstr "Ausgabetyp:"
 
 #: src/gimp/gimp_main_window.c:1382
 msgid "Select the desired output type"
-msgstr "Wählen sie die gewünschte Ausgabeart:"
+msgstr "Wählen Sie den gewünschten Ausgabetyp:"
 
 #: src/gimp/gimp_main_window.c:1385
 msgid "Color"
@@ -3364,10 +3268,8 @@ msgid "Adjust Output..."
 msgstr "Ausgabeeinstellungen.."
 
 #: src/gimp/gimp_main_window.c:1435
-msgid ""
-"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
-msgstr ""
-"Einstellungen für Farbalance, Helligkeit, Kontrast, Sättigung und Rasterung"
+msgid "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgstr "Einstellungen für Farbbalance, Helligkeit, Kontrast, Sättigung und Rasterung"
 
 #: src/gimp/print-image-gimp.c:318
 msgid "Printing..."
@@ -3408,7 +3310,7 @@ msgstr "Parameter %s ist nicht zulässig (wert %d, min %d, max %d)\n"
 
 #: src/ghost/ijsgimpprint.c:363
 msgid "Printer must be specified with -sModel\n"
-msgstr "Der Drucker muß mit -sModel angegeben werden\n"
+msgstr "Der Drucker muss mit -sModel angegeben werden\n"
 
 #: src/ghost/ijsgimpprint.c:365
 #, c-format
@@ -3418,7 +3320,7 @@ msgstr "Druckermodel %s ist unbekannt.\n"
 #: src/ghost/ijsgimpprint.c:635
 #, c-format
 msgid "Unknown option %s\n"
-msgstr "Unbekannte Option %s\n"
+msgstr "Unbekannte Option: %s\n"
 
 #: src/ghost/ijsgimpprint.c:809
 #, c-format
@@ -3428,17 +3330,17 @@ msgstr "%.0f von %.0f\n"
 #: src/ghost/ijsgimpprint.c:915
 #, c-format
 msgid "ijs_server_get_page_header failed %d\n"
-msgstr "ijs_server_get_page_header failed %d\n"
+msgstr "ijs_server_get_page_header gescheitert: %d\n"
 
 #: src/ghost/ijsgimpprint.c:926
 #, c-format
 msgid "image_init failed %d\n"
-msgstr "image_init gescheitert %d\n"
+msgstr "image_init gescheitert: %d\n"
 
 #: src/ghost/ijsgimpprint.c:937
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
-msgstr "Kann file descriptor : %s nicht öffnen\n"
+msgstr "Kann File-Deskriptor %s nicht öffnen\n"
 
 #: src/ghost/ijsgimpprint.c:949
 #, c-format
@@ -3448,7 +3350,7 @@ msgstr "Kann %s: %s nicht öffnen\n"
 #: src/ghost/ijsgimpprint.c:961
 #, c-format
 msgid "Unknown printer %s\n"
-msgstr "Unbekannter Drucker %s\n"
+msgstr "Unbekannter Drucker: %s\n"
 
 #: src/ghost/ijsgimpprint.c:994
 msgid "Bad parameters; cannot continue!\n"
@@ -3457,7 +3359,7 @@ msgstr "Unzulässige Parameter, breche ab!\n"
 #: src/ghost/ijsgimpprint.c:1004
 #, c-format
 msgid "Get next row failed at %.0f\n"
-msgstr "Zeilensprung gescheitert bei % 0f \n"
+msgstr "Zeilensprung gescheitert bei %.0f\n"
 
 #~ msgid "Model %d out of range.\n"
 #~ msgstr "Model %d ist ungültig!\n"
@@ -3495,8 +3397,7 @@ msgstr "Zeilensprung gescheitert bei % 0f \n"
 #~ msgstr ""
 #~ "Bitte betrachten sie den Ausdruck und entscheiden sie sich für \n"
 #~ "die beßsten Übereinstimmungen der Muster-Paare .\n"
-#~ "Geben sie die Muster-Nummer ein, '?' für Hilfe, oder 'r' um den Druck zu "
-#~ "wiederholen\n"
+#~ "Geben sie die Muster-Nummer ein, '?' für Hilfe, oder 'r' um den Druck zu wiederholen\n"
 
 #~ msgid "Curve:"
 #~ msgstr "Kennlinie:"
