@@ -296,7 +296,7 @@ STP_ARG_WITH_DETAILED([modules],
     fi)
 
 # Abort if a broken configuration was required
-if test x$disable_static = xyes; then
+if test x$enable_static = xyes; then
   if test $WITH_MODULES = no; then
     :
   elif test $WITH_MODULES = static; then
