@@ -28,6 +28,8 @@
 #include "gimp-print-internal.h"
 #include <gimp-print/gimp-print-intl-internal.h>
 #include <math.h>
+#include <string.h>
+#include <stdlib.h>
 
 #define COOKIE_CURVE 0x1ce0b247
 
@@ -38,6 +40,8 @@ typedef struct
   size_t point_count;
   size_t real_point_count;
   stp_curve_wrap_mode_t wrap_mode;
+  int recompute_interval;
+  int recompute_range;
   double gamma;
   double rlo, rhi;		/* Current range limits */
   double blo, bhi;		/* Bounds */
@@ -102,6 +106,7 @@ clear_curve_data(stp_internal_curve_t *curve)
   curve->interval = NULL;
   curve->point_count = 0;
   curve->real_point_count = 0;
+  curve->recompute_interval = 0;
 }
 
 static void
@@ -120,12 +125,13 @@ compute_intervals(stp_internal_curve_t *curve)
       for (i = 0; i < curve->real_point_count - 1; i++)
 	curve->interval[i] = curve->data[i + 1] - curve->data[i];
     }
+  curve->recompute_interval = 0;
 }    
 
 static int
 set_curve_points(stp_internal_curve_t *curve, size_t points)
 {
-  if (points < 2 && (curve->gamma == 0 || points != 0))
+  if (points < 2)
     return 0;
   if (points > 65536 ||
       (curve->wrap_mode == STP_CURVE_WRAP_AROUND && points > 65535))
@@ -150,14 +156,13 @@ stp_curve_allocate(stp_curve_wrap_mode_t wrap_mode)
   ret->rhi = ret->bhi = 1.0;
   ret->curve_type = STP_CURVE_TYPE_LINEAR;
   ret->wrap_mode = wrap_mode;
+  set_curve_points(ret, 2);
+  ret->data = stp_zalloc(ret->real_point_count * sizeof(double));
+  ret->recompute_interval = 1;
   if (wrap_mode == STP_CURVE_WRAP_NONE)
     ret->gamma = 1.0;
-  else
-    {
-      set_curve_points(ret, 2);
-      ret->data = stp_zalloc(ret->real_point_count * sizeof(double));
-      compute_intervals(ret);
-    }
+  ret->data[0] = 0;
+  ret->data[1] = 1;
   return (stp_curve_t) ret;
 }
 
@@ -190,10 +195,15 @@ stp_curve_copy(stp_curve_t dest, const stp_curve_t source)
   if (isource->data)
     {
       idest->data = stp_malloc(sizeof(double) * (isource->real_point_count));
-      idest->interval = NULL;
       (void) memcpy(idest->data, isource->data,
 		    (sizeof(double) * (isource->real_point_count)));
-      compute_intervals(idest);
+    }
+  if (isource->interval)
+    {
+      idest->interval =
+	stp_malloc(sizeof(double) * (isource->real_point_count - 1));
+      (void) memcpy(idest->interval, isource->interval,
+		    (sizeof(double) * (isource->real_point_count - 1)));
     }
 }
 
@@ -236,6 +246,8 @@ stp_curve_get_range(const stp_curve_t curve, double *low, double *high)
 {
   stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
   check_curve(icurve);
+  if (icurve->recompute_range)
+    scan_curve_range(icurve);
   *low = icurve->rlo;
   *high = icurve->rhi;
 }
@@ -318,11 +330,12 @@ stp_curve_set_data(stp_curve_t curve, size_t count, const double *data)
       return 0;
   set_curve_points(icurve, count);
   icurve->data = stp_zalloc(icurve->real_point_count * sizeof(double));
+  icurve->gamma = 0.0;
   memcpy(icurve->data, data, (sizeof(double) * icurve->real_point_count));
   if (icurve->wrap_mode == STP_CURVE_WRAP_AROUND)
     icurve->data[icurve->point_count] = icurve->data[0];
-  compute_intervals(icurve);
-  scan_curve_range(icurve);
+  icurve->recompute_interval = 1;
+  icurve->recompute_range = 1;
   return 1;
 }
 
@@ -339,33 +352,20 @@ int
 stp_curve_set_point(stp_curve_t curve, size_t where, double data)
 {
   stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
-  int need_to_rescan = 0;
   check_curve(icurve);
   if (where >= icurve->point_count || ! finite(data) ||
       data < icurve->blo || data > icurve->bhi)
     return 0;
-  if (data < icurve->rlo)
-    icurve->rlo = data;
-  else if (data > icurve->rhi)
-    icurve->rhi = data;
-  else if (icurve->data[where] == icurve->rhi ||
-	   icurve->data[where] == icurve->rlo)
-    need_to_rescan = 1;
+  if (data < icurve->rlo ||
+      data > icurve->rhi ||
+      icurve->data[where] == icurve->rhi ||
+      icurve->data[where] == icurve->rlo)
+    icurve->recompute_range = 1;
+  icurve->gamma = 0.0;
   icurve->data[where] = data;
   if (where == 0 && icurve->wrap_mode == STP_CURVE_WRAP_AROUND)
-    {
       icurve->data[icurve->point_count] = data;
-      icurve->interval[icurve->point_count - 1] =
-	icurve->data[icurve->point_count] -
-	icurve->data[icurve->point_count - 1];
-    }
-  if (where > 0)
-    icurve->interval[where - 1] =
-      icurve->data[where] - icurve->data[where - 1];
-  icurve->interval[where] = icurve->data[where + 1] - icurve->data[where];
-
-  if (need_to_rescan)
-    scan_curve_range(icurve);
+  icurve->recompute_interval = 1;
   return 1;
 }
 
@@ -388,14 +388,10 @@ stp_curve_rescale(stp_curve_t curve, double scale,
   int i;
   double nblo;
   double nbhi;
-  double nrlo;
-  double nrhi;
 
   check_curve(icurve);
   nblo = icurve->blo;
   nbhi = icurve->bhi;
-  nrlo = icurve->rlo;
-  nrhi = icurve->rhi;
   if (bounds_mode == STP_CURVE_BOUNDS_RESCALE)
     {
       switch (mode)
@@ -404,22 +400,23 @@ stp_curve_rescale(stp_curve_t curve, double scale,
 	  nblo += scale;
 	  nbhi += scale;
 	  break;
-	case STP_CURVE_COMPOSE_SUBTRACT:
-	  nblo -= scale;
-	  nbhi -= scale;
-	  break;
 	case STP_CURVE_COMPOSE_MULTIPLY:
-	  nblo *= scale;
-	  nbhi *= scale;
-	  break;
-	case STP_CURVE_COMPOSE_DIVIDE:
-	  if (scale == 0.0)
-	    return 0;
-	  nblo /= scale;
-	  nbhi /= scale;
+	  if (scale < 0)
+	    {
+	      double tmp = nblo * scale;
+	      nblo = nbhi * scale;
+	      nbhi = tmp;
+	    }
+	  else
+	    {
+	      nblo *= scale;
+	      nbhi *= scale;
+	    }
 	  break;
 	case STP_CURVE_COMPOSE_EXPONENTIATE:
 	  if (scale == 0.0)
+	    return 0;
+	  if (nblo < 0)
 	    return 0;
 	  nblo = pow(nblo, scale);
 	  nbhi = pow(nbhi, scale);
@@ -432,9 +429,6 @@ stp_curve_rescale(stp_curve_t curve, double scale,
   if (! finite(nbhi) || ! finite(nblo))
     return 0;
 
-  nrlo = nbhi;
-  nrhi = nblo;
-
   if (icurve->point_count)
     {
       double *tmp = stp_malloc(sizeof(double) * icurve->real_point_count);
@@ -445,14 +439,8 @@ stp_curve_rescale(stp_curve_t curve, double scale,
 	    case STP_CURVE_COMPOSE_ADD:
 	      tmp[i] = icurve->data[i] + scale;
 	      break;
-	    case STP_CURVE_COMPOSE_SUBTRACT:
-	      tmp[i] = icurve->data[i] - scale;
-	      break;
 	    case STP_CURVE_COMPOSE_MULTIPLY:
 	      tmp[i] = icurve->data[i] * scale;
-	      break;
-	    case STP_CURVE_COMPOSE_DIVIDE:
-	      tmp[i] = icurve->data[i] / scale;
 	      break;
 	    case STP_CURVE_COMPOSE_EXPONENTIATE:
 	      tmp[i] = pow(icurve->data[i], scale);
@@ -470,15 +458,14 @@ stp_curve_rescale(stp_curve_t curve, double scale,
 	      else
 		tmp[i] = nblo;
 	    }
-	  if (tmp[i] < nrlo)
-	    nrlo = tmp[i];
-	  if (tmp[i] > nrhi)
-	    nrhi = tmp[i];
 	}
+      icurve->bhi = nbhi;
+      icurve->blo = nblo;
       icurve->gamma = 0.0;
       memcpy(icurve->data, tmp, sizeof(double) * icurve->real_point_count);
       stp_free(tmp);
-      compute_intervals(icurve);
+      icurve->recompute_range = 1;
+      icurve->recompute_interval = 1;
     }
   return 1;
 }
@@ -498,7 +485,7 @@ stp_curve_print(FILE *f, const stp_curve_t curve)
 	  icurve->gamma,
 	  icurve->blo,
 	  icurve->bhi);
-  if (icurve->gamma == 0 && icurve->point_count)
+/*  if (icurve->gamma == 0 && icurve->point_count) */
     for (i = 0; i < icurve->point_count; i++)
       fprintf(f, "%g;", icurve->data[i]);
   setlocale(LC_ALL, "");
@@ -621,7 +608,7 @@ stp_curve_read(FILE *f, stp_curve_t curve)
     goto bad;
   if (iret->gamma)
     {
-      set_curve_points(iret, 0);
+      set_curve_points(iret, 2);
       stp_curve_resample(ret, points);
     }
   else
@@ -640,8 +627,8 @@ stp_curve_read(FILE *f, stp_curve_t curve)
       if (wrap_mode == STP_CURVE_WRAP_AROUND)
 	iret->data[iret->point_count] = iret->data[0];
     }
-  compute_intervals(iret);
-  scan_curve_range(iret);
+  iret->recompute_interval = 1;
+  iret->recompute_range = 1;
   stp_curve_copy(curve, ret);
   stp_curve_destroy(ret);
   setlocale(LC_ALL, "");
@@ -734,7 +721,7 @@ stp_curve_read_string(const char *text, stp_curve_t curve)
   noffset = 0;
   if (iret->gamma)
     {
-      set_curve_points(iret, 0);
+      set_curve_points(iret, 2);
       stp_curve_resample(ret, points);
     }
   else
@@ -759,8 +746,8 @@ stp_curve_read_string(const char *text, stp_curve_t curve)
 	  iret->data[iret->point_count] = iret->data[0];
 	}
     }
-  compute_intervals(iret);
-  scan_curve_range(iret);
+  iret->recompute_interval = 1;
+  iret->recompute_range = 1;
   stp_curve_copy(curve, ret);
   stp_curve_destroy(ret);
   setlocale(LC_ALL, "");
@@ -776,6 +763,8 @@ interpolate_gamma_internal(const stp_curve_t curve, double where)
 {
   stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
   double gamma = icurve->gamma;
+  if (icurve->real_point_count)
+    where /= (icurve->real_point_count - 1);
   if (gamma < 0)
     {
       where = 1.0 - where;
@@ -795,6 +784,8 @@ interpolate_point_internal(const stp_curve_t curve, double where)
 
   if (frac == 0.0)
     return icurve->data[integer];
+  if (icurve->recompute_interval)
+    compute_intervals(icurve);
   if (icurve->curve_type == STP_CURVE_TYPE_LINEAR)
     return icurve->data[integer] + frac * icurve->interval[integer];
   else
@@ -813,8 +804,8 @@ stp_curve_interpolate_value(const stp_curve_t curve, double where,
   if (icurve->wrap_mode == STP_CURVE_WRAP_AROUND)
     limit += 1;
 
-  if (where < 0 || (where > 1 && where > limit)) /* points == 0 */
-    return 0;			/* for gamma curve */
+  if (where < 0 || where > limit)
+    return 0;
   if (icurve->gamma)	/* this means a pure gamma curve */
     *result = interpolate_gamma_internal(curve, where);
   else
@@ -835,11 +826,6 @@ stp_curve_resample(stp_curve_t curve, size_t points)
 
   if (points == icurve->point_count)
     return 1;
-  if (points == 0 && icurve->gamma)
-    {
-      set_curve_points(icurve, 0);
-      return 1;
-    }
 
   if (points < 2)
     return 0;
@@ -852,6 +838,8 @@ stp_curve_resample(stp_curve_t curve, size_t points)
     }
   if (limit > 65536)
     return 0;
+  if (old < 0)
+    old = 1;
 
   new_vec = stp_malloc(sizeof(double) * limit);
 
@@ -871,7 +859,7 @@ stp_curve_resample(stp_curve_t curve, size_t points)
 					   (double) (limit - 1)));
   set_curve_points(icurve, points);
   icurve->data = new_vec;
-  compute_intervals(icurve);
+  icurve->recompute_interval = 1;
   return 1;
 }
 
@@ -920,7 +908,13 @@ stp_curve_compose(stp_curve_t *retval,
   double gamma_b = stp_curve_get_gamma(b);
   unsigned points_a = stp_curve_count_points(a);
   unsigned points_b = stp_curve_count_points(b);
+  double alo, ahi, blo, bhi;
+  double pa, pb;
+  double nrange, ndelta;
   int i;
+
+  stp_curve_get_bounds(a, &alo, &ahi);
+  stp_curve_get_bounds(b, &blo, &bhi);
 
   if (stp_curve_get_wrap(a) != stp_curve_get_wrap(b))
     return 0;
@@ -938,32 +932,26 @@ stp_curve_compose(stp_curve_t *retval,
   if (points > 65536 ||
       ((stp_curve_get_wrap(a) == STP_CURVE_WRAP_AROUND) && points > 65535))
     return 0;
+  if (mode == STP_CURVE_COMPOSE_MULTIPLY && (alo < 0 || blo < 0))
+    return 0;
 
-  if (gamma_a && gamma_b && gamma_a * gamma_b > 0)
+  if (gamma_a && gamma_b && gamma_a * gamma_b > 0 &&
+      mode == STP_CURVE_COMPOSE_MULTIPLY)
     {
-      switch (mode)
-	{
-	case STP_CURVE_COMPOSE_MULTIPLY:
-	  *retval = stp_curve_allocate(STP_CURVE_WRAP_NONE);
-	  return stp_curve_set_gamma(*retval, points, gamma_a + gamma_b);
-	case STP_CURVE_COMPOSE_DIVIDE:
-	  *retval = stp_curve_allocate(STP_CURVE_WRAP_NONE);
-	  return stp_curve_set_gamma(*retval, points, gamma_a - gamma_b);
-	default:
-	  break;
-	}
+      *retval = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+      stp_curve_set_bounds(*retval, alo * blo, ahi * bhi);
+      return stp_curve_set_gamma(*retval, points, gamma_a + gamma_b);
     }
   if (points < 2)
     return 0;
   tmp_data = stp_malloc(sizeof(double) * points);
   for (i = 0; i < points; i++)
     {
-      double pa, pb;
-      if (stp_curve_interpolate_value(a, i * (points_a - 1) / (points - 1),
-				      &pa))
+      if (!stp_curve_interpolate_value(a, i * (points_a - 1) / (points - 1),
+				       &pa))
 	goto bad;
-      if (stp_curve_interpolate_value(b, i * (points_b - 1) / (points - 1),
-				      &pb))
+      if (!stp_curve_interpolate_value(b, i * (points_b - 1) / (points - 1),
+				       &pb))
 	goto bad;
       switch (mode)
 	{
@@ -973,26 +961,31 @@ stp_curve_compose(stp_curve_t *retval,
 	case STP_CURVE_COMPOSE_MULTIPLY:
 	  pa *= pb;
 	  break;
-	case STP_CURVE_COMPOSE_SUBTRACT:
-	  pa -= pb;
-	  break;
-	case STP_CURVE_COMPOSE_DIVIDE:
-	  if (pb == 0.0)
-	    goto bad;
-	  pa /= pb;
-	  break;
-	case STP_CURVE_COMPOSE_EXPONENTIATE:
-	  if (pa == 0.0 && pb == 0.0)
-	    goto bad;
-	  pa = pow(pa, pb);
-	  break;
 	default:
 	  goto bad;
 	}
       if (! finite(pa))
 	goto bad;
+      tmp_data[i] = pa;
     }
   ret = stp_curve_allocate(stp_curve_get_wrap(a));
+  switch (mode)
+    {
+    case STP_CURVE_COMPOSE_ADD:
+      stp_curve_rescale(ret, (ahi - alo) + (bhi - blo),
+			STP_CURVE_COMPOSE_MULTIPLY, STP_CURVE_BOUNDS_RESCALE);
+      stp_curve_rescale(ret, alo + blo,
+			STP_CURVE_COMPOSE_ADD, STP_CURVE_BOUNDS_RESCALE);
+      break;
+    case STP_CURVE_COMPOSE_MULTIPLY:
+      stp_curve_rescale(ret, (ahi - alo) * (bhi - blo),
+			STP_CURVE_COMPOSE_MULTIPLY, STP_CURVE_BOUNDS_RESCALE);
+      stp_curve_rescale(ret, alo * blo,
+			STP_CURVE_COMPOSE_ADD, STP_CURVE_BOUNDS_RESCALE);
+      break;
+    default:
+      goto bad;
+    }
   if (! stp_curve_set_data(ret, points, tmp_data))
     goto bad1;
   *retval = ret;

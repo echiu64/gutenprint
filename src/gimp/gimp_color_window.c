@@ -41,6 +41,7 @@ guchar *preview_thumbnail_data;
 GtkWidget *color_adjust_dialog;
 
 GtkWidget   *dither_algo_combo       = NULL;
+GtkWidget   *dither_algo_label       = NULL;
 static gint  dither_algo_callback_id = -1;
 static void color_update (GtkAdjustment *adjustment);
 
@@ -102,6 +103,7 @@ build_dither_combo (void)
     }
 
   plist_build_combo (dither_algo_combo,
+		     dither_algo_label,
 		     vec,
 		     stp_get_string_parameter (pv->v, "DitherAlgorithm"),
 		     desc.deflt.str,
@@ -150,6 +152,7 @@ create_color_adjust_window (void)
   gint i;
   GtkWidget *table;
   GtkWidget *event_box;
+  GtkWidget *curve;
 
   /*
    * Fetch a thumbnail of the image we're to print from the Gimp.  This must
@@ -181,12 +184,15 @@ create_color_adjust_window (void)
 		     NULL, 1, NULL, TRUE, TRUE,
 
 		     NULL);
+  gtk_window_set_policy(GTK_WINDOW(color_adjust_dialog), 1, 1, 1);
 
   table = gtk_table_new (1, 1, FALSE);
   gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-  gtk_table_set_row_spacings (GTK_TABLE (table), 2);
+  gtk_table_set_row_spacings (GTK_TABLE (table), 0);
+/*  gtk_table_set_row_spacing (GTK_TABLE (table), 8, 6); */
+
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (color_adjust_dialog)->vbox),
 		      table, FALSE, FALSE, 0);
   gtk_widget_show (table);
@@ -239,8 +245,9 @@ create_color_adjust_window (void)
    */
 
   event_box = gtk_event_box_new ();
-  table_attach_aligned(GTK_TABLE (table), 0, color_option_count + 1,
-		       _("Dither Algorithm:"), 1.0, 0.5, event_box, 1, TRUE);
+  dither_algo_label = table_attach_aligned
+    (GTK_TABLE (table), 0, color_option_count + 1,
+     _("Dither Algorithm:"), 1.0, 0.5, event_box, 1, TRUE);
 
   dither_algo_combo = gtk_combo_new ();
   gtk_container_add (GTK_CONTAINER(event_box), dither_algo_combo);
@@ -258,6 +265,11 @@ create_color_adjust_window (void)
 		  "work well for text and line art.\n"
 		  "Hybrid Floyd-Steinberg generally produces "
 		  "inferior output."));
+  curve = gtk_gamma_curve_new();
+  table_attach_aligned(GTK_TABLE (table), 0, color_option_count + 2,
+		       _("Curve:"), 1.0, 0.5, curve, 1, TRUE);
+  gtk_curve_set_range(GTK_CURVE(GTK_GAMMA_CURVE(curve)->curve), 0.0, 200.0, 0.0, 200.0);
+  gtk_widget_show(curve);
 }
 
 static void

@@ -49,7 +49,7 @@ const char *good_curves[] =
     "STP_CURVE;Wrap ;Linear ;48;0;0;4;0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
     "STP_CURVE;Nowrap ;Linear ;48;0;0;4;0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
     "STP_CURVE;Nowrap ;Linear ;48;1.0;0;4;",
-    "STP_CURVE;Nowrap ;Linear ;0;1.0;0;4;",
+    "STP_CURVE;Nowrap ;Linear ;2;1.0;0;4;",
   };
 
 static const int good_curve_count = sizeof(good_curves) / sizeof(const char *);
@@ -123,27 +123,70 @@ main(int argc, char **argv)
 	}
     }
   stp_curve_destroy(curve2);
+  printf("allocate 1\n");
   curve1 = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  printf("allocate 2\n");
   curve2 = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  printf("set gamma 1\n");
   if (!stp_curve_set_gamma(curve1, 64, 1.2))
     {
       printf("set_gamma failed!\n");
       global_error_count++;
     }
+  stp_curve_print(stdout, curve1);
+  fprintf(stdout, "\n");
+  printf("set gamma 2\n");
   if (!stp_curve_set_gamma(curve2, 64, -1.2))
     {
       printf("set_gamma failed!\n");
       global_error_count++;
     }
+  stp_curve_print(stdout, curve2);
+  fprintf(stdout, "\n");
+  printf("compose add\n");
   if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_ADD, 64))
     {
-      printf("compose failed!\n");
+      printf("add compose failed!\n");
       global_error_count++;
     }
-  stp_curve_print(stdout, curve3);
-			 
-
+  else
+    stp_curve_print(stdout, curve3);
   fprintf(stdout, "\n");
+  stp_curve_destroy(curve3);
+  printf("compose multiply\n");
+  if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_MULTIPLY, 64))
+    {
+      printf("multiply compose failed!\n");
+      global_error_count++;
+    }
+  else
+    stp_curve_print(stdout, curve3);
+  fprintf(stdout, "\n");
+  stp_curve_destroy(curve3);
+
+  stp_curve_print(stdout, curve2);
+  fprintf(stdout, "\n");
+
+  if (!stp_curve_rescale(curve2, -1, STP_CURVE_COMPOSE_MULTIPLY,
+			 STP_CURVE_BOUNDS_RESCALE))
+    {
+      printf("multiply rescale failed!\n");
+      global_error_count++;
+    }
+  else
+    stp_curve_print(stdout, curve2);
+  fprintf(stdout, "\n");
+  if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_ADD, 64))
+    {
+      printf("subtract compose failed!\n");
+      global_error_count++;
+    }
+  else
+    stp_curve_print(stdout, curve3);
+  fprintf(stdout, "\n");
+  stp_curve_destroy(curve3);
+  stp_curve_destroy(curve1);
+  stp_curve_destroy(curve2);
 
   return 0;
 }

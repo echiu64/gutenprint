@@ -47,6 +47,7 @@ typedef struct
   void (*extra)(const gchar *);
   gint callback_id;
   GtkWidget *combo;
+  GtkWidget *label;
 } list_option_t;
 
 typedef struct
@@ -363,13 +364,24 @@ set_adjustment_tooltip (GtkObject *adj, const gchar *tip)
   set_help_data (GTK_WIDGET (GIMP_SCALE_ENTRY_SPINBUTTON (adj)), tip);
 }
 
-void
+GtkWidget *
 table_attach_aligned(GtkTable *table, gint column, gint row,
 		     const gchar *label_text, gfloat xalign, gfloat yalign,
 		     GtkWidget *widget, gint colspan, gboolean left_align)
 {
+  GList *children;
+  GtkTableChild *child;
   gimp_table_attach_aligned(table, column, row, label_text, xalign, yalign,
 			    widget, colspan, left_align);
+  children = table->children;
+  while (children)
+    {
+      child = (GtkTableChild *)children->data;
+      if (child->left_attach == column && child->top_attach == row)
+	return child->widget;
+      children = children->next;
+    }
+  return NULL;
 }
 
 static void
@@ -381,8 +393,9 @@ create_new_combo(list_option_t *list_option, GtkWidget *table,
   gtk_container_add(GTK_CONTAINER(event_box), list_option->combo);
   gtk_widget_show(list_option->combo);
   set_help_data(event_box, _(list_option->help));
-  table_attach_aligned(GTK_TABLE(table), hpos, vpos, _(list_option->text),
-		       1.0, 0.5, event_box, 1, TRUE);
+  list_option->label = table_attach_aligned
+    (GTK_TABLE(table), hpos, vpos, _(list_option->text),
+     1.0, 0.5, event_box, 1, TRUE);
 }
 
 static const char *
@@ -426,6 +439,7 @@ build_printer_combo(void)
 	}
     }
   plist_build_combo(printer_combo,
+		    NULL,
 		    printer_list,
 		    stp_string_list_param(printer_list, plist_current)->name,
 		    NULL,
@@ -463,6 +477,7 @@ create_top_level_structure(void)
                      NULL, 1, NULL, FALSE, TRUE,
 
                      NULL);
+  gtk_window_set_policy(GTK_WINDOW(print_dialog), 1, 1, 1);
 
   g_free (plug_in_name);
 
@@ -510,7 +525,7 @@ create_preview (void)
   gtk_widget_show (event_box);
 
   gtk_signal_connect (GTK_OBJECT (preview), "expose_event",
-                      GTK_SIGNAL_FUNC (preview_expose), NULL);
+		      GTK_SIGNAL_FUNC (preview_expose), NULL);
   gtk_signal_connect (GTK_OBJECT (preview), "button_press_event",
                       GTK_SIGNAL_FUNC (preview_button_callback), NULL);
   gtk_signal_connect (GTK_OBJECT (preview), "button_release_event",
@@ -647,6 +662,7 @@ create_printer_dialog (void)
 				 NULL, 1, NULL, FALSE, TRUE,
 
 				 NULL);
+  gtk_window_set_policy(GTK_WINDOW(setup_dialog), 1, 1, 1);
 
   /*
    * Top-level table for dialog.
@@ -656,8 +672,7 @@ create_printer_dialog (void)
   gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-  gtk_table_set_row_spacings (GTK_TABLE (table), 8);
-  gtk_table_set_row_spacing (GTK_TABLE (table), 0, 100);
+  gtk_table_set_row_spacing (GTK_TABLE (table), 0, 150);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (setup_dialog)->vbox), table,
                       TRUE, TRUE, 0);
   gtk_widget_show (table);
@@ -800,6 +815,7 @@ create_new_printer_dialog (void)
                      _("Cancel"), gtk_widget_hide,
                      NULL, 1, NULL, FALSE, TRUE,
 		     NULL);
+  gtk_window_set_policy(GTK_WINDOW(new_printer_dialog), 1, 1, 1);
 
   table = gtk_table_new (1, 1, FALSE);
   gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
@@ -832,6 +848,7 @@ create_about_dialog (void)
                      _("OK"), gtk_widget_hide,
                      NULL, 1, NULL, TRUE, TRUE,
 		     NULL);
+  gtk_window_set_policy(GTK_WINDOW(about_dialog), 1, 1, 1);
 
   label = gtk_label_new
     (_("Gimp-Print Version " PLUG_IN_VERSION "\n"
@@ -1432,6 +1449,7 @@ scaling_callback (GtkWidget *widget)
  ****************************************************************************/
 void
 plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
+		   GtkWidget      *label,
 		   stp_string_list_t items,      /* I - Menu items */
 		   const gchar    *cur_item,    /* I - Current item */
 		   const gchar    *def_value,   /* I - default item */
@@ -1457,7 +1475,9 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
       gtk_combo_set_popdown_strings (GTK_COMBO (combo), list);
       *callback_id = -1;
       gtk_widget_set_sensitive (combo, FALSE);
-      gtk_widget_show (combo);
+      gtk_widget_hide (combo);
+      if (label)
+	gtk_widget_hide(label);
       return;
     }
 
@@ -1486,6 +1506,8 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
   gtk_combo_set_value_in_list (GTK_COMBO (combo), TRUE, FALSE);
   gtk_widget_set_sensitive (combo, TRUE);
   gtk_widget_show (combo);
+  if (label)
+    gtk_widget_show(label);
 }
 
 void
@@ -1683,7 +1705,7 @@ do_all_updates(void)
 	  else if (stp_get_string_parameter(pv->v, option->name)[0] == '\0')
 	    stp_set_string_parameter(pv->v, option->name, desc.deflt.str);
 	}
-      plist_build_combo(option->combo, option->params,
+      plist_build_combo(option->combo, NULL, option->params,
 			stp_get_string_parameter(pv->v, option->name),
 			desc.deflt.str, combo_callback,
 			&(option->callback_id), option);
