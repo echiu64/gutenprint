@@ -1268,11 +1268,12 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
       if (dither_type & D_ADAPTIVE_BASE)
 	{
 	  dither_type -= D_ADAPTIVE_BASE;
-	  if (base <= d->adaptive_lower_limit)
+	  if (base <= d->adaptive_limit)
 	    {
 	      dither_type = D_ORDERED;
 	      dither_value = base;
 	    }
+#if 0
 	  else if (base < d->adaptive_limit)
 	    {
 	      unsigned dtmp = (base - d->adaptive_lower_limit) * 65536 /
@@ -1285,6 +1286,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	      else if (adjusted <= 0)
 		return adjusted;
 	    }
+#endif
 	  else if (adjusted <= 0)
 	    return adjusted;
 	}
@@ -1452,7 +1454,10 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 		}
 	      *ink_budget -= dot_size;
 	    }
-	  adjusted -= v;
+	  if (dither_type & D_ORDERED_BASE)
+	    adjusted = -(int) (2 * v / 4);
+	  else
+	    adjusted -= v;
 	}
       return adjusted;
     }
@@ -1777,7 +1782,11 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
    * following line can be tried instead:
    * ak = ks;
    */
+#if 0
   ak = 2*ks-ks*ks/d->density;
+#else
+  ak = ks;
+#endif
   k = kl * (unsigned) ak / d->density;
   ok = k;
   bk = k;

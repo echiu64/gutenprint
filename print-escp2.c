@@ -226,22 +226,22 @@ typedef struct escp_init
  * The green and blue will vary somewhat with different inks
  */
 
-static double dot_sizes[] = { 0.333, 0.5, 1.0 };
+static double dot_sizes[] = { 0.550, 0.700, 1.0 };
 
 static simple_dither_range_t variable_dither_ranges[] =
 {
-  { 0.074, 0x1, 0, 1 },
-  { 0.111, 0x2, 0, 2 },
-  { 0.222, 0x3, 0, 3 },
-/*  { 0.333, 0x1, 1, 1 }, */
-  { 0.5,   0x2, 1, 2 },
+  { 0.183, 0x1, 0, 1 },
+/*  { 0.233, 0x2, 0, 2 },
+  { 0.333, 0x3, 0, 3 }, */
+  { 0.550, 0x1, 1, 1 },
+  { 0.700, 0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
 
 static simple_dither_range_t standard_dither_ranges[] =
 {
-  { 0.333, 0x1, 1, 1 },
-  { 0.5,   0x2, 1, 2 },
+  { 0.550, 0x1, 1, 1 },
+  { 0.7,   0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
 
@@ -253,67 +253,6 @@ static simple_dither_range_t mis_sixtone_ranges[] =
   { 0.50, 0x001000, 1, 1 },	/* Y */
   { 0.75, 0x010000, 1, 1 },	/* M */
   { 1.00, 0x100000, 1, 1 }	/* K */
-};
-
-static full_dither_range_t normal_dither_ranges[] =
-{
-  { 0.0,   0.5,  0x0, 0x1, 1, 1},
-  { 0.5,   0.67, 0x1, 0x2, 1, 1},
-  { 0.67,  1.0,  0x2, 0x3, 1, 1}
-};
-
-static full_dither_range_t stp870_c1_dither_ranges[] =
-{
-  { 0.0,  0.18, 0x0, 0x1, 0, 0},
-  { 0.18, 0.25, 0x1, 0x2, 0, 0},
-  { 0.25, 0.52, 0x2, 0x1, 0, 1},
-  { 0.25, 0.39, 0x2, 0x3, 0, 0},
-  { 0.39, 0.52, 0x3, 0x1, 0, 1},
-  { 0.52, 0.67, 0x1, 0x2, 1, 1},
-  { 0.67, 0.96, 0x2, 0x3, 1, 1}
-};
-
-static full_dither_range_t stp870_c2_dither_ranges[] =
-{
-  { 0.0,  0.18, 0x0, 0x1, 0, 0},
-  { 0.18, 0.25, 0x1, 0x2, 0, 0},
-  { 0.25, 0.39, 0x2, 0x3, 0, 0},
-  { 0.39, 0.67, 0x3, 0x2, 0, 1},
-  { 0.67, 0.96, 0x2, 0x3, 1, 1}
-};
-
-static full_dither_range_t stp870_m1_dither_ranges[] =
-{
-  { 0.0,  0.18, 0x0, 0x1, 0, 0},
-  { 0.18, 0.24, 0x1, 0x2, 0, 0},
-  { 0.24, 0.52, 0x2, 0x1, 0, 1},
-  { 0.24, 0.36, 0x2, 0x3, 0, 0},
-  { 0.36, 0.52, 0x3, 0x1, 0, 1},
-  { 0.52, 0.67, 0x1, 0x2, 1, 1},
-  { 0.67, 1.0,  0x2, 0x3, 1, 1}
-};
-
-static full_dither_range_t stp870_m2_dither_ranges[] =
-{
-  { 0.0,  0.18, 0x0, 0x1, 0, 0},
-  { 0.18, 0.24, 0x1, 0x2, 0, 0},
-  { 0.24, 0.36, 0x2, 0x3, 0, 0},
-  { 0.36, 0.67, 0x3, 0x2, 0, 1},
-  { 0.67, 1.0,  0x2, 0x3, 1, 1}
-};
-
-static full_dither_range_t stp870_y_dither_ranges[] =
-{
-  { 0.0,  0.55,  0x0, 0x1, 1, 1},
-  { 0.55,  0.71,  0x1, 0x2, 1, 1},
-  { 0.71,  1.0,  0x2, 0x3, 1, 1}
-};
-
-static full_dither_range_t stp870_k_dither_ranges[] =
-{
-  { 0.0,  0.55,  0x0, 0x1, 1, 1},
-  { 0.55,  0.67, 0x1, 0x2, 1, 1},
-  { 0.67, 1.0,   0x2, 0x3, 1, 1}
 };
 
 /*
@@ -1323,7 +1262,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 
   dither_set_black_levels(dither, 1.0, 1.0, 1.0);
   if (use_6color)
-    dither_set_black_lower(dither, .5 / bits);
+    dither_set_black_lower(dither, .4 / bits + .1);
   else
     dither_set_black_lower(dither, .25 / bits);
   if (use_glossy_film)
