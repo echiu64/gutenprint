@@ -2923,13 +2923,8 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
     }
     QUANT(1);
 
-    if (nv.image_type == IMAGE_MONOCHROME)
-      stp_dither_monochrome(out, y, dither, black, duplicate_line);
-    else if (output_type == OUTPUT_GRAY)
-      stp_dither_black(out, y, dither, black, duplicate_line);
-    else
-      stp_dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		  yellow, dyellow, black, duplicate_line);
+    stp_dither(out, y, dither, cyan, lcyan, magenta, lmagenta,
+	       yellow, dyellow, black, duplicate_line);
     QUANT(2);
 
     if (use_softweave)

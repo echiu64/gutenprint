@@ -2160,13 +2160,8 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
 		   NULL);
     }
 
-    if (nv.image_type == IMAGE_MONOCHROME)
-      stp_dither_monochrome(out, y, dither, black, duplicate_line);
-    else if (output_type == OUTPUT_GRAY)
-      stp_dither_black(out, y, dither, black, duplicate_line);
-    else
-      stp_dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		  yellow, 0, black, duplicate_line);
+    stp_dither(out, y, dither, cyan, lcyan, magenta, lmagenta,
+	       yellow, 0, black, duplicate_line);
 
 #ifdef DEBUG
     /* fprintf(stderr,","); */

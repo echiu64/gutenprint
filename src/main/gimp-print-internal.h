@@ -243,19 +243,12 @@ extern void	stp_dither_set_adaptive_divisor(void *vd, unsigned divisor);
 
 extern void	stp_free_dither(void *);
 
-
-extern void	stp_dither_monochrome(const unsigned short *, int, void *,
-				      unsigned char *, int duplicate_line);
-
-extern void	stp_dither_black(const unsigned short *, int, void *,
-				 unsigned char *, int duplicate_line);
-
-extern void	stp_dither_cmyk(const unsigned short *, int, void *,
-				unsigned char *,
-				unsigned char *, unsigned char *,
-				unsigned char *, unsigned char *,
-				unsigned char *, unsigned char *,
-				int duplicate_line);
+extern void	stp_dither(const unsigned short *, int, void *,
+			   unsigned char *,
+			   unsigned char *, unsigned char *,
+			   unsigned char *, unsigned char *,
+			   unsigned char *, unsigned char *,
+			   int duplicate_line);
 
 
 extern void *	stp_initialize_weave_params(int S, int J, int O,
