@@ -1353,9 +1353,9 @@ pcl_print(const printer_t *printer,		/* I - Model */
     * Swap left/top offsets...
     */
 
-    x    = top;
-    top  = left;
-    left = page_width - x - out_width;
+    x    = left;
+    left = top;
+    top  = page_height - x - out_height;
   }
 
   if (left < 0)
