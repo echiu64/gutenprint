@@ -2121,8 +2121,8 @@ canon_print(const stp_printer_t printer,		/* I - Model */
   */
 
   switch (sscanf(resolution,"%dx%d",&xdpi,&ydpi)) {
-  case 1: ydpi= xdpi; if (ydpi>caps.max_ydpi) ydpi/= 2; break;
-  case 0: xdpi= caps.max_xdpi; ydpi= caps.max_ydpi; break;
+  case 1: ydpi= xdpi; if (ydpi>caps->max_ydpi) ydpi/= 2; break;
+  case 0: xdpi= caps->max_xdpi; ydpi= caps->max_ydpi; break;
   }
 
 #ifdef DEBUG
