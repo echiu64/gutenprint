@@ -23,6 +23,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.8  2000/03/02 03:09:03  rlk
+ *   Performance, by replacing long long with int
+ *
  *   Revision 1.7  2000/02/28 01:26:11  rlk
  *   Try to improve high resolution quality
  *
@@ -1053,7 +1056,7 @@ do {								\
 	{							\
 	  int cutoff = ((density - d->l##r##_level) * 65536 /	\
 			(65536 - d->l##r##_level));		\
-	  long long sub;					\
+	  int sub;						\
 	  if (cutoff >= 0)					\
 	    sub = d->l##r##_level +				\
 	      (((65535ll - d->l##r##_level) * cutoff) >> 16);	\
@@ -1078,33 +1081,33 @@ do {								\
     }								\
 } while (0)
 
-#define UPDATE_DITHER(r, d2, x, width)					      \
-do {									      \
-  int offset = ((15 - (((o##r & 0xf000) >> 12))) * d->horizontal_overdensity) \
-					>> 1;				      \
-  int tmp##r = r;							      \
-  if (tmp##r > 65535)							      \
-    tmp##r = 65535;							      \
-  if (x < offset)							      \
-    offset = x;								      \
-  else if (x > d->dst_width - offset - 1)				      \
-    offset = d->dst_width - x - 1;					      \
-  if (ditherbit##d2 & bit)						      \
-    {									      \
-      r##error1[-offset] += tmp##r;					      \
-      r##error1[0] += 3 * tmp##r;					      \
-      r##error1[offset] += tmp##r;					      \
-      if (x > 0 && x < (d->dst_width - 1))				      \
-	dither##r    = r##error0[direction] + 3 * tmp##r;		      \
-    }									      \
-  else									      \
-    {									      \
-      r##error1[-offset] += tmp##r;					      \
-      r##error1[0] +=  tmp##r;						      \
-      r##error1[offset] += tmp##r;					      \
-      if (x > 0 && x < (d->dst_width - 1))				      \
-	dither##r    = r##error0[direction] + 5 * tmp##r;		      \
-    }									      \
+#define UPDATE_DITHER(r, d2, x, width)					\
+do {									\
+  int offset = (255 - (((o##r & 0xff00) >> 8)))				\
+					>> (5 - d->overdensity_bits);	\
+  int tmp##r = r;							\
+  if (tmp##r > 65535)							\
+    tmp##r = 65535;							\
+  if (offset > x)							\
+    offset = x;								\
+  else if (offset > d->dst_width - x - 1)				\
+    offset = d->dst_width - x - 1;					\
+  if (ditherbit##d2 & bit)						\
+    {									\
+      r##error1[-offset] += tmp##r;					\
+      r##error1[0] += 3 * tmp##r;					\
+      r##error1[offset] += tmp##r;					\
+      if (x > 0 && x < (d->dst_width - 1))				\
+	dither##r    = r##error0[direction] + 3 * tmp##r;		\
+    }									\
+  else									\
+    {									\
+      r##error1[-offset] += tmp##r;					\
+      r##error1[0] +=  tmp##r;						\
+      r##error1[offset] += tmp##r;					\
+      if (x > 0 && x < (d->dst_width - 1))				\
+	dither##r    = r##error0[direction] + 5 * tmp##r;		\
+    }									\
 } while (0)
 
 void
@@ -1124,10 +1127,10 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		xstep,		/* X step */
 		xmod,		/* X error modulus */
 		length;		/* Length of output bitmap in bytes */
-  long long	c, m, y, k,	/* CMYK values */
+  long		c, m, y, k,	/* CMYK values */
 		oc, om, ok, oy,
 		divk;		/* Inverse of K */
-  long long     diff;		/* Average color difference */
+  int		diff;		/* Average color difference */
   unsigned char	bit,		/* Current bit */
 		*cptr,		/* Current cyan pixel */
 		*mptr,		/* Current magenta pixel */
@@ -1154,7 +1157,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   int bk;
   int ub, lb;
   int ditherbit0, ditherbit1, ditherbit2, ditherbit3;
-  long long	density;
+  int density;
   dither_t *d = (dither_t *) vd;
 
   /*
@@ -1304,13 +1307,14 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       * the amount of color in the pixel (colorful pixels get less black)...
       */
       int xdiff = (abs(c - m) + abs(c - y) + abs(m - y)) / 3;
+      int tk;
 
       diff = 65536 - xdiff;
-      diff = (diff * diff * diff) >> 32; /* diff = diff^3 */
+      diff = ((long long) diff * (long long) diff * (long long) diff) >> 32;
       diff--;
       if (diff < 0)
 	diff = 0;
-      k    = (diff * k) >> 16;
+      k    = (int) (((unsigned) diff * (unsigned) k) >> 16);
       ak = k;
       divk = 65535 - k;
       if (divk == 0)
@@ -1321,10 +1325,16 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
         * Full color; update the CMY values for the black value and reduce
         * CMY as necessary to give better blues, greens, and reds... :)
         */
+	unsigned ck = c - k;
+	unsigned mk = m - k;
+	unsigned yk = y - k;
 
-        c  = (65535 - ((rgb[2] + rgb[1]) >> 3)) * (c - k) / divk;
-        m  = (65535 - ((rgb[1] + rgb[0]) >> 3)) * (m - k) / divk;
-        y  = (65535 - ((rgb[0] + rgb[2]) >> 3)) * (y - k) / divk;
+        c  = ((unsigned) (65535 - ((rgb[2] + rgb[1]) >> 3))) * ck /
+	  (unsigned) divk;
+        m  = ((unsigned) (65535 - ((rgb[1] + rgb[0]) >> 3))) * mk /
+	  (unsigned) divk;
+        y  = ((unsigned) (65535 - ((rgb[0] + rgb[2]) >> 3))) * yk /
+	  (unsigned) divk;
       }
 #ifdef PRINT_DEBUG
       yc = c;
@@ -1339,9 +1349,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
        */
       ok = k;
       nk = k + (ditherk) / 8;
-      kdarkness = MAX((((c * d->c_darkness) +
-			(m * d->m_darkness) +
-			(y * d->y_darkness)) >> 6), ak);
+      tk = (((c * d->c_darkness) + (m * d->m_darkness) + (y * d->y_darkness))
+	    >> 6);
+      kdarkness = MAX(tk, ak);
       if (kdarkness < d->k_upper)
 	{
 	  int rb;
@@ -1415,10 +1425,14 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       * better reds, greens, and blues...
       */
 
+      unsigned ck = c - k;
+      unsigned mk = m - k;
+      unsigned yk = y - k;
+
       ok = 0;
-      c  = (65535 - rgb[1] / 4) * (c - k) / 65535 + k;
-      m  = (65535 - rgb[2] / 4) * (m - k) / 65535 + k;
-      y  = (65535 - rgb[0] / 4) * (y - k) / 65535 + k;
+      c  = ((unsigned) (65535 - rgb[1] / 4)) * ck / 65535 + k;
+      m  = ((unsigned) (65535 - rgb[2] / 4)) * mk / 65535 + k;
+      y  = ((unsigned) (65535 - rgb[0] / 4)) * yk / 65535 + k;
     }
 
     density = (c + m + y) >> d->overdensity_bits;
@@ -1786,7 +1800,7 @@ do {									\
 	{								\
 	  int cutoff = ((density - d->l##r##_level) * 65536 /		\
 			(65536 - d->l##r##_level));			\
-	  long long sub;						\
+	  int sub;							\
 	  if (cutoff >= 0)						\
 	    sub = d->l##r##_level +					\
 	      (((65535ll - d->l##r##_level) * cutoff) >> 16);		\
@@ -1823,10 +1837,10 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
 		xstep,		/* X step */
 		xmod,		/* X error modulus */
 		length;		/* Length of output bitmap in bytes */
-  long long	c, m, y, k,	/* CMYK values */
+  int		c, m, y, k,	/* CMYK values */
 		oc, om, ok, oy,
 		divk;		/* Inverse of K */
-  long long     diff;		/* Average color difference */
+  int   	diff;		/* Average color difference */
   unsigned char	bit,		/* Current bit */
 		*cptr,		/* Current cyan pixel */
 		*mptr,		/* Current magenta pixel */
@@ -1853,7 +1867,7 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
   int bk;
   int ub, lb;
   int ditherbit0, ditherbit1, ditherbit2, ditherbit3;
-  long long	density;
+  int	density;
   dither_t *d = (dither_t *) vd;
 
   /*
@@ -1983,14 +1997,15 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
       * Since we're printing black, adjust the black level based upon
       * the amount of color in the pixel (colorful pixels get less black)...
       */
+      int tk;
       int xdiff = (abs(c - m) + abs(c - y) + abs(m - y)) / 3;
 
       diff = 65536 - xdiff;
-      diff = (diff * diff * diff) >> 32; /* diff = diff^3 */
+      diff = ((long long) diff * (long long) diff * (long long) diff) >> 32;
       diff--;
       if (diff < 0)
 	diff = 0;
-      k    = (diff * k) >> 16;
+      k    = (int) (((unsigned) diff * (unsigned) k) >> 16);
       ak = k;
       divk = 65535 - k;
       if (divk == 0)
@@ -2001,10 +2016,16 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
         * Full color; update the CMY values for the black value and reduce
         * CMY as necessary to give better blues, greens, and reds... :)
         */
+	unsigned ck = c - k;
+	unsigned mk = m - k;
+	unsigned yk = y - k;
 
-        c  = (65535 - ((rgb[2] + rgb[1]) >> 3)) * (c - k) / divk;
-        m  = (65535 - ((rgb[1] + rgb[0]) >> 3)) * (m - k) / divk;
-        y  = (65535 - ((rgb[0] + rgb[2]) >> 3)) * (y - k) / divk;
+        c  = ((unsigned) (65535 - ((rgb[2] + rgb[1]) >> 3))) * ck /
+	  (unsigned) divk;
+        m  = ((unsigned) (65535 - ((rgb[1] + rgb[0]) >> 3))) * mk /
+	  (unsigned) divk;
+        y  = ((unsigned) (65535 - ((rgb[0] + rgb[2]) >> 3))) * yk /
+	  (unsigned) divk;
       }
 
       /*
@@ -2014,9 +2035,9 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
        */
       ok = k;
       nk = k + (ditherk) / 8;
-      kdarkness = MAX((((c * d->c_darkness) +
-			(m * d->m_darkness) +
-			(y * d->y_darkness)) >> 6), ak);
+      tk = (((c * d->c_darkness) + (m * d->m_darkness) + (y * d->y_darkness))
+	    >> 6);
+      kdarkness = MAX(tk, ak);
       if (kdarkness < d->k_upper)
 	{
 	  int rb;
@@ -2079,10 +2100,14 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
       * better reds, greens, and blues...
       */
 
+      unsigned ck = c - k;
+      unsigned mk = m - k;
+      unsigned yk = y - k;
+
       ok = 0;
-      c  = (65535 - rgb[1] / 4) * (c - k) / 65535 + k;
-      m  = (65535 - rgb[2] / 4) * (m - k) / 65535 + k;
-      y  = (65535 - rgb[0] / 4) * (y - k) / 65535 + k;
+      c  = ((unsigned) (65535 - rgb[1] / 4)) * ck / 65535 + k;
+      m  = ((unsigned) (65535 - rgb[2] / 4)) * mk / 65535 + k;
+      y  = ((unsigned) (65535 - rgb[0] / 4)) * yk / 65535 + k;
     }
 
     density = (c + m + y) >> d->overdensity_bits;
