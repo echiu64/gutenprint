@@ -1535,10 +1535,10 @@ stp_erprintf(const char *format, ...)
   va_end(args);
 }
 
-static unsigned long stp_debug_level = 0;
+unsigned long stp_debug_level = 0;
 
 static void
-init_stp_debug(void)
+stp_init_debug(void)
 {
   static int debug_initialized = 0;
   if (!debug_initialized)
@@ -1557,7 +1557,7 @@ void
 stp_dprintf(unsigned long level, const stp_vars_t v, const char *format, ...)
 {
   int bytes;
-  init_stp_debug();
+  stp_init_debug();
   if ((level & stp_debug_level) && stp_get_errfunc(v))
     {
       char *result;
@@ -1572,7 +1572,7 @@ stp_deprintf(unsigned long level, const char *format, ...)
 {
   va_list args;
   va_start(args, format);
-  init_stp_debug();
+  stp_init_debug();
   if (level & stp_debug_level)
     vfprintf(stderr, format, args);
   va_end(args);
@@ -1630,7 +1630,7 @@ stp_init(void)
       setlocale (LC_ALL, "");
       bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 #endif
-      init_stp_debug();
+      stp_init_debug();
     }
   stp_is_initialised = 1;
   return (0);

@@ -414,9 +414,11 @@ extern void stp_erprintf(const char *format, ...);
 #define STP_DBG_LEXMARK		0x80
 #define STP_DBG_WEAVE_PARAMS	0x100
 #define STP_DBG_ROWS		0x200
+#define STP_DBG_MARK_FILE       0x400
 extern void stp_dprintf(unsigned long level, const stp_vars_t v,
 			const char *format, ...);
 extern void stp_deprintf(unsigned long level, const char *format, ...);
+extern unsigned long stp_debug_level;
 
 extern void *stp_malloc (size_t);
 extern void *stp_zalloc (size_t);
