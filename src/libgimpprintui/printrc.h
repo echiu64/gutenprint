@@ -29,11 +29,15 @@
 #ifndef __GIMP_PRINT_PRINTRC_H__
 #define __GIMP_PRINT_PRINTRC_H__
 
+#if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
 typedef union yylv {
   int ival;
   double dval;
   char *sval;
 } YYSTYPE;
+# define yystype YYSTYPE /* obsolescent; will be withdrawn */
+# define YYSTYPE_IS_DECLARED 1
+#endif
 
 #include "printrcy.h"
 
