@@ -38,10 +38,12 @@ CC	=	@CC@
 CFLAGS	=	@CFLAGS@ @DEFS@
 CHMOD	=	@CHMOD@
 CP	=	@CP@
+ECHO	=	@ECHO@
 LDFLAGS	=	@LDFLAGS@
 LIBS	=	@LIBS@
 MKDIR	=	@MKDIR@
 RANLIB	=	:
+SILENT	=	@SILENT@
 
 
 #
@@ -60,12 +62,11 @@ sysconfdir	=	@sysconfdir@
 # Rules...
 #
 
-.SILENT:
 .SUFFIXES:	.c .o
 
 .c.o:
-	echo Compiling $<
-	$(CC) $(CFLAGS) -c $<
+	$(ECHO) Compiling $<
+	$(SILENT) $(CC) $(CFLAGS) -c $<
 
 
 #
@@ -85,19 +86,20 @@ OBJS	=	$(DRVOBJS) calibrate.o commandtoepson.o epson.o genppd.o \
 #
 
 all:
-	echo Using $(CC) for C compiler.
-	echo Using \"$(CFLAGS)\" for compiler options.
-	echo Using \"$(LDFLAGS)\" for linker options.
-	echo Using \"$(LIBS)\" for libraries.
-	$(MAKE) $(TARGETS)
+	$(ECHO) Using $(CC) for C compiler.
+	$(ECHO) Using \"$(CFLAGS)\" for compiler options.
+	$(ECHO) Using \"$(LDFLAGS)\" for linker options.
+	$(ECHO) Using \"$(LIBS)\" for libraries.
+	$(SILENT) $(MAKE) $(TARGETS)
 
 #
 # Clean all object files...
 #
 
 clean:
-	$(RM) -r ppd
-	$(RM) $(OBJS) $(TARGETS)
+	$(ECHO) Cleaning object and generated files...
+	$(SILENT) $(RM) -r ppd
+	$(SILENT) $(RM) $(OBJS) $(TARGETS)
 
 
 #
@@ -105,34 +107,34 @@ clean:
 #
 
 install:
-	echo Installing calibration utility...
-	-$(MKDIR) $(bindir)
-	$(CP) calibrate $(bindir)
-	$(CHMOD) a+rx $(bindir)/calibrate
-	-$(MKDIR) $(datadir)/cups
-	$(CP) calibrate.ppm $(datadir)/cups
-	$(CHMOD) a+r $(datadir)/cups/calibrate.ppm
+	$(ECHO) Installing calibration utility...
+	-$(SILENT) $(MKDIR) $(bindir)
+	$(SILENT) $(CP) calibrate $(bindir)
+	$(SILENT) $(CHMOD) a+rx $(bindir)/calibrate
+	-$(SILENT) $(MKDIR) $(datadir)/cups
+	$(SILENT) $(CP) calibrate.ppm $(datadir)/cups
+	$(SILENT) $(CHMOD) a+r $(datadir)/cups/calibrate.ppm
 
-	echo Installing drivers...
-	-$(MKDIR) $(libdir)/cups/backend
-	$(CP) epson $(libdir)/cups/backend
-	$(CHMOD) a+rx $(libdir)/cups/backend/epson
+	$(ECHO) Installing drivers...
+	-$(SILENT) $(MKDIR) $(libdir)/cups/backend
+	$(SILENT) $(CP) epson $(libdir)/cups/backend
+	$(SILENT) $(CHMOD) a+rx $(libdir)/cups/backend/epson
 
-	-$(MKDIR) $(libdir)/cups/filter
-	$(CP) rastertoprinter $(libdir)/cups/filter
-	$(CHMOD) a+rx $(libdir)/cups/filter/rastertoprinter
-	$(CP) commandtoepson $(libdir)/cups/filter
-	$(CHMOD) a+rx $(libdir)/cups/filter/commandtoepson
+	-$(SILENT) $(MKDIR) $(libdir)/cups/filter
+	$(SILENT) $(CP) rastertoprinter $(libdir)/cups/filter
+	$(SILENT) $(CHMOD) a+rx $(libdir)/cups/filter/rastertoprinter
+	$(SILENT) $(CP) commandtoepson $(libdir)/cups/filter
+	$(SILENT) $(CHMOD) a+rx $(libdir)/cups/filter/commandtoepson
 
-	echo Installing PPD files...
-	-$(MKDIR) $(datadir)/cups/model
-	$(CP) ppd/* $(datadir)/cups/model
-	$(CHMOD) a+r $(datadir)/cups/model/*
+	$(ECHO) Installing PPD files...
+	-$(SILENT) $(MKDIR) $(datadir)/cups/model
+	$(SILENT) $(CP) ppd/* $(datadir)/cups/model
+	$(SILENT) $(CHMOD) a+r $(datadir)/cups/model/*
 
-	echo Installing new command MIME type...
-	-$(MKDIR) $(sysconfdir)/cups
-	$(CP) command.types $(sysconfdir)/cups
-	$(CHMOD) a+r $(sysconfdir)/cups/command.types
+	$(ECHO) Installing new command MIME type...
+	-$(SILENT) $(MKDIR) $(sysconfdir)/cups
+	$(SILENT) $(CP) command.types $(sysconfdir)/cups
+	$(SILENT) $(CHMOD) a+r $(sysconfdir)/cups/command.types
 
 
 #
@@ -140,8 +142,8 @@ install:
 #
 
 calibrate:	calibrate.o
-	echo Linking $@...
-	$(CC) $(LDFLAGS) -o calibrate calibrate.o -lm
+	$(ECHO) Linking $@...
+	$(SILENT) $(CC) $(LDFLAGS) -o calibrate calibrate.o -lm
 
 
 #
@@ -149,8 +151,8 @@ calibrate:	calibrate.o
 #
 
 commandtoepson:	commandtoepson.o
-	echo Linking $@...
-	$(CC) $(LDFLAGS) -o commandtoepson commandtoepson.o $(LIBS)
+	$(ECHO) Linking $@...
+	$(SILENT) $(CC) $(LDFLAGS) -o commandtoepson commandtoepson.o $(LIBS)
 
 
 #
@@ -158,8 +160,8 @@ commandtoepson:	commandtoepson.o
 #
 
 epson:	epson.o
-	echo Linking $@...
-	$(CC) $(LDFLAGS) -o epson epson.o $(LIBS)
+	$(ECHO) Linking $@...
+	$(SILENT) $(CC) $(LDFLAGS) -o epson epson.o $(LIBS)
 
 
 #
@@ -167,8 +169,8 @@ epson:	epson.o
 #
 
 genppd:	genppd.o libdrv.a
-	echo Linking $@...
-	$(CC) $(LDFLAGS) -o genppd genppd.o libdrv.a $(LIBS)
+	$(ECHO) Linking $@...
+	$(SILENT) $(CC) $(LDFLAGS) -o genppd genppd.o libdrv.a $(LIBS)
 
 genppd.o:	cups-print.h cups-printers.c
 
@@ -178,10 +180,10 @@ genppd.o:	cups-print.h cups-printers.c
 #
 
 ppd:	genppd
-	echo Cleaning old PPD files...
-	$(RM) -r ppd/*
-	echo Running $@...
-	./genppd
+	$(ECHO) Cleaning old PPD files...
+	$(SILENT) $(RM) -r ppd/*
+	$(ECHO) Running $@...
+	$(SILENT) ./genppd
 
 
 #
@@ -189,10 +191,10 @@ ppd:	genppd
 #
 
 libdrv.a:	$(DRVOBJS)
-	echo Archiving $@...
-	$(RM) $@
-	$(AR) $(ARFLAGS) $@ $(DRVOBJS)
-	$(RANLIB) $@
+	$(ECHO) Archiving $@...
+	$(SILENT) $(RM) $@
+	$(SILENT) $(AR) $(ARFLAGS) $@ $(DRVOBJS)
+	$(SILENT) $(RANLIB) $@
 
 $(DRVOBJS):	cups-print.h cups-quickmatrix257.h cups-ran.367.179.h
 cups-util.c:	cups-printers.c
@@ -203,8 +205,8 @@ cups-util.c:	cups-printers.c
 #
 
 rastertoprinter:	rastertoprinter.o libdrv.a
-	echo Linking $@...
-	$(CC) $(LDFLAGS) -o rastertoprinter rastertoprinter.o libdrv.a $(LIBS)
+	$(ECHO) Linking $@...
+	$(SILENT) $(CC) $(LDFLAGS) -o rastertoprinter rastertoprinter.o libdrv.a $(LIBS)
 
 rastertoprinter.o:	cups-print.h cups-quickmatrix257.h cups-ran.367.179.h
 
