@@ -200,7 +200,10 @@ bjc-6100		CANON BJC 6100
 bjc-7000		CANON BJC 7000
 bjc-7100		CANON BJC 7100
 bjc-8200		CANON BJC 8200
+bjc-s400		CANON S400
 bjc-s450		CANON S450
+bjc-s800		CANON S800
+bjc-s4500		CANON S4500
 compaq-ij750		COMPAQ IJ750
 escp2			EPSON Stylus Color
 escp2-pro		EPSON Stylus Color Pro
@@ -280,6 +283,7 @@ pcl-5si			HP LaserJet 5Si
 pcl-6			HP LaserJet 6 series
 lexmark-3200		Lexmark 3200
 lexmark-4076		Lexmark 4076 (PCL printer)
+lexmark-z31             Lexmark Z31
 lexmark-z52             Lexmark Z52
 
 Most or all of the Epson Stylus printers are fully functional.  The
