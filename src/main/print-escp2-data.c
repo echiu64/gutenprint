@@ -730,12 +730,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
      MODEL_SUPPORTS_INK_CHANGE_NO),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 4,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 8, 0, 0, 0, 8,
+    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 8,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 9, 9, 9, 9, 26, 9, 9, 9, 0, 9, 9, 9, 0,
     1, 15, 0, 0,
     sc660_dotsizes, sc660_densities, &stpi_escp2_simple_drops,
-    stpi_escp2_sc660_reslist, &stpi_escp2_standard_inkgroup,
+    stpi_escp2_sc640_reslist, &stpi_escp2_standard_inkgroup,
     standard_bits, standard_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence
   },

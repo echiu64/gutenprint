@@ -336,27 +336,6 @@ const res_t *const stpi_escp2_sc640_reslist[] =
   NULL
 };
 
-const res_t *const stpi_escp2_sc660_reslist[] =
-{
-  &r_360x90sw,
-
-  &r_180sw,
-
-  &r_360x180sw,
-
-  &r_360mw,
-  &r_360dpi,
-
-  &r_720x360sw,
-
-  &r_720sw,
-
-  &r_1440x720sw,
-  &r_1440x720hq2,
-
-  NULL
-};
-
 static const res_t r_360fol =
 { "360fol",        N_("360 DPI Full Overlap"),
   360,  360,  0, 2, 1 };
