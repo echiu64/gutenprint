@@ -1,0 +1,8 @@
+Here is a set of experimental replacement files for gimp-print's print-dither.c
+and print-escp2.c based on gimp-print 3.1.4.
+This is a try at less grainy rendering and better grays.
+
+It's also the first time I ever use CVS. Hope this works and I didn't mess
+something...
+
+jmv 
