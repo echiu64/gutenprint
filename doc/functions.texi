@@ -1,0 +1,810 @@
+@node Functions, Programs, Types, Top
+@chapter Functions
+@cindex functions
+
+This section of the manual is a complete reference to all of the functions
+comprising libgimpprint, with examples.
+
+All of the libgimpprint functions can be declared by including the master
+libgimpprint header, @file{<gimp-print/gimp-print.h>}. This should be done in
+every source file that uses gimpprint functions by putting
+
+@example
+#include <gimp-print/gimp-print.h>
+@end example
+
+@noindent at the top of each file.
+
+@menu
+* Main functions::              Essential functions every program must call.
+* Misc functions::              Unclassified functions.
+* Dither functions::            Dither algorithms.
+* Paper functions::             Paper size and orientation.
+* Printer functions::           Printer selection.
+* Settings functions::          Getting and changing settings.
+* Version functions::           Getting libgimpprint version information.
+@end menu
+
+@node Main functions, Misc functions, Functions, Functions
+@section Main functions
+@cindex main functions
+
+These functions comprise the heart of libgimpprint. All or most other
+functions in the library depend absolutely upon them. In the case of
+@code{stp_init}, this function @emph{must} be called before any of the
+other functions in the library.
+
+
+@cindex initialising libgimpprint
+@deftypefun int stp_init (void)
+
+This function initialises the libgimpprint library. It must be called before
+any of the other libgimpprint functions are called. It is responsible for
+setting up message catalogues (for internationalisation). This function
+may be called more than once, at any stage during the execution of a
+program.
+
+It returns zero on success, nonzero on failure.
+@end deftypefun
+
+@code{stp_init} might be used as follows:
+
+@example
+int
+main (int argc, char **argv)
+@{
+  stp_init();
+  
+  @dots{}
+
+@}
+@end example
+
+
+
+@cindex memory allocation
+@deftypefun {void *} stp_malloc (size_t @var{size})
+
+Where @var{size} is the amount of memory to allocate (in bytes).
+
+This function allocates memory. It will always return a pointer to the
+allocated memory. It will not return on failure.
+
+It returns a pointer to the allocated memory.
+@end deftypefun
+
+@node Misc functions, Dither functions, Main functions, Functions
+@section Misc functions
+@cindex misc functions
+
+@deftypefun {const char *} stp_printer_get_long_name (const stp_printer_t @var{p})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_printer_get_driver (const stp_printer_t @var{p})
+
+@end deftypefun
+
+
+@deftypefun int stp_printer_get_model (const stp_printer_t @var{p})
+
+@end deftypefun
+
+
+@deftypefun {const stp_printfuncs_t *} stp_printer_get_printfuncs (const stp_printer_t @var{p})
+
+@end deftypefun
+
+
+@deftypefun {const stp_vars_t} stp_printer_get_printvars (const stp_printer_t @var{p})
+
+@end deftypefun
+
+
+@deftypefun stp_vars_t stp_allocate_vars (void)
+
+@end deftypefun
+
+
+@deftypefun void stp_copy_vars (stp_vars_t @var{vd}, const stp_vars_t @var{vs})
+
+@end deftypefun
+
+
+@deftypefun stp_vars_t stp_allocate_copy (const stp_vars_t @var{vs})
+
+@end deftypefun
+
+
+@deftypefun void stp_free_vars (stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_output_to (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_driver (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_ppd_file (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_resolution (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_media_size (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_media_type (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_media_source (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_ink_type (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_dither_algorithm (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_output_to_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_driver_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_ppd_file_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_resolution_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_media_size_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_media_type_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_media_source_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_ink_type_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_dither_algorithm_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_output_type (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_orientation (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_left (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_top (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_image_type (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_unit (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_page_width (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_page_height (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_input_color_model (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_output_color_model (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_brightness (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_scaling (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_gamma (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_contrast (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_cyan (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_magenta (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_yellow (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_saturation (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_density (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_app_gamma (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_lut (stp_vars_t @var{vv}, void *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_outdata (stp_vars_t @var{vv}, void *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_errdata (stp_vars_t @var{vv}, void *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_cmap (stp_vars_t @var{vv}, unsigned char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_output_to (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_driver (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_ppd_file (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_resolution (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_media_size (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_media_type (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_media_source (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_ink_type (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_dither_algorithm (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_output_type (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_orientation (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_left (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_top (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_image_type (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_unit (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_page_width (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_page_height (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_input_color_model (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_output_color_model (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_brightness (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_scaling (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_gamma (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_contrast (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_cyan (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_magenta (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_yellow (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_saturation (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_density (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_app_gamma (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {void *} stp_get_lut (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {void *} stp_get_outdata (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {void *} stp_get_errdata (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {unsigned char *} stp_get_cmap (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+@deftypefun void stp_set_outfunc (const stp_vars_t @var{vv}, stp_outfunc_t @var{val})
+
+@end deftypefun
+
+
+@deftypefun stp_outfunc_t stp_get_outfunc (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_errfunc (const stp_vars_t @var{vv}, stp_outfunc_t @var{val})
+
+@end deftypefun
+
+
+@deftypefun stp_outfunc_t stp_get_errfunc (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_option(stp_vars_t @var{v}, const char *@var{name}, const char *@var{data}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_clear_option (stp_vars_t @var{v}, const char *@var{name})
+
+@end deftypefun
+
+
+@deftypefun void stp_clear_all_options (stp_vars_t @var{v})
+
+@end deftypefun
+
+
+@deftypefun size_t stp_option_count (const stp_vars_t @var{v})
+
+@end deftypefun
+
+
+@deftypefun {const stp_option_t} stp_get_option_by_index (const stp_vars_t @var{v}, size_t @var{idx})
+
+@end deftypefun
+
+
+@deftypefun {const stp_option_t} stp_get_option_by_name (const stp_vars_t @var{v}, const char *@var{name})
+
+@end deftypefun
+
+
+/* NOTE: not null delimited! */
+@deftypefun {const char *} stp_option_data (const stp_option_t @var{option})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_option_name (const stp_option_t @var{option})
+
+@end deftypefun
+
+
+@deftypefun size_t stp_option_length (const stp_option_t @var{option})
+
+@end deftypefun
+
+
+/*
+ * hue_map is an array of 49 doubles representing the mapping of hue
+ * from (0..6) to (0..6) in increments of .125.  The hue_map is in CMY space,
+ * so hue=0 is cyan.
+ */
+typedef void (*stp_convert_t)(const stp_vars_t vars, const unsigned char *in,
+                              unsigned short *out, int *zero_mask,
+                              int width, int bpp, const unsigned char *cmap,
+                              const double *hue_map, const double *lum_map,
+                              const double *sat_map);
+
+@deftypefun void stp_merge_printvars (stp_vars_t @var{user}, const stp_vars_t @var{print})
+
+@end deftypefun
+
+
+@deftypefun void stp_allocate_lut (stp_vars_t @var{v}, size_t @var{steps})
+
+@end deftypefun
+
+
+@deftypefun void stp_free_lut (stp_vars_t @var{v})
+
+@end deftypefun
+
+
+@deftypefun void stp_compute_lut (stp_vars_t @var{v}, size_t @var{steps})
+
+@end deftypefun
+
+
+@node Dither functions, Paper functions, Misc functions, Functions
+@section Dither functions
+@cindex dither functions
+
+@deftypefun size_t stp_dither_algorithm_count (void)
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_dither_algorithm_name (int @var{id})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_default_dither_algorithm (void)
+
+@end deftypefun
+
+
+@node Paper functions, Printer functions, Dither functions, Functions
+@section Paper functions
+@cindex paper functions
+
+@deftypefun int stp_known_papersizes (void)
+
+@end deftypefun
+
+
+@deftypefun {const stp_papersize_t} stp_get_papersize_by_name (const char *@var{name})
+
+@end deftypefun
+
+
+@deftypefun {const stp_papersize_t} stp_get_papersize_by_size (int @var{l}, int @var{w})
+
+@end deftypefun
+
+
+@deftypefun {const stp_papersize_t} stp_get_papersize_by_index (int @var{index})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_papersize_get_name (const stp_papersize_t @var{pt})
+
+@end deftypefun
+
+
+@deftypefun unsigned stp_papersize_get_width (const stp_papersize_t @var{pt})
+
+@end deftypefun
+
+
+@deftypefun unsigned stp_papersize_get_height (const stp_papersize_t @var{pt})
+
+@end deftypefun
+
+
+@deftypefun unsigned stp_papersize_get_top (const stp_papersize_t @var{pt})
+
+@end deftypefun
+
+
+@deftypefun unsigned stp_papersize_get_left (const stp_papersize_t @var{pt})
+
+@end deftypefun
+
+
+@deftypefun unsigned stp_papersize_get_bottom (const stp_papersize_t @var{pt})
+
+@end deftypefun
+
+
+@deftypefun unsigned stp_papersize_get_right (const stp_papersize_t @var{pt})
+
+@end deftypefun
+
+
+@deftypefun stp_papersize_unit_t stp_papersize_get_unit (const stp_papersize_t @var{pt})
+
+@end deftypefun
+
+
+@node Printer functions, Settings functions, Paper functions, Functions
+@section Printer functions
+@cindex printer functions
+
+@deftypefun int stp_known_printers (void)
+
+@end deftypefun
+
+
+@deftypefun {const stp_printer_t} stp_get_printer_by_index (int @var{idx})
+
+@end deftypefun
+
+
+@deftypefun {const stp_printer_t} stp_get_printer_by_long_name (const char *@var{long_name})
+
+@end deftypefun
+
+
+@deftypefun {const stp_printer_t} stp_get_printer_by_driver (const char *@var{driver})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_printer_index_by_driver (const char *@var{driver})
+
+@end deftypefun
+
+
+@node Settings functions, Version functions, Printer functions, Functions
+@section Settings functions
+@cindex settings functions
+
+@deftypefun stp_convert_t stp_choose_colorfunc (int @var{output_type}, int @var{image_bpp}, const unsigned char *@var{cmap}, int *@var{out_bpp}, const stp_vars_t @var{v})
+
+@end deftypefun
+
+
+@deftypefun void stp_compute_page_parameters (int @var{page_right}, int @var{page_left}, int @var{page_top}, int @var{page_bottom}, double @var{scaling}, int @var{image_width}, int @var{image_height}, stp_image_t *@var{image}, int *@var{orientation}, int *{page_width}, int *@var{page_height}, int *@var{out_width}, int *@var{out_height}, int *@var{left}, int *@var{top})
+
+@end deftypefun
+
+
+@deftypefun {const stp_vars_t} stp_default_settings (void)
+
+@end deftypefun
+
+
+@deftypefun {const stp_vars_t} stp_maximum_settings (void)
+
+@end deftypefun
+
+
+@deftypefun {const stp_vars_t} stp_minimum_settings (void)
+
+@end deftypefun
+
+
+
+
+@node Version functions,  , Settings functions, Functions
+@section Version functions
+@cindex version functions
+
+@deftypefun {const char *} stp_check_version (unsigned int @var{required_major},
+unsigned int @var{required_minor}, unsigned int @var{required_micro})
+
+This function checks whether the version of libgimpprint that the program
+is linked with is equal to the version number passed to it. If the version
+is the same, the function returns @code{NULL}. If any of the version
+numbers do not match (i.e. the library version is too old or too new), a string containing a desription of the difference is
+returned. The first error found is returned. The function checks in the order
+major, minor, micro.
+@end deftypefun
+
+@subsection Version macros
+
+@defmac GIMPPRINT_CHECK_VERSION (major,minor,micro)
+
+This macro returns zero if the version of the libgimpprint headers are
+greater or equal to the version given as an argument. It returns nonzero
+if the version of the libgimpprint headers are less than the argument.
+@end defmac
+
+@defmac GIMPPRINT_MAJOR_VERSION
+@end defmac
+
+@defmac GIMPPRINT_MINOR_VERSION
+@end defmac
+
+@defmac GIMPPRINT_MICRO_VERSION
+@end defmac
+
+@defmac GIMPPRINT_CURRENT_INTERFACE
+@end defmac
+
+@defmac GIMPPRINT_BINARY_AGE
+@end defmac
+
+@defmac GIMPPRINT_INTERFACE_AGE
+@end defmac
+
+These macros are integers holding the version numbers. They should be
+used for compile-time checking only. To check version numbers at
+run-time, use the equivalent variables. Note that at present (4.1.x
+development branch) the library interface version numbers are not used.
+
+@subsection Version variables
+
+@deftypevar {const unsigned int} gimpprint_major_version
+@end deftypevar
+
+@deftypevar {const unsigned int} gimpprint_minor_version
+@end deftypevar
+
+@deftypevar {const unsigned int} gimpprint_micro_version
+@end deftypevar
+
+@deftypevar {const unsigned int} gimpprint_current_interface
+@end deftypevar
+
+@deftypevar {const unsigned int} gimpprint_binary_age
+@end deftypevar
+
+@deftypevar {const unsigned int} gimpprint_interface_age
+@end deftypevar
+
+These variables hold the library version numbers. Because the version of
+the library may change on a system using shared libraries, these should
+be used instead of the equivalent macros when checking the library
+version at run-time. Note that at present (4.1.x development branch) the
+library interface version numbers are not used.

@@ -1,0 +1,11 @@
+@node Appendices, Dithering, Problems, Top
+@menu
+* Dithering::                   Dither algorithms
+* Weaving::                     Weaving algorithms
+* ESC/P2::                      Epson ESC/P2 printer control language
+@end menu
+
+@include dither.texi
+@include weave.texi
+@include escp2.texi
+

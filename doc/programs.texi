@@ -1,0 +1,22 @@
+@node Programs, Problems, Functions, Top
+@chapter Programs
+@cindex programs
+
+@menu
+* The GIMP plugin::             The print plugin for the GIMP
+* Ghostscript::                 Printer driver
+* CUPS::                        Printer driver
+@end menu
+
+@node The GIMP plugin, Ghostscript, Programs, Programs
+@section The GIMP print plugin
+@cindex GIMP print plugin
+@cindex print plugin
+
+@node Ghostscript, CUPS, The GIMP plugin, Programs
+@section Ghostscript driver
+@cindex ghostscript driver
+
+@node CUPS,  , Ghostscript, Programs
+@section CUPS driver
+@cindex CUPS driver

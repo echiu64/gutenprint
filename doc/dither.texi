@@ -1,0 +1,3 @@
+@node Dithering, Weaving, Appendices, Appendices
+@appendix Dithering
+@cindex dithering

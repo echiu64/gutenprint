@@ -1,0 +1,93 @@
+@node Types, Functions, Integrating libgimpprint, Top
+@chapter Types
+@cindex types
+
+@deftypevr {Data type} {} stp_papersize_unit_t
+@example
+typedef enum papersize_unit
+@{
+  PAPERSIZE_ENGLISH,
+  PAPERSIZE_METRIC
+@} stp_papersize_unit_t;
+@end example
+
+@end deftypevr
+
+@deftypevr {Data type} {} stp_image_t
+@example
+typedef struct stp_image
+@{
+  void (*init)(struct stp_image *image);
+  void (*reset)(struct stp_image *image);
+  void (*transpose)(struct stp_image *image);
+  void (*hflip)(struct stp_image *image);
+  void (*vflip)(struct stp_image *image);
+  void (*crop)(struct stp_image *image,
+               int left, int top, int right,
+               int bottom);
+  void (*rotate_ccw)(struct stp_image *image);
+  void (*rotate_cw)(struct stp_image *image);
+  void (*rotate_180)(struct stp_image *image);
+  int  (*bpp)(struct stp_image *image);
+  int  (*width)(struct stp_image *image);
+  int  (*height)(struct stp_image *image);
+  void (*get_row)(struct stp_image *image,
+        unsigned char *data, int row);
+  const char *(*get_appname)(struct stp_image *image);
+  void (*progress_init)(struct stp_image *image);
+  void (*note_progress)(struct stp_image *image,
+        double current, double total);
+  void (*progress_conclude)(struct stp_image *image);
+  void *rep;
+@} stp_image_t;
+@end example
+@end deftypevr
+
+@deftypevr {Data type} {void *} stp_printer_t
+@end deftypevr
+
+@deftypevr {Data type} {void *} stp_vars_t
+@end deftypevr
+
+@deftypevr {Data type} {void *} stp_option_t
+@end deftypevr
+
+@deftypevr {Data type} {void *} stp_papersize_t
+@end deftypevr
+
+@deftypevr {Data type} {} stp_outfunc_t
+@example
+typedef void (*stp_outfunc_t) (void *data,
+              const char *buffer, size_t bytes);
+@end example
+@end deftypevr
+
+@deftypevr {Data type} {} stp_printfuncs_t
+@example
+typedef struct
+@{
+  char  **(*parameters)(const stp_printer_t printer,
+                        const char *ppd_file,
+                        const char *name, int *count);
+  void  (*media_size)(const stp_printer_t printer,
+                      const stp_vars_t v, int *width,
+                      int *height);
+  void  (*imageable_area)(const stp_printer_t printer,
+                          const stp_vars_t v,
+                          int *left, int *right,
+                          int *bottom, int *top);
+  void  (*limit)(const stp_printer_t printer,
+                 const stp_vars_t v,
+                 int *width, int *height);
+  void  (*print)(const stp_printer_t printer,
+                 stp_image_t *image, const stp_vars_t v);
+  const char *(*default_parameters)(const stp_printer_t printer,
+                                    const char *ppd_file,
+                                    const char *name);
+  void  (*describe_resolution)(const stp_printer_t printer,
+                               const char *resolution,
+                               int *x, int *y);
+  int   (*verify)(const stp_printer_t p, const stp_vars_t v);
+@} stp_printfuncs_t;
+@end example
+@end deftypevr

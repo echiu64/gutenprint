@@ -23,13 +23,14 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+
+## Variables
+
 DOCS = \
  FAQ.html \
  README.dither \
- README.escp2 \
  README.maintaining \
  README.new-printer \
- README.weave \
  docbook.css \
  print-color.png \
  print-main.png \
@@ -37,14 +38,20 @@ DOCS = \
  print.html \
  print.sgml
 
+
+## Data
+
 info_TEXINFOS = gimpprint.texi
 
-gimpprint_TEXINFOS = gpl.texi
+gimpprint_TEXINFOS = overview.texi copying.texi gpl.texi introduction.texi using.texi types.texi functions.texi programs.texi problems.texi appendices.texi dither.texi weave.texi escp2.texi indices.texi
+
+
+## Rules
 
 all-local: html
 
 html: html-stamp
-html-stamp: gimpprint.texi version.texi gpl.texi
+html-stamp: $(gimpprint_TEXINFOS)
 	if test x$(TEXI2HTML_PROG) != x ; then \
 	  rm -rf manual-html ; \
 	  mkdir manual-html ; \
@@ -69,6 +76,9 @@ dist-hook: html
 
 maintainer-clean-local:
 	rm -rf manual-html
+
+
+## Clean
 
 DISTCLEANFILES = html-stamp
 MAINTAINERCLEANFILES = Makefile.in
