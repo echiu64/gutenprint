@@ -59,16 +59,21 @@ pstate_t pstate;
 line_type **page=NULL;
 
 /* Color Codes:
-   color    Epson   Sequential
-   Black    0       0
-   Magenta  1       1
-   Cyan     2       2
-   Yellow   4       3
-   L.Mag.   17      4
-   L.Cyan   18      5
+   color    Epson1  Epson2   Sequential
+   Black    0       0        0
+   Magenta  1       1        1
+   Cyan     2       2        2
+   Yellow   4       4        3
+   L.Mag.   17      257      4
+   L.Cyan   18      258      5
  */
-#define seqcolor(c) (((c)&3)+((c)&20)?3:0)  /* Intuitive, huh? */
-#define epcolor(c)  ({0,1,2,4,17,18}[c])
+
+/* convert either Epson1 or Epson2 color encoding into a sequential encoding */
+#define seqcolor(c) (((c)&3)+((c)&276)?3:0)  /* Intuitive, huh? */
+/* sequential to Epson1 */
+#define ep1color(c)  ({0,1,2,4,17,18}[c])
+/* sequential to Epson2 */
+#define ep2color(c)  ({0,1,2,4,257,258}[c])
   
 
 void *mycalloc(size_t count,size_t size){
@@ -97,6 +102,7 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
 
   if (skip==0) {
     fprintf(stderr,"Warning!  Attempting to print at %d DPI but units are set to %d DPI.\n",density,pstate.relative_horizontal_units);
+    return;
   }
  
   if (!page) {
@@ -112,12 +118,12 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
     if (!(page[y])) {
       page[y]=(line_type *) mycalloc(sizeof(line_type),1);
     }
-    if (!page[y]->line[seqcolor(color)]) {
-       page[y]->line[seqcolor(color)]=(unsigned char *)
-          mycalloc(sizeof(unsigned char),bufsize*skip);
-       page[y]->startx[seqcolor(color)]=pstate.xposition;
-       page[y]->stopx[seqcolor(color)]=pstate.xposition+n*skip;
-       memcpy(page[y]->line[seqcolor(color)],buf,bufsize);
+    if (!page[y]->line[color]) {
+       page[y]->line[color]=(unsigned char *) mycalloc(sizeof(unsigned char),
+                                                       bufsize*skip);
+       page[y]->startx[color]=pstate.xposition;
+       page[y]->stopx[color]=pstate.xposition+n*skip;
+       memcpy(page[y]->line[color],buf,bufsize);
     } else {
        fprintf(stderr,"FIXME: double printing not yet supported.\n");
     }
@@ -182,7 +188,7 @@ int currentcolor,currentbpp,density;
             break;
         case 'i': /* transfer raster image */
             get1("Error reading color.\n");
-            currentcolor=ch;
+            currentcolor=seqcolor(ch);
             get1("Error reading compression mode!\n");
             c=ch;
             get1("Error reading bpp!\n");
@@ -373,10 +379,30 @@ int currentcolor,currentbpp,density;
               case 'S': /* set paper dimensions */
                 break;
               case 'r': /* select color */
+                if (bufsize!=2) {
+                  fprintf(stderr,"Malformed color selection request.\n");
+                } else {
+                  sh=256*buf[0]+buf[1];
+                  if ((buf[1]>4)||(buf[1]==3)||(buf[0]>1)||
+                      (buf[0]&&((buf[1]==0)||(buf[1]==4)))) {
+                    fprintf(stderr,"Invalid color 0x%X.\n",sh);
+                  } else {
+                    pstate.current_color=seqcolor(sh);
+                  }
+                }
                 break;
               case '/': /* set relative horizontal position */
+                i=(buf[3]<<24)|(buf[2]<<16)|(buf[1]<<8)|buf[0];
+                if (pstate.xposition+i<0) {
+                  fprintf(stderr,"Warning! Attempt to move to -X region ignored.\n");
+                } else  /* FIXME: Where is the right margin??? */
+                  pstate.xposition+=i;
                 break;
               case '$': /* set absolute horizontal position */
+                i=(buf[3]<<24)|(buf[2]<<16)|(buf[1]<<8)|buf[0];
+                pstate.xposition=i*(pstate.relative_horizontal_units/
+                                     pstate.absolute_horizontal_units);
+            break;
                 break;
               case 'C': /* set page length */
                 break;
