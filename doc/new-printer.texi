@@ -145,31 +145,135 @@ An @code{escp2_printer_t} is a C struct defined as follows:
 typedef struct escp2_printer
 @{
   model_cap_t	flags;		/* Bitmask of flags, see below */
-  int 		nozzles;	/* Number of nozzles per color */
-  int		nozzle_separation; /* Separation between rows, in 1/720" */
+/*****************************************************************************/
+  int		nozzles;	/* Number of nozzles per color */
+  int		min_nozzles;	/* Minimum number of nozzles per color */
+  int		nozzle_separation; /* Separation between rows, in 1/360" */
   int		black_nozzles;	/* Number of black nozzles (may be extra) */
+  int		min_black_nozzles;	/* # of black nozzles (may be extra) */
+  int		black_nozzle_separation; /* Separation between rows */
+/*****************************************************************************/
   int		xres;		/* Normal distance between dots in */
 				/* softweave mode (inverse inches) */
-  int		max_paper_width; /* Maximum paper width, in points*/
+  int		enhanced_xres;	/* Distance between dots in highest */
+				/* quality modes */
+  int		base_separation; /* Basic unit of row separation */
+  int		base_resolution; /* Base hardware spacing (above this */
+				/* always requires multiple passes) */
+  int		enhanced_resolution;/* Above this we use the */
+				    /* enhanced_xres rather than xres */
+  int		resolution_scale;   /* Scaling factor for ESC(D command */
+  int		max_black_resolution; /* Above this resolution, we */
+				      /* must use color parameters */
+				      /* rather than (faster) black */
+				      /* only parameters*/
+  int		max_hres;
+  int		max_vres;
+  int		min_hres;
+  int		min_vres;
+/*****************************************************************************/
+  int		max_paper_width; /* Maximum paper width, in points */
   int		max_paper_height; /* Maximum paper height, in points */
+  int		min_paper_width; /* Maximum paper width, in points */
+  int		min_paper_height; /* Maximum paper height, in points */
+				/* Softweave: */
   int		left_margin;	/* Left margin, points */
   int		right_margin;	/* Right margin, points */
   int		top_margin;	/* Absolute top margin, points */
   int		bottom_margin;	/* Absolute bottom margin, points */
+				/* "Micro"weave: */
+  int		m_left_margin;	/* Left margin, points */
+  int		m_right_margin;	/* Right margin, points */
+  int		m_top_margin;	/* Absolute top margin, points */
+  int		m_bottom_margin;	/* Absolute bottom margin, points */
+/*****************************************************************************/
+  int		extra_feed;	/* Extra distance the paper can be spaced */
+				/* beyond the bottom margin, in 1/360". */
+				/* (maximum useful value is */
+				/* nozzles * nozzle_separation) */
   int		separation_rows; /* Some printers require funky spacing */
 				/* arguments in microweave mode. */
   int		pseudo_separation_rows;/* Some printers require funky */
 				/* spacing arguments in softweave mode */
-  escp2_dot_size_t dot_sizes;	/* Vector of dot sizes for resolutions */
-  escp2_densities_t densities;	/* List of densities for each printer */
-  escp2_variable_inklist_t *inks; /* Choices of inks for this printer */
+
+  int           zero_margin_offset;   /* Offset to use to achieve */
+				      /* zero-margin printing */
+/*****************************************************************************/
+		 /* The stylus 480 and 580 have an unusual arrangement of
+				  color jets that need special handling */
+  const int *head_offset;
+  int		initial_vertical_offset;
+  int		black_initial_vertical_offset;
+
+/*****************************************************************************/
+  const int *dot_sizes;		/* Vector of dot sizes for resolutions */
+  const double *densities;	/* List of densities for each printer */
+  const escp2_variable_inklist_t *inks; /* Choices of inks for this printer */
+/*****************************************************************************/
+  const double *lum_adjustment;
+  const double *hue_adjustment;
+  const double *sat_adjustment;
+  const paperlist_t *paperlist;
 @} escp2_printer_t;
 @end example
 @end deftypevr
 
-Most of these should be self-explanatory.  Some printers have more
-black nozzles than color nozzles, and it's possible for software to
-take advantage of that.
+The printer definition block is divided into 8 sections.  The first
+section is a set of miscellaneous printer options.  These are
+described in the code, and will not be discussed further here.
+
+
+The second section describes the number of nozzles and the separation
+between nozzles in base units.  The base unit is 1/360" for all
+currently supported printers, but future printers may support a
+smaller base unit.
+
+Many printers have more black nozzles than nozzles of other colors,
+and when used in black and white mode, it's possible to use these
+extra nozzles, which speeds up printing.  As an example, a printer
+that is specified to have 48 cyan, magenta, and yellow nozzles, and
+144 black nozzles, can use all 144 black nozzles when printing black
+ink only.  When printing in color, only 48 nozzles of each color
+(including black) can be used.
+
+Most printers can print using either the number of nozzles available
+or any smaller number.  Some printers require that all of the nozzles
+be used.  Those printers will set @code{min_nozzles} and/or
+@code{min_black_nozzles} to the same value as @code{nozzles} and/or
+@code{black_nozzles}.
+
+
+The third section defines basic units of measure for the printer,
+including the standard separation between dots, the base nozzle
+separation, and the minimum and maximum printing resolutions the
+printer supports.  Most of these are fairly self-explanatory, but some
+are not obvious.
+
+Most Epson printers, other than the high-end Stylus Pro models, cannot
+print dots spaced more closely than 1/360" or 1/720" apart (this is
+the setting for @code{xres}.  This is true even for printers that
+support resolutions of 1440 or 2880 DPI.  In these cases, the data
+must be printed in 2, 4, or 8 passes.  While the printer can position
+the head to a resolution of 1/1440" or 1/2880", the head cannot
+deposit ink that frequently.
+
+Some printers can only print in their very best quality (using the
+smallest dots available) printing at a lower resolution.  For example,
+the Stylus Photo EX can normally print with a dot spacing of 1/720".
+The smallest dot size cannot be printed with a dot spacing of less
+than 1/360", however.  In this case, we use @code{enhanced_xres}
+to specify the resolution to be used in this enhanced mode, and
+@code{enhanced_resolution} to specify the printing resolution above
+which we use the @code{enhanced_xres}.
+
+The @code{resolution_scale} command is used to specify scaling factors
+for the dot separation on newer printers.  It should always be 14400
+with current printers.
+
+
+The fourth section specifies the minimum and maximum paper sizes, and
+the margins.  Some printers allow use of narrower margins when
+softweave is used; both sets of margins are specified. 
 
 There is a convenient @samp{INCH} macro defined to make specification of
 the @code{max_paper_width} and @code{max_paper_height} more legible.  It
@@ -178,76 +282,119 @@ of points.  For example, to specify 8.5", @samp{INCH(17/2)} expands to
 @samp{(72 * 17/2)}, which is evaluated left to right, and hence
 generates the correct value.
 
-Very, very few printers require (or allow) @code{separation_rows} to be
-anything but 1 and @code{pseudo_separation_rows} other than zero.  The
-Stylus Color 1520, Stylus Color 800, Stylus Color 850, and (strangely
-enough to my mind, since it's a new printer) Stylus Color 660 seem to be
-the only exceptions.
 
-The last three members of this struct are the most interesting, and
-require the most work.  They are in order a vector of dot sizes for
-each printing mode, a list of base densities for each printing mode,
-and a pointer to a table of ink value definitions.  These will be
-described individually.
+The fifth section specifies some miscellaneous values that are
+required for certain printers.  For most printers, the correct values
+are 1 for @code{separation_rows} and 0 for the others.  Very, very few
+printers require (or allow) @code{separation_rows} to be anything but
+1 and @code{pseudo_separation_rows} other than zero.  The Stylus Color
+1520, Stylus Color 800, Stylus Color 850, and (strangely enough to my
+mind, since it's a new printer) Stylus Color 660 seem to be the only
+exceptions.
+
+The @code{zero_margin_offset} is used to specify an additional
+negative horizontal offset required to print to the edges of the paper
+on newer Stylus Photo printers.  These must be determined empirically;
+good starting values are 100 for 1440 DPI and 50 for 2880 DPI
+printers.  The goal is to print to the edge of the page, but not over
+it.
 
 
-The list of dot sizes contains values for seven printing modes: 180 DPI,
-360 DPI ``microweave'' (which really means ``not soft weave''), 360 DPI
-softweave, 720 DPI microweave, 720 DPI softweave, 1440 DPI microweave,
-and 1440 DPI softweave.  The appropriate dot size is chosen from this
-vector at run time, and passed to the printer's set dot size command.
-Any value that is equal to @samp{-1} indicates an illegal mode.  For
-example, currently all printers have a value of @samp{-1} for 180 DPI,
-because nothing really supports it properly.  If someone can find a good
-dot size for it, some printers could do it.
+The sixth section specifies head offsets for printers that do not have
+the color jets aligned.  Certain printers, such as the Stylus Color
+480, have an unusual head arrangement whereby instead of all of the
+colors being aligned vertically, the nozzles are configured in
+groups.  These printers are easy to determine; if the normal head
+offset of zero for each color is used, the printing will be vertically
+out of alignment.  Most of these printers require specification of a
+negative offset for printing to the top edge of the paper; typically
+these printers do not require such an offset when printing black only.
+
+The seventh section specifies the most difficult values to tune, the
+dot sizes, printing densities, and ink values (for variable dot size
+enabled printers).  These will be described in detail below.
+
+
+The last section specifies luminosity, hue, and saturation adjustment
+vectors for the printer, and the paper definitions.  These are
+presently not covered here.
+
+
+The lists of dot sizes and densities contain values for 13 printing
+modes: 120/180 DPI using printer weaving (single row; incorrectly
+referred to as ``microweave'') and ``soft'' weaving (the driver
+determines the exact pattern of dot layout), 360 DPI microweave and
+softweave, 720x360 DPI microweave and softweave, 720 DPI microweave
+and softweave, 1440x720 microweave and softweave, 2880x720 microweave
+and softweave, and 2880x1440 softweave only.  Printer weaving is
+referred to as ``microweave'' for historical reasons.
+
+For the dot sizes, the value for each element in the vector selects
+the dot size to be used when printing at this (or similar)
+resolution.  The dot sizes are determined by consulting the
+programming manual for the printer and experimenting as described
+below.  Current Epson printers always use dot sizes less than
+@samp{16}, or @samp{0x10}, to indicate single dot size (each dot is
+represented by 1 bit, and it's either printed or not), and dot sizes
+of @samp{16} or greater to indicate variable dot size (each dot is
+represented by 2 bits, and it can either be not printed or take on 2
+or 3 values, representing the relative size of the printed dot).
+Variable dot sizes permit the use of very small dots (which would be
+too small to fill the page and produce solid black) in light areas,
+while allowing the page to be filled with larger dots in darker areas.
 
 Even single dot size printers can usually produce dots of different
 sizes; it's just illegal to actually try to switch dot size during a
 page.  These dots are also much bigger than those used in true
 variable dot size printing.
 
+A dot size of @samp{-1} indicates that this resolution is illegal for
+the printer in question.  Any resolutions that would use this dot size
+will not be presented to the user.  A dot size of @samp{-2} indicates
+that this resolution is legal, but that the driver is not to attempt
+to set any dot size.  Some very old printers do not support the
+command to set the dot size.
+
 Most printers support a dot size of @samp{0} as a mode-specific default,
 but it's often a bigger dot than necessary.  Printers usually also
 support some dot sizes between @samp{1} and @samp{3}.  Usually @samp{1}
 is the right dot size for 720 and 1440 dpi printing, and @samp{3} works
-best at 360 dpi.  Some printers claim to support @samp{4} as a ``super
-micro dot'' for 1440 dpi printing, but it doesn't always work out that
-way.  The Stylus Photo EX is such a printer.  Setting a dot size of
-@samp{4} in 360 dpi mode in fact produces smaller dots, but it's useless
-at such coarse resolution.  However, setting a dot size of @samp{4} in
-720 or 1440 dpi mode produces the same size dot as size @samp{0}, and
-only size @samp{1} produces a smaller dot.
+best at 360 dpi.
 
 Variable dot size printers usually support 2 or 3 sets of variable dot
 sizes.  Older printers based on a 6 picolitre drop (the 480, 720, 740,
 750, 900, and 1200) support two: mode 16 (0x10 in hexadecimal) for
-normal variable dots at 1440 or 720 dpi, and mode 17 (0x10) for special
-larger dots at 360 dpi.  Newer printers based on 4 picolitre drops
-support three sizes: @samp{0x10} for 4 pl base drops, @samp{0x11} for 6
-pl base drops, and @samp{0x12} for special large drops.  On these
-printers, @samp{0x10} usually works best at 1440x720 and @samp{0x11}
-works best at 720x720.  Unfortunately, @samp{0x10} doesn't seem to
-generate quite enough density at 720x720, because if it did the output
-would be very smooth.  Perhaps it's possible to tweak things@enddots{}
+normal variable dots at 1440 or 720 dpi, and mode 17 (0x10) for
+special larger dots at 360 dpi.  Newer printers based on 4 picolitre
+drops normally support three sizes: @samp{0x10} for 4 pl base drops,
+@samp{0x11} for 6 pl base drops, and @samp{0x12} for special large
+drops.  On these printers, @samp{0x10} usually works best at 1440x720
+and @samp{0x11} works best at 720x720.  Unfortunately, @samp{0x10}
+doesn't seem to generate quite enough density at 720x720, because if
+it did the output would be very smooth.  Perhaps it's possible to
+tweak things@enddots{}
 
 
 The list of densities is a list of base density values for all of the
-above listed modes, plus 1440x1440 and 1440x2880 emulated.  ``Density''
-refers to the amount of ink deposited when a solid color (or solid
-black) is printed.  So if the density is @samp{.5}, solid black actually
-prints only half the possible dots.  ``Base density'' refers to the fact
-that the density value can be scaled in the GUI or on the Ghostscript
-command line.  The density value specified is multiplied by the base
-density to obtain the effective density value.  All other things (such
-as ink drop size) remaining the same, doubling the resolution requires
-halving the base density, which must never exceed @samp{1}.
+above listed modes.  ``Density'' refers to the amount of ink deposited
+when a solid color (or solid black) is printed.  So if the density is
+@samp{.5}, solid black actually prints only half the possible dots.
+``Base density'' refers to the fact that the density value can be
+scaled in the GUI or on the Ghostscript command line.  The density
+value specified (which is not made visible to the user) is multiplied
+by the base density to obtain the effective density value.  All other
+things (such as ink drop size) remaining the same, doubling the
+resolution requires halving the base density.  The base density in the
+density vector may exceed @samp{1}, as many paper types require lower
+density than the base driver.  The driver ensures that the actual
+density never exceeds 1.
 
 Tuning the density should be done on high quality paper (usually
 glossy photo paper).  The goal is to find the lowest density value
 that results in solid black (no visible gaps under a fairly high power
 magnifying glass or loupe).  If an appropriate density value is found
-for 720 DPI, it can be divided by 2 for 1440x720, by 4 for 1440x1440,
-and by 8 for 1440x2880.
+for 720 DPI, it could be divided by 2 for 1440x720, by 4 for 2880x720,
+and by 8 for 2880x1440.
 
 However, for printers that offer a choice of dot size, this may not be
 the best strategy.  The best choice for dot size is the smallest dot
@@ -255,7 +402,6 @@ size that allows choosing a density value not greater than 1 that
 gives full coverage.  This dot size may be different for different
 resolutions.  Tuning variable dot size printers is more complicated;
 the process is described below.
-
 
 The last member is a pointer to a structure containing a list of ink
 values for variable dot size (or 6 color) inks.  We model variable dot
@@ -268,7 +414,7 @@ choices.
 
 This structure is actually rather complicated; it contains entries for
 each combination of physical printer resolution (180, 360, 720, and
-1440 dpi), ink colors (4 and 6), and single and variable dot sizes
+1440 dpi), ink colors (4, 6, and 7), and single and variable dot sizes
 (since some printer modes can't handle variable dot size inks).  Since
 there's so much data, it's actually a somewhat deeply nested
 structure:
