@@ -447,6 +447,8 @@ get_tmp_filename()
  * 'run()' - Run the plug-in...
  */
 
+#define PRINT_LUT
+
 static void
 run(char   *name,		/* I - Name of print program. */
     int    nparams,		/* I - Number of parameters passed in */
@@ -789,7 +791,7 @@ do_print_dialog(void)
     N_("Portrait"),
     N_("Landscape")
   };
-  char plug_in_name[80];
+  gchar *plug_in_name;
 
 
  /*
@@ -814,9 +816,11 @@ do_print_dialog(void)
   */
 
   print_dialog = dialog = gtk_dialog_new();
-  sprintf(plug_in_name, _("Print v%s"), PLUG_IN_VERSION);
 
+  plug_in_name = g_strdup_printf (_("Print v%s"), PLUG_IN_VERSION);
   gtk_window_set_title(GTK_WINDOW(dialog), plug_in_name);
+  g_free (plug_in_name);
+  
   gtk_window_set_wmclass(GTK_WINDOW(dialog), "print", "Gimp");
   gtk_window_position(GTK_WINDOW(dialog), GTK_WIN_POS_MOUSE);
   gtk_container_border_width(GTK_CONTAINER(dialog), 0);
@@ -985,7 +989,6 @@ do_print_dialog(void)
 		     (gpointer)OUTPUT_COLOR);
   gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
   gtk_widget_show(button);
-
 
   label = gtk_label_new(_("Density:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
