@@ -158,6 +158,9 @@ deb: debian/changelog debian/control debian/rules
 	cd .. ; \
 	rm -r $(PACKAGE)-$(VERSION)
 
+debian/control:
+	debian/rules debian/control
+
 
 ## Clean
 
