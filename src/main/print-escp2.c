@@ -2198,6 +2198,8 @@ escp2_print_page(stp_vars_t v, stp_image_t *image)
 	weave_pattern = STPI_WEAVE_DESCENDING;
       else if (strcmp(weave, "Ascending2X") == 0)
 	weave_pattern = STPI_WEAVE_ASCENDING_2X;
+      else if (strcmp(weave, "Staggered") == 0)
+	weave_pattern = STPI_WEAVE_STAGGERED;
     }
 
   stpi_initialize_weave
