@@ -59,9 +59,11 @@ static GtkWidget *print_dialog;           /* Print dialog window */
 static GtkWidget *recenter_button;
 static GtkWidget *left_entry;
 static GtkWidget *right_entry;
+static GtkWidget *right_border_entry;
 static GtkWidget *width_entry;
 static GtkWidget *top_entry;
 static GtkWidget *bottom_entry;
+static GtkWidget *bottom_border_entry;
 static GtkWidget *height_entry;
 static GtkWidget *unit_inch;
 static GtkWidget *unit_cm;
@@ -375,6 +377,18 @@ gimp_create_main_window (void)
                              _("Right:"), 1.0, 0.5,
                              entry, 1, TRUE);
 
+
+  right_border_entry = entry = gtk_entry_new ();
+  g_snprintf (s, sizeof (s), "%.3f", fabs (vars.left));
+  gtk_entry_set_text (GTK_ENTRY (entry), s);
+  gtk_signal_connect (GTK_OBJECT (entry), "activate",
+                      GTK_SIGNAL_FUNC (gimp_position_callback),
+		      NULL);
+  gtk_widget_set_usize (entry, 60, 0);
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 3,
+                             _("Right Border:"), 1.0, 0.5,
+                             entry, 1, TRUE);
+
   bottom_entry = entry = gtk_entry_new ();
   g_snprintf (s, sizeof (s), "%.3f", fabs (vars.left));
   gtk_entry_set_text (GTK_ENTRY (entry), s);
@@ -384,6 +398,18 @@ gimp_create_main_window (void)
   gtk_widget_set_usize (entry, 60, 0);
   gimp_table_attach_aligned (GTK_TABLE (table), 2, 2,
                              _("Bottom:"), 1.0, 0.5,
+                             entry, 1, TRUE);
+
+
+  bottom_border_entry = entry = gtk_entry_new ();
+  g_snprintf (s, sizeof (s), "%.3f", fabs (vars.left));
+  gtk_entry_set_text (GTK_ENTRY (entry), s);
+  gtk_signal_connect (GTK_OBJECT (entry), "activate",
+                      GTK_SIGNAL_FUNC (gimp_position_callback),
+		      NULL);
+  gtk_widget_set_usize (entry, 60, 0);
+  gimp_table_attach_aligned (GTK_TABLE (table), 2, 3,
+                             _("Bottom Border:"), 1.0, 0.5,
                              entry, 1, TRUE);
 
   /*
@@ -401,9 +427,9 @@ gimp_create_main_window (void)
                                  (gpointer) 1, NULL, NULL,
 				 vars.orientation == ORIENT_LANDSCAPE,
                                  NULL);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 3,
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 5,
                              _("Orientation:"), 1.0, 0.5,
-                             option, 1, TRUE);
+                             option, 4, TRUE);
 
   /*
    *  Printer settings frame...
@@ -1215,11 +1241,23 @@ gimp_position_callback (GtkWidget *widget)
       new_value *= unit_scaler;
       vars.top = ((new_value + 1.0 / 144) * 72) - (top + print_height);
     }
+  else if (widget == bottom_border_entry)
+    {
+      gfloat new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
+      new_value *= unit_scaler;
+      vars.top = (paper_height - print_height) - (new_value * 72);
+    }
   else if (widget == right_entry)
     {
       gfloat new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
       new_value *= unit_scaler;
       vars.left = ((new_value + 1.0 / 144) * 72) - (left + print_width);
+    }
+  else if (widget == right_border_entry)
+    {
+      gfloat new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
+      new_value *= unit_scaler;
+      vars.left = (paper_width - print_width) - (new_value * 72);
     }
   else if (widget == width_entry)
     {
@@ -1918,12 +1956,23 @@ gimp_preview_update (void)
   gtk_entry_set_text (GTK_ENTRY (bottom_entry), s);
   gtk_signal_handler_unblock_by_data (GTK_OBJECT (bottom_entry), NULL);
 
+  gtk_signal_handler_block_by_data (GTK_OBJECT (bottom_border_entry), NULL);
+  g_snprintf(s, sizeof (s), "%.2f",
+	     (paper_height - (vars.top + print_height)) / unit_scaler);
+  gtk_entry_set_text (GTK_ENTRY (bottom_border_entry), s);
+  gtk_signal_handler_unblock_by_data (GTK_OBJECT (bottom_border_entry), NULL);
+
   gtk_signal_handler_block_by_data (GTK_OBJECT (right_entry), NULL);
   g_snprintf (s, sizeof (s), "%.2f",
 	      (left + vars.left + print_width) / unit_scaler);
-
   gtk_entry_set_text (GTK_ENTRY (right_entry), s);
   gtk_signal_handler_unblock_by_data (GTK_OBJECT (right_entry), NULL);
+
+  gtk_signal_handler_block_by_data (GTK_OBJECT (right_border_entry), NULL);
+  g_snprintf (s, sizeof (s), "%.2f",
+	      (paper_width - (vars.left + print_width)) / unit_scaler);
+  gtk_entry_set_text (GTK_ENTRY (right_border_entry), s);
+  gtk_signal_handler_unblock_by_data (GTK_OBJECT (right_border_entry), NULL);
 
   gtk_signal_handler_block_by_data (GTK_OBJECT (width_entry), NULL);
   g_snprintf (s, sizeof (s), "%.2f", print_width / unit_scaler);
