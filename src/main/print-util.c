@@ -224,8 +224,7 @@ static const stp_internal_vars_t max_vars =
 stp_vars_t
 stp_allocate_vars(void)
 {
-  void *retval = stp_malloc(sizeof(stp_internal_vars_t));
-  memset(retval, 0, sizeof(stp_internal_vars_t));
+  void *retval = stp_zalloc(sizeof(stp_internal_vars_t));
   stp_copy_vars(retval, (stp_vars_t)&default_vars);
   return (retval);
 }
@@ -794,6 +793,8 @@ static stp_internal_papersize_t paper_sizes[] =
     297, 684, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* US Commercial 10 env */
   { "w315h414",		N_ ("A2 Invitation"),
     315, 414, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* US A2 invitation */
+  { "Monarch",		N_ ("Monarch Envelope"),
+    279, 540, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* Monarch envelope (3.875 * 7.5) */
   { "Custom",		N_ ("Custom"),
     0, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
 
@@ -1642,6 +1643,27 @@ stp_malloc (size_t size)
   register void *memptr = NULL;
 
   if ((memptr = malloc (size)) == NULL)
+    {
+      fputs("Virtual memory exhausted.\n", stderr);
+      exit (EXIT_FAILURE);
+    }
+  return (memptr);
+}
+
+void *
+stp_zalloc (size_t size)
+{
+  register void *memptr = stp_malloc(size);
+  (void) memset(memptr, 0, size);
+  return (memptr);
+}
+
+void *
+stp_realloc (void *ptr, size_t size)
+{
+  register void *memptr = NULL;
+
+  if (size > 0 && ((memptr = realloc (ptr, size)) == NULL))
     {
       fputs("Virtual memory exhausted.\n", stderr);
       exit (EXIT_FAILURE);

@@ -7,6 +7,7 @@ gdevstp-color.c
 gdevstp-dither.c
 gdevstp-dither-matrices.c
 gdevstp-escp2.c
+gdevstp-escp2-data.c
 gdevstp-lexmark.c
 gdevstp-pcl.c
 gdevstp-printers.c
@@ -15,6 +16,8 @@ gdevstp-util.c
 gdevstp-weave.c
 gdevstp-print.h
 gdevstp-print-internal.h
+gdevstp-print-escp2.h
+gdevstp-print-dither.h
 gdevstp-print-intl-internal.h
 gdevstp-quickmatrix257.h
 gdevstp-ran.367.179.h

@@ -31,18 +31,16 @@ INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
 LIBPRINTUT = $(top_builddir)/lib/libprintut.la
 LIBS = $(INTLLIBS) @LIBS@
 
-TESTS = testdither run-weavetest
+TESTS = run-testdither run-weavetest
 
 
 ## Programs
-TEST_BIN = testdither escp2-weavetest unprint pcl-unprint bjc-unprint
 
-noinst_PROGRAMS = @TEST_BIN@
-EXTRA_PROGRAMS = escp2-weavetest unprint pcl-unprint bjc-unprint testdither
+if BUILD_TEST
+noinst_PROGRAMS = testdither escp2-weavetest unprint pcl-unprint bjc-unprint
+endif
 
 escp2_weavetest_SOURCES = escp2-weavetest.c
-
-escp2_weavetest.o: escp2_weavetest.c
 escp2_weavetest_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
 escp2_weavetest_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
@@ -71,7 +69,7 @@ $(LIBGIMPPRINT_LIBS):
 
 ## Clean
 
-CLEANFILES = $(EXTRA_PROGRAMS) mixed-color-1bit.ppm
+CLEANFILES = mixed-color-1bit.ppm
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = cyan-sweep.tif parse-escp2 run-weavetest
+EXTRA_DIST = cyan-sweep.tif parse-escp2 run-weavetest run-testdither

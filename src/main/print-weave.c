@@ -1698,6 +1698,58 @@ stp_pack_tiff(const unsigned char *line,
  * -- Robert Krawitz <rlk@alum.mit.edu) November 3, 1999
  */
 
+static stp_lineoff_t *
+allocate_lineoff(int count, int ncolors)
+{
+  int i;
+  stp_lineoff_t *retval = stp_malloc(count * sizeof(stp_lineoff_t));
+  for (i = 0; i < count; i++)
+    {
+      retval[i].ncolors = ncolors;
+      retval[i].v = stp_zalloc(ncolors * sizeof(unsigned long));
+    }
+  return (retval);
+}
+
+static stp_lineactive_t *
+allocate_lineactive(int count, int ncolors)
+{
+  int i;
+  stp_lineactive_t *retval = stp_malloc(count * sizeof(stp_lineactive_t));
+  for (i = 0; i < count; i++)
+    {
+      retval[i].ncolors = ncolors;
+      retval[i].v = stp_zalloc(ncolors * sizeof(char));
+    }
+  return (retval);
+}
+
+static stp_linecount_t *
+allocate_linecount(int count, int ncolors)
+{
+  int i;
+  stp_linecount_t *retval = stp_malloc(count * sizeof(stp_linecount_t));
+  for (i = 0; i < count; i++)
+    {
+      retval[i].ncolors = ncolors;
+      retval[i].v = stp_zalloc(ncolors * sizeof(int));
+    }
+  return (retval);
+}
+
+static stp_linebufs_t *
+allocate_linebuf(int count, int ncolors)
+{
+  int i;
+  stp_linebufs_t *retval = stp_malloc(count * sizeof(stp_linebufs_t));
+  for (i = 0; i < count; i++)
+    {
+      retval[i].ncolors = ncolors;
+      retval[i].v = stp_zalloc(ncolors * sizeof(unsigned char *));
+    }
+  return (retval);
+}
+
 /*
  * Initialize the weave parameters
  *
@@ -1746,9 +1798,8 @@ stp_initialize_weave(int jets,	/* Width of print head */
 {
   int i;
   int last_line, maxHeadOffset;
-  stp_softweave_t *sw = stp_malloc(sizeof (stp_softweave_t));
+  stp_softweave_t *sw = stp_zalloc(sizeof (stp_softweave_t));
 
-  (void) memset(sw, 0, sizeof(stp_softweave_t));
   if (jets < 1)
     jets = 1;
   if (jets == 1 || sep < 1)
@@ -1802,16 +1853,14 @@ stp_initialize_weave(int jets,	/* Width of print head */
    * setup printhead offsets.
    * for monochrome (bw) printing, the offsets are 0.
    */
-  if(ncolors > 1)
-    for(i=0; i<NCHANNELS; i++)
+  sw->head_offset = stp_zalloc(ncolors * sizeof(int));
+  if (ncolors > 1)
+    for(i = 0; i < ncolors; i++)
       sw->head_offset[i] = head_offset[i];
-  else
-    for(i=0; i<NCHANNELS; i++)
-      sw->head_offset[i] = 0;
 
   maxHeadOffset = 0;
-  for(i=0; i<NCHANNELS; i++)
-    if(sw->head_offset[i] > maxHeadOffset)
+  for (i = 0; i < ncolors; i++)
+    if (sw->head_offset[i] > maxHeadOffset)
       maxHeadOffset = sw->head_offset[i];
 
   sw->virtual_jets = sw->jets;
@@ -1848,15 +1897,11 @@ stp_initialize_weave(int jets,	/* Width of print head */
 
   sw->linewidth = linewidth;
   sw->vertical_height = lineheight;
-  sw->lineoffsets = stp_malloc(sw->vmod * sizeof(stp_lineoff_t));
-  memset(sw->lineoffsets, 0, sw->vmod * sizeof(stp_lineoff_t));
-  sw->lineactive = stp_malloc(sw->vmod * sizeof(stp_lineactive_t));
-  memset(sw->lineactive, 0, sw->vmod * sizeof(stp_lineactive_t));
-  sw->linebases = stp_malloc(sw->vmod * sizeof(stp_linebufs_t));
-  sw->passes = stp_malloc(sw->vmod * sizeof(stp_pass_t));
-  memset(sw->passes, 0, sw->vmod * sizeof(stp_pass_t));
-  sw->linecounts = stp_malloc(sw->vmod * sizeof(stp_linecount_t));
-  memset(sw->linecounts, 0, sw->vmod * sizeof(stp_linecount_t));
+  sw->lineoffsets = allocate_lineoff(sw->vmod, ncolors);
+  sw->lineactive = allocate_lineactive(sw->vmod, ncolors);
+  sw->linebases = allocate_linebuf(sw->vmod, ncolors);
+  sw->passes = stp_zalloc(sw->vmod * sizeof(stp_pass_t));
+  sw->linecounts = allocate_linecount(sw->vmod, ncolors);
   sw->rcache = -2;
   sw->vcache = -2;
   sw->fill_start = fill_start;
@@ -1884,10 +1929,7 @@ stp_destroy_weave(void *vsw)
 {
   int i, j;
   stp_softweave_t *sw = (stp_softweave_t *) vsw;
-  stp_free(sw->linecounts);
   stp_free(sw->passes);
-  stp_free(sw->lineactive);
-  stp_free(sw->lineoffsets);
   if (sw->fold_buf)
     stp_free(sw->fold_buf);
   if (sw->comp_buf)
@@ -1902,8 +1944,16 @@ stp_destroy_weave(void *vsw)
 	  if (sw->linebases[i].v[j])
 	    stp_free(sw->linebases[i].v[j]);
 	}
+      stp_free(sw->linecounts[i].v);
+      stp_free(sw->linebases[i].v);
+      stp_free(sw->lineactive[i].v);
+      stp_free(sw->lineoffsets[i].v);
     }
+  stp_free(sw->linecounts);
+  stp_free(sw->lineactive);
+  stp_free(sw->lineoffsets);
   stp_free(sw->linebases);
+  stp_free(sw->head_offset);
   stp_destroy_weave_params(sw->weaveparm);
   stp_free(vsw);
 }
@@ -2029,10 +2079,10 @@ check_linebases(stp_softweave_t *sw, int row, int cpass, int head_offset,
 		int color)
 {
   stp_linebufs_t *bufs =
-    (stp_linebufs_t *)stp_get_linebases(sw, row, cpass, head_offset);
+    (stp_linebufs_t *) stp_get_linebases(sw, row, cpass, head_offset);
   if (!(bufs[0].v[color]))
     bufs[0].v[color] =
-      stp_malloc(sw->virtual_jets * sw->bitwidth * sw->horizontal_width);
+      stp_zalloc (sw->virtual_jets * sw->bitwidth * sw->horizontal_width);
 }
 
 /*
@@ -2268,15 +2318,6 @@ finalize_row(stp_softweave_t *sw, int row, int model, int width,
     }
 }
 
-static void *
-xzmalloc(size_t bytes)
-{
-  void *retval = stp_malloc(bytes);
-  if (retval)
-    memset(retval, 0, bytes);
-  return (retval);
-}
-
 void
 stp_write_weave(void *        vsw,
 		int           length,	/* I - Length of bitmap data */
@@ -2302,9 +2343,9 @@ stp_write_weave(void *        vsw,
   int cpass = sw->current_vertical_subpass * h_passes;
 
   if (!sw->fold_buf)
-    sw->fold_buf = xzmalloc(sw->bitwidth * ylength);
+    sw->fold_buf = stp_zalloc(sw->bitwidth * ylength);
   if (!sw->comp_buf)
-    sw->comp_buf = xzmalloc(sw->bitwidth *(sw->compute_linewidth)(sw,ylength));
+    sw->comp_buf = stp_zalloc(sw->bitwidth *(sw->compute_linewidth)(sw,ylength));
   if (sw->current_vertical_subpass == 0)
     initialize_row(sw, sw->lineno, xlength, cols);
 
@@ -2317,7 +2358,7 @@ stp_write_weave(void *        vsw,
         for (i = 0; i < h_passes; i++)
 	  {
 	    if (!sw->s[i])
-	      sw->s[i] = xzmalloc(sw->bitwidth *
+	      sw->s[i] = stp_zalloc(sw->bitwidth *
 				    (sw->compute_linewidth)(sw, ylength));
 	    lineoffs[i] = stp_get_lineoffsets(sw, sw->lineno, cpass + i,
 					      sw->head_offset[j]);

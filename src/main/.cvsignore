@@ -8,6 +8,7 @@ print-canon.lo
 print-dither.lo
 print-dither-matrices.lo
 print-escp2.lo
+print-escp2-data.lo
 print-pcl.lo
 print-ps.lo
 print-printers.c
@@ -15,4 +16,8 @@ print-util.lo
 print-color.lo
 print-weave.lo
 print-version.lo
+gimpprint-config.in
 gimpprint-config
+gimpprint.pc
+gimpprint.m4
+gimpprint.pc.in

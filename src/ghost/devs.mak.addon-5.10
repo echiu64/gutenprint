@@ -9,6 +9,7 @@ stp_=gdevstp.$(OBJ) \
 	gdevstp-color.$(OBJ) \
 	gdevstp-weave.$(OBJ) \
 	gdevstp-escp2.$(OBJ) \
+	gdevstp-escp2-data.$(OBJ) \
 	gdevstp-lexmark.$(OBJ) \
 	gdevstp-pcl.$(OBJ) \
 	gdevstp-canon.$(OBJ) \
@@ -29,14 +30,17 @@ gdevstp-weave.$(OBJ) : gdevstp-weave.c $(PDEVH) gdevstp-print.h gdevstp-print-in
 gdevstp-color.$(OBJ) : gdevstp-color.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h
 	$(CCC) -DDISABLE_NLS gdevstp-color.c
 
-gdevstp-dither.$(OBJ) : gdevstp-dither.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h
+gdevstp-dither.$(OBJ) : gdevstp-dither.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h gdevstp-print-dither.h
 	$(CCC) -DDISABLE_NLS gdevstp-dither.c
 
-gdevstp-dither-matrices.$(OBJ) : gdevstp-dither-matrices.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h
+gdevstp-dither-matrices.$(OBJ) : gdevstp-dither-matrices.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h gdevstp-print-dither.h
 	$(CCC) -DDISABLE_NLS gdevstp-dither.c
 
-gdevstp-escp2.$(OBJ) : gdevstp-escp2.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h
+gdevstp-escp2.$(OBJ) : gdevstp-escp2.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h gdevstp-print-escp2.h
 	$(CCC) -DDISABLE_NLS gdevstp-escp2.c
+
+gdevstp-escp2-data.$(OBJ) : gdevstp-escp2-data.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h gdevstp-print-escp2.h
+	$(CCC) -DDISABLE_NLS gdevstp-escp2-data.c
 
 gdevstp-lexmark.$(OBJ) : gdevstp-lexmark.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h
 	$(CCC) -DDISABLE_NLS gdevstp-lexmark.c

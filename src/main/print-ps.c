@@ -103,7 +103,7 @@ ps_parameters(const stp_printer_t printer,	/* I - Printer model */
       if (strcmp(name, "PageSize") == 0)
 	{
 	  int papersizes = stp_known_papersizes();
-	  valptrs = stp_malloc(sizeof(stp_param_t) * papersizes);
+	  valptrs = stp_zalloc(sizeof(stp_param_t) * papersizes);
 	  *count = 0;
 	  for (i = 0; i < papersizes; i++)
 	    {
@@ -124,7 +124,8 @@ ps_parameters(const stp_printer_t printer,	/* I - Printer model */
   rewind(ps_ppd);
   *count = 0;
 
-  valptrs = stp_malloc(100 * sizeof(stp_param_t));
+  /* FIXME -- need to use realloc */
+  valptrs = stp_zalloc(100 * sizeof(stp_param_t));
 
   while (fgets(line, sizeof(line), ps_ppd) != NULL)
   {
@@ -549,8 +550,8 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
           (double)out_width / ((double)image_width),
           (double)out_height / ((double)image_height));
 
-  in  = stp_malloc(image_width * image_bpp);
-  out = stp_malloc((image_width * out_bpp + 3) * 2);
+  in  = stp_zalloc(image_width * image_bpp);
+  out = stp_zalloc((image_width * out_bpp + 3) * 2);
 
   stp_compute_lut(nv, 256);
 
@@ -788,7 +789,7 @@ ppd_find(const char *ppd_file,	/* I - Name of PPD file */
   if (ppd_file == NULL || name == NULL || option == NULL)
     return (NULL);
   if (!value)
-    value = stp_malloc(32768);
+    value = stp_zalloc(32768);
 
   if (ps_ppd_file == NULL || strcmp(ps_ppd_file, ppd_file) != 0)
   {

@@ -15,7 +15,7 @@ if [ -z "$image_types" ] ; then
 fi
 
 if [ -z "$algos" ] ; then
-    algos='Adaptive Ordered Fast VeryFast Floyd'
+    algos='Adaptive EvenTone Ordered Fast VeryFast Floyd'
 fi
 
 if [ -z "$print_image" ] ; then
