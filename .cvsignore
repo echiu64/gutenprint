@@ -1,4 +1,5 @@
 .deps
+.noupdate
 ABOUT-NLS
 ChangeLog
 Makefile

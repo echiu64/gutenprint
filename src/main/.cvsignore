@@ -6,6 +6,7 @@ libgimpprint.la
 print-lexmark.lo
 print-canon.lo
 print-dither.lo
+print-dither-matrices.lo
 print-escp2.lo
 print-pcl.lo
 print-ps.lo
