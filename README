@@ -812,6 +812,7 @@ DEBIAN
 			    with doc-base.
     cupsys-driver-gimpprint The CUPS driver and PPD files.
     foomatic-db-gimpprint   Foomatic data files for gimp-print drivers.
+    ijsgimpprint	    Ghostscript IJS server.
     libgimpprint1	    The libgimpprint library (GIMP-Print core).
     libgimpprint-dev	    Headers, symlinks, m4 macro
 			    (AM_PATH_GIMPPRINT) and gimpprint-config
@@ -820,6 +821,7 @@ DEBIAN
     gimpprint-doc	    User's Guide in HTML and PDF format
     libgimpprint-doc	    Programmer's Guide in Info, DVI and HTML
 			    format.
+    gimpprint-locales	    Message catalogues for internationalisation.
     escputil		    The escputil printer tool for Epson printers.
 
     The library symlinks will get packaged without any modification needed
