@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.22  1999/11/12 01:51:47  rlk
+ *   Much better black
+ *
  *   Revision 1.21  1999/11/10 01:13:06  rlk
  *   Support up to 2880 dpi
  *
@@ -201,6 +204,22 @@
  * Want to dynamically allocate this so we can 
  */
 
+#define ERROR_ROWS 2
+
+typedef union error
+{
+  struct
+  {
+    int c[2];
+    int m[2];
+    int y[2];
+    int k[2];
+  } c;
+  int v[4][2];
+} error_t;
+
+error_t *nerror = 0;
+
 int	error[2][4][14*2880+1];
 
 /*
@@ -324,8 +343,8 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
 #define RATIO_Y DE_Y / NU_Y
 #define RATIO_Y1 (DE_Y + NU_Y) / NU_Y
 
-#define KDARKNESS_LOWER (32 * 256)
-#define KDARKNESS_UPPER (144 * 256)
+#define KDARKNESS_LOWER (16 * 256)
+#define KDARKNESS_UPPER (168 * 256)
 
 #define C_RANDOMIZER 1
 #define M_RANDOMIZER 1
@@ -352,7 +371,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		xmod,		/* X error modulus */
 		length;		/* Length of output bitmap in bytes */
   long long	c, m, y, k,	/* CMYK values */
-		oc, om, ok, oy,
+		oc, om, ok, oy, xk,
 		divk;		/* Inverse of K */
   long long     diff;		/* Average color difference */
   unsigned char	bit,		/* Current bit */
@@ -466,6 +485,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
     om = m;
     oy = y;
     k = MIN(c, MIN(m, y));
+    xk = k;
 #ifdef PRINT_DEBUG
     xc = c;
     xm = m;
@@ -505,8 +525,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       * Since we're printing black, adjust the black level based upon
       * the amount of color in the pixel (colorful pixels get less black)...
       */
+      long long xdiff = (abs(c - m) + abs(c - y) + abs(m - y)) / 3;
 
-      diff = 65536 - (abs(c - m) + abs(c - y) + abs(m - y)) / 3;
+      diff = 65536 - xdiff;
       diff = diff * diff * diff / (65536ll * 65536ll); /* diff = diff^3 */
       diff--;
       if (diff < 0)
@@ -514,6 +535,10 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       k    = diff * k / 65535ll;
       ak = k;
       divk = 65535 - k;
+#if 0
+      kdarkness = xdiff * 2 / 3;
+      kdarkness = 0;
+#endif
       if (divk == 0)
         c = m = y = 0;	/* Grayscale */
       else
@@ -527,7 +552,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
         m  = (65535 - (unsigned) rgb[2] / 4) * (m - k) / divk;
         y  = (65535 - (unsigned) rgb[0] / 4) * (y - k) / divk;
       }
-      kdarkness = (c + m + c) / 3;
 #ifdef PRINT_DEBUG
       yc = c;
       ym = m;
@@ -536,21 +560,34 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       /* Need to do the diffuse-the-black-into-cmyk thing here, too */
       ok = k;
       nk = k + (ditherk) / 8;
+#if 0
+      kdarkness = (abs(c - m) + abs(c - y) + abs(m - y)) / 3;
+#endif
+#if 0
+      fprintf(stderr, "kdarkness %d ak %d\n", kdarkness, ak);
+#endif
+#if 0
+      kdarkness = (2 * c + 2 * m + y + (xk * 10)) / 3;
+#endif
+      kdarkness = MAX((c + c / 3 + m + 2 * y / 3) / 4, ak);
       if (kdarkness < KDARKNESS_UPPER)
 	{
-	  if (ak < (KDARKNESS_UPPER - kdarkness) * KDARKNESS_LOWER /
-	      KDARKNESS_UPPER)
+	  int rb;
+	  ub = KDARKNESS_UPPER - kdarkness;
+	  lb = ub * KDARKNESS_LOWER / KDARKNESS_UPPER;
+	  rb = ub - lb;
+#if 0
+	  fprintf(stderr, "kdarkness %d ak %d lb %d ub %d\n", kdarkness, ak, lb, ub);
+#endif
+	  if (kdarkness <= lb)
 	    {
 	      bk = 0;
 	      ub = 0;
 	      lb = 1;
 	    }
-	  else if (ak < (KDARKNESS_UPPER - kdarkness))
+	  else if (kdarkness < ub)
 	    {
-	      lb = ((KDARKNESS_UPPER - KDARKNESS_LOWER) *
-		    (KDARKNESS_UPPER - kdarkness) / KDARKNESS_UPPER);
-	      ub = lb - ((KDARKNESS_UPPER - kdarkness) - ak);
-	      if (lb == 0 || ((ditherbit / bit) % lb) < ub)
+	      if (rb == 0 || (ditherbit % rb) < (kdarkness - lb))
 		bk = nk;
 	      else
 		bk = 0;
@@ -566,15 +603,15 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	bk = nk;
       ck = nk - bk;
     
-      c += ck ;
       if (lmagenta)
 	{
-/*	  m += ck * 9 / 8; */
-	  m += ck;
-	  y += ck * 3 / 2;
+	  c += ck * 3 / 4;
+	  m += ck * 7 / 8;
+	  y += ck;
 	}
       else
 	{
+	  c += ck;
 	  m += ck;
 	  y += ck;
 	}
