@@ -1244,7 +1244,7 @@ canon_size_type(const stp_vars_t *v, canon_cap_t caps)
 static char *
 c_strdup(const char *s)
 {
-  char *ret = malloc(strlen(s) + 1);
+  char *ret = xmalloc(strlen(s) + 1);
   strcpy(ret, s);
   return ret;
 }
@@ -1413,7 +1413,7 @@ canon_parameters(const stp_printer_t *printer,	/* I - Printer model */
   if (strcmp(name, "PageSize") == 0) {
     int height_limit, width_limit;
     const stp_papersize_t *papersizes = stp_get_papersizes();
-    valptrs = malloc(sizeof(char *) * stp_known_papersizes());
+    valptrs = xmalloc(sizeof(char *) * stp_known_papersizes());
     *count = 0;
 
     width_limit = caps.max_width;
@@ -1423,7 +1423,7 @@ canon_parameters(const stp_printer_t *printer,	/* I - Printer model */
       if (strlen(papersizes[i].name) > 0 &&
 	  papersizes[i].width <= width_limit &&
 	  papersizes[i].height <= height_limit) {
-	valptrs[*count] = malloc(strlen(papersizes[i].name) + 1);
+	valptrs[*count] = xmalloc(strlen(papersizes[i].name) + 1);
 	strcpy(valptrs[*count], papersizes[i].name);
 	(*count)++;
       }
@@ -1436,7 +1436,7 @@ canon_parameters(const stp_printer_t *printer,	/* I - Printer model */
     int x,y;
     int c= 0;
     int t;
-    valptrs = malloc(sizeof(char *) * 10);
+    valptrs = xmalloc(sizeof(char *) * 10);
 
     for (x=1; x<6; x++) {
       for (y=x-1; y<x+1; y++) {
@@ -1465,7 +1465,7 @@ canon_parameters(const stp_printer_t *printer,	/* I - Printer model */
   else if (strcmp(name, "InkType") == 0)
   {
     int c= 0;
-    valptrs = malloc(sizeof(char *) * 5);
+    valptrs = xmalloc(sizeof(char *) * 5);
     if ((caps.inks & CANON_INK_K))
       valptrs[c++]= c_strdup(_("Black"));
     if ((caps.inks & CANON_INK_CMY))
@@ -1492,7 +1492,7 @@ canon_parameters(const stp_printer_t *printer,	/* I - Printer model */
   else
     return (NULL);
 
-  valptrs = malloc(*count * sizeof(char *));
+  valptrs = xmalloc(*count * sizeof(char *));
   for (i = 0; i < *count; i ++)
     valptrs[i] = c_strdup(p[i]);
 
@@ -1554,7 +1554,7 @@ canon_cmd(FILE *prn, /* I - the printer         */
   if (!buffer || (num > bufsize)) {
     if (buffer)
       free(buffer);
-    buffer = malloc(num);
+    buffer = xmalloc(num);
     bufsize= num;
     if (!buffer) {
 #ifdef DEBUG
@@ -1732,7 +1732,7 @@ static void canon_deinit_printer(FILE *prn, canon_cap_t caps)
  */
 static unsigned char *canon_alloc_buffer(int size)
 {
-  unsigned char *buf= malloc(size);
+  unsigned char *buf= xmalloc(size);
   if (buf) memset(buf,0,size);
   return buf;
 }
@@ -2130,8 +2130,8 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
     }
   stp_dither_set_density(dither, nv.density);
 
-  in  = malloc(image_width * image_bpp);
-  out = malloc(image_width * out_bpp * 2);
+  in  = xmalloc(image_width * image_bpp);
+  out = xmalloc(image_width * out_bpp * 2);
 
   errdiv  = image_height / out_length;
   errmod  = image_height % out_length;

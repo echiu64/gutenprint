@@ -1931,7 +1931,7 @@ escp2_parameters(const stp_printer_t *printer,	/* I - Printer model */
     {
       unsigned int height_limit, width_limit;
       const stp_papersize_t *papersizes = stp_get_papersizes();
-      valptrs = malloc(sizeof(char *) * stp_known_papersizes());
+      valptrs = xmalloc(sizeof(char *) * stp_known_papersizes());
       *count = 0;
       width_limit = escp2_max_paper_width(model, &printer->printvars);
       height_limit = escp2_max_paper_height(model, &printer->printvars);
@@ -1941,7 +1941,7 @@ escp2_parameters(const stp_printer_t *printer,	/* I - Printer model */
 	      papersizes[i].width <= width_limit &&
 	      papersizes[i].height <= height_limit)
 	    {
-	      valptrs[*count] = malloc(strlen(papersizes[i].name) + 1);
+	      valptrs[*count] = xmalloc(strlen(papersizes[i].name) + 1);
 	      strcpy(valptrs[*count], papersizes[i].name);
 	      (*count)++;
 	    }
@@ -1951,7 +1951,7 @@ escp2_parameters(const stp_printer_t *printer,	/* I - Printer model */
   else if (strcmp(name, "Resolution") == 0)
     {
       const res_t *res = &(escp2_reslist[0]);
-      valptrs = malloc(sizeof(char *) * sizeof(escp2_reslist) / sizeof(res_t));
+      valptrs = xmalloc(sizeof(char *) * sizeof(escp2_reslist) / sizeof(res_t));
       *count = 0;
       while(res->hres)
 	{
@@ -1975,7 +1975,7 @@ escp2_parameters(const stp_printer_t *printer,	/* I - Printer model */
 	      if (((horizontal_passes * res->vertical_passes) <= 8) &&
 		  (! res->softweave || (nozzles > 1 && nozzles > oversample)))
 		{
-		  valptrs[*count] = malloc(strlen(res->name) + 1);
+		  valptrs[*count] = xmalloc(strlen(res->name) + 1);
 		  strcpy(valptrs[*count], res->name);
 		  (*count)++;
 		}
@@ -1991,10 +1991,10 @@ escp2_parameters(const stp_printer_t *printer,	/* I - Printer model */
       else
 	{
 	  int ninktypes = sizeof(ink_types) / sizeof(char *);
-	  valptrs = malloc(sizeof(char *) * ninktypes);
+	  valptrs = xmalloc(sizeof(char *) * ninktypes);
 	  for (i = 0; i < ninktypes; i++)
 	    {
-	      valptrs[i] = malloc(strlen(ink_types[i]) + 1);
+	      valptrs[i] = xmalloc(strlen(ink_types[i]) + 1);
 	      strcpy(valptrs[i], ink_types[i]);
 	    }
 	  *count = ninktypes;
@@ -2004,10 +2004,10 @@ escp2_parameters(const stp_printer_t *printer,	/* I - Printer model */
   else if (strcmp(name, "MediaType") == 0)
     {
       int nmediatypes = paper_type_count;
-      valptrs = malloc(sizeof(char *) * nmediatypes);
+      valptrs = xmalloc(sizeof(char *) * nmediatypes);
       for (i = 0; i < nmediatypes; i++)
 	{
-	  valptrs[i] = malloc(strlen(escp2_paper_list[i].name) + 1);
+	  valptrs[i] = xmalloc(strlen(escp2_paper_list[i].name) + 1);
 	  strcpy(valptrs[i], escp2_paper_list[i].name);
 	}
       *count = nmediatypes;
@@ -2020,7 +2020,7 @@ escp2_parameters(const stp_printer_t *printer,	/* I - Printer model */
 	return NULL;
       else
 	{      /* Roll Feed capable printers */
-		valptrs = malloc(sizeof(char *) * 2);
+		valptrs = xmalloc(sizeof(char *) * 2);
 		valptrs[0] = strdup(_("Standard"));
 		valptrs[1] = strdup(_("Roll Feed"));
 		*count = 2;
@@ -2644,7 +2644,7 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
 
   if (output_type == OUTPUT_GRAY)
   {
-    black   = malloc(length * bits);
+    black   = xmalloc(length * bits);
     cyan    = NULL;
     magenta = NULL;
     lcyan    = NULL;
@@ -2654,24 +2654,24 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
   }
   else
   {
-    cyan    = malloc(length * bits);
-    magenta = malloc(length * bits);
-    yellow  = malloc(length * bits);
+    cyan    = xmalloc(length * bits);
+    magenta = xmalloc(length * bits);
+    yellow  = xmalloc(length * bits);
 
     if (escp2_has_cap(model, MODEL_HASBLACK_MASK, MODEL_HASBLACK_YES, &nv))
-      black = malloc(length * bits);
+      black = xmalloc(length * bits);
     else
       black = NULL;
     switch (colormode)
       {
       case COLOR_CCMMYYK:
-	lcyan = malloc(length * bits);
-	lmagenta = malloc(length * bits);
-	dyellow = malloc(length * bits);
+	lcyan = xmalloc(length * bits);
+	lmagenta = xmalloc(length * bits);
+	dyellow = xmalloc(length * bits);
 	break;
       case COLOR_CCMMYK:
-	lcyan = malloc(length * bits);
-	lmagenta = malloc(length * bits);
+	lcyan = xmalloc(length * bits);
+	lmagenta = xmalloc(length * bits);
 	dyellow = NULL;
 	break;
       default:
@@ -2810,8 +2810,8 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
     }
   stp_dither_set_density(dither, nv.density);
 
-  in  = malloc(image_width * image_bpp);
-  out = malloc(image_width * out_bpp * 2);
+  in  = xmalloc(image_width * image_bpp);
+  out = xmalloc(image_width * out_bpp * 2);
 
   errdiv  = image_height / out_height;
   errmod  = image_height % out_height;
@@ -2928,7 +2928,7 @@ static void
 escp2_init_microweave(int top)
 {
   if (!microweave_s)
-    microweave_s = malloc(7 * 4 * COMPBUFWIDTH);
+    microweave_s = xmalloc(7 * 4 * COMPBUFWIDTH);
   accumulated_spacing = top;
 }
 
@@ -2955,11 +2955,11 @@ escp2_do_microweave_pack(const unsigned char *line,
   int i;
   int retval = 0;
   if (!pack_buf)
-    pack_buf = malloc(COMPBUFWIDTH);
+    pack_buf = xmalloc(COMPBUFWIDTH);
   for (i = 0; i < oversample; i++)
     {
       if (!s[i])
-	s[i] = malloc(COMPBUFWIDTH);
+	s[i] = xmalloc(COMPBUFWIDTH);
     }
 
   if (!line ||

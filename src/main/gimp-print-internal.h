@@ -33,6 +33,10 @@
 #ifndef _GIMP_PRINT_INTERNAL_H_
 #define _GIMP_PRINT_INTERNAL_H_
 
+
+#include "../../lib/xmalloc.h"
+
+
 #define ECOLOR_C 0
 #define ECOLOR_M 1
 #define ECOLOR_Y 2

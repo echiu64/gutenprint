@@ -24,12 +24,10 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "../src/stcolortool.h"
-#include "../src/backend.h"
 
-#ifndef HAVE_PUBLIB_XMALLOC
+#ifndef HAVE_XMALLOC
 extern void *xmalloc (size_t);
 #endif
-#ifndef HAVE_PUBLIB_XREALLOC
+#ifndef HAVE_XREALLOC
 extern void *xrealloc (void *, size_t);
 #endif
