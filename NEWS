@@ -25,23 +25,36 @@ Gimp-Print 4.1.99a3 contains the following changes over 4.1.99a2:
    C40UX does.  It is not currently known whether this is a flaw with
    the printer or the library.
 
-4) The CUPS driver cleanly aborts printing if an active job is removed
+4) Improvements for 6 pl Epson Stylus printers (Stylus Color 670 and
+   740, and Stylus Photo 720, 750, and 1200).  The improvements will
+   take the form of better color accuracy and less ink use.  The
+   improvements should be noticeable at 720 DPI and substantial at
+   1440x720 (which is now smoother).  4 pl printers will exhibit
+   better color accuracy and less ink use at 720 DPI.
+
+5) The CUPS driver cleanly aborts printing if an active job is removed
    from the queue.  It may take up to 30 seconds or so for the printer
    to stop printing, but the job will terminate cleanly, leaving the
    printer in a sane state.
 
-5) LaserJet printers now have a sensible default for InputSlot.
+6) LaserJet printers now have a sensible default for InputSlot (media
+   source).
 
-6) LaserJet printers support additional media sizes.
+7) LaserJet printers support additional media sizes.
 
-7) The Stylus Photo 780/785/790/895, 890, and 1280/1290 should now
+8) Initial support for the HP DesignJet 750 (wide carriage printer).
+
+9) The Stylus Photo 780/785/790/895, 890, and 1280/1290 should now
    print to very close to the margins on all sides.  The bottom of the
    page may have a very small margin left (less than 1 mm).
 
-8) The Epson Stylus Color, Stylus Color 400, Stylus Color 500, Stylus
+10) The Epson Stylus Color, Stylus Color 400, Stylus Color 500, Stylus
    Color Pro XL, and Stylus Color 1500 print correctly again.
 
-9) Changing ink cartridges on the Epson Stylus Color 480/580 will not
+11) A new 360 DPI unidirectional mode was added for modern Epson
+   Stylus printers.  See bug 450205.
+
+12) Changing ink cartridges on the Epson Stylus Color 480/580 will not
    be supported in at least initial 4.2 releases.  This project
    appears to be somewhat more complicated and riskier than previously
    believed.  The cartridge can be changed by hand by unplugging and
@@ -51,12 +64,10 @@ Gimp-Print 4.1.99a3 contains the following changes over 4.1.99a2:
    allow changing the cartridge.  WARNING: this may damage the printer
    over the long term; be careful!
 
-10) Initial support for the HP DesignJet 750 (wide carriage printer).
-
-11) The escputil command now returns ink levels and status more
+13) The escputil command now returns ink levels and status more
    reliably, particularly for USB-connected printers.
 
-12) A new test program, testpattern, is available in the test
+14) A new test program, testpattern, is available in the test
    directory.  This program uses the 16-bit raw CMYK input.  In
    addition to demonstrating use of 16-bit raw CMYK, this program is
    also an example of how to use the libgimpprint API.
