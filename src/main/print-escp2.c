@@ -982,25 +982,25 @@ static const double standard_lum_adjustment[49] =
   0.79,
   0.78,				/* B */
   0.8,
+  0.83,
   0.87,
+  0.9,
   0.95,
   1.05,
   1.15,
-  1.3,
-  1.6,
-  1.9,				/* M */
-  1.85,
-  1.8,
-  1.75,
-  1.65,
-  1.55,
-  1.45,
-  1.4,
-  1.35,				/* R */
+  1.3,				/* M */
   1.25,
+  1.2,
   1.15,
-  1.1,
-  1.05,
+  1.12,
+  1.09,
+  1.06,
+  1.03,
+  1.0,				/* R */
+  1.0,
+  1.0,
+  1.0,
+  1.0,
   1.0,
   1.0,
   1.0,
@@ -1008,12 +1008,12 @@ static const double standard_lum_adjustment[49] =
   0.9,
   0.8,
   0.7,
+  0.65,
   0.6,
-  0.56,
+  0.55,
   0.52,
-  0.48,
-  0.4,				/* G */
-  0.43,
+  0.48,				/* G */
+  0.47,
   0.47,
   0.49,
   0.49,
@@ -1059,16 +1059,16 @@ static const double standard_hue_adjustment[49] =
   3.85,
   4.0,				/* Y */
   4.2,
-  4.37,
+  4.35,
+  4.45,
   4.55,
   4.65,
-  4.78,
-  4.85,
-  4.9,
-  4.95,				/* G */
+  4.72,
+  4.75,
+  4.8,				/* G */
+  4.95,
   5.05,
-  5.15,
-  5.25,
+  5.2,
   5.35,
   5.5,
   5.65,
@@ -3029,6 +3029,15 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       * paper's left edge.
       */
       left += 92 * physical_ydpi * undersample / max_vres;
+    }
+
+  if (escp2_has_cap(model, MODEL_YZEROMARGIN, MODEL_YZEROMARGIN_YES, nv))
+    {
+     /*
+      * In zero-margin mode, the origin is about 1/4" to the top of the
+      * paper's top edge.
+      */
+      top += 180 * physical_ydpi / max_vres;
     }
 
  /*

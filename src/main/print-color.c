@@ -1608,7 +1608,9 @@ stp_compute_lut(stp_vars_t v, size_t steps)
   double contrast = stp_get_contrast(v);
   double app_gamma = stp_get_app_gamma(v);
   double brightness = stp_get_brightness(v);
-  double screen_gamma = app_gamma / 1.7;	/* Why 1.7??? */
+  double screen_gamma = app_gamma / 4.0;	/* Why 1.7??? */
+  double pivot = .25;
+  double ipivot = 1.0 - pivot;
   lut_t *lut;
 
   /*
@@ -1623,6 +1625,14 @@ stp_compute_lut(stp_vars_t v, size_t steps)
 
   lut = allocate_lut(steps);
   stp_set_lut(v, lut);
+  stp_dprintf(STP_DBG_LUT, v, "stp_compute_lut\n");
+  stp_dprintf(STP_DBG_LUT, v, " cyan %.3f\n", cyan);
+  stp_dprintf(STP_DBG_LUT, v, " magenta %.3f\n", magenta);
+  stp_dprintf(STP_DBG_LUT, v, " yellow %.3f\n", yellow);
+  stp_dprintf(STP_DBG_LUT, v, " print_gamma %.3f\n", print_gamma);
+  stp_dprintf(STP_DBG_LUT, v, " contrast %.3f\n", contrast);
+  stp_dprintf(STP_DBG_LUT, v, " brightness %.3f\n", brightness);
+  stp_dprintf(STP_DBG_LUT, v, " screen_gamma %.3f\n", screen_gamma);
   for (i = 0; i < steps; i ++)
     {
       double temp_pixel;
@@ -1665,7 +1675,10 @@ stp_compute_lut(stp_vars_t v, size_t steps)
       /*
        * Third, correct for the screen gamma
        */
-      pixel = 1.0 - pow(pixel, screen_gamma);
+
+      pixel = 1.0 -
+	(1.0 / (1.0 - pow(pivot, screen_gamma))) *
+	(pow(pivot + ipivot * pixel, screen_gamma) - pow(pivot, screen_gamma));
 
       /*
        * Third, fix up cyan, magenta, yellow values
@@ -1732,11 +1745,9 @@ stp_compute_lut(stp_vars_t v, size_t steps)
       else
 	lut->blue[i] = (unsigned)(blue_pixel);
       stp_dprintf(STP_DBG_LUT, v,
-		  "%3i  %5d  %5d  %5d  %5d  %f %f %f %f  %f %f %f  %f\n",
+		  "%3i  %5d  %5d  %5d  %5d\n",
 		  i, lut->composite[i], lut->red[i],
-		  lut->green[i], lut->blue[i], pixel, red_pixel,
-		  green_pixel, blue_pixel, print_gamma, screen_gamma,
-		  print_gamma, app_gamma);
+		  lut->green[i], lut->blue[i]);
     }
 }
 
