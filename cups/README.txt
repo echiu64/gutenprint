@@ -45,7 +45,7 @@ WHAT TOOLS ARE INCLUDED?
 
 Current we provide two tools for making CUPS drivers.
 
-The first is called "calibrate" which allows you to do
+The first is called "cups-calibrate" which allows you to do
 super-simple color calibration of your printer drivers.  It is
 an interactive program that prints several calibration images
 through your driver until a final profile is produced.
