@@ -26,7 +26,9 @@
 #endif
 #include "../../lib/libprintut.h"
 
-#include "gimp-print-ui.h"
+#include <gimp-print/gimp-print-intl.h>
+#include <gimp-print/gimp-print-intl-internal.h>
+#include <gimp-print/gimp-print-ui.h>
 #include "gimp-print-ui-internal.h"
 
 #include <unistd.h>
@@ -38,13 +40,11 @@
 #include <signal.h>
 #include <sys/wait.h>
 
-#include "print-intl.h"
-
 static int	compare_printers (stpui_plist_t *p1, stpui_plist_t *p2);
 
-int		plist_current = 0,	/* Current system printer */
-		plist_count = 0;	/* Number of system printers */
-stpui_plist_t	*plist;			/* System printers */
+int		stpui_plist_current = 0,	/* Current system printer */
+		stpui_plist_count = 0;	/* Number of system printers */
+stpui_plist_t	*stpui_plist;			/* System printers */
 stp_printer_t current_printer = 0;	/* Current printer index */
 static char *printrc_name = NULL;
 
@@ -176,11 +176,11 @@ check_plist(int count)
   else if (current_plist_size == 0)
     {
       current_plist_size = count;
-      plist = xmalloc(current_plist_size * sizeof(stpui_plist_t));
+      stpui_plist = xmalloc(current_plist_size * sizeof(stpui_plist_t));
       for (i = 0; i < current_plist_size; i++)
 	{
-	  memset(&(plist[i]), 0, sizeof(stpui_plist_t));
-	  stpui_printer_initialize(&(plist[i]));
+	  memset(&(stpui_plist[i]), 0, sizeof(stpui_plist_t));
+	  stpui_printer_initialize(&(stpui_plist[i]));
 	}
     }
   else
@@ -189,11 +189,11 @@ check_plist(int count)
       current_plist_size *= 2;
       if (current_plist_size < count)
 	current_plist_size = count;
-      plist = realloc(plist, current_plist_size * sizeof(stpui_plist_t));
+      stpui_plist = realloc(stpui_plist, current_plist_size * sizeof(stpui_plist_t));
       for (i = old_plist_size; i < current_plist_size; i++)
 	{
-	  memset(&(plist[i]), 0, sizeof(stpui_plist_t));
-	  stpui_printer_initialize(&(plist[i]));
+	  memset(&(stpui_plist[i]), 0, sizeof(stpui_plist_t));
+	  stpui_printer_initialize(&(stpui_plist[i]));
 	}
     }
 }
@@ -356,7 +356,7 @@ stpui_plist_add(const stpui_plist_t *key, int add_only)
    */
   stpui_plist_t *p;
   if (strcmp(_("File"), key->name) == 0
-      && strcmp(plist[0].name, _("File")) == 0)
+      && strcmp(stpui_plist[0].name, _("File")) == 0)
     {
       if (add_only)
 	return 0;
@@ -365,7 +365,7 @@ stpui_plist_add(const stpui_plist_t *key, int add_only)
 #ifdef DEBUG
 	  printf("Updated File printer directly\n");
 #endif
-	  p = &plist[0];
+	  p = &stpui_plist[0];
 	  stpui_plist_copy(p, key);
 	  p->active = 1;
 	}
@@ -373,7 +373,7 @@ stpui_plist_add(const stpui_plist_t *key, int add_only)
     }
   else if (stp_get_printer(key->v))
     {
-      p = psearch(key, plist + 1, plist_count - 1,
+      p = psearch(key, stpui_plist + 1, stpui_plist_count - 1,
 		  sizeof(stpui_plist_t),
 		  (int (*)(const void *, const void *)) compare_printers);
       if (p == NULL)
@@ -382,9 +382,9 @@ stpui_plist_add(const stpui_plist_t *key, int add_only)
 	  fprintf(stderr, "Adding new printer from printrc file: %s\n",
 		  key->name);
 #endif
-	  check_plist(plist_count + 1);
-	  p = plist + plist_count;
-	  plist_count++;
+	  check_plist(stpui_plist_count + 1);
+	  p = stpui_plist + stpui_plist_count;
+	  stpui_plist_count++;
 	  stpui_plist_copy(p, key);
 	  p->active = 0;
 	}
@@ -427,7 +427,7 @@ stpui_printrc_load(void)
 
   stpui_get_system_printers();
 
-  system_printers = plist_count - 1;
+  system_printers = stpui_plist_count - 1;
 
   if ((fp = fopen(filename, "r")) != NULL)
   {
@@ -643,13 +643,13 @@ stpui_printrc_load(void)
     {
       if (current_printer)
 	{
-	  for (i = 0; i < plist_count; i ++)
-	    if (strcmp(current_printer, plist[i].name) == 0)
-	      plist_current = i;
+	  for (i = 0; i < stpui_plist_count; i ++)
+	    if (strcmp(current_printer, stpui_plist[i].name) == 0)
+	      stpui_plist_current = i;
 	}
     }
   else
-    plist_current = 0;
+    stpui_plist_current = 0;
 }
 
 /*
@@ -671,14 +671,14 @@ stpui_printrc_save(void)
     */
 
 #ifdef DEBUG
-    fprintf(stderr, "Number of printers: %d\n", plist_count);
+    fprintf(stderr, "Number of printers: %d\n", stpui_plist_count);
 #endif
 
     fputs("#PRINTRCv1 written by GIMP-PRINT " PLUG_IN_VERSION "\n", fp);
 
-    fprintf(fp, "Current-Printer: %s\n", plist[plist_current].name);
+    fprintf(fp, "Current-Printer: %s\n", stpui_plist[stpui_plist_current].name);
 
-    for (i = 0, p = plist; i < plist_count; i ++, p ++)
+    for (i = 0, p = stpui_plist; i < stpui_plist_count; i ++, p ++)
       {
 	int count;
 	int j;
@@ -757,8 +757,6 @@ compare_printers(stpui_plist_t *p1, stpui_plist_t *p2)
 #define PRINTERS_LPC	1
 #define PRINTERS_LPSTAT	2
 
-const char *current_printer_name = NULL;
-
 void
 stpui_get_system_printers(void)
 {
@@ -786,11 +784,11 @@ stpui_get_system_printers(void)
   defname[0] = '\0';
 
   check_plist(1);
-  plist_count = 1;
-  stpui_printer_initialize(&plist[0]);
-  strcpy(plist[0].name, _("File"));
-  stp_set_driver(plist[0].v, "ps2");
-  stp_set_output_type(plist[0].v, OUTPUT_COLOR);
+  stpui_plist_count = 1;
+  stpui_printer_initialize(&stpui_plist[0]);
+  strcpy(stpui_plist[0].name, _("File"));
+  stp_set_driver(stpui_plist[0].v, "ps2");
+  stp_set_output_type(stpui_plist[0].v, OUTPUT_COLOR);
 
  /*
   * Figure out what command to run...  We use lpstat if it is available over
@@ -852,8 +850,8 @@ stpui_get_system_printers(void)
                 /* check for duplicate printers--yes, they can happen,
                  * and it makes gimp-print forget everything about the
                  * printer */
-                for (i = 1; i < plist_count; i++)
-                  if (strcmp(line, plist[i].name) == 0)
+                for (i = 1; i < stpui_plist_count; i++)
+                  if (strcmp(line, stpui_plist[i].name) == 0)
 		    {
 		      printer_exists = 1;
 		      break;
@@ -861,18 +859,18 @@ stpui_get_system_printers(void)
 		if (printer_exists)
 		  break;
 
-		check_plist(plist_count + 1);
-		stpui_printer_initialize(&plist[plist_count]);
-		stpui_plist_set_name(&(plist[plist_count]), line);
+		check_plist(stpui_plist_count + 1);
+		stpui_printer_initialize(&stpui_plist[stpui_plist_count]);
+		stpui_plist_set_name(&(stpui_plist[stpui_plist_count]), line);
 #ifdef DEBUG
                 fprintf(stderr, "Adding new printer from lpc: <%s>\n",
                   line);
 #endif
 		result = g_strdup_printf("lpr -P%s -l", line);
-		stpui_plist_set_output_to(&(plist[plist_count]), result);
+		stpui_plist_set_output_to(&(stpui_plist[stpui_plist_count]), result);
 		free(result);
-		stp_set_driver(plist[plist_count].v, "ps2");
-		plist_count ++;
+		stp_set_driver(stpui_plist[stpui_plist_count].v, "ps2");
+		stpui_plist_count ++;
 	      }
 	      break;
 
@@ -884,26 +882,26 @@ stpui_get_system_printers(void)
                 /* check for duplicate printers--yes, they can happen,
                  * and it makes gimp-print forget everything about the
                  * printer */
-                for (i = 1; i < plist_count; i++)
-                  if (strcmp(name, plist[i].name) == 0)
+                for (i = 1; i < stpui_plist_count; i++)
+                  if (strcmp(name, stpui_plist[i].name) == 0)
 		    {
 		      printer_exists = 1;
 		      break;
 		    }
 		if (printer_exists)
 		  break;
-		check_plist(plist_count + 1);
-		stpui_printer_initialize(&plist[plist_count]);
-		stpui_plist_set_name(&(plist[plist_count]), name);
+		check_plist(stpui_plist_count + 1);
+		stpui_printer_initialize(&stpui_plist[stpui_plist_count]);
+		stpui_plist_set_name(&(stpui_plist[stpui_plist_count]), name);
 #ifdef DEBUG
                 fprintf(stderr, "Adding new printer from lpc: <%s>\n",
                   name);
 #endif
 		result = g_strdup_printf("lp -s -d%s -oraw", name);
-		stpui_plist_set_output_to(&(plist[plist_count]), result);
+		stpui_plist_set_output_to(&(stpui_plist[stpui_plist_count]), result);
 		free(result);
-		stp_set_driver(plist[plist_count].v, "ps2");
-        	plist_count ++;
+		stp_set_driver(stpui_plist[stpui_plist_count].v, "ps2");
+        	stpui_plist_count ++;
 	      }
 	      else
         	sscanf(line, "system default destination: %127s", defname);
@@ -914,19 +912,25 @@ stpui_get_system_printers(void)
     }
   }
 
-  if (plist_count > 2)
-    qsort(plist + 1, plist_count - 1, sizeof(stpui_plist_t),
+  if (stpui_plist_count > 2)
+    qsort(stpui_plist + 1, stpui_plist_count - 1, sizeof(stpui_plist_t),
           (int (*)(const void *, const void *))compare_printers);
 
   if (defname[0] != '\0')
   {
-    for (i = 0; i < plist_count; i ++)
-      if (strcmp(defname, plist[i].name) == 0)
+    for (i = 0; i < stpui_plist_count; i ++)
+      if (strcmp(defname, stpui_plist[i].name) == 0)
         break;
 
-    if (i < plist_count)
-      plist_current = i;
+    if (i < stpui_plist_count)
+      stpui_plist_current = i;
   }
+}
+
+const stpui_plist_t *
+stpui_get_current_printer(void)
+{
+  return &(stpui_plist[stpui_plist_current]);
 }
 
 /*
@@ -962,7 +966,7 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
    * Open the file/execute the print command...
    */
 
-  if (plist_current > 0)
+  if (stpui_plist_current > 0)
     {
       /*
        * The following IPC code is only necessary because the GIMP kills
@@ -1039,8 +1043,10 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
   if (prn != NULL)
     {
       stpui_plist_t *np = allocate_stpui_plist_copy(printer);
+      stp_vars_t current_vars =
+	stp_printer_get_printvars(stp_get_printer(np->v));
       int orientation;
-      stp_merge_printvars(np->v, stp_printer_get_printvars(current_printer));
+      stp_merge_printvars(np->v, current_vars);
 
       /*
        * Set up the orientation
@@ -1079,7 +1085,7 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
 	  return 0;
 	}
 
-      if (plist_current > 0)
+      if (stpui_plist_current > 0)
 	{
 	  fclose (prn);
 	  kill (cpid, SIGUSR1);

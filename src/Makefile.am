@@ -23,6 +23,15 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
-SUBDIRS = printdef main escputil gimp cups foomatic ghost testpattern
+SUBDIRS = 					\
+	printdef 				\
+	main					\
+	libgimpprintui				\
+	escputil				\
+	gimp					\
+	cups					\
+	foomatic				\
+	ghost					\
+	testpattern
 
 MAINTAINERCLEANFILES = Makefile.in

@@ -34,8 +34,6 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <libgimp/gimp.h>
-#include <libgimp/gimpui.h>
 
 #ifdef INCLUDE_GIMP_PRINT_H
 #include INCLUDE_GIMP_PRINT_H
@@ -49,11 +47,11 @@
 
 typedef enum
 {
-  ORIENT_AUTO,
-  ORIENT_PORTRAIT,
-  ORIENT_LANDSCAPE,
-  ORIENT_UPSIDEDOWN,
-  ORIENT_SEASCAPE
+  ORIENT_AUTO = -1,
+  ORIENT_PORTRAIT = 0,
+  ORIENT_LANDSCAPE = 1,
+  ORIENT_UPSIDEDOWN = 2,
+  ORIENT_SEASCAPE = 3
 } orient_t;
 
 typedef struct		/**** Printer List ****/
@@ -68,13 +66,6 @@ typedef struct		/**** Printer List ****/
   stp_vars_t	v;
 } stpui_plist_t;
 
-extern gint             plist_count;	   /* Number of system printers */
-extern gint             plist_current;     /* Current system printer */
-extern stpui_plist_t         *plist;		  /* System printers */
-extern stp_printer_t current_printer;
-extern gint             runme;
-extern gint             saveme;
-
 /*
  * Function prototypes
  */
@@ -87,6 +78,7 @@ extern const char *stpui_plist_get_name(const stpui_plist_t *p);
 extern void stpui_plist_copy(stpui_plist_t *vd, const stpui_plist_t *vs);
 extern int stpui_plist_add(const stpui_plist_t *key, int add_only);
 extern void stpui_printer_initialize(stpui_plist_t *printer);
+extern const stpui_plist_t *stpui_get_current_printer(void);
 
 extern void stpui_set_printrc_file(const char *name);
 extern const char * stpui_get_printrc_file(void);
@@ -100,7 +92,7 @@ extern stp_outfunc_t stpui_get_errfunc(void);
 extern void stpui_set_errdata(void *errdata);
 extern void *stpui_get_errdata(void);
 
-extern void stpui_create_main_window (void);
+extern gint stpui_do_print_dialog (void);
 
 extern gint stpui_compute_orientation(void);
 extern void stpui_set_image_dimensions(gint width, gint height);

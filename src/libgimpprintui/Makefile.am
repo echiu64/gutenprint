@@ -23,42 +23,30 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
-
 ## Variables
 
 AM_CFLAGS = $(GNUCFLAGS)
-INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS)
-GIMPPRINT_LIBS = $(top_builddir)/src/main/libgimpprint.la
-GIMPPRINTUI_LIBS = $(top_builddir)/src/libgimpprintui/libgimpprintui.la
-GIMPPRINT_DEPLIBS = -lm
-GIMPPRINTUI_DEPLIBS = @GTK_LIBS@
-LIBGIMPPRINT_LIBS = $(GIMPPRINT_LIBS) $(GIMPPRINT_DEPLIBS)
-LIBPRINTUT = $(top_builddir)/lib/libprintut.la
-LIBS = $(INTLLIBS) @LIBS@
+INCLUDES = @GTK_CFLAGS@ @INCLUDES@
 
+m4datadir = $(datadir)/aclocal
 
 ## Programs
 
-if BUILD_GIMP
-gimp_plug_in_PROGRAMS = print
-endif
+lib_LTLIBRARIES = libgimpprintui.la
 
-print_SOURCES = \
-	print-image-gimp.c \
-	print-intl.h \
-	print.c \
-	print_gimp.h
+libgimpprintui_la_SOURCES =			\
+	panel.c					\
+	plist.c					\
+	ui-utils.c				\
+	print-image-thumbnail.c			\
+	gimp-print-ui-internal.h
 
-print_LDADD = $(LIBPRINTUT) $(GIMP_LIBS) $(GIMPPRINTUI_LIBS) $(GIMPPRINTUI_DEPLIBS) $(LIBGIMPPRINT_LIBS)
-
-
-## Rules
-
-$(GIMPPRINT_LIBS):
-	cd ../main ; \
-	$(MAKE)
-
-
-## Clean
+libgimpprintui_la_LIBADD = $(GTK_LIBS)
+# Uncommment to build an unversioned library (version in soname)
+libgimpprintui_la_LDFLAGS = -release $(GIMPPRINT_VERSION) -rpath $(libdir)
+# Uncomment to build a versioned library
+#libgimpprintui_la_LDFLAGS = \
+# -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
+# -rpath $(libdir)
 
 MAINTAINERCLEANFILES = Makefile.in

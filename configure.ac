@@ -80,7 +80,9 @@ dnl gimpprint_libs:    libs to store in gimpprint-config
 
 dnl initial default values
 GIMPPRINT_LIBS="-lgimpprint"
+GIMPPRINT_UI_LIBS="-lgimpprintui"
 INCLUDE_GIMP_PRINT_H="\"gimp-print/gimp-print.h\""
+INCLUDE_GIMP_PRINT_UI_H="\"gimp-print/gimp-print-ui.h\""
 
 [GIMPPRINT_MAJOR_VERSION]=GIMPPRINT_MAJOR_VERSION
 [GIMPPRINT_MINOR_VERSION]=GIMPPRINT_MINOR_VERSION
@@ -273,9 +275,19 @@ if test -z "${GIMP_CONFIG}" ; then
 else
   BUILD_GIMP="yes"
 fi
+
+AM_PATH_GTK(1.2.0,
+  BUILD_LIBGIMPPRINTUI="yes",
+  BUILD_LIBGIMPPRINTUI="no")
+
 STP_ARG_WITH([gimp],
              [build GIMP Print plugin],
              [BUILD_GIMP],
+             [(automatic)])
+
+STP_ARG_WITH([gimpprintui],
+             [build Gimp-Print user interface library],
+             [BUILD_LIBGIMPPRINTUI],
              [(automatic)])
 
 STP_ARG_ENABLE([samples],
@@ -496,7 +508,7 @@ PKG_CHECK_MODULES(LIBXML, libxml-2.0)
 
 STP_CUPS_LIBS
 
-if test x$BUILD_LEXMARKUTIL = xyes ; then
+if test x$BUILD_LEXMARKUTIL = xyes -o x$BUILD_GIMPPRINTUI = xyes ; then
 AM_PATH_GTK(1.2.0, ,
             AC_MSG_ERROR(Cannot find GTK: Is gtk-config in path?))
 fi
@@ -624,7 +636,9 @@ AC_SUBST(GIMP_LIBS)
 AC_SUBST(gimp_plug_indir)
 AC_SUBST(GIMPPRINT_CFLAGS)
 AC_SUBST(GIMPPRINT_LIBS)
+AC_SUBST(GIMPPRINT_UI_LIBS)
 AC_SUBST(GIMPPRINT_DEPLIBS)
+AC_SUBST(GIMPPRINT_UI_DEPLIBS)
 AC_SUBST(GIMPPRINT_VERSION)
 AC_SUBST(gimpprint_cflags)
 gimpprint_libs="${GIMPPRINT_LIBS} ${GIMPPRINT_DEPLIBS}"
@@ -692,6 +706,7 @@ AC_CONFIG_FILES([src/gimp/Makefile])
 AC_CONFIG_FILES([src/main/Makefile])
 AC_CONFIG_FILES([src/main/gimpprint-config], [chmod +x src/main/gimpprint-config])
 AC_CONFIG_FILES([src/main/gimpprint.pc])
+AC_CONFIG_FILES([src/libgimpprintui/Makefile])
 AC_CONFIG_FILES([src/printdef/Makefile])
 AC_CONFIG_FILES([cups-gimpprint.list])
 AC_CONFIG_FILES([test/Makefile])

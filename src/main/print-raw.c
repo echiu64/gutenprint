@@ -115,6 +115,10 @@ raw_parameters(const stp_vars_t v, const char *name,
 	   (strcmp(name, "InputSlot") == 0))
     {
       description->bounds.str = stp_string_list_allocate();
+	stp_string_list_add_param(description->bounds.str,
+				  "Standard", "Standard");
+      description->deflt.str =
+	stp_string_list_param(description->bounds.str, 0)->name;
     }
   else
     stp_describe_internal_parameter(v, name, description);

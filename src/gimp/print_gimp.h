@@ -43,6 +43,12 @@
 #include <gimp-print/gimp-print.h>
 #endif
 
+#ifdef INCLUDE_GIMP_PRINT_UI_H
+#include INCLUDE_GIMP_PRINT_UI_H
+#else
+#include <gimp-print/gimp-print-ui.h>
+#endif
+
 /* How to create an Image wrapping a Gimp drawable */
 extern stp_image_t *Image_GimpDrawable_new(GimpDrawable *drawable, int);
 

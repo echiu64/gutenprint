@@ -1,0 +1,9 @@
+.deps
+.libs
+Makefile
+Makefile.in
+libgimpprintui.la
+panel.lo
+plist.lo
+print-image-thumbnail.lo
+ui-utils.lo

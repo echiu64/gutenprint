@@ -31,3 +31,4 @@ print-weave.lo
 printers-oldlist.h
 printers.lo
 string-list.lo
+image.lo

@@ -26,7 +26,7 @@
 #endif
 #include "../../lib/libprintut.h"
 
-#include "gimp-print-ui.h"
+#include <gimp-print/gimp-print-ui.h>
 #include "print_gimp.h"
 
 #include <sys/types.h>
@@ -70,8 +70,6 @@ GimpPlugInInfo	PLUG_IN_INFO =		/* Plug-in information */
 
 static stpui_plist_t gimp_vars;
 
-int		saveme = FALSE;		/* True if print should proceed */
-int		runme = FALSE;		/* True if print should proceed */
 static gint32          image_ID;	        /* image ID */
 
 
@@ -199,12 +197,10 @@ run (char   *name,		/* I - Name of print program. */
 
   stpui_printer_initialize(&gimp_vars);
   stp_set_input_color_model(gimp_vars.v, COLOR_MODEL_RGB);
-  stp_set_output_color_model(gimp_vars.v, COLOR_MODEL_RGB);
   /*
    * Initialize parameter data...
    */
 
-  current_printer = stp_get_printer_by_index (0);
   run_mode = (GimpRunModeType)param[0].data.d_int32;
 
   values = g_new (GimpParam, 1);
@@ -269,7 +265,7 @@ run (char   *name,		/* I - Name of print program. */
 
       if (!do_print_dialog (name))
 	goto cleanup;
-      stpui_plist_copy(&gimp_vars, &(plist[plist_current]));
+      stpui_plist_copy(&gimp_vars, stpui_get_current_printer());
       break;
 
     case GIMP_RUN_NONINTERACTIVE:
@@ -339,7 +335,6 @@ run (char   *name,		/* I - Name of print program. */
 	    gimp_vars.unit = param[27].data.d_int32;
 	}
 
-      current_printer = stp_get_printer(gimp_vars.v);
       break;
 
     case GIMP_RUN_WITH_LAST_VALS:
@@ -406,8 +401,6 @@ gimp_writefunc(void *file, const char *buf, size_t bytes)
 static gint
 do_print_dialog (gchar *proc_name)
 {
-  gimp_help_init ();
-
  /*
   * Generate the filename for the current user...
   */
@@ -418,29 +411,5 @@ do_print_dialog (gchar *proc_name)
   stpui_set_errdata(stderr);
   stpui_set_thumbnail_func(stpui_get_thumbnail_data_function);
   stpui_set_thumbnail_data((void *) image_ID);
-
-  /*
-   * Get printrc options...
-   */
-  stpui_printrc_load ();
-
-  /*
-   * Print dialog window...
-   */
-  stpui_create_main_window();
-
-  gtk_main ();
-  gdk_flush ();
-
-  /*
-   * Set printrc options...
-   */
-  if (saveme)
-    stpui_printrc_save ();
-  g_free (filename);
-
-  /*
-   * Return ok/cancel...
-   */
-  return (runme);
+  return stpui_do_print_dialog();
 }
