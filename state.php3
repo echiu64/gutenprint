@@ -467,6 +467,7 @@ $all_known_printers = array(
 	'Brother HL-1250'  => 'pcl-4',
 	'Brother HL-1260'  => 'pcl-4',
 	'Brother HL-1270N'  => 'pcl-4',
+	'Brother HL-1440'  => 'pcl-4',
 	'Brother HL-1660e'  => 'pcl-4',
 	'Brother HL-2060'  => 'pcl-4',
 	'Brother MFC-6550MC'  => 'pcl-2',
