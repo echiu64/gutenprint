@@ -13,7 +13,8 @@ can be used for many of the most demanding printing tasks.
 This software includes the Print plug-in for the Gimp, and GhostScript
 and CUPS drivers, including Foomatic data.
 
-The Gimp Print plugin requires the Gimp 1.2.
+The print plugin for the Gimp requires the Gimp 1.2 (later versions of
+the Gimp are not supported).
 
 The CUPS driver requires CUPS 1.1.9 or higher.  1.1.14 or above is
 highly recommended, as certain translation-related bugs are fixed and
