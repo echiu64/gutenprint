@@ -735,7 +735,7 @@ DEBIAN
     cupsys-driver-gimpprint The CUPS driver and PPD files.
     ijsgimpprint	    Ghostscript IJS server.
     foomatic-db-gimpprint   Foomatic data files for gimp-print drivers.
-    libgimpprint1	    The libgimpprint library (GIMP-Print core).
+    libgimpprint1	    The libgimpprint library (Gimp-Print core).
     libgimpprint1-dev	    Headers, symlinks, m4 macro
 			    (AM_PATH_GIMPPRINT) and gimpprint-config
 			    needed to develop programs that link with

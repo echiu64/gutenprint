@@ -90,7 +90,7 @@ umask 0177;
 my @ppdglob = glob("$ppd_dir/*");
 my $ppdlist = join ' ', @ppdglob;
 if (@ppdglob) {
-    open PPDFILES, "grep -i -l GIMP-print $ppdlist|" or die "can't grep $ppd_dir/*: $!";
+    open PPDFILES, "grep -i -l Gimp-Print $ppdlist|" or die "can't grep $ppd_dir/*: $!";
     while (<PPDFILES>) {
 	chomp;
 	push @ppd_files,  $_;

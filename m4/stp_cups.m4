@@ -1,4 +1,4 @@
-# This file is part of GIMP-Print.                     -*- Autoconf -*-
+# This file is part of Gimp-Print.                     -*- Autoconf -*-
 # CUPS support.
 # Copyright 2000-2002 Roger Leigh
 #

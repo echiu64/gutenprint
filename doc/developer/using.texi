@@ -41,6 +41,6 @@ gcc -o prog -lgimpprint prog.o
 @end example
 
 The compiler and linker flags needed may vary depending on the options
-GIMP-Print was configured with when it was built. The
+Gimp-Print was configured with when it was built. The
 @command{gimpprint-config} script will give the correct parameters for
 the local installation (@pxref{gimpprint-config}).

@@ -56,7 +56,7 @@ ChangeLog:
 	    exit 1 ; \
 	  fi \
 	elif test -s ChangeLog ; then \
-	  echo "ChangeLog: This is not a CVS version of GIMP-Print" ; \
+	  echo "ChangeLog: This is not a CVS version of Gimp-Print" ; \
 	  echo "ChangeLog: Not updating ChangeLog from CVS!" ; \
 	else \
 	  echo "ChangeLog: No ChangeLog or ChangeLog of zero size found!" ; \

@@ -4,14 +4,14 @@
 @cindex reading
 @cindex manual, how to read
 @cindex how to read
-This manual documents the use of the GIMP-Print package, focusing mainly on the
-libgimpprint library that is the core of GIMP-Print. Parts of the manual which
+This manual documents the use of the Gimp-Print package, focusing mainly on the
+libgimpprint library that is the core of Gimp-Print. Parts of the manual which
 describe the use of libgimpprint are aimed primarily at programmers, and do
 assume that the reader is familiar with C programming, and using standard
 programming tools on GNU or UNIX systems.
 
 For the end-user, there is a separate manual documenting programs that come
-with GIMP-Print, including the GIMP @command{print} plugin, and the CUPS and
+with Gimp-Print, including the GIMP @command{print} plugin, and the CUPS and
 Ghostscript drivers.
 
 The best way to learn how to use libgimpprint in your own programs is to read
@@ -31,5 +31,5 @@ used in Epson printers and how to add support for a new printer to
 libgimpprint.
 
 @sp 2
-@center We hope you enjoy using GIMP-Print!
-@center ---The GIMP-Print project
+@center We hope you enjoy using Gimp-Print!
+@center ---The Gimp-Print project

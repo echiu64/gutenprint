@@ -2,7 +2,7 @@
 @c %**start of header
 @c $Id$
 @setfilename gimpprint.info
-@settitle GIMP-Print
+@settitle Gimp-Print
 @finalout
 @c @exampleindent 0
 @c For double-sided printing, uncomment:
@@ -22,7 +22,7 @@
 
 @dircategory Libraries
 @direntry
-* GIMP-Print: (gimpprint).      print plugin for the GIMP, and printing library
+* Gimp-Print: (gimpprint).      print plugin for the GIMP, and printing library
 @end direntry
 
 @ifinfo
@@ -55,10 +55,10 @@ by the Foundation.
 @end ifinfo
 
 @titlepage
-@title GIMP-Print Developer's Manual
+@title Gimp-Print Developer's Manual
 @subtitle The print plugin for the GIMP, and printing library
 @subtitle Version @value{VERSION}, @value{UPDATED}
-@author The GIMP-Print Project
+@author The Gimp-Print Project
 
 @page
 @vskip 0pt plus 1filll
@@ -92,12 +92,12 @@ by the Free Software Foundation.
 @comment  node-name,  next,  previous,  up
 @top The print plugin for the GIMP and printing library
 
-This is the Developer's Manual for GIMP-Print.  This manual documents the
+This is the Developer's Manual for Gimp-Print.  This manual documents the
 libgimpprint library and associated programs used for high quality printing.
 This edition documents version @value{VERSION}.
 
 @xref{Problems}, for information on how to report problems with
-GIMP-Print.
+Gimp-Print.
 @end ifnottex
 
 @c All the menus can be updated with the EMACS command

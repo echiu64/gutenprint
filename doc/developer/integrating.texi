@@ -19,7 +19,7 @@ tools such as @command{autoconf} and @command{automake}.
 @section @command{gimpprint-config}
 @pindex gimpprint-config
 
-Depending on the setup of the computer system GIMP-Print was installed on, as
+Depending on the setup of the computer system Gimp-Print was installed on, as
 well as the options passed to @command{configure} when configuring the
 package when it was built, the @env{CFLAGS} and @env{LIBS} parameters
 needed to compile and link programs with libgimpprint may vary. To make it
@@ -42,11 +42,11 @@ Libraries:
 @end example
 
 The @option{--prefix} and @option{--exec-prefix} options are only needed if the
-installed locations of parts of GIMP-Print are different from the configured
-locations. These should never be needed if GIMP-Print was properly configured
+installed locations of parts of Gimp-Print are different from the configured
+locations. These should never be needed if Gimp-Print was properly configured
 and installed.
 
-The installed version of GIMP-Print can be obtained with the
+The installed version of Gimp-Print can be obtained with the
 @option{--version} option:
 
 @example
@@ -115,14 +115,14 @@ programs, compiler characteristics and other system information such as
 available headers and libraries. @inforef{Top, GNU autoconf, autoconf}, for
 more information.
 
-GIMP-Print provides an @command{m4} macro, @code{AM_PATH_GIMPPRINT}, suitable for
+Gimp-Print provides an @command{m4} macro, @code{AM_PATH_GIMPPRINT}, suitable for
 use in a @file{configure.ac}. It defines the environment variables
 @env{GIMPPRINT_CFLAGS}, @env{GIMPPRINT_LIBS} and @env{GIMPPRINT_CONFIG}. You can
 optionally specify a minimum version of the library to use, and shell script to
 run if the test suceeds or fails.
 
 @defmac AM_PATH_GIMPPRINT (@r{[}@var{minimum-version} @r{[}, @var{action-if-found} @r{[}, @var{action-if-not-found}@r{]]]})
-Check for an installed version of GIMP-Print greater than or equal to
+Check for an installed version of Gimp-Print greater than or equal to
 @var{minimum-version}.
 
 @var{action-if-found} is a list of shell commands to run if the check

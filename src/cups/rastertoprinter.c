@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   GIMP-print based raster filter for the Common UNIX Printing System.
+ *   Gimp-Print based raster filter for the Common UNIX Printing System.
  *
  *   Copyright 1993-2003 by Easy Software Products.
  *
@@ -781,7 +781,7 @@ Image_get_appname(stp_image_t *image)		/* I - Image */
 {
   (void)image;
 
-  return ("CUPS 1.1.x driver based on GIMP-print");
+  return ("CUPS 1.1.x driver based on Gimp-Print");
 }
 
 
