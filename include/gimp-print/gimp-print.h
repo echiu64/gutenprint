@@ -48,7 +48,6 @@
 #include <gimp-print/array.h>
 #include <gimp-print/curve.h>
 #include <gimp-print/sequence.h>
-#include <gimp-print/xml.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -33,6 +33,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 #include "array.h"
 #include "dither-impl.h"
 #include "path.h"
@@ -63,25 +64,6 @@ gcd(unsigned a, unsigned b)
       b = tmp;
     }
 }
-
-stp_array_t
-stpi_find_standard_dither_array(int x_aspect, int y_aspect)
-{
-  stp_array_t answer;
-  int divisor = gcd(x_aspect, y_aspect);
-
-  x_aspect /= divisor;
-  y_aspect /= divisor;
-
-  answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
-  if (answer)
-    return answer;
-  answer = stpi_xml_get_dither_array(y_aspect, x_aspect);
-  if (answer)
-    return answer;
-  return NULL;
-}
-
 
 static inline int
 calc_ordered_point(unsigned x, unsigned y, int steps, int multiplier,
@@ -477,4 +459,331 @@ stpi_dither_set_transition(stp_vars_t v, double exponent)
   else
     for (i = 0; i < 65536; i++)
       d->virtual_dot_scale[i] = i;
+}
+
+static stpi_list_t *dither_matrix_cache = NULL;
+
+typedef struct
+{
+  int x;
+  int y;
+  const char *filename;
+} stpi_xml_dither_cache_t;
+
+static const char *
+stpi_xml_dither_cache_get(int x, int y)
+{
+  stpi_list_item_t *ln;
+
+  stpi_xml_init();
+
+  if (stpi_debug_level & STPI_DBG_XML)
+    stpi_erprintf("stpi_xml_dither_cache_get: lookup %dx%d... ", x, y);
+
+  ln = stpi_list_get_start(dither_matrix_cache);
+
+  while (ln)
+    {
+      if (((stpi_xml_dither_cache_t *) stpi_list_item_get_data(ln))->x == x &&
+	  ((stpi_xml_dither_cache_t *) stpi_list_item_get_data(ln))->y == y)
+	{
+
+	  if (stpi_debug_level & STPI_DBG_XML)
+	    stpi_erprintf("found\n");
+
+	  stpi_xml_exit();
+	  return ((stpi_xml_dither_cache_t *) stpi_list_item_get_data(ln))->filename;
+	}
+      ln = stpi_list_item_next(ln);
+    }
+  if (stpi_debug_level & STPI_DBG_XML)
+    stpi_erprintf("missing\n");
+
+  stpi_xml_exit();
+
+  return NULL;
+}
+
+static void
+stpi_xml_dither_cache_set(int x, int y, const char *filename)
+{
+  stpi_xml_dither_cache_t *cacheval;
+
+  assert(x && y && filename);
+
+  stpi_xml_init();
+
+  if (dither_matrix_cache == NULL)
+    dither_matrix_cache = stpi_list_create();
+
+  if (stpi_xml_dither_cache_get(x, y))
+      /* Already cached for this x and y aspect */
+    return;
+
+  cacheval = stpi_malloc(sizeof(stpi_xml_dither_cache_t));
+  cacheval->x = x;
+  cacheval->y = y;
+  cacheval->filename = stpi_strdup(filename);
+
+  stpi_list_item_create(dither_matrix_cache, NULL, (void *) cacheval);
+
+  if (stpi_debug_level & STPI_DBG_XML)
+    stpi_erprintf("stpi_xml_dither_cache_set: added %dx%d\n", x, y);
+
+  stpi_xml_exit();
+
+  return;
+}
+
+/*
+ * Parse the <dither-matrix> node.
+ */
+static int
+stpi_xml_process_dither_matrix(xmlNodePtr dm,     /* The dither matrix node */
+			       const char *file)  /* Source file */
+			       
+{
+  xmlChar *value;
+  int x = -1;
+  int y = -1;
+
+
+  value = xmlGetProp(dm, (const xmlChar *) "x-aspect");
+  x = stpi_xmlstrtol(value);
+  xmlFree(value);
+
+  value = xmlGetProp(dm, (const xmlChar *) "y-aspect");
+  y = stpi_xmlstrtol(value);
+  xmlFree(value);
+
+  if (stpi_debug_level & STPI_DBG_XML)
+    stpi_erprintf("stpi_xml_process_dither_matrix: x=%d, y=%d\n", x, y);
+
+  stpi_xml_dither_cache_set(x, y, file);
+  return 1;
+}
+
+static stp_array_t
+stpi_array_create_from_xmltree(xmlNodePtr array)  /* The array node */
+{
+  xmlChar *stmp;                          /* Temporary string */
+  xmlNodePtr child;                       /* Child sequence node */
+  int x_size, y_size;
+  size_t count;
+  stp_sequence_t seq = NULL;
+  stp_array_t ret = NULL;
+  stpi_internal_array_t *iret;
+
+  stmp = xmlGetProp(array, (const xmlChar *) "x-size");
+  if (stmp)
+    {
+      x_size = (int) stpi_xmlstrtoul(stmp);
+      xmlFree(stmp);
+    }
+  else
+    {
+      stpi_erprintf("stpi_array_create_from_xmltree: \"x-size\" missing\n");
+      goto error;
+    }
+  /* Get y-size */
+  stmp = xmlGetProp(array, (const xmlChar *) "y-size");
+  if (stmp)
+    {
+      y_size = (int) stpi_xmlstrtoul(stmp);
+      xmlFree(stmp);
+    }
+  else
+    {
+      stpi_erprintf("stpi_array_create_from_xmltree: \"y-size\" missing\n");
+      goto error;
+    }
+
+  /* Get the sequence data */
+
+  child = array->children;
+  while (child)
+    {
+      if (!xmlStrcmp(child->name, (const xmlChar *) "sequence"))
+	{
+	  seq = stpi_sequence_create_from_xmltree(child);
+	  break;
+	}
+      child = child->next;
+    }
+
+  if (seq == NULL)
+    goto error;
+
+  ret = stp_array_create(x_size, y_size);
+  iret = (stpi_internal_array_t *) ret;
+  if (iret->data)
+    stp_sequence_destroy(iret->data);
+  iret->data = seq;
+
+  count = stp_sequence_get_size(seq);
+  if (count != (x_size * y_size))
+    {
+      stpi_erprintf("stpi_array_create_from_xmltree: size mismatch between array and sequence\n");
+      goto error;
+    }
+
+  return ret;
+
+ error:
+  stpi_erprintf("stpi_array_create_from_xmltree: error during curve read\n");
+  if (ret)
+    stp_array_destroy(ret);
+  return NULL;
+}
+
+static stp_array_t
+stpi_dither_array_create_from_xmltree(xmlNodePtr dm) /* Dither matrix node */
+{
+  xmlChar *stmp;
+  xmlNodePtr child;
+  stp_array_t ret = NULL;
+  int x_aspect, y_aspect; /* Dither matrix size */
+
+  /* Get x-size */
+  stmp = xmlGetProp(dm, (const xmlChar *) "x-aspect");
+  if (stmp)
+    {
+      x_aspect = (int) stpi_xmlstrtoul(stmp);
+      xmlFree(stmp);
+    }
+  else
+    {
+      stpi_erprintf("stpi_dither_array_create_from_xmltree: \"x-aspect\" missing\n");
+      goto error;
+    }
+  /* Get y-size */
+  stmp = xmlGetProp(dm, (const xmlChar *) "y-aspect");
+  if (stmp)
+    {
+      y_aspect = (int) stpi_xmlstrtoul(stmp);
+      xmlFree(stmp);
+    }
+  else
+    {
+      stpi_erprintf("stpi_dither_array_create_from_xmltree: \"y-aspect\" missing\n");
+      goto error;
+    }
+
+  /* Now read in the array */
+  child = dm->children;
+  while (child)
+    {
+      if (!xmlStrcmp(child->name, (const xmlChar *) "array"))
+	{
+	  ret = stpi_array_create_from_xmltree(child);
+	  break;
+	}
+      child = child->next;
+    }
+
+  return ret;
+
+ error:
+  if (ret)
+    stp_array_destroy(ret);
+  return NULL;
+}
+
+static stp_array_t
+xml_doc_get_dither_array(xmlDocPtr doc)
+{
+  xmlNodePtr cur;
+  xmlNodePtr xmlseq;
+
+  if (doc == NULL )
+    {
+      fprintf(stderr,"xml_doc_get_dither_array: XML file not parsed successfully.\n");
+      return NULL;
+    }
+
+  cur = xmlDocGetRootElement(doc);
+
+  if (cur == NULL)
+    {
+      fprintf(stderr,"xml_doc_get_dither_array: empty document\n");
+      xmlFreeDoc(doc);
+      return NULL;
+    }
+
+  xmlseq = stpi_xml_get_node(cur, "gimp-print", "dither-matrix", NULL);
+  if (xmlseq == NULL )
+    {
+      fprintf(stderr,"xml-doc-get-dither-array: XML file is not a dither matrix.\n");
+      return NULL;
+    }
+
+  return stpi_dither_array_create_from_xmltree(xmlseq);
+}
+
+static stp_array_t
+stpi_dither_array_create_from_file(const char* file)
+{
+  xmlDocPtr doc;   /* libXML document pointer */
+  stp_array_t ret;
+
+  stpi_xml_init();
+
+  if (stpi_debug_level & STPI_DBG_XML)
+    stpi_erprintf("stpi_dither_array_create_from_file: reading `%s'...\n", file);
+
+  doc = xmlParseFile(file);
+
+  ret = xml_doc_get_dither_array(doc);
+
+  if (doc)
+    xmlFreeDoc(doc);
+
+  stpi_xml_exit();
+
+  return ret;
+}
+
+static stp_array_t
+stpi_xml_get_dither_array(int x, int y)
+{
+  const char *file;
+  stp_array_t ret;
+
+  stpi_xml_init();
+
+  file = stpi_xml_dither_cache_get(x, y);
+  if (file == NULL)
+    {
+      stpi_xml_exit();
+      return NULL;
+    }
+
+  ret = stpi_dither_array_create_from_file(file);
+
+  stpi_xml_exit();
+  return ret;
+}
+
+void
+stpi_init_dither(void)
+{
+  stpi_register_xml_parser("dither-matrix", stpi_xml_process_dither_matrix);
+}
+
+stp_array_t
+stpi_find_standard_dither_array(int x_aspect, int y_aspect)
+{
+  stp_array_t answer;
+  int divisor = gcd(x_aspect, y_aspect);
+
+  x_aspect /= divisor;
+  y_aspect /= divisor;
+
+  answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
+  if (answer)
+    return answer;
+  answer = stpi_xml_get_dither_array(y_aspect, x_aspect);
+  if (answer)
+    return answer;
+  return NULL;
 }

@@ -33,8 +33,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <errno.h>
+#include <ctype.h>
 #include "sequence.h"
-
+#include "xml.h"
 
 /*
  * We could do more sanity checks here if we want.
@@ -104,8 +106,8 @@ stp_sequence_destroy(stp_sequence_t sequence)
   stpi_free(iseq);
 }
 
-void stp_sequence_copy(stp_sequence_t dest,
-		       const stp_sequence_t source)
+void
+stp_sequence_copy(stp_sequence_t dest, const stp_sequence_t source)
 {
   stpi_internal_sequence_t *idest = (stpi_internal_sequence_t *) dest;
   stpi_internal_sequence_t *isource = (stpi_internal_sequence_t *) source;
@@ -296,6 +298,238 @@ stp_sequence_get_point(const stp_sequence_t sequence, size_t where,
     return 0;
   *data = iseq->data[where];
   return 1;
+}
+
+stp_sequence_t
+stpi_sequence_create_from_xmltree(xmlNodePtr da)
+{
+  xmlChar *stmp;
+  stp_sequence_t ret = NULL;
+  size_t point_count;
+  double low, high;
+  xmlChar buf[100];
+  xmlChar *bufptr = &buf[0];
+  int i, j;
+  int offset = 0;
+  int maxlen;
+  int found;
+
+
+  ret = stp_sequence_create();
+
+  /* Get curve point count */
+  stmp = xmlGetProp(da, (const xmlChar *) "count");
+  if (stmp)
+    {
+      point_count = (size_t) stpi_xmlstrtoul(stmp);
+      if ((stpi_xmlstrtol(stmp)) < 0)
+	{
+	  stpi_erprintf("stpi_xmltree_create_from_sequence: \"count\" is less than zero\n");
+	  goto error;
+	}
+      xmlFree(stmp);
+    }
+  else
+    {
+      stpi_erprintf("stpi_xmltree_create_from_sequence: \"count\" missing\n");
+      goto error;
+    }
+  /* Get lower bound */
+  stmp = xmlGetProp(da, (const xmlChar *) "lower-bound");
+  if (stmp)
+    {
+      low = stpi_xmlstrtod(stmp);
+      xmlFree(stmp);
+    }
+  else
+    {
+      stpi_erprintf("stpi_xmltree_create_from_sequence: \"lower-bound\" missing\n");
+      goto error;
+    }
+  /* Get upper bound */
+  stmp = xmlGetProp(da, (const xmlChar *) "upper-bound");
+  if (stmp)
+    {
+      high = stpi_xmlstrtod(stmp);
+      xmlFree(stmp);
+    }
+  else
+    {
+      stpi_erprintf("stpi_xmltree_create_from_sequence: \"upper-bound\" missing\n");
+      goto error;
+    }
+
+  if (stpi_debug_level & STPI_DBG_XML)
+    stpi_erprintf("stpi_xmltree_create_from_sequence: stp_sequence_set_size: %d\n",
+		  point_count);
+  stp_sequence_set_size(ret, point_count);
+  stp_sequence_set_bounds(ret, low, high);
+
+  /* Now read in the data points */
+  if (point_count)
+    {
+      stmp = xmlNodeGetContent(da);
+      if (stmp)
+	{
+	  double tmpval;
+	  maxlen = strlen((const char *) stmp);
+	  for (i = 0; i < point_count; i++)
+	    {
+	      memset(bufptr, 0, 100);
+	      *(bufptr + 99) = '\0';
+	      for (j = 0, found = 0; j < 99; j++)
+		{
+		  if (offset + j > maxlen)
+		    {
+		      if (found == 0)
+			{
+			  xmlFree(stmp);
+			  fprintf(stderr,
+				  "stpi_xmltree_create_from_sequence: "
+				  "read aborted: too little data "
+				  "(n=%d, needed %d)\n", i, point_count);
+			  goto error;
+			}
+		      else /* Hit end, but we have some data */
+			{
+			  *(bufptr + j) = '\0';
+			  break;
+			}
+		    }
+		  if (!isspace((const char) *(stmp + offset + j)))
+		    found = 1; /* found a printing character */
+		  else if (found) /* space found, and we've seen chars */
+		    {
+		      *(bufptr + j) = '\0';
+		      break;
+		    }
+		  *(bufptr + j) = *(stmp + offset + j);
+		}
+	      offset += j;
+	      tmpval = stpi_xmlstrtod(buf);
+	      if (! finite(tmpval)
+		  || ( tmpval == 0 && errno == ERANGE )
+		  || tmpval < low
+		  || tmpval > high)
+		{
+		  xmlFree(stmp);
+		  stpi_erprintf("stpi_xmltree_create_from_sequence: "
+				"read aborted: datum out of bounds: "
+				"%g (require %g <= x <= %g), n = %d\n",
+				tmpval, low, high, i);
+		  goto error;
+		}
+	      /* Datum was valid, so now add to the sequence */
+	      stp_sequence_set_point(ret, i, tmpval);
+	    }
+	  xmlFree(stmp);
+	}
+    }
+
+  return ret;
+
+ error:
+  stpi_erprintf("stpi_xmltree_create_from_sequence: error during sequence read\n");
+  if (ret)
+    stp_sequence_destroy(ret);
+  return NULL;
+}
+
+xmlNodePtr
+stpi_xmltree_create_from_sequence(stp_sequence_t seq)   /* The sequence */
+{
+  size_t pointcount;
+  double low;
+  double high;
+
+  char *count;
+  char *lower_bound;
+  char *upper_bound;
+
+  xmlNodePtr seqnode;
+
+  int i;                 /* loop counter */
+
+  pointcount = stp_sequence_get_size(seq);
+  stp_sequence_get_bounds(seq, &low, &high);
+
+  /* should count be of greater precision? */
+  stpi_asprintf(&count, "%lu", (unsigned long) pointcount);
+  stpi_asprintf(&lower_bound, "%g", low);
+  stpi_asprintf(&upper_bound, "%g", high);
+
+  seqnode = xmlNewNode(NULL, (const xmlChar *) "sequence");
+  (void) xmlSetProp(seqnode, (const xmlChar *) "count",
+		    (const xmlChar *) count);
+  (void) xmlSetProp(seqnode, (const xmlChar *) "lower-bound",
+		    (const xmlChar *) lower_bound);
+  (void) xmlSetProp(seqnode, (const xmlChar *) "upper-bound",
+		    (const xmlChar *) upper_bound);
+
+  stpi_free(count);
+  stpi_free(lower_bound);
+  stpi_free(upper_bound);
+
+  /* Write the curve points into the node content */
+  if (pointcount) /* Is there any data to write? */
+    {
+      /* Calculate total size */
+      int datasize = 0;
+      xmlChar *data;
+      xmlChar *offset;
+
+      for (i = 0; i < pointcount; i++)
+	{
+	  double dval;
+	  char *sval;
+
+	  if ((stp_sequence_get_point(seq, i, &dval)) != 1)
+	    goto error;
+
+	  stpi_asprintf(&sval, "%g", dval);
+
+	  datasize += strlen(sval) + 1; /* Add 1 for space separator and
+					   NUL termination */
+	  stpi_free(sval);
+      }
+      datasize += 2; /* Add leading and trailing newlines */
+      /* Allocate a big enough string */
+      data = (xmlChar *) stpi_malloc(sizeof(xmlChar) * datasize);
+      offset = data;
+      *(offset) = '\n'; /* Add leading newline */
+      offset++;
+      /* Populate the string */
+      for (i = 0; i < pointcount; i++)
+	{
+	  double dval;
+	  char *sval;
+
+	  if ((stp_sequence_get_point(seq, i, &dval)) == 0)
+	    goto error;
+
+	  stpi_asprintf(&sval, "%g", dval);
+
+	  strcpy((char *) offset, sval); /* Add value */
+	  offset += strlen (sval);
+	  if ((i + 1) % 12)
+	    *offset = ' '; /* Add space */
+	  else
+	    *offset = '\n'; /* Add newline every 12 points */
+	  offset++;
+
+	  stpi_free(sval);
+	}
+      *(offset -1) = '\n'; /* Add trailing newline */
+      *(offset) = '\0'; /* Add NUL terminator */
+      xmlNodeAddContent(seqnode, (xmlChar *) data);
+      stpi_free(data);
+    }
+  return seqnode;
+
+ error:
+  if (seqnode)
+    xmlFreeNode(seqnode);
+  return NULL;
 }
 
 

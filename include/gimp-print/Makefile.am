@@ -35,7 +35,6 @@ pkginclude_HEADERS = \
 	array.h \
 	curve.h \
 	sequence.h \
-	xml.h \
 	gimp-print-ui.h
 
 nodist_pkginclude_HEADERS = gimp-print-version.h

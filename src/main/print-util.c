@@ -604,6 +604,10 @@ stp_init(void)
       bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 #endif
       stpi_init_debug();
+      stpi_xml_preinit();
+      stpi_init_printer();
+      stpi_init_paper();
+      stpi_init_dither();
       /* Load modules */
       if (stpi_module_load())
 	return 1;

@@ -39,6 +39,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "papers.h"
+#include "xml.h"
 
 static stpi_list_t *paper_list = NULL;
 
@@ -245,4 +246,180 @@ stpi_default_media_size(const stp_vars_t v,	/* I */
       if (*height == 0)
 	*height = 792;
     }
+}
+
+/*
+ * Process the <paper> node.
+ */
+static stp_papersize_t *
+stpi_xml_process_paper(xmlNodePtr paper) /* The paper node */
+{
+  xmlNodePtr prop;                              /* Temporary node pointer */
+  xmlChar *stmp;                                /* Temporary string */
+  /* props[] (unused) is the correct tag sequence */
+  /*  const char *props[] =
+    {
+      "name",
+      "description",
+      "width",
+      "height",
+      "left",
+      "right",
+      "bottom",
+      "top",
+      "unit",
+      NULL
+      };*/
+  stp_papersize_t *outpaper;   /* Generated paper */
+  int
+    id = 0,			/* Check id is present */
+    name = 0,			/* Check name is present */
+    height = 0,			/* Check height is present */
+    width = 0,			/* Check width is present */
+    left = 0,			/* Check left is present */
+    right = 0,			/* Check right is present */
+    bottom = 0,			/* Check bottom is present */
+    top = 0,			/* Check top is present */
+    unit = 0;			/* Check unit is present */
+
+  if (stpi_debug_level & STPI_DBG_XML)
+    {
+      stmp = xmlGetProp(paper, (const xmlChar*) "name");
+      stpi_erprintf("stpi_xml_process_paper: name: %s\n", stmp);
+      xmlFree(stmp);
+    }
+
+  outpaper = stpi_malloc(sizeof(stp_papersize_t));
+  if (!outpaper)
+    return NULL;
+
+  outpaper->name =
+    (char *) xmlGetProp(paper, (const xmlChar *) "name");
+
+  outpaper->top = 0;
+  outpaper->left = 0;
+  outpaper->bottom = 0;
+  outpaper->right = 0;
+  if (outpaper->name)
+    id = 1;
+
+  prop = paper->children;
+  while(prop)
+    {
+      if (!xmlStrcmp(prop->name, (const xmlChar *) "description"))
+	{
+	  outpaper->text = (char *)
+	    xmlGetProp(prop, (const xmlChar *) "value");
+	  name = 1;
+	}
+      if (!xmlStrcmp(prop->name, (const xmlChar *) "comment"))
+	{
+	  outpaper->comment = (char *)
+	    xmlGetProp(prop, (const xmlChar *) "value");
+	}
+      if (!xmlStrcmp(prop->name, (const xmlChar *) "width"))
+	{
+	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
+	  if (stmp)
+	    {
+	      outpaper->width = stpi_xmlstrtoul(stmp);
+	      xmlFree(stmp);
+	      width = 1;
+	    }
+	}
+      if (!xmlStrcmp(prop->name, (const xmlChar *) "height"))
+	{
+	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
+	  if (stmp)
+	    {
+	      outpaper->height = stpi_xmlstrtoul(stmp);
+	      xmlFree(stmp);
+	      height = 1;
+	    }
+	}
+      if (!xmlStrcmp(prop->name, (const xmlChar *) "left"))
+	{
+	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
+	  outpaper->left = stpi_xmlstrtoul(stmp);
+	  xmlFree(stmp);
+	  left = 1;
+	}
+      if (!xmlStrcmp(prop->name, (const xmlChar *) "right"))
+	{
+	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
+	  outpaper->right = stpi_xmlstrtoul(stmp);
+	  xmlFree(stmp);
+	  right = 1;
+	}
+      if (!xmlStrcmp(prop->name, (const xmlChar *) "bottom"))
+	{
+	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
+	  outpaper->bottom = stpi_xmlstrtoul(stmp);
+	  xmlFree(stmp);
+	  bottom = 1;
+	}
+      if (!xmlStrcmp(prop->name, (const xmlChar *) "top"))
+	{
+	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
+	  outpaper->top = stpi_xmlstrtoul(stmp);
+	  xmlFree(stmp);
+	  top = 1;
+	}
+      if (!xmlStrcmp(prop->name, (const xmlChar *) "unit"))
+	{
+	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
+	  if (stmp)
+	    {
+	      if (!xmlStrcmp(stmp, (const xmlChar *) "english"))
+		outpaper->paper_unit = PAPERSIZE_ENGLISH_STANDARD;
+	      else if (!xmlStrcmp(stmp, (const xmlChar *) "english-extended"))
+		outpaper->paper_unit = PAPERSIZE_ENGLISH_EXTENDED;
+	      else if (!xmlStrcmp(stmp, (const xmlChar *) "metric"))
+		outpaper->paper_unit = PAPERSIZE_METRIC_STANDARD;
+	      else if (!xmlStrcmp(stmp, (const xmlChar *) "metric-extended"))
+		outpaper->paper_unit = PAPERSIZE_METRIC_EXTENDED;
+	      /* Default unit */
+	      else
+		outpaper->paper_unit = PAPERSIZE_METRIC_EXTENDED;
+	      xmlFree(stmp);
+	      unit = 1;
+	    }
+	}
+
+      prop = prop->next;
+    }
+  if (id && name && width && height && unit) /* Margins are optional */
+    return outpaper;
+  stpi_free(outpaper);
+  outpaper = NULL;
+  return NULL;
+}
+
+/*
+ * Parse the <paperdef> node.
+ */
+static int
+stpi_xml_process_paperdef(xmlNodePtr paperdef, const char *file) /* The paperdef node */
+{
+  xmlNodePtr paper;                           /* paper node pointer */
+  stp_papersize_t *outpaper;         /* Generated paper */
+
+  paper = paperdef->children;
+  while (paper)
+    {
+      if (!xmlStrcmp(paper->name, (const xmlChar *) "paper"))
+	{
+	  outpaper = stpi_xml_process_paper(paper);
+	  if (outpaper)
+	    stpi_paper_create(outpaper);
+	}
+      paper = paper->next;
+    }
+  return 1;
+}
+
+void
+stpi_init_paper(void)
+{
+  stpi_register_xml_parser("paperdef", stpi_xml_process_paperdef);
 }

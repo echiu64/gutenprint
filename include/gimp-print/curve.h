@@ -272,19 +272,11 @@ extern int stp_curve_rescale(stp_curve_t curve, double scale,
  * NOTE that these calls are not thread-safe!  These routines may
  * manipulate the locale to achieve a safe representation.
  */
-extern char *stp_curve_print_string(const stp_curve_t curve);
-extern void stp_curve_print(FILE *f, const stp_curve_t curve);
+extern int stp_curve_write(FILE *file, stp_curve_t curve);
+extern char *stp_curve_write_string(stp_curve_t curve);
 
-/*
- * If reading the curve fails, the existing curve will not be changed.
- *
- * stp_curve_read_string returns the number of bytes read.  If that
- * number is -1, the read failed.
- */
-extern int stp_curve_read(FILE *f, stp_curve_t curve);
-extern stp_curve_t stp_curve_create_read(FILE *f);
-extern int stp_curve_read_string(const char *text, stp_curve_t curve);
-extern stp_curve_t stp_curve_create_read_string(const char *text);
+extern stp_curve_t stp_curve_create_from_file(const char* file);
+extern stp_curve_t stp_curve_create_from_string(const char* string);
 
 /*
  * Compose two curves, creating a third curve.  Only add and multiply
@@ -315,10 +307,6 @@ extern stp_curve_t stp_curve_create_read_string(const char *text);
 extern int stp_curve_compose(stp_curve_t *retval,
 			     const stp_curve_t a, const stp_curve_t b,
 			     stp_curve_compose_t mode, int points);
-
-/* Include curve read/write functions */
-
-#include <gimp-print/xml.h>
 
 
 #endif /* GIMP_PRINT_CURVE_H */

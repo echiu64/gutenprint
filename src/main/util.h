@@ -120,6 +120,14 @@ extern void *stpi_zalloc (size_t);
 extern void *stpi_realloc (void *ptr, size_t);
 extern void stpi_free(void *ptr);
 
+#define SAFE_FREE(x)				\
+do						\
+{						\
+  if ((x))					\
+    stpi_free((char *)(x));			\
+  ((x)) = NULL;					\
+} while (0)
+
 extern size_t stpi_strlen(const char *s);
 extern char *stpi_strndup(const char *s, int n);
 extern char *stpi_strdup(const char *s);
@@ -133,8 +141,8 @@ extern void stpi_abort(void);
 *                                                               *
 ****************************************************************/
 
-typedef void stpi_list_item_t;
-typedef void stpi_list_t;
+typedef void *stpi_list_item_t;
+typedef void *stpi_list_t;
 typedef void (*node_freefunc)(stpi_list_item_t *);
 typedef void *(*node_copyfunc)(const stpi_list_item_t *);
 typedef const char *(*node_namefunc)(const stpi_list_item_t *);
@@ -187,14 +195,17 @@ extern void stpi_default_media_size(const stp_vars_t v,
  */
 extern void stpi_prune_inactive_options(stp_vars_t v);
 
+/*
+ * FIXME Need somewhere else to put these initialization routines
+ * which users shouldn't call.
+ */
 
-#define SAFE_FREE(x)				\
-do						\
-{						\
-  if ((x))					\
-    stpi_free((char *)(x));			\
-  ((x)) = NULL;					\
-} while (0)
+extern void stpi_init_paper(void);
+extern void stpi_init_dither(void);
+extern void stpi_init_printer(void);
+extern char *stpi_xio_fgets(char *s, int size, void *ixio);
+extern void stpi_xio_free(void *ixio);
+
 
 /* Uncomment the next line to get performance statistics:
  * look for QUANT(#) in the code. At the end of escp2-print

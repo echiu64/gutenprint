@@ -971,7 +971,7 @@ print_debug_params(const escp2_init_t *init)
 	case STP_PARAMETER_TYPE_CURVE:
 	  if (stp_check_curve_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
 	    {
-	      char *curve = (char *)
+	      char *curve =
 		stp_curve_write_string(stp_get_curve_parameter(v, p->name));
 	      print_remote_param(v, p->name, curve);
 	      stpi_free(curve);
