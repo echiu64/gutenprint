@@ -95,7 +95,7 @@ install:
 	$(CP) calibrate $(PREFIX)/bin
 	$(CHMOD) 755 $(PREFIX)/bin/calibrate
 
-	echo Installing EPSON drivers...
+	echo Installing drivers...
 	-$(MKDIR) $(PREFIX)/lib/cups/backend
 	$(CP) epson $(PREFIX)/lib/cups/backend
 	$(CHMOD) 755 $(PREFIX)/lib/cups/backend/epson
@@ -106,9 +106,14 @@ install:
 	$(CP) commandtoepson $(PREFIX)/lib/cups/filter
 	$(CHMOD) 755 $(PREFIX)/lib/cups/filter/commandtoepson
 
+	echo Installing PPD files...
 	-$(MKDIR) $(PREFIX)/share/cups/model
 	$(CP) ppd/* $(PREFIX)/share/cups/model
 	$(CHMOD) a+r $(PREFIX)/share/cups/model/*
+
+	echo Installing new command MIME type...
+	$(CP) command.types $(PREFIX)/etc/cups
+	$(CHMOD) a+r $(PREFIX)/etc/cups/command.types
 
 
 #

@@ -1,16 +1,22 @@
 /*
  * "$Id$"
  *
- *   PPD file generation program for the CUPS driver development kit.
+ *   PPD file generation program for the CUPS drivers.
  *
- *   Copyright 1993-2000 by Easy Software Products, All Rights Reserved.
+ *   Copyright 1993-2000 by Easy Software Products.
  *
- *   These coded instructions, statements, and computer programs are the
- *   property of Easy Software Products and are protected by Federal
- *   copyright law.  Distribution and use rights are outlined in the file
- *   "LICENSE.txt" which should have been included with this file.  If this
- *   file is missing or damaged please contact Easy Software Products
- *   at:
+ *   This program is free software; you can redistribute it and/or
+ *   modify it under the terms of the GNU General Public License,
+ *   version 2, as published by the Free Software Foundation.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program; if not, please contact Easy Software
+ *   Products at:
  *
  *       Attn: CUPS Licensing Information
  *       Easy Software Products
@@ -257,8 +263,24 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
 		};
 
 
+ /*
+  * Skip the PostScript drivers...
+  */
+
+  if (strcmp(p->driver, "ps") == 0 ||
+      strcmp(p->driver, "ps2") == 0)
+    return (0);
+
+ /* 
+  * Make sure the destination directory exists...
+  */
+
   mkdir(prefix, 0777);
   sprintf(filename, "%s/%s" PPDEXT, prefix, p->driver);
+
+ /*
+  * Open the PPD file...
+  */
 
   if ((fp = gzopen(filename, "wb")) == NULL)
   {
@@ -266,6 +288,10 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
             filename, strerror(errno));
     return (2);
   }
+
+ /*
+  * Write a standard header...
+  */
 
   sscanf(p->long_name, "%63s", manufacturer);
 
