@@ -31,8 +31,7 @@ INTRODUCTION:
   The original stp driver will not be maintained beyond Gimp-Print
   4.2; it will be phased out and replaced by the IJS driver
   (ijsgimpprint).  It currently has all of the capabilities of the stp
-  driver, but it is not as mature and does not currently have Foomatic
-  support.
+  driver, but it is perhaps not as mature.
 
   IJS support was incorporated into Ghostscript in GNU Ghostscript
   6.53 and AFPL Ghostscript 7.04, as IJS 0.32.
@@ -244,17 +243,14 @@ BUILD AND INSTALLATION OF THE IJS GIMPPRINT DRIVER:
    ftp.gnu.org.  After these packages are installed, run:
 
    cd ghostscript-6.53/ijs
-   aclocal
    autoconf
-   automake
    ./configure
    make
    make install
 
-   You will get error messages during the autoconf and/or automake
-   process.  The important point is that the configure works
-   correctly.  This will install the necessary header files and
-   libraries.
+   You will perhaps get error messages during the autoconf process.
+   The important point is that the configure works correctly.  This
+   will install the necessary header files and libraries.
 
    After the IJS core files and Ghostscript are installed, you can
    build and install the IJS driver within the Gimp-Print package.
@@ -385,7 +381,8 @@ The driver will not permit use of invalid settings.
 
 The options for this driver are very complex.  We strongly recommend
 use of a printer management system such as Foomatic rather than
-configuring a spooler manually with this driver.
+configuring a spooler manually with this driver. The driver name used
+by Foomatic is "gimp-print",
 
 Overview for the IJS Driver:
 -------- --- --- --- -------
@@ -413,6 +410,10 @@ comma-separated list of sub-options:
 
 and so forth.
 
+The options for this driver are very complex. We strongly recommend
+use of a printer management system such as Foomatic rather than
+configuring a spooler manually with this driver. The driver name used
+by Foomatic is "gimp-print-ijs",
 
 Printer Model Selection:
 ------- ----- ----------
