@@ -1,3 +1,18 @@
+gimp-print (4.3.4-2) unstable; urgency=low
+
+  * Fixed doc-base problems in libgimpprint-doc.  The doc-base file is
+    generated with sed to insert the version number.
+  * libgimpprint$(VERSION)-doc provides and conflicts with a virtual
+    package libgimpprint-doc to prevent clashes with gimpprint.info docs.
+    
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Thu,  1 Aug 2002 12:19:42 +0100
+
+gimp-print (4.3.4-1) unstable; urgency=low
+
+  * New upstream development release (4.3.4)
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Sat, 20 Jul 2002 18:56:44 +0100
+
 gimp-print (4.3.1-1) unstable; urgency=low
 
   * Move escputil to section utils

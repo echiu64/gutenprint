@@ -1,4 +1,4 @@
-Document: libgimpprint-doc
+Document: libgimpprint#LIBRARY_VERSION#-doc
 Title: The libgimpprint Reference Manual
 Author: The GIMP-Print Project
 Abstract: The gimpprint library routines give programmers an interface to
@@ -11,5 +11,5 @@ Abstract: The gimpprint library routines give programmers an interface to
 Section: Apps/Programming
 
 Format: HTML
-Index: /usr/share/doc/libgimpprint-doc/html/gimpprint_toc.html
-Files: /usr/share/doc/libgimpprint-doc/html/*.html
+Index: /usr/share/doc/libgimpprint#LIBRARY_VERSION#-doc/html/gimpprint_toc.html
+Files: /usr/share/doc/libgimpprint#LIBRARY_VERSION#-doc/html/*.html

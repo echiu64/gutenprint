@@ -26,13 +26,14 @@ UPSTREAM_VERSION = $(shell dpkg-parsechangelog | grep ^Version | sed "s/.* //" |
 LIBRARY_VERSION =  -$(UPSTREAM_VERSION)
 #LIBRARY_VERSION = 1
 
-autoconfigure: autoconfigure-stamp debian/control
-autoconfigure-stamp:
+autoconfigure: autoconfigure-stamp
+autoconfigure-stamp: debian/control debian/libgimpprint-doc.doc-base
 	dh_testdir
 	cd debian ; \
 	for file in libgimpprint*; do \
 	  ln -sf $$file `echo $$file | sed -e 's/libgimpprint/libgimpprint$(LIBRARY_VERSION)/'` ; \
 	done
+	rm debian/libgimpprint$(LIBRARY_VERSION)*.in
 	mkdir debian/gimp-print-build ; \
 	cd debian/gimp-print-build ; \
 	BUILD_PACKAGE=true ../../configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --enable-static --enable-shared --without-gimp --with-cups --without-ijs --with-foomatic --disable-test --disable-translated-ppds --disable-cups-level3-ps --enable-maintainer-mode
@@ -163,10 +164,16 @@ binary: binary-indep binary-arch
 ChangeLog: changelog-stamp
 changelog-stamp: build
 	$(MAKE) ChangeLog
-	
-# Make sure an/that  is up-to-date.
+
+SEDPATTERN = -e "s/\#UPSTREAM_VERSION\#/$(UPSTREAM_VERSION)/g" -e "s/\#LIBRARY_VERSION\#/$(LIBRARY_VERSION)/g"
+
+# Make sure debian/control is up-to-date.
 debian/control: debian/changelog debian/control.in
-	sed -e "s/#UPSTREAM_VERSION#/$(UPSTREAM_VERSION)/g" -e "s/#LIBRARY_VERSION#/$(LIBRARY_VERSION)/g" <debian/control.in >debian/control
+	sed $(SEDPATTERN) <debian/control.in >debian/control
+
+# Make sure debian/libgimpprint-doc.doc-base is up-to-date.
+debian/libgimpprint-doc.doc-base: debian/changelog debian/libgimpprint-doc.doc-base.in
+	sed $(SEDPATTERN) <debian/libgimpprint-doc.doc-base.in >debian/libgimpprint-doc.doc-base
 
 # Make sure that configure is up-to-date.
 configure: configure.ac scripts/install-sh
@@ -181,4 +188,4 @@ scripts/install-sh:
 	  NOCONFIGURE=TRUE /bin/sh autogen.sh ; \
 	fi
 
-.PHONY: build clean binary-indep binary-arch binary install autoconfigure NEWS
+.PHONY: build clean binary-indep binary-arch binary install autoconfigure
