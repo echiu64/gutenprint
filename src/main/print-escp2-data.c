@@ -3245,7 +3245,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
   },
   /* 18: Stylus Color 660 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
+    (MODEL_VARIABLE_NO | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
      MODEL_FAST_360_NO),
     32, 1, 4, 32, 1, 4,
