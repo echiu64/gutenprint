@@ -76,6 +76,30 @@ If you do not wish to build the Gimp Print plugin, you must run
 ./configure --with-cups --without-gimp
 
 
+FOOMATIC
+
+This package includes support for the Foomatic meta-driver package.
+To build the Foomatic data, you must run:
+
+./configure --with-foomatic
+make
+make install
+
+Note that it almost never makes sense to build the Foomatic driver
+without also building the Ghostscript driver, so you will normally
+want to run
+
+./configure --with-foomatic --with-ghost
+
+If you do not wish to build the Gimp Print plugin, you must run
+
+./configure --with-foomatic --without-gimp
+
+Please visit http://www.linuxprinting.org/foomatic.html for more
+information on Foomatic.  The current Foomatic data was generated for
+"Phase 2".
+
+
 RECOMMENDED SETTINGS
 
 We recommend starting with all default settings for the slider

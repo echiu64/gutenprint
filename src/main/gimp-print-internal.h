@@ -198,7 +198,7 @@ typedef struct stp_softweave
   int oversample;		/* Excess precision per row */
   int repeat_count;		/* How many times a pass is repeated */
   int ncolors;			/* How many colors (1, 4, or 6) */
-  int horizontal_width;		/* Line width in output pixels */
+  int linewidth;		/* Line width in input pixels */
   int vertical_height;		/* Image height in output pixels */
   int firstline;		/* Actual first line (referenced to paper) */
 
@@ -219,12 +219,11 @@ typedef struct stp_softweave
   int rcache;
   int vcache;
   stp_vars_t v;
-  void (*flushfunc)(struct stp_softweave *sw,
-		    int passno, int model,
-		    int width, int hoffset,
-		    int ydpi, int xdpi,
-		    int physical_xdpi,
-		    int vertical_subpass);
+  void (*flushfunc)(struct stp_softweave *sw, int passno, int model,
+		    int width, int hoffset, int ydpi, int xdpi,
+		    int physical_xdpi, int vertical_subpass);
+  void (*fill_start)(struct stp_softweave *sw, int row, int subpass,
+		     int width, int missingstartrows, int color);
 } stp_softweave_t;
 
 /*
@@ -331,7 +330,23 @@ extern void *stp_initialize_weave(int jets, int separation, int oversample,
 						    int width, int hoffset,
 						    int ydpi, int xdpi,
 						    int physical_xdpi,
-						    int vertical_subpass));
+						    int vertical_subpass),
+				  void (*fill_start)(stp_softweave_t *sw,
+						     int row,
+						     int subpass, int width,
+						     int missingstartrows,
+						     int vertical_subpass),
+				  int (*compute_linewidth)(const stp_softweave_t *sw));
+
+extern void stp_fill_tiff(stp_softweave_t *sw, int row, int subpass,
+			  int width, int missingstartrows, int color);
+extern void stp_fill_uncompressed(stp_softweave_t *sw, int row, int subpass,
+				  int width, int missingstartrows, int color);
+
+extern int stp_compute_tiff_linewidth(const stp_softweave_t *sw);
+extern int stp_compute_uncompressed_linewidth(const stp_softweave_t *sw);
+
+
 
 extern void stp_flush_all(void *, int model, int width, int hoffset,
 			  int ydpi, int xdpi, int physical_xdpi);

@@ -1513,7 +1513,6 @@ stp_pack(const unsigned char *line,
   return active;
 }
 
-
 /*
  * "Soft" weave
  *
@@ -1755,10 +1754,16 @@ stp_initialize_weave(int jets,	/* Width of print head */
 		     void (*flushfunc)(stp_softweave_t *sw, int passno,
 				       int model, int width, int hoffset,
 				       int ydpi, int xdpi, int physical_xdpi,
-				       int vertical_subpass))
+				       int vertical_subpass),
+		     void (*fill_start)(stp_softweave_t *sw, int row,
+					int subpass, int width,
+					int missingstartrows,
+					int vertical_subpass),
+		     int (*compute_linewidth)(const stp_softweave_t *sw))
 {
   int i;
   int last_line, maxHeadOffset;
+  int horizontal_width;
   stp_softweave_t *sw = stp_malloc(sizeof (stp_softweave_t));
 
   (void) memset(sw, 0, sizeof(stp_softweave_t));
@@ -1853,7 +1858,7 @@ stp_initialize_weave(int jets,	/* Width of print head */
    * one part in 128.
    */
 
-  sw->horizontal_width = (linewidth + 128 + 7) * 129 / 128;
+  sw->linewidth = linewidth;
   sw->vertical_height = lineheight;
   sw->lineoffsets = stp_malloc(sw->vmod * sizeof(stp_lineoff_t));
   memset(sw->lineoffsets, 0, sw->vmod * sizeof(stp_lineoff_t));
@@ -1866,6 +1871,8 @@ stp_initialize_weave(int jets,	/* Width of print head */
   memset(sw->linecounts, 0, sw->vmod * sizeof(stp_linecount_t));
   sw->rcache = -2;
   sw->vcache = -2;
+  sw->fill_start = fill_start;
+  horizontal_width = (compute_linewidth)(sw);
 
   for (i = 0; i < sw->vmod; i++)
     {
@@ -1874,7 +1881,7 @@ stp_initialize_weave(int jets,	/* Width of print head */
       for (j = 0; j < sw->ncolors; j++)
 	{
 	  sw->linebases[i].v[j] =
-	    stp_malloc(jets * sw->bitwidth * sw->horizontal_width / 8);
+	    stp_malloc(jets * sw->bitwidth * horizontal_width / 8);
 	}
     }
   return (void *) sw;
@@ -2036,9 +2043,9 @@ stp_get_pass_by_pass(const stp_softweave_t *sw, int pass)
  * with a count of 1.
  */
 
-static void
-fillin_start_rows(const stp_softweave_t *sw, int row, int subpass,
-		  int width, int missingstartrows, int color)
+void
+stp_fill_tiff(stp_softweave_t *sw, int row, int subpass,
+	      int width, int missingstartrows, int color)
 {
   stp_lineoff_t *lineoffs;
   stp_linecount_t *linecount;
@@ -2049,37 +2056,66 @@ fillin_start_rows(const stp_softweave_t *sw, int row, int subpass,
   width = sw->bitwidth * width * 8;
   for (k = 0; k < missingstartrows; k++)
     {
-    int bytes_to_fill = width;
-    int full_blocks = bytes_to_fill / (128 * 8);
-    int leftover = (7 + (bytes_to_fill % (128 * 8))) / 8;
-    int l = 0;
-    bufs = stp_get_linebases(sw, row, subpass, sw->head_offset[color]);
+      int bytes_to_fill = width;
+      int full_blocks = bytes_to_fill / (128 * 8);
+      int leftover = (7 + (bytes_to_fill % (128 * 8))) / 8;
+      int l = 0;
+      bufs = stp_get_linebases(sw, row, subpass, sw->head_offset[color]);
 
-    while (l < full_blocks)
-      {
-      (bufs[0].v[color][2 * i]) = 129;
-      (bufs[0].v[color][2 * i + 1]) = 0;
-      i++;
-      l++;
-      }
-    if (leftover == 1)
-      {
-      (bufs[0].v[color][2 * i]) = 1;
-      (bufs[0].v[color][2 * i + 1]) = 0;
-      i++;
-      }
-    else if (leftover > 0)
-      {
-      (bufs[0].v[color][2 * i]) = 257 - leftover;
-      (bufs[0].v[color][2 * i + 1]) = 0;
-      i++;
-      }
+      while (l < full_blocks)
+	{
+	  (bufs[0].v[color][2 * i]) = 129;
+	  (bufs[0].v[color][2 * i + 1]) = 0;
+	  i++;
+	  l++;
+	}
+      if (leftover == 1)
+	{
+	  (bufs[0].v[color][2 * i]) = 1;
+	  (bufs[0].v[color][2 * i + 1]) = 0;
+	  i++;
+	}
+      else if (leftover > 0)
+	{
+	  (bufs[0].v[color][2 * i]) = 257 - leftover;
+	  (bufs[0].v[color][2 * i + 1]) = 0;
+	  i++;
+	}
     }
 
   lineoffs = stp_get_lineoffsets(sw, row, subpass, sw->head_offset[color]);
   linecount = stp_get_linecount(sw, row, subpass, sw->head_offset[color]);
   lineoffs[0].v[color] = 2 * i;
   linecount[0].v[color] = missingstartrows;
+}
+
+void
+stp_fill_uncompressed(stp_softweave_t *sw, int row, int subpass,
+		      int width, int missingstartrows, int color)
+{
+  stp_lineoff_t *lineoffs;
+  stp_linecount_t *linecount;
+  const stp_linebufs_t *bufs;
+
+  bufs = stp_get_linebases(sw, row, subpass, sw->head_offset[color]);
+  lineoffs = stp_get_lineoffsets(sw, row, subpass, sw->head_offset[color]);
+  linecount = stp_get_linecount(sw, row, subpass, sw->head_offset[color]);
+  width *= sw->bitwidth * missingstartrows;
+  memset(bufs[0].v[color], 0, width);
+  lineoffs[0].v[color] = width;
+  linecount[0].v[color] = missingstartrows;
+}
+
+int
+stp_compute_tiff_linewidth(const stp_softweave_t *sw)
+{
+  return ((sw->linewidth + 128 + 7) * 129 / 128);
+}
+
+int
+stp_compute_uncompressed_linewidth(const stp_softweave_t *sw)
+{
+  return (8 * ((sw->linewidth + 7) / 8));
 }
 
 static void
@@ -2127,7 +2163,7 @@ initialize_row(const stp_softweave_t *sw, int row, int width)
 
       if((linecount[0].v[j] == 0) && (w.jet > 0))
         {
-	fillin_start_rows(sw, row, i, width, w.jet, j);
+	  (sw->fill_start)(sw, row, i, width, w.jet, j);
         }
       }
     }
