@@ -47,8 +47,8 @@
  * Constants for GUI...
  */
 #ifdef EXPANDED_PREVIEW_WINDOW
-#define PREVIEW_SIZE_VERT  360 /* Assuming max media size of 24" A2 */
-#define PREVIEW_SIZE_HORIZ 280 /* Assuming max media size of 24" A2 */
+#define PREVIEW_SIZE_VERT  320 /* Assuming max media size of 24" A2 */
+#define PREVIEW_SIZE_HORIZ 320 /* Assuming max media size of 24" A2 */
 #else
 #define PREVIEW_SIZE_VERT  240 /* Assuming max media size of 24" A2 */
 #define PREVIEW_SIZE_HORIZ 240 /* Assuming max media size of 24" A2 */
