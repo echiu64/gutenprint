@@ -114,7 +114,7 @@ $(LIBGIMPPRINT_LIBS):
 
 ## Clean
 
-CLEANFILES = $(noinst_PROGRAMS)
+CLEANFILES = $(noinst_PROGRAMS) foomatic-stamp
 MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = foomatic-printermap 		\
