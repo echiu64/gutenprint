@@ -70,7 +70,7 @@ endif
 	@for p in $(cups_filter) ; do \
 		$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(libdir)/$(PACKAGE)/filter/ ; \
 	done
-	$(mkinstalldirs) $(DESTDIR)$(libdir)/$(PACKAGE)/model
+	$(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)/model
 	cd ppd ; \
 	for ppdfile in * ; do \
 	  $(INSTALL_DATA) $$ppdfile $(DESTDIR)$(datadir)/$(PACKAGE)/model/ ; \
