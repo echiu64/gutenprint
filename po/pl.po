@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
-"POT-Creation-Date: 2002-01-29 22:36-0500\n"
+"POT-Creation-Date: 2002-02-14 20:58-0500\n"
 "PO-Revision-Date: 2001-10-18 11:53+0100\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -2809,3 +2809,75 @@ msgstr "<Image>/Plik/Wydrukuj..."
 #: src/gimp/print.c:1184
 msgid "File"
 msgstr "Plik"
+
+#: src/ghost/ijsgimpprint.c:135
+#, c-format
+msgid "Bad color space: bps %d channels %d space %s\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:143
+msgid "No row buffer\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:172
+#, c-format
+msgid "Parameter %s out of range (value %f, min %f, max %f)\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:176 src/ghost/ijsgimpprint.c:198
+#, c-format
+msgid "Unable to parse parameter %s=%s (expect a number)\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:194
+#, c-format
+msgid "Parameter %s out of range (value %d, min %d, max %d)\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:336
+msgid "Printer must be specified with -sModel\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:338
+#, c-format
+msgid "Printer %s is not a known model\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:557
+#, fuzzy, c-format
+msgid "Unknown option %s\n"
+msgstr "Nieznana opcja %c\n"
+
+#: src/ghost/ijsgimpprint.c:704
+#, c-format
+msgid "%.0f of %.0f\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:816
+#, c-format
+msgid "image_init failed %d\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:827
+#, c-format
+msgid "Unable to open file descriptor: %s\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:839
+#, fuzzy, c-format
+msgid "Unable to open %s: %s\n"
+msgstr "Nie mo¿na otworzyæ urz±dzenia %s: %s\n"
+
+#: src/ghost/ijsgimpprint.c:851
+#, fuzzy, c-format
+msgid "Unknown printer %s\n"
+msgstr "Nieznana opcja %c\n"
+
+#: src/ghost/ijsgimpprint.c:882
+msgid "Bad parameters; cannot continue!\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:892
+#, c-format
+msgid "Get next row failed at %d\n"
+msgstr ""

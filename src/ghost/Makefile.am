@@ -112,4 +112,25 @@ EXTRA_DIST = \
 	debian-patch \
 	debian-patch-stp \
 	devs.mak.addon-5.10 \
-	gdevstp.c \
+	gdevstp.c
+
+## Variables
+
+AM_CFLAGS = $(GNUCFLAGS)
+INCLUDES = @IJS_CFLAGS@ @INCLUDES@ $(LIBGIMPPRINT_CFLAGS)
+LIBS = @IJS_LIBS@ @LIBS@ $(INTLLIBS)
+
+## Programs
+
+IJS_BIN = ijsgimpprint
+
+bin_PROGRAMS = @IJS_BIN@
+
+EXTRA_PROGRAMS = ijsgimpprint
+
+ijsgimpprint_LDADD = $(LIBGIMPPRINT_LIBS)
+ijsgimpprint_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
+
+$(LIBGIMPPRINT_LIBS):
+	cd ../main ; \
+	$(MAKE)

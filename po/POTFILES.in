@@ -40,5 +40,8 @@ src/gimp/print.c
 ## @-@-@-@-@ NO-GIMP @-@-@-@-@
 # Foomatic-related sources
 src/foomatic/printer_options.c
+
+# Ghostscript IJS driver
+src/ghost/ijsgimpprint.c
 ## @-@-@-@-@ YES-GIMP @-@-@-@-@
 

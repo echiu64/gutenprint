@@ -94,7 +94,7 @@ dnl Specify a configuration file.
 AM_CONFIG_HEADER(config.h)
 
 dnl Available languages (translations)
-ALL_LINGUAS="en_GB sv no fr da pl"
+ALL_LINGUAS="en_GB sv no fr da pl sk"
 AC_SUBST(ALL_LINGUAS)
 
 dnl Compiler options and definitions
@@ -112,6 +112,7 @@ BUILD_TRANSLATED_PPDS=yes
 USE_LEVEL3_PS=no
 BUILD_GHOST=no
 BUILD_FOOMATIC=no
+BUILD_IJS=no
 BUILD_TEST=no
 BUILD_TESTPATTERN=no
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
@@ -211,6 +212,16 @@ AC_ARG_WITH(foomatic,
     *) AC_MSG_RESULT([unknown])
        AC_MSG_ERROR([bad value ${withval} for --with-foomatic]) ;;
   esac],[AC_MSG_RESULT([${BUILD_FOOMATIC}])])
+
+AC_MSG_CHECKING([whether to build IJS driver])
+AC_ARG_WITH(ijs,
+[  --with-ijs              build IJS driver [default=${BUILD_IJS}]],
+  [case "${withval}" in
+    yes) BUILD_IJS="yes" ; AC_MSG_RESULT([yes]) ;;
+    no) BUILD_IJS="no" ; AC_MSG_RESULT([no]) ;;
+    *) AC_MSG_RESULT([unknown])
+       AC_MSG_ERROR([bad value ${withval} for --with-ijs]) ;;
+  esac],[AC_MSG_RESULT([${BUILD_IJS}])])
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 AC_MSG_CHECKING([whether to turn on debugging in build])
@@ -369,6 +380,16 @@ if test x${BUILD_FOOMATIC} = xyes ; then
   if test -z "$FOOMATIC_KITLOAD" ; then
     AC_MSG_WARN(Cannot find foomatic-kitload; attempt to install foomatic will fail)
   fi
+fi
+
+dnl ijs checks
+if test x${BUILD_IJS} = xyes ; then
+  AC_PATH_PROG(IJS_CONFIG, ijs-config)
+  if test -z "$IJS_CONFIG" ; then
+    AC_MSG_ERROR(Cannot find ijs-config; please ensure ijs 0.30 is installed);
+  fi
+  IJS_CFLAGS=`$IJS_CONFIG --cflags`
+  IJS_LIBS=`$IJS_CONFIG --libs`
 fi
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
@@ -602,6 +623,11 @@ if test x${BUILD_FOOMATIC} = xyes ; then
 fi
 AM_CONDITIONAL(BUILD_FOOMATIC, test x${BUILD_FOOMATIC} = xyes)
 
+if test x${BUILD_IJS} = xyes ; then
+  IJS_BIN='$(IJS_BIN)'
+fi
+AM_CONDITIONAL(BUILD_IJS, test x${BUILD_IJS} = xyes)
+
 if test x${BUILD_CUPS} = xyes ; then
   CUPS_BIN='$(CUPS_BIN)'
   CUPS_BACKEND_BIN='$(CUPS_BACKEND_BIN)'
@@ -774,6 +800,10 @@ AC_SUBST(CUPS_PPD_PS_LEVEL)
 AC_SUBST(CUPS_NOINST_BIN)
 AC_SUBST(FOOMATIC_NOINST_BIN)
 AC_SUBST(FOOMATIC_INSTALL)
+AC_SUBST(IJS_BIN)
+AC_SUBST(IJS_INSTALL)
+AC_SUBST(IJS_CFLAGS)
+AC_SUBST(IJS_LIBS)
 AC_SUBST(TEST_BIN)
 AC_SUBST(TESTPATTERN_BIN)
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
