@@ -23,7 +23,8 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "print.h"
+#include <gimp-print.h>
+#include <gimp-print-internal.h>
 
 /*
  * NOTE: writing of 2-bit dither images is currently broken due to the

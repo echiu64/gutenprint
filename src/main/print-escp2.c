@@ -30,7 +30,8 @@
 #include <config.h>
 #endif
 #ifndef WEAVETEST
-#include "print.h"
+#include <gimp-print.h>
+#include <gimp-print-internal.h>
 #endif
 
 #ifndef __GNUC__

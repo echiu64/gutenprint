@@ -31,7 +31,8 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "print.h"
+#include <gimp-print.h>
+#include <gimp-print-internal.h>
 #include <math.h>
 #include <limits.h>
 

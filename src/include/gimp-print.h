@@ -30,8 +30,8 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
-#ifndef PRINT_HEADER
-#define PRINT_HEADER
+#ifndef _GIMP_PRINT_H
+#define _GIMP_PRINT_H
 
 /*
  * Include necessary header files...
@@ -531,7 +531,7 @@ extern struct timeval quantify_prev_time;
 extern void  print_timers(void );
 #endif
 
-#endif /* PRINT_HEADER */
+#endif /* _GIMP_PRINT_H */
 /*
  * End of "$Id$".
  */

@@ -31,7 +31,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "print.h"
+#include <gimp-print.h>
+#include <gimp-print-internal.h>
 
 #if 0
 #define TEST_RAW

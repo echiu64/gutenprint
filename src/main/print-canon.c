@@ -44,7 +44,8 @@
 #include <config.h>
 #endif
 #include <stdarg.h>
-#include "print.h"
+#include <gimp-print.h>
+#include <gimp-print-internal.h>
 
 /* #define DEBUG */
 

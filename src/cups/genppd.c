@@ -52,7 +52,8 @@
 #include <cups/cups.h>
 #include <cups/raster.h>
 
-#include "print.h"
+#include <gimp-print.h>
+#include <gimp-print-internal.h>
 
 /*
  * File handling stuff...

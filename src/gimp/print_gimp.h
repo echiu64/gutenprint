@@ -43,7 +43,8 @@
 #include <libgimp/gimp.h>
 #include <libgimp/gimpui.h>
 
-#include "print.h"
+#include <gimp-print.h>
+#include <gimp-print-internal.h>
 
 /*
  * All Gimp-specific code is in this file.

@@ -1,10 +1,10 @@
 /*
  * "$Id$"
  *
- *   I18N header file for the gimp-print plugin.
+ *   Print plug-in header file for the GIMP.
  *
- *   Copyright 1997-2000 Michael Sweet (mike@easysw.com),
- *	Robert Krawitz (rlk@alum.mit.edu) and Michael Natterer (mitch@gimp.org)
+ *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
+ *	Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -19,19 +19,22 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * Revision History:
+ *
+ *   See ChangeLog
  */
 
-#include <gimp-print.h>
-#include <gimp-print-internal.h>
+/*
+ * This file must include only standard C header files.  The core code must
+ * compile on generic platforms that don't support glib, gimp, gtk, etc.
+ */
 
-typedef union yylv {
-  int ival;
-  double dval;
-  char *sval;
-} YYSTYPE;
+#ifndef _GIMP_PRINT_INTERNAL_H
+#define _GIMP_PRINT_INTERNAL_H
 
-extern YYSTYPE yylval;
-extern stp_printer_t thePrinter;
 
-#include "printdefy.h"
-
+#endif /* _GIMP_PRINT_INTERNAL_H */
+/*
+ * End of "$Id$".
+ */

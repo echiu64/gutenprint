@@ -29,7 +29,8 @@
 /* #define PRINT_DEBUG */
 
 
-#include "print.h"
+#include <gimp-print.h>
+#include <gimp-print-internal.h>
 #include <limits.h>
 
 
