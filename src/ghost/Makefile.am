@@ -44,7 +44,7 @@ endif
 
 all-local: $(ALL_LOCAL_DEPS)
 
-GHCODE = -e 's/print-printers.c/gdevstp-printers.c/' -e 's/^\\\#include "\(.*\)\.h"$$/\\\#include "gdevstp-\1.h"/' -e 's/^\\\#include <gimp-print\(.*\)\.h>$$/\\\#include "gdevstp-print\1.h"/'
+GHCODE = -e 's/print-printers.c/gdevstp-printers.c/' -e 's/^\\\#include "\(gimp\-\)*\(.*\)\.h"$$/\\\#include "gdevstp-\2.h"/' -e 's/^\\\#include <gimp-print\/gimp-print\(.*\)\.h>$$/\\\#include "gdevstp-print\1.h"/'
 
 $(srcdir)/gdevstp-print.h: $(top_srcdir)/include/gimp-print/gimp-print.h
 	sed $(GHCODE) $< > $(srcdir)/$@
