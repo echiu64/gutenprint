@@ -71,9 +71,8 @@ static const escp2_dot_size_t c3pl_pigment_dotsizes =
 static const escp2_dot_size_t p3pl_dotsizes =
 { 0x13, 0x10, 0x11, 0x11, 0x12, 0x12, 0x12, 0x12 };
 
-/* Purely a guess 0x14 */
 static const escp2_dot_size_t p1_5pl_dotsizes =
-{ 0x13, 0x10, 0x11, 0x11, 0x12, 0x14, 0x14, 0x14 };
+{ 0x10, 0x10, 0x11, 0x11, 0x12, 0x13, 0x13, 0x13 };
 
 static const escp2_dot_size_t c2pl_dotsizes =
 { 0x12, 0x12, 0x12, 0x11, 0x13,   -1, 0x10, 0x10 };
@@ -185,6 +184,9 @@ static const escp2_base_resolutions_t ultrachrome_base_res =
 
 static const escp2_base_resolutions_t c1_8_base_res =
 {  360,  360,  720,  720,  720, 1440, 1440, 1440 };
+
+static const escp2_base_resolutions_t c1_5_base_res =
+{  360,  360,  720,  720,  720,  720,  720,  720 };
 
 static const escp2_base_resolutions_t stc900_base_res =
 {  360,  360,  360,  360,  180,  180,  360,  360 };
@@ -1641,8 +1643,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191,
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, &stpi_escp2_variable_1_5pl_drops,
-    stpi_escp2_superfine_reslist, &stpi_escp2_photo_gen2_inkgroup,
-    variable_bits, ultrachrome_base_res, &cd_cutter_roll_feed_input_slot_list,
+    stpi_escp2_superfine_reslist, &stpi_escp2_cmykrb_inkgroup,
+    variable_bits, c1_5_base_res, &cd_cutter_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL
   },

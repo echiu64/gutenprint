@@ -87,7 +87,7 @@ typedef struct {
  * actually read in the data.  This optimization may be worthwhile.
  */
 
-#define MAX_INKS 7
+#define MAX_INKS 11
 typedef struct {
    unsigned char *line[MAX_INKS];
    int startx[MAX_INKS];
@@ -123,6 +123,10 @@ line_type **page=NULL;
    L.Cyan   18      258      5
    L.Black  16      256      6
    D.Yellow 36      516      7
+   Red      7       N/A      8
+   Blue     8       N/A      9
+   P.Black  64      N/A      0
+   Gloss    9       N/A      10
  */
 
 /* convert either Epson1 or Epson2 color encoding into a sequential encoding */
@@ -132,6 +136,7 @@ seqcolor(int c)
   switch (c)
     {
     case 0:
+    case 64:
       return 0;
     case 1:
       return 1;
@@ -151,6 +156,12 @@ seqcolor(int c)
     case 36:
     case 516:
       return 7;
+    case 7:
+      return 8;
+    case 8:
+      return 9;
+    case 9:
+      return 10;
     default:
       return 0;
     }
@@ -257,18 +268,21 @@ set_bits(unsigned char *p,int idx,int value)
     }
 }
 
-static float ink_colors[8][4] =
+static float ink_colors[MAX_INKS][4] =
 {{ 0,   0,  0,  1 },		/* K */
  { 1,  .1,  1,  1 },		/* M */
- { .1,  1,  1,  1 },		/* C */
+ { .1, .7, .7,  1 },		/* C */
  { 1,   1, .1,  1 },		/* Y */
  { 1,  .7,  1,  1 },		/* m */
- { .7,  1,  1,  1 },		/* c */
+ { .4,  1,  1,  1 },		/* c */
  { .7, .7, .7,  1 },		/* k */
  { .7, .7,  0,  1 },		/* dY */
+ { 1,   0,  0,  1 },		/* R */
+ { 0,   0,  1,  1 },		/* B */
+ { 1,   1,  1,  1 },		/* Gloss */
 };
 
-static float quadtone_inks[] = { 0.0, .5, .25, .75 };
+static float quadtone_inks[] = { 0.0, .25, .5, .75 };
 
 static float bpp_shift[] = { 0, 1, 3, 7, 15, 31, 63, 127, 255 };
 
