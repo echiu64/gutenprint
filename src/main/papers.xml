@@ -120,6 +120,12 @@
       <height value="1368"/>
       <unit value="english"/>
     </paper>
+    <paper name="EngineeringC">
+      <description value="Engineering C 17x22"/>
+      <width value="1224"/>
+      <height value="1584"/>
+      <unit value="english"/>
+    </paper>
 <!--
     Other common photographic paper sizes
 -->
