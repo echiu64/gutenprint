@@ -221,7 +221,14 @@ main(int argc, char **argv)
     }
   stp_curve_print(stdout, curve1);
   fprintf(stdout, "\n");
-  if (stp_curve_resample(curve1, 37) == 0)
+  if (stp_curve_resample(curve1, 41) == 0)
+    {
+      fprintf(stderr, "stp_curve_resample failed\n");
+      global_error_count++;
+    }
+  stp_curve_print(stdout, curve1);
+  fprintf(stdout, "\n");
+  if (stp_curve_resample(curve1, 83) == 0)
     {
       fprintf(stderr, "stp_curve_resample failed\n");
       global_error_count++;
@@ -267,6 +274,21 @@ main(int argc, char **argv)
   fprintf(stdout, "\n");
   stp_curve_destroy(curve1);
   stp_curve_destroy(curve2);
+
+  curve1 = stp_curve_allocate(STP_CURVE_WRAP_AROUND);
+  stp_curve_set_interpolation_type(curve1, STP_CURVE_TYPE_SPLINE);
+  stp_curve_set_bounds(curve1, 0.0, 4.0);
+  stp_curve_set_data(curve1, 48, standard_sat_adjustment);
+  stp_curve_print(stdout, curve1);
+  fprintf(stdout, "\n");
+  if (stp_curve_resample(curve1, 384) == 0)
+    {
+      fprintf(stderr, "stp_curve_resample failed\n");
+      global_error_count++;
+    }
+  stp_curve_print(stdout, curve1);
+  fprintf(stdout, "\n");
+  stp_curve_destroy(curve1);
 
   printf("%d total errors\n", global_error_count);
   return global_error_count ? 0 : 1;
