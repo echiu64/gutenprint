@@ -154,6 +154,7 @@ typedef struct
   int undersample;
   int initial_vertical_offset;
   int min_nozzles;
+  int printed_something;
 } escp2_privdata_t;
 
 typedef struct
@@ -966,8 +967,10 @@ escp2_init_printer(const escp2_init_t *init)
 }
 
 static void
-escp2_deinit_printer(const escp2_init_t *init)
+escp2_deinit_printer(const escp2_init_t *init, int printed_something)
 {
+  if (!printed_something)
+    stp_putc('\n', init->v);
   stp_puts(/* Eject page */
 	   "\014"
 	   /* ESC/P2 reset */
@@ -1094,6 +1097,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 
   privdata.undersample = 1;
   privdata.initial_vertical_offset = 0;
+  privdata.printed_something = 0;
   stp_set_driver_data(nv, &privdata);
 
   separation_rows = escp2_separation_rows(model, nv);
@@ -1543,7 +1547,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
  /*
   * Cleanup...
   */
-  escp2_deinit_printer(&init);
+  escp2_deinit_printer(&init, privdata.printed_something);
 
   stp_free_lut(nv);
   stp_free(in);
@@ -1769,6 +1773,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	  if (extralines)
 	    send_extra_data(sw, v, extralines, lwidth);
 	  stp_putc('\r', v);
+	  pd->printed_something = 1;
 	}
       lineoffs[0].v[j] = 0;
       linecount[0].v[j] = 0;
