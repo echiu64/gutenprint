@@ -1109,31 +1109,31 @@ gimp_position_callback (GtkWidget *widget)
   if (widget == top_entry)
     {
       gfloat new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
-	  value *= unit_scaler;
+	  new_value *= unit_scaler;
       vars.top = ((new_value + 1.0 / 144) * 72) - top;
     }
   else if (widget == left_entry)
     {
       gfloat new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
-	  value *= unit_scaler;
+	  new_value *= unit_scaler;
       vars.left = ((new_value + 1.0 / 144) * 72) - left;
     }
   else if (widget == bottom_entry)
     {
       gfloat new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
-	  value *= unit_scaler;
+	  new_value *= unit_scaler;
       vars.top = ((new_value + 1.0 / 144) * 72) - (top + print_height);
     }
   else if (widget == right_entry)
     {
       gfloat new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
-	  value *= unit_scaler;
+	  new_value *= unit_scaler;
       vars.left = ((new_value + 1.0 / 144) * 72) - (left + print_width);
     }
   else if (widget == width_entry)
     {
       gfloat new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
-	  value *= unit_scaler;
+	  new_value *= unit_scaler;
       if (vars.scaling >= 0) {
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi), TRUE);
         gimp_scaling_callback (scaling_ppi);
@@ -1144,7 +1144,7 @@ gimp_position_callback (GtkWidget *widget)
   else if (widget == height_entry)
     {
       gfloat new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
-	  value *= unit_scaler;
+	  new_value *= unit_scaler;
       if (vars.scaling >= 0) {
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi), TRUE);
         gimp_scaling_callback (scaling_ppi);
