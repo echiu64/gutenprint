@@ -1,0 +1,7 @@
+Makefile.in
+Makefile
+.deps
+.libs
+printer_options
+foomatic-db
+foomatic-generator

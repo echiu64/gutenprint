@@ -32,17 +32,13 @@ AM_CPPFLAGS =\
 
 noinst_PROGRAMS = @TEST_BIN@
 
-EXTRA_PROGRAMS = escp2-weavetest printer_options unprint escp2-unprint pcl-unprint bjc-unprint testdither
+EXTRA_PROGRAMS = escp2-weavetest unprint escp2-unprint pcl-unprint bjc-unprint testdither
 
 escp2_weavetest_SOURCES = escp2-weavetest.c
 
 escp2_weavetest.o: escp2_weavetest.c 
 escp2_weavetest_LDADD = $(LIBGIMPPRINT_LIBS)
 escp2_weavetest_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
-
-printer_options_SOURCES = printer_options.c
-printer_options_LDADD = -lm $(LIBGIMPPRINT_LIBS)
-printer_options_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 unprint_SOURCES = unprint.c
 

@@ -1,0 +1,26 @@
+<driver id="driver/@@DRVNAME@@">
+ <name>@@DRVNAME@@</name>
+ <url>http://gimp-print.sourceforge.net/</url>
+ <execution>
+  <ghostscript />
+  <prototype>gs -q -dSAFER -dNOPAUSE -dBATCH -sDEVICE=stp %A%Z -sOutputFile=- -</prototype>
+ </execution>
+ <comments>
+  <en>STP supports a wide variety of Epson Stylus, HP DeskJet and LaserJet,
+    and Canon BubbleJet printers, with the primary goal being
+    uncompromising quality.  Epson Stylus printers in particular are
+    supported in all resolutions and modes, and the latest printers are
+    capable of producing prints that rival photographic prints in
+    quality.  This package also offers much faster printing for high
+    quality text and presentation graphics when required.
+    &lt;p&gt;
+    The execution information currently here corresponds to driver version
+    @@STPVER@@.
+    &lt;p&gt;
+    To get a pre-patched/pre-compiled GNU-GhostScript 5.50 with this driver
+    (version 4.0.4) download sources and binaries of
+    &lt;a href="ftp://ftp2.easysw.com/pub/ghostscript/"&gt;ESP 
+    GhostScript&lt;/a&gt;.</en>
+ </comments>
+ @@STPRINTERS@@
+</driver>

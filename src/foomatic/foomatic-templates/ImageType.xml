@@ -1,0 +1,76 @@
+<option type="enum" id="opt/@@DRVNAME@@-imagetype">
+  <!-- A multilingual <comments> block can appear here, too;
+       it should be treated as documentation for the user. -->
+  <arg_longname>
+   <en>Image Type</en>
+  </arg_longname>
+  <arg_shortname>
+   <en>ImageType</en><!-- backends only know <en> shortnames! -->
+  </arg_shortname>
+  <arg_execution>
+   <arg_order>100</arg_order>
+   <arg_spot>A</arg_spot>
+   <arg_postscript />
+   <arg_proto>&lt;&lt;/ImageType %s&gt;&gt;setpagedevice</arg_proto>
+  </arg_execution>
+  <constraints>
+     <constraint sense="true">
+      <driver>@@DRVNAME@@</driver>
+      <arg_defval>ev/258</arg_defval>
+     </constraint>
+  </constraints>
+  <enum_vals>
+   <enum_val id="ev/258">
+    <ev_longname>
+     <en>Line art (color or gray scale)</en>
+    </ev_longname>
+    <!-- A multilingual <comments> block can appear here, too;
+         it should be treated as documentation for the user. -->
+    <ev_shortname>
+     <en>LineArt</en>
+     <!-- Until someone tells me how to learn the user locale in 
+          backends, the shortname must be monolingual in <en>! -->
+    </ev_shortname>
+    <ev_driverval>0</ev_driverval>
+   </enum_val>
+   <enum_val id="ev/261">
+    <ev_longname>
+     <en>Pure bw or prescreened (currently black-only)</en>
+    </ev_longname>
+    <!-- A multilingual <comments> block can appear here, too;
+         it should be treated as documentation for the user. -->
+    <ev_shortname>
+     <en>Black</en>
+     <!-- Until someone tells me how to learn the user locale in 
+          backends, the shortname must be monolingual in <en>! -->
+    </ev_shortname>
+    <ev_driverval>3</ev_driverval>
+   </enum_val>
+   <enum_val id="ev/259">
+    <ev_longname>
+     <en>Primarily solid colors ro smooth gradients (color or gray scale)</en>
+    </ev_longname>
+    <!-- A multilingual <comments> block can appear here, too;
+         it should be treated as documentation for the user. -->
+    <ev_shortname>
+     <en>Solids</en>
+     <!-- Until someone tells me how to learn the user locale in 
+          backends, the shortname must be monolingual in <en>! -->
+    </ev_shortname>
+    <ev_driverval>1</ev_driverval>
+   </enum_val>
+   <enum_val id="ev/260">
+    <ev_longname>
+     <en>Continuous-tone photographs (color or gray scale)</en>
+    </ev_longname>
+    <!-- A multilingual <comments> block can appear here, too;
+         it should be treated as documentation for the user. -->
+    <ev_shortname>
+     <en>Photos</en>
+     <!-- Until someone tells me how to learn the user locale in 
+          backends, the shortname must be monolingual in <en>! -->
+    </ev_shortname>
+    <ev_driverval>2</ev_driverval>
+   </enum_val>
+  </enum_vals>
+</option>

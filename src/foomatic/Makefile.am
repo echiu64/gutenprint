@@ -23,6 +23,22 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
-SUBDIRS = printdef main cups escputil foomatic ghost gimp include
+INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
+LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
 
+AM_CPPFLAGS =\
+ -DLOCALEDIR=\""$(localedir)"\" \
+ @MAINTAINER_CFLAGS@
+
+noinst_PROGRAMS = printer_options
+
+printer_options_SOURCES = printer_options.c
+printer_options_LDADD = -lm $(LIBGIMPPRINT_LIBS)
+printer_options_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
+
+$(LIBGIMPPRINT_LIBS):
+	$(MAKE) -C ../../src/main
+
+EXTRA_DIST = cyan-sweep.tif parse-escp2 run-weavetest
+CLEANFILES = $(noinst_PROGRAMS)
 MAINTAINERCLEANFILES = Makefile.in

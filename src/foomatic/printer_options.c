@@ -29,7 +29,7 @@
 #else
 #include <gimp-print.h>
 #endif
-#include "../lib/libprintut.h"
+#include "../../lib/libprintut.h"
 
 char *params[] =
 {
