@@ -9,7 +9,7 @@ INTRODUCTION:
 
  This driver works with GhostScript 5.10, 5.50, and 6.51.  It should
  work with any later releases on the 6.5x GNU Ghostscript line, such
- as 6.52XS.  Due to incompatibilities between the Aladdin Free Public
+ as 6.52.  Due to incompatibilities between the Aladdin Free Public
  License (AFPL) and the GNU General Public License (GPL), this driver
  may not be combined and distributed with versions of GhostScript not
  covered by the GPL.  We will not fix bugs reported against
