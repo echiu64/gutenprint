@@ -300,7 +300,6 @@ stp_free_vars(stp_vars_t vv)
   SAFE_FREE(v->media_source);
   SAFE_FREE(v->ink_type);
   SAFE_FREE(v->dither_algorithm);
-  stp_clear_all_options(vv);
 }
 
 #define DEF_STRING_FUNCS(s)				\
@@ -476,7 +475,6 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
   stp_set_cmap(vd, stp_get_cmap(vs));
   stp_set_outfunc(vd, stp_get_outfunc(vs));
   stp_set_errfunc(vd, stp_get_errfunc(vs));
-  stp_clear_all_options(vd);
   stp_copy_options(vd, vs);
   stp_set_verified(vd, stp_get_verified(vs));
 }
@@ -522,133 +520,6 @@ stp_merge_printvars(stp_vars_t user, const stp_vars_t print)
   if (stp_get_output_type(print) == OUTPUT_GRAY &&
       stp_get_output_type(user) == OUTPUT_COLOR)
     stp_set_output_type(user, OUTPUT_GRAY);
-}
-
-static stp_internal_option_t *
-stp_get_option_by_name_internal(const stp_vars_t vd, const char *name)
-{
-  const stp_internal_vars_t *v = (const stp_internal_vars_t *) vd;
-  stp_internal_option_t *opt = (stp_internal_option_t *)v->options;
-  while (opt)
-    {
-      if (!strcmp(opt->name, name))
-        return opt;
-      opt = opt->next;
-    }
-  return opt;
-}
-
-void
-stp_set_option(stp_vars_t vd, const char *name, const char *data, int bytes)
-{
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vd;
-  stp_internal_option_t *opt = stp_get_option_by_name_internal(v, name);
-  if (opt)
-    {
-      if (opt->length == bytes && !memcmp(opt->data, data, bytes))
-        return;
-      stp_free(opt->data);
-    }
-  else
-    {
-      stp_internal_option_t *popt = (stp_internal_option_t *) (v->options);
-      opt = stp_malloc(sizeof(stp_internal_option_t));
-      opt->name = stp_malloc(strlen(name) + 1);
-      strcpy(opt->name, name);
-      opt->next = popt;
-      if (popt)
-        popt->prev = opt;
-      v->options = opt;
-    }
-  opt->data = stp_malloc(bytes);
-  opt->length = bytes;
-  memcpy(opt->data, data, bytes);
-}
-
-void
-stp_clear_option(stp_vars_t vd, const char *name)
-{
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vd;
-  stp_internal_option_t *opt = (stp_internal_option_t *) v->options;
-  while (opt)
-    {
-      if (!strcmp(opt->name, name))
-        {
-          stp_free(opt->name);
-          stp_free(opt->data);
-          if (opt->prev)
-            opt->prev->next = opt->next;
-          if (opt->next)
-            opt->next->prev = opt->prev;
-          stp_free(opt);
-          return;
-        }
-      opt = opt->next;
-    }
-}
-
-size_t
-stp_option_count(const stp_vars_t vd)
-{
-  const stp_internal_vars_t *v = (const stp_internal_vars_t *) vd;
-  size_t i = 0;
-  stp_internal_option_t *opt = v->options;
-  while (opt)
-    {
-      opt = opt->next;
-      i++;
-    }
-  return i;
-}
-
-stp_option_t
-stp_get_option_by_name(const stp_vars_t v, const char *name)
-{
-  return stp_get_option_by_name_internal(v, name);
-}
-
-stp_option_t
-stp_get_option_by_index(const stp_vars_t vd, size_t index)
-{
-  const stp_internal_vars_t *v = (const stp_internal_vars_t *) vd;
-  stp_internal_option_t *opt = v->options;
-  while (index-- && opt)
-    opt = opt->next;
-  return opt;
-}  
-
-const char *
-stp_option_data(const stp_option_t option)
-{
-  return ((const stp_internal_option_t *) option)->data;
-}
-
-const char *
-stp_option_name(const stp_option_t option)
-{
-  return ((const stp_internal_option_t *) option)->name;
-}
-
-size_t
-stp_option_length(const stp_option_t option)
-{
-  return ((const stp_internal_option_t *) option)->length;
-}
-
-void
-stp_clear_all_options(stp_vars_t vd)
-{
-  stp_internal_vars_t *v = (stp_internal_vars_t *)vd;
-  stp_internal_option_t *opt = (stp_internal_option_t *)v->options;
-  while (opt)
-    {
-      stp_internal_option_t *nopt = opt->next;
-      stp_free(opt->name);
-      stp_free(opt->data);
-      stp_free(opt);
-      opt = nopt;
-    }
-  v->options = NULL;
 }
 
 /*
@@ -907,7 +778,7 @@ stp_papersize_get_unit(const stp_papersize_t pt)
  * This is, of course, blatantly thread-unsafe.  However, it certainly
  * speeds up genppd by a lot!
  */
-stp_papersize_t
+const stp_papersize_t
 stp_get_papersize_by_name(const char *name)
 {
   static int last_used_papersize = 0;
@@ -927,7 +798,7 @@ stp_get_papersize_by_name(const char *name)
   return NULL;
 }
 #else
-stp_papersize_t
+const stp_papersize_t
 stp_get_papersize_by_name(const char *name)
 {
   const stp_internal_papersize_t *val = &(paper_sizes[0]);
@@ -941,7 +812,7 @@ stp_get_papersize_by_name(const char *name)
 }
 #endif
 
-stp_papersize_t
+const stp_papersize_t
 stp_get_papersize_by_index(int index)
 {
   if (index < 0 || index >= stp_known_papersizes())
@@ -960,7 +831,7 @@ paper_size_mismatch(int l, int w, const stp_internal_papersize_t *val)
   return hdiff + vdiff;
 }
 
-stp_papersize_t
+const stp_papersize_t
 stp_get_papersize_by_size(int l, int w)
 {
   int score = INT_MAX;
@@ -1030,7 +901,7 @@ stp_known_printers(void)
   return printer_count;
 }
 
-stp_printer_t
+const stp_printer_t
 stp_get_printer_by_index(int idx)
 {
   if (idx < 0 || idx >= printer_count)
@@ -1038,7 +909,7 @@ stp_get_printer_by_index(int idx)
   return (stp_printer_t) &(printers[idx]);
 }
 
-stp_printer_t
+const stp_printer_t
 stp_get_printer_by_long_name(const char *long_name)
 {
   const stp_internal_printer_t *val = &(printers[0]);
@@ -1052,7 +923,7 @@ stp_get_printer_by_long_name(const char *long_name)
   return NULL;
 }
 
-stp_printer_t
+const stp_printer_t
 stp_get_printer_by_driver(const char *driver)
 {
   const stp_internal_printer_t *val = &(printers[0]);
@@ -1108,7 +979,7 @@ stp_printer_get_printfuncs(const stp_printer_t p)
   return val->printfuncs;
 }
 
-stp_vars_t
+const stp_vars_t
 stp_printer_get_printvars(const stp_printer_t p)
 {
   const stp_internal_printer_t *val = (const stp_internal_printer_t *) p;

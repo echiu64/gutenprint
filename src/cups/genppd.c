@@ -142,6 +142,65 @@ msize_t	sizes[] =
 	  { "TabloidExtra",	864,  1296 }
 	};
 
+static struct				/**** STP numeric options ****/
+{
+  const char	*name,			/* Name of option */
+    		*text;			/* Human-readable text */
+  int		low,			/* Low value (thousandths) */
+    		high,			/* High value (thousandths) */
+	        defval,			/* Default value */
+    		step;			/* Step (thousandths) */
+}		stp_options[] =
+{
+  { "stpBrightness",	"Brightness" },
+  { "stpContrast",	"Contrast" },
+  { "stpGamma",		"Gamma" },
+  { "stpDensity",	"Density" },
+  { "stpCyan",		"Cyan" },
+  { "stpMagenta",	"Magenta" },
+  { "stpYellow",	"Yellow" },
+  { "stpSaturation",	"Saturation" }
+};
+
+static void
+initialize_stp_options(void)
+{
+  const stp_vars_t lower = stp_minimum_settings();
+  const stp_vars_t upper = stp_maximum_settings();
+  const stp_vars_t defvars = stp_default_settings();
+  stp_options[0].low = 1000 * stp_get_brightness(lower);
+  stp_options[0].high = 1000 * stp_get_brightness(upper);
+  stp_options[0].defval = 1000 * stp_get_brightness(defvars);
+  stp_options[0].step = 50;
+  stp_options[1].low = 1000 * stp_get_contrast(lower);
+  stp_options[1].high = 1000 * stp_get_contrast(upper);
+  stp_options[1].defval = 1000 * stp_get_contrast(defvars);
+  stp_options[1].step = 50;
+  stp_options[2].low = 1000 * stp_get_gamma(lower);
+  stp_options[2].high = 1000 * stp_get_gamma(upper);
+  stp_options[2].defval = 1000 * stp_get_gamma(defvars);
+  stp_options[2].step = 50;
+  stp_options[3].low = 1000 * stp_get_density(lower);
+  stp_options[3].high = 1000 * stp_get_density(upper);
+  stp_options[3].defval = 1000 * stp_get_density(defvars);
+  stp_options[3].step = 50;
+  stp_options[4].low = 1000 * stp_get_cyan(lower);
+  stp_options[4].high = 1000 * stp_get_cyan(upper);
+  stp_options[4].defval = 1000 * stp_get_cyan(defvars);
+  stp_options[4].step = 50;
+  stp_options[5].low = 1000 * stp_get_magenta(lower);
+  stp_options[5].high = 1000 * stp_get_magenta(upper);
+  stp_options[5].defval = 1000 * stp_get_magenta(defvars);
+  stp_options[5].step = 50;
+  stp_options[6].low = 1000 * stp_get_yellow(lower);
+  stp_options[6].high = 1000 * stp_get_yellow(upper);
+  stp_options[6].defval = 1000 * stp_get_yellow(defvars);
+  stp_options[6].step = 50;
+  stp_options[7].low = 1000 * stp_get_saturation(lower);
+  stp_options[7].high = 1000 * stp_get_saturation(upper);
+  stp_options[7].defval = 1000 * stp_get_saturation(defvars);
+  stp_options[7].step = 50;
+}
 
 /*
  * Local functions...
@@ -176,6 +235,7 @@ main(int  argc,			/* I - Number of command-line arguments */
 
   prefix = "ppd";
 
+  initialize_stp_options();
   for (i = 1; i < argc; i ++)
     if (strcmp(argv[i], "--help") == 0)
     {
@@ -240,7 +300,6 @@ typedef struct
   int top;
 } paper_t;
 
-
 /*
  * 'write_ppd()' - Write a PPD file.
  */
@@ -270,24 +329,6 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   const stp_printfuncs_t *printfuncs;	/* Driver functions */
   paper_t	*the_papers;		/* Media sizes */
   int		cur_opt;		/* Current option */
-  static struct				/**** STP numeric options ****/
-  {
-    const char	*name,			/* Name of option */
-  		*text;			/* Human-readable text */
-    int		low,			/* Low value (thousandths) */
-		high,			/* High value (thousandths) */
-		step;			/* Step (thousandths) */
-  }		stp_options[] =
-  {
-    { "stpBrightness",	"Brightness",	500, 2000, 100 },
-    { "stpContrast",	"Contrast",	500, 2000, 100 },
-    { "stpGamma",	"Gamma",	500, 4000, 100 },
-    { "stpDensity",	"Density",	100, 1000, 50 },
-    { "stpCyan",	"Cyan",		500, 2000, 50 },
-    { "stpMagenta",	"Magenta",	500, 2000, 50 },
-    { "stpYellow",	"Yellow",	500, 2000, 50 },
-    { "stpSaturation",	"Saturation",	0,   1000, 50 }
-  };
 
 
  /*

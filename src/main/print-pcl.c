@@ -1665,7 +1665,18 @@ pcl_default_parameters(const stp_printer_t printer,
     {
       for (i = 0; i < NUM_RESOLUTIONS; i++)
 	{
-	  if (caps->resolutions & pcl_resolutions[i].pcl_code)
+	  if ((caps->resolutions & pcl_resolutions[i].pcl_code) &&
+	      (pcl_resolutions[i].pcl_code >= PCL_RES_300_300))
+	    {
+	      return _(pcl_val_to_string(pcl_resolutions[i].pcl_code,
+					 pcl_resolutions, NUM_RESOLUTIONS));
+	    }
+	}
+      /* If printer can't handle at least 300x300, look for anything that */
+      /* works */
+      for (i = 0; i < NUM_RESOLUTIONS; i++)
+	{
+	  if ((caps->resolutions & pcl_resolutions[i].pcl_code))
 	    {
 	      return _(pcl_val_to_string(pcl_resolutions[i].pcl_code,
 					 pcl_resolutions, NUM_RESOLUTIONS));

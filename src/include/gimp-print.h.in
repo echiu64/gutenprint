@@ -393,21 +393,6 @@ extern stp_outfunc_t stp_get_outfunc (const stp_vars_t vv);
 extern void stp_set_errfunc (const stp_vars_t vv, stp_outfunc_t val);
 extern stp_outfunc_t stp_get_errfunc (const stp_vars_t vv);
 
-extern void stp_set_option (stp_vars_t v, const char *name, const char *data,
-                            int bytes);
-extern void stp_clear_option (stp_vars_t v, const char *name);
-extern void stp_clear_all_options (stp_vars_t v);
-extern size_t stp_option_count (const stp_vars_t v);
-extern const stp_option_t stp_get_option_by_index (const stp_vars_t v,
-                                                   size_t idx);
-extern const stp_option_t stp_get_option_by_name (const stp_vars_t v,
-                                                  const char *name);
-
-/* NOTE: not null delimited! */
-extern const char * stp_option_data (const stp_option_t option);
-extern const char * stp_option_name (const stp_option_t option);
-extern size_t stp_option_length (const stp_option_t option);
-
 /*
  * hue_map is an array of 49 doubles representing the mapping of hue
  * from (0..6) to (0..6) in increments of .125.  The hue_map is in CMY space,
