@@ -3,7 +3,7 @@
  *
  *   GIMP-print based raster filter for the Common UNIX Printing System.
  *
- *   Copyright 1993-2001 by Easy Software Products.
+ *   Copyright 1993-2002 by Easy Software Products.
  *
  *   This program is free software; you can redistribute it and/or
  *   modify it under the terms of the GNU General Public License,
@@ -314,6 +314,8 @@ main(int  argc,				/* I - Number of command-line arguments */
 
     cups.page ++;
     cups.row = 0;
+
+    fprintf(stderr, "PAGE: %d 1\n", cups.page);
 
    /*
     * Debugging info...
