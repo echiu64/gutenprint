@@ -1220,6 +1220,14 @@
 <language value=pcl>
 </printer>
 
+<printer name="HP DesignJet 700" driver="pcl-desnj-700">
+<nocolor>
+<model value=10700>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
 <printer name="HP DesignJet 750C" driver="pcl-750">
 <color>
 <model value=10750>
@@ -1239,6 +1247,22 @@
 <printer name="HP DesignJet 3500C" driver="pcl-desnj-3500">
 <color>
 <model value=12500>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DesignJet 430" driver="pcl-desnj-430">
+<nocolor>
+<model value=10230>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DesignJet 450C" driver="pcl-desnj-450">
+<color>
+<model value=10250>
 <gamma value=0.818>
 <density value=0.786>
 <language value=pcl>

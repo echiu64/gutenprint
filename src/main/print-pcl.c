@@ -337,10 +337,10 @@ static const pcl_cap_t pcl_model_capabilities[] =
     { -1,			/* No selectable paper sources */
     },
   },
-  /* DesignJet 230 */
+  /* DesignJet 230/430 (monochrome ) */
   { 10230,
-    36 * 72, 100 * 12 * 72,
-    5 * 72, 583 * 72 / 100,		/* Min paper size */
+    36 * 72, 150 * 12 * 72,		/* 150ft in roll mode, 64" in sheet */
+    830 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
     PCL_RES_300_300 | PCL_RES_600_600,
     {49, 49, 15, 15},
     {49, 49, 15, 15},
@@ -363,14 +363,41 @@ static const pcl_cap_t pcl_model_capabilities[] =
       -1,
     },
   },
-  /* DesignJet 250C */
+  /* DesignJet 250C/450C/455CA/488CA */
+  /* The "CA" versions have a "software RIP" but are the same hardware */
   { 10250,
-    36 * 72, 100 * 12 * 72,
-    5 * 72, 583 * 72 / 100,		/* Min paper size */
+    36 * 72, 150 * 12 * 72,		/* 150ft in roll mode, 64" in sheet */
+    830 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
     PCL_RES_300_300 | PCL_RES_600_600_MONO,
     {49, 49, 15, 15},
     {49, 49, 15, 15},
     PCL_COLOR_CMYK,
+    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
+    {
+      PCL_PAPERSIZE_LETTER,
+      -1,
+    },
+    {
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    {
+      PCL_PAPERSOURCE_STANDARD,
+      -1,
+    },
+  },
+  /* DesignJet 700 (monochrome) */
+  { 10700,
+    36 * 72, 150 * 12 * 72,		/* 150ft in roll mode, 64" in sheet */
+    830 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
+    PCL_RES_300_300 | PCL_RES_600_600,
+    {30, 30, 15, 15},		/* These margins are for sheet mode FIX */
+    {30, 30, 15, 15},
+    PCL_COLOR_NONE,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
     {
       PCL_PAPERSIZE_LETTER,
@@ -391,10 +418,10 @@ static const pcl_cap_t pcl_model_capabilities[] =
   },
   /* DesignJet 750C */
   { 10750,
-    36 * 72, 100 * 12 * 72,
-    5 * 72, 583 * 72 / 100,		/* Min paper size */
+    36 * 72, 150 * 12 * 72,		/* 150ft in roll mode, 64" in sheet */
+    830 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
     PCL_RES_300_300 | PCL_RES_600_600_MONO,
-    {30, 30, 15, 15},
+    {30, 30, 15, 15},	/* These margins are for roll mode FIX */
     {30, 30, 15, 15},
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
@@ -415,12 +442,12 @@ static const pcl_cap_t pcl_model_capabilities[] =
       -1,
     },
   },
-  /* DesignJet 2500C/3500C */
+  /* DesignJet 2500C/3500C (44" wide) */
   { 12500,	/* Deskjet 2500 already has "2500" */
-    44 * 72, 100 * 12 * 72,
-    5 * 72, 583 * 72 / 100,		/* Min paper size */
+    44 * 72, 150 * 12 * 72,		/* 150ft in roll mode, 64" in sheet */
+    830 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
     PCL_RES_300_300 | PCL_RES_600_600_MONO,
-    {49, 49, 15, 15},
+    {49, 49, 15, 15},		/* Check/Fix */
     {49, 49, 15, 15},
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
