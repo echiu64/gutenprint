@@ -23,12 +23,25 @@ Gimp-Print 4.0a2 contains the following improvements over Gimp-Print
 4) The Ghostscript driver produces more useful error messages if
    incorrect parameters are supplied.
 
-5) The top margin of the Epson Stylus Color 850 should be correct now.
+5) The top margin of the Epson Stylus Color 850 should be correct
+   now.  The printer is not capable of printing to the top of the
+   page.
 
 6) Ink levels have been fine tuned (not necessarily correctly) for
    newer Epson printers.
 
 7) Work around some inlining problems with egcs 1.1.2.
+
+ERRATA:
+
+1) The PDQ and CUPS descriptor files are still not fixed.
+
+2) While calibration should still be improved, there is doubtless much
+   to go.
+
+3) There have been sporadic reports of blank splotches or regions,
+   apparently at the very darkest intensity.  This is not yet fully
+   characterized.
 
 
 Gimp-Print 4.0a1 contains the following improvements over Gimp-Print 3.1.9:
