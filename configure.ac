@@ -389,7 +389,8 @@ STP_CUPS_PROGS
 
 dnl foomatic checks
 if test x${BUILD_FOOMATIC} = xyes ; then
-  AC_PATH_PROG(FOOMATIC_KITLOAD, foomatic-kitload, , [$PATH:/usr/sbin:/usr/local/sbin])
+  PATH_SBIN=$PATH:/usr/sbin:/usr/local/sbin
+  AC_PATH_PROG(FOOMATIC_KITLOAD, foomatic-kitload, , [$PATH_SBIN])
   if test -z "$FOOMATIC_KITLOAD" ; then
     AC_MSG_WARN(Cannot find foomatic-kitload; attempt to install foomatic will fail)
   fi
