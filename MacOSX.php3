@@ -129,10 +129,10 @@ using it and we believe that it will be useful for many purposes.
  <p>
  Gimp-Print 4.2.7 is the newest stable release for Mac OS X; it includes 225
  drivers supporting over 600 printers. The disk-image file includes an OS X
- installer package, an uninstaller package, plus illustrated documentation to easily guide you through
- the printer set-up process. For users running Mac OS X Jaguar This package requires (but does not include) ESP
- Ghostscript 7.05.6 for Mac OS X (<b>download below and install, if
- necessary</b>).  ESP Ghostscript is a required installation only for Mac OS X "Jaguar" (version 10.2.x); later versions of Mac OS X do not require this companion software! 
+ installer package, an uninstaller package, plus illustrated documentation to easily guide you through the printer set-up process.
+</p><p>
+ <em>Please note</em>: Mac OS X Jaguar users need ESP Ghostscript (see below). ESP
+ Ghostscript 7.05.6 for Mac OS X is a required installation <b>only</b> for Mac OS X "Jaguar" (version 10.2.x); later versions of Mac OS X do not require this companion software! 
  </p>
 <!--
  <b>Gimp-Print 4.2.6-rc2</b>
@@ -316,8 +316,7 @@ delayed. All new development is focused on the 5.0 series.
      We have released a replacement USB backend driver for Macintosh
      OS X 10.2 and higher that to the best of our knowledge fixes all
      of these problems.  This driver, named "usbtb", is available on
-     the download site at
-     http://sourceforge.net/project/showfiles.php?group_id=1537&package_id=120183.
+     the <a href="http://sourceforge.net/project/showfiles.php?group_id=1537&package_id=120183">project download site</a> and more information about usbtb is available <a href="http://www.buymelunch.org/printing/usbtb/">here</a>.
      We recommend that all users of OS X 10.2 and above who are having
      printing problems with USB-attached printers try this driver.  In
      addition to resolving these problems, this driver also also
@@ -365,70 +364,23 @@ delayed. All new development is focused on the 5.0 series.
      names.  Previously, certain CUPS applications could display the
      manufacturer names incorrectly.</li>
 
-   <li>Mac OS X users who use the Epson Printer Utility (provided by
-     Epson with their standard driver set) to check ink levels and
-     perform maintenance tasks, such as head cleaning or head
-     alignment, may encounter print job failures when attempting to
-     print with the Gimp-Print driver after using the Epson
-     utility. The cause for this failure is currently unknown, but the
-     workaround is to completely power-cycle the printer, after which
-     the Gimp-Print driver should again print normally.  Another
-     option is to disable the Epson Printer Utility.</li>
-
-   <li>The Mac OS X print dialog may offer an "Autoselect" option as the
-     default media source (input slot) on some printers.  This option
-     may not be valid and can result in nothing being printed.  The
-     workaround is to choose a different setting (explicitly select
-     the input slot you wish to use).</li>
-
-   <li>The new HP DesignJets have not been fully tuned.  In particular,
-     there are reports that they print too light.  This can be
-     corrected with the Density adjustment (try 1.5~1.7 or
-     thereabouts).</li>
-
-   <li>The list of compatible and potentially compatible Hewlett-Packard
-     printers has been updated with the latest available information.
-     If a particular printer does not work with the recommended
-     driver, we recommend that you try other similar drivers, check
-     the Feature Requests at
-     http://sourceforge.net/tracker/?atid=101537&group_id=1537&func=browse,
-     and if the printer is not listed please file a feature request
-     (via the Submit New button).</li>
-
-   <li>Borderless (full-bleed) printing is not quite correct on the
-     Epson Stylus Photo printers that support it (see bug 621668).
-     Typically, the left or right margin is off by 1 mm or less,
-     resulting in a very fine white strip on that edge.</li>
-
-   <li>Many Canon printers do not print correctly at 720x360 DPI.  The
-     workaround is to use 360 or 720 DPI.</li>
-
-   <li>Many new Epson Stylus printers do not return status to the
-     escputil command (for ink level check, etc).  We recommend use of
-     the mtink tool (please see http://xwtools.automatix.de) for this
-     purpose.</li>
-
-   <li>With certain versions of CUPS and in certain configurations, if a
-     new version of Gimp-Print is installed over an existing version
-     genppd will create PPD files based on the older version of
-     Gimp-Print rather than the newer version. </li>
  </ol>
 
  <dl>
-<dt><b>The following bugs have been fixed in Gimp-Print 4.2.6</b>:</dt>
+<dt><b>The following bugs have been fixed in Gimp-Print 4.2.7</b>:</dt>
 
-<dd>627266 Mac OS X: Autoselect option incorrectly offered
-<dd>668342 Canon S-450 prints only one page of a job
-<dd>729918 Postscript family driver fails in non-US locale
-<dd>735493 CUPS PPD files lacking *OutputOrder
-<dd>842715 Epson 600/800/850/1520/3000 fail at certain resolutions BW
-<dd>865253 genppd may not generate new PPD files (4.2)
-</dl>
- <dl>
-<dt><b>The following bugs have been tested and cannot be reproduced</b>:</dt>
+<dd>613054 Mac OS X: Printing from InDesign 2.0 on OS 10.2.1
+<dd>855685 escputil does not return status for C84
+<dd>907765 CUPS filter `progress meter' reports incorrect page number
+<dd>919224 Postscript driver fails in non-US locale with a PPD file
+<dd>919225 segv on ia64 from lack of prototype for strdup
+<dd>919226 Incorrect horizontal offset on Epson C64 and C84 printers
+<dd>924862 Gimp-print breaks thebuild script of the GIMP 2.0 on Solaris
+<dd>929227 Gimp-Print incorrectly attempts to build against GIMP 2.0
+<dd>971832 HP DesignJet 2500/3500 have incorrect widths
+<dd>971833 CUPS PPD manufacturer names violate spec (4.2)
+<dd>972014 eksprx600_610.ppd crashes gimp-print-4.2.6-4
 
-<dd>764041 CNR: Epson 3000 720x360DPI problem
-<dd>828993 CNR: Epson SC 850 using Microweave prints tall characters
 </dl>
  <dl>
 <dt><b>The following bugs are currently open</b>:</dt>
