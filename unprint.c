@@ -827,6 +827,8 @@ void parse_canon(FILE *fp_r){
   int m=0;
   int currentcolor,currentbpp,density,eject,got_graphics;
   int count,counter,cmdcounter;
+  int delay_c=0, delay_m=0, delay_y=0, delay_C=0, 
+    delay_M=0, delay_Y=0, delay_K=0, currentdelay=0;
 
   counter=0;
   
@@ -921,19 +923,19 @@ void parse_canon(FILE *fp_r){
      switch(ch) {
      case 'A': /* 0x41 - transfer graphics data */
        switch (*buf) { 
-       case 'C': currentcolor= 2;
+       case 'C': currentcolor= 2; currentdelay= delay_C;
 	 break;
-       case 'M': currentcolor= 1;
+       case 'M': currentcolor= 1; currentdelay= delay_M;
 	 break;
-       case 'Y': currentcolor= 3;
+       case 'Y': currentcolor= 3; currentdelay= delay_Y;
 	 break;
-       case 'K': currentcolor= 0;
+       case 'K': currentcolor= 0; currentdelay= delay_K;
 	 break;
-       case 'c': currentcolor= 5;
+       case 'c': currentcolor= 5; currentdelay= delay_c;
 	 break;
-       case 'm': currentcolor= 4;
+       case 'm': currentcolor= 4; currentdelay= delay_m;
 	 break;
-       case 'y': currentcolor= 6;
+       case 'y': currentcolor= 6; currentdelay= delay_y;
 	 break;
        default:
 	 fprintf(stderr,"Error: unsupported color type 0x%02x.\n",*buf);
@@ -942,8 +944,10 @@ void parse_canon(FILE *fp_r){
        pstate.current_color= currentcolor;
        m= rle_decode(buf+1,bufsize-1,256*256-1);
        /* reverse_bit_order(buf+1,m); */
+       pstate.yposition+= currentdelay;
        if (m) update_page(buf+1,m,1,(m*8)/pstate.bpp,currentcolor,
-			  pstate.absolute_vertical_units);
+			  pstate.absolute_horizontal_units);
+       pstate.yposition-= currentdelay;
 #ifdef DEBUG_CANON
        fprintf(stderr,"%c:%d>%d  ",*buf,sh-1,m); 
 #endif
@@ -989,6 +993,18 @@ void parse_canon(FILE *fp_r){
      case 'q': /* 0x71 - turn yet something else on/off */
        break;
      case 't': /* 0x74 - contains bpp and line delaying*/
+       pstate.bpp= buf[0];
+       fprintf(stderr,"canon: using %d bpp\n",pstate.bpp);
+       if (buf[1]&0x04) {
+	 delay_y= 0; 
+	 delay_m= 0; 
+	 delay_c= 0; 
+	 delay_Y= 0; 
+	 delay_M= delay_Y+112; 
+	 delay_C= delay_M+112; 
+	 delay_K= delay_C+112; 
+	 fprintf(stderr,"canon: using line delay code\n");
+       }
        break;
               
      default:
