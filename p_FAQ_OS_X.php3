@@ -237,16 +237,18 @@ require('standard_html_header.php3');
  Gimp-Print drivers (PPDs) are not listed there. They use to be there in Gimp-Print
  4.2.5 so where did they go?
  </h3>
-   <p>On Mac OS X when using the provided installer package the PPDs are
-    now stored in the standard PPD location
-   <pre>/Library/Printers/PPDs/Contents/Resources/en.lproj</pre>
-   rather than in
-   <pre>/usr/share/cups/model/C</pre>
-   which is different from all previous releases. This change was
-    made primarily for performance reasons, but it also allows for normal users to find them if need be (the old PPD path is hidden from users in the Mac OS X Finder).  As a consequence of this change,
-    the PPDs will no longer be available for printer setup when
-    using the CUPS web admin; the Apple provided Print Center application
-    is not affected by this change. If you want or need to use the CUPS web
+ <p>Strting with version 4.2.6-pre2 the Mac OS X installer package installs the
+ Gimp-Print PPDs into the "standard" location recommended by Apple,
+ <pre>/Library/Printers/PPDs/Contents/Resources/en.lproj</pre>
+ rather than in the CUPS-standard location of 
+ <pre>/usr/share/cups/model/C</pre>
+ which is different from all previous releases. This change was
+ implemented primarily for performance reasons, but it also provides a means for
+ normal users to find a PPD if need be (the previous PPD path is hidden from users
+ in the Mac OS X Finder).  As a consequence of this change,
+ the Gimp-Print PPDs will no longer be available for printer setup when
+ using the CUPS web admin; the Apple provided Print Center application
+ is not affected by this change. If you want or need to use the CUPS web
  admin to create a printer (if you need to create a serial printer, for example)
  you can still use the CUPS web admin to create the printer, but you will need to
  select one of the available models and then open Print Center/Printer Setup Utility 
