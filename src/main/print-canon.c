@@ -898,7 +898,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1,
     CANON_CAP_STD1,
     {-1,0,0,0,-1,-1}, /*150x150 300x300 600x600 1200x600 1200x1200 2400x2400*/
-    {1,1,1,1,1,1},    /*------- 300x300 600x600 1200x600 --------- ---------*/
+    {1,1,1.8,1,1,1},  /*------- 300x300 600x600 1200x600 --------- ---------*/
     CANON_INK(canon_ink_standard),
     standard_lum_adjustment,
     standard_hue_adjustment,
