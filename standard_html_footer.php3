@@ -7,7 +7,7 @@
 <table border=0 align="right">
 <tr><td>
 <A href="http://sourceforge.net"><IMG
-src="http://sourceforge.net/sflogo.php?group_id=1537&type=5"
+src="http://sourceforge.net/sflogo.php?group_id=1537&amp;type=5"
 width="210" height="63" border="0" alt="SourceForge Logo"></A> 
 </td>
 <td>

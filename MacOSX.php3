@@ -234,6 +234,7 @@ require('standard_html_header.php3');
  <p>
  Gimp-Print version 4.2.3-pre1 is the newest pre-release build in the stable
  4.2 series; it contains the following improvements over Gimp-Print 4.2.2:
+ </p>
  <ul>
  <li>The Epson stylus 600, 800, 850, 1520, and 3000 now print correctly at
  1440x720 DPI.</li>
@@ -256,7 +257,6 @@ require('standard_html_header.php3');
  360x240 bad horizontal position
  </dl>
  &nbsp;
- </p>
  </td>
  </tr>
  <TR bgcolor="#D0D0D0" >
