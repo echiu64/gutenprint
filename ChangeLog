@@ -1,3 +1,32 @@
+2000-11-02	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.70.2.3) (+1 -1)
+	
+	Need the source for the man page, not the man page itself, at top level.
+	
+2000-11-01	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.56.2.4) (+14 -0)
+	
+	4.0.1 release
+	
+2000-10-31	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.73) (+2 -1)
+	
+	Copy escputil man page to Ghost directory
+	
+2000-10-31	<rlk@sourceforge.net>
+
+	Files:	.cvsignore (1.9.2.1) (+1 -0)
+		escputil.1.in (1.1.2.1) (+0 -0)
+		configure.in (1.36.2.3) (+7 -1)
+		RELNOTES (1.33.2.5) (+2 -0)
+		Makefile.am (1.70.2.2) (+5 -1)
+		ChangeLog (1.56.2.3) (+18 -0)
+	
+	escputil man page
+	
 2000-10-31	<rlk@sourceforge.net>
 
 	Files:	.cvsignore (1.10) (+1 -0)
@@ -28,6 +57,59 @@
 		Makefile.am (1.71) (+1 -1)
 	
 	Bring over a few fixes from 4.0+
+	
+2000-10-29	<rlk@sourceforge.net>
+
+	Files:	INSTALL (1.5.12.1) (+1 -15)
+		escputil.c (1.15.2.2) (+2 -2)
+		configure.in (1.36.2.2) (+1 -1)
+		RELNOTES (1.33.2.4) (+13 -3)
+		README (1.35.2.2) (+4 -4)
+		Makefile.am (1.70.2.1) (+1 -1)
+	
+	119667 INSTALL file is out of date
+	119668 escputil will not compile on non-GNU system
+	119669 escputil in Ghostscript in 4.0.0 is obsolete.
+	Bump version.
+	
+2000-10-28	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.56.2.2) (+31 -0)
+	
+	Gimp 1.1.29 sync
+	
+2000-10-24	<rlk@sourceforge.net>
+
+	Files:	RELNOTES (1.33.2.3) (+69 -218)
+	
+	More updates preparing for 4.0 release
+	
+2000-10-24	<rlk@sourceforge.net>
+
+	Files:	RELNOTES (1.33.2.2) (+3 -0)
+	
+	Note fix for Canon positioning bug (117581).
+	
+2000-10-24	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.89.2.1) (+2 -2)
+	
+	Fixed a bug leading to wrong horizontal offsets when xdpi != ydpi
+	
+2000-10-24	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.56.2.1) (+35 -0)
+		configure.in (1.36.2.1) (+1 -1)
+		RELNOTES (1.33.2.1) (+8 -2)
+		README (1.35.2.1) (+6 -7)
+	
+	Prep for 4.0.0
+	
+2000-10-23	<rlk@sourceforge.net>
+
+	Files:	print-pcl.c (1.87.2.1) (+2 -2)
+	
+	116840 LaserJet 4 can do 600 DPI
 	
 2000-10-23	<davehill@sourceforge.net>
 
@@ -63,6 +145,12 @@
 2000-10-21	<rlk@sourceforge.net>
 
 	Files:	escputil.c (1.16) (+2 -1)
+	
+	117385 escputil doesn't work with old printers if -m is specified
+	
+2000-10-21	<rlk@sourceforge.net>
+
+	Files:	escputil.c (1.15.2.1) (+2 -1)
 	
 	117385 escputil doesn't work with old printers if -m is specified
 	
@@ -2426,6 +2514,20 @@
 	have changed incompatibly.  This change was required in order to better
 	support the driver in the long run.
 	
+2000-08-05	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.69.2.5) (+13 -14)
+		Ghost/gdevstp.c (1.28.2.6) (+21 -20)
+		Ghost/README (1.28.2.6) (+12 -12)
+		printdefy.y (1.6.2.4) (+8 -5)
+		print.h (1.71.2.4) (+17 -21)
+		print-util.c (1.111.2.3) (+30 -12)
+		print-ps.c (1.36.2.4) (+13 -30)
+		print-pcl.c (1.66.2.4) (+9 -22)
+		print-escp2.c (1.198.2.5) (+13 -14)
+	
+	Fix the last remaining bugs in the Ghostscript driver revamp.
+	
 2000-08-05	<sharkey@sourceforge.net>
 
 	Files:	Ghost/devs.mak.addon-5.10 (1.2) (+4 -0)
@@ -2440,6 +2542,60 @@
 	The ESC 640 claims to use the new command set, and also claims to be a
 	1440 dpi printer, but it doesn't support the ESC($ command???
 	
+2000-08-05	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.34.2.1) (+4 -5)
+		Ghost/gdevstp.c (1.28.2.5) (+15 -25)
+		Ghost/README (1.28.2.5) (+0 -11)
+		printdefy.y (1.6.2.3) (+5 -1)
+		print.h (1.71.2.3) (+35 -20)
+		print.c (1.104.2.2) (+9 -3)
+		print-util.c (1.111.2.2) (+29 -9)
+		print-ps.c (1.36.2.3) (+39 -10)
+		print-pcl.c (1.66.2.3) (+36 -7)
+		print-escp2.c (1.198.2.4) (+19 -8)
+		print-canon.c (1.69.2.4) (+41 -24)
+		gtk_main_window.c (1.43.2.1) (+4 -5)
+	
+	Set page dimensions correctly (?) in Ghostscript
+	
+2000-08-05	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.69.2.3) (+3 -7)
+		Ghost/gdevstp.c (1.28.2.4) (+51 -30)
+		Ghost/README (1.28.2.4) (+51 -57)
+		printers.xml (1.18.2.3) (+9 -1)
+		printdefy.y (1.6.2.2) (+5 -5)
+		print.h (1.71.2.2) (+12 -7)
+		print.c (1.104.2.1) (+6 -3)
+		print-util.c (1.111.2.1) (+105 -1)
+		print-ps.c (1.36.2.2) (+2 -2)
+		print-pcl.c (1.66.2.2) (+3 -6)
+		print-escp2.c (1.198.2.3) (+3 -7)
+	
+	Check consistency of print variables before printing.
+	
+	Change resolution and dither algorithm to strings rather than numbers.
+	
+2000-08-04	<rlk@sourceforge.net>
+
+	Files:	README.escp2 (1.11.2.1) (+1 -1)
+		Ghost/README (1.28.2.3) (+13 -2)
+		printers.xml (1.18.2.2) (+1 -1)
+		print-escp2.c (1.198.2.2) (+71 -24)
+	
+	Support more paper types.
+	
+	Split out Stylus Photo 670.
+	
+2000-08-04	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.69.2.2) (+43 -1)
+		Ghost/gdevstp.c (1.28.2.3) (+36 -10)
+		Ghost/README (1.28.2.2) (+74 -1)
+	
+	#ifdef out the stderr noise
+	
 2000-08-04	<rlk@sourceforge.net>
 
 	Files:	escputil.c (1.7) (+49 -18)
@@ -2448,6 +2604,37 @@
 	What's testing?).
 	
 	Attempt to function on systems without GNU getopt.
+	
+2000-08-03	<rlk@sourceforge.net>
+
+	Files:	escputil.c (1.6.2.1) (+2 -2)
+	
+	We need to open the raw device write only, not read only.
+	
+2000-08-03	<rlk@sourceforge.net>
+
+	Files:	Ghost/gdevstp.c (1.28.2.2) (+8 -1)
+	
+	Grab the printer model name correctly
+	
+2000-08-03	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.44.2.1) (+1 -1)
+		Ghost/gs-stp.pdq (1.6.2.1) (+286 -71)
+		Ghost/gdevstp.c (1.28.2.1) (+85 -95)
+		Ghost/devs.mak.addon-5.10 (1.1.6.1) (+21 -5)
+		Ghost/contrib.mak.addon (1.7.2.1) (+18 -6)
+		Ghost/com-stp.ppd (1.2.2.1) (+69 -18)
+		Ghost/README (1.28.2.1) (+142 -35)
+		printers.xml (1.18.2.1) (+42 -10)
+		printdefy.y (1.6.2.1) (+5 -1)
+		print.h (1.71.2.1) (+7 -15)
+		print-ps.c (1.36.2.1) (+6 -1)
+		print-pcl.c (1.66.2.1) (+10 -1)
+		print-escp2.c (1.198.2.1) (+1 -3)
+		print-canon.c (1.69.2.1) (+30 -1)
+	
+	Make stp driver work for all supported printers, not just Epson
 	
 2000-08-02	<davehill@sourceforge.net>
 
@@ -2988,6 +3175,17 @@
 	
 	Declare yylex() to clean up a pesky compiler warning.
 	
+2000-06-29	<jmv@sourceforge.net>
+
+	Files:	print-canon.c (1.49.2.5) (+1 -1)
+		print.h (1.55.2.6) (+2 -2)
+		print-pcl.c (1.52.2.5) (+1 -1)
+		print-escp2.c (1.155.2.7) (+92 -72)
+		print-dither.c (1.53.2.8) (+50 -49)
+	
+	Ink reduction is back in. Improved levels for better transitions.
+	Cleanup.
+	
 2000-06-26	<gandy@sourceforge.net>
 
 	Files:	print-canon.c (1.67) (+11 -1)
@@ -3071,6 +3269,14 @@
 	
 	Preparations to improve color output on the canon printers (might break
 	things till the next commit)
+	
+2000-06-23	<jmv@sourceforge.net>
+
+	Files:	print-dither.c (1.53.2.7) (+70 -63)
+		print.h (1.55.2.5) (+2 -0)
+		print-escp2.c (1.155.2.6) (+71 -69)
+	
+	Several corrections. Black improved. Ordered dithering massively improved
 	
 2000-06-22	<gandy@sourceforge.net>
 
@@ -3239,6 +3445,20 @@
 	Files:	printdefy.y (1.5) (+2 -2)
 	
 	Declare main() properly.
+	
+2000-06-20	<jmv@sourceforge.net>
+
+	Files:	gimp_color_window.c (1.6.2.2) (+2 -2)
+		print.h (1.55.2.4) (+1 -0)
+		print.c (1.95.2.3) (+18 -9)
+		print-escp2.c (1.155.2.5) (+48 -18)
+		print-dither.c (1.53.2.6) (+21 -16)
+		gtk_main_window.c (1.14.2.3) (+83 -17)
+		gtk_color_window.c (1.9.2.2) (+2 -2)
+		gimp_main_window.c (1.10.2.3) (+101 -28)
+	
+	Fixes several bugs for 1 ink level and 3 ink level printers.
+	Changes to black generation.
 	
 2000-06-20	<rlk@sourceforge.net>
 
@@ -3416,6 +3636,45 @@
 	
 	Test matrix for 2:1 resolutions
 	
+2000-06-18	<jmv@sourceforge.net>
+
+	Files:	ChangeLog (1.13.2.2) (+101 -0)
+		unprint.c (1.37.6.2) (+44 -44)
+		quickmatrix257.h (1.1.2.1) (+5951 -5951)
+		quickmatrix199.h (1.1.2.1) (+3466 -3466)
+		quickmatrix199-2.h (1.1.2.1) (+3466 -3466)
+		print_gimp.h (1.15.2.2) (+0 -0)
+		print.h (1.55.2.3) (+3 -3)
+		print.c (1.95.2.2) (+6 -6)
+		print-util.c (1.92.2.2) (+5 -5)
+		print-ps.c (1.26.2.2) (+2 -2)
+		print-pcl.c (1.52.2.4) (+61 -61)
+		print-image-gimp.c (1.2.2.2) (+3 -3)
+		print-escp2.c (1.155.2.4) (+437 -234)
+		print-dither.c (1.53.2.5) (+181 -162)
+		print-canon.c (1.49.2.4) (+138 -138)
+		pcl-unprint.c (1.12.2.1) (+11 -11)
+		make-deb.sh (1.1.2.1) (+1 -1)
+		gtk_main_window.c (1.14.2.2) (+57 -47)
+		gtk_color_window.c (1.9.2.1) (+7 -7)
+		gimp_main_window.c (1.10.2.2) (+19 -19)
+		gimp_color_window.c (1.6.2.1) (+2 -2)
+		escp2-weavetest.c (1.11.2.1) (+2 -2)
+		escp2-unprint.c (1.1.6.1) (+8 -8)
+		README.escp2 (1.3.2.2) (+92 -8)
+		README.dither (1.5.2.1) (+4 -3)
+		INSTALL (1.5.6.1) (+4 -1)
+	
+	Merge with 2000-06-17 main repository. gtk "Driver" now shows all printers
+	
+2000-06-18	<rlk@sourceforge.net>
+
+	Files:	Matgen/quickmatrix199-2.i (1.1.2.1) (+0 -0)
+		Matgen/quickmatrix257.i (1.1.2.1) (+0 -0)
+		Matgen/quickmatrix199.i (1.1.2.1) (+0 -0)
+	
+	These files already exist at top level; no need to duplicate them.
+	
 2000-06-18	<rlk@sourceforge.net>
 
 	Files:	Matgen/quickmatrix199-2.i (1.2) (+0 -0)
@@ -3521,12 +3780,49 @@
 	
 	Handle -r1440x720 correctly.
 	
+2000-06-17	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.49.2.3) (+2 -2)
+		print-pcl.c (1.52.2.3) (+2 -2)
+	
+	Fix calls to dither_set_density
+	
+2000-06-17	<jmv@sourceforge.net>
+
+	Files:	ChangeLog (1.13.2.1) (+1268 -1196)
+		Ghost/gs-stp.pdq (1.3.2.1) (+3 -8)
+		Ghost/gdevstp.c (1.13.2.1) (+6 -1)
+		Ghost/README (1.16.2.1) (+2 -2)
+		unprint.c (1.37.6.1) (+2 -2)
+		print_gimp.h (1.15.2.1) (+9 -1)
+		print.c (1.95.2.1) (+12 -87)
+		print-ps.c (1.26.2.1) (+20 -159)
+		print-pcl.c (1.52.2.2) (+98 -335)
+		print-image-gimp.c (1.2.2.1) (+1 -1)
+		print-dither.c (1.53.2.4) (+1 -8)
+		print-canon.c (1.49.2.2) (+95 -268)
+		mkchlog (1.2.2.1) (+17 -7)
+		gtk_main_window.c (1.14.2.1) (+182 -118)
+		gimp_main_window.c (1.10.2.1) (+168 -121)
+		README.escp2 (1.3.2.1) (+8 -92)
+		Makefile.am (1.36.2.1) (+2 -1)
+	
+	Branch cleanup
+	
 2000-06-17	<iay@sourceforge.net>
 
 	Files:	README.escp2 (1.3) (+92 -8)
 	
 	Added information about remote mode commands gleaned from examination of
 	the output of the Epson utilities for the ESC740.
+	
+2000-06-17	<jmv@sourceforge.net>
+
+	Files:	print-dither.c (1.53.2.3) (+120 -99)
+		print-util.c (1.92.2.1) (+134 -2)
+		print-escp2.c (1.155.2.3) (+21 -21)
+	
+	Density based dithering. Improved black generation and color transitions
 	
 2000-06-15	<sharkey@sourceforge.net>
 
@@ -3583,6 +3879,24 @@
 	Scale quadratically rather than linearly between tones to improve
 	transition regions on 6-color and variable dot size printers.
 	
+2000-06-13	<jmv@sourceforge.net>
+
+	Files:	print.h (1.55.2.2) (+25 -6)
+	
+	JMV's work updated
+	
+2000-06-13	<jmv@sourceforge.net>
+
+	Files:	print-escp2.c (1.155.2.2) (+335 -344)
+	
+	JMV's work for epson 870
+	
+2000-06-13	<jmv@sourceforge.net>
+
+	Files:	print-dither.c (1.53.2.2) (+786 -551)
+	
+	JMV's Work based on print-dither 1.60
+	
 2000-06-13	<rlk@sourceforge.net>
 
 	Files:	ChangeLog (1.15) (+86 -0)
@@ -3608,6 +3922,13 @@
 	rendering may see improvements of about an order of magnitude, give
 	or take.  Photographs will not improve very much in rendering
 	performance.
+	
+2000-06-13	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.60.2.1) (+55 -37)
+		print-escp2.c (1.161.2.1) (+386 -193)
+	
+	In case I have a disk crash...
 	
 2000-06-12	<gandy@sourceforge.net>
 
@@ -3893,6 +4214,16 @@
 	
 	Fix a bug which printed the image too far left by the width of the
 	left margin.
+	
+2000-06-03	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.49.2.1) (+2 -2)
+		print.h (1.55.2.1) (+3 -3)
+		print-pcl.c (1.52.2.1) (+2 -2)
+		print-escp2.c (1.155.2.1) (+31 -9)
+		print-dither.c (1.53.2.1) (+101 -51)
+	
+	Put Jean-Marc Verbavatz's stuff on a branch, to make merging easier
 	
 2000-06-03	<rlk@sourceforge.net>
 
@@ -4927,6 +5258,19 @@
 	
 	New dithering code
 	
+2000-04-16	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.19.2.6) (+13 -18)
+	
+	Final
+	
+2000-04-16	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.19.2.5) (+113 -56)
+		print.h (1.48.4.2) (+5 -2)
+	
+	More improvements
+	
 2000-04-15	<mitsch@sourceforge.net>
 
 	Files:	gimp_color_window.c (1.3) (+1 -4)
@@ -4964,6 +5308,12 @@
 	
 	Also had to move the GtkAdjustment definitions to print.c and made
 	them extern in the ui files.
+	
+2000-04-14	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.19.2.4) (+95 -11)
+	
+	Other dithering options
 	
 2000-04-13	<davehill@sourceforge.net>
 
@@ -5005,6 +5355,36 @@
 	wanted.
 	Fixed problem with options being carried from one printer to
 	another.
+	
+2000-04-13	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.19.2.3) (+17 -10)
+		print-escp2.c (1.120.2.3) (+8 -5)
+	
+	Much improved
+	
+2000-04-12	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.19.2.2) (+10 -7)
+		print-escp2.c (1.120.2.2) (+197 -10)
+	
+	some improvement
+	
+2000-04-12	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.119.2.3) (+7 -4)
+	
+	Constant hacking
+	
+2000-04-11	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.35.4.1) (+16 -30)
+		print.h (1.48.4.1) (+57 -22)
+		print-pcl.c (1.40.4.1) (+24 -10)
+		print-escp2.c (1.120.2.1) (+49 -41)
+		print-dither.c (1.19.2.1) (+429 -1108)
+	
+	Yet another dither hack
 	
 2000-04-10	<rlk@sourceforge.net>
 
@@ -5062,9 +5442,31 @@
 	
 2000-03-29	<rlk@sourceforge.net>
 
+	Files:	dither_matrix.c (1.1.2.2) (+0 -0)
+	
+	Again: fuck patents!
+	
+2000-03-29	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.18.2.2) (+5 -28)
+		print-escp2.c (1.119.2.2) (+7 -4)
+	
+	Fuck patents
+	
+2000-03-29	<rlk@sourceforge.net>
+
 	Files:	dither_matrix.c (1.1) ( )
+		dither_matrix.c (1.1.2.1) (+2573 -0)
 	
 	file dither_matrix.c was initially added on branch ordered-dither-branch.
+	
+2000-03-29	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.18.2.1) (+374 -5)
+		run-weavetest (1.11.2.1) (+1 -1)
+		print-escp2.c (1.119.2.1) (+201 -14)
+	
+	Put this in for safety and for people to play with it
 	
 2000-03-27	<smiller@sourceforge.net>
 
@@ -5744,6 +6146,15 @@
 	
 	PDQ
 	
+2000-02-24	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.39.2.4) (+19 -3)
+		print.c (1.38.2.7) (+4 -4)
+		print-util.c (1.49.2.3) (+0 -427)
+		print-pcl.c (1.14.2.2) (+8 -3)
+	
+	3.0.9 fixes
+	
 2000-02-23	<davehill@sourceforge.net>
 
 	Files:	pcl-unprint.c (1.4) (+270 -60)
@@ -5826,6 +6237,24 @@
 	Files:	Ghost/gs-stp.pdq (1.1) ( )
 	
 	pdq/xpdq file for stp; supplied by Grant Taylor
+	
+2000-02-23	<rlk@sourceforge.net>
+
+	Files:	print.c (1.38.2.6) (+298 -90)
+	
+	1) New save settings/print/print and save settings buttons.
+	
+	2) Save "file" printer correctly.
+	
+	3) Location boxes/size and place correctly
+	
+2000-02-22	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.39.2.3) (+12 -7)
+		print.c (1.38.2.5) (+29 -7)
+		print-util.c (1.49.2.2) (+130 -62)
+	
+	3.0.7
 	
 2000-02-22	<gandy@sourceforge.net>
 
@@ -6407,6 +6836,14 @@
 	Files:	print-escp2.c (1.70) (+38 -35)
 	
 	One more try
+	
+2000-02-11	<rlk@sourceforge.net>
+
+	Files:	README (1.6.2.3) (+1 -1)
+		print.c (1.38.2.4) (+3 -3)
+		print-escp2.c (1.39.2.2) (+30 -5)
+	
+	print 3.0.6 fixes
 	
 2000-02-11	<sharkey@sourceforge.net>
 
@@ -7161,11 +7598,55 @@
 	
 2000-01-15	<rlk@sourceforge.net>
 
+	Files:	print-pcl.c (1.14.2.1) (+11 -7)
+		print.c (1.38.2.3) (+40 -3)
+	
+	PCL and Gimp 1.0 patches from Dave Hill
+	
+2000-01-15	<rlk@sourceforge.net>
+
 	Files:	print-escp2.c (1.40) (+275 -237)
 		print.c (1.39) (+15 -3)
 		print-util.c (1.50) (+11 -4)
 	
 	Intermediate version
+	
+2000-01-13	<rlk@sourceforge.net>
+
+	Files:	README (1.6.2.2) (+2 -2)
+		print-util.c (1.49.2.1) (+6 -3)
+	
+	Bump version
+	
+2000-01-13	<rlk@sourceforge.net>
+
+	Files:	print.c (1.38.2.2) (+3 -3)
+	
+	Bump version
+	
+2000-01-13	<rlk@sourceforge.net>
+
+	Files:	README (1.6.2.1) (+5 -3)
+	
+	Updates
+	
+2000-01-13	<rlk@sourceforge.net>
+
+	Files:	print.c (1.38.2.1) (+3 -3)
+	
+	bump version
+	
+2000-01-13	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.39.2.1) (+6 -3)
+	
+	silliness
+	
+2000-01-13	<rlk@sourceforge.net>
+
+	Files:	Makefile.standalone (1.4.2.1) (+1 -1)
+	
+	generic gcc
 	
 2000-01-13	<rlk@sourceforge.net>
 
@@ -7184,6 +7665,18 @@
 	Files:	print.h (1.22) (+15 -2)
 	
 	Gimp merge
+	
+2000-01-13	<rlk@sourceforge.net>
+
+	Files:	README (1.1.1.1) (+21 -6)
+		print.h (1.1.1.2) (+130 -43)
+		print.c (1.1.1.5) (+1393 -368)
+		print-util.c (1.1.1.2) (+2057 -216)
+		print-ps.c (1.1.1.2) (+217 -126)
+		print-pcl.c (1.1.1.2) (+214 -478)
+		print-escp2.c (1.1.1.2) (+1546 -257)
+	
+	Update from the Gimp
 	
 2000-01-09	<rlk@sourceforge.net>
 
@@ -7456,11 +7949,32 @@
 	
 	.
 	
+1999-11-27	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.1.1.5) (+29 -67)
+		Makefile.in (1.1.1.8) (+181 -117)
+	
+	.
+	
+1999-11-27	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.1.1.4) (+67 -29)
+		Makefile.in (1.1.1.7) (+117 -181)
+	
+	.
+	
 1999-11-25	<rlk@sourceforge.net>
 
 	Files:	print.c (1.28) (+44 -33)
 	
 	1.1.12 merge
+	
+1999-11-25	<rlk@sourceforge.net>
+
+	Files:	Makefile.in (1.1.1.6) (+4 -1)
+		print.c (1.1.1.4) (+44 -34)
+	
+	.
 	
 1999-11-25	<rlk@sourceforge.net>
 
@@ -7655,6 +8169,13 @@
 	Files:	Makefile (1.6) (+36 -32)
 	
 	1.1.11 merge
+	
+1999-11-02	<rlk@sourceforge.net>
+
+	Files:	Makefile (1.1.1.4) (+37 -33)
+		Makefile.in (1.1.1.5) (+12 -8)
+	
+	gimp 1.1.11
 	
 1999-11-02	<rlk@sourceforge.net>
 
@@ -7872,6 +8393,18 @@
 	
 	1.1.10 merge
 	
+1999-10-07	<rlk@sourceforge.net>
+
+	Files:	Makefile (1.1.1.3) (+172 -122)
+		print.c (1.1.1.3) (+52 -13)
+		Makefile.in (1.1.1.3) (+128 -171)
+		Makefile.in (1.1.1.4) (+174 -124)
+		Makefile.am (1.1.1.2) (+74 -28)
+		Makefile.am (1.1.1.3) (+29 -74)
+		Makefile (1.1.1.2) (+141 -184)
+	
+	gimp 1.1.10
+	
 1999-10-06	<rlk@sourceforge.net>
 
 	Files:	print.c (1.6) (+214 -125)
@@ -7913,9 +8446,22 @@
 	
 1999-09-12	<rlk@sourceforge.net>
 
+	Files:	Makefile (1.1.1.1) (+41 -29)
+	
+	.
+	
+1999-09-12	<rlk@sourceforge.net>
+
 	Files:	print.c (1.3) (+17 -18)
 	
 	1.1.9 merge
+	
+1999-09-12	<rlk@sourceforge.net>
+
+	Files:	Makefile.in (1.1.1.2) (+31 -19)
+		print.c (1.1.1.2) (+17 -18)
+	
+	.
 	
 1999-09-12	<rlk@sourceforge.net>
 
@@ -7932,13 +8478,21 @@
 1999-09-12	<rlk@sourceforge.net>
 
 	Files:	Makefile.am (1.1) ( )
+		print.h (1.1.1.1) (+0 -0)
 		print.h (1.1) ( )
+		print.c (1.1.1.1) (+0 -0)
 		print.c (1.1) ( )
+		print-util.c (1.1.1.1) (+0 -0)
 		print-util.c (1.1) ( )
+		print-ps.c (1.1.1.1) (+0 -0)
 		print-ps.c (1.1) ( )
+		print-pcl.c (1.1.1.1) (+0 -0)
 		print-pcl.c (1.1) ( )
+		print-escp2.c (1.1.1.1) (+0 -0)
 		print-escp2.c (1.1) ( )
+		Makefile.in (1.1.1.1) (+0 -0)
 		Makefile.in (1.1) ( )
+		Makefile.am (1.1.1.1) (+0 -0)
 	
 	Initial revision
 	
