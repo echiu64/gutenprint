@@ -153,6 +153,8 @@ refresh-data-local: ppd
 
 install-data-hook:
 # Remove unused directories in install tree
+	-@echo 'Expect a number of "rmdir: Directory not empty" warnings'
+	-@echo 'These messages are harmless and should be ignored.'
 	-rmdir $(DESTDIR)$(cups_modeldir)
 	-rmdir $(DESTDIR)$(pkgdatadir)
 	-rmdir $(DESTDIR)$(cupsexec_backenddir)
