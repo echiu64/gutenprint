@@ -12,7 +12,7 @@ command character and a byte count for the arguments that follow.  The
 byte count is a 16-bit (2 byte) binary integer, in little endian
 order.
 
-All arguments listed here are of the form "name<bytes>" where <bytes>
+All arguments listed here are of the form "name[bytes]" where [bytes]
 is the number of bytes that comprise the argument.  The arguments
 themselves are usually one, two, or four byte integers, always little
 endian (the least significant bits come first).  Presumably this is to
@@ -171,15 +171,15 @@ ESC . COMPRESS1 VSEP1 HSEP1 LINES1 WIDTH2 data...
 	The TIFF compression is implemented as one count byte followed
 	by one or more data bytes.  There are two cases:
 
-	1) If the count byte is 128 or less, it is followed by <count>
+	1) If the count byte is 128 or less, it is followed by [count]
            + 1 data bytes.  So if the count byte is 0, it is followed
            by 1 data byte; if it is 128, it is followed by 129 data
            bytes.
 
 	2) If the count byte is greater than 128, it is followed by
-           one byte.  This byte is repeated (257 - <count>) times.  So
-           if <count> is 129, the next byte is treated as though it
-           were repeated 128 times; if <count> is 255, it is treated
+           one byte.  This byte is repeated (257 - [count]) times.  So
+           if [count] is 129, the next byte is treated as though it
+           were repeated 128 times; if [count] is 255, it is treated
            as though it were repeated twice.
 
 ESC i COLOR1 COMPRESS1 BITS1 BYTES2 LINES2 data...
@@ -219,7 +219,7 @@ ESC (R BC=8 00 R E M O T E 1
 	what is in a remote command sequence is described in a separate
 	section below.
 
-ESC 01 @EJL <sp> ID\r\n
+ESC 01 @EJL [sp] ID\r\n
 	Return the printer ID.  This is considered a remote mode
 	command, although the syntax is that of a conventional
 	command.  This returns the following information:
@@ -227,9 +227,9 @@ ESC 01 @EJL <sp> ID\r\n
 @EJL ID\r
 MFG:EPSON;
 CMD:ESCPL2,BDC;
-MDL:<printer model>;
+MDL:[printer model];
 CLS:PRINTER;
-DES:EPSON <printer model>;
+DES:EPSON [printer model];
 \f
 
 After all data has been sent, a form feed byte should be sent.
@@ -241,7 +241,8 @@ communication protocol (whatever that is) and enables normal data
 transfer.  Sending it multiple times is is not harmful, so it is
 normally sent at the beginning of each job:
 
-ESC 01 @EJL<space>1284.4<newline>@EJL<space><space><space><space><space><newline>ESC@
+ESC 01 @EJL[space]1284.4[newline]@EJL[space][space][space][space][space][newline]ESC@
+
 
 
 The proper sequence of initialization commands is:
@@ -270,11 +271,11 @@ repeat for each color:
 	ESC ($ or ESC (\ or ESC \
 	ESC (r or ESC r (if needed -- not used with ESC i and not needed if
 	    the color has not changed from the previous printed line)
-	ESC . or ESC i  ...data... <return> (0A hex)
+	ESC . or ESC i  ...data... [return] (0A hex)
 
 To terminate a page:
 
-<formfeed> (0C hex)
+[formfeed] (0C hex)
 ESC @
 
 
