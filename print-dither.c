@@ -149,6 +149,7 @@ typedef struct dither
   int k_lower;			/* Transition range (lower/upper) for CMY */
   int k_upper;			/* vs. K */
   int density2;			/* Density * 2 */
+  int densityh;			/* Density / 2 */
   unsigned dlb_range;
   unsigned bound_range;
 
@@ -634,6 +635,7 @@ dither_set_density(void *vd, double density)
   d->k_lower = d->k_lower * density;
   d->density = (int) ((65536 * density) + .5);
   d->density2 = 2 * d->density;
+  d->densityh = d->density / 2;
   d->dlb_range = d->density - d->k_lower;
   d->bound_range = d->k_upper - d->k_lower;
   d->d_cutoff = d->density / 16;
@@ -1617,7 +1619,6 @@ dither_monochrome(const unsigned short  *gray,	/* I - Grayscale pixels */
   memset(black, 0, length * bits);
   kptr = black;
   xerror = 0;
-  matrix_set_row(d, kdither, row);
   if (!duplicate_line)
     {
       d->last_line_was_empty = 1;
@@ -1632,27 +1633,24 @@ dither_monochrome(const unsigned short  *gray,	/* I - Grayscale pixels */
     }
   if (d->last_line_was_empty)
     return;
+  matrix_set_row(d, kdither, row);
   for (x = 0; x < dst_width; x++)
     {
-      if (!gray[0])
+      if (gray[0] < 65535 && (d->density >= ditherpoint_fast(d, kdither, x)))
 	{
-	  if (d->density >= ditherpoint_fast(d, kdither, x))
-	    {
-	      tptr = kptr;
-	      for (j = 0; j < bits; j++, tptr += length)
-		tptr[0] |= bit;
-	    }
+	  tptr = kptr;
+	  for (j = 0; j < bits; j++, tptr += length)
+	    tptr[0] |= bit;
 	}
 
       gray   += xstep;
       xerror += xmod;
-      if (bit == 1)
+      bit >>= 1;
+      if (bit == 0)
 	{
 	  kptr ++;
 	  bit = 128;
 	}
-      else
-	bit >>= 1;
       if (xerror >= dst_width)
 	{
 	  xerror -= dst_width;
@@ -1660,6 +1658,48 @@ dither_monochrome(const unsigned short  *gray,	/* I - Grayscale pixels */
 	}
     }
 }
+
+static void
+generate_black(dither_t *d,
+	       const unsigned short *gray,
+	       int *nonzero,
+	       int row)
+{
+  register unsigned short kk;
+  register unsigned short *k = get_valueline(d, ECOLOR_K);
+  register int lnonzero = 0;
+  register int x, xerror, xstep, xmod;
+
+  if (d->src_width == d->dst_width)
+    {
+      for (x = d->dst_width; x > 0; x--)
+	{
+	  kk = *k++ = 65535 - *gray++;
+	  lnonzero |= kk;
+	}
+    }
+  else
+    {
+      xstep  = 3 * (d->src_width / d->dst_width);
+      xmod   = d->src_width % d->dst_width;
+      xerror = 0;
+      for (x = d->dst_width; x > 0; x--)
+	{
+	  kk = *k++ = 65535 - gray[0];
+	  lnonzero |= kk;
+	  gray += xstep;
+	  xerror += xmod;
+	  if (xerror >= d->dst_width)
+	    {
+	      xerror -= d->dst_width;
+	      gray ++;
+	    }
+	}
+    }
+
+  *nonzero = lnonzero;
+}
+
 
 /*
  * 'dither_black()' - Dither grayscale pixels to black.
@@ -1674,65 +1714,46 @@ dither_black_fast(const unsigned short   *gray,	/* I - Grayscale pixels */
 		  int		duplicate_line)
 {
   int		x,		/* Current X coordinate */
-		xerror,		/* X error count */
-		xstep,		/* X step */
-		xmod,		/* X error modulus */
 		length;		/* Length of output bitmap in bytes */
   unsigned char	bit,		/* Current bit */
 		*kptr;		/* Current black pixel */
   int		k;
   dither_t *d = (dither_t *) vd;
+  unsigned short *kl = get_valueline(d, ECOLOR_K);
   dither_color_t *kd = &(d->k_dither);
   dither_matrix_t *kdither = &(d->k_dithermat);
   int dst_width = d->dst_width;
   int dither_very_fast = 0;
+  int nonzero;
   if (kd->nlevels == 1 && kd->ranges[0].bits_h == 1 && kd->ranges[0].isdark_h)
     dither_very_fast = 1;
 
   bit = 128;
 
-  xstep  = d->src_width / d->dst_width;
-  xmod   = d->src_width % d->dst_width;
   length = (d->dst_width + 7) / 8;
 
   memset(black, 0, length * d->k_dither.signif_bits);
   if (!duplicate_line)
     {
-      d->last_line_was_empty = 1;
-      for (x = 0; x < d->src_width; x ++)
-	{
-	  if (gray[x] != 65535)
-	    {
-	      d->last_line_was_empty = 0;
-	      break;
-	    }
-	}
+      generate_black(d, gray, &nonzero, row);
+      d->last_line_was_empty = !nonzero;
     }
   if (d->last_line_was_empty)
     return;
   kptr = black;
-  xerror = 0;
   matrix_set_row(d, &(d->k_dithermat), row);
 
   for (x = 0; x < dst_width; x++)
     {
-      k = 65535 - *gray;
+      k = kl[x];
       print_color_fast(d, kd, k, k, x, row, kptr, NULL, bit, length, kdither,
 		       dither_very_fast);
 
-      gray   += xstep;
-      xerror += xmod;
-      if (bit == 1)
+      bit >>= 1;
+      if (bit == 0)
 	{
 	  kptr ++;
 	  bit = 128;
-	}
-      else
-	bit >>= 1;
-      if (xerror >= dst_width)
-	{
-	  xerror -= dst_width;
-	  gray++;
 	}
     }
 }
@@ -1746,43 +1767,31 @@ dither_black_ordered(const unsigned short   *gray,
 {
 
   int		x,		/* Current X coordinate */
-		xerror,		/* X error count */
-		xstep,		/* X step */
-		xmod,		/* X error modulus */
 		length;		/* Length of output bitmap in bytes */
   unsigned char	bit,		/* Current bit */
 		*kptr;		/* Current black pixel */
   int		k;		/* Current black error */
   dither_t *d = (dither_t *) vd;
+  unsigned short *kl = get_valueline(d, ECOLOR_K);
   int terminate;
+  int nonzero;
   int ink_budget;
 
   bit = 128;
   x = 0;
   terminate = d->dst_width;
 
-  xstep  = d->src_width / d->dst_width;
-  xmod   = d->src_width % d->dst_width;
   length = (d->dst_width + 7) / 8;
 
   memset(black, 0, length * d->k_dither.signif_bits);
   kptr = black;
-  xerror = 0;
   matrix_set_row(d, &(d->k_dithermat), row);
   matrix_set_row(d, &(d->k_pick), row);
 
   if (!duplicate_line)
     {
-      int nonempty = 0;
-      for (x = 0; x < d->src_width; x ++)
-	{
-	  if (gray[x] != 65535)
-	    {
-	      nonempty = 1;
-	      break;
-	    }
-	}
-      d->last_line_was_empty = !nonempty;
+      generate_black(d, gray, &nonzero, row);
+      d->last_line_was_empty = !nonzero;
     }
   if (d->last_line_was_empty)
     return;
@@ -1791,22 +1800,15 @@ dither_black_ordered(const unsigned short   *gray,
     {
       ink_budget = d->ink_limit;
 
-      k = 65535 - *gray;
+      k = kl[x];
       print_color(d, &(d->k_dither), k, k, k, x, row, kptr, NULL, bit,
 		  length, d->k_randomizer, 0, &ink_budget,
 		  &(d->k_pick), &(d->k_dithermat), d->dither_type);
-      gray   += xstep;
-      xerror += xmod;
       bit >>= 1;
       if (bit == 0)
 	{
 	  kptr ++;
 	  bit = 128;
-	}
-      if (xerror >= d->dst_width)
-	{
-	  xerror -= d->dst_width;
-	  gray++;
 	}
     }
 }
@@ -1820,9 +1822,6 @@ dither_black(const unsigned short   *gray,	/* I - Grayscale pixels */
 {
 
   int		x,		/* Current X coordinate */
-		xerror,		/* X error count */
-		xstep,		/* X step */
-		xmod,		/* X error modulus */
 		length;		/* Length of output bitmap in bytes */
   unsigned char	bit,		/* Current bit */
 		*kptr;		/* Current black pixel */
@@ -1831,11 +1830,13 @@ dither_black(const unsigned short   *gray,	/* I - Grayscale pixels */
 		*kerror0,	/* Pointer to current error row */
 		*kerror1;	/* Pointer to next error row */
   dither_t *d = (dither_t *) vd;
+  unsigned short *kl = get_valueline(d, ECOLOR_K);
   int terminate;
   int direction = row & 1 ? 1 : -1;
   int odb = d->spread;
   int odb_mask = (1 << odb) - 1;
   int ink_budget;
+  int nonzero;
 
   if (d->dither_type & D_FAST_BASE)
     {
@@ -1853,8 +1854,6 @@ dither_black(const unsigned short   *gray,	/* I - Grayscale pixels */
   x = (direction == 1) ? 0 : d->dst_width - 1;
   terminate = (direction == 1) ? d->dst_width : -1;
 
-  xstep  = d->src_width / d->dst_width;
-  xmod   = d->src_width % d->dst_width;
   length = (d->dst_width + 7) / 8;
 
   kerror0 = get_errline(d, row, ECOLOR_K);
@@ -1863,16 +1862,8 @@ dither_black(const unsigned short   *gray,	/* I - Grayscale pixels */
   memset(black, 0, length * d->k_dither.signif_bits);
   if (!duplicate_line)
     {
-      int nonempty = 0;
-      for (x = 0; x < d->src_width; x ++)
-	{
-	  if (gray[x] != 65535)
-	    {
-	      nonempty = 1;
-	      break;
-	    }
-	}
-      if (nonempty)
+      generate_black(d, gray, &nonzero, row);
+      if (nonzero)
 	d->last_line_was_empty = 0;
       else
 	d->last_line_was_empty++;
@@ -1892,16 +1883,11 @@ dither_black(const unsigned short   *gray,	/* I - Grayscale pixels */
     }
 
   kptr = black;
-  xerror = 0;
   if (direction == -1)
     {
       kerror0 += d->dst_width - 1;
       kerror1 += d->dst_width - 1;
       kptr = black + length - 1;
-      xstep = -xstep;
-      gray += d->src_width - 1;
-      xerror = ((d->dst_width - 1) * xmod) % d->dst_width;
-      xmod = -xmod;
     }
   matrix_set_row(d, &(d->k_dithermat), row);
   matrix_set_row(d, &(d->k_pick), row);
@@ -1914,7 +1900,7 @@ dither_black(const unsigned short   *gray,	/* I - Grayscale pixels */
     {
       ink_budget = d->ink_limit;
 
-      k = 65535 - *gray;
+      k = kl[x];
       ok = k;
       k = UPDATE_COLOR(k, ditherk);
       k = print_color(d, &(d->k_dither), ok, ok, k, x, row, kptr, NULL,
@@ -1923,8 +1909,6 @@ dither_black(const unsigned short   *gray,	/* I - Grayscale pixels */
       ditherk = update_dither(k, ok, d->src_width, odb, odb_mask,
 			      direction, kerror0, kerror1, d);
 
-      gray   += xstep;
-      xerror += xmod;
       if (direction == 1)
 	{
 	  bit >>= 1;
@@ -1933,25 +1917,16 @@ dither_black(const unsigned short   *gray,	/* I - Grayscale pixels */
 	      kptr ++;
 	      bit = 128;
 	    }
-	  if (xerror >= d->dst_width)
-	    {
-	      xerror -= d->dst_width;
-	      gray++;
-	    }
 	}
       else
 	{
-	  bit <<= 1;
-	  if (bit == 256)
+	  if (bit == 128)
 	    {
 	      kptr --;
 	      bit = 1;
 	    }
-	  if (xerror < 0)
-	    {
-	      xerror += d->dst_width;
-	      gray--;
-	    }
+	  else
+	    bit <<= 1;
 	}
     }
 }
@@ -2286,10 +2261,10 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
       if (black)
 	{
 	  k = USMIN(c, USMIN(m, y));
-	  if (k < 32768)
+	  if (k < d->densityh)
 	    k = 0;
 	  else
-	    k = 65535 - ((65535 - k) * 2);
+	    k = (d->density - 1) - ((d->density - 1 - k) * 2);
 	  c -= k;
 	  m -= k;
 	  y -= k;
