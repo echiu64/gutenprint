@@ -12,7 +12,7 @@ require('standard_html_header.php3');
 # Please remember to use <P> </P> tags !  ?>
 
 <p>Please download gimp-print from <a
-href="https://sourceforge.net/project/?group_id=1537>our project page.</a></p>
+href="https://sourceforge.net/project/?group_id=1537">our project page.</a></p>
 
 
 <p>You may view the <a href="http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/?cvsroot=gimp-print">CVS web interface</a>.</p>
