@@ -237,6 +237,14 @@
         <gamma value="0.585"/>
         <density value="1.0"/>
       </printer>
+      <printer name="EPSON Stylus C50" driver="escp2-c50">
+        <color value="true"/>
+        <model value="56"/>
+        <magenta value="0.95"/>
+        <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
+      </printer>
       <printer name="EPSON Stylus C60" driver="escp2-c60">
         <color value="true"/>
         <model value="33"/>

@@ -1318,6 +1318,22 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     variable_bits, variable_base_res, &default_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
+  /* 56: Stylus C50 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
+     MODEL_FAST_360_NO),
+    15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
+    9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
+    0, 1, 0, 0, -99, 0, 0,
+    c4pl_dotsizes, c4pl_densities,
+    &stpi_escp2_variable_4pl_inks, &stpi_escp2_standard_paper_list,
+    stpi_escp2_standard_reslist, &stpi_escp2_x80_inklist,
+    variable_bits, variable_base_res, &default_input_slot_list,
+    &new_init_sequence, &je_deinit_sequence
+  },
 };
 
 const int stpi_escp2_model_limit =
