@@ -1,6 +1,5 @@
-Gimp-Print 4.2.4-rc1, released November 19, 2002, is a release
-candidate for Gimp-Print 4.2.4 the stable Gimp-Print 4.2 series (it is
-not Gimp-Print 4.2.4).
+Gimp-Print 4.2.4, released November 25, 2002, is a stable release in
+the Gimp-Print 4.2 series.
 
 Gimp-Print is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -30,34 +29,128 @@ Users of Macintosh OS X 10.2 and above can use this package, as the
 printing system is based on CUPS, which is supported by Gimp-print.
 Note that Macintosh OS X 10.0 and 10.1 (including 10.1.5) cannot use
 this package.  We recommend that Macintosh OS X users download the
-precompiled installer package from http://gimp-print.sourceforge.net
-rather than attempt to build this package from source, as using the
-installer is much simpler.  We further recommend that Macintosh OS X
-users install ESP GhostScript, to permit printing from Carbon
-applications (such as most Adobe applications) that generate
-PostScript rather than PDF output.  Directions for that are also
-available at http://gimp-print.sourceforge.net.
+precompiled installer package from
+http://gimp-print.sourceforge.net/MacOSX.php3 rather than attempt to
+build this package from source, as using the installer is much
+simpler.  We further recommend that Macintosh OS X users install ESP
+GhostScript, to permit printing from Carbon applications (such as most
+Adobe applications) that generate PostScript rather than PDF output.
+Directions for that are also available at
+http://gimp-print.sourceforge.net/MacOSX.php3.
 
 Please read the README file for full instructions on installing this
 package.
 
-Gimp-Print 4.2.4-rc1 contains the following fixes and changes over
-Gimp-Print 4.2.4-pre2:
 
-  1) Support for the HP DesignJet 230, 250, 430, 450, 455, 488, 700,
-     2500, and 3500 printers.
+Gimp-Print 4.2.4 contains the following major changes over Gimp-Print
+4.2.3:
 
-  2) PCL laser printers (pcl-2, pcl-3, pcl-4, pcl-5, and pcl-6),
-     including HP LaserJet printers and many other models, now print
-     black correctly (previously it was printed as a medium gray).
 
-  3) PCL laser printers now have correct margins on A4 paper.
+* Major Bugs Fixed:
 
-The following bugs have been fixed in Gimp-Print 4.2.4-rc1:
+  1) (bugs 603702 and 619537) All PCL laser printers (including HP
+     LaserJet and many other printer lines) printed too light (black
+     came out as medium gray).
 
-631936 HP DesignJet Margin Problems
-619537 QUALITY - Poor quality w/ Lexmark OprtaE+ and pcl-4
+  2) (bugs 631993 and 633910) Various problems with the PPD files
+     used by the native CUPS driver worked incorrectly with many
+     applications, leading to failures to print, failures to recognize
+     certain page sizes, and custom page sizes not working correctly
+     have been fixed.  To fix these problems, you must reinstall all
+     of your printer queues using Gimp-Print PPD files.  To do this,
+     you must delete and re-create the printer queue (merely modifying
+     or configuring the queue will not solve the problem).
+
+     Please see the release notes for 4.2.3 (below) for instructions
+     on using custom page sizes.
+
+  3) (bug 628698) Lexmark printers produced severely distorted colors
+     in some cases.
+
+  4) (bug 631498) Canon large-format printers did not support A3 paper
+     size; these printers are now capable of printing on that size
+     paper.
+
+  5) (no bug number) PCL laser printers now have correct margins on
+     A4-size paper.
+
+  6) (bug 630365) The Epson Stylus Photo 950 now prints correctly in
+     1440x1440 and 2880x720 DPI modes.  This is not significant new
+     functionality; these modes are actually printed at 2880x1440,
+     which did not have htis problem.
+
+  7) (no bug number, but related to 628698) 6-color HP printers should
+     now print correctly using all 6 colors.
+
+  8) (no bug number) The dimensions for 22x30 watercolor paper were
+     incorrect.
+
+
+* New Functionality:
+
+  1) The following HP DesignJet large-format plotters are now
+     supported: DesignJet 230, 250, 430, 450, 455, 488, 700, 2500, and
+     3500.  Other DesignJet printers may work with one of these
+     drivers.
+
+  2) The following Epson multi-function devices are now supported as
+     printers: Stylus 3200CX and 5200CX.  This project does not
+     support scanners, so we cannot offer any advice on the scanner
+     component of these units.
+
+  3) The Epson MJ-930C is now supported.
+
+  4) Various manual pages have been added or updated.  See
+     gimpprint(3), ijsgimpprint(1), escputil(1), and cups-calibrate(8)
+     for more information.
+
+
+* Exceptions and Workarounds:
+
+  1) The new HP DesignJets have not been fully tuned.  In particular,
+     there are reports that they print too light.  This can be
+     corrected with the Density adjustment (try 1.5~1.7 or
+     thereabouts).
+
+  2) The version of libtool used to build this package, 1.4.2, does
+     not create shared libraries correctly on some platforms (in
+     particular, 68k and MIPS).  The workaround is to either build
+     static libraries only (configure --disable-shared), or to
+     regenerate the libtool with libtool 1.4.3.  We expect this to be
+     fixed in a future release.
+
+  3) The Epson Stylus 2200 has not been tuned in 7-color mode, and
+     reports are that quality is subpar in this mode.  We recommend
+     using 6-color mode until this is tuned, which we hope to be in
+     the near future.
+
+  4) There are longstanding reports of problems printing with certain
+     USB-parallel and USB-serial adapters on Macintosh OS X.  In
+     particular, many users have reported problems with the Keyspan
+     adapter; we recommend that users having problems try different
+     brands of adapters, and avoid using USB hubs.  Please check our
+     web site (http://gimp-print.sourceforge.net) for updates.
+
+  5) The list of compatible and potentially compatible Hewlett-Packard
+     printers has been updated with the latest available information.
+     If a particular printer does not work with the recommended
+     driver, we recommend that you try other similar drivers, check
+     the Feature Requests at
+     http://sourceforge.net/tracker/?atid=101537&group_id=1537&func=browse,
+     and if the printer is not listed please file a feature request
+     (via the Submit New button).
+
+
+The following bugs have been fixed in Gimp-Print 4.2.4:
+
 603702 QUALITY-HP LaserJet 5L print is too light
+619537 QUALITY - Poor quality w/ Lexmark OprtaE+ and pcl-4
+628698 Lexmark color reversal
+630365 Epson Stylus Photo 950: Enlarged image with some 1440/2800
+631498 Canon driver does not support A3 page size for large format
+631936 HP DesignJet Margin Problems
+631993 Macintosh OS X: Custom page size problems w/some apps
+633910 Epson 1520 ppd bug gimp-print 4.2.3
 
 The following bugs are currently open:
 
@@ -77,52 +170,9 @@ The following bugs are currently open:
 627978 QUALITY: Canon BJC-6500 has magenta cast.
 631937 HP DesignJet Sheet Cutter Problem
 639356 Build system: The version of libtool is too old
-
-
-Gimp-Print 4.2.4-pre2 contains the following fixes and changes over
-Gimp-Print 4.2.4-pre1:
-
-  1) Custom pages sizes should now work with all applications
-     supporting them.
-
-  2) The Foomatic option names now match the names of the options in
-     the native CUPS driver.
-
-  3) Man pages for gimpprint(3) (i. e. libgimpprint) have been added.
-
-The following bug has been fixed in Gimp-Print 4.2.4-pre2:
-
-631993 Macintosh OS X: Custom page size problems w/some apps
-
-
-
-Gimp-Print 4.2.4-pre1 contains the following fixes and changes over
-Gimp-Print 4.2.3:
-
-  1) Serious color errors with Lexmark printers have been fixed.
-
-  2) An inability of CUPS to print certain page sizes has been fixed.
-
-  3) 6-color HP and Lexmark printers now print correctly.
-
-  4) The Epson Stylus Photo 950, 960, and PM-950C now print correctly
-     at 1440x1440 and 2880x720 DPI.  This is not a major fix; these
-     resolutions are actually printed at 2880x1440 DPI (which did not
-     have problems).  This printer (these are all different names for
-     the same printer) is not actually capable of printing at
-     1440x1440 or 2880x720 DPI.
-
-  5) Page sizes for some Canon printers have been corrected; A3-format
-     printing is now supported on appropriate printers.
-
-  6) Support for the Epson MJ-930C has been added.
-
-The following bugs have been fixed in Gimp-Print 4.2.4-pre1:
-
-628698 Lexmark color reversal
-630365 Epson Stylus Photo 950: Enlarged image with some 1440/2800
-631498 Canon driver does not support A3 page size for large format
-633910 Epson 1520 ppd bug gimp-print 4.2.3
+641992 HP DesignJet 455CA printing rotated 90
+641981 HP DesignJet 455 too light
+641628 QUALITY: Epson Stylus 2200 print quality is low in 7-color
 
 
 
@@ -770,16 +820,16 @@ EPSON Stylus C20SX
 EPSON Stylus C20UX
 EPSON Stylus C40SX
 EPSON Stylus C40UX
-EPSON Stylus C41SX              (NEW)
-EPSON Stylus C41UX              (NEW)
-EPSON Stylus C42SX              (NEW)
-EPSON Stylus C42UX              (NEW)
+EPSON Stylus C41SX
+EPSON Stylus C41UX
+EPSON Stylus C42SX
+EPSON Stylus C42UX
 EPSON Stylus C60
-EPSON Stylus C61                (NEW)
-EPSON Stylus C62                (NEW)
+EPSON Stylus C61
+EPSON Stylus C62
 EPSON Stylus C70
 EPSON Stylus C80
-EPSON Stylus C82                (NEW)
+EPSON Stylus C82
 EPSON Stylus Color
 EPSON Stylus Color Pro
 EPSON Stylus Color Pro XL
@@ -810,72 +860,74 @@ EPSON Stylus Color 3000
 EPSON Stylus Photo
 EPSON Stylus Photo 700
 EPSON Stylus Photo EX
-EPSON Stylus Photo EX3          (NEW)
+EPSON Stylus Photo EX3
 EPSON Stylus Photo 720
 EPSON Stylus Photo 750
 EPSON Stylus Photo 780/785/790
 EPSON Stylus Photo 810/820
-EPSON Stylus Photo 825/830      (NEW)
+EPSON Stylus Photo 825/830
 EPSON Stylus Photo 870/875
 EPSON Stylus Photo 890/895
-EPSON Stylus Photo 915          (NEW)
-EPSON Stylus Photo 925          (NEW)
-EPSON Stylus Photo 950          (NEW)
-EPSON Stylus Photo 960          (NEW)
+EPSON Stylus Photo 915
+EPSON Stylus Photo 925
+EPSON Stylus Photo 950
+EPSON Stylus Photo 960
 EPSON Stylus Photo 1200
 EPSON Stylus Photo 1270
 EPSON Stylus Photo 1280/1290
 EPSON Stylus Photo 2000P
-EPSON Stylus Photo 2100         (NEW, experimental)
-EPSON Stylus Photo 2200         (NEW, experimental)
+EPSON Stylus Photo 2100         (experimental)
+EPSON Stylus Photo 2200         (experimental)
 EPSON Stylus Pro 5000
 EPSON Stylus Pro 5500
 EPSON Stylus Pro 7000
 EPSON Stylus Pro 7500
-EPSON Stylus Pro 7600           (NEW, experimental)
+EPSON Stylus Pro 7600           (experimental)
 EPSON Stylus Pro 9000
 EPSON Stylus Pro 9500
-EPSON Stylus Pro 9600           (NEW, experimental)
+EPSON Stylus Pro 9600           (experimental)
 EPSON Stylus Pro 10000
 EPSON Stylus Scan 2000
 EPSON Stylus Scan 2500
 EPSON Stylus CX-3200            (NEW)
 EPSON Stylus CX-5200            (NEW)
-EPSON CL-700                    (NEW)
-EPSON CL-750                    (NEW)
-EPSON EM-900C                   (NEW)
-EPSON EM-930C                   (NEW)
-EPSON MC-10000                  (NEW)
-EPSON MC-2000                   (NEW)
-EPSON MC-5000                   (NEW)
-EPSON MC-7000                   (NEW)
-EPSON MC-9000                   (NEW)
-EPSON MJ-5100C                  (NEW)
-EPSON MJ-6000C                  (NEW)
-EPSON MJ-8000C                  (NEW)
-EPSON PM-10000                  (NEW)
-EPSON PM-2000C                  (NEW)
-EPSON PM-2200C                  (NEW)
-EPSON PM-3000C                  (NEW)
-EPSON PM-3300C                  (NEW)
-EPSON PM-3500C                  (NEW)
-EPSON PM-4000PX                 (NEW)
-EPSON PM-5000C                  (NEW)
-EPSON PM-7000C                  (NEW)
-EPSON PM-700C                   (NEW)
-EPSON PM-730C                   (NEW)
-EPSON PM-750C                   (NEW)
-EPSON PM-760C                   (NEW)
-EPSON PM-770C                   (NEW)
-EPSON PM-780C                   (NEW)
-EPSON PM-790PT                  (NEW)
-EPSON PM-800C                   (NEW)
-EPSON PM-850PT                  (NEW)
-EPSON PM-880C                   (NEW)
-EPSON PM-9000C                  (NEW)
-EPSON PM-950C                   (NEW)
-EPSON PX-7000                   (NEW)
-EPSON PX-9000                   (NEW)
+EPSON CL-700
+EPSON CL-750
+EPSON EM-900C
+EPSON EM-930C
+EPSON MC-10000
+EPSON MC-2000
+EPSON MC-5000
+EPSON MC-7000
+EPSON MC-9000
+EPSON MJ-520C
+EPSON MJ-930C
+EPSON MJ-5100C
+EPSON MJ-6000C
+EPSON MJ-8000C
+EPSON PM-10000
+EPSON PM-2000C
+EPSON PM-2200C
+EPSON PM-3000C
+EPSON PM-3300C
+EPSON PM-3500C
+EPSON PM-4000PX
+EPSON PM-5000C
+EPSON PM-7000C
+EPSON PM-700C
+EPSON PM-730C
+EPSON PM-750C
+EPSON PM-760C
+EPSON PM-770C
+EPSON PM-780C
+EPSON PM-790PT
+EPSON PM-800C
+EPSON PM-850PT
+EPSON PM-880C
+EPSON PM-9000C
+EPSON PM-950C
+EPSON PX-7000
+EPSON PX-9000
 HP DeskJet 340
 HP DeskJet 400
 HP DeskJet 500
@@ -1111,9 +1163,9 @@ Epson MC-2000                  escp2-mc2000    EPSON MC-2000
 Epson MC-5000                  escp2-mc5000    EPSON MC-5000
 Epson MC-7000                  escp2-mc7000    EPSON MC-7000
 Epson MC-9000                  escp2-mc9000    EPSON MC-9000
-Epson MJ-5100C                 escp2-mj5100c   EPSON MJ-5100C
 Epson MJ-520C                  escp2-mj520c    EPSON MJ-520C
 Epson MJ-930C                  escp2-mj930c    EPSON MJ-930C
+Epson MJ-5100C                 escp2-mj5100c   EPSON MJ-5100C
 Epson MJ-6000C                 escp2-mj6000c   EPSON MJ-6000C
 Epson MJ-8000C                 escp2-mj8000c   EPSON MJ-8000C
 Epson MC-10000                 escp2-mc10000   EPSON MC-10000
@@ -1159,8 +1211,12 @@ HP DesignJet 2500              pcl-desnj-2500  HP DesignJet 2500
 HP DesignJet 3500              pcl-desnj-3500  HP DesignJet 3500
 HP DeskJet 340C                pcl-340         HP DeskJet 340
 HP DeskJet 400                 pcl-400         HP DeskJet 400
+HP DeskJet 400C                pcl-540         HP DeskJet 540C
+HP DeskJet 420C                pcl-540         HP DeskJet 540C
 HP DeskJet 500                 pcl-500         HP DeskJet 500
+HP DeskJet 505J Plus           pcl-500         HP DeskJet 500
 HP DeskJet 500C                pcl-501         HP DeskJet 500C
+HP DeskJet 510                 pcl-500         HP DeskJet 500
 HP DeskJet 520                 pcl-520         HP DeskJet 520
 HP DeskJet 540C                pcl-540         HP DeskJet 540C
 HP DeskJet 550C                pcl-550         HP DeskJet 550C
@@ -1185,22 +1241,37 @@ HP DeskJet 697C                pcl-690         HP DeskJet 690 series
 HP DeskJet 810C                pcl-810         HP DeskJet 810C
 HP DeskJet 812C                pcl-812         HP DeskJet 812C
 HP DeskJet 815C                pcl-812         HP DeskJet 812C
+HP DeskJet 816C                pcl-812         HP DeskJet 812C
 HP DeskJet 830C                pcl-810         HP DeskJet 810C
 HP DeskJet 832C                pcl-810         HP DeskJet 810C
 HP DeskJet 840C                pcl-840         HP DeskJet 840C
 HP DeskJet 841C                pcl-840         HP DeskJet 840C
 HP DeskJet 842C                pcl-842         HP DeskJet 842C
+HP DeskJet 843C                pcl-842         HP DeskJet 842C
 HP DeskJet 845C                pcl-845         HP DeskJet 845C
 HP DeskJet 850C                pcl-850         HP DeskJet 850C
 HP DeskJet 855C                pcl-855         HP DeskJet 855C
+HP DeskJet 880C                pcl-810         HP DeskJet 810C
+HP DeskJet 882C                pcl-810         HP DeskJet 810C
 HP DeskJet 870C                pcl-870         HP DeskJet 870C
 HP DeskJet 890C                pcl-890         HP DeskJet 890C
 HP DeskJet 895C                pcl-895         HP DeskJet 895C
+HP DeskJet 916C                pcl-900         HP DeskJet 900 series
+HP DeskJet 920C                pcl-900         HP DeskJet 900 series
 HP DeskJet 930C                pcl-900         HP DeskJet 900 series
 HP DeskJet 932C                pcl-900         HP DeskJet 900 series
+HP DeskJet 933C                pcl-900         HP DeskJet 900 series
+HP DeskJet 934C                pcl-900         HP DeskJet 900 series
+HP DeskJet 935C                pcl-900         HP DeskJet 900 series
+HP DeskJet 940C                pcl-900         HP DeskJet 900 series
+HP DeskJet 948C                pcl-900         HP DeskJet 900 series
 HP DeskJet 950C                pcl-900         HP DeskJet 900 series
 HP DeskJet 952C                pcl-900         HP DeskJet 900 series
+HP DeskJet 955C                pcl-900         HP DeskJet 900 series
+HP DeskJet 957C                pcl-900         HP DeskJet 900 series
+HP DeskJet 959C                pcl-900         HP DeskJet 900 series
 HP DeskJet 970C                pcl-900         HP DeskJet 900 series
+HP DeskJet 975C                pcl-900         HP DeskJet 900 series
 HP DeskJet 990C                pcl-900         HP DeskJet 900 series
 HP DeskJet 1100C               pcl-1100        HP DeskJet 1100C
 HP DeskJet 1120C               pcl-1120        HP DeskJet 1120C
@@ -1212,6 +1283,11 @@ HP DeskJet 1600CM              pcl-1600        HP DeskJet 1600C
 HP DeskJet 2000C               pcl-2000        HP DeskJet 2000 series
 HP DeskJet 2500C               pcl-2500        HP DeskJet 2500 series
 HP DeskJet 2500CM              pcl-2500        HP DeskJet 2500 series
+HP DeskJet 3810                pcl-900         HP DeskJet 900 series
+HP DeskJet 3816                pcl-900         HP DeskJet 900 series
+HP DeskJet 3820                pcl-900         HP DeskJet 900 series
+HP DeskJet 3822                pcl-900         HP DeskJet 900 series
+HP E-printer E20               pcl-601         HP DeskJet 600 series
 HP LaserJet 2                  pcl-2           HP LaserJet II series
 HP LaserJet 2D                 pcl-2           HP LaserJet II series
 HP LaserJet 2P                 pcl-2           HP LaserJet II series
@@ -1253,10 +1329,35 @@ HP OfficeJet                   pcl-520         HP DeskJet 520
 HP OfficeJet 300               pcl-520         HP DeskJet 520
 HP OfficeJet 330               pcl-520         HP DeskJet 520
 HP OfficeJet 350               pcl-520         HP DeskJet 520
+HP OfficeJet 500               pcl-601         HP DeskJet 600 series
+HP OfficeJet 600               pcl-601         HP DeskJet 600 series
+HP OfficeJet 625               pcl-601         HP DeskJet 600 series
+HP OfficeJet 635               pcl-601         HP DeskJet 600 series
+HP OfficeJet 720               pcl-690         HP DeskJet 690 series
+HP OfficeJet G55               pcl-900         HP DeskJet 900 series
+HP OfficeJet G85               pcl-900         HP DeskJet 900 series
+HP OfficeJet G95               pcl-900         HP DeskJet 900 series
+HP OfficeJet K60               pcl-900         HP DeskJet 900 series
+HP OfficeJet K80               pcl-900         HP DeskJet 900 series
 HP OfficeJet LX                pcl-520         HP DeskJet 520
 HP OfficeJet Pro 1150C         pcl-850         HP DeskJet 850C
+HP OfficeJet Pro 1170          pcl-890         HP DeskJet 890C
+HP OfficeJet Pro 1175          pcl-890         HP DeskJet 890C
+HP OfficeJet R40               pcl-810         HP DeskJet 810C
+HP OfficeJet R45               pcl-810         HP DeskJet 810C
+HP OfficeJet R60               pcl-810         HP DeskJet 810C
+HP OfficeJet R65               pcl-810         HP DeskJet 810C
+HP OfficeJet R80               pcl-810         HP DeskJet 810C
+HP OfficeJet T45               pcl-810         HP DeskJet 810C
+HP OfficeJet T65               pcl-810         HP DeskJet 810C
+HP OfficeJet V40               pcl-900         HP DeskJet 900 series
 HP PhotoSmart P1000            pcl-P1000       HP PhotoSmart P1000
 HP PhotoSmart P1100            pcl-P1100       HP PhotoSmart P1100
+HP PSC 370                     pcl-690         HP DeskJet 690 series
+HP PSC 380                     pcl-690         HP DeskJet 690 series
+HP PSC 500                     pcl-810         HP DeskJet 810C
+HP PSC 750                     pcl-900         HP DeskJet 900 series
+HP PSC 950                     pcl-900         HP DeskJet 900 series
 IBM 4019                       pcl-2           HP LaserJet II series
 IBM 4029 030 LaserPrinter 10   pcl-2           HP LaserJet II series
 IBM 4029 030 LaserPrinter 10   pcl-3           HP LaserJet III series
@@ -1344,6 +1445,11 @@ Xerox DocuPrint 4508           pcl-4           HP LaserJet 4 series
 Xerox DocuPrint N4512          pcl-4           HP LaserJet 4 series
 Xerox DocuPrint N4512 PS       pcl-4           HP LaserJet 4 series
 Xerox Document Centre 400      pcl-4           HP LaserJet 4 series
+generic PCL-2 laser printer    pcl-2           HP LaserJet II series
+generic PCL-3 laser printer    pcl-3           HP LaserJet III series
+generic PCL-4 laser printer    pcl-4           HP LaserJet 4 series
+generic PCL-5 laser printer    pcl-5           HP LaserJet 5 series
+generic PCL-6 laser printer    pcl-6           HP LaserJet 6 series
 
 
 Printer-Specific Notes:
@@ -1368,8 +1474,9 @@ Printer-Specific Notes:
       2880x720 on line art with very fine detail.  It is unlikely that
       2880x1440 would yield any significant additional improvement.
 
-      Note that these resolutions are not officially supported by Epson,
-      and may not work on all C70, C80, and C82 printers.
+      Note that these resolutions are not officially supported by
+      Epson on the C70 and C80, and may not work on all C70 and C80
+      printers.
 
     * Many Epson printers (specifically, the Epson Stylus Color 740
       and all newer printers) will not respond to ASCII text without a
