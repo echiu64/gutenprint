@@ -28,7 +28,7 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
-pkgconfigdatadir = $(prefix)/lib/pkgconfig
+pkgconfigdatadir = $(libdir)/pkgconfig
 pkgxmldatadir = $(pkgdatadir)/$(VERSION)/xml
 pkgmoduledir = $(pkglibdir)/$(VERSION)/modules
 

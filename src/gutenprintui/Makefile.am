@@ -29,7 +29,7 @@ include $(top_srcdir)/scripts/global.mk
 ## Variables
 
 m4datadir = $(datadir)/aclocal
-pkgconfigdatadir = $(prefix)/lib/pkgconfig
+pkgconfigdatadir = $(libdir)/pkgconfig
 
 
 ## Programs
