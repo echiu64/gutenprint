@@ -295,7 +295,7 @@ input_needs_splitting(const stp_vars_t *v)
 #endif
 }
 
-void
+static void
 stp_initialize_special_channels(stp_vars_t *v, int angle_count)
 {
   stpi_channel_group_t *cg =
@@ -479,13 +479,20 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
   stp_dprintf(STP_DBG_INK, v, "   max_density    %d\n", cg->max_density);
   stp_dprintf(STP_DBG_INK, v, "   angle_count    %d\n", cg->angle_count);
   stp_dprintf(STP_DBG_INK, v, "   black_channel  %d\n", cg->black_channel);
-  stp_dprintf(STP_DBG_INK, v, "   input_data     %x\n", cg->input_data);
-  stp_dprintf(STP_DBG_INK, v, "   multi_tmp      %x\n", cg->multi_tmp);
-  stp_dprintf(STP_DBG_INK, v, "   split_input    %x\n", cg->split_input);
-  stp_dprintf(STP_DBG_INK, v, "   output_data    %x\n", cg->output_data);
-  stp_dprintf(STP_DBG_INK, v, "   alloc_data_1   %x\n", cg->alloc_data_1);
-  stp_dprintf(STP_DBG_INK, v, "   alloc_data_2   %x\n", cg->alloc_data_2);
-  stp_dprintf(STP_DBG_INK, v, "   alloc_data_3   %x\n", cg->alloc_data_3);
+  stp_dprintf(STP_DBG_INK, v, "   input_data     %p\n",
+	      (void *) cg->input_data);
+  stp_dprintf(STP_DBG_INK, v, "   multi_tmp      %p\n",
+	      (void *) cg->multi_tmp);
+  stp_dprintf(STP_DBG_INK, v, "   split_input    %p\n",
+	      (void *) cg->split_input);
+  stp_dprintf(STP_DBG_INK, v, "   output_data    %p\n",
+	      (void *) cg->output_data);
+  stp_dprintf(STP_DBG_INK, v, "   alloc_data_1   %p\n",
+	      (void *) cg->alloc_data_1);
+  stp_dprintf(STP_DBG_INK, v, "   alloc_data_2   %p\n",
+	      (void *) cg->alloc_data_2);
+  stp_dprintf(STP_DBG_INK, v, "   alloc_data_3   %p\n",
+	      (void *) cg->alloc_data_3);
   for (i = 0; i < cg->channel_count; i++)
     {
       stp_dprintf(STP_DBG_INK, v, "   Channel %d:\n", i);
