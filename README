@@ -1,14 +1,14 @@
 INTRODUCTION
 
-    This is Gimp-Print version 4.2.3-pre3, a prerelease in the 4.2
-    series (it is not actually 4.2.3).  Gimp-Print is a suite of
-    printer drivers that may be used with most common UNIX print
-    spooling systems, including CUPS, lpr, LPRng, or others.  These
-    drivers provide high quality printing for UNIX (including
-    Macintosh OS X 10.2 and newer) and Linux systems in many cases
-    equal to or better than proprietary vendor-supplied drivers, and
-    can be used for many of the most demanding printing tasks.  A
-    complete list of supported printers may be found in the NEWS file.
+    This is Gimp-Print version 4.2.3, a stable release in the 4.2
+    series.  Gimp-Print is a suite of printer drivers that may be used
+    with most common UNIX print spooling systems, including CUPS, lpr,
+    LPRng, or others.  These drivers provide high quality printing for
+    UNIX (including Macintosh OS X 10.2 and newer) and Linux systems
+    in many cases equal to or better than proprietary vendor-supplied
+    drivers, and can be used for many of the most demanding printing
+    tasks.  A complete list of supported printers may be found in the
+    NEWS file.
 
     This release is backward compatible with other releases of
     Gimp-Print 4.2 (4.2.0, 4.2.1, and 4.2.2).
