@@ -3,13 +3,17 @@
 #include <math.h>
 #include <time.h>
 
+#define TRUE 1
+#define FALSE 0
+
+/* 199 size matrix designed to be re-used shifted 100 pixels
+ * shifted right or down
+ */
+#if 0
 #define HSIZE 199
 #define VSIZE 199
 #define HSIZE2 (HSIZE/2)
 #define VSIZE2 (VSIZE/2)
-#define TRUE 1
-#define FALSE 0
-/* X1, Y1, etc are initial bits to be set in the matrix. Choose well!! */
 #define X1 0
 #define Y1 0
 #define X2 150
@@ -18,7 +22,43 @@
 #define Y3 124
 #define X4 112
 #define Y4 162
+#endif
 
+/* Another 199 size matrix designed to be re-used shifted 100 pixels
+ * shifted right or down - should not interfere with the one above.
+ */
+#if 0
+#define HSIZE 199
+#define VSIZE 199
+#define HSIZE2 (HSIZE/2)
+#define VSIZE2 (VSIZE/2)
+#define X1 38
+#define Y1 38
+#define X2 88
+#define Y2 188
+#define X3 162
+#define Y3 113
+#define X4 1
+#define Y4 150
+#endif
+
+/*
+/* 257x257  matrix designed to be shifted 128 pixels right or down
+ */
+#if 1
+#define HSIZE 257
+#define VSIZE 257
+#define HSIZE2 (HSIZE/2)
+#define VSIZE2 (VSIZE/2)
+#define X1 0
+#define Y1 0
+#define X2 194
+#define Y2 65
+#define X3 96
+#define Y3 160
+#define X4 145
+#define Y4 209
+#endif
 int main(void)
 {
 int bitcount, x, y, initial[HSIZE*VSIZE], result[HSIZE*VSIZE], hsearch, tmp, vsearch;
@@ -85,7 +125,8 @@ while (bitcount < VSIZE*HSIZE)
             else
               total+=1;
             }
-        total += drand48()/hsearch;
+// The below value seems slightly noisy in darker tones, try adding less noise
+        total += drand48()/(hsearch);
         if (total > maximum)
           {
 /* it is the largest so far */
