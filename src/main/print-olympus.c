@@ -192,8 +192,8 @@ static const olymp_resolution_list_t p300_res_list =
 
 static const olymp_pagesize_t p300_page[] =
 {
-  { "Custom", NULL, -1, -1, 28, 28, 48, 48},
   { "A6", NULL, -1, -1, 28, 28, 48, 48},
+  { "Custom", NULL, -1, -1, 28, 28, 48, 48},
 };
 
 static const olymp_pagesize_list_t p300_page_list =
@@ -203,10 +203,10 @@ static const olymp_pagesize_list_t p300_page_list =
 
 static const olymp_printsize_t p300_printsize[] =
 {
-  { "306x306", "Custom", 1024, 1376},
-  { "153x153", "Custom", 1024, 1376},
   { "306x306", "A6", 1024, 1376},
   { "153x153", "A6",  512,  688},
+  { "306x306", "Custom", 1024, 1376},
+  { "153x153", "Custom", 1024, 1376},
 };
 
 static const olymp_printsize_list_t p300_printsize_list =
@@ -225,6 +225,8 @@ static void p300_printer_init_func(stp_vars_t *v)
 static void p300_plane_end_func(stp_vars_t *v)
 {
   stp_zprintf(v, "\033\033\033P%cS", privdata.plane);
+  stp_deprintf(STP_DBG_OLYMPUS, "olympus: p300_plane_end_func: %c\n",
+	privdata.plane);
 }
 
 static void p300_block_init_func(stp_vars_t *v)
@@ -234,6 +236,10 @@ static void p300_block_init_func(stp_vars_t *v)
   stp_put16_be(privdata.block_min_x, v);
   stp_put16_be(privdata.block_max_y, v);
   stp_put16_be(privdata.block_max_x, v);
+
+  stp_deprintf(STP_DBG_OLYMPUS, "olympus: p300_block_init_func: %d-%dx%d-%d\n",
+	privdata.block_min_x, privdata.block_max_x,
+	privdata.block_min_y, privdata.block_max_y);
 }
 
 static const char p300_adj_cyan[] =
@@ -1179,8 +1185,8 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   int xdpi, ydpi;	/* Resolution */
 
   /* image in pixels */
-  unsigned short image_px_width  = stp_image_width(image);
-  unsigned short image_px_height = stp_image_height(image);
+  unsigned short image_px_width;
+  unsigned short image_px_height;
 
   /* output in 1/72" */
   int out_pt_width  = stp_get_width(v);
@@ -1214,6 +1220,10 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
       stp_eprintf(v, _("Print options not verified; cannot print.\n"));
       return 0;
     }
+
+  stp_image_init(image);
+  image_px_width  = stp_image_width(image);
+  image_px_height = stp_image_height(image);
 
   stp_describe_resolution(v, &xdpi, &ydpi);
   olympus_printsize(v, &max_print_px_width, &max_print_px_height);
