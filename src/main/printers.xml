@@ -943,6 +943,24 @@
       </printer>
     </family>
     <family name="pcl">
+      <printer name="APPLE Color StyleWriter 4100" driver="pcl-apple-4100">
+        <color value="true"/>
+        <model value="601"/>	<!-- Uses 600 series driver -->
+        <gamma value="0.818"/>
+        <density value="0.786"/>
+      </printer>
+      <printer name="APPLE Color StyleWriter 4500" driver="pcl-apple-4500">
+        <color value="true"/>
+        <model value="690"/>	<!-- Uses 690 driver -->
+        <gamma value="0.818"/>
+        <density value="0.786"/>
+      </printer>
+      <printer name="APPLE Color StyleWriter 6500" driver="pcl-apple-6500">
+        <color value="true"/>
+        <model value="800"/>	<!-- Uses 850 driver -->
+        <gamma value="0.818"/>
+        <density value="0.786"/>
+      </printer>
       <printer name="HP DeskJet 340" driver="pcl-340">
         <color value="true"/>
         <model value="340"/>
