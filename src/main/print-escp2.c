@@ -2663,6 +2663,11 @@ escp2_set_form_factor(const stp_vars_t v, escp2_init_t *init)
     /* Make the page 2/10" wider (probably ignored by the printer anyway) */
     page_width += 144 * 720 / init->xdpi;
 
+  if (escp2_has_cap(init->model, MODEL_YZEROMARGIN, MODEL_YZEROMARGIN_YES,
+		    init->v))
+    /* Make the page 2/10" higher (probably ignored by the printer anyway) */
+    page_height += 144 * 720 / init->ydpi;
+
   if (escp2_has_cap(init->model, MODEL_COMMAND, MODEL_COMMAND_1999,
 		    init->v))
     stp_zprintf(v, "\033(S\010%c%c%c%c%c%c%c%c%c", 0,
@@ -3035,9 +3040,10 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     {
      /*
       * In zero-margin mode, the origin is about 1/4" to the top of the
-      * paper's top edge.
+      * paper's top edge.  The value 18 was reported to be correct by
+      * Mogens Jaeger.
       */
-      top += 180 * physical_ydpi / max_vres;
+      top += 18 * physical_ydpi / max_vres;
     }
 
  /*
