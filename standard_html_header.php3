@@ -28,13 +28,15 @@ H1 {
 
 /* end hiding content from old browsers */ -->
 </STYLE>
-<table border="0" width="100%" cellspacing="0"><tr><td bgcolor="#eeeeee" width="100%">
+<table border="0" width="100%" cellspacing="0">
+<tr>
+<td bgcolor="#eeeeee">
 &#160;
 </td></tr></table>
 
 <TABLE BORDER="0">
 <TR><TD>
-<? includeImage('top_image','Welcome to the gimp-print Website') ?>
+<? includeImage('top_image','Welcome to the gimp-print Website',0) ?>
 </TD><TD>
 <P>
 <a

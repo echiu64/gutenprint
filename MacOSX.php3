@@ -52,7 +52,7 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <h2>
- <font color=#ff0000>Read the FAQ!</font>
+ <font color="#ff0000">Read the FAQ!</font>
  </h2>
  <p>
  The <a href= "http://gimp-print.sourceforge.net/p_FAQ_OS_X.php3" >Gimp-Print
@@ -60,7 +60,7 @@ require('standard_html_header.php3');
  Mac OS X 10.2 Jaguar.
  </p>
  <h2>
- <font color=#ff0000>Check the Forums</font>
+ <font color="#ff0000">Check the Forums</font>
  </h2>
  <p>
  If your question about Gimp-Print isn't answered in the <a href=
@@ -71,14 +71,14 @@ require('standard_html_header.php3');
  </p>
  <p>
  If you are experiencing a problem that you believe may be a driver bug please
- check the <a href= "http://sourceforge.net/tracker/?group_id=1537&atid=101537"
+ check the <a href= "http://sourceforge.net/tracker/?group_id=1537&amp;atid=101537"
  >bug tracker</a>. If the problem you are facing is not listed in the installer
  disk documentation, the <a href=
  "http://gimp-print.sourceforge.net/p_FAQ_OS_X.php3" >FAQ</a>, the <a href=
  "http://sourceforge.net/forum/?group_id=1537" >forums</a>, or the <a href=
- "http://sourceforge.net/tracker/?group_id=1537&atid=101537" >bug tracker</a>
+ "http://sourceforge.net/tracker/?group_id=1537&amp;atid=101537" >bug tracker</a>
  then you should file a <a href=
- "http://sourceforge.net/tracker/?group_id=1537&atid=201537" >support
+ "http://sourceforge.net/tracker/?group_id=1537&amp;atid=201537" >support
  request</a> against it.
  </p>
  </td>
@@ -252,7 +252,7 @@ require('standard_html_header.php3');
  <dt>Bugs fixed in this release: <dd>597964 Epson 660 wrong margins <dd>604854
  QUALITY-Epson 1520 and 3000 print too dark at 1440x720 DPI <dd>611804
  rastertoprinter.c fails to compile on Solaris <dd>613384 Epson 7600 no
- printing <dd>615561 Epson C40UX cannot print in B&W and Gray <dd>615759
+ printing <dd>615561 Epson C40UX cannot print in B&amp;W and Gray <dd>615759
  360x240 bad horizontal position
  </dl>
  &nbsp;
@@ -283,7 +283,7 @@ require('standard_html_header.php3');
  <p>
  For full compatibility with all Mac OS X applications (such as Adobe
  Pagemaker, Appleworks, etc...), we recommend Mac users install <a href=
- "http://sourceforge.net/project/showfiles.php?group_id=18073&release_id=109322"
+ "http://sourceforge.net/project/showfiles.php?group_id=18073&amp;release_id=109322"
  >ESP Ghostscript 7.05.5</a> (or later), an OS X-compatible open
  source PostScript interpreter. Installing ESP Ghostscript is simple when you
  use the
