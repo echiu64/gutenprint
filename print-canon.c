@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.17  2000/02/08 17:55:25  gandy
+ *   Added call to dither_cmyk4()
+ *
  *   Revision 1.16  2000/02/08 17:39:48  gandy
  *   Got support for variable drop sizes ready for testing
  *
@@ -830,12 +833,8 @@ canon_print(int       model,		/* I - Model */
 
   if (!strcmp(resolution+(strlen(resolution)-3),"DMT") && 
       (caps.features & CANON_CAP_DMT)) {
-    if (output_type == OUTPUT_GRAY) {
-      use_dmt= 1;
-      fprintf(stderr,"canon: using drop modulation technology\n");
-    } else {
-      fprintf(stderr,"canon: drop modulation only available for B/W\n");
-    }
+    use_dmt= 1;
+    fprintf(stderr,"canon: using drop modulation technology\n");
   }
 
  /*
@@ -1093,13 +1092,20 @@ canon_print(int       model,		/* I - Model */
       
       if (output_type == OUTPUT_GRAY && use_dmt)
 	dither_black4(out, x, dither, black);
+
       else if (output_type == OUTPUT_GRAY)
 	dither_black(out, x, dither, black);
+
+      else if (use_dmt)
+	dither_cmyk4(out, x, dither, cyan, lcyan, magenta, lmagenta,
+		     yellow, lyellow, black);
+
       else
 	dither_cmyk(out, x, dither, cyan, lcyan, magenta, lmagenta,
 		    yellow, lyellow, black);
 
       /* fprintf(stderr,"."); */
+
       canon_write_line(prn, caps, ydpi,
 		       black,    delay_k,
 		       cyan,     delay_c, 
@@ -1109,6 +1115,7 @@ canon_print(int       model,		/* I - Model */
 		       lmagenta, delay_lm,
 		       lyellow,  delay_ly, 
 		       length, out_width, left, use_dmt);
+
       /* fprintf(stderr,"!"); */
  
       canon_advance_buffer(black,   buf_length,delay_k);
@@ -1153,9 +1160,15 @@ canon_print(int       model,		/* I - Model */
 
       if (output_type == OUTPUT_GRAY && use_dmt)
 	dither_black4(out, y, dither, black);
+
       else if (output_type == OUTPUT_GRAY)
 	dither_black(out, y, dither, black);
-      else
+
+      else if (use_dmt)
+	dither_cmyk4(out, y, dither, cyan, lcyan, magenta, lmagenta,
+		     yellow, lyellow, black);
+
+      else 
 	dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
 		    yellow, lyellow, black);
 
@@ -1170,6 +1183,7 @@ canon_print(int       model,		/* I - Model */
 		       lcyan,    delay_lc, 
 		       lmagenta, delay_lm,
 		       length, out_width, left, use_dmt);
+
       /* fprintf(stderr,"!"); */
 
       canon_advance_buffer(black,   buf_length,delay_k);
@@ -1199,6 +1213,7 @@ canon_print(int       model,		/* I - Model */
     fprintf(stderr,"\ncanon: flushing %d possibly delayed buffers\n",
 	    delay_max);
     for (y= 0; y<delay_max; y++) {
+
       canon_write_line(prn, caps, ydpi,
 		       black,    delay_k,
 		       cyan,     delay_c, 
@@ -1208,6 +1223,7 @@ canon_print(int       model,		/* I - Model */
 		       lmagenta, delay_lm,
 		       lyellow,  delay_ly, 
 		       length, out_width, left, use_dmt);
+
       /* fprintf(stderr,"-"); */
 
       canon_advance_buffer(black,   buf_length,delay_k);
