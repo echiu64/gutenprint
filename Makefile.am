@@ -4,7 +4,7 @@ libexecdir = $(gimptool_prefix)/plug-ins
 
 libexec_PROGRAMS = print
 
-bin_PROGRAMS = escp2-unprint escp2-weavetest canon-unprint pcl-unprint
+bin_PROGRAMS = unprint escp2-weavetest canon-unprint pcl-unprint
 
 print_SOURCES = \
 	print-canon.c   \
@@ -16,7 +16,7 @@ print_SOURCES = \
 	print.c		\
 	print.h   
 
-escp2_unprint_SOURCES = escp2-unprint.c
+unprint_SOURCES = unprint.c
 canon_unprint_SOURCES = canon-unprint.cpp
 escp2_weavetest_SOURCES = escp2-weavetest.c
 pcl_unprint_SOURCES = pcl-unprint.c
