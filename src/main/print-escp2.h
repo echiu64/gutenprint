@@ -174,6 +174,10 @@ typedef struct
 #define MODEL_VACUUM_NO		0x000ul
 #define MODEL_VACUUM_YES	0x100ul
 
+#define MODEL_FAST_360_MASK	0x200ul
+#define MODEL_FAST_360_NO	0x000ul
+#define MODEL_FAST_360_YES	0x200ul
+
 typedef enum
 {
   MODEL_COMMAND,
@@ -182,6 +186,7 @@ typedef enum
   MODEL_VARIABLE_DOT,
   MODEL_GRAYMODE,
   MODEL_VACUUM,
+  MODEL_FAST_360,
   MODEL_LIMIT
 } escp2_model_option_t;
 

@@ -1,6 +1,6 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.2.2-rc1, released August 13, 2002, is the first release
+Gimp-Print 4.2.2-rc2, released August 22, 2002, is the second release
 candidate for Gimp-Print 4.2.2.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
@@ -21,6 +21,38 @@ or APFL GhostScript 7.04 or later.
 Please read the README file for full instructions on building and
 installing this package.
 
+Gimp-Print 4.2.2-rc2 contains the following major changes over
+Gimp-Print 4.2.2-rc2:
+
+  1) Support for Epson Stylus C41, C42, C61, C62, C82; Stylus Photo
+     830, Stylus Photo 915, Stylus Photo 925.
+
+  2) Updated escputil to support all new Epson printers.
+
+  3) More tuning for Epson Stylus Photo 950, 960, 2100, 2200; Stylus
+     Pro 7600, 9600.
+
+  4) Performance improvement for Epson Stylus Photo 2100 and 2200 at
+     360 DPI in monochrome, grayscale, and four color modes.
+
+  5) A problem with the Gimp Print plugin losing track of printer
+     settings on some systems (where lpstat or lpc return two or more
+     descriptive lines for each printer) has been fixed.
+
+The following bug has been fixed in Gimp-Print 4.2.2-rc2:
+
+598341 get_system_printers() problem with dups.
+
+The following bugs are presently open in Gimp-Print 4.2.2-rc2:
+
+538097 Printing on Canon s400
+549677 Still problems with scaling in 4.2.1
+581168 BJC 250 just spits out pages
+596538 Cutting on Epson Stylus Photo 925
+597964 Epson 660 wrong margins
+599029 Fast printing not supported on 950, 960
+
+
 Gimp-Print 4.2.2-rc1 contains the following major changes over
 Gimp-Print 4.2.2-pre4:
 
@@ -38,7 +70,7 @@ Gimp-Print 4.2.2-pre4:
 
   5) Updated Swedish translation.
 
-The following bugs have been fixed in Gimp-Print 4.2.2-pre5:
+The following bugs have been fixed in Gimp-Print 4.2.2-rc1:
 
 586960 Gimp Print plugin installs incorrectly on some systems
 592093 IJS driver sets page size incorrectly in some non-US locales

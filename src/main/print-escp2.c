@@ -74,6 +74,7 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
   { "variable_mode",		6, 1 },
   { "graymode",		 	7, 1 },
   { "vacuum",			8, 1 },
+  { "fast_360",			9, 1 },
 };
 
 #define INCH(x)		(72 * x)
@@ -115,6 +116,7 @@ typedef struct escp2_init
   int initial_vertical_offset;
   int total_channels;
   int use_black_parameters;
+  int use_fast_360;
   const char *paper_type;
   const char *media_source;
   const escp2_inkname_t *inkname;
@@ -716,7 +718,10 @@ escp2_set_resolution(const escp2_init_t *init)
 static void
 escp2_set_color(const escp2_init_t *init)
 {
-  if (escp2_has_cap(init->model, MODEL_GRAYMODE, MODEL_GRAYMODE_YES, init->v))
+  if (init->use_fast_360)
+    stp_zprintf(init->v, "\033(K\002%c%c%c", 0, 0, 3);
+  else if (escp2_has_cap(init->model, MODEL_GRAYMODE, MODEL_GRAYMODE_YES,
+			 init->v))
     stp_zprintf(init->v, "\033(K\002%c%c%c", 0, 0,
 		(init->use_black_parameters ? 1 : 2));
 }
@@ -812,22 +817,15 @@ escp2_set_printhead_resolution(const escp2_init_t *init)
     {
       int xres;
       int yres;
-      int nozzle_separation;
       int scale = escp2_resolution_scale(init->model, init->v);
 
       xres = scale / init->physical_xdpi;
-
-      if (init->use_black_parameters)
-	nozzle_separation =
-	  escp2_black_nozzle_separation(init->model, init->v);
-      else
-	nozzle_separation = escp2_nozzle_separation(init->model, init->v);
 
       if (escp2_has_cap(init->model, MODEL_COMMAND, MODEL_COMMAND_PRO,
 			init->v) && !init->use_softweave)
 	yres = scale / init->ydpi;
       else
-	yres = (nozzle_separation * scale /
+	yres = (init->nozzle_separation * scale /
 		escp2_base_separation(init->model, init->v));
 
       /* Magic resolution cookie */
@@ -1279,6 +1277,12 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       channels_in_use = setup_ink_types(ink_type, &privdata, cols, head_offset,
 					dt, channel_limit, length * bits);
     }
+  if (escp2_has_cap(model, MODEL_FAST_360, MODEL_FAST_360_YES, nv) &&
+      (ink_type->inkset == INKSET_CMYK || channels_in_use == 1) &&
+      xdpi == 360 && ydpi == 360)
+    init.use_fast_360 = 1;
+  else
+    init.use_fast_360 = 0;
 
   /*
    * Set up the printer-specific parameters (weaving)
@@ -1308,6 +1312,13 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	  nozzle_separation = escp2_nozzle_separation(model, nv);
 	  privdata.min_nozzles = escp2_min_nozzles(model, nv);
 	}
+      if (init.use_fast_360)
+	{
+	  nozzles *= 2;
+	  nozzle_separation /= 2;
+	  if (privdata.min_nozzles == nozzles)
+	    privdata.min_nozzles *= 2;
+	}
       nozzle_separation =
 	nozzle_separation * ydpi / escp2_base_separation(model, nv);
     }
@@ -1319,6 +1330,8 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       nozzle_separation = 1;
       init.use_black_parameters = 0;
     }
+  init.nozzles = nozzles;
+  init.nozzle_separation = nozzle_separation;
 
   if (horizontal_passes == 0)
     horizontal_passes = 1;

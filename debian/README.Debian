@@ -1,7 +1,7 @@
 gimp-print for Debian
 ---------------------
 
-This is Gimp-Print version 4.2.2-rc1, a release candidate for
+This is Gimp-Print version 4.2.2-rc2, a release candidate for
 Gimp-Print 4.2.2 in the 4.2 stable series.  Gimp-Print is the
 print facility for the Gimp, and in addition a suite of drivers
 that may be used with common UNIX spooling systems using
