@@ -297,13 +297,14 @@ diffuse_error(stpi_dither_channel_t *dc, eventone_t *et, int diff_factor, int x,
 static inline int
 eventone_adjust(stpi_shade_segment_t *sp, eventone_t *et, int ditherpoint, unsigned int desired, unsigned int dotsize)
 {
-  ditherpoint += sp->dis.r_sq * et->aspect;
-  if (desired < dotsize) {
-    if (desired <= 1) ditherpoint -= EVEN_C1 * dotsize;
-    else ditherpoint -= (EVEN_C1 * dotsize) / desired;
+  if (desired > 0) {
+    ditherpoint += sp->dis.r_sq * et->aspect;
+    if (desired < dotsize) {
+      ditherpoint -= (EVEN_C1 * dotsize) / desired;
+    }
+    if (ditherpoint > 65535) ditherpoint = 65535;
+    else if (ditherpoint < 0) ditherpoint = 0;
   }
-  if (ditherpoint > 65535) ditherpoint = 65535;
-  else if (ditherpoint < 0) ditherpoint = 0;
   return ditherpoint;
 }
 
@@ -337,6 +338,8 @@ found_segment:
   { int ditherpoint;
     if (totalink >= upper->range) {
       ditherpoint = 65536;
+    } else if (totalink <= lower->range) {
+      ditherpoint = 0;
     } else {
       if (lower->range == 0) {
         ditherpoint = eventone_adjust(sp, et, (totalink * 65536) / upper->range, baseink, upper->range);
