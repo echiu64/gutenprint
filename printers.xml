@@ -113,7 +113,7 @@
 <language value=canon>
 </printer>
 
-<printer name="CANON S450" driver="bjc-6000">
+<printer name="CANON S450" driver="bjc-s450">
 <color>
 <model value=6000>
 <gamma value=0.750>
