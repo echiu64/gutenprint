@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.16  1999/11/02 02:04:18  rlk
+ *   Much better weaving code!
+ *
  *   Revision 1.15  1999/11/01 03:38:53  rlk
  *   First cut at weaving
  *
@@ -722,7 +725,9 @@ escp2_print(int       model,		/* I - Model */
 	  {
 	    fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
 	    fwrite("\033(i\001\000\000", 6, 1, prn);	/* Microweave off! */
+#if 0
 	    fwrite("\033\0311", 3, 1, prn); /* ??? */
+#endif
 	    fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Microdots */
 	    initialize_weave(32, 8);
 	  }
@@ -1092,14 +1097,15 @@ initialize_weave(int jets, int sep)
   njets = jets;
 
   weavefactor = jets / separation;
-  jetsused = ((weavefactor - 1) * separation) + 1;
-  initialoffset = (jetsused - weavefactor) * separation;
+  jetsused = ((weavefactor) * separation);
+  initialoffset = (jetsused - weavefactor - 1) * separation;
   jetsleftover = njets - jetsused + 1;
   weavespan = (jetsused - 1) * separation;
 
   currentpass = 0;
   currentline = 0;
-  last_pass_offset = -initialoffset;
+/*   last_pass_offset = -initialoffset; */
+  last_pass_offset = 0;
   last_pass = -1;
 
   linebufs = malloc(6 * 1536 * weavespan * jetsused);
@@ -1149,20 +1155,28 @@ Static void
 weave_parameters_by_row(int row, weave_t *w)
 {
   int passblockstart = (row + initialoffset) / jetsused;
+  int internaljetsused = jetsused;
   int internallogicalpassstart;
   w->row = row;
   w->pass = (passblockstart - (separation - 1)) +
     (separation + row - passblockstart - 1) % separation;
-  internallogicalpassstart = (w->pass * jetsused)  - initialoffset;
-  w->logicalpassstart =  internallogicalpassstart -
-    (separation * (w->pass % jetsleftover));
+  internallogicalpassstart = (w->pass * jetsused) - initialoffset +
+    (w->pass % separation);
+  if (internallogicalpassstart < 0)
+    {
+      internaljetsused -=
+	(((separation - 1) - internallogicalpassstart) / separation);
+      internallogicalpassstart += separation *
+	(((separation - 1) - internallogicalpassstart) / separation);
+    }
+  w->logicalpassstart =  internallogicalpassstart;
   w->jet = ((row - w->logicalpassstart) / separation);
   if (internallogicalpassstart >= 0)
     w->physpassstart = internallogicalpassstart;
   else
     w->physpassstart = internallogicalpassstart +
-      (separation * ((separation - internallogicalpassstart - 1) / separation));
-  w->physpassend = (jetsused - 1) * separation + internallogicalpassstart;
+      (separation * ((separation - internallogicalpassstart) / separation));
+  w->physpassend = (internaljetsused - 1) * separation + internallogicalpassstart;
   w->missingstartrows = (w->physpassstart - w->logicalpassstart) / separation;
 }
 
