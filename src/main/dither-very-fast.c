@@ -36,11 +36,10 @@
 
 static inline void
 print_color_very_fast(const stpi_dither_t *d, stpi_dither_channel_t *dc,
-		      int val, int x, int y, unsigned char bit, int length)
+		      int val, int x, int y, unsigned char bit,
+		      unsigned bits, int length)
 {
   int j;
-  stpi_dither_segment_t *dd = &(dc->ranges[dc->nlevels - 1]);
-  unsigned bits = dd->upper->bits;
   if (bits && val >= ditherpoint(d, &(dc->dithermat), x))
     {
       unsigned char *tptr = dc->ptr + d->ptr_offset;
@@ -54,7 +53,6 @@ print_color_very_fast(const stpi_dither_t *d, stpi_dither_channel_t *dc,
 	  if (j & bits)
 	    tptr[0] |= bit;
 	}
-
     }
 }
 
@@ -68,8 +66,10 @@ stpi_dither_very_fast(stp_vars_t v,
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   int		x,
 		length;
+  unsigned char *bit_patterns;
   unsigned char	bit;
   int i;
+  int one_bit_only = 1;
 
   int xerror, xstep, xmod;
 
@@ -84,18 +84,46 @@ stpi_dither_very_fast(stp_vars_t v,
   xmod   = d->src_width % d->dst_width;
   xerror = 0;
 
-  QUANT(6);
-  for (x = 0; x != d->dst_width; x ++)
+  bit_patterns = stpi_zalloc(sizeof(unsigned char) * CHANNEL_COUNT(d));
+  for (i = 0; i < CHANNEL_COUNT(d); i++)
     {
-      for (i = 0; i < CHANNEL_COUNT(d); i++)
-	{
-	  if (CHANNEL(d, i).ptr && raw[i])
-	    print_color_very_fast(d, &(CHANNEL(d, i)), raw[i], x, row,
-				  bit, length);
-	}
-
-      QUANT(11);
-      ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d), xerror, xstep, xmod);
-      QUANT(13);
+      stpi_dither_channel_t *dc = &(CHANNEL(d, i));
+      if (dc->nlevels > 0)
+	bit_patterns[i] = dc->ranges[dc->nlevels - 1].upper->bits;
+      if (bit_patterns[i] != 1)
+	one_bit_only = 0;
     }
+  QUANT(6);
+  if (one_bit_only)
+    {
+      for (x = 0; x < d->dst_width; x ++)
+	{
+	  for (i = 0; i < CHANNEL_COUNT(d); i++)
+	    {
+	      if (raw[i] &&
+		  raw[i] >= ditherpoint(d, &(CHANNEL(d, i).dithermat), x))
+		CHANNEL(d, i).ptr[d->ptr_offset] |= bit;
+	    }
+	  ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d),
+				 xerror, xstep, xmod);
+	}
+    }
+  else
+    {
+      for (x = 0; x < d->dst_width; x ++)
+	{
+	  for (i = 0; i < CHANNEL_COUNT(d); i++)
+	    {
+	      if (CHANNEL(d, i).ptr && raw[i])
+		print_color_very_fast(d, &(CHANNEL(d, i)), raw[i], x, row,
+				      bit, bit_patterns[i], length);
+	    }
+
+	  QUANT(11);
+	  ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d),
+				 xerror, xstep, xmod);
+	  QUANT(13);
+	}
+    }
+  stpi_free(bit_patterns);
 }
