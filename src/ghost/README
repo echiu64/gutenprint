@@ -251,6 +251,10 @@ the driver program must be specified.  This will typically be
 /usr/local/bin/ijsgimpprint; the parameter in this case is
 -sIjsServer=/usr/local/bin/ijsgimpprint .
 
+Also, -dIjsUseOutputFD should be specified whenever output from
+Ghostscript will go to stdout or into a pipe.  It may be specified in
+all other cases, with only a slight performance degradation.
+
 The -sIjsParams parameter contains a single string containing a
 comma-separated list of sub-options:
 
@@ -1296,6 +1300,6 @@ gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-660 -dDensity=0.8 -r720 \
    -sQuality=720sw -dColor=2 -sOutputFile=- foo.ps
 
 gs -sDEVICE=ijs -sIjsServer=/usr/local/bin/ijsgimpprint \
-   -sDeviceManufacturer=EPSON -sDeviceModel=escp2-660
+   -sDeviceManufacturer=EPSON -sDeviceModel=escp2-660 -dIjsUseOutputFD
    -sProcessColorModel=DeviceGrayscale -dBitsPerSample=1 -sOutputFile=-
    -sIjsParams='Quality=720sw,Density=0.8' foo.ps
