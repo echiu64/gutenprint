@@ -523,13 +523,26 @@ void parse_escp2(FILE *fp_r){
         eject=1;
         continue;
       }
+      if (ch==0x0) { /* NUL */
+	fprintf(stderr, "Ignoring NUL character at 0x%08X\n", counter-1);
+	continue;
+      }
       if (ch!=0x1b) {
         fprintf(stderr,"Corrupt file?  No ESC found.  Found: %02X at 0x%08X\n",ch,counter-1);
         continue;
       }
+    nextcommand:
       get1("Corrupt file.  No command found.\n");
       /* fprintf(stderr,"Got a %X.\n",ch); */
       switch (ch) {
+	case 1: /* Magic EJL stuff to get USB port working */
+	    fprintf(stderr,"Ignoring EJL commands.\n");
+	    do {
+	      get1("Error reading EJL commands.\n");
+	    } while (!eject && ch != 0x1b);
+	    if (ch==0x1b)
+	      goto nextcommand;
+	    break;
         case '@': /* initialize printer */
             if (page) {
               eject=1;
@@ -664,14 +677,59 @@ void parse_escp2(FILE *fp_r){
         case '(': /* commands with a payload */
             get1("Corrupt file.  Incomplete extended command.\n");
             if (ch=='R') { /* "remote mode" */
-              fprintf(stderr,"Warning!  Commands in remote mode ignored.\n");
-              do {
-                while((!eject)&&(ch!=0x1b)) {
-                  get1("Error in remote mode.\n");
-                }
-                get1("Error reading remote mode terminator\n");
-              } while ((!eject)&&(ch!=0));
-              continue;
+              get2("Corrupt file.  Error reading buffer size.\n");
+	      bufsize=sh;
+	      getn(bufsize,"Corrupt file.  Error reading remote mode name.\n");
+	      if (bufsize==8 && memcmp(buf, "\0REMOTE1", 8)==0) {
+		int rc1=0, rc2=0;
+		/* Remote mode 1 */
+		do {
+		  get1("Corrupt file.  Error in remote mode.\n");
+		  rc1=ch;
+		  get1("Corrupt file.  Error reading remote mode command.\n");
+		  rc2=ch;
+		  get2("Corrupt file.  Error reading remote mode command size.\n");
+		  bufsize=sh;
+		  if (bufsize) {
+		    getn(bufsize, "Corrupt file.  Error reading remote mode command parameters.\n");
+		  }
+		  if (rc1==0x1b && rc2==0) {
+		    /* ignore quietly */
+		  } else if (rc1=='L' && rc2=='D') {
+		    fprintf(stderr, "Load settings from NVRAM command ignored.\n");
+		  } else if (rc1=='N' && rc2=='C') {
+		    fprintf(stderr, "Nozzle check command ignored.\n");
+		  } else if (rc1=='V' && rc2=='I') {
+		    fprintf(stderr, "Print version information command ignored.\n");
+		  } else if (rc1=='A' && rc2=='I') {
+		    fprintf(stderr, "Print printer ID command ignored.\n");
+		  } else if (rc1=='C' && rc2=='H') {
+		    fprintf(stderr, "Remote head cleaning command ignored.\n");
+		  } else if (rc1=='D' && rc2=='T') {
+		    fprintf(stderr, "Print alignment pattern command ignored.\n");
+		  } else if (rc1=='D' && rc2=='A') {
+		    fprintf(stderr, "Alignment results command ignored.\n");
+		  } else if (rc1=='S' && rc2=='V') {
+		    fprintf(stderr, "Alignment save command ignored.\n");
+		  } else if (rc1=='R' && rc2=='S') {
+		    fprintf(stderr, "Remote mode reset command ignored.\n");
+		  } else if (rc1=='I' && rc2=='Q') {
+		    fprintf(stderr, "Fetch ink quantity command ignored.\n");
+		  } else {
+		    fprintf(stderr, "Remote mode command `%c%c' ignored.\n",
+			    rc1,rc2);
+		  }
+		} while (!eject && !(rc1==0x1b && rc2==0));
+	      } else {
+                fprintf(stderr,"Warning!  Commands in unrecognised remote mode ignored.\n");
+                do {
+                  while((!eject)&&(ch!=0x1b)) {
+                    get1("Error in remote mode.\n");
+                  }
+                  get1("Error reading remote mode terminator\n");
+                } while ((!eject)&&(ch!=0));
+	      }
+	      break;
             }
             get2("Corrupt file.  Error reading buffer size.\n");
             bufsize=sh;
@@ -720,7 +778,7 @@ void parse_escp2(FILE *fp_r){
                 }
                 break;
               case 'e': /* set dot size */
-                if ((bufsize!=2)||(buf[0]!=0)||((buf[1]>4)&&(buf[1]!=0x10))) {
+                if ((bufsize!=2)||(buf[0]!=0)||((buf[1]>4)&&(buf[1]!=0x10)&&(buf[1]!=0x11))) {
                   fprintf(stderr,"Malformed dotsize setting command.\n");
                 } else {
                   if (got_graphics) {
