@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.8  1999/10/25 23:31:59  rlk
+ *   16-bit clean
+ *
  *   Revision 1.7  1999/10/21 01:27:37  rlk
  *   More progress toward full 16-bit rendering
  *
@@ -402,9 +405,8 @@ pcl_print(int       model,		/* I - Model */
           int       copies,		/* I - Number of copies */
           FILE      *prn,		/* I - File to print to */
           GDrawable *drawable,		/* I - Image to print */
-          lut_t     *lut,		/* I - Brightness lookup table */
 	  guchar    *cmap,		/* I - Colormap (for indexed images) */
-	  lut16_t   *lut16,		/* I - Brightness lookup table (16-bit) */
+	  lut_t   *lut,		/* I - Brightness lookup table (16-bit) */
 	  float     saturation		/* I - Saturation */
 	  )
 {
@@ -435,7 +437,7 @@ pcl_print(int       model,		/* I - Model */
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
-  convert16_t	colorfunc;	/* Color conversion function... */
+  convert_t	colorfunc;	/* Color conversion function... */
   void		(*writefunc)(FILE *, unsigned char *, int, int);
 				/* PCL output function */
 
@@ -854,7 +856,7 @@ pcl_print(int       model,		/* I - Model */
         gimp_pixel_rgn_get_col(&rgn, in, errline, 0, drawable->height);
       }
 
-      (*colorfunc)(in, out, drawable->height, drawable->bpp, lut16, cmap,
+      (*colorfunc)(in, out, drawable->height, drawable->bpp, lut, cmap,
 		   saturation);
 
       if (xdpi == 300 && model == 800)
@@ -944,7 +946,7 @@ pcl_print(int       model,		/* I - Model */
         gimp_pixel_rgn_get_row(&rgn, in, 0, errline, drawable->width);
       }
 
-      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut16, cmap,
+      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut, cmap,
 		   saturation);
 
       if (xdpi == 300 && model == 800)

@@ -37,6 +37,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.14  1999/10/25 23:31:59  rlk
+ *   16-bit clean
+ *
  *   Revision 1.13  1999/10/25 00:14:46  rlk
  *   Remove more of the 8-bit code, now that it is tested
  *
@@ -1575,12 +1578,12 @@ dither_cmyk4_16(gushort       *rgb,		/* I - RGB pixels */
  *                    adjusted).
  */
 
+#if 0
 void
 gray_to_gray(guchar *grayin,	/* I - RGB pixels */
              guchar *grayout,	/* O - RGB pixels */
              int    width,	/* I - Width of row */
              int    bpp,	/* I - Bytes-per-pixel in grayin */
-             lut_t  *lut,	/* I - Brightness lookup table */
              guchar *cmap,	/* I - Colormap (unused) */
 	     float  saturation	/* I - Saturation */
 	     )
@@ -1616,13 +1619,14 @@ gray_to_gray(guchar *grayin,	/* I - RGB pixels */
     }
   }
 }
+#endif
 
 void
 gray_to_gray16(guchar *grayin,		/* I - RGB pixels */
 	       gushort *grayout,	/* O - RGB pixels */
 	       int    width,		/* I - Width of row */
 	       int    bpp,		/* I - Bytes-per-pixel in grayin */
-	       lut16_t  *lut,		/* I - Brightness lookup table */
+	       lut_t  *lut,		/* I - Brightness lookup table */
 	       guchar *cmap,		/* I - Colormap (unused) */
 	       float  saturation	/* I - Saturation */
 	       )
@@ -1664,12 +1668,12 @@ gray_to_gray16(guchar *grayin,		/* I - RGB pixels */
  * 'indexed_to_gray()' - Convert indexed image data to grayscale.
  */
 
+#if 0
 void
 indexed_to_gray(guchar *indexed,	/* I - Indexed pixels */
                 guchar *gray,		/* O - Grayscale pixels */
         	int    width,		/* I - Width of row */
         	int    bpp,		/* I - Bytes-per-pixel in indexed */
-                lut_t  *lut,		/* I - Brightness lookup table */
                 guchar *cmap,		/* I - Colormap */
 		float  saturation	/* I - Saturation */
 		)
@@ -1710,13 +1714,14 @@ indexed_to_gray(guchar *indexed,	/* I - Indexed pixels */
     }
   }
 }
+#endif
 
 void
 indexed_to_gray16(guchar *indexed,	/* I - Indexed pixels */
 		  gushort *gray,	/* O - Grayscale pixels */
 		  int    width,		/* I - Width of row */
 		  int    bpp,		/* I - Bytes-per-pixel in indexed */
-		  lut16_t  *lut,	/* I - Brightness lookup table */
+		  lut_t  *lut,	/* I - Brightness lookup table */
 		  guchar *cmap,		/* I - Colormap */
 		  float  saturation	/* I - Saturation */
 		  )
@@ -1764,7 +1769,7 @@ indexed_to_rgb16(guchar *indexed,	/* I - Indexed pixels */
 		 gushort *rgb,		/* O - RGB pixels */
 		 int    width,		/* I - Width of row */
 		 int    bpp,		/* I - Bytes-per-pixel in indexed */
-		 lut16_t  *lut,		/* I - Brightness lookup table */
+		 lut_t  *lut,		/* I - Brightness lookup table */
 		 guchar *cmap,		/* I - Colormap */
 		 float  saturation	/* I - Saturation */
 		 )
@@ -1828,7 +1833,7 @@ rgb_to_gray16(guchar *rgb,		/* I - RGB pixels */
 	      gushort *gray,		/* O - Grayscale pixels */
 	      int    width,		/* I - Width of row */
 	      int    bpp,		/* I - Bytes-per-pixel in RGB */
-	      lut16_t  *lut,		/* I - Brightness lookup table */
+	      lut_t  *lut,		/* I - Brightness lookup table */
 	      guchar *cmap,		/* I - Colormap (unused) */
 	      float  saturation		/* I - Saturation */
 	      )
@@ -1877,7 +1882,7 @@ rgb_to_rgb16(guchar *rgbin,		/* I - RGB pixels */
 	     gushort *rgbout,		/* O - RGB pixels */
 	     int    width,		/* I - Width of row */
 	     int    bpp,		/* I - Bytes-per-pixel in indexed */
-	     lut16_t *lut,		/* I - Brightness lookup table */
+	     lut_t *lut,		/* I - Brightness lookup table */
 	     guchar *cmap,		/* I - Colormap */
 	     float  saturation		/* I - Saturation */
 	     )
@@ -2128,7 +2133,6 @@ calc_hsv_to_rgb16(gushort *rgb, double h, double s, double v)
 
 void
 compute_lut(lut_t *lut,
-	    lut16_t *lut16,
 	    int icontrast,
 	    float red,
 	    float green,
@@ -2203,14 +2207,10 @@ compute_lut(lut_t *lut,
 	  adjusted_pixel *= 65535.0;
 
 	  red_pixel = green_pixel = blue_pixel = adjusted_pixel;
-	  lut->composite[i] = adjusted_pixel / 256;
-	  lut16->composite[i] = adjusted_pixel;
-	  lut->red[i] = adjusted_pixel / 256;
-	  lut16->red[i] = adjusted_pixel;
-	  lut->green[i] = adjusted_pixel / 256;
-	  lut16->green[i] = adjusted_pixel;
-	  lut->blue[i] = adjusted_pixel / 256;
-	  lut16->blue[i] = adjusted_pixel;
+	  lut->composite[i] = adjusted_pixel;
+	  lut->red[i] = adjusted_pixel;
+	  lut->green[i] = adjusted_pixel;
+	  lut->blue[i] = adjusted_pixel;
 	} else {
 	  
 	  /*
@@ -2271,75 +2271,60 @@ compute_lut(lut_t *lut,
 	  if (pixel <= 0.0)
 	    {
 	      lut->composite[i] = 0;
-	      lut16->composite[i] = 0;
 	    }
 	  else if (pixel >= 65535.0)
 	    {
-	      lut->composite[i] = 255;
-	      lut16->composite[i] = 65535;
+	      lut->composite[i] = 65535;
 	    }
 	  else
 	    {
-	      lut->composite[i] = (unsigned) (((float) ((unsigned) (pixel / 256.0))) + 0.5);
-	      lut16->composite[i] = (unsigned)(pixel + 0.5);
+	      lut->composite[i] = (unsigned)(pixel + 0.5);
 	    }
 
 	  if (red_pixel <= 0.0)
 	    {
 	      lut->red[i] = 0;
-	      lut16->red[i] = 0;
 	    }
 	  else if (red_pixel >= 65535.0)
 	    {
-	      lut->red[i] = 255;
-	      lut16->red[i] = 65535;
+	      lut->red[i] = 65535;
 	    }
 	  else
 	    {
-	      lut->red[i] = (unsigned) (((float) ((unsigned) (red_pixel / 256.0))) + 0.5);
-	      lut16->red[i] = (unsigned)(red_pixel + 0.5);
+	      lut->red[i] = (unsigned)(red_pixel + 0.5);
 	    }
 
 	  if (green_pixel <= 0.0)
 	    {
 	      lut->green[i] = 0;
-	      lut16->green[i] = 0;
 	    }
 	  else if (green_pixel >= 65535.0)
 	    {
-	      lut->green[i] = 255;
-	      lut16->green[i] = 65535;
+	      lut->green[i] = 65535;
 	    }
 	  else
 	    {
-	      lut->green[i] = (unsigned) (((float) ((unsigned) (green_pixel / 256.0))) + 0.5);
-	      lut16->green[i] = (unsigned)(green_pixel + 0.5);
+	      lut->green[i] = (unsigned)(green_pixel + 0.5);
 	    }
 
 	  if (blue_pixel <= 0.0)
 	    {
 	      lut->blue[i] = 0;
-	      lut16->blue[i] = 0;
 	    }
 	  else if (blue_pixel >= 65535.0)
 	    {
-	      lut->blue[i] = 255;
-	      lut16->blue[i] = 65535;
+	      lut->blue[i] = 65535;
 	    }
 	  else
 	    {
-	      lut->blue[i] = (unsigned) (((float) ((unsigned) (blue_pixel / 256.0))) + 0.5);
-	      lut16->blue[i] = (unsigned)(blue_pixel + 0.5);
+	      lut->blue[i] = (unsigned)(blue_pixel + 0.5);
 	    }
 	}
 #ifdef PRINT_LUT
-      fprintf(ltfile, "%3i  %3d %5d  %3d %5d  %3d %5d  %3d %5d  %f %f %f %f  %f %f %f\n",
-	      i, lut->composite[i], lut16->composite[i],
-	      lut->red[i], lut16->red[i],
-	      lut->green[i], lut16->green[i],
-	      lut->blue[i], lut16->blue[i],
-	      pixel, red_pixel, green_pixel, blue_pixel, print_gamma,
-	      screen_gamma, print_gamma);
+      fprintf(ltfile, "%3i  %5d  %5d  %5d  %5d  %f %f %f %f  %f %f %f\n",
+	      i, lut->composite[i], lut->red[i], lut->green[i],
+	      lut->blue[i], pixel, red_pixel, green_pixel, blue_pixel,
+	      print_gamma, screen_gamma, print_gamma);
 #endif
     }
 

@@ -32,6 +32,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.6  1999/10/25 23:31:59  rlk
+ *   16-bit clean
+ *
  *   Revision 1.5  1999/10/21 01:27:37  rlk
  *   More progress toward full 16-bit rendering
  *
@@ -521,9 +524,8 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
          int       copies,		/* I - Number of copies */
          FILE      *prn,		/* I - File to print to */
          GDrawable *drawable,		/* I - Image to print */
-         lut_t     *lut,		/* I - Brightness lookup table */
 	 guchar    *cmap,		/* I - Colormap (for indexed images) */
-	 lut16_t   *lut16,		/* I - Brightness lookup table (16-bit) */
+	 lut_t   *lut,		/* I - Brightness lookup table (16-bit) */
 	 float     saturation		/* I - Saturation */
 	 )
 {
@@ -547,7 +549,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
 		temp_height,	/* Temporary height of image on page */
 		landscape;	/* True if we rotate the output 90 degrees */
   time_t	curtime;	/* Current time of day */
-  convert16_t	colorfunc;	/* Color conversion function... */
+  convert_t	colorfunc;	/* Color conversion function... */
   char		*command;	/* PostScript command */
   int		order,		/* Order of command */
 		num_commands;	/* Number of commands */
@@ -861,7 +863,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
         gimp_progress_update((double)y / (double)drawable->height);
 
       gimp_pixel_rgn_get_row(&rgn, in, 0, y, drawable->width);
-      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut16, cmap,
+      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut, cmap,
 		   saturation);
 
       ps_hex(prn, out, drawable->width * out_bpp);
@@ -905,7 +907,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
         gimp_progress_update((double)y / (double)drawable->height);
 
       gimp_pixel_rgn_get_row(&rgn, in, 0, y, drawable->width);
-      (*colorfunc)(in, out + out_offset, drawable->width, drawable->bpp, lut16,
+      (*colorfunc)(in, out + out_offset, drawable->width, drawable->bpp, lut,
 		   cmap, saturation);
 
       out_length = out_offset + drawable->width * out_bpp;

@@ -67,19 +67,11 @@
 
 typedef struct
 {
-  guchar composite[256];
-  guchar red[256];
-  guchar green[256];
-  guchar blue[256];
-} lut_t;
-
-typedef struct
-{
   gushort composite[256];
   gushort red[256];
   gushort green[256];
   gushort blue[256];
-} lut16_t;
+} lut_t;
 
 typedef struct
 {
@@ -95,19 +87,16 @@ typedef struct
                       int *width, int *length);
   void	(*imageable_area)(int model, char *ppd_file, char *media_size,
                           int *left, int *right, int *bottom, int *top);
+  /* Print function */
   void	(*print)(int model, char *ppd_file, char *resolution,
                  char *media_size, char *media_type, char *media_source,
                  int output_type, int orientation, float scaling, int left,
                  int top, int copies, FILE *prn, GDrawable *drawable,
-                 lut_t *lut, guchar *cmap, lut16_t *lut16,
-		 float saturation);	/* Print function */
+                 guchar *cmap, lut_t *lut, float saturation);
 } printer_t;
 
-typedef void (*convert_t)(guchar *in, guchar *out, int width, int bpp,
-                          lut_t *lut, guchar *cmap, float saturation);
-
-typedef void (*convert16_t)(guchar *in, gushort *out, int width, int bpp,
-			    lut16_t *lut, guchar *cmap, float saturation);
+typedef void (*convert_t)(guchar *in, gushort *out, int width, int bpp,
+			  lut_t *lut, guchar *cmap, float saturation);
 
 
 /*
@@ -132,20 +121,22 @@ extern void	dither_cmyk4_16(gushort *, int, int, int, unsigned char *,
 				unsigned char *);
 
 
+#if 0
 extern void	gray_to_gray(guchar *, guchar *, int, int, lut_t *,
 			     guchar *, float);
 extern void	indexed_to_gray(guchar *, guchar *, int, int, lut_t *,
 				guchar *, float);
+#endif
 
-extern void	gray_to_gray16(guchar *, gushort *, int, int, lut16_t *,
+extern void	gray_to_gray16(guchar *, gushort *, int, int, lut_t *,
 			       guchar *, float);
-extern void	indexed_to_gray16(guchar *, gushort *, int, int, lut16_t *,
+extern void	indexed_to_gray16(guchar *, gushort *, int, int, lut_t *,
 				  guchar *, float);
-extern void	indexed_to_rgb16(guchar *, gushort *, int, int, lut16_t *,
+extern void	indexed_to_rgb16(guchar *, gushort *, int, int, lut_t *,
 				 guchar *, float);
-extern void	rgb_to_gray16(guchar *, gushort *, int, int, lut16_t *,
+extern void	rgb_to_gray16(guchar *, gushort *, int, int, lut_t *,
 			      guchar *, float);
-extern void	rgb_to_rgb16(guchar *, gushort *, int, int, lut16_t *,
+extern void	rgb_to_rgb16(guchar *, gushort *, int, int, lut_t *,
 			     guchar *, float);
 
 
@@ -163,8 +154,8 @@ extern void	escp2_print(int model, char *ppd_file, char *resolution,
 			    char *media_source, int output_type,
 			    int orientation, float scaling, int left,
 			    int top, int copies, FILE *prn,
-			    GDrawable *drawable, lut_t *lut, guchar *cmap,
-			    lut16_t *lut16, float saturation);
+			    GDrawable *drawable, guchar *cmap,
+			    lut_t *lut, float saturation);
 
 extern char	**pcl_parameters(int model, char *ppd_file, char *name,
 		                 int *count);
@@ -176,8 +167,8 @@ extern void	pcl_print(int model, char *ppd_file, char *resolution,
 			  char *media_source, int output_type,
 			  int orientation, float scaling,
 		          int left, int top, int copies, FILE *prn,
-		          GDrawable *drawable, lut_t *lut, guchar *cmap,
-			  lut16_t *lut16, float saturation);
+		          GDrawable *drawable, guchar *cmap,
+			  lut_t *lut, float saturation);
 
 extern char	**ps_parameters(int model, char *ppd_file, char *name,
 		                int *count);
@@ -191,8 +182,7 @@ extern void	ps_print(int model, char *ppd_file, char *resolution,
 			 char *media_source, int output_type,
 			 int orientation, float scaling, int left, int top,
 			 int copies, FILE *prn, GDrawable *drawable,
-			 lut_t *lut, guchar *cmap, lut16_t *lut16,
-			 float saturation);
+			 guchar *cmap, lut_t *lut, float saturation);
 
 extern void calc_hsv_to_rgb16(gushort *rgb, double h, double s, double v);
 extern void calc_rgb16_to_hsv(gushort *rgb, double *hue, double *sat,
@@ -201,7 +191,7 @@ extern void calc_hsv_to_rgb(guchar *rgb, double h, double s, double v);
 extern void calc_rgb_to_hsv(guchar *rgb, double *hue, double *sat,
 			    double *val);
 
-extern void compute_lut(lut_t *lut, lut16_t *lut16, int icontrast,
+extern void compute_lut(lut_t *lut, int icontrast,
 			float red, float green, float blue, int ibrightness,
 			float print_gamma, float gimp_gamma, float user_gamma,
 			int linear, float printer_density, float user_density);

@@ -30,6 +30,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.11  1999/10/25 23:31:59  rlk
+ *   16-bit clean
+ *
  *   Revision 1.10  1999/10/25 00:16:12  rlk
  *   Comment
  *
@@ -417,9 +420,8 @@ escp2_print(int       model,		/* I - Model */
             int       copies,		/* I - Number of copies */
             FILE      *prn,		/* I - File to print to */
             GDrawable *drawable,	/* I - Image to print */
-            lut_t     *lut,		/* I - Brightness lookup table */
             guchar    *cmap,		/* I - Colormap (for indexed images) */
-	    lut16_t   *lut16,		/* I - Brightness lookup table (16-bit) */
+	    lut_t     *lut,		/* I - Brightness lookup table (16-bit) */
 	    float     saturation	/* I - Saturation */
 	    )
 {
@@ -454,7 +456,7 @@ escp2_print(int       model,		/* I - Model */
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
-  convert16_t	colorfunc = 0;	/* Color conversion function... */
+  convert_t	colorfunc = 0;	/* Color conversion function... */
 
 
  /*
@@ -799,7 +801,7 @@ escp2_print(int       model,		/* I - Model */
         gimp_pixel_rgn_get_col(&rgn, in, errline, 0, drawable->height);
       }
 
-      (*colorfunc)(in, out, drawable->height, drawable->bpp, lut16, cmap,
+      (*colorfunc)(in, out, drawable->height, drawable->bpp, lut, cmap,
 		   saturation);
 
       if (output_type == OUTPUT_GRAY)
@@ -869,7 +871,7 @@ escp2_print(int       model,		/* I - Model */
         gimp_pixel_rgn_get_row(&rgn, in, 0, errline, drawable->width);
       }
 
-      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut16, cmap,
+      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut, cmap,
 		   saturation);
 
       if (output_type == OUTPUT_GRAY)
