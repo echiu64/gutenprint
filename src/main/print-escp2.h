@@ -21,6 +21,10 @@
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#ifndef GIMP_PRINT_INTERNAL_ESCP2_H
+#define GIMP_PRINT_INTERNAL_ESCP2_H
+
+
 #define PHYSICAL_CHANNEL_LIMIT 7
 
 /*
@@ -373,3 +377,9 @@ typedef struct escp2_printer
 
 extern const escp2_stp_printer_t stp_escp2_model_capabilities[];
 extern const int stp_escp2_model_limit;
+
+
+#endif /* GIMP_PRINT_INTERNAL_ESCP2_H */
+/*
+ * End of "$Id$".
+ */

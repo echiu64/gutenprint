@@ -21,6 +21,15 @@
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+
+#ifndef GIMP_PRINT_INTERNAL_VARS_H
+#define GIMP_PRINT_INTERNAL_VARS_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #include <sys/types.h>
 
 typedef struct stp_internal_option
@@ -71,3 +80,19 @@ typedef struct					/* Plug-in variables */
   stp_internal_option_t *options;
   int verified;			/* Ensure that params are OK! */
 } stp_internal_vars_t;
+
+
+extern void	stp_set_driver_data (stp_vars_t vv, void * val);
+extern void * 	stp_get_driver_data (const stp_vars_t vv);
+
+extern void	stp_set_verified(stp_vars_t vv, int value);
+extern int	stp_get_verified(stp_vars_t vv);
+
+extern void     stp_copy_options(stp_vars_t vd, const stp_vars_t vs);
+
+
+#ifdef __cplusplus
+  }
+#endif
+
+#endif /* GIMP_PRINT_INTERNAL_VARS_H */

@@ -25,6 +25,13 @@
  * compile on generic platforms that don't support glib, gimp, gimpprint, etc.
  */
 
+#ifndef GIMP_PRINT_INTERNAL_LIST_H
+#define GIMP_PRINT_INTERNAL_LIST_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 struct stp_internal_list_node;
 
@@ -54,3 +61,8 @@ typedef struct stp_internal_list_head
 } stp_internal_list_head_t;
 
 
+#ifdef __cplusplus
+  }
+#endif
+
+#endif /* GIMP_PRINT_INTERNAL_LIST_H */

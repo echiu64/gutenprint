@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   Print plug-in header file for the GIMP.
+ *   libgimpprint header.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
  *	Robert Krawitz (rlk@alum.mit.edu)
@@ -30,29 +30,51 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
-#ifndef GIMP_PRINT_INTERNAL_INTERNAL_H
-#define GIMP_PRINT_INTERNAL_INTERNAL_H
+#ifndef GIMP_PRINT_INTERNAL_DITHER_MATRICES_H
+#define GIMP_PRINT_INTERNAL_DITHER_MATRICES_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-#include "dither.h"
-#include "dither-matrices.h"
-#include "list.h"
-#include "papers.h"
-#include "printers.h"
-#include "util.h"
-#include "vars.h"
-#include "weave.h"
+
+typedef struct stp_dither_matrix_short
+{
+  int x;
+  int y;
+  int bytes;
+  int prescaled;
+  const unsigned short *data;
+} stp_dither_matrix_short_t;
+
+typedef struct stp_dither_matrix_normal
+{
+  int x;
+  int y;
+  int bytes;
+  int prescaled;
+  const unsigned *data;
+} stp_dither_matrix_normal_t;
+
+typedef struct stp_dither_matrix
+{
+  int x;
+  int y;
+  int bytes;
+  int prescaled;
+  const void *data;
+} stp_dither_matrix_t;
 
 
 #ifdef __cplusplus
   }
 #endif
 
-#endif /* GIMP_PRINT_INTERNAL_INTERNAL_H */
+#endif /* GIMP_PRINT_INTERNAL_DITHER_MATRICES_H */
 /*
  * End of "$Id$".
  */

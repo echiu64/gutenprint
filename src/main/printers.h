@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   Print plug-in header file for the GIMP.
+ *   libgimpprint header.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
  *	Robert Krawitz (rlk@alum.mit.edu)
@@ -30,29 +30,37 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
-#ifndef GIMP_PRINT_INTERNAL_INTERNAL_H
-#define GIMP_PRINT_INTERNAL_INTERNAL_H
+#ifndef GIMP_PRINT_INTERNAL_PRINTERS_H
+#define GIMP_PRINT_INTERNAL_PRINTERS_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-#include "dither.h"
-#include "dither-matrices.h"
-#include "list.h"
-#include "papers.h"
-#include "printers.h"
+
 #include "util.h"
-#include "vars.h"
-#include "weave.h"
+
+
+extern stp_list_t *stp_printer_list;
+
+
+extern int stp_init_printer_list(void);
+
+extern const stp_printfuncs_t *stp_printer_get_printfuncs(const stp_printer_t p);
+
+extern int
+stp_verify_printer_params(const stp_printer_t, const stp_vars_t);
 
 
 #ifdef __cplusplus
   }
 #endif
 
-#endif /* GIMP_PRINT_INTERNAL_INTERNAL_H */
+#endif /* GIMP_PRINT_INTERNAL_PRINTERS_H */
 /*
  * End of "$Id$".
  */
