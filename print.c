@@ -35,6 +35,7 @@
 #include <os2.h>
 #endif
 
+#include <unistd.h>
 #include "print-intl.h"
 
 /*

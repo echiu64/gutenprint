@@ -43,9 +43,6 @@
 /*
  * Include necessary header files...
  */
-#ifndef HAVE_UNISTD_H
-#define HAVE_UNISTD_H
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -53,9 +50,6 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 
 /*
  * Constants...
