@@ -39,7 +39,7 @@ test -f $srcdir/ChangeLog || echo > $srcdir/ChangeLog
   (libtool --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "**Error**: You must have \`libtool' installed to compile gimp-print."
-    echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.4.2.tar.gz"
+    echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.4.3.tar.gz"
     echo "(or a newer version if it is available)"
     DIE=1
   }
