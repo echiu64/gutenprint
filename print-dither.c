@@ -1531,7 +1531,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	   * suggests, and we look up where is value is between
 	   * lowerbound and density:
 	   */
-
+	  
 	  kdarkness = ((c*2 + m*2 +y ) - 2 * d->density )/3;
 	  if (kdarkness > k)
 	    ok = kdarkness;
@@ -1560,23 +1560,27 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	 * an S curve: 2ks - ks^2. This is then multiplied by the darkness
 	 * value in kl. If we think this is too complex the following line
 	 * can be tried instead:    
-         * k = ks * kl / d->density;
+         * ak = ks;
 	 */
-	  k = (2*ks-ks*ks/d->density) * kl / d->density;
+	  ak = 2*ks-ks*ks/d->density;
+	  k = kl * ak / d->density;
 	  ok = k;
 	  bk = k;
- 
+
 	  if (k > 0)
 	    {
 	    /*
 	     * Because black is always fairly neutral, we do not have to
 	     * calculate the amount to take out of CMY. The result will be
 	     * a bit dark but that is OK. If things are okay CMY cannot go
-	     * negative here - unless extra K is added in the previous block
-	     */  
-	      c -= k;
-	      m -= k;
-	      y -= k;
+	     * negative here - unless extra K is added in the previous block.
+	     * We multiply by ak to prevent taking out too much. This prevents
+	     * dark areas from becoming very dull.
+	     */
+	     
+	      c -= k * ak / d->density;
+	      m -= k * ak / d->density;
+	      y -= k * ak / d->density;
 	      if (c < 0)
 		c = 0;
 	      if (m < 0)
