@@ -1127,6 +1127,9 @@ stp_describe_parameter(const stp_vars_t v, const char *name,
 		       stp_parameter_t *description)
 {
   description->p_type = STP_PARAMETER_TYPE_INVALID;
+/* Set these to NULL in case stpi_*_describe_parameter() doesn't */
+  description->bounds.str = NULL;
+  description->deflt.str = NULL;
   stpi_printer_describe_parameter(v, name, description);
   if (description->p_type != STP_PARAMETER_TYPE_INVALID)
     return;

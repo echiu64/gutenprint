@@ -546,7 +546,7 @@ stpui_printrc_load_v1(FILE *fp)
 	  /* Switch to printer named VALUE */
 	  stpui_plist_add(&key, 0);
 #ifdef DEBUG
-	  printf("output_to is now %s\n", stp_get_output_to(p->v));
+	  printf("output_to is now %s\n", stpui_plist_get_output_to(&key));
 #endif
 
 	  stp_vars_free(key.v);
@@ -798,7 +798,7 @@ stpui_printrc_save(void)
 	    }
 	  stp_parameter_list_free(params);
 #ifdef DEBUG
-	  fprintf(stderr, "Wrote printer %d: %s\n", i, param->name);
+	  fprintf(stderr, "Wrote printer %d: %s\n", i, p->name);
 #endif
 	}
       fclose(fp);
