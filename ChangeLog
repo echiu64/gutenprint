@@ -1,5 +1,11 @@
 2000-12-18	<rlk@sourceforge.net>
 
+	Files:	ChangeLog (1.65) (+57 -0)
+	
+	4.1.0 release
+	
+2000-12-18	<rlk@sourceforge.net>
+
 	Files:	configure.in (1.40) (+9 -1)
 	
 	Enable --enable-gimptest=no

@@ -889,6 +889,8 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 			  double ev = lum_map[ih] +
 			    eh * (lum_map[ih + 1] - lum_map[ih]);
 			  ev = 1.0 + (s * (ev - 1.0));
+			  if (v > .5)
+			    ev = 1.0 + ((2.0 * (1.0 - v)) * (ev - 1.0));
 			  v = 1.0 - pow(1.0 - v, ev);
 			}
 		    }
