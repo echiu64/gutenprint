@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 0.3\n"
-"POT-Creation-Date: 2002-06-30 22:06+0200\n"
+"POT-Creation-Date: 2002-07-22 21:18-0400\n"
 "PO-Revision-Date: 2002-07-01 19:36+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian/Bokmaal <no@li.org>\n"
@@ -132,51 +132,51 @@ msgstr "Manuell med pause"
 msgid "Manual without Pause"
 msgstr "Manuell uten pause"
 
-#: src/escputil/escputil.c:584 src/main/print-canon.c:1689
+#: src/escputil/escputil.c:584 src/main/print-canon.c:1688
 #: src/main/print-lexmark.c:666
 msgid "Black"
 msgstr "Sort"
 
-#: src/main/print-canon.c:1694
+#: src/main/print-canon.c:1693
 msgid "CMY Color"
 msgstr "CMY-farge"
 
-#: src/main/print-canon.c:1699
+#: src/main/print-canon.c:1698
 msgid "CMYK Color"
 msgstr "CMYK-farge"
 
-#: src/main/print-canon.c:1704
+#: src/main/print-canon.c:1703
 msgid "Photo CcMmY Color"
 msgstr "Foto CcMmY-farge"
 
-#: src/main/print-canon.c:1709
+#: src/main/print-canon.c:1708
 msgid "Photo CcMmYK Color"
 msgstr "Foto CcMmYK-farge"
 
-#. Note to translators: "EvenTone" is the proper name, rather than a
-#. descriptive name, of this algorithm.
-#: src/main/print-dither.c:66
-msgid "EvenTone"
-msgstr ""
-
-#: src/main/print-dither.c:67
+#: src/main/print-dither.c:64
 msgid "Adaptive Hybrid"
 msgstr ""
 
-#: src/main/print-dither.c:68
+#: src/main/print-dither.c:65
 msgid "Ordered"
 msgstr "Ordnet"
 
-#: src/main/print-dither.c:69
+#: src/main/print-dither.c:66
 msgid "Fast"
 msgstr "Rask"
 
-#: src/main/print-dither.c:70
+#: src/main/print-dither.c:67
 msgid "Very Fast"
 msgstr "Meget rask"
 
-#: src/main/print-dither.c:71
+#: src/main/print-dither.c:68
 msgid "Hybrid Floyd-Steinberg"
+msgstr ""
+
+#. Note to translators: "EvenTone" is the proper name, rather than a
+#. descriptive name, of this algorithm.
+#: src/main/print-dither.c:71
+msgid "EvenTone"
 msgstr ""
 
 #. name                                                    hres vres softw v_pass overs unidir resid
@@ -1703,7 +1703,7 @@ msgstr ""
 
 #: src/escputil/escputil.c:946 src/escputil/escputil.c:953
 #: src/escputil/escputil.c:966 src/escputil/escputil.c:982
-#: src/escputil/escputil.c:1049 src/escputil/escputil.c:1183
+#: src/escputil/escputil.c:1049 src/escputil/escputil.c:1190
 msgid "> "
 msgstr ">"
 
@@ -1785,7 +1785,7 @@ msgstr ""
 
 #: src/escputil/escputil.c:1035 src/escputil/escputil.c:1057
 #: src/escputil/escputil.c:1100 src/escputil/escputil.c:1169
-#: src/escputil/escputil.c:1191 src/escputil/escputil.c:1234
+#: src/escputil/escputil.c:1180
 msgid "Press enter to continue > "
 msgstr "Trykk linjeskift for å fortsette > "
 
@@ -1796,38 +1796,37 @@ msgid ""
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1048 src/escputil/escputil.c:1182
+#: src/escputil/escputil.c:1048
 #, c-format
 msgid "Pass #%d"
 msgstr "Gjennomgang #%d"
 
 #: src/escputil/escputil.c:1054 src/escputil/escputil.c:1099
-#: src/escputil/escputil.c:1188 src/escputil/escputil.c:1233
 msgid "Please insert a fresh sheet of paper.\n"
 msgstr "Vennligst sett inn et nytt ark.\n"
 
-#: src/escputil/escputil.c:1073 src/escputil/escputil.c:1207
+#: src/escputil/escputil.c:1073 src/escputil/escputil.c:1209
 msgid "Number out of range!\n"
 msgstr "Tallet er utenfor gyldig område!\n"
 
-#: src/escputil/escputil.c:1078 src/escputil/escputil.c:1212
+#: src/escputil/escputil.c:1078 src/escputil/escputil.c:1214
 msgid "I cannot understand what you typed!\n"
 msgstr "Kan ikke forstå det du skrev inn!\n"
 
-#: src/escputil/escputil.c:1084 src/escputil/escputil.c:1218
+#: src/escputil/escputil.c:1084
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1091 src/escputil/escputil.c:1225
+#: src/escputil/escputil.c:1091
 msgid "Attempting to set alignment..."
 msgstr "Prøver å sette justering..."
 
-#: src/escputil/escputil.c:1094 src/escputil/escputil.c:1228
+#: src/escputil/escputil.c:1094
 msgid "succeeded.\n"
 msgstr "fullført.\n"
 
-#: src/escputil/escputil.c:1095 src/escputil/escputil.c:1229
+#: src/escputil/escputil.c:1095
 #, c-format
 msgid ""
 "Please verify that the alignment is correct.  After the alignment pattern\n"
@@ -1875,13 +1874,27 @@ msgstr ""
 msgid "Printer %s does not require color head alignment.\n"
 msgstr "Skriver %s krever ikke justering av fargehode.\n"
 
-#: src/escputil/escputil.c:1176
+#: src/escputil/escputil.c:1178
 msgid ""
-"Please inspect the print, and choose the pattern in each set.\n"
-"Type a pattern number, '?' for help, or 'r' to repeat the procedure.\n"
+"Please re-insert the same alignment sheet in the printer when it is\n"
+"finished printing.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1275
+#: src/escputil/escputil.c:1184
+msgid ""
+"Inspect the alignment sheet, and determine which pattern is the smoothest.\n"
+"This pattern will appear to have the least ``grain''.\n"
+"If you cannot find a smooth pattern, please select the number for the\n"
+"best pattern, and repeat the procedure.\n"
+"Type a pattern number, or '?' for help.\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1220
+#, c-format
+msgid "The best pattern should be numbered between 1 and %d.\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1264
 msgid "Error in input\n"
 msgstr "Feil i inndata\n"
 
@@ -2521,83 +2534,83 @@ msgid "<Image>/File/Print..."
 msgstr "<Image>/Fil/Skriv ut..."
 
 #: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:833
-#: src/gimp/print.c:1184
+#: src/gimp/print.c:1182
 msgid "File"
 msgstr "Fil"
 
-#: src/ghost/ijsgimpprint.c:144
+#: src/ghost/ijsgimpprint.c:139
 #, c-format
 msgid "Bad color space: bps %d channels %d space %s\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:152
+#: src/ghost/ijsgimpprint.c:147
 msgid "No row buffer\n"
 msgstr "Ingen rad for buffer\n"
 
-#: src/ghost/ijsgimpprint.c:181
+#: src/ghost/ijsgimpprint.c:176
 #, c-format
 msgid "Parameter %s out of range (value %f, min %f, max %f)\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:185 src/ghost/ijsgimpprint.c:207
+#: src/ghost/ijsgimpprint.c:180 src/ghost/ijsgimpprint.c:202
 #, c-format
 msgid "Unable to parse parameter %s=%s (expect a number)\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:203
+#: src/ghost/ijsgimpprint.c:198
 #, c-format
 msgid "Parameter %s out of range (value %d, min %d, max %d)\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:345
+#: src/ghost/ijsgimpprint.c:340
 msgid "Printer must be specified with -sModel\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:347
+#: src/ghost/ijsgimpprint.c:342
 #, c-format
 msgid "Printer %s is not a known model\n"
 msgstr "Skriver %s er ikke en kjent modell\n"
 
-#: src/ghost/ijsgimpprint.c:589
+#: src/ghost/ijsgimpprint.c:596
 #, c-format
 msgid "Unknown option %s\n"
 msgstr "Ukjent flagg %s\n"
 
-#: src/ghost/ijsgimpprint.c:732
+#: src/ghost/ijsgimpprint.c:739
 #, c-format
 msgid "%.0f of %.0f\n"
 msgstr "%.0f av %.0f\n"
 
-#: src/ghost/ijsgimpprint.c:838
+#: src/ghost/ijsgimpprint.c:845
 #, c-format
 msgid "ijs_server_get_page_header failed %d\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:849
+#: src/ghost/ijsgimpprint.c:856
 #, c-format
 msgid "image_init failed %d\n"
 msgstr "image_init feilet %d\n"
 
-#: src/ghost/ijsgimpprint.c:860
+#: src/ghost/ijsgimpprint.c:867
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
 msgstr "Kan ikke åpne fildeskriptor: %s\n"
 
-#: src/ghost/ijsgimpprint.c:872
+#: src/ghost/ijsgimpprint.c:879
 #, c-format
 msgid "Unable to open %s: %s\n"
 msgstr "Kan ikke åpne %s: %s\n"
 
-#: src/ghost/ijsgimpprint.c:884
+#: src/ghost/ijsgimpprint.c:891
 #, c-format
 msgid "Unknown printer %s\n"
 msgstr "Ukjent skriver %s\n"
 
-#: src/ghost/ijsgimpprint.c:915
+#: src/ghost/ijsgimpprint.c:922
 msgid "Bad parameters; cannot continue!\n"
 msgstr "Ugyldige parametere; kan ikke fortsette!\n"
 
-#: src/ghost/ijsgimpprint.c:925
+#: src/ghost/ijsgimpprint.c:932
 #, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr "Henting av neste rad feilet ved %.0f\n"

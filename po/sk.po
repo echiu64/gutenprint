@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GIMP Print\n"
-"POT-Creation-Date: 2002-06-05 19:56-0400\n"
+"POT-Creation-Date: 2002-07-22 21:18-0400\n"
 "PO-Revision-Date: 2002-05-20 18:08+0100\n"
 "Last-Translator: Zdenko Podobný <zdpo@mailbox.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -182,15 +182,6 @@ msgstr "Hybridný Floyd-Steinbergov"
 msgid "EvenTone"
 msgstr "Obálka"
 
-#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2.c:481
-#: src/main/print-pcl.c:202
-msgid "Standard"
-msgstr "©tandardný"
-
-#: src/main/print-escp2.c:483
-msgid "Roll Feed"
-msgstr "Kotúèový podávaè"
-
 #. name                                                    hres vres softw v_pass overs unidir resid
 #: src/main/print-lexmark.c:622 src/main/print-lexmark.c:708
 msgid "300 DPI x 600 DPI"
@@ -327,6 +318,10 @@ msgstr "Rýchloschnúce foto"
 #: src/main/print-pcl.c:163
 msgid "Quick-dry Transparency"
 msgstr "Rýchloschnúce priesvit. fólie"
+
+#: src/gimp/gimp_main_window.c:1616 src/main/print-pcl.c:202
+msgid "Standard"
+msgstr "©tandardný"
 
 #: src/main/print-pcl.c:203 src/main/print-util.c:547
 msgid "Manual"
@@ -2857,86 +2852,89 @@ msgid "<Image>/File/Print..."
 msgstr "<Image>/Súbor/Tlaè..."
 
 #: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:833
-#: src/gimp/print.c:1184
+#: src/gimp/print.c:1182
 msgid "File"
 msgstr "Súbor"
 
-#: src/ghost/ijsgimpprint.c:144
+#: src/ghost/ijsgimpprint.c:139
 #, c-format
 msgid "Bad color space: bps %d channels %d space %s\n"
 msgstr "Zlý farebný priestor: bps %d kanály %d priestor %s\n"
 
-#: src/ghost/ijsgimpprint.c:152
+#: src/ghost/ijsgimpprint.c:147
 msgid "No row buffer\n"
 msgstr "Neexistuje riadkový bufer\n"
 
-#: src/ghost/ijsgimpprint.c:181
+#: src/ghost/ijsgimpprint.c:176
 #, c-format
 msgid "Parameter %s out of range (value %f, min %f, max %f)\n"
 msgstr "Parameter %s je mimo rozsahu (hodnota %f, min %f, max %f)\n"
 
-#: src/ghost/ijsgimpprint.c:185 src/ghost/ijsgimpprint.c:207
+#: src/ghost/ijsgimpprint.c:180 src/ghost/ijsgimpprint.c:202
 #, c-format
 msgid "Unable to parse parameter %s=%s (expect a number)\n"
 msgstr "Nie je mo¾né analyzova» parameter %s=%s (oèakáva sa èíslo)\n"
 
-#: src/ghost/ijsgimpprint.c:203
+#: src/ghost/ijsgimpprint.c:198
 #, c-format
 msgid "Parameter %s out of range (value %d, min %d, max %d)\n"
 msgstr "Parameter %s je mimo rozsahu (hodnota %d, min %d, max %d)\n"
 
-#: src/ghost/ijsgimpprint.c:345
+#: src/ghost/ijsgimpprint.c:340
 msgid "Printer must be specified with -sModel\n"
 msgstr "Tlaèiareò musí by» urèené pomocou -sModel\n"
 
-#: src/ghost/ijsgimpprint.c:347
+#: src/ghost/ijsgimpprint.c:342
 #, c-format
 msgid "Printer %s is not a known model\n"
 msgstr "Tlaèiareò %s nie je známy model\n"
 
-#: src/ghost/ijsgimpprint.c:589
+#: src/ghost/ijsgimpprint.c:596
 #, c-format
 msgid "Unknown option %s\n"
 msgstr "Neznáme nastavenie %s\n"
 
-#: src/ghost/ijsgimpprint.c:732
+#: src/ghost/ijsgimpprint.c:739
 #, c-format
 msgid "%.0f of %.0f\n"
 msgstr "%.0f z %.0f\n"
 
-#: src/ghost/ijsgimpprint.c:838
+#: src/ghost/ijsgimpprint.c:845
 #, c-format
 msgid "ijs_server_get_page_header failed %d\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:849
+#: src/ghost/ijsgimpprint.c:856
 #, c-format
 msgid "image_init failed %d\n"
 msgstr "image_init zlyhalo %d\n"
 
-#: src/ghost/ijsgimpprint.c:860
+#: src/ghost/ijsgimpprint.c:867
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
 msgstr "Nepodarilo sa otvori» popis súboru: %s\n"
 
-#: src/ghost/ijsgimpprint.c:872
+#: src/ghost/ijsgimpprint.c:879
 #, c-format
 msgid "Unable to open %s: %s\n"
 msgstr "Nie je mo¾né otvori» %s: %s\n"
 
-#: src/ghost/ijsgimpprint.c:884
+#: src/ghost/ijsgimpprint.c:891
 #, c-format
 msgid "Unknown printer %s\n"
 msgstr "Neznáma tlaèiareò %s\n"
 
-#: src/ghost/ijsgimpprint.c:915
+#: src/ghost/ijsgimpprint.c:922
 msgid "Bad parameters; cannot continue!\n"
 msgstr "Zlé parametre; nie je mo¾né pokraèova»!\n"
 
-#: src/ghost/ijsgimpprint.c:925
+#: src/ghost/ijsgimpprint.c:932
 #, fuzzy, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr "Získanie nasledujúceho riadku zlyhalo na %d\n"
+
+#~ msgid "Roll Feed"
+#~ msgstr "Kotúèový podávaè"
 
 #~ msgid "Plain Paper Fast Load"
 #~ msgstr "Obyèajný papier rýchle nasadenie"

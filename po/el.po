@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 1.0\n"
-"POT-Creation-Date: 2002-06-05 19:56-0400\n"
+"POT-Creation-Date: 2002-07-22 21:18-0400\n"
 "PO-Revision-Date: 2001-12-29 20:10+0000\n"
 "Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -208,16 +208,6 @@ msgstr ""
 msgid "EvenTone"
 msgstr "Εκτύπωση Φακέλου"
 
-#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2.c:481
-#: src/main/print-pcl.c:202
-msgid "Standard"
-msgstr "Κανονικό"
-
-#: src/main/print-escp2.c:483
-#, fuzzy
-msgid "Roll Feed"
-msgstr "Ρόλος"
-
 #. name                                                    hres vres softw v_pass overs unidir resid
 #: src/main/print-lexmark.c:622 src/main/print-lexmark.c:708
 msgid "300 DPI x 600 DPI"
@@ -364,6 +354,10 @@ msgstr ""
 #, fuzzy
 msgid "Quick-dry Transparency"
 msgstr "Διαφάνεια Χροιάς"
+
+#: src/gimp/gimp_main_window.c:1616 src/main/print-pcl.c:202
+msgid "Standard"
+msgstr "Κανονικό"
 
 # Revise translation of "manual" (as in opposite of "automatic", not synonym of "documentation")
 #: src/main/print-pcl.c:203 src/main/print-util.c:547
@@ -2722,86 +2716,90 @@ msgstr "<Image>/Φίλτρα/Κείμενο/FreeType..."
 
 #
 #: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:833
-#: src/gimp/print.c:1184
+#: src/gimp/print.c:1182
 msgid "File"
 msgstr "Αρχείο"
 
-#: src/ghost/ijsgimpprint.c:144
+#: src/ghost/ijsgimpprint.c:139
 #, c-format
 msgid "Bad color space: bps %d channels %d space %s\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:152
+#: src/ghost/ijsgimpprint.c:147
 msgid "No row buffer\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:181
+#: src/ghost/ijsgimpprint.c:176
 #, c-format
 msgid "Parameter %s out of range (value %f, min %f, max %f)\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:185 src/ghost/ijsgimpprint.c:207
+#: src/ghost/ijsgimpprint.c:180 src/ghost/ijsgimpprint.c:202
 #, c-format
 msgid "Unable to parse parameter %s=%s (expect a number)\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:203
+#: src/ghost/ijsgimpprint.c:198
 #, c-format
 msgid "Parameter %s out of range (value %d, min %d, max %d)\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:345
+#: src/ghost/ijsgimpprint.c:340
 msgid "Printer must be specified with -sModel\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:347
+#: src/ghost/ijsgimpprint.c:342
 #, c-format
 msgid "Printer %s is not a known model\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:589
+#: src/ghost/ijsgimpprint.c:596
 #, fuzzy, c-format
 msgid "Unknown option %s\n"
 msgstr "¶γνωστος κωδικός op %u"
 
-#: src/ghost/ijsgimpprint.c:732
+#: src/ghost/ijsgimpprint.c:739
 #, c-format
 msgid "%.0f of %.0f\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:838
+#: src/ghost/ijsgimpprint.c:845
 #, c-format
 msgid "ijs_server_get_page_header failed %d\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:849
+#: src/ghost/ijsgimpprint.c:856
 #, c-format
 msgid "image_init failed %d\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:860
+#: src/ghost/ijsgimpprint.c:867
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:872
+#: src/ghost/ijsgimpprint.c:879
 #, fuzzy, c-format
 msgid "Unable to open %s: %s\n"
 msgstr "¶νοιγμα αρχείου %s αδύνατον\n"
 
-#: src/ghost/ijsgimpprint.c:884
+#: src/ghost/ijsgimpprint.c:891
 #, fuzzy, c-format
 msgid "Unknown printer %s\n"
 msgstr "¶γνωστος κωδικός op %u"
 
-#: src/ghost/ijsgimpprint.c:915
+#: src/ghost/ijsgimpprint.c:922
 msgid "Bad parameters; cannot continue!\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:925
+#: src/ghost/ijsgimpprint.c:932
 #, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Roll Feed"
+#~ msgstr "Ρόλος"
 
 #, fuzzy
 #~ msgid "Back Light Film"

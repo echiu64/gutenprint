@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
-"POT-Creation-Date: 2002-06-05 19:56-0400\n"
+"POT-Creation-Date: 2002-07-22 21:18-0400\n"
 "PO-Revision-Date: 2002-04-29 00:38GMT\n"
 "Last-Translator: Gustavo D. Vranjes <gvranjes@abaconet.com.ar>\n"
 "Language-Team: Castellano <es@li.org>\n"
@@ -181,15 +181,6 @@ msgstr "Floyd-Steinberg Híbrido"
 msgid "EvenTone"
 msgstr "Sobre"
 
-#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2.c:481
-#: src/main/print-pcl.c:202
-msgid "Standard"
-msgstr "Estándar"
-
-#: src/main/print-escp2.c:483
-msgid "Roll Feed"
-msgstr "Alimentación por Rollo"
-
 #. name                                                    hres vres softw v_pass overs unidir resid
 #: src/main/print-lexmark.c:622 src/main/print-lexmark.c:708
 msgid "300 DPI x 600 DPI"
@@ -327,6 +318,10 @@ msgstr "Fotografía de Secado Rápido"
 #: src/main/print-pcl.c:163
 msgid "Quick-dry Transparency"
 msgstr "Transparencia de Secado Rápido"
+
+#: src/gimp/gimp_main_window.c:1616 src/main/print-pcl.c:202
+msgid "Standard"
+msgstr "Estándar"
 
 #: src/main/print-pcl.c:203 src/main/print-util.c:547
 msgid "Manual"
@@ -2887,86 +2882,89 @@ msgid "<Image>/File/Print..."
 msgstr "<Image>/Archivo/Imprimir..."
 
 #: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:833
-#: src/gimp/print.c:1184
+#: src/gimp/print.c:1182
 msgid "File"
 msgstr "Archivo"
 
-#: src/ghost/ijsgimpprint.c:144
+#: src/ghost/ijsgimpprint.c:139
 #, c-format
 msgid "Bad color space: bps %d channels %d space %s\n"
 msgstr "Mal espacio de color: bps %d canales %d espacio %s\n"
 
-#: src/ghost/ijsgimpprint.c:152
+#: src/ghost/ijsgimpprint.c:147
 msgid "No row buffer\n"
 msgstr "Sin buffer de filas\n"
 
-#: src/ghost/ijsgimpprint.c:181
+#: src/ghost/ijsgimpprint.c:176
 #, c-format
 msgid "Parameter %s out of range (value %f, min %f, max %f)\n"
 msgstr "Parámetro %s fuera de rango (valor %f, mín %f, máx %f)\n"
 
-#: src/ghost/ijsgimpprint.c:185 src/ghost/ijsgimpprint.c:207
+#: src/ghost/ijsgimpprint.c:180 src/ghost/ijsgimpprint.c:202
 #, c-format
 msgid "Unable to parse parameter %s=%s (expect a number)\n"
 msgstr "No puedo analizar el parámetro %s=%s (se espera un número)\n"
 
-#: src/ghost/ijsgimpprint.c:203
+#: src/ghost/ijsgimpprint.c:198
 #, c-format
 msgid "Parameter %s out of range (value %d, min %d, max %d)\n"
 msgstr "Parámetro %s fuera de rango (valor %d, mín %d, máx %d)\n"
 
-#: src/ghost/ijsgimpprint.c:345
+#: src/ghost/ijsgimpprint.c:340
 msgid "Printer must be specified with -sModel\n"
 msgstr "La impresora debe ser especificada con -sModel\n"
 
-#: src/ghost/ijsgimpprint.c:347
+#: src/ghost/ijsgimpprint.c:342
 #, c-format
 msgid "Printer %s is not a known model\n"
 msgstr "La impresora %s no es un modelo conocido\n"
 
-#: src/ghost/ijsgimpprint.c:589
+#: src/ghost/ijsgimpprint.c:596
 #, c-format
 msgid "Unknown option %s\n"
 msgstr "Opción desconocida %s\n"
 
-#: src/ghost/ijsgimpprint.c:732
+#: src/ghost/ijsgimpprint.c:739
 #, c-format
 msgid "%.0f of %.0f\n"
 msgstr "%.0f of %.0f\n"
 
-#: src/ghost/ijsgimpprint.c:838
+#: src/ghost/ijsgimpprint.c:845
 #, c-format
 msgid "ijs_server_get_page_header failed %d\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:849
+#: src/ghost/ijsgimpprint.c:856
 #, c-format
 msgid "image_init failed %d\n"
 msgstr "falló image_init %d\n"
 
-#: src/ghost/ijsgimpprint.c:860
+#: src/ghost/ijsgimpprint.c:867
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
 msgstr "No puedo abrir el descriptor de archivo: %s\n"
 
-#: src/ghost/ijsgimpprint.c:872
+#: src/ghost/ijsgimpprint.c:879
 #, c-format
 msgid "Unable to open %s: %s\n"
 msgstr "No puedo abrir %s: %s\n"
 
-#: src/ghost/ijsgimpprint.c:884
+#: src/ghost/ijsgimpprint.c:891
 #, c-format
 msgid "Unknown printer %s\n"
 msgstr "Impresora desconocida %s\n"
 
-#: src/ghost/ijsgimpprint.c:915
+#: src/ghost/ijsgimpprint.c:922
 msgid "Bad parameters; cannot continue!\n"
 msgstr "¡Parámetros malos, no puedo continuar!\n"
 
-#: src/ghost/ijsgimpprint.c:925
+#: src/ghost/ijsgimpprint.c:932
 #, fuzzy, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr "Traer próxima fila falló en %d\n"
+
+#~ msgid "Roll Feed"
+#~ msgstr "Alimentación por Rollo"
 
 #~ msgid "Plain Paper Fast Load"
 #~ msgstr "Papel Común Carga Rápida"

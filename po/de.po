@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimpprint 4.3.1\n"
-"POT-Creation-Date: 2002-06-28 20:44-0400\n"
+"POT-Creation-Date: 2002-07-22 21:18-0400\n"
 "PO-Revision-Date: 2002-06-30 14:23MET\n"
 "Last-Translator: Olaf Klemke <olke@users.sourceforge.net>\n"
 "Language-Team: deutsch <gnome-de@gnome.org>\n"
@@ -133,52 +133,52 @@ msgstr "Handeinzug mit Pause"
 msgid "Manual without Pause"
 msgstr "Handeinzug ohne Pause"
 
-#: src/escputil/escputil.c:584 src/main/print-canon.c:1689
+#: src/escputil/escputil.c:584 src/main/print-canon.c:1688
 #: src/main/print-lexmark.c:666
 msgid "Black"
 msgstr "Schwarz"
 
-#: src/main/print-canon.c:1694
+#: src/main/print-canon.c:1693
 msgid "CMY Color"
 msgstr "CMY Farbe"
 
-#: src/main/print-canon.c:1699
+#: src/main/print-canon.c:1698
 msgid "CMYK Color"
 msgstr "CMYK Farbe"
 
-#: src/main/print-canon.c:1704
+#: src/main/print-canon.c:1703
 msgid "Photo CcMmY Color"
 msgstr "Foto CcMmY Farbe"
 
-#: src/main/print-canon.c:1709
+#: src/main/print-canon.c:1708
 msgid "Photo CcMmYK Color"
 msgstr "Foto CcMmYK Farbe"
 
-#. Note to translators: "EvenTone" is the proper name, rather than a
-#. descriptive name, of this algorithm.
-#: src/main/print-dither.c:66
-msgid "EvenTone"
-msgstr "Ausgeglichen"
-
-#: src/main/print-dither.c:67
+#: src/main/print-dither.c:64
 msgid "Adaptive Hybrid"
 msgstr "Adaptive Hybrid"
 
-#: src/main/print-dither.c:68
+#: src/main/print-dither.c:65
 msgid "Ordered"
 msgstr "Abgestuft"
 
-#: src/main/print-dither.c:69
+#: src/main/print-dither.c:66
 msgid "Fast"
 msgstr "Schnell"
 
-#: src/main/print-dither.c:70
+#: src/main/print-dither.c:67
 msgid "Very Fast"
 msgstr "Sehr schnell"
 
-#: src/main/print-dither.c:71
+#: src/main/print-dither.c:68
 msgid "Hybrid Floyd-Steinberg"
 msgstr "Hybrid Floyd-Steinberg"
+
+#. Note to translators: "EvenTone" is the proper name, rather than a
+#. descriptive name, of this algorithm.
+#: src/main/print-dither.c:71
+msgid "EvenTone"
+msgstr "Ausgeglichen"
 
 #. name                                                    hres vres softw v_pass overs unidir resid
 #: src/main/print-lexmark.c:622 src/main/print-lexmark.c:708
@@ -1110,8 +1110,10 @@ msgid ""
 "under certain conditions; type 'escputil -l' for details.\n"
 msgstr ""
 ", Copyright © 2000-2001 Robert Krawitz\n"
-"Escputil erhalten sie OHNE JEGLICHE GARANTIE; für Einzelheiten geben sie 'escputil -l' ein\n"
-"Dies ist freie Software und sie dürfen sie gern, unter den genannten Bedingungen, \n"
+"Escputil erhalten sie OHNE JEGLICHE GARANTIE; für Einzelheiten geben sie "
+"'escputil -l' ein\n"
+"Dies ist freie Software und sie dürfen sie gern, unter den genannten "
+"Bedingungen, \n"
 "weitergeben; für Einzelheiten geben sie 'escputil -l' ein.\n"
 
 #: src/escputil/escputil.c:70
@@ -1204,20 +1206,23 @@ msgstr ""
 "                         als Aussetzer erkennbar. Wenn diese auftreten, \n"
 "                        sollten sie die Köpfe reinigen\n"
 "    -a|--align-head    Richtet die Köpfe aus. VORSICHT: Die unnötige\n"
-"                       Benutzung dieser Option kann eine schlechte Druckqualität\n"
+"                       Benutzung dieser Option kann eine schlechte "
+"Druckqualität\n"
 "                       oder Druckerschäden verursachen.\n"
 "    -o|--align-color    Richtet den Farb-Kopf aus.(nur Stylus Color 480 \n"
-"                             580 ).  VORSICHT: Die unnötige Benutzung dieser \n"
+"                             580 ).  VORSICHT: Die unnötige Benutzung "
+"dieser \n"
 "                            Option kann eine schlechte Druckqualität oder\n"
 "                            Druckerschäden verursachen.\n"
 "    -s|--status        Zeigt den Drucker Status.\n"
 "    -i|--ink-level     Fragt den Tintenstand ab. Benötigt Schreib- und\n"
 "                            Leserechte auf die Drucker-Schnittstelle. \n"
 "    -d|--identify      Fragt die Modelinformationen ab.\n"
-"                             Benötigt Schreib- und Leserechte auf die Drucker-"
-"Schnittstelle \n"
+"                             Benötigt Schreib- und Leserechte auf die "
+"Drucker-Schnittstelle \n"
 "                       Drucker-Schnittstelle.\n"
-"    -l|--license       Zeigt die Lizenz- und Garantiebedingungen dieses Programmes\n"
+"    -l|--license       Zeigt die Lizenz- und Garantiebedingungen dieses "
+"Programmes\n"
 "    -M|--list-models   Zeigt die unterstützen Drucker an..\n"
 "    -h|--help          Zeigt diese Informationen an.\n"
 "  Optionen:\n"
@@ -1644,11 +1649,13 @@ msgstr "Prozent verbleibend"
 
 #: src/escputil/escputil.c:678
 msgid "Printer identification requires using a raw device.\n"
-msgstr "Zur Druckererkennung bedarf es des Zugriffs auf die direkte Schnittstelle.\n"
+msgstr ""
+"Zur Druckererkennung bedarf es des Zugriffs auf die direkte Schnittstelle.\n"
 
 #: src/escputil/escputil.c:721
 msgid "Printer status requires using a raw device.\n"
-msgstr "Zur Druckerabfrage  bedarf es des Zugriffs auf die direkte Schnittstelle.\n"
+msgstr ""
+"Zur Druckerabfrage  bedarf es des Zugriffs auf die direkte Schnittstelle.\n"
 
 #: src/escputil/escputil.c:764
 msgid "Cleaning heads...\n"
@@ -1885,12 +1892,13 @@ msgstr ""
 
 #: src/escputil/escputil.c:946 src/escputil/escputil.c:953
 #: src/escputil/escputil.c:966 src/escputil/escputil.c:982
-#: src/escputil/escputil.c:1049 src/escputil/escputil.c:1183
+#: src/escputil/escputil.c:1049 src/escputil/escputil.c:1190
 msgid "> "
 msgstr "> "
 
 #: src/escputil/escputil.c:951
-msgid "Please confirm by typing 'q' again that you wish to quit without saving:\n"
+msgid ""
+"Please confirm by typing 'q' again that you wish to quit without saving:\n"
 msgstr ""
 "Bitte bestätigen sie mit der Taste 'q' das sie die Einstellungen nicht "
 "sichern möchten\n"
@@ -1979,7 +1987,7 @@ msgstr ""
 
 #: src/escputil/escputil.c:1035 src/escputil/escputil.c:1057
 #: src/escputil/escputil.c:1100 src/escputil/escputil.c:1169
-#: src/escputil/escputil.c:1191 src/escputil/escputil.c:1234
+#: src/escputil/escputil.c:1180
 msgid "Press enter to continue > "
 msgstr "Drücken sie Eingabe um fortzufahren > "
 
@@ -1994,38 +2002,37 @@ msgstr ""
 "Geben sie die Nummer ein, '?' für Hilfe, oder 'r' um den Druck zu "
 "wiederholen\n"
 
-#: src/escputil/escputil.c:1048 src/escputil/escputil.c:1182
+#: src/escputil/escputil.c:1048
 #, c-format
 msgid "Pass #%d"
 msgstr "Durchgang #%d"
 
 #: src/escputil/escputil.c:1054 src/escputil/escputil.c:1099
-#: src/escputil/escputil.c:1188 src/escputil/escputil.c:1233
 msgid "Please insert a fresh sheet of paper.\n"
 msgstr "Bitte legen sie ein neues Blatt ein.\n"
 
-#: src/escputil/escputil.c:1073 src/escputil/escputil.c:1207
+#: src/escputil/escputil.c:1073 src/escputil/escputil.c:1209
 msgid "Number out of range!\n"
 msgstr "Die Zahl ist ungültig!\n"
 
-#: src/escputil/escputil.c:1078 src/escputil/escputil.c:1212
+#: src/escputil/escputil.c:1078 src/escputil/escputil.c:1214
 msgid "I cannot understand what you typed!\n"
 msgstr "Wie bitte ?????\n"
 
-#: src/escputil/escputil.c:1084 src/escputil/escputil.c:1218
+#: src/escputil/escputil.c:1084
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
 msgstr "Die Nummer des besten Paares sollte zwischen 1 und %d liegen.\n"
 
-#: src/escputil/escputil.c:1091 src/escputil/escputil.c:1225
+#: src/escputil/escputil.c:1091
 msgid "Attempting to set alignment..."
 msgstr "Beginne die Köpfe einzurichten..."
 
-#: src/escputil/escputil.c:1094 src/escputil/escputil.c:1228
+#: src/escputil/escputil.c:1094
 msgid "succeeded.\n"
 msgstr "erledigt. \n"
 
-#: src/escputil/escputil.c:1095 src/escputil/escputil.c:1229
+#: src/escputil/escputil.c:1095
 #, c-format
 msgid ""
 "Please verify that the alignment is correct.  After the alignment pattern\n"
@@ -2109,17 +2116,32 @@ msgstr ""
 msgid "Printer %s does not require color head alignment.\n"
 msgstr "Drucker %s benötigt keine Kopfausrichtung.\n"
 
-#: src/escputil/escputil.c:1176
+#: src/escputil/escputil.c:1178
 msgid ""
-"Please inspect the print, and choose the pattern in each set.\n"
-"Type a pattern number, '?' for help, or 'r' to repeat the procedure.\n"
-msgstr ""
-"Bitte betrachten sie den Ausdruck und entscheiden sie sich für \n"
-"die besten Übereinstimmungen der Muster-Paare .\n"
-"Geben sie die Nummer ein, '?' für Hilfe, oder 'r' um den Druck zu "
-"wiederholen\n"
+"Please re-insert the same alignment sheet in the printer when it is\n"
+"finished printing.\n"
+msgstr "Bitte legen sie das selbe Blatt ein, nachdem der Druck beendet ist.\n"
 
-#: src/escputil/escputil.c:1275
+#: src/escputil/escputil.c:1184
+msgid ""
+"Inspect the alignment sheet, and determine which pattern is the smoothest.\n"
+"This pattern will appear to have the least ``grain''.\n"
+"If you cannot find a smooth pattern, please select the number for the\n"
+"best pattern, and repeat the procedure.\n"
+"Type a pattern number, or '?' for help.\n"
+msgstr ""
+"Betrachten sie den Musterausdruck und finden sie herraus, welches Muster \n"
+"am besten zusammen paßt, optimal ist eine durchgehende Linie.\n"
+"Wenn sie keine gute Übereinstimmung finden, wählen sie die annehm-\n"
+"barste und wiederholen den Vorgang.\n"
+"Geben sie die Musternummer ein oder \"?\" für Hilfe.\n"
+
+#: src/escputil/escputil.c:1220
+#, c-format
+msgid "The best pattern should be numbered between 1 and %d.\n"
+msgstr "Die Nummer des besten Musters sollte zwischen 1 und %d liegen.\n"
+
+#: src/escputil/escputil.c:1264
 msgid "Error in input\n"
 msgstr "Eingabefehler\n"
 
@@ -2767,8 +2789,8 @@ msgid ""
 "Slowest, but most accurate and smoothest color for continuous tone images "
 "and photographs"
 msgstr ""
-"Langsamster,.aber bester und genauester Druck für Farbverläufe "
-"und Fotografien"
+"Langsamster,.aber bester und genauester Druck für Farbverläufe und "
+"Fotografien"
 
 #: src/gimp/gimp_main_window.c:1377
 msgid "Output Type:"
@@ -2810,8 +2832,11 @@ msgid "Adjust Output..."
 msgstr "Ausgabe einstellen..."
 
 #: src/gimp/gimp_main_window.c:1435
-msgid "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
-msgstr "Einstellen der Farbbalance, Helligkeit, Sättigung, Rasterung und des Kontrastes "
+msgid ""
+"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgstr ""
+"Einstellen der Farbbalance, Helligkeit, Sättigung, Rasterung und des "
+"Kontrastes "
 
 #: src/gimp/print-image-gimp.c:318
 msgid "Printing..."
@@ -2822,86 +2847,95 @@ msgid "<Image>/File/Print..."
 msgstr "<Image>/Datei/Drucken..."
 
 #: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:833
-#: src/gimp/print.c:1184
+#: src/gimp/print.c:1182
 msgid "File"
 msgstr "Datei"
 
-#: src/ghost/ijsgimpprint.c:144
+#: src/ghost/ijsgimpprint.c:139
 #, c-format
 msgid "Bad color space: bps %d channels %d space %s\n"
 msgstr "falscher Farbraum:  bps %d Kanäle %d Abstand %s\n"
 
-#: src/ghost/ijsgimpprint.c:152
+#: src/ghost/ijsgimpprint.c:147
 msgid "No row buffer\n"
 msgstr "Kein Zeilen-Speicher\n"
 
-#: src/ghost/ijsgimpprint.c:181
+#: src/ghost/ijsgimpprint.c:176
 #, c-format
 msgid "Parameter %s out of range (value %f, min %f, max %f)\n"
 msgstr "Parameter %s ist nicht zulässig (wert %f, min %f, max %f)\n"
 
-#: src/ghost/ijsgimpprint.c:185 src/ghost/ijsgimpprint.c:207
+#: src/ghost/ijsgimpprint.c:180 src/ghost/ijsgimpprint.c:202
 #, c-format
 msgid "Unable to parse parameter %s=%s (expect a number)\n"
 msgstr "Kann den Parameter %s=%s nicht auswerten (erwarte eine Zahl)\n"
 
-#: src/ghost/ijsgimpprint.c:203
+#: src/ghost/ijsgimpprint.c:198
 #, c-format
 msgid "Parameter %s out of range (value %d, min %d, max %d)\n"
 msgstr "Parameter %s ist nicht zulässig (wert %d, min %d, max %d)\n"
 
-#: src/ghost/ijsgimpprint.c:345
+#: src/ghost/ijsgimpprint.c:340
 msgid "Printer must be specified with -sModel\n"
 msgstr "Der Drucker muß mit -sMODEL angegeben werden\n"
 
-#: src/ghost/ijsgimpprint.c:347
+#: src/ghost/ijsgimpprint.c:342
 #, c-format
 msgid "Printer %s is not a known model\n"
 msgstr "Druckermodel %s ist unbekannt.\n"
 
-#: src/ghost/ijsgimpprint.c:589
+#: src/ghost/ijsgimpprint.c:596
 #, c-format
 msgid "Unknown option %s\n"
 msgstr "Unbekannte Option %s\n"
 
-#: src/ghost/ijsgimpprint.c:732
+#: src/ghost/ijsgimpprint.c:739
 #, c-format
 msgid "%.0f of %.0f\n"
 msgstr "%.0f von %.0f\n"
 
-#: src/ghost/ijsgimpprint.c:838
+#: src/ghost/ijsgimpprint.c:845
 #, c-format
 msgid "ijs_server_get_page_header failed %d\n"
 msgstr "ijs_server_get_page_header failed %d\n"
 
-#: src/ghost/ijsgimpprint.c:849
+#: src/ghost/ijsgimpprint.c:856
 #, c-format
 msgid "image_init failed %d\n"
 msgstr "image_init gescheitert %d\n"
 
-#: src/ghost/ijsgimpprint.c:860
+#: src/ghost/ijsgimpprint.c:867
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
 msgstr "Kann file descriptor : %s nicht öffnen\n"
 
-#: src/ghost/ijsgimpprint.c:872
+#: src/ghost/ijsgimpprint.c:879
 #, c-format
 msgid "Unable to open %s: %s\n"
 msgstr "Kann %s: %s nicht öffnen\n"
 
-#: src/ghost/ijsgimpprint.c:884
+#: src/ghost/ijsgimpprint.c:891
 #, c-format
 msgid "Unknown printer %s\n"
 msgstr "Unbekannter Drucker %s\n"
 
-#: src/ghost/ijsgimpprint.c:915
+#: src/ghost/ijsgimpprint.c:922
 msgid "Bad parameters; cannot continue!\n"
 msgstr "Unzulässige Parameter, breche ab!\n"
 
-#: src/ghost/ijsgimpprint.c:925
+#: src/ghost/ijsgimpprint.c:932
 #, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr "Zeilensprung in %.0f gescheitert\n"
+
+#~ msgid ""
+#~ "Please inspect the print, and choose the pattern in each set.\n"
+#~ "Type a pattern number, '?' for help, or 'r' to repeat the procedure.\n"
+#~ msgstr ""
+#~ "Bitte betrachten sie den Ausdruck und entscheiden sie sich für \n"
+#~ "die besten Übereinstimmungen der Muster-Paare .\n"
+#~ "Geben sie die Nummer ein, '?' für Hilfe, oder 'r' um den Druck zu "
+#~ "wiederholen\n"
 
 #~ msgid "13x19"
 #~ msgstr "13×19"
@@ -2920,28 +2954,3 @@ msgstr "Zeilensprung in %.0f gescheitert\n"
 
 #~ msgid "HP Greeting Card"
 #~ msgstr "HP Greeting Card"
-
-#~ msgid ""
-#~ "Please re-insert the same alignment sheet in the printer when it is\n"
-#~ "finished printing.\n"
-#~ msgstr ""
-#~ "Bitte legen sie das selbe Blatt ein, nachdem der Druck beendet ist.\n"
-
-#~ msgid ""
-#~ "Inspect the alignment sheet, and determine which pattern is the "
-#~ "smoothest.\n"
-#~ "This pattern will appear to have the least ``grain''.\n"
-#~ "If you cannot find a smooth pattern, please select the number for the\n"
-#~ "best pattern, and repeat the procedure.\n"
-#~ "Type a pattern number, or '?' for help.\n"
-#~ msgstr ""
-#~ "Betrachten sie den Musterausdruck und finden sie herraus, welches "
-#~ "Muster \n"
-#~ "am besten zusammen paßt, optimal ist eine durchgehende Linie.\n"
-#~ "Wenn sie keine gute Übereinstimmung finden, wählen sie die annehm-\n"
-#~ "barste und wiederholen den Vorgang.\n"
-#~ "Geben sie die Musternummer ein oder \"?\" für Hilfe.\n"
-
-#~ msgid "The best pattern should be numbered between 1 and %d.\n"
-#~ msgstr "Die Nummer des besten Musters sollte zwischen 1 und %d liegen.\n"
-
