@@ -64,7 +64,6 @@ libgimpprint_la_LIBADD = $(GIMPPRINT_DEPLIBS)
 # Uncomment to build a versioned library
 libgimpprint_la_LDFLAGS = \
  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
- -export-dynamic \
  -rpath $(libdir)
 
 

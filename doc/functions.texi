@@ -740,5 +740,5 @@ development branch) the library interface version numbers are not used.
 These variables hold the library version numbers. Because the version of
 the library may change on a system using shared libraries, these should
 be used instead of the equivalent macros when checking the library
-version at run-time. Note that at present (4.1.x development branch) the
-library interface version numbers are not used.
+version at run-time. Note that library interface version numbers are not
+used in the development branch, but are in the stable branch.

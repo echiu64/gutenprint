@@ -242,7 +242,7 @@ AC_ARG_ENABLE(libgimpprint,
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 AC_MSG_CHECKING([whether to build testpattern generator])
 AC_ARG_WITH(testpattern,
-[  --with-testpattern       build testpattern generator [default=${BUILD_TESTPATTERN}]],
+[  --with-testpattern      build testpattern generator [default=${BUILD_TESTPATTERN}]],
   [case "${withval}" in
     yes) BUILD_TESTPATTERN="yes" ; AC_MSG_RESULT([yes]) ;;
     no) BUILD_TESTPATTERN="no" ; AC_MSG_RESULT([no]) ;;

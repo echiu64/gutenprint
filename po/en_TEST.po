@@ -9,7 +9,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2001-08-24 21:40-0400\n"
+"POT-Creation-Date: 2001-09-01 19:39+0100\n"
 "PO-Revision-Date: 2001-02-07 21:33+0\n"
 "Last-Translator: Roger Leigh <roger@whinlatter.uklinux.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,13 +77,13 @@ msgstr "TEST: %s: option `-W %s' is ambiguous\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "TEST: %s: option `-W %s' doesn't allow an argument\n"
 
-#: src/main/print-canon.c:1221 src/main/print-escp2.c:2559
-#: src/main/print-lexmark.c:696
+#: src/main/print-canon.c:1221 src/main/print-escp2.c:2567
+#: src/main/print-lexmark.c:789
 msgid "Plain Paper"
 msgstr "TEST: Plain Paper"
 
-#: src/main/print-canon.c:1222 src/main/print-escp2.c:2571
-#: src/main/print-lexmark.c:702
+#: src/main/print-canon.c:1222 src/main/print-escp2.c:2579
+#: src/main/print-lexmark.c:795
 msgid "Transparencies"
 msgstr "TEST: Transparencies"
 
@@ -123,20 +123,20 @@ msgstr "TEST: Glossy Photo Cards"
 msgid "Photo Paper Pro"
 msgstr "TEST: Photo Paper Pro"
 
-#: src/main/print-canon.c:1232 src/main/print-escp2.c:2605
-#: src/main/print-lexmark.c:733
+#: src/main/print-canon.c:1232 src/main/print-escp2.c:2613
+#: src/main/print-lexmark.c:826
 msgid "Other"
 msgstr "TEST: Other"
 
-#: src/main/print-canon.c:1505 src/main/print-lexmark.c:927
+#: src/main/print-canon.c:1505 src/main/print-lexmark.c:1021
 msgid "Auto Sheet Feeder"
 msgstr "TEST: Auto Sheet Feeder"
 
-#: src/main/print-canon.c:1506 src/main/print-lexmark.c:928
+#: src/main/print-canon.c:1506 src/main/print-lexmark.c:1022
 msgid "Manual with Pause"
 msgstr "TEST: Manual with Pause"
 
-#: src/main/print-canon.c:1507 src/main/print-lexmark.c:929
+#: src/main/print-canon.c:1507 src/main/print-lexmark.c:1023
 msgid "Manual without Pause"
 msgstr "TEST: Manual without Pause"
 
@@ -184,431 +184,438 @@ msgstr "TEST: Very Fast"
 msgid "Hybrid Floyd-Steinberg"
 msgstr "TEST: Hybrid Floyd-Steinberg"
 
-#: src/main/print-escp2.c:2191
+#: src/main/print-escp2.c:2199
 #, fuzzy
 msgid "360 x 120 DPI"
 msgstr "TEST: 360 DPI"
 
-#: src/main/print-escp2.c:2193
+#: src/main/print-escp2.c:2201
 #, fuzzy
 msgid "360 x 120 DPI Unidirectional"
 msgstr "TEST: 360 DPI Unidirectional"
 
-#: src/main/print-escp2.c:2195
+#: src/main/print-escp2.c:2203
 msgid "180 DPI"
 msgstr "TEST: 180 DPI"
 
-#: src/main/print-escp2.c:2197
+#: src/main/print-escp2.c:2205
 msgid "180 DPI Unidirectional"
 msgstr "TEST: 180 DPI Unidirectional"
 
-#: src/main/print-escp2.c:2199
+#: src/main/print-escp2.c:2207
 msgid "360 DPI Softweave"
 msgstr "TEST: 360 DPI Softweave"
 
-#: src/main/print-escp2.c:2201
+#: src/main/print-escp2.c:2209
 #, fuzzy
 msgid "360 DPI Softweave Unidirectional"
 msgstr "TEST: 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2203
+#: src/main/print-escp2.c:2211
 msgid "360 DPI Microweave"
 msgstr "TEST: 360 DPI Microweave"
 
-#: src/main/print-escp2.c:2205
+#: src/main/print-escp2.c:2213
 msgid "360 DPI Microweave Unidirectional"
 msgstr "TEST: 360 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2.c:2207
+#: src/main/print-escp2.c:2215
 msgid "360 DPI"
 msgstr "TEST: 360 DPI"
 
-#: src/main/print-escp2.c:2209
+#: src/main/print-escp2.c:2217
 msgid "360 DPI Unidirectional"
 msgstr "TEST: 360 DPI Unidirectional"
 
-#: src/main/print-escp2.c:2211
+#: src/main/print-escp2.c:2219
 msgid "360 DPI Full Overlap"
 msgstr ""
 
-#: src/main/print-escp2.c:2213
+#: src/main/print-escp2.c:2221
 #, fuzzy
 msgid "360 DPI Full Overlap Unidirectional"
 msgstr "TEST: 360 DPI Unidirectional"
 
-#: src/main/print-escp2.c:2215
+#: src/main/print-escp2.c:2223
 #, fuzzy
 msgid "360 DPI FOL2"
 msgstr "TEST: 360 DPI"
 
-#: src/main/print-escp2.c:2217
+#: src/main/print-escp2.c:2225
 #, fuzzy
 msgid "360 DPI FOL2 Unidirectional"
 msgstr "TEST: 360 DPI Unidirectional"
 
-#: src/main/print-escp2.c:2219
+#: src/main/print-escp2.c:2227
 #, fuzzy
 msgid "360 DPI MW2"
 msgstr "TEST: 360 DPI"
 
-#: src/main/print-escp2.c:2221
+#: src/main/print-escp2.c:2229
 #, fuzzy
 msgid "360 DPI MW2 Unidirectional"
 msgstr "TEST: 360 DPI Unidirectional"
 
-#: src/main/print-escp2.c:2223
+#: src/main/print-escp2.c:2231
 #, fuzzy
 msgid "720 x 360 DPI Softweave"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2225
+#: src/main/print-escp2.c:2233
 #, fuzzy
 msgid "720 x 360 DPI Softweave Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2227
+#: src/main/print-escp2.c:2235
 #, fuzzy
 msgid "720 x 360 DPI Default"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2229
+#: src/main/print-escp2.c:2237
 #, fuzzy
 msgid "720 x 360 DPI Default Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2231
+#: src/main/print-escp2.c:2239
 #, fuzzy
 msgid "720 x 360 DPI Microweave"
 msgstr "TEST: 360 DPI Microweave"
 
-#: src/main/print-escp2.c:2233
+#: src/main/print-escp2.c:2241
 #, fuzzy
 msgid "720 x 360 DPI Microweave Unidirectional"
 msgstr "TEST: 360 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2.c:2235
+#: src/main/print-escp2.c:2243
 #, fuzzy
 msgid "720 x 360 DPI FOL"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2237
+#: src/main/print-escp2.c:2245
 #, fuzzy
 msgid "720 x 360 DPI FOL Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2239
+#: src/main/print-escp2.c:2247
 #, fuzzy
 msgid "720 x 360 DPI FOL2"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2241
+#: src/main/print-escp2.c:2249
 #, fuzzy
 msgid "720 x 360 DPI FOL2 Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2243
+#: src/main/print-escp2.c:2251
 #, fuzzy
 msgid "720 x 360 DPI MW2"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2245
+#: src/main/print-escp2.c:2253
 #, fuzzy
 msgid "720 x 360 DPI MW2 Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2247
+#: src/main/print-escp2.c:2255
 #, fuzzy
 msgid "720 DPI Default"
 msgstr "TEST: 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:2249
+#: src/main/print-escp2.c:2257
 #, fuzzy
 msgid "720 DPI Default Unidirectional"
 msgstr "TEST: 1200 DPI  Unidirectional"
 
-#: src/main/print-escp2.c:2251
+#: src/main/print-escp2.c:2259
 msgid "720 DPI Microweave"
 msgstr "TEST: 720 DPI Microweave"
 
-#: src/main/print-escp2.c:2253
+#: src/main/print-escp2.c:2261
 msgid "720 DPI Microweave Unidirectional"
 msgstr "TEST: 720 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2.c:2255
+#: src/main/print-escp2.c:2263
 msgid "720 DPI Full Overlap"
 msgstr ""
 
-#: src/main/print-escp2.c:2257
+#: src/main/print-escp2.c:2265
 #, fuzzy
 msgid "720 DPI Full Overlap Unidirectional"
 msgstr "TEST: 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2259
+#: src/main/print-escp2.c:2267
 msgid "720 DPI Four Pass"
 msgstr ""
 
-#: src/main/print-escp2.c:2261
+#: src/main/print-escp2.c:2269
 #, fuzzy
 msgid "720 DPI Four Pass Unidirectional"
 msgstr "TEST: 1200 DPI  Unidirectional"
 
-#: src/main/print-escp2.c:2263
+#: src/main/print-escp2.c:2271
 msgid "720 DPI Softweave"
 msgstr "TEST: 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2265
+#: src/main/print-escp2.c:2273
 msgid "720 DPI Softweave Unidirectional"
 msgstr "TEST: 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2267
+#: src/main/print-escp2.c:2275
 msgid "720 DPI High Quality"
 msgstr "TEST: 720 DPI High Quality"
 
-#: src/main/print-escp2.c:2269
+#: src/main/print-escp2.c:2277
 msgid "720 DPI High Quality Unidirectional"
 msgstr "TEST: 720 DPI High Quality Unidirectional"
 
-#: src/main/print-escp2.c:2271
+#: src/main/print-escp2.c:2279
 msgid "720 DPI Highest Quality"
 msgstr "TEST: 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:2273
+#: src/main/print-escp2.c:2281
 #, fuzzy
 msgid "1440 x 720 DPI Default"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2275
+#: src/main/print-escp2.c:2283
 #, fuzzy
 msgid "1440 x 720 DPI Default Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2277
+#: src/main/print-escp2.c:2285
 msgid "1440 x 720 DPI Microweave"
 msgstr "TEST: 1440 x 720 DPI Microweave"
 
-#: src/main/print-escp2.c:2279
+#: src/main/print-escp2.c:2287
 msgid "1440 x 720 DPI Microweave Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2.c:2281
+#: src/main/print-escp2.c:2289
 #, fuzzy
 msgid "1440 x 720 DPI FOL"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2283
+#: src/main/print-escp2.c:2291
 #, fuzzy
 msgid "1440 x 720 DPI FOL Unidirectional"
 msgstr "TEST: 180 DPI Unidirectional"
 
-#: src/main/print-escp2.c:2285
+#: src/main/print-escp2.c:2293
 #, fuzzy
 msgid "1440 x 720 DPI Four Pass"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2287
+#: src/main/print-escp2.c:2295
 #, fuzzy
 msgid "1440 x 720 DPI Four Pass Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2289
+#: src/main/print-escp2.c:2297
 msgid "1440 x 720 DPI Softweave"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2291
+#: src/main/print-escp2.c:2299
 msgid "1440 x 720 DPI Softweave Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2293
+#: src/main/print-escp2.c:2301
 msgid "1440 x 720 DPI Highest Quality"
 msgstr "TEST: 1440 x 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:2295
+#: src/main/print-escp2.c:2303
 msgid "1440 x 1440 DPI Softweave"
 msgstr "TEST: 1440 x 1440 DPI Softweave"
 
-#: src/main/print-escp2.c:2297
+#: src/main/print-escp2.c:2305
 msgid "1440 x 1440 DPI Highest Quality"
 msgstr "TEST: 1440 x 1440 DPI Highest Quality"
 
-#: src/main/print-escp2.c:2299
+#: src/main/print-escp2.c:2307
 msgid "2880 x 720 DPI Softweave"
 msgstr "TEST: 2880 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2301
+#: src/main/print-escp2.c:2309
 msgid "2880 x 720 DPI Softweave Unidirectional"
 msgstr "TEST: 2880 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2303
+#: src/main/print-escp2.c:2311
 msgid "2880 x 1440 DPI Softweave"
 msgstr "TEST: 2880 x 1440 DPI Softweave"
 
-#: src/main/print-escp2.c:2306
+#: src/main/print-escp2.c:2314
 #, fuzzy
 msgid "1440 x 360 DPI Softweave"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2308
+#: src/main/print-escp2.c:2316
 #, fuzzy
 msgid "1440 x 360 DPI Softweave Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2310
+#: src/main/print-escp2.c:2318
 #, fuzzy
 msgid "1440 x 360 DPI High Quality"
 msgstr "TEST: 1440 x 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:2312
+#: src/main/print-escp2.c:2320
 #, fuzzy
 msgid "1440 x 360 DPI High Quality Uni"
 msgstr "TEST: 1440 x 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:2314
+#: src/main/print-escp2.c:2322
 #, fuzzy
 msgid "1440 x 360 DPI Highest Quality"
 msgstr "TEST: 1440 x 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:2562
+#: src/main/print-escp2.c:2570
 msgid "Plain Paper Fast Load"
 msgstr "TEST: Plain Paper Fast Load"
 
 #. 7.25 * 10.5in
-#: src/main/print-escp2.c:2565 src/main/print-util.c:549
+#: src/main/print-escp2.c:2573 src/main/print-util.c:549
 msgid "Postcard"
 msgstr "TEST: Postcard"
 
-#: src/main/print-escp2.c:2568 src/main/print-lexmark.c:699
+#: src/main/print-escp2.c:2576 src/main/print-lexmark.c:792
 msgid "Glossy Film"
 msgstr "TEST: Glossy Film"
 
-#: src/main/print-escp2.c:2574 src/main/print-lexmark.c:705
+#: src/main/print-escp2.c:2582 src/main/print-lexmark.c:798
 msgid "Envelopes"
 msgstr "TEST: Envelopes"
 
-#: src/main/print-escp2.c:2577
+#: src/main/print-escp2.c:2585
 msgid "Back Light Film"
 msgstr "TEST: Back Light Film"
 
-#: src/main/print-escp2.c:2580 src/main/print-lexmark.c:708
+#: src/main/print-escp2.c:2588 src/main/print-lexmark.c:801
 msgid "Matte Paper"
 msgstr "TEST: Matte Paper"
 
-#: src/main/print-escp2.c:2583 src/main/print-lexmark.c:711
+#: src/main/print-escp2.c:2591 src/main/print-lexmark.c:804
 msgid "Inkjet Paper"
 msgstr "TEST: Inkjet Paper"
 
-#: src/main/print-escp2.c:2586 src/main/print-lexmark.c:714
+#: src/main/print-escp2.c:2594 src/main/print-lexmark.c:807
 msgid "Photo Quality Inkjet Paper"
 msgstr "TEST: Photo Quality Inkjet Paper"
 
-#: src/main/print-escp2.c:2589 src/main/print-lexmark.c:717
+#: src/main/print-escp2.c:2597 src/main/print-lexmark.c:810
 msgid "Photo Paper"
 msgstr "TEST: Photo Paper"
 
-#: src/main/print-escp2.c:2592 src/main/print-lexmark.c:720
+#: src/main/print-escp2.c:2600 src/main/print-lexmark.c:813
 msgid "Premium Glossy Photo Paper"
 msgstr "TEST: Premium Glossy Photo Paper"
 
-#: src/main/print-escp2.c:2596 src/main/print-lexmark.c:724
+#: src/main/print-escp2.c:2604 src/main/print-lexmark.c:817
 msgid "Premium Luster Photo Paper"
 msgstr "TEST: Premium Luster Photo Paper"
 
-#: src/main/print-escp2.c:2599 src/main/print-lexmark.c:727
+#: src/main/print-escp2.c:2607 src/main/print-lexmark.c:820
 msgid "Photo Quality Glossy Paper"
 msgstr "TEST: Photo Quality Glossy Paper"
 
-#: src/main/print-escp2.c:2602 src/main/print-lexmark.c:730
+#: src/main/print-escp2.c:2610 src/main/print-lexmark.c:823
 msgid "Ilford Heavy Paper"
 msgstr ""
 
-#: src/main/print-escp2.c:2622
+#: src/main/print-escp2.c:2630
 msgid "Seven Color Enhanced"
 msgstr "TEST: Seven Color Enhanced"
 
-#: src/main/print-escp2.c:2623
+#: src/main/print-escp2.c:2631
 #, fuzzy
 msgid "Six Color Enhanced Composite"
 msgstr "TEST: Seven Color Enhanced"
 
-#. !!incorrect, black should NOT be used!!
-#: src/main/print-escp2.c:2624 src/main/print-lexmark.c:548
+#: src/main/print-escp2.c:2632 src/main/print-lexmark.c:562
+#: src/main/print-lexmark.c:637
 msgid "Six Color Photo"
 msgstr "TEST: Six Color Photo"
 
-#: src/main/print-escp2.c:2625 src/main/print-lexmark.c:549
+#: src/main/print-escp2.c:2633 src/main/print-lexmark.c:567
+#: src/main/print-lexmark.c:642
 #, fuzzy
 msgid "Five Color Photo Composite"
 msgstr "TEST: Six Color Photo"
 
-#: src/main/print-escp2.c:2626 src/main/print-lexmark.c:546
+#. output_type   ncolors used_colors   pass_length  v_top_head_offset
+#. *                                                        h_catridge_offset
+#. *                                                           h_direction_offset
+#. *                                                               head_offset
+#: src/main/print-escp2.c:2634 src/main/print-lexmark.c:552
+#: src/main/print-lexmark.c:627
 msgid "Four Color Standard"
 msgstr "TEST: Four Color Standard"
 
-#: src/main/print-escp2.c:2627 src/main/print-lexmark.c:547
+#: src/main/print-escp2.c:2635 src/main/print-lexmark.c:557
+#: src/main/print-lexmark.c:632
 msgid "Three Color Composite"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1502 src/main/print-escp2.c:3068
+#: src/gimp/gimp_main_window.c:1502 src/main/print-escp2.c:3092
 #: src/main/print-pcl.c:198
 msgid "Standard"
 msgstr "TEST: Standard"
 
-#: src/main/print-escp2.c:3070
+#: src/main/print-escp2.c:3094
 msgid "Roll Feed"
 msgstr "TEST: Roll Feed"
 
 #. name                                                    hres vres softw v_pass overs unidir resid
-#: src/main/print-lexmark.c:507 src/main/print-lexmark.c:527
+#: src/main/print-lexmark.c:528 src/main/print-lexmark.c:609
 #, fuzzy
 msgid "300 DPI x 600 DPI"
 msgstr "TEST: 300x300 DPI"
 
-#: src/main/print-lexmark.c:508 src/main/print-lexmark.c:528
+#: src/main/print-lexmark.c:529 src/main/print-lexmark.c:610
 msgid "600 DPI"
 msgstr "TEST: 600 DPI"
 
-#: src/main/print-lexmark.c:509 src/main/print-lexmark.c:529
+#: src/main/print-lexmark.c:530 src/main/print-lexmark.c:611
 #, fuzzy
 msgid "600 DPI high quality"
 msgstr "TEST: 360 DPI High Quality"
 
-#: src/main/print-lexmark.c:510 src/main/print-lexmark.c:530
+#: src/main/print-lexmark.c:531 src/main/print-lexmark.c:612
 msgid "600 DPI Unidirectional"
 msgstr "TEST: 600 DPI Unidirectional"
 
-#: src/main/print-lexmark.c:511 src/main/print-lexmark.c:531
+#: src/main/print-lexmark.c:532 src/main/print-lexmark.c:613
 msgid "1200 DPI"
 msgstr "TEST: 1200 DPI"
 
-#: src/main/print-lexmark.c:512 src/main/print-lexmark.c:532
+#: src/main/print-lexmark.c:533 src/main/print-lexmark.c:614
 #, fuzzy
 msgid "1200 DPI high quality"
 msgstr "TEST: 720 DPI High Quality"
 
-#: src/main/print-lexmark.c:513 src/main/print-lexmark.c:533
+#: src/main/print-lexmark.c:534 src/main/print-lexmark.c:615
 #, fuzzy
 msgid "1200 DPI highest quality"
 msgstr "TEST: 720 DPI Highest Quality"
 
-#: src/main/print-lexmark.c:514 src/main/print-lexmark.c:534
+#: src/main/print-lexmark.c:535 src/main/print-lexmark.c:616
 msgid "1200 DPI  Unidirectional"
 msgstr "TEST: 1200 DPI  Unidirectional"
 
-#: src/main/print-lexmark.c:515
+#: src/main/print-lexmark.c:536
 #, fuzzy
 msgid "2400 DPI x 1200 DPI"
 msgstr "TEST: 2400x600 DPI"
 
-#: src/main/print-lexmark.c:516
+#: src/main/print-lexmark.c:537
 #, fuzzy
 msgid "2400 DPI x 1200 DPI high quality"
 msgstr "TEST: 1440 x 720 DPI Highest Quality"
 
-#: src/main/print-lexmark.c:517
+#: src/main/print-lexmark.c:538
 #, fuzzy
 msgid "2400 DPI x 1200 DPI highest quality"
 msgstr "TEST: 1440 x 720 DPI Highest Quality"
 
-#: src/main/print-lexmark.c:519
+#: src/main/print-lexmark.c:540
 msgid "test print"
 msgstr ""
 
@@ -1669,7 +1676,7 @@ msgstr "TEST: Photograph"
 
 #: src/gimp/gimp_main_window.c:1266
 #, fuzzy
-msgid "Adjust Color..."
+msgid "Adjust Output..."
 msgstr "TEST: Adjust Color"
 
 #: src/gimp/gimp_main_window.c:1293

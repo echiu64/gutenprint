@@ -42,7 +42,7 @@ Description: gimp-print printer driver for CUPS
 Package: libgimpprint-dev
 Architecture: any
 Section: devel
-Depends: libgimpprint#UPSTREAM_VERSION# (= ${Source-Version})
+Depends: libgimpprint1 (= ${Source-Version})
 Description: header files for compiling programs with libgimpprint
  This package contains the header files for the gimp-print package, along with
  a static version of libgimpprint.
@@ -55,7 +55,7 @@ Description: header files for compiling programs with libgimpprint
 Package: libgimpprint-doc
 Architecture: all
 Section: doc
-Suggests: libgimpprint#UPSTREAM_VERSION# (= ${Source-Version})
+Suggests: libgimpprint1 (= ${Source-Version})
 Description: Documentation and example code for the gimpprint library
  This package contains lots of info-files, DVI docs and other
  documentation about the gimpprint library for photo-quality
@@ -64,7 +64,7 @@ Description: Documentation and example code for the gimpprint library
  Install this package if you want to have lots of info about the
  gimpprint library when you're programming.
 
-Package: libgimpprint#UPSTREAM_VERSION#
+Package: libgimpprint1
 Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}
