@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.37  1999/12/19 14:36:18  rlk
+ *   Make 'em big enough
+ *
  *   Revision 1.36  1999/12/18 23:08:28  rlk
  *   comments, mostly
  *
@@ -1303,7 +1306,7 @@ escp2_write(FILE          *prn,	/* I - Print file or command */
 	     int           width,	/* I - Printed width */
 	     int           offset)	/* I - Offset from left side */
 {
-  unsigned char	comp_buf[1536],		/* Compression buffer */
+  unsigned char	comp_buf[3072],		/* Compression buffer */
     *comp_ptr;
   static int    last_density = 0;       /* Last density printed */
   static int	last_plane = 0;		/* Last color plane printed */
@@ -1605,7 +1608,7 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses)
   last_pass_offset = 0;
   last_pass = -1;
 
-  linebufs = malloc(6 * 1536 * vmod * jets * horizontal_weave);
+  linebufs = malloc(6 * 3072 * vmod * jets * horizontal_weave);
   lineoffsets = malloc(vmod * sizeof(lineoff_t) * horizontal_weave);
   linebases = malloc(vmod * sizeof(linebufs_t) * horizontal_weave);
   passes = malloc(vmod * sizeof(pass_t));
@@ -1622,7 +1625,7 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses)
 	  for (j = 0; j < 6; j++)
 	    {
 	      linebases[k * vmod + i].v[j] = bufbase;
-	      bufbase += 1536 * jets;
+	      bufbase += 3072 * jets;
 	    }
 	}
     }
@@ -2121,8 +2124,8 @@ escp2_write_weave(FILE          *prn,	/* I - Print file or command */
 		  unsigned char *M)
 {
   static int lineno = 0;
-  static unsigned char s[4][1536];
-  static unsigned char comp_buf[1536];
+  static unsigned char s[4][3072];
+  static unsigned char comp_buf[3072];
   unsigned char *comp_ptr;
   int i, j;
   unsigned char *cols[6];
