@@ -117,7 +117,7 @@ static stp_image_t theImage =
   NULL
 };
 
-static volatile stp_image_status_t Image_status;
+static volatile stp_image_status_t Image_status = STP_IMAGE_STATUS_OK;
 
 static void
 set_special_parameter(stp_vars_t v, const char *name, int choice)
@@ -135,6 +135,197 @@ set_special_parameter(stp_vars_t v, const char *name, int choice)
   stp_parameter_description_free(&desc);
 }
 
+static void
+print_debug_block(cups_image_t *cups)
+{
+  fprintf(stderr, "DEBUG: StartPage...\n");
+  fprintf(stderr, "DEBUG: MediaClass = \"%s\"\n", cups->header.MediaClass);
+  fprintf(stderr, "DEBUG: MediaColor = \"%s\"\n", cups->header.MediaColor);
+  fprintf(stderr, "DEBUG: MediaType = \"%s\"\n", cups->header.MediaType);
+  fprintf(stderr, "DEBUG: OutputType = \"%s\"\n", cups->header.OutputType);
+
+  fprintf(stderr, "DEBUG: AdvanceDistance = %d\n", cups->header.AdvanceDistance);
+  fprintf(stderr, "DEBUG: AdvanceMedia = %d\n", cups->header.AdvanceMedia);
+  fprintf(stderr, "DEBUG: Collate = %d\n", cups->header.Collate);
+  fprintf(stderr, "DEBUG: CutMedia = %d\n", cups->header.CutMedia);
+  fprintf(stderr, "DEBUG: Duplex = %d\n", cups->header.Duplex);
+  fprintf(stderr, "DEBUG: HWResolution = [ %d %d ]\n", cups->header.HWResolution[0],
+	  cups->header.HWResolution[1]);
+  fprintf(stderr, "DEBUG: ImagingBoundingBox = [ %d %d %d %d ]\n",
+	  cups->header.ImagingBoundingBox[0], cups->header.ImagingBoundingBox[1],
+	  cups->header.ImagingBoundingBox[2], cups->header.ImagingBoundingBox[3]);
+  fprintf(stderr, "DEBUG: InsertSheet = %d\n", cups->header.InsertSheet);
+  fprintf(stderr, "DEBUG: Jog = %d\n", cups->header.Jog);
+  fprintf(stderr, "DEBUG: LeadingEdge = %d\n", cups->header.LeadingEdge);
+  fprintf(stderr, "DEBUG: Margins = [ %d %d ]\n", cups->header.Margins[0],
+	  cups->header.Margins[1]);
+  fprintf(stderr, "DEBUG: ManualFeed = %d\n", cups->header.ManualFeed);
+  fprintf(stderr, "DEBUG: MediaPosition = %d\n", cups->header.MediaPosition);
+  fprintf(stderr, "DEBUG: MediaWeight = %d\n", cups->header.MediaWeight);
+  fprintf(stderr, "DEBUG: MirrorPrint = %d\n", cups->header.MirrorPrint);
+  fprintf(stderr, "DEBUG: NegativePrint = %d\n", cups->header.NegativePrint);
+  fprintf(stderr, "DEBUG: NumCopies = %d\n", cups->header.NumCopies);
+  fprintf(stderr, "DEBUG: Orientation = %d\n", cups->header.Orientation);
+  fprintf(stderr, "DEBUG: OutputFaceUp = %d\n", cups->header.OutputFaceUp);
+  fprintf(stderr, "DEBUG: PageSize = [ %d %d ]\n", cups->header.PageSize[0],
+	  cups->header.PageSize[1]);
+  fprintf(stderr, "DEBUG: Separations = %d\n", cups->header.Separations);
+  fprintf(stderr, "DEBUG: TraySwitch = %d\n", cups->header.TraySwitch);
+  fprintf(stderr, "DEBUG: Tumble = %d\n", cups->header.Tumble);
+  fprintf(stderr, "DEBUG: cupsWidth = %d\n", cups->header.cupsWidth);
+  fprintf(stderr, "DEBUG: cupsHeight = %d\n", cups->header.cupsHeight);
+  fprintf(stderr, "DEBUG: cupsMediaType = %d\n", cups->header.cupsMediaType);
+  fprintf(stderr, "DEBUG: cupsBitsPerColor = %d\n", cups->header.cupsBitsPerColor);
+  fprintf(stderr, "DEBUG: cupsBitsPerPixel = %d\n", cups->header.cupsBitsPerPixel);
+  fprintf(stderr, "DEBUG: cupsBytesPerLine = %d\n", cups->header.cupsBytesPerLine);
+  fprintf(stderr, "DEBUG: cupsColorOrder = %d\n", cups->header.cupsColorOrder);
+  fprintf(stderr, "DEBUG: cupsColorSpace = %d\n", cups->header.cupsColorSpace);
+  fprintf(stderr, "DEBUG: cupsCompression = %d\n", cups->header.cupsCompression);
+  fprintf(stderr, "DEBUG: cupsRowCount = %d\n", cups->header.cupsRowCount);
+  fprintf(stderr, "DEBUG: cupsRowFeed = %d\n", cups->header.cupsRowFeed);
+  fprintf(stderr, "DEBUG: cupsRowStep = %d\n", cups->header.cupsRowStep);
+}
+
+static stp_vars_t
+initialize_page(cups_image_t *cups, const stp_printer_t printer)
+{
+  int i;
+  stp_papersize_t	size;		/* Paper size */
+  stp_parameter_list_t params;
+  int nparams;
+  stp_vars_t v = stp_vars_create_copy(stp_printer_get_defaults(printer));
+
+  stp_set_float_parameter(v, "AppGamma", 1.0);
+  for (i = 0; i < stp_option_count; i++)
+    stp_set_float_parameter(v, stp_options[i].iname,
+			    stp_options[i].defval / 1000.0);
+  stp_set_page_width(v, cups->header.PageSize[0]);
+  stp_set_page_height(v, cups->header.PageSize[1]);
+  stp_set_outfunc(v, cups_writefunc);
+  stp_set_errfunc(v, cups_writefunc);
+  stp_set_outdata(v, stdout);
+  stp_set_errdata(v, stderr);
+
+  switch (cups->header.cupsColorSpace)
+    {
+    case CUPS_CSPACE_W :
+      stp_set_output_type(v, OUTPUT_GRAY);
+      break;
+    case CUPS_CSPACE_K :
+      stp_set_output_type(v, OUTPUT_GRAY);
+      stp_set_float_parameter(v, "Density", 4.0);
+      break;
+    case CUPS_CSPACE_RGB :
+      stp_set_output_type(v, OUTPUT_COLOR);
+      break;
+    case CUPS_CSPACE_CMYK :
+      stp_set_output_type(v, OUTPUT_RAW_CMYK);
+      break;
+    default :
+      fprintf(stderr, "ERROR: Bad colorspace %d!",
+	      cups->header.cupsColorSpace);
+      break;
+    }
+
+  set_special_parameter(v, "DitherAlgorithm", cups->header.cupsRowStep);
+  set_special_parameter(v, "Resolution", cups->header.cupsCompression);
+  set_special_parameter(v, "ImageOptimization", cups->header.cupsRowCount);
+
+  stp_set_string_parameter(v, "InputSlot", cups->header.MediaClass);
+  stp_set_string_parameter(v, "MediaType", cups->header.MediaType);
+  stp_set_string_parameter(v, "InkType", cups->header.OutputType);
+
+  fprintf(stderr, "DEBUG: PageSize = %dx%d\n", cups->header.PageSize[0],
+	  cups->header.PageSize[1]);
+
+  if ((size = stp_get_papersize_by_size(cups->header.PageSize[1],
+					cups->header.PageSize[0])) != NULL)
+    stp_set_string_parameter(v, "PageSize", stp_papersize_get_name(size));
+  else
+    fprintf(stderr, "ERROR: Unable to get media size!\n");
+
+  stp_merge_printvars(v, stp_printer_get_defaults(printer));
+
+  params = stp_get_parameter_list(v);
+  nparams = stp_parameter_list_count(params);
+  for (i = 0; i < nparams; i++)
+    {
+      const stp_parameter_t *p = stp_parameter_list_param(params, i);
+      switch (p->p_type)
+	{
+	case STP_PARAMETER_TYPE_STRING_LIST:
+	  fprintf(stderr, "DEBUG: stp_get_%s(v) |%s|\n",
+		  p->name, stp_get_string_parameter(v, p->name) ?
+		  stp_get_string_parameter(v, p->name) : "NULL");
+	  break;
+	case STP_PARAMETER_TYPE_DOUBLE:
+	  fprintf(stderr, "DEBUG: stp_get_%s(v) |%.3f|\n",
+		  p->name, stp_get_float_parameter(v, p->name));
+	  break;
+	case STP_PARAMETER_TYPE_INT:
+	  fprintf(stderr, "DEBUG: stp_get_%s(v) |%.d|\n",
+		  p->name, stp_get_int_parameter(v, p->name));
+	  break;
+	case STP_PARAMETER_TYPE_BOOLEAN:
+	  fprintf(stderr, "DEBUG: stp_get_%s(v) |%.d|\n",
+		  p->name, stp_get_boolean_parameter(v, p->name));
+	  break;
+	  /*
+	   * We don't handle raw, curve, or filename arguments.
+	   */
+	default:
+	  break;
+	}
+    }
+  stp_parameter_list_free(params);
+  stp_set_job_mode(v, STP_JOB_MODE_JOB);
+  fprintf(stderr, "DEBUG: stp_get_driver(v) |%s|\n", stp_get_driver(v));
+  fprintf(stderr, "DEBUG: stp_get_output_type(v) |%d|\n", stp_get_output_type(v));
+  fprintf(stderr, "DEBUG: stp_get_left(v) |%d|\n", stp_get_left(v));
+  fprintf(stderr, "DEBUG: stp_get_top(v) |%d|\n", stp_get_top(v));
+  fprintf(stderr, "DEBUG: stp_get_page_width(v) |%d|\n", stp_get_page_width(v));
+  fprintf(stderr, "DEBUG: stp_get_page_height(v) |%d|\n", stp_get_page_height(v));
+  fprintf(stderr, "DEBUG: stp_get_input_color_model(v) |%d|\n", stp_get_input_color_model(v));
+  stp_get_media_size(v, &(cups->width), &(cups->height));
+  stp_get_imageable_area(v, &(cups->left), &(cups->right),
+			 &(cups->bottom), &(cups->top));
+  fprintf(stderr, "DEBUG: GIMP-PRINT %d %d %d  %d %d %d\n",
+	  cups->width, cups->left, cups->right, cups->height, cups->top, cups->bottom);
+  stp_set_width(v, cups->right - cups->left);
+  stp_set_height(v, cups->bottom - cups->top);
+  stp_set_left(v, cups->left);
+  stp_set_top(v, cups->top);
+  cups->right = cups->width - cups->right;
+  cups->width = cups->width - cups->left - cups->right;
+  cups->width = cups->header.HWResolution[0] * cups->width / 72;
+  cups->left = cups->header.HWResolution[0] * cups->left / 72;
+  cups->right = cups->header.HWResolution[0] * cups->right / 72;
+
+  cups->bottom = cups->height - cups->bottom;
+  cups->height = cups->height - cups->top - cups->bottom;
+  cups->height = cups->header.HWResolution[1] * cups->height / 72;
+  cups->top = cups->header.HWResolution[1] * cups->top / 72;
+  cups->bottom = cups->header.HWResolution[1] * cups->bottom / 72;
+  fprintf(stderr, "DEBUG: GIMP-PRINT %d %d %d  %d %d %d\n",
+	  cups->width, cups->left, cups->right, cups->height, cups->top, cups->bottom);
+
+  return v;
+}
+
+static void
+purge_excess_data(cups_image_t *cups)
+{
+  char *buffer = xmalloc(cups->header.cupsBytesPerLine);
+  if (buffer)
+    while (cups->row < cups->header.cupsHeight)
+      {
+	cupsRasterReadPixels(cups->ras, (unsigned char *)buffer,
+			     cups->header.cupsBytesPerLine);
+	cups->row ++;
+      }
+  free(buffer);
+}    
+
 /*
  * 'main()' - Main entry and processing of driver.
  */
@@ -149,13 +340,11 @@ main(int  argc,				/* I - Number of command-line arguments */
   ppd_file_t		*ppd;		/* PPD file */
   ppd_option_t		*option;	/* PPD option */
   stp_printer_t		printer;	/* Printer driver */
-  stp_vars_t		v;		/* Printer driver variables */
-  stp_papersize_t	size;		/* Paper size */
-  char			*buffer;	/* Overflow buffer */
   int			num_options;	/* Number of CUPS options */
   cups_option_t		*options;	/* CUPS options */
   const char		*val;		/* CUPS option value */
   int			i;
+  stp_vars_t		v = NULL;
 
  /*
   * Initialise libgimpprint
@@ -179,8 +368,6 @@ main(int  argc,				/* I - Number of command-line arguments */
     fputs("ERROR: rastertoprinter job-id user title copies options [file]\n", stderr);
     return (1);
   }
-
-  Image_status = STP_IMAGE_STATUS_OK;
 
  /*
   * Get the PPD file...
@@ -262,247 +449,66 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   cups.page = 0;
 
+  /*
+   * Read the first page header, which we need in order to set up
+   * the page.
+   */
+  signal(SIGTERM, cancel_job);
   while (cupsRasterReadHeader(cups.ras, &cups.header))
-  {
-   /*
-    * Update the current page...
-    */
-
-    cups.row = 0;
-
-    fprintf(stderr, "PAGE: %d 1\n", cups.page);
-
-   /*
-    * Debugging info...
-    */
-
-    fprintf(stderr, "DEBUG: StartPage...\n");
-    fprintf(stderr, "DEBUG: MediaClass = \"%s\"\n", cups.header.MediaClass);
-    fprintf(stderr, "DEBUG: MediaColor = \"%s\"\n", cups.header.MediaColor);
-    fprintf(stderr, "DEBUG: MediaType = \"%s\"\n", cups.header.MediaType);
-    fprintf(stderr, "DEBUG: OutputType = \"%s\"\n", cups.header.OutputType);
-
-    fprintf(stderr, "DEBUG: AdvanceDistance = %d\n", cups.header.AdvanceDistance);
-    fprintf(stderr, "DEBUG: AdvanceMedia = %d\n", cups.header.AdvanceMedia);
-    fprintf(stderr, "DEBUG: Collate = %d\n", cups.header.Collate);
-    fprintf(stderr, "DEBUG: CutMedia = %d\n", cups.header.CutMedia);
-    fprintf(stderr, "DEBUG: Duplex = %d\n", cups.header.Duplex);
-    fprintf(stderr, "DEBUG: HWResolution = [ %d %d ]\n", cups.header.HWResolution[0],
-            cups.header.HWResolution[1]);
-    fprintf(stderr, "DEBUG: ImagingBoundingBox = [ %d %d %d %d ]\n",
-            cups.header.ImagingBoundingBox[0], cups.header.ImagingBoundingBox[1],
-            cups.header.ImagingBoundingBox[2], cups.header.ImagingBoundingBox[3]);
-    fprintf(stderr, "DEBUG: InsertSheet = %d\n", cups.header.InsertSheet);
-    fprintf(stderr, "DEBUG: Jog = %d\n", cups.header.Jog);
-    fprintf(stderr, "DEBUG: LeadingEdge = %d\n", cups.header.LeadingEdge);
-    fprintf(stderr, "DEBUG: Margins = [ %d %d ]\n", cups.header.Margins[0],
-            cups.header.Margins[1]);
-    fprintf(stderr, "DEBUG: ManualFeed = %d\n", cups.header.ManualFeed);
-    fprintf(stderr, "DEBUG: MediaPosition = %d\n", cups.header.MediaPosition);
-    fprintf(stderr, "DEBUG: MediaWeight = %d\n", cups.header.MediaWeight);
-    fprintf(stderr, "DEBUG: MirrorPrint = %d\n", cups.header.MirrorPrint);
-    fprintf(stderr, "DEBUG: NegativePrint = %d\n", cups.header.NegativePrint);
-    fprintf(stderr, "DEBUG: NumCopies = %d\n", cups.header.NumCopies);
-    fprintf(stderr, "DEBUG: Orientation = %d\n", cups.header.Orientation);
-    fprintf(stderr, "DEBUG: OutputFaceUp = %d\n", cups.header.OutputFaceUp);
-    fprintf(stderr, "DEBUG: PageSize = [ %d %d ]\n", cups.header.PageSize[0],
-            cups.header.PageSize[1]);
-    fprintf(stderr, "DEBUG: Separations = %d\n", cups.header.Separations);
-    fprintf(stderr, "DEBUG: TraySwitch = %d\n", cups.header.TraySwitch);
-    fprintf(stderr, "DEBUG: Tumble = %d\n", cups.header.Tumble);
-    fprintf(stderr, "DEBUG: cupsWidth = %d\n", cups.header.cupsWidth);
-    fprintf(stderr, "DEBUG: cupsHeight = %d\n", cups.header.cupsHeight);
-    fprintf(stderr, "DEBUG: cupsMediaType = %d\n", cups.header.cupsMediaType);
-    fprintf(stderr, "DEBUG: cupsBitsPerColor = %d\n", cups.header.cupsBitsPerColor);
-    fprintf(stderr, "DEBUG: cupsBitsPerPixel = %d\n", cups.header.cupsBitsPerPixel);
-    fprintf(stderr, "DEBUG: cupsBytesPerLine = %d\n", cups.header.cupsBytesPerLine);
-    fprintf(stderr, "DEBUG: cupsColorOrder = %d\n", cups.header.cupsColorOrder);
-    fprintf(stderr, "DEBUG: cupsColorSpace = %d\n", cups.header.cupsColorSpace);
-    fprintf(stderr, "DEBUG: cupsCompression = %d\n", cups.header.cupsCompression);
-    fprintf(stderr, "DEBUG: cupsRowCount = %d\n", cups.header.cupsRowCount);
-    fprintf(stderr, "DEBUG: cupsRowFeed = %d\n", cups.header.cupsRowFeed);
-    fprintf(stderr, "DEBUG: cupsRowStep = %d\n", cups.header.cupsRowStep);
-
-   /*
-    * Setup printer driver variables...
-    */
-
-    if (cups.page == 0)
-      {
-	stp_parameter_list_t params;
-	int nparams;
-	v = stp_vars_create_copy(stp_printer_get_defaults(printer));
-
-	stp_set_float_parameter(v, "AppGamma", 1.0);
-	for (i = 0; i < stp_option_count; i++)
-	  stp_set_float_parameter(v, stp_options[i].iname,
-				  stp_options[i].defval / 1000.0);
-	stp_set_page_width(v, cups.header.PageSize[0]);
-	stp_set_page_height(v, cups.header.PageSize[1]);
-	stp_set_outfunc(v, cups_writefunc);
-	stp_set_errfunc(v, cups_writefunc);
-	stp_set_outdata(v, stdout);
-	stp_set_errdata(v, stderr);
-
-	switch (cups.header.cupsColorSpace)
-	  {
-	  case CUPS_CSPACE_W :
-	    stp_set_output_type(v, OUTPUT_GRAY);
-	    break;
-	  case CUPS_CSPACE_K :
-	    stp_set_output_type(v, OUTPUT_GRAY);
-	    stp_set_float_parameter(v, "Density", 4.0);
-	    break;
-	  case CUPS_CSPACE_RGB :
-	    stp_set_output_type(v, OUTPUT_COLOR);
-	    break;
-	  case CUPS_CSPACE_CMYK :
-	    stp_set_output_type(v, OUTPUT_RAW_CMYK);
-	    break;
-	  default :
-	    fprintf(stderr, "ERROR: Bad colorspace %d!",
-		    cups.header.cupsColorSpace);
-	    break;
-	  }
-
-	set_special_parameter(v, "DitherAlgorithm", cups.header.cupsRowStep);
-	set_special_parameter(v, "Resolution", cups.header.cupsCompression);
-	set_special_parameter(v, "ImageOptimization",cups.header.cupsRowCount);
-
-	stp_set_string_parameter(v, "InputSlot", cups.header.MediaClass);
-	stp_set_string_parameter(v, "MediaType", cups.header.MediaType);
-	stp_set_string_parameter(v, "InkType", cups.header.OutputType);
-
-	fprintf(stderr, "DEBUG: PageSize = %dx%d\n", cups.header.PageSize[0],
-		cups.header.PageSize[1]);
-
-	if ((size = stp_get_papersize_by_size(cups.header.PageSize[1],
-					      cups.header.PageSize[0])) != NULL)
-	  stp_set_string_parameter(v, "PageSize", stp_papersize_get_name(size));
-	else
-	  fprintf(stderr, "ERROR: Unable to get media size!\n");
-
-	stp_merge_printvars(v, stp_printer_get_defaults(printer));
-
-	params = stp_get_parameter_list(v);
-	nparams = stp_parameter_list_count(params);
-	for (i = 0; i < nparams; i++)
-	  {
-	    const stp_parameter_t *p = stp_parameter_list_param(params, i);
-	    switch (p->p_type)
-	      {
-	      case STP_PARAMETER_TYPE_STRING_LIST:
-		fprintf(stderr, "DEBUG: stp_get_%s(v) |%s|\n",
-			p->name, stp_get_string_parameter(v, p->name) ?
-			stp_get_string_parameter(v, p->name) : "NULL");
-		break;
-	      case STP_PARAMETER_TYPE_DOUBLE:
-		fprintf(stderr, "DEBUG: stp_get_%s(v) |%.3f|\n",
-			p->name, stp_get_float_parameter(v, p->name));
-		break;
-	      case STP_PARAMETER_TYPE_INT:
-		fprintf(stderr, "DEBUG: stp_get_%s(v) |%.d|\n",
-			p->name, stp_get_int_parameter(v, p->name));
-		break;
-	      case STP_PARAMETER_TYPE_BOOLEAN:
-		fprintf(stderr, "DEBUG: stp_get_%s(v) |%.d|\n",
-			p->name, stp_get_boolean_parameter(v, p->name));
-		break;
-	      default:
-		break;
-	      }
-	  }
-	stp_parameter_list_free(params);
-	stp_set_job_mode(v, STP_JOB_MODE_JOB);
-      }
-
-    fprintf(stderr, "DEBUG: stp_get_driver(v) |%s|\n", stp_get_driver(v));
-    fprintf(stderr, "DEBUG: stp_get_output_type(v) |%d|\n", stp_get_output_type(v));
-    fprintf(stderr, "DEBUG: stp_get_left(v) |%d|\n", stp_get_left(v));
-    fprintf(stderr, "DEBUG: stp_get_top(v) |%d|\n", stp_get_top(v));
-    fprintf(stderr, "DEBUG: stp_get_page_width(v) |%d|\n", stp_get_page_width(v));
-    fprintf(stderr, "DEBUG: stp_get_page_height(v) |%d|\n", stp_get_page_height(v));
-    fprintf(stderr, "DEBUG: stp_get_input_color_model(v) |%d|\n", stp_get_input_color_model(v));
-    stp_set_page_number(v, cups.page);
-
-    stp_get_media_size(v, &(cups.width), &(cups.height));
-    stp_get_imageable_area(v, &(cups.left), &(cups.right),
-			   &(cups.bottom), &(cups.top));
-    fprintf(stderr, "DEBUG: GIMP-PRINT %d %d %d  %d %d %d\n",
-	    cups.width, cups.left, cups.right, cups.height, cups.top, cups.bottom);
-    stp_set_width(v, cups.right - cups.left);
-    stp_set_height(v, cups.bottom - cups.top);
-    stp_set_left(v, cups.left);
-    stp_set_top(v, cups.top);
-    cups.right = cups.width - cups.right;
-    cups.width = cups.width - cups.left - cups.right;
-    cups.width = cups.header.HWResolution[0] * cups.width / 72;
-    cups.left = cups.header.HWResolution[0] * cups.left / 72;
-    cups.right = cups.header.HWResolution[0] * cups.right / 72;
-
-    cups.bottom = cups.height - cups.bottom;
-    cups.height = cups.height - cups.top - cups.bottom;
-    cups.height = cups.header.HWResolution[1] * cups.height / 72;
-    cups.top = cups.header.HWResolution[1] * cups.top / 72;
-    cups.bottom = cups.header.HWResolution[1] * cups.bottom / 72;
-    fprintf(stderr, "DEBUG: GIMP-PRINT %d %d %d  %d %d %d\n",
-	    cups.width, cups.left, cups.right, cups.height, cups.top, cups.bottom);
-
-    /*
-     * Print the page...
-     */
-    if (stp_verify(v))
     {
-      signal(SIGTERM, cancel_job);
+      /*
+       * We don't know how many pages we're going to print, and
+       * we need to call stp_end_job at the completion of the job.
+       * Therefore, we need to keep v in scope after the termination
+       * of the loop to permit calling stp_end_job then.  Therefore,
+       * we have to free the previous page's stp_vars_t at the start
+       * of the loop.
+       */
+      if (v)
+	stp_vars_free(v);
+
+      /*
+       * Setup printer driver variables...
+       */
+      v = initialize_page(&cups, printer);
+      stp_set_page_number(v, cups.page);
+      cups.row = 0;
+      fprintf(stderr, "PAGE: %d 1\n", cups.page);
+      print_debug_block(&cups);
       if (cups.page == 0)
 	stp_start_job(v, &theImage);
-      stp_print(v, &theImage);
-      fflush(stdout);
+
+      if (stp_verify(v) && stp_print(v, &theImage))
+	fflush(stdout);
+      else
+	{
+	  fputs("ERROR: Invalid printer settings!\n", stderr);
+	  stp_end_job(v, &theImage);
+	  stp_vars_free(v);
+	  cupsRasterClose(cups.ras);
+	  if (fd != 0)
+	    close(fd);
+	  fputs("ERROR: No pages found!\n", stderr);
+	  return 1;
+	}
+
+      /*
+       * Purge any remaining bitmap data...
+       */
+      if (cups.row < cups.header.cupsHeight)
+	purge_excess_data(&cups);
+      cups.page ++;
     }
-    else
-      fputs("ERROR: Invalid printer settings!\n", stderr);
-
-   /*
-    * Purge any remaining bitmap data...
-    */
-
-    if (cups.row < cups.header.cupsHeight)
+  if (v)
     {
-      if ((buffer = xmalloc(cups.header.cupsBytesPerLine)) == NULL)
-        break;
-
-      while (cups.row < cups.header.cupsHeight)
-      {
-        cupsRasterReadPixels(cups.ras, (unsigned char *)buffer,
-	                     cups.header.cupsBytesPerLine);
-	cups.row ++;
-      }
+      stp_end_job(v, &theImage);
+      stp_vars_free(v);
     }
-    cups.page ++;
-  }
-
-  if (cups.page > 0)
-    stp_end_job(v, &theImage);
-  stp_vars_free(v);
-
- /*
-  * Close the raster stream...
-  */
-
   cupsRasterClose(cups.ras);
   if (fd != 0)
     close(fd);
-
- /*
-  * If no pages were printed, send an error message...
-  */
-
-  if (cups.page == 0)
-    fputs("ERROR: No pages found!\n", stderr);
-  else
-    fputs("INFO: Ready to print.\n", stderr);
-
-  return (cups.page == 0);
+  fputs("INFO: Ready to print.\n", stderr);
+  return 0;
 }
 
 
@@ -526,7 +532,6 @@ void
 cancel_job(int sig)			/* I - Signal */
 {
   (void)sig;
-
   Image_status = STP_IMAGE_STATUS_ABORT;
 }
 
@@ -539,7 +544,6 @@ static int				/* O - Bytes per pixel */
 Image_bpp(stp_image_t *image)		/* I - Image */
 {
   cups_image_t	*cups;		/* CUPS image */
-
 
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return (0);
@@ -616,10 +620,11 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
 	    bytes_per_line, cups->row);
     cupsRasterReadPixels(cups->ras, data, bytes_per_line);
     cups->row ++;
-    if (margin) {
-      fprintf(stderr, "DEBUG: GIMP-PRINT tossing right %d\n", margin);
-      throwaway_data(margin, cups);
-    }
+    if (margin)
+      {
+	fprintf(stderr, "DEBUG: GIMP-PRINT tossing right %d\n", margin);
+	throwaway_data(margin, cups);
+      }
 
    /*
     * Invert black data for monochrome output...
