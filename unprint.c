@@ -25,6 +25,8 @@
 #include<limits.h>
 #include<string.h>
 
+#undef DEBUG_CANON
+
 typedef struct {
   unsigned char unidirectional;
   unsigned char microweave;
@@ -761,29 +763,35 @@ void reverse_bit_order(unsigned char *buf, int n)
  */
 int rle_decode(unsigned char *inbuf, int n, int max)
 {
-  unsigned char outbuf[1440*20];
-  int cnt,num;
+  unsigned char outbuf[1440*3];
+  char *ib= (char *)inbuf;
+  char cnt;
+  int num;
   int i= 0, j;
   int o= 0;
 
-  if (max>1440*20) max= 1440*20; /* FIXME: this can be done much better! */
+#ifdef DEBUG_RLE
+  fprintf(stderr,"input: %d\n",n);
+#endif
+  if (n<=0) return 0;
+  if (max>1440*3) max= 1440*3; /* FIXME: this can be done much better! */
 
   while (i<n && o<max) {
-    cnt= inbuf[i];
+    cnt= ib[i];
     if (cnt<0) { 
-      // cnt identical bytes
-      // fprintf(stderr,"rle 0x%02x = %4d = %4d\n",cnt&0xff,cnt,1-cnt);
+      /* cnt identical bytes */
+      /* fprintf(stderr,"rle 0x%02x = %4d = %4d\n",cnt&0xff,cnt,1-cnt); */
       num= 1-cnt;
-      // fprintf (stderr,"+%6d ",num);
-      for (j=0; j<num && o+j<max; j++) outbuf[o+j]=inbuf[i+1];
+      /* fprintf (stderr,"+%6d ",num); */
+      for (j=0; j<num && o+j<max; j++) outbuf[o+j]= inbuf[i+1];
       o+= num;
       i+= 2;
     } else { 
-      // cnt individual bytes
-      // fprintf(stderr,"raw 0x%02x = %4d = %4d\n",cnt&0xff,cnt,cnt + 1);
+      /* cnt individual bytes */
+      /* fprintf(stderr,"raw 0x%02x = %4d = %4d\n",cnt&0xff,cnt,cnt + 1); */
       num= cnt+1;
-      // fprintf (stderr,"*%6d ",num);
-      for (j=0; j<num && o+j<max; j++) outbuf[o+j]=inbuf[i+j+1];
+      /* fprintf (stderr,"*%6d ",num); */
+      for (j=0; j<num && o+j<max; j++) outbuf[o+j]= inbuf[i+j+1];
       o+= num;
       i+= num+1;
     }
@@ -795,6 +803,9 @@ int rle_decode(unsigned char *inbuf, int n, int max)
   /* copy decompressed data to inbuf: */
   memset(inbuf,0,max-1);
   memcpy(inbuf,outbuf,o);
+#ifdef DEBUG_RLE
+   fprintf(stderr,"output: %d\n",o); 
+#endif
   return o;
 }
 
@@ -818,7 +829,9 @@ void parse_canon(FILE *fp_r){
     counter++;
    if (ch==0xd) { /* carriage return */
      pstate.xposition=0;
+#ifdef DEBUG_CANON
      fprintf(stderr,"<  ");
+#endif
      continue;
    }
    if (ch==0xc) { /* form feed */
@@ -920,8 +933,11 @@ void parse_canon(FILE *fp_r){
        pstate.current_color= currentcolor;
        m= rle_decode(buf+1,sh-1,256*256-1);
        /* reverse_bit_order(buf+1,m); */
-       if (m) update_page(buf+1,m,1,m,currentcolor,/*currentbpp,*/pstate.absolute_vertical_units);
+       if (m) update_page(buf+1,m,1,m*8,currentcolor,
+			  /*currentbpp,*/pstate.absolute_vertical_units);
+#ifdef DEBUG_CANON
        fprintf(stderr,"%c:%d>%d  ",*buf,sh-1,m); 
+#endif
        break;
      case 'a': /* 0x61 - turn something on/off */
        break;
@@ -931,7 +947,8 @@ void parse_canon(FILE *fp_r){
        break;
      case 'd': /* 0x64 - set resolution */
        if (page) {
-	 fprintf(stderr,"Setting the page format in the middle of printing a page is not supported.\n");
+	 fprintf(stderr,"Setting the page format in the middle of printing "
+		 "a page is not supported.\n");
 	 exit(-1);
        }
        pstate.relative_vertical_units=   
@@ -949,7 +966,9 @@ void parse_canon(FILE *fp_r){
        break;
      case 'e': /* 0x65 - vertical head movement */
        pstate.yposition+= (buf[1]+256*buf[0]);
-       fprintf(stderr,"\n"); /* DEBUG */
+#ifdef DEBUG_CANON
+       fprintf(stderr,"\n"); 
+#endif
        break;
      case 'l': /* 0x6c - some more information about the print job*/
        break;
@@ -961,15 +980,16 @@ void parse_canon(FILE *fp_r){
        break;
      case 't': /* 0x74 - contains bpp and line delaying*/
        break;
-       
-       
+              
      default:
-       fprintf(stderr,"Warning: Unknown command ESC ( 0x%X at 0x%08X.\n",ch,cmdcounter);
+       fprintf(stderr,"Warning: Unknown command ESC ( 0x%X at 0x%08X.\n",
+	       ch,cmdcounter);
      }
      break;
      
    default:
-     fprintf(stderr,"Warning: Unknown command ESC 0x%X at 0x%08X.\n",ch,counter-2);
+     fprintf(stderr,"Warning: Unknown command ESC 0x%X at 0x%08X.\n",
+	     ch,counter-2);
    }
  }
 
