@@ -134,6 +134,7 @@ CLEANFILES = $(noinst_PROGRAMS) foomatic-stamp
 MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = foomatic-printermap 		\
+	oldprinterids				\
 	foomatic-templates-gs/*.xml		\
 	foomatic-templates-ijs/*.xml
 
