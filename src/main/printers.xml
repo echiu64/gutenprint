@@ -59,6 +59,30 @@
 <language value=canon>
 </printer>
 
+<printer name="CANON BJC 210" driver="bjc-210">
+<color>
+<model value=210>
+<gamma value=1.000>
+<density value=0.800>
+<language value=canon>
+</printer>
+
+<printer name="CANON BJC 240" driver="bjc-240">
+<color>
+<model value=240>
+<gamma value=1.000>
+<density value=0.800>
+<language value=canon>
+</printer>
+
+<printer name="CANON BJC 250" driver="bjc-250">
+<color>
+<model value=250>
+<gamma value=1.000>
+<density value=0.800>
+<language value=canon>
+</printer>
+
 <printer name="CANON BJC 1000" driver="bjc-1000">
 <color>
 <model value=1000>

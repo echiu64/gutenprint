@@ -338,6 +338,24 @@ static const canon_variable_ink_t canon_ink_Xx_3bit =
 };
 
 
+/* Inkset for printing in CMY and 1bit/pixel */
+static const canon_variable_inkset_t ci_CMY_1 =
+{
+  NULL,
+  NULL,
+  NULL, 
+  NULL
+};
+
+/* Inkset for printing in CMY and 2bit/pixel */
+static const canon_variable_inkset_t ci_CMY_2 =
+{
+  &canon_ink_X_2bit,
+  &canon_ink_X_2bit,
+  &canon_ink_X_2bit,
+  NULL
+};
+
 /* Inkset for printing in CMYK and 1bit/pixel */
 static const canon_variable_inkset_t ci_CMYK_1 =
 {
@@ -402,6 +420,22 @@ static const canon_variable_inklist_t canon_ink_standard[] =
     1,4,
     &ci_CMYK_1, &ci_CMYK_1, &ci_CMYK_1,
     &ci_CMYK_1, &ci_CMYK_1, &ci_CMYK_1,
+  },
+};
+
+/* Ink set for printers using CMY and CMY photo printing, 1 or 2bit/pixel */
+static const canon_variable_inklist_t canon_ink_oldphoto[] =
+{
+  {
+    1,3,
+    &ci_CMY_1, &ci_CMY_1, &ci_CMY_1,
+    &ci_CMY_1, &ci_CMY_1, &ci_CMY_1,
+  },
+  {
+    2,3,
+    &ci_CMY_2, &ci_CMY_2,
+    &ci_CMY_2, &ci_CMY_2,
+    &ci_CMY_2, &ci_CMY_2,
   },
 };
 
@@ -945,19 +979,73 @@ static const canon_cap_t canon_model_capabilities[] =
   /* *************** */
 
 
-  { /* Canon BJC 1000 *//* heads: BC-20 BC-21 BC-22 BC-29 */
+  { /* Canon BJC 210 *//* heads: BC-02 BC-05 BC-06 */
+    210,
+    11*72, 17*72,
+    90, 720, 360, 2,
+    11, 9, 10, 18,
+    CANON_INK_K | CANON_INK_CMY,
+    CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
+    CANON_CAP_STD0,
+    CANON_MODES(canon_nomodes),
+#ifndef EXPERIMENTAL_STUFF
+    {0,0,0,0,-1,-1},/*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
+    {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
+    CANON_INK(canon_ink_standard),
+#endif
+    standard_lum_adjustment,
+    standard_hue_adjustment,
+    standard_sat_adjustment
+  },
+  { /* Canon BJC 240 *//* heads: BC-02 BC-05 BC-06 */
+    240,
+    11*72, 17*72,
+    90, 720, 360, 2,
+    11, 9, 10, 18,
+    CANON_INK_K | CANON_INK_CMY,
+    CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
+    CANON_CAP_STD0 | CANON_CAP_DMT,
+    CANON_MODES(canon_nomodes),
+#ifndef EXPERIMENTAL_STUFF
+    {0,0,1,0,-1,-1},/*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
+    {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
+    CANON_INK(canon_ink_oldphoto),
+#endif
+    standard_lum_adjustment,
+    standard_hue_adjustment,
+    standard_sat_adjustment
+  },
+  { /* Canon BJC 250 *//* heads: BC-02 BC-05 BC-06 */
+    250,
+    11*72, 17*72,
+    90, 720, 360, 2,
+    11, 9, 10, 18,
+    CANON_INK_K | CANON_INK_CMY,
+    CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
+    CANON_CAP_STD0 | CANON_CAP_DMT,
+    CANON_MODES(canon_nomodes),
+#ifndef EXPERIMENTAL_STUFF
+    {0,0,1,0,-1,-1},/*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
+    {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
+    CANON_INK(canon_ink_oldphoto),
+#endif
+    standard_lum_adjustment,
+    standard_hue_adjustment,
+    standard_sat_adjustment
+  },
+  { /* Canon BJC 1000 *//* heads: BC-02 BC-05 BC-06 */
     1000,
     11*72, 17*72,
-    180, 360, 360, 2,
+    90, 720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMY,
     CANON_SLOT_ASF1,
-    CANON_CAP_STD0 | CANON_CAP_a,
+    CANON_CAP_STD0 | CANON_CAP_DMT | CANON_CAP_a,
     CANON_MODES(canon_nomodes),
 #ifndef EXPERIMENTAL_STUFF
-    {0,0,-1,-1,-1,-1},/*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
+    {0,0,1,0,-1,-1},  /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
-    CANON_INK(canon_ink_standard),
+    CANON_INK(canon_ink_oldphoto),
 #endif
     standard_lum_adjustment,
     standard_hue_adjustment,
@@ -2059,6 +2147,7 @@ canon_init_setImage(const stp_vars_t v, canon_init_t *init)
     arg_74_1= 0x02;
     arg_74_2= 0x80;
     arg_74_3= 0x09;
+    if (init->colormode == COLOR_CMY) arg_74_3= 0x02; /* for BC-06 cartridge!!! */
   }
 
   /* workaround for the bjc8200 in 6color mode - not really understood */
@@ -2278,9 +2367,10 @@ canon_print(const stp_printer_t printer,		/* I - Model */
   stp_deprintf(STP_DBG_CANON,"       rescode   =0x%x\n",canon_res_code(caps,xdpi,ydpi));
   res_code= canon_res_code(caps,xdpi,ydpi);
 
-  if (!strcmp(resolution+(strlen(resolution)-3),"DMT") &&
-      (caps->features & CANON_CAP_DMT) &&
-      output_type != OUTPUT_MONOCHROME) {
+  if (((!strcmp(resolution+(strlen(resolution)-3),"DMT")) ||
+       (!strcmp(resolution+(strlen(resolution)-3),"dmt"))) &&
+       (caps->features & CANON_CAP_DMT) &&
+       output_type != OUTPUT_MONOCHROME) {
     bits= 2;
     stp_deprintf(STP_DBG_CANON,"canon: using drop modulation technology\n");
   }
