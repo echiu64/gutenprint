@@ -1,0 +1,10 @@
+#!/bin/sh
+./autogen.sh
+make dist
+TARFILE=`ls -tr *.tar.gz | tail -1l`
+tar -C .. -xzf $TARFILE
+touch myfiles
+find . | sed "s/^[^\/]*\///" > myfiles
+tar -tzf $TARFILE | sed "s/^[^\/]*\///" | sed "s/\/$//" >> myfiles
+rm -rf `sort myfiles | uniq -u | grep -v "^.$" | grep -v "^$"`
+dpkg-buildpackage $@
