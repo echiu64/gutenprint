@@ -5,6 +5,7 @@ stp_=$(GLOBJ)gdevstp.$(OBJ) \
 	$(GLOBJ)gdevstp-util.$(OBJ) \
 	$(GLOBJ)gdevstp-weave.$(OBJ) \
 	$(GLOBJ)gdevstp-escp2.$(OBJ) \
+	$(GLOBJ)gdevstp-lexmark.$(OBJ) \
 	$(GLOBJ)gdevstp-pcl.$(OBJ) \
 	$(GLOBJ)gdevstp-canon.$(OBJ) \
 	$(GLOBJ)gdevstp-ps.$(OBJ)
@@ -26,6 +27,9 @@ $(GLOBJ)gdevstp-dither.$(OBJ) : $(GLSRC)gdevstp-dither.c $(PDEVH)
 
 $(GLOBJ)gdevstp-escp2.$(OBJ) : $(GLSRC)gdevstp-escp2.c $(PDEVH)
 	$(GLCC) $(GLO_)gdevstp-escp2.$(OBJ) $(C_) $(GLSRC)gdevstp-escp2.c
+
+$(GLOBJ)gdevstp-lexmark.$(OBJ) : $(GLSRC)gdevstp-lexmark.c $(PDEVH)
+	$(GLCC) $(GLO_)gdevstp-lexmark.$(OBJ) $(C_) $(GLSRC)gdevstp-lexmark.c
 
 $(GLOBJ)gdevstp-pcl.$(OBJ) : $(GLSRC)gdevstp-pcl.c $(PDEVH)
 	$(GLCC) $(GLO_)gdevstp-pcl.$(OBJ) $(C_) $(GLSRC)gdevstp-pcl.c
