@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.15  2000/02/08 14:12:17  gandy
+ *   Next step in supporting variable dot sizes (still experimental)
+ *
  *   Revision 1.14  2000/02/08 12:24:50  gandy
  *   Beginning support for variable drop sizes (experimental stage)
  *
@@ -1076,8 +1079,10 @@ canon_print(int       model,		/* I - Model */
       }
 
       (*colorfunc)(in, out, image_height, image_bpp, lut, cmap, v);
-
-      if (output_type == OUTPUT_GRAY)
+      
+      if (output_type == OUTPUT_GRAY && use_dmt)
+	dither_black4(out, x, dither, black);
+      else if (output_type == OUTPUT_GRAY)
 	dither_black(out, x, dither, black);
       else
 	dither_cmyk(out, x, dither, cyan, lcyan, magenta, lmagenta,
@@ -1135,7 +1140,9 @@ canon_print(int       model,		/* I - Model */
 
       (*colorfunc)(in, out, image_width, image_bpp, lut, cmap, v);
 
-      if (output_type == OUTPUT_GRAY)
+      if (output_type == OUTPUT_GRAY && use_dmt)
+	dither_black4(out, y, dither, black);
+      else if (output_type == OUTPUT_GRAY)
 	dither_black(out, y, dither, black);
       else
 	dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
