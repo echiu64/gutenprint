@@ -138,14 +138,6 @@ writefunc(void *file, const char *buf, size_t bytes)
   fwrite(buf, 1, bytes, prn);
 }
 
-static int global_bpp = 0;
-
-static int
-image_bpp(stp_image_t *image)
-{
-  return global_bpp;
-}
-
 static int
 image_width(stp_image_t *image)
 {
@@ -156,15 +148,10 @@ static stp_image_t theImage =
 {
   NULL,
   NULL,
-  image_bpp,
   image_width,
   NULL,
   NULL,
   NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
 };
 
 /*
@@ -207,7 +194,6 @@ main(int  argc,				/* I - Number of command-line arguments */
 		  "random"
 		};
   struct timeval tv1, tv2;
-  int bpp = 0;
   int quiet = 0;
 
  /*
@@ -296,21 +282,22 @@ main(int  argc,				/* I - Number of command-line arguments */
   if (dither_name)
     stp_set_string_parameter(v, "DitherAlgorithm", dither_name);
 
+  stp_set_string_parameter(v, "ChannelBitDepth", "8");
   switch (stpi_dither_type)
     {
     case DITHER_GRAY:
-      stp_set_output_type(v, OUTPUT_GRAY);
-      bpp = 1;
+      stp_set_string_parameter(v, "PrintingMode", "BW");
+      stp_set_string_parameter(v, "InputImageType", "Grayscale");
       break;
     case DITHER_COLOR:
     case DITHER_PHOTO:
-      stp_set_output_type(v, OUTPUT_COLOR);
-      bpp = 3;
+      stp_set_string_parameter(v, "PrintingMode", "Color");
+      stp_set_string_parameter(v, "InputImageType", "RGB");
       break;
     case DITHER_CMYK:
     case DITHER_PHOTO_CMYK:
-      stp_set_output_type(v, OUTPUT_RAW_CMYK);
-      bpp = 4;
+      stp_set_string_parameter(v, "PrintingMode", "Color");
+      stp_set_string_parameter(v, "InputImageType", "CMYK");
       break;
     }
 

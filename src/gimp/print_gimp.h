@@ -50,6 +50,6 @@
 #endif
 
 /* How to create an Image wrapping a Gimp drawable */
-extern stp_image_t *Image_GimpDrawable_new(GimpDrawable *drawable, int);
+extern stpui_image_t *Image_GimpDrawable_new(GimpDrawable *drawable, gint32);
 
 #endif  /* __PRINT_GIMP_H__ */

@@ -45,6 +45,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include "generic-options.h"
 #include "module.h"
 #include "xml.h"
 
@@ -457,6 +458,8 @@ stp_init(void)
       /* Initialise modules */
       if (stpi_module_init())
 	return 1;
+      /* Set up defaults for core parameters */
+      stpi_initialize_printer_defaults();
     }
 
   stpi_is_initialised = 1;
@@ -538,6 +541,67 @@ stpi_read_and_compose_curves(const char *s1, const char *s2,
     }
   else
     return t2;
+}
+
+void
+stp_merge_printvars(stp_vars_t user, stp_const_vars_t print)
+{
+  int i;
+  stp_parameter_list_t params = stp_get_parameter_list(print);
+  int count = stp_parameter_list_count(params);
+  for (i = 0; i < count; i++)
+    {
+      const stp_parameter_t *p = stp_parameter_list_param(params, i);
+      if (p->p_type == STP_PARAMETER_TYPE_DOUBLE &&
+	  p->p_class == STP_PARAMETER_CLASS_OUTPUT &&
+	  stp_check_float_parameter(print, p->name, STP_PARAMETER_DEFAULTED))
+	{
+	  stp_parameter_t desc;
+	  double prnval = stp_get_float_parameter(print, p->name);
+	  double usrval;
+	  stp_describe_parameter(print, p->name, &desc);
+	  if (stp_check_float_parameter(user, p->name, STP_PARAMETER_ACTIVE))
+	    usrval = stp_get_float_parameter(user, p->name);
+	  else
+	    usrval = desc.deflt.dbl;
+	  if (strcmp(p->name, "Gamma") == 0)
+	    usrval /= prnval;
+	  else
+	    usrval *= prnval;
+	  if (usrval < desc.bounds.dbl.lower)
+	    usrval = desc.bounds.dbl.lower;
+	  else if (usrval > desc.bounds.dbl.upper)
+	    usrval = desc.bounds.dbl.upper;
+	  stp_set_float_parameter(user, p->name, usrval);
+	  stp_parameter_description_free(&desc);
+	}
+    }
+  stp_parameter_list_free(params);
+}
+
+stp_parameter_list_t
+stp_get_parameter_list(stp_const_vars_t v)
+{
+  stp_parameter_list_t ret = stp_parameter_list_create();
+  stp_parameter_list_t tmp_list;
+
+  tmp_list = stpi_printer_list_parameters(v);
+  stp_parameter_list_append(ret, tmp_list);
+  stp_parameter_list_free(tmp_list);
+
+  tmp_list = stpi_color_list_parameters(v);
+  stp_parameter_list_append(ret, tmp_list);
+  stp_parameter_list_free(tmp_list);
+
+  tmp_list = stpi_dither_list_parameters(v);
+  stp_parameter_list_append(ret, tmp_list);
+  stp_parameter_list_free(tmp_list);
+
+  tmp_list = stpi_list_generic_parameters(v);
+  stp_parameter_list_append(ret, tmp_list);
+  stp_parameter_list_free(tmp_list);
+
+  return ret;
 }
 
 void

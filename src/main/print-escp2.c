@@ -69,6 +69,51 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
   { "supports_ink_change",     11, 1 },
 };
 
+typedef struct
+{
+  unsigned count;
+  const char *name;
+} channel_count_t;
+
+static const channel_count_t escp2_channel_counts[] =
+{
+  { 1,  "1" },
+  { 2,  "2" },
+  { 3,  "3" },
+  { 4,  "4" },
+  { 5,  "5" },
+  { 6,  "6" },
+  { 7,  "7" },
+  { 8,  "8" },
+  { 9,  "9" },
+  { 10, "10" },
+  { 11, "11" },
+  { 12, "12" },
+  { 13, "13" },
+  { 14, "14" },
+  { 15, "15" },
+  { 16, "16" },
+  { 17, "17" },
+  { 18, "18" },
+  { 19, "19" },
+  { 20, "20" },
+  { 21, "21" },
+  { 22, "22" },
+  { 23, "23" },
+  { 24, "24" },
+  { 25, "25" },
+  { 26, "26" },
+  { 27, "27" },
+  { 28, "28" },
+  { 29, "29" },
+  { 30, "30" },
+  { 31, "31" },
+  { 32, "32" },
+};
+
+static int escp2_channel_counts_count =
+sizeof(escp2_channel_counts) / sizeof(channel_count_t);
+
 static const double ink_darknesses[] =
 {
   1.0, 0.31 / .4, 0.61 / .96, 0.08, 0.31 * 0.33 / .4, 0.61 * 0.33 / .96, 0.33, 1.0
@@ -125,7 +170,7 @@ static const stp_parameter_t the_parameters[] =
   {
     "PageSize", N_("Page Size"), N_("Basic Printer Setup"),
     N_("Size of the paper being printed to"),
-    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
@@ -228,6 +273,18 @@ static const stp_parameter_t the_parameters[] =
     N_("Ink Channels"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0
+  },
+  {
+    "PrintingMode", N_("Printing Mode"), N_("Core Parameter"),
+    N_("Printing Output Mode"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
+  },
+  {
+    "RawChannels", N_("Raw Channels"), N_("Core Parameter"),
+    N_("Raw Channel Count"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
+    STP_PARAMETER_LEVEL_BASIC, 0, 1, -1, 1
   },
   PARAMETER_INT(max_hres),
   PARAMETER_INT(max_vres),
@@ -548,6 +605,26 @@ DEF_COMPOSITE_ACCESSOR(inkgroup, const inkgroup_t *)
 DEF_COMPOSITE_ACCESSOR(input_slots, const input_slot_list_t *)
 DEF_COMPOSITE_ACCESSOR(quality_list, const quality_list_t *)
 
+static const channel_count_t *
+get_channel_count_by_name(const char *name)
+{
+  int i;
+  for (i = 0; i < escp2_channel_counts_count; i++)
+    if (strcmp(name, escp2_channel_counts[i].name) == 0)
+      return &(escp2_channel_counts[i]);
+  return NULL;
+}
+
+static const channel_count_t *
+get_channel_count_by_number(unsigned count)
+{
+  int i;
+  for (i = 0; i < escp2_channel_counts_count; i++)
+    if (count == escp2_channel_counts[i].count)
+      return &(escp2_channel_counts[i]);
+  return NULL;
+}
+
 static int
 escp2_ink_type(stp_const_vars_t v, int resid)
 {
@@ -645,12 +722,16 @@ escp2_paperlist(stp_const_vars_t v)
 static int
 using_automatic_settings(stp_const_vars_t v, auto_mode_t mode)
 {
+  int is_raw = 0;
+  if (stp_get_string_parameter(v, "InputImageType") &&
+      strcmp(stp_get_string_parameter(v, "InputImageType"), "Raw") == 0)
+    is_raw = 1;
   switch (mode)
     {
     case AUTO_MODE_QUALITY:
       if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE) &&
 	  strcmp(stp_get_string_parameter(v, "Quality"), "None") != 0 &&
-	  stp_get_output_type(v) != OUTPUT_RAW_PRINTER)
+	  !is_raw)
 	return 1;
       else
 	return 0;
@@ -658,7 +739,7 @@ using_automatic_settings(stp_const_vars_t v, auto_mode_t mode)
     case AUTO_MODE_FULL_AUTO:
       if (stp_check_string_parameter(v, "AutoMode", STP_PARAMETER_ACTIVE) &&
 	  strcmp(stp_get_string_parameter(v, "AutoMode"), "None") != 0 &&
-	  stp_get_output_type(v) != OUTPUT_RAW_PRINTER)
+	  !is_raw)
 	return 1;
       else
 	return 0;
@@ -666,7 +747,7 @@ using_automatic_settings(stp_const_vars_t v, auto_mode_t mode)
     case AUTO_MODE_MANUAL:
       if (!stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE) ||
 	  strcmp(stp_get_string_parameter(v, "Quality"), "None") == 0 ||
-	  stp_get_output_type(v) == OUTPUT_RAW_PRINTER)
+	  is_raw)
 	return 1;
       else
 	return 0;
@@ -945,6 +1026,16 @@ get_inktype(stp_const_vars_t v)
 	    return ink_list->inknames[i];
 	}
     }
+  /*
+   * If we couldn't find anything, try again with the default ink type.
+   * This may mean duplicate work, but that's cheap enough.
+   */
+  ink_type = get_default_inktype(v);
+  for (i = 0; i < ink_list->n_inks; i++)
+    {
+      if (strcmp(ink_type, ink_list->inknames[i]->name) == 0)
+	return ink_list->inknames[i];
+    }
   return NULL;
 }
 
@@ -998,7 +1089,8 @@ set_density_parameter(stp_const_vars_t v,
 		      stp_parameter_t *description,
 		      int color)
 {
-  if (stp_get_output_type(v) != OUTPUT_GRAY &&
+  if (stp_get_string_parameter(v, "PrintingMode") &&
+      strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0 &&
       using_automatic_settings(v, AUTO_MODE_MANUAL))
     description->is_active = 1;
   else
@@ -1025,7 +1117,8 @@ set_color_transition_parameter(stp_const_vars_t v,
 			       int color)
 {
   description->is_active = 0;
-  if (stp_get_output_type(v) != OUTPUT_GRAY &&
+  if (stp_get_string_parameter(v, "PrintingMode") &&
+      strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0 &&
       using_automatic_settings(v, AUTO_MODE_MANUAL))
     {
       const escp2_inkname_t *ink_name = get_inktype(v);
@@ -1438,6 +1531,39 @@ escp2_parameters(stp_const_vars_t v, const char *name,
       description->bounds.integer.lower = -1;
       description->bounds.integer.upper = -2;
     }
+  else if (strcmp(name, "PrintingMode") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+      stp_string_list_add_string
+	(description->bounds.str, "Color", _("Color"));
+      stp_string_list_add_string
+	(description->bounds.str, "BW", _("Black and White"));
+      description->deflt.str =
+	stp_string_list_param(description->bounds.str, 0)->name;
+    }
+  else if (strcmp(name, "RawChannels") == 0)
+    {
+      const inklist_t *inks = escp2_inklist(v);
+      int ninktypes = inks->n_inks;
+      description->bounds.str = stp_string_list_create();
+      if (ninktypes > 1)
+	{
+	  stp_string_list_add_string(description->bounds.str, "None", "None");
+	  for (i = 0; i < ninktypes; i++)
+	    if (inks->inknames[i]->inkset == INKSET_EXTENDED)
+	      {
+		const channel_count_t *ch =
+		  (get_channel_count_by_number
+		   (inks->inknames[i]->channel_set->channel_count));
+		stp_string_list_add_string(description->bounds.str,
+					   ch->name, ch->name);
+	      }
+	  description->deflt.str =
+	    stp_string_list_param(description->bounds.str, 0)->name;
+	}
+      if (ninktypes <= 1)
+	description->is_active = 0;
+    }
 }
 
 static const res_t *
@@ -1589,6 +1715,41 @@ escp2_describe_resolution(stp_const_vars_t v, int *x, int *y)
   *y = -1;
 }
 
+static const char *
+escp2_describe_output(stp_const_vars_t v)
+{
+  const char *printing_mode = stp_get_string_parameter(v, "PrintingMode");
+  const char *input_image_type = stp_get_string_parameter(v, "InputImageType");
+  if (strcmp(input_image_type, "Raw") == 0)
+    return "Raw";
+  else if (strcmp(printing_mode, "BW") == 0)
+    return "Grayscale";
+  else
+    {
+      const escp2_inkname_t *ink_type = get_inktype(v);
+      if (ink_type)
+	{
+	  switch (ink_type->inkset)
+	    {
+	    case INKSET_CMYKRB:
+	      return "CMYKRB";
+	    case INKSET_CMYK:
+	    case INKSET_CcMmYK:
+	    case INKSET_CcMmYyK:
+	    case INKSET_CcMmYKk:
+	    default:
+	      if (ink_type->channel_set->channels[0])
+		return "KCMY";
+	      else
+		return "CMY";
+	      break;
+	    }
+	}
+      else
+	return "CMYK";
+    }
+}
+
 static int
 escp2_has_advanced_command_set(stp_const_vars_t v)
 {
@@ -1606,28 +1767,37 @@ escp2_use_extended_commands(stp_const_vars_t v, int use_softweave)
 }
 
 static int
-set_raw_ink_type(stp_vars_t v, stp_image_t *image)
+set_raw_ink_type(stp_vars_t v)
 {
   const inklist_t *inks = escp2_inklist(v);
   int ninktypes = inks->n_inks;
   int i;
+  const char *channel_name = stp_get_string_parameter(v, "RawChannels");
+  const channel_count_t *count;
+  if (!channel_name)
+    return 0;
+  count = get_channel_count_by_name(channel_name);
+  if (!count)
+    return 0;
+    
   /*
    * If we're using raw printer output, we dummy up the appropriate inkset.
    */
   for (i = 0; i < ninktypes; i++)
     if (inks->inknames[i]->inkset == INKSET_EXTENDED &&
-	inks->inknames[i]->channel_set->channel_count * 2 == stpi_image_bpp(image))
+	(inks->inknames[i]->channel_set->channel_count == count->count))
       {
 	stpi_dprintf(STPI_DBG_INK, v, "Changing ink type from %s to %s\n",
 		     stp_get_string_parameter(v, "InkType") ?
 		     stp_get_string_parameter(v, "InkType") : "NULL",
 		     inks->inknames[i]->name);
 	stp_set_string_parameter(v, "InkType", inks->inknames[i]->name);
+	stp_set_int_parameter(v, "STPIRawChannels", count->count);
 	return 1;
       }
   stpi_eprintf
     (v, _("This printer does not support raw printer output at depth %d\n"),
-     stpi_image_bpp(image) / 2);
+     count->count);
   return 0;
 }
 
@@ -1648,9 +1818,8 @@ adjust_density_and_ink_type(stp_vars_t v, stp_image_t *image)
       stp_set_float_parameter(v, "Density", 1.0);
     }
 
-  if (pd->rescale_density)
-    stp_scale_float_parameter
-      (v, "Density", paper_density * escp2_density(v, o_resid));
+  stp_scale_float_parameter
+    (v, "Density", paper_density * escp2_density(v, o_resid));
   pd->drop_size = escp2_ink_type(v, o_resid);
   pd->ink_resid = o_resid;
 
@@ -1870,8 +2039,11 @@ setup_head_offset(stp_vars_t v)
   escp2_privdata_t *pd = get_privdata(v);
   int i;
   int channel_id = 0;
+  int channel_limit = pd->logical_channels;
   const escp2_inkname_t *ink_type = pd->inkname;
-  pd->head_offset = stpi_zalloc(sizeof(int) * pd->channels_in_use);
+  if (pd->channels_in_use > pd->logical_channels)
+    channel_limit = pd->channels_in_use;
+  pd->head_offset = stpi_zalloc(sizeof(int) * channel_limit);
   for (i = 0; i < pd->logical_channels; i++)
     {
       const ink_channel_t *channel = ink_type->channel_set->channels[i];
@@ -1947,6 +2119,7 @@ allocate_channels(stp_vars_t v, int line_length)
 	    }
 	}
     }
+  stp_set_string_parameter(v, "STPIOutputType", escp2_describe_output(v));
 }
 
 static unsigned
@@ -2090,12 +2263,10 @@ setup_head_parameters(stp_vars_t v)
   /*
    * Set up the output channels
    */
-  if (stp_get_output_type(v) == OUTPUT_RAW_PRINTER)
-    pd->logical_channels = escp2_physical_channels(v);
-  else if (stp_get_output_type(v) == OUTPUT_GRAY)
+  if (strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") == 0)
     pd->logical_channels = 1;
   else
-    pd->logical_channels = NCOLORS;
+    pd->logical_channels = pd->inkname->channel_set->channel_count;
 
   pd->physical_channels =
     compute_channel_count(pd->inkname, pd->logical_channels);
@@ -2138,7 +2309,8 @@ setup_head_parameters(stp_vars_t v)
 
   setup_head_offset(v);
 
-  if (stp_get_output_type(v) == OUTPUT_GRAY && pd->physical_channels == 1)
+  if (strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") == 0 &&
+      pd->physical_channels == 1)
     {
       if (pd->use_black_parameters)
 	pd->initial_vertical_offset =
@@ -2287,14 +2459,10 @@ escp2_print_data(stp_vars_t v, stp_image_t *image)
       inner_r_sq = (double) pd->cd_inner_radius * (double) pd->cd_inner_radius;
     }
 
-  stpi_image_progress_init(image);
-
   for (y = 0; y < pd->image_printed_height; y ++)
     {
       int duplicate_line = 1;
       unsigned zero_mask;
-      if ((y & 63) == 0)
-	stpi_image_note_progress(image, y, pd->image_printed_height);
 
       if (errline != errlast)
 	{
@@ -2389,19 +2557,18 @@ escp2_print_page(stp_vars_t v, stp_image_t *image)
      PACKFUNC,
      COMPUTEFUNC);
 
-  stpi_set_output_color_model(v, COLOR_MODEL_CMY);
+  stpi_dither_init(v, image, pd->image_printed_width, pd->res->printed_hres,
+		   pd->res->printed_vres);
+  allocate_channels(v, line_width);
   adjust_print_quality(v, image);
   out_channels = stpi_color_init(v, image, 65536);
 
-  stpi_dither_init(v, image, pd->image_printed_width, pd->res->printed_hres,
-		   pd->res->printed_vres);
 /*  stpi_dither_set_expansion(v, pd->res->hres / pd->res->printed_hres); */
 
-  allocate_channels(v, line_width);
   setup_inks(v);
 
   status = escp2_print_data(v, image);
-  stpi_image_progress_conclude(image);
+  stpi_image_conclude(image);
   stpi_flush_all(v);
   stpi_escp2_terminate_page(v);
 
@@ -2433,8 +2600,8 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
     }
   stpi_image_init(image);
 
-  if (stp_get_output_type(v) == OUTPUT_RAW_PRINTER &&
-      !set_raw_ink_type(v, image))
+  if (strcmp(stp_get_string_parameter(v, "InputImageType"), "Raw") == 0 &&
+      !set_raw_ink_type(v))
     return 0;
 
   pd = (escp2_privdata_t *) stpi_zalloc(sizeof(escp2_privdata_t));
@@ -2446,20 +2613,8 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
     escp2_has_cap(v, MODEL_SEND_ZERO_ADVANCE, MODEL_SEND_ZERO_ADVANCE_YES);
   stpi_allocate_component_data(v, "Driver", NULL, NULL, pd);
 
-  if (stp_get_output_type(v) == OUTPUT_RAW_CMYK ||
-      stp_get_output_type(v) == OUTPUT_RAW_PRINTER)
-    pd->rescale_density = 0;
-  else
-    pd->rescale_density = 1;
-
   pd->inkname = get_inktype(v);
   pd->channels_in_use = count_channels(pd->inkname);
-  if (stp_get_output_type(v) != OUTPUT_RAW_PRINTER &&
-      pd->inkname->channel_set->channel_count == 1)
-    stp_set_output_type(v, OUTPUT_GRAY);
-  if (stp_get_output_type(v) == OUTPUT_COLOR &&
-      pd->inkname->channel_set->channels[ECOLOR_K] != NULL)
-    stp_set_output_type(v, OUTPUT_RAW_CMYK);
 
   setup_resolution(v);
   setup_head_parameters(v);
@@ -2486,7 +2641,8 @@ escp2_print(stp_const_vars_t v, stp_image_t *image)
   stp_vars_t nv = stp_vars_create_copy(v);
   int op = OP_JOB_PRINT;
   int status;
-  if (stp_get_job_mode(v) == STP_JOB_MODE_PAGE)
+  if (!stp_get_string_parameter(v, "JobMode") ||
+      strcmp(stp_get_string_parameter(v, "JobMode"), "Page") == 0)
     op = OP_JOB_START | OP_JOB_PRINT | OP_JOB_END;
   stpi_prune_inactive_options(nv);
   status = escp2_do_print(nv, image, op);
@@ -2525,6 +2681,7 @@ static const stpi_printfuncs_t print_escp2_printfuncs =
   escp2_limit,
   escp2_print,
   escp2_describe_resolution,
+  escp2_describe_output,
   stpi_verify_printer_params,
   escp2_job_start,
   escp2_job_end

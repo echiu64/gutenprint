@@ -170,8 +170,9 @@ run (char   *name,		/* I - Name of print program. */
   GimpExportReturnType export = GIMP_EXPORT_CANCEL;    /* return value of gimp_export_image() */
   gdouble xres, yres;
   char *image_filename;
-  stp_image_t *image;
+  stpui_image_t *image;
   gint32 image_ID;
+  gint32 base_type;
   if (getenv("STP_DEBUG_STARTUP"))
     while (SDEBUG)
       ;
@@ -195,7 +196,6 @@ run (char   *name,		/* I - Name of print program. */
 #endif
 
   stpui_printer_initialize(&gimp_vars);
-  stp_set_input_color_model(gimp_vars.v, COLOR_MODEL_RGB);
   /*
    * Initialize parameter data...
    */
@@ -248,6 +248,20 @@ run (char   *name,		/* I - Name of print program. */
   stpui_set_image_dimensions(drawable->width, drawable->height);
   gimp_image_get_resolution (image_ID, &xres, &yres);
   stpui_set_image_resolution(xres, yres);
+  stpui_set_image_channel_depth(8);
+  base_type = gimp_image_base_type(image_ID);
+  switch (base_type)
+    {
+    case GIMP_INDEXED:
+    case GIMP_RGB:
+      stpui_set_image_type("RGB");
+      break;
+    case GIMP_GRAY:
+      stpui_set_image_type("Whitescale");
+      break;
+    default:
+    }
+
   image = Image_GimpDrawable_new(drawable, image_ID);
   stp_set_float_parameter(gimp_vars.v, "AppGamma", gimp_gamma());
 
@@ -278,7 +292,14 @@ run (char   *name,		/* I - Name of print program. */
 	  stpui_plist_set_output_to(&gimp_vars, param[3].data.d_string);
 	  stp_set_driver(gimp_vars.v, param[4].data.d_string);
 	  stp_set_file_parameter(gimp_vars.v, "PPDFile", param[5].data.d_string);
-	  stp_set_output_type(gimp_vars.v, param[6].data.d_int32);
+	  switch (param[6].data.d_int32)
+	    {
+	    case 0:
+	    default:
+	      stp_set_string_parameter(gimp_vars.v, "PrintingMode", "BW");
+	    case 1:
+	      stp_set_string_parameter(gimp_vars.v, "PrintingMode", "Color");
+	    }
 	  stp_set_string_parameter(gimp_vars.v, "Resolution", param[7].data.d_string);
 	  stp_set_string_parameter(gimp_vars.v, "PageSize", param[8].data.d_string);
 	  stp_set_string_parameter(gimp_vars.v, "MediaType", param[9].data.d_string);
@@ -418,7 +439,7 @@ do_print_dialog (gchar *proc_name, gint32 image_ID)
   stpui_set_printrc_file(filename);
   g_free(filename);
   if (! getenv("STP_PRINT_MESSAGES_TO_STDERR"))
-  stpui_set_errfunc(gimp_errfunc);
+    stpui_set_errfunc(gimp_errfunc);
   stpui_set_thumbnail_func(stpui_get_thumbnail_data_function);
   stpui_set_thumbnail_data((void *) image_ID);
   return stpui_do_print_dialog();

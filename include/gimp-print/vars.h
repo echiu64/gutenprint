@@ -1,5 +1,5 @@
 /*
- * "$Id$"
+ * "$id: vars.h,v 1.3.4.4 2004/03/09 03:00:25 rlk Exp $"
  *
  *   libgimpprint stp_vars_t core functions.
  *
@@ -34,22 +34,6 @@ extern "C" {
  * Constants...
  */
 
-#define OUTPUT_GRAY             0       /* Grayscale output */
-#define OUTPUT_COLOR            1       /* Color output */
-#define OUTPUT_RAW_CMYK         2       /* Raw CMYK output */
-#define OUTPUT_RAW_PRINTER	3	/* Printer-specific raw output */
-
-#define COLOR_MODEL_RGB         0
-#define COLOR_MODEL_CMY         1
-#define NCOLOR_MODELS           2
-
-
-typedef enum
-{
-  STP_JOB_MODE_PAGE,
-  STP_JOB_MODE_JOB
-} stp_job_mode_t;
-
 /*
  * Opaque representation of printer setttings.
  *
@@ -59,7 +43,6 @@ typedef enum
  */
 typedef void *stp_vars_t;
 typedef const void *stp_const_vars_t;
-
 
 
 /*
@@ -86,7 +69,7 @@ typedef enum
 {
   STP_PARAMETER_CLASS_FEATURE,	/* Printer feature */
   STP_PARAMETER_CLASS_OUTPUT,	/* Output control */
-  STP_PARAMETER_CLASS_PAGE_SIZE, /* Special for specifying page size */
+  STP_PARAMETER_CLASS_CORE,	/* Core Gimp-Print parameter */
   STP_PARAMETER_CLASS_INVALID
 } stp_parameter_class_t;
 
@@ -101,7 +84,8 @@ typedef enum
   STP_PARAMETER_LEVEL_ADVANCED2,
   STP_PARAMETER_LEVEL_ADVANCED3,
   STP_PARAMETER_LEVEL_ADVANCED4,
-  STP_PARAMETER_LEVEL_INTERNAL,
+  STP_PARAMETER_LEVEL_INTERNAL,	/* Parameters used only within Gimp-Print */
+  STP_PARAMETER_LEVEL_EXTERNAL,	/* Parameters used only outside Gimp-Print */
   STP_PARAMETER_LEVEL_INVALID
 } stp_parameter_level_t;
 
@@ -175,7 +159,7 @@ typedef struct
     stp_curve_t curve;
     stp_double_bound_t dbl;
     stp_int_bound_t integer;
-    stp_string_list_t  str;
+    stp_string_list_t str;
     stp_array_t array;
   } bounds;
   union				/* Default value of the parameter */
@@ -205,19 +189,31 @@ typedef void (*stp_outfunc_t) (void *data, const char *buffer, size_t bytes);
 *                                                               *
 ****************************************************************/
 
+/*
+ * Constructors, destructors
+ */
 extern stp_vars_t stp_vars_create(void);
 extern void stp_vars_copy(stp_vars_t vd, stp_const_vars_t vs);
 extern stp_vars_t stp_vars_create_copy(stp_const_vars_t vs);
 extern void stp_vars_free(stp_vars_t v);
 
+/* 
+ * Set/get the name of the printer driver
+ */
 extern void stp_set_driver(stp_vars_t v, const char *val);
 extern void stp_set_driver_n(stp_vars_t v, const char *val, int bytes);
 extern const char *stp_get_driver(stp_const_vars_t v);
 
+/*
+ * Set/get the name of the color conversion routine, if not default
+ */
 extern void stp_set_color_conversion(stp_vars_t v, const char *val);
 extern void stp_set_color_conversion_n(stp_vars_t v, const char *val, int bytes);
 extern const char *stp_get_color_conversion(stp_const_vars_t v);
 
+/*
+ * Set/get the position and size of the image
+ */
 extern void stp_set_left(stp_vars_t v, int val);
 extern int stp_get_left(stp_const_vars_t v);
 
@@ -230,9 +226,9 @@ extern int stp_get_width(stp_const_vars_t v);
 extern void stp_set_height(stp_vars_t v, int val);
 extern int stp_get_height(stp_const_vars_t v);
 
-extern void stp_set_job_mode(stp_vars_t, stp_job_mode_t);
-extern stp_job_mode_t stp_get_job_mode(stp_const_vars_t);
-
+/*
+ * Set/get job properties
+ */
 extern void stp_set_page_number(stp_vars_t, int);
 extern int stp_get_page_number(stp_const_vars_t);
 
@@ -244,26 +240,6 @@ extern int stp_get_page_width(stp_const_vars_t v);
 
 extern void stp_set_page_height(stp_vars_t v, int val);
 extern int stp_get_page_height(stp_const_vars_t v);
-
-/*
- * Set output type.  This is likely to change further.
- */
-extern void stp_set_output_type(stp_vars_t v, int val);
-extern int stp_get_output_type(stp_const_vars_t v);
-
-/*
- * Input color model refers to how the data is being sent to the
- * driver library; the default is RGB.  Output color model refers to
- * the characteristics of the device; the default is CMYK.  The output
- * color model is set by the printer driver and cannot be overridden.
- * It is provided to permit applications to generate previews using
- * the color machinery in Gimp-Print.  If this is done, normally
- * the output color model will be RGB.
- *
- * This is subject to change.
- */
-extern void stp_set_input_color_model(stp_vars_t v, int val);
-extern int stp_get_input_color_model(stp_const_vars_t v);
 
 /*
  * These functions are used to print output and diagnostic information
@@ -357,11 +333,11 @@ stp_parameter_find_in_settings(stp_const_vars_t v, const char *name);
 extern void stp_set_string_parameter(stp_vars_t v, const char *parameter,
 				     const char *value);
 extern void stp_set_string_parameter_n(stp_vars_t v, const char *parameter,
-				       const char *value, int bytes);
+				       const char *value, size_t bytes);
 extern void stp_set_file_parameter(stp_vars_t v, const char *parameter,
 				   const char *value);
 extern void stp_set_file_parameter_n(stp_vars_t v, const char *parameter,
-				     const char *value, int bytes);
+				     const char *value, size_t bytes);
 extern void stp_set_float_parameter(stp_vars_t v, const char *parameter,
 				    double value);
 extern void stp_set_int_parameter(stp_vars_t v, const char *parameter,
@@ -373,7 +349,7 @@ extern void stp_set_curve_parameter(stp_vars_t v, const char *parameter,
 extern void stp_set_array_parameter(stp_vars_t v, const char *parameter,
 				    stp_const_array_t value);
 extern void stp_set_raw_parameter(stp_vars_t v, const char *parameter,
-				  const void *value, int bytes);
+				  const void *value, size_t bytes);
 
 extern void stp_scale_float_parameter(stp_vars_t v, const char *param,
 				      double scale);
@@ -383,13 +359,13 @@ extern void stp_set_default_string_parameter(stp_vars_t v,
 					     const char *value);
 extern void stp_set_default_string_parameter_n(stp_vars_t v,
 					       const char *parameter,
-					       const char *value, int bytes);
+					       const char *value, size_t bytes);
 extern void stp_set_default_file_parameter(stp_vars_t v,
 					   const char *parameter,
 					   const char *value);
 extern void stp_set_default_file_parameter_n(stp_vars_t v,
 					     const char *parameter,
-					     const char *value, int bytes);
+					     const char *value, size_t bytes);
 extern void stp_set_default_float_parameter(stp_vars_t v,
 					    const char *parameter,
 					    double value);
@@ -407,7 +383,7 @@ extern void stp_set_default_array_parameter(stp_vars_t v,
 					    stp_const_array_t value);
 extern void stp_set_default_raw_parameter(stp_vars_t v,
 					  const char *parameter,
-					  const void *value, int bytes);
+					  const void *value, size_t bytes);
 
 extern const char *stp_get_string_parameter(stp_const_vars_t v,
 					    const char *param);

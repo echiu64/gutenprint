@@ -583,7 +583,6 @@ typedef struct
   int drop_size;		/* ID of the drop size we're using */
   int ink_resid;		/* Array index for the drop set we're using */
   const escp2_inkname_t *inkname; /* Description of the ink set */
-  int rescale_density;		/* Do we want to rescale the density? */
 
   /* Ink channels */
   int logical_channels;		/* Number of logical ink channels (e.g.CMYK) */

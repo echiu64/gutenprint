@@ -42,7 +42,7 @@
 
 typedef struct
 {
-  int color_model;
+  const char *output_type;
   int output_channels;
   int rotate_channels;
   const char *name;
@@ -65,12 +65,12 @@ static const raw_printer_t raw_model_capabilities[] =
 
 static const ink_t inks[] =
 {
-  { COLOR_MODEL_RGB, 3, 0, "RGB" },
-  { COLOR_MODEL_CMY, 3, 0, "CMY" },
-  { COLOR_MODEL_CMY, 4, 1, "CMYK" },
-  { COLOR_MODEL_CMY, 4, 0, "KCMY" },
-  { COLOR_MODEL_RGB, 1, 0, "RGBGray" },
-  { COLOR_MODEL_CMY, 1, 0, "CMYGray" },
+  { "RGB", 3, 0, "RGB" },
+  { "CMY", 3, 0, "CMY" },
+  { "KCMY", 4, 1, "CMYK" },
+  { "KCMY", 4, 0, "KCMY" },
+  { "Whitescale", 1, 0, "RGBGray" },
+  { "Grayscale", 1, 0, "CMYGray" },
 };
 
 static const int ink_count = sizeof(inks) / sizeof(ink_t);
@@ -81,6 +81,12 @@ static const stp_parameter_t the_parameters[] =
     "InkType", N_("Ink Type"), N_("Advanced Printer Setup"),
     N_("Type of ink in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
+  },
+  {
+    "PrintingMode", N_("Printing Mode"), N_("Core Parameter"),
+    N_("Printing Output Mode"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
 };
@@ -123,6 +129,16 @@ raw_parameters(stp_const_vars_t v, const char *name,
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
     }
+  else if (strcmp(name, "PrintingMode") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+      stp_string_list_add_string
+	(description->bounds.str, "Color", _("Color"));
+      stp_string_list_add_string
+	(description->bounds.str, "BW", _("Black and White"));
+      description->deflt.str =
+	stp_string_list_param(description->bounds.str, 0)->name;
+    }
   else
     description->is_active = 0;
 }
@@ -162,6 +178,20 @@ raw_describe_resolution(stp_const_vars_t v, int *x, int *y)
   *y = 72;
 }
 
+static const char *
+raw_describe_output(stp_const_vars_t v)
+{
+  const char *ink_type = stp_get_string_parameter(v, "InkType");
+  if (ink_type)
+    {
+      int i;
+      for (i = 0; i < ink_count; i++)
+	if (strcmp(ink_type, inks[i].name) == 0)
+	    return inks[i].output_type;
+    }
+  return "RGB";
+}
+
 /*
  * 'escp2_print()' - Print an image to an EPSON printer.
  */
@@ -195,19 +225,19 @@ raw_print(stp_const_vars_t v, stp_image_t *image)
       stp_vars_free(nv);
       return 0;
     }
-  stpi_set_output_color_model(nv, COLOR_MODEL_CMY);
   if (ink_type)
     {
       for (i = 0; i < ink_count; i++)
 	if (strcmp(ink_type, inks[i].name) == 0)
 	  {
-	    stpi_set_output_color_model(nv, inks[i].color_model);
+	    stp_set_string_parameter(nv, "STPIOutputType", inks[i].output_type);
 	    ink_channels = inks[i].output_channels;
 	    rotate_output = inks[i].rotate_channels;
 	    break;
 	  }
     }
 
+  stp_set_float_parameter(nv, "Density", 1.0);
   stpi_channel_reset(nv);
   for (i = 0; i < ink_channels; i++)
     stpi_channel_add(nv, i, 0, 1.0);
@@ -219,7 +249,7 @@ raw_print(stp_const_vars_t v, stp_image_t *image)
 
   if (out_channels != ink_channels && out_channels != 1 && ink_channels != 1)
     {
-      stpi_eprintf(nv, _("Internal error!  Output channels or input channels must be 1\n"));
+      stpi_eprintf(nv, "Internal error!  Output channels or input channels must be 1\n");
       stp_vars_free(nv);
       return 0;
     }
@@ -227,17 +257,11 @@ raw_print(stp_const_vars_t v, stp_image_t *image)
   if (out_channels != ink_channels)
     final_out = stpi_malloc(width * ink_channels * 2);
 
-  stp_set_float_parameter(nv, "Density", 1.0);
-
-  stpi_image_progress_init(image);
-
   for (y = 0; y < height; y++)
     {
       unsigned short *out;
       unsigned short *real_out;
       unsigned zero_mask;
-      if ((y & 63) == 0)
-	stpi_image_note_progress(image, y, height);
       if (stpi_color_get_row(nv, image, y, &zero_mask))
 	{
 	  status = 2;
@@ -288,7 +312,7 @@ raw_print(stp_const_vars_t v, stp_image_t *image)
       stpi_zfwrite((char *) real_out,
 		   width * ink_channels * bytes_per_channel, 1, nv);
     }
-  stpi_image_progress_conclude(image);
+  stpi_image_conclude(image);
   if (final_out)
     stpi_free(final_out);
   stp_vars_free(nv);
@@ -304,6 +328,7 @@ static const stpi_printfuncs_t print_raw_printfuncs =
   raw_limit,
   raw_print,
   raw_describe_resolution,
+  raw_describe_output,
   stpi_verify_printer_params,
   NULL,
   NULL

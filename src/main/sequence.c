@@ -182,6 +182,14 @@ stp_sequence_get_bounds(stp_const_sequence_t sequence,
 }
 
 
+static stpi_internal_sequence_t *
+cast_to_iseq(stp_const_sequence_t sequence)
+{
+  stpi_internal_sequence_t *answer = (stpi_internal_sequence_t *) sequence;
+  check_sequence(answer);
+  return answer;
+}
+
 /*
  * Find the minimum and maximum points on the curve.
  */
@@ -206,12 +214,10 @@ void
 stp_sequence_get_range(stp_const_sequence_t sequence,
 		       double *low, double *high)
 {
-  const stpi_internal_sequence_t *iseq =
-    (const stpi_internal_sequence_t *) sequence;
-  check_sequence(iseq);
+  stpi_internal_sequence_t *iseq = cast_to_iseq(sequence);
   if (iseq->recompute_range) /* Don't recompute the range if we don't
 			       need to. */
-    scan_sequence_range((stpi_internal_sequence_t *) iseq);
+    scan_sequence_range(iseq);
   *low = iseq->rlo;
   *high = iseq->rhi;
 }
@@ -530,8 +536,7 @@ const t *								     \
 stp_sequence_get_##name##_data(stp_const_sequence_t sequence, size_t *count) \
 {									     \
   int i;								     \
-  stpi_internal_sequence_t *iseq = (stpi_internal_sequence_t *) sequence;    \
-  check_sequence(iseq);							     \
+  stpi_internal_sequence_t *iseq = cast_to_iseq(sequence);		     \
   if (iseq->blo < (double) lb || iseq->bhi > (double) ub)		     \
     return NULL;							     \
   if (!iseq->name##_data)						     \

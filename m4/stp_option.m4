@@ -128,3 +128,45 @@ AC_DEFUN([STP_ARG_ENABLE],
 # automake uses autoconf traces, this breaks automake
 AC_DEFUN([STP_CONDITIONAL],
 [AM_CONDITIONAL(BUILD_$1, test x${BUILD_$1} = xyes)])
+
+
+## STP_ADD_COMPILER_ARG (ARG, COMPILER, VARIABLE)
+## ---------------------------------------------------------------------------
+## ARG            Compiler option
+## COMPILER       Compiler name
+## VARIABLE       Variable to add option to (default CFLAGS).
+AC_DEFUN([STP_ADD_COMPILER_ARG],[
+  AC_MSG_CHECKING(if m4_ifval([$3],[$3 ],${CC} )supports $1)
+  stp_acOLDCFLAGS="${CFLAGS}"
+  CFLAGS="${m4_ifval([$2],[$2],CFLAGS)} $1"
+  AC_TRY_COMPILE(,,
+      [ AC_MSG_RESULT(yes);
+        stp_newCFLAGS="${m4_ifval([$2],[$2],CFLAGS)} $1"],
+      [ AC_MSG_RESULT(no);])]
+  CFLAGS="$stp_acOLDCFLAGS"
+  m4_ifval([$2],[$2],CFLAGS)="${stp_newCFLAGS}",
+])
+
+## STP_ADD_FIRST_COMPILER_ARG (ARGS, COMPILER, VARIABLE)
+## ---------------------------------------------------------------------------
+## ARGS           Compiler options
+## COMPILER       Compiler name
+## VARIABLE       Variable to add option to (default CFLAGS).
+AC_DEFUN([STP_ADD_FIRST_COMPILER_ARG],[
+  for stp_ac_arg in $1 ; do
+    stp_ac_save_CFLAGS="${m4_ifval([$2],[$2],CFLAGS)}"
+    STP_ADD_COMPILER_ARG([${stp_ac_arg}], [$2], [$3])
+    test "${stp_ac_save_CFLAGS}" != "${m4_ifval([$2],[$2],$CFLAGS)}" && break
+  done
+])
+
+## STP_ADD_COMPILER_ARGS (ARGS, COMPILER, VARIABLE)
+## ---------------------------------------------------------------------------
+## ARGS            Compiler options
+## COMPILER       Compiler name
+## VARIABLE       Variable to add option to (default CFLAGS).
+AC_DEFUN([STP_ADD_COMPILER_ARGS],[
+  for stp_ac_arg in $1 ; do
+    STP_ADD_COMPILER_ARG([${stp_ac_arg}], [$2], [$3])
+  done
+])

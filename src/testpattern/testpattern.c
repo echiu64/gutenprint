@@ -43,29 +43,22 @@
 extern int yyparse(void);
 
 static const char *Image_get_appname(stp_image_t *image);
-static void Image_progress_conclude(stp_image_t *image);
-static void Image_note_progress(stp_image_t *image,
-				double current, double total);
-static void Image_progress_init(stp_image_t *image);
+static void Image_conclude(stp_image_t *image);
+static void Image_init(stp_image_t *image);
 static stp_image_status_t Image_get_row(stp_image_t *image,
 					unsigned char *data,
 					size_t byte_limit, int row);
 static int Image_height(stp_image_t *image);
 static int Image_width(stp_image_t *image);
-static int Image_bpp(stp_image_t *image);
-static void Image_init(stp_image_t *image);
 static stp_image_t theImage =
 {
   Image_init,
   NULL,				/* reset */
-  Image_bpp,
   Image_width,
   Image_height,
   Image_get_row,
   Image_get_appname,
-  Image_progress_init,
-  Image_note_progress,
-  Image_progress_conclude,
+  Image_conclude,
   NULL
 };
 stp_vars_t global_vars;
@@ -80,16 +73,16 @@ int global_printer_width;
 int global_printer_height;
 int global_band_height;
 int global_n_testpatterns;
-int global_ink_depth;
 char *global_printer;
 double global_density;
 double global_xtop;
 double global_xleft;
 double global_hsize;
 double global_vsize;
-int global_image_type;
-int global_color_model;
+const char *global_image_type;
 int global_bit_depth;
+int global_channel_depth;
+int global_invert_data = 0;
 int global_use_raw_cmyk;
 int global_did_something;
 int global_suppress_output = 0;
@@ -200,18 +193,18 @@ initialize_global_parameters(void)
   global_printer_height = 0;
   global_band_height = 0;
   global_n_testpatterns = -1;
-  global_ink_depth = 0;
   global_printer = NULL;
   global_density = 1.0;
   global_xtop = 0;
   global_xleft = 0;
   global_hsize = 1.0;
   global_vsize = 1.0;
-  global_image_type = OUTPUT_RAW_CMYK;
-  global_color_model = COLOR_MODEL_CMY;
   global_bit_depth = 16;
+  global_channel_depth = 0;
+  global_image_type = "CMYK";
   global_use_raw_cmyk = 0;
   global_did_something = 0;
+  global_invert_data = 0;
   if (static_testpatterns)
     free(static_testpatterns);
   static_testpatterns = NULL;
@@ -235,6 +228,7 @@ do_print(void)
   stp_parameter_list_t params;
   int count;
   int i;
+  char tmp[32];
 
   initialize_global_parameters();
   global_vars = stp_vars_create();
@@ -270,10 +264,14 @@ do_print(void)
   stp_set_errfunc(v, writefunc);
   stp_set_outdata(v, stdout);
   stp_set_errdata(v, stderr);
+  stp_set_string_parameter(v, "InputImageType", global_image_type);
+  sprintf(tmp, "%d", global_bit_depth);
+  stp_set_string_parameter(v, "ChannelBitDepth", tmp);
+  sprintf(tmp, "%d", global_channel_depth);
+  stp_set_string_parameter(v, "RawChannels", tmp);
   stp_set_float_parameter(v, "Density", global_density);
   stp_set_string_parameter(v, "Quality", "None");
   stp_set_string_parameter(v, "ImageType", "None");
-  stp_set_input_color_model(v, global_color_model);
 
   params = stp_get_parameter_list(v);
   count = stp_parameter_list_count(params);
@@ -285,12 +283,6 @@ do_print(void)
 	stp_set_string_parameter(v, p->name, val);
     }
   stp_parameter_list_free(params);
-
-  /*
-   * Most programs will not use OUTPUT_RAW_CMYK; OUTPUT_COLOR or
-   * OUTPUT_GRAYSCALE are more useful for most purposes.
-   */
-  stp_set_output_type(v, global_image_type);
 
   stp_get_imageable_area(v, &left, &right, &bottom, &top);
   stp_describe_resolution(v, &x, &y);
@@ -362,11 +354,8 @@ static void
 invert_data(unsigned char *data, size_t byte_depth)
 {
   int i;
-  size_t image_depth = 4;
   size_t total_bytes;
-  if (global_ink_depth)
-    image_depth = global_ink_depth;
-  total_bytes = global_printer_width * image_depth * byte_depth;
+  total_bytes = global_printer_width * global_channel_depth * byte_depth;
   for (i = 0; i < total_bytes; i++)
     data[i] = 0xff ^ data[i];
 }  
@@ -382,32 +371,50 @@ fill_black_##bits(unsigned char *data, size_t len, size_t scount)	\
   int i;								\
   T *s_data = (T *) data;						\
   unsigned black_val = global_ink_limit * ((1 << bits) - 1);		\
-  if (global_ink_depth)							\
+  if (strcmp(global_image_type, "Raw") == 0)				\
     {									\
       for (i = 0; i < (len / scount) * scount; i++)			\
 	{								\
-	  memset(s_data, 0, sizeof(T) * global_ink_depth);		\
+	  memset(s_data, 0, sizeof(T) * global_channel_depth);		\
 	  s_data[0] = black_val;					\
-	  if (global_ink_depth == 3)					\
+	  if (global_channel_depth == 3)				\
 	    {								\
 	      s_data[1] = black_val;					\
 	      s_data[2] = black_val;					\
 	    }								\
-	  else if (global_ink_depth == 5)				\
+	  else if (global_channel_depth == 5)				\
 	    {								\
 	      s_data[2] = black_val;					\
 	      s_data[4] = black_val;					\
 	    }								\
-	  s_data += global_ink_depth;					\
+	  s_data += global_channel_depth;				\
 	}								\
     }									\
-  else									\
+  else if (strcmp(global_image_type, "CMYK") == 0)			\
     {									\
       for (i = 0; i < (len / scount) * scount; i++)			\
 	{								\
 	  memset(s_data, 0, sizeof(unsigned short) * 4);		\
 	  s_data[3] = black_val;					\
 	  s_data += 4;							\
+	}								\
+    }									\
+  else if (strcmp(global_image_type, "KCMY") == 0)			\
+    {									\
+      for (i = 0; i < (len / scount) * scount; i++)			\
+	{								\
+	  memset(s_data, 0, sizeof(unsigned short) * 4);		\
+	  s_data[0] = black_val;					\
+	  s_data += 4;							\
+	}								\
+    }									\
+  else if (strcmp(global_image_type, "Grayscale") == 0)			\
+    {									\
+      for (i = 0; i < (len / scount) * scount; i++)			\
+	{								\
+	  memset(s_data, 0, sizeof(unsigned short) * 1);		\
+	  s_data[0] = black_val;					\
+	  s_data += 1;							\
 	}								\
     }									\
 }
@@ -427,7 +434,7 @@ fill_black(unsigned char *data, size_t len, size_t scount, size_t bytes)
       fill_black_16(data, len, scount);
       break;
     }
-  if (global_color_model == COLOR_MODEL_RGB)
+  if (global_invert_data)
     invert_data(data, bytes);
 }
 
@@ -436,16 +443,8 @@ static void								\
 fill_white_##bits(unsigned char *data, size_t len, size_t scount)	\
 {									\
   T *s_data = (T *) data;						\
-  if (global_ink_depth)							\
-    {									\
-      memset(s_data, 0, sizeof(T) * global_ink_depth *			\
-	     ((len / scount) * scount));				\
-    }									\
-  else									\
-    {									\
-      memset(s_data, 0, sizeof(T) * 4 *					\
-	     ((len / scount) * scount));				\
-    }									\
+  memset(s_data, 0, sizeof(T) * global_channel_depth *			\
+	 ((len / scount) * scount));					\
 }
 
 FILL_WHITE_FUNCTION(unsigned short, 16)
@@ -463,7 +462,7 @@ fill_white(unsigned char *data, size_t len, size_t scount, size_t bytes)
       fill_white_16(data, len, scount);
       break;
     }
-  if (global_color_model == COLOR_MODEL_RGB)
+  if (global_invert_data)
     invert_data(data, bytes);
 }
 
@@ -474,7 +473,6 @@ fill_grid_##bits(unsigned char *data, size_t len, size_t scount,	\
 {									\
   int i;								\
   int xlen = (len / scount) * scount;					\
-  int depth = global_ink_depth;						\
   int errdiv = (p->d.g.ticks) / (xlen - 1);				\
   int errmod = (p->d.g.ticks) % (xlen - 1);				\
   int errval  = 0;							\
@@ -483,8 +481,6 @@ fill_grid_##bits(unsigned char *data, size_t len, size_t scount,	\
   T *s_data = (T *) data;						\
   unsigned multiplier = (1 << bits) - 1;				\
 									\
-  if (depth == 0)							\
-    depth = 4;								\
   for (i = 0; i < xlen; i++)						\
     {									\
       if (errline != errlast)						\
@@ -499,7 +495,7 @@ fill_grid_##bits(unsigned char *data, size_t len, size_t scount,	\
 	  errval -= xlen - 1;						\
 	  errline++;							\
 	}								\
-      s_data += depth;							\
+      s_data += global_channel_depth;					\
     }									\
 }
 
@@ -521,97 +517,97 @@ fill_grid(unsigned char *data, size_t len, size_t scount,
     }
 }
 
-#define FILL_COLORS_EXTENDED_FUNCTION(T, bits)				   \
-static void								   \
-fill_colors_extended_##bits(unsigned char *data, size_t len,		   \
-			    size_t scount, testpattern_t *p)		   \
-{									   \
-  double mins[STP_CHANNEL_LIMIT];					   \
-  double vals[STP_CHANNEL_LIMIT];					   \
-  double gammas[STP_CHANNEL_LIMIT];					   \
-  int i;								   \
-  int j;								   \
-  int k;								   \
-  int pixels;								   \
-  int channel_limit = global_ink_depth <= 7 ? 7 : global_ink_depth;	   \
-  T *s_data = (T *) data;						   \
-  unsigned multiplier = (1 << bits) - 1;				   \
-									   \
-  for (j = 0; j < channel_limit; j++)					   \
-    {									   \
-      mins[j] = p->d.p.mins[j] == -2 ? global_levels[j] : p->d.p.mins[j];  \
-      vals[j] = p->d.p.vals[j] == -2 ? global_levels[j] : p->d.p.vals[j];  \
-      gammas[j] = p->d.p.gammas[j] * global_gamma * global_gammas[j];	   \
-      vals[j] -= mins[j];						   \
-    }									   \
-  if (scount > len)							   \
-    scount = len;							   \
-  pixels = len / scount;						   \
-  for (i = 0; i < scount; i++)						   \
-    {									   \
-      double where = (double) i / ((double) scount - 1);		   \
-      double val = where;						   \
-      double xvals[STP_CHANNEL_LIMIT];					   \
-									   \
-      for (j = 0; j < channel_limit; j++)				   \
-	{								   \
-	  xvals[j] = mins[j] + val * vals[j];				   \
-	  xvals[j] = pow(xvals[j], gammas[j]);				   \
-	  xvals[j] *= global_ink_limit * multiplier;			   \
-	}								   \
-      for (k = 0; k < pixels; k++)					   \
-	{								   \
-	  switch (global_ink_depth)					   \
-	    {								   \
-	    case 1:							   \
-	      s_data[0] = xvals[0];					   \
-	      break;							   \
-	    case 2:							   \
-	      s_data[0] = xvals[0];					   \
-	      s_data[1] = xvals[4];					   \
-	      break;							   \
-	    case 3:							   \
-	      s_data[0] = xvals[1];					   \
-	      s_data[1] = xvals[2];					   \
-	      s_data[2] = xvals[3];					   \
-	      break;							   \
-	    case 4:							   \
-	      s_data[0] = xvals[0];					   \
-	      s_data[1] = xvals[1];					   \
-	      s_data[2] = xvals[2];					   \
-	      s_data[3] = xvals[3];					   \
-	      break;							   \
-	    case 5:							   \
-	      s_data[0] = xvals[1];					   \
-	      s_data[1] = xvals[5];					   \
-	      s_data[2] = xvals[2];					   \
-	      s_data[3] = xvals[6];					   \
-	      s_data[4] = xvals[3];					   \
-	      break;							   \
-	    case 6:							   \
-	      s_data[0] = xvals[0];					   \
-	      s_data[1] = xvals[1];					   \
-	      s_data[2] = xvals[5];					   \
-	      s_data[3] = xvals[2];					   \
-	      s_data[4] = xvals[6];					   \
-	      s_data[5] = xvals[3];					   \
-	      break;							   \
-	    case 7:							   \
-	      s_data[0] = xvals[0];					   \
-	      s_data[1] = xvals[4];					   \
-	      s_data[2] = xvals[1];					   \
-	      s_data[3] = xvals[5];					   \
-	      s_data[4] = xvals[2];					   \
-	      s_data[5] = xvals[6];					   \
-	      s_data[6] = xvals[3];					   \
-	      break;							   \
-	    default:							   \
-	      for (j = 0; j < global_ink_depth; j++)			   \
-		s_data[j] = xvals[j];					   \
-	    }								   \
-	  s_data += global_ink_depth;					   \
-	}								   \
-    }									   \
+#define FILL_COLORS_EXTENDED_FUNCTION(T, bits)				    \
+static void								    \
+fill_colors_extended_##bits(unsigned char *data, size_t len,		    \
+			    size_t scount, testpattern_t *p)		    \
+{									    \
+  double mins[STP_CHANNEL_LIMIT];					    \
+  double vals[STP_CHANNEL_LIMIT];					    \
+  double gammas[STP_CHANNEL_LIMIT];					    \
+  int i;								    \
+  int j;								    \
+  int k;								    \
+  int pixels;								    \
+  int channel_limit = global_channel_depth <= 7 ? 7 : global_channel_depth; \
+  T *s_data = (T *) data;						    \
+  unsigned multiplier = (1 << bits) - 1;				    \
+									    \
+  for (j = 0; j < channel_limit; j++)					    \
+    {									    \
+      mins[j] = p->d.p.mins[j] == -2 ? global_levels[j] : p->d.p.mins[j];   \
+      vals[j] = p->d.p.vals[j] == -2 ? global_levels[j] : p->d.p.vals[j];   \
+      gammas[j] = p->d.p.gammas[j] * global_gamma * global_gammas[j];	    \
+      vals[j] -= mins[j];						    \
+    }									    \
+  if (scount > len)							    \
+    scount = len;							    \
+  pixels = len / scount;						    \
+  for (i = 0; i < scount; i++)						    \
+    {									    \
+      double where = (double) i / ((double) scount - 1);		    \
+      double val = where;						    \
+      double xvals[STP_CHANNEL_LIMIT];					    \
+									    \
+      for (j = 0; j < channel_limit; j++)				    \
+	{								    \
+	  xvals[j] = mins[j] + val * vals[j];				    \
+	  xvals[j] = pow(xvals[j], gammas[j]);				    \
+	  xvals[j] *= global_ink_limit * multiplier;			    \
+	}								    \
+      for (k = 0; k < pixels; k++)					    \
+	{								    \
+	  switch (global_channel_depth)					    \
+	    {								    \
+	    case 1:							    \
+	      s_data[0] = xvals[0];					    \
+	      break;							    \
+	    case 2:							    \
+	      s_data[0] = xvals[0];					    \
+	      s_data[1] = xvals[4];					    \
+	      break;							    \
+	    case 3:							    \
+	      s_data[0] = xvals[1];					    \
+	      s_data[1] = xvals[2];					    \
+	      s_data[2] = xvals[3];					    \
+	      break;							    \
+	    case 4:							    \
+	      s_data[0] = xvals[0];					    \
+	      s_data[1] = xvals[1];					    \
+	      s_data[2] = xvals[2];					    \
+	      s_data[3] = xvals[3];					    \
+	      break;							    \
+	    case 5:							    \
+	      s_data[0] = xvals[1];					    \
+	      s_data[1] = xvals[5];					    \
+	      s_data[2] = xvals[2];					    \
+	      s_data[3] = xvals[6];					    \
+	      s_data[4] = xvals[3];					    \
+	      break;							    \
+	    case 6:							    \
+	      s_data[0] = xvals[0];					    \
+	      s_data[1] = xvals[1];					    \
+	      s_data[2] = xvals[5];					    \
+	      s_data[3] = xvals[2];					    \
+	      s_data[4] = xvals[6];					    \
+	      s_data[5] = xvals[3];					    \
+	      break;							    \
+	    case 7:							    \
+	      s_data[0] = xvals[0];					    \
+	      s_data[1] = xvals[4];					    \
+	      s_data[2] = xvals[1];					    \
+	      s_data[3] = xvals[5];					    \
+	      s_data[4] = xvals[2];					    \
+	      s_data[5] = xvals[6];					    \
+	      s_data[6] = xvals[3];					    \
+	      break;							    \
+	    default:							    \
+	      for (j = 0; j < global_channel_depth; j++)		    \
+		s_data[j] = xvals[j];					    \
+	    }								    \
+	  s_data += global_channel_depth;				    \
+	}								    \
+    }									    \
 }
 
 FILL_COLORS_EXTENDED_FUNCTION(unsigned short, 16)
@@ -703,7 +699,7 @@ fill_colors_##bits(unsigned char *data, size_t len, size_t scount,	  \
 	}								  \
       for (k = 0; k < pixels; k++)					  \
 	{								  \
-	  switch (global_ink_depth)					  \
+	  switch (global_channel_depth)					  \
 	    {								  \
 	    case 0:							  \
 	      for (j = 0; j < 4; j++)					  \
@@ -716,6 +712,10 @@ fill_colors_##bits(unsigned char *data, size_t len, size_t scount,	  \
 	    case 2:							  \
 	      s_data[0] = xvals[0];					  \
 	      s_data[1] = 0;						  \
+	      break;							  \
+	    case 3:							  \
+	      for (j = 1; j < 4; j++)					  \
+		s_data[j - 1] = xvals[j];				  \
 	      break;							  \
 	    case 4:							  \
 	      for (j = 0; j < 4; j++)					  \
@@ -736,7 +736,7 @@ fill_colors_##bits(unsigned char *data, size_t len, size_t scount,	  \
 		s_data[j] = 0;						  \
 	      break;							  \
 	    }								  \
-	  s_data += global_ink_depth;					  \
+	  s_data += global_channel_depth;				  \
 	}								  \
     }									  \
 }
@@ -748,8 +748,7 @@ static void
 fill_colors(unsigned char *data, size_t len, size_t scount,
 	    testpattern_t *p, size_t bytes)
 {
-  if (global_color_model == COLOR_MODEL_RGB &&
-      global_image_type == OUTPUT_COLOR)
+  if (strcmp(global_image_type, "RGB") == 0)
     fill_colors_extended(data, len, scount, p, bytes);
   else
     {
@@ -786,8 +785,6 @@ fill_pattern(testpattern_t *p, unsigned char *data, size_t width,
     default:
       break;
     }
-  if (global_color_model == COLOR_MODEL_RGB)
-    invert_data(data, byte_depth);
 }
 
 
@@ -795,9 +792,7 @@ static stp_image_status_t
 Image_get_row(stp_image_t *image, unsigned char *data,
 	      size_t byte_limit, int row)
 {
-  int depth = 4;
-  if (global_ink_depth)
-    depth = global_ink_depth;
+  int depth = global_channel_depth;
   if (static_testpatterns[0].t == E_IMAGE)
     {
       testpattern_t *t = &(static_testpatterns[0]);
@@ -808,6 +803,7 @@ Image_get_row(stp_image_t *image, unsigned char *data,
 	  fprintf(stderr, "Read failed!\n");
 	  return STP_IMAGE_STATUS_ABORT;
 	}
+      fprintf(stderr, ".");
     }
   else
     {
@@ -819,6 +815,7 @@ Image_get_row(stp_image_t *image, unsigned char *data,
 		       global_printer_width, global_steps, depth,
 		       global_bit_depth / 8);
 	  previous_band = band;
+	  fprintf(stderr, ".");
 	}
       else if (row == global_printer_height - 1)
 	fill_black(data, global_printer_width, global_steps,
@@ -832,19 +829,10 @@ Image_get_row(stp_image_t *image, unsigned char *data,
 		       global_printer_width, global_steps, depth,
 		       global_bit_depth / 8);
 	  previous_band = band;
+	  fprintf(stderr, ".");
 	}
     }
   return STP_IMAGE_STATUS_OK;
-}
-
-static int
-Image_bpp(stp_image_t *image)
-{
-  int byte_depth = global_bit_depth / 8;
-  if (global_ink_depth)
-    return global_ink_depth * byte_depth;
-  else
-    return 4 * byte_depth;
 }
 
 static int
@@ -872,20 +860,7 @@ Image_init(stp_image_t *image)
 }
 
 static void
-Image_progress_init(stp_image_t *image)
-{
- /* dummy function */
-}
-
-/* progress display */
-static void
-Image_note_progress(stp_image_t *image, double current, double total)
-{
-  fprintf(stderr, ".");
-}
-
-static void
-Image_progress_conclude(stp_image_t *image)
+Image_conclude(stp_image_t *image)
 {
   fprintf(stderr, "\n");
 }

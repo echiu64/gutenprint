@@ -95,13 +95,10 @@ print_debug_params(stp_vars_t v)
   print_remote_param(v, "Version", VERSION);
   print_remote_param(v, "Release Date", RELEASE_DATE);
   print_remote_param(v, "Driver", stp_get_driver(v));
-  print_remote_int_param(v, "Output Type", stp_get_output_type(v));
   print_remote_int_param(v, "Left", stp_get_left(v));
   print_remote_int_param(v, "Top", stp_get_top(v));
   print_remote_int_param(v, "Page Width", stp_get_page_width(v));
   print_remote_int_param(v, "Page Height", stp_get_page_height(v));
-  print_remote_int_param(v, "Input Model", stp_get_input_color_model(v));
-  print_remote_int_param(v, "Output Model", stpi_get_output_color_model(v));
   print_remote_int_param(v, "Model", stpi_get_model_id(v));
   print_remote_int_param(v, "Ydpi", pd->res->vres);
   print_remote_int_param(v, "Xdpi", pd->res->hres);

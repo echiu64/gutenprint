@@ -43,14 +43,27 @@ main(int argc, char **argv)
     {
       stp_parameter_list_t params;
       int nparams;
+      stp_parameter_t desc;
       stp_const_printer_t printer = stp_get_printer_by_index(i);
       const char *driver = stp_printer_get_driver(printer);
       const char *family = stp_printer_get_family(printer);
       stp_vars_t pv = stp_vars_create_copy(stp_printer_get_defaults(printer));
       int tcount = 0;
       size_t count;
+      int printer_is_color = 0;
       if (strcmp(family, "ps") == 0 || strcmp(family, "raw") == 0)
 	continue;
+
+      stp_describe_parameter(pv, "PrintingMode", &desc);
+      if (stp_string_list_is_present(desc.bounds.str, "Color"))
+	printer_is_color = 1;
+      stp_parameter_description_free(&desc);
+      if (printer_is_color)
+	stp_set_string_parameter(pv, "PrintingMode", "Color");
+      else
+	stp_set_string_parameter(pv, "PrintingMode", "BW");
+      stp_set_string_parameter(pv, "ChannelBitDepth", "8");
+
       printf("# Printer model %s, long name `%s'\n", driver,
 	     stp_printer_get_long_name(printer));
 
@@ -60,7 +73,6 @@ main(int argc, char **argv)
       for (k = 0; k < nparams; k++)
 	{
 	  const stp_parameter_t *p = stp_parameter_list_param(params, k);
-	  stp_parameter_t desc;
 	  if (p->p_level > STP_PARAMETER_LEVEL_ADVANCED4 ||
 	      (p->p_class != STP_PARAMETER_CLASS_OUTPUT &&
 	       p->p_class != STP_PARAMETER_CLASS_FEATURE))
@@ -156,7 +168,7 @@ main(int argc, char **argv)
       stp_parameter_list_free(params);
       if (tcount > 0)
 	{
-	  if (stp_get_output_type(pv) == OUTPUT_COLOR)
+	  if (printer_is_color)
 	    {
 	      printf("$defaults{'%s'}{'%s'} = '%s';\n",
 		     driver, "Color", "Color");

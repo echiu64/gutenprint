@@ -317,6 +317,7 @@ do
 	  : do nothing -- we still have an old unmodified configure.ac
 	else
 	  echo "Creating $dr/aclocal.m4 ..."
+	  rm -f aclocal.m4
 	  test -r aclocal.m4 || touch aclocal.m4
 	  # We've removed po/ChangeLog from the repository.  Version
 	  # 0.10.40 of gettext appends an entry to the ChangeLog every time

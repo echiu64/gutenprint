@@ -264,9 +264,9 @@ static const gint unit_count = sizeof(units) / sizeof(unit_t);
 
 static radio_group_t output_types[] =
   {
-    { N_("Color"), N_("Color output"), OUTPUT_COLOR, NULL },
+    { N_("Color"), N_("Color output"), "Color", NULL },
     { N_("Grayscale"),
-      N_("Print in shades of gray using black ink"), OUTPUT_GRAY, NULL }
+      N_("Print in shades of gray using black ink"), "BW", NULL }
   };
 
 static const gint output_type_count = (sizeof(output_types) /
@@ -374,7 +374,7 @@ set_default_curve_callback(GtkObject *button, gpointer xopt)
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail();
   return 1;
-}  
+}
 
 static int
 set_previous_curve_callback(GtkObject *button, gpointer xopt)
@@ -542,7 +542,7 @@ checkbox_callback(GtkObject *button, gpointer xopt)
     update_adjusted_thumbnail();
   preview_update();
   return 1;
-}  
+}
 
 static void
 stpui_create_boolean(option_t *opt,
@@ -636,7 +636,7 @@ build_page_size_combo(option_t *option)
 		      stp_get_string_parameter(pv->v, option->fast_desc->name),
 		      option->info.list.default_val, combo_callback,
 		      &(option->info.list.callback_id),
-		      check_page_size, option);    
+		      check_page_size, option);
 }
 
 static void
@@ -656,8 +656,7 @@ build_a_combo(option_t *option)
 	       ! stp_string_list_is_present(option->info.list.params, val))
 	stp_set_string_parameter(pv->v, option->fast_desc->name,
 				 option->info.list.default_val);
-      if (option->fast_desc->p_class == STP_PARAMETER_CLASS_PAGE_SIZE &&
-	  strcmp(option->fast_desc->name, "PageSize") == 0)
+      if (strcmp(option->fast_desc->name, "PageSize") == 0)
 	build_page_size_combo(option);
       else
 	plist_build_combo(option->info.list.combo, option->info.list.label,
@@ -667,8 +666,7 @@ build_a_combo(option_t *option)
 						   option->fast_desc->name),
 			  option->info.list.default_val, combo_callback,
 			  &(option->info.list.callback_id), NULL, option);
-      if (option->fast_desc->p_class == STP_PARAMETER_CLASS_PAGE_SIZE &&
-	  strcmp(option->fast_desc->name, "PageSize") == 0)
+      if (strcmp(option->fast_desc->name, "PageSize") == 0)
 	set_media_size
 	  (stp_get_string_parameter(pv->v, option->fast_desc->name));
     }
@@ -688,6 +686,7 @@ populate_options(stp_const_vars_t v)
 {
   stp_parameter_list_t params = stp_get_parameter_list(v);
   int i;
+  int idx;
   if (current_options)
     {
       for (i = 0; i < current_option_count; i++)
@@ -740,57 +739,66 @@ populate_options(stp_const_vars_t v)
   current_option_count = stp_parameter_list_count(params);
   current_options = malloc(sizeof(option_t) * current_option_count);
 
-  for (i = 0; i < current_option_count; i++)
+  for (idx = 0, i = 0; i < current_option_count; i++)
     {
       stp_parameter_t desc;
-      option_t *opt = &(current_options[i]);
-      opt->fast_desc = stp_parameter_list_param(params, i);
-      stp_describe_parameter(v, opt->fast_desc->name, &desc);
-      opt->checkbox = NULL;
-      opt->is_active = 0;
-      opt->is_enabled = 0;
-      switch (opt->fast_desc->p_type)
+      const stp_parameter_t *param = stp_parameter_list_param(params, i);
+      if (param->p_class == STP_PARAMETER_CLASS_OUTPUT ||
+	  param->p_class == STP_PARAMETER_CLASS_FEATURE ||
+	  (param->p_class == STP_PARAMETER_CLASS_CORE &&
+	   strcmp(param->name, "PageSize") == 0))
 	{
-	case STP_PARAMETER_TYPE_STRING_LIST:
-	  opt->info.list.callback_id = -1;
-	  opt->info.list.default_val = g_strdup(desc.deflt.str);
-	  if (desc.bounds.str)
-	    opt->info.list.params =
-	      stp_string_list_create_copy(desc.bounds.str);
-	  else
-	    opt->info.list.params = NULL;
-	  opt->info.list.combo = NULL;
-	  opt->info.list.label = NULL;
-	  opt->is_active = desc.is_active;
-	  break;
-	case STP_PARAMETER_TYPE_DOUBLE:
-	  opt->info.flt.adjustment = NULL;
-	  opt->info.flt.upper = desc.bounds.dbl.upper;
-	  opt->info.flt.lower = desc.bounds.dbl.lower;
-	  opt->info.flt.deflt = desc.deflt.dbl;
-	  opt->info.flt.scale = 1.0;
-	  opt->is_active = desc.is_active;
-	  break;
-	case STP_PARAMETER_TYPE_CURVE:
-	  opt->info.curve.label = NULL;
-	  opt->info.curve.button = NULL;
-	  opt->info.curve.dialog = NULL;
-	  opt->info.curve.gamma_curve = NULL;
-	  opt->info.curve.current = NULL;
-	  opt->info.curve.deflt = desc.deflt.curve;
-	  opt->info.curve.is_visible = FALSE;
-	  opt->is_active = desc.is_active;
-	  break;
-	case STP_PARAMETER_TYPE_BOOLEAN:
-	  opt->info.bool.checkbox = NULL;
-	  opt->info.bool.current = 0;
-	  opt->info.bool.deflt = desc.deflt.boolean;
-	  opt->is_active = desc.is_active;
-	default:
-	  break;
+	  option_t *opt = &(current_options[idx]);
+	  opt->fast_desc = stp_parameter_list_param(params, i);
+	  stp_describe_parameter(v, opt->fast_desc->name, &desc);
+	  opt->checkbox = NULL;
+	  opt->is_active = 0;
+	  opt->is_enabled = 0;
+	  switch (opt->fast_desc->p_type)
+	    {
+	    case STP_PARAMETER_TYPE_STRING_LIST:
+	      opt->info.list.callback_id = -1;
+	      opt->info.list.default_val = g_strdup(desc.deflt.str);
+	      if (desc.bounds.str)
+		opt->info.list.params =
+		  stp_string_list_create_copy(desc.bounds.str);
+	      else
+		opt->info.list.params = NULL;
+	      opt->info.list.combo = NULL;
+	      opt->info.list.label = NULL;
+	      opt->is_active = desc.is_active;
+	      break;
+	    case STP_PARAMETER_TYPE_DOUBLE:
+	      opt->info.flt.adjustment = NULL;
+	      opt->info.flt.upper = desc.bounds.dbl.upper;
+	      opt->info.flt.lower = desc.bounds.dbl.lower;
+	      opt->info.flt.deflt = desc.deflt.dbl;
+	      opt->info.flt.scale = 1.0;
+	      opt->is_active = desc.is_active;
+	      break;
+	    case STP_PARAMETER_TYPE_CURVE:
+	      opt->info.curve.label = NULL;
+	      opt->info.curve.button = NULL;
+	      opt->info.curve.dialog = NULL;
+	      opt->info.curve.gamma_curve = NULL;
+	      opt->info.curve.current = NULL;
+	      opt->info.curve.deflt = desc.deflt.curve;
+	      opt->info.curve.is_visible = FALSE;
+	      opt->is_active = desc.is_active;
+	      break;
+	    case STP_PARAMETER_TYPE_BOOLEAN:
+	      opt->info.bool.checkbox = NULL;
+	      opt->info.bool.current = 0;
+	      opt->info.bool.deflt = desc.deflt.boolean;
+	      opt->is_active = desc.is_active;
+	    default:
+	      break;
+	    }
+	  idx++;
+	  stp_parameter_description_free(&desc);
 	}
-      stp_parameter_description_free(&desc);
     }
+  current_option_count = idx;
   stp_parameter_list_free(params);
 }
 
@@ -807,13 +815,19 @@ populate_option_table(GtkWidget *table, int p_class)
 	vpos[i][j] = 0;
 	counts[i][j] = 0;
       }
-	
+
 
   /* First scan the options to figure out where to start */
   for (i = 0; i < current_option_count; i++)
     {
       const stp_parameter_t *desc = current_options[i].fast_desc;
-      if (desc->p_class == p_class)
+      /*
+       * Specialize the core parameters (page size is the only one we want)
+       * Yuck.
+       */
+      if (desc->p_class == p_class &&
+	  (desc->p_class != STP_PARAMETER_CLASS_CORE ||
+	   strcmp(desc->name, "PageSize") == 0))
 	{
 	  switch (desc->p_type)
 	    {
@@ -856,7 +870,9 @@ populate_option_table(GtkWidget *table, int p_class)
       option_t *opt = &(current_options[i]);
       stp_const_curve_t xcurve;
       const stp_parameter_t *desc = opt->fast_desc;
-      if (desc->p_class == p_class)
+      if (desc->p_class == p_class &&
+	  (desc->p_class != STP_PARAMETER_CLASS_CORE ||
+	   strcmp(desc->name, "PageSize") == 0))
 	{
 	  switch (desc->p_type)
 	    {
@@ -1431,7 +1447,7 @@ create_printer_dialog (void)
       gtk_clist_set_row_data_full(GTK_CLIST(manufacturer_clist), i, xname,
 				  g_free);
     }
-  stp_string_list_free(manufacturer_list);	  
+  stp_string_list_free(manufacturer_list);
   gtk_clist_sort(GTK_CLIST(manufacturer_clist));
   build_printer_driver_clist();
 
@@ -2541,8 +2557,7 @@ do_color_updates (void)
 		set_curve_active(opt, FALSE, TRUE);
 	      break;
 	    case STP_PARAMETER_TYPE_STRING_LIST:
-	      if (opt->fast_desc->p_class == STP_PARAMETER_CLASS_PAGE_SIZE &&
-		  strcmp(opt->fast_desc->name, "PageSize") == 0)
+	      if (strcmp(opt->fast_desc->name, "PageSize") == 0)
 		build_page_size_combo(opt);
 	      else if (stp_check_string_parameter(pv->v, opt->fast_desc->name,
 						  STP_PARAMETER_INACTIVE))
@@ -2588,7 +2603,7 @@ update_options(void)
   gtk_widget_hide(printer_features_table);
   gtk_widget_hide(color_adjustment_table);
   populate_options(pv->v);
-  populate_option_table(page_size_table, STP_PARAMETER_CLASS_PAGE_SIZE);
+  populate_option_table(page_size_table, STP_PARAMETER_CLASS_CORE);
   populate_option_table(printer_features_table, STP_PARAMETER_CLASS_FEATURE);
   populate_option_table(color_adjustment_table, STP_PARAMETER_CLASS_OUTPUT);
   gtk_widget_show(page_size_table);
@@ -2635,7 +2650,9 @@ do_all_updates(void)
 
   for (i = 0; i < output_type_count; i++)
     {
-      if (output_types[i].value == stp_get_output_type(pv->v))
+      if (stp_get_string_parameter(pv->v, "PrintingMode") &&
+	  strcmp(output_types[i].value,
+		 stp_get_string_parameter(pv->v, "PrintingMode")) == 0)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_types[i].button),
 				     TRUE);
     }
@@ -2697,6 +2714,7 @@ plist_callback (GtkWidget *widget,
 		gpointer   data)
 {
   gint         i;
+  stp_parameter_t desc;
 
   suppress_preview_update++;
   invalidate_frame ();
@@ -2726,22 +2744,37 @@ plist_callback (GtkWidget *widget,
   manufacturer = stp_printer_get_manufacturer(stp_get_printer(pv->v));
   build_printer_driver_clist();
 
-  if (strcmp(stp_get_driver(pv->v), ""))
+  if (strcmp(stp_get_driver(pv->v), "") != 0)
     tmp_printer = stp_get_printer(pv->v);
 
-  if (stp_get_output_type (stp_printer_get_defaults(tmp_printer)) ==
-      OUTPUT_COLOR)
+  stp_describe_parameter(pv->v, "PrintingMode", &desc);
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
     {
-      gtk_widget_set_sensitive (output_types[0].button, TRUE);
+      if (!stp_string_list_is_present(desc.bounds.str, "Color"))
+	{
+	  gtk_widget_set_sensitive (output_types[1].button, TRUE);
+	  if (gtk_toggle_button_get_active
+	      (GTK_TOGGLE_BUTTON (output_types[0].button)) == TRUE)
+	    gtk_toggle_button_set_active
+	      (GTK_TOGGLE_BUTTON (output_types[1].button), TRUE);
+	  gtk_widget_set_sensitive (output_types[0].button, FALSE);
+	}
+      else if (!stp_string_list_is_present(desc.bounds.str, "BW"))
+	{
+	  gtk_widget_set_sensitive (output_types[0].button, TRUE);
+	  if (gtk_toggle_button_get_active
+	      (GTK_TOGGLE_BUTTON (output_types[1].button)) == TRUE)
+	    gtk_toggle_button_set_active
+	      (GTK_TOGGLE_BUTTON (output_types[0].button), TRUE);
+	  gtk_widget_set_sensitive (output_types[1].button, FALSE);
+	}
+      else
+	{
+	  gtk_widget_set_sensitive (output_types[0].button, TRUE);
+	  gtk_widget_set_sensitive (output_types[1].button, TRUE);
+	}
     }
-  else
-    {
-      if (gtk_toggle_button_get_active
-	  (GTK_TOGGLE_BUTTON (output_types[0].button)) == TRUE)
-	gtk_toggle_button_set_active
-	  (GTK_TOGGLE_BUTTON (output_types[1].button), TRUE);
-      gtk_widget_set_sensitive (output_types[0].button, FALSE);
-    }
+  stp_parameter_description_free(&desc);
   do_all_updates();
 
   setup_update ();
@@ -2845,7 +2878,7 @@ set_media_size(const gchar *new_media_size)
 		}
 	    }
 	}
-	  
+
       if (pap->width == 0)
 	{
 	  int max_w, max_h, min_w, min_h;
@@ -2942,8 +2975,7 @@ combo_callback(GtkWidget *widget, gpointer data)
       invalidate_frame();
       invalidate_preview_thumbnail();
       stp_set_string_parameter(pv->v, option->fast_desc->name, new_value);
-      if (option->fast_desc->p_class == STP_PARAMETER_CLASS_PAGE_SIZE &&
-	  strcmp(option->fast_desc->name, "PageSize") == 0)
+      if (strcmp(option->fast_desc->name, "PageSize") == 0)
 	set_media_size(new_value);
       g_idle_add(refresh_all_options, (gpointer) &refresh_all_options);
       if (option->fast_desc->p_class == STP_PARAMETER_CLASS_OUTPUT)
@@ -2980,11 +3012,11 @@ output_type_callback (GtkWidget *widget,
 
   if (GTK_TOGGLE_BUTTON (widget)->active)
     {
-      if ((gint) data == OUTPUT_GRAY)
+      if (strcmp((const char *) data, "BW") == 0)
 	gtk_widget_hide(output_color_vbox);
       else
 	gtk_widget_show(output_color_vbox);
-      stp_set_output_type (pv->v, (gint) data);
+      stp_set_string_parameter(pv->v, "PrintingMode", (const char *) data);
       invalidate_preview_thumbnail ();
       update_adjusted_thumbnail ();
       set_options_active(NULL);
@@ -3283,11 +3315,11 @@ static void
 pop_ppd_box(void)
 {
   stp_const_vars_t v = stp_printer_get_defaults(tmp_printer);
-  if (stp_parameter_find_in_settings(v, "PPDFile")) 
+  if (stp_parameter_find_in_settings(v, "PPDFile"))
     {
       gtk_widget_show (ppd_label);
       gtk_widget_show (ppd_box);
-    } 
+    }
   else
     {
       gtk_widget_hide (ppd_label);
@@ -3315,7 +3347,7 @@ build_printer_driver_clist(void)
 	   * example, try listing olympus_LTX_stpi_module_data after
 	   * raw_LTX_stpi_module_data.
 	   */
-	  
+
 	  gtk_clist_insert (GTK_CLIST (printer_driver), current_idx, &tmp);
 	  gtk_clist_set_row_data (GTK_CLIST (printer_driver), current_idx,
 				  (gpointer) i);
@@ -3324,7 +3356,7 @@ build_printer_driver_clist(void)
 	}
     }
 }
-  
+
 static void
 manufacturer_callback(GtkWidget      *widget, /* I - Driver list */
 		      gint            row,
@@ -3342,7 +3374,7 @@ manufacturer_callback(GtkWidget      *widget, /* I - Driver list */
   build_printer_driver_clist();
   setup_update();
   calling_manufacturer_callback--;
-}  
+}
 
 /*
  *  print_driver_callback() - Update the current printer driver.
@@ -3500,7 +3532,7 @@ redraw_color_swatch (void)
 	  cmap = gtk_widget_get_colormap (GTK_WIDGET(swatch));
 	}
 
-      if (stp_get_output_type(pv->v) == OUTPUT_GRAY)
+      if (strcmp(stp_get_string_parameter(pv->v, "PrintingMode"), "BW") == 0)
 	gdk_draw_gray_image(swatch->widget.window, gc, 0, 0,
 			    thumbnail_w, thumbnail_h, GDK_RGB_DITHER_NORMAL,
 			    adjusted_thumbnail_data, thumbnail_w);
@@ -3619,9 +3651,7 @@ compute_thumbnail(stp_const_vars_t v)
   stp_set_outdata(nv, &priv);
   stp_set_errfunc(nv, stpui_get_errfunc());
   stp_set_errdata(nv, stpui_get_errdata());
-  if (stp_get_output_type(nv) == OUTPUT_COLOR)
-    stp_set_output_type(nv, OUTPUT_RAW_CMYK);
-  if (stp_get_output_type(nv) == OUTPUT_GRAY)
+  if (strcmp(stp_get_string_parameter(nv, "PrintingMode"), "BW") == 0)
     {
       priv.bpp = 1;
       stp_set_string_parameter(nv, "InkType", "RGBGray");
@@ -3647,14 +3677,18 @@ compute_thumbnail(stp_const_vars_t v)
     }
   stp_vars_free(nv);
   return answer;
-}  
+}
 
 static void
 set_thumbnail_orientation(void)
 {
   gint           x, y;
   gint preview_limit = (thumbnail_h * thumbnail_w) - 1;
-  gint bpp = stp_get_output_type(pv->v) == OUTPUT_GRAY ? 1 : 3;
+  gint bpp;
+  if (strcmp(stp_get_string_parameter(pv->v, "PrintingMode"), "BW") == 0)
+    bpp = 1;
+  else
+    bpp = 3;
   switch (physical_orientation)
     {
     case ORIENT_PORTRAIT:
@@ -3683,7 +3717,7 @@ set_thumbnail_orientation(void)
 		  bpp * ((thumbnail_h - y - 1) * thumbnail_w + x)), bpp);
       break;
     }
-}  
+}
 
 static void
 update_adjusted_thumbnail (void)
@@ -3723,7 +3757,9 @@ create_valid_preview(guchar **preview_data)
 {
   if (adjusted_thumbnail_data)
     {
-      gint bpp = stp_get_output_type(pv->v) == OUTPUT_GRAY ? 1 : 3;
+      gint bpp =
+	(strcmp(stp_get_string_parameter(pv->v, "PrintingMode"), "BW") == 0) ?
+	1 : 3;
       gint v_denominator = preview_h > 1 ? preview_h - 1 : 1;
       gint v_numerator = (preview_thumbnail_h - 1) % v_denominator;
       gint v_whole = (preview_thumbnail_h - 1) / v_denominator;
@@ -3948,7 +3984,7 @@ do_preview_thumbnail (void)
   if (!preview_valid)
     gdk_draw_rectangle (preview->widget.window, gc, 1,
 			preview_x, preview_y, preview_w, preview_h);
-  else if (stp_get_output_type(pv->v) == OUTPUT_GRAY)
+  else if (strcmp(stp_get_string_parameter(pv->v, "PrintingMode"), "BW") == 0)
     gdk_draw_gray_image (preview->widget.window, gc,
 			 preview_x, preview_y, preview_w, preview_h,
 			 GDK_RGB_DITHER_NORMAL, preview_data, preview_w);
@@ -3967,7 +4003,7 @@ do_preview_thumbnail (void)
     gdk_draw_rectangle (preview->widget.window, gc, 0,
 			paper_display_left, paper_display_top,
 			paper_display_width, paper_display_height);
-    
+
 
   /* draw orientation arrow pointing to top-of-paper */
   draw_arrow (preview->widget.window, gcinv, paper_display_left,
@@ -4362,7 +4398,7 @@ set_controls_active (GtkObject *checkbutton, gpointer xopt)
 	default:
 	  break;
 	}
-    }   
+    }
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail();
 }

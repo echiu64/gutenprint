@@ -66,7 +66,7 @@ static const stp_parameter_t the_parameters[] =
   {
     "PageSize", N_("Page Size"), N_("Basic Printer Setup"),
     N_("Size of the paper being printed to"),
-    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
@@ -97,6 +97,12 @@ static const stp_parameter_t the_parameters[] =
     "PPDFile", N_("PPDFile"), N_("Basic Printer Setup"),
     N_("PPD File"),
     STP_PARAMETER_TYPE_FILE, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
+  },
+  {
+    "PrintingMode", N_("Printing Mode"), N_("Core Parameter"),
+    N_("Printing Output Mode"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
 };
@@ -154,6 +160,18 @@ ps_parameters_internal(stp_const_vars_t v, const char *name,
 	stpi_fill_parameter_settings(description, &(the_parameters[i]));
 	break;
       }
+
+  if (strcmp(name, "PrintingMode") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+      stp_string_list_add_string
+	(description->bounds.str, "Color", _("Color"));
+      stp_string_list_add_string
+	(description->bounds.str, "BW", _("Black and White"));
+      description->deflt.str =
+	stp_string_list_param(description->bounds.str, 0)->name;
+      return;
+    }
 
   if (ps_ppd == NULL)
     {
@@ -344,6 +362,16 @@ ps_describe_resolution(stp_const_vars_t v, int *x, int *y)
   setlocale(LC_ALL, "");
 }
 
+static const char *
+ps_describe_output(stp_const_vars_t v)
+{
+  const char *print_mode = stp_get_string_parameter(v, "PrintingMode");
+  if (print_mode && strcmp(print_mode, "Color") == 0)
+    return "RGB";
+  else
+    return "Whitescale";
+}
+
 /*
  * 'ps_print()' - Print an image to a PostScript printer.
  */
@@ -358,7 +386,7 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
   const char	*media_size = stp_get_string_parameter(v, "PageSize");
   const char	*media_type = stp_get_string_parameter(v, "MediaType");
   const char	*media_source = stp_get_string_parameter(v, "InputSlot");
-  int 		output_type = stp_get_output_type(v);
+  const char    *print_mode = stp_get_string_parameter(v, "PrintingMode");
   unsigned short *out = NULL;
   int		top = stp_get_top(v);
   int		left = stp_get_left(v);
@@ -388,8 +416,7 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
     int		order;
   }		commands[4];
   int           image_height,
-                image_width,
-                image_bpp;
+		image_width;
   stp_vars_t	nv = stp_vars_create_copy(v);
   if (!resolution)
     resolution = "";
@@ -407,12 +434,7 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
       return 0;
     }
 
- /*
-  * Setup a read-only pixel region for the entire image...
-  */
-
   stpi_image_init(image);
-  image_bpp = stpi_image_bpp(image);
 
  /*
   * Compute the output size...
@@ -429,12 +451,6 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
 
   image_height = stpi_image_height(image);
   image_width = stpi_image_width(image);
-
- /*
-  * Let the user know what we're doing...
-  */
-
-  stpi_image_progress_init(image);
 
  /*
   * Output a standard PostScript header with DSC comments...
@@ -590,11 +606,14 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
 
   stpi_channel_reset(nv);
   stpi_channel_add(nv, 0, 0, 1.0);
-  if (output_type == OUTPUT_COLOR)
+  if (strcmp(print_mode, "Color") == 0)
     {
       stpi_channel_add(nv, 1, 0, 1.0);
       stpi_channel_add(nv, 2, 0, 1.0);
+      stp_set_string_parameter(nv, "STPIOutputType", "RGB");
     }
+  else
+    stp_set_string_parameter(nv, "STPIOutputType", "Whitescale");
 
   out_channels = stpi_color_init(nv, image, 256);
 
@@ -606,16 +625,13 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
 
     stpi_puts("[ 1 0 0 -1 0 1 ]\n", v);
 
-    if (output_type == OUTPUT_GRAY)
-      stpi_puts("{currentfile picture readhexstring pop} image\n", v);
-    else
+    if (strcmp(print_mode, "Color") == 0)
       stpi_puts("{currentfile picture readhexstring pop} false 3 colorimage\n", v);
+    else
+      stpi_puts("{currentfile picture readhexstring pop} image\n", v);
 
     for (y = 0; y < image_height; y ++)
     {
-      if ((y & 15) == 0)
-	stpi_image_note_progress(image, y, image_height);
-
       if (stpi_color_get_row(nv, image, y, &zero_mask))
 	{
 	  status = 2;
@@ -628,10 +644,10 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
   }
   else
   {
-    if (output_type == OUTPUT_GRAY)
-      stpi_puts("/DeviceGray setcolorspace\n", v);
-    else
+    if (strcmp(print_mode, "Color") == 0)
       stpi_puts("/DeviceRGB setcolorspace\n", v);
+    else
+      stpi_puts("/DeviceGray setcolorspace\n", v);
 
     stpi_puts("<<\n", v);
     stpi_puts("\t/ImageType 1\n", v);
@@ -640,10 +656,10 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
     stpi_zprintf(v, "\t/Height %d\n", image_height);
     stpi_puts("\t/BitsPerComponent 8\n", v);
 
-    if (output_type == OUTPUT_GRAY)
-      stpi_puts("\t/Decode [ 0 1 ]\n", v);
-    else
+    if (strcmp(print_mode, "Color") == 0)
       stpi_puts("\t/Decode [ 0 1 0 1 0 1 ]\n", v);
+    else
+      stpi_puts("\t/Decode [ 0 1 ]\n", v);
 
     stpi_puts("\t/DataSource currentfile /ASCII85Decode filter\n", v);
 
@@ -657,9 +673,6 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
 
     for (y = 0, out_offset = 0; y < image_height; y ++)
     {
-      if ((y & 15) == 0)
-	stpi_image_note_progress(image, y, image_height);
-
       /* FIXME!!! */
       if (stpi_color_get_row(nv, image, y /*, out + out_offset */ , &zero_mask))
 	{
@@ -685,10 +698,7 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
         memcpy(out, out + out_ps_height - out_offset, out_offset);
     }
   }
-  stpi_image_progress_conclude(image);
-
-  if (out)
-    stpi_free(out);
+  stpi_image_conclude(image);
 
   stpi_puts("grestore\n", v);
   stpi_puts("showpage\n", v);
@@ -926,6 +936,7 @@ static const stpi_printfuncs_t print_ps_printfuncs =
   ps_limit,
   ps_print,
   ps_describe_resolution,
+  ps_describe_output,
   stpi_verify_printer_params,
   NULL,
   NULL

@@ -59,7 +59,7 @@ static const char *zero = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
 
 typedef struct
 {
-  int color_model;
+  const char *output_type;
   int output_channels;
   const char *name;
 } ink_t;
@@ -160,7 +160,7 @@ static const olympus_cap_t* olympus_get_model_capabilities(int model);
 
 static const ink_t cmy_inks[] =
 {
-  { COLOR_MODEL_CMY, 3, "CMY" },
+  { "CMY", 3, "CMY" },
 };
 
 static const ink_list_t cmy_ink_list =
@@ -170,7 +170,7 @@ static const ink_list_t cmy_ink_list =
 
 static const ink_t rgb_inks[] =
 {
-  { COLOR_MODEL_RGB, 3, "RGB" },
+  { "RGB", 3, "RGB" },
 };
 
 static const ink_list_t rgb_ink_list =
@@ -743,7 +743,7 @@ static const stp_parameter_t the_parameters[] =
   {
     "PageSize", N_("Page Size"), N_("Basic Printer Setup"),
     N_("Size of the paper being printed to"),
-    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
@@ -781,6 +781,12 @@ static const stp_parameter_t the_parameters[] =
     N_("Print without borders"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 0, -1, 1
+  },
+  {
+    "PrintingMode", N_("Printing Mode"), N_("Core Parameter"),
+    N_("Printing Output Mode"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
 };
 
@@ -1010,6 +1016,14 @@ olympus_parameters(stp_const_vars_t v, const char *name,
       if (olympus_feature(caps, OLYMPUS_FEATURE_BORDERLESS)) 
         description->is_active = 1;
     }
+  else if (strcmp(name, "PrintingMode") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+      stp_string_list_add_string
+	(description->bounds.str, "Color", _("Color"));
+      description->deflt.str =
+	stp_string_list_param(description->bounds.str, 0)->name;
+    }
   else
     description->is_active = 0;
 }
@@ -1097,6 +1111,12 @@ olympus_describe_resolution(stp_const_vars_t v, int *x, int *y)
   return;
 }
 
+static const char *
+olympus_describe_output(stp_const_vars_t v)
+{
+  return "CMY";
+}
+
 /*
  * olympus_print()
  */
@@ -1105,7 +1125,6 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 {
   int i, j;
   int y, min_y, max_y;			/* Looping vars */
-  int max_progress, curr_progress = 0;	/* Progress info */
   int min_x, max_x;
   int out_channels, out_bytes;
   unsigned short *final_out = NULL;
@@ -1234,7 +1253,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   privdata.xsize = print_px_width;
   privdata.ysize = print_px_height;
 
-  stpi_set_output_color_model(v, COLOR_MODEL_CMY);
+  stp_set_string_parameter(v, "STPIOutputType", "CMY");
   
   if (caps->adj_cyan &&
         !stp_check_curve_parameter(v, "CyanCurve", STP_PARAMETER_ACTIVE))
@@ -1266,7 +1285,8 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
       for (i = 0; i < caps->inks->n_items; i++)
 	if (strcmp(ink_type, caps->inks->item[i].name) == 0)
 	  {
-	    stpi_set_output_color_model(v, caps->inks->item[i].color_model);
+	    stp_set_string_parameter(v, "STPIOutputType",
+				     caps->inks->item[i].output_type);
 	    ink_channels = caps->inks->item[i].output_channels;
 	    break;
 	  }
@@ -1281,7 +1301,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 #if 0
   if (out_channels != ink_channels && out_channels != 1 && ink_channels != 1)
     {
-      stpi_eprintf(v, _("Internal error!  Output channels or input channels must be 1\n"));
+      stpi_eprintf(v, "Internal error!  Output channels or input channels must be 1\n");
       return 0;
     }
 #endif
@@ -1291,8 +1311,6 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
     final_out = stpi_malloc(print_px_width * ink_channels * 2);
 
   stp_set_float_parameter(v, "Density", 1.0);
-
-  stpi_image_progress_init(image);
 
   if (ink_type && strcmp(ink_type, "RGB") == 0)
     {
@@ -1341,9 +1359,6 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
       max_x = out_px_right;
     }
       
-  max_progress = (caps->interlacing == OLYMPUS_INTERLACE_PLANE ?
-		  	(max_y - min_y) * ink_channels : max_y - min_y) / 63;
-
   r_errdiv  = image_px_height / out_px_height;
   r_errmod  = image_px_height % out_px_height; 
   c_errdiv = image_px_width / out_px_width;
@@ -1387,9 +1402,6 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
                 }
             }
         
-          if ((y & 63) == 0)
-            stpi_image_note_progress(image, curr_progress++, max_progress);
-  
           if (y < out_px_top || y >= out_px_bottom)
   	    stpi_zfwrite((char *) zeros, out_bytes, print_px_width, v);
           else
@@ -1523,7 +1535,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
       stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->printer_end\n");
       (*(caps->printer_end_func))(v);
     }
-  stpi_image_progress_conclude(image);
+  stpi_image_conclude(image);
   if (final_out)
     stpi_free(final_out);
   return status;
@@ -1549,6 +1561,7 @@ static const stpi_printfuncs_t print_olympus_printfuncs =
   olympus_limit,
   olympus_print,
   olympus_describe_resolution,
+  olympus_describe_output,
   stpi_verify_printer_params,
   NULL,
   NULL

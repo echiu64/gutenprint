@@ -127,7 +127,21 @@ Top: TOP tINT
 ;
 
 Output_Type: OUTPUT_TYPE tINT
-	{ stp_set_output_type(current_printer->v, $2); }
+	{
+	  switch ($2)
+	    {
+	    case 0:
+	      stp_set_string_parameter
+		(current_printer->v, "PrintingMode", "BW");
+	      break;
+	    case 1:
+	    case 2:
+	    default:
+	      stp_set_string_parameter
+		(current_printer->v, "PrintingMode", "Color");
+	      break;
+	    }
+	}
 ;
 
 Custom_Page_Width: CUSTOM_PAGE_WIDTH tINT

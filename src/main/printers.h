@@ -49,6 +49,7 @@ typedef struct
                  int *min_width, int *min_height);
   int   (*print)(stp_const_vars_t v, stp_image_t *image);
   void  (*describe_resolution)(stp_const_vars_t v, int *x, int *y);
+  const char *(*describe_output)(stp_const_vars_t v);
   int   (*verify)(stp_vars_t v);
   int   (*start_job)(stp_const_vars_t v, stp_image_t *image);
   int   (*end_job)(stp_const_vars_t v, stp_image_t *image);
@@ -66,6 +67,7 @@ extern int stpi_verify_printer_params(stp_vars_t);
 
 extern int stpi_family_register(stpi_list_t *family);
 extern int stpi_family_unregister(stpi_list_t *family);
+extern void stpi_initialize_printer_defaults(void);
 
 extern stp_parameter_list_t stpi_printer_list_parameters(stp_const_vars_t v);
 
@@ -73,6 +75,7 @@ extern void
 stpi_printer_describe_parameter(stp_const_vars_t v, const char *name,
 				stp_parameter_t *description);
 
+const char *stpi_describe_output(stp_const_vars_t v);
 
 #ifdef __cplusplus
   }

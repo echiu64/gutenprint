@@ -48,6 +48,9 @@ int		stpui_plist_current = 0,	/* Current system printer */
 stpui_plist_t	*stpui_plist;			/* System printers */
 int             stpui_show_all_paper_sizes = 0;
 static char *printrc_name = NULL;
+static char *image_type;
+static gint image_raw_channels = 0;
+static gint image_channel_depth = 8;
 
 #define SAFE_FREE(x)				\
 do						\
@@ -130,8 +133,27 @@ stpui_plist_get_name(const stpui_plist_t *p)
 }
 
 void
+stpui_set_image_type(const char *itype)
+{
+  image_type = g_strdup(itype);
+}
+
+void
+stpui_set_image_raw_channels(gint channels)
+{
+  image_raw_channels = channels;
+}
+
+void
+stpui_set_image_channel_depth(gint depth)
+{
+  image_channel_depth = depth;
+}
+
+void
 stpui_printer_initialize(stpui_plist_t *printer)
 {
+  char tmp[32];
   stpui_plist_set_output_to(printer, "");
   stpui_plist_set_name(printer, "");
   printer->active = 0;
@@ -140,6 +162,17 @@ stpui_printer_initialize(stpui_plist_t *printer)
   printer->auto_size_roll_feed_paper = 0;
   printer->unit = 0;
   printer->v = stp_vars_create();
+  stp_set_string_parameter(printer->v, "InputImageType", image_type);
+  if (image_raw_channels)
+    {
+      (void) sprintf(tmp, "%d", image_raw_channels);
+      stp_set_string_parameter(printer->v, "RawChannels", tmp);
+    }
+  if (image_channel_depth)
+    {
+      (void) sprintf(tmp, "%d", image_channel_depth);
+      stp_set_string_parameter(printer->v, "ChannelBitDepth", tmp);
+    }
   printer->invalid_mask = INVALID_TOP | INVALID_LEFT;
 }
 
@@ -482,7 +515,22 @@ stpui_printrc_load_v0(FILE *fp)
 
       if (!get_mandatory_file_param(key.v, "PPDFile", &lineptr))
 	continue;
-      GET_MANDATORY_INT_PARAM(output_type);
+      if ((commaptr = strchr(lineptr, ',')) != NULL)
+	{
+	  switch (atoi(lineptr))
+	    {
+	    case 1:
+	      stp_set_string_parameter(key.v, "PrintingMode", "Color");
+	      break;
+	    case 0:
+	    default:
+	      stp_set_string_parameter(key.v, "PrintingMode", "BW");
+	      break;
+	    }
+	}
+      else
+	continue;
+      
       if (!get_mandatory_string_param(key.v, "Resolution", &lineptr))
 	continue;
       if (!get_mandatory_string_param(key.v, "PageSize", &lineptr))
@@ -597,7 +645,18 @@ stpui_printrc_load_v1(FILE *fp)
       else if (strcasecmp("ppd-file", keyword) == 0)
 	stp_set_file_parameter(key.v, "PPDFile", value);
       else if (strcasecmp("output-type", keyword) == 0)
-	stp_set_output_type(key.v, atoi(value));
+	{
+	  switch (atoi(value))
+	    {
+	    case 1:
+	      stp_set_string_parameter(key.v, "PrintingMode", "Color");
+	      break;
+	    case 0:
+	    default:
+	      stp_set_string_parameter(key.v, "PrintingMode", "BW");
+	      break;
+	    }
+	}
       else if (strcasecmp("media-size", keyword) == 0)
 	stp_set_string_parameter(key.v, "PageSize", value);
       else if (strcasecmp("media-type", keyword) == 0)
@@ -814,7 +873,6 @@ stpui_printrc_save(void)
 	  fprintf(fp, "Top: %d\n", stp_get_top(p->v));
 	  fprintf(fp, "Custom_Page_Width: %d\n", stp_get_page_width(p->v));
 	  fprintf(fp, "Custom_Page_Height: %d\n", stp_get_page_height(p->v));
-	  fprintf(fp, "Output_Type: %d\n", stp_get_output_type(p->v));
 
 	  for (j = 0; j < count; j++)
 	    {
@@ -953,7 +1011,7 @@ stpui_get_system_printers(void)
   stpui_plist_set_name(&(stpui_plist[0]), _("File"));
   stpui_plist[0].active = 1;
   stp_set_driver(stpui_plist[0].v, "ps2");
-  stp_set_output_type(stpui_plist[0].v, OUTPUT_COLOR);
+  stp_set_string_parameter(stpui_plist[0].v, "PrintingMode", "Color");
 
  /*
   * Figure out what command to run...  We use lpstat if it is available over
@@ -1030,7 +1088,7 @@ stpui_get_system_printers(void)
                 fprintf(stderr, "Adding new printer from lpc: <%s>\n",
                   line);
 #endif
-		result = g_strdup_printf("lpr -P%s -l", line);
+		result = g_strdup_printf("lpr -l -P%s", line);
 		stpui_plist_set_output_to(&(stpui_plist[stpui_plist_count]), result);
 		free(result);
 		stp_set_driver(stpui_plist[stpui_plist_count].v, "ps2");
@@ -1061,7 +1119,7 @@ stpui_get_system_printers(void)
                 fprintf(stderr, "Adding new printer from lpc: <%s>\n",
                   name);
 #endif
-		result = g_strdup_printf("lp -s -d%s -oraw", name);
+		result = g_strdup_printf("lp -oraw -s -d%s", name);
 		stpui_plist_set_output_to(&(stpui_plist[stpui_plist_count]), result);
 		free(result);
 		stp_set_driver(stpui_plist[stpui_plist_count].v, "ps2");
@@ -1124,7 +1182,7 @@ stpui_errfunc(void *file, const char *buf, size_t bytes)
 }
 
 int
-stpui_print(const stpui_plist_t *printer, stp_image_t *image)
+stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
 {
   int		ppid = getpid (), /* PID of plugin */
 		opid,		/* PID of output process */
@@ -1300,11 +1358,20 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
 
   if (prn != NULL)
     {
+      char tmp[32];
       stpui_plist_t *np = allocate_stpui_plist_copy(printer);
       stp_const_vars_t current_vars =
 	stp_printer_get_defaults(stp_get_printer(np->v));
       int orientation;
       stp_merge_printvars(np->v, current_vars);
+      stp_set_string_parameter(np->v, "InputImageType", image_type);
+      if (image_raw_channels)
+	{
+	  sprintf(tmp, "%d", image_raw_channels);
+	  stp_set_string_parameter(np->v, "RawChannels", tmp);
+	}
+      sprintf(tmp, "%d", image_channel_depth);
+      stp_set_string_parameter(np->v, "ChannelBitDepth", tmp);
 
       /*
        * Set up the orientation
@@ -1339,7 +1406,7 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
       stp_set_errfunc(np->v, stpui_get_errfunc());
       stp_set_outdata(np->v, prn);
       stp_set_errdata(np->v, stpui_get_errdata());
-      if (stp_print(np->v, image) != 1)
+      if (stp_print(np->v, &(image->im)) != 1)
 	{
 	  stpui_plist_destroy(np);
 	  g_free(np);

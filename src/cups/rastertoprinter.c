@@ -32,14 +32,11 @@
  *   main()                    - Main entry and processing of driver.
  *   cups_writefunc()          - Write data to a file...
  *   cancel_job()              - Cancel the current job...
- *   Image_bpp()               - Return the bytes-per-pixel of an image.
  *   Image_get_appname()       - Get the application we are running.
  *   Image_get_row()           - Get one row of the image.
  *   Image_height()            - Return the height of an image.
  *   Image_init()              - Initialize an image.
- *   Image_note_progress()     - Notify the user of our progress.
- *   Image_progress_conclude() - Close the progress display.
- *   Image_progress_init()     - Initialize progress display.
+ *   Image_conclude()          - Close the progress display.
  *   Image_width()             - Return the width of an image.
  */
 
@@ -89,6 +86,7 @@ typedef struct
   int			top;
   int			width;
   int			height;
+  int			last_percent;
   cups_page_header_t	header;		/* Page header from file */
 } cups_image_t;
 
@@ -96,30 +94,23 @@ static void	cups_writefunc(void *file, const char *buf, size_t bytes);
 static void	cups_errfunc(void *file, const char *buf, size_t bytes);
 static void	cancel_job(int sig);
 static const char *Image_get_appname(stp_image_t *image);
-static void	 Image_progress_conclude(stp_image_t *image);
-static void	Image_note_progress(stp_image_t *image,
-				    double current, double total);
-static void	Image_progress_init(stp_image_t *image);
 static stp_image_status_t Image_get_row(stp_image_t *image,
 					unsigned char *data,
 					size_t byte_limit, int row);
 static int	Image_height(stp_image_t *image);
 static int	Image_width(stp_image_t *image);
-static int	Image_bpp(stp_image_t *image);
+static void	Image_conclude(stp_image_t *image);
 static void	Image_init(stp_image_t *image);
 
 static stp_image_t theImage =
 {
   Image_init,
   NULL,				/* reset */
-  Image_bpp,
   Image_width,
   Image_height,
   Image_get_row,
   Image_get_appname,
-  Image_progress_init,
-  Image_note_progress,
-  Image_progress_conclude,
+  Image_conclude,
   NULL
 };
 
@@ -203,12 +194,10 @@ print_debug_block(const stp_vars_t v, const cups_image_t *cups)
   fprintf(stderr, "DEBUG: Gimp-Print cupsRowFeed = %d\n", cups->header.cupsRowFeed);
   fprintf(stderr, "DEBUG: Gimp-Print cupsRowStep = %d\n", cups->header.cupsRowStep);
   fprintf(stderr, "DEBUG: Gimp-Print stp_get_driver(v) |%s|\n", stp_get_driver(v));
-  fprintf(stderr, "DEBUG: Gimp-Print stp_get_output_type(v) |%d|\n", stp_get_output_type(v));
   fprintf(stderr, "DEBUG: Gimp-Print stp_get_left(v) |%d|\n", stp_get_left(v));
   fprintf(stderr, "DEBUG: Gimp-Print stp_get_top(v) |%d|\n", stp_get_top(v));
   fprintf(stderr, "DEBUG: Gimp-Print stp_get_page_width(v) |%d|\n", stp_get_page_width(v));
   fprintf(stderr, "DEBUG: Gimp-Print stp_get_page_height(v) |%d|\n", stp_get_page_height(v));
-  fprintf(stderr, "DEBUG: Gimp-Print stp_get_input_color_model(v) |%d|\n", stp_get_input_color_model(v));
   params = stp_get_parameter_list(v);
   nparams = stp_parameter_list_count(params);
   for (i = 0; i < nparams; i++)
@@ -247,6 +236,18 @@ print_debug_block(const stp_vars_t v, const cups_image_t *cups)
   stp_parameter_list_free(params);
 }
 
+static int
+printer_supports_bw(stp_const_vars_t v)
+{
+  stp_parameter_t desc;
+  int status = 0;
+  stp_describe_parameter(v, "PrintingMode", &desc);
+  if (stp_string_list_is_present(desc.bounds.str, "BW"))
+    status = 1;
+  stp_parameter_description_free(&desc);
+  return status;
+}
+
 static stp_vars_t
 initialize_page(cups_image_t *cups, stp_const_vars_t default_settings)
 {
@@ -260,19 +261,36 @@ initialize_page(cups_image_t *cups, stp_const_vars_t default_settings)
   stp_set_outdata(v, stdout);
   stp_set_errdata(v, stderr);
 
+  stp_set_string_parameter(v, "ChannelBitDepth", "8");
   switch (cups->header.cupsColorSpace)
     {
     case CUPS_CSPACE_W :
-      stp_set_output_type(v, OUTPUT_GRAY);
+      /* Olympus photo printers don't support black & white ink! */
+      if (printer_supports_bw(v))
+	stp_set_string_parameter(v, "PrintingMode", "BW");
+      stp_set_string_parameter(v, "InputImageType", "Whitescale");
       break;
     case CUPS_CSPACE_K :
-      stp_set_output_type(v, OUTPUT_GRAY);
+      /* Olympus photo printers don't support black & white ink! */
+      if (printer_supports_bw(v))
+	stp_set_string_parameter(v, "PrintingMode", "BW");
+      stp_set_string_parameter(v, "InputImageType", "Grayscale");
       break;
     case CUPS_CSPACE_RGB :
-      stp_set_output_type(v, OUTPUT_COLOR);
+      stp_set_string_parameter(v, "PrintingMode", "Color");
+      stp_set_string_parameter(v, "InputImageType", "RGB");
+      break;
+    case CUPS_CSPACE_CMY :
+      stp_set_string_parameter(v, "PrintingMode", "Color");
+      stp_set_string_parameter(v, "InputImageType", "CMY");
       break;
     case CUPS_CSPACE_CMYK :
-      stp_set_output_type(v, OUTPUT_RAW_CMYK);
+      stp_set_string_parameter(v, "PrintingMode", "Color");
+      stp_set_string_parameter(v, "InputImageType", "CMYK");
+      break;
+    case CUPS_CSPACE_KCMY :
+      stp_set_string_parameter(v, "PrintingMode", "Color");
+      stp_set_string_parameter(v, "InputImageType", "KCMY");
       break;
     default :
       fprintf(stderr, "ERROR: Gimp-Print Bad colorspace %d!",
@@ -298,7 +316,7 @@ initialize_page(cups_image_t *cups, stp_const_vars_t default_settings)
   else
     fprintf(stderr, "ERROR: Gimp-Print Unable to get media size!\n");
 
-  stp_set_job_mode(v, STP_JOB_MODE_JOB);
+  stp_set_string_parameter(v, "JobMode", "Job");
   stp_get_media_size(v, &(cups->width), &(cups->height));
   stp_get_imageable_area(v, &(cups->left), &(cups->right),
 			 &(cups->bottom), &(cups->top));
@@ -638,7 +656,7 @@ main(int  argc,				/* I - Number of command-line arguments */
       v = initialize_page(&cups, default_settings);
       stp_set_page_number(v, cups.page);
       cups.row = 0;
-      fprintf(stderr, "DEBUG: Gimp-Print printing page %d\n", cups.page);
+      fprintf(stderr, "DEBUG: Gimp-Print printing page %d\n", cups.page + 1);
       fprintf(stderr, "PAGE: %d 1\n", cups.page + 1);
       print_debug_block(v, &cups);
       if (!stp_verify(v))
@@ -742,36 +760,6 @@ cancel_job(int sig)			/* I - Signal */
   Image_status = STP_IMAGE_STATUS_ABORT;
 }
 
-
-/*
- * 'Image_bpp()' - Return the bytes-per-pixel of an image.
- */
-
-static int				/* O - Bytes per pixel */
-Image_bpp(stp_image_t *image)		/* I - Image */
-{
-  cups_image_t	*cups;		/* CUPS image */
-
-  if ((cups = (cups_image_t *)(image->rep)) == NULL)
-    return (0);
-
- /*
-  * For now, we only support RGB and grayscale input from the
-  * raster filters.
-  */
-
-  switch (cups->header.cupsColorSpace)
-  {
-    default :
-        return (1);
-    case CUPS_CSPACE_RGB :
-        return (3);
-    case CUPS_CSPACE_CMYK :
-        return (4);
-  }
-}
-
-
 /*
  * 'Image_get_appname()' - Get the application we are running.
  */
@@ -817,7 +805,7 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
   stp_image_status_t tmp_image_status = Image_status;
   unsigned char *orig = data;           /* Temporary pointer */
   static int warned = 0;                /* Error warning printed? */
-
+  int new_percent;
 
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     {
@@ -883,6 +871,15 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
 	}
     }
 
+  new_percent = (int) (100.0 * cups->row / cups->header.cupsHeight);
+  if (new_percent > cups->last_percent)
+    {
+      fprintf(stderr, "INFO: Gimp-Print Printing page %d, %d%%\n",
+	      cups->page + 1, new_percent);
+      cups->last_percent = new_percent;
+    }
+
+  if (cups->row < cups->header.cupsHeight)
   if (tmp_image_status != STP_IMAGE_STATUS_OK)
     fprintf(stderr, "DEBUG: Gimp-Print image status %d\n", tmp_image_status);
       return tmp_image_status;
@@ -914,26 +911,14 @@ Image_height(stp_image_t *image)	/* I - Image */
 static void
 Image_init(stp_image_t *image)		/* I - Image */
 {
-  (void)image;
-}
-
-/*
- * 'Image_note_progress()' - Notify the user of our progress.
- */
-
-void
-Image_note_progress(stp_image_t *image,	/* I - Image */
-		    double current,	/* I - Current progress */
-		    double total)	/* I - Maximum progress */
-{
   cups_image_t	*cups;		/* CUPS image */
 
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return;
+  cups->last_percent = 0;
 
-  fprintf(stderr, "INFO: Gimp-Print Printing page %d, %.0f%%\n",
-          cups->page + 1, 100.0 * current / total);
-    /* cups->page + 1 because users expect 1-based counting */
+  fprintf(stderr, "INFO: Starting page %d...\n", cups->page + 1);
+  /* cups->page + 1 because users expect 1-based counting */
 }
 
 /*
@@ -941,7 +926,7 @@ Image_note_progress(stp_image_t *image,	/* I - Image */
  */
 
 static void
-Image_progress_conclude(stp_image_t *image)	/* I - Image */
+Image_conclude(stp_image_t *image)	/* I - Image */
 {
   cups_image_t	*cups;		/* CUPS image */
 
@@ -949,23 +934,7 @@ Image_progress_conclude(stp_image_t *image)	/* I - Image */
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return;
 
-  fprintf(stderr, "INFO: Gimp-Print Finished page %d...\n", cups->page);
-}
-
-/*
- * 'Image_progress_init()' - Initialize progress display.
- */
-
-static void
-Image_progress_init(stp_image_t *image)/* I - Image */
-{
-  cups_image_t	*cups;		/* CUPS image */
-
-
-  if ((cups = (cups_image_t *)(image->rep)) == NULL)
-    return;
-
-  fprintf(stderr, "INFO: Gimp-Print Starting page %d...\n", cups->page);
+  fprintf(stderr, "INFO: Gimp-Print Finished page %d...\n", cups->page + 1);
 }
 
 /*

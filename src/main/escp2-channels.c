@@ -403,7 +403,7 @@ DECLARE_CHANNEL_SET(standard_gloss_black);
 
 const escp2_inkname_t stpi_escp2_default_gloss_black_inkset =
 {
-  "Gray", N_("Grayscale Enhanced Gloss"), INKSET_CMYK,
+  "GrayG", N_("Grayscale Enhanced Gloss"), INKSET_CMYK,
   &standard_gloss_black_channel_set
 };
 
@@ -416,7 +416,7 @@ DECLARE_CHANNEL_SET(standard_photo_gloss_black);
 
 const escp2_inkname_t stpi_escp2_default_photo_gloss_black_inkset =
 {
-  "Gray", N_("Grayscale Enhanced Gloss"), INKSET_CMYK,
+  "GrayG", N_("Grayscale Enhanced Gloss"), INKSET_CMYK,
   &standard_photo_gloss_black_channel_set
 };
 
@@ -580,7 +580,7 @@ DECLARE_CHANNEL_SET(standard_gloss_cmy);
 
 static const escp2_inkname_t three_color_composite_gloss_inkset =
 {
-  "RGB", N_("Three Color Composite Enhanced Gloss"), INKSET_CMYK,
+  "RGBG", N_("Three Color Composite Enhanced Gloss"), INKSET_CMYK,
   &standard_gloss_cmy_channel_set
 };
 
@@ -632,7 +632,7 @@ DECLARE_CHANNEL_SET(gloss_cmyk);
 
 static const escp2_inkname_t four_color_gloss_inkset =
 {
-  "CMYK", N_("Four Color Standard Enhanced Gloss"), INKSET_CMYK,
+  "CMYKG", N_("Four Color Standard Enhanced Gloss"), INKSET_CMYK,
   &gloss_cmyk_channel_set
 };
 
@@ -647,7 +647,7 @@ DECLARE_CHANNEL_SET(photo_gloss_cmyk);
 
 static const escp2_inkname_t four_color_photo_gloss_inkset =
 {
-  "CMYK", N_("Four Color Standard Enhanced Gloss"), INKSET_CMYK,
+  "CMYKG", N_("Four Color Standard Enhanced Gloss"), INKSET_CMYK,
   &photo_gloss_cmyk_channel_set
 };
 
@@ -942,7 +942,7 @@ DECLARE_CHANNEL_SET(gloss_cmykrb);
 
 static const escp2_inkname_t gloss_cmykrb_inkset =
 {
-  "CMYKRB", N_("Six Color Photo Enhanced Gloss"), INKSET_CMYKRB,
+  "CMYKRBG", N_("Six Color Photo Enhanced Gloss"), INKSET_CMYKRB,
   &gloss_cmykrb_channel_set
 };
 
@@ -958,7 +958,7 @@ DECLARE_CHANNEL_SET(photo_gloss_cmykrb);
 
 static const escp2_inkname_t photo_gloss_cmykrb_inkset =
 {
-  "CMYKRB", N_("Six Color Photo Enhanced Gloss"), INKSET_CMYKRB,
+  "CMYKRBG", N_("Six Color Photo Enhanced Gloss"), INKSET_CMYKRB,
   &photo_gloss_cmykrb_channel_set
 };
 
@@ -1588,11 +1588,11 @@ DECLARE_INKLIST("ultramatte", ultra_matte7, photo7,
 
 static const escp2_inkname_t *const cmykrb_matte_ink_types[] =
 {
-  &gloss_cmykrb_inkset,
+/*  &gloss_cmykrb_inkset, */
   &standard_cmykrb_inkset,
-  &four_color_gloss_inkset,
+/*  &four_color_gloss_inkset, */
   &four_color_standard_inkset,
-  &three_color_composite_gloss_inkset,
+/*  &three_color_composite_gloss_inkset, */
   &three_color_composite_inkset,
   &one_color_extended_inkset,
   &one_color_extended_gloss_inkset,
@@ -1610,11 +1610,11 @@ DECLARE_INKLIST("cmykrbmatte", cmykrb_matte, cmykrb_matte,
 
 static const escp2_inkname_t *const cmykrb_photo_ink_types[] =
 {
-  &photo_gloss_cmykrb_inkset,
+/*  &photo_gloss_cmykrb_inkset, */
   &photo_cmykrb_inkset,
-  &four_color_photo_gloss_inkset,
+/*   &four_color_photo_gloss_inkset, */
   &four_color_photo_inkset,
-  &three_color_composite_gloss_inkset,
+/*   &three_color_composite_gloss_inkset, */
   &three_color_composite_inkset,
   &one_color_photo_extended_inkset,
   &one_color_photo_extended_gloss_inkset,

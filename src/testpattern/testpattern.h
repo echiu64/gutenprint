@@ -62,7 +62,6 @@ typedef struct
 #define YY_ALWAYS_INTERACTIVE 1
 
 extern stp_vars_t global_vars;
-extern int global_ink_depth;
 extern double global_levels[];
 extern double global_gammas[];
 extern double global_gamma;
@@ -75,11 +74,12 @@ extern double global_xleft;
 extern double global_hsize;
 extern double global_vsize;
 extern int global_noblackline;
-extern int global_image_type;
+extern const char *global_image_type;
 extern int global_color_model;
 extern int global_bit_depth;
-extern int global_use_raw_cmyk;
+extern int global_channel_depth;
 extern int global_did_something;
+extern int global_invert_data;
 
 
 extern char *c_strdup(const char *s);

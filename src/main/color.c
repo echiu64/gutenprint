@@ -199,7 +199,7 @@ stpi_color_init(stp_vars_t v,
 }
 
 int
-stpi_color_get_row(stp_const_vars_t v,
+stpi_color_get_row(stp_vars_t v,
 		   stp_image_t *image,
 		   int row,
 		   unsigned *zero_mask)

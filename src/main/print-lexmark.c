@@ -266,7 +266,7 @@ static const stp_parameter_t the_parameters[] =
   {
     "PageSize", N_("Page Size"), N_("Basic Printer Setup"),
     N_("Size of the paper being printed to"),
-    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
@@ -298,6 +298,12 @@ static const stp_parameter_t the_parameters[] =
     N_("Ink Channels"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0
+  },
+  {
+    "PrintingMode", N_("Printing Mode"), N_("Core Parameter"),
+    N_("Printing Output Mode"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
 };
 
@@ -459,7 +465,6 @@ typedef lexmark_res_t lexmark_res_t_array[LEXM_RES_COUNT];
 
 /* ink type parameters (substructure of lexmark_cap_t) */
 typedef struct {
-  unsigned int output_type; /* type of output */
   int ncolors;
   unsigned int used_colors; /* specifies the head colors to be used (e.g. COLOR_MODE_K */
   unsigned int pass_length; /* avaliable jets for one color */
@@ -473,7 +478,7 @@ typedef struct
 {
   const char *name;
   const char *text;
-  lexmark_inkparam_t ink_parameter[3];
+  lexmark_inkparam_t ink_parameter[2];
 } lexmark_inkname_t;
 
 
@@ -595,25 +600,20 @@ static const lexmark_inkname_t ink_types_z52[] =
    *                                                           h_direction_offset
    *                                                               head_offset */
   { "CMYK",     N_("Four Color Standard"),
-    {{ OUTPUT_GRAY,       1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },
-     { OUTPUT_COLOR,      4, COLOR_MODE_CMYK,   192/3,   0, 0, 10, head_offset_cmyk },
-     { OUTPUT_RAW_CMYK,   4, COLOR_MODE_CMYK,   192/3,   0, 0, 10, head_offset_cmyk }}},
+    {{ 1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },
+     { 4, COLOR_MODE_CMYK,   192/3,   0, 0, 10, head_offset_cmyk }}},
   { "RGB",      N_("Three Color Composite"),
-    {{ OUTPUT_GRAY,       1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },  /* we ignor CMY, use black */
-     { OUTPUT_COLOR,      4, COLOR_MODE_CMY,    192/3,   0, 0, 10, head_offset_cmy },
-     { OUTPUT_RAW_CMYK,   4, COLOR_MODE_CMY,    192/3,   0, 0, 10, head_offset_cmy }}},
+    {{ 1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },  /* we ignor CMY, use black */
+     { 4, COLOR_MODE_CMY,    192/3,   0, 0, 10, head_offset_cmy }}},
   { "PhotoCMYK", N_("Six Color Photo"),
-    {{ OUTPUT_COLOR,      6, COLOR_MODE_CcMcYK, 192/3,   0, 0, 10, head_offset_cCmMyk },
-     { OUTPUT_GRAY,       1, COLOR_MODE_K,      192/3,   0, 0, 10, head_offset_cCmMyk },
-     { OUTPUT_RAW_CMYK,   6, COLOR_MODE_CcMcYK, 192/3,   0, 0, 10, head_offset_cCmMyk }}},
+    {{ 1, COLOR_MODE_K,      192/3,   0, 0, 10, head_offset_cCmMyk },
+     { 6, COLOR_MODE_CcMcYK, 192/3,   0, 0, 10, head_offset_cCmMyk }}},
   { "PhotoCMY", N_("Five Color Photo Composite"),
-    {{ OUTPUT_COLOR,      5, COLOR_MODE_CcMcY,  192/3,   0, 0, 10, head_offset_cCmMyk },
-     { OUTPUT_GRAY,       1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cCmMyk }, /* we ignor CMY, use black */
-     { OUTPUT_RAW_CMYK,   5, COLOR_MODE_CcMcY,  192/3,   0, 0, 10, head_offset_cCmMyk }}},
+    {{ 1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cCmMyk },
+     { 5, COLOR_MODE_CcMcY,  192/3,   0, 0, 10, head_offset_cCmMyk }}}, /* we ignor CMY, use black */
   { "Gray",     N_("Black"),
-    {{ OUTPUT_GRAY,       1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },
-     { OUTPUT_COLOR,      1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },
-     { OUTPUT_RAW_CMYK,   1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk }}},
+    {{ 1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },
+     { 1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk }}},
   { NULL, NULL }
 };
 
@@ -670,21 +670,17 @@ static const lexmark_inkname_t ink_types_3200[] =
    *                                                           h_direction_offset
    *                                                               head_offset */
   { "CMYK",     N_("Four Color Standard"),
-    {{ OUTPUT_GRAY,       1, COLOR_MODE_K,        208,  20, 0, 12, head_offset_cmyk },
-     { OUTPUT_COLOR,      4, COLOR_MODE_CMYK,   192/3,   0, 0, 12, head_offset_cmyk },
-     { OUTPUT_RAW_CMYK,   4, COLOR_MODE_CMYK,   192/3,   0, 0, 12, head_offset_cmyk }}},
+    {{ 1, COLOR_MODE_K,        208,  20, 0, 12, head_offset_cmyk },
+     { 4, COLOR_MODE_CMYK,   192/3,   0, 0, 12, head_offset_cmyk }}},
   { "RGB",      N_("Three Color Composite"),
-    {{ OUTPUT_GRAY,       1, COLOR_MODE_K,        208,  20, 0, 12, head_offset_cmyk },  /* we ignor CMY, use black */
-     { OUTPUT_COLOR,      4, COLOR_MODE_CMY,    192/3,   0, 0, 12, head_offset_cmy },
-     { OUTPUT_RAW_CMYK,   4, COLOR_MODE_CMY,    192/3,   0, 0, 12, head_offset_cmy }}},
+    {{ 1, COLOR_MODE_K,        208,  20, 0, 12, head_offset_cmyk },  /* we ignor CMY, use black */
+     { 4, COLOR_MODE_CMY,    192/3,   0, 0, 12, head_offset_cmy }}},
   { "PhotoCMYK", N_("Six Color Photo"),
-    {{ OUTPUT_COLOR,      6, COLOR_MODE_CcMcYK, 192/3,   0, 0, 12, head_offset_cCmMyk },
-     { OUTPUT_GRAY,       1, COLOR_MODE_K,      192/3,   0, 0, 12, head_offset_cCmMyk },
-     { OUTPUT_RAW_CMYK,   6, COLOR_MODE_CcMcYK, 192/3,   0, 0, 12, head_offset_cCmMyk }}},
+    {{ 1, COLOR_MODE_K,      192/3,   0, 0, 12, head_offset_cCmMyk },
+     { 6, COLOR_MODE_CcMcYK, 192/3,   0, 0, 12, head_offset_cCmMyk }}},
   { "PhotoCMY", N_("Five Color Photo Composite"),
-    {{ OUTPUT_COLOR,      5, COLOR_MODE_CcMcY,  192/3,   0, 0, 12, head_offset_cCmMyk },
-     { OUTPUT_GRAY,       1, COLOR_MODE_K,        208,  20, 0, 12, head_offset_cCmMyk }, /* we ignor CMY, use black */
-     { OUTPUT_RAW_CMYK,   5, COLOR_MODE_CcMcY,  192/3,   0, 0, 12, head_offset_cCmMyk }}},
+    {{ 1, COLOR_MODE_K,        208,  20, 0, 12, head_offset_cCmMyk }, /* we ignor CMY, use black */
+     { 5, COLOR_MODE_CcMcY,  192/3,   0, 0, 12, head_offset_cCmMyk }}},
   { NULL, NULL }
 };
 
@@ -916,7 +912,7 @@ static const paper_t lexmark_paper_list[] =
 static const int paper_type_count = sizeof(lexmark_paper_list) / sizeof(paper_t);
 
 static const lexmark_inkname_t *
-lexmark_get_ink_type(const char *name, int output_type, const lexmark_cap_t * caps)
+lexmark_get_ink_type(const char *name, int printing_color, const lexmark_cap_t * caps)
 {
   int i = 0;
   const lexmark_inkname_t *ink_type = caps->ink_types;
@@ -929,17 +925,15 @@ lexmark_get_ink_type(const char *name, int output_type, const lexmark_cap_t * ca
 }
 
 static const lexmark_inkparam_t *
-lexmark_get_ink_parameter(const char *name, int output_type, const lexmark_cap_t * caps, stp_vars_t nv)
+lexmark_get_ink_parameter(const char *name, int printing_color, const lexmark_cap_t * caps, stp_const_vars_t nv)
 {
-  int i;
-  const lexmark_inkname_t *ink_type = lexmark_get_ink_type(name, output_type, caps);
+  const lexmark_inkname_t *ink_type = lexmark_get_ink_type(name, printing_color, caps);
 
   if (ink_type->name == NULL) {
     return (NULL); /* not found ! */
   }
 
-  for (i=0; (ink_type->ink_parameter[i].output_type != output_type); i++) ;
-    return &(ink_type->ink_parameter[i]);
+  return &(ink_type->ink_parameter[printing_color]);
 }
 
 
@@ -1120,7 +1114,6 @@ lexmark_describe_resolution(stp_const_vars_t v, int *x, int *y)
 }
 
 
-
 static stp_param_string_t media_sources[] =
 {
   { "Auto",		N_("Auto Sheet Feeder") },
@@ -1143,6 +1136,30 @@ lexmark_list_parameters(stp_const_vars_t v)
   for (i = 0; i < float_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(float_parameters[i].param));
   return ret;
+}
+
+static const char *
+lexmark_describe_output(stp_const_vars_t v)
+{
+  int printing_color = 0;
+  int model = stpi_get_model_id(v);
+  const lexmark_cap_t *caps = lexmark_get_model_capabilities(model);
+  const char *print_mode = stp_get_string_parameter(v, "PrintingMode");
+  const char *ink_type = stp_get_string_parameter(v, "InkType");
+  const lexmark_inkparam_t *ink_parameter;
+
+  if (strcmp(print_mode, "Color") == 0)
+    printing_color = 1;
+
+  ink_parameter = lexmark_get_ink_parameter(ink_type, printing_color, caps, v);
+
+  if (ink_parameter->used_colors == COLOR_MODE_K ||
+      caps->inks == LEXMARK_INK_K || !printing_color)
+    return "Grayscale";
+  else if (!(ink_parameter->used_colors & COLOR_MODE_K))
+    return "CMY";
+  else
+    return "CMYK";
 }
 
 static void
@@ -1260,6 +1277,16 @@ lexmark_parameters(stp_const_vars_t v, const char *name,
       description->bounds.integer.lower = -1;
       description->bounds.integer.upper = -1;
     }
+  else if (strcmp(name, "PrintingMode") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+      stp_string_list_add_string
+	(description->bounds.str, "Color", _("Color"));
+      stp_string_list_add_string
+	(description->bounds.str, "BW", _("Black and White"));
+      description->deflt.str =
+	stp_string_list_param(description->bounds.str, 0)->name;
+    }
 }
 
 /*
@@ -1335,7 +1362,7 @@ lexmark_limit(stp_const_vars_t v,  		/* I */
 
 static int
 lexmark_init_printer(stp_const_vars_t v, const lexmark_cap_t * caps,
-		     int output_type,
+		     int printing_color,
 		     const char *source_str,
 		     int xdpi, int ydpi,
 		     int page_width, int page_height,
@@ -1584,8 +1611,7 @@ lexmark_do_print(stp_vars_t v, stp_image_t *image)
     errlast;	/* Last raster line loaded */
   unsigned      zero_mask;
   int           image_height,
-                image_width,
-                image_bpp;
+                image_width;
   int           use_dmt = 0;
   int pass_length=0;              /* count of inkjets for one pass */
   int add_top_offset=0;              /* additional top offset */
@@ -1619,7 +1645,8 @@ lexmark_do_print(stp_vars_t v, stp_image_t *image)
   const char	*resolution   = stp_get_string_parameter(v, "Resolution");
   const char	*media_type   = stp_get_string_parameter(v, "MediaType");
   const char	*media_source = stp_get_string_parameter(v, "InputSlot");
-  int 		output_type   = stp_get_output_type(v);
+  const char    *print_mode = stp_get_string_parameter(v, "PrintingMode");
+  int printing_color = 0;
   const char	*ink_type     = stp_get_string_parameter(v, "InkType");
   int		top = stp_get_top(v);
   int		left = stp_get_left(v);
@@ -1628,7 +1655,7 @@ lexmark_do_print(stp_vars_t v, stp_image_t *image)
   const lexmark_res_t *res_para_ptr =
     lexmark_get_resolution_para(model, resolution);
   const paper_t *media = get_media_type(media_type,caps);
-  const lexmark_inkparam_t *ink_parameter = lexmark_get_ink_parameter(ink_type, output_type, caps, v);
+  const lexmark_inkparam_t *ink_parameter;
 
   stpi_prune_inactive_options(v);
 
@@ -1641,6 +1668,10 @@ lexmark_do_print(stp_vars_t v, stp_image_t *image)
       stpi_eprintf(v, "Print options not verified; cannot print.\n");
       return 0;
     }
+  if (strcmp(print_mode, "Color") == 0)
+    printing_color = 1;
+
+  ink_parameter = lexmark_get_ink_parameter(ink_type, printing_color, caps, v);
 
   if (ink_parameter == NULL)
     {
@@ -1648,14 +1679,7 @@ lexmark_do_print(stp_vars_t v, stp_image_t *image)
       return 0;
     }
 
-
-  /*
-  * Setup a read-only pixel region for the entire image...
-  */
-
   stpi_image_init(image);
-  image_bpp = stpi_image_bpp(image);
-
 
   source= lexmark_source_type(media_source,caps);
 
@@ -1666,10 +1690,9 @@ lexmark_do_print(stp_vars_t v, stp_image_t *image)
   if ((ink_parameter->used_colors == COLOR_MODE_K) ||
       (caps->inks == LEXMARK_INK_K))
     {
-      output_type = OUTPUT_GRAY;
-      stp_set_output_type(v, OUTPUT_GRAY);
+      printing_color = 0;
+      stp_set_string_parameter(v, "PrintingMode", "BW");
     }
-  stpi_set_output_color_model(v, COLOR_MODEL_CMY);
 
   /*
    * Choose the correct color conversion function...
@@ -1768,7 +1791,7 @@ densityDivisor /= 1.2;
   lxm3200_linetoeject = (page_true_height * 1200) / 72;
 
 
-  if (!lexmark_init_printer(v, caps, output_type,
+  if (!lexmark_init_printer(v, caps, printing_color,
 			    media_source,
 			    xdpi, ydpi, page_width, page_height,
 			    top,left,use_dmt))
@@ -1860,6 +1883,15 @@ densityDivisor /= 1.2;
     cols.p.M = stpi_zalloc(buf_length+10);
   }
 
+  if (cols.p.k)
+    {
+      if (cols.p.c)
+	stp_set_string_parameter(v, "STPIOutputType", "KCMY");
+      else
+	stp_set_string_parameter(v, "STPIOutputType", "Grayscale");
+    }
+  else
+    stp_set_string_parameter(v, "STPIOutputType", "CMY");
 
 #ifdef DEBUG
   stpi_erprintf("lexmark: driver will use colors ");
@@ -1916,18 +1948,15 @@ densityDivisor /= 1.2;
   stpi_erprintf("density is %f\n",stp_get_parameter(v, "Density"));
 #endif
 
-  if (output_type != OUTPUT_RAW_PRINTER && output_type != OUTPUT_RAW_CMYK)
-    {
 #ifdef DEBUG
-      stpi_erprintf("density is %f and will be changed to %f  (%f)\n",
-		   stp_get_float_parameter(v, "Density"),
-		   stp_get_float_parameter(v, "Density") / densityDivisor,
-		   densityDivisor);
+  stpi_erprintf("density is %f and will be changed to %f  (%f)\n",
+		stp_get_float_parameter(v, "Density"),
+		stp_get_float_parameter(v, "Density") / densityDivisor,
+		densityDivisor);
 #endif
 
-      /* Lexmark do not have differnet pixel sizes. We have to correct the density according the print resolution. */
-      stp_scale_float_parameter(v, "Density", 1.0 / densityDivisor);
-    }
+  /* Lexmark do not have differnet pixel sizes. We have to correct the density according the print resolution. */
+  stp_scale_float_parameter(v, "Density", 1.0 / densityDivisor);
 
 
   /*
@@ -1941,8 +1970,7 @@ densityDivisor /= 1.2;
 
   if (media)
     {
-      if (output_type != OUTPUT_RAW_PRINTER && output_type != OUTPUT_RAW_CMYK)
-	stp_scale_float_parameter(v, "Density", media->base_density);
+      stp_scale_float_parameter(v, "Density", media->base_density);
       stp_scale_float_parameter(v, "Cyan", media->p_cyan);
       stp_scale_float_parameter(v, "Magenta", media->p_magenta);
       stp_scale_float_parameter(v, "Yellow", media->p_yellow);
@@ -1951,8 +1979,7 @@ densityDivisor /= 1.2;
     }
   else
     {
-      if (output_type != OUTPUT_RAW_PRINTER && output_type != OUTPUT_RAW_CMYK)
-	stp_scale_float_parameter(v, "Density", .8);
+      stp_scale_float_parameter(v, "Density", .8);
       k_lower *= .1;
       k_upper = .5;
     }
@@ -2063,11 +2090,6 @@ densityDivisor /= 1.2;
       stp_set_curve_parameter(v, "SatMap", sat_adjustment);
       stp_curve_free(sat_adjustment);
     }
-  if (output_type == OUTPUT_COLOR && cols.p.k)
-    {
-      output_type = OUTPUT_RAW_CMYK;
-      stp_set_output_type(v, OUTPUT_RAW_CMYK);
-    }
 
   out_channels = stpi_color_init(v, image, 65536);
 
@@ -2103,13 +2125,9 @@ densityDivisor /= 1.2;
   privdata.xdpi = xdpi;
   privdata.physical_xdpi = physical_xdpi;
 
-  stpi_image_progress_init(image);
   for (y = 0; y < out_height; y ++)
     {
       int duplicate_line = 1;
-
-      if ((y & 63) == 0)
-	stpi_image_note_progress(image, y, out_height);
 
       if (errline != errlast)
 	{
@@ -2132,7 +2150,7 @@ densityDivisor /= 1.2;
 	  errline ++;
 	}
     }
-  stpi_image_progress_conclude(image);
+  stpi_image_conclude(image);
 
   stpi_flush_all(v);
 
@@ -2176,6 +2194,7 @@ static const stpi_printfuncs_t print_lexmark_printfuncs =
   lexmark_limit,
   lexmark_print,
   lexmark_describe_resolution,
+  lexmark_describe_output,
   stpi_verify_printer_params,
   NULL,
   NULL

@@ -49,6 +49,12 @@ static const stpi_image_type_t standard_image_types[] =
   { "LineArt",      N_("Line Art") },
 };
 
+static const stpi_job_mode_t standard_job_modes[] =
+{
+  { "Page",         N_("Page") },
+  { "Job",          N_("Job") },
+};
+
 static const stp_parameter_t the_parameters[] =
 {
   {
@@ -61,6 +67,12 @@ static const stp_parameter_t the_parameters[] =
     "ImageType", N_("Image Type"), N_("Basic Image Adjustment"),
     N_("Type of image being printed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_OUTPUT,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0
+  },
+  {
+    "JobMode", N_("Job Mode"), N_("Job Mode"),
+    N_("Job vs. page mode"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0
   },
 };
@@ -128,6 +140,36 @@ stpi_get_image_type_by_name(const char *image_type)
   return NULL;
 }
 
+int
+stpi_get_job_modes_count(void)
+{
+  return sizeof(standard_job_modes) / sizeof(stpi_job_mode_t);
+}
+
+const stpi_job_mode_t *
+stpi_get_job_mode_by_index(int idx)
+{
+  if (idx < 0 || idx >= stpi_get_job_modes_count())
+    return NULL;
+  else
+    return &(standard_job_modes[idx]);
+}
+
+const stpi_job_mode_t *
+stpi_get_job_mode_by_name(const char *job_mode)
+{
+  int i;
+  if (!job_mode)
+    return NULL;
+  for (i = 0; i < stpi_get_job_modes_count(); i++)
+    {
+      const stpi_job_mode_t *itype = stpi_get_job_mode_by_index(i);
+      if (strcmp(job_mode, itype->name) == 0)
+	return itype;
+    }
+  return NULL;
+}
+
 stp_parameter_list_t
 stpi_list_generic_parameters(stp_const_vars_t v)
 {
@@ -174,7 +216,7 @@ stpi_describe_generic_parameter(stp_const_vars_t v, const char *name,
       description->p_type = STP_PARAMETER_TYPE_INVALID;
 #endif
     }
-  if (strcmp(name, "ImageType") == 0)
+  else if (strcmp(name, "ImageType") == 0)
     {
       description->bounds.str = stp_string_list_create();
       stp_string_list_add_string(description->bounds.str, "None",
@@ -186,6 +228,17 @@ stpi_describe_generic_parameter(stp_const_vars_t v, const char *name,
 				     itype->text);
 	}
       description->deflt.str = "TextGraphics";
+    }
+  else if (strcmp(name, "JobMode") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+      for (i = 0; i < stpi_get_job_modes_count(); i++)
+	{
+	  const stpi_job_mode_t *itype = stpi_get_job_mode_by_index(i);
+	  stp_string_list_add_string(description->bounds.str, itype->name,
+				     itype->text);
+	}
+      description->deflt.str = "Page";
     }
 }
 

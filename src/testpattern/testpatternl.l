@@ -101,11 +101,12 @@ page_size		DBG(PAGESIZE); return PAGESIZE;
 ;			DBG(SEMI); return SEMI;
 mode			DBG(MODE); return MODE;
 cmyk			yylval.ival = CMYK;DBG(CMYK); return CMYK;
+kcmy			yylval.ival = CMYK;DBG(KCMY); return KCMY;
 rgb			yylval.ival = RGB;DBG(RGB); return RGB;
+cmy			yylval.ival = RGB;DBG(CMY); return CMY;
 grey			yylval.ival = GRAY;DBG(GRAY); return GRAY;
 gray			yylval.ival = GRAY;DBG(GRAY); return GRAY;
 white			yylval.ival = WHITE;DBG(WHITE); return WHITE;
-raw			yylval.ival = RAW;DBG(RAW); return RAW;
 message			DBG(MESSAGE); return MESSAGE;
 end			DBG(END); return END;
 

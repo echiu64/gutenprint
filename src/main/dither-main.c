@@ -161,7 +161,7 @@ do									\
 } while (0)
 
 static stpi_ditherfunc_t *
-stpi_set_dither_function(stp_vars_t v, int image_bpp)
+stpi_set_dither_function(stp_vars_t v)
 {
   const stpi_quality_t *quality = NULL;
   const char *image_type = stp_get_string_parameter(v, "ImageType");
@@ -333,7 +333,6 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
 		 int xdpi, int ydpi)
 {
   int in_width = stpi_image_width(image);
-  int image_bpp = stpi_image_bpp(image);
   stpi_dither_t *d = stpi_zalloc(sizeof(stpi_dither_t));
 
   stpi_allocate_component_data(v, "Dither", NULL, stpi_dither_free, d);
@@ -354,7 +353,7 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
       d->x_aspect = ydpi / xdpi;
       d->y_aspect = 1;
     }
-  d->ditherfunc = stpi_set_dither_function(v, image_bpp);
+  d->ditherfunc = stpi_set_dither_function(v);
   d->transition = 1.0;
   d->adaptive_limit = .75 * 65535;
 

@@ -363,8 +363,8 @@ for $drivertype (@drivertypes) {
 #    opendir TDIR, "$templatedir-$drivertype" or
 #	die "Cannot open templates directory: $!\n";
 
-    for $fooopt (keys(%ev_choices), @floatnumopts_list,
-		 @intnumopts_list, "PrintoutMode", "gimp-print") {
+    for $fooopt (sort (keys(%ev_choices), @floatnumopts_list,
+		 @intnumopts_list), "PrintoutMode", "gimp-print") {
 
 	# The "PrintoutMode" option is only supported by Foomatic 2.9.x or
 	# newer (preliminary skipped always, do not remove the 

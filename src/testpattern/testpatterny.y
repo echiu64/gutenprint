@@ -117,7 +117,9 @@ find_color(const char *name)
 %token SEMI
 %token CHANNEL
 %token CMYK
+%token KCMY
 %token RGB
+%token CMY
 %token GRAY
 %token WHITE
 %token RAW
@@ -134,30 +136,41 @@ COLOR: CYAN | L_CYAN | MAGENTA | L_MAGENTA
 	| YELLOW | D_YELLOW | BLACK | L_BLACK
 ;
 
-rawspec: /* empty */ | RAW
+cmykspec: CMYK tINT
 	{
-	  global_use_raw_cmyk = 1;
-	  global_image_type = OUTPUT_RAW_CMYK;
+	  global_image_type = "CMYK";
+	  global_channel_depth = 4;
+	  global_invert_data = 0;
+	  if ($2 == 8 || $2 == 16)
+	    global_bit_depth = $2;
 	}
 ;
 
-cmykspec: CMYK rawspec tINT
+kcmyspec: KCMY tINT
 	{
-	  if (global_use_raw_cmyk)
-	    global_image_type = OUTPUT_RAW_CMYK;
-	  else
-	    global_image_type = OUTPUT_COLOR;
-	  global_color_model = COLOR_MODEL_CMY;
-	  if ($3 == 8 || $3 == 16)
-	    global_bit_depth = $3;
+	  global_image_type = "KCMY";
+	  global_channel_depth = 4;
+	  global_invert_data = 0;
+	  if ($2 == 8 || $2 == 16)
+	    global_bit_depth = $2;
 	}
 ;
 
 rgbspec: RGB tINT
 	{
-	  global_image_type = OUTPUT_COLOR;
-	  global_color_model = COLOR_MODEL_RGB;
-	  global_ink_depth = 3;
+	  global_image_type = "RGB";
+	  global_channel_depth = 3;
+	  global_invert_data = 1;
+	  if ($2 == 8 || $2 == 16)
+	    global_bit_depth = $2;
+	}
+;
+
+cmyspec: CMY tINT
+	{
+	  global_image_type = "CMY";
+	  global_channel_depth = 3;
+	  global_invert_data = 0;
 	  if ($2 == 8 || $2 == 16)
 	    global_bit_depth = $2;
 	}
@@ -165,9 +178,9 @@ rgbspec: RGB tINT
 
 grayspec: GRAY tINT
 	{
-	  global_image_type = OUTPUT_GRAY;
-	  global_color_model = COLOR_MODEL_CMY;
-	  global_ink_depth = 1;
+	  global_image_type = "Grayscale";
+	  global_channel_depth = 1;
+	  global_invert_data = 0;
 	  if ($2 == 8 || $2 == 16)
 	    global_bit_depth = $2;
 	}
@@ -175,22 +188,25 @@ grayspec: GRAY tINT
 
 whitespec: WHITE tINT
 	{
-	  global_image_type = OUTPUT_GRAY;
-	  global_color_model = COLOR_MODEL_RGB;
-	  global_ink_depth = 1;
+	  global_image_type = "Whitescale";
+	  global_channel_depth = 1;
+	  global_invert_data = 1;
 	  if ($2 == 8 || $2 == 16)
 	    global_bit_depth = $2;
 	}
 ;
 
-extendedspec: EXTENDED tINT
+extendedspec: EXTENDED tINT tINT
 	{
-	  global_image_type = OUTPUT_RAW_PRINTER;
-	  global_ink_depth = $2;
+	  global_image_type = "Raw";
+	  global_invert_data = 0;
+	  global_channel_depth = $2;
+	  if ($2 == 8 || $2 == 16)
+	    global_bit_depth = $3;
 	}
 ;
 
-modespec: cmykspec | rgbspec | grayspec | whitespec | extendedspec
+modespec: cmykspec | kcmyspec | rgbspec | cmyspec | grayspec | whitespec | extendedspec
 ;
 
 inputspec: MODE modespec
@@ -355,7 +371,7 @@ pattern: PATTERN patvars color_blocks
 
 xpattern: XPATTERN color_blocks
 	{
-	  if (global_ink_depth == 0)
+	  if (global_channel_depth == 0)
 	    {
 	      fprintf(stderr, "xpattern may only be used with extended color depth\n");
 	      exit(1);

@@ -95,7 +95,7 @@ null_printer(void)
 {
   stpi_erprintf("Null stp_printer_t! Please report this bug.\n");
   stpi_abort();
-}  
+}
 
 static void
 bad_printer(void)
@@ -113,11 +113,18 @@ check_printer(const stpi_internal_printer_t *p)
     bad_printer();
 }
 
-static inline const stpi_internal_printer_t *
-get_printer(stp_const_printer_t printer)
+static inline stpi_internal_printer_t *
+get_printer(stp_printer_t printer)
 {
-  const stpi_internal_printer_t *val =
-    (const stpi_internal_printer_t *) printer;
+  stpi_internal_printer_t *val = (stpi_internal_printer_t *) printer;
+  check_printer(val);
+  return val;
+}
+
+static inline const stpi_internal_printer_t *
+get_const_printer(stp_const_printer_t printer)
+{
+  const stpi_internal_printer_t *val = (const stpi_internal_printer_t *) printer;
   check_printer(val);
   return val;
 }
@@ -141,8 +148,7 @@ stp_get_printer_by_index(int idx)
 static void
 stpi_printer_freefunc(void *item)
 {
-  stpi_internal_printer_t *printer =
-    (stpi_internal_printer_t *) get_printer(item);
+  stpi_internal_printer_t *printer = get_printer(item);
   stpi_free(printer->long_name);
   stpi_free(printer->family);
   stpi_free(printer);
@@ -151,63 +157,63 @@ stpi_printer_freefunc(void *item)
 const char *
 stp_printer_get_driver(stp_const_printer_t p)
 {
-  const stpi_internal_printer_t *val = get_printer(p);
+  const stpi_internal_printer_t *val = get_const_printer(p);
   return val->driver;
 }
 
 static const char *
 stpi_printer_namefunc(const void *item)
 {
-  const stpi_internal_printer_t *val = get_printer(item);
+  const stpi_internal_printer_t *val = get_const_printer(item);
   return val->driver;
 }
 
 const char *
 stp_printer_get_long_name(stp_const_printer_t p)
 {
-  const stpi_internal_printer_t *val = get_printer(p);
+  const stpi_internal_printer_t *val = get_const_printer(p);
   return val->long_name;
 }
 
 static const char *
 stpi_printer_long_namefunc(const void *item)
 {
-  const stpi_internal_printer_t *val = get_printer(item);
+  const stpi_internal_printer_t *val = get_const_printer(item);
   return val->long_name;
 }
 
 const char *
 stp_printer_get_family(stp_const_printer_t p)
 {
-  const stpi_internal_printer_t *val = get_printer(p);
+  const stpi_internal_printer_t *val = get_const_printer(p);
   return val->family;
 }
 
 const char *
 stp_printer_get_manufacturer(stp_const_printer_t p)
 {
-  const stpi_internal_printer_t *val = get_printer(p);
+  const stpi_internal_printer_t *val = get_const_printer(p);
   return val->manufacturer;
 }
 
 int
 stp_printer_get_model(stp_const_printer_t p)
 {
-  const stpi_internal_printer_t *val = get_printer(p);
+  const stpi_internal_printer_t *val = get_const_printer(p);
   return val->model;
 }
 
 static inline const stpi_printfuncs_t *
 stpi_get_printfuncs(stp_const_printer_t p)
 {
-  const stpi_internal_printer_t *val = get_printer(p);
+  const stpi_internal_printer_t *val = get_const_printer(p);
   return val->printfuncs;
 }
 
 stp_const_vars_t
 stp_printer_get_defaults(stp_const_printer_t p)
 {
-  const stpi_internal_printer_t *val = get_printer(p);
+  const stpi_internal_printer_t *val = get_const_printer(p);
   return (stp_vars_t) val->printvars;
 }
 
@@ -269,7 +275,7 @@ int
 stpi_get_model_id(stp_const_vars_t v)
 {
   stp_const_printer_t p = stp_get_printer_by_driver(stp_get_driver(v));
-  const stpi_internal_printer_t *val = get_printer(p);
+  const stpi_internal_printer_t *val = get_const_printer(p);
   return val->model;
 }
 
@@ -288,6 +294,84 @@ stpi_printer_describe_parameter(stp_const_vars_t v, const char *name,
   const stpi_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
   (printfuncs->parameters)(v, name, description);
+}
+
+static void
+set_printer_defaults(stp_vars_t v, int core_only)
+{
+  stp_parameter_list_t *params;
+  int count;
+  int i;
+  stp_parameter_t desc;
+  params = stp_get_parameter_list(v);
+  count = stp_parameter_list_count(params);
+  for (i = 0; i < count; i++)
+    {
+      const stp_parameter_t *p = stp_parameter_list_param(params, i);
+      if (p->is_mandatory &&
+	  (!core_only || p->p_class == STP_PARAMETER_CLASS_CORE))
+	{
+	  stp_describe_parameter(v, p->name, &desc);
+	  switch (p->p_type)
+	    {
+	    case STP_PARAMETER_TYPE_STRING_LIST:
+	      stp_set_string_parameter(v, p->name, desc.deflt.str);
+	      stp_set_string_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+	      break;
+	    case STP_PARAMETER_TYPE_DOUBLE:
+	      stp_set_float_parameter(v, p->name, desc.deflt.dbl);
+	      stp_set_float_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+	      break;
+	    case STP_PARAMETER_TYPE_INT:
+	      stp_set_int_parameter(v, p->name, desc.deflt.integer);
+	      stp_set_int_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+	      break;
+	    case STP_PARAMETER_TYPE_BOOLEAN:
+	      stp_set_boolean_parameter(v, p->name, desc.deflt.boolean);
+	      stp_set_boolean_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+	      break;
+	    case STP_PARAMETER_TYPE_CURVE:
+	      stp_set_curve_parameter(v, p->name, desc.deflt.curve);
+	      stp_set_curve_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+	      break;
+	    case STP_PARAMETER_TYPE_ARRAY:
+	      stp_set_array_parameter(v, p->name, desc.deflt.array);
+	      stp_set_array_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+	      break;
+	    default:
+	      break;
+	    }
+	  stp_parameter_description_free(&desc);
+	}
+    }
+  stp_parameter_list_free(params);
+}
+
+void
+stp_set_printer_defaults(stp_vars_t v, stp_const_printer_t printer)
+{
+  stp_set_driver(v, stp_printer_get_driver(printer));
+  set_printer_defaults(v, 0);
+}
+
+void
+stpi_initialize_printer_defaults(void)
+{
+  stpi_list_item_t *printer_item;
+  if (printer_list == NULL)
+    {
+      stpi_init_printer_list();
+      if (stpi_debug_level & STPI_DBG_PRINTERS)
+	stpi_erprintf
+	  ("stpi_family_register(): initialising printer_list...\n");
+    }
+  printer_item = stpi_list_get_start(printer_list);
+  while (printer_item)
+    {
+      set_printer_defaults
+	(get_printer(stpi_list_item_get_data(printer_item))->printvars, 1);
+      printer_item = stpi_list_item_next(printer_item);
+    }
 }
 
 void
@@ -324,6 +408,14 @@ stp_describe_resolution(stp_const_vars_t v, int *x, int *y)
   (printfuncs->describe_resolution)(v, x, y);
 }
 
+const char *
+stpi_describe_output(stp_const_vars_t v)
+{
+  const stpi_printfuncs_t *printfuncs =
+    stpi_get_printfuncs(stp_get_printer(v));
+  return (printfuncs->describe_output)(v);
+}
+
 int
 stp_verify(stp_vars_t v)
 {
@@ -351,7 +443,8 @@ stp_start_job(stp_const_vars_t v, stp_image_t *image)
 {
   const stpi_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
-  if (stp_get_job_mode(v) == STP_JOB_MODE_PAGE)
+  if (!stp_get_string_parameter(v, "JobMode") ||
+      strcmp(stp_get_string_parameter(v, "JobMode"), "Page") == 0)
     return 1;
   if (printfuncs->start_job)
     return (printfuncs->start_job)(v, image);
@@ -364,7 +457,8 @@ stp_end_job(stp_const_vars_t v, stp_image_t *image)
 {
   const stpi_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
-  if (stp_get_job_mode(v) == STP_JOB_MODE_PAGE)
+  if (!stp_get_string_parameter(v, "JobMode") ||
+      strcmp(stp_get_string_parameter(v, "JobMode"), "Page") == 0)
     return 1;
   if (printfuncs->end_job)
     return (printfuncs->end_job)(v, image);
@@ -374,9 +468,10 @@ stp_end_job(stp_const_vars_t v, stp_image_t *image)
 
 static int
 verify_string_param(stp_const_vars_t v, const char *parameter,
-		    stp_parameter_t *desc)
+		    stp_parameter_t *desc, int quiet)
 {
-  int answer = 1;
+  stpi_parameter_verify_t answer = PARAMETER_OK;
+  stpi_dprintf(STPI_DBG_VARS, v, "    Verifying string %s\n", parameter);
   if (desc->is_mandatory ||
       stp_check_string_parameter(v, parameter, STP_PARAMETER_ACTIVE))
     {
@@ -384,17 +479,20 @@ verify_string_param(stp_const_vars_t v, const char *parameter,
       stp_string_list_t vptr = desc->bounds.str;
       size_t count = 0;
       int i;
+      stpi_dprintf(STPI_DBG_VARS, v, "     value %s\n",
+		   checkval ? checkval : "(null)");
       if (vptr)
 	count = stp_string_list_count(vptr);
-      answer = 0;
+      answer = PARAMETER_BAD;
       if (checkval == NULL)
 	{
 	  if (count == 0)
-	    answer = 1;
+	    answer = PARAMETER_OK;
 	  else
 	    {
-	      stpi_eprintf(v, _("Value must be set for %s\n"), parameter);
-	      answer = 0;
+	      if (!quiet)
+		stpi_eprintf(v, _("Value must be set for %s\n"), parameter);
+	      answer = PARAMETER_BAD;
 	    }
 	}
       else if (count > 0)
@@ -402,15 +500,15 @@ verify_string_param(stp_const_vars_t v, const char *parameter,
 	  for (i = 0; i < count; i++)
 	    if (!strcmp(checkval, stp_string_list_param(vptr, i)->name))
 	      {
-		answer = 1;
+		answer = PARAMETER_OK;
 		break;
 	      }
-	  if (!answer)
+	  if (!answer && !quiet)
 	    stpi_eprintf(v, _("`%s' is not a valid %s\n"), checkval, parameter);
 	}
       else if (strlen(checkval) == 0)
-	answer = 1;
-      else
+	answer = PARAMETER_OK;
+      else if (!quiet)
 	stpi_eprintf(v, _("`%s' is not a valid %s\n"), checkval, parameter);
     }
   stp_parameter_description_free(desc);
@@ -419,8 +517,9 @@ verify_string_param(stp_const_vars_t v, const char *parameter,
 
 static int
 verify_double_param(stp_const_vars_t v, const char *parameter,
-		    stp_parameter_t *desc)
+		    stp_parameter_t *desc, int quiet)
 {
+  stpi_dprintf(STPI_DBG_VARS, v, "    Verifying double %s\n", parameter);
   if (desc->is_mandatory ||
       stp_check_float_parameter(v, parameter, STP_PARAMETER_ACTIVE))
     {
@@ -428,19 +527,21 @@ verify_double_param(stp_const_vars_t v, const char *parameter,
       if (checkval < desc->bounds.dbl.lower ||
 	  checkval > desc->bounds.dbl.upper)
 	{
-	  stpi_eprintf(v, _("%s must be between %f and %f (is %f)\n"),
-		      parameter, desc->bounds.dbl.lower,
-		      desc->bounds.dbl.upper, checkval);
-	  return 0;
+	  if (!quiet)
+	    stpi_eprintf(v, _("%s must be between %f and %f (is %f)\n"),
+			 parameter, desc->bounds.dbl.lower,
+			 desc->bounds.dbl.upper, checkval);
+	  return PARAMETER_BAD;
 	}
     }
-  return 1;
+  return PARAMETER_OK;
 }
 
 static int
 verify_int_param(stp_const_vars_t v, const char *parameter,
-		 stp_parameter_t *desc)
+		 stp_parameter_t *desc, int quiet)
 {
+  stpi_dprintf(STPI_DBG_VARS, v, "    Verifying int %s\n", parameter);
   if (desc->is_mandatory ||
       stp_check_int_parameter(v, parameter, STP_PARAMETER_ACTIVE))
     {
@@ -448,22 +549,24 @@ verify_int_param(stp_const_vars_t v, const char *parameter,
       if (checkval < desc->bounds.integer.lower ||
 	  checkval > desc->bounds.integer.upper)
 	{
-	  stpi_eprintf(v, _("%s must be between %d and %d (is %d)\n"),
-		      parameter, desc->bounds.integer.lower,
-		      desc->bounds.integer.upper, checkval);
+	  if (!quiet)
+	    stpi_eprintf(v, _("%s must be between %d and %d (is %d)\n"),
+			 parameter, desc->bounds.integer.lower,
+			 desc->bounds.integer.upper, checkval);
 	  stp_parameter_description_free(desc);
-	  return 0;
+	  return PARAMETER_BAD;
 	}
     }
   stp_parameter_description_free(desc);
-  return 1;
+  return PARAMETER_OK;
 }
 
 static int
 verify_curve_param(stp_const_vars_t v, const char *parameter,
-		    stp_parameter_t *desc)
+		    stp_parameter_t *desc, int quiet)
 {
-  int answer = 1;
+  stpi_parameter_verify_t answer = 1;
+  stpi_dprintf(STPI_DBG_VARS, v, "    Verifying curve %s\n", parameter);
   if (desc->bounds.curve &&
       (desc->is_mandatory ||
        stp_check_curve_parameter(v, parameter, STP_PARAMETER_ACTIVE)))
@@ -477,19 +580,21 @@ verify_curve_param(stp_const_vars_t v, const char *parameter,
 	  stp_curve_get_bounds(desc->bounds.curve, &l1, &u1);
 	  if (u0 > u1 || l0 < l1)
 	    {
-	      stpi_eprintf(v, _("%s bounds must be between %f and %f\n"),
-			  parameter, l1, u1);
-	      answer = 0;
+	      if (!quiet)
+		stpi_eprintf(v, _("%s bounds must be between %f and %f\n"),
+			     parameter, l1, u1);
+	      answer = PARAMETER_BAD;
 	    }
 	  if (stp_curve_get_wrap(checkval) !=
 	      stp_curve_get_wrap(desc->bounds.curve))
 	    {
-	      stpi_eprintf(v, _("%s wrap mode must be %s\n"),
-			  parameter,
-			  (stp_curve_get_wrap(desc->bounds.curve) ==
-			   STP_CURVE_WRAP_NONE) ?
-			  _("no wrap") : _("wrap around"));
-	      answer = 0;
+	      if (!quiet)
+		stpi_eprintf(v, _("%s wrap mode must be %s\n"),
+			     parameter,
+			     (stp_curve_get_wrap(desc->bounds.curve) ==
+			      STP_CURVE_WRAP_NONE) ?
+			     _("no wrap") : _("wrap around"));
+	      answer = PARAMETER_BAD;
 	    }
 	}
     }
@@ -497,36 +602,40 @@ verify_curve_param(stp_const_vars_t v, const char *parameter,
   return answer;
 }
 
-static int
-verify_param(stp_const_vars_t v, const char *parameter)
+stpi_parameter_verify_t
+stpi_verify_parameter(stp_const_vars_t v, const char *parameter,
+		      int quiet)
 {
   stp_parameter_t desc;
+  quiet = 0;
+  stpi_dprintf(STPI_DBG_VARS, v, "  Verifying %s\n", parameter);
   stp_describe_parameter(v, parameter, &desc);
   if (!desc.is_active)
     {
       stp_parameter_description_free(&desc);
-      return 1;
+      return PARAMETER_INACTIVE;
     }
   switch (desc.p_type)
     {
     case STP_PARAMETER_TYPE_STRING_LIST:
-      return verify_string_param(v, parameter, &desc);
+      return verify_string_param(v, parameter, &desc, quiet);
     case STP_PARAMETER_TYPE_DOUBLE:
-      return verify_double_param(v, parameter, &desc);
+      return verify_double_param(v, parameter, &desc, quiet);
     case STP_PARAMETER_TYPE_INT:
-      return verify_int_param(v, parameter, &desc);
+      return verify_int_param(v, parameter, &desc, quiet);
     case STP_PARAMETER_TYPE_CURVE:
-      return verify_curve_param(v, parameter, &desc);
+      return verify_curve_param(v, parameter, &desc, quiet);
     case STP_PARAMETER_TYPE_RAW:
     case STP_PARAMETER_TYPE_FILE:
       stp_parameter_description_free(&desc);
-      return 1;			/* No way to verify this here */
+      return PARAMETER_OK;		/* No way to verify this here */
     case STP_PARAMETER_TYPE_BOOLEAN:
       stp_parameter_description_free(&desc);
-      return 1;			/* Booleans always OK */
+      return PARAMETER_OK;		/* Booleans always OK */
     default:
-      stpi_eprintf(v, _("Unknown type parameter %s (%d)\n"),
-		  parameter, desc.p_type);
+      if (!quiet)
+	stpi_eprintf(v, _("Unknown type parameter %s (%d)\n"),
+		     parameter, desc.p_type);
       stp_parameter_description_free(&desc);
       return 0;
     }
@@ -581,12 +690,10 @@ stpi_verify_printer_params(stp_vars_t v)
   void *odata = stp_get_errdata(v);
 
   stp_parameter_list_t params;
-  stp_const_printer_t p = stp_get_printer(v);
   int nparams;
   int i;
   int answer = 1;
   int left, top, bottom, right;
-  stp_const_vars_t printvars = stp_printer_get_defaults(p);
   const char *pagesize = stp_get_string_parameter(v, "PageSize");
 
   stp_set_errfunc((stp_vars_t) v, fill_buffer_writefunc);
@@ -595,19 +702,10 @@ stpi_verify_printer_params(stp_vars_t v)
   errbuf.data = NULL;
   errbuf.bytes = 0;
 
-  /*
-   * Note that in raw CMYK mode the user is responsible for not sending
-   * color output to black & white printers!
-   */
-  if (stp_get_output_type(printvars) == OUTPUT_GRAY &&
-      stp_get_output_type(v) == OUTPUT_COLOR)
-    {
-      answer = 0;
-      stpi_eprintf(v, _("Printer does not support color output\n"));
-    }
   if (pagesize && strlen(pagesize) > 0)
     {
-      answer &= verify_param(v, "PageSize");
+      if (stpi_verify_parameter(v, "PageSize", 0) == 0)
+	answer = 0;
     }
   else
     {
@@ -618,7 +716,7 @@ stpi_verify_printer_params(stp_vars_t v)
 	  stp_get_page_width(v) <= min_width || stp_get_page_width(v) > width)
 	{
 	  answer = 0;
-	  stpi_eprintf(v, _("Image size is not valid\n"));
+	  stpi_eprintf(v, _("Page size is not valid\n"));
 	}
     }
 
@@ -660,20 +758,20 @@ stpi_verify_printer_params(stp_vars_t v)
       stpi_eprintf(v, _("Image is too long for the page\n"));
     }
 
-  CHECK_INT_RANGE(v, output_type, 0, OUTPUT_RAW_PRINTER);
-  CHECK_INT_RANGE(v, input_color_model, 0, NCOLOR_MODELS - 1);
-  CHECK_INT_RANGE_INTERNAL(v, output_color_model, 0, NCOLOR_MODELS - 1);
   CHECK_INT_RANGE(v, page_number, 0, INT_MAX);
-  CHECK_INT_RANGE(v, job_mode, STP_JOB_MODE_PAGE, STP_JOB_MODE_JOB);
 
   params = stp_get_parameter_list(v);
   nparams = stp_parameter_list_count(params);
   for (i = 0; i < nparams; i++)
     {
       const stp_parameter_t *param = stp_parameter_list_param(params, i);
-      if (param->p_class != STP_PARAMETER_CLASS_PAGE_SIZE &&
-	  param->is_active && param->verify_this_parameter)
-	answer &= verify_param(v, param->name);
+      stpi_dprintf(STPI_DBG_VARS, v, "Checking %s %d %d\n", param->name,
+		   param->is_active, param->verify_this_parameter);
+
+      if (strcmp(param->name, "PageSize") != 0 &&
+	  param->is_active && param->verify_this_parameter &&
+	  stpi_verify_parameter(v, param->name, 0) == 0)
+	answer = 0;
     }
   stp_parameter_list_free(params);
   stp_set_errfunc((stp_vars_t) v, ofunc);
@@ -735,7 +833,7 @@ stpi_family_register(stpi_list_t *family)
 	{
 	  printer = get_printer(stpi_list_item_get_data(printer_item));
 	  if (!stpi_list_get_item_by_name(printer_list,
-					 stp_get_driver(printer->printvars)))
+					  stp_get_driver(printer->printvars)))
 	    stpi_list_item_create(printer_list, NULL, printer);
 	  printer_item = stpi_list_item_next(printer_item);
 	}
@@ -793,7 +891,6 @@ stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
  /* props[] (unused) is the correct tag sequence */
   /*  const char *props[] =
     {
-      "color",
       "model",
       "black",
       "cyan",
@@ -815,7 +912,6 @@ stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
   int
     driver = 0,                                       /* Check driver */
     long_name = 0,                                    /* Check long_name */
-    color = 0,                                        /* Check color */
     model = 0;                                        /* Check model */
 
   outprinter = stpi_zalloc(sizeof(stpi_internal_printer_t));
@@ -850,19 +946,7 @@ stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
       if (prop->type == MXML_ELEMENT)
 	{
 	  const char *prop_name = prop->value.element.name;
-	  if (!strcmp(prop_name, "color"))
-	    {
-	      stmp = stpi_mxmlElementGetAttr(prop, "value");
-	      if (stmp)
-		{
-		  if (!strcmp(stmp, "true"))
-		    stp_set_output_type(outprinter->printvars, OUTPUT_COLOR);
-		  else
-		    stp_set_output_type(outprinter->printvars, OUTPUT_GRAY);
-		  color = 1;
-		}
-	    }
-	  else if (!strcmp(prop_name, "model"))
+	  if (!strcmp(prop_name, "model"))
 	    {
 	      stmp = stpi_mxmlElementGetAttr(prop, "value");
 	      if (stmp)
@@ -893,7 +977,7 @@ stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
 	}
       prop = prop->next;
     }
-  if (driver && long_name && color && model && printfuncs)
+  if (driver && long_name && model && printfuncs)
     {
       if (stpi_debug_level & STPI_DBG_XML)
 	{

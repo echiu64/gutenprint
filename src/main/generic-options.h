@@ -34,6 +34,12 @@ typedef struct
   const char *text;
 } stpi_image_type_t;
 
+typedef struct
+{
+  const char *name;
+  const char *text;
+} stpi_job_mode_t;
+
 extern int stpi_get_qualities_count(void);
 
 extern const stpi_quality_t *stpi_get_quality_by_index(int idx);
@@ -45,6 +51,12 @@ extern int stpi_get_image_types_count(void);
 extern const stpi_image_type_t *stpi_get_image_type_by_index(int idx);
 
 extern const stpi_image_type_t *stpi_get_image_type_by_name(const char *image_type);
+
+extern int stpi_get_job_modes_count(void);
+
+extern const stpi_job_mode_t *stpi_get_job_mode_by_index(int idx);
+
+extern const stpi_job_mode_t *stpi_get_job_mode_by_name(const char *job_mode);
 
 extern stp_parameter_list_t stpi_list_generic_parameters(stp_const_vars_t v);
 

@@ -40,11 +40,24 @@ extern "C" {
 
 #include <gimp-print/color.h>
 
+#if 0
+typedef enum
+{
+  STP_OUTPUT_TYPE_INVALID,
+  STP_OUTPUT_TYPE_GRAYSCALE,
+  STP_OUTPUT_TYPE_WHITESCALE,
+  STP_OUTPUT_TYPE_RGB,
+  STP_OUTPUT_TYPE_CMY,
+  STP_OUTPUT_TYPE_CMYK,
+  STP_OUTPUT_TYPE_CMYKRB,
+  STP_OUTPUT_TYPE_RAW
+} stp_output_type_t;
+#endif
 
 typedef struct
 {
   int (*init)(stp_vars_t v, stp_image_t *image, size_t steps);
-  int (*get_row)(stp_const_vars_t v, stp_image_t *image,
+  int (*get_row)(stp_vars_t v, stp_image_t *image,
 		 int row, unsigned *zero_mask);
   stp_parameter_list_t (*list_parameters)(stp_const_vars_t v);
   void (*describe_parameter)(stp_const_vars_t v, const char *name,
@@ -73,7 +86,7 @@ extern int stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps);
  * Acquire input and perform color conversion.  Return value
  * is status; zero is success.
  */
-extern int stpi_color_get_row(stp_const_vars_t v, stp_image_t *image,
+extern int stpi_color_get_row(stp_vars_t v, stp_image_t *image,
 			      int row, unsigned *zero_mask);
 
 extern stp_parameter_list_t stpi_color_list_parameters(stp_const_vars_t v);

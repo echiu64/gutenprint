@@ -112,12 +112,14 @@ image_init(IMAGE *img, IjsPageHeader *ph)
 		    ph->width, ph->height, ph->bps, ph->n_chan, ph->xres,
 		    ph->yres));
 
+  stp_set_string_parameter(img->v, "ChannelBitDepth", "8");
   if ((img->bps == 1) && (img->n_chan == 1) &&
       (strncmp(ph->cs, DeviceGray, strlen(DeviceGray)) == 0))
     {
       stp_parameter_t desc;
       STP_DEBUG(fprintf(stderr, "output monochrome\n"));
-      img->output_type = OUTPUT_GRAY;
+      stp_set_string_parameter(img->v, "InputImageType", "Whitescale");
+      stp_set_string_parameter(img->v, "PrintingMode", "BW");
       stp_describe_parameter(img->v, "Contrast", &desc);
       if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
 	stp_set_float_parameter(img->v, "Contrast", desc.bounds.dbl.upper);
@@ -129,7 +131,8 @@ image_init(IMAGE *img, IjsPageHeader *ph)
       (strncmp(ph->cs, DeviceGray, strlen(DeviceGray)) == 0))
     {
       STP_DEBUG(fprintf(stderr, "output gray\n"));
-      img->output_type = OUTPUT_GRAY;
+      stp_set_string_parameter(img->v, "InputImageType", "Whitescale");
+      stp_set_string_parameter(img->v, "PrintingMode", "BW");
       img->monochrome_flag = 0;
       /* 8-bit greyscale */
     }
@@ -137,7 +140,8 @@ image_init(IMAGE *img, IjsPageHeader *ph)
 	   (strncmp(ph->cs, DeviceRGB, strlen(DeviceRGB)) == 0))
     {
       STP_DEBUG(fprintf(stderr, "output color\n"));
-      img->output_type = OUTPUT_COLOR;
+      stp_set_string_parameter(img->v, "InputImageType", "RGB");
+      stp_set_string_parameter(img->v, "PrintingMode", "Color");
       img->monochrome_flag = 0;
       /* 24-bit colour */
     }
@@ -145,7 +149,8 @@ image_init(IMAGE *img, IjsPageHeader *ph)
 	   (strncmp(ph->cs, DeviceCMYK, strlen(DeviceCMYK)) == 0))
     {
       STP_DEBUG(fprintf(stderr, "output CMYK\n"));
-      img->output_type = OUTPUT_RAW_CMYK;
+      stp_set_string_parameter(img->v, "InputImageType", "CMYK");
+      stp_set_string_parameter(img->v, "PrintingMode", "Color");
       img->monochrome_flag = 0;
       /* 32-bit CMYK colour */
     }
@@ -680,16 +685,6 @@ gimp_outfunc(void *data, const char *buffer, size_t bytes)
 /**********************************************************/
 /* stp_image_t functions */
 
-/* bytes per pixel (NOT bits per pixel) */
-static int
-gimp_image_bpp(stp_image_t *image)
-{
-  IMAGE *img = (IMAGE *)(image->rep);
-  STP_DEBUG(fprintf(stderr, "gimp_image_bpp: bps=%d n_chan=%d returning %d\n",
-		    img->bps, img->n_chan, (img->bps * img->n_chan + 7) / 8));
-  return (img->bps * img->n_chan + 7) / 8;
-}
-
 static int
 gimp_image_width(stp_image_t *image)
 {
@@ -796,14 +791,6 @@ gimp_image_get_appname(stp_image_t *image)
   return "ijsgimp";
 }
 
-static void
-gimp_image_note_progress(stp_image_t *image, double current, double total)
-{
-  char buf[256];
-  sprintf(buf, _("%.0f of %.0f\n"), current, total);
-  STP_DEBUG(gimp_outfunc(stderr, buf, strlen(buf)));
-}
-
 /**********************************************************/
 
 static const char *
@@ -833,7 +820,8 @@ stp_dbg(const char *msg, stp_const_vars_t v)
 	  stp_get_float_parameter(v, "Density"));
   fprintf(stderr, "Settings: width %d, height %d\n",
 	  stp_get_page_width(v), stp_get_page_height(v));
-  fprintf(stderr, "Settings: output type %d\n", stp_get_output_type(v));
+  fprintf(stderr, "Settings: output type %s\n",
+	  safe_get_string_parameter(v, "InputImageType"));
   fprintf(stderr, "Settings: Image Type %s\n",
 	  safe_get_string_parameter(v, "ImageOptimization"));
   fprintf(stderr, "Settings: Quality %s\n",
@@ -892,12 +880,10 @@ main (int argc, char **argv)
   stp_set_outdata(img.v, NULL);
 
   memset(&si, 0, sizeof(si));
-  si.bpp = gimp_image_bpp;
   si.width = gimp_image_width;
   si.height = gimp_image_height;
   si.get_row = gimp_image_get_row;
   si.get_appname = gimp_image_get_appname;
-  si.note_progress = gimp_image_note_progress;
   si.rep = &img;
 
   ijs_server_install_status_cb (img.ctx, gimp_status_cb, &img);
@@ -975,7 +961,6 @@ main (int argc, char **argv)
       img.bytes_left = img.total_bytes;
 
       stp_set_float_parameter(img.v, "AppGamma", 1.7);
-      stp_set_output_type(img.v, img.output_type);
       stp_get_media_size(img.v, &w, &h);
       stp_get_imageable_area(img.v, &l, &r, &b, &t);
       width = r - l;
@@ -983,7 +968,7 @@ main (int argc, char **argv)
       height = b - t;
       stp_set_height(img.v, height);
       stp_set_page_number(img.v, page);
-      stp_set_job_mode(img.v, STP_JOB_MODE_JOB);
+      stp_set_string_parameter(img.v, "JobMode", "Job");
       STP_DEBUG(stp_dbg("about to print", img.v));
       if (stp_verify(img.v))
 	{

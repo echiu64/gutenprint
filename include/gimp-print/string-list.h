@@ -54,7 +54,7 @@ stp_string_list_create_from_params(const stp_param_string_t *list,
 				   size_t count);
 
 extern int
-stp_string_list_is_present(stp_string_list_t list, const char *value);
+stp_string_list_is_present(stp_const_string_list_t list, const char *value);
 
 
 #ifdef __cplusplus

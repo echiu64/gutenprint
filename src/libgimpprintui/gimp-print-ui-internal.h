@@ -106,7 +106,7 @@ typedef struct
 {
   const char *name;
   const char *help;
-  gint value;
+  const char *value;
   GtkWidget *button;
 } radio_group_t;
 

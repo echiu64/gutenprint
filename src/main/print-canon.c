@@ -1186,7 +1186,7 @@ typedef struct {
 
 typedef struct {
   const canon_cap_t *caps;
-  int output_type;
+  int printing_color;
   const paper_t *pt;
   int print_head;
   int colormode;
@@ -1222,7 +1222,7 @@ static const stp_parameter_t the_parameters[] =
   {
     "PageSize", N_("Page Size"), N_("Basic Printer Setup"),
     N_("Size of the paper being printed to"),
-    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
@@ -1254,6 +1254,12 @@ static const stp_parameter_t the_parameters[] =
     N_("Ink Channels"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0
+  },
+  {
+    "PrintingMode", N_("Printing Mode"), N_("Core Parameter"),
+    N_("Printing Output Mode"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
 };
 
@@ -1607,6 +1613,32 @@ canon_describe_resolution(stp_const_vars_t v, int *x, int *y)
   *y = -1;
 }
 
+static const char *
+canon_describe_output(stp_const_vars_t v)
+{
+  int model = stpi_get_model_id(v);
+  const canon_cap_t *caps = canon_get_model_capabilities(model);
+  const char *print_mode = stp_get_string_parameter(v, "PrintingMode");
+  const char *ink_type = stp_get_string_parameter(v, "InkType");
+  colormode_t colormode = canon_printhead_colors(ink_type,caps);
+  int printhead= canon_printhead_type(ink_type,caps);
+
+  if (strcmp(print_mode, "Color") == 0 ||
+      printhead == 0 || caps->inks == CANON_INK_K)
+    colormode = COLOR_MONOCHROME;
+
+  switch (colormode)
+    {
+    case COLOR_CMY:
+      return "CMY";
+    case COLOR_CMYK:
+      return "CMYK";
+    case COLOR_MONOCHROME:
+    default:
+      return "Grayscale";
+    }
+}
+
 static const stp_param_string_t media_sources[] =
               {
                 { "Auto",	N_ ("Auto Sheet Feeder") },
@@ -1774,6 +1806,16 @@ canon_parameters(stp_const_vars_t v, const char *name,
       stp_string_list_add_string(description->bounds.str,
 				media_sources[i].name,
 				_(media_sources[i].text));
+  }
+  else if (strcmp(name, "PrintingMode") == 0)
+  {
+    description->bounds.str = stp_string_list_create();
+    stp_string_list_add_string
+      (description->bounds.str, "Color", _("Color"));
+    stp_string_list_add_string
+      (description->bounds.str, "BW", _("Black and White"));
+    description->deflt.str =
+      stp_string_list_param(description->bounds.str, 0)->name;
   }
 }
 
@@ -1947,7 +1989,7 @@ canon_init_setColor(stp_const_vars_t v, canon_init_t *init)
 		break;		/*	tbd */
 
   	case 1:			/* 360 dpi series - BJC-4000, BJC-210, BJC-70 and their descendants */
-		if (init->output_type==OUTPUT_GRAY)
+		if (!init->printing_color)
     			arg_63_1|= 0x01;					/* PRINT_COLOUR */
 
   		arg_63_2 = ((init->pt ? init->pt->media_code : 0) << 4)		/* PRINT_MEDIA */
@@ -1960,7 +2002,7 @@ canon_init_setColor(stp_const_vars_t v, canon_init_t *init)
 		break;
 
 	case 3:			/* 720 dpi series - BJC-3000 and descendants */
-		if (init->output_type==OUTPUT_GRAY)
+		if (!init->printing_color)
     			arg_63_1|= 0x01;					/* colour mode */
 
   		arg_63_2 = (init->pt) ? init->pt->media_code : 0;		/* print media type */
@@ -2063,7 +2105,7 @@ canon_init_setPrintMode(stp_const_vars_t v, canon_init_t *init)
     arg_6d_1= 0x02;
   else if (init->print_head<=4)
     arg_6d_1= 0x04;
-  if (init->output_type==OUTPUT_GRAY)
+  if (!init->printing_color)
     arg_6d_2= 0x02;
 
   if (init->caps->model==8200)
@@ -2243,7 +2285,7 @@ canon_printfunc(stp_vars_t v)
   canon_write_line(v);
   for (i = 0; i < 7; i++)
     canon_advance_buffer(pd->cols[i], pd->buf_length, pd->delay[i]);
-  
+
 }
 
 static double
@@ -2280,7 +2322,8 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
   int		model = stpi_get_model_id(v);
   const char	*resolution = stp_get_string_parameter(v, "Resolution");
   const char	*media_source = stp_get_string_parameter(v, "InputSlot");
-  int 		output_type = stp_get_output_type(v);
+  const char    *print_mode = stp_get_string_parameter(v, "PrintingMode");
+  int printing_color = 0;
   const char	*ink_type = stp_get_string_parameter(v, "InkType");
   int		top = stp_get_top(v);
   int		left = stp_get_left(v);
@@ -2307,8 +2350,7 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
   unsigned	zero_mask;
   int           bits= 1;
   int           image_height,
-                image_width,
-                image_bpp;
+                image_width;
   int           res_code;
   int           use_6color= 0;
   double        k_upper, k_lower;
@@ -2329,6 +2371,8 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
       stpi_eprintf(v, "Print options not verified; cannot print.\n");
       return 0;
     }
+  if (strcmp(print_mode, "Color") == 0)
+    printing_color = 1;
 
   PUT("top        ",top,72);
   PUT("left       ",left,72);
@@ -2338,7 +2382,6 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
   */
 
   stpi_image_init(image);
-  image_bpp = stpi_image_bpp(image);
 
   /* force grayscale if image is grayscale
    *                 or single black cartridge installed
@@ -2346,13 +2389,12 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
 
   if (printhead == 0 || caps->inks == CANON_INK_K)
     {
-      output_type = OUTPUT_GRAY;
-      stp_set_output_type(v, output_type);
+      printing_color = 0;
+      stp_set_string_parameter(v, "PrintingMode", "BW");
     }
 
-  if (output_type == OUTPUT_GRAY)
+  if (!printing_color)
     colormode = COLOR_MONOCHROME;
-  stpi_set_output_color_model(v, COLOR_MODEL_CMY);
 
  /*
   * Figure out the output resolution...
@@ -2406,15 +2448,13 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
   PUT("out_width ", out_width,xdpi);
   PUT("out_height", out_height,ydpi);
 
-  stpi_image_progress_init(image);
-
   PUT("top     ",top,72);
   PUT("left    ",left,72);
 
   pt = get_media_type(stp_get_string_parameter(v, "MediaType"));
 
   init.caps = caps;
-  init.output_type = output_type;
+  init.printing_color = printing_color;
   init.pt = pt;
   init.print_head = printhead;
   init.colormode = colormode;
@@ -2504,6 +2544,16 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
     }
   }
 
+  if (privdata.cols[0])
+    {
+      if (privdata.cols[1])
+	stp_set_string_parameter(v, "STPIOutputType", "KCMY");
+      else
+	stp_set_string_parameter(v, "STPIOutputType", "Grayscale");
+    }
+  else
+    stp_set_string_parameter(v, "STPIOutputType", "CMY");
+
   stpi_deprintf(STPI_DBG_CANON,
 		"canon: driver will use colors %s%s%s%s%s%s%s\n",
 		privdata.cols[0] ? "K" : "",
@@ -2527,14 +2577,11 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
       stp_set_float_parameter_active(v, "Density", STP_PARAMETER_ACTIVE);
       stp_set_float_parameter(v, "Density", 1.0);
     }
-  if (output_type != OUTPUT_RAW_PRINTER && output_type != OUTPUT_RAW_CMYK)
-    {
-      if (pt)
-	stp_scale_float_parameter(v, "Density", pt->base_density);
-      else			/* Can't find paper type? Assume plain */
-	stp_scale_float_parameter(v, "Density", .5);
-      stp_scale_float_parameter(v, "Density", canon_density(caps, res_code));
-    }
+  if (pt)
+    stp_scale_float_parameter(v, "Density", pt->base_density);
+  else			/* Can't find paper type? Assume plain */
+    stp_scale_float_parameter(v, "Density", .5);
+  stp_scale_float_parameter(v, "Density", canon_density(caps, res_code));
   if (stp_get_float_parameter(v, "Density") > 1.0)
     stp_set_float_parameter(v, "Density", 1.0);
   if (colormode == COLOR_MONOCHROME)
@@ -2631,11 +2678,6 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
       stp_set_curve_parameter(v, "SatMap", sat_adjustment);
       stp_curve_free(sat_adjustment);
     }
-  if (output_type == OUTPUT_COLOR && privdata.cols[0])
-    {
-      output_type = OUTPUT_RAW_CMYK;
-      stp_set_output_type(v, OUTPUT_RAW_CMYK);
-    }
 
   out_channels = stpi_color_init(v, image, 65536);
   stpi_allocate_component_data(v, "Driver", NULL, NULL, &privdata);
@@ -2644,8 +2686,6 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
   for (y = 0; y < out_height; y ++)
   {
     int duplicate_line = 1;
-    if ((y & 63) == 0)
-      stpi_image_note_progress(image, y, out_height);
 
     if (errline != errlast)
     {
@@ -2685,7 +2725,7 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
     }
   }
 
-  stpi_image_progress_conclude(image);
+  stpi_image_conclude(image);
 
  /*
   * Cleanup...
@@ -2719,6 +2759,7 @@ static const stpi_printfuncs_t print_canon_printfuncs =
   canon_limit,
   canon_print,
   canon_describe_resolution,
+  canon_describe_output,
   stpi_verify_printer_params,
   canon_start_job,
   canon_end_job

@@ -183,11 +183,22 @@ stpi_channel_set_density_adjustment(stp_vars_t v, int color, int subchannel,
 				    double adjustment)
 {
   stpi_subchannel_t *sch = get_channel(v, color, subchannel);
-  stpi_dprintf(STPI_DBG_INK, v,
-	       "channel_density channel %d subchannel %d adjustment %f\n",
-	       color, subchannel, adjustment);
-  if (sch && adjustment >= 0 && adjustment <= 1)
-    sch->s_density = adjustment * 65535;
+  if ((strcmp(stp_get_string_parameter(v, "STPIOutputType"), "Raw") == 0 &&
+       strcmp(stp_get_string_parameter(v, "ColorCorrection"), "None") == 0) ||
+      (strcmp(stp_get_string_parameter(v, "ColorCorrection"), "Raw") == 0))
+    {
+      stpi_dprintf(STPI_DBG_INK, v,
+		   "Ignoring channel_density channel %d subchannel %d adjustment %f\n",
+		   color, subchannel, adjustment);
+    }
+  else
+    {
+      stpi_dprintf(STPI_DBG_INK, v,
+		   "channel_density channel %d subchannel %d adjustment %f\n",
+		   color, subchannel, adjustment);
+      if (sch && adjustment >= 0 && adjustment <= 1)
+	sch->s_density = adjustment * 65535;
+    }
 }
 
 void

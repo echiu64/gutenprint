@@ -674,6 +674,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
   const stp_param_string_t *opt;
   int has_quality_parameter = 0;
   int has_image_type_parameter = 0;
+  int printer_is_color = 0;
 
  /*
   * Initialize driver-specific variables...
@@ -817,16 +818,25 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
   gzprintf(fp, "*LanguageLevel:	\"%d\"\n", cups_ppd_ps_level);
 
   /* Assume that color printers are inkjets and should have pages reversed */
-  if (stp_get_output_type(printvars) == OUTPUT_COLOR)
+  stp_describe_parameter(printvars, "PrintingMode", &desc);
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
     {
-      gzputs(fp, "*ColorDevice:	True\n");
-      gzputs(fp, "*DefaultColorSpace:	RGB\n");
+      if (stp_string_list_is_present(desc.bounds.str, "Color"))
+	{
+	  printer_is_color = 1;
+	  gzputs(fp, "*ColorDevice:	True\n");
+	}
+      else
+	{
+	  printer_is_color = 0;
+	  gzputs(fp, "*ColorDevice:	False\n");
+	}
+      if (strcmp(desc.deflt.str, "Color") == 0)
+	gzputs(fp, "*DefaultColorSpace:	RGB\n");
+      else
+	gzputs(fp, "*DefaultColorSpace:	Gray\n");
     }
-  else
-    {
-      gzputs(fp, "*ColorDevice:	False\n");
-      gzputs(fp, "*DefaultColorSpace:	Gray\n");
-    }
+  stp_parameter_description_free(&desc);
   gzputs(fp, "*FileSystem:	False\n");
   gzputs(fp, "*LandscapeOrientation: Plus90\n");
   gzputs(fp, "*TTRasterizer:	Type42\n");
@@ -854,6 +864,11 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
   */
 
   v = stp_vars_create_copy(printvars);
+  if (printer_is_color)
+    stp_set_string_parameter(v, "PrintingMode", "Color");
+  else
+    stp_set_string_parameter(v, "PrintingMode", "BW");
+  stp_set_string_parameter(v, "ChannelBitDepth", "8");
   variable_sizes = 0;
   stp_describe_parameter(v, "PageSize", &desc);
   num_opts = stp_string_list_count(desc.bounds.str);
@@ -982,7 +997,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
   gzputs(fp, "*OpenUI *ColorModel: PickOne\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *ColorModel\n");
 
-  if (stp_get_output_type(printvars) == OUTPUT_COLOR)
+  if (printer_is_color)
     gzputs(fp, "*DefaultColorModel: RGB\n");
   else
     gzputs(fp, "*DefaultColorModel: Gray\n");
@@ -992,24 +1007,34 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	       "/cupsColorOrder %d"
 	       "/cupsBitsPerColor 8>>setpagedevice\"\n",
            CUPS_CSPACE_W, CUPS_ORDER_CHUNKED);
-  gzprintf(fp, "*ColorModel Black/Black & White:\t\"<<"
+  gzprintf(fp, "*ColorModel Black/Inverted Grayscale:\t\"<<"
                "/cupsColorSpace %d"
 	       "/cupsColorOrder %d"
 	       "/cupsBitsPerColor 8>>setpagedevice\"\n",
            CUPS_CSPACE_K, CUPS_ORDER_CHUNKED);
 
-  if (stp_get_output_type(printvars) == OUTPUT_COLOR)
+  if (printer_is_color)
   {
-    gzprintf(fp, "*ColorModel RGB/Color:\t\"<<"
+    gzprintf(fp, "*ColorModel RGB/RGB Color:\t\"<<"
                  "/cupsColorSpace %d"
 		 "/cupsColorOrder %d"
 		 "/cupsBitsPerColor 8>>setpagedevice\"\n",
              CUPS_CSPACE_RGB, CUPS_ORDER_CHUNKED);
-    gzprintf(fp, "*ColorModel CMYK/Raw CMYK:\t\"<<"
+    gzprintf(fp, "*ColorModel CMY/CMY Color:\t\"<<"
+                 "/cupsColorSpace %d"
+		 "/cupsColorOrder %d"
+		 "/cupsBitsPerColor 8>>setpagedevice\"\n",
+             CUPS_CSPACE_CMY, CUPS_ORDER_CHUNKED);
+    gzprintf(fp, "*ColorModel CMYK/CMYK:\t\"<<"
                  "/cupsColorSpace %d"
 		 "/cupsColorOrder %d"
 		 "/cupsBitsPerColor 8>>setpagedevice\"\n",
              CUPS_CSPACE_CMYK, CUPS_ORDER_CHUNKED);
+    gzprintf(fp, "*ColorModel KCMY/KCMY:\t\"<<"
+                 "/cupsColorSpace %d"
+		 "/cupsColorOrder %d"
+		 "/cupsBitsPerColor 8>>setpagedevice\"\n",
+             CUPS_CSPACE_KCMY, CUPS_ORDER_CHUNKED);
   }
 
   gzputs(fp, "*CloseUI: *ColorModel\n\n");
@@ -1393,7 +1418,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	}
       stp_parameter_description_free(&qdesc);
     }
-  if (stp_get_output_type(printvars) == OUTPUT_COLOR)
+  if (printer_is_color)
     {
       for (l = 0; l < stp_parameter_list_count(param_list); l++)
 	{
@@ -1407,12 +1432,12 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	       lparam->p_type != STP_PARAMETER_TYPE_BOOLEAN &&
 	       lparam->p_type != STP_PARAMETER_TYPE_DOUBLE))
 	    continue;
-	  stp_set_output_type(v, OUTPUT_COLOR);
+	  stp_set_string_parameter(v, "PrintingMode", "Color");
 	  stp_describe_parameter(v, lparam->name, &desc);
 	  if (desc.is_active)
 	    {
 	      stp_parameter_description_free(&desc);
-	      stp_set_output_type(v, OUTPUT_GRAY);
+	      stp_set_string_parameter(v, "PrintingMode", "BW");
 	      stp_describe_parameter(v, lparam->name, &desc);
 	      if (!desc.is_active)
 		{
@@ -1439,7 +1464,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	    }
 	  stp_parameter_description_free(&desc);
 	}
-      stp_set_output_type(v, OUTPUT_COLOR);
+      stp_set_string_parameter(v, "PrintingMode", "Color");
     }
   stp_parameter_list_free(param_list);
 
