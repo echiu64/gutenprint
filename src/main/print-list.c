@@ -88,7 +88,7 @@ set_name_cache(stp_list_t *list,
 /**
  * Cache a list node by its long name.
  * @param list the list to use.
- * @param name the long name.
+ * @param long_name the long name.
  * @param cache the node to cache.
  */
 static void
