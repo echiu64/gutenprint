@@ -471,108 +471,6 @@ gimp_create_main_window (void)
                              option, 1, TRUE);
 
   /*
-   * Image type
-   */
-  frame = gtk_frame_new (_("Image Settings"));
-  gtk_box_pack_start (GTK_BOX (main_vbox), frame, FALSE, FALSE, 0);
-  gtk_widget_show (frame);
-
-  box = gtk_hbox_new (FALSE, 7);
-  gtk_container_set_border_width (GTK_CONTAINER (box), 2);
-  gtk_container_add (GTK_CONTAINER (frame), box);
-  gtk_widget_show (box);
-
-  image_line_art = button =
-    gtk_radio_button_new_with_label (NULL, _("Line Art"));
-  image_type_group = gtk_radio_button_group (GTK_RADIO_BUTTON (button));
-  if (vars.image_type == IMAGE_LINE_ART)
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
-  gtk_signal_connect (GTK_OBJECT (button), "toggled",
-		      GTK_SIGNAL_FUNC (gimp_image_type_callback),
-		      (gpointer) IMAGE_LINE_ART);
-  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
-  gtk_widget_show (button);
-
-  image_solid_tone= button =
-    gtk_radio_button_new_with_label (image_type_group, _("Solid Colors"));
-  image_type_group = gtk_radio_button_group (GTK_RADIO_BUTTON (button));
-  if (vars.image_type == IMAGE_SOLID_TONE)
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
-  gtk_signal_connect (GTK_OBJECT (button), "toggled",
-		      GTK_SIGNAL_FUNC (gimp_image_type_callback),
-		      (gpointer) IMAGE_SOLID_TONE);
-  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
-  gtk_widget_show (button);
-
-  image_continuous_tone = button =
-    gtk_radio_button_new_with_label (image_type_group, _("Photograph"));
-  image_type_group = gtk_radio_button_group (GTK_RADIO_BUTTON (button));
-  if (vars.image_type == IMAGE_CONTINUOUS)
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
-  gtk_signal_connect (GTK_OBJECT (button), "toggled",
-		      GTK_SIGNAL_FUNC (gimp_image_type_callback),
-		      (gpointer) IMAGE_CONTINUOUS);
-  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
-  gtk_widget_show (button);
-
-  image_monochrome= button =
-    gtk_radio_button_new_with_label(image_type_group, _("Monochrome"));
-  image_type_group = gtk_radio_button_group (GTK_RADIO_BUTTON (button));
-  if (vars.image_type == IMAGE_MONOCHROME)
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
-  gtk_signal_connect (GTK_OBJECT (button), "toggled",
-		      GTK_SIGNAL_FUNC (gimp_image_type_callback),
-		      (gpointer) IMAGE_MONOCHROME);
-  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
-  gtk_widget_show (button);
-
-  /*
-   *  Color adjust button
-   */
-  gimp_create_color_adjust_window ();
-
-  adjust_color_button = button = gtk_button_new_with_label (_("Adjust Color"));
-  gtk_misc_set_padding (GTK_MISC (GTK_BIN (button)->child), 2, 0);
-  gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-			     GTK_SIGNAL_FUNC (gtk_widget_show),
-			     GTK_OBJECT (gimp_color_adjust_dialog));
-  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
-  gtk_widget_show (button);
-
-  /*
-   * Output type toggles...
-   */
-
-  label = gtk_label_new(_("Output Type:"));
-  gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE, 0);
-  gtk_widget_show(label);
-  
-  vbox = gtk_vbox_new (FALSE, 1);
-  gtk_box_set_spacing (GTK_BOX (vbox), -2);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
-  gtk_box_pack_end (GTK_BOX (box), vbox, TRUE, TRUE, 0);
-  gtk_widget_show (vbox);
-
-  output_gray = button = gtk_radio_button_new_with_label (NULL, _("B&W"));
-  group = gtk_radio_button_group (GTK_RADIO_BUTTON (button));
-  if (vars.output_type == 0)
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
-  gtk_signal_connect (GTK_OBJECT (button), "toggled",
-                      GTK_SIGNAL_FUNC (gimp_output_type_callback),
-                      (gpointer) OUTPUT_GRAY);
-  gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
-  gtk_widget_show (button);
-
-  output_color = button = gtk_radio_button_new_with_label (group, _("Color"));
-  if (vars.output_type == 1)
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
-  gtk_signal_connect (GTK_OBJECT (button), "toggled",
-                      GTK_SIGNAL_FUNC (gimp_output_type_callback),
-                      (gpointer) OUTPUT_COLOR);
-  gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
-  gtk_widget_show (button);
-
-  /*
    * Scaling...
    */
   frame = gtk_frame_new (_("Scaling"));
@@ -685,6 +583,108 @@ gimp_create_main_window (void)
   gtk_widget_set_usize (entry, 60, 0);
   gtk_box_pack_end (GTK_BOX (box), entry, FALSE, FALSE, 0);
   gtk_widget_show(entry);
+
+  /*
+   * Image type
+   */
+  frame = gtk_frame_new (_("Image Settings"));
+  gtk_box_pack_start (GTK_BOX (main_vbox), frame, FALSE, FALSE, 0);
+  gtk_widget_show (frame);
+
+  box = gtk_hbox_new (FALSE, 7);
+  gtk_container_set_border_width (GTK_CONTAINER (box), 2);
+  gtk_container_add (GTK_CONTAINER (frame), box);
+  gtk_widget_show (box);
+
+  image_line_art = button =
+    gtk_radio_button_new_with_label (NULL, _("Line Art"));
+  image_type_group = gtk_radio_button_group (GTK_RADIO_BUTTON (button));
+  if (vars.image_type == IMAGE_LINE_ART)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+  gtk_signal_connect (GTK_OBJECT (button), "toggled",
+		      GTK_SIGNAL_FUNC (gimp_image_type_callback),
+		      (gpointer) IMAGE_LINE_ART);
+  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
+  gtk_widget_show (button);
+
+  image_solid_tone= button =
+    gtk_radio_button_new_with_label (image_type_group, _("Solid Colors"));
+  image_type_group = gtk_radio_button_group (GTK_RADIO_BUTTON (button));
+  if (vars.image_type == IMAGE_SOLID_TONE)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+  gtk_signal_connect (GTK_OBJECT (button), "toggled",
+		      GTK_SIGNAL_FUNC (gimp_image_type_callback),
+		      (gpointer) IMAGE_SOLID_TONE);
+  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
+  gtk_widget_show (button);
+
+  image_continuous_tone = button =
+    gtk_radio_button_new_with_label (image_type_group, _("Photograph"));
+  image_type_group = gtk_radio_button_group (GTK_RADIO_BUTTON (button));
+  if (vars.image_type == IMAGE_CONTINUOUS)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+  gtk_signal_connect (GTK_OBJECT (button), "toggled",
+		      GTK_SIGNAL_FUNC (gimp_image_type_callback),
+		      (gpointer) IMAGE_CONTINUOUS);
+  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
+  gtk_widget_show (button);
+
+  image_monochrome= button =
+    gtk_radio_button_new_with_label(image_type_group, _("Monochrome"));
+  image_type_group = gtk_radio_button_group (GTK_RADIO_BUTTON (button));
+  if (vars.image_type == IMAGE_MONOCHROME)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+  gtk_signal_connect (GTK_OBJECT (button), "toggled",
+		      GTK_SIGNAL_FUNC (gimp_image_type_callback),
+		      (gpointer) IMAGE_MONOCHROME);
+  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
+  gtk_widget_show (button);
+
+  /*
+   *  Color adjust button
+   */
+  gimp_create_color_adjust_window ();
+
+  adjust_color_button = button = gtk_button_new_with_label (_("Adjust Color"));
+  gtk_misc_set_padding (GTK_MISC (GTK_BIN (button)->child), 2, 0);
+  gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
+			     GTK_SIGNAL_FUNC (gtk_widget_show),
+			     GTK_OBJECT (gimp_color_adjust_dialog));
+  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
+  gtk_widget_show (button);
+
+  /*
+   * Output type toggles...
+   */
+
+  label = gtk_label_new(_("Output Type:"));
+  gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE, 0);
+  gtk_widget_show(label);
+  
+  vbox = gtk_vbox_new (FALSE, 1);
+  gtk_box_set_spacing (GTK_BOX (vbox), -2);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
+  gtk_box_pack_end (GTK_BOX (box), vbox, TRUE, TRUE, 0);
+  gtk_widget_show (vbox);
+
+  output_gray = button = gtk_radio_button_new_with_label (NULL, _("B&W"));
+  group = gtk_radio_button_group (GTK_RADIO_BUTTON (button));
+  if (vars.output_type == 0)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+  gtk_signal_connect (GTK_OBJECT (button), "toggled",
+                      GTK_SIGNAL_FUNC (gimp_output_type_callback),
+                      (gpointer) OUTPUT_GRAY);
+  gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+  gtk_widget_show (button);
+
+  output_color = button = gtk_radio_button_new_with_label (group, _("Color"));
+  if (vars.output_type == 1)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+  gtk_signal_connect (GTK_OBJECT (button), "toggled",
+                      GTK_SIGNAL_FUNC (gimp_output_type_callback),
+                      (gpointer) OUTPUT_COLOR);
+  gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+  gtk_widget_show (button);
 
   /*
    * Printer option menu...
