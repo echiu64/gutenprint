@@ -68,7 +68,9 @@ static const stp_internal_vars_t default_vars =
 	0,			/* Page width */
 	0,			/* Page height */
 	COLOR_MODEL_RGB,	/* Input color model */
-	COLOR_MODEL_RGB		/* Output color model */
+	COLOR_MODEL_RGB,	/* Output color model */
+	0,			/* Page number */
+	STP_JOB_MODE_PAGE	/* Job mode */
 };
 
 static const stp_internal_vars_t min_vars =
@@ -100,7 +102,9 @@ static const stp_internal_vars_t min_vars =
 	0,			/* Page width */
 	0,			/* Page height */
 	0,			/* Input color model */
-	0			/* Output color model */
+	0,			/* Output color model */
+	0,			/* Page number */
+	STP_JOB_MODE_PAGE	/* Job mode */
 };
 
 static const stp_internal_vars_t max_vars =
@@ -132,7 +136,9 @@ static const stp_internal_vars_t max_vars =
 	0,			/* Page width */
 	0,			/* Page height */
 	NCOLOR_MODELS - 1,	/* Input color model */
-	NCOLOR_MODELS - 1	/* Output color model */
+	NCOLOR_MODELS - 1,	/* Output color model */
+	INT_MAX,		/* Page number */
+	STP_JOB_MODE_JOB	/* Job mode */
 };
 
 static const stp_parameter_t global_parameters[] =
@@ -393,6 +399,8 @@ DEF_FUNCS(page_width, int, )
 DEF_FUNCS(page_height, int, )
 DEF_FUNCS(input_color_model, int, )
 DEF_FUNCS(output_color_model, int, )
+DEF_FUNCS(page_number, int, )
+DEF_FUNCS(job_mode, stp_job_mode_t, )
 DEF_FUNCS(lut, void *, )
 DEF_FUNCS(outdata, void *, )
 DEF_FUNCS(errdata, void *, )

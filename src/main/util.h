@@ -54,6 +54,8 @@ typedef struct
   int   (*print)(const stp_vars_t v, stp_image_t *image);
   void  (*describe_resolution)(const stp_vars_t v, int *x, int *y);
   int   (*verify)(const stp_vars_t v);
+  int   (*start_job)(const stp_vars_t v, stp_image_t *image);
+  int   (*end_job)(const stp_vars_t v, stp_image_t *image);
 } stp_printfuncs_t;
 
 

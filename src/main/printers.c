@@ -260,6 +260,36 @@ stp_print(const stp_vars_t v, stp_image_t *image)
   return (printfuncs->print)(v, image);
 }
 
+int
+stp_start_job(const stp_vars_t v, stp_image_t *image)
+{
+  const stp_printfuncs_t *printfuncs =
+    stp_printer_get_printfuncs(stp_get_printer(v));
+  if (!stp_get_verified(v))
+    return 0;
+  if (stp_get_job_mode(v) == STP_JOB_MODE_JOB)
+    return 1;
+  if (printfuncs->start_job)
+    return (printfuncs->start_job)(v, image);
+  else
+    return 1;
+}
+
+int
+stp_end_job(const stp_vars_t v, stp_image_t *image)
+{
+  const stp_printfuncs_t *printfuncs =
+    stp_printer_get_printfuncs(stp_get_printer(v));
+  if (!stp_get_verified(v))
+    return 0;
+  if (stp_get_job_mode(v) == STP_JOB_MODE_JOB)
+    return 1;
+  if (printfuncs->end_job)
+    return (printfuncs->end_job)(v, image);
+  else
+    return 1;
+}
+
 static int
 verify_string_param(const stp_vars_t v, const char *parameter,
 		    stp_parameter_t *desc)
@@ -443,6 +473,8 @@ stp_verify_printer_params(const stp_vars_t v)
   CHECK_INT_RANGE(v, output_type);
   CHECK_INT_RANGE(v, input_color_model);
   CHECK_INT_RANGE(v, output_color_model);
+  CHECK_INT_RANGE(v, page_number);
+  CHECK_INT_RANGE(v, job_mode);
 
   params = stp_list_parameters(v, &nparams);
   for (i = 0; i < nparams; i++)

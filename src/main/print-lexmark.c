@@ -2143,7 +2143,9 @@ const stp_printfuncs_t stp_lexmark_printfuncs =
   lexmark_limit,
   lexmark_print,
   lexmark_describe_resolution,
-  stp_verify_printer_params
+  stp_verify_printer_params,
+  NULL,
+  NULL
 };
 
 

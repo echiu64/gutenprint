@@ -815,5 +815,7 @@ const stp_printfuncs_t stp_ps_printfuncs =
   ps_limit,
   ps_print,
   ps_describe_resolution,
-  stp_verify_printer_params
+  stp_verify_printer_params,
+  NULL,
+  NULL
 };

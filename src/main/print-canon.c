@@ -2640,7 +2640,9 @@ const stp_printfuncs_t stp_canon_printfuncs =
   canon_limit,
   canon_print,
   canon_describe_resolution,
-  stp_verify_printer_params
+  stp_verify_printer_params,
+  NULL,
+  NULL
 };
 
 /*

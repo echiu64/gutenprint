@@ -154,6 +154,12 @@ extern const char* stp_check_version(unsigned int required_major,
  * output).
  */
 
+typedef enum
+{
+  STP_JOB_MODE_PAGE,
+  STP_JOB_MODE_JOB
+} stp_job_mode_t;
+
 typedef enum stp_image_status
 {
   STP_IMAGE_OK,
@@ -382,6 +388,11 @@ extern int stp_get_left(const stp_vars_t v);
 extern int stp_get_top(const stp_vars_t v);
 extern int stp_get_width(const stp_vars_t v);
 extern int stp_get_height(const stp_vars_t v);
+
+extern void stp_set_job_mode(stp_vars_t, stp_job_mode_t);
+extern stp_job_mode_t stp_get_job_mode(const stp_vars_t);
+extern void stp_set_page_number(stp_vars_t, int);
+extern int stp_get_page_number(const stp_vars_t);
 
 /*
  * For custom page widths, these functions may be used.
@@ -839,6 +850,12 @@ extern int stp_init(void);
  */
 extern int stp_print(const stp_vars_t v, stp_image_t *image);
 
+/*
+ * Must be called prior to the first call to stp_print().
+ */
+extern int stp_start_job(const stp_vars_t, stp_image_t *image);
+
+extern int stp_end_job(const stp_vars_t, stp_image_t *image);
 
 /****************************************************************
 *                                                               *

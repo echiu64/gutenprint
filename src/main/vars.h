@@ -72,6 +72,8 @@ typedef struct					/* Plug-in variables */
   int	page_height;		/* Height of page in points */
   int	input_color_model;	/* Color model for this device */
   int	output_color_model;	/* Color model for this device */
+  int	page_number;
+  stp_job_mode_t job_mode;
   void  *lut;			/* Look-up table */
   void  *driver_data;		/* Private data of the driver */
   unsigned char *cmap;		/* Color map */

@@ -269,7 +269,6 @@ main(int  argc,				/* I - Number of command-line arguments */
     * Update the current page...
     */
 
-    cups.page ++;
     cups.row = 0;
 
     fprintf(stderr, "PAGE: %d 1\n", cups.page);
@@ -329,81 +328,81 @@ main(int  argc,				/* I - Number of command-line arguments */
     * Setup printer driver variables...
     */
 
-    v = stp_allocate_copy(stp_printer_get_printvars(printer));
-
-    stp_set_float_parameter(v, "AppGamma", 1.0);
-    for (i = 0; i < stp_option_count; i++)
-      stp_set_float_parameter(v, stp_options[i].iname,
-			      stp_options[i].defval / 1000.0);
-    stp_set_cmap(v, NULL);
-    stp_set_page_width(v, cups.header.PageSize[0]);
-    stp_set_page_height(v, cups.header.PageSize[1]);
-    stp_set_left(v, 0);
-    stp_set_top(v, 0);
-    stp_set_image_type(v, cups.header.cupsRowCount);
-    stp_set_outfunc(v, cups_writefunc);
-    stp_set_errfunc(v, cups_writefunc);
-    stp_set_outdata(v, stdout);
-    stp_set_errdata(v, stderr);
-
-    switch (cups.header.cupsColorSpace)
-    {
-      case CUPS_CSPACE_W :
-          stp_set_output_type(v, OUTPUT_GRAY);
-	  break;
-      case CUPS_CSPACE_K :
-          stp_set_output_type(v, OUTPUT_MONOCHROME);
-	  break;
-      case CUPS_CSPACE_RGB :
-          stp_set_output_type(v, OUTPUT_COLOR);
-	  break;
-      case CUPS_CSPACE_CMYK :
-          stp_set_output_type(v, OUTPUT_RAW_CMYK);
-	  break;
-      default :
-          fprintf(stderr, "ERROR: Bad colorspace %d!",
-	          cups.header.cupsColorSpace);
-	  break;
-    }
-
-    set_special_parameter(v, "DitherAlgorithm", cups.header.cupsRowStep);
-    set_special_parameter(v, "Resolution", cups.header.cupsCompression);
-
-    stp_set_string_parameter(v, "InputSlot", cups.header.MediaClass);
-    stp_set_string_parameter(v, "MediaType", cups.header.MediaType);
-    stp_set_string_parameter(v, "InkType", cups.header.OutputType);
-
-    fprintf(stderr, "DEBUG: PageSize = %dx%d\n", cups.header.PageSize[0],
-            cups.header.PageSize[1]);
-
-    if ((size = stp_get_papersize_by_size(cups.header.PageSize[1],
-					  cups.header.PageSize[0])) != NULL)
-      stp_set_string_parameter(v, "PageSize", stp_papersize_get_name(size));
-    else
-      fprintf(stderr, "ERROR: Unable to get media size!\n");
-
-   /*
-    * Print the page...
-    */
-
-    stp_merge_printvars(v, stp_printer_get_printvars(printer));
-
-    params = stp_list_parameters(v, &nparams);
-    for (i = 0; i < nparams; i++)
+    if (cups.page == 0)
       {
-	switch (params[i].type)
+	v = stp_allocate_copy(stp_printer_get_printvars(printer));
+
+	stp_set_float_parameter(v, "AppGamma", 1.0);
+	for (i = 0; i < stp_option_count; i++)
+	  stp_set_float_parameter(v, stp_options[i].iname,
+				  stp_options[i].defval / 1000.0);
+	stp_set_cmap(v, NULL);
+	stp_set_page_width(v, cups.header.PageSize[0]);
+	stp_set_page_height(v, cups.header.PageSize[1]);
+	stp_set_left(v, 0);
+	stp_set_top(v, 0);
+	stp_set_image_type(v, cups.header.cupsRowCount);
+	stp_set_outfunc(v, cups_writefunc);
+	stp_set_errfunc(v, cups_writefunc);
+	stp_set_outdata(v, stdout);
+	stp_set_errdata(v, stderr);
+
+	switch (cups.header.cupsColorSpace)
 	  {
-	  case STP_PARAMETER_TYPE_STRING_LIST:
-	    fprintf(stderr, "DEBUG: stp_get_%s(v) |%s|\n",
-		    params[i].name,stp_get_string_parameter(v,params[i].name));
+	  case CUPS_CSPACE_W :
+	    stp_set_output_type(v, OUTPUT_GRAY);
 	    break;
-	  case STP_PARAMETER_TYPE_DOUBLE:
-	    fprintf(stderr, "DEBUG: stp_get_%s(v) |%.3f|\n",
-		    params[i].name,stp_get_float_parameter(v,params[i].name));
+	  case CUPS_CSPACE_K :
+	    stp_set_output_type(v, OUTPUT_MONOCHROME);
 	    break;
-	  default:
+	  case CUPS_CSPACE_RGB :
+	    stp_set_output_type(v, OUTPUT_COLOR);
+	    break;
+	  case CUPS_CSPACE_CMYK :
+	    stp_set_output_type(v, OUTPUT_RAW_CMYK);
+	    break;
+	  default :
+	    fprintf(stderr, "ERROR: Bad colorspace %d!",
+		    cups.header.cupsColorSpace);
 	    break;
 	  }
+
+	set_special_parameter(v, "DitherAlgorithm", cups.header.cupsRowStep);
+	set_special_parameter(v, "Resolution", cups.header.cupsCompression);
+
+	stp_set_string_parameter(v, "InputSlot", cups.header.MediaClass);
+	stp_set_string_parameter(v, "MediaType", cups.header.MediaType);
+	stp_set_string_parameter(v, "InkType", cups.header.OutputType);
+
+	fprintf(stderr, "DEBUG: PageSize = %dx%d\n", cups.header.PageSize[0],
+		cups.header.PageSize[1]);
+
+	if ((size = stp_get_papersize_by_size(cups.header.PageSize[1],
+					      cups.header.PageSize[0])) != NULL)
+	  stp_set_string_parameter(v, "PageSize", stp_papersize_get_name(size));
+	else
+	  fprintf(stderr, "ERROR: Unable to get media size!\n");
+
+	stp_merge_printvars(v, stp_printer_get_printvars(printer));
+
+	params = stp_list_parameters(v, &nparams);
+	for (i = 0; i < nparams; i++)
+	  {
+	    switch (params[i].type)
+	      {
+	      case STP_PARAMETER_TYPE_STRING_LIST:
+		fprintf(stderr, "DEBUG: stp_get_%s(v) |%s|\n",
+			params[i].name,stp_get_string_parameter(v,params[i].name));
+		break;
+	      case STP_PARAMETER_TYPE_DOUBLE:
+		fprintf(stderr, "DEBUG: stp_get_%s(v) |%.3f|\n",
+			params[i].name,stp_get_float_parameter(v,params[i].name));
+		break;
+	      default:
+		break;
+	      }
+	  }
+	stp_set_job_mode(v, STP_JOB_MODE_JOB);
       }
 
     fprintf(stderr, "DEBUG: stp_get_driver(v) |%s|\n", stp_get_driver(v));
@@ -416,6 +415,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: stp_get_page_height(v) |%d|\n", stp_get_page_height(v));
     fprintf(stderr, "DEBUG: stp_get_input_color_model(v) |%d|\n", stp_get_input_color_model(v));
     fprintf(stderr, "DEBUG: stp_get_output_color_model(v) |%d|\n", stp_get_output_color_model(v));
+    stp_set_page_number(v, cups.page);
 
     stp_get_media_size(v, &(cups.width), &(cups.height));
     stp_get_imageable_area(v, &(cups.left), &(cups.right),
@@ -438,9 +438,14 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: GIMP-PRINT %d %d %d  %d %d %d\n",
 	    cups.width, cups.left, cups.right, cups.height, cups.top, cups.bottom);
 
+    /*
+     * Print the page...
+     */
     if (stp_verify(v))
     {
       signal(SIGTERM, cancel_job);
+      if (cups.page == 0)
+	stp_start_job(v, &theImage);
       stp_print(v, &theImage);
       fflush(stdout);
     }
@@ -463,9 +468,12 @@ main(int  argc,				/* I - Number of command-line arguments */
 	cups.row ++;
       }
     }
-
-    stp_free_vars(v);
+    cups.page ++;
   }
+
+  if (cups.page > 0)
+    stp_end_job(v, &theImage);
+  stp_free_vars(v);
 
  /*
   * Close the raster stream...

@@ -4105,12 +4105,14 @@ static const input_slot_t standard_roll_feed_input_slots[] =
   {
     "Standard",
     N_("Standard"),
+    0,
     { "IR\002\000\000\001EX\006\000\000\000\000\000\005\000", 16 },
     { "IR\002\000\000\000", 6}
   },
   {
     "Roll",
     N_("Roll Feed"),
+    0,
     { "IR\002\000\000\001EX\006\000\000\000\000\000\005\001", 16 },
     { "IR\002\000\000\002", 6 }
   }
@@ -4122,17 +4124,50 @@ static const input_slot_list_t standard_roll_feed_input_slot_list =
   sizeof(standard_roll_feed_input_slots) / sizeof(const input_slot_t)
 };
 
+static const input_slot_t cutter_roll_feed_input_slots[] =
+{
+  {
+    "Standard",
+    N_("Standard"),
+    0,
+    { "IR\002\000\000\001EX\006\000\000\000\000\000\005\000", 16 },
+    { "IR\002\000\000\000", 6}
+  },
+  {
+    "RollCutPage",
+    N_("Roll Feed (cut each page)"),
+    1,
+    { "IR\002\000\000\001EX\006\000\000\000\000\000\005\001", 16 },
+    { "IR\002\000\000\002", 6 }
+  },
+  {
+    "RollCutNone",
+    N_("Roll Feed (do not cut)"),
+    0,
+    { "IR\002\000\000\001EX\006\000\000\000\000\000\005\001", 16 },
+    { "IR\002\000\000\002", 6 }
+  }
+};
+
+static const input_slot_list_t cutter_roll_feed_input_slot_list =
+{
+  cutter_roll_feed_input_slots,
+  sizeof(cutter_roll_feed_input_slots) / sizeof(const input_slot_t)
+};
+
 static const input_slot_t pro_roll_feed_input_slots[] =
 {
   {
     "Standard",
     N_("Standard"),
+    0,
     { "PP\003\000\000\002\000", 7 },
     { "", 0 }
   },
   {
     "Roll",
     N_("Roll Feed"),
+    0,
     { "PP\003\000\000\003\000", 7 },
     { "", 0 }
   }
@@ -4149,24 +4184,28 @@ static const input_slot_t sp5000_input_slots[] =
   {
     "CutSheet1",
     N_("Cut Sheet Bin 1"),
+    0,
     { "PP\003\000\000\001\001", 7 },
     { "", 0 }
   },
   {
     "CutSheet2",
     N_("Cut Sheet Bin 2"),
+    0,
     { "PP\003\000\000\002\001", 7 },
     { "", 0 }
   },
   {
     "CutSheetAuto",
     N_("Cut Sheet Autoselect"),
+    0,
     { "PP\003\000\000\001\377", 7 },
     { "", 0 }
   },
   {
     "ManualSelect",
     N_("Manual Selection"),
+    0,
     { "PP\003\000\000\002\001", 7 },
     { "", 0 }
   }
@@ -4905,7 +4944,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 190, 0, 0, 0,
     c2pl_dotsizes, c2pl_densities, &variable_2pl_inks,
     &sp950_paper_list, escp950_reslist, &photo_inklist,
-    stp950_bits, stp950_base_res, &standard_roll_feed_input_slot_list,
+    stp950_bits, stp950_base_res, &cutter_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
   /* 47: Stylus Photo 2100/2200 */
@@ -4920,7 +4959,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 190, 0, 0, 0,
     c4pl_pigment_dotsizes, c4pl_pigment_densities, &variable_4pl_pigment_inks,
     &standard_paper_list, escp2200_reslist, &photo7_inklist,
-    ultrachrome_bits, ultrachrome_base_res, &standard_roll_feed_input_slot_list,
+    ultrachrome_bits, ultrachrome_base_res, &cutter_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
   /* 48: Stylus Pro 7600 */
@@ -4980,7 +5019,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 55, 0, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
     &standard_paper_list, standard_reslist, &photo_inklist,
-    variable_bits, variable_base_res, &standard_roll_feed_input_slot_list,
+    variable_bits, variable_base_res, &cutter_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
   /* 52: Stylus Color C62 */
@@ -5010,7 +5049,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 190, 0, 0, 0,
     c2pl_dotsizes, c2pl_densities, &variable_2pl_inks,
     &sp950_paper_list, escp950_reslist, &photo7_japan_inklist,
-    stp950_bits, stp950_base_res, &standard_roll_feed_input_slot_list,
+    stp950_bits, stp950_base_res, &cutter_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
   /* 54: Stylus Photo EX3 */

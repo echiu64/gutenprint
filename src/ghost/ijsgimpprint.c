@@ -879,7 +879,6 @@ main (int argc, char **argv)
 	  stp_merge_printvars(img.v, stp_printer_get_printvars(printer));
 	}
 
-      page++;
 
       img.total_bytes = (double) ((ph.n_chan * ph.bps * ph.width + 7) >> 3) 
 	* (double) ph.height;
@@ -894,9 +893,13 @@ main (int argc, char **argv)
       stp_set_width(img.v, width);
       height = b - t;
       stp_set_height(img.v, height);
+      stp_set_page_number(img.v, page);
+      stp_set_job_mode(img.v, STP_JOB_MODE_JOB);
       STP_DEBUG(stp_dbg("about to print", img.v));
       if (stp_verify(img.v))
 	{
+	  if (page == 0)
+	    stp_start_job(img.v, &si);
 	  stp_print(img.v, &si);
 	}
       else
@@ -918,8 +921,11 @@ main (int argc, char **argv)
 	}
 
       image_finish(&img);
+      page++;
     }
   while (status == 0);
+  stp_end_job(img.v, &si);
+      
   if (f)
     {
       fclose(f);
