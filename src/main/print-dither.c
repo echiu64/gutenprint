@@ -122,6 +122,10 @@ typedef struct dither_color
   int nlevels;
   unsigned bit_max;
   unsigned signif_bits;
+  int first_bit_light;
+  int first_bit_dark;
+  int last_bit_light;
+  int last_bit_dark;
   dither_segment_t *ranges;
 } dither_color_t;
 
@@ -652,6 +656,13 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
     d->dither_class = DITHER_BLACK;
   else
     d->dither_class = DITHER_CMYK;
+  for (i = 0; i < NCOLORS; i++)
+    {
+      d->dither[i].first_bit_light = -1;
+      d->dither[i].first_bit_dark = -1;
+      d->dither[i].last_bit_light = -1;
+      d->dither[i].last_bit_dark = -1;
+    }
   return d;
 }
 
@@ -1179,6 +1190,30 @@ stp_free_dither(void *vd)
   free(d);
 }
 
+int
+stp_dither_get_first_bit(void *vd, int color, int is_dark)
+{
+  dither_t *d = (dither_t *) vd;
+  if (color < 0 || color >= NCOLORS)
+    return -1;
+  if (is_dark)
+    return d->dither[color].first_bit_dark;
+  else
+    return d->dither[color].first_bit_light;
+}
+
+int
+stp_dither_get_last_bit(void *vd, int color, int is_dark)
+{
+  dither_t *d = (dither_t *) vd;
+  if (color < 0 || color >= NCOLORS)
+    return -1;
+  if (is_dark)
+    return d->dither[color].last_bit_dark;
+  else
+    return d->dither[color].last_bit_light;
+}
+
 static int *
 get_errline(dither_t *d, int row, int color)
 {
@@ -1271,20 +1306,20 @@ update_dither(int r, int o, int width, int odb, int odb_mask,
       tmp += tmp;
       dist = tmp / d->offset0_table[offset];
       dist1 = tmp / d->offset1_table[offset];
+      delta = dist;
+      delta1 = dist1;
+      for (i = -offset; i; i++)
+	{
+	  error1[i] += delta;
+	  error1[-i] += delta;
+	  error0[i] += delta1;
+	  error0[-i] += delta1;
+	  delta1 += dist1;
+	  delta += dist;
+	}
+      error1[0] += delta;
+      return error0[direction];
     }
-  delta = dist;
-  delta1 = dist1;
-  for (i = -offset; i < 0; i++)
-    {
-      error1[i] += delta;
-      error1[-i] += delta;
-      error0[i] += delta1;
-      error0[-i] += delta1;
-      delta1 += dist1;
-      delta += dist;
-    }
-  error1[0] += delta;
-  return error0[direction];
 }
 
 /*
@@ -1295,7 +1330,7 @@ update_dither(int r, int o, int width, int odb, int odb_mask,
  */
 
 static inline int
-print_color(dither_t *d, dither_color_t *rv, int base, int density,
+print_color(const dither_t *d, dither_color_t *rv, int base, int density,
 	    int adjusted, int x, int y, unsigned char *c, unsigned char *lc,
 	    unsigned char bit, int height, unsigned randomizer, int dontprint,
 	    int *ink_budget, dither_matrix_t *pick_matrix,
@@ -1498,6 +1533,18 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	   */
 	  if (dontprint < v && (!ink_budget || *ink_budget >= dot_size))
 	    {
+	      if (isdark)
+		{
+		  if (rv->first_bit_dark == -1)
+		    rv->first_bit_dark = x;
+		  rv->last_bit_dark = x;
+		}
+	      else
+		{
+		  if (rv->first_bit_light == -1)
+		    rv->first_bit_light = x;
+		  rv->last_bit_light = x;
+		}
 	      for (j = 1; j <= bits; j += j, tptr += height)
 		{
 		  if (j & bits)
@@ -1517,7 +1564,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 }
 
 static inline void
-print_color_fast(dither_t *d, dither_color_t *rv, int base,
+print_color_fast(const dither_t *d, dither_color_t *rv, int base,
 		 int adjusted, int x, int y, unsigned char *c,
 		 unsigned char *lc, unsigned char bit, int height,
 		 dither_matrix_t *dither_matrix, int very_fast)
@@ -1533,7 +1580,12 @@ print_color_fast(dither_t *d, dither_color_t *rv, int base,
   if (very_fast)
     {
       if (adjusted >= ditherpoint(d, dither_matrix, x))
-	c[0] |= bit;
+	{
+	  if (rv->first_bit_dark == -1)
+	    rv->first_bit_dark = x;
+	  rv->last_bit_dark = x;
+	  c[0] |= bit;
+	}
       return;
     }
   /*
@@ -1561,6 +1613,18 @@ print_color_fast(dither_t *d, dither_color_t *rv, int base,
 	{
 	  bits = dd->bits_h;
 	  tptr = dd->isdark_h ? c : lc;
+	  if (dd->isdark_h)
+	    {
+	      if (rv->first_bit_dark == -1)
+		rv->first_bit_dark = x;
+	      rv->last_bit_dark = x;
+	    }
+	  else
+	    {
+	      if (rv->first_bit_light == -1)
+		rv->first_bit_light = x;
+	      rv->last_bit_light = x;
+	    }
 
 	  /*
 	   * Lay down all of the bits in the pixel.
@@ -1613,6 +1677,7 @@ stp_dither_monochrome(const unsigned short  *gray,
   dither_t *d = (dither_t *) vd;
   dither_matrix_t *kdither = &(d->dithermat[ECOLOR_K]);
   unsigned bits = d->dither[ECOLOR_K].signif_bits;
+  dither_color_t *rv = &(d->dither[ECOLOR_K]);
   int j;
   unsigned char *tptr;
   int dst_width = d->dst_width;
@@ -1635,6 +1700,9 @@ stp_dither_monochrome(const unsigned short  *gray,
       if (gray[0] && (d->density >= ditherpoint(d, kdither, x)))
 	{
 	  tptr = kptr;
+	  if (rv->first_bit_dark == -1)
+	    rv->first_bit_dark = x;
+	  rv->last_bit_dark = x;
 	  for (j = 0; j < bits; j++, tptr += height)
 	    tptr[0] |= bit;
 	}
@@ -1925,6 +1993,13 @@ stp_dither_black_ed(const unsigned short   *gray,
 		}
 	    }	  
 	}
+    }
+  if (direction == -1)
+    {
+      int tmp;
+      tmp = d->dither[ECOLOR_K].first_bit_dark;
+      d->dither[ECOLOR_K].first_bit_dark = d->dither[ECOLOR_K].last_bit_dark;
+      d->dither[ECOLOR_K].last_bit_dark = tmp;
     }
 }
 
@@ -2873,6 +2948,20 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
   /*
    * Main loop ends here!
    */
+  if (direction == -1)
+    {
+      int i;
+      for (i = 0; i < NCOLORS; i++)
+	{
+	  int tmp;
+	  tmp = d->dither[i].first_bit_dark;
+	  d->dither[i].first_bit_dark = d->dither[i].last_bit_dark;
+	  d->dither[i].last_bit_dark = tmp;
+	  tmp = d->dither[i].first_bit_light;
+	  d->dither[i].first_bit_light = d->dither[i].last_bit_light;
+	  d->dither[i].last_bit_light = tmp;
+	}
+    }
 }
 
 static void
@@ -3531,6 +3620,20 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
   /*
    * Main loop ends here!
    */
+  if (direction == -1)
+    {
+      int i;
+      for (i = 0; i < NCOLORS; i++)
+	{
+	  int tmp;
+	  tmp = d->dither[i].first_bit_dark;
+	  d->dither[i].first_bit_dark = d->dither[i].last_bit_dark;
+	  d->dither[i].last_bit_dark = tmp;
+	  tmp = d->dither[i].first_bit_light;
+	  d->dither[i].first_bit_light = d->dither[i].last_bit_light;
+	  d->dither[i].last_bit_light = tmp;
+	}
+    }
 }
 
 void
@@ -3547,7 +3650,15 @@ stp_dither(const unsigned short  *input,
 	   int		  duplicate_line,
 	   int		  zero_mask)
 {
+  int i;
   dither_t *d = (dither_t *) vd;
+  for (i = 0; i < NCOLORS; i++)
+    {
+      d->dither[i].first_bit_light = -1;
+      d->dither[i].first_bit_dark = -1;
+      d->dither[i].last_bit_light = -1;
+      d->dither[i].last_bit_dark = -1;
+    }
   switch (d->dither_class)
     {
     case DITHER_MONOCHROME:

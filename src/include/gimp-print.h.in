@@ -419,6 +419,10 @@ extern const stp_papersize_t 	stp_get_papersize_by_index(int);
 extern const char *stp_papersize_get_name(const stp_papersize_t pt);
 extern unsigned stp_papersize_get_width(const stp_papersize_t pt);
 extern unsigned stp_papersize_get_height(const stp_papersize_t pt);
+extern unsigned stp_papersize_get_top(const stp_papersize_t pt);
+extern unsigned stp_papersize_get_left(const stp_papersize_t pt);
+extern unsigned stp_papersize_get_bottom(const stp_papersize_t pt);
+extern unsigned stp_papersize_get_right(const stp_papersize_t pt);
 extern stp_papersize_unit_t stp_papersize_get_unit(const stp_papersize_t pt);
 
 

@@ -282,6 +282,8 @@ extern void	stp_dither_set_max_ink(void *vd, int, double);
 extern void	stp_dither_set_x_oversample(void *vd, int os);
 extern void	stp_dither_set_y_oversample(void *vd, int os);
 extern void	stp_dither_set_adaptive_divisor(void *vd, unsigned divisor);
+extern int	stp_dither_get_first_bit(void *vd, int color, int is_dark);
+extern int	stp_dither_get_last_bit(void *vd, int color, int is_dark);
 
 
 extern void	stp_free_dither(void *);
