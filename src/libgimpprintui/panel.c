@@ -2413,14 +2413,14 @@ custom_media_size_callback(GtkWidget *widget,
 static void
 set_media_size(const gchar *new_media_size)
 {
-  const stp_papersize_t pap = stp_get_papersize_by_name (new_media_size);
+  const stp_papersize_t *pap = stp_get_papersize_by_name (new_media_size);
 
   if (pap)
     {
       gint default_width, default_height;
       gint size;
 
-      if (stp_papersize_get_width (pap) == 0)
+      if (pap->width == 0)
 	{
 	  stp_get_media_size(pv->v, &default_width, &default_height);
 	  gtk_widget_set_sensitive (GTK_WIDGET (custom_size_width), TRUE);
@@ -2429,14 +2429,14 @@ set_media_size(const gchar *new_media_size)
 	}
       else
 	{
-	  size = stp_papersize_get_width (pap);
+	  size = pap->width;
 	  gtk_widget_set_sensitive (GTK_WIDGET (custom_size_width), FALSE);
 	  gtk_entry_set_editable (GTK_ENTRY (custom_size_width), FALSE);
 	}
       set_entry_value (custom_size_width, size, 0);
       stp_set_page_width (pv->v, size);
 
-      if (stp_papersize_get_height (pap) == 0)
+      if (pap->height == 0)
 	{
 	  stp_get_media_size(pv->v, &default_height, &default_height);
 	  gtk_widget_set_sensitive (GTK_WIDGET (custom_size_height), TRUE);
@@ -2445,12 +2445,13 @@ set_media_size(const gchar *new_media_size)
 	}
       else
 	{
-	  size = stp_papersize_get_height (pap);
+	  size = pap->height;
 	  gtk_widget_set_sensitive(GTK_WIDGET (custom_size_height), FALSE);
 	  gtk_entry_set_editable (GTK_ENTRY (custom_size_height), FALSE);
 	}
       set_entry_value (custom_size_height, size, 0);
       stp_set_page_height (pv->v, size);
+      preview_update();
     }
 }
 
@@ -2467,9 +2468,9 @@ combo_callback(GtkWidget *widget, gpointer data)
     {
       invalidate_frame();
       invalidate_preview_thumbnail();
+      stp_set_string_parameter(pv->v, option->fast_desc->name, new_value);
       if (option->fast_desc->p_class == STP_PARAMETER_CLASS_PAGE_SIZE)
 	set_media_size(new_value);
-      stp_set_string_parameter(pv->v, option->fast_desc->name, new_value);
       if (option->fast_desc->p_class == STP_PARAMETER_CLASS_OUTPUT)
 	update_adjusted_thumbnail();
     }

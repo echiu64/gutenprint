@@ -767,7 +767,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   for (i = 0; i < num_opts; i++)
   {
-    stp_papersize_t papersize;
+    stp_papersize_t *papersize;
     opt = stp_string_list_param(desc.bounds.str, i);
     papersize = stp_get_papersize_by_name(opt->name);
 
@@ -783,8 +783,8 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
       continue;
     }
 
-    width  = stp_papersize_get_width(papersize);
-    height = stp_papersize_get_height(papersize);
+    width  = papersize->width;
+    height = papersize->height;
 
     if (width <= 0 || height <= 0)
       continue;

@@ -169,6 +169,26 @@ elementFormDefault="qualified">
       <xsd:attribute name="value" type="positiveInteger" use="required"/>
     </xsd:attributeGroup>
   </xsd:element>
+  <xsd:element name="left">
+    <xsd:attributeGroup>
+      <xsd:attribute name="value" type="positiveInteger" use="required"/>
+    </xsd:attributeGroup>
+  </xsd:element>
+  <xsd:element name="right">
+    <xsd:attributeGroup>
+      <xsd:attribute name="value" type="positiveInteger" use="required"/>
+    </xsd:attributeGroup>
+  </xsd:element>
+  <xsd:element name="bottom">
+    <xsd:attributeGroup>
+      <xsd:attribute name="value" type="positiveInteger" use="required"/>
+    </xsd:attributeGroup>
+  </xsd:element>
+  <xsd:element name="top">
+    <xsd:attributeGroup>
+      <xsd:attribute name="value" type="positiveInteger" use="required"/>
+    </xsd:attributeGroup>
+  </xsd:element>
   <xsd:element name="unit">
     <xsd:attributeGroup>
       <xsd:attribute name="value" type="normalizedString"

@@ -48,6 +48,7 @@ static void	pcl_mode0(const stp_vars_t, unsigned char *, unsigned char *,
 			  int, int);
 static void	pcl_mode2(const stp_vars_t, unsigned char *, unsigned char *,
 			  int, int);
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 /*
  * Generic define for a name/value set
@@ -1651,7 +1652,7 @@ static stp_param_string_t ink_types[] =
  */
 
 static const int
-pcl_papersize_valid(const stp_papersize_t pt,
+pcl_papersize_valid(const stp_papersize_t *pt,
 		    int model)
 {
 
@@ -1664,8 +1665,8 @@ pcl_papersize_valid(const stp_papersize_t pt,
                      == PCL_PRINTER_CUSTOM_SIZE);
 #endif
 
-  unsigned int pwidth = stp_papersize_get_width(pt);
-  unsigned int pheight = stp_papersize_get_height(pt);
+  unsigned int pwidth = pt->width;
+  unsigned int pheight = pt->height;
 
 /*
  * This function decides whether a paper size is allowed for the
@@ -1680,14 +1681,14 @@ pcl_papersize_valid(const stp_papersize_t pt,
  * Is it a valid name?
  */
 
-  if (strlen(stp_papersize_get_name(pt)) <= 0)
+  if (strlen(pt->name) <= 0)
     return(0);
 
 /*
  * Is it a recognised supported name?
  */
 
-  if (pcl_convert_media_size(stp_papersize_get_name(pt), model) != -1)
+  if (pcl_convert_media_size(pt->name, model) != -1)
     return(1);
 
 /*
@@ -1767,12 +1768,10 @@ pcl_parameters(const stp_vars_t v, const char *name,
       description->bounds.str = stp_string_list_create();
       for (i = 0; i < papersizes; i++)
 	{
-	  const stp_papersize_t pt = stp_get_papersize_by_index(i);
-	  if (strlen(stp_papersize_get_name(pt)) > 0 &&
-	      pcl_papersize_valid(pt, model))
+	  const stp_papersize_t *pt = stp_get_papersize_by_index(i);
+	  if (strlen(pt->name) > 0 && pcl_papersize_valid(pt, model))
 	    stp_string_list_add_string(description->bounds.str,
-				      stp_papersize_get_name(pt),
-				      stp_papersize_get_text(pt));
+				       pt->name, pt->text);
 	}
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
@@ -1857,19 +1856,23 @@ pcl_parameters(const stp_vars_t v, const char *name,
 /*
  * 'pcl_imageable_area()' - Return the imageable area of the page.
  */
-
 static void
-pcl_imageable_area(const stp_vars_t v,     /* I */
-                   int  *left,		/* O - Left position in points */
-                   int  *right,		/* O - Right position in points */
-                   int  *bottom,	/* O - Bottom position in points */
-                   int  *top)		/* O - Top position in points */
+internal_imageable_area(const stp_vars_t v,     /* I */
+			int  use_paper_margins,
+			int  *left,	/* O - Left position in points */
+			int  *right,	/* O - Right position in points */
+			int  *bottom,	/* O - Bottom position in points */
+			int  *top)	/* O - Top position in points */
 {
   int	width, height;			/* Size of page */
   const pcl_cap_t *caps;		/* Printer caps */
   int	pcl_media_size;			/* Converted media size */
   const char *media_size = stp_get_string_parameter(v, "PageSize");
-  stp_papersize_t pp;
+  const stp_papersize_t *pp = NULL;
+  int left_margin = 0;
+  int right_margin = 0;
+  int bottom_margin = 0;
+  int top_margin = 0;
 
   caps = pcl_get_model_capabilities(stpi_get_model_id(v));
 
@@ -1885,27 +1888,50 @@ pcl_imageable_area(const stp_vars_t v,     /* I */
   if (strlen(media_size) == 0 &&
       ((pp = stp_get_papersize_by_size(stp_get_page_height(v),
 				       stp_get_page_width(v))) != NULL))
-    media_size = stp_papersize_get_name(pp);
+    media_size = pp->name;
 
   stpi_deprintf(STPI_DBG_PCL, "pcl_imageable_area(): media_size: '%s'\n",
 		media_size);
 
   pcl_media_size = pcl_convert_media_size(media_size, stpi_get_model_id(v));
+  if (media_size)
+    pp = stp_get_papersize_by_name(media_size);
+  if (pp && use_paper_margins)
+    {
+      left_margin = pp->left;
+      right_margin = pp->right;
+      bottom_margin = pp->bottom;
+      top_margin = pp->top;
+    }
 
   if (pcl_media_size == PCL_PAPERSIZE_A4)
   {
-    *left   = caps->a4_margins.left_margin;
-    *right  = width - caps->a4_margins.right_margin;
-    *top    = caps->a4_margins.top_margin;
-    *bottom = height - caps->a4_margins.bottom_margin;
+    left_margin = MAX(left_margin, caps->a4_margins.left_margin);
+    right_margin = MAX(right_margin, caps->a4_margins.right_margin);
+    top_margin = MAX(top_margin, caps->a4_margins.top_margin);
+    bottom_margin = MAX(bottom_margin, caps->a4_margins.bottom_margin);
   }
   else
   {
-    *left   = caps->normal_margins.left_margin;
-    *right  = width - caps->normal_margins.right_margin;
-    *top    = caps->normal_margins.top_margin;
-    *bottom = height - caps->normal_margins.bottom_margin;
+    left_margin = MAX(left_margin, caps->normal_margins.left_margin);
+    right_margin = MAX(right_margin, caps->normal_margins.right_margin);
+    top_margin = MAX(top_margin, caps->normal_margins.top_margin);
+    bottom_margin = MAX(bottom_margin, caps->normal_margins.bottom_margin);
   }
+  *left =	left_margin;
+  *right =	width - right_margin;
+  *top =	top_margin;
+  *bottom =	height - bottom_margin;
+}
+
+static void
+pcl_imageable_area(const stp_vars_t v,     /* I */
+                   int  *left,		/* O - Left position in points */
+                   int  *right,		/* O - Right position in points */
+                   int  *bottom,	/* O - Bottom position in points */
+                   int  *top)		/* O - Top position in points */
+{
+  internal_imageable_area(v, 1, left, right, bottom, top);
 }
 
 static void
@@ -1980,7 +2006,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 		pcl_media_source;	/* PCL media source code */
   const double *dot_sizes_use,dot_sizes_cret[]={1.0,1.0,1.0};         /* The dot size used */
   stp_vars_t	nv = stp_vars_create_copy(v);
-  stp_papersize_t pp;
+  const stp_papersize_t *pp;
   int		len_c,		/* Active length of Cyan buffers */
 		len_lc,		/* Ditto Light Cyan */
 		len_m,		/* Ditto Magenta */
@@ -2081,7 +2107,8 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   out_width = stp_get_width(v);
   out_height = stp_get_height(v);
 
-  pcl_imageable_area(nv, &page_left, &page_right, &page_bottom, &page_top);
+  internal_imageable_area(nv, 0, &page_left, &page_right,
+			  &page_bottom, &page_top);
   left -= page_left;
   top -= page_top;
   page_width = page_right - page_left;
@@ -2119,7 +2146,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   if (strlen(media_size) == 0 &&
       ((pp = stp_get_papersize_by_size(stp_get_page_height(v),
 				       stp_get_page_width(v))) != NULL))
-    media_size = stp_papersize_get_name(pp);
+    media_size = pp->name;
 
   pcl_media_size = pcl_convert_media_size(media_size, model);
 

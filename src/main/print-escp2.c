@@ -62,6 +62,7 @@
 #define OP_JOB_PRINT 2
 #define OP_JOB_END   4
 
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define BYTE(expr, byteno) (((expr) >> (8 * byteno)) & 0xff)
 
 static void flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass);
@@ -446,21 +447,19 @@ verify_resolution(const res_t *res, int model, const stp_vars_t v)
 }
 
 static int
-verify_papersize(const stp_papersize_t pt, int model, const stp_vars_t v)
+verify_papersize(const stp_papersize_t *pt, int model, const stp_vars_t v)
 {
   unsigned int height_limit, width_limit;
   unsigned int min_height_limit, min_width_limit;
-  unsigned int pwidth = stp_papersize_get_width(pt);
-  unsigned int pheight = stp_papersize_get_height(pt);
   width_limit = escp2_max_paper_width(model, v);
   height_limit = escp2_max_paper_height(model, v);
   min_width_limit = escp2_min_paper_width(model, v);
   min_height_limit = escp2_min_paper_height(model, v);
-  if (strlen(stp_papersize_get_name(pt)) > 0 &&
-      pwidth <= width_limit && pheight <= height_limit &&
-      (pheight >= min_height_limit || pheight == 0) &&
-      (pwidth >= min_width_limit || pwidth == 0) &&
-      (pwidth == 0 || pheight > 0 ||
+  if (strlen(pt->name) > 0 &&
+      pt->width <= width_limit && pt->height <= height_limit &&
+      (pt->height >= min_height_limit || pt->height == 0) &&
+      (pt->width >= min_width_limit || pt->width == 0) &&
+      (pt->width == 0 || pt->height > 0 ||
        escp2_has_cap(model, MODEL_ROLLFEED, MODEL_ROLLFEED_YES, v)))
     return 1;
   else
@@ -520,11 +519,10 @@ escp2_parameters(const stp_vars_t v, const char *name,
       description->bounds.str = stp_string_list_create();
       for (i = 0; i < papersizes; i++)
 	{
-	  const stp_papersize_t pt = stp_get_papersize_by_index(i);
+	  const stp_papersize_t *pt = stp_get_papersize_by_index(i);
 	  if (verify_papersize(pt, model, v))
 	    stp_string_list_add_string(description->bounds.str,
-				      stp_papersize_get_name(pt),
-				      stp_papersize_get_text(pt));
+				       pt->name, pt->text);
 	}
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
@@ -615,21 +613,24 @@ escp2_find_resolution(int model, const stp_vars_t v, const char *resolution)
     }
 }
 
-/*
- * 'escp2_imageable_area()' - Return the imageable area of the page.
- */
-
 static void
-escp2_imageable_area(const stp_vars_t v,   /* I */
-		     int  *left,	/* O - Left position in points */
-		     int  *right,	/* O - Right position in points */
-		     int  *bottom,	/* O - Bottom position in points */
-		     int  *top)		/* O - Top position in points */
+internal_imageable_area(const stp_vars_t v, int use_paper_margins,
+			int *left, int *right, int *bottom, int *top)
 {
   int	width, height;			/* Size of page */
   int	rollfeed = 0;			/* Roll feed selected */
   const char *input_slot = stp_get_string_parameter(v, "InputSlot");
+  const char *media_size = stp_get_string_parameter(v, "PageSize");
   int model = stpi_get_model_id(v);
+  int left_margin = 0;
+  int right_margin = 0;
+  int bottom_margin = 0;
+  int top_margin = 0;
+  const stp_papersize_t *pt = NULL;
+
+  if (media_size && use_paper_margins)
+    pt = stp_get_papersize_by_name(media_size);
+
   if (model < 0 || model >= stpi_escp2_model_limit)
     {
       stpi_eprintf(v, _("Model %d out of range.\n"), model);
@@ -652,21 +653,46 @@ escp2_imageable_area(const stp_vars_t v,   /* I */
     }
 
   stpi_default_media_size(v, &width, &height);
+  if (pt)
+    {
+      left_margin = pt->left;
+      right_margin = pt->right;
+      bottom_margin = pt->bottom;
+      top_margin = pt->top;
+    }
 
   if (rollfeed)
     {
-      *left =	escp2_roll_left_margin(model, v);
-      *right =	width - escp2_roll_right_margin(model, v);
-      *top =	escp2_roll_top_margin(model, v);
-      *bottom =	height - escp2_roll_bottom_margin(model, v);
+      left_margin = MAX(left_margin, escp2_roll_left_margin(model, v));
+      right_margin = MAX(right_margin, escp2_roll_right_margin(model, v));
+      bottom_margin = MAX(bottom_margin, escp2_roll_bottom_margin(model, v));
+      top_margin = MAX(top_margin, escp2_roll_top_margin(model, v));
     }
   else
     {
-      *left =	escp2_left_margin(model, v);
-      *right =	width - escp2_right_margin(model, v);
-      *top =	escp2_top_margin(model, v);
-      *bottom =	height - escp2_bottom_margin(model, v);
+      left_margin = MAX(left_margin, escp2_left_margin(model, v));
+      right_margin = MAX(right_margin, escp2_right_margin(model, v));
+      bottom_margin = MAX(bottom_margin, escp2_bottom_margin(model, v));
+      top_margin = MAX(top_margin, escp2_top_margin(model, v));
     }
+  *left =	left_margin;
+  *right =	width - right_margin;
+  *top =	top_margin;
+  *bottom =	height - bottom_margin;
+}
+
+/*
+ * 'escp2_imageable_area()' - Return the imageable area of the page.
+ */
+
+static void
+escp2_imageable_area(const stp_vars_t v,   /* I */
+		     int  *left,	/* O - Left position in points */
+		     int  *right,	/* O - Right position in points */
+		     int  *bottom,	/* O - Bottom position in points */
+		     int  *top)		/* O - Top position in points */
+{
+  internal_imageable_area(v, 1, left, right, bottom, top);
 }
 
 static void
@@ -1534,7 +1560,8 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
   if (ydpi > max_vres)
     physical_ydpi = max_vres;
 
-  escp2_imageable_area(v, &page_left, &page_right, &page_bottom, &page_top);
+  internal_imageable_area(v, 0, &page_left, &page_right,
+			  &page_bottom, &page_top);
   left -= page_left;
   top -= page_top;
   page_width = page_right - page_left;

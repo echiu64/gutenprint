@@ -39,10 +39,8 @@ main(int argc, char **argv)
   stp_init();
   for (i = 0; i < stp_known_papersizes(); i++)
     {
-      const stp_papersize_t p = stp_get_papersize_by_index(i);
-      printf("%s %d %d\n", stp_papersize_get_name(p),
-	     stp_papersize_get_width(p),
-	     stp_papersize_get_height(p));
+      const stp_papersize_t *p = stp_get_papersize_by_index(i);
+      printf("%s %d %d\n", p->name, p->width, p->height);
     }
   return 0;
 }

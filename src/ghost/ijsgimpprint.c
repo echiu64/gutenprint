@@ -502,7 +502,7 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
       code = gimp_parse_wxh(vbuf, strlen(vbuf), &w, &h);
       if (code == 0)
 	{
-	  stp_papersize_t p;
+	  const stp_papersize_t *p;
 	  w *= 72;
 	  h *= 72;
 	  STP_DEBUG(fprintf(stderr, "paper size %f %f %s\n", w, h, vbuf));
@@ -510,10 +510,8 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  stp_set_page_height(img->v, h);
 	  if ((p = stp_get_papersize_by_size(h, w)) != NULL)
 	    {
-	      STP_DEBUG(fprintf(stderr, "Found page size %s\n",
-				stp_papersize_get_name(p)));
-	      stp_set_string_parameter(img->v, "PageSize",
-				       stp_papersize_get_name(p));
+	      STP_DEBUG(fprintf(stderr, "Found page size %s\n", p->name));
+	      stp_set_string_parameter(img->v, "PageSize", p->name);
 	    }
 	  else
 	    STP_DEBUG(fprintf(stderr, "No matching paper size found\n"));

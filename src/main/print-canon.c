@@ -73,6 +73,9 @@
 #define COMPBUFWIDTH (MAX_PHYSICAL_BPI * MAX_OVERSAMPLED * MAX_BPP * \
 	MAX_CARRIAGE_WIDTH / CHAR_BIT)
 
+#define MIN(a,b) (((a)<(b)) ? (a) : (b))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
 #define USE_3BIT_FOLD_TYPE 323
 
 /*
@@ -1307,11 +1310,11 @@ canon_printhead_colors(const char *name, const canon_cap_t * caps)
 static unsigned char
 canon_size_type(const stp_vars_t v, const canon_cap_t * caps)
 {
-  const stp_papersize_t pp = stp_get_papersize_by_size(stp_get_page_height(v),
-						       stp_get_page_width(v));
+  const stp_papersize_t *pp = stp_get_papersize_by_size(stp_get_page_height(v),
+							stp_get_page_width(v));
   if (pp)
     {
-      const char *name = stp_papersize_get_name(pp);
+      const char *name = pp->name;
       /* used internally: do not translate */
       /* built ins: */
       if (!strcmp(name,"A5"))          return 0x01;
@@ -1540,16 +1543,14 @@ canon_parameters(const stp_vars_t v, const char *name,
     height_limit = caps->max_height;
 
     for (i = 0; i < papersizes; i++) {
-      const stp_papersize_t pt = stp_get_papersize_by_index(i);
-      if (strlen(stp_papersize_get_name(pt)) > 0 &&
-	  stp_papersize_get_width(pt) <= width_limit &&
-	  stp_papersize_get_height(pt) <= height_limit)
+      const stp_papersize_t *pt = stp_get_papersize_by_index(i);
+      if (strlen(pt->name) > 0 &&
+	  pt->width <= width_limit && pt->height <= height_limit)
 	{
 	  if (stp_string_list_count(description->bounds.str) == 0)
-	    description->deflt.str = stp_papersize_get_name(pt);
+	    description->deflt.str = pt->name;
 	  stp_string_list_add_string(description->bounds.str,
-				   stp_papersize_get_name(pt),
-				   stp_papersize_get_text(pt));
+				     pt->name, pt->text);
 	}
     }
   }
@@ -1639,22 +1640,53 @@ canon_parameters(const stp_vars_t v, const char *name,
  */
 
 static void
+internal_imageable_area(const stp_vars_t v,   /* I */
+			int  use_paper_margins,
+			int  *left,	/* O - Left position in points */
+			int  *right,	/* O - Right position in points */
+			int  *bottom,	/* O - Bottom position in points */
+			int  *top)	/* O - Top position in points */
+{
+  int	width, length;			/* Size of page */
+  int left_margin = 0;
+  int right_margin = 0;
+  int bottom_margin = 0;
+  int top_margin = 0;
+
+  const canon_cap_t * caps= canon_get_model_capabilities(stpi_get_model_id(v));
+  const char *media_size = stp_get_string_parameter(v, "PageSize");
+  const stp_papersize_t *pt = NULL;
+
+  if (media_size && use_paper_margins)
+    pt = stp_get_papersize_by_name(media_size);
+
+  stpi_default_media_size(v, &width, &length);
+  if (pt)
+    {
+      left_margin = pt->left;
+      right_margin = pt->right;
+      bottom_margin = pt->bottom;
+      top_margin = pt->top;
+    }
+  left_margin = MAX(left_margin, caps->border_left);
+  right_margin = MAX(right_margin, caps->border_right);
+  top_margin = MAX(top_margin, caps->border_top);
+  bottom_margin = MAX(bottom_margin, caps->border_bottom);
+
+  *left =	left_margin;
+  *right =	width - right_margin;
+  *top =	top_margin;
+  *bottom =	length - bottom_margin;
+}
+
+static void
 canon_imageable_area(const stp_vars_t v,   /* I */
                      int  *left,	/* O - Left position in points */
                      int  *right,	/* O - Right position in points */
                      int  *bottom,	/* O - Bottom position in points */
                      int  *top)		/* O - Top position in points */
 {
-  int	width, length;			/* Size of page */
-
-  const canon_cap_t * caps= canon_get_model_capabilities(stpi_get_model_id(v));
-
-  stpi_default_media_size(v, &width, &length);
-
-  *left   = caps->border_left;
-  *right  = width - caps->border_right;
-  *top    = caps->border_top;
-  *bottom = length - caps->border_bottom;
+  internal_imageable_area(v, 1, left, right, bottom, top);
 }
 
 static void
@@ -1712,9 +1744,6 @@ canon_cmd(const stp_vars_t v, /* I - the printer         */
 #define ESC28 "\033\050"
 #define ESC5b "\033\133"
 #define ESC40 "\033\100"
-
-#define MIN(a,b) (((a)<(b)) ? (a) : (b))
-#define MAX(a,b) (((a)>(b)) ? (a) : (b))
 
 /* ESC [K --  -- reset printer:
  */
@@ -2182,7 +2211,8 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   out_width = stp_get_width(v);
   out_height = stp_get_height(v);
 
-  canon_imageable_area(nv, &page_left, &page_right, &page_bottom, &page_top);
+  internal_imageable_area(nv, 0, &page_left, &page_right,
+			  &page_bottom, &page_top);
   left -= page_left;
   top -= page_top;
   page_width = page_right - page_left;

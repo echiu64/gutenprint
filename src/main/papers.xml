@@ -72,6 +72,10 @@
       <width value="324"/>
       <height value="495"/>
       <unit value="english"/>
+      <top value="18"/>
+      <left value="18"/>
+      <right value="18"/>
+      <bottom value="45"/>
     </paper>
     <paper name="w360h504">
       <description value="5x7"/>

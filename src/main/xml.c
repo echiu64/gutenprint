@@ -56,7 +56,7 @@ static void stpi_xml_process_printdef(xmlNodePtr printdef);
 static void stpi_xml_process_family(xmlNodePtr family);
 static stpi_internal_printer_t *stpi_xml_process_printer(xmlNodePtr printer, xmlChar *family, const stpi_printfuncs_t *printfuncs);
 static void stpi_xml_process_paperdef(xmlNodePtr paperdef);
-static stpi_internal_papersize_t *stpi_xml_process_paper(xmlNodePtr paper);
+static stp_papersize_t *stpi_xml_process_paper(xmlNodePtr paper);
 
 
 /*
@@ -467,7 +467,7 @@ static void
 stpi_xml_process_paperdef(xmlNodePtr paperdef) /* The paperdef node */
 {
   xmlNodePtr paper;                           /* paper node pointer */
-  stpi_internal_papersize_t *outpaper;         /* Generated paper */
+  stp_papersize_t *outpaper;         /* Generated paper */
 
   paper = paperdef->children;
   while (paper)
@@ -476,7 +476,7 @@ stpi_xml_process_paperdef(xmlNodePtr paperdef) /* The paperdef node */
 	{
 	  outpaper = stpi_xml_process_paper(paper);
 	  if (outpaper)
-	    stpi_paper_create((stp_papersize_t) outpaper);
+	    stpi_paper_create(outpaper);
 	}
       paper = paper->next;
     }
@@ -486,7 +486,7 @@ stpi_xml_process_paperdef(xmlNodePtr paperdef) /* The paperdef node */
 /*
  * Process the <paper> node.
  */
-static stpi_internal_papersize_t *
+static stp_papersize_t *
 stpi_xml_process_paper(xmlNodePtr paper) /* The paper node */
 {
   xmlNodePtr prop;                      /* Temporary node pointer */
@@ -498,16 +498,24 @@ stpi_xml_process_paper(xmlNodePtr paper) /* The paper node */
       "description",
       "width",
       "height",
+      "left",
+      "right",
+      "bottom",
+      "top",
       "unit",
       NULL
       };*/
-  stpi_internal_papersize_t *outpaper;   /* Generated paper */
+  stp_papersize_t *outpaper;   /* Generated paper */
   int
-    id = 0,                             /* Check id is present */
-    name = 0,                           /* Check name is present */
-    height = 0,                         /* Check height is present */
-    width = 0,                          /* Check width is present */
-    unit = 0;                           /* Check unit is present */
+    id = 0,			/* Check id is present */
+    name = 0,			/* Check name is present */
+    height = 0,			/* Check height is present */
+    width = 0,			/* Check width is present */
+    left = 0,			/* Check left is present */
+    right = 0,			/* Check right is present */
+    bottom = 0,			/* Check bottom is present */
+    top = 0,			/* Check top is present */
+    unit = 0;			/* Check unit is present */
 
   if (stpi_debug_level & STPI_DBG_XML)
     {
@@ -516,12 +524,17 @@ stpi_xml_process_paper(xmlNodePtr paper) /* The paper node */
       xmlFree(stmp);
     }
 
-  outpaper = stpi_malloc(sizeof(stpi_internal_papersize_t));
+  outpaper = stpi_malloc(sizeof(stp_papersize_t));
   if (!outpaper)
     return NULL;
 
   outpaper->name =
     (char *) xmlGetProp(paper, (const xmlChar *) "name");
+
+  outpaper->top = 0;
+  outpaper->left = 0;
+  outpaper->bottom = 0;
+  outpaper->right = 0;
   if (outpaper->name)
     id = 1;
 
@@ -553,6 +566,34 @@ stpi_xml_process_paper(xmlNodePtr paper) /* The paper node */
 	  xmlFree(stmp);
 	  height = 1;
 	}
+      if (!xmlStrcmp(prop->name, (const xmlChar *) "left"))
+	{
+	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
+	  outpaper->left = xmlstrtoul(stmp);
+	  xmlFree(stmp);
+	  left = 1;
+	}
+      if (!xmlStrcmp(prop->name, (const xmlChar *) "right"))
+	{
+	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
+	  outpaper->right = xmlstrtoul(stmp);
+	  xmlFree(stmp);
+	  right = 1;
+	}
+      if (!xmlStrcmp(prop->name, (const xmlChar *) "bottom"))
+	{
+	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
+	  outpaper->bottom = xmlstrtoul(stmp);
+	  xmlFree(stmp);
+	  bottom = 1;
+	}
+      if (!xmlStrcmp(prop->name, (const xmlChar *) "top"))
+	{
+	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
+	  outpaper->top = xmlstrtoul(stmp);
+	  xmlFree(stmp);
+	  top = 1;
+	}
       if (!xmlStrcmp(prop->name, (const xmlChar *) "unit"))
 	{
 	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
@@ -569,14 +610,9 @@ stpi_xml_process_paper(xmlNodePtr paper) /* The paper node */
 	  unit = 1;
 	}
 
-      outpaper->top = 0;
-      outpaper->left = 0;
-      outpaper->bottom = 0;
-      outpaper->right = 0;
-
       prop = prop->next;
     }
-  if (id && name && width && height && unit)
+  if (id && name && width && height && unit) /* Margins are optional */
     return outpaper;
   stpi_free(outpaper);
   outpaper = NULL;

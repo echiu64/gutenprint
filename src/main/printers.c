@@ -347,8 +347,10 @@ verify_string_param(const stp_vars_t v, const char *parameter,
     {
       const char *checkval = stp_get_string_parameter(v, parameter);
       stp_string_list_t vptr = desc->bounds.str;
-      size_t count = stp_string_list_count(vptr);
+      size_t count = 0;
       int i;
+      if (vptr)
+	count = stp_string_list_count(vptr);
       answer = 0;
       if (checkval == NULL)
 	{

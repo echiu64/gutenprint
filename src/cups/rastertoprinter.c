@@ -190,7 +190,7 @@ static stp_vars_t
 initialize_page(cups_image_t *cups, const stp_printer_t printer)
 {
   int i;
-  stp_papersize_t	size;		/* Paper size */
+  const stp_papersize_t	*size;		/* Paper size */
   stp_parameter_list_t params;
   int nparams;
   stp_vars_t v = stp_vars_create_copy(stp_printer_get_defaults(printer));
@@ -240,7 +240,7 @@ initialize_page(cups_image_t *cups, const stp_printer_t printer)
 
   if ((size = stp_get_papersize_by_size(cups->header.PageSize[1],
 					cups->header.PageSize[0])) != NULL)
-    stp_set_string_parameter(v, "PageSize", stp_papersize_get_name(size));
+    stp_set_string_parameter(v, "PageSize", size->name);
   else
     fprintf(stderr, "ERROR: Unable to get media size!\n");
 

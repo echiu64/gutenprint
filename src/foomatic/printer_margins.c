@@ -56,7 +56,7 @@ main(int argc, char **argv) {
     num_opts = stp_string_list_count(desc.bounds.str);
     
     for (k = 0; k < num_opts; k++) {
-      stp_papersize_t papersize;
+      const stp_papersize_t *papersize;
       opt = stp_string_list_param(desc.bounds.str, k);
       papersize = stp_get_papersize_by_name(opt->name);
       
@@ -65,8 +65,8 @@ main(int argc, char **argv) {
 	continue;
       }
       
-      width  = stp_papersize_get_width(papersize);
-      height = stp_papersize_get_height(papersize);
+      width  = papersize->width;
+      height = papersize->height;
       
       stp_set_string_parameter(pv, "PageSize", opt->name);
       

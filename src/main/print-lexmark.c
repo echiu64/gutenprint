@@ -70,7 +70,7 @@
 #define false 0
 #define true  1
 
-#define max(a, b) ((a > b) ? a : b)
+#define max(a, b) ((a > b) ? (a) : (b))
 #define INCH(x)		(72 * x)
 
 static const stpi_dither_range_simple_t photo_dither_ranges[] =
@@ -903,11 +903,11 @@ lexmark_size_type
 static unsigned char
 lexmark_size_type(const stp_vars_t v, const lexmark_cap_t * caps)
 {
-  const stp_papersize_t pp = stp_get_papersize_by_size(stp_get_page_height(v),
-						       stp_get_page_width(v));
+  const stp_papersize_t *pp = stp_get_papersize_by_size(stp_get_page_height(v),
+							stp_get_page_width(v));
   if (pp)
     {
-      const char *name = stp_papersize_get_name(pp);
+      const char *name = pp->name;
       /* built ins: */
       if (!strcmp(name,"A5"))		return 0x01;
       if (!strcmp(name,"A4"))		return 0x03;
@@ -1068,19 +1068,16 @@ lexmark_parameters(const stp_vars_t v, const char *name,
     min_height_limit = caps->min_paper_height;
 
     for (i = 0; i < papersizes; i++) {
-      const stp_papersize_t pt = stp_get_papersize_by_index(i);
-      unsigned int pwidth = stp_papersize_get_width(pt);
-      unsigned int pheight = stp_papersize_get_height(pt);
-      if (strlen(stp_papersize_get_name(pt)) > 0 &&
-	  pwidth <= width_limit && pheight <= height_limit &&
-	  (pheight >= min_height_limit || pheight == 0) &&
-	  (pwidth >= min_width_limit || pwidth == 0))
+      const stp_papersize_t *pt = stp_get_papersize_by_index(i);
+      if (strlen(pt->name) > 0 &&
+	  pt->width <= width_limit && pt->height <= height_limit &&
+	  (pt->height >= min_height_limit || pt->height == 0) &&
+	  (pt->width >= min_width_limit || pt->width == 0))
 	{
 	  if (stp_string_list_count(description->bounds.str) == 0)
-	    description->deflt.str = stp_papersize_get_name(pt);
+	    description->deflt.str = pt->name;
 	  stp_string_list_add_string(description->bounds.str,
-				    stp_papersize_get_name(pt),
-				    stp_papersize_get_text(pt));
+				     pt->name, pt->text);
 	}
     }
   }
@@ -1135,24 +1132,54 @@ lexmark_parameters(const stp_vars_t v, const char *name,
  */
 
 static void
+internal_imageable_area(const stp_vars_t v,   /* I */
+			int  use_paper_margins,
+			int  *left,	/* O - Left position in points */
+			int  *right,	/* O - Right position in points */
+			int  *bottom,	/* O - Bottom position in points */
+			int  *top)	/* O - Top position in points */
+{
+  int	width, length;			/* Size of page */
+  int left_margin = 0;
+  int right_margin = 0;
+  int bottom_margin = 0;
+  int top_margin = 0;
+  const char *media_size = stp_get_string_parameter(v, "PageSize");
+  const stp_papersize_t *pt = NULL;
+  const lexmark_cap_t *caps =
+    lexmark_get_model_capabilities(stpi_get_model_id(v));
+
+
+  if (media_size && use_paper_margins)
+    pt = stp_get_papersize_by_name(media_size);
+
+  stpi_default_media_size(v, &width, &length);
+  if (pt)
+    {
+      left_margin = pt->left;
+      right_margin = pt->right;
+      bottom_margin = pt->bottom;
+      top_margin = pt->top;
+    }
+  left_margin = max(left_margin, caps->border_left);
+  right_margin = max(right_margin, caps->border_right);
+  top_margin = max(top_margin, caps->border_top);
+  bottom_margin = max(bottom_margin, caps->border_bottom);
+
+  *left =	left_margin;
+  *right =	width - right_margin;
+  *top =	top_margin;
+  *bottom =	length - bottom_margin;
+}
+
+static void
 lexmark_imageable_area(const stp_vars_t v,   /* I */
 		       int  *left,	/* O - Left position in points */
 		       int  *right,	/* O - Right position in points */
 		       int  *bottom,	/* O - Bottom position in points */
 		       int  *top)	/* O - Top position in points */
 {
-  int	width, length;			/* Size of page */
-
-  const lexmark_cap_t * caps= lexmark_get_model_capabilities(stpi_get_model_id(v));
-
-  stpi_default_media_size(v, &width, &length);
-
-  *left   = caps->border_left;
-  *right  = width - caps->border_right;
-  *top    = caps->border_top;
-  *bottom = length - caps->border_bottom;
-
-  lxm3200_linetoeject = (length * 1200) / 72;
+  internal_imageable_area(v, 1, left, right, bottom, top);
 }
 
 static void
@@ -1593,7 +1620,8 @@ densityDivisor /= 1.2;
   out_width = stp_get_width(v);
   out_height = stp_get_height(v);
 
-  lexmark_imageable_area(nv, &page_left, &page_right, &page_bottom, &page_top);
+  internal_imageable_area(nv, 0, &page_left, &page_right,
+			  &page_bottom, &page_top);
   left -= page_left;
   top -= page_top;
   page_width = page_right - page_left;
@@ -1607,7 +1635,7 @@ densityDivisor /= 1.2;
   image_width = stpi_image_width(image);
 
   stpi_default_media_size(nv, &n, &page_true_height);
-
+  lxm3200_linetoeject = (page_true_height * 1200) / 72;
 
   stpi_image_progress_init(image);
 

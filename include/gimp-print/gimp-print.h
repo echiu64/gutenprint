@@ -362,7 +362,19 @@ typedef enum stp_papersize_unit
   PAPERSIZE_METRIC
 } stp_papersize_unit_t;
 
-typedef void *stp_papersize_t;
+typedef struct
+{
+  char *name;
+  char *text;
+  char *comment;
+  unsigned width;
+  unsigned height;
+  unsigned top;
+  unsigned left;
+  unsigned bottom;
+  unsigned right;
+  stp_papersize_unit_t paper_unit;
+} stp_papersize_t;
 
 /*
  * Output function supplied by the calling application.
@@ -964,19 +976,9 @@ extern int stp_curve_compose(stp_curve_t *retval,
 ****************************************************************/
 
 extern int stp_known_papersizes(void);
-extern const stp_papersize_t stp_get_papersize_by_name(const char *name);
-extern const stp_papersize_t stp_get_papersize_by_size(int l, int w);
-extern const stp_papersize_t stp_get_papersize_by_index(int index);
-extern const char *stp_papersize_get_name(const stp_papersize_t pt);
-extern const char *stp_papersize_get_text(const stp_papersize_t pt);
-extern unsigned stp_papersize_get_width(const stp_papersize_t pt);
-extern unsigned stp_papersize_get_height(const stp_papersize_t pt);
-extern unsigned stp_papersize_get_top(const stp_papersize_t pt);
-extern unsigned stp_papersize_get_left(const stp_papersize_t pt);
-extern unsigned stp_papersize_get_bottom(const stp_papersize_t pt);
-extern unsigned stp_papersize_get_right(const stp_papersize_t pt);
-extern stp_papersize_unit_t stp_papersize_get_unit(const stp_papersize_t pt);
-
+extern const stp_papersize_t *stp_get_papersize_by_name(const char *name);
+extern const stp_papersize_t *stp_get_papersize_by_size(int l, int w);
+extern const stp_papersize_t *stp_get_papersize_by_index(int index);
 
 /****************************************************************
 *                                                               *

@@ -62,7 +62,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 <!--                    Paper                                      -->
 <!--                    Paper definitions                          -->
 <!ELEMENT  paper            (description, comment?,
-                             width, height, unit)                    >
+                             width, height, unit,
+                             top?, left?, bottom?, right?)           >
 <!--         name       Paper identification string                -->
 <!ATTLIST  paper
              name       ID                                 #REQUIRED >
@@ -93,6 +94,34 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 <!ELEMENT  height       EMPTY                                        >
 <!--         value      Paper dimension                            -->
 <!ATTLIST  height
+             value      NMTOKEN                            #REQUIRED >
+
+<!--                    Top margin                                 -->
+<!--                    Paper top margin                           -->
+<!ELEMENT  top          EMPTY                                        >
+<!--         value      Paper dimension                            -->
+<!ATTLIST  top
+             value      NMTOKEN                            #REQUIRED >
+
+<!--                    Left margin                                -->
+<!--                    Paper left margin                          -->
+<!ELEMENT  left         EMPTY                                        >
+<!--         value      Paper dimension                            -->
+<!ATTLIST  left
+             value      NMTOKEN                            #REQUIRED >
+
+<!--                    Bottom margin                              -->
+<!--                    Paper bottom margin                        -->
+<!ELEMENT  bottom       EMPTY                                        >
+<!--         value      Paper dimension                            -->
+<!ATTLIST  bottom
+             value      NMTOKEN                            #REQUIRED >
+
+<!--                    Right margin                               -->
+<!--                    Paper right margin                         -->
+<!ELEMENT  right        EMPTY                                        >
+<!--         value      Paper dimension                            -->
+<!ATTLIST  right
              value      NMTOKEN                            #REQUIRED >
 
 <!--                    Unit                                       -->
