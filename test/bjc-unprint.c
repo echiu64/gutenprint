@@ -28,7 +28,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#ifdef HAVE_MALLOC_H
 #include <malloc.h>
+#endif
 
 
 char *efnlc= 0,*efnlm= 0,*efnc= 0,*efnm= 0,*efny= 0,*efnk= 0;
