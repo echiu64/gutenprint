@@ -619,6 +619,8 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
   else if (print_head<=4) arg_6d_1= 0x04;
   if (output_type==OUTPUT_GRAY) arg_6d_2= 0x02;
 
+  if (caps.model==8200) arg_6d_3= 0x01;
+
   arg_70_1= (printable_height >> 8) & 0xff;
   arg_70_2= (printable_height) & 0xff;
   arg_70_3= (printable_width >> 8) & 0xff;
