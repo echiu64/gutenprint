@@ -82,14 +82,14 @@ static const res_t *escp2_find_resolution(stp_const_vars_t v);
 {									\
   "escp2_" #s, "escp2_" #s, N_("Advanced Printer Functionality"), NULL,	\
   STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,			\
-  STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1				\
+  STP_PARAMETER_LEVEL_INTERNAL, 0, 1, -1, 1				\
 }
 
 #define PARAMETER_RAW(s)						\
 {									\
   "escp2_" #s, "escp2_" #s, N_("Advanced Printer Functionality"), NULL,	\
   STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,			\
-  STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1				\
+  STP_PARAMETER_LEVEL_INTERNAL, 0, 1, -1, 1				\
 }
 
 typedef struct
@@ -267,6 +267,8 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(alternate_alignment_choices),
   PARAMETER_INT(cd_x_offset),
   PARAMETER_INT(cd_y_offset),
+  PARAMETER_INT(cd_page_width),
+  PARAMETER_INT(cd_page_height),
   PARAMETER_RAW(preinit_sequence),
   PARAMETER_RAW(postinit_remote_sequence)
 };
@@ -515,6 +517,8 @@ DEF_SIMPLE_ACCESSOR(min_paper_width, unsigned)
 DEF_SIMPLE_ACCESSOR(min_paper_height, unsigned)
 DEF_SIMPLE_ACCESSOR(cd_x_offset, int)
 DEF_SIMPLE_ACCESSOR(cd_y_offset, int)
+DEF_SIMPLE_ACCESSOR(cd_page_width, int)
+DEF_SIMPLE_ACCESSOR(cd_page_height, int)
 DEF_SIMPLE_ACCESSOR(extra_feed, unsigned)
 DEF_SIMPLE_ACCESSOR(pseudo_separation_rows, int)
 DEF_SIMPLE_ACCESSOR(base_separation, int)
@@ -2171,14 +2175,23 @@ setup_page(stp_vars_t v)
     {
       int left_center = escp2_cd_x_offset(v);
       int top_center = escp2_cd_y_offset(v);
+      if (escp2_cd_page_width(v))
+	pd->page_right = escp2_cd_page_width(v);
+      else
+	extra_left = left_center - (pd->page_right / 2);
+      if (escp2_cd_page_height(v))
+	{
+	  pd->page_bottom = escp2_cd_page_height(v);
+	  pd->page_true_height = escp2_cd_page_height(v);
+	}
+      else
+	extra_top = top_center - (pd->page_bottom / 2);
       pd->cd_inner_radius = 43 * pd->micro_units * 10 / 254 / 2;
       pd->cd_outer_radius = pd->page_right * pd->micro_units / 72 / 2;
       pd->cd_x_offset =
 	((pd->page_right / 2) - stp_get_left(v)) * pd->micro_units / 72;
       pd->cd_y_offset =
-	((pd->page_right / 2) - stp_get_top(v)) * pd->micro_units / 72;
-      extra_left = left_center - (pd->page_right / 2);
-      extra_top = top_center - (pd->page_bottom / 2);
+	((pd->page_bottom / 2) - stp_get_top(v)) * pd->micro_units / 72;
     }
 
   pd->page_right += extra_left + 1;
