@@ -93,6 +93,7 @@ typedef struct
 } cups_image_t;
 
 static void	cups_writefunc(void *file, const char *buf, size_t bytes);
+static void	cups_errfunc(void *file, const char *buf, size_t bytes);
 static void	cancel_job(int sig);
 static const char *Image_get_appname(stp_image_t *image);
 static void	 Image_progress_conclude(stp_image_t *image);
@@ -123,6 +124,7 @@ static stp_image_t theImage =
 };
 
 static volatile stp_image_status_t Image_status = STP_IMAGE_STATUS_OK;
+static double total_bytes_printed = 0;
 
 static void
 set_special_parameter(stp_vars_t v, const char *name, int choice)
@@ -211,7 +213,7 @@ initialize_page(cups_image_t *cups, stp_const_vars_t default_settings)
   stp_set_page_width(v, cups->header.PageSize[0]);
   stp_set_page_height(v, cups->header.PageSize[1]);
   stp_set_outfunc(v, cups_writefunc);
-  stp_set_errfunc(v, cups_writefunc);
+  stp_set_errfunc(v, cups_errfunc);
   stp_set_outdata(v, stdout);
   stp_set_errdata(v, stderr);
 
@@ -452,7 +454,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   int			num_options;	/* Number of CUPS options */
   cups_option_t		*options;	/* CUPS options */
   stp_vars_t		v = NULL;
-  stp_vars_t		default_settings = stp_vars_create();
+  stp_vars_t		default_settings;
   int			initialized_job = 0;
 
  /*
@@ -462,7 +464,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   theImage.rep = &cups;
 
   stp_init();
-
+  default_settings = stp_vars_create();
  /*
   * Check for valid arguments...
   */
@@ -632,19 +634,23 @@ main(int  argc,				/* I - Number of command-line arguments */
       stp_vars_free(v);
     }
   cupsRasterClose(cups.ras);
+  fprintf(stderr, "DEBUG: Gimp-Print printed total %.0f bytes\n",
+	  total_bytes_printed);
+  fputs("INFO: Gimp-Print Ready to print.\n", stderr);
   if (fd != 0)
     close(fd);
-  fputs("INFO: Gimp-Print Ready to print.\n", stderr);
   return 0;
 
 cups_abort:
+  fprintf(stderr, "DEBUG: Gimp-Print printed total %.0f bytes\n",
+	  total_bytes_printed);
   fputs("ERROR: Gimp-Print Invalid printer settings!\n", stderr);
   stp_end_job(v, &theImage);
   stp_vars_free(v);
   cupsRasterClose(cups.ras);
+  fputs("ERROR: Gimp-Print No pages found!\n", stderr);
   if (fd != 0)
     close(fd);
-  fputs("ERROR: Gimp-Print No pages found!\n", stderr);
   return 1;
 }
 
@@ -657,7 +663,27 @@ static void
 cups_writefunc(void *file, const char *buf, size_t bytes)
 {
   FILE *prn = (FILE *)file;
+  total_bytes_printed += bytes;
   fwrite(buf, 1, bytes, prn);
+}
+
+static void
+cups_errfunc(void *file, const char *buf, size_t bytes)
+{
+  size_t next_nl = 0;
+  size_t where = 0;
+  FILE *prn = (FILE *)file;
+  while (where < bytes)
+    {
+      fputs("DEBUG: Gimp-Print internal: ", prn);
+      while (next_nl < bytes)
+	{
+	  if (buf[next_nl++] == '\n')
+	    break;
+	}
+      fwrite(buf + where, 1, next_nl - where, prn);
+      where = next_nl;
+    }	
 }
 
 
