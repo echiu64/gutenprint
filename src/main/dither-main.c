@@ -43,7 +43,7 @@ static const stpi_dither_algorithm_t dither_algos[] =
 {
   /* Note to translators: "EvenTone" is the proper name, rather than a */
   /* descriptive name, of this algorithm. */
-  { "None",     N_ ("Default"),                D_EVENTONE },
+  { "None",     N_ ("Default"),                -1 },
   { "EvenTone", N_ ("EvenTone"),               D_EVENTONE },
   { "Adaptive",	N_ ("Adaptive Hybrid"),        D_ADAPTIVE_HYBRID },
   { "Ordered",	N_ ("Ordered"),                D_ORDERED },
@@ -215,6 +215,10 @@ stpi_set_dither_function(stp_vars_t v, int image_bpp)
 	  d->stpi_dither_type = D_EVENTONE;
 	  break;
 	}
+      /* EvenTone performs poorly if the aspect ratio is greater than 2 */
+      if (d->stpi_dither_type == D_EVENTONE &&
+	  (d->x_aspect > 2 || d->y_aspect > 2))
+	d->stpi_dither_type = D_ADAPTIVE_HYBRID;
     }
   else if (algorithm)
     {
@@ -226,6 +230,14 @@ stpi_set_dither_function(stp_vars_t v, int image_bpp)
 	      break;
 	    }
 	}
+      if (d->stpi_dither_type == -1)
+	{
+	  d->stpi_dither_type = D_EVENTONE;
+	  /* EvenTone performs poorly if the aspect ratio is greater than 2 */
+	  if (d->stpi_dither_type == D_EVENTONE &&
+	      (d->x_aspect > 2 || d->y_aspect > 2))
+	    d->stpi_dither_type = D_ADAPTIVE_HYBRID;
+	}	
     }
   switch (d->stpi_dither_type)
     {
@@ -315,7 +327,6 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
 
   d->finalized = 0;
   d->error_rows = ERROR_ROWS;
-  d->ditherfunc = stpi_set_dither_function(v, image_bpp);
   d->d_cutoff = 4096;
 
   d->offset0_table = NULL;
@@ -330,6 +341,7 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
       d->x_aspect = ydpi / xdpi;
       d->y_aspect = 1;
     }
+  d->ditherfunc = stpi_set_dither_function(v, image_bpp);
   d->transition = 1.0;
   d->adaptive_limit = .75 * 65535;
 
