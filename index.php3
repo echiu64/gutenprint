@@ -21,6 +21,7 @@ href="http://www.gimp.org">the Gimp</a>.</H4>
 
 <P>For a quick download, please visit <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
+</p>
 
 <p>Red Hat users may want to check out <a href="gs_stp.html">this
 site</a> for quick and easy setup.</p>
@@ -28,34 +29,15 @@ site</a> for quick and easy setup.</p>
 <p>We recommend <a href="http://www.cups.org">CUPS</a> (the Common
 UNIX Printing System) for the easiest setup.</p>
 
+<H2><font color="#ff0000">Gimp-Print 4.2 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of November 24,
+2001!</strong></em></font> Gimp-Print 4.2.0, the first stable release
+in the 4.2 line, is out!  Please read the release notes <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 </p>
-<H2><font color="#ff0000">Gimp-Print 4.1.99-rc1 is
-released!</font></h2>
 
-<P><strong><em><font color="#ff0000">New as of November 11,
-2001!</strong></em></font> Gimp-Print 4.1.99-rc1, a release candidate
-in the 4.2 line, is out.  This offers mostly minor improvements and
-bug fixes, and this release should be very close to the final 4.2.</p>
-
-<P><strong><em><font color="#ff0000">New as of October 15,
-2001!</strong></em></font> Daniele Berti has updated his rpm's of
-GhostScript 5.50 with the Gimp-Print stp driver (4.0.5).  It's
-available at <a
-href="http://space.tin.it/computer/wvtberti/linux/stp_driver/gs_stp.htm">http://space.tin.it/computer/wvtberti/linux/stp_driver/gs_stp.htm</a>.</p>
-
-<H2><font color="#ff0000">Gimp-Print 4.0.5 is
-released!</font></h2>
-<P><strong><em><font color="#ff0000">New as of May 26,
-2001!</strong></em></font> Gimp-Print 4.0.5, expected to be the final
-stable release of 4.0, has been released.  This features support for
-the Epson Stylus Color 680/777 and Stylus Pro 7500, and a few bug
-fixes.</p>
-
-<P><strong><em><font color="#ff0000">New as of November 27,
-2000!</strong></em></font> Gimp-Print 4.0.4 is out.  All users of the
-stable 4.0 release should upgrade to 4.0.4.</p>
-
-<P>Please check out <a
+<P>Please visit <a
 href="http://sourceforge.net/project/?group_id=1537">our
 project page</a>, which contains a lot more information about us!</p>
 

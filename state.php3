@@ -1,6 +1,6 @@
 <?
 
-$plugin_version_number = '4.1.99a1';
+$plugin_version_number = '4.2.0;
 
 $maintainer = '<a href="http://sourceforge.net/developer/index.php?form_dev=5436">Robert Krawitz</a>';
 
@@ -12,44 +12,37 @@ $supported_printers = array(
 		'EPSON Stylus Photo' => 'Fully Operational',
 		'EPSON Stylus Photo 700' => 'Fully Operational',
 		'EPSON Stylus Photo EX' => 'Fully Operational',
-		'EPSON Stylus Photo 720' => 'Fully Operational (4.1 only)',
+		'EPSON Stylus Photo 720' => 'Fully Operational',
 		'EPSON Stylus Photo 750' => 'Fully Operational',
-		'EPSON Stylus Photo 780' => 'Fully Operational (4.1 only;
-		use the 870 driver in 4.0)',
-		'EPSON Stylus Photo 790' => 'Fully Operational (4.1 only;
-		use the 870 driver in 4.0)',
-		'EPSON Stylus Photo 810' => 'Fully Operational (4.1 only;
-		use the 870 driver in 4.0)',
-		'EPSON Stylus Photo 820' => 'Fully Operational (4.1 only;
-		use the 870 driver in 4.0)',
+		'EPSON Stylus Photo 780' => 'Fully Operational',
+		'EPSON Stylus Photo 790' => 'Fully Operational',
+		'EPSON Stylus Photo 810' => 'Fully Operational',
+		'EPSON Stylus Photo 820' => 'Fully Operational',
 		'EPSON Stylus Photo 870' => 'Fully Operational',
-		'EPSON Stylus Photo 890' => 'Fully Operational (4.1 only;
-		use the 870 driver in 4.0)',
+		'EPSON Stylus Photo 890' => 'Fully Operational',
 		'EPSON Stylus Photo 1200' => 'Fully Operational',
 		'EPSON Stylus Photo 1270' => 'Fully Operational',
-		'EPSON Stylus Photo 1280' => 'Fully Operational (4.1 only;
-		use the 1270 driver in 4.0)',
-		'EPSON Stylus Photo 1290' => 'Fully Operational (4.1 only;
-		use the 1270 driver in 4.0)',
+		'EPSON Stylus Photo 1280' => 'Fully Operational',
+		'EPSON Stylus Photo 1290' => 'Fully Operational',
 		'EPSON Stylus Photo 2000P' => 'Testing in Progress, untuned'
 		),
 	'Stylus Color Range' => array(
-		'EPSON Stylus C20SX' => 'Fully Operational (4.1 only)',
-		'EPSON Stylus C20UX' => 'Fully Operational (4.1 only)',
-		'EPSON Stylus C40SX' => 'Fully Operational (4.1 only)',
-		'EPSON Stylus C40UX' => 'Fully Operational (4.1 only)',
-		'EPSON Stylus C60' => 'Fully Operational (4.1 only)',
-		'EPSON Stylus C70' => 'Fully Operational (4.1 only)',
-		'EPSON Stylus C80' => 'Fully Operational (4.1 only)',
+		'EPSON Stylus C20SX' => 'Fully Operational',
+		'EPSON Stylus C20UX' => 'Fully Operational',
+		'EPSON Stylus C40SX' => 'Fully Operational',
+		'EPSON Stylus C40UX' => 'Fully Operational',
+		'EPSON Stylus C60' => 'Fully Operational',
+		'EPSON Stylus C70' => 'Fully Operational',
+		'EPSON Stylus C80' => 'Fully Operational',
 		'EPSON Stylus Color' => 'Fully Operational',
 		'EPSON Stylus Color Pro' => 'Fully Operational',
 		'EPSON Stylus Color Pro XL' => 'Fully Operational',
 		'EPSON Stylus Color 400' => 'Fully Operational',
 		'EPSON Stylus Color 440' => 'Fully Operational',
 		'EPSON Stylus Color 460' => 'Needs Testing',
-		'EPSON Stylus Color 480' => 'Operational, cannot change cartridge (4.1 only)',
+		'EPSON Stylus Color 480' => 'Operational, cannot change cartridge',
 		'EPSON Stylus Color 500' => 'Fully Operational',
-		'EPSON Stylus Color 580' => 'Operational, cannot change cartridge (4.1 only)',
+		'EPSON Stylus Color 580' => 'Operational, cannot change cartridge',
 		'EPSON Stylus Color 600' => 'Fully Operational',
 		'EPSON Stylus Color 640' => 'Fully Operational',
 		'EPSON Stylus Color 660' => 'Fully Operational',
@@ -61,32 +54,27 @@ $supported_printers = array(
 		'EPSON Stylus Color 800' => 'Fully Operational',
 		'EPSON Stylus Color 850' => 'Fully Operational',
 		'EPSON Stylus Color 860' => 'Fully Operational',
-		'EPSON Stylus Color 880' => 'Testing in Progress (4.1
-		only; use the 860 driver in 4.0)',
-		'EPSON Stylus Color 83' => 'Testing in Progress (4.1
-		only; use the 860 driver in 4.0)',
-		'EPSON Stylus Color 900' => 'Fully Operational (tuned in 4.1 only)',
-		'EPSON Stylus Color 980' => 'Fully Operational (4.1
-		only; use the 900 driver for partial operation in 4.0)',
+		'EPSON Stylus Color 880' => 'Testing in Progress',
+		'EPSON Stylus Color 83' => 'Testing in Progress',
+		'EPSON Stylus Color 900' => 'Fully Operational',
+		'EPSON Stylus Color 980' => 'Fully Operational',
 		'EPSON Stylus Color 1160' => 'Fully Operational',
 		'EPSON Stylus Color 1500' => 'Fully Operational',
 		'EPSON Stylus Color 1520' => 'Fully Operational',
 		'EPSON Stylus Color 3000' => 'Fully Operational'
 		),
 	'Stylus Pro Range' => array(
-		'EPSON Stylus Pro 5000' => 'Needs Testing (4.1 only)',
-		'EPSON Stylus Pro 5500' => 'Needs Testing (4.1 only)',
-		'EPSON Stylus Pro 7000' => 'Needs Testing (4.1 only)',
-		'EPSON Stylus Pro 7500' => 'Needs Testing (4.1 only)',
-		'EPSON Stylus Pro 9000' => 'Needs Testing (4.1 only)',
-		'EPSON Stylus Pro 9500' => 'Needs Testing (4.1 only)',
-		'EPSON Stylus Pro 10000' => 'Needs Testing (4.1 only)'
+		'EPSON Stylus Pro 5000' => 'Needs Testing',
+		'EPSON Stylus Pro 5500' => 'Needs Testing',
+		'EPSON Stylus Pro 7000' => 'Needs Testing',
+		'EPSON Stylus Pro 7500' => 'Needs Testing',
+		'EPSON Stylus Pro 9000' => 'Needs Testing',
+		'EPSON Stylus Pro 9500' => 'Needs Testing',
+		'EPSON Stylus Pro 10000' => 'Needs Testing'
 		),
 	'Stylus Scan Range' => array(
-		'EPSON Stylus Scan 2000' => 'Fully Operational (4.1
-		only; use the 740 driver in 4.0)',
-		'EPSON Stylus Scan 2500' => 'Fully Operational (4.1
-		only; use the 740 driver in 4.0)'
+		'EPSON Stylus Scan 2000' => 'Fully Operational',
+		'EPSON Stylus Scan 2500' => 'Fully Operational'
 		)
 	),
 'HP' => array(
@@ -120,13 +108,13 @@ $supported_printers = array(
 	),
 'Canon (<strong><em>New!</em></strong>)' => array(
        'BJC Range' => array(
-	       'BJC 30' => 'Operational (4.1 only)',
-	       'BJC 50' => 'Operational (4.1 only)',
-	       'BJC 55' => 'Operational (4.1 only)',
-	       'BJC 80' => 'Operational (4.1 only)',
-	       'BJC 210' => 'Needs Testing (4.1 only)',
-	       'BJC 240' => 'Needs Testing (4.1 only)',
-	       'BJC 250' => 'Needs Testing (4.1 only)',
+	       'BJC 30' => 'Operational',
+	       'BJC 50' => 'Operational',
+	       'BJC 55' => 'Operational',
+	       'BJC 80' => 'Operational',
+	       'BJC 210' => 'Needs Testing',
+	       'BJC 240' => 'Needs Testing',
+	       'BJC 250' => 'Needs Testing',
 	       'BJC 1000' => 'Untested',
 	       'BJC 2000' => 'Untested',
 	       'BJC 3000' => 'Untested',
@@ -137,24 +125,18 @@ $supported_printers = array(
 	       'BJC 7000' => 'Untested',
 	       'BJC 7100' => 'Untested',
 	       'BJC 8200' => 'Operational',
-	       'S400' => 'Operational (4.1 only)',
-	       'S450' => 'Operational (4.1 only)',
-	       'S800' => 'Operational (4.1 only)',
-	       'S4500' => 'Operational (4.1 only)'
+	       'S400' => 'Operational',
+	       'S450' => 'Operational',
+	       'S800' => 'Operational',
+	       'S4500' => 'Operational'
 	       )
        ),
 'Lexmark (<strong><em>New!</em></strong>)' => array(
        'Ink Jet Printers' => array(
-	       '3200' => 'Unknown (4.1 only)',
 	       '4076' => 'Operational',
-	       'Z31' => 'Needs Testing (4.1 only)',
-	       'Z42' => 'Needs Testing (4.1 only)',
-	       'Z52' => 'Operational (4.1 only)'
-	       )
-       ),
-'Compaq (<strong><em>New!</em></strong>)' => array(
-       'Ink Jet Printers' => array(
-	       'IJ750' => 'Operational (4.1 only)'
+	       'Z42' => 'Needs Testing',
+	       'Z43' => 'Needs Testing',
+	       'Z52' => 'Operational'
 	       )
        ),
 'Postscript' => array(
