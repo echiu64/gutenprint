@@ -30,6 +30,7 @@
 #include "print-escp2.h"
 
 #if 0
+#if 0
 static const char standard_sat_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 "<gimp-print>\n"
@@ -104,6 +105,52 @@ static const char standard_hue_adj[] =
 /* R */  "-.12 -.07 -.04 -.02 0.00 0.00 0.00 0.00 "  /* Y */
 /* Y */  "0.00 0.00 0.00 -.05 -.10 -.15 -.22 -.24 "  /* G */
 /* G */  "-.26 -.30 -.33 -.28 -.25 -.20 -.13 -.06 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+#endif
+
+static const char standard_sat_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
+/* B */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* M */
+/* M */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* R */
+/* R */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* G */
+/* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
+static const char standard_lum_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "0.39 0.42 0.47 0.54 0.61 0.67 0.73 0.77 "  /* B */
+/* B */  "0.77 0.74 0.67 0.67 0.68 0.71 0.74 0.77 "  /* M */
+/* M */  "0.81 0.86 0.92 0.97 1.00 1.00 1.00 1.00 "  /* R */
+/* R */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 1.00 1.00 0.99 0.98 0.96 0.94 0.90 "  /* G */
+/* G */  "0.85 0.65 0.50 0.41 0.41 0.40 0.39 0.39 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
+static const char standard_hue_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
+/* C */  "0.00 0.00 0.00 -.02 -.06 -.12 -.18 -.24 "  /* B */
+/* B */  "-.30 -.28 -.28 -.26 -.24 -.22 -.20 -.20 "  /* M */
+/* M */  "-.22 -.28 -.34 -.40 -.50 -.45 -.40 -.30 "  /* R */
+/* R */  "-.12 -.07 -.04 -.02 0.00 0.00 0.00 0.00 "  /* Y */
+/* Y */  "0.00 -.00 -.06 -.12 -.18 -.26 -.34 -.42 "  /* G */
+/* G */  "-.50 -.44 -.38 -.31 -.25 -.20 -.13 -.06 "  /* C */
 "</sequence>\n"
 "</curve>\n"
 "</gimp-print>\n";
@@ -624,9 +671,9 @@ DECLARE_PAPER_ADJUSTMENTS(ultrachrome_matte);
 
 static const paper_adjustment_t durabrite_adjustments[] =
 {
-  { "Plain", 0.769, .5, 1, .075, .9, 1, 1, 1, 1, 1, 1,
+  { "Plain", 0.769, .5, .5, .075, .9, 1, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
-  { "PlainFast", 0.769, .5, 1, .075, .9, 1, 1, 1, 1, 1, 1,
+  { "PlainFast", 0.769, .5, .5, .075, .9, 1, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "Postcard", 0.875, .5, 1, .075, .9, 1, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
@@ -644,7 +691,7 @@ static const paper_adjustment_t durabrite_adjustments[] =
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "Inkjet", 0.875, .5, 1, .10, .9, 1, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
-  { "Coated", 1.0, 1.0, 1, .15, .999, 1, 1, 1, 1, 1, 1,
+  { "Coated", 1.0, .5, .5, .05, .999, 1, 1, 1, 1, 1, 1.1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "Photo", 1.0, 1.0, 1, .15, .999, 1, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
