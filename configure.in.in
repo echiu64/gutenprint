@@ -89,6 +89,7 @@ AC_SUBST(LT_AGE)
 
 dnl Initialize automake stuff.
 AM_INIT_AUTOMAKE(${PACKAGE}, ${GIMPPRINT_VERSION})
+dnl AM_ACLOCAL_INCLUDE(m4)
 
 dnl Specify a configuration file.
 AM_CONFIG_HEADER(config.h)
@@ -311,8 +312,8 @@ AC_ARG_WITH(readline,
        AC_MSG_RESULT([yes (using extra libraries ${withval})]) ;;
   esac],[AC_MSG_RESULT([${USE_READLINE}])])
 
-AC_PATH_PROG(GIMP_CONFIG, gimp-config)
-if test -z "${GIMP_CONFIG}" ; then
+AC_PATH_PROG(GIMP_CONFIG_12, gimp-config-1.2)
+if test -z "${GIMP_CONFIG_12}" ; then
   BUILD_GIMP="no"
 else
   BUILD_GIMP="yes"
@@ -650,7 +651,7 @@ fi
 
 dnl GIMP library checks
 if test x${BUILD_GIMP} = xyes -o -n "${BUILD_PACKAGE}" ; then
-  AM_PATH_GIMP(1.2.0,
+  STP_PATH_GIMP(1.2.0,
                [SAVE_GTK_LIBS="$GIMP_LIBS"
                 SAVE_GTK_CFLAGS="$GIMP_CFLAGS"],
                 AC_MSG_ERROR(Cannot find GIMP libraries: Please run ldconfig as root, make sure gimptool is on your PATH, and if applicable ensure that you have the GIMP, GTK, and GLIB development packages installed.))
