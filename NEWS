@@ -1,7 +1,7 @@
-Welcome to Gimp-Print 5.0 Beta 2!  Please read these release notes
+Welcome to Gutenprint 5.0 Beta 3!  Please read these release notes
 carefully.
 
-Gimp-Print 5.0.0-beta2 is the second beta prerelease of Gimp-Print
+Gutenprint 5.0.0-beta3 is the second beta prerelease of Gutenprint
 5.0.  It is based on the 4.3 series that has been in development for
 over two years, and includes many improvements over the very popular
 4.2 series.  This release is not considered to be a fully stable
@@ -10,7 +10,7 @@ undergone the extensive testing that is required to declare a release
 stable), but we've been using it and we believe that it will be useful
 for many purposes.
 
-Gimp-Print is a suite of printer drivers that may be used with most
+Gutenprint is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
 others.  These drivers provide high quality printing for UNIX
 (including Macintosh OS X 10.2 and 10.3) and Linux systems that in
@@ -20,7 +20,7 @@ tasks requiring flexibility and high quality.  This software package
 includes the Print plug-in for the GIMP and Ghostscript and CUPS
 drivers, as well as Foomatic data.
 
-Gimp-Print currently contains over 200 drivers supporting in excess of
+Gutenprint currently contains over 200 drivers supporting in excess of
 600 printer models.
 
 The Print plug-in for the GIMP requires the GIMP 1.2.3 or above on the
@@ -36,10 +36,10 @@ Please the rest of the release notes, in particular the Exceptions and
 Workarounds, for full details on installation, as there is an
 important caveat.  CUPS is the printing system used on Macintosh OS X
 10.2 and above, and many other systems use it.  The combination of
-CUPS and Gimp-Print provides a flexible, general purpose printing
+CUPS and Gutenprint provides a flexible, general purpose printing
 system capable of producing the highest quality output with any of the
 printers supported by this package.  We strongly recommend using CUPS
-with Gimp-Print as a general-purpose printing solution.
+with Gutenprint as a general-purpose printing solution.
 
 The Ghostscript driver requires GNU Ghostscript 6.53 or higher, ESP
 Ghostscript 7.05 or higher, or AFPL Ghostscript 7.04 or higher.  It
@@ -64,7 +64,7 @@ OS X 10.0 and 10.1 use a different system that would require a
 separate driver, and we do not plan to write that driver.
 
 The README file included with this package provides full instructions
-on building and installing Gimp-Print.
+on building and installing Gutenprint.
 
 These release notes contain the following sections:
 
