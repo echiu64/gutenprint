@@ -128,9 +128,9 @@ SHADES(esp960_c) = { 0.32, 1.0 };
 SHADES(esp960_m) = { 0.35, 1.0 };
 SHADES(esp960_y) = { 0.5, 1.0 };
 
-SHADES(photo_pigment_k) = { 0.49, 1.0 };
-SHADES(photo_pigment_c) = { 0.40, 1.0 };
-SHADES(photo_pigment_m) = { 0.26, 1.0 };
+SHADES(photo_pigment_k) = { 0.48, 1.0 };
+SHADES(photo_pigment_c) = { 0.38, 1.0 };
+SHADES(photo_pigment_m) = { 0.31, 1.0 };
 SHADES(photo_pigment_y) = { 0.5, 1.0 };
 
 SHADES(photo_yellow) = { 0.5, 1.0 };
