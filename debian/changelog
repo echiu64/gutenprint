@@ -1,3 +1,9 @@
+gimp-print (4.2.0-1) unstable; urgency=low
+
+  * New upstream stable release (4.2.0)
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Thu, 22 Nov 2001 08:25:46 +0000
+
 gimp-print (4.1.99-rc1-2) unstable; urgency=low
 
   * New upstream release
