@@ -1,6 +1,0 @@
-
-
-AC_DEFUN(AM_PATH_GIMPPRINT,
-[
-STP_PATH_LIB(gimpprint, $1, gimp-print/gimp-print.h, , $4, $2, $3)
-])
