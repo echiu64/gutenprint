@@ -150,14 +150,14 @@ sub update_ppd ($) {
     open ORIG, $_ or die "$_: can't open PPD file: $!";
     seek (ORIG, 0, 0) or die "can't seek to start of PPD file";
     # Get the `PCFileName'; the new source PPD will have the same name.
-    my $filename;
-    my $gimpprintfilename;
+    my $filename = "";
+    my $gimpprintfilename = "";
     while (<ORIG>) {
 	if ( /^\*PCFileName/ ) {
 	    ($filename) = m/^\*PCFileName:\s*"(.*)"/;
 	}
 	if ( /^\*%Gimp-Print Filename:/ ) {
-	    ($gimpprintfilename) = m/^\*%Gimp-Print Filename:\s*"(.*)"/;
+	    ($gimpprintfilename) = m/^\*%Gimp-Print Filename:\s*(.*)/;
 	}
     }
     if ($debug) {
@@ -238,7 +238,7 @@ sub update_ppd ($) {
     my($tmpfile, $tmpfilename) = tmpnam();
     chown(0, 0, $tmpfilename); # root.root
     chmod(0644, $tmpfilename);
-    unlink $tmpfilename or die "can'r unlink temporary file $tmpfile: $!";
+    unlink $tmpfilename or warn "can't unlink temporary file $tmpfile: $!\n";
     print $tmpfile $source_data;
 
 
@@ -320,13 +320,25 @@ default_loop:
 
     # Write new PPD...
 
-    # unlinking the original and replace with the new version
-    unlink $ppd_source_filename or die "can't unlink $ppd_source_filename: $!";
-    open NEWPPD, "> $ppd_source_filename" or die "can't open $ppd_source_filename for writing: $!";
+    my $tmpnew = "${ppd_source_filename}.new";
+    if (! open NEWPPD, "> $tmpnew") {
+	warn "Can't open $tmpnew for writing: $!\n";
+	return;
+    }
+    chown(0, 0, $tmpnew);	# Bad idea to hardcode this...
+    chmod(0644, $tmpnew);	# Bad idea to hardcode this...
     print NEWPPD $source_data;
-    chown(0, 0, $ppd_source_filename);
-    chmod(0644, $ppd_source_filename);
-    close NEWPPD or die "can't close $ppd_source_filename: $!";
+    if (! close NEWPPD) {
+	warn "Can't close ${tmpnew}.new for writing: $!\n";
+	unlink $tmpnew;
+	return;
+    }
+
+    if (! rename $tmpnew, $ppd_source_filename) {
+	warn "Can't rename $tmpnew to $ppd_source_filename: $!\n";
+	unlink $tmpnew;
+	return;
+    }
 
     if (!$quiet || $verbose) {
 	print STDOUT "Updated $ppd_source_filename using $source\n";
@@ -358,7 +370,7 @@ sub find_ppd ($$$$) {
 	     "$ppd_base_dir/C/$pcfilename",
 	     "$ppd_base_dir/$gimpprintfilename$gzext",
 	     "$ppd_base_dir/$pcfilename$gzext",
-	     "$ppd_base_dir/$gimpprintfilename"
+	     "$ppd_base_dir/$gimpprintfilename",
 	     "$ppd_base_dir/$pcfilename"
 	     ) {
         # Check it's a regular file, owned by root.root, not writable
@@ -369,7 +381,9 @@ sub find_ppd ($$$$) {
 	    return $_;
 	}
 	else {
-	    print STDERR "$_: not a regular file, or insecure ownership and permissions.  Skipped\n";
+	    if (! -d $_ && ! /\/$/) {
+		print STDERR "$_: not a regular file, or insecure ownership and permissions.  Skipped\n";
+	    }
 	}
     }
 # Yikes!  Can't find a valid PPD file!
