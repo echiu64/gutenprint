@@ -1,0 +1,61 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(print.c)
+AM_INIT_AUTOMAKE(print,3.1.0)
+
+dnl Checks for programs.
+AC_PROG_AWK
+AC_PROG_CC
+AC_PROG_INSTALL
+AC_PROG_LN_S
+
+dnl ---------------------------------------------------------------------------
+dnl check for GTK
+dnl ---------------------------------------------------------------------------
+AM_PATH_GTK(1.0.5,
+        [SAVE_GTK_LIBS="$GTK_LIBS"
+        SAVE_GTK_CFLAGS="$GTK_CFLAGS"],
+        AC_MSG_ERROR(Cannot find GTK+: Is gtk-config in executable path?))
+
+dnl Checks for libraries.
+dnl Replace `main' with a function in -lX11:
+AC_CHECK_LIB(X11, main)
+dnl Replace `main' with a function in -lXext:
+AC_CHECK_LIB(Xext, main)
+dnl Replace `main' with a function in -lgdk:
+AC_CHECK_LIB(gdk, main)
+dnl I can't get the next two to work right
+dnl Replace `main' with a function in -lgimp:
+dnl AC_CHECK_LIB(gimp,gimpmatrix)
+dnl Replace `main' with a function in -lgimpui:
+dnl AC_CHECK_LIB(gimpui, main)
+GIMP_LIBS="-lgimp -lgimpui"
+dnl Replace `main' with a function in -lglib:
+AC_CHECK_LIB(glib, main)
+dnl Replace `main' with a function in -lgmodule:
+AC_CHECK_LIB(gmodule, main)
+dnl Replace `main' with a function in -lgtk:
+AC_CHECK_LIB(gtk, main)
+dnl Replace `main' with a function in -lm:
+AC_CHECK_LIB(m, main)
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(unistd.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_OFF_T
+AC_TYPE_SIZE_T
+
+dnl Checks for library functions.
+AC_FUNC_MEMCMP
+AC_TYPE_SIGNAL
+AC_CHECK_FUNCS(strtol)
+
+AC_SUBST(LP_DEF)
+AC_SUBST(LPSTAT_DEF)
+AC_SUBST(LPR_DEF)
+AC_SUBST(LPC_DEF)
+AC_SUBST(GIMP_LIBS)
+
+AC_OUTPUT(Makefile)
