@@ -595,6 +595,886 @@ calculate_row_parameters(void *vw,		/* I - weave parameters */
 	*ojetsused = jetsused;
 }
 
+void
+stp_fold(const unsigned char *line,
+	   int single_length,
+	   unsigned char *outbuf)
+{
+  int i;
+  memset(outbuf, 0, single_length * 2);
+  for (i = 0; i < single_length; i++)
+    {
+      unsigned char l0 = line[0];
+      unsigned char l1 = line[single_length];
+      if (l0 || l1)
+	{
+	  outbuf[0] =
+	    ((l0 & (1 << 7)) >> 1) +
+	    ((l0 & (1 << 6)) >> 2) +
+	    ((l0 & (1 << 5)) >> 3) +
+	    ((l0 & (1 << 4)) >> 4) +
+	    ((l1 & (1 << 7)) >> 0) +
+	    ((l1 & (1 << 6)) >> 1) +
+	    ((l1 & (1 << 5)) >> 2) +
+	    ((l1 & (1 << 4)) >> 3);
+	  outbuf[1] =
+	    ((l0 & (1 << 3)) << 3) +
+	    ((l0 & (1 << 2)) << 2) +
+	    ((l0 & (1 << 1)) << 1) +
+	    ((l0 & (1 << 0)) << 0) +
+	    ((l1 & (1 << 3)) << 4) +
+	    ((l1 & (1 << 2)) << 3) +
+	    ((l1 & (1 << 1)) << 2) +
+	    ((l1 & (1 << 0)) << 1);
+	}
+      line++;
+      outbuf += 2;
+    }
+}
+
+static void
+stp_split_2_1(int length,
+		const unsigned char *in,
+		unsigned char *outhi,
+		unsigned char *outlo)
+{
+  unsigned char *outs[2];
+  int i;
+  int row = 0;
+  int limit = length * 2;
+  outs[0] = outhi;
+  outs[1] = outlo;
+  memset(outs[1], 0, limit);
+  for (i = 0; i < limit; i++)
+    {
+      unsigned char inbyte = in[i];
+      outs[0][i] = 0;
+      if (inbyte == 0)
+	continue;
+      /* For some reason gcc isn't unrolling this, even with -funroll-loops */
+      if (inbyte & 1)
+	{
+	  outs[row][i] |= 1 & inbyte;
+	  row = row ^ 1;
+	}
+      if (inbyte & (1 << 1))
+	{
+	  outs[row][i] |= (1 << 1) & inbyte;
+	  row = row ^ 1;
+	}
+      if (inbyte & (1 << 2))
+	{
+	  outs[row][i] |= (1 << 2) & inbyte;
+	  row = row ^ 1;
+	}
+      if (inbyte & (1 << 3))
+	{
+	  outs[row][i] |= (1 << 3) & inbyte;
+	  row = row ^ 1;
+	}
+      if (inbyte & (1 << 4))
+	{
+	  outs[row][i] |= (1 << 4) & inbyte;
+	  row = row ^ 1;
+	}
+      if (inbyte & (1 << 5))
+	{
+	  outs[row][i] |= (1 << 5) & inbyte;
+	  row = row ^ 1;
+	}
+      if (inbyte & (1 << 6))
+	{
+	  outs[row][i] |= (1 << 6) & inbyte;
+	  row = row ^ 1;
+	}
+      if (inbyte & (1 << 7))
+	{
+	  outs[row][i] |= (1 << 7) & inbyte;
+	  row = row ^ 1;
+	}
+    }
+}
+
+static void
+stp_split_2_2(int length,
+		const unsigned char *in,
+		unsigned char *outhi,
+		unsigned char *outlo)
+{
+  unsigned char *outs[2];
+  int i;
+  unsigned row = 0;
+  int limit = length * 2;
+  outs[0] = outhi;
+  outs[1] = outlo;
+  memset(outs[1], 0, limit);
+  for (i = 0; i < limit; i++)
+    {
+      unsigned char inbyte = in[i];
+      outs[0][i] = 0;
+      if (inbyte == 0)
+	continue;
+      /* For some reason gcc isn't unrolling this, even with -funroll-loops */
+      if (inbyte & 3)
+	{
+	  outs[row][i] |= (3 & inbyte);
+	  row = row ^ 1;
+	}
+      if (inbyte & (3 << 2))
+	{
+	  outs[row][i] |= ((3 << 2) & inbyte);
+	  row = row ^ 1;
+	}
+      if (inbyte & (3 << 4))
+	{
+	  outs[row][i] |= ((3 << 4) & inbyte);
+	  row = row ^ 1;
+	}
+      if (inbyte & (3 << 6))
+	{
+	  outs[row][i] |= ((3 << 6) & inbyte);
+	  row = row ^ 1;
+	}
+    }
+}
+
+void
+stp_split_2(int length,
+	      int bits,
+	      const unsigned char *in,
+	      unsigned char *outhi,
+	      unsigned char *outlo)
+{
+  if (bits == 2)
+    stp_split_2_2(length, in, outhi, outlo);
+  else
+    stp_split_2_1(length, in, outhi, outlo);
+}
+
+static void
+stp_split_4_1(int length,
+		const unsigned char *in,
+		unsigned char *out0,
+		unsigned char *out1,
+		unsigned char *out2,
+		unsigned char *out3)
+{
+  unsigned char *outs[4];
+  int i;
+  int row = 0;
+  int limit = length * 2;
+  outs[0] = out0;
+  outs[1] = out1;
+  outs[2] = out2;
+  outs[3] = out3;
+  memset(outs[1], 0, limit);
+  memset(outs[2], 0, limit);
+  memset(outs[3], 0, limit);
+  for (i = 0; i < limit; i++)
+    {
+      unsigned char inbyte = in[i];
+      outs[0][i] = 0;
+      if (inbyte == 0)
+	continue;
+      /* For some reason gcc isn't unrolling this, even with -funroll-loops */
+      if (inbyte & 1)
+	{
+	  outs[row][i] |= 1 & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (1 << 1))
+	{
+	  outs[row][i] |= (1 << 1) & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (1 << 2))
+	{
+	  outs[row][i] |= (1 << 2) & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (1 << 3))
+	{
+	  outs[row][i] |= (1 << 3) & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (1 << 4))
+	{
+	  outs[row][i] |= (1 << 4) & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (1 << 5))
+	{
+	  outs[row][i] |= (1 << 5) & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (1 << 6))
+	{
+	  outs[row][i] |= (1 << 6) & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (1 << 7))
+	{
+	  outs[row][i] |= (1 << 7) & inbyte;
+	  row = (row + 1) & 3;
+	}
+    }
+}
+
+static void
+stp_split_4_2(int length,
+		const unsigned char *in,
+		unsigned char *out0,
+		unsigned char *out1,
+		unsigned char *out2,
+		unsigned char *out3)
+{
+  unsigned char *outs[4];
+  int i;
+  int row = 0;
+  int limit = length * 2;
+  outs[0] = out0;
+  outs[1] = out1;
+  outs[2] = out2;
+  outs[3] = out3;
+  memset(outs[1], 0, limit);
+  memset(outs[2], 0, limit);
+  memset(outs[3], 0, limit);
+  for (i = 0; i < limit; i++)
+    {
+      unsigned char inbyte = in[i];
+      outs[0][i] = 0;
+      if (inbyte == 0)
+	continue;
+      /* For some reason gcc isn't unrolling this, even with -funroll-loops */
+      if (inbyte & 3)
+	{
+	  outs[row][i] |= 3 & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (3 << 2))
+	{
+	  outs[row][i] |= (3 << 2) & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (3 << 4))
+	{
+	  outs[row][i] |= (3 << 4) & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (3 << 6))
+	{
+	  outs[row][i] |= (3 << 6) & inbyte;
+	  row = (row + 1) & 3;
+	}
+    }
+}
+
+void
+stp_split_4(int length,
+	      int bits,
+	      const unsigned char *in,
+	      unsigned char *out0,
+	      unsigned char *out1,
+	      unsigned char *out2,
+	      unsigned char *out3)
+{
+  if (bits == 2)
+    stp_split_4_2(length, in, out0, out1, out2, out3);
+  else
+    stp_split_4_1(length, in, out0, out1, out2, out3);
+}
+
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+#define SH20 0
+#define SH21 8
+#else
+#define SH20 8
+#define SH21 0
+#endif
+
+static void
+stp_unpack_2_1(int length,
+		 const unsigned char *in,
+		 unsigned char *out0,
+		 unsigned char *out1)
+{
+  unsigned char	tempin,
+		bit,
+		temp0,
+		temp1;
+
+
+  for (bit = 128, temp0 = 0, temp1 = 0;
+       length > 0;
+       length --)
+    {
+      tempin = *in++;
+
+      if (tempin & 128)
+        temp0 |= bit;
+      if (tempin & 64)
+        temp1 |= bit;
+
+      bit >>= 1;
+
+      if (tempin & 32)
+        temp0 |= bit;
+      if (tempin & 16)
+        temp1 |= bit;
+
+      bit >>= 1;
+
+      if (tempin & 8)
+        temp0 |= bit;
+      if (tempin & 4)
+        temp1 |= bit;
+
+      bit >>= 1;
+
+      if (tempin & 2)
+        temp0 |= bit;
+      if (tempin & 1)
+        temp1 |= bit;
+
+      if (bit > 1)
+        bit >>= 1;
+      else
+      {
+        bit     = 128;
+	*out0++ = temp0;
+	*out1++ = temp1;
+
+	temp0   = 0;
+	temp1   = 0;
+      }
+    }
+
+  if (bit < 128)
+    {
+      *out0++ = temp0;
+      *out1++ = temp1;
+    }
+}
+
+static void
+stp_unpack_2_2(int length,
+		 const unsigned char *in,
+		 unsigned char *out0,
+		 unsigned char *out1)
+{
+  unsigned char	tempin,
+		shift,
+		temp0,
+		temp1;
+
+
+  length *= 2;
+
+  for (shift = 0, temp0 = 0, temp1 = 0;
+       length > 0;
+       length --)
+    {
+     /*
+      * Note - we can't use (tempin & N) >> (shift - M) since negative
+      * right-shifts are not always implemented.
+      */
+
+      tempin = *in++;
+
+      if (tempin & 192)
+        temp0 |= (tempin & 192) >> shift;
+      if (tempin & 48)
+        temp1 |= ((tempin & 48) << 2) >> shift;
+
+      shift += 2;
+
+      if (tempin & 12)
+        temp0 |= ((tempin & 12) << 4) >> shift;
+      if (tempin & 3)
+        temp1 |= ((tempin & 3) << 6) >> shift;
+
+      if (shift < 6)
+        shift += 2;
+      else
+      {
+        shift   = 0;
+	*out0++ = temp0;
+	*out1++ = temp1;
+
+	temp0   = 0;
+	temp1   = 0;
+      }
+    }
+
+  if (shift)
+    {
+      *out0++ = temp0;
+      *out1++ = temp1;
+    }
+}
+
+void
+stp_unpack_2(int length,
+	       int bits,
+	       const unsigned char *in,
+	       unsigned char *outlo,
+	       unsigned char *outhi)
+{
+  if (bits == 1)
+    stp_unpack_2_1(length, in, outlo, outhi);
+  else
+    stp_unpack_2_2(length, in, outlo, outhi);
+}
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+#define SH40 0
+#define SH41 8
+#define SH42 16
+#define SH43 24
+#else
+#define SH40 24
+#define SH41 16
+#define SH42 8
+#define SH43 0
+#endif
+
+static void
+stp_unpack_4_1(int length,
+		 const unsigned char *in,
+		 unsigned char *out0,
+		 unsigned char *out1,
+		 unsigned char *out2,
+		 unsigned char *out3)
+{
+  unsigned char	tempin,
+		bit,
+		temp0,
+		temp1,
+		temp2,
+		temp3;
+
+
+  for (bit = 128, temp0 = 0, temp1 = 0, temp2 = 0, temp3 = 0;
+       length > 0;
+       length --)
+    {
+      tempin = *in++;
+
+      if (tempin & 128)
+        temp0 |= bit;
+      if (tempin & 64)
+        temp1 |= bit;
+      if (tempin & 32)
+        temp2 |= bit;
+      if (tempin & 16)
+        temp3 |= bit;
+
+      bit >>= 1;
+
+      if (tempin & 8)
+        temp0 |= bit;
+      if (tempin & 4)
+        temp1 |= bit;
+      if (tempin & 2)
+        temp2 |= bit;
+      if (tempin & 1)
+        temp3 |= bit;
+
+      if (bit > 1)
+        bit >>= 1;
+      else
+      {
+        bit     = 128;
+	*out0++ = temp0;
+	*out1++ = temp1;
+	*out2++ = temp2;
+	*out3++ = temp3;
+
+	temp0   = 0;
+	temp1   = 0;
+	temp2   = 0;
+	temp3   = 0;
+      }
+    }
+
+  if (bit < 128)
+    {
+      *out0++ = temp0;
+      *out1++ = temp1;
+      *out2++ = temp2;
+      *out3++ = temp3;
+    }
+}
+
+static void
+stp_unpack_4_2(int length,
+		 const unsigned char *in,
+		 unsigned char *out0,
+		 unsigned char *out1,
+		 unsigned char *out2,
+		 unsigned char *out3)
+{
+  unsigned char	tempin,
+		shift,
+		temp0,
+		temp1,
+		temp2,
+		temp3;
+
+
+  length *= 2;
+
+  for (shift = 0, temp0 = 0, temp1 = 0, temp2 = 0, temp3 = 0;
+       length > 0;
+       length --)
+    {
+     /*
+      * Note - we can't use (tempin & N) >> (shift - M) since negative
+      * right-shifts are not always implemented.
+      */
+
+      tempin = *in++;
+
+      if (tempin & 192)
+        temp0 |= (tempin & 192) >> shift;
+      if (tempin & 48)
+        temp1 |= ((tempin & 48) << 2) >> shift;
+      if (tempin & 12)
+        temp2 |= ((tempin & 12) << 4) >> shift;
+      if (tempin & 3)
+        temp3 |= ((tempin & 3) << 6) >> shift;
+
+      if (shift < 6)
+        shift += 2;
+      else
+      {
+        shift   = 0;
+	*out0++ = temp0;
+	*out1++ = temp1;
+	*out2++ = temp2;
+	*out3++ = temp3;
+
+	temp0   = 0;
+	temp1   = 0;
+	temp2   = 0;
+	temp3   = 0;
+      }
+    }
+
+  if (shift)
+    {
+      *out0++ = temp0;
+      *out1++ = temp1;
+      *out2++ = temp2;
+      *out3++ = temp3;
+    }
+}
+
+void
+stp_unpack_4(int length,
+	       int bits,
+	       const unsigned char *in,
+	       unsigned char *out0,
+	       unsigned char *out1,
+	       unsigned char *out2,
+	       unsigned char *out3)
+{
+  if (bits == 1)
+    stp_unpack_4_1(length, in, out0, out1, out2, out3);
+  else
+    stp_unpack_4_2(length, in, out0, out1, out2, out3);
+}
+
+static void
+stp_unpack_8_1(int length,
+		 const unsigned char *in,
+		 unsigned char *out0,
+		 unsigned char *out1,
+		 unsigned char *out2,
+		 unsigned char *out3,
+		 unsigned char *out4,
+		 unsigned char *out5,
+		 unsigned char *out6,
+		 unsigned char *out7)
+{
+  unsigned char	tempin, bit, temp0, temp1, temp2, temp3, temp4, temp5, temp6,
+    temp7;
+
+
+  for (bit = 128, temp0 = 0, temp1 = 0, temp2 = 0,
+       temp3 = 0, temp4 = 0, temp5 = 0, temp6 = 0, temp7 = 0;
+       length > 0;
+       length --)
+    {
+      tempin = *in++;
+
+      if (tempin & 128)
+        temp0 |= bit;
+      if (tempin & 64)
+        temp1 |= bit;
+      if (tempin & 32)
+        temp2 |= bit;
+      if (tempin & 16)
+        temp3 |= bit;
+      if (tempin & 8)
+        temp4 |= bit;
+      if (tempin & 4)
+        temp5 |= bit;
+      if (tempin & 2)
+        temp6 |= bit;
+      if (tempin & 1)
+        temp7 |= bit;
+
+      if (bit > 1)
+        bit >>= 1;
+      else
+      {
+        bit     = 128;
+	*out0++ = temp0;
+	*out1++ = temp1;
+	*out2++ = temp2;
+	*out3++ = temp3;
+	*out4++ = temp4;
+	*out5++ = temp5;
+	*out6++ = temp6;
+	*out7++ = temp7;
+
+	temp0   = 0;
+	temp1   = 0;
+	temp2   = 0;
+	temp3   = 0;
+	temp4   = 0;
+	temp5   = 0;
+	temp6   = 0;
+	temp7   = 0;
+      }
+    }
+
+  if (bit < 128)
+    {
+      *out0++ = temp0;
+      *out1++ = temp1;
+      *out2++ = temp2;
+      *out3++ = temp3;
+      *out4++ = temp4;
+      *out5++ = temp5;
+      *out6++ = temp6;
+      *out7++ = temp7;
+    }
+}
+
+static void
+stp_unpack_8_2(int length,
+		 const unsigned char *in,
+		 unsigned char *out0,
+		 unsigned char *out1,
+		 unsigned char *out2,
+		 unsigned char *out3,
+		 unsigned char *out4,
+		 unsigned char *out5,
+		 unsigned char *out6,
+		 unsigned char *out7)
+{
+  unsigned char	tempin,
+		shift,
+		temp0,
+		temp1,
+		temp2,
+		temp3,
+		temp4,
+		temp5,
+		temp6,
+		temp7;
+
+
+  for (shift = 0, temp0 = 0, temp1 = 0,
+       temp2 = 0, temp3 = 0, temp4 = 0, temp5 = 0, temp6 = 0, temp7 = 0;
+       length > 0;
+       length --)
+    {
+     /*
+      * Note - we can't use (tempin & N) >> (shift - M) since negative
+      * right-shifts are not always implemented.
+      */
+
+      tempin = *in++;
+
+      if (tempin & 192)
+        temp0 |= (tempin & 192) >> shift;
+      if (tempin & 48)
+        temp1 |= ((tempin & 48) << 2) >> shift;
+      if (tempin & 12)
+        temp2 |= ((tempin & 12) << 4) >> shift;
+      if (tempin & 3)
+        temp3 |= ((tempin & 3) << 6) >> shift;
+
+      tempin = *in++;
+
+      if (tempin & 192)
+        temp4 |= (tempin & 192) >> shift;
+      if (tempin & 48)
+        temp5 |= ((tempin & 48) << 2) >> shift;
+      if (tempin & 12)
+        temp6 |= ((tempin & 12) << 4) >> shift;
+      if (tempin & 3)
+        temp7 |= ((tempin & 3) << 6) >> shift;
+
+      if (shift < 6)
+        shift += 2;
+      else
+      {
+        shift   = 0;
+	*out0++ = temp0;
+	*out1++ = temp1;
+	*out2++ = temp2;
+	*out3++ = temp3;
+	*out4++ = temp4;
+	*out5++ = temp5;
+	*out6++ = temp6;
+	*out7++ = temp7;
+
+	temp0   = 0;
+	temp1   = 0;
+	temp2   = 0;
+	temp3   = 0;
+	temp4   = 0;
+	temp5   = 0;
+	temp6   = 0;
+	temp7   = 0;
+      }
+    }
+
+  if (shift)
+    {
+      *out0++ = temp0;
+      *out1++ = temp1;
+      *out2++ = temp2;
+      *out3++ = temp3;
+      *out4++ = temp4;
+      *out5++ = temp5;
+      *out6++ = temp6;
+      *out7++ = temp7;
+    }
+}
+
+void
+stp_unpack_8(int length,
+	       int bits,
+	       const unsigned char *in,
+	       unsigned char *out0,
+	       unsigned char *out1,
+	       unsigned char *out2,
+	       unsigned char *out3,
+	       unsigned char *out4,
+	       unsigned char *out5,
+	       unsigned char *out6,
+	       unsigned char *out7)
+{
+  if (bits == 1)
+    stp_unpack_8_1(length, in, out0, out1, out2, out3,
+		     out4, out5, out6, out7);
+  else
+    stp_unpack_8_2(length, in, out0, out1, out2, out3,
+		     out4, out5, out6, out7);
+}
+
+int
+stp_pack(const unsigned char *line,
+	 int length,
+	 unsigned char *comp_buf,
+	 unsigned char **comp_ptr)
+{
+  const unsigned char *start;		/* Start of compressed data */
+  unsigned char repeat;			/* Repeating char */
+  int count;			/* Count of compressed bytes */
+  int tcount;			/* Temporary count < 128 */
+  int active = 0;		/* Have we found data? */
+
+  /*
+   * Compress using TIFF "packbits" run-length encoding...
+   */
+
+  (*comp_ptr) = comp_buf;
+
+  while (length > 0)
+    {
+      /*
+       * Get a run of non-repeated chars...
+       */
+
+      start  = line;
+      line   += 2;
+      length -= 2;
+
+      while (length > 0 && (line[-2] != line[-1] || line[-1] != line[0]))
+	{
+	  if (! active && (line[-2] || line[-1] || line[0]))
+	    active = 1;
+	  line ++;
+	  length --;
+	}
+
+      line   -= 2;
+      length += 2;
+
+      /*
+       * Output the non-repeated sequences (max 128 at a time).
+       */
+
+      count = line - start;
+      while (count > 0)
+	{
+	  tcount = count > 128 ? 128 : count;
+
+	  (*comp_ptr)[0] = tcount - 1;
+	  memcpy((*comp_ptr) + 1, start, tcount);
+
+	  (*comp_ptr) += tcount + 1;
+	  start    += tcount;
+	  count    -= tcount;
+	}
+
+      if (length <= 0)
+	break;
+
+      /*
+       * Find the repeated sequences...
+       */
+
+      start  = line;
+      repeat = line[0];
+      if (repeat)
+	active = 1;
+
+      line ++;
+      length --;
+
+      while (length > 0 && *line == repeat)
+	{
+	  line ++;
+	  length --;
+	}
+
+      /*
+       * Output the repeated sequences (max 128 at a time).
+       */
+
+      count = line - start;
+      while (count > 0)
+	{
+	  tcount = count > 128 ? 128 : count;
+
+	  (*comp_ptr)[0] = 1 - tcount;
+	  (*comp_ptr)[1] = repeat;
+
+	  (*comp_ptr) += 2;
+	  count    -= tcount;
+	}
+    }
+  return active;
+}
+
 #ifdef TEST_COOKED
 static void
 calculate_pass_parameters(cooked_t *w,		/* I - weave parameters */

@@ -1326,97 +1326,6 @@ canon_fold_msb_lsb(const unsigned char *line,
   }
 }
 
-static void
-canon_pack(unsigned char *line,
-	   int length,
-	   unsigned char *comp_buf,
-	   unsigned char **comp_ptr)
-{
-  unsigned char *start;			/* Start of compressed data */
-  unsigned char repeat;			/* Repeating char */
-  int count;			/* Count of compressed bytes */
-  int tcount;			/* Temporary count < 128 */
-
-  /*
-   * Compress using TIFF "packbits" run-length encoding...
-   */
-
-  (*comp_ptr) = comp_buf;
-
-  while (length > 0)
-    {
-      /*
-       * Get a run of non-repeated chars...
-       */
-
-      start  = line;
-      line   += 2;
-      length -= 2;
-
-      while (length > 0 && (line[-2] != line[-1] || line[-1] != line[0]))
-	{
-	  line ++;
-	  length --;
-	}
-
-      line   -= 2;
-      length += 2;
-
-      /*
-       * Output the non-repeated sequences (max 128 at a time).
-       */
-
-      count = line - start;
-      while (count > 0)
-	{
-	  tcount = count > 128 ? 128 : count;
-
-	  (*comp_ptr)[0] = tcount - 1;
-	  memcpy((*comp_ptr) + 1, start, tcount);
-
-	  (*comp_ptr) += tcount + 1;
-	  start    += tcount;
-	  count    -= tcount;
-	}
-
-      if (length <= 0)
-	break;
-
-      /*
-       * Find the repeated sequences...
-       */
-
-      start  = line;
-      repeat = line[0];
-
-      line ++;
-      length --;
-
-      while (length > 0 && *line == repeat)
-	{
-	  line ++;
-	  length --;
-	}
-
-      /*
-       * Output the repeated sequences (max 128 at a time).
-       */
-
-      count = line - start;
-      while (count > 0)
-	{
-	  tcount = count > 128 ? 128 : count;
-
-	  (*comp_ptr)[0] = 1 - tcount;
-	  (*comp_ptr)[1] = repeat;
-
-	  (*comp_ptr) += 2;
-	  count    -= tcount;
-	}
-    }
-}
-
-
 /*
  * 'canon_write()' - Send graphics using TIFF packbits compression.
  */
@@ -1474,7 +1383,7 @@ canon_write(FILE          *prn,		/* I - Print file or command */
     }
   }
 
-  canon_pack(in_ptr, length, comp_data, &comp_ptr);
+  stp_pack(in_ptr, length, comp_data, &comp_ptr);
   newlength= comp_ptr - comp_buf;
 
   /* send packed empty lines if any */

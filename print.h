@@ -291,15 +291,6 @@ extern void	dither_set_adaptive_divisor(void *vd, unsigned divisor);
 extern void	free_dither(void *);
 
 
-extern void *	initialize_weave_params(int S, int J, int O,
-		                        int firstrow, int lastrow,
-		                        int pagelength, int strategy);
-extern void	calculate_row_parameters(void *w, int row, int subpass,
-		                         int *pass, int *jet, int *startrow,
-					 int *phantomrows, int *jetsused);
-extern void	destroy_weave_params(void *vw);
-
-
 extern void	dither_monochrome(const unsigned short *, int, void *,
 				 unsigned char *, int duplicate_line);
 
@@ -312,6 +303,41 @@ extern void	dither_cmyk(const unsigned short *, int, void *,
 			    unsigned char *, unsigned char *,
 			    unsigned char *, unsigned char *,
 			    int duplicate_line);
+
+
+extern void *	initialize_weave_params(int S, int J, int O,
+		                        int firstrow, int lastrow,
+		                        int pagelength, int strategy);
+extern void	calculate_row_parameters(void *w, int row, int subpass,
+		                         int *pass, int *jet, int *startrow,
+					 int *phantomrows, int *jetsused);
+extern void	destroy_weave_params(void *vw);
+
+extern void	stp_fold(const unsigned char *line, int single_length,
+			 unsigned char *outbuf);
+
+extern void	stp_split_2(int length, int bits, const unsigned char *in,
+			    unsigned char *outhi, unsigned char *outlo);
+
+extern void	stp_split_4(int length, int bits, const unsigned char *in,
+			    unsigned char *out0, unsigned char *out1,
+			    unsigned char *out2, unsigned char *out3);
+
+extern void	stp_unpack_2(int length, int bits, const unsigned char *in,
+			     unsigned char *outlo, unsigned char *outhi);
+
+extern void	stp_unpack_4(int length, int bits, const unsigned char *in,
+			     unsigned char *out0, unsigned char *out1,
+			     unsigned char *out2, unsigned char *out3);
+
+extern void	stp_unpack_8(int length, int bits, const unsigned char *in,
+			     unsigned char *out0, unsigned char *out1,
+			     unsigned char *out2, unsigned char *out3,
+			     unsigned char *out4, unsigned char *out5,
+			     unsigned char *out6, unsigned char *out7);
+
+extern int	stp_pack(const unsigned char *line, int length,
+			 unsigned char *comp_buf, unsigned char **comp_ptr);
 
 extern void	merge_printvars(vars_t *user, const vars_t *print);
 extern void	free_lut(vars_t *v);

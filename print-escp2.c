@@ -34,8 +34,6 @@
 #  define inline
 #endif /* !__GNUC__ */
 
-/*#include <endian.h>*/
-
 typedef enum {
   COLOR_MONOCHROME,
   COLOR_CMYK,
@@ -2423,886 +2421,6 @@ escp2_print(const printer_t *printer,		/* I - Model */
 #endif
 }
 
-static void
-escp2_fold(const unsigned char *line,
-	   int single_length,
-	   unsigned char *outbuf)
-{
-  int i;
-  memset(outbuf, 0, single_length * 2);
-  for (i = 0; i < single_length; i++)
-    {
-      unsigned char l0 = line[0];
-      unsigned char l1 = line[single_length];
-      if (l0 || l1)
-	{
-	  outbuf[0] =
-	    ((l0 & (1 << 7)) >> 1) +
-	    ((l0 & (1 << 6)) >> 2) +
-	    ((l0 & (1 << 5)) >> 3) +
-	    ((l0 & (1 << 4)) >> 4) +
-	    ((l1 & (1 << 7)) >> 0) +
-	    ((l1 & (1 << 6)) >> 1) +
-	    ((l1 & (1 << 5)) >> 2) +
-	    ((l1 & (1 << 4)) >> 3);
-	  outbuf[1] =
-	    ((l0 & (1 << 3)) << 3) +
-	    ((l0 & (1 << 2)) << 2) +
-	    ((l0 & (1 << 1)) << 1) +
-	    ((l0 & (1 << 0)) << 0) +
-	    ((l1 & (1 << 3)) << 4) +
-	    ((l1 & (1 << 2)) << 3) +
-	    ((l1 & (1 << 1)) << 2) +
-	    ((l1 & (1 << 0)) << 1);
-	}
-      line++;
-      outbuf += 2;
-    }
-}
-
-static void
-escp2_split_2_1(int length,
-		const unsigned char *in,
-		unsigned char *outhi,
-		unsigned char *outlo)
-{
-  unsigned char *outs[2];
-  int i;
-  int row = 0;
-  int limit = length * 2;
-  outs[0] = outhi;
-  outs[1] = outlo;
-  memset(outs[1], 0, limit);
-  for (i = 0; i < limit; i++)
-    {
-      unsigned char inbyte = in[i];
-      outs[0][i] = 0;
-      if (inbyte == 0)
-	continue;
-      /* For some reason gcc isn't unrolling this, even with -funroll-loops */
-      if (inbyte & 1)
-	{
-	  outs[row][i] |= 1 & inbyte;
-	  row = row ^ 1;
-	}
-      if (inbyte & (1 << 1))
-	{
-	  outs[row][i] |= (1 << 1) & inbyte;
-	  row = row ^ 1;
-	}
-      if (inbyte & (1 << 2))
-	{
-	  outs[row][i] |= (1 << 2) & inbyte;
-	  row = row ^ 1;
-	}
-      if (inbyte & (1 << 3))
-	{
-	  outs[row][i] |= (1 << 3) & inbyte;
-	  row = row ^ 1;
-	}
-      if (inbyte & (1 << 4))
-	{
-	  outs[row][i] |= (1 << 4) & inbyte;
-	  row = row ^ 1;
-	}
-      if (inbyte & (1 << 5))
-	{
-	  outs[row][i] |= (1 << 5) & inbyte;
-	  row = row ^ 1;
-	}
-      if (inbyte & (1 << 6))
-	{
-	  outs[row][i] |= (1 << 6) & inbyte;
-	  row = row ^ 1;
-	}
-      if (inbyte & (1 << 7))
-	{
-	  outs[row][i] |= (1 << 7) & inbyte;
-	  row = row ^ 1;
-	}
-    }
-}
-
-static void
-escp2_split_2_2(int length,
-		const unsigned char *in,
-		unsigned char *outhi,
-		unsigned char *outlo)
-{
-  unsigned char *outs[2];
-  int i;
-  unsigned row = 0;
-  int limit = length * 2;
-  outs[0] = outhi;
-  outs[1] = outlo;
-  memset(outs[1], 0, limit);
-  for (i = 0; i < limit; i++)
-    {
-      unsigned char inbyte = in[i];
-      outs[0][i] = 0;
-      if (inbyte == 0)
-	continue;
-      /* For some reason gcc isn't unrolling this, even with -funroll-loops */
-      if (inbyte & 3)
-	{
-	  outs[row][i] |= (3 & inbyte);
-	  row = row ^ 1;
-	}
-      if (inbyte & (3 << 2))
-	{
-	  outs[row][i] |= ((3 << 2) & inbyte);
-	  row = row ^ 1;
-	}
-      if (inbyte & (3 << 4))
-	{
-	  outs[row][i] |= ((3 << 4) & inbyte);
-	  row = row ^ 1;
-	}
-      if (inbyte & (3 << 6))
-	{
-	  outs[row][i] |= ((3 << 6) & inbyte);
-	  row = row ^ 1;
-	}
-    }
-}
-
-static void
-escp2_split_2(int length,
-	      int bits,
-	      const unsigned char *in,
-	      unsigned char *outhi,
-	      unsigned char *outlo)
-{
-  if (bits == 2)
-    escp2_split_2_2(length, in, outhi, outlo);
-  else
-    escp2_split_2_1(length, in, outhi, outlo);
-}
-
-static void
-escp2_split_4_1(int length,
-		const unsigned char *in,
-		unsigned char *out0,
-		unsigned char *out1,
-		unsigned char *out2,
-		unsigned char *out3)
-{
-  unsigned char *outs[4];
-  int i;
-  int row = 0;
-  int limit = length * 2;
-  outs[0] = out0;
-  outs[1] = out1;
-  outs[2] = out2;
-  outs[3] = out3;
-  memset(outs[1], 0, limit);
-  memset(outs[2], 0, limit);
-  memset(outs[3], 0, limit);
-  for (i = 0; i < limit; i++)
-    {
-      unsigned char inbyte = in[i];
-      outs[0][i] = 0;
-      if (inbyte == 0)
-	continue;
-      /* For some reason gcc isn't unrolling this, even with -funroll-loops */
-      if (inbyte & 1)
-	{
-	  outs[row][i] |= 1 & inbyte;
-	  row = (row + 1) & 3;
-	}
-      if (inbyte & (1 << 1))
-	{
-	  outs[row][i] |= (1 << 1) & inbyte;
-	  row = (row + 1) & 3;
-	}
-      if (inbyte & (1 << 2))
-	{
-	  outs[row][i] |= (1 << 2) & inbyte;
-	  row = (row + 1) & 3;
-	}
-      if (inbyte & (1 << 3))
-	{
-	  outs[row][i] |= (1 << 3) & inbyte;
-	  row = (row + 1) & 3;
-	}
-      if (inbyte & (1 << 4))
-	{
-	  outs[row][i] |= (1 << 4) & inbyte;
-	  row = (row + 1) & 3;
-	}
-      if (inbyte & (1 << 5))
-	{
-	  outs[row][i] |= (1 << 5) & inbyte;
-	  row = (row + 1) & 3;
-	}
-      if (inbyte & (1 << 6))
-	{
-	  outs[row][i] |= (1 << 6) & inbyte;
-	  row = (row + 1) & 3;
-	}
-      if (inbyte & (1 << 7))
-	{
-	  outs[row][i] |= (1 << 7) & inbyte;
-	  row = (row + 1) & 3;
-	}
-    }
-}
-
-static void
-escp2_split_4_2(int length,
-		const unsigned char *in,
-		unsigned char *out0,
-		unsigned char *out1,
-		unsigned char *out2,
-		unsigned char *out3)
-{
-  unsigned char *outs[4];
-  int i;
-  int row = 0;
-  int limit = length * 2;
-  outs[0] = out0;
-  outs[1] = out1;
-  outs[2] = out2;
-  outs[3] = out3;
-  memset(outs[1], 0, limit);
-  memset(outs[2], 0, limit);
-  memset(outs[3], 0, limit);
-  for (i = 0; i < limit; i++)
-    {
-      unsigned char inbyte = in[i];
-      outs[0][i] = 0;
-      if (inbyte == 0)
-	continue;
-      /* For some reason gcc isn't unrolling this, even with -funroll-loops */
-      if (inbyte & 3)
-	{
-	  outs[row][i] |= 3 & inbyte;
-	  row = (row + 1) & 3;
-	}
-      if (inbyte & (3 << 2))
-	{
-	  outs[row][i] |= (3 << 2) & inbyte;
-	  row = (row + 1) & 3;
-	}
-      if (inbyte & (3 << 4))
-	{
-	  outs[row][i] |= (3 << 4) & inbyte;
-	  row = (row + 1) & 3;
-	}
-      if (inbyte & (3 << 6))
-	{
-	  outs[row][i] |= (3 << 6) & inbyte;
-	  row = (row + 1) & 3;
-	}
-    }
-}
-
-static void
-escp2_split_4(int length,
-	      int bits,
-	      const unsigned char *in,
-	      unsigned char *out0,
-	      unsigned char *out1,
-	      unsigned char *out2,
-	      unsigned char *out3)
-{
-  if (bits == 2)
-    escp2_split_4_2(length, in, out0, out1, out2, out3);
-  else
-    escp2_split_4_1(length, in, out0, out1, out2, out3);
-}
-
-
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-#define SH20 0
-#define SH21 8
-#else
-#define SH20 8
-#define SH21 0
-#endif
-
-static void
-escp2_unpack_2_1(int length,
-		 const unsigned char *in,
-		 unsigned char *out0,
-		 unsigned char *out1)
-{
-  unsigned char	tempin,
-		bit,
-		temp0,
-		temp1;
-
-
-  for (bit = 128, temp0 = 0, temp1 = 0;
-       length > 0;
-       length --)
-    {
-      tempin = *in++;
-
-      if (tempin & 128)
-        temp0 |= bit;
-      if (tempin & 64)
-        temp1 |= bit;
-
-      bit >>= 1;
-
-      if (tempin & 32)
-        temp0 |= bit;
-      if (tempin & 16)
-        temp1 |= bit;
-
-      bit >>= 1;
-
-      if (tempin & 8)
-        temp0 |= bit;
-      if (tempin & 4)
-        temp1 |= bit;
-
-      bit >>= 1;
-
-      if (tempin & 2)
-        temp0 |= bit;
-      if (tempin & 1)
-        temp1 |= bit;
-
-      if (bit > 1)
-        bit >>= 1;
-      else
-      {
-        bit     = 128;
-	*out0++ = temp0;
-	*out1++ = temp1;
-
-	temp0   = 0;
-	temp1   = 0;
-      }
-    }
-
-  if (bit < 128)
-    {
-      *out0++ = temp0;
-      *out1++ = temp1;
-    }
-}
-
-static void
-escp2_unpack_2_2(int length,
-		 const unsigned char *in,
-		 unsigned char *out0,
-		 unsigned char *out1)
-{
-  unsigned char	tempin,
-		shift,
-		temp0,
-		temp1;
-
-
-  length *= 2;
-
-  for (shift = 0, temp0 = 0, temp1 = 0;
-       length > 0;
-       length --)
-    {
-     /*
-      * Note - we can't use (tempin & N) >> (shift - M) since negative
-      * right-shifts are not always implemented.
-      */
-
-      tempin = *in++;
-
-      if (tempin & 192)
-        temp0 |= (tempin & 192) >> shift;
-      if (tempin & 48)
-        temp1 |= ((tempin & 48) << 2) >> shift;
-
-      shift += 2;
-
-      if (tempin & 12)
-        temp0 |= ((tempin & 12) << 4) >> shift;
-      if (tempin & 3)
-        temp1 |= ((tempin & 3) << 6) >> shift;
-
-      if (shift < 6)
-        shift += 2;
-      else
-      {
-        shift   = 0;
-	*out0++ = temp0;
-	*out1++ = temp1;
-
-	temp0   = 0;
-	temp1   = 0;
-      }
-    }
-
-  if (shift)
-    {
-      *out0++ = temp0;
-      *out1++ = temp1;
-    }
-}
-
-static void
-escp2_unpack_2(int length,
-	       int bits,
-	       const unsigned char *in,
-	       unsigned char *outlo,
-	       unsigned char *outhi)
-{
-  if (bits == 1)
-    escp2_unpack_2_1(length, in, outlo, outhi);
-  else
-    escp2_unpack_2_2(length, in, outlo, outhi);
-}
-
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-#define SH40 0
-#define SH41 8
-#define SH42 16
-#define SH43 24
-#else
-#define SH40 24
-#define SH41 16
-#define SH42 8
-#define SH43 0
-#endif
-
-static void
-escp2_unpack_4_1(int length,
-		 const unsigned char *in,
-		 unsigned char *out0,
-		 unsigned char *out1,
-		 unsigned char *out2,
-		 unsigned char *out3)
-{
-  unsigned char	tempin,
-		bit,
-		temp0,
-		temp1,
-		temp2,
-		temp3;
-
-
-  for (bit = 128, temp0 = 0, temp1 = 0, temp2 = 0, temp3 = 0;
-       length > 0;
-       length --)
-    {
-      tempin = *in++;
-
-      if (tempin & 128)
-        temp0 |= bit;
-      if (tempin & 64)
-        temp1 |= bit;
-      if (tempin & 32)
-        temp2 |= bit;
-      if (tempin & 16)
-        temp3 |= bit;
-
-      bit >>= 1;
-
-      if (tempin & 8)
-        temp0 |= bit;
-      if (tempin & 4)
-        temp1 |= bit;
-      if (tempin & 2)
-        temp2 |= bit;
-      if (tempin & 1)
-        temp3 |= bit;
-
-      if (bit > 1)
-        bit >>= 1;
-      else
-      {
-        bit     = 128;
-	*out0++ = temp0;
-	*out1++ = temp1;
-	*out2++ = temp2;
-	*out3++ = temp3;
-
-	temp0   = 0;
-	temp1   = 0;
-	temp2   = 0;
-	temp3   = 0;
-      }
-    }
-
-  if (bit < 128)
-    {
-      *out0++ = temp0;
-      *out1++ = temp1;
-      *out2++ = temp2;
-      *out3++ = temp3;
-    }
-}
-
-static void
-escp2_unpack_4_2(int length,
-		 const unsigned char *in,
-		 unsigned char *out0,
-		 unsigned char *out1,
-		 unsigned char *out2,
-		 unsigned char *out3)
-{
-  unsigned char	tempin,
-		shift,
-		temp0,
-		temp1,
-		temp2,
-		temp3;
-
-
-  length *= 2;
-
-  for (shift = 0, temp0 = 0, temp1 = 0, temp2 = 0, temp3 = 0;
-       length > 0;
-       length --)
-    {
-     /*
-      * Note - we can't use (tempin & N) >> (shift - M) since negative
-      * right-shifts are not always implemented.
-      */
-
-      tempin = *in++;
-
-      if (tempin & 192)
-        temp0 |= (tempin & 192) >> shift;
-      if (tempin & 48)
-        temp1 |= ((tempin & 48) << 2) >> shift;
-      if (tempin & 12)
-        temp2 |= ((tempin & 12) << 4) >> shift;
-      if (tempin & 3)
-        temp3 |= ((tempin & 3) << 6) >> shift;
-
-      if (shift < 6)
-        shift += 2;
-      else
-      {
-        shift   = 0;
-	*out0++ = temp0;
-	*out1++ = temp1;
-	*out2++ = temp2;
-	*out3++ = temp3;
-
-	temp0   = 0;
-	temp1   = 0;
-	temp2   = 0;
-	temp3   = 0;
-      }
-    }
-
-  if (shift)
-    {
-      *out0++ = temp0;
-      *out1++ = temp1;
-      *out2++ = temp2;
-      *out3++ = temp3;
-    }
-}
-
-static void
-escp2_unpack_4(int length,
-	       int bits,
-	       const unsigned char *in,
-	       unsigned char *out0,
-	       unsigned char *out1,
-	       unsigned char *out2,
-	       unsigned char *out3)
-{
-  if (bits == 1)
-    escp2_unpack_4_1(length, in, out0, out1, out2, out3);
-  else
-    escp2_unpack_4_2(length, in, out0, out1, out2, out3);
-}
-
-static void
-escp2_unpack_8_1(int length,
-		 const unsigned char *in,
-		 unsigned char *out0,
-		 unsigned char *out1,
-		 unsigned char *out2,
-		 unsigned char *out3,
-		 unsigned char *out4,
-		 unsigned char *out5,
-		 unsigned char *out6,
-		 unsigned char *out7)
-{
-  unsigned char	tempin, bit, temp0, temp1, temp2, temp3, temp4, temp5, temp6,
-    temp7;
-
-
-  for (bit = 128, temp0 = 0, temp1 = 0, temp2 = 0,
-       temp3 = 0, temp4 = 0, temp5 = 0, temp6 = 0, temp7 = 0;
-       length > 0;
-       length --)
-    {
-      tempin = *in++;
-
-      if (tempin & 128)
-        temp0 |= bit;
-      if (tempin & 64)
-        temp1 |= bit;
-      if (tempin & 32)
-        temp2 |= bit;
-      if (tempin & 16)
-        temp3 |= bit;
-      if (tempin & 8)
-        temp4 |= bit;
-      if (tempin & 4)
-        temp5 |= bit;
-      if (tempin & 2)
-        temp6 |= bit;
-      if (tempin & 1)
-        temp7 |= bit;
-
-      if (bit > 1)
-        bit >>= 1;
-      else
-      {
-        bit     = 128;
-	*out0++ = temp0;
-	*out1++ = temp1;
-	*out2++ = temp2;
-	*out3++ = temp3;
-	*out4++ = temp4;
-	*out5++ = temp5;
-	*out6++ = temp6;
-	*out7++ = temp7;
-
-	temp0   = 0;
-	temp1   = 0;
-	temp2   = 0;
-	temp3   = 0;
-	temp4   = 0;
-	temp5   = 0;
-	temp6   = 0;
-	temp7   = 0;
-      }
-    }
-
-  if (bit < 128)
-    {
-      *out0++ = temp0;
-      *out1++ = temp1;
-      *out2++ = temp2;
-      *out3++ = temp3;
-      *out4++ = temp4;
-      *out5++ = temp5;
-      *out6++ = temp6;
-      *out7++ = temp7;
-    }
-}
-
-static void
-escp2_unpack_8_2(int length,
-		 const unsigned char *in,
-		 unsigned char *out0,
-		 unsigned char *out1,
-		 unsigned char *out2,
-		 unsigned char *out3,
-		 unsigned char *out4,
-		 unsigned char *out5,
-		 unsigned char *out6,
-		 unsigned char *out7)
-{
-  unsigned char	tempin,
-		shift,
-		temp0,
-		temp1,
-		temp2,
-		temp3,
-		temp4,
-		temp5,
-		temp6,
-		temp7;
-
-
-  for (shift = 0, temp0 = 0, temp1 = 0,
-       temp2 = 0, temp3 = 0, temp4 = 0, temp5 = 0, temp6 = 0, temp7 = 0;
-       length > 0;
-       length --)
-    {
-     /*
-      * Note - we can't use (tempin & N) >> (shift - M) since negative
-      * right-shifts are not always implemented.
-      */
-
-      tempin = *in++;
-
-      if (tempin & 192)
-        temp0 |= (tempin & 192) >> shift;
-      if (tempin & 48)
-        temp1 |= ((tempin & 48) << 2) >> shift;
-      if (tempin & 12)
-        temp2 |= ((tempin & 12) << 4) >> shift;
-      if (tempin & 3)
-        temp3 |= ((tempin & 3) << 6) >> shift;
-
-      tempin = *in++;
-
-      if (tempin & 192)
-        temp4 |= (tempin & 192) >> shift;
-      if (tempin & 48)
-        temp5 |= ((tempin & 48) << 2) >> shift;
-      if (tempin & 12)
-        temp6 |= ((tempin & 12) << 4) >> shift;
-      if (tempin & 3)
-        temp7 |= ((tempin & 3) << 6) >> shift;
-
-      if (shift < 6)
-        shift += 2;
-      else
-      {
-        shift   = 0;
-	*out0++ = temp0;
-	*out1++ = temp1;
-	*out2++ = temp2;
-	*out3++ = temp3;
-	*out4++ = temp4;
-	*out5++ = temp5;
-	*out6++ = temp6;
-	*out7++ = temp7;
-
-	temp0   = 0;
-	temp1   = 0;
-	temp2   = 0;
-	temp3   = 0;
-	temp4   = 0;
-	temp5   = 0;
-	temp6   = 0;
-	temp7   = 0;
-      }
-    }
-
-  if (shift)
-    {
-      *out0++ = temp0;
-      *out1++ = temp1;
-      *out2++ = temp2;
-      *out3++ = temp3;
-      *out4++ = temp4;
-      *out5++ = temp5;
-      *out6++ = temp6;
-      *out7++ = temp7;
-    }
-}
-
-static void
-escp2_unpack_8(int length,
-	       int bits,
-	       const unsigned char *in,
-	       unsigned char *out0,
-	       unsigned char *out1,
-	       unsigned char *out2,
-	       unsigned char *out3,
-	       unsigned char *out4,
-	       unsigned char *out5,
-	       unsigned char *out6,
-	       unsigned char *out7)
-{
-  if (bits == 1)
-    escp2_unpack_8_1(length, in, out0, out1, out2, out3,
-		     out4, out5, out6, out7);
-  else
-    escp2_unpack_8_2(length, in, out0, out1, out2, out3,
-		     out4, out5, out6, out7);
-}
-
-static int
-escp2_pack(const unsigned char *line,
-	   int length,
-	   unsigned char *comp_buf,
-	   unsigned char **comp_ptr)
-{
-  const unsigned char *start;		/* Start of compressed data */
-  unsigned char repeat;			/* Repeating char */
-  int count;			/* Count of compressed bytes */
-  int tcount;			/* Temporary count < 128 */
-  int active = 0;		/* Have we found data? */
-
-  /*
-   * Compress using TIFF "packbits" run-length encoding...
-   */
-
-  (*comp_ptr) = comp_buf;
-
-  while (length > 0)
-    {
-      /*
-       * Get a run of non-repeated chars...
-       */
-
-      start  = line;
-      line   += 2;
-      length -= 2;
-
-      while (length > 0 && (line[-2] != line[-1] || line[-1] != line[0]))
-	{
-	  if (! active && (line[-2] || line[-1] || line[0]))
-	    active = 1;
-	  line ++;
-	  length --;
-	}
-
-      line   -= 2;
-      length += 2;
-
-      /*
-       * Output the non-repeated sequences (max 128 at a time).
-       */
-
-      count = line - start;
-      while (count > 0)
-	{
-	  tcount = count > 128 ? 128 : count;
-
-	  (*comp_ptr)[0] = tcount - 1;
-	  memcpy((*comp_ptr) + 1, start, tcount);
-
-	  (*comp_ptr) += tcount + 1;
-	  start    += tcount;
-	  count    -= tcount;
-	}
-
-      if (length <= 0)
-	break;
-
-      /*
-       * Find the repeated sequences...
-       */
-
-      start  = line;
-      repeat = line[0];
-      if (repeat)
-	active = 1;
-
-      line ++;
-      length --;
-
-      while (length > 0 && *line == repeat)
-	{
-	  line ++;
-	  length --;
-	}
-
-      /*
-       * Output the repeated sequences (max 128 at a time).
-       */
-
-      count = line - start;
-      while (count > 0)
-	{
-	  tcount = count > 128 ? 128 : count;
-
-	  (*comp_ptr)[0] = 1 - tcount;
-	  (*comp_ptr)[1] = repeat;
-
-	  (*comp_ptr) += 2;
-	  count    -= tcount;
-	}
-    }
-  return active;
-}
-
 static unsigned char *microweave_s = 0;
 static unsigned char *microweave_comp_ptr[6][4];
 static int microweave_setactive[6][4];
@@ -3360,7 +2478,7 @@ escp2_do_microweave_pack(const unsigned char *line,
     in = line;
   else
     {
-      escp2_fold(line, length, pack_buf);
+      stp_fold(line, length, pack_buf);
       in = pack_buf;
     }
   switch (oversample)
@@ -3369,17 +2487,17 @@ escp2_do_microweave_pack(const unsigned char *line,
       memcpy(s[0], in, bits * length);
       break;
     case 2:
-      escp2_unpack_2(length, bits, in, s[0], s[1]);
+      stp_unpack_2(length, bits, in, s[0], s[1]);
       break;
     case 4:
-      escp2_unpack_4(length, bits, in, s[0], s[1], s[2], s[3]);
+      stp_unpack_4(length, bits, in, s[0], s[1], s[2], s[3]);
       break;
     }
   for (i = 0; i < oversample; i++)
     {
       microweave_setactive[color][i] =
-	escp2_pack(s[i], length * bits, MICRO_S(color, i),
-		   &(microweave_comp_ptr[color][i]));
+	stp_pack(s[i], length * bits, MICRO_S(color, i),
+		 &(microweave_comp_ptr[color][i]));
       retval |= microweave_setactive[color][i];
     }
   return retval;
@@ -4351,7 +3469,7 @@ finalize_row(escp2_softweave_t *sw, int row, int model, int width,
 {
   int i;
 #if 0
-printf("Finalizing row %d...\n", row);
+  printf("Finalizing row %d...\n", row);
 #endif
   for (i = 0; i < sw->oversample; i++)
     {
@@ -4360,12 +3478,12 @@ printf("Finalizing row %d...\n", row);
       weave_parameters_by_row(sw, row, i, &w);
       (*lines)++;
       if (w.physpassend == row)
-       {
+	{
 #if 0
-printf("Pass=%d, physpassend=%d, row=%d, lineno=%d, trying to flush...\n", w.pass, w.physpassend, row, sw->lineno);
+	  printf("Pass=%d, physpassend=%d, row=%d, lineno=%d, trying to flush...\n", w.pass, w.physpassend, row, sw->lineno);
 #endif
-	escp2_flush(sw, model, width, hoffset, ydpi, xdpi, physical_xdpi, prn);
-       }
+	  escp2_flush(sw, model, width, hoffset, ydpi, xdpi, physical_xdpi, prn);
+	}
     }
 }
 
@@ -4429,7 +3547,7 @@ escp2_write_weave(void *        vsw,
 	  const unsigned char *in;
 	  if (sw->bitwidth == 2)
 	    {
-	      escp2_fold(cols[j], length, fold_buf);
+	      stp_fold(cols[j], length, fold_buf);
 	      in = fold_buf;
 	    }
 	  else
@@ -4439,16 +3557,16 @@ escp2_write_weave(void *        vsw,
 	      switch (sw->horizontal_weave)
 		{
 		case 2:
-		  escp2_unpack_2(length, sw->bitwidth, in, s[0], s[1]);
+		  stp_unpack_2(length, sw->bitwidth, in, s[0], s[1]);
 		  break;
 		case 4:
-		  escp2_unpack_4(length, sw->bitwidth, in,
-				 s[0], s[1], s[2], s[3]);
+		  stp_unpack_4(length, sw->bitwidth, in,
+			       s[0], s[1], s[2], s[3]);
 		  break;
 		case 8:
-		  escp2_unpack_8(length, sw->bitwidth, in,
-				 s[0], s[1], s[2], s[3],
-				 s[4], s[5], s[6], s[7]);
+		  stp_unpack_8(length, sw->bitwidth, in,
+			       s[0], s[1], s[2], s[3],
+			       s[4], s[5], s[6], s[7]);
 		  break;
 		}
 	      switch (sw->vertical_subpasses)
@@ -4457,14 +3575,14 @@ escp2_write_weave(void *        vsw,
 		  switch (sw->horizontal_weave)
 		    {
 		    case 1:
-		      escp2_split_4(length, sw->bitwidth, in,
-				    s[0], s[1], s[2], s[3]);
+		      stp_split_4(length, sw->bitwidth, in,
+				  s[0], s[1], s[2], s[3]);
 		      break;
 		    case 2:
-		      escp2_split_4(length, sw->bitwidth, s[0],
-				    s[0], s[2], s[4], s[6]);
-		      escp2_split_4(length, sw->bitwidth, s[1],
-				    s[1], s[3], s[5], s[7]);
+		      stp_split_4(length, sw->bitwidth, s[0],
+				  s[0], s[2], s[4], s[6]);
+		      stp_split_4(length, sw->bitwidth, s[1],
+				  s[1], s[3], s[5], s[7]);
 		      break;
 		    }
 		  break;
@@ -4472,17 +3590,17 @@ escp2_write_weave(void *        vsw,
 		  switch (sw->horizontal_weave)
 		    {
 		    case 1:
-		      escp2_split_2(xlength, sw->bitwidth, in, s[0], s[1]);
+		      stp_split_2(xlength, sw->bitwidth, in, s[0], s[1]);
 		      break;
 		    case 2:
-		      escp2_split_2(xlength, sw->bitwidth, s[0], s[0], s[2]);
-		      escp2_split_2(xlength, sw->bitwidth, s[1], s[1], s[3]);
+		      stp_split_2(xlength, sw->bitwidth, s[0], s[0], s[2]);
+		      stp_split_2(xlength, sw->bitwidth, s[1], s[1], s[3]);
 		      break;
 		    case 4:
-		      escp2_split_2(xlength, sw->bitwidth, s[0], s[0], s[4]);
-		      escp2_split_2(xlength, sw->bitwidth, s[1], s[1], s[5]);
-		      escp2_split_2(xlength, sw->bitwidth, s[2], s[2], s[6]);
-		      escp2_split_2(xlength, sw->bitwidth, s[3], s[3], s[7]);
+		      stp_split_2(xlength, sw->bitwidth, s[0], s[0], s[4]);
+		      stp_split_2(xlength, sw->bitwidth, s[1], s[1], s[5]);
+		      stp_split_2(xlength, sw->bitwidth, s[2], s[2], s[6]);
+		      stp_split_2(xlength, sw->bitwidth, s[3], s[3], s[7]);
 		      break;
 		    }
 		  break;
@@ -4491,7 +3609,7 @@ escp2_write_weave(void *        vsw,
 		}
 	      for (i = 0; i < h_passes; i++)
 		{
-		  setactive = escp2_pack(s[i], sw->bitwidth * xlength,
+		  setactive = stp_pack(s[i], sw->bitwidth * xlength,
 					 comp_buf, &comp_ptr);
 		  add_to_row(sw, sw->lineno, comp_buf, comp_ptr - comp_buf,
 			     colors[j], densities[j], setactive,
@@ -4500,7 +3618,7 @@ escp2_write_weave(void *        vsw,
 	    }
 	  else
 	    {
-	      setactive = escp2_pack(in, length * sw->bitwidth,
+	      setactive = stp_pack(in, length * sw->bitwidth,
 				     comp_buf, &comp_ptr);
 	      add_to_row(sw, sw->lineno, comp_buf, comp_ptr - comp_buf,
 			 colors[j], densities[j], setactive,
