@@ -415,7 +415,9 @@
 #gptofoo pcl-4 printer/HP-LaserJet_6L
 #gptofoo pcl-4 printer/HP-LaserJet_6MP
 #gptofoo pcl-4 printer/HP-LaserJet_6P
+#gptofoo pcl-5 printer/HP-LaserJet_1010
 #gptofoo pcl-5 printer/HP-LaserJet_1012
+#gptofoo pcl-5 printer/HP-LaserJet_1015
 #gptofoo pcl-6 printer/HP-LaserJet_1100
 #gptofoo pcl-6 printer/HP-LaserJet_1100A
 #gptofoo pcl-6 printer/HP-LaserJet_1150
