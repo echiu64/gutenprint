@@ -151,6 +151,7 @@ int		runme = FALSE;		/* True if print should proceed */
 const printer_t *current_printer = 0;	/* Current printer index */
 gint32          image_ID;	        /* image ID */
 
+const char *image_filename;
 int image_width;
 int image_height;
 
@@ -356,6 +357,10 @@ run (char   *name,		/* I - Name of print program. */
 
   image_ID = param[1].data.d_int32;
   drawable_ID = param[2].data.d_int32;
+
+  image_filename = gimp_image_get_filename (image_ID);
+  if (strchr(image_filename, '/'))
+    image_filename = strrchr(image_filename, '/') + 1;
 
 #ifndef GIMP_1_0
   /*  eventually export the image */ 
@@ -843,7 +848,7 @@ printrc_load(void)
 		*commaptr;	/* Pointer to next comma */
   plist_t	*p,		/* Current printer */
 		key;		/* Search key */
-#ifdef GIMP_1_0
+#if (GIMP_MINOR_VERSION == 0)
   char		*home;		/* Home dir */
 #endif
 
@@ -997,7 +1002,7 @@ printrc_save(void)
   char	       *filename;	/* Printrc filename */
   int		i;		/* Looping var */
   plist_t	*p;		/* Current printer */
-#ifdef GIMP_1_0
+#if (GIMP_MINOR_VERSION == 0)
   char		*home;		/* Home dir */
 #endif
 
