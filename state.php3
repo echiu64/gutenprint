@@ -105,7 +105,7 @@ $supported_printers = array(
        'Ink Jet Printers' => array(
 	       '3200' => 'Operational (4.1 only)',
 	       '4076' => 'Operational',
-	       'Z31' => 'Needs Testing (4.1 only),
+	       'Z31' => 'Needs Testing (4.1 only)',
 	       'Z52' => 'Operational (4.1 only)'
 	       )
        ),
