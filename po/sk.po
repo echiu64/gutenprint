@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GIMP Print\n"
-"POT-Creation-Date: 2002-11-15 19:18-0500\n"
+"POT-Creation-Date: 2002-11-19 20:35-0500\n"
 "PO-Revision-Date: 2002-05-20 18:08+0100\n"
 "Last-Translator: Zdenko Podobný <zdpo@mailbox.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -806,11 +806,11 @@ msgstr "1200x600 DPI"
 msgid "2400x600 DPI"
 msgstr "2400x600 DPI"
 
-#: src/main/print-pcl.c:1567
+#: src/main/print-pcl.c:1703
 msgid "Color + Black Cartridges"
 msgstr "Farebná + èierna kazeta"
 
-#: src/main/print-pcl.c:1568
+#: src/main/print-pcl.c:1704
 msgid "Color + Photo Cartridges"
 msgstr "Farebná + Foto kazeta"
 

@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
-"POT-Creation-Date: 2002-11-15 19:18-0500\n"
+"POT-Creation-Date: 2002-11-19 20:35-0500\n"
 "PO-Revision-Date: 2001-11-05 21:42+0100\n"
 "Last-Translator: Roger Leigh <roger@whinlatter.uklinux.net>\n"
 "Language-Team: British English\n"
@@ -806,11 +806,11 @@ msgstr "1200×600 DPI"
 msgid "2400x600 DPI"
 msgstr "2400×600 DPI"
 
-#: src/main/print-pcl.c:1567
+#: src/main/print-pcl.c:1703
 msgid "Color + Black Cartridges"
 msgstr "Colour + Black Cartridges"
 
-#: src/main/print-pcl.c:1568
+#: src/main/print-pcl.c:1704
 msgid "Color + Photo Cartridges"
 msgstr "Colour + Photo Cartridges"
 

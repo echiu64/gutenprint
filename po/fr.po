@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 4.2.1-pre4\n"
-"POT-Creation-Date: 2002-11-15 19:18-0500\n"
+"POT-Creation-Date: 2002-11-19 20:35-0500\n"
 "PO-Revision-Date: 2002-09-15 16:07+0200\n"
 "Last-Translator: Raymond Ostertag <r.ostertag@caramail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -785,11 +785,11 @@ msgstr "1200 x 600 ppp"
 msgid "2400x600 DPI"
 msgstr "2400 x 600 ppp"
 
-#: src/main/print-pcl.c:1567
+#: src/main/print-pcl.c:1703
 msgid "Color + Black Cartridges"
 msgstr "Cartouches couleur et noir"
 
-#: src/main/print-pcl.c:1568
+#: src/main/print-pcl.c:1704
 msgid "Color + Photo Cartridges"
 msgstr "Cartouches couleur et photo"
 
