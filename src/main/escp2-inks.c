@@ -45,10 +45,10 @@
 static const escp2_variable_ink_t name##_ink =		\
 {							\
   density,						\
-  shades##_shades,					\
   sizeof(shades##_shades) / sizeof(double),		\
-  dotsizes##_dotsizes,					\
-  sizeof(dotsizes##_dotsizes) / sizeof(double)		\
+  sizeof(dotsizes##_dotsizes) / sizeof(double),		\
+  shades##_shades,					\
+  dotsizes##_dotsizes					\
 }
 
 #define DOTSIZE(name) static const double name##_dotsizes[]

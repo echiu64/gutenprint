@@ -64,34 +64,34 @@ typedef unsigned long model_featureset_t;
  * An entry of -1 in a slot means that this resolution is not available.
  */
 
-typedef int escp2_dot_size_t[RES_N];
+typedef short escp2_dot_size_t[RES_N];
 
 /*
  * Choose the number of bits to use at each resolution.
  */
 
-typedef int escp2_bits_t[RES_N];
+typedef short escp2_bits_t[RES_N];
 
 /*
  * Choose the base resolution to use at each resolution.
  */
 
-typedef int escp2_base_resolutions_t[RES_N];
+typedef short escp2_base_resolutions_t[RES_N];
 
 /*
  * Specify the base density for each available resolution.
  * This obviously depends upon the dot size.
  */
 
-typedef double escp2_densities_t[RES_N];
+typedef float escp2_densities_t[RES_N];
 
 typedef struct escp2_variable_ink
 {
-  double darkness;
+  float darkness;
+  short numshades;
+  short numdotsizes;
   const double *shades;
-  int numshades;
   const double *dotsizes;
-  int numdotsizes;
 } escp2_variable_ink_t;
 
 typedef const escp2_variable_ink_t *escp2_variable_inkset_t[PHYSICAL_CHANNEL_LIMIT];
@@ -102,22 +102,22 @@ typedef struct
 {
   const char *name;
   const char *text;
-  int paper_feed_sequence;
-  int platen_gap;
-  double base_density;
-  double k_lower_scale;
-  double k_upper;
-  double cyan;
-  double magenta;
-  double yellow;
-  double p_cyan;
-  double p_magenta;
-  double p_yellow;
-  double saturation;
-  double gamma;
-  int feed_adjustment;
-  int vacuum_intensity;
-  int paper_thickness;
+  short paper_feed_sequence;
+  short platen_gap;
+  float base_density;
+  float k_lower_scale;
+  float k_upper;
+  float cyan;
+  float magenta;
+  float yellow;
+  float p_cyan;
+  float p_magenta;
+  float p_yellow;
+  float saturation;
+  float gamma;
+  short feed_adjustment;
+  short vacuum_intensity;
+  short paper_thickness;
   const char *hue_adjustment;
   const char *lum_adjustment;
   const char *sat_adjustment;
@@ -126,7 +126,7 @@ typedef struct
 
 typedef struct
 {
-  int paper_count;
+  short paper_count;
   const paper_t *papers;
 } paperlist_t;
 
@@ -176,26 +176,26 @@ typedef enum
 typedef struct
 {
   const char *attr_name;
-  int bit_shift;
-  int bit_width;
+  short bit_shift;
+  short bit_width;
 } escp2_printer_attr_t;
 
 typedef struct
 {
   const char *name;
   const char *text;
-  int hres;
-  int vres;
-  int softweave;
-  int microweave;
-  int vertical_passes;
+  short hres;
+  short vres;
+  short softweave;
+  short microweave;
+  short vertical_passes;
 } res_t;
 
 typedef struct
 {
-  int color;
-  int subchannel;
-  int head_offset;
+  short color;
+  short subchannel;
+  short head_offset;
   const char *channel_density;
   const char *subchannel_scale;
 } physical_subchannel_t;
@@ -203,7 +203,7 @@ typedef struct
 typedef struct
 {
   const physical_subchannel_t *subchannels;
-  int n_subchannels;
+  short n_subchannels;
 } ink_channel_t;
 
 typedef enum
@@ -220,11 +220,11 @@ typedef struct
 {
   const char *name;
   const char *text;
-  int is_color;
+  short is_color;
+  short channel_limit;
   inkset_id_t inkset;
-  double k_lower;
-  double k_upper;
-  int channel_limit;
+  float k_lower;
+  float  k_upper;
   const char *lum_adjustment;
   const char *hue_adjustment;
   const char *sat_adjustment;
@@ -234,7 +234,7 @@ typedef struct
 typedef struct
 {
   const escp2_inkname_t *const *inknames;
-  size_t n_inks;
+  short n_inks;
 } inklist_t;
 
 #define ROLL_FEED_CUT_ALL (1)
@@ -244,7 +244,7 @@ typedef struct
 {
   const char *name;
   const char *text;
-  int is_roll_feed;
+  short is_roll_feed;
   unsigned roll_feed_cut_flags;
   const stp_raw_t init_sequence;
   const stp_raw_t deinit_sequence;
@@ -261,43 +261,43 @@ typedef struct escp2_printer
   model_cap_t	flags;		/* Bitmask of flags, see above */
 /*****************************************************************************/
   /* Basic head configuration */
-  int		nozzles;	/* Number of nozzles per color */
-  int		min_nozzles;	/* Minimum number of nozzles per color */
-  int		nozzle_separation; /* Separation between rows, in 1/360" */
-  int		black_nozzles;	/* Number of black nozzles (may be extra) */
-  int		min_black_nozzles;	/* # of black nozzles (may be extra) */
-  int		black_nozzle_separation; /* Separation between rows */
-  int		fast_nozzles;	/* Number of fast nozzles */
-  int		min_fast_nozzles;	/* # of fast nozzles (may be extra) */
-  int		fast_nozzle_separation; /* Separation between rows */
-  int		physical_channels; /* Number of ink channels */
+  short		nozzles;	/* Number of nozzles per color */
+  short		min_nozzles;	/* Minimum number of nozzles per color */
+  short		nozzle_separation; /* Separation between rows, in 1/360" */
+  short		black_nozzles;	/* Number of black nozzles (may be extra) */
+  short		min_black_nozzles;	/* # of black nozzles (may be extra) */
+  short		black_nozzle_separation; /* Separation between rows */
+  short		fast_nozzles;	/* Number of fast nozzles */
+  short		min_fast_nozzles;	/* # of fast nozzles (may be extra) */
+  short		fast_nozzle_separation; /* Separation between rows */
+  short		physical_channels; /* Number of ink channels */
 /*****************************************************************************/
   /* Print head resolution */
-  int		base_separation; /* Basic unit of row separation */
-  int		resolution_scale;   /* Scaling factor for ESC(D command */
-  int		max_black_resolution; /* Above this resolution, we */
+  short		base_separation; /* Basic unit of row separation */
+  short		resolution_scale;   /* Scaling factor for ESC(D command */
+  short		max_black_resolution; /* Above this resolution, we */
 				      /* must use color parameters */
 				      /* rather than (faster) black */
 				      /* only parameters*/
-  int		max_hres;
-  int		max_vres;
-  int		min_hres;
-  int		min_vres;
+  short		max_hres;
+  short		max_vres;
+  short		min_hres;
+  short		min_vres;
   /* Miscellaneous printer-specific data */
-  int		extra_feed;	/* Extra distance the paper can be spaced */
+  short		extra_feed;	/* Extra distance the paper can be spaced */
 				/* beyond the bottom margin, in 1/360". */
 				/* (maximum useful value is */
 				/* nozzles * nozzle_separation) */
-  int		separation_rows; /* Some printers require funky spacing */
+  short		separation_rows; /* Some printers require funky spacing */
 				/* arguments in microweave mode. */
-  int		pseudo_separation_rows;/* Some printers require funky */
+  short		pseudo_separation_rows;/* Some printers require funky */
 				/* spacing arguments in softweave mode */
 
-  int           zero_margin_offset;   /* Offset to use to achieve */
+  short         zero_margin_offset;   /* Offset to use to achieve */
 				      /* zero-margin printing */
-  int		initial_vertical_offset;
-  int		black_initial_vertical_offset;
-  int		extra_720dpi_separation;
+  short		initial_vertical_offset;
+  short		black_initial_vertical_offset;
+  short		extra_720dpi_separation;
 /*****************************************************************************/
   /* Paper size limits */
   int		max_paper_width; /* Maximum paper width, in points */
@@ -308,29 +308,29 @@ typedef struct escp2_printer
   /* Borders */
 				/* SHEET FED: */
 				/* Softweave: */
-  int		left_margin;	/* Left margin, points */
-  int		right_margin;	/* Right margin, points */
-  int		top_margin;	/* Absolute top margin, points */
-  int		bottom_margin;	/* Absolute bottom margin, points */
+  short		left_margin;	/* Left margin, points */
+  short		right_margin;	/* Right margin, points */
+  short		top_margin;	/* Absolute top margin, points */
+  short		bottom_margin;	/* Absolute bottom margin, points */
 				/* "Micro"weave: */
-  int		m_left_margin;	/* Left margin, points */
-  int		m_right_margin;	/* Right margin, points */
-  int		m_top_margin;	/* Absolute top margin, points */
-  int		m_bottom_margin;	/* Absolute bottom margin, points */
+  short		m_left_margin;	/* Left margin, points */
+  short		m_right_margin;	/* Right margin, points */
+  short		m_top_margin;	/* Absolute top margin, points */
+  short		m_bottom_margin;	/* Absolute bottom margin, points */
 				/* ROLL FEED: */
 				/* Softweave: */
-  int		roll_left_margin;	/* Left margin, points */
-  int		roll_right_margin;	/* Right margin, points */
-  int		roll_top_margin;	/* Absolute top margin, points */
-  int		roll_bottom_margin;	/* Absolute bottom margin, points */
+  short		roll_left_margin;	/* Left margin, points */
+  short		roll_right_margin;	/* Right margin, points */
+  short		roll_top_margin;	/* Absolute top margin, points */
+  short		roll_bottom_margin;	/* Absolute bottom margin, points */
 				/* "Micro"weave: */
-  int		m_roll_left_margin;	/* Left margin, points */
-  int		m_roll_right_margin;	/* Right margin, points */
-  int		m_roll_top_margin;	/* Absolute top margin, points */
-  int		m_roll_bottom_margin;	/* Absolute bottom margin, points */
+  short		m_roll_left_margin;	/* Left margin, points */
+  short		m_roll_right_margin;	/* Right margin, points */
+  short		m_roll_top_margin;	/* Absolute top margin, points */
+  short		m_roll_bottom_margin;	/* Absolute bottom margin, points */
 /*****************************************************************************/
-  const int *dot_sizes;		/* Vector of dot sizes for resolutions */
-  const double *densities;	/* List of densities for each printer */
+  const short *dot_sizes;	/* Vector of dot sizes for resolutions */
+  const float *densities;	/* List of densities for each printer */
 /*****************************************************************************/
   const escp2_variable_inklist_t *inks; /* Choices of inks for this printer */
   const paperlist_t *paperlist;
@@ -338,8 +338,8 @@ typedef struct escp2_printer
   const res_t *const *reslist;
   const inklist_t *inklist;
 /*****************************************************************************/
-  const int *bits;
-  const int *base_resolutions;
+  const short *bits;
+  const short *base_resolutions;
   const input_slot_list_t *input_slots;
 /*****************************************************************************/
   const stp_raw_t *preinit_sequence;
