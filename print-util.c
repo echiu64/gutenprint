@@ -38,6 +38,13 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.54  2000/01/21 00:53:39  rlk
+ *   1) Add a few more paper sizes.
+ *
+ *   2) Clean up Makefile.standalone.
+ *
+ *   3) Nominal support for Stylus Color 850.
+ *
  *   Revision 1.53  2000/01/21 00:18:59  rlk
  *   Describe the algorithms in print-util.c.
  *
@@ -307,8 +314,6 @@
  */
 
 #define ERROR_ROWS 2
-#define MAX_BPI (4 * 720)
-#define MAX_WIDTH (14)
 #define NCOLORS (4)
 
 typedef union error
@@ -326,7 +331,7 @@ typedef union error
 error_t *nerror = 0;
 
 
-int	error[ERROR_ROWS][NCOLORS][MAX_WIDTH*MAX_BPI+1];
+int	error[ERROR_ROWS][NCOLORS][MAX_CARRIAGE_WIDTH*MAX_BPI+1];
 
 /*
  * Dithering functions!
@@ -2630,41 +2635,91 @@ default_media_size(int  model,		/* I - Printer model */
         	   int  *width,		/* O - Width in points */
         	   int  *length)	/* O - Length in points */
 {
-  if (strcmp(media_size, "Letter") == 0)
-  {
-    *width  = 612;
-    *length = 792;
-  }
-  else if (strcmp(media_size, "Legal") == 0)
-  {
-    *width  = 612;
-    *length = 1008;
-  }
-  else if (strcmp(media_size, "Tabloid") == 0)
-  {
-    *width  = 792;
-    *length = 1214;
-  }
-  else if (strcmp(media_size, "12x18") == 0)
-  {
-    *width  = 864;
-    *length = 1296;
-  }
+  if (strcmp(media_size, "Postcard") == 0)
+    {
+      *width = 283;
+      *length = 416;
+    }
+  else if (strcmp(media_size, "4x6") == 0)
+    {
+      *width = 288;
+      *length = 432;
+    }
+  else if (strcmp(media_size, "A6") == 0)
+    {
+      *width = 295;
+      *length = 417;
+    }
+  else if (strcmp(media_size, "5x8") == 0)
+    {
+      *width = 360;
+      *length = 576;
+    }
+  else if (strcmp(media_size, "A5") == 0)
+    {
+      *width = 424;
+      *length = 597;
+    }
+  else if (strcmp(media_size, "B5") == 0)
+    {
+      *width = 518;
+      *length = 727;
+    }
+  else if (strcmp(media_size, "8x10") == 0)
+    {
+      *width = 576;
+      *length = 720;
+    }
   else if (strcmp(media_size, "A4") == 0)
-  {
-    *width  = 595;
-    *length = 842;
-  }
+    {
+      *width  = 595;
+      *length = 842;
+    }
+  else if (strcmp(media_size, "Letter") == 0)
+    {
+      *width  = 612;
+      *length = 792;
+    }
+  else if (strcmp(media_size, "Legal") == 0)
+    {
+      *width  = 612;
+      *length = 1008;
+    }
+  else if (strcmp(media_size, "B4") == 0)
+    {
+      *width = 727;
+      *length = 1029;
+    }
+  else if (strcmp(media_size, "Tabloid") == 0)
+    {
+      *width  = 792;
+      *length = 1214;
+    }
   else if (strcmp(media_size, "A3") == 0)
-  {
-    *width  = 842;
-    *length = 1191;
-  }
+    {
+      *width  = 842;
+      *length = 1191;
+    }
+  else if (strcmp(media_size, "12x18") == 0)
+    {
+      *width  = 864;
+      *length = 1296;
+    }
+  else if (strcmp(media_size, "13x19") == 0)
+    {
+      *width = 936;
+      *length = 1368;
+    }
+  else if (strcmp(media_size, "A2") == 0)
+    {
+      *width = 1188;
+      *length = 1684;
+    }
   else
-  {
-    *width  = 0;
-    *length = 0;
-  }
+    {
+      *width  = 0;
+      *length = 0;
+    }
 }
 
 /*

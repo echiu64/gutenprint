@@ -31,6 +31,13 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.43  2000/01/21 00:53:39  rlk
+ *   1) Add a few more paper sizes.
+ *
+ *   2) Clean up Makefile.standalone.
+ *
+ *   3) Nominal support for Stylus Color 850.
+ *
  *   Revision 1.42  2000/01/17 22:23:31  rlk
  *   Print 3.1.0
  *
@@ -398,7 +405,7 @@ typedef model_cap_t model_class_t;
 #define MODEL_NOZZLES_MASK	0xff000000
 #define MODEL_MAKE_NOZZLES(x) 	((long long) ((x)) << 24)
 #define MODEL_GET_NOZZLES(x) 	(((x) & MODEL_NOZZLES_MASK) >> 24)
-#define MODEL_SEPARATION_MASK	0xf00000000l
+#define MODEL_SEPARATION_MASK	0xf00000000ll
 #define MODEL_MAKE_SEPARATION(x) 	(((long long) (x)) << 32)
 #define MODEL_GET_SEPARATION(x)	(((x) & MODEL_SEPARATION_MASK) >> 32)
 
@@ -406,7 +413,6 @@ typedef model_cap_t model_class_t;
 #define PHYSICAL_BPI 720
 #define MAX_OVERSAMPLED 4
 #define MAX_BPP 2
-#define MAX_CARRIAGE_WIDTH 14
 #define BITS_PER_BYTE 8
 #define COMPBUFWIDTH (PHYSICAL_BPI * MAX_OVERSAMPLED * MAX_BPP * \
 	MAX_CARRIAGE_WIDTH / BITS_PER_BYTE)
@@ -519,6 +525,11 @@ model_cap_t model_capabilities[] =
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
    | MODEL_VARIABLE_4
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(8)),
+  /* Stylus Color 850 */
+  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_COLOR
+   | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
+   | MODEL_VARIABLE_NORMAL
+   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(24) | MODEL_MAKE_SEPARATION(8)),
 };
 
 typedef struct {

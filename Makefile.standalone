@@ -26,7 +26,7 @@ GLIBINCLUDE = -I/usr/local/glib/include -I/usr/lib/glib/include
 LOCALEDIR=/usr/local/share/locale
 X11DIR = /usr/X11R6
 
-OPTLEVEL = -O6 -funroll-all-loops -mstack-align-double -Wall
+OPTLEVEL = -O6 -funroll-all-loops -Wall
 CC = gcc
 
 G_LIBS= -L$(PREFIX)$(LIBRARIES) -lgimp -lgimpui -lgtk -lgdk -lglib -lgmodule

@@ -276,6 +276,8 @@ printer_t	printers[] =		/* List of supported printer types */
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { N_("EPSON Stylus Color 800"),	"escp2-800",	1,	4,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
+  { N_("EPSON Stylus Color 850"),	"escp2-850",	1,	15,	0.585,	0.646,
+    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { N_("EPSON Stylus Color 900"),	"escp2-900",	1,	12,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { N_("EPSON Stylus Color 1520"),	"escp2-1520",	1,	5,	0.585,	0.646,
