@@ -1513,7 +1513,8 @@ gimp_media_size_callback (GtkWidget *widget,
       gdouble unit_scaler = 1.0;
       new_value *= 72;
       if (vars.unit)
-	unit_scaler *= 2.54;
+	unit_scaler /= 2.54;
+      new_value *= unit_scaler;
       (current_printer->limit)(current_printer, &vars, &width_limit,
 			       &height_limit);
       if (new_value < 72)
@@ -1527,7 +1528,7 @@ gimp_media_size_callback (GtkWidget *widget,
       gimp_preview_update ();
       new_value = new_value / 72.0;
       if (vars.unit)
-	new_value /= 2.54;
+	new_value *= 2.54;
       g_snprintf(s, sizeof(s), "%.2f", new_value);
       gtk_entry_set_text(GTK_ENTRY(custom_size_width), s);
     }
@@ -1538,7 +1539,7 @@ gimp_media_size_callback (GtkWidget *widget,
       gdouble unit_scaler = 1.0;
       new_value *= 72;
       if (vars.unit)
-	unit_scaler *= 2.54;
+	unit_scaler /= 2.54;
       new_value *= unit_scaler;
       (current_printer->limit)(current_printer, &vars, &width_limit,
 			       &height_limit);
@@ -1553,7 +1554,7 @@ gimp_media_size_callback (GtkWidget *widget,
       gimp_preview_update ();
       new_value = new_value / 72.0;
       if (vars.unit)
-	new_value /= 2.54;
+	new_value *= 2.54;
       g_snprintf(s, sizeof(s), "%.2f", new_value);
       gtk_entry_set_text(GTK_ENTRY(custom_size_height), s);
     }
