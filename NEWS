@@ -19,14 +19,14 @@ later GNU Ghostscript release based on 6.51 (e. g. 6.52).
 Please read the README file for full instructions on building and
 installing this package.
 
-Gimp-Print 4.2.1-pre2 contains the following major changes and fixes
+Gimp-Print 4.2.1-pre3 contains the following major changes and fixes
 over Gimp-Print 4.2.1-pre2:
 
   1) Canon printers should now print with correct scaling at all
      supported resolutions.  This is the first stage in fixing the
      Canon driver.
 
-The following bug is fixed in 4.2.1-pre2:
+The following bug is fixed in 4.2.1-pre3:
 
 493838 canon print scaling broken
 
