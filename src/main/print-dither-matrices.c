@@ -523,22 +523,19 @@ stpi_xml_dither_cache_set(int x, int y, const char *filename)
  * Parse the <dither-matrix> node.
  */
 static int
-stpi_xml_process_dither_matrix(xmlNodePtr dm,     /* The dither matrix node */
+stpi_xml_process_dither_matrix(mxml_node_t *dm,     /* The dither matrix node */
 			       const char *file)  /* Source file */
 			       
 {
-  xmlChar *value;
+  const char *value;
   int x = -1;
   int y = -1;
 
-
-  value = xmlGetProp(dm, (const xmlChar *) "x-aspect");
+  value = mxmlElementGetAttr(dm, "x-aspect");
   x = stpi_xmlstrtol(value);
-  xmlFree(value);
 
-  value = xmlGetProp(dm, (const xmlChar *) "y-aspect");
+  value = mxmlElementGetAttr(dm, "y-aspect");
   y = stpi_xmlstrtol(value);
-  xmlFree(value);
 
   if (stpi_debug_level & STPI_DBG_XML)
     stpi_erprintf("stpi_xml_process_dither_matrix: x=%d, y=%d\n", x, y);
@@ -548,19 +545,17 @@ stpi_xml_process_dither_matrix(xmlNodePtr dm,     /* The dither matrix node */
 }
 
 static stp_array_t
-stpi_dither_array_create_from_xmltree(xmlNodePtr dm) /* Dither matrix node */
+stpi_dither_array_create_from_xmltree(mxml_node_t *dm) /* Dither matrix node */
 {
-  xmlChar *stmp;
-  xmlNodePtr child;
-  stp_array_t ret = NULL;
+  const char *stmp;
+  mxml_node_t *child;
   int x_aspect, y_aspect; /* Dither matrix size */
 
   /* Get x-size */
-  stmp = xmlGetProp(dm, (const xmlChar *) "x-aspect");
+  stmp = mxmlElementGetAttr(dm, "x-aspect");
   if (stmp)
     {
       x_aspect = (int) stpi_xmlstrtoul(stmp);
-      xmlFree(stmp);
     }
   else
     {
@@ -568,11 +563,10 @@ stpi_dither_array_create_from_xmltree(xmlNodePtr dm) /* Dither matrix node */
       goto error;
     }
   /* Get y-size */
-  stmp = xmlGetProp(dm, (const xmlChar *) "y-aspect");
+  stmp = mxmlElementGetAttr(dm, "y-aspect");
   if (stmp)
     {
       y_aspect = (int) stpi_xmlstrtoul(stmp);
-      xmlFree(stmp);
     }
   else
     {
@@ -581,30 +575,20 @@ stpi_dither_array_create_from_xmltree(xmlNodePtr dm) /* Dither matrix node */
     }
 
   /* Now read in the array */
-  child = dm->children;
-  while (child)
-    {
-      if (!xmlStrcmp(child->name, (const xmlChar *) "array"))
-	{
-	  ret = stpi_array_create_from_xmltree(child);
-	  break;
-	}
-      child = child->next;
-    }
-
-  return ret;
-
+  child = mxmlFindElement(dm, dm, "array", NULL, NULL, MXML_DESCEND);
+  if (child)
+    return stpi_array_create_from_xmltree(child);
+  else
+    stpi_erprintf("stpi_dither_array_create_from_xmltree: cannot find root\n");
  error:
-  if (ret)
-    stp_array_destroy(ret);
   return NULL;
 }
 
 static stp_array_t
-xml_doc_get_dither_array(xmlDocPtr doc)
+xml_doc_get_dither_array(mxml_node_t *doc)
 {
-  xmlNodePtr cur;
-  xmlNodePtr xmlseq;
+  mxml_node_t *cur;
+  mxml_node_t *xmlseq;
 
   if (doc == NULL )
     {
@@ -612,12 +596,11 @@ xml_doc_get_dither_array(xmlDocPtr doc)
       return NULL;
     }
 
-  cur = xmlDocGetRootElement(doc);
+  cur = doc->child;
 
   if (cur == NULL)
     {
       fprintf(stderr,"xml_doc_get_dither_array: empty document\n");
-      xmlFreeDoc(doc);
       return NULL;
     }
 
@@ -634,20 +617,30 @@ xml_doc_get_dither_array(xmlDocPtr doc)
 static stp_array_t
 stpi_dither_array_create_from_file(const char* file)
 {
-  xmlDocPtr doc;   /* libXML document pointer */
+  mxml_node_t *doc;
   stp_array_t ret;
+
+  FILE *fp = fopen(file, "r");
+  if (!fp)
+    {
+      stpi_erprintf("stp_curve_create_from_file: unable to open %s: %s\n",
+		    file, strerror(errno));
+      return NULL;
+    }
 
   stpi_xml_init();
 
   if (stpi_debug_level & STPI_DBG_XML)
     stpi_erprintf("stpi_dither_array_create_from_file: reading `%s'...\n", file);
 
-  doc = xmlParseFile(file);
-
-  ret = xml_doc_get_dither_array(doc);
+  doc = mxmlLoadFile(NULL, fp, MXML_NO_CALLBACK);
+  (void) fclose(fp);
 
   if (doc)
-    xmlFreeDoc(doc);
+    {
+      ret = xml_doc_get_dither_array(doc);
+      mxmlDelete(doc);
+    }
 
   stpi_xml_exit();
 

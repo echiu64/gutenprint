@@ -204,21 +204,20 @@ stp_array_get_sequence(stp_const_array_t array)
 }
 
 stp_array_t
-stpi_array_create_from_xmltree(xmlNodePtr array)  /* The array node */
+stpi_array_create_from_xmltree(mxml_node_t *array)  /* The array node */
 {
-  xmlChar *stmp;                          /* Temporary string */
-  xmlNodePtr child;                       /* Child sequence node */
+  const char *stmp;                          /* Temporary string */
+  mxml_node_t *child;                       /* Child sequence node */
   int x_size, y_size;
   size_t count;
   stp_sequence_t seq = NULL;
   stp_array_t ret = NULL;
   stpi_internal_array_t *iret;
 
-  stmp = xmlGetProp(array, (const xmlChar *) "x-size");
+  stmp = mxmlElementGetAttr(array, "x-size");
   if (stmp)
     {
-      x_size = (int) stpi_xmlstrtoul(stmp);
-      xmlFree(stmp);
+      x_size = (int) strtoul(stmp, NULL, 0);
     }
   else
     {
@@ -226,11 +225,10 @@ stpi_array_create_from_xmltree(xmlNodePtr array)  /* The array node */
       goto error;
     }
   /* Get y-size */
-  stmp = xmlGetProp(array, (const xmlChar *) "y-size");
+  stmp = mxmlElementGetAttr(array, "y-size");
   if (stmp)
     {
-      y_size = (int) stpi_xmlstrtoul(stmp);
-      xmlFree(stmp);
+      y_size = (int) strtoul(stmp, NULL, 0);
     }
   else
     {
@@ -240,16 +238,9 @@ stpi_array_create_from_xmltree(xmlNodePtr array)  /* The array node */
 
   /* Get the sequence data */
 
-  child = array->children;
-  while (child)
-    {
-      if (!xmlStrcmp(child->name, (const xmlChar *) "sequence"))
-	{
-	  seq = stpi_sequence_create_from_xmltree(child);
-	  break;
-	}
-      child = child->next;
-    }
+  child = mxmlFindElement(array, array, "sequence", NULL, NULL, MXML_DESCEND);
+  if (child)
+    seq = stpi_sequence_create_from_xmltree(child);
 
   if (seq == NULL)
     goto error;
@@ -270,7 +261,7 @@ stpi_array_create_from_xmltree(xmlNodePtr array)  /* The array node */
   return ret;
 
  error:
-  stpi_erprintf("stpi_array_create_from_xmltree: error during curve read\n");
+  stpi_erprintf("stpi_array_create_from_xmltree: error during array read\n");
   if (ret)
     stp_array_destroy(ret);
   return NULL;

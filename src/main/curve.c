@@ -31,6 +31,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include "xml.h"
 
 #ifdef __GNUC__
@@ -1081,10 +1084,10 @@ stp_curve_compose(stp_curve_t *retval,
 
 
 static stp_curve_t
-stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
+stp_curve_create_from_xmltree(mxml_node_t *curve)  /* The curve node */
 {
-  xmlChar *stmp;                          /* Temporary string */
-  xmlNodePtr child;                       /* Child sequence node */
+  const char *stmp;                          /* Temporary string */
+  mxml_node_t *child;                       /* Child sequence node */
   stp_curve_t ret = NULL;                 /* Curve to return */
   stp_curve_type_t curve_type;            /* Type of curve */
   stp_curve_wrap_mode_t wrap_mode;        /* Curve wrap mode */
@@ -1094,20 +1097,18 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
 
   stpi_xml_init();
   /* Get curve type */
-  stmp = xmlGetProp(curve, (const xmlChar *) "type");
+  stmp = mxmlElementGetAttr(curve, "type");
   if (stmp)
     {
-      if (!xmlStrcmp(stmp, (const xmlChar *) "linear"))
+      if (!strcmp(stmp, "linear"))
 	  curve_type = STP_CURVE_TYPE_LINEAR;
-      else if (!xmlStrcmp(stmp, (const xmlChar *) "spline"))
+      else if (!strcmp(stmp, "spline"))
 	  curve_type = STP_CURVE_TYPE_SPLINE;
       else
 	{
 	  stpi_erprintf("stp_curve_create_from_xmltree: %s: \"type\" invalid\n", stmp);
-	  xmlFree (stmp);
 	  goto error;
 	}
-      xmlFree (stmp);
     }
   else
     {
@@ -1115,22 +1116,20 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
       goto error;
     }
   /* Get curve wrap mode */
-  stmp = xmlGetProp(curve, (const xmlChar *) "wrap");
+  stmp = mxmlElementGetAttr(curve, "wrap");
   if (stmp)
     {
-      if (!xmlStrcmp(stmp, (const xmlChar *) "nowrap"))
+      if (!strcmp(stmp, "nowrap"))
 	wrap_mode = STP_CURVE_WRAP_NONE;
-      else if (!xmlStrcmp(stmp, (const xmlChar *) "wrap"))
+      else if (!strcmp(stmp, "wrap"))
 	{
 	  wrap_mode = STP_CURVE_WRAP_AROUND;
 	}
       else
 	{
 	  stpi_erprintf("stp_curve_create_from_xmltree: %s: \"wrap\" invalid\n", stmp);
-	  xmlFree (stmp);
 	  goto error;
 	}
-      xmlFree (stmp);
     }
   else
     {
@@ -1138,11 +1137,10 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
       goto error;
     }
   /* Get curve gamma */
-  stmp = xmlGetProp(curve, (const xmlChar *) "gamma");
+  stmp = mxmlElementGetAttr(curve, "gamma");
   if (stmp)
     {
       fgamma = stpi_xmlstrtod(stmp);
-      xmlFree(stmp);
     }
   else
     {
@@ -1161,16 +1159,9 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
   ret = stp_curve_create(wrap_mode);
   stp_curve_set_interpolation_type(ret, curve_type);
 
-  child = curve->children;
-  while (child)
-    {
-      if (!xmlStrcmp(child->name, (const xmlChar *) "sequence"))
-	{
-	  seq = stpi_sequence_create_from_xmltree(child);
-	  break;
-	}
-      child = child->next;
-    }
+  child = mxmlFindElement(curve, curve, "sequence", NULL, NULL, MXML_DESCEND);
+  if (child)
+    seq = stpi_sequence_create_from_xmltree(child);
 
   if (seq == NULL)
     {
@@ -1223,7 +1214,7 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
 }
 
 
-static xmlNodePtr
+static mxml_node_t *
 stp_xmltree_create_from_curve(stp_const_curve_t curve)  /* The curve */
 {
   stp_curve_wrap_mode_t wrapmode;
@@ -1235,8 +1226,8 @@ stp_xmltree_create_from_curve(stp_const_curve_t curve)  /* The curve */
   char *type;
   char *cgamma;
 
-  xmlNodePtr curvenode = NULL;
-  xmlNodePtr child = NULL;
+  mxml_node_t *curvenode = NULL;
+  mxml_node_t *child = NULL;
 
   stpi_xml_init();
 
@@ -1257,10 +1248,10 @@ stp_xmltree_create_from_curve(stp_const_curve_t curve)  /* The curve */
   stpi_asprintf(&type, "%s", stpi_curve_type_names[interptype]);
   stpi_asprintf(&cgamma, "%g", gammaval);
 
-  curvenode = xmlNewNode(NULL, (const xmlChar *) "curve");
-  (void) xmlSetProp(curvenode, (const xmlChar *) "wrap", (const xmlChar *) wrap);
-  (void) xmlSetProp(curvenode, (const xmlChar *) "type", (const xmlChar *) type);
-  (void) xmlSetProp(curvenode, (const xmlChar *) "gamma", (const xmlChar *) cgamma);
+  curvenode = mxmlNewElement(NULL, "curve");
+  mxmlElementSetAttr(curvenode, "wrap", wrap);
+  mxmlElementSetAttr(curvenode, "type", type);
+  mxmlElementSetAttr(curvenode, "gamma", cgamma);
 
   stpi_free(wrap);
   stpi_free(type);
@@ -1294,7 +1285,7 @@ stp_xmltree_create_from_curve(stp_const_curve_t curve)  /* The curve */
       stpi_erprintf("stp_xmltree_create_from_curve: sequence node is NULL\n");
       goto error;
     }
-  xmlAddChild(curvenode, child);
+  mxmlAdd(curvenode, MXML_ADD_AFTER, NULL, child);
 
   stpi_xml_exit();
 
@@ -1303,20 +1294,20 @@ stp_xmltree_create_from_curve(stp_const_curve_t curve)  /* The curve */
  error:
   stpi_erprintf("stp_xmltree_create_from_curve: error during xmltree creation\n");
   if (curvenode)
-    xmlFreeNode(curvenode);
+    mxmlDelete(curvenode);
   if (child)
-    xmlFreeNode(child);
+    mxmlDelete(child);
   stpi_xml_exit();
 
   return NULL;
 }
 
-static xmlDocPtr
+static mxml_node_t *
 xmldoc_create_from_curve(stp_const_curve_t curve)
 {
-  xmlDocPtr xmldoc;
-  xmlNodePtr rootnode;
-  xmlNodePtr curvenode;
+  mxml_node_t *xmldoc;
+  mxml_node_t *rootnode;
+  mxml_node_t *curvenode;
 
   /* Get curve details */
   curvenode = stp_xmltree_create_from_curve(curve);
@@ -1332,15 +1323,15 @@ xmldoc_create_from_curve(stp_const_curve_t curve)
       stpi_erprintf("xmldoc_create_from_curve: error creating XML document\n");
       return NULL;
     }
-  rootnode = xmlDocGetRootElement(xmldoc);
+  rootnode = xmldoc->child;
   if (rootnode == NULL)
     {
-      xmlFreeDoc(xmldoc);
+      mxmlDelete(xmldoc);
       stpi_erprintf("xmldoc_create_from_curve: error getting XML document root node\n");
       return NULL;
     }
 
-  xmlAddChild(rootnode, curvenode);
+  mxmlAdd(rootnode, MXML_ADD_AFTER, NULL, curvenode);
 
   return xmldoc;
 }
@@ -1348,9 +1339,7 @@ xmldoc_create_from_curve(stp_const_curve_t curve)
 int
 stp_curve_write(FILE *file, stp_const_curve_t curve)  /* The curve */
 {
-  xmlDocPtr xmldoc = NULL;
-  xmlCharEncodingHandlerPtr xmlenc;
-  xmlOutputBufferPtr xmlbuf;
+  mxml_node_t *xmldoc = NULL;
 
   stpi_xml_init();
 
@@ -1361,16 +1350,10 @@ stp_curve_write(FILE *file, stp_const_curve_t curve)  /* The curve */
       return 1;
     }
 
-  /* Save the XML file */
-
-  xmlenc = xmlGetCharEncodingHandler(XML_CHAR_ENCODING_UTF8);
-  xmlbuf = xmlOutputBufferCreateFile(file, xmlenc);
-  xmlSaveFormatFileTo(xmlbuf, xmldoc, "UTF-8", 1);
-  /* xmlOutputBufferFlush(xmlbuf); */
-  /* xmlOutputBufferClose(xmlbuf); */
+  mxmlSaveFile(xmldoc, file, MXML_NO_CALLBACK);
 
   if (xmldoc)
-    xmlFreeDoc(xmldoc);
+    mxmlDelete(xmldoc);
 
   stpi_xml_exit();
 
@@ -1380,39 +1363,61 @@ stp_curve_write(FILE *file, stp_const_curve_t curve)  /* The curve */
 char *
 stp_curve_write_string(stp_const_curve_t curve)  /* The curve */
 {
-  xmlDocPtr xmldoc = NULL;
-  xmlChar *output = NULL;
-  char *noutput;
-  int size;
+  char template[64];
+  int fd;
+  int fdd;
+  mode_t fmode = umask(077);
+  FILE *fp;
+  char *output = NULL;
+  struct stat statbuf;
+  off_t total_bytes_read = 0;
 
-  stpi_xml_init();
-
-  xmldoc = xmldoc_create_from_curve(curve);
-  if (xmldoc == NULL)
+  strcpy(template, "/tmp/gpxioXXXXXX");
+  fd = mkstemp(template);
+  umask(fmode);
+  if (fd == -1)
+    goto out;
+  (void) unlink(template);
+  fdd = dup(fd);
+  if (fdd == -1)
+    goto out1;
+  fp = fdopen(fd, "w");
+  if (fp == NULL)
+    goto out2;
+  if (stp_curve_write(fp, curve))
+    goto out2;
+  if (fclose(fp) != 0)
+    goto out2;
+  if (lseek(fdd, 0, SEEK_SET) == (off_t) -1)
+    goto out2;
+  if (fstat(fdd, &statbuf) == -1)
+    goto out2;
+  output = stpi_zalloc(statbuf.st_size + 1);
+  while (total_bytes_read < statbuf.st_size)
     {
-      stpi_xml_exit();
-      return NULL;
+      ssize_t bytes = read(fdd, output + total_bytes_read,
+			   statbuf.st_size - total_bytes_read);
+      if (bytes <= 0)
+	{
+	  stpi_free(output);
+	  output = NULL;
+	  goto out2;
+	}
+      total_bytes_read +=bytes;
     }
-
-  /* Save the XML file */
-
-  xmlDocDumpFormatMemory(xmldoc, &output, &size, 1);
-
-  if (xmldoc)
-    xmlFreeDoc(xmldoc);
-
-  stpi_xml_exit();
-
-  noutput = stpi_strdup((char *)output);
-  xmlFree(output);
-  return noutput;
+ out2:
+  (void) close(fdd);
+ out1:
+  (void) close(fd);
+ out:
+  return output;
 }
 
 static stp_curve_t
-xml_doc_get_curve(xmlDocPtr doc)
+xml_doc_get_curve(mxml_node_t *doc)
 {
-  xmlNodePtr cur;
-  xmlNodePtr xmlcurve;
+  mxml_node_t *cur;
+  mxml_node_t *xmlcurve;
   stp_curve_t curve = NULL;
 
   if (doc == NULL )
@@ -1421,12 +1426,12 @@ xml_doc_get_curve(xmlDocPtr doc)
       return NULL;
     }
 
-  cur = xmlDocGetRootElement(doc);
+  cur = doc->child;
 
   if (cur == NULL)
     {
       fprintf(stderr,"xml_doc_get_curve: empty document\n");
-      xmlFreeDoc(doc);
+      mxmlDelete(doc);
       return NULL;
     }
 
@@ -1438,24 +1443,20 @@ xml_doc_get_curve(xmlDocPtr doc)
   return curve;
 }
 
-
-stp_curve_t
-stp_curve_create_from_file(const char* file)
+static stp_curve_t
+stp_curve_create_from_fp(FILE *fp)
 {
-  xmlDocPtr doc;   /* libXML document pointer */
+  mxml_node_t *doc;
   stp_curve_t curve = NULL;
 
   stpi_xml_init();
 
-  if (stpi_debug_level & STPI_DBG_XML)
-    stpi_erprintf("stp_curve_create_from_file: reading `%s'...\n", file);
-
-  doc = xmlParseFile(file);
+  doc = mxmlLoadFile(NULL, fp, MXML_NO_CALLBACK);
 
   curve = xml_doc_get_curve(doc);
 
   if (doc)
-    xmlFreeDoc(doc);
+    mxmlDelete(doc);
 
   stpi_xml_exit();
 
@@ -1463,24 +1464,37 @@ stp_curve_create_from_file(const char* file)
 }
 
 stp_curve_t
+stp_curve_create_from_file(const char* file)
+{
+  stp_curve_t curve = NULL;
+  FILE *fp = fopen(file, "r");
+  if (!fp)
+    {
+      stpi_erprintf("stp_curve_create_from_file: unable to open %s: %s\n",
+		    file, strerror(errno));
+      return NULL;
+    }
+  if (stpi_debug_level & STPI_DBG_XML)
+    stpi_erprintf("stp_curve_create_from_file: reading `%s'...\n", file);
+
+  curve = stp_curve_create_from_fp(fp);
+  (void) fclose(fp);
+  return curve;
+
+}
+
+stp_curve_t
 stp_curve_create_from_string(const char* string)
 {
-  xmlDocPtr doc;   /* libXML document pointer */
   stp_curve_t curve = NULL;
-
-  stpi_xml_init();
-
+  FILE *fp = stpi_xio_init_string_input(string);
+  if (!fp)
+    {
+      return NULL;
+    }
   if (stpi_debug_level & STPI_DBG_XML)
-    stpi_erprintf("stp_curve_create_from_string: reading string...\n");
-
-  doc = xmlParseMemory(string, strlen(string));
-
-  curve = xml_doc_get_curve(doc);
-
-  if (doc)
-    xmlFreeDoc(doc);
-
-  stpi_xml_exit();
-
+    stpi_erprintf("stp_curve_create_from_string: reading '%s'...\n", string);
+  curve = stp_curve_create_from_fp(fp);
+  (void) fclose(fp);
   return curve;
 }

@@ -248,10 +248,10 @@ stpi_default_media_size(stp_const_vars_t v,	/* I */
  * Process the <paper> node.
  */
 static stp_papersize_t *
-stpi_xml_process_paper(xmlNodePtr paper) /* The paper node */
+stpi_xml_process_paper(mxml_node_t *paper) /* The paper node */
 {
-  xmlNodePtr prop;                              /* Temporary node pointer */
-  xmlChar *stmp;                                /* Temporary string */
+  mxml_node_t *prop;                              /* Temporary node pointer */
+  const char *stmp;                                /* Temporary string */
   /* props[] (unused) is the correct tag sequence */
   /*  const char *props[] =
     {
@@ -280,17 +280,15 @@ stpi_xml_process_paper(xmlNodePtr paper) /* The paper node */
 
   if (stpi_debug_level & STPI_DBG_XML)
     {
-      stmp = xmlGetProp(paper, (const xmlChar*) "name");
+      stmp = mxmlElementGetAttr(paper, (const char*) "name");
       stpi_erprintf("stpi_xml_process_paper: name: %s\n", stmp);
-      xmlFree(stmp);
     }
 
   outpaper = stpi_malloc(sizeof(stp_papersize_t));
   if (!outpaper)
     return NULL;
 
-  outpaper->name =
-    (char *) xmlGetProp(paper, (const xmlChar *) "name");
+  outpaper->name = stpi_strdup(mxmlElementGetAttr(paper, "name"));
 
   outpaper->top = 0;
   outpaper->left = 0;
@@ -299,89 +297,82 @@ stpi_xml_process_paper(xmlNodePtr paper) /* The paper node */
   if (outpaper->name)
     id = 1;
 
-  prop = paper->children;
+  prop = paper->child;
   while(prop)
     {
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "description"))
+      if (prop->type == MXML_ELEMENT)
 	{
-	  outpaper->text = (char *)
-	    xmlGetProp(prop, (const xmlChar *) "value");
-	  name = 1;
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "comment"))
-	{
-	  outpaper->comment = (char *)
-	    xmlGetProp(prop, (const xmlChar *) "value");
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "width"))
-	{
-	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-	  if (stmp)
+	  const char *prop_name = prop->value.element.name;
+      
+	  if (!strcmp(prop_name, "description"))
 	    {
-	      outpaper->width = stpi_xmlstrtoul(stmp);
-	      xmlFree(stmp);
-	      width = 1;
+	      outpaper->text = stpi_strdup(mxmlElementGetAttr(prop, "value"));
+	      name = 1;
+	    }
+	  if (!strcmp(prop_name, "comment"))
+	    outpaper->comment = stpi_strdup(mxmlElementGetAttr(prop, "value"));
+	  if (!strcmp(prop_name, "width"))
+	    {
+	      stmp = mxmlElementGetAttr(prop, "value");
+	      if (stmp)
+		{
+		  outpaper->width = stpi_xmlstrtoul(stmp);
+		  width = 1;
+		}
+	    }
+	  if (!strcmp(prop_name, "height"))
+	    {
+	      stmp = mxmlElementGetAttr(prop, "value");
+	      if (stmp)
+		{
+		  outpaper->height = stpi_xmlstrtoul(stmp);
+		  height = 1;
+		}
+	    }
+	  if (!strcmp(prop_name, "left"))
+	    {
+	      stmp = mxmlElementGetAttr(prop, "value");
+	      outpaper->left = stpi_xmlstrtoul(stmp);
+	      left = 1;
+	    }
+	  if (!strcmp(prop_name, "right"))
+	    {
+	      stmp = mxmlElementGetAttr(prop, "value");
+	      outpaper->right = stpi_xmlstrtoul(stmp);
+	      right = 1;
+	    }
+	  if (!strcmp(prop_name, "bottom"))
+	    {
+	      stmp = mxmlElementGetAttr(prop, "value");
+	      outpaper->bottom = stpi_xmlstrtoul(stmp);
+	      bottom = 1;
+	    }
+	  if (!strcmp(prop_name, "top"))
+	    {
+	      stmp = mxmlElementGetAttr(prop, "value");
+	      outpaper->top = stpi_xmlstrtoul(stmp);
+	      top = 1;
+	    }
+	  if (!strcmp(prop_name, "unit"))
+	    {
+	      stmp = mxmlElementGetAttr(prop, "value");
+	      if (stmp)
+		{
+		  if (!strcmp(stmp, "english"))
+		    outpaper->paper_unit = PAPERSIZE_ENGLISH_STANDARD;
+		  else if (!strcmp(stmp, "english-extended"))
+		    outpaper->paper_unit = PAPERSIZE_ENGLISH_EXTENDED;
+		  else if (!strcmp(stmp, "metric"))
+		    outpaper->paper_unit = PAPERSIZE_METRIC_STANDARD;
+		  else if (!strcmp(stmp, "metric-extended"))
+		    outpaper->paper_unit = PAPERSIZE_METRIC_EXTENDED;
+		  /* Default unit */
+		  else
+		    outpaper->paper_unit = PAPERSIZE_METRIC_EXTENDED;
+		  unit = 1;
+		}
 	    }
 	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "height"))
-	{
-	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-	  if (stmp)
-	    {
-	      outpaper->height = stpi_xmlstrtoul(stmp);
-	      xmlFree(stmp);
-	      height = 1;
-	    }
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "left"))
-	{
-	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-	  outpaper->left = stpi_xmlstrtoul(stmp);
-	  xmlFree(stmp);
-	  left = 1;
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "right"))
-	{
-	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-	  outpaper->right = stpi_xmlstrtoul(stmp);
-	  xmlFree(stmp);
-	  right = 1;
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "bottom"))
-	{
-	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-	  outpaper->bottom = stpi_xmlstrtoul(stmp);
-	  xmlFree(stmp);
-	  bottom = 1;
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "top"))
-	{
-	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-	  outpaper->top = stpi_xmlstrtoul(stmp);
-	  xmlFree(stmp);
-	  top = 1;
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "unit"))
-	{
-	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-	  if (stmp)
-	    {
-	      if (!xmlStrcmp(stmp, (const xmlChar *) "english"))
-		outpaper->paper_unit = PAPERSIZE_ENGLISH_STANDARD;
-	      else if (!xmlStrcmp(stmp, (const xmlChar *) "english-extended"))
-		outpaper->paper_unit = PAPERSIZE_ENGLISH_EXTENDED;
-	      else if (!xmlStrcmp(stmp, (const xmlChar *) "metric"))
-		outpaper->paper_unit = PAPERSIZE_METRIC_STANDARD;
-	      else if (!xmlStrcmp(stmp, (const xmlChar *) "metric-extended"))
-		outpaper->paper_unit = PAPERSIZE_METRIC_EXTENDED;
-	      /* Default unit */
-	      else
-		outpaper->paper_unit = PAPERSIZE_METRIC_EXTENDED;
-	      xmlFree(stmp);
-	      unit = 1;
-	    }
-	}
-
       prop = prop->next;
     }
   if (id && name && width && height && unit) /* Margins are optional */
@@ -395,19 +386,23 @@ stpi_xml_process_paper(xmlNodePtr paper) /* The paper node */
  * Parse the <paperdef> node.
  */
 static int
-stpi_xml_process_paperdef(xmlNodePtr paperdef, const char *file) /* The paperdef node */
+stpi_xml_process_paperdef(mxml_node_t *paperdef, const char *file) /* The paperdef node */
 {
-  xmlNodePtr paper;                           /* paper node pointer */
+  mxml_node_t *paper;                           /* paper node pointer */
   stp_papersize_t *outpaper;         /* Generated paper */
 
-  paper = paperdef->children;
+  paper = paperdef->child;
   while (paper)
     {
-      if (!xmlStrcmp(paper->name, (const xmlChar *) "paper"))
+      if (paper->type == MXML_ELEMENT)
 	{
-	  outpaper = stpi_xml_process_paper(paper);
-	  if (outpaper)
-	    stpi_paper_create(outpaper);
+	  const char *paper_name = paper->value.element.name;
+	  if (!strcmp(paper_name, "paper"))
+	    {
+	      outpaper = stpi_xml_process_paper(paper);
+	      if (outpaper)
+		stpi_paper_create(outpaper);
+	    }
 	}
       paper = paper->next;
     }

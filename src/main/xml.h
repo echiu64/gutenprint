@@ -30,14 +30,9 @@
 extern "C" {
 #endif
 
-#include <libxml/globals.h>
-#include <libxml/parser.h>
-#include <libxml/tree.h>
-#include <libxml/xmlmemory.h>
-#include <libxml/xmlIO.h>
-#include <libxml/encoding.h>
+#include "mxml.h"
 
-typedef int (*stpi_xml_parse_func)(xmlNodePtr node, const char *file);
+typedef int (*stpi_xml_parse_func)(mxml_node_t *node, const char *file);
 
 extern void
 stpi_register_xml_parser(const char *name, stpi_xml_parse_func parse_func);
@@ -48,20 +43,20 @@ stpi_unregister_xml_parser(const char *name);
 extern int stpi_xml_init_defaults(void);
 extern int stpi_xml_parse_file(const char *file);
 
-extern long stpi_xmlstrtol(xmlChar *value);
-extern unsigned long stpi_xmlstrtoul(xmlChar *value);
-extern double stpi_xmlstrtod(xmlChar *textval);
+extern long stpi_xmlstrtol(const char *value);
+extern unsigned long stpi_xmlstrtoul(const char *value);
+extern double stpi_xmlstrtod(const char *textval);
 
 extern void stpi_xml_init(void);
 extern void stpi_xml_exit(void);
-extern xmlNodePtr stpi_xml_get_node(xmlNodePtr xmlroot, ...);
-extern xmlDocPtr stpi_xmldoc_create_generic(void);
+extern mxml_node_t *stpi_xml_get_node(mxml_node_t *xmlroot, ...);
+extern mxml_node_t *stpi_xmldoc_create_generic(void);
 extern void stpi_xml_preinit(void);
 
-extern stp_sequence_t stpi_sequence_create_from_xmltree(xmlNodePtr da);
-extern xmlNodePtr stpi_xmltree_create_from_sequence(stp_sequence_t seq);
+extern stp_sequence_t stpi_sequence_create_from_xmltree(mxml_node_t *da);
+extern mxml_node_t *stpi_xmltree_create_from_sequence(stp_sequence_t seq);
 
-extern stp_array_t stpi_array_create_from_xmltree(xmlNodePtr array);
+extern stp_array_t stpi_array_create_from_xmltree(mxml_node_t *array);
 
 #endif /* GIMP_PRINT_INTERNAL_XML_H */
 /*

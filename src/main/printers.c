@@ -774,13 +774,13 @@ stpi_family_unregister(stpi_list_t *family)
  * NULL on failure.
  */
 static stpi_internal_printer_t*
-stp_printer_create_from_xmltree(xmlNodePtr printer, /* The printer node */
-				xmlChar *family,    /* Family name */
+stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
+				const char *family,    /* Family name */
 				const stpi_printfuncs_t *printfuncs)
                                                     /* Family printfuncs */
 {
-  xmlNodePtr prop;                                  /* Temporary node pointer */
-  xmlChar *stmp;                                    /* Temporary string */
+  mxml_node_t *prop;                                  /* Temporary node pointer */
+  const char *stmp;                                    /* Temporary string */
  /* props[] (unused) is the correct tag sequence */
   /*  const char *props[] =
     {
@@ -821,12 +821,10 @@ stp_printer_create_from_xmltree(xmlNodePtr printer, /* The printer node */
 
   outprinter->cookie = COOKIE_PRINTER;
 
-  stmp = xmlGetProp(printer, (const xmlChar *) "driver");
+  stmp = mxmlElementGetAttr(printer, "driver");
   stp_set_driver(outprinter->printvars, (const char *) stmp);
-  xmlFree(stmp);
 
-  outprinter->long_name =
-    (char *) xmlGetProp(printer, (const xmlChar *) "name");
+  outprinter->long_name = stpi_strdup(mxmlElementGetAttr(printer, "name"));
   outprinter->family = stpi_strdup((const char *) family);
 
   if (stp_get_driver(outprinter->printvars))
@@ -836,50 +834,51 @@ stp_printer_create_from_xmltree(xmlNodePtr printer, /* The printer node */
 
   outprinter->printfuncs = printfuncs;
 
-  prop = printer->children;
+  prop = printer->child;
   while (prop)
     {
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "color"))
+      if (prop->type == MXML_ELEMENT)
 	{
-	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-	  if (stmp)
+	  const char *prop_name = prop->value.element.name;
+	  if (!strcmp(prop_name, "color"))
 	    {
-	      if (!xmlStrcmp(stmp, (const xmlChar *) "true"))
-		stp_set_output_type(outprinter->printvars, OUTPUT_COLOR);
-	      else
-		stp_set_output_type(outprinter->printvars, OUTPUT_GRAY);
-	      color = 1;
-	      xmlFree(stmp);
-	    }
-	}
-      else if (!xmlStrcmp(prop->name, (const xmlChar *) "model"))
-	{
-	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-	  if (stmp)
-	    {
-	      outprinter->model = stpi_xmlstrtol(stmp);
-	      model = 1;
-	      xmlFree(stmp);
-	    }
-	}
-      else
-	{
-	  const stpi_xml_prop_t *stp_prop = stpi_xml_props;
-	  while (stp_prop->property)
-	    {
-	      if (!xmlStrcmp(prop->name, (const xmlChar *) stp_prop->property))
+	      stmp = mxmlElementGetAttr(prop, "value");
+	      if (stmp)
 		{
-		  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-		  if (stmp)
-		    {
-		      stp_set_float_parameter(outprinter->printvars,
-					      stp_prop->parameter,
-					      (float) stpi_xmlstrtod(stmp));
-		      xmlFree(stmp);
-		      break;
-		    }
+		  if (!strcmp(stmp, "true"))
+		    stp_set_output_type(outprinter->printvars, OUTPUT_COLOR);
+		  else
+		    stp_set_output_type(outprinter->printvars, OUTPUT_GRAY);
+		  color = 1;
 		}
-	      stp_prop++;
+	    }
+	  else if (!strcmp(prop_name, "model"))
+	    {
+	      stmp = mxmlElementGetAttr(prop, "value");
+	      if (stmp)
+		{
+		  outprinter->model = stpi_xmlstrtol(stmp);
+		  model = 1;
+		}
+	    }
+	  else
+	    {
+	      const stpi_xml_prop_t *stp_prop = stpi_xml_props;
+	      while (stp_prop->property)
+		{
+		  if (!strcmp(prop_name, stp_prop->property))
+		    {
+		      stmp = mxmlElementGetAttr(prop, "value");
+		      if (stmp)
+			{
+			  stp_set_float_parameter(outprinter->printvars,
+						  stp_prop->parameter,
+						  (float) stpi_xmlstrtod(stmp));
+			  break;
+			}
+		    }
+		  stp_prop++;
+		}
 	    }
 	}
       prop = prop->next;
@@ -888,9 +887,8 @@ stp_printer_create_from_xmltree(xmlNodePtr printer, /* The printer node */
     {
       if (stpi_debug_level & STPI_DBG_XML)
 	{
-	  stmp = xmlGetProp(printer, (const xmlChar*) "driver");
+	  stmp = mxmlElementGetAttr(printer, "driver");
 	  stpi_erprintf("stp_printer_create_from_xmltree: printer: %s\n", stmp);
-	  xmlFree(stmp);
 	}
       outprinter->driver = stp_get_driver(outprinter->printvars);
       return outprinter;
@@ -903,12 +901,12 @@ stp_printer_create_from_xmltree(xmlNodePtr printer, /* The printer node */
  * Parse the <family> node.
  */
 static void
-stpi_xml_process_family(xmlNodePtr family)     /* The family node */
+stpi_xml_process_family(mxml_node_t *family)     /* The family node */
 {
   stpi_list_t *family_module_list = NULL;      /* List of valid families */
   stpi_list_item_t *family_module_item;        /* Current family */
-  xmlChar *family_name;                       /* Name of family */
-  xmlNodePtr printer;                         /* printer child node */
+  const char *family_name;                       /* Name of family */
+  mxml_node_t *printer;                         /* printer child node */
   stpi_module_t *family_module_data;           /* Family module data */
   stpi_internal_family_t *family_data = NULL;  /* Family data */
   int family_valid = 0;                       /* Is family valid? */
@@ -918,15 +916,13 @@ stpi_xml_process_family(xmlNodePtr family)     /* The family node */
   if (!family_module_list)
     return;
 
-
-  family_name = xmlGetProp(family, (const xmlChar *) "name");
+  family_name = mxmlElementGetAttr(family, "name");
   family_module_item = stpi_list_get_start(family_module_list);
   while (family_module_item)
     {
       family_module_data = (stpi_module_t *)
 	stpi_list_item_get_data(family_module_item);
-      if (!xmlStrcmp(family_name, (const xmlChar *)
-		     family_module_data->name))
+      if (!strcmp(family_name, family_module_data->name))
 	{
 	  if (stpi_debug_level & STPI_DBG_XML)
 	    stpi_erprintf("stpi_xml_process_family: family module: %s\n",
@@ -939,21 +935,26 @@ stpi_xml_process_family(xmlNodePtr family)     /* The family node */
 	  family_module_item = stpi_list_item_next(family_module_item);
     }
 
-  printer = family->children;
+  printer = family->child;
   while (family_valid && printer)
     {
-      if (!xmlStrcmp(printer->name, (const xmlChar *) "printer"))
+      if (printer->type == MXML_ELEMENT)
 	{
-	  outprinter = stp_printer_create_from_xmltree(printer, family_name,
-					       family_data->printfuncs);
-	  if (outprinter)
-	    stpi_list_item_create(family_data->printer_list, NULL, outprinter);
+	  const char *printer_name = printer->value.element.name;
+	  if (!strcmp(printer_name, "printer"))
+	    {
+	      outprinter =
+		stp_printer_create_from_xmltree(printer, family_name,
+						family_data->printfuncs);
+	      if (outprinter)
+		stpi_list_item_create(family_data->printer_list, NULL,
+				      outprinter);
+	    }
 	}
       printer = printer->next;
     }
 
   stpi_list_destroy(family_module_list);
-  xmlFree (family_name);
   return;
 }
 
@@ -961,16 +962,20 @@ stpi_xml_process_family(xmlNodePtr family)     /* The family node */
  * Parse the <printdef> node.
  */
 static int
-stpi_xml_process_printdef(xmlNodePtr printdef, const char *file) /* The printdef node */
+stpi_xml_process_printdef(mxml_node_t *printdef, const char *file) /* The printdef node */
 {
-  xmlNodePtr family;                          /* Family child node */
+  mxml_node_t *family;                          /* Family child node */
 
-  family = printdef->children;
+  family = printdef->child;
   while (family)
     {
-      if (!xmlStrcmp(family->name, (const xmlChar *) "family"))
+      if (family->type == MXML_ELEMENT)
 	{
-	  stpi_xml_process_family(family);
+	  const char *family_name = family->value.element.name;
+	  if (!strcmp(family_name, "family"))
+	    {
+	      stpi_xml_process_family(family);
+	    }
 	}
       family = family->next;
     }

@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   XML parser - process gimp-print XML data with libxml2.
+ *   XML parser - process gimp-print XML data with mxml.
  *
  *   Copyright 2002-2003 Roger Leigh (roger@whinlatter.uklinux.net)
  *
@@ -93,12 +93,8 @@ stpi_unregister_xml_parser(const char *name)
     stpi_list_item_destroy(stpi_xml_registry, item);
 }
 
-static void stpi_xml_process_gimpprint(xmlNodePtr gimpprint, const char *file);
+static void stpi_xml_process_gimpprint(mxml_node_t *gimpprint, const char *file);
 
-/*static xmlFreeFunc xml_free_func = NULL;*/       /* libXML free function */
-/*static xmlMallocFunc xml_malloc_func = NULL;*/   /* libXML malloc function */
-/*static xmlReallocFunc xml_realloc_func = NULL;*/ /* libXML realloc function */
-/*static xmlStrdupFunc xml_strdup_func = NULL;*/   /* libXML strdup function */
 static char *saved_lc_collate;                 /* Saved LC_COLLATE */
 static char *saved_lc_ctype;                   /* Saved LC_CTYPE */
 static char *saved_lc_numeric;                 /* Saved LC_NUMERIC */
@@ -118,7 +114,7 @@ stpi_xml_preinit(void)
 
 /*
  * Call before using any of the static functions in this file.  All
- * public functions should call this before using any libXML
+ * public functions should call this before using any mxml
  * functions.
  */
 void
@@ -130,27 +126,17 @@ stpi_xml_init(void)
       return;
     }
 
-  xmlInitParser();
   /* Set some locale facets to "C" */
   saved_lc_collate = setlocale(LC_COLLATE, "C");
   saved_lc_ctype = setlocale(LC_CTYPE, "C");
   saved_lc_numeric = setlocale(LC_NUMERIC, "C");
 
-  /* Use our memory allocation functions with libXML */
-  /*  xmlMemGet (&xml_free_func,
-	     &xml_malloc_func,
-	     &xml_realloc_func,
-	     &xml_strdup_func);
-  xmlMemSetup (stpi_free,
-	       stpi_malloc,
-	       stpi_realloc,
-	       stpi_strdup);*/
   xml_is_initialised = 1;
 }
 
 /*
  * Call after using any of the static functions in this file.  All
- * public functions should call this after using any libXML functions.
+ * public functions should call this after using any mxml functions.
  */
 void
 stpi_xml_exit(void)
@@ -162,13 +148,6 @@ stpi_xml_exit(void)
     }
   else if (xml_is_initialised < 1)
     return;
-  xmlCleanupParser();
-
-  /* Restore libXML memory functions to their previous state */
-  /*  xmlMemSetup (xml_free_func,
-	       xml_malloc_func,
-	       xml_realloc_func,
-	       xml_strdup_func);*/
 
   /* Restore locale */
   setlocale(LC_COLLATE, saved_lc_collate);
@@ -235,43 +214,52 @@ stpi_xml_init_defaults(void)
 int
 stpi_xml_parse_file(const char *file) /* File to parse */
 {
-  xmlDocPtr doc;   /* libXML document pointer */
-  xmlNodePtr cur;  /* libXML node pointer */
-
-  stpi_xml_init();
+  mxml_node_t *doc;
+  mxml_node_t *cur;
+  FILE *fp;
 
   if (stpi_debug_level & STPI_DBG_XML)
     stpi_erprintf("stp_xml_parse_file: reading  `%s'...\n", file);
 
-  doc = xmlParseFile(file);
+  fp = fopen(file, "r");
+  if (!fp)
+    {
+      stpi_erprintf("stp_xml_parse_file: unable to open %s: %s\n", file,
+		    strerror(errno));
+      return 1;
+    }
 
-  if (doc == NULL )
+  stpi_xml_init();
+
+  doc = mxmlLoadFile(NULL, fp, MXML_NO_CALLBACK);
+  fclose(fp);
+
+  cur = doc->child;
+  while (cur &&
+	 (cur->type != MXML_ELEMENT ||
+	  strcmp(cur->value.element.name, "gimp-print") != 0))
+    cur = cur->next;
+
+  if (cur == NULL || cur->type != MXML_ELEMENT)
     {
       stpi_erprintf("stp_xml_parse_file: %s: parse error\n", file);
-      xmlFreeDoc(doc);
+      mxmlDelete(cur);
       return 1;
     }
 
-  cur = xmlDocGetRootElement(doc);
-
-  if (cur == NULL)
+  if (strcmp(cur->value.element.name, "gimp-print") != 0)
     {
-      fprintf(stderr,"empty document\n");
-      xmlFreeDoc(doc);
-      return 1;
-    }
-
-  if (xmlStrcmp(cur->name, (const xmlChar *) "gimp-print"))
-    {
-      fprintf(stderr,"XML file of the wrong type, root node != gimp-print");
-      xmlFreeDoc(doc);
+      fprintf(stderr,
+	      "XML file of the wrong type, root node is %s != gimp-print",
+	      cur->value.element.name);
+      mxmlDelete(cur);
       return 1;
     }
 
   /* The XML file was read and is the right format */
 
   stpi_xml_process_gimpprint(cur, file);
-  xmlFreeDoc(doc);
+  mxmlDelete(doc);
 
   stpi_xml_exit();
 
@@ -282,10 +270,10 @@ stpi_xml_parse_file(const char *file) /* File to parse */
  * Convert a text string into an integer.
  */
 long
-stpi_xmlstrtol(xmlChar* textval)
+stpi_xmlstrtol(const char *textval)
 {
   long val; /* The value to return */
-  val = strtol((const char *) textval, (char **)NULL, 10);
+  val = strtol(textval, (char **)NULL, 10);
 
   return val;
 }
@@ -294,10 +282,10 @@ stpi_xmlstrtol(xmlChar* textval)
  * Convert a text string into an unsigned int.
  */
 unsigned long
-stpi_xmlstrtoul(xmlChar* textval)
+stpi_xmlstrtoul(const char *textval)
 {
   unsigned long val; /* The value to return */
-  val = strtoul((const char *) textval, (char **)NULL, 10);
+  val = strtoul(textval, (char **)NULL, 10);
 
   return val;
 }
@@ -306,10 +294,10 @@ stpi_xmlstrtoul(xmlChar* textval)
  * Convert a text string into a double.
  */
 double
-stpi_xmlstrtod(xmlChar *textval)
+stpi_xmlstrtod(const char *textval)
 {
   double val; /* The value to return */
-  val = strtod((const char *) textval, (char **)NULL);
+  val = strtod(textval, (char **)NULL);
 
   return val;
 }
@@ -322,39 +310,32 @@ stpi_xmlstrtod(xmlChar *textval)
  * return the first dither node in the tree.  Additional dither nodes
  * cannot be accessed with this function.
  */
-xmlNodePtr
-stpi_xml_get_node(xmlNodePtr xmlroot, ...)
+mxml_node_t *
+stpi_xml_get_node(mxml_node_t *xmlroot, ...)
 {
-  xmlNodePtr child;
-  xmlNodePtr retnode = NULL;
+  mxml_node_t *child;
   va_list ap;
-  const xmlChar *target = NULL;
+  const char *target = NULL;
 
   va_start(ap, xmlroot);
 
   child = xmlroot;
-  target = va_arg(ap, const xmlChar *);
+  target = va_arg(ap, const char *);
 
-  while (child && child->name && target)
+  while (target && child)
     {
-      if (!xmlStrcmp(child->name, target))
-	{
-	  retnode = child;
-	  child = child->children;
-	  target = va_arg(ap, const xmlChar *);
-	  continue;
-	}
-      child = child->next;
+      child = mxmlFindElement(child, child, target, NULL, NULL, MXML_DESCEND);
+      target = va_arg(ap, const char *);
     }
   va_end(ap);
-  return retnode;
+  return child;
 }
 
 static void
-stpi_xml_process_node(xmlNodePtr node, const char *file)
+stpi_xml_process_node(mxml_node_t *node, const char *file)
 {
   stpi_list_item_t *item =
-    stpi_list_get_item_by_name(stpi_xml_registry, (const char *) node->name);
+    stpi_list_get_item_by_name(stpi_xml_registry, node->value.element.name);
   if (item)
     {
       stpi_xml_parse_registry *xmlp =
@@ -367,15 +348,16 @@ stpi_xml_process_node(xmlNodePtr node, const char *file)
  * Parse the <gimp-print> root node.
  */
 void
-stpi_xml_process_gimpprint(xmlNodePtr cur, const char *file) /* The node to parse */
+stpi_xml_process_gimpprint(mxml_node_t *cur, const char *file) /* The node to parse */
 {
-  xmlNodePtr child;                       /* Child node pointer */
+  mxml_node_t *child;                       /* Child node pointer */
 
-  child = cur->children;
+  child = cur->child;
   while (child)
     {
       /* process nodes with corresponding parser */
-      stpi_xml_process_node(child, file);
+      if (child->type == MXML_ELEMENT)
+	stpi_xml_process_node(child, file);
       child = child->next;
     }
 }
@@ -383,26 +365,26 @@ stpi_xml_process_gimpprint(xmlNodePtr cur, const char *file) /* The node to pars
 /*
  * Create a basic gimp-print XML document tree root
  */
-xmlDocPtr
+mxml_node_t *
 stpi_xmldoc_create_generic(void)
 {
-  xmlDocPtr xmldoc;
-  xmlNodePtr rootnode;
+  mxml_node_t *doc;
+  mxml_node_t *rootnode;
 
   /* Create the XML tree */
-  xmldoc = xmlNewDoc((const xmlChar *) "1.0");
+  doc = mxmlNewElement(NULL, "?xml");
+  mxmlElementSetAttr(doc, "version", "1.0");
 
-  rootnode = xmlNewNode(NULL, (const xmlChar *) "gimp-print");
-  (void) xmlSetProp(rootnode, (const xmlChar *) "xmlns",
-		    (const xmlChar *) "http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0");
-  (void) xmlSetProp(rootnode, (const xmlChar *) "xmlns:xsi",
-		    (const xmlChar *) "http://www.w3.org/2001/XMLSchema-instance");
-  (void) xmlSetProp(rootnode, (const xmlChar *) "xsi:schemaLocation",
-		    (const xmlChar *) "http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd");
+  rootnode = mxmlNewElement(doc, "gimp-print");
+  mxmlElementSetAttr
+    (rootnode, "xmlns", "http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0");
+  mxmlElementSetAttr
+    (rootnode, "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+  mxmlElementSetAttr
+    (rootnode, "xsi:schemaLocation",
+     "http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd");
 
-  xmlDocSetRootElement(xmldoc, rootnode);
-
-  return xmldoc;
+  return doc;
 }
 
 
