@@ -388,27 +388,27 @@ at low printing resolutions.  Many printers do not support this kind
 of printing at resolutions of 720 DPI and above, and some printers
 that do actually print just one row (using just one nozzle per color)
 at a time.  While this particular use will produce extremely high
-quality (no banding whatsoever, normally), it may damage the print
-head due to ink pooling.  All printers that we are aware of have no
-such trouble at 360 DPI.
+quality (no banding whatsoever, normally), it may eventually damage
+the print head due to ink pooling.  All printers that we are aware of
+have no such trouble at 360 DPI.
 
 Generally, we recommend use of 360 DPI printing modes for most
 purposes on plain paper (perhaps 720x360 for the best quality output).
 Use of 720 DPI and above simply takes more time to compute and print
-the page, with little quality gain.  For draft purposes, use of 180,
-180x120, or 360x120 will not produce solidly black output, but will
-save ink and time.  On high quality "photo" papers, we recommend use
-of 720 DPI for proofing and 1440x720 DPI for final output.  720x360
-may be acceptable for initial proofs, but on may printers it will not
+the page, with little quality gain.  For draft purposes, use of 180 or
+360x120 DPI will not produce solidly black output, but will save ink
+and time.  On high quality "photo" papers, we recommend use of 720 DPI
+for proofing and 1440x720 DPI for final output.  720x360 may be
+acceptable for initial proofs, but on may printers it will not
 generate sufficient density.  360 DPI will produce very coarse output
 that may lack sufficient density on these high quality papers.
 
 We believe that generally there is little reason to use 2880x720 DPI.
 The actual resolution this produces will not be much better than
 1440x720 DPI, but it will take twice as long to generate the output.
-The exception is on the Stylus Color 900 and 980: these printers
-produce sufficiently small dots (3 pl) that they can take advantage of
-such high resolution.  Even there, 1440x720 will likely produce more
+The exception is on the Stylus Color 980: this printer produces
+sufficiently small dots (3 pl) that they can take advantage of such
+high resolution.  Even in that case, 1440x720 will likely produce more
 than adequate output.
 
 The following resolutions are supported on printers other than the
@@ -432,10 +432,22 @@ Resolutions for those printers are listed in a later section.
 '360 x 120 DPI'
 '360 x 120 DPI Unidirectional'
 
-'360 DPI'                                  (works on all printers)
-'360 DPI Unidirectional'                   (works on all printers)
-'360 DPI Microweave'                       (works on all printers)
-'360 DPI Microweave Unidirectional'        (works on all printers)
+'360 DPI'                                  (works on all printers
+					    except for Stylus C20 and
+					    C40, and Stylus Color 480
+					    and 580)
+'360 DPI Unidirectional'                   (works on all printers
+					    except for Stylus C20 and
+					    C40, and Stylus Color 480
+					    and 580)
+'360 DPI Microweave'                       (works on all printers
+					    except for Stylus C20 and
+					    C40, and Stylus Color 480
+					    and 580)
+'360 DPI Microweave Unidirectional'        (works on all printers
+					    except for Stylus C20 and
+					    C40, and Stylus Color 480
+					    and 580)
 '360 DPI Softweave'                        (works on printers that support
                                             variable dot sizes, such as
                                             the Epson Stylus Color 740
@@ -490,11 +502,13 @@ Resolutions for those printers are listed in a later section.
 '1440 x 720 DPI Microweave'                (works on some, mostly old
                                             printers; recommended only
                                             on printers that do not
-                                            support other 720 DPI modes)
+                                            support other 1440x720 DPI
+                                            modes)
 '1440 x 720 DPI Microweave Unidirectional' (works on some, mostly old
                                             printers; recommended only
                                             on printers that do not
-                                            support other 720 DPI modes)
+                                            support other 1440x720 DPI
+                                            modes)
 '1440 x 720 DPI Softweave'                 (works on all 1440x720 dpi
                                             printers except for Stylus
                                             Color 1520 and 3000)
@@ -510,10 +524,12 @@ Resolutions for those printers are listed in a later section.
 
 '2880 x 720 DPI Softweave'                 (works on Stylus Color 680,
                                             777, 880, 83, and 980,
-                                            Stylus Photo 790, 890, 1290)
+                                            Stylus Photo 780/790, 890,
+                                            and 1280/1290)
 '2880 x 720 DPI Softweave Unidirectional'  (works on Stylus Color 680,
                                             777, 880, 83, and 980,
-                                            Stylus Photo 790, 890, 1290)
+                                            Stylus Photo 780/790, 890,
+                                            and 1280/1290)
 
 The Stylus Pro printers (Stylus Pro 5000, 5500, 7000, 7500, 9000,
 9500, and 10000) support additional microweave modes known as Full
