@@ -893,6 +893,12 @@
       <height value="387"/>
       <unit value="english-extended"/>
     </paper>
+    <paper name="w288h504">
+      <description value="4x7"/>
+      <width value="288"/>
+      <height value="504"/>
+      <unit value="english-extended"/>
+    </paper>
     <paper name="w253h337">
       <description value="CP_L"/>
       <comment value="89mm x 119mm"/>
