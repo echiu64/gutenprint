@@ -3,6 +3,7 @@
 stp_=gdevstp.$(OBJ) \
 	gdevstp-dither.$(OBJ) \
 	gdevstp-util.$(OBJ) \
+	gdevstp-weave.$(OBJ) \
 	gdevstp-escp2.$(OBJ)
 
 $(DD)stp.dev:	$(stp_) $(DD)page.dev
@@ -13,6 +14,9 @@ gdevstp.$(OBJ) : gdevstp.c $(PDEVH)
 
 gdevstp-util.$(OBJ) : gdevstp-util.c $(PDEVH)
 	$(CCC) -DESCP2_GHOST gdevstp-util.c
+
+gdevstp-weave.$(OBJ) : gdevstp-weave.c $(PDEVH)
+	$(CCC) gdevstp-weave.c
 
 gdevstp-dither.$(OBJ) : gdevstp-dither.c $(PDEVH)
 	$(CCC) -DESCP2_GHOST gdevstp-dither.c
