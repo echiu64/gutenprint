@@ -15,7 +15,8 @@ require('standard_html_header.php3');
 <P>A project to enhance the Print plugin for the GIMP.</P>
 
 <P><strong>We have fixed the download page!  Our apologies for not
-including a working download link.</strong></p>
+including a working download link.</strong>.  We've also added a
+GhostScript driver for Epson Stylus inkjet printers.</p>
 
 <P>Please check out <a
 href="https://sourceforge.net/project/?group_id=1537">our
@@ -45,10 +46,5 @@ have not done a public release of version 3.1 yet, due to the rapid
 change of the source base, we hope to do one in the fairly near
 future. Our CVS repository is publicly readable, so you're welcome to
 download it and experiment.</p>
-
-<p>A major goal of version 3.1 is to use the identical source base as
-the core of a GhostScript driver, and perhaps as a plugin or filter to
-other printing systems. Henryk "Buggs" Richter has already
-demonstrated a prototype, and he reports excellent print quality.</p>
 
 <?require('standard_html_footer.php3');?>
