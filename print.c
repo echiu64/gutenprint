@@ -138,7 +138,11 @@ static void	run(char *, int, GParam *, int *, GParam **);
 static void     init_gtk (void);
 static int	do_print_dialog(void);
 
+#ifndef GIMP_1_0
+extern void     gimp_create_main_window(void);
+#else
 extern void     gtk_create_main_window(void);
+#endif
 
 #if 0
 static void	cleanupfunc(void);
@@ -272,12 +276,10 @@ query(void)
   };
   static int		nargs = sizeof(args) / sizeof(args[0]);
 
-  INIT_I18N();
-
   gimp_install_procedure(
       "file_print",
-      _("This plug-in prints images from The GIMP."),
-      _("Prints images to PostScript, PCL, or ESC/P2 printers."),
+      "This plug-in prints images from The GIMP.",
+      "Prints images to PostScript, PCL, or ESC/P2 printers.",
       "Michael Sweet <mike@easysw.com> and Robert Krawitz <rlk@alum.mit.edu>",
       "Copyright 1997-2000 by Michael Sweet and Robert Krawitz",
       PLUG_IN_VERSION,
@@ -664,7 +666,11 @@ do_print_dialog(void)
     /*
      * Print dialog window...
      */
+#ifndef GIMP_1_0
+    gimp_create_main_window();
+#else
     gtk_create_main_window();
+#endif
 
     gtk_main();
     gdk_flush();

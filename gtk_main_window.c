@@ -59,74 +59,74 @@ void  printrc_save(void);
 /***
  * Main window widgets
  ***/
-GtkWidget* print_dialog;           /* Print dialog window */
-GtkWidget* recenter_button;
-GtkWidget* left_entry;
-GtkWidget* right_entry;
-GtkWidget* top_entry;
-GtkWidget* bottom_entry;
-GtkWidget* media_size;             /* Media size option button */
-GtkWidget* media_size_menu=NULL;   /* Media size menu */
-GtkWidget* media_type;             /* Media type option button */
-GtkWidget* media_type_menu=NULL;   /* Media type menu */
-GtkWidget* media_source;           /* Media source option button */
-GtkWidget* media_source_menu=NULL; /* Media source menu */
-GtkWidget* ink_type;               /* Ink type option button */
-GtkWidget* ink_type_menu=NULL;     /* Ink type menu */
-GtkWidget* resolution;             /* Resolution option button */
-GtkWidget* resolution_menu=NULL;   /* Resolution menu */
-GtkWidget* scaling_scale;          /* Scale widget for scaling */
-GtkWidget* scaling_entry;          /* Text entry widget for scaling */
-GtkWidget* scaling_percent;        /* Scale by percent */
-GtkWidget* scaling_ppi;            /* Scale by pixels-per-inch */
+static GtkWidget* print_dialog;           /* Print dialog window */
+static GtkWidget* recenter_button;
+static GtkWidget* left_entry;
+static GtkWidget* right_entry;
+static GtkWidget* top_entry;
+static GtkWidget* bottom_entry;
+static GtkWidget* media_size;             /* Media size option button */
+static GtkWidget* media_size_menu=NULL;   /* Media size menu */
+static GtkWidget* media_type;             /* Media type option button */
+static GtkWidget* media_type_menu=NULL;   /* Media type menu */
+static GtkWidget* media_source;           /* Media source option button */
+static GtkWidget* media_source_menu=NULL; /* Media source menu */
+static GtkWidget* ink_type;               /* Ink type option button */
+static GtkWidget* ink_type_menu=NULL;     /* Ink type menu */
+static GtkWidget* resolution;             /* Resolution option button */
+static GtkWidget* resolution_menu=NULL;   /* Resolution menu */
+static GtkWidget* scaling_scale;          /* Scale widget for scaling */
+static GtkWidget* scaling_entry;          /* Text entry widget for scaling */
+static GtkWidget* scaling_percent;        /* Scale by percent */
+static GtkWidget* scaling_ppi;            /* Scale by pixels-per-inch */
 #ifndef GIMP_1_0
-GtkWidget* scaling_image;          /* Scale to the image */
+static GtkWidget* scaling_image;          /* Scale to the image */
 #endif
-GtkWidget* output_gray;            /* Output type toggle, black */
-GtkWidget* output_color;           /* Output type toggle, color */
-GtkWidget* linear_on;              /* Linear toggle, on */
-GtkWidget* linear_off;             /* Linear toggle, off */
-GtkWidget* image_line_art;
-GtkWidget* image_solid_tone;
-GtkWidget* image_continuous_tone;
-GtkWidget* image_monochrome;
-GtkWidget* setup_dialog;           /* Setup dialog window */
-GtkWidget* printer_driver;         /* Printer driver widget */
-GtkWidget* ppd_file;               /* PPD file entry */
-GtkWidget* ppd_button;             /* PPD file browse button */
-GtkWidget* output_cmd;             /* Output command text entry */
-GtkWidget* ppd_browser;            /* File selection dialog for PPD files */
-GtkWidget* file_browser;           /* FSD for print files */
-GtkWidget* printandsave_button;
-GtkWidget* print_button;
-GtkWidget* save_settings_button;
-GtkWidget* cancel_button;
-GtkWidget* adjust_color_button;
+static GtkWidget* output_gray;            /* Output type toggle, black */
+static GtkWidget* output_color;           /* Output type toggle, color */
+static GtkWidget* linear_on;              /* Linear toggle, on */
+static GtkWidget* linear_off;             /* Linear toggle, off */
+static GtkWidget* image_line_art;
+static GtkWidget* image_solid_tone;
+static GtkWidget* image_continuous_tone;
+static GtkWidget* image_monochrome;
+static GtkWidget* setup_dialog;           /* Setup dialog window */
+static GtkWidget* printer_driver;         /* Printer driver widget */
+static GtkWidget* ppd_file;               /* PPD file entry */
+static GtkWidget* ppd_button;             /* PPD file browse button */
+static GtkWidget* output_cmd;             /* Output command text entry */
+static GtkWidget* ppd_browser;            /* File selection dialog for PPD files */
+static GtkWidget* file_browser;           /* FSD for print files */
+static GtkWidget* printandsave_button;
+static GtkWidget* print_button;
+static GtkWidget* save_settings_button;
+static GtkWidget* cancel_button;
+static GtkWidget* adjust_color_button;
 
-GtkObject* scaling_adjustment;	   /* Adjustment object for scaling */
+static GtkObject* scaling_adjustment;	   /* Adjustment object for scaling */
 
-int		num_media_sizes=0;	/* Number of media sizes */
-char		**media_sizes;		/* Media size strings */
-int		num_media_types=0;	/* Number of media types */
-char		**media_types;		/* Media type strings */
-int		num_media_sources=0;	/* Number of media sources */
-char		**media_sources;	/* Media source strings */
-int		num_ink_types=0;	/* Number of ink types */
-char		**ink_types;		/* Ink type strings */
-int		num_resolutions=0;	/* Number of resolutions */
-char		**resolutions;		/* Resolution strings */
+static int		num_media_sizes=0;	/* Number of media sizes */
+static char		**media_sizes;		/* Media size strings */
+static int		num_media_types=0;	/* Number of media types */
+static char		**media_types;		/* Media type strings */
+static int		num_media_sources=0;	/* Number of media sources */
+static char		**media_sources;	/* Media source strings */
+static int		num_ink_types=0;	/* Number of ink types */
+static char		**ink_types;		/* Ink type strings */
+static int		num_resolutions=0;	/* Number of resolutions */
+static char		**resolutions;		/* Resolution strings */
 
 
-GtkDrawingArea	*preview;		/* Preview drawing area widget */
-int		mouse_x,		/* Last mouse X */
-		mouse_y;		/* Last mouse Y */
+static GtkDrawingArea	*preview;		/* Preview drawing area widget */
+static int		mouse_x,		/* Last mouse X */
+	        	mouse_y;		/* Last mouse Y */
 
-int 		page_left;		/* Left pixel column of page */
-int		page_top;		/* Top pixel row of page */
-int		page_width;		/* Width of page on screen */
-int		page_height;		/* Height of page on screen */
-int		print_width;		/* Printed width of image */
-int		print_height;		/* Printed height of image */
+static int 		page_left;		/* Left pixel column of page */
+static int		page_top;		/* Top pixel row of page */
+static int		page_width;		/* Width of page on screen */
+static int		page_height;		/* Height of page on screen */
+static int		print_width;		/* Printed width of image */
+static int		print_height;		/* Printed height of image */
 
 extern GtkObject* brightness_adjustment; /* Adjustment object for brightness */
 extern GtkObject* saturation_adjustment; /* Adjustment object for saturation */
@@ -175,8 +175,8 @@ static void gtk_show_adjust_button_callback(GtkWidget *);
 
 extern void gtk_create_color_adjust_window(void);
 
-GtkWidget* table;      /* Table "container" for controls */
-GtkWidget* dialog;     /* Dialog window */
+static GtkWidget* table;      /* Table "container" for controls */
+static GtkWidget* dialog;     /* Dialog window */
 
 /*****************************************************************************
  *

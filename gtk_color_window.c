@@ -43,32 +43,32 @@ extern plist_t  plist[MAX_PLIST];       /* System printers */
 
 GtkWidget* gtk_color_adjust_dialog;
 
-GtkWidget* brightness_scale;	/* Scale for brightness */
-GtkWidget* brightness_entry;	/* Text entry widget for brightness */
-GtkWidget* saturation_scale;	/* Scale for saturation */
-GtkWidget* saturation_entry;	/* Text entry widget for saturation */
-GtkWidget* density_scale;	/* Scale for density */
-GtkWidget* density_entry;	/* Text entry widget for density */
-GtkWidget* contrast_scale;	/* Scale for contrast */
-GtkWidget* contrast_entry;	/* Text entry widget for contrast */
-GtkWidget* red_scale;		/* Scale for red */
-GtkWidget* red_entry;		/* Text entry widget for red */
-GtkWidget* green_scale;		/* Scale for green */
-GtkWidget* green_entry;		/* Text entry widget for green */
-GtkWidget* blue_scale;		/* Scale for blue */
-GtkWidget* blue_entry;		/* Text entry widget for blue */
-GtkWidget* gamma_scale;		/* Scale for gamma */
-GtkWidget* gamma_entry;         /* Text entry widget for gamma */
-GtkWidget* dismiss_button;      /* Action area dismiss button */
+static GtkWidget* brightness_scale;	/* Scale for brightness */
+static GtkWidget* brightness_entry;	/* Text entry widget for brightness */
+static GtkWidget* saturation_scale;	/* Scale for saturation */
+static GtkWidget* saturation_entry;	/* Text entry widget for saturation */
+static GtkWidget* density_scale;	/* Scale for density */
+static GtkWidget* density_entry;	/* Text entry widget for density */
+static GtkWidget* contrast_scale;	/* Scale for contrast */
+static GtkWidget* contrast_entry;	/* Text entry widget for contrast */
+static GtkWidget* red_scale;		/* Scale for red */
+static GtkWidget* red_entry;		/* Text entry widget for red */
+static GtkWidget* green_scale;		/* Scale for green */
+static GtkWidget* green_entry;		/* Text entry widget for green */
+static GtkWidget* blue_scale;		/* Scale for blue */
+static GtkWidget* blue_entry;		/* Text entry widget for blue */
+static GtkWidget* gamma_scale;		/* Scale for gamma */
+static GtkWidget* gamma_entry;         /* Text entry widget for gamma */
+static GtkWidget* dismiss_button;      /* Action area dismiss button */
 
-GtkObject* brightness_adjustment;  /* Adjustment object for brightness */
-GtkObject* saturation_adjustment;  /* Adjustment object for saturation */
-GtkObject* density_adjustment;	   /* Adjustment object for density */
-GtkObject* contrast_adjustment;	   /* Adjustment object for contrast */
-GtkObject* red_adjustment;	   /* Adjustment object for red */
-GtkObject* green_adjustment;	   /* Adjustment object for green */
-GtkObject* blue_adjustment;	   /* Adjustment object for blue */
-GtkObject* gamma_adjustment;	   /* Adjustment object for gamma */
+static GtkObject* brightness_adjustment;  /* Adjustment object for brightness */
+static GtkObject* saturation_adjustment;  /* Adjustment object for saturation */
+static GtkObject* density_adjustment;	   /* Adjustment object for density */
+static GtkObject* contrast_adjustment;	   /* Adjustment object for contrast */
+static GtkObject* red_adjustment;	   /* Adjustment object for red */
+static GtkObject* green_adjustment;	   /* Adjustment object for green */
+static GtkObject* blue_adjustment;	   /* Adjustment object for blue */
+static GtkObject* gamma_adjustment;	   /* Adjustment object for gamma */
 
 
 static void gtk_brightness_update(GtkAdjustment *);

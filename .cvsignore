@@ -11,7 +11,10 @@ configure
 escp2-weavetest
 pcl-unprint
 print
+print-printers.c
 printdef
+printdefl.c
+printdefy.c
 printdefy.h
 unprint
 weavetest
