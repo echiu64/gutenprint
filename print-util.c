@@ -32,6 +32,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.83  2000/03/03 00:11:20  rlk
+ *   Silly bug in rgb_to_gray
+ *
  *   Revision 1.82  2000/03/02 03:38:12  rlk
  *   Clean up conversion functions...again...and fix rgb to gray to do density
  *
@@ -734,8 +737,8 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	    t = 0.0;
 	  *gray = (unsigned short) (t * 65536.0);
 	}
-      gray += bpp;
-      rgb += 3;
+      rgb += bpp;
+      gray ++;
       width --;
     }
 }
