@@ -96,7 +96,7 @@ binary-indep: build install ChangeLog
 	  if test ! -f gimpprint.html; then \
 	    ln -s gimpprint_toc.html gimpprint.html; \
 	  fi
-	  cd debian/gimpprint-doc/usr/share/doc/gimpprint-doc/html;
+	  cd debian/gimpprint-doc/usr/share/doc/gimpprint-doc/html; \
 	  if test ! -f index.html; then \
 	    ln -s book1.html index.html; \
 	  fi
