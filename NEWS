@@ -1,7 +1,7 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.2.2-pre4, released July 30, 2002, is a prerelease in
-the Gimp-Print 4.2 line.
+Gimp-Print 4.2.2-rc1, released August 13, 2002, is the first release
+candidate for Gimp-Print 4.2.2.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
 and CUPS drivers, including Foomatic data.
@@ -20,6 +20,29 @@ or APFL GhostScript 7.04 or later.
 
 Please read the README file for full instructions on building and
 installing this package.
+
+Gimp-Print 4.2.2-rc1 contains the following major changes over
+Gimp-Print 4.2.2-pre4:
+
+  1) The IJS Ghostscript driver works properly in all locales.
+     Previously it did not work correctly in locales with different
+     numerical conventions than the "C" locale, due to problems
+     parsing certain numeric options.
+
+  2) The Gimp Print plugin now installs correctly on all supported
+     systems.
+
+  3) A crash problem with the Lexmark driver is fixed.
+
+  4) Further improvements for the Epson Stylus Photo 950.
+
+  5) Updated Swedish translation.
+
+The following bugs have been fixed in Gimp-Print 4.2.2-pre5:
+
+586960 Gimp Print plugin installs incorrectly on some systems
+592093 IJS driver sets page size incorrectly in some non-US locales
+594637 Lexmark Z52 driver crash
 
 Gimp-Print 4.2.2-pre4 contains the following major changes over
 Gimp-Print 4.2.2-pre3:
