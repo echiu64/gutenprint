@@ -419,7 +419,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 {
   unsigned ld = vars->density * 65536;
   double isat = 1.0;
-  double ssat = sqrt(vars->saturation * 2.5);
+  double ssat = sqrt(vars->saturation * 1.25);
   if (ssat > 1)
     isat = 1.0 / ssat;
   while (width > 0)
