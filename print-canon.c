@@ -1427,9 +1427,9 @@ canon_write(FILE          *prn,		/* I - Print file or command */
   if (dmt) {
     if (1) {
       if (caps.features & CANON_CAP_MSB_FIRST) 
-	canon_fold_lsb_msb(line,length,in_fold);
-      else
 	canon_fold_msb_lsb(line,length,in_fold);
+      else
+	canon_fold_lsb_msb(line,length,in_fold);
       in_ptr= in_fold;
     }
     length*= 2;
@@ -1526,6 +1526,9 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
 
 /*
  *   $Log$
+ *   Revision 1.43  2000/05/11 05:54:15  gandy
+ *   Fix for variable drop size printing
+ *
  *   Revision 1.42  2000/05/05 11:12:36  gandy
  *   Better handling of canon send buffer
  *
