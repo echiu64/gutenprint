@@ -2872,6 +2872,8 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	}
       }
 
+      pick = 0;
+
       for (i=0; i < NCOLORS; i++) {
         int value;
 	int dark_only;
@@ -2926,22 +2928,21 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	if (i == ECOLOR_K) {
 	  CHANNEL(d, ECOLOR_K).b = dr[ECOLOR_K]->value[0];
 	  if (ri[ECOLOR_K] >= 32768) {
-	    dr[ECOLOR_K]++;
-	    CHANNEL(d, ECOLOR_K).b = dr[ECOLOR_K]->value[0];
+	    CHANNEL(d, ECOLOR_K).b = dr[ECOLOR_K]->value[1];
+	    pick = (1 << ECOLOR_K);
 	  }
 	}
       }
 
-      pick = pick_vertex(ri);
+      pick |= pick_vertex(ri);
 
       /* Compute the values we're going to use (ignoring black's influence) */
       /* And find out whether the bigger black dot would be more suitable than the small one */
 
       { int point[NCOLORS];
-        int blacksize = 1;		/* Assume large black is OK */
 	int useblack = 0;		/* Do we print black at all? */
 
-        point[ECOLOR_K] = dr[ECOLOR_K]->value[blacksize];
+        point[ECOLOR_K] = CHANNEL(d, ECOLOR_K).b;
 	if (d->black_density != d->density) {
 	  point[ECOLOR_K] = (unsigned)point[ECOLOR_K] * (unsigned)d->density / d->black_density;
 	}
@@ -2949,26 +2950,13 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
         for (i=1; i < NCOLORS; i++) {
 	  if (pick & (1 << i)) {
 	    point[i] = dr[i]->value[1];
-	    if (point[i] < point[ECOLOR_K]) {
-	      blacksize = 0;		/* Use small black instead */
-	    }
 	  } else {
 	    point[i] = dr[i]->value[0];
-	    if (CHANNEL(d, i).v < point[ECOLOR_K]) {
-	      blacksize = 0;		/* Use small black instead */
-	    }
-	  }
-	}
-
-	if (blacksize == 0) {
-	  point[ECOLOR_K] = dr[ECOLOR_K]->value[blacksize];
-	  if (d->black_density != d->density) {
-	    point[ECOLOR_K] = (unsigned)point[ECOLOR_K] * (unsigned)d->density / d->black_density;
 	  }
 	}
 
 	for (i=0; i < NCOLORS; i++) {
-	  if ((CHANNEL(d, ECOLOR_K).b > 0) || ((i != 0) && (point[i] > 0))) {
+	  if (point[i] > 0) {
 	    r_sq[i] = 0;
 	    dx[i] = et->dx2;
 	    dy[i] = et->dy2;
@@ -2978,7 +2966,6 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	  et->dy[i][x] = dy[i] + et->d2y;
         }
 
-        /* We know which sizes of each colour we want to use, and also the size of the black ink. */
         /* Only print the black ink if it means we can avoid printing another ink, otherwise we're just wasting ink */
 
         for (i=1; i < NCOLORS; i++) {
@@ -2994,7 +2981,6 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	/* Adjust colours to print based on black ink */
         if (useblack) {
 	  print_inks = (1 << ECOLOR_K);
-          if (blacksize) pick |= (1 << ECOLOR_K);
 	  for (i=1; i < NCOLORS; i++) {
 	    if (point[i] <= point[ECOLOR_K]) {
 	      point[i] = point[ECOLOR_K];
@@ -3007,7 +2993,7 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
         /* Adjust error values for dither */
 	ndither[ECOLOR_K] += CHANNEL(d, ECOLOR_K).o - CHANNEL(d, ECOLOR_K).b;
         for (i=1; i < NCOLORS; i++) {
-	  ndither[i] += CHANNEL(d, i).o + CHANNEL(d, ECOLOR_K).b - point[i];
+	  ndither[i] += CHANNEL(d, i).o + point[ECOLOR_K] - point[i];
         }
       }
 
