@@ -1185,7 +1185,7 @@ stp_dither_set_shades(void *vd, int color, int nshades,
 
   for (i=0;i<dc->numshades;i++) {
     shade_segment_t *sp = &dc->shades[i];
-    sp->subchannel = i;
+    sp->subchannel = shades[i].subchannel;
     sp->value = 0;
     sp->density = 65536.0 * shades[i].value + 0.5;
     if (i == 0) {
