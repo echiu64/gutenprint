@@ -1163,7 +1163,7 @@ DECLARE_INKLIST("None", gen1, photo, N_("EPSON Standard Inks"),
 DECLARE_INKLIST("None", gen2, photo, N_("EPSON Standard Inks"),
 		standard, gen2);
 DECLARE_INKLIST("None", pigment, photo, N_("EPSON Standard Inks"),
-		standard, stp2200);
+		ultrachrome, stp2200);
 
 static const escp2_inkname_t *const f360_photo_ink_types[] =
 {
