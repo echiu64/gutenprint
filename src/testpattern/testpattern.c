@@ -336,6 +336,10 @@ main(int argc, char **argv)
 
   (printfuncs->imageable_area)(the_printer, v, &left, &right, &bottom, &top);
   (printfuncs->describe_resolution)(the_printer, stp_get_resolution(v),&x, &y);
+  if (x < 0)
+    x = 300;
+  if (y < 0)
+    y = 300;
 
   width = right - left;
   height = top - bottom;
