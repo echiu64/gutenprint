@@ -29,13 +29,10 @@ MAINT_CHARSET = latin1
 PACKAGE = cups
 
 bindir = @cups_bindir@
-datadir = @cups_datadir@
-libdir = @cups_libdir@
-sysconfdir = @cups_sysconfdir@
 
-pkgdatadir = $(datadir)/$(PACKAGE)
-pkglibdir = $(libdir)/$(PACKAGE)
-pkgsysconfdir = $(sysconfdir)/$(PACKAGE)
+pkgdatadir = $(cups_conf_datadir)
+pkglibdir = $(cups_conf_serverbin)
+pkgsysconfdir = $(cups_conf_serverroot)
 
 cupsexec_backenddir = $(pkglibdir)/backend
 cupsexec_filterdir = $(pkglibdir)/filter
@@ -158,14 +155,14 @@ install-data-hook:
 # Remove unused directories in install tree
 	-rmdir $(DESTDIR)$(cups_modeldir)
 	-rmdir $(DESTDIR)$(pkgdatadir)
-	-rmdir $(DESTDIR)$(datadir)
 	-rmdir $(DESTDIR)$(cupsexec_backenddir)
 	-rmdir $(DESTDIR)$(cupsexec_filterdir)
-	-rmdir $(DESTDIR)$(pkglibdir)
-	-rmdir $(DESTDIR)$(libdir)
-	-rmdir $(DESTDIR)$(pkgsysconfdir)
-	-rmdir $(DESTDIR)$(sysconfdir)
 	-rmdir $(DESTDIR)$(bindir)
+	-rmdir $(DESTDIR)$(pkglibdir)
+	-rmdir $(DESTDIR)$(pkgsysconfdir)
+	-rmdir `dirname $(DESTDIR)$(pkgdatadir)`
+	-rmdir `dirname $(DESTDIR)$(pkglibdir)`
+	-rmdir `dirname $(DESTDIR)$(pkgsysconfdir)`
 
 
 ## Rules
@@ -197,7 +194,7 @@ ppd-nls: genppd
 	wdir=`pwd` ; \
 	cd $(top_builddir)/po ; \
 	$(MAKE) ; \
-	$(MAKE) prefix=$${wdir}/catalog datadir=$${wdir}/catalog/share install
+	$(MAKE) DESTDIR= prefix=$${wdir}/catalog datadir=$${wdir}/catalog/share install
 	for language in $(ALL_LINGUAS) ; do \
 	  mkdir ppd/$$language ; \
 	  echo "$$language:" ; \

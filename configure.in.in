@@ -471,11 +471,11 @@ if test x${BUILD_CUPS} = xyes ; then
     LIBS="$LIBS -lz"
     AC_DEFINE(HAVE_LIBZ,, [Define if libz is present.])
   fi
-  AC_PATH_PROG(CUPSCONFIG,cups-config)
-  if test "x$CUPSCONFIG" != x; then
+  AC_PATH_PROG(CUPS_CONFIG,cups-config)
+  if test "x$CUPS_CONFIG" != x; then
     dnl Use values from CUPS config...
-    CUPS_LIBS="`$CUPSCONFIG --ldflags` `$CUPSCONFIG --image --libs`"
-    CUPS_CFLAGS="`$CUPSCONFIG --cflags`"
+    CUPS_LIBS="`$CUPS_CONFIG --ldflags` `$CUPS_CONFIG --image --libs`"
+    CUPS_CFLAGS="`$CUPS_CONFIG --cflags`"
   else
     dnl Save current library list...
     SAVELIBS="$LIBS"
@@ -704,26 +704,33 @@ if test "${bindir}" = "\${prefix}/bin" -a "${cups_prefix}" = "/" ; then
 else
   cups_bindir="${cups_prefix}/bin"
 fi
-dnl Fix "datadir" variable if it hasn't been specified...
-if test "${datadir}" = "\${prefix}/share" -a "${cups_prefix}" = "/" ; then
-  cups_datadir="/usr/share"
+
+dnl Get explicit CUPS directories if possible
+if test "x$CUPS_CONFIG" != x; then
+  cups_conf_datadir="`$CUPS_CONFIG --datadir`"
+  cups_conf_serverbin="`$CUPS_CONFIG --serverbin`"
+  cups_conf_serverroot="`$CUPS_CONFIG --serverroot`"
 else
-  cups_datadir="${cups_prefix}/share"
-fi
-dnl Fix "libdir" variable if it hasn't been specified...
-if test "${libdir}" = "\${prefix}/lib" -a "${cups_prefix}" = "/" ; then
-  cups_libdir="/usr/lib"
-else
-  cups_libdir="${cups_prefix}/lib"
-fi
-dnl Fix "sysconfdir" variable if it hasn't been specified...
-if test "${sysconfdir}" = "\${prefix}/etc"; then
-  if test "${cups_prefix}" = "/usr" ; then
-    cups_sysconfdir="/etc"
+dnl Some logical guessing
+  if test "${datadir}" = "\${prefix}/share" -a "${cups_prefix}" = "/" ; then
+    cups_conf_datadir="/usr/share/cups"
   else
-    cups_sysconfdir="${cups_prefix}/etc"
+    cups_conf_datadir="${cups_prefix}/share/cups"
+  fi
+  if test "${libdir}" = "\${prefix}/lib" -a "${cups_prefix}" = "/" ; then
+    cups_conf_serverbin="/usr/lib/cups"
+  else
+    cups_conf_serverbin="${cups_prefix}/lib/cups"
+  fi
+  if test "${sysconfdir}" = "\${prefix}/etc"; then
+    if test "${cups_prefix}" = "/usr" ; then
+      cups_conf_serverroot="/etc/cups"
+    else
+      cups_conf_serverroot="${cups_prefix}/etc/cups"
+    fi
   fi
 fi
+
 
 AM_CONDITIONAL(USE_NLS, test x${USE_NLS} = xyes)
 
@@ -735,7 +742,7 @@ LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
 
 dnl Definitions
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
-AC_DEFINE_UNQUOTED(CUPS_DATADIR, "${cups_exec_prefix}/share/cups", [CUPS data directory.])
+AC_DEFINE_UNQUOTED(CUPS_DATADIR, "$cups_conf_datadir", [CUPS data directory.])
 AC_DEFINE_UNQUOTED(CUPS_PPD_PS_LEVEL, ${CUPS_PPD_PS_LEVEL}, [CUPS PPD PostScript level])
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
@@ -751,9 +758,9 @@ dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 AC_SUBST(cups_prefix)
 AC_SUBST(cups_exec_prefix)
 AC_SUBST(cups_bindir)
-AC_SUBST(cups_datadir)
-AC_SUBST(cups_libdir)
-AC_SUBST(cups_sysconfdir)
+AC_SUBST(cups_conf_datadir)
+AC_SUBST(cups_conf_serverbin)
+AC_SUBST(cups_conf_serverroot)
 AC_SUBST(CUPS_BIN)
 AC_SUBST(CUPS_BACKEND_BIN)
 AC_SUBST(CUPS_FILTER_BIN)
