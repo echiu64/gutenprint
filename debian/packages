@@ -1,0 +1,81 @@
+# debian/packages for gimp-print
+# This file written by Charles Briscoe-Smith.
+
+Source: gimp-print
+Section: graphics
+Priority: optional
+Maintainer: Charles Briscoe-Smith <cpbs@debian.org>
+Standards-Version: 3.1.0
+Home-Page: <URL:http://gimp-print.sourceforge.com/>
+Upstream-Source: CVS
+Description: an updated "print" plugin for the GIMP
+# Packaged-For: Debian
+Copyright: GPL
+ Copyright 1997-2000 Michael Sweet (mike@easysw.com)
+                     Robert Krawitz (rlk@alum.mit.edu)
+                     Steve Miller (smiller@rni.net)
+                     Michael Natterer (mitch@gimp.org)
+                     Eric Sharkey <sharkey@superk.physics.sunysb.edu>
+                     Dave Hill <dave@minnie.demon.co.uk>
+                     Andy Thaller <thaller@ph.tum.de>
+ .
+ This program is free software; you can redistribute it and/or modify it
+ under the terms of the GNU General Public License as published by the
+ Free Software Foundation; either version 2 of the License, or (at your
+ option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License along
+ with this program; if not, write to the Free Software Foundation, Inc.,
+ 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+Major-Changes:
+Patches: *.dpatch
+Build: sh
+ ./configure --prefix=/usr
+ make
+Clean: sh
+ make distclean || true
+
+# If you build this against gimp 1.0, change the following paragraph to
+# refer to gimp 1.0 instead.
+
+Package: gimp-1.1-print
+Architecture: any
+Depends: [/usr/lib/gimp/1.1/plug-ins/*]
+Description: Updated "print" plugin for the GIMP 1.1
+ This package includes an updated print plugin for version 1.1 of
+ the GIMP.  It will divert your current print plugin out of the way,
+ and restore it when this package is removed.
+ .
+ This print plugin features numerous improvements over the plugin included
+ with the Gimp, including:
+ .
+  - Support for many more printers.
+ .
+  - Far better print quality, including better dithering
+    algorithms and more control over colour.
+ .
+  - Revamped user interface.
+ .
+  - Driver settings can be saved between invocations.
+ .
+ This driver is also available as a Ghostscript driver.
+Install: sh
+ yada install -bin print -into /usr/lib/gimp/1.1/plug-ins
+ yada install -doc AUTHORS ChangeLog NEWS README README.dither RELNOTES
+Preinst: sh
+ if test "$1" = install; then
+   dpkg-divert --package gimp-1.1-print \
+               --divert /usr/lib/gimp/1.1/print.gimp1.1 \
+               --rename --quiet --add /usr/lib/gimp/1.1/plug-ins/print
+ fi
+Postrm: sh
+ if test "$1" = remove; then
+   dpkg-divert --package gimp-1.1-print \
+               --divert /usr/lib/gimp/1.1/print.gimp1.1 \
+               --rename --quiet --remove /usr/lib/gimp/1.1/plug-ins/print
+ fi
