@@ -508,6 +508,12 @@ escp2_parameters(int  model,		/* I - Printer model */
     "Single Dot Size"
   };
 
+  static char *media_types[] =
+  {
+    "Standard Paper",
+    "Glossy Film"
+  };
+
   if (count == NULL)
     return (NULL);
 
@@ -578,6 +584,16 @@ escp2_parameters(int  model,		/* I - Printer model */
 	  *count = 2;
 	  return valptrs;
 	}
+    }
+  else if (strcmp(name, "MediaType") == 0)
+    {
+      valptrs = malloc(sizeof(char *) * 2);
+      valptrs[0] = malloc(strlen(media_types[0]) + 1);
+      strcpy(valptrs[0], media_types[0]);
+      valptrs[1] = malloc(strlen(media_types[1]) + 1);
+      strcpy(valptrs[1], media_types[1]);
+      *count = 2;
+      return valptrs;
     }
   else
     return (NULL);
@@ -772,6 +788,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   char 		*ppd_file = v->ppd_file;
   char 		*resolution = v->resolution;
   char 		*media_size = v->media_size;
+  char		*media_type = v->media_type;
   int 		output_type = v->output_type;
   int		orientation = v->orientation;
   char          *ink_type = v->ink_type;
@@ -825,6 +842,10 @@ escp2_print(const printer_t *printer,		/* I - Model */
   void *	dither;
   colormode_t colormode = COLOR_CCMMYK;
   int		separation_rows = escp2_separation_rows(model);
+  int		use_glossy_film = 0;
+
+  if (!strcmp(media_type, "Glossy Film"))
+    use_glossy_film = 1;
 
   if (v->image_type == IMAGE_MONOCHROME)
     {
@@ -1134,12 +1155,12 @@ escp2_print(const printer_t *printer,		/* I - Model */
     dither = init_dither(image_height, out_width, v);
   else
     dither = init_dither(image_width, out_width, v);
-  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
-    {
-      dither_set_black_levels(dither, 1.5, 1.5, 1.5);
-      dither_set_black_lower(dither, .3);
-      dither_set_black_upper(dither, .5);
-    }
+  dither_set_black_levels(dither, 1.5, 1.5, 1.5);
+  dither_set_black_lower(dither, .3);
+  if (use_glossy_film)
+    dither_set_black_upper(dither, .8);
+  else
+    dither_set_black_upper(dither, .5);
   if (bits == 2)
     {
       dither_set_y_ranges_simple(dither, 3, dot_sizes, v->density);
@@ -2948,6 +2969,9 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.132  2000/04/26 12:48:26  rlk
+ *   Support glossy film
+ *
  *   Revision 1.131  2000/04/26 02:39:28  rlk
  *   try again for 660
  *
