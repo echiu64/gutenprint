@@ -252,19 +252,24 @@ find_segment(stpi_dither_channel_t *dc, eventone_t *et, int totalink,
 
 found_segment:
 
-  { int dither_point;
+  { unsigned dither_point;
     if (totalink >= upper->range) {
       dither_point = 65536;
     } else if (totalink <= lower->range) {
       dither_point = 0;
     } else {
       if (lower->range == 0) {
-        dither_point = eventone_adjust(&dc->shade, et, (totalink * 65536) / upper->range, baseink, upper->range);
+	unsigned where =
+	  ((unsigned) totalink * 65536u) / (unsigned) upper->range;
+	dither_point =
+	  eventone_adjust(&dc->shade, et, where, baseink, upper->range);
       } else {
-        dither_point = ((totalink - lower->range) * 65536) / (upper->range - lower->range);
+	dither_point =
+	  (((unsigned) totalink - (unsigned) lower->range) * 65536u) /
+	  ((unsigned) upper->range - (unsigned) lower->range);
       }
     }
-    return dither_point;
+    return (int) dither_point;
   }
 }
 
@@ -319,11 +324,9 @@ stpi_dither_et(stp_vars_t v,
   xstep  = channel_count * (d->src_width / d->dst_width);
   xmod   = d->src_width % d->dst_width;
   xerror = (xmod * x) % d->dst_width;
+  range = 0;
 
   for (; x != terminate; x += direction) {
-
-    range = 0;
-
     for (i=0; i < channel_count; i++) {
       if (CHANNEL(d, i).ptr)
 	{
