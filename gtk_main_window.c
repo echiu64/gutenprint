@@ -76,9 +76,6 @@ static GtkWidget* scaling_scale;          /* Scale widget for scaling */
 static GtkWidget* scaling_entry;          /* Text entry widget for scaling */
 static GtkWidget* scaling_percent;        /* Scale by percent */
 static GtkWidget* scaling_ppi;            /* Scale by pixels-per-inch */
-#ifndef GIMP_1_0
-static GtkWidget* scaling_image;          /* Scale to the image */
-#endif
 static GtkWidget* output_gray;            /* Output type toggle, black */
 static GtkWidget* output_color;           /* Output type toggle, color */
 #ifdef DO_LINEAR
@@ -819,14 +816,6 @@ void gtk_create_main_window(void)
     gtk_signal_connect(GTK_OBJECT(scaling_ppi), "toggled",
 		       (GtkSignalFunc)gtk_scaling_callback, NULL);
 
-#ifndef GIMP_1_0
-    scaling_image = button = gtk_button_new_with_label(_("Set Image Scale"));
-    gtk_signal_connect(GTK_OBJECT(button), "clicked",
-		       (GtkSignalFunc)gtk_scaling_callback, NULL);
-    gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
-    gtk_widget_show(button);
-#endif
-
     /***
      *  Color adjust button
      ***/
@@ -1246,25 +1235,6 @@ static void gtk_scaling_callback(GtkWidget* widget) /* I - New value */
     plist[plist_current].v.scaling = vars.scaling;
     gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
   }
-#ifndef GIMP_1_0
-  else if (widget == scaling_image)
-  {
-    gdouble xres, yres;
-    gimp_image_get_resolution(image_ID, &xres, &yres);
-    GTK_ADJUSTMENT (scaling_adjustment)->lower = min_ppi_scaling;
-    GTK_ADJUSTMENT (scaling_adjustment)->upper = max_ppi_scaling + 1;
-    if (yres < min_ppi_scaling)
-      yres = min_ppi_scaling;
-    if (yres > max_ppi_scaling)
-      yres = max_ppi_scaling;
-
-    GTK_ADJUSTMENT(scaling_adjustment)->value = yres;
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_ppi), TRUE);
-    vars.scaling = 0.0;
-    plist[plist_current].v.scaling = vars.scaling;
-    gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
-  }
-#endif
 }
 
 /****************************************************************************

@@ -1400,13 +1400,16 @@ escp2_parameters(const printer_t *printer,	/* I - Printer model */
 	  if (escp2_ink_type(model, res->hres, !res->softweave) != -1)
 	    {
 	      int nozzles = escp2_nozzles(model);
-	      int separation = escp2_nozzle_separation(model);
 	      int xdpi = res->hres;
 	      int horizontal_passes = xdpi / escp2_xres(model);
-	      if (horizontal_passes == 0)
+	      int oversample = horizontal_passes * res->vertical_passes
+	                         * res->vertical_oversample;
+	      if (horizontal_passes < 1)
 		horizontal_passes = 1;
+	      if (oversample < 1)
+		oversample = 1;
 	      if (((horizontal_passes * res->vertical_passes) <= 8) &&
-		  (! res->softweave || (nozzles > 1 && nozzles > separation)))
+		  (! res->softweave || (nozzles > 1 && nozzles > oversample)))
 		{
 		  valptrs[*count] = malloc(strlen(res->name) + 1);
 		  strcpy(valptrs[*count], res->name);
@@ -1491,13 +1494,16 @@ escp2_default_resolution(const printer_t *printer)
       if (escp2_ink_type(printer->model, res->hres, !res->softweave) != -1)
 	{
 	  int nozzles = escp2_nozzles(printer->model);
-	  int separation = escp2_nozzle_separation(printer->model);
 	  int xdpi = res->hres;
 	  int horizontal_passes = xdpi / escp2_xres(printer->model);
-	  if (horizontal_passes == 0)
+	  int oversample = horizontal_passes * res->vertical_passes
+	                     * res->vertical_oversample;
+	  if (horizontal_passes < 1)
 	    horizontal_passes = 1;
+	  if (oversample < 1)
+	    oversample = 1;
 	  if (((horizontal_passes * res->vertical_passes) <= 8) &&
-	      (! res->softweave || (nozzles > 1 && nozzles > separation)))
+	      (! res->softweave || (nozzles > 1 && nozzles > oversample)))
 	    return res->name;
 	}
       res++;
