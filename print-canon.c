@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.30  2000/02/23 19:09:56  gandy
+ *   small fix for delayed lines
+ *
  *   Revision 1.29  2000/02/23 17:43:22  gandy
  *   Fixed a bug in canon_write
  *
@@ -1058,13 +1061,13 @@ canon_print(int       model,		/* I - Model */
 
   if(xdpi==1440){
     delay_k= 0;
-    delay_c= 110;
-    delay_m= 220;
-    delay_y= 330;
+    delay_c= 112;
+    delay_m= 224;
+    delay_y= 336;
     delay_lc= 0;
     delay_lm= 0;
     delay_ly= 0;
-    delay_max= 330;
+    delay_max= 336;
     fprintf(stderr,"canon: delay on!\n");
   } else {
     delay_k= delay_c= delay_m= delay_y= delay_lc= delay_lm= delay_ly=0;
