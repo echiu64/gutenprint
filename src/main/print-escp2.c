@@ -2236,8 +2236,8 @@ static int
 escp2_print_data(stp_vars_t v, stp_image_t *image)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  int errdiv  = stpi_image_height(image) / pd->image_scaled_height;
-  int errmod  = stpi_image_height(image) % pd->image_scaled_height;
+  int errdiv  = stpi_image_height(image) / pd->image_printed_height;
+  int errmod  = stpi_image_height(image) % pd->image_printed_height;
   int errval  = 0;
   int errlast = -1;
   int errline  = 0;
@@ -2249,19 +2249,19 @@ escp2_print_data(stp_vars_t v, stp_image_t *image)
   unsigned char *cd_mask = NULL;
   if (pd->cd_outer_radius > 0)
     {
-      cd_mask = stpi_malloc(1 + (pd->image_scaled_width + 7) / 8);
+      cd_mask = stpi_malloc(1 + (pd->image_printed_width + 7) / 8);
       outer_r_sq = (double) pd->cd_outer_radius * (double) pd->cd_outer_radius;
       inner_r_sq = (double) pd->cd_inner_radius * (double) pd->cd_inner_radius;
     }
 
   stpi_image_progress_init(image);
 
-  for (y = 0; y < pd->image_scaled_height; y ++)
+  for (y = 0; y < pd->image_printed_height; y ++)
     {
       int duplicate_line = 1;
       unsigned zero_mask;
       if ((y & 63) == 0)
-	stpi_image_note_progress(image, y, pd->image_scaled_height);
+	stpi_image_note_progress(image, y, pd->image_printed_height);
 
       if (errline != errlast)
 	{
@@ -2277,7 +2277,7 @@ escp2_print_data(stp_vars_t v, stp_image_t *image)
 	    pd->cd_y_offset - (y * pd->micro_units / pd->res->printed_vres);
 	  if (y_distance_from_center < 0)
 	    y_distance_from_center = -y_distance_from_center;
-	  memset(cd_mask, 0, (pd->image_scaled_width + 7) / 8);
+	  memset(cd_mask, 0, (pd->image_printed_width + 7) / 8);
 	  if (y_distance_from_center < pd->cd_outer_radius)
 	    {
 	      double y_sq = (double) y_distance_from_center *
@@ -2285,15 +2285,13 @@ escp2_print_data(stp_vars_t v, stp_image_t *image)
 	      int x_where = sqrt(outer_r_sq - y_sq) + .5;
 	      int scaled_x_where = x_where * pd->res->printed_hres / pd->micro_units;
 	      set_mask(cd_mask, x_center, scaled_x_where,
-		       pd->image_scaled_width,
-		       pd->image_scaled_width / pd->image_printed_width, 0);
+		       pd->image_printed_width, 1, 0);
 	      if (y_distance_from_center < pd->cd_inner_radius)
 		{
 		  x_where = sqrt(inner_r_sq - y_sq) + .5;
 		  scaled_x_where = x_where * pd->res->printed_hres / pd->micro_units;
 		  set_mask(cd_mask, x_center, scaled_x_where,
-			   pd->image_scaled_width,
-			   pd->image_scaled_width /pd->image_printed_width, 1);
+			   pd->image_printed_width, 1, 1);
 		}
 	    }
 	}
@@ -2303,9 +2301,9 @@ escp2_print_data(stp_vars_t v, stp_image_t *image)
       stpi_write_weave(v, pd->cols);
       errval += errmod;
       errline += errdiv;
-      if (errval >= pd->image_scaled_height)
+      if (errval >= pd->image_printed_height)
 	{
-	  errval -= pd->image_scaled_height;
+	  errval -= pd->image_printed_height;
 	  errline ++;
 	}
     }
