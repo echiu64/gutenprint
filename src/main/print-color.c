@@ -611,6 +611,11 @@ rgb_to_rgb(const stp_vars_t vars,
   size_t l_points = 0;
   size_t s_points = 0;
   double tmp;
+  int do_update_cmyk = 1;
+  if (strcmp(stp_get_string_parameter(vars, "ImageOptimization"),
+	     "HSLAdjust") == 0)
+    do_update_cmyk = 0;
+
   if (lut->hue_map)
     h_points = stp_curve_count_points(lut->hue_map);
   if (lut->lum_map)
@@ -655,7 +660,8 @@ rgb_to_rgb(const stp_vars_t vars,
 		s = 1.0;
 	      calc_hsl_to_rgb(rgbout, h, s, l);
 	    }
-	  update_cmyk(rgbout);	/* Fiddle with the INPUT */
+	  if (do_update_cmyk)
+	    update_cmyk(rgbout);	/* Fiddle with the INPUT */
 	  if (lut->steps == 65536)
 	    {
 	      rgbout[0] = red[rgbout[0]];
@@ -918,6 +924,11 @@ gray_to_rgb(const stp_vars_t vars,
   const unsigned short *red;
   const unsigned short *green;
   const unsigned short *blue;
+  int do_update_cmyk = 1;
+  if (strcmp(stp_get_string_parameter(vars, "ImageOptimization"),
+	     "HSLAdjust") == 0)
+    do_update_cmyk = 0;
+
   red = stp_curve_get_ushort_data(lut->cyan, &count);
   green = stp_curve_get_ushort_data(lut->magenta, &count);
   blue = stp_curve_get_ushort_data(lut->yellow, &count);
@@ -937,7 +948,8 @@ gray_to_rgb(const stp_vars_t vars,
 	  trgb[0] =
 	    trgb[1] =
 	    trgb[2] = i0 | (i0 << 8);
-	  update_cmyk(trgb);
+	  if (do_update_cmyk)
+	    update_cmyk(trgb);
 	  if (lut->steps == 65536)
 	    {
 	      rgbout[0] = red[trgb[0]];
@@ -2056,6 +2068,8 @@ stpi_color_describe_parameter(const stp_vars_t v, const char *name,
 		  description->bounds.str = stp_string_list_create();
 		  stp_string_list_add_string
 		    (description->bounds.str, "LineArt", _("Line Art"));
+		  stp_string_list_add_string
+		    (description->bounds.str, "HSLAdjust", _("HSL-corrected"));
 		  stp_string_list_add_string
 		    (description->bounds.str, "Solid", _("Solid Colors"));
 		  stp_string_list_add_string
