@@ -1,6 +1,7 @@
 ### --------------- Epson Stylus Photo Driver ---------------------------- ###
 
 stp_=$(GLOBJ)gdevstp.$(OBJ) \
+	$(GLOBJ)gdevstp-dither.$(OBJ) \
 	$(GLOBJ)gdevstp-util.$(OBJ) \
 	$(GLOBJ)gdevstp-escp2.$(OBJ)
 
