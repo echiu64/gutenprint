@@ -302,11 +302,21 @@ X     + Update of the Foomatic data to the new data scheme.  The
 
     * Critical:
 
-      + Resolution of all OS X printing issues.  There are a number of
+      + Duplex support on appropriate printers.  This is RFE 644811.
+
+	Dave Hill is presently working on this.  It would be very
+	desirable to have this for beta, as it is a highly requested
+	item.
+
+X     + Resolution of all OS X printing issues.  There are a number of
         OS X problems (mostly related to the USB output driver, but
         some are also utility-related).  It is not clear whether we
         would hold the release indefinitely for this.  We will have to
         respond to individual issues.
+
+	This is now COMPLETE.  Tyler Blessing has released the usbtb
+	package, which is an updated USB driver for OS X.  He is
+	maintaining it and releasing it on our site.
 
 X     + Piecewise linear curves.  This is a more economical storage
         format for typical cases, and is much more useful for cubic
@@ -320,7 +330,12 @@ X     + Piecewise linear curves.  This is a more economical storage
 
 	UPDATE 20040529 GTK does not support piecewise curves.
 	Therefore this would either require a GTK upgrade or a custom
-	widget.
+	widget.  The standard GTK curve widget is deprecated in any
+	event.  
+
+	UPDATE 20040605 Mike Porter has provided a replacement widget
+	which provides better services in this regard.  It needs to be
+	integrated.
 
 X     + Exposure of printer characteristics to the application level.
         This would allow printers to specify read-only parameters,
@@ -400,6 +415,28 @@ X     + Support for 8 bit linearized, and 16 bit linearized and
 
 	This is COMPLETE.
 
+X     + Improvement of user controls (contrast and brightness).
+
+	This is RFE 619299.  The request relates to the legacy
+	behavior whereby the brightness control changes the black or
+	white point of the print.  This behavior is reasonable when
+	printing photos full bleed but is not reasonable when printing
+	pages.
+
+	The behavior of the controls as of 5.0 alpha-3 is very strange
+	in the fully corrected RGB mode.  The user controls are
+	applied after HSL remapping, which produces very strange
+	effects such as non-monotonic luminance curves.  It's
+	important for user adjustments (in particular, brightness,
+	contrast, and saturation) to be made prior to HSL mapping, as
+	HSL mapping is intended to correct for the printer.
+
+	This is COMPLETE.  The brightness control now exponentially
+	adjusts the luminance prior to HSL-remapping, effectively
+	yielding a gamma-like curve in luminance, which produces a
+	desirable effect.  Contrast is applied in RGB space prior to
+	remapping.
+
 
     * Important:
 
@@ -450,6 +487,12 @@ X     + Header file reorganization.  The purpose of this project is to
 	If this is to be done, it should be done by BETA for
 	stability.
 
+X     + Header file reorganization.  The purpose of this project is to
+        create a supported internal API for modules.
+
+	Needed prior to BETA, as change is pervasive and will break
+	programs.
+
 
 Proposed release schedule:
 -------- ------- --------
@@ -458,7 +501,7 @@ MILESTONE			PLAN		CURRENT		COMPLETE
 Alpha freeze (slush)		07/15/2003			N/A
 Alpha 1				07/25/2003			01/11/2004
 Alpha 2				08/08/2003			04/11/2004
-Alpha 3				08/22/2003
+Alpha 3				08/22/2003			05/12/2004
 Beta freeze			09/05/2003
 Beta 1				09/12/2003
 Beta 2				10/03/2003
