@@ -608,7 +608,7 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
 	  break;
 	}
     }
-  d->transition = .6;
+  d->transition = 1.0;
 
   if (d->dither_type == D_VERY_FAST)
     stp_dither_set_iterated_matrix(d, 2, DITHER_FAST_STEPS, sq2, 0, 2, 4);
@@ -721,7 +721,8 @@ stp_dither_set_transition(void *vd, double exponent)
   destroy_matrix(&(d->mat7));
   copy_matrix(&(d->mat6), &(d->mat7));
   d->transition = exponent;
-  exponential_scale_matrix(&(d->mat7), exponent);
+  if (exponent < .999 || exponent > 1.001)
+    exponential_scale_matrix(&(d->mat7), exponent);
   if (d->dither_type & D_ORDERED_BASE)
     {
       clone_matrix(&(d->mat7), &(d->pick[ECOLOR_C]), 2 * x_3, y_3);
@@ -736,12 +737,16 @@ stp_dither_set_transition(void *vd, double exponent)
       clone_matrix(&(d->mat7), &(d->pick[ECOLOR_Y]), 2 * x_3, 0);
       clone_matrix(&(d->mat7), &(d->pick[ECOLOR_K]), x_3, 2 * y_3);
     }
-  for (i = 0; i < 65536; i++)
-    {
-      double dd = i / 65535.0;
-      dd = pow(dd, 1.0 / exponent);
-      d->virtual_dot_scale[i] = dd * 65535;
-    }
+  if (exponent < .999 || exponent > 1.001)
+    for (i = 0; i < 65536; i++)
+      {
+	double dd = i / 65535.0;
+	dd = pow(dd, 1.0 / exponent);
+	d->virtual_dot_scale[i] = dd * 65535;
+      }
+  else
+    for (i = 0; i < 65536; i++)
+      d->virtual_dot_scale[i] = i;
 }
 
 void

@@ -1612,6 +1612,7 @@ lexmark_describe_resolution(printer,
 			  (lmagenta)? (0.3333) : (0.0),
 			  (lyellow) ? (0.3333) : (0.0), stp_get_density(nv));
   }
+  stp_dither_set_transition(dither, .6);
 
   switch (stp_get_image_type(nv))
     {

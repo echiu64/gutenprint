@@ -635,15 +635,15 @@ stp_calculate_row_parameters(void *vw,		/* I - weave parameters */
 
 void
 stp_fold(const unsigned char *line,
-	   int single_height,
+	   int single_length,
 	   unsigned char *outbuf)
 {
   int i;
-  memset(outbuf, 0, single_height * 2);
-  for (i = 0; i < single_height; i++)
+  memset(outbuf, 0, single_length * 2);
+  for (i = 0; i < single_length; i++)
     {
       unsigned char l0 = line[0];
-      unsigned char l1 = line[single_height];
+      unsigned char l1 = line[single_length];
       if (l0 || l1)
 	{
 	  outbuf[0] =
@@ -671,7 +671,7 @@ stp_fold(const unsigned char *line,
 }
 
 static void
-stp_split_2_1(int height,
+stp_split_2_1(int length,
 		const unsigned char *in,
 		unsigned char *outhi,
 		unsigned char *outlo)
@@ -679,7 +679,7 @@ stp_split_2_1(int height,
   unsigned char *outs[2];
   int i;
   int row = 0;
-  int limit = height * 2;
+  int limit = length * 2;
   outs[0] = outhi;
   outs[1] = outlo;
   memset(outs[1], 0, limit);
@@ -734,7 +734,7 @@ stp_split_2_1(int height,
 }
 
 static void
-stp_split_2_2(int height,
+stp_split_2_2(int length,
 		const unsigned char *in,
 		unsigned char *outhi,
 		unsigned char *outlo)
@@ -742,7 +742,7 @@ stp_split_2_2(int height,
   unsigned char *outs[2];
   int i;
   unsigned row = 0;
-  int limit = height * 2;
+  int limit = length * 2;
   outs[0] = outhi;
   outs[1] = outlo;
   memset(outs[1], 0, limit);
@@ -777,20 +777,20 @@ stp_split_2_2(int height,
 }
 
 void
-stp_split_2(int height,
+stp_split_2(int length,
 	      int bits,
 	      const unsigned char *in,
 	      unsigned char *outhi,
 	      unsigned char *outlo)
 {
   if (bits == 2)
-    stp_split_2_2(height, in, outhi, outlo);
+    stp_split_2_2(length, in, outhi, outlo);
   else
-    stp_split_2_1(height, in, outhi, outlo);
+    stp_split_2_1(length, in, outhi, outlo);
 }
 
 static void
-stp_split_4_1(int height,
+stp_split_4_1(int length,
 		const unsigned char *in,
 		unsigned char *out0,
 		unsigned char *out1,
@@ -800,7 +800,7 @@ stp_split_4_1(int height,
   unsigned char *outs[4];
   int i;
   int row = 0;
-  int limit = height * 2;
+  int limit = length * 2;
   outs[0] = out0;
   outs[1] = out1;
   outs[2] = out2;
@@ -859,7 +859,7 @@ stp_split_4_1(int height,
 }
 
 static void
-stp_split_4_2(int height,
+stp_split_4_2(int length,
 		const unsigned char *in,
 		unsigned char *out0,
 		unsigned char *out1,
@@ -869,7 +869,7 @@ stp_split_4_2(int height,
   unsigned char *outs[4];
   int i;
   int row = 0;
-  int limit = height * 2;
+  int limit = length * 2;
   outs[0] = out0;
   outs[1] = out1;
   outs[2] = out2;
@@ -908,7 +908,7 @@ stp_split_4_2(int height,
 }
 
 void
-stp_split_4(int height,
+stp_split_4(int length,
 	      int bits,
 	      const unsigned char *in,
 	      unsigned char *out0,
@@ -917,9 +917,9 @@ stp_split_4(int height,
 	      unsigned char *out3)
 {
   if (bits == 2)
-    stp_split_4_2(height, in, out0, out1, out2, out3);
+    stp_split_4_2(length, in, out0, out1, out2, out3);
   else
-    stp_split_4_1(height, in, out0, out1, out2, out3);
+    stp_split_4_1(length, in, out0, out1, out2, out3);
 }
 
 
@@ -932,137 +932,81 @@ stp_split_4(int height,
 #endif
 
 static void
-stp_unpack_2_1(int height,
+stp_unpack_2_1(int length,
 		 const unsigned char *in,
 		 unsigned char *out0,
 		 unsigned char *out1)
 {
-  unsigned char	tempin,
-		bit,
-		temp0,
-		temp1;
+  unsigned char ti0, ti1;
+  unsigned char to0, to1;
 
+  if (length <= 0)
+    return;
 
-  for (bit = 128, temp0 = 0, temp1 = 0;
-       height > 0;
-       height --)
+  for (;length; length --)
     {
-      tempin = *in++;
+      ti0 = *in++;
+      ti1 = *in++;
 
-      if (tempin & 128)
-        temp0 |= bit;
-      if (tempin & 64)
-        temp1 |= bit;
-
-      bit >>= 1;
-
-      if (tempin & 32)
-        temp0 |= bit;
-      if (tempin & 16)
-        temp1 |= bit;
-
-      bit >>= 1;
-
-      if (tempin & 8)
-        temp0 |= bit;
-      if (tempin & 4)
-        temp1 |= bit;
-
-      bit >>= 1;
-
-      if (tempin & 2)
-        temp0 |= bit;
-      if (tempin & 1)
-        temp1 |= bit;
-
-      if (bit > 1)
-        bit >>= 1;
-      else
-      {
-        bit     = 128;
-	*out0++ = temp0;
-	*out1++ = temp1;
-
-	temp0   = 0;
-	temp1   = 0;
-      }
-    }
-
-  if (bit < 128)
-    {
-      *out0++ = temp0;
-      *out1++ = temp1;
+      to0  = (ti0 & 0x80) << 0;
+      to1  = (ti0 & 0x40) << 1;
+      to0 |= (ti0 & 0x20) << 1;
+      to1 |= (ti0 & 0x10) << 2;
+      to0 |= (ti0 & 0x08) << 2;
+      to1 |= (ti0 & 0x04) << 3;
+      to0 |= (ti0 & 0x02) << 3;
+      to1 |= (ti0 & 0x01) << 4;
+      to0 |= (ti1 & 0x80) >> 4;
+      to1 |= (ti1 & 0x40) >> 3;
+      to0 |= (ti1 & 0x20) >> 3;
+      to1 |= (ti1 & 0x10) >> 2;
+      to0 |= (ti1 & 0x08) >> 2;
+      to1 |= (ti1 & 0x04) >> 1;
+      to0 |= (ti1 & 0x02) >> 1;
+      to1 |= (ti1 & 0x01) >> 0;
+      *out0++ = to0;
+      *out1++ = to1;
     }
 }
 
 static void
-stp_unpack_2_2(int height,
-		 const unsigned char *in,
-		 unsigned char *out0,
-		 unsigned char *out1)
+stp_unpack_2_2(int length,
+	       const unsigned char *in,
+	       unsigned char *out0,
+	       unsigned char *out1)
 {
-  unsigned char	tempin,
-		shift,
-		temp0,
-		temp1;
+  if (length <= 0)
+    return;
 
-
-  height *= 2;
-
-  for (shift = 0, temp0 = 0, temp1 = 0;
-       height > 0;
-       height --)
+  for (;length;length --)
     {
-     /*
-      * Note - we can't use (tempin & N) >> (shift - M) since negative
-      * right-shifts are not always implemented.
-      */
+      unsigned char ti0, ti1;
+      ti0 = in[0];
+      ti1 = in[1];
 
-      tempin = *in++;
-
-      if (tempin & 192)
-        temp0 |= (tempin & 192) >> shift;
-      if (tempin & 48)
-        temp1 |= ((tempin & 48) << 2) >> shift;
-
-      shift += 2;
-
-      if (tempin & 12)
-        temp0 |= ((tempin & 12) << 4) >> shift;
-      if (tempin & 3)
-        temp1 |= ((tempin & 3) << 6) >> shift;
-
-      if (shift < 6)
-        shift += 2;
-      else
-      {
-        shift   = 0;
-	*out0++ = temp0;
-	*out1++ = temp1;
-
-	temp0   = 0;
-	temp1   = 0;
-      }
-    }
-
-  if (shift)
-    {
-      *out0++ = temp0;
-      *out1++ = temp1;
+      *out0++  = (ti0 & 0xc0) << 0
+	| (ti0 & 0x0c) << 2
+	| (ti1 & 0xc0) >> 4
+	| (ti1 & 0x0c) >> 2;
+      *out1++  = (ti0 & 0x30) << 2
+	| (ti0 & 0x03) << 4
+	| (ti1 & 0x30) >> 2
+	| (ti1 & 0x03) >> 0;
+      in += 2;
     }
 }
 
 void
-stp_unpack_2(int height,
+stp_unpack_2(int length,
 	       int bits,
 	       const unsigned char *in,
 	       unsigned char *outlo,
 	       unsigned char *outhi)
 {
   if (bits == 1)
-    stp_unpack_2_1(height, in, outlo, outhi);
+    stp_unpack_2_1(length, in, outlo, outhi);
   else
-    stp_unpack_2_2(height, in, outlo, outhi);
+    stp_unpack_2_2(length, in, outlo, outhi);
 }
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
@@ -1078,75 +1022,71 @@ stp_unpack_2(int height,
 #endif
 
 static void
-stp_unpack_4_1(int height,
+stp_unpack_4_1(int length,
 		 const unsigned char *in,
 		 unsigned char *out0,
 		 unsigned char *out1,
 		 unsigned char *out2,
 		 unsigned char *out3)
 {
-  unsigned char	tempin,
-		bit,
-		temp0,
-		temp1,
-		temp2,
-		temp3;
+  unsigned char ti0, ti1, ti2, ti3;
+  unsigned char to0, to1, to2, to3;
 
+  if (length <= 0)
+    return;
 
-  for (bit = 128, temp0 = 0, temp1 = 0, temp2 = 0, temp3 = 0;
-       height > 0;
-       height --)
+  for (;length; length --)
     {
-      tempin = *in++;
+      ti0 = *in++;
+      ti1 = *in++;
+      ti2 = *in++;
+      ti3 = *in++;
 
-      if (tempin & 128)
-        temp0 |= bit;
-      if (tempin & 64)
-        temp1 |= bit;
-      if (tempin & 32)
-        temp2 |= bit;
-      if (tempin & 16)
-        temp3 |= bit;
+      to0  = (ti0 & 0x80) << 0;
+      to1  = (ti0 & 0x40) << 1;
+      to2  = (ti0 & 0x20) << 2;
+      to3  = (ti0 & 0x10) << 3;
+      to0 |= (ti0 & 0x08) << 3;
+      to1 |= (ti0 & 0x04) << 4;
+      to2 |= (ti0 & 0x02) << 5;
+      to3 |= (ti0 & 0x01) << 6;
 
-      bit >>= 1;
+      to0 |= (ti1 & 0x80) >> 2;
+      to1 |= (ti1 & 0x40) >> 1;
+      to2 |= (ti1 & 0x20) >> 0;
+      to3 |= (ti1 & 0x10) << 1;
+      to0 |= (ti1 & 0x08) << 1;
+      to1 |= (ti1 & 0x04) << 2;
+      to2 |= (ti1 & 0x02) << 3;
+      to3 |= (ti1 & 0x01) << 4;
 
-      if (tempin & 8)
-        temp0 |= bit;
-      if (tempin & 4)
-        temp1 |= bit;
-      if (tempin & 2)
-        temp2 |= bit;
-      if (tempin & 1)
-        temp3 |= bit;
+      to0 |= (ti2 & 0x80) >> 4;
+      to1 |= (ti2 & 0x40) >> 3;
+      to2 |= (ti2 & 0x20) >> 2;
+      to3 |= (ti2 & 0x10) >> 1;
+      to0 |= (ti2 & 0x08) >> 1;
+      to1 |= (ti2 & 0x04) >> 0;
+      to2 |= (ti2 & 0x02) << 1;
+      to3 |= (ti2 & 0x01) << 2;
 
-      if (bit > 1)
-        bit >>= 1;
-      else
-      {
-        bit     = 128;
-	*out0++ = temp0;
-	*out1++ = temp1;
-	*out2++ = temp2;
-	*out3++ = temp3;
+      to0 |= (ti3 & 0x80) >> 6;
+      to1 |= (ti3 & 0x40) >> 5;
+      to2 |= (ti3 & 0x20) >> 4;
+      to3 |= (ti3 & 0x10) >> 3;
+      to0 |= (ti3 & 0x08) >> 3;
+      to1 |= (ti3 & 0x04) >> 2;
+      to2 |= (ti3 & 0x02) >> 1;
+      to3 |= (ti3 & 0x01) >> 0;
 
-	temp0   = 0;
-	temp1   = 0;
-	temp2   = 0;
-	temp3   = 0;
-      }
-    }
-
-  if (bit < 128)
-    {
-      *out0++ = temp0;
-      *out1++ = temp1;
-      *out2++ = temp2;
-      *out3++ = temp3;
+      *out0++ = to0;
+      *out1++ = to1;
+      *out2++ = to2;
+      *out3++ = to3;
     }
 }
 
 static void
-stp_unpack_4_2(int height,
+stp_unpack_4_2(int length,
 		 const unsigned char *in,
 		 unsigned char *out0,
 		 unsigned char *out1,
@@ -1161,11 +1101,11 @@ stp_unpack_4_2(int height,
 		temp3;
 
 
-  height *= 2;
+  length *= 2;
 
   for (shift = 0, temp0 = 0, temp1 = 0, temp2 = 0, temp3 = 0;
-       height > 0;
-       height --)
+       length > 0;
+       length --)
     {
      /*
       * Note - we can't use (tempin & N) >> (shift - M) since negative
@@ -1210,7 +1150,7 @@ stp_unpack_4_2(int height,
 }
 
 void
-stp_unpack_4(int height,
+stp_unpack_4(int length,
 	       int bits,
 	       const unsigned char *in,
 	       unsigned char *out0,
@@ -1219,13 +1159,13 @@ stp_unpack_4(int height,
 	       unsigned char *out3)
 {
   if (bits == 1)
-    stp_unpack_4_1(height, in, out0, out1, out2, out3);
+    stp_unpack_4_1(length, in, out0, out1, out2, out3);
   else
-    stp_unpack_4_2(height, in, out0, out1, out2, out3);
+    stp_unpack_4_2(length, in, out0, out1, out2, out3);
 }
 
 static void
-stp_unpack_8_1(int height,
+stp_unpack_8_1(int length,
 		 const unsigned char *in,
 		 unsigned char *out0,
 		 unsigned char *out1,
@@ -1242,8 +1182,8 @@ stp_unpack_8_1(int height,
 
   for (bit = 128, temp0 = 0, temp1 = 0, temp2 = 0,
        temp3 = 0, temp4 = 0, temp5 = 0, temp6 = 0, temp7 = 0;
-       height > 0;
-       height --)
+       length > 0;
+       length --)
     {
       tempin = *in++;
 
@@ -1303,7 +1243,7 @@ stp_unpack_8_1(int height,
 }
 
 static void
-stp_unpack_8_2(int height,
+stp_unpack_8_2(int length,
 		 const unsigned char *in,
 		 unsigned char *out0,
 		 unsigned char *out1,
@@ -1328,8 +1268,8 @@ stp_unpack_8_2(int height,
 
   for (shift = 0, temp0 = 0, temp1 = 0,
        temp2 = 0, temp3 = 0, temp4 = 0, temp5 = 0, temp6 = 0, temp7 = 0;
-       height > 0;
-       height --)
+       length > 0;
+       length --)
     {
      /*
       * Note - we can't use (tempin & N) >> (shift - M) since negative
@@ -1397,7 +1337,7 @@ stp_unpack_8_2(int height,
 }
 
 void
-stp_unpack_8(int height,
+stp_unpack_8(int length,
 	       int bits,
 	       const unsigned char *in,
 	       unsigned char *out0,
@@ -1410,23 +1350,23 @@ stp_unpack_8(int height,
 	       unsigned char *out7)
 {
   if (bits == 1)
-    stp_unpack_8_1(height, in, out0, out1, out2, out3,
+    stp_unpack_8_1(length, in, out0, out1, out2, out3,
 		     out4, out5, out6, out7);
   else
-    stp_unpack_8_2(height, in, out0, out1, out2, out3,
+    stp_unpack_8_2(length, in, out0, out1, out2, out3,
 		     out4, out5, out6, out7);
 }
 
 int
 stp_pack_uncompressed(const unsigned char *line,
-		      int height,
+		      int length,
 		      unsigned char *comp_buf,
 		      unsigned char **comp_ptr)
 {
   int i;
-  memcpy(comp_buf, line, height);
-  *comp_ptr = comp_buf + height;
-  for (i = 0; i < height; i++)
+  memcpy(comp_buf, line, length);
+  *comp_ptr = comp_buf + length;
+  for (i = 0; i < length; i++)
     if (line[i])
       return 1;
   return 0;
@@ -1434,7 +1374,7 @@ stp_pack_uncompressed(const unsigned char *line,
 
 int
 stp_pack_tiff(const unsigned char *line,
-	      int height,
+	      int length,
 	      unsigned char *comp_buf,
 	      unsigned char **comp_ptr)
 {
@@ -1443,39 +1383,41 @@ stp_pack_tiff(const unsigned char *line,
   int count;			/* Count of compressed bytes */
   int tcount;			/* Temporary count < 128 */
   int active = 0;		/* Have we found data? */
+  register const unsigned char *xline = line;
+  register int xlength = length;
 
   /*
-   * Compress using TIFF "packbits" run-height encoding...
+   * Compress using TIFF "packbits" run-length encoding...
    */
 
   (*comp_ptr) = comp_buf;
 
-  while (height > 0)
+  while (xlength > 0)
     {
       /*
        * Get a run of non-repeated chars...
        */
 
-      start  = line;
-      line   += 2;
-      height -= 2;
+      start  = xline;
+      xline   += 2;
+      xlength -= 2;
 
-      while (height > 0 && (line[-2] != line[-1] || line[-1] != line[0]))
+      while (xlength > 0 && (xline[-2] != xline[-1] || xline[-1] != xline[0]))
 	{
-	  if (! active && (line[-2] || line[-1] || line[0]))
+	  if (! active && (xline[-2] || xline[-1] || xline[0]))
 	    active = 1;
-	  line ++;
-	  height --;
+	  xline ++;
+	  xlength --;
 	}
 
-      line   -= 2;
-      height += 2;
+      xline   -= 2;
+      xlength += 2;
 
       /*
        * Output the non-repeated sequences (max 128 at a time).
        */
 
-      count = line - start;
+      count = xline - start;
       while (count > 0)
 	{
 	  tcount = count > 128 ? 128 : count;
@@ -1488,32 +1430,37 @@ stp_pack_tiff(const unsigned char *line,
 	  count    -= tcount;
 	}
 
-      if (height <= 0)
+      if (xlength <= 0)
 	break;
 
       /*
        * Find the repeated sequences...
        */
 
-      start  = line;
-      repeat = line[0];
+      start  = xline;
+      repeat = xline[0];
       if (repeat)
 	active = 1;
 
-      line ++;
-      height --;
+      xline ++;
+      xlength --;
 
-      while (height > 0 && *line == repeat)
+      if (xlength > 0)
 	{
-	  line ++;
-	  height --;
+	  int ylength = xlength;
+	  while (ylength && *xline == repeat)
+	    {
+	      xline ++;
+	      ylength --;
+	    }
+	  xlength = ylength;
 	}
 
       /*
        * Output the repeated sequences (max 128 at a time).
        */
 
-      count = line - start;
+      count = xline - start;
       while (count > 0)
 	{
 	  tcount = count > 128 ? 128 : count;

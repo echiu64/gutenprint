@@ -2252,6 +2252,8 @@ canon_print(const stp_printer_t printer,		/* I - Model */
       else
 	stp_dither_set_transition(dither, .5);
     }
+  else
+    stp_dither_set_transition(dither, .6);
 
   /* used internally: do not translate */
   if (!strcmp(stp_get_dither_algorithm(nv), _("Ordered")))

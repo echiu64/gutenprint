@@ -299,18 +299,71 @@ than for others.
 Print Resolution Selection:
 ----- ---------- ----------
 
+-sQuality='quality'
+
 The meaning of this is model-specific.
 
-For Epson Stylus printers:
+For Epson Stylus printers, within each specified resolution, the
+quality is generally listed from worst to best (and generally higher
+quality means lower speed).  For example, 360 DPI Unidirectional is
+better than 360 DPI.  Characteristics of specific models and
+individual printers may affect the orderings to some degree; on many
+printers, unidirectional printing will improve quality substantially
+more than using an otherwise better quality printing mode.
 
--sQuality='quality'
+"Softweave", "High Quality", and "Highest Quality" use algorithms
+within the driver to generate the sequence of rows printed.  On
+printers capable of supporting variable dot sizes, only these printing
+modes can generate the smallest dots (3, 4, or 6 picolitres, or pl)
+that the printer is capable of.  In addition, the algorithms we use
+produce very high quality results, with very little banding.  We
+strongly suggest use of these modes where available.
+
+The difference between "Softweave", "High Quality", and "Highest
+Quality" lies in the number of passes made over each line.  The
+"Softweave" modes always perform the fewest passes required for any
+given resolution; High and Highest quality perform more.  This trades
+off printing speed against quality.
+
+"Microweave" modes, and modes with no specified quality other than
+unidirectional, use algorithms within the printer to generate the
+sequence of rows printed.  These algorithms generally only work well
+at low printing resolutions.  Many printers do not support this kind
+of printing at resolutions of 720 DPI and above, and some printers
+that do actually print just one row (using just one nozzle per color)
+at a time.  While this particular use will produce extremely high
+quality (no banding whatsoever, normally), it may damage the print
+head due to ink pooling.  All printers that we are aware of have no
+such trouble at 360 DPI.
+
+Generally, we recommend use of 360 DPI printing modes for most
+purposes on plain paper (perhaps 720x360 for the best quality output).
+Use of 720 DPI and above simply takes more time to compute and print
+the page, with little quality gain.  For draft purposes, use of 180,
+180x120, or 360x120 will not produce solidly black output, but it will
+save ink and time.  On high quality "photo" papers, we recommend use
+of 720 DPI for proofing and 1440x720 DPI for final output.  720x360
+may be acceptable for initial proofs, but on may printers it will not
+generate sufficient density.  360 DPI will produce very coarse output
+that may lack sufficient density on these high quality papers.
+
+We believe that generally there is little reason to use 2880x720 DPI.
+The actual resolution this produces will not be much better than
+1440x720 DPI, but it will take twice as long to generate the output.
+The exception is on the Stylus Color 900 and 980: these printers
+produce sufficiently small dots (3 pl) that they can take advantage of
+such high resolution.  Even there, 1440x720 will likely produce more
+than adequate output.
 
 '180 DPI'				   (works on many printers)
 '180 DPI Unidirectional'		   (works on many printers)
+
 '180 x 120 DPI'				   (works on many printers)
 '180 x 120 DPI Unidirectional'		   (works on many printers)
+
 '360 x 120 DPI'				   (works on many printers)
 '360 x 120 DPI Unidirectional'		   (works on many printers)
+
 '360 DPI'                                  (works on all printers)
 '360 DPI Unidirectional'                   (works on all printers)
 '360 DPI Microweave'                       (works on all printers)
@@ -327,6 +380,16 @@ For Epson Stylus printers:
 					    variable dot sizes, such as
 					    the Epson Stylus Color 740
 					    and newer)
+
+'720 x 360 DPI Softweave'                  (works on all printers except
+					    for Stylus Color, Stylus
+					    Color 1500, Stylus Color
+					    1520, and Stylus Color 3000)
+'720 x 360 DPI Softweave Unidirectional'   (works on all printers except
+					    for Stylus Color, Stylus
+					    Color 1500, Stylus Color
+					    1520, and Stylus Color 3000)
+
 '720 DPI Microweave'                       (works on most printers;
 					    not recommended on the
 					    Stylus Color 740 and newer)
@@ -353,6 +416,7 @@ For Epson Stylus printers:
 					    for Stylus Color, Stylus
 					    Color 1500, Stylus Color
 					    1520, and Stylus Color 3000)
+
 '1440 x 720 DPI Microweave'                (works on some older 1440x720 dpi
 					    printers; not normally
 					    recommended)
@@ -368,41 +432,13 @@ For Epson Stylus printers:
 '1440 x 720 DPI Highest Quality'           (works on all 1440x720 dpi
 					    printers except for Stylus
 					    Color 1520 and Stylus Color 3000)
+
 '2880 x 720 DPI Softweave'                 (works on Stylus Color 680,
 					    777, 880, 83, and 980,
 					    Stylus Photo 790, 890, 1290)
 '2880 x 720 DPI Softweave Unidirectional'  (works on Stylus Color 680,
 					    777, 880, 83, and 980,
 					    Stylus Photo 790, 890, 1290)
-
-On most printers, unidirectional printing is higher quality than
-bidirectional printing, but somewhat slower.  This is most true on
-older printers.  The current driver offers unidirectional and
-bidirectional printing modes at most supported resolutions and quality
-levels; a few very high quality modes are only offered with
-unidirectional printing, and a few low quality modes are only offered
-with bidirectional printing.  Many people will find the 360 DPI
-Microweave Unidirectional mode offers excellent print quality for
-general use, and 720 DPI Softweave Unidirectional offers good enough
-print quality for more demanding applications.
-
-The Microweave modes at 720 DPI and higher are extremely slow on many
-printers (360 DPI Microweave does not suffer this problem).  Not all
-printers can do Microweave properly, particularly at 1440x720 DPI.  If
-Microweave is used with these printers, the printing will be done one
-row at a time.  In addition to being extremely slow (but often
-extremely high quality), this may be harmful to the print head and may
-cause clogging, due to ink pooling in the print head.  If your printer
-is capable of non-Microweave modes, there is seldom any advantage to
-be had from using Microweave.
-
-In general, using resolutions lower than 720 DPI on coated paper will
-yield less than ideal results, although for many purposes the quality
-will be sufficient.  It may not be possible to get really solid black
-at 360 DPI on coated photo paper.
-
-180, 180x120, and 360x120 DPI are only useful as economy modes on
-plain paper.
 
 
 For PCL printers (including Hewlett-Packard and Lexmark 4076):

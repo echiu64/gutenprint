@@ -2087,6 +2087,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
 
     if (do_6color)
       stp_dither_set_light_inks(dither, .25, .25, 0.0, stp_get_density(nv));
+  stp_dither_set_transition(dither, .6);
 
   switch (stp_get_image_type(nv))
     {
