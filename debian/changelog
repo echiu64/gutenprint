@@ -1,3 +1,14 @@
+gimp-print (4.3.21-1) unstable; urgency=low
+
+  * New upstream development release.
+  * Synchronise package descriptions with gimp-print 4.2.5-5 in Debian
+    unstable.
+  * Update dependencies in line with gimp-print 4.2.5-5.
+  * gimp1.2-print renamed to gimp-print.  The gimp1.2 package has been
+    renamed to gimp.
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Wed,  1 Oct 2003 21:14:11 +0100
+
 gimp-print (4.3.17-1) unstable; urgency=low
 
   * New upstream development release.

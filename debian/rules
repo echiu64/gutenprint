@@ -119,9 +119,9 @@ binary-arch: build install ChangeLog
 	dh_link -a
 	dh_compress -a
 	dh_fixperms -a
-	dh_makeshlibs -a -V
+	dh_makeshlibs -a -V -X usr/lib/gimp-print
 	dh_installdeb -a
-	dh_shlibdeps -a -X usr/lib/gimp-print l`pwd`/debian/libgimpprint$(LIBRARY_VERSION)/usr/lib:`pwd`/debian/libgimpprintui$(LIBRARY_VERSION)/usr/lib
+	dh_shlibdeps -a -X usr/lib/gimp-print -l`pwd`/debian/libgimpprint$(LIBRARY_VERSION)/usr/lib:`pwd`/debian/libgimpprintui$(LIBRARY_VERSION)/usr/lib
 	dh_gencontrol -a
 	dh_md5sums -a
 	dh_builddeb -a

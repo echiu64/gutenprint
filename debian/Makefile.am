@@ -41,10 +41,10 @@ EXTRA_DIST = \
 	escputil.docs \
 	escputil.install \
 	foomatic-db-gimp-print.install \
-	gimp1.2-print.docs \
-	gimp1.2-print.install \
-	gimp1.2-print.postrm \
-	gimp1.2-print.preinst \
+	gimp-print.docs \
+	gimp-print.install \
+	gimp-print.postrm \
+	gimp-print.preinst \
 	gimpprint-doc.doc-base \
 	gimpprint-doc.install \
 	gimpprint-locales.install \
