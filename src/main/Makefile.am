@@ -109,7 +109,7 @@ print-papers.c: $(srcdir)/papers-oldlist.h
 $(srcdir)/papers-oldlist.h: ../printdef/xmldef $(srcdir)/papers.xml
 	../printdef/xmldef papers $(srcdir)/papers.xml > $(srcdir)/papers-oldlist.h
 
-../printdef/xmldef: $(addprefix ../printdef/, printdef.c printdef.h)
+../printdef/xmldef: $(addprefix ../printdef/, printdef.c)
 	cd ../printdef ; \
 	$(MAKE) xmldef
 
