@@ -32,6 +32,12 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.31  2000/02/23 20:29:08  davehill
+ *   Replaced all "model ==" code with a capabilities database.
+ *   According to the ghostscript driver (and the HP windows driver), the
+ *   "new" end raster graphics command is *rC, not *rbC.
+ *   Use correct commands to set high quality output if dpi >= 300
+ *
  *   Revision 1.30  2000/02/19 12:45:27  davehill
  *   Fixed OUTPUT_COLOR vs OUTPUT_GRAY.
  *   Fixed number of planes output for DJ600 in 600dpi mode.
@@ -234,6 +240,160 @@
 static void	pcl_mode0(FILE *, unsigned char *, int, int);
 static void	pcl_mode2(FILE *, unsigned char *, int, int);
 
+/*
+ * Printer capability data
+ */
+
+typedef struct {
+  int model;
+  int max_width;
+  int max_height;
+  int resolutions;
+  int top_margin;
+  int bottom_margin;
+  int left_margin;
+  int right_margin;
+  int color_type;		/* 2 print head or one, 2 level or 4 */
+  int printer_type;		/* Deskjet/Laserjet and quirks */
+  } pcl_cap_t;
+
+#define PCL_RES_150_150		1
+#define PCL_RES_300_300		2
+#define PCL_RES_600_300		4	/* DJ 600 series */
+#define PCL_RES_600_600_MONO	8	/* DJ 800/1100 b/w only */
+
+#define PCL_COLOR_NONE		0
+#define PCL_COLOR_CMY		1	/* One print head */
+#define PCL_COLOR_CMYK		2	/* Two print heads */
+#define PCL_COLOR_4		4	/* CRet printing */
+
+#define PCL_PRINTER_LJ		1
+#define PCL_PRINTER_DJ		2
+#define PCL_PRINTER_NEW_ERG	4	/* use "\033*rC" to end raster graphics,
+					   instead of "\033*rB" */
+#define PCL_PRINTER_TIFF	8	/* Use TIFF compression */
+#define PCL_PRINTER_MEDIATYPE	16	/* Use media type & print quality */
+
+pcl_cap_t pcl_model_capabilities[] =
+{
+  /* Default/unknown printer - assume laserjet */
+  { 0,
+    17 * 72 / 2, 14 * 72,		/* Max paper size */
+    PCL_RES_150_150 | PCL_RES_300_300,	/* Resolutions */
+    12, 12, 18, 18,			/* Margins */
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ },
+  /* Deskjet 500 */
+  { 500,
+    17 * 72 / 2, 14 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300,
+    7, 41, 18, 18,
+    PCL_COLOR_NONE,
+    PCL_PRINTER_DJ },
+  /* Deskjet 500C, 540C */
+  { 501,
+    17 * 72 / 2, 14 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300,
+    7, 33, 18, 18,
+    PCL_COLOR_CMY,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF },
+  /* Deskjet 550C, 560C */
+  { 550,
+    17 * 72 / 2, 14 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300,
+    3, 33, 18, 18,
+    PCL_COLOR_CMYK,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF },
+  /* Deskjet 600/600C */
+  { 600,
+    17 * 72 / 2, 14 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300,
+    0, 33, 18, 18,
+    PCL_COLOR_CMY,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE },
+  /* Deskjet 6xx series */
+  { 601,
+    17 * 72 / 2, 14 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300,
+    0, 33, 18, 18,
+    PCL_COLOR_CMYK,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE },
+  /* Deskjet 800 series */
+  { 800,
+    17 * 72 / 2, 14 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO,
+    3, 33, 18, 18,
+    PCL_COLOR_CMYK | PCL_COLOR_4,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE },
+  /* Deskjet 1100C, 1120C */
+  { 1100,
+    12 * 72, 18 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO,
+    3, 33, 18, 18,
+    PCL_COLOR_CMYK,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE },
+  /* Deskjet 1200C, 1600C */
+  { 1200,
+    17 * 72 / 2, 14 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300,
+    12, 12, 18, 18,
+    PCL_COLOR_CMY,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE },
+  /* LaserJet II series */
+  { 2,
+    17 * 72 / 2, 14 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300,
+    12, 12, 18, 18,
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ },
+  /* LaserJet III series */
+  { 3,
+    17 * 72 / 2, 14 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300,
+    12, 12, 18, 18,
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ | PCL_PRINTER_TIFF },
+  /* LaserJet 4 series, 5 series, 6 series */
+  { 4,
+    17 * 72 / 2, 14 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300,
+    12, 12, 18, 18,
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF },
+  /* LaserJet 4V, 4Si, 5Si */
+  { 5,
+    12 * 72, 18 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300,
+    12, 12, 18, 18,
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF },
+};
+
+/*
+ * pcl_get_model_capabilities() - Return struct of model capabilities
+ */
+
+pcl_cap_t				/* O: Capabilities */
+pcl_get_model_capabilities(int model)	/* I: Model */
+{
+  int i;
+  int models= sizeof(pcl_model_capabilities) / sizeof(pcl_cap_t);
+  for (i=0; i<models; i++) {
+    if (pcl_model_capabilities[i].model == model) {
+      return pcl_model_capabilities[i];
+    }
+  }
+  fprintf(stderr,"pcl: model %d not found in capabilities list.\n",model);
+  return pcl_model_capabilities[0];
+}
+
+static char *
+c_strdup(const char *s)
+{
+  char *ret = malloc(strlen(s) + 1);
+  strcpy(ret, s);
+  return ret;
+}
 
 /*
  * 'pcl_parameters()' - Return the parameter values for the given parameter.
@@ -246,16 +406,16 @@ pcl_parameters(int  model,	/* I - Printer model */
                int  *count)	/* O - Number of values */
 {
   int		i;
-  const char    **p;
+  char          **p;
   char		**valptrs;
-  const static char	*media_types[] =
+  static char	*media_types[] =
 		{
 		  ("Plain"),
 		  ("Premium"),
 		  ("Glossy"),
 		  ("Transparency")
 		};
-  const static char	*media_sources[] =
+  static char	*media_sources[] =
 		{
 		  ("Manual"),
 		  ("Tray 1"),
@@ -263,13 +423,8 @@ pcl_parameters(int  model,	/* I - Printer model */
 		  ("Tray 3"),
 		  ("Tray 4"),
 		};
-  const static char	*resolutions[] =
-		{
-		  ("150 DPI"),
-		  ("300 DPI"),
-		  ("600 DPI")
-		};
 
+  pcl_cap_t caps;
 
   if (count == NULL)
     return (NULL);
@@ -279,27 +434,27 @@ pcl_parameters(int  model,	/* I - Printer model */
   if (name == NULL)
     return (NULL);
 
+  caps = pcl_get_model_capabilities(model);
+
+#ifdef DEBUG
+  fprintf(stderr, "Printer model = %d\n", model);
+  fprintf(stderr, "PageWidth = %d, PageLength = %d\n", caps.max_width, caps.max_height);
+  fprintf(stderr, "Margins: top = %d, bottom = %d, left = %d, right = %d\n",
+    caps.top_margin, caps.bottom_margin, caps.left_margin, caps.right_margin);
+  fprintf(stderr, "Resolutions: %d\n", caps.resolutions);
+  fprintf(stderr, "ColorType = %d, PrinterType = %d\n", caps.color_type, caps.printer_type);
+#endif
+
   if (strcmp(name, "PageSize") == 0)
     {
-      int length_limit, width_limit;
       const papersize_t *papersizes = get_papersizes();
       valptrs = malloc(sizeof(char *) * known_papersizes());
       *count = 0;
-      if (model == 5 || model == 1100)
-	{
-	  width_limit = 12 * 72;
-	  length_limit = 18 * 72;
-	}
-      else
-	{
-	  width_limit = 17 * 72 / 2; /* 8.5" */
-	  length_limit = 14 * 72;
-	}
       for (i = 0; i < known_papersizes(); i++)
 	{
 	  if (strlen(papersizes[i].name) > 0 &&
-	      papersizes[i].width <= width_limit &&
-	      papersizes[i].length <= length_limit)
+	      papersizes[i].width <= caps.max_width &&
+	      papersizes[i].length <= caps.max_height)
 	    {
 	      valptrs[*count] = malloc(strlen(papersizes[i].name) + 1);
 	      strcpy(valptrs[*count], papersizes[i].name);
@@ -310,7 +465,7 @@ pcl_parameters(int  model,	/* I - Printer model */
     }
   else if (strcmp(name, "MediaType") == 0)
   {
-    if (model < 500)
+    if ((caps.printer_type & PCL_PRINTER_LJ) == PCL_PRINTER_LJ)
     {
       *count = 0;
       return (NULL);
@@ -323,7 +478,7 @@ pcl_parameters(int  model,	/* I - Printer model */
   }
   else if (strcmp(name, "InputSlot") == 0)
   {
-    if (model < 500)
+    if ((caps.printer_type & PCL_PRINTER_LJ) == PCL_PRINTER_LJ)
     {
       *count = 5;
       p = media_sources;
@@ -336,12 +491,18 @@ pcl_parameters(int  model,	/* I - Printer model */
   }
   else if (strcmp(name, "Resolution") == 0)
   {
-    if (model == 4 || model == 5 || model == 800 || model == 600 || model == 601)
-      *count = 3;
-    else
-      *count = 2;
-
-    p = resolutions;
+    int c= 0;
+    valptrs = malloc(sizeof(char *) * 4);
+    if (caps.resolutions & PCL_RES_150_150)
+      valptrs[c++]= c_strdup("150x150 DPI");
+    if (caps.resolutions & PCL_RES_300_300)
+      valptrs[c++]= c_strdup("300x300 DPI");
+    if (caps.resolutions & PCL_RES_600_300)
+      valptrs[c++]= c_strdup("600x300 DPI");
+    if (caps.resolutions & PCL_RES_600_600_MONO)
+      valptrs[c++]= c_strdup("600x600 DPI (mono only)");
+    *count= c;
+    p= valptrs;
   }
   else
     return (NULL);
@@ -372,50 +533,16 @@ pcl_imageable_area(int  model,		/* I - Printer model */
                    int  *top)		/* O - Top position in points */
 {
   int	width, length;			/* Size of page */
+  pcl_cap_t caps;			/* Printer caps */
 
+  caps = pcl_get_model_capabilities(model);
 
   default_media_size(model, ppd_file, media_size, &width, &length);
 
-  switch (model)
-  {
-    default :
-        *left   = 18;
-        *right  = width - 18;
-        *top    = length - 12;
-        *bottom = 12;
-        break;
-
-    case 500 :
-        *left   = 18;
-        *right  = width - 18;
-        *top    = length - 7;
-        *bottom = 41;
-        break;
-
-    case 501 :
-        *left   = 18;
-        *right  = width - 18;
-        *top    = length - 7;
-        *bottom = 33;
-        break;
-
-    case 550 :
-    case 800 :
-    case 1100 :
-        *left   = 18;
-        *right  = width - 18;
-        *top    = length - 3;
-        *bottom = 33;
-        break;
-
-    case 600 :
-    case 601 :
-        *left   = 18;
-        *right  = width - 18;
-        *top    = length - 0;
-        *bottom = 33;
-        break;
-  }
+  *left   = caps.left_margin;
+  *right  = width - caps.right_margin;
+  *top    = length - caps.top_margin;
+  *bottom = caps.bottom_margin;
 }
 
 
@@ -474,7 +601,10 @@ pcl_print(int       model,		/* I - Model */
                 image_width,
                 image_bpp;
   void *	dither;
+  pcl_cap_t	caps;		/* Printer capabilities */
+  int		do_cret;	/* 300 DPI CRet printing */
 
+  caps = pcl_get_model_capabilities(model);
 
  /*
   * Setup a read-only pixel region for the entire image...
@@ -489,7 +619,7 @@ pcl_print(int       model,		/* I - Model */
   * Choose the correct color conversion function...
   */
 
-  if (model <= 500)
+  if (caps.color_type == PCL_COLOR_NONE)
     output_type = OUTPUT_GRAY;
   else if (image_bpp < 3 && cmap == NULL && output_type == OUTPUT_COLOR)
     output_type = OUTPUT_GRAY_COLOR;		/* Force grayscale output */
@@ -524,17 +654,24 @@ pcl_print(int       model,		/* I - Model */
   * Figure out the output resolution...
   */
 
-  xdpi = atoi(resolution);
+  sscanf(resolution,"%dx%d",&xdpi,&ydpi);
+  
+#ifdef DEBUG
+  fprintf(stderr,"pcl: resolution=%dx%d\n",xdpi,ydpi);
+#endif
+  
+  if (((caps.resolutions & PCL_RES_600_600_MONO) == PCL_RES_600_600_MONO) &&
+      output_type != OUTPUT_GRAY && xdpi == 600) {
+      xdpi = 300;
+      ydpi = 300;
+  }
 
-  if ((model == 800 || model == 1100) &&
-      output_type != OUTPUT_GRAY && xdpi == 600)
-    xdpi = 300;
+  do_cret = (xdpi == 300 && ((caps.color_type & PCL_COLOR_4) == PCL_COLOR_4));
 
-  if ((model == 600 || model == 601) && xdpi == 600)
-    ydpi = 300;
-  else
-    ydpi = xdpi;
-
+#ifdef DEBUG
+  fprintf(stderr, "do_cret = %d\n", do_cret);
+#endif
+  
  /*
   * Compute the output size...
   */
@@ -698,15 +835,6 @@ pcl_print(int       model,		/* I - Model */
   fputs("\033&l0L", prn);			/* Turn off perforation skip */
   fputs("\033&l0E", prn);			/* Reset top margin to 0 */
 
-  if (strcmp(media_type, "Plain") == 0)		/* Set media type */
-    fputs("\033&l0M", prn);
-  else if (strcmp(media_type, "Premium") == 0)
-    fputs("\033&l2M", prn);
-  else if (strcmp(media_type, "Glossy") == 0)
-    fputs("\033&l3M", prn);
-  else if (strcmp(media_type, "Transparency") == 0)
-    fputs("\033&l4M", prn);
-
   if (strcmp(media_source, "Manual") == 0)	/* Set media source */
     fputs("\033&l2H", prn);
   else if (strcmp(media_source, "Tray 1") == 0)
@@ -718,12 +846,52 @@ pcl_print(int       model,		/* I - Model */
   else if (strcmp(media_source, "Tray 4") == 0)
     fputs("\033&l5H", prn);
 
-  if (model >= 500 && model < 1200 && xdpi >= 300)
-    fputs("\033*r2Q", prn);
-  else if (model == 1200 && xdpi >= 300)
-    fputs("\033*o1Q", prn);
+ /* Set DJ print quality to "best" if resolution >= 300
+    The following models use depletion, raster quality and shingling:-
+    500, 500c, 510, 520, 550c, 560c.
+    The rest use Media Type and Print Quality.
 
-  if (xdpi != ydpi)				/* Set resolution */
+    FIXME: the 540c is lumped in with the 500c in this driver...
+
+    See the hpdj ghostscript driver by Martin Lottermoser
+ */
+
+  if ((xdpi >= 300) && ((caps.printer_type & PCL_PRINTER_DJ) == PCL_PRINTER_DJ))
+  {
+    if ((caps.printer_type & PCL_PRINTER_MEDIATYPE) == PCL_PRINTER_MEDIATYPE)
+    {
+      fputs("\033*o1M", prn);			/* Quality = presentation */
+      if (strcmp(media_type, "Plain") == 0)	/* Set media type */
+        fputs("\033&l0M", prn);
+      else if (strcmp(media_type, "Premium") == 0)
+        fputs("\033&l2M", prn);
+      else if (strcmp(media_type, "Glossy") == 0)
+        fputs("\033&l3M", prn);
+      else if (strcmp(media_type, "Transparency") == 0)
+        fputs("\033&l4M", prn);
+    }
+    else
+    {
+      fputs("\033*r2Q", prn);			/* Quality (high) */
+      fputs("\033*o2Q", prn);			/* Shingling (4 passes) */
+
+ /* Depletion depends on media type and colour mode. */
+
+      if ((strcmp(media_type, "Plain") == 0)
+        | (strcmp(media_type, "Transparency") == 0)) {
+        if (output_type != OUTPUT_GRAY)
+          fputs("\033*o2D", prn);			/* Depletion 25% */
+        else
+          fputs("\033*o5D", prn);			/* Depletion 50% with gamma correction */
+      }
+
+      else if ((strcmp(media_type, "Premium") == 0)
+             | (strcmp(media_type, "Glossy") == 0))
+        fputs("\033*o1D", prn);			/* Depletion none */
+    }
+  }
+
+  if (xdpi != ydpi)				/* Set resolution for 600 series */
   {
    /*
     * Send 26-byte configure image data command with horizontal and
@@ -733,7 +901,7 @@ pcl_print(int       model,		/* I - Model */
     fputs("\033*g26W", prn);
     putc(2, prn);				/* Format 2 */
     if (output_type != OUTPUT_GRAY)
-      if (model == 600)
+      if ((caps.color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
         putc(3, prn);				/* # output planes */
       else
         putc(4, prn);				/* # output planes */
@@ -768,7 +936,7 @@ pcl_print(int       model,		/* I - Model */
     putc(0, prn);
     putc(2, prn);				/* # of yellow levels */
   }
-  else if (xdpi == 300 && model == 800)		/* 300 DPI CRet */
+  else if (do_cret)				/* 300 DPI CRet */
   {
    /*
     * Send 26-byte configure image data command with horizontal and
@@ -815,17 +983,23 @@ pcl_print(int       model,		/* I - Model */
     fprintf(prn, "\033*t%dR", xdpi);		/* Simple resolution */
     if (output_type != OUTPUT_GRAY)
     {
-      if (model == 501 || model == 600 || model == 1200)
+      if ((caps.color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
         fputs("\033*r-3U", prn);		/* Simple CMY color */
       else
         fputs("\033*r-4U", prn);		/* Simple KCMY color */
     }
   }
 
-  if (model < 3 || model == 500)
-    fputs("\033*b0M", prn);			/* Mode 0 (no compression) */
-  else
+  if ((caps.printer_type & PCL_PRINTER_TIFF) == PCL_PRINTER_TIFF)
+  {
     fputs("\033*b2M", prn);			/* Mode 2 (TIFF) */
+    writefunc = pcl_mode2;
+  }
+  else
+  {
+    fputs("\033*b0M", prn);			/* Mode 0 (no compression) */
+    writefunc = pcl_mode0;
+  }
 
  /*
   * Convert image size to printer resolution and setup the page for printing...
@@ -846,7 +1020,7 @@ pcl_print(int       model,		/* I - Model */
   */
 
   length = (out_width + 7) / 8;
-  if (xdpi == 300 && model == 800)
+  if (do_cret)
     length *= 2;
 
   if (output_type == OUTPUT_GRAY)
@@ -862,20 +1036,15 @@ pcl_print(int       model,		/* I - Model */
     magenta = malloc(length);
     yellow  = malloc(length);
   
-    if (model != 501 && model != 600 && model != 1200)
-      black = malloc(length);
-    else
+    if ((caps.color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
       black = NULL;
+    else
+      black = malloc(length);
   }
     
  /*
   * Output the page, rotating as necessary...
   */
-
-  if (model < 3 || model == 500)
-    writefunc = pcl_mode0;
-  else
-    writefunc = pcl_mode2;
 
   if (landscape)
   {
@@ -907,7 +1076,7 @@ pcl_print(int       model,		/* I - Model */
 
       (*colorfunc)(in, out, image_height, image_bpp, cmap, v);
 
-      if (xdpi == 300 && model == 800)
+      if (do_cret)
       {
        /*
         * 4-level (CRet) dithers...
@@ -997,7 +1166,7 @@ pcl_print(int       model,		/* I - Model */
 
       (*colorfunc)(in, out, image_width, image_bpp, cmap, v);
 
-      if (xdpi == 300 && model == 800)
+      if (do_cret)
       {
        /*
         * 4-level (CRet) dithers...
@@ -1076,18 +1245,10 @@ pcl_print(int       model,		/* I - Model */
     free(yellow);
   }
 
-  switch (model)			/* End raster graphics */
-  {
-    case 1 :
-    case 2 :
-    case 3 :
-    case 500 :
-        fputs("\033*rB", prn);
-        break;
-    default :
-        fputs("\033*rbC", prn);
-        break;
-  }
+  if ((caps.printer_type & PCL_PRINTER_NEW_ERG) == PCL_PRINTER_NEW_ERG)
+    fputs("\033*rC", prn);
+  else
+    fputs("\033*rB", prn);
 
   fputs("\033&l0H", prn);		/* Eject page */
   fputs("\033E", prn);			/* PCL reset */
