@@ -34,7 +34,9 @@ pkgconfigdatadir = $(prefix)/lib/pkgconfig
 
 ## Programs
 
+if BUILD_LIBGIMPPRINTUI
 lib_LTLIBRARIES = libgimpprintui.la
+endif
 
 libgimpprintui_la_SOURCES =			\
 	printrcy.y				\

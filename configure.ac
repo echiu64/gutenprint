@@ -313,7 +313,7 @@ else
 fi
 
 AM_PATH_GTK(1.2.0,
-  BUILD_LIBGIMPPRINT_UI="yes"
+  BUILD_LIBGIMPPRINTUI="yes"
   GIMPPRINT_UI_LIBDEPS="${GIMPPRINT_UI_LIBDEPS} ${GTK_LIBS}"
   gimpprint_ui_libdeps="${gimpprint_ui_libdeps} ${GTK_LIBS}",
   BUILD_LIBGIMPPRINTUI="no")
@@ -323,10 +323,10 @@ STP_ARG_WITH([gimp],
              [BUILD_GIMP],
              [(automatic)])
 
-STP_ARG_WITH([gimpprintui],
-             [build Gimp-Print user interface library],
-             [BUILD_LIBGIMPPRINTUI],
-             [(automatic)])
+STP_ARG_ENABLE([libgimpprintui],
+               [build Gimp-Print user interface library],
+               [BUILD_LIBGIMPPRINTUI],
+               [(automatic)])
 
 STP_ARG_ENABLE([samples],
                [install sample images],
@@ -652,6 +652,8 @@ AM_CONDITIONAL(BUILD_ESCPUTIL, test x${BUILD_ESCPUTIL} = xyes)
 AM_CONDITIONAL(BUILD_TEST, test x${BUILD_TEST} = xyes)
 
 AM_CONDITIONAL(BUILD_TESTPATTERN, test x${BUILD_TESTPATTERN} = xyes)
+
+AM_CONDITIONAL(BUILD_LIBGIMPPRINTUI, test x${BUILD_LIBGIMPPRINTUI} = xyes)
 
 AM_CONDITIONAL(BUILD_GIMP, test x${BUILD_GIMP} = xyes)
 
