@@ -901,6 +901,8 @@ stp_get_papersize_by_name(const char *name)
   int base = last_used_papersize;
   int sizes = stp_known_papersizes();
   int i;
+  if (!name)
+    return NULL;
   for (i = 0; i < sizes; i++)
     {
       int size_to_try = (i + base) % sizes;
@@ -918,6 +920,8 @@ const stp_papersize_t
 stp_get_papersize_by_name(const char *name)
 {
   const stp_internal_papersize_t *val = &(paper_sizes[0]);
+  if (!name)
+    return NULL;
   while (strlen(val->name) > 0)
     {
       if (!strcmp(val->name, name))
@@ -974,9 +978,9 @@ stp_get_papersize_by_size(int l, int w)
 void
 stp_default_media_size(const stp_printer_t printer,
 					/* I - Printer model (not used) */
-		   const stp_vars_t v,	/* I */
-        	   int  *width,		/* O - Width in points */
-        	   int  *height)	/* O - Height in points */
+		       const stp_vars_t v,	/* I */
+		       int  *width,		/* O - Width in points */
+		       int  *height)	/* O - Height in points */
 {
   if (stp_get_page_width(v) > 0 && stp_get_page_height(v) > 0)
     {
@@ -1028,6 +1032,8 @@ stp_get_printer_by_long_name(const char *long_name)
 {
   const stp_internal_printer_t *val = &(printers[0]);
   int i;
+  if (!long_name)
+    return NULL;
   for (i = 0; i < stp_known_printers(); i++)
     {
       if (!strcmp(val->long_name, long_name))
@@ -1042,6 +1048,8 @@ stp_get_printer_by_driver(const char *driver)
 {
   const stp_internal_printer_t *val = &(printers[0]);
   int i;
+  if (!driver)
+    return NULL;
   for (i = 0; i < stp_known_printers(); i++)
     {
       if (!strcmp(val->driver, driver))
@@ -1056,6 +1064,8 @@ stp_get_printer_index_by_driver(const char *driver)
 {
   int idx = 0;
   const stp_internal_printer_t *val = &(printers[0]);
+  if (!driver)
+    return -1;
   for (idx = 0; idx < stp_known_printers(); idx++)
     {
       if (!strcmp(val->driver, driver))
