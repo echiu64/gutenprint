@@ -774,17 +774,15 @@ mixing black ink in.  The Epson Stylus Color 1500 cannot mix black ink
 with colored inks; on this printer, Three Color Composite must be
 used.
 
-As of this writing (September 2001), no seven color printers are sold
-in North America.  When such a printer is sold, the Seven Color
-Enhanced and Six Color Enhanced Composite modes will utilize all of
-these inks.
-
-Photo7          Seven Color Enhanced
-PhotoEnhance    Six Color Enhanced Composite
+Photo7          Seven Color Enhanced (CcMmYKk, for the Epson Stylus
+                Photo 2100 and 2200, and Stylus Pro 7600 and 9600).
 PhotoCMYK       Six Color Photo
 PhotoCMY        Five Color Photo Composite
 CMYK            Four Color Standard
 RGB             Three Color Composite
+Quadtone        Quadtone grayscale inks (special third party inksets
+                designed to produce superior results for grayscale
+                images).
 
 
 For Canon printers:
