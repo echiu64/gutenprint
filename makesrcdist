@@ -40,8 +40,8 @@ endif
 echo "Making configuration script..."
 
 aclocal -I .
-automake
 autoconf
+automake
 
 echo "Removing CVS directories..."
 
