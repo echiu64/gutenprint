@@ -935,31 +935,31 @@ allocate_linebuf(int count, int ncolors)
  * 4) phys_lines >= 2 * jets * sep
  */
 void *
-stpi_initialize_weave(int jets,	/* Width of print head */
-		     int sep,	/* Separation in rows between jets */
-		     int osample,	/* Horizontal oversample */
-		     int v_subpasses, /* Vertical passes */
-		     int v_subsample, /* Vertical oversampling */
-		     int ncolors,
-		     int width,	/* bits/pixel */
-		     int linewidth,	/* Width of a line, in pixels */
-		     int lineheight, /* Number of lines that will be printed */
-		     int first_line, /* First line that will be printed on page */
-		     int phys_lines, /* Total height of the page in rows */
-		     int weave_strategy, /* Which weaving pattern to use */
-		     int *head_offset,
-		     stp_vars_t v,
-		     void (*flushfunc)(stpi_softweave_t *sw, int passno,
-				       int vertical_subpass),
-		     void (*fill_start)(stpi_softweave_t *sw, int row,
-					int subpass, int width,
-					int missingstartrows,
+stpi_initialize_weave(stp_vars_t v,
+		      int jets,	/* Width of print head */
+		      int sep,	/* Separation in rows between jets */
+		      int osample,	/* Horizontal oversample */
+		      int v_subpasses, /* Vertical passes */
+		      int v_subsample, /* Vertical oversampling */
+		      int ncolors,
+		      int width,	/* bits/pixel */
+		      int linewidth,	/* Width of a line, in pixels */
+		      int lineheight, /* Lines that will be printed */
+		      int first_line, /* First line that will be printed */
+		      int phys_lines, /* Total height of the page in rows */
+		      int weave_strategy, /* Which weaving pattern to use */
+		      int *head_offset,
+		      void (*flushfunc)(stpi_softweave_t *sw, int passno,
 					int vertical_subpass),
-		     int (*pack)(const unsigned char *in, int bytes,
-				 unsigned char *out, unsigned char **optr,
-				 int *first, int *last),
-		     int (*compute_linewidth)(const stpi_softweave_t *sw,
-					      int n))
+		      void (*fill_start)(stpi_softweave_t *sw, int row,
+					 int subpass, int width,
+					 int missingstartrows,
+					 int vertical_subpass),
+		      int (*pack)(const unsigned char *in, int bytes,
+				  unsigned char *out, unsigned char **optr,
+				  int *first, int *last),
+		      int (*compute_linewidth)(const stpi_softweave_t *sw,
+					       int n))
 {
   int i;
   int last_line, maxHeadOffset;

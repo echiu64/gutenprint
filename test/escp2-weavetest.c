@@ -164,11 +164,11 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
       phys_lines += 2*(physjets+1)*physsep;
     }
 
-  sw = stpi_initialize_weave(physjets, physsep, hpasses, vpasses, subpasses,
-			    7, 1, 128, nrows, first_line,
-			    phys_lines, strategy, head_offset, v, flush_pass,
-			    stpi_fill_tiff, stpi_pack_tiff,
-			    stpi_compute_tiff_linewidth);
+  sw = stpi_initialize_weave(v, physjets, physsep, hpasses, vpasses, subpasses,
+			     7, 1, 128, nrows, first_line,
+			     phys_lines, strategy, head_offset, flush_pass,
+			     stpi_fill_tiff, stpi_pack_tiff,
+			     stpi_compute_tiff_linewidth);
   if (!sw)
     return 1;
 

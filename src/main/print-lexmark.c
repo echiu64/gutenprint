@@ -1751,24 +1751,25 @@ densityDivisor /= 1.2;
   stpi_set_driver_data(v, &privdata);
   /*  lxm_nozzles_used = 1;*/
 
-  weave = stpi_initialize_weave(pass_length,                        /* jets */
-			       nozzle_separation,                  /* separation */
-			       horizontal_passes,                  /* h overample */
-			       res_para_ptr->vertical_passes,      /* v passes */
-			       res_para_ptr->vertical_oversample,  /* v oversample */
-			       ncolors,                            /* colors */
-			       1,                                  /* bits/pixel */
-			       out_width,                          /* line width */
-			       out_height,
-			       ((top * ydpi) / 72)+(((caps->offset_top_border+add_top_offset)*ydpi)
+  weave = stpi_initialize_weave(v,
+				pass_length, /* jets */
+				nozzle_separation, /* separation */
+				horizontal_passes, /* h overample */
+				res_para_ptr->vertical_passes, /* v passes */
+				res_para_ptr->vertical_oversample, /* v oversample */
+				ncolors, /* colors */
+				1, /* bits/pixel */
+				out_width, /* line width */
+				out_height,
+				((top * ydpi) / 72)+(((caps->offset_top_border+add_top_offset)*ydpi)
 						     /caps->y_raster_res),
-			       (page_height * ydpi) / 72,
-			       1, /* weave_strategy */
-			       (int *)lexmark_head_offset(ydpi, ink_type, caps, ink_parameter, &lineoff_buffer),
-			       v, flush_pass,
-			       stpi_fill_uncompressed,  /* fill_start */
-			       stpi_pack_uncompressed,  /* pack */
-			       stpi_compute_uncompressed_linewidth);  /* compute_linewidth */
+				(page_height * ydpi) / 72,
+				1, /* weave_strategy */
+				(int *)lexmark_head_offset(ydpi, ink_type, caps, ink_parameter, &lineoff_buffer),
+				flush_pass,
+				stpi_fill_uncompressed,  /* fill_start */
+				stpi_pack_uncompressed,  /* pack */
+				stpi_compute_uncompressed_linewidth);  /* compute_linewidth */
 
 
 
