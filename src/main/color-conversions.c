@@ -415,6 +415,7 @@ generic_cmy_to_kcmy(const stp_vars_t *vars, const unsigned short *in,
   unsigned short nz2 = 0;
   unsigned short nz3 = 0;
 
+  stp_curve_resample(stp_curve_cache_get_curve(&(lut->gcr_curve)), lut->steps);
   gcr_lookup = stp_curve_cache_get_ushort_data(&(lut->gcr_curve));
   stp_curve_resample(stp_curve_cache_get_curve
 		     (&(lut->channel_curves[CHANNEL_K])), lut->steps);
