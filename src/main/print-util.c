@@ -1260,7 +1260,7 @@ verify_param(const char *checkval, stp_param_t *vptr,
 	    break;
 	  }
       if (!answer)
-	stp_eprintf(v, "%s is not a valid %s\n", checkval, what);
+	stp_eprintf(v, _("%s is not a valid %s\n"), checkval, what);
       for (i = 0; i < count; i++)
 	{
 	  stp_free((void *)vptr[i].name);
@@ -1268,11 +1268,41 @@ verify_param(const char *checkval, stp_param_t *vptr,
 	}
     }
   else
-    stp_eprintf(v, "%s is not a valid %s\n", checkval, what);
+    stp_eprintf(v, _("%s is not a valid %s\n"), checkval, what);
   if (vptr)
     free(vptr);
   return answer;
 }
+
+#define CHECK_FLOAT_RANGE(v, component)					\
+do									\
+{									\
+  const stp_vars_t max = stp_maximum_settings();			\
+  const stp_vars_t min = stp_minimum_settings();			\
+  if (stp_get_##component((v)) < stp_get_##component(min) ||		\
+      stp_get_##component((v)) > stp_get_##component(max))		\
+    {									\
+      answer = 0;							\
+      stp_eprintf(v, _("%s out of range (value %f, min %f, max %f)\n"),	\
+		  #component, stp_get_##component(v),			\
+		  stp_get_##component(min), stp_get_##component(max));	\
+    }									\
+} while (0)
+
+#define CHECK_INT_RANGE(v, component)					\
+do									\
+{									\
+  const stp_vars_t max = stp_maximum_settings();			\
+  const stp_vars_t min = stp_minimum_settings();			\
+  if (stp_get_##component((v)) < stp_get_##component(min) ||		\
+      stp_get_##component((v)) > stp_get_##component(max))		\
+    {									\
+      answer = 0;							\
+      stp_eprintf(v, _("%s out of range (value %d, min %d, max %d)\n"),	\
+		  #component, stp_get_##component(v),			\
+		  stp_get_##component(min), stp_get_##component(max));	\
+    }									\
+} while (0)
 
 int
 stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
@@ -1294,7 +1324,7 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
        stp_get_output_type(v) == OUTPUT_RAW_CMYK))
     {
       answer = 0;
-      stp_eprintf(v, "Printer does not support color output\n");
+      stp_eprintf(v, _("Printer does not support color output\n"));
     }
   if (strlen(stp_get_media_size(v)) > 0)
     {
@@ -1312,9 +1342,40 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
 	  stp_get_page_width(v) <= min_width || stp_get_page_width(v) > width)
 	{
 	  answer = 0;
-	  stp_eprintf(v, "Image size is not valid\n");
+	  stp_eprintf(v, _("Image size is not valid\n"));
 	}
     }
+
+  if (stp_get_top(v) < 0)
+    {
+      answer = 0;
+      stp_eprintf(v, _("Top margin must not be less than zero\n"));
+    }
+
+  if (stp_get_left(v) < 0)
+    {
+      answer = 0;
+      stp_eprintf(v, _("Left margin must not be less than zero\n"));
+    }
+
+  CHECK_FLOAT_RANGE(v, gamma);
+  CHECK_FLOAT_RANGE(v, contrast);
+  CHECK_FLOAT_RANGE(v, cyan);
+  CHECK_FLOAT_RANGE(v, magenta);
+  CHECK_FLOAT_RANGE(v, yellow);
+  CHECK_FLOAT_RANGE(v, brightness);
+  CHECK_FLOAT_RANGE(v, density);
+  CHECK_FLOAT_RANGE(v, saturation);
+  if (stp_get_scaling(v) > 0)
+    {
+      CHECK_FLOAT_RANGE(v, scaling);
+    }
+
+  CHECK_INT_RANGE(v, image_type);
+  CHECK_INT_RANGE(v, unit);
+  CHECK_INT_RANGE(v, output_type);
+  CHECK_INT_RANGE(v, input_color_model);
+  CHECK_INT_RANGE(v, output_color_model);
 
   if (strlen(stp_get_media_type(v)) > 0)
     {
@@ -1351,7 +1412,7 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
 	return answer;
       }
 
-  stp_eprintf(v, "%s is not a valid dither algorithm\n",
+  stp_eprintf(v, _("%s is not a valid dither algorithm\n"),
 	      stp_get_dither_algorithm(v));
   stp_set_verified(v, 0);
   return 0;
