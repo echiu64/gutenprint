@@ -23,11 +23,6 @@ while (<>) {
     } elsif (/^revision /) {
 	($ignore, $revision) = split;
 	@junk = split(/\./, $revision);
-	if ($#junk > 2) {
-	    $skipme = 1;
-	} else {
-	    $skipme = 0;
-	}
     } elsif (/^date: /) {
 	($ignore, $date, $time, $ignore, $author, $ignore, $ignore,
 	 $ignore, $plus, $minus, $ignore) = split;
