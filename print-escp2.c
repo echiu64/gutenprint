@@ -1257,7 +1257,12 @@ escp2_print(const printer_t *printer,		/* I - Model */
   else
     dither_set_black_upper(dither, .6);
   if (bits == 2)
-    dither_set_adaptive_divisor(dither, 8);
+    {
+      if (use_6color)
+	dither_set_adaptive_divisor(dither, 8);
+      else
+	dither_set_adaptive_divisor(dither, 16);
+    }  
   else
     dither_set_adaptive_divisor(dither, 4);
   if (bits == 2)
