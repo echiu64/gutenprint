@@ -228,12 +228,12 @@ print_debug_block(const stp_vars_t v, const cups_image_t *cups)
 		  stp_get_float_parameter_active(v, p->name));
 	  break;
 	case STP_PARAMETER_TYPE_INT:
-	  fprintf(stderr, "DEBUG: Gimp-Print stp_get_int %s(v) |%.d| %d\n",
+	  fprintf(stderr, "DEBUG: Gimp-Print stp_get_int %s(v) |%d| %d\n",
 		  p->name, stp_get_int_parameter(v, p->name),
 		  stp_get_int_parameter_active(v, p->name));
 	  break;
 	case STP_PARAMETER_TYPE_BOOLEAN:
-	  fprintf(stderr, "DEBUG: Gimp-Print stp_get_boolean %s(v) |%.d| %d\n",
+	  fprintf(stderr, "DEBUG: Gimp-Print stp_get_boolean %s(v) |%d| %d\n",
 		  p->name, stp_get_boolean_parameter(v, p->name),
 		  stp_get_boolean_parameter_active(v, p->name));
 	  break;
