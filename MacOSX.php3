@@ -223,6 +223,7 @@ require('standard_html_header.php3');
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
  <TR bgcolor="#D0D0D0" >
  <TD>
+ <a name ="pre3"></a>
  <B>Gimp-Print 4.2.3-pre3</B>
  </TD>
  <TD align="right" >
@@ -258,6 +259,7 @@ require('standard_html_header.php3');
  </td>
  <TR bgcolor="#D0D0D0" >
  <TD>
+ <a name ="pre1"></a>
  <B>Gimp-Print 4.2.3-pre1</B>
  </TD>
  <TD align="right" >
@@ -295,6 +297,7 @@ require('standard_html_header.php3');
  </td>
  </tr>
  <TR bgcolor="#D0D0D0" >
+ <a name ="4.2.2"></a>
  <TD>
  <B>Gimp-Print 4.2.2 is now available for Mac OS X Jaguar!</B>
  </TD>
