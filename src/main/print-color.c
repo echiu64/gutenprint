@@ -620,7 +620,7 @@ adjust_lum(lut_t *lut, size_t l_points, double l, double s, double h)
 	  (tmp < .9999 || tmp > 1.0001))
 	{
 	  double el = tmp;
-	  el = 1.0 + (s * (el - 1.0));
+	  el = 1.0 + (sqrt(s) * (el - 1.0));
 	  if (l > .5)
 	    el = 1.0 + ((2.0 * (1.0 - l)) * (el - 1.0));
 	  l = 1.0 - pow(1.0 - l, el);
