@@ -36,8 +36,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <ijs/ijs.h>
-#include <ijs/ijs_server.h>
+#include <ijs.h>
+#include <ijs_server.h>
 #include <errno.h>
 #include <gimp-print/gimp-print-intl-internal.h>
 
