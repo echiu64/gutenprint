@@ -204,6 +204,9 @@ calculate_raw_row_parameters(raw_t *w,		/* I - weave parameters */
                              int *startrow)	/* O - starting row of pass */
 {
 	int subblockoffset, subpassblock, band, baserow, passinband, offset;
+	int pass_div_separation;
+	int pass_mod_separation;
+	int off_mod_separation;
 
 	subblockoffset = row % w->subblocksperpassblock;
 	switch (w->strategy) {
@@ -255,22 +258,45 @@ calculate_raw_row_parameters(raw_t *w,		/* I - weave parameters */
 	baserow = row - subblockoffset - band * w->separation * w->jets;
 	passinband = baserow / w->advancebasis;
 	offset = baserow % w->advancebasis;
+	pass_div_separation = passinband / w->separation;
+	pass_mod_separation = passinband % w->separation;
+	off_mod_separation = offset % w->separation;
 
-	while (offset % w->separation != 0
-	       || passinband / w->separation != subpass
-	       || passinband % w->separation / w->passespersubblock
+	while (off_mod_separation != 0
+	       || pass_div_separation != subpass
+	       || pass_mod_separation / w->passespersubblock
 	            != subpassblock)
-	{
-		offset += w->advancebasis;
-		passinband--;
-		if (passinband < 0) {
-			const int roundedjets = w->advancebasis
-			                          * w->oversampling;
-			band--;
-			passinband += w->separation * w->oversampling;
-			offset += w->separation * (w->jets - roundedjets);
-		}
-	}
+	  {
+	    offset += w->advancebasis;
+	    passinband--;
+	    if (passinband >= 0)
+	      {
+		pass_mod_separation--;
+		if (pass_mod_separation < 0)
+		  {
+		    pass_mod_separation += w->separation;
+		    pass_div_separation--;
+		  }
+		if (w->advancebasis < w->separation)
+		  {
+		    off_mod_separation += w->advancebasis;
+		    if (off_mod_separation >= w->separation)
+		      off_mod_separation -= w->separation;
+		  }
+		else if (w->advancebasis > w->separation)
+		  off_mod_separation = offset % w->separation;
+	      }
+	    else
+	      {
+		const int roundedjets = w->advancebasis * w->oversampling;
+		band--;
+		passinband += w->separation * w->oversampling;
+		offset += w->separation * (w->jets - roundedjets);
+		pass_div_separation = passinband / w->separation;
+		pass_mod_separation = passinband % w->separation;
+		off_mod_separation = offset % w->separation;
+	      }
+	  }
 
 	*pass = band * w->oversampling * w->separation + passinband;
 	*jet = offset / w->separation;
@@ -537,7 +563,7 @@ stp_destroy_weave_params(void *vw)
 	free(w);
 }
 
-void
+static void
 stp_calculate_row_parameters(void *vw,		/* I - weave parameters */
                          int row,		/* I - row number */
                          int subpass,		/* I - subpass */

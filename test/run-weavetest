@@ -5,38 +5,24 @@ passes='1,1,1 2,1,1 1,2,1 1,2,2 1,4,1 2,2,1 1,4,2 2,2,2 2,4,2 8,1,1'
 
 jets='15 20 21 32 48 64 96 128 144 192'
 separations='1 2 3 4 6 8'
-rows=10000
+arrangements='0 1'
+rows=5000
 
-for jet in $jets ; do
+(for jet in $jets ; do
     for sep in $separations ; do
 	for pass in $passes ; do
-	    stuff=`echo "$jet,$sep,$pass" | awk -F, '{printf "%d %d %d %d %d\n", $1, $2, $3, $4, $5}'`
-	    a=`echo $stuff | cut -f1 '-d '`
-	    b=`echo $stuff | cut -f2 '-d '`
-	    c=`echo $stuff | cut -f3 '-d '`
-	    d=`echo $stuff | cut -f4 '-d '`
-	    e=`echo $stuff | cut -f5 '-d '`
-	    start=`expr $a \* $b`
-	    s1=`expr $start - 1`
-	    for f in 0 41 $start $s1 ; do
-		end=`expr $rows + $f + $start`
-		end1=`expr $rows + $f`
-		end2=`expr $rows + $f + 35`
-		for g in $end $end1 $end2 ; do
-		    ./escp2-weavetest $stuff $rows $f $g > /dev/null 2>&1
-		    if [ $? -ne 0 ] ; then
-			if [ -n "`echo $modes | grep $jet,$sep`" ] ; then
-			    echo -n '*'
-			elif [ $a -lt `expr $b \* $c \* $d \* $e` ] ; then
-			    echo -n '!'
-			else
-			    echo -n ' '
-			fi
-			echo -n "$stuff $rows $f $g "
-			./escp2-weavetest $stuff $rows $f $g | tail -1
-		    fi
+	    for arrangement in $arrangements; do
+		((start = $jet * $sep))
+		((s1 = $start - 1))
+		for f in 0 41 $start $s1 ; do
+		    ((end = $rows + $f + $start))
+		    ((end1 = $rows + $f))
+		    ((end2 = $rows + $f + 35))
+		    for g in $end $end1 $end2 ; do
+			echo "$jet $sep $pass $rows $f $g $arrangement"
+		    done
 		done
 	    done
 	done
     done
-done
+done) | sed 's/,/ /g' | ./escp2-weavetest

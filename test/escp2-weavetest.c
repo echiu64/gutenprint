@@ -110,19 +110,16 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 {
 }
 
-#if 0
-#define E_ERROR_CODE (w.physpassend == w.row && lastpass + 1 != w.pass ? (errors[4]++, 'E') : ' ')
-#else
-#define E_ERROR_CODE ' '
-#endif
-
 int
-main(int argc, char **argv)
+run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
+		  int subpasses, int nrows, int first_line, int phys_lines,
+		  int color_jet_arrangement, int strategy, int quiet)
 {
   int i;
   int j;
   stp_weave_t w;
   int errors[26];
+  char errcodes[26];
   int total_errors = 0;
   int lastpass = -1;
   int newestpass = -1;
@@ -133,34 +130,16 @@ main(int argc, char **argv)
   signed char *physpassstuff;
   signed char *rowdetail;
   int *current_slot;
-  int nrows;
-  int physjets;
-  int physsep;
-  int hpasses, vpasses, subpasses;
   int vmod;
-  int first_line, phys_lines;
-  int strategy = 1;
   void *sw;
+
   memset(errors, 0, sizeof(int) * 26);
-  if (argc != 9)
-    {
-      fprintf(stderr, "Usage: %s jets separation hpasses vpasses subpasses rows start end\n",
-	      argv[0]);
-      return 2;
-    }
-  physjets = atoi(argv[1]);
-  physsep = atoi(argv[2]);
-  hpasses = atoi(argv[3]);
-  vpasses = atoi(argv[4]);
-  subpasses = atoi(argv[5]);
   if (physjets < hpasses * vpasses * subpasses)
     {
-      fprintf(stderr, "Oversample exceeds jets\n");
+      if (quiet <= 1)
+	printf("Oversample exceeds jets\n");
       return 1;
     }
-  nrows = atoi(argv[6]);
-  first_line = atoi(argv[7]);
-  phys_lines = atoi(argv[8]);
   passstarts = xmalloc(sizeof(int) * (nrows + physsep));
   logpassstarts = xmalloc(sizeof(int) * (nrows + physsep));
   passends = xmalloc(sizeof(int) * (nrows + physsep));
@@ -175,11 +154,14 @@ main(int argc, char **argv)
 
   sw = stp_initialize_weave(physjets, physsep, hpasses, vpasses, subpasses,
 			    1, 1, 128, nrows, 1, first_line,
-			    phys_lines, strategy, COLOR_JET_ARRANGEMENT_DEFAULT,
+			    phys_lines, strategy, color_jet_arrangement,
 			    NULL, flush_pass);
-  print_header();
-  printf("%15s %5s %5s %5s %10s %10s %10s %10s\n", "", "row", "pass", "jet",
-	 "missing", "logical", "physstart", "physend");
+  if (!quiet)
+    {
+      print_header();
+      printf("%15s %5s %5s %5s %10s %10s %10s %10s\n", "", "row", "pass",
+	     "jet", "missing", "logical", "physstart", "physend");
+    }
   for (i = 0; i < vmod; i++)
     current_slot[i] = -1;
   for (i = 0; i < (nrows + physsep); i++)
@@ -187,6 +169,7 @@ main(int argc, char **argv)
       passstarts[i] = -1;
       passends[i] = -1;
     }
+  memset(errcodes, ' ', 26);
   for (i = 0; i < nrows; i++)
     {
       for (j = 0; j < hpasses * vpasses * subpasses; j++)
@@ -194,42 +177,55 @@ main(int argc, char **argv)
 	  int physrow;
 	  stp_weave_parameters_by_row((stp_softweave_t *)sw, i+first_line, j, &w);
 	  physrow = w.logicalpassstart + physsep * w.jet;
-	  printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%5d %5d %5d %10d %10d %10d %10d\n",
-		 (w.pass < 0 ? (errors[0]++, 'A') : ' '),
-		 (w.jet < 0 || w.jet > physjets - 1 ?
-		  (errors[1]++, 'B') : ' '),
-		 (w.physpassstart > w.row ? (errors[2]++, 'C') : ' '),
-		 (w.physpassend < w.row ? (errors[3]++, 'D') : ' '),
-		 E_ERROR_CODE,
-		 (w.pass >= 0 && w.pass < nrows && passstarts[w.pass] != -1
-		  && passstarts[w.pass] !=w.physpassstart ?
-		  (errors[5]++, 'F') : ' '),
-		 (w.pass >= 0 && w.pass < nrows && passends[w.pass] != -1 &&
-		  passends[w.pass] !=w.physpassend ?
-		  (errors[6]++, 'G') : ' '),
-		 (w.row != physrow ? (errors[7]++, 'H') : ' '),
-		 (w.missingstartrows < 0 || w.missingstartrows > physjets - 1 ?
-		  (errors[8]++, 'I') : ' '),
-		 (w.physpassstart < 0 ? (errors[9]++, 'J') : ' '),
-		 (w.missingstartrows > w.jet ? (errors[10]++, 'K') : ' '),
-		 (w.pass >= 0 && w.pass < nrows &&
-		  physpassstuff[w.pass] >= 0 && physpassstuff[w.pass] != j ?
-		  (errors[11]++, 'L') : ' '),
-		 (w.pass >= 0 && w.pass < nrows && w.jet >= 0 &&
-		  w.jet < physjets &&
-		  rowdetail[w.pass * physjets + w.jet] == 1 ?
-		  (errors[12]++, 'M') : ' '),
-		 (current_slot[w.pass % vmod] != -1 &&
-		  current_slot[w.pass % vmod] != w.pass ?
-		  (errors[13]++, 'N') : ' '),
-		 (w.physpassstart == w.row && w.jet != w.missingstartrows ?
-		  (errors[14]++, 'O') : ' '),
-		 ((w.logicalpassstart < 0) ||
-		  (w.logicalpassstart + physsep * (physjets - 1) >= phys_lines) ?
-		  (errors[15]++, 'P') : ' '),
-		 w.row, w.pass, w.jet,
-		 w.missingstartrows, w.logicalpassstart, w.physpassstart,
-		 w.physpassend);
+
+	  errcodes[0] = (w.pass < 0 ? (errors[0]++, 'A') : ' ');
+	  errcodes[1] = (w.jet < 0 || w.jet > physjets - 1 ?
+			 (errors[1]++, 'B') : ' ');
+	  errcodes[2] = (w.physpassstart > w.row ? (errors[2]++, 'C') : ' ');
+	  errcodes[3] = (w.physpassend < w.row ? (errors[3]++, 'D') : ' ');
+#if 0
+	  errcodes[4] = (w.physpassend == w.row && lastpass + 1 != w.pass ?
+			 (errors[4]++, 'E') : ' ');
+#endif
+	  errcodes[5] = (w.pass >= 0 && w.pass < nrows &&
+			 passstarts[w.pass] != -1 &&
+			 passstarts[w.pass] != w.physpassstart ?
+			 (errors[5]++, 'F') : ' ');
+	  errcodes[6] = (w.pass >= 0 && w.pass < nrows &&
+			 passends[w.pass] != -1 &&
+			 passends[w.pass] != w.physpassend ?
+			 (errors[6]++, 'G') : ' ');
+	  errcodes[7] = (w.row != physrow ? (errors[7]++, 'H') : ' ');
+	  errcodes[8] = (w.missingstartrows < 0 ||
+			 w.missingstartrows > physjets - 1 ?
+			 (errors[8]++, 'I') : ' ');
+	  errcodes[9] = (w.physpassstart < 0 ? (errors[9]++, 'J') : ' ');
+	  errcodes[10] = (w.missingstartrows > w.jet ?
+			  (errors[10]++, 'K') : ' ');
+	  errcodes[11] = (w.pass >= 0 && w.pass < nrows &&
+			  physpassstuff[w.pass] >= 0 &&
+			  physpassstuff[w.pass] != j ?
+			  (errors[11]++, 'L') : ' ');
+	  errcodes[12] = (w.pass >= 0 && w.pass < nrows && w.jet >= 0 &&
+			  w.jet < physjets &&
+			  rowdetail[w.pass * physjets + w.jet] == 1 ?
+			  (errors[12]++, 'M') : ' ');
+	  errcodes[13] = (current_slot[w.pass % vmod] != -1 &&
+			  current_slot[w.pass % vmod] != w.pass ?
+			  (errors[13]++, 'N') : ' ');
+	  errcodes[14] = (w.physpassstart == w.row &&
+			  w.jet != w.missingstartrows ?
+			  (errors[14]++, 'O') : ' ');
+	  errcodes[15] = ((w.logicalpassstart < 0) ||
+			  (w.logicalpassstart + physsep * (physjets - 1) >=
+			   phys_lines) ?
+			  (errors[15]++, 'P') : ' ');
+	  errcodes[16] = '\0';
+
+	  if (!quiet)
+	    printf("%15s%5d %5d %5d %10d %10d %10d %10d\n",
+		   errcodes, w.row, w.pass, w.jet, w.missingstartrows,
+		   w.logicalpassstart, w.physpassstart, w.physpassend);
 	  if (w.pass >= 0 && w.pass < (nrows + physsep))
 	    {
 	      if (w.physpassend == w.row)
@@ -254,31 +250,112 @@ main(int argc, char **argv)
 	    }
 	}
     }
-  printf("Unterminated passes:\n");
+  if (!quiet)
+    printf("Unterminated passes:\n");
   for (i = 0; i <= newestpass; i++)
     if (passends[i] >= -1 && passends[i] < nrows)
       {
-	printf("%d %d\n", i, passends[i]);
+	if (!quiet)
+	  printf("%d %d\n", i, passends[i]);
 	errors[16]++;
       }
-  printf("Last terminated pass: %d\n", lastpass);
-  printf("Pass starts:\n");
+  if (!quiet)
+    {
+      printf("Last terminated pass: %d\n", lastpass);
+      printf("Pass starts:\n");
+    }
   for (i = 0; i <= newestpass; i++)
     {
-      if (i == 0)
-	printf("%c %d %d\n", ' ', i, logpassstarts[i]);
-      else
-	printf("%c %d %d\n",
-	       logpassstarts[i] < logpassstarts[i - 1] ? (errors[17]++, 'Q') : ' ',
-	       i, logpassstarts[i]);
+      char qchar = ' ';
+      if (i > 0)
+	qchar = logpassstarts[i] < logpassstarts[i - 1] ?
+	  (errors[17]++, 'Q') : ' ';
+      if (!quiet)
+	printf("%c %d %d\n", qchar, i, logpassstarts[i]);
     }
   for (i = 0; i < 26; i++)
     total_errors += errors[i];
-  printf("%d total errors\n", total_errors);
-  fflush(stdout);
   stp_destroy_weave(sw);
+  free(rowdetail);
+  free(physpassstuff);
+  free(current_slot);
+  free(passcounts);
+  free(passends);
+  free(logpassstarts);
+  free(passstarts);
+  if (!quiet || (quiet == 1 && total_errors > 0))
+    printf("%d total error%s\n", total_errors, total_errors == 1 ? "" : "s");
   if (total_errors > 0)
     return 1;
   else
     return 0;
+}
+
+
+int
+main(int argc, char **argv)
+{
+  int nrows;
+  int physjets;
+  int physsep;
+  int hpasses, vpasses, subpasses;
+  int first_line, phys_lines;
+  int strategy = 1;
+  int color_jet_arrangement;
+  int quiet = 0;
+  int status = 0;
+
+  if (argc == 1)
+    {
+      int total_cases = 0;
+      int failures = 0;
+      char linebuf[4096];
+      while (fgets(linebuf, 4096, stdin))
+	{
+	  int retval;
+	  (void) sscanf(linebuf, "%d%d%d%d%d%d%d%d%d", &physjets, &physsep,
+			&hpasses, &vpasses, &subpasses, &nrows, &first_line,
+			&phys_lines, &color_jet_arrangement);
+	  printf("%d %d %d %d %d %d %d %d %d ", physjets, physsep, hpasses,
+			vpasses, subpasses, nrows, first_line, phys_lines,
+			color_jet_arrangement);
+	  retval = run_one_weavetest(physjets, physsep, hpasses, vpasses,
+				     subpasses, nrows, first_line, phys_lines,
+				     color_jet_arrangement, strategy, 1);
+	  total_cases++;
+	  if (retval)
+	    failures++;
+	  else
+	    putc('\n', stdout);
+	  fflush(stdout);
+	  status |= retval;
+	}
+      printf("Total cases: %d, failures: %d\n", total_cases, failures);
+      return status;
+    }
+  if (argc != 10)
+    {
+      fprintf(stderr, "Usage: %s jets separation hpasses vpasses subpasses rows start end arrangement\n",
+	      argv[0]);
+      return 2;
+    }
+  physjets = atoi(argv[1]);
+  physsep = atoi(argv[2]);
+  hpasses = atoi(argv[3]);
+  vpasses = atoi(argv[4]);
+  subpasses = atoi(argv[5]);
+  nrows = atoi(argv[6]);
+  first_line = atoi(argv[7]);
+  phys_lines = atoi(argv[8]);
+  color_jet_arrangement = atoi(argv[9]);
+  if (physjets < hpasses * vpasses * subpasses)
+    {
+      fprintf(stderr, "Oversample exceeds jets\n");
+      return 1;
+    }
+  if (getenv("QUIET"))
+    quiet = 2;
+  return (run_one_weavetest(physjets, physsep, hpasses, vpasses,
+			    subpasses, nrows, first_line, phys_lines,
+			    color_jet_arrangement, strategy, quiet));
 }
