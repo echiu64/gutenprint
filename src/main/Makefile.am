@@ -29,6 +29,8 @@ MAINT_CHARSET = latin1
 AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@
 
+pkgconfigdir = $(prefix)/lib/pkgconfig
+
 
 ## Programs
 
@@ -47,6 +49,7 @@ libgimpprint_la_SOURCES = \
 	print-canon.c \
 	print-dither.c \
 	print-escp2.c \
+	print-escp2.h \
 	print-escp2-data.c \
 	print-pcl.c \
 	print-ps.c \
@@ -74,6 +77,8 @@ MAIN_DAT = gimpprint.m4
 m4datadir = $(datadir)/aclocal
 m4data_DATA = @MAIN_DAT@
 
+pkgconfig_DATA = gimp-print.pc
+
 
 ## Rules
 
@@ -92,7 +97,7 @@ printdefl.o: printdefy.o
 ## Clean
 
 CLEANFILES = print-printers.c
-DISTCLEANFILES = gimpprint-config
+DISTCLEANFILES = gimpprint-config gimp-print.pc
 MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = gimpprint.m4 gimpprint-config.in printers.xml

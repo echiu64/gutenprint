@@ -828,7 +828,8 @@ cups-gimpprint.list man/cups-calibrate.8 src/testpattern/Makefile
 src/cups/Makefile src/foomatic/Makefile test/Makefile
 src/foomatic/foomatic-generator src/ghost/Makefile src/ghost/contrib.mak.addon
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
-src/main/Makefile src/main/gimpprint-config src/printdef/Makefile
+src/main/Makefile src/main/gimpprint-config 
+src/main/gimp-print.pc src/printdef/Makefile
 ],[
 chmod +x src/main/gimpprint-config
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@

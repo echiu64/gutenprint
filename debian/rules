@@ -104,7 +104,7 @@ binary-arch: build install ChangeLog
 	dh_installdocs -a
 	  cp src/cups/README debian/cupsys-driver-gimpprint/usr/share/doc/cupsys-driver-gimpprint/README.cups
 	  mkdir debian/gimp1.2-print/usr/share/doc/gimp1.2-print/html ; \
-	  cp doc/*.html doc/*.png debian/gimp1.2-print/usr/share/doc/gimp1.2-print/html ; \
+	  cp doc/*.html debian/gimp1.2-print/usr/share/doc/gimp1.2-print/html
 	dh_installexamples -a
 	  mkdir -p debian/gimp1.2-print/usr/share/doc/gimp1.2-print/samples
 	  cp -r samples/*.png debian/gimp1.2-print/usr/share/doc/gimp1.2-print/samples
