@@ -156,8 +156,7 @@ initialize_printer(gp_plist_t *printer)
   printer->orientation = ORIENT_AUTO;
   printer->unit = 0;
   printer->v = stp_allocate_vars();
-  printer->left_is_valid = 0;
-  printer->top_is_valid = 0;
+  printer->invalid_mask = INVALID_TOP | INVALID_LEFT;
 }
 
 void
@@ -170,8 +169,7 @@ copy_printer(gp_plist_t *vd, const gp_plist_t *vs)
   vd->scaling = vs->scaling;
   vd->orientation = vs->orientation;
   vd->unit = vs->unit;
-  vd->left_is_valid = vs->left_is_valid;
-  vd->top_is_valid = vs->top_is_valid;
+  vd->invalid_mask = vs->invalid_mask;
   plist_set_name(vd, plist_get_name(vs));
   plist_set_output_to(vd, plist_get_output_to(vs));
 }
@@ -1028,8 +1026,7 @@ printrc_load(void)
 	*/
 
         initialize_printer(&key);
-	key.left_is_valid = 1;
-	key.top_is_valid = 1;
+	key.invalid_mask = 0;
         lineptr = line;
 
        /*
@@ -1122,8 +1119,7 @@ printrc_load(void)
 #endif
 
 	  initialize_printer(&key);
-	  key.left_is_valid = 1;
-	  key.top_is_valid = 1;
+	  key.invalid_mask = 0;
 	  plist_set_name(&key, value);
 	} else if (strcasecmp("destination", keyword) == 0) {
 	  plist_set_output_to(&key, value);
