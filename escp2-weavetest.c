@@ -67,6 +67,35 @@
 #define WEAVETEST
 #include "print-escp2.c"
 
+const char header[] = "\
+Legend:\n\
+A  Negative pass number.\n\
+B  Jet number out of range.\n\
+C  Starting row of this pass after the current row.\n\
+D  Ending row of this pass before the current row.\n\
+E  Current row is the ending row of the pass, and the pass number is not\n\
+   one greater than the previous completed pass.\n\
+F  The current pass's starting row is not consistent with the previously\n\
+   observed starting row of this pass.
+G  The current pass's ending row is not consistent with the previously\n\
+   observed ending row of this pass.\n\
+H  The current row does not match the computed current row.\n\
+I  The number of missing start rows is less than zero or greater than or\n\
+   equal to the actual number of jets.\n\
+J  The first printed row of this pass is less than zero.\n\
+K  The number of missing start rows of this pass is greater than the\n\
+   jet used to print the current row.\n\
+L  The subpass printed by the current pass is not consistent with an earlier\n\
+   record of the subpass printed by this pass.\n\
+M  The same physical row is being printed more than once.\n";
+
+
+void
+print_header()
+{
+  printf("%s", header);
+}
+
 int
 main(int argc, char **argv)
 {
@@ -110,6 +139,7 @@ main(int argc, char **argv)
 
   sw = initialize_weave(physjets, physsep, hpasses, vpasses, subpasses,
 			COLOR_MONOCHROME, 1, 128, 1);
+  print_header();
   printf("%13s %5s %5s %5s %10s %10s %10s %10s\n", "", "row", "pass", "jet",
 	 "missing", "logical", "physstart", "physend");
   for (i = 0; i < nrows; i++)
@@ -174,7 +204,7 @@ main(int argc, char **argv)
 	printf("%c %d %d\n", ' ', i, logpassstarts[i]);
       else
 	printf("%c %d %d\n",
-	       logpassstarts[i] <= logpassstarts[i - 1] ? (errors++, 'A') : ' ',
+	       logpassstarts[i] <= logpassstarts[i - 1] ? (errors++, 'N') : ' ',
 	       i, logpassstarts[i]);
     }
   printf("%d total errors\n", errors);
