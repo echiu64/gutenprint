@@ -1179,7 +1179,10 @@ escp2_print(const printer_t *printer,		/* I - Model */
   else
     dither = init_dither(image_width, out_width, v);
   dither_set_black_levels(dither, 1.0, 1.0, 1.0);
-  dither_set_black_lower(dither, .25 / ((1 << bits) - 1));
+  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+    dither_set_black_lower(dither, .5 / bits);
+  else
+    dither_set_black_lower(dither, .25 / bits);
   if (use_glossy_film)
     dither_set_black_upper(dither, .999);
   else

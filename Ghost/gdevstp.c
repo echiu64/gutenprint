@@ -97,7 +97,6 @@ typedef struct {
 /* in gdevstp-escp2.c */
 extern const char *escp2_resname(int);
 
-
 /* global variables, RO for subfunctions */
 private uint stp_raster;
 private byte *stp_row;
@@ -138,122 +137,110 @@ static privdata_t stp_data =
 * ghostscript driver function calls                                    *
 ***********************************************************************/
 
+static void
+stp_print_dbg(const char *msg, gx_device_printer *pdev,
+	      const privdata_t *stp_data)
+{
+#ifdef DRV_DEBUG
+  if (pdev)
+    fprintf(stderr,"%s Image: %d x %d pixels, %f x %f dpi\n",
+	    msg, pdev->width, pdev->height, pdev->x_pixels_per_inch,
+	    pdev->y_pixels_per_inch);
+
+  fprintf(stderr,"%s Settings: r: %d  g: %d  b: %d\n",
+	  msg, stp_data->v.red, stp_data->v.green, stp_data->v.blue);
+  fprintf(stderr, "Media size %s\n", stp_data->v.media_size);
+
+  fprintf(stderr,"Settings: model: %d  bright: %d  contrast: %d\n",
+	  stp_data->model, stp_data->v.brightness, stp_data->v.contrast);
+
+  fprintf(stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
+	  stp_data->v.gamma, stp_data->v.saturation, stp_data->v.density);
+#endif
+}
+
+static void
+stp_print_debug(const char *msg, gx_device *pdev,
+		const privdata_t *stp_data)
+{
+#ifdef DRV_DEBUG
+  if (pdev)
+    fprintf(stderr,"%s Image: %d x %d pixels, %f x %f dpi\n",
+	    msg, pdev->width, pdev->height, pdev->x_pixels_per_inch,
+	    pdev->y_pixels_per_inch);
+
+  fprintf(stderr,"%s Settings: r: %d  g: %d  b: %d\n",
+	  msg, stp_data->v.red, stp_data->v.green, stp_data->v.blue);
+  fprintf(stderr, "Media size %s\n", stp_data->v.media_size);
+
+  fprintf(stderr,"Settings: model: %d  bright: %d  contrast: %d\n",
+	  stp_data->model, stp_data->v.brightness, stp_data->v.contrast);
+
+  fprintf(stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
+	  stp_data->v.gamma, stp_data->v.saturation, stp_data->v.density);
+#endif
+}
+  
+
 /*----------- Write out a in escp2 format. ---------------*/
 private int stp_print_page(gx_device_printer * pdev, FILE * file)
 {
-    int code;									/* return code */
-    int model;
-    const printer_t *printer;
-    int i;
+  int code;			/* return code */
+  int model;
+  const printer_t *printer;
+  int i;
 
+  stp_print_dbg("stp_print_page", pdev, &stp_data);
+  code = 0;
+  stp_pdev = pdev;
+  stp_raster = gdev_prn_raster(pdev);
+  stp_row = gs_alloc_bytes(pdev->memory, stp_raster, "stp file buffer");
 
-#ifdef DRV_DEBUG
-    fprintf(stderr,"Image: %d x %d pixels, %f x %f dpi\n",
-            pdev->width,
-            pdev->height,
-            pdev->x_pixels_per_inch,
-            pdev->y_pixels_per_inch
-           );
-
-    fprintf(stderr, "Media size %s\n", stp_data.v.media_size);
-
-    fprintf(stderr,"Settings: r: %d  g: %d  b: %d\n",
-            stp_data.v.red,
-            stp_data.v.green,
-            stp_data.v.blue
-           );
-
-    fprintf(stderr,"Settings: model: %d  bright: %d  contrast: %d\n",
-            stp_data.model,
-            stp_data.v.brightness,
-            stp_data.v.contrast
-           );
-
-    fprintf(stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
-            stp_data.v.gamma,
-            stp_data.v.saturation,
-            stp_data.v.density
-           );
-#endif
-    code = 0;
-    stp_pdev = pdev;
-    stp_raster = gdev_prn_raster(pdev);
-    stp_row = gs_alloc_bytes(pdev->memory, stp_raster, "stp file buffer");
-
-    if (stp_row == 0)		/* can't allocate row buffer */
-	 return_error(gs_error_VMerror);
-
-    /* Inititalize printer */
-    /* int height = pdev->height;*/
-    /* int width = pdev->width; */
-    /* pdev->x_pixels_per_inch */
-    /* pdev->y_pixels_per_inch */
-    /* int depth = pdev->color_info.depth; */
+  if (stp_row == 0)		/* can't allocate row buffer */
+    return_error(gs_error_VMerror);
 
 #ifdef DRV_DEBUG
-    fprintf(stderr,"1 step done!");
+  fprintf(stderr,"1 step done!");
 #endif
 
-    model = stp_data.model;                 /* 6 = Stylus Photo  */
+  model = stp_data.model;                 /* 6 = Stylus Photo  */
 
-    /* Ugh */
-    for (i = 0; i < known_printers(); i++)
-      {
-	printer = get_printer_by_index(i);
-	if (printer->model == model &&
-	    printer->print == escp2_print)
-	  break;
-      }
-    if (printer->model != model &&
-	printer->print != escp2_print)
-      {
-	fprintf(stderr, "Unknown printer model\n");
-	code = 1;
-	return code;
-      }
-		
-    strcpy(stp_data.v.resolution, escp2_resname(stp_data.resnr));
-    strcpy(stp_data.v.dither_algorithm, dither_algo_names[stp_data.algnr]);
-
-    stp_data.v.scaling = -pdev->x_pixels_per_inch; /* resolution of image to print */
-
-    /* compute lookup table: lut_t*,float dest_gamma,float app_gamma,vars_t* */
-    compute_lut(&(printer->printvars), 1, &stp_data.v);
-
-#ifdef DRV_DEBUG
-    fprintf(stderr,"lut done!");
-#endif
- 
-#ifdef DRV_DEBUG
-    fprintf(stderr,"prefs done, now skipping the top margin lines in input\n");
-#endif
-
-    stp_data.topoffset = 0;
-#if 0
-    /* correct top offset (row number) */
+  /* Ugh */
+  for (i = 0; i < known_printers(); i++)
     {
-     float grmpf;
-
-     grmpf = (float)stp_data.v.top * (float)stp_pdev->x_pixels_per_inch / 72.;
-
-     stp_data.topoffset = (int)grmpf;
-#ifdef DRV_DEBUG
-    fprintf(stderr,"top offset %d pixels\n",stp_data.topoffset);
-#endif
+      printer = get_printer_by_index(i);
+      if (printer->model == model &&
+	  printer->print == escp2_print)
+	break;
     }
-#endif
+  if (printer->model != model &&
+      printer->print != escp2_print)
+    {
+      fprintf(stderr, "Unknown printer model\n");
+      code = 1;
+      return code;
+    }
+		
+  strcpy(stp_data.v.resolution, escp2_resname(stp_data.resnr));
+  strcpy(stp_data.v.dither_algorithm, dither_algo_names[stp_data.algnr]);
 
-    escp2_print(printer,	/* I - Model */
-                1,		/* I - Number of copies */
-                file,		/* I - File to print to */
-                NULL,		/* I - Image to print (dummy) */
-                NULL,		/* I - Colormap (for indexed images) */
-                &stp_data.v);	/* vars_t * */
+  stp_data.v.scaling = -pdev->x_pixels_per_inch; /* resolution of image */
 
-    gs_free_object(pdev->memory, stp_row, "stp row buffer");
-    stp_row = NULL;
+  /* compute lookup table: lut_t*,float dest_gamma,float app_gamma,vars_t* */
+  compute_lut(&(printer->printvars), 1, &stp_data.v);
 
-    return code;
+  stp_data.topoffset = 0;
+  escp2_print(printer,	/* I - Model */
+	      1,		/* I - Number of copies */
+	      file,		/* I - File to print to */
+	      NULL,		/* I - Image to print (dummy) */
+	      NULL,		/* I - Colormap (for indexed images) */
+	      &stp_data.v);	/* vars_t * */
+
+  gs_free_object(pdev->memory, stp_row, "stp row buffer");
+  stp_row = NULL;
+
+  return code;
 }
 
 /* 24-bit color mappers (taken from gdevmem2.c). */
@@ -263,9 +250,9 @@ gx_color_index
 stp_map_16m_rgb_color(gx_device * dev, gx_color_value r, gx_color_value g,
 		  gx_color_value b)
 {
-    return gx_color_value_to_byte(b) +
-	((uint) gx_color_value_to_byte(g) << 8) +
-	((ulong) gx_color_value_to_byte(r) << 16);
+  return gx_color_value_to_byte(b) +
+    ((uint) gx_color_value_to_byte(g) << 8) +
+    ((ulong) gx_color_value_to_byte(r) << 16);
 }
 
 /* Map a color index to a r-g-b color. */
@@ -273,10 +260,10 @@ int
 stp_map_16m_color_rgb(gx_device * dev, gx_color_index color,
 		  gx_color_value prgb[3])
 {
-    prgb[2] = gx_color_value_from_byte(color & 0xff);
-    prgb[1] = gx_color_value_from_byte((color >> 8) & 0xff);
-    prgb[0] = gx_color_value_from_byte(color >> 16);
-    return 0;
+  prgb[2] = gx_color_value_from_byte(color & 0xff);
+  prgb[1] = gx_color_value_from_byte((color >> 8) & 0xff);
+  prgb[0] = gx_color_value_from_byte(color >> 16);
+  return 0;
 }
 
 
@@ -291,66 +278,9 @@ private int stp_get_params(gx_device *pdev, gs_param_list *plist)
   int code;
   gs_param_string pmedia;
 
-
-#ifdef DRV_DEBUG
-    fprintf(stderr,"stp_get_params(0) Image: %d x %d pixels, %f x %f dpi\n",
-            pdev->width,
-            pdev->height,
-            pdev->x_pixels_per_inch,
-            pdev->y_pixels_per_inch
-           );
-
-    fprintf(stderr, "Media size %s\n", stp_data.v.media_size);
-    fprintf(stderr,"Settings: r: %d  g: %d  b: %d\n",
-            stp_data.v.red,
-            stp_data.v.green,
-            stp_data.v.blue
-           );
-
-    fprintf(stderr,"Settings: model: %d  bright: %d  contrast: %d\n",
-            stp_data.model,
-            stp_data.v.brightness,
-            stp_data.v.contrast
-           );
-
-    fprintf(stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
-            stp_data.v.gamma,
-            stp_data.v.saturation,
-            stp_data.v.density
-           );
-#endif
-
+  stp_print_debug("stp_get_params(0)", pdev, &stp_data);
   code = gdev_prn_get_params(pdev, plist);
-
-
-#ifdef DRV_DEBUG
-    fprintf(stderr,"stp_get_params Image: %d x %d pixels, %f x %f dpi\n",
-            pdev->width,
-            pdev->height,
-            pdev->x_pixels_per_inch,
-            pdev->y_pixels_per_inch
-           );
-
-    fprintf(stderr, "Media size %s\n", stp_data.v.media_size);
-    fprintf(stderr,"Settings: r: %d  g: %d  b: %d\n",
-            stp_data.v.red,
-            stp_data.v.green,
-            stp_data.v.blue
-           );
-
-    fprintf(stderr,"Settings: model: %d  bright: %d  contrast: %d\n",
-            stp_data.model,
-            stp_data.v.brightness,
-            stp_data.v.contrast
-           );
-
-    fprintf(stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
-            stp_data.v.gamma,
-            stp_data.v.saturation,
-            stp_data.v.density
-           );
-#endif
-
+  stp_print_debug("stp_get_params(1)", pdev, &stp_data);
   param_string_from_string(pmedia, stp_data.v.media_size);
 
   if ( code < 0 ||
@@ -395,33 +325,7 @@ private int stp_put_params(gx_device *pdev, gs_param_list *plist)
   int code   = 0;
 
 
-#ifdef DRV_DEBUG
-    fprintf(stderr,"stp_put_params Image: %d x %d pixels, %f x %f dpi\n",
-            pdev->width,
-            pdev->height,
-            pdev->x_pixels_per_inch,
-            pdev->y_pixels_per_inch
-           );
-
-    fprintf(stderr, "Media size %s\n", stp_data.v.media_size);
-    fprintf(stderr,"Settings: r: %d  g: %d  b: %d\n",
-            stp_data.v.red,
-            stp_data.v.green,
-            stp_data.v.blue
-           );
-
-    fprintf(stderr,"Settings: model: %d  bright: %d  contrast: %d\n",
-            stp_data.model,
-            stp_data.v.brightness,
-            stp_data.v.contrast
-           );
-
-    fprintf(stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
-            stp_data.v.gamma,
-            stp_data.v.saturation,
-            stp_data.v.density
-           );
-#endif
+  stp_print_debug("stp_put_params", pdev, &stp_data);
 
   param_string_from_string(pmedia, stp_data.v.media_size);
 
@@ -488,26 +392,7 @@ private int stp_put_param_int(gs_param_list *plist,
 {
   int code, value;
 
-#ifdef DRV_DEBUG
-    fprintf(stderr,"stp_put_param_int Settings: r: %d  g: %d  b: %d\n",
-            stp_data.v.red,
-            stp_data.v.green,
-            stp_data.v.blue
-           );
-
-    fprintf(stderr, "Media size %s\n", stp_data.v.media_size);
-    fprintf(stderr,"Settings: model: %d  bright: %d  contrast: %d\n",
-            stp_data.model,
-            stp_data.v.brightness,
-            stp_data.v.contrast
-           );
-
-    fprintf(stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
-            stp_data.v.gamma,
-            stp_data.v.saturation,
-            stp_data.v.density
-           );
-#endif
+  stp_print_debug("stp_put_param_int", NULL, &stp_data);
   switch ( code = param_read_int(plist, pname, &value) )
     {
     default:
@@ -537,28 +422,7 @@ private int stp_put_param_float(gs_param_list *plist,
   int code;
   float value;
     
-
-#ifdef DRV_DEBUG
-    fprintf(stderr,"stp_put_param_float Settings: r: %d  g: %d  b: %d\n",
-            stp_data.v.red,
-            stp_data.v.green,
-            stp_data.v.blue
-           );
-
-    fprintf(stderr, "Media size %s\n", stp_data.v.media_size);
-    fprintf(stderr,"Settings: model: %d  bright: %d  contrast: %d\n",
-            stp_data.model,
-            stp_data.v.brightness,
-            stp_data.v.contrast
-           );
-
-    fprintf(stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
-            stp_data.v.gamma,
-            stp_data.v.saturation,
-            stp_data.v.density
-           );
-#endif
-
+  stp_print_debug("stp_put_param_float", NULL, &stp_data);
   switch ( code = param_read_float(plist, pname, &value) )
     {
     default:
@@ -586,35 +450,7 @@ stp_open(gx_device *pdev)
   int left,right,bottom,top,width,length;
   char none[5];
   
-
-#ifdef DRV_DEBUG
-    fprintf(stderr,"stp_open Image: %d x %d pixels, %f x %f dpi\n",
-            pdev->width,
-            pdev->height,
-            pdev->x_pixels_per_inch,
-            pdev->y_pixels_per_inch
-           );
-
-    fprintf(stderr, "Media size %s\n", stp_data.v.media_size);
-    fprintf(stderr,"Settings: r: %d  g: %d  b: %d\n",
-            stp_data.v.red,
-            stp_data.v.green,
-            stp_data.v.blue
-           );
-
-    fprintf(stderr,"Settings: model: %d  bright: %d  contrast: %d\n",
-            stp_data.model,
-            stp_data.v.brightness,
-            stp_data.v.contrast
-           );
-
-    fprintf(stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
-            stp_data.v.gamma,
-            stp_data.v.saturation,
-            stp_data.v.density
-           );
-#endif
-
+  stp_print_debug("stp_open", pdev, &stp_data);
   strcpy(none,"");
 
   default_media_size(stp_data.model,
@@ -654,13 +490,7 @@ stp_open(gx_device *pdev)
 /* get one row of the image */
 void Image_get_row(Image image, unsigned char *data, int row)
 {
-#ifdef DRV_DEBUG
   gdev_prn_copy_scan_lines(stp_pdev, stp_data.topoffset+row, data, stp_raster);
-#else
-  int a;
-  a = gdev_prn_copy_scan_lines(stp_pdev, stp_data.topoffset+row, data, stp_raster);
-#endif
-
 }
 
 /* return bpp of picture (24 here) */

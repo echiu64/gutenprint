@@ -59,6 +59,24 @@
 #define MATRIX_SIZE3_2 ((MATRIX_SIZE3) * (MATRIX_SIZE3))
 #define MODOP3(x, y) ((x) % (y))
 
+#define MATRIX_NB4 (1)
+#define MATRIX_BASE4 (199)
+#define MATRIX_SIZE4 (199)
+#define MATRIX_SIZE4_2 ((MATRIX_SIZE4) * (MATRIX_SIZE4))
+#define MODOP4(x, y) ((x) % (y))
+
+#define MATRIX_NB5 (1)
+#define MATRIX_BASE5 (199)
+#define MATRIX_SIZE5 (199)
+#define MATRIX_SIZE5_2 ((MATRIX_SIZE5) * (MATRIX_SIZE5))
+#define MODOP5(x, y) ((x) % (y))
+
+#define MATRIX_NB6 (1)
+#define MATRIX_BASE6 (257)
+#define MATRIX_SIZE6 (257)
+#define MATRIX_SIZE6_2 ((MATRIX_SIZE6) * (MATRIX_SIZE6))
+#define MODOP6(x, y) ((x) % (y))
+
 #define DITHERPOINT(d, x, y, m) \
 ((d)->ordered_dither_matrix##m[MODOP##m((x), MATRIX_SIZE##m)][MODOP##m((y), MATRIX_SIZE##m)])
 
@@ -176,6 +194,9 @@ typedef struct dither
   unsigned ordered_dither_matrix1[MATRIX_SIZE1][MATRIX_SIZE1];
   unsigned ordered_dither_matrix2[MATRIX_SIZE2][MATRIX_SIZE2];
   unsigned ordered_dither_matrix3[MATRIX_SIZE3][MATRIX_SIZE3];
+  unsigned ordered_dither_matrix4[MATRIX_SIZE4][MATRIX_SIZE4];
+  unsigned ordered_dither_matrix5[MATRIX_SIZE5][MATRIX_SIZE5];
+  unsigned ordered_dither_matrix6[MATRIX_SIZE6][MATRIX_SIZE6];
 } dither_t;
 
 /*
@@ -225,17 +246,33 @@ static int msq1[] =
   15,  7,  4, 13, 21
 };
 
+static unsigned short quic0[] = {
+#include "quickmatrix199.h"
+};
+
+static unsigned short quic1[] = {
+#include "quickmatrix199-2.h"
+};
+
+static unsigned int quic2[] = {
+#include "quickmatrix257.h"
+};
+
 #define CALC_MATRIX(matid, init)				\
 do {								\
   for (x = 0; x < MATRIX_SIZE##matid; x++)			\
     for (y = 0; y < MATRIX_SIZE##matid; y++)			\
       {								\
-	d->ordered_dither_matrix##matid[x][y] =			\
-	  calc_ordered_point(x, y, MATRIX_NB##matid, 1,		\
+	if (MATRIX_NB##matid > 1)				\
+	  d->ordered_dither_matrix##matid[x][y] =		\
+	    calc_ordered_point(x, y, MATRIX_NB##matid, 1,	\
 			       MATRIX_BASE##matid, init);	\
+	else							\
+	  d->ordered_dither_matrix##matid[x][y] =		\
+	    init[x * MATRIX_SIZE##matid + y];			\
 	d->ordered_dither_matrix##matid[x][y] =			\
-	  d->ordered_dither_matrix##matid[x][y] *		\
-	  65536 / (MATRIX_SIZE##matid##_2);			\
+	  (long long) d->ordered_dither_matrix##matid[x][y] *	\
+	  65536ll / (long long) (MATRIX_SIZE##matid##_2);	\
       }								\
 } while (0)
 
@@ -285,6 +322,9 @@ init_dither(int in_width, int out_width, vars_t *v)
   CALC_MATRIX(1, sq3);
   CALC_MATRIX(2, msq0);
   CALC_MATRIX(3, msq1);
+  CALC_MATRIX(4, quic0);
+  CALC_MATRIX(5, quic1);
+  CALC_MATRIX(6, quic2);
 
   if (!strcmp(v->dither_algorithm, "Hybrid Floyd-Steinberg"))
     d->dither_type = D_FLOYD_HYBRID;
@@ -1080,7 +1120,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 		    ix = x + y / 3;
 		    iy = y + x / 3;
 		  }
-		imatrix = DITHERPOINT(d, ix, iy, 0);
+		imatrix = DITHERPOINT(d, ix, iy, 6);
 
 		/*
 		 * Your low order bits, sir...
@@ -1164,7 +1204,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	      v = dd->value_h;
 	      dot_size = dd->dot_size_h;
 	    }
-	  else if (rangepoint >= DITHERPOINT(d, x + y / 3, y + x / 3, 3))
+	  else if (rangepoint >= DITHERPOINT(d, y, x, 6))
 	    {
 	      isdark = dd->isdark_h;
 	      bits = dd->bits_h;

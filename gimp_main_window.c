@@ -1699,13 +1699,13 @@ gimp_preview_update (void)
 
   gtk_signal_handler_block_by_data (GTK_OBJECT (bottom_entry), NULL);
   g_snprintf(s, sizeof (s), "%.2f", 
-	     (bottom + printable_height - (vars.top + print_height)) / 72.0);
+	     (((paper_height - top) + vars.top) + print_height) / 72.0);
   gtk_entry_set_text (GTK_ENTRY (bottom_entry), s);
   gtk_signal_handler_unblock_by_data (GTK_OBJECT (bottom_entry), NULL);
 
   gtk_signal_handler_block_by_data (GTK_OBJECT (right_entry), NULL);
   g_snprintf (s, sizeof (s), "%.2f", 
-	      (paper_width - (left + vars.left + print_width)) / 72.0);
+	      (left + vars.left + print_width) / 72.0);
 
   gtk_entry_set_text (GTK_ENTRY (right_entry), s);
   gtk_signal_handler_unblock_by_data (GTK_OBJECT (right_entry), NULL);

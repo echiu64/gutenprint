@@ -59,7 +59,7 @@ AM_CPPFLAGS =					\
 print_LDADD = $(GIMP_LIBS)
 
 EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
-	README.dither \
+	README.dither quickmatrix199-2.h quickmatrix199.h quickmatrix257.h \
 	Ghost/COPYING Ghost/ChangeLog Ghost/README Ghost/contrib.mak.addon \
 	Ghost/gdevstp-dither.c Ghost/gdevstp-escp2.c Ghost/gdevstp-print.h \
 	Ghost/gdevstp-util.c Ghost/gdevstp.c Ghost/gdevstp.h \
@@ -91,10 +91,13 @@ files:
 	  echo $$p; \
 	done
 
-ghost: $(addprefix Ghost/gdevstp-, dither.c escp2.c util.c printers.c) Ghost/gdevstp-print.h
+GHDRS=print.h quickmatrix199.h quickmatrix199-2.h quickmatrix257.h print.h
+GHCODE=-e 's/^\\\#include "\(.*\)\.h"$$/\\\#include "gdevstp-\1.h"/'
+
+ghost: $(addprefix Ghost/gdevstp-, dither.c escp2.c util.c printers.c $(GHDRS))
+
+Ghost/gdevstp-%.h: %.h Makefile
+	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $@
 
 Ghost/gdevstp-%: print-% Makefile
-	sed -e 's/print.h/gdevstp-print.h/' -e 's/print-printers.c/gdevstp-printers.c/' $< > $@
-
-Ghost/gdevstp-print.h: print.h Makefile
-	sed -e 's/print.h/gdevstp-print.h/' -e 's/print-printers.c/gdevstp-printers.c/' $< > $@
+	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $@
