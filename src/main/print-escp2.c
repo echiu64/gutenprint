@@ -1340,7 +1340,7 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
   { "command_mode",		12, 4 },
   { "ink_types",		16, 1 },
   { "rollfeed",			17, 1 },
-  { "horizontal_zero_margin",	18, 1 }
+  { "horizontal_zero_margin",	18, 1 },
   { "vertical_zero_margin",	19, 1 }
 };
 
