@@ -32,7 +32,7 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <a href="MacOSX.php3#4.2.6"><b>January 11, 2004 -</b></a> Gimp-Print 4.2.6 is now available for download. This is the most recent stable release of Gimp-Print, and most likely the last version to be released in the 4.2.x series.
+ <a href="MacOSX.php3#4.2.7"><b>July 14, 2004 -</b></a> Gimp-Print 4.2.7 is now available for download. This is the most recent stable release of Gimp-Print, and very likely the last version to be released in the 4.2.x series.
  </p>
  <p>
  <a href="MacOSX.php3#5.0.0-alpha1"><b>January 11, 2004 -</b></a> Gimp-Print 
@@ -109,30 +109,30 @@ using it and we believe that it will be useful for many purposes.
  <tr>
  <td>
  <br>
- <b>Gimp-Print 4.2.6</b>
+ <b>Gimp-Print 4.2.7</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-0.ppc.dmg?download"
- >gimp-print-4.2.6-0.ppc.dmg</a>&nbsp;(5.9 MB)
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.7-0.ppc.dmg?download"
+ >gimp-print-4.2.7-0.ppc.dmg</a>&nbsp;(5.9 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6.tar.gz?download"
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.7.tar.gz?download"
  >source</a>)
  </td>
  </tr>
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 4.2.6 is the newest stable release for Mac OS X; it includes 225
+ Gimp-Print 4.2.7 is the newest stable release for Mac OS X; it includes 225
  drivers supporting over 600 printers. The disk-image file includes an OS X
  installer package, an uninstaller package, plus illustrated documentation to easily guide you through
  the printer set-up process. For users running Mac OS X Jaguar This package requires (but does not include) ESP
  Ghostscript 7.05.6 for Mac OS X (<b>download below and install, if
- necessary</b>).  ESP Ghostscript is not required for Mac OS X "Panther". 
+ necessary</b>).  ESP Ghostscript is a required installation only for Mac OS X "Jaguar" (version 10.2.x); later versions of Mac OS X do not require this companion software! 
  </p>
 <!--
  <b>Gimp-Print 4.2.6-rc2</b>
@@ -252,9 +252,9 @@ The Gimp-Print uninstaller will completely remove any version of Gimp-Print that
  Installing GIMP is NOT required.
  </p>
  <p>
- Gimp-Print 4.2.6 is expected to be the final stable release on the Gimp-Print
- 4.2 release line. We anticipate further no releases in the 4.2 line with all
- new development focused on the 5.0 series.
+ Gimp-Print 4.2.7 is expected to be the ultimate release in the Gimp-Print
+ 4.2 series unless any critical bugs are found in 4.2.7 or Gimp-Print 5.0 is further
+delayed. All new development is focused on the 5.0 series.
  </p>
  <P>
  Please visit <a href= "http://sourceforge.net/project/?group_id=1537" >our
@@ -273,6 +273,191 @@ The Gimp-Print uninstaller will completely remove any version of Gimp-Print that
  News Items
  </h3>
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+  <a name ="4.2.7"></a>
+ <B>Gimp-Print 4.2.7</B>
+ </TD>
+ <TD align="right" >
+ <B>2004-07-14</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gimp-Print version 4.2.7 contains the following improvements over
+ <a href= "MacOSX.php3#4.2.6">Gimp-Print 4.2.6</a>:
+ </p>
+<b> New Functionality:</b>
+ <ol>
+   <li>The Epson Stylus Photo R200/R210 and R300/R310 printers, and the
+     RX500 and RX600 multi-function devices, are now supported.  These
+     printers have been properly tuned and are fully functional
+     (except for direct printing to CD's).  The Epson CX5300 and
+     CX5400 multi-functional devices are also now supported as
+     printers.</li>
+   <li>The HP LaserJet 1012 and Brother HL-1440 printers are now
+     supported.</li>
+   <li>Super A0 and Super B0 paper sizes are now supported.</li>
+   <li>Translations for Hungarian, Ukrainian, and Norwegian/Bokmaal have
+     been added.  In addition, other translations have been updated.</li>
+ </ol>
+<b>Major bugs fixed :</b>
+ <ol>
+
+   <li>Many Macintosh OS X users have reported problems of various kinds
+     with USB-attached printers, including both native USB and
+     parallel printers connected with USB-parallel printers.  Symptoms
+     reported include failure to print altogether, inability to print
+     more than one page without rebooting or restarting the print
+     system, and poor performance.  These problems are not specific to
+     Gimp-Print.<br><br>
+
+     We have released a replacement USB backend driver for Macintosh
+     OS X 10.2 and higher that to the best of our knowledge fixes all
+     of these problems.  This driver, named "usbtb", is available on
+     the download site at
+     http://sourceforge.net/project/showfiles.php?group_id=1537&package_id=120183.
+     We recommend that all users of OS X 10.2 and above who are having
+     printing problems with USB-attached printers try this driver.  In
+     addition to resolving these problems, this driver also also
+     provides textual cues to the system printer queue window to walk
+     the user through recovery from common error conditions, and it
+     also provides ink level reporting for Epson and HP printers that
+     support it.<br><br>
+
+     This replacement USB backend driver is not specific to
+     Gimp-Print, and may be used with any USB-connected printer with
+     any CUPS printer driver under OS X.</li>
+   <li>(bug 907765) The CUPS driver now reports pages starting from page
+     1 rather than page 0 as was previously the case.</li>
+   <li>(bug 919224) The Postscript output driver (in the GIMP plugin)
+     now functions correctly in non-US locales when a PPD file is
+     provided.</li>
+   <li>(bug 919225) A segmentation violation on the IA64 platform is
+     fixed.</li>
+   <li>(bug 972014) A bug in the Postscript output driver causes the
+     GIMP plugin to crash on startup with certain PPD files.  This bug
+     is not related to locale.  At least certain PPD files from the
+     Epson PIPS drivers are known to result in this problem.</li>
+   <li>(bug 919226) The horizontal printing position on the Epson Stylus
+     C63/C64 and C83/C84 printers has been fixed.</li>
+   <li>(bug 613054) The CUPS driver now handles, via a workaround,
+     incorrect Postscript generated by some programs.  In certain
+     cases, these programs result in the generation of single bit
+     output, rather than 8-bit output as it should.  The result was
+     that Gimp-Print printed only a thin band of horizontally
+     compressed output, and it may have crashed in some cases.<br><br>The programs most commonly affected were Adobe InDesign 2.0 and
+     psnup.</li>
+   <li>(bug 924862) The package now operates correctly with on Solaris
+     and other systems using an external libintl.</li>
+   <li>(bug 929227) Gimp-Print no longer attempts to build (and fail)
+     the Print plugin against the GIMP 2.0.  This fix requires a
+     special build procedure in some circumstances; please see item
+     (10) under Exceptions and Workarounds below.</li>
+   <li>(bug 855685) escputil now reports ink levels from all known Epson
+     Stylus printers.  In addition, ink level reporting is more
+     reliable in general, with fewer timeouts or unparseable output.</li>
+   <li>(bug 971832) The HP DesignJet 2500 and 3500 now support correct
+     maximum page widths of 36" and 54" respectively, rather than 44"
+     for both.</li>
+   <li>(bug 971833) The PPD files now use the recommended manufacturer
+     names.  Previously, certain CUPS applications could display the
+     manufacturer names incorrectly.</li>
+
+   <li>Mac OS X users who use the Epson Printer Utility (provided by
+     Epson with their standard driver set) to check ink levels and
+     perform maintenance tasks, such as head cleaning or head
+     alignment, may encounter print job failures when attempting to
+     print with the Gimp-Print driver after using the Epson
+     utility. The cause for this failure is currently unknown, but the
+     workaround is to completely power-cycle the printer, after which
+     the Gimp-Print driver should again print normally.  Another
+     option is to disable the Epson Printer Utility.</li>
+
+   <li>The Mac OS X print dialog may offer an "Autoselect" option as the
+     default media source (input slot) on some printers.  This option
+     may not be valid and can result in nothing being printed.  The
+     workaround is to choose a different setting (explicitly select
+     the input slot you wish to use).</li>
+
+   <li>The new HP DesignJets have not been fully tuned.  In particular,
+     there are reports that they print too light.  This can be
+     corrected with the Density adjustment (try 1.5~1.7 or
+     thereabouts).</li>
+
+   <li>The list of compatible and potentially compatible Hewlett-Packard
+     printers has been updated with the latest available information.
+     If a particular printer does not work with the recommended
+     driver, we recommend that you try other similar drivers, check
+     the Feature Requests at
+     http://sourceforge.net/tracker/?atid=101537&group_id=1537&func=browse,
+     and if the printer is not listed please file a feature request
+     (via the Submit New button).</li>
+
+   <li>Borderless (full-bleed) printing is not quite correct on the
+     Epson Stylus Photo printers that support it (see bug 621668).
+     Typically, the left or right margin is off by 1 mm or less,
+     resulting in a very fine white strip on that edge.</li>
+
+   <li>Many Canon printers do not print correctly at 720x360 DPI.  The
+     workaround is to use 360 or 720 DPI.</li>
+
+   <li>Many new Epson Stylus printers do not return status to the
+     escputil command (for ink level check, etc).  We recommend use of
+     the mtink tool (please see http://xwtools.automatix.de) for this
+     purpose.</li>
+
+   <li>With certain versions of CUPS and in certain configurations, if a
+     new version of Gimp-Print is installed over an existing version
+     genppd will create PPD files based on the older version of
+     Gimp-Print rather than the newer version. </li>
+ </ol>
+
+ <dl>
+<dt><b>The following bugs have been fixed in Gimp-Print 4.2.6</b>:</dt>
+
+<dd>627266 Mac OS X: Autoselect option incorrectly offered
+<dd>668342 Canon S-450 prints only one page of a job
+<dd>729918 Postscript family driver fails in non-US locale
+<dd>735493 CUPS PPD files lacking *OutputOrder
+<dd>842715 Epson 600/800/850/1520/3000 fail at certain resolutions BW
+<dd>865253 genppd may not generate new PPD files (4.2)
+</dl>
+ <dl>
+<dt><b>The following bugs have been tested and cannot be reproduced</b>:</dt>
+
+<dd>764041 CNR: Epson 3000 720x360DPI problem
+<dd>828993 CNR: Epson SC 850 using Microweave prints tall characters
+</dl>
+ <dl>
+<dt><b>The following bugs are currently open</b>:</dt>
+
+<dd>470049 CUPS PPD files not translated on all systems
+<dd>538097 QUALITY-Canon S400 dark and yellow cast
+<dd>549677 Canon BJC-1000 functions incorrectly at 720x360 DPI
+<dd>557868 QUALITY-HP DeskJet 560 is washed out
+<dd>581168 Canon BJC 250 just spits out pages
+<dd>601767 Mac OS X: Canon BJC 2100 does not print multiple pages
+<dd>602933 QUALITY-Canon S800 dark and grainy
+<dd>613054 Mac OS X: Printing from InDesign 2.0 on OS 10.2.1
+<dd>614882 QUALITY - Canon BJC-55 is too pale and desaturated
+<dd>621668 Epson Stylus full bleed prints have slight margin
+<dd>627978 QUALITY: Canon BJC-6500 has magenta cast.
+<dd>631937 HP DesignJet Sheet Cutter Problem
+<dd>641981 QUALITY: HP DesignJets print too light
+<dd>645116 QUALITY: HP DeskJet regression from 4.1.7
+<dd>647035 QUALITY: Colors don't match OEM drivers
+<dd>662988 HP DeskJet 970Cxi page horizontally squeezed
+<dd>672692 Epson photo 700 single page of multi page job
+<dd>687656 Paper Positioning Problems Epson 7600
+<dd>704334 QUALITY: Epson SP 2100: Green Cast/Dark Colours/Poor Greys
+<dd>811062 Reverse printing
+</dl>
+
+ &nbsp;
+ </td>
+ </tr>
  <TR bgcolor="#D0D0D0" >
  <TD>
   <a name ="4.2.6"></a>
