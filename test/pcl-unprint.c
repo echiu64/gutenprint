@@ -36,13 +36,18 @@
 static const char *id="@(#) $Id$";
 
 /*
+ * Size of buffer used to read file
+ */
+#define READ_SIZE 1024
+
+/*
  * Largest data attached to a command. 1024 means that we can have up to 8192
  * pixels in a row
  */
 #define MAX_DATA 1024
 
 FILE *read_fd,*write_fd;
-char read_buffer[1024];
+char read_buffer[READ_SIZE];
 char data_buffer[MAX_DATA];
 char initial_command[3];
 int initial_command_index;
@@ -88,6 +93,7 @@ typedef struct {
     int lcyan_data_rows_per_row;
     char **lmagenta_bufs;
     int lmagenta_data_rows_per_row;
+    int buffer_length;
     int active_height;			/* Height of output data */
     int output_depth;
 } output_t;
@@ -232,7 +238,7 @@ void fill_buffer(void)
 {
 
     if ((read_pointer == -1) || (read_pointer >= read_size)) {
-	read_size = (int) fread(&read_buffer, sizeof(char), 1024, read_fd);
+	read_size = (int) fread(&read_buffer, sizeof(char), READ_SIZE, read_fd);
 
 #ifdef DEBUG
 	fprintf(stderr, "Read %d characters\n", read_size);
@@ -695,7 +701,7 @@ int decode_tiff(char *in_buffer,		/* I: Data buffer */
 	    fprintf(stderr, "\n");
 #endif
 	    if ((dpos + count + 1) > maxlen) {
-		fprintf(stderr, "ERROR: Too much expanded data (%d), increase MAX_DATA!\n", dpos + count + 1);
+		fprintf(stderr, "ERROR: Too much expanded data (%d)!\n", dpos + count + 1);
 		exit(EXIT_FAILURE);
 	    }
 	    memcpy(&decode_buf[dpos], &in_buffer[pos+1], (size_t) (count + 1));
@@ -707,7 +713,7 @@ int decode_tiff(char *in_buffer,		/* I: Data buffer */
 	    fprintf(stderr, "%02x repeated %d times\n", (unsigned char) in_buffer[pos + 1], 1 - count);
 #endif
 	    if ((dpos + 1 - count) > maxlen) {
-		fprintf(stderr, "ERROR: Too much expanded data (%d), increase MAX_DATA!\n", dpos + 1 - count);
+		fprintf(stderr, "ERROR: Too much expanded data (%d)!\n", dpos + 1 - count);
 		exit(EXIT_FAILURE);
 	    }
 	    memset(&decode_buf[dpos], in_buffer[pos + 1], (size_t) (1 - count));
@@ -813,7 +819,9 @@ int main(int argc, char *argv[])
     output_data.lcyan_data_rows_per_row = 0;
     output_data.lmagenta_bufs = NULL;
     output_data.lmagenta_data_rows_per_row = 0;
+    output_data.buffer_length = 0;
     output_data.active_height = 0;
+    output_data.output_depth = 0;
 
     id = id;				/* Remove compiler warning */
     received_rows = NULL;
@@ -1011,40 +1019,42 @@ int main(int argc, char *argv[])
  * Allocate some storage for the expected planes
  */
 
+		output_data.buffer_length = (image_data.image_width + 7) / 8;
+
 		if (output_data.black_data_rows_per_row != 0) {
 		    output_data.black_bufs = xmalloc(output_data.black_data_rows_per_row * sizeof (char *));
 		    for (i=0; i < output_data.black_data_rows_per_row; i++) {
-			output_data.black_bufs[i] = xmalloc(MAX_DATA * sizeof (char));
+			output_data.black_bufs[i] = xmalloc(output_data.buffer_length * sizeof (char));
 		    }
 		}
 		if (output_data.cyan_data_rows_per_row != 0) {
 		    output_data.cyan_bufs = xmalloc(output_data.cyan_data_rows_per_row * sizeof (char *));
 		    for (i=0; i < output_data.cyan_data_rows_per_row; i++) {
-			output_data.cyan_bufs[i] = xmalloc(MAX_DATA * sizeof (char));
+			output_data.cyan_bufs[i] = xmalloc(output_data.buffer_length * sizeof (char));
 		    }
 		}
 		if (output_data.magenta_data_rows_per_row != 0) {
 		    output_data.magenta_bufs = xmalloc(output_data.magenta_data_rows_per_row * sizeof (char *));
 		    for (i=0; i < output_data.magenta_data_rows_per_row; i++) {
-			output_data.magenta_bufs[i] = xmalloc(MAX_DATA * sizeof (char));
+			output_data.magenta_bufs[i] = xmalloc(output_data.buffer_length * sizeof (char));
 		    }
 		}
 		if (output_data.yellow_data_rows_per_row != 0) {
 		    output_data.yellow_bufs = xmalloc(output_data.yellow_data_rows_per_row * sizeof (char *));
 		    for (i=0; i < output_data.yellow_data_rows_per_row; i++) {
-			output_data.yellow_bufs[i] = xmalloc(MAX_DATA * sizeof (char));
+			output_data.yellow_bufs[i] = xmalloc(output_data.buffer_length * sizeof (char));
 		    }
 		}
 		if (output_data.lcyan_data_rows_per_row != 0) {
 		    output_data.lcyan_bufs = xmalloc(output_data.lcyan_data_rows_per_row * sizeof (char *));
 		    for (i=0; i < output_data.lcyan_data_rows_per_row; i++) {
-			output_data.lcyan_bufs[i] = xmalloc(MAX_DATA * sizeof (char));
+			output_data.lcyan_bufs[i] = xmalloc(output_data.buffer_length * sizeof (char));
 		    }
 		}
 		if (output_data.lmagenta_data_rows_per_row != 0) {
 		    output_data.lmagenta_bufs = xmalloc(output_data.lmagenta_data_rows_per_row * sizeof (char *));
 		    for (i=0; i < output_data.lmagenta_data_rows_per_row; i++) {
-			output_data.lmagenta_bufs[i] = xmalloc(MAX_DATA * sizeof (char));
+			output_data.lmagenta_bufs[i] = xmalloc(output_data.buffer_length * sizeof (char));
 		    }
 		}
 
@@ -1325,7 +1335,7 @@ int main(int argc, char *argv[])
 
 		for (i=0; i<expected_data_rows_per_row; i++)
 		{
-		    memset(received_rows[i], 0, (size_t) MAX_DATA * sizeof(char));
+		    memset(received_rows[i], 0, (size_t) output_data.buffer_length * sizeof(char));
 		}
 		for (i=0; i<numeric_arg; i++)
 		{
@@ -1564,7 +1574,7 @@ int main(int argc, char *argv[])
 		    output_data.active_height = numeric_arg;
 		}
 		else
-		    output_data.active_height = decode_tiff(data_buffer, numeric_arg, received_rows[current_data_row], MAX_DATA);
+		    output_data.active_height = decode_tiff(data_buffer, numeric_arg, received_rows[current_data_row], output_data.buffer_length);
 
 		if (command == PCL_DATA_LAST) {
 		    if (image_data.colour_type == PCL_MONO)
