@@ -252,7 +252,7 @@ gimp_create_main_window (void)
    * the thumbnail...
    */
 
-  adjusted_thumbnail_data = g_xmalloc (3 * thumbnail_w * thumbnail_h);
+  adjusted_thumbnail_data = g_malloc (3 * thumbnail_w * thumbnail_h);
 
   /*
    * Create the main dialog
@@ -2256,7 +2256,7 @@ gimp_preview_update (void)
     gint v_error = v_denominator / 2;
     gint y = 0;
 
-    preview_data = g_xmalloc(3 * preview_h * preview_w);
+    preview_data = g_malloc(3 * preview_h * preview_w);
     while (y < preview_h)
       {
 	if (v_cur == v_last)
