@@ -1,0 +1,21 @@
+### --------------- Epson Stylus Photo Driver ---------------------------- ###
+
+stp_=gdevstp.$(OBJ) \
+	gdevstp-dither.$(OBJ) \
+	gdevstp-util.$(OBJ) \
+	gdevstp-escp2.$(OBJ)
+
+$(DD)stp.dev:	$(stp_) $(DD)page.dev
+	$(SETPDEV) $(DD)stp $(stp_)
+
+gdevstp.$(OBJ) : gdevstp.c $(PDEVH)
+	$(CCC) -DESCP2_GHOST gdevstp.c
+
+gdevstp-util.$(OBJ) : gdevstp-util.c $(PDEVH)
+	$(CCC) -DESCP2_GHOST gdevstp-util.c
+
+gdevstp-dither.$(OBJ) : gdevstp-dither.c $(PDEVH)
+	$(CCC) -DESCP2_GHOST gdevstp-dither.c
+
+gdevstp-escp2.$(OBJ) : gdevstp-escp2.c $(PDEVH)
+	$(CCC) -DESCP2_GHOST gdevstp-escp2.c
