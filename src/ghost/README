@@ -7,9 +7,9 @@ INTRODUCTION:
  printers with high quality.  The same driver now supports many Canon,
  HP, and Lexmark printers.
 
- This driver works with GhostScript 5.10, 5.50, and 6.51.  It should
- work with any later releases on the 6.5x GNU Ghostscript line, such
- as 6.52XS.  Due to incompatibilities between the Aladdin Free Public
+ This driver works with GhostScript 5.50 and 6.51.  It should work
+ with any later releases on the 6.5x GNU Ghostscript line, such as
+ 6.52XS.  Due to incompatibilities between the Aladdin Free Public
  License (AFPL) and the GNU General Public License (GPL), this driver
  may not be combined and distributed with versions of GhostScript not
  covered by the GPL.  We will not fix bugs reported against
@@ -48,24 +48,12 @@ LICENSE:
 BUILD AND INSTALLATION:
 ----- --- -------------
 
-1) Get a recent Ghostscript (5.10, 5.50, or 6.51 or its successors)
-   and prepare the sources as described in the documentation (don`t
-   forget zlib, libpng and libjpeg when downloading the source) for
-   compiling
+1) Get a recent Ghostscript (5.50 or 6.51 or its successors) and
+   prepare the sources as described in the documentation (don`t forget
+   zlib, libpng and libjpeg when downloading the source) for compiling
 
-2) If you are using Ghostscript 5.50 or 6.51, you have two choices.
-   The recommended (newer) method follows.  This method builds the stp
-   driver by linking against the libgimpprint library that is
-   installed on your system.  If you wish to use the older method (or
-   you're using Ghostscript 5.10), which actually installs all of the
-   Gimp-Print source files into your Ghostscript source tree, please
-   skip to step 7.  We strongly recommend that all Ghostscript users,
-   except for those who cannot upgrade from 5.10, use the new method.
-
-
-3) The recommended (newer) method requires you to build and install
-   Gimp-print, and links against the installed libgimpprint.so or
-   libgimpprint.a.  Run
+2) You first need to build and install the core Gimp-print library.
+   Run
 
    ./configure
    make
@@ -80,15 +68,14 @@ BUILD AND INSTALLATION:
 
    ./configure --without-gimp
 
-   if you do not wish to build the Gimp Print plugin.  Note that you
-   do *not* need to run "./configure --with-ghost" as before.
+   if you do not wish to build the Gimp Print plugin.
 
-4) Copy the file "gdevstp.c" from this directory into the Ghostscript
+3) Copy the file "gdevstp.c" from this directory into the Ghostscript
    source directory.  Depending upon the version of Ghostscript you
    use, this may be either the top level of your Ghostscript source
    distribution, or the "src/" subdirectory.
 
-5) Edit the file "contrib.mak" (in either the top level or src/
+4) Edit the file "contrib.mak" (in either the top level or src/
    subdirectory, depending upon your version of Ghostscript) by adding
    the contents of "contrib.mak.addon", which should have been created
    by running configure.  Be careful to add *exactly* the contents of
@@ -101,46 +88,7 @@ BUILD AND INSTALLATION:
    must edit the contrib.mak file appropriately.  The contrib.mak.addon
    file in this directory is automatically updated by running configure.
 
-6) Skip to step 11.
-
-
-7) If you are using Ghostscript 5.10, or prefer to use the old, tried
-   and true method for building the driver, run
-
-   ./configure --with-ghost
-   make
-
-   in the top level directory (../.. from here).
-
-   You may optionally run
-
-   ./configure --without-gimp --with-ghost
-
-   if you do not wish to build the Gimp Print plugin.
-
-8) Copy all "*.c" and "*.h" files from this directory to the
-   Ghostscript source directory.  Depending upon the version of
-   Ghostscript you use, this may be either the top level of your
-   Ghostscript source distribution, or the "src/" subdirectory.
-
-9) If you are using Ghostscript 5.50 or 6.51: edit the file
-   "contrib.mak" (in either the top level or src/ subdirectoy,
-   depending upon your version of Ghostscript) by adding the contents
-   of "contrib.mak.addon.old".  Be careful to add *exactly* the
-   contents of this file; if you cut and paste it, you may find that
-   the tab characters in contrib.mak.addon get transformed into
-   spaces, and as a result when you run 'make' it will fail.
-
-10) If you are using Ghostscript 5.10: edit the file "devs.mak" (in
-   either the top level or src/ subdirectoy, depending upon your
-   version of Ghostscript) by adding the contents of
-   "devs.mak.addon-5.10".  Be careful to add *exactly* the contents of
-   this file; if you cut and paste it, you may find that the tab
-   characters in contrib.mak.addon get transformed into spaces, and as
-   a result when you run 'make' it will fail.
-
-
-11) Add "$(DD)stp.dev" to the line "DEVICE_DEVS6=..." in the makefile
+5) Add "$(DD)stp.dev" to the line "DEVICE_DEVS6=..." in the makefile
    used by Ghostscript (this is usually accessible as "makefile" in
    the top level Ghostscript source, but that is normally just a
    symbolic link to a system-specific makefile, such as unix-gcc.mak).
@@ -148,7 +96,7 @@ BUILD AND INSTALLATION:
    add this to any such line.  If there is no DEVICE_DEVS6= line, you
    may add it to any other DEVICE_DEVSx line that is present.
 
-12) Compile and install gs as described in the Ghostscript
+6) Compile and install gs as described in the Ghostscript
    documentation.  After a successful compiler run you get a new
    driver named "stp".  Check this by calling "gs -h" with the newly
    compiled Ghostscript.
@@ -157,92 +105,6 @@ The distribution includes a utility named "escputil" that performs
 many utility functions, such as head cleaning, nozzle alignment, and
 the like, for Epson Stylus printers.  This is normally compiled by
 "make" and installed by "make install".
-
-
-DEBIAN:
--------
-
-Debian users can try the following (contributed by Stuart Miles and
-updated by Dan Christensen <jdc@julian.uwo.ca>): versions are current
-as of 5 October 2000.  The Debian installation procedure is being
-extensively redone as of February 2001.
-
-As of version 5.50 and 6.61, the current Debian packages in testing
-(woody) and unstable (sid) are linked with libgimpprint, thus
-saving you the effort of doing any patching yourself!  Because it
-uses a shared object (libgimpprint.so), you may upgrade the
-gimp-print drivers simply by installing a newer version of the
-libgimpprint library.
-
-NOTE: the script 'scripts/make-deb.sh' does the following for you.
-      It is probably better to upgrade to a new 5.50 or 6.51 release;
-      only use this if you are running stable (potato) or earlier.
-
-Download the debianised sources for gs-aladdin and libjpeg to the
-directory containing the print-x.xxx directory:
-
-# apt-get source gs libjpeg62
-
-(Make sure you have a deb-src entry in /etc/apt/sources.list first!
-See the sources.list(5) man page for more info on setting up apt.)
-
-The name of the libjpeg package may vary.
-
-This will download the .dsc, orig.tar.gz and diff.gz files, unpack and
-patch the files for you.
-
-Rename the libjpegxxx (currently libjpeg6b-6b) directory to libjpeg.
-
-To compile gs you will also need the following installed:
-
-# apt-get install sharutils zlib1g-dev svgalibg1-dev libpng2-dev vflib2-dev
-
-The name of the packages may vary. The above corresponds to
-
-sharutils 4.2.1-2 shar, unshar, uuencode, uudecode
-zlib1g-dev 1.1.3-11 compression library - development
-svgalibg1-dev 1.4.1-2 Shared, non-x, graphics library used by Ghos
-libpng2-dev 1.0.8-1 PNG library - development
-vflib2-dev 2.25.1-5 Vector Font Library for Japanese Character C
-
-but current versions (and possibly older versions) will probably
-work as well.
-
-Next do the following:
-
-# mkdir gs-x.xx/contrib/stp
-# cd print-x.xxx/Ghost
-# cp gdevstp* *.mak.addon* ../../gs-x.xx/contrib/stp
-# cp README ../../gs-x.xx/contrib/stp/README.stp
-# cp debian-patch ../../gs-x.xx/debian
-# cp debian-patch-stp ../../gs-x.xx/debian/patches/stp
-# cd ../../gs-x.xx/debian
-# patch < debian-patch [patches control and rules files]
-# chmod u+x addentry [maybe this should be fixed in the tar file?]
-# cd .. [now we are in gs-x.xx]
-# debian/rules binary
-
-The rules script will copy the sourcefiles and README.stp into the
-main gs directory, patch contrib.mak, add the stp entry to
-unix-gcc.mak, compile gs, package it all up as a .deb package
-(gs-stp_5.10-9.1_i386.deb) and put the resulting file in the directory
-above gs.
-
-To install it:
-
-# cd ..
-# dpkg -i gs-stp_5.10-9.1_i386.deb
-
-If you have gs or gs-aladdin installed, it will be removed.
-
-DISCLAIMER:
-
-This is not an official Debian package. This method works for at
-least one person. To be really neat and tidy other files need
-modifying to ensure that this custom package gets marked as such and
-_not_ an official package. The only problem I've found is that I
-the gs-pdfencrypt insists on having gs installed rather than gs-stp.
-If you know how to fix this, please update this README.
 
 
 OPTIONS:

@@ -249,8 +249,8 @@ GHOSTSCRIPT
 
     This package includes a Ghostscript driver that may be built,
     allowing use of this software for general printing purposes.  This
-    package requires Ghostscript 5.10, 5.50, or 6.51.  Later releases
-    in the 6.5x GNU Ghostscript branch (e. g. 6.52) should also work.
+    package requires Ghostscript 5.50 or 6.51.  Later releases in the
+    6.5x GNU Ghostscript branch (e. g. 6.52) should also work.
 
     We *strongly* recommend that end users not attempt to use this
     driver directly.  The available options are very complex, and the
@@ -266,16 +266,15 @@ GHOSTSCRIPT
     to build and install it, and available options; the build
     procedure here merely creates the necessary source files that you
     must add to your Ghostscript source.  The directions vary for
-    different versions of Ghostscript.  Only Ghostscript 5.10, 5.50,
-    and 6.51 are currently supported.  In particular, versions of
-    Ghostscript that are not licensed under the GNU General Public
-    License (GPL) are not supported, and this driver may not be
-    distributed with such a version.
+    different versions of Ghostscript.  Only Ghostscript 5.50 and 6.51
+    (and its successors in the 6.5x line) are currently supported.  In
+    particular, versions of Ghostscript that are not licensed under
+    the GNU General Public License (GPL) are not supported, and this
+    driver may not be distributed with such a version.
 
     Note that many of the options to the Ghostscript driver are
-    incompatible with the options used prior to release 4.1.99-a3.
-    Please read src/ghost/README for information on the current
-    options.
+    incompatible with the options used prior to release 4.2.  Please
+    read src/ghost/README for information on the current options.
 
 
 PRINTER-SPECIFIC NOTES:

@@ -110,7 +110,6 @@ dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 BUILD_CUPS=no
 BUILD_TRANSLATED_PPDS=yes
 USE_LEVEL3_PS=no
-BUILD_GHOST=no
 BUILD_FOOMATIC=no
 BUILD_TEST=no
 BUILD_TESTPATTERN=no
@@ -191,16 +190,6 @@ AC_ARG_ENABLE(cups-level3-ppds,
     *) AC_MSG_RESULT([unknown])
        AC_MSG_ERROR([bad value ${enableval} for --enable-cups-level3-ps]) ;;
   esac],[AC_MSG_RESULT([${USE_LEVEL3_PS}])])
-
-AC_MSG_CHECKING([whether to build ghostscript driver])
-AC_ARG_WITH(ghost,
-[  --with-ghost            build ghostscript driver patch [default=${BUILD_GHOST}]],
-  [case "${withval}" in
-    yes) BUILD_GHOST="yes" ; AC_MSG_RESULT([yes]) ;;
-    no) BUILD_GHOST="no" ; AC_MSG_RESULT([no]) ;;
-    *) AC_MSG_RESULT([unknown])
-       AC_MSG_ERROR([bad value ${withval} for --with-ghost]) ;;
-  esac],[AC_MSG_RESULT([${BUILD_GHOST}])])
 
 AC_MSG_CHECKING([whether to build foomatic data files])
 AC_ARG_WITH(foomatic,
@@ -622,8 +611,6 @@ else
 fi
 
 AM_CONDITIONAL(USE_LEVEL3_PS, test x${USE_LEVEL3_PS} = xyes)
-
-AM_CONDITIONAL(BUILD_GHOST, test x${BUILD_GHOST} = xyes)
 
 if test x${BUILD_ESCPUTIL} = xyes ; then
   ESCPUTIL_BIN='$(ESCPUTIL_BIN)'
