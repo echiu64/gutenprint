@@ -1,4 +1,4 @@
-Gimp-Print 4.2.7-pre1, released April 5, 2004, is a prerelease
+Gimp-Print 4.2.7-pre1, released April 11, 2004, is a prerelease
 in the Gimp-Print 4.2 series.
 
 Gimp-Print is a suite of printer drivers that may be used with most
@@ -11,8 +11,8 @@ can be used for many of the most demanding printing tasks.
 This software includes the Print plug-in for the Gimp, and GhostScript
 and CUPS drivers, including Foomatic data.
 
-The Print plug-in for the GIMP requires the Gimp 1.2.  The Gimp 1.3
-is not supported at this time.
+The Print plug-in for the GIMP requires the Gimp 1.2.  The GIMP 1.3
+and 2.0 are not supported.
 
 The CUPS driver requires CUPS 1.1.9 or higher.  1.1.14 or above is
 highly recommended, as certain translation-related bugs are fixed and
@@ -42,6 +42,21 @@ http://gimp-print.sourceforge.net/MacOSX.php3.
 Please read the README file for full instructions on installing this
 package from source code.
 
+These release notes contain the following sections:
+
+1) Changes from 4.2.6 to 4.2.7-pre1
+2) Changes from 4.2.5 to 4.2.6
+3) Changes from 4.2.4 to 4.2.5
+4) Changes from 4.2.3 to 4.2.4
+5) Changes from 4.2.2 to 4.2.3
+6) Changes from 4.2.1 to 4.2.2
+7) Changes from 4.2.0 to 4.2.1
+8) Overall changes from 4.0 to 4.2
+9) List of supported printers
+10) Printer-specific notes
+
+================================================================
+
 Gimp-Print 4.2.7-pre1 contains the following major changes over Gimp-Print
 4.2.6:
 
@@ -70,12 +85,13 @@ Gimp-Print 4.2.7-pre1 contains the following major changes over Gimp-Print
      The programs most commonly affected were Adobe InDesign 2.0 and
      psnup.
 
-  6) (bug 924862) The package now operates correctly with
-     the GIMP 2.0 on Solaris and other systems using an external
-     libintl.
+  6) (bug 924862) The package now operates correctly with on Solaris
+     and other systems using an external libintl.
 
   7) (bug 929227) Gimp-Print no longer attempts to build (and fail)
-     the Print plugin against the GIMP 2.0
+     the Print plugin against the GIMP 2.0.  This fix requires a
+     special build procedure in some circumstances; please see item
+     (10) under Exceptions and Workarounds below.
 
 
 * New functionality:
@@ -200,6 +216,53 @@ Gimp-Print 4.2.7-pre1 contains the following major changes over Gimp-Print
 
      3) Edit cups-config to remove the reference to the run path.
 
+  10) The fix for bug 929227 (Gimp-Print incorrectly attempts to build
+     against GIMP 2.0) requires special build instructions if you are
+     using a very old version of the GIMP 1.2 (versions affected are
+     believed to include 1.2.0, 1.2.1, and 1.2.2).  Specifically, you
+     must set GIMPTOOL in the environment to point to the proper
+     version of gimptool when running Gimp-Print's configure script.
+     For example:
+
+     GIMPTOOL=/usr/bin/gimptool ./configure
+
+     The bug fix involves checking for the presence of the GIMP
+     slightly differently from how it was previously done.
+     Previously, Gimp-Print checked for the presence of a program
+     named "gimptool", which provides information about how to build
+     plugins against the GIMP.  This worked correctly when only the
+     GIMP 1.2 was installed, but not when the GIMP 2.0 was installed.
+
+     The GIMP 2.0 actually installs a program named "gimptool-2.0",
+     and creates a symbolic link named "gimptool" pointing to it.
+     Later versions of the GIMP 1.2 (1.2.3, 1.2.4, 1.2.5, and any
+     later versions that may be released) similarly create a program
+     named "gimptool-1.2" and a symbolic link named "gimptool".
+     As the configure script prior to this bug fix simply checked for
+     gimptool, it incorrectly detected a gimptool from the GIMP 2.0,
+     which this version of Gimp-Print cannot build against.
+
+     The current configure script checks first for gimptool-1.2 and
+     then for gimptool, and only accepts the use of a GIMP 1.2 version
+     of one of these programs.  However, if you have one of the older
+     versions of the GIMP 1.2 installed in a non-standard location,
+     and you use --with-gimp-prefix or --with-gimp-exec-prefix to
+     specify its location, the configure script will not automatically
+     detect the correct location of gimptool, and you must specify it
+     as described above.  Note that you must specify a copy of
+     gimptool from the GIMP 1.2, not from the GIMP 2.0.  If your copy
+     of the GIMP is installed in a standard location (typically
+     /usr/bin or /usr/local/bin), you do not need to use
+     --with-gimp-prefix or --with-gimp-exec-prefix, and therefore do
+     not need to use this workaround.
+
+     The Gimp-Print and GIMP projects recommend upgrading to a newer
+     revision of the GIMP 1.2 (at the time these release notes are
+     written, the latest version is 1.2.5), which will not require
+     this workaround.  This workaround is available in the event that
+     you cannot or do not wish to upgrade your installation of the
+     GIMP.
+
 
 The following bugs have been fixed in Gimp-Print 4.2.7-pre1:
 
@@ -233,7 +296,7 @@ The following bugs are currently open:
 687656 Paper Positioning Problems Epson 7600
 704334 QUALITY: Epson SP 2100: Green Cast/Dark Colours/Poor Greys
 811062 Reverse printing
-
+================================================================
 
 Gimp-Print 4.2.6 contains the following major changes over Gimp-Print
 4.2.5:
@@ -321,7 +384,7 @@ The following bugs have been tested and cannot be reproduced:
 
 764041 CNR: Epson 3000 720x360DPI problem
 828993 CNR: Epson SC 850 using Microweave prints tall characters
-
+================================================================
 
 Gimp-Print 4.2.5 contains the following major changes over Gimp-Print
 4.2.4:
@@ -461,7 +524,7 @@ The following bugs have been fixed in Gimp-Print 4.2.5:
 672845 Buffer overflow in escputil
 672846 rastertoprinter does not compile on Solaris with gcc
 672850 Epson back end in CUPS driver can lock up
-
+================================================================
 
 Gimp-Print 4.2.4 contains the following major changes over Gimp-Print
 4.2.3:
@@ -576,7 +639,7 @@ The following bugs have been fixed in Gimp-Print 4.2.4:
 631936 HP DesignJet Margin Problems
 631993 Macintosh OS X: Custom page size problems w/some apps
 633910 Epson 1520 ppd bug gimp-print 4.2.3
-
+================================================================
 
 
 Gimp-Print 4.2.3 contains the following major changes over Gimp-Print
@@ -672,7 +735,7 @@ The following bugs have been fixed in Gimp-Print 4.2.3:
 621667 Very large prints on Epson 9500 fail
 622612 CUPS driver forbids custom page sizes
 625602 QUALITY Pale output on Stylus Pro 7500
-
+================================================================
 
 
 Gimp-Print 4.2.2 contains the following major changes over Gimp-Print
@@ -802,7 +865,7 @@ The following bugs have been fixed in Gimp-Print 4.2.2:
 598341 get_system_printers() problem with duplicate entries
 599505 PS2 printing from GIMP broken with CUPS
 600249 gimp-print output too narrow in CUPS
-
+================================================================
 
 
 Gimp-Print 4.2.1 contains the following major changes over Gimp-Print
@@ -899,7 +962,7 @@ The following bugs have been fixed in 4.2.1:
 540307 Syntax error in CloseUI in PPD files
 543562 Portability issues
 548844 OS X support
-
+================================================================
 
 
 Gimp-Print 4.2.0 contains the following major changes over Gimp-Print
@@ -1183,7 +1246,7 @@ Gimp-Print 4.2.0 contains the following major changes over Gimp-Print
 
   4) The "unprint" program supplied in the test directory is much more
      functional and accurate than previously.
-
+================================================================
 
 Supported Printers:
 
@@ -2058,7 +2121,7 @@ Generic PCL 5 Printer          pcl-4           HP LaserJet 4 series
 Generic PCL 5c Printer         pcl-4           HP LaserJet 4 series
 Generic PCL 5e Printer         pcl-4           HP LaserJet 4 series
 Generic PCL 6/PCL XL Printer   pcl-6           HP LaserJet 6 series
-
+================================================================
 
 Printer-Specific Notes:
 
