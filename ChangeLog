@@ -1,3 +1,60 @@
+2000-12-18	<rlk@sourceforge.net>
+
+	Files:	configure.in (1.40) (+9 -1)
+	
+	Enable --enable-gimptest=no
+	
+2000-12-18	<rlk@sourceforge.net>
+
+	Files:	README (1.38) (+0 -6)
+		Ghost/README (1.58) (+46 -32)
+		RELNOTES (1.35) (+45 -1)
+	
+	Prep for 4.1.0 release
+	
+2000-12-18	<rlk@sourceforge.net>
+
+	Files:	cups/genppd.c (1.15) (+4 -4)
+	
+	strlen(x) + 1 != strlen(x + 1)
+	
+2000-12-18	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.285) (+2 -1)
+	
+	Add 720 micoweave unidirectional
+	
+2000-12-18	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.284) (+2 -1)
+	
+	Add 180 unidirectional
+	
+2000-12-17	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.283) (+109 -71)
+		printers.xml (1.38) (+8 -0)
+	
+	Prepare Epson driver for future 7 color printer(s).
+	
+	Add S450 as alias for Canon bjc-6000
+	
+2000-12-17	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.64) (+7 -0)
+		print-escp2.c (1.282) (+361 -518)
+		print-dither.c (1.110) (+18 -18)
+	
+	Generate dither matrices more correctly.
+	
+	Revamp ink type stuff heavily in Epson driver.
+	
+2000-12-16	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.109) (+26 -3)
+	
+	Look a little better in very fast mode, at least at square resolutions.
+	
 2000-12-16	<rlk@sourceforge.net>
 
 	Files:	ChangeLog (1.63) (+26 -0)
