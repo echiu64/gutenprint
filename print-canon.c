@@ -689,7 +689,7 @@ canon_advance_buffer(unsigned char *buf, int len, int num)
 }
 
 /*
- * 'canon_print()' - Print an image to an CANON printer.
+ * 'canon_print()' - Print an image to a CANON printer.
  */
 void
 canon_print(const printer_t *printer,		/* I - Model */
@@ -1072,9 +1072,9 @@ canon_print(const printer_t *printer,		/* I - Model */
 
   if (!use_dmt) {
     dither_set_light_inks(dither, 
-			  (lcyan)   ? (.25) : (0.0), 
-			  (lmagenta)? (.25) : (0.0), 
-			  (lyellow) ? (.25) : (0.0), nv.density);
+			  (lcyan)   ? (.3333) : (0.0), 
+			  (lmagenta)? (.3333) : (0.0), 
+			  (lyellow) ? (.3333) : (0.0), nv.density);
   }
 
   switch (nv.image_type)
