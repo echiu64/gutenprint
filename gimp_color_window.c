@@ -61,6 +61,81 @@ static void gimp_dither_algo_callback (GtkWidget *widget,
 				       gpointer   data);
 void gimp_build_dither_menu    (void);
 
+static GtkDrawingArea *swatch;
+static void redraw_swatch(void);
+
+#define SWATCH_W (128)
+#define SWATCH_H (128)
+
+extern gint thumbnail_w, thumbnail_h, thumbnail_bpp;
+extern guchar *thumbnail_data;
+
+
+static void
+redraw_swatch (void)
+{
+  static GdkGC *gc = NULL;
+  static GdkColormap *cmap;
+  int x, y, out_bpp;
+  convert_t colourfunc;
+  unsigned short out[3 * SWATCH_W * SWATCH_H];
+  unsigned char *outscan;
+  float old_density = vars.density;
+
+  static GdkImage *img = NULL;
+
+  if (swatch->widget.window == NULL) {
+    return;
+  }
+
+  if (img == NULL)
+    img = gdk_image_new (GDK_IMAGE_NORMAL,
+                         gdk_window_get_visual (swatch->widget.window),
+                         thumbnail_w, thumbnail_h);
+
+  vars.density = 1.0;
+
+  compute_lut (256, &vars);
+  colourfunc = choose_colorfunc (vars.output_type, thumbnail_bpp, NULL,
+                                 &out_bpp, &vars);
+
+#if 0
+  gdk_window_clear (swatch->widget.window);
+#endif
+
+  if (gc == NULL) {
+    gc = gdk_gc_new (swatch->widget.window);
+    cmap = gtk_widget_get_colormap (GTK_WIDGET(swatch));
+  }
+
+  for (y = 0; y < thumbnail_h; y++) {
+    (*colourfunc) (thumbnail_data + thumbnail_bpp * thumbnail_w * y,
+                   out + out_bpp * thumbnail_w * y,
+                   thumbnail_w, thumbnail_bpp, NULL, &vars);
+  }
+
+  outscan = (unsigned char *) out;
+  for (x = 0; x < out_bpp * thumbnail_w * thumbnail_h; x++) {
+    outscan[x] = out[x] / 0x0101U;
+  }
+  if (out_bpp == 1) {
+    gdk_draw_gray_image (swatch->widget.window, gc,
+                         (SWATCH_W - thumbnail_w) / 2,
+                         (SWATCH_H - thumbnail_h) / 2,
+                         thumbnail_w, thumbnail_h, GDK_RGB_DITHER_NORMAL,
+                         outscan, out_bpp * thumbnail_w);
+  } else {
+    gdk_draw_rgb_image (swatch->widget.window, gc,
+                        (SWATCH_W - thumbnail_w) / 2,
+                        (SWATCH_H - thumbnail_h) / 2,
+                        thumbnail_w, thumbnail_h, GDK_RGB_DITHER_NORMAL,
+                        outscan, out_bpp * thumbnail_w);
+  }
+
+  vars.density = old_density;
+
+  free_lut (&vars);
+}
 
 /*
  * gimp_create_color_adjust_window (void)
@@ -91,23 +166,37 @@ gimp_create_color_adjust_window (void)
 
 		     NULL);
 
-  table = gtk_table_new (9, 3, FALSE);
+  table = gtk_table_new (10, 3, FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 2);
-  gtk_table_set_row_spacing (GTK_TABLE (table), 1, 6);
-  gtk_table_set_row_spacing (GTK_TABLE (table), 4, 6);
-  gtk_table_set_row_spacing (GTK_TABLE (table), 7, 6);
+  gtk_table_set_row_spacing (GTK_TABLE (table), 2, 6);
+  gtk_table_set_row_spacing (GTK_TABLE (table), 5, 6);
+  gtk_table_set_row_spacing (GTK_TABLE (table), 8, 6);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), table,
 		      FALSE, FALSE, 0);
   gtk_widget_show (table);
+
+  /*
+   * Drawing area for colour swatch feedback display...
+   */
+
+  swatch = (GtkDrawingArea *) gtk_drawing_area_new ();
+  gtk_drawing_area_size (swatch, SWATCH_W, SWATCH_H);
+  gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (swatch),
+                    0, 3, 0, 1, 0, 0, 0, 0);
+  gtk_signal_connect (GTK_OBJECT (swatch), "expose_event",
+                      GTK_SIGNAL_FUNC (redraw_swatch),
+                      NULL);
+  gtk_widget_show (GTK_WIDGET (swatch));
+  gtk_widget_set_events (GTK_WIDGET (swatch), GDK_EXPOSURE_MASK);
 
   /*
    * Brightness slider...
    */
 
   brightness_adjustment =
-    gimp_scale_entry_new (GTK_TABLE (table), 0, 0,
+    gimp_scale_entry_new (GTK_TABLE (table), 0, 1,
                           _("Brightness:"), 200, 0,
                           vars.brightness, lower->brightness,
 			  upper->brightness, defvars->brightness / 100,
@@ -122,7 +211,7 @@ gimp_create_color_adjust_window (void)
    */
 
   contrast_adjustment =
-    gimp_scale_entry_new (GTK_TABLE (table), 0, 1,
+    gimp_scale_entry_new (GTK_TABLE (table), 0, 2,
                           _("Contrast:"), 200, 0,
                           vars.contrast, lower->contrast, upper->contrast,
 			  defvars->contrast / 100, defvars->contrast / 10,
@@ -137,7 +226,7 @@ gimp_create_color_adjust_window (void)
    */
 
   cyan_adjustment =
-    gimp_scale_entry_new (GTK_TABLE (table), 0, 2,
+    gimp_scale_entry_new (GTK_TABLE (table), 0, 3,
                           _("Cyan:"), 200, 0,
                           vars.cyan, lower->cyan, upper->cyan,
 			  defvars->cyan / 100, defvars->cyan / 10, 3,
@@ -152,7 +241,7 @@ gimp_create_color_adjust_window (void)
    */
 
   magenta_adjustment =
-    gimp_scale_entry_new (GTK_TABLE (table), 0, 3,
+    gimp_scale_entry_new (GTK_TABLE (table), 0, 4,
                           _("Magenta:"), 200, 0,
                           vars.magenta, lower->magenta, upper->magenta,
 			  defvars->magenta / 100, defvars->magenta / 10, 3,
@@ -167,7 +256,7 @@ gimp_create_color_adjust_window (void)
    */
 
   yellow_adjustment =
-    gimp_scale_entry_new (GTK_TABLE (table), 0, 4,
+    gimp_scale_entry_new (GTK_TABLE (table), 0, 5,
                           _("Yellow:"), 200, 0,
                           vars.yellow, lower->yellow, upper->yellow,
 			  defvars->yellow / 100, defvars->yellow / 10, 3,
@@ -182,7 +271,7 @@ gimp_create_color_adjust_window (void)
    */
 
   saturation_adjustment =
-    gimp_scale_entry_new (GTK_TABLE (table), 0, 5,
+    gimp_scale_entry_new (GTK_TABLE (table), 0, 6,
                           _("Saturation:"), 200, 0,
                           vars.saturation, lower->saturation,
 			  upper->saturation, defvars->saturation / 1000,
@@ -198,7 +287,7 @@ gimp_create_color_adjust_window (void)
    */
 
   density_adjustment =
-    gimp_scale_entry_new (GTK_TABLE (table), 0, 6,
+    gimp_scale_entry_new (GTK_TABLE (table), 0, 7,
                           _("Density:"), 200, 0,
                           vars.density, lower->density,
 			  upper->density, defvars->density / 1000,
@@ -214,7 +303,7 @@ gimp_create_color_adjust_window (void)
    */
 
   gamma_adjustment =
-    gimp_scale_entry_new (GTK_TABLE (table), 0, 7,
+    gimp_scale_entry_new (GTK_TABLE (table), 0, 8,
                           _("Gamma:"), 200, 0,
                           vars.gamma, lower->gamma,
 			  upper->gamma, defvars->gamma / 1000,
@@ -230,7 +319,7 @@ gimp_create_color_adjust_window (void)
    */
 
   dither_algo_button = gtk_option_menu_new ();
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 8,
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 9,
 			     _("Dither Algorithm:"), 1.0, 0.5,
 			     dither_algo_button, 1, TRUE);
   gimp_build_dither_menu ();
@@ -243,6 +332,7 @@ gimp_brightness_update (GtkAdjustment *adjustment)
     {
       vars.brightness = adjustment->value;
       plist[plist_current].v.brightness = adjustment->value;
+      redraw_swatch();
     }
 }
 
@@ -253,6 +343,7 @@ gimp_contrast_update (GtkAdjustment *adjustment)
     {
       vars.contrast = adjustment->value;
       plist[plist_current].v.contrast = adjustment->value;
+      redraw_swatch();
     }
 }
 
@@ -263,6 +354,7 @@ gimp_cyan_update (GtkAdjustment *adjustment)
     {
       vars.cyan = adjustment->value;
       plist[plist_current].v.cyan = adjustment->value;
+      redraw_swatch();
     }
 }
 
@@ -273,6 +365,7 @@ gimp_magenta_update (GtkAdjustment *adjustment)
     {
       vars.magenta = adjustment->value;
       plist[plist_current].v.magenta = adjustment->value;
+      redraw_swatch();
     }
 }
 
@@ -283,6 +376,7 @@ gimp_yellow_update (GtkAdjustment *adjustment)
     {
       vars.yellow = adjustment->value;
       plist[plist_current].v.yellow = adjustment->value;
+      redraw_swatch();
     }
 }
 
@@ -293,6 +387,7 @@ gimp_saturation_update (GtkAdjustment *adjustment)
     {
       vars.saturation = adjustment->value;
       plist[plist_current].v.saturation = adjustment->value;
+      redraw_swatch();
     }
 }
 
@@ -313,6 +408,7 @@ gimp_gamma_update (GtkAdjustment *adjustment)
     {
       vars.gamma = adjustment->value;
       plist[plist_current].v.gamma = adjustment->value;
+      redraw_swatch();
     }
 }
 

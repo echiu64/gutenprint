@@ -184,6 +184,9 @@ extern void gimp_build_dither_menu           (void);
 
 static gint preview_ppi = 10;
 
+gint thumbnail_w, thumbnail_h, thumbnail_bpp;
+guchar *thumbnail_data;
+
 /*
  *  gimp_create_main_window()
  */
@@ -221,6 +224,15 @@ gimp_create_main_window (void)
 
   const printer_t *the_printer = get_printer_by_index (0);
   gchar *plug_in_name;
+
+  /*
+   * Fetch a thumbnail of the image we're to print from the Gimp...
+   */
+
+  thumbnail_w = 128;
+  thumbnail_h = 128;
+  thumbnail_data = gimp_image_get_thumbnail_data (image_ID, &thumbnail_w,
+                                                  &thumbnail_h, &thumbnail_bpp);
 
   /*
    * Create the main dialog
