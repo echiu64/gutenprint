@@ -307,6 +307,13 @@ main(int  argc,
   puts("");
   printf("    %s\n", cupsProfile);
   puts("");
+  puts("You can add this to the PPD file for this printer to make this change");
+  puts("permanent, or use the following option with a printing command:");
+  puts("");
+  printf("    -o profile=%s\n", profile);
+  puts("");
+  puts("to use the profile for this job only.");
+  puts("");
   puts("Calibration is complete.");
   return 0;
 }
