@@ -776,17 +776,17 @@ typedef enum {
 } colormode_t;
 
 typedef struct canon_caps {
-  int model;
+  int model;          /* model number as used in printers.xml */
   int max_width;      /* maximum printable paper size */
-  int max_height;
-  int base_res;
-  int max_xdpi;
-  int max_ydpi;
-  int max_quality;
-  int border_left;
-  int border_right;
-  int border_top;
-  int border_bottom;
+  int max_height;     
+  int base_res;       /* base resolution - shall be 150 or 180 */
+  int max_xdpi;       /* maximum horizontal resolution */
+  int max_ydpi;       /* maximum vertical resolution */
+  int max_quality;    
+  int border_left;    /* left margin, points */
+  int border_right;   /* right margin, points */
+  int border_top;     /* absolute top margin, points */
+  int border_bottom;  /* absolute bottom margin, points */
   int inks;           /* installable cartridges (CANON_INK_*) */
   int slots;          /* available paperslots */
   int features;       /* special bjl settings */

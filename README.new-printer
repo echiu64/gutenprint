@@ -407,3 +407,68 @@ get rid of all color casts.
 
 There are other ways of tuning printers, but this one works pretty
 well for me.
+
+
+CANON INKJET PRINTERS
+
+Basically, a new canon printer can be added to print-canon.c in a similar 
+way as described above for the epson inkjet printers. The main differences 
+are noted here:
+
+In general, canon printers have more "built-in intelligence" than epson 
+printers which results in the fact that the driver only has to tell the 
+printing conditions like resolutions, dot sizes, etc. to the printer and 
+afterwards transfer the raster data line by line for each color used. 
+
+"canon_cap_t" is a C struct defined as follows:
+
+typedef struct canon_caps {
+  int model;          /* model number as used in printers.xml */
+  int max_width;      /* maximum printable paper size */
+  int max_height;     
+  int base_res;       /* base resolution - shall be 150 or 180 */
+  int max_xdpi;       /* maximum horizontal resolution */
+  int max_ydpi;       /* maximum vertical resolution */
+  int max_quality;    
+  int border_left;    /* left margin, points */
+  int border_right;   /* right margin, points */
+  int border_top;     /* absolute top margin, points */
+  int border_bottom;  /* absolute bottom margin, points */
+  int inks;           /* installable cartridges (CANON_INK_*) */
+  int slots;          /* available paperslots */
+  int features;       /* special bjl settings */
+  canon_dot_size_t dot_sizes;	/* Vector of dot sizes for resolutions */
+  canon_densities_t densities;	/* List of densities for each printer */
+  canon_variable_inklist_t *inxs; /* Choices of inks for this printer */
+} canon_cap_t;
+
+Since there are canon printers which print in resolutions of 2^n*150 dpi 
+(e.g. 300, 600, 1200) and others which support resolutions of 2^n*180 dpi 
+(e.g. 360, 720, 1440), there's a base resolution (150 or 180, respectively)
+given in the canon_cap_t. The structs canon_dot_size_t, canon_densities_t 
+and canon_variable_inklist_t refer to resolutions being multiples of the
+base resolution.
+
+For the canon driver, the struct canon_dot_size_t holds values for a model's 
+capabilities at a given resolution: "-1" if the resolution is not supported.
+"0" if it can be used and "1" if the resolution can be used for variable dot
+size printing. 
+
+In canon_densities_t the base densities for each resolution can be specified 
+like for an epson printer, the same holds true for canon_variable_inklist_t.
+See the descriptions above to learn about how to adjust your model's output
+to yield nice results.
+
+If you plan to add or adjust a model for 7color printing, please note that 
+7color printing is not yet supported in the canon_variable_inklist_t struct.
+Extending this struct means to also extend all ink definitions, accordingly.
+The same should be true for 3color models (i.e. those that can only print 
+with CMY and not K)
+
+
+
+
+
+
+
+
