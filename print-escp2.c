@@ -2994,7 +2994,9 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	{
 	  /* FIXME need a more general way of specifying column */
 	  /* separation */
-	  if (escp2_has_cap(model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999))
+	  if (escp2_has_cap(model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999) &&
+	      !(escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
+			      MODEL_VARIABLE_NORMAL)))
 	    {
 	      int pos = ((hoffset * xdpi / 720) + microoffset);
 	      if (pos > 0)
