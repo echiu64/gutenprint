@@ -1254,7 +1254,7 @@ c_strdup(const char *s)
   return ret;
 }
 
-int canon_res_code(canon_cap_t caps, int xdpi, int ydpi)
+static int canon_res_code(canon_cap_t caps, int xdpi, int ydpi)
 {
   int x, y, res= 0;
 
@@ -1718,7 +1718,7 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
   canon_cmd(prn,ESC28,0x65, 2, (top >> 8 ),(top & 255));
 }
 
-void canon_deinit_printer(FILE *prn, canon_cap_t caps)
+static void canon_deinit_printer(FILE *prn, canon_cap_t caps)
 {
   /* eject page */
   fputc(0x0c,prn);
