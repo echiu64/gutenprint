@@ -16,5 +16,6 @@ cups-gimpprint.list
 debian-build
 intl
 libtool
+m4local
 stamp-h
 stamp-h.in

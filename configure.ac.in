@@ -426,7 +426,7 @@ fi
 popdef([PLUG_IN_PATH])
 
 dnl Honour aclocal flags.
-dnl AM_ACLOCAL_INCLUDE m4local
+dnl AM_ACLOCAL_INCLUDE(m4local)
 ACLOCAL_FLAGS='-I src/main'
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
