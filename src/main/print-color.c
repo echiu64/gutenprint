@@ -679,6 +679,10 @@ copy_lut(void *vlut)
       stp_curve_cache_copy(&(dest->channel_curves[i]), &(src->channel_curves[i]));
       dest->gamma_values[i] = src->gamma_values[i];
     }
+  stp_curve_cache_copy(&(dest->brightness_correction),
+		       &(src->brightness_correction));
+  stp_curve_cache_copy(&(dest->contrast_correction),
+		       &(src->contrast_correction));
   stp_curve_cache_copy(&(dest->user_color_correction),
 		       &(src->user_color_correction));
   dest->print_gamma = src->print_gamma;
@@ -691,7 +695,6 @@ copy_lut(void *vlut)
   stp_curve_cache_copy(&(dest->lum_map), &(src->lum_map));
   stp_curve_cache_copy(&(dest->sat_map), &(src->sat_map));
   stp_curve_cache_copy(&(dest->gcr_curve), &(src->gcr_curve));
-  stp_curve_cache_copy(&(dest->user_color_correction), &(src->gcr_curve));
   /* Don't copy gray_tmp */
   /* Don't copy cmy_tmp */
   /* Don't copy cmyk_tmp */
@@ -708,6 +711,8 @@ free_lut(void *vlut)
 {
   lut_t *lut = (lut_t *)vlut;
   free_channels(lut);
+  stp_curve_free_curve_cache(&(lut->brightness_correction));
+  stp_curve_free_curve_cache(&(lut->contrast_correction));
   stp_curve_free_curve_cache(&(lut->user_color_correction));
   stp_curve_free_curve_cache(&(lut->hue_map));
   stp_curve_free_curve_cache(&(lut->lum_map));
@@ -868,14 +873,23 @@ static void
 compute_user_correction(lut_t *lut)
 {
   double *tmp;
-  double xcontrast = pow(lut->contrast, lut->contrast);
-  stp_curve_t *curve = stp_curve_cache_get_curve(&(lut->user_color_correction));
+  double *tmp_brightness;
+  double *tmp_contrast;
+  double xcontrast = lut->contrast;
+  stp_curve_t *curve =
+    stp_curve_cache_get_curve(&(lut->user_color_correction));
+  stp_curve_t *brightness_curve =
+    stp_curve_cache_get_curve(&(lut->brightness_correction));
+  stp_curve_t *contrast_curve =
+    stp_curve_cache_get_curve(&(lut->contrast_correction));
   double brightness = lut->brightness;
   int i;
   int isteps = lut->steps;
   if (isteps > 256)
     isteps = 256;
   tmp = stp_malloc(sizeof(double) * lut->steps);
+  tmp_brightness = stp_malloc(sizeof(double) * lut->steps);
+  tmp_contrast = stp_malloc(sizeof(double) * lut->steps);
   if (brightness < .001)
     brightness = 1000;
   else if (brightness > 1.999)
@@ -924,29 +938,36 @@ compute_user_correction(lut_t *lut)
 	pixel = temp_pixel;
       else
 	pixel = 1 - temp_pixel;
+      tmp_contrast[i] = floor((pixel * 65535) + .5);
 
       /*
        * Second, do brightness
        */
-      pixel = pow(pixel, brightness);
-
-      /*
-       * Third, correct for the screen gamma
-       */
-
-      pixel = pixel * 65535.0;
-      if (pixel <= 0.0)
-	tmp[i] = 0;
-      else if (pixel >= 65535.0)
-	tmp[i] = 65535;
+      if (brightness < 1)
+	pixel = pow(pixel, brightness);
       else
-	tmp[i] = (pixel);
-      tmp[i] = floor(tmp[i] + 0.5);		/* rounding is done here */
+	pixel = 1.0 - pow(1.0 - pixel, 1.0 / brightness);
+      tmp[i] = floor((pixel * 65535) + .5);
+      
+      pixel = (double) i / (double) (isteps - 1);
+      if (brightness < 1)
+	pixel = pow(pixel, brightness);
+      else
+	pixel = 1.0 - pow(1.0 - pixel, 1.0 / brightness);
+      tmp_brightness[i] = floor((pixel * 65535) + .5);
     }  
   stp_curve_set_data(curve, isteps, tmp);
   if (isteps != lut->steps)
     stp_curve_resample(curve, lut->steps);
+  stp_curve_set_data(brightness_curve, isteps, tmp_brightness);
+  if (isteps != lut->steps)
+    stp_curve_resample(brightness_curve, lut->steps);
+  stp_curve_set_data(contrast_curve, isteps, tmp_contrast);
+  if (isteps != lut->steps)
+    stp_curve_resample(contrast_curve, lut->steps);
   stp_free(tmp);
+  stp_free(tmp_brightness);
+  stp_free(tmp_contrast);
 }
 
 static void
@@ -1163,6 +1184,14 @@ stpi_compute_lut(stp_vars_t *v)
   stp_curve_rescale(curve, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
 		    STP_CURVE_BOUNDS_RESCALE);
   stp_curve_cache_set_curve(&(lut->user_color_correction), curve);
+  curve = stp_curve_create_copy(color_curve_bounds);
+  stp_curve_rescale(curve, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
+		    STP_CURVE_BOUNDS_RESCALE);
+  stp_curve_cache_set_curve(&(lut->brightness_correction), curve);
+  curve = stp_curve_create_copy(color_curve_bounds);
+  stp_curve_rescale(curve, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
+		    STP_CURVE_BOUNDS_RESCALE);
+  stp_curve_cache_set_curve(&(lut->contrast_correction), curve);
   compute_user_correction(lut);
 
   /*
