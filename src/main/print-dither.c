@@ -1156,6 +1156,15 @@ stp_dither_set_shades(void *vd, int color, int nshades,
 {
   int i, j;
 
+  /* Setting ink_gamma to different values changes the amount
+     of photo ink used (or other lighter inks). Set to 0 it uses
+     the maximum amount of ink possible without soaking the paper.
+     Set to 1.0 it is very conservative.
+     0.5 is probably a good compromise
+   */
+
+  const double ink_gamma = 0.5;
+
   dither_t *d = (dither_t *) vd;
   dither_channel_t *dc = &(PHYSICAL_CHANNEL(d, color));
 
@@ -1179,8 +1188,11 @@ stp_dither_set_shades(void *vd, int color, int nshades,
       sp->lower = 0;
       sp->trans = 0;
     } else {
-      sp->lower = density * shades[i-1].value * shades[i-1].value * 65536.0 + 0.5;
-      sp->trans = density * shades[i-1].value * shades[i].value * 65536.0 + 0.5;
+      double k;
+      k = 65536.0 * density * pow(shades[i-1].value, ink_gamma);
+      sp->lower = k * shades[i-1].value + 0.5;
+      sp->trans = k * shades[i].value + 0.5;
+
       /* Precompute some values */
       sp->div1 = (sp->density * (sp->trans - sp->lower)) / sp->trans;
       sp->div2 = (sp[-1].density * (sp->trans - sp->lower)) / sp->lower;
