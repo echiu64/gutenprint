@@ -1117,6 +1117,58 @@ static pcl_cap_t pcl_model_capabilities[] =
     },
   },
 };
+static double lum_adjustment[49] =
+{
+  0.714,			/* C */
+  0.769,
+  0.769,
+  0.769,
+  0.769,
+  0.769,
+  0.714,
+  0.667,
+  0.625,				/* B */
+  0.667,
+  0.714,
+  0.769,
+  0.833,
+  0.909,
+  1.0,
+  1.0,
+  1.0,				/* M */
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,				/* R */
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,				/* Y */
+  1.0,
+  0.952,
+  0.909,
+  0.909,
+  0.869,
+  0.833,
+  0.769,
+  0.714,			/* G */
+  0.769,
+  0.833,
+  0.833,
+  0.833,
+  0.8,
+  0.769,
+  0.74,
+  0.714				/* C */
+};  
 
 static double hue_adjustment[49] =
 {
@@ -2040,7 +2092,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
       duplicate_line = 0;
       Image_get_row(image, in, errline);
       (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv,
-		   hue_adjustment, NULL);
+		   hue_adjustment, lum_adjustment);
     }
 
     if (do_cret)

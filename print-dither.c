@@ -145,6 +145,7 @@ typedef struct dither
   int dst_width;		/* Output width */
 
   int density;			/* Desired density, 0-1.0 (scaled 0-65536) */
+  int black_density;		/* Desired density, 0-1.0 (scaled 0-65536) */
   int k_lower;			/* Transition range (lower/upper) for CMY */
   int k_upper;			/* vs. K */
   int density2;			/* Density * 2 */
@@ -640,6 +641,18 @@ dither_set_density(void *vd, double density)
   d->d_cutoff = d->density / 16;
   d->adaptive_limit = d->density / d->adaptive_divisor;
   d->adaptive_lower_limit = d->adaptive_limit / 4;
+  dither_set_black_density(vd, density);
+}
+
+void
+dither_set_black_density(void *vd, double density)
+{
+  dither_t *d = (dither_t *) vd;
+  if (density > 1)
+    density = 1;
+  else if (density < 0)
+    density = 0;
+  d->black_density = (int) ((65536 * density) + .5);
 }
 
 static double
@@ -1986,6 +1999,8 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
     k = (unsigned) kl * (unsigned) ak / density;
   ok = k;
   bk = k;
+  if (bk > 0 && density != d->black_density)
+    bk = (unsigned) bk * (unsigned) d->black_density / density;
 
   if (k && ak && ok > 0)
     {

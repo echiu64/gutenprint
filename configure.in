@@ -39,10 +39,12 @@ if test -n "$GCC"; then
     MAINTAINER_CFLAGS='-Wall -Wcast-align -Wstrict-prototypes'
   fi
 
-  if test "x$OPTIM" = "x"; then
-    CFLAGS="$CFLAGS -O2"
-  else
-    CFLAGS="$CFLAGS -g"
+  if test -z "$CFLAGS" ; then
+    if test "x$OPTIM" = "x"; then
+      CFLAGS="$CFLAGS -O2"
+    else
+      CFLAGS="$CFLAGS -g"
+    fi
   fi
 else
   if test "$USE_MAINTAINER_MODE" = "yes" ; then
@@ -51,17 +53,19 @@ else
     MAINTAINER_CFLAGS=''
   fi
 
-  if test "x$OPTIM" = "x"; then
-    case `uname` in
-      IRIX*)
-        CFLAGS="$CFLAGS -O3"
-	;;
-      *)
-        CFLAGS="$CFLAGS -O"
-        ;;
-    esac
-  else
-    CFLAGS="$CFLAGS -g"
+  if test -z "$CFLAGS" ; then
+    if test "x$OPTIM" = "x"; then
+      case `uname` in
+        IRIX*)
+	  CFLAGS="$CFLAGS -O3"
+	  ;;
+        *)
+          CFLAGS="$CFLAGS -O"
+          ;;
+      esac
+    else
+      CFLAGS="$CFLAGS -g"
+    fi
   fi
 fi
 

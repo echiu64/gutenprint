@@ -320,6 +320,18 @@ dither_set_density() takes a double between 0 and 1 representing the
    desired ink density for printing solid colors.  This is used in a
    number of places in the dithering routine to make decisions.
 
+dither_set_black_density() takes a double between 0 and 1 representing
+   the desired ink density for printing black ink in color printing.
+   This is used to balance black against color ink.  By default, this
+   is equal to the density set by dither_set_density().  By setting it
+   higher, more black ink will be printed.  For example, if the base
+   density is .4 and the black density is .8, twice as much black ink
+   will be printed as would otherwise be called for.
+
+   This is not used when printing in monochrome.  When printing
+   monochrome, the base density (dither_set_density) should be
+   adjusted appropriately.
+
 dither_set_ink_budget() takes an unsigned number representing the most
    ink that may be deposited at a given point.  This number is
    arbitrary; the limit is computed by summing the size of each ink
