@@ -523,7 +523,7 @@ stpi_dither_et_single(stp_vars_t v,
     int maximum_value = 0;
     int comparison = 32768;
     stpi_dither_channel_t *best_channel = NULL;
-    int best_channel_value = 4096;
+    int best_channel_value = 4;
     int random_value = ditherpoint(d, &(d->dither_matrix), x);
 
     if (d->stpi_dither_type & D_ORDERED_BASE)
@@ -653,7 +653,7 @@ stpi_dither_et(stp_vars_t v,
 	       const unsigned char *mask)
 {
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
-  if (d->stpi_dither_type & D_ADAPTIVE_BASE)
+  if ((d->stpi_dither_type & D_ADAPTIVE_BASE) && (CHANNEL_COUNT(d) > 1))
     stpi_dither_et_single(v, row, raw, duplicate_line, zero_mask, mask);
   else
     stpi_dither_et_standard(v, row, raw, duplicate_line, zero_mask, mask);
