@@ -42,7 +42,6 @@ typedef struct
   int   d2y;
   stpi_dis_t	d_sq;
   int	aspect;
-  int	*recip;
 } eventone_t;
 
 
@@ -81,7 +80,6 @@ free_eventone_data(stpi_dither_t *d)
   eventone_t *et = (eventone_t *) d->aux_data;
   if (et)
     {
-      stpi_free(et->recip);
       stpi_free(et);
       d->aux_data = NULL;
     }
@@ -118,12 +116,6 @@ et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
 
       et->aspect = EVEN_C2 / (xa * ya);
       et->d_sq.r_sq = 0;
-    }
-
-    et->recip = stpi_malloc(65536 * sizeof(int));
-    et->recip[0] = EVEN_C1 * 65536;
-    for (i=1; i < 65536; i++) {
-        et->recip[i] = EVEN_C1 * 65536 / i;
     }
 
     for (i = 0; i < CHANNEL_COUNT(d); i++) {
@@ -307,7 +299,8 @@ eventone_adjust(stpi_shade_segment_t *sp, eventone_t *et, int ditherpoint, unsig
 {
   ditherpoint += sp->dis.r_sq * et->aspect;
   if (desired < dotsize) {
-    ditherpoint -= et->recip[(desired<<16) / dotsize];
+    if (desired <= 1) ditherpoint -= EVEN_C1 * dotsize;
+    else ditherpoint -= (EVEN_C1 * dotsize) / desired;
   }
   if (ditherpoint > 65535) ditherpoint = 65535;
   else if (ditherpoint < 0) ditherpoint = 0;
