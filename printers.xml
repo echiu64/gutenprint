@@ -361,13 +361,16 @@
 <language value=escp2>
 </printer>
 
-<printer name="EPSON Stylus Color 480" driver="escp2-480">
-<color>
-<model value=21>
-<gamma value=0.585>
-<density value=1.0>
-<language value=escp2>
-</printer>
+# The 480 has a really weird print head.  It's not a simple 15x6 head
+# like one would expect; the colors are offset from one another
+# vertically.
+#<printer name="EPSON Stylus Color 480" driver="escp2-480">
+#<color>
+#<model value=21>
+#<gamma value=0.585>
+#<density value=1.0>
+#<language value=escp2>
+#</printer>
 
 <printer name="EPSON Stylus Color 500" driver="escp2-500">
 <color>
