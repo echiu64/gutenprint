@@ -14,6 +14,11 @@ building from a distributed tarball.  Other tools that might
 potentially be needed are the latest versions of gettext and
 texi2html.
 
+NOTE: Versions >= 4.2.1 requires an up-to-date version of foomatic to
+build (>= 0.20020129), which may not yet be available in Debian
+unstable.  It is available from foomatic CVS or tarball distribution
+(see www.linuxprinting.org).  This is due to the addition of a
+foomatic package.
 
 General
 -------

@@ -1,3 +1,9 @@
+gimp-print (4.2.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Fri, 15 Feb 2002 19:56:49 +0000
+
 gimp-print (4.2.0-3) unstable; urgency=low
 
   * Fix libgimpprint.postinst to use 'if' instead of 'case', removing a
