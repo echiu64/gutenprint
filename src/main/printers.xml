@@ -1411,7 +1411,7 @@
       </printer>
     </family>
     <family name="olympus">
-      <printer name="Olympus P300" driver="olympus-p300">
+      <printer name="OLYMPUS P300" driver="olympus-p300">
         <color value="true"/>
         <model value="0"/>
       </printer>

@@ -108,6 +108,71 @@ static const stp_parameter_t the_parameters[] =
 static int the_parameter_count =
 sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
+typedef struct
+{
+  const stp_parameter_t param;
+  double min;
+  double max;
+  double defval;
+  int color_only;
+} float_param_t;
+
+static const float_param_t float_parameters[] =
+{
+  {
+    {
+      "CyanDensity", N_("Cyan Balance"),
+      N_("Adjust the cyan balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1, 1
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "MagentaDensity", N_("Magenta Balance"),
+      N_("Adjust the magenta balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2, 1
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "YellowDensity", N_("Yellow Balance"),
+      N_("Adjust the yellow balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3, 1
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "BlackDensity", N_("Black Balance"),
+      N_("Adjust the black balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0, 1
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "LightCyanTransition", N_("Light Cyan Transition"),
+      N_("Light Cyan Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "LightMagentaTransition", N_("Light Magenta Transition"),
+      N_("Light Magenta Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1
+    }, 0.0, 5.0, 1.0, 1
+  },
+};    
+
+static const int float_parameter_count =
+sizeof(float_parameters) / sizeof(const float_param_t);
+
+
 static stp_parameter_list_t
 olympus_list_parameters(stp_const_vars_t v)
 {
@@ -115,6 +180,8 @@ olympus_list_parameters(stp_const_vars_t v)
   int i;
   for (i = 0; i < the_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(the_parameters[i]));
+  for (i = 0; i < float_parameter_count; i++)
+    stp_parameter_list_add_param(ret, &(float_parameters[i].param));
   return ret;
 }
 
@@ -128,6 +195,16 @@ olympus_parameters(stp_const_vars_t v, const char *name,
     return;
 
   description->deflt.str = NULL;
+  for (i = 0; i < float_parameter_count; i++)
+    if (strcmp(name, float_parameters[i].param.name) == 0)
+      {
+	stpi_fill_parameter_settings(description,
+				     &(float_parameters[i].param));
+	description->deflt.dbl = float_parameters[i].defval;
+	description->bounds.dbl.upper = float_parameters[i].max;
+	description->bounds.dbl.lower = float_parameters[i].min;
+      }
+
   for (i = 0; i < the_parameter_count; i++)
     if (strcmp(name, the_parameters[i].name) == 0)
       {
@@ -143,7 +220,8 @@ olympus_parameters(stp_const_vars_t v, const char *name,
 	{
 	  const stp_papersize_t *pt = stp_get_papersize_by_index(i);
 	  if (strcmp(pt->name,
-	        olympus_model_capabilities[model].papersize) == 0)
+	        olympus_model_capabilities[model].papersize) == 0 ||
+		(pt->width == 0 && pt->height == 0))
 	    {
 	      stp_string_list_add_string(description->bounds.str,
 					pt->name, pt->text);
