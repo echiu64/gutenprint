@@ -1,6 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
-<HEAD><TITLE><? echo ($title) ?></TITLE></HEAD>
+<HEAD>
+<BASE HREF="http://gimp-print.sourceforge.net/">
+<TITLE><? echo ($title) ?></TITLE>
+</HEAD>
 <META NAME="CLASSIFICATION" CONTENT="General HTML">
 <META NAME="Author" CONTENT="The Gimp Print Project">
 <META NAME="KEYWORDS" CONTENT="The Gimp, Gimp, Print, Printers, Linux,
@@ -43,5 +46,5 @@ the Developers!</a>
 </TD></TR>
 </TABLE>
 <? echo(navbar($navbar_text)) ?>
-<table border="0" width="100%" cellspacing=40><tr><td>
+<table border="0" width="100%" cellspacing=10><tr><td>
 
