@@ -1,10 +1,7 @@
 # British English messages for gimp-print.
-# Copyright (C) 2001 Roger Leigh.
+# Copyright (C) 2001-2004 Roger Leigh.
 # Roger Leigh <rleigh@debian.org>, 2001.
 # Christian Rose <menthos@menthos.com>, 2001.
-#
-# $Id$
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
