@@ -554,7 +554,7 @@ DECLARE_INK(standard_2pl_2880, 1.0);
 
 static const stp_simple_dither_range_t photo_2pl_2880_dither_ranges[] =
 {
-  { 0.21, 0x1, 1, 1 },
+  { 0.36, 0x1, 1, 1 },
   { 1.00, 0x1, 0, 1 },
 };
 
@@ -2241,6 +2241,64 @@ static const paperlist_t c80_paper_list =
   c80_papers
 };
 
+static const paper_t sp950_papers[] =
+{
+  { "Plain", N_("Plain Paper"),
+    6, 0, 0.80, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
+    1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
+  { "PlainFast", N_("Plain Paper Fast Load"),
+    1, 0, 0.80, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
+    1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
+  { "Postcard", N_("Postcard"),
+    3, 0, 0.83, .2, .6, 1.0, 1.0, 1.0, .9, 1.0, 1.1,
+    1, 1.0, 0x00, 0x00, 0x02, NULL, plain_paper_lum_adjustment, NULL},
+  { "GlossyFilm", N_("Glossy Film"),
+    0, 0, 1.00 ,1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    1, 1.0, 0x6d, 0x00, 0x01, NULL, plain_paper_lum_adjustment, NULL},
+  { "Transparency", N_("Transparencies"),
+    0, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    1.0, 1.0, 0x6d, 0x00, 0x02, NULL, plain_paper_lum_adjustment, NULL},
+  { "Envelope", N_("Envelopes"),
+    4, 0, 0.80, .125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
+  { "BackFilm", N_("Back Light Film"),
+    0, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    1, 1.0, 0x6d, 0x00, 0x01, NULL, NULL, NULL},
+  { "Matte", N_("Matte Paper"),
+    2, 0, 0.85, 1.0, .999, 1.05, .9, 1.05, .9, 1.0, 1.1,
+    1, 1.0, 0x00, 0x00, 0x02, NULL, NULL, NULL},
+  { "Inkjet", N_("Inkjet Paper"),
+    6, 0, 0.85, .25, .6, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
+  { "Coated", N_("Photo Quality Inkjet Paper"),
+    0, 0, 1.00, 1.0, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    1, 1.0, 0x6b, 0x1a, 0x01, NULL, NULL, NULL},
+  { "Photo", N_("Photo Paper"),
+    2, 0, 1.00, 1.0, .9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    1, 1.0, 0x67, 0x00, 0x02, NULL, NULL, NULL},
+  { "GlossyPhoto", N_("Premium Glossy Photo Paper"),
+    7, 0, 1.10, 1.0, .999, 1.0, 1.0, 1.0, 1.0, 1.03, 1.0,
+    1, 1.0, 0x80, 0x00, 0x02,
+    pgpp_hue_adjustment, pgpp_lum_adjustment, pgpp_sat_adjustment},
+  { "Luster", N_("Premium Luster Photo Paper"),
+    7, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    1.0, 1.0, 0x80, 0x00, 0x02, NULL, NULL, NULL},
+  { "GlossyPaper", N_("Photo Quality Glossy Paper"),
+    0, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    1.0, 1.0, 0x6b, 0x1a, 0x01, NULL, NULL, NULL},
+  { "Ilford", N_("Ilford Heavy Paper"),
+    2, 0, .85, .5, 1.35, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    1, 1.0, 0x80, 0x00, 0x02, NULL, NULL, NULL },
+  { "Other", N_("Other"),
+    0, 0, 0.80, 0.125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
+};
+
+static const paperlist_t sp950_paper_list =
+{
+  sizeof(sp950_papers) / sizeof(paper_t),
+  sp950_papers
+};
 
 /*
  * Dot sizes are for:
@@ -2461,7 +2519,7 @@ static const escp2_densities_t c3pl_pigment_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.69, 0.69, 0.511, 0.511, 0.765, 0.765, 0.585, 0.585, 0.293 };
 
 static const escp2_densities_t c2pl_densities =
-{ 2.0, 2.0, 1.05,1.05,0.64, 0.74, 0.48,  0.48,  0.495, 0.495, 1.23,  1.23,  0.425 };
+{ 2.0, 2.0, 1.05,1.05,0.64, 0.74, 0.48,  0.48,  0.495, 0.495, 1.00,  1.00,  0.52 };
 
 static const escp2_densities_t c4pl_pigment_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.568, 0.784, 0.784, 0.593, 0.593, 0.297 };
@@ -3453,7 +3511,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 190, 0, 0, 0,
     c2pl_dotsizes, c2pl_densities, &variable_2pl_inks,
-    &sp780_paper_list, standard_reslist, &photo_inklist,
+    &sp950_paper_list, standard_reslist, &photo_inklist,
     stp950_bits, stp950_base_res, &default_input_slot_list,
     &new_init_sequence, NULL
   },
