@@ -311,6 +311,8 @@ run (char   *name,		/* I - Name of print program. */
 #endif
 
   vars = stp_allocate_copy(stp_default_settings());
+  stp_set_input_color_model(vars, COLOR_MODEL_RGB);
+  stp_set_output_color_model(vars, COLOR_MODEL_RGB);
   /*
    * Initialize parameter data...
    */

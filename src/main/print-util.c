@@ -70,6 +70,8 @@ typedef struct					/* Plug-in variables */
   float app_gamma;		/* Application gamma */
   int	page_width;		/* Width of page in points */
   int	page_height;		/* Height of page in points */
+  int	input_color_model;	/* Color model for this device */
+  int	output_color_model;	/* Color model for this device */
   void  *lut;			/* Look-up table */
   void  *driver_data;		/* Private data of the driver */
   unsigned char *cmap;		/* Color map */
@@ -125,7 +127,9 @@ static const stp_internal_vars_t default_vars =
 	0,			/* Unit 0=Inch */
 	1.0,			/* Application gamma placeholder */
 	0,			/* Page width */
-	0			/* Page height */
+	0,			/* Page height */
+	COLOR_MODEL_RGB,		/* Input color model */
+	COLOR_MODEL_RGB		/* Output color model */
 };
 
 static const stp_internal_vars_t min_vars =
@@ -157,7 +161,9 @@ static const stp_internal_vars_t min_vars =
 	0,			/* Unit 0=Inch */
 	1.0,			/* Application gamma placeholder */
 	0,			/* Page width */
-	0			/* Page height */
+	0,			/* Page height */
+	0,			/* Input color model */
+	0			/* Output color model */
 };
 
 static const stp_internal_vars_t max_vars =
@@ -189,7 +195,9 @@ static const stp_internal_vars_t max_vars =
 	1,			/* Unit 0=Inch */
 	1.0,			/* Application gamma placeholder */
 	0,			/* Page width */
-	0			/* Page height */
+	0,			/* Page height */
+	NCOLOR_MODELS - 1,	/* Input color model */
+	NCOLOR_MODELS - 1	/* Output color model */
 };
 
 stp_vars_t
@@ -321,6 +329,8 @@ DEF_FUNCS(image_type, int);
 DEF_FUNCS(unit, int);
 DEF_FUNCS(page_width, int);
 DEF_FUNCS(page_height, int);
+DEF_FUNCS(input_color_model, int);
+DEF_FUNCS(output_color_model, int);
 DEF_FUNCS(brightness, float);
 DEF_FUNCS(scaling, float);
 DEF_FUNCS(gamma, float);
@@ -336,6 +346,8 @@ DEF_FUNCS(outdata, void *);
 DEF_FUNCS(errdata, void *);
 DEF_FUNCS(driver_data, void *);
 DEF_FUNCS(cmap, unsigned char *);
+DEF_FUNCS(outfunc, stp_outfunc_t);
+DEF_FUNCS(errfunc, stp_outfunc_t);
 
 void
 stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
@@ -344,6 +356,7 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
     return;
   stp_set_output_to(vd, stp_get_output_to(vs));
   stp_set_driver(vd, stp_get_driver(vs));
+  stp_set_driver_data(vd, stp_get_driver_data(vs));
   stp_set_ppd_file(vd, stp_get_ppd_file(vs));
   stp_set_resolution(vd, stp_get_resolution(vs));
   stp_set_media_size(vd, stp_get_media_size(vs));
@@ -369,6 +382,8 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
   stp_set_saturation(vd, stp_get_saturation(vs));
   stp_set_density(vd, stp_get_density(vs));
   stp_set_app_gamma(vd, stp_get_app_gamma(vs));
+  stp_set_input_color_model(vd, stp_get_input_color_model(vd));
+  stp_set_output_color_model(vd, stp_get_output_color_model(vd));
   stp_set_lut(vd, stp_get_lut(vs));
   stp_set_outdata(vd, stp_get_outdata(vs));
   stp_set_errdata(vd, stp_get_errdata(vs));
@@ -383,34 +398,6 @@ stp_allocate_copy(const stp_vars_t vs)
   stp_vars_t vd = stp_allocate_vars();
   stp_copy_vars(vd, vs);
   return (vd);
-}
-
-void
-stp_set_outfunc(stp_vars_t vv, stp_outfunc_t outfunc)
-{
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
-  v->outfunc = outfunc;
-}
-
-stp_outfunc_t
-stp_get_outfunc(const stp_vars_t vv)
-{
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
-  return (v->outfunc);
-}
-
-void
-stp_set_errfunc(stp_vars_t vv, stp_outfunc_t errfunc)
-{
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
-  v->errfunc = errfunc;
-}
-
-stp_outfunc_t
-stp_get_errfunc(const stp_vars_t vv)
-{
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
-  return (v->errfunc);
 }
 
 #define ICLAMP(value)						\

@@ -2685,6 +2685,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
   stp_convert_t	colorfunc = 0;	/* Color conversion function... */
+  int		zero_mask;
   int   	image_height,
 		image_width,
 		image_bpp;
@@ -2748,6 +2749,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     colormode = COLOR_CCMMYK;
   else
     colormode = COLOR_CMYK;
+  stp_set_output_color_model(nv, COLOR_MODEL_CMY);
 
  /*
   * Setup a read-only pixel region for the entire image...
@@ -3027,7 +3029,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     stp_set_density(nv, 1.0);
   if (colormode == COLOR_MONOCHROME)
     stp_set_gamma(nv, stp_get_gamma(nv) / .8);
-  stp_compute_lut(256, nv);
+  stp_compute_lut(nv, 256);
 
  /*
   * Output the page...
@@ -3157,7 +3159,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       errlast = errline;
       duplicate_line = 0;
       image->get_row(image, in, errline);
-      (*colorfunc)(in, out, image_width, image_bpp, cmap, nv,
+      (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap,
 		   escp2_hue_adjustment(model, nv) ? hue_adjustment : NULL,
 		   escp2_lum_adjustment(model, nv) ? lum_adjustment : NULL,
 		   escp2_sat_adjustment(model, nv) ? sat_adjustment : NULL);
@@ -3165,7 +3167,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     QUANT(1);
 
     stp_dither(out, y, dither, cyan, lcyan, magenta, lmagenta,
-	       yellow, dyellow, black, duplicate_line);
+	       yellow, dyellow, black, duplicate_line, zero_mask);
     QUANT(2);
 
     stp_write_weave(weave, length, ydpi, model, out_width, left,

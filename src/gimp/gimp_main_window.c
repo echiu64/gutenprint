@@ -248,7 +248,7 @@ gimp_create_main_window (void)
 
   /*
    * thumbnail_w and thumbnail_h have now been adjusted to the actual
-   * thumbnail dimensions.  Now initialize a colour-adjusted version of
+   * thumbnail dimensions.  Now initialize a color-adjusted version of
    * the thumbnail...
    */
 
@@ -1113,7 +1113,7 @@ void
 gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 			gint            num_items,   /* I - Number of items */
 			gchar    **items,       /* I - Menu items */
-			gchar     *cur_item,    /* I - Current item */
+			const gchar     *cur_item,    /* I - Current item */
 			GtkSignalFunc   callback,    /* I - Callback */
 			gint           *callback_id) /* IO - Callback ID (init to -1) */
 {
@@ -1148,7 +1148,7 @@ gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 				     callback,
 				     NULL);
 
-  gtk_entry_set_text (entry, cur_item);
+  gtk_entry_set_text (entry, strdup(cur_item));
 
   for (i = 0; i < num_items; i ++)
     if (strcmp(items[i], cur_item) == 0)
@@ -1964,7 +1964,7 @@ void
 gimp_update_adjusted_thumbnail (void)
 {
   gint      x, y;
-  stp_convert_t colourfunc;
+  stp_convert_t colorfunc;
   gushort   out[3 * THUMBNAIL_MAXW];
   guchar   *adjusted_data = adjusted_thumbnail_data;
   gfloat    old_density = stp_get_density(vars);
@@ -1974,14 +1974,14 @@ gimp_update_adjusted_thumbnail (void)
 
   stp_set_density(vars, 1.0);
 
-  stp_compute_lut (256, vars);
-  colourfunc = stp_choose_colorfunc (stp_get_output_type(vars), thumbnail_bpp, NULL,
+  stp_compute_lut (vars, 256);
+  colorfunc = stp_choose_colorfunc (stp_get_output_type(vars), thumbnail_bpp, NULL,
 				 &adjusted_thumbnail_bpp, vars);
 
   for (y = 0; y < thumbnail_h; y++)
     {
-      (*colourfunc) (thumbnail_data + thumbnail_bpp * thumbnail_w * y,
-		     out, thumbnail_w, thumbnail_bpp, NULL, vars, NULL, NULL,
+      (*colorfunc) (vars, thumbnail_data + thumbnail_bpp * thumbnail_w * y,
+		     out, NULL, thumbnail_w, thumbnail_bpp, NULL, NULL, NULL,
 		     NULL);
       for (x = 0; x < adjusted_thumbnail_bpp * thumbnail_w; x++)
 	{

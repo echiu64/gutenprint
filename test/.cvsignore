@@ -7,4 +7,5 @@ printer_options
 unprint
 escp2-unprint
 pcl-unprint
+bjc-unprint
 testdither

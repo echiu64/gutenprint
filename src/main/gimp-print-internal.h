@@ -292,7 +292,7 @@ extern void	stp_dither(const unsigned short *, int, void *,
 			   unsigned char *, unsigned char *,
 			   unsigned char *, unsigned char *,
 			   unsigned char *, unsigned char *,
-			   int duplicate_line);
+			   int duplicate_line, int zero_mask);
 
 extern void	stp_fold(const unsigned char *line, int single_height,
 			 unsigned char *outbuf);

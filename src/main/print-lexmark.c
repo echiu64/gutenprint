@@ -1168,42 +1168,43 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
   int		n;		/* Output number */
   unsigned short *out;	/* Output pixels (16-bit) */
   unsigned char	*in,		/* Input pixels */
-    *black,		/* Black bitmap data */
-    *cyan,		/* Cyan bitmap data */
-    *magenta,	/* Magenta bitmap data */
-    *yellow,	/* Yellow bitmap data */
-    *lcyan,		/* Light cyan bitmap data */
-    *lmagenta,	/* Light magenta bitmap data */
-    *lyellow;	/* Light yellow bitmap data */
+		*black,		/* Black bitmap data */
+    		*cyan,		/* Cyan bitmap data */
+    		*magenta,	/* Magenta bitmap data */
+    		*yellow,	/* Yellow bitmap data */
+    		*lcyan,		/* Light cyan bitmap data */
+    		*lmagenta,	/* Light magenta bitmap data */
+    		*lyellow;	/* Light yellow bitmap data */
   int           delay_k,
-    delay_c,
-    delay_m,
-    delay_y,
-    delay_lc,
-    delay_lm,
-    delay_ly,
-    delay_max;
+    		delay_c,
+    		delay_m,
+    		delay_y,
+    		delay_lc,
+    		delay_lm,
+    		delay_ly,
+    		delay_max;
   int		page_left,	/* Left margin of page */
-    page_right,	/* Right margin of page */
-    page_top,	/* Top of page */
-    page_bottom,	/* Bottom of page */
-    page_width,	/* Width of page */
-    page_height,	/* Length of page */
-    page_true_height,	/* True length of page */
-    out_width,	/* Width of image on page */
-    out_height,	/* Length of image on page */
-    out_bpp,	/* Output bytes per pixel */
-    length,		/* Length of raster data */
-    buf_length,     /* Length of raster data buffer (dmt) */
-    errdiv,		/* Error dividend */
-    errmod,		/* Error modulus */
-    errval,		/* Current error value */
-    errline,	/* Current raster line */
-    errlast;	/* Last raster line loaded */
+    		page_right,	/* Right margin of page */
+    		page_top,	/* Top of page */
+    		page_bottom,	/* Bottom of page */
+    		page_width,	/* Width of page */
+    		page_height,	/* Length of page */
+    		page_true_height,	/* True length of page */
+    		out_width,	/* Width of image on page */
+    		out_height,	/* Length of image on page */
+    		out_bpp,	/* Output bytes per pixel */
+    		length,		/* Length of raster data */
+    		buf_length,     /* Length of raster data buffer (dmt) */
+    		errdiv,		/* Error dividend */
+    		errmod,		/* Error modulus */
+    		errval,		/* Current error value */
+    		errline,	/* Current raster line */
+    		errlast;	/* Last raster line loaded */
   stp_convert_t	colorfunc = 0;	/* Color conversion function... */
+  int		zero_mask;
   int           image_height,
-    image_width,
-    image_bpp;
+    		image_width,
+    		image_bpp;
   int           use_dmt = 0;
   void *	dither;
   stp_vars_t	nv = stp_allocate_copy(v);
@@ -1255,6 +1256,7 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
   if (printhead == 0 || caps->inks == LEXMARK_INK_K) {
     output_type = OUTPUT_GRAY;
   }
+  stp_set_output_color_model(nv, COLOR_MODEL_CMY);
 
   /*
    * Choose the correct color conversion function...
@@ -1547,7 +1549,7 @@ lexmark_describe_resolution(printer,
   if (stp_get_density(nv) > 1.0)
     stp_set_density(nv, 1.0);
 
-  stp_compute_lut(256, nv);
+  stp_compute_lut(nv, 256);
 
 #ifdef DEBUG
   fprintf(stderr,"density is %f\n",stp_get_density(nv));
@@ -1891,16 +1893,16 @@ lexmark_describe_resolution(printer,
 	    image->get_row(image, in, errline);
 	    /*	  printf("errline %d ,   image height %d\n", errline, image_height);*/
 #if 1
-	    (*colorfunc)(in, out, image_width, image_bpp, cmap, nv,
+	    (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap,
 			 hue_adjustment, lum_adjustment, NULL);
 #else
-	    (*colorfunc)(in, out, image_width, image_bpp, cmap, nv,
+	    (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap,
 			 NULL, NULL, NULL);
 #endif
 	  }
 	/*      printf("Let's dither   %d    %d  %d\n", ((y%interlace)), buf_length, length);*/
 	stp_dither(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		   yellow, lyellow, black, duplicate_line);
+		   yellow, lyellow, black, duplicate_line, zero_mask);
 
 	clean_color(cyan, length);
 	clean_color(magenta, length);

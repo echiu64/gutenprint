@@ -1933,6 +1933,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
   stp_convert_t	colorfunc = 0;	/* Color conversion function... */
+  int		zero_mask;
   int           bits= 1;
   int           image_height,
                 image_width,
@@ -1987,6 +1988,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
 
   if (output_type == OUTPUT_GRAY)
     colormode = COLOR_MONOCHROME;
+  stp_set_output_color_model(nv, COLOR_MODEL_CMY);
 
   /*
    * Choose the correct color conversion function...
@@ -2184,7 +2186,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
     stp_set_density(nv, 1.0);
   if (colormode == COLOR_MONOCHROME)
     stp_set_gamma(nv, stp_get_gamma(nv) / .8);
-  stp_compute_lut(256, nv);
+  stp_compute_lut(nv, 256);
 
 #ifdef DEBUG
   fprintf(stderr,"density is %f\n",stp_get_density(nv));
@@ -2327,14 +2329,14 @@ canon_print(const stp_printer_t printer,		/* I - Model */
       errlast = errline;
       duplicate_line = 0;
       image->get_row(image, in, errline);
-      (*colorfunc)(in, out, image_width, image_bpp, cmap, nv, 
+      (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap,
 		   have_hue_adjustment ? hue_adjustment : NULL,
 		   have_lum_adjustment ? lum_adjustment : NULL,
 		   have_sat_adjustment ? sat_adjustment : NULL);
     }
 
     stp_dither(out, y, dither, cyan, lcyan, magenta, lmagenta,
-	       yellow, 0, black, duplicate_line);
+	       yellow, 0, black, duplicate_line, zero_mask);
 
 #ifdef DEBUG
     /* fprintf(stderr,","); */

@@ -37,6 +37,9 @@
 #define IMAGE_MONOCHROME	3
 #define NIMAGE_TYPES		4
 
+#define COLOR_MODEL_RGB		0
+#define COLOR_MODEL_CMY		1
+
 typedef struct					/* Plug-in variables */
 {
   char	output_to[256],		/* Name of file or command to print to */
@@ -67,7 +70,10 @@ typedef struct					/* Plug-in variables */
   float app_gamma;		/* Application gamma */
   int	page_width;		/* Width of page in points */
   int	page_height;		/* Height of page in points */
+  int	input_color_model;	/* Color model for this device */
+  int	output_color_model;	/* Color model for this device */
   void  *lut;			/* Look-up table */
+  void  *driver_data;		/* Private data of the driver */
   unsigned char *cmap;		/* Color map */
   void (*outfunc)(void *data, const char *buffer, size_t bytes);
   void *outdata;

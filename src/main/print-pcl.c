@@ -1618,6 +1618,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
   stp_convert_t	colorfunc;	/* Color conversion function... */
+  int		zero_mask;
   void		(*writefunc)(const stp_vars_t, unsigned char *, int, int);
 				/* PCL output function */
   int           image_height,
@@ -1678,6 +1679,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
       output_type = OUTPUT_GRAY;
       stp_set_output_type(nv, OUTPUT_GRAY);
     }
+  stp_set_output_color_model(nv, COLOR_MODEL_CMY);
 
   colorfunc = stp_choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, nv);
 
@@ -2042,7 +2044,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   * Output the page, rotating as necessary...
   */
 
-  stp_compute_lut(256, nv);
+  stp_compute_lut(nv, 256);
 
   if (xdpi > ydpi)
     dither = stp_init_dither(image_width, out_width, 1, xdpi / ydpi, nv);
@@ -2124,12 +2126,12 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
       errlast = errline;
       duplicate_line = 0;
       image->get_row(image, in, errline);
-      (*colorfunc)(in, out, image_width, image_bpp, cmap, nv,
+      (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap,
 		   hue_adjustment, lum_adjustment, NULL);
     }
 
     stp_dither(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		yellow, NULL, black, duplicate_line);
+		yellow, NULL, black, duplicate_line, zero_mask);
 
     if (do_cret)
     {

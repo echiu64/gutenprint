@@ -288,6 +288,7 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 		out_offset;	/* Output offset (Level 2 output) */
   time_t	curtime;	/* Current time of day */
   stp_convert_t	colorfunc;	/* Color conversion function... */
+  int		zero_mask;
   char		*command;	/* PostScript command */
   int		order,		/* Order of command */
 		num_commands;	/* Number of commands */
@@ -465,7 +466,7 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
   in  = stp_malloc(image_width * image_bpp);
   out = stp_malloc((image_width * out_bpp + 3) * 2);
 
-  stp_compute_lut(256, nv);
+  stp_compute_lut(nv, 256);
 
   if (model == 0)
   {
@@ -486,7 +487,8 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 	image->note_progress(image, y, image_height);
 
       image->get_row(image, in, y);
-      (*colorfunc)(in, out, image_width, image_bpp, cmap, nv, NULL, NULL, NULL);
+      (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap,
+		   NULL, NULL, NULL);
 
       ps_hex(v, out, image_width * out_bpp);
     }
@@ -526,8 +528,8 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 	image->note_progress(image, y, image_height);
 
       image->get_row(image, in, y);
-      (*colorfunc)(in, out + out_offset, image_width, image_bpp, cmap, nv,
-		   NULL, NULL, NULL);
+      (*colorfunc)(nv, in, out + out_offset, &zero_mask, image_width,
+		   image_bpp, cmap, NULL, NULL, NULL);
 
       out_ps_height = out_offset + image_width * out_bpp;
 

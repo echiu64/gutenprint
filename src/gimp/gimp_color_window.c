@@ -68,7 +68,7 @@ static void gimp_dither_algo_callback (GtkWidget *widget,
 extern void gimp_update_adjusted_thumbnail (void);
 extern void gimp_plist_build_combo         (GtkWidget      *combo,
 					    gint            num_items,
-					    const gchar         **items,
+					    gchar         **items,
 					    const gchar          *cur_item,
 					    GtkSignalFunc   callback,
 					    gint           *callback_id);
@@ -157,7 +157,7 @@ gimp_create_color_adjust_window (void)
   gtk_widget_show (table);
 
   /*
-   * Drawing area for colour swatch feedback display...
+   * Drawing area for color swatch feedback display...
    */
 
   swatch = (GtkDrawingArea *) gtk_drawing_area_new ();
@@ -442,16 +442,17 @@ void
 gimp_build_dither_combo (void)
 {
   int i;
-  const char **vec = xmalloc(sizeof(const char *) *
-			    stp_dither_algorithm_count());
+  char **vec = xmalloc(sizeof(const char *) * stp_dither_algorithm_count());
   for (i = 0; i < stp_dither_algorithm_count(); i++)
-    vec[i] = stp_dither_algorithm_name(i);
+    vec[i] = strdup(stp_dither_algorithm_name(i));
   gimp_plist_build_combo (dither_algo_combo,
 			  stp_dither_algorithm_count(),
 			  vec,
 			  stp_get_dither_algorithm(plist[plist_current].v),
 			  &gimp_dither_algo_callback,
 			  &dither_algo_callback_id);
+  for (i = 0; i < stp_dither_algorithm_count(); i++)
+    free(vec[i]);
   free(vec);
 }
 
