@@ -197,6 +197,7 @@ Printer Model Selection:
 
 -sModel=name
 
+bjc-30			CANON BJC 30
 bjc-1000		CANON BJC 1000
 bjc-2000		CANON BJC 2000
 bjc-3000		CANON BJC 3000
@@ -218,8 +219,10 @@ escp2-600		EPSON Stylus Color 600
 escp2-640		EPSON Stylus Color 640
 escp2-660		EPSON Stylus Color 660
 escp2-670		EPSON Stylus Color 670
+escp2-680		EPSON Stylus Color 680
 escp2-740		EPSON Stylus Color 740
 escp2-760		EPSON Stylus Color 760
+escp2-777		EPSON Stylus Color 777
 escp2-800		EPSON Stylus Color 800
 escp2-850		EPSON Stylus Color 850
 escp2-860		EPSON Stylus Color 860
@@ -235,6 +238,7 @@ escp2-700		EPSON Stylus Photo 700
 escp2-ex		EPSON Stylus Photo EX
 escp2-720		EPSON Stylus Photo 720
 escp2-750		EPSON Stylus Photo 750
+escp2-790		EPSON Stylus Photo 790
 escp2-870		EPSON Stylus Photo 870
 escp2-1200		EPSON Stylus Photo 1200
 escp2-1270		EPSON Stylus Photo 1270

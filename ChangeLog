@@ -1,3 +1,202 @@
+2000-11-18	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.75) (+4 -3)
+		ran.509.131.h (1.2) (+22 -0)
+		printers.xml (1.34) (+11 -3)
+		print-escp2.c (1.266) (+326 -210)
+		print-dither.c (1.96) (+9 -1)
+	
+	Support 2880x720
+	
+2000-11-18	<mitsch@sourceforge.net>
+
+	Files:	print.c (1.129) (+6 -2)
+	
+	To make copying files to gimpcvs easier, check for INIT_I18N_UI
+	and use that macro instead of INIT_LOCALE if it exists.
+	
+	Fixes #122731
+	
+2000-11-12	<rwisi@sourceforge.net>
+
+	Files:	print-lexmark.c (1.2) (+37 -42)
+	
+	Corrected error in print-lexmark.c at photo prints.
+	
+2000-11-12	<rwisi@sourceforge.net>
+
+	Files:	Makefile.am (1.74) (+1 -0)
+		Ghost/README (1.53) (+1 -0)
+		printers.xml (1.33) (+8 -0)
+		printdefy.y (1.12) (+12 -1)
+		print.h (1.91) (+14 -2)
+		print-lexmark.c (1.1) ( )
+	
+	Added support for Lexmark Z52.
+	
+2000-11-12	<sharkey@sourceforge.net>
+
+	Files:	make-deb.sh (1.3) (+1 -1)
+	
+	Adjust for the fact that the format of /etc/debian_version has changed.
+	
+2000-11-12	<sharkey@sourceforge.net>
+
+	Files:	debian/changelog (1.2) (+6 -0)
+	
+	Bump the revision number up to 4.0.2.
+	
+2000-11-12	<sharkey@sourceforge.net>
+
+	Files:	Ghost/debian-patch (1.2) (+15 -21)
+	
+	Slightly change the way Ghostscript is packaged for Debian.
+	
+	Originally, this patch would allow you to compile a package named
+	"gs-stp", which would both conflict with and provide the original gs package.
+	
+	Unfortunately, gs-pdfencrypt has a versioned depends on gs, and dpkg does
+	not support a versioned provides, so you can't install gs-pdfencrypt with
+	gs-stp.  At least, not as far as I can figure.
+	
+	So the solution is to not make a "gs-stp" package, but a new gs package,
+	with "stp" appended to the version number (5.10stp).  This allows
+	everything to work.
+	
+2000-11-11	<ttonino@sourceforge.net>
+
+	Files:	ran.509.131.h (1.1) ( )
+	
+	Generated new matrix for printers with 4:1 resolution, for example 2880x720
+	DPI.
+	
+2000-11-06	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.94) (+2 -2)
+	
+	Fixed malformed debug message
+	
+2000-11-03	<rlk@sourceforge.net>
+
+	Files:	cups/rastertoprinter.c (1.10) (+3 -2)
+	
+	Need to do yellow too
+	
+2000-11-03	<rlk@sourceforge.net>
+
+	Files:	cups/rastertoprinter.c (1.9) (+8 -2)
+	
+	Attempt to fix 121170
+	
+2000-11-03	<rlk@sourceforge.net>
+
+	Files:	Ghost/gdevstp.c (1.44) (+3 -3)
+	
+	Try to fix 121169
+	
+2000-10-31	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.73) (+2 -1)
+	
+	Copy escputil man page to Ghost directory
+	
+2000-10-31	<rlk@sourceforge.net>
+
+	Files:	.cvsignore (1.10) (+1 -0)
+		configure.in (1.38) (+7 -1)
+		Makefile.am (1.72) (+3 -0)
+	
+	escputil man page
+	
+2000-10-31	<rlk@sourceforge.net>
+
+	Files:	escputil.1.in (1.1) ( )
+	
+	Man page for escputil.
+	
+2000-10-29	<davehill@sourceforge.net>
+
+	Files:	print-pcl.c (1.91) (+15 -13)
+		printers.xml (1.32) (+4 -4)
+	
+	Latest version of Tommy's CRET patch.
+	Changed 810/812/842 and 895 printers to the 840 CRET driver.
+	
+2000-10-29	<rlk@sourceforge.net>
+
+	Files:	INSTALL (1.6) (+1 -15)
+		print-pcl.c (1.90) (+2 -2)
+		escputil.c (1.17) (+2 -2)
+		Makefile.am (1.71) (+1 -1)
+	
+	Bring over a few fixes from 4.0+
+	
+2000-10-23	<davehill@sourceforge.net>
+
+	Files:	print-pcl.c (1.89) (+45 -6)
+		printers.xml (1.31) (+1 -1)
+	
+	Updated to latest version of Tommy's patch, plus fixed 8xx C-RET.
+	
+2000-10-22	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.93) (+2 -2)
+	
+	Fixed small bug leading to wrong horizontal offsets for xdpi != ydpi
+	
+2000-10-22	<gandy@sourceforge.net>
+
+	Files:	cups/Makefile.in (1.18) (+25 -4)
+		cups/commandtocanon.c (1.1) ( )
+		cups/canon.c (1.1) ( )
+	
+	Added preliminary support for canon printers in cups - alls existing commands
+	are working except for ink level determination. Some canon specific commands
+	are missing for lack of cups-commands files.
+	
+2000-10-22	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.92) (+8 -2)
+	
+	Changed fallback behaviour for unspecified inktypes: CMYK, CMY or K are
+	used if available. This makes color printing with cups possible even with
+	missing InkType specifications.
+	
+2000-10-21	<rlk@sourceforge.net>
+
+	Files:	escputil.c (1.16) (+2 -1)
+	
+	117385 escputil doesn't work with old printers if -m is specified
+	
+2000-10-20	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.91) (+11 -1)
+		printers.xml (1.30) (+8 -0)
+	
+	Added support for the Canon BJC-6200 -- Mostly functional, quite good output
+	
+2000-10-20	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.90) (+12 -1)
+		printers.xml (1.29) (+8 -0)
+	
+	Added support for Canon BJC-30 as suggested by Tim Hanham
+	
+2000-10-20	<rlk@sourceforge.net>
+
+	Files:	README (1.36) (+6 -11)
+		print-pcl.c (1.88) (+40 -8)
+		configure.in (1.37) (+1 -1)
+		RELNOTES (1.34) (+1 -931)
+	
+	Tommy Schultz Lassen's CRET patch; initialize 4.1 branch
+	
+2000-10-20	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.56) (+9 -0)
+	
+	4.0.0rc1
+	
 2000-10-19	<rlk@sourceforge.net>
 
 	Files:	ChangeLog (1.55) (+102 -0)
@@ -5124,6 +5323,7 @@
 		README (1.12) (+1 -1)
 		Makefile.am (1.24) (+2 -0)
 	
+	branches:  1.5.6;  1.5.12;
 	Try to maintain dependency order of lex on yacc stuff
 	
 2000-03-17	<rlk@sourceforge.net>

@@ -1122,7 +1122,7 @@ static escp2_printer_t model_capabilities[] =
     { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .1615, .1615, .0808 },
     &simple_6color_inks
   },
-  /* 32: Stylus Color 777 */
+  /* 32: Stylus Color 777/680 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
@@ -1158,7 +1158,18 @@ static escp2_printer_t model_capabilities[] =
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .1825, .1825, .0913 },
     &variable_3pl_inks
   },
-
+  /* 35: Stylus Photo 790 */
+  {
+    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+     | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
+     | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
+     | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
+    48, 3, 48, 3, 360, 360, INCH(17 / 2), INCH(44), 0, 0, 0, 9, 1, 0,
+    2880, 720,
+    { -1, 4, 0x12, 2, 0x11, -1, 0x10, -1, 0x10 },
+    { 2.0, 1.3, 1.3, .431, .710, .216, .533, .2665, .2665, .2665, .1333 },
+    &variable_4pl_6color_inks
+  },
 };
 
 typedef struct escp_init
