@@ -78,6 +78,10 @@ Some tips on tuning the output:
   Density 1.6
 
 
+Makefile.standalone enables you to build this plugin as a standalone
+plugin, without reference to a Gimp source tree.
+
+
 Enjoy!
 
 -Robert Krawitz, November 14, 1999
