@@ -1948,16 +1948,8 @@ static void gtk_setup_open_callback(void)
   gtk_widget_show (setup_dialog);
   adjustment =
     gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(printer_crawler));
-  adjustment->page_increment = adjustment->page_size -
-    (adjustment->step_increment * 2);
-  if (adjustment->page_increment <= 0)
-    adjustment->page_increment = adjustment->step_increment;
-  adjustment->value = (idx - 1) * adjustment->step_increment +
-    adjustment->page_increment;
-  gtk_adjustment_changed(adjustment);
-  
-  gtk_scrolled_window_set_vadjustment(GTK_SCROLLED_WINDOW(printer_crawler),
-				      adjustment);
+  gtk_adjustment_set_value(adjustment, idx * adjustment->step_increment +
+			   adjustment->page_size);
   gtk_widget_show(setup_dialog);
 }
 
