@@ -460,7 +460,7 @@ read_from_printer(int fd, char *buf, int bufsize)
 	break;
 #endif
       status = read(fd, buf, bufsize - 1);
-      if (status < 0 && errno == EAGAIN)
+      if (status == 0 || (status < 0 && errno == EAGAIN))
 	{
 	  sleep(1);
 	  status = 0; /* not an error (read would have blocked) */
@@ -612,7 +612,8 @@ get_printer(int quiet)
 	}
     }
   printf(_("Printer model %s is not known.\n"), printer_model);
-  do_help(1);
+  if (!quiet)
+    do_help(1);
   return NULL;
 }
 
