@@ -156,7 +156,7 @@ clean-figures:
 	rm -rf figures/*.eps figures/*.pdf
 
 maintainer-clean-local:
-	rm -rf $(HTMLDIR)
+	rm -rf $(HTMLDIR) html-stamp
 
 #
 # This is my (so far failed) attempt to create an index for this documentation.
