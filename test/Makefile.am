@@ -60,6 +60,11 @@ $(LIBGIMPPRINT_LIBS):
 	$(MAKE)
 
 
+## Rules
+
+run-weavetest: escp2-weavetest
+
+
 ## Clean
 
 CLEANFILES = $(EXTRA_PROGRAMS) mixed-color-1bit.ppm
