@@ -244,6 +244,15 @@ main(int argc, char **argv)
     }
   stp_curve_print(stdout, curve2);
   fprintf(stdout, "\n");
+  printf("compose add\n");
+  if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_MULTIPLY, -1))
+    {
+      printf("add compose failed!\n");
+      global_error_count++;
+    }
+  else
+    stp_curve_print(stdout, curve3);
+  fprintf(stdout, "\n");
   if (!stp_curve_read_string(linear_curve_1, curve1))
     {
       fprintf(stderr, "stp_curve_read_string failed\n");
