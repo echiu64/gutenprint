@@ -23,12 +23,15 @@ diff src/main/Makefile.am.orig src/main/Makefile.am
 > 	@STRIP_END@
 
 To build the packages, do:
-$ dpkg-buildpackage -rfakeroot -us -uc, or
-$ debuild
+$ dpkg-buildpackage -rfakeroot -us -uc
+or
+$ debuild -us -uc -L -i
 
 It should build without problems on Debian stable (2.2/potato) and the current
-testing and unstable distributions.
+testing and unstable distributions. As this is the unstable CVS version, I
+advise you to remove (better: purge) the packages before upgrading them,
+especially gimp1.2-print, to avoid any problems with diversions.
 
 I hope you like it!
 
-Roger Leigh <roger@whinlatter.uklinux.net> -- Sat, 10 Feb 2001 21:44:22 +0000
+Roger Leigh <roger@whinlatter.uklinux.net> -- Tue, 13 Feb 2001 17:34:02 +0000

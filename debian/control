@@ -7,7 +7,7 @@ Build-Depends: libc6-dev, libcupsys2-dev, libgimp1.2-dev, libglib1.2-dev, libgtk
 
 Package: gimp1.2-print
 Architecture: any
-Depends: ${shlibs:Depends}, libgimpprint (>= ${Source-Version})
+Depends: ${shlibs:Depends}, gimp1.2, libgimpprint (>= ${Source-Version})
 Description: print plugin for the GIMP
  This is Gimp-Print version 4.1.4, a development release in the 4.1
  line.  Gimp-print is the print facility for the Gimp, and in addition

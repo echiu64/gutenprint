@@ -1,14 +1,3 @@
-2001-02-08  Roger Leigh  <roger@whinlatter.uklinux.net>
+This ChangeLog is redundant. Please see the main ChangeLog for i18n changes.
 
-	* Created en_GB and en_TEST translations (en_TEST has all strings
-	  prefixed with 'TEST: ' for debugging purposes).
-
-2001-01-02  Roger Leigh  <roger@whinlatter.uklinux.net>
-
-	* Created po/POTFILES.in with current source locations.
-
-	* Created po/ChangeLog
-
-Local variables:
-mode: change-log
-End:
+This file is present only to keep po/Makefile.in.in happy.
