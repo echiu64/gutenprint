@@ -446,9 +446,32 @@ do									\
     }									\
 } while (0)
 
+typedef struct
+{
+  char *data;
+  size_t bytes;
+} errbuf_t;
+
+static void
+fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
+{
+  errbuf_t *errbuf = (errbuf_t *) priv;
+  if (errbuf->bytes == 0)
+    errbuf->data = stp_malloc(bytes + 1);
+  else
+    errbuf->data = stp_realloc(errbuf->data, errbuf->bytes + bytes + 1);
+  memcpy(errbuf->data + errbuf->bytes, buffer, bytes);
+  errbuf->bytes += bytes;
+  errbuf->data[errbuf->bytes] = '\0';
+}
+
 int
 stp_verify_printer_params(const stp_vars_t v)
 {
+  errbuf_t errbuf;
+  stp_outfunc_t ofunc = stp_get_errfunc(v);
+  void *odata = stp_get_errdata(v);
+
   stp_parameter_list_t params;
   const stp_printer_t p = stp_get_printer(v);
   int nparams;
@@ -457,6 +480,12 @@ stp_verify_printer_params(const stp_vars_t v)
   int left, top, bottom, right;
   const stp_vars_t printvars = stp_printer_get_printvars(p);
   const char *pagesize = stp_get_string_parameter(v, "PageSize");
+
+  stp_set_errfunc((stp_vars_t) v, fill_buffer_writefunc);
+  stp_set_errdata((stp_vars_t) v, &errbuf);
+
+  errbuf.data = NULL;
+  errbuf.bytes = 0;
 
   /*
    * Note that in raw CMYK mode the user is responsible for not sending
@@ -539,6 +568,13 @@ stp_verify_printer_params(const stp_vars_t v)
 	answer &= verify_param(v, p->name);
     }
   stp_parameter_list_destroy(params);
+  stp_set_errfunc((stp_vars_t) v, ofunc);
+  stp_set_errdata((stp_vars_t) v, odata);
   stp_set_verified(v, answer);
+  if (errbuf.bytes > 0)
+    {
+      stp_eprintf(v, "%s", errbuf.data);
+      stp_free(errbuf.data);
+    }
   return answer;
 }

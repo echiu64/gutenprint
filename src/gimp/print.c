@@ -398,6 +398,14 @@ gimp_writefunc(void *file, const char *buf, size_t bytes)
   fwrite(buf, 1, bytes, prn);
 }
 
+static void
+gimp_errfunc(void *file, const char *buf, size_t bytes)
+{
+  char formatbuf[32];
+  snprintf(formatbuf, 31, "%%%ds", bytes);
+  g_message(formatbuf, buf);
+}
+
 static gint
 do_print_dialog (gchar *proc_name)
 {
@@ -407,8 +415,7 @@ do_print_dialog (gchar *proc_name)
   char *filename = gimp_personal_rc_file ((BAD_CONST_CHAR) "printrc");
   stpui_set_printrc_file(filename);
   g_free(filename);
-  stpui_set_errfunc(gimp_writefunc);
-  stpui_set_errdata(stderr);
+  stpui_set_errfunc(gimp_errfunc);
   stpui_set_thumbnail_func(stpui_get_thumbnail_data_function);
   stpui_set_thumbnail_data((void *) image_ID);
   return stpui_do_print_dialog();

@@ -64,6 +64,20 @@ static char	*ppd_find(const char *, const char *, const char *, int *);
  * 'ps_parameters()' - Return the parameter values for the given parameter.
  */
 
+static int
+is_standard_param(const char *name)
+{
+  if (name &&
+      ((strcmp(name, "Resolution") == 0) ||
+       (strcmp(name, "InkType") == 0) ||
+       (strcmp(name, "InputSlot") == 0) ||
+       (strcmp(name, "MediaType") == 0) ||
+       (strcmp(name, "PageSize") == 0)))
+    return 1;
+  else
+    return 0;
+}
+
 static void
 ps_parameters(const stp_vars_t v, const char *name,
 	      stp_parameter_t *description)
@@ -77,13 +91,11 @@ ps_parameters(const stp_vars_t v, const char *name,
   description->type = STP_PARAMETER_TYPE_INVALID;
   description->deflt.str = 0;
 
-  if (ppd_file == NULL || strlen(ppd_file) == 0 || name == NULL)
-    {
-      stp_describe_internal_parameter(v, name, description);
-      return;
-    }
+  if (name == NULL)
+    return;
 
-  if (ps_ppd_file == NULL || strcmp(ps_ppd_file, ppd_file) != 0)
+  if (ppd_file != NULL && strlen(ppd_file) > 0 &&
+      (ps_ppd_file == NULL || strcmp(ps_ppd_file, ppd_file) != 0))
   {
     if (ps_ppd != NULL)
       fclose(ps_ppd);
@@ -115,6 +127,11 @@ ps_parameters(const stp_vars_t v, const char *name,
 	  description->deflt.str =
 	    stp_string_list_param(description->bounds.str, 0)->name;
 	}
+      else if (is_standard_param(name))
+	{
+	  description->bounds.str = stp_string_list_allocate();
+	  description->type = STP_PARAMETER_TYPE_STRING_LIST;
+	}	  
       else
 	stp_describe_internal_parameter(v, name, description);
       return;
@@ -149,7 +166,7 @@ ps_parameters(const stp_vars_t v, const char *name,
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
     }
-  else
+  else if (!is_standard_param(name))
     {
       stp_string_list_free(description->bounds.str);
       description->bounds.str = NULL;

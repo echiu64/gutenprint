@@ -34,6 +34,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 
 #include <sys/types.h>
 #include <signal.h>
@@ -384,7 +385,6 @@ stpui_plist_add(const stpui_plist_t *key, int add_only)
 	  p = stpui_plist + stpui_plist_count;
 	  stpui_plist_count++;
 	  stpui_plist_copy(p, key);
-	  p->active = 0;
 	}
       else
 	{
@@ -394,7 +394,6 @@ stpui_plist_add(const stpui_plist_t *key, int add_only)
 	  printf("Updating printer %s.\n", key->name);
 #endif
 	  stpui_plist_copy(p, key);
-	  p->active = 1;
 	}
     }
   return 1;
@@ -436,6 +435,7 @@ stpui_printrc_load(void)
     (void) memset(&key, 0, sizeof(stpui_plist_t));
     stpui_printer_initialize(&key);
     strcpy(key.name, _("File"));
+    key.active = 1;
     (void) memset(line, 0, 1024);
     while (fgets(line, sizeof(line), fp) != NULL)
     {
@@ -590,6 +590,11 @@ stpui_printrc_load(void)
 	  stp_set_page_width(key.v, atoi(value));
 	} else if (strcasecmp("custom-page-height", keyword) == 0) {
 	  stp_set_page_height(key.v, atoi(value));
+	  /* Special case Ink-Type and Dither-Algorithm */
+	} else if (strcasecmp("ink-type", keyword) == 0) {
+	  stp_set_string_parameter(key.v, "InkType", value);
+	} else if (strcasecmp("dither-algorithm", keyword) == 0) {
+	  stp_set_string_parameter(key.v, "DitherAlgorithm", value);
 	} else {
 	  stp_parameter_t desc;
 	  stp_curve_t curve;
@@ -793,6 +798,7 @@ stpui_get_system_printers(void)
   stpui_plist_count = 1;
   stpui_printer_initialize(&stpui_plist[0]);
   strcpy(stpui_plist[0].name, _("File"));
+  stpui_plist[0].active = 1;
   stp_set_driver(stpui_plist[0].v, "ps2");
   stp_set_output_type(stpui_plist[0].v, OUTPUT_COLOR);
 
@@ -876,6 +882,7 @@ stpui_get_system_printers(void)
 		stpui_plist_set_output_to(&(stpui_plist[stpui_plist_count]), result);
 		free(result);
 		stp_set_driver(stpui_plist[stpui_plist_count].v, "ps2");
+		stpui_plist[stpui_plist_count].active = 1;
 		stpui_plist_count ++;
 	      }
 	      break;
@@ -907,6 +914,7 @@ stpui_get_system_printers(void)
 		stpui_plist_set_output_to(&(stpui_plist[stpui_plist_count]), result);
 		free(result);
 		stp_set_driver(stpui_plist[stpui_plist_count].v, "ps2");
+		stpui_plist[stpui_plist_count].active = 1;
         	stpui_plist_count ++;
 	      }
 	      else
@@ -958,14 +966,23 @@ writefunc(void *file, const char *buf, size_t bytes)
   fwrite(buf, 1, bytes, prn);
 }
 
+static void
+errfunc(void *file, const char *buf, size_t bytes)
+{
+  g_message(buf);
+}
+
 int
 stpui_print(const stpui_plist_t *printer, stp_image_t *image)
 {
   int		ppid = getpid (), /* PID of plugin */
 		opid,		/* PID of output process */
 		cpid = 0,	/* PID of control/monitor process */
-		pipefd[2];	/* Fds of the pipe connecting all the above */
+		pipefd[2],	/* Fds of the pipe connecting all the above */
+		errfd[2],	/* Message logger from lp command */
+		syncfd[2];	/* Sync the logger */
   FILE		*prn = NULL;	/* Print file/command */
+  int		do_sync = 1;
   int		dummy;
 
   /*
@@ -981,14 +998,19 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
        */
       usr1_interrupt = 0;
       signal (SIGUSR1, usr1_handler);
+      if (pipe (syncfd) != 0) {
+	do_sync = 0;
+      }
       if (pipe (pipefd) != 0) {
 	prn = NULL;
       } else {
 	cpid = fork ();
 	if (cpid < 0) {
+	  do_sync = 0;
 	  prn = NULL;
 	} else if (cpid == 0) {
 	  /* LPR monitor process.  Printer output is piped to us. */
+	  close(syncfd[0]);
 	  opid = fork ();
 	  if (opid < 0) {
 	    /* Errors will cause the plugin to get a SIGPIPE.  */
@@ -997,6 +1019,39 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
 	    dup2 (pipefd[0], 0);
 	    close (pipefd[0]);
 	    close (pipefd[1]);
+	    if (pipe(errfd) == 0) {
+	      opid = fork();
+	      if (opid == 0) { /* Child monitors stderr */
+		stp_outfunc_t errfunc = stpui_get_errfunc();
+		void *errdata = stpui_get_errdata();
+		char buf[4096]; /* calls g_message on anything it sees */
+		close (pipefd[0]);
+		close (pipefd[1]);
+		while (1) {
+		  ssize_t bytes = read(errfd[0], buf, 4095);
+		  if (bytes == 0)
+		    break;
+		  else if (bytes > 0) {
+		    buf[bytes] = '\0';
+		    (*errfunc)(errdata, buf, bytes);
+		  } else {
+		    snprintf(buf, 4095,
+			     "Read messages failed: %s\n", strerror(errno));
+		    (*errfunc)(errdata, buf, strlen(buf));
+		    break;
+		  }
+		}
+		write(syncfd[1], "Done", 5);
+		_exit(0);
+	      } else {
+		dup2 (errfd[1], 2);
+		dup2 (errfd[1], 1);
+		close(errfd[1]);
+		close (pipefd[0]);
+		close (pipefd[1]);
+	      }
+	    }
+	    close(syncfd[1]);
 	    execl("/bin/sh", "/bin/sh", "-c", stpui_plist_get_output_to(printer),
 		  NULL);
 	    /* NOTREACHED */
@@ -1008,6 +1063,7 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
 	     * finished printing normally, we close our end of the pipe,
 	     * and go away.
 	     */
+	    close (syncfd[1]);
 	    close (pipefd[0]);
 	    while (usr1_interrupt == 0) {
 	      if (kill (ppid, 0) < 0) {
@@ -1036,6 +1092,7 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
 	    _exit (0);
 	  }
 	} else {
+	  close (syncfd[1]);
 	  close (pipefd[0]);
 	  /* Parent process.  We generate the printer output. */
 	  prn = fdopen (pipefd[1], "w");
@@ -1099,6 +1156,11 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
 	}
       else
 	fclose (prn);
+      if (do_sync)
+	{
+	  char buf[8];
+	  (void) read(syncfd[0], buf, 8);
+	}
       stp_vars_free(np->v);
       free(np);
       return 1;
