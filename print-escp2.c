@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.87  2000/02/19 16:01:36  rlk
+ *   A bit more cleanup to non-softweave
+ *
  *   Revision 1.86  2000/02/18 01:58:42  rlk
  *   Try to fix microweave and 360 dpi
  *
@@ -836,7 +839,7 @@ escp2_imageable_area(int  model,	/* I - Printer model */
         *left   = 9;
         *right  = width - 9;
         *top    = length;
-        *bottom = 80;
+        *bottom = 64;
         break;
 
   case MODEL_IMAGEABLE_600:
@@ -912,39 +915,39 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
   switch (escp2_cap(model, MODEL_INIT_MASK)) /* Printer specific initialization */
   {
     case MODEL_INIT_COLOR : /* ESC */
-        if (output_type == OUTPUT_COLOR && ydpi > 360 && !use_softweave)
-      	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
+        if (output_type != OUTPUT_GRAY && ydpi > 360 && !use_softweave)
+      	  fwrite("\033(i\001\000\001", 6, 1, prn);     /* Microweave mode on */
         break;
 
     case MODEL_INIT_PRO : /* ESC Pro, Pro XL, 400, 500 */
         fwrite("\033(e\002\000\000\001", 7, 1, prn);	/* Small dots */
 
         if (ydpi > 360 && !use_softweave)
-      	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
+      	  fwrite("\033(i\001\000\001", 6, 1, prn);     /* Microweave mode on */
         break;
 
     case MODEL_INIT_1500 : /* ESC 1500 */
         fwrite("\033(e\002\000\000\001", 7, 1, prn);	/* Small dots */
 
         if (ydpi > 360 && !use_softweave)
-      	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
+      	  fwrite("\033(i\001\000\001", 6, 1, prn);     /* Microweave mode on */
         break;
 
     case MODEL_INIT_600 : /* ESC 600, 800, 1520, 3000 */
 	if (output_type == OUTPUT_GRAY)
-	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black printing */
+	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black */
 	else
 	  fwrite("\033(K\002\000\000\002", 7, 1, prn);	/* Color printing */
 
         fwrite("\033(e\002\000\000\002", 7, 1, prn);	/* Small dots */
 
         if (ydpi > 360 && !use_softweave)
-      	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
+      	  fwrite("\033(i\001\000\001", 6, 1, prn);     /* Microweave mode on */
         break;
 
     case MODEL_INIT_440 : /* ESC 440, 640, 740, 900 */
 	if (output_type == OUTPUT_GRAY)
-	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black printing */
+	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black */
 	if (!use_softweave)
 	  fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
 	else
@@ -953,15 +956,17 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 	  {
 	    fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
 	    if (bits > 1)
-	      fwrite("\033(e\002\000\000\020", 7, 1, prn);	/* Default dots */
+	      fwrite("\033(e\002\000\000\020", 7, 1, prn); /* Default dots */
 	    else
-	      fwrite("\033(e\002\000\000\000", 7, 1, prn);	/* Default dots */
+	      fwrite("\033(e\002\000\000\000", 7, 1, prn); /* Default dots */
 	  }
+	else
+	  fwrite("\033(e\002\000\000\000", 7, 1, prn);	/* Default dots */
         break;
 
     case MODEL_INIT_PHOTO:
 	if (output_type == OUTPUT_GRAY)
-	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black printing */
+	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black */
 	else
 	  fwrite("\033(K\002\000\000\002", 7, 1, prn);	/* Color printing */
 	if (!use_softweave)
@@ -978,7 +983,7 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
         break;
     case MODEL_INIT_PHOTO2:
 	if (output_type == OUTPUT_GRAY)
-	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black printing */
+	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black */
 	if (!use_softweave)
 	  fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
 	else
@@ -987,9 +992,9 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 	  {
 	    fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
 	    if (bits > 1)
-	      fwrite("\033(e\002\000\000\020", 7, 1, prn);	/* Default dots */
+	      fwrite("\033(e\002\000\000\020", 7, 1, prn);   /* Default dots */
 	    else
-	      fwrite("\033(e\002\000\000\000", 7, 1, prn);	/* Default dots */
+	      fwrite("\033(e\002\000\000\000", 7, 1, prn);   /* Default dots */
 	  }
 	else
 	  fwrite("\033(e\002\000\000\002", 7, 1, prn);	/* Whatever dots */
@@ -1016,8 +1021,6 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 	  putc(0, prn);
 	  putc(0, prn);
 	  n = ydpi * (page_length - page_bottom) / 72;
-	  if (use_softweave)
-	    n += 320 * ydpi / 720;
 	  putc(n & 255, prn);
 	  putc(n >> 8, prn);
 	  putc(0, prn);
@@ -1030,8 +1033,6 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 	  putc(n & 255, prn);
 	  putc(n >> 8, prn);
 	  n = ydpi * (page_length - page_bottom) / 72;
-	  if (use_softweave)
-	    n += 320 * ydpi / 720;
 	  putc(n & 255, prn);
 	  putc(n >> 8, prn);
 	}
@@ -1749,9 +1750,9 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
   unsigned char	comp_buf[COMPBUFWIDTH],		/* Compression buffer */
     *comp_ptr;
 
- /*
-  * Don't send blank lines...
-  */
+  /*
+   * Don't send blank lines...
+   */
 
   if (line[0] == 0 && memcmp(line, line + 1, (bits * length) - 1) == 0)
     return;
@@ -1764,13 +1765,13 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
       escp2_pack(pack_buf, length * bits, comp_buf, &comp_ptr);
     }
 
- /*
-  * Set the print head position.
-  */
+  /*
+   * Set the print head position.
+   */
 
- /*
-  * Set the color if necessary...
-  */
+  /*
+   * Set the color if necessary...
+   */
 
   if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
     fprintf(prn, "\033(r\002%c%c%c", 0, density, plane);
@@ -1794,37 +1795,27 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
   else
     fprintf(prn, "\033\\%c%c", offset & 255, offset >> 8);
 
- /*
-  * Send a line of raster graphics...
-  */
+  /*
+   * Send a line of raster graphics...
+   */
 
-  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
+  switch (ydpi)				/* Raster graphics header */
     {
-      int ncolor = (density << 4) | plane;
-      int nwidth = bits * ((width + 7) / 8);
-      fprintf(prn, "\033i%c%c%c%c%c%c%c", ncolor, 1, bits,
-	      nwidth & 255, nwidth >> 8, 1, 0);
+    case 180 :
+      fwrite("\033.\001\024\024\001", 6, 1, prn);
+      break;
+    case 360 :
+      fwrite("\033.\001\012\012\001", 6, 1, prn);
+      break;
+    case 720 :
+      if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK, MODEL_720DPI_600))
+	fwrite("\033.\001\050\005\001", 6, 1, prn);
+      else
+	fwrite("\033.\001\005\005\001", 6, 1, prn);
+      break;
     }
-  else
-    {
-      switch (ydpi)				/* Raster graphics header */
-	{
-	case 180 :
-	  fwrite("\033.\001\024\024\001", 6, 1, prn);
-	  break;
-	case 360 :
-	  fwrite("\033.\001\012\012\001", 6, 1, prn);
-	  break;
-	case 720 :
-	  if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK, MODEL_720DPI_600))
-	    fwrite("\033.\001\050\005\001", 6, 1, prn);
-	  else
-	    fwrite("\033.\001\005\005\001", 6, 1, prn);
-	  break;
-	}
-      putc(width & 255, prn);		/* Width of raster line in pixels */
-      putc(width >> 8, prn);
-    }
+  putc(width & 255, prn);		/* Width of raster line in pixels */
+  putc(width >> 8, prn);
 
   fwrite(comp_buf, comp_ptr - comp_buf, 1, prn);
   putc('\r', prn);
