@@ -56,10 +56,17 @@ static int yyerror( const char *s )
 %token M_GAMMA
 %token Y_GAMMA
 %token K_GAMMA
+%token LC_GAMMA
+%token LM_GAMMA
+%token LK_GAMMA
 %token GAMMA
 %token C_LEVEL
 %token M_LEVEL
 %token Y_LEVEL
+%token K_LEVEL
+%token LC_LEVEL
+%token LM_LEVEL
+%token LK_LEVEL
 %token LEVELS
 %token INK_LIMIT
 %token INK
@@ -78,12 +85,17 @@ static int yyerror( const char *s )
 %token VSIZE
 %token BLACKLINE
 %token PATTERN
+%token XPATTERN
+%token EXTENDED
 %token IMAGE
 
 %start Thing
 
 %%
 
+extended: EXTENDED tINT
+	{ global_ink_depth = $2; }
+;
 global_c_level: C_LEVEL tDOUBLE
 	{ global_c_level = $2; }
 ;
@@ -92,6 +104,9 @@ global_m_level: M_LEVEL tDOUBLE
 ;
 global_y_level: Y_LEVEL tDOUBLE
 	{ global_y_level = $2; }
+;
+global_k_level: K_LEVEL tDOUBLE
+	{ global_k_level = $2; }
 ;
 global_c_gamma: C_GAMMA tDOUBLE
 	{ global_c_gamma = $2; }
@@ -104,6 +119,24 @@ global_y_gamma: Y_GAMMA tDOUBLE
 ;
 global_k_gamma: K_GAMMA tDOUBLE
 	{ global_k_gamma = $2; }
+;
+global_lc_level: LC_LEVEL tDOUBLE
+	{ global_lc_level = $2; }
+;
+global_lm_level: LM_LEVEL tDOUBLE
+	{ global_lm_level = $2; }
+;
+global_lk_level: LK_LEVEL tDOUBLE
+	{ global_lk_level = $2; }
+;
+global_lc_gamma: LC_GAMMA tDOUBLE
+	{ global_lc_gamma = $2; }
+;
+global_lm_gamma: LM_GAMMA tDOUBLE
+	{ global_lm_gamma = $2; }
+;
+global_lk_gamma: LK_GAMMA tDOUBLE
+	{ global_lk_gamma = $2; }
 ;
 global_gamma: GAMMA tDOUBLE
 	{ global_gamma = $2; }
@@ -180,6 +213,41 @@ pattern: PATTERN tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE
 	}
 ;
 
+xpattern: XPATTERN tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE
+	  tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE
+	  tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE
+	{
+	  testpattern_t *t = get_next_testpattern();
+	  if (global_ink_depth == 0)
+	    {
+	      fprintf(stderr, "xpattern may only be used with extended color depth\n");
+	      exit(1);
+	    }
+	  t->t = E_XPATTERN;
+	  t->d.p.k_min = $2;
+	  t->d.p.k = $3;
+	  t->d.p.k_gamma = $4;
+	  t->d.p.lk_min = $5;
+	  t->d.p.lk = $6;
+	  t->d.p.lk_gamma = $7;
+	  t->d.p.c_min = $8;
+	  t->d.p.c = $9;
+	  t->d.p.c_gamma = $10;
+	  t->d.p.lc_min = $11;
+	  t->d.p.lc = $12;
+	  t->d.p.lc_gamma = $13;
+	  t->d.p.m_min = $14;
+	  t->d.p.m = $15;
+	  t->d.p.m_gamma = $16;
+	  t->d.p.lm_min = $17;
+	  t->d.p.lm = $18;
+	  t->d.p.lm_gamma = $19;
+	  t->d.p.y_min = $20;
+	  t->d.p.y = $21;
+	  t->d.p.y_gamma = $22;
+	}
+;
+
 image: IMAGE tINT tINT
 	{
 	  testpattern_t *t = get_next_testpattern();
@@ -196,13 +264,17 @@ image: IMAGE tINT tINT
 
 Empty:
 
-Rule: global_c_level | global_m_level | global_y_level
+Rule:   global_k_level | global_c_level | global_m_level | global_y_level
+	| global_lk_level | global_lc_level | global_lm_level
 	| global_c_gamma | global_m_gamma | global_y_gamma | global_k_gamma
+	| global_lc_gamma | global_lm_gamma | global_lk_gamma
 	| global_gamma | levels | ink_limit | printer | ink_type | resolution
 	| media_source | media_type | media_size | dither_algorithm | density
-	| top | left | hsize | vsize | blackline
+	| top | left | hsize | vsize | blackline | extended
 
-Patterns: Patterns pattern | Empty
+A_Pattern: pattern | xpattern
+
+Patterns: Patterns A_Pattern | Empty
 
 Image: image
 

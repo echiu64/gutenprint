@@ -269,6 +269,12 @@ magenta
 cyan
 @item 4
 yellow
+@item 5
+alternate black (Stylus C70/C80)
+@item 6
+alternate black (Stylus C70/C80)
+@item 16
+gray ("light black")
 @item 17
 light magenta
 @item 18
@@ -284,7 +290,8 @@ no compression
 @item 1
 TIFF compression (incorrectly documented as "run length encoded")
 @item 2
-TIFF compression with a special command set.
+TIFF compression with a special command set, or "run length encoding
+2" on some printers.
 @end table
 
 @var{BITS} is the number of bits per pixel.
@@ -345,10 +352,10 @@ After all data has been sent, a form feed byte should be sent.
 
 All newer Epson printers (STC 440, STP 750) require the following
 command to be sent at least once to enable printing at all.  This
-command specifically takes the printer out of the Epson packet mode
-communication protocol (whatever that is) and enables normal data
-transfer.  Sending it multiple times is is not harmful, so it is
-normally sent at the beginning of each job:
+command specifically takes the printer out of the 1284.4 packet mode
+communication protocol and enables normal data transfer.  Sending it
+multiple times is is not harmful, so it is normally sent at the
+beginning of each job:
 
 @example
 ESC 01@@EJL[space]1284.4[newline]@@EJL[space][space][space][space]
@@ -483,8 +490,8 @@ clean black head
 clean color heads
 @end table
 
-While @var{xx} = @samp{00} is probably supported by all printers, @var{xx} =
-@samp{01} and @samp{02} may well not be.
+While @var{xx} = @samp{00} is likely supported by all printers, @var{xx} =
+@samp{01} and @samp{02} are not.
 @end deffn
 
 @deffn {ESC/P2 remote command} @code{* DT @var{BC}=3 00 @var{xx} 00}
@@ -493,25 +500,11 @@ via the choice of @var{xx}.  Pattern @samp{0} is coarse, pattern
 @samp{1} is medium, and pattern @samp{2} is fine.
 @end deffn
 
-@deffn {ESC/P2 remote command} @code{* DU @var{BC}=6 00 @var{xx} 00 09 00 @var{yy}}
-Print another alignment pattern.  It isn't entirely clear what @var{xx}
-and @var{yy} are, but it appears that @var{xx} takes on the values
-@samp{1} and @samp{2} , and @var{yy} takes on the values @samp{0} and
-@var{1}.  This may only work on the 580 and/or 480.
-@end deffn
-
 @deffn {ESC/P2 remote command} @code{* DA @var{BC}=4 00 @var{xx} 00 @var{yy}}
-Set results for the first alignment pattern.  @var{xx} is the pattern
+Set results for the alignment pattern.  @var{xx} is the pattern
 (@samp{1}--@samp{3}); @var{yy} is the best choice from the set
 (@samp{1}--@samp{7} or @samp{1}--@samp{15}).  This does not save to
 NVRAM, so when the printer is powered off, the setting will be lost.
-@end deffn
-
-@deffn {ESC/P2 remote command} @code{* DA @var{BC}=6 00 @var{xx} 00 @var{yy} 09 00}
-Set results for alternate alignment pattern.  @var{xx} appears to be the
-pass, and @var{yy} appears to be the optimum pattern.  This does not
-save to NVRAM, so when the printer is powered off, the setting will be
-lost.
 @end deffn
 
 @deffn {ESC/P2 remote command} @code{* SV @var{BC}=0}
@@ -552,12 +545,10 @@ in roll mode, the values change to @var{xx}=@samp{01} at the start of a
 job and @var{xx}=@samp{00} at the end of a job.
 @end deffn
 
-@deffn {ESC/P2 remote command} @code{* FP @var{BC}=3 00 @var{xx} @var{yy}}
-@var{xx}=@samp{00} and @var{yy}=@samp{00} selects the printer's normal
-left margin (about 3mm).  @var{xx}=@samp{0xb0} and @var{yy}=@samp{0xff}
-selects zero-margin mode, where the left-most print position is shifted
-to a point about 0.1" to the left of the left-hand edge of the paper,
-allowing printing up to (and off) the left-hand edge of the paper.
+@deffn {ESC/P2 remote command} @code{* FP @var{BC}=3 00 @var{pos}[2]}
+Specify the horizontal left margin in units of 1/360 inch.  The
+default value for @var{pos} is 0.  For borderless printing on printers
+that support it, a value of -80 (@samp{FFB0h}) should be used.
 @end deffn
 
 The commands below are partially documented in the Stylus Pro 9000
@@ -741,18 +732,49 @@ Paper jam
 Out of ink
 @item 06
 Paper out
+@item 0D
+Paper gap error
+@item 10
+Maintenance request
+@item 11
+Tear-off mode selected
+@item 12
+Double feed error
+@item 1C
+Cutter position error
+@item 1D
+Cutter jam
+@item 1E
+Ink color error
+@item 23
+Ink combination error
 @end table
 
 @samp{IQ} is the amount of ink left, as a (decimal!) percentage
 expressed in hexadecimal.  The values are black, cyan, magenta, and
-yellow (presumably 6-color printers supply light cyan and light magenta
-inks as additional parameters).
+yellow.  6 and 7 color printers usually specify two or three
+additional values for light cyan, light magenta, and gray.  However,
+some low end 6-color printers specify only four values.
+
+For printers with different ink cartridge options, the following
+additional values may appear:
+
+@table @samp
+@item NA
+Ink cartridge is not inserted
+@item RE
+Ink cartridge information cannot be read
+@item WE
+Ink cartridge information cannot be written
+@item CI
+Ink cartridge is inserted, but has not been read
+@end table
 
 @samp{WR}, if provided, is the warning status:
 
 @table @samp
 @item 10
-Black ink low
+Black ink low (Photo black on printers using UltraChrome (R) ink)
 @item 11
 Cyan
 @item 12
@@ -763,6 +785,12 @@ Yellow
 Light cyan (presumably)
 @item 15
 Light magenta (presumably)
+@item 17
+Gray (with UltraChrome-compatible printers)
+@item 18
+Matte black 1 (UltraChrome)
+@item 19
+Matte black 2 (UltraChrome)
 @end table
 
 @samp{RV} is the firmware revision (one byte ASCII).
@@ -771,6 +799,8 @@ Light magenta (presumably)
 indicate ``ink weight rank ID'' of KCMY, respectively.
 
 @samp{TC}, if provided, is the total time of cleaning or ink filling (?).
+
+@samp{RC}, if provided, is the firmware revision.
 
 @samp{INK:} and @samp{MI} are @strong{not documented}.
 @end deffn
@@ -817,6 +847,51 @@ that in this case the number of bytes is variable!
 @deffn {ESC/P2 remote command} @code{* SM @var{BC}=2 00 02}
 @strong{Function unknown}.  Used on the STC 3000 at least when using
 roll feed.
+@end deffn
+
+@deffn {ESC/P2 remote command} @code{* JE @var{BC}=1 00}
+@strong{Function unknown}.  On new printers (STC 740 or newer), this
+command should be sent after all data has been sent.  If this command
+is not sent, and the printer is connected to a Windows system, the
+last page of the job will not print completely.  The most likely
+explanation for for this is that the Windows driver typically puts the
+printer in 1284.4 packet mode, and this command has the effect of
+flushing the buffer in the printer.
+@end deffn
+
+@deffn {ESC/P2 remote command} @code{* CO @var{BC}=8 00 @var{cutter}[1] @var{page}[1] @var{unit}[1] @var{position}[4]}
+Specify paper cutting on Stylus Photo 2200 (and perhaps some other
+printers).
+
+@var{cutter} must be 0.
+
+@var{page} should be one of the following:
+
+@table @samp
+@item 0
+All pages
+@item 1
+First page only
+@item 2
+Last page only
+@end table
+
+@var{unit} should be one of the following:
+
+@table @samp
+@item 0
+1/360 in.
+@item 1
+1/720 in.
+@item 2
+1/1440 in.
+@end table
+
+This command should be used twice.  The first @code{CO} command
+specifies where the page will be cut at the top, and the second
+specifies where the page will be cut at the bottom.  This permits
+cutting both the top and the bottom of the page.
+
 @end deffn
 
 

@@ -74,6 +74,7 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
   { "variable_mode",		6, 1 },
   { "graymode",		 	7, 1 },
   { "vacuum",			8, 1 },
+  { "fast_360",			9, 1 },
 };
 
 #define INCH(x)		(72 * x)
@@ -115,6 +116,8 @@ typedef struct escp2_init
   int initial_vertical_offset;
   int total_channels;
   int use_black_parameters;
+  int channel_limit;
+  int use_fast_360;
   const char *paper_type;
   const char *media_source;
   const escp2_inkname_t *inkname;
@@ -181,6 +184,7 @@ DEF_SIMPLE_ACCESSOR(black_initial_vertical_offset, int)
 DEF_SIMPLE_ACCESSOR(max_black_resolution, int)
 DEF_SIMPLE_ACCESSOR(zero_margin_offset, int)
 DEF_SIMPLE_ACCESSOR(extra_720dpi_separation, int)
+DEF_SIMPLE_ACCESSOR(physical_channels, int)
 DEF_SIMPLE_ACCESSOR(paperlist, const paperlist_t *)
 DEF_SIMPLE_ACCESSOR(reslist, const res_t *)
 DEF_SIMPLE_ACCESSOR(inklist, const inklist_t *)
@@ -340,6 +344,15 @@ verify_papersize(const stp_papersize_t pt, int model, const stp_vars_t v)
     return 0;
 }
 
+static int
+verify_inktype(const escp2_inkname_t *inks, int model, const stp_vars_t v)
+{
+  if (inks->inkset == INKSET_EXTENDED)
+    return 0;
+  else
+    return 1;
+}
+
 /*
  * 'escp2_parameters()' - Return the parameter values for the given parameter.
  */
@@ -410,12 +423,21 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
       }
     valptrs = stp_malloc(sizeof(stp_param_t) * ninktypes);
     for (i = 0; i < ninktypes; i++)
-    {
-      valptrs[i].name = c_strdup(inks->inknames[i]->name);
-      valptrs[i].text = c_strdup(_(inks->inknames[i]->text));
-    }
-    *count = ninktypes;
-    return valptrs;
+      {
+	if (verify_inktype(inks->inknames[i], model, v))
+	  {
+	    valptrs[*count].name = c_strdup(inks->inknames[i]->name);
+	    valptrs[*count].text = c_strdup(_(inks->inknames[i]->text));
+	    (*count)++;
+	  }
+      }
+    if (*count)
+      return valptrs;
+    else
+      {
+	stp_free(valptrs);
+	return NULL;
+      }
   }
   else if (strcmp(name, "MediaType") == 0)
   {
@@ -562,7 +584,13 @@ escp2_default_parameters(const stp_printer_t printer,
   else if (strcmp(name, "InkType") == 0)
     {
       const inklist_t *inks = escp2_inklist(model, v);
-      return inks->inknames[0]->name;
+      int ninktypes = inks->n_inks;
+      for (i = 0; i < ninktypes; i++)
+	{
+	  if (verify_inktype(inks->inknames[i], model, v))
+	    return (inks->inknames[i]->name);
+	}
+      return NULL;
     }
   else if (strcmp(name, "MediaType") == 0)
     {
@@ -716,7 +744,10 @@ escp2_set_resolution(const escp2_init_t *init)
 static void
 escp2_set_color(const escp2_init_t *init)
 {
-  if (escp2_has_cap(init->model, MODEL_GRAYMODE, MODEL_GRAYMODE_YES, init->v))
+  if (init->use_fast_360)
+    stp_zprintf(init->v, "\033(K\002%c%c%c", 0, 0, 3);
+  else if (escp2_has_cap(init->model, MODEL_GRAYMODE, MODEL_GRAYMODE_YES,
+			 init->v))
     stp_zprintf(init->v, "\033(K\002%c%c%c", 0, 0,
 		(init->use_black_parameters ? 1 : 2));
 }
@@ -812,22 +843,15 @@ escp2_set_printhead_resolution(const escp2_init_t *init)
     {
       int xres;
       int yres;
-      int nozzle_separation;
       int scale = escp2_resolution_scale(init->model, init->v);
 
       xres = scale / init->physical_xdpi;
-
-      if (init->use_black_parameters)
-	nozzle_separation =
-	  escp2_black_nozzle_separation(init->model, init->v);
-      else
-	nozzle_separation = escp2_nozzle_separation(init->model, init->v);
 
       if (escp2_has_cap(init->model, MODEL_COMMAND, MODEL_COMMAND_PRO,
 			init->v) && !init->use_softweave)
 	yres = scale / init->ydpi;
       else
-	yres = (nozzle_separation * scale /
+	yres = (init->nozzle_separation * scale /
 		escp2_base_separation(init->model, init->v));
 
       /* Magic resolution cookie */
@@ -954,7 +978,7 @@ adjust_print_quality(const escp2_init_t *init, void *dither,
 
   inks = escp2_inks(init->model, init->resid, init->inkname->inkset, nv);
   if (inks)
-    for (i = 0; i < NCOLORS; i++)
+    for (i = 0; i < init->channel_limit; i++)
       if ((*inks)[i])
 	stp_dither_set_ranges(dither, i, (*inks)[i]->count, (*inks)[i]->range,
 			      (*inks)[i]->density * paper_k_upper *
@@ -1015,7 +1039,7 @@ count_channels(const escp2_inkname_t *inks)
 {
   int answer = 0;
   int i;
-  for (i = 0; i < NCOLORS; i++)
+  for (i = 0; i < inks->channel_limit; i++)
     if (inks->channels[i])
       answer += inks->channels[i]->n_subchannels;
   return answer;
@@ -1054,7 +1078,7 @@ static const ink_channel_t default_black_channels =
 
 static const escp2_inkname_t default_black_ink =
 {
-  NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL,
+  NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, NULL,
   {
     &default_black_channels, NULL, NULL, NULL
   }
@@ -1165,9 +1189,38 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 
   if (!stp_get_verified(nv))
     {
-      stp_eprintf(nv, "Print options not verified; cannot print.\n");
+      stp_eprintf(nv, _("Print options not verified; cannot print.\n"));
       return;
     }
+
+  image_bpp = image->bpp(image);
+
+  if (output_type == OUTPUT_RAW_PRINTER)
+    {
+      const inklist_t *inks = escp2_inklist(model, v);
+      int ninktypes = inks->n_inks;
+      int i;
+      int found = 0;
+      /*
+       * If we're using raw printer output, we dummy up the appropriate inkset.
+       */
+      for (i = 0; i < ninktypes; i++)
+	if (inks->inknames[i]->inkset == INKSET_EXTENDED &&
+	    inks->inknames[i]->channel_limit * 2 == image_bpp)
+	  {
+	    stp_eprintf(nv, "Changing ink type from %s to %s\n",
+			stp_get_ink_type(nv), inks->inknames[i]->name);
+	    stp_set_ink_type(nv, inks->inknames[i]->name);
+	    found = 1;
+	    break;
+	  }
+      if (!found)
+	{
+	  stp_eprintf(nv, _("This printer does not support raw printer output\n"));
+	  return;
+	}
+    }
+
 
   privdata.undersample = 1;
   privdata.initial_vertical_offset = 0;
@@ -1265,9 +1318,12 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   head_offset = stp_zalloc(sizeof(int) * total_channels);
 
   memset(head_offset, 0, sizeof(head_offset));
-  channel_limit = NCOLORS;
-  if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
+  if (output_type == OUTPUT_RAW_PRINTER)
+    channel_limit = escp2_physical_channels(model, v);
+  else if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
     channel_limit = 1;
+  else
+    channel_limit = NCOLORS;
 
   dt = stp_create_dither_data();
 
@@ -1279,6 +1335,12 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       channels_in_use = setup_ink_types(ink_type, &privdata, cols, head_offset,
 					dt, channel_limit, length * bits);
     }
+  if (escp2_has_cap(model, MODEL_FAST_360, MODEL_FAST_360_YES, nv) &&
+      (ink_type->inkset == INKSET_CMYK || channels_in_use == 1) &&
+      xdpi == 360 && ydpi == 360)
+    init.use_fast_360 = 1;
+  else
+    init.use_fast_360 = 0;
 
   /*
    * Set up the printer-specific parameters (weaving)
@@ -1286,8 +1348,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   if (res->softweave)
     {
       horizontal_passes = xdpi / physical_xdpi;
-      if ((output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME) &&
-	  channels_in_use == 1 &&
+      if (channels_in_use == 1 &&
 	  (ydpi >= (escp2_base_separation(model, nv) /
 		    escp2_black_nozzle_separation(model, nv))) &&
 	  (escp2_max_black_resolution(model, nv) < 0 ||
@@ -1308,6 +1369,13 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	  nozzle_separation = escp2_nozzle_separation(model, nv);
 	  privdata.min_nozzles = escp2_min_nozzles(model, nv);
 	}
+      if (init.use_fast_360)
+	{
+	  nozzles *= 2;
+	  nozzle_separation /= 2;
+	  if (privdata.min_nozzles == nozzles)
+	    privdata.min_nozzles *= 2;
+	}
       nozzle_separation =
 	nozzle_separation * ydpi / escp2_base_separation(model, nv);
     }
@@ -1319,6 +1387,8 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       nozzle_separation = 1;
       init.use_black_parameters = 0;
     }
+  init.nozzles = nozzles;
+  init.nozzle_separation = nozzle_separation;
 
   if (horizontal_passes == 0)
     horizontal_passes = 1;
@@ -1394,6 +1464,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   init.v = nv;
   init.inkname = ink_type;
   init.total_channels = total_channels;
+  init.channel_limit = channel_limit;
 
   escp2_init_printer(&init);
 
@@ -1402,7 +1473,6 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   */
 
   stp_set_output_color_model(nv, COLOR_MODEL_CMY);
-  image_bpp = image->bpp(image);
   colorfunc = stp_choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, nv);
 
   in  = stp_malloc(image_width * image_bpp);
@@ -1415,9 +1485,11 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   errline  = 0;
 
   if (xdpi > ydpi)
-    dither = stp_init_dither(image_width, out_width, 1, xdpi / ydpi, nv);
+    dither = stp_init_dither(image_width, out_width, image_bpp,
+			     1, xdpi / ydpi, nv);
   else
-    dither = stp_init_dither(image_width, out_width, ydpi / xdpi, 1, nv);
+    dither = stp_init_dither(image_width, out_width, image_bpp,
+			     ydpi / xdpi, 1, nv);
 
   adjust_print_quality(&init, dither,
 		       &lum_adjustment, &sat_adjustment, &hue_adjustment);

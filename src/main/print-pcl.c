@@ -2428,9 +2428,11 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   stp_compute_lut(nv, 256);
 
   if (xdpi > ydpi)
-    dither = stp_init_dither(image_width, out_width, 1, xdpi / ydpi, nv);
+    dither = stp_init_dither(image_width, out_width, image_bpp,
+			     1, xdpi / ydpi, nv);
   else
-    dither = stp_init_dither(image_width, out_width, ydpi / xdpi, 1, nv);
+    dither = stp_init_dither(image_width, out_width, image_bpp,
+			     ydpi / xdpi, 1, nv);
 
 /* Set up dithering for special printers. */
 

@@ -82,11 +82,18 @@ static stp_image_t theImage =
 
 double global_c_level = 1.0;
 double global_c_gamma = 1.0;
+double global_lc_level = 1.0;
+double global_lc_gamma = 1.0;
 double global_m_level = 1.0;
 double global_m_gamma = 1.0;
+double global_lm_level = 1.0;
+double global_lm_gamma = 1.0;
 double global_y_level = 1.0;
 double global_y_gamma = 1.0;
+double global_k_level = 1.0;
 double global_k_gamma = 1.0;
+double global_lk_level = 1.0;
+double global_lk_gamma = 1.0;
 double global_gamma = 1.0;
 int levels = 256;
 double ink_limit = 1.0;
@@ -105,6 +112,7 @@ double vsize = 1.0;
 int noblackline = 0;
 int printer_width, printer_height, bandheight;
 int n_testpatterns = 0;
+int global_ink_depth = 0;
 
 testpattern_t *the_testpatterns = NULL;
 
@@ -327,7 +335,10 @@ main(int argc, char **argv)
    * Most programs will not use OUTPUT_RAW_CMYK; OUTPUT_COLOR or
    * OUTPUT_GRAYSCALE are more useful for most purposes.
    */
-  stp_set_output_type(v, OUTPUT_RAW_CMYK);
+  if (global_ink_depth)
+    stp_set_output_type(v, OUTPUT_RAW_PRINTER);
+  else
+    stp_set_output_type(v, OUTPUT_RAW_CMYK);
 
   pt = stp_get_papersize_by_name(stp_get_media_size(v));
   if (!pt)
@@ -384,10 +395,21 @@ static void
 fill_black(unsigned short *data, size_t len, size_t scount)
 {
   int i;
-  for (i = 0; i < (len / scount) * scount; i++)
+  if (global_ink_depth)
     {
-      data[3] = ink_limit * 65535;
-      data += 4;
+      for (i = 0; i < (len / scount) * scount; i++)
+	{
+	  data[0] = ink_limit * 65535;
+	  data += global_ink_depth;
+	}
+    }
+  else
+    {
+      for (i = 0; i < (len / scount) * scount; i++)
+	{
+	  data[3] = ink_limit * 65535;
+	  data += 4;
+	}
     }
 }
 
@@ -460,11 +482,150 @@ fill_colors(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
       kk *= ink_limit * 65535;
       for (j = 0; j < pixels; j++)
 	{
-	  data[0] = cc;
-	  data[1] = mm;
-	  data[2] = yy;
-	  data[3] = kk;
-	  data += 4;
+	  switch (global_ink_depth)
+	    {
+	    case 0:
+	      data[0] = cc;
+	      data[1] = mm;
+	      data[2] = yy;
+	      data[3] = kk;
+	      data += 4;
+	      break;
+	    case 1:
+	      data[0] = kk;
+	      break;
+	    case 2:
+	      data[0] = kk;
+	      data[1] = 0;
+	      break;
+	    case 4:
+	      data[0] = kk;
+	      data[1] = cc;
+	      data[2] = mm;
+	      data[3] = yy;
+	      break;
+	    case 6:
+	      data[0] = kk;
+	      data[1] = cc;
+	      data[2] = 0;
+	      data[3] = mm;
+	      data[4] = 0;
+	      data[5] = yy;
+	      break;
+	    case 7:
+	      data[0] = kk;
+	      data[1] = 0;
+	      data[2] = cc;
+	      data[3] = 0;
+	      data[4] = mm;
+	      data[5] = 0;
+	      data[6] = yy;
+	      break;
+	    }
+	  data += global_ink_depth;
+	}
+    }
+}
+
+static void
+fill_colors_extended(unsigned short *data, size_t len,
+		     size_t scount, testpattern_t *p)
+{
+  double c_min = p->d.p.c_min == -2 ? global_c_level : p->d.p.c_min;
+  double m_min = p->d.p.m_min == -2 ? global_m_level : p->d.p.m_min;
+  double y_min = p->d.p.y_min == -2 ? global_y_level : p->d.p.y_min;
+  double k_min = p->d.p.k_min == -2 ? global_k_level : p->d.p.k_min;
+  double lc_min = p->d.p.lc_min == -2 ? global_lc_level : p->d.p.lc_min;
+  double lm_min = p->d.p.lm_min == -2 ? global_lm_level : p->d.p.lm_min;
+  double lk_min = p->d.p.lk_min == -2 ? global_lk_level : p->d.p.lk_min;
+  double c = p->d.p.c == -2 ? global_c_level : p->d.p.c;
+  double m = p->d.p.m == -2 ? global_m_level : p->d.p.m;
+  double y = p->d.p.y == -2 ? global_y_level : p->d.p.y;
+  double k = p->d.p.k == -2 ? global_k_level : p->d.p.k;
+  double lc = p->d.p.lc == -2 ? global_lc_level : p->d.p.lc;
+  double lm = p->d.p.lm == -2 ? global_lm_level : p->d.p.lm;
+  double lk = p->d.p.lk == -2 ? global_lk_level : p->d.p.lk;
+  double c_gamma = p->d.p.c_gamma * global_gamma * global_c_gamma;
+  double m_gamma = p->d.p.m_gamma * global_gamma * global_m_gamma;
+  double y_gamma = p->d.p.y_gamma * global_gamma * global_y_gamma;
+  double k_gamma = p->d.p.k_gamma * global_gamma * global_k_gamma;
+  double lc_gamma = p->d.p.lc_gamma * global_gamma * global_lc_gamma;
+  double lm_gamma = p->d.p.lm_gamma * global_gamma * global_lm_gamma;
+  double lk_gamma = p->d.p.lk_gamma * global_gamma * global_lk_gamma;
+  int i;
+  int j;
+  int pixels;
+  c -= c_min;
+  m -= m_min;
+  y -= y_min;
+  k -= k_min;
+  lc -= lc_min;
+  lm -= lm_min;
+  lk -= lk_min;
+  if (scount > len)
+    scount = len;
+  pixels = len / scount;
+  for (i = 0; i < scount; i++)
+    {
+      double where = (double) i / ((double) scount - 1);
+      double val = where;
+      double cc = c_min + val * c;
+      double mm = m_min + val * m;
+      double yy = y_min + val * y;
+      double kk = k_min + val * k;
+      double lcc = lc_min + val * lc;
+      double lmm = lm_min + val * lm;
+      double lkk = lk_min + val * lk;
+      cc = pow(cc, c_gamma);
+      mm = pow(mm, m_gamma);
+      yy = pow(yy, y_gamma);
+      kk = pow(kk, k_gamma);
+      lcc = pow(lcc, lc_gamma);
+      lmm = pow(lmm, lm_gamma);
+      lkk = pow(lkk, lk_gamma);
+      cc *= ink_limit * 65535;
+      mm *= ink_limit * 65535;
+      yy *= ink_limit * 65535;
+      kk *= ink_limit * 65535;
+      lcc *= ink_limit * 65535;
+      lmm *= ink_limit * 65535;
+      lkk *= ink_limit * 65535;
+      for (j = 0; j < pixels; j++)
+	{
+	  switch (global_ink_depth)
+	    {
+	    case 1:
+	      data[0] = kk;
+	      break;
+	    case 2:
+	      data[0] = kk;
+	      data[1] = lkk;
+	      break;
+	    case 4:
+	      data[0] = kk;
+	      data[1] = cc;
+	      data[2] = mm;
+	      data[3] = yy;
+	      break;
+	    case 6:
+	      data[0] = kk;
+	      data[1] = cc;
+	      data[2] = lcc;
+	      data[3] = mm;
+	      data[4] = lmm;
+	      data[5] = yy;
+	      break;
+	    case 7:
+	      data[0] = kk;
+	      data[1] = lkk;
+	      data[2] = cc;
+	      data[3] = lcc;
+	      data[4] = mm;
+	      data[5] = lmm;
+	      data[6] = yy;
+	      break;
+	    }
+	  data += global_ink_depth;
 	}
     }
 }
@@ -474,11 +635,14 @@ extern FILE *yyin;
 static stp_image_status_t
 Image_get_row(stp_image_t *image, unsigned char *data, int row)
 {
+  int depth = 4;
+  if (global_ink_depth)
+    depth = global_ink_depth;
   if (the_testpatterns[0].t == E_IMAGE)
     {
       testpattern_t *t = &(the_testpatterns[0]);
-      int total_read = fread(data, 1, t->d.i.x * 8, yyin);
-      if (total_read != t->d.i.x * 8)
+      int total_read = fread(data, 1, t->d.i.x * depth * 2, yyin);
+      if (total_read != t->d.i.x * depth * 2)
 	{
 	  fprintf(stderr, "Read failed!\n");
 	  return STP_IMAGE_ABORT;
@@ -490,25 +654,33 @@ Image_get_row(stp_image_t *image, unsigned char *data, int row)
       int band = row / bandheight;
       if (previous_band == -2)
 	{
-	  memset(data, 0, printer_width * 4 * sizeof(unsigned short));
-	  fill_colors((unsigned short *)data, printer_width, levels,
-		      &(the_testpatterns[band]));
+	  memset(data, 0, printer_width * depth * sizeof(unsigned short));
+	  if (the_testpatterns[band].t == E_XPATTERN)
+	    fill_colors_extended((unsigned short *)data, printer_width,
+				 levels, &(the_testpatterns[band]));
+	  else
+	    fill_colors((unsigned short *)data, printer_width, levels,
+			&(the_testpatterns[band]));
 	  previous_band = band;
 	}
       else if (row == printer_height - 1)
 	{
-	  memset(data, 0, printer_width * 4 * sizeof(unsigned short));
+	  memset(data, 0, printer_width * depth * sizeof(unsigned short));
 	  fill_black((unsigned short *)data, printer_width, levels);
 	}
       else if (band >= n_testpatterns)
-	memset(data, 0, printer_width * 4 * sizeof(unsigned short));
-      else if (band != previous_band && band > 0)
+	memset(data, 0, printer_width * depth * sizeof(unsigned short));
+      else if (band != previous_band && band >= 0)
 	{
-	  memset(data, 0, printer_width * 4 * sizeof(unsigned short));
+	  memset(data, 0, printer_width * depth * sizeof(unsigned short));
 	  if (noblackline)
 	    {
-	      fill_colors((unsigned short *)data, printer_width, levels,
-			  &(the_testpatterns[band]));
+	      if (the_testpatterns[band].t == E_XPATTERN)
+		fill_colors_extended((unsigned short *)data, printer_width,
+				     levels, &(the_testpatterns[band]));
+	      else
+		fill_colors((unsigned short *)data, printer_width, levels,
+			    &(the_testpatterns[band]));
 	      previous_band = band;
 	    }
 	  else
@@ -524,7 +696,10 @@ Image_get_row(stp_image_t *image, unsigned char *data, int row)
 static int
 Image_bpp(stp_image_t *image)
 {
-  return 8;
+  if (global_ink_depth)
+    return global_ink_depth * 2;
+  else
+    return 8;
 }
 
 static int

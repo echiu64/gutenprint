@@ -164,6 +164,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 		};
   struct timeval tv1, tv2;
   stp_dither_data_t *dt;
+  int bpp = 0;
 
  /*
   * Initialise libgimpprint
@@ -252,21 +253,25 @@ main(int  argc,				/* I - Number of command-line arguments */
     {
     case DITHER_GRAY:
       stp_set_output_type(v, OUTPUT_GRAY);
+      bpp = 1;
       break;
     case DITHER_MONOCHROME:
       stp_set_output_type(v, OUTPUT_MONOCHROME);
+      bpp = 1;
       break;
     case DITHER_COLOR:
     case DITHER_PHOTO:
       stp_set_output_type(v, OUTPUT_COLOR);
+      bpp = 3;
       break;
     case DITHER_CMYK:
     case DITHER_PHOTO_CMYK:
       stp_set_output_type(v, OUTPUT_RAW_CMYK);
+      bpp = 4;
       break;
     }
 
-  dither = stp_init_dither(IMAGE_WIDTH, IMAGE_WIDTH, 1, 1, v);
+  dither = stp_init_dither(IMAGE_WIDTH, IMAGE_WIDTH, bpp, 1, 1, v);
 
   for (i = 0; i < NCOLORS; i++)
     stp_dither_set_black_level(dither, i, 1.0);

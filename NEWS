@@ -1,6 +1,6 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.3.3, released July 14, 2002, is a development release of
+Gimp-Print 4.3.4, released July 14, 2002, is a development release of
 this package.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
@@ -20,6 +20,20 @@ or APFL GhostScript 7.04 or later.
 
 Please read the README file for full instructions on building and
 installing this package.
+
+Gimp-Print 4.3.4 contains the following major changes over Gimp-Print
+4.3.3:
+
+1) A new raw output mode is provided.  This permits the driver to pass
+   the color information through unchanged.  Each channel is dithered
+   individually (including the photo channels on 6 and 7 color
+   printers).  Currently, this is only supported on Epson Stylus
+   printers.
+
+   This is currently only accessible via the testpattern generator.
+   This could be used in conjunction with external color generation
+   as part of a fully color managed workflow.
+
 
 Gimp-Print 4.3.3 contains the following major changes over Gimp-Print
 4.3.2:

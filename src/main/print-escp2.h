@@ -21,6 +21,8 @@
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#define PHYSICAL_CHANNEL_LIMIT 7
+
 /*
  * Printer capabilities.
  *
@@ -112,7 +114,7 @@ typedef struct escp2_variable_ink
   double density;
 } escp2_variable_ink_t;
 
-typedef const escp2_variable_ink_t *escp2_variable_inkset_t[NCOLORS];
+typedef const escp2_variable_ink_t *escp2_variable_inkset_t[PHYSICAL_CHANNEL_LIMIT];
 
 typedef const escp2_variable_inkset_t *escp2_variable_inklist_t[][RES_N / 2];
 
@@ -174,6 +176,10 @@ typedef struct
 #define MODEL_VACUUM_NO		0x000ul
 #define MODEL_VACUUM_YES	0x100ul
 
+#define MODEL_FAST_360_MASK	0x200ul
+#define MODEL_FAST_360_NO	0x000ul
+#define MODEL_FAST_360_YES	0x200ul
+
 typedef enum
 {
   MODEL_COMMAND,
@@ -182,6 +188,7 @@ typedef enum
   MODEL_VARIABLE_DOT,
   MODEL_GRAYMODE,
   MODEL_VACUUM,
+  MODEL_FAST_360,
   MODEL_LIMIT
 } escp2_model_option_t;
 
@@ -227,7 +234,8 @@ typedef enum
   INKSET_CcMmYK         = 1,
   INKSET_CcMmYyK        = 2,
   INKSET_CcMmYKk        = 3,
-  INKSET_PIEZO_QUADTONE = 4
+  INKSET_PIEZO_QUADTONE = 4,
+  INKSET_EXTENDED	= 5
 } inkset_id_t;
 
 typedef struct
@@ -238,10 +246,11 @@ typedef struct
   inkset_id_t inkset;
   double k_lower;
   double k_upper;
+  int channel_limit;
   const double *lum_adjustment;
   const double *hue_adjustment;
   const double *sat_adjustment;
-  const ink_channel_t *channels[NCOLORS];
+  const ink_channel_t *channels[PHYSICAL_CHANNEL_LIMIT];
 } escp2_inkname_t;
 
 typedef struct
@@ -279,6 +288,7 @@ typedef struct escp2_printer
   int		black_nozzles;	/* Number of black nozzles (may be extra) */
   int		min_black_nozzles;	/* # of black nozzles (may be extra) */
   int		black_nozzle_separation; /* Separation between rows */
+  int		physical_channels; /* Number of ink channels */
 /*****************************************************************************/
   /* Print head resolution */
   int		base_separation; /* Basic unit of row separation */

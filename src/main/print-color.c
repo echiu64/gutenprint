@@ -1793,6 +1793,45 @@ cmyk_8_to_cmyk(const stp_vars_t vars,
 }
 
 static void
+raw_to_raw(const stp_vars_t vars,
+	   const unsigned char *rawin,
+	   unsigned short *rawout,
+	   int *zero_mask,
+	   int width,
+	   int bpp,
+	   const unsigned char *cmap,
+	   const double *hue_map,
+	   const double *lum_map,
+	   const double *sat_map)
+{
+  int i;
+  int j;
+  int nz[32];
+  int colors;
+  const unsigned short *srawin = (const unsigned short *) rawin;
+  colors = bpp / 2;
+
+  memset(nz, 0, sizeof(nz));
+  for (i = 0; i < width; i++)
+    {
+      for (j = 0; j < colors; j++)
+	{
+	  nz[j] |= srawin[j];
+	  rawout[j] = srawin[j];
+	}
+      srawin += colors;
+      rawout += colors;
+    }
+  if (zero_mask)
+    {
+      *zero_mask = 0;
+      for (i = 0; i < colors; i++)
+	if (! nz[i])
+	  *zero_mask |= 1 << i;
+    }
+}
+
+static void
 cmyk_to_cmyk(const stp_vars_t vars,
 	     const unsigned char *cmykin,
 	     unsigned short *cmykout,
@@ -2120,6 +2159,11 @@ stp_choose_colorfunc(int output_type,
 	default:
 	  RETURN_COLORFUNC(NULL);
 	}
+    case OUTPUT_RAW_PRINTER:
+      if (image_bpp & 1 || image_bpp > 64)
+	RETURN_COLORFUNC(NULL);
+      *out_bpp = image_bpp / 2;
+      RETURN_COLORFUNC(raw_to_raw);
     case OUTPUT_GRAY:
     default:
       *out_bpp = 1;

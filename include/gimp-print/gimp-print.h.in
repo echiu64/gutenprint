@@ -81,6 +81,7 @@ extern const char* stp_check_version (unsigned int required_major,
 #define OUTPUT_COLOR            1       /* Color output */
 #define OUTPUT_MONOCHROME       2       /* Raw monochrome output */
 #define OUTPUT_RAW_CMYK         3       /* Raw CMYK output */
+#define OUTPUT_RAW_PRINTER	4	/* Printer-specific raw output */
 
 #define ORIENT_AUTO             -1      /* Best orientation */
 #define ORIENT_PORTRAIT         0       /* Portrait orientation */

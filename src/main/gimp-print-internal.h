@@ -237,7 +237,7 @@ extern void	stp_default_media_size(const stp_printer_t printer,
 				       const stp_vars_t v, int *width,
 				       int *height);
 
-extern void *	stp_init_dither(int in_width, int out_width,
+extern void *	stp_init_dither(int in_width, int out_width, int bpp,
 				int horizontal_aspect,
 				int vertical_aspect, stp_vars_t vars);
 extern void	stp_dither_set_iterated_matrix(void *vd, size_t edge,

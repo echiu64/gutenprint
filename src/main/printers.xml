@@ -221,16 +221,6 @@
 <language value=escp2>
 </printer>
 
-<printer name="EPSON Stylus C40SX" driver="escp2-c40sx">
-<color>
-<model value=43>
-<gamma value=0.585>
-<density value=1.0>
-<magenta value=0.95>
-<yellow value=0.9>
-<language value=escp2>
-</printer>
-
 <printer name="EPSON Stylus C20UX" driver="escp2-c20ux">
 <color>
 <model value=42>
@@ -241,7 +231,47 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus C40SX" driver="escp2-c40sx">
+<color>
+<model value=43>
+<gamma value=0.585>
+<density value=1.0>
+<magenta value=0.95>
+<yellow value=0.9>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus C40UX" driver="escp2-c40ux">
+<color>
+<model value=43>
+<gamma value=0.585>
+<density value=1.0>
+<magenta value=0.95>
+<yellow value=0.9>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus C41SX" driver="escp2-c41sx">
+<color>
+<model value=43>
+<gamma value=0.585>
+<density value=1.0>
+<magenta value=0.95>
+<yellow value=0.9>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus C41UX" driver="escp2-c41ux">
+<color>
+<model value=43>
+<gamma value=0.585>
+<density value=1.0>
+<magenta value=0.95>
+<yellow value=0.9>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus C42SX" driver="escp2-c42sx">
 <color>
 <model value=43>
 <gamma value=0.585>
@@ -269,6 +299,22 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus C61" driver="escp2-c61">
+<color>
+<model value=52>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus C62" driver="escp2-c62">
+<color>
+<model value=52>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus C70" driver="escp2-c70">
 <color>
 <model value=44>
@@ -281,6 +327,17 @@
 </printer>
 
 <printer name="EPSON Stylus C80" driver="escp2-c80">
+<color>
+<model value=44>
+<gamma value=0.688>
+<density value=1.0>
+<cyan value=0.96>
+<magenta value=1.02>
+<yellow value=1.02>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus C82" driver="escp2-c82">
 <color>
 <model value=44>
 <gamma value=0.688>
@@ -601,6 +658,14 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Photo 830" driver="escp2-830">
+<color>
+<model value=50>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Photo 870" driver="escp2-870">
 <color>
 <model value=22>
@@ -628,6 +693,22 @@
 <printer name="EPSON Stylus Photo 895" driver="escp2-895">
 <color>
 <model value=36>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Photo 915" driver="escp2-915">
+<color>
+<model value=36>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Photo 925" driver="escp2-925">
+<color>
+<model value=51>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>

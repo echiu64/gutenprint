@@ -118,11 +118,40 @@ line_type **page=NULL;
    Yellow   4       4        3
    L.Mag.   17      257      4
    L.Cyan   18      258      5
-   L.Yellow NA      NA       6
+   L.Black  16      256      6
+   D.Yellow 20      260      7
  */
 
 /* convert either Epson1 or Epson2 color encoding into a sequential encoding */
-#define seqcolor(c) (((c)&3)+(((c)&276)?3:0))  /* Intuitive, huh? */
+static inline int
+seqcolor(int c)
+{
+  switch (c)
+    {
+    case 0:
+      return 0;
+    case 1:
+      return 1;
+    case 2:
+      return 2;
+    case 4:
+      return 3;
+    case 17:
+    case 257:
+      return 4;
+    case 18:
+    case 258:
+      return 5;
+    case 16:
+    case 256:
+      return 6;
+    case 20:
+    case 260:
+      return 7;
+    default:
+      return 0;
+    }
+}
 
 extern void merge_line(line_type *p, unsigned char *l, int startl, int stopl,
 		       int color);
@@ -232,8 +261,9 @@ static float ink_colors[8][4] =
  { 1,   1, .1,  1 },		/* Y */
  { 1,  .7,  1,  1 },		/* m */
  { .7,  1,  1,  1 },		/* c */
- { 1,   1, .7,  1 },		/* y */
- { 1,   1,  1,  1 }};
+ { .7, .7, .7,  1 },		/* k */
+ { 1,   1,  0,  1 },		/* dY */
+};
 
 static float quadtone_inks[] = { 0.0, .5, .25, .75 };
 
