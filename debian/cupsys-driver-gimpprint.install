@@ -1,8 +1,8 @@
 debian/install/etc/cups                                etc
 debian/install/usr/bin/cups-calibrate                  usr/bin
-debian/install/usr/sbin/cups-genppd                    usr/sbin
-debian/install/usr/sbin/cups-genppdconfig              usr/sbin
-debian/install/usr/sbin/cups-genppdupdate              usr/sbin
+debian/install/usr/sbin/cups-genppd.4.3                usr/sbin
+debian/install/usr/sbin/cups-genppdconfig.4.3          usr/sbin
+debian/install/usr/sbin/cups-genppdupdate.4.3          usr/sbin
 debian/install/usr/lib/cups                            usr/lib
 debian/install/usr/share/cups/calibrate.ppm            usr/share/cups
 debian/install/usr/share/man/man8/cups-calibrate.8     usr/share/man/man8

@@ -1,3 +1,11 @@
+gimp-print (4.3.25-1) unstable; urgency=low
+
+  * New upstream development release.
+  * Use new versioned CUPS executables.
+  * Fix libgimpprintui header and pkg-config data installation.
+
+ -- Roger Leigh <rleigh@debian.org>  Sun,  4 Jan 2004 10:29:10 +0000
+
 gimp-print (4.3.21-1) unstable; urgency=low
 
   * New upstream development release.
