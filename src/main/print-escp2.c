@@ -1291,7 +1291,7 @@ adjust_density_and_ink_type(escp2_init_t *init, stp_image_t *image)
 	  int resid = init->res->resid;
 	  int xresid = resid;
 	  double xdensity = density;
-	  while (density > 1.0 && resid >= RES_360_M)
+	  while (density > 1.0 && resid >= RES_360)
 	    {
 	      int tresid = xresid - 2;
 	      int bits_now = escp2_bits(v, resid);

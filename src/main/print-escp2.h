@@ -38,6 +38,32 @@ typedef unsigned long model_featureset_t;
 
 
 /*
+ * Definition of the multi-level inks available to a given printer.
+ * Each printer may use a different kind of ink droplet for variable
+ * and single drop size for each supported horizontal resolution and
+ * type of ink (4 or 6 color).
+ *
+ * Recall that 6 color ink is treated as simply another kind of
+ * multi-level ink, but the driver offers the user a choice of 4 and
+ * 6 color ink, so we need to define appropriate inksets for both
+ * kinds of ink.
+ *
+ * Stuff like the MIS 4 and 6 "color" monochrome inks doesn't fit into
+ * this model very nicely, so we'll either have to special case it
+ * or find some way of handling it in here.
+ */
+
+#define RES_LOW		 0
+#define RES_360		 1
+#define RES_720_360	 2
+#define RES_720		 3
+#define RES_1440_720	 4
+#define RES_2880_720	 5
+#define RES_2880_1440	 6
+#define RES_2880_2880	 7
+#define RES_N		 8
+
+/*
  * For each printer, we can select from a variety of dot sizes.
  * For single dot size printers, the available sizes are usually 0,
  * which is the "default", and some subset of 1-4.  For simple variable
@@ -54,64 +80,26 @@ typedef unsigned long model_featureset_t;
  * An entry of -1 in a slot means that this resolution is not available.
  */
 
-typedef int escp2_dot_size_t[12];
+typedef int escp2_dot_size_t[RES_N];
 
 /*
  * Choose the number of bits to use at each resolution.
  */
 
-typedef int escp2_bits_t[12];
+typedef int escp2_bits_t[RES_N];
 
 /*
  * Choose the base resolution to use at each resolution.
  */
 
-typedef int escp2_base_resolutions_t[12];
+typedef int escp2_base_resolutions_t[RES_N];
 
 /*
  * Specify the base density for each available resolution.
  * This obviously depends upon the dot size.
  */
 
-typedef double escp2_densities_t[12];
-
-/*
- * Definition of the multi-level inks available to a given printer.
- * Each printer may use a different kind of ink droplet for variable
- * and single drop size for each supported horizontal resolution and
- * type of ink (4 or 6 color).
- *
- * Recall that 6 color ink is treated as simply another kind of
- * multi-level ink, but the driver offers the user a choice of 4 and
- * 6 color ink, so we need to define appropriate inksets for both
- * kinds of ink.
- *
- * Stuff like the MIS 4 and 6 "color" monochrome inks doesn't fit into
- * this model very nicely, so we'll either have to special case it
- * or find some way of handling it in here.
- */
-
-#define RES_120_M	 0
-#define RES_120		 1
-#define RES_180_M	 2
-#define RES_180		 3
-#define RES_360_M	 4
-#define RES_360		 5
-#define RES_720_360_M	 6
-#define RES_720_360	 7
-#define RES_720_M	 8
-#define RES_720		 9
-#define RES_1440_720_M	 10
-#define RES_1440_720	 11
-#define RES_1440_1440_M	 12
-#define RES_1440_1440	 13
-#define RES_2880_720_M	 14
-#define RES_2880_720	 15
-#define RES_2880_1440_M	 16
-#define RES_2880_1440	 17
-#define RES_2880_2880_M	 18
-#define RES_2880_2880	 19
-#define RES_N		 20
+typedef double escp2_densities_t[RES_N];
 
 typedef struct escp2_variable_ink
 {
@@ -124,7 +112,7 @@ typedef struct escp2_variable_ink
 
 typedef const escp2_variable_ink_t *escp2_variable_inkset_t[PHYSICAL_CHANNEL_LIMIT];
 
-typedef const escp2_variable_inkset_t *escp2_variable_inklist_t[][RES_N / 2];
+typedef const escp2_variable_inkset_t *escp2_variable_inklist_t[][RES_N];
 
 typedef struct
 {
