@@ -51,8 +51,7 @@ EXTRA_DIST = \
 	libgimpprint.files \
 	README.building \
 	README.Debian \
-	rules \
-	templates
+	rules
 
 
 ## Rules
