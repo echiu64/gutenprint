@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.20  1999/11/07 22:16:42  rlk
+ *   Bug fixes; try to improve dithering slightly
+ *
  *   Revision 1.19  1999/10/29 01:01:16  rlk
  *   Smoother rendering of darker colors
  *
@@ -195,7 +198,7 @@
  * Want to dynamically allocate this so we can 
  */
 
-int	error[2][4][14*720+1];
+int	error[2][4][14*1440+1];
 
 /*
  * 'dither_black()' - Dither grayscale pixels to black.
@@ -321,23 +324,23 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
 #define KDARKNESS_LOWER (32 * 256)
 #define KDARKNESS_UPPER (144 * 256)
 
-#define C_RANDOMIZER 4
-#define M_RANDOMIZER 4
-#define Y_RANDOMIZER 4
-#define K_RANDOMIZER 4
+#define C_RANDOMIZER 1
+#define M_RANDOMIZER 1
+#define Y_RANDOMIZER 1
+#define K_RANDOMIZER 8
 
 void
 dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
-	      int           row,	/* I - Current Y coordinate */
-	      int           src_width,	/* I - Width of input row */
-	      int           dst_width,	/* I - Width of output rows */
-	      unsigned char *cyan,	/* O - Cyan bitmap pixels */
-	      unsigned char *lcyan,	/* O - Light cyan bitmap pixels */
-	      unsigned char *magenta,	/* O - Magenta bitmap pixels */
-	      unsigned char *lmagenta,	/* O - Light magenta bitmap pixels */
-	      unsigned char *yellow,	/* O - Yellow bitmap pixels */
-	      unsigned char *lyellow,	/* O - Light yellow bitmap pixels */
-	      unsigned char *black)	/* O - Black bitmap pixels */
+	    int           row,		/* I - Current Y coordinate */
+	    int           src_width,	/* I - Width of input row */
+	    int           dst_width,	/* I - Width of output rows */
+	    unsigned char *cyan,	/* O - Cyan bitmap pixels */
+	    unsigned char *lcyan,	/* O - Light cyan bitmap pixels */
+	    unsigned char *magenta,	/* O - Magenta bitmap pixels */
+	    unsigned char *lmagenta,	/* O - Light magenta bitmap pixels */
+	    unsigned char *yellow,	/* O - Yellow bitmap pixels */
+	    unsigned char *lyellow,	/* O - Light yellow bitmap pixels */
+	    unsigned char *black)	/* O - Black bitmap pixels */
 {
   int		x,		/* Current X coordinate */
 		xerror,		/* X error count */
@@ -389,8 +392,8 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   merror0 = error[row & 1][1];
   merror1 = error[1 - (row & 1)][1];
 
-  yerror0 = error[row & 1][5];
-  yerror1 = error[1 - (row & 1)][5];
+  yerror0 = error[row & 1][2];
+  yerror1 = error[1 - (row & 1)][2];
 
   kerror0 = error[row & 1][3];
   kerror1 = error[1 - (row & 1)][3];
@@ -553,7 +556,8 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       c += ck ;
       if (lmagenta)
 	{
-	  m += ck * 9 / 8;
+/*	  m += ck * 9 / 8; */
+	  m += ck;
 	  y += ck * 3 / 2;
 	}
       else
