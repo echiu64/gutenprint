@@ -58,7 +58,8 @@ AC_DEFUN([STP_GIMP2_LIBS],
 [dnl GIMP library checks
 if test x${BUILD_GIMP2} = xyes ; then
   GIMP2_DATA_DIR=`$PKG_CONFIG gimp-2.0 --variable=gimpdatadir`
-  GIMP2_PLUGIN_DIR=`$PKG_CONFIG gimp-2.0 --variable=gimplibdir`
+  GIMP2_PLUGIN_DIR=`$PKG_CONFIG gimp-2.0 --variable=gimplibdir`/plug-ins
+  gimp2_plug_indir="${GIMP2_PLUGIN_DIR}"
 fi
 ])
 

@@ -34,7 +34,7 @@ LOCAL_CPPFLAGS = $(GIMPPRINT_CFLAGS) $(GIMP2_CFLAGS)
 ## Programs
 
 if BUILD_GIMP2
-gimp_plug_in_PROGRAMS = print
+gimp2_plug_in_PROGRAMS = print
 endif
 
 print_SOURCES = \
