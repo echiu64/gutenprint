@@ -133,21 +133,11 @@ install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	fi
 
 uninstall-local: $(INSTALL_DATA_LOCAL_DEPS)
-#	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
-#	  for language in en $(LINGUAS) ; do \
-#	    echo "Removing $$language locale PPD files..." ; \
-#	    for ppdfile in ppd/$$language/* ; do \
-#	      if test -f "$(DESTDIR)$(cups_modeldir)/$$language/`basename $$ppdfile`" ; then \
-#	        $(RM) -f $(DESTDIR)$(cups_modeldir)/$$language/`basename $$ppdfile` ; \
-#	      fi ; \
-#	    done; \
-#	  done \
-#	fi
 # Remove PPDs installed in new PPD location
 	if test -z "DONT_UNINSTALL_PPDS" ; then \
 	  if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
 	    $(RM) -fr $(DESTDIR)$(cups_modeldir)/* ; \
-	  fi
+	  fi \
 	fi
 
 install-data-hook:
