@@ -37,6 +37,55 @@ in the 4.2 line, is out!  Please read the release notes <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 </p>
 
+<p>The Gimp-Print Project is pleased to announce the release of
+Gimp-Print 4.2.0, the newest stable release of Gimp-Print.  Gimp-Print
+is a suite of printer drivers for all UNIX operating systems,
+supporting printers from Canon, Epson, Hewlett-Packard, Lexmark, and
+compatible printers from other vendors, featuring extremely high
+quality, flexibility, and integration with most common printing
+systems.</p>
+
+<p>Gimp-Print 4.2 includes a core module (libgimpprint) that forms a
+common print engine supporting CUPS, Ghostscript, and Foomatic.  It
+also includes the Print plug-in for the Gimp (version 1.2).  The
+libgimpprint core, which is portable to all POSIX-compliant operating
+systems, can also be used by custom printing solutions.</p>
+
+<p>Gimp-Print 4.2 is a successor to the Gimp-Print 4.0 release line.
+Compared to that series, Gimp-Print 4.2 offers:</p>
+
+<ul>
+
+<li>Support for many new printers, including Lexmark printers for the
+first time</li
+
+<li>User's and developer's manuals</li>
+
+<li>Greatly improved print quality, particularly in color fidelity</li>
+
+<li>Internationalization, with translations into Danish, French,
+Norwegian, Polish, Swedish, and British English</li>
+
+<li>Greatly improved packaging</li>
+</ul>
+
+<p>A full list of new features, in addition to the current list of
+supported printers, may be found in the NEWS file at the top level of
+the distribution.</p>
+
+<p>Gimp-Print is supplied in source code form under the GPL (GNU
+General Public License).  Please be sure to read the README and NEWS
+files in the distribution.</p>
+
+<p>We anticipate further releases in the 4.2 line, primarily to support
+new printers and improved functionality in existing printers.
+Alongside that, we will be working on the 4.3 development line, which
+will eventually become the successor to 4.2.</p>
+
+<p>Enjoy!</p>
+
+<p><i>- The Gimp-Print Project Team</i></p>
+
 <P>Please visit <a
 href="http://sourceforge.net/project/?group_id=1537">our
 project page</a>, which contains a lot more information about us!</p>
