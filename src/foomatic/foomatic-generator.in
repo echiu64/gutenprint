@@ -85,6 +85,7 @@ use Data::Dumper;
 open PIPE, "./printer_options|" or die "Cannot run printer_options: $!\n";
 print STDERR "Loading options from ./printer_options...";
 while(<PIPE>) {
+    #print $_;
     next if m!^#!;
     eval $_;
 }
@@ -95,6 +96,7 @@ if ($foomatic3) {
     open PIPE, "./printer_margins|" or die "Cannot run printer_margins: $!\n";
     print STDERR "Loading margins from ./printer_margins...";
     $code = join('', <PIPE>);
+    #print $code;
     close PIPE or die "Cannot run printer_margins: $!\n";
     eval $code or die "Cannot run printer_margins: $!\n";
     print STDERR "done.\n";
@@ -112,7 +114,7 @@ print STDERR "done.\n";
 # OK, now %stpdata is a big honking thing, and %defaults is in there, too.
 
 # Invert, to build %bar{$optionname} = [ choice1, choice2 ];
-my ($a, $otmp, $vtmp);
+my ($a, $b, $otmp, $vtmp);
 for $a (keys(%stpdata)) {
     for $otmp (keys %{$stpdata{$a}}) {
 	for $vtmp (keys (%{$stpdata{$a}{$otmp}})) {
@@ -123,6 +125,28 @@ for $a (keys(%stpdata)) {
 	}
     }
 }
+
+# Lists of numerical options
+for $a (keys(%stp_float_values)) {
+    for $b (keys %{$stp_float_values{$a}}) {
+	for $otmp (keys (%{$stp_float_values{$a}{$b}})) {
+	    if (!$seen_floatnumopt{$otmp}++) {
+		push (@floatnumopts_list, $otmp);
+	    }
+	}
+    }
+}
+for $a (keys(%stp_int_values)) {
+    for $b (keys %{$stp_int_values{$a}}) {
+	for $otmp (keys (%{$stp_int_values{$a}{$b}})) {
+	    if (!$seen_intnumopt{$otmp}++) {
+		push (@intnumopts_list, $otmp);
+	    }
+	}
+    }
+}
+
+#print Dumper(%ev_choices);
 
 if ($foomatic3) {
     # Generate data for "PrintoutMode" option, only needed for 
@@ -313,21 +337,41 @@ for $drivertype (@drivertypes) {
 	die "Cannot create directory foomatic-db/$drvname/driver: $!\n"
 	    unless -d 'foomatic-db/$drvname/driver';
 
-    opendir TDIR, "$templatedir-$drivertype" or
-	die "Cannot open templates directory: $!\n";
+    my $order = 1000;
 
-    while ($tmpl=readdir(TDIR)) {
+#    opendir TDIR, "$templatedir-$drivertype" or
+#	die "Cannot open templates directory: $!\n";
 
-	# Only XML files
-	next if ($tmpl !~ m!.+\.xml$!);
+    for $fooopt (keys(%ev_choices), @floatnumopts_list,
+		 @intnumopts_list, "PrintoutMode") {
+
 	# The "PrintoutMode" option is only supported by Foomatic 2.9.x or
 	# newer
-	next if ((!$foomatic3) && ($tmpl eq "PrintoutMode.xml"));
+	next if ((!$foomatic3) && ($fooopt eq "PrintoutMode"));
 
-	my $fooopt = $tmpl;
-	$fooopt =~ s!\.xml$!!;
-	my $stpopt = $argnamemap{$fooopt};
-	$stpopt = $fooopt if ! defined ($stpopt);
+	# "x_resolution" and "y_resolution" appear in %ev_choices but are
+	# not option names, so skip them
+	next if $fooopt =~ /^[xy]_resolution$/;
+
+	my ($num_opt, $type, $tmpl);
+	if (member($fooopt, @floatnumopts_list)) {
+	    $num_opt = 1;
+	    $type = "float";
+	    $tmpl = "NumericalOptions.xml";
+	} elsif (member($fooopt, @intnumopts_list)) {
+	    $num_opt = 1;
+	    $type = "int";
+	    $tmpl = "NumericalOptions.xml";
+	} else {
+	    $num_opt = 0;
+	    $type = "enum";
+	    $tmpl = "${fooopt}.xml";
+	    $tmpl = "OtherOptions.xml" 
+		if ! -r "$templatedir-$drivertype/$tmpl";
+	}
+	#my $stpopt = $argnamemap{$fooopt};
+	#$stpopt = $fooopt if ! defined ($stpopt);
+	my $stpopt = $fooopt;
 
 #	print STDERR "Argnamemap '$fooopt' => '$stpopt'\n";
 
@@ -335,7 +379,7 @@ for $drivertype (@drivertypes) {
 	my @datafile = <TMPL>;
 	close TMPL;
 
-	print STDERR "Processing $tmpl...";
+	print STDERR "Processing \"$fooopt\"...";
 
 	my $template = join('',@datafile);
 
@@ -350,8 +394,16 @@ for $drivertype (@drivertypes) {
 	# Put the options into PPD groups (Foomatic >= 2.9)
 
 	if ($foomatic3) {
+	    my $group;
+	    if (defined($optiongroups->{$fooopt})) {
+		$group = $optiongroups->{$fooopt};
+	    } elsif ($num_opt) {
+		$group = "Adjustment";
+	    } else {
+		$group = "Miscellaneous";
+	    }
 	    my $substitution = "\n   <arg_group>" . 
-		$optiongroups->{$fooopt} . "</arg_group>";
+		$group . "</arg_group>";
 	    $template =~ s!\@\@GROUP\@\@!$substitution!g;
 	} else {
 	    $template =~ s!\@\@GROUP\@\@!!g;
@@ -359,9 +411,27 @@ for $drivertype (@drivertypes) {
 
 	# Now do the numeric substitutions
 
+	$template =~ s!\@\@TYPE\@\@!$type!g;
 	for $substr (@numericsubs) {
-	    my $substitution = $stp_values{$substr}{$stpopt};
+	    my $substitution;
+	    if ($type eq "float") {
+		my $substitution = $stp_float_values{$substr}{$stpopt};
+	    } else {
+		my $substitution = $stp_int_values{$substr}{$stpopt};
+	    }
 	    $template =~ s!\@\@$substr\@\@!$substitution!g;
+	}
+
+	# Substitutions for generic template files
+	my $lowercaseshortname = lc($fooopt);
+	if ($tmpl !~ /^$fooopt/) {
+	    $template =~ s!\@\@LOWERCASESHORTNAME\@\@!$lowercaseshortname!g;
+	    $template =~ s!\@\@LONGNAME\@\@!$longnames{$fooopt}!g;
+	    $template =~ s!\@\@SHORTNAME\@\@!$fooopt!g;
+	    $template =~ s!\@\@ORDER\@\@!$order!g;
+	    $order += 10;
+	    $template =~ s!\@\@SPOT\@\@!"B"!g;
+	    $template =~ s!\@\@PROTO\@\@!"$stpopt=\%s,"!g;
 	}
 
 	# Now do special-purpose substitutions
@@ -372,6 +442,22 @@ for $drivertype (@drivertypes) {
 		$template =~ s!\@\@$substr\@\@!$substitution!g;
 	    }
 	}
+	if ($template =~ m!\@\@OPTCONSTRAINTS\@\@!) {
+	    my $substitution = build_cons($stpopt);
+	    if (defined($substitution)) {
+		$template =~ s!\@\@OPTCONSTRAINTS\@\@!$substitution!g;
+	    }
+	}
+	if ($template =~ m!\@\@ENUMVALS\@\@!) {
+	    my $substitution = build_ev($stpopt);
+	    if (defined($substitution)) {
+		$template =~ s!\@\@ENUMVALS\@\@!$substitution!g;
+	    }
+	}
+
+	# File name for the option XML file
+
+	$tmpl = "${fooopt}.xml" if $tmpl !~ /^$fooopt\.xml$/;
 
 	# Any more?
 	grep (m!\@\@([^\@]+)\@\@!g
@@ -404,6 +490,10 @@ for $drivertype (@drivertypes) {
     undef %rescache;
 
 }
+
+
+# member( $a, @b ) returns 1 if $a is in @b, 0 otherwise.
+sub member { my $e = shift; foreach (@_) { $e eq $_ and return 1 } 0 };
 
 sub get_ev_shortname {
     my ($val) = @_;

@@ -74,6 +74,8 @@ main(int argc, char **argv)
 		{
 		  printf("$defaults{'%s'}{'%s'} = '%s';\n",
 			 driver, p->name, desc.deflt.str);
+		  printf("$longnames{'%s'} = '%s';\n",
+			 p->name, p->text);
 		  for (j = 0; j < count; j++)
 		    {
 		      const stp_param_string_t *param =
@@ -117,8 +119,8 @@ main(int argc, char **argv)
 			 driver, desc.name, desc.bounds.dbl.upper);
 		  printf("$stp_float_values{'%s'}{'DEFVAL'}{'%s'} = %.3f;\n",
 			 driver, desc.name, desc.deflt.dbl);
-		  printf("$stp_float_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
-			 driver, desc.name, _(desc.text));
+		  /* printf("$stp_float_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
+		     driver, desc.name, _(desc.text)); */
 		  printf("$stp_float_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
 			 driver, desc.name, _(desc.category));
 		  printf("$stp_float_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
@@ -136,8 +138,8 @@ main(int argc, char **argv)
 			 driver, desc.name, desc.bounds.integer.upper);
 		  printf("$stp_int_values{'%s'}{'DEFVAL'}{'%s'} = %d;\n",
 			 driver, desc.name, desc.deflt.integer);
-		  printf("$stp_int_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
-			 driver, desc.name, _(desc.text));
+		  /* printf("$stp_int_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
+		     driver, desc.name, _(desc.text)); */
 		  printf("$stp_int_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
 			 driver, desc.name, _(desc.category));
 		  printf("$stp_int_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",

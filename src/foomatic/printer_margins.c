@@ -53,6 +53,8 @@ main(int argc, char **argv) {
     printf("# Printer model %s, long name `%s'\n", driver,
 	   stp_printer_get_long_name(p));
     stp_describe_parameter(pv, "PageSize", &desc);
+    printf("$defaults{'%s'}{'PageSize'} = '%s';\n",
+	   driver, desc.deflt.str);
     num_opts = stp_string_list_count(desc.bounds.str);
     
     for (k = 0; k < num_opts; k++) {
@@ -83,6 +85,8 @@ main(int argc, char **argv) {
 	height = 0;
       }
 
+      printf("$stpdata{'%s'}{'PageSize'}{'%s'} = '%s';\n",
+	     driver, opt->name, opt->text);
       printf("$imageableareas{'%s'}{'%s'} = {\n",
 	     driver, opt->name);
       printf("  'left' => '%d',\n", left);
