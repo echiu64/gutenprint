@@ -27,7 +27,9 @@
 #include "../lib/libprintut.h"
 #include<stdio.h>
 #include<stdlib.h>
+#ifdef HAVE_LIMITS_H
 #include<limits.h>
+#endif
 #include<string.h>
 
 #ifdef __GNUC__
