@@ -872,16 +872,10 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	      dither_type -= D_ADAPTIVE_BASE;
 	      if (base < d->density / 128)
 		{
-		  dither_type = D_ORDERED_PERTURBED;
-		  dither_value = base;
-		}
-	      else if (base < d->density / 64)
-		{
-		  unsigned dtmp = (base - d->density / 128) * 128 * 65536
-		    / d->density;
+		  unsigned dtmp = base * 128 * 65536 / d->density;
 		  if (((rand() & 0xffff000) >> 12) > dtmp)
 		    {
-		      dither_type = D_ORDERED_PERTURBED;
+		      dither_type = D_ORDERED;
 		      dither_value = base;
 		    }
 		}
@@ -1467,13 +1461,13 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
     if (!printed_black)
       {
-	c = print_color(d, &(d->c_dither), oc, (oc / 2 + density / 6), c,
+	c = print_color(d, &(d->c_dither), oc, oc, c,
 			x, row, cptr, lcptr, bit, length, 0, 1,
 			d->c_randomizer);
-	m = print_color(d, &(d->m_dither), om, (om / 2 + density / 6), m,
+	m = print_color(d, &(d->m_dither), om, om, m,
 			x, row, mptr, lmptr, bit, length, 1, 0,
 			d->m_randomizer);
-	y = print_color(d, &(d->y_dither), oy, (oy / 2 + density / 6), y,
+	y = print_color(d, &(d->y_dither), oy, oy, y,
 			x, row, yptr, lyptr, bit, length, 1, 1,
 			d->y_randomizer);
       }
@@ -1495,6 +1489,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.31  2000/04/26 02:52:02  rlk
+ *   Minor improvements
+ *
  *   Revision 1.30  2000/04/24 01:56:37  rlk
  *   Give the primary more weight, and the other colors less weight, in the
  *   density calculation.  The previous weights resulted in too much dark
