@@ -50,7 +50,8 @@
 #include <stdarg.h>
 
 #if (0)
-#define DEBUG 1 
+#define DEBUG 1
+#define EXPERIMENTAL_STUFF 0
 #endif
 
 #define MAX_CARRIAGE_WIDTH	13 /* This really needs to go away */
@@ -635,11 +636,11 @@ typedef struct canon_caps {
   int printmodes_cnt;
 #else
   int dummy;
-#endif
   const canon_dot_size_t dot_sizes;   /* Vector of dot sizes for resolutions */
   const canon_densities_t densities;   /* List of densities for each printer */
   const canon_variable_inklist_t *inxs; /* Choices of inks for this printer */
   int inxs_cnt;                         /* number of ink definitions in inxs */
+#endif
   const double *lum_adjustment;
   const double *hue_adjustment;
   const double *sat_adjustment;
@@ -711,12 +712,13 @@ static void canon_write_line(const stp_vars_t, const canon_cap_t *, int,
 
 #ifdef EXPERIMENTAL_STUFF
 
-#define BC_10   CANON_INK_K
+#define BC_10   CANON_INK_K       /* b/w   */
 #define BC_11   CANON_INK_CMYK    /* color */
 #define BC_12   CANON_INK_CMYK    /* photo */
-#define BC_20   CANON_INK_K
+#define BC_20   CANON_INK_K       /* b/w   */
 #define BC_21   CANON_INK_CMYK    /* color */
 #define BC_22   CANON_INK_CMYK    /* photo */
+#define BC_29   0                 /* neon! */
 #define BC_3031 CANON_INK_CMYK    /* color */
 #define BC_3231 CANON_INK_CcMmYK  /* photo */
 
@@ -780,8 +782,7 @@ static const canon_cap_t canon_model_capabilities[] =
   /* ************************************ */
 
 
-  { /* Canon BJ 30 */
-    /* heads: BC-10 */
+  { /* Canon  BJ 30   *//* heads: BC-10 */
     30,
     9.5*72, 14*72,
     90, 360, 360, 2,
@@ -790,16 +791,17 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a,
     CANON_MODES(canon_modes_30),
+#ifndef EXPERIMENTAL_STUFF
     {-1,0,0,0,-1,-1}, /*090x090 180x180 360x360 720x360 720x720 1440x1440*/ 
     {1,1,1,1,1,1},    /*------- 180x180 360x360 720x360 ------- ---------*/ 
     CANON_INK(canon_ink_standard),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
   },
 
-  { /* Canon BJC 85 */
-    /* heads: BC-20 BC-21 BC-22 */
+  { /* Canon  BJC 85  *//* heads: BC-20 BC-21 BC-22 */
     85,
     9.5*72, 14*72,
     90, 720, 360, 2,
@@ -808,16 +810,17 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_DMT,
     CANON_MODES(canon_modes_85),
+#ifndef EXPERIMENTAL_STUFF
     {-1,-1,1,0,-1,-1},/*090x090 180x180 360x360 720x360 720x720 1440x1440*/ 
     {1,1,1,1,1,1},    /*------- ------- 360x360 720x360 ------- ---------*/ 
     CANON_INK(canon_ink_standard),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
   },
 
-  { /* Canon BJC 4300 */
-    /* heads: BC-20 BC-21 BC-22 BC-29 */
+  { /* Canon BJC 4300 *//* heads: BC-20 BC-21 BC-22 BC-29 */
     4300,
     618, 936,      /* 8.58" x 13 " */
     180, 1440, 720, 2,
@@ -826,16 +829,17 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
     CANON_CAP_STD0 | CANON_CAP_DMT,
     CANON_MODES(canon_nomodes),
+#ifndef EXPERIMENTAL_STUFF
     {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standard),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
   },
 
-  { /* Canon BJC 4400 */
-    /* heads: BC-20 BC-21 BC-22 BC-29 */
+  { /* Canon BJC 4400 *//* heads: BC-20 BC-21 BC-22 BC-29 */
     4400,
     9.5*72, 14*72,
     90, 720, 360, 2,
@@ -844,16 +848,17 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_DMT,
     CANON_MODES(canon_nomodes),
+#ifndef EXPERIMENTAL_STUFF
     {-1,-1,0,0,-1,-1},/*090x090 180x180 360x360 720x360 720x720 1440x1440*/ 
     {1,1,1,1,1,1},    /*------- ------- 360x360 720x360 ------- ---------*/ 
     CANON_INK(canon_ink_standard),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
   },
 
-  { /* Canon BJC 6000 */
-    /* heads: BC-30/BC-31 BC-32/BC-31 */
+  { /* Canon BJC 6000 *//* heads: BC-30/BC-31 BC-32/BC-31 */
     6000,
     618, 936,      /* 8.58" x 13 " */
     180, 1440, 720, 2,
@@ -862,16 +867,17 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
     CANON_CAP_STD1 | CANON_CAP_DMT | CANON_CAP_ACKSHORT,
     CANON_MODES(canon_modes_6x00),
+#ifndef EXPERIMENTAL_STUFF
     {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1.8,1,0.5,1,1},/*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
   },
 
-  { /* Canon BJC 6200 */
-    /* heads: BC-30/BC-31 BC-32/BC-31 */
+  { /* Canon BJC 6200 *//* heads: BC-30/BC-31 BC-32/BC-31 */
     6200,
     618, 936,      /* 8.58" x 13 " */
     180, 1440, 720, 2,
@@ -880,16 +886,17 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
     CANON_CAP_STD1 | CANON_CAP_DMT | CANON_CAP_ACKSHORT,
     CANON_MODES(canon_modes_6x00),
+#ifndef EXPERIMENTAL_STUFF
     {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {0,1.8,1,.5,0,0}, /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
   },
 
-  { /* Canon BJC 6500 */
-    /* heads: BC-30/BC-31 BC-32/BC-31 */
+  { /* Canon BJC 6500 *//* heads: BC-30/BC-31 BC-32/BC-31 */
     6500,
     11*72, 17*72,
     180, 1440, 720, 2,
@@ -898,27 +905,30 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
     CANON_CAP_STD1 | CANON_CAP_DMT,
     CANON_MODES(canon_modes_6x00),
+#ifndef EXPERIMENTAL_STUFF
     {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {0,1.8,1,.5,0,0}, /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
   },
 
-  { /* Canon BJC 8200 */
-    /* heads: BC-50 */
+  { /* Canon BJC 8200 *//* heads: BC-50 */
     8200,
     11*72, 17*72,
     150, 1200,1200, 4,
     11, 9, 10, 18,
-    CANON_INK_CMYK | CANON_INK_CcMmYK,
+    CANON_INK_CMYK, /*  | CANON_INK_CcMmYK */
     CANON_SLOT_ASF1,
     CANON_CAP_STD1 | CANON_CAP_r | CANON_CAP_DMT | CANON_CAP_ACKSHORT,
     CANON_MODES(canon_nomodes),
+#ifndef EXPERIMENTAL_STUFF
     {-1,0,0,-1,0,-1}, /*150x150 300x300 600x600 1200x600 1200x1200 2400x2400*/
     {1,1,1,1,1,1},    /*------- 300x300 600x600 -------- 1200x1200 ---------*/
     CANON_INK(canon_ink_superphoto),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -932,8 +942,7 @@ static const canon_cap_t canon_model_capabilities[] =
   /* *************** */
 
 
-  { /* Canon BJC 1000 */
-    /* heads: BC-20 BC-21 BC-22 BC-29 */
+  { /* Canon BJC 1000 *//* heads: BC-20 BC-21 BC-22 BC-29 */
     1000,
     11*72, 17*72,
     180, 360, 360, 2,
@@ -942,15 +951,16 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a,
     CANON_MODES(canon_nomodes),
+#ifndef EXPERIMENTAL_STUFF
     {0,0,-1,-1,-1,-1},/*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
     CANON_INK(canon_ink_standard),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
   },
-  { /* Canon BJC 2000 */
-    /* heads: BC-20 BC-21 BC-22 BC-29 */
+  { /* Canon BJC 2000 *//* heads: BC-20 BC-21 BC-22 BC-29 */
     2000,
     11*72, 17*72,
     180, 720, 360, 2,
@@ -959,15 +969,16 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a,
     CANON_MODES(canon_nomodes),
+#ifndef EXPERIMENTAL_STUFF
     {0,0,-1,-1,-1,-1},/*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
     CANON_INK(canon_ink_standard),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
   },
-  { /* Canon BJC 3000 */
-    /* heads: BC-30 BC-33 BC-34 */
+  { /* Canon BJC 3000 *//* heads: BC-30 BC-33 BC-34 */
     3000,
     11*72, 17*72,
     180, 1440, 720, 2,
@@ -976,15 +987,16 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_DMT, /*FIX? should have _r? */
     CANON_MODES(canon_nomodes),
+#ifndef EXPERIMENTAL_STUFF
     {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standard),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
   },
-  { /* Canon BJC 6100 */
-    /* heads: BC-30/BC-31 BC-32/BC-31 */
+  { /* Canon BJC 6100 *//* heads: BC-30/BC-31 BC-32/BC-31 */
     6100,
     11*72, 17*72,
     180, 1440, 720, 2,
@@ -993,15 +1005,16 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1,
     CANON_CAP_STD1 | CANON_CAP_a | CANON_CAP_r | CANON_CAP_DMT,
     CANON_MODES(canon_modes_6x00),
+#ifndef EXPERIMENTAL_STUFF
     {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standard),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
   },
-  { /* Canon BJC 7000 */
-    /* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
+  { /* Canon BJC 7000 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
     7000,
     11*72, 17*72,
     150, 1200, 600, 2,
@@ -1010,15 +1023,16 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1,
     CANON_CAP_STD1,
     CANON_MODES(canon_nomodes),
+#ifndef EXPERIMENTAL_STUFF
     {-1,0,0,0,-1,-1}, /*150x150 300x300 600x600 1200x600 1200x1200 2400x2400*/
     {1,1,1.8,1,1,1},  /*------- 300x300 600x600 1200x600 --------- ---------*/
     CANON_INK(canon_ink_standard),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
   },
-  { /* Canon BJC 7100 */
-    /* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
+  { /* Canon BJC 7100 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
     7100,
     11*72, 17*72,
     150, 1200, 600, 2,
@@ -1027,9 +1041,11 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1,
     CANON_CAP_STD0,
     CANON_MODES(canon_nomodes),
+#ifndef EXPERIMENTAL_STUFF
     {-1,0,0,0,-1,-1}, /*150x150 300x300 600x600 1200x600 1200x1200 2400x2400*/
     {1,1,1,1,1,1},    /*------- 300x300 600x600 1200x600 --------- ---------*/
     CANON_INK(canon_ink_standard),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1042,8 +1058,7 @@ static const canon_cap_t canon_model_capabilities[] =
   /*                           */
   /*****************************/
 
-  { /* Canon BJC 5100 */
-    /* heads: BC-20 BC-21 BC-22 BC-23 BC-29 */
+  { /* Canon BJC 5100 *//* heads: BC-20 BC-21 BC-22 BC-23 BC-29 */
     5100,
     17*72, 22*72,
     180, 1440, 720, 2,
@@ -1052,15 +1067,16 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_DMT,
     CANON_MODES(canon_nomodes),
+#ifndef EXPERIMENTAL_STUFF
     {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standard),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
   },
-  { /* Canon BJC 5500 */
-    /* heads: BC-20 BC-21 BC-29 */
+  { /* Canon BJC 5500 *//* heads: BC-20 BC-21 BC-29 */
     5500,
     22*72, 34*72,
     180, 720, 360, 2,
@@ -1069,15 +1085,16 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a,
     CANON_MODES(canon_nomodes),
+#ifndef EXPERIMENTAL_STUFF
     {0,0,-1,-1,-1,-1},/*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
     CANON_INK(canon_ink_standard),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
   },
-  { /* Canon BJC 6500 */
-    /* heads: BC-30/BC-31 BC-32/BC-31 */
+  { /* Canon BJC 6500 *//* heads: BC-30/BC-31 BC-32/BC-31 */
     6500,
     17*72, 22*72,
     180, 1440, 720, 2,
@@ -1086,15 +1103,16 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1,
     CANON_CAP_STD1 | CANON_CAP_a | CANON_CAP_DMT,
     CANON_MODES(canon_nomodes),
+#ifndef EXPERIMENTAL_STUFF
     {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standard),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
   },
-  { /* Canon BJC 8500 */
-    /* heads: BC-80/BC-81 BC-82/BC-81 */
+  { /* Canon BJC 8500 *//* heads: BC-80/BC-81 BC-82/BC-81 */
     8500,
     17*72, 22*72,
     150, 1200,1200, 2,
@@ -1103,9 +1121,11 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1,
     CANON_CAP_STD0,
     CANON_MODES(canon_nomodes),
+#ifndef EXPERIMENTAL_STUFF
     {-1,0,0,-1,0,-1}, /*150x150 300x300 600x600 1200x600 1200x1200 2400x2400*/
     {1,1,1,1,1,1},    /*------- 300x300 600x600 -------- 1200x1200 ---------*/
     CANON_INK(canon_ink_standard),
+#endif
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1353,6 +1373,7 @@ c_strdup(const char *s)
   return ret;
 }
 
+#ifndef EXPERIMENTAL_STUFF
 static int canon_res_code(const canon_cap_t * caps, int xdpi, int ydpi)
 {
   int x, y, res= 0;
@@ -1362,10 +1383,37 @@ static int canon_res_code(const canon_cap_t * caps, int xdpi, int ydpi)
 
   return res;
 }
+#else
+static const canon_variable_printmode_t *canon_printmode(const canon_cap_t * caps,
+							 int xdpi, int ydpi, 
+							 int bpp, int head)
+{
+  const canon_variable_printmode_t *modes;
+  int modes_cnt;
+  int i;
+  if (!caps) return 0;
+  modes= caps->printmodes;
+  modes_cnt= caps->printmodes_cnt;
+  /* search for the right printmode: */
+  for (i=0; i<modes_cnt; i++) {
+    if ((modes[i].xdpi== xdpi) && (modes[i].ydpi== ydpi) &&
+	(modes[i].bits== bpp) && (modes[i].printhead== head)) 
+      {
+	return &(modes[i]);
+      }
+  }
+  /* nothing found -> either return 0 or apply some policy to 
+   * get a fallback printmode
+   */
+  if (modes[0].xdpi) return modes;
+  return 0;
+}
+#endif
 
 static int
 canon_ink_type(const canon_cap_t * caps, int res_code)
 {
+#ifndef EXPERIMENTAL_STUFF
   switch (res_code)
     {
     case 0x11: return caps->dot_sizes.dot_r11;
@@ -1376,6 +1424,9 @@ canon_ink_type(const canon_cap_t * caps, int res_code)
     case 0x55: return caps->dot_sizes.dot_r55;
     }
   return -1;
+#else
+  return -1;
+#endif
 }
 
 static const double *
@@ -1405,6 +1456,7 @@ canon_sat_adjustment(const stp_printer_t printer)
 static double
 canon_density(const canon_cap_t * caps, int res_code)
 {
+#ifndef EXPERIMENTAL_STUFF
   switch (res_code)
     {
     case 0x11: return caps->densities.d_r11;
@@ -1420,11 +1472,15 @@ canon_density(const canon_cap_t * caps, int res_code)
 #endif
       return 0.2;
     }
+#else
+  return 0.2;
+#endif
 }
 
 static const canon_variable_inkset_t *
 canon_inks(const canon_cap_t * caps, int res_code, int colors, int bits)
 {
+#ifndef EXPERIMENTAL_STUFF
   const canon_variable_inklist_t *inks = caps->inxs;
   int i;
 
@@ -1458,6 +1514,9 @@ canon_inks(const canon_cap_t * caps, int res_code, int colors, int bits)
 	  res_code,bits,colors,caps->inxs_cnt);
 #endif
   return NULL;
+#else
+  return NULL;
+#endif
 }
 
 static void
@@ -2193,9 +2252,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
   int have_lum_adjustment= 0;
   int have_sat_adjustment= 0;
   int have_hue_adjustment= 0;
-
   canon_init_t  init;
-
   const canon_cap_t * caps= canon_get_model_capabilities(model);
   int printhead= canon_printhead_type(ink_type,caps);
   colormode_t colormode = canon_printhead_colors(ink_type,caps);
