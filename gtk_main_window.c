@@ -1869,13 +1869,18 @@ static void gtk_image_type_callback(GtkWidget *widget,
 static void gtk_print_callback(void)
 {
   if (plist_current > 0)
-  {
-    runme = TRUE;
-
-    gtk_widget_destroy(print_dialog);
-  }
+    {
+      runme = TRUE;
+      gtk_widget_destroy (gtk_color_adjust_dialog);
+      gtk_widget_destroy (setup_dialog);
+      gtk_widget_destroy(print_dialog);
+    }
   else
-    gtk_widget_show(file_browser);
+    {
+      gtk_widget_set_sensitive (gtk_color_adjust_dialog, FALSE);
+      gtk_widget_set_sensitive (setup_dialog, FALSE);
+      gtk_widget_show(file_browser);
+    }
 }
 
 /****************************************************************************
@@ -1885,14 +1890,20 @@ static void gtk_print_callback(void)
  ****************************************************************************/
 static void gtk_printandsave_callback(void)
 {
-  runme = TRUE;
   saveme = TRUE;
   if (plist_current > 0)
-  {
-    gtk_widget_destroy(print_dialog);
-  }
+    {
+      runme = TRUE;
+      gtk_widget_destroy (gtk_color_adjust_dialog);
+      gtk_widget_destroy (setup_dialog);
+      gtk_widget_destroy(print_dialog);
+    }
   else
-    gtk_widget_show(file_browser);
+    {
+      gtk_widget_set_sensitive (gtk_color_adjust_dialog, FALSE);
+      gtk_widget_set_sensitive (setup_dialog, FALSE);
+      gtk_widget_show(file_browser);
+    }
 }
 
 /****************************************************************************
@@ -1964,8 +1975,7 @@ static void gtk_setup_open_callback(void)
   gtk_widget_show (setup_dialog);
   adjustment =
     gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(printer_crawler));
-  gtk_adjustment_set_value(adjustment, idx * adjustment->step_increment +
-			   adjustment->page_size);
+  gtk_adjustment_set_value(adjustment, idx * (adjustment->step_increment + 3));
   gtk_widget_show(setup_dialog);
 }
 
@@ -2072,7 +2082,8 @@ static void gtk_file_ok_callback(void)
          gtk_file_selection_get_filename(GTK_FILE_SELECTION(file_browser)));
 
   runme = TRUE;
-
+  gtk_widget_destroy (gtk_color_adjust_dialog);
+  gtk_widget_destroy (setup_dialog);
   gtk_widget_destroy(print_dialog);
 }
 
@@ -2084,8 +2095,9 @@ static void gtk_file_ok_callback(void)
 static void gtk_file_cancel_callback(void)
 {
   gtk_widget_hide(file_browser);
-
-  gtk_widget_destroy(print_dialog);
+  gtk_widget_set_sensitive (gtk_color_adjust_dialog, TRUE);
+  gtk_widget_set_sensitive (setup_dialog, TRUE);
+  gtk_widget_set_sensitive (print_dialog, TRUE);
 }
 
 /****************************************************************************

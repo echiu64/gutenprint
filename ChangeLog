@@ -1,3 +1,99 @@
+2000-09-09	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.36) (+52 -0)
+		Ghost/README (1.45) (+2 -12)
+		printer_options.c (1.2) (+4 -1)
+		configure.in (1.26) (+48 -20)
+		README.weave (1.2) (+140 -1)
+		README.dither (1.8) (+14 -3)
+		README (1.27) (+8 -2)
+		Makefile.am (1.55) (+4 -1)
+	
+	Add --disable-lp and --disable-lpr options to configure.
+	
+	-Wall really belongs in the warnings even in production.  The others,
+	maybe not.
+	
+	Other minor changes.
+	
+2000-09-09	<rlk@sourceforge.net>
+
+	Files:	cups/README.txt (1.3) (+18 -0)
+	
+	Instructions for people who use the CVS interface
+	
+2000-09-09	<rlk@sourceforge.net>
+
+	Files:	cups/Makefile.in (1.6) (+10 -18)
+	
+	Make compile verbose enough so that it's possible to see what's going
+	on.
+	
+	Improve robustness of ppd generation.
+	
+2000-09-08	<easysw@sourceforge.net>
+
+	Files:	print-util.c (1.136) (+10 -10)
+		cups/rastertoprinter.c (1.2) (+17 -4)
+		cups/genppd.c (1.3) (+343 -1512)
+		printdefy.y (1.11) (+3 -3)
+	
+	Fixed international A sizes (wrong values with width and height)
+	
+	Changes printers array so it isn't static (needed for genppd, and
+	it doesn't matter for the GS driver or GIMP plug-in)
+	
+	Updated genppd to generate PPD files from the driver list.
+	
+	Added media size, source, and type to raster driver.
+	
+	(hopefully this will be all that is left to make it all work)
+	
+2000-09-08	<easysw@sourceforge.net>
+
+	Files:	Makefile.am (1.54) (+2 -0)
+		cups/genppd.c (1.2) (+13 -9)
+		cups/configure.in (1.2) (+4 -4)
+		cups/configure (1.2) (+83 -37)
+		cups/Makefile.in (1.5) (+31 -19)
+	
+	Fixed CUPS file generation rules.
+	
+	CUPS driver makefile changes.
+	
+	Fix to configure script for CUPS drivers.
+	
+2000-09-08	<easysw@sourceforge.net>
+
+	Files:	escputil.c (1.8) (+2 -2)
+		print.c (1.112) (+3 -3)
+	
+	Portability - index() should no longer be used since strchr() is the
+	ANSI C replacement and is available on all current platforms.
+	
+2000-09-08	<easysw@sourceforge.net>
+
+	Files:	Makefile.am (1.53) (+13 -1)
+	
+	Removed hard-coded GCC warning options from automake file...
+	
+	Added CUPS source building targets a la Ghostscript driver.
+	
+2000-09-08	<easysw@sourceforge.net>
+
+	Files:	cups/Makefile.in (1.4) (+12 -24)
+		cups/util.h (1.2) (+2 -2)
+		cups/rastertoprinter.c (1.1) ( )
+		cups/rastertoepson.c (1.4) (+2 -2)
+		cups/pack.c (1.2) (+2 -2)
+		cups/epson.drv (1.3) (+2 -2)
+		cups/dither.c (1.3) (+2 -2)
+		cups/check.c (1.2) (+2 -2)
+	
+	Redid CUPS driver to use GIMP-print code directly, a la the stp driver.
+	
+	Not sure how well this will work out, but we'll see...
+	
 2000-09-07	<rlk@sourceforge.net>
 
 	Files:	print-escp2.c (1.246) (+2 -2)

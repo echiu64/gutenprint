@@ -1625,11 +1625,14 @@ gimp_print_callback (void)
   if (plist_current > 0)
     {
       runme = TRUE;
-
+      gtk_widget_destroy (gimp_color_adjust_dialog);
+      gtk_widget_destroy (setup_dialog);
       gtk_widget_destroy (print_dialog);
     }
   else
     {
+      gtk_widget_set_sensitive (gimp_color_adjust_dialog, FALSE);
+      gtk_widget_set_sensitive (setup_dialog, FALSE);
       gtk_widget_set_sensitive (print_dialog, FALSE);
       gtk_widget_show (file_browser);
     }
@@ -1646,11 +1649,14 @@ gimp_printandsave_callback (void)
   if (plist_current > 0)
     {
       runme = TRUE;
-
+      gtk_widget_destroy (gimp_color_adjust_dialog);
+      gtk_widget_destroy (setup_dialog);
       gtk_widget_destroy (print_dialog);
     }
   else
     {
+      gtk_widget_set_sensitive (gimp_color_adjust_dialog, FALSE);
+      gtk_widget_set_sensitive (setup_dialog, FALSE);
       gtk_widget_set_sensitive (print_dialog, FALSE);
       gtk_widget_show (file_browser);
     }
@@ -1702,8 +1708,7 @@ gimp_setup_open_callback (void)
   gtk_widget_show (setup_dialog);
   adjustment =
     gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(printer_crawler));
-  gtk_adjustment_set_value(adjustment,
-			   idx * (adjustment->step_increment + 3));
+  gtk_adjustment_set_value(adjustment, idx * (adjustment->step_increment + 3));
   gtk_widget_show (setup_dialog);
 }
 
@@ -1786,7 +1791,8 @@ gimp_file_ok_callback (void)
 	  gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_browser)));
 
   runme = TRUE;
-
+  gtk_widget_destroy (gimp_color_adjust_dialog);
+  gtk_widget_destroy (setup_dialog);
   gtk_widget_destroy (print_dialog);
 }
 
@@ -1797,7 +1803,8 @@ static void
 gimp_file_cancel_callback (void)
 {
   gtk_widget_hide (file_browser);
-
+  gtk_widget_set_sensitive (gimp_color_adjust_dialog, TRUE);
+  gtk_widget_set_sensitive (print_dialog, TRUE);
   gtk_widget_set_sensitive (print_dialog, TRUE);
 }
 
