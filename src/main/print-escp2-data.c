@@ -1646,7 +1646,7 @@ static const escp2_inkname_t seven_color_photo_ink =
 
 static const escp2_inkname_t quadtone_ink =
 {
-  "Quadtone", N_ ("Quadtone"), 0, 4, 0, 0,
+  "PiezoQuadtone", N_ ("Piezography (TM) Quadtone"), 0, 4, 0, 0,
   {
     &quadtone_channels, NULL, NULL, NULL
   }
