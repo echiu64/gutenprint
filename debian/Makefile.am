@@ -51,11 +51,10 @@ EXTRA_DIST = \
 	ijsgimpprint.install \
 	libgimpprint-dev.docs \
 	libgimpprint-dev.install \
-	libgimpprint-doc.doc-base.in \
+	libgimpprint-doc.doc-base.developer.in \
+	libgimpprint-doc.doc-base.reference.in \
 	libgimpprint-doc.install.in \
 	libgimpprint.install.in \
-        libgimpprintui-dev.install \
-        libgimpprintui.install \
 	README.building \
 	README.Debian \
 	rules

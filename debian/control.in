@@ -115,53 +115,6 @@ Description: The Gimp-Print printer driver library
  many cases, and can be used for many of the most demanding printing
  tasks.
 
-Package: libgimpprintui#LIBRARY_VERSION#-dev
-Architecture: any
-Section: libdevel
-Depends: libgimpprintui#LIBRARY_VERSION# (= ${Source-Version})
-Provides: libgimpprintui-dev
-Conflicts: libgimpprintui-dev
-Replaces: libgimpprintui-dev
-Suggests: libgimpprint#LIBRARY_VERSION#-doc (= ${Source-Version})
-Description: Header files and extras for compiling programs with libgimpprintui
- This package contains the header files for the libgimpprintui
- library, along with a static version of libgimpprintui.
- libgimpprintui contains GTK+ widgets which may be used for print
- dialogs etc. for use with libgimpprint.
- .
- Install this package if you wish to develop packages that use
- libgimpprintui.
- .
- This is Gimp-Print version #UPSTREAM_VERSION#, an alpha release
- in the 5.0 series.
- .
- Gimp-Print is the print facility for the Gimp, and in addition a
- suite of drivers that may be used with common UNIX spooling systems
- using GhostScript or CUPS.  These drivers provide printing quality
- for UNIX/Linux on a par with proprietary vendor-supplied drivers in
- many cases, and can be used for many of the most demanding printing
- tasks.
-
-Package: libgimpprintui#LIBRARY_VERSION#
-Architecture: any
-Section: libs
-Depends: ${shlibs:Depends}
-Suggests: gimpprint-locales (>= ${Source-Version})
-Description: Gimp-Print printer drivers - user interface library
- This package includes the libgimpprintui library, necessary to run
- gimp-print.  libgimpprintui contains GTK+ widgets which may be
- used for print dialogs etc. for use with libgimpprint.
- .
- This is Gimp-Print version #UPSTREAM_VERSION#, an alpha release
- in the 5.0 series.
- .
- Gimp-Print is the print facility for the Gimp, and in addition a
- suite of drivers that may be used with common UNIX spooling systems
- using GhostScript or CUPS.  These drivers provide printing quality
- for UNIX/Linux on a par with proprietary vendor-supplied drivers in
- many cases, and can be used for many of the most demanding printing
- tasks.
-
 Package: gimpprint-locales
 Architecture: all
 Section: libs

@@ -1,3 +1,14 @@
+gimp-print (5.0.0-alpha3-1) unstable; urgency=low
+
+  * New upstream alpha release.
+  * Build a static libgimpprintui only.
+  * Remove libgimpprintui packages.
+  * libgimpprint-doc: Fix documentation installation for new API
+    reference and developer's reference.
+  * cupsys-driver-gimpprint: remove PPDs on removal.
+
+ -- Roger Leigh <rleigh@debian.org>  Sun, 23 May 2004 12:41:20 +0100
+
 gimp-print (5.0.0-alpha2-1) unstable; urgency=low
 
   * New upstream alpha release.

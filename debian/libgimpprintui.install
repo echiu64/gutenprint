@@ -1,2 +1,0 @@
-debian/install/usr/lib/libgimpprintui.so.*  usr/lib
-debian/install/usr/lib/libgimpprintui-*.so  usr/lib
