@@ -1,4 +1,6 @@
-/* Dither matrix generation */
+/* Dither matrix generation                       */
+/* This program is written 2000 by Thomas Tonino. */
+/* It is placed in the public domain.             */
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
