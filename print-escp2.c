@@ -206,6 +206,23 @@ static simple_dither_range_t variable_dither_ranges[] =
   { 1.0,   0x3, 1 }
 };
 
+static simple_dither_range_t standard_dither_ranges[] =
+{
+  { 0.5,   0x1, 1 },
+  { 0.832, 0x2, 1 },
+  { 1.0,   0x3, 1 }
+};
+
+static simple_dither_range_t mis_sixtone_ranges[] =
+{
+  { 0.15, 0x000001, 1 },      /* LC */
+  { 0.25, 0x000010, 1 },      /* C */
+  { 0.45, 0x000100, 1 },      /* LM */
+  { 0.50, 0x001000, 1 },      /* Y */
+  { 0.75, 0x010000, 1 },      /* M */
+  { 1.00, 0x100000, 1 }               /* K */
+};
+
 /*
  * A lot of these are guesses
  */
@@ -382,10 +399,25 @@ static const res_t escp2_reslist[] = {
   { "1440 x 720 DPI Microweave", 1440, 720, 0, 2, 1, 1 },
   { "1440 x 720 DPI Softweave", 1440, 720, 1, 2, 1, 1 },
   { "1440 x 720 DPI Highest Quality", 1440, 720, 1, 2, 2, 1 },
-  { "1440 x 1440 DPI Two-pass", 1440, 1440, 1, 2, 1, 2 },
+  { "1440 x 720 DPI Enhanced", 1440, 1440, 1, 2, 1, 2 },
   { "2880 x 720 DPI Two-pass", 2880, 720, 1, 4, 1, 1 },
   /* { "1440 x 720 DPI Two-pass Microweave", 2880, 720, 0, 1, 1 }, */
   { "", 0, 0, 0, 0, 0 }
+};
+
+typedef struct {
+  const char name[65];
+  int is_color;
+  int variable_dot_size;
+  int dot_size_bits;
+  simple_dither_range_t *standard_dither;
+  simple_dither_range_t *photo_dither;
+} ink_t;
+
+static const ink_t escp2_inklist[] = {
+  { "Variable Dot Size", 1, 1, 2, standard_dither_ranges, variable_dither_ranges },
+  { "Single Dot Size", 1, 1, 1, NULL, NULL },
+  { "MIS Six Tone Monochrome", 0, 0, 1, NULL, mis_sixtone_ranges }
 };
 
 #ifdef ESCP2_GHOST
@@ -634,7 +666,7 @@ escp2_imageable_area(int  model,	/* I - Printer model */
 }
 
 static void
-escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
+escp2_init_printer(FILE *prn,int model, int output_type, int ydpi, int xdpi,
 		   int use_softweave, int page_length, int page_width,
 		   int page_top, int page_bottom, int top, int nozzles,
 		   int nozzle_separation, int horizontal_passes,
@@ -674,7 +706,14 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 
   fprintf(prn, "\033(i\001%c%c", 0, use_softweave ? 0 : 1);
 
-  fprintf(prn, "\033U%c", (horizontal_passes * vertical_passes > 2) ? 1 : 0);
+  if (horizontal_passes * vertical_passes * vertical_subsample > 2)
+    {
+      fprintf(prn, "\033U%c", 1);
+      if (xdpi > 720)
+      fprintf(prn, "\033(s%c%c%c", 1, 0, 2);
+    }
+  else
+    fprintf(prn, "\033U%c", 0);
 
   if (!use_softweave)
     {
@@ -1093,7 +1132,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 		  escp2_nozzle_separation(model)) / 10; /* Top and bottom */
   page_top = 0;
 
-  escp2_init_printer(prn, model, output_type, ydpi, use_softweave,
+  escp2_init_printer(prn, model, output_type, ydpi, xdpi, use_softweave,
 		     page_length, page_width, page_top, page_bottom,
 		     top, nozzles, nozzle_separation,
 		     horizontal_passes, vertical_passes, vertical_subsample,
@@ -1164,11 +1203,11 @@ escp2_print(const printer_t *printer,		/* I - Model */
   else
     dither = init_dither(image_width, out_width, v);
   dither_set_black_levels(dither, 1.5, 1.5, 1.5);
-  dither_set_black_lower(dither, .3);
+  dither_set_black_lower(dither, .25);
   if (use_glossy_film)
-    dither_set_black_upper(dither, .8);
+    dither_set_black_upper(dither, 1.0);
   else
-    dither_set_black_upper(dither, .5);
+    dither_set_black_upper(dither, 1.0);
   if (bits == 2)
     {
       dither_set_y_ranges_simple(dither, 3, dot_sizes, v->density);
@@ -1196,6 +1235,9 @@ escp2_print(const printer_t *printer,		/* I - Model */
       dither_set_ink_spread(dither, 15);
       break;
     case IMAGE_CONTINUOUS:
+      if (ydpi > 720)
+      dither_set_ink_spread(dither, 14);
+      else
       dither_set_ink_spread(dither, 13);
       break;
     }	    
@@ -2984,6 +3026,10 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.134  2000/05/02 11:33:57  rlk
+ *   Improved dither code.  Deposits significantly less ink than previous version,
+ *   and gives better saturation.
+ *
  *   Revision 1.133  2000/04/29 19:44:40  rlk
  *   Preliminary support for Stylus Color 760
  *

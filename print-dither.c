@@ -60,12 +60,6 @@
 #define MATRIX_SIZE3_2 ((MATRIX_SIZE3) * (MATRIX_SIZE3))
 #define MODOP3(x, y) ((x) % (y))
 
-#define MATRIX_NB4 (1)
-#define MATRIX_BASE4 (23)
-#define MATRIX_SIZE4 (23)
-#define MATRIX_SIZE4_2 ((MATRIX_SIZE4) * (MATRIX_SIZE4))
-#define MODOP4(x, y) ((x) % (y))
-
 #define DITHERPOINT(d, x, y, m) \
 ((d)->ordered_dither_matrix##m[MODOP##m((x), MATRIX_SIZE##m)][MODOP##m((y), MATRIX_SIZE##m)])
 
@@ -132,9 +126,6 @@ typedef struct dither
 
   int density;			/* Desired density, 0-1.0 (scaled 0-65536) */
 
-  int d_cutoff;			/* When ordered dither is used, threshold */
-				/* above which no randomness is used. */
-
   int spread;			/* With Floyd-Steinberg, how widely the */
 				/* error is distributed.  This should be */
 				/* between 12 (very broad distribution) and */
@@ -159,6 +150,11 @@ typedef struct dither
 
   int dither_type;
 
+  int d_cutoff;			/* When ordered dither is used, threshold */
+				/* above which no randomness is used. */
+  int adaptive_divisor;
+  int adaptive_limit;
+
   dither_color_t c_dither;
   dither_color_t m_dither;
   dither_color_t y_dither;
@@ -172,7 +168,6 @@ typedef struct dither
   unsigned ordered_dither_matrix1[MATRIX_SIZE1][MATRIX_SIZE1];
   unsigned ordered_dither_matrix2[MATRIX_SIZE2][MATRIX_SIZE2];
   unsigned ordered_dither_matrix3[MATRIX_SIZE3][MATRIX_SIZE3];
-  unsigned ordered_dither_matrix4[MATRIX_SIZE4][MATRIX_SIZE4];
 } dither_t;
 
 /*
@@ -220,46 +215,6 @@ static int msq1[] =
   06,  0, 12, 24, 18,
   14, 23, 16,  5,  2,
   15,  7,  4, 13, 21
-};
-
-static int tonino0[] =
-{
-  221, 473, 75, 190, 416, 67, 143, 356, 257, 43, 297, 239, 496, 0, 189,
-  478, 26, 211, 509, 136, 192, 526, 119, 290, 158, 396, 256, 12, 485, 185,
-  462, 420, 133, 466, 405, 116, 429, 335, 142, 425, 277, 50, 439, 269, 56,
-  430, 333, 45, 501, 363, 97, 332, 293, 53, 314, 350, 84, 41, 270, 367,
-  58, 206, 388, 344, 197, 305, 366, 106, 412, 219, 455, 60, 163, 410, 231,
-  379, 128, 227, 479, 173, 229, 513, 150, 307, 523, 111, 71, 494, 129, 8,
-  489, 147, 16, 380, 202, 272, 524, 32, 155, 515, 6, 109, 432, 289, 79,
-  451, 242, 11, 415, 265, 167, 403, 337, 284, 249, 347, 74, 487, 323, 114,
-  443, 281, 243, 383, 325, 213, 392, 319, 48, 275, 180, 468, 328, 22, 449,
-  184, 87, 464, 196, 433, 261, 39, 207, 306, 397, 183, 73, 457, 36, 159,
-  465, 124, 376, 441, 89, 222, 507, 54, 240, 517, 132, 310, 386, 149, 460,
-  417, 91, 23, 500, 137, 259, 361, 68, 253, 503, 199, 34, 357, 286, 153,
-  382, 294, 360, 35, 278, 65, 102, 170, 354, 481, 233, 343, 423, 177, 511,
-  413, 105, 349, 292, 118, 491, 63, 235, 483, 101, 216, 428, 179, 504,
-  338, 255, 30, 200, 298, 100, 13, 308, 83, 279, 220, 2, 406, 446, 164,
-  395, 435, 168, 28, 474, 144, 401, 1, 224, 438, 391, 127, 426, 493, 205,
-  352, 475, 175, 321, 522, 141, 209, 340, 51, 113, 312, 370, 77, 322, 266,
-  104, 470, 78, 316, 477, 57, 169, 374, 146, 47, 431, 94, 368, 262, 19,
-  497, 250, 186, 512, 252, 121, 528, 161, 365, 296, 188, 214, 24, 247,
-  271, 440, 117, 241, 402, 27, 194, 461, 331, 130, 390, 427, 10, 212, 450,
-  46, 418, 334, 15, 508, 399, 112, 516, 411, 64, 520, 336, 131, 484, 303,
-  98, 414, 225, 59, 345, 273, 398, 300, 195, 92, 258, 458, 135, 288, 369,
-  160, 40, 302, 228, 364, 62, 274, 381, 7, 245, 454, 317, 154, 469, 82,
-  139, 480, 5, 208, 351, 238, 70, 447, 232, 329, 453, 4, 181, 467, 204,
-  151, 525, 171, 49, 505, 108, 217, 37, 375, 326, 521, 387, 85, 488, 52,
-  125, 498, 88, 148, 490, 311, 107, 444, 267, 95, 422, 283, 198, 378, 304,
-  514, 237, 174, 61, 157, 419, 182, 282, 359, 191, 251, 424, 372, 210, 38,
-  385, 348, 44, 324, 362, 134, 21, 448, 115, 287, 437, 226, 276, 471, 20,
-  320, 459, 55, 291, 9, 81, 280, 506, 76, 201, 492, 120, 69, 486, 246,
-  187, 342, 33, 408, 495, 355, 110, 264, 404, 96, 502, 346, 162, 482, 341,
-  165, 407, 299, 254, 409, 176, 309, 384, 72, 499, 260, 99, 145, 42, 203,
-  377, 138, 172, 218, 389, 315, 122, 18, 248, 434, 140, 31, 456, 223, 14,
-  476, 234, 166, 421, 313, 371, 244, 452, 301, 29, 436, 268, 25, 442, 215,
-  394, 472, 66, 230, 518, 126, 330, 445, 152, 358, 17, 80, 463, 3, 339,
-  123, 519, 236, 327, 510, 103, 193, 527, 93, 156, 353, 285, 373, 90, 263,
-  393, 86, 318, 400, 295, 178
 };
 
 #define CALC_MATRIX(matid, init)				\
@@ -319,7 +274,6 @@ init_dither(int in_width, int out_width, vars_t *v)
   CALC_MATRIX(1, sq3);
   CALC_MATRIX(2, msq0);
   CALC_MATRIX(3, msq1);
-  CALC_MATRIX(4, tonino0);
 
   if (!strcmp(v->dither_algorithm, "Hybrid Floyd-Steinberg"))
     d->dither_type = D_FLOYD_HYBRID;
@@ -336,23 +290,16 @@ init_dither(int in_width, int out_width, vars_t *v)
   else
     d->dither_type = D_FLOYD_HYBRID;
 
-  d->spread = 13;
   d->src_width = in_width;
   d->dst_width = out_width;
-  d->density = 65536;
-  d->d_cutoff = d->density / 16;
-  d->k_lower = 26214;		/* .4 */
-  d->k_upper = 45875;		/* .7 */
-  d->c_randomizer = 65536;
-  d->m_randomizer = 65536;
-  d->y_randomizer = 65536;
-  d->k_randomizer = 65536;
-  d->k_clevel = 64;
-  d->k_mlevel = 64;
-  d->k_ylevel = 64;
-  d->c_darkness = 22;
-  d->m_darkness = 16;
-  d->y_darkness = 10;
+
+  dither_set_ink_spread(d, 13);
+  dither_set_black_lower(d, .4);
+  dither_set_black_upper(d, .7);
+  dither_set_black_levels(d, 1.0, 1.0, 1.0);
+  dither_set_randomizers(d, 1.0, 1.0, 1.0, 1.0);
+  dither_set_ink_darkness(d, .4, .3, .2);
+  dither_set_density(d, 1.0);
   return d;
 }  
 
@@ -368,6 +315,8 @@ dither_set_density(void *vd, double density)
   d->k_lower = d->k_lower * density;
   d->density = (int) ((65536 * density) + .5);
   d->d_cutoff = d->density / 16;
+  d->adaptive_divisor = 128 << ((16 - d->spread) >> 1);
+  d->adaptive_limit = d->density / d->adaptive_divisor;
 }
 
 void
@@ -389,6 +338,8 @@ dither_set_ink_spread(void *vd, int spread)
 {
   dither_t *d = (dither_t *) vd;
   d->spread = spread;
+  d->adaptive_divisor = 128 << ((16 - d->spread) >> 1);
+  d->adaptive_limit = d->density / d->adaptive_divisor;
 }
 
 void
@@ -495,8 +446,7 @@ dither_set_ranges(dither_color_t *s, int nlevels,
 	    s->ranges[l].range_h = 65536;
 	  else
 	    s->ranges[l].range_h =
-	      (ranges[l].value + ranges[l].value) * 65536.0 *
-	      density / 2;
+	      (ranges[l].value + ranges[l].value) * 65536.0 * density / 2;
 	  if (s->ranges[l].range_h > 65536)
 	    s->ranges[l].range_h = 65536;
 	  s->ranges[l].value_h = ranges[l].value * 65536.0;
@@ -796,52 +746,66 @@ do {									  \
  * is a triangular function.
  */
 
-#define UPDATE_DITHER(r, x, width)					\
-do {									\
-  if (!(d->dither_type & D_ORDERED_BASE))				\
-    {									\
-      int tmp##r = r;							\
-      int i, dist;							\
-      int offset;							\
-      int delta;							\
-      if (tmp##r != 0)							\
-	{								\
-	  int myspread;							\
-	  if (odb >= 16 || o##r >= 2048)				\
-	    offset = 0;							\
-	  else								\
-	    {								\
-	      int tmpo##r = o##r * 32;					\
-	      offset = (65535 - (tmpo##r & 0xffff)) >> odb;		\
-	      if ((rand() & odb_mask) > (tmpo##r & odb_mask))		\
-		offset++;						\
-	    }								\
-	  if (offset > x)						\
-	    offset = x;							\
-	  else if (offset > xdw1)					\
-	    offset = xdw1;						\
-	  if (tmp##r > 65535)						\
-	    tmp##r = 65535;						\
-	  myspread = 4;							\
-	  if (offset == 0)						\
-	    dist = myspread * tmp##r;					\
-	  else								\
-	    dist = myspread * tmp##r / ((offset + 1) * (offset + 1));	\
-	  if (x > 0 && 0 < xdw1)					\
-	    dither##r = r##error0[direction] + (8 - myspread) * tmp##r;	\
-	  delta = dist;							\
-	  for (i = -offset; i <= offset; i++)				\
-	    {								\
-	      r##error1[i] += delta;					\
-	      if (i < 0)						\
-		delta += dist;						\
-	      else							\
-		delta -= dist;						\
-	    }								\
-	}								\
-      else								\
-	dither##r = r##error0[direction];				\
-    }									\
+#define UPDATE_DITHER(r, x, width)					     \
+do {									     \
+  if (!(d->dither_type & D_ORDERED_BASE))				     \
+    {									     \
+      int tmp##r = r;							     \
+      if (tmp##r != 0)							     \
+	{								     \
+	  int i, dist;							     \
+	  int dist1;							     \
+	  int offset;							     \
+	  int delta, delta1;						     \
+	  int myspread;							     \
+	  if (odb >= 16 || o##r >= 2048)				     \
+	    offset = 0;							     \
+	  else								     \
+	    {								     \
+	      int tmpo##r = o##r * 32;					     \
+	      offset = (65535 - (tmpo##r & 0xffff)) >> odb;		     \
+	      if ((rand() & odb_mask) > (tmpo##r & odb_mask))		     \
+		offset++;						     \
+	    }								     \
+	  if (offset > x)						     \
+	    offset = x;							     \
+	  else if (offset > xdw1)					     \
+	    offset = xdw1;						     \
+	  if (tmp##r > 65535)						     \
+	    tmp##r = 65535;						     \
+	  myspread = 4;							     \
+	  if (offset == 0)						     \
+	    {								     \
+	      dist = myspread * tmp##r;					     \
+	      if ((x > 0 && direction < 0) || (xdw1 > 0 && direction > 0))   \
+		r##error0[direction] += (8 - myspread) * tmp##r;	     \
+	      delta1 = 0;						     \
+	      dist1 = 0;						     \
+	    }								     \
+	  else								     \
+	    {								     \
+	      dist = myspread * tmp##r / ((offset + 1) * (offset + 1));	     \
+	      dist1 = (8 - myspread) * tmp##r * 2 / ((offset + 1) * offset); \
+	      delta1 = dist1 * offset;					     \
+	    }								     \
+	  delta = dist;							     \
+	  for (i = -offset; i <= offset; i++)				     \
+	    {								     \
+	      r##error1[i] += delta;					     \
+	      if ((i > 0 && direction > 0) || (i < 0 && direction < 0))	     \
+		{							     \
+		  r##error0[i] += delta1;				     \
+		  delta1 -= dist1;					     \
+		}							     \
+	      if (i < 0)						     \
+		delta += dist;						     \
+	      else							     \
+		delta -= dist;						     \
+	    }								     \
+	}								     \
+      if ((x > 0 && direction < 0) || (xdw1 > 0 && direction > 0))	     \
+	dither##r = r##error0[direction];				     \
+    }									     \
 } while (0)
 
 /*
@@ -869,7 +833,7 @@ static int
 print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	    int adjusted, int x, int y, unsigned char *c, unsigned char *lc,
 	    unsigned char bit, int length, int invert_x, int invert_y,
-	    unsigned randomizer)
+	    unsigned randomizer, int dontprint)
 {
   int i;
   int levels = rv->nlevels - 1;
@@ -887,262 +851,263 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
   for (i = levels; i >= 0; i--)
     {
       dither_segment_t *dd = &(rv->ranges[i]);
-      if (density > dd->range_l)
+      int dither_value = adjusted;
+      unsigned rangepoint;
+      unsigned virtual_value;
+      unsigned vmatrix;
+      int dither_type = d->dither_type;
+      if (density <= dd->range_l)
+	continue;
+
+      /*
+       * If we're using an adaptive dithering method, decide whether
+       * to use the Floyd-Steinberg or the ordered method based on the
+       * input value.  The choice of 1/128 is somewhat arbitrary and
+       * could stand to be parameterized.  Another possibility would be
+       * to scale to something less than pure ordered at 0 input value.
+       */
+      if (dither_type & D_ADAPTIVE_BASE)
 	{
-	  int dither_value = adjusted;
-	  unsigned rangepoint;
-	  unsigned virtual_value;
-	  unsigned vmatrix;
-	  int dither_type = d->dither_type;
-
-	  /*
-	   * If we're using an adaptive dithering method, decide whether
-	   * to use the Floyd-Steinberg or the ordered method based on the
-	   * input value.  The choice of 1/128 is somewhat arbitrary and
-	   * could stand to be parameterized.  Another possibility would be
-	   * to scale to something less than pure ordered at 0 input value.
-	   */
-	  if (dither_type & D_ADAPTIVE_BASE)
+	  dither_type -= D_ADAPTIVE_BASE;
+	  if (base < d->adaptive_limit)
 	    {
-	      int divisor = 128 << ((16 - d->spread) >> 1);
-	      dither_type -= D_ADAPTIVE_BASE;
-	      if (base < d->density / divisor)
+	      unsigned dtmp = base * d->adaptive_divisor * 65536 / d->density;
+	      if (((rand() & 0xffff000) >> 12) > dtmp)
 		{
-		  unsigned dtmp = base * divisor * 65536 / d->density;
-		  if (((rand() & 0xffff000) >> 12) > dtmp)
-		    {
-		      dither_type = D_ORDERED;
-		      dither_value = base;
-		    }
+		  dither_type = D_ORDERED;
+		  dither_value = base;
 		}
 	    }
+	}
 
-	  /*
-	   * Where are we within the range.  If we're going to print at
-	   * all, this determines the probability of printing the darker
-	   * vs. the lighter ink.  If the inks are identical (same value
-	   * and darkness), it doesn't matter.
-	   *
-	   * We scale the input linearly against the top and bottom of the
-	   * range.
-	   */
-	  if (dd->range_span == 0 ||
-	      (dd->value_span == 0 && dd->isdark_l == dd->isdark_h))
-	    rangepoint = 32768;
-	  else
-	    rangepoint =
-	      ((unsigned) (density - dd->range_l)) * 65536 / dd->range_span;
+      /*
+       * Where are we within the range.  If we're going to print at
+       * all, this determines the probability of printing the darker
+       * vs. the lighter ink.  If the inks are identical (same value
+       * and darkness), it doesn't matter.
+       *
+       * We scale the input linearly against the top and bottom of the
+       * range.
+       */
+      if (dd->range_span == 0 ||
+	  (dd->value_span == 0 && dd->isdark_l == dd->isdark_h))
+	rangepoint = 32768;
+      else
+	rangepoint =
+	  ((unsigned) (density - dd->range_l)) * 65536 / dd->range_span;
 
-	  /*
-	   * Compute the virtual dot size that we're going to print.
-	   * This is somewhere between the two candidate dot sizes.
-	   * This is scaled between the high and low value.
-	   */
+      /*
+       * Compute the virtual dot size that we're going to print.
+       * This is somewhere between the two candidate dot sizes.
+       * This is scaled between the high and low value.
+       */
 
-	  if (dd->value_span == 0)
-	    virtual_value = dd->value_h;
-	  else if (dd->range_span == 0)
-	    virtual_value = (dd->value_h + dd->value_l) / 2;
-	  else if (dd->value_h == 65536 && rangepoint == 65536)
-	    virtual_value = 65536;
-	  else
-	    virtual_value = dd->value_l +
-	      (dd->value_span * rangepoint / 65536);
+      if (dd->value_span == 0)
+	virtual_value = dd->value_h;
+      else if (dd->range_span == 0)
+	virtual_value = (dd->value_h + dd->value_l) / 2;
+      else if (dd->value_h == 65536 && rangepoint == 65536)
+	virtual_value = 65536;
+      else
+	virtual_value = dd->value_l + (dd->value_span * rangepoint / 65536);
 
-	  /*
-	   * Reduce the randomness as the base value increases, to get
-	   * smoother output in the midtones.  Idea suggested by
-	   * Thomas Tonino.
-	   */
-	  if (!(d->dither_type & D_ORDERED_BASE))
-	    {
-	      if (base > d->d_cutoff)
-		randomizer = 0;
-	      else if (base > d->d_cutoff / 2)
-		randomizer = randomizer * 2 * (d->d_cutoff - base)
-		  / d->d_cutoff;
-	    }
+      /*
+       * Reduce the randomness as the base value increases, to get
+       * smoother output in the midtones.  Idea suggested by
+       * Thomas Tonino.
+       */
+      if (!(d->dither_type & D_ORDERED_BASE))
+	{
+	  if (base > d->d_cutoff)
+	    randomizer = 0;
+	  else if (base > d->d_cutoff / 2)
+	    randomizer = randomizer * 2 * (d->d_cutoff - base) / d->d_cutoff;
+	}
 
-	  /*
-	   * A hack to get a bit more choice out of a single matrix.
-	   * Fiddle the x and y coordinates.
-	   */
-	  if (invert_y)
-	    {
-	      unsigned tmp = x;
-	      x = y + 33;
-	      y = tmp + 29;
+      /*
+       * A hack to get a bit more choice out of a single matrix.
+       * Fiddle the x and y coordinates.
+       */
+      if (invert_y)
+	{
+	  unsigned tmp = x;
+	  x = y + 33;
+	  y = tmp + 29;
 	      
-	    }
+	}
 
+      /*
+       * Compute the comparison value to decide whether to print at
+       * all.  If there is no randomness, simply divide the virtual
+       * dotsize by 2 to get standard "pure" Floyd-Steinberg (or "pure"
+       * matrix dithering, which degenerates to a threshold).
+       */
+      if (randomizer == 0)
+	vmatrix = virtual_value / 2;
+      else
+	{
 	  /*
-	   * Compute the comparison value to decide whether to print at
-	   * all.  If there is no randomness, simply divide the virtual
-	   * dotsize by 2 to get standard "pure" Floyd-Steinberg (or "pure"
-	   * matrix dithering, which degenerates to a threshold).
+	   * First, compute a value between 0 and 65536 that will be
+	   * scaled to produce an offset from the desired threshold.
 	   */
- 	  if (randomizer == 0)
-	    vmatrix = virtual_value / 2;
-	  else
+	  switch (dither_type)
 	    {
+	    case D_FLOYD:
 	      /*
-	       * First, compute a value between 0 and 65536 that will be
-	       * scaled to produce an offset from the desired threshold.
+	       * Floyd-Steinberg: use a mildly Gaussian random number.
+	       * This might be a bit too Gaussian.
 	       */
-	      switch (dither_type)
-		{
-		case D_FLOYD:
-		  /*
-		   * Floyd-Steinberg: use a mildly Gaussian random number.
-		   * This might be a bit too Gaussian.
-		   */
-		  vmatrix = ((rand() & 0xffff000) +
-			     (rand() & 0xffff000) +
-			     (rand() & 0xffff000) +
-			     (rand() & 0xffff000)) >> 14;
-		  break;
-		case D_FLOYD_HYBRID:
-		  /*
-		   * Hybrid Floyd-Steinberg: use a matrix (or a really ugly
-		   * combination of matrices) to generate the offset.
-		   */
-		  vmatrix = DITHERPOINT(d, x, y, 1) ^ DITHERPOINT(d, x, y, 2);
-		case D_ORDERED:
-		case D_ORDERED_PERTURBED:
-		default:
-		  /*
-		   * Ordered: again, we use a matrix to generate the offset.
-		   * This time, however, we use a different matrix.
-		   * We also generate some random low-order bits to ensure that
-		   * even very small values have a chance to print.
-		   */
+	      vmatrix = ((rand() & 0xffff000) +
+			 (rand() & 0xffff000)) >> 13;
+	      break;
+	    case D_FLOYD_HYBRID:
+	      /*
+	       * Hybrid Floyd-Steinberg: use a matrix (or a really ugly
+	       * combination of matrices) to generate the offset.
+	       */
+	      vmatrix = DITHERPOINT(d, x, y, 1) ^ DITHERPOINT(d, x, y, 2);
+	    case D_ORDERED:
+	    case D_ORDERED_PERTURBED:
+	    default:
+	      /*
+	       * Ordered: again, we use a matrix to generate the offset.
+	       * This time, however, we use a different matrix.
+	       * We also generate some random low-order bits to ensure that
+	       * even very small values have a chance to print.
+	       */
+	      {
+		int imatrix;
+		int rand0 = rand();
+		int ix, iy;
+		if (dither_type == D_ORDERED_PERTURBED)
 		  {
-		    int imatrix;
-		    int rand0 = rand();
-		    int ix, iy;
-		    if (dither_type == D_ORDERED_PERTURBED)
-		      {
-			/*
-			 * "Twist" the matrix to break up lines.  This is
-			 * somewhat peculiar to the iterated-2 matrix we've
-			 * chosen.  A better matrix may not need this.
-			 */
-			ix = x + y / (((x / 11) % 7) + 3);
-			iy = y + x / (((y / 11) % 7) + 3);
-		      }
-		    else
-		      {
-			/*
-			 * Improve the iterated-2 matrix.  A better matrix
-			 * may not need this treatment.
-			 */
-			ix = x + y / 3;
-			iy = y + x / 3;
-		      }
-		    imatrix = DITHERPOINT(d, ix, iy, 0);
-
 		    /*
-		     * Your low order bits, sir...
+		     * "Twist" the matrix to break up lines.  This is
+		     * somewhat peculiar to the iterated-2 matrix we've
+		     * chosen.  A better matrix may not need this.
 		     */
-		    rand0 = rand();
-		    imatrix += (rand0 + (rand0 >> 7) +
-				(rand0 >> 14) + (rand0 >> 21)) & 127;
-		    imatrix -= 63;
-		    if (imatrix < 0)
-		      vmatrix = 0;
-		    else if (imatrix > 65536)
-		      vmatrix = 65536;
-		    else
-		      vmatrix = imatrix;
+		    ix = x + y / (((x / 11) % 7) + 3);
+		    iy = y + x / (((y / 11) % 7) + 3);
 		  }
-		}
+		else
+		  {
+		    /*
+		     * Improve the iterated-2 matrix.  A better matrix
+		     * may not need this treatment.
+		     */
+		    ix = x + y / 3;
+		    iy = y + x / 3;
+		  }
+		imatrix = DITHERPOINT(d, ix, iy, 0);
 
-	      /*
-	       * Another way to get more use out of the matrix.  If the
-	       * matrix is evenly distributed, it doesn't matter which way
-	       * we do the comparison.  At this point vmatrix is simply
-	       * a number between 0 and 65536; subtracting it from 65536
-	       * won't change anything.
-	       */
-	      if (invert_x)
-		vmatrix = 65536 - vmatrix;
-
-	      if (vmatrix == 65536 && virtual_value == 65536)
 		/*
-		 * These numbers will break 32-bit unsigned arithmetic!
-		 * Maybe this is so rare that we'd be better off using
-		 * long long arithmetic, but that's likely to be much more
-		 * expensive on 32-bit architectures.
+		 * Your low order bits, sir...
 		 */
-		vmatrix = 32768;
-	      else
-		{
-		  /*
-		   * Now, scale the virtual dot size appropriately.  Note that
-		   * we'll get something evenly distributed between 0 and
-		   * the virtual dot size, centered on the dot size / 2,
-		   * which is the normal threshold value.
-		   */
-		  vmatrix = vmatrix * virtual_value / 65536;
-		  if (randomizer != 65536)
-		    {
-		      /*
-		       * We want vmatrix to be scaled between 0 and
-		       * virtual_value when randomizer is 65536 (fully random).
-		       * When it's less, we want it to scale through part of
-		       * that range. In all cases, it should center around
-		       * virtual_value / 2.
-		       *
-		       * vbase is the bottom of the scaling range.
-		       */
-		      unsigned vbase = virtual_value * (65536u - randomizer) /
-			131072u;
-		      vmatrix = vmatrix * randomizer / 65536;
-		      vmatrix += vbase;
-		    }
-		}
-	    } /* randomizer != 0 */
+		rand0 = rand();
+		imatrix += (rand0 + (rand0 >> 7) +
+			    (rand0 >> 14) + (rand0 >> 21)) & 127;
+		imatrix -= 63;
+		if (imatrix < 0)
+		  vmatrix = 0;
+		else if (imatrix > 65536)
+		  vmatrix = 65536;
+		else
+		  vmatrix = imatrix;
+	      }
+	    }
 
 	  /*
-	   * After all that, printing is almost an afterthought.
-	   * Pick the actual dot size (using a matrix here) and print it.
+	   * Another way to get more use out of the matrix.  If the
+	   * matrix is evenly distributed, it doesn't matter which way
+	   * we do the comparison.  At this point vmatrix is simply
+	   * a number between 0 and 65536; subtracting it from 65536
+	   * won't change anything.
 	   */
-	  if (dither_value >= vmatrix)
-	    {
-	      int j;
-	      int isdark;
-	      unsigned char *tptr;
-	      unsigned bits;
-	      
-	      if (dd->isdark_h == dd->isdark_l && dd->bits_h == dd->bits_l)
-		{
-		  isdark = dd->isdark_h;
-		  bits = dd->bits_h;
-		}
-	      else if (rangepoint >= DITHERPOINT(d, x, y, 3))
-		{
-		  isdark = dd->isdark_h;
-		  bits = dd->bits_h;
-		}
-	      else
-		{
-		  isdark = dd->isdark_l;
-		  bits = dd->bits_l;
-		}
-	      tptr = isdark ? c : lc;
+	  if (invert_x)
+	    vmatrix = 65536 - vmatrix;
 
+	  if (vmatrix == 65536 && virtual_value == 65536)
+	    /*
+	     * These numbers will break 32-bit unsigned arithmetic!
+	     * Maybe this is so rare that we'd be better off using
+	     * long long arithmetic, but that's likely to be much more
+	     * expensive on 32-bit architectures.
+	     */
+	    vmatrix = 32768;
+	  else
+	    {
 	      /*
-	       * Lay down all of the bits in the pixel.
+	       * Now, scale the virtual dot size appropriately.  Note that
+	       * we'll get something evenly distributed between 0 and
+	       * the virtual dot size, centered on the dot size / 2,
+	       * which is the normal threshold value.
 	       */
+	      vmatrix = vmatrix * virtual_value / 65536;
+	      if (randomizer != 65536)
+		{
+		  /*
+		   * We want vmatrix to be scaled between 0 and
+		   * virtual_value when randomizer is 65536 (fully random).
+		   * When it's less, we want it to scale through part of
+		   * that range. In all cases, it should center around
+		   * virtual_value / 2.
+		   *
+		   * vbase is the bottom of the scaling range.
+		   */
+		  unsigned vbase = virtual_value * (65536u - randomizer) /
+		    131072u;
+		  vmatrix = vmatrix * randomizer / 65536;
+		  vmatrix += vbase;
+		}
+	    }
+	} /* randomizer != 0 */
+
+      /*
+       * After all that, printing is almost an afterthought.
+       * Pick the actual dot size (using a matrix here) and print it.
+       */
+      if (dither_value >= vmatrix)
+	{
+	  int j;
+	  int isdark;
+	  unsigned char *tptr;
+	  unsigned bits;
+	  unsigned v;
+	      
+	  if (dd->isdark_h == dd->isdark_l && dd->bits_h == dd->bits_l)
+	    {
+	      isdark = dd->isdark_h;
+	      bits = dd->bits_h;
+	      v = dd->value_h;
+	    }
+	  else if (rangepoint >= DITHERPOINT(d, x, y, 3))
+	    {
+	      isdark = dd->isdark_h;
+	      bits = dd->bits_h;
+	      v = dd->value_h;
+	    }
+	  else
+	    {
+	      isdark = dd->isdark_l;
+	      bits = dd->bits_l;
+	      v = dd->value_l;
+	    }
+	  tptr = isdark ? c : lc;
+
+	  /*
+	   * Lay down all of the bits in the pixel.
+	   */
+	  if (!dontprint)
+	    {
 	      for (j = 1; j <= bits; j += j, tptr += length)
 		{
 		  if (j & bits)
 		    *tptr |= bit;
 		}
-	      adjusted -= virtual_value;
 	    }
-	  break;
+	  adjusted -= v;
 	}
+      return adjusted;
     }
   return adjusted;
 }
@@ -1278,12 +1243,12 @@ dither_black(unsigned short   *gray,		/* I - Grayscale pixels */
     ok = k;
     if (d->dither_type & D_ORDERED_BASE)
       print_color(d, &(d->k_dither), k, k, k, x, row, kptr, NULL, bit,
-		  length, 0, 0, d->k_randomizer);
+		  length, 0, 0, d->k_randomizer, 0);
     else
       {
 	UPDATE_COLOR(k);
 	k = print_color(d, &(d->k_dither), ok, ok, k, x, row, kptr, NULL, bit,
-			length, 0, 0, d->k_randomizer);
+			length, 0, 0, d->k_randomizer, 0);
 	UPDATE_DITHER(k, x, d->src_width);
       }
 
@@ -1339,7 +1304,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		*kerror1;	/* Pointer to next error row */
   int		ditherbit;	/* Random dither bitmask */
   int		ck;
-  int		bk;
+  int		bk = 0;
   int		ub, lb;
   int		density;
   dither_t	*d = (dither_t *) vd;
@@ -1449,6 +1414,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       c = 65535 - (unsigned) rgb[0];
       m = 65535 - (unsigned) rgb[1];
       y = 65535 - (unsigned) rgb[2];
+      oc = c;
+      om = m;
+      oy = y;
       k = MIN(c, MIN(m, y));
 
       if (black != NULL)
@@ -1467,6 +1435,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	  if (diff < 0)
 	    diff = 0;
 	  k = (int) (((unsigned) diff * (unsigned) k) >> 16);
+#if 0
 	  ak = k;
 	  divk = 65535 - k;
 	  if (divk == 0)
@@ -1489,11 +1458,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	      y  = ((unsigned) (65535 - ((rgb[0] + rgb[2]) >> 3))) * yk /
 		(unsigned) divk;
 	    }
-
+#endif
 	  ok = k;
-	  oc = c;
-	  om = m;
-	  oy = y;
+	  ak = k;
 
 	  /*
 	   * kdarkness is an artificially computed darkness value for deciding
@@ -1505,9 +1472,13 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	   * In between we scale.  We actually choose, for each point,
 	   * whether we're going to print black or color.
 	   */
+#if 0
 	  tk = (((oc * d->c_darkness) + (om * d->m_darkness) +
 		 (oy * d->y_darkness)) >> 6);
-	  kdarkness = MAX(tk, ak);
+#else
+	  tk = k;
+#endif
+	  kdarkness = tk;
 	  if (kdarkness < d->k_upper) /* Possibility of printing color */
 	    {
 	      int rb;
@@ -1550,26 +1521,23 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	    }
 	  ck = ok - bk;
     
-	  if (ck > 0)		/* Using color, so we have to update them */
+	  if (bk > 0)
 	    {
-	      c += (d->k_clevel * ck) >> 6;
-	      m += (d->k_mlevel * ck) >> 6;
-	      y += (d->k_ylevel * ck) >> 6;
-
-	      /*
-	       * Don't allow cmy to grow without bound.
-	       */
-	      if (c > 65535)
-		c = 65535;
-	      if (m > 65535)
-		m = 65535;
-	      if (y > 65535)
-		y = 65535;
+	      c -= (d->k_clevel * bk) >> 6;
+	      m -= (d->k_mlevel * bk) >> 6;
+	      y -= (d->k_ylevel * bk) >> 6;
+	      if (c < 0)
+		c = 0;
+	      if (m < 0)
+		m = 0;
+	      if (y < 0)
+		y = 0;
 	    }
+
 	  k = bk;
 	  UPDATE_COLOR(k);
-	  tk = print_color(d, &(d->k_dither), bk, bk, k, x, row, kptr, NULL,
-			   bit, length, 0, 0, 65536);
+	  tk = print_color(d, &(d->k_dither), bk, bk, k, x, row, kptr,
+			   NULL, bit, length, 0, 0, 0, 0);
 	  if (tk != k)
 	    printed_black = 1;
 	  k = tk;
@@ -1595,6 +1563,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	}
 
 
+#if 0
       /*
        * Done handling the black.  Now print the color.
        * Isn't this easy by comparison?
@@ -1602,24 +1571,25 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       oc = c;
       om = m;
       oy = y;
+#endif
 
-      density = (c + m + y);
+      density = oc + om + oy;
       UPDATE_COLOR(c);
       UPDATE_COLOR(m);
       UPDATE_COLOR(y);
 
-      if (!printed_black)
-	{
-	  c = print_color(d, &(d->c_dither), oc, oc, c,
-			  x, row, cptr, lcptr, bit, length, 0, 1,
-			  d->c_randomizer);
-	  m = print_color(d, &(d->m_dither), om, om, m,
-			  x, row, mptr, lmptr, bit, length, 1, 0,
-			  d->m_randomizer);
-	  y = print_color(d, &(d->y_dither), oy, oy, y,
-			  x, row, yptr, lyptr, bit, length, 1, 1,
-			  d->y_randomizer);
-	}
+      c = print_color(d, &(d->c_dither), oc,
+		      oc + (om * d->m_darkness + oy * d->y_darkness) / 128,
+		      c, x, row, cptr, lcptr, bit, length, 0, 1,
+		      d->c_randomizer, printed_black);
+      m = print_color(d, &(d->m_dither), om,
+		      om + (oc * d->c_darkness + oy * d->y_darkness) / 128,
+		      m, x, row, mptr, lmptr, bit, length, 1, 0,
+		      d->m_randomizer, printed_black);
+      y = print_color(d, &(d->y_dither), oy,
+		      oy + (om * d->m_darkness + oc * d->c_darkness) / 128,
+		      y, x, row, yptr, lyptr, bit, length, 1, 1,
+		      d->y_randomizer, printed_black);
 
       UPDATE_DITHER(c, x, d->dst_width);
       UPDATE_DITHER(m, x, d->dst_width);
@@ -1638,6 +1608,10 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.35  2000/05/02 11:33:57  rlk
+ *   Improved dither code.  Deposits significantly less ink than previous version,
+ *   and gives better saturation.
+ *
  *   Revision 1.34  2000/04/29 01:14:19  rlk
  *   Improve photo and line art mode
  *
