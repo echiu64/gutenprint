@@ -33,6 +33,7 @@
 #include <string.h>
 #include <gimp-print.h>
 #include <gimp-print-internal.h>
+#include <gimp-print-intl-internal.h>
 
 #ifndef __GNUC__
 #  define inline

@@ -20,6 +20,7 @@ src/main/print-pcl.c
 src/main/print-ps.c
 src/main/print-util.c
 src/main/print-weave.c
+src/main/print-version.c
 
 # escputil sources
 src/escputil/escputil.c

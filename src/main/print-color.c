@@ -33,6 +33,7 @@
 #endif
 #include <gimp-print.h>
 #include <gimp-print-internal.h>
+#include <gimp-print-intl-internal.h>
 #include <math.h>
 #include <limits.h>
 

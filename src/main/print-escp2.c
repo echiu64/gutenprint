@@ -32,6 +32,7 @@
 #ifndef WEAVETEST
 #include <gimp-print.h>
 #include <gimp-print-internal.h>
+#include <gimp-print-intl-internal.h>
 #endif
 
 #ifndef __GNUC__
@@ -1673,32 +1674,32 @@ typedef struct {
 } res_t;
 
 static const res_t escp2_reslist[] = {
-  { "180 DPI",                                  180,  180,  0, 0, 1, 1, 0, 0 },
-  { "180 DPI Unidirectional",                   180,  180,  0, 0, 1, 1, 1, 0 },
-  { "360 DPI",                                  360,  360,  0, 0, 1, 1, 0, 2 },
-  { "360 DPI Unidirectional",                   360,  360,  0, 0, 1, 1, 1, 2 },
-  { "360 DPI Microweave",                       360,  360,  0, 1, 1, 1, 0, 2 },
-  { "360 DPI Microweave Unidirectional",        360,  360,  0, 1, 1, 1, 1, 2 },
-  { "360 DPI Softweave",                        360,  360,  1, 0, 1, 1, 0, 3 },
-  { "360 DPI High Quality",                     360,  360,  1, 0, 2, 1, 0, 3 },
-  { "360 DPI High Quality Unidirectional",      360,  360,  1, 0, 2, 1, 1, 3 },
-  { "720 DPI Microweave",                       720,  720,  0, 1, 1, 1, 0, 4 },
-  { "720 DPI Microweave Unidirectional",        720,  720,  0, 1, 1, 1, 1, 4 },
-  { "720 DPI Softweave",                        720,  720,  1, 0, 1, 1, 0, 5 },
-  { "720 DPI Softweave Unidirectional",         720,  720,  1, 0, 1, 1, 1, 5 },
-  { "720 DPI High Quality",                     720,  720,  1, 0, 2, 1, 0, 5 },
-  { "720 DPI High Quality Unidirectional",      720,  720,  1, 0, 2, 1, 1, 5 },
-  { "720 DPI Highest Quality",                  720,  720,  1, 0, 4, 1, 1, 5 },
-  { "1440 x 720 DPI Microweave",                1440, 720,  0, 1, 1, 1, 0, 6 },
-  { "1440 x 720 DPI Microweave Unidirectional", 1440, 720,  0, 1, 1, 1, 1, 6 },
-  { "1440 x 720 DPI Softweave",                 1440, 720,  1, 0, 1, 1, 0, 7 },
-  { "1440 x 720 DPI Softweave Unidirectional",  1440, 720,  1, 0, 1, 1, 1, 7 },
-  { "1440 x 720 DPI Highest Quality",           1440, 720,  1, 0, 2, 1, 1, 7 },
-  { "1440 x 1440 DPI Softweave",                1440, 1440, 1, 0, 1, 1, 1, 9 },
-  { "1440 x 1440 DPI Highest Quality",          1440, 1440, 1, 0, 2, 1, 1, 9 },
-  { "2880 x 720 DPI Softweave",                 2880, 720,  1, 0, 1, 1, 0, 11},
-  { "2880 x 720 DPI Softweave Unidirectional",  2880, 720,  1, 0, 1, 1, 1, 11},
-  { "2880 x 1440 DPI Softweave",                2880, 1440, 1, 0, 1, 1, 1, 13},
+  { N_ ("180 DPI"),                                  180,  180,  0, 0, 1, 1, 0, 0 },
+  { N_ ("180 DPI Unidirectional"),                   180,  180,  0, 0, 1, 1, 1, 0 },
+  { N_ ("360 DPI"),                                  360,  360,  0, 0, 1, 1, 0, 2 },
+  { N_ ("360 DPI Unidirectional"),                   360,  360,  0, 0, 1, 1, 1, 2 },
+  { N_ ("360 DPI Microweave"),                       360,  360,  0, 1, 1, 1, 0, 2 },
+  { N_ ("360 DPI Microweave Unidirectional"),        360,  360,  0, 1, 1, 1, 1, 2 },
+  { N_ ("360 DPI Softweave"),                        360,  360,  1, 0, 1, 1, 0, 3 },
+  { N_ ("360 DPI High Quality"),                     360,  360,  1, 0, 2, 1, 0, 3 },
+  { N_ ("360 DPI High Quality Unidirectional"),      360,  360,  1, 0, 2, 1, 1, 3 },
+  { N_ ("720 DPI Microweave"),                       720,  720,  0, 1, 1, 1, 0, 4 },
+  { N_ ("720 DPI Microweave Unidirectional"),        720,  720,  0, 1, 1, 1, 1, 4 },
+  { N_ ("720 DPI Softweave"),                        720,  720,  1, 0, 1, 1, 0, 5 },
+  { N_ ("720 DPI Softweave Unidirectional"),         720,  720,  1, 0, 1, 1, 1, 5 },
+  { N_ ("720 DPI High Quality"),                     720,  720,  1, 0, 2, 1, 0, 5 },
+  { N_ ("720 DPI High Quality Unidirectional"),      720,  720,  1, 0, 2, 1, 1, 5 },
+  { N_ ("720 DPI Highest Quality"),                  720,  720,  1, 0, 4, 1, 1, 5 },
+  { N_ ("1440 x 720 DPI Microweave"),                1440, 720,  0, 1, 1, 1, 0, 6 },
+  { N_ ("1440 x 720 DPI Microweave Unidirectional"), 1440, 720,  0, 1, 1, 1, 1, 6 },
+  { N_ ("1440 x 720 DPI Softweave"),                 1440, 720,  1, 0, 1, 1, 0, 7 },
+  { N_ ("1440 x 720 DPI Softweave Unidirectional"),  1440, 720,  1, 0, 1, 1, 1, 7 },
+  { N_ ("1440 x 720 DPI Highest Quality"),           1440, 720,  1, 0, 2, 1, 1, 7 },
+  { N_ ("1440 x 1440 DPI Softweave"),                1440, 1440, 1, 0, 1, 1, 1, 9 },
+  { N_ ("1440 x 1440 DPI Highest Quality"),          1440, 1440, 1, 0, 2, 1, 1, 9 },
+  { N_ ("2880 x 720 DPI Softweave"),                 2880, 720,  1, 0, 1, 1, 0, 11},
+  { N_ ("2880 x 720 DPI Softweave Unidirectional"),  2880, 720,  1, 0, 1, 1, 1, 11},
+  { N_ ("2880 x 1440 DPI Softweave"),                2880, 1440, 1, 0, 1, 1, 1, 13},
   { "", 0, 0, 0, 0, 0, -1 }
 };
 
@@ -1721,21 +1722,21 @@ typedef struct {
 } paper_t;
 
 static const paper_t escp2_paper_list[] = {
-  { "Plain Paper", 1, 0, .5, .25, .5 },
-  { "Plain Paper Fast Load", 5, 0, .5, .25, .5 },
-  { "Postcard", 2, 0, .6, .25, .6 },
-  { "Glossy Film", 3, 0, 1.0, 1.0, .999 },
-  { "Transparencies", 3, 0, 1.0, 1.0, .999 },
-  { "Envelopes", 4, 0, .5, .25, .5 },
-  { "Back Light Film", 6, 0, 1.0, 1.0, .999 },
-  { "Matte Paper", 7, 0, 1.0, 1.0, .9 },
-  { "Inkjet Paper", 7, 0, .78, .25, .6 },
-  { "Photo Quality Inkjet Paper", 7, 0, 1, 1.0, .999 },
-  { "Photo Paper", 8, 0, 1, 1.0, .9 },
-  { "Premium Glossy Photo Paper", 8, 0, .9, 1.0, .999 },
-  { "Premium Luster Photo Paper", 8, 0, 1.0, 1.0, .999 },
-  { "Photo Quality Glossy Paper", 6, 0, 1.0, 1.0, .999 },
-  { "Other", 0, 0, .5, .25, .5 },
+  { N_ ("Plain Paper"), 1, 0, .5, .25, .5 },
+  { N_ ("Plain Paper Fast Load"), 5, 0, .5, .25, .5 },
+  { N_ ("Postcard"), 2, 0, .6, .25, .6 },
+  { N_ ("Glossy Film"), 3, 0, 1.0, 1.0, .999 },
+  { N_ ("Transparencies"), 3, 0, 1.0, 1.0, .999 },
+  { N_ ("Envelopes"), 4, 0, .5, .25, .5 },
+  { N_ ("Back Light Film"), 6, 0, 1.0, 1.0, .999 },
+  { N_ ("Matte Paper"), 7, 0, 1.0, 1.0, .9 },
+  { N_ ("Inkjet Paper"), 7, 0, .78, .25, .6 },
+  { N_ ("Photo Quality Inkjet Paper"), 7, 0, 1, 1.0, .999 },
+  { N_ ("Photo Paper"), 8, 0, 1, 1.0, .9 },
+  { N_ ("Premium Glossy Photo Paper"), 8, 0, .9, 1.0, .999 },
+  { N_ ("Premium Luster Photo Paper"), 8, 0, 1.0, 1.0, .999 },
+  { N_ ("Photo Quality Glossy Paper"), 6, 0, 1.0, 1.0, .999 },
+  { N_ ("Other"), 0, 0, .5, .25, .5 },
 };
 
 static const int paper_type_count = sizeof(escp2_paper_list) / sizeof(paper_t);
@@ -1914,8 +1915,8 @@ escp2_parameters(const stp_printer_t *printer,	/* I - Printer model */
 
   static const char *ink_types[] =
   {
-    "Six Color Photo",
-    "Four Color Standard"
+    N_ ("Six Color Photo"),
+    N_ ("Four Color Standard")
   };
 
   if (count == NULL)
@@ -2020,8 +2021,8 @@ escp2_parameters(const stp_printer_t *printer,	/* I - Printer model */
       else
 	{      /* Roll Feed capable printers */
 		valptrs = malloc(sizeof(char *) * 2);
-		valptrs[0] = strdup("Standard");
-		valptrs[1] = strdup("Roll Feed");
+		valptrs[0] = strdup(_("Standard"));
+		valptrs[1] = strdup(_("Roll Feed"));
 		*count = 2;
 		return valptrs;
 	}
@@ -2159,7 +2160,7 @@ escp2_set_remote_sequence(FILE *prn, escp2_init_t *init)
       if (escp2_has_cap(init->model, MODEL_ROLLFEED_MASK,
 			MODEL_ROLLFEED_YES, init->v))
 	{
-	  if(strcmp(init->media_source,"Roll Feed") == 0)
+	  if(strcmp(init->media_source,_("Roll Feed")) == 0)
 	    fprintf(prn, /* Set Roll Feed mode */
 		    "IR\002%c%c%c"
 		    "EX\006%c%c%c%c%c%c%c", 
@@ -2354,7 +2355,7 @@ escp2_deinit_printer(FILE *prn, escp2_init_t *init)
       if (escp2_has_cap(init->model, MODEL_ROLLFEED_MASK,
 			MODEL_ROLLFEED_YES, init->v))
 	{
-	  if(strcmp(init->media_source,"Roll Feed") == 0)
+	  if(strcmp(init->media_source,_("Roll Feed")) == 0)
 	    fprintf(prn, /* End Roll Feed mode */
 		    "IR\002%c%c%c", 0, 0, 0);
 	  else
@@ -2455,16 +2456,16 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
   separation_rows = escp2_separation_rows(model, &nv);
   max_vres = escp2_max_vres(model, &nv);
   if (escp2_has_cap(model, MODEL_COLOR_MASK, MODEL_COLOR_6, &nv) &&
-      strcmp(ink_type, "Four Color Standard") != 0 &&
+      strcmp(ink_type, _("Four Color Standard")) != 0 &&
       nv.image_type != IMAGE_MONOCHROME)
     use_6color = 1;
 
   if (escp2_has_cap(model, MODEL_COLOR_MASK, MODEL_COLOR_7, &nv) &&
       nv.image_type != IMAGE_MONOCHROME)
     {
-      if (strcmp(ink_type, "Six Color Photo") == 0)
+      if (strcmp(ink_type, _("Six Color Photo")) == 0)
 	use_6color = 1;
-      else if (strcmp(ink_type, "Seven Color Enhanced") == 0)
+      else if (strcmp(ink_type, _("Seven Color Enhanced")) == 0)
 	use_7color = 1;
     }
 
@@ -2787,7 +2788,7 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
       else
 	stp_dither_set_transition(dither, .5);
     }
-  if (!strcmp(nv.dither_algorithm, "Ordered"))
+  if (!strcmp(nv.dither_algorithm, _("Ordered")))
     stp_dither_set_transition(dither, 1);
 
   switch (nv.image_type)

@@ -38,6 +38,7 @@
 #endif
 #include <gimp-print.h>
 #include <gimp-print-internal.h>
+#include <gimp-print-intl-internal.h>
 #include <limits.h>
 #include <math.h>
 
@@ -82,13 +83,13 @@ typedef struct
 
 static dither_algo_t dither_algos[] =
 {
-  { "Adaptive Hybrid",        D_ADAPTIVE_HYBRID },
-  { "Ordered",                D_ORDERED },
-  { "Fast",                   D_FAST },
-  { "Very Fast",              D_VERY_FAST },
-  { "Adaptive Random",        D_ADAPTIVE_RANDOM },
-  { "Hybrid Floyd-Steinberg", D_FLOYD_HYBRID },
-  { "Random Floyd-Steinberg", D_FLOYD }
+  { N_ ("Adaptive Hybrid"),        D_ADAPTIVE_HYBRID },
+  { N_ ("Ordered"),                D_ORDERED },
+  { N_ ("Fast"),                   D_FAST },
+  { N_ ("Very Fast"),              D_VERY_FAST },
+  { N_ ("Adaptive Random"),        D_ADAPTIVE_RANDOM },
+  { N_ ("Hybrid Floyd-Steinberg"), D_FLOYD_HYBRID },
+  { N_ ("Random Floyd-Steinberg"), D_FLOYD }
 };
 
 static int num_dither_algos = sizeof(dither_algos) / sizeof(dither_algo_t);

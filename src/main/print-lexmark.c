@@ -46,6 +46,7 @@
 #include <stdarg.h>
 #include <gimp-print.h>
 #include <gimp-print-internal.h>
+#include <gimp-print-intl-internal.h>
 
 #define false 0
 #define true  1
@@ -478,17 +479,17 @@ static double media_parameters[][3] =
 static int
 lexmark_media_type(const char *name, lexmark_cap_t caps)
 {
-  if (!strcmp(name,"Plain Paper"))           return  1;
-  if (!strcmp(name,"Transparencies"))        return  2;
-  if (!strcmp(name,"Back Print Film"))       return  3;
-  if (!strcmp(name,"Fabric Sheets"))         return  4;
-  if (!strcmp(name,"Envelope"))              return  5;
-  if (!strcmp(name,"High Resolution Paper")) return  6;
-  if (!strcmp(name,"T-Shirt Transfers"))     return  7;
-  if (!strcmp(name,"High Gloss Film"))       return  8;
-  if (!strcmp(name,"Glossy Photo Paper"))    return  9;
-  if (!strcmp(name,"Glossy Photo Cards"))    return 10;
-  if (!strcmp(name,"Photo Paper Pro"))       return 11;
+  if (!strcmp(name,_("Plain Paper")))           return  1;
+  if (!strcmp(name,_("Transparencies")))        return  2;
+  if (!strcmp(name,_("Back Print Film")))       return  3;
+  if (!strcmp(name,_("Fabric Sheets")))         return  4;
+  if (!strcmp(name,_("Envelope")))              return  5;
+  if (!strcmp(name,_("High Resolution Paper"))) return  6;
+  if (!strcmp(name,_("T-Shirt Transfers")))     return  7;
+  if (!strcmp(name,_("High Gloss Film")))       return  8;
+  if (!strcmp(name,_("Glossy Photo Paper")))    return  9;
+  if (!strcmp(name,_("Glossy Photo Cards")))    return 10;
+  if (!strcmp(name,_("Photo Paper Pro")))       return 11;
 
 #ifdef DEBUG
   fprintf(stderr,"lexmark: Unknown media type '%s' - reverting to plain\n",name);
@@ -499,9 +500,9 @@ lexmark_media_type(const char *name, lexmark_cap_t caps)
 static int
 lexmark_source_type(const char *name, lexmark_cap_t caps)
 {
-  if (!strcmp(name,"Auto Sheet Feeder"))    return 4;
-  if (!strcmp(name,"Manual with Pause"))    return 0;
-  if (!strcmp(name,"Manual without Pause")) return 1;
+  if (!strcmp(name,_("Auto Sheet Feeder")))    return 4;
+  if (!strcmp(name,_("Manual with Pause")))    return 0;
+  if (!strcmp(name,_("Manual without Pause"))) return 1;
 
 #ifdef DEBUG
   fprintf(stderr,"lexmark: Unknown source type '%s' - reverting to auto\n",name);
@@ -514,12 +515,12 @@ lexmark_printhead_type(const char *name, lexmark_cap_t caps)
 {
   FILE *dbfFile; 
 
-  if (!strcmp(name,"Black"))       return 0;
-  if (!strcmp(name,"Color"))       return 1;
-  if (!strcmp(name,"Black/Color")) return 2;
-  if (!strcmp(name,"Photo/Color")) return 3;
-  if (!strcmp(name,"Photo"))       return 4;
-  if (!strcmp(name,"Photo Test Mode"))       return 5;
+  if (!strcmp(name,_("Black")))       return 0;
+  if (!strcmp(name,_("Color")))       return 1;
+  if (!strcmp(name,_("Black/Color"))) return 2;
+  if (!strcmp(name,_("Photo/Color"))) return 3;
+  if (!strcmp(name,_("Photo")))       return 4;
+  if (!strcmp(name,_("Photo Test Mode")))       return 5;
 
 
 #ifdef DEBUG
@@ -542,16 +543,16 @@ lexmark_size_type(const stp_vars_t *v, lexmark_cap_t caps)
     {
       const char *name = pp->name;
       /* built ins: */
-      if (!strcmp(name,"A5"))          return 0x01;
-      if (!strcmp(name,"A4"))          return 0x03;
-      if (!strcmp(name,"B5"))          return 0x08;
-      if (!strcmp(name,"Letter"))      return 0x0d;
-      if (!strcmp(name,"Legal"))       return 0x0f;
-      if (!strcmp(name,"Envelope 10")) return 0x16;
-      if (!strcmp(name,"Envelope DL")) return 0x17;
-      if (!strcmp(name,"Letter+"))     return 0x2a;
-      if (!strcmp(name,"A4+"))         return 0x2b;
-      if (!strcmp(name,"Lexmark 4x2")) return 0x2d;
+      if (!strcmp(name,_("A5")))          return 0x01;
+      if (!strcmp(name,_("A4")))          return 0x03;
+      if (!strcmp(name,_("B5")))          return 0x08;
+      if (!strcmp(name,_("Letter")))      return 0x0d;
+      if (!strcmp(name,_("Legal")))       return 0x0f;
+      if (!strcmp(name,_("Envelope 10"))) return 0x16;
+      if (!strcmp(name,_("Envelope DL"))) return 0x17;
+      if (!strcmp(name,_("Letter+")))     return 0x2a;
+      if (!strcmp(name,_("A4+")))         return 0x2b;
+      if (!strcmp(name,_("Lexmark 4x2"))) return 0x2d;
       /* custom */
 
 #ifdef DEBUG
@@ -613,12 +614,12 @@ typedef struct {
 } lexmark_res_t;
 
 static const lexmark_res_t lexmark_reslist[] = {
-  { "300 DPI",                                  300,  300,  0, 1, 1, 0, 0 },
-  { "300 DPI Unidirectional",                   300,  300,  0, 1, 1, 1, 0 },
-  { "600 DPI",                                  600,  600,  0, 1, 1, 0, 1 },
-  { "600 DPI Unidirectional",                   600,  600,  0, 1, 1, 1, 1 },
-  { "1200 DPI ",                               1200, 1200,  1, 2, 1, 0, 2 },
-  { "1200 DPI  Unidirectional",                1200, 1200,  0, 1, 1, 1, 2 },
+  { N_ ("300 DPI"),                                  300,  300,  0, 1, 1, 0, 0 },
+  { N_ ("300 DPI Unidirectional"),                   300,  300,  0, 1, 1, 1, 0 },
+  { N_ ("600 DPI"),                                  600,  600,  0, 1, 1, 0, 1 },
+  { N_ ("600 DPI Unidirectional"),                   600,  600,  0, 1, 1, 1, 1 },
+  { N_ ("1200 DPI "),                               1200, 1200,  1, 2, 1, 0, 2 },
+  { N_ ("1200 DPI  Unidirectional"),                1200, 1200,  0, 1, 1, 1, 2 },
   { "", 0, 0, 0, 0, 0, -1 }
 };
 
@@ -686,23 +687,23 @@ lexmark_parameters(const stp_printer_t *printer,	/* I - Printer model */
 
   static const char   *media_types[] =
   {
-    ("Plain Paper"),
-    ("Transparencies"),
-    ("Back Print Film"),
-    ("Fabric Sheets"),
-    ("Envelope"),
-    ("High Resolution Paper"),
-    ("T-Shirt Transfers"),
-    ("High Gloss Film"),
-    ("Glossy Photo Paper"),
-    ("Glossy Photo Cards"),
-    ("Photo Paper Pro")
+    (N_ ("Plain Paper")),
+    (N_ ("Transparencies")),
+    (N_ ("Back Print Film")),
+    (N_ ("Fabric Sheets")),
+    (N_ ("Envelope")),
+    (N_ ("High Resolution Paper")),
+    (N_ ("T-Shirt Transfers")),
+    (N_ ("High Gloss Film")),
+    (N_ ("Glossy Photo Paper")),
+    (N_ ("Glossy Photo Cards")),
+    (N_ ("Photo Paper Pro"))
   };
   static const char   *media_sources[] =
   {
-    ("Auto Sheet Feeder"),
-    ("Manual with Pause"),
-    ("Manual without Pause"),
+    (N_ ("Auto Sheet Feeder")),
+    (N_ ("Manual with Pause")),
+    (N_ ("Manual without Pause")),
   };
 
   lexmark_cap_t caps= lexmark_get_model_capabilities(printer->model);
@@ -760,16 +761,16 @@ lexmark_parameters(const stp_printer_t *printer,	/* I - Printer model */
       int c= 0;
       valptrs = malloc(sizeof(char *) * 5);
       if ((caps.inks & LEXMARK_INK_K))
-	valptrs[c++]= c_strdup("Black");
+	valptrs[c++]= c_strdup(_("Black"));
       if ((caps.inks & LEXMARK_INK_CMY))
-	valptrs[c++]= c_strdup("Color");
+	valptrs[c++]= c_strdup(_("Color"));
       if ((caps.inks & LEXMARK_INK_CMYK))
-	valptrs[c++]= c_strdup("Black/Color");
+	valptrs[c++]= c_strdup(_("Black/Color"));
       if ((caps.inks & LEXMARK_INK_CcMmYK))
-	valptrs[c++]= c_strdup("Photo/Color");
+	valptrs[c++]= c_strdup(_("Photo/Color"));
       if ((caps.inks & LEXMARK_INK_CcMmYy))
-	valptrs[c++]= c_strdup("Photo/Color");
-      valptrs[c++]= c_strdup("Photo Test Mode");
+	valptrs[c++]= c_strdup(_("Photo/Color"));
+      valptrs[c++]= c_strdup(_("Photo Test Mode"));
       *count = c;
       return (valptrs);
     }

@@ -368,6 +368,10 @@ if test "${sysconfdir}" = "\${prefix}/etc"; then
   fi
 fi
 
+dnl Define LTLIBOBJS
+LTLIBOBJS=`echo "$LIBOBJS" | sed 's/\.o/.lo/g'`
+LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
+
 dnl Definitions
 AC_DEFINE_UNQUOTED(CUPS_DATADIR, "${cups_exec_prefix}/share/cups")
 AC_DEFINE_UNQUOTED(RELEASE_DATE, XXX)
@@ -395,6 +399,8 @@ AC_SUBST(GIMP_PRINT_H)
 AC_SUBST(GIMPPRINT_LIBS)
 AC_SUBST(INCLUDES)
 AC_SUBST(LIBREADLINE_DEPS)
+AC_SUBST(LTLIBOBJS)
+AC_SUBST(LTALLOCA)
 AC_SUBST(MAIN_BIN)
 AC_SUBST(MAINTAINER_CFLAGS)
 AC_SUBST(PLUG_IN_PATH)

@@ -31,6 +31,7 @@
 #endif
 #include <gimp-print.h>
 #include <gimp-print-internal.h>
+#include <gimp-print-intl-internal.h>
 #include <time.h>
 #include <string.h>
 #include <limits.h>
