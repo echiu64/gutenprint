@@ -1962,7 +1962,7 @@ static const escp2_inkname_t j_six_color_enhanced_composite_inkset =
 
 static const escp2_inkname_t seven_color_photo_inkset =
 {
-  "PhotoCMYK", N_ ("Seven Color Photo"), 1, INKSET_CcMmYKk, .1, .25,
+  "PhotoCMYK7", N_ ("Seven Color Photo"), 1, INKSET_CcMmYKk, .1, .25,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &photo2_black_channels, &photo_cyan_channels,
@@ -1996,14 +1996,14 @@ static const inklist_t name##_inklist =			\
 }							\
 
 
-static const escp2_inkname_t *cmy_ink_types[] =
+static const escp2_inkname_t *const cmy_ink_types[] =
 {
   &three_color_composite_inkset
 };
 
 DECLARE_INKLIST(cmy);
 
-static const escp2_inkname_t *standard_ink_types[] =
+static const escp2_inkname_t *const standard_ink_types[] =
 {
   &four_color_standard_inkset,
   &three_color_composite_inkset,
@@ -2012,7 +2012,7 @@ static const escp2_inkname_t *standard_ink_types[] =
 
 DECLARE_INKLIST(standard);
 
-static const escp2_inkname_t *c80_ink_types[] =
+static const escp2_inkname_t *const c80_ink_types[] =
 {
   &c80_four_color_standard_inkset,
   &c80_three_color_composite_inkset,
@@ -2021,7 +2021,7 @@ static const escp2_inkname_t *c80_ink_types[] =
 
 DECLARE_INKLIST(c80);
 
-static const escp2_inkname_t *x80_ink_types[] =
+static const escp2_inkname_t *const x80_ink_types[] =
 {
   &x80_four_color_standard_inkset,
   &x80_three_color_composite_inkset,
@@ -2029,7 +2029,7 @@ static const escp2_inkname_t *x80_ink_types[] =
 
 DECLARE_INKLIST(x80);
 
-static const escp2_inkname_t *photo_ink_types[] =
+static const escp2_inkname_t *const photo_ink_types[] =
 {
   &six_color_photo_inkset,
   &five_color_photo_composite_inkset,
@@ -2040,7 +2040,7 @@ static const escp2_inkname_t *photo_ink_types[] =
 
 DECLARE_INKLIST(photo);
 
-static const escp2_inkname_t *photo7_japan_ink_types[] =
+static const escp2_inkname_t *const photo7_japan_ink_types[] =
 {
   &j_seven_color_enhanced_inkset,
   &j_six_color_enhanced_composite_inkset,
@@ -2051,7 +2051,7 @@ static const escp2_inkname_t *photo7_japan_ink_types[] =
 
 DECLARE_INKLIST(photo7_japan);
 
-static const escp2_inkname_t *photo7_ink_types[] =
+static const escp2_inkname_t *const photo7_ink_types[] =
 {
   &seven_color_photo_inkset,
   &six_color_photo_inkset,
