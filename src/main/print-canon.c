@@ -2193,7 +2193,6 @@ canon_deinit_printer(stp_const_vars_t v, canon_init_t *init)
   canon_cmd(v,ESC28,0x62,1,0);
   if (init->caps->features & CANON_CAP_a)
     canon_cmd(v,ESC28,0x61, 1, 0);
-  canon_cmd(v,ESC40,0,0);
 }
 
 static int
