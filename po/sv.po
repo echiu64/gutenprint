@@ -12,40 +12,40 @@ msgstr ""
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=3Diso-8859-1\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: lib/getopt.c:681
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
-msgstr "%s: flaggan \"%s\" =E4r flertydig\n"
+msgstr "%s: flaggan \"%s\" är flertydig\n"
 
 #: lib/getopt.c:706
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
-msgstr "%s: flaggan \"--%s\" till=E5ter inget argument\n"
+msgstr "%s: flaggan \"--%s\" tillåter inget argument\n"
 
 #: lib/getopt.c:711
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
-msgstr "%s: flaggan \"%c%s\" till=E5ter inget argument\n"
+msgstr "%s: flaggan \"%c%s\" tillåter inget argument\n"
 
 #: lib/getopt.c:729 lib/getopt.c:902
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
-msgstr "%s: flaggan \"%s\" kr=E4ver ett argument\n"
+msgstr "%s: flaggan \"%s\" kräver ett argument\n"
 
 #. --option
 #: lib/getopt.c:758
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
-msgstr "%s: ok=E4nd flagga \"--%s\"\n"
+msgstr "%s: okänd flagga \"--%s\"\n"
 
 #. +option or -option
 #: lib/getopt.c:762
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
-msgstr "%s: ok=E4nd flagga \"%c%s\"\n"
+msgstr "%s: okänd flagga \"%c%s\"\n"
 
 #. 1003.2 specifies the format of this message.
 #: lib/getopt.c:788
@@ -62,17 +62,17 @@ msgstr "%s: ogiltig flagga -- %c\n"
 #: lib/getopt.c:821 lib/getopt.c:951
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
-msgstr "%s: flaggan kr=E4ver ett argument -- %c\n"
+msgstr "%s: flaggan kräver ett argument -- %c\n"
 
 #: lib/getopt.c:868
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
-msgstr "%s: flaggan \"-W %s\" =E4r flertydig\n"
+msgstr "%s: flaggan \"-W %s\" är flertydig\n"
 
 #: lib/getopt.c:886
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
-msgstr "%s: flaggan \"-W %s\" till=E5ter inget argument\n"
+msgstr "%s: flaggan \"-W %s\" tillåter inget argument\n"
 
 #: src/main/print-canon.c:1221 src/main/print-escp2.c:2764
 #: src/main/print-lexmark.c:790
@@ -98,7 +98,7 @@ msgstr "Kuvert"
 
 #: src/main/print-canon.c:1226
 msgid "High Resolution Paper"
-msgstr "H=F6guppl=F6sningspapper"
+msgstr "Högupplösningspapper"
 
 #: src/main/print-canon.c:1227
 msgid "T-Shirt Transfers"
@@ -106,7 +106,7 @@ msgstr "T-shirttryck"
 
 #: src/main/print-canon.c:1228
 msgid "High Gloss Film"
-msgstr "H=F6gglansig film"
+msgstr "Högglansig film"
 
 #: src/main/print-canon.c:1229
 msgid "Glossy Photo Paper"
@@ -143,19 +143,19 @@ msgstr "Svart"
 
 #: src/main/print-canon.c:1605
 msgid "CMY Color"
-msgstr "CMY-f=E4rg"
+msgstr "CMY-färg"
 
 #: src/main/print-canon.c:1610
 msgid "CMYK Color"
-msgstr "CMYK-f=E4rg"
+msgstr "CMYK-färg"
 
 #: src/main/print-canon.c:1615
 msgid "Photo CcMmY Color"
-msgstr "CcMmY-fotof=E4rg"
+msgstr "CcMmY-fotofärg"
 
 #: src/main/print-canon.c:1620
 msgid "Photo CcMmYK Color"
-msgstr "CcMmYK-fotof=E4rg"
+msgstr "CcMmYK-fotofärg"
 
 #: src/main/print-dither.c:62
 msgid "Adaptive Hybrid"
@@ -179,11 +179,11 @@ msgstr "Hybrid Floyd-Steinberg"
 
 #: src/main/print-escp2.c:2360 src/main/print-escp2.c:2363
 msgid "360 x 90 DPI Fast Economy Draft"
-msgstr "360 =D7 90 DPI snabbt och ekonomiskt utkast"
+msgstr "360 × 90 DPI snabbt och ekonomiskt utkast"
 
 #: src/main/print-escp2.c:2366 src/main/print-escp2.c:2369
 msgid "360 x 120 DPI Economy Draft"
-msgstr "360 =D7 120 DPI ekonomiskt utkast"
+msgstr "360 × 120 DPI ekonomiskt utkast"
 
 #: src/main/print-escp2.c:2372 src/main/print-escp2.c:2375
 msgid "180 DPI Economy Draft"
@@ -191,11 +191,11 @@ msgstr "180 DPI ekonomiskt utkast"
 
 #: src/main/print-escp2.c:2378 src/main/print-escp2.c:2381
 msgid "360 x 240 DPI Draft"
-msgstr "360 =D7 240 DPI utkast"
+msgstr "360 × 240 DPI utkast"
 
 #: src/main/print-escp2.c:2384 src/main/print-escp2.c:2387
 msgid "360 x 180 DPI Draft"
-msgstr "360 =D7 180 DPI utkast"
+msgstr "360 × 180 DPI utkast"
 
 #: src/main/print-escp2.c:2390 src/main/print-escp2.c:2398
 msgid "360 DPI"
@@ -207,19 +207,19 @@ msgstr "360 DPI enkelriktad"
 
 #: src/main/print-escp2.c:2394
 msgid "360 DPI Microweave"
-msgstr "360 DPI mikrov=E4v"
+msgstr "360 DPI mikroväv"
 
 #: src/main/print-escp2.c:2396
 msgid "360 DPI Microweave Unidirectional"
-msgstr "360 DPI enkelriktad mikrov=E4v"
+msgstr "360 DPI enkelriktad mikroväv"
 
 #: src/main/print-escp2.c:2402
 msgid "360 DPI Full Overlap"
-msgstr "360 DPI helt =F6verlappande"
+msgstr "360 DPI helt överlappande"
 
 #: src/main/print-escp2.c:2404
 msgid "360 DPI Full Overlap Unidirectional"
-msgstr "360 DPI helt =F6verlappande och enkelriktad"
+msgstr "360 DPI helt överlappande och enkelriktad"
 
 #: src/main/print-escp2.c:2406
 msgid "360 DPI FOL2"
@@ -239,43 +239,43 @@ msgstr "360 DPI enkelriktad MW2"
 
 #: src/main/print-escp2.c:2415 src/main/print-escp2.c:2419
 msgid "720 x 360 DPI"
-msgstr "720 =D7 360 DPI"
+msgstr "720 × 360 DPI"
 
 #: src/main/print-escp2.c:2417 src/main/print-escp2.c:2421
 msgid "720 x 360 DPI Unidirectional"
-msgstr "720 =D7 360 DPI enkelriktad"
+msgstr "720 × 360 DPI enkelriktad"
 
 #: src/main/print-escp2.c:2423
 msgid "720 x 360 DPI Microweave"
-msgstr "720 =D7 360 DPI mikrov=E4v"
+msgstr "720 × 360 DPI mikroväv"
 
 #: src/main/print-escp2.c:2425
 msgid "720 x 360 DPI Microweave Unidirectional"
-msgstr "720 =D7 360 DPI enkelriktad mikrov=E4v"
+msgstr "720 × 360 DPI enkelriktad mikroväv"
 
 #: src/main/print-escp2.c:2427
 msgid "720 x 360 DPI FOL"
-msgstr "720 =D7 360 DPI FOL"
+msgstr "720 × 360 DPI FOL"
 
 #: src/main/print-escp2.c:2429
 msgid "720 x 360 DPI FOL Unidirectional"
-msgstr "720 =D7 360 DPI FOL enkelriktad"
+msgstr "720 × 360 DPI FOL enkelriktad"
 
 #: src/main/print-escp2.c:2431
 msgid "720 x 360 DPI FOL2"
-msgstr "720 =D7 360 DPI FOL2"
+msgstr "720 × 360 DPI FOL2"
 
 #: src/main/print-escp2.c:2433
 msgid "720 x 360 DPI FOL2 Unidirectional"
-msgstr "720 =D7 360 DPI FOL2 enkelriktad"
+msgstr "720 × 360 DPI FOL2 enkelriktad"
 
 #: src/main/print-escp2.c:2435
 msgid "720 x 360 DPI MW2"
-msgstr "720 =D7 360 DPI MW2"
+msgstr "720 × 360 DPI MW2"
 
 #: src/main/print-escp2.c:2437
 msgid "720 x 360 DPI MW2 Unidirectional"
-msgstr "720 =D7 360 DPI MW2 enkelriktad"
+msgstr "720 × 360 DPI MW2 enkelriktad"
 
 #: src/main/print-escp2.c:2440 src/main/print-escp2.c:2456
 msgid "720 DPI"
@@ -287,19 +287,19 @@ msgstr "720 DPI enkelriktad"
 
 #: src/main/print-escp2.c:2444
 msgid "720 DPI Microweave"
-msgstr "720 DPI mikrov=E4v"
+msgstr "720 DPI mikroväv"
 
 #: src/main/print-escp2.c:2446
 msgid "720 DPI Microweave Unidirectional"
-msgstr "720 DPI enkelriktad mikrov=E4v"
+msgstr "720 DPI enkelriktad mikroväv"
 
 #: src/main/print-escp2.c:2448
 msgid "720 DPI Full Overlap"
-msgstr "720 DPI helt =F6verlappande"
+msgstr "720 DPI helt överlappande"
 
 #: src/main/print-escp2.c:2450
 msgid "720 DPI Full Overlap Unidirectional"
-msgstr "720 DPI helt =F6verlappande och enkelriktad"
+msgstr "720 DPI helt överlappande och enkelriktad"
 
 #: src/main/print-escp2.c:2452
 msgid "720 DPI Four Pass"
@@ -311,74 +311,74 @@ msgstr "720 DPI enkelriktad fyrpass"
 
 #: src/main/print-escp2.c:2460
 msgid "720 DPI High Quality"
-msgstr "720 DPI h=F6g kvalitet"
+msgstr "720 DPI hög kvalitet"
 
 #: src/main/print-escp2.c:2462
 msgid "720 DPI High Quality Unidirectional"
-msgstr "720 DPI enkelriktad och h=F6g kvalitet"
+msgstr "720 DPI enkelriktad och hög kvalitet"
 
 #: src/main/print-escp2.c:2464
 msgid "720 DPI Highest Quality"
-msgstr "720 DPI h=F6gsta kvalitet"
+msgstr "720 DPI högsta kvalitet"
 
 #: src/main/print-escp2.c:2467 src/main/print-escp2.c:2483
 msgid "1440 x 720 DPI"
-msgstr "1440 =D7 720 DPI"
+msgstr "1440 × 720 DPI"
 
 #: src/main/print-escp2.c:2469 src/main/print-escp2.c:2485
 msgid "1440 x 720 DPI Unidirectional"
-msgstr "1440 =D7 720 DPI enkelriktad"
+msgstr "1440 × 720 DPI enkelriktad"
 
 #: src/main/print-escp2.c:2471
 msgid "1440 x 720 DPI Microweave"
-msgstr "1440 =D7 720 DPI mikrov=E4v"
+msgstr "1440 × 720 DPI mikroväv"
 
 #: src/main/print-escp2.c:2473
 msgid "1440 x 720 DPI Microweave Unidirectional"
-msgstr "1440 =D7 720 DPI enkelriktad mikrov=E4v"
+msgstr "1440 × 720 DPI enkelriktad mikroväv"
 
 #: src/main/print-escp2.c:2475
 msgid "1440 x 720 DPI FOL"
-msgstr "1440 =D7 720 DPI FOL"
+msgstr "1440 × 720 DPI FOL"
 
 #: src/main/print-escp2.c:2477
 msgid "1440 x 720 DPI FOL Unidirectional"
-msgstr "1440 =D7 720 DPI enkelriktad FOL"
+msgstr "1440 × 720 DPI enkelriktad FOL"
 
 #: src/main/print-escp2.c:2479
 msgid "1440 x 720 DPI Four Pass"
-msgstr "1440 =D7 720 DPI fyrpass"
+msgstr "1440 × 720 DPI fyrpass"
 
 #: src/main/print-escp2.c:2481
 msgid "1440 x 720 DPI Four Pass Unidirectional"
-msgstr "1440 =D7 720 DPI enkelriktad fyrpass"
+msgstr "1440 × 720 DPI enkelriktad fyrpass"
 
 #: src/main/print-escp2.c:2487
 msgid "1440 x 720 DPI Highest Quality"
-msgstr "1440 =D7 720 DPI h=F6gsta kvalitet"
+msgstr "1440 × 720 DPI högsta kvalitet"
 
 #: src/main/print-escp2.c:2490
 msgid "2880 x 720 DPI"
-msgstr "2880 =D7 720 DPI"
+msgstr "2880 × 720 DPI"
 
 #: src/main/print-escp2.c:2492
 msgid "2880 x 720 DPI Unidirectional"
-msgstr "2880 =D7 720 DPI enkelriktad"
+msgstr "2880 × 720 DPI enkelriktad"
 
 #.
 #. * Nothing thus far supports 1440 DPI vertical resolution
 #.
 #: src/main/print-escp2.c:2498
 msgid "1440 x 1440 DPI"
-msgstr "1440 =D7 1440 DPI"
+msgstr "1440 × 1440 DPI"
 
 #: src/main/print-escp2.c:2500
 msgid "1440 x 1440 DPI Highest Quality"
-msgstr "1440 =D7 1440 DPI h=F6gsta kvalitet"
+msgstr "1440 × 1440 DPI högsta kvalitet"
 
 #: src/main/print-escp2.c:2503
 msgid "2880 x 1440 DPI"
-msgstr "2880 =D7 1440 DPI"
+msgstr "2880 × 1440 DPI"
 
 #.
 #. * These resolutions have no practical use; they're neither as good as
@@ -387,23 +387,23 @@ msgstr "2880 =D7 1440 DPI"
 #.
 #: src/main/print-escp2.c:2511
 msgid "1440 x 360 DPI"
-msgstr "1440 =D7 360 DPI"
+msgstr "1440 × 360 DPI"
 
 #: src/main/print-escp2.c:2513
 msgid "1440 x 360 DPI Unidirectional"
-msgstr "1440 =D7 360 DPI enkelriktad"
+msgstr "1440 × 360 DPI enkelriktad"
 
 #: src/main/print-escp2.c:2515
 msgid "1440 x 360 DPI High Quality"
-msgstr "1440 =D7 360 DPI h=F6g kvalitet"
+msgstr "1440 × 360 DPI hög kvalitet"
 
 #: src/main/print-escp2.c:2517
 msgid "1440 x 360 DPI High Quality Uni"
-msgstr "1440 =D7 360 DPI enkelriktad h=F6g kvalitet"
+msgstr "1440 × 360 DPI enkelriktad hög kvalitet"
 
 #: src/main/print-escp2.c:2519
 msgid "1440 x 360 DPI Highest Quality"
-msgstr "1440 =D7 360 DPI h=F6gsta kvalitet"
+msgstr "1440 × 360 DPI högsta kvalitet"
 
 #: src/main/print-escp2.c:2767
 msgid "Plain Paper Fast Load"
@@ -432,11 +432,11 @@ msgstr "Matte-papper"
 
 #: src/main/print-escp2.c:2788 src/main/print-lexmark.c:805
 msgid "Inkjet Paper"
-msgstr "Bl=E4ckstr=E5lepapper"
+msgstr "Bläckstrålepapper"
 
 #: src/main/print-escp2.c:2791 src/main/print-lexmark.c:808
 msgid "Photo Quality Inkjet Paper"
-msgstr "Bl=E4ckstr=E5lepapper med fotokvalitet"
+msgstr "Bläckstrålepapper med fotokvalitet"
 
 #: src/main/print-escp2.c:2794 src/main/print-lexmark.c:811
 msgid "Photo Paper"
@@ -461,43 +461,40 @@ msgstr "Tungt Ilford-papper"
 # Jag tror inte detta ska skrivas samman, jfr snarlika meddelanden
 #: src/main/print-escp2.c:2827
 msgid "Seven Color Enhanced"
-msgstr "Sjuf=E4rgs f=F6rb=E4ttrad"
+msgstr "Sjufärgs förbättrad"
 
 # Jag tror inte detta ska skrivas samman, jfr snarlika meddelanden
 #: src/main/print-escp2.c:2828
 msgid "Six Color Enhanced Composite"
-msgstr "Sexf=E4rgs f=F6rb=E4ttrad sammansatt"
+msgstr "Sexfärgs förbättrad sammansatt"
 
 # Jag tror inte detta ska skrivas samman, jfr snarlika meddelanden
 #: src/main/print-escp2.c:2829 src/main/print-lexmark.c:563
 #: src/main/print-lexmark.c:638
 msgid "Six Color Photo"
-msgstr "Sexf=E4rgs foto"
+msgstr "Sexfärgs foto"
 
 # Jag tror inte detta ska skrivas samman, jfr snarlika meddelanden
 #: src/main/print-escp2.c:2830 src/main/print-lexmark.c:568
 #: src/main/print-lexmark.c:643
 msgid "Five Color Photo Composite"
-msgstr "Femf=E4rgsfoto sammansatt"
+msgstr "Femfärgsfoto sammansatt"
 
 # Jag tror inte detta ska skrivas samman, jfr snarlika meddelanden
 #. output_type   ncolors used_colors   pass_length  v_top_head_offset
-#. *                                                        h_catridge_of=
-fset
-#. *                                                           h_directio=
-n_offset
-#. *                                                               head_o=
-ffset
+#. *                                                        h_catridge_offset
+#. *                                                           h_direction_offset
+#. *                                                               head_offset
 #: src/main/print-escp2.c:2831 src/main/print-lexmark.c:553
 #: src/main/print-lexmark.c:628
 msgid "Four Color Standard"
-msgstr "Fyrf=E4rgs standard"
+msgstr "Fyrfärgs standard"
 
 # Jag tror inte detta ska skrivas samman, jfr snarlika meddelanden
 #: src/main/print-escp2.c:2832 src/main/print-lexmark.c:558
 #: src/main/print-lexmark.c:633
 msgid "Three Color Composite"
-msgstr "Tref=E4rgers sammansatt"
+msgstr "Trefärgers sammansatt"
 
 #: src/gimp/gimp_main_window.c:1616 src/main/print-escp2.c:3292
 #: src/main/print-pcl.c:198
@@ -508,11 +505,10 @@ msgstr "Standard"
 msgid "Roll Feed"
 msgstr "Rullmatning"
 
-#. name                                                    hres vres soft=
-w v_pass overs unidir resid
+#. name                                                    hres vres softw v_pass overs unidir resid
 #: src/main/print-lexmark.c:529 src/main/print-lexmark.c:610
 msgid "300 DPI x 600 DPI"
-msgstr "300 DPI =D7 600 DPI"
+msgstr "300 DPI × 600 DPI"
 
 #: src/main/print-lexmark.c:530 src/main/print-lexmark.c:611
 msgid "600 DPI"
@@ -520,7 +516,7 @@ msgstr "600 DPI"
 
 #: src/main/print-lexmark.c:531 src/main/print-lexmark.c:612
 msgid "600 DPI high quality"
-msgstr "600 DPI h=F6g kvalitet"
+msgstr "600 DPI hög kvalitet"
 
 #: src/main/print-lexmark.c:532 src/main/print-lexmark.c:613
 msgid "600 DPI Unidirectional"
@@ -532,11 +528,11 @@ msgstr "1200 DPI"
 
 #: src/main/print-lexmark.c:534 src/main/print-lexmark.c:615
 msgid "1200 DPI high quality"
-msgstr "1200 DPI h=F6g kvalitet"
+msgstr "1200 DPI hög kvalitet"
 
 #: src/main/print-lexmark.c:535 src/main/print-lexmark.c:616
 msgid "1200 DPI highest quality"
-msgstr "1200 DPI h=F6gsta kvalitet"
+msgstr "1200 DPI högsta kvalitet"
 
 #: src/main/print-lexmark.c:536 src/main/print-lexmark.c:617
 msgid "1200 DPI  Unidirectional"
@@ -544,15 +540,15 @@ msgstr "1200 DPI enkelriktad"
 
 #: src/main/print-lexmark.c:537
 msgid "2400 DPI x 1200 DPI"
-msgstr "2400 DPI =D7 1200 DPI"
+msgstr "2400 DPI × 1200 DPI"
 
 #: src/main/print-lexmark.c:538
 msgid "2400 DPI x 1200 DPI high quality"
-msgstr "2400 DPI =D7 1200 DPI h=F6g kvalitet"
+msgstr "2400 DPI × 1200 DPI hög kvalitet"
 
 #: src/main/print-lexmark.c:539
 msgid "2400 DPI x 1200 DPI highest quality"
-msgstr "2400 DPI =D7 1200 DPI h=F6gsta kvalitet"
+msgstr "2400 DPI × 1200 DPI högsta kvalitet"
 
 #: src/main/print-lexmark.c:541
 msgid "test print"
@@ -579,15 +575,14 @@ msgid "Tabloid"
 msgstr "Tabloid"
 
 #. US Tabloid (11 x 17 in)
-#: src/main/print-pcl.c:112 src/main/print-pcl.c:199 src/main/print-util.=
-c:565
+#: src/main/print-pcl.c:112 src/main/print-pcl.c:199 src/main/print-util.c:565
 msgid "Manual"
 msgstr "Manuell"
 
 #. US Manual/Statement (5.5 x 8.5 in)
 #: src/main/print-pcl.c:113
 msgid "13x19"
-msgstr "13=D719"
+msgstr "13×19"
 
 #. US 13x19/Super B (13 x 19 in)
 #: src/main/print-pcl.c:114 src/main/print-util.c:616
@@ -632,17 +627,17 @@ msgstr "A6"
 #. ISO/JIS A6 card
 #: src/main/print-pcl.c:122 src/main/print-util.c:553
 msgid "4x6"
-msgstr "4=D76"
+msgstr "4×6"
 
 #. US Index card (4 x 6 in)
 #: src/main/print-pcl.c:123 src/main/print-util.c:559
 msgid "5x8"
-msgstr "5=D78"
+msgstr "5×8"
 
 #. US Index card (5 x 8 in)
 #: src/main/print-pcl.c:124 src/main/print-util.c:551
 msgid "3x5"
-msgstr "3=D75"
+msgstr "3×5"
 
 #. US Index card (3 x 5 in)
 #: src/main/print-pcl.c:125
@@ -754,47 +749,47 @@ msgstr "Fack"
 
 #: src/main/print-pcl.c:209
 msgid "Optional Source"
-msgstr "Valfri k=E4lla"
+msgstr "Valfri källa"
 
 #: src/main/print-pcl.c:210
 msgid "Autoselect"
-msgstr "V=E4lj automatiskt"
+msgstr "Välj automatiskt"
 
 #: src/main/print-pcl.c:224
 msgid "150x150 DPI"
-msgstr "150=D7150 DPI"
+msgstr "150×150 DPI"
 
 #: src/main/print-pcl.c:225
 msgid "300x300 DPI"
-msgstr "300=D7300 DPI"
+msgstr "300×300 DPI"
 
 #: src/main/print-pcl.c:226
 msgid "600x300 DPI"
-msgstr "600=D7300 DPI"
+msgstr "600×300 DPI"
 
 #: src/main/print-pcl.c:227
 msgid "600x600 DPI monochrome"
-msgstr "600=D7600 DPI enf=E4rgad"
+msgstr "600×600 DPI enfärgad"
 
 #: src/main/print-pcl.c:228
 msgid "600x600 DPI"
-msgstr "600=D7600 DPI"
+msgstr "600×600 DPI"
 
 #: src/main/print-pcl.c:229
 msgid "1200x600 DPI"
-msgstr "1200=D7600 DPI"
+msgstr "1200×600 DPI"
 
 #: src/main/print-pcl.c:230
 msgid "2400x600 DPI"
-msgstr "2400=D7600 DPI"
+msgstr "2400×600 DPI"
 
 #: src/main/print-pcl.c:1535
 msgid "Color + Black Cartridges"
-msgstr "F=E4rgpatroner + svarta patroner"
+msgstr "Färgpatroner + svarta patroner"
 
 #: src/main/print-pcl.c:1536
 msgid "Color + Photo Cartridges"
-msgstr "F=E4rgpatroner + fotopatroner"
+msgstr "Färgpatroner + fotopatroner"
 
 #. Name of file or command to print to
 #: src/main/print-util.c:125 src/main/print-util.c:159
@@ -804,69 +799,69 @@ msgstr "ps2"
 
 #: src/main/print-util.c:555
 msgid "Epson 4x6 Photo Paper"
-msgstr "Epson 4=D76 fotopapper"
+msgstr "Epson 4×6 fotopapper"
 
 #: src/main/print-util.c:557
 msgid "5x7"
-msgstr "5=D77"
+msgstr "5×7"
 
 #: src/main/print-util.c:561
 msgid "6x8"
-msgstr "6=D78"
+msgstr "6×8"
 
 #: src/main/print-util.c:563
 msgid "8x10"
-msgstr "8=D710"
+msgstr "8×10"
 
 #. 5.5in x 8.5in
 #: src/main/print-util.c:567
 msgid "12x18"
-msgstr "12=D718"
+msgstr "12×18"
 
 #: src/main/print-util.c:569
 msgid "Super B 13x19"
-msgstr "Super B 13=D719"
+msgstr "Super B 13×19"
 
 #. Other common photographic paper sizes
 #: src/main/print-util.c:573
 msgid "8x12"
-msgstr "8=D712"
+msgstr "8×12"
 
 #. Sometimes used for 35 mm
 #: src/main/print-util.c:575
 msgid "11x14"
-msgstr "11=D714"
+msgstr "11×14"
 
 #: src/main/print-util.c:577
 msgid "16x20"
-msgstr "16=D720"
+msgstr "16×20"
 
 #: src/main/print-util.c:579
 msgid "16x24"
-msgstr "16=D724"
+msgstr "16×24"
 
 #. 20x24 for 35 mm
 #: src/main/print-util.c:581
 msgid "20x24"
-msgstr "20=D724"
+msgstr "20×24"
 
 #: src/main/print-util.c:583
 msgid "20x30"
-msgstr "20=D730"
+msgstr "20×30"
 
 #. 24x30 for 35 mm
 #: src/main/print-util.c:585
 msgid "24x30"
-msgstr "24=D730"
+msgstr "24×30"
 
 #: src/main/print-util.c:587
 msgid "24x36"
-msgstr "24=D736"
+msgstr "24×36"
 
 #. Sometimes used for 35 mm
 #: src/main/print-util.c:589
 msgid "30x40"
-msgstr "30=D740"
+msgstr "30×40"
 
 #. International Paper Sizes (mostly taken from BS4000:1968)
 #.
@@ -1191,7 +1186,7 @@ msgstr "Crown Quarto"
 msgid "Large Crown Quarto"
 msgstr "Large crown quarto"
 
-# f=E5r plats
+# får plats
 #. 201mm x 258mm
 #: src/main/print-util.c:774
 msgid "Demy Quarto"
@@ -1245,12 +1240,12 @@ msgstr "Stor pingvinpocket"
 #. 148 x 200 mm
 #: src/main/print-util.c:804
 msgid "Japanese long envelope #3"
-msgstr "Japanskt l=E5ngt kuvert 3"
+msgstr "Japanskt långt kuvert 3"
 
 #. Japanese long envelope #3
 #: src/main/print-util.c:806
 msgid "Japanese long envelope #4"
-msgstr "Japanskt l=E5ngt kuvert 4"
+msgstr "Japanskt långt kuvert 4"
 
 #. Japanese long envelope #4
 #: src/main/print-util.c:808
@@ -1312,19 +1307,19 @@ msgstr "ISOLatin1"
 
 #: src/gimp/gimp_color_window.c:193
 msgid "Print Color Adjust"
-msgstr "Justera utskriftsf=E4rg"
+msgstr "Justera utskriftsfärg"
 
 #: src/gimp/gimp_color_window.c:197
 msgid "Set Defaults"
-msgstr "St=E4ll in standardv=E4rden"
+msgstr "Ställ in standardvärden"
 
 #: src/gimp/gimp_color_window.c:199
 msgid "Close"
-msgstr "St=E4ng"
+msgstr "Stäng"
 
 #: src/gimp/gimp_color_window.c:230
 msgid "Image preview"
-msgstr "F=F6rhandsgranskning av bild"
+msgstr "Förhandsgranskning av bild"
 
 #: src/gimp/gimp_color_window.c:240
 msgid "Brightness:"
@@ -1335,8 +1330,8 @@ msgid ""
 "Set the brightness of the print.\n"
 "0 is solid black, 2 is solid white"
 msgstr ""
-"St=E4ll in ljusstyrkan p=E5 utskriften.\n"
-"0 =E4r helt svart, 2 =E4r helt vitt"
+"Ställ in ljusstyrkan på utskriften.\n"
+"0 är helt svart, 2 är helt vitt"
 
 #: src/gimp/gimp_color_window.c:260
 msgid "Contrast:"
@@ -1344,7 +1339,7 @@ msgstr "Kontrast:"
 
 #: src/gimp/gimp_color_window.c:268
 msgid "Set the contrast of the print"
-msgstr "St=E4ll in kontrasten p=E5 utskriften"
+msgstr "Ställ in kontrasten på utskriften"
 
 #: src/gimp/gimp_color_window.c:279
 msgid "Cyan:"
@@ -1352,7 +1347,7 @@ msgstr "Cyan:"
 
 #: src/gimp/gimp_color_window.c:287
 msgid "Adjust the cyan balance of the print"
-msgstr "Justera cyanbalansen p=E5 utskriften"
+msgstr "Justera cyanbalansen på utskriften"
 
 #: src/gimp/gimp_color_window.c:298
 msgid "Magenta:"
@@ -1360,7 +1355,7 @@ msgstr "Magenta:"
 
 #: src/gimp/gimp_color_window.c:306
 msgid "Adjust the magenta balance of the print"
-msgstr "Justera magentabalansen p=E5 utskriften"
+msgstr "Justera magentabalansen på utskriften"
 
 #: src/gimp/gimp_color_window.c:317
 msgid "Yellow:"
@@ -1368,22 +1363,20 @@ msgstr "Gult:"
 
 #: src/gimp/gimp_color_window.c:325
 msgid "Adjust the yellow balance of the print"
-msgstr "Justera gulbalansen p=E5 utskriften"
+msgstr "Justera gulbalansen på utskriften"
 
 #: src/gimp/gimp_color_window.c:336
 msgid "Saturation:"
-msgstr "M=E4ttnad:"
+msgstr "Mättnad:"
 
 #: src/gimp/gimp_color_window.c:344
 msgid ""
 "Adjust the saturation (color balance) of the print\n"
-"Use zero saturation to produce grayscale output using color and black in=
-ks"
+"Use zero saturation to produce grayscale output using color and black inks"
 msgstr ""
-"Justera m=E4ttnaden (f=E4rgbalansen) p=E5 utskriften\n"
-"Anv=E4nd noll som m=E4ttnad f=F6r att skapa gr=E5skaleutdata med f=E4rgb=
-l=E4ck och svart "
-"bl=E4ck"
+"Justera mättnaden (färgbalansen) på utskriften\n"
+"Använd noll som mättnad för att skapa gråskaleutdata med färgbläck och svart "
+"bläck"
 
 #: src/gimp/gimp_color_window.c:357
 msgid "Density:"
@@ -1391,16 +1384,13 @@ msgstr "Intensitet:"
 
 #: src/gimp/gimp_color_window.c:365
 msgid ""
-"Adjust the density (amount of ink) of the print. Reduce the density if t=
-he "
+"Adjust the density (amount of ink) of the print. Reduce the density if the "
 "ink bleeds through the paper or smears; increase the density if black "
 "regions are not solid."
 msgstr ""
-"Justera intensiteten (m=E4ngden bl=E4ck) p=E5 utskriften. Minska intensi=
-teten om "
-"bl=E4cket tr=E4nger igenom pappret eller smetar; =F6ka intensiteten om s=
-varta "
-"omr=E5den inte =E4r helt svarta."
+"Justera intensiteten (mängden bläck) på utskriften. Minska intensiteten om "
+"bläcket tränger igenom pappret eller smetar; öka intensiteten om svarta "
+"områden inte är helt svarta."
 
 #: src/gimp/gimp_color_window.c:379
 msgid "Gamma:"
@@ -1409,43 +1399,34 @@ msgstr "Gamma:"
 #: src/gimp/gimp_color_window.c:387
 msgid ""
 "Adjust the gamma of the print. Larger values will produce a generally "
-"brighter print, while smaller values will produce a generally darker pri=
-nt. "
-"Black and white will remain the same, unlike with the brightness adjustm=
-ent."
+"brighter print, while smaller values will produce a generally darker print. "
+"Black and white will remain the same, unlike with the brightness adjustment."
 msgstr ""
-"Justera gammav=E4rdet p=E5 utskriften. St=F6rre v=E4rden kommer att skap=
-a en i "
-"allm=E4nhet ljusare utskrift, medan mindre v=E4rden kommer att skapa en =
-m=F6rkare "
-"utskrift. Svart och vitt kommer att vara samma, till skillnad fr=E5n d=E5=
- "
-"ljusstyrkeinst=E4llningen anv=E4nds."
+"Justera gammavärdet på utskriften. Större värden kommer att skapa en i "
+"allmänhet ljusare utskrift, medan mindre värden kommer att skapa en mörkare "
+"utskrift. Svart och vitt kommer att vara samma, till skillnad från då "
+"ljusstyrkeinställningen används."
 
 #: src/gimp/gimp_color_window.c:403
 msgid "Dither Algorithm:"
-msgstr "F=E4rgutj=E4mningsalgoritm:"
+msgstr "Färgutjämningsalgoritm:"
 
 #: src/gimp/gimp_color_window.c:411
 msgid ""
 "Choose the dither algorithm to be used.\n"
 "Adaptive Hybrid usually produces the best all-around quality.\n"
 "Ordered is faster and produces almost as good quality on photographs.\n"
-"Fast and Very Fast are considerably faster, and work well for text and l=
-ine "
+"Fast and Very Fast are considerably faster, and work well for text and line "
 "art.\n"
 "Hybrid Floyd-Steinberg generally produces inferior output."
 msgstr ""
-"V=E4lj vilken f=E4rgutj=E4mningsalgoritm som ska anv=E4ndas.\n"
-"Adaptiv hybrid producerar normalt b=E4st kvalitet i de flesta sammanhang=
-.\n"
-"Sorterad =E4r snabbare och producerar n=E4stan lika bra kvalitet p=E5 "
+"Välj vilken färgutjämningsalgoritm som ska användas.\n"
+"Adaptiv hybrid producerar normalt bäst kvalitet i de flesta sammanhang.\n"
+"Sorterad är snabbare och producerar nästan lika bra kvalitet på "
 "fotografier.\n"
-"Snabb och Mycket snabb =E4r avsev=E4rt snabbare, och fungerar bra med te=
-xt och "
+"Snabb och Mycket snabb är avsevärt snabbare, och fungerar bra med text och "
 "radgrafik.\n"
-"Hybrid Floyd-Steinberg producerar i allm=E4nhet mycket s=E4mre resultat.=
-"
+"Hybrid Floyd-Steinberg producerar i allmänhet mycket sämre resultat."
 
 #.
 #. * Create the main dialog
@@ -1465,7 +1446,7 @@ msgid ""
 "Save Settings"
 msgstr ""
 "Skriv ut och\n"
-"spara inst=E4llningar"
+"spara inställningar"
 
 #: src/gimp/gimp_main_window.c:340
 msgid ""
@@ -1473,7 +1454,7 @@ msgid ""
 "Settings"
 msgstr ""
 "Spara\n"
-"inst=E4llningar"
+"inställningar"
 
 #: src/gimp/gimp_main_window.c:342
 msgid "Print"
@@ -1486,7 +1467,7 @@ msgstr "Avbryt"
 
 #: src/gimp/gimp_main_window.c:383
 msgid "Preview"
-msgstr "F=F6rhandsgranskning"
+msgstr "Förhandsgranskning"
 
 #: src/gimp/gimp_main_window.c:407
 msgid ""
@@ -1494,30 +1475,23 @@ msgid ""
 "Click and drag with the primary button to position the image.\n"
 "Click and drag with the second button to move the image with finer "
 "precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units=
- of "
+"Click and drag with the third (middle) button to move the image in units of "
 "the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the im=
-age "
+"Holding down the shift key while clicking and dragging constrains the image "
 "to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will ret=
-urn "
+"If you click another button while dragging the mouse, the image will return "
 "to its original position."
 msgstr ""
-"Positionera bilden p=E5 sidan.\n"
-"Klicka och dra med huvudknappen f=F6r att positionera bilden.\n"
-"Klicka och dra med den andra knappen f=F6r att flytta bilden med finare =
-"
+"Positionera bilden på sidan.\n"
+"Klicka och dra med huvudknappen för att positionera bilden.\n"
+"Klicka och dra med den andra knappen för att flytta bilden med finare "
 "precision; varje flyttenhet flyttar bilden med en punkt (1/72\")\n"
-"Klicka och dra med den tredje (mittersta) musknappen f=F6r att flytta bi=
-lden i "
+"Klicka och dra med den tredje (mittersta) musknappen för att flytta bilden i "
 "enheter av bildstorleken.\n"
-"Att h=E5lla ned skifttangenten vid klickande och dragande begr=E4nsar fl=
-ytten "
-"till r=F6relse i endast horisontell och vertikal led.\n"
-"Om du klickar n=E5gon annan knapp under tiden du drar med musen kommer b=
-ilden "
-"att =E5terg=E5 till sin ursprungliga position."
+"Att hålla ned skifttangenten vid klickande och dragande begränsar flytten "
+"till rörelse i endast horisontell och vertikal led.\n"
+"Om du klickar någon annan knapp under tiden du drar med musen kommer bilden "
+"att återgå till sin ursprungliga position."
 
 #: src/gimp/gimp_main_window.c:434
 msgid "Position"
@@ -1529,7 +1503,7 @@ msgstr "Automatik"
 
 #: src/gimp/gimp_main_window.c:454
 msgid "Portrait"
-msgstr "St=E5ende"
+msgstr "Stående"
 
 #: src/gimp/gimp_main_window.c:456
 msgid "Landscape"
@@ -1548,8 +1522,7 @@ msgid ""
 "Select the orientation: portrait, landscape, upside down, or seascape "
 "(upside down landscape)"
 msgstr ""
-"V=E4lj orientering: st=E5ende, liggande, uppochner eller liggande uppoch=
-ner"
+"Välj orientering: stående, liggande, uppochner eller liggande uppochner"
 
 #: src/gimp/gimp_main_window.c:469
 msgid "Orientation:"
@@ -1557,36 +1530,35 @@ msgstr "Orientering:"
 
 #: src/gimp/gimp_main_window.c:483
 msgid "Left:"
-msgstr "V=E4nster:"
+msgstr "Vänster:"
 
 #: src/gimp/gimp_main_window.c:487
 msgid "Distance from the left of the paper to the image"
-msgstr "Avst=E5nd fr=E5n v=E4nsterkanten p=E5 pappret till bilden"
+msgstr "Avstånd från vänsterkanten på pappret till bilden"
 
 #: src/gimp/gimp_main_window.c:496
 msgid "Top:"
-msgstr "=D6vre kant:"
+msgstr "Övre kant:"
 
 #: src/gimp/gimp_main_window.c:500
 msgid "Distance from the top of the paper to the image"
-msgstr "Avst=E5nd fr=E5n =F6verkanten p=E5 pappret till bilden"
+msgstr "Avstånd från överkanten på pappret till bilden"
 
 #: src/gimp/gimp_main_window.c:509
 msgid "Right:"
-msgstr "H=F6ger:"
+msgstr "Höger:"
 
 #: src/gimp/gimp_main_window.c:513
 msgid "Distance from the left of the paper to the right of the image"
-msgstr "Avst=E5nd fr=E5n v=E4nsterkanten p=E5 pappret till h=F6gerkanten =
-p=E5 bilden"
+msgstr "Avstånd från vänsterkanten på pappret till högerkanten på bilden"
 
 #: src/gimp/gimp_main_window.c:523
 msgid "Right Border:"
-msgstr "H=F6gerkant:"
+msgstr "Högerkant:"
 
 #: src/gimp/gimp_main_window.c:527
 msgid "Distance from the right of the paper to the image"
-msgstr "Avst=E5nd fr=E5n h=F6gerkanten p=E5 pappret till bilden"
+msgstr "Avstånd från högerkanten på pappret till bilden"
 
 #: src/gimp/gimp_main_window.c:537
 msgid "Bottom:"
@@ -1594,8 +1566,7 @@ msgstr "Nedre kant:"
 
 #: src/gimp/gimp_main_window.c:541
 msgid "Distance from the top of the paper to the bottom of the image"
-msgstr "Avst=E5nd fr=E5n =F6verkanten p=E5 pappret till nederkanten p=E5 =
-bilden"
+msgstr "Avstånd från överkanten på pappret till nederkanten på bilden"
 
 #: src/gimp/gimp_main_window.c:551
 msgid "Bottom Border:"
@@ -1603,7 +1574,7 @@ msgstr "Nederkant:"
 
 #: src/gimp/gimp_main_window.c:555
 msgid "Distance from the bottom of the paper to the image"
-msgstr "Avst=E5nd fr=E5n nederkanten p=E5 pappret till bilden"
+msgstr "Avstånd från nederkanten på pappret till bilden"
 
 #: src/gimp/gimp_main_window.c:572
 msgid "Center:"
@@ -1615,15 +1586,15 @@ msgstr "Vertikalt"
 
 #: src/gimp/gimp_main_window.c:581
 msgid "Center the image vertically on the paper"
-msgstr "Centrera bilden vertikalt p=E5 pappret"
+msgstr "Centrera bilden vertikalt på pappret"
 
 #: src/gimp/gimp_main_window.c:587
 msgid "Both"
-msgstr "B=E5de och"
+msgstr "Både och"
 
 #: src/gimp/gimp_main_window.c:592
 msgid "Center the image on the paper"
-msgstr "Centrera bilden p=E5 pappret"
+msgstr "Centrera bilden på pappret"
 
 #: src/gimp/gimp_main_window.c:599
 msgid "Horizontally"
@@ -1631,7 +1602,7 @@ msgstr "Horisontellt"
 
 #: src/gimp/gimp_main_window.c:604
 msgid "Center the image horizontally on the paper"
-msgstr "Centrera bilden horisontellt p=E5 pappret"
+msgstr "Centrera bilden horisontellt på pappret"
 
 #: src/gimp/gimp_main_window.c:620
 msgid "Setup Printer"
@@ -1651,7 +1622,7 @@ msgstr "Skrivarmodell:"
 
 #: src/gimp/gimp_main_window.c:660
 msgid "Select your printer model"
-msgstr "V=E4lj din skrivarmodell"
+msgstr "Välj din skrivarmodell"
 
 #.
 #. * PPD file.
@@ -1662,15 +1633,15 @@ msgstr "PPD-fil:"
 
 #: src/gimp/gimp_main_window.c:714
 msgid "Enter the correct PPD filename for your printer"
-msgstr "Ange r=E4tt PPD-filnamn f=F6r din skrivare"
+msgstr "Ange rätt PPD-filnamn för din skrivare"
 
 #: src/gimp/gimp_main_window.c:717
 msgid "Browse"
-msgstr "Bl=E4ddra"
+msgstr "Bläddra"
 
 #: src/gimp/gimp_main_window.c:723
 msgid "Choose the correct PPD filename for your printer"
-msgstr "V=E4lj r=E4tt PPD-filnamn f=F6r din skrivare"
+msgstr "Välj rätt PPD-filnamn för din skrivare"
 
 #.
 #. * Print command.
@@ -1681,15 +1652,12 @@ msgstr "Kommando:"
 
 #: src/gimp/gimp_main_window.c:746
 msgid ""
-"Enter the correct command to print to your printer. Note: Please do not =
-"
+"Enter the correct command to print to your printer. Note: Please do not "
 "remove the `-l' or `-oraw' from the command string, or printing will "
 "probably fail!"
 msgstr ""
-"Ange r=E4tt kommando f=F6r atyy skriva ut till din skrivare. Obs: Ta int=
-e bort "
-"\"-l\" eller \"-oraw\" fr=E5n kommandostr=E4ngen. Om du g=F6r detta komm=
-er "
+"Ange rätt kommando för atyy skriva ut till din skrivare. Obs: Ta inte bort "
+"\"-l\" eller \"-oraw\" från kommandosträngen. Om du gör detta kommer "
 "utskriften troligtvis att misslyckas!"
 
 #.
@@ -1724,16 +1692,14 @@ msgstr "Om Gimp-Print "
 
 #: src/gimp/gimp_main_window.c:884
 msgid "Printer Settings"
-msgstr "Skrivarinst=E4llningar"
+msgstr "Skrivarinställningar"
 
 #: src/gimp/gimp_main_window.c:897
 msgid ""
-"Select the name of the printer (not the type, or model, of printer) that=
- you "
+"Select the name of the printer (not the type, or model, of printer) that you "
 "wish to print to"
 msgstr ""
-"V=E4lj namnet p=E5 skrivaren (inte skrivarens typ eller modell) som du v=
-ill "
+"Välj namnet på skrivaren (inte skrivarens typ eller modell) som du vill "
 "skriva ut till"
 
 #.
@@ -1745,12 +1711,10 @@ msgstr "Konfigurera skrivare..."
 
 #: src/gimp/gimp_main_window.c:919
 msgid ""
-"Choose the printer model, PPD file, and command that is used to print to=
- "
+"Choose the printer model, PPD file, and command that is used to print to "
 "this printer"
 msgstr ""
-"V=E4lj den skrivarmodell, PPD-fil och kommando som anv=E4nds f=F6r att s=
-kriva ut "
+"Välj den skrivarmodell, PPD-fil och kommando som används för att skriva ut "
 "till denna skrivare"
 
 #.
@@ -1765,13 +1729,12 @@ msgid ""
 "Define a new logical printer. This can be used to name a collection of "
 "settings that you wish to remember for future use."
 msgstr ""
-"Ange en ny logisk skrivare. Detta kan anv=E4ndas f=F6r att namnge en sam=
-ling "
-"inst=E4llningar som du vill komma ih=E5g f=F6r framtida anv=E4ndning."
+"Ange en ny logisk skrivare. Detta kan användas för att namnge en samling "
+"inställningar som du vill komma ihåg för framtida användning."
 
 #: src/gimp/gimp_main_window.c:957
 msgid "Size of paper that you wish to print to"
-msgstr "Storlek p=E5 pappret som du vill skriva ut till"
+msgstr "Storlek på pappret som du vill skriva ut till"
 
 #: src/gimp/gimp_main_window.c:960
 msgid "Media Size:"
@@ -1787,15 +1750,15 @@ msgstr "Bredd:"
 
 #: src/gimp/gimp_main_window.c:983
 msgid "Width of the paper that you wish to print to"
-msgstr "Bredd p=E5 pappret som du vill skriva ut till"
+msgstr "Bredd på pappret som du vill skriva ut till"
 
 #: src/gimp/gimp_main_window.c:989 src/gimp/gimp_main_window.c:1201
 msgid "Height:"
-msgstr "H=F6jd:"
+msgstr "Höjd:"
 
 #: src/gimp/gimp_main_window.c:1000
 msgid "Height of the paper that you wish to print to"
-msgstr "H=F6jd p=E5 pappret som du vill skriva ut till"
+msgstr "Höjd på pappret som du vill skriva ut till"
 
 #: src/gimp/gimp_main_window.c:1016
 msgid "Type of media you're printing to"
@@ -1807,27 +1770,27 @@ msgstr "Mediatyp:"
 
 #: src/gimp/gimp_main_window.c:1032
 msgid "Source (input slot) of media you're printing to"
-msgstr "K=E4lla (inmatningsfack) med media som du skriver ut till"
+msgstr "Källa (inmatningsfack) med media som du skriver ut till"
 
 #: src/gimp/gimp_main_window.c:1035
 msgid "Media Source:"
-msgstr "Mediak=E4lla:"
+msgstr "Mediakälla:"
 
 #: src/gimp/gimp_main_window.c:1048
 msgid "Type of ink in the printer"
-msgstr "Typ av bl=E4ck i skrivaren"
+msgstr "Typ av bläck i skrivaren"
 
 #: src/gimp/gimp_main_window.c:1051
 msgid "Ink Type:"
-msgstr "Bl=E4cktyp:"
+msgstr "Bläcktyp:"
 
 #: src/gimp/gimp_main_window.c:1064
 msgid "Resolution and quality of the print"
-msgstr "Uppl=F6sning och kvalitet p=E5 utskriften"
+msgstr "Upplösning och kvalitet på utskriften"
 
 #: src/gimp/gimp_main_window.c:1067
 msgid "Resolution:"
-msgstr "Uppl=F6sning:"
+msgstr "Upplösning:"
 
 #: src/gimp/gimp_main_window.c:1083
 msgid "Size"
@@ -1839,16 +1802,14 @@ msgstr "Skalning:"
 
 #: src/gimp/gimp_main_window.c:1109
 msgid "Set the scale (size) of the image"
-msgstr "=C4ndra skalningen (storleken) p=E5 bilden"
+msgstr "Ändra skalningen (storleken) på bilden"
 
 #: src/gimp/gimp_main_window.c:1142
 msgid ""
-"Select whether scaling is measured as percent of available page size or =
-"
+"Select whether scaling is measured as percent of available page size or "
 "number of output dots per inch"
 msgstr ""
-"V=E4lj huruvida skalning m=E4ts i procent av tillg=E4nglig sidstorlek el=
-ler antal "
+"Välj huruvida skalning mäts i procent av tillgänglig sidstorlek eller antal "
 "utdatapunkter per tum"
 
 #: src/gimp/gimp_main_window.c:1147
@@ -1857,7 +1818,7 @@ msgstr "Procent"
 
 #: src/gimp/gimp_main_window.c:1154
 msgid "Scale the print to the size of the page"
-msgstr "Skala utskriften till storleken p=E5 sidan"
+msgstr "Skala utskriften till storleken på sidan"
 
 #: src/gimp/gimp_main_window.c:1160
 msgid "PPI"
@@ -1869,11 +1830,11 @@ msgstr "Skala utskriften till antalet punkter per tum"
 
 #: src/gimp/gimp_main_window.c:1192
 msgid "Set the width of the print"
-msgstr "St=E4ll in bredden p=E5 utskriften"
+msgstr "Ställ in bredden på utskriften"
 
 #: src/gimp/gimp_main_window.c:1205
 msgid "Set the height of the print"
-msgstr "St=E4ll in bredden p=E5 utskriften"
+msgstr "Ställ in bredden på utskriften"
 
 #: src/gimp/gimp_main_window.c:1225
 msgid "Units:"
@@ -1881,7 +1842,7 @@ msgstr "Enheter:"
 
 #: src/gimp/gimp_main_window.c:1230
 msgid "Select the base unit of measurement for printing"
-msgstr "V=E4lj grundenheten f=F6r utskrift"
+msgstr "Välj grundenheten för utskrift"
 
 #: src/gimp/gimp_main_window.c:1233
 msgid "Inch"
@@ -1889,7 +1850,7 @@ msgstr "tum"
 
 #: src/gimp/gimp_main_window.c:1240
 msgid "Set the base unit of measurement to inches"
-msgstr "St=E4ll in grundenheten till tum"
+msgstr "Ställ in grundenheten till tum"
 
 #: src/gimp/gimp_main_window.c:1246
 msgid "cm"
@@ -1897,7 +1858,7 @@ msgstr "cm"
 
 #: src/gimp/gimp_main_window.c:1252
 msgid "Set the base unit of measurement to centimetres"
-msgstr "St=E4ll in grundenheten till centimeter"
+msgstr "Ställ in grundenheten till centimeter"
 
 #.
 #. * The "image size" button
@@ -1907,16 +1868,16 @@ msgid ""
 "Use Original\n"
 "Image Size"
 msgstr ""
-"Anv=E4nd\n"
+"Använd\n"
 "originalbildstorlek"
 
 #: src/gimp/gimp_main_window.c:1268
 msgid "Set the print size to the size of the image"
-msgstr "St=E4ll in storleken p=E5 utskriften till storleken p=E5 sidan"
+msgstr "Ställ in storleken på utskriften till storleken på sidan"
 
 #: src/gimp/gimp_main_window.c:1292
 msgid "Image / Output Settings"
-msgstr "Bild-/utdatainst=E4llningar"
+msgstr "Bild-/utdatainställningar"
 
 #: src/gimp/gimp_main_window.c:1305
 msgid "Image Type:"
@@ -1924,7 +1885,7 @@ msgstr "Bildtyp:"
 
 #: src/gimp/gimp_main_window.c:1310
 msgid "Optimize the output for the type of image being printed"
-msgstr "Optimera utdata f=F6r den typ av bild som skrivs ut"
+msgstr "Optimera utdata för den typ av bild som skrivs ut"
 
 #: src/gimp/gimp_main_window.c:1314
 msgid "Line Art"
@@ -1932,15 +1893,15 @@ msgstr "Linjegrafik"
 
 #: src/gimp/gimp_main_window.c:1321
 msgid "Fastest and brightest color for text and line art"
-msgstr "Snabbaste och ljusaste f=E4rg f=F6r text och linjegrafik"
+msgstr "Snabbaste och ljusaste färg för text och linjegrafik"
 
 #: src/gimp/gimp_main_window.c:1328
 msgid "Solid Colors"
-msgstr "Enstaka f=E4rger"
+msgstr "Enstaka färger"
 
 #: src/gimp/gimp_main_window.c:1335
 msgid "Best for images dominated by regions of solid color"
-msgstr "B=E4st f=F6r bilder som domineras av enf=E4rgade omr=E5den"
+msgstr "Bäst för bilder som domineras av enfärgade områden"
 
 #: src/gimp/gimp_main_window.c:1343
 msgid "Photograph"
@@ -1948,12 +1909,10 @@ msgstr "Fotografi"
 
 #: src/gimp/gimp_main_window.c:1351
 msgid ""
-"Slowest, but most accurate and smoothest color for continuous tone image=
-s "
+"Slowest, but most accurate and smoothest color for continuous tone images "
 "and photographs"
 msgstr ""
-"L=E5ngsammast, men noggrannast och mjukast f=E4rg f=F6r bilder med f=E4r=
-gskalor och "
+"Långsammast, men noggrannast och mjukast färg för bilder med färgskalor och "
 "fotografier"
 
 #: src/gimp/gimp_main_window.c:1377
@@ -1962,23 +1921,23 @@ msgstr "Utdatatyp:"
 
 #: src/gimp/gimp_main_window.c:1382
 msgid "Select the desired output type"
-msgstr "V=E4lj =F6nskad typ av utdata"
+msgstr "Välj önskad typ av utdata"
 
 #: src/gimp/gimp_main_window.c:1385
 msgid "Color"
-msgstr "F=E4rg"
+msgstr "Färg"
 
 #: src/gimp/gimp_main_window.c:1391
 msgid "Color output"
-msgstr "F=E4rgutdata"
+msgstr "Färgutdata"
 
 #: src/gimp/gimp_main_window.c:1396
 msgid "Grayscale"
-msgstr "Gr=E5toner"
+msgstr "Gråtoner"
 
 #: src/gimp/gimp_main_window.c:1403
 msgid "Print in shades of gray using black ink"
-msgstr "Skriv ut i gr=E5toner genom att anv=E4nda svart bl=E4ck"
+msgstr "Skriv ut i gråtoner genom att använda svart bläck"
 
 #: src/gimp/gimp_main_window.c:1410
 msgid "Black and White"
@@ -1986,7 +1945,7 @@ msgstr "Svartvitt"
 
 #: src/gimp/gimp_main_window.c:1417
 msgid "Print in black and white (no color, and no shades of gray)"
-msgstr "Skriv ut i svartvitt (ingen f=E4rg och inga gr=E5toner)"
+msgstr "Skriv ut i svartvitt (ingen färg och inga gråtoner)"
 
 #.
 #. *  Color adjust button
@@ -1997,11 +1956,9 @@ msgstr "Justera utdata..."
 
 #: src/gimp/gimp_main_window.c:1435
 msgid ""
-"Adjust color balance, brightness, contrast, saturation, and dither algor=
-ithm"
+"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
 msgstr ""
-"Justera f=E4rgbalans, ljusstyrka, kontrast, m=E4ttnad och f=E4rgutj=E4mn=
-ingsalgoritm"
+"Justera färgbalans, ljusstyrka, kontrast, mättnad och färgutjämningsalgoritm"
 
 #: src/gimp/print-image-gimp.c:318
 msgid "Printing..."
@@ -2023,15 +1980,15 @@ msgstr "Fil"
 #~ msgstr "flse"
 
 #~ msgid "Center the image vertically on the paper!"
-#~ msgstr "Centrera bilden vertikalt p=E5 pappret!"
+#~ msgstr "Centrera bilden vertikalt på pappret!"
 
 #~ msgid "Center the image on the paper!"
-#~ msgstr "Centrera bilden p=E5 pappret!"
+#~ msgstr "Centrera bilden på pappret!"
 
 #~ msgid ""
 #~ "Right\n"
 #~ "Border:"
-#~ msgstr "H=F6gerkant:"
+#~ msgstr "Högerkant:"
 
 #~ msgid ""
 #~ "Bottom\n"
@@ -2039,13 +1996,14 @@ msgstr "Fil"
 #~ msgstr "Nederkant:"
 
 #~ msgid "Select the orientation of the image"
-#~ msgstr "V=E4lj bildens orientering"
+#~ msgstr "Välj bildens orientering"
 
 #~ msgid "Setup"
-#~ msgstr "Inst=E4llningar"
+#~ msgstr "Inställningar"
 
 #~ msgid "Scaling"
 #~ msgstr "Skalning"
 
 #~ msgid "1200 DPI Unidirectional"
 #~ msgstr "1200 DPI enkelriktad"
+
