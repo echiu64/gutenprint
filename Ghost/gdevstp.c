@@ -189,6 +189,7 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
   const printer_t *printer = NULL;
   uint stp_raster;
   byte *stp_row;
+  const papersize_t *p;
 
   stp_print_dbg("stp_print_page", pdev, &stp_data);
   code = 0;
@@ -221,6 +222,12 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
 
   stp_data.v.page_width = pdev->MediaSize[0];
   stp_data.v.page_height = pdev->MediaSize[1];
+  if ((p =
+       get_papersize_by_size(stp_data.v.page_height, stp_data.v.page_width)) !=
+      NULL)
+    strcpy(stp_data.v.media_size, p->name);
+  stp_print_dbg("stp_print_page", pdev, &stp_data);
+    
   theImage.dev = pdev;
   theImage.data = &stp_data;
   theImage.raster = stp_raster;
