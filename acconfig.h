@@ -26,6 +26,9 @@
 /* Package version*/
 #undef VERSION
 
+/* CUPS data directory */
+#undef CUPS_DATADIR
+
 /* Define if GNU ld is present */
 #undef HAVE_GNU_LD
 
