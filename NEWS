@@ -1,4 +1,4 @@
-Gimp-Print 4.3.17, released June 20, 2003, is a development release of
+Gimp-Print 4.3.18, released July 6, 2003, is a development release of
 this package.  Like all development releases, this version is
 considered unstable and should only be used by those individuals
 tolerant of the likelihood of problems.  Individuals desiring a stable
@@ -37,6 +37,23 @@ this package.
 
 Please read the README file for full instructions on installing this
 package.
+
+
+Gimp-Print 4.3.18 contains the following major changes over Gimp-Print
+4.3.17:
+
+1) A serious bug in the CUPS PPD files that was introduced in 4.3.17
+   is fixed.  It is essential that all CUPS users take this release.
+
+2) Various long-standing portability and compilation problems have
+   been fixed.
+
+3) The main header file (gimp-print.h) has been split into smaller
+   pieces.
+
+4) The British English (en_GB) translation has been updated.
+
+5) The Epson Stylus CX-3100 and CX-5100 are now supported.
 
 
 Gimp-Print 4.3.17 contains the following major changes over Gimp-Print
