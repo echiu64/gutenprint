@@ -37,7 +37,8 @@
 typedef enum {
   COLOR_MONOCHROME,
   COLOR_CMYK,
-  COLOR_CCMMYK
+  COLOR_CCMMYK,
+  COLOR_CCMMYYK
 } colormode_t;
 
 /*
@@ -48,9 +49,9 @@ typedef enum {
 static const int color_indices[16] = { 0, 1, 2, -1,
 				       3, -1, -1, -1,
 				       -1, 4, 5, -1,
-				       -1, -1, -1, -1 };
-static const int colors[6] = { 0, 1, 2, 4, 1, 2 };
-static const int densities[6] = { 0, 0, 0, 0, 1, 1 };
+				       6, -1, -1, -1 };
+static const int colors[7] = { 0, 1, 2, 4, 1, 2, 4};
+static const int densities[7] = { 0, 0, 0, 0, 1, 1, 1 };
 
 #ifndef WEAVETEST
 
@@ -58,8 +59,8 @@ static void
 escp2_write_microweave(FILE *, const unsigned char *,
 		       const unsigned char *, const unsigned char *,
 		       const unsigned char *, const unsigned char *,
-		       const unsigned char *, int, int, int, int, int,
-		       int, int);
+		       const unsigned char *, const unsigned char *,
+		       int, int, int, int, int, int, int);
 static void *initialize_weave(int jets, int separation, int oversample,
 			      int horizontal, int vertical,
 			      colormode_t colormode, int width, int linewidth,
@@ -71,7 +72,8 @@ static void
 escp2_write_weave(void *, FILE *, int, int, int, int, int, int, int,
 		  const unsigned char *c, const unsigned char *m,
 		  const unsigned char *y, const unsigned char *k,
-		  const unsigned char *C, const unsigned char *M);
+		  const unsigned char *C, const unsigned char *M,
+		  const unsigned char *DY);
 static void escp2_init_microweave(int);
 static void escp2_free_microweave(void);
 
@@ -886,9 +888,10 @@ typedef struct escp2_printer
 #define MODEL_HASBLACK_YES	0x00ull /* when it is also printing color? */
 #define MODEL_HASBLACK_NO	0x10ull /* Only the 1500 can't. */
 
-#define MODEL_6COLOR_MASK	0x20ull /* Is this a 6-color printer? */
-#define MODEL_6COLOR_NO		0x00ull
-#define MODEL_6COLOR_YES	0x20ull
+#define MODEL_COLOR_MASK	0x60ull /* Is this a 6-color printer? */
+#define MODEL_COLOR_4		0x00ull
+#define MODEL_COLOR_6		0x20ull
+#define MODEL_COLOR_7		0x40ull
 
 #define MODEL_GRAYMODE_MASK	0x80ull /* Does this printer support special */
 #define MODEL_GRAYMODE_NO	0x00ull /* fast black printing? */
@@ -929,7 +932,7 @@ static escp2_printer_t model_capabilities[] =
   /* 0: Stylus Color */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES 
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     1, 1, 1, 1, 720, 720, INCH(17 / 2), INCH(14), 14, 14, 9, 49, 1, 0,
@@ -941,7 +944,7 @@ static escp2_printer_t model_capabilities[] =
   /* 1: Stylus Color Pro/Pro XL/400/500 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO 
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 3, 48, 3, 720, 720, INCH(17 / 2), INCH(14), 14, 14, 0, 30, 1, 0,
@@ -953,7 +956,7 @@ static escp2_printer_t model_capabilities[] =
   /* 2: Stylus Color 1500 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_NO | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO 
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     1, 1, 1, 1, 720, 720, INCH(11), INCH(17), 14, 14, 9, 49, 1, 0,
@@ -965,7 +968,7 @@ static escp2_printer_t model_capabilities[] =
   /* 3: Stylus Color 600 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_4 | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 4, 32, 4, 720, 360, INCH(17 / 2), INCH(14), 8, 9, 0, 30, 1, 0,
@@ -977,7 +980,7 @@ static escp2_printer_t model_capabilities[] =
   /* 4: Stylus Color 800 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     64, 2, 64, 2, 720, 360, INCH(17 / 2), INCH(14), 8, 9, 9, 40, 1, 4,
@@ -989,7 +992,7 @@ static escp2_printer_t model_capabilities[] =
   /* 5: Stylus Color 850 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     64, 2, 128, 1, 720, 360, INCH(17 / 2), INCH(14), 9, 9, 9, 40, 1, 4,
@@ -1001,7 +1004,7 @@ static escp2_printer_t model_capabilities[] =
   /* 6: Stylus Color 1520 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     64, 2, 64, 2, 720, 360, INCH(17), INCH(55), 8, 9, 9, 40, 1, 4,
@@ -1015,7 +1018,7 @@ static escp2_printer_t model_capabilities[] =
   /* 7: Stylus Photo 700 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_YES | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_6 | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 4, 32, 4, 720, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 30, 1, 0,
@@ -1027,7 +1030,7 @@ static escp2_printer_t model_capabilities[] =
   /* 8: Stylus Photo EX */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_YES | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_6 | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 4, 32, 4, 720, 360, INCH(11), INCH(17), 9, 9, 0, 30, 1, 0,
@@ -1039,7 +1042,7 @@ static escp2_printer_t model_capabilities[] =
   /* 9: Stylus Photo */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_YES | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_6 | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO 
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 4, 32, 4, 720, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 30, 1, 0,
@@ -1056,7 +1059,7 @@ static escp2_printer_t model_capabilities[] =
   /* completely beyond me, but there you are... */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_4 | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES 
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     21, 4, 21, 4, 720, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
@@ -1068,7 +1071,7 @@ static escp2_printer_t model_capabilities[] =
   /* 11: Stylus Color 640 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_4 | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 4, 64, 2, 1440, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
@@ -1080,7 +1083,7 @@ static escp2_printer_t model_capabilities[] =
   /* 12: Stylus Color 740 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 3, 144, 1, 360, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
@@ -1092,7 +1095,7 @@ static escp2_printer_t model_capabilities[] =
   /* 13: Stylus Color 900 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     96, 2, 192, 1, 360, 180, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
@@ -1104,7 +1107,7 @@ static escp2_printer_t model_capabilities[] =
   /* 14: Stylus Photo 750 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
+     | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 3, 48, 3, 360, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
@@ -1116,7 +1119,7 @@ static escp2_printer_t model_capabilities[] =
   /* 15: Stylus Photo 1200 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
+     | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     48, 3, 48, 3, 360, 360, INCH(13), INCH(44), 9, 9, 0, 9, 1, 0,
@@ -1128,7 +1131,7 @@ static escp2_printer_t model_capabilities[] =
   /* 16: Stylus Color 860 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 3, 144, 1, 360, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
@@ -1140,7 +1143,7 @@ static escp2_printer_t model_capabilities[] =
   /* 17: Stylus Color 1160 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 3, 144, 1, 360, 360, INCH(13), INCH(44), 9, 9, 0, 9, 1, 0,
@@ -1152,7 +1155,7 @@ static escp2_printer_t model_capabilities[] =
   /* 18: Stylus Color 660 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_4 | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 4, 64, 2, 1440, 720, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 8,
@@ -1164,7 +1167,7 @@ static escp2_printer_t model_capabilities[] =
   /* 19: Stylus Color 760 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 3, 144, 1, 360, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
@@ -1176,7 +1179,7 @@ static escp2_printer_t model_capabilities[] =
   /* 20: Stylus Photo 720 (Australia) */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
+     | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 4, 32, 4, 360, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
@@ -1188,7 +1191,7 @@ static escp2_printer_t model_capabilities[] =
   /* 21: Stylus Color 480 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO 
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     15, 3, 15, 3, 360, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
@@ -1200,7 +1203,7 @@ static escp2_printer_t model_capabilities[] =
   /* 22: Stylus Photo 870 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
+     | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
     48, 3, 48, 3, 360, 360, INCH(17 / 2), INCH(44), 0, 0, 0, 9, 1, 0,
@@ -1212,7 +1215,7 @@ static escp2_printer_t model_capabilities[] =
   /* 23: Stylus Photo 1270 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
+     | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
     48, 3, 48, 3, 360, 360, INCH(13), INCH(44), 0, 0, 0, 9, 1, 0,
@@ -1224,7 +1227,7 @@ static escp2_printer_t model_capabilities[] =
   /* 24: Stylus Color 3000 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     64, 2, 64, 2, 720, 360, INCH(17), INCH(55), 8, 9, 9, 40, 1, 4,
@@ -1236,7 +1239,7 @@ static escp2_printer_t model_capabilities[] =
   /* 25: Stylus Color 670 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 4, 64, 2, 360, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
@@ -1248,7 +1251,7 @@ static escp2_printer_t model_capabilities[] =
   /* 26: Stylus Photo 2000P */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
+     | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 3, 144, 1, 360, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
@@ -1260,7 +1263,7 @@ static escp2_printer_t model_capabilities[] =
   /* 27: Stylus Pro 5000 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     64, 2, 64, 2, 360, 360, INCH(13), INCH(1200), 9, 9, 0, 9, 1, 0,
@@ -1272,7 +1275,7 @@ static escp2_printer_t model_capabilities[] =
   /* 28: Stylus Pro 7000 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     64, 2, 64, 2, 360, 360, INCH(24), INCH(1200), 9, 9, 0, 9, 1, 0,
@@ -1284,7 +1287,7 @@ static escp2_printer_t model_capabilities[] =
   /* 29: Stylus Pro 7500 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_SELECTABLE
-     | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     64, 2, 64, 2, 360, 360, INCH(24), INCH(1200), 9, 9, 0, 9, 1, 0,
@@ -1296,7 +1299,7 @@ static escp2_printer_t model_capabilities[] =
   /* 30: Stylus Pro 9000 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     64, 2, 64, 2, 360, 360, INCH(44), INCH(1200), 9, 9, 0, 9, 1, 0,
@@ -1308,7 +1311,7 @@ static escp2_printer_t model_capabilities[] =
   /* 31: Stylus Pro 9500 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_SELECTABLE
-     | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
+     | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     64, 2, 64, 2, 360, 360, INCH(44), INCH(1200), 9, 9, 0, 9, 1, 0,
@@ -1320,7 +1323,7 @@ static escp2_printer_t model_capabilities[] =
   /* 32: Stylus Color 777/680 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 3, 144, 1, 360, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
@@ -1332,7 +1335,7 @@ static escp2_printer_t model_capabilities[] =
   /* 33: Stylus Color 880 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 3, 144, 1, 360, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
@@ -1344,7 +1347,7 @@ static escp2_printer_t model_capabilities[] =
   /* 34: Stylus Color 980 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     96, 2, 192, 1, 360, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
@@ -1356,7 +1359,7 @@ static escp2_printer_t model_capabilities[] =
   /* 35: Stylus Photo 790 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
+     | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
     48, 3, 48, 3, 360, 360, INCH(17 / 2), INCH(44), 0, 0, 0, 9, 1, 0,
@@ -1799,7 +1802,7 @@ escp2_parameters(const printer_t *printer,	/* I - Printer model */
     }
   else if (strcmp(name, "InkType") == 0)
     {
-      if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_NO))
+      if (escp2_has_cap(model, MODEL_COLOR_MASK, MODEL_COLOR_4))
 	return NULL;
       else
 	{
@@ -2035,7 +2038,7 @@ escp2_set_margins(FILE *prn, escp_init_t *init)
 		      MODEL_VARIABLE_NORMAL)) &&
       init->use_softweave)
     {
-      if (escp2_has_cap(init->model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+      if (escp2_has_cap(init->model, MODEL_COLOR_MASK, MODEL_COLOR_6))
 	fprintf(prn, "\033(c\010%c%c%c%c%c%c%c%c%c", 0,
 		t & 0xff, t >> 8, (t >> 16) & 0xff, (t >> 24) & 0xff,
 		l & 0xff, l >> 8, (l >> 16) & 0xff, (l >> 24) & 0xff);
@@ -2160,9 +2163,10 @@ escp2_print(const printer_t *printer,		/* I - Model */
 		*black,		/* Black bitmap data */
 		*cyan,		/* Cyan bitmap data */
 		*magenta,	/* Magenta bitmap data */
+		*yellow,	/* Yellow bitmap data */
 		*lcyan,		/* Light cyan bitmap data */
 		*lmagenta,	/* Light magenta bitmap data */
-		*yellow;	/* Yellow bitmap data */
+		*dyellow;	/* Dark Yellow bitmap data */
   int		page_left,	/* Left margin of page */
 		page_right,	/* Right margin of page */
 		page_top,	/* Top of page */
@@ -2192,6 +2196,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   int		vertical_oversample = 1;
   int		unidirectional = 0;
   int		use_6color = 0;
+  int		use_7color = 0;
   const res_t 	*res;
   int		bits;
   void *	weave = NULL;
@@ -2208,10 +2213,19 @@ escp2_print(const printer_t *printer,		/* I - Model */
 
   memcpy(&nv, v, sizeof(vars_t));
 
-  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES) &&
+  if (escp2_has_cap(model, MODEL_COLOR_MASK, MODEL_COLOR_6) &&
       strcmp(ink_type, "Four Color Standard") != 0 &&
       nv.image_type != IMAGE_MONOCHROME)
     use_6color = 1;
+
+  if (escp2_has_cap(model, MODEL_COLOR_MASK, MODEL_COLOR_7) &&
+      nv.image_type != IMAGE_MONOCHROME)
+    {
+      if (strcmp(ink_type, "Six Color Photo") == 0)
+	use_6color = 1;
+      else if (strcmp(ink_type, "Seven Color Enhanced") == 0)
+	use_7color = 1;
+    }
 
   if (nv.image_type == IMAGE_MONOCHROME)
     {
@@ -2221,6 +2235,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
     }
   else if (output_type == OUTPUT_GRAY)
     colormode = COLOR_MONOCHROME;
+  else if (use_7color)
+    colormode = COLOR_CCMMYYK;
   else if (use_6color)
     colormode = COLOR_CCMMYK;
   else
@@ -2388,6 +2404,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
     lcyan    = NULL;
     lmagenta = NULL;
     yellow  = NULL;
+    dyellow = NULL;
   }
   else
   {
@@ -2399,12 +2416,23 @@ escp2_print(const printer_t *printer,		/* I - Model */
       black = malloc(length * bits);
     else
       black = NULL;
-    if (use_6color) {
-      lcyan = malloc(length * bits);
-      lmagenta = malloc(length * bits);
-    } else {
-      lcyan = NULL;
-      lmagenta = NULL;
+    switch (colormode)
+      {
+      case COLOR_CCMMYYK:
+	lcyan = malloc(length * bits);
+	lmagenta = malloc(length * bits);
+	dyellow = malloc(length * bits);
+	break;
+      case COLOR_CCMMYK:
+	lcyan = malloc(length * bits);
+	lmagenta = malloc(length * bits);
+	dyellow = NULL;
+	break;
+      default:
+	lcyan = NULL;
+	lmagenta = NULL;
+	dyellow = NULL;
+	break;
     }
   }
 
@@ -2446,7 +2474,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
     dither = init_dither(image_width, out_width, ydpi / xdpi, 1, &nv);
 
   dither_set_black_levels(dither, 1.0, 1.0, 1.0);
-  if (use_6color)
+  if (use_6color || use_7color)
     k_lower = .4 / bits + .1;
   else
     k_lower = .25 / bits;
@@ -2464,7 +2492,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   dither_set_black_upper(dither, k_upper);
   if (bits == 2)
     {
-      if (use_6color)
+      if (use_6color || use_7color)
 	dither_set_adaptive_divisor(dither, 8);
       else
 	dither_set_adaptive_divisor(dither, 16);
@@ -2472,7 +2500,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   else
     dither_set_adaptive_divisor(dither, 4);
 
-  inks = escp2_inks(model, resid, use_6color ? 6 : 4, bits);
+  inks = escp2_inks(model, resid, use_7color ? 7 : (use_6color ? 6 : 4), bits);
   if (inks)
     for (i = 0; i < NCOLORS; i++)
       if ((*inks)[i])
@@ -2481,7 +2509,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 
   if (bits == 2)
     {
-      if (use_6color)
+      if (use_6color || use_7color)
 	dither_set_transition(dither, .7);
       else
 	dither_set_transition(dither, .5);
@@ -2540,16 +2568,17 @@ escp2_print(const printer_t *printer,		/* I - Model */
       dither_black(out, y, dither, black, duplicate_line);
     else
       dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		  yellow, 0, black, duplicate_line);
+		  yellow, dyellow, black, duplicate_line);
     QUANT(2);
 
     if (use_softweave)
       escp2_write_weave(weave, prn, length, ydpi, model, out_width, left,
 			xdpi, physical_xdpi,
-			cyan, magenta, yellow, black, lcyan, lmagenta);
+			cyan, magenta, yellow, black, lcyan, lmagenta,
+			dyellow);
     else
       escp2_write_microweave(prn, black, cyan, magenta, yellow, lcyan,
-			     lmagenta, length, xdpi, ydpi, model,
+			     lmagenta, dyellow, length, xdpi, ydpi, model,
 			     out_width, left, bits);
     QUANT(3);
     errval += errmod;
@@ -2691,6 +2720,7 @@ escp2_write_microweave(FILE          *prn,	/* I - Print file or command */
 		       const unsigned char *y,	/* I - Output bitmap data */
 		       const unsigned char *lc,	/* I - Output bitmap data */
 		       const unsigned char *lm,	/* I - Output bitmap data */
+		       const unsigned char *dy,	/* I - Output bitmap data */
 		       int           length,	/* I - Length of bitmap data */
 		       int           xdpi,	/* I - Horizontal resolution */
 		       int           ydpi,	/* I - Vertical resolution */
@@ -2711,6 +2741,7 @@ escp2_write_microweave(FILE          *prn,	/* I - Print file or command */
   gsetactive |= escp2_do_microweave_pack(y, length, oversample, bits, 3);
   gsetactive |= escp2_do_microweave_pack(lm, length, oversample, bits, 4);
   gsetactive |= escp2_do_microweave_pack(lc, length, oversample, bits, 5);
+  gsetactive |= escp2_do_microweave_pack(dy, length, oversample, bits, 6);
   if (!gsetactive)
     {
       accumulated_spacing++;
@@ -2718,7 +2749,7 @@ escp2_write_microweave(FILE          *prn,	/* I - Print file or command */
     }
   for (i = 0; i < oversample; i++)
     {
-      for (j = 0; j < 6; j++)
+      for (j = 0; j < 7; j++)
 	{
 	  if (!microweave_setactive[j][i])
 	    continue;
@@ -2757,7 +2788,7 @@ escp2_write_microweave(FILE          *prn,	/* I - Print file or command */
 	    }
 	  if (j != last_color)
 	    {
-	      if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+	      if (!escp2_has_cap(model, MODEL_COLOR_MASK, MODEL_COLOR_4))
 		fprintf(prn, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
 	      else
 		fprintf(prn, "\033r%c", colors[j]);
@@ -3034,7 +3065,7 @@ typedef struct			/* Weave parameters for a specific pass */
 } pass_t;
 
 typedef union {			/* Offsets from the start of each line */
-  unsigned long v[6];		/* (really pass) */
+  unsigned long v[7];		/* (really pass) */
   struct {
     unsigned long k;
     unsigned long m;
@@ -3042,11 +3073,12 @@ typedef union {			/* Offsets from the start of each line */
     unsigned long y;
     unsigned long M;
     unsigned long C;
+    unsigned long Y;
   } p;
 } lineoff_t;
 
 typedef union {			/* Is this line active? */
-  char v[6];			/* (really pass) */
+  char v[7];			/* (really pass) */
   struct {
     char k;
     char m;
@@ -3054,6 +3086,7 @@ typedef union {			/* Is this line active? */
     char y;
     char M;
     char C;
+    char Y;
   } p;
 } lineactive_t;
 
@@ -3066,6 +3099,7 @@ typedef union {			/* Base pointers for each pass */
     unsigned char *y;
     unsigned char *M;
     unsigned char *C;
+    unsigned char *Y;
   } p;
 } linebufs_t;
 
@@ -3206,8 +3240,10 @@ initialize_weave(int jets,	/* Width of print head */
       sw->ncolors = 4;
       break;
     case COLOR_CCMMYK:
-    default:
       sw->ncolors = 6;
+      break;
+    case COLOR_CCMMYYK:
+      sw->ncolors = 7;
       break;
     }
 
@@ -3516,7 +3552,7 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	  if (!escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
 			     MODEL_VARIABLE_NORMAL))
 	    ;
-	  else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+	  else if (!escp2_has_cap(model, MODEL_COLOR_MASK, MODEL_COLOR_4))
 	    fprintf(prn, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
 	  else
 	    fprintf(prn, "\033r%c", colors[j]);
@@ -3677,7 +3713,8 @@ escp2_write_weave(void *        vsw,
 		  const unsigned char *y,
 		  const unsigned char *k,
 		  const unsigned char *C,
-		  const unsigned char *M)
+		  const unsigned char *M,
+		  const unsigned char *Y)
 {
   escp2_softweave_t *sw = (escp2_softweave_t *) vsw;
   static unsigned char *s[8];
@@ -3698,6 +3735,7 @@ escp2_write_weave(void *        vsw,
   cols[3] = y;
   cols[4] = M;
   cols[5] = C;
+  cols[6] = Y;
   if (!fold_buf)
     fold_buf = malloc(COMPBUFWIDTH);
   if (!comp_buf)
