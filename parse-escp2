@@ -20,6 +20,7 @@ while (<>) {
 	      "(\$", "VARIABLE",
 	      "(D", "VARIABLE",
 	      "(R", "VARIABLE",
+	      "(s", "VARIABLE",
 	      "\\", 2,
 	      "\$", 2,
 	      "(\\", "VARIABLE",
