@@ -47,7 +47,7 @@
 #include <gimp-print-internal.h>
 #include <gimp-print-intl-internal.h>
 
-#if (1)
+#if (0)
 #define DEBUG 1 
 #endif
 
