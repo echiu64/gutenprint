@@ -1748,6 +1748,10 @@ gimp_output_type_callback (GtkWidget *widget,
       stp_set_output_type(plist[plist_current].v, (gint) data);
       gimp_update_adjusted_thumbnail();
     }
+  if (widget == output_color)
+    gimp_set_color_sliders_active(TRUE);
+  else
+    gimp_set_color_sliders_active(FALSE);
   gimp_preview_update ();
 }
 
