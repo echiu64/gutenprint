@@ -30,6 +30,7 @@
 #include <gimp-print/gimp-print.h>
 #include "gimp-print-internal.h"
 #include <math.h>
+#include <string.h>
 
 #ifdef __GNUC__
 #define inline __inline__
@@ -148,6 +149,46 @@ stp_dither_matrix_shear(dither_matrix_t *mat, int x_shear, int y_shear)
       MATRIX_POINT(mat->matrix, i, j, mat->x_size, mat->y_size) =
 	MATRIX_POINT(tmp, i * (y_shear + 1), j, mat->x_size, mat->y_size);
   stp_free(tmp);
+}
+
+int
+stp_dither_matrix_validate_curve(const stp_curve_t curve)
+{
+  double low, high;
+  stp_curve_get_bounds(curve, &low, &high);
+  if (low < 0 || high > 65535)
+    return 0;
+  if (!stp_curve_get_point(curve, 0, &low))
+    return 0;
+  if (!stp_curve_get_point(curve, 1, &high))
+    return 0;
+  if (low * high != stp_curve_count_points(curve) - 2)
+    return 0;
+  return 1;
+}
+
+void
+stp_dither_matrix_init_from_curve(dither_matrix_t *mat,
+				  const stp_curve_t curve)
+{
+  size_t count;
+  const unsigned short *vec = stp_curve_get_ushort_data(curve, &count);
+  mat->base = vec[0];
+  mat->exp = 1;
+  mat->x_size = vec[0];
+  mat->y_size = vec[1];
+  mat->total_size = mat->x_size * mat->y_size;
+  mat->matrix = stp_malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
+  memcpy(mat->matrix, vec + 2,
+	 mat->x_size * mat->y_size * sizeof(unsigned short));
+  mat->last_x = mat->last_x_mod = 0;
+  mat->last_y = mat->last_y_mod = 0;
+  mat->index = 0;
+  mat->i_own = 1;
+  if (is_po2(mat->x_size))
+    mat->fast_mask = mat->x_size - 1;
+  else
+    mat->fast_mask = 0;
 }
 
 void

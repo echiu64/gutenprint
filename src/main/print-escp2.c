@@ -153,19 +153,40 @@ escp2_has_cap(int model, escp2_model_option_t feature,
 static t						\
 escp2_##f(int model, const stp_vars_t v)		\
 {							\
+  if (stp_check_int_parameter(v, "escp2_" #f))		\
+    return stp_get_int_parameter(v, "escp2_" #f);	\
   return (stp_escp2_model_capabilities[model].f);	\
 }
 
-#define DEF_MICROWEAVE_ACCESSOR(f, t)					     \
-static t								     \
-escp2_##f(int model, const stp_vars_t v)				     \
-{									     \
-  const res_t *res =							     \
-    escp2_find_resolution(model, v, stp_get_string_parameter(v, "Resolution")); \
-  if (res && !(res->softweave))						     \
-    return (stp_escp2_model_capabilities[model].m_##f);			     \
-  else									     \
-    return (stp_escp2_model_capabilities[model].f);			     \
+#define DEF_RAW_ACCESSOR(f, t)				\
+static t						\
+escp2_##f(int model, const stp_vars_t v)		\
+{							\
+  if (stp_check_raw_parameter(v, "escp2_" #f))		\
+    return stp_get_raw_parameter(v, "escp2_" #f);	\
+  return (stp_escp2_model_capabilities[model].f);	\
+}
+
+#define DEF_COMPOSITE_ACCESSOR(f, t)			\
+static t						\
+escp2_##f(int model, const stp_vars_t v)		\
+{							\
+  return (stp_escp2_model_capabilities[model].f);	\
+}
+
+#define DEF_MICROWEAVE_ACCESSOR(f, t)					\
+static t								\
+escp2_##f(int model, const stp_vars_t v)				\
+{									\
+  const res_t *res =							\
+    escp2_find_resolution(model, v,					\
+			  stp_get_string_parameter(v, "Resolution"));	\
+  if (stp_check_int_parameter(v, "escp2_" #f))				\
+    return stp_get_int_parameter(v, "escp2_" #f);			\
+  if (res && !(res->softweave))						\
+    return (stp_escp2_model_capabilities[model].m_##f);			\
+  else									\
+    return (stp_escp2_model_capabilities[model].f);			\
 }
 
 DEF_SIMPLE_ACCESSOR(max_hres, int)
@@ -198,12 +219,14 @@ DEF_SIMPLE_ACCESSOR(max_black_resolution, int)
 DEF_SIMPLE_ACCESSOR(zero_margin_offset, int)
 DEF_SIMPLE_ACCESSOR(extra_720dpi_separation, int)
 DEF_SIMPLE_ACCESSOR(physical_channels, int)
-DEF_SIMPLE_ACCESSOR(paperlist, const paperlist_t *)
-DEF_SIMPLE_ACCESSOR(reslist, const res_t *)
-DEF_SIMPLE_ACCESSOR(inklist, const inklist_t *)
-DEF_SIMPLE_ACCESSOR(input_slots, const input_slot_list_t *)
-DEF_SIMPLE_ACCESSOR(preinit_sequence, const init_sequence_t *)
-DEF_SIMPLE_ACCESSOR(postinit_remote_sequence, const init_sequence_t *)
+
+DEF_RAW_ACCESSOR(preinit_sequence, const stp_raw_t *)
+DEF_RAW_ACCESSOR(postinit_remote_sequence, const stp_raw_t *)
+
+DEF_COMPOSITE_ACCESSOR(paperlist, const paperlist_t *)
+DEF_COMPOSITE_ACCESSOR(reslist, const res_t *)
+DEF_COMPOSITE_ACCESSOR(inklist, const inklist_t *)
+DEF_COMPOSITE_ACCESSOR(input_slots, const input_slot_list_t *)
 
 DEF_MICROWEAVE_ACCESSOR(left_margin, unsigned)
 DEF_MICROWEAVE_ACCESSOR(right_margin, unsigned)
@@ -218,6 +241,8 @@ static int
 escp2_ink_type(int model, int resid, const stp_vars_t v)
 {
   int dotid = resid2dotid(resid);
+  if (stp_check_int_parameter(v, "escp2_ink_type"))
+    return stp_get_int_parameter(v, "escp2_ink_type");
   return stp_escp2_model_capabilities[model].dot_sizes[dotid];
 }
 
@@ -225,13 +250,17 @@ static double
 escp2_density(int model, int resid, const stp_vars_t v)
 {
   int dotid = resid2dotid(resid);
+  if (stp_check_float_parameter(v, "escp2_density"))
+    return stp_get_float_parameter(v, "escp2_density");
   return stp_escp2_model_capabilities[model].densities[dotid];
 }
 
-static double
+static int
 escp2_bits(int model, int resid, const stp_vars_t v)
 {
   int dotid = resid2dotid(resid);
+  if (stp_check_int_parameter(v, "escp2_bits"))
+    return stp_get_int_parameter(v, "escp2_bits");
   return stp_escp2_model_capabilities[model].bits[dotid];
 }
 
@@ -239,6 +268,8 @@ static double
 escp2_base_res(int model, int resid, const stp_vars_t v)
 {
   int dotid = resid2dotid(resid);
+  if (stp_check_float_parameter(v, "escp2_base_res"))
+    return stp_get_float_parameter(v, "escp2_base_res");
   return stp_escp2_model_capabilities[model].base_resolutions[dotid];
 }
 
@@ -573,9 +604,9 @@ escp2_reset_printer(const escp2_init_t *init)
    * Magic initialization string that's needed to take printer out of
    * packet mode.
    */
-  const init_sequence_t *inits = escp2_preinit_sequence(init->model, init->v);
+  const stp_raw_t *inits = escp2_preinit_sequence(init->model, init->v);
   if (inits)
-    stp_zfwrite(inits->data, inits->length, 1, init->v);
+    stp_zfwrite(inits->data, inits->bytes, 1, init->v);
 
   stp_send_command(init->v, "\033@", "");
 }
@@ -707,9 +738,9 @@ escp2_set_remote_sequence(const escp2_init_t *init)
 	{
 	  int divisor = escp2_base_separation(init->model, init->v) / 360;
 	  int height = init->page_true_height * 5 / divisor;
-	  if (init->input_slot->init_sequence.length)
+	  if (init->input_slot->init_sequence.bytes)
 	    stp_zfwrite(init->input_slot->init_sequence.data,
-			init->input_slot->init_sequence.length, 1, init->v);
+			init->input_slot->init_sequence.bytes, 1, init->v);
 	  switch (init->input_slot->roll_feed_cut_flags)
 	    {
 	    case ROLL_FEED_CUT_ALL:
@@ -878,18 +909,18 @@ escp2_deinit_printer(const escp2_init_t *init)
   stp_puts("\033@", init->v);	/* ESC/P2 reset */
   if (escp2_has_advanced_command_set(init->model, init->v) || init->input_slot)
     {
-      const init_sequence_t *deinit =
+      const stp_raw_t *deinit =
 	escp2_postinit_remote_sequence(init->model, init->v);
       stp_send_command(init->v, "\033(R", "bcs", 0, "REMOTE1");
-      if (init->input_slot && init->input_slot->deinit_sequence.length)
+      if (init->input_slot && init->input_slot->deinit_sequence.bytes)
 	stp_zfwrite(init->input_slot->deinit_sequence.data,
-		    init->input_slot->deinit_sequence.length, 1, init->v);
+		    init->input_slot->deinit_sequence.bytes, 1, init->v);
       /* Load settings from NVRAM */
       stp_send_command(init->v, "LD", "b");
 
       /* Magic deinit sequence reported by Simone Falsini */
       if (deinit)
-	stp_zfwrite(deinit->data, deinit->length, 1, init->v);
+	stp_zfwrite(deinit->data, deinit->bytes, 1, init->v);
       /* Exit remote mode */
       stp_send_command(init->v, "\033", "ccc", 0, 0, 0);
     }
@@ -1392,6 +1423,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
   * Send ESC/P2 initialization commands...
   */
   init.model = model;
+  init.v = nv;
   init.output_type = output_type;
   if (init.output_type == OUTPUT_MONOCHROME)
     init.output_type = OUTPUT_GRAY;
@@ -1430,7 +1462,6 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 
   init.horizontal_passes = horizontal_passes;
   init.bits = bits;
-  init.v = nv;
   init.inkname = ink_type;
   init.total_channels = total_channels;
   init.channel_limit = channel_limit;

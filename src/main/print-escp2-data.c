@@ -4093,16 +4093,16 @@ static const input_slot_t standard_roll_feed_input_slots[] =
     N_("Standard"),
     0,
     0,
-    { "IR\002\000\000\001EX\006\000\000\000\000\000\005\000", 16 },
-    { "IR\002\000\000\000", 6}
+    { 16, (char *) "IR\002\000\000\001EX\006\000\000\000\000\000\005\000" },
+    { 6, (char *) "IR\002\000\000\000"}
   },
   {
     "Roll",
     N_("Roll Feed"),
     1,
     0,
-    { "IR\002\000\000\001EX\006\000\000\000\000\000\005\001", 16 },
-    { "IR\002\000\000\002", 6 }
+    { 16, (char *) "IR\002\000\000\001EX\006\000\000\000\000\000\005\001" },
+    { 6, (char *) "IR\002\000\000\002" }
   }
 };
 
@@ -4119,24 +4119,24 @@ static const input_slot_t cutter_roll_feed_input_slots[] =
     N_("Standard"),
     0,
     0,
-    { "IR\002\000\000\001EX\006\000\000\000\000\000\005\000", 16 },
-    { "IR\002\000\000\000", 6}
+    { 16, (char *) "IR\002\000\000\001EX\006\000\000\000\000\000\005\000" },
+    { 6, (char *) "IR\002\000\000\000"}
   },
   {
     "RollCutPage",
     N_("Roll Feed (cut each page)"),
     1,
     1,
-    { "IR\002\000\000\001EX\006\000\000\000\000\000\005\001", 16 },
-    { "IR\002\000\000\002", 6 }
+    { 16, (char *) "IR\002\000\000\001EX\006\000\000\000\000\000\005\001" },
+    { 6, (char *) "IR\002\000\000\002" }
   },
   {
     "RollCutNone",
     N_("Roll Feed (do not cut)"),
     1,
     0,
-    { "IR\002\000\000\001EX\006\000\000\000\000\000\005\001", 16 },
-    { "IR\002\000\000\002", 6 }
+    { 16, (char *) "IR\002\000\000\001EX\006\000\000\000\000\000\005\001" },
+    { 6, (char *) "IR\002\000\000\002" }
   }
 };
 
@@ -4153,16 +4153,16 @@ static const input_slot_t pro_roll_feed_input_slots[] =
     N_("Standard"),
     0,
     0,
-    { "PP\003\000\000\002\000", 7 },
-    { "", 0 }
+    { 7, (char *) "PP\003\000\000\002\000" },
+    { 0, (char *) "" }
   },
   {
     "Roll",
     N_("Roll Feed"),
     1,
     0,
-    { "PP\003\000\000\003\000", 7 },
-    { "", 0 }
+    { 7, (char *) "PP\003\000\000\003\000" },
+    { 0, (char *) "" }
   }
 };
 
@@ -4179,32 +4179,32 @@ static const input_slot_t sp5000_input_slots[] =
     N_("Cut Sheet Bin 1"),
     0,
     0,
-    { "PP\003\000\000\001\001", 7 },
-    { "", 0 }
+    { 7, (char *) "PP\003\000\000\001\001" },
+    { 0, (char *) "" }
   },
   {
     "CutSheet2",
     N_("Cut Sheet Bin 2"),
     0,
     0,
-    { "PP\003\000\000\002\001", 7 },
-    { "", 0 }
+    { 7, (char *) "PP\003\000\000\002\001" },
+    { 0, (char *) "" }
   },
   {
     "CutSheetAuto",
     N_("Cut Sheet Autoselect"),
     0,
     0,
-    { "PP\003\000\000\001\377", 7 },
-    { "", 0 }
+    { 7, (char *) "PP\003\000\000\001\377" },
+    { 0, (char *) "" }
   },
   {
     "ManualSelect",
     N_("Manual Selection"),
     0,
     0,
-    { "PP\003\000\000\002\001", 7 },
-    { "", 0 }
+    { 7, (char *) "PP\003\000\000\002\001" },
+    { 0, (char *) "" }
   }
 };
 
@@ -4220,14 +4220,14 @@ static const input_slot_list_t default_input_slot_list =
   0,
 };
 
-static const init_sequence_t new_init_sequence =
+static const stp_raw_t new_init_sequence =
 {
-  "\0\0\0\033\001@EJL 1284.4\n@EJL     \n\033@", 29
+  29, (char *) "\0\0\0\033\001@EJL 1284.4\n@EJL     \n\033@"
 };
 
-static const init_sequence_t je_deinit_sequence =
+static const stp_raw_t je_deinit_sequence =
 {
-  "JE\001\000\000", 5
+  5, (char *) "JE\001\000\000"
 };
 
 #define INCH(x)		(72 * x)

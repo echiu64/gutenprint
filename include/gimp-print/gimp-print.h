@@ -613,7 +613,7 @@ extern stp_curve_type_t stp_curve_get_interpolation_type(const stp_curve_t curve
  * the bounds, the operation is not performed and FALSE is returned.  Count
  * (number of points) must be at least two.
  *
- * The number of points must not exceed 65536 (65535 for a wrap-mode curve);
+ * The number of points must not exceed 1048576.
  */
 extern int stp_curve_set_data(stp_curve_t curve, size_t count,
 			      const double *data);

@@ -79,6 +79,9 @@ extern void stp_dither_matrix_init_short(dither_matrix_t *mat, int x_size,
 					 int y_size,
 					 const unsigned short *array,
 					 int transpose, int prescaled);
+extern int stp_dither_matrix_validate_curve(const stp_curve_t curve);
+extern void stp_dither_matrix_init_from_curve(dither_matrix_t *mat,
+					      const stp_curve_t curve);
 extern void stp_dither_matrix_destroy(dither_matrix_t *mat);
 extern void stp_dither_matrix_clone(const dither_matrix_t *src,
 				    dither_matrix_t *dest,
@@ -141,6 +144,8 @@ extern void	stp_dither_set_iterated_matrix(void *vd, size_t edge,
 					       int x_shear, int y_shear);
 extern void	stp_dither_set_matrix(void *vd, const stp_dither_matrix_t *mat,
 				      int transpose, int x_shear, int y_shear);
+extern void	stp_dither_set_matrix_from_curve(void *vd,
+						 const stp_curve_t curve);
 extern void	stp_dither_set_transition(void *vd, double);
 extern void	stp_dither_set_density(void *vd, double);
 extern void	stp_dither_set_black_density(void *vd, double);

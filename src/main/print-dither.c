@@ -537,8 +537,21 @@ stp_dither_init(int in_width, int out_width, int image_bpp,
   d->adaptive_input_set = 0;
 
   if (d->dither_type == D_VERY_FAST)
-    stp_dither_set_iterated_matrix(d, 2, DITHER_FAST_STEPS, sq2, 0, 2, 4);
-  else
+    {
+      if (stp_check_int_parameter(v, "DitherVeryFastSteps"))
+	stp_dither_set_iterated_matrix
+	  (d, 2, stp_get_int_parameter(v, "DitherVeryFastSteps"), sq2, 0, 2,4);
+      else
+	stp_dither_set_iterated_matrix(d, 2, DITHER_FAST_STEPS, sq2, 0, 2, 4);
+    }
+  else if (stp_check_curve_parameter(v, "DitherMatrix") &&
+	   (stp_dither_matrix_validate_curve
+	    (stp_get_curve_parameter(v, "DitherMatrix"))))
+    {
+      stp_dither_set_matrix_from_curve
+	(d, stp_get_curve_parameter(v, "DitherMatrix"));
+    }
+  else	   
     {
       stp_dither_matrix_t *mat;
       int transposed = 0;
@@ -648,6 +661,15 @@ stp_dither_set_matrix(void *vd, const stp_dither_matrix_t *matrix,
 			   (const unsigned *)matrix->data,
 			   transposed, matrix->prescaled);
   postinit_matrix(d, x_shear, y_shear);
+}
+
+void
+stp_dither_set_matrix_from_curve(void *vd, const stp_curve_t curve)
+{
+  dither_t *d = (dither_t *) vd;
+  preinit_matrix(d);
+  stp_dither_matrix_init_from_curve(&(d->dither_matrix), curve);
+  postinit_matrix(d, 0, 0);
 }
 
 void
