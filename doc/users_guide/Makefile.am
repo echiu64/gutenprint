@@ -166,7 +166,7 @@ install-data-local: $(STANDARD_TARGETS)
 	  fi ; \
 	  if test -d $(HTMLDIR) ; then \
 	    cd $(HTMLDIR) ; \
-	  elif test -f $(srcdir)/$(HTMLDIR) ; then \
+	  elif test -d $(srcdir)/$(HTMLDIR) ; then \
 	    cd $(srcdir)/$(HTMLDIR) ; \
 	  else \
 	    exit 1 ; \
