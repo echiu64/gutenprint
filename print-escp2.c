@@ -31,6 +31,13 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.96  2000/02/25 02:22:37  rlk
+ *   1) Stylus Color 460 (really a variant 440, at least until I learn otherwise).
+ *
+ *   2) Major optimization for gs driver in particular: elide rows that are blank.
+ *
+ *   3) make variable dot size the default for those printers.
+ *
  *   Revision 1.95  2000/02/23 13:19:52  rlk
  *   Some minor fixes
  *
@@ -644,7 +651,7 @@ static model_cap_t model_capabilities[] =
    | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
 
   /* THIRD GENERATION PRINTERS */
-  /* 10: Stylus Color 440 */
+  /* 10: Stylus Color 440/460 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_NEW | MODEL_INIT_440
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720) | MODEL_COMMAND_1999
@@ -1263,7 +1270,7 @@ escp2_print(int       model,		/* I - Model */
 	}
     }
   if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
-      use_softweave && strcmp(ink_type, "Variable Dot Size") == 0)
+      use_softweave && strcmp(ink_type, "Single Dot Size") != 0)
     bits = 2;
   else
     bits = 1;
@@ -1655,7 +1662,7 @@ escp2_fold(const unsigned char *line,
 }
       
 
-static void
+static int
 escp2_pack(const unsigned char *line,
 	   int length,
 	   unsigned char *comp_buf,
@@ -1665,6 +1672,7 @@ escp2_pack(const unsigned char *line,
   unsigned char repeat;			/* Repeating char */
   int count;			/* Count of compressed bytes */
   int tcount;			/* Temporary count < 128 */
+  int active = 0;		/* Have we found data? */
 
   /*
    * Compress using TIFF "packbits" run-length encoding...
@@ -1684,6 +1692,8 @@ escp2_pack(const unsigned char *line,
 
       while (length > 0 && (line[-2] != line[-1] || line[-1] != line[0]))
 	{
+	  if (! active && (line[-2] || line[-1] || line[0]))
+	    active = 1;
 	  line ++;
 	  length --;
 	}
@@ -1717,6 +1727,8 @@ escp2_pack(const unsigned char *line,
 
       start  = line;
       repeat = line[0];
+      if (repeat)
+	active = 1;
 
       line ++;
       length --;
@@ -1743,6 +1755,7 @@ escp2_pack(const unsigned char *line,
 	  count    -= tcount;
 	}
     }
+  return active;
 }
 
 
@@ -1794,6 +1807,7 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
   unsigned char pack_buf[COMPBUFWIDTH];
   unsigned char	comp_buf[COMPBUFWIDTH],		/* Compression buffer */
     *comp_ptr;
+  int setactive = 1;
 
   /*
    * Don't send blank lines...
@@ -1803,12 +1817,14 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
     return;
 
   if (bits == 1)
-    escp2_pack(line, length, comp_buf, &comp_ptr);
+    setactive = escp2_pack(line, length, comp_buf, &comp_ptr);
   else
     {
       escp2_fold(line, length, pack_buf);
-      escp2_pack(pack_buf, length * bits, comp_buf, &comp_ptr);
+      setactive = escp2_pack(pack_buf, length * bits, comp_buf, &comp_ptr);
     }
+  if (!setactive)		/* Short circuit */
+    return;
 
   /*
    * Set the print head position.
@@ -2001,6 +2017,18 @@ typedef union {			/* Offsets from the start of each line */
   } p;
 } lineoff_t;
 
+typedef union {			/* Is this line active? */
+  char v[6];			/* (really pass) */
+  struct {
+    char k;
+    char m;
+    char c;
+    char y;
+    char M;
+    char C;
+  } p;
+} lineactive_t;
+
 typedef union {			/* Base pointers for each pass */
   unsigned char *v[6];
   struct {
@@ -2017,6 +2045,7 @@ typedef struct {
   unsigned char *linebufs;	/* Actual data buffers */
   linebufs_t *linebases;	/* Base address of each row buffer */
   lineoff_t *lineoffsets;	/* Offsets within each row buffer */
+  lineactive_t *lineactive;	/* Does this line have anything printed? */
   int *linecounts;		/* How many rows we've printed this pass */
   pass_t *passes;		/* Circular list of pass numbers */
   int last_pass_offset;		/* Starting row (offset from the start of */
@@ -2142,6 +2171,7 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses,
   sw->linebufs = malloc(sw->ncolors * (sw->horizontal_width / 8) * sw->vmod *
 			jets * sw->oversample * sw->bitwidth);
   sw->lineoffsets = malloc(sw->vmod * sizeof(lineoff_t) * sw->oversample);
+  sw->lineactive = malloc(sw->vmod * sizeof(lineactive_t) * sw->oversample);
   sw->linebases = malloc(sw->vmod * sizeof(linebufs_t) * sw->oversample);
   sw->passes = malloc(sw->vmod * sizeof(pass_t));
   sw->linecounts = malloc(sw->vmod * sizeof(int));
@@ -2171,6 +2201,7 @@ destroy_weave(void *vsw)
   free(sw->linecounts);
   free(sw->passes);
   free(sw->linebases);
+  free(sw->lineactive);
   free(sw->lineoffsets);
   free(sw->linebufs);
   free(vsw);
@@ -2270,6 +2301,14 @@ get_lineoffsets(const escp2_softweave_t *sw, int row, int subpass)
   return &(sw->lineoffsets[w.pass % sw->vmod]);
 }
 
+static lineactive_t *
+get_lineactive(const escp2_softweave_t *sw, int row, int subpass)
+{
+  weave_t w;
+  weave_parameters_by_row(sw, row, subpass, &w);
+  return &(sw->lineactive[w.pass % sw->vmod]);
+}
+
 static int *
 get_linecount(const escp2_softweave_t *sw, int row, int subpass)
 {
@@ -2298,6 +2337,12 @@ static lineoff_t *
 get_lineoffsets_by_pass(const escp2_softweave_t *sw, int pass)
 {
   return &(sw->lineoffsets[pass % sw->vmod]);
+}
+
+static lineactive_t *
+get_lineactive_by_pass(const escp2_softweave_t *sw, int pass)
+{
+  return &(sw->lineactive[pass % sw->vmod]);
 }
 
 static int *
@@ -2389,6 +2434,7 @@ initialize_row(const escp2_softweave_t *sw, int row, int width)
       if (w.physpassstart == row)
 	{
 	  lineoff_t *lineoffs = get_lineoffsets(sw, row, i);
+	  lineactive_t *lineactive = get_lineactive(sw, row, i);
 	  int *linecount = get_linecount(sw, row, i);
 	  int j;
 	  pass_t *pass = get_pass_by_row(sw, row, i);
@@ -2399,7 +2445,10 @@ initialize_row(const escp2_softweave_t *sw, int row, int width)
 	  pass->physpassend = w.physpassend;
 	  pass->subpass = i;
 	  for (j = 0; j < sw->ncolors; j++)
-	    lineoffs[0].v[j] = 0;
+	    {
+	      lineoffs[0].v[j] = 0;
+	      lineactive[0].v[j] = 0;
+	    }
 	  *linecount = 0;
 	  if (w.missingstartrows > 0)
 	    fillin_start_rows(sw, row, i, width, w.missingstartrows);
@@ -2418,6 +2467,7 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 {
   int j;
   lineoff_t *lineoffs = get_lineoffsets_by_pass(sw, passno);
+  lineactive_t *lineactive = get_lineactive_by_pass(sw, passno);
   const linebufs_t *bufs = get_linebases_by_pass(sw, passno);
   pass_t *pass = get_pass_by_pass(sw, passno);
   int *linecount = get_linecount_by_pass(sw, passno);
@@ -2438,7 +2488,7 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
     }
   for (j = 0; j < sw->ncolors; j++)
     {
-      if (lineoffs[0].v[j] == 0)
+      if (lineactive[0].v[j] == 0)
 	continue;
       if (ydpi >= 720 &&
 	  escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
@@ -2510,15 +2560,18 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 
 static void
 add_to_row(escp2_softweave_t *sw, int row, unsigned char *buf, size_t nbytes,
-	   int plane, int density, int subpass)
+	   int plane, int density, int subpass, int setactive)
 {
   weave_t w;
   int color = get_color_by_params(plane, density);
   lineoff_t *lineoffs = get_lineoffsets(sw, row, subpass);
+  lineactive_t *lineactive = get_lineactive(sw, row, subpass);
   const linebufs_t *bufs = get_linebases(sw, row, subpass);
   weave_parameters_by_row(sw, row, subpass, &w);
   memcpy(bufs[0].v[color] + lineoffs[0].v[color], buf, nbytes);
   lineoffs[0].v[color] += nbytes;
+  if (setactive)
+    lineactive[0].v[color] = 1;
 }
 
 static void
@@ -2851,6 +2904,7 @@ escp2_write_weave(void *        vsw,
   int xwidth = (width + sw->horizontal_weave - 1) / sw->horizontal_weave;
   unsigned char *comp_ptr;
   int i, j;
+  int setactive;
   const unsigned char *cols[6];
   cols[0] = k;
   cols[1] = m;
@@ -2925,20 +2979,21 @@ escp2_write_weave(void *        vsw,
 		}
 	      for (i = 0; i < sw->oversample; i++)
 		{
-		  escp2_pack(s[i], sw->bitwidth * xlength, comp_buf,
-			     &comp_ptr);
+		  setactive = escp2_pack(s[i], sw->bitwidth * xlength,
+					 comp_buf, &comp_ptr);
 		  add_to_row(sw, sw->lineno, comp_buf, comp_ptr - comp_buf,
-			     colors[j], densities[j], i);
+			     colors[j], densities[j], i, setactive);
 		}
 	    }
 	  else
 	    {
 	      if (sw->bitwidth == 1)
-		escp2_pack(cols[j], length, comp_buf, &comp_ptr);
+		setactive = escp2_pack(cols[j], length, comp_buf, &comp_ptr);
 	      else
-		escp2_pack(fold_buf, length * 2, comp_buf, &comp_ptr);
+		setactive = escp2_pack(fold_buf, length * 2, comp_buf,
+				       &comp_ptr);
 	      add_to_row(sw, sw->lineno, comp_buf, comp_ptr - comp_buf,
-			 colors[j], densities[j], 0);
+			 colors[j], densities[j], 0, setactive);
 	    }
 	}
     }
