@@ -19,7 +19,6 @@
 
 use strict;
 use Getopt::Std;
-use Compress::Zlib;
 use Fcntl qw(:mode);
 use File::Temp qw(:POSIX);
 use File::Copy qw(mv);
@@ -217,12 +216,12 @@ sub update_ppd ($) {
 
     my $suffix = "\\" . $gzext; # Add '\', so m// matches the '.'.
     if ($source =~ m/.gz$/) { # Decompress input buffer
-	my $gz = gzopen($source, "rb")
-	    or die "$_: can't open for decompression: $gzerrno";
-	my $tmp;
-	$ source_data .= $tmp while $gz->gzread($tmp);
-	die "$_: can't decompress file: $gzerrno" if $gzerrno != Z_STREAM_END ;
-	$gz->gzclose();
+	open GZIN, "gunzip -c $source |"
+	    or die "$_: can't open for decompression: $!";
+	while (<GZIN>) {
+	    $source_data .= $_;
+	}
+	close GZIN;
     }
     else {
 	open SOURCE, $source
