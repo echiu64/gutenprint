@@ -96,7 +96,8 @@ stpi_dither_ordered(stp_vars_t v,
 		    int row,
 		    const unsigned short *raw,
 		    int duplicate_line,
-		    int zero_mask)
+		    int zero_mask,
+		    const unsigned char *mask)
 {
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   int		x,
@@ -129,13 +130,16 @@ stpi_dither_ordered(stp_vars_t v,
     {
       for (x = 0; x < d->dst_width; x ++)
 	{
-	  for (i = 0; i < CHANNEL_COUNT(d); i++)
+	  if (!mask || (*(mask + d->ptr_offset) & bit))
 	    {
-	      if (raw[i] &&
-		  raw[i] >= ditherpoint(d, &(CHANNEL(d, i).dithermat), x))
+	      for (i = 0; i < CHANNEL_COUNT(d); i++)
 		{
-		  set_row_ends(&(CHANNEL(d, i)), x);
-		  CHANNEL(d, i).ptr[d->ptr_offset] |= bit;
+		  if (raw[i] &&
+		      raw[i] >= ditherpoint(d, &(CHANNEL(d, i).dithermat), x))
+		    {
+		      set_row_ends(&(CHANNEL(d, i)), x);
+		      CHANNEL(d, i).ptr[d->ptr_offset] |= bit;
+		    }
 		}
 	    }
 	  ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d),
@@ -146,13 +150,15 @@ stpi_dither_ordered(stp_vars_t v,
     {
       for (x = 0; x != d->dst_width; x ++)
 	{
-	  for (i = 0; i < CHANNEL_COUNT(d); i++)
+	  if (!mask || (*(mask + d->ptr_offset) & bit))
 	    {
-	      if (CHANNEL(d, i).ptr && raw[i])
-		print_color_ordered(d, &(CHANNEL(d, i)), raw[i], x, row,
-				    bit, length);
+	      for (i = 0; i < CHANNEL_COUNT(d); i++)
+		{
+		  if (CHANNEL(d, i).ptr && raw[i])
+		    print_color_ordered(d, &(CHANNEL(d, i)), raw[i], x, row,
+					bit, length);
+		}
 	    }
-
 	  ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d), xerror,
 				 xstep, xmod);
 	}

@@ -66,7 +66,8 @@ typedef struct
 
 #define MAX_SPREAD 32
 
-typedef void stpi_ditherfunc_t(stp_vars_t, int, const unsigned short *, int, int);
+typedef void stpi_ditherfunc_t(stp_vars_t, int, const unsigned short *, int,
+			       int, const unsigned char *);
 
 /*
  * An end of a dither segment, describing one ink

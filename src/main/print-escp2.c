@@ -2164,7 +2164,7 @@ escp2_print_data(stp_vars_t v, stp_image_t *image)
 	    return 2;
 	}
 
-      stpi_dither(v, y, duplicate_line, zero_mask);
+      stpi_dither(v, y, duplicate_line, zero_mask, NULL);
 
       stpi_write_weave(v, pd->cols);
       errval += errmod;

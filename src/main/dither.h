@@ -179,12 +179,13 @@ extern unsigned char *stpi_dither_get_channel(stp_vars_t v,
 					      unsigned subchannel);
 
 extern void stpi_dither(stp_vars_t v, int row, int duplicate_line,
-			int zero_mask);
+			int zero_mask, const unsigned char *mask);
 
 #ifdef STPI_TESTDITHER
 extern void stpi_dither_internal(stp_vars_t v, int row,
 				 const unsigned short *input,
-				 int duplicate_line, int zero_mask);
+				 int duplicate_line, int zero_mask,
+				 const unsigned char *mask);
 #endif
 
 #ifdef __cplusplus

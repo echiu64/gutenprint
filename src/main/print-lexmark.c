@@ -2118,7 +2118,7 @@ densityDivisor /= 1.2;
 	      break;
 	    }
 	}
-      stpi_dither(v, y, duplicate_line, zero_mask);
+      stpi_dither(v, y, duplicate_line, zero_mask, NULL);
       stpi_write_weave(v, (unsigned char **)cols.v);
 
       errval += errmod;

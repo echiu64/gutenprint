@@ -319,7 +319,8 @@ stpi_dither_et(stp_vars_t v,
 	       int row,
 	       const unsigned short *raw,
 	       int duplicate_line,
-	       int zero_mask)
+	       int zero_mask,
+	       const unsigned char *mask)
 {
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   eventone_t *et;
@@ -401,11 +402,12 @@ stpi_dither_et(stp_vars_t v,
 
 	  /* Adjust the error to reflect the dot choice */
 	  if (inkp->bits) {
+	    if (!mask || (*(mask + d->ptr_offset) & bit)) {
+	      set_row_ends(dc, x);
 
-	    set_row_ends(dc, x);
-
-	    /* Do the printing */
-	    print_ink(d, dc->ptr, inkp, bit, length);
+	      /* Do the printing */
+	      print_ink(d, dc->ptr, inkp, bit, length);
+	    }
 	  }
 
 	  /* Spread the error around to the adjacent dots */

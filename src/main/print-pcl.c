@@ -2431,7 +2431,7 @@ pcl_do_print(stp_vars_t v, stp_image_t *image)
 	  break;
 	}
     }
-    stpi_dither(v, y, duplicate_line, zero_mask);
+    stpi_dither(v, y, duplicate_line, zero_mask, NULL);
     pcl_printfunc(v);
     stpi_deprintf(STPI_DBG_PCL,"pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
 		  y, errline, errval, errmod, out_height);

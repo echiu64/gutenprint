@@ -121,7 +121,8 @@ update_dither(stpi_dither_t *d, int channel, int width,
 
 static inline int
 print_color(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
-	    unsigned char bit, int length, int dontprint, int stpi_dither_type)
+	    unsigned char bit, int length, int dontprint, int stpi_dither_type,
+	    const unsigned char *mask)
 {
   int base = dc->b;
   int density = dc->o;
@@ -291,22 +292,25 @@ print_color(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
 	      else
 		subc = lower;
 	    }
-	  bits = subc->bits;
 	  v = subc->value;
-	  if (dc->ptr)
+	  if (!mask || (*(mask + d->ptr_offset) & bit))
 	    {
-	      tptr = dc->ptr + d->ptr_offset;
-
-	      /*
-	       * Lay down all of the bits in the pixel.
-	       */
-	      if (dontprint < v)
+	      if (dc->ptr)
 		{
-		  set_row_ends(dc, x);
-		  for (j = 1; j <= bits; j += j, tptr += length)
+		  tptr = dc->ptr + d->ptr_offset;
+
+		  /*
+		   * Lay down all of the bits in the pixel.
+		   */
+		  if (dontprint < v)
 		    {
-		      if (j & bits)
-			tptr[0] |= bit;
+		      bits = subc->bits;
+		      set_row_ends(dc, x);
+		      for (j = 1; j <= bits; j += j, tptr += length)
+			{
+			  if (j & bits)
+			    tptr[0] |= bit;
+			}
 		    }
 		}
 	    }
@@ -399,7 +403,8 @@ stpi_dither_ed(stp_vars_t v,
 	       int row,
 	       const unsigned short *raw,
 	       int duplicate_line,
-	       int zero_mask)
+	       int zero_mask,
+	       const unsigned char *mask)
 {
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   int		x,
@@ -418,7 +423,7 @@ stpi_dither_ed(stp_vars_t v,
     for (i = 0; i < CHANNEL_COUNT(d); i++)
       if (CHANNEL(d, i).nlevels > 1)
 	{
-	  stpi_dither_ordered(v, row, raw, duplicate_line, zero_mask);
+	  stpi_dither_ordered(v, row, raw, duplicate_line, zero_mask, mask);
 	  return;
 	}
   if (!shared_ed_initializer(d, row, duplicate_line, zero_mask, length,
@@ -446,7 +451,8 @@ stpi_dither_ed(stp_vars_t v,
 	      CHANNEL(d, i).b = CHANNEL(d, i).v;
 	      CHANNEL(d, i).v = UPDATE_COLOR(CHANNEL(d, i).v, ndither[i]);
 	      CHANNEL(d, i).v = print_color(d, &(CHANNEL(d, i)), x, row, bit,
-					    length, 0, d->stpi_dither_type);
+					    length, 0, d->stpi_dither_type,
+					    mask);
 	      ndither[i] = update_dither(d, i, d->src_width,
 					 direction, error[i][0], error[i][1]);
 	    }

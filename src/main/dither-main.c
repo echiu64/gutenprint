@@ -441,7 +441,8 @@ stpi_dither_get_errline(stpi_dither_t *d, int row, int color)
 
 void
 stpi_dither_internal(stp_vars_t v, int row, const unsigned short *input,
-		     int duplicate_line, int zero_mask)
+		     int duplicate_line, int zero_mask,
+		     const unsigned char *mask)
 {
   int i;
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
@@ -459,12 +460,13 @@ stpi_dither_internal(stp_vars_t v, int row, const unsigned short *input,
       stpi_dither_matrix_set_row(&(CHANNEL(d, i).pick), row);
     }
   d->ptr_offset = 0;
-  (d->ditherfunc)(v, row, input, duplicate_line, zero_mask);
+  (d->ditherfunc)(v, row, input, duplicate_line, zero_mask, mask);
 }
 
 void
-stpi_dither(stp_vars_t v, int row, int duplicate_line, int zero_mask)
+stpi_dither(stp_vars_t v, int row, int duplicate_line, int zero_mask,
+	    const unsigned char *mask)
 {
   const unsigned short *input = stpi_channel_get_output(v);
-  stpi_dither_internal(v, row, input, duplicate_line, zero_mask);
+  stpi_dither_internal(v, row, input, duplicate_line, zero_mask, mask);
 }

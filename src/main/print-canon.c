@@ -2651,7 +2651,7 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
 	}
     }
 
-    stpi_dither(v, y, duplicate_line, zero_mask);
+    stpi_dither(v, y, duplicate_line, zero_mask, NULL);
     canon_printfunc(v);
     errval += errmod;
     errline += errdiv;

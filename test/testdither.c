@@ -445,21 +445,21 @@ main(int  argc,				/* I - Number of command-line arguments */
     {
       case DITHER_GRAY :
           image_get_row(gray, i);
-	  stpi_dither_internal(v, i, gray, 0, 0);
+	  stpi_dither_internal(v, i, gray, 0, 0, NULL);
 	  if (fp)
 	    write_gray(fp, black);
 	  break;
       case DITHER_COLOR :
       case DITHER_CMYK :
           image_get_row(rgb, i);
-	  stpi_dither_internal(v, i, rgb, 0, 0);
+	  stpi_dither_internal(v, i, rgb, 0, 0, NULL);
 	  if (fp)
 	    write_color(fp, cyan, magenta, yellow, black);
 	  break;
       case DITHER_PHOTO :
       case DITHER_PHOTO_CMYK :
           image_get_row(rgb, i);
-	  stpi_dither_internal(v, i, rgb, 0, 0);
+	  stpi_dither_internal(v, i, rgb, 0, 0, NULL);
 	  if (fp)
 	    write_photo(fp, cyan, lcyan, magenta, lmagenta, yellow, black);
 	  break;
