@@ -119,8 +119,8 @@ if test -n "$MODULE_UP[]_CONFLICTS" ; then
   echo 'Conflicts: @MODULE_UP[]_CONFLICTS@' >>$PKGCONFIG_FILE
 fi
 echo 'Version: @VERSION@' >>$PKGCONFIG_FILE
-echo 'Libs: -L${libdir} @gimpprint_libs@' >>$PKGCONFIG_FILE
-echo 'Cflags: -I${includedir} @gimpprint_cflags@' >>$PKGCONFIG_FILE
+echo 'Libs: -L${libdir} @MODULE_DOWN[]_libs@' >>$PKGCONFIG_FILE
+echo 'Cflags: -I${includedir} @MODULE_DOWN[]_cflags@' >>$PKGCONFIG_FILE
 m4_pushdef([PKGCONFIG_UP], [m4_translit([$1], [a-z], [A-Z])])dnl
 PKGCONFIG_UP[]_PKGCONFIG="PKGCONFIG_DIR[]$1-config"
 AC_SUBST(PKGCONFIG_UP[]_PKGCONFIG)
