@@ -65,7 +65,7 @@ Gimp-Print 4.2.5:
 
 6) The Foomatic data now uses the clear-text printer ID's from
    Foomatic 3.0, in addition to legacy support for the older numeric
-   ideas.
+   ID's.
 
 7) Minor adjustment to the HP DeskJet 340 margins.
 
