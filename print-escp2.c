@@ -227,6 +227,67 @@ static simple_dither_range_t mis_sixtone_ranges[] =
   { 1.00, 0x100000, 1, 1 }	/* K */
 };
 
+static full_dither_range_t normal_dither_ranges[] =
+{
+  { 0.0,   0.5,  0x0, 0x1, 1, 1},
+  { 0.5,   0.67, 0x1, 0x2, 1, 1},
+  { 0.67,  1.0,  0x2, 0x3, 1, 1}
+};
+
+static full_dither_range_t stp870_c1_dither_ranges[] =
+{
+  { 0.0,  0.18, 0x0, 0x1, 0, 0},
+  { 0.18, 0.25, 0x1, 0x2, 0, 0},
+  { 0.25, 0.52, 0x2, 0x1, 0, 1},
+  { 0.25, 0.39, 0x2, 0x3, 0, 0},
+  { 0.39, 0.52, 0x3, 0x1, 0, 1},
+  { 0.52, 0.67, 0x1, 0x2, 1, 1},
+  { 0.67, 0.96, 0x2, 0x3, 1, 1}
+};
+
+static full_dither_range_t stp870_c2_dither_ranges[] =
+{
+  { 0.0,  0.18, 0x0, 0x1, 0, 0},
+  { 0.18, 0.25, 0x1, 0x2, 0, 0},
+  { 0.25, 0.39, 0x2, 0x3, 0, 0},
+  { 0.39, 0.67, 0x3, 0x2, 0, 1},
+  { 0.67, 0.96, 0x2, 0x3, 1, 1}
+};
+
+static full_dither_range_t stp870_m1_dither_ranges[] =
+{
+  { 0.0,  0.18, 0x0, 0x1, 0, 0},
+  { 0.18, 0.24, 0x1, 0x2, 0, 0},
+  { 0.24, 0.52, 0x2, 0x1, 0, 1},
+  { 0.24, 0.36, 0x2, 0x3, 0, 0},
+  { 0.36, 0.52, 0x3, 0x1, 0, 1},
+  { 0.52, 0.67, 0x1, 0x2, 1, 1},
+  { 0.67, 1.0,  0x2, 0x3, 1, 1}
+};
+
+static full_dither_range_t stp870_m2_dither_ranges[] =
+{
+  { 0.0,  0.18, 0x0, 0x1, 0, 0},
+  { 0.18, 0.24, 0x1, 0x2, 0, 0},
+  { 0.24, 0.36, 0x2, 0x3, 0, 0},
+  { 0.36, 0.67, 0x3, 0x2, 0, 1},
+  { 0.67, 1.0,  0x2, 0x3, 1, 1}
+};
+
+static full_dither_range_t stp870_y_dither_ranges[] =
+{
+  { 0.0,  0.55,  0x0, 0x1, 1, 1},
+  { 0.55,  0.71,  0x1, 0x2, 1, 1},
+  { 0.71,  1.0,  0x2, 0x3, 1, 1}
+};
+
+static full_dither_range_t stp870_k_dither_ranges[] =
+{
+  { 0.0,  0.55,  0x0, 0x1, 1, 1},
+  { 0.55,  0.67, 0x1, 0x2, 1, 1},
+  { 0.67, 1.0,   0x2, 0x3, 1, 1}
+};
+
 /*
  * A lot of these are guesses
  */

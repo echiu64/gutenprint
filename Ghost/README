@@ -201,7 +201,6 @@ Dithering Algorithms:
 2  Random Floyd-Steinberg
 3  Adaptive Hybrid Floyd-Steinberg
 4  Adaptive Random Floyd-Steinberg
-5  Perturbed Ordered
 
 Hybrid algorithms use error diffusion, but a matrix is used when a
 random number is required.  Adaptive algorithms use error diffusion

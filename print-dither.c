@@ -186,6 +186,7 @@ typedef struct dither
 
   int ink_limit;		/* Maximum amount of ink that may be */
 				/* deposited */
+  int oversampling;
 
   /* Hardwiring these matrices in here is an abomination.  This */
   /* eventually needs to be cleaned up. */
@@ -342,7 +343,7 @@ init_dither(int in_width, int out_width, vars_t *v)
   d->dst_width = out_width;
   d->adaptive_divisor = 2;
 
-  dither_set_ink_budget(d, INT_MAX);
+  dither_set_max_ink(d, INT_MAX, 1.0);
   dither_set_ink_spread(d, 13);
   dither_set_black_lower(d, .4);
   dither_set_black_upper(d, .7);
@@ -370,19 +371,23 @@ dither_set_density(void *vd, double density)
 }
 
 void
+dither_set_max_ink(void *vd, int levels, double max_ink)
+{
+  dither_t *d = (dither_t *) vd;
+  d->ink_limit = MAX(max_ink, 1)*levels;
+  d->ink_limit = max_ink*levels+0.5;
+#ifdef VERBOSE
+  fprintf(stderr, "Maxink: %f %d\n", max_ink, d->ink_limit);
+#endif
+}
+
+void
 dither_set_adaptive_divisor(void *vd, unsigned divisor)
 {
   dither_t *d = (dither_t *) vd;
   d->adaptive_divisor = divisor;
   d->adaptive_limit = d->density / d->adaptive_divisor;
   d->adaptive_lower_limit = d->adaptive_limit / 4;
-}
-
-void
-dither_set_ink_budget(void *vd, unsigned budget)
-{
-  dither_t *d = (dither_t *) vd;
-  d->ink_limit = budget;
 }
 
 void
@@ -506,7 +511,7 @@ dither_set_ranges(dither_color_t *s, int nlevels,
   s->ranges = (dither_segment_t *)
     malloc(s->nlevels * sizeof(dither_segment_t));
   s->bit_max = 0;
-#if 0
+#ifdef VERBOSE
   fprintf(stderr, "dither_set_ranges nlevels %d density %f\n", nlevels, density);
   for (i = 0; i < nlevels; i++)
     fprintf(stderr, "  level %d value %f pattern %x is_dark %d\n", i,
@@ -584,7 +589,83 @@ dither_set_ranges(dither_color_t *s, int nlevels,
       s->signif_bits++;
       lbit >>= 1;
     }
-#if 0
+#ifdef VERBOSE
+  for (i = 0; i < s->nlevels; i++)
+    {
+      fprintf(stderr, "    level %d value_l %d value_h %d range_l %d range_h %d\n",
+	      i, s->ranges[i].value_l, s->ranges[i].value_h,
+	      s->ranges[i].range_l, s->ranges[i].range_h);
+      fprintf(stderr, "       bits_l %d bits_h %d isdark_l %d isdark_h %d\n",
+	      s->ranges[i].bits_l, s->ranges[i].bits_h,
+	      s->ranges[i].isdark_l, s->ranges[i].isdark_h);
+      fprintf(stderr, "       rangespan %d valuespan %d\n",
+	      s->ranges[i].range_span, s->ranges[i].value_span);
+    }
+  fprintf(stderr, "  bit_max %d signif_bits %d\n", s->bit_max, s->signif_bits);
+#endif
+}
+
+static void
+dither_set_ranges_full(dither_color_t *s, int nlevels,
+		  const full_dither_range_t *ranges, double density, int max_ink)
+{
+  int i, j;
+  unsigned lbit;
+  if (s->ranges)
+    free(s->ranges);
+  s->nlevels = nlevels > 1 ? nlevels + 1 : nlevels;
+  s->nlevels = nlevels+1;
+  s->ranges = (dither_segment_t *)
+    malloc(s->nlevels * sizeof(dither_segment_t));
+  s->bit_max = 0;
+#if VERBOSE
+  fprintf(stderr, "dither_set_ranges nlevels %d density %f\n", nlevels, density);
+  for (i = 0; i < nlevels; i++)
+    fprintf(stderr, "  level %d value: low %f high %f pattern low %x high %x is_dark low %d high %d\n", i,
+	    ranges[i].value_l, ranges[i].value_h, ranges[i].bits_l, ranges[i].bits_h,ranges[i].isdark_l, ranges[i].isdark_h);
+#endif
+  for(i=j=0; i < nlevels; i++) {
+    if (ranges[i].bits_h > s->bit_max)
+      s->bit_max = ranges[i].bits_h;
+    if (ranges[i].bits_l > s->bit_max)
+      s->bit_max = ranges[i].bits_l;
+    s->ranges[j].dot_size_l = ranges[i].bits_l; /* FIXME */
+    s->ranges[j].dot_size_h = ranges[i].bits_h;
+	/*if(s->ranges[j].dot_size_l > max_ink || s->ranges[j].dot_size_h > max_ink)
+		   continue;*/
+    s->ranges[j].value_l = ranges[i].value_l * 65535;
+    s->ranges[j].value_h = ranges[i].value_h * 65535;
+    s->ranges[j].range_l = s->ranges[j].value_l*density;
+    s->ranges[j].range_h = s->ranges[j].value_h*density;
+    s->ranges[j].bits_l = ranges[i].bits_l;
+    s->ranges[j].bits_h = ranges[i].bits_h;
+    s->ranges[j].isdark_l = ranges[i].isdark_l;
+    s->ranges[j].isdark_h = ranges[i].isdark_h;
+    s->ranges[j].range_span = s->ranges[j].range_h-s->ranges[j].range_l;
+    s->ranges[j].value_span = s->ranges[j].value_h-s->ranges[j].value_l;
+	j++;
+  }
+  s->ranges[j].range_l = s->ranges[j - 1].range_h;
+  s->ranges[j].value_l = s->ranges[j - 1].value_h;
+  s->ranges[j].bits_l = s->ranges[j - 1].bits_h;
+  s->ranges[j].isdark_l = s->ranges[j - 1].isdark_h;
+  s->ranges[j].dot_size_l = s->ranges[j - 1].dot_size_h;
+  s->ranges[j].range_h = 65535;
+  s->ranges[j].value_h = 65535;
+  s->ranges[j].bits_h = s->ranges[j].bits_l;
+  s->ranges[j].isdark_h = s->ranges[j].isdark_l;
+  s->ranges[j].dot_size_h = s->ranges[j].dot_size_l;
+  s->ranges[j].range_span = s->ranges[j].range_h - s->ranges[j].range_l;
+  s->ranges[j].value_span = 0;
+  s->nlevels = j+1;
+  lbit = s->bit_max;
+  s->signif_bits = 0;
+  while (lbit > 0)
+    {
+      s->signif_bits++;
+      lbit >>= 1;
+    }
+#if VERBOSE
   for (i = 0; i < s->nlevels; i++)
     {
       fprintf(stderr, "    level %d value_l %d value_h %d range_l %d range_h %d\n",
@@ -626,6 +707,15 @@ dither_set_c_ranges_simple(void *vd, int nlevels, const double *levels,
 }
 
 void
+dither_set_c_ranges_full(void *vd, int nlevels,
+			 const full_dither_range_t *ranges, double density)
+{
+  dither_t *d = (dither_t *) vd;
+  dither_set_ranges_full(&(d->c_dither), nlevels, ranges, density,
+			 d->ink_limit);
+}
+
+void
 dither_set_m_ranges(void *vd, int nlevels, const simple_dither_range_t *ranges,
 		    double density)
 {
@@ -649,7 +739,16 @@ dither_set_m_ranges_simple(void *vd, int nlevels, const double *levels,
   dither_set_m_ranges(vd, nlevels, r, density);
   free(r);
 }
-  
+
+void
+dither_set_m_ranges_full(void *vd, int nlevels,
+			 const full_dither_range_t *ranges, double density)
+{
+  dither_t *d = (dither_t *) vd;
+  dither_set_ranges_full(&(d->m_dither), nlevels, ranges, density,
+			 d->ink_limit);
+}
+
 void
 dither_set_y_ranges(void *vd, int nlevels, const simple_dither_range_t *ranges,
 		    double density)
@@ -674,7 +773,16 @@ dither_set_y_ranges_simple(void *vd, int nlevels, const double *levels,
   dither_set_y_ranges(vd, nlevels, r, density);
   free(r);
 }
-  
+
+void
+dither_set_y_ranges_full(void *vd, int nlevels,
+			 const full_dither_range_t *ranges, double density)
+{
+  dither_t *d = (dither_t *) vd;
+  dither_set_ranges_full(&(d->y_dither), nlevels, ranges, density,
+			 d->ink_limit);
+}
+
 void
 dither_set_k_ranges(void *vd, int nlevels, const simple_dither_range_t *ranges,
 		    double density)
@@ -699,7 +807,16 @@ dither_set_k_ranges_simple(void *vd, int nlevels, const double *levels,
   dither_set_k_ranges(vd, nlevels, r, density);
   free(r);
 }
-  
+
+void
+dither_set_k_ranges_full(void *vd, int nlevels,
+			 const full_dither_range_t *ranges, double density)
+{
+  dither_t *d = (dither_t *) vd;
+  dither_set_ranges_full(&(d->k_dither), nlevels, ranges, density,
+			 d->ink_limit);
+}
+
 
 void
 free_dither(void *vd)
