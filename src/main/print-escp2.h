@@ -85,15 +85,6 @@ typedef double escp2_densities_t[13];
  * or find some way of handling it in here.
  */
 
-#define INKTYPE_SINGLE	 0
-#define INKTYPE_VARIABLE 1
-#define INKTYPE_N	 2
-
-#define INKSET_4	 0
-#define INKSET_6	 1
-#define INKSET_7	 2
-#define INKSET_N	 3
-
 #define RES_120_M	 0
 #define RES_120		 1
 #define RES_180_M	 2
@@ -123,7 +114,7 @@ typedef struct escp2_variable_ink
 
 typedef const escp2_variable_ink_t *escp2_variable_inkset_t[NCOLORS];
 
-typedef const escp2_variable_inkset_t *escp2_variable_inklist_t[INKTYPE_N][INKSET_N][RES_N / 2];
+typedef const escp2_variable_inkset_t *escp2_variable_inklist_t[][RES_N / 2];
 
 typedef struct
 {
@@ -281,6 +272,7 @@ typedef struct
   const char *name;
   const char *text;
   int is_color;
+  int inkset;
   double k_lower;
   double k_upper;
   const ink_channel_t *channels[NCOLORS];
@@ -288,8 +280,8 @@ typedef struct
 
 typedef struct
 {
-  int n_inks;
   const escp2_inkname_t **inknames;
+  int n_inks;
 } inklist_t;
 
 typedef struct escp2_printer

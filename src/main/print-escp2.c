@@ -66,35 +66,6 @@ resid2dotid(int resid)
   return dotidmap[resid];
 }
 
-static int
-bits2inktype(int bits)
-{
-  if (bits == 1)
-    return INKTYPE_SINGLE;
-  else
-    return INKTYPE_VARIABLE;
-}
-
-static int
-colors2inkset(int colors)
-{
-  switch (colors)
-    {
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-      return INKSET_4;
-    case 5:
-    case 6:
-      return INKSET_6;
-    case 7:
-      return INKSET_7;
-    default:
-      return -1;
-    }
-}
-
 static const escp2_printer_attr_t escp2_printer_attrs[] =
 {
   { "init_sequence",	 	0, 4 },
@@ -274,14 +245,12 @@ escp2_base_res(int model, int resid, const stp_vars_t v)
 }
 
 static const escp2_variable_inkset_t *
-escp2_inks(int model, int resid, int colors, int bits, const stp_vars_t v)
+escp2_inks(int model, int resid, int inkset, const stp_vars_t v)
 {
   const escp2_variable_inklist_t *inks =
     stp_escp2_model_capabilities[model].inks;
-  int inktype = bits2inktype(bits);
-  int inkset = colors2inkset(colors);
   resid /= 2;
-  return (*inks)[inktype][inkset][resid];
+  return (*inks)[inkset][resid];
 }
 
 static const paper_t *
@@ -1002,7 +971,7 @@ adjust_print_quality(const escp2_init_t *init, void *dither,
   stp_dither_set_black_lower(dither, k_lower);
   stp_dither_set_black_upper(dither, k_upper);
 
-  inks = escp2_inks(init->model, init->resid, init->ncolors, init->bits, nv);
+  inks = escp2_inks(init->model, init->resid, init->inkname->inkset, nv);
   if (inks)
     for (i = 0; i < NCOLORS; i++)
       if ((*inks)[i])
@@ -1101,7 +1070,7 @@ static const ink_channel_t default_black_channels =
 
 static const escp2_inkname_t default_black_ink =
 {
-  NULL, NULL, 0, 0, 0,
+  NULL, NULL, 0, 0, 0, 0,
   {
     &default_black_channels, NULL, NULL, NULL
   }
