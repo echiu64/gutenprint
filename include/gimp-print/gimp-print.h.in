@@ -554,7 +554,8 @@ extern stp_curve_type_t stp_curve_get_interpolation_type(const stp_curve_t curve
  *
  * The number of points must not exceed 65536 (65535 for a wrap-mode curve);
  */
-extern int stp_curve_set_data(stp_curve_t curve, size_t count, double *data);
+extern int stp_curve_set_data(stp_curve_t curve, size_t count,
+			      const double *data);
 
 /*
  * Return a pointer to the curve's raw data.

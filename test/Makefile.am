@@ -40,7 +40,7 @@ TESTS = run-testdither run-weavetest
 ## Programs
 
 if BUILD_TEST
-noinst_PROGRAMS = testdither escp2-weavetest unprint pcl-unprint bjc-unprint
+noinst_PROGRAMS = testdither escp2-weavetest unprint pcl-unprint bjc-unprint curve
 endif
 
 escp2_weavetest_SOURCES = escp2-weavetest.c
@@ -48,6 +48,9 @@ escp2_weavetest_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
 
 unprint_SOURCES = unprint.c
 unprint_LDADD = $(LIBPRINTUT)
+
+curve_SOURCES = curve.c
+curve_LDADD = $(LIBGIMPPRINT_LIBS)
 
 pcl_unprint_SOURCES = pcl-unprint.c
 pcl_unprint_LDADD = $(LIBPRINTUT)
