@@ -321,6 +321,19 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
   else
     fprintf(stderr, "ERROR: Gimp-Print Unable to get media size!\n");
 
+ /* 
+  * Duplex
+  * Note that the names MUST match those in the printer driver(s)
+  */
+
+  if (cups->header.Duplex != 0)
+    {
+      if (cups->header.Tumble != 0)
+        stp_set_string_parameter(v, "Duplex", "DuplexTumble");
+      else
+        stp_set_string_parameter(v, "Duplex", "DuplexNoTumble");
+    }
+
   stp_set_string_parameter(v, "JobMode", "Job");
   stp_get_media_size(v, &(cups->width), &(cups->height));
   stp_get_imageable_area(v, &(cups->left), &(cups->right),

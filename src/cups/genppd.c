@@ -131,6 +131,7 @@ const char *special_options[] =
   "OutputOrder",
   "Quality",
   "ImageType",
+  "Duplex",
   NULL
 };
 
@@ -804,6 +805,9 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
     gzputs(fp, "*PSVersion:	\"(3010.000) 705\"\n");
   gzprintf(fp, "*LanguageLevel:	\"%d\"\n", cups_ppd_ps_level);
 
+  /* Set Job Mode to "Job" as this enables the Duplex option */
+  stp_set_string_parameter(printvars, "JobMode", "Job");
+
   /* Assume that color printers are inkjets and should have pages reversed */
   stp_describe_parameter(printvars, "PrintingMode", &desc);
   if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
@@ -1175,6 +1179,37 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
       gzputs(fp, "*OutputOrder Normal/Normal: \"\"\n");
       gzputs(fp, "*OutputOrder Reverse/Reverse: \"\"\n");
       gzputs(fp, "*CloseUI: *OutputOrder\n\n");
+    }
+  stp_parameter_description_destroy(&desc);
+
+ /* 
+  * Duplex
+  * Note that the opt->name strings MUST match those in the printer driver(s)
+  * else the PPD files will not be generated correctly
+  */
+
+  stp_describe_parameter(v, "Duplex", &desc);
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
+    {
+      num_opts = stp_string_list_count(desc.bounds.str);
+      if (num_opts > 0)
+      {
+        gzputs(fp, "*OpenUI *Duplex/Double-Sided Printing: PickOne\n");
+        gzputs(fp, "*OrderDependency: 20 AnySetup *Duplex\n");
+        gzprintf(fp, "*DefaultDuplex: %s\n", desc.deflt.str);
+
+        for (i = 0; i < num_opts; i++)
+          {
+            opt = stp_string_list_param(desc.bounds.str, i);
+            if (strcmp(opt->name, "None") == 0)
+              gzprintf(fp, "*Duplex %s/%s: \"<</Duplex false>>setpagedevice\"\n", opt->name, opt->text);
+            else if (strcmp(opt->name, "DuplexNoTumble") == 0)
+              gzprintf(fp, "*Duplex %s/%s: \"<</Duplex true/Tumble false>>setpagedevice\"\n", opt->name, opt->text);
+            else if (strcmp(opt->name, "DuplexTumble") == 0)
+              gzprintf(fp, "*Duplex %s/%s: \"<</Duplex true/Tumble true>>setpagedevice\"\n", opt->name, opt->text);
+           }
+        gzputs(fp, "*CloseUI: *Duplex\n\n");
+      }
     }
   stp_parameter_description_destroy(&desc);
 

@@ -57,6 +57,9 @@ typedef struct
   int do_cretb;
   int do_6color;
   int height;
+  int duplex;
+  int tumble;
+  int use_crd;
 } pcl_privdata_t;
 
 /*
@@ -321,6 +324,7 @@ typedef struct {
 #define PCL_PRINTER_MEDIATYPE	16	/* Use media type & print quality */
 #define PCL_PRINTER_CUSTOM_SIZE	32	/* Custom sizes supported */
 #define PCL_PRINTER_BLANKLINE	64	/* Blank line removal supported */
+#define PCL_PRINTER_DUPLEX	128	/* Printer can have duplexer */
 
 /*
  * FIXME - the 520 shouldn't be lumped in with the 500 as it supports
@@ -892,7 +896,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {5, 33, 10, 10},	/* Oliver Vecernik */
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
-      PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
+      PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE | PCL_PRINTER_DUPLEX,
     dj600_papersizes,
     basic_papertypes,
     emptylist,
@@ -1033,7 +1037,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     emptylist,
     laserjet_papersources,
   },
-  /* LaserJet 4V, 4Si */
+  /* LaserJet 4V */
   { 5,
     13 * 72, 19 * 72,
     1, 1,				/* Min paper size */
@@ -1046,6 +1050,20 @@ static const pcl_cap_t pcl_model_capabilities[] =
     emptylist,
     laserjet_papersources,
   },
+  /* LaserJet 4Si */
+  { 51,
+    13 * 72, 19 * 72,
+    1, 1,				/* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
+    {12, 12, 18, 18},
+    {12, 12, 10, 10},	/* Check/Fix */
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
+      PCL_PRINTER_DUPLEX,
+    ljbig_papersizes,
+    emptylist,
+    laserjet_papersources,
+  },
   /* LaserJet 4 series (except as above), 5 series, 6 series */
   { 6,
     17 * 72 / 2, 14 * 72,
@@ -1054,7 +1072,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 18, 18},
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
-    PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
+    PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
+      PCL_PRINTER_DUPLEX,
     ljsmall_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1067,7 +1086,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 18, 18},
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
-    PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
+    PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
+      PCL_PRINTER_DUPLEX,
     ljbig_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1162,6 +1182,12 @@ static const stp_parameter_t the_parameters[] =
     "PrintingMode", N_("Printing Mode"), N_("Core Parameter"),
     N_("Printing Output Mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+  },
+  {
+    "Duplex", N_("Double-Sided Printing"), N_("Basic Printer Setup"),
+    N_("Duplex/Tumble Setting"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
   },
 };
@@ -1395,6 +1421,19 @@ static const stp_param_string_t ink_types[] =
   { "Photo",	N_ ("Color + Photo Cartridges") }
 };
 
+/*
+ * Duplex support - modes available
+ * Note that the internal names MUST match those in cups/genppd.c else the
+ * PPD files will not be generated correctly
+ */
+
+static const stp_param_string_t duplex_types[] =
+{
+  { "None",		N_ ("Off") },
+  { "DuplexNoTumble",	N_ ("Long Edge (Standard)") },
+  { "DuplexTumble",	N_ ("Short Edge (Flip)") }
+};
+#define NUM_DUPLEX (sizeof (duplex_types) / sizeof (stp_param_string_t))
 
 /*
  * 'pcl_papersize_valid()' - Is the paper size valid for this printer.
@@ -1610,6 +1649,41 @@ pcl_parameters(const stp_vars_t *v, const char *name,
     }
     else
       description->is_active = 0;
+  }
+  else if (strcmp(name, "Duplex") == 0)
+  {
+    int offer_duplex=0;
+
+    description->bounds.str = stp_string_list_create();
+
+/*
+ * Don't offer the Duplex/Tumble options if the JobMode parameter is
+ * set to "Page" Mode.
+ * "Page" mode is set by the Gimp Plugin, which only outputs one page at a
+ * time, so Duplex/Tumble is meaningless.
+ */
+
+    if (stp_get_string_parameter(v, "JobMode"))
+        offer_duplex = strcmp(stp_get_string_parameter(v, "JobMode"), "Page");
+    else
+     offer_duplex=1;
+
+    if (offer_duplex)
+    {
+      if (caps->stp_printer_type & PCL_PRINTER_DUPLEX)
+      {
+        description->deflt.str = duplex_types[0].name;
+        for (i=0; i < NUM_DUPLEX; i++)
+        {
+          stp_string_list_add_string(description->bounds.str,
+			       duplex_types[i].name,_(duplex_types[i].text));
+        }
+      }
+      else
+        description->is_active = 0;	/* Not supported by printer */
+    }
+    else
+      description->is_active = 0;	/* Not in "Job" mode */
   }
   else if (strcmp(name, "CyanDensity") == 0 ||
 	   strcmp(name, "MagentaDensity") == 0 ||
@@ -1917,8 +1991,10 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   const char	*media_type = stp_get_string_parameter(v, "MediaType");
   const char	*media_source = stp_get_string_parameter(v, "InputSlot");
   const char	*ink_type = stp_get_string_parameter(v, "InkType");
-  const char    *print_mode = stp_get_string_parameter(v, "PrintingMode");
-  int printing_color = 0;
+  const char	*print_mode = stp_get_string_parameter(v, "PrintingMode");
+  const char	*duplex_mode = stp_get_string_parameter(v, "Duplex");
+  int		page_number = stp_get_int_parameter(v, "PageNumber");
+  int		printing_color = 0;
   int		top = stp_get_top(v);
   int		left = stp_get_left(v);
   int		y;		/* Looping vars */
@@ -1948,9 +2024,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
                 image_width;
   const pcl_cap_t *caps;		/* Printer capabilities */
   int		planes = 3;	/* # of output planes */
-  int		pcl_media_size, /* PCL media size code */
-		pcl_media_type, /* PCL media type code */
-		pcl_media_source;	/* PCL media source code */
+  int		pcl_media_size; /* PCL media size code */
   const double *dot_sizes_use;
   const stp_papersize_t *pp;
   int		the_top_margin,	/* Corrected top margin */
@@ -2051,21 +2125,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   image_width = stp_image_width(image);
 
  /*
-  * Send PCL initialization commands...
-  */
-
-  if (privdata.do_cretb)
-    {
-      stp_puts("\033*rbC", v);	/* End raster graphics */
-    }
-  stp_puts("\033E", v); 				/* PCL reset */
-  if (privdata.do_cretb)
-    {
-      stp_zprintf(v, "\033%%-12345X@PJL ENTER LANGUAGE=PCL3GUI\n");
-    }
-
- /*
-  * Set media size
+  * Set media size here because it is needed by the margin calculation code.
   */
 
   if (!media_size)
@@ -2092,48 +2152,90 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
     pcl_media_size = PCL_PAPERSIZE_CUSTOM;			/* Custom */
   }
 
-  stp_zprintf(v, "\033&l%dA", pcl_media_size);
+  stp_deprintf(STP_DBG_PCL, "Duplex: %s, Page_Number: %d\n", duplex_mode, page_number);
+  privdata.duplex=0;
+  privdata.tumble=0;
 
-  stp_puts("\033&l0L", v);			/* Turn off perforation skip */
-  stp_puts("\033&l0E", v);			/* Reset top margin to 0 */
+ /*
+  * Duplex
+  */
+
+  if (duplex_mode)
+    {
+      if (caps->stp_printer_type & PCL_PRINTER_DUPLEX)
+        {
+          if ((strcmp(duplex_mode, "DuplexTumble") == 0) || (strcmp(duplex_mode, "DuplexNoTumble") == 0))
+            privdata.duplex=1;
+          if ((strcmp(duplex_mode, "DuplexTumble") == 0))
+            privdata.tumble=1;
+        }
+      else
+        stp_erprintf("pcl: cannot duplex on this hardware.\n");
+    }
+
+ /*
+  * Send PCL initialization commands...
+  */
+
+  if ((privdata.duplex == 0) || ((page_number & 1) == 0))
+    {
+      int pcl_media_type,	/* PCL media type code */
+          pcl_media_source;	/* PCL media source code */
+
+      stp_deprintf(STP_DBG_PCL, "Normal init\n");
+
+      if (privdata.do_cretb)
+        stp_puts("\033*rbC", v);	/* End raster graphics */
+      stp_puts("\033E", v); 				/* PCL reset */
+      if (privdata.do_cretb)
+        stp_zprintf(v, "\033%%-12345X@PJL ENTER LANGUAGE=PCL3GUI\n");
+
+      stp_puts("\033&l6D\033&k12H",v);		/* 6 lines per inch, 10 chars per inch */
+      stp_puts("\033&l0O",v);			/* Portrait */
+
+      stp_zprintf(v, "\033&l%dA", pcl_media_size);	/* Set media size we calculated above */
+      stp_zprintf(v, "\033&l%dP", stp_get_page_height(v) / 12);
+						/* Length of "forms" in "lines" */
+      stp_puts("\033&l0L", v);			/* Turn off perforation skip */
+      stp_puts("\033&l0E", v);			/* Reset top margin to 0 */
 
  /*
   * Convert media source string to the code, if specified.
   */
 
-  if (media_source && strlen(media_source) != 0) {
-    pcl_media_source = pcl_string_to_val(media_source, pcl_media_sources,
-                         sizeof(pcl_media_sources) / sizeof(pcl_t));
+      if (media_source && strlen(media_source) != 0) {
+        pcl_media_source = pcl_string_to_val(media_source, pcl_media_sources,
+                             sizeof(pcl_media_sources) / sizeof(pcl_t));
 
-    stp_deprintf(STP_DBG_PCL,"pcl_media_source = %d, media_source = %s\n", pcl_media_source,
-           media_source);
+        stp_deprintf(STP_DBG_PCL,"pcl_media_source = %d, media_source = %s\n", pcl_media_source,
+               media_source);
 
-    if (pcl_media_source == -1)
-      stp_deprintf(STP_DBG_PCL, "Unknown media source %s, ignored.\n", media_source);
-    else if (pcl_media_source != PCL_PAPERSOURCE_STANDARD) {
+        if (pcl_media_source == -1)
+          stp_deprintf(STP_DBG_PCL, "Unknown media source %s, ignored.\n", media_source);
+        else if (pcl_media_source != PCL_PAPERSOURCE_STANDARD) {
 
 /* Correct the value by taking the modulus */
 
-      pcl_media_source = pcl_media_source % PAPERSOURCE_MOD;
-      stp_zprintf(v, "\033&l%dH", pcl_media_source);
-    }
-  }
+          pcl_media_source = pcl_media_source % PAPERSOURCE_MOD;
+          stp_zprintf(v, "\033&l%dH", pcl_media_source);
+        }
+      }
 
  /*
   * Convert media type string to the code, if specified.
   */
 
-  if (media_type && strlen(media_type) != 0) {
-    pcl_media_type = pcl_string_to_val(media_type, pcl_media_types,
-                       sizeof(pcl_media_types) / sizeof(pcl_t));
+      if (media_type && strlen(media_type) != 0) {
+        pcl_media_type = pcl_string_to_val(media_type, pcl_media_types,
+                           sizeof(pcl_media_types) / sizeof(pcl_t));
 
-    stp_deprintf(STP_DBG_PCL,"pcl_media_type = %d, media_type = %s\n", pcl_media_type,
-           media_type);
+        stp_deprintf(STP_DBG_PCL,"pcl_media_type = %d, media_type = %s\n", pcl_media_type,
+               media_type);
 
-    if (pcl_media_type == -1) {
-      stp_deprintf(STP_DBG_PCL, "Unknown media type %s, set to PLAIN.\n", media_type);
-      pcl_media_type = PCL_PAPERTYPE_PLAIN;
-    }
+        if (pcl_media_type == -1) {
+          stp_deprintf(STP_DBG_PCL, "Unknown media type %s, set to PLAIN.\n", media_type);
+          pcl_media_type = PCL_PAPERTYPE_PLAIN;
+        }
 
 /*
  * The HP812C doesn't like glossy paper being selected when using 600x600
@@ -2141,50 +2243,89 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
  *
  */
 
-    if (privdata.do_cretb && pcl_media_type == PCL_PAPERTYPE_GLOSSY) {
-      stp_deprintf(STP_DBG_PCL, "Media type GLOSSY, set to PREMIUM for PhotoRET II.\n");
-      pcl_media_type = PCL_PAPERTYPE_PREMIUM;
-    }
-  }
-  else
-    pcl_media_type = PCL_PAPERTYPE_PLAIN;
+        if (privdata.do_cretb && pcl_media_type == PCL_PAPERTYPE_GLOSSY) {
+          stp_deprintf(STP_DBG_PCL, "Media type GLOSSY, set to PREMIUM for PhotoRET II.\n");
+          pcl_media_type = PCL_PAPERTYPE_PREMIUM;
+        }
+      }
+      else
+        pcl_media_type = PCL_PAPERTYPE_PLAIN;
 
  /*
   * Set DJ print quality to "best" if resolution >= 300
   */
 
-  if ((xdpi >= 300) && ((caps->stp_printer_type & PCL_PRINTER_DJ) == PCL_PRINTER_DJ))
-  {
-    if ((caps->stp_printer_type & PCL_PRINTER_MEDIATYPE) == PCL_PRINTER_MEDIATYPE)
-    {
-      stp_puts("\033*o1M", v);			/* Quality = presentation */
-      stp_zprintf(v, "\033&l%dM", pcl_media_type);
-    }
-    else
-    {
-      stp_puts("\033*r2Q", v);			/* Quality (high) */
-      stp_puts("\033*o2Q", v);			/* Shingling (4 passes) */
+      if ((xdpi >= 300) && ((caps->stp_printer_type & PCL_PRINTER_DJ) == PCL_PRINTER_DJ))
+      {
+        if ((caps->stp_printer_type & PCL_PRINTER_MEDIATYPE) == PCL_PRINTER_MEDIATYPE)
+        {
+          stp_puts("\033*o1M", v);			/* Quality = presentation */
+          stp_zprintf(v, "\033&l%dM", pcl_media_type);
+        }
+        else
+        {
+          stp_puts("\033*r2Q", v);			/* Quality (high) */
+          stp_puts("\033*o2Q", v);			/* Shingling (4 passes) */
 
  /* Depletion depends on media type and cart type. */
 
-      if ((pcl_media_type == PCL_PAPERTYPE_PLAIN)
-	|| (pcl_media_type == PCL_PAPERTYPE_BOND)) {
-      if ((caps->color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
-          stp_puts("\033*o2D", v);			/* Depletion 25% */
-        else
-          stp_puts("\033*o5D", v);			/* Depletion 50% with gamma correction */
+          if ((pcl_media_type == PCL_PAPERTYPE_PLAIN)
+           || (pcl_media_type == PCL_PAPERTYPE_BOND)) {
+            if ((caps->color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
+              stp_puts("\033*o2D", v);			/* Depletion 25% */
+            else
+              stp_puts("\033*o5D", v);			/* Depletion 50% with gamma correction */
+            }
+
+          else if ((pcl_media_type == PCL_PAPERTYPE_PREMIUM)
+                 || (pcl_media_type == PCL_PAPERTYPE_GLOSSY)
+                 || (pcl_media_type == PCL_PAPERTYPE_TRANS))
+            stp_puts("\033*o1D", v);			/* Depletion none */
+        }
       }
 
-      else if ((pcl_media_type == PCL_PAPERTYPE_PREMIUM)
-             || (pcl_media_type == PCL_PAPERTYPE_GLOSSY)
-             || (pcl_media_type == PCL_PAPERTYPE_TRANS))
-        stp_puts("\033*o1D", v);			/* Depletion none */
-    }
-  }
+/*
+ * Duplex
+ */
 
-  if ((xdpi != ydpi) || (privdata.do_cret) || (privdata.do_6color))
+      if (privdata.duplex)
+          stp_zprintf(v,"\033&l%dS", privdata.duplex + privdata.tumble);
+      }
+    else
+      {
+        stp_deprintf(STP_DBG_PCL, "Back face init\n");
+        stp_puts("\033&a2G", v);
+      }
+
+/*
+ * See if we need to use the CRD (Configure Raster Data) command, because we're
+ * doing something interesting on a DeskJet.
+ * (I hate long complicated if statements, the compiler will sort it out!).
+ */
+
+  privdata.use_crd = 0;
+  if ((caps->stp_printer_type & PCL_PRINTER_DJ) == PCL_PRINTER_DJ)
+    {
+    if (xdpi != ydpi)				/* Different X and Y Resolutions */
+      privdata.use_crd = 1;
+    if (privdata.do_cret)			/* Resolution Enhancement */
+      privdata.use_crd = 1;
+    if (privdata.do_6color)			/* Photo Ink printing */
+      privdata.use_crd = 1;
+    if (privdata.duplex)			/* Duplexing */
+      privdata.use_crd = 1;
+    }
+
+  if (privdata.use_crd)
 						/* Set resolution using CRD */
   {
+
+/*
+ * If duplexing on a CRD printer, we need to use the (re)load media command.
+ */
+
+    if (privdata.duplex)
+      stp_puts("\033&l-2H",v);			/* Load media */
 
    /*
     * Send configure image data command with horizontal and
@@ -2534,12 +2675,15 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   else
     stp_puts("\033*rB", v);
 
-  stp_puts("\033&l0H", v);		/* Eject page */
-  if (privdata.do_cretb)
+  if ((privdata.duplex == 1) && ((page_number & 1) == 0))
+      stp_puts("\014", v);		/* Form feed */
+  else
     {
-      stp_zprintf(v, "\033%%-12345X\n");
+      stp_puts("\033&l0H", v);		/* Eject page */
+      if (privdata.do_cretb)
+        stp_zprintf(v, "\033%%-12345X\n");
+      stp_puts("\033E", v); 		/* PCL reset */
     }
-  stp_puts("\033E", v); 				/* PCL reset */
   return status;
 }
 

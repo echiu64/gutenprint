@@ -385,6 +385,7 @@ gimp_list_cb (void *list_cb_data,
 {
   const char *param_list = list_all_parameters();
   int size = strlen (param_list);
+  STP_DEBUG(fprintf(stderr, "gimp_list_cb: %s\n", param_list));
 
   if (size > val_size)
     return IJS_EBUF;
@@ -402,6 +403,7 @@ gimp_enum_cb (void *enum_cb_data,
 	      int val_size)
 {
   const char *val = NULL;
+  STP_DEBUG(fprintf(stderr, "gimp_enum_cb: key=%s\n", key));
   if (!strcmp (key, "ColorSpace"))
     val = "DeviceRGB,DeviceGray,DeviceCMYK";
   else if (!strcmp (key, "DeviceManufacturer"))
@@ -560,7 +562,11 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
       if (printer &&
 	  strcmp(stp_printer_get_family(printer), "ps") != 0 &&
 	  strcmp(stp_printer_get_family(printer), "raw") != 0)
-	stp_set_printer_defaults(img->v, printer);
+        {
+	  stp_set_printer_defaults(img->v, printer);
+          /* Reset JobMode to "Job" */
+          stp_set_string_parameter(img->v, "JobMode", "Job");
+        }
       else
 	code = IJS_ERANGE;
     }
@@ -608,17 +614,22 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	    STP_DEBUG(fprintf(stderr, "No matching paper size found\n"));
 	}
     }
-  else if (strcmp (key, "Duplex") == 0)
+
+/*
+ * Duplex & Tumble. The PS: values come from the PostScript document, the
+ * others come from the command line. However, the PS: values seem to get
+ * fed back again as non PS: values after the command line is processed.
+ * The net effect is that the command line is always overridden by the
+ * values from the document.
+ */
+
+  else if ((strcmp (key, "Duplex") == 0) || (strcmp (key, "PS:Duplex") == 0))
     {
+      stp_set_string_parameter(img->v, "x_Duplex", vbuf);
     }
-  else if (strcmp (key, "PS:Duplex") == 0)
+  else if ((strcmp (key, "Tumble") == 0) || (strcmp (key, "PS:Tumble") == 0))
     {
-    }
-  else if (strcmp (key, "Tumble") == 0)
-    {
-    }
-  else if (strcmp (key, "PS:Tumble") == 0)
-    {
+       stp_set_string_parameter(img->v, "x_Tumble", vbuf);
     }
   else
     {
@@ -857,6 +868,8 @@ stp_dbg(const char *msg, const stp_vars_t *v)
 	  safe_get_string_parameter(v, "PageSize"));
   fprintf(stderr, "Settings: InkType %s\n",
 	  safe_get_string_parameter(v, "InkType"));
+  fprintf(stderr, "Settings: Duplex %s\n",
+	  safe_get_string_parameter(v, "Duplex"));
 }
 
 static void
@@ -1030,8 +1043,40 @@ main (int argc, char **argv)
       else
 	height = b - t;
       stp_set_height(img.v, height);
-      stp_set_string_parameter(img.v, "JobMode", "Job");
       stp_set_int_parameter(img.v, "PageNumber", page);
+
+/* 
+ * Fix up the duplex/tumble settings stored in the "x_" parameters
+ * If Duplex is "true" then look at "Tumble". If duplex is not "true" or "false"
+ * then just take it (e.g. Duplex=DuplexNoTumble).
+ */
+      STP_DEBUG(fprintf(stderr, "x_Duplex=%s\n", safe_get_string_parameter(img.v, "x_Duplex")));
+      STP_DEBUG(fprintf(stderr, "x_Tumble=%s\n", safe_get_string_parameter(img.v, "x_Tumble")));
+
+      if (stp_get_string_parameter(img.v, "x_Duplex"))
+        {
+          if (strcmp(stp_get_string_parameter(img.v, "x_Duplex"), "false") == 0)
+            stp_set_string_parameter(img.v, "Duplex", "None");
+          else if (strcmp(stp_get_string_parameter(img.v, "x_Duplex"), "true") == 0)
+            {
+              if (stp_get_string_parameter(img.v, "x_Tumble"))
+              {
+                if (strcmp(stp_get_string_parameter(img.v, "x_Tumble"), "false") == 0)
+                  stp_set_string_parameter(img.v, "Duplex", "DuplexNoTumble");
+                else
+                  stp_set_string_parameter(img.v, "Duplex", "DuplexTumble");
+              }
+            else	/* Tumble missing, assume false */
+              stp_set_string_parameter(img.v, "Duplex", "DuplexNoTumble");
+            }
+          else	/* Not true or false */
+            stp_set_string_parameter(img.v, "Duplex", stp_get_string_parameter(img.v, "x_Duplex"));
+        }
+
+/* can I destroy the unused parameters? */
+
+      STP_DEBUG(fprintf(stderr, "Duplex=%s\n", safe_get_string_parameter(img.v, "Duplex")));
+
       purge_unused_float_parameters(img.v);
       STP_DEBUG(stp_dbg("about to print", img.v));
       if (stp_verify(img.v))

@@ -53,6 +53,9 @@ main(int argc, char **argv)
       if (strcmp(family, "ps") == 0 || strcmp(family, "raw") == 0)
 	continue;
 
+      /* Set Job Mode to "Job" as this enables the Duplex option */
+      stp_set_string_parameter(pv, "JobMode", "Job");
+
       stp_describe_parameter(pv, "PrintingMode", &desc);
       if (stp_string_list_is_present(desc.bounds.str, "Color"))
 	printer_is_color = 1;

@@ -1243,8 +1243,13 @@
         <gamma value="1.000"/>
         <density value="1.000"/>
       </printer>
-      <printer name="HP LaserJet 4V, 4Si" driver="pcl-4v" manufacturer="HP">
+      <printer name="HP LaserJet 4V" driver="pcl-4v" manufacturer="HP">
         <model value="5"/>
+        <gamma value="1.000"/>
+        <density value="1.000"/>
+      </printer>
+      <printer name="HP LaserJet 4Si" driver="pcl-4si" manufacturer="HP">
+        <model value="51"/>
         <gamma value="1.000"/>
         <density value="1.000"/>
       </printer>
