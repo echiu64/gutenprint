@@ -51,6 +51,7 @@ typedef struct
   gint callback_id;
   GtkWidget *combo;
   GtkWidget *label;
+  stp_parameter_class_t p_class;
 } list_option_t;
 
 typedef struct

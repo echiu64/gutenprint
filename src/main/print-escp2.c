@@ -759,7 +759,7 @@ escp2_set_remote_sequence(const escp2_init_t *init)
       print_remote_int_param(init->v, "Output Type", stp_get_output_type(init->v));
       print_remote_int_param(init->v, "Left", stp_get_left(init->v));
       print_remote_int_param(init->v, "Top", stp_get_top(init->v));
-      print_remote_int_param(init->v, "Image Type", stp_get_image_type(init->v));
+      print_remote_param(init->v, "Image Type", stp_get_string_parameter(init->v, "ImageOptimization"));
       print_remote_int_param(init->v, "Page Width", stp_get_page_width(init->v));
       print_remote_int_param(init->v, "Page Height", stp_get_page_height(init->v));
       print_remote_int_param(init->v, "Input Model", stp_get_input_color_model(init->v));
@@ -1044,7 +1044,6 @@ adjust_print_quality(const escp2_init_t *init, void *dither,
   const escp2_variable_inkset_t *inks;
   double k_upper, k_lower;
   double paper_k_upper;
-  int		ink_spread;
   /*
    * Compute the LUT.  For now, it's 8 bit, but that may eventually
    * sometimes change.
@@ -1116,23 +1115,6 @@ adjust_print_quality(const escp2_init_t *init, void *dither,
 			      (*inks)[i]->density * paper_k_upper *
 			      stp_get_float_parameter(nv, "Density"));
 
-  switch (stp_get_image_type(nv))
-    {
-    case IMAGE_LINE_ART:
-      stp_dither_set_ink_spread(dither, 19);
-      break;
-    case IMAGE_SOLID_TONE:
-      stp_dither_set_ink_spread(dither, 15);
-      break;
-    case IMAGE_CONTINUOUS:
-      ink_spread = 13;
-      if (init->ydpi > escp2_max_vres(init->model, nv))
-	ink_spread++;
-      if (init->bits > 1)
-	ink_spread++;
-      stp_dither_set_ink_spread(dither, ink_spread);
-      break;
-    }
   stp_dither_set_density(dither, stp_get_float_parameter(nv, "Density"));
 
   sat_adjustment = stp_read_and_compose_curves(init->inkname->sat_adjustment,

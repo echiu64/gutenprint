@@ -316,7 +316,7 @@ run (char   *name,		/* I - Name of print program. */
 	    stp_set_float_parameter(gimp_vars.v, "Yellow", param[20].data.d_float);
 
           if (nparams > 21)
-            stp_set_image_type(gimp_vars.v, param[22].data.d_int32);
+	    stp_set_string_parameter(gimp_vars.v, "ImageOptimization", param[21].data.d_string);
 
           if (nparams > 22)
             stp_set_float_parameter(gimp_vars.v, "Saturation", param[23].data.d_float);

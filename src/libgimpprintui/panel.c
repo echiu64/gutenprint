@@ -176,10 +176,6 @@ static void file_cancel_callback  (void);
 
 static GtkWidget *color_adjust_dialog;
 
-static GtkWidget *dither_algo_combo = NULL;
-static GtkWidget *dither_algo_label = NULL;
-static gint dither_algo_callback_id = -1;
-
 static void preview_update              (void);
 static void preview_expose              (void);
 static void preview_button_callback     (GtkWidget      *widget,
@@ -190,8 +186,6 @@ static void preview_motion_callback     (GtkWidget      *widget,
 					 gpointer        data);
 static void position_callback           (GtkWidget      *widget);
 static void position_button_callback    (GtkWidget      *widget,
-					 gpointer        data);
-static void image_type_callback         (GtkWidget      *widget,
 					 gpointer        data);
 static void plist_build_combo(GtkWidget *combo,
 			      GtkWidget *label,
@@ -227,6 +221,17 @@ static list_option_t the_list_options[] =
     { "Resolution", N_("Resolution:"),
       N_("Resolution and quality of the print"),
       NULL, NULL, -1 },
+    { "DitherAlgorithm", N_("Dither Algorithm:"),
+      N_("Choose the dither algorithm to be used.\n"
+	 "Adaptive Hybrid usually produces the best all-around quality.\n"
+	 "EvenTone is a new, experimental algorithm that often produces excellent results.\n"
+	 "Ordered is faster and produces almost as good quality on photographs.\n"
+	 "Fast and Very Fast are considerably faster, and work well for text and line art.\n"
+	 "Hybrid Floyd-Steinberg generally produces inferior output."),
+      NULL, NULL, -1 },
+    { "ImageOptimization", N_("Image Type:"),
+      N_("Optimize the output for the type of image being printed"),
+      NULL, NULL, -1 },
   };
 
 static const gint list_option_count = (sizeof(the_list_options) /
@@ -259,21 +264,6 @@ static radio_group_t output_types[] =
 
 static const gint output_type_count = (sizeof(output_types) /
 				       sizeof(radio_group_t));
-
-static radio_group_t image_types[] =
-  {
-    { N_("Line Art"), N_("Fastest and brightest color for text and line art"),
-      IMAGE_LINE_ART, NULL },
-    { N_("Solid Colors"),
-      N_("Best for images dominated by regions of solid color"),
-      IMAGE_SOLID_TONE, NULL },
-    { N_("Photograph"),
-      N_("Slowest, but most accurate and smoothest color for continuous tone "
-	 "images and photographs"), IMAGE_CONTINUOUS, NULL }
-  };
-
-static const gint image_type_count = (sizeof(image_types) /
-				      sizeof(radio_group_t));
 
 static color_option_t color_options[] =
   {
@@ -900,8 +890,13 @@ create_printer_settings_frame (void)
 
   for (i = 0; i < list_option_count; i++)
     {
-      if (strcmp(the_list_options[i].name, "PageSize"))
-	stpui_create_new_combo(&(the_list_options[i]), table, 0, vpos++);
+      stp_parameter_t desc;
+      list_option_t *option = &(the_list_options[i]);
+      stp_describe_parameter(stp_default_settings(), option->name, &desc);
+      option->p_class = desc.p_class;
+      if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST &&
+	  desc.p_class == STP_PARAMETER_CLASS_FEATURE)
+	stpui_create_new_combo(option, table, 0, vpos++);
     }
 }
 
@@ -1155,31 +1150,15 @@ create_color_adjust_window (void)
 	}
     }
 
-  /*
-   * Dither algorithm option combo...
-   */
-
-  event_box = gtk_event_box_new ();
-  dither_algo_label = stpui_table_attach_aligned
-    (GTK_TABLE (table), 0, color_option_count + 1,
-     _("Dither Algorithm:"), 1.0, 0.5, event_box, 1, TRUE);
-
-  dither_algo_combo = gtk_combo_new ();
-  gtk_container_add (GTK_CONTAINER(event_box), dither_algo_combo);
-  gtk_widget_show (dither_algo_combo);
-
-  stpui_set_help_data(GTK_WIDGET (event_box),
-		_("Choose the dither algorithm to be used.\n"
-		  "Adaptive Hybrid usually produces the best "
-		  "all-around quality.\n"
-		  "EvenTone is a new, experimental algorithm "
-		  "that often produces excellent results.\n"
-		  "Ordered is faster and produces almost as good "
-		  "quality on photographs.\n"
-		  "Fast and Very Fast are considerably faster, and "
-		  "work well for text and line art.\n"
-		  "Hybrid Floyd-Steinberg generally produces "
-		  "inferior output."));
+  for (i = 0; i < list_option_count; i++)
+    {
+      stp_parameter_t desc;
+      list_option_t *option = &(the_list_options[i]);
+      stp_describe_parameter(stp_default_settings(), option->name, &desc);
+      if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST &&
+	  desc.p_class == STP_PARAMETER_CLASS_OUTPUT)
+	stpui_create_new_combo(option, table, 0, color_option_count + i + 1);
+    }
 #if 0
   curve = gtk_gamma_curve_new();
   stpui_table_attach_aligned(GTK_TABLE (table), 0, color_option_count + 2,
@@ -1219,22 +1198,6 @@ create_image_settings_frame (void)
   gtk_table_attach (GTK_TABLE (table), event_box, 0, 1, 0, 1,
                     GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, 0, 0);
   gtk_widget_show (event_box);
-
-  label = gtk_label_new (_("Image Type:"));
-  gtk_container_add (GTK_CONTAINER (event_box), label);
-  gtk_widget_show (label);
-
-  stpui_set_help_data(event_box,
-		_("Optimize the output for the type of image being printed"));
-
-  group = NULL;
-  for (i = 0; i < image_type_count; i++)
-    group = stpui_create_radio_button(&(image_types[i]), group, table, 0, i,
-				      image_type_callback);
-
-  sep = gtk_hseparator_new ();
-  gtk_box_pack_start (GTK_BOX (vbox), sep, FALSE, FALSE, 0);
-  gtk_widget_show (sep);
 
   /*
    * Output type toggles.
@@ -1667,46 +1630,6 @@ position_callback (GtkWidget *widget)
 }
 
 static void
-dither_algo_callback (GtkWidget *widget, gpointer data)
-{
-  stp_parameter_t desc;
-  const gchar *new_algo;
-  const gchar *algo = stp_get_string_parameter(pv->v, "DitherAlgorithm");
-  stp_describe_parameter(pv->v, "DitherAlgorithm", &desc);
-  new_algo = stpui_combo_get_name(dither_algo_combo, desc.bounds.str);
-  if (!algo || strcmp(algo, new_algo) != 0)
-    stp_set_string_parameter(pv->v, "DitherAlgorithm", new_algo);
-}
-
-static void
-build_dither_combo (void)
-{
-  stp_string_list_t vec = NULL;
-  stp_parameter_t desc;
-  const gchar *algo = stp_get_string_parameter(pv->v, "DitherAlgorithm");
-  stp_describe_parameter(pv->v, "DitherAlgorithm", &desc);
-  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
-    {
-      vec = desc.bounds.str;
-      if (vec == NULL || stp_string_list_count(vec) == 0)
-	stp_set_string_parameter(pv->v, "DitherAlgorithm", NULL);
-      else if (!algo || strlen(algo) == 0)
-	stp_set_string_parameter(pv->v, "DitherAlgorithm", desc.deflt.str);
-    }
-
-  plist_build_combo (dither_algo_combo,
-		     dither_algo_label,
-		     vec,
-		     stp_get_string_parameter (pv->v, "DitherAlgorithm"),
-		     desc.deflt.str,
-		     &dither_algo_callback,
-		     &dither_algo_callback_id,
-		     NULL);
-  if (vec)
-    stp_string_list_free(vec);
-}
-
-static void
 do_color_updates (void)
 {
   int i;
@@ -1770,13 +1693,6 @@ do_all_updates(void)
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(units[pv->unit].checkbox),
 			       TRUE);
 
-  for (i = 0; i < image_type_count; i++)
-    {
-      if (image_types[i].value == stp_get_image_type(pv->v))
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(image_types[i].button),
-				     TRUE);
-    }
-
   suppress_preview_update--;
   preview_update ();
 
@@ -1812,8 +1728,6 @@ do_all_updates(void)
       if (option->extra)
 	(option->extra)(stp_get_string_parameter(pv->v, option->name));
     }
-
-  build_dither_combo ();
 }
 
 /*
@@ -1974,6 +1888,8 @@ combo_callback(GtkWidget *widget, gpointer data)
 	(option->extra)(new_value);
       stp_set_string_parameter(pv->v, option->name, new_value);
       preview_update();
+      if (option->p_class == STP_PARAMETER_CLASS_OUTPUT)
+	update_adjusted_thumbnail();
     }
 }
 
@@ -2065,24 +1981,6 @@ unit_callback (GtkWidget *widget,
     {
       pv->unit = (gint) data;
       set_all_entry_values();
-    }
-}
-
-/*
- *  image_type_callback() - Update the current image type mode.
- */
-static void
-image_type_callback (GtkWidget *widget,
-		     gpointer   data)
-{
-  reset_preview ();
-
-  if (GTK_TOGGLE_BUTTON (widget)->active)
-    {
-      stp_set_image_type (pv->v, (gint) data);
-      invalidate_preview_thumbnail ();
-      update_adjusted_thumbnail ();
-      preview_update ();
     }
 }
 

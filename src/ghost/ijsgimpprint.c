@@ -284,7 +284,7 @@ gimp_list_cb (void *list_cb_data,
 	      char *val_buf,
 	      int val_size)
 {
-  const char *param_list = "OutputFile,OutputFD,DeviceManufacturer,DeviceModel,Quality,MediaName,MediaType,MediaSource,InkType,DitherAlgorithm,ImageType,Brightness,Gamma,Contrast,Cyan,Magenta,Yellow,Saturation,Density,PrintableArea,PrintableTopLeft,TopLeft,Dpi";
+  const char *param_list = "OutputFile,OutputFD,DeviceManufacturer,DeviceModel,Quality,MediaName,MediaType,MediaSource,InkType,DitherAlgorithm,ImageOptimization,Brightness,Gamma,Contrast,Cyan,Magenta,Yellow,Saturation,Density,PrintableArea,PrintableTopLeft,TopLeft,Dpi";
   int size = strlen (param_list);
 
   if (size > val_size)
@@ -510,12 +510,6 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  else
 	    STP_DEBUG(fprintf(stderr, "No matching paper size found\n"));
 	}
-    }
-  else if (strcmp(key, "ImageType") == 0)
-    {
-      code = get_int(vbuf, key, &i);
-      if (code == 0)
-	stp_set_image_type(img->v, i);
     }
   else if (strcmp (key, "Duplex") == 0)
     {
@@ -748,8 +742,9 @@ stp_dbg(const char *msg, const stp_vars_t v)
 	  stp_get_float_parameter(v, "Density"));
   fprintf(stderr, "Settings: width %d, height %d\n",
 	  stp_get_page_width(v), stp_get_page_height(v));
-  fprintf(stderr, "Settings: output type %d  image type %d\n",
-	  stp_get_output_type(v), stp_get_image_type(v));
+  fprintf(stderr, "Settings: output type %d\n", stp_get_output_type(v));
+  fprintf(stderr, "Settings: Image Type %s\n",
+	  safe_get_string_parameter(v, "ImageOptimization"));
   fprintf(stderr, "Settings: Quality %s\n",
 	  safe_get_string_parameter(v, "Resolution"));
   fprintf(stderr, "Settings: Dither %s\n",

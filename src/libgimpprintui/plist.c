@@ -496,7 +496,7 @@ stpui_printrc_load(void)
 	get_optional_float_param(key.v, "Magenta", &lineptr, &keepgoing);
 	get_optional_float_param(key.v, "Yellow", &lineptr, &keepgoing);
         IGNORE_OPTIONAL_PARAM(linear);
-        GET_OPTIONAL_INT_PARAM(image_type);
+        IGNORE_OPTIONAL_PARAM(image_type);
 	get_optional_float_param(key.v, "Saturation", &lineptr, &keepgoing);
 	get_optional_float_param(key.v, "Density", &lineptr, &keepgoing);
 	get_optional_string_param(key.v, "InkType", &lineptr, &keepgoing);
@@ -583,7 +583,7 @@ stpui_printrc_load(void)
 	} else if (strcasecmp("linear", keyword) == 0) {
 	  /* Ignore linear */
 	} else if (strcasecmp("image-type", keyword) == 0) {
-	  stp_set_image_type(key.v, atoi(value));
+	  /* Ignore image type */
 	} else if (strcasecmp("unit", keyword) == 0) {
 	  key.unit = atoi(value);
 	} else if (strcasecmp("custom-page-width", keyword) == 0) {
@@ -703,7 +703,6 @@ stpui_printrc_save(void)
 	fprintf(fp, "Custom-Page-Height: %d\n", stp_get_page_height(p->v));
 
 	fprintf(fp, "Output-Type: %d\n", stp_get_output_type(p->v));
-	fprintf(fp, "Image-Type: %d\n", stp_get_image_type(p->v));
 
 	for (j = 0; j < count; j++)
 	  {

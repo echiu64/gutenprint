@@ -2332,26 +2332,6 @@ canon_print(const stp_vars_t v, stp_image_t *image)
 			      inks->k->density *
 			      stp_get_float_parameter(nv, "Density"));
     }
-
-  switch (stp_get_image_type(nv))
-    {
-    case IMAGE_LINE_ART:
-      stp_dither_set_ink_spread(dither, 19);
-      break;
-    case IMAGE_SOLID_TONE:
-      stp_dither_set_ink_spread(dither, 15);
-      break;
-    case IMAGE_CONTINUOUS:
-      ink_spread = 13;
-      /*
-      if (ydpi > canon_max_vres(model))
-	ink_spread++;
-      */
-      if (bits > 1)
-	ink_spread++;
-      stp_dither_set_ink_spread(dither, ink_spread);
-      break;
-    }
   stp_dither_set_density(dither, stp_get_float_parameter(nv, "Density"));
 
   errdiv  = image_height / out_height;

@@ -183,7 +183,7 @@ static float_param_t the_parameters[] =
     {
       "ImageOptimization", N_("Image Type"),
       N_("Optimize the settings for the type of image to be printed"),
-      STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_BASIC, 0
     },
   }
@@ -1695,6 +1695,8 @@ stp_color_init(stp_vars_t v,
 	       stp_image_t *image,
 	       size_t steps)
 {
+  const char *image_type = stp_get_string_parameter(v, "ImageOptimization");
+  int itype = 0;
   int out_channels = 0;
   int image_bpp = stp_image_bpp(image);
   lut_t *lut;
@@ -1702,6 +1704,15 @@ stp_color_init(stp_vars_t v,
   lut = (lut_t *)(stp_get_color_data(v));
   lut->image_bpp = image_bpp;
   lut->image_width = stp_image_width(image);
+  if (image_type)
+    {
+      if (strcmp(image_type, "LineArt") == 0)
+	itype = 0;
+      else if (strcmp(image_type, "Solid") == 0)
+	itype = 1;
+      else if (strcmp(image_type, "Photograph") == 0)
+	itype = 2;
+    }
   switch (stp_get_output_type(v))
     {
     case OUTPUT_MONOCHROME:
@@ -1739,13 +1750,13 @@ stp_color_init(stp_vars_t v,
       switch (image_bpp)
 	{
 	case 3:
-	  switch (stp_get_image_type(v))
+	  switch (itype)
 	    {
-	    case IMAGE_CONTINUOUS:
+	    case 2:
 	      SET_COLORFUNC(rgb_to_rgb);
-	    case IMAGE_SOLID_TONE:
+	    case 1:
 	      SET_COLORFUNC(solid_rgb_to_rgb);
-	    case IMAGE_LINE_ART:
+	    case 0:
 	      SET_COLORFUNC(fast_rgb_to_rgb);
 	    default:
 	      set_null_colorfunc();
@@ -1753,12 +1764,12 @@ stp_color_init(stp_vars_t v,
 	    }
 	  break;
 	case 1:
-	  switch (stp_get_image_type(v))
+	  switch (itype)
 	    {
-	    case IMAGE_CONTINUOUS:
-	    case IMAGE_SOLID_TONE:
+	    case 2:
+	    case 1:
 	      SET_COLORFUNC(gray_to_rgb);
-	    case IMAGE_LINE_ART:
+	    case 0:
 	      SET_COLORFUNC(fast_gray_to_rgb);
 	    default:
 	      set_null_colorfunc();

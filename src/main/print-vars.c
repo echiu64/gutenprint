@@ -46,7 +46,6 @@ typedef struct					/* Plug-in variables */
   int	cookie;
   const char *driver;		/* Name of printer "driver" */
   int	output_type;		/* Color or grayscale output */
-  int	image_type;		/* Image type (line art etc.) */
   float app_gamma;		/* Application gamma */
   int	input_color_model;	/* Color model for this device */
   int	output_color_model;	/* Color model for this device */
@@ -92,7 +91,6 @@ static stp_internal_vars_t default_vars =
 	COOKIE_VARS,
 	N_ ("ps2"),	       	/* Name of printer "driver" */
 	OUTPUT_COLOR,		/* Color or grayscale output */
-	IMAGE_LINE_ART,		/* Type of image */
 	1.0,			/* Application gamma placeholder */
 	COLOR_MODEL_RGB,	/* Input color model */
 	COLOR_MODEL_RGB,	/* Output color model */
@@ -104,7 +102,6 @@ static stp_internal_vars_t min_vars =
 	COOKIE_VARS,
 	N_ ("ps2"),		/* Name of printer "driver" */
 	0,			/* Color or grayscale output */
-	IMAGE_LINE_ART,		/* Type of image */
 	1.0,			/* Application gamma placeholder */
 	0,			/* Input color model */
 	0,			/* Output color model */
@@ -116,7 +113,6 @@ static stp_internal_vars_t max_vars =
 	COOKIE_VARS,
 	N_ ("ps2"),		/* Name of printer "driver" */
 	OUTPUT_RAW_PRINTER,	/* Color or grayscale output */
-	IMAGE_CONTINUOUS,	/* Type of image */
 	1.0,			/* Application gamma placeholder */
 	NCOLOR_MODELS - 1,	/* Input color model */
 	NCOLOR_MODELS - 1,	/* Output color model */
@@ -371,7 +367,6 @@ DEF_FUNCS(left, int, )
 DEF_FUNCS(top, int, )
 DEF_FUNCS(width, int, )
 DEF_FUNCS(height, int, )
-DEF_FUNCS(image_type, int, )
 DEF_FUNCS(page_width, int, )
 DEF_FUNCS(page_height, int, )
 DEF_FUNCS(input_color_model, int, )
@@ -774,7 +769,6 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
   stp_set_top(vd, stp_get_top(vs));
   stp_set_width(vd, stp_get_width(vs));
   stp_set_height(vd, stp_get_height(vs));
-  stp_set_image_type(vd, stp_get_image_type(vs));
   stp_set_page_width(vd, stp_get_page_width(vs));
   stp_set_page_height(vd, stp_get_page_height(vs));
   stp_set_input_color_model(vd, stp_get_input_color_model(vd));
@@ -842,7 +836,9 @@ stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p)
   for (i = 0; i < count; i++)
     {
       const stp_parameter_t *p = stp_parameter_list_param(params, i);
-      if (p->p_type == STP_PARAMETER_TYPE_STRING_LIST)
+      if (p->p_type == STP_PARAMETER_TYPE_STRING_LIST &&
+	  (p->p_class == STP_PARAMETER_CLASS_FEATURE ||
+	   p->p_class == STP_PARAMETER_CLASS_PAGE_SIZE))
 	{
 	  stp_describe_parameter(v, p->name, &desc);
 	  stp_set_string_parameter(v, p->name, desc.deflt.str);

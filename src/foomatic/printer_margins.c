@@ -40,54 +40,68 @@ main(int argc, char **argv)
     {
       stp_vars_t v;
       const stp_printer_t p = stp_get_printer_by_index(i);
+      stp_vars_t pv = stp_allocate_copy(stp_printer_get_printvars(p));
       const stp_vars_t printvars = stp_printer_get_printvars(p);
-      const stp_printfuncs_t* printfuncs = stp_printer_get_printfuncs(p);
-      int		num_opts;
-      stp_param_t	*opts;
-      const char	*defopt;
+      const char *driver = stp_printer_get_driver(p);
+      const char *family = stp_printer_get_family(p);
+      stp_parameter_t desc;
+      int count;
+
+
       int		width, height,
 	                bottom, left,
 	                top, right;
+      if (strcmp(family, "ps") == 0 || strcmp(family, "raw") == 0)
+	continue;
+      stp_describe_parameter(pv, "PageSize", &desc);
+
       printf("# Printer model %s, long name `%s'\n",
 	     stp_printer_get_driver(p), stp_printer_get_long_name(p));
-      v = stp_allocate_copy(printvars);
-      opts = (*(printfuncs->parameters))(p, NULL, "PageSize", &num_opts);
-      defopt = (*(printfuncs->default_parameters))(p, NULL, "PageSize");
-      for (k = 0; k < num_opts; k++) {
-	const stp_papersize_t papersize = stp_get_papersize_by_name(opts[k].name);
+
+      if (desc.p_type != STP_PARAMETER_TYPE_STRING_LIST)
+	continue;
+
+      count = stp_string_list_count(desc.bounds.str);
+
+      for (k = 0; k < count; k++)
+	{
+	  int owidth, oheight;
+	  const char *name = stp_string_list_param(desc.bounds.str, k)->name;
+	  const stp_papersize_t papersize = stp_get_papersize_by_name(name);
 	
-	if (!papersize) {
-	  printf("Unable to look up size %s!\n", opts[k].name);
-	  continue;
+	  if (!papersize)
+	    {
+	      printf("Unable to look up size %s!\n", name);
+	      continue;
+	    }
+	  
+	  width  = stp_papersize_get_width(papersize);
+	  height = stp_papersize_get_height(papersize);
+	  
+	  owidth = width;
+	  oheight = height;
+	  
+	  stp_set_media_size(v, opts[k].name);
+	  
+	  (*(printfuncs->media_size))(p, v, &width, &height);
+	  (*(printfuncs->imageable_area))(p, v, &left, &right, &bottom, &top);
+	  
+	  /* FIXME */
+	  if (owidth == 0)
+	    right = width - right;
+	  if (oheight == 0)
+	    top = height - top;
+	  
+	  printf("$imageableareas{'%s'}{'%s'} = {\n",
+		 stp_printer_get_driver(p), opts[k].name);
+	  printf("  'left' => '%d',\n", left);
+	  printf("  'right' => '%d',\n", right);
+	  printf("  'top' => '%d',\n", top);
+	  printf("  'bottom' => '%d',\n", bottom);
+	  printf("  'width' => '%d',\n", width);
+	  printf("  'height' => '%d'\n", height);
+	  printf("};\n");
 	}
-	  
-	width  = stp_papersize_get_width(papersize);
-	height = stp_papersize_get_height(papersize);
-	  
-	/* if (width <= 0 || height <= 0)
-	   continue; */
-	  
-	stp_set_media_size(v, opts[k].name);
-	  
-	(*(printfuncs->media_size))(p, v, &width, &height);
-	(*(printfuncs->imageable_area))(p, v, &left, &right, &bottom, &top);
-	  
-	if (strcmp(opts[k].name, "Custom") == 0) {
-	  /* Use relative values for the custom size */
-	  right = width - right;
-	  top = height - top;
-	}
-	  
-	printf("$imageableareas{'%s'}{'%s'} = {\n",
-	       stp_printer_get_driver(p), opts[k].name);
-	printf("  'left' => '%d',\n", left);
-	printf("  'right' => '%d',\n", right);
-	printf("  'top' => '%d',\n", top);
-	printf("  'bottom' => '%d',\n", bottom);
-	printf("  'width' => '%d',\n", width);
-	printf("  'height' => '%d'\n", height);
-	printf("};\n");
-      }
     }
   return 0;
 }

@@ -341,7 +341,6 @@ main(int  argc,				/* I - Number of command-line arguments */
 	stp_set_page_height(v, cups.header.PageSize[1]);
 	stp_set_left(v, 0);
 	stp_set_top(v, 0);
-	stp_set_image_type(v, cups.header.cupsRowCount);
 	stp_set_outfunc(v, cups_writefunc);
 	stp_set_errfunc(v, cups_writefunc);
 	stp_set_outdata(v, stdout);
@@ -369,6 +368,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 
 	set_special_parameter(v, "DitherAlgorithm", cups.header.cupsRowStep);
 	set_special_parameter(v, "Resolution", cups.header.cupsCompression);
+	set_special_parameter(v, "ImageOptimization",cups.header.cupsRowCount);
 
 	stp_set_string_parameter(v, "InputSlot", cups.header.MediaClass);
 	stp_set_string_parameter(v, "MediaType", cups.header.MediaType);
@@ -418,7 +418,6 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: stp_get_output_type(v) |%d|\n", stp_get_output_type(v));
     fprintf(stderr, "DEBUG: stp_get_left(v) |%d|\n", stp_get_left(v));
     fprintf(stderr, "DEBUG: stp_get_top(v) |%d|\n", stp_get_top(v));
-    fprintf(stderr, "DEBUG: stp_get_image_type(v) |%d|\n", stp_get_image_type(v));
     fprintf(stderr, "DEBUG: stp_get_page_width(v) |%d|\n", stp_get_page_width(v));
     fprintf(stderr, "DEBUG: stp_get_page_height(v) |%d|\n", stp_get_page_height(v));
     fprintf(stderr, "DEBUG: stp_get_input_color_model(v) |%d|\n", stp_get_input_color_model(v));

@@ -572,7 +572,6 @@ stp_verify_printer_params(const stp_vars_t v)
       stp_eprintf(v, _("Image is too long for the page\n"));
     }
 
-  CHECK_INT_RANGE(v, image_type);
   CHECK_INT_RANGE(v, output_type);
   CHECK_INT_RANGE(v, input_color_model);
   CHECK_INT_RANGE(v, output_color_model);
