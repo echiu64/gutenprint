@@ -32,7 +32,7 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <a href="MacOSX.php3#4.2.5"><b>January 26, 2002 -</b></a> Gimp-Print 4.2.5, the newest stable release of Gimp-Print, is now available for download.
+ <a href="MacOSX.php3#4.2.5"><b>January 26, 2003 -</b></a> Gimp-Print 4.2.5, the newest stable release of Gimp-Print, is now available for download.
  </p>
  <p>
  Please help us test USB-to-Parallel cable converters! If you have used one of
