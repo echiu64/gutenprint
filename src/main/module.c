@@ -54,7 +54,6 @@ static stpi_internal_module_class_t module_classes[] =
     {STPI_MODULE_CLASS_MISC, N_("Miscellaneous (unclassified)")},
     {STPI_MODULE_CLASS_FAMILY, N_("Family driver")},
     {STPI_MODULE_CLASS_DITHER, N_("Dither algorithm")},
-    {STPI_MODULE_CLASS_COLOR, N_("Color conversion")},
     {STPI_MODULE_CLASS_INVALID, NULL} /* Must be last */
   };
 

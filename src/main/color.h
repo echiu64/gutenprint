@@ -60,17 +60,6 @@ extern void
 stpi_color_describe_parameter(const stp_vars_t v, const char *name,
 			     stp_parameter_t *description);
 
-typedef struct
-{
-  stp_parameter_list_t (*list_parameters)(const stp_vars_t v);
-  void  (*parameters)(const stp_vars_t v, const char *name,
-		      stp_parameter_t *);
-  int   (*init)(stp_vars_t v, stp_image_t *image, size_t steps);
-  init  (*get_row)(const stp_vars_t v, stp_image_t *image, int row,
-		   unsigned short *out, int *zero_mask);
-} stpi_colorfuncs_t;
-
-
 #ifdef __cplusplus
   }
 #endif

@@ -1435,7 +1435,7 @@ cmyk_to_gray(const stp_vars_t vars,
     }
 }
 
-static int
+int
 stpi_color_get_row(const stp_vars_t v, stp_image_t *image, int row,
 		  unsigned short *out, int *zero_mask)
 {
@@ -1753,7 +1753,7 @@ stpi_dprintf(STPI_DBG_COLORFUNC, v,					    \
 lut->colorfunc = x;							    \
 break
 
-static int
+int
 stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
 {
   const char *image_type = stp_get_string_parameter(v, "ImageOptimization");
@@ -1890,7 +1890,7 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
   return out_channels;
 }
 
-static stp_parameter_list_t
+stp_parameter_list_t
 stpi_color_list_parameters(const stp_vars_t v)
 {
   stpi_list_t *ret = stp_parameter_list_create();
@@ -1902,7 +1902,7 @@ stpi_color_list_parameters(const stp_vars_t v)
   return ret;
 }
 
-static void
+void
 stpi_color_describe_parameter(const stp_vars_t v, const char *name,
 			      stp_parameter_t *description)
 {
@@ -1984,30 +1984,3 @@ stpi_color_describe_parameter(const stp_vars_t v, const char *name,
 	}
     }
 }
-
-static const stpi_colorfuncs_t standard_colorfuncs =
-{
-  stpi_color_list_parameters,
-  stpi_color_describe_parameter,
-  stpi_color_init,
-  stpi_color_get_row
-};
-
-/* Module header */
-#define stpi_module_version standard_color_LTX_stpi_module_version
-#define stpi_module_data standard_color_LTX_stpi_module_data
-
-stpi_module_version_t stpi_module_version = {0, 0};
-
-stpi_module_t stpi_color_module_data =
-  {
-    "standard-color",
-    VERSION,
-    "Standard Gimp-print color driver",
-    STPI_MODULE_CLASS_COLOR,
-    NULL,
-    NULL,
-    NULL
-    (void *) &standard_colorfuncs
-  };
-
