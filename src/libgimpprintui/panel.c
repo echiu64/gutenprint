@@ -1337,6 +1337,14 @@ create_printer_dialog (void)
 	{
 	  gchar *tmp=g_strdup(gettext(stp_printer_get_long_name(the_printer)));
 
+	  /*
+	   * FIXME Somehow if the raw printer comes before any of the
+	   * "real" printers in the list of printers created in module.c,
+	   * this code barfs on any of those printers added later.  For
+	   * example, try listing olympus_LTX_stpi_module_data after
+	   * raw_LTX_stpi_module_data.
+	   */
+	  
 	  gtk_clist_insert (GTK_CLIST (printer_driver), i, &tmp);
 	  gtk_clist_set_row_data (GTK_CLIST (printer_driver), i, (gpointer) i);
 	  g_free(tmp);
