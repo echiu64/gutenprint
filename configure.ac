@@ -480,7 +480,10 @@ else
   fi
 fi
 if test "$CC" = "gcc" ; then
-  GNUCFLAGS="-Wall -Waggregate-return -Wcast-align -Wcast-qual -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls -Wnested-externs -Wwrite-strings -pedantic -Werror-implicit-function-declaration -Winline"
+  GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -pedantic -Werror-implicit-function-declaration -Winline"
+  if test x${USE_MAINTAINER_MODE} = xyes ; then
+    GNUCFLAGS="${GNUCFLAGS} -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls"
+  fi
 fi
 AC_SUBST(GNUCFLAGS)
 
