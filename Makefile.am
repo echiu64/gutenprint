@@ -86,7 +86,7 @@ GHOST_DIST= COPYING ChangeLog README contrib.mak.addon \
 CUPS_DIST = CHANGES.txt LICENSE.txt Makefile.in README.txt configure \
 		commandtoepson.c epson.c genppd.c rastertoprinter.c $(CUPSCOPY)
 
-DOC_DIST = color.png docbook.css main.png print.html setup.png
+DOC_DIST = color.png docbook.css main.png print.html setup.png print.sgml
 
 EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
 	README.dither quickmatrix257.h ran.367.179.h make-deb.sh README.escp2 \

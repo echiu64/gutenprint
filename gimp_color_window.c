@@ -44,7 +44,8 @@ static GtkObject *magenta_adjustment;
 static GtkObject *yellow_adjustment;
 static GtkObject *gamma_adjustment;
 
-static GtkWidget *dither_algo_combo  = NULL;
+GtkWidget *dither_algo_combo       = NULL;
+static int dither_algo_callback_id = -1;
 
 static void gimp_brightness_update (GtkAdjustment *adjustment);
 static void gimp_saturation_update (GtkAdjustment *adjustment);
@@ -64,7 +65,8 @@ extern void gimp_plist_build_combo(GtkWidget*,
 				   int,
 				   char**,
 				   char*,
-				   GtkSignalFunc);
+				   GtkSignalFunc,
+				   int*);
 
 void gimp_build_dither_combo           (void);
 void gimp_redraw_color_swatch         (void);
@@ -437,7 +439,8 @@ gimp_build_dither_combo (void)
 			 num_dither_algos,
 			 dither_algo_names,
 			 plist[plist_current].v.dither_algorithm,
-			 &gimp_dither_algo_callback);
+			 &gimp_dither_algo_callback,
+			 &dither_algo_callback_id);
 }
 
 static void

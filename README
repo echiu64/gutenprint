@@ -1,5 +1,12 @@
-This is the Print plug-in for the Gimp, version 4.0a3 (pre-release).
-Please read the release notes carefully!
+This is the gimp-print version 4.0b1 (beta).  Gimp-print is the print
+facility for the Gimp, and in addition a suite of drivers that may be
+used with common UNIX spooling systems using GhostScript or CUPS.
+These drivers provide printing quality for UNIX/Linux on a par with
+proprietary vendor-supplied drivers in many cases, and can be used for
+many of the most demanding printing tasks.
+
+Please read the release notes carefully, as this release is not
+entirely compatible with 4.0a3!
 
 
 BASIC INSTALLATION

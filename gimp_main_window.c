@@ -52,6 +52,7 @@ extern gint             saveme;
 
 void  printrc_save (void);
 extern GtkWidget *gimp_color_adjust_dialog;
+extern GtkWidget *dither_algo_combo;
 extern void gimp_do_color_updates(void);
 extern void gimp_redraw_color_swatch(void);
 
@@ -71,10 +72,16 @@ static GtkWidget *height_entry;
 static GtkWidget *unit_inch;
 static GtkWidget *unit_cm;
 static GtkWidget *media_size_combo=NULL;  /* Media size combo box */
+static int media_size_callback_id=-1;     /* Media size calback ID */
 static GtkWidget *media_type_combo=NULL;  /* Media type combo box */
+static int media_type_callback_id=-1;     /* Media type calback ID */
 static GtkWidget *media_source_combo=NULL;/* Media source combo box */
+static int media_source_callback_id=-1;   /* Media source calback ID */
 static GtkWidget *ink_type_combo=NULL;    /* Ink type combo box */
+static int ink_type_callback_id=-1;       /* Ink type calback ID */
 static GtkWidget *resolution_combo=NULL;  /* Resolution combo box */
+static int resolution_callback_id=-1;     /* Resolution calback ID */
+static GtkWidget *orientation_menu=NULL;  /* Orientation menu */
 static GtkWidget *scaling_percent;        /* Scale by percent */
 static GtkWidget *scaling_ppi;            /* Scale by pixels-per-inch */
 static GtkWidget *scaling_image;          /* Scale to the image */
@@ -92,7 +99,6 @@ static GtkWidget *ppd_button;           /* PPD file browse button */
 static GtkWidget *output_cmd;           /* Output command text entry */
 static GtkWidget *ppd_browser;          /* File selection dialog for PPD files */
 static GtkWidget *file_browser;         /* FSD for print files */
-static GtkWidget *printandsave_button;
 static GtkWidget *adjust_color_button;
 
 static GtkObject *scaling_adjustment;	/* Adjustment object for scaling */
@@ -143,6 +149,7 @@ static void gimp_printandsave_callback (void);
 static void gimp_print_callback        (void);
 static void gimp_save_callback         (void);
 
+static void gimp_setup_update          (void);
 static void gimp_setup_open_callback   (void);
 static void gimp_setup_ok_callback     (void);
 static void gimp_ppd_browse_callback   (void);
@@ -249,7 +256,7 @@ gimp_create_main_window (void)
                      FALSE, TRUE, FALSE,
 
                      _("Print and\nSave Settings"), gimp_printandsave_callback,
-                     NULL, NULL, &printandsave_button, FALSE, FALSE,
+                     NULL, NULL, NULL, FALSE, FALSE,
                      _("Save\nSettings"), gimp_save_callback,
                      NULL, NULL, NULL, FALSE, FALSE,
                      _("Print"), gimp_print_callback,
@@ -434,7 +441,8 @@ gimp_create_main_window (void)
    * Orientation option menu...
    */
 
-  option = gimp_option_menu_new (FALSE,
+  orientation_menu = option
+         = gimp_option_menu_new (FALSE,
                                  _("Auto"), gimp_orientation_callback,
                                  (gpointer) ORIENT_AUTO, NULL, NULL,
 				 vars.orientation == ORIENT_AUTO,
@@ -1044,14 +1052,19 @@ gimp_plist_build_combo(GtkWidget*  combo,     /* I - Combo widget */
 		       int         num_items, /* I - Number of items */
 		       char**      items,     /* I - Menu items */
 		       char*       cur_item,  /* I - Current item */
-		       GtkSignalFunc callback) /* I - Callback */
+		       GtkSignalFunc callback, /* I - Callback */
+		       int*        callback_id) /* IO - Callback ID (init to -1) */
 {
   int		i;	/* Looping var */
   GList		*list = 0;
   GtkEntry	*entry = GTK_ENTRY(GTK_COMBO(combo)->entry);
 
 
+  if (*callback_id != -1)
+    gtk_signal_disconnect(GTK_OBJECT(entry), *callback_id);
+#if 0
   gtk_signal_handlers_destroy(GTK_OBJECT(entry));
+#endif
   gtk_entry_set_editable(entry, FALSE);
 
   if (num_items == 0)
@@ -1059,6 +1072,7 @@ gimp_plist_build_combo(GtkWidget*  combo,     /* I - Combo widget */
       list = g_list_append(list, _("Standard"));
       gtk_combo_set_popdown_strings(GTK_COMBO(combo), list);
       g_list_free(list);
+      *callback_id = -1;
       gtk_widget_set_sensitive(combo, FALSE);
       gtk_widget_show(combo);
       return;
@@ -1069,7 +1083,8 @@ gimp_plist_build_combo(GtkWidget*  combo,     /* I - Combo widget */
 
   gtk_combo_set_popdown_strings(GTK_COMBO(combo), list);
 
-  gtk_signal_connect(GTK_OBJECT(entry), "changed", (GtkSignalFunc)callback, 0);
+  *callback_id = gtk_signal_connect(GTK_OBJECT(entry), "changed",
+                                    (GtkSignalFunc)callback, 0);
 
   gtk_entry_set_text(entry, cur_item);
 
@@ -1080,7 +1095,6 @@ gimp_plist_build_combo(GtkWidget*  combo,     /* I - Combo widget */
   if (i == num_items)
       gtk_entry_set_text(entry, gettext(items[0]));
 
-  gtk_combo_set_use_arrows(GTK_COMBO(combo), TRUE);
   gtk_combo_set_value_in_list(GTK_COMBO(combo), TRUE, FALSE);
   gtk_widget_set_sensitive(combo, TRUE);
   gtk_widget_show(combo);
@@ -1140,6 +1154,9 @@ gimp_do_misc_updates (void)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (output_color), TRUE);
 
   gimp_do_color_updates();
+
+  gtk_option_menu_set_history(GTK_OPTION_MENU(orientation_menu),
+                              vars.orientation + 1);
 
   if (plist[plist_current].v.unit == 0)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (unit_inch), TRUE);
@@ -1295,6 +1312,11 @@ gimp_plist_callback (GtkWidget *widget,
   strcpy (vars.resolution, p->v.resolution);
   strcpy (vars.output_to, p->v.output_to);
 
+  gtk_entry_set_text (GTK_ENTRY(GTK_COMBO(dither_algo_combo)->entry),
+                      vars.dither_algorithm);
+
+  gimp_setup_update ();
+
   gimp_do_misc_updates ();
 
   /*
@@ -1310,7 +1332,8 @@ gimp_plist_callback (GtkWidget *widget,
 			 num_media_sizes,
 			 media_sizes,
 			 p->v.media_size,
-			 gimp_media_size_callback);
+			 gimp_media_size_callback,
+			 &media_size_callback_id);
 
   for (i = 0; i < num_media_sizes; i ++)
     free(media_sizes[i]);
@@ -1328,7 +1351,8 @@ gimp_plist_callback (GtkWidget *widget,
 			 num_media_types,
 			 media_types,
 			 p->v.media_type,
-			 gimp_media_type_callback);
+			 gimp_media_type_callback,
+			 &media_type_callback_id);
 
   if (num_media_types > 0)
     {
@@ -1349,7 +1373,8 @@ gimp_plist_callback (GtkWidget *widget,
 			 num_media_sources,
 			 media_sources,
 			 p->v.media_source,
-			 gimp_media_source_callback);
+			 gimp_media_source_callback,
+			 &media_source_callback_id);
 
   if (num_media_sources > 0)
     {
@@ -1369,7 +1394,8 @@ gimp_plist_callback (GtkWidget *widget,
 			 num_ink_types,
 			 ink_types,
 			 p->v.ink_type,
-			 gimp_ink_type_callback);
+			 gimp_ink_type_callback,
+			 &ink_type_callback_id);
 
   if (num_ink_types > 0)
     {
@@ -1390,7 +1416,8 @@ gimp_plist_callback (GtkWidget *widget,
 			 num_resolutions,
 			 resolutions,
 			 p->v.resolution,
-			 gimp_resolution_callback);
+			 gimp_resolution_callback,
+			 &resolution_callback_id);
 
   if (num_resolutions > 0)
     {
@@ -1607,10 +1634,10 @@ gimp_save_callback (void)
 }
 
 /*
- *  gimp_setup_open_callback() -
+ *  gimp_setup_update() - update widgets in the setup dialog
  */
 static void
-gimp_setup_open_callback (void)
+gimp_setup_update (void)
 {
   GtkAdjustment *adjustment;
   gint idx;
@@ -1640,11 +1667,29 @@ gimp_setup_open_callback (void)
   else
     gtk_widget_show (output_cmd);
 
-  gtk_widget_show (setup_dialog);
   adjustment =
     gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(printer_crawler));
   gtk_adjustment_set_value(adjustment, idx * (adjustment->step_increment + 3));
+}
+
+/*
+ *  gimp_setup_open_callback() -
+ */
+static void
+gimp_setup_open_callback (void)
+{
+  static int first_time = 1;
+
+  gimp_setup_update ();
+
   gtk_widget_show (setup_dialog);
+
+  if (first_time)
+    {
+      /* Make sure the driver scroller gets positioned correctly... */
+      gimp_setup_update ();
+      first_time = 0;
+    }
 }
 
 /*

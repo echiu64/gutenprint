@@ -1,3 +1,27 @@
+2000-09-16	<easysw@sourceforge.net>
+
+	Files:	configure.in (1.33) (+30 -3)
+		cups/genppd.c (1.9) (+6 -5)
+		testdither.c (1.2) (+39 -19)
+		print-dither.c (1.93) (+86 -113)
+	
+	Added configure check for random() and a new option --enable-debug.
+	
+	Simple optimizations to the dithering and color separation code.
+	(generate_cmy, update_cmyk, print_*, and dither_*); maybe a 5%
+	speedup right now on average...
+	
+	Added no-image option for testdither.
+	
+	Added new very fast dither to generated PPD files...
+	
+2000-09-16	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.41) (+58 -0)
+		Makefile.am (1.63) (+3 -0)
+	
+	Add documentation to the release
+	
 2000-09-16	<rlk@sourceforge.net>
 
 	Files:	Documentation/color.png (1.1) ( )

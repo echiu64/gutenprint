@@ -592,7 +592,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 {
   unsigned ld = vars->density * 65536;
   double isat = 1.0;
-  double ssat = sqrt(vars->saturation * 1.6);
+  double ssat = vars->saturation * 1.6;
   int i0 = -1;
   int i1 = -1;
   int i2 = -1;
@@ -602,11 +602,15 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
   int o2 = 0;
   int use_previous = 0;
   lut_t *lut = (lut_t *)(vars->lut);
-  int compute_saturation = 1;
-  if (ssat > .99999 && ssat < 1.00001)
-    compute_saturation = 0;
+  int compute_saturation = ssat <= .99999 || ssat >= 1.00001;
+  int split_saturation = ssat > 1.4;
+  if (split_saturation)
+    ssat = sqrt(ssat);
   if (ssat > 1)
     isat = 1.0 / ssat;
+#if 0
+printf("rgb-to-rgb: ssat=%f, isat=%f, do-sat=%d, split-sat=%d\n", ssat, isat, compute_saturation, split_saturation);
+#endif
   while (width > 0)
     {
       double h, s, v;
@@ -717,7 +721,8 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	  rgbout[2] = lookup_value(rgbout[2], lut->steps,
 				   lut->blue, lut->shiftval,
 				   lut->bin_size, lut->bin_shift);
-	  if (ssat > 1.4 &&(rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
+	  if (split_saturation &&
+	      (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
 	    {
 	      rgbout[0] = 65535 - rgbout[0];
 	      rgbout[1] = 65535 - rgbout[1];

@@ -28,6 +28,7 @@
 #endif
 
 #include <signal.h>
+#include <ctype.h>
 #include <sys/wait.h>
 #ifdef __EMX__
 #define INCL_DOSDEVICES
@@ -837,12 +838,14 @@ printrc_load(void)
   char		line[1024],	/* Line in printrc file */
 		*lineptr,	/* Pointer in line */
 		*commaptr;	/* Pointer to next comma */
-  plist_t	*p,		/* Current printer */
+  plist_t	*p = 0,		/* Current printer */
 		key;		/* Search key */
 #if (GIMP_MINOR_VERSION == 0)
   char		*home;		/* Home dir */
 #endif
+  int		format = 0;	/* rc file format version */
   int		system_printers; /* printer count before reading printrc */
+  char *	current_printer = 0; /* printer to select */
 
   check_plist(1);
 
@@ -888,86 +891,231 @@ printrc_load(void)
     {
       int keepgoing = 1;
       if (line[0] == '#')
+      {
+	if (strncmp("#PRINTRCv", line, 9) == 0)
+	{
+#ifdef DEBUG
+          printf("Found printrc version tag: `%s'\n", line);
+          printf("Version number: `%s'\n", &(line[9]));
+#endif
+	  (void) sscanf(&(line[9]), "%d", &format);
+	}
         continue;	/* Comment */
-      initialize_printer(&key);
-      lineptr = line;
-     /*
-      * Read the command-delimited printer definition data.  Note that
-      * we can't use sscanf because %[^,] fails if the string is empty...
-      */
+      }
+      if (format == 0)
+      {
+       /*
+	* Read old format printrc lines...
+	*/
 
-      GET_MANDATORY_STRING_PARAM(name);
-      GET_MANDATORY_STRING_PARAM(v.output_to);
-      GET_MANDATORY_STRING_PARAM(v.driver);
+        initialize_printer(&key);
+        lineptr = line;
 
-      if (! get_printer_by_driver(key.v.driver))
-	continue;
+       /*
+        * Read the command-delimited printer definition data.  Note that
+        * we can't use sscanf because %[^,] fails if the string is empty...
+        */
 
-      GET_MANDATORY_STRING_PARAM(v.ppd_file);
-      GET_MANDATORY_INT_PARAM(v.output_type);
-      GET_MANDATORY_STRING_PARAM(v.resolution);
-      GET_MANDATORY_STRING_PARAM(v.media_size);
-      GET_MANDATORY_STRING_PARAM(v.media_type);
+        GET_MANDATORY_STRING_PARAM(name);
+        GET_MANDATORY_STRING_PARAM(v.output_to);
+        GET_MANDATORY_STRING_PARAM(v.driver);
 
-      GET_OPTIONAL_STRING_PARAM(media_source);
-      GET_OPTIONAL_FLOAT_PARAM(brightness);
-      GET_OPTIONAL_FLOAT_PARAM(scaling);
-      GET_OPTIONAL_INT_PARAM(orientation);
-      GET_OPTIONAL_INT_PARAM(left);
-      GET_OPTIONAL_INT_PARAM(top);
-      GET_OPTIONAL_FLOAT_PARAM(gamma);
-      GET_OPTIONAL_FLOAT_PARAM(contrast);
-      GET_OPTIONAL_FLOAT_PARAM(cyan);
-      GET_OPTIONAL_FLOAT_PARAM(magenta);
-      GET_OPTIONAL_FLOAT_PARAM(yellow);
-      GET_OPTIONAL_INT_PARAM(linear);
-      GET_OPTIONAL_INT_PARAM(image_type);
-      GET_OPTIONAL_FLOAT_PARAM(saturation);
-      GET_OPTIONAL_FLOAT_PARAM(density);
-      GET_OPTIONAL_STRING_PARAM(ink_type);
-      GET_OPTIONAL_STRING_PARAM(dither_algorithm);
-      GET_OPTIONAL_INT_PARAM(unit);
+        if (! get_printer_by_driver(key.v.driver))
+	  continue;
+
+        GET_MANDATORY_STRING_PARAM(v.ppd_file);
+        GET_MANDATORY_INT_PARAM(v.output_type);
+        GET_MANDATORY_STRING_PARAM(v.resolution);
+        GET_MANDATORY_STRING_PARAM(v.media_size);
+        GET_MANDATORY_STRING_PARAM(v.media_type);
+
+        GET_OPTIONAL_STRING_PARAM(media_source);
+        GET_OPTIONAL_FLOAT_PARAM(brightness);
+        GET_OPTIONAL_FLOAT_PARAM(scaling);
+        GET_OPTIONAL_INT_PARAM(orientation);
+        GET_OPTIONAL_INT_PARAM(left);
+        GET_OPTIONAL_INT_PARAM(top);
+        GET_OPTIONAL_FLOAT_PARAM(gamma);
+        GET_OPTIONAL_FLOAT_PARAM(contrast);
+        GET_OPTIONAL_FLOAT_PARAM(cyan);
+        GET_OPTIONAL_FLOAT_PARAM(magenta);
+        GET_OPTIONAL_FLOAT_PARAM(yellow);
+        GET_OPTIONAL_INT_PARAM(linear);
+        GET_OPTIONAL_INT_PARAM(image_type);
+        GET_OPTIONAL_FLOAT_PARAM(saturation);
+        GET_OPTIONAL_FLOAT_PARAM(density);
+        GET_OPTIONAL_STRING_PARAM(ink_type);
+        GET_OPTIONAL_STRING_PARAM(dither_algorithm);
+        GET_OPTIONAL_INT_PARAM(unit);
 
 /*
  * The format of the list is the File printer followed by a qsort'ed list
  * of system printers. So, if we want to update the file printer, it is
  * always first in the list, else call bsearch.
  */
-      if ((strcmp(key.name, _("File")) == 0) && (strcmp(plist[0].name,
-	   _("File")) == 0))
-	{
+        if ((strcmp(key.name, _("File")) == 0) && (strcmp(plist[0].name,
+	     _("File")) == 0))
+	  {
 #ifdef DEBUG
-	  printf("Updated File printer directly\n");
+	    printf("Updated File printer directly\n");
 #endif
-	  p = &plist[0];
-	  memcpy(p, &key, sizeof(plist_t));
-	  p->active = 1;
+	    p = &plist[0];
+	    memcpy(p, &key, sizeof(plist_t));
+	    p->active = 1;
+	  }
+        else
+	  {
+            if ((p = bsearch(&key, plist + 1, system_printers, sizeof(plist_t),
+                         (int (*)(const void *, const void *))compare_printers))
+	        != NULL)
+	      {
+#ifdef DEBUG
+	        printf("Updating printer %s.\n", key.name);
+#endif
+	        memcpy(p, &key, sizeof(plist_t));
+	        p->active = 1;
+	      }
+            else
+    	      {
+#ifdef DEBUG
+                fprintf(stderr, "Adding new printer from printrc file: %s\n",
+                  key.name);
+#endif
+	        check_plist(plist_count + 1);
+	        p = plist + plist_count;
+	        memcpy(p, &key, sizeof(plist_t));
+	        p->active = 0;
+	        plist_count++;
+	      }
+	  }
+      }
+      else if (format == 1)
+      {
+       /*
+	* Read new format printrc lines...
+	*/
+
+	char *keyword, *end, *value;
+
+	keyword = line;
+	for (keyword = line; isspace(*keyword); keyword++)
+	{
+	  /* skip initial spaces... */
 	}
-      else
+	if (!isalpha(*keyword))
+	  continue;
+	for (end = keyword; isalnum(*end) || *end == '-'; end++)
 	{
-          if ((p = bsearch(&key, plist + 1, system_printers, sizeof(plist_t),
-                       (int (*)(const void *, const void *))compare_printers))
-	      != NULL)
+	  /* find end of keyword... */
+	}
+	value = end;
+	while (isspace(*value)) {
+	  /* skip over white space... */
+	  value++;
+	}
+	if (*value != ':')
+	  continue;
+	value++;
+	*end = '\0';
+	while (isspace(*value)) {
+	  /* skip over white space... */
+	  value++;
+	}
+	for (end = value; *end && *end != '\n'; end++)
+	{
+	  /* find end of line... */
+	}
+	*end = '\0';
+#ifdef DEBUG
+        printf("Keyword = `%s', value = `%s'\n", keyword, value);
+#endif
+	if (strcasecmp("current-printer", keyword) == 0) {
+	  if (current_printer)
+	    free (current_printer);
+	  current_printer = strdup(value);
+	} else if (strcasecmp("printer", keyword) == 0) {
+	  /* Switch to printer named VALUE */
+	  if (strcmp(_("File"), value) == 0
+	      && strcmp(plist[0].name, _("File")) == 0)
+	  {
+	    p = &plist[0];
+	  }
+	  else
+	  {
+	    p = bsearch(&key, plist + 1, system_printers,
+	                sizeof(plist_t),
+	                (int (*)(const void *, const void *)) compare_printers);
+	    if (p == NULL)
 	    {
-#ifdef DEBUG
-	      printf("Updating printer %s.\n", key.name);
-#endif
-	      memcpy(p, &key, sizeof(plist_t));
-	      p->active = 1;
-	    }
-          else
-    	    {
-#ifdef DEBUG
-              fprintf(stderr, "Adding new printer from printrc file: %s\n",
-                key.name);
-#endif
 	      check_plist(plist_count + 1);
 	      p = plist + plist_count;
-	      memcpy(p, &key, sizeof(plist_t));
-	      p->active = 0;
 	      plist_count++;
 	    }
+	  }
+	  if (p) strncpy(p->name, value, 127);
+	} else if (strcasecmp("destination", keyword) == 0) {
+	  if (p) strncpy(p->v.output_to, value, 255);
+	} else if (strcasecmp("driver", keyword) == 0) {
+	  if (p) strncpy(p->v.driver, value, 63);
+	} else if (strcasecmp("ppd-file", keyword) == 0) {
+	  if (p) strncpy(p->v.ppd_file, value, 256);
+	} else if (strcasecmp("output-type", keyword) == 0) {
+	  if (p) p->v.output_type = atoi(value);
+	} else if (strcasecmp("resolution", keyword) == 0) {
+	  if (p) strncpy(p->v.resolution, value, 63);
+	} else if (strcasecmp("media-size", keyword) == 0) {
+	  if (p) strncpy(p->v.media_size, value, 63);
+	} else if (strcasecmp("media-type", keyword) == 0) {
+	  if (p) strncpy(p->v.media_type, value, 63);
+	} else if (strcasecmp("media-source", keyword) == 0) {
+	  if (p) strncpy(p->v.media_source, value, 63);
+	} else if (strcasecmp("brightness", keyword) == 0) {
+	  if (p) p->v.brightness = atof(value);
+	} else if (strcasecmp("scaling", keyword) == 0) {
+	  if (p) p->v.scaling = atof(value);
+	} else if (strcasecmp("orientation", keyword) == 0) {
+	  if (p) p->v.orientation = atoi(value);
+	} else if (strcasecmp("left", keyword) == 0) {
+	  if (p) p->v.left = atoi(value);
+	} else if (strcasecmp("top", keyword) == 0) {
+	  if (p) p->v.top = atoi(value);
+	} else if (strcasecmp("gamma", keyword) == 0) {
+	  if (p) p->v.gamma = atof(value);
+	} else if (strcasecmp("contrast", keyword) == 0) {
+	  if (p) p->v.contrast = atof(value);
+	} else if (strcasecmp("cyan", keyword) == 0) {
+	  if (p) p->v.cyan = atof(value);
+	} else if (strcasecmp("magenta", keyword) == 0) {
+	  if (p) p->v.magenta = atof(value);
+	} else if (strcasecmp("yellow", keyword) == 0) {
+	  if (p) p->v.yellow = atof(value);
+	} else if (strcasecmp("linear", keyword) == 0) {
+	  if (p) p->v.linear = atoi(value);
+	} else if (strcasecmp("image-type", keyword) == 0) {
+	  if (p) p->v.image_type = atoi(value);
+	} else if (strcasecmp("saturation", keyword) == 0) {
+	  if (p) p->v.saturation = atof(value);
+	} else if (strcasecmp("density", keyword) == 0) {
+	  if (p) p->v.density = atof(value);
+	} else if (strcasecmp("ink-type", keyword) == 0) {
+	  if (p) strncpy(p->v.ink_type, value, 63);
+	} else if (strcasecmp("dither-algorithm", keyword) == 0) {
+	  if (p) strncpy(p->v.dither_algorithm, value, 63);
+	} else if (strcasecmp("unit", keyword) == 0) {
+	  if (p) p->v.unit = atoi(value);
+	} else {
+	  /* Unrecognised keyword; ignore it... */
+#if 1
+          printf("Unrecognised keyword `%s' in printrc; value `%s'\n", keyword, value);
+#endif
 	}
+      }
+      else
+      {
+       /*
+        * We cannot read this file format...
+        */
+      }
     }
 
     fclose(fp);
@@ -979,14 +1127,26 @@ printrc_load(void)
   * Select the current printer as necessary...
   */
 
-  if (vars.output_to[0] != '\0')
+  if (format == 1)
   {
-    for (i = 0; i < plist_count; i ++)
-      if (strcmp(vars.output_to, plist[i].v.output_to) == 0)
-        break;
+    if (current_printer)
+    {
+      for (i = 0; i < plist_count; i ++)
+        if (strcmp(current_printer, plist[i].name) == 0)
+	  plist_current = i;
+    }
+  }
+  else
+  {
+    if (vars.output_to[0] != '\0')
+    {
+      for (i = 0; i < plist_count; i ++)
+        if (strcmp(vars.output_to, plist[i].v.output_to) == 0)
+          break;
 
-    if (i < plist_count)
-      plist_current = i;
+      if (i < plist_count)
+        plist_current = i;
+    }
   }
 }
 
@@ -1039,6 +1199,7 @@ printrc_save(void)
     fprintf(stderr, "Number of printers: %d\n", plist_count);
 #endif
 
+#if 0
     fputs("#PRINTRC " PLUG_IN_VERSION "\n", fp);
 
     for (i = 0, p = plist; i < plist_count; i ++, p ++)
@@ -1060,6 +1221,46 @@ printrc_save(void)
 #endif
 
       }
+#else
+    fputs("#PRINTRCv1 written by GIMP-PRINT " PLUG_IN_VERSION "\n", fp);
+
+    fprintf(fp, "Current-Printer: %s\n", plist[plist_current].name);
+
+    for (i = 0, p = plist; i < plist_count; i ++, p ++)
+      {
+	fprintf(fp, "\nPrinter: %s\n", p->name);
+	fprintf(fp, "Destination: %s\n", p->v.output_to);
+	fprintf(fp, "Driver: %s\n", p->v.driver);
+	fprintf(fp, "PPD-File: %s\n", p->v.ppd_file);
+	fprintf(fp, "Output-Type: %d\n", p->v.output_type);
+	fprintf(fp, "Resolution: %s\n", p->v.resolution);
+	fprintf(fp, "Media-Size: %s\n", p->v.media_size);
+	fprintf(fp, "Media-Type: %s\n", p->v.media_type);
+	fprintf(fp, "Media-Source: %s\n", p->v.media_source);
+	fprintf(fp, "Brightness: %.3f\n", p->v.brightness);
+	fprintf(fp, "Scaling: %.3f\n", p->v.scaling);
+	fprintf(fp, "Orientation: %d\n", p->v.orientation);
+	fprintf(fp, "Left: %d\n", p->v.left);
+	fprintf(fp, "Top: %d\n", p->v.top);
+	fprintf(fp, "Gamma: %.3f\n", p->v.gamma);
+	fprintf(fp, "Contrast: %.3f\n", p->v.contrast);
+	fprintf(fp, "Cyan: %.3f\n", p->v.cyan);
+	fprintf(fp, "Magenta: %.3f\n", p->v.magenta);
+	fprintf(fp, "Yellow: %.3f\n", p->v.yellow);
+	fprintf(fp, "Linear: %d\n", p->v.linear);
+	fprintf(fp, "Image-Type: %d\n", p->v.image_type);
+	fprintf(fp, "Saturation: %.3f\n", p->v.saturation);
+	fprintf(fp, "Density: %.3f\n", p->v.density);
+	fprintf(fp, "Ink-Type: %s\n", p->v.ink_type);
+	fprintf(fp, "Dither-Algorithm: %s\n", p->v.dither_algorithm);
+	fprintf(fp, "Unit: %d\n", p->v.unit);
+
+#ifdef DEBUG
+        fprintf(stderr, "Wrote printer %d: %s\n", i, p->name);
+#endif
+
+      }
+#endif
     fclose(fp);
   } else {
     fprintf(stderr,"could not open printrc file \"%s\"\n",filename);

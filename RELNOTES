@@ -12,31 +12,66 @@ This plugin can be compiled against either Gimp 1.1 or 1.0.
 Gimp-Print 4.0b1 contains the following improvements and changes over
 Gimp-Print 4.0a3:
 
-1) Support for CUPS, through a choice of a native CUPS driver or
+1) For Gimp plug-in users: the format of the printrc file has changed
+   in a way that is incompatible with older versions of the plugin.
+   This version of the software can read old printrc files, but older
+   versions of the plugin cannot read the new format.
+
+   The new format uses a keyword-based approach that is far superior
+   to the old format, and will be much more amenable to future changes
+   that may become necessary.
+
+2) Online documentation for the print plugin finally exists.
+
+3) Support for CUPS, through a choice of a native CUPS driver or
    Cups-o-Matic.
 
-2) Support for the Foomatic printer configuration system, greatly
+4) Support for the Foomatic printer configuration system, greatly
    simplifying configuration and use with lpd, CUPS, and PDQ.
 
-3) The preview window in the plugin now shows a low-resolution
+5) The preview window in the plugin now shows a low-resolution
    representation of the actual image.  The color adjustment window
    shows an thumbnail that reflects the effect that color adjustments
    have on the output.
 
-4) The old GTK-based interface is now disabled by default when used
+6) The old GTK-based interface is now disabled by default when used
    with the Gimp 1.1.  It can be enabled by running configure with
    --enable-maintainer-mode.
 
-5) The plugin now detects the spooling system at runtime, so it need
+7) The plugin now detects the spooling system at runtime, so it need
    not be compiled specifically for use with Berkeley lpd, System V
    lp, CUPS, or LPRng.
 
-6) Substantial quality improvement for the Epson Stylus Photo 700/EX
+8) Substantial quality improvement for many Epson Stylus printers in
    in 1440x720 DPI modes.  The price is that printing takes much
    longer.  If you need high quality with better performance, use
    720x720 DPI Highest Quality.
 
-7) A number of miscellaneous bugs have been fixed.
+   The specific printers that are affected are the Epson Stylus Color
+   600, 800, 850, 900, 1520, and 3000, and the Epson Stylus Photo 700
+   and EX.  The effect in all cases will be smoother output that is
+   particularly visible in pale tones.
+
+9) The Fast dither algorithm has been slightly tweaked, and a Very
+   Fast dither algorithm has been added.
+
+10) Most menus have been converted to combo boxes.
+
+11) The printrc code has been fixed to set reasonable defaults if an
+   old printrc file with now-invalid parameter settings is read.
+
+12) It is now possible to print in seascape and upside down portrait
+   mode.
+
+13) The support for the Stylus Photo 2000P has been fixed and should
+   now be correct.
+
+14) Printer names may now be up to 127 characters.
+
+15) Additional performance improvements over earlier versions of this
+    package.
+
+16) A number of miscellaneous bugs have been fixed.
 
 
 Gimp-Print 4.0a3 contains the following improvements over Gimp-Print
