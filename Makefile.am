@@ -37,9 +37,17 @@ AM_CPPFLAGS = \
 
 print_LDADD = $(GIMP_LIBS)
 
-.PHONY: files
+.PHONY: files ghost
 
 files:
 	@files=`ls $(DISTFILES) 2> /dev/null`; for p in $$files; do \
 	  echo $$p; \
 	done
+
+ghost: $(addprefix Ghost/gdevstp-, dither.c escp2.c util.c) Ghost/gdevstp-print.h
+
+Ghost/gdevstp%: print% Makefile
+	sed 's/print.h/gdevstp-print.h/' $< > $@
+
+Ghost/gdevstp-print.h: print.h Makefile
+	sed 's/print.h/gdevstp-print.h/' $< > $@

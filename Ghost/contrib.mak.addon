@@ -8,13 +8,13 @@ $(DD)stp.dev:	$(stp_) $(DD)page.dev
 	$(SETPDEV) $(DD)stp $(stp_)
 
 $(GLOBJ)gdevstp.$(OBJ) : $(GLSRC)gdevstp.c $(PDEVH)
-	$(GLCC) $(GLO_)gdevstp.$(OBJ) $(C_) $(GLSRC)gdevstp.c
+	$(GLCC) -DESCP2_GHOST $(GLO_)gdevstp.$(OBJ) $(C_) $(GLSRC)gdevstp.c
 
 $(GLOBJ)gdevstp-util.$(OBJ) : $(GLSRC)gdevstp-util.c $(PDEVH)
-	$(GLCC) $(GLO_)gdevstp-util.$(OBJ) $(C_) $(GLSRC)gdevstp-util.c
+	$(GLCC) -DESCP2_GHOST $(GLO_)gdevstp-util.$(OBJ) $(C_) $(GLSRC)gdevstp-util.c
 
 $(GLOBJ)gdevstp-dither.$(OBJ) : $(GLSRC)gdevstp-dither.c $(PDEVH)
-	$(GLCC) $(GLO_)gdevstp-dither.$(OBJ) $(C_) $(GLSRC)gdevstp-dither.c
+	$(GLCC) -DESCP2_GHOST $(GLO_)gdevstp-dither.$(OBJ) $(C_) $(GLSRC)gdevstp-dither.c
 
 $(GLOBJ)gdevstp-escp2.$(OBJ) : $(GLSRC)gdevstp-escp2.c $(PDEVH)
-	$(GLCC) $(GLO_)gdevstp-escp2.$(OBJ) $(C_) $(GLSRC)gdevstp-escp2.c
+	$(GLCC) -DESCP2_GHOST $(GLO_)gdevstp-escp2.$(OBJ) $(C_) $(GLSRC)gdevstp-escp2.c

@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.71  2000/02/13 02:01:38  rlk
+ *   Build a Ghostscript driver!  No idea if it works yet...
+ *
  *   Revision 1.70  2000/02/09 02:56:27  rlk
  *   Put lut inside vars
  *
@@ -1074,10 +1077,12 @@ default_media_size(int  model,		/* I - Printer model */
 
 const static printer_t	printers[] =	/* List of supported printer types */
 {
+#ifndef ESCP2_GHOST
   { "PostScript Level 1",	"ps",		1,	0,	1.000,	1.000,
     ps_parameters,	ps_media_size,	ps_imageable_area,	ps_print },
   { "PostScript Level 2",	"ps2",		1,	1,	1.000,	1.000,
     ps_parameters,	ps_media_size,	ps_imageable_area,	ps_print },
+
   { "HP DeskJet 500, 520",	"pcl-500",	0,	500,	0.818,	0.786,
     pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
   { "HP DeskJet 500C, 540C",	"pcl-501",	1,	501,	0.818,	0.786,
@@ -1108,6 +1113,8 @@ const static printer_t	printers[] =	/* List of supported printer types */
     pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
   { "HP LaserJet 6 series",	"pcl-6",	0,	4,	1.000,	0.615,
     pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
+#endif
+
   { "EPSON Stylus Color",	"escp2",	1,	0,	0.597,	0.568,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { "EPSON Stylus Color Pro",	"escp2-pro",	1,	1,	0.597,	0.631,
@@ -1155,6 +1162,7 @@ const static printer_t	printers[] =	/* List of supported printer types */
   { "EPSON Stylus Photo",	"escp2-photo",	1,	8,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
 
+#ifndef ESCP2_GHOST
   { "CANON BJC 1000",           "bjc-1000",     1,      1000,   1.0,    0.8,
     canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
   { "CANON BJC 2000",           "bjc-2000",     1,      2000,   1.0,    0.8,
@@ -1169,6 +1177,7 @@ const static printer_t	printers[] =	/* List of supported printer types */
     canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
   { "CANON BJC 7100",           "bjc-7100",     1,      7100,   1.0,    0.8,
     canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
+#endif
 };
 
 

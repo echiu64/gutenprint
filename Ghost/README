@@ -47,7 +47,7 @@ Installation and Compilation:
  - add "$(DD)stp.dev" to the line "DEVICE_DEVS6=..." in "unix-gcc.mak"
 
  Compile and install gs as described in the documentation, after a
- successful compiler run you got a new driver named "stp700". Check 
+ successful compiler run you got a new driver named "stp". Check 
  this by calling "gs -h" with the newly compiled ghostscript.
 
 

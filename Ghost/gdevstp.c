@@ -110,7 +110,7 @@ typedef struct {
 } privdata_t;
 
 /* in gdevstp-escp2.c */
-extern res_t reslist[];
+extern res_t escp2_reslist[];
 
 
 /* global variables, RO for subfunctions */
@@ -144,7 +144,6 @@ private int stp_print_page(gx_device_printer * pdev, FILE * file)
     int code;									/* return code */
     int model;
     vars_t stp_vars;
-    lut_t stp_lut;
 
     code = 0;
     stp_pdev = pdev;
@@ -204,7 +203,7 @@ private int stp_print_page(gx_device_printer * pdev, FILE * file)
  
     strcpy(stp_vars.ppd_file,"");           /* no ppd file by now */
 
-    strcpy(stp_vars.resolution,reslist[stp_data.resnr].name); /* 360 dpi default */
+    strcpy(stp_vars.resolution,escp2_reslist[stp_data.resnr].name); /* 360 dpi default */
 
     stp_vars.top  = 0;                     /* */
     stp_vars.left = 0;
@@ -228,7 +227,7 @@ private int stp_print_page(gx_device_printer * pdev, FILE * file)
     strcpy(stp_vars.media_size,stp_data.media); /* "A4", "Letter", "Legal", "A3", ... */
     
     /* compute lookup table: lut_t*,float dest_gamma,float app_gamma,vars_t* */
-    compute_lut(&stp_lut, 0.585 , 1 , &stp_vars);
+    compute_lut(0.585 , 1 , &stp_vars);
 
 #ifdef DRV_DEBUG
     fprintf(stderr,"lut done!");
@@ -261,7 +260,6 @@ private int stp_print_page(gx_device_printer * pdev, FILE * file)
                 NULL,						/* I - Image to print (dummy) */
                 NULL,						/* unsigned char *cmap,	
                                     		   I - Colormap (for indexed images) */
-	            &stp_lut,					/* I - Brightness lookup table */
                 &stp_vars);					/* vars_t * */
 
     gs_free_object(pdev->memory, stp_row, "stp row buffer");
@@ -477,7 +475,7 @@ stp_open(gx_device *pdev)
                        &top);				/* O - Top position in points */
         
   /*!!!! fix for "+32 hack" in escp2-driver when setting printer Top/bottom margins */
-  if(reslist[stp_data.resnr].softweave != 0)
+  if(escp2_reslist[stp_data.resnr].softweave != 0)
   {
    top -= (32-6);
   }
