@@ -1150,6 +1150,31 @@ olympus_describe_output(const stp_vars_t *v)
   return "CMY";
 }
 
+unsigned short *
+olympus_get_cached_output(stp_vars_t *v,
+             stp_image_t *image,
+	     unsigned short **cache,
+             int line, int size)
+{
+  unsigned zero_mask;
+
+  stp_deprintf(STP_DBG_OLYMPUS, "olympus: get row %d", line);
+  if (cache[line] == NULL)
+    {
+      stp_deprintf(STP_DBG_OLYMPUS, " (calling stp_color_get_row())\n");
+      if (!stp_color_get_row(v, image, line, &zero_mask))
+        {
+          cache[line] = stp_malloc(size);
+          memcpy(cache[line], stp_channel_get_output(v), size);
+        }
+    }
+  else
+    {
+      stp_deprintf(STP_DBG_OLYMPUS, " (cached)\n");
+    }
+  return cache[line];
+}
+
 /*
  * olympus_print()
  */
@@ -1164,6 +1189,7 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   unsigned char  *char_out = NULL;
   unsigned short *real_out = NULL;
   unsigned short *err_out = NULL;
+  unsigned short **rows = NULL;		/* "cache" of rows read from image */
   int char_out_width;
   int status = 1;
   int ink_channels = 1;
@@ -1343,6 +1369,7 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
     }
 #endif
 
+  rows = stp_zalloc(image_px_height * sizeof(unsigned short *));
   err_out = stp_malloc(print_px_width * ink_channels * 2);
   if (out_channels != ink_channels)
     final_out = stp_malloc(print_px_width * ink_channels * 2);
@@ -1421,7 +1448,7 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
         {
           unsigned short *out;
           int duplicate_line = 1;
-          unsigned zero_mask;
+/*          unsigned zero_mask; */
     
           if (((y - min_y) % caps->block_size) == 0)
 	    {
@@ -1450,6 +1477,7 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
                   /* stp_erprintf("left %d ", out_px_left); */
   	        }
   
+#if 0
               if (r_errline != r_errlast)
                 {
   	          r_errlast = r_errline;
@@ -1464,6 +1492,20 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
                 }
 
               out = stp_channel_get_output(v);
+#endif
+              if (r_errline != r_errlast)
+                {
+  	          r_errlast = r_errline;
+  	          duplicate_line = 0;
+		}
+
+	      out = olympus_get_cached_output(v, image, rows, r_errline,
+	                                  print_px_width * ink_channels * 2);
+	      if (out == NULL)
+	        {
+		  status = 2;
+		  break;
+		}
 
               c_errval  = 0;
               c_errlast = -1;
@@ -1579,6 +1621,12 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
     stp_free(err_out);
   if (zeros)
     stp_free(zeros);
+  if (rows)
+    {
+      for (i = 0; i <image_px_height; i++)
+        stp_free(rows[i]);
+      stp_free(rows);
+    }
   return status;
 }
 
