@@ -79,7 +79,7 @@ by the Free Software Foundation.
 
 @contents
 
-@ifinfo
+@ifnottex
 @c All the nodes can be updated using the EMACS command
 @c texinfo-every-node-update, which is normally bound to C-c C-u C-e.
 @node Top, Instructions, (dir), (dir)
@@ -91,7 +91,7 @@ for high quality printing. This edition documents version @value{VERSION}.
 
 @xref{Problems}, for information on how to report problems with
 GIMP-Print.
-@end ifinfo
+@end ifnottex
 
 @c All the menus can be updated with the EMACS command
 @c texinfo-all-menus-update, which is normally bound to C-c C-u C-a.

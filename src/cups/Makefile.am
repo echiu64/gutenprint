@@ -123,9 +123,9 @@ $(LIBGIMPPRINT_LIBS):
 
 dist-hook:
 	for dir in commands ; do \
-	  if test -d $$dir ; then \
+	  if test -d $(srcdir)/$$dir ; then \
 	    mkdir $(distdir)/$$dir; \
-	    for dirfile in $$dir/*; do \
+	    for dirfile in $(srcdir)/$$dir/*; do \
 	      if test -f $$dirfile ; then \
 	        cp -p $$dirfile $(distdir)/$$dir; \
 	      fi \
