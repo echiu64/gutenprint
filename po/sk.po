@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GIMP Print\n"
-"POT-Creation-Date: 2002-03-30 15:21-0500\n"
+"POT-Creation-Date: 2002-03-30 18:54-0500\n"
 "PO-Revision-Date: 2002-03-11 18:28+0100\n"
 "Last-Translator: Zdenko Podobný <zdpo@mailbox.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -3147,74 +3147,74 @@ msgstr "<Image>/Súbor/Tlaè..."
 msgid "File"
 msgstr "Súbor"
 
-#: src/ghost/ijsgimpprint.c:135
+#: src/ghost/ijsgimpprint.c:144
 #, c-format
 msgid "Bad color space: bps %d channels %d space %s\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:143
+#: src/ghost/ijsgimpprint.c:152
 msgid "No row buffer\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:172
+#: src/ghost/ijsgimpprint.c:181
 #, c-format
 msgid "Parameter %s out of range (value %f, min %f, max %f)\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:176 src/ghost/ijsgimpprint.c:198
+#: src/ghost/ijsgimpprint.c:185 src/ghost/ijsgimpprint.c:207
 #, c-format
 msgid "Unable to parse parameter %s=%s (expect a number)\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:194
+#: src/ghost/ijsgimpprint.c:203
 #, c-format
 msgid "Parameter %s out of range (value %d, min %d, max %d)\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:336
+#: src/ghost/ijsgimpprint.c:345
 msgid "Printer must be specified with -sModel\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:338
+#: src/ghost/ijsgimpprint.c:347
 #, fuzzy, c-format
 msgid "Printer %s is not a known model\n"
 msgstr "Neznámy typ tlaèiarne %s.\n"
 
-#: src/ghost/ijsgimpprint.c:557
+#: src/ghost/ijsgimpprint.c:566
 #, fuzzy, c-format
 msgid "Unknown option %s\n"
 msgstr "Neznáme nastavenie %c\n"
 
-#: src/ghost/ijsgimpprint.c:704
+#: src/ghost/ijsgimpprint.c:709
 #, c-format
 msgid "%.0f of %.0f\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:816
+#: src/ghost/ijsgimpprint.c:821
 #, c-format
 msgid "image_init failed %d\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:827
+#: src/ghost/ijsgimpprint.c:832
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:839
+#: src/ghost/ijsgimpprint.c:844
 #, fuzzy, c-format
 msgid "Unable to open %s: %s\n"
 msgstr "Nie je mo¾né otvori» zariadenie %s: %s\n"
 
-#: src/ghost/ijsgimpprint.c:851
+#: src/ghost/ijsgimpprint.c:856
 #, fuzzy, c-format
 msgid "Unknown printer %s\n"
 msgstr "Neznáme nastavenie %c\n"
 
-#: src/ghost/ijsgimpprint.c:882
+#: src/ghost/ijsgimpprint.c:887
 msgid "Bad parameters; cannot continue!\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:892
+#: src/ghost/ijsgimpprint.c:897
 #, c-format
 msgid "Get next row failed at %d\n"
 msgstr ""
