@@ -28,7 +28,8 @@ MAINT_CHARSET = latin1
 
 AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS)
-LIBS = @LIBS@ $(INTLLIBS)
+LIBPRINTUT = $(top_builddir)/lib/libprintut.la
+LIBS = $(INTLLIBS) @LIBS@
 
 ## Programs
 
@@ -40,7 +41,7 @@ LFLAGS = -i
 YFLAGS = -d
 
 testpattern_SOURCES = testpattern.c testpatterny.y testpatternl.l testpattern.h
-testpattern_LDADD = $(LIBGIMPPRINT_LIBS)
+testpattern_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
 testpattern_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 testpatternl.o: testpatterny.o

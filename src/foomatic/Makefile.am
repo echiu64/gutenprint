@@ -28,7 +28,8 @@ MAINT_CHARSET = latin1
 
 AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
-LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
+LIBPRINTUT = $(top_builddir)/lib/libprintut.la
+LIBS = $(INTLLIBS) @LIBS@
 
 
 ## Programs
@@ -39,23 +40,23 @@ noinst_PROGRAMS = printer_options paper_sizes gimp-print-version \
 endif
 
 printer_options_SOURCES = printer_options.c
-printer_options_LDADD = $(LIBGIMPPRINT_LIBS)
+printer_options_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
 printer_options_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 gimp_print_version_SOURCES = gimp-print-version.c
-gimp_print_version_LDADD = $(LIBGIMPPRINT_LIBS)
+gimp_print_version_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
 gimp_print_version_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 paper_sizes_SOURCES = paper_sizes.c
-paper_sizes_LDADD = $(LIBGIMPPRINT_LIBS)
+paper_sizes_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
 paper_sizes_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 stp_limits_SOURCES = stp_limits.c
-stp_limits_LDADD = $(LIBGIMPPRINT_LIBS)
+stp_limits_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
 stp_limits_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 printers_SOURCES = printers.c
-printers_LDADD = $(LIBGIMPPRINT_LIBS)
+printers_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
 printers_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 

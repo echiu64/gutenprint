@@ -28,7 +28,8 @@ MAINT_CHARSET = latin1
 
 AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
-LIBS = @LIBS@ ../lib/libprintut.la $(INTLLIBS) ../lib/libprintut.la
+LIBPRINTUT = $(top_builddir)/lib/libprintut.la
+LIBS = $(INTLLIBS) @LIBS@
 
 TESTS = run-testdither run-weavetest
 
@@ -40,19 +41,20 @@ noinst_PROGRAMS = testdither escp2-weavetest unprint pcl-unprint bjc-unprint
 endif
 
 escp2_weavetest_SOURCES = escp2-weavetest.c
-
-escp2_weavetest.o: escp2_weavetest.c
-escp2_weavetest_LDADD = $(LIBGIMPPRINT_LIBS)
+escp2_weavetest_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
 escp2_weavetest_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 unprint_SOURCES = unprint.c
+unprint_LDADD = $(LIBPRINTUT)
 
 pcl_unprint_SOURCES = pcl-unprint.c
+pcl_unprint_LDADD = $(LIBPRINTUT)
 
 bjc_unprint_SOURCES = bjc-unprint.c
+bjc_unprint_LDADD = $(LIBPRINTUT)
 
 testdither_SOURCES = testdither.c
-testdither_LDADD = $(LIBGIMPPRINT_LIBS)
+testdither_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
 testdither_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 $(LIBGIMPPRINT_LIBS):

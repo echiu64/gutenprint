@@ -38,7 +38,8 @@ EXTRA_DIST = \
 
 AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @IJS_CFLAGS@ @INCLUDES@ $(LIBGIMPPRINT_CFLAGS)
-LIBS = @IJS_LIBS@ @LIBS@ $(INTLLIBS)
+LIBPRINTUT = $(top_builddir)/lib/libprintut.la
+LIBS = @IJS_LIBS@ $(INTLLIBS) @LIBS@
 
 ## Programs
 
@@ -46,7 +47,7 @@ if BUILD_IJS
 bin_PROGRAMS = ijsgimpprint
 endif
 
-ijsgimpprint_LDADD = $(LIBGIMPPRINT_LIBS)
+ijsgimpprint_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
 ijsgimpprint_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 $(LIBGIMPPRINT_LIBS):

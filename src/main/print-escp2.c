@@ -179,6 +179,7 @@ typedef struct escp2_init
   int unidirectional;
   int resid;
   int initial_vertical_offset;
+  int ncolors;
   const char *paper_type;
   const char *media_source;
   stp_vars_t v;
@@ -576,11 +577,11 @@ escp2_default_parameters(const stp_printer_t printer,
       for (i = 0; i < papersizes; i++)
 	{
 	  const stp_papersize_t pt = stp_get_papersize_by_index(i);
+	  unsigned int pwidth = stp_papersize_get_width(pt);
+	  unsigned int pheight = stp_papersize_get_height(pt);
 	  if (strlen(stp_papersize_get_name(pt)) > 0 &&
-	      stp_papersize_get_width(pt) >= min_width_limit &&
-	      stp_papersize_get_height(pt) >= min_height_limit &&
-	      stp_papersize_get_width(pt) <= width_limit &&
-	      stp_papersize_get_height(pt) <= height_limit)
+	      pwidth >= min_width_limit && pheight >= min_height_limit &&
+	      pwidth <= width_limit && pheight <= height_limit)
 	    return (stp_papersize_get_name(pt));
 	}
       return NULL;
@@ -964,6 +965,157 @@ escp2_deinit_printer(const escp2_init_t *init, int printed_something)
     }
 }
 
+static void
+adjust_print_quality(const escp2_init_t *init, void *dither,
+		     double *lum_adjustment, double *sat_adjustment,
+		     double *hue_adjustment)
+{
+  const paper_t *pt;
+  const stp_vars_t nv = init->v;
+  int i;
+  const escp2_variable_inkset_t *inks;
+  double k_upper, k_lower;
+  int		ink_spread;
+  /*
+   * Compute the LUT.  For now, it's 8 bit, but that may eventually
+   * sometimes change.
+   */
+  if (init->ncolors > 4)
+    k_lower = .5;
+  else
+    k_lower = .25;
+
+  pt = get_media_type(init->model, stp_get_media_type(nv), nv);
+  if (pt)
+    {
+      stp_set_density(nv, stp_get_density(nv) * pt->base_density);
+      if (init->ncolors >= 5)
+	{
+	  stp_set_cyan(nv, stp_get_cyan(nv) * pt->p_cyan);
+	  stp_set_magenta(nv, stp_get_magenta(nv) * pt->p_magenta);
+	  stp_set_yellow(nv, stp_get_yellow(nv) * pt->p_yellow);
+	}
+      else
+	{
+	  stp_set_cyan(nv, stp_get_cyan(nv) * pt->cyan);
+	  stp_set_magenta(nv, stp_get_magenta(nv) * pt->magenta);
+	  stp_set_yellow(nv, stp_get_yellow(nv) * pt->yellow);
+	}
+      stp_set_saturation(nv, stp_get_saturation(nv) * pt->saturation);
+      stp_set_gamma(nv, stp_get_gamma(nv) * pt->gamma);
+      k_lower *= pt->k_lower_scale;
+      k_upper = pt->k_upper;
+    }
+  else				/* Can't find paper type? Assume plain */
+    {
+      stp_set_density(nv, stp_get_density(nv) * .8);
+      k_lower *= .1;
+      k_upper = .5;
+    }
+  stp_set_density(nv, stp_get_density(nv) *
+		  escp2_density(init->model, init->resid, nv));
+  if (stp_get_density(nv) > 1.0)
+    stp_set_density(nv, 1.0);
+  if (init->ncolors == 1)
+    stp_set_gamma(nv, stp_get_gamma(nv) / .8);
+  stp_compute_lut(nv, 256);
+
+  for (i = 0; i <= NCOLORS; i++)
+    stp_dither_set_black_level(dither, i, 1.0);
+  stp_dither_set_black_lower(dither, k_lower);
+  stp_dither_set_black_upper(dither, k_upper);
+
+  inks = escp2_inks(init->model, init->resid, init->ncolors, init->bits, nv);
+  if (inks)
+    for (i = 0; i < NCOLORS; i++)
+      if ((*inks)[i])
+	stp_dither_set_ranges(dither, i, (*inks)[i]->count, (*inks)[i]->range,
+			      (*inks)[i]->density * k_upper *
+			      stp_get_density(nv));
+
+  switch (stp_get_image_type(nv))
+    {
+    case IMAGE_LINE_ART:
+      stp_dither_set_ink_spread(dither, 19);
+      break;
+    case IMAGE_SOLID_TONE:
+      stp_dither_set_ink_spread(dither, 15);
+      break;
+    case IMAGE_CONTINUOUS:
+      ink_spread = 13;
+      if (init->ydpi > escp2_max_vres(init->model, nv))
+	ink_spread++;
+      if (init->bits > 1)
+	ink_spread++;
+      stp_dither_set_ink_spread(dither, ink_spread);
+      break;
+    }
+  stp_dither_set_density(dither, stp_get_density(nv));
+  if (escp2_lum_adjustment(init->model, nv))
+    {
+      for (i = 0; i < 49; i++)
+	{
+	  lum_adjustment[i] = escp2_lum_adjustment(init->model, nv)[i];
+	  if (pt && pt->lum_adjustment)
+	    lum_adjustment[i] *= pt->lum_adjustment[i];
+	}
+    }
+  if (escp2_sat_adjustment(init->model, nv))
+    {
+      for (i = 0; i < 49; i++)
+	{
+	  sat_adjustment[i] = escp2_sat_adjustment(init->model, nv)[i];
+	  if (pt && pt->sat_adjustment)
+	    sat_adjustment[i] *= pt->sat_adjustment[i];
+	}
+    }
+  if (escp2_hue_adjustment(init->model, nv))
+    {
+      for (i = 0; i < 49; i++)
+	{
+	  hue_adjustment[i] = escp2_hue_adjustment(init->model, nv)[i];
+	  if (pt && pt->hue_adjustment)
+	    hue_adjustment[i] += pt->hue_adjustment[i];
+	}
+    } 
+} 
+
+static void
+get_inktype(const stp_printer_t printer, const stp_vars_t v,
+	    int model, int *hasblack, int *ncolors)
+{
+  int		output_type = stp_get_output_type(v);
+  const char	*ink_type = stp_get_ink_type(v);
+  const inklist_t *ink_names = escp2_inklist(model, v);
+  int i;
+
+  if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
+    *ncolors = 1;
+  else
+    for (i = 0; i < ink_names->n_inks; i++)
+      {
+	if (strcmp(ink_type, ink_names->inknames[i].name) == 0)
+	  {
+	    *hasblack = ink_names->inknames[i].hasblack;
+	    *ncolors = ink_names->inknames[i].ncolors;
+	    break;
+	  }
+      }
+  if (ncolors == 0)
+    {
+      ink_type = escp2_default_parameters(printer, NULL, "InkType");
+      for (i = 0; i < ink_names->n_inks; i++)
+	{
+	  if (strcmp(ink_type, ink_names->inknames[i].name) == 0)
+	    {
+	      *hasblack = ink_names->inknames[i].hasblack;
+	      *ncolors = ink_names->inknames[i].ncolors;
+	      break;
+	    }
+	}
+    }
+}  
+
 /*
  * 'escp2_print()' - Print an image to an EPSON printer.
  */
@@ -978,7 +1130,6 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   const char	*media_type = stp_get_media_type(v);
   int		output_type = stp_get_output_type(v);
   int		orientation = stp_get_orientation(v);
-  const char	*ink_type = stp_get_ink_type(v);
   double	scaling = stp_get_scaling(v);
   const char	*media_source = stp_get_media_source(v);
   int		top = stp_get_top(v);
@@ -1036,12 +1187,8 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   void *	weave = NULL;
   void *	dither;
   int		separation_rows;
-  int		ink_spread;
   stp_vars_t	nv = stp_allocate_copy(v);
   escp2_init_t	init;
-  const escp2_variable_inkset_t *inks;
-  const paper_t *pt;
-  double k_upper, k_lower;
   int max_vres;
   const unsigned char *cols[7];
   int head_offset[8];
@@ -1053,7 +1200,6 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   int drop_size;
   int min_nozzles;
   stp_dither_data_t *dt;
-  const inklist_t *ink_names;
 
   if (!stp_get_verified(nv))
     {
@@ -1066,56 +1212,18 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   privdata.printed_something = 0;
   stp_set_driver_data(nv, &privdata);
 
-  separation_rows = escp2_separation_rows(model, nv);
-  max_vres = escp2_max_vres(model, nv);
+  get_inktype(printer, nv, model, &hasblack, &ncolors);
 
-  ink_names = escp2_inklist(model, nv);
-
-  if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
-    ncolors = 1;
-  else
-    for (i = 0; i < ink_names->n_inks; i++)
-      {
-	if (strcmp(ink_type, ink_names->inknames[i].name) == 0)
-	  {
-	    hasblack = ink_names->inknames[i].hasblack;
-	    ncolors = ink_names->inknames[i].ncolors;
-	    break;
-	  }
-      }
-  if (ncolors == 0)
-    {
-      ink_type = escp2_default_parameters(printer, NULL, "InkType");
-      for (i = 0; i < ink_names->n_inks; i++)
-	{
-	  if (strcmp(ink_type, ink_names->inknames[i].name) == 0)
-	    {
-	      hasblack = ink_names->inknames[i].hasblack;
-	      ncolors = ink_names->inknames[i].ncolors;
-	      break;
-	    }
-	}
-    }
   stp_set_output_color_model(nv, COLOR_MODEL_CMY);
 
  /*
-  * Setup a read-only pixel region for the entire image...
+  * Compute the output size...
   */
-
   image->init(image);
   image_height = image->height(image);
   image_width = image->width(image);
   image_bpp = image->bpp(image);
 
- /*
-  * Choose the correct color conversion function...
-  */
-
-  colorfunc = stp_choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, nv);
-
- /*
-  * Compute the output size...
-  */
   escp2_imageable_area(printer, nv, &page_left, &page_right,
 		       &page_bottom, &page_top);
 
@@ -1130,16 +1238,19 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
    */
   image_height = image->height(image);
   image_width = image->width(image);
+  stp_default_media_size(printer, nv, &n, &page_true_height);
+
+  colorfunc = stp_choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, nv);
 
  /*
   * Figure out the output resolution...
   */
   res = escp2_find_resolution(model, nv, resolution);
-  if (!res)
-    return;
   use_softweave = res->softweave;
   use_microweave = res->microweave;
-  if (!use_softweave)
+  if (use_softweave)
+    max_vres = escp2_max_vres(model, nv);
+  else
     max_vres = escp2_base_resolution(model, nv);
   xdpi = res->hres;
   ydpi = res->vres;
@@ -1191,6 +1302,9 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       min_nozzles = 1;
       nozzle_separation = 1;
     }
+
+  separation_rows = escp2_separation_rows(model, nv);
+
   if (drop_size > 0 && drop_size & 0x10)
     bits = 2;
   else
@@ -1214,17 +1328,9 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	  max_head_offset = head_offset[i];
       }
 
-
- /*
-  * Let the user know what we're doing...
-  */
-
-  image->progress_init(image);
-
  /*
   * Send ESC/P2 initialization commands...
   */
-  stp_default_media_size(printer, nv, &n, &page_true_height);
   init.model = model;
   init.output_type = output_type;
   if (init.output_type == OUTPUT_MONOCHROME)
@@ -1271,6 +1377,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   init.paper_type = media_type;
   init.media_source = media_source;
   init.v = nv;
+  init.ncolors = ncolors;
 
   escp2_init_printer(&init);
 
@@ -1297,6 +1404,17 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	undersample / max_vres / undersample_denominator;
     }
 
+  weave = stp_initialize_weave(nozzles, nozzle_separation,
+			       horizontal_passes, vertical_passes,
+			       vertical_oversample, ncolors, bits,
+			       out_width, out_height, separation_rows,
+			       top * physical_ydpi / 72,
+			       (page_height * physical_ydpi / 72 +
+				escp2_extra_feed(model, nv) * physical_ydpi /
+				escp2_base_resolution(model, nv)),
+			       1, head_offset, nv, flush_pass,
+			       FILLFUNC, PACKFUNC, COMPUTEFUNC);
+
  /*
   * Allocate memory for the raster data...
   */
@@ -1313,7 +1431,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 
       if (ncolors == 7)
 	dyellow = stp_zalloc(length * bits);
-      if (ncolors >= 6)
+      if (ncolors >= 5)
 	{
 	  lcyan = stp_zalloc(length * bits);
 	  lmagenta = stp_zalloc(length * bits);
@@ -1329,101 +1447,14 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   cols[5] = lcyan;
   cols[6] = dyellow;
 
-  /* Epson printers are currently all 720 physical dpi vertically */
-  weave = stp_initialize_weave(nozzles, nozzle_separation,
-			       horizontal_passes, vertical_passes,
-			       vertical_oversample, ncolors, bits,
-			       out_width, out_height, separation_rows,
-			       top * physical_ydpi / 72,
-			       (page_height * physical_ydpi / 72 +
-				escp2_extra_feed(model, nv) * physical_ydpi /
-				escp2_base_resolution(model, nv)),
-			       1, head_offset, nv, flush_pass,
-			       FILLFUNC, PACKFUNC, COMPUTEFUNC);
-
-  /*
-   * Compute the LUT.  For now, it's 8 bit, but that may eventually
-   * sometimes change.
-   */
-  if (ncolors > 4)
-    k_lower = .5;
-  else
-    k_lower = .25;
-
-  pt = get_media_type(model, stp_get_media_type(nv), nv);
-  if (pt)
-    {
-      stp_set_density(nv, stp_get_density(nv) * pt->base_density);
-      if (ncolors >= 5)
-	{
-	  stp_set_cyan(nv, stp_get_cyan(nv) * pt->p_cyan);
-	  stp_set_magenta(nv, stp_get_magenta(nv) * pt->p_magenta);
-	  stp_set_yellow(nv, stp_get_yellow(nv) * pt->p_yellow);
-	}
-      else
-	{
-	  stp_set_cyan(nv, stp_get_cyan(nv) * pt->cyan);
-	  stp_set_magenta(nv, stp_get_magenta(nv) * pt->magenta);
-	  stp_set_yellow(nv, stp_get_yellow(nv) * pt->yellow);
-	}
-      stp_set_saturation(nv, stp_get_saturation(nv) * pt->saturation);
-      stp_set_gamma(nv, stp_get_gamma(nv) * pt->gamma);
-      k_lower *= pt->k_lower_scale;
-      k_upper = pt->k_upper;
-    }
-  else				/* Can't find paper type? Assume plain */
-    {
-      stp_set_density(nv, stp_get_density(nv) * .8);
-      k_lower *= .1;
-      k_upper = .5;
-    }
-  stp_set_density(nv, stp_get_density(nv) * escp2_density(model, resid, nv));
-  if (stp_get_density(nv) > 1.0)
-    stp_set_density(nv, 1.0);
-  if (ncolors == 1)
-    stp_set_gamma(nv, stp_get_gamma(nv) / .8);
-  stp_compute_lut(nv, 256);
-
- /*
-  * Output the page...
-  */
-
-  if (xdpi > ydpi)
-    dither = stp_init_dither(image_width, out_width, 1, xdpi / ydpi, nv);
-  else
-    dither = stp_init_dither(image_width, out_width, ydpi / xdpi, 1, nv);
-
-  for (i = 0; i <= NCOLORS; i++)
-    stp_dither_set_black_level(dither, i, 1.0);
-  stp_dither_set_black_lower(dither, k_lower);
-  stp_dither_set_black_upper(dither, k_upper);
-
-  inks = escp2_inks(model, resid, ncolors, bits, nv);
-  if (inks)
-    for (i = 0; i < NCOLORS; i++)
-      if ((*inks)[i])
-	stp_dither_set_ranges(dither, i, (*inks)[i]->count, (*inks)[i]->range,
-			      (*inks)[i]->density * k_upper *
-			      stp_get_density(nv));
-
-  switch (stp_get_image_type(nv))
-    {
-    case IMAGE_LINE_ART:
-      stp_dither_set_ink_spread(dither, 19);
-      break;
-    case IMAGE_SOLID_TONE:
-      stp_dither_set_ink_spread(dither, 15);
-      break;
-    case IMAGE_CONTINUOUS:
-      ink_spread = 13;
-      if (ydpi > escp2_max_vres(model, nv))
-	ink_spread++;
-      if (bits > 1)
-	ink_spread++;
-      stp_dither_set_ink_spread(dither, ink_spread);
-      break;
-    }
-  stp_dither_set_density(dither, stp_get_density(nv));
+  dt = stp_create_dither_data();
+  stp_add_channel(dt, black, ECOLOR_K, 0);
+  stp_add_channel(dt, cyan, ECOLOR_C, 0);
+  stp_add_channel(dt, lcyan, ECOLOR_C, 1);
+  stp_add_channel(dt, magenta, ECOLOR_M, 0);
+  stp_add_channel(dt, lmagenta, ECOLOR_M, 1);
+  stp_add_channel(dt, yellow, ECOLOR_Y, 0);
+  stp_add_channel(dt, dyellow, ECOLOR_Y, 1);
 
   in  = stp_malloc(image_width * image_bpp);
   out = stp_malloc(image_width * out_bpp * 2);
@@ -1433,42 +1464,20 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   errval  = 0;
   errlast = -1;
   errline  = 0;
-  if (escp2_lum_adjustment(model, nv))
-    {
-      for (i = 0; i < 49; i++)
-	{
-	  lum_adjustment[i] = escp2_lum_adjustment(model, nv)[i];
-	  if (pt && pt->lum_adjustment)
-	    lum_adjustment[i] *= pt->lum_adjustment[i];
-	}
-    }
-  if (escp2_sat_adjustment(model, nv))
-    {
-      for (i = 0; i < 49; i++)
-	{
-	  sat_adjustment[i] = escp2_sat_adjustment(model, nv)[i];
-	  if (pt && pt->sat_adjustment)
-	    sat_adjustment[i] *= pt->sat_adjustment[i];
-	}
-    }
-  if (escp2_hue_adjustment(model, nv))
-    {
-      for (i = 0; i < 49; i++)
-	{
-	  hue_adjustment[i] = escp2_hue_adjustment(model, nv)[i];
-	  if (pt && pt->hue_adjustment)
-	    hue_adjustment[i] += pt->hue_adjustment[i];
-	}
-    }
 
-  dt = stp_create_dither_data();
-  stp_add_channel(dt, black, ECOLOR_K, 0);
-  stp_add_channel(dt, cyan, ECOLOR_C, 0);
-  stp_add_channel(dt, lcyan, ECOLOR_C, 1);
-  stp_add_channel(dt, magenta, ECOLOR_M, 0);
-  stp_add_channel(dt, lmagenta, ECOLOR_M, 1);
-  stp_add_channel(dt, yellow, ECOLOR_Y, 0);
-  stp_add_channel(dt, dyellow, ECOLOR_Y, 1);
+  if (xdpi > ydpi)
+    dither = stp_init_dither(image_width, out_width, 1, xdpi / ydpi, nv);
+  else
+    dither = stp_init_dither(image_width, out_width, ydpi / xdpi, 1, nv);
+
+  adjust_print_quality(&init, dither,
+		       lum_adjustment, sat_adjustment, hue_adjustment);
+
+ /*
+  * Let the user know what we're doing...
+  */
+
+  image->progress_init(image);
 
   QUANT(0);
   for (y = 0; y < out_height; y ++)

@@ -61,14 +61,14 @@ typedef struct
 
 static const dither_algo_t dither_algos[] =
 {
+  /* Note to translators: "EvenTone" is the proper name, rather than a */
+  /* descriptive name, of this algorithm. */  
+  { "EvenTone", N_ ("EvenTone"),               D_EVENTONE },
   { "Adaptive",	N_ ("Adaptive Hybrid"),        D_ADAPTIVE_HYBRID },
   { "Ordered",	N_ ("Ordered"),                D_ORDERED },
   { "Fast",	N_ ("Fast"),                   D_FAST },
   { "VeryFast",	N_ ("Very Fast"),              D_VERY_FAST },
-  { "Floyd",	N_ ("Hybrid Floyd-Steinberg"), D_FLOYD_HYBRID },
-  /* Note to translators: "EvenTone" is the proper name, rather than a */
-  /* descriptive name, of this algorithm. */  
-  { "EvenTone", N_ ("EvenTone"),               D_EVENTONE }
+  { "Floyd",	N_ ("Hybrid Floyd-Steinberg"), D_FLOYD_HYBRID }
 };
 
 static const int num_dither_algos = sizeof(dither_algos)/sizeof(dither_algo_t);

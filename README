@@ -1,17 +1,14 @@
 INTRODUCTION
 
-    This is Gimp-Print version 4.2.0, the first stable release in the
-    4.2 line.  Gimp-print is the print facility for the Gimp, and in
-    addition a suite of drivers that may be used with common UNIX
+    This is Gimp-Print version 4.3.0, the first development release in
+    the 4.3 line.  Gimp-print is the print facility for the Gimp, and
+    in addition a suite of drivers that may be used with common UNIX
     spooling systems using GhostScript or CUPS.  These drivers provide
     printing quality for UNIX/Linux in many cases equal to or better
     than proprietary vendor-supplied drivers, and can be used for many
     of the most demanding printing tasks.
 
-    Please read this README, and the NEWS file carefully!  Many things
-    have changed from previous releases.  The package is quite
-    different in many ways from Gimp-Print 4.0, and you should read
-    these instructions carefully.
+    Please read this README, and the NEWS file carefully!
 
     A user's manual exists in doc/users_guide; it is normally
     installed in PDF and HTML form in /usr/local/share/gimp-print/doc.
@@ -58,7 +55,7 @@ BASIC INSTALLATION
 
 THE GIMP
 
-    Gimp-print 4.2 requires the Gimp 1.2.
+    Gimp-print 4.3 requires the Gimp 1.2.
 
     To build and install the Gimp Print plug-in:
 

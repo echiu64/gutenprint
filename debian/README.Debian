@@ -1,8 +1,8 @@
 gimp-print for Debian
 ---------------------
 
-This is Gimp-Print version 4.2.0, the first stable release in the 4.2
-series.  Gimp-print is the print facility for the Gimp, and in
+This is Gimp-Print version 4.3.0, the first development release in the
+4.3 series.  Gimp-print is the print facility for the Gimp, and in
 addition a suite of drivers that may be used with common UNIX spooling
 systems using GhostScript or CUPS.  These drivers provide printing
 quality for UNIX/Linux on a par with proprietary vendor-supplied

@@ -648,25 +648,35 @@ STP_CONFIG_LIBCONFIG_IN([gimpprint], [src/main])
 STP_CONFIG_PKGCONFIG_IN([gimpprint], [GIMP Print Top Quality Printer Drivers], [src/main])
 STP_CONFIG_GIMPPRINT_M4
 
-AC_OUTPUT_COMMANDS([ghost],[
-exec_prefix=`eval echo ${exec_prefix}`
-prefix=${prefix}
-])
+literal_includedir=`eval echo $includedir`
+literal_libdir=`eval echo $libdir`
+
+AC_SUBST(literal_includedir)
+AC_SUBST(literal_libdir)
 
 AC_CONFIG_FILES([Makefile])
-AC_CONFIG_FILES([doc/Makefile doc/developer/Makefile doc/users_guide/Makefile])
-AC_CONFIG_FILES([include/Makefile include/gimp-print/Makefile include/gimp-print/gimp-print.h])
+AC_CONFIG_FILES([doc/Makefile])
+AC_CONFIG_FILES([doc/developer/Makefile])
+AC_CONFIG_FILES([doc/users_guide/Makefile])
+AC_CONFIG_FILES([include/Makefile])
+AC_CONFIG_FILES([include/gimp-print/Makefile])
+AC_CONFIG_FILES([include/gimp-print/gimp-print.h])
 AC_CONFIG_FILES([intl/Makefile])
 AC_CONFIG_FILES([lib/Makefile])
-AC_CONFIG_FILES([man/Makefile man/escputil.1])
+AC_CONFIG_FILES([man/Makefile])
+AC_CONFIG_FILES([man/escputil.1])
 AC_CONFIG_FILES([man/cups-calibrate.8])
-AC_CONFIG_FILES([man/gimpprint.3 man/gimpprint-config.1])
+AC_CONFIG_FILES([man/gimpprint.3])
+AC_CONFIG_FILES([man/gimpprint-config.1])
 AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([samples/Makefile])
 AC_CONFIG_FILES([src/Makefile])
-AC_CONFIG_FILES([src/cups/Makefile src/escputil/Makefile src/foomatic/Makefile])
+AC_CONFIG_FILES([src/cups/Makefile])
+AC_CONFIG_FILES([src/escputil/Makefile])
+AC_CONFIG_FILES([src/foomatic/Makefile])
 AC_CONFIG_FILES([src/foomatic/foomatic-generator], [chmod +x src/foomatic/foomatic-generator])
-AC_CONFIG_FILES([src/ghost/Makefile src/ghost/contrib.mak.addon src/testpattern/Makefile])
+AC_CONFIG_FILES([src/ghost/Makefile])
+AC_CONFIG_FILES([src/testpattern/Makefile])
 AC_CONFIG_FILES([src/gimp/Makefile])
 AC_CONFIG_FILES([src/main/Makefile])
 AC_CONFIG_FILES([src/main/gimpprint-config], [chmod +x src/main/gimpprint-config])
@@ -674,11 +684,14 @@ AC_CONFIG_FILES([src/main/gimpprint.pc])
 AC_CONFIG_FILES([src/printdef/Makefile])
 AC_CONFIG_FILES([cups-gimpprint.list])
 AC_CONFIG_FILES([test/Makefile])
-AC_CONFIG_COMMANDS([ghost],[
+AC_CONFIG_FILES([src/ghost/contrib.mak.addon], [
 if test -f src/ghost/contrib.mak.addon ; then
-  sed -e 's;${exec_prefix};'"${exec_prefix};" -e 's;${prefix};'"${prefix};" src/ghost/contrib.mak.addon > src/ghost/contrib.mak.addon.tmp
+  sed -e 's;${exec_prefix};'"${literal_exec_prefix};" -e 's;${prefix};'"${literal_prefix};" src/ghost/contrib.mak.addon > src/ghost/contrib.mak.addon.tmp
   mv src/ghost/contrib.mak.addon.tmp src/ghost/contrib.mak.addon
 fi
+], [
+literal_prefix="`eval echo $prefix`"
+literal_exec_prefix="`eval echo $exec_prefix`"
 ])
 AC_CONFIG_COMMANDS([default], [
 echo "Finished configuring."

@@ -1,7 +1,7 @@
 INTRODUCTION:
 -------------
 
-  Gimp-Print 4.2 includes an associated Ghostscript driver, which is
+  Gimp-Print 4.3 includes an associated Ghostscript driver, which is
   named `stp'.  That name originally referred to Epson Stylus Photo
   printers; this is the first Ghostscript driver which supported those
   printers with high quality.  The same driver now supports many Canon,
@@ -15,9 +15,10 @@ INTRODUCTION:
   covered by the GPL.  We will not fix bugs reported against
   combinations of this driver with AFPL-only versions of GhostScript.
 
-  Ghostscript 6.53 contains a version of the Gimp-Print driver based
-  on the Gimp-Print 4.2.0 release with a bug fix.  Building Gimp-Print
-  is much simpler with Ghostscript 6.53 for that reason.
+  GNU Ghostscript 6.53 and 7.05 contains a version of the Gimp-Print
+  driver based on the Gimp-Print 4.2.0 release with a bug fix.
+  Building Gimp-Print is much simpler with Ghostscript 6.53 and 7.05
+  for that reason.
 
   Gimp-Print includes another driver based on the new IJS protocol.
   IJS is a relatively new (as of early 2002) initiative to improve the
@@ -79,11 +80,12 @@ LICENSE:
 BUILD AND INSTALLATION OF THE STP DRIVER:
 ----- --- ------------ -- --- --- -------
 
-For Ghostscript 6.53 (recommended):
+For GNU Ghostscript 6.53 and 7.05 (recommended):
 
-   Building Gimp-Print for Ghostscript 6.53 is much simpler, as the
-   driver is already in the Ghostscript package.  It is sufficient to
-   build and install the Gimp-Print library and Ghostscript.
+   Building Gimp-Print for GNU Ghostscript 6.53 and 7.05 is much
+   simpler, as the driver is already in the Ghostscript package.  It
+   is sufficient to build and install the Gimp-Print library and
+   Ghostscript.
 
 1) First build and install the core Gimp-Print library.  Run
 
@@ -1318,8 +1320,8 @@ gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-870 -dDensity=0.8 \
    -dImageType=2 -sOutputFile=/dev/lp0 foo.ps
 
 gs -sDEVICE=ijs -sIjsServer=/usr/local/bin/ijsgimpprint \
-   -sDeviceManufacturer=EPSON -sDeviceModel=escp2-870
-   -sOutputFile=/dev/lp0
+   -sDeviceManufacturer=EPSON -sDeviceModel=escp2-870 \
+   -sOutputFile=/dev/lp0 \
    -sIjsParams='Quality=1440x720hq,MediaType=GlossyPhoto,Density=0.8,ImageType=2' \
    foo.ps
 
@@ -1328,6 +1330,6 @@ gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-660 -dDensity=0.8 -r720 \
    -sQuality=720sw -dColor=2 -sOutputFile=- foo.ps
 
 gs -sDEVICE=ijs -sIjsServer=/usr/local/bin/ijsgimpprint \
-   -sDeviceManufacturer=EPSON -sDeviceModel=escp2-660 -dIjsUseOutputFD
-   -sProcessColorModel=DeviceGray -dBitsPerSample=1 -sOutputFile=-
+   -sDeviceManufacturer=EPSON -sDeviceModel=escp2-660 -dIjsUseOutputFD \
+   -sProcessColorModel=DeviceGray -dBitsPerSample=1 -sOutputFile=- \
    -sIjsParams='Quality=720sw,Density=0.8' foo.ps

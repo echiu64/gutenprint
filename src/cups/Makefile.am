@@ -41,8 +41,8 @@ cups_modeldir = $(pkgdatadir)/model
 AM_CFLAGS = $(GNUCFLAGS)
 DEFS = @CUPS_CFLAGS@ @DEFS@ -I. -I$(srcdir) -I../.. -DCUPS_DATADIR=\"$(pkgdatadir)\" -DGIMP_PRINT_VERSION=\"$(VERSION)\"
 INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS)
-LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
-
+LIBPRINTUT = $(top_builddir)/lib/libprintut.la
+LIBS = $(INTLLIBS) @LIBS@
 
 ## Programs
 
@@ -61,23 +61,23 @@ endif
 
 
 cups_calibrate_SOURCES = cups-calibrate.c
-cups_calibrate_LDADD = -lm
+cups_calibrate_LDADD = $(LIBPRINTUT) -lm
 
 commandtoepson_SOURCES = commandtoepson.c
-commandtoepson_LDADD = $(CUPS_LIBS)
+commandtoepson_LDADD = $(LIBPRINTUT) $(CUPS_LIBS)
 
 canon_SOURCES = canon.c
-canon_LDADD = $(CUPS_LIBS)
+canon_LDADD = $(LIBPRINTUT) $(CUPS_LIBS)
 
 epson_SOURCES = epson.c
-epson_LDADD = $(CUPS_LIBS)
+epson_LDADD = $(LIBPRINTUT) $(CUPS_LIBS)
 
 genppd_SOURCES = genppd.c
-genppd_LDADD = $(CUPS_LIBS) $(GENPPD_LIBS) $(LIBGIMPPRINT_LIBS)
+genppd_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(GENPPD_LIBS) $(LIBGIMPPRINT_LIBS)
 genppd_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 rastertoprinter_SOURCES = rastertoprinter.c
-rastertoprinter_LDADD = $(CUPS_LIBS) $(LIBGIMPPRINT_LIBS)
+rastertoprinter_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(LIBGIMPPRINT_LIBS)
 rastertoprinter_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 
