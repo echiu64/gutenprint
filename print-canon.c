@@ -116,6 +116,17 @@ static canon_cap_t canon_model_capabilities[] =
 
   /* tested models */
 
+
+  { /* Canon BJ 30 */
+    30,
+    9.5*72, 14*72,
+    360, 360, 2,
+    11, 9, 10, 18,
+    CANON_INK_K,
+    CANON_SLOT_ASF1,
+    CANON_CAP_CMD61
+  },
+
   { /* Canon BJC 4300 */
     4300,
     618, 936,      /* 8.58" x 13 " */
