@@ -233,7 +233,6 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(pseudo_separation_rows),
   PARAMETER_INT(base_separation),
   PARAMETER_INT(base_resolution),
-  PARAMETER_INT(enhanced_resolution),
   PARAMETER_INT(resolution_scale),
   PARAMETER_INT(initial_vertical_offset),
   PARAMETER_INT(black_initial_vertical_offset),
@@ -355,7 +354,6 @@ DEF_SIMPLE_ACCESSOR(extra_feed, unsigned)
 DEF_SIMPLE_ACCESSOR(pseudo_separation_rows, int)
 DEF_SIMPLE_ACCESSOR(base_separation, int)
 DEF_SIMPLE_ACCESSOR(base_resolution, int)
-DEF_SIMPLE_ACCESSOR(enhanced_resolution, int)
 DEF_SIMPLE_ACCESSOR(resolution_scale, int)
 DEF_SIMPLE_ACCESSOR(initial_vertical_offset, int)
 DEF_SIMPLE_ACCESSOR(black_initial_vertical_offset, int)
@@ -1099,7 +1097,7 @@ escp2_set_printhead_speed(const escp2_init_t *init)
   if (init->unidirectional)
     {
       stpi_send_command(v, "\033U", "c", 1);
-      if (init->xdpi > escp2_enhanced_resolution(v))
+      if (init->xdpi > escp2_base_resolution(v))
 	stpi_send_command(v, "\033(s", "bc", 2);
     }
   else

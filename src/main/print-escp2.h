@@ -295,8 +295,6 @@ typedef struct escp2_printer
   int		base_separation; /* Basic unit of row separation */
   int		base_resolution; /* Base hardware line spacing (above this */
 				/* always requires multiple passes) */
-  int		enhanced_resolution;/* Above this we use the */
-				    /* enhanced_xres rather than xres */
   int		resolution_scale;   /* Scaling factor for ESC(D command */
   int		max_black_resolution; /* Above this resolution, we */
 				      /* must use color parameters */
