@@ -39,6 +39,8 @@ src/main/print-vars.c
 #src/main/print-version.c
 src/main/print-weave.c
 src/main/string-list.c
+# Extracted XML translatable strings
+src/main/xmli18n-tmp.h
 
 # UI library sources
 src/libgimpprintui/panel.c
