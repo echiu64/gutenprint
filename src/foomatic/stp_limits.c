@@ -37,34 +37,37 @@ main(int argc, char **argv)
   stp_parameter_t desc;
   int nparams;
   int i;
-  const stp_parameter_t *params;
+  stp_parameter_list_t params;
 
   stp_init();
-  params = stp_list_parameters(stp_default_settings(), &nparams);
+  params = stp_list_parameters(stp_default_settings());
+  nparams = stp_parameter_list_count(params);
   for (i = 0; i < nparams; i++)
     {
-      if (params[i].type == STP_PARAMETER_TYPE_DOUBLE)
+      const stp_parameter_t *p = stp_parameter_list_param(params, i);
+      if (p->type == STP_PARAMETER_TYPE_DOUBLE)
 	{
 	  stp_describe_parameter(stp_default_settings(),
-				 params[i].name, &desc);
+				 p->name, &desc);
 	  printf("$stp_values{'MINVAL'}{'%s'} = %.3f\n",
-		 params[i].name, desc.bounds.dbl.lower);
+		 p->name, desc.bounds.dbl.lower);
 	  printf("$stp_values{'MAXVAL'}{'%s'} = %.3f\n",
-		 params[i].name, desc.bounds.dbl.upper);
+		 p->name, desc.bounds.dbl.upper);
 	  printf("$stp_values{'DEFVAL'}{'%s'} = %.3f\n",
-		 params[i].name, desc.deflt.dbl);
+		 p->name, desc.deflt.dbl);
 	}
-      else if (params[i].type == STP_PARAMETER_TYPE_INT)
+      else if (p->type == STP_PARAMETER_TYPE_INT)
 	{
 	  stp_describe_parameter(stp_default_settings(),
-				 params[i].name, &desc);
+				 p->name, &desc);
 	  printf("$stp_values{'MINVAL'}{'%s'} = %d\n",
-		 params[i].name, desc.bounds.integer.lower);
+		 p->name, desc.bounds.integer.lower);
 	  printf("$stp_values{'MAXVAL'}{'%s'} = %d\n",
-		 params[i].name, desc.bounds.integer.upper);
+		 p->name, desc.bounds.integer.upper);
 	  printf("$stp_values{'DEFVAL'}{'%s'} = %d\n",
-		 params[i].name, desc.deflt.integer);
+		 p->name, desc.deflt.integer);
 	}
     }
+  stp_parameter_list_destroy(params);
   return 0;
 }

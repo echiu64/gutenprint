@@ -449,7 +449,7 @@ do									\
 int
 stp_verify_printer_params(const stp_vars_t v)
 {
-  const stp_parameter_t *params;
+  stp_parameter_list_t params;
   const stp_printer_t p = stp_get_printer(v);
   int nparams;
   int i;
@@ -529,12 +529,15 @@ stp_verify_printer_params(const stp_vars_t v)
   CHECK_INT_RANGE(v, page_number);
   CHECK_INT_RANGE(v, job_mode);
 
-  params = stp_list_parameters(v, &nparams);
+  params = stp_list_parameters(v);
+  nparams = stp_parameter_list_count(params);
   for (i = 0; i < nparams; i++)
     {
-      if (params[i].class != STP_PARAMETER_CLASS_PAGE_SIZE)
-	answer &= verify_param(v, params[i].name);
+      stp_parameter_t *p = stp_parameter_list_param(params, i);
+      if (p->class != STP_PARAMETER_CLASS_PAGE_SIZE)
+	answer &= verify_param(v, p->name);
     }
+  stp_parameter_list_destroy(params);
   stp_set_verified(v, answer);
   return answer;
 }

@@ -156,8 +156,6 @@ main(int  argc,				/* I - Number of command-line arguments */
   cups_option_t		*options;	/* CUPS options */
   const char		*val;		/* CUPS option value */
   int			i;
-  const stp_parameter_t *params;
-  int			nparams;
 
  /*
   * Initialise libgimpprint
@@ -331,6 +329,8 @@ main(int  argc,				/* I - Number of command-line arguments */
 
     if (cups.page == 0)
       {
+	stp_parameter_list_t params;
+	int nparams;
 	v = stp_allocate_copy(stp_printer_get_printvars(printer));
 
 	stp_set_float_parameter(v, "AppGamma", 1.0);
@@ -385,27 +385,30 @@ main(int  argc,				/* I - Number of command-line arguments */
 
 	stp_merge_printvars(v, stp_printer_get_printvars(printer));
 
-	params = stp_list_parameters(v, &nparams);
+	params = stp_list_parameters(v);
+	nparams = stp_parameter_list_count(params);
 	for (i = 0; i < nparams; i++)
 	  {
-	    switch (params[i].type)
+	    const stp_parameter_t *p = stp_parameter_list_param(params, i);
+	    switch (p->type)
 	      {
 	      case STP_PARAMETER_TYPE_STRING_LIST:
 		fprintf(stderr, "DEBUG: stp_get_%s(v) |%s|\n",
-			params[i].name,stp_get_string_parameter(v,params[i].name));
+			p->name, stp_get_string_parameter(v, p->name));
 		break;
 	      case STP_PARAMETER_TYPE_DOUBLE:
 		fprintf(stderr, "DEBUG: stp_get_%s(v) |%.3f|\n",
-			params[i].name,stp_get_float_parameter(v,params[i].name));
+			p->name, stp_get_float_parameter(v, p->name));
 		break;
 	      case STP_PARAMETER_TYPE_INT:
 		fprintf(stderr, "DEBUG: stp_get_%s(v) |%.d|\n",
-			params[i].name,stp_get_int_parameter(v,params[i].name));
+			p->name, stp_get_int_parameter(v, p->name));
 		break;
 	      default:
 		break;
 	      }
 	  }
+	stp_parameter_list_destroy(params);
 	stp_set_job_mode(v, STP_JOB_MODE_JOB);
       }
 

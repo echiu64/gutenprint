@@ -305,11 +305,6 @@ static const stp_parameter_t global_parameters[] =
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_BASIC
     },
-    {
-      NULL, NULL, NULL,
-      STP_PARAMETER_TYPE_INVALID, STP_PARAMETER_CLASS_INVALID,
-      STP_PARAMETER_LEVEL_INVALID
-    }
   };
 
 const stp_vars_t
@@ -706,7 +701,7 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
 {
   int count;
   int i;
-  const stp_parameter_t *params;
+  stp_parameter_list_t params;
   if (vs == vd)
     return;
   stp_set_driver(vd, stp_get_driver(vs));
@@ -735,30 +730,34 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
   stp_set_errdata(vd, stp_get_errdata(vs));
   stp_set_outfunc(vd, stp_get_outfunc(vs));
   stp_set_errfunc(vd, stp_get_errfunc(vs));
-  params = stp_list_parameters(vs, &count);
+  params = stp_list_parameters(vs);
+  count = stp_parameter_list_count(params);
   for (i = 0; i < count; i++)
-    switch (params[i].type)
-      {
-      case STP_PARAMETER_TYPE_STRING_LIST:
-      case STP_PARAMETER_TYPE_FILE:
-	stp_set_string_parameter(vd, params[i].name,
-				 stp_get_string_parameter(vs, params[i].name));
-	break;
-      case STP_PARAMETER_TYPE_DOUBLE:
-	stp_set_float_parameter(vd, params[i].name,
-				stp_get_float_parameter(vs, params[i].name));
-	break;
-      case STP_PARAMETER_TYPE_INT:
-	stp_set_int_parameter(vd, params[i].name,
-			      stp_get_int_parameter(vs, params[i].name));
-	break;
-      case STP_PARAMETER_TYPE_CURVE:
-	stp_set_curve_parameter(vd, params[i].name,
-				stp_get_curve_parameter(vs, params[i].name));
-	break;
-      default:
-	break;
-      }
+    {
+      const stp_parameter_t *p = stp_parameter_list_param(params, i);
+      switch (p->type)
+	{
+	case STP_PARAMETER_TYPE_STRING_LIST:
+	case STP_PARAMETER_TYPE_FILE:
+	  stp_set_string_parameter(vd, p->name,
+				   stp_get_string_parameter(vs, p->name));
+	  break;
+	case STP_PARAMETER_TYPE_DOUBLE:
+	  stp_set_float_parameter(vd, p->name,
+				  stp_get_float_parameter(vs, p->name));
+	  break;
+	case STP_PARAMETER_TYPE_INT:
+	  stp_set_int_parameter(vd, p->name,
+				stp_get_int_parameter(vs, p->name));
+	  break;
+	case STP_PARAMETER_TYPE_CURVE:
+	  stp_set_curve_parameter(vd, p->name,
+				  stp_get_curve_parameter(vs, p->name));
+	  break;
+	default:
+	  break;
+	}
+    }
   stp_copy_options(vd, vs);
   stp_set_verified(vd, stp_get_verified(vs));
 }
@@ -776,26 +775,30 @@ stp_merge_printvars(stp_vars_t user, const stp_vars_t print)
 {
   int count;
   int i;
-  const stp_parameter_t *params = stp_list_parameters(print, &count);
+  stp_parameter_list_t params = stp_list_parameters(print);
+  count = stp_parameter_list_count(params);
   for (i = 0; i < count; i++)
-    if (params[i].type == STP_PARAMETER_TYPE_DOUBLE &&
-	params[i].class == STP_PARAMETER_CLASS_OUTPUT &&
-	params[i].level == STP_PARAMETER_LEVEL_BASIC)
-      {
-	stp_parameter_t desc;
-	double usrval = stp_get_float_parameter(user, params[i].name);
-	double prnval = stp_get_float_parameter(print, params[i].name);
-	stp_describe_parameter(print, params[i].name, &desc);
-	if (strcmp(params[i].name, "Gamma") == 0)
-	  usrval /= prnval;
-	else
-	  usrval *= prnval;
-	if (usrval < desc.bounds.dbl.lower)
-	  usrval = desc.bounds.dbl.lower;
-	else if (usrval > desc.bounds.dbl.upper)
-	  usrval = desc.bounds.dbl.upper;
-	stp_set_float_parameter(user, params[i].name, usrval);
-      }
+    {
+      const stp_parameter_t *p = stp_parameter_list_param(params, i);
+      if (p->type == STP_PARAMETER_TYPE_DOUBLE &&
+	  p->class == STP_PARAMETER_CLASS_OUTPUT &&
+	  p->level == STP_PARAMETER_LEVEL_BASIC)
+	{
+	  stp_parameter_t desc;
+	  double usrval = stp_get_float_parameter(user, p->name);
+	  double prnval = stp_get_float_parameter(print, p->name);
+	  stp_describe_parameter(print, p->name, &desc);
+	  if (strcmp(p->name, "Gamma") == 0)
+	    usrval /= prnval;
+	  else
+	    usrval *= prnval;
+	  if (usrval < desc.bounds.dbl.lower)
+	    usrval = desc.bounds.dbl.lower;
+	  else if (usrval > desc.bounds.dbl.upper)
+	    usrval = desc.bounds.dbl.upper;
+	  stp_set_float_parameter(user, p->name, usrval);
+	}
+    }
   if (stp_get_output_type(print) == OUTPUT_GRAY &&
       (stp_get_output_type(user) == OUTPUT_COLOR ||
        stp_get_output_type(user) == OUTPUT_RAW_CMYK))
@@ -805,18 +808,20 @@ stp_merge_printvars(stp_vars_t user, const stp_vars_t print)
 void
 stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p)
 {
-  const stp_parameter_t *params;
+  stp_parameter_list_t *params;
   int count;
   int i;
   stp_parameter_t desc;
   stp_set_driver(v, stp_printer_get_driver(p));
-  params = stp_list_parameters(v, &count);
+  params = stp_list_parameters(v);
+  count = stp_parameter_list_count(params);
   for (i = 0; i < count; i++)
     {
-      if (params[i].type == STP_PARAMETER_TYPE_STRING_LIST)
+      const stp_parameter_t *p = stp_parameter_list_param(params, i);
+      if (p->type == STP_PARAMETER_TYPE_STRING_LIST)
 	{
-	  stp_describe_parameter(v, params[i].name, &desc);
-	  stp_set_string_parameter(v, params[i].name, desc.deflt.str);
+	  stp_describe_parameter(v, p->name, &desc);
+	  stp_set_string_parameter(v, p->name, desc.deflt.str);
 	  stp_string_list_free(desc.bounds.str);
 	}
     }
@@ -826,7 +831,8 @@ void
 stp_describe_internal_parameter(const stp_vars_t v, const char *name,
 				stp_parameter_t *description)
 {
-  const stp_parameter_t *param = global_parameters;
+  stp_parameter_list_t list;
+  const stp_parameter_t *param;
   if (strcmp(name, "DitherAlgorithm") == 0)
     {
       stp_fill_parameter_settings(description, name);
@@ -836,31 +842,118 @@ stp_describe_internal_parameter(const stp_vars_t v, const char *name,
 	stp_string_list_param(description->bounds.str, 0)->name;
       return;
     }
-  while (param->type)
+  list = stp_list_parameters(v);
+  param = stp_parameter_find(list, name);
+  stp_parameter_list_destroy(list);
+
+  if (param->type == STP_PARAMETER_TYPE_DOUBLE &&
+      strcmp(name, param->name) == 0)
     {
-      if (param->type == STP_PARAMETER_TYPE_DOUBLE &&
-	  strcmp(name, param->name) == 0)
+      stp_fill_parameter_settings(description, name);
+      if (description->type == STP_PARAMETER_TYPE_DOUBLE)
 	{
-	  stp_fill_parameter_settings(description, name);
-	  if (description->type == STP_PARAMETER_TYPE_DOUBLE)
-	    {
-	      description->bounds.dbl.lower =
-		stp_get_float_parameter(stp_minimum_settings(), name);
-	      description->bounds.dbl.upper =
-		stp_get_float_parameter(stp_maximum_settings(), name);
-	      description->deflt.dbl =
-		stp_get_float_parameter(stp_default_settings(), name);
-	    }
-	  return;
+	  description->bounds.dbl.lower =
+	    stp_get_float_parameter(stp_minimum_settings(), name);
+	  description->bounds.dbl.upper =
+	    stp_get_float_parameter(stp_maximum_settings(), name);
+	  description->deflt.dbl =
+	    stp_get_float_parameter(stp_default_settings(), name);
 	}
-      param++;
+      return;
     }
   description->type = STP_PARAMETER_TYPE_INVALID;
 }
 
-const stp_parameter_t *
-stp_list_parameters(const stp_vars_t v, int *count)
+static const char *
+param_namefunc(const stp_list_item_t *item)
 {
-  *count = (sizeof(global_parameters) / sizeof(const stp_parameter_t)) - 1;
-  return global_parameters;
+  const stp_parameter_t *param =
+    (const stp_parameter_t *) stp_list_item_get_data(item);
+  return param->name;
+}
+
+static const char *
+param_longnamefunc(const stp_list_item_t *item)
+{
+  const stp_parameter_t *param =
+    (const stp_parameter_t *) stp_list_item_get_data(item);
+  return param->text;
+}
+
+static stp_list_t *
+stp_parameter_list_create(void)
+{
+  stp_list_t *ret = stp_list_create();
+  stp_list_set_namefunc(ret, param_namefunc);
+  stp_list_set_long_namefunc(ret, param_longnamefunc);
+  return ret;
+}
+
+stp_parameter_list_t
+stp_list_parameters(const stp_vars_t v)
+{
+  stp_list_t *ret = stp_parameter_list_create();
+  int i;
+  for (i = 0; i < (sizeof(global_parameters) / sizeof(const stp_parameter_t));
+       i++)
+    stp_list_item_create(ret, NULL, (void *) &(global_parameters[i]));
+  return ret;
+}
+
+size_t
+stp_parameter_list_count(const stp_parameter_list_t list)
+{
+  stp_list_t *ilist = (stp_list_t *)list;
+  return stp_list_get_length(ilist);
+}
+
+const stp_parameter_t *
+stp_parameter_find(const stp_parameter_list_t list, const char *name)
+{
+  stp_list_t *ilist = (stp_list_t *)list;
+  stp_list_item_t *item = stp_list_get_item_by_name(ilist, name);
+  if (item)
+    return (stp_parameter_t *) stp_list_item_get_data(item);
+  else
+    return NULL;
+}
+
+const stp_parameter_t *
+stp_parameter_list_param(const stp_parameter_list_t list, size_t item)
+{
+  stp_list_t *ilist = (stp_list_t *)list;
+  if (item >= stp_list_get_length(ilist))
+    return NULL;
+  else
+    return (stp_parameter_t *)
+      stp_list_item_get_data(stp_list_get_item_by_index(ilist, item));
+}
+
+void
+stp_parameter_list_destroy(stp_parameter_list_t list)
+{
+  stp_list_destroy((stp_list_t *)list);
+}
+
+stp_parameter_list_t
+stp_parameter_list_copy(const stp_parameter_list_t list)
+{
+  stp_list_t *ret = stp_parameter_list_create();
+  int i;
+  size_t count = stp_parameter_list_count(list);
+  for (i = 0; i < count; i++)
+    stp_list_item_create(ret, NULL, (void *)stp_parameter_list_param(list, i));
+  return ret;
+}
+
+void
+stp_parameter_list_append(stp_parameter_list_t list,
+			  const stp_parameter_list_t append)
+{
+  int i;
+  stp_list_t *ilist = (stp_list_t *)list;
+  size_t count = stp_parameter_list_count(append);
+  for (i = 0; i < count; i++)
+    stp_list_item_create(ilist, NULL,
+			 (void *) stp_parameter_list_param(list, i));
 }

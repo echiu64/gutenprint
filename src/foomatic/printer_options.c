@@ -24,6 +24,7 @@
 #include <config.h>
 #endif
 #include <stdio.h>
+#include <string.h>
 #ifdef INCLUDE_GIMP_PRINT_H
 #include INCLUDE_GIMP_PRINT_H
 #else
@@ -39,7 +40,7 @@ main(int argc, char **argv)
   stp_init();
   for (i = 0; i < stp_known_printers(); i++)
     {
-      const stp_parameter_t *params;
+      stp_parameter_list_t params;
       int nparams;
       const stp_printer_t p = stp_get_printer_by_index(i);
       const char *driver = stp_printer_get_driver(p);
@@ -51,27 +52,30 @@ main(int argc, char **argv)
 	continue;
       printf("# Printer model %s, long name `%s'\n", driver,
 	     stp_printer_get_long_name(p));
-      params = stp_list_parameters(pv, &nparams);
+
+      params = stp_list_parameters(pv);
+      nparams = stp_parameter_list_count(params);
 
       for (k = 0; k < nparams; k++)
 	{
+	  const stp_parameter_t *p = stp_parameter_list_param(params, k);
 	  stp_parameter_t desc;
 	  count = 0;
-	  stp_describe_parameter(pv, params[k].name, &desc);
+	  stp_describe_parameter(pv, p->name, &desc);
 	  if (desc.type == STP_PARAMETER_TYPE_STRING_LIST)
 	    {
 	      count = stp_string_list_count(desc.bounds.str);
 	      if (count > 0)
 		{
 		  printf("$defaults{'%s'}{'%s'} = '%s';\n",
-			 driver, params[k].name, desc.deflt.str);
+			 driver, p->name, desc.deflt.str);
 		  for (j = 0; j < count; j++)
 		    {
 		      const stp_param_string_t *param =
 			stp_string_list_param(desc.bounds.str, j);
 		      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-			     driver, params[k].name, param->name, param->text);
-		      if (strcmp(params[k].name, "Resolution") == 0)
+			     driver, p->name, param->name, param->text);
+		      if (strcmp(p->name, "Resolution") == 0)
 			{
 			  int x, y;
 			  stp_set_string_parameter(pv, "Resolution",
@@ -91,6 +95,7 @@ main(int argc, char **argv)
 	    }
 	  tcount += count;
 	}
+      stp_parameter_list_destroy(params);
       if (tcount > 0)
 	{
 	  if (stp_get_output_type(pv) == OUTPUT_COLOR)

@@ -202,7 +202,7 @@ main(int argc, char **argv)
   int x, y;
   int width, height;
   int retval;
-  const stp_parameter_t *params;
+  stp_parameter_list_t params;
   int count;
   int i;
 
@@ -337,12 +337,17 @@ main(int argc, char **argv)
   stp_set_errdata(v, stderr);
   stp_set_float_parameter(v, "Density", density);
   
-  params = stp_list_parameters(v, &count);
+  params = stp_list_parameters(v);
+  count = stp_parameter_list_count(params);
   for (i = 0; i < count; i++)
-    if (params[i].type == STP_PARAMETER_TYPE_STRING_LIST &&
-	strlen(stp_get_string_parameter(tv, params[i].name)) > 0)
-      stp_set_string_parameter(v, params[i].name,
-			       stp_get_string_parameter (tv, params[i].name));
+    {
+      const stp_parameter_t *p = stp_parameter_list_param(params, i);
+      if (p->type == STP_PARAMETER_TYPE_STRING_LIST &&
+	  strlen(stp_get_string_parameter(tv, p->name)) > 0)
+	stp_set_string_parameter(v, p->name,
+				 stp_get_string_parameter (tv, p->name));
+    }
+  stp_parameter_list_destroy(params);
 
   /*
    * Most programs will not use OUTPUT_RAW_CMYK; OUTPUT_COLOR or

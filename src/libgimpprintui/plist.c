@@ -683,7 +683,8 @@ stpui_printrc_save(void)
 	int count;
 	int j;
 	const stp_curve_t curve;
-	const stp_parameter_t *params = stp_list_parameters(p->v, &count);
+	stp_parameter_list_t *params = stp_list_parameters(p->v);
+	count = stp_parameter_list_count(params);
 	fprintf(fp, "\nPrinter: %s\n", p->name);
 	fprintf(fp, "Destination: %s\n", stpui_plist_get_output_to(p));
 	fprintf(fp, "Scaling: %.3f\n", p->scaling);
@@ -703,25 +704,26 @@ stpui_printrc_save(void)
 
 	for (j = 0; j < count; j++)
 	  {
-	    if (strcmp(params[j].name, "AppGamma") == 0)
+	    const stp_parameter_t *param = stp_parameter_list_param(params, j);
+	    if (strcmp(param->name, "AppGamma") == 0)
 	      continue;
-	    switch (params[j].type)
+	    switch (param->type)
 	      {
 	      case STP_PARAMETER_TYPE_STRING_LIST:
 	      case STP_PARAMETER_TYPE_FILE:
-		fprintf(fp, "%s: %s\n", params[j].name,
-			stp_get_string_parameter(p->v, params[j].name));
+		fprintf(fp, "%s: %s\n", param->name,
+			stp_get_string_parameter(p->v, param->name));
 		break;
 	      case STP_PARAMETER_TYPE_DOUBLE:
-		fprintf(fp, "%s: %f\n", params[j].name,
-			stp_get_float_parameter(p->v, params[j].name));
+		fprintf(fp, "%s: %f\n", param->name,
+			stp_get_float_parameter(p->v, param->name));
 		break;
 	      case STP_PARAMETER_TYPE_INT:
-		fprintf(fp, "%s: %d\n", params[j].name,
-			stp_get_int_parameter(p->v, params[j].name));
+		fprintf(fp, "%s: %d\n", param->name,
+			stp_get_int_parameter(p->v, param->name));
 		break;
 	      case STP_PARAMETER_TYPE_CURVE:
-		curve = stp_get_curve_parameter(p->v, params[j].name);
+		curve = stp_get_curve_parameter(p->v, param->name);
 		stp_curve_print(fp, curve);
 		fprintf(fp, "\n");
 		break;
@@ -729,8 +731,9 @@ stpui_printrc_save(void)
 		break;
 	      }
 	  }
+	stp_parameter_list_destroy(params);
 #ifdef DEBUG
-        fprintf(stderr, "Wrote printer %d: %s\n", i, p->name);
+        fprintf(stderr, "Wrote printer %d: %s\n", i, param->name);
 #endif
       }
     fclose(fp);
