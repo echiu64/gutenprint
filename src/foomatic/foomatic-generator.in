@@ -1,4 +1,4 @@
-#!@PERL_PROG@
+#!@PERL@
 
 # Wherever we put it...
 my $mapfile;
