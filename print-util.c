@@ -207,7 +207,7 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 	     int    	width,		/* I - Width of row */
 	     int    	bpp,		/* I - Bytes-per-pixel in grayin */
 	     unsigned char *cmap,	/* I - Colormap (unused) */
-	     vars_t	*vars
+	     const vars_t	*vars
 	     )
 {
   while (width > 0)
@@ -244,7 +244,7 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 		int    width,			/* I - Width of row */
 		int    bpp,			/* I - bpp in indexed */
 		unsigned char *cmap,		/* I - Colormap */
-		vars_t   *vars			/* I - Saturation */
+		const vars_t   *vars			/* I - Saturation */
 		)
 {
   int		i;
@@ -287,7 +287,7 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	       int    width,		/* I - Width of row */
 	       int    bpp,		/* I - Bytes-per-pixel in indexed */
 	       unsigned char *cmap,	/* I - Colormap */
-	       vars_t   *vars		/* I - Saturation */
+	       const vars_t   *vars		/* I - Saturation */
 	       )
 {
   while (width > 0)
@@ -347,7 +347,7 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	    int    width,		/* I - Width of row */
 	    int    bpp,			/* I - Bytes-per-pixel in RGB */
 	    unsigned char *cmap,	/* I - Colormap (unused) */
-	    vars_t   *vars		/* I - Saturation */
+	    const vars_t   *vars		/* I - Saturation */
 	    )
 {
   while (width > 0)
@@ -388,7 +388,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	   int    		width,		/* I - Width of row */
 	   int    		bpp,		/* I - Bytes/pix in indexed */
 	   unsigned char 	*cmap,		/* I - Colormap */
-	   vars_t  		*vars		/* I - Saturation */
+	   const vars_t  		*vars		/* I - Saturation */
 	   )
 {
   unsigned ld = vars->density * 65536;
@@ -446,7 +446,7 @@ gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 	    int    		width,		/* I - Width of row */
 	    int    		bpp,		/* I - Bytes/pix in indexed */
 	    unsigned char 	*cmap,		/* I - Colormap */
-	    vars_t  		*vars		/* I - Saturation */
+	    const vars_t  		*vars		/* I - Saturation */
 	    )
 {
   while (width > 0)

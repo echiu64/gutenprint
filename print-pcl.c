@@ -1112,7 +1112,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
           FILE      *prn,		/* I - File to print to */
           Image     image,		/* I - Image to print */
 	  unsigned char    *cmap,	/* I - Colormap (for indexed images) */
-	  vars_t    *v)
+	  const vars_t    *v)
 {
   int		model = printer->model;
   char 		*ppd_file = v->ppd_file;
@@ -1170,7 +1170,9 @@ pcl_print(const printer_t *printer,		/* I - Model */
                 pcl_media_size, /* PCL media size code */
 		pcl_media_type, /* PCL media type code */
 		pcl_media_source;	/* PCL media source code */
+  vars_t	nv;
 
+  memcpy(&nv, v, sizeof(vars_t));
   caps = pcl_get_model_capabilities(model);
 
  /*
@@ -1185,7 +1187,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
  /*
   * Choose the correct color conversion function...
   */
-  if (v->image_type == IMAGE_MONOCHROME)
+  if (nv.image_type == IMAGE_MONOCHROME)
     {
       output_type = OUTPUT_GRAY;
     }
@@ -1239,7 +1241,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
   }
 
   do_cret = (xdpi >= 300 && ((caps.color_type & PCL_COLOR_CMYK4) == PCL_COLOR_CMYK4) &&
-	     v->image_type != IMAGE_MONOCHROME);
+	     nv.image_type != IMAGE_MONOCHROME);
 
 #ifdef DEBUG
   fprintf(stderr, "do_cret = %d\n", do_cret);
@@ -1651,15 +1653,15 @@ pcl_print(const printer_t *printer,		/* I - Model */
   * Output the page, rotating as necessary...
   */
 
-  v->density *= printer->printvars.density;
-  if (v->density > 1.0)
-    v->density = 1.0;
-  v->saturation *= printer->printvars.saturation;
+  nv.density *= printer->printvars.density;
+  if (nv.density > 1.0)
+    nv.density = 1.0;
+  nv.saturation *= printer->printvars.saturation;
 
   if (landscape)
-    dither = init_dither(image_height, out_width, v);
+    dither = init_dither(image_height, out_width, &nv);
   else
-    dither = init_dither(image_width, out_width, v);
+    dither = init_dither(image_width, out_width, &nv);
 
 /* Set up dithering for special printers. */
 
@@ -1671,21 +1673,21 @@ pcl_print(const printer_t *printer,		/* I - Model */
 
   if (do_cret)				/* 4-level printing for 800/1120 */
     {
-      dither_set_y_ranges_simple(dither, 3, dot_sizes, v->density);
-      dither_set_k_ranges_simple(dither, 3, dot_sizes, v->density);
+      dither_set_y_ranges_simple(dither, 3, dot_sizes, nv.density);
+      dither_set_k_ranges_simple(dither, 3, dot_sizes, nv.density);
 
 /* Note: no printer I know of does both CRet (4-level) and 6 colour, but
    what the heck. variable_dither_ranges copied from print-escp2.c */
 
       if (do_6color)			/* Photo for 69x */
 	{
-	  dither_set_c_ranges(dither, 6, variable_dither_ranges, v->density);
-	  dither_set_m_ranges(dither, 6, variable_dither_ranges, v->density);
+	  dither_set_c_ranges(dither, 6, variable_dither_ranges, nv.density);
+	  dither_set_m_ranges(dither, 6, variable_dither_ranges, nv.density);
 	}
       else
 	{	
-	  dither_set_c_ranges_simple(dither, 3, dot_sizes, v->density);
-	  dither_set_m_ranges_simple(dither, 3, dot_sizes, v->density);
+	  dither_set_c_ranges_simple(dither, 3, dot_sizes, nv.density);
+	  dither_set_m_ranges_simple(dither, 3, dot_sizes, nv.density);
 	}
     }
   else 
@@ -1693,9 +1695,9 @@ pcl_print(const printer_t *printer,		/* I - Model */
 /* Set light inks for 6 colour printers. Numbers copied from print-escp2.c */
 
     if (do_6color)
-      dither_set_light_inks(dither, .25, .25, 0.0, v->density);
+      dither_set_light_inks(dither, .25, .25, 0.0, nv.density);
 
-  switch (v->image_type)
+  switch (nv.image_type)
     {
     case IMAGE_LINE_ART:
       dither_set_ink_spread(dither, 19);
@@ -1707,7 +1709,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
       dither_set_ink_spread(dither, 14);
       break;
     }	    
-  dither_set_density(dither, v->density);
+  dither_set_density(dither, nv.density);
 
   if (landscape)
   {
@@ -1736,7 +1738,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
 	Image_get_col(image, in, errline);
       }
 
-      (*colorfunc)(in, out, image_height, image_bpp, cmap, v);
+      (*colorfunc)(in, out, image_height, image_bpp, cmap, &nv);
 
       if (do_cret)
       {
@@ -1782,7 +1784,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-	  if (v->image_type == IMAGE_MONOCHROME)
+	  if (nv.image_type == IMAGE_MONOCHROME)
 	    dither_fastblack(out, x, dither, black);
 	  else
 	    dither_black(out, x, dither, black);
@@ -1844,7 +1846,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
 	Image_get_row(image, in, errline);
       }
 
-      (*colorfunc)(in, out, image_width, image_bpp, cmap, v);
+      (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv);
 
       if (do_cret)
       {
@@ -1890,7 +1892,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-	  if (v->image_type == IMAGE_MONOCHROME)
+	  if (nv.image_type == IMAGE_MONOCHROME)
 	    dither_fastblack(out, y, dither, black);
 	  else
 	    dither_black(out, y, dither, black);

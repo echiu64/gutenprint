@@ -231,7 +231,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
          FILE      *prn,		/* I - File to print to */
          Image     image,		/* I - Image to print */
 	 unsigned char    *cmap,	/* I - Colormap (for indexed images) */
-	 vars_t    *v)
+	 const vars_t    *v)
 {
   int		model = printer->model;
   char 		*ppd_file = v->ppd_file;
@@ -275,8 +275,9 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
   int           image_height,
                 image_width,
                 image_bpp;
+  vars_t	nv;
 
-
+  memcpy(&nv, v, sizeof(vars_t));
  /*
   * Setup a read-only pixel region for the entire image...
   */
@@ -570,8 +571,8 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
   in  = malloc(image_width * image_bpp);
   out = malloc((image_width * out_bpp + 3) * 2);
 
-  v->density *= printer->printvars.density;
-  v->saturation *= printer->printvars.saturation;
+  nv.density *= printer->printvars.density;
+  nv.saturation *= printer->printvars.saturation;
 
   if (model == 0)
   {
@@ -595,7 +596,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
 	Image_note_progress(image, y, image_height);
 
       Image_get_row(image, in, y);
-      (*colorfunc)(in, out, image_width, image_bpp, cmap, v);
+      (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv);
 
       ps_hex(prn, out, image_width * out_bpp);
     }
@@ -638,7 +639,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
 	Image_note_progress(image, y, image_height);
 
       Image_get_row(image, in, y);
-      (*colorfunc)(in, out + out_offset, image_width, image_bpp, cmap, v);
+      (*colorfunc)(in, out + out_offset, image_width, image_bpp, cmap, &nv);
 
       out_length = out_offset + image_width * out_bpp;
 

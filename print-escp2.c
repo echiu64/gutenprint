@@ -812,7 +812,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
             FILE      *prn,		/* I - File to print to */
 	    Image     image,		/* I - Image to print */
             unsigned char    *cmap,	/* I - Colormap (for indexed images) */
-	    vars_t    *v)
+	    const vars_t    *v)
 {
   int		model = printer->model;
   char 		*ppd_file = v->ppd_file;
@@ -874,11 +874,14 @@ escp2_print(const printer_t *printer,		/* I - Model */
   int		separation_rows = escp2_separation_rows(model);
   int		use_glossy_film = 0;
   int		ink_spread;
+  vars_t	nv;
+
+  memcpy(&nv, v, sizeof(vars_t));
 
   if (!strcmp(media_type, "Glossy Film"))
     use_glossy_film = 1;
 
-  if (v->image_type == IMAGE_MONOCHROME)
+  if (nv.image_type == IMAGE_MONOCHROME)
     {
       colormode = COLOR_MONOCHROME;
       output_type = OUTPUT_GRAY;
@@ -968,7 +971,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
     }
   if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
       use_softweave && strcmp(ink_type, "Single Dot Size") != 0 &&
-      v->image_type != IMAGE_MONOCHROME)
+      nv.image_type != IMAGE_MONOCHROME)
     bits = 2;
   else
     bits = 1;
@@ -1169,16 +1172,16 @@ escp2_print(const printer_t *printer,		/* I - Model */
   * Output the page, rotating as necessary...
   */
 
-  v->density = v->density * printer->printvars.density /
+  nv.density = nv.density * printer->printvars.density /
     (real_horizontal_passes * vertical_subsample);
-  if (v->density > 1.0)
-    v->density = 1.0;
-  v->saturation *= printer->printvars.saturation;
+  if (nv.density > 1.0)
+    nv.density = 1.0;
+  nv.saturation *= printer->printvars.saturation;
 
   if (landscape)
-    dither = init_dither(image_height, out_width, v);
+    dither = init_dither(image_height, out_width, &nv);
   else
-    dither = init_dither(image_width, out_width, v);
+    dither = init_dither(image_width, out_width, &nv);
 
   dither_set_black_levels(dither, 1.0, 1.0, 1.0);
   if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
@@ -1197,25 +1200,25 @@ escp2_print(const printer_t *printer,		/* I - Model */
     {
       int dsize = (sizeof(variable_dither_ranges) /
 		   sizeof(simple_dither_range_t));
-      dither_set_y_ranges_simple(dither, 3, dot_sizes, v->density);
-      dither_set_k_ranges_simple(dither, 3, dot_sizes, v->density);
+      dither_set_y_ranges_simple(dither, 3, dot_sizes, nv.density);
+      dither_set_k_ranges_simple(dither, 3, dot_sizes, nv.density);
       if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
 	{
 	  dither_set_c_ranges(dither, dsize, variable_dither_ranges,
-			      v->density);
+			      nv.density);
 	  dither_set_m_ranges(dither, dsize, variable_dither_ranges,
-			      v->density);
+			      nv.density);
 	}
       else
 	{	
-	  dither_set_c_ranges_simple(dither, 3, dot_sizes, v->density);
-	  dither_set_m_ranges_simple(dither, 3, dot_sizes, v->density);
+	  dither_set_c_ranges_simple(dither, 3, dot_sizes, nv.density);
+	  dither_set_m_ranges_simple(dither, 3, dot_sizes, nv.density);
 	}
     }
   else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
-    dither_set_light_inks(dither, .25, .25, 0.0, v->density);
+    dither_set_light_inks(dither, .25, .25, 0.0, nv.density);
 
-  switch (v->image_type)
+  switch (nv.image_type)
     {
     case IMAGE_LINE_ART:
       dither_set_ink_spread(dither, 19);
@@ -1232,7 +1235,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
       dither_set_ink_spread(dither, ink_spread);
       break;
     }	    
-  dither_set_density(dither, v->density);
+  dither_set_density(dither, nv.density);
 
   if (landscape)
   {
@@ -1256,9 +1259,9 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	Image_get_col(image, in, errline);
       }
 
-      (*colorfunc)(in, out, image_height, image_bpp, cmap, v);
+      (*colorfunc)(in, out, image_height, image_bpp, cmap, &nv);
 
-      if (v->image_type == IMAGE_MONOCHROME)
+      if (nv.image_type == IMAGE_MONOCHROME)
 	dither_fastblack(out, x, dither, black);
       else if (output_type == OUTPUT_GRAY)
 	dither_black(out, x, dither, black);
@@ -1309,9 +1312,9 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	Image_get_row(image, in, errline);
       }
 
-      (*colorfunc)(in, out, image_width, image_bpp, cmap, v);
+      (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv);
 
-      if (v->image_type == IMAGE_MONOCHROME)
+      if (nv.image_type == IMAGE_MONOCHROME)
 	dither_fastblack(out, y, dither, black);
       else if (output_type == OUTPUT_GRAY)
 	dither_black(out, y, dither, black);

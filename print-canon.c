@@ -672,7 +672,7 @@ canon_print(const printer_t *printer,		/* I - Model */
             FILE      *prn,		/* I - File to print to */
 	    Image     image,		/* I - Image to print */
             unsigned char    *cmap,	/* I - Colormap (for indexed images) */
-	    vars_t    *v)
+	    const vars_t    *v)
 {
   int		model = printer->model;
   char 		*ppd_file = v->ppd_file;
@@ -733,10 +733,12 @@ canon_print(const printer_t *printer,		/* I - Model */
   int           use_dmt = 0;
   void *	dither;
   double        the_levels[] = { 0.5, 0.75, 1.0 };
+  vars_t	nv;
 
   canon_cap_t caps= canon_get_model_capabilities(model);
   int printhead= canon_printhead_type(ink_type,caps);
 
+  memcpy(&nv, v, sizeof(vars_t));
   /*
   PUT("top        ",top,72);
   PUT("left       ",left,72);
@@ -755,7 +757,7 @@ canon_print(const printer_t *printer,		/* I - Model */
    *                 or single black cartridge installed
    */
 
-  if (v->image_type == IMAGE_MONOCHROME)
+  if (nv.image_type == IMAGE_MONOCHROME)
     {
       output_type = OUTPUT_GRAY;
     }
@@ -801,7 +803,7 @@ canon_print(const printer_t *printer,		/* I - Model */
 
   if (!strcmp(resolution+(strlen(resolution)-3),"DMT") && 
       (caps.features & CANON_CAP_DMT) &&
-      v->image_type != IMAGE_MONOCHROME) {
+      nv.image_type != IMAGE_MONOCHROME) {
     use_dmt= 1;
     fprintf(stderr,"canon: using drop modulation technology\n");
   }
@@ -1022,15 +1024,15 @@ canon_print(const printer_t *printer,		/* I - Model */
   if (black)    fputc('K',stderr);
   fprintf(stderr,"\n");
 
-  v->density *= printer->printvars.density * ydpi / xdpi;
-  if (v->density > 1.0)
-    v->density = 1.0;
-  v->saturation *= printer->printvars.saturation;
+  nv.density *= printer->printvars.density * ydpi / xdpi;
+  if (nv.density > 1.0)
+    nv.density = 1.0;
+  nv.saturation *= printer->printvars.saturation;
 
   if (landscape)
-    dither = init_dither(image_height, out_width, v);
+    dither = init_dither(image_height, out_width, &nv);
   else
-    dither = init_dither(image_width, out_width, v);
+    dither = init_dither(image_width, out_width, &nv);
 
   dither_set_black_levels(dither, 1.0, 1.0, 1.0);
   dither_set_black_lower(dither, .8 / ((1 << (use_dmt+1)) - 1));
@@ -1047,10 +1049,10 @@ canon_print(const printer_t *printer,		/* I - Model */
     dither_set_light_inks(dither, 
 			  (lcyan)   ? (.25) : (0.0), 
 			  (lmagenta)? (.25) : (0.0), 
-			  (lyellow) ? (.25) : (0.0), v->density);
+			  (lyellow) ? (.25) : (0.0), nv.density);
   }
 
-  switch (v->image_type)
+  switch (nv.image_type)
     {
     case IMAGE_LINE_ART:
       dither_set_ink_spread(dither, 19);
@@ -1062,14 +1064,14 @@ canon_print(const printer_t *printer,		/* I - Model */
       dither_set_ink_spread(dither, 14);
       break;
     }	    
-  dither_set_density(dither, v->density);
+  dither_set_density(dither, nv.density);
 
   if (use_dmt)
     {
-      dither_set_c_ranges_simple(dither, 3, the_levels, v->density);
-      dither_set_m_ranges_simple(dither, 3, the_levels, v->density);
-      dither_set_y_ranges_simple(dither, 3, the_levels, v->density);
-      dither_set_k_ranges_simple(dither, 3, the_levels, v->density);
+      dither_set_c_ranges_simple(dither, 3, the_levels, nv.density);
+      dither_set_m_ranges_simple(dither, 3, the_levels, nv.density);
+      dither_set_y_ranges_simple(dither, 3, the_levels, nv.density);
+      dither_set_k_ranges_simple(dither, 3, the_levels, nv.density);
     }
  /*
   * Output the page, rotating as necessary...
@@ -1094,11 +1096,11 @@ canon_print(const printer_t *printer,		/* I - Model */
 	Image_get_col(image, in, errline);
       }
 
-      (*colorfunc)(in, out, image_height, image_bpp, cmap, v);
+      (*colorfunc)(in, out, image_height, image_bpp, cmap, &nv);
       
       if (output_type == OUTPUT_GRAY)
 	{
-	  if (v->image_type == IMAGE_MONOCHROME)
+	  if (nv.image_type == IMAGE_MONOCHROME)
 	    dither_fastblack(out, x, dither, black);
 	  else
 	    dither_black(out, x, dither, black);
@@ -1159,11 +1161,11 @@ canon_print(const printer_t *printer,		/* I - Model */
 	Image_get_row(image, in, errline);
       }
 
-      (*colorfunc)(in, out, image_width, image_bpp, cmap, v);
+      (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv);
 
       if (output_type == OUTPUT_GRAY)
 	{
-	  if (v->image_type == IMAGE_MONOCHROME)
+	  if (nv.image_type == IMAGE_MONOCHROME)
 	    dither_fastblack(out, y, dither, black);
 	  else
 	    dither_black(out, y, dither, black);
