@@ -98,6 +98,8 @@ static void	brightness_update(GtkAdjustment *);
 static void	brightness_callback(GtkWidget *);
 static void	saturation_update(GtkAdjustment *);
 static void	saturation_callback(GtkWidget *);
+static void	density_update(GtkAdjustment *);
+static void	density_callback(GtkWidget *);
 static void	contrast_update(GtkAdjustment *);
 static void	contrast_callback(GtkWidget *);
 static void	red_update(GtkAdjustment *);
@@ -172,6 +174,7 @@ struct					/* Plug-in variables */
 	blue;			/* Output blue level */
   gint	linear;			/* Linear density (mostly for testing!) */
   float	saturation;		/* Output saturation */
+  float	density;		/* Maximum output density */
 }		vars =
 {
 	"",			/* Name of file or command to print to */
@@ -188,13 +191,14 @@ struct					/* Plug-in variables */
 	-1,			/* Orientation (-1 = automatic) */
 	-1,			/* X offset (-1 = center) */
 	-1,			/* Y offset (-1 = center) */
-	0.0,			/* Screen gamma */
+	1.0,			/* Screen gamma */
 	100,			/* Contrast */
 	100,			/* Red */
 	100,			/* Green */
 	100,			/* Blue */
 	0,			/* Linear */
-	1.0			/* Output saturation */
+	1.0,			/* Output saturation */
+	1.0			/* Density */
 };
 
 GtkWidget	*print_dialog,		/* Print dialog window */
@@ -214,6 +218,8 @@ GtkWidget	*print_dialog,		/* Print dialog window */
 		*brightness_entry,	/* Text entry widget for brightness */
 		*saturation_scale,	/* Scale for saturation */
 		*saturation_entry,	/* Text entry widget for saturation */
+		*density_scale,		/* Scale for density */
+		*density_entry,		/* Text entry widget for density */
 		*contrast_scale,	/* Scale for contrast */
 		*contrast_entry,	/* Text entry widget for contrast */
 		*red_scale,		/* Scale for red */
@@ -238,7 +244,8 @@ GtkWidget	*print_dialog,		/* Print dialog window */
 
 GtkObject	*scaling_adjustment,	/* Adjustment object for scaling */
 		*brightness_adjustment,	/* Adjustment object for brightness */
-		*saturation_adjustment,	/* Adjustment object for brightness */
+		*saturation_adjustment,	/* Adjustment object for saturation */
+		*density_adjustment,	/* Adjustment object for density */
 		*contrast_adjustment,	/* Adjustment object for contrast */
 		*red_adjustment,	/* Adjustment object for red */
 		*green_adjustment,	/* Adjustment object for green */
@@ -327,9 +334,9 @@ printer_t	printers[] =		/* List of supported printer types */
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { N_("EPSON Stylus Color 3000"),	"escp2-3000",	1,	5,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { N_("EPSON Stylus Photo 700"),	"escp2-700",	1,	6,	0.700,	0.950,
+  { N_("EPSON Stylus Photo 700"),	"escp2-700",	1,	6,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { N_("EPSON Stylus Photo EX"),	"escp2-ex",	1,	7,	0.700,	0.950,
+  { N_("EPSON Stylus Photo EX"),	"escp2-ex",	1,	7,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
 };
 
@@ -382,6 +389,7 @@ query(void)
     { PARAM_INT32,	"blue",		"Top offset (points, -1 = centered)" },
     { PARAM_INT32,	"linear",	"Linear output (0 = normal, 1 = linear)" },
     { PARAM_FLOAT,	"saturation",	"Saturation (0-1000%)" },
+    { PARAM_FLOAT,	"density",	"Density (0-200%)" },
   };
   static int		nargs = sizeof(args) / sizeof(args[0]);
 
@@ -612,7 +620,12 @@ run(char   *name,		/* I - Name of print program. */
           if (nparams > 22)
             vars.saturation = param[22].data.d_float;
           else
-            vars.saturation = 100.0;
+            vars.saturation = 1.0;
+
+          if (nparams > 23)
+            vars.density = param[23].data.d_float;
+          else
+            vars.density = 1.0;
 	}
 
         for (i = 0; i < (sizeof(printers) / sizeof(printers[0])); i ++)
@@ -700,10 +713,8 @@ run(char   *name,		/* I - Name of print program. */
 	  brightness   = 100.0 / vars.brightness;
 	  screen_gamma = gimp_gamma() * brightness / 1.7;
 	}
-      if (vars.gamma > 0)
-	print_gamma = 1.0 / vars.gamma;
-      else
-	print_gamma  = 1.0 / printer->gamma;
+
+      print_gamma = vars.gamma / printer->gamma;
 
       for (i = 0; i < 256; i ++)
       {
@@ -769,13 +780,13 @@ run(char   *name,		/* I - Name of print program. */
 	     * Finally, fix up print gamma and scale
 	     */
 
-	    pixel = 256.0 * (256.0 - 256.0 * printer->density *
+	    pixel = 256.0 * (256.0 - 256.0 * printer->density * vars.density *
 			     pow(brightness * pixel, print_gamma));
-	    red_pixel = 256.0 * (256.0 - 256.0 * printer->density *
+	    red_pixel = 256.0 * (256.0 - 256.0 * printer->density * vars.density *
 				 pow(brightness * red_pixel, print_gamma));
-	    green_pixel = 256.0 * (256.0 - 256.0 * printer->density *
+	    green_pixel = 256.0 * (256.0 - 256.0 * printer->density * vars.density *
 				   pow(brightness * green_pixel, print_gamma));
-	    blue_pixel = 256.0 * (256.0 - 256.0 * printer->density *
+	    blue_pixel = 256.0 * (256.0 - 256.0 * printer->density * vars.density *
 				  pow(brightness * blue_pixel, print_gamma));
 
 #if 0
@@ -1493,6 +1504,41 @@ do_print_dialog(void)
   gtk_widget_set_usize(entry, 40, 0);
   gtk_widget_show(entry);
 
+ /*
+  * Density slider...
+  */
+
+  label = gtk_label_new(_("Density:"));
+  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 15, 16, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(label);
+
+  box = gtk_hbox_new(FALSE, 8);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 15, 16, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(box);
+
+  density_adjustment = scale_data =
+      gtk_adjustment_new((float)vars.density, 0.1, 3.0, 0.001, 0.01, 1.0);
+
+  gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
+		     (GtkSignalFunc)density_update, NULL);
+
+  density_scale = scale = gtk_hscale_new(GTK_ADJUSTMENT(scale_data));
+  gtk_box_pack_start(GTK_BOX(box), scale, FALSE, FALSE, 0);
+  gtk_widget_set_usize(scale, 200, 0);
+  gtk_scale_set_draw_value(GTK_SCALE(scale), FALSE);
+  gtk_range_set_update_policy(GTK_RANGE(scale), GTK_UPDATE_CONTINUOUS);
+  gtk_widget_show(scale);
+
+  density_entry = entry = gtk_entry_new();
+  sprintf(s, "%5.3f", vars.density);
+  gtk_entry_set_text(GTK_ENTRY(entry), s);
+  gtk_signal_connect(GTK_OBJECT(entry), "changed",
+		     (GtkSignalFunc)density_callback, NULL);
+  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
+  gtk_widget_set_usize(entry, 40, 0);
+  gtk_widget_show(entry);
+
 
  /*
   * Printer option menu...
@@ -2050,6 +2096,55 @@ saturation_callback(GtkWidget *widget)	/* I - Entry widget */
       GTK_ADJUSTMENT(saturation_adjustment)->value = new_value;
 
       gtk_signal_emit_by_name(saturation_adjustment, "value_changed");
+    }
+  }
+}
+
+/*
+ * 'density_update()' - Update the density field using the scale.
+ */
+
+static void
+density_update(GtkAdjustment *adjustment)	/* I - New value */
+{
+  char	s[255];					/* Text buffer */
+
+
+  if (vars.density != adjustment->value)
+  {
+    vars.density = adjustment->value;
+
+    sprintf(s, "%4.3f", vars.density);
+
+    gtk_signal_handler_block_by_data(GTK_OBJECT(density_entry), NULL);
+    gtk_entry_set_text(GTK_ENTRY(density_entry), s);
+    gtk_signal_handler_unblock_by_data(GTK_OBJECT(density_entry), NULL);
+
+    preview_update();
+  }
+}
+
+
+/*
+ * 'density_callback()' - Update the density scale using the text entry.
+ */
+
+static void
+density_callback(GtkWidget *widget)	/* I - Entry widget */
+{
+  gint		new_value;		/* New scaling value */
+
+
+  new_value = atoi(gtk_entry_get_text(GTK_ENTRY(widget)));
+
+  if (vars.density != new_value)
+  {
+    if ((new_value >= GTK_ADJUSTMENT(density_adjustment)->lower) &&
+	(new_value < GTK_ADJUSTMENT(density_adjustment)->upper))
+    {
+      GTK_ADJUSTMENT(density_adjustment)->value = new_value;
+
+      gtk_signal_emit_by_name(density_adjustment, "value_changed");
     }
   }
 }
