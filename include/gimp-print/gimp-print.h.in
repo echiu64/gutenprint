@@ -875,6 +875,15 @@ extern void stp_describe_resolution(const stp_vars_t v, int *x, int *y);
  */
 extern int stp_verify(const stp_vars_t v);
 
+/*
+ * Default global settings.  The main use of this is to provide a usable
+ * stp_vars_t for purposes of parameter inquiry in the absence of a
+ * specific printer.  This is currently used in a variety of places
+ * to get information on the standard color parameters without querying
+ * a particular printer.
+ */
+extern const stp_vars_t stp_default_settings(void);
+
 
 /****************************************************************
 *                                                               *
@@ -904,43 +913,6 @@ extern int stp_end_job(const stp_vars_t, stp_image_t *image);
  * Set the encoding that all translated strings are output in.
  */
 extern const char * stp_set_output_codeset(const char *codeset);
-
-
-/****************************************************************
-*                                                               *
-* COLOR                                                         *
-*                                                               *
-* All of this is very likely to change in the future            *
-*                                                               *
-****************************************************************/
-
-typedef void (*stp_convert_t) (const stp_vars_t vars, const unsigned char *in,
-                               unsigned short *out, int *zero_mask,
-                               int width, int bpp);
-
-/*
- * Choose the appropriate color function depending upon choice of input
- * and output.
- */
-extern stp_convert_t stp_choose_colorfunc(const stp_vars_t v, int image_bpp,
-					  int *out_channels);
-
-/*
- * hue_map, lum_map, and sat_map adjust the hue, luminosity, and saturation
- * of the print.
- */
-extern void stp_compute_lut(stp_vars_t v, size_t steps, stp_curve_t hue,
-			    stp_curve_t lum, stp_curve_t sat);
-extern void stp_free_lut(stp_vars_t v);
-
-/*
- * Default global settings.  The main use of this is to provide a usable
- * stp_vars_t for purposes of parameter inquiry in the absence of a
- * specific printer.  This is currently used in a variety of places
- * to get information on the standard color parameters without querying
- * a particular printer.
- */
-extern const stp_vars_t stp_default_settings(void);
 
 
 #ifdef __cplusplus

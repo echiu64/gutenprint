@@ -61,6 +61,11 @@ typedef struct
 typedef void *(*copy_data_func_t)(const stp_vars_t);
 typedef void (*destroy_data_func_t)(stp_vars_t);
 
+/* Color conversion function -- almost surely will change! */
+typedef void (*stp_convert_t) (const stp_vars_t vars, const unsigned char *in,
+                               unsigned short *out, int *zero_mask,
+                               int width, int bpp);
+
 extern void stp_zprintf(const stp_vars_t v, const char *format, ...);
 
 extern void stp_zfwrite(const char *buf, size_t bytes, size_t nitems,
@@ -102,6 +107,20 @@ extern stp_curve_t stp_read_and_compose_curves(const char *s1, const char *s2,
 					       stp_curve_compose_t comp);
 extern void stp_abort(void);
 
+/*
+ * Choose the appropriate color function depending upon choice of input
+ * and output.
+ */
+extern stp_convert_t stp_choose_colorfunc(const stp_vars_t v, int image_bpp,
+					  int *out_channels);
+
+/*
+ * hue_map, lum_map, and sat_map adjust the hue, luminosity, and saturation
+ * of the print.
+ */
+extern void stp_compute_lut(stp_vars_t v, size_t steps, stp_curve_t hue,
+			    stp_curve_t lum, stp_curve_t sat);
+extern void stp_free_lut(stp_vars_t v);
 
 /* Uncomment the next line to get performance statistics:
  * look for QUANT(#) in the code. At the end of escp2-print

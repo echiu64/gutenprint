@@ -42,13 +42,31 @@
 typedef struct
 {
   int color_model;
+  int output_channels;
   const char *name;
 } ink_t;
 
+typedef struct raw_printer
+{
+  int output_bits;
+} raw_printer_t;
+
+static const raw_printer_t raw_model_capabilities[] =
+{
+  {
+    16
+  },
+  {
+    8
+  },
+};
+
 static const ink_t inks[] =
 {
-  { COLOR_MODEL_CMY, "RGB" },
-  { COLOR_MODEL_CMY, "CMY" },
+  { COLOR_MODEL_RGB, 3, "RGB" },
+  { COLOR_MODEL_CMY, 3, "CMY" },
+  { COLOR_MODEL_RGB, 1, "RGBGray" },
+  { COLOR_MODEL_CMY, 1, "CMYGray" },
 };
 
 static const int ink_count = sizeof(inks) / sizeof(ink_t);
@@ -117,8 +135,8 @@ raw_imageable_area(const stp_vars_t v,
 {
   *left = 0;
   *top = 0;
-  *bottom = stp_get_page_width(v);
-  *top = stp_get_page_height(v);
+  *right = stp_get_page_width(v);
+  *bottom = stp_get_page_height(v);
 }
 
 static void
@@ -145,9 +163,10 @@ raw_describe_resolution(const stp_vars_t v, int *x, int *y)
 static int
 raw_print(const stp_vars_t v, stp_image_t *image)
 {
+  int		model = stp_get_model(v);
   int width = stp_get_page_width(v);
   int height = stp_get_page_height(v);
-  int		i;
+  int		i, j;
   int		y;		/* Looping vars */
   stp_convert_t	colorfunc;	/* Color conversion function... */
   stp_vars_t	nv = stp_allocate_copy(v);
@@ -155,89 +174,89 @@ raw_print(const stp_vars_t v, stp_image_t *image)
   unsigned short *out;	/* Output pixels (16-bit) */
   unsigned short *final_out = NULL;
   unsigned char	*in;		/* Input pixels */
-  int		errdiv,		/* Error dividend */
-		errmod,		/* Error modulus */
-		errval,		/* Current error value */
-		errline,	/* Current raster line */
-		errlast;	/* Last raster line loaded */
   int		status = 1;
+  int bytes_per_channel = raw_model_capabilities[model].output_bits / 8;
+  int ink_channels = 1;
 
   if (!stp_verify(nv))
     {
       stp_eprintf(nv, _("Print options not verified; cannot print.\n"));
+      stp_free_vars(nv);
+      return 0;
+    }
+  if (width != image->width(image) || height != image->height(image))
+    {
+      stp_eprintf(nv, _("Image dimensions must match paper dimensions"));
+      stp_free_vars(nv);
+      return 0;
+    }
+  for (i = 0; i < ink_count; i++)
+    if (strcmp(stp_get_string_parameter(nv, "InkType"), inks[i].name) == 0)
+      {
+	stp_set_output_color_model(nv, inks[i].color_model);
+	ink_channels = inks[i].output_channels;
+	break;
+      }
+  colorfunc = stp_choose_colorfunc(nv, image->bpp(image), &out_channels);
+  if (out_channels != ink_channels && out_channels != 1 && ink_channels != 1)
+    {
+      stp_eprintf(nv, _("Internal error!  Output channels or input channels must be 1\n"));
+      stp_free_vars(nv);
       return 0;
     }
 
-  for (i = 0; i < ink_count; i++)
-    if (strcmp(stp_get_string_parameter(nv, "InkType"), inks[i].name) == 0)
-      stp_set_output_color_model(nv, inks[i].color_model);
-  colorfunc = stp_choose_colorfunc(nv, image->bpp(image), &out_channels);
-
-  in  = stp_malloc(image->width(image) * image->bpp(image));
-  out = stp_malloc(image->width(image) * out_channels * 2);
-  if (width != image->width(image))
-    final_out = stp_malloc(width * out_channels * 2);
+  in  = stp_malloc(width * image->bpp(image));
+  out = stp_malloc(width * out_channels * 2);
+  if (out_channels != ink_channels)
+    final_out = stp_malloc(width * ink_channels * 2);
 
   stp_set_float_parameter(nv, "Density", 1.0);
   stp_compute_lut(nv, 256, NULL, NULL, NULL);
 
   image->progress_init(image);
-  errdiv  = image->height(image) / height;
-  errmod  = image->height(image) % height;
-  errval  = 0;
-  errlast = -1;
-  errline  = 0;
 
   for (y = 0; y < height; y++)
     {
-      int duplicate_line = 1;
+      unsigned short *real_out = out;
       int zero_mask;
       if ((y & 63) == 0)
 	image->note_progress(image, y, height);
-
-      if (errline != errlast)
+      if (image->get_row(image, in, y) != STP_IMAGE_OK)
 	{
-	  errlast = errline;
-	  duplicate_line = 0;
-	  if (image->get_row(image, in, errline) != STP_IMAGE_OK)
-	    {
-	      status = 2;
-	      break;
-	    }
-	  (*colorfunc)(nv, in, out, &zero_mask, image->width(image),
-		       image->bpp(image));
+	  status = 2;
+	  break;
 	}
-      if (width != image->width(image))
+      (*colorfunc)(nv, in, out, &zero_mask, width, image->bpp(image));
+      if (out_channels != ink_channels)
 	{
-	  int xerrdiv = image->width(image) / width;
-	  int xerrmod = image->width(image) % width;
-	  int xerrval = 0;
-	  int xerrline = 0;
-	  int x;
-	  for (x = 0; x < width; x++)
+	  real_out = final_out;
+	  if (out_channels < ink_channels)
 	    {
-	      memcpy(final_out + out_channels * 2 * x,
-		     out + out_channels * 2 * xerrline,
-		     out_channels * 2);
-	      xerrval += xerrmod;
-	      xerrline += xerrdiv;
-	      if (xerrval >= width)
+	      for (i = 0; i < width; i++)
 		{
-		  xerrval -= width;
-		  xerrline ++;
+		  for (j = 0; j < ink_channels; j++)
+		    final_out[i * ink_channels + j] = out[i];
 		}
 	    }
-	  stp_zfwrite((char *) final_out, width * out_channels * 2, 1, nv);
+	  else
+	    {
+	      for (i = 0; i < width; i++)
+		{
+		  int avg = 0;
+		  for (j = 0; j < out_channels; j++)
+		    avg += out[i * out_channels + j];
+		  final_out[i] = avg / out_channels;
+		}
+	    }
 	}
-      else
-	stp_zfwrite((char *) out, width * out_channels * 2, 1, nv);
-      errval += errmod;
-      errline += errdiv;
-      if (errval >= height)
+      if (bytes_per_channel == 1)
 	{
-	  errval -= height;
-	  errline ++;
+	  unsigned char *char_out = (unsigned char *) real_out;
+	  for (i = 0; i < width * ink_channels; i++)
+	    char_out[i] = real_out[i] / 257;
 	}
+      stp_zfwrite((char *) real_out,
+		  width * ink_channels * bytes_per_channel, 1, nv);
     }
   image->progress_conclude(image);
   if (final_out)

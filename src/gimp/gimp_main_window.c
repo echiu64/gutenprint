@@ -2243,6 +2243,23 @@ file_cancel_callback (void)
 
 extern void gimp_writefunc(void *file, const char *buf, size_t bytes);
 
+typedef struct
+{
+  unsigned char *base_addr;
+  off_t offset;
+  off_t limit;
+} priv_t;
+
+static void
+fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
+{
+  priv_t *p = (priv_t *) priv;
+  if (bytes + p->offset > p->limit)
+    bytes = p->limit - p->offset;
+  memcpy(p->base_addr + p->offset, buffer, bytes);
+  p->offset += bytes;
+}
+
 /*
  * update_adjusted_thumbnail()
  */
@@ -2250,71 +2267,90 @@ void
 update_adjusted_thumbnail (void)
 {
   gint           x, y;
-  stp_convert_t  colorfunc;
-  gushort        *out;
   guchar        *adjusted_data = adjusted_thumbnail_data;
-  gfloat         old_density = stp_get_float_parameter(pv->v, "Density");
   gint preview_limit = (thumbnail_h * thumbnail_w) - 1;
+  priv_t priv;
+  stp_image_t *im;
+  stp_vars_t nv;
 
   if (thumbnail_data == 0 || adjusted_thumbnail_data == 0 ||
       do_update_thumbnail == 0)
     return;
+  
+  im = Image_Thumbnail_new(thumbnail_data, thumbnail_w,
+			   thumbnail_h, thumbnail_bpp);
+  nv = stp_allocate_copy(pv->v);
+  stp_set_driver(nv, "raw-data-8");
+  stp_set_top(nv, 0);
+  stp_set_left(nv, 0);
+  stp_set_width(nv, thumbnail_w);
+  stp_set_height(nv, thumbnail_h);
+  stp_set_outfunc(nv, fill_buffer_writefunc);
+  stp_set_outdata(nv, &priv);
+  stp_set_errfunc(nv, gimp_writefunc);
+  stp_set_errdata(nv, stderr);
+  stp_set_string_parameter(nv, "PageSize", "Custom");
+  if (thumbnail_bpp == 1)
+    stp_set_string_parameter(nv, "InkType", "RGBGray");
+  else
+    stp_set_string_parameter(nv, "InkType", "RGB");
+  stp_set_string_parameter(nv, "Resolution", "Standard");
+  stp_set_string_parameter(nv, "MediaType", "Standard");
+  stp_set_string_parameter(nv, "InputSlot", "Standard");
+  stp_set_page_height(nv, thumbnail_h);
+  stp_set_page_width(nv, thumbnail_w);
 
-  stp_set_errfunc(pv->v, gimp_writefunc);
-  stp_set_errdata(pv->v, stderr);
-  stp_set_float_parameter (pv->v, "Density", 1.0);
-  stp_compute_lut (pv->v, 256, NULL, NULL, NULL);
-  colorfunc = stp_choose_colorfunc (pv->v, thumbnail_bpp,
-				    &adjusted_thumbnail_bpp);
-  out = g_malloc(adjusted_thumbnail_bpp * thumbnail_h * thumbnail_w *
-		 sizeof(gushort));
-  for (y = 0; y < thumbnail_h; y++)
+  priv.base_addr = adjusted_data;
+  priv.offset = 0;
+  priv.limit = thumbnail_bpp * thumbnail_h * thumbnail_w;
+
+  stp_set_float_parameter (nv, "Density", 1.0);
+  if (stp_verify(nv) != 1)
     {
-      (*colorfunc) (pv->v, thumbnail_data + thumbnail_bpp * thumbnail_w * y,
-		    out, NULL, thumbnail_w, thumbnail_bpp);
-      for (x = 0; x < adjusted_thumbnail_bpp * thumbnail_w; x++)
-	{
-	  *adjusted_data++ = out[x] / 0x0101U;
-	}
+      stp_erprintf("did not verify!\n");
+      stp_free_vars(nv);
+      return;
     }
-  free(out);
-
-  stp_free_lut (pv->v);
-
-  stp_set_float_parameter (pv->v, "Density", old_density);
+  if (stp_print(nv, im) != 1)
+    {
+      stp_erprintf("did not print thumbnail!\n");
+      stp_free_vars(nv);
+      return;
+    }
+  stp_free_vars(nv);
 
   switch (physical_orientation)
     {
     case ORIENT_PORTRAIT:
       memcpy(preview_thumbnail_data, adjusted_thumbnail_data,
-	     adjusted_thumbnail_bpp * thumbnail_h * thumbnail_w);
+	     thumbnail_bpp * thumbnail_h * thumbnail_w);
       break;
     case ORIENT_SEASCAPE:
       for (x = 0; x < thumbnail_w; x++)
 	for (y = 0; y < thumbnail_h; y++)
 	  memcpy((preview_thumbnail_data +
-		  adjusted_thumbnail_bpp * (x * thumbnail_h + y)),
+		  thumbnail_bpp * (x * thumbnail_h + y)),
 		 (adjusted_thumbnail_data +
-		  adjusted_thumbnail_bpp * (y * thumbnail_w + x)),
-		 adjusted_thumbnail_bpp);
+		  thumbnail_bpp * (y * thumbnail_w + x)),
+		 thumbnail_bpp);
       break;
 
     case ORIENT_UPSIDEDOWN:
       for (x = 0; x < thumbnail_h * thumbnail_w; x++)
 	memcpy((preview_thumbnail_data +
-		adjusted_thumbnail_bpp * (preview_limit - x)),
-	       adjusted_thumbnail_data + adjusted_thumbnail_bpp * x,
-	       adjusted_thumbnail_bpp);
+		thumbnail_bpp * (preview_limit - x)),
+	       adjusted_thumbnail_data + thumbnail_bpp * x,
+	       thumbnail_bpp);
       break;
     case ORIENT_LANDSCAPE:
       for (x = 0; x < thumbnail_w; x++)
 	for (y = 0; y < thumbnail_h; y++)
 	  memcpy((preview_thumbnail_data +
-		  adjusted_thumbnail_bpp * (preview_limit -
+		  thumbnail_bpp * (preview_limit -
 					    (x * thumbnail_h + y))),
 		 (adjusted_thumbnail_data +
-		  adjusted_thumbnail_bpp * (y * thumbnail_w + x)),
-		 adjusted_thumbnail_bpp);
+		  thumbnail_bpp * (y * thumbnail_w + x)),
+		 thumbnail_bpp);
       break;
     }
 
@@ -2361,8 +2397,8 @@ create_valid_preview(guchar **preview_data)
   gint h_denominator = preview_w > 1 ? preview_w - 1 : 1;
   gint h_numerator = (preview_thumbnail_w - 1) % h_denominator;
   gint h_whole = (preview_thumbnail_w - 1) / h_denominator;
-  gint adjusted_preview_width = adjusted_thumbnail_bpp * preview_w;
-  gint adjusted_thumbnail_width = adjusted_thumbnail_bpp * preview_thumbnail_w;
+  gint adjusted_preview_width = thumbnail_bpp * preview_w;
+  gint adjusted_thumbnail_width = thumbnail_bpp * preview_thumbnail_w;
   gint v_cur = 0;
   gint v_last = -1;
   gint v_error = v_denominator / 2;
@@ -2381,7 +2417,7 @@ create_valid_preview(guchar **preview_data)
 	memcpy (outbuf, outbuf-adjusted_preview_width, adjusted_preview_width);
       else
 	{
-	  guchar *inbuf = preview_thumbnail_data - adjusted_thumbnail_bpp
+	  guchar *inbuf = preview_thumbnail_data - thumbnail_bpp
 	    + adjusted_thumbnail_width * v_cur;
 
 	  gint h_cur = 0;
@@ -2394,17 +2430,17 @@ create_valid_preview(guchar **preview_data)
 	    {
 	      if (h_cur == h_last)
 		{
-		  for (i = 0; i < adjusted_thumbnail_bpp; i++)
-		    outbuf[i] = outbuf[i - adjusted_thumbnail_bpp];
+		  for (i = 0; i < thumbnail_bpp; i++)
+		    outbuf[i] = outbuf[i - thumbnail_bpp];
 		}
 	      else
 		{
-		  inbuf += adjusted_thumbnail_bpp * (h_cur - h_last);
+		  inbuf += thumbnail_bpp * (h_cur - h_last);
 		  h_last = h_cur;
-		  for (i = 0; i < adjusted_thumbnail_bpp; i++)
+		  for (i = 0; i < thumbnail_bpp; i++)
 		    outbuf[i] = inbuf[i];
 		}
-	      outbuf += adjusted_thumbnail_bpp;
+	      outbuf += thumbnail_bpp;
 	      h_cur += h_whole;
 	      h_error += h_numerator;
 	      if (h_error >= h_denominator)
@@ -2562,7 +2598,7 @@ do_preview_thumbnail (void)
   draw_arrow (preview->widget.window, gcset, paper_display_left,
 	      paper_display_top);
 
-  if (adjusted_thumbnail_bpp == 1)
+  if (thumbnail_bpp == 1)
     gdk_draw_gray_image (preview->widget.window, gc,
 			 preview_x, preview_y, preview_w, preview_h,
 			 GDK_RGB_DITHER_NORMAL, preview_data, preview_w);

@@ -43,6 +43,7 @@ endif
 
 print_SOURCES = \
 	print-image-gimp.c \
+	print-image-thumbnail.c \
 	print-intl.h \
 	print.c \
 	gimp_color_window.c \

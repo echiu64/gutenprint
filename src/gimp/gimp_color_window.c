@@ -33,9 +33,8 @@
 #include <string.h>
 
 gint    thumbnail_w, thumbnail_h, thumbnail_bpp;
-guchar *internal_thumbnail_data;
+static guchar *internal_thumbnail_data;
 guchar *thumbnail_data;
-gint    adjusted_thumbnail_bpp;
 guchar *adjusted_thumbnail_data;
 guchar *preview_thumbnail_data;
 
@@ -133,14 +132,14 @@ redraw_color_swatch (void)
       cmap = gtk_widget_get_colormap (GTK_WIDGET(swatch));
     }
 
-  (adjusted_thumbnail_bpp == 1
+  (thumbnail_bpp == 1
    ? gdk_draw_gray_image
    : gdk_draw_rgb_image) (swatch->widget.window, gc,
 			  (SWATCH_W - thumbnail_w) / 2,
 			  (SWATCH_H - thumbnail_h) / 2,
 			  thumbnail_w, thumbnail_h, GDK_RGB_DITHER_NORMAL,
 			  adjusted_thumbnail_data,
-			  adjusted_thumbnail_bpp * thumbnail_w);
+			  thumbnail_bpp * thumbnail_w);
 }
 
 /*
@@ -186,14 +185,15 @@ create_color_adjust_window (void)
       thumbnail_data = internal_thumbnail_data;
       break;
     case 2:
-      thumbnail_data = g_malloc (thumbnail_w * thumbnail_h);
+      thumbnail_data = g_malloc (3 * thumbnail_w * thumbnail_h);
       for (i = 0; i < thumbnail_w * thumbnail_h; i++)
 	{
 	  gint val = internal_thumbnail_data[2 * i];
 	  gint alpha = internal_thumbnail_data[(2 * i) + 1];
-	  thumbnail_data[i] = val * alpha / 255 + 255 - alpha;
+	  thumbnail_data[(3 * i) + 0] = val * alpha / 255 + 255 - alpha;
+	  thumbnail_data[(3 * i) + 1] = val * alpha / 255 + 255 - alpha;
+	  thumbnail_data[(3 * i) + 2] = val * alpha / 255 + 255 - alpha;
 	}
-      thumbnail_bpp--;
       break;
     case 4:
       thumbnail_data = g_malloc (3 * thumbnail_w * thumbnail_h);
@@ -207,12 +207,12 @@ create_color_adjust_window (void)
 	  thumbnail_data[(3 * i) + 1] = g * alpha / 255 + 255 - alpha;
 	  thumbnail_data[(3 * i) + 2] = b * alpha / 255 + 255 - alpha;
 	}
-      thumbnail_bpp--;
       break;
     default:
       break;
       /* Whatever */
     }
+  thumbnail_bpp = 3;
 
   color_adjust_dialog =
     gimp_dialog_new (_("Print Color Adjust"), "print",

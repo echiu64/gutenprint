@@ -1271,7 +1271,11 @@
       </printer>
     </family>
     <family name="raw">
-      <printer name="RAW DATA" driver="raw-data">
+      <printer name="RAW DATA 16 bit" driver="raw-data-16">
+        <color value="true"/>
+        <model value="0"/>
+      </printer>
+      <printer name="RAW DATA 8 bit" driver="raw-data-8">
         <color value="true"/>
         <model value="1"/>
       </printer>

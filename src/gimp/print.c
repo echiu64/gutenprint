@@ -316,7 +316,6 @@ run (char   *name,		/* I - Name of print program. */
   GimpDrawable	*drawable;	/* Drawable for image */
   GimpRunModeType	 run_mode;	/* Current run mode */
   FILE		*prn = NULL;	/* Print file/command */
-  int		 ncolors;	/* Number of colors in colormap */
   GimpParam	*values;	/* Return values */
   gint32         drawable_ID;   /* drawable ID */
   GimpExportReturnType export = GIMP_EXPORT_CANCEL;    /* return value of gimp_export_image() */

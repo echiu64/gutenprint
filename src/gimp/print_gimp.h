@@ -151,4 +151,8 @@ extern void Image_rotate_ccw(stp_image_t *image);
 extern void Image_rotate_cw(stp_image_t *image);
 extern void Image_rotate_180(stp_image_t *image);
 
+/* Thumbnails -- keep it simple! */
+
+stp_image_t *Image_Thumbnail_new(const guchar *data, gint w, gint h, gint bpp);
+
 #endif  /* __PRINT_GIMP_H__ */
