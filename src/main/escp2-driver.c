@@ -121,6 +121,8 @@ print_debug_params(stp_vars_t v)
   print_remote_int_param(v, "Image_height", pd->image_height);
   print_remote_int_param(v, "Image_scaled_width", pd->image_scaled_width);
   print_remote_int_param(v, "Image_scaled_height", pd->image_scaled_height);
+  print_remote_int_param(v, "Image_printed_width", pd->image_printed_width);
+  print_remote_int_param(v, "Image_printed_height", pd->image_printed_height);
   print_remote_int_param(v, "Image_left_position", pd->image_left_position);
   print_remote_int_param(v, "Nozzles", pd->nozzles);
   print_remote_int_param(v, "Nozzle_separation", pd->nozzle_separation);
@@ -469,7 +471,7 @@ static void
 send_print_command(stp_vars_t v, stpi_pass_t *pass, int color, int nlines)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  int lwidth = (pd->image_scaled_width + (pd->horizontal_passes - 1)) /
+  int lwidth = (pd->image_printed_width + (pd->horizontal_passes - 1)) /
     pd->horizontal_passes;
   if (pd->command_set == MODEL_COMMAND_PRO || pd->variable_dots)
     {
@@ -505,7 +507,7 @@ static void
 send_extra_data(stp_vars_t v, int extralines)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  int lwidth = (pd->image_scaled_width + (pd->horizontal_passes - 1)) /
+  int lwidth = (pd->image_printed_width + (pd->horizontal_passes - 1)) /
     pd->horizontal_passes;
 #if TEST_UNCOMPRESSED
   int i;

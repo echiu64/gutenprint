@@ -7,7 +7,7 @@
  *	Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
- *   under the terms of the GNU General Public License as published by the Free
+ *   under the terms of the GNU eral Public License as published by the Free
  *   Software Foundation; either version 2 of the License, or (at your option)
  *   any later version.
  *
@@ -449,6 +449,50 @@ static const paper_adjustment_t photo2_adjustments[] =
 };
 
 DECLARE_PAPER_ADJUSTMENTS(photo2);
+
+static const paper_adjustment_t photo3_adjustments[] =
+{
+  { "Plain", 0.738, .5, 0.5, .1, .9, 1, 1, 1, 1, 1, 1.2,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "PlainFast", 0.738, .5, 0.5, .1, .9, 1, 1, 1, 1, 1, 1.2,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "Postcard", 0.83, .5, 0.5, .1, .9, 1, 1, 1, 1, 1, 1.2,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "GlossyFilm", 1.00, .5, 0.5, .2, .999, 1, 1, 1, 1, 1, 1,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "Transparency", 1.00, .5, 0.25, .2, .999, 1, 1, 1, 1, 1, 1,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "Envelope", 0.738, .5, 0.5, .1, .9, 1, 1, 1, 1, 1, 1.2,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "BackFilm", 1.00, .5, 0.25, .2, .999, 1, 1, 1, 1, 1, 1,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "Matte", 0.85, .75, 0.4, .3, .999, 1, 1, 1, 1, 1, 1.1,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "MatteHeavy", 0.85, .75, .3, .2, .999, 1, 1, 1, 1, 1, 1.1,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "Inkjet", 0.85, .5, 0.5, .15, .9, 1, 1, 1, 1, 1, 1.1,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "Coated", 1.2, .5, .25, .15, .999, .89, 1, 1, 1, 1, 1.2,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "Photo", 1.00, .5, 0.25, .2, .999, 1, 1, 1, 1, 1, 1.1,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "GlossyPhoto", 1.0, .5, 0.5, .3, .999, 1, 1, 1, .9, 1, 1.0,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "Semigloss", 1.0, .5, 0.5, .3, .999, 1, 1, 1, .9, 1, 1.0,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "Luster", 1.0, .5, 0.5, .3, .999, 1, 1, 1, .9, 1, 1.0,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "GlossyPaper", 1.00, .5, 0.25, .2, .999, 1, 1, 1, 1, 1, 1,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "Ilford", .85, .5, 0.25, .2, .999, 1, 1, 1, 1, 1, 1,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj  },
+  { "ColorLife", 1.00, .5, 0.25, .2, .9, 1, 1, 1, 1, 1, 1.1,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "Other", 0.738, .5, 0.5, .1, .9, 1, 1, 1, 1, 1, 1.2,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+};
+
+DECLARE_PAPER_ADJUSTMENTS(photo3);
 
 static const paper_adjustment_t sp960_adjustments[] =
 {

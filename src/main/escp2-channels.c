@@ -1313,6 +1313,18 @@ static const shade_set_t photo_gen2_shades =	/* Stylus 870 and newer */
   { 1, { 1.0 }},
 };
 
+static const shade_set_t photo_gen3_shades =	/* Stylus R300 and newer */
+{
+  { 1, { 1.0 }},
+  { 2, { 1.0, 0.35 }},
+  { 2, { 1.0, 0.35 }},
+  { 1, { 1.0 }},
+  { 1, { 1.0 }},
+  { 1, { 1.0 }},
+  { 1, { 1.0 }},
+  { 1, { 1.0 }},
+};
+
 static const shade_set_t esp960_shades =	/* Epson 950/960/PM-950C/PM-970C */
 {
   { 1, { 1.0 }},
@@ -1484,6 +1496,8 @@ DECLARE_INKLIST("None", gen1, photo, N_("EPSON Standard Inks"),
 		standard, photo, photo_gen1);
 DECLARE_INKLIST("None", photo_gen2, photo, N_("EPSON Standard Inks"),
 		standard, photo2, photo_gen2);
+DECLARE_INKLIST("None", photo_gen3, photo, N_("EPSON Standard Inks"),
+		standard, photo3, photo_gen3);
 DECLARE_INKLIST("None", pigment, photo, N_("EPSON Standard Inks"),
 		ultrachrome, ultrachrome_photo, stp2000);
 
@@ -1678,6 +1692,14 @@ static const inklist_t *const photo_gen2_group[] =
 };
 
 DECLARE_INKGROUP(photo_gen2);
+
+static const inklist_t *const photo_gen3_group[] =
+{
+  &photo_gen3_inklist,
+  &quadtone_inklist
+};
+
+DECLARE_INKGROUP(photo_gen3);
 
 static const inklist_t *const photo_pigment_group[] =
 {

@@ -797,27 +797,27 @@ verify_resolution_by_paper_type(stp_const_vars_t v, const res_t *res)
       switch (paper->paper_class)
 	{
 	case PAPER_PLAIN:
-	  if (res->vres > 720 || res->hres > 720)
+	  if (res->printed_vres > 720 || res->hres > 720)
 	    return 0;
 	  break;
 	case PAPER_GOOD:
-	  if (res->vres < 180 || res->hres < 360 ||
-	      res->vres > 720 || res->hres > 1440)
+	  if (res->printed_vres < 180 || res->hres < 360 ||
+	      res->printed_vres > 720 || res->hres > 1440)
 	    return 0;
 	  break;
 	case PAPER_PHOTO:
-	  if (res->vres < 360 || 
+	  if (res->printed_vres < 360 || 
 	      (res->hres < 720 && res->hres < escp2_max_hres(v)))
 	    return 0;
 	  break;
 	case PAPER_PREMIUM_PHOTO:
-	  if (res->vres < 720 ||
+	  if (res->printed_vres < 720 ||
 	      (res->hres < 720 && res->hres < escp2_max_hres(v)))
 	    return 0;
 	  break;
 	case PAPER_TRANSPARENCY:
-	  if (res->vres < 360 || res->hres < 360 ||
-	      res->vres > 720 || res->hres > 720)
+	  if (res->printed_vres < 360 || res->hres < 360 ||
+	      res->printed_vres > 720 || res->hres > 720)
 	    return 0;
 	  break;
 	}
@@ -831,8 +831,7 @@ verify_resolution(stp_const_vars_t v, const res_t *res)
   int nozzle_width =
     (escp2_base_separation(v) / escp2_nozzle_separation(v));
   int nozzles = escp2_nozzles(v);
-  int resid = compute_resid(res);
-  if (escp2_ink_type(v, resid) != -1 &&
+  if (escp2_ink_type(v, compute_printed_resid(res)) != -1 &&
       res->vres <= escp2_max_vres(v) &&
       res->hres <= escp2_max_hres(v) &&
       res->vres >= escp2_min_vres(v) &&
@@ -841,7 +840,7 @@ verify_resolution(stp_const_vars_t v, const res_t *res)
        ((res->vres / nozzle_width) * nozzle_width) == res->vres))
     {
       int xdpi = res->hres;
-      int physical_xdpi = escp2_base_res(v, resid);
+      int physical_xdpi = escp2_base_res(v, compute_resid(res));
       int horizontal_passes, oversample;
       if (physical_xdpi > xdpi)
 	physical_xdpi = xdpi;
@@ -2340,7 +2339,7 @@ escp2_print_page(stp_vars_t v, stp_image_t *image)
   int i;
   escp2_privdata_t *pd = get_privdata(v);
   int out_channels;		/* Output bytes per pixel */
-  int line_width = (pd->image_scaled_width + 7) / 8 * pd->bitwidth;
+  int line_width = (pd->image_printed_width + 7) / 8 * pd->bitwidth;
   int weave_pattern = STPI_WEAVE_ZIGZAG;
   if (stp_check_string_parameter(v, "Weave", STP_PARAMETER_ACTIVE))
     {
@@ -2366,8 +2365,8 @@ escp2_print_page(stp_vars_t v, stp_image_t *image)
      1,
      pd->channels_in_use,
      pd->bitwidth,
-     pd->image_scaled_width,
-     pd->image_scaled_height,
+     pd->image_printed_width,
+     pd->image_printed_height,
      pd->image_top * pd->res->vres / 72,
      (pd->page_height + escp2_extra_feed(v)) * pd->res->vres / 72,
      pd->head_offset,
