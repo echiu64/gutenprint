@@ -1,14 +1,14 @@
-Welcome to Gimp-Print 5.0 Alpha 3!  Please read these release notes
+Welcome to Gimp-Print 5.0 Beta 1!  Please read these release notes
 carefully.
 
-Gimp-Print 5.0.0-alpha3 is the third alpha release (technology
-preview) in the line that will eventually lead to Gimp-Print 5.0.  It
-is based on the 4.3 series that has been in development for two years,
-and includes many improvements over the very popular 4.2 series.  This
-release is not considered to be a fully stable release (there are
-still various things in flux, and it has not undergone the extensive
-testing that is required to declare a release stable), but we've been
-using it and we believe that it will be useful for many purposes.
+Gimp-Print 5.0.0-beta1 is the first beta prerelease of Gimp-Print 5.0.
+It is based on the 4.3 series that has been in development for over
+two years, and includes many improvements over the very popular 4.2
+series.  This release is not considered to be a fully stable release
+(there are still various things in flux, and it has not undergone the
+extensive testing that is required to declare a release stable), but
+we've been using it and we believe that it will be useful for many
+purposes.
 
 Gimp-Print is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -69,12 +69,136 @@ on building and installing Gimp-Print.
 
 These release notes contain the following sections:
 
-1) Changes from 5.0.0-alpha2 to 5.0.0-alpha3
-2) Changes from 5.0.0-alpha1 to 5.0.0-alpha2
-3) Overall changes from 4.2 to 5.0.
-4) List of supported printers
-5) Printer-specific notes
+1) Changes from 5.0.0-alpha3 to 5.0.0-beta1
+2) Changes from 5.0.0-alpha2 to 5.0.0-alpha3
+3) Changes from 5.0.0-alpha1 to 5.0.0-alpha2
+4) Overall changes from 4.2 to 5.0.
+5) List of supported printers
+6) Printer-specific notes
 
+================================================================
+
+* Major changes between Gimp-Print 5.0.0 alpha 3 and 5.0.0 beta 1:
+
+  1) We have made several changes to the color generation to yield
+     better results and fix problems.
+
+     The brightness and contrast controls now function quite
+     differently from before.  With RGB or CMY input, the brightness
+     control now adjusts the luminance using an exponential function,
+     and so does not change the black and white points (RFE 619299) or
+     the color (hue and saturation).  This yields more expected output
+     when printing to a page.  The behavior with grayscale input is
+     equivalent.  With CMYK and raw input, however, the brightness
+     control is applied on a per-channel basis.  Normally these
+     controls will not be used with CMYK input.
+
+     In addition, the brightness and contrast controls are now applied
+     separately from the gamma adjustment.  Furthermore, the
+     brightness, contrast, and saturation adjustments are made prior
+     to HSL adjustment, and gamma correction after that adjustment.
+     HSL and gamma adjustments are considered to be printer
+     adjustments while brightness, contrast, and saturation are
+     considered to be user adjustments.  Consistent with this, the
+     gamma adjustment has been made optional.
+
+     Finally, color->black generation is now done correctly for RGB
+     and whitescale inputs.
+
+  2) The GIMP plugin now saves the printc file in a form that can be
+     read back in any locale.  Previously, the file was not always
+     saved in a form that could be read back in all locales (bug
+     955436).
+
+  3) Printer detection and command logic in the GIMP plugin has been
+     completely reworked as follows:
+
+     * The plugin now uses a much faster technique to discover
+       printers when using System V or CUPS spoolers (bug 742187).
+
+     * The plugin offers a choice of using a standard command, a
+       custom command, or file output when printing.  The standard
+       command is constructed based on the output queue name, the
+       printing system in use, and the type of output being
+       generated.  It specifies raw printing for any output type other
+       than Postscript; Postscript printing does not use the raw
+       option (bug 700792).  The default is to use the standard
+       printing command.
+
+     * The plugin no longer creates a printer definition for each
+       queue.  If there is no previous printrc file, it creates a
+       single printer; if there was a previous printrc file, it keeps
+       all previous definitions.  The output queue name for each
+       printer is taken from the printer name if a queue of that name
+       exists, otherwise no queue name is used.
+
+     * The printrc file format has changed slightly, and is not back
+       compatible with 5.0 alpha releases.  Therefore, saving the
+       printrc file in this release will yield a file that cannot be
+       read by earlier releases.
+
+  4) A compiler warning/error in the GIMP plugin was fixed (bug
+     964781).
+
+  5) A compile error on systems lacking the "alphasort" function has
+     been fixed (bug 960211).  This includes at least some versions of
+     Solaris.
+
+  6) The page widths for the HP DesignJet 2500 and 3500 printers have
+     been fixed to be 36 and 54 inches respectively.  Previously both
+     printers were specified to be 44 inches wide.
+
+  7) (bug 972014) A bug in the Postscript output driver causes the
+     GIMP plugin to misbehave with certain PPD files.  This bug is not
+     related to locale.  At least certain PPD files from the Epson
+     PIPS drivers are known to result in this problem.
+
+  8) Build problems when VPATH is used have been fixed.
+
+  9) The cups-genppdupdate.5.0 script now exits with a success status
+     if no PPD files have been updated but there are otherwise no
+     errors.  This permits the script to run successfully if there are
+     no Gimp-Print printer queues defined or all Gimp-Print-based
+     queues are using Gimp-Print 4.2 PPD files.  This could cause
+     upgrade scripts to fail inappropriately.
+
+  10) The stp_string_list_t data type now uses forward declaration and
+     pointers.  This was missed in the API cleanup in 5.0.0-alpha3.
+
+  11) The API now offers piecewise curves (using linear or cubic spline
+     interpolation).  None of the current applications can utilize
+     these curves properly, however.  Another problem with spline
+     interpolation has been fixed.
+
+  12) Additional automated testing of the color code has been added,
+     and various bugs in the color code in certain cases have been
+     fixed as a result.
+
+  13) Duplex printing is now supported on an experimental basis in the
+     PCL driver for the HP LaserJet 4, 5, 6 series (and other
+     equivalents that use the "pcl-4" driver) and HP DeskJet 900
+     series (and other equivalents that use the "pcl-900"
+     driver). These two drivers cover a large number of equivalent
+     printers.
+
+     There is a choice of 2 duplex settings "Long Edge" and "Short
+     Edge" as well as "Simplex" (which is the default). Note that
+     attempting to print duplex to a non-equipped printer will be
+     ignored by the hardware, but the job should still print.
+
+     The Duplex option is not shown by the Gimp plugin as it only
+     outputs one page.
+
+     The cups PPD files and the foomatic data now reflect the additional
+     option, but these have not been exhaustively tested.
+
+     The "pcl-4" driver has been tested on an HP 8550, an HP 4550 (both
+     color printers supported in monochrome), an HP 4100TN, an HP 2200dn
+     and a LexMark Optra T.
+
+     The "pcl-900" driver has not been tested on a real printer.
+
+  Please see the change log for full information.
 ================================================================
 
 * Major changes between Gimp-Print 5.0.0 alpha 2 and 5.0.0 alpha 3:
@@ -215,7 +339,6 @@ These release notes contain the following sections:
   11) Some minor performance improvements (as identified by Valgrind)
      have been incorporated.
 
-  Please see the change log for full information.
 ================================================================
 
 While Gimp-Print 5.0 is not finalized, it contains many improvements
@@ -259,6 +382,10 @@ and changes from 4.2, as follows:
 
        The old behavior is available by turning on the "Linear
        Contrast Adjustment".
+
+     * The brightness control now behaves more appropriately,
+       adjusting the image's overall brightness without changing the
+       black or white points.
 
      * The Cyan, Magenta, and Yellow settings have been replaced with
        separate settings for gamma and density for Cyan, Magenta,
@@ -401,12 +528,13 @@ and changes from 4.2, as follows:
 
   5) Epson printers have been completely retuned, in most cases
      yielding much better density, more accurate gray scale, and
-     higher Dmax on all paper types.
+     darker blac on all paper types.
 
 
 * New Functionality:
 
-  1) This release offers a new curve data type.
+  1) This release offers a new curve data type, permitting very
+     precise adjustments of output.
 
   2) This release offers many new output controls:
 
@@ -469,21 +597,26 @@ and changes from 4.2, as follows:
      based on the paper type loaded by the user.  Similarly, there is
      no default for the input slot or ink set.
 
-  10) A new Threshold color correction mode has been added that
+  10) Support for a variety of input types, in both 8 and 16 bit
+     resolution, has been added.  Gimp-Print can now handle input in
+     grayscale, whitescale (inverted grayscale), RGB, CMY, CMYK, and
+     KCMY in 8 and 16 bit resolutions for all output types.
+
+  11) A new Threshold color correction mode has been added that
      produces either all-on or all-off of each color.  This is similar
      to the Monochrome mode in 4.2, except that it works for color as
      well as black.
 
-  11) A new Desaturated color correction mode has been added that
+  12) A new Desaturated color correction mode has been added that
      produces gray (desaturated) output using color inks.
 
-  12) A new Density color correction mode has been added that corrects
+  13) A new Density color correction mode has been added that corrects
      only for density.  This will normally produce excessively dark
      output.  However, applications that wish to use their own
      linearization curves may wish to use this interface to prevent
      Gimp-Print from performing its own linearization.
 
-  13) A new Raw color correction mode has been added that performs no
+  14) A new Raw color correction mode has been added that performs no
      correction whatsoever on the input.  This mode may be used by
      applications that wish to perform their own ink limiting and
      linearization.
@@ -502,7 +635,18 @@ and changes from 4.2, as follows:
      writes out the printrc file in a format that earlier versions of
      Gimp-Print cannot read.
 
-  4) If you are using an older version of the GIMP 1.2, and the GIMP
+  4) Printer queue discovery and command specification are greatly
+     simplified over 4.2.  The plugin now offers a default printing
+     command that is determined based on the characteristics of the
+     system, and also offers the choice of printing to a file or using
+     a custom print command for each printer defined in the printrc
+     file.
+
+  5) The Print plugin now always displays all options relevant to
+     what's being printed, enabling and disabling options as
+     appropriate.
+
+  6) If you are using an older version of the GIMP 1.2, and the GIMP
      is installed in a non-standard location on your system such that
      you cannot run configure in Gimp-Print without using
      --with-gimp-prefix or --with-gimp-exec-prefix, please read item
@@ -599,19 +743,19 @@ and changes from 4.2, as follows:
      us if you would like to assist with this.
 
   4) Translation to other languages other than US-English is not
-     supported in this release.  This will be fixed prior to 5.0.
+     supported in this release.  This will be fixed prior to 5.0 final
+     release.
 
   5) Support for the Canon S200 has not yet been ported forward from
      4.2.
 
-  6) This release is probably slower than 4.2 in many cases,
-     particularly when using High Accuracy (which is the default color
-     correction in most cases) or Bright color correction.  It is
-     possible that this release will not be able to drive some
-     printers at full speed, particularly if your computer has a slow
-     processor.  Performance has not been analyzed or tuned at
-     present.  We expect to improve the performance prior to final
-     release.
+  6) This release is slower than 4.2 in many cases, particularly when
+     using High Accuracy (which is the default color correction in
+     most cases) or Bright color correction.  It is possible that this
+     release will not be able to drive some printers at full speed,
+     particularly if your computer has a slow processor.  Performance
+     has been only partially analyzed or tuned at present.  We hope to
+     improve the performance prior to final release.
 
   7) The user's manual and developer's guide have not been updated for
      this release.
@@ -794,8 +938,7 @@ and changes from 4.2, as follows:
      has been completely revised, permitting applications to specify
      input mode, output mode, channel bit depth, and color correction
      completely independently.  This architecture is also more
-     extensible.  The implementation is not finalized, but the
-     interface is not likely to change substantially.
+     extensible.
 
   7) Complete overhaul of the black generation in CMYK output.  Black
      generation is now performed in the color code rather than the
