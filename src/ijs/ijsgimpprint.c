@@ -71,6 +71,7 @@ typedef struct _IMAGE
   int n_chan;		/* number of channels */
   int xres;		/* dpi */
   int yres;
+  int output_type;
   int row;		/* row number in buffer */
   int row_width;	/* length of a row */
   char *row_buf;	/* buffer for raster */
@@ -100,16 +101,19 @@ image_init(IMAGE *img, IjsPageHeader *ph)
   if ((img->bps == 8) && (img->n_chan == 1) &&
       (strncmp(ph->cs, DeviceGray, strlen(DeviceGray)) == 0))
     {
+      img->output_type = OUTPUT_GRAY;
       /* 8-bit greyscale */
     }
   else if ((img->bps == 8) && (img->n_chan == 3) &&
 	   (strncmp(ph->cs, DeviceRGB, strlen(DeviceRGB)) == 0))
     {
+      img->output_type = OUTPUT_COLOR;
       /* 24-bit colour */
     }
   else if ((img->bps == 8) && (img->n_chan == 4) && 
 	   (strncmp(ph->cs, DeviceCMYK, strlen(DeviceCMYK)) == 0))
     {
+      img->output_type = OUTPUT_RAW_CMYK;
       /* 32-bit CMYK colour */
     }
   else
@@ -239,7 +243,7 @@ gimp_list_cb (void *list_cb_data,
 	      char *val_buf,
 	      int val_size)
 {
-  const char *param_list = "OutputFile,DeviceManufacturer,DeviceModel,Quality,MediaName,MediaType,MediaSource,InkType,Dither,OutputType,ImageType,Brightness,Gamma,Contrast,Cyan,Magenta,Yellow,Saturation,Density,PrintableArea,PrintableTopLeft,TopLeft,Dpi";
+  const char *param_list = "OutputFile,DeviceManufacturer,DeviceModel,Quality,MediaName,MediaType,MediaSource,InkType,Dither,ImageType,Brightness,Gamma,Contrast,Cyan,Magenta,Yellow,Saturation,Density,PrintableArea,PrintableTopLeft,TopLeft,Dpi";
   int size = strlen (param_list);
 
   fprintf (stderr, "gimp_list_cb\n");
@@ -297,7 +301,6 @@ gimp_get_cb (void *get_cb_data,
   GimpParamList *curs;
   const char *val;
   char buf[256];
-  int code;
 
   fprintf (stderr, "gimp_get_cb: %s\n", key);
   if (!printer)
@@ -345,7 +348,6 @@ gimp_get_cb (void *get_cb_data,
     {
       int l, r, b, t;
       int h, w;
-      double pa[2];
       (*stp_printer_get_printfuncs(printer)->media_size)
 	(printer, v, &w, &h);
       (*stp_printer_get_printfuncs(printer)->imageable_area)
@@ -452,13 +454,6 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
     stp_set_ink_type(img->v, vbuf);
   else if (strcmp(key, "Dither") == 0)
     stp_set_dither_algorithm(img->v, vbuf);
-  else if (strcmp(key, "OutputType") == 0)
-    {
-      code = get_int(vbuf, &i,
-		     stp_get_output_type(lower), stp_get_output_type(upper));
-      if (code == 0)
-	stp_set_output_type(img->v, i);
-    }
   else if (strcmp(key, "ImageType") == 0)
     {
       code = get_int(vbuf, &i,
@@ -803,6 +798,7 @@ main (int argc, char **argv)
       stp_set_app_gamma(img.v, (float)1.7);
       stp_set_cmap(img.v, NULL);
       stp_set_scaling(img.v, (float)-img.xres); /* resolution of image */
+      stp_set_output_type(img.v, img.output_type); 
       if (stp_printer_get_printfuncs(printer)->verify(printer, img.v))
 	{
 	  stp_printer_get_printfuncs(printer)->print(printer, &si, img.v);
