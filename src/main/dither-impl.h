@@ -115,9 +115,7 @@ typedef struct dither_channel
 {
   unsigned randomizer;		/* With Floyd-Steinberg dithering, control */
 				/* how much randomness is applied to the */
-				/* threshold values (0-65535).  With ordered */
-				/* dithering, how much randomness is added */
-				/* to the matrix value. */
+				/* threshold values (0-65535). */
   unsigned bit_max;
   unsigned signif_bits;
   unsigned density;
