@@ -1407,7 +1407,7 @@ find_first_and_last(const unsigned char *line, int length,
       if (line[i] == 0)
 	{
 	  if (!found_first)
-	    *first++;
+	    (*first)++;
 	}
       else
 	{
