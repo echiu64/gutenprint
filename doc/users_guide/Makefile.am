@@ -28,11 +28,11 @@ MAINT_CHARSET = latin1
 
 MANUAL = users-guide
 MANUAL_SRC_FILES = $(srcdir)/$(MANUAL).sgml \
-	$(srcdir)/ch_0.sgml \
-	$(srcdir)/ch_1.sgml \
-	$(srcdir)/ch_2.sgml \
-	$(srcdir)/ch_3.sgml \
-	$(srcdir)/ch_4.sgml \
+	$(srcdir)/title.sgml \
+	$(srcdir)/history.sgml \
+	$(srcdir)/gimp.sgml \
+	$(srcdir)/cups.sgml \
+	$(srcdir)/utils.sgml \
 	$(srcdir)/gfdl.sgml
 HTMLDIR = html
 
