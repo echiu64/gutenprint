@@ -32,10 +32,10 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <a href="MacOSX.php3#4.3.18"><b>July 08, 2003 -</b></a> Gimp-Print 4.3.18 is the latest Mac OS X release in the developmental line (4.3.x) of Gimp-Print. Currently, the 4.3.x line is not entirely functional in Mac OS X Jaguar. Almost all users should continue to use the 4.2.x line until the current issues with 4.3.x are resolved.  See the <a href="MacOSX.php3#4.3.18">news item</a> for more details, especially if you ever installed 4.3.17.
+ <a href="MacOSX.php3#4.2.6-pre2"><b>September 21, 2003 -</b></a> Gimp-Print 4.2.6-pre2 is now available for download.
  </p>
  <p>
- <a href="MacOSX.php3#4.2.6-pre1"><b>April 30, 2003 -</b></a> Gimp-Print 4.2.6-pre1 is the newest testing release of Gimp-Print.
+ <a href="MacOSX.php3#4.3.18"><b>July 08, 2003 -</b></a> Gimp-Print 4.3.18 is the latest Mac OS X release in the developmental line (4.3.x) of Gimp-Print. Currently, the 4.3.x line is not entirely functional in Mac OS X Jaguar. Almost all users should continue to use the 4.2.x line until the current issues with 4.3.x are resolved.  See the <a href="MacOSX.php3#4.3.18">news item</a> for more details, especially if you ever installed 4.3.17.
  </p>
  <p>
  <a href="MacOSX.php3#downloadESPGS"><b>April 30, 2003 -</b></a> ESP Ghostscript version 7.05.6 (ESPGS) is now available as a Mac OS X installer package in the downloads section. All Gimp-Print users should update to this version of ESPGS.
@@ -132,27 +132,27 @@ require('standard_html_header.php3');
  Ghostscript 7.05.6 for Mac OS X (<b>download below and install, if
  necessary</b>).
  </p>
- <b>Gimp-Print 4.2.6-pre1</b>
+ <b>Gimp-Print 4.2.6-pre2</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-pre1.ppc.dmg?download"
- >gimp-print-4.2.6-pre1.ppc.dmg</a>&nbsp;(3.9 MB)
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-pre2.ppc.dmg?download"
+ >gimp-print-4.2.6-pre2.ppc.dmg</a>&nbsp;(3.9 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-pre1.tar.gz?download"
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-pre2.tar.gz?download"
  >source</a>)
  </td>
  </tr>
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 4.2.6-pre1 is the newest pre-release for Mac OS X; it includes bug 
- fixes over 4.2.5, but it may contain new bugs. This package requires (but does
- not include) ESP Ghostscript for Mac OS X (<b>download below and 
+ Gimp-Print 4.2.6-pre2 is the newest pre-release for Mac OS X; it includes bug 
+ fixes over 4.2.5, but it may contain new bugs. On Mac OS X "Jaguar" this 
+ package requires (but does not include) ESP Ghostscript (<b>download below and 
  install, if necessary</b>).
  </p>
  <b>Gimp-Print 4.3.18</b>
@@ -254,6 +254,88 @@ require('standard_html_header.php3');
  News Items
  </h3>
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+ <a name ="4.2.6-pre2"></a>
+ <B>Gimp-Print 4.2.6-pre2</B>
+ </TD>
+ <TD align="right" >
+ <B>2003-09-21</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gimp-Print version 4.2.6-pre2 contains the following improvements over
+ <a href= "MacOSX.php3#4.2.5">Gimp-Print 4.2.5</a>:
+ </p>
+<b>Major changes</b>
+ <ol>
+   <li>A bug in the CUPS driver whereby the quality degrades on each
+   successive page of a multi-page job has been fixed.  This bug was
+   introduced in 4.2.6-pre1, and is not present in 4.2.5.</li>
+   <li>The CUPS driver now offers normal and reversed paper order,
+   permitting printing documents in the correct order on inkjet
+   printers.<./li>
+   <li>The Postscript driver in the GIMP plug-in now works correctly in
+   non-US locales.</li>
+   <li>Preliminary support for the Epson Stylus C83 and C84.</li>
+   <li>Preliminary support for the Canon S200.</li>
+   <li>A Czech language translation has been added.</li>
+   <li>The printer compatibility list has been updated to reflect the
+   latest information from linuxprinting.org.</li>
+   <li>Engineering C paper size is now added.</li>
+   <li>escputil will no longer hang if the printer does not respond.</li>
+   <li>The Swedish and German translations have been updated.</li>
+   <li>The man pages have been updated.</li>
+   <li>On Mac OS X when using the provided installer package the PPDs are
+    now stored in the standard PPD location<pre>
+
+          /Library/Printers/PPDs/Contents/Resources/en.lproj
+
+    </pre>rather than in<pre>
+
+          /usr/share/cups/model/C
+
+    </pre>which is different from all previous releases. This change was
+    made for performance reasons (memory usage).  As a consequence,
+    the PPDs will no longer be available for printer setup when
+    using the CUPS web admin. The Apple provided Print Center application
+    is not affected by this change.</li>
+
+</ol>
+<dl>
+<dt><b>The following bugs have been fixed in Gimp-Print 4.2.6-pre2</b>:</dt>
+
+<dd>806902 CUPS quality degrades on multi-page jobs (4.2.6-pre1 only)
+<dd>729918 Postscript family driver fails in non-US locale
+<dd>735493 CUPS PPD files lacking *OutputOrder
+</dl>
+
+   <li></li>
+   <li>The Mac OS X installer package now includes an "uninstaller" which will
+   completley (and safely) remove the Gimp-Print software.</li>
+   <li>Preliminary support for Epson Stylus C50, Stylus Photo 900, CL-740,
+   PM-870C, PM-930C, PM-970C, and PM-3700C.  The PM-930C and PM-970C
+   are limited to 2880x1440 DPI in this release; this restriction will
+   not be lifted in 4.2.x line.</li>
+   <li>Better conformance to the PPD spec on the part of the CUPS PPD
+   files.</li>
+   <li>Per-page variables in the CUPS driver are now set at the beginning
+   of each page.  This makes it possible to change the page size (for
+   example) in the middle of a document.</li>
+   <li>The PostScript LanguageLevel attribute in the CUPS PPD files now
+   defaults to 3, as all current Ghostscript releases are fully
+   compatible with Level 3 PostScript.</li>
+   <li>Minor speed improvement for the HP LaserJet IIP.</li>
+   <li>The Foomatic data now uses the clear-text printer ID's from
+   Foomatic 3.0, in addition to legacy support for the older numeric
+   ideas.</li>
+   <li>Minor adjustment to the HP DeskJet 340 margins.</li>
+ </ol>
+ &nbsp;
+ </td>
+ </tr>
  <TR bgcolor="#D0D0D0" >
  <TD>
  <a name ="4.3.18"></a>
