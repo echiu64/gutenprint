@@ -43,6 +43,8 @@
 #include <stdarg.h>
 #include "print.h"
 
+#define DEBUG
+
 /*
  * For each printer, we can select from a variety of dot sizes.
  * For single dot size printers, the available sizes are usually 0,
@@ -928,8 +930,8 @@ static canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
     CANON_CAP_DMT | CANON_CAP_CMD6d | CANON_CAP_CMD70,
-    {-1,1,0,0,-1,-1},
-    { 1,1,1,1,1,1 },
+    { -1, 1, 0, 0, -1, -1 },
+    {  0, 1.8, 1, .5, 0, 0 },
     &variable_6pl_6color_inks
   },
 
@@ -1088,28 +1090,40 @@ static canon_cap_t canon_model_capabilities[] =
 
 typedef struct {
   const char name[65];
-  int paper_feed_sequence;
-  int platen_gap;
+  int media_code;
   double base_density;
   double k_lower_scale;
   double k_upper;
 } paper_t;
 
 static const paper_t canon_paper_list[] = {
-  { "Plain Paper", 1, 0, .5, .25, .5 },
-  { "Plain Paper Fast Load", 5, 0, .5, .25, .5 },
-  { "Postcard", 2, 0, .6, .25, .6 },
-  { "Glossy Film", 3, 0, 1.0, 1.0, .9 },
-  { "Transparencies", 3, 0, 1.0, 1.0, .9 },
-  { "Envelopes", 4, 0, .5, .25, .5 },
-  { "Back Light Film", 6, 0, 1.0, 1.0, .9 },
-  { "Matte Paper", 7, 0, 1.0, 1.0, .9 },
-  { "Inkjet Paper", 7, 0, .78, .25, .6 },
-  { "Photo Quality Inkjet Paper", 7, 0, 1, 1.0, .9 },
-  { "Photo Paper", 8, 0, 1, 1.0, .9 },
-  { "Premium Glossy Photo Paper", 8, 0, .9, 1.0, .9 },
-  { "Photo Quality Glossy Paper", 6, 0, 1.0, 1.0, .9 },
-  { "Other", 0, 0, .5, .25, .5 },
+  { "Plain Paper",                0x00, 0.50, 0.25, 0.5 },
+  { "Transparencies",             0x02, 1.00, 1.00, 0.9 },
+  { "Back Print Film",            0x03, 1.00, 1.00, 0.9 },
+  { "Fabric Sheets",              0x04, 0.50, 0.25, 0.5 },
+  { "Envelope",                   0x08, 0.50, 0.25, 0.5 },
+  { "High Resolution Paper",      0x07, 0.78, 0.25, 0.5 },
+  { "T-Shirt Transfers",          0x03, 0.50, 0.25, 0.5 },
+  { "High Gloss Film",            0x06, 1.00, 1.00, 0.9 },
+  { "Glossy Photo Paper",         0x05, 1.00, 1.00, 0.9 },
+  { "Glossy Photo Cards",         0x0a, 1.00, 1.00, 0.9 },
+  { "Photo Paper Pro",            0x09, 1.00, 1.00, 0.9 },
+  /* escp2 paper:
+  { "Plain Paper",                0x00, 0.50, 0.25, .5 },
+  { "Plain Paper Fast Load",      0x00, 0.50, 0.25, .5 },
+  { "Postcard",                   0x00, 0.60, 0.25, .6 },
+  { "Glossy Film",                0x00, 1.00, 1.00, .9 }, 
+  { "Transparencies",             0x00, 1.00, 1.00, .9 }, 
+  { "Envelopes",                  0x00, 0.50, 0.25, .5 }, 
+  { "Back Light Film",            0x00, 1.00, 1.00, .9 }, 
+  { "Matte Paper",                0x00, 1.00, 1.00, .9 }, 
+  { "Inkjet Paper",               0x00, 0.78, 0.25, .6 }, 
+  { "Photo Quality Inkjet Paper", 0x00, 1.00, 1.00, .9 }, 
+  { "Photo Paper",                0x00, 1.00, 1.00, .9 }, 
+  { "Premium Glossy Photo Paper", 0x00, 0.90, 1.00, .9 }, 
+  { "Photo Quality Glossy Paper", 0x00, 1.00, 1.00, .9 }, 
+  */
+  { "Other",                      0x00, 0.50, 0.25, .5 },
 };
 
 static const int paper_type_count = sizeof(canon_paper_list) / sizeof(paper_t);
@@ -1141,27 +1155,6 @@ static canon_cap_t canon_get_model_capabilities(int model)
   fprintf(stderr,"canon: model %d not found in capabilities list.\n",model);
 #endif
   return canon_model_capabilities[0];
-}
-
-static int
-canon_media_type(const char *name, canon_cap_t caps)
-{
-  if (!strcmp(name,"Plain Paper"))           return  1;
-  if (!strcmp(name,"Transparencies"))        return  2;
-  if (!strcmp(name,"Back Print Film"))       return  3;
-  if (!strcmp(name,"Fabric Sheets"))         return  4;
-  if (!strcmp(name,"Envelope"))              return  5;
-  if (!strcmp(name,"High Resolution Paper")) return  6;
-  if (!strcmp(name,"T-Shirt Transfers"))     return  7;
-  if (!strcmp(name,"High Gloss Film"))       return  8;
-  if (!strcmp(name,"Glossy Photo Paper"))    return  9;
-  if (!strcmp(name,"Glossy Photo Cards"))    return 10;
-  if (!strcmp(name,"Photo Paper Pro"))       return 11;
-
-#ifdef DEBUG
-  fprintf(stderr,"canon: Unknown media type '%s' - reverting to plain\n",name);
-#endif
-  return 1;
 }
 
 static int
@@ -1588,7 +1581,7 @@ canon_cmd(FILE *prn, /* I - the printer         */
 
 static void
 canon_init_printer(FILE *prn, canon_cap_t caps,
-		   int output_type, const char *media_str,
+		   int output_type, const paper_t *pt,
 		   const vars_t *v, int print_head,
 		   const char *source_str,
 		   int xdpi, int ydpi,
@@ -1596,14 +1589,6 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
 		   int top, int left,
 		   int use_dmt)
 {
-#define MEDIACODES 11
-  static unsigned char mediacode_63[] = {
-    0x00,0x00,0x02,0x03,0x04,0x08,0x07,0x03,0x06,0x05,0x05,0x09
-  };
-  static unsigned char mediacode_6c[] = {
-    0x00,0x00,0x02,0x03,0x04,0x08,0x07,0x03,0x06,0x05,0x0a,0x09
-  };
-
   #define ESC28 "\x1b\x28"
   #define ESC5b "\x1b\x5b"
   #define ESC40 "\x1b\x40"
@@ -1613,7 +1598,7 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
     arg_63_2 = 0x00, /* plain paper */
     arg_63_3 = caps.max_quality, /* output quality  */
     arg_6c_1 = 0x00,
-    arg_6c_2 = 0x01, /* plain paper */
+    arg_6c_2 = 0x00, /* plain paper */
     arg_6d_1 = 0x03, /* color printhead? */
     arg_6d_2 = 0x00, /* 00=color  02=b/w */
     arg_6d_3 = 0x00, /* only 01 for bjc8200 */
@@ -1627,7 +1612,7 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
     arg_74_2 = 0x00, /*  */
     arg_74_3 = 0x01; /* 01 <= 360 dpi    09 >= 720 dpi */
 
-  int media= canon_media_type(media_str,caps);
+  /* int media= canon_media_type(media_str,caps); */
   int source= canon_source_type(source_str,caps);
 
   int printable_width=  page_width*10/12;
@@ -1659,10 +1644,7 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
   if (xdpi==1440) arg_74_2= 0x04;
   if (ydpi>=720)  arg_74_3= 0x09;
 
-  if (media<MEDIACODES) {
-    arg_63_2= mediacode_63[media];
-    arg_6c_2= mediacode_6c[media];
-  }
+  if (pt) arg_63_2= arg_6c_2= pt->media_code;
 
   if (use_dmt) {
     arg_74_1= 0x02;
@@ -1775,7 +1757,6 @@ canon_print(const printer_t *printer,		/* I - Model */
   unsigned char *cmap = v->cmap;
   int		model = printer->model;
   const char	*resolution = v->resolution;
-  const char	*media_type = v->media_type;
   const char	*media_source = v->media_source;
   int 		output_type = v->output_type;
   int		orientation = v->orientation;
@@ -1935,7 +1916,9 @@ canon_print(const printer_t *printer,		/* I - Model */
   PUT("top     ",top,72);
   PUT("left    ",left,72);
 
-  canon_init_printer(prn, caps, output_type, media_type,
+  pt = get_media_type(nv.media_type);
+
+  canon_init_printer(prn, caps, output_type, pt,
 		     &nv, printhead, media_source,
 		     xdpi, ydpi, page_width, page_height,
 		     top,left,(bits==2));
@@ -2041,7 +2024,6 @@ canon_print(const printer_t *printer,		/* I - Model */
    * Compute the LUT.  For now, it's 8 bit, but that may eventually
    * sometimes change.
    */
-  pt = get_media_type(nv.media_type);
   if (pt)
     nv.density *= pt->base_density;
   else
