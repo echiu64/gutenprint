@@ -150,8 +150,8 @@ image_init(IMAGE *img, IjsPageHeader *ph)
 static void
 image_finish(IMAGE *img)
 {
-  if (img->row_buf);
-  free(img->row_buf);
+  if (img->row_buf)
+    free(img->row_buf);
   img->row_buf = NULL;
 }
 
