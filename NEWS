@@ -10,6 +10,37 @@ The Gimp Print plugin requires the Gimp 1.2.
 
 Gimp-Print 4.1.5 contains the following fixes and improvements over 4.1.4:
 
+1) A "bar-code" effect on certain HP printers (all printing looks like
+   something vaguely resembling a bar code) is now fixed.
+
+2) The maximum paper dimensions for many Epson printers (particularly
+   older ones) is fixed.  In particular, all printers can now print
+   44" long or better, the Stylus Color Pro, Pro XL, 400, and 500 can
+   now print 13" wide, and the Stylus Photo EX can print A3-sized
+   paper.
+
+3) Clean up the Debian packaging a bit more.
+
+4) Bug fixes for the Epson 480/580.
+
+5) Fix printing dimensions for Epon 780/790, 890, and 1280/1290 to
+   allow printing to all edges.
+
+6) Significant quality improvements for Epson printers printing to
+   plain paper.  The noticeable effects should be more solid blacks
+   and colors.  There may be a bit more ink bleed, but it should not
+   be wildly excessive.
+
+   Users of 6-color (Stylus Photo) printers may find that using Four
+   Color Standard ink gives better results on plain paper.  There will
+   be less ink bleed and more consistent grays, at the expense of
+   smoothness of pale tones.
+
+7) A significant rewrite of some of the internals, while having no
+   effect on the behavior of the package, will ultimately permit a
+   much more stable binary interface.  Currently, this is in an
+   interim state.
+
 
 Gimp-Print 4.1.4 contains the following fixes and improvements over 4.1.3:
 
