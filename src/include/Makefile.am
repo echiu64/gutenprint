@@ -23,7 +23,7 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
-noinst_HEADERS = print-intl.h
+noinst_HEADERS = gimp-print-intl.h
 
 pkginclude_HEADERS = @GIMP_PRINT_H@
 

@@ -52,8 +52,12 @@
 #include <cups/cups.h>
 #include <cups/raster.h>
 
-#include <gimp-print.h>
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+#include <gimp-print.h>
+#include <gimp-print-intl.h>
+#include "../../lib/libprintut.h"
 
 /*
  * File handling stuff...
@@ -88,50 +92,50 @@ typedef struct
 
 msize_t	sizes[] =
 	{
-	  { "A0",		2384, 3370 },
-	  { "A0.Transverse",	3370, 2384 },
-	  { "A1",		1684, 2384 },
-	  { "A1.Transverse",	2384, 1684 },
-	  { "A2",		1191, 1684 },
-	  { "A2.Transverse",	1684, 1191 },
-	  { "A3",		842,  1191 },
-	  { "A3.Transverse",	1191, 842 },
-	  { "A4",		595,  842 },
-	  { "A4.Transverse",	842,  595 },
-	  { "A5",		420,  595 },
-	  { "A5.Transverse",	595,  420 },
-	  { "A6",		297,  420 },
-	  { "AnsiC",		1224, 1584 },
-	  { "AnsiD",		1584, 2448 },
-	  { "AnsiE",		2448, 3168 },
-	  { "ARCHA",		648,  864 },
-	  { "ARCHA.Transverse",	864,  648 },
-	  { "ARCHB",		864,  1296 },
-	  { "ARCHB.Transverse",	1296, 864 },
-	  { "ARCHC",		1296, 1728 },
-	  { "ARCHC.Transverse",	1728, 1296 },
-	  { "ARCHD",		1728, 2592 },
-	  { "ARCHD.Transverse",	2592, 1728 },
-	  { "ARCHE",		2592, 3456 },
-	  { "ARCHE.Transverse",	3456, 2592 },
-	  { "B0",		2918, 4128 },
-	  { "B1",		2064, 2918 },
-	  { "B2",		1458, 2064 },
-	  { "B3",		1032, 1458 },
-	  { "B4",		729,  1032 },
-	  { "B5",		516,  729 },
-	  { "Env10",		297,  684 },
-	  { "EnvC5",		459,  649 },
-	  { "EnvDL",		312,  624 },
-	  { "EnvISOB5",		499,  709 },
-	  { "EnvMonarch",	279,  540 },
-	  { "Executive",	522,  756 },
-	  { "FanFoldUS",	1071, 792 },
-	  { "Legal",		612,  1008 },
-	  { "Letter",		612,  792 },
-	  { "Letter.Transverse",792,  612 },
-	  { "Tabloid",		792,  1224 },
-	  { "TabloidExtra",	864,  1296 }
+	  { N_ ("A0"),			2384, 3370 },
+	  { N_ ("A0.Transverse"),	3370, 2384 },
+	  { N_ ("A1"),			1684, 2384 },
+	  { N_ ("A1.Transverse"),	2384, 1684 },
+	  { N_ ("A2"),			1191, 1684 },
+	  { N_ ("A2.Transverse"),	1684, 1191 },
+	  { N_ ("A3"),			842,  1191 },
+	  { N_ ("A3.Transverse"),	1191, 842 },
+	  { N_ ("A4"),			595,  842 },
+	  { N_ ("A4.Transverse"),	842,  595 },
+	  { N_ ("A5"),			420,  595 },
+	  { N_ ("A5.Transverse"),	595,  420 },
+	  { N_ ("A6"),			297,  420 },
+	  { N_ ("AnsiC"),		1224, 1584 },
+	  { N_ ("AnsiD"),		1584, 2448 },
+	  { N_ ("AnsiE"),		2448, 3168 },
+	  { N_ ("ARCHA"),		648,  864 },
+	  { N_ ("ARCHA.Transverse"),	864,  648 },
+	  { N_ ("ARCHB"),		864,  1296 },
+	  { N_ ("ARCHB.Transverse"),	1296, 864 },
+	  { N_ ("ARCHC"),		1296, 1728 },
+	  { N_ ("ARCHC.Transverse"),	1728, 1296 },
+	  { N_ ("ARCHD"),		1728, 2592 },
+	  { N_ ("ARCHD.Transverse"),	2592, 1728 },
+	  { N_ ("ARCHE"),		2592, 3456 },
+	  { N_ ("ARCHE.Transverse"),	3456, 2592 },
+	  { N_ ("B0"),			2918, 4128 },
+	  { N_ ("B1"),			2064, 2918 },
+	  { N_ ("B2"),			1458, 2064 },
+	  { N_ ("B3"),			1032, 1458 },
+	  { N_ ("B4"),			729,  1032 },
+	  { N_ ("B5"),			516,  729 },
+	  { N_ ("Env10"),		297,  684 },
+	  { N_ ("EnvC5"),		459,  649 },
+	  { N_ ("EnvDL"),		312,  624 },
+	  { N_ ("EnvISOB5"),		499,  709 },
+	  { N_ ("EnvMonarch"),		279,  540 },
+	  { N_ ("Executive"),		522,  756 },
+	  { N_ ("FanFoldUS"),		1071, 792 },
+	  { N_ ("Legal"),		612,  1008 },
+	  { N_ ("Letter"),		612,  792 },
+	  { N_ ("Letter.Transverse"),	792,  612 },
+	  { N_ ("Tabloid"),		792,  1224 },
+	  { N_ ("TabloidExtra"),	864,  1296 }
 	};
 
 
@@ -195,7 +199,7 @@ main(int  argc,			/* I - Number of command-line arguments */
 void
 usage(void)
 {
-  puts("Usage: genppd [--help] [--prefix dir]");
+  puts(_("Usage: genppd [--help] [--prefix dir]"));
   exit(1);
 }
 
@@ -245,7 +249,7 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
 
   if ((fp = gzopen(filename, "wb")) == NULL)
   {
-    fprintf(stderr, "genppd: Unable to create file \"%s\" - %s.\n",
+    fprintf(stderr, _("genppd: Unable to create file \"%s\" - %s.\n"),
             filename, strerror(errno));
     return (2);
   }
@@ -256,7 +260,7 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
 
   sscanf(p->long_name, "%63s", manufacturer);
 
-  fprintf(stderr, "Writing %s...\n", filename);
+  fprintf(stderr, _("Writing %s...\n"), filename);
 
   gzputs(fp, "*PPD-Adobe: \"4.3\"\n");
   gzputs(fp, "*%PPD file for CUPS/GIMP-print.\n");
@@ -268,11 +272,11 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
   gzputs(fp, "*LanguageVersion: English\n");
   gzputs(fp, "*LanguageEncoding: ISOLatin1\n");
   gzprintf(fp, "*PCFileName:	\"%s.ppd\"\n", p->driver);
-  gzprintf(fp, "*Manufacturer:	\"%s\"\n", manufacturer);
+  gzprintf(fp, "*Manufacturer:	\"%s\"\n", _(manufacturer));
   gzputs(fp, "*Product:	\"(GIMP-print v" VERSION ")\"\n");
-  gzprintf(fp, "*ModelName:     \"%s\"\n", p->driver);
-  gzprintf(fp, "*ShortNickName: \"%s\"\n", p->long_name);
-  gzprintf(fp, "*NickName:      \"%s, CUPS+GIMP-print v" VERSION "\"\n", p->long_name);
+  gzprintf(fp, "*ModelName:     \"%s\"\n", _(p->driver));
+  gzprintf(fp, "*ShortNickName: \"%s\"\n", _(p->long_name));
+  gzprintf(fp, "*NickName:      \"%s, CUPS+GIMP-print v" VERSION "\"\n", _(p->long_name));
   gzputs(fp, "*PSVersion:	\"(3010.000) 550\"\n");
   gzputs(fp, "*LanguageLevel:	\"3\"\n");
   gzprintf(fp, "*ColorDevice:	%s\n",
@@ -524,7 +528,7 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
   for (i = 0; i < stp_dither_algorithm_count(); i ++)
   {
     const char *s;
-    char *copy = malloc(strlen(stp_dither_algorithm_name(i)) + 1);
+    char *copy = xmalloc(strlen(stp_dither_algorithm_name(i)) + 1);
     char *d = copy;
     s = stp_dither_algorithm_name(i);
     do
@@ -554,7 +558,7 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
   for (i = 0; i < num_opts; i ++)
   {
     char *s;
-    char *copy = malloc(strlen(opts[i]) + 1);
+    char *copy = xmalloc(strlen(opts[i]) + 1);
     char *d = copy;
    /* 
     * Strip resolution name to its essentials...

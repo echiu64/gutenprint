@@ -23,6 +23,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+#include "../../lib/libprintut.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -240,7 +241,7 @@ main(int argc, char **argv)
 	      printf("You may only specify one printer or raw device.\n");
 	      do_help(1);
 	    }
-	  printer = malloc(strlen(optarg) + 1);
+	  printer = xmalloc(strlen(optarg) + 1);
 	  strcpy(printer, optarg);
 	  break;
 	case 'r':
@@ -249,7 +250,7 @@ main(int argc, char **argv)
 	      printf("You may only specify one printer or raw device.\n");
 	      do_help(1);
 	    }
-	  raw_device = malloc(strlen(optarg) + 1);
+	  raw_device = xmalloc(strlen(optarg) + 1);
 	  strcpy(raw_device, optarg);
 	  break;
 	case 'm':
@@ -258,7 +259,7 @@ main(int argc, char **argv)
 	      printf("You may only specify one printer model.\n");
 	      do_help(1);
 	    }
-	  printer_model = malloc(strlen(optarg) + 1);
+	  printer_model = xmalloc(strlen(optarg) + 1);
 	  strcpy(printer_model, optarg);
 	  break;
 	case 'u':
@@ -940,7 +941,7 @@ char *do_get_input (const char *prompt)
 #endif
 #else
 	/* no libreadline; use fgets instead */
-	input = malloc (sizeof (char) * BUFSIZ);
+	input = xmalloc (sizeof (char) * BUFSIZ);
 	memset(input, 0, BUFSIZ);
 	printf ("%s", prompt);
 	fgets_status = fgets (input, BUFSIZ, stdin);

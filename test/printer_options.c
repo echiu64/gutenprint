@@ -25,6 +25,7 @@
 #endif
 #include <stdio.h>
 #include <gimp-print.h>
+#include "../lib/libprintut.h"
 
 char *params[] =
 {

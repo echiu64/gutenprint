@@ -25,21 +25,14 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 INCLUDES = -I../intl
 
 
-noinst_LIBRARIES = libprintut.a
+noinst_LTLIBRARIES = libprintut.la
 
-libprintut_a_SOURCES =
+libprintut_la_SOURCES =
 
-libprintut_a_LIBADD = @ALLOCA@ @LIBOBJS@
-
-
-noinst_LTLIBRARIES = libprintut-pic.la
-
-libprintut_pic_la_SOURCES =
-
-libprintut_pic_la_LIBADD = @LTLIBOBJS@
+libprintut_la_LIBADD = @LTALLOCA@ @LTLIBOBJS@
 
 
-noinst_HEADERS = getopt.h pathmax.h xmalloc.h
+noinst_HEADERS = getopt.h libprintut.h pathmax.h xmalloc.h
 
 
 MAINTAINERCLEANFILES = Makefile.in

@@ -34,7 +34,7 @@
 #define _GIMP_PRINT_INTERNAL_H_
 
 
-#include "../../lib/xmalloc.h"
+#include "../../lib/libprintut.h"
 
 
 #define ECOLOR_C 0

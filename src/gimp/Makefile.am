@@ -45,7 +45,7 @@ print_SOURCES = \
 	gtk_main_window.c \
 	print_gimp.h
 
-print_LDADD = $(GIMP_LIBS) $(GIMPPRINT_LIBS)
+print_LDADD = $(GIMP_LIBS) $(GIMPPRINT_LIBS) ../../lib/libprintut.la
 
 print_DEPENDENCIES = $(GIMPPRINT_LIBS)
 

@@ -308,7 +308,7 @@ if test x${BUILD_CUPS} = xyes ; then
 else
   CUPS_INSTALL=""
 fi
-AM_CONDITIONAL(CUPS_INSTALL, test x${BUILD_CUPS} = xyes)
+AM_CONDITIONAL(BUILD_CUPS, test x${BUILD_CUPS} = xyes)
 if test x${BUILD_GIMP} = xyes ; then
   GIMP_BIN="print"
 fi
@@ -319,6 +319,7 @@ AM_CONDITIONAL(GHOST_BIN, test x${BUILD_GHOST} = xyes)
 if test x${BUILD_ESCPUTIL} = xyes ; then
   ESCPUTIL_BIN="escputil"
 fi
+AM_CONDITIONAL(BUILD_ESCPUTIL, test x${BUILD_ESCPUTIL} = xyes)
 if test x${BUILD_LIBGIMPPRINT} = xyes ; then
   MAIN_BIN="libgimpprint.la"
   GIMPPRINT_LIBS="\$(top_builddir)/src/main/libgimpprint.la"

@@ -1,5 +1,4 @@
 /*
- * xmalloc.c:
  * $Id$
  * gimp-print memory allocation functions.
  * Copyright (C) 1999,2000  Roger Leigh
@@ -28,12 +27,8 @@
 #include <stdlib.h>
 
 
-#ifndef HAVE_PUBLIB_XMALLOC
 void *xmalloc (size_t);
-#endif
-#ifndef HAVE_PUBLIB_XREALLOC
-void *xrealloc (void *, size_t);
-#endif
+void *stp_realloc (void *, size_t);
 
 
 /******************************************************************************
@@ -55,8 +50,8 @@ xmalloc (size_t size)
 
   if ((memptr = malloc (size)) == NULL)
     {
-      fprintf(stderr, "Virtual memory exhausted.\n");
-	   exit (EXIT_FAILURE);
+      fprintf (stderr, "Virtual memory exhausted.\n");
+      exit (EXIT_FAILURE);
     }
   return (memptr);
 }
@@ -82,7 +77,33 @@ xrealloc (void *ptr, size_t size)
 
   if ((memptr = realloc (ptr, size)) == NULL)
     {
-	    fprintf(stderr, "Virtual memory exhausted.\n");
+      fprintf (stderr, "Virtual memory exhausted.\n");
+      exit (EXIT_FAILURE);
+    }
+  return (memptr);
+}
+
+
+/******************************************************************************
+ *
+ * Function:    xcalloc()
+ * Description: calloc memory, but print an error and exit if calloc fails
+ *
+ * Input:       site_t size     Size of memory to allocate
+ * Output:      void *
+ *
+ * Variables:   void *memptr    Pointer to malloc'ed memory
+ *
+ ******************************************************************************/
+
+void *
+xcalloc (size_t count, size_t size)
+{
+  register void *memptr = NULL;
+
+  if ((memptr = calloc (count,size)) == NULL)
+    {
+      fprintf (stderr, "Virtual memory exhausted.\n");
       exit (EXIT_FAILURE);
     }
   return (memptr);

@@ -41,6 +41,7 @@ cups_modeldir = $(pkgdatadir)/model
 CFLAGS = @CFLAGS@ $(CUPS_CFLAGS)
 DEFS = @DEFS@ -I. -I$(srcdir) -I../.. -DCUPS_DATADIR=\"$(pkgdatadir)\" -DGIMP_PRINT_VERSION=\"$(VERSION)\"
 INCLUDES = @INCLUDES@
+LIBS = @LIBS@ ../../lib/libprintut.la
 
 ## Programs
 
@@ -62,7 +63,7 @@ canon_LDADD = $(CUPS_LIBS)
 
 epson_LDADD = $(CUPS_LIBS)
 
-genppd_LDADD = $(CUPS_LIBS) $(GIMPPRINT_LIBS)
+genppd_LDADD = $(CUPS_LIBS) $(GIMPPRINT_LIBS) @INTLLIBS@
 
 rastertoprinter_LDADD = $(CUPS_LIBS) $(GIMPPRINT_LIBS)
 
@@ -72,7 +73,7 @@ pkgdata_DATA = @CUPS_PKG@
 
 pkgsysconf_DATA = @CUPS_CONF@
 
-if CUPS_INSTALL
+if BUILD_CUPS
 install-data-local: ppd
 endif
 	$(mkinstalldirs) $(DESTDIR)$(cups_modeldir)

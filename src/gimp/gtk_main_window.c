@@ -24,6 +24,8 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+#include "../../lib/libprintut.h"
+
 #include "print_gimp.h"
 
 #ifndef NEW_UI_ONLY
@@ -176,7 +178,7 @@ static int preview_ppi = 10;
 static char *
 c_strdup(const char *s)
 {
-  char *ret = malloc(strlen(s) + 1);
+  char *ret = xmalloc(strlen(s) + 1);
   strcpy(ret, s);
   return ret;
 }

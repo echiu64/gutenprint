@@ -24,6 +24,8 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+#include "../../lib/libprintut.h"
+
 #include "print_gimp.h"
 
 #ifndef NEW_UI_ONLY

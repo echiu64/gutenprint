@@ -47,7 +47,7 @@ libgimpprint_la_SOURCES = \
 	quickmatrix257.h \
 	ran.367.179.h \
 	ran.509.131.h
-libgimpprint_la_LIBADD = ../../lib/libprintut-pic.la -lm
+libgimpprint_la_LIBADD = ../../lib/libprintut.la -lm
 libgimpprint_la_LDFLAGS = -release $(VERSION) -rpath $(libdir)
 
 $(srcdir)/print-util.c: print-printers.c

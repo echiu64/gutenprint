@@ -1,6 +1,6 @@
 /*
  * $Id$
- * gimp-print memory allocation functions.
+ * Header for utility library functions.
  * Copyright (C) 1999,2000  Roger Leigh
  *
  * This program is free software; you can redistribute it and/or modify
@@ -20,24 +20,23 @@
  ******************************************************************************/
 
 
-#ifndef __XMALLOC_H__
-#define __XMALLOC_H__
-
+#ifndef __LIBPRINTUT_H__
+#define __LIBPRINTUT_H__
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <stdlib.h>
 
 #ifndef HAVE_XMALLOC
-extern void *xmalloc (size_t);
-#endif
-#ifndef HAVE_XREALLOC
-extern void *xrealloc (void *, size_t);
-#endif
-#ifndef HAVE_XCALLOC
-extern void*xcalloc (size_t count, size_t size);
+#include "xmalloc.h"
 #endif
 
+#ifndef HAVE_XGETCWD
+extern char *xgetcwd (void);
+#endif
 
-#endif /* __XMALLOC_H__ */
+#ifndef HAVE_GETOPT_LONG
+#include "getopt.h"
+#endif
+
+#endif /* __LIBPRINTUT_H__ */

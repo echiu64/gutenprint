@@ -24,6 +24,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+#include "../lib/libprintut.h"
 #include<stdio.h>
 #include<stdlib.h>
 #include<limits.h>
@@ -104,40 +105,6 @@ line_type **page=NULL;
 /* sequential to Epson2 */
 #define ep2color(c)  ({0,1,2,4,257,258}[c])
 
-
-void *mycalloc(size_t count,size_t size){
-  void *p;
-  if ((p=calloc(count,size))) {
-    return(p);
-  }
-
-  fprintf(stderr,"Buy some RAM, dude!\n");
-  exit(-1);
-  return (NULL); /* MRS: Suppress compiler warnings... */
-}
-
-void *mymalloc(size_t size){
-  void *p;
-  if ((p=malloc(size))) {
-    return(p);
-  }
-
-  fprintf(stderr,"Buy some RAM, dude!\n");
-  exit(-1);
-  return (NULL); /* MRS: Suppress compiler warnings... */
-}
-
-void *myrealloc(void *ptr, size_t size){
-  void *p;
-
-  if ((p=realloc(ptr,size))||(size==0)) {
-    return(p);
-  }
-
-  fprintf(stderr,"Buy some RAM, dude!\n");
-  exit(-1);
-  return (NULL); /* MRS: Suppress compiler warnings... */
-}
 
 int get_bits(unsigned char *p,int index) {
 
@@ -225,7 +192,7 @@ void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color
 
   oldstop=p->stopx[color];
   p->stopx[color]=(stopl>p->stopx[color])?stopl:p->stopx[color];
-  p->line[color]=myrealloc(p->line[color],((p->stopx[color]-p->startx[color]+1)*pstate.bpp+7)/8);
+  p->line[color]=xrealloc(p->line[color],((p->stopx[color]-p->startx[color]+1)*pstate.bpp+7)/8);
   memset(p->line[color]+((oldstop-p->startx[color]+1)*pstate.bpp+7)/8,0,
           ((p->stopx[color]-p->startx[color]+1)*pstate.bpp+7)/8-
           ((oldstop-p->startx[color]+1)*pstate.bpp+7)/8);
@@ -452,7 +419,7 @@ int update_page(unsigned char *buf, /* I - pixel data               */
      * with an ESC @ and allocate the default page.  Otherwise, we'll
      * have unpredictable results.  But, that's a pretty acurate statement
      * for a real printer, too!  */
-    page=(line_type **)mycalloc(pstate.bottom_margin, sizeof(line_type *));
+    page=(line_type **)xcalloc(pstate.bottom_margin, sizeof(line_type *));
   }
   for (mi=0,y=pstate.yposition;
        y<pstate.yposition+m*(pstate.microweave?1:pstate.nozzle_separation);
@@ -465,7 +432,7 @@ int update_page(unsigned char *buf, /* I - pixel data               */
     if (left_white==n)
       continue; /* ignore blank lines */
     if (!(page[y])) {
-      page[y]=(line_type *) mycalloc(sizeof(line_type),1);
+      page[y]=(line_type *) xcalloc(sizeof(line_type),1);
     }
     if ((left_white*pstate.bpp<8)&&(skip==1)) {
       left_white=0; /* if it's just a few bits, don't bother cropping */
@@ -481,7 +448,7 @@ int update_page(unsigned char *buf, /* I - pixel data               */
     }
     page[y]->startx[color]=pstate.xposition+left_white*skip;
     page[y]->stopx[color]=pstate.xposition+((n-1-right_white)*skip);
-    page[y]->line[color]=(unsigned char *) mycalloc(sizeof(unsigned char),
+    page[y]->line[color]=(unsigned char *) xcalloc(sizeof(unsigned char),
      (((page[y]->stopx[color]-page[y]->startx[color])*skip+1)*pstate.bpp+7)/8);
     expand_line(buf+mi*((n*pstate.bpp+7)/8),page[y]->line[color],
                 page[y]->stopx[color]-page[y]->startx[color]+1,skip,left_white);
@@ -823,7 +790,7 @@ void parse_escp2(FILE *fp_r){
                        pstate.page_height) {
                     pstate.page_height=pstate.top_margin+pstate.bottom_margin;
                   }
-                  page=(line_type **)mycalloc(pstate.bottom_margin,
+                  page=(line_type **)xcalloc(pstate.bottom_margin,
                                   sizeof(line_type *));
                   /* FIXME: what is cut sheet paper??? */
                 }
@@ -1156,7 +1123,7 @@ void parse_canon(FILE *fp_r){
 	       pstate.relative_horizontal_units,
 	       pstate.relative_vertical_units);
 
-       page=(line_type **)mycalloc(pstate.bottom_margin,sizeof(line_type *));
+       page=(line_type **)xcalloc(pstate.bottom_margin,sizeof(line_type *));
        break;
      case 'e': /* 0x65 - vertical head movement */
        pstate.yposition+= (buf[1]+256*buf[0]);

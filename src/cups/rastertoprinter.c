@@ -334,7 +334,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 
     if (cups.row < cups.header.cupsHeight)
     {
-      if ((buffer = malloc(cups.header.cupsBytesPerLine)) == NULL)
+      if ((buffer = xmalloc(cups.header.cupsBytesPerLine)) == NULL)
         break;
 
       while (cups.row < cups.header.cupsHeight)
