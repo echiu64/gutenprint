@@ -1284,6 +1284,8 @@ verify_param(const char *checkval, stp_param_t *vptr,
 	  stp_free((void *)vptr[i].text);
 	}
     }
+  else
+    stp_eprintf(v, "%s is not a valid %s\n", checkval, what);
   if (vptr)
     free(vptr);
   return answer;
