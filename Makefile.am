@@ -92,8 +92,8 @@ uninstall-libexecPROGRAMS: $(libexec_PROGRAMS)
 
 .PHONY: files ghost ChangeLog force_aclocal
 
-#ChangeLog:
-#	cvs log | perl ./mkchlog > ChangeLog
+ChangeLog:
+	cvs log | perl ./mkchlog > ChangeLog
 
 files:
 	@files=`ls $(DISTFILES) 2> /dev/null`; for p in $$files; do \
