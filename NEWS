@@ -1271,6 +1271,7 @@ HP DeskJet 1600C
 HP DeskJet 2000 series
 HP DeskJet 2500 series
 HP LaserJet II series
+HP LaserJet IIP series
 HP LaserJet III series
 HP LaserJet 4 series
 HP LaserJet 4V, 4Si
@@ -1547,8 +1548,14 @@ HP Business Inkjet 2250TN      pcl-900         HP DeskJet 900 series
 HP Business Inkjet 2280        pcl-900         HP DeskJet 900 series
 HP Color Inkjet Printer CP1160 pcl-900         HP DeskJet 900 series
 HP Color Inkjet Printer CP1700 pcl-900         HP DeskJet 900 series
+HP Color LaserJet 5            pcl-3           HP LaserJet III series
+HP Color LaserJet 2500         pcl-4           HP LaserJet 4 series
+HP Color LaserJet 4500         pcl-4           HP LaserJet 4 series
 HP Color LaserJet 4550         pcl-4           HP LaserJet 4 series
+HP Color LaserJet 4600         pcl-4           HP LaserJet 4 series
 HP Color LaserJet 5000         pcl-4           HP LaserJet 4 series
+HP Color LaserJet 5500         pcl-4           HP LaserJet 4 series
+HP Color LaserJet 8550GN       pcl-4           HP LaserJet 4 series
 HP DesignJet 230               pcl-desnj-230   HP DesignJet 230
 HP DesignJet 250C              pcl-desnj-250   HP DesignJet 250
 HP DesignJet 430               pcl-desnj-430   HP DesignJet 430
@@ -1646,11 +1653,12 @@ HP DeskJet 5550                pcl-900         HP DeskJet 900 series
 HP DeskJet 5551                pcl-900         HP DeskJet 900 series
 HP DeskJet 6122                pcl-900         HP DeskJet 900 series
 HP DeskJet 6127                pcl-900         HP DeskJet 900 series
+HP DeskJet 9300                pcl-900         HP DeskJet 900 series
 HP E-printer E20               pcl-601         HP DeskJet 600 series
 HP LaserJet 2                  pcl-2           HP LaserJet II series
 HP LaserJet 2D                 pcl-2           HP LaserJet II series
-HP LaserJet 2P                 pcl-2           HP LaserJet II series
-HP LaserJet 2P Plus            pcl-2           HP LaserJet II series
+HP LaserJet 2P                 pcl-2p          HP LaserJet IIP series
+HP LaserJet 2P Plus            pcl-2p          HP LaserJet IIP series
 HP LaserJet 3                  pcl-3           HP LaserJet III series
 HP LaserJet 3D                 pcl-3           HP LaserJet III series
 HP LaserJet 3P w/ PCL5         pcl-4l          HP LaserJet 4L
@@ -1665,10 +1673,13 @@ HP LaserJet 4Si                pcl-4           HP LaserJet 4 series
 HP LaserJet 4V                 pcl-4v          HP LaserJet 4V, 4Si
 HP LaserJet 5                  pcl-5           HP LaserJet 5 series
 HP LaserJet 5L                 pcl-4           HP LaserJet 4 series
+HP LaserJet 5M                 pcl-4           HP LaserJet 4 series
+HP LaserJet 5MP                pcl-4           HP LaserJet 4 series
 HP LaserJet 5P                 pcl-5           HP LaserJet 5 series
 HP LaserJet 5Si                pcl-5si         HP LaserJet 5Si
 HP LaserJet 6                  pcl-6           HP LaserJet 6 series
 HP LaserJet 6L                 pcl-4           HP LaserJet 4 series
+HP LaserJet 6MP                pcl-4           HP LaserJet 4 series
 HP LaserJet 6P                 pcl-4           HP LaserJet 4 series
 HP LaserJet 1100               pcl-6           HP LaserJet 6 series
 HP LaserJet 1100A              pcl-6           HP LaserJet 6 series
@@ -1677,11 +1688,17 @@ HP LaserJet 1200               pcl-6           HP LaserJet 6 series
 HP LaserJet 1220               pcl-6           HP LaserJet 6 series
 HP LaserJet 1300               pcl-6           HP LaserJet 6 series
 HP LaserJet 2100               pcl-6           HP LaserJet 6 series
+HP LaserJet 2100M              pcl-6           HP LaserJet 6 series
 HP LaserJet 2200               pcl-6           HP LaserJet 6 series
 HP LaserJet 2300               pcl-6           HP LaserJet 6 series
 HP LaserJet 3200               pcl-6           HP LaserJet 6 series
 HP LaserJet 3200m              pcl-6           HP LaserJet 6 series
 HP LaserJet 3200se             pcl-6           HP LaserJet 6 series
+HP LaserJet 3300 MFP           pcl-6           HP LaserJet 6 series
+HP LaserJet 3310 MFP           pcl-6           HP LaserJet 6 series
+HP LaserJet 3320 MFP           pcl-6           HP LaserJet 6 series
+HP LaserJet 3320N MFP          pcl-6           HP LaserJet 6 series
+HP LaserJet 3330 MFP           pcl-6           HP LaserJet 6 series
 HP LaserJet 4000               pcl-6           HP LaserJet 6 series
 HP LaserJet 4050               pcl-6           HP LaserJet 6 series
 HP LaserJet 4100               pcl-6           HP LaserJet 6 series
@@ -1693,6 +1710,8 @@ HP LaserJet 8000               pcl-6           HP LaserJet 6 series
 HP LaserJet 8100               pcl-6           HP LaserJet 6 series
 HP LaserJet 8150               pcl-6           HP LaserJet 6 series
 HP LaserJet 9000               pcl-6           HP LaserJet 6 series
+HP Mopier 240                  pcl-6           HP LaserJet 6 series
+HP Mopier 320                  pcl-6           HP LaserJet 6 series
 HP OfficeJet                   pcl-520         HP DeskJet 520
 HP OfficeJet 300               pcl-520         HP DeskJet 520
 HP OfficeJet 330               pcl-520         HP DeskJet 520
@@ -1711,7 +1730,14 @@ HP OfficeJet 700               pcl-690         HP DeskJet 690 series
 HP OfficeJet 710               pcl-690         HP DeskJet 690 series
 HP OfficeJet 720               pcl-690         HP DeskJet 690 series
 HP OfficeJet 725               pcl-690         HP DeskJet 690 series
+HP OfficeJet 5105              pcl-900         HP DeskJet 900 series
+HP OfficeJet 5110              pcl-900         HP DeskJet 900 series
+HP OfficeJet 5110xi            pcl-900         HP DeskJet 900 series
+HP OfficeJet 6105              pcl-900         HP DeskJet 900 series
 HP OfficeJet 6110              pcl-900         HP DeskJet 900 series
+HP OfficeJet 7110              pcl-900         HP DeskJet 900 series
+HP OfficeJet 7130              pcl-900         HP DeskJet 900 series
+HP OfficeJet 7140              pcl-900         HP DeskJet 900 series
 HP OfficeJet D125              pcl-900         HP DeskJet 900 series
 HP OfficeJet D135              pcl-900         HP DeskJet 900 series
 HP OfficeJet D145              pcl-900         HP DeskJet 900 series
@@ -1720,7 +1746,9 @@ HP OfficeJet G55               pcl-900         HP DeskJet 900 series
 HP OfficeJet G85               pcl-900         HP DeskJet 900 series
 HP OfficeJet G95               pcl-900         HP DeskJet 900 series
 HP OfficeJet K60               pcl-900         HP DeskJet 900 series
+HP OfficeJet K60xi             pcl-900         HP DeskJet 900 series
 HP OfficeJet K80               pcl-900         HP DeskJet 900 series
+HP OfficeJet K80xi             pcl-900         HP DeskJet 900 series
 HP OfficeJet LX                pcl-520         HP DeskJet 520
 HP OfficeJet Pro 1150C         pcl-850         HP DeskJet 850C
 HP OfficeJet Pro 1170C         pcl-890         HP DeskJet 890C
@@ -1733,6 +1761,10 @@ HP OfficeJet R80               pcl-810         HP DeskJet 810C
 HP OfficeJet T45               pcl-810         HP DeskJet 810C
 HP OfficeJet T65               pcl-810         HP DeskJet 810C
 HP OfficeJet V40               pcl-900         HP DeskJet 900 series
+HP OfficeJet V40xi             pcl-900         HP DeskJet 900 series
+HP PhotoSmart P100             pcl-900         HP DeskJet 900 series
+HP PhotoSmart P130             pcl-900         HP DeskJet 900 series
+HP PhotoSmart P230             pcl-900         HP DeskJet 900 series
 HP PhotoSmart P1000            pcl-P1000       HP PhotoSmart P1000
 HP PhotoSmart P1100            pcl-P1100       HP PhotoSmart P1100
 HP PhotoSmart P1115            pcl-900         HP DeskJet 900 series
@@ -1740,6 +1772,7 @@ HP PhotoSmart P1215            pcl-900         HP DeskJet 900 series
 HP PhotoSmart P1218            pcl-900         HP DeskJet 900 series
 HP PhotoSmart P1315            pcl-900         HP DeskJet 900 series
 HP PhotoSmart 7150             pcl-900         HP DeskJet 900 series
+HP PhotoSmart 7345             pcl-900         HP DeskJet 900 series
 HP PhotoSmart 7350             pcl-900         HP DeskJet 900 series
 HP PhotoSmart 7550             pcl-900         HP DeskJet 900 series
 HP PSC 370                     pcl-690         HP DeskJet 690 series
@@ -1747,6 +1780,7 @@ HP PSC 380                     pcl-690         HP DeskJet 690 series
 HP PSC 500                     pcl-810         HP DeskJet 810C
 HP PSC 750                     pcl-900         HP DeskJet 900 series
 HP PSC 950                     pcl-900         HP DeskJet 900 series
+HP PSC 950xi                   pcl-900         HP DeskJet 900 series
 HP PSC 2110                    pcl-900         HP DeskJet 900 series
 HP PSC 2150                    pcl-900         HP DeskJet 900 series
 HP PSC 2210                    pcl-900         HP DeskJet 900 series
@@ -1757,17 +1791,50 @@ IBM Page Printer 3112          pcl-4           HP LaserJet 4 series
 Infotec 4651 MF                pcl-6           HP LaserJet 6 series
 Kyocera F-1010                 pcl-2           HP LaserJet II series
 Kyocera FS-600                 pcl-4           HP LaserJet 4 series
+Kyocera FS-600 KPDL 2          pcl-4           HP LaserJet 4 series
 Kyocera FS-680                 pcl-4           HP LaserJet 4 series
+Kyocera FS-800                 pcl-4           HP LaserJet 4 series
 Kyocera FS-1000                pcl-4           HP LaserJet 4 series
 Kyocera FS-1000+               pcl-4           HP LaserJet 4 series
 Kyocera FS-1010                pcl-4           HP LaserJet 4 series
+Kyocera FS-1050                pcl-4           HP LaserJet 4 series
+Kyocera FS-1200                pcl-4           HP LaserJet 4 series
+Kyocera FS-1600                pcl-4           HP LaserJet 4 series
+Kyocera FS-1600+               pcl-4           HP LaserJet 4 series
+Kyocera FS-1700                pcl-4           HP LaserJet 4 series
+Kyocera FS-1700+               pcl-4           HP LaserJet 4 series
+Kyocera FS-1750                pcl-4           HP LaserJet 4 series
 Kyocera FS-1800                pcl-4           HP LaserJet 4 series
+Kyocera FS-1800+               pcl-4           HP LaserJet 4 series
 Kyocera FS-1900                pcl-4           HP LaserJet 4 series
 Kyocera FS-3500                pcl-3           HP LaserJet III series
+Kyocera FS-3600                pcl-4           HP LaserJet 4 series
+Kyocera FS-3600+               pcl-4           HP LaserJet 4 series
+Kyocera FS-3700                pcl-4           HP LaserJet 4 series
+Kyocera FS-3700+               pcl-4           HP LaserJet 4 series
 Kyocera FS-3750                pcl-6           HP LaserJet 6 series
 Kyocera FS-3800                pcl-4           HP LaserJet 4 series
+Kyocera FS-5800C               pcl-4           HP LaserJet 4 series
+Kyocera FS-5900C               pcl-4           HP LaserJet 4 series
+Kyocera FS-6500                pcl-3           HP LaserJet III series
+Kyocera FS-6500+               pcl-3           HP LaserJet III series
+Kyocera FS-6700                pcl-4           HP LaserJet 4 series
+Kyocera FS-7000                pcl-4           HP LaserJet 4 series
+Kyocera FS-7000+               pcl-4           HP LaserJet 4 series
+Kyocera FS-8000C               pcl-4           HP LaserJet 4 series
+Kyocera FS-9000                pcl-4           HP LaserJet 4 series
 Kyocera FS-9100DN              pcl-4           HP LaserJet 4 series
 Kyocera FS-9500DN              pcl-4           HP LaserJet 4 series
+Kyocera KM-1530                pcl-4           HP LaserJet 4 series
+Kyocera KM-1810                pcl-4           HP LaserJet 4 series
+Kyocera KM-2030                pcl-4           HP LaserJet 4 series
+Kyocera KM-2530                pcl-4           HP LaserJet 4 series
+Kyocera KM-3530                pcl-4           HP LaserJet 4 series
+Kyocera KM-4230                pcl-4           HP LaserJet 4 series
+Kyocera KM-4530                pcl-4           HP LaserJet 4 series
+Kyocera KM-5230                pcl-4           HP LaserJet 4 series
+Kyocera KM-5530                pcl-4           HP LaserJet 4 series
+Kyocera KM-6230                pcl-4           HP LaserJet 4 series
 Lexmark 4076                   lexmark-4076    Lexmark 4076
 Lexmark Optra E                pcl-4           HP LaserJet 4 series
 Lexmark Optra E+               pcl-4           HP LaserJet 4 series
@@ -1816,8 +1883,11 @@ Ricoh Aficio 700               pcl-4           HP LaserJet 4 series
 Samsung ML-85                  pcl-4           HP LaserJet 4 series
 Samsung ML-4600                pcl-6           HP LaserJet 6 series
 Samsung ML-5000a               pcl-4           HP LaserJet 4 series
-Samsung ML-6000/6100           pcl-4           HP LaserJet 4 series
-Samsung ML-7000/7000P/7000N    pcl-6           HP LaserJet 6 series
+Samsung ML-6000                pcl-4           HP LaserJet 4 series
+Samsung ML-6100                pcl-4           HP LaserJet 4 series
+Samsung ML-7000                pcl-6           HP LaserJet 6 series
+Samsung ML-7000N               pcl-6           HP LaserJet 6 series
+Samsung ML-7000P               pcl-6           HP LaserJet 6 series
 Samsung ML-7050                pcl-6           HP LaserJet 6 series
 Samsung QL-5100A               pcl-4           HP LaserJet 4 series
 Samsung QL-6050                pcl-4           HP LaserJet 4 series
@@ -1828,6 +1898,7 @@ Star LS-04                     pcl-2           HP LaserJet II series
 Star LaserPrinter 8            pcl-2           HP LaserJet II series
 Tally MT908                    pcl-3           HP LaserJet III series
 Xerox Able 1406                pcl-4           HP LaserJet 4 series
+Xerox DocuPrint C20            pcl-4           HP LaserJet 4 series
 Xerox DocuPrint P8e            pcl-4           HP LaserJet 4 series
 Xerox DocuPrint P12            pcl-2           HP LaserJet II series
 Xerox DocuPrint P1202          pcl-6           HP LaserJet 6 series
