@@ -33,7 +33,7 @@ NONGIMP_DISTDIRS =
 NONGIMP_SUBDIRS = test
 NONGIMP_DISTDIRS = debian
 ## @-@-@-@-@ YES-GIMP @-@-@-@-@
-SUBDIRS = doc include intl lib man src samples $(NONGIMP_SUBDIRS) po
+SUBDIRS = include intl lib man src samples $(NONGIMP_SUBDIRS) po doc
 DISTDIRS = scripts $(NONGIMP_DISTDIRS)
 
 if MAINTAINER_MODE

@@ -767,7 +767,7 @@ do_nozzle_check(void)
   exit(do_print_cmd());
 }
 
-const char new_align_help[] = N_("\
+const char *new_align_help = N_("\
 Please read these instructions very carefully before proceeding.\n\
 \n\
 This utility lets you align the print head of your Epson Stylus inkjet\n\
@@ -802,7 +802,7 @@ settings, but powering the printer off and back on will.  If you quit,\n\
 you must repeat the entire process if you wish to later save the results.\n\
 It is essential that you not turn your printer off during this procedure.\n\n");
 
-const char old_align_help[] = N_("\
+const char *old_align_help = N_("\
 Please read these instructions very carefully before proceeding.\n\
 \n\
 This utility lets you align the print head of your Epson Stylus inkjet\n\
@@ -1092,7 +1092,7 @@ do_align(void)
   goto read_final;
 }
 
-const char color_align_help[] = N_("\
+const char *color_align_help = N_("\
 Please read these instructions very carefully before proceeding.\n\
 \n\
 This utility lets you align the color print head of your Epson Stylus inkjet\n\
