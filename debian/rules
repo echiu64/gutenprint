@@ -113,17 +113,26 @@ debian/control: debian/changelog debian/control.in
 	sed -e "s/#UPSTREAM_VERSION#/$(UPSTREAM_VERSION)/g" <debian/control.in >debian/control
 
 # Make sure that configure is up-to-date.
-configure: configure.in
+configure: configure.in scripts/install-sh
 	if test -f configure.in ; then \
-          autoconf ; \
-	fi
-
-configure.in:
-	if test -f configure.in ; then \
-	  if test -f scripts/autogen.sh ; then \
-	    /bin/sh scripts/autogen.sh --version ; \
+	  if test -f autogen.sh ; then \
+	    /bin/sh autogen.sh --version ; \
 	  fi \
 	fi
+	
+configure.in: configure.in.in
+	if test -f configure.in.in ; then \
+	  if test -f autogen.sh ; then \
+	    /bin/sh autogen.sh --version ; \
+	  fi \
+	fi
+
+scripts/install-sh:
+	if test -f autogen.sh ; then \
+	  /bin/sh autogen.sh --version ; \
+	fi
+
+configure.in.in:
 
 ChangeLog:
 	$(MAKE) -f debian/gimp-print-build/Makefile top_srcdir=`/bin/pwd` ChangeLog
