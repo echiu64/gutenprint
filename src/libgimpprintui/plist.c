@@ -408,7 +408,7 @@ stpui_plist_add(const stpui_plist_t *key, int add_only)
       if (stp_get_printer(key->v))
 	{
 #ifdef DEBUG
-	  printf("Updated File printer directly\n");
+	  fprintf(stderr, "Updated File printer directly\n");
 #endif
 	  p = &stpui_plist[0];
 	  stpui_plist_copy(p, key);
@@ -437,7 +437,7 @@ stpui_plist_add(const stpui_plist_t *key, int add_only)
 	  if (add_only)
 	    return 0;
 #ifdef DEBUG
-	  printf("Updating printer %s.\n", key->name);
+	  fprintf(stderr, "Updating printer %s.\n", key->name);
 #endif
 	  stpui_plist_copy(p, key);
 	}
@@ -568,7 +568,7 @@ stpui_printrc_load_v1(FILE *fp)
 	}
       *end = '\0';
 #ifdef DEBUG
-      printf("Keyword = `%s', value = `%s'\n", keyword, value);
+      fprintf(stderr, "Keyword = `%s', value = `%s'\n", keyword, value);
 #endif
       if (strcasecmp("current-printer", keyword) == 0)
 	{
@@ -581,7 +581,8 @@ stpui_printrc_load_v1(FILE *fp)
 	  /* Switch to printer named VALUE */
 	  stpui_plist_add(&key, 0);
 #ifdef DEBUG
-	  printf("output_to is now %s\n", stpui_plist_get_output_to(&key));
+	  fprintf(stderr,
+		  "output_to is now %s\n", stpui_plist_get_output_to(&key));
 #endif
 
 	  stp_vars_free(key.v);
@@ -744,8 +745,8 @@ stpui_printrc_load(void)
 	  if (strncmp("#PRINTRCv", line, 9) == 0)
 	    {
 #ifdef DEBUG
-	      printf("Found printrc version tag: `%s'\n", line);
-	      printf("Version number: `%s'\n", &(line[9]));
+	      fprintf(stderr, "Found printrc version tag: `%s'\n", line);
+	      fprintf(stderr, "Version number: `%s'\n", &(line[9]));
 #endif
 	      (void) sscanf(&(line[9]), "%d", &format);
 	    }
@@ -900,7 +901,7 @@ stpui_printrc_save(void)
       fclose(fp);
     }
   else
-    fprintf(stderr,"could not open printrc file \"%s\"\n",filename);
+    fprintf(stderr, "could not open printrc file \"%s\"\n",filename);
 }
 
 /*
