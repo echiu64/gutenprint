@@ -1,4 +1,4 @@
-Print plugin for the Gimp.  Version 3.0 by Robert Krawitz
+Print plugin for the Gimp.  Version 3.1 by Robert Krawitz
 <rlk@alum.mit.edu> based on version 2.0 by Michael Sweet
 <mike@easysw.com>.
 
@@ -67,7 +67,8 @@ Some tips on tuning the output:
   will create acceptable images.  You may find that you want different
   settings for different images.
 
-* One group of settings you might want to start with is:
+* One group of settings you might want to start with for the Epson
+  Stylus Photo is:
 
   Gamma 1.5
   Brightness 40
@@ -80,4 +81,4 @@ plugin, without reference to a Gimp source tree.
 
 Enjoy!
 
--Robert Krawitz, January 8, 2000
+-Robert Krawitz, January 19, 2000

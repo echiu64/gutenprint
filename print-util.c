@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.53  2000/01/21 00:18:59  rlk
+ *   Describe the algorithms in print-util.c.
+ *
  *   Revision 1.52  2000/01/17 22:23:31  rlk
  *   Print 3.1.0
  *
@@ -324,6 +327,156 @@ error_t *nerror = 0;
 
 
 int	error[ERROR_ROWS][NCOLORS][MAX_WIDTH*MAX_BPI+1];
+
+/*
+ * Dithering functions!
+ *
+ * We currently have four dithering functions:
+ *
+ * 1) dither_black produces a single level of black from grayscale input.
+ *    This is used by most printers when printing grayscale.
+ *
+ * 2) dither_cmyk produces 3, 4, 6, or 7 color output (actually, it can
+ *    deal with any combination of dark and light colored inks, but not a
+ *    "light black" ink, although that would be nice :-) ).
+ *
+ * 3) dither_black4 produces four levels of black (corresponding to three
+ *    dot sizes and no ink).  This was originally written by Mike Sweet
+ *    for various HP printers, but it's useful for some of the newer Epson
+ *    Stylus printers, too.  THIS HAS NOT BEEN TESTED IN 3.1.
+ *
+ * 4) dither_cmyk4 does likewise for color output.  THIS HAS NOT BEEN TESTED
+ *    IN 3.1.
+ *
+ * Many of these routines (in particular dither_cmyk and the 4-level functions)
+ * have constants hard coded that are tuned for particular printers.  Needless
+ * to say, this must go.
+ *
+ * The dithering algorithm is a basic error diffusion, with a few tweaks of
+ * my own.  Error diffusion works by taking the output error at a given pixel
+ * and "diffusing" it into surrounding pixels.  Output error is the difference
+ * between the amount of ink output and the input level at each pixel.  For
+ * simple printers, with one or four ink colors and only one dot size, the
+ * amount of ink output is either 65536 (i. e. full output) or 0 (no output).
+ * The difference between this and the input level is the error.  Normal
+ * error diffusion adds part of this error to the adjoining pixels in the
+ * next column and the next row (the algorithm simply scans each row in turn,
+ * never backing up).  The error adds up until it reaches a threshold (half of
+ * the full output level, or 32768), at which point a dot is output, the
+ * output is subtracted from the current value, and the (now negative) error
+ * is diffused similarly.
+ *
+ * Handling multiple output levels makes life a bit more complicated.  In
+ * principle, it shouldn't be much harder: simply figure out what the ratio
+ * between the available output levels is and have multiple thresholds.
+ * In practice, getting these right involves a lot of trial and error.  The
+ * other thing that's important is to maximize the number of dots that have
+ * some ink.  This will reduce the amount of speckling.  More on this later.
+ *
+ * The next question: how do we handle black when printing in color?  Black
+ * ink is much darker than colored inks.  It's possible to produce black by
+ * adding some mixture of cyan, magenta, and yellow -- in principle.  In
+ * practice, the black really isn't very black, and different inks and
+ * different papers will produce different color casts.  However, by using
+ * CMY to produce gray, we can output a lot more dots!  This makes for a much
+ * smoother image.  What's more, one cyan, one magenta, and one yellow dot
+ * produce less darkness than one black dot, so we're outputting that many
+ * more dots.  Better yet, with 6 or 7 color printers, we have to output even
+ * more light ink dots.  So Epson Stylus Photo printers can produce really
+ * smooth grays -- if we do everything right.  The right idea is to use
+ * CMY at lower black levels, and gradually mix in black as the overall
+ * amount of ink increases, so the black dots don't really become visible
+ * within the ink mass.
+ *
+ * I stated earlier that I've tweaked the basic error diffusion algorithm.
+ * Here's what I've done to improve it:
+ *
+ * 1) We use a randomized threshold to decide when to print.  This does
+ *    two things for us: it reduces the slightly squiggly diagonal lines
+ *    that are the mark of error diffusion; and it allows us to lay down
+ *    some ink even in very light areas near the edge of the image.
+ *    The squiggly lines that error diffusion algorithms tend to generate
+ *    are caused by the gradual accumulation of error.  This error is
+ *    partially added horizontally and partially vertically.  The horizontal
+ *    accumulation results in a dot eventually being printed.  The vertical
+ *    accumulation results in a dot getting laid down in roughly the same
+ *    horizontal position in the next row.  The diagonal squigglies result
+ *    from the error being added to pixels one forward and one below the
+ *    current pixel; these lines slope from the top right to the bottom left
+ *    of the image.
+ *
+ *    Error diffusion also results in pale areas being completely white near
+ *    the top left of the image (the origin of the printing coordinates).
+ *    This is because enough error has to accumulate for anything at all to
+ *    get printed.
+ *
+ *    Randomizing the threshold somewhat breaks up the diagonals to some
+ *    degree by randomizing the exact location that the accumulated output
+ *    crosses the threshold.  It reduces the false white areas by allowing
+ *    some dots to be printed even when the accumulated output level is very
+ *    low.  It doesn't result in excess ink because the full output level
+ *    is still subtracted and diffused.
+ *
+ * 2) Alternating scan direction between rows (first row is scanned left to
+ *    right, second is scanned right to left, and so on).  This also helps
+ *    break up white areas, and it also seems to break up squigglies a bit.
+ *    Furthermore, it eliminates directional biases in the horizontal
+ *    direction.
+ *
+ * 3) Diffusing the error into more pixels.  Instead of diffusing the entire
+ *    error into (X+1, Y) and (X, Y+1), we diffuse it into (X+1, Y),
+ *    (X+K, Y+1), (X, Y+1), (X-K, Y+1) where K depends upon the output level
+ *    (it never exceeds about 5 dots, and is greater at higher output
+ *    levels).  This really reduces squigglies and graininess.
+ *
+ * 4) Don't lay down any colored ink if we're laying down black ink.  There's
+ *    no point; the colored ink won't show.  We still pretend that we did
+ *    for purposes of error diffusion (otherwise excessive error will build
+ *    up, and will take a long time to clear, resulting in heavy bleeding of
+ *    ink into surrounding areas, which is very ugly indeed), but we don't
+ *    bother wasting the ink.
+ *
+ * 5) Oversampling.  This is how to print 1440x720 with Epson Stylus printers.
+ *    Printing full density at 1440x720 will result in excess ink being laid
+ *    down.  The trick is to print only every other dot.  We still compute
+ *    the error as though we printed every dot.  It turns out that
+ *    randomizing which dots are printed results in very speckled output.
+ *
+ * What about multiple output levels?  For 6 and 7 color printers, simply
+ * using different threshold levels has a problem: the pale inks have trouble
+ * being seen when a lot of darker ink is being printed.  So rather than
+ * just using the output level of the particular color to decide which ink
+ * to print, we look at the total density (sum of all output levels).
+ * If the density's high enough, we prefer to use the dark ink.  Speckling
+ * is less visible when there's a lot of ink, anyway.  I haven't yet figured
+ * out what to do for multiple levels of one color.
+ *
+ * Speaking of 6 colors a bit more, I also determined (empirically!) that
+ * simply subtracting the appropriate output level (full for the dark ink,
+ * partial for the light ink) results in speckling.  Why?  Well, after printing
+ * a dark dot, it takes longer to "recharge" the output level than after
+ * printing a light dot.  What I do instead is compute a probability of
+ * printing either a light or a dark dot when I exceed the threshold.  Picking
+ * a random number decides which color ink to lay down.  However, rather than
+ * subtracting the level appropriate for what I printed, I subtract a scaled
+ * amount between the two levels.  The amount is scaled by the probability:
+ * (L + P * (D - L)) where L is the light level, P is the probability of
+ * printing dark, D is the dark level.  This also results in smoother output.
+ *
+ * You'll note that I haven't quoted a single source on color or printing
+ * theory.  I simply did all of this empirically.
+ *
+ * There are various other tricks to reduce speckling.  One that I've seen
+ * is to reduce the amount of ink printed in regions where one color
+ * (particularly cyan, which is perceived as the darkest) is very pale.
+ * This does reduce speckling all right, but it also results in strange
+ * tonal curves and weird (to my eye) colors.
+ *
+ * Another, better trick is to print fixed patterns corresponding to given
+ * output levels (basically a patterned screen).  This is probably much
+ * better, but it's harder to get right in areas of rapidly varying color
+ * and probably requires more lookup tables.  But it might be worth a shot.
+ */
 
 /*
  * 'dither_black()' - Dither grayscale pixels to black.
