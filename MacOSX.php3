@@ -120,7 +120,7 @@ require('standard_html_header.php3');
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 4.2.5 is the newest final release for Mac OS X; it includes 197
+ Gimp-Print 4.2.5 is the newest stable release for Mac OS X; it includes 197
  drivers supporting over 511 printers. The disk-image file includes an OS X
  installer package plus illustrated documentation to easily guide you through
  the printer set-up process. This package requires (but does not include) ESP
