@@ -32,11 +32,5 @@ src/gimp/gimp_main_window.c
 src/gimp/print-image-gimp.c
 src/gimp/print.c
 
-# Test sources
-test/escp2-weavetest.c
-test/pcl-unprint.c
-test/testdither.c
-test/unprint.c
-
 # Foomatic-related sources
 src/foomatic/printer_options.c
