@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GIMP Print\n"
-"POT-Creation-Date: 2003-05-11 08:50-0400\n"
+"POT-Creation-Date: 2003-05-22 21:30-0400\n"
 "PO-Revision-Date: 2002-05-20 18:08+0100\n"
 "Last-Translator: Zdenko Podobný <zdpo@mailbox.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -35,19 +35,16 @@ msgstr "%s: voµba `%c%s' nedovoµuje pou¾i» argument\n"
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: voµba `%s' vy¾aduje argument\n"
 
-#. --option
 #: lib/getopt.c:758
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: neznáma voµba `--%s'\n"
 
-#. +option or -option
 #: lib/getopt.c:762
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: neznáma voµba `%c%s'\n"
 
-#. 1003.2 specifies the format of this message.
 #: lib/getopt.c:788
 #, c-format
 msgid "%s: illegal option -- %c\n"
@@ -58,7 +55,6 @@ msgstr "%s: neplatná voµba -- %c\n"
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: neplatná voµba -- %c\n"
 
-#. 1003.2 specifies the format of this message.
 #: lib/getopt.c:821 lib/getopt.c:951
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
@@ -74,8 +70,6 @@ msgstr "%s: voµba `-W %s` je viacznaèná\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: voµba `-W %s' nedovoµuje pou¾i» argument\n"
 
-#. Note to translators: "EvenTone" is the proper name, rather than a
-#. descriptive name, of this algorithm.
 #: src/main/dither-main.c:45
 #, fuzzy
 msgid "EvenTone"
@@ -360,9 +354,9 @@ msgstr "Veµkos»"
 msgid "Size of the paper being printed to"
 msgstr "Veµkos» papiera, na ktorý chcete tlaèi»"
 
-#: src/cups/genppd.c:996 src/main/print-canon.c:1281 src/main/print-escp2.c:89
+#: src/main/print-canon.c:1281 src/main/print-escp2.c:89
 #: src/main/print-lexmark.c:294 src/main/print-pcl.c:1505
-#: src/main/print-ps.c:73
+#: src/main/print-ps.c:73 src/cups/genppd.c:996
 msgid "Media Type"
 msgstr "Typ média"
 
@@ -372,9 +366,9 @@ msgstr "Typ média"
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr ""
 
-#: src/cups/genppd.c:1020 src/main/print-canon.c:1287
-#: src/main/print-escp2.c:95 src/main/print-lexmark.c:300
-#: src/main/print-pcl.c:1511 src/main/print-ps.c:79
+#: src/main/print-canon.c:1287 src/main/print-escp2.c:95
+#: src/main/print-lexmark.c:300 src/main/print-pcl.c:1511
+#: src/main/print-ps.c:79 src/cups/genppd.c:1020
 msgid "Media Source"
 msgstr "Zdroj média"
 
@@ -397,9 +391,9 @@ msgstr "Typ atramentu"
 msgid "Type of ink in the printer"
 msgstr "Typ atramentu tlaèiarne"
 
-#: src/cups/genppd.c:1042 src/main/print-canon.c:1299
-#: src/main/print-escp2.c:101 src/main/print-lexmark.c:312
-#: src/main/print-pcl.c:1523 src/main/print-ps.c:91
+#: src/main/print-canon.c:1299 src/main/print-escp2.c:101
+#: src/main/print-lexmark.c:312 src/main/print-pcl.c:1523
+#: src/main/print-ps.c:91 src/cups/genppd.c:1042
 msgid "Resolution"
 msgstr "Rozlí¹enie"
 
@@ -421,8 +415,8 @@ msgstr "Manuálne s preru¹ením"
 msgid "Manual without Pause"
 msgstr "Manuálne bez preru¹enia"
 
-#: src/escputil/escputil.c:617 src/libgimpprintui/panel.c:1797
 #: src/main/print-canon.c:1686 src/main/print-lexmark.c:564
+#: src/libgimpprintui/panel.c:1797 src/escputil/escputil.c:617
 msgid "Black"
 msgstr "Èierna"
 
@@ -504,8 +498,8 @@ msgstr "Gama:"
 msgid "Gamma value assumed by application"
 msgstr ""
 
-#: src/escputil/escputil.c:618 src/libgimpprintui/panel.c:1776
-#: src/main/print-color.c:135
+#: src/main/print-color.c:135 src/libgimpprintui/panel.c:1776
+#: src/escputil/escputil.c:618
 msgid "Cyan"
 msgstr "Azúrová"
 
@@ -514,8 +508,8 @@ msgstr "Azúrová"
 msgid "Adjust the cyan gamma"
 msgstr "Prispôsobenie vyvá¾enie azúrovej farby pre tlaè"
 
-#: src/escputil/escputil.c:619 src/libgimpprintui/panel.c:1783
-#: src/main/print-color.c:143
+#: src/main/print-color.c:143 src/libgimpprintui/panel.c:1783
+#: src/escputil/escputil.c:619
 msgid "Magenta"
 msgstr "Purpurová"
 
@@ -524,8 +518,8 @@ msgstr "Purpurová"
 msgid "Adjust the magenta gamma"
 msgstr "Prispôsobenie vyvá¾enie purpurovej farby pre tlaè"
 
-#: src/escputil/escputil.c:620 src/libgimpprintui/panel.c:1790
-#: src/main/print-color.c:151
+#: src/main/print-color.c:151 src/libgimpprintui/panel.c:1790
+#: src/escputil/escputil.c:620
 msgid "Yellow"
 msgstr "®ltá"
 
@@ -794,9 +788,9 @@ msgstr "Zmeni» veµkos» tlaèe podµa rozmerov strany"
 msgid "Image is too long for the page\n"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:2196 src/main/print-escp2-data.c:268
-#: src/main/print-escp2-data.c:294 src/main/print-escp2-data.c:328
-#: src/main/print-escp2.c:612 src/main/print-pcl.c:233
+#: src/main/print-escp2-data.c:268 src/main/print-escp2-data.c:294
+#: src/main/print-escp2-data.c:328 src/main/print-escp2.c:612
+#: src/main/print-pcl.c:233 src/libgimpprintui/panel.c:2196
 msgid "Standard"
 msgstr "©tandardný"
 
@@ -868,7 +862,7 @@ msgstr ""
 msgid "Gray Transition"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:1201 src/main/print-escp2.c:661
+#: src/main/print-escp2.c:661 src/libgimpprintui/panel.c:1201
 msgid "Auto"
 msgstr "Automaticky"
 
@@ -891,7 +885,6 @@ msgstr "Tlaèiareò nepodporuje farebný výstup\n"
 msgid "Print options not verified; cannot print.\n"
 msgstr ""
 
-#. name                                                    hres vres softw v_pass overs unidir resid
 #: src/main/print-lexmark.c:524 src/main/print-lexmark.c:605
 msgid "300 DPI x 600 DPI"
 msgstr "300 DPI x 600 DPI"
@@ -940,10 +933,6 @@ msgstr "2400 DPI x 1200 DPI Najvy¹¹ia kvalita"
 msgid "test print"
 msgstr "Test tlaèe"
 
-#. output_type   ncolors used_colors   pass_length  v_top_head_offset
-#. *                                                        h_catridge_offset
-#. *                                                           h_direction_offset
-#. *                                                               head_offset
 #: src/main/print-lexmark.c:548 src/main/print-lexmark.c:623
 msgid "Four Color Standard"
 msgstr "©tandardný ¹tvorfarebný"
@@ -1032,7 +1021,6 @@ msgstr "Rýchloschnúce priesvit. fólie"
 msgid "Manual"
 msgstr "Manuál"
 
-#. {"Envelope", PCL_PAPERSOURCE_ENVELOPE},
 #: src/main/print-pcl.c:236
 msgid "Tray 1"
 msgstr "Zásobník 1"
@@ -2556,10 +2544,14 @@ msgid "LEXMARK Z53"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:342
-msgid "RAW DATA 16 bit"
+msgid "Olympus P300"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:343
+msgid "RAW DATA 16 bit"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:344
 msgid "RAW DATA 8 bit"
 msgstr ""
 
@@ -2646,9 +2638,6 @@ msgstr "OK"
 msgid "Cancel"
 msgstr "Storno"
 
-#.
-#. * Create the main dialog
-#.
 #: src/libgimpprintui/panel.c:982
 #, c-format
 msgid "%s -- Print v%s"
@@ -2842,9 +2831,6 @@ msgstr "Vycentrova» vodorovne obrázok na papieri"
 msgid "Setup Printer"
 msgstr "Nastavi» tlaèiareò"
 
-#.
-#. * Printer driver option menu.
-#.
 #: src/libgimpprintui/panel.c:1303 src/libgimpprintui/panel.c:1537
 msgid "Printer Model:"
 msgstr "Model tlaèiarne:"
@@ -2853,9 +2839,6 @@ msgstr "Model tlaèiarne:"
 msgid "Select your printer model"
 msgstr "Vyberte model va¹ej tlaèiarne"
 
-#.
-#. * PPD file.
-#.
 #: src/libgimpprintui/panel.c:1350
 msgid "PPD File:"
 msgstr "PPD súbor:"
@@ -2872,9 +2855,6 @@ msgstr "Prechádza»"
 msgid "Choose the correct PPD filename for your printer"
 msgstr "Zvoµte správny PPD názov súboru pre va¹u tlaèiareò"
 
-#.
-#. * Print command.
-#.
 #: src/libgimpprintui/panel.c:1381
 msgid "Command:"
 msgstr "Príkaz:"
@@ -2889,16 +2869,10 @@ msgstr ""
 "prosím z re»azca pre tlaè prepínaèe `-l' alebo `-oraw', lebo tlaè "
 "pravdepodobne nebude úspe¹ná!"
 
-#.
-#. * Output file selection dialog.
-#.
 #: src/libgimpprintui/panel.c:1401
 msgid "Print To File?"
 msgstr "Tlaèi» do súboru?"
 
-#.
-#. * PPD file selection dialog.
-#.
 #: src/libgimpprintui/panel.c:1414
 msgid "PPD File?"
 msgstr "PPD súbor?"
@@ -2980,9 +2954,6 @@ msgstr ""
 "Zvoµte si názov tlaèiarne (nie typ alebo model tlaèiarne), na ktorej chcete "
 "tlaèi»"
 
-#.
-#. * Setup printer button
-#.
 #: src/libgimpprintui/panel.c:1549
 msgid "Setup Printer..."
 msgstr "Nastavenie tlaèiarne..."
@@ -2995,9 +2966,6 @@ msgstr ""
 "Voµba model tlaèiarne, PPD súboru a príkaz, ktorý sa pou¾íva pre tlaè na "
 "tejto tlaèiarni"
 
-#.
-#. * New printer button
-#.
 #: src/libgimpprintui/panel.c:1564
 msgid "New Printer..."
 msgstr "Nová tlaèiareò..."
@@ -3055,9 +3023,6 @@ msgstr "Nastavi» ¹írku tlaèe"
 msgid "Set the height of the print"
 msgstr "Nastavi» vý¹ku tlaèe"
 
-#.
-#. * The "image size" button
-#.
 #: src/libgimpprintui/panel.c:1699
 msgid ""
 "Use Original\n"
@@ -3177,16 +3142,10 @@ msgstr ""
 msgid "Gimp-Print"
 msgstr "O Gimp-Print "
 
-#. Specify language of PPD translation
-#. Translators: Specify the language of the PPD translation.
-#. * Use the English name of your language here, e.g. "Swedish" instead of
-#. * "Svenska".
-#.
 #: src/cups/genppd.c:734
 msgid "English"
 msgstr "Slovak"
 
-#. Specify PPD translation encoding e.g. ISOLatin1
 #: src/cups/genppd.c:736
 msgid "ISOLatin1"
 msgstr "ISOLatin1"

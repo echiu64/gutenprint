@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 4.2.1-pre4\n"
-"POT-Creation-Date: 2003-05-11 08:50-0400\n"
+"POT-Creation-Date: 2003-05-22 21:30-0400\n"
 "PO-Revision-Date: 2002-09-15 16:07+0200\n"
 "Last-Translator: Raymond Ostertag <r.ostertag@caramail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -35,19 +35,16 @@ msgstr "%s : l'option « %c%s » n'accepte pas de paramètre\n"
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s : l'option « %s » nécessite un paramètre\n"
 
-#. --option
 #: lib/getopt.c:758
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s : option inconnue « --%s »\n"
 
-#. +option or -option
 #: lib/getopt.c:762
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s : option inconnue « %c%s »\n"
 
-#. 1003.2 specifies the format of this message.
 #: lib/getopt.c:788
 #, c-format
 msgid "%s: illegal option -- %c\n"
@@ -58,7 +55,6 @@ msgstr "%s : option illégale -- %c\n"
 msgid "%s: invalid option -- %c\n"
 msgstr "%s : option invalide -- %c\n"
 
-#. 1003.2 specifies the format of this message.
 #: lib/getopt.c:821 lib/getopt.c:951
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
@@ -74,8 +70,6 @@ msgstr "%s : l'option « -W %s » est ambigüe\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s : l'option « -W %s » n'accepte pas de paramètre\n"
 
-#. Note to translators: "EvenTone" is the proper name, rather than a
-#. descriptive name, of this algorithm.
 #: src/main/dither-main.c:45
 msgid "EvenTone"
 msgstr "Tons lisses"
@@ -359,9 +353,9 @@ msgstr "Taille"
 msgid "Size of the paper being printed to"
 msgstr "Taille du papier sur lequel vous souhaitez imprimer"
 
-#: src/cups/genppd.c:996 src/main/print-canon.c:1281 src/main/print-escp2.c:89
+#: src/main/print-canon.c:1281 src/main/print-escp2.c:89
 #: src/main/print-lexmark.c:294 src/main/print-pcl.c:1505
-#: src/main/print-ps.c:73
+#: src/main/print-ps.c:73 src/cups/genppd.c:996
 msgid "Media Type"
 msgstr "Type de support"
 
@@ -371,9 +365,9 @@ msgstr "Type de support"
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr ""
 
-#: src/cups/genppd.c:1020 src/main/print-canon.c:1287
-#: src/main/print-escp2.c:95 src/main/print-lexmark.c:300
-#: src/main/print-pcl.c:1511 src/main/print-ps.c:79
+#: src/main/print-canon.c:1287 src/main/print-escp2.c:95
+#: src/main/print-lexmark.c:300 src/main/print-pcl.c:1511
+#: src/main/print-ps.c:79 src/cups/genppd.c:1020
 msgid "Media Source"
 msgstr "Source du support"
 
@@ -396,9 +390,9 @@ msgstr "Type d'encre"
 msgid "Type of ink in the printer"
 msgstr "Type d'encre dans l'imprimante"
 
-#: src/cups/genppd.c:1042 src/main/print-canon.c:1299
-#: src/main/print-escp2.c:101 src/main/print-lexmark.c:312
-#: src/main/print-pcl.c:1523 src/main/print-ps.c:91
+#: src/main/print-canon.c:1299 src/main/print-escp2.c:101
+#: src/main/print-lexmark.c:312 src/main/print-pcl.c:1523
+#: src/main/print-ps.c:91 src/cups/genppd.c:1042
 msgid "Resolution"
 msgstr "Résolution"
 
@@ -420,8 +414,8 @@ msgstr "Manuel avec pause"
 msgid "Manual without Pause"
 msgstr "Manuel sans pause"
 
-#: src/escputil/escputil.c:617 src/libgimpprintui/panel.c:1797
 #: src/main/print-canon.c:1686 src/main/print-lexmark.c:564
+#: src/libgimpprintui/panel.c:1797 src/escputil/escputil.c:617
 msgid "Black"
 msgstr "Noir"
 
@@ -504,8 +498,8 @@ msgstr "Gamma :"
 msgid "Gamma value assumed by application"
 msgstr ""
 
-#: src/escputil/escputil.c:618 src/libgimpprintui/panel.c:1776
-#: src/main/print-color.c:135
+#: src/main/print-color.c:135 src/libgimpprintui/panel.c:1776
+#: src/escputil/escputil.c:618
 msgid "Cyan"
 msgstr "Cyan"
 
@@ -514,8 +508,8 @@ msgstr "Cyan"
 msgid "Adjust the cyan gamma"
 msgstr "Ajuste le niveau de cyan de l'impression"
 
-#: src/escputil/escputil.c:619 src/libgimpprintui/panel.c:1783
-#: src/main/print-color.c:143
+#: src/main/print-color.c:143 src/libgimpprintui/panel.c:1783
+#: src/escputil/escputil.c:619
 msgid "Magenta"
 msgstr "Magenta"
 
@@ -524,8 +518,8 @@ msgstr "Magenta"
 msgid "Adjust the magenta gamma"
 msgstr "Ajuste le niveau de majenta de l'impression"
 
-#: src/escputil/escputil.c:620 src/libgimpprintui/panel.c:1790
-#: src/main/print-color.c:151
+#: src/main/print-color.c:151 src/libgimpprintui/panel.c:1790
+#: src/escputil/escputil.c:620
 msgid "Yellow"
 msgstr "Jaune"
 
@@ -794,9 +788,9 @@ msgstr "Dimensionne l'impression par rapport à la taille de la page"
 msgid "Image is too long for the page\n"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:2196 src/main/print-escp2-data.c:268
-#: src/main/print-escp2-data.c:294 src/main/print-escp2-data.c:328
-#: src/main/print-escp2.c:612 src/main/print-pcl.c:233
+#: src/main/print-escp2-data.c:268 src/main/print-escp2-data.c:294
+#: src/main/print-escp2-data.c:328 src/main/print-escp2.c:612
+#: src/main/print-pcl.c:233 src/libgimpprintui/panel.c:2196
 msgid "Standard"
 msgstr "Standard"
 
@@ -868,7 +862,7 @@ msgstr ""
 msgid "Gray Transition"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:1201 src/main/print-escp2.c:661
+#: src/main/print-escp2.c:661 src/libgimpprintui/panel.c:1201
 msgid "Auto"
 msgstr "Auto"
 
@@ -891,7 +885,6 @@ msgstr "L'imprimante ne supporte pas les sorties en couleur\n"
 msgid "Print options not verified; cannot print.\n"
 msgstr ""
 
-#. name                                                    hres vres softw v_pass overs unidir resid
 #: src/main/print-lexmark.c:524 src/main/print-lexmark.c:605
 msgid "300 DPI x 600 DPI"
 msgstr "300 x 600 ppp"
@@ -940,10 +933,6 @@ msgstr "2400 x 1200 ppp Très haute qualité"
 msgid "test print"
 msgstr "test d'impression"
 
-#. output_type   ncolors used_colors   pass_length  v_top_head_offset
-#. *                                                        h_catridge_offset
-#. *                                                           h_direction_offset
-#. *                                                               head_offset
 #: src/main/print-lexmark.c:548 src/main/print-lexmark.c:623
 msgid "Four Color Standard"
 msgstr "Quatre couleurs standard"
@@ -1032,7 +1021,6 @@ msgstr "Transparent séchage rapide"
 msgid "Manual"
 msgstr "Manuel"
 
-#. {"Envelope", PCL_PAPERSOURCE_ENVELOPE},
 #: src/main/print-pcl.c:236
 msgid "Tray 1"
 msgstr "Bac 1"
@@ -2555,10 +2543,14 @@ msgid "LEXMARK Z53"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:342
-msgid "RAW DATA 16 bit"
+msgid "Olympus P300"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:343
+msgid "RAW DATA 16 bit"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:344
 msgid "RAW DATA 8 bit"
 msgstr ""
 
@@ -2645,9 +2637,6 @@ msgstr "Valider"
 msgid "Cancel"
 msgstr "Annuler"
 
-#.
-#. * Create the main dialog
-#.
 #: src/libgimpprintui/panel.c:982
 #, c-format
 msgid "%s -- Print v%s"
@@ -2844,9 +2833,6 @@ msgstr "Centrer l'image horizontalement sur le papier"
 msgid "Setup Printer"
 msgstr "Configuration de l'imprimante"
 
-#.
-#. * Printer driver option menu.
-#.
 #: src/libgimpprintui/panel.c:1303 src/libgimpprintui/panel.c:1537
 msgid "Printer Model:"
 msgstr "Modèle d'imprimante :"
@@ -2855,9 +2841,6 @@ msgstr "Modèle d'imprimante :"
 msgid "Select your printer model"
 msgstr "Sélectionnez le modèle de votre imprimante"
 
-#.
-#. * PPD file.
-#.
 #: src/libgimpprintui/panel.c:1350
 msgid "PPD File:"
 msgstr "Fichier PPD :"
@@ -2874,9 +2857,6 @@ msgstr "Parcourir"
 msgid "Choose the correct PPD filename for your printer"
 msgstr "Choisissez le fichier PPD correct pour votre imprimante"
 
-#.
-#. * Print command.
-#.
 #: src/libgimpprintui/panel.c:1381
 msgid "Command:"
 msgstr "Commande :"
@@ -2891,16 +2871,10 @@ msgstr ""
 "plait n'enlevez pas le '-l' ou '-oraw' de la ligne de commande ou "
 "l'impression va probablement échouer !"
 
-#.
-#. * Output file selection dialog.
-#.
 #: src/libgimpprintui/panel.c:1401
 msgid "Print To File?"
 msgstr "Imprimer dans un fichier ?"
 
-#.
-#. * PPD file selection dialog.
-#.
 #: src/libgimpprintui/panel.c:1414
 msgid "PPD File?"
 msgstr "Fichier PPD ?"
@@ -2985,9 +2959,6 @@ msgstr ""
 "Sélectionnez le nom de l'imprimante (pas le type ni le modèle) que vous "
 "voulez utiliser pour l'impression"
 
-#.
-#. * Setup printer button
-#.
 #: src/libgimpprintui/panel.c:1549
 msgid "Setup Printer..."
 msgstr "Configurer l'imprimante..."
@@ -3000,9 +2971,6 @@ msgstr ""
 "Indiquez le modèle d'imprimante, le fichier PPD et la commande nécessaire "
 "pour l'impression sur cette imprimante"
 
-#.
-#. * New printer button
-#.
 #: src/libgimpprintui/panel.c:1564
 msgid "New Printer..."
 msgstr "Nouvelle imprimante..."
@@ -3060,9 +3028,6 @@ msgstr "Défini la largeur de l'impression"
 msgid "Set the height of the print"
 msgstr "Défini la hauteur de l'impression"
 
-#.
-#. * The "image size" button
-#.
 #: src/libgimpprintui/panel.c:1699
 msgid ""
 "Use Original\n"
@@ -3183,16 +3148,10 @@ msgstr ""
 msgid "Gimp-Print"
 msgstr "À propos de Gimp-Print"
 
-#. Specify language of PPD translation
-#. Translators: Specify the language of the PPD translation.
-#. * Use the English name of your language here, e.g. "Swedish" instead of
-#. * "Svenska".
-#.
 #: src/cups/genppd.c:734
 msgid "English"
 msgstr "French"
 
-#. Specify PPD translation encoding e.g. ISOLatin1
 #: src/cups/genppd.c:736
 msgid "ISOLatin1"
 msgstr "ISOLatin1"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print Version 4.2.3\n"
-"POT-Creation-Date: 2003-05-11 08:50-0400\n"
+"POT-Creation-Date: 2003-05-22 21:30-0400\n"
 "PO-Revision-Date: 2002-10-07 19:10+0900\n"
 "Last-Translator: Takeshi AIHANA <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -33,19 +33,16 @@ msgstr "%s: オプション '%c%s' には引数は不要です\n"
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: オプション '%s' には引数が必要です\n"
 
-#. --option
 #: lib/getopt.c:758
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: 不明なオプション '--%s'\n"
 
-#. +option or -option
 #: lib/getopt.c:762
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: 不明なオプション '`%c%s'\n"
 
-#. 1003.2 specifies the format of this message.
 #: lib/getopt.c:788
 #, c-format
 msgid "%s: illegal option -- %c\n"
@@ -56,7 +53,6 @@ msgstr "%s: 不正なオプション -- %c\n"
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: おかしなオプション -- %c\n"
 
-#. 1003.2 specifies the format of this message.
 #: lib/getopt.c:821 lib/getopt.c:951
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
@@ -72,8 +68,6 @@ msgstr "%s: オプション '-W %s' 単体では使用できません\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: オプション '-W %s' には引数が不要です\n"
 
-#. Note to translators: "EvenTone" is the proper name, rather than a
-#. descriptive name, of this algorithm.
 #: src/main/dither-main.c:45
 msgid "EvenTone"
 msgstr "イベントトーン方式"
@@ -357,9 +351,9 @@ msgstr "画像のサイズ"
 msgid "Size of the paper being printed to"
 msgstr "印刷する用紙のサイズです。"
 
-#: src/cups/genppd.c:996 src/main/print-canon.c:1281 src/main/print-escp2.c:89
+#: src/main/print-canon.c:1281 src/main/print-escp2.c:89
 #: src/main/print-lexmark.c:294 src/main/print-pcl.c:1505
-#: src/main/print-ps.c:73
+#: src/main/print-ps.c:73 src/cups/genppd.c:996
 msgid "Media Type"
 msgstr "用紙の種類"
 
@@ -369,9 +363,9 @@ msgstr "用紙の種類"
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr ""
 
-#: src/cups/genppd.c:1020 src/main/print-canon.c:1287
-#: src/main/print-escp2.c:95 src/main/print-lexmark.c:300
-#: src/main/print-pcl.c:1511 src/main/print-ps.c:79
+#: src/main/print-canon.c:1287 src/main/print-escp2.c:95
+#: src/main/print-lexmark.c:300 src/main/print-pcl.c:1511
+#: src/main/print-ps.c:79 src/cups/genppd.c:1020
 msgid "Media Source"
 msgstr "給紙方法"
 
@@ -394,9 +388,9 @@ msgstr "インクの種類"
 msgid "Type of ink in the printer"
 msgstr "印刷時のインクの種類です。"
 
-#: src/cups/genppd.c:1042 src/main/print-canon.c:1299
-#: src/main/print-escp2.c:101 src/main/print-lexmark.c:312
-#: src/main/print-pcl.c:1523 src/main/print-ps.c:91
+#: src/main/print-canon.c:1299 src/main/print-escp2.c:101
+#: src/main/print-lexmark.c:312 src/main/print-pcl.c:1523
+#: src/main/print-ps.c:91 src/cups/genppd.c:1042
 msgid "Resolution"
 msgstr "解像度"
 
@@ -418,8 +412,8 @@ msgstr "ポーズ付き手動給紙"
 msgid "Manual without Pause"
 msgstr "ポーズなし手動給紙"
 
-#: src/escputil/escputil.c:617 src/libgimpprintui/panel.c:1797
 #: src/main/print-canon.c:1686 src/main/print-lexmark.c:564
+#: src/libgimpprintui/panel.c:1797 src/escputil/escputil.c:617
 msgid "Black"
 msgstr "黒色"
 
@@ -501,8 +495,8 @@ msgstr "ガンマ:"
 msgid "Gamma value assumed by application"
 msgstr ""
 
-#: src/escputil/escputil.c:618 src/libgimpprintui/panel.c:1776
-#: src/main/print-color.c:135
+#: src/main/print-color.c:135 src/libgimpprintui/panel.c:1776
+#: src/escputil/escputil.c:618
 msgid "Cyan"
 msgstr "シアン (C)"
 
@@ -511,8 +505,8 @@ msgstr "シアン (C)"
 msgid "Adjust the cyan gamma"
 msgstr "印刷時のシアン色のバランスを調整します。"
 
-#: src/escputil/escputil.c:619 src/libgimpprintui/panel.c:1783
-#: src/main/print-color.c:143
+#: src/main/print-color.c:143 src/libgimpprintui/panel.c:1783
+#: src/escputil/escputil.c:619
 msgid "Magenta"
 msgstr "マゼンタ (M)"
 
@@ -521,8 +515,8 @@ msgstr "マゼンタ (M)"
 msgid "Adjust the magenta gamma"
 msgstr "印刷時のマゼンタ色のバランスを調整します。"
 
-#: src/escputil/escputil.c:620 src/libgimpprintui/panel.c:1790
-#: src/main/print-color.c:151
+#: src/main/print-color.c:151 src/libgimpprintui/panel.c:1790
+#: src/escputil/escputil.c:620
 msgid "Yellow"
 msgstr "黄色 (Y)"
 
@@ -790,9 +784,9 @@ msgstr "用紙サイズを 100 とした場合の比率です。"
 msgid "Image is too long for the page\n"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:2196 src/main/print-escp2-data.c:268
-#: src/main/print-escp2-data.c:294 src/main/print-escp2-data.c:328
-#: src/main/print-escp2.c:612 src/main/print-pcl.c:233
+#: src/main/print-escp2-data.c:268 src/main/print-escp2-data.c:294
+#: src/main/print-escp2-data.c:328 src/main/print-escp2.c:612
+#: src/main/print-pcl.c:233 src/libgimpprintui/panel.c:2196
 msgid "Standard"
 msgstr "標準"
 
@@ -864,7 +858,7 @@ msgstr ""
 msgid "Gray Transition"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:1201 src/main/print-escp2.c:661
+#: src/main/print-escp2.c:661 src/libgimpprintui/panel.c:1201
 msgid "Auto"
 msgstr "自動"
 
@@ -887,7 +881,6 @@ msgstr "プリンタはカラー印刷をサポートしていません\n"
 msgid "Print options not verified; cannot print.\n"
 msgstr ""
 
-#. name                                                    hres vres softw v_pass overs unidir resid
 #: src/main/print-lexmark.c:524 src/main/print-lexmark.c:605
 msgid "300 DPI x 600 DPI"
 msgstr "300 DPI x 600 DPI"
@@ -936,10 +929,6 @@ msgstr "2400 DPI x 1200 DPI 高品質"
 msgid "test print"
 msgstr "テスト印刷"
 
-#. output_type   ncolors used_colors   pass_length  v_top_head_offset
-#. *                                                        h_catridge_offset
-#. *                                                           h_direction_offset
-#. *                                                               head_offset
 #: src/main/print-lexmark.c:548 src/main/print-lexmark.c:623
 msgid "Four Color Standard"
 msgstr "Four Color Standard"
@@ -1028,7 +1017,6 @@ msgstr "即乾スライド"
 msgid "Manual"
 msgstr "手動"
 
-#. {"Envelope", PCL_PAPERSOURCE_ENVELOPE},
 #: src/main/print-pcl.c:236
 msgid "Tray 1"
 msgstr "トレイ１"
@@ -2551,10 +2539,14 @@ msgid "LEXMARK Z53"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:342
-msgid "RAW DATA 16 bit"
+msgid "Olympus P300"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:343
+msgid "RAW DATA 16 bit"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:344
 msgid "RAW DATA 8 bit"
 msgstr ""
 
@@ -2641,9 +2633,6 @@ msgstr "OK"
 msgid "Cancel"
 msgstr "取り消し"
 
-#.
-#. * Create the main dialog
-#.
 #: src/libgimpprintui/panel.c:982
 #, c-format
 msgid "%s -- Print v%s"
@@ -2836,9 +2825,6 @@ msgstr "用紙の水平方向の中心にします。"
 msgid "Setup Printer"
 msgstr "プリンタの選択"
 
-#.
-#. * Printer driver option menu.
-#.
 #: src/libgimpprintui/panel.c:1303 src/libgimpprintui/panel.c:1537
 msgid "Printer Model:"
 msgstr "プリンタの型式:"
@@ -2847,9 +2833,6 @@ msgstr "プリンタの型式:"
 msgid "Select your printer model"
 msgstr "お使いのプリンタを選択します。"
 
-#.
-#. * PPD file.
-#.
 #: src/libgimpprintui/panel.c:1350
 msgid "PPD File:"
 msgstr "PPD ファイル:"
@@ -2866,9 +2849,6 @@ msgstr "参照"
 msgid "Choose the correct PPD filename for your printer"
 msgstr "お使いのプリンタ用の PPD ファイルを選択します。"
 
-#.
-#. * Print command.
-#.
 #: src/libgimpprintui/panel.c:1381
 msgid "Command:"
 msgstr "コマンド:"
@@ -2882,16 +2862,10 @@ msgstr ""
 "お使いのプリンタ向けの印刷コマンドを入力します。【注記】: '-l' または '-"
 "oraw' オプションを削除しないで下さい。印刷に失敗します！"
 
-#.
-#. * Output file selection dialog.
-#.
 #: src/libgimpprintui/panel.c:1401
 msgid "Print To File?"
 msgstr "ファイルに印刷しますか？"
 
-#.
-#. * PPD file selection dialog.
-#.
 #: src/libgimpprintui/panel.c:1414
 msgid "PPD File?"
 msgstr "PPD ファイルですか？"
@@ -2969,9 +2943,6 @@ msgid ""
 "wish to print to"
 msgstr "お使いのプリンタ (プリンタの型式ではありません) 名を選択します。"
 
-#.
-#. * Setup printer button
-#.
 #: src/libgimpprintui/panel.c:1549
 msgid "Setup Printer..."
 msgstr "プリンタの選択..."
@@ -2982,9 +2953,6 @@ msgid ""
 "this printer"
 msgstr "プリンタの型式と PPD ファイル、印刷コマンドを選択します。"
 
-#.
-#. * New printer button
-#.
 #: src/libgimpprintui/panel.c:1564
 msgid "New Printer..."
 msgstr "新しいプリンタ..."
@@ -3042,9 +3010,6 @@ msgstr "印刷時の幅をセットします。"
 msgid "Set the height of the print"
 msgstr "印刷時の高さをセットします。"
 
-#.
-#. * The "image size" button
-#.
 #: src/libgimpprintui/panel.c:1699
 msgid ""
 "Use Original\n"
@@ -3164,16 +3129,10 @@ msgstr ""
 msgid "Gimp-Print"
 msgstr "Gimp-Print"
 
-#. Specify language of PPD translation
-#. Translators: Specify the language of the PPD translation.
-#. * Use the English name of your language here, e.g. "Swedish" instead of
-#. * "Svenska".
-#.
 #: src/cups/genppd.c:734
 msgid "English"
 msgstr "Japanese"
 
-#. Specify PPD translation encoding e.g. ISOLatin1
 #: src/cups/genppd.c:736
 msgid "ISOLatin1"
 msgstr "ISO ラテン１"
