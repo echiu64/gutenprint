@@ -82,6 +82,8 @@ static olympus_privdata_t privdata;
 
 typedef struct {
   const char* name;
+  int xdpi;
+  int ydpi;
 } olymp_resolution_t;
 
 typedef struct {
@@ -180,8 +182,8 @@ static const ink_list_t rgb_ink_list =
 /* Olympus P-300 series */
 static const olymp_resolution_t p300_res[] =
 {
-  { "306x306"},
-  { "153x153"},
+  { "306x306", 306, 306},
+  { "153x153", 153, 153},
 };
 
 static const olymp_resolution_list_t p300_res_list =
@@ -278,7 +280,7 @@ static const char p300_adj_yellow[] =
 /* Olympus P-400 series */
 static const olymp_resolution_t res_314dpi[] =
 {
-  { "314x314"},
+  { "314x314", 314, 314},
 };
 
 static const olymp_resolution_list_t res_314dpi_list =
@@ -494,7 +496,7 @@ static const char cpx00_adj_yellow[] =
 /* Sony UP-DP10 */
 static const olymp_resolution_t updp10_res[] =
 {
-  { "300x300"},
+  { "300x300", 300, 300},
 };
 
 static const olymp_resolution_list_t updp10_res_list =
@@ -586,7 +588,7 @@ static const laminate_list_t updp10_laminate_list =
 /* Fujifilm CX-400 */
 static const olymp_resolution_t cx400_res[] =
 {
-  { "317x316"},
+  { "317x316", 317, 316},
 };
 
 static const olymp_resolution_list_t cx400_res_list =
@@ -639,6 +641,20 @@ static void cx400_printer_init_func(stp_vars_t v)
 		  "\x00\x00\x2d\x00\x00\x00\x00", 1, 19, v);
   stpi_zfwrite("FUJIFILMNX1000\1", 1, 15, v);
 }
+  
+static const olymp_resolution_t all_resolutions[] =
+{
+  { "306x306", 306, 306},
+  { "153x153", 153, 153},
+  { "314x314", 314, 314},
+  { "300x300", 300, 300},
+  { "317x316", 317, 316},
+};
+
+static const olymp_resolution_list_t all_res_list =
+{
+  all_resolutions, sizeof(all_resolutions) / sizeof(olymp_resolution_t)
+};
 
 static const olympus_cap_t olympus_model_capabilities[] =
 {
@@ -1056,12 +1072,21 @@ static void
 olympus_describe_resolution(stp_const_vars_t v, int *x, int *y)
 {
   const char *resolution = stp_get_string_parameter(v, "Resolution");
-  
+  int i;
+
   *x = -1;
   *y = -1;
   if (resolution)
-    sscanf(resolution, "%dx%d", x, y);
-  
+    {
+      for (i = 0; i < all_res_list.n_items; i++)
+	{
+	  if (strcmp(resolution, all_res_list.item[i].name) == 0)
+	    {
+	      *x = all_res_list.item[i].xdpi;
+	      *y = all_res_list.item[i].ydpi;
+	    }
+	}
+    }  
   return;
 }
 
