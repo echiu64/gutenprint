@@ -237,8 +237,8 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
 		  "",
 		  "Softweave",
 		  "Microweave",
-		  "High Quality",
-		  "Highest Quality",
+		  "High",
+		  "Highest",
 		  "Emulated",
 		  "DMT",
 		  "monochrome"
@@ -577,10 +577,10 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
     */
 
     quality[0] = '\0';
-    if (sscanf(opts[i], "%d x %d DPI%s", &xdpi, &ydpi, quality) == 1)
-      if (sscanf(opts[i], "%dx%d DPI%s", &xdpi, &ydpi, quality) == 1)
+    if (sscanf(opts[i], "%d x %d%*s%s", &xdpi, &ydpi, quality) == 1)
+      if (sscanf(opts[i], "%dx%d%*s%s", &xdpi, &ydpi, quality) == 1)
       {
-	sscanf(opts[i], "%d DPI%s", &xdpi, quality);
+	sscanf(opts[i], "%d%*s%s", &xdpi, quality);
 	ydpi = xdpi;
       }
 

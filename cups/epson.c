@@ -100,11 +100,12 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
   FILE		*fp;		/* Print file */
   int		copies;		/* Number of copies to print */
   int		fd,		/* Parallel/USB device or socket */
-		error;		/* Last error */
+		error,		/* Last error */
+		backchannel;	/* Read backchannel data? */
   struct sockaddr_in addr;	/* Socket address */
   struct hostent *hostaddr;	/* Host address */
   int		wbytes;		/* Number of bytes written */
-  size_t	nbytes,		/* Number of bytes read */
+  int		nbytes,		/* Number of bytes read */
 		tbytes;		/* Total number of bytes written */
   char		buffer[8192],	/* Output buffer */
 		*bufptr;	/* Pointer into buffer */
@@ -292,6 +293,8 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
   * Finally, send the print file...
   */
 
+  backchannel = 1;
+
   while (copies > 0)
   {
     copies --;
@@ -331,6 +334,9 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
       * Check for possible data coming back from the printer...
       */
 
+      if (!backchannel)
+        continue;
+
       timeout.tv_sec = 0;
       timeout.tv_usec = 0;
       FD_ZERO(&input);
@@ -345,7 +351,8 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
 	{
 	  fprintf(stderr, "ERROR: Back-channel read error - %s!\n",
 	          strerror(errno));
-	  break;
+          backchannel = 0;
+          continue;
 	}
 
         buffer[nbytes] = '\0';
@@ -560,8 +567,19 @@ list_devices(void)
 	*/
 
         if (strcmp(make, "EPSON") == 0)
-	  printf("direct epson:/dev/usb/lp%d \"%s %s\" \"USB Printer #%d\"\n",
-		 i, make, model, i + 1);
+	{
+          sprintf(device, "/dev/usb/lp%d", i);
+	  if (access(device, 0))
+	  {
+	    sprintf(device, "/dev/usb/usblp%d", i);
+
+	    if (access(device, 0))
+	      sprintf(device, "/dev/usblp%d", i);
+	  }
+
+	  printf("direct epson:%s \"%s %s\" \"USB Printer #%d\"\n",
+		 device, make, model, i + 1);
+        }
 
 	i ++;
 
@@ -577,6 +595,13 @@ list_devices(void)
     for (i = 0; i < 8; i ++)
     {
       sprintf(device, "/dev/usb/lp%d", i);
+      if ((fd = open(device, O_RDWR)) >= 0)
+      {
+	close(fd);
+	printf("direct epson:%s \"EPSON\" \"USB Printer #%d\"\n", device, i + 1);
+      }
+
+      sprintf(device, "/dev/usb/usblp%d", i);
       if ((fd = open(device, O_RDWR)) >= 0)
       {
 	close(fd);
