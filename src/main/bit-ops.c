@@ -36,6 +36,7 @@
 #include <limits.h>
 #endif
 #include "weave.h"
+#include "bit-ops.h"
 
 void
 stpi_fold(const unsigned char *line,
@@ -804,12 +805,13 @@ find_first_and_last(const unsigned char *line, int length,
 }
 
 int
-stpi_pack_uncompressed(const unsigned char *line,
-		      int length,
-		      unsigned char *comp_buf,
-		      unsigned char **comp_ptr,
-		      int *first,
-		      int *last)
+stpi_pack_uncompressed(stp_vars_t v,
+		       const unsigned char *line,
+		       int length,
+		       unsigned char *comp_buf,
+		       unsigned char **comp_ptr,
+		       int *first,
+		       int *last)
 {
   find_first_and_last(line, length, first, last);
   memcpy(comp_buf, line, length);
@@ -821,12 +823,13 @@ stpi_pack_uncompressed(const unsigned char *line,
 }
 
 int
-stpi_pack_tiff(const unsigned char *line,
-	      int length,
-	      unsigned char *comp_buf,
-	      unsigned char **comp_ptr,
-	      int *first,
-	      int *last)
+stpi_pack_tiff(stp_vars_t v,
+	       const unsigned char *line,
+	       int length,
+	       unsigned char *comp_buf,
+	       unsigned char **comp_ptr,
+	       int *first,
+	       int *last)
 {
   const unsigned char *start;		/* Start of compressed data */
   unsigned char repeat;			/* Repeating char */

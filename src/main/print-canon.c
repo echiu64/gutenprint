@@ -639,7 +639,7 @@ typedef struct
   int ydpi;
 } canon_privdata_t;
 
-static void canon_write_line(stp_const_vars_t);
+static void canon_write_line(stp_vars_t);
 
 
 /* Codes for possible ink-tank combinations.
@@ -2159,7 +2159,7 @@ setup_column(canon_privdata_t *privdata, int col, int buf_length)
 }
 
 static void
-canon_printfunc(stp_const_vars_t v)
+canon_printfunc(stp_vars_t v)
 {
   int i;
   canon_privdata_t *pd = (canon_privdata_t *) stpi_get_component_data(v, "Driver");
@@ -2827,7 +2827,7 @@ canon_shift_buffer2(unsigned char *line,int length,int bits)
  */
 
 static int
-canon_write(stp_const_vars_t v,		/* I - Print file or command */
+canon_write(stp_vars_t v,		/* I - Print file or command */
 	    const canon_cap_t *   caps,	        /* I - Printer model */
 	    unsigned char *line,	/* I - Output bitmap data */
 	    int           length,	/* I - Length of bitmap data */
@@ -2897,7 +2897,7 @@ canon_write(stp_const_vars_t v,		/* I - Print file or command */
 	      "bitoffset=%d!!\n",bitoffset);
   }
 
-  stpi_pack_tiff(in_ptr, length, comp_data, &comp_ptr, NULL, NULL);
+  stpi_pack_tiff(v, in_ptr, length, comp_data, &comp_ptr, NULL, NULL);
   newlength= comp_ptr - comp_buf;
 
   /* send packed empty lines if any */
@@ -2922,7 +2922,7 @@ canon_write(stp_const_vars_t v,		/* I - Print file or command */
 
 
 static void
-canon_write_line(stp_const_vars_t v)
+canon_write_line(stp_vars_t v)
 {
   canon_privdata_t *pd =
     (canon_privdata_t *) stpi_get_component_data(v, "Driver");

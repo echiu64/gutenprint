@@ -46,8 +46,8 @@
 /*
  * Local functions...
  */
-static void	pcl_mode0(stp_const_vars_t, unsigned char *, int, int);
-static void	pcl_mode2(stp_const_vars_t, unsigned char *, int, int);
+static void	pcl_mode0(stp_vars_t, unsigned char *, int, int);
+static void	pcl_mode2(stp_vars_t, unsigned char *, int, int);
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 typedef struct
@@ -55,7 +55,7 @@ typedef struct
   int do_blank;
   int blank_lines;
   unsigned char *comp_buf;
-  void (*writefunc)(stp_const_vars_t, unsigned char *, int, int);	/* PCL output function */
+  void (*writefunc)(stp_vars_t, unsigned char *, int, int);	/* PCL output function */
   int do_cret;
   int do_cretb;
   int do_6color;
@@ -2771,7 +2771,7 @@ static const stpi_printfuncs_t stpi_pcl_printfuncs =
  */
 
 static void
-pcl_mode0(stp_const_vars_t v,		/* I - Print file or command */
+pcl_mode0(stp_vars_t v,		/* I - Print file or command */
           unsigned char *line,		/* I - Output bitmap data */
           int           height,		/* I - Height of bitmap data */
           int           last_plane)	/* I - True if this is the last plane */
@@ -2786,7 +2786,7 @@ pcl_mode0(stp_const_vars_t v,		/* I - Print file or command */
  */
 
 static void
-pcl_mode2(stp_const_vars_t v,		/* I - Print file or command */
+pcl_mode2(stp_vars_t v,		/* I - Print file or command */
           unsigned char *line,		/* I - Output bitmap data */
           int           height,		/* I - Height of bitmap data */
           int           last_plane)	/* I - True if this is the last plane */
@@ -2796,7 +2796,7 @@ pcl_mode2(stp_const_vars_t v,		/* I - Print file or command */
   unsigned char *comp_buf = privdata->comp_buf;
   unsigned char	*comp_ptr;		/* Current slot in buffer */
 
-  stpi_pack_tiff(line, height, comp_buf, &comp_ptr, NULL, NULL);
+  stpi_pack_tiff(v, line, height, comp_buf, &comp_ptr, NULL, NULL);
 
  /*
   * Send a line of raster graphics...

@@ -102,7 +102,6 @@ const char header[] = "Legend:\n"
 "P  Physical row number out of bounds.\n"
 "Q  Pass starts earlier than a prior pass.\n";
 
-stp_vars_t v;
 
 static void
 print_header(void)
@@ -111,7 +110,7 @@ print_header(void)
 }
 
 static void
-flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
+flush_pass(stp_vars_t v, int passno, int vertical_subpass)
 {
 }
 
@@ -130,6 +129,7 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
   int i;
   int j;
   stpi_weave_t w;
+  stp_vars_t v;
   int errors[26];
   char errcodes[26];
   int total_errors = 0;
@@ -143,8 +143,13 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
   signed char *rowdetail;
   int *current_slot;
   int vmod;
-  void *sw;
   int head_offset[8];
+
+  v = stp_vars_create();
+  stp_set_outfunc(v, writefunc);
+  stp_set_errfunc(v, writefunc);
+  stp_set_outdata(v, stdout);
+  stp_set_errdata(v, stdout);
 
   memset(errors, 0, sizeof(int) * 26);
 #if 0
@@ -165,13 +170,11 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
       phys_lines += 2*(physjets+1)*physsep;
     }
 
-  sw = stpi_initialize_weave(v, physjets, physsep, hpasses, vpasses, subpasses,
+  stpi_initialize_weave(v, physjets, physsep, hpasses, vpasses, subpasses,
 			     7, 1, 128, nrows, first_line,
 			     phys_lines, strategy, head_offset, flush_pass,
 			     stpi_fill_tiff, stpi_pack_tiff,
 			     stpi_compute_tiff_linewidth);
-  if (!sw)
-    return 1;
 
   passstarts = xmalloc(sizeof(int) * (nrows + physsep));
   logpassstarts = xmalloc(sizeof(int) * (nrows + physsep));
@@ -205,7 +208,7 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
       for (j = 0; j < hpasses * vpasses * subpasses; j++)
 	{
 	  int physrow;
-	  stpi_weave_parameters_by_row((stpi_softweave_t *)sw, i+first_line, j, &w);
+	  stpi_weave_parameters_by_row(v, i+first_line, j, &w);
 	  physrow = w.logicalpassstart + physsep * w.jet;
 
 	  errcodes[0] = (w.pass < 0 ? (errors[0]++, 'A') : ' ');
@@ -305,7 +308,6 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
     }
   for (i = 0; i < 26; i++)
     total_errors += errors[i];
-  stpi_destroy_weave(sw);
   free(rowdetail);
   free(physpassstuff);
   free(current_slot);
@@ -315,6 +317,7 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
   free(passstarts);
   if (!quiet || (quiet == 1 && total_errors > 0))
     printf("%d total error%s\n", total_errors, total_errors == 1 ? "" : "s");
+  stp_vars_free(v);
   if (total_errors > 0)
     return 1;
   else
@@ -340,12 +343,6 @@ main(int argc, char **argv)
   */
 
   stp_init();
-
-  v = stp_vars_create();
-  stp_set_outfunc(v, writefunc);
-  stp_set_errfunc(v, writefunc);
-  stp_set_outdata(v, stdout);
-  stp_set_errdata(v, stdout);
 
   if (argc == 1)
     {

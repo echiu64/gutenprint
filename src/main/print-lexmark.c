@@ -145,7 +145,7 @@ static void readtestprintline(testdata *td, lexmark_linebufs_t *linebufs);
 #endif
 
 static void
-flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass);
+flush_pass(stp_vars_t v, int passno, int vertical_subpass);
 
 /*** resolution specific parameters */
 #define DPI300   0
@@ -740,6 +740,11 @@ typedef struct lexm_privdata_weave {
   int ydpi;
   int xdpi;
   int physical_xdpi;
+  int last_pass_offset;
+  int jets;
+  int bitwidth;
+  int ncolors;
+  int horizontal_weave;
   unsigned char *outbuf;
 } lexm_privdata_weave;
 
@@ -1505,7 +1510,6 @@ lexmark_do_print(stp_vars_t v, stp_image_t *image)
   int  horizontal_passes;
   int  ncolors;
   lexm_privdata_weave privdata;
-  void *	weave = NULL;
 
   lexmark_lineoff_t lineoff_buffer;  /* holds the line offsets of each color */
 #ifdef DEBUG
@@ -1779,26 +1783,29 @@ densityDivisor /= 1.2;
   stpi_allocate_component_data(v, "Driver", NULL, NULL, &privdata);
   /*  lxm_nozzles_used = 1;*/
 
-  weave = stpi_initialize_weave(v,
-				pass_length, /* jets */
-				nozzle_separation, /* separation */
-				horizontal_passes, /* h overample */
-				res_para_ptr->vertical_passes, /* v passes */
-				res_para_ptr->vertical_oversample, /* v oversample */
-				ncolors, /* colors */
-				1, /* bits/pixel */
-				out_width, /* line width */
-				out_height,
-				((top * ydpi) / 72)+(((caps->offset_top_border+add_top_offset)*ydpi)
-						     /caps->y_raster_res),
-				(page_height * ydpi) / 72,
-				1, /* weave_strategy */
-				(int *)lexmark_head_offset(ydpi, ink_type, caps, ink_parameter, &lineoff_buffer),
-				flush_pass,
-				stpi_fill_uncompressed,  /* fill_start */
-				stpi_pack_uncompressed,  /* pack */
-				stpi_compute_uncompressed_linewidth);  /* compute_linewidth */
-
+  stpi_initialize_weave(v,
+			pass_length, /* jets */
+			nozzle_separation, /* separation */
+			horizontal_passes, /* h overample */
+			res_para_ptr->vertical_passes, /* v passes */
+			res_para_ptr->vertical_oversample, /* v oversample */
+			ncolors, /* colors */
+			1, /* bits/pixel */
+			out_width, /* line width */
+			out_height,
+			((top * ydpi) / 72)+(((caps->offset_top_border+add_top_offset)*ydpi)
+					     /caps->y_raster_res),
+			(page_height * ydpi) / 72,
+			1, /* weave_strategy */
+			(int *)lexmark_head_offset(ydpi, ink_type, caps, ink_parameter, &lineoff_buffer),
+			flush_pass,
+			stpi_fill_uncompressed,  /* fill_start */
+			stpi_pack_uncompressed,  /* pack */
+			stpi_compute_uncompressed_linewidth);  /* compute_linewidth */
+  privdata.last_pass_offset = 0;
+  privdata.jets = pass_length;
+  privdata.ncolors = ncolors;
+  privdata.horizontal_weave = horizontal_passes;
 
 
 
@@ -1974,7 +1981,7 @@ densityDivisor /= 1.2;
 	    }
 	}
       stpi_dither(v, y, out, duplicate_line, zero_mask);
-      stpi_write_weave(weave, length, (unsigned char **)cols.v);
+      stpi_write_weave(v, (unsigned char **)cols.v);
 
       errval += errmod;
       errline += errdiv;
@@ -1986,7 +1993,7 @@ densityDivisor /= 1.2;
     }
   stpi_image_progress_conclude(image);
 
-  stpi_flush_all(weave);
+  stpi_flush_all(v);
 
   lexmark_deinit_printer(v, caps);
 
@@ -1994,7 +2001,6 @@ densityDivisor /= 1.2;
   * Cleanup...
   */
   stpi_free(out);
-  stpi_destroy_weave(weave);
   if (privdata.outbuf != NULL) {
     stpi_free(privdata.outbuf);/* !!!!!!!!!!!!!! */
   }
@@ -2553,24 +2559,23 @@ stp_const_vars_t lex_write_tmp_file(stp_const_vars_t ofile, void *data,int lengt
 
 
 static void
-flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
+flush_pass(stp_vars_t v, int passno, int vertical_subpass)
 {
-  stp_const_vars_t nv = (sw->v);
-  stpi_lineoff_t        *lineoffs   = stpi_get_lineoffsets_by_pass(sw, passno);
-  stpi_lineactive_t     *lineactive = stpi_get_lineactive_by_pass(sw, passno);
-  const stpi_linebufs_t *bufs       = stpi_get_linebases_by_pass(sw, passno);
-  stpi_pass_t           *pass       = stpi_get_pass_by_pass(sw, passno);
-  stpi_linecount_t      *linecount  = stpi_get_linecount_by_pass(sw, passno);
-  lexm_privdata_weave *privdata_weave =
-    (lexm_privdata_weave *) stpi_get_component_data(nv, "Driver");
-  int width = privdata_weave->width;
-  int hoffset = privdata_weave->hoffset;
-  int model = privdata_weave->model;
-  int xdpi = privdata_weave->xdpi;
-  int ydpi = privdata_weave->ydpi;
-  int physical_xdpi = privdata_weave->physical_xdpi;
-  int lwidth = (width + (sw->horizontal_weave - 1)) / sw->horizontal_weave;
-  int microoffset = vertical_subpass & (sw->horizontal_weave - 1);
+  stpi_lineoff_t        *lineoffs   = stpi_get_lineoffsets_by_pass(v, passno);
+  stpi_lineactive_t     *lineactive = stpi_get_lineactive_by_pass(v, passno);
+  const stpi_linebufs_t *bufs       = stpi_get_linebases_by_pass(v, passno);
+  stpi_pass_t           *pass       = stpi_get_pass_by_pass(v, passno);
+  stpi_linecount_t      *linecount  = stpi_get_linecount_by_pass(v, passno);
+  lexm_privdata_weave *pd =
+    (lexm_privdata_weave *) stpi_get_component_data(v, "Driver");
+  int width = pd->width;
+  int hoffset = pd->hoffset;
+  int model = pd->model;
+  int xdpi = pd->xdpi;
+  int ydpi = pd->ydpi;
+  int physical_xdpi = pd->physical_xdpi;
+  int lwidth = (width + (pd->horizontal_weave - 1)) / pd->horizontal_weave;
+  int microoffset = vertical_subpass & (pd->horizontal_weave - 1);
 
   int prn_mode;
   int j; /* color counter */
@@ -2583,11 +2588,11 @@ flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
 
 #ifdef DEBUG
   stpi_erprintf("Lexmark: flush_pass, here we are !\n");
-  stpi_erprintf("  passno %i, sw->ncolors %i, width %d, lwidth %d, linecount k % d, linecount m % d, bitwidth %d\n",
-	       passno, sw->ncolors, width, lwidth, /*linecount[0].p.k, linecount[0].p.m,*/ sw->bitwidth);
-  stpi_erprintf("microoffset %d, vertical_subpass %d, sw->horizontal_weave %d\n", microoffset,vertical_subpass, sw->horizontal_weave);
+  stpi_erprintf("  passno %i, pd->ncolors %i, width %d, lwidth %d, linecount k % d, linecount m % d, bitwidth %d\n",
+	       passno, pd->ncolors, width, lwidth, /*linecount[0].p.k, linecount[0].p.m,*/ pd->bitwidth);
+  stpi_erprintf("microoffset %d, vertical_subpass %d, pd->horizontal_weave %d\n", microoffset,vertical_subpass, pd->horizontal_weave);
 
-  stpi_erprintf("Lexmark: last_pass_offset %d, last_pass %d, logicalpassstart %d\n", sw->last_pass_offset, sw->last_pass, pass->logicalpassstart);
+  stpi_erprintf("Lexmark: last_pass_offset %d, logicalpassstart %d\n", pd->last_pass_offset, pass->logicalpassstart);
   stpi_erprintf("Lexmark: vertical adapt: caps->y_raster_res %d, ydpi %d,  \n", caps->y_raster_res, ydpi);
 
 #endif
@@ -2620,11 +2625,11 @@ flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
     break;
   }
   /* calculate paper shift and adapt actual resoution to physical positioning resolution */
-  paperShift = (pass->logicalpassstart - sw->last_pass_offset) * (caps->y_raster_res/ydpi);
+  paperShift = (pass->logicalpassstart - pd->last_pass_offset) * (caps->y_raster_res/ydpi);
 
 
       /*** do we have to print something with the color cartridge ? ***/
-      if ((ECOLOR_C < sw->ncolors) && (lineactive[0].v[ECOLOR_C] > 0))
+      if ((ECOLOR_C < pd->ncolors) && (lineactive[0].v[ECOLOR_C] > 0))
 	{
 	  head_colors[0].line = bufs[0].v[ECOLOR_C];
 	  head_colors[0].used_jets = linecount[0].v[ECOLOR_C];
@@ -2635,7 +2640,7 @@ flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
 	  head_colors[0].used_jets = 0;
 	}
 
-      if ((ECOLOR_M < sw->ncolors) && (lineactive[0].v[ECOLOR_M] > 0))
+      if ((ECOLOR_M < pd->ncolors) && (lineactive[0].v[ECOLOR_M] > 0))
 	{
 	  head_colors[1].line = bufs[0].v[ECOLOR_M];
 	  head_colors[1].used_jets = linecount[0].v[ECOLOR_M];
@@ -2646,7 +2651,7 @@ flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
 	  head_colors[1].used_jets = 0;
 	}
 
-      if ((ECOLOR_Y < sw->ncolors) && (lineactive[0].v[ECOLOR_Y] > 0))
+      if ((ECOLOR_Y < pd->ncolors) && (lineactive[0].v[ECOLOR_Y] > 0))
 	{
 	  head_colors[2].line = bufs[0].v[ECOLOR_Y];
 	  head_colors[2].used_jets = linecount[0].v[ECOLOR_Y];
@@ -2664,13 +2669,13 @@ flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
 #ifdef DEBUG
 	stpi_erprintf("lexmark_write: lwidth %d\n", lwidth);
 #endif
-	lexmark_write(nv,		/* I - Print file or command */
-		      privdata_weave->outbuf,/*unsigned char *prnBuf,   mem block to buffer output */
+	lexmark_write(v,		/* I - Print file or command */
+		      pd->outbuf,/*unsigned char *prnBuf,   mem block to buffer output */
 		      &paperShift,           /* int *paperShift, */
-		      privdata_weave->direction,                     /* int direction, */
-		      sw->jets,       /* num of inks to print */
+		      pd->direction,                     /* int direction, */
+		      pd->jets,       /* num of inks to print */
 		      caps,                  /* const lexmark_cap_t *   caps,	    I - Printer model */
-		      privdata_weave->ink_parameter,
+		      pd->ink_parameter,
 		      xdpi,                  /* int xresolution, */
 		      2,                     /* yCount,*/
 		      head_colors,           /* Lexmark_head_colors *head_colors, */
@@ -2680,18 +2685,18 @@ flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
 		      lwidth,      /* width, 	 I - Printed width in pixles*/
 		      hoffset+microoffset,   /* offset  I - Offset from left side in x_raster_res DPI */
 		      0                      /* dmt */);
-	if (privdata_weave->bidirectional)
-	  privdata_weave->direction = (privdata_weave->direction +1) & 1;
+	if (pd->bidirectional)
+	  pd->direction = (pd->direction +1) & 1;
       }
 
 
       /*** do we have to print somthing with black or photo cartridge ? ***/
       /* we print with the photo or black cartidge */
 
-    if (sw->jets != 208)
+    if (pd->jets != 208)
       {
 	/* we have photo or black cartridge */
-	if ((ECOLOR_LC < sw->ncolors) && (lineactive[0].v[ECOLOR_LC] > 0))
+	if ((ECOLOR_LC < pd->ncolors) && (lineactive[0].v[ECOLOR_LC] > 0))
 	  {
 	    head_colors[0].line = bufs[0].v[ECOLOR_LC];
 	    head_colors[0].used_jets = linecount[0].v[ECOLOR_LC];
@@ -2702,7 +2707,7 @@ flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
 	    head_colors[0].used_jets = 0;
 	  }
 
-	    if ((ECOLOR_LM < sw->ncolors) && (lineactive[0].v[ECOLOR_LM] > 0))
+	    if ((ECOLOR_LM < pd->ncolors) && (lineactive[0].v[ECOLOR_LM] > 0))
 	  {
 	    head_colors[1].line = bufs[0].v[ECOLOR_LM];
 	    head_colors[1].used_jets = linecount[0].v[ECOLOR_LM];
@@ -2713,7 +2718,7 @@ flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
 	    head_colors[1].used_jets = 0;
 	  }
 
-	    if ((ECOLOR_K < sw->ncolors) && (lineactive[0].v[ECOLOR_K] > 0))
+	    if ((ECOLOR_K < pd->ncolors) && (lineactive[0].v[ECOLOR_K] > 0))
 	  {
 	    head_colors[2].line = bufs[0].v[ECOLOR_K];
 	    head_colors[2].used_jets = linecount[0].v[ECOLOR_K];
@@ -2726,13 +2731,13 @@ flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
       }
     else
       {
-	if ((ECOLOR_K < sw->ncolors) && (lineactive[0].v[ECOLOR_K] > 0))
+	if ((ECOLOR_K < pd->ncolors) && (lineactive[0].v[ECOLOR_K] > 0))
 	  {
 	    /* we have black cartridge; we have to print with all 208 jets at once */
 	    head_colors[0].line = bufs[0].v[ECOLOR_K];
 	    head_colors[0].used_jets = linecount[0].v[ECOLOR_K];
 	    head_colors[0].head_nozzle_start = 0;
-	    head_colors[0].head_nozzle_end = sw->jets/2;
+	    head_colors[0].head_nozzle_end = pd->jets/2;
 	    head_colors[2].line = NULL;
 	    head_colors[2].used_jets = 0;
 	    head_colors[2].head_nozzle_start = 0;
@@ -2761,13 +2766,13 @@ flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
 
      if ((head_colors[0].line != 0) || (head_colors[1].line != 0) || (head_colors[2].line != 0)) {
 
-    lexmark_write(nv,		/* I - Print file or command */
-		  privdata_weave->outbuf,/*unsigned char *prnBuf,   mem block to buffer output */
+    lexmark_write(v,		/* I - Print file or command */
+		  pd->outbuf,/*unsigned char *prnBuf,   mem block to buffer output */
 		  &paperShift,           /* int *paperShift, */
-		  privdata_weave->direction,             /* int direction, */
-		  sw->jets,              /* num of inks to print */
+		  pd->direction,             /* int direction, */
+		  pd->jets,              /* num of inks to print */
 		  caps,                  /* const lexmark_cap_t *   caps,     I - Printer model */
-		  privdata_weave->ink_parameter,
+		  pd->ink_parameter,
 		  xdpi,                  /* int xresolution, */
 		  2,                     /* yCount,*/
 		  head_colors,           /* Lexmark_head_colors *head_colors, */
@@ -2777,16 +2782,16 @@ flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
 		  lwidth,      /* width, 	 I - Printed width in pixles*/
 		  hoffset+microoffset,   /* offset  I - Offset from left side in x_raster_res DPI */
 		  0                      /* dmt */);
-    if (privdata_weave->bidirectional)
+    if (pd->bidirectional)
       {
-	privdata_weave->direction = (privdata_weave->direction +1) & 1;
+	pd->direction = (pd->direction +1) & 1;
       }
     }
   /* store paper position in respect if there was a paper shift */
-  sw->last_pass_offset = pass->logicalpassstart - (paperShift / (caps->y_raster_res/ydpi));
+  pd->last_pass_offset = pass->logicalpassstart - (paperShift / (caps->y_raster_res/ydpi));
   }
 
-  for (j = 0; j < sw->ncolors; j++)
+  for (j = 0; j < pd->ncolors; j++)
     {
       lineoffs[0].v[j]  = 0;
       linecount[0].v[j] = 0;
@@ -2796,8 +2801,6 @@ flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
   stpi_erprintf("lexmark_write finished\n");
 #endif
 
-  sw->last_pass = pass->pass;
-  pass->pass = -1;
 }
 
 

@@ -31,6 +31,7 @@
 #include "../lib/libprintut.h"
 #include "../src/main/gimp-print-internal.h"
 #include "../src/main/weave.h"
+#include "../src/main/bit-ops.h"
 #include <stdio.h>
 #include <sys/time.h>
 #include <unistd.h>

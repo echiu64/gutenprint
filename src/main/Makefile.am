@@ -118,6 +118,7 @@ libgimpprint_la_SOURCES = \
 	string-list.c \
 	util.h \
 	vars.h \
+	bit-ops.h \
 	weave.h \
 	xml.c \
 	xml.h \

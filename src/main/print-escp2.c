@@ -60,7 +60,7 @@
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define BYTE(expr, byteno) (((expr) >> (8 * byteno)) & 0xff)
 
-static void flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass);
+static void flush_pass(stp_vars_t v, int passno, int vertical_subpass);
 static void escp2_describe_resolution(stp_const_vars_t v, int *x, int *y);
 
 static const escp2_printer_attr_t escp2_printer_attrs[] =
@@ -92,6 +92,11 @@ typedef struct
   int ydpi;
   int xdpi;
   int physical_xdpi;
+  int last_pass_offset;
+  int jets;
+  int bitwidth;
+  int ncolors;
+  int horizontal_weave;
   const physical_subchannel_t **channels;
 } escp2_privdata_t;
 
@@ -1289,18 +1294,6 @@ adjust_density_and_ink_type(escp2_init_t *init, stp_image_t *image)
 	      int drop_size_then = escp2_ink_type(v, tresid);
 
 	      /*
-	       * If the softweave/microweave isn't available at the lower
-	       * resolution, try the drop size for the other flavor.
-	       */
-	      if (drop_size_then == -1)
-		{
-		  tresid ^= 1;
-		  bits_then = escp2_bits(v, tresid);
-		  density_then = escp2_density(v, tresid);
-		  drop_size_then = escp2_ink_type(v, tresid);
-		}
-
-	      /*
 	       * If we would change the number of bits in the ink type,
 	       * don't try this.  Some resolutions require using a certain
 	       * number of bits!
@@ -1549,9 +1542,8 @@ setup_ink_types(stp_vars_t v,
 }
 
 static int
-escp2_print_data(stp_vars_t v, stp_image_t *image, void *weave,
-		 int height, int width, unsigned short *out,
-		 unsigned char **cols)
+escp2_print_data(stp_vars_t v, stp_image_t *image, int height, int width,
+		 unsigned short *out, unsigned char **cols)
 {
   int errdiv  = stpi_image_height(image) / height;
   int errmod  = stpi_image_height(image) % height;
@@ -1582,7 +1574,7 @@ escp2_print_data(stp_vars_t v, stp_image_t *image, void *weave,
       stpi_dither(v, y, out, duplicate_line, zero_mask);
       QUANT(2);
 
-      stpi_write_weave(weave, width, cols);
+      stpi_write_weave(v, cols);
       QUANT(3);
       errval += errmod;
       errline += errdiv;
@@ -1594,7 +1586,7 @@ escp2_print_data(stp_vars_t v, stp_image_t *image, void *weave,
       QUANT(4);
     }
   stpi_image_progress_conclude(image);
-  stpi_flush_all(weave);
+  stpi_flush_all(v);
   QUANT(5);
   return 1;
 }  
@@ -1633,7 +1625,6 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
   int		nozzle_separation;
   int		horizontal_passes;
 
-  void *	weave;
   escp2_init_t	init;
   int		max_vres;
   int 		*head_offset;
@@ -1668,6 +1659,7 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
   privdata.initial_vertical_offset = 0;
   privdata.printed_something = 0;
   privdata.last_color = -1;
+  privdata.last_pass_offset = 0;
   stpi_allocate_component_data(v, "Driver", NULL, NULL, &privdata);
 
   ink_type = get_inktype(v);
@@ -1795,6 +1787,7 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
       init.use_black_parameters = 0;
     }
   init.nozzles = nozzles;
+  privdata.jets = nozzles;
 
   if (horizontal_passes == 0)
     horizontal_passes = 1;
@@ -1845,6 +1838,7 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
 
   init.horizontal_passes = horizontal_passes;
   init.bits = escp2_bits(v, init.res->resid);
+  privdata.bitwidth = init.bits;
   init.inkname = ink_type;
   init.total_channels = total_channels;
   init.channel_limit = channel_limit;
@@ -1905,21 +1899,23 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
       privdata.physical_xdpi = physical_xdpi;
       privdata.ydpi = ydpi;
       privdata.width = out_width;
+      privdata.ncolors = total_channels;
+      privdata.horizontal_weave = horizontal_passes;
 
       /*
        * Allocate memory for the raster data...
        */
 
-      weave = stpi_initialize_weave(v, nozzles, nozzle_separation,
-				    horizontal_passes, res->vertical_passes,
-				    res->vertical_oversample, total_channels,
-				    init.bits, out_width, out_height,
-				    top * physical_ydpi / 72,
-				    (page_height * physical_ydpi / 72 +
-				     escp2_extra_feed(v) * physical_ydpi /
-				     escp2_base_resolution(v)),
-				    1, head_offset, flush_pass,
-				    FILLFUNC, PACKFUNC, COMPUTEFUNC);
+      stpi_initialize_weave(v, nozzles, nozzle_separation,
+			    horizontal_passes, res->vertical_passes,
+			    res->vertical_oversample, total_channels,
+			    init.bits, out_width, out_height,
+			    top * physical_ydpi / 72,
+			    (page_height * physical_ydpi / 72 +
+			     escp2_extra_feed(v) * physical_ydpi /
+			     escp2_base_resolution(v)),
+			    1, head_offset, flush_pass,
+			    FILLFUNC, PACKFUNC, COMPUTEFUNC);
 
       stpi_set_output_color_model(v, COLOR_MODEL_CMY);
 
@@ -1932,13 +1928,11 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
 
       out = stpi_malloc(stpi_image_width(image) * out_channels * 2);
 
-      status =
-	escp2_print_data(v, image, weave, out_height, length, out, cols);
+      status = escp2_print_data(v, image, out_height, length, out, cols);
 
       /*
        * Cleanup...
        */
-      stpi_destroy_weave(weave);
       stpi_free(out);
       if (!privdata.printed_something)
 	stpi_send_command(v, "\n", "");
@@ -2011,35 +2005,33 @@ static const stpi_printfuncs_t stpi_escp2_printfuncs =
 };
 
 static void
-set_vertical_position(stpi_softweave_t *sw, stpi_pass_t *pass,
-		      stp_const_vars_t v)
+set_vertical_position(stp_vars_t v, stpi_pass_t *pass)
 {
   escp2_privdata_t *pd =
     (escp2_privdata_t *) stpi_get_component_data(v, "Driver");
-  int advance = pass->logicalpassstart - sw->last_pass_offset -
+  int advance = pass->logicalpassstart - pd->last_pass_offset -
     (escp2_separation_rows(v) - 1);
   advance *= pd->undersample;
-  if (pass->logicalpassstart > sw->last_pass_offset ||
+  if (pass->logicalpassstart > pd->last_pass_offset ||
       pd->initial_vertical_offset != 0)
     {
       advance += pd->initial_vertical_offset;
       pd->initial_vertical_offset = 0;
-      if (escp2_use_extended_commands(v, sw->jets > 1))
+      if (escp2_use_extended_commands(v, pd->jets > 1))
 	stpi_send_command(v, "\033(v", "bl", advance);
       else
 	stpi_send_command(v, "\033(v", "bh", advance);
-      sw->last_pass_offset = pass->logicalpassstart;
+      pd->last_pass_offset = pass->logicalpassstart;
     }
 }
 
 static void
-set_color(stpi_softweave_t *sw, stpi_pass_t *pass, stp_const_vars_t v,
-	  int color)
+set_color(stp_vars_t v, stpi_pass_t *pass, int color)
 {
   escp2_privdata_t *pd =
     (escp2_privdata_t *) stpi_get_component_data(v, "Driver");
   if (pd->last_color != color &&
-      ! escp2_use_extended_commands(v, sw->jets > 1))
+      ! escp2_use_extended_commands(v, pd->jets > 1))
     {
       int ncolor = pd->channels[color]->color;
       int density = pd->channels[color]->density;
@@ -2052,13 +2044,12 @@ set_color(stpi_softweave_t *sw, stpi_pass_t *pass, stp_const_vars_t v,
 }
 
 static void
-set_horizontal_position(stpi_softweave_t *sw, stpi_pass_t *pass,
-			stp_const_vars_t v, int hoffset, int ydpi,
+set_horizontal_position(stp_vars_t v, stpi_pass_t *pass, int hoffset, int ydpi,
 			int xdpi, int vertical_subpass)
 {
-  int microoffset = vertical_subpass & (sw->horizontal_weave - 1);
   escp2_privdata_t *pd =
     (escp2_privdata_t *) stpi_get_component_data(v, "Driver");
+  int microoffset = vertical_subpass & (pd->horizontal_weave - 1);
   if (!escp2_has_advanced_command_set(v) &&
       (xdpi <= escp2_base_resolution(v) || escp2_max_hres(v) < 1440))
     {
@@ -2084,12 +2075,14 @@ set_horizontal_position(stpi_softweave_t *sw, stpi_pass_t *pass,
 }
 
 static void
-send_print_command(stpi_softweave_t *sw, stpi_pass_t *pass, int color,
-		   int lwidth, stp_const_vars_t v, int hoffset, int ydpi,
-		   int xdpi, int physical_xdpi, int nlines)
+send_print_command(stp_vars_t v, stpi_pass_t *pass, int color, int lwidth,
+		   int hoffset, int ydpi, int xdpi, int physical_xdpi,
+		   int nlines)
 {
+  escp2_privdata_t *pd =
+    (escp2_privdata_t *) stpi_get_component_data(v, "Driver");
   if (!escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_PRO) &&
-      sw->jets == 1 && sw->bitwidth == 1)
+      pd->jets == 1 && pd->bitwidth == 1)
     {
       int ygap = 3600 / ydpi;
       int xgap = 3600 / xdpi;
@@ -2116,24 +2109,26 @@ send_print_command(stpi_softweave_t *sw, stpi_pass_t *pass, int color,
     {
       escp2_privdata_t *pd = (escp2_privdata_t *) stpi_get_component_data(v, "Driver");
       int ncolor = pd->channels[color]->color;
-      int nwidth = sw->bitwidth * ((lwidth + 7) / 8);
+      int nwidth = pd->bitwidth * ((lwidth + 7) / 8);
       if (pd->channels[color]->density >= 0)
 	ncolor |= (pd->channels[color]->density << 4);
       stpi_send_command(v, "\033i", "ccchh", ncolor, COMPRESSION,
-			sw->bitwidth, nwidth, nlines);
+			pd->bitwidth, nwidth, nlines);
     }
 }
 
 static void
-send_extra_data(stpi_softweave_t *sw, stp_vars_t v, int extralines, int lwidth)
+send_extra_data(stp_vars_t v, int extralines, int lwidth)
 {
+  escp2_privdata_t *pd =
+    (escp2_privdata_t *) stpi_get_component_data(v, "Driver");
 #if TEST_UNCOMPRESSED
   int i;
-  for (i = 0; i < sw->bitwidth * (lwidth + 7) / 8; i++)
+  for (i = 0; i < pd->bitwidth * (lwidth + 7) / 8; i++)
     stpi_putc(0, v);
 #else  /* !TEST_UNCOMPRESSED */
   int k, l;
-  int bytes_to_fill = sw->bitwidth * ((lwidth + 7) / 8);
+  int bytes_to_fill = pd->bitwidth * ((lwidth + 7) / 8);
   int full_blocks = bytes_to_fill / 128;
   int leftover = bytes_to_fill % 128;
   int total_bytes = extralines * (full_blocks + 1) * 2;
@@ -2163,19 +2158,18 @@ send_extra_data(stpi_softweave_t *sw, stp_vars_t v, int extralines, int lwidth)
 }
 
 static void
-flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
+flush_pass(stp_vars_t v, int passno, int vertical_subpass)
 {
   int j;
-  stp_vars_t v = (sw->v);
   escp2_privdata_t *pd =
     (escp2_privdata_t *) stpi_get_component_data(v, "Driver");
-  stpi_lineoff_t *lineoffs = stpi_get_lineoffsets_by_pass(sw, passno);
-  stpi_lineactive_t *lineactive = stpi_get_lineactive_by_pass(sw, passno);
-  const stpi_linebufs_t *bufs = stpi_get_linebases_by_pass(sw, passno);
-  stpi_pass_t *pass = stpi_get_pass_by_pass(sw, passno);
-  stpi_linecount_t *linecount = stpi_get_linecount_by_pass(sw, passno);
+  stpi_lineoff_t *lineoffs = stpi_get_lineoffsets_by_pass(v, passno);
+  stpi_lineactive_t *lineactive = stpi_get_lineactive_by_pass(v, passno);
+  const stpi_linebufs_t *bufs = stpi_get_linebases_by_pass(v, passno);
+  stpi_pass_t *pass = stpi_get_pass_by_pass(v, passno);
+  stpi_linecount_t *linecount = stpi_get_linecount_by_pass(v, passno);
   int width = pd->width;
-  int lwidth = (width + (sw->horizontal_weave - 1)) / sw->horizontal_weave;
+  int lwidth = (width + (pd->horizontal_weave - 1)) / pd->horizontal_weave;
   int hoffset = pd->hoffset;
   int xdpi = pd->xdpi;
   int ydpi = pd->ydpi;
@@ -2185,7 +2179,7 @@ flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
 
   if (ydpi > escp2_max_vres(v))
     ydpi = escp2_max_vres(v);
-  for (j = 0; j < sw->ncolors; j++)
+  for (j = 0; j < pd->ncolors; j++)
     {
       if (lineactive[0].v[j] > 0)
 	{
@@ -2197,11 +2191,11 @@ flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
 	      extralines = minlines - nlines;
 	      nlines = minlines;
 	    }
-	  set_vertical_position(sw, pass, v);
-	  set_color(sw, pass, v, j);
-	  set_horizontal_position(sw, pass, v, hoffset, ydpi, xdpi,
+	  set_vertical_position(v, pass);
+	  set_color(v, pass, j);
+	  set_horizontal_position(v, pass, hoffset, ydpi, xdpi,
 				  vertical_subpass);
-	  send_print_command(sw, pass, j, lwidth, v, hoffset, ydpi,
+	  send_print_command(v, pass, j, lwidth, hoffset, ydpi,
 			     xdpi, physical_xdpi, nlines);
 
 	  /*
@@ -2209,16 +2203,13 @@ flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
 	   */
 	  stpi_zfwrite((const char *)bufs[0].v[j], lineoffs[0].v[j], 1, v);
 	  if (extralines)
-	    send_extra_data(sw, v, extralines, lwidth);
+	    send_extra_data(v, extralines, lwidth);
 	  stpi_send_command(v, "\r", "");
 	  pd->printed_something = 1;
 	}
       lineoffs[0].v[j] = 0;
       linecount[0].v[j] = 0;
     }
-
-  sw->last_pass = pass->pass;
-  pass->pass = -1;
 }
 
 
