@@ -2,10 +2,10 @@
 # Manish Singh    98-6-11
 # Shamelessly stolen from Owen Taylor
 
-dnl AM_PATH_GIMP([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
+dnl STP_PATH_GIMP([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
 dnl Test for GIMP, and define GIMP_CFLAGS and GIMP_LIBS
 dnl
-AC_DEFUN(AM_PATH_GIMP,
+AC_DEFUN(STP_PATH_GIMP,
 [dnl 
 dnl Get the cflags and libraries from the gimptool script
 dnl
@@ -29,7 +29,7 @@ AC_ARG_ENABLE(gimptest, [  --disable-gimptest      Do not try to compile and run
      fi
   fi
 
-  AC_PATH_PROG(GIMPTOOL, gimptool-1.2, no)
+  AC_PATH_PROGS([GIMPTOOL], [gimptool-1.2 gimptool], no)
   min_gimp_version=ifelse([$1], ,1.0.0,$1)
   AC_MSG_CHECKING(for GIMP - version >= $min_gimp_version)
   no_gimp=""

@@ -56,10 +56,10 @@ if test x${BUILD_GIMP} = xyes ; then
     GIMP_CFLAGS="-I\$(top_srcdir)/../.. \$(GTK_CFLAGS) \$(GLIB_CFLAGS)"
     GIMP_LIBS="\$(GTK_LIBS) \$(GLIB_LIBS) \$(top_builddir)/../../libgimp/libgimp.la  \$(top_builddir)/../../libgimp/libgimpui.la"
   else
-    AM_PATH_GIMP(1.2.0,
-                 [SAVE_GTK_LIBS="$GIMP_LIBS"
-                  SAVE_GTK_CFLAGS="$GIMP_CFLAGS"],
-                  AC_MSG_ERROR(Cannot find GIMP libraries: Please run ldconfig as root, make sure gimptool is on your PATH, and if applicable ensure that you have the GIMP, GTK, and GLIB development packages installed.))
+    STP_PATH_GIMP(1.2.0,
+                  [SAVE_GTK_LIBS="$GIMP_LIBS"
+                   SAVE_GTK_CFLAGS="$GIMP_CFLAGS"],
+                   AC_MSG_ERROR(Cannot find GIMP libraries: Please run ldconfig as root, make sure gimptool is on your PATH, and if applicable ensure that you have the GIMP, GTK, and GLIB development packages installed.))
   fi
 fi
 
