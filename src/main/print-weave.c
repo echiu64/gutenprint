@@ -313,6 +313,7 @@ calculate_raw_row_parameters(raw_t *w,		/* I - weave parameters */
 		else
 			subpassblock = w->subblocksperpassblock
 			                 - (subblockoffset - 1) / 2;
+		break;
 	default:
 		subpassblock = subblockoffset;
 		break;
