@@ -2987,7 +2987,7 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
 	    int           bits)
 {
   unsigned char
-    comp_buf[COMPBUFWIDTH],		/* Compression buffer */
+    comp_buf[COMPBUFWIDTH + COMPBUFWIDTH / 4],	/* Compression buffer */
     in_fold[COMPBUFWIDTH],
     *in_ptr= line,
     *comp_ptr, *comp_data;
@@ -3006,14 +3006,14 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
 
   if (bits==2) {
     memset(in_fold,0,length);
-    canon_fold_2bit(line,length / 2,in_fold);
+    canon_fold_2bit(line,length,in_fold);
     in_ptr= in_fold;
     length= (length*8/4); /* 4 pixels in 8bit */
     offset= (offset*8/4); /* 4 pixels in 8bit  */
   }
   if (bits==3) {
     memset(in_fold,0,length);
-    canon_fold_3bit(line,length / 3,in_fold);
+    canon_fold_3bit(line,length,in_fold);
     in_ptr= in_fold;
     length= (length*8)/3;
     offset= (offset/3)*8;
@@ -3086,7 +3086,7 @@ canon_write_line(stp_vars_t *v)
       if (pd->cols[col])
 	written += canon_write(v, pd->caps,
 			       pd->cols[col] + pd->delay[col] * pd->buf_length,
-			       pd->buf_length, num, pd->ydpi,
+			       pd->buf_length / pd->bits, num, pd->ydpi,
 			       &(pd->emptylines), pd->out_width,
 			       pd->left, pd->bits);
     }
