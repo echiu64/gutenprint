@@ -5,8 +5,8 @@ stp_=$(GLOBJ)gdevstp.$(OBJ) \
 	$(GLOBJ)gdevstp-util.$(OBJ) \
 	$(GLOBJ)gdevstp-escp2.$(OBJ)
 
-stp.dev:	$(stp_) page.dev
-	$(SETPDEV) stp $(stp_)
+$(DD)stp.dev:	$(stp_) $(DD)page.dev
+	$(SETPDEV) $(DD)stp $(stp_)
 
 $(GLOBJ)gdevstp.$(OBJ) : $(GLSRC)gdevstp.c $(PDEVH)
 	$(GLCC) -DESCP2_GHOST $(GLO_)gdevstp.$(OBJ) $(C_) $(GLSRC)gdevstp.c
