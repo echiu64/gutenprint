@@ -1042,19 +1042,19 @@ static const double standard_hue_adjustment[49] =
   1.65,
   1.8,
   2.00,				/* M */
-  2.1,
-  2.2,
-  2.3,
+  2.08,
+  2.16,
+  2.24,
+  2.32,
   2.4,
   2.48,
   2.56,
-  2.65,
-  2.79,				/* R */
+  2.65,				/* R */
+  2.75,
   2.95,
   3.15,
-  3.3,
-  3.45,
-  3.6,
+  3.35,
+  3.55,
   3.75,
   3.85,
   4.0,				/* Y */
@@ -3311,12 +3311,11 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	  /*
 	   * Set color where appropriate
 	   */
-	  if (sw->last_color != j)
+	  if (sw->last_color != j &&
+	      (sw->jets == 1 || escp2_has_cap(model, MODEL_VARIABLE_DOT,
+					      MODEL_VARIABLE_NORMAL, v)))
 	    {
-	      if (sw->jets > 1 && !escp2_has_cap(model, MODEL_VARIABLE_DOT,
-						 MODEL_VARIABLE_NORMAL, v))
-		;
-	      else if (!escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_4, v))
+	      if (!escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_4, v))
 		stp_zprintf(v, "\033(r%c%c%c%c", 2, 0, densities[j],colors[j]);
 	      else
 		stp_zprintf(v, "\033r%c", colors[j]);
@@ -3326,32 +3325,29 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	  /*
 	   * Set horizontal position
 	   */
-	  if (escp2_max_hres(model, v) >= 1440 && xdpi > escp2_base_resolution)
-	    {
-	      if (escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_1999, v) &&
-		  !(escp2_has_cap(model, MODEL_VARIABLE_DOT,
-				  MODEL_VARIABLE_NORMAL, v)))
-		{
-		  pos = ((hoffset * xdpi / ydpi) + microoffset);
-		  if (pos > 0)
-		    stp_zprintf(v, "\033($%c%c%c%c%c%c", 4, 0,
-				pos & 255, (pos >> 8) & 255,
-				(pos >> 16) & 255, (pos >> 24) & 255);
-		}
-	      else
-		{
-		  pos = ((hoffset * escp2_max_hres(model, v) / ydpi) +
-			 microoffset);
-		  if (pos > 0)
-		    stp_zprintf(v, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
-				pos & 255, pos >> 8);
-		}
-	    }
-	  else
+	  if (xdpi <= escp2_base_resolution || escp2_max_hres(model, v) < 1440)
 	    {
 	      pos = (hoffset + microoffset);
 	      if (pos > 0)
 		stp_zprintf(v, "\033\\%c%c", pos & 255, pos >> 8);
+	    }
+	  else if (escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_1999,v) &&
+		   !(escp2_has_cap(model, MODEL_VARIABLE_DOT,
+				   MODEL_VARIABLE_NORMAL, v)))
+	    {
+	      pos = ((hoffset * xdpi / ydpi) + microoffset);
+	      if (pos > 0)
+		stp_zprintf(v, "\033($%c%c%c%c%c%c", 4, 0,
+			    pos & 255, (pos >> 8) & 255,
+			    (pos >> 16) & 255, (pos >> 24) & 255);
+	    }
+	  else
+	    {
+	      pos = ((hoffset * escp2_max_hres(model, v) / ydpi) +
+		     microoffset);
+	      if (pos > 0)
+		stp_zprintf(v, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
+			    pos & 255, pos >> 8);
 	    }
 
 	  /*
