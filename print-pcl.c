@@ -32,6 +32,13 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.22  2000/02/06 22:31:04  rlk
+ *   1) Use old methods only for microweave printing.
+ *
+ *   2) remove MAX_DPI from print.h since it's no longer necessary.
+ *
+ *   3) Remove spurious CVS logs that were just clutter.
+ *
  *   Revision 1.21  2000/02/06 21:25:10  davehill
  *   Fixed max paper sizes.
  *
@@ -114,109 +121,6 @@
  *
  *   Revision 1.2  1999/09/12 00:12:24  rlk
  *   Current best stuff
- *
- *   Revision 1.11  1999/05/29 16:35:27  yosh
- *   * configure.in
- *   * Makefile.am: removed tips files, AC_SUBST GIMP_PLUGINS and
- *   GIMP_MODULES so you can easily skip those parts of the build
- *
- *   * acinclude.m4
- *   * config.sub
- *   * config.guess
- *   * ltconfig
- *   * ltmain.sh: libtool 1.3.2
- *
- *   * app/fileops.c: shuffle #includes to avoid warning about MIN and
- *   MAX
- *
- *   [ The following is a big i18n patch from David Monniaux
- *     <david.monniaux@ens.fr> ]
- *
- *   * tips/gimp_conseils.fr.txt
- *   * tips/gimp_tips.txt
- *   * tips/Makefile.am
- *   * configure.in: moved tips to separate dir
- *
- *   * po-plugins: new dir for plug-in translation files
- *
- *   * configure.in: add po-plugins dir and POTFILES processing
- *
- *   * app/boundary.c
- *   * app/brightness_contrast.c
- *   * app/by_color_select.c
- *   * app/color_balance.c
- *   * app/convert.c
- *   * app/curves.c
- *   * app/free_select.c
- *   * app/gdisplay.c
- *   * app/gimpimage.c
- *   * app/gimpunit.c
- *   * app/gradient.c
- *   * app/gradient_select.c
- *   * app/install.c
- *   * app/session.c: various i18n tweaks
- *
- *   * app/tips_dialog.c: localize tips filename
- *
- *   * libgimp/gimpunit.c
- *   * libgimp/gimpunitmenu.c: #include "config.h"
- *
- *   * plug-ins/CEL
- *   * plug-ins/CML_explorer
- *   * plug-ins/Lighting
- *   * plug-ins/apply_lens
- *   * plug-ins/autostretch_hsv
- *   * plug-ins/blur
- *   * plug-ins/bmp
- *   * plug-ins/borderaverage
- *   * plug-ins/bumpmap
- *   * plug-ins/bz2
- *   * plug-ins/checkerboard
- *   * plug-ins/colorify
- *   * plug-ins/compose
- *   * plug-ins/convmatrix
- *   * plug-ins/cubism
- *   * plug-ins/depthmerge
- *   * plug-ins/destripe
- *   * plug-ins/gif
- *   * plug-ins/gifload
- *   * plug-ins/jpeg
- *   * plug-ins/mail
- *   * plug-ins/oilify
- *   * plug-ins/png
- *   * plug-ins/print
- *   * plug-ins/ps
- *   * plug-ins/xbm
- *   * plug-ins/xpm
- *   * plug-ins/xwd: plug-in i18n stuff
- *
- *   -Yosh
- *
- *   Revision 1.10  1998/08/28 23:01:45  yosh
- *   * acconfig.h
- *   * configure.in
- *   * app/main.c: added check for putenv and #ifdefed it's usage since NeXTStep is
- *   lame
- *
- *   * libgimp/gimp.c
- *   * app/main.c
- *   * app/plug_in.c: conditionally compile shared mem stuff so platforms without
- *   it can still work
- *
- *   * plug-ins/CEL/CEL.c
- *   * plug-ins/palette/palette.c
- *   * plug-ins/print/print-escp2.c
- *   * plug-ins/print/print-pcl.c
- *   * plug-ins/print/print-ps.c: s/strdup/g_strdup/ for portability
- *
- *   -Yosh
- *
- *   Revision 1.9  1998/05/17 07:16:46  yosh
- *   0.99.31 fun
- *
- *   updated print plugin
- *
- *   -Yosh
  *
  *   Revision 1.12  1998/05/16  18:27:59  mike
  *   Added support for 4-level "CRet" mode of 800/1100 series printers.

@@ -33,6 +33,13 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.14  2000/02/06 22:31:04  rlk
+ *   1) Use old methods only for microweave printing.
+ *
+ *   2) remove MAX_DPI from print.h since it's no longer necessary.
+ *
+ *   3) Remove spurious CVS logs that were just clutter.
+ *
  *   Revision 1.13  2000/01/25 19:51:27  rlk
  *   1) Better attempt at supporting newer Epson printers.
  *
@@ -73,83 +80,6 @@
  *
  *   Revision 1.2  1999/09/12 00:12:24  rlk
  *   Current best stuff
- *
- *   Revision 1.14  1999/05/29 16:35:29  yosh
- *   * configure.in
- *   * Makefile.am: removed tips files, AC_SUBST GIMP_PLUGINS and
- *   GIMP_MODULES so you can easily skip those parts of the build
- *
- *   * acinclude.m4
- *   * config.sub
- *   * config.guess
- *   * ltconfig
- *   * ltmain.sh: libtool 1.3.2
- *
- *   * app/fileops.c: shuffle #includes to avoid warning about MIN and
- *   MAX
- *
- *   [ The following is a big i18n patch from David Monniaux
- *     <david.monniaux@ens.fr> ]
- *
- *   * tips/gimp_conseils.fr.txt
- *   * tips/gimp_tips.txt
- *   * tips/Makefile.am
- *   * configure.in: moved tips to separate dir
- *
- *   * po-plugins: new dir for plug-in translation files
- *
- *   * configure.in: add po-plugins dir and POTFILES processing
- *
- *   * app/boundary.c
- *   * app/brightness_contrast.c
- *   * app/by_color_select.c
- *   * app/color_balance.c
- *   * app/convert.c
- *   * app/curves.c
- *   * app/free_select.c
- *   * app/gdisplay.c
- *   * app/gimpimage.c
- *   * app/gimpunit.c
- *   * app/gradient.c
- *   * app/gradient_select.c
- *   * app/install.c
- *   * app/session.c: various i18n tweaks
- *
- *   * app/tips_dialog.c: localize tips filename
- *
- *   * libgimp/gimpunit.c
- *   * libgimp/gimpunitmenu.c: #include "config.h"
- *
- *   * plug-ins/CEL
- *   * plug-ins/CML_explorer
- *   * plug-ins/Lighting
- *   * plug-ins/apply_lens
- *   * plug-ins/autostretch_hsv
- *   * plug-ins/blur
- *   * plug-ins/bmp
- *   * plug-ins/borderaverage
- *   * plug-ins/bumpmap
- *   * plug-ins/bz2
- *   * plug-ins/checkerboard
- *   * plug-ins/colorify
- *   * plug-ins/compose
- *   * plug-ins/convmatrix
- *   * plug-ins/cubism
- *   * plug-ins/depthmerge
- *   * plug-ins/destripe
- *   * plug-ins/gif
- *   * plug-ins/gifload
- *   * plug-ins/jpeg
- *   * plug-ins/mail
- *   * plug-ins/oilify
- *   * plug-ins/png
- *   * plug-ins/print
- *   * plug-ins/ps
- *   * plug-ins/xbm
- *   * plug-ins/xpm
- *   * plug-ins/xwd: plug-in i18n stuff
- *
- *   -Yosh
  *
  *   Revision 1.13  1999/05/27 19:11:33  asbjoer
  *   use g_strncasecmp()

@@ -65,7 +65,6 @@
 #define ORIENT_LANDSCAPE	1	/* Landscape orientation */
 
 #define MAX_CARRIAGE_WIDTH	17
-#define MAX_BPI (4 * 720)
 
 #ifndef MIN
 #  define MIN(a,b)		((a) < (b) ? (a) : (b))
