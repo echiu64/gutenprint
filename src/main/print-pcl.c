@@ -2386,8 +2386,10 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 /* Set up dithering for special printers. */
 
 #if 1		/* Leave alone for now */
-  stp_set_default_float_parameter(nv, "GCRLower", .3);
-  stp_set_default_float_parameter(nv, "GCRUpper", .999);
+  if (!stp_check_float_parameter(nv, "GCRLower", STP_PARAMETER_ACTIVE))
+    stp_set_default_float_parameter(nv, "GCRLower", .3);
+  if (!stp_check_float_parameter(nv, "GCRUpper", STP_PARAMETER_ACTIVE))
+    stp_set_default_float_parameter(nv, "GCRUpper", .999);
 #endif
   stpi_dither_init(nv, image, out_width, xdpi, ydpi);
 
@@ -2428,13 +2430,13 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 			    stp_get_float_parameter(nv, "Density"));
     }
 
-  if (!stp_check_curve_parameter(nv, "HueMap"))
+  if (!stp_check_curve_parameter(nv, "HueMap", STP_PARAMETER_ACTIVE))
     {
       hue_adjustment = stp_curve_create_read_string(standard_hue_adjustment);
       stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
       stp_curve_free(hue_adjustment);
     }
-  if (!stp_check_curve_parameter(nv, "LumMap"))
+  if (!stp_check_curve_parameter(nv, "LumMap", STP_PARAMETER_ACTIVE))
     {
       lum_adjustment = stp_curve_create_read_string(standard_lum_adjustment);
       stp_curve_free(lum_adjustment);

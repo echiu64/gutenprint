@@ -108,20 +108,6 @@ sizeof(the_parameters) / sizeof(const stp_parameter_t);
  * 'ps_parameters()' - Return the parameter values for the given parameter.
  */
 
-static int
-is_standard_param(const char *name)
-{
-  if (name &&
-      ((strcmp(name, "Resolution") == 0) ||
-       (strcmp(name, "InkType") == 0) ||
-       (strcmp(name, "InputSlot") == 0) ||
-       (strcmp(name, "MediaType") == 0) ||
-       (strcmp(name, "PageSize") == 0)))
-    return 1;
-  else
-    return 0;
-}
-
 static stp_parameter_list_t
 ps_list_parameters(const stp_vars_t v)
 {
@@ -185,12 +171,10 @@ ps_parameters(const stp_vars_t v, const char *name,
 	    }
 	  description->deflt.str =
 	    stp_string_list_param(description->bounds.str, 0)->name;
+	  description->is_active = 1;
 	}
-      else if (is_standard_param(name))
-	{
-	  description->bounds.str = NULL;
-	  description->is_active = 0;
-	}
+      else
+	description->is_active = 0;
       return;
     }
 
@@ -212,23 +196,18 @@ ps_parameters(const stp_vars_t v, const char *name,
       else
         ltext = loption;
 
-      stp_string_list_add_string(description->bounds.str,
-			       loption, ltext);
+      stp_string_list_add_string(description->bounds.str, loption, ltext);
     }
   }
 
-  if (is_standard_param(name))
-    {
-      if (stp_string_list_count(description->bounds.str) > 0)
-	description->deflt.str =
-	  stp_string_list_param(description->bounds.str, 0)->name;
-    }
+  if (stp_string_list_count(description->bounds.str) > 0)
+    description->deflt.str =
+      stp_string_list_param(description->bounds.str, 0)->name;
   else
     {
       stp_string_list_free(description->bounds.str);
       description->is_active = 0;
       description->bounds.str = NULL;
-      description->p_type = STP_PARAMETER_TYPE_INVALID;
     }
   return;
 }

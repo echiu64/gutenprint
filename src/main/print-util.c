@@ -148,8 +148,8 @@ stpi_zfwrite(const char *buf, size_t bytes, size_t nitems, const stp_vars_t v)
 void
 stpi_putc(int ch, const stp_vars_t v)
 {
-  char a = (char) ch;
-  (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), &a, 1);
+  unsigned char a = (unsigned char) ch;
+  (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), (char *) &a, 1);
 }
 
 #define BYTE(expr, byteno) (((expr) >> (8 * byteno)) & 0xff)
@@ -169,21 +169,21 @@ stpi_put16_be(unsigned short sh, const stp_vars_t v)
 }
 
 void
-stpi_put32_le(unsigned int sh, const stp_vars_t v)
+stpi_put32_le(unsigned int in, const stp_vars_t v)
 {
-  stpi_putc(BYTE(sh, 0), v);
-  stpi_putc(BYTE(sh, 1), v);
-  stpi_putc(BYTE(sh, 2), v);
-  stpi_putc(BYTE(sh, 3), v);
+  stpi_putc(BYTE(in, 0), v);
+  stpi_putc(BYTE(in, 1), v);
+  stpi_putc(BYTE(in, 2), v);
+  stpi_putc(BYTE(in, 3), v);
 }
 
 void
-stpi_put32_be(unsigned int sh, const stp_vars_t v)
+stpi_put32_be(unsigned int in, const stp_vars_t v)
 {
-  stpi_putc(BYTE(sh, 3), v);
-  stpi_putc(BYTE(sh, 2), v);
-  stpi_putc(BYTE(sh, 1), v);
-  stpi_putc(BYTE(sh, 0), v);
+  stpi_putc(BYTE(in, 3), v);
+  stpi_putc(BYTE(in, 2), v);
+  stpi_putc(BYTE(in, 1), v);
+  stpi_putc(BYTE(in, 0), v);
 }
 
 void
@@ -212,6 +212,8 @@ stpi_send_command(const stp_vars_t v, const char *command,
 	    case 'a':
 	    case 'b':
 	    case 'B':
+	    case 'd':
+	    case 'D':
 	      break;
 	    case 'c':
 	      (void) va_arg(args, unsigned int);
@@ -244,13 +246,19 @@ stpi_send_command(const stp_vars_t v, const char *command,
       switch (fchar)
 	{
 	case 'a':
-	  stpi_put16_le(byte_count, v);
+	  stpi_putc(byte_count, v);
 	  break;
 	case 'b':
 	  stpi_put16_le(byte_count, v);
 	  break;
 	case 'B':
 	  stpi_put16_be(byte_count, v);
+	  break;
+	case 'd':
+	  stpi_put32_le(byte_count, v);
+	  break;
+	case 'D':
+	  stpi_put32_be(byte_count, v);
 	  break;
 	case 'c':
 	  stpi_putc(va_arg(args, unsigned int), v);

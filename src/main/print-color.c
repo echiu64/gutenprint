@@ -109,7 +109,7 @@ static float_param_t float_parameters[] =
       "AppGamma", N_("AppGamma"),
       N_("Gamma value assumed by application"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1
+      STP_PARAMETER_LEVEL_ADVANCED5, 1, 1, -1
     }, 0.1, 4.0, 1.0, 0
   },
   {
@@ -138,18 +138,10 @@ static float_param_t float_parameters[] =
   },
   {
     {
-      "Black", N_("Black"),
-      N_("Adjust the black gamma"),
-      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1, 0
-    }, 0.0, 4.0, 1.0, 1
-  },
-  {
-    {
       "CyanDensity", N_("Cyan Balance"),
       N_("Adjust the cyan balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1, 1
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -157,7 +149,7 @@ static float_param_t float_parameters[] =
       "MagentaDensity", N_("Magenta Balance"),
       N_("Adjust the magenta balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1, 2
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -165,7 +157,7 @@ static float_param_t float_parameters[] =
       "YellowDensity", N_("Yellow Balance"),
       N_("Adjust the yellow balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1, 3
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -173,7 +165,7 @@ static float_param_t float_parameters[] =
       "BlackDensity", N_("Black Balance"),
       N_("Adjust the black balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -191,8 +183,16 @@ static float_param_t float_parameters[] =
       "ImageOptimization", N_("Image Type"),
       N_("Optimize the settings for the type of image to be printed"),
       STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 0, 1, -1
-    }, 0.0, 0.0, 0.0, 1
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+    }, 0.0, 0.0, 0.0, 0
+  },
+  {
+    {
+      "Black", N_("GCR Transition"),
+      N_("Adjust the black gamma"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 0
+    }, 0.0, 1.0, 1.0, 1
   },
   {
     {
@@ -1127,11 +1127,11 @@ compute_gcr_curve(const stp_vars_t vars)
   int step = 65535 / (lut->steps - 1); /* 1 or 257 */
   int i;
 
-  if (stp_check_float_parameter(vars, "GCRUpper"))
+  if (stp_check_float_parameter(vars, "GCRUpper", STP_PARAMETER_ACTIVE))
     k_upper = stp_get_float_parameter(vars, "GCRUpper");
-  if (stp_check_float_parameter(vars, "GCRLower"))
+  if (stp_check_float_parameter(vars, "GCRLower", STP_PARAMETER_ACTIVE))
     k_lower = stp_get_float_parameter(vars, "GCRLower");
-  if (stp_check_float_parameter(vars, "Black"))
+  if (stp_check_float_parameter(vars, "Black", STP_PARAMETER_ACTIVE))
     k_gamma = stp_get_float_parameter(vars, "Black");
   k_upper *= 65535;
   k_lower *= 65535;
@@ -1186,7 +1186,7 @@ generic_rgb_to_cmyk(const stp_vars_t vars,
 
   if (!lut->gcr_curve)
     {
-      if (stp_check_curve_parameter(vars, "GCRCurve"))
+      if (stp_check_curve_parameter(vars, "GCRCurve", STP_PARAMETER_ACTIVE))
 	lut->gcr_curve =
 	  stp_curve_create_copy(stp_get_curve_parameter(vars, "GCRCurve"));
       else

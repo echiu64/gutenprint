@@ -140,11 +140,17 @@ query (void)
 			  args, NULL);
 }
 
+static guchar *gimp_thumbnail_data = NULL;
+
 static guchar *
 stpui_get_thumbnail_data_function(void *image_ID, gint *width, gint *height,
 				  gint *bpp, gint page)
 {
-  return gimp_image_get_thumbnail_data((gint) image_ID, width, height, bpp);
+  if (gimp_thumbnail_data)
+    free(gimp_thumbnail_data);
+  gimp_thumbnail_data =
+    gimp_image_get_thumbnail_data((gint) image_ID, width, height, bpp);
+  return gimp_thumbnail_data;
 }
 
 /*
@@ -346,6 +352,9 @@ run (char   *name,		/* I - Name of print program. */
       break;
     }
 
+  if (gimp_thumbnail_data)
+    free(gimp_thumbnail_data);
+
   /*
    * Print the image...
    */
@@ -415,7 +424,7 @@ do_print_dialog (gchar *proc_name)
   char *filename = gimp_personal_rc_file ((BAD_CONST_CHAR) "printrc");
   stpui_set_printrc_file(filename);
   g_free(filename);
-  stpui_set_errfunc(gimp_errfunc);
+/*  stpui_set_errfunc(gimp_errfunc); */
   stpui_set_thumbnail_func(stpui_get_thumbnail_data_function);
   stpui_set_thumbnail_data((void *) image_ID);
   return stpui_do_print_dialog();

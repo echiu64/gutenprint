@@ -337,7 +337,8 @@ verify_string_param(const stp_vars_t v, const char *parameter,
 		    stp_parameter_t *desc)
 {
   int answer = 1;
-  if (desc->is_mandatory || stp_check_string_parameter(v, parameter))
+  if (desc->is_mandatory ||
+      stp_check_string_parameter(v, parameter, STP_PARAMETER_ACTIVE))
     {
       const char *checkval = stp_get_string_parameter(v, parameter);
       stp_string_list_t vptr = desc->bounds.str;
@@ -378,7 +379,8 @@ static int
 verify_double_param(const stp_vars_t v, const char *parameter,
 		    stp_parameter_t *desc)
 {
-  if (desc->is_mandatory || stp_check_float_parameter(v, parameter))
+  if (desc->is_mandatory ||
+      stp_check_float_parameter(v, parameter, STP_PARAMETER_ACTIVE))
     {
       double checkval = stp_get_float_parameter(v, parameter);
       if (checkval < desc->bounds.dbl.lower ||
@@ -397,7 +399,8 @@ static int
 verify_int_param(const stp_vars_t v, const char *parameter,
 		 stp_parameter_t *desc)
 {
-  if (desc->is_mandatory || stp_check_int_parameter(v, parameter))
+  if (desc->is_mandatory ||
+      stp_check_int_parameter(v, parameter, STP_PARAMETER_ACTIVE))
     {
       int checkval = stp_get_int_parameter(v, parameter);
       if (checkval < desc->bounds.integer.lower ||
@@ -420,7 +423,8 @@ verify_curve_param(const stp_vars_t v, const char *parameter,
 {
   int answer = 1;
   if (desc->bounds.curve &&
-      (desc->is_mandatory || stp_check_curve_parameter(v, parameter)))
+      (desc->is_mandatory ||
+       stp_check_curve_parameter(v, parameter, STP_PARAMETER_ACTIVE)))
     {
       stp_curve_t checkval = stp_get_curve_parameter(v, parameter);
       if (checkval)

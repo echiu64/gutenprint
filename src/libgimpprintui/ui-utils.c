@@ -448,20 +448,30 @@ stpui_scale_entry_new(GtkTable    *table,
 		      gboolean     constrain,
 		      gfloat       unconstrained_lower,
 		      gfloat       unconstrained_upper,
-		      const gchar *tooltip)
+		      const gchar *tooltip,
+		      gboolean     is_optional)
 {
   GtkWidget *label;
   GtkWidget *scale;
   GtkWidget *spinbutton;
+  GtkWidget *checkbutton = NULL;
   GtkObject *adjustment;
   GtkObject *return_adj;
 
   label = gtk_label_new (text);
-  gtk_misc_set_alignment (GTK_MISC (label), 1.0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label,
-                    column, column + 1, row, row + 1,
+                    column + 1, column + 2, row, row + 1,
                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
+
+  checkbutton = gtk_check_button_new();
+  gtk_table_attach_defaults(GTK_TABLE(table), checkbutton,
+			    column, column + 1, row, row + 1);
+  if (is_optional)
+    gtk_widget_show(checkbutton);
+  else
+    gtk_widget_hide(checkbutton);
 
   if (! constrain &&
       unconstrained_lower <= lower &&
@@ -474,10 +484,10 @@ stpui_scale_entry_new(GtkTable    *table,
 					    0.0);
 
       spinbutton = spin_button_new (&adjustment, value,
-					 unconstrained_lower,
-					 unconstrained_upper,
-					 step_increment, page_increment, 0.0,
-					 1.0, digits);
+				    unconstrained_lower,
+				    unconstrained_upper,
+				    step_increment, page_increment, 0.0,
+				    1.0, digits);
 
       gtk_signal_connect
 	(GTK_OBJECT (constrained_adj), "value_changed",
@@ -496,8 +506,8 @@ stpui_scale_entry_new(GtkTable    *table,
   else
     {
       spinbutton = spin_button_new (&adjustment, value, lower, upper,
-					 step_increment, page_increment, 0.0,
-					 1.0, digits);
+				    step_increment, page_increment, 0.0,
+				    1.0, digits);
 
       return_adj = adjustment;
     }
@@ -511,12 +521,12 @@ stpui_scale_entry_new(GtkTable    *table,
   gtk_scale_set_digits (GTK_SCALE (scale), digits);
   gtk_scale_set_draw_value (GTK_SCALE (scale), FALSE);
   gtk_table_attach (GTK_TABLE (table), scale,
-		    column + 1, column + 2, row, row + 1,
+		    column + 2, column + 3, row, row + 1,
 		    GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
   gtk_widget_show (scale);
 
   gtk_table_attach (GTK_TABLE (table), spinbutton,
-		    column + 2, column + 3, row, row + 1,
+		    column + 3, column + 4, row, row + 1,
 		    GTK_SHRINK, GTK_SHRINK, 0, 0);
   gtk_widget_show (spinbutton);
 
@@ -526,6 +536,7 @@ stpui_scale_entry_new(GtkTable    *table,
       stpui_set_help_data (spinbutton, tooltip);
     }
 
+  gtk_object_set_data (GTK_OBJECT (return_adj), "checkbutton", checkbutton);
   gtk_object_set_data (GTK_OBJECT (return_adj), "label", label);
   gtk_object_set_data (GTK_OBJECT (return_adj), "scale", scale);
   gtk_object_set_data (GTK_OBJECT (return_adj), "spinbutton", spinbutton);
@@ -549,46 +560,59 @@ stpui_scale_entry_new(GtkTable    *table,
  * Note that the @label_text can be #NULL and that the widget will be attached
  * starting at (@column + 1) in this case, too.
  **/
-static void
-table_attach_aligned (GtkTable    *table,
-			   gint         column,
-			   gint         row,
-			   const gchar *label_text,
-			   gfloat       xalign,
-			   gfloat       yalign,
-			   GtkWidget   *widget,
-			   gint         colspan,
-			   gboolean     left_align)
+void
+stpui_table_attach_aligned (GtkTable    *table,
+			    gint         column,
+			    gint         row,
+			    const gchar *label_text,
+			    gfloat       xalign,
+			    gfloat       yalign,
+			    GtkWidget   *widget,
+			    gint         colspan,
+			    gboolean     left_align,
+			    gboolean     is_optional)
 {
+  if (is_optional)
+    {
+      GtkWidget *checkbutton;
+
+      checkbutton = gtk_check_button_new();
+      gtk_table_attach (table, checkbutton,
+			column, column + 1,
+			row, row + 1,
+			GTK_FILL, GTK_FILL, 0, 0);
+      gtk_widget_show (checkbutton);
+    }
+    
   if (label_text)
     {
       GtkWidget *label;
 
       label = gtk_label_new (label_text);
       gtk_misc_set_alignment (GTK_MISC (label), xalign, yalign);
-      gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_RIGHT);
+      gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
       gtk_table_attach (table, label,
-			column, column + 1,
+			column + 1, column + 2,
 			row, row + 1,
 			GTK_FILL, GTK_FILL, 0, 0);
       gtk_widget_show (label);
     }
 
+  gtk_widget_show (widget);
   if (left_align)
     {
       GtkWidget *alignment;
 
       alignment = gtk_alignment_new (0.0, 0.5, 0.0, 0.0);
       gtk_container_add (GTK_CONTAINER (alignment), widget);
-      gtk_widget_show (widget);
 
       widget = alignment;
     }
 
   gtk_table_attach (table, widget,
-		    column + 1, column + 1 + colspan,
+		    column + 2, column + 2 + colspan,
 		    row, row + 1,
-		    GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+		    GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
 
   gtk_widget_show (widget);
 }
@@ -744,8 +768,8 @@ stpui_create_entry(GtkWidget *table, int hpos, int vpos, const char *text,
 {
   GtkWidget *entry = gtk_entry_new();
   gtk_widget_set_usize(entry, 60, 0);
-  table_attach_aligned(GTK_TABLE(table), hpos, vpos, text,
-		       1.0, 0.5, entry, 1, TRUE);
+  stpui_table_attach_aligned(GTK_TABLE(table), hpos, vpos, text,
+			     0.0, 0.5, entry, 1, TRUE, FALSE);
   stpui_set_help_data(entry, help);
   gtk_signal_connect(GTK_OBJECT(entry), "activate",
 		     GTK_SIGNAL_FUNC(callback), NULL);
@@ -759,8 +783,8 @@ stpui_create_radio_button(radio_group_t *radio, GSList *group,
 {
   radio->button = gtk_radio_button_new_with_label(group, _(radio->name));
   group = gtk_radio_button_group(GTK_RADIO_BUTTON(radio->button));
-  table_attach_aligned(GTK_TABLE(table), hpos, vpos, NULL, 0.5, 0.5,
-		       radio->button, 1, FALSE);
+  stpui_table_attach_aligned(GTK_TABLE(table), hpos, vpos, NULL, 0.5, 0.5,
+			     radio->button, 1, FALSE, FALSE);
   stpui_set_help_data(radio->button, _(radio->help));
   gtk_signal_connect(GTK_OBJECT(radio->button), "toggled",
 		     GTK_SIGNAL_FUNC(callback), (gpointer) radio->value);
@@ -774,20 +798,27 @@ stpui_set_adjustment_tooltip (GtkObject *adj, const gchar *tip)
   stpui_set_help_data (GTK_WIDGET (SCALE_ENTRY_SPINBUTTON (adj)), tip);
 }
 
-GtkWidget *
-stpui_table_attach_aligned(GtkTable *table, gint column, gint row,
-			   const gchar *label_text, gfloat xalign,
-			   gfloat yalign, GtkWidget *widget, gint colspan,
-			   gboolean left_align)
+static GtkWidget *
+table_label(GtkTable *table, gint column, gint row)
 {
-  GList *children;
-  GtkTableChild *child;
-  table_attach_aligned(table, column, row, label_text, xalign, yalign,
-		       widget, colspan, left_align);
-  children = table->children;
+  GList *children = table->children;;
   while (children)
     {
-      child = (GtkTableChild *)children->data;
+      GtkTableChild *child = (GtkTableChild *)children->data;
+      if (child->left_attach == column + 1 && child->top_attach == row)
+	return child->widget;
+      children = children->next;
+    }
+  return NULL;
+}
+
+static GtkWidget *
+table_checkbutton(GtkTable *table, gint column, gint row)
+{
+  GList *children = table->children;
+  while (children)
+    {
+      GtkTableChild *child = (GtkTableChild *)children->data;
       if (child->left_attach == column && child->top_attach == row)
 	return child->widget;
       children = children->next;
@@ -796,17 +827,22 @@ stpui_table_attach_aligned(GtkTable *table, gint column, gint row,
 }
 
 void
-stpui_create_new_combo(list_option_t *list_option, GtkWidget *table,
-		       int hpos, int vpos)
+stpui_create_new_combo(option_t *option, GtkWidget *table,
+		       int hpos, int vpos, gboolean is_optional)
 {
   GtkWidget *event_box = gtk_event_box_new();
-  list_option->combo = gtk_combo_new();
-  gtk_container_add(GTK_CONTAINER(event_box), list_option->combo);
-  gtk_widget_show(list_option->combo);
-  stpui_set_help_data(event_box, _(list_option->fast_desc->help));
-  list_option->label = stpui_table_attach_aligned
-    (GTK_TABLE(table), hpos, vpos, _(list_option->fast_desc->text),
-     1.0, 0.5, event_box, 1, TRUE);
+  GtkWidget *combo = gtk_combo_new();
+  option->info.list.combo = combo;
+  gtk_container_add(GTK_CONTAINER(event_box), combo);
+  gtk_widget_show(combo);
+  gtk_widget_show(event_box);
+  stpui_set_help_data(event_box, _(option->fast_desc->help));
+  stpui_table_attach_aligned
+    (GTK_TABLE(table), hpos, vpos, _(option->fast_desc->text),
+     0.0, 0.5, event_box, 2, TRUE, is_optional);
+  option->info.list.label = table_label(GTK_TABLE(table), hpos, vpos);
+  option->checkbox =
+    table_checkbutton(GTK_TABLE(table), hpos, vpos);
 }
 
 const char *
@@ -830,4 +866,33 @@ stpui_combo_get_name(GtkWidget   *combo,
 	  return (stp_string_list_param(options, i)->name);
     }
   return (NULL);
+}
+
+void
+stpui_create_scale_entry(option_t    *opt,
+			 GtkTable    *table,
+			 gint         column,
+			 gint         row,
+			 const gchar *text,
+			 gint         scale_usize,
+			 gint         spinbutton_usize,
+			 gfloat       value,
+			 gfloat       lower,
+			 gfloat       upper,
+			 gfloat       step_increment,
+			 gfloat       page_increment,
+			 guint        digits,
+			 gboolean     constrain,
+			 gfloat       unconstrained_lower,
+			 gfloat       unconstrained_upper,
+			 const gchar *tooltip,
+			 gboolean     is_optional)
+{
+  opt->info.flt.adjustment =
+    stpui_scale_entry_new(table, column, row, text, scale_usize,
+			  spinbutton_usize, value, lower, upper,
+			  step_increment, page_increment, digits, constrain,
+			  unconstrained_lower, unconstrained_upper,
+			  tooltip, is_optional);
+  opt->checkbox = table_checkbutton(table, column, row);
 }

@@ -143,14 +143,14 @@ typedef struct escp2_init
 {							\
   "escp2_" #s, "escp2_" #s, NULL,			\
   STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,	\
-  STP_PARAMETER_LEVEL_ADVANCED4, 0, 1			\
+  STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1		\
 }
 
 #define PARAMETER_RAW(s)				\
 {							\
   "escp2_" #s, "escp2_" #s, NULL,			\
   STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,	\
-  STP_PARAMETER_LEVEL_ADVANCED4, 0, 1			\
+  STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1		\
 }
 
 static const stp_parameter_t the_parameters[] =
@@ -245,22 +245,22 @@ escp2_has_cap(int model, escp2_model_option_t feature,
     }
 }
 
-#define DEF_SIMPLE_ACCESSOR(f, t)			\
-static t						\
-escp2_##f(int model, const stp_vars_t v)		\
-{							\
-  if (stp_check_int_parameter(v, "escp2_" #f))		\
-    return stp_get_int_parameter(v, "escp2_" #f);	\
-  return (stpi_escp2_model_capabilities[model].f);	\
+#define DEF_SIMPLE_ACCESSOR(f, t)					\
+static t								\
+escp2_##f(int model, const stp_vars_t v)				\
+{									\
+  if (stp_check_int_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	\
+    return stp_get_int_parameter(v, "escp2_" #f);			\
+  return (stpi_escp2_model_capabilities[model].f);			\
 }
 
-#define DEF_RAW_ACCESSOR(f, t)				\
-static t						\
-escp2_##f(int model, const stp_vars_t v)		\
-{							\
-  if (stp_check_raw_parameter(v, "escp2_" #f))		\
-    return stp_get_raw_parameter(v, "escp2_" #f);	\
-  return (stpi_escp2_model_capabilities[model].f);	\
+#define DEF_RAW_ACCESSOR(f, t)						\
+static t								\
+escp2_##f(int model, const stp_vars_t v)				\
+{									\
+  if (stp_check_raw_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	\
+    return stp_get_raw_parameter(v, "escp2_" #f);			\
+  return (stpi_escp2_model_capabilities[model].f);			\
 }
 
 #define DEF_COMPOSITE_ACCESSOR(f, t)			\
@@ -277,10 +277,10 @@ escp2_##f(int model, const stp_vars_t v)				\
   const res_t *res =							\
     escp2_find_resolution(model, v,					\
 			  stp_get_string_parameter(v, "Resolution"));	\
-  if (stp_check_int_parameter(v, "escp2_" #f))				\
+  if (stp_check_int_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	\
     return stp_get_int_parameter(v, "escp2_" #f);			\
   if (res && !(res->softweave))						\
-    return (stpi_escp2_model_capabilities[model].m_##f);			\
+    return (stpi_escp2_model_capabilities[model].m_##f);		\
   else									\
     return (stpi_escp2_model_capabilities[model].f);			\
 }
@@ -337,7 +337,7 @@ static int
 escp2_ink_type(int model, int resid, const stp_vars_t v)
 {
   int dotid = resid2dotid(resid);
-  if (stp_check_int_parameter(v, "escp2_ink_type"))
+  if (stp_check_int_parameter(v, "escp2_ink_type", STP_PARAMETER_ACTIVE))
     return stp_get_int_parameter(v, "escp2_ink_type");
   return stpi_escp2_model_capabilities[model].dot_sizes[dotid];
 }
@@ -346,7 +346,7 @@ static double
 escp2_density(int model, int resid, const stp_vars_t v)
 {
   int dotid = resid2dotid(resid);
-  if (stp_check_float_parameter(v, "escp2_density"))
+  if (stp_check_float_parameter(v, "escp2_density", STP_PARAMETER_ACTIVE))
     return stp_get_float_parameter(v, "escp2_density");
   return stpi_escp2_model_capabilities[model].densities[dotid];
 }
@@ -355,7 +355,7 @@ static int
 escp2_bits(int model, int resid, const stp_vars_t v)
 {
   int dotid = resid2dotid(resid);
-  if (stp_check_int_parameter(v, "escp2_bits"))
+  if (stp_check_int_parameter(v, "escp2_bits", STP_PARAMETER_ACTIVE))
     return stp_get_int_parameter(v, "escp2_bits");
   return stpi_escp2_model_capabilities[model].bits[dotid];
 }
@@ -364,7 +364,7 @@ static double
 escp2_base_res(int model, int resid, const stp_vars_t v)
 {
   int dotid = resid2dotid(resid);
-  if (stp_check_float_parameter(v, "escp2_base_res"))
+  if (stp_check_float_parameter(v, "escp2_base_res", STP_PARAMETER_ACTIVE))
     return stp_get_float_parameter(v, "escp2_base_res");
   return stpi_escp2_model_capabilities[model].base_resolutions[dotid];
 }
@@ -1104,10 +1104,12 @@ adjust_print_quality(const escp2_init_t *init, stp_image_t *image)
   if (stp_get_float_parameter(nv, "Density") > 1.0)
     stp_set_float_parameter(nv, "Density", 1.0);
 
-  stp_set_default_float_parameter(nv, "GCRLower", k_lower);
-  stp_set_default_float_parameter(nv, "GCRUpper", k_upper);
+  if (!stp_check_float_parameter(nv, "GCRLower", STP_PARAMETER_ACTIVE))
+    stp_set_default_float_parameter(nv, "GCRLower", k_lower);
+  if (!stp_check_float_parameter(nv, "GCRUpper", STP_PARAMETER_ACTIVE))
+    stp_set_default_float_parameter(nv, "GCRUpper", k_upper);
 
-  if (!stp_check_curve_parameter(nv, "HueMap"))
+  if (!stp_check_curve_parameter(nv, "HueMap", STP_PARAMETER_ACTIVE))
     {
       hue_adjustment = stpi_read_and_compose_curves
 	(init->inkname->hue_adjustment, pt ? pt->hue_adjustment : NULL,
@@ -1115,7 +1117,7 @@ adjust_print_quality(const escp2_init_t *init, stp_image_t *image)
       stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
       stp_curve_free(hue_adjustment);
     }
-  if (!stp_check_curve_parameter(nv, "SatMap"))
+  if (!stp_check_curve_parameter(nv, "SatMap", STP_PARAMETER_ACTIVE))
     {
       sat_adjustment = stpi_read_and_compose_curves
 	(init->inkname->sat_adjustment, pt ? pt->sat_adjustment : NULL,
@@ -1123,7 +1125,7 @@ adjust_print_quality(const escp2_init_t *init, stp_image_t *image)
       stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
       stp_curve_free(sat_adjustment);
     }
-  if (!stp_check_curve_parameter(nv, "LumMap"))
+  if (!stp_check_curve_parameter(nv, "LumMap", STP_PARAMETER_ACTIVE))
     {
       lum_adjustment = stpi_read_and_compose_curves
 	(init->inkname->lum_adjustment, pt ? pt->lum_adjustment : NULL,

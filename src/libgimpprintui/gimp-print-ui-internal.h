@@ -43,15 +43,33 @@
 
 typedef struct
 {
-  const char *name;
-  void (*extra)(const gchar *);
   gint callback_id;
-  const stp_parameter_t *fast_desc;
-  const char *default_val;
+  char *default_val;
   stp_string_list_t params;
   GtkWidget *combo;
   GtkWidget *label;
-} list_option_t;
+} list_option_t;  
+
+typedef struct
+{
+  GtkObject *adjustment;
+  gfloat upper;
+  gfloat lower;
+  gfloat deflt;
+  gfloat scale;
+} float_option_t;
+
+typedef struct
+{
+  const stp_parameter_t *fast_desc;
+  int is_active;
+  int is_enabled;
+  GtkWidget *checkbox;
+  union {
+    list_option_t list;
+    float_option_t flt;
+  } info;
+} option_t;
 
 typedef struct
 {
@@ -69,15 +87,6 @@ typedef struct
   gint value;
   GtkWidget *button;
 } radio_group_t;
-
-typedef struct
-{
-  const char *name;
-  GtkObject *adjustment;
-  gfloat scale;
-  gint is_active;
-  gint update_thumbnail;
-} color_option_t;
 
 typedef struct
 {
@@ -107,6 +116,9 @@ typedef struct
         gtk_spin_button_get_adjustment \
         (GTK_SPIN_BUTTON (gtk_object_get_data (GTK_OBJECT (adj), "spinbutton")))
 
+#define SCALE_ENTRY_CHECKBUTTON(adj) \
+        GTK_CHECK_BUTTON (gtk_object_get_data (GTK_OBJECT (adj), "checkbutton"))
+
 /*
  * Function prototypes
  */
@@ -120,19 +132,22 @@ extern void stpui_plist_copy(stpui_plist_t *vd, const stpui_plist_t *vs);
 extern gint stpui_plist_count;	   /* Number of system printers */
 extern gint stpui_plist_current;     /* Current system printer */
 extern stpui_plist_t *stpui_plist;		  /* System printers */
+extern const char *stpui_printrc_current_printer;
 
 extern int stpui_plist_add(const stpui_plist_t *key, int add_only);
+extern stpui_plist_t *stpui_plist_create(const char *name, const char *driver);
 extern void stpui_printer_initialize(stpui_plist_t *printer);
 extern const char *stpui_combo_get_name(GtkWidget   *combo,
 				  const stp_string_list_t options);
 extern void stpui_set_adjustment_tooltip(GtkObject *adjustment,
 					 const gchar *tip);
 extern void stpui_set_help_data(GtkWidget *widget, const gchar *tooltip);
-extern GtkWidget *stpui_table_attach_aligned(GtkTable *table, gint column,
-					     gint row, const gchar *label_text,
-					     gfloat xalign, gfloat yalign,
-					     GtkWidget *widget, gint colspan,
-					     gboolean left_align);
+extern void stpui_table_attach_aligned(GtkTable *table, gint column,
+				       gint row, const gchar *label_text,
+				       gfloat xalign, gfloat yalign,
+				       GtkWidget *widget, gint colspan,
+				       gboolean left_align,
+				       gboolean is_optional);
 
 extern GtkWidget *stpui_create_entry(GtkWidget *table, int hpos, int vpos,
 				     const char *text, const char *help,
@@ -141,8 +156,8 @@ extern GSList *stpui_create_radio_button(radio_group_t *radio, GSList *group,
 					 GtkWidget *table, int hpos, int vpos,
 					 GtkSignalFunc callback);
 extern void stpui_set_adjustment_tooltip (GtkObject *adj, const gchar *tip);
-extern void stpui_create_new_combo(list_option_t *list_option,
-				   GtkWidget *table, int hpos, int vpos);
+extern void stpui_create_new_combo(option_t *option, GtkWidget *table,
+				   int hpos, int vpos, gboolean is_optional);
 extern void stpui_help_init (void);
 extern void stpui_help_free (void);
 extern void stpui_enable_help (void);
@@ -176,6 +191,7 @@ extern GtkWidget *stpui_option_menu_new(gboolean            menu_only,
 					 *  gboolean        active
 					 */
 					...);
+
 extern GtkObject *stpui_scale_entry_new(GtkTable    *table,
 					gint         column,
 					gint         row,
@@ -191,7 +207,27 @@ extern GtkObject *stpui_scale_entry_new(GtkTable    *table,
 					gboolean     constrain,
 					gfloat       unconstrained_lower,
 					gfloat       unconstrained_upper,
-					const gchar *tooltip);
+					const gchar *tooltip,
+					gboolean     is_optional);
+
+extern void stpui_create_scale_entry(option_t    *option,
+				     GtkTable    *table,
+				     gint         column,
+				     gint         row,
+				     const gchar *text,
+				     gint         scale_usize,
+				     gint         spinbutton_usize,
+				     gfloat       value,
+				     gfloat       lower,
+				     gfloat       upper,
+				     gfloat       step_increment,
+				     gfloat       page_increment,
+				     guint        digits,
+				     gboolean     constrain,
+				     gfloat       unconstrained_lower,
+				     gfloat       unconstrained_upper,
+				     const gchar *tooltip,
+				     gboolean     is_optional);
 
 
 /* Thumbnails -- keep it simple! */

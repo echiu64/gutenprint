@@ -39,6 +39,9 @@ pkgconfigdatadir = $(prefix)/lib/pkgconfig
 lib_LTLIBRARIES = libgimpprintui.la
 
 libgimpprintui_la_SOURCES =			\
+	printrcy.y				\
+	printrcl.l				\
+	printrc.h				\
 	panel.c					\
 	plist.c					\
 	ui-utils.c				\
@@ -53,6 +56,11 @@ libgimpprintui_la_LDFLAGS = -release $(GIMPPRINT_VERSION) -rpath $(libdir)
 # -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
 # -rpath $(libdir)
 
+AM_LFLAGS = -i
+AM_YFLAGS = -d
+
+printrcl.o: printrcy.o
+plist.o: printrcy.o
 
 ## Data
 
@@ -68,4 +76,4 @@ dist-hook:
 
 ## Clean
 
-MAINTAINERCLEANFILES = Makefile.in
+MAINTAINERCLEANFILES = Makefile.in printrcl.c printrcy.c printrcy.h

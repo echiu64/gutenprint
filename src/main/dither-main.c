@@ -248,7 +248,7 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
   shade.subchannel = 0;
   shade.dot_sizes = &ds;
   shade.numsizes = 1;
-  if (stp_check_float_parameter(v, "Density"))
+  if (stp_check_float_parameter(v, "Density", STP_PARAMETER_ACTIVE))
     d->fdensity = stp_get_float_parameter(v, "Density");
   else
     d->fdensity = 1.0;
@@ -266,22 +266,22 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
       switch (i)
 	{
 	case 0:
-	  if (stp_check_float_parameter(v, "BlackDensity"))
+	  if (stp_check_float_parameter(v, "BlackDensity", STP_PARAMETER_ACTIVE))
 	    PHYSICAL_CHANNEL(d, i).density_adjustment =
 	      stp_get_float_parameter(v, "BlackDensity");
 	  break;
 	case 1:
-	  if (stp_check_float_parameter(v, "CyanDensity"))
+	  if (stp_check_float_parameter(v, "CyanDensity", STP_PARAMETER_ACTIVE))
 	    PHYSICAL_CHANNEL(d, i).density_adjustment =
 	      stp_get_float_parameter(v, "CyanDensity");
 	  break;
 	case 2:
-	  if (stp_check_float_parameter(v, "MagentaDensity"))
+	  if (stp_check_float_parameter(v, "MagentaDensity", STP_PARAMETER_ACTIVE))
 	    PHYSICAL_CHANNEL(d, i).density_adjustment =
 	      stp_get_float_parameter(v, "MagentaDensity");
 	  break;
 	case 3:
-	  if (stp_check_float_parameter(v, "YellowDensity"))
+	  if (stp_check_float_parameter(v, "YellowDensity", STP_PARAMETER_ACTIVE))
 	    PHYSICAL_CHANNEL(d, i).density_adjustment =
 	      stp_get_float_parameter(v, "YellowDensity");
 	  break;
@@ -308,13 +308,13 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
 
   if (d->stpi_dither_type == D_VERY_FAST)
     {
-      if (stp_check_int_parameter(v, "DitherVeryFastSteps"))
+      if (stp_check_int_parameter(v, "DitherVeryFastSteps", STP_PARAMETER_ACTIVE))
 	stpi_dither_set_iterated_matrix
 	  (v, 2, stp_get_int_parameter(v, "DitherVeryFastSteps"), sq2, 0, 2,4);
       else
 	stpi_dither_set_iterated_matrix(v, 2, DITHER_FAST_STEPS, sq2, 0, 2, 4);
     }
-  else if (stp_check_curve_parameter(v, "DitherMatrix") &&
+  else if (stp_check_curve_parameter(v, "DitherMatrix", STP_PARAMETER_ACTIVE) &&
 	   (stpi_dither_matrix_validate_curve
 	    (stp_get_curve_parameter(v, "DitherMatrix"))))
     {

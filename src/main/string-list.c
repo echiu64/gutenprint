@@ -27,6 +27,7 @@
 #include <gimp-print/gimp-print.h>
 #include "gimp-print-internal.h"
 #include <gimp-print/gimp-print-intl-internal.h>
+#include <string.h>
 
 static void
 free_list_element(stpi_list_item_t *item)
@@ -102,7 +103,8 @@ stp_string_list_create_copy(const stp_string_list_t list)
 }
 
 stp_string_list_t
-stp_string_list_create_from_params(const stp_param_string_t *list, size_t count)
+stp_string_list_create_from_params(const stp_param_string_t *list,
+				   size_t count)
 {
   size_t i = 0;
   stp_string_list_t retval = stp_string_list_create();
@@ -113,10 +115,27 @@ stp_string_list_create_from_params(const stp_param_string_t *list, size_t count)
 
 void
 stp_string_list_add_string(stp_string_list_t list,
-			  const char *name, const char *text)
+			   const char *name, const char *text)
 {
   stp_param_string_t *new_string = stpi_malloc(sizeof(stp_param_string_t));
   new_string->name = stpi_strdup(name);
   new_string->text = stpi_strdup(text);
   stpi_list_item_create((stpi_list_t *) list, NULL, new_string);
+}
+
+int
+stp_string_list_is_present(stp_string_list_t list, const char *value)
+{
+  if (list && value)
+    {
+      size_t i = 0;
+      size_t count = stp_string_list_count(list);
+      for (i = 0; i < count; i++)
+	{
+	  stp_param_string_t *p = stp_string_list_param(list, i);
+	  if (strcmp(p->name, value) == 0)
+	    return 1;
+	}
+    }
+  return 0;
 }
