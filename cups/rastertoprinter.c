@@ -308,7 +308,8 @@ main(int  argc,				/* I - Number of command-line arguments */
 
       while (cups.row < cups.header.cupsHeight)
       {
-        cupsRasterReadPixels(cups.ras, buffer, cups.header.cupsBytesPerLine);
+        cupsRasterReadPixels(cups.ras, (unsigned char *)buffer,
+	                     cups.header.cupsBytesPerLine);
 	cups.row ++;
       }
     }

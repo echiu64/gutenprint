@@ -37,7 +37,8 @@
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
-
+#include <unistd.h>
+#include <sys/types.h>
 
 /*
  * min/max/abs macros...
@@ -82,6 +83,8 @@ main(int  argc,
   char	*profile;
   char	cupsProfile[1024];
   char	command[1024];
+  char  lpoptionscommand[1024];
+  char  line[255];
   char	junk[255];
   FILE	*fp;
   float	kd, rd, g;
@@ -93,6 +96,25 @@ main(int  argc,
 
   puts("ESP Printer Calibration Tool v1.0");
   puts("Copyright 1999-2000 by Easy Software Products, All Rights Reserved.");
+  puts("");
+  puts("This program allows you to calibrate the color output of printers");
+  puts("using the GIMP-Print CUPS or ESP Print Pro drivers.");
+  puts("");
+  puts("Please note that this program ONLY works with the GIMP-Print CUPS or");
+  puts("ESP Print Pro drivers. If you are using the GIMP-Print stp driver of");
+  puts("GhostScript or the drivers of the GIMP-Print plug-in of GIMP, this");
+  puts("calibration will not work.");
+  puts("");
+  puts("These drivers by the text \"CUPS+GIMP-print\" or \"ESP Print Pro\" in");
+  puts("the model description displayed by the CUPS web interface, KUPS,");
+  puts("the ESP Print Pro Printer Manager, or printerdrake.");
+  puts("");
+  puts("If you are not using the correct driver, press CTRL+C now and");
+  puts("reinstall your printer queue with the appropriate driver first.");
+  puts("");
+  puts("To make a calibration profile for all users, run this program as");
+  puts("the \"root\" user.");
+  puts("");
   puts("");
 
   safe_gets("Printer name [default]?", printer, sizeof(printer));
@@ -315,7 +337,50 @@ main(int  argc,
   puts("to use the profile for this job only.");
   puts("");
   puts("Calibration is complete.");
-  return 0;
+  puts("");
+
+  if (getuid() == 0)
+  {
+    do
+      safe_gets("Would you like to save the profile as a system-wide default (y/n)? ",
+                line, sizeof(line));
+    while (tolower(line[0]) != 'n' && tolower(line[0]) != 'y');
+  }
+  else
+    line[0] = 'n';
+
+  if (line[0] == 'n')
+  {
+    do
+      safe_gets("Would you like to save the profile as a personal default (y/n)? ",
+                line, sizeof(line));
+    while (tolower(line[0]) != 'n' && tolower(line[0]) != 'y');
+  }
+
+  puts("");
+  if (tolower(line[0]) == 'n')
+  {
+    puts("Calibration profile NOT saved.");
+    return (0);
+  }
+
+  strcpy(lpoptionscommand, "lpoptions");
+  if (printer[0])
+  {
+    strcat(lpoptionscommand, " -p ");
+    strcat(lpoptionscommand, printer);
+  }
+
+  strcat(lpoptionscommand, " -o profile=");
+
+  strcat(lpoptionscommand, profile);
+
+  if (system(lpoptionscommand) == 0)
+    puts("Calibration profile successfully saved.");
+  else
+    puts("An error occured while saving the calibration profile.");
+
+  return (0);
 }
 
 
