@@ -1,5 +1,5 @@
 .\" $Id$
-.\" Copyright (C) 2000 Roger Leigh <roger@whinlatter.uklinux.net>
+.\" Copyright (C) 2000-2002 Roger Leigh <roger@whinlatter.uklinux.net>
 .\"
 .\" This program is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -36,15 +36,15 @@ version.
 .PP
 This manual page was written by Roger Leigh (roger@whinlatter.uklinux.net)
 .SH SEE ALSO
-.BR gimpprint-color (7), 
-.BR gimpprint-dithers (7), 
-.BR gimpprint-imagetypes (7), 
-.BR gimpprint-inktypes (7), 
-.BR gimpprint-mediasizes (7), 
-.BR gimpprint-mediasources (7), 
-.BR gimpprint-mediatypes (7), 
-.BR gimpprint-models (7), 
-.BR gimpprint-resolutions (7). 
+.BR gimpprint-color (7),
+.BR gimpprint-dithers (7),
+.BR gimpprint-imagetypes (7),
+.BR gimpprint-inktypes (7),
+.BR gimpprint-mediasizes (7),
+.BR gimpprint-mediasources (7),
+.BR gimpprint-mediatypes (7),
+.BR gimpprint-models (7),
+.BR gimpprint-resolutions (7).
 .PP
 The full documentation for
 .B Gimp-Print
