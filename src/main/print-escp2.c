@@ -125,7 +125,8 @@ typedef struct escp2_init
   int nozzle_separation;
   int horizontal_passes;
   int bits;
-  int resid;
+  int drop_size;
+  int ink_resid;
   int initial_vertical_offset;
   int total_channels;
   int use_black_parameters;
@@ -239,8 +240,8 @@ escp2_has_cap(int model, escp2_model_option_t feature,
   else
     {
       model_featureset_t featureset =
-	(((1ul << escp2_printer_attrs[feature].bits) - 1ul) <<
-	 escp2_printer_attrs[feature].shift);
+	(((1ul << escp2_printer_attrs[feature].bit_width) - 1ul) <<
+	 escp2_printer_attrs[feature].bit_shift);
       return ((stpi_escp2_model_capabilities[model].flags & featureset)==class);
     }
 }
@@ -800,6 +801,7 @@ print_debug_params(const escp2_init_t *init)
   print_remote_int_param(init->v, "Bits", init->bits);
   print_remote_int_param(init->v, "Unidirectional", init->res->unidirectional);
   print_remote_int_param(init->v, "Resid", init->res->resid);
+  print_remote_int_param(init->v, "Drop Size", init->drop_size);
   print_remote_int_param(init->v, "Initial_vertical_offset", init->initial_vertical_offset);
   print_remote_int_param(init->v, "Total_channels", init->total_channels);
   print_remote_int_param(init->v, "Use_black_parameters", init->use_black_parameters);
@@ -936,9 +938,8 @@ static void
 escp2_set_dot_size(const escp2_init_t *init)
 {
   /* Dot size */
-  int drop_size = escp2_ink_type(init->model, init->res->resid, init->v);
-  if (drop_size >= 0)
-    stpi_send_command(init->v, "\033(e", "bcc", 0, drop_size);
+  if (init->drop_size >= 0)
+    stpi_send_command(init->v, "\033(e", "bcc", 0, init->drop_size);
 }
 
 static void
@@ -1046,6 +1047,69 @@ escp2_deinit_printer(const escp2_init_t *init)
     }
 }
 
+static void
+adjust_density_and_ink_type(escp2_init_t *init, stp_image_t *image)
+{
+  const paper_t *pt;
+  double paper_density = .8;
+  stp_vars_t v = init->v;
+  pt = get_media_type(init->model,stp_get_string_parameter(v, "MediaType"), v);
+  if (pt)
+    paper_density = pt->base_density;
+
+  if (init->rescale_density)
+    stp_scale_float_parameter
+      (v, "Density",
+       paper_density * escp2_density(init->model, init->res->resid, v));
+  init->drop_size = escp2_ink_type(init->model, init->res->resid, v);
+  init->ink_resid = init->res->resid;
+
+  /*
+   * If density is greater than 1, try to find the dot size from a lower
+   * resolution that will let us print.  This allows use of high ink levels
+   * on special paper types that need a lot of ink.
+   */
+  if (stp_get_float_parameter(v, "Density") > 1.0)
+    {
+      if (stp_check_int_parameter(v, "escp2_ink_type", STP_PARAMETER_ACTIVE) ||
+	  stp_check_int_parameter(v, "escp2_density", STP_PARAMETER_ACTIVE) ||
+	  stp_check_int_parameter(v, "escp2_bits", STP_PARAMETER_ACTIVE))
+	{
+	  stp_set_float_parameter(v, "Density", 1.0);
+	}
+      else
+	{
+	  double density = stp_get_float_parameter(v, "Density");
+	  int resid = init->res->resid;
+	  while (density > 1.0 && resid >= RES_360_M)
+	    {
+	      int bits_now = escp2_bits(init->model, resid, v);
+	      double density_now = escp2_density(init->model, resid, v);
+	      int bits_then = escp2_bits(init->model, resid - 2, v);
+	      double density_then = escp2_density(init->model, resid - 2, v);
+	      int drop_size_then = escp2_ink_type(init->model, resid - 2, v);
+
+	      /*
+	       * If we would change the number of bits in the ink type,
+	       * don't try this.  Some resolutions require using a certain
+	       * number of bits!
+	       */
+
+	      if (bits_now != bits_then || density_then <= 0.0 ||
+		  drop_size_then == -1)
+		break;
+	      density = density * density_now / density_then / 2;
+	      resid -= 2;
+	    }
+	  init->drop_size = escp2_ink_type(init->model, resid, init->v);
+	  init->ink_resid = resid;
+	  if (density > 1.0)
+	    density = 1.0;
+	  stp_set_float_parameter(v, "Density", density);
+	}
+    }
+}
+
 static int
 adjust_print_quality(const escp2_init_t *init, stp_image_t *image)
 {
@@ -1057,7 +1121,6 @@ adjust_print_quality(const escp2_init_t *init, stp_image_t *image)
   const stp_vars_t nv = init->v;
   double k_upper, k_lower;
   double paper_k_upper;
-  double paper_density;
   /*
    * Compute the LUT.  For now, it's 8 bit, but that may eventually
    * sometimes change.
@@ -1069,7 +1132,6 @@ adjust_print_quality(const escp2_init_t *init, stp_image_t *image)
 		      stp_get_string_parameter(nv, "MediaType"), nv);
   if (pt)
     {
-      paper_density = pt->base_density;
       k_lower *= pt->k_lower_scale;
       paper_k_upper = pt->k_upper;
       k_upper *= pt->k_upper;
@@ -1090,19 +1152,10 @@ adjust_print_quality(const escp2_init_t *init, stp_image_t *image)
     }
   else				/* Assume some kind of plain paper */
     {
-      paper_density = .8;
       k_lower *= .1;
       paper_k_upper = .5;
       k_upper *= .5;
     }
-
-  if (init->rescale_density)
-    stp_scale_float_parameter
-      (nv, "Density",
-       paper_density * escp2_density(init->model, init->res->resid, nv));
-
-  if (stp_get_float_parameter(nv, "Density") > 1.0)
-    stp_set_float_parameter(nv, "Density", 1.0);
 
   if (!stp_check_float_parameter(nv, "GCRLower", STP_PARAMETER_ACTIVE))
     stp_set_default_float_parameter(nv, "GCRLower", k_lower);
@@ -1212,7 +1265,7 @@ setup_inks(const escp2_init_t *init)
 		      stp_get_string_parameter(nv, "MediaType"), nv);
   if (pt)
     paper_k_upper = pt->k_upper;
-  inks = escp2_inks(init->model, init->res->resid, init->inkname->inkset, nv);
+  inks = escp2_inks(init->model, init->ink_resid, init->inkname->inkset, nv);
   if (inks)
     {
       stpi_init_debug_messages(nv);
@@ -1328,6 +1381,7 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
   int		i;
 
   const res_t	*res;
+  int		resid;
   int		xdpi;
   int		ydpi;	/* Resolution */
   int		physical_ydpi;
@@ -1348,7 +1402,6 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
   int		nozzle_separation;
   int		horizontal_passes;
 
-  int		bits;
   void *	weave;
   escp2_init_t	init;
   int		max_vres;
@@ -1440,6 +1493,7 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
     max_vres = escp2_base_resolution(model, v);
   xdpi = res->hres;
   ydpi = res->vres;
+  resid = res->resid;
   undersample = res->vertical_undersample;
   privdata.undersample = res->vertical_undersample;
   privdata.denominator = res->vertical_denominator;
@@ -1451,8 +1505,6 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
   physical_ydpi = ydpi;
   if (ydpi > max_vres)
     physical_ydpi = max_vres;
-
-  bits = escp2_bits(model, res->resid, v);
 
   escp2_imageable_area(v, &page_left, &page_right, &page_bottom, &page_top);
   left -= page_left;
@@ -1606,7 +1658,7 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
     init.page_bottom = 0;
 
   init.horizontal_passes = horizontal_passes;
-  init.bits = bits;
+  init.bits = escp2_bits(model, init.res->resid, v);
   init.inkname = ink_type;
   init.total_channels = total_channels;
   init.channel_limit = channel_limit;
@@ -1634,6 +1686,7 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
       page_height += 2;
     }
 
+  adjust_density_and_ink_type(&init, image);
   if (print_op & OP_JOB_START)
     escp2_init_printer(&init);
   if (print_op & OP_JOB_PRINT)
@@ -1675,7 +1728,7 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
       weave = stpi_initialize_weave(nozzles, nozzle_separation,
 				   horizontal_passes, res->vertical_passes,
 				   res->vertical_oversample, total_channels,
-				   bits, out_width, out_height,
+				   init.bits, out_width, out_height,
 				   top * physical_ydpi / 72,
 				   (page_height * physical_ydpi / 72 +
 				    escp2_extra_feed(model, v) *
@@ -1689,7 +1742,7 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
       out_channels = adjust_print_quality(&init, image);
       stpi_dither_init(v, image, out_width, xdpi, ydpi);
       channels_in_use = setup_ink_types(ink_type, &privdata, cols, head_offset,
-					v, channel_limit, length * bits);
+					v, channel_limit, length * init.bits);
       setup_inks(&init);
 
       out = stpi_malloc(stpi_image_width(image) * out_channels * 2);
