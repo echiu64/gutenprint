@@ -24,6 +24,9 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+
+## Variables
+
 NONGIMP_SUBDIRS =
 NONGIMP_DISTDIRS =
 ## @-@-@-@-@ NO-GIMP @-@-@-@-@
@@ -36,6 +39,9 @@ DISTDIRS = scripts $(NONGIMP_DISTDIRS)
 if MAINTAINER_MODE
 MAINT_MODE = true
 endif
+
+
+## Rules
 
 ## Libtool dependency
 libtool: $(LIBTOOL_DEPS)
@@ -143,6 +149,9 @@ deb: debian/changelog debian/control debian/rules
 	debuild $(DEBUILD_OPTIONS) ; \
 	cd .. ; \
 	rm -r $(PACKAGE)-$(VERSION)
+
+
+## Clean
 
 CLEANSCRIPTS = \
 	config.guess \
