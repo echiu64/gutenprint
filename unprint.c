@@ -818,6 +818,7 @@ void parse_canon(FILE *fp_r){
     counter++;
    if (ch==0xd) { /* carriage return */
      pstate.xposition=0;
+     fprintf(stderr,"<  ");
      continue;
    }
    if (ch==0xc) { /* form feed */
@@ -920,7 +921,7 @@ void parse_canon(FILE *fp_r){
        m= rle_decode(buf+1,sh-1,256*256-1);
        /* reverse_bit_order(buf+1,m); */
        if (m) update_page(buf+1,m,1,m,currentcolor,/*currentbpp,*/pstate.absolute_vertical_units);
-       fprintf(stderr,"%c:%d->%d",*buf,sh-1,m); 
+       fprintf(stderr,"%c:%d>%d  ",*buf,sh-1,m); 
        break;
      case 'a': /* 0x61 - turn something on/off */
        break;
