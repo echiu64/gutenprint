@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimpprint 4.3.4\n"
-"POT-Creation-Date: 2004-04-11 15:13-0400\n"
+"POT-Creation-Date: 2004-06-13 10:43-0400\n"
 "PO-Revision-Date: 2002-10-18 19:24+0100\n"
 "Last-Translator: Filipe Maia <fmaia@gmx.net>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
@@ -138,7 +138,7 @@ msgstr "Manual com Pausa"
 msgid "Manual without Pause"
 msgstr "Manual sem Pausa"
 
-#: src/escputil/escputil.c:634 src/main/print-canon.c:1558
+#: src/escputil/escputil.c:637 src/main/print-canon.c:1558
 #: src/main/print-lexmark.c:666
 msgid "Black"
 msgstr "Preto"
@@ -813,11 +813,11 @@ msgstr "1200×600 DPI"
 msgid "2400x600 DPI"
 msgstr "2400×600 DPI"
 
-#: src/main/print-pcl.c:1737
+#: src/main/print-pcl.c:1763
 msgid "Color + Black Cartridges"
 msgstr "Cartuchos Cor + Preto"
 
-#: src/main/print-pcl.c:1738
+#: src/main/print-pcl.c:1764
 msgid "Color + Photo Cartridges"
 msgstr "Cartuchos Cor + Fotografia"
 
@@ -1515,28 +1515,28 @@ msgstr "%s não é um algoritmo de \"dither\" válido\n"
 #. * Use the English name of your language here, e.g. "Swedish" instead of
 #. * "Svenska".
 #.
-#: src/cups/genppd.c:482
+#: src/cups/genppd.c:519
 msgid "English"
 msgstr "Portuguese"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
-#: src/cups/genppd.c:484
+#: src/cups/genppd.c:521
 msgid "ISOLatin1"
 msgstr "ISOLatin1"
 
-#: src/cups/genppd.c:745
+#: src/cups/genppd.c:777
 msgid "Media Type"
 msgstr "Tipo de Média"
 
-#: src/cups/genppd.c:771
+#: src/cups/genppd.c:803
 msgid "Media Source"
 msgstr "Fonte de Média"
 
-#: src/cups/genppd.c:795
+#: src/cups/genppd.c:827
 msgid "Resolution"
 msgstr "Resolução"
 
-#: src/cups/genppd.c:830
+#: src/cups/genppd.c:862
 #, fuzzy
 msgid "GIMP-print"
 msgstr "Imprimir"
@@ -1544,30 +1544,30 @@ msgstr "Imprimir"
 #.
 #. * Image types...
 #.
-#: src/cups/genppd.c:837
+#: src/cups/genppd.c:869
 msgid "Image Type"
 msgstr "Tipo de Imagem"
 
-#: src/cups/genppd.c:842 src/gimp/gimp_main_window.c:1314
+#: src/cups/genppd.c:874 src/gimp/gimp_main_window.c:1314
 msgid "Line Art"
 msgstr "\"Line Art\""
 
-#: src/cups/genppd.c:844 src/gimp/gimp_main_window.c:1328
+#: src/cups/genppd.c:876 src/gimp/gimp_main_window.c:1328
 msgid "Solid Colors"
 msgstr "Cores Sólidas"
 
-#: src/cups/genppd.c:846 src/gimp/gimp_main_window.c:1343
+#: src/cups/genppd.c:878 src/gimp/gimp_main_window.c:1343
 msgid "Photograph"
 msgstr "Fotografia"
 
 #.
 #. * Dithering algorithms...
 #.
-#: src/cups/genppd.c:854
+#: src/cups/genppd.c:886
 msgid "Dither Algorithm"
 msgstr "Algoritmos de \"Dither\"\""
 
-#: src/cups/genppd.c:873
+#: src/cups/genppd.c:905
 msgid "Ink Type"
 msgstr "Tipo de tinta"
 
@@ -2209,85 +2209,85 @@ msgstr "Não é possível imprimir para impressora %s com %s\n"
 msgid "Unable to send command to printer\n"
 msgstr "Não foi possível enviar comando para a impressora\n"
 
-#: src/escputil/escputil.c:580
+#: src/escputil/escputil.c:583
 msgid "Read from printer timed out\n"
 msgstr ""
 
-#: src/escputil/escputil.c:582
+#: src/escputil/escputil.c:585
 #, c-format
 msgid "Cannot read from %s: %s\n"
 msgstr "Não é possível ler a partir de %s: %s\n"
 
-#: src/escputil/escputil.c:635
+#: src/escputil/escputil.c:638
 msgid "Cyan"
 msgstr "Ciano"
 
-#: src/escputil/escputil.c:636
+#: src/escputil/escputil.c:639
 msgid "Magenta"
 msgstr "Magenta"
 
-#: src/escputil/escputil.c:637
+#: src/escputil/escputil.c:640
 msgid "Yellow"
 msgstr "Amarelo"
 
-#: src/escputil/escputil.c:638
+#: src/escputil/escputil.c:641
 msgid "Light Cyan"
 msgstr "Ciano Claro"
 
-#: src/escputil/escputil.c:639
+#: src/escputil/escputil.c:642
 msgid "Light Magenta"
 msgstr "Magenta Claro"
 
-#: src/escputil/escputil.c:640
+#: src/escputil/escputil.c:643
 msgid "Black/Dark Yellow"
 msgstr ""
 
-#: src/escputil/escputil.c:654
+#: src/escputil/escputil.c:658
 msgid "Obtaining ink levels requires using a raw device.\n"
 msgstr "Obter níveis de tinta requere a utilização de um dipositivo.\n"
 
-#: src/escputil/escputil.c:660 src/escputil/escputil.c:731
-#: src/escputil/escputil.c:770
+#: src/escputil/escputil.c:668 src/escputil/escputil.c:743
+#: src/escputil/escputil.c:782
 #, c-format
 msgid "Cannot open %s read/write: %s\n"
 msgstr "Não foi possível abrir %s escrita/leitura: %s\n"
 
-#: src/escputil/escputil.c:669 src/escputil/escputil.c:742
-#: src/escputil/escputil.c:779
+#: src/escputil/escputil.c:681 src/escputil/escputil.c:754
+#: src/escputil/escputil.c:791
 #, c-format
 msgid "Cannot write to %s: %s\n"
 msgstr "Não foi possível escrever para %s: %s\n"
 
-#: src/escputil/escputil.c:682
+#: src/escputil/escputil.c:700
 msgid "Cannot parse output from printer\n"
 msgstr "Não é possivel processar o output da impressora\n"
 
-#: src/escputil/escputil.c:686
+#: src/escputil/escputil.c:704
 msgid "Ink color"
 msgstr "Cor da Tinta"
 
-#: src/escputil/escputil.c:686
+#: src/escputil/escputil.c:704
 msgid "Percent remaining"
 msgstr "Percentagem restante"
 
-#: src/escputil/escputil.c:725
+#: src/escputil/escputil.c:737
 msgid "Printer identification requires using a raw device.\n"
 msgstr "Identificação da impressora requere a utilização de um dispositivo.\n"
 
-#: src/escputil/escputil.c:764
+#: src/escputil/escputil.c:776
 msgid "Printer status requires using a raw device.\n"
 msgstr "Status da impressora requere a utilização de um dipositivo.\n"
 
-#: src/escputil/escputil.c:803
+#: src/escputil/escputil.c:815
 msgid "Cleaning heads...\n"
 msgstr "Limpando as cabeças...\n"
 
-#: src/escputil/escputil.c:812
+#: src/escputil/escputil.c:824
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
 msgstr ""
 "A testar a agulha, por favor assegure-se que existe papel na impressora.\n"
 
-#: src/escputil/escputil.c:816
+#: src/escputil/escputil.c:828
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -2372,7 +2372,7 @@ msgstr ""
 "procedimento.\n"
 "\n"
 
-#: src/escputil/escputil.c:851
+#: src/escputil/escputil.c:863
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -2447,11 +2447,11 @@ msgstr ""
 "os resultados. É essencial que você não desligue a impressora durante este "
 "procedimento.\n"
 
-#: src/escputil/escputil.c:895
+#: src/escputil/escputil.c:907
 msgid "Unable to send command to the printer, exiting.\n"
 msgstr "Não foi possível enviar o comando para a impressora, saindo.\n"
 
-#: src/escputil/escputil.c:913
+#: src/escputil/escputil.c:925
 msgid ""
 "Printer alignment must be done with a raw device or else\n"
 "the -m option must be used to specify a printer.\n"
@@ -2459,11 +2459,11 @@ msgstr ""
 "O alinhamento da impressora deve ser feiro com um dipositovo\n"
 "ou então a opção -m deve ser usada para especificar a impressora.\n"
 
-#: src/escputil/escputil.c:917
+#: src/escputil/escputil.c:929
 msgid "Attempting to detect printer model..."
 msgstr "Tentado detectar o modelo da impressora..."
 
-#: src/escputil/escputil.c:922
+#: src/escputil/escputil.c:934
 #, c-format
 msgid ""
 "\n"
@@ -2472,7 +2472,7 @@ msgstr ""
 "\n"
 "Não foi possível abir %s leitura/escrita %s\n"
 
-#: src/escputil/escputil.c:930
+#: src/escputil/escputil.c:942
 #, c-format
 msgid ""
 "\n"
@@ -2481,7 +2481,7 @@ msgstr ""
 "\n"
 "Não foi possível escrever para %s: %s\n"
 
-#: src/escputil/escputil.c:946
+#: src/escputil/escputil.c:958
 msgid ""
 "\n"
 "Cannot detect printer type.\n"
@@ -2491,12 +2491,12 @@ msgstr ""
 "Não foi possível detecar o tipo de impressora.\n"
 "Por favor use a opção -m para especificar o modelo da sua impressora.\n"
 
-#: src/escputil/escputil.c:963
+#: src/escputil/escputil.c:975
 #, c-format
 msgid "Printer model %s is not known.\n"
 msgstr "O modelo de impressora %s é desconhecido.\n"
 
-#: src/escputil/escputil.c:974
+#: src/escputil/escputil.c:986
 msgid ""
 "Please inspect the final output very carefully to ensure that your\n"
 "printer is in proper alignment. You may now:\n"
@@ -2514,19 +2514,19 @@ msgstr ""
 "Vai-lhe ser pedido para confirmar a sua escolha.\n"
 "O que é que pretende fazer (s, q, r)?\n"
 
-#: src/escputil/escputil.c:982 src/escputil/escputil.c:989
-#: src/escputil/escputil.c:1002 src/escputil/escputil.c:1018
-#: src/escputil/escputil.c:1085 src/escputil/escputil.c:1226
+#: src/escputil/escputil.c:994 src/escputil/escputil.c:1001
+#: src/escputil/escputil.c:1014 src/escputil/escputil.c:1030
+#: src/escputil/escputil.c:1097 src/escputil/escputil.c:1238
 msgid "> "
 msgstr "> "
 
-#: src/escputil/escputil.c:987
+#: src/escputil/escputil.c:999
 msgid ""
 "Please confirm by typing 'q' again that you wish to quit without saving:\n"
 msgstr ""
 "Por favor confirme carregando em 'q' outra vez se deseja sair sem gravar:\n"
 
-#: src/escputil/escputil.c:992
+#: src/escputil/escputil.c:1004
 msgid ""
 "OK, your printer is aligned, but the alignment has not been saved.\n"
 "If you wish to save the alignment, you must repeat this process.\n"
@@ -2534,7 +2534,7 @@ msgstr ""
 "A sua impressora está alinhada, mas o alinhamento não foi gravado.\n"
 "Se deseja gravar o alinhamento, terá de repetir o processo.\n"
 
-#: src/escputil/escputil.c:999
+#: src/escputil/escputil.c:1011
 msgid ""
 "Please confirm by typing 'r' again that you wish to repeat the\n"
 "alignment process:\n"
@@ -2542,11 +2542,11 @@ msgstr ""
 "Por favor confirme, carregando em 'r' outra vez, que deseja repetir\n"
 "o processo de alinhamento:\n"
 
-#: src/escputil/escputil.c:1005
+#: src/escputil/escputil.c:1017
 msgid "Repeating the alignment process.\n"
 msgstr "Repetindo o processo de alinhamento.\n"
 
-#: src/escputil/escputil.c:1011
+#: src/escputil/escputil.c:1023
 msgid ""
 "This will permanently alter the configuration of your printer.\n"
 "WARNING: this procedure has not been approved by Seiko Epson, and\n"
@@ -2560,15 +2560,15 @@ msgstr ""
 "Por favor confirme, carregando em 's' outra vez, que você deseja gravar\n"
 "as configurações para a sua impressora:\n"
 
-#: src/escputil/escputil.c:1021
+#: src/escputil/escputil.c:1033
 msgid "About to save settings..."
 msgstr "Prestes a gravar as configurações..."
 
-#: src/escputil/escputil.c:1027
+#: src/escputil/escputil.c:1039
 msgid "failed!\n"
 msgstr "falhou!\n"
 
-#: src/escputil/escputil.c:1028
+#: src/escputil/escputil.c:1040
 msgid ""
 "Your settings were not saved successfully.  You must repeat the\n"
 "alignment procedure.\n"
@@ -2576,24 +2576,24 @@ msgstr ""
 "A suas configurações não foram gravados com sucesso.\n"
 "Vai ter de repetir o processo de alinhamento.\n"
 
-#: src/escputil/escputil.c:1032
+#: src/escputil/escputil.c:1044
 msgid "succeeded!\n"
 msgstr "sucesso!\n"
 
-#: src/escputil/escputil.c:1033
+#: src/escputil/escputil.c:1045
 msgid "Your alignment settings have been saved to the printer.\n"
 msgstr ""
 "As suas configurações do alinhamento foram gravadas para a impressora.\n"
 
-#: src/escputil/escputil.c:1038
+#: src/escputil/escputil.c:1050
 msgid "Unrecognized command.\n"
 msgstr "Comando desconhecido.\n"
 
-#: src/escputil/escputil.c:1041
+#: src/escputil/escputil.c:1053
 msgid "Final command was not confirmed.\n"
 msgstr "O comando final não foi confirmado.\n"
 
-#: src/escputil/escputil.c:1046
+#: src/escputil/escputil.c:1058
 #, c-format
 msgid ""
 "This procedure assumes that your printer is an Epson %s.\n"
@@ -2610,13 +2610,13 @@ msgstr ""
 "Por favor coloque uma folha de papel na impressora para iniciar\n"
 "o processo de alinhamento da cabeça.\n"
 
-#: src/escputil/escputil.c:1071 src/escputil/escputil.c:1093
-#: src/escputil/escputil.c:1136 src/escputil/escputil.c:1205
-#: src/escputil/escputil.c:1216
+#: src/escputil/escputil.c:1083 src/escputil/escputil.c:1105
+#: src/escputil/escputil.c:1148 src/escputil/escputil.c:1217
+#: src/escputil/escputil.c:1228
 msgid "Press enter to continue > "
 msgstr "Pressione enter para continuar > "
 
-#: src/escputil/escputil.c:1078
+#: src/escputil/escputil.c:1090
 msgid ""
 "Please inspect the print, and choose the best pair of lines in each "
 "pattern.\n"
@@ -2626,37 +2626,37 @@ msgstr ""
 "padrão.\n"
 "Insira um par, '?' para ajuda, ou 'r' para repetir o procedimento.\n"
 
-#: src/escputil/escputil.c:1084
+#: src/escputil/escputil.c:1096
 #, c-format
 msgid "Pass #%d"
 msgstr "Passagem #%d"
 
-#: src/escputil/escputil.c:1090 src/escputil/escputil.c:1135
+#: src/escputil/escputil.c:1102 src/escputil/escputil.c:1147
 msgid "Please insert a fresh sheet of paper.\n"
 msgstr "Por favor insira uma nova folha de papel.\n"
 
-#: src/escputil/escputil.c:1109 src/escputil/escputil.c:1245
+#: src/escputil/escputil.c:1121 src/escputil/escputil.c:1257
 msgid "Number out of range!\n"
 msgstr "Número fora do intervalo|\n"
 
-#: src/escputil/escputil.c:1114 src/escputil/escputil.c:1250
+#: src/escputil/escputil.c:1126 src/escputil/escputil.c:1262
 msgid "I cannot understand what you typed!\n"
 msgstr "Eu não consigo intender o que escreveu!\n"
 
-#: src/escputil/escputil.c:1120
+#: src/escputil/escputil.c:1132
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
 msgstr "O melhor par de linhasdeve estar numerado entre 1 e %d.\n"
 
-#: src/escputil/escputil.c:1127
+#: src/escputil/escputil.c:1139
 msgid "Attempting to set alignment..."
 msgstr "Tentando definir o alinhamento..."
 
-#: src/escputil/escputil.c:1130
+#: src/escputil/escputil.c:1142
 msgid "succeeded.\n"
 msgstr "sucesso.\n"
 
-#: src/escputil/escputil.c:1131
+#: src/escputil/escputil.c:1143
 #, c-format
 msgid ""
 "Please verify that the alignment is correct.  After the alignment pattern\n"
@@ -2671,7 +2671,7 @@ msgstr ""
 "é o padrão %d. Se não é, você deve repetir o processo para obter a melhor\n"
 "qualidade de impressão.\n"
 
-#: src/escputil/escputil.c:1146
+#: src/escputil/escputil.c:1158
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -2747,12 +2747,12 @@ msgstr ""
 "danificar a\n"
 "sua impressora!\n"
 
-#: src/escputil/escputil.c:1196
+#: src/escputil/escputil.c:1208
 #, c-format
 msgid "Printer %s does not require color head alignment.\n"
 msgstr "A impressora %s não necessita de alinhamento das cabeças de cor.\n"
 
-#: src/escputil/escputil.c:1214
+#: src/escputil/escputil.c:1226
 msgid ""
 "Please re-insert the same alignment sheet in the printer when it is\n"
 "finished printing.\n"
@@ -2760,7 +2760,7 @@ msgstr ""
 "Por favor reinsira a mesma folha de alinhamentos na impressora\n"
 "quando ela acabar de imprimir.\n"
 
-#: src/escputil/escputil.c:1220
+#: src/escputil/escputil.c:1232
 msgid ""
 "Inspect the alignment sheet, and determine which pattern is the smoothest.\n"
 "This pattern will appear to have the least ``grain''.\n"
@@ -2774,12 +2774,12 @@ msgstr ""
 "número para melhor padrão, e repita o procedimento.\n"
 "Insira um número de padrão, ou '?' para ajuda.\n"
 
-#: src/escputil/escputil.c:1256
+#: src/escputil/escputil.c:1268
 #, c-format
 msgid "The best pattern should be numbered between 1 and %d.\n"
 msgstr "O melhor padrão deve estar numerado entre 1 e %d.\n"
 
-#: src/escputil/escputil.c:1300
+#: src/escputil/escputil.c:1312
 msgid "Error in input\n"
 msgstr "Erro no input\n"
 

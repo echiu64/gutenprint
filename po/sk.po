@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 4.2.7-pre1\n"
-"POT-Creation-Date: 2004-04-11 15:13-0400\n"
+"POT-Creation-Date: 2004-06-13 10:43-0400\n"
 "PO-Revision-Date: 2004-04-19 21:48+0100\n"
 "Last-Translator: Zdenko Podobný <zdpo@mailbox.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -139,7 +139,7 @@ msgstr "Manuálne s prerušením"
 msgid "Manual without Pause"
 msgstr "Manuálne bez prerušenia"
 
-#: src/escputil/escputil.c:634 src/main/print-canon.c:1558
+#: src/escputil/escputil.c:637 src/main/print-canon.c:1558
 #: src/main/print-lexmark.c:666
 msgid "Black"
 msgstr "Čierna"
@@ -813,11 +813,11 @@ msgstr "1200x600 DPI"
 msgid "2400x600 DPI"
 msgstr "2400x600 DPI"
 
-#: src/main/print-pcl.c:1737
+#: src/main/print-pcl.c:1763
 msgid "Color + Black Cartridges"
 msgstr "Farebná + čierna kazeta"
 
-#: src/main/print-pcl.c:1738
+#: src/main/print-pcl.c:1764
 msgid "Color + Photo Cartridges"
 msgstr "Farebná + Foto kazeta"
 
@@ -1508,58 +1508,58 @@ msgstr "%s nie je platný algoritmus rozptylu\n"
 #. * Use the English name of your language here, e.g. "Swedish" instead of
 #. * "Svenska".
 #.
-#: src/cups/genppd.c:482
+#: src/cups/genppd.c:519
 msgid "English"
 msgstr "Slovak"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
-#: src/cups/genppd.c:484
+#: src/cups/genppd.c:521
 msgid "ISOLatin1"
 msgstr "ISOLatin1"
 
-#: src/cups/genppd.c:745
+#: src/cups/genppd.c:777
 msgid "Media Type"
 msgstr "Typ média"
 
-#: src/cups/genppd.c:771
+#: src/cups/genppd.c:803
 msgid "Media Source"
 msgstr "Zdroj média"
 
-#: src/cups/genppd.c:795
+#: src/cups/genppd.c:827
 msgid "Resolution"
 msgstr "Rozlíšenie"
 
-#: src/cups/genppd.c:830
+#: src/cups/genppd.c:862
 msgid "GIMP-print"
 msgstr "GIMP-print"
 
 #.
 #. * Image types...
 #.
-#: src/cups/genppd.c:837
+#: src/cups/genppd.c:869
 msgid "Image Type"
 msgstr "Typ obrázku"
 
-#: src/cups/genppd.c:842 src/gimp/gimp_main_window.c:1314
+#: src/cups/genppd.c:874 src/gimp/gimp_main_window.c:1314
 msgid "Line Art"
 msgstr "Čiarová grafika"
 
-#: src/cups/genppd.c:844 src/gimp/gimp_main_window.c:1328
+#: src/cups/genppd.c:876 src/gimp/gimp_main_window.c:1328
 msgid "Solid Colors"
 msgstr "Jednoliate farby"
 
-#: src/cups/genppd.c:846 src/gimp/gimp_main_window.c:1343
+#: src/cups/genppd.c:878 src/gimp/gimp_main_window.c:1343
 msgid "Photograph"
 msgstr "Fotografia"
 
 #.
 #. * Dithering algorithms...
 #.
-#: src/cups/genppd.c:854
+#: src/cups/genppd.c:886
 msgid "Dither Algorithm"
 msgstr "Algoritmus rozptylu"
 
-#: src/cups/genppd.c:873
+#: src/cups/genppd.c:905
 msgid "Ink Type"
 msgstr "Typ atramentu"
 
@@ -1575,7 +1575,8 @@ msgid ""
 "under certain conditions; type 'escputil -l' for details.\n"
 msgstr ""
 ", Copyright (C) 2000-2001 Robert Krawitz\n"
-"Escputil prichádza bez AKÝCHKOĽVEK GARANCIÍ; detaily získate po napísaní 'escputil -l'\n"
+"Escputil prichádza bez AKÝCHKOĽVEK GARANCIÍ; detaily získate po napísaní "
+"'escputil -l'\n"
 "Toto je slobodný softvér a jeho redistribúcia je za istých podmienok\n"
 "vítaná; viac informácií získate po napísaní 'escputil -l'.\n"
 
@@ -1599,7 +1600,8 @@ msgid ""
 msgstr ""
 "Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
-"Toto je iba orientačný preklad licencie, ktorá platí v originálnom anglickom znení.\n"
+"Toto je iba orientačný preklad licencie, ktorá platí v originálnom anglickom "
+"znení.\n"
 "\n"
 "Tento program je voľne šíriteľný; môžete ho redistribuovať a meniť\n"
 "v súlade so Všeobecnou verejnou licenciou GNU publikovanou\n"
@@ -1634,10 +1636,12 @@ msgid ""
 "                       utility may result in poor print quality and/or\n"
 "                       damage to the printer.\n"
 "    -o|--align-color   Align the color print head (Stylus Color 480 and 580\n"
-"                       only).  CAUTION: Misuse of this utility may result in\n"
+"                       only).  CAUTION: Misuse of this utility may result "
+"in\n"
 "                       poor print quality and/or damage to the printer.\n"
 "    -s|--status        Retrieve printer status.\n"
-"    -i|--ink-level     Obtain the ink level from the printer.  This requires\n"
+"    -i|--ink-level     Obtain the ink level from the printer.  This "
+"requires\n"
 "                       read/write access to the raw printer device.\n"
 "    -d|--identify      Query the printer for make and model information.\n"
 "                       This requires read/write access to the raw printer\n"
@@ -1653,7 +1657,8 @@ msgid ""
 "    -u|--new           The printer is a new printer (Stylus Color 740 or\n"
 "                       newer).\n"
 "    -q|--quiet         Suppress the banner.\n"
-"    -m|--model         Specify the precise printer model for head alignment.\n"
+"    -m|--model         Specify the precise printer model for head "
+"alignment.\n"
 msgstr ""
 "Použitie: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
 "                [-P tlačiareň | -r zariadenie] [-u] [-q] [-m model]\n"
@@ -1664,24 +1669,30 @@ msgstr ""
 "  Príkazy:\n"
 "    -c|--clean-head    Čistí tlačovú hlavu.\n"
 "    -n|--nozzle-check  Vytlačí testovaciu vzorku na otvory.\n"
-"                       Špinavé alebo upchaté otvory budú zobrazené ako medzery\n"
+"                       Špinavé alebo upchaté otvory budú zobrazené ako "
+"medzery\n"
 "                       vo vzorke. Ak uvidíte nejaké medzery, mali by ste\n"
 "                       očistiť tlačovú hlavu.\n"
 "    -a|--align-head    Zarovnanie tlačovej hlavy.  UPOZORNENIE: Nesprávne\n"
 "                       použitie tohoto nástroja bude mať za následok nízku\n"
 "                       kvalitu tlače a/alebo poškodenie tlačiarne.\n"
-"    -o|--align-color   Zarovnanie farebnej hlavy ( iba pre Stylus Color 480 a\n"
-"                       580 UPOZORNENIE: Nesprávne použitie tohoto nástroja bude\n"
-"                       mať za následok nízku kvalitu tlače a/alebo poškodenie\n"
+"    -o|--align-color   Zarovnanie farebnej hlavy ( iba pre Stylus Color 480 "
+"a\n"
+"                       580 UPOZORNENIE: Nesprávne použitie tohoto nástroja "
+"bude\n"
+"                       mať za následok nízku kvalitu tlače a/alebo "
+"poškodenie\n"
 " \t\t\ttlačiarne.\n"
 "    -s|--status        Informácie o stave tlačiarne.\n"
-"    -i|--ink-level     Získanie o informácie o úrovni atramentu z tlačiarne.\n"
+"    -i|--ink-level     Získanie o informácie o úrovni atramentu z "
+"tlačiarne.\n"
 "\t\t\tToto vyžaduje prístup čítanie/zápis na základné\n"
 "                       zariadenie tlačiarne.\n"
 "    -d|--identify      Požiadavka na tlačiareň o informácie o modely.\n"
 "                       Toto vyžaduje prístup čítanie/zápis na základné\n"
 "                       zariadenie tlačiarne.\n"
-"    -l|--license       Zobrazenie licencie/podmienok záruky tohoto programu.\n"
+"    -l|--license       Zobrazenie licencie/podmienok záruky tohoto "
+"programu.\n"
 "    -M|--list-models   Zoznam dostupných modelov tlačiarní.\n"
 "    -h|--help          Zobrazí tieto informácie.\n"
 "\n"
@@ -1693,7 +1704,8 @@ msgstr ""
 "    -u|--new           Tlačiareň je nová tlačiareň (Stylus Color 740 alebo\n"
 "                       novšia).\n"
 "    -q|--quiet         zakázanie nápisu.\n"
-"    -m|--model         Určenie presného modelu tlačiarne pre zarovnanie hlavy.\n"
+"    -m|--model         Určenie presného modelu tlačiarne pre zarovnanie "
+"hlavy.\n"
 
 #: src/escputil/escputil.c:150
 msgid ""
@@ -2185,84 +2197,84 @@ msgstr "Na tlačiarni %s s %s nie je možné tlačiť \n"
 msgid "Unable to send command to printer\n"
 msgstr "Nie je možné poslať príkaz na tlačiareň\n"
 
-#: src/escputil/escputil.c:580
+#: src/escputil/escputil.c:583
 msgid "Read from printer timed out\n"
 msgstr "Čítať vypršanie časového limitu z tlačiarne\n"
 
-#: src/escputil/escputil.c:582
+#: src/escputil/escputil.c:585
 #, c-format
 msgid "Cannot read from %s: %s\n"
 msgstr "Nie je možné čítať z %s: %s\n"
 
-#: src/escputil/escputil.c:635
+#: src/escputil/escputil.c:638
 msgid "Cyan"
 msgstr "Azúrová"
 
-#: src/escputil/escputil.c:636
+#: src/escputil/escputil.c:639
 msgid "Magenta"
 msgstr "Purpurová"
 
-#: src/escputil/escputil.c:637
+#: src/escputil/escputil.c:640
 msgid "Yellow"
 msgstr "Žltá"
 
-#: src/escputil/escputil.c:638
+#: src/escputil/escputil.c:641
 msgid "Light Cyan"
 msgstr "Jasná azúrová"
 
-#: src/escputil/escputil.c:639
+#: src/escputil/escputil.c:642
 msgid "Light Magenta"
 msgstr "Jasná purpurová"
 
-#: src/escputil/escputil.c:640
+#: src/escputil/escputil.c:643
 msgid "Black/Dark Yellow"
 msgstr "Čierna/Tmavá žltá"
 
-#: src/escputil/escputil.c:654
+#: src/escputil/escputil.c:658
 msgid "Obtaining ink levels requires using a raw device.\n"
 msgstr "Získanie úrovne atramentu vyžaduje použitie základného zariadenia.\n"
 
-#: src/escputil/escputil.c:660 src/escputil/escputil.c:731
-#: src/escputil/escputil.c:770
+#: src/escputil/escputil.c:668 src/escputil/escputil.c:743
+#: src/escputil/escputil.c:782
 #, c-format
 msgid "Cannot open %s read/write: %s\n"
 msgstr "Nie je možné otvoriť %s pre čítanie/zápis: %s\n"
 
-#: src/escputil/escputil.c:669 src/escputil/escputil.c:742
-#: src/escputil/escputil.c:779
+#: src/escputil/escputil.c:681 src/escputil/escputil.c:754
+#: src/escputil/escputil.c:791
 #, c-format
 msgid "Cannot write to %s: %s\n"
 msgstr "Nie je možné zapisovať do %s: %s\n"
 
-#: src/escputil/escputil.c:682
+#: src/escputil/escputil.c:700
 msgid "Cannot parse output from printer\n"
 msgstr "Nie je možné analyzovať výstup z tlačiarne\n"
 
-#: src/escputil/escputil.c:686
+#: src/escputil/escputil.c:704
 msgid "Ink color"
 msgstr "Farebný atrament"
 
-#: src/escputil/escputil.c:686
+#: src/escputil/escputil.c:704
 msgid "Percent remaining"
 msgstr "Zostávajúce percentá"
 
-#: src/escputil/escputil.c:725
+#: src/escputil/escputil.c:737
 msgid "Printer identification requires using a raw device.\n"
 msgstr "Identifikácia tlačiarne vyžaduje používanie základného zariadenia.\n"
 
-#: src/escputil/escputil.c:764
+#: src/escputil/escputil.c:776
 msgid "Printer status requires using a raw device.\n"
 msgstr "Stav tlačiarne vyžaduje používanie základného zariadenia.\n"
 
-#: src/escputil/escputil.c:803
+#: src/escputil/escputil.c:815
 msgid "Cleaning heads...\n"
 msgstr "Čistenie hláv...\n"
 
-#: src/escputil/escputil.c:812
+#: src/escputil/escputil.c:824
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
 msgstr "Spúšťam kontrolu trysiek, uistite sa, že v tlačiarni je papier.\n"
 
-#: src/escputil/escputil.c:816
+#: src/escputil/escputil.c:828
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -2300,7 +2312,8 @@ msgid ""
 "It is essential that you not turn your printer off during this procedure.\n"
 "\n"
 msgstr ""
-"Prosím, veľmi pozorne si prečítajte tieto inštrukcie skôr, ako bude pokračovať.\n"
+"Prosím, veľmi pozorne si prečítajte tieto inštrukcie skôr, ako bude "
+"pokračovať.\n"
 "\n"
 "Tento nástroj vám umožní zarovnať tlačovú hlavu atramentovej tlačiarne\n"
 "Epson Stylus. Jeho nesprávne použitie môže spôsobiť zníženie kvality tlače\n"
@@ -2309,10 +2322,12 @@ msgstr ""
 "riziko za použitie toho nástroja leží na vás.\n"
 "\n"
 "Bude vytlačených %d testovacích vzoriek. Všetky vzorky sú veľmi podobné.\n"
-"Vzorky obsahujú série zvislých čiar, ktoré sa budú prekrývať Pod každým párom je číslo\n"
+"Vzorky obsahujú série zvislých čiar, ktoré sa budú prekrývať Pod každým "
+"párom je číslo\n"
 "od %d do %d.\n"
 "\n"
-"Keď si prezriete páry čiar, mali by ste vybrať taký pár čiar, ktorý je najlepšie\n"
+"Keď si prezriete páry čiar, mali by ste vybrať taký pár čiar, ktorý je "
+"najlepšie\n"
 "zarovnaný. Veľmi pozorne si ich prezrite. Pre najkritickejšie rozhodovanie\n"
 "použite lupu alebo zväčšovacie sklíčko. Tiež vám odporúčame použiť na tento\n"
 "test vysokokvalitný papier, aby sa čiary nerozpíjali na papieri, ale mali\n"
@@ -2329,11 +2344,12 @@ msgstr ""
 "do tlačiarne, (r) - zopakovať proces, alebo (q) - ukončiť bez uloženia.\n"
 "Ukončenie neobnoví pôvodné nastavenie, ale vypnutie a následné zapnutie\n"
 "tlačiarne áno. Pokiaľ ukončíte bez uloženia, budete musieť zopakovať celý\n"
-"proces opäť, ak budete chcieť svoje výsledky uložiť. Je dôležité, aby ste počas\n"
+"proces opäť, ak budete chcieť svoje výsledky uložiť. Je dôležité, aby ste "
+"počas\n"
 "toho procesu nevypli tlačiareň\n"
 "\n"
 
-#: src/escputil/escputil.c:851
+#: src/escputil/escputil.c:863
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -2361,16 +2377,20 @@ msgid ""
 "should find that the middle-most pair (#%d out of the %d) is the best.\n"
 "You will then be offered the choices of (s)aving the result in the printer,\n"
 "(r)epeating the process, or (q)uitting without saving.  Quitting will not\n"
-"restore the previous settings, but powering the printer off and back on will.\n"
+"restore the previous settings, but powering the printer off and back on "
+"will.\n"
 "If you quit, you must repeat the entire process if you wish to later save\n"
 "the results.  It is essential that you not turn off your printer during\n"
 "this procedure.\n"
 "\n"
 msgstr ""
-"Prosím, veľmi pozorne si prečítajte tieto inštrukcie skôr, ako bude pokračovať.\n"
+"Prosím, veľmi pozorne si prečítajte tieto inštrukcie skôr, ako bude "
+"pokračovať.\n"
 "\n"
-"Tento nástroj vám umožní zarovnať tlačovú hlavu atramentovej tlačiarne Epson Stylus.\n"
-"Jeho nesprávne použitie môže spôsobiť zníženie kvality tlače a môže poškodiť\n"
+"Tento nástroj vám umožní zarovnať tlačovú hlavu atramentovej tlačiarne Epson "
+"Stylus.\n"
+"Jeho nesprávne použitie môže spôsobiť zníženie kvality tlače a môže "
+"poškodiť\n"
 "samotnú tlačiareň. Tento nástroj nebol otestovaný spoločnosťou Seiko Epson\n"
 "a je ponúknutý bez akejkoľvek záruky. Celé riziko za použitie toho nástroja\n"
 "leží na vás.\n"
@@ -2378,7 +2398,8 @@ msgstr ""
 "Bude vytlačená testovacia vzorka, ktorá bude obsahovať sériu párov zvislých\n"
 "čiar, ktoré **overlap. Pod každým párom čiar je číslo od %d do %d.\n"
 "\n"
-"Keď si prezriete vzorky, mali by ste vybrať taký pár čiar, ktorý je najlepšie\n"
+"Keď si prezriete vzorky, mali by ste vybrať taký pár čiar, ktorý je "
+"najlepšie\n"
 "zarovnaný. Veľmi pozorne si ich prezrite. Pre najkritickejšie rozhodovanie\n"
 "použite lupu alebo zväčšovacie sklíčko. Tiež vám odporúčame použiť na tento\n"
 "test vysokokvalitný papier, aby sa čiary nerozpíjali na papieri, ale mali\n"
@@ -2387,19 +2408,22 @@ msgstr ""
 "\n"
 "Zarovnávacia vzorka bude vytlačená ešte raz. V tomto prípade by najlepším\n"
 "párom (#%d z %d) mal byť ten uprostred. Potom vám bude ponúknutá možnosť\n"
-"(s) - uložiť výsledky do tlačiarne, (r) - zopakovať proces, alebo (q) - ukončiť\n"
-"bez uloženia.  Ukončenie neobnoví pôvodné nastavenie, ale vypnutie a následné\n"
+"(s) - uložiť výsledky do tlačiarne, (r) - zopakovať proces, alebo (q) - "
+"ukončiť\n"
+"bez uloženia.  Ukončenie neobnoví pôvodné nastavenie, ale vypnutie a "
+"následné\n"
 "zapnutie tlačiarne áno.\n"
 "Pokiaľ ukončíte bez uloženia, budete musieť zopakovať celý proces opäť, ak\n"
-"budete chcieť svoje výsledky uložiť. Je dôležité, aby ste počas toho procesu \n"
+"budete chcieť svoje výsledky uložiť. Je dôležité, aby ste počas toho "
+"procesu \n"
 "nevypli tlačiareň\n"
 "\n"
 
-#: src/escputil/escputil.c:895
+#: src/escputil/escputil.c:907
 msgid "Unable to send command to the printer, exiting.\n"
 msgstr "Nie je možné odoslať príkaz pre tlačiareň, koniec.\n"
 
-#: src/escputil/escputil.c:913
+#: src/escputil/escputil.c:925
 msgid ""
 "Printer alignment must be done with a raw device or else\n"
 "the -m option must be used to specify a printer.\n"
@@ -2407,11 +2431,11 @@ msgstr ""
 "Zarovnanie tlačiarne musí byť vykonané so základného zariadením alebo\n"
 "pomocou voľby -m musíte určiť tlačiareň.\n"
 
-#: src/escputil/escputil.c:917
+#: src/escputil/escputil.c:929
 msgid "Attempting to detect printer model..."
 msgstr "Pokúšam sa zistiť model tlačiarne..."
 
-#: src/escputil/escputil.c:922
+#: src/escputil/escputil.c:934
 #, c-format
 msgid ""
 "\n"
@@ -2420,7 +2444,7 @@ msgstr ""
 "\n"
 "Nie je možné otvoriť %s pre čítanie/zápis: %s\n"
 
-#: src/escputil/escputil.c:930
+#: src/escputil/escputil.c:942
 #, c-format
 msgid ""
 "\n"
@@ -2429,7 +2453,7 @@ msgstr ""
 "\n"
 "Nie je možné zapisovať do %s: %s\n"
 
-#: src/escputil/escputil.c:946
+#: src/escputil/escputil.c:958
 msgid ""
 "\n"
 "Cannot detect printer type.\n"
@@ -2439,12 +2463,12 @@ msgstr ""
 "Nie je možné zistiť typ tlačiarne.\n"
 "Použite prosím -m na určenie modelu vašej tlačiarne.\n"
 
-#: src/escputil/escputil.c:963
+#: src/escputil/escputil.c:975
 #, c-format
 msgid "Printer model %s is not known.\n"
 msgstr "Neznámy typ tlačiarne %s.\n"
 
-#: src/escputil/escputil.c:974
+#: src/escputil/escputil.c:986
 msgid ""
 "Please inspect the final output very carefully to ensure that your\n"
 "printer is in proper alignment. You may now:\n"
@@ -2462,17 +2486,19 @@ msgstr ""
 "Potom bude požiadaný potvrdiť vašu voľbu.\n"
 "Čo chcete spraviť? (s,q,r)?\n"
 
-#: src/escputil/escputil.c:982 src/escputil/escputil.c:989
-#: src/escputil/escputil.c:1002 src/escputil/escputil.c:1018
-#: src/escputil/escputil.c:1085 src/escputil/escputil.c:1226
+#: src/escputil/escputil.c:994 src/escputil/escputil.c:1001
+#: src/escputil/escputil.c:1014 src/escputil/escputil.c:1030
+#: src/escputil/escputil.c:1097 src/escputil/escputil.c:1238
 msgid "> "
 msgstr "> "
 
-#: src/escputil/escputil.c:987
-msgid "Please confirm by typing 'q' again that you wish to quit without saving:\n"
-msgstr "Potvrďte prosím opätovným stlačením 'q', že si želáte ukončiť bez uloženia:\n"
+#: src/escputil/escputil.c:999
+msgid ""
+"Please confirm by typing 'q' again that you wish to quit without saving:\n"
+msgstr ""
+"Potvrďte prosím opätovným stlačením 'q', že si želáte ukončiť bez uloženia:\n"
 
-#: src/escputil/escputil.c:992
+#: src/escputil/escputil.c:1004
 msgid ""
 "OK, your printer is aligned, but the alignment has not been saved.\n"
 "If you wish to save the alignment, you must repeat this process.\n"
@@ -2480,17 +2506,19 @@ msgstr ""
 "V poriadku, vaša tlačiareň je  zarovnaná, ale zarovnanie nebolo uložené.\n"
 "Ak si želáte uložiť zarovnanie, musíte tento proces zopakovať.\n"
 
-#: src/escputil/escputil.c:999
+#: src/escputil/escputil.c:1011
 msgid ""
 "Please confirm by typing 'r' again that you wish to repeat the\n"
 "alignment process:\n"
-msgstr "Opätovným stlačení 'r' potvrďte, že si prajete zopakovať proces zarovnávania:\n"
+msgstr ""
+"Opätovným stlačení 'r' potvrďte, že si prajete zopakovať proces "
+"zarovnávania:\n"
 
-#: src/escputil/escputil.c:1005
+#: src/escputil/escputil.c:1017
 msgid "Repeating the alignment process.\n"
 msgstr "Opakujem proces zarovnávania.\n"
 
-#: src/escputil/escputil.c:1011
+#: src/escputil/escputil.c:1023
 msgid ""
 "This will permanently alter the configuration of your printer.\n"
 "WARNING: this procedure has not been approved by Seiko Epson, and\n"
@@ -2504,15 +2532,15 @@ msgstr ""
 "Potvrďte opätovným stlačením 's', že si prajete uložiť nastavenie\n"
 "vašej tlačiarne:\n"
 
-#: src/escputil/escputil.c:1021
+#: src/escputil/escputil.c:1033
 msgid "About to save settings..."
 msgstr "O nastaveniach ukladania..."
 
-#: src/escputil/escputil.c:1027
+#: src/escputil/escputil.c:1039
 msgid "failed!\n"
 msgstr "zlyhalo!\n"
 
-#: src/escputil/escputil.c:1028
+#: src/escputil/escputil.c:1040
 msgid ""
 "Your settings were not saved successfully.  You must repeat the\n"
 "alignment procedure.\n"
@@ -2520,23 +2548,23 @@ msgstr ""
 "Vaše nastavenie sa nepodarilo úspešne uložiť. Musíte zopakovať\n"
 "procedúru zarovnávania.\n"
 
-#: src/escputil/escputil.c:1032
+#: src/escputil/escputil.c:1044
 msgid "succeeded!\n"
 msgstr "úspešne!\n"
 
-#: src/escputil/escputil.c:1033
+#: src/escputil/escputil.c:1045
 msgid "Your alignment settings have been saved to the printer.\n"
 msgstr "Vaše nastavenia zarovnávania boli uložené do tlačiarne.\n"
 
-#: src/escputil/escputil.c:1038
+#: src/escputil/escputil.c:1050
 msgid "Unrecognized command.\n"
 msgstr "Neznámy príkaz.\n"
 
-#: src/escputil/escputil.c:1041
+#: src/escputil/escputil.c:1053
 msgid "Final command was not confirmed.\n"
 msgstr "Záverečný príkaz nebol potvrdený.\n"
 
-#: src/escputil/escputil.c:1046
+#: src/escputil/escputil.c:1058
 #, c-format
 msgid ""
 "This procedure assumes that your printer is an Epson %s.\n"
@@ -2553,51 +2581,52 @@ msgstr ""
 "Vložte prosím hárok papiera do vašej tlačiarne, aby sa mohla začať\n"
 "procedúra zarovnávania hlavy.\n"
 
-#: src/escputil/escputil.c:1071 src/escputil/escputil.c:1093
-#: src/escputil/escputil.c:1136 src/escputil/escputil.c:1205
-#: src/escputil/escputil.c:1216
+#: src/escputil/escputil.c:1083 src/escputil/escputil.c:1105
+#: src/escputil/escputil.c:1148 src/escputil/escputil.c:1217
+#: src/escputil/escputil.c:1228
 msgid "Press enter to continue > "
 msgstr "Pre pokračovanie stlačte enter > "
 
-#: src/escputil/escputil.c:1078
+#: src/escputil/escputil.c:1090
 msgid ""
-"Please inspect the print, and choose the best pair of lines in each pattern.\n"
+"Please inspect the print, and choose the best pair of lines in each "
+"pattern.\n"
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
 "Preskúmajte pozorne výtlačok a zvoľte najlepší pár čiar v každej vzorke.\n"
 "Stlačte číslo páru, '?' pre pomoc alebo 'r' pre zopakovanie procedúry.\n"
 
-#: src/escputil/escputil.c:1084
+#: src/escputil/escputil.c:1096
 #, c-format
 msgid "Pass #%d"
 msgstr "Prechod #%d"
 
-#: src/escputil/escputil.c:1090 src/escputil/escputil.c:1135
+#: src/escputil/escputil.c:1102 src/escputil/escputil.c:1147
 msgid "Please insert a fresh sheet of paper.\n"
 msgstr "Vložte prosím nový hárok papiera.\n"
 
-#: src/escputil/escputil.c:1109 src/escputil/escputil.c:1245
+#: src/escputil/escputil.c:1121 src/escputil/escputil.c:1257
 msgid "Number out of range!\n"
 msgstr "Číslo je mimo rozsahu!\n"
 
-#: src/escputil/escputil.c:1114 src/escputil/escputil.c:1250
+#: src/escputil/escputil.c:1126 src/escputil/escputil.c:1262
 msgid "I cannot understand what you typed!\n"
 msgstr "Nedokážem pochopiť, čo ste napísali!\n"
 
-#: src/escputil/escputil.c:1120
+#: src/escputil/escputil.c:1132
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
 msgstr "Najlepší pár čiar by mal mať číslo z rozpätia 1 a %d.\n"
 
-#: src/escputil/escputil.c:1127
+#: src/escputil/escputil.c:1139
 msgid "Attempting to set alignment..."
 msgstr "Pokúšam sa nastaviť zarovnávanie..."
 
-#: src/escputil/escputil.c:1130
+#: src/escputil/escputil.c:1142
 msgid "succeeded.\n"
 msgstr "úspešné.\n"
 
-#: src/escputil/escputil.c:1131
+#: src/escputil/escputil.c:1143
 #, c-format
 msgid ""
 "Please verify that the alignment is correct.  After the alignment pattern\n"
@@ -2606,14 +2635,17 @@ msgid ""
 "quality printing.\n"
 msgstr ""
 "Prekontrolujte prosím, či je zarovnávanie správne. Potom, čo bude vzorka\n"
-"opäť vytlačená, uistite sa, či najlepšia vzorka pre každý riadok je vzorka %d. Ak nie je, mali by ste zopakovať tento proces, aby ste dostali najlepšie výsledky pri tlači.\n"
+"opäť vytlačená, uistite sa, či najlepšia vzorka pre každý riadok je vzorka %"
+"d. Ak nie je, mali by ste zopakovať tento proces, aby ste dostali najlepšie "
+"výsledky pri tlači.\n"
 
-#: src/escputil/escputil.c:1146
+#: src/escputil/escputil.c:1158
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
 "\n"
-"This utility lets you align the color print head of your Epson Stylus inkjet\n"
+"This utility lets you align the color print head of your Epson Stylus "
+"inkjet\n"
 "printer.  Misuse of this utility may cause your print quality to degrade\n"
 "and possibly damage your printer.  This utility has not been reviewed by\n"
 "Seiko Epson for correctness, and is offered with no warranty at all.  The\n"
@@ -2640,40 +2672,52 @@ msgid ""
 "WARNING: THIS FUNCTION IS NOT YET TESTED!  It may not work, and it may\n"
 "damage your printer!\n"
 msgstr ""
-"Prosím, veľmi pozorne si prečítajte tieto inštrukcie pred tým, ako bude pokračovať.\n"
+"Prosím, veľmi pozorne si prečítajte tieto inštrukcie pred tým, ako bude "
+"pokračovať.\n"
 "\n"
-"Tento nástroj vám pomôže so zarovnávaním tlačovej hlavy pre farebnú tlač atramentovej tlačiarne Epson Stylus.\n"
-"Jeho nesprávne použitie môže spôsobiť zníženie kvality tlače a môže poškodiť\n"
+"Tento nástroj vám pomôže so zarovnávaním tlačovej hlavy pre farebnú tlač "
+"atramentovej tlačiarne Epson Stylus.\n"
+"Jeho nesprávne použitie môže spôsobiť zníženie kvality tlače a môže "
+"poškodiť\n"
 "samotnú tlačiareň. Tento nástroj nebol odobrený spoločnosťou Seiko Epson\n"
 "a je ponúknutý bez akejkoľvek záruky. Celé riziko za použitie toho nástroja\n"
 "leží na vás.\n"
 "\n"
 "Nástroj vytlačí %d pretlač testovacích vzoriek na jeden kúsok papiera.\n"
-"Najprv sa vytlačí jedna vzorka a papier bude vysunutý. Potom musíte ten istý\n"
-"papier vložiť do tlačiarne, aby sa naň vytlačila ďalšia vzorka. Každá vzorka\n"
+"Najprv sa vytlačí jedna vzorka a papier bude vysunutý. Potom musíte ten "
+"istý\n"
+"papier vložiť do tlačiarne, aby sa naň vytlačila ďalšia vzorka. Každá "
+"vzorka\n"
 "obsahuje sadu možností očíslovaných od %d do %d.\n"
 "\n"
-"Keď si prezriete vzorky, mali by ste nájsť tú s najhladšou textúrou (najmenej\n"
-"''zrnitou''). Mali by ste ich veľmi pozorne prezrieť a  vybrať tú najlepšiu.\n"
-"Odporúčame vám použiť papier pre tlač vo foto kvalite alebo podobne vysokokvalitný\n"
+"Keď si prezriete vzorky, mali by ste nájsť tú s najhladšou textúrou "
+"(najmenej\n"
+"''zrnitou''). Mali by ste ich veľmi pozorne prezrieť a  vybrať tú "
+"najlepšiu.\n"
+"Odporúčame vám použiť papier pre tlač vo foto kvalite alebo podobne "
+"vysokokvalitný\n"
 "typ papiera. Pokiaľ nenájdete hladkú vzorku, mali by ste test zopakovať.\n"
 "\n"
 "Po preskúmaní možností a výbere pásky, vám budú ponúknuté tieto možnosti:\n"
-"(s) - uložiť výsledky do tlačiarne, (r) - zopakovať proces, alebo (q) - ukončiť\n"
-"bez uloženia.  Ukončenie neobnoví pôvodné nastavenie, ale vypnutie a následné\n"
-"zapnutie tlačiarne áno.. Pokiaľ ukončíte bez uloženia, budete musieť zopakovať\n"
+"(s) - uložiť výsledky do tlačiarne, (r) - zopakovať proces, alebo (q) - "
+"ukončiť\n"
+"bez uloženia.  Ukončenie neobnoví pôvodné nastavenie, ale vypnutie a "
+"následné\n"
+"zapnutie tlačiarne áno.. Pokiaľ ukončíte bez uloženia, budete musieť "
+"zopakovať\n"
 "celý proces opäť, ak budete chcieť svoje výsledky uložiť.\n"
 "Je dôležité, aby ste počas toho procesu nevypli tlačiareň\n"
 "\n"
-"VAROVANIE: TÁTO FUNKCIA NIE JE EŠTE OTESTOVANÁ!  Možno nebude fungovať a možno\n"
+"VAROVANIE: TÁTO FUNKCIA NIE JE EŠTE OTESTOVANÁ!  Možno nebude fungovať a "
+"možno\n"
 "vám poškodí tlačiareň!\n"
 
-#: src/escputil/escputil.c:1196
+#: src/escputil/escputil.c:1208
 #, c-format
 msgid "Printer %s does not require color head alignment.\n"
 msgstr "Tlačiareň %s nevyžaduje zarovnanie farebnej hlavy.\n"
 
-#: src/escputil/escputil.c:1214
+#: src/escputil/escputil.c:1226
 msgid ""
 "Please re-insert the same alignment sheet in the printer when it is\n"
 "finished printing.\n"
@@ -2681,7 +2725,7 @@ msgstr ""
 "Opätovne vložte prosím ten istý hárok papiera na zarovnanie\n"
 "do tlačiarne po dokončení tlačenia.\n"
 
-#: src/escputil/escputil.c:1220
+#: src/escputil/escputil.c:1232
 msgid ""
 "Inspect the alignment sheet, and determine which pattern is the smoothest.\n"
 "This pattern will appear to have the least ``grain''.\n"
@@ -2695,12 +2739,12 @@ msgstr ""
 "a zopakujte túto procedúru.\n"
 "Vložte číslo vzorky, alebo '?' pre pomoc.\n"
 
-#: src/escputil/escputil.c:1256
+#: src/escputil/escputil.c:1268
 #, c-format
 msgid "The best pattern should be numbered between 1 and %d.\n"
 msgstr "Najlepšia vzorka by mala mať číslo od 1 po %d.\n"
 
-#: src/escputil/escputil.c:1300
+#: src/escputil/escputil.c:1312
 msgid "Error in input\n"
 msgstr "Chyba na vstupe\n"
 
@@ -2774,23 +2818,36 @@ msgid ""
 "Use zero saturation to produce grayscale output using color and black inks"
 msgstr ""
 "Prispôsobenie sýtosti (farebného vyváženia) tlače\n"
-"Použite nulu na vyprodukovanie výstupu v odtieňoch šedej s použitím farebného a čierneho atramentu"
+"Použite nulu na vyprodukovanie výstupu v odtieňoch šedej s použitím "
+"farebného a čierneho atramentu"
 
 #: src/gimp/gimp_color_window.c:357
 msgid "Density:"
 msgstr "Hustota:"
 
 #: src/gimp/gimp_color_window.c:365
-msgid "Adjust the density (amount of ink) of the print. Reduce the density if the ink bleeds through the paper or smears; increase the density if black regions are not solid."
-msgstr "Nastavte hustotu (množstvo atramentu) pre tlač. Hustotu znížte, ak atrament tečie po papieri, alebo sa rozmazáva; zvýšte hustotu, ak čierne oblasti sú jednoliate."
+msgid ""
+"Adjust the density (amount of ink) of the print. Reduce the density if the "
+"ink bleeds through the paper or smears; increase the density if black "
+"regions are not solid."
+msgstr ""
+"Nastavte hustotu (množstvo atramentu) pre tlač. Hustotu znížte, ak atrament "
+"tečie po papieri, alebo sa rozmazáva; zvýšte hustotu, ak čierne oblasti sú "
+"jednoliate."
 
 #: src/gimp/gimp_color_window.c:379
 msgid "Gamma:"
 msgstr "Gama:"
 
 #: src/gimp/gimp_color_window.c:387
-msgid "Adjust the gamma of the print. Larger values will produce a generally brighter print, while smaller values will produce a generally darker print. Black and white will remain the same, unlike with the brightness adjustment."
-msgstr "Nastavenie gamy pre tlač. Vyššie hodnoty vyprodukujú všeobecne jasnejšiu tlač, kým nižšie hodnoty vyprodukujú tmavšiu tlač. Čierna a biela zostanú také isté na rozdiel od nastavovania jasu."
+msgid ""
+"Adjust the gamma of the print. Larger values will produce a generally "
+"brighter print, while smaller values will produce a generally darker print. "
+"Black and white will remain the same, unlike with the brightness adjustment."
+msgstr ""
+"Nastavenie gamy pre tlač. Vyššie hodnoty vyprodukujú všeobecne jasnejšiu "
+"tlač, kým nižšie hodnoty vyprodukujú tmavšiu tlač. Čierna a biela zostanú "
+"také isté na rozdiel od nastavovania jasu."
 
 #: src/gimp/gimp_color_window.c:403
 msgid "Dither Algorithm:"
@@ -2801,13 +2858,16 @@ msgid ""
 "Choose the dither algorithm to be used.\n"
 "Adaptive Hybrid usually produces the best all-around quality.\n"
 "Ordered is faster and produces almost as good quality on photographs.\n"
-"Fast and Very Fast are considerably faster, and work well for text and line art.\n"
+"Fast and Very Fast are considerably faster, and work well for text and line "
+"art.\n"
 "Hybrid Floyd-Steinberg generally produces inferior output."
 msgstr ""
 "Zvoľte algoritmus rozptylu, ktorý sa použije pri tlači.\n"
 "Prispôsobiteľné miešanie roztylu všobecne poskytuje najlepší výsledok.\n"
-"Postupný rozptyl je rýchlejší a výsledná kvalita je podobná ako je na fotografiách.\n"
-"Rýchly a veľmi rýchly roztyl je podstatne rýchlejší a dobré výsledky poskytuje pre text a čiarovú grafiku.\n"
+"Postupný rozptyl je rýchlejší a výsledná kvalita je podobná ako je na "
+"fotografiách.\n"
+"Rýchly a veľmi rýchly roztyl je podstatne rýchlejší a dobré výsledky "
+"poskytuje pre text a čiarovú grafiku.\n"
 "Miešaný Floyd-Steinbergov roztyl všeobecne poskytuje menej kvalitný výstup."
 
 #.
@@ -2855,17 +2915,25 @@ msgstr "Náhľad"
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return to its original position."
+"Click and drag with the second button to move the image with finer "
+"precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of "
+"the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image "
+"to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return "
+"to its original position."
 msgstr ""
 "Pozícia obrázku na strane.\n"
 "Kliknite a potiahnite primárne tlačítko na pozíciu obrázku.\n"
-"Kliknite a potiahnite sekundárne tlačítko pohybu obrázku s jemnejšou presnosťou; každá jednotka pohybu posunie obrázok o jeden bod (1/72\")\n"
-"Kliknite a potiahnite so stredným tlačítkom na pohyb v jednotkách veľkosti obrázku.\n"
-"Ak pri klikaní a ťahaní podržíte klávesu Shift obmedzíte pohyb obrázku iba na vodorovný a zvislý pohyb.\n"
-"Ak počas ťahania obrázku myšou kliknete iným tlačítkom, obrázok sa vráti na pôvodnú pozíciu."
+"Kliknite a potiahnite sekundárne tlačítko pohybu obrázku s jemnejšou "
+"presnosťou; každá jednotka pohybu posunie obrázok o jeden bod (1/72\")\n"
+"Kliknite a potiahnite so stredným tlačítkom na pohyb v jednotkách veľkosti "
+"obrázku.\n"
+"Ak pri klikaní a ťahaní podržíte klávesu Shift obmedzíte pohyb obrázku iba "
+"na vodorovný a zvislý pohyb.\n"
+"Ak počas ťahania obrázku myšou kliknete iným tlačítkom, obrázok sa vráti na "
+"pôvodnú pozíciu."
 
 #: src/gimp/gimp_main_window.c:434
 msgid "Position"
@@ -2892,8 +2960,11 @@ msgid "Seascape"
 msgstr "Na šírku"
 
 #: src/gimp/gimp_main_window.c:464
-msgid "Select the orientation: portrait, landscape, upside down, or seascape (upside down landscape)"
-msgstr "Zvoľte orientáciu: na výšku, na šírku, hore nohami, na šírku hore nohami "
+msgid ""
+"Select the orientation: portrait, landscape, upside down, or seascape "
+"(upside down landscape)"
+msgstr ""
+"Zvoľte orientáciu: na výšku, na šírku, hore nohami, na šírku hore nohami "
 
 #: src/gimp/gimp_main_window.c:469
 msgid "Orientation:"
@@ -3022,8 +3093,14 @@ msgid "Command:"
 msgstr "Príkaz:"
 
 #: src/gimp/gimp_main_window.c:746
-msgid "Enter the correct command to print to your printer. Note: Please do not remove the `-l' or `-oraw' from the command string, or printing will probably fail!"
-msgstr "Vložte správny príkaz pre tlač na vašej tlačiarni. Poznámka: Neodstráňte prosím z reťazca pre tlač prepínače `-l' alebo `-oraw', lebo tlač pravdepodobne nebude úspešná!"
+msgid ""
+"Enter the correct command to print to your printer. Note: Please do not "
+"remove the `-l' or `-oraw' from the command string, or printing will "
+"probably fail!"
+msgstr ""
+"Vložte správny príkaz pre tlač na vašej tlačiarni. Poznámka: Neodstráňte "
+"prosím z reťazca pre tlač prepínače `-l' alebo `-oraw', lebo tlač "
+"pravdepodobne nebude úspešná!"
 
 #.
 #. * Output file selection dialog.
@@ -3109,8 +3186,12 @@ msgid "Printer Settings"
 msgstr "Nastavenie tlačiarne"
 
 #: src/gimp/gimp_main_window.c:897
-msgid "Select the name of the printer (not the type, or model, of printer) that you wish to print to"
-msgstr "Zvoľte si názov tlačiarne (nie typ alebo model tlačiarne), na ktorej chcete tlačiť"
+msgid ""
+"Select the name of the printer (not the type, or model, of printer) that you "
+"wish to print to"
+msgstr ""
+"Zvoľte si názov tlačiarne (nie typ alebo model tlačiarne), na ktorej chcete "
+"tlačiť"
 
 #.
 #. * Setup printer button
@@ -3120,8 +3201,12 @@ msgid "Setup Printer..."
 msgstr "Nastavenie tlačiarne..."
 
 #: src/gimp/gimp_main_window.c:919
-msgid "Choose the printer model, PPD file, and command that is used to print to this printer"
-msgstr "Voľba model tlačiarne, PPD súboru a príkaz, ktorý sa používa pre tlač na tejto tlačiarni"
+msgid ""
+"Choose the printer model, PPD file, and command that is used to print to "
+"this printer"
+msgstr ""
+"Voľba model tlačiarne, PPD súboru a príkaz, ktorý sa používa pre tlač na "
+"tejto tlačiarni"
 
 #.
 #. * New printer button
@@ -3131,8 +3216,12 @@ msgid "New Printer..."
 msgstr "Nová tlačiareň..."
 
 #: src/gimp/gimp_main_window.c:936
-msgid "Define a new logical printer. This can be used to name a collection of settings that you wish to remember for future use."
-msgstr "Definovanie novej logickej tlačiarne. Toto môže byť použité na pomenovanie zbierky nastavení, ktoré si prajete zapamätať a v budúcnosti používať."
+msgid ""
+"Define a new logical printer. This can be used to name a collection of "
+"settings that you wish to remember for future use."
+msgstr ""
+"Definovanie novej logickej tlačiarne. Toto môže byť použité na pomenovanie "
+"zbierky nastavení, ktoré si prajete zapamätať a v budúcnosti používať."
 
 #: src/gimp/gimp_main_window.c:957
 msgid "Size of paper that you wish to print to"
@@ -3207,8 +3296,12 @@ msgid "Set the scale (size) of the image"
 msgstr "Nastaviť zväčšenie (veľkosť) obrázku"
 
 #: src/gimp/gimp_main_window.c:1142
-msgid "Select whether scaling is measured as percent of available page size or number of output dots per inch"
-msgstr "Zvoľte, či zmena veľkosti bude vyjadrená ako percento dostupnej veľkosti stránky, alebo ako číslo výstupného DPI"
+msgid ""
+"Select whether scaling is measured as percent of available page size or "
+"number of output dots per inch"
+msgstr ""
+"Zvoľte, či zmena veľkosti bude vyjadrená ako percento dostupnej veľkosti "
+"stránky, alebo ako číslo výstupného DPI"
 
 #: src/gimp/gimp_main_window.c:1147
 msgid "Percent"
@@ -3294,8 +3387,12 @@ msgid "Best for images dominated by regions of solid color"
 msgstr "Najlepšie pre obrázky s dominatnými oblasťami jednej farby"
 
 #: src/gimp/gimp_main_window.c:1351
-msgid "Slowest, but most accurate and smoothest color for continuous tone images and photographs"
-msgstr "Najpomalšie, ale najpresnejšie a najhladšie farby pre plynulé odtiene obrázkov a fotografií"
+msgid ""
+"Slowest, but most accurate and smoothest color for continuous tone images "
+"and photographs"
+msgstr ""
+"Najpomalšie, ale najpresnejšie a najhladšie farby pre plynulé odtiene "
+"obrázkov a fotografií"
 
 #: src/gimp/gimp_main_window.c:1377
 msgid "Output Type:"
@@ -3337,8 +3434,10 @@ msgid "Adjust Output..."
 msgstr "Prispôsobiť výstup..."
 
 #: src/gimp/gimp_main_window.c:1435
-msgid "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
-msgstr "Nastavenie farebného vyváženia, kontrastu, sýtosti a algoritmu rozptylu"
+msgid ""
+"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgstr ""
+"Nastavenie farebného vyváženia, kontrastu, sýtosti a algoritmu rozptylu"
 
 #: src/gimp/print-image-gimp.c:318
 msgid "Printing..."
