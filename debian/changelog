@@ -15,8 +15,13 @@ gimp-print (4.3.0-1) unstable; urgency=low
     - Change conflicts to replaces (Eric Sharkey)
     - Fix build dependencies (Eric Sharkey)
   * New package foomatic-db-gimpprint.  Contains foomatic data
+  * Add postscript-viewer virtual package as an alternative to gs Recommends
+    for cupsys-driver-gimpprint
+  * Reinitialise cupsys after installation or removal of
+    cupsys-driver-gimpprint
+  * Correctly version libgimpprint1 shlibs with -V dh_makeshlibs option
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>  Fri,  1 Feb 2002 21:04:45 +0000
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Wed,  6 Mar 2002 00:08:34 +0000
 
 gimp-print (4.2.0-1) unstable; urgency=low
 
