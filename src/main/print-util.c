@@ -853,7 +853,7 @@ const char *
 stp_papersize_get_text(const stp_papersize_t pt)
 {
   const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
-  return p->text;
+  return _(p->text);
 }
 
 unsigned
