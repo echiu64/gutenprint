@@ -1529,7 +1529,10 @@ pcl_print(const printer_t *printer,		/* I - Model */
     nv.density = 1.0;
   nv.saturation *= printer->printvars.saturation;
 
-  dither = init_dither(image_width, out_width, &nv);
+  if (xdpi > ydpi)
+    dither = init_dither(image_width, out_width, 1, xdpi / ydpi, &nv);
+  else
+    dither = init_dither(image_width, out_width, ydpi / xdpi, 1, &nv);
 
 /* Set up dithering for special printers. */
 
@@ -1564,11 +1567,6 @@ pcl_print(const printer_t *printer,		/* I - Model */
 
     if (do_6color)
       dither_set_light_inks(dither, .25, .25, 0.0, nv.density);
-
-  if (xdpi > ydpi)
-    dither_set_aspect_ratio(dither, 1, xdpi / ydpi);
-  else if (ydpi > xdpi)
-    dither_set_aspect_ratio(dither, ydpi / xdpi, 1);
 
   switch (nv.image_type)
     {

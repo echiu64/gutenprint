@@ -246,6 +246,10 @@ static unsigned int quic2[] = {
 #include "quickmatrix257.h"
 };
 
+static unsigned int rect2x1[] = {
+#include "ran.367.179.h"
+};
+
 static inline int
 calc_ordered_point(unsigned x, unsigned y, int steps, int multiplier,
 		   int size, int *map)
@@ -299,7 +303,7 @@ init_iterated_matrix(dither_matrix_t *mat, int size, int exp,
 
 void
 init_matrix(dither_matrix_t *mat, int x_size, int y_size,
-	    unsigned int *array)
+	    unsigned int *array, int transpose)
 {
   int x, y;
   mat->base = x_size;
@@ -310,8 +314,10 @@ init_matrix(dither_matrix_t *mat, int x_size, int y_size,
   for (x = 0; x < mat->x_size; x++)
     for (y = 0; y < mat->y_size; y++)
       {
-	mat->matrix[x + y * mat->x_size] =
-	  array[x + y * mat->x_size];
+	if (transpose)
+	  mat->matrix[x + y * mat->x_size] = array[y + x * mat->x_size];
+	else
+	  mat->matrix[x + y * mat->x_size] = array[x + y * mat->x_size];
 	mat->matrix[x + y * mat->x_size] =
 	  (long long) mat->matrix[x + y * mat->x_size] * 65536ll /
 	  (long long) (mat->x_size * mat->y_size);
@@ -324,7 +330,7 @@ init_matrix(dither_matrix_t *mat, int x_size, int y_size,
 
 void
 init_matrix_short(dither_matrix_t *mat, int x_size, int y_size,
-		  unsigned short *array)
+		  unsigned short *array, int transpose)
 {
   int x, y;
   mat->base = x_size;
@@ -335,8 +341,10 @@ init_matrix_short(dither_matrix_t *mat, int x_size, int y_size,
   for (x = 0; x < mat->x_size; x++)
     for (y = 0; y < mat->y_size; y++)
       {
-	mat->matrix[x + y * mat->x_size] =
-	  array[x + y * mat->x_size];
+	if (transpose)
+	  mat->matrix[x + y * mat->x_size] = array[y + x * mat->x_size];
+	else
+	  mat->matrix[x + y * mat->x_size] = array[x + y * mat->x_size];
 	mat->matrix[x + y * mat->x_size] =
 	  (long long) mat->matrix[x + y * mat->x_size] * 65536ll /
 	  (long long) (mat->x_size * mat->y_size);
@@ -379,6 +387,38 @@ clone_matrix(const dither_matrix_t *src, dither_matrix_t *dest,
   dest->i_own = 0;
 }
 
+void
+copy_matrix(const dither_matrix_t *src, dither_matrix_t *dest)
+{
+  int x;
+  dest->base = src->base;
+  dest->exp = src->exp;
+  dest->x_size = src->x_size;
+  dest->y_size = src->y_size;
+  dest->matrix = malloc(sizeof(unsigned) * dest->x_size * dest->y_size);
+  for (x = 0; x < dest->x_size * dest->y_size; x++)
+    dest->matrix[x] = src->matrix[x];
+  dest->x_offset = 0;
+  dest->y_offset = 0;
+  dest->last_x = 0;
+  dest->last_x_mod = 0;
+  dest->last_y = 0;
+  dest->last_y_mod = 0;
+  dest->index = 0;
+  dest->i_own = 1;
+}
+
+void
+exponential_scale_matrix(dither_matrix_t *mat, double exponent)
+{
+  int i;
+  for (i = 0; i < mat->x_size * mat->y_size; i++)
+    {
+      double dd = mat->matrix[i] / 65535.0;
+      dd = pow(dd, exponent);
+      mat->matrix[i] = 65535 * dd;
+    }
+}
 
 static inline unsigned
 ditherpoint(const dither_t *d, dither_matrix_t *mat, int x, int y)
@@ -458,9 +498,10 @@ ditherpoint(const dither_t *d, dither_matrix_t *mat, int x, int y)
 
 
 void *
-init_dither(int in_width, int out_width, vars_t *v)
+init_dither(int in_width, int out_width, int horizontal_aspect,
+	    int vertical_aspect, vars_t *v)
 {
-  int i;
+  int x_3, y_3;
   dither_t *d = malloc(sizeof(dither_t));
   simple_dither_range_t r;
   memset(d, 0, sizeof(dither_t));
@@ -474,33 +515,30 @@ init_dither(int in_width, int out_width, vars_t *v)
   dither_set_k_ranges(d, 1, &r, 1.0);
   d->offset0_table = NULL;
   d->offset1_table = NULL;
+  d->x_aspect = horizontal_aspect;
+  d->y_aspect = vertical_aspect;
 
-#if 0
-  init_iterated_matrix(&(d->mat0), 2, 5, sq2);
-  init_iterated_matrix(&(d->mat1), 3, 4, sq3);
-  init_iterated_matrix(&(d->mat2), 5, 3, msq0);
-  init_iterated_matrix(&(d->mat3), 5, 3, msq1);
-  init_matrix_short(&(d->mat4), 199, 199, quic0);
-  init_matrix_short(&(d->mat5), 199, 199, quic1);
-#endif
-  init_matrix(&(d->mat6), 257, 257, quic2);
-  init_matrix(&(d->mat7), 257, 257, quic2);
-  for (i = 0; i < 257 * 257; i++)
-    {
-      double dd = d->mat7.matrix[i] / 65535.0;
-      dd = pow(dd, 0.6);
-      d->mat7.matrix[i] = 65535 * dd;
-    }
+  if (d->y_aspect / d->x_aspect == 2)
+    init_matrix(&(d->mat6), 367, 179, rect2x1, 0);
+  else if (d->x_aspect / d->y_aspect == 2)
+    init_matrix(&(d->mat6), 179, 367, rect2x1, 1);
+  else
+    init_matrix(&(d->mat6), 257, 257, quic2, 0);
 
-  clone_matrix(&(d->mat6), &(d->c_dithermat), 171, 85);
-  clone_matrix(&(d->mat6), &(d->m_dithermat), 85, 171);
-  clone_matrix(&(d->mat6), &(d->y_dithermat), 0, 85);
+  copy_matrix(&(d->mat6), &(d->mat7));
+  exponential_scale_matrix(&(d->mat7), .6);
+  x_3 = d->mat6.x_size / 3;
+  y_3 = d->mat6.y_size / 3;
+
+  clone_matrix(&(d->mat6), &(d->c_dithermat), 2 * x_3, y_3);
+  clone_matrix(&(d->mat6), &(d->m_dithermat), x_3, 2 * y_3);
+  clone_matrix(&(d->mat6), &(d->y_dithermat), 0, y_3);
   clone_matrix(&(d->mat6), &(d->k_dithermat), 0, 0);
 
-  clone_matrix(&(d->mat7), &(d->c_pick), 85, 0);
-  clone_matrix(&(d->mat7), &(d->m_pick), 0, 171);
-  clone_matrix(&(d->mat7), &(d->y_pick), 171, 0);
-  clone_matrix(&(d->mat7), &(d->k_pick), 85, 171);
+  clone_matrix(&(d->mat7), &(d->c_pick), x_3, 0);
+  clone_matrix(&(d->mat7), &(d->m_pick), 0, 2 * y_3);
+  clone_matrix(&(d->mat7), &(d->y_pick), 2 * x_3, 0);
+  clone_matrix(&(d->mat7), &(d->k_pick), x_3, 2 * y_3);
 
   if (!strcmp(v->dither_algorithm, "Hybrid Floyd-Steinberg"))
     d->dither_type = D_FLOYD_HYBRID;
@@ -519,7 +557,6 @@ init_dither(int in_width, int out_width, vars_t *v)
   d->dst_width = out_width;
   d->adaptive_divisor = 2;
 
-  dither_set_aspect_ratio(d, 1, 1);
   dither_set_max_ink(d, INT_MAX, 1.0);
   dither_set_ink_spread(d, 13);
   dither_set_black_lower(d, .4);
@@ -529,14 +566,6 @@ init_dither(int in_width, int out_width, vars_t *v)
   dither_set_ink_darkness(d, .4, .3, .2);
   dither_set_density(d, 1.0);
   return d;
-}
-
-void
-dither_set_aspect_ratio(void *vd, int horizontal, int vertical)
-{
-  dither_t *d = (dither_t *) vd;
-  d->x_aspect = horizontal;
-  d->y_aspect = vertical;
 }
 
 void

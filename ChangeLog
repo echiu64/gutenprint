@@ -1,3 +1,31 @@
+2000-06-18	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.18) (+12 -0)
+		print_gimp.h (1.20) (+2 -2)
+		configure.in (1.19) (+1 -1)
+		RELNOTES (1.13) (+7 -1)
+		README (1.18) (+1 -1)
+	
+	Print 3.1.7 release
+	
+2000-06-18	<rlk@sourceforge.net>
+
+	Files:	Ghost/gdevstp.c (1.17) (+2 -2)
+	
+	Fix really stupid bug.  Need to do a flash 3.1.7.
+	
+2000-06-18	<rlk@sourceforge.net>
+
+	Files:	README.escp2 (1.5) (+9 -0)
+	
+	Add a few more remote mode commands
+	
+2000-06-18	<rlk@sourceforge.net>
+
+	Files:	escputil.c (1.2) (+207 -37)
+	
+	Add ink levels and ID string
+	
 2000-06-17	<rlk@sourceforge.net>
 
 	Files:	print_gimp.h (1.19) (+2 -2)

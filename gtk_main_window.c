@@ -164,7 +164,7 @@ static void gtk_setup_cancel_callback(void);
 static void gtk_ppd_browse_callback(void);
 static void gtk_ppd_ok_callback(void);
 static void gtk_ppd_cancel_callback(void);
-static void gtk_print_driver_callback(GtkWidget *, gint);
+static void gtk_print_driver_callback(GtkWidget *, gint, gint, GdkEventButton *, gpointer);
 
 static void gtk_file_ok_callback(void);
 static void gtk_file_cancel_callback(void);
@@ -191,14 +191,16 @@ static GtkWidget* dialog;     /* Dialog window */
  *****************************************************************************/
 void gtk_create_main_window(void)
 {
-    int        i;          /* Looping var */
+    int        i;        /* Looping var */
     char       s[100];     /* Text string */
     GtkWidget* label;      /* Label string */
     GtkWidget* hbbox;      /* button_box for OK/Cancel buttons */
     GtkWidget* button;     /* OK/Cancel buttons */
     GtkWidget* scale;      /* Scale widget */
     GtkWidget* entry;      /* Text entry widget */
-    GtkWidget* menu;       /* Menu of drivers/sizes */
+    GtkWidget* menu;       /* Menu of sizes */
+    GtkWidget* list;       /* List of drivers */
+    GtkWidget* printer_crawler;      /* Scrolled Window for menu */
     GtkWidget* item;       /* Menu item */
     GtkWidget* option;     /* Option menu button */
     GtkWidget* box;        /* Box container */
@@ -952,29 +954,34 @@ void gtk_create_main_window(void)
 		     0, 0);
     gtk_widget_show(label);
 
-    menu = gtk_menu_new();
+	printer_crawler = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (printer_crawler),
+					                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    printer_driver = list = gtk_clist_new(1);
+	gtk_clist_set_selection_mode(GTK_CLIST(list), GTK_SELECTION_SINGLE);
+	gtk_signal_connect(GTK_OBJECT(list), "select_row",
+			   (GtkSignalFunc)gtk_print_driver_callback,
+			   NULL);
+	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (printer_crawler), list);
+    gtk_widget_set_usize(printer_crawler, 200, 0);
+	gtk_widget_show (list);
     for (i = 0; i < known_printers(); i ++)
     {
+        char *tmp;
 	if (!strcmp(the_printer->long_name, ""))
 	    continue;
-	item = gtk_menu_item_new_with_label(gettext(the_printer->long_name));
-	gtk_menu_append(GTK_MENU(menu), item);
-	gtk_signal_connect(GTK_OBJECT(item), "activate",
-			   (GtkSignalFunc)gtk_print_driver_callback,
-			   (gpointer)i);
-	gtk_widget_show(item);
+	tmp = gettext(the_printer->long_name);
+	gtk_clist_insert(GTK_CLIST(list), i, &tmp);
+	gtk_clist_set_row_data(GTK_CLIST(list), i, (gpointer)i);
 	the_printer++;
     }
-
-    printer_driver = option = gtk_option_menu_new();
     gtk_table_attach(GTK_TABLE(table),
-		     option,
-		     1, 2,
+		     printer_crawler,
+		     1, 3,
 		     0, 1,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
-    gtk_option_menu_set_menu(GTK_OPTION_MENU(option), menu);
-    gtk_widget_show(option);
+	gtk_widget_show (printer_crawler);
 
     /*
      * PPD file...
@@ -1794,7 +1801,7 @@ static void gtk_setup_open_callback(void)
   current_printer = get_printer_by_driver(plist[plist_current].v.driver);
   idx = get_printer_index_by_driver(plist[plist_current].v.driver);
 
-  gtk_option_menu_set_history(GTK_OPTION_MENU(printer_driver), idx);
+  gtk_clist_select_row(GTK_CLIST(printer_driver), idx, 0);
 
   gtk_entry_set_text(GTK_ENTRY(ppd_file), plist[plist_current].v.ppd_file);
 
@@ -1855,9 +1862,13 @@ static void gtk_setup_cancel_callback(void)
  * print_driver_callback() - Update the current printer driver...
  *
  ****************************************************************************/
-static void gtk_print_driver_callback(GtkWidget *widget, /* I - Driver menu */
-				      gint      data)    /* I - Data */
+static void gtk_print_driver_callback(GtkWidget *widget, /* I - Driver list */
+					  gint		row,
+					  gint		column,
+					  GdkEventButton	*event,
+				      gpointer      data)    /* I - Data */
 {
+  data = gtk_clist_get_row_data(GTK_CLIST(widget), row);
   current_printer = get_printer_by_index((int) data);
 
   if (strncmp(current_printer->driver, "ps", 2) == 0)

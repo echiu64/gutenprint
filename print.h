@@ -221,9 +221,8 @@ typedef struct
  * Prototypes...
  */
 
-extern void *	init_dither(int in_width, int out_width, vars_t *vars);
-extern void	dither_set_aspect_ratio(void *vd, int horizontal,
-					int vertical);
+extern void *	init_dither(int in_width, int out_width, int horizontal_aspect,
+			    int vertical_aspect, vars_t *vars);
 extern void	dither_set_density(void *vd, double);
 extern void 	dither_set_black_lower(void *vd, double);
 extern void 	dither_set_black_upper(void *vd, double);
