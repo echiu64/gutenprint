@@ -1,5 +1,5 @@
-This is gimp-print version 4.0.0rc1, the first release candidate for
-the first stable release in the 4.0 line.
+This is gimp-print version 4.0.0, the first stable release in the 4.0
+line.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
 and CUPS drivers.  The support for printers in GhostScript and CUPS is
@@ -41,6 +41,12 @@ features over the 2.0 (distributed with the Gimp 1.0) and 3.0
    considerable computation, typical text and graphics now render much
    faster.  There are some new special-purpose extremely fast
    dithering algorithms that can be used.
+
+7) Users of the Print plugin in the Gimp: PLEASE NOTE THAT THE printrc
+   FILE FORMAT IN THIS RELEASE IS NOT BACKWARD COMPATIBLE WITH THE
+   FORMAT IN 3.0 AND PREVIOUS RELEASES!  The main issue here is that
+   running the plug-in in this release will convert your printrc file
+   to the new format, which old releases cannot read.
 
 The following printers are supported by gimp-print 4.0.0.  Note that
 not all of these printers can print with highest quality.  In

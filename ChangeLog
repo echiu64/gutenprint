@@ -1,3 +1,38 @@
+2000-10-21	<rlk@sourceforge.net>
+
+	Files:	escputil.c (1.16) (+2 -1)
+	
+	117385 escputil doesn't work with old printers if -m is specified
+	
+2000-10-20	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.91) (+11 -1)
+		printers.xml (1.30) (+8 -0)
+	
+	Added support for the Canon BJC-6200 -- Mostly functional, quite good output
+	
+2000-10-20	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.90) (+12 -1)
+		printers.xml (1.29) (+8 -0)
+	
+	Added support for Canon BJC-30 as suggested by Tim Hanham
+	
+2000-10-20	<rlk@sourceforge.net>
+
+	Files:	README (1.36) (+6 -11)
+		print-pcl.c (1.88) (+40 -8)
+		configure.in (1.37) (+1 -1)
+		RELNOTES (1.34) (+1 -931)
+	
+	Tommy Schultz Lassen's CRET patch; initialize 4.1 branch
+	
+2000-10-20	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.56) (+9 -0)
+	
+	4.0.0rc1
+	
 2000-10-19	<rlk@sourceforge.net>
 
 	Files:	ChangeLog (1.55) (+102 -0)
