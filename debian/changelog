@@ -1,4 +1,4 @@
-gimp-print (4.1.99a2-2) unstable; urgency=low
+gimp-print (4.1.99-a2-2) unstable; urgency=low
 
   * New upstream release
   * Remove README.dither from libgimpprint-dev.docs
