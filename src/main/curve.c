@@ -32,6 +32,10 @@
 #include <stdlib.h>
 #include <limits.h>
 
+#ifdef __GNUC__
+#define inline __inline__
+#endif
+
 #define COOKIE_CURVE 0x1ce0b247
 static const int curve_point_limit = 1048576;
 
@@ -983,7 +987,7 @@ stp_curve_allocate_read_string(const char *text)
   return ret;
 }
 
-static double
+static inline double
 interpolate_gamma_internal(const stp_curve_t curve, double where)
 {
   stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
@@ -998,14 +1002,12 @@ interpolate_gamma_internal(const stp_curve_t curve, double where)
   return icurve->blo + (icurve->bhi - icurve->blo) * pow(where, gamma);
 }
 
-static double
+static inline double
 interpolate_point_internal(const stp_curve_t curve, double where)
 {
   stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
-  double finteger;
-  int integer;
-  double frac = modf(where, &finteger);
-  integer = finteger;
+  int integer = where;
+  double frac = where - (double) integer;
 
   if (frac == 0.0)
     return icurve->data[integer];
