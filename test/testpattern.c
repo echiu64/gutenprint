@@ -26,12 +26,25 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
+#include "testpattern.h"
 
-static char *
+char *
 c_strdup(const char *s)
 {
-  char *ret = malloc(strlen(s) + 1);
-  strcpy(ret, s);
+  int l = strlen(s);
+  char *ret;
+  if (s[0] == '"' && s[l - 1] == '"')
+    {
+      ret = malloc(l - 1);
+      strncpy(ret, s + 1, l - 2);
+      ret[l - 2] = '\0';
+    }
+  else
+    {
+      ret = malloc(strlen(s) + 1);
+      strcpy(ret, s);
+    }
   return ret;
 }
 
@@ -45,8 +58,20 @@ double global_k_gamma = 1.0;
 double global_gamma = 1.0;
 int levels = 256;
 double ink_limit = 1.0;
-int width, height, bandheight;
-int printer_width, printer_height;
+char *printer = 0;
+char *ink_type = 0;
+char *resolution = 0;
+char *media_source = 0;
+char *media_type = 0;
+char *media_size = 0;
+char *dither_algorithm = 0;
+double density = 1.0;
+double xtop = 0;
+double xleft = 0;
+double hsize = 1.0;
+double vsize = 1.0;
+int noblackline = 0;
+int printer_width, printer_height, bandheight;
 
 static const char *Image_get_appname(stp_image_t *image);
 static void Image_progress_conclude(stp_image_t *image);
@@ -59,7 +84,9 @@ static int Image_height(stp_image_t *image);
 static int Image_width(stp_image_t *image);
 static int Image_bpp(stp_image_t *image);
 static void Image_init(stp_image_t *image);
-extern const int n_testpatterns;
+int n_testpatterns = 0;
+
+testpattern_t *the_testpatterns = NULL;
 
 static stp_image_t theImage =
 {
@@ -87,26 +114,25 @@ typedef const char *(*defparm_t)(const stp_printer_t printer,
 				 const char *ppd_file,
 				 const char *name);
 
-typedef struct
+testpattern_t *
+get_next_testpattern(void)
 {
-  double c_min;
-  double c;
-  double c_gamma;
-  double m_min;
-  double m;
-  double m_gamma;
-  double y_min;
-  double y;
-  double y_gamma;
-  double k_min;
-  double k;
-  double k_gamma;
-  double c_level;
-  double m_level;
-  double y_level;
-  double lower;
-  double upper;
-} testpattern_t;
+  static int internal_n_testpatterns = 0;
+  if (n_testpatterns == 0)
+    {
+      the_testpatterns = malloc(sizeof(testpattern_t));
+      n_testpatterns = internal_n_testpatterns = 1;
+      return &(the_testpatterns[0]);
+    }
+  else if (n_testpatterns >= internal_n_testpatterns)
+    {
+      internal_n_testpatterns *= 2;
+      the_testpatterns =
+	realloc(the_testpatterns,
+		internal_n_testpatterns * sizeof(testpattern_t));
+    }
+  return &(the_testpatterns[n_testpatterns++]);
+}
 
 static void
 do_help(void)
@@ -117,7 +143,7 @@ Usage: testpattern -p printer [-n ramp_levels] [-I ink_limit] [-i ink_type]\n\
                    [-z media_size] [-d dither_algorithm] [-e density]\n\
                    [-c cyan_level] [-m magenta_level] [-y yellow_level]\n\
                    [-C cyan_gamma] [-M magenta_gamma] [-Y yellow_gamma]\n\
-                   [-K black_gamma] [-G gamma]\n\
+                   [-K black_gamma] [-G gamma] [-q]\n\
                    [-H width] [-V height] [-T top] [-L left]\n\
        -H, -V, -T, -L expressed as fractions of the printable paper size\n\
        0.0 < ink_limit <= 1.0\n\
@@ -137,15 +163,6 @@ writefunc(void *file, const char *buf, size_t bytes)
 int
 main(int argc, char **argv)
 {
-  char *printer = 0;
-  char *ink_type = 0;
-  char *resolution = 0;
-  char *media_source = 0;
-  char *media_type = 0;
-  char *media_size = 0;
-  char *dither_algorithm = 0;
-  int levels = 256;
-  double density = 1.0;
   int c;
   stp_vars_t v;
   stp_printer_t the_printer;
@@ -154,14 +171,15 @@ main(int argc, char **argv)
   const stp_printfuncs_t *printfuncs;
   defparm_t defparms;
   int x, y, owidth;
-  double xtop = 0;
-  double xleft = 0;
-  double hsize = 1.0;
-  double vsize = 1.0;
+  int width, height;
+
+  int retval = yyparse();
+  if (retval)
+    return retval;
 
   while (1)
     {
-      c = getopt(argc, argv, "p:n:l:I:r:s:t:z:d:hC:M:Y:K:e:T:L:H:V:c:m:y:G:");
+      c = getopt(argc, argv, "qp:n:l:I:r:s:t:z:d:hC:M:Y:K:e:T:L:H:V:c:m:y:G:");
       if (c == -1)
 	break;
       switch (c)
@@ -219,6 +237,9 @@ main(int argc, char **argv)
 	  break;
 	case 'p':
 	  printer = c_strdup(optarg);
+	  break;
+	case 'q':
+	  noblackline = 1;
 	  break;
 	case 'r':
 	  resolution = c_strdup(optarg);
@@ -495,59 +516,6 @@ fill_colors(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
     }
 }
 
-testpattern_t the_testpatterns[] =
-{
-  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0 },
-  { 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1 },
-  { 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1 },
-  { 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1 },
-  { 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1 },
-  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0 },
-  { 0, -2, 1, 0, -2, 1, 0, -2, 1, 0, 0, 1, 1, 1, 1, 1, 1 },
-  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1 },
-  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, -2, -2, -2, 1, 1 },
-  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, .1, .3 },
-  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, -2, -2, -2, .3, .7 },
-  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, .1, .999 },
-  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, .3, .999 },
-  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, .5, .999 },
-  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, -2, -2, -2, .1, .3 },
-  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, .3, .7 },
-  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, -2, -2, -2, .1, .999 },
-  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, -2, -2, -2, .3, .999 },
-  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, -2, -2, -2, .5, .999 },
-  { 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1 },
-  { 0, 0, 1, 0, .75, 1, 0, .75, 1, 0, .25, 1, 1, 1, 1, 1, 1 },
-  { 0, 0, 1, 0, .75, 1, 0, .75, 1, 0, .25, 1, 1, 1, 1, 0, 0 },
-  { 0, 0, 1, 0, .5, 1, 0, .5, 1, 0, .5, 1, 1, 1, 1, 1, 1 },
-  { 0, 0, 1, 0, .5, 1, 0, .5, 1, 0, .5, 1, 1, 1, 1, 0, 0 },
-  { 0, 0, 1, 0, .25, 1, 0, .25, 1, 0, .75, 1, 1, 1, 1, 1, 1 },
-  { 0, 0, 1, 0, .25, 1, 0, .25, 1, 0, .75, 1, 1, 1, 1, 0, 0 },
-  { 0, 0, 1, 0, .1, 1, 0, .1, 1, 0, .9, 1, 1, 1, 1, 1, 1 },
-  { 0, 0, 1, 0, .1, 1, 0, .1, 1, 0, .9, 1, 1, 1, 1, 0, 0 },
-  { 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1 },
-  { 0, .75, 1, 0, .0, 1, 0, .75, 1, 0, .25, 1, 1, 1, 1, 1, 1 },
-  { 0, .75, 1, 0, .0, 1, 0, .75, 1, 0, .25, 1, 1, 1, 1, 0, 0 },
-  { 0, .5, 1, 0, .0, 1, 0, .5, 1, 0, .5, 1, 1, 1, 1, 1, 1 },
-  { 0, .5, 1, 0, .0, 1, 0, .5, 1, 0, .5, 1, 1, 1, 1, 0, 0 },
-  { 0, .25, 1, 0, .0, 1, 0, .25, 1, 0, .75, 1, 1, 1, 1, 1, 1 },
-  { 0, .25, 1, 0, .0, 1, 0, .25, 1, 0, .75, 1, 1, 1, 1, 0, 0 },
-  { 0, .1, 1, 0, .0, 1, 0, .1, 1, 0, .9, 1, 1, 1, 1, 1, 1 },
-  { 0, .1, 1, 0, .0, 1, 0, .1, 1, 0, .9, 1, 1, 1, 1, 0, 0 },
-  { 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1 },
-  { 0, .75, 1, 0, .75, 1, 0, 0, 1, 0, .25, 1, 1, 1, 1, 1, 1 },
-  { 0, .75, 1, 0, .75, 1, 0, 0, 1, 0, .25, 1, 1, 1, 1, 0, 0 },
-  { 0, .5, 1, 0, .5, 1, 0, 0, 1, 0, .5, 1, 1, 1, 1, 1, 1 },
-  { 0, .5, 1, 0, .5, 1, 0, 0, 1, 0, .5, 1, 1, 1, 1, 0, 0 },
-  { 0, .25, 1, 0, .25, 1, 0, 0, 1, 0, .75, 1, 1, 1, 1, 1, 1 },
-  { 0, .25, 1, 0, .25, 1, 0, 0, 1, 0, .75, 1, 1, 1, 1, 0, 0 },
-  { 0, .1, 1, 0, .1, 1, 0, 0, 1, 0, .9, 1, 1, 1, 1, 1, 1 },
-  { 0, .1, 1, 0, .1, 1, 0, 0, 1, 0, .9, 1, 1, 1, 1, 0, 0 },
-};
-
-const int n_testpatterns = sizeof(the_testpatterns) / sizeof(testpattern_t);
-
-
 static stp_image_status_t
 Image_get_row(stp_image_t *image, unsigned char *data, int row)
 {
@@ -570,8 +538,17 @@ Image_get_row(stp_image_t *image, unsigned char *data, int row)
   else if (band != previous_band && band > 0)
     {
       memset(data, 0, printer_width * 4 * sizeof(unsigned short));
-      fill_black((unsigned short *)data, printer_width, levels);
-      previous_band = -2;
+      if (noblackline)
+	{
+	  fill_colors((unsigned short *)data, printer_width, levels,
+		      &(the_testpatterns[band]));
+	  previous_band = band;
+	}
+      else
+	{
+	  fill_black((unsigned short *)data, printer_width, levels);
+	  previous_band = -2;
+	}
     }
   return STP_IMAGE_OK;
 }

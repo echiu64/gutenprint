@@ -57,9 +57,14 @@ testdither_SOURCES = testdither.c
 testdither_LDADD = $(LIBGIMPPRINT_LIBS)
 testdither_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
-testpattern_SOURCES = testpattern.c
+LFLAGS = -i
+YFLAGS = -d
+
+testpattern_SOURCES = testpattern.c testpatterny.y testpatternl.l testpattern.h
 testpattern_LDADD = $(LIBGIMPPRINT_LIBS)
 testpattern_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
+
+testpatternl.o: testpatterny.o
 
 $(LIBGIMPPRINT_LIBS):
 	$(MAKE) -C ../src/main
@@ -70,4 +75,5 @@ $(LIBGIMPPRINT_LIBS):
 CLEANFILES = $(EXTRA_PROGRAMS) mixed-color-1bit.ppm
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = cyan-sweep.tif parse-escp2 run-weavetest
+DISTCLEANFILES = testpatternl.c testpatterny.c testpatterny.h
+EXTRA_DIST = cyan-sweep.tif parse-escp2 run-weavetest testpatterny.h testpattern.sample
