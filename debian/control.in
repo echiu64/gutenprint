@@ -111,3 +111,17 @@ Recommends: gimpprint-locales (>= ${Source-Version})
 Description: a utility for Epson Stylus printers
  escputil is a utility to clean and align the heads of Epson Stylus printers.
  It can also check the current ink levels in the printer.
+
+Package: foomatic-db-gimpprint
+Architecture: all
+Section: text
+Depends: libgimpprint#UPSTREAM_VERSION# (= ${Source-Version}), foomatic-db
+Description: Printer/Driver database and print system - gimp-print database
+ Foomatic is a printer and driver database with PPD generator and filter
+ backends for various Printing systems from cups over lp* to pdq.
+ .
+ This package contains the database for the gimp-print printer drivers.
+ .
+ These drivers provide printing quality for UNIX/Linux on a par with
+ proprietary vendor-supplied drivers in many cases, and can be used for
+ many of the most demanding printing tasks.

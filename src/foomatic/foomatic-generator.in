@@ -1,10 +1,16 @@
 #!@PERL@
 
+# Get mapfile from command line
+use Getopt::Std;
+getopts("m:t:");
+
 # Wherever we put it...
 my $mapfile;
 # $mapfile = "../main/printers.xml";
-$mapfile = "foomatic-printermap";
+$mapfile = $opt_m;
 
+my $templatedir;
+$templatedir = $opt_t;
 
 # The following substitutions happen to the template XML files:
 # @@STPVER@@         - the version number (ie '4.1.5')
@@ -151,7 +157,7 @@ my $generalsubs = { 'STPVER' => $stpvers,
 
 my @numericsubs = ('MINVAL', 'MAXVAL', 'DEFVAL');
 
-opendir TDIR, "foomatic-templates" or die "Cannot open templates directory: $!\n";
+opendir TDIR, $templatedir or die "Cannot open templates directory: $!\n";
 
 # OK, make the db heirarchy alongside the templates one...
 mkdir 'foomatic-db', 0755 or die "Cannot create directory foomatic-db: $!\n"
