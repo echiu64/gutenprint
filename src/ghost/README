@@ -1,7 +1,7 @@
 INTRODUCTION:
 -------------
 
- Gimp-Print 4.1 includes an associated Ghostscript driver, which is
+ Gimp-Print 4.2 includes an associated Ghostscript driver, which is
  named `stp'.  That name originally referred to Epson Stylus Photo
  printers; this is the first Ghostscript driver which supported those
  printers with high quality.  The same driver now supports many Canon,

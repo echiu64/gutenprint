@@ -1,13 +1,12 @@
 INTRODUCTION
 
-    This is Gimp-Print version 4.1.99rc1, the first release candidate
-    leading up to the 4.2 stable release.  Gimp-print is the print
-    facility for the Gimp, and in addition a suite of drivers that may
-    be used with common UNIX spooling systems using GhostScript or
-    CUPS.  These drivers provide printing quality for UNIX/Linux in
-    many cases equal to or better than proprietary vendor-supplied
-    drivers, and can be used for many of the most demanding printing
-    tasks.
+    This is Gimp-Print version 4.2.0, the first stable release in the
+    4.2 line.  Gimp-print is the print facility for the Gimp, and in
+    addition a suite of drivers that may be used with common UNIX
+    spooling systems using GhostScript or CUPS.  These drivers provide
+    printing quality for UNIX/Linux in many cases equal to or better
+    than proprietary vendor-supplied drivers, and can be used for many
+    of the most demanding printing tasks.
 
     Please read this README, and the NEWS file carefully!  Many things
     have changed from previous releases.  The package is quite
@@ -108,17 +107,35 @@ CUPS
     typically /etc/init.d/cups, /etc/rc.d/cups, or even
     /etc/rc.d/init.d/cups.
 
+    NOTE: If you are using CUPS 1.1.11 or higher, and you have a
+    USB-connected printer, you must have a printer connected to each
+    USB port that you plan to use and powered on when you restart
+    CUPS.  If you do not do so, you will not be able to perform the
+    following step (reinstalling the printer), as described below.
+
     Following this, you must reinstall any printers that you are using
     Gimp-Print PPD's with.  Such printers may be identified in any
     CUPS front end (e. g. KUPS, or via the web interface) because they
     look something like this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-rc1(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(en)
 
-    If the version number (in this case, 4.1.99-rc1) does not match
+    If the version number (in this case, 4.2.0) does not match
     the version of Gimp-Print that you are installing, you must use
     Modify Printer to force the new PPD file to get installed.
     Failure to do so may lead to incorrect output and/or other errors!
+
+    Starting with CUPS 1.1.11, you cannot choose an AppSocket
+    connection and enter "usb:/dev/usblp0" or the like as the URI; you
+    will get a "client-error-not-possible" error at the end of the
+    installation process, and you will have a message like the
+    following in your CUPS error log (typically
+    /var/log/cups/error_log):
+
+E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/usblp0'!
+
+    If the printer was turned on correctly, you will be given a choice
+    of a USB connection in the Device dialog.
 
     You may also have problems if you have a .lpoptions file that has
     old options set.  If you have problems printing, please remove any
@@ -134,15 +151,15 @@ CUPS
     apparent when you use a CUPS front end to select a PPD file and
     you see something like this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-rc1(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-rc1(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-rc1(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(en)
 
     rather than this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-rc1(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-rc1(sv)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-rc1(fr)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(sv)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(fr)
 
     you may wish to turn off the translation of PPD files:
 
