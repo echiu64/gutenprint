@@ -49,25 +49,35 @@
 #define ECOLOR_K 3
 
 #define MATRIX_NB0 (7)
+#define MATRIX_BASE0 (2)
 #define MATRIX_SIZE0 (1 << (MATRIX_NB0))
 #define MODOP0(x, y) ((x) & ((y) - 1))
 
 #define MATRIX_NB1 (4)
+#define MATRIX_BASE1 (3)
 #define MATRIX_SIZE1 (3 * 3 * 3 * 3)
 #define MODOP1(x, y) ((x) % (y))
 
 #define MATRIX_NB2 (3)
+#define MATRIX_BASE2 (5)
 #define MATRIX_SIZE2 (5 * 5 * 5)
 #define MODOP2(x, y) ((x) % (y))
 
 #define MATRIX_NB3 (3)
+#define MATRIX_BASE3 (5)
 #define MATRIX_SIZE3 (5 * 5 * 5)
 #define MODOP3(x, y) ((x) % (y))
+
+#define MATRIX_NB4 (1)
+#define MATRIX_BASE4 (23)
+#define MATRIX_SIZE4 (23)
+#define MODOP4(x, y) ((x) % (y))
 
 #define MATRIX_SIZE0_2 ((MATRIX_SIZE0) * (MATRIX_SIZE0))
 #define MATRIX_SIZE1_2 ((MATRIX_SIZE1) * (MATRIX_SIZE1))
 #define MATRIX_SIZE2_2 ((MATRIX_SIZE2) * (MATRIX_SIZE2))
 #define MATRIX_SIZE3_2 ((MATRIX_SIZE3) * (MATRIX_SIZE3))
+#define MATRIX_SIZE4_2 ((MATRIX_SIZE4) * (MATRIX_SIZE4))
 
 #define DITHERPOINT(x, y, m, d) \
 ((d)->ordered_dither_matrix##m[MODOP##m((x), MATRIX_SIZE##m)][MODOP##m((y), MATRIX_SIZE##m)])
@@ -122,6 +132,7 @@ typedef struct dither
   unsigned ordered_dither_matrix1[MATRIX_SIZE1][MATRIX_SIZE1];
   unsigned ordered_dither_matrix2[MATRIX_SIZE2][MATRIX_SIZE2];
   unsigned ordered_dither_matrix3[MATRIX_SIZE3][MATRIX_SIZE3];
+  unsigned ordered_dither_matrix4[MATRIX_SIZE4][MATRIX_SIZE4];
   int src_width;
   int dst_width;
   int density;
@@ -164,45 +175,19 @@ typedef struct dither
  * Bayer's dither matrix using Judice, Jarvis, and Ninke recurrence relation
  * http://www.cs.rit.edu/~sxc7922/Project/CRT.htm
  */
-static int
-calc_ordered_point(unsigned x, unsigned y, int steps, int multiplier)
-{
-  int i;
-  unsigned retval = 0;
-  static int map[4] = { 0, 2, 3, 1 };
-  for (i = 0; i < steps; i++)
-    {
-      int xa = (x >> i) & 1;
-      int ya = (y >> i) & 1;
-      unsigned base;
-      base = map[ya + (xa * 2)];
-      retval += base << (2 * ((steps - 1) - i));
-    }
-  return retval * multiplier;
-}
 
-static int
-calc_ordered_point_3(unsigned x, unsigned y, int steps, int multiplier)
+static int sq2[] =
 {
-  int i, j;
-  unsigned retval = 0;
-  static int map[9] = { 3, 2, 7, 8, 4, 0, 1, 6, 5 };
-  int divisor = 1;
-  int div1;
-  for (i = 0; i < steps; i++)
-    {
-      int xa = (x / divisor) % 3;
-      int ya = (y / divisor) % 3;
-      unsigned base;
-      base = map[ya + (xa * 3)];
-      div1 = 1;
-      for (j = i; j < steps - 1; j++)
-	div1 *= 9;
-      retval += base * div1;
-      divisor *= 3;
-    }
-  return retval * multiplier;
-}
+  0, 2,
+  3, 1
+};
+
+static int sq3[] =
+{
+  3, 2, 7,
+  8, 4, 0,
+  1, 6, 5
+};
 
 /*
  * This magic square taken from
@@ -233,10 +218,63 @@ static int msq1[] =
   15,  7,  4, 13, 21
 };
 
+static int tonino0[] =
+{
+  221, 473, 75, 190, 416, 67, 143, 356, 257, 43, 297, 239, 496, 0, 189,
+  478, 26, 211, 509, 136, 192, 526, 119, 290, 158, 396, 256, 12, 485, 185,
+  462, 420, 133, 466, 405, 116, 429, 335, 142, 425, 277, 50, 439, 269, 56,
+  430, 333, 45, 501, 363, 97, 332, 293, 53, 314, 350, 84, 41, 270, 367,
+  58, 206, 388, 344, 197, 305, 366, 106, 412, 219, 455, 60, 163, 410, 231,
+  379, 128, 227, 479, 173, 229, 513, 150, 307, 523, 111, 71, 494, 129, 8,
+  489, 147, 16, 380, 202, 272, 524, 32, 155, 515, 6, 109, 432, 289, 79,
+  451, 242, 11, 415, 265, 167, 403, 337, 284, 249, 347, 74, 487, 323, 114,
+  443, 281, 243, 383, 325, 213, 392, 319, 48, 275, 180, 468, 328, 22, 449,
+  184, 87, 464, 196, 433, 261, 39, 207, 306, 397, 183, 73, 457, 36, 159,
+  465, 124, 376, 441, 89, 222, 507, 54, 240, 517, 132, 310, 386, 149, 460,
+  417, 91, 23, 500, 137, 259, 361, 68, 253, 503, 199, 34, 357, 286, 153,
+  382, 294, 360, 35, 278, 65, 102, 170, 354, 481, 233, 343, 423, 177, 511,
+  413, 105, 349, 292, 118, 491, 63, 235, 483, 101, 216, 428, 179, 504,
+  338, 255, 30, 200, 298, 100, 13, 308, 83, 279, 220, 2, 406, 446, 164,
+  395, 435, 168, 28, 474, 144, 401, 1, 224, 438, 391, 127, 426, 493, 205,
+  352, 475, 175, 321, 522, 141, 209, 340, 51, 113, 312, 370, 77, 322, 266,
+  104, 470, 78, 316, 477, 57, 169, 374, 146, 47, 431, 94, 368, 262, 19,
+  497, 250, 186, 512, 252, 121, 528, 161, 365, 296, 188, 214, 24, 247,
+  271, 440, 117, 241, 402, 27, 194, 461, 331, 130, 390, 427, 10, 212, 450,
+  46, 418, 334, 15, 508, 399, 112, 516, 411, 64, 520, 336, 131, 484, 303,
+  98, 414, 225, 59, 345, 273, 398, 300, 195, 92, 258, 458, 135, 288, 369,
+  160, 40, 302, 228, 364, 62, 274, 381, 7, 245, 454, 317, 154, 469, 82,
+  139, 480, 5, 208, 351, 238, 70, 447, 232, 329, 453, 4, 181, 467, 204,
+  151, 525, 171, 49, 505, 108, 217, 37, 375, 326, 521, 387, 85, 488, 52,
+  125, 498, 88, 148, 490, 311, 107, 444, 267, 95, 422, 283, 198, 378, 304,
+  514, 237, 174, 61, 157, 419, 182, 282, 359, 191, 251, 424, 372, 210, 38,
+  385, 348, 44, 324, 362, 134, 21, 448, 115, 287, 437, 226, 276, 471, 20,
+  320, 459, 55, 291, 9, 81, 280, 506, 76, 201, 492, 120, 69, 486, 246,
+  187, 342, 33, 408, 495, 355, 110, 264, 404, 96, 502, 346, 162, 482, 341,
+  165, 407, 299, 254, 409, 176, 309, 384, 72, 499, 260, 99, 145, 42, 203,
+  377, 138, 172, 218, 389, 315, 122, 18, 248, 434, 140, 31, 456, 223, 14,
+  476, 234, 166, 421, 313, 371, 244, 452, 301, 29, 436, 268, 25, 442, 215,
+  394, 472, 66, 230, 518, 126, 330, 445, 152, 358, 17, 80, 463, 3, 339,
+  123, 519, 236, 327, 510, 103, 193, 527, 93, 156, 353, 285, 373, 90, 263,
+  393, 86, 318, 400, 295, 178
+};
+
+#define CALC_MATRIX(matid, init)				\
+do {								\
+  for (x = 0; x < MATRIX_SIZE##matid; x++)			\
+    for (y = 0; y < MATRIX_SIZE##matid; y++)			\
+      {								\
+	d->ordered_dither_matrix##matid[x][y] =			\
+	  calc_ordered_point_n(x, y, MATRIX_NB##matid, 1,	\
+			       MATRIX_BASE##matid, init);	\
+	d->ordered_dither_matrix##matid[x][y] =			\
+	  d->ordered_dither_matrix##matid[x][y] *		\
+	  65536 / (MATRIX_SIZE##matid##_2);			\
+      }								\
+} while (0)
 
 static int
-calc_ordered_point_5(unsigned x, unsigned y, int steps, int multiplier,
-		     int *map)
+calc_ordered_point_n(unsigned x, unsigned y, int steps, int multiplier,
+		     int size, int *map)
 {
   int i, j;
   unsigned retval = 0;
@@ -244,15 +282,15 @@ calc_ordered_point_5(unsigned x, unsigned y, int steps, int multiplier,
   int div1;
   for (i = 0; i < steps; i++)
     {
-      int xa = (x / divisor) % 5;
-      int ya = (y / divisor) % 5;
+      int xa = (x / divisor) % size;
+      int ya = (y / divisor) % size;
       unsigned base;
-      base = map[ya + (xa * 5)];
+      base = map[ya + (xa * size)];
       div1 = 1;
       for (j = i; j < steps - 1; j++)
-	div1 *= 25;
+	div1 *= size * size;
       retval += base * div1;
-      divisor *= 5;
+      divisor *= size;
     }
   return retval * multiplier;
 }
@@ -273,38 +311,11 @@ init_dither(int in_width, int out_width, vars_t *v)
   dither_set_y_ranges(d, 1, &r, 1.0);
   dither_set_k_ranges(d, 1, &r, 1.0);
 
-  for (x = 0; x < MATRIX_SIZE0; x++)
-    for (y = 0; y < MATRIX_SIZE0; y++)
-      {
-	d->ordered_dither_matrix0[x][y] =
-	  calc_ordered_point(x, y, MATRIX_NB0, 1);
-	d->ordered_dither_matrix0[x][y] =
-	  d->ordered_dither_matrix0[x][y] * 65536 / (MATRIX_SIZE0_2);
-      }
-  for (x = 0; x < MATRIX_SIZE1; x++)
-    for (y = 0; y < MATRIX_SIZE1; y++)
-      {
-	d->ordered_dither_matrix1[x][y] =
-	  calc_ordered_point_3(x, y, MATRIX_NB1, 1);
-	d->ordered_dither_matrix1[x][y] =
-	  d->ordered_dither_matrix1[x][y] * 65536 / (MATRIX_SIZE1_2);
-      }
-  for (x = 0; x < MATRIX_SIZE2; x++)
-    for (y = 0; y < MATRIX_SIZE2; y++)
-      {
-	d->ordered_dither_matrix2[x][y] =
-	  calc_ordered_point_5(x, y, MATRIX_NB2, 1, msq0);
-	d->ordered_dither_matrix2[x][y] =
-	  d->ordered_dither_matrix2[x][y] * 65536 / (MATRIX_SIZE2_2);
-      }
-  for (x = 0; x < MATRIX_SIZE3; x++)
-    for (y = 0; y < MATRIX_SIZE3; y++)
-      {
-	d->ordered_dither_matrix3[x][y] =
-	  calc_ordered_point_5(x, y, MATRIX_NB3, 1, msq1);
-	d->ordered_dither_matrix3[x][y] =
-	  d->ordered_dither_matrix3[x][y] * 65536 / (MATRIX_SIZE3_2);
-      }
+  CALC_MATRIX(0, sq2);
+  CALC_MATRIX(1, sq3);
+  CALC_MATRIX(2, msq0);
+  CALC_MATRIX(3, msq1);
+  CALC_MATRIX(4, tonino0);
 
   if (!strcmp(v->dither_algorithm, "Hybrid Floyd-Steinberg"))
     d->dither_type = D_FLOYD_HYBRID;
@@ -1489,6 +1500,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.32  2000/04/27 00:24:24  rlk
+ *   Add Thomas Tonino's 23x23 matrix
+ *
  *   Revision 1.31  2000/04/26 02:52:02  rlk
  *   Minor improvements
  *
