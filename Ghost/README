@@ -203,8 +203,10 @@ escp2-600		EPSON Stylus Color 600
 escp2-640		EPSON Stylus Color 640
 escp2-660		EPSON Stylus Color 660
 escp2-670		EPSON Stylus Color 670
+escp2-680		EPSON Stylus Color 680
 escp2-740		EPSON Stylus Color 740
 escp2-760		EPSON Stylus Color 760
+escp2-777		EPSON Stylus Color 777
 escp2-800		EPSON Stylus Color 800
 escp2-850		EPSON Stylus Color 850
 escp2-860		EPSON Stylus Color 860
@@ -224,6 +226,7 @@ escp2-870		EPSON Stylus Photo 870
 escp2-1200		EPSON Stylus Photo 1200
 escp2-1270		EPSON Stylus Photo 1270
 escp2-2000		EPSON Stylus Photo 2000P
+escp2-7500		EPSON Stylus Pro 7500
 pcl-340			HP DeskJet 340
 pcl-400			HP DeskJet 400
 pcl-500			HP DeskJet 500

@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/csh -fv
 #
 # makesrcdist - make a source distribution of GIMP-print.
 #
@@ -10,7 +10,7 @@ set username="easysw"
 echo "Getting distribution..."
 
 cd /tmp
-cvs -d$username@cvs.gimp-print.sourceforge.net get -rprint-4_0_branch print >& /dev/null
+cvs -d${username}@cvs.gimp-print.sourceforge.net:/cvsroot/gimp-print get -rprint-4_0_branch print
 
 if ($#argv == 0) then
 	echo -n "Version number for distribution? "
