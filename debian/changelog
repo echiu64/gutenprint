@@ -1,3 +1,16 @@
+gimp-print (4.2.6-1) unstable; urgency=low
+
+  * New stable release.
+  * Update Standards-Version to 3.5.9.
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Fri, 25 Apr 2003 18:22:08 +0100
+
+gimp-print (4.2.5-2) unstable; urgency=low
+
+  * Move libgimpprint-dev to section libdevel.
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Tue,  1 Apr 2003 16:40:32 +0100
+
 gimp-print (4.2.5-1) unstable; urgency=low
 
   * New stable release

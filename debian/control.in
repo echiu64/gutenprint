@@ -2,7 +2,7 @@ Source: gimp-print
 Section: graphics
 Priority: optional
 Maintainer: Roger Leigh <roger@whinlatter.uklinux.net>
-Standards-Version: 3.5.7
+Standards-Version: 3.5.9
 Build-Depends: libcupsys2-dev, libgimp1.2-dev, libglib1.2-dev, libgtk1.2-dev, libreadline4-dev, libijs-0.34-dev, debhelper (>= 4.0.2), xlibs-dev, zlib1g-dev, flex, gettext (>= 0.10.36-1), texi2html, docbook-utils, imagemagick, autoconf, automake, libtool, bison, foomatic-bin (>= 0.20020131-1)
 
 Package: gimp1.2-print
@@ -50,7 +50,7 @@ Description: Gimp-Print printer drivers for CUPS
 
 Package: libgimpprint#LIBRARY_VERSION#-dev
 Architecture: any
-Section: devel
+Section: libdevel
 Depends: libgimpprint#LIBRARY_VERSION# (= ${Source-Version})
 Provides: libgimpprint-dev
 Conflicts: libgimpprint-dev
