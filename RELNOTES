@@ -21,28 +21,52 @@ Gimp-Print 4.0a3:
    to the old format, and will be much more amenable to future changes
    that may become necessary.
 
-2) Online documentation for the print plugin finally exists.
+2) Support for the HP Deskjet 800 series has been changed
+   incompatibly.  The "pcl-800" driver (HP Deskjet 800 series) no
+   longer exists, since the 800 series printers fall into two distinct
+   groups, the older 850/855/870/890 printers which supported 4-level
+   dithering (HP calls this C-RET) at 300x300 DPI, and the newer
+   810/812/840/842/895 printers which do not support C-RET at 300x300
+   DPI (these are the same as the Deskjet 600 series).
 
-3) Support for CUPS, through a choice of a native CUPS driver or
+   If you are using the gimp plugin, re-select your 800 series printer
+   from the combo box and re-save the settings.
+
+   If you are using the Ghostscript driver, choose from one of the
+   pcl-8xx values detailed in Ghost/README.
+
+   If you have an 800 series printer that is not on the list, please
+   try both the old C-RET driver (choose model 890) and the non C-RET
+   driver (choose model 895) and see which one works at 300x300 dpi.
+   Also, please let us know; the address is in the README file.
+
+3) The HP Deskjet 1220C has been grouped with the 900 series.
+
+4) The HP PhotoSmart P1000 and P1100 have been added, they are like
+   the HP 900 series.
+
+5) Online documentation for the print plugin finally exists.
+
+6) Support for CUPS, through a choice of a native CUPS driver or
    Cups-o-Matic.
 
-4) Support for the Foomatic printer configuration system, greatly
+7) Support for the Foomatic printer configuration system, greatly
    simplifying configuration and use with lpd, CUPS, and PDQ.
 
-5) The preview window in the plugin now shows a low-resolution
+8) The preview window in the plugin now shows a low-resolution
    representation of the actual image.  The color adjustment window
    shows an thumbnail that reflects the effect that color adjustments
    have on the output.
 
-6) The old GTK-based interface is now disabled by default when used
+9) The old GTK-based interface is now disabled by default when used
    with the Gimp 1.1.  It can be enabled by running configure with
    --enable-maintainer-mode.
 
-7) The plugin now detects the spooling system at runtime, so it need
+10) The plugin now detects the spooling system at runtime, so it need
    not be compiled specifically for use with Berkeley lpd, System V
    lp, CUPS, or LPRng.
 
-8) Substantial quality improvement for many Epson Stylus printers in
+11) Substantial quality improvement for many Epson Stylus printers in
    in 1440x720 DPI modes.  The price is that printing takes much
    longer.  If you need high quality with better performance, use
    720x720 DPI Highest Quality.
@@ -52,54 +76,34 @@ Gimp-Print 4.0a3:
    and EX.  The effect in all cases will be smoother output that is
    particularly visible in pale tones.
 
-9) The Fast dither algorithm has been slightly tweaked, and a Very
+12) The Fast dither algorithm has been slightly tweaked, and a Very
    Fast dither algorithm has been added.
 
-10) Most menus have been converted to combo boxes.
+13) Most menus have been converted to combo boxes.
 
-11) The printrc code has been fixed to set reasonable defaults if an
+14) The printrc code has been fixed to set reasonable defaults if an
    old printrc file with now-invalid parameter settings is read.
 
-12) It is now possible to print in seascape and upside down portrait
+15) It is now possible to print in seascape and upside down portrait
    mode.
 
-13) The support for the Stylus Photo 2000P has been fixed and should
+16) The support for the Stylus Photo 2000P has been fixed and should
    now be correct.
 
-14) Printer names may now be up to 127 characters.
+17) Printer names may now be up to 127 characters.
 
-15) Additional performance improvements over earlier versions of this
+18) Additional performance improvements over earlier versions of this
     package.
 
-16) Support for the HP Deskjet 800 series has been changed.
-    The "pcl-800" driver (HP Deskjet 800 series) no longer exists,
-    since the 800 series printers fall into two distinct groups,
-    the older 850/855/870/890 printers which supported 4-level
-    dithering (HP calls this C-RET) at 300x300 DPI, and the newer
-    810/812/840/842/895 printers which do not support C-RET at
-    300x300 DPI (these are the same as the Deskjet 600 series).
+19) A number of miscellaneous bugs have been fixed.
 
-    If you are using the gimp plugin, re-select your 800 series printer
-    from the combo box and re-save the settings.
 
-    If you are using the Ghostscript driver, choose from one of the
-    pcl-8xx values detailed in Ghost/README.
+Errata:
 
-    If you have an 800 series printer that is not on the list, please
-    try both the old C-RET driver (choose model 890) and the non C-RET
-    driver (choose model 895) and see which one works at 300x300 dpi.
-    Also, please let us know; the address is in the README file.
+1) The higher resolutions of the HP Deskjet 900/1220C and the HP
+   PhotoSmart P1000/P1100 have been disabled as they do not work.
+   Investigation into these modes (Photo-Ret III) is continuing.
 
-17) The HP Deskjet 1220C has been grouped with the 900 series.
-
-18) The HP PhotoSmart P1000 and P1100 have been added, they are like
-    the HP 900 series.
-
-19) The higher resolutions of the HP Deskjet 900/1220C and the HP
-    PhotoSmart P1000/P1100 have been disabled as they do not work.
-    Investigation into these modes (Photo-Ret III) is continuing.
-
-20) A number of miscellaneous bugs have been fixed.
 
 Gimp-Print 4.0a3 contains the following improvements over Gimp-Print
 4.0a2:
