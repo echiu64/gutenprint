@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.40  1999/12/18 23:45:07  rlk
+ *   typo
+ *
  *   Revision 1.39  1999/12/12 20:49:01  rlk
  *   Various changes
  *
@@ -762,7 +765,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
         */
 
         c  = (65535 - (rgb[2] + rgb[1]) / 8) * (c - k) / divk;
-        m  = (65535 - (rgb[1] + rgb[2]) / 8) * (m - k) / divk;
+        m  = (65535 - (rgb[1] + rgb[0]) / 8) * (m - k) / divk;
         y  = (65535 - (rgb[0] + rgb[2]) / 8) * (y - k) / divk;
       }
 #ifdef PRINT_DEBUG
