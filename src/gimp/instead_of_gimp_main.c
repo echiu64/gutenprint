@@ -65,14 +65,11 @@
  }
 #endif
 
-static GtkTooltips *tool_tips  = NULL;
-
 /* This main() can be changed to another function name which you
  * call to do printing in your own application.  I am leaving it
  * as main() so that it can be compiled to create a standalone executable.
  */
-int gimp_print_gui( FILE *, unsigned, unsigned );
-void runit( char *, int *, GimpParam **);
+void runit( gchar *, gdouble, gdouble, char *, int *, GimpParam **);
 void prepare_gimp_drawable_get( GimpDrawable *drawable );
 FILE *RGB_image;
 
@@ -80,16 +77,17 @@ FILE *RGB_image;
 #ifdef STANDALONE
 int main( int argc, char *argv[])
 #else
-int gimp_print_gui( FILE *fpgimpprint, unsigned height, unsigned width )
+int gimpprint_panel( FILE *fpgimpprint, unsigned height, unsigned width )
 #endif
 {                            
   int nreturn_vals;       
   GimpParam retval, *return_vals;   
   GimpDrawable drawable;
   gint32 image_ID = 0, drawable_ID = 0;
+  gchar *image_filename;
 
 #ifdef STANDALONE
-  unsigned width, height;
+  gdouble width, height;
   FILE *fpgimpprint;
 
   gtk_set_locale();
@@ -103,17 +101,15 @@ int gimp_print_gui( FILE *fpgimpprint, unsigned height, unsigned width )
   }
 
   fpgimpprint = fopen( argv[1], "r" );
-  height = atoi( argv[2]);
-  width = atoi( argv[3]);
+  height = atof( argv[2]);
+  width = atof( argv[3]);
 #endif
-
-  tool_tips = gtk_tooltips_new();
 
   /* Do three things to set up your image */
 
      /* One */
      /* You name the image here. It will appear as the title of the GUI gtk frame. */
-     gimp_image_set_filename( image_ID, "Rapid Chart" ); /* image_ID does nothing */
+     image_filename = "Rapid Chart";
 
      /* Two */
      /* drawable holds some dimensions. */
@@ -160,7 +156,7 @@ int gimp_print_gui( FILE *fpgimpprint, unsigned height, unsigned width )
         return_vals = &retval;             
                                            
         /* send along all parameters even if some are not used */
-        runit( "file_print_gimp", &nreturn_vals, &return_vals );    
+        runit( image_filename, height, width, "file_print_gimp", &nreturn_vals, &return_vals );    
 
         if( argc == 5 && *argv[4] == '1' )
            unlink( argv[1] );
@@ -214,82 +210,12 @@ gimp_ui_init (const gchar *prog_name,
    */
 /*
   if( preview )
-    gtk_preview_set_gamma( gimp_gamma() );
+    gtk_preview_set_gamma( 1.0 );   gimp_gamma 
 */
 
   initialized = TRUE;
-}
 
-
-/* must imitate gimp_image_set_filename() and ...get...() as in the real gimp */
-static gchar *thefilename = NULL;
-
-gboolean gimp_image_set_filename( gint32 image_ID, gchar *nm ) 
-                                       /*image_ID is unused in my version*/
-{
-  static const char *error = "memory error gimp_image_set_filename()";
-
-  if( thefilename != NULL && thefilename != error )
-     free(thefilename);
-
-  thefilename = malloc( strlen(nm) + 1 ); 
-  if( thefilename == NULL )
-     thefilename = error;
-  else
-     strcpy( thefilename, nm );
-
-  return(TRUE);
-}
-gchar *gimp_image_get_filename( gint32 image_ID ) /* image_ID is unused in my version*/
-{
-  return( thefilename );
-}
-
-
-/* must imitate gimp_image_get_resolution() as in the real gimp */
-
-gboolean gimp_image_get_resolution( gint32 image_ID, gdouble *xres, gdouble *yres)  
-                                        /* image_ID is unused */
-{
-   gboolean ret = TRUE;
-
-   *xres = 800;
-   *yres = 559;
-
-   return( ret );
-}
-
-/* must imitate gimp_gamma because it is in gimp_ui_init() */
-gdouble gimp_gamma()
-{
-  gdouble ret = 1.0;
-
-  return( ret );
-}
-
-/* must imitate gimp_export_image() in real gimp */
-GimpExportReturnType 
-gimp_export_image( gint32 *image_ID, 
-                   gint32 *drawable_ID, 
-                   const gchar *Print, 
-                   GimpExportCapabilities exp )
-{
-   GimpExportReturnType export = !GIMP_EXPORT_CANCEL; /* assure NOT cancelling */
-
-   return(export);
-}
-
-/* do nothing: */
-void gimp_drawable_detach( GimpDrawable *drawable )
-{
-}
-
-/* do nothing: */
-gboolean gimp_image_delete( gint32 image_ID )
-{
-   gboolean ret = TRUE;
-
-   return( ret );
+  return;
 }
 
 
@@ -314,9 +240,7 @@ gimp_tile_width (void)
   return _gimp_tile_width;
 }
 
-
-/* must imitate gimp_drawable_get() in real gimp */
-GimpDrawable *gimp_drawable_get( gint32 drawable_ID )
+GimpDrawable *drawable_get()
 {
   /* ignore the drawable_ID and just talk about our own image here */
 
@@ -342,26 +266,6 @@ GimpDrawable *gimp_drawable_get( gint32 drawable_ID )
   return( thedrawable );
 }
 
-/* do nothing. used in gimp_main_window.c */
-void gimp_help_init()
-{
-}
-
-/* These tool tip items are the same as in gimp.
- * I put them here so that we don't need to
- * have the gimp library bound in.
- */
-void
-gimp_help_enable_tooltips (void)
-{
-  gtk_tooltips_enable(tool_tips);
-}
-
-void
-gimp_help_disable_tooltips (void)
-{
-  gtk_tooltips_disable(tool_tips);
-}
 
 /** Do nothing */
 gboolean
@@ -376,31 +280,6 @@ gimp_progress_update (gdouble percentage)
 {
 
   return TRUE;
-}
-
-/* This one is slightly different than gimp's version.
- * But it does the same thing with my return; statements.
- */
-void
-gimp_help_set_help_data (GtkWidget   *widget,
-			 const gchar *tooltip,
-			 const gchar *help_data)
-{
-  if(widget == NULL)
-     return;
-  if( !GTK_IS_WIDGET(widget) )
-     return;
-
-  if( tooltip )
-  {
-      gtk_tooltips_set_tip (tool_tips, widget, tooltip,
-			    (gpointer) help_data);
-  }
-  else if( help_data )
-  {
-      gtk_object_set_data( GTK_OBJECT (widget), "gimp_help_data", (gpointer) help_data);
-  }
-  return;
 }
 
 /* this is what Image_GimpDrawable_new() does:
@@ -523,9 +402,154 @@ void gimp_pixel_rgn_get_col( GimpPixelRgn *rgn,
   return;
 }
 
-/* must imitate gimp_image_get_thumbnail_data() as in the real gimp*/
 
-guchar *gimp_image_get_thumbnail_data( gint32 image_ID, gint *ww, gint *hh, gint *bpp )
+/*
+ * gimp_image_get_cmap:
+ * @image_ID: The image.
+ * @num_colors: Number of colors in the colormap array.
+ *
+ * Returns the image's colormap
+ *
+ * This procedure returns an actual pointer to the image's colormap, as
+ * well as the number of colors contained in the colormap. If the image
+ * is not of base type INDEXED, this pointer will be NULL.
+ *
+ * Returns: The image's colormap.
+ */
+guchar *gimp_image_get_cmap (gint32  image_ID, gint   *num_colors)
+{
+  gint    num_bytes;
+  guchar *cmap;
+
+  cmap = NULL;  /*_gimp_image_get_cmap (image_ID, &num_bytes);*/
+
+  num_bytes = 3;
+  *num_colors = num_bytes;
+
+  return cmap;
+}
+
+static gulong      max_cache_size  = 0;
+
+void
+gimp_tile_cache_size (gulong kilobytes)
+{
+  max_cache_size = kilobytes * 1024;
+}
+
+void
+gimp_tile_cache_ntiles (gulong ntiles)
+{
+  gimp_tile_cache_size ((gulong)(ntiles * _gimp_tile_width * _gimp_tile_height * 4 + 1023) / 1024);
+}
+
+GimpImageBaseType gimp_image_base_type( gint32 image_ID)
+{
+  return( GIMP_RGB );
+}
+
+
+
+/**
+ * gimp_personal_rc_file:
+ * @basename: The basename of a rc_file.
+ *
+ * Returns the name of a file in the user-specific GIMP settings directory.
+ *
+ * The returned string is allocated dynamically and *SHOULD* be freed
+ * with g_free() after use.
+ *
+ * Returns: The name of a file in the user-specific GIMP settings directory.
+ **/
+gchar*
+gimp_personal_rc_file( gchar *basename)
+{
+  printf( "%s (I wonder what happens if this directory does not exist)\nAlso, I need to clean up the code.\nBut, basically this first version works, dpace Jan/2003.\n",
+          gimp_directory() 
+        );
+  fflush(stdout);
+
+  return g_strconcat( gimp_directory(),
+		      G_DIR_SEPARATOR_S,
+		      basename,
+		      NULL);
+}
+
+
+/**
+ * gimp_directory:
+ *
+ * Returns the user-specific GIMP settings directory. If the environment 
+ * variable GIMP_DIRECTORY exists, it is used. If it is an absolute path, 
+ * it is used as is.  If it is a relative path, it is taken to be a 
+ * subdirectory of the home directory. If it is relative path, and no home 
+ * directory can be determined, it is taken to be a subdirectory of
+ * gimp_data_directory().
+ *
+ * The usual case is that no GIMP_DIRECTORY environment variable exists, 
+ * and then we use the GIMPDIR subdirectory of the home directory. If no 
+ * home directory exists, we use a per-user subdirectory of
+ * gimp_data_directory().
+ * In any case, we always return some non-empty string, whether it
+ * corresponds to an existing directory or not.
+ *
+ * The returned string is allocated just once, and should *NOT* be
+ * freed with g_free().
+ *
+ * Returns: The user-specific GIMP settings directory.
+ **/
+gchar*
+gimp_directory (void)
+{
+return( (gchar *)"/home/dpace/.gimp-1.2/" );
+}
+
+/*******************************************************
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+#include "../../lib/libprintut.h"
+
+#include <gimp-print/gimp-print-ui.h>
+#include "print_gimp.h"
+
+#include <sys/types.h>
+#include <signal.h>
+#include <ctype.h>
+#include <sys/wait.h>
+
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+
+#include "print-intl.h"
+********************************************************/
+
+static int	do_print_dialog (char *proc_name);
+
+/*
+ * Work around GIMP library not being const-safe.  This is a very ugly
+ * hack, but the excessive warnings generated can mask more serious
+ * problems.
+ */
+
+#define BAD_CONST_CHAR char *
+
+/*
+ * Globals...
+ */
+
+static stpui_plist_t gimp_vars;
+
+static gint32    image_ID_printc;   /* image ID */
+
+
+static guchar *
+stpui_get_thumbnail_data_function(void *image_ID_printc, 
+                                  gint *ww, 
+                                  gint *hh,
+				  gint *bpp, 
+                                  gint page)
 {
   /* gimp's version seems to call image_thumbnail_invoker(); in gimp.../app/  */
 
@@ -539,9 +563,9 @@ guchar *gimp_image_get_thumbnail_data( gint32 image_ID, gint *ww, gint *hh, gint
   gint iiw, iih, imitatew, imitateh;
   gint dwidth, dheight;
 
-  drawable =  gimp_drawable_get(0);
+  drawable =  drawable_get();
 
-  /* my version discards image_ID */
+  /* my version discards image_ID_printc */
 
   /* some of this is from image_thumbnail_invoker(), gimp.../app/image_cmds.c */
   if( *ww <= 0)
@@ -638,866 +662,20 @@ guchar *gimp_image_get_thumbnail_data( gint32 image_ID, gint *ww, gint *hh, gint
       }
     }
   }
-
   return(bufstart);
 }
 
-/*
- * gimp_image_get_cmap:
- * @image_ID: The image.
- * @num_colors: Number of colors in the colormap array.
- *
- * Returns the image's colormap
- *
- * This procedure returns an actual pointer to the image's colormap, as
- * well as the number of colors contained in the colormap. If the image
- * is not of base type INDEXED, this pointer will be NULL.
- *
- * Returns: The image's colormap.
- */
-guchar *gimp_image_get_cmap (gint32  image_ID, gint   *num_colors)
-{
-  gint    num_bytes;
-  guchar *cmap;
-
-  cmap = NULL;  /*_gimp_image_get_cmap (image_ID, &num_bytes);*/
-
-  num_bytes = 3;
-  *num_colors = num_bytes;
-
-  return cmap;
-}
-
-#if 0
-/* from gimp-1.2.2/libgimp/gimp.h and print.c*/
-#define gimp_set_data         gimp_procedural_db_set_data */
-
-gimp_procedural_db_set_data( PLUG_IN_NAME, vars, sizeof (vars))
-{
-}
-#endif
-
-
-static gulong      max_cache_size  = 0;
-
 void
-gimp_tile_cache_size (gulong kilobytes)
-{
-  max_cache_size = kilobytes * 1024;
-}
-
-void
-gimp_tile_cache_ntiles (gulong ntiles)
-{
-  gimp_tile_cache_size ((gulong)(ntiles * _gimp_tile_width * _gimp_tile_height * 4 + 1023) / 1024);
-}
-
-GimpImageBaseType gimp_image_base_type( gint32 image_ID)
-{
-  return( GIMP_RGB );
-}
-
-void *xmalloc (size_t size)
-{
-  register void *memptr = NULL;
-
-  if ((memptr = malloc (size)) == NULL)
-  {
-      fprintf(stderr, "memory exhausted: xmalloc().\n");
-      exit(1);
-  }
-  return (memptr);
-}
-
-
-
-GtkWidget * gimp_dialog_new                 (const gchar        *title,
-					     const gchar        *wmclass_name,
-					     GimpHelpFunc        help_func,
-					     const gchar        *help_data,
-					     GtkWindowPosition   position,
-					     gint                allow_shrink,
-					     gint                allow_grow,
-					     gint                auto_shrink,
-
-					     /* specify action area buttons
-					      * as va_list:
-					      *  const gchar    *label,
-					      *  GtkSignalFunc   callback,
-					      *  gpointer        data,
-					      *  GtkObject      *slot_object,
-					      *  GtkWidget     **widget_ptr,
-					      *  gboolean        default_action,
-					      *  gboolean        connect_delete,
-					      */
-
-					     ...)
-{
-  GtkWidget *dialog;
-  va_list    args;
-
-  va_start (args, auto_shrink);
-
-  g_return_val_if_fail (title != NULL, NULL);
-  g_return_val_if_fail (wmclass_name != NULL, NULL);
-
-  dialog = gtk_dialog_new ();
-  gtk_window_set_title (GTK_WINDOW (dialog), title);
-  gtk_window_set_wmclass (GTK_WINDOW (dialog), wmclass_name, "Gimp");
-  gtk_window_set_position (GTK_WINDOW (dialog), position);
-  gtk_window_set_policy (GTK_WINDOW (dialog), allow_shrink, allow_grow, auto_shrink);
-
-  /*  prepare the action_area  */
-  gimp_dialog_create_action_areav (GTK_DIALOG (dialog), args);
-
-  /*  connect the "F1" help key  */
-/*
-  if (help_func)
-    gimp_help_connect_help_accel (dialog, help_func, help_data);
- */
-  va_end (args);
-
-  return dialog;
-}
-
-/*  local callbacks of gimp_dialog_new ()  */
-static gint
-gimp_dialog_delete_callback (GtkWidget *widget,
-                             GdkEvent  *event,
-                             gpointer   data)
-{
-  GtkSignalFunc  cancel_callback;
-  GtkWidget     *cancel_widget;
-
-  cancel_callback =
-    (GtkSignalFunc) gtk_object_get_data (GTK_OBJECT (widget),
-                                         "gimp_dialog_cancel_callback");
-  cancel_widget =
-    (GtkWidget*) gtk_object_get_data (GTK_OBJECT (widget),
-                                      "gimp_dialog_cancel_widget");
-
-  /*  the cancel callback has to destroy the dialog  */
-  if (cancel_callback)
-    (* cancel_callback) (cancel_widget, data);
-
-  return TRUE;
-}
-
-
-/**
- * gimp_dialog_create_action_areav:
- * @dialog: The #GtkDialog you want to create the action_area for.
- * @args: A @va_list as obtained with va_start() describing the action_area
- *        buttons.
- *
- */
-void
-gimp_dialog_create_action_areav (GtkDialog *dialog,
-				 va_list    args)
-{
-  GtkWidget *hbbox = NULL;
-  GtkWidget *button;
-
-  /*  action area variables  */
-  const gchar    *label;
-  GtkSignalFunc   callback;
-  gpointer        data;
-  GtkObject      *slot_object;
-  GtkWidget     **widget_ptr;
-  gboolean        default_action;
-  gboolean        connect_delete;
-
-  gboolean delete_connected = FALSE;
-
-  g_return_if_fail (dialog != NULL);
-  g_return_if_fail (GTK_IS_DIALOG (dialog));
-
-  /*  prepare the action_area  */
-  label = va_arg (args, const gchar *);
-
-  if (label)
-    {
-      gtk_container_set_border_width (GTK_CONTAINER (dialog->action_area), 2);
-      gtk_box_set_homogeneous (GTK_BOX (dialog->action_area), FALSE);
-
-      hbbox = gtk_hbutton_box_new ();
-      gtk_button_box_set_spacing (GTK_BUTTON_BOX (hbbox), 4);
-      gtk_box_pack_end (GTK_BOX (dialog->action_area), hbbox, FALSE, FALSE, 0);
-      gtk_widget_show (hbbox);
-    }
-
-  /*  the action_area buttons  */
-  while (label)
-    {
-      callback       = va_arg (args, GtkSignalFunc);
-      data           = va_arg (args, gpointer);
-      slot_object    = va_arg (args, GtkObject *);
-      widget_ptr     = va_arg (args, GtkWidget **);
-      default_action = va_arg (args, gboolean);
-      connect_delete = va_arg (args, gboolean);
-
-      button = gtk_button_new_with_label (label);
-      GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
-      gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
-
-      if (slot_object == (GtkObject *) 1)
-	slot_object = GTK_OBJECT (dialog);
-
-      if (data == NULL)
-	data = dialog;
-
-      if (callback)
-	{
-	  if (slot_object)
-	    gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-				       GTK_SIGNAL_FUNC (callback),
-				       slot_object);
-	  else
-	    gtk_signal_connect (GTK_OBJECT (button), "clicked",
-				GTK_SIGNAL_FUNC (callback),
-				data);
-	}
-
-      if (widget_ptr)
-	*widget_ptr = button;
-
-      if (connect_delete && callback && !delete_connected)
-	{
-	  gtk_object_set_data (GTK_OBJECT (dialog),
-			       "gimp_dialog_cancel_callback",
-			       callback);
-	  gtk_object_set_data (GTK_OBJECT (dialog),
-			       "gimp_dialog_cancel_widget",
-			       slot_object ? slot_object : GTK_OBJECT (button));
-
-	  /*  catch the WM delete event  */
-	  gtk_signal_connect (GTK_OBJECT (dialog), "delete_event",
-			      GTK_SIGNAL_FUNC (gimp_dialog_delete_callback),
-			      data);
-
-	  delete_connected = TRUE;
-	}
-
-      if (default_action)
-	gtk_widget_grab_default (button);
-      gtk_widget_show (button);
-
-      label = va_arg (args, gchar *);
-    }
-}
-
-/**
- * gimp_scale_entry_new:
- * @table:               The #GtkTable the widgets will be attached to.
- * @column:              The column to start with.
- * @row:                 The row to attach the widgets.
- * @text:                The text for the #GtkLabel which will appear
- *                       left of the #GtkHScale.
- * @scale_usize:         The minimum horizontal size of the #GtkHScale.
- * @spinbutton_usize:    The minimum horizontal size of the #GtkSpinButton.
- * @value:               The initial value.
- * @lower:               The lower boundary.
- * @upper:               The upper boundary.
- * @step_increment:      The step increment.
- * @page_increment:      The page increment.
- * @digits:              The number of decimal digits.
- * @constrain:           #TRUE if the range of possible values of the
- *                       #GtkSpinButton should be the same as of the #GtkHScale.
- * @unconstrained_lower: The spinbutton's lower boundary
- *                       if @constrain == #FALSE.
- * @unconstrained_upper: The spinbutton's upper boundary
- *                       if @constrain == #FALSE.
- * @tooltip:             A tooltip message for the scale and the spinbutton.
- * @help_data:           The widgets' help_data (see gimp_help_set_help_data()).
- *
- * This function creates a #GtkLabel, a #GtkHScale and a #GtkSpinButton and
- * attaches them to a 3-column #GtkTable.
- *
- * Note that if you pass a @tooltip or @help_data to this function you'll
- * have to initialize GIMP's help system with gimp_help_init() before using it.
- *
- * Returns: The #GtkSpinButton's #GtkAdjustment.
- **/
-GtkObject *
-gimp_scale_entry_new (GtkTable    *table,
-		      gint         column,
-		      gint         row,
-		      const gchar *text,
-		      gint         scale_usize,
-		      gint         spinbutton_usize,
-		      gfloat       value,
-		      gfloat       lower,
-		      gfloat       upper,
-		      gfloat       step_increment,
-		      gfloat       page_increment,
-		      guint        digits,
-		      gboolean     constrain,
-		      gfloat       unconstrained_lower,
-		      gfloat       unconstrained_upper,
-		      const gchar *tooltip,
-		      const gchar *help_data)
-{
-  GtkWidget *label;
-  GtkWidget *scale;
-  GtkWidget *spinbutton;
-  GtkObject *adjustment;
-  GtkObject *return_adj;
-
-  label = gtk_label_new (text);
-  gtk_misc_set_alignment (GTK_MISC (label), 1.0, 0.5);
-  gtk_table_attach (GTK_TABLE (table), label,
-                    column, column + 1, row, row + 1,
-                    GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show (label);
-
-#ifdef SKIP_THIS_BECAUSE_CONSTRAINED_IS_ALWAYS_TRUE_DPACE
-  if (! constrain &&
-      unconstrained_lower <= lower &&
-      unconstrained_upper >= upper)
-    {
-      GtkObject *constrained_adj;
-
-      constrained_adj = gtk_adjustment_new (value, lower, upper,
-					    step_increment, page_increment,
-					    0.0);
-
-      spinbutton = gimp_spin_button_new (&adjustment, value,
-					 unconstrained_lower,
-					 unconstrained_upper,
-					 step_increment, page_increment, 0.0,
-					 1.0, digits);
-
-      gtk_signal_connect
-	(GTK_OBJECT (constrained_adj), "value_changed",
-	 GTK_SIGNAL_FUNC (gimp_scale_entry_unconstrained_adjustment_callback),
-	 adjustment);
-
-      gtk_signal_connect
-	(GTK_OBJECT (adjustment), "value_changed",
-	 GTK_SIGNAL_FUNC (gimp_scale_entry_unconstrained_adjustment_callback),
-	 constrained_adj);
-
-      return_adj = adjustment;
-
-      adjustment = constrained_adj;
-    }
-  else
-    {
-#endif
-      spinbutton = gimp_spin_button_new (&adjustment, value, lower, upper,
-					 step_increment, page_increment, 0.0,
-					 1.0, digits);
-
-      return_adj = adjustment;
-#ifdef SKIP_THIS_BECAUSE_CONSTRAINED_IS_ALWAYS_TRUE_DPACE
-    }
-#endif
-    
-  if (spinbutton_usize > 0)
-    gtk_widget_set_usize (spinbutton, spinbutton_usize, -1);
-
-  scale = gtk_hscale_new (GTK_ADJUSTMENT (adjustment));
-  if (scale_usize > 0)
-    gtk_widget_set_usize (scale, scale_usize, -1);
-  gtk_scale_set_digits (GTK_SCALE (scale), digits);
-  gtk_scale_set_draw_value (GTK_SCALE (scale), FALSE);
-  gtk_table_attach (GTK_TABLE (table), scale,
-		    column + 1, column + 2, row, row + 1,
-		    GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
-  gtk_widget_show (scale);
-
-  gtk_table_attach (GTK_TABLE (table), spinbutton,
-		    column + 2, column + 3, row, row + 1,
-		    GTK_SHRINK, GTK_SHRINK, 0, 0);
-  gtk_widget_show (spinbutton);
-
-  if (tooltip || help_data)
-    {
-      gimp_help_set_help_data (scale, tooltip, help_data);
-      gimp_help_set_help_data (spinbutton, tooltip, help_data);
-    }
-
-  gtk_object_set_data (GTK_OBJECT (return_adj), "label", label);
-  gtk_object_set_data (GTK_OBJECT (return_adj), "scale", scale);
-  gtk_object_set_data (GTK_OBJECT (return_adj), "spinbutton", spinbutton);
-
-  return return_adj;
-}
-
-/**
- * gimp_spin_button_new:
- * @adjustment:     Returns the spinbutton's #GtkAdjustment.
- * @value:          The initial value of the spinbutton.
- * @lower:          The lower boundary.
- * @upper:          The uppper boundary.
- * @step_increment: The spinbutton's step increment.
- * @page_increment: The spinbutton's page increment (mouse button 2).
- * @page_size:      The spinbutton's page size.
- * @climb_rate:     The spinbutton's climb rate.
- * @digits:         The spinbutton's number of decimal digits.
- *
- * This function is a shortcut for gtk_adjustment_new() and a subsequent
- * gtk_spin_button_new() and does some more initialisation stuff like
- * setting a standard minimun horizontal size.
- *
- * Returns: A #GtkSpinbutton and it's #GtkAdjustment.
- **/
-GtkWidget *
-gimp_spin_button_new (GtkObject **adjustment,  /* return value */
-		      gfloat      value,
-		      gfloat      lower,
-		      gfloat      upper,
-		      gfloat      step_increment,
-		      gfloat      page_increment,
-		      gfloat      page_size,
-		      gfloat      climb_rate,
-		      guint       digits)
-{
-  GtkWidget *spinbutton;
-
-  *adjustment = gtk_adjustment_new (value, lower, upper,
-				    step_increment, page_increment, page_size);
-
-  spinbutton = gtk_spin_button_new (GTK_ADJUSTMENT (*adjustment),
-				    climb_rate, digits);
-  gtk_spin_button_set_shadow_type (GTK_SPIN_BUTTON (spinbutton),
-				   GTK_SHADOW_NONE);
-  gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (spinbutton), TRUE);
-  gtk_widget_set_usize (spinbutton, 75, -1);
-
-  return spinbutton;
-}
-
-/**
- * gimp_option_menu_new:
- * @menu_only: #TRUE if the function should return a #GtkMenu only.
- * @...:       A #NULL terminated @va_list describing the menu items.
- *
- * Returns: A #GtkOptionMenu or a #GtkMenu (depending on @menu_only).
- **/
-GtkWidget *
-gimp_option_menu_new (gboolean            menu_only,
-
-		      /* specify menu items as va_list:
-		       *  const gchar    *label,
-		       *  GtkSignalFunc   callback,
-		       *  gpointer        data,
-		       *  gpointer        user_data,
-		       *  GtkWidget     **widget_ptr,
-		       *  gboolean        active
-		       */
-
-		       ...)
-{
-  GtkWidget *menu;
-  GtkWidget *menuitem;
-
-  /*  menu item variables  */
-  const gchar    *label;
-  GtkSignalFunc   callback;
-  gpointer        data;
-  gpointer        user_data;
-  GtkWidget     **widget_ptr;
-  gboolean        active;
-
-  va_list args;
-  gint    i;
-  gint    initial_index;
-
-  menu = gtk_menu_new ();
-
-  /*  create the menu items  */
-  initial_index = 0;
-
-  va_start (args, menu_only);
-  label = va_arg (args, const gchar *);
-
-  for (i = 0; label; i++)
-    {
-      callback   = va_arg (args, GtkSignalFunc);
-      data       = va_arg (args, gpointer);
-      user_data  = va_arg (args, gpointer);
-      widget_ptr = va_arg (args, GtkWidget **);
-      active     = va_arg (args, gboolean);
-
-      if (strcmp (label, "---"))
-	{
-	  menuitem = gtk_menu_item_new_with_label (label);
-
-	  gtk_signal_connect (GTK_OBJECT (menuitem), "activate",
-			      callback,
-			      data);
-
-	  if (user_data)
-	    gtk_object_set_user_data (GTK_OBJECT (menuitem), user_data);
-	}
-      else
-	{
-	  menuitem = gtk_menu_item_new ();
-
-	  gtk_widget_set_sensitive (menuitem, FALSE);
-	}
-
-      gtk_menu_append (GTK_MENU (menu), menuitem);
-
-      if (widget_ptr)
-	*widget_ptr = menuitem;
-
-      gtk_widget_show (menuitem);
-
-      /*  remember the initial menu item  */
-      if (active)
-	initial_index = i;
-
-      label = va_arg (args, const gchar *);
-    }
-  va_end (args);
-
-  if (! menu_only)
-    {
-      GtkWidget *optionmenu;
-
-      optionmenu = gtk_option_menu_new ();
-      gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenu), menu);
-
-      /*  select the initial menu item  */
-      gtk_option_menu_set_history (GTK_OPTION_MENU (optionmenu), initial_index);
-
-      return optionmenu;
-    }
-
-  return menu;
-}
-
-/**
- * gimp_table_attach_aligned:
- * @table:      The #GtkTable the widgets will be attached to.
- * @column:     The column to start with.
- * @row:        The row to attach the eidgets.
- * @label_text: The text for the #GtkLabel which will be attached left of the
- *              widget.
- * @xalign:     The horizontal alignment of the #GtkLabel.
- * @yalign:     The vertival alignment of the #GtkLabel.
- * @widget:     The #GtkWidget to attach right of the label.
- * @colspan:    The number of columns the widget will use.
- * @left_align: #TRUE if the widget should be left-aligned.
- *
- * Note that the @label_text can be #NULL and that the widget will be attached
- * starting at (@column + 1) in this case, too.
- **/
-void
-gimp_table_attach_aligned (GtkTable    *table,
-			   gint         column,
-			   gint         row,
-			   const gchar *label_text,
-			   gfloat       xalign,
-			   gfloat       yalign,
-			   GtkWidget   *widget,
-			   gint         colspan,
-			   gboolean     left_align)
-{
-  if (label_text)
-    {
-      GtkWidget *label;
-
-      label = gtk_label_new (label_text);
-      gtk_misc_set_alignment (GTK_MISC (label), xalign, yalign);
-      gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_RIGHT);
-      gtk_table_attach (table, label,
-			column, column + 1,
-			row, row + 1,
-			GTK_FILL, GTK_FILL, 0, 0);
-      gtk_widget_show (label);
-    }
-
-  if (left_align)
-    {
-      GtkWidget *alignment;
-
-      alignment = gtk_alignment_new (0.0, 0.5, 0.0, 0.0);
-      gtk_container_add (GTK_CONTAINER (alignment), widget);
-      gtk_widget_show (widget);
-
-      widget = alignment;
-    }
-
-  gtk_table_attach (table, widget,
-		    column + 1, column + 1 + colspan,
-		    row, row + 1,
-		    GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
-
-  gtk_widget_show (widget);
-}
-
-/* do nothing - dpace */
-/*  The standard help function  */
-void
-gimp_standard_help_func (const gchar *help_data)
-{
-  /*gimp_help (NULL, help_data);*/
-}
-
-/**
- * gimp_personal_rc_file:
- * @basename: The basename of a rc_file.
- *
- * Returns the name of a file in the user-specific GIMP settings directory.
- *
- * The returned string is allocated dynamically and *SHOULD* be freed
- * with g_free() after use.
- *
- * Returns: The name of a file in the user-specific GIMP settings directory.
- **/
-gchar*
-gimp_personal_rc_file( gchar *basename)
-{
-  printf( "%s (I wonder what happens if this directory does not exist)\nAlso, I need to clean up the code.\nBut, basically this first version works, dpace Jan/2003.\n",
-          gimp_directory() 
-        );
-  fflush(stdout);
-
-  return g_strconcat( gimp_directory(),
-		      G_DIR_SEPARATOR_S,
-		      basename,
-		      NULL);
-}
-
-
-/**
- * gimp_directory:
- *
- * Returns the user-specific GIMP settings directory. If the environment 
- * variable GIMP_DIRECTORY exists, it is used. If it is an absolute path, 
- * it is used as is.  If it is a relative path, it is taken to be a 
- * subdirectory of the home directory. If it is relative path, and no home 
- * directory can be determined, it is taken to be a subdirectory of
- * gimp_data_directory().
- *
- * The usual case is that no GIMP_DIRECTORY environment variable exists, 
- * and then we use the GIMPDIR subdirectory of the home directory. If no 
- * home directory exists, we use a per-user subdirectory of
- * gimp_data_directory().
- * In any case, we always return some non-empty string, whether it
- * corresponds to an existing directory or not.
- *
- * The returned string is allocated just once, and should *NOT* be
- * freed with g_free().
- *
- * Returns: The user-specific GIMP settings directory.
- **/
-gchar*
-gimp_directory (void)
-{
-return( (gchar *)"/home/dpace/.gimp-1.2/" );
-}
-
-#ifdef DPACE_SKIP_IT
-  static gchar *gimp_dir = NULL;
-  gchar *env_gimp_dir;
-  gchar *home_dir;
-  gchar *home_dir_sep;
-
-  if (gimp_dir != NULL)
-    return gimp_dir;
-
-  env_gimp_dir = g_getenv ("GIMP_DIRECTORY");
-  home_dir = g_get_home_dir ();
-
-  if (home_dir != NULL && home_dir[strlen (home_dir)-1] != G_DIR_SEPARATOR)
-    home_dir_sep = G_DIR_SEPARATOR_S;
-  else
-    home_dir_sep = "";
-
-  if (NULL != env_gimp_dir)
-    {
-      if (g_path_is_absolute (env_gimp_dir))
-	gimp_dir = g_strdup (env_gimp_dir);
-      else
-	{
-	  if (NULL != home_dir)
-	    {
-	      gimp_dir = g_strconcat (home_dir,
-				      home_dir_sep,
-				      env_gimp_dir,
-				      NULL);
-	    }
-	  else
-	    {
-	      gimp_dir = g_strconcat (gimp_data_directory (),
-				      G_DIR_SEPARATOR_S,
-				      env_gimp_dir,
-				      NULL);
-	    }
-	}
-    }
-  else
-    {
-#ifdef __EMX__       
-	gimp_dir = g_strdup(__XOS2RedirRoot(GIMPDIR));
-	return gimp_dir;  
-#endif      
-	if (NULL != home_dir)
-	{
-	  gimp_dir = g_strconcat (home_dir,
-				  home_dir_sep,
-				  GIMPDIR,
-				  NULL);
-	}
-      else
-	{
-#ifndef G_OS_WIN32
-	  g_message ("warning: no home directory.");
-#endif
-	  gimp_dir = g_strconcat (gimp_data_directory (),
-				  G_DIR_SEPARATOR_S,
-				  GIMPDIR,
-				  ".",
-				  g_get_user_name (),
-				  NULL);
-	}
-    }
-
-  return gimp_dir;
-}
-
-/**
- * gimp_data_directory:
- *
- * Returns the top directory for GIMP data. If the environment variable 
- * GIMP_DATADIR exists, that is used.  It should be an absolute pathname.
- * Otherwise, on Unix the compile-time defined directory is used.  On
- * Win32, the installation directory as deduced from the executable's
- * name is used.
- *
- * The returned string is allocated just once, and should *NOT* be
- * freed with g_free().
- *
- * Returns: The top directory for GIMP data.
- **/
-gchar*
-gimp_data_directory (void)
-{
-  static gchar *gimp_data_dir = NULL;
-  gchar *env_gimp_data_dir = NULL;
-  
-  if (gimp_data_dir != NULL)
-    return gimp_data_dir;
-
-  env_gimp_data_dir = g_getenv ("GIMP_DATADIR");
-
-  if (NULL != env_gimp_data_dir)
-    {
-      if (!g_path_is_absolute (env_gimp_data_dir))
-	g_error ("GIMP_DATADIR environment variable should be an absolute path.");
-#ifndef __EMX__
-      gimp_data_dir = g_strdup (env_gimp_data_dir);
-#else      
-      gimp_data_dir = g_strdup (__XOS2RedirRoot(env_gimp_data_dir));
-#endif      
-    }
-  else
-    {
-#ifndef G_OS_WIN32
-#ifndef __EMX__
-      gimp_data_dir = DATADIR;
-#else
-      gimp_data_dir = g_strdup(__XOS2RedirRoot(DATADIR));
-#endif
-#else
-      /* Figure it out from the executable name */
-      gchar filename[MAX_PATH];
-      gchar *sep1, *sep2;
-
-      if (GetModuleFileName (NULL, filename, sizeof (filename)) == 0)
-	g_error ("GetModuleFilename failed\n");
-      
-      /* If the executable file name is of the format
-       * <foobar>\bin\gimp.exe of <foobar>\plug-ins\filter.exe, * use
-       * <foobar>. Otherwise, use the directory where the executable
-       * is.
-       */
-
-      sep1 = strrchr (filename, G_DIR_SEPARATOR);
-
-      *sep1 = '\0';
-
-      sep2 = strrchr (filename, G_DIR_SEPARATOR);
-
-      if (sep2 != NULL)
-	{
-	  if (g_strcasecmp (sep2 + 1, "bin") == 0
-	      || g_strcasecmp (sep2 + 1, "plug-ins") == 0)
-	    *sep2 = '\0';
-	}
-
-      gimp_data_dir = g_strdup (filename);
-#endif
-    }
-  return gimp_data_dir;
-}
-#endif
-
-
-
-/*******************************************************
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-#include "../../lib/libprintut.h"
-
-#include <gimp-print/gimp-print-ui.h>
-#include "print_gimp.h"
-
-#include <sys/types.h>
-#include <signal.h>
-#include <ctype.h>
-#include <sys/wait.h>
-
-#include <unistd.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "print-intl.h"
-********************************************************/
-
-void	run (char *, int, GimpParam *, int *, GimpParam **);
-static int	do_print_dialog (char *proc_name);
-
-/*
- * Work around GIMP library not being const-safe.  This is a very ugly
- * hack, but the excessive warnings generated can mask more serious
- * problems.
- */
-
-#define BAD_CONST_CHAR char *
-
-/*
- * Globals...
- */
-
-static stpui_plist_t gimp_vars;
-
-static gint32    image_ID_printc;   /* image ID */
-
-
-static guchar *
-stpui_get_thumbnail_data_function(void *image_ID_printc, gint *width, gint *height,
-				  gint *bpp, gint page)
-{
-  return gimp_image_get_thumbnail_data((gint) image_ID_printc, width, height, bpp);
-}
-
-void
-runit(char   *name,		/* I - Name of print program. */
-     int    *nreturn_vals,	/* O - Number of return values */
-     GimpParam **return_vals)	/* O - Return values */
+runit(gchar *image_filename, 
+      gdouble height, 
+      gdouble width, 
+      char   *name,		/* I - Name of print program. */
+      int    *nreturn_vals,	/* O - Number of return values */
+      GimpParam **return_vals)	/* O - Return values */
 {
   GimpDrawable	*drawable;	/* Drawable for image */
   GimpParam	*values;	/* Return values */
   gint32         drawable_ID;   /* drawable ID */
-  GimpExportReturnType export = GIMP_EXPORT_CANCEL;    /* return value of gimp_export_image() */
-  gdouble xres, yres;
-  const char *image_filename;
   stp_image_t *image;
 
  /*
@@ -1532,41 +710,23 @@ runit(char   *name,		/* I - Name of print program. */
   *nreturn_vals = 1;
   *return_vals  = values;
 
-  image_filename = gimp_image_get_filename(image_ID_printc);
-  if (strchr(image_filename, '/'))
+  if( strchr(image_filename, '/'))
     image_filename = strrchr(image_filename, '/') + 1;
   stpui_set_image_filename(image_filename);
 
-  /*  eventually export the image */
   gimp_ui_init ("print", TRUE);
-  export = gimp_export_image (&image_ID_printc, &drawable_ID, "Print",
-				  (GIMP_EXPORT_CAN_HANDLE_RGB |
-				   GIMP_EXPORT_CAN_HANDLE_GRAY |
-				   GIMP_EXPORT_CAN_HANDLE_INDEXED |
-				   GIMP_EXPORT_CAN_HANDLE_ALPHA));
-  if( export == GIMP_EXPORT_CANCEL)
-  {
-     *nreturn_vals = 1;
-     values[0].data.d_status = GIMP_PDB_EXECUTION_ERROR;
-     return;
-  }
 
-  /*
-   * Get drawable...
-   */
-
-  drawable = gimp_drawable_get (drawable_ID);
-  stpui_set_image_dimensions(drawable->width, drawable->height);
-  gimp_image_get_resolution (image_ID_printc, &xres, &yres);
-  stpui_set_image_resolution(xres, yres);
+  drawable = drawable_get();
+  stpui_set_image_dimensions( (guint)width, (guint)height );
+  stpui_set_image_resolution( width, height);
   image = Image_GimpDrawable_new(drawable, image_ID_printc);
-  stp_set_float_parameter(gimp_vars.v, "AppGamma", gimp_gamma());
+  stp_set_float_parameter(gimp_vars.v, "AppGamma", 1.0 );  /* 1.0 gimp_gamma */
 
   /*
    * Get information from the dialog...
    */
    
-  if(do_print_dialog (name))
+  if( do_print_dialog( name) )
   {
      stpui_plist_copy(&gimp_vars, stpui_get_current_printer());
    
@@ -1579,11 +739,11 @@ runit(char   *name,		/* I - Name of print program. */
           * Set the tile cache size...
           */
    
-         if (drawable->height > drawable->width)
-	   gimp_tile_cache_ntiles ((drawable->height + gimp_tile_width () - 1) /
+         if( height > width)
+	   gimp_tile_cache_ntiles (( (guint)height + gimp_tile_width () - 1) /
 				   gimp_tile_width () + 1);
          else
-	   gimp_tile_cache_ntiles ((drawable->width + gimp_tile_width () - 1) /
+	   gimp_tile_cache_ntiles (( (guint)width + gimp_tile_width () - 1) /
 				   gimp_tile_width () + 1);
    
          if (! stpui_print(&gimp_vars, image))
@@ -1599,13 +759,7 @@ runit(char   *name,		/* I - Name of print program. */
 #endif
      }
    
-     /*
-      * Detach from the drawable...
-      */
-     gimp_drawable_detach (drawable);
   }
-  if( export == GIMP_EXPORT_EXPORT)
-    gimp_image_delete (image_ID_printc);
   stp_vars_free(gimp_vars.v);
 }
 
