@@ -801,7 +801,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 {
   unsigned ld = vars->density * 65536;
   double isat = 1.0;
-  double ssat = vars->saturation * 1.6;
+  double ssat = vars->saturation;
   int i0 = -1;
   int i1 = -1;
   int i2 = -1;
