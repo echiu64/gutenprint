@@ -905,6 +905,10 @@ canon_print(const printer_t *printer,		/* I - Model */
 			  &orientation, &page_width, &page_height,
 			  &out_width, &out_height, &left, &top);
 
+  /*
+   * Recompute the image height and width.  If the image has been
+   * rotated, these will change from previously.
+   */
   image_height = Image_height(image);
   image_width = Image_width(image);
 
