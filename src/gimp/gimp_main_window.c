@@ -534,8 +534,8 @@ create_preview (void)
 }
 
 static GtkWidget *
-create_positioning_entry(GtkWidget *table, int hpos, int vpos,
-			 const char *text, const char *help)
+create_entry(GtkWidget *table, int hpos, int vpos, const char *text,
+	     const char *help, GtkSignalFunc callback)
 {
   GtkWidget *entry = gtk_entry_new();
   gtk_widget_set_usize(entry, 60, 0);
@@ -543,8 +543,16 @@ create_positioning_entry(GtkWidget *table, int hpos, int vpos,
 			    1.0, 0.5, entry, 1, TRUE);
   gimp_help_set_help_data(entry, help, NULL);
   gtk_signal_connect(GTK_OBJECT(entry), "activate",
-		     GTK_SIGNAL_FUNC(position_callback), NULL);
+		     GTK_SIGNAL_FUNC(callback), NULL);
   return entry;
+}
+
+static GtkWidget *
+create_positioning_entry(GtkWidget *table, int hpos, int vpos,
+			 const char *text, const char *help)
+{
+  return create_entry
+    (table, hpos, vpos, text, help, GTK_SIGNAL_FUNC(position_callback));
 }
 
 static GtkWidget *
@@ -910,9 +918,8 @@ create_printer_settings_frame (void)
 {
   GtkWidget *table;
   GtkWidget *printer_hbox;
-  GtkWidget *media_size_hbox;
+  GtkWidget *media_size_table;
   GtkWidget *button;
-  GtkWidget *label;
   GtkWidget *event_box;
   gint vpos = 0;
   gint i;
@@ -1002,42 +1009,20 @@ create_printer_settings_frame (void)
    * Custom media size entries
    */
 
-  media_size_hbox = gtk_hbox_new (FALSE, 4);
+  media_size_table = gtk_table_new (1, 4, FALSE);
   gimp_table_attach_aligned (GTK_TABLE (table), 0, vpos++,
                              _("Dimensions:"), 1.0, 0.5,
-                             media_size_hbox, 2, TRUE);
+                             media_size_table, 2, TRUE);
 
-  label = gtk_label_new (_("Width:"));
-  gtk_box_pack_start (GTK_BOX (media_size_hbox), label, FALSE, FALSE, 0);
-  gtk_widget_show (label);
+  custom_size_width = create_entry
+    (media_size_table, 0, 2, _("Width:"),
+     _("Width of the paper that you wish to print to"),
+     custom_media_size_callback);
 
-  custom_size_width = gtk_entry_new ();
-  gtk_widget_set_usize (custom_size_width, 60, 0);
-  gtk_box_pack_start (GTK_BOX (media_size_hbox), custom_size_width,
-                      FALSE, FALSE, 0);
-  gtk_widget_show (custom_size_width);
-
-  gimp_help_set_help_data (custom_size_width,
-                           _("Width of the paper that you wish to print to"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (custom_size_width), "activate",
-                      GTK_SIGNAL_FUNC (custom_media_size_callback), NULL);
-
-  label = gtk_label_new (_("Height:"));
-  gtk_box_pack_start (GTK_BOX (media_size_hbox), label, FALSE, FALSE, 0);
-  gtk_widget_show (label);
-
-  custom_size_height = gtk_entry_new ();
-  gtk_widget_set_usize (custom_size_height, 60, 0);
-  gtk_box_pack_start (GTK_BOX (media_size_hbox), custom_size_height,
-                      FALSE, FALSE, 0);
-  gtk_widget_show (custom_size_height);
-
-  gimp_help_set_help_data (custom_size_height,
-                           _("Height of the paper that you wish to print to"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (custom_size_height), "activate",
-                      GTK_SIGNAL_FUNC (custom_media_size_callback), NULL);
+  custom_size_height = create_entry
+    (media_size_table, 2, 2, _("Height:"),
+     _("Height of the paper that you wish to print to"),
+     custom_media_size_callback);
 
   for (i = 0; i < list_option_count; i++)
     {
