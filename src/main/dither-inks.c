@@ -441,6 +441,10 @@ stpi_dither_set_inks_full(stp_vars_t v, int color, int nshades,
       sp->dotsizes = stpi_zalloc(sp->numdotsizes * sizeof(stpi_ink_defn_t));
       if (idx >= 0)
 	stpi_dither_set_ranges(v, idx, &shades[i], density);
+      stpi_dprintf(STPI_DBG_INK, v,
+		   "  shade %d value %f lower %d trans %d div1 %d div2 %d\n",
+		   i, shades[i].value, sp->lower, sp->trans, sp->div1,
+		   sp->div2);
       for (j=0; j < sp->numdotsizes; j++)
 	{
 	  ip = &sp->dotsizes[j];
@@ -449,6 +453,10 @@ stpi_dither_set_inks_full(stp_vars_t v, int color, int nshades,
 	  ip->range = density * ip->value;
 	  ip->bits = dp->bit_pattern;
 	  ip->dot_size = dp->value * 65536.0 + 0.5;
+	  stpi_dprintf(STPI_DBG_INK, v,
+		       "    dotsize %d value %d range %d bits %d size %d\n",
+		       j, ip->value, ip->range, ip->bits, ip->dot_size);
+	  
 	}
     }
 }
