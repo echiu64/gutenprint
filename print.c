@@ -153,6 +153,10 @@ gint32          image_ID;	        /* image ID */
 int image_width;
 int image_height;
 
+int num_dither_algos = 0;
+char** dither_algo_names = 0;
+char* cur_dither_name = 0;
+
 /*
  * 'main()' - Main entry - just call gimp_main()...
  */

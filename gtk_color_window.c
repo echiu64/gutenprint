@@ -57,6 +57,11 @@ static GtkWidget* blue_entry;		/* Text entry widget for blue */
 static GtkWidget* gamma_scale;		/* Scale for gamma */
 static GtkWidget* gamma_entry;         /* Text entry widget for gamma */
 static GtkWidget* dismiss_button;      /* Action area dismiss button */
+static GtkWidget* dither_algo_button;  /* Button for dither type menu */
+static GtkWidget* dither_algo_menu = NULL;  /* dither menu */
+extern int num_dither_algos;
+extern char** dither_algo_names;
+extern char* cur_dither_name;
 
 extern GtkObject* brightness_adjustment;  /* Adjustment object for brightness */
 extern GtkObject* saturation_adjustment;  /* Adjustment object for saturation */
@@ -85,6 +90,8 @@ static void gtk_blue_callback(GtkWidget *);
 static void gtk_gamma_update(GtkAdjustment *);
 static void gtk_gamma_callback(GtkWidget *);
 static void gtk_close_adjust_callback(void);
+static void gtk_dither_algo_callback(void);
+static void gtk_build_dither_menu(void);
 
 
 /*****************************************************************************
@@ -574,6 +581,32 @@ void gtk_create_color_adjust_window(void)
     gtk_widget_set_usize(entry, 40, 0);
     gtk_widget_show(entry);
 
+    /***
+     * Dither algorithm  option menu...
+     ***/
+    label = gtk_label_new(_("Dither Algorithm:"));
+    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+    gtk_table_attach(GTK_TABLE(table),
+		     label,
+		     1, 2,
+		     8, 9,
+		     GTK_FILL, GTK_FILL,
+		     0, 0);
+    gtk_widget_show(label);
+
+    box = gtk_hbox_new(FALSE, 0);
+    gtk_table_attach(GTK_TABLE(table),
+		     box,
+		     2, 3,
+		     8, 9,
+		     GTK_FILL, GTK_FILL,
+		     0, 0);
+    gtk_widget_show(box);
+
+    dither_algo_button = gtk_option_menu_new();
+    gtk_box_pack_start(GTK_BOX(box), dither_algo_button, FALSE, FALSE, 0);
+    gtk_build_dither_menu();
+
 
     /***
      * Add dismiss button
@@ -586,7 +619,7 @@ void gtk_create_color_adjust_window(void)
     gtk_button_box_set_spacing (GTK_BUTTON_BOX (hbbox), 4);
     gtk_box_pack_end (GTK_BOX (GTK_DIALOG (dialog)->action_area),
 		      hbbox,
-		      FALSE, FALSE, 0);
+		      TRUE, TRUE, 0);
     gtk_widget_show (hbbox);
  
     dismiss_button = gtk_button_new_with_label (_("Dismiss"));
@@ -983,4 +1016,89 @@ static void gtk_density_update(GtkAdjustment *adjustment)  /* I - New value */
 static void gtk_close_adjust_callback(void)
 {
     gtk_widget_hide(gtk_color_adjust_dialog);
+}
+
+/****************************************************************************
+ *
+ * gtk_build_dither_menu() - builds the dither algorithm option menu.
+ *
+ ***************************************************************************/
+static void gtk_build_dither_menu()
+{
+    int		i;	/* Looping var */
+    GtkWidget	*item;	/* Menu item */
+    GtkWidget	*item0 = 0;	/* First menu item */
+
+    if (dither_algo_menu != NULL)
+    {
+	gtk_widget_destroy(dither_algo_menu);
+	dither_algo_menu = NULL;
+    }
+
+    dither_algo_menu = gtk_menu_new();
+
+    if (num_dither_algos == 0)
+    {
+	item = gtk_menu_item_new_with_label (_("Standard"));
+	gtk_menu_append (GTK_MENU (dither_algo_menu), item);
+	gtk_widget_show (item);
+	gtk_option_menu_set_menu (GTK_OPTION_MENU (dither_algo_button),
+				  dither_algo_menu);
+	gtk_widget_set_sensitive (dither_algo_button, FALSE);
+	gtk_widget_show(dither_algo_button);
+	return;
+    }
+    else
+    {
+	gtk_widget_set_sensitive(dither_algo_button, TRUE);
+    }
+
+    for (i = 0; i < num_dither_algos; i ++)
+    {
+	item = gtk_menu_item_new_with_label(gettext(dither_algo_names[i]));
+	if (i == 0)
+	    item0 = item;
+	gtk_menu_append(GTK_MENU(dither_algo_menu), item);
+	gtk_signal_connect(GTK_OBJECT(item),
+			   "activate",
+			   (GtkSignalFunc)gtk_dither_algo_callback,
+			   (gpointer)i);
+	gtk_widget_show(item);
+    }
+
+    gtk_option_menu_set_menu(GTK_OPTION_MENU(dither_algo_button ),
+			     dither_algo_menu);
+    
+#ifdef DEBUG
+    printf("cur_item = \'%s\'\n", cur_item);
+#endif /* DEBUG */
+
+    for (i = 0; i < num_dither_algos; i ++)
+    {
+#ifdef DEBUG
+	printf("item[%d] = \'%s\'\n", i, dither_algo_names[i]);
+#endif /* DEBUG */
+
+	if (strcmp(dither_algo_names[i], cur_dither_name) == 0)
+	{
+	    gtk_option_menu_set_history(GTK_OPTION_MENU(dither_algo_button), i);
+	    break;
+	}
+    }
+
+    if (i == num_dither_algos)
+    {
+	gtk_option_menu_set_history(GTK_OPTION_MENU(dither_algo_button), 0);
+	gtk_signal_emit_by_name(GTK_OBJECT(item0), "activate");
+    }
+    gtk_widget_show(dither_algo_button);
+}
+
+/****************************************************************************
+ *
+ * gtk_dither_algo_Callback()
+ *
+ ****************************************************************************/
+static void gtk_dither_algo_callback()
+{
 }
