@@ -684,7 +684,7 @@ do_status(void)
       fprintf(stderr, "Cannot read from %s: %s\n", raw_device,strerror(errno));
       exit(1);
     }
-  while ((where = index(buf, ';')) != NULL)
+  while ((where = strchr(buf, ';')) != NULL)
     *where = '\n';
   printf("%s\n", buf);
   (void) close(fd);
@@ -1364,7 +1364,6 @@ do_ink_change(void)
   int fd;
   int status;
   stp_printer_t *printer = &printer_list[0];
-  const char *printer_name = NULL;
   int prstatus;
   int prerror;
 
@@ -1424,7 +1423,6 @@ do_ink_change(void)
       if (!strcmp(printer_model, printer->short_name) ||
 	  !strcmp(printer_model, printer->long_name))
 	{
-	  printer_name = printer->long_name;
 	  if (!printer->ink_change)
 	    {
 	      fprintf(stderr, "The %s printer requires ink cartridge change\n",
