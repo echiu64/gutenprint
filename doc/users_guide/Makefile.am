@@ -94,8 +94,24 @@ dist-hook: $(USER_GUIDE)
 	fi ; \
 	done
 
-$(MANUAL).pdf:  $(MANUAL).sgml
-	$(DB2PDF) $(srcdir)/$(MANUAL).sgml
+$(MANUAL).pdf:  ./$(MANUAL).sgml
+	if test $(srcdir) = '.' ; then \
+	  : ; \
+	else \
+	  if test -L $(notdir $<) ; then \
+	    $(RM) $(notdir $<) ; \
+	  fi ; \
+	  $(LN_S) $< $(notdir $<) ; \
+	  if test -d figures ; then \
+	    : ; \
+	  else \
+	    mkdir figures ; \
+	  fi ; \
+	  for image in $(addprefix $(srcdir)/, $(PNG_IMAGES)) ; do \
+	    cp -p $$image figures/`basename $$image` ; \
+	  done ; \
+	fi ; \
+	$(DB2PDF) $(MANUAL).sgml
 
 docs: html ps pdf
 
@@ -106,7 +122,7 @@ pdf: $(MANUAL).pdf
 ps: $(MANUAL).ps
 
 $(MANUAL).ps:  $(MANUAL).sgml $(EPS_IMAGES)
-	sed -e 's/\.png"/.eps"/g' -e 's/FORMAT="PNG"/FORMAT="EPS"/g' $(srcdir)/$(MANUAL).sgml > $(MANUAL)_eps.sgml
+	sed -e 's/\.png"/.eps"/g' -e 's/FORMAT="PNG"/FORMAT="EPS"/g' $< > $(MANUAL)_eps.sgml
 	$(DB2PS) $(MANUAL)_eps.sgml
 	mv $(MANUAL)_eps.ps $(MANUAL).ps
 	$(RM) $(MANUAL)_eps.*
@@ -122,11 +138,14 @@ html: html-stamp
 # html-stamp should *only* be called by html--it's just a timestamp!
 html-stamp: $(MANUAL).sgml $(PNG_IMAGES)
 	if test $(srcdir) = '.' ; then \
-	  SOURCE='' ; \
+	  : ; \
 	else \
-	  SOURCE='$(srcdir)/' ; \
-	fi ; \
-	$(DB2HTML) $${SOURCE}$(MANUAL).sgml
+	  if test -L $(notdir $<) ; then \
+	    $(RM) $(notdir $<) ; \
+	  fi ; \
+	  $(LN_S) $< $(notdir $<) ; \
+	fi
+	$(DB2HTML) $(MANUAL).sgml
 	-mkdir $(MANUAL)/figures
 	for image in $(addprefix $(srcdir)/, $(PNG_IMAGES)) ; do \
 	  cp -p $$image $(MANUAL)/figures/`basename $$image` ; \
@@ -138,25 +157,35 @@ html-stamp: $(MANUAL).sgml $(PNG_IMAGES)
 
 install-data-local: $(STANDARD_TARGETS)
 	if test -n '$(STANDARD_TARGETS)' ; then \
-	  $(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/figures ; \
-	  $(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/stylesheet-images ; \
-	  $(INSTALL_DATA) $(MANUAL).pdf $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
-	  cd $(HTMLDIR) ; \
+	  $(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/figures ; \
+	  $(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/stylesheet-images ; \
+	  if test -f $(MANUAL).pdf ; then \
+	    $(INSTALL_DATA) $(MANUAL).pdf $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
+	  elif test -f $(srcdir)/$(MANUAL).pdf ; then \
+	    $(INSTALL_DATA) $(srcdir)/$(MANUAL).pdf $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
+	  fi ; \
+	  if test -d $(HTMLDIR) ; then \
+	    cd $(HTMLDIR) ; \
+	  elif test -f $(srcdir)/$(HTMLDIR) ; then \
+	    cd $(srcdir)/$(HTMLDIR) ; \
+	  else \
+	    exit 1 ; \
+	  fi ; \
 	  for file in *.html *.css ; do \
 	    if test -f $$file ; then \
-	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
+	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html ; \
 	    fi ; \
 	  done ; \
 	  cd figures ; \
 	  for file in *.png ; do \
 	    if test -f $$file ; then \
-	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/figures ; \
+	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/figures ; \
 	    fi ; \
 	  done ; \
 	  cd ../stylesheet-images ; \
 	  for file in * ; do \
 	    if test -f $$file ; then \
-	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/stylesheet-images ; \
+	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/stylesheet-images ; \
 	    fi ; \
 	  done ; \
 	fi
@@ -177,6 +206,12 @@ clean-local:
 	  echo 'clean-local: Not removing EPS figures' ; \
 	else \
 	  $(CLEAN_MANUALS) ; \
+	fi
+	if test $(srcdir) = "." ; then \
+	  : ; \
+	else \
+	  $(RM) $(MANUAL).sgml ; \
+	  $(RM) -r figures ; \
 	fi
 	$(RM) -r *.tex *.log *.aux *.dvi *.gz *.out *.junk *.out *.fot
 	$(RM) -r db2html* DB2HTML*

@@ -30,7 +30,7 @@ SUBDIRS = users_guide
 
 MANUAL = gimpprint
 HTMLDIR = manual-html
-DOCS = $(MANUAL).pdf $(MANUAL).ps $(MANUAL).dvi html
+DOCS = $(MANUAL).dvi $(MANUAL).ps html
 
 IMAGES = \
  print-color.png \
@@ -44,6 +44,11 @@ MAINT_MODE = true
 else
 MAINT_MODE = false
 endif
+
+USER_GUIDE = $(MANUAL).ps html
+
+STANDARD_TARGETS=@USER_GUIDE@
+
 
 if MAINTAINER_MODE
 ALL_LOCAL_TARGETS = docs
@@ -72,10 +77,13 @@ ps: $(MANUAL).ps
 pdf: $(MANUAL).pdf
 	cd users_guide; $(MAKE) pdf
 
-gimpprint.dvi: $(EPS_IMAGES) $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS) $(info_TEXINFOS))
 
-%.eps:
-	$(CONVERT) $(srcdir)/$(basename $@).png EPS2:$@
+TEXI2DVIFLAGS = -I $(srcdir)
+gimpprint.dvi: $(EPS_IMAGES) $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS) $(info_TEXINFOS))
+	$(TEXI2DVI) $(TEXI2DVIFLAGS) $(srcdir)/gimpprint.texi
+
+%.eps: %.png
+	  $(CONVERT) $< EPS2:$@
 
 html: html-stamp
 	cd users_guide; $(MAKE) html
@@ -89,22 +97,38 @@ html-stamp: $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS) $(info_TEXINFOS))
 	  cp -p $$image $(HTMLDIR)-tmp ; \
 	done
 	cd $(HTMLDIR)-tmp ; \
-	if test $(srcdir) = '.' ; then \
-	  SOURCE='..' ; \
-	else \
-	  SOURCE=$(srcdir) ; \
-	fi ; \
 	$(TEXI2HTML) -menu -split_node -number -expandinfo \
-	      -I $(srcdir) $${SOURCE}/$(MANUAL).texi 2>&1
+	      -I ../$(srcdir) ../$(srcdir)/$(MANUAL).texi 2>&1
 	$(RM) -r $(HTMLDIR)
 	mv $(HTMLDIR)-tmp $(HTMLDIR)
 	touch html-stamp
 
 $(MANUAL).ps: $(MANUAL).dvi
-	$(DVIPS) -o $(MANUAL).ps $(MANUAL).dvi
+	TEXPICTS=$(srcdir):. $(DVIPS) $< -o $@
 
 $(MANUAL).pdf: $(MANUAL).dvi
-	$(DVIPDF) $(MANUAL).dvi
+	TEXPICTS=$(srcdir):. $(DVIPDF) $< $@
+
+install-data-local: $(STANDARD_TARGETS)
+	if test -n '$(STANDARD_TARGETS)' ; then \
+	  $(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
+	  $(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/manual-html ; \
+	  if test -f $(MANUAL).ps ; then \
+	    $(INSTALL_DATA) $(MANUAL).ps $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
+	  elif test -f $(srcdir)/$(MANUAL).ps ; then \
+	    $(INSTALL_DATA) $(srcdir)/$(MANUAL).ps $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
+	  fi ; \
+	  if test -d $(HTMLDIR) ; then \
+	    cd $(HTMLDIR) ; \
+	  elif test -d $(srcdir)/$(HTMLDIR) ; then \
+	    cd $(srcdir)/$(HTMLDIR) ; \
+	  fi ; \
+	  for file in * ; do \
+	    if test -f $$file ; then \
+	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/manual-html ; \
+	    fi ; \
+	  done ; \
+	fi
 
 dist-hook: html
 	for dir in manual-html ; do \
