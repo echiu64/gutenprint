@@ -49,7 +49,7 @@
  */
 #include <gtk/gtk.h>
 #include <libgimp/gimp.h>
-#define PLUG_IN_VERSION		"3.0.7 - 18 Feb 2000"
+#define PLUG_IN_VERSION		"3.0.8 - 22 Feb 2000"
 #define PLUG_IN_NAME		"Print"
 
 #include <math.h>
@@ -73,6 +73,7 @@
 #else
 #include <libgimp/gimpintl.h>
 #include <locale.h>
+#include <stdio.h>
 
 #ifndef LOCALEDIR
 #define LOCALEDIR g_strconcat (gimp_data_directory (), \
@@ -107,7 +108,7 @@
 
 #define SCALE_WIDTH		64
 #define ENTRY_WIDTH		64
-#define PREVIEW_SIZE		220	/* Assuming max media size of 22" */
+#define PREVIEW_SIZE		240	/* Assuming max media size of 24" */
 #define MAX_PLIST		100
 
 
@@ -162,7 +163,9 @@ static void	resolution_callback(GtkWidget *, gint);
 static void	output_type_callback(GtkWidget *, gint);
 static void	linear_callback(GtkWidget *, gint);
 static void	orientation_callback(GtkWidget *, gint);
+static void	printandsave_callback(void);
 static void	print_callback(void);
+static void	save_callback(void);
 static void	cancel_callback(void);
 static void	close_callback(void);
 
@@ -180,7 +183,8 @@ static void	file_cancel_callback(void);
 static void	preview_update(void);
 static void	preview_button_callback(GtkWidget *, GdkEventButton *);
 static void	preview_motion_callback(GtkWidget *, GdkEventMotion *);
-
+static void	top_callback(GtkWidget *);
+static void	left_callback(GtkWidget *);
 
 /*
  * Globals...
@@ -322,7 +326,12 @@ GtkWidget	*print_dialog,		/* Print dialog window */
 		*ppd_button,		/* PPD file browse button */
 		*output_cmd,		/* Output command text entry */
 		*ppd_browser,		/* File selection dialog for PPD files */
-		*file_browser;		/* FSD for print files */
+		*file_browser,		/* FSD for print files */
+		*left_entry,
+		*right_entry,
+		*top_entry,
+		*bottom_entry,
+		*printandsave_button;
 
 GtkObject	*scaling_adjustment,	/* Adjustment object for scaling */
 		*brightness_adjustment,	/* Adjustment object for brightness */
@@ -359,6 +368,7 @@ int		plist_current = 0,	/* Current system printer */
 		plist_count = 0;	/* Number of system printers */
 plist_t		plist[MAX_PLIST];	/* System printers */
 
+int		saveme = FALSE;         /* True if print should proceed */
 int		runme = FALSE,		/* True if print should proceed */
 		current_printer = 0;	/* Current printer index */
 gint32          image_ID;	        /* image ID */
@@ -405,10 +415,10 @@ query(void)
     { PARAM_INT32,	"left",		"Left offset (points, -1 = centered)" },
     { PARAM_INT32,	"top",		"Top offset (points, -1 = centered)" },
     { PARAM_FLOAT,	"gamma",	"Output gamma (0.1 - 3.0)" },
-    { PARAM_INT32,	"contrast",	"Top offset (points, -1 = centered)" },
-    { PARAM_INT32,	"red",		"Top offset (points, -1 = centered)" },
-    { PARAM_INT32,	"green",	"Top offset (points, -1 = centered)" },
-    { PARAM_INT32,	"blue",		"Top offset (points, -1 = centered)" },
+    { PARAM_INT32,	"contrast",	"Contrast" },
+    { PARAM_INT32,	"red",		"Red level" },
+    { PARAM_INT32,	"green",	"Green level" },
+    { PARAM_INT32,	"blue",		"Blue level" },
     { PARAM_INT32,	"linear",	"Linear output (0 = normal, 1 = linear)" },
     { PARAM_FLOAT,	"saturation",	"Saturation (0-1000%)" },
     { PARAM_FLOAT,	"density",	"Density (0-200%)" },
@@ -846,7 +856,7 @@ do_print_dialog(void)
   * Top-level table for dialog...
   */
 
-  table = gtk_table_new(17, 4, FALSE);
+  table = gtk_table_new(20, 4, FALSE);
   gtk_container_border_width(GTK_CONTAINER(table), 6);
   gtk_table_set_col_spacings(GTK_TABLE(table), 4);
   gtk_table_set_row_spacings(GTK_TABLE(table), 8);
@@ -878,6 +888,71 @@ do_print_dialog(void)
   gtk_widget_set_events((GtkWidget *)preview,
                         GDK_EXPOSURE_MASK | GDK_BUTTON_MOTION_MASK |
                         GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+  label = gtk_label_new(_("Left:"));
+  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(label);
+  box = gtk_hbox_new(FALSE, 8);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 2, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(box);
+  left_entry = entry = gtk_entry_new();
+  sprintf(s, "%.3f", fabs(vars.left));
+  gtk_entry_set_text(GTK_ENTRY(entry), s);
+  gtk_signal_connect(GTK_OBJECT(entry), "activate",
+                     (GtkSignalFunc)left_callback, NULL);
+  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
+  gtk_widget_set_usize(entry, 60, 0);
+  gtk_widget_show(entry);
+
+
+  label = gtk_label_new(_("Top:"));
+  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 2, 3, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(label);
+  box = gtk_hbox_new(FALSE, 8);
+  gtk_table_attach(GTK_TABLE(table), box, 3, 4, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(box);
+  top_entry = entry = gtk_entry_new();
+  sprintf(s, "%.3f", fabs(vars.top));
+  gtk_entry_set_text(GTK_ENTRY(entry), s);
+  gtk_signal_connect(GTK_OBJECT(entry), "activate",
+                     (GtkSignalFunc)top_callback, NULL);
+  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
+  gtk_widget_set_usize(entry, 60, 0);
+  gtk_widget_show(entry);
+
+
+  label = gtk_label_new(_("Right:"));
+  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(label);
+  box = gtk_hbox_new(FALSE, 8);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 2, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(box);
+  right_entry = entry = gtk_entry_new();
+  sprintf(s, "%.3f", fabs(vars.left));
+  gtk_entry_set_text(GTK_ENTRY(entry), s);
+  gtk_entry_set_editable(GTK_ENTRY(entry), FALSE);
+  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
+  gtk_widget_set_usize(entry, 60, 0);
+  gtk_widget_show(entry);
+
+
+  label = gtk_label_new(_("Bottom:"));
+  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 2, 3, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(label);
+  box = gtk_hbox_new(FALSE, 8);
+  gtk_table_attach(GTK_TABLE(table), box, 3, 4, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(box);
+  bottom_entry = entry = gtk_entry_new();
+  sprintf(s, "%.3f", fabs(vars.left));
+  gtk_entry_set_text(GTK_ENTRY(entry), s);
+  gtk_entry_set_editable(GTK_ENTRY(entry), FALSE);
+  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
+  gtk_widget_set_usize(entry, 60, 0);
+  gtk_widget_show(entry);
+
 
  /*
   * Media size option menu...
@@ -979,11 +1054,11 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Output Type:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 2, 3, 6, 7, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 2, 3, 7, 8, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 3, 4, 6, 7, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 3, 4, 7, 8, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   output_gray = button = gtk_radio_button_new_with_label(NULL, _("B&W"));
@@ -1005,13 +1080,13 @@ do_print_dialog(void)
   gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
   gtk_widget_show(button);
 
-  label = gtk_label_new(_("Density:"));
+  label = gtk_label_new(_("Output Level:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 2, 3, 7, 8, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 2, 3, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 3, 4, 7, 8, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 3, 4, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   linear_off = button = gtk_radio_button_new_with_label(NULL, _("Normal scale"));
@@ -1039,11 +1114,11 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Scaling:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 11, 12, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 11, 12, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   if (vars.scaling < 0.0)
@@ -1088,13 +1163,14 @@ do_print_dialog(void)
                      (GtkSignalFunc)scaling_callback, NULL);
   gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
   gtk_widget_show(button);
-  
+
+#ifndef GIMP_1_0
   scaling_image = button = gtk_toggle_button_new_with_label(_("Set Image Scale"));
   gtk_signal_connect(GTK_OBJECT(button), "clicked",
                      (GtkSignalFunc)scaling_callback, NULL);
   gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
   gtk_widget_show(button);
-
+#endif
 
 
  /*
@@ -1103,11 +1179,11 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Brightness:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 12, 13, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 12, 13, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   brightness_adjustment = scale_data =
@@ -1138,11 +1214,11 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Gamma:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 13, 14, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 13, 14, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   gamma_adjustment = scale_data =
@@ -1181,10 +1257,10 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Contrast:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 11, 12, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 14, 15, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 11, 12, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 14, 15, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   contrast_adjustment = scale_data =
@@ -1215,11 +1291,11 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Red:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 12, 13, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 15, 16, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 12, 13, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 15, 16, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   red_adjustment = scale_data =
@@ -1250,11 +1326,11 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Green:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 13, 14, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 16, 17, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 13, 14, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 16, 17, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   green_adjustment = scale_data =
@@ -1285,11 +1361,11 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Blue:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 14, 15, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 17, 18, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 14, 15, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 17, 18, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   blue_adjustment = scale_data =
@@ -1320,15 +1396,15 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Saturation:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 15, 16, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 18, 19, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 15, 16, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 18, 19, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   saturation_adjustment = scale_data =
-      gtk_adjustment_new((float)vars.saturation, 0.1, 10.0, 0.001, 0.01, 1.0);
+      gtk_adjustment_new((float)vars.saturation, 0.001, 10.0, 0.001, 0.01, 1.0);
 
   gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
 		     (GtkSignalFunc)saturation_update, NULL);
@@ -1355,11 +1431,11 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Density:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 16, 17, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 19, 20, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 16, 17, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 19, 20, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   density_adjustment = scale_data =
@@ -1436,13 +1512,30 @@ do_print_dialog(void)
   gtk_box_set_homogeneous(GTK_BOX(GTK_DIALOG(dialog)->action_area), FALSE);
   gtk_box_set_spacing(GTK_BOX(GTK_DIALOG(dialog)->action_area), 0);
 
+  button = printandsave_button =
+    gtk_button_new_with_label (_("Print And Save Settings"));
+  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+  gtk_signal_connect (GTK_OBJECT (button), "clicked",
+		      (GtkSignalFunc) printandsave_callback,
+		      NULL);
+  gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
+  gtk_widget_grab_default (button);
+  gtk_widget_show (button);
+
   button = gtk_button_new_with_label (_("Print"));
   GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
 		      (GtkSignalFunc) print_callback,
 		      NULL);
   gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
-  gtk_widget_grab_default (button);
+  gtk_widget_show (button);
+
+  button = gtk_button_new_with_label (_("Save Current Settings"));
+  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+  gtk_signal_connect (GTK_OBJECT (button), "clicked",
+		      (GtkSignalFunc) save_callback,
+		      NULL);
+  gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
   gtk_widget_show (button);
 
   button = gtk_button_new_with_label (_("Cancel"));
@@ -1599,7 +1692,8 @@ do_print_dialog(void)
   * Set printrc options...
   */
 
-  printrc_save();
+  if (saveme)
+    printrc_save();
 
  /*
   * Return ok/cancel...
@@ -2089,6 +2183,33 @@ scaling_callback(GtkWidget *widget)	/* I - Entry widget */
   }
 }
 
+static void
+top_callback(GtkWidget *widget)
+{
+  gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
+  if (vars.top != new_value)
+    {
+      vars.top = new_value * 72;
+      if (vars.top < 0)
+      vars.top = 0;
+      plist[plist_current].v.top = vars.top;
+      preview_update();
+    }
+}
+  
+static void
+left_callback(GtkWidget *widget)
+{
+  gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
+  if (vars.left != new_value)
+    {
+      vars.left = new_value * 72;
+      if (vars.left < 0)
+      vars.left = 0;
+      plist[plist_current].v.left = vars.left;
+      preview_update();
+    }
+}
 
 /*
  * 'plist_build_menu()' - Build an option menu for the given parameters...
@@ -2464,6 +2585,26 @@ print_callback(void)
     gtk_widget_show(file_browser);
 }
 
+static void
+printandsave_callback(void)
+{
+  runme = TRUE;
+  saveme = TRUE;
+  if (plist_current > 0)
+  {
+    gtk_widget_destroy(print_dialog);
+  }
+  else
+    gtk_widget_show(file_browser);
+}
+
+static void
+save_callback(void)
+{
+  printrc_save();
+  gtk_widget_grab_default(printandsave_button);
+}
+
 /*
  * 'cancel_callback()' - Cancel the print...
  */
@@ -2626,6 +2767,7 @@ preview_update(void)
 		width, length;	/* Physical width */
   static GdkGC	*gc = NULL;	/* Graphics context */
   printer_t	*p;		/* Current printer driver */
+  char s[255];
 
 
   if (preview->widget.window == NULL)
@@ -2641,37 +2783,36 @@ preview_update(void)
   (*p->imageable_area)(p->model, vars.ppd_file, vars.media_size, &left, &right,
                        &bottom, &top);
 
-  page_width  = 10 * (right - left) / 72;
-  page_height = 10 * (top - bottom) / 72;
+  page_width  = right - left;
+  page_height = top - bottom;
 
   (*p->media_size)(p->model, vars.ppd_file, vars.media_size, &width, &length);
 
-  width  = 10 * width / 72;
-  length = 10 * length / 72;
-
   if (vars.scaling < 0)
   {
-    tw0 = -image_width * 10 / vars.scaling;
+    tw0 = 72 * -image_width / vars.scaling;
     th0 = tw0 * image_height / image_width;
     tw1 = tw0;
     th1 = th0;
   }
   else
   {
+    /* Portrait */
     tw0 = page_width * vars.scaling / 100;
     th0 = tw0 * image_height / image_width;
-    if (th0 > page_height)
+    if (th0 > page_height * vars.scaling / 100)
     {
-      th0 = page_height;
+      th0 = page_height * vars.scaling / 100;
       tw0 = th0 * image_width / image_height;
     }
     ta0 = tw0 * th0;
 
+    /* Landscape */
     tw1 = page_height * vars.scaling / 100;
     th1 = tw1 * image_height / image_width;
-    if (th1 > page_width)
+    if (th1 > page_width * vars.scaling / 100)
     {
-      th1 = page_width;
+      th1 = page_width * vars.scaling / 100;
       tw1 = th1 * image_width / image_height;
     }
     ta1 = tw1 * th1;
@@ -2681,18 +2822,42 @@ preview_update(void)
   {
     if (vars.scaling < 0)
     {
-      if ((th0 > page_height && tw0 <= page_height) ||
-          (tw0 > page_width && th0 <= page_width))
-        orient = ORIENT_LANDSCAPE;
-      else
+      if ((page_width > page_height && tw0 > th0) ||
+        (page_height > page_width && th0 > tw0))
+      {
         orient = ORIENT_PORTRAIT;
+        if (tw0 > page_width)
+          {
+            vars.scaling *= (double) page_width / (double) tw0;
+            th0 = th0 * page_width / tw0;
+          }
+        if (th0 > page_height)
+          {
+            vars.scaling *= (double) page_height / (double) th0;
+            tw0 = tw0 * page_height / th0;
+          }
+      }
+      else
+      {
+        orient = ORIENT_LANDSCAPE;
+        if (tw1 > page_height)
+          {
+            vars.scaling *= (double) page_height / (double) tw1;
+            th1 = th1 * page_height / tw1;
+          }
+        if (th1 > page_width)
+          {
+            vars.scaling *= (double) page_width / (double) th1;
+            tw1 = tw1 * page_width / th1;
+          }
+      }
     }
     else
     {
       if (ta0 >= ta1)
-	orient = ORIENT_PORTRAIT;
+      orient = ORIENT_PORTRAIT;
       else
-	orient = ORIENT_LANDSCAPE;
+      orient = ORIENT_LANDSCAPE;
     }
   }
   else
@@ -2715,46 +2880,65 @@ preview_update(void)
     print_height = th0;
   }
 
-  page_left = (PREVIEW_SIZE - page_width) / 2;
-  page_top  = (PREVIEW_SIZE - page_height) / 2;
+  page_left = (PREVIEW_SIZE - 10 * page_width / 72) / 2;
+  page_top  = (PREVIEW_SIZE - 10 * page_height / 72) / 2;
 
   gdk_draw_rectangle(preview->widget.window, gc, 0,
-                     (PREVIEW_SIZE - width) / 2,
-                     (PREVIEW_SIZE - length) / 2,
-                     width, length);
+                     (PREVIEW_SIZE - (10 * width / 72)) / 2,
+                     (PREVIEW_SIZE - (10 * length / 72)) / 2,
+                     10 * width / 72, 10 * length / 72);
 
 
   if (vars.left < 0)
-    left = (page_width - print_width) / 2;
-  else
-  {
-    left = 10 * vars.left / 72;
+    vars.left = (page_width - print_width) / 2;
 
-    if (left > (page_width - print_width))
+  left = vars.left;
+
+  if (left > (page_width - print_width))
     {
       left      = page_width - print_width;
-      vars.left = 72 * left / 10;
+      vars.left = left;
       plist[plist_current].v.left = vars.left;
     }
-  }
 
   if (vars.top < 0)
-    top = (page_height - print_height) / 2;
-  else
-  {
-    top  = 10 * vars.top / 72;
+    vars.top  = (page_height - print_height) / 2;
+  top  = vars.top;
 
-    if (top > (page_height - print_height))
+  if (top > (page_height - print_height))
     {
       top      = page_height - print_height;
-      vars.top = 72 * top / 10;
+      vars.top = top;
       plist[plist_current].v.top = vars.top;
     }
-  }
+  
+  sprintf(s, "%.3f", vars.top / 72.0);
+  gtk_signal_handler_block_by_data(GTK_OBJECT(top_entry), NULL);
+  gtk_entry_set_text(GTK_ENTRY(top_entry), s);
+  gtk_signal_handler_unblock_by_data(GTK_OBJECT(top_entry), NULL);
+
+  sprintf(s, "%.3f", vars.left / 72.0);
+  gtk_signal_handler_block_by_data(GTK_OBJECT(left_entry), NULL);
+  gtk_entry_set_text(GTK_ENTRY(left_entry), s);
+  gtk_signal_handler_unblock_by_data(GTK_OBJECT(left_entry), NULL);
+
+  if (vars.scaling < 0)
+    sprintf(s, "%.3f",
+	    (vars.top + (image_height * -72.0 / vars.scaling)) / 72.0);
+  else
+    sprintf(s, "%.3f", (vars.top + print_height) / 72.0);
+  gtk_entry_set_text(GTK_ENTRY(bottom_entry), s);
+
+  if (vars.scaling < 0)
+    sprintf(s, "%.3f",
+	    (vars.left + (image_width * -72.0 / vars.scaling)) / 72.0);
+  else
+    sprintf(s, "%.3f", (vars.left + print_width) / 72.0);
+  gtk_entry_set_text(GTK_ENTRY(right_entry), s);
 
   gdk_draw_rectangle(preview->widget.window, gc, 1,
-                     page_left + left, page_top + top,
-                     print_width, print_height);
+		     page_left + 10 * left / 72, page_top + 10 * top / 72,
+                     10 * print_width / 72, 10 * print_height / 72);
 
   gdk_flush();
 }
@@ -2876,7 +3060,7 @@ printrc_load(void)
       int keepgoing = 1;
       if (line[0] == '#')
         continue;	/* Comment */
-
+      initialize_printer(&key);
      /*
       * Read the command-delimited printer definition data.  Note that
       * we can't use sscanf because %[^,] fails if the string is empty...
@@ -3081,18 +3265,40 @@ printrc_load(void)
 	  lineptr = commaptr + 1;
 	}
 	  
-      if ((p = bsearch(&key, plist + 1, plist_count - 1, sizeof(plist_t),
-                       (int (*)(const void *, const void *))compare_printers)) != NULL)
+/*
+ * The format of the list is the File printer followed by a qsort'ed list
+ * of system printers. So, if we want to update the file printer, it is
+ * always first in the list, else call bsearch.
+ */
+      if ((strcmp(key.name, _("File")) == 0) && (strcmp(plist[0].name,
+	   _("File")) == 0))
 	{
+#ifdef DEBUG
+	  printf("Updated File printer directly\n");
+#endif
+	  p = &plist[0];
 	  memcpy(p, &key, sizeof(plist_t));
 	  p->active = 1;
 	}
-      else if (plist_count < MAX_PLIST - 1)
+      else
 	{
-	  p = plist + plist_count;
-	  memcpy(p, &key, sizeof(plist_t));
-	  p->active = 0;
-	  plist_count++;
+          if ((p = bsearch(&key, plist + 1, plist_count - 1, sizeof(plist_t),
+                       (int (*)(const void *, const void *))compare_printers))
+	      != NULL)
+	    {
+#ifdef DEBUG
+	      printf("Updating printer %s.\n", key.name);
+#endif
+	      memcpy(p, &key, sizeof(plist_t));
+	      p->active = 1;
+	    }
+          else if (plist_count < MAX_PLIST - 1)
+    	    {
+	      p = plist + plist_count;
+	      memcpy(p, &key, sizeof(plist_t));
+	      p->active = 0;
+	      plist_count++;
+	    }
 	}
     }
 
@@ -3163,7 +3369,7 @@ printrc_save(void)
 
     fputs("#PRINTRC " PLUG_IN_VERSION "\n", fp);
 
-    for (i = 1, p = plist + 1; i < plist_count; i ++, p ++)
+    for (i = 0, p = plist; i < plist_count; i ++, p ++)
       fprintf(fp, "%s,%s,%s,%s,%d,%s,%s,%s,%s,%d,%.3f,%d,%d,%d,%.3f,%d,%d,%d,%d,%d,%.3f,%.3f\n",
               p->name, p->v.output_to, p->v.driver, p->v.ppd_file,
 	      p->v.output_type, p->v.resolution, p->v.media_size,
@@ -3198,10 +3404,11 @@ static void
 get_printers(void)
 {
   int	i;
+  char defname[17];
+#if defined(LPC_COMMAND) || defined(LPSTAT_COMMAND)
   FILE	*pfile;
-  char	line[129],
-	name[17],
-	defname[17];
+  char	line[129], name[17];
+#endif
 #ifdef __EMX__
   BYTE  pnum;
 #endif
@@ -3217,11 +3424,12 @@ get_printers(void)
   plist[0].v.output_type = OUTPUT_COLOR;
 
 #ifdef LPC_COMMAND
-  if ((pfile = popen(LPC_COMMAND " status", "r")) != NULL)
+  if ((pfile = popen(LPC_COMMAND " status < /dev/null", "r")) != NULL)
   {
     while (fgets(line, sizeof(line), pfile) != NULL &&
            plist_count < MAX_PLIST)
-      if (strchr(line, ':') != NULL && line[0] != ' ' && line[0] != '\t')
+      if (strchr(line, ':') != NULL && line[0] != ' ' && 
+	  line[0] != '\t' && strncmp(line,"Press RETURN to continue",24))
       {
         *strchr(line, ':') = '\0';
         strcpy(plist[plist_count].name, line);
