@@ -405,7 +405,7 @@ stp_sequence_create_from_xmltree(stp_mxml_node_t *da)
 }
 
 stp_mxml_node_t *
-stp_xmltree_create_from_sequence(stp_sequence_t *seq)   /* The sequence */
+stp_xmltree_create_from_sequence(const stp_sequence_t *seq)   /* The sequence */
 {
   size_t pointcount;
   double low;

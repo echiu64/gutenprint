@@ -1401,7 +1401,7 @@ stp_curve_compose(stp_curve_t **retval,
 }
 
 
-static stp_curve_t *
+stp_curve_t *
 stp_curve_create_from_xmltree(stp_mxml_node_t *curve)  /* The curve node */
 {
   const char *stmp;                       /* Temporary string */
@@ -1565,7 +1565,7 @@ stp_curve_create_from_xmltree(stp_mxml_node_t *curve)  /* The curve node */
 }
 
 
-static stp_mxml_node_t *
+stp_mxml_node_t *
 stp_xmltree_create_from_curve(const stp_curve_t *curve)  /* The curve */
 {
   stp_curve_wrap_mode_t wrapmode;
