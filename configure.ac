@@ -211,7 +211,7 @@ STP_ARG_ENABLE([translated-cups-ppds],
 
 USE_LEVEL3_PS=no
 if test -n "${CUPS_CONFIG}" -a "${BUILD_CUPS}" = "yes" ; then
-  cups_version="`${CUPS_CONFIG} -version`"
+  cups_version="`${CUPS_CONFIG} --version`"
   cups_major="`echo $cups_version | awk -F. '{print $1}'`"
   cups_minor="`echo $cups_version | awk -F. '{print $2}'`"
   cups_point="`echo $cups_version | awk -F. '{print $3}'`"
