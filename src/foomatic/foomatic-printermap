@@ -25,6 +25,7 @@
 #gptofoo escp2-c40sx printer/Epson-Stylus_C40SX
 #gptofoo escp2-c40ux printer/Epson-Stylus_C40UX
 #gptofoo escp2-c60 printer/Epson-Stylus_C60
+#gptofoo escp2-c70 printer/Epson-Stylus_C70
 #gptofoo escp2-c80 printer/Epson-Stylus_C80
 #gptofoo escp2 printer/61184
 #gptofoo escp2-pro printer/25824
@@ -62,6 +63,7 @@
 #gptofoo escp2-780 printer/Epson-Stylus_Photo_780
 #gptofoo escp2-785 printer/Epson-Stylus_Photo_785
 #gptofoo escp2-790 printer/Epson-Stylus_Photo_790
+#gptofoo escp2-810 printer/Epson-Stylus_Photo_810
 #gptofoo escp2-870 printer/284105
 #gptofoo escp2-875 printer/Epson-Stylus_Photo_875
 #gptofoo escp2-890 printer/Epson-Stylus_Photo_890

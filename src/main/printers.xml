@@ -245,6 +245,14 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus C70" driver="escp2-c70">
+<color>
+<model value=44>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus C80" driver="escp2-c80">
 <color>
 <model value=44>
@@ -540,6 +548,14 @@
 </printer>
 
 <printer name="EPSON Stylus Photo 790" driver="escp2-790">
+<color>
+<model value=35>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Photo 810" driver="escp2-810">
 <color>
 <model value=35>
 <gamma value=0.585>
