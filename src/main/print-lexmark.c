@@ -2483,8 +2483,6 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 #ifdef DEBUG
    stp_erprintf("!! Line too long !! reduce it from %d", width);
 #endif
-   stp_erprintf("!! Line too long !! reduce it from %d", width);
-   exit(2);
     width = ((((caps->max_paper_width*caps->x_raster_res)/72) - offset)*xdpi)/caps->x_raster_res;
 #ifdef DEBUG
    stp_erprintf(" down to %d\n", width);
@@ -2622,7 +2620,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
       break;
 
     case m_z42:
-      if ((p-tbits) & 1) *(p++)=0; // z42 packets always have even length
+      if ((p-tbits) & 1) *(p++)=0; /* z42 packets always have even length */
       /* fall through */
     case m_3200:
       tbits[0] = 0x80 | ((unsigned char)((valid_bytes >> 24) & 0x1f));
