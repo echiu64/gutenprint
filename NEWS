@@ -85,7 +85,8 @@ These release notes contain the following sections:
      comprehensively tested.  Please report any issues you may find.
 
      Note that this change invalidates any profiles generated for
-     earlier versions of Gimp-Print.
+     earlier versions of Gimp-Print.  It is likely that additional
+     changes will be made prior to 5.0 final release.
 
   2) Printing direct to CD on Epson printers that support it now
      works.  In addition, a choice of center hole size (16 mm or 43
