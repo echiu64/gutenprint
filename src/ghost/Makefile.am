@@ -34,7 +34,7 @@ EXTRA_DIST = README
 
 ## Variables
 
-LOCAL_CFLAGS = @IJS_CFLAGS@
+LOCAL_CFLAGS = @IJS_CFLAGS@ @GLIB_CFLAGS@
 
 
 ## Programs
@@ -43,4 +43,4 @@ if BUILD_GHOSTSCRIPT
 bin_PROGRAMS = ijsgimpprint
 endif
 
-ijsgimpprint_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS) $(IJS_LIBS)
+ijsgimpprint_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS) $(IJS_LIBS) $(GLIB_LIBS)

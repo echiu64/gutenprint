@@ -41,6 +41,7 @@
 #include <ijs_server.h>
 #include <errno.h>
 #include <gimp-print/gimp-print-intl-internal.h>
+#include <glib.h>
 
 static int stp_debug = 0;
 
@@ -287,6 +288,94 @@ gimp_status_cb (void *status_cb_data,
   return 0;
 }
 
+static void
+increment_parameter_length(gpointer key, gpointer value, gpointer udata)
+{
+  const char *name = (const char *) key;
+  size_t *parameter_list_length = (size_t *) udata;
+  *parameter_list_length += strlen(name) + 1;
+}
+
+typedef struct
+{
+  char *buf;
+  off_t offset;
+} counted_string_t;
+
+static void
+add_param_to_string(gpointer key, gpointer value, gpointer udata)
+{
+  const char *name = (const char *) key;
+  counted_string_t *cs = (counted_string_t *) udata;
+  strcpy(cs->buf + cs->offset, name);
+  cs->offset += strlen(name) + 1;
+  cs->buf[cs->offset - 1] = ',';
+}
+
+static const char *
+list_all_parameters(void)
+{
+  static char *param_string = NULL;
+  size_t param_length = 0;
+  if (param_length == 0)
+    {
+      counted_string_t cs;
+      GHashTable *hash = g_hash_table_new(g_str_hash, g_str_equal);
+      int printer_count = stp_printer_model_count();
+      int i;
+      g_hash_table_insert(hash, g_strdup("PrintableArea"), (gpointer) 1);
+      g_hash_table_insert(hash, g_strdup("Dpi"), (gpointer) 1);
+      g_hash_table_insert(hash, g_strdup("PrintableTopLeft"), (gpointer) 1);
+      g_hash_table_insert(hash, g_strdup("DeviceManufacturer"), (gpointer) 1);
+      g_hash_table_insert(hash, g_strdup("DeviceModel"), (gpointer) 1);
+      g_hash_table_insert(hash, g_strdup("PageImageFormat"), (gpointer) 1);
+      g_hash_table_insert(hash, g_strdup("OutputFile"), (gpointer) 1);
+      g_hash_table_insert(hash, g_strdup("OutputFd"), (gpointer) 1);
+      g_hash_table_insert(hash, g_strdup("Quality"), (gpointer) 1);
+      g_hash_table_insert(hash, g_strdup("PaperSize"), (gpointer) 1);
+      g_hash_table_insert(hash, g_strdup("MediaName"), (gpointer) 1);
+      for (i = 0; i < printer_count; i++)
+	{
+	  const stp_printer_t printer = stp_get_printer_by_index(i);
+	  stp_parameter_list_t params =
+	    stp_get_parameter_list(stp_printer_get_defaults(printer));
+	  size_t count = stp_parameter_list_count(params);
+	  int j;
+	  if (strcmp(stp_printer_get_family(printer), "ps") == 0 ||
+	      strcmp(stp_printer_get_family(printer), "raw") == 0)
+	    continue;
+	  for (j = 0; j < count; j++)
+	    {
+	      const stp_parameter_t *param =
+		stp_parameter_list_param(params, j);
+	      if ((param->p_level < STP_PARAMETER_LEVEL_ADVANCED4) &&
+		  (param->p_type != STP_PARAMETER_TYPE_RAW) &&
+		  (param->p_type != STP_PARAMETER_TYPE_FILE) &&
+		  (strcmp(param->name, "Resolution") != 0) &&
+		  (strcmp(param->name, "PageSize") != 0) &&
+		  (g_hash_table_lookup(hash, param->name) == NULL))
+		g_hash_table_insert(hash, g_strdup(param->name), (gpointer) 1);
+	    }
+	  stp_parameter_list_free(params);
+	}
+      g_hash_table_foreach(hash, increment_parameter_length, &param_length);
+      param_string = g_malloc(param_length);
+      cs.buf = param_string;
+      cs.offset = 0;
+      g_hash_table_foreach(hash, add_param_to_string, &cs);
+      if (cs.offset != param_length)
+	{
+	  fprintf(stderr, "Bad string length %ud != %ud!\n", cs.offset,
+		  param_length);
+	  exit(1);
+	}
+      param_string[param_length - 1] = '\0';
+      g_hash_table_destroy(hash);
+    }
+  return param_string;
+}
+
+
 static int
 gimp_list_cb (void *list_cb_data,
 	      IjsServerCtx *ctx,
@@ -294,7 +383,7 @@ gimp_list_cb (void *list_cb_data,
 	      char *val_buf,
 	      int val_size)
 {
-  const char *param_list = "OutputFile,OutputFD,DeviceManufacturer,DeviceModel,Quality,MediaName,MediaType,MediaSource,InkType,DitherAlgorithm,ImageOptimization,Brightness,Gamma,Contrast,Cyan,Magenta,Yellow,Saturation,Density,PrintableArea,PrintableTopLeft,TopLeft,Dpi";
+  const char *param_list = list_all_parameters();
   int size = strlen (param_list);
 
   if (size > val_size)
