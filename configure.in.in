@@ -415,7 +415,7 @@ if test x${BUILD_LIBGIMPPRINT} = xyes ; then
   LIBGIMPPRINT_LIBS="\$(top_builddir)/src/main/libgimpprint.la"
   GIMP_PRINT_H="gimp-print.h"
 else
-  AM_PATH_GIMPPRINT
+  AM_PATH_GIMPPRINT($GIMPPRINT_VERSION)
   LIBGIMPPRINT_LIBS="${GIMPPRINT_LIBS}"
 fi
 if test x${BUILD_TEST} = xyes ; then
