@@ -970,8 +970,8 @@ gimp_scaling_callback (GtkWidget *widget)
       new_percent = 100 * min_ppi_scaling / current_scale;
       if (new_percent > 100)
 	new_percent = 100;
-      if (new_percent < 5)
-	new_percent = 5;
+      if (new_percent < lower->scaling)
+	new_percent = lower->scaling;
       GTK_ADJUSTMENT (scaling_adjustment)->value = new_percent;
       vars.scaling = 0.0;
       plist[plist_current].v.scaling = vars.scaling;
