@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.70  2000/02/12 03:37:04  rlk
+ *   One more try
+ *
  *   Revision 1.69  2000/02/11 02:19:13  rlk
  *   Remove apparently spurious flush command
  *
@@ -827,9 +830,6 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
     case MODEL_INIT_440 : /* ESC 440, 640, 740, 900 */
 	if (output_type == OUTPUT_GRAY)
 	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black printing */
-	else
-	  fwrite("\033(K\002\000\000\002", 7, 1, prn);	/* Color printing */
-
 	if (bits > 1)
 	  fwrite("\033(e\002\000\000\020", 7, 1, prn);	/* Default dots */
 	else
@@ -837,7 +837,7 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 
         if (ydpi > 360)
 	  {
-	    fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
+	    fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
 	    if (!use_softweave)
 	      fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
 	    else
@@ -865,11 +865,9 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
     case MODEL_INIT_PHOTO2:
 	if (output_type == OUTPUT_GRAY)
 	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black printing */
-	else
-	  fwrite("\033(K\002\000\000\002", 7, 1, prn);	/* Color printing */
         if (ydpi > 360)
 	  {
-	    fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
+	    fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
 	    if (!use_softweave)
 	      fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
 	    else
@@ -893,32 +891,35 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
       putc(0, prn);
       putc(0, prn);
 
-#if 0
-      /* This seems to confuse some printers... */
-      fwrite("\033(c\010\000", 5, 1, prn);	/* Top/bottom margins */
-      n = ydpi * (page_length - page_top) / 72;
-      putc(n & 255, prn);
-      putc(n >> 8, prn);
-      putc(0, prn);
-      putc(0, prn);
-      n = ydpi * (page_length - page_bottom) / 72;
-      if (use_softweave)
-	n += 320 * ydpi / 720;
-      putc(n & 255, prn);
-      putc(n >> 8, prn);
-      putc(0, prn);
-      putc(0, prn);
-#else
-      fwrite("\033(c\004\000", 5, 1, prn);	/* Top/bottom margins */
-      n = ydpi * (page_length - page_top) / 72;
-      putc(n & 255, prn);
-      putc(n >> 8, prn);
-      n = ydpi * (page_length - page_bottom) / 72;
-      if (use_softweave)
-	n += 320 * ydpi / 720;
-      putc(n & 255, prn);
-      putc(n >> 8, prn);
-#endif
+      if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+	{
+	  /* This seems to confuse some printers... */
+	  fwrite("\033(c\010\000", 5, 1, prn);	/* Top/bottom margins */
+	  n = ydpi * (page_length - page_top) / 72;
+	  putc(n & 255, prn);
+	  putc(n >> 8, prn);
+	  putc(0, prn);
+	  putc(0, prn);
+	  n = ydpi * (page_length - page_bottom) / 72;
+	  if (use_softweave)
+	    n += 320 * ydpi / 720;
+	  putc(n & 255, prn);
+	  putc(n >> 8, prn);
+	  putc(0, prn);
+	  putc(0, prn);
+	}
+      else
+	{
+	  fwrite("\033(c\004\000", 5, 1, prn);	/* Top/bottom margins */
+	  n = ydpi * (page_length - page_top) / 72;
+	  putc(n & 255, prn);
+	  putc(n >> 8, prn);
+	  n = ydpi * (page_length - page_bottom) / 72;
+	  if (use_softweave)
+	    n += 320 * ydpi / 720;
+	  putc(n & 255, prn);
+	  putc(n >> 8, prn);
+	}
 
       fwrite("\033(S\010\000", 5, 1, prn);
       fprintf(prn, "%c%c%c%c%c%c%c%c",
@@ -930,6 +931,8 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 	      (((page_length * 720 / 72) >> 8) & 0xff),
 	      (((page_length * 720 / 72) >> 16) & 0xff),
 	      (((page_length * 720 / 72) >> 24) & 0xff));
+
+      fwrite("\033(D\004\000\100\070\170\050", 9, 1, prn);
 
       fwrite("\033(V\004\000", 5, 1, prn);     /* Absolute vertical position */
       n = ydpi * (page_length - top) / 72;
