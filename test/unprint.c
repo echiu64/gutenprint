@@ -168,7 +168,7 @@ get_bits(unsigned char *p, int index)
       for (b = 0; b < pstate.bpp; b++)
 	{
 	  value += value;
-	  value |= (p[(addr + b) >> 3] >> (7-((addr + b) & 7))) & 1;
+	  value |= (p[(addr + b) >> 3] >> (7 - ((addr + b) & 7))) & 1;
 	}
       return(value);
     }
@@ -186,7 +186,7 @@ set_bits(unsigned char *p,int index,int value)
   /*
    * p is a pointer to a bit stream, ordered MSb first.  Set the
    * indexth bpp bit width field to value value.  Ignore byte
-   * boundries.
+   * boundaries.
    */
 
   int b;
@@ -225,14 +225,14 @@ set_bits(unsigned char *p,int index,int value)
 }
 
 static float ink_colors[8][4] =
-{{ 0,  0,  0,  1 },		/* K */
+{{ 0,   0,  0,  1 },		/* K */
  { 1,  .1,  1,  1 },		/* M */
  { .1,  1,  1,  1 },		/* C */
- { 1,  1,  .1,  1 },		/* Y */
- { 1, .7,  1,  1 },		/* m */
- { .7, 1,  1,  1 },		/* c */
- { 1,  1,  .7, 1 },		/* y */
- { 1,  1,  1,  1 }};
+ { 1,   1, .1,  1 },		/* Y */
+ { 1,  .7,  1,  1 },		/* m */
+ { .7,  1,  1,  1 },		/* c */
+ { 1,   1, .7,  1 },		/* y */
+ { 1,   1,  1,  1 }};
 
 static float bpp_shift[] = { 0, 1, 3, 7, 15, 31, 63, 127, 255 };
 
@@ -343,11 +343,12 @@ expand_line (unsigned char *src, unsigned char *dst, int height, int skip,
       /* the trivial case, this should be faster */
       memcpy(dst, src + left_ignore * pstate.bpp / 8,
 	     (height * pstate.bpp + 7) / 8);
-      return;
     }
-
-  for (i = 0; i < height; i++)
-    set_bits(dst, i * skip, get_bits(src, i + left_ignore));
+  else
+    {
+      for (i = 0; i < height; i++)
+	set_bits(dst, i * skip, get_bits(src, i + left_ignore));
+    }
 }
 
 int donothing;
@@ -685,9 +686,9 @@ parse_escp2_data(FILE *fp_r)
 	  fprintf(stderr, "Warning! Color depth altered by ESC i.\n");
 	  pstate.bpp=ch;
 	}
-      if (pstate.bpp>2)
+      if (pstate.bpp > 2)
 	fprintf(stderr, "Warning! Excessively deep color detected.\n");
-      if (pstate.bpp==0)
+      if (pstate.bpp == 0)
 	fprintf(stderr, "Warning! Zero bit pixel depth detected.\n");
       get2("Error reading number of horizontal dots!\n");
       n = (unsigned) sh * 8 / pstate.bpp;
@@ -698,10 +699,11 @@ parse_escp2_data(FILE *fp_r)
     case '.':
       get1("Error reading compression mode!\n");
       c=ch;
-      if (c>2) {
-	fprintf(stderr,"Warning!  Unknown compression mode.\n");
-	break;
-      }
+      if (c > 2)
+	{
+	  fprintf(stderr,"Warning!  Unknown compression mode.\n");
+	  break;
+	}
       get1("Error reading vertical density!\n");
       /* What should we do with the vertical density here??? */
       get1("Error reading horizontal density!\n");
@@ -719,48 +721,49 @@ parse_escp2_data(FILE *fp_r)
       buf = realloc(buf, bandsize);
       valid_bufsize = bandsize;
     }
-  switch (c) {
-  case 0:  /* uncompressed */
-    bufsize = bandsize;
-    getn(bufsize,"Error reading raster data!\n");
-    update_page(buf, bufsize, m, n, currentcolor, density);
-    break;
-  case 1:  /* run length encoding */
-    i = 0;
-    while (!eject && (i < bandsize))
-      {
-	get1("Error reading global_counter!\n");
-	if (ch < 128)
-	  {
-	    bufsize = ch + 1;
-	    getnoff(bufsize, i, "Error reading RLE raster data!\n");
-	  }
-	else
-	  {
-	    bufsize = 257 - (unsigned int)ch;
-	    get1("Error reading compressed RLE raster data!\n");
-	    memset(buf + i, ch, bufsize);
-	  }
-	i += bufsize;
-      }
-    if (i != bandsize)
-      {
-	fprintf(stderr, "Error decoding RLE data.\n");
-	fprintf(stderr, "Total bufsize %d, expected %d\n",
-		i, bandsize);
-	eject = 1;
-      }
-    else
-      update_page(buf, i, m, n, currentcolor, density);
-    break;
-  case 2: /* TIFF compression */
-    fprintf(stderr, "TIFF mode not yet supported!\n");
-    /* FIXME: write TIFF stuff */
-    break;
-  default: /* unknown */
-    fprintf(stderr, "Unknown compression mode %d.\n", c);
-    break;
-  }
+  switch (c)
+    {
+    case 0:  /* uncompressed */
+      bufsize = bandsize;
+      getn(bufsize,"Error reading raster data!\n");
+      update_page(buf, bufsize, m, n, currentcolor, density);
+      break;
+    case 1:  /* run length encoding */
+      i = 0;
+      while (!eject && (i < bandsize))
+	{
+	  get1("Error reading global_counter!\n");
+	  if (ch < 128)
+	    {
+	      bufsize = ch + 1;
+	      getnoff(bufsize, i, "Error reading RLE raster data!\n");
+	    }
+	  else
+	    {
+	      bufsize = 257 - (unsigned int) ch;
+	      get1("Error reading compressed RLE raster data!\n");
+	      memset(buf + i, ch, bufsize);
+	    }
+	  i += bufsize;
+	}
+      if (i != bandsize)
+	{
+	  fprintf(stderr, "Error decoding RLE data.\n");
+	  fprintf(stderr, "Total bufsize %d, expected %d\n",
+		  i, bandsize);
+	  eject = 1;
+	}
+      else
+	update_page(buf, i, m, n, currentcolor, density);
+      break;
+    case 2: /* TIFF compression */
+      fprintf(stderr, "TIFF mode not yet supported!\n");
+      /* FIXME: write TIFF stuff */
+      break;
+    default: /* unknown */
+      fprintf(stderr, "Unknown compression mode %d.\n", c);
+      break;
+    }
 }
 
 static void
