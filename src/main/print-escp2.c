@@ -374,7 +374,7 @@ static const escp2_variable_ink_t standard_6pl_ink =
 
 static const stp_simple_dither_range_t standard_x80_6pl_dither_ranges[] =
 {
-  { 0.25,  0x1, 1, 1 },
+  { 0.325, 0x1, 1, 1 },
   { 0.5,   0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
@@ -386,9 +386,23 @@ static const escp2_variable_ink_t standard_x80_6pl_ink =
   1.0
 };
 
+static const stp_simple_dither_range_t standard_x80_multishot_dither_ranges[] =
+{
+  { 0.163, 0x1, 1, 1 },
+  { 0.5,   0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static const escp2_variable_ink_t standard_x80_multishot_ink =
+{
+  standard_x80_multishot_dither_ranges,
+  sizeof(standard_x80_multishot_dither_ranges) / sizeof(stp_simple_dither_range_t),
+  1.0
+};
+
 static const stp_simple_dither_range_t standard_x80_1440_6pl_dither_ranges[] =
 {
-  { 0.5,   0x1, 1, 1 },
+  { 0.65,  0x1, 1, 1 },
   { 1.0,   0x2, 1, 2 },
 };
 
@@ -569,6 +583,14 @@ static const escp2_variable_inkset_t escp2_6pl_standard_inks =
   &standard_6pl_ink,
   &standard_6pl_ink,
   &standard_6pl_ink
+};
+
+static const escp2_variable_inkset_t escp2_x80_multishot_standard_inks =
+{
+  &standard_x80_multishot_ink,
+  &standard_x80_multishot_ink,
+  &standard_x80_multishot_ink,
+  &standard_x80_multishot_ink
 };
 
 static const escp2_variable_inkset_t escp2_x80_6pl_standard_inks =
@@ -816,10 +838,10 @@ static const escp2_variable_inklist_t variable_x80_6pl_4color_inks =
   },
   {
     {
-      &escp2_x80_6pl_standard_inks,
-      &escp2_x80_6pl_standard_inks,
-      &escp2_x80_6pl_standard_inks,
-      &escp2_x80_6pl_standard_inks,
+      &escp2_x80_multishot_standard_inks,
+      &escp2_x80_multishot_standard_inks,
+      &escp2_x80_multishot_standard_inks,
+      &escp2_x80_multishot_standard_inks,
       &escp2_x80_6pl_standard_inks,
       &escp2_x80_1440_6pl_standard_inks,
       &escp2_x80_1440_6pl_standard_inks,
@@ -1311,7 +1333,7 @@ static const int sc660_dotsizes[] =
 { 3, 3, -1, 3, 0, 3, 0, -1, 0, -1, -1, -1, -1 };
 
 static const int sc480_dotsizes[] =
-{ 0, -1, 0x13, -1, 0x13, -1, 0x10, -1, 0x10, -1, -1, -1, -1 };
+{ 0x13, -1, 0x13, -1, 0x13, -1, 0x10, -1, 0x10, -1, -1, -1, -1 };
 
 static const int p4pl_dotsizes[] =
 { 4, 4, 0x12, 2, 0x12, 2, 0x11, -1, 0x10, -1, -1, -1, -1 };
@@ -1841,7 +1863,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES | MODEL_ENHANCED_MICROWEAVE_NO
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO),
-    15, 15, 3, 47, 47, 3, 360, 360, INCH(17 / 2), INCH(1200), 9, 9, 0, 30, 0, 1, 0,
+    15, 15, 3, 48, 48, 3, 360, 360, INCH(17 / 2), INCH(1200), 9, 9, 0, 9, 0, 1, 0,
     360, 720, 720, 14400,
     x80_head_offset, -99, 0, 720, 720, sc480_dotsizes, sc480_densities,
     &variable_x80_6pl_4color_inks,
