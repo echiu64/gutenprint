@@ -62,7 +62,7 @@ libgimpprint_la_LDFLAGS = -release $(VERSION) -rpath $(libdir)
 m4datadir = $(datadir)/aclocal
 m4data_DATA = @MAIN_DAT@
 
-print-util.o: print-printers.c $(srcdir)/print-util.c
+print-util.lo: print-printers.c $(srcdir)/print-util.c
 
 print-printers.c: ../printdef/printdef $(srcdir)/printers.xml
 	../printdef/printdef < $(srcdir)/printers.xml > print-printers.c
