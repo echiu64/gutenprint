@@ -237,8 +237,8 @@ require('standard_html_header.php3');
  Gimp-Print drivers (PPDs) are not listed there. They use to be there in Gimp-Print
  4.2.5 so where did they go?
  </h3>
- <p>Strting with version 4.2.6-pre2 the Mac OS X installer package installs the
- Gimp-Print PPDs into the "standard" location recommended by Apple,
+ <p>Starting with version 4.2.6-pre2 of the Mac OS X installer package the
+ Gimp-Print PPDs are installed into the "standard" location recommended by Apple,
  <pre>/Library/Printers/PPDs/Contents/Resources/en.lproj</pre>
  rather than in the CUPS-standard location of 
  <pre>/usr/share/cups/model/C</pre>
