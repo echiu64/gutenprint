@@ -1572,19 +1572,19 @@ stp_free_lut(stp_vars_t v)
     {
       lut_t *lut = (lut_t *)(stp_get_lut(v));
       if (lut->composite)
-	free(lut->composite);
+	stp_free(lut->composite);
       if (lut->red)
-	free(lut->red);
+	stp_free(lut->red);
       if (lut->green)
-	free(lut->green);
+	stp_free(lut->green);
       if (lut->blue)
-	free(lut->blue);
+	stp_free(lut->blue);
       lut->steps = 0;
       lut->composite = NULL;
       lut->red = NULL;
       lut->green = NULL;
       lut->blue = NULL;
-      free(stp_get_lut(v));
+      stp_free(stp_get_lut(v));
       stp_set_lut(v, NULL);
     }
 }

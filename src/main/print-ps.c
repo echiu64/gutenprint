@@ -35,9 +35,7 @@
 #include <time.h>
 #include <string.h>
 #include <limits.h>
-
-/*#define DEBUG*/
-
+#include <stdio.h>
 
 /*
  * Local variables...
@@ -140,7 +138,7 @@ ps_parameters(const stp_printer_t printer,	/* I - Printer model */
 
   if (*count == 0)
   {
-    free(valptrs);
+    stp_free(valptrs);
     return (NULL);
   }
   else
@@ -228,11 +226,11 @@ ps_media_size(const stp_printer_t printer,	/* I - Printer model */
 {
   char	*dimensions;			/* Dimensions of media size */
 
-
-#ifdef DEBUG
-  printf("ps_media_size(%d, \'%s\', \'%s\', %08x, %08x)\n", model, ppd_file,
-         media_size, width, height);
-#endif /* DEBUG */
+  stp_dprintf(STP_DBG_PS, v,
+	      "ps_media_size(%d, \'%s\', \'%s\', %08x, %08x)\n",
+	      stp_printer_get_model(printer), stp_get_ppd_file(v),
+	      stp_get_media_size(v),
+	      width, height);
 
   if ((dimensions = ppd_find(stp_get_ppd_file(v), "PaperDimension",
 			     stp_get_media_size(v), NULL))
@@ -265,28 +263,26 @@ ps_imageable_area(const stp_printer_t printer,	/* I - Printer model */
   if ((area = ppd_find(stp_get_ppd_file(v), "ImageableArea",
 		       stp_get_media_size(v), NULL))
       != NULL)
-  {
-#ifdef DEBUG
-    printf("area = \'%s\'\n", area);
-#endif /* DEBUG */
-    if (sscanf(area, "%f%f%f%f", &fleft, &fbottom, &fright, &ftop) == 4)
     {
-      *left   = (int)fleft;
-      *right  = (int)fright;
-      *bottom = (int)fbottom;
-      *top    = (int)ftop;
+      stp_dprintf(STP_DBG_PS, v, "area = \'%s\'\n", area);
+      if (sscanf(area, "%f%f%f%f", &fleft, &fbottom, &fright, &ftop) == 4)
+	{
+	  *left   = (int)fleft;
+	  *right  = (int)fright;
+	  *bottom = (int)fbottom;
+	  *top    = (int)ftop;
+	}
+      else
+	*left = *right = *bottom = *top = 0;
     }
-    else
-      *left = *right = *bottom = *top = 0;
-  }
   else
-  {
-    stp_default_media_size(printer, v, right, top);
-    *left   = 18;
-    *right  -= 18;
-    *top    -= 36;
-    *bottom = 36;
-  }
+    {
+      stp_default_media_size(printer, v, right, top);
+      *left   = 18;
+      *right  -= 18;
+      *top    -= 36;
+      *bottom = 36;
+    }
 }
 
 static void
@@ -296,7 +292,7 @@ ps_limit(const stp_printer_t printer,	/* I - Printer model */
 	    int  *height)		/* O - Top position in points */
 {
   *width =	INT_MAX;
-    *height =	INT_MAX;
+  *height =	INT_MAX;
 }
 
 /*
@@ -419,12 +415,12 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
   else
     top = page_height - top + page_bottom;
 
-#ifdef DEBUG
-  printf("out_width = %d, out_height = %d\n", out_width, out_height);
-  printf("page_left = %d, page_right = %d, page_bottom = %d, page_top = %d\n",
-         page_left, page_right, page_bottom, page_top);
-  printf("left = %d, top = %d\n", left, top);
-#endif /* DEBUG */
+  stp_dprintf(STP_DBG_PS, v,
+	      "out_width = %d, out_height = %d\n", out_width, out_height);
+  stp_dprintf(STP_DBG_PS, v,
+	      "page_left = %d, page_right = %d, page_bottom = %d, page_top = %d\n",
+	      page_left, page_right, page_bottom, page_top);
+  stp_dprintf(STP_DBG_PS, v, "left = %d, top = %d\n", left, top);
 
   stp_puts("%!PS-Adobe-3.0\n", v);
 #ifdef HAVE_CONFIG_H
@@ -509,7 +505,7 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
     {
       stp_puts(commands[i].command, v);
       stp_puts("\n", v);
-      free(commands[i].command);
+      stp_free(commands[i].command);
     }
 
     stp_puts("%%EndProlog\n", v);
@@ -615,8 +611,8 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
   image->progress_conclude(image);
 
   stp_free_lut(nv);
-  free(in);
-  free(out);
+  stp_free(in);
+  stp_free(out);
 
   stp_puts("grestore\n", v);
   stp_puts("showpage\n", v);

@@ -239,7 +239,6 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
   int		width, height,		/* Page information */
 		bottom, left,
 		top, right;
-  int		printed_default_resolution = 0;
   const char *driver = stp_printer_get_driver(p);
   const char *long_name = stp_printer_get_long_name(p);
   const stp_vars_t printvars = stp_printer_get_printvars(p);

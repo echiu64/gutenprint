@@ -37,10 +37,7 @@
  * Include necessary header files...
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
+#include <stddef.h>	/* For size_t */
 
 #ifdef __cplusplus
 extern "C" {

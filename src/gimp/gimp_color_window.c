@@ -30,6 +30,7 @@
 #include "print_gimp.h"
 
 #include "print-intl.h"
+#include <string.h>
 
 extern stp_vars_t   vars;
 extern gint     plist_count;       /* Number of system printers */

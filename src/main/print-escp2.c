@@ -29,11 +29,10 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#ifndef WEAVETEST
 #include <gimp-print.h>
 #include <gimp-print-internal.h>
 #include <gimp-print-intl-internal.h>
-#endif
+#include <string.h>
 
 static void flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 		       int hoffset, int ydpi, int xdpi, int physical_xdpi,
@@ -3232,13 +3231,13 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   escp2_deinit_printer(nv, &init);
 
   stp_free_lut(nv);
-  free(in);
-  free(out);
+  stp_free(in);
+  stp_free(out);
   stp_destroy_weave(weave);
 
   for (i = 0; i < 7; i++)
     if (cols[i])
-      free((unsigned char *) cols[i]);
+      stp_free((unsigned char *) cols[i]);
 
 #ifdef QUANTIFY
   print_timers(nv);

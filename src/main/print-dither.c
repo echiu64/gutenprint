@@ -350,7 +350,7 @@ shear_matrix(dither_matrix_t *mat, int x_shear, int y_shear)
     for (j = 0; j < mat->y_size; j++)
       DITHERPOINT(mat->matrix, i, j, mat->x_size, mat->y_size) =
 	DITHERPOINT(tmp, i * (y_shear + 1), j, mat->x_size, mat->y_size);
-  free(tmp);
+  stp_free(tmp);
 }
 
 static void
@@ -423,7 +423,7 @@ static void
 destroy_matrix(dither_matrix_t *mat)
 {
   if (mat->i_own && mat->matrix)
-    free(mat->matrix);
+    stp_free(mat->matrix);
   mat->matrix = NULL;
   mat->base = 0;
   mat->exp = 0;
@@ -791,12 +791,12 @@ stp_dither_set_ink_spread(void *vd, int spread)
   dither_t *d = (dither_t *) vd;
   if (d->offset0_table)
     {
-      free(d->offset0_table);
+      stp_free(d->offset0_table);
       d->offset0_table = NULL;
     }
   if (d->offset1_table)
     {
-      free(d->offset1_table);
+      stp_free(d->offset1_table);
       d->offset1_table = NULL;
     }
   if (spread >= 16)
@@ -873,7 +873,7 @@ stp_dither_set_generic_ranges(dither_t *d, dither_color_t *s, int nlevels,
   int i;
   unsigned lbit;
   if (s->ranges)
-    free(s->ranges);
+    stp_free(s->ranges);
   s->nlevels = nlevels > 1 ? nlevels + 1 : nlevels;
   s->ranges = (dither_segment_t *)
     stp_malloc(s->nlevels * sizeof(dither_segment_t));
@@ -983,7 +983,7 @@ stp_dither_set_generic_ranges_full(dither_t *d, dither_color_t *s, int nlevels,
   int i, j;
   unsigned lbit;
   if (s->ranges)
-    free(s->ranges);
+    stp_free(s->ranges);
   s->nlevels = nlevels > 1 ? nlevels + 1 : nlevels;
   s->nlevels = nlevels+1;
   s->ranges = (dither_segment_t *)
@@ -1082,7 +1082,7 @@ stp_dither_set_ranges_simple(void *vd, int color, int nlevels,
       r[i].is_dark = 1;
     }
   stp_dither_set_ranges(vd, color, nlevels, r, density);
-  free(r);
+  stp_free(r);
 }
 
 void
@@ -1105,35 +1105,35 @@ stp_free_dither(void *vd)
     {
       if (d->channel[j].vals)
 	{
-	  free(d->channel[j].vals);
+	  stp_free(d->channel[j].vals);
 	  d->channel[j].vals = NULL;
 	}
       for (i = 0; i < ERROR_ROWS; i++)
 	{
 	  if (d->channel[j].errs[i])
 	    {
-	      free(d->channel[j].errs[i]);
+	      stp_free(d->channel[j].errs[i]);
 	      d->channel[j].errs[i] = NULL;
 	    }
 	}
-      free(d->channel[i].dither.ranges);
+      stp_free(d->channel[i].dither.ranges);
       d->channel[i].dither.ranges = NULL;
       destroy_matrix(&(d->channel[i].pick));
       destroy_matrix(&(d->channel[i].dithermat));
     }
   if (d->offset0_table)
     {
-      free(d->offset0_table);
+      stp_free(d->offset0_table);
       d->offset0_table = NULL;
     }
   if (d->offset1_table)
     {
-      free(d->offset1_table);
+      stp_free(d->offset1_table);
       d->offset1_table = NULL;
     }
   destroy_matrix(&(d->mat6));
   destroy_matrix(&(d->mat7));
-  free(d);
+  stp_free(d);
 }
 
 int

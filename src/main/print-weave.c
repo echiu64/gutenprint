@@ -382,8 +382,8 @@ invert_map(int *map, int *stagger, int count, int oldfirstpass,
 
 	memcpy(map, newmap, count * sizeof(int));
 	memcpy(stagger, newstagger, count * sizeof(int));
-	free(newstagger);
-	free(newmap);
+	stp_free(newstagger);
+	stp_free(newmap);
 }
 
 static void
@@ -561,11 +561,11 @@ stp_destroy_weave_params(void *vw)
 {
 	cooked_t *w = (cooked_t *) vw;
 
-	if (w->pass_premap) free(w->pass_premap);
-	if (w->stagger_premap) free(w->stagger_premap);
-	if (w->pass_postmap) free(w->pass_postmap);
-	if (w->stagger_postmap) free(w->stagger_postmap);
-	free(w);
+	if (w->pass_premap) stp_free(w->pass_premap);
+	if (w->stagger_premap) stp_free(w->stagger_premap);
+	if (w->pass_postmap) stp_free(w->pass_postmap);
+	if (w->stagger_postmap) stp_free(w->stagger_postmap);
+	stp_free(w);
 }
 
 static void
@@ -1758,7 +1758,7 @@ stp_initialize_weave(int jets,	/* Width of print head */
 	}
       stp_eprintf(v, "Weave error: oversample (%d) > jets (%d)\n",
 		  sw->oversample, jets);
-      free(sw);
+      stp_free(sw);
       return 0;
     }
   else
@@ -1776,7 +1776,7 @@ stp_initialize_weave(int jets,	/* Width of print head */
     {
       stp_eprintf(v, "Weave error: oversample (%d) > jets (%d)\n",
 		  sw->oversample, jets);
-      free(sw);
+      stp_free(sw);
       return 0;
     }
 
@@ -1857,27 +1857,27 @@ stp_destroy_weave(void *vsw)
 {
   int i, j;
   stp_softweave_t *sw = (stp_softweave_t *) vsw;
-  free(sw->linecounts);
-  free(sw->passes);
-  free(sw->lineactive);
-  free(sw->lineoffsets);
+  stp_free(sw->linecounts);
+  stp_free(sw->passes);
+  stp_free(sw->lineactive);
+  stp_free(sw->lineoffsets);
   if (sw->fold_buf)
-    free(sw->fold_buf);
+    stp_free(sw->fold_buf);
   if (sw->comp_buf)
-    free(sw->comp_buf);
+    stp_free(sw->comp_buf);
   for (i = 0; i < 8; i++)
     if (sw->s[i])
-      free(sw->s[i]);
+      stp_free(sw->s[i]);
   for (i = 0; i < sw->vmod; i++)
     {
       for (j = 0; j < sw->ncolors; j++)
 	{
-	  free(sw->linebases[i].v[j]);
+	  stp_free(sw->linebases[i].v[j]);
 	}
     }
-  free(sw->linebases);
+  stp_free(sw->linebases);
   stp_destroy_weave_params(sw->weaveparm);
-  free(vsw);
+  stp_free(vsw);
 }
 
 static inline void

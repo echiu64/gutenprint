@@ -27,13 +27,12 @@
 #endif
 #include "../../lib/libprintut.h"
 
-#define EXPANDED_PREVIEW_WINDOW
+#define MAX_PREVIEW_PPI        (30)
 
 #include "print_gimp.h"
 
-#define MAX_PREVIEW_PPI        (30)
-
 #include "print-intl.h"
+#include <string.h>
 
 /*
  * Constants for GUI...

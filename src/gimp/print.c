@@ -38,6 +38,8 @@
 #endif
 
 #include <unistd.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "print-intl.h"
 

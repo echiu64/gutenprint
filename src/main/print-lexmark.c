@@ -53,7 +53,6 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <stdarg.h>
 #include <gimp-print.h>
 #include <gimp-print-internal.h>
 #include <gimp-print-intl-internal.h>
@@ -524,7 +523,7 @@ lexmark_get_model_capabilities(int model)
     return &(lexmark_model_capabilities[i]);
   }
 #ifdef DEBUG
-  fprintf(stderr,"lexmark: model %d not found in capabilities list.\n",model);
+  stp_erprintf"lexmark: model %d not found in capabilities list.\n",model);
 #endif
   return &(lexmark_model_capabilities[0]);
 }
@@ -562,7 +561,7 @@ lexmark_media_type(const char *name, const lexmark_cap_t * caps)
   if (!strcmp(name,_("Photo Paper Pro")))       return 11;
 
 #ifdef DEBUG
-  fprintf(stderr,"lexmark: Unknown media type '%s' - reverting to plain\n",name);
+  stp_erprintf"lexmark: Unknown media type '%s' - reverting to plain\n",name);
 #endif
   return 1;
 }
@@ -575,7 +574,7 @@ lexmark_source_type(const char *name, const lexmark_cap_t * caps)
   if (!strcmp(name,_("Manual without Pause"))) return 1;
 
 #ifdef DEBUG
-  fprintf(stderr,"lexmark: Unknown source type '%s' - reverting to auto\n",name);
+  stp_erprintf"lexmark: Unknown source type '%s' - reverting to auto\n",name);
 #endif
   return 4;
 }
@@ -594,7 +593,7 @@ lexmark_printhead_type(const char *name, const lexmark_cap_t * caps)
 
 
 #ifdef DEBUG
-  fprintf(stderr,"lexmark: Unknown head combo '%s' - reverting to black\n",name);
+  stp_erprintf"lexmark: Unknown head combo '%s' - reverting to black\n",name);
 #endif
   return 2;
 }
@@ -614,8 +613,8 @@ lexmark_head_offset(int model,                      /* i */
   
   if (im != -1) {
 #ifdef DEBUG
-    fprintf(stderr,"lexmark_head_offset (%i) (%x)\n",model,lexmark_model_capabilities[im].head_offset);
-    fprintf(stderr,"  sizie %d,  size_v %d, size_v[0] %d\n", sizeof(*lineoff_buffer), sizeof(lineoff_buffer->v), sizeof(lineoff_buffer->v[0]));
+    stp_erprintf"lexmark_head_offset (%i) (%x)\n",model,lexmark_model_capabilities[im].head_offset);
+    stp_erprintf"  sizie %d,  size_v %d, size_v[0] %d\n", sizeof(*lineoff_buffer), sizeof(lineoff_buffer->v), sizeof(lineoff_buffer->v[0]));
 #endif
     
     memcpy(lineoff_buffer, lexmark_model_capabilities[im].head_offset, sizeof(*lineoff_buffer));
@@ -629,7 +628,7 @@ lexmark_head_offset(int model,                      /* i */
     return (lineoff_buffer);
   } else {
 #ifdef DEBUG
-    fprintf(stderr,"lexmark_head_offset: can't find printer (%i) !!!\n",model);
+    stp_erprintf"lexmark_head_offset: can't find printer (%i) !!!\n",model);
 #endif
     return NULL;
   }
@@ -664,9 +663,9 @@ lexmark_size_type(const stp_vars_t v, const lexmark_cap_t * caps)
       /* custom */
 
 #ifdef DEBUG
-      fprintf(stderr,"lexmark: Unknown paper size '%s' - using custom\n",name);
+      stp_erprintf"lexmark: Unknown paper size '%s' - using custom\n",name);
     } else {
-      fprintf(stderr,"lexmark: Couldn't look up paper size %dx%d - "
+      stp_erprintf"lexmark: Couldn't look up paper size %dx%d - "
 	      "using custom\n",stp_get_page_height(v), stp_get_page_width(v));
 #endif
     }
@@ -755,7 +754,7 @@ static const lexmark_res_t
 	}
       res++;
     }
-  fprintf(stderr,"lexmark_get_resolution_para: resolution not found (%s)\n", resolution);
+  stp_erprintf("lexmark_get_resolution_para: resolution not found (%s)\n", resolution);
   return NULL;
 }
 
@@ -1112,7 +1111,7 @@ lexmark_init_printer(const stp_vars_t v, const lexmark_cap_t * caps,
 			break;
 
 		default:
-			fprintf(stderr, "Unknown printer !! %i\n", caps->model);
+			stp_erprintf("Unknown printer !! %i\n", caps->model);
 			exit(2);
   }
 
@@ -1127,7 +1126,7 @@ lexmark_init_printer(const stp_vars_t v, const lexmark_cap_t * caps,
 
   /*
 #ifdef DEBUG
-  fprintf(stderr,"lexmark: printable size = %dx%d (%dx%d) %02x%02x %02x%02x\n",
+  stp_erprintf"lexmark: printable size = %dx%d (%dx%d) %02x%02x %02x%02x\n",
 	  page_width,page_height,printable_width,printable_length,
 	  arg_70_1,arg_70_2,arg_70_3,arg_70_4);
 #endif
@@ -1407,7 +1406,7 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
       printMode |= COLOR_MODE_C | COLOR_MODE_Y | COLOR_MODE_M | COLOR_MODE_LC | COLOR_MODE_LM | COLOR_MODE_K;
       ncolors += 3;
 #ifdef DEBUG
-      fprintf(stderr,"lexmark: print in photo mode !!.\n");
+      stp_erprintf"lexmark: print in photo mode !!.\n");
 #endif
 
     }
@@ -1422,7 +1421,7 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
 lexmark_describe_resolution(printer,
 			    resolution, &xdpi,&ydpi);
 #ifdef DEBUG
-  fprintf(stderr,"lexmark: resolution=%dx%d\n",xdpi,ydpi);
+  stp_erprintf"lexmark: resolution=%dx%d\n",xdpi,ydpi);
 #endif
 
   switch (res_para_ptr->resid) {
@@ -1448,7 +1447,7 @@ lexmark_describe_resolution(printer,
 
 #ifdef DEBUG
   if (res_para_ptr->resid == DPItest) {
-    fprintf(stderr, "Start test print1\n");
+    stp_erprintf("Start test print1\n");
     doTestPrint = 1;
   }
 #endif
@@ -1462,7 +1461,7 @@ lexmark_describe_resolution(printer,
 
   horizontal_passes = xdpi / physical_xdpi;
 #ifdef DEBUG
-    fprintf(stderr,"lexmark: horizontal_passes %i, xdpi %i, physical_xdpi %i\n",
+    stp_erprintf"lexmark: horizontal_passes %i, xdpi %i, physical_xdpi %i\n",
 	    horizontal_passes, xdpi, physical_xdpi);
 #endif
 
@@ -1474,7 +1473,7 @@ lexmark_describe_resolution(printer,
       stp_get_image_type(nv) != IMAGE_MONOCHROME) {
     use_dmt= 1;
 #ifdef DEBUG
-    fprintf(stderr,"lexmark: using drop modulation technology\n");
+    stp_erprintf"lexmark: using drop modulation technology\n");
 #endif
   }
 
@@ -1523,20 +1522,20 @@ lexmark_describe_resolution(printer,
   /*  dbgfile = lex_show_init(out_width, out_height);*/
   dbgfile = lex_show_init(out_width, out_height-100);
 
-  fprintf(stderr, "border: left %ld, x_raster_res %d, offser_left %ld\n", left, caps->x_raster_res, caps->offset_left_border);
+  stp_erprintf("border: left %ld, x_raster_res %d, offser_left %ld\n", left, caps->x_raster_res, caps->offset_left_border);
 #endif
 
   left = ((caps->x_raster_res * left) / 72) + caps->offset_left_border;
 
 #ifdef DEBUG
-  fprintf(stderr, "border: left %d\n", left);
+  stp_erprintf("border: left %d\n", left);
 #endif
 
 
 
 #ifdef DEBUG
   if (doTestPrint == 1) {
-    fprintf(stderr, "Start test print\n");
+    stp_erprintf("Start test print\n");
     testprint(&td);
     out_width = td.x;
     out_height = td.y;
@@ -1564,7 +1563,7 @@ lexmark_describe_resolution(printer,
   }
 
 #ifdef DEBUG
-  fprintf(stderr,"lexmark: buflength is %d!\n",buf_length);
+  stp_erprintf"lexmark: buflength is %d!\n",buf_length);
 #endif
 
 
@@ -1602,15 +1601,15 @@ lexmark_describe_resolution(printer,
 
 
 #ifdef DEBUG
-  fprintf(stderr,"lexmark: driver will use colors ");
-  if (cols.p.c)     fputc('c',stderr);
-  if (cols.p.C)     fputc('C',stderr);
-  if (cols.p.m)     fputc('m',stderr);
-  if (cols.p.M)     fputc('M',stderr);
-  if (cols.p.y)     fputc('y',stderr);
-  if (cols.p.Y)     fputc('Y',stderr);
-  if (cols.p.k)     fputc('k',stderr);
-  fprintf(stderr,"\n");
+  stp_erprintf"lexmark: driver will use colors ");
+  if (cols.p.c)     stp_erputc('c');
+  if (cols.p.C)     stp_erputc('C');
+  if (cols.p.m)     stp_erputc('m');
+  if (cols.p.M)     stp_erputc('M');
+  if (cols.p.y)     stp_erputc('y');
+  if (cols.p.Y)     stp_erputc('Y');
+  if (cols.p.k)     stp_erputc('k');
+  stp_erprintf"\n");
 #endif
 
 
@@ -1644,11 +1643,11 @@ lexmark_describe_resolution(printer,
 
 
 #ifdef DEBUG
-  fprintf(stderr,"density is %f\n",stp_get_density(nv));
+  stp_erprintf"density is %f\n",stp_get_density(nv));
 #endif
 
 #ifdef DEBUG
-  fprintf(stderr,"density is %f and will be changed to %f  (%f)\n",stp_get_density(nv), stp_get_density(nv)/densityDivisor, densityDivisor);
+  stp_erprintf"density is %f and will be changed to %f  (%f)\n",stp_get_density(nv), stp_get_density(nv)/densityDivisor, densityDivisor);
 #endif
   /* Lexmark do not have differnet pixel sizes. We have to correct the density according the print resolution. */
   stp_set_density(nv, stp_get_density(nv) / densityDivisor);
@@ -1663,7 +1662,7 @@ lexmark_describe_resolution(printer,
   stp_compute_lut(nv, 256);
 
 #ifdef DEBUG
-  fprintf(stderr,"density is %f\n",stp_get_density(nv));
+  stp_erprintf"density is %f\n",stp_get_density(nv));
 #endif
 
   if (xdpi > ydpi)
@@ -1739,7 +1738,7 @@ lexmark_describe_resolution(printer,
 
   /* calculate the memory we need for one line of the printer image (hopefully we are right) */
 #ifdef DEBUG
-  fprintf(stderr,"---------- buffer mem size = %d\n", (((((pass_length/8)*11)/10)+40) * out_width)+200);
+  stp_erprintf"---------- buffer mem size = %d\n", (((((pass_length/8)*11)/10)+40) * out_width)+200);
 #endif
 
   errdiv  = image_height / out_height;
@@ -1757,7 +1756,7 @@ lexmark_describe_resolution(printer,
       int duplicate_line = 1;
       
 #ifdef DEBUGyy
-      fprintf(stderr,"print y %i\n", y);
+      stp_erprintf"print y %i\n", y);
 #endif
       
       if ((y & 63) == 0)
@@ -1797,8 +1796,8 @@ lexmark_describe_resolution(printer,
 #endif
       
 #ifdef DEBUGyy
-            fprintf(stderr, "Let's go stp_write_weave\n");
-	      fprintf(stderr, "length %d\n", length);
+            stp_erprintf("Let's go stp_write_weave\n");
+	      stp_erprintf("length %d\n", length);
 #endif
 
       stp_write_weave(weave, length, ydpi, model, out_width, left,
@@ -1829,19 +1828,19 @@ lexmark_describe_resolution(printer,
   */
 
   stp_free_lut(nv);
-  free(in);
-  free(out);
+  stp_free(in);
+  stp_free(out);
   if (privdata.outbuf != NULL) {
-    free(privdata.outbuf);/* !!!!!!!!!!!!!! */
+    stp_free(privdata.outbuf);/* !!!!!!!!!!!!!! */
   }
 
-  if (cols.p.k != NULL) free(cols.p.k);
-  if (cols.p.c != NULL) free(cols.p.c);
-  if (cols.p.m != NULL) free(cols.p.m);
-  if (cols.p.y != NULL) free(cols.p.y);
-  if (cols.p.C != NULL) free(cols.p.C);
-  if (cols.p.M != NULL) free(cols.p.M);
-  if (cols.p.Y != NULL) free(cols.p.Y);
+  if (cols.p.k != NULL) stp_free(cols.p.k);
+  if (cols.p.c != NULL) stp_free(cols.p.c);
+  if (cols.p.m != NULL) stp_free(cols.p.m);
+  if (cols.p.y != NULL) stp_free(cols.p.y);
+  if (cols.p.C != NULL) stp_free(cols.p.C);
+  if (cols.p.M != NULL) stp_free(cols.p.M);
+  if (cols.p.Y != NULL) stp_free(cols.p.Y);
 
 #ifdef DEBUG
   lex_show_deinit(dbgfile);
@@ -1893,7 +1892,7 @@ lexmark_init_line(int mode, unsigned char *prnBuf,
     /* K could only be present if black is printed only. */
     if ((mode & COLOR_MODE_K) || (mode & (COLOR_MODE_K | COLOR_MODE_LC | COLOR_MODE_LM))) {
 #ifdef DEBUG
-      fprintf(stderr,"set  photo/black catridge \n");
+      stp_erprintf"set  photo/black catridge \n");
 #endif
       prnBuf[LX_Z52_COLOR_MODE_POS] = LX_Z52_BLACK_PRINT;
 
@@ -1903,7 +1902,7 @@ lexmark_init_line(int mode, unsigned char *prnBuf,
       }
     } else {
 #ifdef DEBUG
-      fprintf(stderr,"set color catridge \n");
+      stp_erprintf"set color catridge \n");
 #endif
       prnBuf[LX_Z52_COLOR_MODE_POS] = LX_Z52_COLOR_PRINT;
 
@@ -2030,7 +2029,7 @@ lexmark_init_line(int mode, unsigned char *prnBuf,
       break;
 
   case m_lex7500:
-    fprintf(stderr, "Lexmark 7500 not supported !\n");
+    stp_erprintf("Lexmark 7500 not supported !\n");
     return NULL;
     break;
   }
@@ -2085,8 +2084,8 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
   int colIndex;
   int rwidth; /* real with used at printing (includes shift between even & odd nozzles) */
 #ifdef DEBUG
-  /* fprintf(stderr,"<%c>",("CMYKcmy"[coloridx])); */
-  fprintf(stderr,"pass length %d\n", pass_length);
+  /* stp_erprintf"<%c>",("CMYKcmy"[coloridx])); */
+  stp_erprintf"pass length %d\n", pass_length);
 #endif
 
 
@@ -2094,11 +2093,11 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
   if ((((width*caps->x_raster_res)/xdpi)+offset) > ((caps->max_width*caps->x_raster_res)/72)) {
     /* line too long !! Cut the line */
 #ifdef DEBUG
-   fprintf(stderr,"!! Line too long !! reduce it from %d", width);
+   stp_erprintf"!! Line too long !! reduce it from %d", width);
 #endif
     width = ((((caps->max_width*caps->x_raster_res)/72) - offset)*xdpi)/caps->x_raster_res;
 #ifdef DEBUG
-   fprintf(stderr," down to %d\n", width);
+   stp_erprintf" down to %d\n", width);
 #endif
   }
 
@@ -2106,7 +2105,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
   /* we have to write the initial sequence for a line */
 
 #ifdef DEBUG
-  fprintf(stderr,"lexmark: printer line initialized.\n");
+  stp_erprintf"lexmark: printer line initialized.\n");
 #endif
 
   if (direction) {
@@ -2129,7 +2128,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 
 
 #ifdef DEBUG
-  fprintf(stderr,"lexmark: xStart %d, xEnd %d, xIter %d.\n", xStart, xEnd, xIter);
+  stp_erprintf"lexmark: xStart %d, xEnd %d, xIter %d.\n", xStart, xEnd, xIter);
 #endif
 
   /* now we can start to write the pixels */
@@ -2247,13 +2246,13 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
     } else {
       /* there are no dots, make empy package */
 #ifdef DEBUG
-      /*     fprintf(stderr,"-- empty col %i\n", x); */
+      /*     stp_erprintf"-- empty col %i\n", x); */
 #endif
     }
   }
 
 #ifdef DEBUG
-  fprintf(stderr,"lexmark: 4\n");
+  stp_erprintf"lexmark: 4\n");
 #endif
 
   clen=((unsigned char *)p)-prnBuf;
@@ -2288,12 +2287,12 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
     /* now we write the image line */
     stp_zfwrite(prnBuf,1,clen,v);
 #ifdef DEBUG
-    fprintf(stderr,"lexmark: line written.\n");
+    stp_erprintf"lexmark: line written.\n");
 #endif
     return 1;
   } else {
 #ifdef DEBUG
-    fprintf(stderr,"-- empty line\n");
+    stp_erprintf"-- empty line\n");
 #endif
     return 0;
   }
@@ -2411,7 +2410,7 @@ void lex_show_dither(const stp_vars_t file, unsigned char *y,
 }
 
 void lex_show_deinit(const stp_vars_t file) {
-  fprintf(stderr, "lex_show_lcount %d,   lex_show_length %d\n", lex_show_lcount, lex_show_length);
+  stp_erprintf("lex_show_lcount %d,   lex_show_length %d\n", lex_show_lcount, lex_show_length);
 }
 
 
@@ -2445,12 +2444,12 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 
  
 #ifdef DEBUG
-  fprintf(stderr,"Lexmark: flush_pass, here we are !\n");
-  fprintf(stderr,"  passno %i, sw->ncolors %i, width %d, lwidth %d, linecount k %d, linecount m %d, bitwidth %d, separation_rows  %d\n", passno, sw->ncolors, width, lwidth, linecount[0].p.k, linecount[0].p.m, sw->bitwidth, sw->separation_rows);
-  fprintf(stderr, "microoffset %d, vertical_subpass %d, sw->horizontal_weave %d\n", microoffset,vertical_subpass, sw->horizontal_weave);
+  stp_erprintf"Lexmark: flush_pass, here we are !\n");
+  stp_erprintf"  passno %i, sw->ncolors %i, width %d, lwidth %d, linecount k %d, linecount m %d, bitwidth %d, separation_rows  %d\n", passno, sw->ncolors, width, lwidth, linecount[0].p.k, linecount[0].p.m, sw->bitwidth, sw->separation_rows);
+  stp_erprintf("microoffset %d, vertical_subpass %d, sw->horizontal_weave %d\n", microoffset,vertical_subpass, sw->horizontal_weave);
 
-  fprintf(stderr,"Lexmark: last_pass_offset %d, last_pass %d, logicalpassstart %d\n", sw->last_pass_offset, sw->last_pass, pass->logicalpassstart);
-  fprintf(stderr,"Lexmark: vertical adapt: caps->y_raster_res %d, ydpi %d,  \n", caps->y_raster_res, ydpi);
+  stp_erprintf"Lexmark: last_pass_offset %d, last_pass %d, logicalpassstart %d\n", sw->last_pass_offset, sw->last_pass, pass->logicalpassstart);
+  stp_erprintf"Lexmark: vertical adapt: caps->y_raster_res %d, ydpi %d,  \n", caps->y_raster_res, ydpi);
 
 #endif
 
@@ -2458,10 +2457,10 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
   if (1) { /* wisi */
 
 #ifdef DEBUG
-  fprintf(stderr,"1\n");
-  fprintf(stderr,"\n");
-  fprintf(stderr,"lineoffs[0].v[j]  %d\n", lineoffs[0].v[0]);
-  fprintf(stderr,"lineoffs[0].v[j]  %d\n", lineoffs[0].v[1]);
+  stp_erprintf"1\n");
+  stp_erprintf"\n");
+  stp_erprintf"lineoffs[0].v[j]  %d\n", lineoffs[0].v[0]);
+  stp_erprintf"lineoffs[0].v[j]  %d\n", lineoffs[0].v[1]);
 
 #endif
 
@@ -2477,7 +2476,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
     break;
   default:
 #ifdef DEBUG
-    fprintf(stderr,"Eror: Unsupported phys resolution (%d)\n", physical_xdpi);
+    stp_erprintf"Eror: Unsupported phys resolution (%d)\n", physical_xdpi);
 #endif
     return;
     break;
@@ -2520,7 +2519,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 #endif
 
 #ifdef DEBUG
-    fprintf(stderr,"lexmark_write: lwidth %d\n", lwidth);
+    stp_erprintf"lexmark_write: lwidth %d\n", lwidth);
 #endif
     lexmark_write(nv,		/* I - Print file or command */
 		  privdata_weave->outbuf,/*unsigned char *prnBuf,   mem block to buffer output */
@@ -2613,7 +2612,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
   linecount[0].v[6] = 0;
  
 #ifdef DEBUG
-  fprintf(stderr,"lexmark_write finished\n");
+  stp_erprintf"lexmark_write finished\n");
 #endif 
 
   sw->last_pass = pass->pass;
@@ -2682,13 +2681,13 @@ static void readtestprintline(testdata *td, stp_linebufs_t *linebufs)
   char dummy1[256];
   int icol, ix;
 
-  fprintf(stderr, "start readtestprintline\n");
+  stp_erprintf("start readtestprintline\n");
   for (icol=0; icol < 7; icol++) {
     if (linebufs->v[icol] != NULL) {
       memset(linebufs->v[icol], 0, (td->x+7)/8);  /* clean line */
     }
   }
-  fprintf(stderr, "1 readtestprintline cols %d\n", td->cols);
+  stp_erprintf("1 readtestprintline cols %d\n", td->cols);
 
 
   fscanf(td->ifile, "%[^\"]\"%[^\"]\",", dummy1, td->input_line);

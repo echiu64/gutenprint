@@ -35,6 +35,9 @@
 #include <math.h>
 #include <limits.h>
 #include <stdarg.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
 
@@ -242,7 +245,7 @@ stp_allocate_vars(void)
 do						\
 {						\
   if ((x))					\
-    free((char *)(x));				\
+    stp_free((char *)(x));				\
   ((x)) = NULL;					\
 } while (0)
 
@@ -523,7 +526,7 @@ stp_set_option(stp_vars_t vd, const char *name, const char *data, int bytes)
     {
       if (opt->length == bytes && !memcmp(opt->data, data, bytes))
         return;
-      free(opt->data);
+      stp_free(opt->data);
     }
   else
     {
@@ -550,13 +553,13 @@ stp_clear_option(stp_vars_t vd, const char *name)
     {
       if (!strcmp(opt->name, name))
         {
-          free(opt->name);
-          free(opt->data);
+          stp_free(opt->name);
+          stp_free(opt->data);
           if (opt->prev)
             opt->prev->next = opt->next;
           if (opt->next)
             opt->next->prev = opt->prev;
-          free(opt);
+          stp_free(opt);
           return;
         }
       opt = opt->next;
@@ -619,9 +622,9 @@ stp_clear_all_options(stp_vars_t vd)
   while (opt)
     {
       stp_internal_option_t *nopt = opt->next;
-      free(opt->name);
-      free(opt->data);
-      free(opt);
+      stp_free(opt->name);
+      stp_free(opt->data);
+      stp_free(opt);
       opt = nopt;
     }
   v->options = NULL;
@@ -1211,10 +1214,10 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
 		      stp_get_media_size(v));
 	good_page_size:
 	  for (i = 0; i < count; i++)
-	    free(vptr[i]);
+	    stp_free(vptr[i]);
 	}
       if (vptr)
-	free(vptr);
+	stp_free(vptr);
     }
   else
     {
@@ -1246,10 +1249,10 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
 		      stp_get_media_type(v));
 	good_media_type:
 	  for (i = 0; i < count; i++)
-	    free(vptr[i]);
+	    stp_free(vptr[i]);
 	}
       if (vptr)
-	free(vptr);
+	stp_free(vptr);
     }
 
   if (strlen(stp_get_media_source(v)) > 0)
@@ -1265,10 +1268,10 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
 		      stp_get_media_source(v));
 	good_media_source:
 	  for (i = 0; i < count; i++)
-	    free(vptr[i]);
+	    stp_free(vptr[i]);
 	}
       if (vptr)
-	free(vptr);
+	stp_free(vptr);
     }
 
   if (strlen(stp_get_resolution(v)) > 0)
@@ -1284,10 +1287,10 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
 		      stp_get_resolution(v));
 	good_resolution:
 	  for (i = 0; i < count; i++)
-	    free(vptr[i]);
+	    stp_free(vptr[i]);
 	}
       if (vptr)
-	free(vptr);
+	stp_free(vptr);
     }
 
   if (strlen(stp_get_ink_type(v)) > 0)
@@ -1302,10 +1305,10 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
 	  stp_eprintf(v, "%s is not a valid ink type\n", stp_get_ink_type(v));
 	good_ink_type:
 	  for (i = 0; i < count; i++)
-	    free(vptr[i]);
+	    stp_free(vptr[i]);
 	}
       if (vptr)
-	free(vptr);
+	stp_free(vptr);
     }
 
   for (i = 0; i < stp_dither_algorithm_count(); i++)
@@ -1479,6 +1482,21 @@ stp_eprintf(const stp_vars_t v, const char *format, ...)
     }
 }
 
+void
+stp_erputc(int ch)
+{
+  putc(ch, stderr);
+}
+
+void
+stp_erprintf(const char *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+  vfprintf(stderr, format, args);
+  va_end(args);
+}
+
 static unsigned long stp_debug_level = 0;
 
 static void
@@ -1524,6 +1542,11 @@ stp_malloc (size_t size)
   return (memptr);
 }
 
+void
+stp_free(void *ptr)
+{
+  free(ptr);
+}
 
 #ifdef QUANTIFY
 unsigned quantify_counts[NUM_QUANTIFY_BUCKETS] = {0};
