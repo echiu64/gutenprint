@@ -807,7 +807,7 @@ do_align(void)
   printf("\n");
   printf("Please place a sheet of paper in your printer to begin the head\n");
   printf("alignment procedure.\n");
-  inbuf = do_get_input("Press enter to continue ");
+  inbuf = do_get_input("Press enter to continue > ");
   initialize_print_cmd();
   for (curpass = 1; curpass <= passes; curpass ++)
     {
@@ -834,7 +834,7 @@ do_align(void)
 	  printf("Please insert a fresh sheet of paper.\n");
 	  fflush(stdout);
 	  initialize_print_cmd();
-	  (void) do_get_input("Press enter to continue");
+	  (void) do_get_input("Press enter to continue > ");
 	  /* Ick. Surely there's a cleaner way? */
 	  goto top;
 	case 'h':
@@ -870,7 +870,7 @@ do_align(void)
 	{
 	  printf("Aligning phase %d, and performing final test.\n", curpass);
 	  printf("Please insert a fresh sheet of paper.\n");
-	  (void) do_get_input("Press enter to continue");
+	  (void) do_get_input("Press enter to continue > ");
 	}
       else
 	printf("Aligning phase %d, and starting phase %d.\n", curpass,
