@@ -2722,7 +2722,7 @@ canon_write(const stp_vars_t v,		/* I - Print file or command */
   }
   if (bitoffset) {
     if (bitoffset<8)
-      canon_shift_buffer(in_ptr,length+1,bitoffset);
+      canon_shift_buffer(in_ptr,length,bitoffset);
     else
       fprintf(stderr,"SEVERE BUG IN print-canon.c::canon_write() "
 	      "bitoffset=%d!!\n",bitoffset);
@@ -2731,7 +2731,7 @@ canon_write(const stp_vars_t v,		/* I - Print file or command */
 #endif
   }
 
-  stp_pack_tiff(in_ptr, length+1, comp_data, &comp_ptr);
+  stp_pack_tiff(in_ptr, length, comp_data, &comp_ptr);
   newlength= comp_ptr - comp_buf;
 
   /* send packed empty lines if any */
