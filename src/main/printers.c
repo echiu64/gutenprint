@@ -94,7 +94,7 @@ stp_get_printer_by_index(int idx)
   if (printer_list == NULL)
     {
       stpi_erprintf("No printer drivers found: "
-		   "re STP_DATA_PATH and STPI_MODULE_PATH correct?\n");
+		   "are STP_DATA_PATH and STPI_MODULE_PATH correct?\n");
       stpi_init_printer_list();
     }
   printer = stpi_list_get_item_by_index(printer_list, idx);
@@ -183,7 +183,7 @@ stp_get_printer_by_long_name(const char *long_name)
   if (printer_list == NULL)
     {
       stpi_erprintf("No printer drivers found: "
-		   "re STP_DATA_PATH and STPI_MODULE_PATH correct?\n");
+		   "are STP_DATA_PATH and STPI_MODULE_PATH correct?\n");
       stpi_init_printer_list();
     }
   printer = stpi_list_get_item_by_long_name(printer_list, long_name);
@@ -199,7 +199,7 @@ stp_get_printer_by_driver(const char *driver)
   if (printer_list == NULL)
     {
       stpi_erprintf("No printer drivers found: "
-		   "re STP_DATA_PATH and STPI_MODULE_PATH correct?\n");
+		   "are STP_DATA_PATH and STPI_MODULE_PATH correct?\n");
       stpi_init_printer_list();
     }
   printer = stpi_list_get_item_by_name(printer_list, driver);
@@ -645,6 +645,9 @@ stpi_family_register(stpi_list_t *family)
   if (printer_list == NULL)
     {
       stpi_init_printer_list();
+#ifdef DEBUG
+      fprintf (stderr, "stpi_family_register(): initialising printer_list...\n");
+#endif
     }
 
   if (family)
@@ -676,6 +679,9 @@ stpi_family_unregister(stpi_list_t *family)
   if (printer_list == NULL)
     {
       stpi_init_printer_list();
+#ifdef DEBUG
+      fprintf (stderr, "stpi_family_unregister(): initialising printer_list...\n");
+#endif
     }
 
   if (family)

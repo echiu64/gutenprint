@@ -101,10 +101,13 @@ stpi_list_create(void)
 stpi_list_t *
 stpi_list_copy(stpi_list_t *list)
 {
-  stpi_list_t *ret = stpi_list_create();
+  stpi_list_t *ret;
   node_copyfunc copyfunc = stpi_list_get_copyfunc(list);
   stpi_list_item_t *item = stpi_list_get_start(list);
 
+  check_list((stpi_internal_list_head_t *) list);
+
+  ret = stpi_list_create();
   stpi_list_set_copyfunc(ret, stpi_list_get_copyfunc(list));
   /* If we use default (shallow) copy, we can't free the elements of it */
   if (stpi_list_get_copyfunc(list))
