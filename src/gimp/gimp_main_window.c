@@ -43,6 +43,7 @@
  */
 #define PREVIEW_SIZE_VERT  360
 #define PREVIEW_SIZE_HORIZ 260
+#define MINIMUM_IMAGE_PERCENT (5)
 #define MOVE_CONSTRAIN	   0
 #define MOVE_HORIZONTAL	   1
 #define MOVE_VERTICAL      2
@@ -1154,7 +1155,7 @@ create_scaling_frame (void)
   scaling_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 0, _("Scaling:"), 100, 75,
 			  100.0,
-			  5.0,
+			  (gdouble) MINIMUM_IMAGE_PERCENT,
 			  100.0,
 			  1.0, 10.0, 1, TRUE, 0, 0, NULL, NULL);
   set_adjustment_tooltip (scaling_adjustment,
@@ -1594,7 +1595,7 @@ scaling_callback (GtkWidget *widget)
   else
     min_ppi_scaling = min_ppi_scaling2;
 
-  max_ppi_scaling = min_ppi_scaling * 100 / 5.0;
+  max_ppi_scaling = min_ppi_scaling * 100 / (gdouble) MINIMUM_IMAGE_PERCENT;
 
   if (widget == scaling_ppi)
     {
@@ -1621,15 +1622,15 @@ scaling_callback (GtkWidget *widget)
 	return;
 
       current_scale = GTK_ADJUSTMENT (scaling_adjustment)->value;
-      GTK_ADJUSTMENT (scaling_adjustment)->lower = 5.0;
+      GTK_ADJUSTMENT (scaling_adjustment)->lower = (gdouble) MINIMUM_IMAGE_PERCENT;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = 100.0;
 
       new_percent = 100 * min_ppi_scaling / current_scale;
 
       if (new_percent > 100)
 	new_percent = 100;
-      if (new_percent < 5.0)
-	new_percent = 5.0;
+      if (new_percent < (gdouble) MINIMUM_IMAGE_PERCENT)
+	new_percent = (gdouble) MINIMUM_IMAGE_PERCENT;
 
       GTK_ADJUSTMENT (scaling_adjustment)->value = new_percent;
       pv->scaling = 0.0;
@@ -1750,7 +1751,7 @@ do_misc_updates (void)
       else
 	min_ppi_scaling = min_ppi_scaling2;
 
-      max_ppi_scaling = min_ppi_scaling * 100 / 5.0;
+      max_ppi_scaling = min_ppi_scaling * 100 / (gdouble) MINIMUM_IMAGE_PERCENT;
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi), TRUE);
       GTK_ADJUSTMENT (scaling_adjustment)->lower = min_ppi_scaling;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = max_ppi_scaling;
@@ -1763,7 +1764,7 @@ do_misc_updates (void)
       gdouble tmp = pv->scaling;
 
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_percent), TRUE);
-      GTK_ADJUSTMENT (scaling_adjustment)->lower = 5.0;
+      GTK_ADJUSTMENT (scaling_adjustment)->lower = (gdouble) MINIMUM_IMAGE_PERCENT;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = 100.0;
       GTK_ADJUSTMENT (scaling_adjustment)->value = tmp;
       gtk_signal_emit_by_name (scaling_adjustment, "changed");
@@ -3031,7 +3032,7 @@ preview_update (void)
       else
 	min_ppi_scaling = min_ppi_scaling2;
 
-      max_ppi_scaling = min_ppi_scaling * 20;
+      max_ppi_scaling = min_ppi_scaling * 100 / MINIMUM_IMAGE_PERCENT;
       if (pv->scaling < 0 && pv->scaling > -min_ppi_scaling)
 	pv->scaling = -min_ppi_scaling;
 
