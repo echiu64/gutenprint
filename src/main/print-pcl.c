@@ -1657,7 +1657,7 @@ pcl_default_parameters(const stp_printer_t printer,
 	}
       else
 	{
-	  return _(pcl_val_to_string(caps->paper_sources[0], pcl_media_types,
+	  return _(pcl_val_to_string(caps->paper_sources[0], pcl_media_sources,
 				     NUM_PRINTER_PAPER_SOURCES));
 	}
     }
