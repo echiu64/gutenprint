@@ -1,6 +1,6 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.3.2, released June 29, 2002, is a development release of
+Gimp-Print 4.3.3, released July 14, 2002, is a development release of
 this package.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
@@ -20,6 +20,29 @@ or APFL GhostScript 7.04 or later.
 
 Please read the README file for full instructions on building and
 installing this package.
+
+Gimp-Print 4.3.3 contains the following major changes over Gimp-Print
+4.3.2:
+
+1) Printing at very low vertical resolution (typically less than 360
+   DPI; 360 DPI itself is fine) in black and white mode on some Epson
+   printers either failed or produced incorrect results.  This bug has
+   been present for a while.
+
+2) Quad tone grayscale inks, such as the Piezography (TM) inks, are
+   now supported for most Epson Stylus printers.  This is not tuned
+   for a particular inkset at this time, so the results will not be of
+   top quality yet.
+
+3) The Gimp Print plugin will now compile properly on commercial UNIX
+   systems that do not have the asprintf function (which is
+   libc-specific).
+
+4) Various improvements to EvenTone dithering.
+
+5) The Epson Stylus Photo 2100 and 2200, and 7600 and 9600, should now
+   print correctly in seven color mode (for UltraChrome inks).
+
 
 Gimp-Print 4.3.2 contains the following major changes over Gimp-Print
 4.3.1:
