@@ -217,7 +217,7 @@ static const escp2_densities_t c4pl_pigment_densities =
 { 2.7, 1.35, 0.68, 0.798, 0.798, 0.798, 0.399, 0.200 };
 
 static const escp2_densities_t c3pl_pigment_densities =
-{ 3.2, 1.6,  0.84, 0.865, 0.534, 0.534, 0.534, 0.267 };
+{ 2.6, 1.3,  0.67, 0.692, 0.427, 0.427, 0.427, 0.214 };
 
 static const escp2_densities_t c3pl_densities =
 { 2.6, 1.3,  0.65, 0.730, 0.7,   0.91,  0.455, 0.228 };

@@ -560,6 +560,50 @@ static const paper_adjustment_t ultrachrome_matte_adjustments[] =
 
 DECLARE_PAPER_ADJUSTMENTS(ultrachrome_matte);
 
+static const paper_adjustment_t c80_adjustments[] =
+{
+  { "Plain", 0.769, 1, .075, .9, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "PlainFast", 0.769, 1, .075, .9, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Postcard", 0.875, 1, .075, .9, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "GlossyFilm", .875, 1, .15, .999, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Transparency", .875, 1, .15, .999, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Envelope", 0.769, 1, .075, .9, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "BackFilm", 1.0, 1, .15, .999, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Matte", 0.875, 1, .15, .999, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "MatteHeavy", 0.875, 1, .15, .999, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Inkjet", 0.875, 1, .10, .9, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Coated", 1.0, 1, .15, .999, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Photo", 1.0, 1, .15, .999, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "GlossyPhoto", 0.875, 1, .15, .999, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Semigloss", 0.875, 1, .15, .999, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Luster", 0.875, 1, .15, .999, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "GlossyPaper", 1.0, 1, .15, .999, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Ilford", .875, 1, .15, 1.35, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj  },
+  { "ColorLife", .875, 1, .15, .9, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Other", 0.769, 1, .075, .9, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+};
+
+DECLARE_PAPER_ADJUSTMENTS(c80);
+
 static const paper_t standard_papers[] =
 {
   { "Plain", N_("Plain Paper"), PAPER_PLAIN,
@@ -635,7 +679,7 @@ static const paper_t c80_papers[] =
   { "Semigloss", N_("Premium Semigloss Photo Paper"), PAPER_PREMIUM_PHOTO,
     8, 0, 0x80, 0x00, 0x02, "RGB", NULL },
   { "Luster", N_("Premium Luster Photo Paper"), PAPER_PREMIUM_PHOTO,
-    8, 0, 0x80, 0x00, 0x02, NULL, NULL },
+    8, 0, 0x80, 0x00, 0x02, "RGB", NULL },
   { "GlossyPaper", N_("Photo Quality Glossy Paper"), PAPER_PHOTO,
     6, 0, 0x6b, 0x1a, 0x01, NULL, NULL },
   { "Ilford", N_("Ilford Heavy Paper"), PAPER_PREMIUM_PHOTO,
