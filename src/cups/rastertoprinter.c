@@ -3,7 +3,7 @@
  *
  *   GIMP-print based raster filter for the Common UNIX Printing System.
  *
- *   Copyright 1993-2000 by Easy Software Products.
+ *   Copyright 1993-2001 by Easy Software Products.
  *
  *   This program is free software; you can redistribute it and/or
  *   modify it under the terms of the GNU General Public License,
@@ -50,6 +50,7 @@
 #include <cups/cups.h>
 #include <cups/ppd.h>
 #include <cups/raster.h>
+#include <signal.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -109,12 +110,68 @@ static stp_image_t theImage =
   NULL
 };
 
+
+/*
+ * 'cups_writefunc()' - Write data to a file...
+ */
+
 static void
 cups_writefunc(void *file, const char *buf, size_t bytes)
 {
   FILE *prn = (FILE *)file;
   fwrite(buf, 1, bytes, prn);
 }
+
+
+/*
+ * 'CancelJob()' - Cancel the current job...
+ */
+
+void
+CancelJob(int sig)			/* I - Signal */
+{
+  int	i;				/* Looping var */
+
+
+  (void)sig;
+
+ /*
+  * WARNING:
+  *
+  * The code you are about to see is a hack.  In the event a real
+  * cancel method is provided with each printer driver, this code
+  * will be replaced with the appropriate printer driver call to
+  * eject the current page and reset the printer to a known state.
+  *
+  * This is only a hack.
+  *
+  * This code will likely only work for HP and EPSON printers.
+  * It *may* work with Canon printers.  It almost certainly will
+  * not work with Lexmark printers.
+  */
+
+ /*
+  * Send out lots of NUL bytes to clear out any pending raster data...
+  */
+
+  for (i = 0; i < 2000; i ++)
+    putchar(0);
+
+ /*
+  * Send both the PCL and EPSON reset sequences...
+  */
+
+  printf("\033@\033E");
+
+ /*
+  * Flush buffers and exit...
+  */
+
+  fflush(stdout);
+
+  exit(0);
+}
+
 
 /*
  * 'main()' - Main entry and processing of driver.
@@ -128,18 +185,30 @@ main(int  argc,				/* I - Number of command-line arguments */
   cups_image_t		cups;		/* CUPS image */
   const char		*ppdfile;	/* PPD environment variable */
   ppd_file_t		*ppd;		/* PPD file */
-  stp_printer_t	printer;	/* Printer driver */
+  stp_printer_t		printer;	/* Printer driver */
   stp_vars_t		v;		/* Printer driver variables */
   stp_papersize_t	size;		/* Paper size */
   char			*buffer;	/* Overflow buffer */
-  int		num_opts;		/* Number of printer options */
-  char		**opts;			/* Printer options */
-
-  theImage.rep = &cups;
+  int			num_options;	/* Number of CUPS options */
+  cups_option_t		*options;	/* CUPS options */
+  const char		*val;		/* CUPS option value */
+  int			num_res;	/* Number of printer resolutions */
+  char			**res;		/* Printer resolutions */
+  float			stp_gamma,	/* STP options */
+			stp_brightness,
+			stp_cyan,
+			stp_magenta,
+			stp_yellow,
+			stp_contrast,
+			stp_saturation,
+			stp_density;
+  
 
  /*
   * Initialise libgimpprint
   */
+
+  theImage.rep = &cups;
 
   stp_init();
 
@@ -157,6 +226,52 @@ main(int  argc,				/* I - Number of command-line arguments */
     fputs("ERROR: rastertoprinter job-id user title copies options [file]\n", stderr);
     return (1);
   }
+
+ /*
+  * Get the STP options, if any...
+  */
+
+  num_options = cupsParseOptions(argv[5], 0, &options);
+
+  if ((val = cupsGetOption("stpGamma", num_options, options)) != NULL)
+    stp_gamma = atof(val) * 0.001;
+  else
+    stp_gamma = 1.0;
+
+  if ((val = cupsGetOption("stpBrightness", num_options, options)) != NULL)
+    stp_brightness = atof(val) * 0.001;
+  else
+    stp_brightness = 1.0;
+
+  if ((val = cupsGetOption("stpCyan", num_options, options)) != NULL)
+    stp_cyan = atof(val) * 0.001;
+  else
+    stp_cyan = 1.0;
+
+  if ((val = cupsGetOption("stpMagenta", num_options, options)) != NULL)
+    stp_magenta = atof(val) * 0.001;
+  else
+    stp_magenta = 1.0;
+
+  if ((val = cupsGetOption("stpYellow", num_options, options)) != NULL)
+    stp_yellow = atof(val) * 0.001;
+  else
+    stp_yellow = 1.0;
+
+  if ((val = cupsGetOption("stpContrast", num_options, options)) != NULL)
+    stp_contrast = atof(val) * 0.001;
+  else
+    stp_contrast = 1.0;
+
+  if ((val = cupsGetOption("stpSaturation", num_options, options)) != NULL)
+    stp_saturation = atof(val) * 0.001;
+  else
+    stp_saturation = 1.0;
+
+  if ((val = cupsGetOption("stpDensity", num_options, options)) != NULL)
+    stp_density = atof(val) * 0.001;
+  else
+    stp_density = 1.0;
 
  /*
   * Get the PPD file and figure out which driver to use...
@@ -192,6 +307,13 @@ main(int  argc,				/* I - Number of command-line arguments */
   }
 
   ppdClose(ppd);
+
+ /*
+  * Get the resolution options...
+  */
+
+  res = stp_printer_get_printfuncs(printer)->parameters(printer, NULL,
+                                                        "Resolution", &num_res);
 
  /*
   * Open the page stream...
@@ -284,19 +406,19 @@ main(int  argc,				/* I - Number of command-line arguments */
     v = stp_allocate_copy(stp_printer_get_printvars(printer));
 
     stp_set_app_gamma(v, 1.0);
-    stp_set_brightness(v, 1.0);
-    stp_set_contrast(v, 1.0);
-    stp_set_cyan(v, 1.0);
-    stp_set_magenta(v, 1.0);
-    stp_set_yellow(v, 1.0);
-    stp_set_saturation(v, 1.0);
-    stp_set_density(v, 1.0);
+    stp_set_brightness(v, stp_brightness);
+    stp_set_contrast(v, stp_contrast);
+    stp_set_cyan(v, stp_cyan);
+    stp_set_magenta(v, stp_magenta);
+    stp_set_yellow(v, stp_yellow);
+    stp_set_saturation(v, stp_saturation);
+    stp_set_density(v, stp_density);
     stp_set_scaling(v, 0); /* No scaling */
     stp_set_cmap(v, NULL);
     stp_set_page_width(v, cups.header.PageSize[0]);
     stp_set_page_height(v, cups.header.PageSize[1]);
     stp_set_orientation(v, ORIENT_PORTRAIT);
-    stp_set_gamma(v, 1.0);
+    stp_set_gamma(v, stp_gamma);
     stp_set_image_type(v, cups.header.cupsRowCount);
     stp_set_outfunc(v, cups_writefunc);
     stp_set_errfunc(v, cups_writefunc);
@@ -308,9 +430,15 @@ main(int  argc,				/* I - Number of command-line arguments */
     else
       stp_set_output_type(v, OUTPUT_COLOR);
 
-    stp_set_dither_algorithm(v, cups.header.OutputType);
+    if (cups.header.cupsRowStep >= stp_dither_algorithm_count())
+      fprintf(stderr, "ERROR: Unable to set dither algorithm!\n");
+    else
+    stp_set_dither_algorithm(v,
+                             stp_dither_algorithm_name(cups.header.cupsRowStep));
+
     stp_set_media_source(v, cups.header.MediaClass);
     stp_set_media_type(v, cups.header.MediaType);
+    stp_set_ink_type(v, cups.header.OutputType);
 
     fprintf(stderr, "DEBUG: PageSize = %dx%d\n", cups.header.PageSize[0],
             cups.header.PageSize[1]);
@@ -321,13 +449,10 @@ main(int  argc,				/* I - Number of command-line arguments */
     else
       fprintf(stderr, "ERROR: Unable to get media size!\n");
 
-    opts = (*(stp_printer_get_printfuncs(printer)->parameters))(printer, NULL, "Resolution",
-						&num_opts);
-    if (cups.header.cupsCompression < 0 ||
-	cups.header.cupsCompression >= num_opts)
+    if (cups.header.cupsCompression >= num_res)
       fprintf(stderr, "ERROR: Unable to set printer resolution!\n");
     else
-      stp_set_resolution(v, opts[cups.header.cupsCompression]);
+      stp_set_resolution(v, res[cups.header.cupsCompression]);
 
    /*
     * Print the page...
@@ -364,7 +489,10 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: stp_get_density(v) |%.3f|\n", stp_get_density(v));
     fprintf(stderr, "DEBUG: stp_get_app_gamma(v) |%.3f|\n", stp_get_app_gamma(v));
     if (stp_printer_get_printfuncs(printer)->verify(printer, v))
+    {
+      signal(SIGTERM, CancelJob);
       stp_printer_get_printfuncs(printer)->print(printer, &theImage, v);
+    }
     else
       fputs("ERROR: Invalid printer settings!\n", stderr);
 
@@ -384,6 +512,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 	cups.row ++;
       }
     }
+
     stp_free_vars(v);
   }
 

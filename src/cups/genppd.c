@@ -3,7 +3,7 @@
  *
  *   PPD file generation program for the CUPS drivers.
  *
- *   Copyright 1993-2000 by Easy Software Products.
+ *   Copyright 1993-2001 by Easy Software Products.
  *
  *   This program is free software; you can redistribute it and/or
  *   modify it under the terms of the GNU General Public License,
@@ -96,50 +96,50 @@ typedef struct
 
 msize_t	sizes[] =
 	{
-	  { N_ ("A0"),			2384, 3370 },
-	  { N_ ("A0.Transverse"),	3370, 2384 },
-	  { N_ ("A1"),			1684, 2384 },
-	  { N_ ("A1.Transverse"),	2384, 1684 },
-	  { N_ ("A2"),			1191, 1684 },
-	  { N_ ("A2.Transverse"),	1684, 1191 },
-	  { N_ ("A3"),			842,  1191 },
-	  { N_ ("A3.Transverse"),	1191, 842 },
-	  { N_ ("A4"),			595,  842 },
-	  { N_ ("A4.Transverse"),	842,  595 },
-	  { N_ ("A5"),			420,  595 },
-	  { N_ ("A5.Transverse"),	595,  420 },
-	  { N_ ("A6"),			297,  420 },
-	  { N_ ("AnsiC"),		1224, 1584 },
-	  { N_ ("AnsiD"),		1584, 2448 },
-	  { N_ ("AnsiE"),		2448, 3168 },
-	  { N_ ("ARCHA"),		648,  864 },
-	  { N_ ("ARCHA.Transverse"),	864,  648 },
-	  { N_ ("ARCHB"),		864,  1296 },
-	  { N_ ("ARCHB.Transverse"),	1296, 864 },
-	  { N_ ("ARCHC"),		1296, 1728 },
-	  { N_ ("ARCHC.Transverse"),	1728, 1296 },
-	  { N_ ("ARCHD"),		1728, 2592 },
-	  { N_ ("ARCHD.Transverse"),	2592, 1728 },
-	  { N_ ("ARCHE"),		2592, 3456 },
-	  { N_ ("ARCHE.Transverse"),	3456, 2592 },
-	  { N_ ("B0"),			2918, 4128 },
-	  { N_ ("B1"),			2064, 2918 },
-	  { N_ ("B2"),			1458, 2064 },
-	  { N_ ("B3"),			1032, 1458 },
-	  { N_ ("B4"),			729,  1032 },
-	  { N_ ("B5"),			516,  729 },
-	  { N_ ("Env10"),		297,  684 },
-	  { N_ ("EnvC5"),		459,  649 },
-	  { N_ ("EnvDL"),		312,  624 },
-	  { N_ ("EnvISOB5"),		499,  709 },
-	  { N_ ("EnvMonarch"),		279,  540 },
-	  { N_ ("Executive"),		522,  756 },
-	  { N_ ("FanFoldUS"),		1071, 792 },
-	  { N_ ("Legal"),		612,  1008 },
-	  { N_ ("Letter"),		612,  792 },
-	  { N_ ("Letter.Transverse"),	792,  612 },
-	  { N_ ("Tabloid"),		792,  1224 },
-	  { N_ ("TabloidExtra"),	864,  1296 }
+	  { "A0",		2384, 3370 },
+	  { "A0.Transverse",	3370, 2384 },
+	  { "A1",		1684, 2384 },
+	  { "A1.Transverse",	2384, 1684 },
+	  { "A2",		1191, 1684 },
+	  { "A2.Transverse",	1684, 1191 },
+	  { "A3",		842,  1191 },
+	  { "A3.Transverse",	1191, 842 },
+	  { "A4",		595,  842 },
+	  { "A4.Transverse",	842,  595 },
+	  { "A5",		420,  595 },
+	  { "A5.Transverse",	595,  420 },
+	  { "A6",		297,  420 },
+	  { "AnsiC",		1224, 1584 },
+	  { "AnsiD",		1584, 2448 },
+	  { "AnsiE",		2448, 3168 },
+	  { "ARCHA",		648,  864 },
+	  { "ARCHA.Transverse",	864,  648 },
+	  { "ARCHB",		864,  1296 },
+	  { "ARCHB.Transverse",	1296, 864 },
+	  { "ARCHC",		1296, 1728 },
+	  { "ARCHC.Transverse",	1728, 1296 },
+	  { "ARCHD",		1728, 2592 },
+	  { "ARCHD.Transverse",	2592, 1728 },
+	  { "ARCHE",		2592, 3456 },
+	  { "ARCHE.Transverse",	3456, 2592 },
+	  { "B0",		2918, 4128 },
+	  { "B1",		2064, 2918 },
+	  { "B2",		1458, 2064 },
+	  { "B3",		1032, 1458 },
+	  { "B4",		729,  1032 },
+	  { "B5",		516,  729 },
+	  { "Env10",		297,  684 },
+	  { "EnvC5",		459,  649 },
+	  { "EnvDL",		312,  624 },
+	  { "EnvISOB5",		499,  709 },
+	  { "EnvMonarch",	279,  540 },
+	  { "Executive",	522,  756 },
+	  { "FanFoldUS",	1071, 792 },
+	  { "Legal",		612,  1008 },
+	  { "Letter",		612,  792 },
+	  { "Letter.Transverse",792,  612 },
+	  { "Tabloid",		792,  1224 },
+	  { "TabloidExtra",	864,  1296 }
 	};
 
 
@@ -160,15 +160,21 @@ main(int  argc,			/* I - Number of command-line arguments */
      char *argv[])		/* I - Command-line arguments */
 {
   int		i;		/* Looping var */
-  const char		*prefix;	/* Directory prefix for output */
+  const char	*prefix;	/* Directory prefix for output */
+  stp_printer_t	printer;	/* Pointer to printer driver */
 
-  prefix = "ppd";
 
  /*
   * Initialise libgimpprint
   */
 
   stp_init();
+
+ /*
+  * Parse command-line args...
+  */
+
+  prefix = "ppd";
 
   for (i = 1; i < argc; i ++)
     if (strcmp(argv[i], "--help") == 0)
@@ -194,12 +200,17 @@ main(int  argc,			/* I - Number of command-line arguments */
     else
       usage();
 
+ /*
+  * Write PPD files...
+  */
+
   for (i = 0; i < stp_known_printers(); i++)
-    {
-      const stp_printer_t printer = stp_get_printer_by_index(i);
-      if (printer && write_ppd(printer, prefix))
-	return (1);
-    }
+  {
+    printer = stp_get_printer_by_index(i);
+
+    if (printer && write_ppd(printer, prefix))
+      return (1);
+  }
 
   return (0);
 }
@@ -212,7 +223,7 @@ main(int  argc,			/* I - Number of command-line arguments */
 void
 usage(void)
 {
-  puts(_("Usage: genppd [--help] [--prefix dir]"));
+  puts("Usage: genppd [--help] [--prefix dir]");
   exit(1);
 }
 
@@ -229,13 +240,14 @@ typedef struct
   int top;
 } paper_t;
 
+
 /*
  * 'write_ppd()' - Write a PPD file.
  */
 
 int					/* O - Exit status */
-write_ppd(const stp_printer_t p,		/* I - Printer driver */
-	  const char      *prefix)	/* I - Prefix (directory) for PPD files */
+write_ppd(const stp_printer_t p,	/* I - Printer driver */
+	  const char          *prefix)	/* I - Prefix (directory) for PPD files */
 {
   int		i, j;			/* Looping vars */
   gzFile	fp;			/* File to write to */
@@ -251,13 +263,44 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
   int		width, height,		/* Page information */
 		bottom, left,
 		top, right;
-  const char *driver = stp_printer_get_driver(p);
-  const char *long_name = stp_printer_get_long_name(p);
-  const stp_vars_t printvars = stp_printer_get_printvars(p);
-  int model = stp_printer_get_model(p);
-  const stp_printfuncs_t *printfuncs = stp_printer_get_printfuncs(p);
-  paper_t *the_papers = NULL;
-  int cur_opt = 0;
+  const char	*driver;		/* Driver name */
+  const char	*long_name;		/* Driver long name */
+  stp_vars_t	printvars;		/* Printer option names */
+  int		model;			/* Driver model number */
+  const stp_printfuncs_t *printfuncs;	/* Driver functions */
+  paper_t	*the_papers;		/* Media sizes */
+  int		cur_opt;		/* Current option */
+  static struct				/**** STP numeric options ****/
+  {
+    const char	*name,			/* Name of option */
+  		*text;			/* Human-readable text */
+    int		low,			/* Low value (thousandths) */
+		high,			/* High value (thousandths) */
+		step;			/* Step (thousandths) */
+  }		stp_options[] =
+  {
+    { "stpBrightness",	"Brightness",	500, 2000, 100 },
+    { "stpContrast",	"Contrast",	500, 2000, 100 },
+    { "stpGamma",	"Gamma",	500, 4000, 100 },
+    { "stpDensity",	"Density",	100, 1000, 50 },
+    { "stpCyan",	"Cyan",		500, 2000, 50 },
+    { "stpMagenta",	"Magenta",	500, 2000, 50 },
+    { "stpYellow",	"Yellow",	500, 2000, 50 },
+    { "stpSaturation",	"Saturation",	0,   1000, 50 }
+  };
+
+
+ /*
+  * Initialize driver-specific variables...
+  */
+
+  driver     = stp_printer_get_driver(p);
+  long_name  = stp_printer_get_long_name(p);
+  printvars  = stp_printer_get_printvars(p);
+  model      = stp_printer_get_model(p);
+  printfuncs = stp_printer_get_printfuncs(p);
+  the_papers = NULL;
+  cur_opt    = 0;
 
  /*
   * Skip the PostScript drivers...
@@ -280,7 +323,7 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
 
   if ((fp = gzopen(filename, "wb")) == NULL)
   {
-    fprintf(stderr, _("genppd: Unable to create file \"%s\" - %s.\n"),
+    fprintf(stderr, "genppd: Unable to create file \"%s\" - %s.\n",
             filename, strerror(errno));
     return (2);
   }
@@ -291,11 +334,11 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
 
   sscanf(long_name, "%63s", manufacturer);
 
-  fprintf(stderr, _("Writing %s...\n"), filename);
+  fprintf(stderr, "Writing %s...\n", filename);
 
   gzputs(fp, "*PPD-Adobe: \"4.3\"\n");
   gzputs(fp, "*%PPD file for CUPS/GIMP-print.\n");
-  gzputs(fp, "*%Copyright 1993-2000 by Easy Software Products, All Rights Reserved.\n");
+  gzputs(fp, "*%Copyright 1993-2001 by Easy Software Products, All Rights Reserved.\n");
   gzputs(fp, "*%This PPD file may be freely used and distributed under the terms of\n");
   gzputs(fp, "*%the GNU GPL.\n");
   gzputs(fp, "*FormatVersion:	\"4.3\"\n");
@@ -303,11 +346,11 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
   gzputs(fp, "*LanguageVersion: English\n");
   gzputs(fp, "*LanguageEncoding: ISOLatin1\n");
   gzprintf(fp, "*PCFileName:	\"%s.ppd\"\n", driver);
-  gzprintf(fp, "*Manufacturer:	\"%s\"\n", _(manufacturer));
+  gzprintf(fp, "*Manufacturer:	\"%s\"\n", manufacturer);
   gzputs(fp, "*Product:	\"(GIMP-print v" VERSION ")\"\n");
-  gzprintf(fp, "*ModelName:     \"%s\"\n", _(driver));
-  gzprintf(fp, "*ShortNickName: \"%s\"\n", _(long_name));
-  gzprintf(fp, "*NickName:      \"%s, CUPS+GIMP-print v" VERSION "\"\n", _(long_name));
+  gzprintf(fp, "*ModelName:     \"%s\"\n", driver);
+  gzprintf(fp, "*ShortNickName: \"%s\"\n", long_name);
+  gzprintf(fp, "*NickName:      \"%s, CUPS+GIMP-print v" VERSION "\"\n", long_name);
   gzputs(fp, "*PSVersion:	\"(3010.000) 550\"\n");
   gzputs(fp, "*LanguageLevel:	\"3\"\n");
   gzprintf(fp, "*ColorDevice:	%s\n",
@@ -323,7 +366,7 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
   gzputs(fp, "*cupsManualCopies: True\n");
   gzputs(fp, "*cupsFilter:	\"application/vnd.cups-raster 100 rastertoprinter\"\n");
   if (strcasecmp(manufacturer, "EPSON") == 0)
-    gzputs(fp, "*cupsFilter:	\"application/vnd.cups-command 100 commandtoepson\"\n");
+    gzputs(fp, "*cupsFilter:	\"application/vnd.cups-command 33 commandtoepson\"\n");
 
  /*
   * Get the page sizes from the driver...
@@ -460,24 +503,10 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
   gzputs(fp, "*CloseUI: *ColorModel\n");
 
  /*
-  * Image types...
-  */
-
-  gzputs(fp, "*OpenUI *ImageType/Image Type: PickOne\n");
-  gzputs(fp, "*OrderDependency: 10 AnySetup *ImageType\n");
-  gzputs(fp, "*DefaultImageType: Continuous\n");
-
-  gzprintf(fp, "*ImageType LineArt/Line Art:\t\"<</cupsRowCount 0>>setpagedevice\"\n");
-  gzprintf(fp, "*ImageType SolidTone/Solid Tone:\t\"<</cupsRowCount 1>>setpagedevice\"\n");
-  gzprintf(fp, "*ImageType Continuous/Photograph:\t\"<</cupsRowCount 2>>setpagedevice\"\n");
-
-  gzputs(fp, "*CloseUI: *ImageType\n");
-
- /*
   * Media types...
   */
 
-  opts = (*(printfuncs->parameters))(p, NULL, "MediaType", &num_opts);
+  opts   = (*(printfuncs->parameters))(p, NULL, "MediaType", &num_opts);
   defopt = (*(printfuncs->default_parameters))(p, NULL, "MediaType");
 
   if (num_opts > 0)
@@ -486,7 +515,7 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
     gzputs(fp, "*OrderDependency: 10 AnySetup *MediaType\n");
     gzputs(fp, "*DefaultMediaType: ");
     for (opt = defopt; *opt; opt ++)
-      if (*opt != ' ' && *opt != '/')
+      if (*opt != ' ' && *opt != '/' && *opt != '\'' && *opt != '\"')
 	gzputc(fp, *opt);
     gzputc(fp, '\n');
 
@@ -495,7 +524,7 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
       gzputs(fp, "*MediaType ");
 
       for (opt = opts[i]; *opt; opt ++)
-        if (*opt != ' ' && *opt != '/')
+	if (*opt != ' ' && *opt != '/' && *opt != '\'' && *opt != '\"')
 	  gzputc(fp, *opt);
 
       gzprintf(fp, "/%s:\t\"<</MediaType(%s)>>setpagedevice\"\n", opts[i], opts[i]);
@@ -520,7 +549,7 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
     gzputs(fp, "*OrderDependency: 10 AnySetup *InputSlot\n");
     gzputs(fp, "*DefaultInputSlot: ");
     for (opt = defopt; *opt; opt ++)
-      if (*opt != ' ' && *opt != '/')
+      if (*opt != ' ' && *opt != '/' && *opt != '\'' && *opt != '\"')
 	gzputc(fp, *opt);
     gzputc(fp, '\n');
 
@@ -529,7 +558,7 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
       gzputs(fp, "*InputSlot ");
 
       for (opt = opts[i]; *opt; opt ++)
-        if (*opt != ' ' && *opt != '/')
+	if (*opt != ' ' && *opt != '/' && *opt != '\'' && *opt != '\"')
 	  gzputc(fp, *opt);
 
       gzprintf(fp, "/%s:\t\"<</MediaClass(%s)>>setpagedevice\"\n", opts[i], opts[i]);
@@ -542,39 +571,12 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
   }
 
  /*
-  * Dithering algorithms...
-  */
-
-  gzputs(fp, "*OpenUI *Dither: PickOne\n");
-  gzputs(fp, "*OrderDependency: 10 AnySetup *Dither\n");
-
-  for (i = 0; i < stp_dither_algorithm_count(); i ++)
-  {
-    const char *s;
-    char *copy = xmalloc(strlen(stp_dither_algorithm_name(i)) + 1);
-    char *d = copy;
-    s = stp_dither_algorithm_name(i);
-    do
-    {
-      if (*s != ' ' && *s != '\t' && *s != '-')
-	*d++ = *s;
-    } while (*s++);
-
-    if (i == 0)
-      gzprintf(fp, "*DefaultDither: %s\n", copy);
-    gzprintf(fp, "*Dither %s/%s: \"<</OutputType(%s)>>setpagedevice\"\n",
-             copy, stp_dither_algorithm_name(i), stp_dither_algorithm_name(i));
-    free(copy);
-  }
-
-  gzputs(fp, "*CloseUI: *Dither\n");
-
- /*
   * Resolutions...
   */
 
-  opts = (*(printfuncs->parameters))(p, NULL, "Resolution", &num_opts);
+  opts   = (*(printfuncs->parameters))(p, NULL, "Resolution", &num_opts);
   defopt = (*(printfuncs->default_parameters))(p, NULL, "Resolution");
+
   gzputs(fp, "*OpenUI *Resolution: PickOne\n");
   gzputs(fp, "*OrderDependency: 20 AnySetup *Resolution\n");
 
@@ -596,6 +598,7 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
     char *s;
     char *copy = xmalloc(strlen(opts[i]) + 1);
     char *d = copy;
+
    /* 
     * Strip resolution name to its essentials...
     */
@@ -607,7 +610,7 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
     s = opts[i];
     do
     {
-      if (*s != ' ' && *s != '\t' && *s != '-')
+      if (*s != ' ' && *s != '/' && *s != '\'' && *s != '\"' && *s != '-')
 	*d++ = *s;
     } while (*s++);
 
@@ -620,9 +623,142 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
     free(copy);
     free(opts[i]);
   }
+
   if (opts)
     free(opts);
+
   gzputs(fp, "*CloseUI: *Resolution\n");
+
+ /*
+  * STP option group...
+  */
+
+  gzputs(fp, "*OpenGroup: STP\n");
+
+   /*
+    * Image types...
+    */
+
+    gzputs(fp, "*OpenUI *stpImageType/Image Type: PickOne\n");
+    gzputs(fp, "*OrderDependency: 10 AnySetup *stpImageType\n");
+    gzputs(fp, "*DefaultstpImageType: Continuous\n");
+
+    gzprintf(fp, "*stpImageType LineArt/Line Art:\t\"<</cupsRowCount 0>>setpagedevice\"\n");
+    gzprintf(fp, "*stpImageType SolidTone/Solid Tone:\t\"<</cupsRowCount 1>>setpagedevice\"\n");
+    gzprintf(fp, "*stpImageType Continuous/Photograph:\t\"<</cupsRowCount 2>>setpagedevice\"\n");
+
+    gzputs(fp, "*CloseUI: *stpImageType\n");
+
+   /*
+    * Dithering algorithms...
+    */
+
+    gzputs(fp, "*OpenUI *stpDither/Dither Algorithm: PickOne\n");
+    gzputs(fp, "*OrderDependency: 10 AnySetup *stpDither\n");
+
+    for (i = 0; i < stp_dither_algorithm_count(); i ++)
+    {
+      const char *s;
+      char *copy = xmalloc(strlen(stp_dither_algorithm_name(i)) + 1);
+      char *d = copy;
+      s = stp_dither_algorithm_name(i);
+      do
+      {
+	if (*s != ' ' && *s != '\t' && *s != '-' && *s != '\'' && *s != '\"')
+	  *d++ = *s;
+      } while (*s++);
+
+      if (i == 0)
+	gzprintf(fp, "*DefaultstpDither: %s\n", copy);
+      gzprintf(fp, "*stpDither %s/%s: \"<</cupsRowStep %d>>setpagedevice\"\n",
+               copy, stp_dither_algorithm_name(i), i);
+      free(copy);
+    }
+
+    gzputs(fp, "*CloseUI: *stpDither\n");
+
+   /*
+    * InkTypes...
+    */
+
+    opts   = (*(printfuncs->parameters))(p, NULL, "InkType", &num_opts);
+    defopt = (*(printfuncs->default_parameters))(p, NULL, "InkType");
+
+    gzputs(fp, "*OpenUI *stpInkType/Ink Type: PickOne\n");
+    gzputs(fp, "*OrderDependency: 20 AnySetup *stpInkType\n");
+
+    if (defopt)
+      {
+	const char *s = defopt;
+	char *copy = xmalloc(strlen(defopt) + 1);
+	char *d = copy;
+	do
+	  {
+	    if (*s != ' ' && *s != '\t' && *s != '-')
+	      *d++ = *s;
+	  } while (*s++);
+	gzprintf(fp, "*DefaultstpInkType: %s\n", copy);
+      }
+
+    for (i = 0; i < num_opts; i ++)
+    {
+      char *s;
+      char *copy = xmalloc(strlen(opts[i]) + 1);
+      char *d = copy;
+
+      /* This should not happen! */
+      s = opts[i];
+      do
+      {
+	if (*s != ' ' && *s != '/' && *s != '\'' && *s != '\"' && *s != '-')
+	  *d++ = *s;
+      } while (*s++);
+
+     /*
+      * Write the resolution option...
+      */
+
+      gzprintf(fp, "*stpInkType %s/%s:\t\"<</OutputType(%s)>>setpagedevice\"\n",
+               copy, opts[i], opts[i]);
+      free(copy);
+      free(opts[i]);
+    }
+
+    if (opts)
+      free(opts);
+
+    gzputs(fp, "*CloseUI: *stpInkType\n");
+
+   /*
+    * Advanced STP options...
+    */
+
+    if (stp_get_output_type(printvars) == OUTPUT_COLOR)
+      num_opts = 8;
+    else
+      num_opts = 4;
+
+    for (i = 0; i < num_opts; i ++)
+    {
+      gzprintf(fp, "*OpenUI *%s/%s: PickOne\n", stp_options[i].name,
+               stp_options[i].text);
+      gzprintf(fp, "*Default%s: 1000\n", stp_options[i].name);
+      for (j = stp_options[i].low;
+           j <= stp_options[i].high;
+	   j += stp_options[i].step)
+	gzprintf(fp, "*%s %d/%.3f: \"\"\n", stp_options[i].name, j, j * 0.001);
+      gzprintf(fp, "*CloseUI *%s\n", stp_options[i].name);
+    }
+
+ /*
+  * End of STP option group...
+  */
+
+  gzputs(fp, "*CloseGroup: STP\n");
+
+ /*
+  * Fonts...
+  */
 
   gzputs(fp, "*DefaultFont: Courier\n");
   gzputs(fp, "*Font AvantGarde-Book: Standard \"(001.006S)\" Standard ROM\n");
