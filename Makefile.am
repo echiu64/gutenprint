@@ -17,6 +17,7 @@ print_SOURCES = \
 	print-util.c	   \
 	print.c		   \
         gtk_color_window.c \
+	gtk_main_window.c  \
 	print.h
 
 print-util.c: print-printers.c
