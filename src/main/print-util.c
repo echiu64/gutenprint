@@ -777,7 +777,7 @@ stp_papersize_get_unit(const stp_papersize_t pt)
   return p->paper_unit;
 }
 
-#if 0
+#if 1
 /*
  * This is, of course, blatantly thread-unsafe.  However, it certainly
  * speeds up genppd by a lot!
