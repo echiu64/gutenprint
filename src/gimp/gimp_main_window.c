@@ -1257,7 +1257,7 @@ create_image_settings_frame(void)
    *  Color adjust button
    */
 
-  label = gtk_label_new (_(""));
+  label = gtk_label_new ("");
   gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
   gtk_widget_show (label);
 
@@ -1278,7 +1278,7 @@ create_image_settings_frame(void)
    * Output type toggles.
    */
 
-  label = gtk_label_new (_(""));
+  label = gtk_label_new ("");
   gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
   gtk_widget_show (label);
 
