@@ -43,10 +43,9 @@
 static stpi_list_t *paper_list = NULL;
 
 static void
-stpi_paper_freefunc(stpi_list_item_t *item)
+stpi_paper_freefunc(void *item)
 {
-  stp_papersize_t *paper =
-    (stp_papersize_t *) stpi_list_item_get_data(item);
+  stp_papersize_t *paper = (stp_papersize_t *) (item);
   stpi_free(paper->name);
   stpi_free(paper->text);
   stpi_free(paper->comment);
@@ -54,18 +53,16 @@ stpi_paper_freefunc(stpi_list_item_t *item)
 }
 
 static const char *
-stpi_paper_namefunc(const stpi_list_item_t *item)
+stpi_paper_namefunc(const void *item)
 {
-  stp_papersize_t *paper =
-    (stp_papersize_t *) stpi_list_item_get_data(item);
+  const stp_papersize_t *paper = (const stp_papersize_t *) (item);
   return paper->name;
 }
 
 static const char *
-stpi_paper_long_namefunc(const stpi_list_item_t *item)
+stpi_paper_long_namefunc(const void *item)
 {
-  stp_papersize_t *paper =
-    (stp_papersize_t *) stpi_list_item_get_data(item);
+  const stp_papersize_t *paper = (const stp_papersize_t *) (item);
   return paper->text;
 }
 

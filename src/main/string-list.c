@@ -30,28 +30,25 @@
 #include <string.h>
 
 static void
-free_list_element(stpi_list_item_t *item)
+free_list_element(void *item)
 {
-  stp_param_string_t *string =
-    (stp_param_string_t *) stpi_list_item_get_data(item);
+  stp_param_string_t *string = (stp_param_string_t *) (item);
   stpi_free((char *) string->name);
   stpi_free((char *) string->text);
   stpi_free(string);
 }
 
 static const char *
-namefunc(const stpi_list_item_t *item)
+namefunc(const void *item)
 {
-  stp_param_string_t *string =
-    (stp_param_string_t *) stpi_list_item_get_data(item);
+  stp_param_string_t *string = (stp_param_string_t *) (item);
   return string->name;
 }
 
 static void *
-copyfunc(const stpi_list_item_t *item)
+copyfunc(const void *item)
 {
-  stp_param_string_t *string =
-    (stp_param_string_t *) stpi_list_item_get_data(item);
+  stp_param_string_t *string = (stp_param_string_t *) (item);
   stp_param_string_t *new_string = stpi_malloc(sizeof(stp_param_string_t));
   new_string->name = stpi_strdup(string->name);
   new_string->text = stpi_strdup(string->text);
@@ -59,10 +56,9 @@ copyfunc(const stpi_list_item_t *item)
 }
 
 static const char *
-long_namefunc(const stpi_list_item_t *item)
+long_namefunc(const void *item)
 {
-  stp_param_string_t *string =
-    (stp_param_string_t *) stpi_list_item_get_data(item);
+  stp_param_string_t *string = (stp_param_string_t *) (item);
   return string->text;
 }
 

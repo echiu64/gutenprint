@@ -312,7 +312,7 @@ escp2_has_cap(stp_const_vars_t v, escp2_model_option_t feature,
 }
 
 #define DEF_SIMPLE_ACCESSOR(f, t)					\
-static t								\
+static inline t								\
 escp2_##f(stp_const_vars_t v)						\
 {									\
   if (stp_check_int_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	\
@@ -325,7 +325,7 @@ escp2_##f(stp_const_vars_t v)						\
 }
 
 #define DEF_RAW_ACCESSOR(f, t)						\
-static t								\
+static inline t								\
 escp2_##f(stp_const_vars_t v)						\
 {									\
   if (stp_check_raw_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	\
@@ -338,7 +338,7 @@ escp2_##f(stp_const_vars_t v)						\
 }
 
 #define DEF_COMPOSITE_ACCESSOR(f, t)			\
-static t						\
+static inline t						\
 escp2_##f(stp_const_vars_t v)				\
 {							\
   int model = stpi_get_model_id(v);			\
@@ -346,7 +346,7 @@ escp2_##f(stp_const_vars_t v)				\
 }
 
 #define DEF_ROLL_ACCESSOR(f, t)						     \
-static t								     \
+static inline t								     \
 escp2_##f(stp_const_vars_t v, int rollfeed)				     \
 {									     \
   if (stp_check_int_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	     \
@@ -862,6 +862,15 @@ escp2_find_resolution(stp_const_vars_t v, const char *resolution)
   return NULL;
 }
 
+static inline int
+imax(int a, int b)
+{
+  if (a > b)
+    return a;
+  else
+    return b;
+}
+
 static void
 internal_imageable_area(stp_const_vars_t v, int use_paper_margins,
 			int *left, int *right, int *bottom, int *top)
@@ -903,10 +912,10 @@ internal_imageable_area(stp_const_vars_t v, int use_paper_margins,
       top_margin = pt->top;
     }
 
-  left_margin = MAX(left_margin, escp2_left_margin(v, rollfeed));
-  right_margin = MAX(right_margin, escp2_right_margin(v, rollfeed));
-  bottom_margin = MAX(bottom_margin, escp2_bottom_margin(v, rollfeed));
-  top_margin = MAX(top_margin, escp2_top_margin(v, rollfeed));
+  left_margin = imax(left_margin, escp2_left_margin(v, rollfeed));
+  right_margin = imax(right_margin, escp2_right_margin(v, rollfeed));
+  bottom_margin = imax(bottom_margin, escp2_bottom_margin(v, rollfeed));
+  top_margin = imax(top_margin, escp2_top_margin(v, rollfeed));
 
   *left =	left_margin;
   *right =	width - right_margin;

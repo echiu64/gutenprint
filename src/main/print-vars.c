@@ -102,31 +102,47 @@ static stpi_internal_vars_t default_vars =
 };
 
 static void
+null_vars(void)
+{
+  stpi_erprintf("Null stp_vars_t! Please report this bug.\n");
+  stpi_abort();
+}  
+
+static void
+bad_vars(void)
+{
+  stpi_erprintf("Bad stp_vars_t! Please report this bug.\n");
+  stpi_abort();
+}
+
+static inline void
 check_vars(const stpi_internal_vars_t *v)
 {
   if (v == NULL)
-    {
-      stpi_erprintf("Null stp_vars_t! Please report this bug.\n");
-      stpi_abort();
-    }
+    null_vars();
   if (v->cookie != COOKIE_VARS)
-    {
-      stpi_erprintf("Bad stp_vars_t! Please report this bug.\n");
-      stpi_abort();
-    }
+    bad_vars();
+}
+
+static inline stpi_internal_vars_t *
+get_vars(stp_const_vars_t vars)
+{
+  stpi_internal_vars_t *val = (stpi_internal_vars_t *) vars;
+  check_vars(val);
+  return val;
 }
 
 static const char *
-value_namefunc(const stpi_list_item_t *item)
+value_namefunc(const void *item)
 {
-  const value_t *v = (value_t *)stpi_list_item_get_data(item);
+  const value_t *v = (value_t *) (item);
   return v->name;
 }
 
 static void
-value_freefunc(stpi_list_item_t *item)
+value_freefunc(void *item)
 {
-  value_t *v = (value_t *)stpi_list_item_get_data(item);
+  value_t *v = (value_t *) (item);
   switch (v->typ)
     {
     case STP_PARAMETER_TYPE_STRING_LIST:
@@ -157,10 +173,10 @@ create_vars_list(void)
 }
 
 static value_t *
-value_copy(const stpi_list_item_t *item)
+value_copy(const void *item)
 {
   value_t *ret = stpi_malloc(sizeof(value_t));
-  const value_t *v = (value_t *)stpi_list_item_get_data(item);
+  const value_t *v = (value_t *) (item);
   ret->name = stpi_strdup(v->name);
   ret->typ = v->typ;
   ret->active = v->active;
@@ -201,23 +217,23 @@ copy_value_list(const stpi_list_t *src)
   const stpi_list_item_t *item = stpi_list_get_start((const stpi_list_t *)src);
   while (item)
     {
-      stpi_list_item_create(ret, NULL, value_copy(item));
+      stpi_list_item_create(ret, NULL, value_copy(stpi_list_item_get_data(item)));
       item = stpi_list_item_next(item);
     }
   return ret;
 }
 
 static const char *
-compdata_namefunc(const stpi_list_item_t *item)
+compdata_namefunc(const void *item)
 {
-  const compdata_t *cd = (compdata_t *)stpi_list_item_get_data(item);
+  const compdata_t *cd = (compdata_t *) (item);
   return cd->name;
 }
 
 static void
-compdata_freefunc(stpi_list_item_t *item)
+compdata_freefunc(void *item)
 {
-  compdata_t *cd = (compdata_t *)stpi_list_item_get_data(item);
+  compdata_t *cd = (compdata_t *) (item);
   if (cd->freefunc)
     (cd->freefunc)(cd->data);
   stpi_free(cd->name);
@@ -225,9 +241,9 @@ compdata_freefunc(stpi_list_item_t *item)
 }
 
 static void *
-compdata_copyfunc(const stpi_list_item_t *item)
+compdata_copyfunc(const void *item)
 {
-  compdata_t *cd = (compdata_t *)stpi_list_item_get_data(item);
+  compdata_t *cd = (compdata_t *) (item);
   if (cd->copyfunc)
     return (cd->copyfunc)(cd->data);
   else
@@ -242,9 +258,8 @@ stpi_allocate_component_data(stp_vars_t vv,
 			     void *data)
 {
   compdata_t *cd = stpi_malloc(sizeof(compdata_t));
-  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;
+  stpi_internal_vars_t *v = get_vars(vv);
   stpi_list_item_t *item;
-  check_vars(v);
   item = stpi_list_get_item_by_name(v->internal_data, name);
   if (item)
     stpi_list_item_destroy(v->internal_data, item);
@@ -258,9 +273,8 @@ stpi_allocate_component_data(stp_vars_t vv,
 void
 stpi_destroy_component_data(stp_vars_t vv, const char *name)
 {
-  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;
+  stpi_internal_vars_t *v = get_vars(vv);
   stpi_list_item_t *item;
-  check_vars(v);
   item = stpi_list_get_item_by_name(v->internal_data, name);
   if (item)
     stpi_list_item_destroy(v->internal_data, item);
@@ -269,9 +283,8 @@ stpi_destroy_component_data(stp_vars_t vv, const char *name)
 void *
 stpi_get_component_data(stp_const_vars_t vv, const char *name)
 {
-  const stpi_internal_vars_t *v = (const stpi_internal_vars_t *) vv;
+  const stpi_internal_vars_t *v = get_vars(vv);
   stpi_list_item_t *item;
-  check_vars(v);
   item = stpi_list_get_item_by_name(v->internal_data, name);
   if (item)
     return ((compdata_t *) stpi_list_item_get_data(item))->data;
@@ -340,8 +353,7 @@ void
 stp_vars_free(stp_vars_t vv)
 {
   int i;
-  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;
-  check_vars(v);
+  stpi_internal_vars_t *v = get_vars(vv);
   for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
     stpi_list_destroy(v->params[i]);
   stpi_list_destroy(v->internal_data);
@@ -349,55 +361,50 @@ stp_vars_free(stp_vars_t vv)
   stpi_free(v);
 }
 
-#define DEF_STRING_FUNCS(s, i)						\
-void									\
-stp##i##_set_##s(stp_vars_t vv, const char *val)			\
-{									\
-  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;		\
-  check_vars(v);							\
-  if (v->s == val)							\
-    return;								\
-  SAFE_FREE(v->s);							\
-  v->s = stpi_strdup(val);						\
-  v->verified = 0;							\
-}									\
-									\
-void									\
-stp##i##_set_##s##_n(stp_vars_t vv, const char *val, int n)		\
-{									\
-  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;		\
-  check_vars(v);							\
-  if (v->s == val)							\
-    return;								\
-  SAFE_FREE(v->s);							\
-  v->s = stpi_strndup(val, n);						\
-  v->verified = 0;							\
-}									\
-									\
-const char *								\
-stp##i##_get_##s(stp_const_vars_t vv)					\
-{									\
-  const stpi_internal_vars_t *v = (const stpi_internal_vars_t *) vv;	\
-  check_vars(v);							\
-  return v->s;								\
+#define DEF_STRING_FUNCS(s, i)					\
+void								\
+stp##i##_set_##s(stp_vars_t vv, const char *val)		\
+{								\
+  stpi_internal_vars_t *v = get_vars(vv);			\
+  if (v->s == val)						\
+    return;							\
+  SAFE_FREE(v->s);						\
+  v->s = stpi_strdup(val);					\
+  v->verified = 0;						\
+}								\
+								\
+void								\
+stp##i##_set_##s##_n(stp_vars_t vv, const char *val, int n)	\
+{								\
+  stpi_internal_vars_t *v = get_vars(vv);			\
+  if (v->s == val)						\
+    return;							\
+  SAFE_FREE(v->s);						\
+  v->s = stpi_strndup(val, n);					\
+  v->verified = 0;						\
+}								\
+								\
+const char *							\
+stp##i##_get_##s(stp_const_vars_t vv)				\
+{								\
+  const stpi_internal_vars_t *v = get_vars(vv);			\
+  return v->s;							\
 }
 
-#define DEF_FUNCS(s, t, u, i)						\
-u void									\
-stp##i##_set_##s(stp_vars_t vv, t val)					\
-{									\
-  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;		\
-  check_vars(v);							\
-  v->verified = 0;							\
-  v->s = val;								\
-}									\
-									\
-u t									\
-stp##i##_get_##s(stp_const_vars_t vv)					\
-{									\
-  const stpi_internal_vars_t *v = (const stpi_internal_vars_t *) vv;	\
-  check_vars(v);							\
-  return v->s;								\
+#define DEF_FUNCS(s, t, u, i)			\
+u void						\
+stp##i##_set_##s(stp_vars_t vv, t val)		\
+{						\
+  stpi_internal_vars_t *v = get_vars(vv);	\
+  v->verified = 0;				\
+  v->s = val;					\
+}						\
+						\
+u t						\
+stp##i##_get_##s(stp_const_vars_t vv)		\
+{						\
+  const stpi_internal_vars_t *v = get_vars(vv);	\
+  return v->s;					\
 }
 
 #define DEF_INTERNAL_STRING_FUNCS(s) DEF_STRING_FUNCS(s, i)
@@ -426,16 +433,14 @@ DEF_INTERNAL_FUNCS(output_color_model, int, )
 void
 stpi_set_verified(stp_vars_t vv, int val)
 {
-  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;
-  check_vars(v);
+  stpi_internal_vars_t *v = get_vars(vv);
   v->verified = val;
 }
 
 int
 stpi_get_verified(stp_const_vars_t vv)
 {
-  const stpi_internal_vars_t *v = (const stpi_internal_vars_t *) vv;
-  check_vars(v);
+  const stpi_internal_vars_t *v = get_vars(vv);
   return v->verified;
 }
 
@@ -1368,18 +1373,16 @@ stp_set_printer_defaults(stp_vars_t v, stp_const_printer_t printer)
 }
 
 static const char *
-param_namefunc(const stpi_list_item_t *item)
+param_namefunc(const void *item)
 {
-  const stp_parameter_t *param =
-    (const stp_parameter_t *) stpi_list_item_get_data(item);
+  const stp_parameter_t *param = (const stp_parameter_t *)(item);
   return param->name;
 }
 
 static const char *
-param_longnamefunc(const stpi_list_item_t *item)
+param_longnamefunc(const void *item)
 {
-  const stp_parameter_t *param =
-    (const stp_parameter_t *) stpi_list_item_get_data(item);
+  const stp_parameter_t *param = (const stp_parameter_t *) (item);
   return param->text;
 }
 

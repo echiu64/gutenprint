@@ -44,9 +44,9 @@
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
 
 
-static void stpi_printer_freefunc(stpi_list_item_t *item);
-static const char* stpi_printer_namefunc(const stpi_list_item_t *item);
-static const char* stpi_printer_long_namefunc(const stpi_list_item_t *item);
+static void stpi_printer_freefunc(void *item);
+static const char* stpi_printer_namefunc(const void *item);
+static const char* stpi_printer_long_namefunc(const void *item);
 
 static stpi_list_t *printer_list = NULL;
 
@@ -55,6 +55,7 @@ static stpi_list_t *printer_list = NULL;
 typedef struct stpi_internal_printer
 {
   int        cookie;            /* Magic number */
+  const char *driver;
   char       *long_name;        /* Long name for UI */
   char       *family;           /* Printer family */
   int        model;             /* Model number */
@@ -89,18 +90,35 @@ stp_printer_model_count(void)
 }
 
 static void
+null_printer(void)
+{
+  stpi_erprintf("Null stp_printer_t! Please report this bug.\n");
+  stpi_abort();
+}  
+
+static void
+bad_printer(void)
+{
+  stpi_erprintf("Bad stp_printer_t! Please report this bug.\n");
+  stpi_abort();
+}
+
+static inline void
 check_printer(const stpi_internal_printer_t *p)
 {
   if (p == NULL)
-    {
-      stpi_erprintf("Null stp_printer_t! Please report this bug.\n");
-      stpi_abort();
-    }
+    null_printer();
   if (p->cookie != COOKIE_PRINTER)
-    {
-      stpi_erprintf("Bad stp_printer_t! Please report this bug.\n");
-      stpi_abort();
-    }
+    bad_printer();
+}
+
+static inline const stpi_internal_printer_t *
+get_printer(stp_const_printer_t printer)
+{
+  const stpi_internal_printer_t *val =
+    (const stpi_internal_printer_t *) printer;
+  check_printer(val);
+  return val;
 }
 
 stp_const_printer_t
@@ -120,73 +138,68 @@ stp_get_printer_by_index(int idx)
 }
 
 static void
-stpi_printer_freefunc(stpi_list_item_t *item)
+stpi_printer_freefunc(void *item)
 {
   stpi_internal_printer_t *printer =
-    (stpi_internal_printer_t *) stpi_list_item_get_data(item);
-  check_printer(printer);
+    (stpi_internal_printer_t *) get_printer(item);
   stpi_free(printer->long_name);
   stpi_free(printer->family);
   stpi_free(printer);
 }
 
-static const char *
-stpi_printer_namefunc(const stpi_list_item_t *item)
+const char *
+stp_printer_get_driver(stp_const_printer_t p)
 {
-  stp_printer_t printer = (stp_printer_t) stpi_list_item_get_data(item);
-  return stp_printer_get_driver(printer);
+  const stpi_internal_printer_t *val = get_printer(p);
+  return val->driver;
 }
 
 static const char *
-stpi_printer_long_namefunc(const stpi_list_item_t *item)
+stpi_printer_namefunc(const void *item)
 {
-  stp_printer_t printer = (stp_printer_t) stpi_list_item_get_data(item);
-  return stp_printer_get_long_name(printer);
+  const stpi_internal_printer_t *val = get_printer(item);
+  return val->driver;
 }
 
 const char *
 stp_printer_get_long_name(stp_const_printer_t p)
 {
-  const stpi_internal_printer_t *val = (const stpi_internal_printer_t *) p;
-  check_printer(val);
+  const stpi_internal_printer_t *val = get_printer(p);
   return val->long_name;
 }
 
-const char *
-stp_printer_get_driver(stp_const_printer_t p)
+static const char *
+stpi_printer_long_namefunc(const void *item)
 {
-  return stp_get_driver(stp_printer_get_defaults(p));
+  const stpi_internal_printer_t *val = get_printer(item);
+  return val->long_name;
 }
 
 const char *
 stp_printer_get_family(stp_const_printer_t p)
 {
-  const stpi_internal_printer_t *val = (const stpi_internal_printer_t *) p;
-  check_printer(val);
+  const stpi_internal_printer_t *val = get_printer(p);
   return val->family;
 }
 
 int
 stp_printer_get_model(stp_const_printer_t p)
 {
-  const stpi_internal_printer_t *val = (const stpi_internal_printer_t *) p;
-  check_printer(val);
+  const stpi_internal_printer_t *val = get_printer(p);
   return val->model;
 }
 
-static const stpi_printfuncs_t *
+static inline const stpi_printfuncs_t *
 stpi_get_printfuncs(stp_const_printer_t p)
 {
-  const stpi_internal_printer_t *val = (const stpi_internal_printer_t *) p;
-  check_printer(val);
+  const stpi_internal_printer_t *val = get_printer(p);
   return val->printfuncs;
 }
 
 stp_const_vars_t
 stp_printer_get_defaults(stp_const_printer_t p)
 {
-  const stpi_internal_printer_t *val = (const stpi_internal_printer_t *) p;
-  check_printer(val);
+  const stpi_internal_printer_t *val = get_printer(p);
   return (stp_vars_t) val->printvars;
 }
 
@@ -247,8 +260,9 @@ stp_get_printer(stp_const_vars_t v)
 int
 stpi_get_model_id(stp_const_vars_t v)
 {
-  stp_const_printer_t p = stp_get_printer(v);
-  return stp_printer_get_model(p);
+  stp_const_printer_t p = stp_get_printer_by_driver(stp_get_driver(v));
+  const stpi_internal_printer_t *val = get_printer(p);
+  return val->model;
 }
 
 stp_parameter_list_t
@@ -689,7 +703,7 @@ int
 stpi_family_register(stpi_list_t *family)
 {
   stpi_list_item_t *printer_item;
-  stpi_internal_printer_t *printer;
+  const stpi_internal_printer_t *printer;
 
   if (printer_list == NULL)
     {
@@ -705,9 +719,7 @@ stpi_family_register(stpi_list_t *family)
 
       while(printer_item)
 	{
-	  printer = (stpi_internal_printer_t *)
-	    stpi_list_item_get_data(printer_item);
-	  check_printer(printer);
+	  printer = get_printer(stpi_list_item_get_data(printer_item));
 	  if (!stpi_list_get_item_by_name(printer_list,
 					 stp_get_driver(printer->printvars)))
 	    stpi_list_item_create(printer_list, NULL, printer);
@@ -723,7 +735,7 @@ stpi_family_unregister(stpi_list_t *family)
 {
   stpi_list_item_t *printer_item;
   stpi_list_item_t *old_printer_item;
-  stpi_internal_printer_t *printer;
+  const stpi_internal_printer_t *printer;
 
   if (printer_list == NULL)
     {
@@ -739,9 +751,7 @@ stpi_family_unregister(stpi_list_t *family)
 
       while(printer_item)
 	{
-	  printer = (stpi_internal_printer_t *)
-	    stpi_list_item_get_data(printer_item);
-	  check_printer(printer);
+	  printer = get_printer(stpi_list_item_get_data(printer_item));
 	  old_printer_item =
 	    stpi_list_get_item_by_name(printer_list,
 				      stp_get_driver(printer->printvars));
@@ -794,7 +804,7 @@ stp_printer_create_from_xmltree(xmlNodePtr printer, /* The printer node */
     color = 0,                                        /* Check color */
     model = 0;                                        /* Check model */
 
-  outprinter = stpi_malloc(sizeof(stpi_internal_printer_t));
+  outprinter = stpi_zalloc(sizeof(stpi_internal_printer_t));
   if (!outprinter)
     return NULL;
   outprinter->printvars = stp_vars_create();
@@ -877,6 +887,7 @@ stp_printer_create_from_xmltree(xmlNodePtr printer, /* The printer node */
 	  stpi_erprintf("stp_printer_create_from_xmltree: printer: %s\n", stmp);
 	  xmlFree(stmp);
 	}
+      outprinter->driver = stp_get_driver(outprinter->printvars);
       return outprinter;
     }
   stpi_free(outprinter);
