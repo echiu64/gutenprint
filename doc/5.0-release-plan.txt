@@ -275,7 +275,7 @@ IMPORTANT: functionality that is expected by a broad class of users,
 
     * Mandatory:
 
-      + GIMP 2.0 Print plugin.  Due to delays in our release cycle,
+X     + GIMP 2.0 Print plugin.  Due to delays in our release cycle,
         The GIMP released its 2.0 release prior to our 5.0 release.
         This Print plugin needs to be easier to use than the current
         plugin.
@@ -284,6 +284,10 @@ IMPORTANT: functionality that is expected by a broad class of users,
 	the Print plugin.
 
 	Needed for BETA.
+
+	This is COMPLETE as of June 22, 2004.  This will be handed off
+	to the GIMP team at some point for inclusion in the GIMP tree
+	rather than ours.
 
 X     + Elimination of libxml2 dependency.  OS X and at least some
         commercial UNIX variants do not bundle this with the OS, so
@@ -302,11 +306,14 @@ X     + Update of the Foomatic data to the new data scheme.  The
 
     * Critical:
 
-      + Duplex support on appropriate printers.  This is RFE 644811.
+X     + Duplex support on appropriate printers.  This is RFE 644811.
 
 	Dave Hill is presently working on this.  It would be very
 	desirable to have this for beta, as it is a highly requested
 	item.
+
+	This is now active for the pcl-4 and pcl-900 drivers as of
+	June 20, 2004.
 
 X     + Resolution of all OS X printing issues.  There are a number of
         OS X problems (mostly related to the USB output driver, but
@@ -487,12 +494,6 @@ X     + Header file reorganization.  The purpose of this project is to
 	If this is to be done, it should be done by BETA for
 	stability.
 
-X     + Header file reorganization.  The purpose of this project is to
-        create a supported internal API for modules.
-
-	Needed prior to BETA, as change is pervasive and will break
-	programs.
-
 
 Proposed release schedule:
 -------- ------- --------
@@ -502,7 +503,7 @@ Alpha freeze (slush)		07/15/2003			N/A
 Alpha 1				07/25/2003			01/11/2004
 Alpha 2				08/08/2003			04/11/2004
 Alpha 3				08/22/2003			05/12/2004
-Beta freeze			09/05/2003
+Beta freeze			09/05/2003			06/22/2004
 Beta 1				09/12/2003
 Beta 2				10/03/2003
 Beta 3				10/24/2003
