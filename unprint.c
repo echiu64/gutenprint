@@ -374,21 +374,31 @@ int update_page(unsigned char *buf,int bufsize,int m,int n,int color,int density
 }
 
 
+
+#define get1(error) if (!(count=fread(&ch,1,1,fp_r)))\
+{fprintf(stderr,error);eject=1;continue;} else counter+=count;
+
+#define get2(error) {if(!(count=fread(minibuf,1,2,fp_r))){\
+fprintf(stderr,error);eject=1;continue;} else counter+=count;\
+sh=minibuf[0]+minibuf[1]*256;}
+
+#define getn(n,error) if (!(count=fread(buf,1,n,fp_r)))\
+{fprintf(stderr,error);eject=1;continue;} else counter+=count;
+
+#define getnoff(n,offset,error) if (!(count=fread(buf+offset,1,n,fp_r))){\
+fprintf(stderr,error);eject=1;continue;} else counter+=count;
+
+
+
 void parse_escp2(FILE *fp_r){
 
   int i,m=0,n=0,c=0;
   int currentcolor,currentbpp,density,eject,got_graphics;
   int count,counter;
 
-counter=0;
-#define get1(error) if (!(count=fread(&ch,1,1,fp_r))) {fprintf(stderr,error);eject=1;continue;} else counter+=count;
-#define get2(error) {if(!(count=fread(minibuf,1,2,fp_r))){\
-                       fprintf(stderr,error);eject=1;continue;} else counter+=count;\
-                       sh=minibuf[0]+minibuf[1]*256;}
-#define getn(n,error) if (!(count=fread(buf,1,n,fp_r))){fprintf(stderr,error);eject=1;continue;} else counter+=count;
-#define getnoff(n,offset,error) if (!(count=fread(buf+offset,1,n,fp_r))){fprintf(stderr,error);eject=1;continue;} else counter+=count;
+  counter=0;
+  eject=got_graphics=currentbpp=currentcolor=density=0;
 
-    eject=got_graphics=currentbpp=currentcolor=density=0;
     while ((!eject)&&(fread(&ch,1,1,fp_r))){
       counter++;
       if (ch==0xd) { /* carriage return */
@@ -800,7 +810,7 @@ int rle_decode(unsigned char *inbuf, int n, int max)
     }
   }
   if (o>=max) {
-    fprintf(stderr,"Warning: rle decompression exceeds output buffer - dumped\n");
+    fprintf(stderr,"Warning: rle decompression exceeds output buffer.\n");
     return 0;
   }
   /* copy decompressed data to inbuf: */
@@ -819,13 +829,7 @@ void parse_canon(FILE *fp_r){
   int count,counter,cmdcounter;
 
   counter=0;
-#define get1(error) if (!(count=fread(&ch,1,1,fp_r))) {fprintf(stderr,error);eject=1;continue;} else counter+=count;
-#define get2(error) {if(!(count=fread(minibuf,1,2,fp_r))){\
-                       fprintf(stderr,error);eject=1;continue;} else counter+=count;\
-                       sh=minibuf[0]+minibuf[1]*256;}
-#define getn(n,error) if (!(count=fread(buf,1,n,fp_r))){fprintf(stderr,error);eject=1;continue;} else counter+=count;
-#define getnoff(n,offset,error) if (!(count=fread(buf+offset,1,n,fp_r))){fprintf(stderr,error);eject=1;continue;} else counter+=count;
- 
+  
   page= 0;
   eject=got_graphics=currentbpp=currentcolor=density=0;
   while ((!eject)&&(fread(&ch,1,1,fp_r))){
@@ -857,7 +861,8 @@ void parse_canon(FILE *fp_r){
      continue;
    }
    if (ch!=0x1b) {
-     fprintf(stderr,"Corrupt file?  No ESC found.  Found: %02X at 0x%08X\n",ch,counter-1);
+     fprintf(stderr,"Corrupt file?  No ESC found.  Found: %02X at 0x%08X\n",
+	     ch,counter-1);
      continue;
    }
    get1("Corrupt file.  No command found.\n");
@@ -897,7 +902,8 @@ void parse_canon(FILE *fp_r){
 	 fprintf(stderr,"canon: init printer\n");
        }
      } else {
-       fprintf(stderr,"Warning: Unknown command ESC %c 0x%X at 0x%08X.\n",0x5b,ch,cmdcounter);
+       fprintf(stderr,"Warning: Unknown command ESC %c 0x%X at 0x%08X.\n",
+	       0x5b,ch,cmdcounter);
      }
      break;
      
@@ -937,7 +943,7 @@ void parse_canon(FILE *fp_r){
        m= rle_decode(buf+1,bufsize-1,256*256-1);
        /* reverse_bit_order(buf+1,m); */
        if (m) update_page(buf+1,m,1,(m*8)/pstate.bpp,currentcolor,
-			  /*currentbpp,*/pstate.absolute_vertical_units);
+			  pstate.absolute_vertical_units);
 #ifdef DEBUG_CANON
        fprintf(stderr,"%c:%d>%d  ",*buf,sh-1,m); 
 #endif
@@ -963,7 +969,8 @@ void parse_canon(FILE *fp_r){
        pstate.bottom_margin= pstate.relative_vertical_units* 22; 
        /* FIXME: replace with real page length */
        fprintf(stderr,"canon: res is %d x %d dpi\n",
-	       pstate.relative_horizontal_units,pstate.relative_vertical_units);
+	       pstate.relative_horizontal_units,
+	       pstate.relative_vertical_units);
 
        page=(line_type **)mycalloc(pstate.bottom_margin,sizeof(line_type *));
        break;
