@@ -65,6 +65,7 @@ CLEANFILES = printdefl.c printdefy.c printdefy.h print-printers.c \
 	$(addprefix Ghost/, $(GCOPY))
 
 MAINTAINERCLEANFILES = configure Makefile.in aclocal.m4
+MAINTAINERdir = $(bindir)
 
 INCLUDES = \
  -I$(top_srcdir)\
