@@ -1379,6 +1379,9 @@ compute_lut(size_t steps, vars_t *uv)
 const static papersize_t paper_sizes[] =
 {
   /* Common imperial page sizes */
+  { "Letter",   612,  792, PAPERSIZE_ENGLISH },	/* 8.5in x 11in */
+  { "Legal",    612, 1008, PAPERSIZE_ENGLISH },	/* 8.5in x 14in */
+  { "Tabloid",  792, 1224, PAPERSIZE_ENGLISH },	/*  11in x 17in */
   { "Postcard", 283,  416, PAPERSIZE_ENGLISH },	/* 100mm x 147mm */
   { "4x6",      288,  432, PAPERSIZE_ENGLISH },
   { "5x7",      360,  504, PAPERSIZE_ENGLISH },
@@ -1386,9 +1389,6 @@ const static papersize_t paper_sizes[] =
   { "6x8",      432,  576, PAPERSIZE_ENGLISH },
   { "8x10",     576,  720, PAPERSIZE_ENGLISH },
   { "Manual",   396,  612, PAPERSIZE_ENGLISH },	/* 5.5in x 8.5in */
-  { "Letter",   612,  792, PAPERSIZE_ENGLISH },	/* 8.5in x 11in */
-  { "Legal",    612, 1008, PAPERSIZE_ENGLISH },	/* 8.5in x 14in */
-  { "Tabloid",  792, 1224, PAPERSIZE_ENGLISH },	/*  11in x 17in */
   { "12x18",    864, 1296, PAPERSIZE_ENGLISH },
   { "13x19",    936, 1368, PAPERSIZE_ENGLISH },
 
