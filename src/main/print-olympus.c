@@ -406,24 +406,27 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
   int xdpi, ydpi;	/* Resolution */
 
   /* image in pixels */
-  unsigned short image_width  = stpi_image_width(image);
-  unsigned short image_height = stpi_image_height(image);
-  unsigned short image_left, image_right, image_top, image_bottom;
+  unsigned short image_px_width  = stpi_image_width(image);
+  unsigned short image_px_height = stpi_image_height(image);
 
   /* output in 1/72" */
-  int width  = stp_get_width(v);
-  int height = stp_get_height(v);
-  int left   = stp_get_left(v);
-  int top    = stp_get_top(v);
+  int out_pt_width  = stp_get_width(v);
+  int out_pt_height = stp_get_height(v);
+  int out_pt_left   = stp_get_left(v);
+  int out_pt_top    = stp_get_top(v);
+
+  /* output in pixels */
+  int out_px_width, out_px_height;
+  int out_px_left, out_px_right, out_px_top, out_px_bottom;
 
   /* page in 1/72" */
-  int page_width = stp_get_page_width(v);
-  int page_height = stp_get_page_height(v);
-  int page_left, page_right, page_top, page_bottom;
+  int page_pt_width  = stp_get_page_width(v);
+  int page_pt_height = stp_get_page_height(v);
+  int page_pt_left, page_pt_right, page_pt_top, page_pt_bottom;
 
   /* page w/out borders in pixels (according to selected dpi) */
-  int print_width  = res->x_max_res;
-  int print_height = res->y_max_res;
+  int print_px_width  = res->x_max_res;
+  int print_px_height = res->y_max_res;
   
   unsigned char  copies = 1;
   unsigned short hi_speed = 1;
@@ -438,46 +441,57 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
     }
 
   stp_describe_resolution(nv, &xdpi, &ydpi);
-  olympus_imageable_area(v, &page_left, &page_right,
-    &page_bottom, &page_top);
+  olympus_imageable_area(v, &page_pt_left, &page_pt_right,
+	&page_pt_bottom, &page_pt_top);
 
-  image_left   = (left - page_left) * xdpi / 72;
-  image_left   = (image_left + image_width > print_width ?
-    print_width - image_width : image_left); /* we correct bad rounding */
-  image_top    = (top  - page_top)  * ydpi / 72;
-  image_top    = (image_top + image_height > print_height ?
-    print_height - image_height: image_top);
-  image_right  = image_left + image_width;
-  image_bottom = image_top  + image_height;
+  out_px_width  = out_pt_width  * xdpi / 72;
+  out_px_height = out_pt_height * ydpi / 72;
+
+  out_px_width  = (out_px_width > print_px_width ?
+		  print_px_width : out_px_width);
+  out_px_height = (out_px_height > print_px_height ?
+		  print_px_height : out_px_height);
+  out_px_left   = (out_pt_left - page_pt_left) * xdpi / 72;
+  out_px_left   = (out_px_left + out_px_width > print_px_width ?
+  	print_px_width - out_px_width :
+	out_px_left);				/* correct bad rounding :( */
+  out_px_top    = (out_pt_top  - page_pt_top)  * ydpi / 72;
+  out_px_top    = (out_px_top + out_px_height > print_px_height ?
+  	print_px_height - out_px_height :
+	out_px_top);
+  out_px_right  = out_px_left + out_px_width;
+  out_px_bottom = out_px_top  + out_px_height;
   
 /*
-  stpi_eprintf(v, "paper        %d x %d\n"
-		"image        %d x %d\n"
-		"image(72dpi) %d x %d\n"
-		"* out        %d x %d\n"
-		"* left x top %d x %d\n"
-		"image left x top %d x %d\n"
-		"border (%d - %d) = %d x (%d - %d) = %d\n"
-		"printable pixels   %d x %d\n"
-		"res                %d x %d\n",
-		page_width, page_height,
-		image_width, image_height,
-		image_width * 72 / xdpi, image_height * 72 / ydpi,
-		width, height,
-		left, top,
-		image_left, image_top,
-		page_right, page_left, page_right - page_left,
-		  page_bottom, page_top, page_bottom - page_top,
-		print_width, print_height,
+  stpi_eprintf(v, "paper (pt)   %d x %d\n"
+		"image (px)   %d x %d\n"
+		"image (pt)   %d x %d\n"
+		"* out (pt)   %d x %d\n"
+		"* out (px)   %d x %d\n"
+		"* left x top (pt) %d x %d\n"
+		"* left x top (px) %d x %d\n"
+		"border (pt) (%d - %d) = %d x (%d - %d) = %d\n"
+		"printable pixels (px)   %d x %d\n"
+		"res (dpi)               %d x %d\n",
+		page_pt_width, page_pt_height,
+		image_px_width, image_px_height,
+		image_px_width * 72 / xdpi, image_px_height * 72 / ydpi,
+		out_pt_width, out_pt_height,
+		out_px_width, out_px_height,
+		out_pt_left, out_pt_top,
+		out_px_left, out_px_top,
+		page_pt_right, page_pt_left, page_pt_right - page_pt_left,
+		  page_pt_bottom, page_pt_top, page_pt_bottom - page_pt_top,
+		print_px_width, print_px_height,
 		xdpi, ydpi
 		);	
 */
 
   /* skip the job if image is not approximately the same size as output */
-  if (width - image_width * 72 / xdpi < -2
-      || width - image_width * 72 / xdpi > 2
-      || height - image_height * 72 / ydpi < -2
-      || height - image_height * 72 / ydpi > 2)
+  if (out_px_width - image_px_width < -2
+      || out_px_width - image_px_width > 2
+      || out_px_height - image_px_height < -2
+      || out_px_height - image_px_height > 2)
     {
       stpi_eprintf(nv, _("This driver is under development.\n\n"
         "It can't rescale your image at present. \n"
@@ -516,13 +530,13 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
     }
 
   if (out_channels != ink_channels)
-    final_out = stpi_malloc(print_width * ink_channels * 2);
+    final_out = stpi_malloc(print_px_width * ink_channels * 2);
 
   stp_set_float_parameter(nv, "Density", 1.0);
 
   stpi_image_progress_init(image);
 
-  zeros = stpi_zalloc(print_width+1);
+  zeros = stpi_zalloc(print_px_width+1);
   
   /* printer init */
   stpi_zfwrite("\033\033\033C\033N", 1, 6, nv);
@@ -542,10 +556,10 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
     {
     if (caps->need_empty_rows) {
       min_y = 0;
-      max_y = print_height - 1;
+      max_y = print_px_height - 1;
     } else {
-      min_y = image_top & 0xfff0;
-      max_y = ((image_bottom - 1) | 0x000f);
+      min_y = out_px_top & 0xfff0;
+      max_y = ((out_px_bottom - 1) | 0x000f);
     }
     
     max_progress = max_y - min_y;
@@ -563,37 +577,37 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
 	stpi_putc(y >> 8, nv);
 	stpi_putc(y & 0xff, nv);
 
-	min_x = (caps->need_empty_cols ? 0 : image_left);
+	min_x = (caps->need_empty_cols ? 0 : out_px_left);
 	stpi_putc(min_x >> 8, nv);
 	stpi_putc(min_x & 0xff, nv);
 	
 	stpi_putc((y + 15) >> 8, nv);
 	stpi_putc((y + 15) & 0xff, nv);
 	
-	max_x = (caps->need_empty_cols ? print_width - 1 : image_right);
+	max_x = (caps->need_empty_cols ? print_px_width - 1 : out_px_right);
 	stpi_putc(max_x >> 8, nv);
 	stpi_putc(max_x & 0xff, nv);
 	}
       
 
-      if (y < image_top || y >= image_bottom)
+      if ((y & 63) == 0)
         {
-	stpi_zfwrite((char *) zeros, 1, print_width, nv);
+        stpi_image_note_progress(image, max_progress/3 * (l - layers) + y / 3,
+            max_progress);
+        }
+      if (y < out_px_top || y >= out_px_bottom)
+        {
+	stpi_zfwrite((char *) zeros, 1, print_px_width, nv);
 	}
       else
         {
-        if (caps->need_empty_cols && image_left > 0)
+        if (caps->need_empty_cols && out_px_left > 0)
 	  {
-          stpi_zfwrite((char *) zeros, 1, image_left, nv);
-/* stpi_erprintf("left %d ", image_left); */
+          stpi_zfwrite((char *) zeros, 1, out_px_left, nv);
+/* stpi_erprintf("left %d ", out_px_left); */
 	  }
-        if ((y & 63) == 0)
-          {
-    	  stpi_image_note_progress(image, max_progress/3 * (l - layers) + y / 3,
-            max_progress);
-          }
 
-        if (stpi_color_get_row(nv, image, y - image_top, &zero_mask))
+        if (stpi_color_get_row(nv, image, y - out_px_top, &zero_mask))
           {
   	  status = 2;
   	  break;
@@ -605,7 +619,7 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
   	  real_out = final_out;
   	  if (out_channels < ink_channels)
   	    {
-  	      for (i = 0; i < image_width; i++)
+  	      for (i = 0; i < out_px_width; i++)
   		{
   		  for (j = 0; j < ink_channels; j++)
   		    final_out[i * ink_channels + j] = out[i];
@@ -613,7 +627,7 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
   	    }
   	  else
   	    {
-  	      for (i = 0; i < image_width; i++)
+  	      for (i = 0; i < out_px_width; i++)
   		{
   		  int avg = 0;
   		  for (j = 0; j < out_channels; j++)
@@ -623,15 +637,15 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
   	    }
   	}
   	char_out = (unsigned char *) real_out;
-  	for (i = 0; i < image_width; i++)
+  	for (i = 0; i < out_px_width; i++)
   	  char_out[i] = real_out[i * ink_channels + (layers - l + 2)] / 257;
   
-	stpi_zfwrite((char *) real_out, 1, image_width, nv);
-/* stpi_erprintf("data %d ", image_width); */
-        if (caps->need_empty_cols && image_right < print_width)
+	stpi_zfwrite((char *) real_out, 1, out_px_width, nv);
+/* stpi_erprintf("data %d ", out_px_width); */
+        if (caps->need_empty_cols && out_px_right < print_px_width)
 	  {
-          stpi_zfwrite((char *) zeros, 1, print_width - image_right, nv);
-/* stpi_erprintf("right %d ", print_width - image_right); */
+          stpi_zfwrite((char *) zeros, 1, print_px_width - out_px_right, nv);
+/* stpi_erprintf("right %d ", print_px_width - out_px_right); */
 	  }
 /* stpi_erprintf("\n"); */
 	}
