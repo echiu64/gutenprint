@@ -6,7 +6,7 @@ dnl AM_PATH_GIMP([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
 dnl Test for GIMP, and define GIMP_CFLAGS and GIMP_LIBS
 dnl
 AC_DEFUN(AM_PATH_GIMP,
-[dnl
+[dnl 
 dnl Get the cflags and libraries from the gimptool script
 dnl
 AC_ARG_WITH(gimp-prefix,[  --with-gimp-prefix=PFX  Prefix where GIMP is installed (optional)],
@@ -19,17 +19,17 @@ AC_ARG_ENABLE(gimptest, [  --disable-gimptest      Do not try to compile and run
   if test x$gimptool_exec_prefix != x ; then
      gimptool_args="$gimptool_args --exec-prefix=$gimptool_exec_prefix"
      if test x${GIMPTOOL+set} != xset ; then
-        GIMPTOOL=$gimptool_exec_prefix/bin/gimptool
+        GIMPTOOL=$gimptool_exec_prefix/bin/gimptool-1.2
      fi
   fi
   if test x$gimptool_prefix != x ; then
      gimptool_args="$gimptool_args --prefix=$gimptool_prefix"
      if test x${GIMPTOOL+set} != xset ; then
-        GIMPTOOL=$gimptool_prefix/bin/gimptool
+        GIMPTOOL=$gimptool_prefix/bin/gimptool-1.2
      fi
   fi
 
-  AC_PATH_PROG(GIMPTOOL, gimptool, no)
+  AC_PATH_PROG(GIMPTOOL, gimptool-1.2, no)
   min_gimp_version=ifelse([$1], ,1.0.0,$1)
   AC_MSG_CHECKING(for GIMP - version >= $min_gimp_version)
   no_gimp=""
@@ -86,7 +86,7 @@ dnl
       GIMP_MICRO_VERSION >= (micro)))
 #endif
 
-#if GIMP_CHECK_VERSION(1,1,20)
+#if GIMP_CHECK_VERSION(1,1,24)
 GimpPlugInInfo
 #else
 GPlugInInfo
@@ -138,7 +138,7 @@ int main ()
   fi
   if test "x$no_gimp" = x ; then
      AC_MSG_RESULT(yes)
-     ifelse([$2], , :, [$2])
+     ifelse([$2], , :, [$2])     
   else
      AC_MSG_RESULT(no)
      if test "$GIMPTOOL" = "no" ; then
@@ -165,7 +165,7 @@ int main ()
       GIMP_MICRO_VERSION >= (micro)))
 #endif
 
-#if GIMP_CHECK_VERSION(1,1,20)
+#if GIMP_CHECK_VERSION(1,1,24)
 GimpPlugInInfo
 #else
 GPlugInInfo
