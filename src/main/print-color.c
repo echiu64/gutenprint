@@ -55,6 +55,7 @@ typedef struct
   int image_width;
   stp_convert_t colorfunc;
   stp_curve_t composite;
+  stp_curve_t black;
   stp_curve_t cyan;
   stp_curve_t magenta;
   stp_curve_t yellow;
@@ -1133,31 +1134,32 @@ compute_gcr_curve(const stp_vars_t vars)
     k_lower = stp_get_float_parameter(vars, "GCRLower");
   if (stp_check_float_parameter(vars, "Black", STP_PARAMETER_ACTIVE))
     k_gamma = stp_get_float_parameter(vars, "Black");
-  k_upper *= 65535;
-  k_lower *= 65535;
+  k_upper *= lut->steps;
+  k_lower *= lut->steps;
 
-  if (k_lower > 65536)
-    k_lower = 65536;
+  if (k_lower > lut->steps)
+    k_lower = lut->steps;
   if (k_upper < k_lower)
     k_upper = k_lower + 1;
 
-  for (i = 0; i < k_lower; i += step)
+  for (i = 0; i < k_lower; i ++)
     tmp_data[i] = 0;
-  if (k_upper < 65535)
+  if (k_upper < lut->steps)
     {
-      for (i = ceil(k_lower); i < k_upper; i += step)
+      for (i = ceil(k_lower); i < k_upper; i ++)
 	{
 	  double where = (i - k_lower) / (k_upper - k_lower);
-	  tmp_data[i] = k_upper * (1.0 - pow(1.0 - where, k_gamma)) / 65535;
+	  tmp_data[i] = k_upper * (1.0 - pow(1.0 - where, k_gamma)) /
+	    lut->steps;
 	}
-      for (i = ceil(k_upper); i < 65536; i += step)
-	tmp_data[i] = i / 65535.0;
+      for (i = ceil(k_upper); i < lut->steps; i ++)
+	tmp_data[i] = i / (double) lut->steps;
     }
-  else if (k_lower < 65535)
-    for (i = ceil(k_lower); i < 65536; i += step)
+  else if (k_lower < lut->steps)
+    for (i = ceil(k_lower); i < lut->steps; i ++)
       {
 	double where = (i - k_lower) / (k_upper - k_lower);
-	tmp_data[i] = k_upper * pow(where, k_gamma) / 65535;
+	tmp_data[i] = k_upper * pow(where, k_gamma) / lut->steps;
       }
   curve = stp_curve_create(STP_CURVE_WRAP_NONE);
   if (! stp_curve_set_data(curve, lut->steps, tmp_data))
@@ -1181,6 +1183,7 @@ generic_rgb_to_cmyk(const stp_vars_t vars,
   int step = 65535 / (lut->steps - 1); /* 1 or 257 */
 
   const unsigned short *gcr_lookup;
+  const unsigned short *black_lookup;
   size_t points;
   int i;
 
@@ -1193,10 +1196,12 @@ generic_rgb_to_cmyk(const stp_vars_t vars,
 	lut->gcr_curve = compute_gcr_curve(vars);
       stp_curve_rescale(lut->gcr_curve, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
 			STP_CURVE_BOUNDS_RESCALE);
-      stp_curve_resample(lut->gcr_curve, 65536);
     }
 
+  stp_curve_resample(lut->gcr_curve, lut->steps);
   gcr_lookup = stp_curve_get_ushort_data(lut->gcr_curve, &points);
+  stp_curve_resample(lut->black, lut->steps);
+  black_lookup = stp_curve_get_ushort_data(lut->black, &points);
 
   for (i = 0; i < width; i++, out += 4, in += 3)
     {
@@ -1211,13 +1216,14 @@ generic_rgb_to_cmyk(const stp_vars_t vars,
 	out[3] = 0;
       else
 	{
+	  int where, resid;
 	  int kk;
 	  if (lut->steps == 65536)
 	    kk = gcr_lookup[k];
 	  else
 	    {
-	      int where = k / step;
-	      int resid = k % step;
+	      where = k / step;
+	      resid = k % step;
 	      if (resid == 0)
 		kk = gcr_lookup[where];
 	      else
@@ -1226,10 +1232,17 @@ generic_rgb_to_cmyk(const stp_vars_t vars,
 	    }
 	  if (kk > k)
 	    kk = k;
-	  out[3] = kk;
+	  if (lut->steps == 65536)
+	    out[3] = black_lookup[kk];
+	  else
+	    {
+	      where = kk / step;
+	      resid = kk % step;
+	      out[3] = black_lookup[where] +
+		(black_lookup[where + 1] - black_lookup[where]) * resid / step;
+	    }	    
 	  for (j = 0; j < 3; j++)
 	    out[j] -= kk;
-/*	  fprintf(stderr, "k %d kk %d\n", k, kk); */
 	}
     }
 }
@@ -1453,10 +1466,12 @@ allocate_lut(void)
 {
   lut_t *ret = stpi_malloc(sizeof(lut_t));
   ret->composite = stp_curve_create(STP_CURVE_WRAP_NONE);
+  ret->black = stp_curve_create(STP_CURVE_WRAP_NONE);
   ret->cyan = stp_curve_create(STP_CURVE_WRAP_NONE);
   ret->magenta = stp_curve_create(STP_CURVE_WRAP_NONE);
   ret->yellow = stp_curve_create(STP_CURVE_WRAP_NONE);
   stp_curve_set_bounds(ret->composite, 0, 65535);
+  stp_curve_set_bounds(ret->black, 0, 65535);
   stp_curve_set_bounds(ret->cyan, 0, 65535);
   stp_curve_set_bounds(ret->magenta, 0, 65535);
   stp_curve_set_bounds(ret->yellow, 0, 65535);
@@ -1513,6 +1528,8 @@ stpi_free_lut(stp_vars_t v)
       lut_t *lut = (lut_t *)(stpi_get_color_data(v));
       if (lut->composite)
 	stp_curve_free(lut->composite);
+      if (lut->black)
+	stp_curve_free(lut->black);
       if (lut->cyan)
 	stp_curve_free(lut->cyan);
       if (lut->magenta)
@@ -1743,14 +1760,26 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
     {
       stp_curve_copy(lut->composite, composite_curve);
       invert_curve(lut->composite, input_color_model, output_color_model);
+      stp_curve_copy(lut->black, composite_curve);
+/*
+      invert_curve(lut->black, COLOR_MODEL_CMY, COLOR_MODEL_CMY);
+*/
       stp_curve_rescale(lut->composite, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
 			STP_CURVE_BOUNDS_RESCALE);
       stp_curve_resample(lut->composite, steps);
+      stp_curve_rescale(lut->black, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
+			STP_CURVE_BOUNDS_RESCALE);
+      stp_curve_resample(lut->black, steps);
     }
   else
-    compute_a_curve(lut->composite, steps, 1.0, print_gamma, contrast,
-		    app_gamma, brightness, screen_gamma,
-		    input_color_model, output_color_model);
+    {
+      compute_a_curve(lut->composite, steps, 1.0, print_gamma, contrast,
+		      app_gamma, brightness, screen_gamma,
+		      input_color_model, output_color_model);
+      compute_a_curve(lut->black, steps, 1.0, print_gamma, contrast,
+		      app_gamma, brightness, screen_gamma,
+		      COLOR_MODEL_CMY, COLOR_MODEL_CMY);
+    }
   if (cyan_curve)
     {
       stp_curve_copy(lut->cyan, cyan_curve);

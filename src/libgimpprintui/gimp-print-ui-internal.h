@@ -77,7 +77,7 @@ typedef struct
   int is_active;
   int is_enabled;
   GtkWidget *checkbox;
-  struct {
+  union {
     list_option_t list;
     float_option_t flt;
     curve_option_t curve;
@@ -104,6 +104,7 @@ typedef struct
 typedef struct
 {
   unsigned char *base_addr;
+  int bpp;
   off_t offset;
   off_t limit;
 } priv_t;
@@ -128,9 +129,6 @@ typedef struct
 #define SCALE_ENTRY_SPINBUTTON_ADJ(adj) \
         gtk_spin_button_get_adjustment \
         (GTK_SPIN_BUTTON (gtk_object_get_data (GTK_OBJECT (adj), "spinbutton")))
-
-#define SCALE_ENTRY_CHECKBUTTON(adj) \
-        GTK_CHECK_BUTTON (gtk_object_get_data (GTK_OBJECT (adj), "checkbutton"))
 
 /*
  * Function prototypes
@@ -159,8 +157,7 @@ extern void stpui_table_attach_aligned(GtkTable *table, gint column,
 				       gint row, const gchar *label_text,
 				       gfloat xalign, gfloat yalign,
 				       GtkWidget *widget, gint colspan,
-				       gboolean left_align,
-				       gboolean is_optional);
+				       gboolean left_align);
 
 extern GtkWidget *stpui_create_entry(GtkWidget *table, int hpos, int vpos,
 				     const char *text, const char *help,
@@ -220,8 +217,7 @@ extern GtkObject *stpui_scale_entry_new(GtkTable    *table,
 					gboolean     constrain,
 					gfloat       unconstrained_lower,
 					gfloat       unconstrained_upper,
-					const gchar *tooltip,
-					gboolean     is_optional);
+					const gchar *tooltip);
 
 extern void stpui_create_scale_entry(option_t    *option,
 				     GtkTable    *table,

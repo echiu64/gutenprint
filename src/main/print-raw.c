@@ -66,6 +66,7 @@ static const ink_t inks[] =
 {
   { COLOR_MODEL_RGB, 3, "RGB" },
   { COLOR_MODEL_CMY, 3, "CMY" },
+  { COLOR_MODEL_CMY, 4, "CMYK" },
   { COLOR_MODEL_RGB, 1, "RGBGray" },
   { COLOR_MODEL_CMY, 1, "CMYGray" },
 };

@@ -31,11 +31,13 @@
 #include <gimp-print/gimp-print-ui.h>
 #include "gimp-print-ui-internal.h"
 
+#include <stdio.h>
 #include <string.h>
 
+static void default_errfunc(void *data, const char *buffer, size_t bytes);
 static gchar *image_filename;
-static stp_outfunc_t the_errfunc;
-static void *the_errdata;
+static stp_outfunc_t the_errfunc = default_errfunc;
+static void *the_errdata = NULL;
 static get_thumbnail_func_t thumbnail_func;
 static void *thumbnail_private_data;
 
@@ -395,7 +397,7 @@ spin_button_new (GtkObject **adjustment,  /* return value */
 
 static void
 scale_entry_unconstrained_adjustment_callback (GtkAdjustment *adjustment,
-						    GtkAdjustment *other_adj)
+					       GtkAdjustment *other_adj)
 {
   gtk_signal_handler_block_by_data (GTK_OBJECT (other_adj), adjustment);
 
@@ -448,13 +450,11 @@ stpui_scale_entry_new(GtkTable    *table,
 		      gboolean     constrain,
 		      gfloat       unconstrained_lower,
 		      gfloat       unconstrained_upper,
-		      const gchar *tooltip,
-		      gboolean     is_optional)
+		      const gchar *tooltip)
 {
   GtkWidget *label;
   GtkWidget *scale;
   GtkWidget *spinbutton;
-  GtkWidget *checkbutton = NULL;
   GtkObject *adjustment;
   GtkObject *return_adj;
 
@@ -464,14 +464,6 @@ stpui_scale_entry_new(GtkTable    *table,
                     column + 1, column + 2, row, row + 1,
                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
-
-  checkbutton = gtk_check_button_new();
-  gtk_table_attach_defaults(GTK_TABLE(table), checkbutton,
-			    column, column + 1, row, row + 1);
-  if (is_optional)
-    gtk_widget_show(checkbutton);
-  else
-    gtk_widget_hide(checkbutton);
 
   if (! constrain &&
       unconstrained_lower <= lower &&
@@ -536,7 +528,6 @@ stpui_scale_entry_new(GtkTable    *table,
       stpui_set_help_data (spinbutton, tooltip);
     }
 
-  gtk_object_set_data (GTK_OBJECT (return_adj), "checkbutton", checkbutton);
   gtk_object_set_data (GTK_OBJECT (return_adj), "label", label);
   gtk_object_set_data (GTK_OBJECT (return_adj), "scale", scale);
   gtk_object_set_data (GTK_OBJECT (return_adj), "spinbutton", spinbutton);
@@ -569,21 +560,8 @@ stpui_table_attach_aligned (GtkTable    *table,
 			    gfloat       yalign,
 			    GtkWidget   *widget,
 			    gint         colspan,
-			    gboolean     left_align,
-			    gboolean     is_optional)
+			    gboolean     left_align)
 {
-  if (is_optional)
-    {
-      GtkWidget *checkbutton;
-
-      checkbutton = gtk_check_button_new();
-      gtk_table_attach (table, checkbutton,
-			column, column + 1,
-			row, row + 1,
-			GTK_FILL, GTK_FILL, 0, 0);
-      gtk_widget_show (checkbutton);
-    }
-    
   if (label_text)
     {
       GtkWidget *label;
@@ -591,9 +569,7 @@ stpui_table_attach_aligned (GtkTable    *table,
       label = gtk_label_new (label_text);
       gtk_misc_set_alignment (GTK_MISC (label), xalign, yalign);
       gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
-      gtk_table_attach (table, label,
-			column + 1, column + 2,
-			row, row + 1,
+      gtk_table_attach (table, label, column, column + 1, row, row + 1,
 			GTK_FILL, GTK_FILL, 0, 0);
       gtk_widget_show (label);
     }
@@ -609,8 +585,7 @@ stpui_table_attach_aligned (GtkTable    *table,
       widget = alignment;
     }
 
-  gtk_table_attach (table, widget,
-		    column + 2, column + 2 + colspan,
+  gtk_table_attach (table, widget, column + 1, column + 1 + colspan,
 		    row, row + 1,
 		    GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
 
@@ -714,6 +689,12 @@ stpui_get_image_filename(void)
   return(image_filename);
 }
 
+static void
+default_errfunc(void *data, const char *buffer, size_t bytes)
+{
+  fwrite(buffer, 1, bytes, data ? data : stderr);
+}
+
 void
 stpui_set_errfunc(stp_outfunc_t wfunc)
 {
@@ -769,7 +750,7 @@ stpui_create_entry(GtkWidget *table, int hpos, int vpos, const char *text,
   GtkWidget *entry = gtk_entry_new();
   gtk_widget_set_usize(entry, 60, 0);
   stpui_table_attach_aligned(GTK_TABLE(table), hpos, vpos, text,
-			     0.0, 0.5, entry, 1, TRUE, FALSE);
+			     0.0, 0.5, entry, 1, TRUE);
   stpui_set_help_data(entry, help);
   gtk_signal_connect(GTK_OBJECT(entry), "activate",
 		     GTK_SIGNAL_FUNC(callback), NULL);
@@ -784,7 +765,7 @@ stpui_create_radio_button(radio_group_t *radio, GSList *group,
   radio->button = gtk_radio_button_new_with_label(group, _(radio->name));
   group = gtk_radio_button_group(GTK_RADIO_BUTTON(radio->button));
   stpui_table_attach_aligned(GTK_TABLE(table), hpos, vpos, NULL, 0.5, 0.5,
-			     radio->button, 1, FALSE, FALSE);
+			     radio->button, 1, FALSE);
   stpui_set_help_data(radio->button, _(radio->help));
   gtk_signal_connect(GTK_OBJECT(radio->button), "toggled",
 		     GTK_SIGNAL_FUNC(callback), (gpointer) radio->value);
@@ -812,37 +793,26 @@ table_label(GtkTable *table, gint column, gint row)
   return NULL;
 }
 
-static GtkWidget *
-table_checkbutton(GtkTable *table, gint column, gint row)
-{
-  GList *children = table->children;
-  while (children)
-    {
-      GtkTableChild *child = (GtkTableChild *)children->data;
-      if (child->left_attach == column && child->top_attach == row)
-	return child->widget;
-      children = children->next;
-    }
-  return NULL;
-}
-
 void
 stpui_create_new_combo(option_t *option, GtkWidget *table,
 		       int hpos, int vpos, gboolean is_optional)
 {
   GtkWidget *event_box = gtk_event_box_new();
   GtkWidget *combo = gtk_combo_new();
+
+  option->checkbox = gtk_check_button_new();
+  gtk_table_attach_defaults(GTK_TABLE(table), option->checkbox,
+			    hpos, hpos + 1, vpos, vpos + 1);
+
   option->info.list.combo = combo;
   gtk_container_add(GTK_CONTAINER(event_box), combo);
   gtk_widget_show(combo);
   gtk_widget_show(event_box);
   stpui_set_help_data(event_box, _(option->fast_desc->help));
   stpui_table_attach_aligned
-    (GTK_TABLE(table), hpos, vpos, _(option->fast_desc->text),
-     0.0, 0.5, event_box, 2, TRUE, is_optional);
+    (GTK_TABLE(table), hpos + 1, vpos, _(option->fast_desc->text),
+     0.0, 0.5, event_box, 2, TRUE);
   option->info.list.label = table_label(GTK_TABLE(table), hpos, vpos);
-  option->checkbox =
-    table_checkbutton(GTK_TABLE(table), hpos, vpos);
 }
 
 const char *
@@ -888,11 +858,12 @@ stpui_create_scale_entry(option_t    *opt,
 			 const gchar *tooltip,
 			 gboolean     is_optional)
 {
+  opt->checkbox = gtk_check_button_new();
+  gtk_table_attach_defaults(GTK_TABLE(table), opt->checkbox,
+			    column, column + 1, row, row + 1);
   opt->info.flt.adjustment =
     stpui_scale_entry_new(table, column, row, text, scale_usize,
 			  spinbutton_usize, value, lower, upper,
 			  step_increment, page_increment, digits, constrain,
-			  unconstrained_lower, unconstrained_upper,
-			  tooltip, is_optional);
-  opt->checkbox = table_checkbutton(table, column, row);
+			  unconstrained_lower, unconstrained_upper, tooltip);
 }

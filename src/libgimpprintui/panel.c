@@ -65,6 +65,12 @@ static GtkWidget *main_hbox;
 static GtkWidget *right_vbox;
 static GtkWidget *notebook;
 
+static GtkWidget *output_color_vbox;
+static GtkWidget *cyan_button;
+static GtkWidget *magenta_button;
+static GtkWidget *yellow_button;
+static GtkWidget *black_button;
+
 static GtkWidget *print_dialog;           /* Print dialog window */
 
 static GtkWidget *recenter_button;
@@ -527,8 +533,7 @@ static void
 build_a_combo(option_t *option)
 {
   if (option->fast_desc &&
-      option->fast_desc->p_type == STP_PARAMETER_TYPE_STRING_LIST &&
-      option->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
+      option->fast_desc->p_type == STP_PARAMETER_TYPE_STRING_LIST)
     {
       const gchar *val = stp_get_string_parameter(pv->v,
 						  option->fast_desc->name);
@@ -566,47 +571,42 @@ populate_options(const stp_vars_t v)
       for (i = 0; i < current_option_count; i++)
 	{
 	  option_t *opt = &(current_options[i]);
-	  if (opt->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
+	  switch (opt->fast_desc->p_type)
 	    {
-	      switch (opt->fast_desc->p_type)
+	    case STP_PARAMETER_TYPE_STRING_LIST:
+	      if (opt->info.list.combo)
 		{
-		case STP_PARAMETER_TYPE_STRING_LIST:
-		  if (opt->info.list.combo)
-		    {
-		      gtk_widget_destroy(opt->info.list.combo);
-		      gtk_widget_destroy(opt->info.list.label);
-		      if (opt->info.list.params)
-			stp_string_list_free(opt->info.list.params);
-		      free(opt->info.list.default_val);
-		    }
-		  break;
-		case STP_PARAMETER_TYPE_DOUBLE:
-		  if (opt->info.flt.adjustment)
-		    {
-		      gtk_widget_destroy
-			(GTK_WIDGET
-			 (SCALE_ENTRY_SCALE(opt->info.flt.adjustment)));
-		      gtk_widget_destroy
-			(GTK_WIDGET
-			 (SCALE_ENTRY_LABEL(opt->info.flt.adjustment)));
-		      gtk_widget_destroy
-			(GTK_WIDGET
-			 (SCALE_ENTRY_CHECKBUTTON(opt->info.flt.adjustment)));
-		      gtk_widget_destroy
-			(GTK_WIDGET
-			 (SCALE_ENTRY_SPINBUTTON(opt->info.flt.adjustment)));
-		    }
-		  break;
-		case STP_PARAMETER_TYPE_CURVE:
-		  gtk_widget_destroy(GTK_WIDGET(opt->info.curve.label));
-		  gtk_widget_destroy(GTK_WIDGET(opt->info.curve.button));
-		  gtk_widget_destroy(GTK_WIDGET(opt->info.curve.dialog));
-		  gtk_widget_destroy(GTK_WIDGET(opt->checkbox));
-		  break;
-		default:
-		  break;
+		  gtk_widget_destroy(opt->info.list.combo);
+		  gtk_widget_destroy(opt->info.list.label);
+		  if (opt->info.list.params)
+		    stp_string_list_free(opt->info.list.params);
+		  free(opt->info.list.default_val);
 		}
+	      break;
+	    case STP_PARAMETER_TYPE_DOUBLE:
+	      if (opt->info.flt.adjustment)
+		{
+		  gtk_widget_destroy
+		    (GTK_WIDGET
+		     (SCALE_ENTRY_SCALE(opt->info.flt.adjustment)));
+		  gtk_widget_destroy
+		    (GTK_WIDGET
+		     (SCALE_ENTRY_LABEL(opt->info.flt.adjustment)));
+		  gtk_widget_destroy
+		    (GTK_WIDGET
+		     (SCALE_ENTRY_SPINBUTTON(opt->info.flt.adjustment)));
+		}
+	      break;
+	    case STP_PARAMETER_TYPE_CURVE:
+	      gtk_widget_destroy(GTK_WIDGET(opt->info.curve.label));
+	      gtk_widget_destroy(GTK_WIDGET(opt->info.curve.button));
+	      gtk_widget_destroy(GTK_WIDGET(opt->info.curve.dialog));
+	      break;
+	    default:
+	      break;
 	    }
+	  if (opt->checkbox)
+	    gtk_widget_destroy(GTK_WIDGET(opt->checkbox));
 	}
       free(current_options);
     }
@@ -618,46 +618,46 @@ populate_options(const stp_vars_t v)
       stp_parameter_t desc;
       option_t *opt = &(current_options[i]);
       opt->fast_desc = stp_parameter_list_param(params, i);
-      if (opt->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
+      stp_describe_parameter(v, opt->fast_desc->name, &desc);
+      opt->checkbox = NULL;
+      opt->is_active = 0;
+      opt->is_enabled = 0;
+      switch (opt->fast_desc->p_type)
 	{
-	  stp_describe_parameter(v, opt->fast_desc->name, &desc);
-	  switch (opt->fast_desc->p_type)
-	    {
-	    case STP_PARAMETER_TYPE_STRING_LIST:
-	      opt->info.list.callback_id = -1;
-	      opt->info.list.default_val = g_strdup(desc.deflt.str);
-	      if (desc.bounds.str)
-		opt->info.list.params =
-		  stp_string_list_create_copy(desc.bounds.str);
-	      else
-		opt->info.list.params = NULL;
-	      opt->info.list.combo = NULL;
-	      opt->info.list.label = NULL;
-	      opt->is_active = desc.is_active;
-	      break;
-	    case STP_PARAMETER_TYPE_DOUBLE:
-	      opt->info.flt.adjustment = NULL;
-	      opt->info.flt.upper = desc.bounds.dbl.upper;
-	      opt->info.flt.lower = desc.bounds.dbl.lower;
-	      opt->info.flt.deflt = desc.deflt.dbl;
-	      opt->info.flt.scale = 1.0;
-	      opt->is_active = desc.is_active;
-	      break;
-	    case STP_PARAMETER_TYPE_CURVE:
-	      opt->info.curve.label = NULL;
-	      opt->info.curve.button = NULL;
-	      opt->info.curve.dialog = NULL;
-	      opt->info.curve.gamma_curve = NULL;
-	      opt->info.curve.current = NULL;
-	      opt->info.curve.deflt = desc.deflt.curve;
-	      opt->info.curve.is_visible = FALSE;
-	      opt->is_active = desc.is_active;
-	      break;
-	    default:
-	      break;
-	    }
-	  stp_parameter_description_free(&desc);
+	case STP_PARAMETER_TYPE_STRING_LIST:
+	  opt->info.list.callback_id = -1;
+	  opt->info.list.default_val = g_strdup(desc.deflt.str);
+	  if (desc.bounds.str)
+	    opt->info.list.params =
+	      stp_string_list_create_copy(desc.bounds.str);
+	  else
+	    opt->info.list.params = NULL;
+	  opt->info.list.combo = NULL;
+	  opt->info.list.label = NULL;
+	  opt->is_active = desc.is_active;
+	  break;
+	case STP_PARAMETER_TYPE_DOUBLE:
+	  opt->info.flt.adjustment = NULL;
+	  opt->info.flt.upper = desc.bounds.dbl.upper;
+	  opt->info.flt.lower = desc.bounds.dbl.lower;
+	  opt->info.flt.deflt = desc.deflt.dbl;
+	  opt->info.flt.scale = 1.0;
+	  opt->is_active = desc.is_active;
+	  break;
+	case STP_PARAMETER_TYPE_CURVE:
+	  opt->info.curve.label = NULL;
+	  opt->info.curve.button = NULL;
+	  opt->info.curve.dialog = NULL;
+	  opt->info.curve.gamma_curve = NULL;
+	  opt->info.curve.current = NULL;
+	  opt->info.curve.deflt = desc.deflt.curve;
+	  opt->info.curve.is_visible = FALSE;
+	  opt->is_active = desc.is_active;
+	  break;
+	default:
+	  break;
 	}
+      stp_parameter_description_free(&desc);
     }
   stp_parameter_list_free(params);
 }
@@ -681,7 +681,7 @@ populate_option_table(GtkWidget *table, int p_class)
   for (i = 0; i < current_option_count; i++)
     {
       const stp_parameter_t *desc = current_options[i].fast_desc;
-      if (desc->p_class == p_class && desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
+      if (desc->p_class == p_class)
 	{
 	  switch (desc->p_type)
 	    {
@@ -707,7 +707,8 @@ populate_option_table(GtkWidget *table, int p_class)
 	  GtkWidget *sep = gtk_hseparator_new();
 	  gtk_table_attach_defaults(GTK_TABLE(table), sep, 0, 4,
 				    current_pos, current_pos + 1);
-	  gtk_widget_show(sep);
+	  if (i <= MAXIMUM_PARAMETER_LEVEL)
+	    gtk_widget_show(sep);
 	  current_pos++;
 	}
       for (j = 0; j < STP_PARAMETER_TYPE_INVALID; j++)
@@ -721,7 +722,7 @@ populate_option_table(GtkWidget *table, int p_class)
     {
       option_t *opt = &(current_options[i]);
       const stp_parameter_t *desc = opt->fast_desc;
-      if (desc->p_class == p_class && desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
+      if (desc->p_class == p_class)
 	{
 	  switch (desc->p_type)
 	    {
@@ -744,9 +745,6 @@ populate_option_table(GtkWidget *table, int p_class)
 	      gtk_signal_connect(GTK_OBJECT(opt->info.flt.adjustment),
 				 "value_changed",
 				 GTK_SIGNAL_FUNC(color_update), opt);
-	      gtk_signal_connect
-		(GTK_OBJECT(SCALE_ENTRY_CHECKBUTTON(opt->info.flt.adjustment)),
-		 "toggled", GTK_SIGNAL_FUNC(set_controls_active), opt);
 	      break;
 	    case STP_PARAMETER_TYPE_CURVE:
 	      opt->info.curve.current =
@@ -755,13 +753,14 @@ populate_option_table(GtkWidget *table, int p_class)
 				 vpos[desc->p_level][desc->p_type]++,
 				 _(desc->text), opt->info.curve.deflt,
 				 !(desc->is_mandatory));
-	      gtk_signal_connect
-		(GTK_OBJECT(opt->checkbox), "toggled",
-		 GTK_SIGNAL_FUNC(set_controls_active), opt);
 	      break;
 	    default:
 	      break;
 	    }
+	  if (opt->checkbox)
+	    gtk_signal_connect
+	      (GTK_OBJECT(opt->checkbox), "toggled",
+	       GTK_SIGNAL_FUNC(set_controls_active), opt);
 	}
     }
 }
@@ -774,58 +773,64 @@ set_options_active(void)
     {
       option_t *opt = &(current_options[i]);
       const stp_parameter_t *desc = opt->fast_desc;
-      if (desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
+      switch (desc->p_type)
 	{
-	  switch (desc->p_type)
+	case STP_PARAMETER_TYPE_STRING_LIST:
+	  build_a_combo(opt);
+	  break;
+	case STP_PARAMETER_TYPE_DOUBLE:
+	  if (opt->is_active && desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
 	    {
-	    case STP_PARAMETER_TYPE_STRING_LIST:
-	      build_a_combo(opt);
-	      break;
-	    case STP_PARAMETER_TYPE_DOUBLE:
-	      if (opt->is_active)
+	      GtkObject *adj = opt->info.flt.adjustment;
+	      if (adj)
 		{
-		  GtkObject *adj = opt->info.flt.adjustment;
-		  if (adj)
-		    {
-		      gtk_widget_show(GTK_WIDGET(SCALE_ENTRY_LABEL(adj)));
-		      gtk_widget_show(GTK_WIDGET(SCALE_ENTRY_SCALE(adj)));
-		      gtk_widget_show(GTK_WIDGET(SCALE_ENTRY_SPINBUTTON(adj)));
-		      if (!(desc->is_mandatory))
-			gtk_widget_show(GTK_WIDGET(SCALE_ENTRY_CHECKBUTTON(adj)));
-		    }
+		  gtk_widget_show(GTK_WIDGET(SCALE_ENTRY_LABEL(adj)));
+		  gtk_widget_show(GTK_WIDGET(SCALE_ENTRY_SCALE(adj)));
+		  gtk_widget_show(GTK_WIDGET(SCALE_ENTRY_SPINBUTTON(adj)));
 		}
-	      else
-		{
-		  GtkObject *adj = opt->info.flt.adjustment;
-		  if (adj)
-		    {
-		      gtk_widget_hide(GTK_WIDGET(SCALE_ENTRY_LABEL(adj)));
-		      gtk_widget_hide(GTK_WIDGET(SCALE_ENTRY_SCALE(adj)));
-		      gtk_widget_hide(GTK_WIDGET(SCALE_ENTRY_SPINBUTTON(adj)));
-		      gtk_widget_hide(GTK_WIDGET(SCALE_ENTRY_CHECKBUTTON(adj)));
-		    }
-		}
-	      break;
-	    case STP_PARAMETER_TYPE_CURVE:
-	      if (opt->is_active)
-		{
-		  gtk_widget_show(GTK_WIDGET(opt->info.curve.label));
-		  gtk_widget_show(GTK_WIDGET(opt->info.curve.button));
-		  if (!(desc->is_mandatory))
-		    gtk_widget_show(GTK_WIDGET(opt->checkbox));
-		}
-	      else
-		{
-		  gtk_widget_hide(GTK_WIDGET(opt->info.curve.label));
-		  gtk_widget_hide(GTK_WIDGET(opt->info.curve.button));
-		  gtk_widget_hide(GTK_WIDGET(opt->info.curve.dialog));
-		}
-	      break;
-	    default:
-	      break;
 	    }
+	  else
+	    {
+	      GtkObject *adj = opt->info.flt.adjustment;
+	      if (adj)
+		{
+		  gtk_widget_hide(GTK_WIDGET(SCALE_ENTRY_LABEL(adj)));
+		  gtk_widget_hide(GTK_WIDGET(SCALE_ENTRY_SCALE(adj)));
+		  gtk_widget_hide(GTK_WIDGET(SCALE_ENTRY_SPINBUTTON(adj)));
+		}
+	    }
+	  break;
+	case STP_PARAMETER_TYPE_CURVE:
+	  if (opt->is_active && desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
+	    {
+	      gtk_widget_show(GTK_WIDGET(opt->info.curve.label));
+	      gtk_widget_show(GTK_WIDGET(opt->info.curve.button));
+	    }
+	  else
+	    {
+	      gtk_widget_hide(GTK_WIDGET(opt->info.curve.label));
+	      gtk_widget_hide(GTK_WIDGET(opt->info.curve.button));
+	      gtk_widget_hide(GTK_WIDGET(opt->info.curve.dialog));
+	    }
+	  break;
+	default:
+	  break;
+	}
+      if (opt->checkbox)
+	{
+	  if (!(opt->is_active) || desc->p_level > MAXIMUM_PARAMETER_LEVEL)
+	    gtk_widget_hide(GTK_WIDGET(opt->checkbox));
+	  else if (!(desc->is_mandatory))
+	    gtk_widget_show(GTK_WIDGET(opt->checkbox));
 	}
     }
+}
+
+static int
+color_button_callback(GtkObject *button)
+{
+  invalidate_preview_thumbnail();
+  update_adjusted_thumbnail();
 }
 
 static void
@@ -1007,7 +1012,7 @@ create_positioning_frame (void)
 		 _("Select the orientation: portrait, landscape, "
 		   "upside down, or seascape (upside down landscape)"));
   stpui_table_attach_aligned (GTK_TABLE (table), 0, 0, _("Orientation:"),
-			      1.0, 0.5, orientation_menu, 4, TRUE, FALSE);
+			      1.0, 0.5, orientation_menu, 4, TRUE);
   sep = gtk_hseparator_new ();
   gtk_table_attach_defaults (GTK_TABLE (table), sep, 0, 6, 1, 2);
   gtk_widget_show (sep);
@@ -1044,7 +1049,7 @@ create_positioning_frame (void)
 
   box = gtk_hbox_new (TRUE, 4);
   stpui_table_attach_aligned (GTK_TABLE (table), 0, 7, _("Center:"), 0.5, 0.5,
-			      box, 5, TRUE, FALSE);
+			      box, 5, TRUE);
   recenter_vertical_button = create_positioning_button
     (box, INVALID_TOP, _("Vertically"),
      _("Center the image vertically on the paper"));
@@ -1238,7 +1243,7 @@ create_new_printer_dialog (void)
   new_printer_entry = gtk_entry_new ();
   gtk_entry_set_max_length (GTK_ENTRY (new_printer_entry), 127);
   stpui_table_attach_aligned(GTK_TABLE (table), 0, 0, _("Printer Name:"), 1.0,
-			     0.5, new_printer_entry, 1, TRUE, FALSE);
+			     0.5, new_printer_entry, 1, TRUE);
 
   stpui_set_help_data(new_printer_entry,
 		_("Enter the name you wish to give this logical printer"));
@@ -1323,10 +1328,10 @@ create_printer_settings_frame (void)
 		_("Select the name of the printer (not the type, "
 		  "or model, of printer) that you wish to print to"));
   stpui_table_attach_aligned(GTK_TABLE (table), 0, vpos++, _("Printer Name:"),
-			     0.0, 0.5, event_box, 1, TRUE, FALSE);
+			     0.0, 0.5, event_box, 1, TRUE);
   printer_model_label = gtk_label_new ("");
   stpui_table_attach_aligned(GTK_TABLE (table), 0, vpos++, _("Printer Model:"),
-			     0.0, 0.0, printer_model_label, 1, TRUE, FALSE);
+			     0.0, 0.0, printer_model_label, 1, TRUE);
   printer_hbox = gtk_hbox_new (TRUE, 4);
   gtk_table_attach_defaults (GTK_TABLE (table), printer_hbox,
 			     1, 4, vpos, vpos + 1);
@@ -1385,7 +1390,7 @@ create_printer_settings_frame (void)
 
   media_size_table = gtk_table_new (1, 1, FALSE);
   stpui_table_attach_aligned(GTK_TABLE (table), 0, vpos++, _("Dimensions:"),
-			     0.0, 0.5, media_size_table, 4, TRUE, FALSE);
+			     0.0, 0.5, media_size_table, 4, TRUE);
   custom_size_width = stpui_create_entry
     (media_size_table, 0, 2, _("Width:"),
      _("Width of the paper that you wish to print to"),
@@ -1440,7 +1445,7 @@ create_scaling_frame (void)
   scaling_adjustment =
     stpui_scale_entry_new (GTK_TABLE (table), 0, 0, _("Scaling:"), 100, 75,
 			   100.0, minimum_image_percent, 100.0,
-			   1.0, 10.0, 1, TRUE, 0, 0, NULL, FALSE);
+			   1.0, 10.0, 1, TRUE, 0, 0, NULL);
   stpui_set_adjustment_tooltip(scaling_adjustment,
 			       _("Set the scale (size) of the image"));
   gtk_signal_connect (GTK_OBJECT (scaling_adjustment), "value_changed",
@@ -1479,7 +1484,7 @@ create_scaling_frame (void)
   scaling_percent = gtk_radio_button_new_with_label (NULL, _("Percent"));
   group = gtk_radio_button_group (GTK_RADIO_BUTTON (scaling_percent));
   stpui_table_attach_aligned(GTK_TABLE (table), 0, 0, NULL, 0.5, 0.5,
-			     scaling_percent, 2, TRUE, FALSE);
+			     scaling_percent, 2, TRUE);
 
   stpui_set_help_data(scaling_percent, _("Scale the print to the size of the page"));
   gtk_signal_connect (GTK_OBJECT (scaling_percent), "toggled",
@@ -1487,7 +1492,7 @@ create_scaling_frame (void)
 
   scaling_ppi = gtk_radio_button_new_with_label (group, _("PPI"));
   stpui_table_attach_aligned(GTK_TABLE (table), 0, 1, NULL, 0.5, 0.5,
-			     scaling_ppi, 1, TRUE, FALSE);
+			     scaling_ppi, 1, TRUE);
 
   stpui_set_help_data(scaling_ppi,
 		_("Scale the print to the number of dots per inch"));
@@ -1558,7 +1563,7 @@ create_scaling_frame (void)
       unit->checkbox = gtk_radio_button_new_with_label(group, _(unit->name));
       group = gtk_radio_button_group(GTK_RADIO_BUTTON(unit->checkbox));
       stpui_table_attach_aligned(GTK_TABLE(table), i / 2, i % 2, NULL, 0.5,
-				 0.5, unit->checkbox, 1, TRUE, FALSE);
+				 0.5, unit->checkbox, 1, TRUE);
       stpui_set_help_data(unit->checkbox, _(unit->help));
       gtk_signal_connect(GTK_OBJECT(unit->checkbox), "toggled",
 			 GTK_SIGNAL_FUNC(unit_callback), (gpointer) i);
@@ -1609,7 +1614,7 @@ create_color_adjust_window (void)
   event_box = gtk_event_box_new ();
   gtk_widget_show (GTK_WIDGET (event_box));
   gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (event_box),
-                    0, 3, 0, 1, 0, 0, 0, 0);
+                    0, 1, 0, 1, 0, 0, 0, 0);
 
   swatch = (GtkDrawingArea *) gtk_drawing_area_new ();
   gtk_widget_set_events (GTK_WIDGET (swatch), GDK_EXPOSURE_MASK);
@@ -1621,6 +1626,43 @@ create_color_adjust_window (void)
   gtk_signal_connect (GTK_OBJECT (swatch), "expose_event",
                       GTK_SIGNAL_FUNC (redraw_color_swatch),
                       NULL);
+
+  event_box = gtk_event_box_new ();
+  gtk_widget_show (GTK_WIDGET (event_box));
+  gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (event_box),
+                    1, 2, 0, 1, 0, 0, 0, 0);
+
+  output_color_vbox = gtk_vbox_new(TRUE, 0);
+  gtk_container_add(GTK_CONTAINER(event_box), output_color_vbox);
+  gtk_widget_show(GTK_WIDGET(output_color_vbox));
+
+  cyan_button = gtk_toggle_button_new_with_label(_("Cyan"));
+  gtk_box_pack_start(GTK_BOX(output_color_vbox), cyan_button, TRUE, TRUE, 0);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cyan_button), TRUE);
+  gtk_widget_show(GTK_WIDGET(cyan_button));
+  gtk_signal_connect (GTK_OBJECT (cyan_button), "toggled",
+                      GTK_SIGNAL_FUNC (color_button_callback), NULL);
+
+  magenta_button = gtk_toggle_button_new_with_label(_("Magenta"));
+  gtk_box_pack_start(GTK_BOX(output_color_vbox), magenta_button, TRUE, TRUE,0);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(magenta_button), TRUE);
+  gtk_widget_show(GTK_WIDGET(magenta_button));
+  gtk_signal_connect (GTK_OBJECT (magenta_button), "toggled",
+                      GTK_SIGNAL_FUNC (color_button_callback), NULL);
+
+  yellow_button = gtk_toggle_button_new_with_label(_("Yellow"));
+  gtk_box_pack_start(GTK_BOX(output_color_vbox), yellow_button, TRUE, TRUE, 0);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(yellow_button), TRUE);
+  gtk_widget_show(GTK_WIDGET(yellow_button));
+  gtk_signal_connect (GTK_OBJECT (yellow_button), "toggled",
+                      GTK_SIGNAL_FUNC (color_button_callback), NULL);
+
+  black_button = gtk_toggle_button_new_with_label(_("Black"));
+  gtk_box_pack_start(GTK_BOX(output_color_vbox), black_button, TRUE, TRUE, 0);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(black_button), TRUE);
+  gtk_widget_show(GTK_WIDGET(black_button));
+  gtk_signal_connect (GTK_OBJECT (black_button), "toggled",
+                      GTK_SIGNAL_FUNC (color_button_callback), NULL);
 
   color_adjustment_table = gtk_table_new(1, 1, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (color_adjustment_table), 2);
@@ -2090,17 +2132,26 @@ position_callback (GtkWidget *widget)
 }
 
 static void
-set_adjustment_active(GtkObject *adj, gboolean active, gboolean do_toggle)
+set_adjustment_active(option_t *opt, gboolean active, gboolean do_toggle)
 {
+  GtkObject *adj = opt->info.flt.adjustment;
   if (do_toggle)
-    gtk_toggle_button_set_active
-      (GTK_TOGGLE_BUTTON (SCALE_ENTRY_CHECKBUTTON(adj)), active);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(opt->checkbox), active);
   gtk_widget_set_sensitive
     (GTK_WIDGET (SCALE_ENTRY_LABEL (adj)), active);
   gtk_widget_set_sensitive
     (GTK_WIDGET (SCALE_ENTRY_SCALE (adj)), active);
   gtk_widget_set_sensitive
     (GTK_WIDGET (SCALE_ENTRY_SPINBUTTON (adj)), active);
+}
+
+static void
+set_combo_active(option_t *opt, gboolean active, gboolean do_toggle)
+{
+  if (do_toggle)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(opt->checkbox), active);
+  gtk_widget_set_sensitive(GTK_WIDGET(opt->info.list.combo), active);
+  gtk_widget_set_sensitive(GTK_WIDGET(opt->info.list.label), active);
 }
 
 static void
@@ -2136,9 +2187,9 @@ do_color_updates (void)
 		 stp_get_float_parameter(pv->v, opt->fast_desc->name));
 	      if (stp_check_float_parameter(pv->v, opt->fast_desc->name,
 					    STP_PARAMETER_ACTIVE))
-		set_adjustment_active(opt->info.flt.adjustment, TRUE, TRUE);
+		set_adjustment_active(opt, TRUE, TRUE);
 	      else
-		set_adjustment_active(opt->info.flt.adjustment, FALSE, TRUE);
+		set_adjustment_active(opt, FALSE, TRUE);
 	      break;
 	    case STP_PARAMETER_TYPE_CURVE:
 	      if (stp_check_curve_parameter(pv->v, opt->fast_desc->name,
@@ -2146,6 +2197,13 @@ do_color_updates (void)
 		set_curve_active(opt, TRUE, TRUE);
 	      else
 		set_curve_active(opt, FALSE, TRUE);
+	      break;
+	    case STP_PARAMETER_TYPE_STRING_LIST:
+	      if (stp_check_string_parameter(pv->v, opt->fast_desc->name,
+					     STP_PARAMETER_ACTIVE))
+		set_combo_active(opt, TRUE, TRUE);
+	      else
+		set_combo_active(opt, FALSE, TRUE);
 	      break;
 	    default:
 	      break;
@@ -2383,7 +2441,6 @@ combo_callback(GtkWidget *widget, gpointer data)
       if (option->fast_desc->p_class == STP_PARAMETER_CLASS_PAGE_SIZE)
 	set_media_size(new_value);
       stp_set_string_parameter(pv->v, option->fast_desc->name, new_value);
-      preview_update();
       if (option->fast_desc->p_class == STP_PARAMETER_CLASS_OUTPUT)
 	update_adjusted_thumbnail();
     }
@@ -2417,6 +2474,10 @@ output_type_callback (GtkWidget *widget,
 
   if (GTK_TOGGLE_BUTTON (widget)->active)
     {
+      if ((gint) data == OUTPUT_GRAY)
+	gtk_widget_hide(output_color_vbox);
+      else
+	gtk_widget_show(output_color_vbox);
       stp_set_output_type (pv->v, (gint) data);
       invalidate_preview_thumbnail ();
       update_adjusted_thumbnail ();
@@ -2462,21 +2523,36 @@ unit_callback (GtkWidget *widget,
 static void
 destroy_dialogs (void)
 {
+  int i;
   gtk_widget_destroy (color_adjust_dialog);
   gtk_widget_destroy (setup_dialog);
   gtk_widget_destroy (print_dialog);
   gtk_widget_destroy (new_printer_dialog);
   gtk_widget_destroy (about_dialog);
+  for (i = 0; i < current_option_count; i++)
+    {
+      if (current_options[i].fast_desc->p_type == STP_PARAMETER_TYPE_CURVE &&
+	  current_options[i].info.curve.dialog)
+	gtk_widget_destroy(current_options[i].info.curve.dialog);
+    }
 }
 
 static void
 dialogs_set_sensitive (gboolean sensitive)
 {
+  int i;
   gtk_widget_set_sensitive (color_adjust_dialog, sensitive);
   gtk_widget_set_sensitive (setup_dialog, sensitive);
   gtk_widget_set_sensitive (print_dialog, sensitive);
   gtk_widget_set_sensitive (new_printer_dialog, sensitive);
   gtk_widget_set_sensitive (about_dialog, sensitive);
+  for (i = 0; i < current_option_count; i++)
+    {
+      if (current_options[i].fast_desc->p_type == STP_PARAMETER_TYPE_CURVE &&
+	  current_options[i].info.curve.dialog)
+	gtk_widget_set_sensitive(current_options[i].info.curve.dialog,
+				 sensitive);
+    }
 }
 
 /*
@@ -2740,11 +2816,66 @@ file_cancel_callback (void)
 static void
 fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
 {
+  int mask = 0;
+  int i;
+  int pixels = bytes / 4;
   priv_t *p = (priv_t *) priv;
-  if (bytes + p->offset > p->limit)
-    bytes = p->limit - p->offset;
-  memcpy(p->base_addr + p->offset, buffer, bytes);
-  p->offset += bytes;
+  unsigned char *where = p->base_addr + p->offset;
+  const unsigned char *xbuffer = (const unsigned char *)buffer;
+
+  if (p->bpp == 1)
+    {
+      memcpy(where, buffer, bytes);
+      p->offset += bytes;
+    }
+  else
+    {
+      if (bytes + p->offset > p->limit)
+	bytes = p->limit - p->offset;
+      if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(cyan_button)))
+	mask |= 1;
+      if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(magenta_button)))
+	mask |= 2;
+      if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(yellow_button)))
+	mask |= 4;
+      if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(black_button)))
+	mask |= 8;
+
+      memset(where, 0xff, pixels * 3);
+      for (i = 0; i < pixels; i++)
+	{
+	  if (mask & 8)
+	    {
+	      where[0] -= xbuffer[3];
+	      where[1] -= xbuffer[3];
+	      where[2] -= xbuffer[3];
+	    }
+	  if (mask & 1)
+	    {
+	      if (where[0] < xbuffer[0])
+		where[0] = 0;
+	      else
+		where[0] -= xbuffer[0];
+	    }
+	  if (mask & 2)
+	    {
+	      if (where[1] < xbuffer[1])
+		where[1] = 0;
+	      else
+		where[1] -= xbuffer[1];
+	    }
+	  if (mask & 4)
+	    {
+	      if (where[2] < xbuffer[2])
+		where[2] = 0;
+	      else
+		where[2] -= xbuffer[2];
+	    }
+	  where += 3;
+	  xbuffer += 4;
+	}
+      p->offset += pixels * 3;
+    }
 }
 
 /*
@@ -2765,12 +2896,14 @@ redraw_color_swatch (void)
 	  cmap = gtk_widget_get_colormap (GTK_WIDGET(swatch));
 	}
 
-      (thumbnail_bpp == 1
-       ? gdk_draw_gray_image
-       : gdk_draw_rgb_image) (swatch->widget.window, gc, 0, 0,
-			      thumbnail_w, thumbnail_h, GDK_RGB_DITHER_NORMAL,
-			      adjusted_thumbnail_data,
-			      thumbnail_bpp * thumbnail_w);
+      if (stp_get_output_type(pv->v) == OUTPUT_GRAY)
+	gdk_draw_gray_image(swatch->widget.window, gc, 0, 0,
+			    thumbnail_w, thumbnail_h, GDK_RGB_DITHER_NORMAL,
+			    adjusted_thumbnail_data, thumbnail_w);
+      else
+	gdk_draw_rgb_image(swatch->widget.window, gc, 0, 0,
+			   thumbnail_w, thumbnail_h, GDK_RGB_DITHER_NORMAL,
+			   adjusted_thumbnail_data, 3 * thumbnail_w);
     }
 }
 
@@ -2873,6 +3006,7 @@ compute_thumbnail(const stp_vars_t v)
   stp_image_t *im = stpui_image_thumbnail_new(thumbnail_data, thumbnail_w,
 					      thumbnail_h, thumbnail_bpp);
   const stp_vars_t nv = stp_vars_create_copy(v);
+  fprintf(stderr, "thumbnail_bpp %d\n", thumbnail_bpp);
   stp_set_printer_defaults(nv, stp_get_printer_by_driver("raw-data-8"));
   stp_set_top(nv, 0);
   stp_set_left(nv, 0);
@@ -2882,10 +3016,18 @@ compute_thumbnail(const stp_vars_t v)
   stp_set_outdata(nv, &priv);
   stp_set_errfunc(nv, stpui_get_errfunc());
   stp_set_errdata(nv, stpui_get_errdata());
-  if (thumbnail_bpp == 1)
-    stp_set_string_parameter(nv, "InkType", "RGBGray");
+  if (stp_get_output_type(nv) == OUTPUT_COLOR)
+    stp_set_output_type(nv, OUTPUT_RAW_CMYK);
+  if (stp_get_output_type(nv) == OUTPUT_GRAY)
+    {
+      priv.bpp = 1;
+      stp_set_string_parameter(nv, "InkType", "RGBGray");
+    }
   else
-    stp_set_string_parameter(nv, "InkType", "RGB");
+    {
+      priv.bpp = 4;
+      stp_set_string_parameter(nv, "InkType", "CMYK");
+    }
   stp_set_page_height(nv, thumbnail_h);
   stp_set_page_width(nv, thumbnail_w);
   stp_set_float_parameter (nv, "Density", 1.0);
@@ -2908,38 +3050,31 @@ set_thumbnail_orientation(void)
 {
   gint           x, y;
   gint preview_limit = (thumbnail_h * thumbnail_w) - 1;
+  gint bpp = stp_get_output_type(pv->v) == OUTPUT_GRAY ? 1 : 3;
   switch (physical_orientation)
     {
     case ORIENT_PORTRAIT:
       memcpy(preview_thumbnail_data, adjusted_thumbnail_data,
-	     thumbnail_bpp * thumbnail_h * thumbnail_w);
+	     bpp * thumbnail_h * thumbnail_w);
       break;
     case ORIENT_SEASCAPE:
       for (x = 0; x < thumbnail_w; x++)
 	for (y = 0; y < thumbnail_h; y++)
-	  memcpy((preview_thumbnail_data +
-		  thumbnail_bpp * (x * thumbnail_h + y)),
-		 (adjusted_thumbnail_data +
-		  thumbnail_bpp * (y * thumbnail_w + x)),
-		 thumbnail_bpp);
+	  memcpy((preview_thumbnail_data + bpp * (x * thumbnail_h + y)),
+		 (adjusted_thumbnail_data + bpp * (y * thumbnail_w + x)), bpp);
       break;
 
     case ORIENT_UPSIDEDOWN:
       for (x = 0; x < thumbnail_h * thumbnail_w; x++)
-	memcpy((preview_thumbnail_data +
-		thumbnail_bpp * (preview_limit - x)),
-	       adjusted_thumbnail_data + thumbnail_bpp * x,
-	       thumbnail_bpp);
+	memcpy((preview_thumbnail_data + bpp * (preview_limit - x)),
+	       adjusted_thumbnail_data + bpp * x, bpp);
       break;
     case ORIENT_LANDSCAPE:
       for (x = 0; x < thumbnail_w; x++)
 	for (y = 0; y < thumbnail_h; y++)
 	  memcpy((preview_thumbnail_data +
-		  thumbnail_bpp * (preview_limit -
-				   (x * thumbnail_h + y))),
-		 (adjusted_thumbnail_data +
-		  thumbnail_bpp * (y * thumbnail_w + x)),
-		 thumbnail_bpp);
+		  bpp * (preview_limit - (x * thumbnail_h + y))),
+		 (adjusted_thumbnail_data + bpp * (y * thumbnail_w + x)), bpp);
       break;
     }
 }  
@@ -2982,14 +3117,15 @@ create_valid_preview(guchar **preview_data)
 {
   if (adjusted_thumbnail_data)
     {
+      gint bpp = stp_get_output_type(pv->v) == OUTPUT_GRAY ? 1 : 3;
       gint v_denominator = preview_h > 1 ? preview_h - 1 : 1;
       gint v_numerator = (preview_thumbnail_h - 1) % v_denominator;
       gint v_whole = (preview_thumbnail_h - 1) / v_denominator;
       gint h_denominator = preview_w > 1 ? preview_w - 1 : 1;
       gint h_numerator = (preview_thumbnail_w - 1) % h_denominator;
       gint h_whole = (preview_thumbnail_w - 1) / h_denominator;
-      gint adjusted_preview_width = thumbnail_bpp * preview_w;
-      gint adjusted_thumbnail_width = thumbnail_bpp * preview_thumbnail_w;
+      gint adjusted_preview_width = bpp * preview_w;
+      gint adjusted_thumbnail_width = bpp * preview_thumbnail_w;
       gint v_cur = 0;
       gint v_last = -1;
       gint v_error = v_denominator / 2;
@@ -2998,7 +3134,7 @@ create_valid_preview(guchar **preview_data)
 
       if (*preview_data)
 	free (*preview_data);
-      *preview_data = g_malloc (3 * preview_h * preview_w);
+      *preview_data = g_malloc (bpp * preview_h * preview_w);
 
       for (y = 0; y < preview_h; y++)
 	{
@@ -3009,7 +3145,7 @@ create_valid_preview(guchar **preview_data)
 		    adjusted_preview_width);
 	  else
 	    {
-	      guchar *inbuf = preview_thumbnail_data - thumbnail_bpp
+	      guchar *inbuf = preview_thumbnail_data - bpp
 		+ adjusted_thumbnail_width * v_cur;
 
 	      gint h_cur = 0;
@@ -3022,17 +3158,17 @@ create_valid_preview(guchar **preview_data)
 		{
 		  if (h_cur == h_last)
 		    {
-		      for (i = 0; i < thumbnail_bpp; i++)
-			outbuf[i] = outbuf[i - thumbnail_bpp];
+		      for (i = 0; i < bpp; i++)
+			outbuf[i] = outbuf[i - bpp];
 		    }
 		  else
 		    {
-		      inbuf += thumbnail_bpp * (h_cur - h_last);
+		      inbuf += bpp * (h_cur - h_last);
 		      h_last = h_cur;
-		      for (i = 0; i < thumbnail_bpp; i++)
+		      for (i = 0; i < bpp; i++)
 			outbuf[i] = inbuf[i];
 		    }
-		  outbuf += thumbnail_bpp;
+		  outbuf += bpp;
 		  h_cur += h_whole;
 		  h_error += h_numerator;
 		  if (h_error >= h_denominator)
@@ -3194,7 +3330,7 @@ do_preview_thumbnail (void)
   if (!preview_valid)
     gdk_draw_rectangle (preview->widget.window, gc, 1,
 			preview_x, preview_y, preview_w, preview_h);
-  else if (thumbnail_bpp == 1)
+  else if (stp_get_output_type(pv->v) == OUTPUT_GRAY)
     gdk_draw_gray_image (preview->widget.window, gc,
 			 preview_x, preview_y, preview_w, preview_h,
 			 GDK_RGB_DITHER_NORMAL, preview_data, preview_w);
@@ -3474,44 +3610,79 @@ static void
 set_controls_active (GtkObject *checkbutton, gpointer xopt)
 {
   option_t *opt = (option_t *) xopt;
-  if (opt->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
+  stp_parameter_t desc;
+  gboolean setting =
+    gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(checkbutton));
+  if (setting && opt->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
     {
-      gboolean setting =
-	gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(checkbutton));
       switch (opt->fast_desc->p_type)
 	{
 	case STP_PARAMETER_TYPE_DOUBLE:
-	  if (setting)
+	  set_adjustment_active(opt, TRUE, FALSE);
+	  if (! stp_check_float_parameter(pv->v, opt->fast_desc->name,
+					  STP_PARAMETER_INACTIVE))
 	    {
-	      set_adjustment_active(opt->info.flt.adjustment, TRUE, FALSE);
-	      stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
-					     STP_PARAMETER_ACTIVE);
+	      stp_describe_parameter(pv->v, opt->fast_desc->name, &desc);
+	      stp_set_float_parameter(pv->v, opt->fast_desc->name,
+				      desc.deflt.dbl);
+	      stp_parameter_description_free(&desc);
 	    }
-	  else
-	    {
-	      set_adjustment_active(opt->info.flt.adjustment, FALSE, FALSE);
-	      stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
-					     STP_PARAMETER_INACTIVE);
-	    }
+	  stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
+					 STP_PARAMETER_ACTIVE);
 	  break;
 	case STP_PARAMETER_TYPE_CURVE:
-	  if (setting)
+	  set_curve_active(opt, TRUE, FALSE);
+	  if (! stp_check_curve_parameter(pv->v, opt->fast_desc->name,
+					  STP_PARAMETER_INACTIVE))
 	    {
-	      set_curve_active(opt, TRUE, FALSE);
-	      stp_set_curve_parameter_active(pv->v, opt->fast_desc->name,
-					     STP_PARAMETER_ACTIVE);
+	      stp_describe_parameter(pv->v, opt->fast_desc->name, &desc);
+	      stp_set_curve_parameter(pv->v, opt->fast_desc->name,
+				      desc.deflt.curve);
+	      stp_parameter_description_free(&desc);
 	    }
-	  else
+	  stp_set_curve_parameter_active(pv->v, opt->fast_desc->name,
+					 STP_PARAMETER_ACTIVE);
+	  break;
+	case STP_PARAMETER_TYPE_STRING_LIST:
+	  set_combo_active(opt, TRUE, FALSE);
+	  if (! stp_check_string_parameter(pv->v, opt->fast_desc->name,
+					   STP_PARAMETER_INACTIVE))
 	    {
-	      set_curve_active(opt, FALSE, FALSE);
-	      stp_set_curve_parameter_active(pv->v, opt->fast_desc->name,
-					     STP_PARAMETER_INACTIVE);
+	      stp_describe_parameter(pv->v, opt->fast_desc->name, &desc);
+	      stp_set_string_parameter(pv->v, opt->fast_desc->name,
+				       desc.deflt.str);
+	      stp_parameter_description_free(&desc);
 	    }
+	  stp_set_string_parameter_active(pv->v, opt->fast_desc->name,
+					  STP_PARAMETER_ACTIVE);
 	  break;
 	default:
 	  break;
 	}
     }
+  else
+    {
+      switch (opt->fast_desc->p_type)
+	{
+	case STP_PARAMETER_TYPE_DOUBLE:
+	  set_adjustment_active(opt, FALSE, FALSE);
+	  stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
+					 STP_PARAMETER_INACTIVE);
+	  break;
+	case STP_PARAMETER_TYPE_CURVE:
+	  set_curve_active(opt, FALSE, FALSE);
+	  stp_set_curve_parameter_active(pv->v, opt->fast_desc->name,
+					 STP_PARAMETER_INACTIVE);
+	  break;
+	case STP_PARAMETER_TYPE_STRING_LIST:
+	  set_combo_active(opt, FALSE, FALSE);
+	  stp_set_string_parameter_active(pv->v, opt->fast_desc->name,
+					  STP_PARAMETER_INACTIVE);
+	  break;
+	default:
+	  break;
+	}
+    }   
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail();
 }
