@@ -34,9 +34,7 @@ image is moved in points@footnote{The output resolution of the plugin.}.
 The arrow resizes depending upon the media size chosen; the shaft of the
 arrow is always equal to one inch on the output.
 
-@iftex
 @image{print-main,,4in}
-@end iftex
 
 
 @subsection Printer Settings
@@ -53,9 +51,7 @@ printer supports.  Below that are dropdown menus for choosing media type
 (what kind of paper), media source (what input tray), ink type, and
 resolution.  All of these settings are printer-specific.
 
-@iftex
 @image{print-setup,,2in}
-@end iftex
 
 
 @subsection Position
@@ -123,9 +119,7 @@ adjustment of various parameters related to the print quality.  These
 are independent of the controls within the GIMP itself and only affect
 the print.
 
-@iftex
 @image{print-color,,2in}
-@end iftex
 
 At the top of the window is a thumbnail of the image that changes to
 reflect the color settings of the image.  This enables you to get an

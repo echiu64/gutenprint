@@ -9,6 +9,9 @@ gimpprint.info-3
 gimpprint.info-4
 gimpprint.info-5
 texinfo.tex
+print-color.eps
+print-main.eps
+print-setup.eps
 gimpprint.tocs
 Makefile.in
 Makefile

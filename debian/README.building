@@ -1,6 +1,23 @@
 Building the gimp-print Debian packages	                 -*- mode: text -*-
 =======================================
 
+
+Prerequisites
+-------------
+
+The packages that must be installed to build the gimp-print packages
+are listed in the Build-Depends field of the control file
+debian/control[.in].  However, these are the prerequisites to build
+the Debianised source.  Other things may be needed if building
+directly from CVS; it is less likely other tools will be needed if
+building from a distributed tarball.  Other tools that might
+potentially be needed are the latest versions of gettext and
+texi2html.
+
+
+General
+-------
+
 Please note the Build-Depends line in debian/control, which lists the
 packages needed to be installed in order to build the packages, in
 addition to the standard package building tools.
@@ -20,7 +37,7 @@ may be of help.
 
 
 Building this package from CVS
-==============================
+------------------------------
 
 If you have changed any of the build scripts, run ./autogen.sh first.
 
@@ -35,7 +52,7 @@ Now proceed as for building from a tarball, below.
 
 
 Building this package from a tarball
-====================================
+------------------------------------
 
 Take the tarball gimp-print-VERSION.tar.gz, and copy it to an empty
 build directory.  Rename it to gimp-print_VERSION.orig.tar.gz.  This
@@ -68,5 +85,5 @@ unstable distributions.
 
 I hope you like it!
 
-Roger Leigh <roger@whinlatter.uklinux.net> -- Sun,  9 Sep 2001 17:29:27 +0100
+Roger Leigh <roger@whinlatter.uklinux.net> -- Tue, 18 Sep 2001 17:06:40 +0100
 

@@ -1,4 +1,4 @@
-gimp-print (4.1.99-b2-2) unstable; urgency=low
+gimp-print (4.1.99-b2-5) unstable; urgency=low
 
   * New upstream release
   * Changed library version names to reflect upstream library
@@ -7,8 +7,12 @@ gimp-print (4.1.99-b2-2) unstable; urgency=low
   * Add Build-Depends for gettext (>= 0.10.36-1), because
     'make install' fails with earlier versions due to absent
     DESTDIR support.
+  * libgimpprint-doc uses ps instead of dvi manual, due to inclusion
+    of graphics
+  * gimp1.2-print no longer registers documentation with doc-base, as
+    the manual is provided in libgimpprint-doc
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>  Mon, 10 Sep 2001 17:54:24 +0100
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Tue, 18 Sep 2001 14:15:37 +0100
 
 gimp-print (4.1.99-a3-1) unstable; urgency=low
 

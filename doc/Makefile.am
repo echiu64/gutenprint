@@ -28,10 +28,7 @@ MAINT_CHARSET = latin1
 
 DOCS = \
  FAQ.html \
- README.maintaining \
- docbook.css \
- print.html \
- print.sgml
+ README.maintaining
 
 IMAGES = \
  print-color.png \
@@ -80,6 +77,7 @@ html-stamp: $(srcdir)/gimpprint.texi $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS
 	  rm -rf manual-html-tmp ; \
 	  mkdir manual-html-tmp ; \
 	  cd manual-html-tmp ; \
+	  cp ../*.png . ; \
 	  $(TEXI2HTML_PROG) -menu -split_node -number -expandinfo \
 	    -I ../$(srcdir) ../$(srcdir)/gimpprint.texi 2>&1 | grep . ; \
 	    stat=$$? ; stat=`expr 1 - $$stat` ; \
