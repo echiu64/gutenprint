@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.14  1999/10/26 23:58:31  rlk
+ *   indentation
+ *
  *   Revision 1.13  1999/10/26 23:36:51  rlk
  *   Comment out all remaining 16-bit code, and rename 16-bit functions to "standard" names
  *
@@ -434,7 +437,7 @@ escp2_print(int       model,		/* I - Model */
             FILE      *prn,		/* I - File to print to */
 	    Image     image,		/* I - Image to print */
             unsigned char    *cmap,	/* I - Colormap (for indexed images) */
-	    lut_t     *lut,		/* I - Brightness lookup table (16-bit) */
+	    lut_t     *lut,		/* I - Brightness lookup table */
 	    float     saturation	/* I - Saturation */
 	    )
 {

@@ -71,6 +71,17 @@ typedef struct
 
 typedef void *Image;
 
+extern void Image_init(Image image);
+extern int Image_bpp(Image image);
+extern int Image_width(Image image);
+extern int Image_height(Image image);
+extern const char *Image_get_pluginname(Image image);
+extern void Image_get_col(Image image, unsigned char *data, int column);
+extern void Image_get_row(Image image, unsigned char *data, int row);
+extern void Image_progress_init(Image image);
+extern void Image_note_progress(Image image, double current, double total);
+
+
 typedef struct
 {
   char	*long_name,			/* Long name for UI */
@@ -93,8 +104,9 @@ typedef struct
                  unsigned char *cmap, lut_t *lut, float saturation);
 } printer_t;
 
-typedef void (*convert_t)(unsigned char *in, unsigned short *out, int width, int bpp,
-			  lut_t *lut, unsigned char *cmap, float saturation);
+typedef void 	(*convert_t)(unsigned char *in, unsigned short *out, int width,
+			     int bpp, lut_t *lut, unsigned char *cmap,
+			     float saturation);
 
 
 /*
@@ -108,23 +120,30 @@ extern void	dither_cmyk(unsigned short *, int, int, int, unsigned char *,
 			    unsigned char *, unsigned char *,
 			    unsigned char *, unsigned char *);
 
-extern void	dither_black4(unsigned short *, int, int, int, unsigned char *);
+extern void	dither_black4(unsigned short *, int, int, int,
+			      unsigned char *);
 
 extern void	dither_cmyk4(unsigned short *, int, int, int, unsigned char *,
 			     unsigned char *, unsigned char *,
 			     unsigned char *);
 
-
-extern void	gray_to_gray(unsigned char *, unsigned short *, int, int, lut_t *,
-			       unsigned char *, float);
+extern void	gray_to_gray(unsigned char *, unsigned short *, int, int,
+			     lut_t *, unsigned char *, float);
 extern void	indexed_to_gray(unsigned char *, unsigned short *, int, int,
 				  lut_t *, unsigned char *, float);
-extern void	indexed_to_rgb(unsigned char *, unsigned short *, int, int, lut_t *,
-				 unsigned char *, float);
-extern void	rgb_to_gray(unsigned char *, unsigned short *, int, int, lut_t *,
-			      unsigned char *, float);
-extern void	rgb_to_rgb(unsigned char *, unsigned short *, int, int, lut_t *,
-			     unsigned char *, float);
+extern void	indexed_to_rgb(unsigned char *, unsigned short *, int, int,
+			       lut_t *, unsigned char *, float);
+extern void	rgb_to_gray(unsigned char *, unsigned short *, int, int,
+			    lut_t *, unsigned char *, float);
+extern void	rgb_to_rgb(unsigned char *, unsigned short *, int, int,
+			   lut_t *, unsigned char *, float);
+
+extern void	compute_lut(lut_t *lut, int icontrast,
+			    float red, float green, float blue,
+			    int ibrightness, float print_gamma,
+			    float gimp_gamma, float user_gamma, int linear,
+			    float printer_density, float user_density);
+
 
 
 extern void	default_media_size(int model, char *ppd_file, char *media_size,
@@ -144,6 +163,7 @@ extern void	escp2_print(int model, char *ppd_file, char *resolution,
 			    Image image, unsigned char *cmap,
 			    lut_t *lut, float saturation);
 
+
 extern char	**pcl_parameters(int model, char *ppd_file, char *name,
 		                 int *count);
 extern void	pcl_imageable_area(int model, char *ppd_file, char *media_size,
@@ -156,6 +176,7 @@ extern void	pcl_print(int model, char *ppd_file, char *resolution,
 		          int left, int top, int copies, FILE *prn,
 		          Image image, unsigned char *cmap,
 			  lut_t *lut, float saturation);
+
 
 extern char	**ps_parameters(int model, char *ppd_file, char *name,
 		                int *count);
@@ -170,26 +191,6 @@ extern void	ps_print(int model, char *ppd_file, char *resolution,
 			 int orientation, float scaling, int left, int top,
 			 int copies, FILE *prn, Image image,
 			 unsigned char *cmap, lut_t *lut, float saturation);
-
-extern void calc_hsv_to_rgb(unsigned short *rgb, double h, double s, double v);
-extern void calc_rgb_to_hsv(unsigned short *rgb, double *hue, double *sat,
-			      double *val);
-
-extern void compute_lut(lut_t *lut, int icontrast,
-			float red, float green, float blue, int ibrightness,
-			float print_gamma, float gimp_gamma, float user_gamma,
-			int linear, float printer_density, float user_density);
-
-extern void Image_init(Image image);
-extern int Image_bpp(Image image);
-extern int Image_width(Image image);
-extern int Image_height(Image image);
-extern const char *Image_get_pluginname(Image image);
-extern void Image_get_col(Image image, unsigned char *data, int column);
-extern void Image_get_row(Image image, unsigned char *data, int row);
-extern void Image_progress_init(Image image);
-extern void Image_note_progress(Image image, double current, double total);
-
 
 #ifdef LEFTOVER_8_BIT
 extern void	dither_cmyk4(unsigned char *, int, int, int, unsigned char *,

@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.17  1999/10/26 23:58:31  rlk
+ *   indentation
+ *
  *   Revision 1.16  1999/10/26 23:36:51  rlk
  *   Comment out all remaining 16-bit code, and rename 16-bit functions to "standard" names
  *
@@ -174,6 +177,8 @@
 /*
  * Error buffer for dither functions.  This needs to be at least 14xMAXDPI
  * (currently 720) to avoid problems...
+ *
+ * Want to dynamically allocate this so we can 
  */
 
 int	error[2][4][14*720+1];
@@ -183,11 +188,11 @@ int	error[2][4][14*720+1];
  */
 
 void
-dither_black(unsigned short       *gray,	/* I - Grayscale pixels */
-	       int           row,	/* I - Current Y coordinate */
-	       int           src_width,	/* I - Width of input row */
-	       int           dst_width,	/* I - Width of output row */
-	       unsigned char *black)	/* O - Black bitmap pixels */
+dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
+	     int           	row,		/* I - Current Y coordinate */
+	     int           	src_width,	/* I - Width of input row */
+	     int           	dst_width,	/* I - Width of output row */
+	     unsigned char 	*black)		/* O - Black bitmap pixels */
 {
   int		x,		/* Current X coordinate */
 		xerror,		/* X error count */
@@ -308,7 +313,7 @@ dither_black(unsigned short       *gray,	/* I - Grayscale pixels */
 #define K_RANDOMIZER 4
 
 void
-dither_cmyk(unsigned short       *rgb,	/* I - RGB pixels */
+dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	      int           row,	/* I - Current Y coordinate */
 	      int           src_width,	/* I - Width of input row */
 	      int           dst_width,	/* I - Width of output rows */
@@ -821,8 +826,8 @@ dither_cmyk(unsigned short       *rgb,	/* I - RGB pixels */
 #ifdef PRINT_DEBUG
     fprintf(dbg, "   x %d y %d  r %d g %d b %d  xc %lld xm %lld xy %lld yc "
 	    "%lld ym %lld yy %lld xk %lld  diff %lld divk %lld  oc %lld om "
-	    "%lld oy %lld ok %lld  c %lld m %lld y %lld k %lld  %c%c%c%c%c%c%c  "
-	    "dk %lld dc %lld dm %lld dy %lld  kd %d ck %d bk %d nk %d ub %d "
+	    "%lld oy %lld ok %lld  c %lld m %lld y %lld k %lld  %c%c%c%c%c%c%c"
+	    "  dk %lld dc %lld dm %lld dy %lld  kd %d ck %d bk %d nk %d ub %d "
 	    "lb %d\n",
 	    x, row,
 	    rgb[0], rgb[1], rgb[2],
@@ -1012,14 +1017,14 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
  */
 
 void
-dither_cmyk4(unsigned short       *rgb,		/* I - RGB pixels */
-	     int           row,		/* I - Current Y coordinate */
-	     int           src_width,	/* I - Width of input row */
-	     int           dst_width,	/* I - Width of output rows */
-	     unsigned char *cyan,		/* O - Cyan bitmap pixels */
-	     unsigned char *magenta,		/* O - Magenta bitmap pixels */
-	     unsigned char *yellow,		/* O - Yellow bitmap pixels */
-	     unsigned char *black)		/* O - Black bitmap pixels */
+dither_cmyk4(unsigned short     *rgb,		/* I - RGB pixels */
+	     int           	row,		/* I - Current Y coordinate */
+	     int           	src_width,	/* I - Width of input row */
+	     int           	dst_width,	/* I - Width of output rows */
+	     unsigned char	*cyan,		/* O - Cyan bitmap pixels */
+	     unsigned char 	*magenta,	/* O - Magenta bitmap pixels */
+	     unsigned char 	*yellow,	/* O - Yellow bitmap pixels */
+	     unsigned char 	*black)		/* O - Black bitmap pixels */
 {
   int		x,		/* Current X coordinate */
 		xerror,		/* X error count */
@@ -1250,331 +1255,10 @@ dither_cmyk4(unsigned short       *rgb,		/* I - RGB pixels */
   }
 }
 
-
-/*
- * 'gray_to_gray()' - Convert grayscale image data to grayscale (brightness
- *                    adjusted).
- */
-
-void
-gray_to_gray(unsigned char *grayin,		/* I - RGB pixels */
-	       unsigned short *grayout,	/* O - RGB pixels */
-	       int    width,		/* I - Width of row */
-	       int    bpp,		/* I - Bytes-per-pixel in grayin */
-	       lut_t  *lut,		/* I - Brightness lookup table */
-	       unsigned char *cmap,		/* I - Colormap (unused) */
-	       float  saturation	/* I - Saturation */
-	       )
-{
-  if (bpp == 1)
-  {
-   /*
-    * No alpha in image...
-    */
-
-    while (width > 0)
-    {
-      *grayout = lut->composite[*grayin];
-
-      grayin ++;
-      grayout ++;
-      width --;
-    }
-  }
-  else
-  {
-   /*
-    * Handle alpha in image...
-    */
-
-    while (width > 0)
-    {
-      *grayout = lut->composite[grayin[0] * grayin[1] / 255] + 255 - grayin[1];
-
-      grayin += bpp;
-      grayout ++;
-      width --;
-    }
-  }
-}
+/* rgb/hsv conversions taken from Gimp common/autostretch_hsv.c */
 
 
-/*
- * 'indexed_to_gray()' - Convert indexed image data to grayscale.
- */
-
-void
-indexed_to_gray(unsigned char *indexed,	/* I - Indexed pixels */
-		  unsigned short *gray,		/* O - Grayscale pixels */
-		  int    width,			/* I - Width of row */
-		  int    bpp,			/* I - bpp in indexed */
-		  lut_t  *lut,			/* I - Brightness LUT */
-		  unsigned char *cmap,		/* I - Colormap */
-		  float  saturation		/* I - Saturation */
-		  )
-{
-  int		i;			/* Looping var */
-  unsigned char	gray_cmap[256];		/* Grayscale colormap */
-
-
-  for (i = 0; i < 256; i ++, cmap += 3)
-    gray_cmap[i] = (cmap[0] * LUM_RED + cmap[1] * LUM_GREEN + cmap[2] * LUM_BLUE) / 100;
-
-  if (bpp == 1)
-  {
-   /*
-    * No alpha in image...
-    */
-
-    while (width > 0)
-    {
-      *gray = lut->composite[gray_cmap[*indexed]];
-      indexed ++;
-      gray ++;
-      width --;
-    }
-  }
-  else
-  {
-   /*
-    * Handle alpha in image...
-    */
-
-    while (width > 0)
-    {
-      *gray = lut->composite[gray_cmap[indexed[0] * indexed[1] / 255] + 255 - indexed[1]];
-      indexed += bpp;
-      gray ++;
-      width --;
-    }
-  }
-}
-
-
-void
-indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
-		 unsigned short *rgb,		/* O - RGB pixels */
-		 int    width,		/* I - Width of row */
-		 int    bpp,		/* I - Bytes-per-pixel in indexed */
-		 lut_t  *lut,		/* I - Brightness lookup table */
-		 unsigned char *cmap,		/* I - Colormap */
-		 float  saturation	/* I - Saturation */
-		 )
-{
-  if (bpp == 1)
-  {
-   /*
-    * No alpha in image...
-    */
-
-    while (width > 0)
-    {
-      double h, s, v;
-      rgb[0] = lut->red[cmap[*indexed * 3 + 0]];
-      rgb[1] = lut->green[cmap[*indexed * 3 + 1]];
-      rgb[2] = lut->blue[cmap[*indexed * 3 + 2]];
-      if (saturation != 1.0)
-	{
-	  calc_rgb_to_hsv(rgb, &h, &s, &v);
-	  s = pow(s, 1.0 / saturation);
-	  calc_hsv_to_rgb(rgb, h, s, v);
-	}
-      rgb += 3;
-      indexed ++;
-      width --;
-    }
-  }
-  else
-  {
-   /*
-    * RGBA image...
-    */
-
-    while (width > 0)
-    {
-      double h, s, v;
-      rgb[0] = lut->red[cmap[indexed[0] * 3 + 0] * indexed[1] / 255 + 255 - indexed[1]];
-      rgb[1] = lut->green[cmap[indexed[0] * 3 + 1] * indexed[1] / 255 + 255 - indexed[1]];
-      rgb[2] = lut->blue[cmap[indexed[0] * 3 + 2] * indexed[1] / 255 + 255 - indexed[1]];
-      if (saturation != 1.0)
-	{
-	  calc_rgb_to_hsv(rgb, &h, &s, &v);
-	  s = pow(s, 1.0 / saturation);
-	  calc_hsv_to_rgb(rgb, h, s, v);
-	}
-      rgb += 3;
-      indexed += bpp;
-      width --;
-    }
-  }
-}
-
-
-
-/*
- * 'rgb_to_gray()' - Convert RGB image data to grayscale.
- */
-
-void
-rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
-	      unsigned short *gray,		/* O - Grayscale pixels */
-	      int    width,		/* I - Width of row */
-	      int    bpp,		/* I - Bytes-per-pixel in RGB */
-	      lut_t  *lut,		/* I - Brightness lookup table */
-	      unsigned char *cmap,		/* I - Colormap (unused) */
-	      float  saturation		/* I - Saturation */
-	      )
-{
-  if (bpp == 3)
-  {
-   /*
-    * No alpha in image...
-    */
-
-    while (width > 0)
-    {
-      *gray = lut->composite[(rgb[0] * LUM_RED +
-			      rgb[1] * LUM_GREEN +
-			      rgb[2] * LUM_BLUE) / 100];
-      gray ++;
-      rgb += 3;
-      width --;
-    }
-  }
-  else
-  {
-   /*
-    * Image has alpha channel...
-    */
-
-    while (width > 0)
-    {
-      *gray = lut->composite[((rgb[0] * LUM_RED +
-			       rgb[1] * LUM_GREEN +
-			       rgb[2] * LUM_BLUE) *
-			      rgb[3] / 25500 + 255 - rgb[3])];
-      gray ++;
-      rgb += bpp;
-      width --;
-    }
-  }
-}
-
-/*
- * 'rgb_to_rgb()' - Convert rgb image data to RGB.
- */
-
-void
-rgb_to_rgb(unsigned char *rgbin,	/* I - RGB pixels */
-	     unsigned short *rgbout,		/* O - RGB pixels */
-	     int    width,		/* I - Width of row */
-	     int    bpp,		/* I - Bytes-per-pixel in indexed */
-	     lut_t *lut,		/* I - Brightness lookup table */
-	     unsigned char *cmap,	/* I - Colormap */
-	     float  saturation		/* I - Saturation */
-	     )
-{
-  if (bpp == 3)
-  {
-   /*
-    * No alpha in image...
-    */
-
-    while (width > 0)
-    {
-      double h, s, v;
-      rgbout[0] = lut->red[rgbin[0]];
-      rgbout[1] = lut->green[rgbin[1]];
-      rgbout[2] = lut->blue[rgbin[2]];
-      if (saturation != 1.0)
-	{
-	  calc_rgb_to_hsv(rgbout, &h, &s, &v);
-	  s = pow(s, 1.0 / saturation);
-	  calc_hsv_to_rgb(rgbout, h, s, v);
-	}
-      rgbin += 3;
-      rgbout += 3;
-      width --;
-    }
-  }
-  else
-  {
-   /*
-    * RGBA image...
-    */
-
-    while (width > 0)
-    {
-      double h, s, v;
-      rgbout[0] = lut->red[rgbin[0] * rgbin[3] / 255 + 255 - rgbin[3]];
-      rgbout[1] = lut->green[rgbin[1] * rgbin[3] / 255 + 255 - rgbin[3]];
-      rgbout[2] = lut->blue[rgbin[2] * rgbin[3] / 255 + 255 - rgbin[3]];
-      if (saturation != 1.0)
-	{
-	  calc_rgb_to_hsv(rgbout, &h, &s, &v);
-	  s = pow(s, 1.0 / saturation);
-	  calc_hsv_to_rgb(rgbout, h, s, v);
-	}
-      rgbin += bpp;
-      rgbout += 3;
-      width --;
-    }
-  }
-}
-
-
-/*
- * 'default_media_size()' - Return the size of a default page size.
- */
-
-void
-default_media_size(int  model,		/* I - Printer model */
-        	   char *ppd_file,	/* I - PPD file (not used) */
-        	   char *media_size,	/* I - Media size */
-        	   int  *width,		/* O - Width in points */
-        	   int  *length)	/* O - Length in points */
-{
-  if (strcmp(media_size, "Letter") == 0)
-  {
-    *width  = 612;
-    *length = 792;
-  }
-  else if (strcmp(media_size, "Legal") == 0)
-  {
-    *width  = 612;
-    *length = 1008;
-  }
-  else if (strcmp(media_size, "Tabloid") == 0)
-  {
-    *width  = 792;
-    *length = 1214;
-  }
-  else if (strcmp(media_size, "12x18") == 0)
-  {
-    *width  = 864;
-    *length = 1296;
-  }
-  else if (strcmp(media_size, "A4") == 0)
-  {
-    *width  = 595;
-    *length = 842;
-  }
-  else if (strcmp(media_size, "A3") == 0)
-  {
-    *width  = 842;
-    *length = 1191;
-  }
-  else
-  {
-    *width  = 0;
-    *length = 0;
-  }
-}
-
-/* Taken from common/autostretch_hsv.c */
-
-
-void
+static void
 calc_rgb_to_hsv(unsigned short *rgb, double *hue, double *sat, double *val)
 {
   double red, green, blue;
@@ -1646,7 +1330,7 @@ calc_rgb_to_hsv(unsigned short *rgb, double *hue, double *sat, double *val)
   *val = v;
 }
 
-void
+static void
 calc_hsv_to_rgb(unsigned short *rgb, double h, double s, double v)
 {
   double hue, saturation, value;
@@ -1716,6 +1400,284 @@ calc_hsv_to_rgb(unsigned short *rgb, double h, double s, double v)
   rgb[1] = s*65535;
   rgb[2] = v*65535;
   
+}
+
+
+/*
+ * 'gray_to_gray()' - Convert grayscale image data to grayscale (brightness
+ *                    adjusted).
+ */
+
+void
+gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
+	     unsigned short *grayout,	/* O - RGB pixels */
+	     int    	width,		/* I - Width of row */
+	     int    	bpp,		/* I - Bytes-per-pixel in grayin */
+	     lut_t  	*lut,		/* I - Brightness lookup table */
+	     unsigned char *cmap,	/* I - Colormap (unused) */
+	     float  	saturation	/* I - Saturation */
+	     )
+{
+  if (bpp == 1)
+  {
+   /*
+    * No alpha in image...
+    */
+
+    while (width > 0)
+    {
+      *grayout = lut->composite[*grayin];
+
+      grayin ++;
+      grayout ++;
+      width --;
+    }
+  }
+  else
+  {
+   /*
+    * Handle alpha in image...
+    */
+
+    while (width > 0)
+    {
+      *grayout = lut->composite[grayin[0] * grayin[1] / 255] + 255 - grayin[1];
+
+      grayin += bpp;
+      grayout ++;
+      width --;
+    }
+  }
+}
+
+
+/*
+ * 'indexed_to_gray()' - Convert indexed image data to grayscale.
+ */
+
+void
+indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
+		  unsigned short *gray,		/* O - Grayscale pixels */
+		  int    width,			/* I - Width of row */
+		  int    bpp,			/* I - bpp in indexed */
+		  lut_t  *lut,			/* I - Brightness LUT */
+		  unsigned char *cmap,		/* I - Colormap */
+		  float  saturation		/* I - Saturation */
+		  )
+{
+  int		i;			/* Looping var */
+  unsigned char	gray_cmap[256];		/* Grayscale colormap */
+
+
+  for (i = 0; i < 256; i ++, cmap += 3)
+    gray_cmap[i] = (cmap[0] * LUM_RED +
+		    cmap[1] * LUM_GREEN +
+		    cmap[2] * LUM_BLUE) / 100;
+
+  if (bpp == 1)
+  {
+   /*
+    * No alpha in image...
+    */
+
+    while (width > 0)
+    {
+      *gray = lut->composite[gray_cmap[*indexed]];
+      indexed ++;
+      gray ++;
+      width --;
+    }
+  }
+  else
+  {
+   /*
+    * Handle alpha in image...
+    */
+
+    while (width > 0)
+    {
+      *gray = lut->composite[gray_cmap[indexed[0] * indexed[1] / 255] +
+			    255 - indexed[1]];
+      indexed += bpp;
+      gray ++;
+      width --;
+    }
+  }
+}
+
+
+void
+indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
+		 unsigned short *rgb,	/* O - RGB pixels */
+		 int    width,		/* I - Width of row */
+		 int    bpp,		/* I - Bytes-per-pixel in indexed */
+		 lut_t  *lut,		/* I - Brightness lookup table */
+		 unsigned char *cmap,	/* I - Colormap */
+		 float  saturation	/* I - Saturation */
+		 )
+{
+  if (bpp == 1)
+  {
+   /*
+    * No alpha in image...
+    */
+
+    while (width > 0)
+    {
+      double h, s, v;
+      rgb[0] = lut->red[cmap[*indexed * 3 + 0]];
+      rgb[1] = lut->green[cmap[*indexed * 3 + 1]];
+      rgb[2] = lut->blue[cmap[*indexed * 3 + 2]];
+      if (saturation != 1.0)
+	{
+	  calc_rgb_to_hsv(rgb, &h, &s, &v);
+	  s = pow(s, 1.0 / saturation);
+	  calc_hsv_to_rgb(rgb, h, s, v);
+	}
+      rgb += 3;
+      indexed ++;
+      width --;
+    }
+  }
+  else
+  {
+   /*
+    * RGBA image...
+    */
+
+    while (width > 0)
+    {
+      double h, s, v;
+      rgb[0] = lut->red[cmap[indexed[0] * 3 + 0] * indexed[1] / 255 +
+		       255 - indexed[1]];
+      rgb[1] = lut->green[cmap[indexed[0] * 3 + 1] * indexed[1] / 255 +
+			 255 - indexed[1]];
+      rgb[2] = lut->blue[cmap[indexed[0] * 3 + 2] * indexed[1] / 255 +
+			255 - indexed[1]];
+      if (saturation != 1.0)
+	{
+	  calc_rgb_to_hsv(rgb, &h, &s, &v);
+	  s = pow(s, 1.0 / saturation);
+	  calc_hsv_to_rgb(rgb, h, s, v);
+	}
+      rgb += 3;
+      indexed += bpp;
+      width --;
+    }
+  }
+}
+
+
+
+/*
+ * 'rgb_to_gray()' - Convert RGB image data to grayscale.
+ */
+
+void
+rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
+	      unsigned short *gray,	/* O - Grayscale pixels */
+	      int    width,		/* I - Width of row */
+	      int    bpp,		/* I - Bytes-per-pixel in RGB */
+	      lut_t  *lut,		/* I - Brightness lookup table */
+	      unsigned char *cmap,	/* I - Colormap (unused) */
+	      float  saturation		/* I - Saturation */
+	      )
+{
+  if (bpp == 3)
+  {
+   /*
+    * No alpha in image...
+    */
+
+    while (width > 0)
+    {
+      *gray = lut->composite[(rgb[0] * LUM_RED +
+			      rgb[1] * LUM_GREEN +
+			      rgb[2] * LUM_BLUE) / 100];
+      gray ++;
+      rgb += 3;
+      width --;
+    }
+  }
+  else
+  {
+   /*
+    * Image has alpha channel...
+    */
+
+    while (width > 0)
+    {
+      *gray = lut->composite[((rgb[0] * LUM_RED +
+			       rgb[1] * LUM_GREEN +
+			       rgb[2] * LUM_BLUE) *
+			      rgb[3] / 25500 + 255 - rgb[3])];
+      gray ++;
+      rgb += bpp;
+      width --;
+    }
+  }
+}
+
+/*
+ * 'rgb_to_rgb()' - Convert rgb image data to RGB.
+ */
+
+void
+rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
+	   unsigned short 	*rgbout,	/* O - RGB pixels */
+	   int    		width,		/* I - Width of row */
+	   int    		bpp,		/* I - Bytes/pix in indexed */
+	   lut_t 		*lut,		/* I - Brightness LUT */
+	   unsigned char 	*cmap,		/* I - Colormap */
+	   float  		saturation	/* I - Saturation */
+	   )
+{
+  if (bpp == 3)
+  {
+   /*
+    * No alpha in image...
+    */
+
+    while (width > 0)
+    {
+      double h, s, v;
+      rgbout[0] = lut->red[rgbin[0]];
+      rgbout[1] = lut->green[rgbin[1]];
+      rgbout[2] = lut->blue[rgbin[2]];
+      if (saturation != 1.0)
+	{
+	  calc_rgb_to_hsv(rgbout, &h, &s, &v);
+	  s = pow(s, 1.0 / saturation);
+	  calc_hsv_to_rgb(rgbout, h, s, v);
+	}
+      rgbin += 3;
+      rgbout += 3;
+      width --;
+    }
+  }
+  else
+  {
+   /*
+    * RGBA image...
+    */
+
+    while (width > 0)
+    {
+      double h, s, v;
+      rgbout[0] = lut->red[rgbin[0] * rgbin[3] / 255 + 255 - rgbin[3]];
+      rgbout[1] = lut->green[rgbin[1] * rgbin[3] / 255 + 255 - rgbin[3]];
+      rgbout[2] = lut->blue[rgbin[2] * rgbin[3] / 255 + 255 - rgbin[3]];
+      if (saturation != 1.0)
+	{
+	  calc_rgb_to_hsv(rgbout, &h, &s, &v);
+	  s = pow(s, 1.0 / saturation);
+	  calc_hsv_to_rgb(rgbout, h, s, v);
+	}
+      rgbin += bpp;
+      rgbout += 3;
+      width --;
+    }
+  }
 }
 
 void
@@ -1813,10 +1775,10 @@ compute_lut(lut_t *lut,
 	  /*
 	   * Third, fix up red, green, blue values
 	   *
-	   * I don't know how to do this correctly.  I think that what I'll do is
-	   * if the correction is less than 1 to multiply it by the correction;
-	   * if it's greater than 1, hinge it around 64K.  Doubtless we can
-	   * do better.  Oh well.
+	   * I don't know how to do this correctly.  I think that what I'll do
+	   * is if the correction is less than 1 to multiply it by the
+	   * correction; if it's greater than 1, hinge it around 64K.
+	   * Doubtless we can do better.  Oh well.
 	   */
 	  if (pixel < 0.0)
 	    pixel = 0.0;
@@ -1835,9 +1797,11 @@ compute_lut(lut_t *lut,
 			   pow(brightness * pixel, print_gamma));
 	  red_pixel = 256.0 * (256.0 - 256.0 * printer_density * user_density *
 			       pow(brightness * red_pixel, print_gamma));
-	  green_pixel = 256.0 * (256.0 - 256.0 * printer_density * user_density *
+	  green_pixel = 256.0 * (256.0 - 256.0 * printer_density *
+				 user_density *
 				 pow(brightness * green_pixel, print_gamma));
-	  blue_pixel = 256.0 * (256.0 - 256.0 * printer_density * user_density *
+	  blue_pixel = 256.0 * (256.0 - 256.0 * printer_density *
+				user_density *
 				pow(brightness * blue_pixel, print_gamma));
 
 #if 0
@@ -1920,6 +1884,54 @@ compute_lut(lut_t *lut,
 #endif
 }
 
+/*
+ * 'default_media_size()' - Return the size of a default page size.
+ */
+
+void
+default_media_size(int  model,		/* I - Printer model */
+        	   char *ppd_file,	/* I - PPD file (not used) */
+        	   char *media_size,	/* I - Media size */
+        	   int  *width,		/* O - Width in points */
+        	   int  *length)	/* O - Length in points */
+{
+  if (strcmp(media_size, "Letter") == 0)
+  {
+    *width  = 612;
+    *length = 792;
+  }
+  else if (strcmp(media_size, "Legal") == 0)
+  {
+    *width  = 612;
+    *length = 1008;
+  }
+  else if (strcmp(media_size, "Tabloid") == 0)
+  {
+    *width  = 792;
+    *length = 1214;
+  }
+  else if (strcmp(media_size, "12x18") == 0)
+  {
+    *width  = 864;
+    *length = 1296;
+  }
+  else if (strcmp(media_size, "A4") == 0)
+  {
+    *width  = 595;
+    *length = 842;
+  }
+  else if (strcmp(media_size, "A3") == 0)
+  {
+    *width  = 842;
+    *length = 1191;
+  }
+  else
+  {
+    *width  = 0;
+    *length = 0;
+  }
+}
+
 #ifdef LEFTOVER_8_BIT
 
 #define LEVEL_3	255
@@ -1928,7 +1940,7 @@ compute_lut(lut_t *lut,
 #define LEVEL_0	0
 
 void
-dither_black4(unsigned char        *gray,	/* I - Grayscale pixels */
+dither_black4(unsigned char *gray,	/* I - Grayscale pixels */
               int           row,	/* I - Current Y coordinate */
               int           src_width,	/* I - Width of input row */
               int           dst_width,	/* I - Width of output rows */
@@ -2013,7 +2025,7 @@ dither_black4(unsigned char        *gray,	/* I - Grayscale pixels */
 }
 
 void
-dither_cmyk4(unsigned char        *rgb,	/* I - RGB pixels */
+dither_cmyk4(unsigned char *rgb,	/* I - RGB pixels */
              int           row,		/* I - Current Y coordinate */
              int           src_width,	/* I - Width of input row */
              int           dst_width,	/* I - Width of output rows */
@@ -2253,10 +2265,10 @@ dither_cmyk4(unsigned char        *rgb,	/* I - RGB pixels */
 void
 gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
              unsigned char *grayout,	/* O - RGB pixels */
-             int    width,	/* I - Width of row */
-             int    bpp,	/* I - Bytes-per-pixel in grayin */
+             int   	width,		/* I - Width of row */
+             int    	bpp,		/* I - Bytes-per-pixel in grayin */
              unsigned char *cmap,	/* I - Colormap (unused) */
-	     float  saturation	/* I - Saturation */
+	     float  	saturation	/* I - Saturation */
 	     )
 {
   if (bpp == 1)
@@ -2292,12 +2304,12 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 }
 
 void
-indexed_to_gray(unsigned char *indexed,	/* I - Indexed pixels */
-                unsigned char *gray,		/* O - Grayscale pixels */
-        	int    width,		/* I - Width of row */
-        	int    bpp,		/* I - Bytes-per-pixel in indexed */
-                unsigned char *cmap,		/* I - Colormap */
-		float  saturation	/* I - Saturation */
+indexed_to_gray(unsigned char 	*indexed,	/* I - Indexed pixels */
+                unsigned char 	*gray,		/* O - Grayscale pixels */
+        	int    		width,		/* I - Width of row */
+        	int    		bpp,		/* I - Bytes/pix in indexed */
+                unsigned char 	*cmap,		/* I - Colormap */
+		float  		saturation	/* I - Saturation */
 		)
 {
   int		i;			/* Looping var */
@@ -2305,7 +2317,9 @@ indexed_to_gray(unsigned char *indexed,	/* I - Indexed pixels */
 
 
   for (i = 0; i < 256; i ++, cmap += 3)
-    gray_cmap[i] = (cmap[0] * LUM_RED + cmap[1] * LUM_GREEN + cmap[2] * LUM_BLUE) / 100;
+    gray_cmap[i] = (cmap[0] * LUM_RED +
+		    cmap[1] * LUM_GREEN +
+		    cmap[2] * LUM_BLUE) / 100;
 
   if (bpp == 1)
   {
@@ -2329,7 +2343,8 @@ indexed_to_gray(unsigned char *indexed,	/* I - Indexed pixels */
 
     while (width > 0)
     {
-      *gray = lut->composite[gray_cmap[indexed[0] * indexed[1] / 255] + 255 - indexed[1]];
+      *gray = lut->composite[gray_cmap[indexed[0] * indexed[1] / 255] +
+			    255 - indexed[1]];
       indexed += bpp;
       gray ++;
       width --;

@@ -484,7 +484,7 @@ run(char   *name,		/* I - Name of print program. */
   FILE		*prn;		/* Print file/command */
   printer_t	*printer;	/* Printer driver entry */
   int		i;		/* Looping var */
-  lut_t	lut;		/* 16-bit lookup table for brightness */
+  lut_t		lut;		/* 16-bit lookup table for brightness */
   guchar	*cmap;		/* Colormap (indexed images only) */
   int		ncolors;	/* Number of colors in colormap */
   GParam	*values;	/* Return values */
