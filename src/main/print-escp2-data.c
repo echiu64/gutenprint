@@ -3214,6 +3214,9 @@ static const paper_t standard_papers[] =
   { "Ilford", N_("Ilford Heavy Paper"),
     8, 0, .85, .5, 1.35, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x80, 0x00, 0x02, NULL, NULL, NULL },
+  { "ColorLife", N_("ColorLife Paper"),
+    8, 0, 1.00, 1.0, .9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    1, 1.0, 0x67, 0x00, 0x02, NULL, NULL, NULL},
   { "Other", N_("Other"),
     0, 0, 0.80, 0.125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
@@ -3273,6 +3276,9 @@ static const paper_t sp780_papers[] =
   { "Ilford", N_("Ilford Heavy Paper"),
     2, 0, .85, .5, 1.35, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x80, 0x00, 0x02, NULL, NULL, NULL },
+  { "ColorLife", N_("ColorLife Paper"),
+    2, 0, 1.00, 1.0, .9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    1, 1.0, 0x67, 0x00, 0x02, NULL, NULL, NULL},
   { "Other", N_("Other"),
     0, 0, 0.80, 0.125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
@@ -3332,6 +3338,9 @@ static const paper_t c80_papers[] =
   { "Ilford", N_("Ilford Heavy Paper"),
     8, 0, .85, .5, 1.35, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x80, 0x00, 0x02, NULL, NULL, NULL },
+  { "ColorLife", N_("ColorLife Paper"),
+    8, 0, 1.20, 1.0, .9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    1, 1.0, 0x67, 0x00, 0x02, NULL, NULL, NULL},
   { "Other", N_("Other"),
     0, 0, 0.80, 0.125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
@@ -3391,6 +3400,9 @@ static const paper_t sp950_papers[] =
   { "Ilford", N_("Ilford Heavy Paper"),
     2, 0, .85, .5, 1.35, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x80, 0x00, 0x02, NULL, NULL, NULL },
+  { "ColorLife", N_("ColorLife Paper"),
+    2, 0, 1.00, 1.0, .9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    1, 1.0, 0x67, 0x00, 0x02, NULL, NULL, NULL},
   { "Other", N_("Other"),
     0, 0, 0.80, 0.125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
@@ -3553,7 +3565,7 @@ static const escp2_base_resolutions_t variable_base_res =
 {  360,  360,  360,  360,  360,  360,  360,  360,  360,  360,  360,  360,  360 };
 
 static const escp2_base_resolutions_t stp950_base_res =
-{  360,  360,  360,  360,  360,  360,  360,  360,  360,  360,  360,  360,  720 };
+{  360,  360,  360,  360,  360,  360,  360,  360,  360,  360,  720,  720,  720 };
 
 static const escp2_base_resolutions_t ultrachrome_base_res =
 {  360,  360,  360,  360,  360,  360,  360,  360,  360,  360,  720,  720,  720 };
@@ -3591,7 +3603,7 @@ static const escp2_densities_t sc1500_densities =
 { 2.0, 2.0, 1.3, 1.3, 1.3,  1.3,  0.631, 0.631,   0.0,   0.0,   0.0,   0.0,   0.0 };
 
 static const escp2_densities_t g3_densities =
-{ 2.0, 2.0, 1.3, 1.3, 1.3,  1.3,  0.775, 0.775, 0.388, 0.388, 0.275, 0.275, 0.138 };
+{ 2.0, 2.0, 1.3, 1.3, 1.3,  1.3,  0.775, 0.775, 0.388, 0.388, 0.194, 0.194, 0.097 };
 
 static const escp2_densities_t photo_densities =
 { 2.0, 2.0, 1.3, 1.3, 1.3,  1.3,  0.775, 0.775, 0.55,  0.55,  0.275, 0.275, 0.138 };
@@ -4572,7 +4584,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_FAST_360_NO),
     64, 1, 2, 64, 1, 2, 64, 1, 2, 6,
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
-    INCH(19), INCH(44), INCH(2), INCH(4),
+    INCH(13), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, 0, 0, 4,
     sp5000_dotsizes, photo_densities, &simple_inks,
@@ -4852,7 +4864,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
   },
   /* 46: Stylus Photo 950/960 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
      MODEL_FAST_360_YES),
     96, 1, 2, 96, 1, 2, 24, 1, 1, 6,
@@ -4919,7 +4931,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 2880, 1440, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1, 0, 0, 0, 0, 0,
+    0, 1, 0, 55, 0, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
     &sp780_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &default_input_slot_list,
