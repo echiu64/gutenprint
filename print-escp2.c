@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.99  2000/02/28 01:26:11  rlk
+ *   Try to improve high resolution quality
+ *
  *   Revision 1.98  2000/02/26 16:09:35  rlk
  *   1) Clean up (and maybe fix???) positioning.
  *
@@ -885,8 +888,8 @@ escp2_imageable_area(int  model,	/* I - Printer model */
 {
   int	width, length;			/* Size of page */
   /* Assuming 720 dpi ydpi hardware! */
-  int softweave_margin = (9 + (escp2_nozzles(model) - 1) *
-			  escp2_nozzle_separation(model)) / 10;
+  /* int softweave_margin = (9 + (escp2_nozzles(model) - 1) *
+			  escp2_nozzle_separation(model)) / 10; */
 
   default_media_size(model, ppd_file, media_size, &width, &length);
 
@@ -1072,7 +1075,7 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 	      fwrite("\033(e\002\000\000\000", 7, 1, prn);   /* Default dots */
 	  }
 	else
-	  fwrite("\033(e\002\000\000\002", 7, 1, prn);	/* Whatever dots */
+	  fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Whatever dots */
         break;
   }
 
@@ -1212,6 +1215,7 @@ escp2_print(int       model,		/* I - Model */
   int		nozzles = 1;
   int		nozzle_separation = 1;
   int		horizontal_passes = 1;
+  int		real_horizontal_passes = 1;
   int		vertical_passes = 1;
   const res_t 	*res;
   int		bits;
@@ -1276,6 +1280,7 @@ escp2_print(int       model,		/* I - Model */
 	{
 	  use_softweave = res->softweave;
 	  horizontal_passes = res->horizontal_passes;
+	  real_horizontal_passes = horizontal_passes;
 	  vertical_passes = res->vertical_passes;
 	  if (use_softweave && escp2_xres(model) < 720)
 	    horizontal_passes *= 720 / escp2_xres(model);
@@ -1496,9 +1501,12 @@ escp2_print(int       model,		/* I - Model */
   * Output the page, rotating as necessary...
   */
 
+  v->density /= real_horizontal_passes;
+
   if (landscape)
   {
-    dither = init_dither(image_height, out_width, horizontal_passes);
+    dither = init_dither(image_height, out_width, 1);
+    scale_dither(dither, real_horizontal_passes);
     in  = malloc(image_height * image_bpp);
     out = malloc(image_height * out_bpp * 2);
 
@@ -1561,7 +1569,8 @@ escp2_print(int       model,		/* I - Model */
   }
   else
   {
-    dither = init_dither(image_width, out_width, horizontal_passes);
+    dither = init_dither(image_width, out_width, 1);
+    scale_dither(dither, real_horizontal_passes);
     in  = malloc(image_width * image_bpp);
     out = malloc(image_width * out_bpp * 2);
 
@@ -1680,7 +1689,277 @@ escp2_fold(const unsigned char *line,
       outbuf += 2;
     }
 }
-      
+
+static void
+escp2_split_2(int length,
+	      const unsigned char *in,
+	      unsigned char *outlo,
+	      unsigned char *outhi)
+{
+  int i;
+  for (i = 0; i < length; i++)
+    {
+      unsigned char inbyte = in[i];
+      outlo[i] = inbyte & 0x55;
+      outhi[i] = inbyte & 0xaa;
+    }
+}
+
+static void
+escp2_split_2_2(int length,
+		const unsigned char *in,
+		unsigned char *outlo,
+		unsigned char *outhi)
+{
+  int i;
+  for (i = 0; i < length * 2; i++)
+    {
+      unsigned char inbyte = in[i];
+      outlo[i] = inbyte & 0x33;
+      outhi[i] = inbyte & 0xcc;
+    }
+}
+
+static void
+escp2_split_4(int length,
+	      const unsigned char *in,
+	      unsigned char *out0,
+	      unsigned char *out1,
+	      unsigned char *out2,
+	      unsigned char *out3)
+{
+  int i;
+  for (i = 0; i < length; i++)
+    {
+      unsigned char inbyte = in[i];
+      out0[i] = inbyte & 0x11;
+      out1[i] = inbyte & 0x22;
+      out2[i] = inbyte & 0x44;
+      out3[i] = inbyte & 0x88;
+    }
+}
+
+static void
+escp2_split_4_2(int length,
+		const unsigned char *in,
+		unsigned char *out0,
+		unsigned char *out1,
+		unsigned char *out2,
+		unsigned char *out3)
+{
+  int i;
+  for (i = 0; i < length * 2; i++)
+    {
+      unsigned char inbyte = in[i];
+      out0[i] = inbyte & 0x03;
+      out1[i] = inbyte & 0x0c;
+      out2[i] = inbyte & 0x30;
+      out3[i] = inbyte & 0xc0;
+    }
+}
+
+
+static void
+escp2_unpack_2(int length,
+	       const unsigned char *in,
+	       unsigned char *outlo,
+	       unsigned char *outhi)
+{
+  int i;
+  for (i = 0; i < length; i++)
+    {
+      unsigned char inbyte = *in;
+      if (!(i & 1))
+	{
+	  *outlo =
+	    ((inbyte & (1 << 7)) << 0) +
+	    ((inbyte & (1 << 5)) << 1) +
+	    ((inbyte & (1 << 3)) << 2) +
+	    ((inbyte & (1 << 1)) << 3);
+	  *outhi =
+	    ((inbyte & (1 << 6)) << 1) +
+	    ((inbyte & (1 << 4)) << 2) +
+	    ((inbyte & (1 << 2)) << 3) +
+	    ((inbyte & (1 << 0)) << 4);
+	}
+      else
+	{
+	  *outlo +=
+	    ((inbyte & (1 << 1)) >> 1) +
+	    ((inbyte & (1 << 3)) >> 2) +
+	    ((inbyte & (1 << 5)) >> 3) +
+	    ((inbyte & (1 << 7)) >> 4);
+	  *outhi +=
+	    ((inbyte & (1 << 0)) >> 0) +
+	    ((inbyte & (1 << 2)) >> 1) +
+	    ((inbyte & (1 << 4)) >> 2) +
+	    ((inbyte & (1 << 6)) >> 3);
+	  outlo++;
+	  outhi++;
+	}
+      in++;
+    }
+}
+
+static void
+escp2_unpack_2_2(int length,
+		 const unsigned char *in,
+		 unsigned char *outlo,
+		 unsigned char *outhi)
+{
+  int i;
+  for (i = 0; i < length * 2; i++)
+    {
+      unsigned char inbyte = *in;
+      if (!(i & 1))
+	{
+	  *outlo =
+	    ((inbyte & (3 << 6)) << 0) +
+	    ((inbyte & (3 << 2)) << 2);
+	  *outhi =
+	    ((inbyte & (3 << 4)) << 2) +
+	    ((inbyte & (3 << 0)) << 4);
+	}
+      else
+	{
+	  *outlo +=
+	    ((inbyte & (3 << 6)) >> 4) +
+	    ((inbyte & (3 << 2)) >> 2);
+	  *outhi +=
+	    ((inbyte & (3 << 4)) >> 2) +
+	    ((inbyte & (3 << 0)) >> 0);
+	  outlo++;
+	  outhi++;
+	}
+      in++;
+    }
+}
+
+static void
+escp2_unpack_4(int length,
+	       const unsigned char *in,
+	       unsigned char *out0,
+	       unsigned char *out1,
+	       unsigned char *out2,
+	       unsigned char *out3)
+{
+  int i;
+  for (i = 0; i < length; i++)
+    {
+      unsigned char inbyte = *in;
+      switch (i & 3)
+	{
+	case 0:
+	  *out0 =
+	    ((inbyte & (1 << 7)) << 0) +
+	    ((inbyte & (1 << 3)) << 3);
+	  *out1 =
+	    ((inbyte & (1 << 6)) << 1) +
+	    ((inbyte & (1 << 2)) << 4);
+	  *out2 =
+	    ((inbyte & (1 << 5)) << 2) +
+	    ((inbyte & (1 << 1)) << 5);
+	  *out3 =
+	    ((inbyte & (1 << 4)) << 3) +
+	    ((inbyte & (1 << 0)) << 6);
+	  break;
+	case 1:
+	  *out0 +=
+	    ((inbyte & (1 << 7)) >> 2) +
+	    ((inbyte & (1 << 3)) << 1);
+	  *out1 +=
+	    ((inbyte & (1 << 6)) >> 1) +
+	    ((inbyte & (1 << 2)) << 2);
+	  *out2 +=
+	    ((inbyte & (1 << 5)) >> 0) +
+	    ((inbyte & (1 << 1)) << 3);
+	  *out3 +=
+	    ((inbyte & (1 << 4)) << 1) +
+	    ((inbyte & (1 << 0)) << 4);
+	  break;
+	case 2:
+	  *out0 +=
+	    ((inbyte & (1 << 7)) >> 4) +
+	    ((inbyte & (1 << 3)) >> 1);
+	  *out1 +=
+	    ((inbyte & (1 << 6)) >> 3) +
+	    ((inbyte & (1 << 2)) << 0);
+	  *out2 +=
+	    ((inbyte & (1 << 5)) >> 2) +
+	    ((inbyte & (1 << 1)) << 1);
+	  *out3 +=
+	    ((inbyte & (1 << 4)) >> 1) +
+	    ((inbyte & (1 << 0)) << 2);
+	  break;
+	case 3:
+	  *out0 +=
+	    ((inbyte & (1 << 7)) >> 6) +
+	    ((inbyte & (1 << 3)) >> 3);
+	  *out1 +=
+	    ((inbyte & (1 << 6)) >> 5) +
+	    ((inbyte & (1 << 2)) >> 2);
+	  *out2 +=
+	    ((inbyte & (1 << 5)) >> 4) +
+	    ((inbyte & (1 << 1)) >> 1);
+	  *out3 +=
+	    ((inbyte & (1 << 4)) >> 3) +
+	    ((inbyte & (1 << 0)) >> 0);
+	  out0++;
+	  out1++;
+	  out2++;
+	  out3++;
+	  break;
+	}
+      in++;
+    }
+}
+
+static void
+escp2_unpack_4_2(int length,
+		 const unsigned char *in,
+		 unsigned char *out0,
+		 unsigned char *out1,
+		 unsigned char *out2,
+		 unsigned char *out3)
+{
+  int i;
+  for (i = 0; i < length * 2; i++)
+    {
+      unsigned char inbyte = *in;
+      switch (i & 3)
+	{
+	case 0:
+	  *out0 = ((inbyte & (3 << 6)) << 0);
+	  *out1 = ((inbyte & (3 << 4)) << 2);
+	  *out2 = ((inbyte & (3 << 2)) << 4);
+	  *out3 = ((inbyte & (3 << 0)) << 6);
+	  break;
+	case 1:
+	  *out0 += ((inbyte & (3 << 6)) >> 2);
+	  *out1 += ((inbyte & (3 << 4)) << 0);
+	  *out2 += ((inbyte & (3 << 2)) << 2);
+	  *out3 += ((inbyte & (3 << 0)) << 4);
+	  break;
+	case 2:
+	  *out0 += ((inbyte & (3 << 6)) >> 4);
+	  *out1 += ((inbyte & (3 << 4)) >> 2);
+	  *out2 += ((inbyte & (3 << 2)) << 0);
+	  *out3 += ((inbyte & (3 << 0)) << 2);
+	  break;
+	case 3:
+	  *out0 += ((inbyte & (3 << 6)) >> 6);
+	  *out1 += ((inbyte & (3 << 4)) >> 4);
+	  *out2 += ((inbyte & (3 << 2)) >> 2);
+	  *out3 += ((inbyte & (3 << 0)) >> 0);
+	  out0++;
+	  out1++;
+	  out2++;
+	  out3++;
+	  break;
+	}
+      in++;
+    }
+}
 
 static int
 escp2_pack(const unsigned char *line,
@@ -2626,277 +2905,6 @@ escp2_flush(void *vsw, int model, int width, int hoffset,
 	return;
       flush_pass(sw, pass->pass, model, width, hoffset, ydpi, xdpi, prn,
 		 pass->subpass);
-    }
-}
-
-static void
-escp2_split_2(int length,
-	      const unsigned char *in,
-	      unsigned char *outlo,
-	      unsigned char *outhi)
-{
-  int i;
-  for (i = 0; i < length; i++)
-    {
-      unsigned char inbyte = in[i];
-      outlo[i] = inbyte & 0x55;
-      outhi[i] = inbyte & 0xaa;
-    }
-}
-
-static void
-escp2_split_2_2(int length,
-		const unsigned char *in,
-		unsigned char *outlo,
-		unsigned char *outhi)
-{
-  int i;
-  for (i = 0; i < length * 2; i++)
-    {
-      unsigned char inbyte = in[i];
-      outlo[i] = inbyte & 0x33;
-      outhi[i] = inbyte & 0xcc;
-    }
-}
-
-static void
-escp2_split_4(int length,
-	      const unsigned char *in,
-	      unsigned char *out0,
-	      unsigned char *out1,
-	      unsigned char *out2,
-	      unsigned char *out3)
-{
-  int i;
-  for (i = 0; i < length; i++)
-    {
-      unsigned char inbyte = in[i];
-      out0[i] = inbyte & 0x11;
-      out1[i] = inbyte & 0x22;
-      out2[i] = inbyte & 0x44;
-      out3[i] = inbyte & 0x88;
-    }
-}
-
-static void
-escp2_split_4_2(int length,
-		const unsigned char *in,
-		unsigned char *out0,
-		unsigned char *out1,
-		unsigned char *out2,
-		unsigned char *out3)
-{
-  int i;
-  for (i = 0; i < length * 2; i++)
-    {
-      unsigned char inbyte = in[i];
-      out0[i] = inbyte & 0x03;
-      out1[i] = inbyte & 0x0c;
-      out2[i] = inbyte & 0x30;
-      out3[i] = inbyte & 0xc0;
-    }
-}
-
-
-static void
-escp2_unpack_2(int length,
-	       const unsigned char *in,
-	       unsigned char *outlo,
-	       unsigned char *outhi)
-{
-  int i;
-  for (i = 0; i < length; i++)
-    {
-      unsigned char inbyte = *in;
-      if (!(i & 1))
-	{
-	  *outlo =
-	    ((inbyte & (1 << 7)) << 0) +
-	    ((inbyte & (1 << 5)) << 1) +
-	    ((inbyte & (1 << 3)) << 2) +
-	    ((inbyte & (1 << 1)) << 3);
-	  *outhi =
-	    ((inbyte & (1 << 6)) << 1) +
-	    ((inbyte & (1 << 4)) << 2) +
-	    ((inbyte & (1 << 2)) << 3) +
-	    ((inbyte & (1 << 0)) << 4);
-	}
-      else
-	{
-	  *outlo +=
-	    ((inbyte & (1 << 1)) >> 1) +
-	    ((inbyte & (1 << 3)) >> 2) +
-	    ((inbyte & (1 << 5)) >> 3) +
-	    ((inbyte & (1 << 7)) >> 4);
-	  *outhi +=
-	    ((inbyte & (1 << 0)) >> 0) +
-	    ((inbyte & (1 << 2)) >> 1) +
-	    ((inbyte & (1 << 4)) >> 2) +
-	    ((inbyte & (1 << 6)) >> 3);
-	  outlo++;
-	  outhi++;
-	}
-      in++;
-    }
-}
-
-static void
-escp2_unpack_2_2(int length,
-		 const unsigned char *in,
-		 unsigned char *outlo,
-		 unsigned char *outhi)
-{
-  int i;
-  for (i = 0; i < length * 2; i++)
-    {
-      unsigned char inbyte = *in;
-      if (!(i & 1))
-	{
-	  *outlo =
-	    ((inbyte & (3 << 6)) << 0) +
-	    ((inbyte & (3 << 2)) << 2);
-	  *outhi =
-	    ((inbyte & (3 << 4)) << 2) +
-	    ((inbyte & (3 << 0)) << 4);
-	}
-      else
-	{
-	  *outlo +=
-	    ((inbyte & (3 << 6)) >> 4) +
-	    ((inbyte & (3 << 2)) >> 2);
-	  *outhi +=
-	    ((inbyte & (3 << 4)) >> 2) +
-	    ((inbyte & (3 << 0)) >> 0);
-	  outlo++;
-	  outhi++;
-	}
-      in++;
-    }
-}
-
-static void
-escp2_unpack_4(int length,
-	       const unsigned char *in,
-	       unsigned char *out0,
-	       unsigned char *out1,
-	       unsigned char *out2,
-	       unsigned char *out3)
-{
-  int i;
-  for (i = 0; i < length; i++)
-    {
-      unsigned char inbyte = *in;
-      switch (i & 3)
-	{
-	case 0:
-	  *out0 =
-	    ((inbyte & (1 << 7)) << 0) +
-	    ((inbyte & (1 << 3)) << 3);
-	  *out1 =
-	    ((inbyte & (1 << 6)) << 1) +
-	    ((inbyte & (1 << 2)) << 4);
-	  *out2 =
-	    ((inbyte & (1 << 5)) << 2) +
-	    ((inbyte & (1 << 1)) << 5);
-	  *out3 =
-	    ((inbyte & (1 << 4)) << 3) +
-	    ((inbyte & (1 << 0)) << 6);
-	  break;
-	case 1:
-	  *out0 +=
-	    ((inbyte & (1 << 7)) >> 2) +
-	    ((inbyte & (1 << 3)) << 1);
-	  *out1 +=
-	    ((inbyte & (1 << 6)) >> 1) +
-	    ((inbyte & (1 << 2)) << 2);
-	  *out2 +=
-	    ((inbyte & (1 << 5)) >> 0) +
-	    ((inbyte & (1 << 1)) << 3);
-	  *out3 +=
-	    ((inbyte & (1 << 4)) << 1) +
-	    ((inbyte & (1 << 0)) << 4);
-	  break;
-	case 2:
-	  *out0 +=
-	    ((inbyte & (1 << 7)) >> 4) +
-	    ((inbyte & (1 << 3)) >> 1);
-	  *out1 +=
-	    ((inbyte & (1 << 6)) >> 3) +
-	    ((inbyte & (1 << 2)) << 0);
-	  *out2 +=
-	    ((inbyte & (1 << 5)) >> 2) +
-	    ((inbyte & (1 << 1)) << 1);
-	  *out3 +=
-	    ((inbyte & (1 << 4)) >> 1) +
-	    ((inbyte & (1 << 0)) << 2);
-	  break;
-	case 3:
-	  *out0 +=
-	    ((inbyte & (1 << 7)) >> 6) +
-	    ((inbyte & (1 << 3)) >> 3);
-	  *out1 +=
-	    ((inbyte & (1 << 6)) >> 5) +
-	    ((inbyte & (1 << 2)) >> 2);
-	  *out2 +=
-	    ((inbyte & (1 << 5)) >> 4) +
-	    ((inbyte & (1 << 1)) >> 1);
-	  *out3 +=
-	    ((inbyte & (1 << 4)) >> 3) +
-	    ((inbyte & (1 << 0)) >> 0);
-	  out0++;
-	  out1++;
-	  out2++;
-	  out3++;
-	  break;
-	}
-      in++;
-    }
-}
-
-static void
-escp2_unpack_4_2(int length,
-		 const unsigned char *in,
-		 unsigned char *out0,
-		 unsigned char *out1,
-		 unsigned char *out2,
-		 unsigned char *out3)
-{
-  int i;
-  for (i = 0; i < length * 2; i++)
-    {
-      unsigned char inbyte = *in;
-      switch (i & 3)
-	{
-	case 0:
-	  *out0 = ((inbyte & (3 << 6)) << 0);
-	  *out1 = ((inbyte & (3 << 4)) << 2);
-	  *out2 = ((inbyte & (3 << 2)) << 4);
-	  *out3 = ((inbyte & (3 << 0)) << 6);
-	  break;
-	case 1:
-	  *out0 += ((inbyte & (3 << 6)) >> 2);
-	  *out1 += ((inbyte & (3 << 4)) << 0);
-	  *out2 += ((inbyte & (3 << 2)) << 2);
-	  *out3 += ((inbyte & (3 << 0)) << 4);
-	  break;
-	case 2:
-	  *out0 += ((inbyte & (3 << 6)) >> 4);
-	  *out1 += ((inbyte & (3 << 4)) >> 2);
-	  *out2 += ((inbyte & (3 << 2)) << 0);
-	  *out3 += ((inbyte & (3 << 0)) << 2);
-	  break;
-	case 3:
-	  *out0 += ((inbyte & (3 << 6)) >> 6);
-	  *out1 += ((inbyte & (3 << 4)) >> 4);
-	  *out2 += ((inbyte & (3 << 2)) >> 2);
-	  *out3 += ((inbyte & (3 << 0)) >> 0);
-	  out0++;
-	  out1++;
-	  out2++;
-	  out3++;
-	  break;
-	}
-      in++;
     }
 }
 

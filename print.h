@@ -187,7 +187,7 @@ extern void	dither_set_y_levels(void *vd, int nlevels, double *levels);
 extern void	dither_set_ly_levels(void *vd, int nlevels, double *levels);
 extern void	dither_set_k_levels(void *vd, int nlevels, double *levels);
 
-
+extern void	scale_dither(void *vd, int scale);
 extern void	free_dither(void *);
 extern void	dither_black(unsigned short *, int, void *, unsigned char *);
 

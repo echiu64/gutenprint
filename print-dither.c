@@ -23,6 +23,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.7  2000/02/28 01:26:11  rlk
+ *   Try to improve high resolution quality
+ *
  *   Revision 1.6  2000/02/26 00:14:44  rlk
  *   Rename dither_{black,cmyk}4 to dither_{black,cmyk}_n, and add argument to specify how levels are to be encoded
  *
@@ -288,11 +291,25 @@ dither_set_black_lower(void *vd, double k_lower)
   d->k_lower = (int) (k_lower * 65536);
 }
 
+double
+dither_get_black_lower(void *vd)
+{
+  dither_t *d = (dither_t *) vd;
+  return d->k_lower / 65536.0;
+}
+
 void
 dither_set_black_upper(void *vd, double k_upper)
 {
   dither_t *d = (dither_t *) vd;
   d->k_upper = (int) (k_upper * 65536);
+}
+
+double
+dither_get_black_upper(void *vd)
+{
+  dither_t *d = (dither_t *) vd;
+  return d->k_upper / 65536.0;
 }
 
 void
@@ -302,6 +319,15 @@ dither_set_black_levels(void *vd, double c, double m, double y)
   d->k_clevel = (int) (c * 64);
   d->k_mlevel = (int) (m * 64);
   d->k_ylevel = (int) (y * 64);
+}
+
+void
+dither_get_black_levels(void *vd, double *c, double *m, double *y)
+{
+  dither_t *d = (dither_t *) vd;
+  *c = d->k_clevel / 64.0;
+  *m = d->k_mlevel / 64.0;
+  *y = d->k_ylevel / 64.0;
 }
 
 void
@@ -315,6 +341,16 @@ dither_set_randomizers(void *vd, int c, int m, int y, int k)
 }
 
 void
+dither_get_randomizers(void *vd, int *c, int *m, int *y, int *k)
+{
+  dither_t *d = (dither_t *) vd;
+  *c = d->c_randomizer;
+  *m = d->m_randomizer;
+  *y = d->y_randomizer;
+  *k = d->k_randomizer;
+}
+
+void
 dither_set_ink_darkness(void *vd, double c, double m, double y)
 {
   dither_t *d = (dither_t *) vd;
@@ -324,12 +360,30 @@ dither_set_ink_darkness(void *vd, double c, double m, double y)
 }
 
 void
+dither_get_ink_darkness(void *vd, double *c, double *m, double *y)
+{
+  dither_t *d = (dither_t *) vd;
+  *c = d->c_darkness / 64.0;
+  *m = d->m_darkness / 64.0;
+  *y = d->y_darkness / 64.0;
+}
+
+void
 dither_set_light_inks(void *vd, double c, double m, double y)
 {
   dither_t *d = (dither_t *) vd;
   d->lc_level = (int) (c * 65536);
   d->lm_level = (int) (m * 65536);
   d->ly_level = (int) (y * 65536);
+}
+
+void
+dither_get_light_inks(void *vd, double *c, double *m, double *y)
+{
+  dither_t *d = (dither_t *) vd;
+  *c = d->lc_level / 65536.0;
+  *m = d->lm_level / 65536.0;
+  *y = d->ly_level / 65536.0;
 }
 
 void
@@ -583,6 +637,34 @@ free_dither(void *vd)
   d->k_levels = NULL;
   free(d);
 }
+
+void
+scale_dither(void *vd, int scale)
+{
+  dither_t *d = (dither_t *) vd;
+  d->k_lower /= (scale * scale);
+  d->k_upper /= scale;
+  d->lc_level /= scale;
+  d->lm_level /= scale;
+  d->ly_level /= scale;
+  switch (scale)
+    {
+    case 0:
+    case 1:
+      d->overdensity_bits = 0;
+      break;
+    case 2:
+      d->overdensity_bits = 1;
+      break;
+    case 4:
+      d->overdensity_bits = 2;
+      break;
+    case 8:
+      d->overdensity_bits = 3;
+      break;
+    }
+}
+  
 
 static int *
 get_errline(dither_t *d, int row, int color)
@@ -912,22 +994,6 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  * more saturated colors.
  */
 
-#define NU_C 1
-#define DE_C 1
-#define NU_M 1
-#define DE_M 1
-#define NU_Y 1
-#define DE_Y 1
-
-#define I_RATIO_C1 NU_C / (DE_C + NU_C)
-const static int C_CONST = 65536 * I_RATIO_C1;
-
-#define I_RATIO_M1 NU_M / (DE_M + NU_M)
-const static int M_CONST = 65536 * I_RATIO_M1;
-
-#define I_RATIO_Y1 NU_Y / (DE_Y + NU_Y)
-const static int Y_CONST = 65536 * I_RATIO_Y1;
-
 /*
  * Lower and upper bounds for mixing CMY with K to produce gray scale.
  * Reducing KDARKNESS_LOWER results in more black being used with relatively
@@ -980,7 +1046,7 @@ do {								\
 	  if (r > compare)					\
 	    {							\
 	      DO_PRINT_COLOR(l##r);				\
-	      r -= d->l##r##_level;				\
+	      r -= d->l##r##_level << d->overdensity_bits;	\
 	    }							\
 	}							\
       else if (r > compare)					\
@@ -1003,7 +1069,7 @@ do {								\
 	      DO_PRINT_COLOR(r);				\
 	    }							\
 	  if (sub < d->l##r##_level)				\
-	    r -= d->l##r##_level;				\
+	    r -= d->l##r##_level << d->overdensity_bits;	\
 	  else if (sub > 65535)					\
 	    r -= 65536;						\
 	  else							\
@@ -1012,33 +1078,33 @@ do {								\
     }								\
 } while (0)
 
-#define UPDATE_DITHER(r, d2, x, width)						\
-do {										\
-  int offset = ((15 - (((o##r & 0xf000) >> 12))) * d->horizontal_overdensity)	\
-					>> 1;					\
-  int tmp##r = r;								\
-  if (tmp##r > 65535)								\
-    tmp##r = 65535;								\
-  if (x < offset)								\
-    offset = x;									\
-  else if (x > d->dst_width - offset - 1)					\
-    offset = d->dst_width - x - 1;						\
-  if (ditherbit##d2 & bit)							\
-    {										\
-      r##error1[-offset] += tmp##r;						\
-      r##error1[0] += 3 * tmp##r;						\
-      r##error1[offset] += tmp##r;						\
-      if (x > 0 && x < (d->dst_width - 1))					\
-	dither##r    = r##error0[direction] + 3 * tmp##r;			\
-    }										\
-  else										\
-    {										\
-      r##error1[-offset] += tmp##r;						\
-      r##error1[0] +=  tmp##r;							\
-      r##error1[offset] += tmp##r;						\
-      if (x > 0 && x < (d->dst_width - 1))					\
-	dither##r    = r##error0[direction] + 5 * tmp##r;			\
-    }										\
+#define UPDATE_DITHER(r, d2, x, width)					      \
+do {									      \
+  int offset = ((15 - (((o##r & 0xf000) >> 12))) * d->horizontal_overdensity) \
+					>> 1;				      \
+  int tmp##r = r;							      \
+  if (tmp##r > 65535)							      \
+    tmp##r = 65535;							      \
+  if (x < offset)							      \
+    offset = x;								      \
+  else if (x > d->dst_width - offset - 1)				      \
+    offset = d->dst_width - x - 1;					      \
+  if (ditherbit##d2 & bit)						      \
+    {									      \
+      r##error1[-offset] += tmp##r;					      \
+      r##error1[0] += 3 * tmp##r;					      \
+      r##error1[offset] += tmp##r;					      \
+      if (x > 0 && x < (d->dst_width - 1))				      \
+	dither##r    = r##error0[direction] + 3 * tmp##r;		      \
+    }									      \
+  else									      \
+    {									      \
+      r##error1[-offset] += tmp##r;					      \
+      r##error1[0] +=  tmp##r;						      \
+      r##error1[offset] += tmp##r;					      \
+      if (x > 0 && x < (d->dst_width - 1))				      \
+	dither##r    = r##error0[direction] + 5 * tmp##r;		      \
+    }									      \
 } while (0)
 
 void
