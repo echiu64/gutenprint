@@ -65,14 +65,14 @@ all-local: html
 gimpprint.dvi: $(EPS_IMAGES)
 
 %.eps:
-	$(CONVERT_PROG) $(srcdir)/$(basename $@).png EPS2:$@
+	$(CONVERT) $(srcdir)/$(basename $@).png EPS2:$@
 
 html: html-stamp
 
 ## Note the rather weird way of setting the exit status; this is because
 ## texi2html doesn't set the exit status.
 html-stamp: $(srcdir)/gimpprint.texi $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS))
-	if test x$(TEXI2HTML_PROG) = x ; then \
+	if test x$(TEXI2HTML) = x ; then \
 	  echo "html-stamp: texi2html not found: not regenerating HTML manual" ; \
 	else \
 	  stat=1; \
@@ -80,7 +80,7 @@ html-stamp: $(srcdir)/gimpprint.texi $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS
 	  mkdir manual-html-tmp ; \
 	  cd manual-html-tmp ; \
 	  cp ../*.png . ; \
-	  $(TEXI2HTML_PROG) -menu -split_node -number -expandinfo \
+	  $(TEXI2HTML) -menu -split_node -number -expandinfo \
 	    -I ../$(srcdir) ../$(srcdir)/gimpprint.texi 2>&1 | grep . ; \
 	    stat=$$? ; stat=`expr 1 - $$stat` ; \
 	fi ; \
@@ -91,7 +91,7 @@ html-stamp: $(srcdir)/gimpprint.texi $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS
 
 ps: gimpprint.ps
 gimpprint.ps: gimpprint.dvi
-	$(DVIPS_PROG) -o gimpprint.ps gimpprint.dvi
+	$(DVIPS) -o gimpprint.ps gimpprint.dvi
 
 dist-hook: html
 	for dir in manual-html ; do \

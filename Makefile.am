@@ -55,7 +55,7 @@ ChangeLog:
 	  echo "ChangeLog: .noupdate found: NOT updating ChangeLog from CVS" ; \
 	elif test -d CVS ; then \
 	  echo "ChangeLog: Updating ChangeLog from CVS" ; \
-	  cvs log -N | perl scripts/mkchlog > ChangeLog.tmp ; \
+	  cvs log -N | $(PERL) scripts/mkchlog > ChangeLog.tmp ; \
 	  if test -s ChangeLog.tmp ; then \
 	    mv ChangeLog.tmp ChangeLog ; \
 	  else \
@@ -99,10 +99,10 @@ dist-hook:
 	  rm -rf $(distdir)/ABOUT-NLS $(distdir)/INSTALL $(distdir)/aclocal.m4 $(distdir)/config.h.in $(distdir)/configure $(distdir)/cups-gimpprint.list.in $(distdir)/stamp-h.in ; \
 	  find $(distdir) -name Makefile.in -print | xargs --no-run-if-empty rm ; \
 	  cd $(distdir) ; \
-	  perl ../scripts/patch-gimp configure.in ; \
-	  perl ../scripts/patch-gimp Makefile.am ; \
-	  perl ../scripts/patch-gimp src/Makefile.am ; \
-	  perl ../scripts/patch-gimp po/POTFILES.in ; \
+	  $(PERL) ../scripts/patch-gimp configure.in ; \
+	  $(PERL) ../scripts/patch-gimp Makefile.am ; \
+	  $(PERL) ../scripts/patch-gimp src/Makefile.am ; \
+	  $(PERL) ../scripts/patch-gimp po/POTFILES.in ; \
 	  status=$$? ; \
 	  cd .. ; \
 	  rm -f .gimp-dist ; \
