@@ -105,11 +105,11 @@ Gimp-Print 4.3.24 contains the following major changes over Gimp-Print
 
 2) The package now works properly under OS X 10.2 (Jaguar) and 10.3
    (Panther).  A bug that prevented printing from applications from
-   working properly has been fixed.  The specific problem was due to
-   the fact that CUPS by default sets the input slot (media source) to
-   Autoselect; this was not recognized correctly by the driver.  The
-   current behavior is to treat the Autoselect option as the printer
-   default.
+   working properly (821992) has been fixed.  The specific problem was
+   due to the fact that CUPS by default sets the input slot (media
+   source) to Autoselect; this was not recognized correctly by the
+   driver.  The current behavior is to treat the Autoselect option as
+   the printer default.  This also resolves bug 627266.
 
 3) The CUPS driver has been renamed rastertogimpprint.4.3, and the PPD
    generation program is now named cups-genppd.4.3.  This permits
