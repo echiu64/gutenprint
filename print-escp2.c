@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.62  2000/02/08 00:26:18  rlk
+ *   Some kind of silly magic init string that it appears these printers want.
+ *
  *   Revision 1.61  2000/02/07 01:35:05  rlk
  *   Try to improve variable dot stuff
  *
@@ -726,6 +729,13 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 {
   int n;
   void *weave = 0;
+  /*
+   * Hack that seems to be necessary for these silly things to print.
+   * No, I don't know what it means. -- rlk
+   */
+  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
+    fprintf(prn, "\033\001@EJL 1284.4\n@EJL     \n");
+
   fputs("\033@", prn); 				/* ESC/P2 reset */
 
   fwrite("\033(G\001\000\001", 6, 1, prn);	/* Enter graphics mode */
