@@ -461,7 +461,7 @@ typedef struct {
   int softweave;
   int horizontal_passes;
   int vertical_passes;
-  int vertical_subsample;
+  int vertical_oversample;
 } res_t;
 
 static const res_t escp2_reslist[] = {
@@ -751,7 +751,7 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi, int xdpi,
 		   int use_softweave, int page_length, int page_width,
 		   int page_top, int page_bottom, int top, int nozzles,
 		   int nozzle_separation, int horizontal_passes,
-		   int vertical_passes, int vertical_subsample, int bits)
+		   int vertical_passes, int vertical_oversample, int bits)
 {
   int l, t;
   if (ydpi > 720)
@@ -796,7 +796,7 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi, int xdpi,
 	  (use_softweave || ydpi < 720) ? 0 : 1);
 
   /* Direction/speed */
-  if (horizontal_passes * vertical_passes * vertical_subsample > 2)
+  if (horizontal_passes * vertical_passes * vertical_oversample > 2)
     {
       fprintf(prn, "\033U%c", 1);
       if (xdpi > 720)		/* Slow mode if available */
@@ -937,9 +937,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
   int		nozzles = 1;
   int		nozzle_separation = 1;
   int		horizontal_passes = 1;
-  int		real_horizontal_passes = 1;
   int		vertical_passes = 1;
-  int		vertical_subsample = 1;
+  int		vertical_oversample = 1;
   const res_t 	*res;
   int		bits;
   void *	weave = NULL;
@@ -1009,9 +1008,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	{
 	  use_softweave = res->softweave;
 	  horizontal_passes = res->horizontal_passes;
-	  real_horizontal_passes = horizontal_passes;
 	  vertical_passes = res->vertical_passes;
-	  vertical_subsample = res->vertical_subsample;
+	  vertical_oversample = res->vertical_oversample;
 	  if (use_softweave && escp2_xres(model) < 720)
 	    horizontal_passes *= 720 / escp2_xres(model);
 	  xdpi = res->hres;
@@ -1056,7 +1054,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   escp2_init_printer(prn, model, output_type, ydpi, xdpi, use_softweave,
 		     page_length, page_width, page_top, page_bottom,
 		     top, nozzles, nozzle_separation,
-		     horizontal_passes, vertical_passes, vertical_subsample,
+		     horizontal_passes, vertical_passes, vertical_oversample,
 		     bits);
 
  /*
@@ -1106,7 +1104,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   if (use_softweave)
     /* Epson printers are all 720 physical dpi */
     weave = initialize_weave(nozzles, nozzle_separation, horizontal_passes,
-			     vertical_passes, vertical_subsample, colormode,
+			     vertical_passes, vertical_oversample, colormode,
 			     bits, out_width * escp2_xres(model) / 720,
 			     out_height, separation_rows,
 			     top * 720 / 72, page_height * 720 / 72);
@@ -1117,7 +1115,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
    * Compute the LUT.  For now, it's 8 bit, but that may eventually
    * sometimes change.
    */
-  nv.density = nv.density / (horizontal_passes * vertical_subsample);
+  nv.density = nv.density / (horizontal_passes * vertical_oversample);
   if (bits == 2)
     nv.density *= 3.3;
   if (nv.density > 1.0)
