@@ -29,7 +29,6 @@
 /* stp output driver */
 #include "gdevprn.h"
 #include "gdevpccm.h"
-#include "gdevstp.h"
 #include "gsparam.h"
 
 #include "gdevstp-print.h"
@@ -43,6 +42,11 @@ if (stp_debug) x
 
 /* ------ The device descriptors ------ */
 
+#define X_DPI 360
+#define Y_DPI 360
+
+private dev_proc_map_rgb_color(stp_map_16m_rgb_color);
+private dev_proc_map_color_rgb(stp_map_16m_color_rgb);
 private dev_proc_print_page(stp_print_page);
 private dev_proc_get_params(stp_get_params);
 private dev_proc_put_params(stp_put_params);
@@ -238,7 +242,7 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
 /* 24-bit color mappers (taken from gdevmem2.c). */
 
 /* Map a r-g-b color to a color index. */
-gx_color_index
+private gx_color_index
 stp_map_16m_rgb_color(gx_device * dev, gx_color_value r, gx_color_value g,
 		  gx_color_value b)
 {
@@ -248,7 +252,7 @@ stp_map_16m_rgb_color(gx_device * dev, gx_color_value r, gx_color_value g,
 }
 
 /* Map a color index to a r-g-b color. */
-int
+private int
 stp_map_16m_color_rgb(gx_device * dev, gx_color_index color,
 		  gx_color_value prgb[3])
 {
