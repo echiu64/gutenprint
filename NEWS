@@ -1,4 +1,4 @@
-Gimp-Print 4.2.5-pre2, released December 22, 2002, is a prerelease in
+Gimp-Print 4.2.5, released January 23, 2003, is a stable release
 the Gimp-Print 4.2 series.
 
 Gimp-Print is a suite of printer drivers that may be used with most
@@ -41,58 +41,125 @@ http://gimp-print.sourceforge.net/MacOSX.php3.
 Please read the README file for full instructions on installing this
 package.
 
-Gimp-Print 4.2.5-pre2 contains the following major changes over
-Gimp-Print 4.2.5-pre1:
 
-1) If Foomatic 2.9.x is installed, the Foomatic data will be generated
-   with additional features: Once the options are put into groups
-   ("General", "PrintoutMode", "Adjustment") and a new "PrintoutMode" 
-   option will be added, which lets the user choose pre-configurations
-   for common printing tasks, but still adjust the individual options.
-   If an older version of Foomatic is installed, the Foomatic data will
-   stay as before.
+Gimp-Print 4.2.5 contains the following major changes over Gimp-Print
+4.2.4:
+
+* Major bugs fixed:
+
+  1) (bug 625780) The Epson Stylus Pro 5000 now prints.
+
+  2) (bug 645895) The Epson Stylus Color 640 now prints properly at
+     all resolutions in color, grayscale, and monochrome.
+
+  3) (bug 639356) The version of libtool used in building the release
+     package has been upgraded to 1.4.3, which fixes compile problems
+     on a few platforms (this is primarily of interest to packagers).
+
+  4) (bug 659543) escputil now reports the ink levels correctly on the
+     Stylus Photo 950/960 and 2100/2200.
+
+  5) (bug 672692) A buffer overflow in escputil, which permitted a
+     local privilege escalation if it is installed setuid, has been
+     fixed.  Note that Gimp-print does not install escputil setuid,
+     and we do not recommend explicitly setting the setuid bit.
+
+  6) (bug 672846) A problem compiling rastertoprinter on Solaris with
+     the gcc compiler has been fixed.
+
+  7) (bug 672848) escputil will no longer hang indefinitely if the
+     printer does not respond to a status inquiry; it will now time
+     out after 5 seconds.
+
+  8) (bug 672850) The Epson back end in CUPS will no longer hang
+     attempting to read back ink levels under some circumstances, and
+     it will also compute the ink levels correctly.
+
+  9) (bug 646158) DESTDIR now works correctly with make install (this
+     is primarily of interest to packagers).
 
 
-Gimp-Print 4.2.5-pre1 contains the following major changes over
-Gimp-Print 4.2.4:
+* New Functionality:
 
-1) The Epson Stylus Photo 950/960/PM-950C and 2100/2200 are now tuned.
-   The 950 and 960 are fully tuned, while the 2100 and 2200 are fully
-   tuned with Photographic Black ink.  Matte Black ink on the
-   2100/2200, and dark yellow ink on the PM-950C, are not tuned at
-   this point.
+  1) If Foomatic 2.9.x is installed, the Foomatic data will be
+     generated with additional features: Once the options are put into
+     groups ("General", "PrintoutMode", "Adjustment") and a new
+     "PrintoutMode" option will be added, which lets the user choose
+     pre-configurations for common printing tasks, but still adjust
+     the individual options.  If an older version of Foomatic is
+     installed, the Foomatic data will stay as before.
 
-   As a special note, all of these printers print especially fast at
-   360 DPI in Four Color Standard mode (in color, grayscale, and
-   monochrome).  For this reason, we recommend use of Four Color
-   Standard for printing text and low-resolution graphics on plain
-   paper with these printers.
+  2) (bug 596538) The automatic paper cutter is now functional on the
+     Epson Stylus Photo 925, 950/960, and 2100/2200.
 
-2) Epson Stylus Photo printers with an automatic paper cutter option
-   (the Stylus Photo 925, 950/960/PM-950C, and 2100/2200) now enable
-   the cutter.  This has received some testing, but has not been
-   tested comprehensively.
 
-3) The Epson Stylus Pro 5000 should now print correctly, although this
-   is not yet tested.
+* Quality Improvements:
 
-4) The Epson Stylus Color 640 now prints properly in grayscale and
-   monochrome at 720 DPI and above.
+  1) The Epson Stylus Photo 950/960/PM-950C and 2100/2200 are now tuned.
+     The 950 and 960 are fully tuned, while the 2100 and 2200 are fully
+     tuned with Photographic Black ink.  Matte Black ink on the
+     2100/2200, and dark yellow ink on the PM-950C, are not tuned at
+     this point.
 
-5) DESTDIR now works with 'make install' in the Gimp plugin
-   directory (this is generally of interest only to packagers).
+  2) The Epson Stylus Photo 950/960/PM-950C and 2100/2200 now support
+     double speed printing at 360 DPI in Four Color Standard mode (in
+     color, grayscale, and monochrome).  For this reason, we recommend
+     use of Four Color Standard for printing text and low-resolution
+     graphics on plain paper with these printers.
 
-6) The user manual should now install correctly on all platforms.
+  3) Translations for Danish, German, Portuguese, Swedish, and UK
+     English have been updated.
 
-7) The version of libtool used to build this release has been changed
-   to 1.4.3.  This enables the packaged source to compile correctly on
-   a few architectures (this is generally of interest only to
-   packagers).
 
-8) Updates to the Debian packaging (this is of interest only to Debian
-   packagers).
+* Exceptions and Workarounds:
 
-The following bugs have been fixed in Gimp-Print 4.2.5-pre1:
+  1) There have been a number of reports that printing to a
+     Windows-hosted printer from Macintosh OS X results in only the
+     first page of the job being printed (see bugs 668342 and
+     672692).  In at least some cases, connecting the printer directly
+     to the Macintosh results in correct prints.  There is no known
+     workaround short of connecting the printer directly to the
+     Macintosh.  Investigation is continuing on this problem.
+
+  2) There are longstanding reports of problems printing with certain
+     USB-parallel and USB-serial adapters on Macintosh OS X.  In
+     particular, many users have reported problems with the Keyspan
+     adapter; we recommend that users having problems try different
+     brands of adapters, and avoid using USB hubs.  Please check our
+     web site (http://gimp-print.sourceforge.net) for updates.
+
+  3) The Macintosh OS X Print Center offers an "Autoselect" option for
+     the media source (input slot) on some printers.  This option is
+     not valid and will result in nothing being printed.  The
+     workaround is to choose a different setting (explicitly select
+     the input slot you wish to use).
+
+  4) The new HP DesignJets have not been fully tuned.  In particular,
+     there are reports that they print too light.  This can be
+     corrected with the Density adjustment (try 1.5~1.7 or
+     thereabouts).
+
+  5) The list of compatible and potentially compatible Hewlett-Packard
+     printers has been updated with the latest available information.
+     If a particular printer does not work with the recommended
+     driver, we recommend that you try other similar drivers, check
+     the Feature Requests at
+     http://sourceforge.net/tracker/?atid=101537&group_id=1537&func=browse,
+     and if the printer is not listed please file a feature request
+     (via the Submit New button).
+
+  6) Borderless (full-bleed) printing is not quite correct on the
+     Epson Stylus Photo printers that support it (see bug 621668).
+     Typically, the left or right margin is off by 1 mm or less,
+     resulting in a very fine white strip on that edge.  This will not
+     be fixed in 4.2; it is expected to be fixed in 4.3 and beyond.
+     There is no workaround other than trimming the page.
+
+  7) Many Canon printers do not print correctly at 720x360 DPI.  The
+     workaround is to use 360 or 720 DPI.
+
+
+The following bugs have been fixed in Gimp-Print 4.2.5:
 
 596538 Epson Stylus Photo 925 etc. paper cutter is not functional
 599029 Epson: Maximum speed printing not supported on 950, 960
@@ -102,10 +169,16 @@ The following bugs have been fixed in Gimp-Print 4.2.5-pre1:
 645895 Epson stc640 does not print at 720dpi and above
 646158 Build:DESTDIR broken in make install in print plugin
 649253 QUALITY - Epson 950/960 problems in all resolutions
+659543 escputil Epson Photo 950 Ink level wrong
+672845 Buffer overflow in escputil
+672846 rastertoprinter does not compile on Solaris with gcc
+672848 escputil can hang forever waiting for printer status
+672850 Epson back end in CUPS driver can lock up
 
 The following bugs are currently open:
 
 409612 Epson: Minor positioning problem on 4x6 glossy
+470049 CUPS PPD files not translated on all systems
 538097 QUALITY-Canon S400 dark and yellow cast
 549677 Canon BJC-1000 functions incorrectly at 720x360 DPI
 557868 QUALITY-HP DeskJet 560 is washed out
@@ -119,11 +192,15 @@ The following bugs are currently open:
 627978 QUALITY: Canon BJC-6500 has magenta cast.
 631937 HP DesignJet Sheet Cutter Problem
 641981 QUALITY: HP DesignJet 455 too light
+645116 QUALITY: HP DeskJet regression from 4.1.7
+647035 QUALITY: Colors don't match OEM drivers
+662988 HP DeskJet 970Cxi page horizontally squeezed
+668342 Canon S-450 prints only one page of a job
+672692 Epson photo 700 single page of multi page job
 
 
 Gimp-Print 4.2.4 contains the following major changes over Gimp-Print
 4.2.3:
-
 
 * Major Bugs Fixed:
 
