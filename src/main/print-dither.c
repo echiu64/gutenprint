@@ -832,9 +832,12 @@ stp_dither_finalize_ranges(dither_t *d, dither_channel_t *s)
 		  s->ranges[i].range_span, s->ranges[i].value_span,
 		  s->ranges[i].is_same_ink, s->ranges[i].is_equal);
     }
-  /* ??? Is this correct ??? */
-  if (s->nlevels == 1 && s->ranges[0].upper->bits == 1 && s->ranges[0].upper->subchannel)
+  if (s->nlevels == 1 && s->ranges[0].upper->bits == 1 &&
+      s->ranges[0].upper->subchannel == 0)
     s->very_fast = 1;
+  else
+    s->very_fast = 0;
+	       
   s->maxdot_dens = s->maxdot * d->density;
   s->maxdot_wet = (65536 + d->density) * s->maxdot;
   s->subchannels = max_subchannel + 1;
@@ -1997,7 +2000,7 @@ stp_dither_monochrome_very_fast(const unsigned short  *gray,
   xerror = 0;
   for (x = 0; x < dst_width; x++)
     {
-      if (gray[0] && (d->density >= ditherpoint_fast(d, kdither, x)))
+      if (gray[0] && (d->density > ditherpoint_fast(d, kdither, x)))
 	{
 	  set_row_ends(dc, x, 0);
 	  kptr[d->ptr_offset] |= bit;
@@ -2073,7 +2076,7 @@ stp_dither_black_very_fast(const unsigned short   *gray,
 
   for (x = 0; x < dst_width; x++)
     {
-      if (gray[0] >= ditherpoint_fast(d, &(dc->dithermat), x))
+      if (gray[0] > ditherpoint_fast(d, &(dc->dithermat), x))
 	{
 	  set_row_ends(dc, x, 0);
 	  dc->ptrs[0][d->ptr_offset] |= bit;
@@ -2254,7 +2257,7 @@ stp_dither_cmy_very_fast(const unsigned short  *cmy,
       for (i = 1; i < d->n_channels; i++)
 	{
 	  dither_channel_t *dc = &(CHANNEL(d, i));
-	  if (dc->v >= ditherpoint_fast(d, &(dc->dithermat), x))
+	  if (dc->v > ditherpoint_fast(d, &(dc->dithermat), x))
 	    {
 	      set_row_ends(dc, x, 0);
 	      dc->ptrs[0][d->ptr_offset] |= bit;
@@ -2507,7 +2510,7 @@ stp_dither_cmyk_very_fast(const unsigned short  *cmy,
 	  for (i = 0; i < d->n_channels; i++)
 	    {
 	      dither_channel_t *dc = &(CHANNEL(d, i));
-	      if (dc->v >= ditherpoint_fast(d, &(dc->dithermat), x))
+	      if (dc->v > ditherpoint_fast(d, &(dc->dithermat), x))
 		{
 		  set_row_ends(dc, x, 0);
 		  dc->ptrs[0][d->ptr_offset] |= bit;
@@ -3192,7 +3195,7 @@ stp_dither_raw_cmyk_very_fast(const unsigned short  *cmyk,
       for (i = 0; i < d->n_channels; i++)
 	{
 	  dither_channel_t *dc = &(CHANNEL(d, i));
-	  if (dc->ptrs[0] && dc->v >= ditherpoint_fast(d, &(dc->dithermat), x))
+	  if (dc->ptrs[0] && dc->v > ditherpoint_fast(d, &(dc->dithermat), x))
 	    {
 	      set_row_ends(dc, x, 0);
 	      dc->ptrs[0][d->ptr_offset] |= bit;
