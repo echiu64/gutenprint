@@ -101,7 +101,7 @@ static const stp_parameter_t the_parameters[] =
   },
 };
 
-static int the_parameter_count =
+static const int the_parameter_count =
 sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
 /*

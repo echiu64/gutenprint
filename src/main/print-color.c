@@ -68,6 +68,7 @@ typedef struct
   stp_curve_t sat_map;
   stp_curve_t gcr_curve;
   unsigned short *cmy_tmp;
+  unsigned short *cmyk_lut;
 } lut_t;
 
 typedef struct
@@ -1530,36 +1531,35 @@ cmyk_8_to_kcmy(stp_const_vars_t vars, const unsigned char *in,
   unsigned retval = 0;
   int j;
   int nz[4];
-  static unsigned short	vlut[256];
-  static double print_gamma = -1.0;
   lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
 
   memset(nz, 0, sizeof(nz));
-  if (print_gamma != stp_get_float_parameter(vars, "Gamma"))
+  if (!lut->cmyk_lut)
   {
-    print_gamma = stp_get_float_parameter(vars, "Gamma");
+    double print_gamma = stp_get_float_parameter(vars, "Gamma");
+    lut->cmyk_lut = stpi_malloc(sizeof(unsigned short) * 256);
 
     for (i = 0; i < 256; i ++)
-      vlut[i] = 65535.0 * pow((double)i / 255.0, print_gamma) + 0.5;
+      lut->cmyk_lut[i] = 65535.0 * pow((double)i / 255.0, print_gamma) + 0.5;
   }
 
   for (i = 0; i < lut->image_width; i++)
     {
       j = *in++;
       nz[3] |= j;
-      out[3] = vlut[j];
+      out[3] = lut->cmyk_lut[j];
 
       j = *in++;
       nz[0] |= j;
-      out[0] = vlut[j];
+      out[0] = lut->cmyk_lut[j];
 
       j = *in++;
       nz[1] |= j;
-      out[1] = vlut[j];
+      out[1] = lut->cmyk_lut[j];
 
       j = *in++;
       nz[2] |= j;
-      out[2] = vlut[j];
+      out[2] = lut->cmyk_lut[j];
 
       out += 4;
     }
@@ -1576,24 +1576,23 @@ cmyk_8_to_gray(stp_const_vars_t vars, const unsigned char *in,
   int i;
   int j;
   int nz[4];
-  static unsigned short	vlut[256];
-  static double print_gamma = -1.0;
   lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color")); 
 
   memset(nz, 0, sizeof(nz));
-  if (print_gamma != stp_get_float_parameter(vars, "Gamma"))
+  if (!lut->cmyk_lut)
   {
-    print_gamma = stp_get_float_parameter(vars, "Gamma");
+    double print_gamma = stp_get_float_parameter(vars, "Gamma");
+    lut->cmyk_lut = stpi_malloc(sizeof(unsigned short) * 256);
 
     for (i = 0; i < 256; i ++)
-      vlut[i] = 65535.0 * pow((double)i / 255.0, print_gamma) + 0.5;
+      lut->cmyk_lut[i] = 65535.0 * pow((double)i / 255.0, print_gamma) + 0.5;
   }
 
   for (i = 0; i < lut->image_width; i++)
     {
       j = *in++;
       nz[0] |= j;
-      *out++ = vlut[j];
+      *out++ = lut->cmyk_lut[j];
     }
   return nz[0] ? 1 : 0;
 }
@@ -1732,6 +1731,7 @@ allocate_lut(void)
   ret->in_data = NULL;
   ret->colorfunc = NULL;
   ret->cmy_tmp = NULL;
+  ret->cmyk_lut = NULL;
   ret->channels_are_initialized = 0;
   return ret;
 }
@@ -1794,6 +1794,8 @@ free_lut(void *vlut)
     stpi_free(lut->in_data);
   if (lut->cmy_tmp)
     stpi_free(lut->cmy_tmp);
+  if (lut->cmyk_lut)
+    stpi_free(lut->cmyk_lut);
   memset(lut, 0, sizeof(lut_t));
   stpi_free(lut);
 }

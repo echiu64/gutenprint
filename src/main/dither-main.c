@@ -90,7 +90,7 @@ static const stp_parameter_t dither_parameters[] =
   },
 };
 
-static int dither_parameter_count =
+static const int dither_parameter_count =
 sizeof(dither_parameters) / sizeof(const stp_parameter_t);
 
 stp_parameter_list_t

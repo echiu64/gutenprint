@@ -1144,7 +1144,7 @@ static const stp_parameter_t the_parameters[] =
   },
 };
 
-static int the_parameter_count =
+static const int the_parameter_count =
 sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
 typedef struct
@@ -1208,7 +1208,7 @@ static const float_param_t float_parameters[] =
   },
 };    
 
-static int float_parameter_count =
+static const int float_parameter_count =
 sizeof(float_parameters) / sizeof(const float_param_t);
 
 /*
@@ -1367,7 +1367,7 @@ static int pcl_convert_media_size(const char *media_size,	/* I: Media size strin
 }
 
 
-static stp_param_string_t ink_types[] =
+static const stp_param_string_t ink_types[] =
 {
   { "CMYK",	N_ ("Color + Black Cartridges") },
   { "Photo",	N_ ("Color + Photo Cartridges") }

@@ -1152,7 +1152,7 @@ static const canon_res_t canon_resolutions[] = {
   { 0, 0, NULL, NULL, NULL, NULL }
 };
 
-static const char *plain_paper_lum_adjustment =
+static const char plain_paper_lum_adjustment[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 "<gimp-print>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
@@ -1246,7 +1246,7 @@ static const stp_parameter_t the_parameters[] =
   },
 };
 
-static int the_parameter_count =
+static const int the_parameter_count =
 sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
 typedef struct
@@ -1318,7 +1318,7 @@ static const float_param_t float_parameters[] =
   },
 };    
 
-static int float_parameter_count =
+static const int float_parameter_count =
 sizeof(float_parameters) / sizeof(const float_param_t);
 
 static const paper_t *
@@ -1595,7 +1595,7 @@ canon_describe_resolution(stp_const_vars_t v, int *x, int *y)
   *y = -1;
 }
 
-static stp_param_string_t media_sources[] =
+static const stp_param_string_t media_sources[] =
               {
                 { "Auto",	N_ ("Auto Sheet Feeder") },
                 { "Manual",	N_ ("Manual with Pause") },
@@ -2986,8 +2986,8 @@ canon_write_line(stp_vars_t v)
 {
   canon_privdata_t *pd =
     (canon_privdata_t *) stpi_get_component_data(v, "Driver");
-  static int write_sequence[] = { 0, 3, 2, 1, 6, 5, 4 };
-  static int write_number[] = { 3, 2, 1, 0, 6, 5, 4 };
+  static const int write_sequence[] = { 0, 3, 2, 1, 6, 5, 4 };
+  static const int write_number[] = { 3, 2, 1, 0, 6, 5, 4 };
   int i;
   int written= 0;
 

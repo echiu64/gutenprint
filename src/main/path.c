@@ -36,6 +36,7 @@
 static int stpi_path_check(const struct dirent *module);
 static char *stpi_path_merge(const char *path, const char *file);
 
+/* WARNING: This is not thread safe! -- rlk 20030721 */
 static const char *path_check_path;   /* Path for scandir() callback */
 static const char *path_check_suffix; /* Suffix for scandir() callback */
 
