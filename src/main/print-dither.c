@@ -2109,8 +2109,10 @@ stp_dither_black_ed(const unsigned short   *gray,
       ADVANCE_BIDIRECTIONAL(d, bit, gray, direction, 1, xerror, xmod, error,
 			    1, d->error_rows);
     }
+  stp_free(ndither);
   for (i = 1; i < d->n_channels; i++)
     stp_free(error[i]);
+  stp_free(error);
   if (direction == -1)
     reverse_row_ends(d);
 }
@@ -2314,6 +2316,7 @@ stp_dither_cmy_ed(const unsigned short  *cmy,
   stp_free(ndither);
   for (i = 1; i < d->n_channels; i++)
     stp_free(error[i]);
+  stp_free(error);
   if (direction == -1)
     reverse_row_ends(d);
 }
@@ -2668,6 +2671,7 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
   stp_free(ndither);
   for (i = 1; i < d->n_channels; i++)
     stp_free(error[i]);
+  stp_free(error);
   if (direction == -1)
     reverse_row_ends(d);
 }
@@ -2683,45 +2687,22 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	        length;
   unsigned char	bit;
   int		i;
-  int		ndither[NCOLORS];
+  int		*ndither;
   int		threshold[NCOLORS];
-  int		*error[NCOLORS][ERROR_ROWS];
+  int		***error;
 
   int		terminate;
   int		direction = row & 1 ? 1 : -1;
   int xerror, xstep, xmod;
 
-  if (!duplicate_line)
-    {
-      if ((zero_mask & 7) != 7)
-	d->last_line_was_empty = 0;
-      else
-	d->last_line_was_empty++;
-    }
-  else if (d->last_line_was_empty)
-    d->last_line_was_empty++;
-  if (d->last_line_was_empty >= 5)
-    return;
   length = (d->dst_width + 7) / 8;
+  if (!shared_ed_initializer(d, row, duplicate_line, zero_mask, length,
+			     direction, &error, &ndither))
+    return;
 
   for (i = 1; i < NCOLORS; i++)
-    { int j;
-      for (j = 0; j < ERROR_ROWS; j++)
-	error[i][j] = get_errline(d, row + j, i);
-      memset(error[i][ERROR_ROWS - 1], 0, d->dst_width * sizeof(int));
-      threshold[i] = CHANNEL(d, i).ranges[0].range[1] / 4 - 1;
-    }
-  if (d->last_line_was_empty >= 4)
     {
-      if (d->last_line_was_empty == 4)
-	{
-	  for (i = 1; i < NCOLORS; i++)
-	    { int j;
-	      for (j = 0; j < ERROR_ROWS - 1; j++)
-		memset(error[i][j], 0, d->dst_width * sizeof(int));
-	    }
-	}
-      return;
+      threshold[i] = CHANNEL(d, i).ranges[0].range[1] / 4 - 1;
     }
 
   x = (direction == 1) ? 0 : d->dst_width - 1;
@@ -2733,16 +2714,8 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
   if (direction == -1)
     {
       cmy += (3 * (d->src_width - 1));
-      for (i = 1; i < NCOLORS; i++) {
-        int j;
-	for (j = 0; j < ERROR_ROWS; j++) {
-	  error[i][j] += d->dst_width - 1;
-	}
-      }
-      d->ptr_offset = length - 1;
     }
-  for (i = 1; i < NCOLORS; i++)
-    ndither[i] = error[i][0][0];
+
   QUANT(6);
   for (; x != terminate; x += direction)
     { int pick, print_inks;
@@ -2889,6 +2862,11 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
     for (i=1; i < NCOLORS; i++) {
       error[i][1][-direction] += ndither[i];
     }
+
+    stp_free(ndither);
+    for (i = 1; i < d->n_channels; i++)
+      stp_free(error[i]);
+    stp_free(error);
 }
 
 static void
@@ -3111,6 +3089,7 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
   stp_free(ndither);
   for (i = 1; i < d->n_channels; i++)
     stp_free(error[i]);
+  stp_free(error);
   if (direction == -1)
     reverse_row_ends(d);
 }
