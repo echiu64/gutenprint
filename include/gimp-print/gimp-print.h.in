@@ -262,7 +262,7 @@ typedef enum
 {
   STP_CURVE_BOUNDS_RESCALE,	/* Rescale the bounds */
   STP_CURVE_BOUNDS_CLIP,	/* Clip the curve to the existing bounds */
-  STP_CURVE_BOUNDS_ERROR	/* Error if bounds are violatedx */
+  STP_CURVE_BOUNDS_ERROR	/* Error if bounds are violated */
 } stp_curve_bounds_t;
 
 /*
