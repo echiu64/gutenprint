@@ -84,8 +84,8 @@ These release notes contain the following sections:
      while borderless printing works correctly in CUPS, the actual
      prints don't come out perfectly borderless in all cases.
 
-  2) A problem manifesting itself as unprinted bars within a page has
-     been fixed.
+  2) A problem manifesting itself as unprinted horizontal stripes
+     within a page has been fixed.
 
   3) A number of crash problems in the Print plugin have been fixed,
      and potential crash problems in the core library have been fixed.
@@ -137,8 +137,7 @@ These release notes contain the following sections:
      There may be minor compatible API changes.
 
   10) The libprintut utility library has been removed.  Its
-      functionality has been subsumed into the core Gimp-Print
-      library.
+     functionality has been subsumed into the core Gimp-Print library.
 
   11) More header files have been documented with Doxygen.
 
