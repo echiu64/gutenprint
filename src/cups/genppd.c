@@ -1071,7 +1071,14 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 
   stp_describe_parameter(v, "OutputOrder", &desc);
   if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
-    gzprintf(fp, "*DefaultOutputOrder: %s\n\n", desc.deflt.str);
+    {
+      gzputs(fp, "*OpenUI *OutputOrder: PickOne\n");
+      gzputs(fp, "*OrderDependency: 10 AnySetup *OutputOrder\n");
+      gzprintf(fp, "*DefaultOutputOrder: %s\n", desc.deflt.str);
+      gzputs(fp, "*OutputOrder Normal/Normal: \"\"\n");
+      gzputs(fp, "*OutputOrder Reverse/Reverse: \"\"\n");
+      gzputs(fp, "*CloseUI: *OutputOrder\n\n");
+    }
   stp_parameter_description_free(&desc);
 
   param_list = stp_get_parameter_list(v);
