@@ -73,6 +73,11 @@ Gimp-Print 4.2.3 contains the following major changes over Gimp-Print
      platforms other than Linux (this was known to be an issue on
      Solaris and BSD).  This was a regression in 4.2.2.
 
+  7) (bug 625602) The Stylus Pro 5500, 7000, 7500, 9000, and 9500
+     printed too light at low resolutions.  In addition, at 1440x720
+     some of these printers used an overly-large dot size, resulting
+     in more grain than necessary.
+
 
 * New Functionality:
 
