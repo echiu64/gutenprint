@@ -7,5 +7,6 @@ config.log
 config.status
 configure
 print
+canunprint
 unprint
 weavetest
