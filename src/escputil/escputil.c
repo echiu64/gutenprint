@@ -1167,63 +1167,74 @@ do_align_color(void)
       do_align_color_help(passes, choices);
       printf(_(printer_msg), _(printer_name));
       inbuf = do_get_input(_("Press enter to continue > "));
+    top:
+      initialize_print_cmd();
+      for (curpass = 0; curpass < passes; curpass++)
+	do_remote_cmd("DU", 6, 0, curpass, 0, 9, 0, curpass - 1);
+      if (do_print_cmd())
+	printer_error();
+      printf(_("Please inspect the print, and choose the pattern in each set.\n"
+	       "Type a pattern number, '?' for help, or 'r' to repeat the procedure.\n"));
+      initialize_print_cmd();
       for (curpass = 1; curpass <= passes; curpass ++)
 	{
-	  initialize_print_cmd();
-	  do_remote_cmd("DU", 6, 0, curpass, 0, 9, 0, curpass - 1);
-	  if (do_print_cmd())
-	    printer_error();
-	  if (curpass < passes)
+	reread:
+	  printf(_("Pass #%d"), curpass);
+	  inbuf = do_get_input(_("> "));
+	  switch (inbuf[0])
 	    {
-	      printf(_("Please re-insert the same alignment sheet in the printer when it is\n"
-		       "finished printing.\n"));
+	    case 'r':
+	    case 'R':
+	      printf(_("Please insert a fresh sheet of paper.\n"));
+	      fflush(stdout);
+	      initialize_print_cmd();
 	      (void) do_get_input(_("Press enter to continue > "));
+	      /* Ick. Surely there's a cleaner way? */
+	      goto top;
+	    case 'h':
+	    case '?':
+	      do_align_color_help(passes, choices);
+	      fflush(stdout);
+	    case '\n':
+	    case '\000':
+	      goto reread;
+	    default:
+	      break;
 	    }
+	  answer = strtol(inbuf, &endptr, 10);
+	  if (errno == ERANGE)
+	    {
+	      printf(_("Number out of range!\n"));
+	      goto reread;
+	    }
+	  if (endptr == inbuf)
+	    {
+	      printf(_("I cannot understand what you typed!\n"));
+	      fflush(stdout);
+	      goto reread;
+	    }
+	  if (answer < 1 || answer > choices)
+	    {
+	      printf(_("The best pair of lines should be numbered between 1 and %d.\n"),
+		     choices);
+	      fflush(stdout);
+	      goto reread;
+	    }
+	  do_remote_cmd("DA", 6, 0, 0, 0, answer, 9, 0);
 	}
-    reread:
-      printf(_("Inspect the alignment sheet, and determine which pattern is the smoothest.\n"
-	       "This pattern will appear to have the least ``grain''.\n"
-	       "If you cannot find a smooth pattern, please select the number for the\n"
-	       "best pattern, and repeat the procedure.\n"
-	       "Type a pattern number, or '?' for help.\n"));
-      fflush(stdout);
-      inbuf = do_get_input(_("> "));
-      if (!inbuf)
-	exit(1);
-      switch (inbuf[0])
-	{
-	case 'h':
-	case '?':
-	  do_align_color_help(passes, choices);
-	  fflush(stdout);
-	  /* FALLTHROUGH */
-	case '\n':
-	case '\000':
-	  goto reread;
-	default:
-	  break;
-	}
-      answer = strtol(inbuf, &endptr, 10);
-      if (errno == ERANGE)
-	{
-	  printf(_("Number out of range!\n"));
-	  goto reread;
-	}
-      if (endptr == inbuf)
-	{
-	  printf(_("I cannot understand what you typed!\n"));
-	  fflush(stdout);
-	  goto reread;
-	}
-      if (answer < 1 || answer > choices)
-	{
-	  printf(_("The best pattern should be numbered between 1 and %d.\n"),
-		 choices);
-	  fflush(stdout);
-	  goto reread;
-	}
+      printf(_("Attempting to set alignment..."));
+      if (do_print_cmd())
+	printer_error();
+      printf(_("succeeded.\n"));
+      printf(_("Please verify that the alignment is correct.  After the alignment pattern\n"
+	       "is printed again, please ensure that the best pattern for each line is\n"
+	       "pattern %d.  If it is not, you should repeat the process to get the best\n"
+	       "quality printing.\n"), (choices + 1) / 2);
+      printf(_("Please insert a fresh sheet of paper.\n"));
+      (void) do_get_input(_("Press enter to continue > "));
       initialize_print_cmd();
-      do_remote_cmd("DA", 6, 0, 0, 0, answer, 9, 0);
+      for (curpass = 0; curpass < passes; curpass++)
+	do_remote_cmd("DU", 6, 0, curpass, 0, 9, 0, curpass - 1);
       if (do_print_cmd())
 	printer_error();
     } while (!do_final_alignment());
