@@ -169,7 +169,7 @@ $(UTIL_MANUAL).pdf:  $(UTIL_MANUAL_SRC_FILES)
 	  if test -L $(notdir $<) ; then \
 	    $(RM) $(notdir $<) ; \
 	  fi ; \
-	  $(LN_S) $(UTIL_MANUAL_SRC_FILES) . ; \
+	  $(LN_S) -f $(UTIL_MANUAL_SRC_FILES) . ; \
 	  if test -d figures ; then \
 	    : ; \
 	  else \
@@ -185,7 +185,7 @@ $(GIMP_MANUAL).pdf:  $(GIMP_MANUAL_SRC_FILES)
 	  if test -L $(notdir $<) ; then \
 	    $(RM) $(notdir $<) ; \
 	  fi ; \
-	  $(LN_S) $(GIMP_MANUAL_SRC_FILES) . ; \
+	  $(LN_S) -f $(GIMP_MANUAL_SRC_FILES) . ; \
 	  if test -d figures ; then \
 	    : ; \
 	  else \
@@ -204,7 +204,7 @@ $(CUPS_MANUAL).pdf:  $(CUPS_MANUAL_SRC_FILES)
 	  if test -L $(notdir $<) ; then \
 	    $(RM) $(notdir $<) ; \
 	  fi ; \
-	  $(LN_S) $(CUPS_MANUAL_SRC_FILES) . ; \
+	  $(LN_S) -f $(CUPS_MANUAL_SRC_FILES) . ; \
 	  if test -d figures ; then \
 	    : ; \
 	  else \
@@ -223,7 +223,7 @@ $(MANUAL).pdf:  $(MANUAL_SRC_FILES)
 	  if test -L $(notdir $<) ; then \
 	    $(RM) $(notdir $<) ; \
 	  fi ; \
-	  $(LN_S) $(MANUAL_SRC_FILES) . ; \
+	  $(LN_S) -f $(MANUAL_SRC_FILES) . ; \
 	  if test -d figures ; then \
 	    : ; \
 	  else \
@@ -335,7 +335,7 @@ util-html-stamp: $(UTIL_MANUAL_SRC_FILES) $(UTIL_PNG_IMAGES)
 	  if test -L $(notdir $<) ; then \
 	    $(RM) $(notdir $<) ; \
 	  fi ; \
-	  $(LN_S) $(UTIL_MANUAL_SRC_FILES) . ; \
+	  $(LN_S) -f $(UTIL_MANUAL_SRC_FILES) . ; \
 	fi
 	$(DB2HTML) $(UTIL_MANUAL).sgml
 	-$(RM) -rf $(UTIL_HTMLDIR)
@@ -350,7 +350,7 @@ gimp-html-stamp: $(GIMP_MANUAL_SRC_FILES) $(GIMP_PNG_IMAGES)
 	  if test -L $(notdir $<) ; then \
 	    $(RM) $(notdir $<) ; \
 	  fi ; \
-	  $(LN_S) $(GIMP_MANUAL_SRC_FILES) . ; \
+	  $(LN_S) -f $(GIMP_MANUAL_SRC_FILES) . ; \
 	fi
 	$(DB2HTML) $(GIMP_MANUAL).sgml
 	-mkdir $(GIMP_MANUAL)/figures
@@ -369,7 +369,7 @@ cups-html-stamp: $(CUPS_MANUAL_SRC_FILES) $(CUPS_PNG_IMAGES)
 	  if test -L $(notdir $<) ; then \
 	    $(RM) $(notdir $<) ; \
 	  fi ; \
-	  $(LN_S) $(CUPS_MANUAL_SRC_FILES) . ; \
+	  $(LN_S) -f $(CUPS_MANUAL_SRC_FILES) . ; \
 	fi
 	$(DB2HTML) $(CUPS_MANUAL).sgml
 	-mkdir $(CUPS_MANUAL)/figures
@@ -388,7 +388,7 @@ html-stamp: $(MANUAL_SRC_FILES) $(PNG_IMAGES)
 	  if test -L $(notdir $<) ; then \
 	    $(RM) $(notdir $<) ; \
 	  fi ; \
-	  $(LN_S) $(MANUAL_SRC_FILES) . ; \
+	  $(LN_S) -f $(MANUAL_SRC_FILES) . ; \
 	fi
 	$(DB2HTML) $(MANUAL).sgml
 	-mkdir $(MANUAL)/figures

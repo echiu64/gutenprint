@@ -1,8 +1,10 @@
 Makefile
 Makefile.in
+compile
 config.guess
 config.sub
 config.rpath
+depcomp
 install-sh
 ltconfig
 ltmain.sh

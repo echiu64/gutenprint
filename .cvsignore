@@ -3,6 +3,7 @@
 ABOUT-NLS
 ChangeLog
 ChangeLogStamp
+INSTALL
 Makefile
 Makefile.in
 aclocal.m4
