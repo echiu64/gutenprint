@@ -62,13 +62,17 @@ INSTALLATION AND COMPILATION:
    described in the documentation (don`t forget zlib, libpng and libjpeg
    when downloading the source) for compiling
 
- - copy all "*.c" and "*.h" files to the "src/" subdirectory of ghostscript's
+ - Copy all "*.c" and "*.h" files to the "src/" subdirectory of ghostscript's
    distribution.
 
- - edit the file "contrib.mak" in the "src/" subdirectory by adding
-   the contents of "contrib.mak.addon"
+ - If you are using Ghostscript 5.50 or newer: edit the file
+   "contrib.mak" in the "src/" subdirectory by adding the contents of
+   "contrib.mak.addon"
 
- - add "$(DD)stp.dev" to the line "DEVICE_DEVS6=..." in "unix-gcc.mak"
+ - If you are using Ghsotscript 5.10: edit the file "devs.mak" in the
+   "src/" subdirectory by adding the contents of "devs.mak.addon-5.10".
+
+ - Add "$(DD)stp.dev" to the line "DEVICE_DEVS6=..." in "unix-gcc.mak"
 
  Compile and install gs as described in the documentation, after a
  successful compiler run you got a new driver named "stp". Check 
@@ -249,6 +253,7 @@ For Epson Stylus printers:
 
 -sQuality='
 
+'180 DPI'				 (works on older printers)
 '360 DPI'                                (works on all printers)
 '360 DPI Softweave'                      (works on printers that support
 					  variable dot sizes, such as
@@ -298,6 +303,9 @@ extremely high quality), this may be harmful to the print head and may
 cause clogging, due to ink pooling in the print head.  If your printer
 is capable of non-Microweave modes, there is seldom any advantage to
 be had from using Microweave.
+
+In general, using resolutions lower than 720 DPI on coated paper will
+yield unsatisfactory results.
 
 
 For PCL printers (including Hewlett-Packard and Lexmark):
@@ -540,12 +548,8 @@ BUGS AND LIMITATIONS:
 ---------------------
 
 - This driver is relatively slow, and memory-hungry with large paper
-  sizes and high quality settings.  As of release 3.1.7, it should be
-  considerably faster on sparse files, which is typical of
-  primarily-text output.
+  sizes and high quality settings.
 - In some cases (the Epson Stylus Color 850 is a known example), the
   top margin on the paper will be somewhat wider than desired
   (typically by about 1 cm or 3/8").  This is more likely to happen
   with older printers.
-- 360 dpi output tends to be pale and somewhat rough.  Increasing the
-  density to 1.6 or thereabouts may help to some degree.
