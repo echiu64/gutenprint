@@ -361,7 +361,7 @@ else
 fi
 dnl Fix "sysconfdir" variable if it hasn't been specified...
 if test "${sysconfdir}" = "\${prefix}/etc"; then
-  if test "${cups_prefix}" = "/" ; then
+  if test "${cups_prefix}" = "/usr" ; then
     cups_sysconfdir="/etc"
   else
     cups_sysconfdir="${cups_prefix}/etc"
