@@ -36,19 +36,8 @@ extern "C" {
 #include <libxml/xmlmemory.h>
 #include <libxml/xmlIO.h>
 #include <libxml/encoding.h>
-#if defined(HAVE_VARARGS_H) && !defined(HAVE_STDARG_H)
-#include <varargs.h>
-#else
-#include <stdarg.h>
-#endif
 
 typedef int (*stpi_xml_parse_func)(xmlNodePtr node, const char *file);
-
-typedef struct
-{
-  char *name;
-  stpi_xml_parse_func parse_func;
-} stpi_xml_parse_registry;
 
 extern void
 stpi_register_xml_parser(const char *name, stpi_xml_parse_func parse_func);

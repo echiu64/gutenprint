@@ -3,8 +3,6 @@
  *
  *   XML parser - process gimp-print XML data with libxml2.
  *
- *   Copyright 1997-2002 Michael Sweet (mike@easysw.com),
- *	Robert Krawitz (rlk@alum.mit.edu) and Michael Natterer (mitch@gimp.org)
  *   Copyright 2002-2003 Roger Leigh (roger@whinlatter.uklinux.net)
  *
  *   This program is free software; you can redistribute it and/or modify it
@@ -42,6 +40,17 @@
 #include "module.h"
 #include "path.h"
 #include "xml.h"
+#if defined(HAVE_VARARGS_H) && !defined(HAVE_STDARG_H)
+#include <varargs.h>
+#else
+#include <stdarg.h>
+#endif
+
+typedef struct
+{
+  char *name;
+  stpi_xml_parse_func parse_func;
+} stpi_xml_parse_registry;
 
 static stpi_list_t stpi_xml_registry;
 
