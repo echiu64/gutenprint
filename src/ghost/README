@@ -531,6 +531,8 @@ escp2-9600              EPSON Stylus Pro 9600
 escp2-10000             EPSON Stylus Pro 10000
 escp2-scan2000          EPSON Stylus Scan 2000
 escp2-scan2500          EPSON Stylus Scan 2500
+escp2-cx3200            EPSON Stylus CX-3200
+escp2-cx5200            EPSON Stylus CX-5200
 escp2-cl700		EPSON CL-700
 escp2-cl750		EPSON CL-750
 escp2-em900c		EPSON EM-900C

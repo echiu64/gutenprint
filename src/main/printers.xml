@@ -339,7 +339,7 @@
 
 <printer name="EPSON Stylus C82" driver="escp2-c82">
 <color>
-<model value=44>
+<model value=55>
 <gamma value=0.688>
 <density value=1.0>
 <cyan value=0.96>
@@ -888,6 +888,22 @@
 <printer name="EPSON Stylus Scan 2500" driver="escp2-scan2500">
 <color>
 <model value=12>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus CX-3200" driver="escp2-cx3200">
+<color>
+<model value=52>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus CX-5200" driver="escp2-cx5200">
+<color>
+<model value=55>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>

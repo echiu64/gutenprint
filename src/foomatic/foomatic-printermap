@@ -45,6 +45,8 @@
 #gptofoo escp2-c70 printer/Epson-Stylus_C70
 #gptofoo escp2-c80 printer/Epson-Stylus_C80
 #gptofoo escp2-c82 printer/Epson-Stylus_C82
+#gptofoo escp2-cx3200 printer/Epson-Stylus_CX3200
+#gptofoo escp2-cx5200 printer/Epson-Stylus_CX5200
 #gptofoo escp2 printer/61184
 #gptofoo escp2 printer/25696
 #gptofoo escp2 printer/61216

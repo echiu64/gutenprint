@@ -190,14 +190,14 @@ Gimp-Print 4.2.3 contains the following major changes over Gimp-Print
      CUPS drivers of GIMP-Print and units are again points ("pt" or
      nothing), inches ("in"), cm, and mm:
 
-	CUPS: lpr -o PageSize=Custom.500x750mm bigposter.ps
-	LPRng: lpr -Z PageSize=Custom.500x750mm bigposter.ps
-	GNUlpr: lpr -o PageSize=Custom.500x750mm bigposter.ps
-	LPD: lpr -JPageSize=Custom.500x750mm bigposter.ps
-	PPR: ppr -F "*PageSize Custom" -i 500x750mm bigposter.ps
-	PDQ: pdq -oPageSize_Custom -aPageWidth=500
-		 -aPageHeight=750 -oPageSizeUnit_mm bigposter.ps
-	No spooler: directomatic -o PageSize=Custom.500x750mm bigposter.ps
+        CUPS: lpr -o PageSize=Custom.500x750mm bigposter.ps
+        LPRng: lpr -Z PageSize=Custom.500x750mm bigposter.ps
+        GNUlpr: lpr -o PageSize=Custom.500x750mm bigposter.ps
+        LPD: lpr -JPageSize=Custom.500x750mm bigposter.ps
+        PPR: ppr -F "*PageSize Custom" -i 500x750mm bigposter.ps
+        PDQ: pdq -oPageSize_Custom -aPageWidth=500
+                 -aPageHeight=750 -oPageSizeUnit_mm bigposter.ps
+        No spooler: directomatic -o PageSize=Custom.500x750mm bigposter.ps
 
      This works with both the GhostScript "stp" and the IJS interface
      of GIMP-Print.
@@ -839,6 +839,8 @@ EPSON Stylus Pro 9600           (NEW, experimental)
 EPSON Stylus Pro 10000
 EPSON Stylus Scan 2000
 EPSON Stylus Scan 2500
+EPSON Stylus CX-3200            (NEW)
+EPSON Stylus CX-5200            (NEW)
 EPSON CL-700                    (NEW)
 EPSON CL-750                    (NEW)
 EPSON EM-900C                   (NEW)
@@ -1059,6 +1061,8 @@ Epson Stylus Color 1160        escp2-1160      EPSON Stylus Color 1160
 Epson Stylus Color 1500        escp2-1500      EPSON Stylus Color 1500
 Epson Stylus Color 1520        escp2-1520      EPSON Stylus Color 1520
 Epson Stylus Color 3000        escp2-3000      EPSON Stylus Color 3000
+Epson Stylus CX-3200           escp2-cx3200    EPSON Stylus CX-3200
+Epson Stylus CX-5200           escp2-cx5200    EPSON Stylus CX-5200
 Epson Stylus Photo             escp2-photo     EPSON Stylus Photo
 Epson Stylus Photo 700         escp2-700       EPSON Stylus Photo 700
 Epson Stylus Photo 720         escp2-720       EPSON Stylus Photo 720
@@ -1457,3 +1461,5 @@ Printer-Specific Notes:
       EPSON Stylus Photo 2200
       EPSON Stylus Scan 2000
       EPSON Stylus Scan 2500
+      EPSON Stylus CX-3200
+      EPSON Stylus CX-5200
