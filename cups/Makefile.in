@@ -77,7 +77,7 @@ sysconfdir	=	@sysconfdir@
 TARGETS	=	libdrv.a calibrate commandtoepson epson genppd \
 		ppd rastertoprinter commandtocanon canon
 DRVOBJS	=	cups-canon.o cups-dither.o cups-escp2.o cups-pcl.o \
-		cups-ps.o cups-util.o cups-weave.o
+		cups-ps.o cups-lexmark.o cups-util.o cups-weave.o
 OBJS	=	$(DRVOBJS) calibrate.o commandtoepson.o epson.o genppd.o \
 		rastertoprinter.o commandtocanon.o canon.o
 
