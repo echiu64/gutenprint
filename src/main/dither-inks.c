@@ -297,6 +297,7 @@ stpi_dither_set_ranges_and_shades_simple(stp_vars_t v, int color, int nlevels,
   int i;
   s.dot_sizes = d;
   s.subchannel = 0;
+  s.value = 65535.0;
   s.numsizes = nlevels;
 
   for (i = 0; i < nlevels; i++)
