@@ -33,6 +33,7 @@
  */
 
 #include "mxml.h"
+#include "config.h"
 
 
 /*

@@ -660,6 +660,7 @@ stp_curve_rescale(stp_curve_t curve, double scale,
   int i;
   double nblo;
   double nbhi;
+  size_t count;
 
   check_curve(icurve);
 
@@ -703,13 +704,15 @@ stp_curve_rescale(stp_curve_t curve, double scale,
   if (! finite(nbhi) || ! finite(nblo))
     return 0;
 
-  if (get_point_count(icurve))
+  count = get_point_count(icurve);
+  if (count)
     {
-      double *tmp = stpi_malloc(sizeof(double) * real_point_count);
-      size_t count;
+      double *tmp;
+      size_t scount;
       const double *data;
-      stp_sequence_get_data(icurve->seq, &count, &data);
-      for (i = 0; i < real_point_count; i++)
+      stp_sequence_get_data(icurve->seq, &scount, &data);
+      tmp = stpi_malloc(sizeof(double) * scount);
+      for (i = 0; i < scount; i++)
 	{
 	  switch (mode)
 	    {
@@ -738,7 +741,7 @@ stp_curve_rescale(stp_curve_t curve, double scale,
 	}
       stp_sequence_set_bounds(icurve->seq, nblo, nbhi);
       icurve->gamma = 0.0;
-      stpi_curve_set_points(icurve, real_point_count);
+      stpi_curve_set_points(icurve, count);
       stp_sequence_set_subrange(icurve->seq, 0, real_point_count, tmp);
       stpi_free(tmp);
       icurve->recompute_interval = 1;
@@ -912,7 +915,7 @@ stp_curve_resample(stp_curve_t curve, size_t points)
       new_vec[i] =
 	interpolate_point_internal(curve, ((double) i * (double) old /
 					   (double) (limit - 1)));
-  stpi_curve_set_points(icurve, limit);
+  stpi_curve_set_points(icurve, points);
   stp_sequence_set_subrange(icurve->seq, 0, limit, new_vec);
   icurve->recompute_interval = 1;
   stpi_free(new_vec);
@@ -1419,54 +1422,26 @@ stp_curve_write(FILE *file, stp_const_curve_t curve)  /* The curve */
 char *
 stp_curve_write_string(stp_const_curve_t curve)  /* The curve */
 {
-  char template[64];
-  int fd;
-  int fdd;
-  mode_t fmode = umask(077);
-  FILE *fp;
-  char *output = NULL;
-  struct stat statbuf;
-  off_t total_bytes_read = 0;
+  mxml_node_t *xmldoc = NULL;
+  char *retval;
 
-  strcpy(template, "/tmp/gpxioXXXXXX");
-  fd = mkstemp(template);
-  umask(fmode);
-  if (fd == -1)
-    goto out;
-  (void) unlink(template);
-  fdd = dup(fd);
-  if (fdd == -1)
-    goto out1;
-  fp = fdopen(fd, "w");
-  if (fp == NULL)
-    goto out2;
-  if (stp_curve_write(fp, curve))
-    goto out2;
-  if (fclose(fp) != 0)
-    goto out2;
-  if (lseek(fdd, 0, SEEK_SET) == (off_t) -1)
-    goto out2;
-  if (fstat(fdd, &statbuf) == -1)
-    goto out2;
-  output = stpi_zalloc(statbuf.st_size + 1);
-  while (total_bytes_read < statbuf.st_size)
+  stpi_xml_init();
+
+  xmldoc = xmldoc_create_from_curve(curve);
+  if (xmldoc == NULL)
     {
-      ssize_t bytes = read(fdd, output + total_bytes_read,
-			   statbuf.st_size - total_bytes_read);
-      if (bytes <= 0)
-	{
-	  stpi_free(output);
-	  output = NULL;
-	  goto out2;
-	}
-      total_bytes_read +=bytes;
+      stpi_xml_exit();
+      return NULL;
     }
- out2:
-  (void) close(fdd);
- out1:
-  (void) close(fd);
- out:
-  return output;
+
+  retval = stpi_mxmlSaveAllocString(xmldoc, curve_whitespace_callback);
+
+  if (xmldoc)
+    stpi_mxmlDelete(xmldoc);
+
+  stpi_xml_exit();
+
+  return retval;
 }
 
 static stp_curve_t
@@ -1487,7 +1462,6 @@ xml_doc_get_curve(mxml_node_t *doc)
   if (cur == NULL)
     {
       stpi_erprintf("xml_doc_get_curve: empty document\n");
-      stpi_mxmlDelete(doc);
       return NULL;
     }
 
@@ -1499,11 +1473,20 @@ xml_doc_get_curve(mxml_node_t *doc)
   return curve;
 }
 
-static stp_curve_t
-stp_curve_create_from_fp(FILE *fp)
+stp_curve_t
+stp_curve_create_from_file(const char* file)
 {
-  mxml_node_t *doc;
   stp_curve_t curve = NULL;
+  mxml_node_t *doc;
+  FILE *fp = fopen(file, "r");
+  if (!fp)
+    {
+      stpi_erprintf("stp_curve_create_from_file: unable to open %s: %s\n",
+		    file, strerror(errno));
+      return NULL;
+    }
+  if (stpi_debug_level & STPI_DBG_XML)
+    stpi_erprintf("stp_curve_create_from_file: reading `%s'...\n", file);
 
   stpi_xml_init();
 
@@ -1515,25 +1498,6 @@ stp_curve_create_from_fp(FILE *fp)
     stpi_mxmlDelete(doc);
 
   stpi_xml_exit();
-
-  return curve;
-}
-
-stp_curve_t
-stp_curve_create_from_file(const char* file)
-{
-  stp_curve_t curve = NULL;
-  FILE *fp = fopen(file, "r");
-  if (!fp)
-    {
-      stpi_erprintf("stp_curve_create_from_file: unable to open %s: %s\n",
-		    file, strerror(errno));
-      return NULL;
-    }
-  if (stpi_debug_level & STPI_DBG_XML)
-    stpi_erprintf("stp_curve_create_from_file: reading `%s'...\n", file);
-
-  curve = stp_curve_create_from_fp(fp);
   (void) fclose(fp);
   return curve;
 
@@ -1543,14 +1507,18 @@ stp_curve_t
 stp_curve_create_from_string(const char* string)
 {
   stp_curve_t curve = NULL;
-  FILE *fp = stpi_xio_init_string_input(string);
-  if (!fp)
-    {
-      return NULL;
-    }
+  mxml_node_t *doc;
   if (stpi_debug_level & STPI_DBG_XML)
     stpi_erprintf("stp_curve_create_from_string: reading '%s'...\n", string);
-  curve = stp_curve_create_from_fp(fp);
-  (void) fclose(fp);
+  stpi_xml_init();
+
+  doc = stpi_mxmlLoadString(NULL, string, MXML_NO_CALLBACK);
+
+  curve = xml_doc_get_curve(doc);
+
+  if (doc)
+    stpi_mxmlDelete(doc);
+
+  stpi_xml_exit();
   return curve;
 }
