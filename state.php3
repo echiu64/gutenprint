@@ -80,7 +80,8 @@ $supported_printers = array(
 	       'BJC 6000' => 'Operational but incomplete',
 	       'BJC 6100' => 'Untested',
 	       'BJC 7000' => 'Untested',
-	       'BJC 7100' => 'Untested'
+	       'BJC 7100' => 'Untested',
+	       'BJC 8200' => 'Operational'
 	       )
        ),
 'Postscript' => array(
