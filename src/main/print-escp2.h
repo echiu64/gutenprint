@@ -208,6 +208,10 @@ typedef struct
 #define MODEL_MICROWEAVE_EXCEPTION_360    0x1000000ul
 #define MODEL_MICROWEAVE_EXCEPTION_BLACK  0x2000000ul
 
+#define MODEL_DEINITIALIZE_JE_MASK      0x4000000ul
+#define MODEL_DEINITIALIZE_JE_NO        0x0000000ul
+#define MODEL_DEINITIALIZE_JE_YES       0x4000000ul
+
 #define MODEL_INIT			(0)
 #define MODEL_HASBLACK			(1)
 #define MODEL_COLOR			(2)
@@ -222,7 +226,8 @@ typedef struct
 #define MODEL_MICROWEAVE		(11)
 #define MODEL_VACUUM			(12)
 #define MODEL_MICROWEAVE_EXCEPTION	(13)
-#define MODEL_LIMIT			(14)
+#define MODEL_DEINITIALIZE_JE           (14)
+#define MODEL_LIMIT			(15)
 
 typedef struct
 {

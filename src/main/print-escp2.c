@@ -142,6 +142,7 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
   { "microweave",		20, 3 },
   { "vacuum",			23, 1 },
   { "microweave_exception",	24, 2 },
+  { "deinitialize-je",          26, 1 },
 };
 
 #define INCH(x)		(72 * x)
@@ -984,17 +985,21 @@ escp2_deinit_printer(const escp2_init_t *init, int printed_something)
       if (escp2_has_cap(init->model, MODEL_ROLLFEED,
 			MODEL_ROLLFEED_YES, init->v))
 	{
-	  if(strcmp(init->media_source,"Roll") == 0)
-	    stp_zprintf(init->v, /* End Roll Feed mode */
-			"IR\002%c%c%c", 0, 0, 0);
+	  /* End Roll Feed mode */
+	  if (strcmp(init->media_source, "Roll") == 0)
+	    stp_zprintf(init->v, "IR\002%c%c%c", 0, 0, 0);
 	  else
-	    stp_zprintf(init->v, /* End non-Roll Feed mode */
-			"IR\002%c%c%c", 0, 0, 2);
+	    stp_zprintf(init->v, "IR\002%c%c%c", 0, 0, 2);
 	}
-      stp_zprintf(init->v, /* Load settings from NVRAM */
-		  "LD%c%c"
+      /* Load settings from NVRAM */
+      stp_zprintf(init->v, "LD%c%c", 0, 0);
+
+      /* Magic deinit sequence reported by Simone Falsini */
+      if (escp2_has_cap(init->model, MODEL_DEINITIALIZE_JE,
+			MODEL_DEINITIALIZE_JE_YES, init->v))
+	stp_zprintf(init->v, "JE%c%c%c", 1, 0, 0);
 		  /* Exit remote mode */
-		  "\033%c%c%c",  0, 0, 0, 0, 0);
+      stp_zprintf(init->v, "\033%c%c%c", 0, 0, 0);
 
     }
 }
