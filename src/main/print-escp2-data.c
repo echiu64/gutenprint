@@ -2570,7 +2570,7 @@ static const escp2_inkname_t j_six_color_enhanced_composite_inkset =
 
 static const escp2_inkname_t seven_color_photo_inkset =
 {
-  "PhotoCMYK7", N_ ("Seven Color Photo"), 1, INKSET_CcMmYKk, .1 , 1.0,
+  "PhotoCMYK7", N_ ("Seven Color Photo"), 1, INKSET_CcMmYKk, .05 , 1.0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &photo2_black_channels, &photo_cyan_channels,
@@ -3166,10 +3166,10 @@ static const escp2_densities_t c3pl_pigment_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.69, 0.69, 0.511, 0.511, 0.765, 0.765, 0.585, 0.585, 0.293 };
 
 static const escp2_densities_t c2pl_densities =
-{ 2.0, 2.0, 1.15,1.15,0.57, 0.57, 0.55,  0.55,  0.54,  0.54,  0.416, 0.416, 0.416 };
+{ 2.0, 2.0, 1.15,1.15,0.57, 0.57, 0.650, 0.650, 0.650, 0.650, 0.650, 0.650, 0.650 };
 
 static const escp2_densities_t c4pl_pigment_densities =
-{ 2.0, 2.0, 1.35,1.35,0.68, 0.68, 0.648, 0.648, 0.648, 0.648, 0.648, 0.648, 0.324 };
+{ 2.0, 2.0, 1.35,1.35,0.68, 0.68, 0.518, 0.518, 0.518, 0.518, 0.518, 0.518, 0.259 };
 
 
 static const res_t standard_reslist[] =
@@ -3373,6 +3373,93 @@ static const res_t escp950_reslist[] =
     2880, 1440, 2880, 720,  1,  0, 1, 1, 0, 1, 1, RES_2880_1440},
   { "2880x720swuni",    N_("2880 x 720 DPI Unidirectional"),
     2880, 1440, 2880, 720,  1,  0, 1, 1, 1, 1, 1, RES_2880_1440},
+
+  { "1440x1440sw",      N_("1440 x 1440 DPI"),
+    2880, 1440, 1440, 1440, 1,  0, 1, 1, 1, 1, 1, RES_2880_1440},
+  { "1440x1440hq2",     N_("1440 x 1440 DPI Highest Quality"),
+    2880, 1440, 1440, 1440, 1,  0, 1, 1, 1, 1, 1, RES_2880_1440},
+
+  { "2880x1440sw",      N_("2880 x 1440 DPI"),
+    2880, 1440, 2880, 1440, 1,  0, 1, 1, 1, 1, 1, RES_2880_1440},
+
+  { "", "", 0, 0, 0, 0, 0, 0, 0, 0, 1, -1 }
+};
+
+static const res_t escp2200_reslist[] =
+{
+  { "360x90dpi",        N_("360 x 90 DPI Fast Economy Draft"),
+    360,  90,   360,  90,   0,  0, 1, 1, 0, 1, 1, RES_120_M },
+  { "360x90sw",         N_("360 x 90 DPI Fast Economy Draft"),
+    360,  90,   360,  90,   1,  0, 1, 1, 0, 1, 1, RES_120 },
+
+  { "360x120dpi",       N_("360 x 120 DPI Economy Draft"),
+    360,  120,  360,  120,  0,  0, 1, 1, 0, 3, 1, RES_120_M },
+  { "360x120sw",        N_("360 x 120 DPI Economy Draft"),
+    360,  120,  360,  120,  1,  0, 1, 1, 0, 3, 1, RES_120 },
+
+  { "180dpi",           N_("180 DPI Economy Draft"),
+    180,  180,  180,  180,  0,  0, 1, 1, 0, 1, 1, RES_180_M },
+  { "180sw",            N_("180 DPI Economy Draft"),
+    180,  180,  180,  180,  1,  0, 1, 1, 0, 1, 1, RES_180 },
+
+  { "360x240dpi",       N_("360 x 240 DPI Draft"),
+    360,  240,  360,  240,  0,  0, 1, 1, 0, 3, 2, RES_180_M },
+  { "360x240sw",        N_("360 x 240 DPI Draft"),
+    360,  240,  360,  240,  1,  0, 1, 1, 0, 3, 2, RES_180 },
+
+  { "360x180dpi",       N_("360 x 180 DPI Draft"),
+    360,  180,  360,  180,  0,  0, 1, 1, 0, 1, 1, RES_180_M },
+  { "360x180sw",        N_("360 x 180 DPI Draft"),
+    360,  180,  360,  180,  1,  0, 1, 1, 0, 1, 1, RES_180 },
+
+  { "360sw",            N_("360 DPI"),
+    360,  360,  360,  360,  1,  0, 1, 1, 0, 1, 1, RES_360 },
+  { "360swuni",         N_("360 DPI Unidirectional"),
+    360,  360,  360,  360,  1,  0, 1, 1, 1, 1, 1, RES_360 },
+  { "360mw",            N_("360 DPI Microweave"),
+    360,  360,  360,  360,  0,  1, 1, 1, 0, 1, 1, RES_360_M },
+  { "360mwuni",         N_("360 DPI Microweave Unidirectional"),
+    360,  360,  360,  360,  0,  1, 1, 1, 1, 1, 1, RES_360_M },
+  { "360dpi",           N_("360 DPI"),
+    360,  360,  360,  360,  0,  0, 1, 1, 0, 1, 1, RES_360_M },
+  { "360uni",           N_("360 DPI Unidirectional"),
+    360,  360,  360,  360,  0,  0, 1, 1, 1, 1, 1, RES_360_M },
+
+  { "720x360sw",        N_("720 x 360 DPI"),
+    720,  360,  720,  360,  1,  0, 1, 1, 0, 2, 1, RES_720_360 },
+  { "720x360swuni",     N_("720 x 360 DPI Unidirectional"),
+    720,  360,  720,  360,  1,  0, 1, 1, 1, 2, 1, RES_720_360 },
+
+  { "720mw",            N_("720 DPI Microweave"),
+    720,  720,  720,  720,  0,  1, 1, 1, 0, 1, 1, RES_720_M },
+  { "720mwuni",         N_("720 DPI Microweave Unidirectional"),
+    720,  720,  720,  720,  0,  1, 1, 1, 1, 1, 1, RES_720_M },
+  { "720sw",            N_("720 DPI"),
+    720,  720,  720,  720,  1,  0, 1, 1, 0, 1, 1, RES_720 },
+  { "720swuni",         N_("720 DPI Unidirectional"),
+    720,  720,  720,  720,  1,  0, 1, 1, 1, 1, 1, RES_720 },
+  { "720hq",            N_("720 DPI High Quality"),
+    720,  720,  720,  720,  1,  0, 2, 1, 0, 1, 1, RES_720 },
+  { "720hquni",         N_("720 DPI High Quality Unidirectional"),
+    720,  720,  720,  720,  1,  0, 2, 1, 1, 1, 1, RES_720 },
+  { "720hq2",           N_("720 DPI Highest Quality"),
+    720,  720,  720,  720,  1,  0, 4, 1, 1, 1, 1, RES_720 },
+
+  { "1440x720mw",       N_("1440 x 720 DPI Microweave"),
+    1440, 720,  1440, 720,  0,  1, 1, 1, 0, 1, 1, RES_1440_720_M },
+  { "1440x720mwuni",    N_("1440 x 720 DPI Microweave Unidirectional"),
+    1440, 720,  1440, 720,  0,  1, 1, 1, 1, 1, 1, RES_1440_720_M },
+  { "1440x720sw",       N_("1440 x 720 DPI"),
+    1440, 720,  1440, 720,  1,  0, 1, 1, 0, 1, 1, RES_1440_720 },
+  { "1440x720swuni",    N_("1440 x 720 DPI Unidirectional"),
+    1440, 720,  1440, 720,  1,  0, 1, 1, 1, 1, 1, RES_1440_720 },
+  { "1440x720hq2",      N_("1440 x 720 DPI Highest Quality"),
+    1440, 720,  1440, 720,  1,  0, 2, 1, 1, 1, 1, RES_1440_720 },
+
+  { "2880x720sw",       N_("2880 x 720 DPI"),
+    2880, 720, 2880, 720,  1,  0, 1, 1, 0, 1, 1, RES_2880_720},
+  { "2880x720swuni",    N_("2880 x 720 DPI Unidirectional"),
+    2880, 720, 2880, 720,  1,  0, 1, 1, 1, 1, 1, RES_2880_720},
 
   { "1440x1440sw",      N_("1440 x 1440 DPI"),
     2880, 1440, 1440, 1440, 1,  0, 1, 1, 1, 1, 1, RES_2880_1440},
@@ -4404,9 +4491,9 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1, 0, 0, 0, 0, 0,
+    0, 1, 0, 190, 0, 0, 0,
     c4pl_pigment_dotsizes, c4pl_pigment_densities, &variable_4pl_pigment_inks,
-    &standard_paper_list, standard_reslist, &photo7_inklist,
+    &standard_paper_list, escp2200_reslist, &photo7_inklist,
     ultrachrome_bits, ultrachrome_base_res, &standard_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
