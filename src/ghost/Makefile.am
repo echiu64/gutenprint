@@ -86,10 +86,8 @@ EXTRA_DIST = \
 	Makefile.am \
 	README \
 	README.bsd \
-	com-stp.ppd \
 	contrib.mak.addon \
 	debian-patch \
 	debian-patch-stp \
 	devs.mak.addon-5.10 \
 	gdevstp.c \
-	gs-stp.pdq
