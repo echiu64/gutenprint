@@ -2409,7 +2409,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
 #ifndef PCL_DEBUG_DISABLE_COMPRESSION
   if ((caps->stp_printer_type & PCL_PRINTER_TIFF) == PCL_PRINTER_TIFF)
   {
-    comp_buf = stp_malloc(height + (height + 126) / 127);
+    comp_buf = stp_malloc((height + 128 + 7) * 129 / 128);
     writefunc = pcl_mode2;
   }
   else
