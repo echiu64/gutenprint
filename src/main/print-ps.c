@@ -59,6 +59,14 @@ static void	ps_ascii85(const stp_vars_t, unsigned short *, int, int);
 static char	*ppd_find(const char *, const char *, const char *, int *);
 
 
+static char *
+c_strdup(const char *s)
+{
+  char *ret = stp_malloc(strlen(s) + 1);
+  strcpy(ret, s);
+  return ret;
+}
+
 /*
  * 'ps_parameters()' - Return the parameter values for the given parameter.
  */
@@ -110,8 +118,8 @@ ps_parameters(const stp_printer_t printer,	/* I - Printer model */
 	      const stp_papersize_t pt = stp_get_papersize_by_index(i);
 	      if (strlen(stp_papersize_get_name(pt)) > 0)
 		{
-		  valptrs[*count].name = strdup(stp_papersize_get_name(pt));
-		  valptrs[*count].text = strdup(stp_papersize_get_text(pt));
+		  valptrs[*count].name = c_strdup(stp_papersize_get_name(pt));
+		  valptrs[*count].text = c_strdup(stp_papersize_get_text(pt));
 		  (*count)++;
 		}
 	    }
@@ -142,8 +150,8 @@ ps_parameters(const stp_printer_t printer,	/* I - Printer model */
       else
         ltext = loption;
 
-      valptrs[(*count)].name = strdup(loption);
-      valptrs[(*count)].text = strdup(ltext);
+      valptrs[(*count)].name = c_strdup(loption);
+      valptrs[(*count)].text = c_strdup(ltext);
       (*count) ++;
     }
   }
@@ -217,7 +225,7 @@ ps_default_parameters(const stp_printer_t printer,
 
     if (strcasecmp(lname, defname) == 0)
     {
-      return strdup(loption);
+      return c_strdup(loption);
     }
   }
 
