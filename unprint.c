@@ -82,7 +82,7 @@ line_type **page=NULL;
 
 void *mycalloc(size_t count,size_t size){
   void *p;
-  if (p=calloc(count,size)) {
+  if ((p=calloc(count,size))) {
     return(p);
   }
 
@@ -92,7 +92,7 @@ void *mycalloc(size_t count,size_t size){
 
 void *mymalloc(size_t size){
   void *p;
-  if (p=malloc(size)) {
+  if ((p=malloc(size))) {
     return(p);
   }
 
@@ -235,7 +235,7 @@ void expand_line (unsigned char *src, unsigned char *dst, int length, int bpp, i
 void write_output(FILE *fp_w) {
   int l,p,left,right,first,last,width,height;
   unsigned int amount;
-  ppmpixel white,pixel;
+  ppmpixel pixel;
 
   fprintf(stderr,"Margins: top: %d bottom: top+%d\n",pstate.top_margin,
           pstate.bottom_margin);
@@ -332,7 +332,7 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
   pstate.xposition+=n?(n-1)*skip+1:0;
 }
 
-main(int argc,char *argv[]){
+int main(int argc,char *argv[]){
 
 int currentcolor,currentbpp,density,eject,got_graphics;
 
@@ -590,8 +590,8 @@ int currentcolor,currentbpp,density,eject,got_graphics;
               case 'V': /* set absolute vertical position */
                 i=0;
                 switch (bufsize) {
-                    case 4:i=buf[2]<<16+buf[3]<<24;
-                    case 2:i+=buf[0]+256*buf[1];
+                    case 4:i=(buf[2]<<16)+(buf[3]<<24);
+                    case 2:i+=(buf[0])+(256*buf[1]);
                     if (i*(pstate.relative_vertical_units/
                             pstate.absolute_vertical_units)>=pstate.yposition) {
                       pstate.yposition=i*(pstate.relative_vertical_units/
@@ -611,8 +611,8 @@ int currentcolor,currentbpp,density,eject,got_graphics;
               case 'v': /* set relative vertical position */
                 i=0;
                 switch (bufsize) {
-                    case 4:i=buf[2]<<16+buf[3]<<24;
-                    case 2:i+=buf[0]+256*buf[1];
+                    case 4:i=(buf[2]<<16)+(buf[3]<<24);
+                    case 2:i+=(buf[0])+(256*buf[1]);
                       pstate.yposition+=i;
                     break;
                   default:
@@ -679,4 +679,5 @@ int currentcolor,currentbpp,density,eject,got_graphics;
   write_output(fp_w);
   fclose(fp_w);
 
+  return(0);
 }
