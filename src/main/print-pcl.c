@@ -2726,12 +2726,18 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
 #endif
 
   dt = stp_create_dither_data();
-  stp_add_channel(dt, black, ECOLOR_K, 0);
-  stp_add_channel(dt, cyan, ECOLOR_C, 0);
-  stp_add_channel(dt, lcyan, ECOLOR_C, 1);
-  stp_add_channel(dt, magenta, ECOLOR_M, 0);
-  stp_add_channel(dt, lmagenta, ECOLOR_M, 1);
-  stp_add_channel(dt, yellow, ECOLOR_Y, 0);
+  if (black)
+    stp_add_channel(dt, black, ECOLOR_K, 0);
+  if (cyan)
+    stp_add_channel(dt, cyan, ECOLOR_C, 0);
+  if (lcyan)
+    stp_add_channel(dt, lcyan, ECOLOR_C, 1);
+  if (magenta)
+    stp_add_channel(dt, magenta, ECOLOR_M, 0);
+  if (lmagenta)
+    stp_add_channel(dt, lmagenta, ECOLOR_M, 1);
+  if (yellow)
+    stp_add_channel(dt, yellow, ECOLOR_Y, 0);
 
   for (y = 0; y < out_height; y ++)
   {
