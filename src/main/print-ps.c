@@ -364,9 +364,6 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
   printf("left = %d, top = %d\n", left, top);
 #endif /* DEBUG */
 
-#ifdef __EMX__
-  _fsetmode(v, "t");
-#endif
   stp_puts("%!PS-Adobe-3.0\n", v);
 #ifdef HAVE_CONFIG_H
   stp_zprintf(v, "%%%%Creator: %s/Gimp-Print %s (%s)\n",
