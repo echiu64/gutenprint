@@ -176,7 +176,7 @@ copy_value_list(const stp_list_t *src)
   stp_list_item_t *item = stp_list_get_start((stp_list_t *)src);
   while (item)
     {
-      stp_list_item_create(ret, stp_list_get_end(ret), value_copy(item));
+      stp_list_item_create(ret, NULL, value_copy(item));
       item = stp_list_item_next(item);
     }
   return ret;
@@ -375,7 +375,7 @@ set_raw_parameter(stp_list_t *list, const char *parameter, const char *value,
 	  v = stp_malloc(sizeof(value_t));
 	  v->name = stp_strdup(parameter);
 	  v->typ = typ;
-	  stp_list_item_create(list, stp_list_get_end(list), v);
+	  stp_list_item_create(list, NULL, v);
 	}
       v->value.rval.data = stp_malloc(bytes + 1);
       memcpy(v->value.rval.data, value, bytes);
@@ -394,6 +394,7 @@ stp_set_string_parameter_n(stp_vars_t v, const char *parameter,
   stp_list_t *list = vv->params[STP_PARAMETER_TYPE_STRING_LIST];
   set_raw_parameter(list, parameter, value, bytes,
 		    STP_PARAMETER_TYPE_STRING_LIST);
+  stp_set_verified(v, 0);
 }
 
 void
@@ -404,6 +405,7 @@ stp_set_string_parameter(stp_vars_t v, const char *parameter,
   if (value)
     byte_count = strlen(value);
   stp_set_string_parameter_n(v, parameter, value, byte_count);
+  stp_set_verified(v, 0);
 }
 
 const char *
@@ -429,6 +431,7 @@ stp_set_raw_parameter(stp_vars_t v, const char *parameter,
   stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
   stp_list_t *list = vv->params[STP_PARAMETER_TYPE_RAW];
   set_raw_parameter(list, parameter, value, bytes, STP_PARAMETER_TYPE_RAW);
+  stp_set_verified(v, 0);
 }
 
 const stp_raw_t *
@@ -458,6 +461,7 @@ stp_set_file_parameter(stp_vars_t v, const char *parameter,
     byte_count = strlen(value);
   set_raw_parameter(list, parameter, value, byte_count,
 		    STP_PARAMETER_TYPE_FILE);
+  stp_set_verified(v, 0);
 }
 
 void
@@ -468,6 +472,7 @@ stp_set_file_parameter_n(stp_vars_t v, const char *parameter,
   stp_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
   set_raw_parameter(list, parameter, value, byte_count,
 		    STP_PARAMETER_TYPE_FILE);
+  stp_set_verified(v, 0);
 }
 
 const char *
@@ -506,12 +511,13 @@ stp_set_curve_parameter(stp_vars_t v, const char *parameter,
 	  val = stp_malloc(sizeof(value_t));
 	  val->name = stp_strdup(parameter);
 	  val->typ = STP_PARAMETER_TYPE_CURVE;
-	  stp_list_item_create(list, stp_list_get_end(list), val);
+	  stp_list_item_create(list, NULL, val);
 	}
       val->value.cval = stp_curve_allocate_copy(curve);
     }
   else if (item)
     stp_list_item_destroy(list, item);
+  stp_set_verified(v, 0);
 }
 
 const stp_curve_t
@@ -546,9 +552,10 @@ stp_set_int_parameter(stp_vars_t v, const char *parameter, int ival)
       val = stp_malloc(sizeof(value_t));
       val->name = stp_strdup(parameter);
       val->typ = STP_PARAMETER_TYPE_INT;
-      stp_list_item_create(list, stp_list_get_end(list), val);
+      stp_list_item_create(list, NULL, val);
     }
   val->value.ival = ival;
+  stp_set_verified(v, 0);
 }
 
 const int
@@ -583,12 +590,13 @@ stp_set_boolean_parameter(stp_vars_t v, const char *parameter, int ival)
       val = stp_malloc(sizeof(value_t));
       val->name = stp_strdup(parameter);
       val->typ = STP_PARAMETER_TYPE_BOOLEAN;
-      stp_list_item_create(list, stp_list_get_end(list), val);
+      stp_list_item_create(list, NULL, val);
     }
   if (ival)
     val->value.ival = 1;
   else
     val->value.ival = 0;
+  stp_set_verified(v, 0);
 }
 
 const int
@@ -623,9 +631,10 @@ stp_set_float_parameter(stp_vars_t v, const char *parameter, double dval)
       val = stp_malloc(sizeof(value_t));
       val->name = stp_strdup(parameter);
       val->typ = STP_PARAMETER_TYPE_DOUBLE;
-      stp_list_item_create(list, stp_list_get_end(list), val);
+      stp_list_item_create(list, NULL, val);
     }
   val->value.dval = dval;
+  stp_set_verified(v, 0);
 }
 
 const double
@@ -866,7 +875,7 @@ stp_parameter_list_add_param(stp_parameter_list_t list,
 			     const stp_parameter_t *item)
 {
   stp_list_t *ilist = (stp_list_t *) list;
-  stp_list_item_create(ilist, stp_list_get_end(ilist), (void *) item);
+  stp_list_item_create(ilist, NULL, (void *) item);
 }
 
 stp_parameter_list_t
@@ -946,8 +955,7 @@ stp_parameter_list_copy(const stp_parameter_list_t list)
   int i;
   size_t count = stp_parameter_list_count(list);
   for (i = 0; i < count; i++)
-    stp_list_item_create(ret, stp_list_get_end(ret),
-			 (void *)stp_parameter_list_param(list, i));
+    stp_list_item_create(ret, NULL, (void *)stp_parameter_list_param(list, i));
   return ret;
 }
 
@@ -959,6 +967,6 @@ stp_parameter_list_append(stp_parameter_list_t list,
   stp_list_t *ilist = (stp_list_t *)list;
   size_t count = stp_parameter_list_count(append);
   for (i = 0; i < count; i++)
-    stp_list_item_create(ilist, stp_list_get_end(ilist),
+    stp_list_item_create(ilist, NULL,
 			 (void *) stp_parameter_list_param(append, i));
 }

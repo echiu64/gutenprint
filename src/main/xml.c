@@ -306,9 +306,7 @@ stp_xml_process_family(xmlNodePtr family)     /* The family node */
 	  outprinter = stp_xml_process_printer(printer, family_name,
 					       family_data->printfuncs);
 	  if (outprinter)
-	    stp_list_item_create(family_data->printer_list,
-				 stp_list_get_end(family_data->printer_list),
-				 (void *) outprinter);
+	    stp_list_item_create(family_data->printer_list, NULL, outprinter);
 	}
       printer = printer->next;
     }

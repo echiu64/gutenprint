@@ -79,9 +79,7 @@ stp_path_search(stp_list_t *dirlist, /* List of directories to search */
 	    {
 	      module_name = stp_path_merge((const char *) stp_list_item_get_data(diritem),
 					   module_dir[idx]->d_name);
-	      stp_list_item_create(findlist,
-				   stp_list_get_end(findlist),
-				   module_name);
+	      stp_list_item_create(findlist, NULL, module_name);
 	      stp_free (module_dir[idx]);
 	    }
 	  free (module_dir);
@@ -190,7 +188,7 @@ stp_path_split(stp_list_t *list, /* List to add directories to */
 	  dir = (char *) stp_malloc(len + 1);
 	  strncpy(dir, start, len);
 	  dir[len] = '\0';
-	  stp_list_item_create(list, stp_list_get_end(list), dir);
+	  stp_list_item_create(list, NULL, dir);
 	}
       if (!end)
 	{

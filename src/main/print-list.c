@@ -105,17 +105,19 @@ stp_list_copy(stp_list_t *list)
   node_copyfunc copyfunc = stp_list_get_copyfunc(list);
   stp_list_item_t *item = stp_list_get_start(list);
 
-  stp_list_set_freefunc(ret, stp_list_get_freefunc(list));
+  stp_list_set_copyfunc(ret, stp_list_get_copyfunc(list));
+  /* If we use default (shallow) copy, we can't free the elements of it */
+  if (stp_list_get_copyfunc(list))
+    stp_list_set_freefunc(ret, stp_list_get_freefunc(list));
   stp_list_set_namefunc(ret, stp_list_get_namefunc(list));
   stp_list_set_long_namefunc(ret, stp_list_get_long_namefunc(list));
   stp_list_set_sortfunc(ret, stp_list_get_sortfunc(list));
-  stp_list_set_copyfunc(ret, stp_list_get_copyfunc(list));
   while (item)
     {
       if (copyfunc)
-	stp_list_item_create(ret, stp_list_get_end(ret), (*copyfunc)(item));
+	stp_list_item_create(ret, NULL, (*copyfunc)(item));
       else
-	stp_list_item_create(ret, stp_list_get_end(ret), item);
+	stp_list_item_create(ret, NULL, item);
       item = stp_list_item_next(item);
     }
   return ret;
@@ -389,19 +391,19 @@ stp_list_get_sortfunc(stp_list_t *list)
 /* these functions operate on individual nodes in a list */
 
 /*
- * create a new node in list, after prev (may be null e.g. if sorting
- * prev is calculated automatically, else defaults to end).  Must be
+ * create a new node in list, before next (may be null e.g. if sorting
+ * next is calculated automatically, else defaults to end).  Must be
  * initialised with data (null nodes are disallowed).  The
  * stp_list_item_t type can not exist unless it is associated with an
  * stp_list_t list head.
  */
 int
 stp_list_item_create(stp_list_t *list,
-		     stp_list_item_t *prev,
+		     stp_list_item_t *next,
 		     void *data)
 {
   stp_internal_list_node_t *ln; /* list node to add */
-  stp_internal_list_node_t *lnp; /* list node previous */
+  stp_internal_list_node_t *lnn; /* list node next */
   stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
   check_list(lh);
 
@@ -419,66 +421,66 @@ stp_list_item_create(stp_list_t *list,
   if (lh->sortfunc)
     {
       /* set np to the previous node (before the insertion */
-      lnp = (stp_internal_list_node_t *) stp_list_get_start(list);
-      while (lnp)
+      lnn = (stp_internal_list_node_t *) stp_list_get_end(list);
+      while (lnn)
 	{
-	  if (lh->sortfunc((stp_list_item_t *) lnp,
-			   (stp_list_item_t *) ln) > 0)
+	  if (lh->sortfunc((stp_list_item_t *) lnn,
+			   (stp_list_item_t *) ln) <= 0)
 	    break;
-	  lnp = lnp->next;
+	  lnn = lnn->prev;
 	}
     }
 #ifdef STP_LIST_DEBUG
   else /* check prev exists: only use when debugging, due to overhead */
     {
-      if (prev)
+      if (next)
 	{
-	  lnp = (stp_internal_list_node_t *) stp_list_get_start(list);
-	  while (lnp)
+	  lnn = (stp_internal_list_node_t *) stp_list_get_start(list);
+	  while (lnn)
 	    {
-	      if (lnp == (stp_internal_list_node_t *) prev)
+	      if (lnn == (stp_internal_list_node_t *) next)
 		break;
-	      lnp = lnp->next;
+	      lnn = lnn->prev;
 	    }
 	}
       else
-	  lnp = (stp_internal_list_node_t *) NULL;
+	lnn = (stp_internal_list_node_t *) NULL;
     }
 #else
-  lnp = (stp_internal_list_node_t *) prev;
+  lnn = (stp_internal_list_node_t *) next;
 #endif
 
   /* got lnp; now insert the new ln */
 
-  /* set prev */
-  ln->prev = lnp;
+  /* set next */
+  ln->next = lnn;
 
   if (!ln->prev) /* insert at start of list */
     {
       if (lh->start) /* list not empty */
-	ln->next = lh->start;
+	ln->prev = lh->end;
       else
-	lh->end = ln;
-      lh->start = ln;
-    }
-
-  /* set next (already set if at start of list) */
-
-  if (!ln->next && ln->prev) /* insert at end of list */
-    ln->next = ln->prev->next;
-
-  if (lh->end == ln->prev) /* prev was old end */
-    {
+	lh->start = ln;
       lh->end = ln;
     }
 
-  /* set prev->next */
-  if (ln->prev)
-    ln->prev->next = ln;
+  /* set prev (already set if at start of list) */
+
+  if (!ln->prev && ln->next) /* insert at end of list */
+    ln->prev = ln->next->prev;
+
+  if (lh->start == ln->next) /* prev was old end */
+    {
+      lh->start = ln;
+    }
 
   /* set next->prev */
   if (ln->next)
     ln->next->prev = ln;
+
+  /* set prev->next */
+  if (ln->prev)
+    ln->prev->next = ln;
 
   /* increment reference count */
   lh->length++;

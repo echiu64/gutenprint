@@ -213,8 +213,7 @@ stp_module_get_class(stp_module_class_t class /* Module class */)
     {
       /* Add modules of the same class to our list */
       if (((stp_module_t *) stp_list_item_get_data(ln))->class == class)
-	stp_list_item_create(list, stp_list_get_end(list),
-			     stp_list_item_get_data(ln));
+	stp_list_item_create(list, NULL, stp_list_item_get_data(ln));
       ln = stp_list_item_next(ln);
     }
   return list;
@@ -299,9 +298,7 @@ stp_module_open(const char *modulename /* Module filename */)
 static int stp_module_register(stp_module_t *module /* Module to register */)
 {
   /* Add to the module list */
-  if (stp_list_item_create(module_list,
-			   stp_list_get_end(module_list),
-			   (void *) module))
+  if (stp_list_item_create(module_list, NULL, module))
     return 1;
 
 #ifdef DEBUG

@@ -854,7 +854,7 @@ extern void stp_list_set_sortfunc(stp_list_t *list, node_sortfunc);
 extern node_sortfunc stp_list_get_sortfunc(stp_list_t *list);
 
 extern int stp_list_item_create(stp_list_t *list,
-				stp_list_item_t *prev,
+				stp_list_item_t *next,
 				void *data);
 extern int stp_list_item_destroy(stp_list_t *list,
 				 stp_list_item_t *item);

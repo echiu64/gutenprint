@@ -618,9 +618,7 @@ stp_family_register(stp_list_t *family)
 	  check_printer(printer);
 	  if (!stp_list_get_item_by_name(printer_list,
 					 stp_get_driver(printer->printvars)))
-	    stp_list_item_create(printer_list,
-				 stp_list_get_end(printer_list),
-				 (void *) printer);
+	    stp_list_item_create(printer_list, NULL, printer);
 	  printer_item = stp_list_item_next(printer_item);
 	}
     }
