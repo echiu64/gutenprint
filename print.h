@@ -136,12 +136,6 @@ extern void	gray_to_gray(guchar *, guchar *, int, int, lut_t *,
 			     guchar *, float);
 extern void	indexed_to_gray(guchar *, guchar *, int, int, lut_t *,
 				guchar *, float);
-extern void	indexed_to_rgb(guchar *, guchar *, int, int, lut_t *,
-			       guchar *, float);
-extern void	rgb_to_gray(guchar *, guchar *, int, int, lut_t *,
-			    guchar *, float);
-extern void	rgb_to_rgb(guchar *, guchar *, int, int, lut_t *, guchar *,
-			   float);
 
 extern void	gray_to_gray16(guchar *, gushort *, int, int, lut16_t *,
 			       guchar *, float);
