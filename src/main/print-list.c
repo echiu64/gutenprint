@@ -63,9 +63,14 @@ stpi_list_node_free_data (stpi_list_item_t *item)
 static void
 check_list(const stpi_internal_list_head_t *v)
 {
+  if (v == NULL)
+    {
+      stpi_erprintf("Null stpi_list_t! Please report this bug.\n");
+      stpi_abort();
+    }
   if (v->cookie != COOKIE_LIST)
     {
-      stpi_erprintf("Bad stpi_list_t!\n");
+      stpi_erprintf("Bad stpi_list_t! Please report this bug.\n");
       stpi_abort();
     }
 }

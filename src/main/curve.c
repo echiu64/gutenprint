@@ -89,9 +89,14 @@ static const int wrap_mode_count =
 static void
 check_curve(const stpi_internal_curve_t *v)
 {
+  if (v == NULL)
+    {
+      stpi_erprintf("Null curve! Please report this bug.\n");
+      stpi_abort();
+    }
   if (v->cookie != COOKIE_CURVE)
     {
-      stpi_erprintf("Bad curve!\n");
+      stpi_erprintf("Bad curve! Please report this bug.\n");
       stpi_abort();
     }
 }

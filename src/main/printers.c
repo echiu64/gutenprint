@@ -80,9 +80,14 @@ stp_printer_model_count(void)
 static void
 check_printer(const stpi_internal_printer_t *p)
 {
+  if (p == NULL)
+    {
+      stpi_erprintf("Null stp_printer_t! Please report this bug.\n");
+      stpi_abort();
+    }
   if (p->cookie != COOKIE_PRINTER)
     {
-      stpi_erprintf("Bad stp_printer_t!\n");
+      stpi_erprintf("Bad stp_printer_t! Please report this bug.\n");
       stpi_abort();
     }
 }

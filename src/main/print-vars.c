@@ -230,9 +230,14 @@ do						\
 static void
 check_vars(const stpi_internal_vars_t *v)
 {
+  if (v == NULL)
+    {
+      stpi_erprintf("Null stp_vars_t! Please report this bug.\n");
+      stpi_abort();
+    }
   if (v->cookie != COOKIE_VARS)
     {
-      stpi_erprintf("Bad stp_vars_t!\n");
+      stpi_erprintf("Bad stp_vars_t! Please report this bug.\n");
       stpi_abort();
     }
 }
