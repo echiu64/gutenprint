@@ -132,6 +132,16 @@ static canon_cap_t canon_model_capabilities[] =
     CANON_CAP_DMT
   },
 
+  { /* Canon BJC 4400 */
+    4400,
+    9.5*72, 14*72,
+    720, 360, 2,
+    11, 9, 10, 18,
+    CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,
+    CANON_SLOT_ASF1,
+    CANON_CAP_CMD61 | CANON_CAP_DMT
+  },
+
   { /* Canon BJC 6000 */
     6000,
     618, 936,      /* 8.58" x 13 " */

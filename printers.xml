@@ -393,6 +393,14 @@
 <language value=canon>
 </printer>
 
+<printer name="CANON BJC 4400 photo" driver="bjc-4400">
+<color>
+<model value=4400>
+<gamma value=1.000>
+<density value=0.800>
+<language value=canon>
+</printer>
+
 <printer name="CANON BJC 6000" driver="bjc-6000">
 <color>
 <model value=6000>
