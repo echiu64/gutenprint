@@ -508,6 +508,8 @@ lexmark_source_type(const char *name, lexmark_cap_t caps)
 static int
 lexmark_printhead_type(const char *name, lexmark_cap_t caps)
 {
+  FILE *dbfFile; 
+
   if (!strcmp(name,"Black"))       return 0;
   if (!strcmp(name,"Color"))       return 1;
   if (!strcmp(name,"Black/Color")) return 2;
@@ -515,10 +517,11 @@ lexmark_printhead_type(const char *name, lexmark_cap_t caps)
   if (!strcmp(name,"Photo"))       return 4;
   if (!strcmp(name,"Photo Test Mode"))       return 5;
 
+
 #ifdef DEBUG
   fprintf(stderr,"lexmark: Unknown head combo '%s' - reverting to black\n",name);
 #endif
-  return 0;
+  return 2;
 }
 
 
@@ -665,8 +668,8 @@ lexmark_parameters(const stp_printer_t *printer,	/* I - Printer model */
 	  valptrs[c++]= c_strdup("1200x600 DPI");
 	if (1200<=x && 1200<=y)
 	  valptrs[c++]= c_strdup("1200x1200 DPI");
-	if (2400<=x && 1200<=y)
-	  valptrs[c++]= c_strdup("2400x1200 DPI");
+	/*	if (2400<=x && 1200<=y)
+		valptrs[c++]= c_strdup("2400x1200 DPI"); not already supported !! */
 
       } else if (!(caps.max_xdpi%180)) {
 
