@@ -3091,7 +3091,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     for (i = 0; i < NCOLORS; i++)
       if ((*inks)[i])
 	stp_dither_set_ranges(dither, i, (*inks)[i]->count, (*inks)[i]->range,
-			  (*inks)[i]->density * pt->k_upper *
+			  (*inks)[i]->density * k_upper *
 			      stp_get_density(nv));
 
   if (bits == 2)
@@ -3137,8 +3137,9 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       for (k = 0; k < 49; k++)
 	{
 	  lum_adjustment[k] = escp2_lum_adjustment(model, nv)[k];
-	  if (pt->lum_adjustment)
-	    lum_adjustment[k] *= pt->lum_adjustment[k];
+	  if(pt)
+	    if (pt->lum_adjustment)
+	      lum_adjustment[k] *= pt->lum_adjustment[k];
 	}
     }
   if (escp2_sat_adjustment(model, nv))
@@ -3147,8 +3148,9 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       for (k = 0; k < 49; k++)
 	{
 	  sat_adjustment[k] = escp2_sat_adjustment(model, nv)[k];
-	  if (pt->sat_adjustment)
-	    sat_adjustment[k] *= pt->sat_adjustment[k];
+	  if(pt)
+	    if (pt->sat_adjustment)
+	      sat_adjustment[k] *= pt->sat_adjustment[k];
 	}
     }
   if (escp2_hue_adjustment(model, nv))
@@ -3157,8 +3159,9 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       for (k = 0; k < 49; k++)
 	{
 	  hue_adjustment[k] = escp2_hue_adjustment(model, nv)[k];
-	  if (pt->hue_adjustment)
-	    hue_adjustment[k] += pt->hue_adjustment[k];
+	  if(pt)
+	    if (pt->hue_adjustment)
+	      hue_adjustment[k] += pt->hue_adjustment[k];
 	}
     }
 
