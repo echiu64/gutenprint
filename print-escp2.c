@@ -739,8 +739,8 @@ escp2_parameters(const printer_t *printer,	/* I - Printer model */
 
   static char *ink_types[] =
   {
-    "Variable Dot Size",
-    "Single Dot Size"
+    "Six Color Photo",
+    "Four Color Standard"
   };
 
   static char *media_types[] =
@@ -808,7 +808,7 @@ escp2_parameters(const printer_t *printer,	/* I - Printer model */
     }
   else if (strcmp(name, "InkType") == 0)
     {
-      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_NORMAL))
+      if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_NO))
 	return NULL;
       else
 	{
@@ -1113,6 +1113,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   int		horizontal_passes = 1;
   int		vertical_passes = 1;
   int		vertical_oversample = 1;
+  int		use_6color = 0;
   const res_t 	*res;
   int		bits;
   void *	weave = NULL;
@@ -1128,6 +1129,10 @@ escp2_print(const printer_t *printer,		/* I - Model */
 
   if (!strcmp(media_type, "Glossy Film"))
     use_glossy_film = 1;
+  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES) &&
+      strcmp(ink_type, "Six Color Photo") != 0 &&
+      nv.image_type != IMAGE_MONOCHROME)
+    use_6color = 1;
 
   if (nv.image_type == IMAGE_MONOCHROME)
     {
@@ -1137,7 +1142,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
     }
   else if (output_type == OUTPUT_GRAY)
     colormode = COLOR_MONOCHROME;
-  else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+  else if (use_6color)
     colormode = COLOR_CCMMYK;
   else
     colormode = COLOR_CMYK;
@@ -1205,12 +1210,14 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	  return;
 	}
     }
-  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
-      use_softweave && strcmp(ink_type, "Single Dot Size") != 0 &&
-      nv.image_type != IMAGE_MONOCHROME)
+  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4)
+      && use_softweave)
     bits = 2;
   else
     bits = 1;
+
+  if (!use_softweave)
+    use_6color = 0;
 
  /*
   * Let the user know what we're doing...
@@ -1279,7 +1286,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
       black = malloc(length * bits);
     else
       black = NULL;
-    if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES)) {
+    if (use_6color) {
       lcyan = malloc(length * bits);
       lmagenta = malloc(length * bits);
     } else {
@@ -1318,7 +1325,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
     dither = init_dither(image_width, out_width, ydpi / xdpi, 1, &nv);
 
   dither_set_black_levels(dither, 1.0, 1.0, 1.0);
-  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+  if (use_6color)
     dither_set_black_lower(dither, .5 / bits);
   else
     dither_set_black_lower(dither, .25 / bits);
@@ -1336,7 +1343,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 		   sizeof(simple_dither_range_t));
       dither_set_y_ranges_simple(dither, 3, dot_sizes, nv.density);
       dither_set_k_ranges_simple(dither, 3, dot_sizes, nv.density);
-      if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+      if (use_6color)
 	{
 	  dither_set_c_ranges(dither, dsize, variable_dither_ranges,
 			      nv.density);
@@ -1349,8 +1356,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	  dither_set_m_ranges_simple(dither, 3, dot_sizes, nv.density);
 	}
     }
-  else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
-    dither_set_light_inks(dither, .33, .33, 0.0, nv.density);
+  else if (use_6color)
+    dither_set_light_inks(dither, .33, .33, 0.0, nv.density * .75);
 
 
   switch (nv.image_type)
@@ -2769,10 +2776,12 @@ initialize_weave(int jets,	/* Width of print head */
   sw->horizontal_width = (linewidth + 128 + 7) * 129 / 128;
   sw->vertical_height = lineheight;
   sw->lineoffsets = malloc(sw->vmod * sizeof(lineoff_t));
+  memset(sw->lineoffsets, 0, sw->vmod * sizeof(lineoff_t));
   sw->lineactive = malloc(sw->vmod * sizeof(lineactive_t));
   sw->linebases = malloc(sw->vmod * sizeof(linebufs_t));
   sw->passes = malloc(sw->vmod * sizeof(pass_t));
   sw->linecounts = malloc(sw->vmod * sizeof(int));
+  memset(sw->linecounts, 0, sw->vmod * sizeof(int));
   sw->lineno = 0;
 
   for (i = 0; i < sw->vmod; i++)
@@ -3153,9 +3162,15 @@ initialize_row(const escp2_softweave_t *sw, int row, int width)
 	  pass->subpass = i;
 	  for (j = 0; j < sw->ncolors; j++)
 	    {
+	      if (lineoffs[0].v[j] != 0)
+		fprintf(stderr, "WARNING: pass %d subpass %d row %d: lineoffs %d\n",
+			w.pass, i, row, lineoffs[0].v[j]);
 	      lineoffs[0].v[j] = 0;
 	      lineactive[0].v[j] = 0;
 	    }
+	  if (*linecount != 0)
+	    fprintf(stderr, "WARNING: pass %d subpass %d row %d: linecount %d\n",
+		    w.pass, i, row, *linecount);
 	  *linecount = 0;
 	  if (w.missingstartrows > 0)
 	    fillin_start_rows(sw, row, i, width, w.missingstartrows);
@@ -3191,7 +3206,10 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
   for (j = 0; j < sw->ncolors; j++)
     {
       if (lineactive[0].v[j] == 0)
-	continue;
+	{
+	  lineoffs[0].v[j] = 0;
+	  continue;
+	}
       if (pass->logicalpassstart > sw->last_pass_offset)
 	{
 	  int advance = pass->logicalpassstart - sw->last_pass_offset -
@@ -3283,8 +3301,10 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	}
 
       fwrite(bufs[0].v[j], lineoffs[0].v[j], 1, prn);
+      lineoffs[0].v[j] = 0;
       putc('\r', prn);
     }
+  *linecount = 0;
   sw->last_pass = pass->pass;
   pass->pass = -1;
 }
