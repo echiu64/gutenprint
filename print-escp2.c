@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.83  2000/02/17 03:17:31  rlk
+ *   Yet another try
+ *
  *   Revision 1.82  2000/02/17 01:41:26  rlk
  *   Another try at the variable dot printers
  *
@@ -867,22 +870,30 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
   switch (ydpi)					/* Set line feed increment */
     {
     case 180 :
-      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
-	fwrite("\033(U\005\000\008\008\001\240\005", 10, 1, prn);
+      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
+	  use_softweave)
+	fwrite("\033(U\005\000\008\008\008\240\005", 10, 1, prn);
       else
 	fwrite("\033(U\001\000\024", 6, 1, prn);
       break;
 
     case 360 :
-      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
-	fwrite("\033(U\005\000\004\004\001\240\005", 10, 1, prn);
+      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
+	  use_softweave)
+	fwrite("\033(U\005\000\004\004\004\240\005", 10, 1, prn);
       else
 	fwrite("\033(U\001\000\012", 6, 1, prn);
       break;
 
     case 720 :
-      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
-	fwrite("\033(U\005\000\002\002\001\240\005", 10, 1, prn);
+      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
+	  use_softweave)
+	{
+	  if (horizontal_passes <= 2)
+	    fwrite("\033(U\005\000\002\002\002\240\005", 10, 1, prn);
+	  else
+	    fwrite("\033(U\005\000\002\002\001\240\005", 10, 1, prn);
+	}
       else
 	fwrite("\033(U\001\000\005", 6, 1, prn);
       break;
