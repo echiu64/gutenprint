@@ -40,20 +40,6 @@ extern "C" {
 
 #include <gimp-print/color.h>
 
-#if 0
-typedef enum
-{
-  STP_OUTPUT_TYPE_INVALID,
-  STP_OUTPUT_TYPE_GRAYSCALE,
-  STP_OUTPUT_TYPE_WHITESCALE,
-  STP_OUTPUT_TYPE_RGB,
-  STP_OUTPUT_TYPE_CMY,
-  STP_OUTPUT_TYPE_CMYK,
-  STP_OUTPUT_TYPE_CMYKRB,
-  STP_OUTPUT_TYPE_RAW
-} stp_output_type_t;
-#endif
-
 typedef struct
 {
   int (*init)(stp_vars_t v, stp_image_t *image, size_t steps);
