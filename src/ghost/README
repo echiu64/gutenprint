@@ -702,22 +702,22 @@ For Canon printers:
 
 1200 DPI printers (BJC 7000, BJC 7100, BJC 8200, BJC 8500):
 
-300dpi           300x300 DPI
-300dmt           300x300 DPI DMT
-600dpi           600x600 DPI
-600dmt           600x600 DPI DMT
+300x300dpi       300x300 DPI
+300x300dmt       300x300 DPI DMT
+600x600dpi       600x600 DPI
+600x600dmt       600x600 DPI DMT
 1200x600dpi      1200x600 DPI
-1200dpi          1200x1200 DPI
+1200x1200dpi     1200x1200 DPI
 
 1440 DPI printers (BJC 1000, BJC 2000, BJC 3000, BJC 4300, BJC 4400,
     BJC 5100, BJC 5500, BJC 6000, BJC 6100, BJC 6500, BJC 8200):
 
-360dpi           360x360 DPI
-360dmt           360x360 DPI DMT
+360x360dpi       360x360 DPI
+360x360dmt       360x360 DPI DMT
 720x360dpi       720x360 DPI
-720dpi           720x720 DPI
+720x720dpi       720x720 DPI
 1440x720dpi      1440x720 DPI
-1440dpi          1440x1440 DPI
+1440x1440dpi     1440x1440 DPI
 
 
 Ink Types
