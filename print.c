@@ -162,7 +162,9 @@ static void	resolution_callback(GtkWidget *, gint);
 static void	output_type_callback(GtkWidget *, gint);
 static void	linear_callback(GtkWidget *, gint);
 static void	orientation_callback(GtkWidget *, gint);
+static void	printandsave_callback(void);
 static void	print_callback(void);
+static void	save_callback(void);
 static void	cancel_callback(void);
 static void	close_callback(void);
 
@@ -265,7 +267,8 @@ GtkWidget	*print_dialog,		/* Print dialog window */
 		*left_entry,
 		*right_entry,
 		*top_entry,
-		*bottom_entry;
+		*bottom_entry,
+		*printandsave_button;
 
 GtkObject	*scaling_adjustment,	/* Adjustment object for scaling */
 		*brightness_adjustment,	/* Adjustment object for brightness */
@@ -302,6 +305,7 @@ int		plist_current = 0,	/* Current system printer */
 		plist_count = 0;	/* Number of system printers */
 plist_t		plist[MAX_PLIST];	/* System printers */
 
+int		saveme = FALSE;		/* True if print should proceed */
 int		runme = FALSE;		/* True if print should proceed */
 const printer_t *current_printer = 0;	/* Current printer index */
 
@@ -1439,13 +1443,30 @@ do_print_dialog(void)
   gtk_box_set_homogeneous(GTK_BOX(GTK_DIALOG(dialog)->action_area), FALSE);
   gtk_box_set_spacing(GTK_BOX(GTK_DIALOG(dialog)->action_area), 0);
 
+  button = printandsave_button =
+    gtk_button_new_with_label (_("Print And Save Settings"));
+  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+  gtk_signal_connect (GTK_OBJECT (button), "clicked",
+		      (GtkSignalFunc) printandsave_callback,
+		      NULL);
+  gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
+  gtk_widget_grab_default (button);
+  gtk_widget_show (button);
+
   button = gtk_button_new_with_label (_("Print"));
   GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
 		      (GtkSignalFunc) print_callback,
 		      NULL);
   gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
-  gtk_widget_grab_default (button);
+  gtk_widget_show (button);
+
+  button = gtk_button_new_with_label (_("Save Current Settings"));
+  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+  gtk_signal_connect (GTK_OBJECT (button), "clicked",
+		      (GtkSignalFunc) save_callback,
+		      NULL);
+  gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
   gtk_widget_show (button);
 
   button = gtk_button_new_with_label (_("Cancel"));
@@ -1605,7 +1626,8 @@ do_print_dialog(void)
   * Set printrc options...
   */
 
-  printrc_save();
+  if (saveme)
+    printrc_save();
 
  /*
   * Return ok/cancel...
@@ -2475,6 +2497,26 @@ print_callback(void)
   }
   else
     gtk_widget_show(file_browser);
+}
+
+static void
+printandsave_callback(void)
+{
+  if (plist_current > 0)
+  {
+    runme = TRUE;
+    saveme = TRUE;
+    gtk_widget_destroy(print_dialog);
+  }
+  else
+    gtk_widget_show(file_browser);
+}
+
+static void
+save_callback(void)
+{
+  printrc_save();
+  gtk_widget_grab_default(printandsave_button);
 }
 
 /*
