@@ -211,6 +211,144 @@ GHOSTSCRIPT
     options.
 
 
+PRINTER-SPECIFIC NOTES:
+
+    * The Epson Stylus C70 and C80 may give better results using Three
+      Color Composite printing on Premium Glossy Photo Paper and Premium
+      Semigloss.  Epson's proprietary drivers are thought to do this on
+      these papers.
+
+    * The Epson Stylus C70 and C80 appear to support resolutions of
+      1440x1440 and 2880x1440, but these resolutions may not yield any
+      improvement over 2880x720.  Experiments suggest that 1440x1440
+      yields slightly better results than 2880x720 on Epson Photo Paper,
+      but somewhat inferior results on Premium Glossy Photo Paper.
+      2880x1440 yields essentially no additional improvement on Photo
+      Paper, and intermediate results on Premium Glossy Photo Paper.
+
+      We expect that 1440x1440 would yield maximum improvement over
+      2880x720 on line art with very fine detail.  It is unlikely that
+      2880x1440 would yield any significant additional improvement.
+
+      Note that these resolutions are not officially supported by Epson,
+      and may not work on all C70 and C80 printers.
+
+    * Many Epson printers (specifically, the Epson Stylus Color 740
+      and all newer printers) will not respond to ASCII text without a
+      special "activation" sequence (specifically, this command takes
+      the printers out of "packet mode").  Therefore, the common
+      suggestion to test a printer port by sending plain text to it
+      will not work for these printers.  These printers are, however,
+      able to print plain text *after* the activation sequence is
+      sent.
+
+      A suggestion would be to use the escputil command to print a
+      test pattern:
+
+      escputil -n -u -P printer
+
+      or
+
+      escputil -n -u -r /dev/lp0
+
+      The `-u' option will send the activation sequence.  In addition
+      to printing the test pattern (if at least unidirectional
+      communication is set up), this will enable printing plain ASCII
+      text, at least until the printer is powered off (or used under
+      Windows).
+
+      To test bidirectional communication, the command
+
+      escputil -i -u -r /dev/lp0
+
+      is a good choice, as it will print (to the screen) the amount of
+      ink in the printer.
+
+      Note that this activation sequence is both unnecessary and
+      incorrect on older printers.
+
+      The current list of printers for which the activation sequence
+      must be sent is:
+
+      EPSON Stylus C20SX
+      EPSON Stylus C20UX
+      EPSON Stylus C40SX
+      EPSON Stylus C40UX
+      EPSON Stylus C60
+      EPSON Stylus C70
+      EPSON Stylus C80
+      EPSON Stylus Color 440
+      EPSON Stylus Color 460
+      EPSON Stylus Color 480
+      EPSON Stylus Color 580
+      EPSON Stylus Color 640
+      EPSON Stylus Color 660
+      EPSON Stylus Color 670
+      EPSON Stylus Color 680
+      EPSON Stylus Color 740
+      EPSON Stylus Color 760
+      EPSON Stylus Color 777
+      EPSON Stylus Color 860
+      EPSON Stylus Color 880
+      EPSON Stylus Color 83
+      EPSON Stylus Color 900
+      EPSON Stylus Color 980
+      EPSON Stylus Color 1160
+      EPSON Stylus Photo 720
+      EPSON Stylus Photo 750
+      EPSON Stylus Photo 780/785/790
+      EPSON Stylus Photo 810/820
+      EPSON Stylus Photo 870/875
+      EPSON Stylus Photo 890/895
+      EPSON Stylus Photo 1200
+      EPSON Stylus Photo 1270
+      EPSON Stylus Photo 1280/1290
+      EPSON Stylus Photo 2000P
+      EPSON Stylus Scan 2000
+      EPSON Stylus Scan 2500
+
+
+RECOMMENDED SETTINGS
+
+    We recommend starting with all default settings for the color
+    settings.  The settings can be adjusted as necessary for
+    particular combinations of ink, paper, and subject material.
+
+    We recommend use of the Adaptive Hybrid dithering algorithm in
+    most cases.  Ordered dithering also works very well in many cases,
+    and is somewhat faster, but it does not work very well with text
+    and very fine details (certain kinds of line art), particularly at
+    high resolutions.  Fast dithering is also quite usable in many
+    cases.
+
+    On most inkjet printers, 600 or 720 dpi will produce very high
+    quality; 1200x1200 or 1440x720 dpi will produce extremely high
+    quality.
+
+
+SUPPORT
+
+    1) Read the FAQ, in doc/FAQ.html.  Your question may be answered
+       there.
+
+    2) Read the user's manual, in doc/users_guide.
+
+    3) There are public forums on Sourceforge dedicated to this
+       package.  Please see
+       http://sourceforge.net/forum/?group_id=1537 for more
+       information.  The Help forum is a good source of information.
+
+    4) If you have a technical support issue that does not appear to
+       be a bug in the software, you can use the Tech Support Manager.
+       Please see http://sourceforge.net/support/?group_id=1537.
+
+    5) If you have found a clear bug in the package, you may file a
+       bug report at http://sourceforge.net/bugs/?group_id=1537.
+
+    6) You may send mail to the gimp-print-devel@sourceforge.net
+       mailing list.  This is recommended as a last resort only.
+
+
 KNOWN BUILD ISSUES
 
     * There is a known complication building "escputil" that causes
@@ -314,7 +452,7 @@ KNOWN BUILD ISSUES
       the program did not operate correctly.
 
       If you do not have 'zgrep' on your system, you can gunzip the
-      PPD files, and use 
+      PPD files, and use
 
 	  grep LanguageVersion ppd/*/pcl-4.ppd
 
@@ -374,47 +512,6 @@ KNOWN BUILD ISSUES
       Unfortunately, this may not work correctly on all systems, most
       likely due to linker quirks.  We would like to know about any
       problems experienced, and any workarounds.
-
-
-RECOMMENDED SETTINGS
-
-    We recommend starting with all default settings for the color
-    settings.  The settings can be adjusted as necessary for
-    particular combinations of ink, paper, and subject material.
-
-    We recommend use of the Adaptive Hybrid dithering algorithm in
-    most cases.  Ordered dithering also works very well in many cases,
-    and is somewhat faster, but it does not work very well with text
-    and very fine details (certain kinds of line art), particularly at
-    high resolutions.  Fast dithering is also quite usable in many
-    cases.
-
-    On most inkjet printers, 600 or 720 dpi will produce very high
-    quality; 1200x1200 or 1440x720 dpi will produce extremely high
-    quality.
-
-
-SUPPORT
-
-    1) Read the FAQ, in doc/FAQ.html.  Your question may be answered
-       there.
-
-    2) Read the user's manual, in doc/users_guide.
-
-    3) There are public forums on Sourceforge dedicated to this
-       package.  Please see
-       http://sourceforge.net/forum/?group_id=1537 for more
-       information.  The Help forum is a good source of information.
-
-    4) If you have a technical support issue that does not appear to
-       be a bug in the software, you can use the Tech Support Manager.
-       Please see http://sourceforge.net/support/?group_id=1537.
-
-    5) If you have found a clear bug in the package, you may file a
-       bug report at http://sourceforge.net/bugs/?group_id=1537.
-
-    6) You may send mail to the gimp-print-devel@sourceforge.net
-       mailing list.  This is recommended as a last resort only.
 
 
 PACKAGING
@@ -515,6 +612,8 @@ PACKAGING
       Gimp Print plugin.  The plugin in the Gimp 1.2 tree is based on
       the older Gimp-Print 4.0 source base; 4.2 supports more printers
       with better quality, and has more features than 4.0.
+
+    * Please read the release notes carefully!
 
     * Distributors (UNIX vendors and Linux distributors) should
       subscribe to the gimp-print-devel@sourceforge.net mailing list
