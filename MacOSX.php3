@@ -3,7 +3,7 @@
 require('functions.php3');
 ###############################################
 ##    Set title of this page here    ##########
-$title = 'Gimp-Print for Mac OS X Jaguar';
+$title = 'Gimp-Print for Mac OS X';
 ###############################################
 ###############################################
 require('standard_html_header.php3');
@@ -12,7 +12,7 @@ require('standard_html_header.php3');
 ### Content Below  ###
 # Please remember to use <P> </P> tags !  ?>
  <h1>
- Gimp-Print for Mac OS X Jaguar / Darwin 6.0
+ Gimp-Print for Mac OS X (10.2 and later)
  </h1>
  <h4>
  High quality printer drivers for Canon, Epson, Lexmark, and PCL printers.
@@ -31,21 +31,21 @@ require('standard_html_header.php3');
  </tr>
  <tr>
  <td>
+ <p>
+ <a href="MacOSX.php3#4.2.6-rc2"><b>December 12, 2003 -</b></a> Gimp-Print 4.2.6-rc2 (release candidate 2) is now available for download.
+ </p>
+ <p>
+ <a href="MacOSX.php3#4.3.25"><b>December 12, 2003 -</b></a> Gimp-Print 4.3.25 (unstable development version) is now available for download. This is a packaged version of the development build and is not recommended for typical users.
+ </p>
 <p>
  <a href="MacOSX.php3#uninstall-1.1"><b>November 5, 2003 -</b></a> A Gimp-Print uninstaller is now available for download.
- </p>
- <p>
- <a href="MacOSX.php3#4.2.6-pre3"><b>November 3, 2003 -</b></a> Gimp-Print 4.2.6-pre3 is now available for download.
- </p>
- <p>
- <a href="MacOSX.php3#4.3.18"><b>July 08, 2003 -</b></a> Gimp-Print 4.3.18 is the latest Mac OS X release in the developmental line (4.3.x) of Gimp-Print. Currently, the 4.3.x line is not entirely functional in Mac OS X Jaguar. Almost all users should continue to use the 4.2.x line until the current issues with 4.3.x are resolved.  See the <a href="MacOSX.php3#4.3.18">news item</a> for more details, especially if you ever installed 4.3.17.
  </p>
  <p>
  <a href="MacOSX.php3#downloadESPGS"><b>April 30, 2003 -</b></a> ESP Ghostscript version 7.05.6 (ESPGS) is now available as a Mac OS X installer package in the downloads section. All Gimp-Print users should update to this version of ESPGS.
  </p>
  <p>
  <p>
- <a href="MacOSX.php3#4.2.5"><b>January 26, 2003 -</b></a> Gimp-Print 4.2.5, the newest stable release of Gimp-Print, is now available for download.
+ <a href="MacOSX.php3#4.2.5"><b>January 26, 2003 -</b></a> Gimp-Print 4.2.5, the current stable release of Gimp-Print, is now available for download.
  </p>
  <p>
  </p>
@@ -135,48 +135,48 @@ require('standard_html_header.php3');
  Ghostscript 7.05.6 for Mac OS X (<b>download below and install, if
  necessary</b>).  ESP Ghostscript is not required for Mac OS X "Panther". 
  </p>
- <b>Gimp-Print 4.2.6-pre3</b>
+ <b>Gimp-Print 4.2.6-rc2</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-pre3.ppc.dmg?download"
- >gimp-print-4.2.6-pre3.ppc.dmg</a>&nbsp;(5.5 MB)
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-rc2.ppc.dmg?download"
+ >gimp-print-4.2.6-rc2.ppc.dmg</a>&nbsp;(5.8 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-pre3.tar.gz?download"
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-rc2.tar.gz?download"
  >source</a>)
  </td>
  </tr>
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 4.2.6-pre3 is the newest pre-release for Mac OS X; it includes bug 
- fixes over 4.2.5, but it may contain new bugs. On Mac OS X "Jaguar" this 
+ Gimp-Print 4.2.6-rc2 is the second release candidate for version 4.2.6 ; 
+it includes bug fixes and new features over 4.2.5. On Mac OS X "Jaguar" this 
  package requires (but does not include) ESP Ghostscript (<b>download below and 
  install, if necessary</b>).  ESP Ghostscript is not required for Mac OS X "Panther". 
  </p>
- <b>Gimp-Print 4.3.18</b>
+ <b>Gimp-Print 4.3.25</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.3.18.ppc.dmg?download"
- >gimp-print-4.3.18.ppc.dmg</a>&nbsp;(5.2 MB)
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.3.25.ppc.dmg?download"
+ >gimp-print-4.3.25.ppc.dmg</a>&nbsp;(4.8 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.3.18.tar.bz2?download"
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.3.25.tar.bz2?download"
  >source</a>)
  </td>
  </tr>
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 4.3.18 is the latest Mac OS X release in the 4.3.x developmental line.
+ Gimp-Print 4.3.25 is the latest Mac OS X release in the 4.3.x developmental line.
  This release represents the state-of-the-art in current Gimp-Print development. As such, while it contains many new and exciting features over the mainline branch (4.2.x), it may also provide unexpected behavior, or it simply may not work at all.  For Mac OS X Jaguar this package requires (but does not include) ESP Ghostscript for Mac OS X (<b>download below and 
  install, if necessary</b>). ESP Ghostscript is not required for Mac OS X "Panther". 
  </p>
@@ -274,6 +274,65 @@ The Gimp-Print uninstaller will completely remove any version of Gimp-Print that
  News Items
  </h3>
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+ <a name ="4.2.6-rc2"></a>
+ <B>Gimp-Print 4.2.6-rc2</B>
+ </TD>
+ <TD align="right" >
+ <B>2003-12-12</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gimp-Print version 4.2.6-rc2 contains the following improvements over
+ <a href= "MacOSX.php3#4.2.6-pre3">Gimp-Print 4.2.6-pre3</a>:
+ </p>
+<b>Major changes</b>
+ <ol>
+   <li>The definitions of the Epson Stylus CX-6300 and CX-6400 have been fixed.</li>
+   <li>The European 10x15 cm paper size has been added.</li>
+   <li>A problem with builds using VPATH introduced in 4.2.6-rc1 has been fixed (4.2.6-rc1 was never released as a Mac OS X package, but users building from source would be affected by this bug).</li>
+   <li>The CUPS driver does not attempt to set empty values of media source, media type, and ink type.  This resolves bug 627266 by treating the Autoselect option correctly.</li>
+   <li>Some Epson printer resolution names have been changed.  This change does not introduce an incompatibility.</li>
+   <li>Printing in black and white and grayscale modes on the Epson Stylus Color 600, 800, 850, 1520, and 3000 is fixed.</li>
+
+</ol>
+<dl>
+<dt><b>The following bugs have been fixed in Gimp-Print 4.2.6-rc2</b>:</dt>
+
+<dd>627266 Mac OS X: Autoselect option incorrectly offered
+<dd>842715 Epson 600/800/850/1520/3000 fail at certain resolutions BW
+
+</dl>
+<dl>
+<dt><b>The following previously reported bugs have been tested and cannot be reproduced</b>:</dt>
+
+<dd>828993 CNR: Epson SC 850 using Microweave prints tall characters
+<dd>764041 CNR: Epson 3000 720x360DPI problem
+</dl>
+ &nbsp;
+ </td>
+ </tr>
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+ <a name ="4.3.25"></a>
+ <B>Gimp-Print 4.2.25</B>
+ </TD>
+ <TD align="right" >
+ <B>2003-12-12</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gimp-Print version 4.3.25 is an unstable developmental version of Gimp-Print. This is the first pre-packaged version made available since 
+ <a href= "MacOSX.php3#4.3.18">Gimp-Print 4.3.18</a> and it has numerous improvements and bug fixes. Please see the "NEWS" file included with the package for a complete listing of changes.
+ </p>
+ &nbsp;
+ </td>
+ </tr>
  <TR bgcolor="#D0D0D0" >
  <TD>
  <a name ="uninstall-1.1"></a>
