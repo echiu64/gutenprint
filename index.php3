@@ -86,6 +86,8 @@ will eventually become the successor to 4.2.</p>
 
 <p><i>- The Gimp-Print Project Team</i></p>
 
+<hr>
+
 <P>Please visit <a
 href="http://sourceforge.net/project/?group_id=1537">our
 project page</a>, which contains a lot more information about us!</p>
