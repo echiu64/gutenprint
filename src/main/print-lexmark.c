@@ -1070,9 +1070,9 @@ static const lexmark_res_t
 
   while (res->hres)
     {
-      if (res->vres <= caps->max_ydpi != -1 &&
-	  res->hres <= caps->max_xdpi != -1 &&
-	  !strcmp(resolution, res->name))
+      if ((res->vres <= caps->max_ydpi) && (caps->max_ydpi != -1) &&
+	  (res->hres <= caps->max_xdpi) && (caps->max_xdpi != -1) &&
+	   (!strcmp(resolution, res->name)))
 	{
 	  return res;
 	}
