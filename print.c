@@ -2870,10 +2870,21 @@ preview_update(void)
   gtk_entry_set_text(GTK_ENTRY(left_entry), s);
   gtk_signal_handler_unblock_by_data(GTK_OBJECT(left_entry), NULL);
 
-  sprintf(s, "%.3f", (vars.top + (72 * print_height + 9) / 10) / 72.0);
+  if (vars.scaling < 0)
+    sprintf(s, "%.3f",
+	    (vars.top + (image_height * -72.0 / vars.scaling)) / 72.0);
+  else
+    sprintf(s, "%.3f", (vars.top +
+			(((right - left + 1) * vars.scaling / 100.0) *
+			 image_height / image_width)) / 72.0);
   gtk_entry_set_text(GTK_ENTRY(bottom_entry), s);
 
-  sprintf(s, "%.3f", (vars.left + (72 * print_width + 9) / 10) / 72.0);
+  if (vars.scaling < 0)
+    sprintf(s, "%.3f",
+	    (vars.left + (image_width * -72.0 / vars.scaling)) / 72.0);
+  else
+    sprintf(s, "%.3f",
+	    (vars.left + ((right - left + 1) * vars.scaling / 100.0)) / 72.0);
   gtk_entry_set_text(GTK_ENTRY(right_entry), s);
 
   gdk_draw_rectangle(preview->widget.window, gc, 1,
