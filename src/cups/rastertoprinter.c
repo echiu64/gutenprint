@@ -307,7 +307,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 
     if ((size = stp_get_papersize_by_size(cups.header.PageSize[1],
                                       cups.header.PageSize[0])) != NULL)
-      strcpy(v.media_size, size->name);
+      strncpy(v.media_size, size->name, sizeof(v.media_size) - 1);
     else
       fprintf(stderr, "ERROR: Unable to get media size!\n");
 
