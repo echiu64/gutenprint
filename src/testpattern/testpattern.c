@@ -421,6 +421,16 @@ fill_black(unsigned short *data, size_t len, size_t scount)
       for (i = 0; i < (len / scount) * scount; i++)
 	{
 	  data[0] = ink_limit * 65535;
+	  if (global_ink_depth == 3)
+	    {
+	      data[1] = ink_limit * 65535;
+	      data[2] = ink_limit * 65535;
+	    }
+	  else if (global_ink_depth == 5)
+	    {
+	      data[2] = ink_limit * 65535;
+	      data[4] = ink_limit * 65535;
+	    }
 	  data += global_ink_depth;
 	}
     }
