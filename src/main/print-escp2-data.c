@@ -119,6 +119,8 @@ static const escp2_variable_ink_t name##_ink =				\
 #define PIEZO_2  .75
 #define PIEZO_3 1.0
 
+#define PIEZO_DENSITY 1.0
+
 /***************************************************************\
 *                                                               *
 *                        SINGLE DOT SIZE                        *
@@ -165,7 +167,7 @@ static const stp_simple_dither_range_t piezo_quadtone_dither_ranges[] =
   { PIEZO_3, 0x1, 3, 1 },
 };
 
-DECLARE_INK(piezo_quadtone, 1.0);
+DECLARE_INK(piezo_quadtone, PIEZO_DENSITY);
 
 /***************************************************************\
 *                                                               *
@@ -202,7 +204,7 @@ static const stp_simple_dither_range_t piezo_multishot_quadtone_dither_ranges[] 
   { PIEZO_3 * 1.0, 0x3, 3, 7 },
 };
 
-DECLARE_INK(piezo_multishot_quadtone, 1.0);
+DECLARE_INK(piezo_multishot_quadtone, PIEZO_DENSITY);
 
 /***************************************************************\
 *                                                               *
@@ -260,7 +262,7 @@ static const stp_simple_dither_range_t piezo_6pl_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.0, 0x3, 3, 4 },
 };
 
-DECLARE_INK(piezo_6pl_quadtone, 1.0);
+DECLARE_INK(piezo_6pl_quadtone, PIEZO_DENSITY);
 
 static const stp_simple_dither_range_t piezo_6pl_1440_quadtone_dither_ranges[] =
 {
@@ -272,7 +274,7 @@ static const stp_simple_dither_range_t piezo_6pl_1440_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.0, 0x3, 3, 4 },
 };
 
-DECLARE_INK(piezo_6pl_1440_quadtone, 1.0);
+DECLARE_INK(piezo_6pl_1440_quadtone, PIEZO_DENSITY);
 
 
 /***************************************************************\
@@ -317,7 +319,7 @@ static const stp_simple_dither_range_t piezo_x80_multishot_quadtone_dither_range
   { PIEZO_3 * 1.00, 0x3, 3, 6 },
 };
 
-DECLARE_INK(piezo_x80_multishot_quadtone, 1.0);
+DECLARE_INK(piezo_x80_multishot_quadtone, PIEZO_DENSITY);
 
 static const stp_simple_dither_range_t piezo_x80_6pl_quadtone_dither_ranges[] =
 {
@@ -329,7 +331,7 @@ static const stp_simple_dither_range_t piezo_x80_6pl_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.00, 0x3, 3, 6 },
 };
 
-DECLARE_INK(piezo_x80_6pl_quadtone, 1.0);
+DECLARE_INK(piezo_x80_6pl_quadtone, PIEZO_DENSITY);
 
 static const stp_simple_dither_range_t piezo_x80_1440_6pl_quadtone_dither_ranges[] =
 {
@@ -340,7 +342,7 @@ static const stp_simple_dither_range_t piezo_x80_1440_6pl_quadtone_dither_ranges
   { PIEZO_3 * 1.00, 0x3, 3, 3 },
 };
 
-DECLARE_INK(piezo_x80_1440_6pl_quadtone, 1.0);
+DECLARE_INK(piezo_x80_1440_6pl_quadtone, PIEZO_DENSITY);
 
 
 /***************************************************************\
@@ -377,7 +379,7 @@ static const stp_simple_dither_range_t piezo_680_multishot_quadtone_dither_range
   { PIEZO_3 * 1.00, 0x3, 3, 8 },
 };
 
-DECLARE_INK(piezo_680_multishot_quadtone, 1.0);
+DECLARE_INK(piezo_680_multishot_quadtone, PIEZO_DENSITY);
 
 static const stp_simple_dither_range_t piezo_680_6pl_quadtone_dither_ranges[] =
 {
@@ -389,7 +391,7 @@ static const stp_simple_dither_range_t piezo_680_6pl_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.00, 0x3, 3, 6 },
 };
 
-DECLARE_INK(piezo_680_6pl_quadtone, 1.0);
+DECLARE_INK(piezo_680_6pl_quadtone, PIEZO_DENSITY);
 
 
 /***************************************************************\
@@ -440,7 +442,7 @@ static const stp_simple_dither_range_t piezo_4pl_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.00, 0x3, 3, 3 },
 };
 
-DECLARE_INK(piezo_4pl_quadtone, 1.0);
+DECLARE_INK(piezo_4pl_quadtone, PIEZO_DENSITY);
 
 static const stp_simple_dither_range_t piezo_4pl_2880_quadtone_dither_ranges[] =
 {
@@ -450,7 +452,7 @@ static const stp_simple_dither_range_t piezo_4pl_2880_quadtone_dither_ranges[] =
   { PIEZO_3, 0x1, 3, 1 },
 };
 
-DECLARE_INK(piezo_4pl_2880_quadtone, 1.0);
+DECLARE_INK(piezo_4pl_2880_quadtone, PIEZO_DENSITY);
 
 
 /***************************************************************\
@@ -504,7 +506,7 @@ static const stp_simple_dither_range_t piezo_3pl_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.0, 0x3, 3, 8 },
 };
 
-DECLARE_INK(piezo_3pl_quadtone, 1.0);
+DECLARE_INK(piezo_3pl_quadtone, PIEZO_DENSITY);
 
 static const stp_simple_dither_range_t piezo_3pl_1440_quadtone_dither_ranges[]=
 {
@@ -515,7 +517,7 @@ static const stp_simple_dither_range_t piezo_3pl_1440_quadtone_dither_ranges[]=
   { PIEZO_3 * 1.00, 0x3, 3, 5 },
 };
 
-DECLARE_INK(piezo_3pl_1440_quadtone, 1.0);
+DECLARE_INK(piezo_3pl_1440_quadtone, PIEZO_DENSITY);
 
 static const stp_simple_dither_range_t piezo_3pl_2880_quadtone_dither_ranges[]=
 {
@@ -525,7 +527,7 @@ static const stp_simple_dither_range_t piezo_3pl_2880_quadtone_dither_ranges[]=
   { PIEZO_3, 0x1, 3, 1 },
 };
 
-DECLARE_INK(piezo_3pl_2880_quadtone, 1.0);
+DECLARE_INK(piezo_3pl_2880_quadtone, PIEZO_DENSITY);
 
 static const stp_simple_dither_range_t piezo_980_6pl_quadtone_dither_ranges[] =
 {
@@ -537,7 +539,7 @@ static const stp_simple_dither_range_t piezo_980_6pl_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.00, 0x3, 3, 10 },
 };
 
-DECLARE_INK(piezo_980_6pl_quadtone, 1.0);
+DECLARE_INK(piezo_980_6pl_quadtone, PIEZO_DENSITY);
 
 
 /***************************************************************\
@@ -569,7 +571,7 @@ static const stp_simple_dither_range_t piezo_2pl_2880_quadtone_dither_ranges[]=
   { PIEZO_3, 0x1, 3, 1 },
 };
 
-DECLARE_INK(piezo_2pl_2880_quadtone, 1.0);
+DECLARE_INK(piezo_2pl_2880_quadtone, PIEZO_DENSITY);
 
 
 /***************************************************************\
@@ -624,7 +626,7 @@ static const stp_simple_dither_range_t piezo_economy_pigment_quadtone_dither_ran
   { PIEZO_3, 0x3, 3, 1 },
 };
 
-DECLARE_INK(piezo_economy_pigment_quadtone, 1.0);
+DECLARE_INK(piezo_economy_pigment_quadtone, PIEZO_DENSITY);
 
 static const stp_simple_dither_range_t piezo_multishot_pigment_quadtone_dither_ranges[]=
 {
@@ -635,7 +637,7 @@ static const stp_simple_dither_range_t piezo_multishot_pigment_quadtone_dither_r
   { PIEZO_3 * 1.00, 0x3, 3, 5 },
 };
 
-DECLARE_INK(piezo_multishot_pigment_quadtone, 1.0);
+DECLARE_INK(piezo_multishot_pigment_quadtone, PIEZO_DENSITY);
 
 static const stp_simple_dither_range_t piezo_6pl_pigment_quadtone_dither_ranges[]=
 {
@@ -646,7 +648,7 @@ static const stp_simple_dither_range_t piezo_6pl_pigment_quadtone_dither_ranges[
   { PIEZO_3 * 1.00, 0x3, 3, 10 },
 };
 
-DECLARE_INK(piezo_6pl_pigment_quadtone, 1.0);
+DECLARE_INK(piezo_6pl_pigment_quadtone, PIEZO_DENSITY);
 
 static const stp_simple_dither_range_t piezo_3pl_pigment_quadtone_dither_ranges[]=
 {
@@ -657,7 +659,7 @@ static const stp_simple_dither_range_t piezo_3pl_pigment_quadtone_dither_ranges[
   { PIEZO_3 * 1.00, 0x2, 3, 3 },
 };
 
-DECLARE_INK(piezo_3pl_pigment_quadtone, 1.0);
+DECLARE_INK(piezo_3pl_pigment_quadtone, PIEZO_DENSITY);
 
 static const stp_simple_dither_range_t piezo_3pl_pigment_2880_quadtone_dither_ranges[]=
 {
@@ -667,7 +669,7 @@ static const stp_simple_dither_range_t piezo_3pl_pigment_2880_quadtone_dither_ra
   { PIEZO_3, 0x1, 3, 1 },
 };
 
-DECLARE_INK(piezo_3pl_pigment_2880_quadtone, 1.0);
+DECLARE_INK(piezo_3pl_pigment_2880_quadtone, PIEZO_DENSITY);
 
 
 /***************************************************************\
@@ -703,7 +705,7 @@ static const stp_simple_dither_range_t piezo_pigment_quadtone_dither_ranges[]=
   { PIEZO_3 * 1.00, 0x2, 3, 2 },
 };
 
-DECLARE_INK(piezo_pigment_quadtone, 1.0);
+DECLARE_INK(piezo_pigment_quadtone, PIEZO_DENSITY);
 
 
 /***************************************************************\
