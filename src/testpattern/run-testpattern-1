@@ -228,14 +228,14 @@ fi
 
 StandardBitDepths="8 16"
 StandardModes="rgb kcmy cmyk cmy gray white"
-StandardColorCorrections="None Density Desaturated Accurate Bright Uncorrected Threshold Raw"
+StandardColorCorrections="None Density Desaturated Accurate Bright Uncorrected Threshold Raw Predithered"
 StandardInkTypes="CMYKRB CMYK RGB"
 StandardPrintingModes="BW Color"
 
 RawBitDepths="8 16"
 RawTypes="raw-data-8 raw-data-16"
 RawModes="rgb kcmy cmyk cmy gray white"
-RawColorCorrections="None Density Desaturated Accurate Bright Uncorrected Threshold Raw"
+RawColorCorrections="None Density Desaturated Accurate Bright Uncorrected Threshold Raw Predithered"
 RawInkTypes="CMYK RGB CMY KCMY RGBGray CMYGray"
 RawPrintingModes="Color BW"
 

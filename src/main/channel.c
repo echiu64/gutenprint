@@ -185,7 +185,8 @@ stp_channel_set_density_adjustment(stp_vars_t *v, int color, int subchannel,
   stpi_subchannel_t *sch = get_channel(v, color, subchannel);
   if ((strcmp(stp_get_string_parameter(v, "STPIOutputType"), "Raw") == 0 &&
        strcmp(stp_get_string_parameter(v, "ColorCorrection"), "None") == 0) ||
-      (strcmp(stp_get_string_parameter(v, "ColorCorrection"), "Raw") == 0))
+      strcmp(stp_get_string_parameter(v, "ColorCorrection"), "Raw") == 0 ||
+      strcmp(stp_get_string_parameter(v, "ColorCorrection"), "Predithered") == 0)
     {
       stp_dprintf(STP_DBG_INK, v,
 		  "Ignoring channel_density channel %d subchannel %d adjustment %f\n",

@@ -2270,6 +2270,7 @@ generic_##from##_to_##to(const stp_vars_t *v,			\
     case COLOR_CORRECTION_DESATURATED:				\
       return from2##_to_##to##_desaturated(v, in, out);		\
     case COLOR_CORRECTION_THRESHOLD:				\
+    case COLOR_CORRECTION_PREDITHERED:				\
       return from2##_to_##to##_threshold(v, in, out);		\
     case COLOR_CORRECTION_DENSITY:				\
     case COLOR_CORRECTION_RAW:					\
@@ -2295,6 +2296,7 @@ generic_##from##_to_##to(const stp_vars_t *v,			\
     case COLOR_CORRECTION_DESATURATED:				\
       return from2##_to_##to##_desaturated(v, in, out);		\
     case COLOR_CORRECTION_THRESHOLD:				\
+    case COLOR_CORRECTION_PREDITHERED:				\
       return from2##_to_##to##_threshold(v, in, out);		\
     case COLOR_CORRECTION_DENSITY:				\
     case COLOR_CORRECTION_RAW:					\
@@ -2319,6 +2321,7 @@ generic_##from##_to_##to(const stp_vars_t *v,				\
     case COLOR_CORRECTION_DESATURATED:					\
       return from2##_to_##to(v, in, out);				\
     case COLOR_CORRECTION_THRESHOLD:					\
+    case COLOR_CORRECTION_PREDITHERED:					\
       return from2##_to_##to##_threshold(v, in, out);			\
     case COLOR_CORRECTION_DENSITY:					\
     case COLOR_CORRECTION_RAW:						\
@@ -2438,6 +2441,7 @@ stpi_color_convert_raw(const stp_vars_t *v,
   switch (lut->color_correction->correction)
     {
     case COLOR_CORRECTION_THRESHOLD:
+    case COLOR_CORRECTION_PREDITHERED:
       return raw_to_raw_threshold(v, in, out);
     case COLOR_CORRECTION_UNCORRECTED:
     case COLOR_CORRECTION_BRIGHT:
