@@ -256,7 +256,7 @@ gimp_create_main_window (void)
   gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
   gtk_widget_show (hbox);
 
-  frame = gtk_frame_new (_("Preview"));
+  frame = gtk_frame_new (_("Position"));
   gtk_box_pack_start (GTK_BOX (hbox), frame, FALSE, FALSE, 0);
   gtk_widget_show (frame);
 
@@ -374,28 +374,6 @@ gimp_create_main_window (void)
                              _("Bottom:"), 1.0, 0.5,
                              entry, 1, TRUE);
 
-  width_entry = entry = gtk_entry_new ();
-  g_snprintf (s, sizeof (s), "%.3f", fabs (vars.left));
-  gtk_entry_set_text (GTK_ENTRY (entry), s);
-  gtk_signal_connect (GTK_OBJECT (entry), "activate",
-                      GTK_SIGNAL_FUNC (gimp_position_callback),
-		      NULL);
-  gtk_widget_set_usize (entry, 60, 0);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 3,
-                             _("Width:"), 1.0, 0.5,
-                             entry, 1, TRUE);
-
-  height_entry = entry = gtk_entry_new ();
-  g_snprintf (s, sizeof (s), "%.3f", fabs (vars.left));
-  gtk_entry_set_text (GTK_ENTRY (entry), s);
-  gtk_signal_connect (GTK_OBJECT (entry), "activate",
-                      GTK_SIGNAL_FUNC (gimp_position_callback),
-		      NULL);
-  gtk_widget_set_usize (entry, 60, 0);
-  gimp_table_attach_aligned (GTK_TABLE (table), 2, 3,
-                             _("Height:"), 1.0, 0.5,
-                             entry, 1, TRUE);
-
   /*
    *  Printer settings frame...
    */
@@ -481,71 +459,14 @@ gimp_create_main_window (void)
                              option, 1, TRUE);
 
   /*
-   * Output type toggles...
-   */
-
-  box = gtk_vbox_new (FALSE, 2);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 7,
-                             _("Output Type:"), 1.0, 0.15,
-                             box, 1, TRUE);
-
-  output_gray = button = gtk_radio_button_new_with_label (NULL, _("B&W"));
-  group = gtk_radio_button_group (GTK_RADIO_BUTTON (button));
-  if (vars.output_type == 0)
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
-  gtk_signal_connect (GTK_OBJECT (button), "toggled",
-                      GTK_SIGNAL_FUNC (gimp_output_type_callback),
-                      (gpointer) OUTPUT_GRAY);
-  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
-  gtk_widget_show (button);
-
-  output_color = button = gtk_radio_button_new_with_label (group, _("Color"));
-  if (vars.output_type == 1)
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
-  gtk_signal_connect (GTK_OBJECT (button), "toggled",
-                      GTK_SIGNAL_FUNC (gimp_output_type_callback),
-                      (gpointer) OUTPUT_COLOR);
-  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
-  gtk_widget_show (button);
-
-#ifdef DO_LINEAR
-  box = gtk_vbox_new (FALSE, 2);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 8,
-                             _("Output Level:"), 1.0, 0.15,
-                             box, 1, TRUE);
-
-  linear_off = button =
-    gtk_radio_button_new_with_label (NULL, _("Normal Scale"));
-  linear_group = gtk_radio_button_group (GTK_RADIO_BUTTON (button));
-  if (vars.linear == 0)
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
-  gtk_signal_connect (GTK_OBJECT (button), "toggled",
-                      GTK_SIGNAL_FUNC (gimp_linear_callback),
-                      (gpointer) 0);
-  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
-  gtk_widget_show (button);
-
-  linear_on = button =
-    gtk_radio_button_new_with_label (linear_group,
-				     _("Experimental Linear Scale"));
-  if (vars.linear == 1)
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
-  gtk_signal_connect (GTK_OBJECT (button), "toggled",
-                      GTK_SIGNAL_FUNC (gimp_linear_callback),
-                      (gpointer) 1);
-  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
-  gtk_widget_show (button);
-#endif
-
-  /*
    * Image type
    */
-  frame = gtk_frame_new (_("Image Type"));
+  frame = gtk_frame_new (_("Image Settings"));
   gtk_box_pack_start (GTK_BOX (main_vbox), frame, FALSE, FALSE, 0);
   gtk_widget_show (frame);
 
-  box = gtk_hbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (box), 4);
+  box = gtk_hbox_new (FALSE, 7);
+  gtk_container_set_border_width (GTK_CONTAINER (box), 2);
   gtk_container_add (GTK_CONTAINER (frame), box);
   gtk_widget_show (box);
 
@@ -594,9 +515,55 @@ gimp_create_main_window (void)
   gtk_widget_show (button);
 
   /*
+   *  Color adjust button
+   */
+  gimp_create_color_adjust_window ();
+
+  adjust_color_button = button = gtk_button_new_with_label (_("Adjust Color"));
+  gtk_misc_set_padding (GTK_MISC (GTK_BIN (button)->child), 2, 0);
+  gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
+			     GTK_SIGNAL_FUNC (gtk_widget_show),
+			     GTK_OBJECT (gimp_color_adjust_dialog));
+  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
+  gtk_widget_show (button);
+
+  /*
+   * Output type toggles...
+   */
+
+  label = gtk_label_new(_("Output Type:"));
+  gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
+  gtk_widget_show(label);
+  
+  vbox = gtk_vbox_new (FALSE, 1);
+  gtk_box_set_spacing (GTK_BOX (vbox), -2);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
+  gtk_box_pack_start (GTK_BOX (box), vbox, FALSE, FALSE, 0);
+  gtk_widget_show (vbox);
+
+  output_gray = button = gtk_radio_button_new_with_label (NULL, _("B&W"));
+  group = gtk_radio_button_group (GTK_RADIO_BUTTON (button));
+  if (vars.output_type == 0)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+  gtk_signal_connect (GTK_OBJECT (button), "toggled",
+                      GTK_SIGNAL_FUNC (gimp_output_type_callback),
+                      (gpointer) OUTPUT_GRAY);
+  gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+  gtk_widget_show (button);
+
+  output_color = button = gtk_radio_button_new_with_label (group, _("Color"));
+  if (vars.output_type == 1)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+  gtk_signal_connect (GTK_OBJECT (button), "toggled",
+                      GTK_SIGNAL_FUNC (gimp_output_type_callback),
+                      (gpointer) OUTPUT_COLOR);
+  gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+  gtk_widget_show (button);
+
+  /*
    * Scaling...
    */
-  frame = gtk_frame_new (_("Scaling and Color Settings"));
+  frame = gtk_frame_new (_("Scaling"));
   gtk_box_pack_start (GTK_BOX (main_vbox), frame, FALSE, FALSE, 0);
   gtk_widget_show (frame);
 
@@ -639,7 +606,7 @@ gimp_create_main_window (void)
                       GTK_SIGNAL_FUNC (gimp_scaling_update),
                       NULL);
 
-  box = gtk_hbox_new (FALSE, 4);
+  box = gtk_hbox_new (FALSE, 5);
   gimp_table_attach_aligned (GTK_TABLE (table), 0, 1,
                              NULL, 0, 0,
                              box, 1, FALSE);
@@ -672,18 +639,33 @@ gimp_create_main_window (void)
   gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
   gtk_widget_show (button);
 
-  /*
-   *  Color adjust button
-   */
-  gimp_create_color_adjust_window ();
+  label = gtk_label_new(_("Width:"));
+  gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
+  gtk_widget_show(label);
 
-  adjust_color_button = button = gtk_button_new_with_label (_("Adjust Color"));
-  gtk_misc_set_padding (GTK_MISC (GTK_BIN (button)->child), 2, 0);
-  gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-			     GTK_SIGNAL_FUNC (gtk_widget_show),
-			     GTK_OBJECT (gimp_color_adjust_dialog));
-  gtk_box_pack_end (GTK_BOX (box), button, FALSE, FALSE, 0);
-  gtk_widget_show (button);
+  width_entry = entry = gtk_entry_new ();
+  g_snprintf (s, sizeof (s), "%.3f", fabs (vars.left));
+  gtk_entry_set_text (GTK_ENTRY (entry), s);
+  gtk_signal_connect (GTK_OBJECT (entry), "activate",
+                      GTK_SIGNAL_FUNC (gimp_position_callback),
+		      NULL);
+  gtk_widget_set_usize (entry, 60, 0);
+  gtk_box_pack_start (GTK_BOX (box), entry, FALSE, FALSE, 0);
+  gtk_widget_show(entry);
+
+  label = gtk_label_new(_("Height:"));
+  gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
+  gtk_widget_show(label);
+
+  height_entry = entry = gtk_entry_new ();
+  g_snprintf (s, sizeof (s), "%.3f", fabs (vars.left));
+  gtk_entry_set_text (GTK_ENTRY (entry), s);
+  gtk_signal_connect (GTK_OBJECT (entry), "activate",
+                      GTK_SIGNAL_FUNC (gimp_position_callback),
+		      NULL);
+  gtk_widget_set_usize (entry, 60, 0);
+  gtk_box_pack_end (GTK_BOX (box), entry, FALSE, FALSE, 0);
+  gtk_widget_show(entry);
 
   /*
    * Printer option menu...
