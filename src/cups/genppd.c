@@ -135,7 +135,7 @@ static struct				/**** STP numeric options ****/
 void	initialize_stp_options(void);
 void	usage(void);
 int	write_ppd(const stp_printer_t p, const char *prefix,
-	          const char *language);
+	          const char *language, int verbose);
 
 
 /*
@@ -152,10 +152,13 @@ main(int  argc,			/* I - Number of command-line arguments */
   const char	*language;	/* Language */
   const char    *catalog = NULL;/* Catalog location */
   stp_printer_t	printer;	/* Pointer to printer driver */
+  int           verbose = 0;
   static struct option long_options[] =
 		{		/* Command-line options */
 		  /* name,	has_arg,		flag	val */
 		  {"help",	no_argument,		0,	0},
+		  {"verbose",	no_argument,		0,	0},
+		  {"quiet",	no_argument,		0,	0},
 		  {"catalog",	required_argument,	0,	0},
 		  {"prefix",	required_argument,	0,	0},
 		  {0,		0,			0,	0}
@@ -188,6 +191,17 @@ main(int  argc,			/* I - Number of command-line arguments */
 	  if (strncmp(long_options[option_index].name, "help", 4) == 0)
           {
 	    usage();
+	    break;
+          }
+	  if (strncmp(long_options[option_index].name, "verbose", 7) == 0)
+          {
+	    verbose = 1;
+	    break;
+          }
+
+	  if (strncmp(long_options[option_index].name, "quiet", 5) == 0)
+          {
+	    verbose = 0;
 	    break;
           }
 
@@ -263,9 +277,11 @@ main(int  argc,			/* I - Number of command-line arguments */
   {
     printer = stp_get_printer_by_index(i);
 
-    if (printer && write_ppd(printer, prefix, language))
+    if (printer && write_ppd(printer, prefix, language, verbose))
       return (1);
   }
+  if (!verbose)
+    fprintf(stderr, "\n");
 
   return (0);
 }
@@ -347,7 +363,8 @@ usage(void)
 int					/* O - Exit status */
 write_ppd(const stp_printer_t p,	/* I - Printer driver */
 	  const char          *prefix,	/* I - Prefix (directory) for PPD files */
-	  const char          *language)/* I - Language/locale */
+	  const char          *language,/* I - Language/locale */
+	  int                 verbose)
 {
   int		i, j;			/* Looping vars */
   gzFile	fp;			/* File to write to */
@@ -414,7 +431,10 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   sscanf(long_name, "%63s", manufacturer);
 
-  fprintf(stderr, "Writing %s...\n", filename);
+  if (verbose)
+    fprintf(stderr, "Writing %s...\n", filename);
+  else
+    fprintf(stderr, ".");
 
   gzputs(fp, "*PPD-Adobe: \"4.3\"\n");
   gzputs(fp, "*%PPD file for CUPS/GIMP-print.\n");
