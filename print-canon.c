@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   Print plug-in EPSON ESC/P2 driver for the GIMP.
+ *   Print plug-in CANON BJL driver for the GIMP.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
  *	Robert Krawitz (rlk@alum.mit.edu)
@@ -25,12 +25,15 @@
  *   canon_parameters()     - Return the parameter values for the given
  *                            parameter.
  *   canon_imageable_area() - Return the imageable area of the page.
- *   canon_print()          - Print an image to an EPSON printer.
+ *   canon_print()          - Print an image to a CANON printer.
  *   canon_write()          - Send 6-color graphics using tiff compression.
  *
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.3  2000/02/02 16:00:31  gandy
+ *   Removed remnants from the original escp/2 source not needed for BJL
+ *
  *   Revision 1.2  2000/02/02 15:53:09  gandy
  *   1) reworked printer capabilities handling
  *   2) initilization sends media type, paper format and printable area
@@ -76,103 +79,13 @@ static void canon_write_line(FILE *,
 			     unsigned char *, int,
 			     int, int, int, int, int);
 
-
-/*
- * Printer capabilities.
- *
- * Various classes of printer capabilities are represented by bitmasks.
- */
-
-/*
-#define MODEL_IMAGEABLE_MASK	0xc
-#define MODEL_IMAGEABLE_DEFAULT	0x0
-#define MODEL_IMAGEABLE_PHOTO	0x4
-#define MODEL_IMAGEABLE_600	0x8
-
-#define MODEL_INIT_MASK		0xf0
-#define MODEL_INIT_COLOR	0x00
-#define MODEL_INIT_PRO		0x10
-#define MODEL_INIT_1500		0x20
-#define MODEL_INIT_600		0x30
-#define MODEL_INIT_PHOTO	0x40
-#define MODEL_INIT_440		0x50
-
-#define MODEL_HASBLACK_MASK	0x100
-#define MODEL_HASBLACK_YES	0x000
-#define MODEL_HASBLACK_NO	0x100
-
-#define MODEL_6COLOR_MASK	0x200
-#define MODEL_6COLOR_NO		0x000
-#define MODEL_6COLOR_YES	0x200
-
-#define MODEL_720DPI_MODE_MASK	0xc00
-#define MODEL_720DPI_DEFAULT	0x000
-#define MODEL_720DPI_600	0x400
-#define MODEL_720DPI_PHOTO	0x400 
-
-#define MODEL_1440DPI_MASK	0x1000
-#define MODEL_1440DPI_NO	0x0000
-#define MODEL_1440DPI_YES	0x1000
-
-#define MODEL_VARIABLE_DOT_MASK	0x6000
-#define MODEL_VARIABLE_NORMAL	0x0000
-#define MODEL_VARIABLE_4	0x2000
-
-#define MODEL_NOZZLES_MASK	0xff000000
-#define MODEL_MAKE_NOZZLES(x) 	((long long) ((x)) << 24)
-#define MODEL_GET_NOZZLES(x) 	(((x) & MODEL_NOZZLES_MASK) >> 24)
-#define MODEL_SEPARATION_MASK	0xf00000000l
-#define MODEL_MAKE_SEPARATION(x) 	(((long long) (x)) << 32)
-#define MODEL_GET_SEPARATION(x)	(((x) & MODEL_SEPARATION_MASK) >> 32)
-
-*/
-
 #define PHYSICAL_BPI 1440
 #define MAX_OVERSAMPLED 4
 #define MAX_BPP 2
 #define BITS_PER_BYTE 8
 #define COMPBUFWIDTH (PHYSICAL_BPI * MAX_OVERSAMPLED * MAX_BPP * \
 	MAX_CARRIAGE_WIDTH / BITS_PER_BYTE)
-/*
- * SUGGESTED SETTINGS FOR STYLUS PHOTO EX:
- * Brightness 127
- * Blue 92
- * Saturation 1.2
- *
- * Another group of settings that has worked well for me is
- * Brightness 110
- * Gamma 1.2
- * Contrast 97
- * Blue 88
- * Saturation 1.1
- * Density 1.5
- *
- * With the current code, the following settings seem to work nicely:
- * Brightness ~110
- * Gamma 1.3
- * Contrast 80
- * Green 94
- * Blue 89
- * Saturation 1.15
- * Density 1.6
- *
- * The green and blue will vary somewhat with different inks
- */
 
-
-/*
- * A lot of these are guesses
- */
-
-/*
-model_cap_t canon_model_capabilities[] =
-{
-  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_DEFAULT | MODEL_INIT_COLOR
-   | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_VARIABLE_NORMAL
-   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(1) | MODEL_MAKE_SEPARATION(1)),
-};
-*/
 
 typedef struct {
   int model;
@@ -212,15 +125,6 @@ canon_cap_t canon_model_capabilities[] =
   { 7100, 11*72, 17*72, 1200, 600, CANON_INK_4, CANON_SLOT_2 },
 };
 
-typedef struct {
-  const char name[65];
-  int hres;
-  int vres;
-  int softweave;
-  int horizontal_passes;
-  int vertical_passes;
-} canon_res_t;
-
 static canon_cap_t canon_get_model_capabilities(int model)
 {
   int i;
@@ -233,20 +137,6 @@ static canon_cap_t canon_get_model_capabilities(int model)
   fprintf(stderr,"canon: model %d not found in capabilities list.\n",model);
   return canon_model_capabilities[0];
 }
-
-/*
-static int
-canon_has_cap(int model, model_featureset_t featureset, model_class_t class)
-{
-  return ((canon_model_capabilities[model] & featureset) == class);
-}
-
-static model_class_t
-canon_cap(int model, model_featureset_t featureset)
-{
-  return (canon_model_capabilities[model] & featureset);
-}
-*/
 
 static int
 canon_media_type(const char *name, canon_cap_t caps) 
@@ -291,8 +181,6 @@ canon_size_type(const char *name, canon_cap_t caps)
   /* custom */
   return 0; 
 }
-
-
 
 /*
  * 'canon_parameters()' - Return the parameter values for the given parameter.
@@ -407,7 +295,6 @@ canon_parameters(int  model,		/* I - Printer model */
     }
 
   return (valptrs);
-
 }
 
 
@@ -575,7 +462,6 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
 
   /* some linefeeds */
   canon_cmd(prn,ESC28,0x65, 2, (top >> 8 ),(top & 255));
-
 }
 
 /*
@@ -604,7 +490,7 @@ canon_advance_buffer(unsigned char *buf, int len, int num)
 }
 
 /*
- * 'canon_print()' - Print an image to an EPSON printer.
+ * 'canon_print()' - Print an image to an CANON printer.
  */
 void
 canon_print(int       model,		/* I - Model */
