@@ -1525,6 +1525,132 @@ iabs(int a)
     return -a;
 }
 
+static inline void
+compute_cmyk(int r, int g, int b,
+	     int *c, int *m, int *y, int *k)
+{
+  *c = 65535 - r;
+  *m = 65535 - g;
+  *y = 65535 - b;
+  *k = MIN(*c, MIN(*m, *y));
+}
+
+static inline void
+update_cmy(const dither_t *d, int c, int m, int y, int k,
+	    int *nc, int *nm, int *ny)
+{
+  /*
+   * We're not printing black, but let's adjust the CMY levels to
+   * produce better reds, greens, and blues...
+   *
+   * This code needs to be tuned
+   */
+
+  unsigned ck = c - k;
+  unsigned mk = m - k;
+  unsigned yk = y - k;
+
+  *nc  = ((unsigned) (65535 - c / 4)) * ck / 65535 + k;
+  *nm  = ((unsigned) (65535 - m / 4)) * mk / 65535 + k;
+  *ny  = ((unsigned) (65535 - y / 4)) * yk / 65535 + k;
+}
+
+static inline void
+update_cmyk(const dither_t *d, int c, int m, int y, int k,
+	    int *nc, int *nm, int *ny, int *nk, int *jk)
+{
+  int ak;
+  int kdarkness;
+  unsigned ks, kl;
+  int ub, lb;
+  int ok;
+  int bk;
+
+  ub = d->k_upper;    /* Upper bound */
+  lb = d->k_lower;    /* Lower bound */
+	  
+  /*
+   * Calculate total ink amount.
+   * If there is a lot of ink, black gets added sooner. Saves ink
+   * and with a lot of ink the black doesn't show as speckles.
+   *
+   * k already contains the grey contained in CMY.
+   * First we find out if the color is darker than the K amount
+   * suggests, and we look up where is value is between
+   * lowerbound and density:
+   */
+	  
+  kdarkness = ((c*2 + m*2 +y ) - 2 * d->density )/3;
+  if (kdarkness > k)
+    ok = kdarkness;
+  else
+    ok = k;
+  if ( ok > lb )
+    kl = (unsigned) ( ok - lb ) * (unsigned) d->density /
+      ( d->density - lb );
+  else
+    kl = 0;
+  if (kl > 65535)
+    kl = 65535;
+	    
+  /*
+   * We have a second value, ks, that will be the scaler.
+   * ks is initially showing where the original black
+   * amount is between upper and lower bounds:
+   */
+
+  if ( k > ub )
+    ks = d->density;
+  else if ( k < lb )
+    ks = 0;
+  else
+    ks = (unsigned) ( k - lb ) * (unsigned) d->density /
+      ( ub - lb );
+  if (ks > 65535)
+    ks = 65535;
+	    
+  /*
+   * ks is then processed by a second order function that produces
+   * an S curve: 2ks - ks^2. This is then multiplied by the
+   * darkness value in kl. If we think this is too complex the
+   * following line can be tried instead:    
+   * ak = ks;
+   */
+  ak = 2*ks-ks*ks/d->density;
+  k = kl * (unsigned) ak / d->density;
+  ok = k;
+  bk = k;
+
+  if (k > 0)
+    {
+      /*
+       * Because black is always fairly neutral, we do not have to
+       * calculate the amount to take out of CMY. The result will
+       * be a bit dark but that is OK. If things are okay CMY
+       * cannot go negative here - unless extra K is added in the
+       * previous block. We multiply by ak to prevent taking out
+       * too much. This prevents dark areas from becoming very
+       * dull.
+       */
+	     
+      c -= (unsigned) k * (unsigned) ak / d->density;
+      m -= (unsigned) k * (unsigned) ak / d->density;
+      y -= (unsigned) k * (unsigned) ak / d->density;
+      if (c < 0)
+	c = 0;
+      if (m < 0)
+	m = 0;
+      if (y < 0)
+	y = 0;
+    }
+  *nc = c;
+  *nm = m;
+  *ny = y;
+  *nk = bk;
+  *jk = k;
+}
+
+
 void
 dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	    int           row,	/* I - Current Y coordinate */
@@ -1543,7 +1669,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		xmod,		/* X error modulus */
 		length;		/* Length of output bitmap in bytes */
   int		c, m, y, k,	/* CMYK values */
-		oc, om, ok, oy;
+		oc, om, oy;
   unsigned char	bit,		/* Current bit */
 		*cptr,		/* Current cyan pixel */
 		*mptr,		/* Current magenta pixel */
@@ -1564,9 +1690,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   int		ditherk,	/* Next error value in buffer */
 		*kerror0,	/* Pointer to current error row */
 		*kerror1;	/* Pointer to next error row */
-  unsigned	ks, kl;
   int		bk = 0;
-  int		ub, lb;
   dither_t	*d = (dither_t *) vd;
 
   int		terminate;
@@ -1662,20 +1786,15 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	 kerror0 += direction,
 	 kerror1 += direction)
     {
-      int ak;
-      int kdarkness;
-      int tk;
       int printed_black = 0;
       int omd, oyd, ocd;
       int ink_budget = d->ink_limit;
 
       /*
-       * First compute the standard CMYK separation color values...
+       * First compute the standard CMYK separation color values.
        */
 
-      c = 65535 - (unsigned) rgb[0];
-      m = 65535 - (unsigned) rgb[1];
-      y = 65535 - (unsigned) rgb[2];
+      compute_cmyk(rgb[0], rgb[1], rgb[2], &c, &m, &y, &k);
 
       /*
        * If we're doing ordered dither, and there's no ink, we aren't
@@ -1683,116 +1802,45 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
        */
       if (c == 0 && m == 0 && y == 0 && (d->dither_type & D_ORDERED_BASE))
 	goto advance;
+
+      /*
+       * At this point we've computed the basic CMYK separations.
+       * Now we adjust the levels of each to improve the print quality.
+       */
+
       oc = c;
       om = m;
       oy = y;
-      k = MIN(c, MIN(m, y));
-
       if (k > 0)
 	{
 	  if (black != NULL)
-	    {
-	      ub = d->k_upper;    /* Upper bound */
-	      lb = d->k_lower;    /* Lower bound */
-	  
-	      /*
-	       * Calculate total ink amount.
-	       * If there is a lot of ink, black gets added sooner. Saves ink
-	       * and with a lot of ink the black doesn't show as speckles.
-	       *
-	       * k already contains the grey contained in CMY.
-	       * First we find out if the color is darker than the K amount
-	       * suggests, and we look up where is value is between
-	       * lowerbound and density:
-	       */
-	  
-	      kdarkness = ((c*2 + m*2 +y ) - 2 * d->density )/3;
-	      if (kdarkness > k)
-		ok = kdarkness;
-	      else
-		ok = k;
-	      if ( ok > lb )
-		kl = (unsigned) ( ok - lb ) * (unsigned) d->density /
-		  ( d->density - lb );
-	      else
-		kl = 0;
-	      if (kl > 65535)
-		kl = 65535;
-	    
-	      /*
-	       * We have a second value, ks, that will be the scaler.
-	       * ks is initially showing where the original black
-	       * amount is between upper and lower bounds:
-	       */
-
-	      if ( k > ub )
-		ks = d->density;
-	      else if ( k < lb )
-		ks = 0;
-	      else
-		ks = (unsigned) ( k - lb ) * (unsigned) d->density /
-		  ( ub - lb );
-	      if (ks > 65535)
-		ks = 65535;
-	    
-	      /*
-	       * ks is then processed by a second order function that produces
-	       * an S curve: 2ks - ks^2. This is then multiplied by the
-	       * darkness value in kl. If we think this is too complex the
-	       * following line can be tried instead:    
-	       * ak = ks;
-	       */
-	      ak = 2*ks-ks*ks/d->density;
-	      k = kl * (unsigned) ak / d->density;
-	      ok = k;
-	      bk = k;
-
-	      if (k > 0)
-		{
-		  /*
-		   * Because black is always fairly neutral, we do not have to
-		   * calculate the amount to take out of CMY. The result will
-		   * be a bit dark but that is OK. If things are okay CMY
-		   * cannot go negative here - unless extra K is added in the
-		   * previous block. We multiply by ak to prevent taking out
-		   * too much. This prevents dark areas from becoming very
-		   * dull.
-		   */
-	     
-		  c -= (unsigned) k * (unsigned) ak / d->density;
-		  m -= (unsigned) k * (unsigned) ak / d->density;
-		  y -= (unsigned) k * (unsigned) ak / d->density;
-		  if (c < 0)
-		    c = 0;
-		  if (m < 0)
-		    m = 0;
-		  if (y < 0)
-		    y = 0;
-		}
-	    }
+	    update_cmyk(d, oc, om, oy, k, &c, &m, &y, &bk, &k);
 	  else
-	    {
-	      /*
-	       * We're not printing black, but let's adjust the CMY levels to
-	       * produce better reds, greens, and blues...
-	       *
-	       * This code needs to be tuned
-	       */
-
-	      unsigned ck = c - k;
-	      unsigned mk = m - k;
-	      unsigned yk = y - k;
-
-	      ok = 0;
-	      c  = ((unsigned) (65535 - rgb[1] / 4)) * ck / 65535 + k;
-	      m  = ((unsigned) (65535 - rgb[2] / 4)) * mk / 65535 + k;
-	      y  = ((unsigned) (65535 - rgb[0] / 4)) * yk / 65535 + k;
-	    }
+	    update_cmy(d, oc, om, oy, k, &c, &m, &y);
 	}
 
       /*
        * We've done all of the cmyk separations at this point.
        * Now to do the dithering.
+       *
+       * At this point:
+       *
+       * bk = Amount of black printed with black ink
+       * ak = Adjusted "raw" K value
+       * k = raw K value derived from CMY
+       * oc, om, oy = raw CMY values assuming no K component
+       * c, m, y = CMY values adjusted for the presence of K
+       *
+       * The main reason for this rather elaborate setup, where we have
+       * 8 channels at this point, is to handle variable intensities
+       * (in particular light and dark variants) of inks.  Very dark regions
+       * with slight color tints should be printed with dark inks, not with
+       * the light inks that would be implied by the small amount of remnant
+       * CMY.
+       *
+       * It's quite likely that for simple four-color printers ordinary
+       * CMYK separations would work.  It's possible that they would work
+       * for variable dot sizes, too.
        */
 
       if (!(d->dither_type & D_ORDERED_BASE))
@@ -1808,9 +1856,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
       if (black)
 	{
-	  tk = print_color(d, &(d->k_dither), bk, bk, k, x, row, kptr,
-			   NULL, bit, length, 0, 0, 0, 0, &ink_budget,
-			   &(d->k_pick), &(d->k_dithermat), D_ORDERED);
+	  int tk = print_color(d, &(d->k_dither), bk, bk, k, x, row, kptr,
+			       NULL, bit, length, 0, 0, 0, 0, &ink_budget,
+			       &(d->k_pick), &(d->k_dithermat), D_ORDERED);
 	  if (tk != k)
 	    printed_black = 1;
 	  k = tk;
