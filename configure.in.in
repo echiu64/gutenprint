@@ -173,6 +173,8 @@ AC_ARG_WITH(cups,
        fi ;;
   esac],[AC_MSG_RESULT([${BUILD_CUPS}]) ; cups_prefix="${prefix}"])
 
+
+
 AC_MSG_CHECKING([whether to build translated CUPS PPD files])
 AC_ARG_WITH(translated-ppds,
 [  --with-translated-ppds  build translated CUPS PPD files [default=${BUILD_TRANSLATED_PPDS}]],
@@ -469,7 +471,14 @@ dnl define HAVE_GNU_LD if GNU ld is present
 if test "$ac_cv_prog_gnu_ld" = "yes" ; then
   AC_DEFINE(HAVE_GNU_LD,, [Define if GNU ld is present.])
 fi
-  
+
+AM_CONDITIONAL(BUILD_GENPPD_STATIC, test x"$enable_static" = xyes)
+
+if test "$enable_static" = no -a "$BUILD_CUPS" = yes ; then
+  AC_MSG_WARN([--enable-static is disabled, but CUPS is being built.])
+  AC_MSG_WARN([This may result in a *SILENTLY* incorrect build.])
+  AC_MSG_WARN([Please read the release notes carefully!])
+fi
 
 dnl GNU gettext checks.
 AM_GNU_GETTEXT

@@ -66,6 +66,19 @@ Gimp-Print 4.2.6 contains the following major changes over Gimp-Print
      failed to print in black and white or grayscale at certain
      resolutions.
 
+  5) (bug 865253) In certain cases, the PPD file generator for CUPS
+     may not generate all of the PPD files, or may not generate them
+     correctly.  The underlying problem is some versions of CUPS
+     specify a linker command line that forces an old version of the
+     Gimp-Print driver library to be used when building the PPD files.
+
+     This fix works correctly unless --disable-static (to disable
+     building static libraries) is passed on the command line.
+     Normally, only people packaging up Gimp-Print for distribution
+     use this option.  If you wish to use this option, please read the
+     Exceptions and Workarounds *carefully* for a full description of
+     the problem along with suggested methods of procedure.
+
 
 * New Functionality:
 
@@ -156,6 +169,61 @@ Gimp-Print 4.2.6 contains the following major changes over Gimp-Print
      the mtink tool (please see http://xwtools.automatix.de) for this
      purpose.
 
+  9) With certain versions of CUPS and in certain configurations, if a
+     new version of Gimp-Print is installed over an existing version
+     genppd will create PPD files based on the older version of
+     Gimp-Print rather than the newer version. This will happen if all
+     of the following are true:
+
+     1) The cups-config provided by the CUPS driver adds
+        -Wl,rpath=/usr/lib. This is done by some versions of CUPS
+        reportedly because in some cases the runtime linker does not
+        pick up libraries out of /usr/lib.  This is not the case with
+        1.1.14 and 1.1.15, but is with 1.1.20.  This can be checked by
+        running
+
+        cups-config --libs --ldflags
+
+        and inspecting the output for any mention of "rpath", "RPATH",
+        "RUN_PATH", or the like.
+
+     2) There is presently a version of Gimp-Print installed in /usr
+        (--prefix=/usr) rather than /usr/local or the like.
+
+     3) Gimp-Print is built dynamically only (--disable-static)
+
+     Note that in general if you install CUPS into a non-standard
+     location, and install Gimp-Print into the same location, this
+     problem can surface.
+
+     This bug is difficult to detect in a normal build.  It does not
+     cause an error to happen during build; the only failure is that
+     some PPD files may not be built or may be built with missing
+     options.
+
+     In this case, the run path embedded in the genppd executable
+     points to the version of Gimp-Print installed in /usr/lib. This
+     run path overrides any attempt by libtool to look in the build
+     directory. The result is that genppd is run against the older
+     version of Gimp-Print. If the new version contains additional
+     features (more printers, etc.) they will not be available to
+     genppd.
+
+     If you wish to use only shared libraries, and do not wish to
+     build static libraries at all, there are three workarounds
+     available:
+
+     1) Build and install Gimp-Print into /usr (rather than
+        /usr/local) and then rebuild Gimp-Print from scratch.  This
+        will install the correct libgimpprint.so in /usr/lib, and in
+        the rebuild genppd will be run against the correct library.
+
+     2) Remove the old version of Gimp-Print prior to building the new
+        version of Gimp-Print.  The important files to remove are
+        anything named /usr/lib/libgimpprint*.
+
+     3) Edit cups-config to remove the reference to the run path.
+
 
 The following bugs have been fixed in Gimp-Print 4.2.6:
 
@@ -164,6 +232,7 @@ The following bugs have been fixed in Gimp-Print 4.2.6:
 729918 Postscript family driver fails in non-US locale
 735493 CUPS PPD files lacking *OutputOrder
 842715 Epson 600/800/850/1520/3000 fail at certain resolutions BW
+865253 genppd may not generate new PPD files (4.2)
 
 The following bugs have been tested and cannot be reproduced:
 
