@@ -634,11 +634,25 @@
       <height value="864"/>
       <unit value="english"/>
     </paper>
+    <paper name="ARCHA_trans">
+      <description value="ArchA transposed"/>
+      <comment value="12in x 9in"/>
+      <width value="864"/>
+      <height value="648"/>
+      <unit value="english"/>
+    </paper>
     <paper name="ARCHB">
       <description value="ArchB"/>
       <comment value="12in x 18in"/>
       <width value="864"/>
       <height value="1296"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="ARCHB_trans">
+      <description value="ArchB transposed"/>
+      <comment value="18in x 12in"/>
+      <width value="1296"/>
+      <height value="864"/>
       <unit value="english"/>
     </paper>
     <paper name="ARCHC">
@@ -648,6 +662,13 @@
       <height value="1728"/>
       <unit value="english"/>
     </paper>
+    <paper name="ARCHC_trans">
+      <description value="ArchC transposed"/>
+      <comment value="24in x 18in"/>
+      <width value="1728"/>
+      <height value="1296"/>
+      <unit value="english"/>
+    </paper>
     <paper name="ARCHD">
       <description value="ArchD"/>
       <comment value="24in x 36in"/>
@@ -655,11 +676,25 @@
       <height value="2592"/>
       <unit value="english"/>
     </paper>
+    <paper name="ARCHD_trans">
+      <description value="ArchD transposed"/>
+      <comment value="36in x 24in"/>
+      <width value="2592"/>
+      <height value="1728"/>
+      <unit value="english"/>
+    </paper>
     <paper name="ARCHE">
       <description value="ArchE"/>
       <comment value="36in x 48in"/>
       <width value="2592"/>
       <height value="3456"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="ARCHE_trasn">
+      <description value="ArchE transposed"/>
+      <comment value="48in x 36in"/>
+      <width value="3456"/>
+      <height value="2592"/>
       <unit value="english"/>
     </paper>
 <!-- GROUP: Foolscap -->
