@@ -49,7 +49,7 @@
  */
 #include <gtk/gtk.h>
 #include <libgimp/gimp.h>
-#define PLUG_IN_VERSION		"3.0.6 - 11 Feb 2000"
+#define PLUG_IN_VERSION		"3.0.7 - 18 Feb 2000"
 #define PLUG_IN_NAME		"Print"
 
 #include <math.h>
@@ -295,6 +295,7 @@ GtkWidget	*print_dialog,		/* Print dialog window */
 		*scaling_entry,		/* Text entry widget for scaling */
 		*scaling_percent,	/* Scale by percent */
 		*scaling_ppi,		/* Scale by pixels-per-inch */
+  		*scaling_image,         /* Scale to the image */
 		*brightness_scale,	/* Scale for brightness */
 		*brightness_entry,	/* Text entry widget for brightness */
 		*saturation_scale,	/* Scale for saturation */
@@ -360,6 +361,7 @@ plist_t		plist[MAX_PLIST];	/* System printers */
 
 int		runme = FALSE,		/* True if print should proceed */
 		current_printer = 0;	/* Current printer index */
+gint32          image_ID;	        /* image ID */
 
 /*
  * 'main()' - Main entry - just call gimp_main()...
@@ -476,7 +478,6 @@ run(char   *name,		/* I - Name of print program. */
 #ifdef __EMX__
   char		*tmpfile;	/* temp filename */
 #endif
-  gint32         image_ID;      /* image ID */
   gint32         drawable_ID;   /* drawable ID */
 #ifndef GIMP_1_0
   GimpExportReturnType export = EXPORT_CANCEL;    /* return value of gimp_export_image() */
@@ -1047,7 +1048,7 @@ do_print_dialog(void)
 
   if (vars.scaling < 0.0)
     scaling_adjustment = scale_data =
-	gtk_adjustment_new(-vars.scaling, 50.0, 1201.0, 1.0, 1.0, 1.0);
+	gtk_adjustment_new(-vars.scaling, 36.0, 1201.0, 1.0, 1.0, 1.0);
   else
     scaling_adjustment = scale_data =
 	gtk_adjustment_new(vars.scaling, 5.0, 101.0, 1.0, 1.0, 1.0);
@@ -1087,6 +1088,14 @@ do_print_dialog(void)
                      (GtkSignalFunc)scaling_callback, NULL);
   gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
   gtk_widget_show(button);
+  
+  scaling_image = button = gtk_toggle_button_new_with_label(_("Set Image Scale"));
+  gtk_signal_connect(GTK_OBJECT(button), "clicked",
+                     (GtkSignalFunc)scaling_callback, NULL);
+  gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
+  gtk_widget_show(button);
+
+
 
  /*
   * Brightness slider...
@@ -2049,7 +2058,7 @@ scaling_callback(GtkWidget *widget)	/* I - Entry widget */
   }
   else if (widget == scaling_ppi)
   {
-    GTK_ADJUSTMENT(scaling_adjustment)->lower = 50.0;
+    GTK_ADJUSTMENT(scaling_adjustment)->lower = 36.0;
     GTK_ADJUSTMENT(scaling_adjustment)->upper = 1201.0;
     GTK_ADJUSTMENT(scaling_adjustment)->value = 72.0;
     vars.scaling = 0.0;
@@ -2061,6 +2070,19 @@ scaling_callback(GtkWidget *widget)	/* I - Entry widget */
     GTK_ADJUSTMENT(scaling_adjustment)->lower = 5.0;
     GTK_ADJUSTMENT(scaling_adjustment)->upper = 101.0;
     GTK_ADJUSTMENT(scaling_adjustment)->value = 100.0;
+    vars.scaling = 0.0;
+    plist[plist_current].v.scaling = vars.scaling;
+    gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
+  }
+  else if (widget == scaling_image)
+  {
+    double xres, yres;
+    gimp_image_get_resolution(image_ID, &xres, &yres);
+    GTK_ADJUSTMENT(scaling_adjustment)->lower = 36.0;
+    GTK_ADJUSTMENT(scaling_adjustment)->upper = 1201.0;
+    GTK_ADJUSTMENT(scaling_adjustment)->value = yres;
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_ppi), TRUE);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_image), FALSE);
     vars.scaling = 0.0;
     plist[plist_current].v.scaling = vars.scaling;
     gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
@@ -2153,7 +2175,7 @@ do_misc_updates()
       float tmp = -plist[plist_current].v.scaling;
       plist[plist_current].v.scaling = -plist[plist_current].v.scaling;
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_ppi), TRUE);
-      GTK_ADJUSTMENT(scaling_adjustment)->lower = 50.0;
+      GTK_ADJUSTMENT(scaling_adjustment)->lower = 36.0;
       GTK_ADJUSTMENT(scaling_adjustment)->upper = 1201.0;
       sprintf(s, "%.1f", tmp);
       GTK_ADJUSTMENT(scaling_adjustment)->value = tmp;

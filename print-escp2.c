@@ -31,8 +31,14 @@
  * Revision History:
  *
  *   $Log$
- *   Revision 1.39.2.2  2000/02/11 23:53:22  rlk
- *   print 3.0.6 fixes
+ *   Revision 1.39.2.3  2000/02/22 23:47:20  rlk
+ *   3.0.7
+ *
+ *   Revision 1.39.2.4  2000/02/21 14:27:40  rlk
+ *   Try to fix softweave
+ *
+ *   Revision 1.39.2.3  2000/02/19 00:59:58  rlk
+ *   handle non-6-color softweave correctly
  *
  *   Revision 1.39.2.2  2000/02/11 23:44:39  rlk
  *   3.0.6
@@ -1917,14 +1923,13 @@ flush_pass(int passno, int model, int width, int hoffset, int ydpi,
 	      fwrite("\033.\001\012\012\001", 6, 1, prn);
 	      break;
 	    case 720 :
-	      if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+	      if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK,
+				MODEL_720DPI_600))
 		fprintf(prn, "\033.%c%c%c%c", 1, 8 * 5, 5,
 			*linecount + pass->missingstartrows);
-	      else if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK,
-				     MODEL_720DPI_600))
-		fwrite("\033.\001\050\005\001", 6, 1, prn);
 	      else
-		fwrite("\033.\001\005\005\001", 6, 1, prn);
+		fprintf(prn, "\033.%c%c%c%c", 1, 5, 5,
+			*linecount + pass->missingstartrows);
 	      break;
 	    }
 

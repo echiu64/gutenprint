@@ -38,6 +38,18 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.49.2.2  2000/02/22 23:47:21  rlk
+ *   3.0.7
+ *
+ *   Revision 1.49.2.4  2000/02/22 23:46:00  rlk
+ *   Improve colors
+ *
+ *   Revision 1.49.2.3  2000/02/21 20:36:11  rlk
+ *   Fix dithering!!!
+ *
+ *   Revision 1.49.2.2  2000/02/19 01:10:33  rlk
+ *   alpha stuff
+ *
  *   Revision 1.49.2.1  2000/01/13 23:41:29  rlk
  *   Deal with null black pointer
  *
@@ -352,18 +364,24 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
     if (k > 32767)
     {
       *kptr |= bit;
-      k -= 65535;
+      k -= 65536;
     }
 
     if (ditherbit & bit)
     {
-      kerror1[0] = 5 * k;
-      ditherk    = kerror0[1] + 3 * k;
+      int tmpk = k;
+      if (tmpk > 65535)
+	tmpk = 65535;
+      kerror1[0] = 5 * tmpk;
+      ditherk    = kerror0[1] + 3 * tmpk;
     }
     else
     {
-      kerror1[0] = 3 * k;
-      ditherk    = kerror0[1] + 5 * k;
+      int tmpk = k;
+      if (tmpk > 65535)
+	tmpk = 65535;
+      kerror1[0] = 3 * tmpk;
+      ditherk    = kerror0[1] + 5 * tmpk;
     }
 
     if (bit == 1)
@@ -411,11 +429,11 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  */
 
 #define NU_C 1
-#define DE_C 1
+#define DE_C 2
 #define NU_M 1
-#define DE_M 1
+#define DE_M 2
 #define NU_Y 1
-#define DE_Y 1
+#define DE_Y 2
 
 #define I_RATIO_C NU_C / DE_C
 #define I_RATIO_C1 NU_C / (DE_C + NU_C)
@@ -537,7 +555,7 @@ do {									    \
 	{								    \
 	  PRINT_D1(r, R, d1, d2);					    \
 	  DO_PRINT_COLOR(r);						    \
-	  r -= 65535;							    \
+	  r -= 65536;							    \
 	}								    \
     }									    \
   else									    \
@@ -574,52 +592,41 @@ do {									    \
 	  if (sub < R##_CONST_0)					    \
 	    r -= R##_CONST_0;						    \
 	  else if (sub > 65535)						    \
-	    r -= 65535;							    \
+	    r -= 65536;							    \
 	  else								    \
 	    r -= sub;							    \
 	}								    \
     }									    \
 } while (0)
 
-#if 1
-#define UPDATE_DITHER(r, d2, x, width)					 \
-do {									 \
-  int offset = (15 - (((o##r & 0xf000) >> 12)) * horizontal_overdensity) \
-				       >> 1;				 \
-  if (x < offset)							 \
-    offset = x;								 \
-  else if (x > dst_width - offset - 1)					 \
-    offset = dst_width - x - 1;						 \
-  if (ditherbit##d2 & bit)						 \
-    {									 \
-      r##error1[-offset] += r;						 \
-      r##error1[0] += 3 * r;						 \
-      r##error1[offset] += r;						 \
-      dither##r    = r##error0[direction] + 3 * r;			 \
-    }									 \
-  else									 \
-    {									 \
-      r##error1[-offset] += r;						 \
-      r##error1[0] +=  r;						 \
-      r##error1[offset] += r;						 \
-      dither##r    = r##error0[direction] + 5 * r;			 \
-    }									 \
-} while (0)
-#else
-#define UPDATE_DITHER(r, d2, x, width)			\
-do {							\
-  if (ditherbit##d2 & bit)				\
-    {							\
-      r##error1[0] = 5 * r;				\
-      dither##r    = r##error0[direction] + 3 * r;	\
-    }							\
-  else							\
-    {							\
-      r##error1[0] = 3 * r;				\
-      dither##r    = r##error0[direction] + 5 * r;	\
-    }							\
-} while (0)
-#endif
+#define UPDATE_DITHER(r, d2, x, width)					   \
+do {									   \
+  int offset = ((15 - (((o##r & 0xf000) >> 12))) * horizontal_overdensity) \
+					>> 1;				   \
+  int tmp##r = r;							   \
+  if (tmp##r > 65535)							   \
+    tmp##r = 65535;							   \
+  if (x < offset)							   \
+    offset = x;								   \
+  else if (x > dst_width - offset - 1)					   \
+    offset = dst_width - x - 1;						   \
+  if (ditherbit##d2 & bit)						   \
+    {									   \
+      r##error1[-offset] += tmp##r;					   \
+      r##error1[0] += 3 * tmp##r;					   \
+      r##error1[offset] += tmp##r;					   \
+      if (x > 0 && x < (dst_width - 1))					   \
+	dither##r    = r##error0[direction] + 3 * tmp##r;		   \
+    }									   \
+  else									   \
+    {									   \
+      r##error1[-offset] += tmp##r;					   \
+      r##error1[0] +=  tmp##r;						   \
+      r##error1[offset] += tmp##r;					   \
+      if (x > 0 && x < (dst_width - 1))					   \
+	dither##r    = r##error0[direction] + 5 * tmp##r;		   \
+    }									   \
+  } while (0)
 
 void
 dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
@@ -957,7 +964,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 			(32768 >> K_RANDOMIZER))))
 	{
 	  DO_PRINT_COLOR(k);
-	  k -= 65535;
+	  k -= 65536;
 	}
 
       UPDATE_DITHER(k, 1, x, src_width);
@@ -1162,13 +1169,19 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
 
     if (ditherbit & bit)
     {
-      kerror1[0] = 5 * k;
-      ditherk    = kerror0[1] + 3 * k;
+      int tmpk = k;
+      if (tmpk > 65535)
+	tmpk = 65535;
+      kerror1[0] = 5 * tmpk;
+      ditherk    = kerror0[1] + 3 * tmpk;
     }
     else
     {
-      kerror1[0] = 3 * k;
-      ditherk    = kerror0[1] + 5 * k;
+      int tmpk = k;
+      if (tmpk > 65535)
+	tmpk = 65535;
+      kerror1[0] = 3 * tmpk;
+      ditherk    = kerror0[1] + 5 * tmpk;
     }
 
     if (bit == 1)
@@ -1608,7 +1621,14 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
     while (width > 0)
     {
       *grayout = lut->composite[*grayin];
-
+      if (vars->density != 1.0)
+	{
+	  float t = ((float) *grayout) / 65536.0;
+	  t = (1.0 + ((t - 1.0) * vars->density));
+	  if (t < 0.0)
+	    t = 0.0;
+	  *grayout = (unsigned short) (t * 65536.0);
+	}
       grayin ++;
       grayout ++;
       width --;
@@ -1622,8 +1642,15 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 
     while (width > 0)
     {
-      *grayout = lut->composite[grayin[0] * grayin[1] / 255] + 255 - grayin[1];
-
+      *grayout = lut->composite[grayin[0] * grayin[1] / 255 + 255 - grayin[1]];
+      if (vars->density != 1.0)
+	{
+	  float t = ((float) *grayout) / 65536.0;
+	  t = (1.0 + ((t - 1.0) * vars->density));
+	  if (t < 0.0)
+	    t = 0.0;
+	  *grayout = (unsigned short) (t * 65536.0);
+	}
       grayin += bpp;
       grayout ++;
       width --;
@@ -1664,6 +1691,14 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
     while (width > 0)
     {
       *gray = lut->composite[gray_cmap[*indexed]];
+      if (vars->density != 1.0)
+	{
+	  float t = ((float) *gray) / 65536.0;
+	  t = (1.0 + ((t - 1.0) * vars->density));
+	  if (t < 0.0)
+	    t = 0.0;
+	  *gray = (unsigned short) (t * 65536.0);
+	}
       indexed ++;
       gray ++;
       width --;
@@ -1679,6 +1714,14 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
     {
       *gray = lut->composite[gray_cmap[indexed[0] * indexed[1] / 255] +
 			    255 - indexed[1]];
+      if (vars->density != 1.0)
+	{
+	  float t = ((float) *gray) / 65536.0;
+	  t = (1.0 + ((t - 1.0) * vars->density));
+	  if (t < 0.0)
+	    t = 0.0;
+	  *gray = (unsigned short) (t * 65536.0);
+	}
       indexed += bpp;
       gray ++;
       width --;
@@ -1715,6 +1758,19 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	  s = pow(s, 1.0 / vars->saturation);
 	  calc_hsv_to_rgb(rgb, h, s, v);
 	}
+      if (vars->density != 1.0)
+	{
+	  float t;
+	  int i;
+	  for (i = 0; i < 3; i++)
+	    {
+	      t = ((float) rgb[i]) / 65536.0;
+	      t = (1.0 + ((t - 1.0) * vars->density));
+	      if (t < 0.0)
+		t = 0.0;
+	      rgb[i] = (unsigned short) (t * 65536.0);
+	    }
+	}
       rgb += 3;
       indexed ++;
       width --;
@@ -1740,6 +1796,19 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	  calc_rgb_to_hsv(rgb, &h, &s, &v);
 	  s = pow(s, 1.0 / vars->saturation);
 	  calc_hsv_to_rgb(rgb, h, s, v);
+	}
+      if (vars->density != 1.0)
+	{
+	  float t;
+	  int i;
+	  for (i = 0; i < 3; i++)
+	    {
+	      t = ((float) rgb[i]) / 65536.0;
+	      t = (1.0 + ((t - 1.0) * vars->density));
+	      if (t < 0.0)
+		t = 0.0;
+	      rgb[i] = (unsigned short) (t * 65536.0);
+	    }
 	}
       rgb += 3;
       indexed += bpp;
@@ -1791,7 +1860,7 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
       *gray = lut->composite[((rgb[0] * LUM_RED +
 			       rgb[1] * LUM_GREEN +
 			       rgb[2] * LUM_BLUE) *
-			      rgb[3] / 25500 + 255 - rgb[3])];
+			      rgb[3] / 255 + 255 - rgb[3])];
       gray ++;
       rgb += bpp;
       width --;
@@ -1873,8 +1942,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
       rgbout[0] = lut->red[rgbin[0] * rgbin[3] / 255 + 255 - rgbin[3]];
       rgbout[1] = lut->green[rgbin[1] * rgbin[3] / 255 + 255 - rgbin[3]];
       rgbout[2] = lut->blue[rgbin[2] * rgbin[3] / 255 + 255 - rgbin[3]];
-      if (vars->saturation != 1.0 || vars->contrast != 100 ||
-	  vars->density != 1.0)
+      if (vars->saturation != 1.0 || vars->contrast != 100)
 	{
 	  calc_rgb_to_hsv(rgbout, &h, &s, &v);
 	  if (vars->saturation != 1.0)
