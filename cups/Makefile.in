@@ -234,7 +234,7 @@ libdrv.a:	$(DRVOBJS)
 	$(SILENT) $(RANLIB) $@
 
 $(DRVOBJS):	$(HEADERS)
-cups-util.c:	cups-printers.c
+cups-util.o:	cups-util.c cups-printers.c
 
 
 #
