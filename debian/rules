@@ -37,7 +37,7 @@ autoconfigure-stamp: debian/control debian/libgimpprint-doc.doc-base
 	rm debian/libgimpprint$(LIBRARY_VERSION)*.in
 	mkdir debian/gimp-print-build ; \
 	cd debian/gimp-print-build ; \
-	BUILD_PACKAGE=true ../../configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --enable-static --enable-shared --without-gimp --with-cups --without-ijs --with-foomatic --disable-test --without-translated-ppds --disable-cups-level3-ps --enable-maintainer-mode
+	BUILD_PACKAGE=true ../../configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --enable-static --enable-shared --without-gimp --with-cups --with-ijs --with-foomatic --disable-test --without-translated-ppds --disable-cups-level3-ps --enable-maintainer-mode
 	touch autoconfigure-stamp
 
 build: build-stamp debian/control

@@ -1,9 +1,9 @@
 Source: gimp-print
 Section: graphics
 Priority: optional
-Maintainer: Eric Sharkey <sharkey@debian.org>
+Maintainer: Roger Leigh <roger@whinlatter.uklinux.net>
 Standards-Version: 3.5.6.0
-Build-Depends: libcupsys2-dev, libgimp1.2-dev, libglib1.2-dev, libgtk1.2-dev, libreadline4-dev, debhelper (>= 4.0.2), xlibs-dev, zlib1g-dev, flex, gettext (>= 0.10.36-1), texi2html, docbook-utils, imagemagick, autoconf, automake, libtool, bison, foomatic-bin (>= 0.20020131-1)
+Build-Depends: libcupsys2-dev, libgimp1.2-dev, libglib1.2-dev, libgtk1.2-dev, libreadline4-dev, libijs-0.34-dev, debhelper (>= 4.0.2), xlibs-dev, zlib1g-dev, flex, gettext (>= 0.10.36-1), texi2html, docbook-utils, imagemagick, autoconf, automake, libtool, bison, foomatic-bin (>= 0.20020131-1)
 
 Package: gimp1.2-print
 Architecture: any
@@ -16,7 +16,7 @@ Description: The Print plugin for the GIMP
  This is Gimp-Print version #UPSTREAM_VERSION#, a stable release in
  the 4.2 line.
  .
- Gimp-print is the print facility for the Gimp, and in addition a
+ Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
  using GhostScript or CUPS.  These drivers provide printing quality
  for UNIX/Linux on a par with proprietary vendor-supplied drivers in
@@ -28,7 +28,7 @@ Architecture: any
 Depends: ${shlibs:Depends}, cupsys (>= 1.1.4) | cups (>= 1.1.4)
 Recommends: postscript-viewer | gs (>= 6.51), gimpprint-locales (>= ${Source-Version})
 Suggests: gimpprint-doc (= ${Source-Version})
-Description: Gimp-print printer drivers for CUPS
+Description: Gimp-Print printer drivers for CUPS
  This package includes a CUPS driver based on gimp-print.
  .
  The CUPS drivers contain all of the files needed to support
@@ -41,7 +41,7 @@ Description: Gimp-print printer drivers for CUPS
  This is Gimp-Print version #UPSTREAM_VERSION#, a stable release in
  the 4.2 line.
  .
- Gimp-print is the print facility for the Gimp, and in addition a
+ Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
  using GhostScript or CUPS.  These drivers provide printing quality
  for UNIX/Linux on a par with proprietary vendor-supplied drivers in
@@ -54,6 +54,7 @@ Section: devel
 Depends: libgimpprint#LIBRARY_VERSION# (= ${Source-Version})
 Provides: libgimpprint-dev
 Conflicts: libgimpprint-dev
+Replaces: libgimpprint-dev
 Description: Header files and extras for compiling programs with libgimpprint
  This package contains the header files for the libgimpprint library,
  along with a static version of libgimpprint.
@@ -64,7 +65,7 @@ Description: Header files and extras for compiling programs with libgimpprint
  This is Gimp-Print version #UPSTREAM_VERSION#, a stable release in
  the 4.2 line.
  .
- Gimp-print is the print facility for the Gimp, and in addition a
+ Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
  using GhostScript or CUPS.  These drivers provide printing quality
  for UNIX/Linux on a par with proprietary vendor-supplied drivers in
@@ -74,6 +75,7 @@ Description: Header files and extras for compiling programs with libgimpprint
 Package: libgimpprint#LIBRARY_VERSION#-doc
 Architecture: all
 Section: doc
+Replaces: libgimpprint-doc
 Suggests: libgimpprint#LIBRARY_VERSION# (= ${Source-Version})
 Description: Documentation and example code for the libgimpprint library
  This package contains lots of info-files, DVI docs and other
@@ -85,7 +87,7 @@ Description: Documentation and example code for the libgimpprint library
  This is Gimp-Print version #UPSTREAM_VERSION#, a stable release in
  the 4.2 line.
  .
- Gimp-print is the print facility for the Gimp, and in addition a
+ Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
  using GhostScript or CUPS.  These drivers provide printing quality
  for UNIX/Linux on a par with proprietary vendor-supplied drivers in
@@ -97,7 +99,7 @@ Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}
 Recommends: gimpprint-locales (>= ${Source-Version})
-Description: Gimp-print printer drivers - core library
+Description: Gimp-Print printer drivers - core library
  This package includes the libgimpprint library, necessary to run
  gimp1.2-print and cupsys-driver-gimpprint.
  .
@@ -107,7 +109,7 @@ Description: Gimp-print printer drivers - core library
  This is Gimp-Print version #UPSTREAM_VERSION#, a stable release in
  the 4.2 line.
  .
- Gimp-print is the print facility for the Gimp, and in addition a
+ Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
  using GhostScript or CUPS.  These drivers provide printing quality
  for UNIX/Linux on a par with proprietary vendor-supplied drivers in
@@ -129,7 +131,7 @@ Description: Locale data files for gimp-print
  This is Gimp-Print version #UPSTREAM_VERSION#, a stable release in
  the 4.2 line.
  .
- Gimp-print is the print facility for the Gimp, and in addition a
+ Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
  using GhostScript or CUPS.  These drivers provide printing quality
  for UNIX/Linux on a par with proprietary vendor-supplied drivers in
@@ -152,7 +154,7 @@ Description: Users' Guide for GIMP-Print and CUPS
  This is Gimp-Print version #UPSTREAM_VERSION#, a stable release in
  the 4.2 line.
  .
- Gimp-print is the print facility for the Gimp, and in addition a
+ Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
  using GhostScript or CUPS.  These drivers provide printing quality
  for UNIX/Linux on a par with proprietary vendor-supplied drivers in
@@ -167,6 +169,25 @@ Recommends: gimpprint-locales (>= ${Source-Version})
 Description: A maintenance utility for Epson Stylus printers
  escputil is a utility to clean and align the heads of Epson Stylus
  printers.  It can also check the current ink levels in the printer.
+ .
+ This is Gimp-Print version #UPSTREAM_VERSION#, a stable release in
+ the 4.2 line.
+ .
+ Gimp-Print is the print facility for the Gimp, and in addition a
+ suite of drivers that may be used with common UNIX spooling systems
+ using GhostScript or CUPS.  These drivers provide printing quality
+ for UNIX/Linux on a par with proprietary vendor-supplied drivers in
+ many cases, and can be used for many of the most demanding printing
+ tasks.
+
+Package: ijsgimpprint
+Architecture: any
+Section: text
+Depends: ${shlibs:Depends}, gs (>= 6.53) | gs-esp (>= 6.53) | gs-aladdin (>= 7.04)
+Description: Inkjet Server - Ghostscript driver for GIMP-Print
+ This package contains the ijsgimpprint binary which provides
+ Ghostscript with a GIMP-Print driver, supporting all printers
+ supported by libgimpprint.
  .
  This is Gimp-Print version #UPSTREAM_VERSION#, a stable release in
  the 4.2 line.
@@ -193,7 +214,7 @@ Description: Printer/Driver database and print system - gimp-print database
  This is Gimp-Print version #UPSTREAM_VERSION#, a stable release in
  the 4.2 line.
  .
- Gimp-print is the print facility for the Gimp, and in addition a
+ Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
  using GhostScript or CUPS.  These drivers provide printing quality
  for UNIX/Linux on a par with proprietary vendor-supplied drivers in

@@ -1,3 +1,13 @@
+gimp-print (4.2.3-1) unstable; urgency=low
+
+  * New stable release.
+  * I am the new maintainer of gimp-print for Debian.
+  * New package ijsgimpprint.  This provides an IJS server for use
+    with ghostscript.
+  * Fix doc-base problems with gimpprint-doc.
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Wed,  9 Oct 2002 13:26:30 +0100
+
 gimp-print (4.2.2-1) unstable; urgency=low
 
   * New stable release.
