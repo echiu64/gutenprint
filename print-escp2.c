@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.71  2000/02/12 15:21:55  rlk
+ *   Use Epson sequences more exactly
+ *
  *   Revision 1.70  2000/02/12 03:37:04  rlk
  *   One more try
  *
@@ -934,7 +937,7 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 
       fwrite("\033(D\004\000\100\070\170\050", 9, 1, prn);
 
-      fwrite("\033(V\004\000", 5, 1, prn);     /* Absolute vertical position */
+      fwrite("\033(v\004\000", 5, 1, prn);     /* Absolute vertical position */
       n = ydpi * (page_length - top) / 72;
       putc(n & 255, prn);
       putc(n >> 8, prn);
@@ -1638,7 +1641,7 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
     {
       if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
 			MODEL_VARIABLE_4))
-	fprintf(prn, "\033(/%c%c%c%c%c%c", 4, 0,
+	fprintf(prn, "\033($%c%c%c%c%c%c", 4, 0,
 		(offset * 1440 / ydpi) & 255,
 		((offset * 1440 / ydpi) >> 8) & 255,
 		((offset * 1440 / ydpi) >> 16) & 255,
@@ -2249,7 +2252,7 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	  /* separation */
 	  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
 			    MODEL_VARIABLE_4))
-	    fprintf(prn, "\033(/%c%c%c%c%c%c", 4, 0,
+	    fprintf(prn, "\033($%c%c%c%c%c%c", 4, 0,
 		    ((hoffset * 1440 / ydpi) + microoffset) & 255,
 		    (((hoffset * 1440 / ydpi) + microoffset) >> 8) & 255,
 		    (((hoffset * 1440 / ydpi) + microoffset) >> 16) & 255,
