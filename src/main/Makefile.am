@@ -100,4 +100,4 @@ CLEANFILES = print-printers.c
 DISTCLEANFILES = gimpprint-config gimpprint-config.in gimpprint.pc gimpprint.pc.in gimpprint.m4
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = gimpprint.m4.top gimpprint.m4.bot printers.xml
+EXTRA_DIST = gimpprint.m4.top printers.xml
