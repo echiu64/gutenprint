@@ -1946,7 +1946,7 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
   ok = k;
   bk = k;
 
-  if (k && ak)
+  if (k && ak && ok > 0)
     {
       /*
        * Because black is always fairly neutral, we do not have to
@@ -1959,9 +1959,18 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
        */
 
       ok = (unsigned) k * (unsigned) ak / (unsigned) d->density;
-      c -= ok;
-      m -= ok;
-      y -= ok;
+      if (d->k_clevel == 64)
+	c -= ok;
+      else
+	c -= (ok * d->k_clevel) >> 6;
+      if (d->k_mlevel == 64)
+	m -= ok;
+      else
+	m -= (ok * d->k_mlevel) >> 6;
+      if (d->k_ylevel == 64)
+	y -= ok;
+      else
+	y -= (ok * d->k_ylevel) >> 6;
 
       if (c < 0)
 	c = 0;
