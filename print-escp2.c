@@ -1335,6 +1335,7 @@ typedef struct escp_init
   int ydpi;
   int xdpi;
   int use_softweave;
+  int use_microweave;
   int page_length;
   int page_width;
   int page_top;
@@ -1354,32 +1355,37 @@ typedef struct {
   int hres;
   int vres;
   int softweave;
+  int microweave;
   int vertical_passes;
   int vertical_oversample;
   int unidirectional;
 } res_t;
 
 static const res_t escp2_reslist[] = {
-  { "180 DPI",                                  180,  180,  0, 1, 1, 0 },
-  { "360 DPI",                                  360,  360,  0, 1, 1, 0 },
-  { "360 DPI Softweave",                        360,  360,  1, 1, 1, 0 },
-  { "360 DPI High Quality",                     360,  360,  1, 2, 1, 0 },
-  { "720 DPI Microweave",                       720,  720,  0, 1, 1, 0 },
-  { "720 DPI Softweave",                        720,  720,  1, 1, 1, 0 },
-  { "720 DPI Softweave Unidirectional",         720,  720,  1, 1, 1, 1 },
-  { "720 DPI High Quality",                     720,  720,  1, 2, 1, 0 },
-  { "720 DPI High Quality Unidirectional",      720,  720,  1, 2, 1, 1 },
-  { "720 DPI Highest Quality",                  720,  720,  1, 4, 1, 1 },
-  { "1440 x 720 DPI Microweave",                1440, 720,  0, 1, 1, 0 },
-  { "1440 x 720 DPI Microweave Unidirectional", 1440, 720,  0, 1, 1, 1 },
-  { "1440 x 720 DPI Softweave",                 1440, 720,  1, 1, 1, 0 },
-  { "1440 x 720 DPI Softweave Unidirectional",  1440, 720,  1, 1, 1, 1 },
-  { "1440 x 720 DPI Highest Quality",           1440, 720,  1, 2, 1, 1 },
-  { "1440 x 1440 DPI Softweave",                1440, 1440, 1, 1, 1, 1 },
-  { "1440 x 1440 DPI Highest Quality",          1440, 1440, 1, 2, 1, 1 },
-  { "2880 x 720 DPI Softweave",                 2880, 720,  1, 1, 1, 0 },
-  { "2880 x 720 DPI Softweave Unidirectional",  2880, 720,  1, 1, 1, 1 },
-  { "2880 x 1440 DPI Softweave",                2880, 1440, 1, 1, 1, 1 },
+  { "180 DPI",                                  180,  180,  0, 0, 1, 1, 0 },
+  { "360 DPI",                                  360,  360,  0, 0, 1, 1, 0 },
+  { "360 DPI Unidirectional",                   360,  360,  0, 0, 1, 1, 1 },
+  { "360 DPI Microweave",                       360,  360,  0, 1, 1, 1, 0 },
+  { "360 DPI Microweave Unidirectional",        360,  360,  0, 1, 1, 1, 1 },
+  { "360 DPI Softweave",                        360,  360,  1, 0, 1, 1, 0 },
+  { "360 DPI High Quality",                     360,  360,  1, 0, 2, 1, 0 },
+  { "360 DPI High Quality Unidirectional",      360,  360,  1, 0, 2, 1, 1 },
+  { "720 DPI Microweave",                       720,  720,  0, 1, 1, 1, 0 },
+  { "720 DPI Softweave",                        720,  720,  1, 0, 1, 1, 0 },
+  { "720 DPI Softweave Unidirectional",         720,  720,  1, 0, 1, 1, 1 },
+  { "720 DPI High Quality",                     720,  720,  1, 0, 2, 1, 0 },
+  { "720 DPI High Quality Unidirectional",      720,  720,  1, 0, 2, 1, 1 },
+  { "720 DPI Highest Quality",                  720,  720,  1, 0, 4, 1, 1 },
+  { "1440 x 720 DPI Microweave",                1440, 720,  0, 1, 1, 1, 0 },
+  { "1440 x 720 DPI Microweave Unidirectional", 1440, 720,  0, 1, 1, 1, 1 },
+  { "1440 x 720 DPI Softweave",                 1440, 720,  1, 0, 1, 1, 0 },
+  { "1440 x 720 DPI Softweave Unidirectional",  1440, 720,  1, 0, 1, 1, 1 },
+  { "1440 x 720 DPI Highest Quality",           1440, 720,  1, 0, 2, 1, 1 },
+  { "1440 x 1440 DPI Softweave",                1440, 1440, 1, 0, 1, 1, 1 },
+  { "1440 x 1440 DPI Highest Quality",          1440, 1440, 1, 0, 2, 1, 1 },
+  { "2880 x 720 DPI Softweave",                 2880, 720,  1, 0, 1, 1, 0 },
+  { "2880 x 720 DPI Softweave Unidirectional",  2880, 720,  1, 0, 1, 1, 1 },
+  { "2880 x 1440 DPI Softweave",                2880, 1440, 1, 0, 1, 1, 1 },
   { "", 0, 0, 0, 0, 0 }
 };
 
@@ -2135,8 +2141,7 @@ escp2_set_color(FILE *prn, escp_init_t *init)
 static void
 escp2_set_microweave(FILE *prn, escp_init_t *init)
 {
-  fprintf(prn, "\033(i\001%c%c", 0,
-	  (init->use_softweave || init->ydpi < escp2_base_resolution) ? 0 : 1);
+  fprintf(prn, "\033(i\001%c%c", 0, init->use_microweave);
 }
 
 static void
@@ -2331,6 +2336,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
                 image_width,
                 image_bpp;
   int		use_softweave = 0;
+  int		use_microweave = 0;
   int		nozzles = 1;
   int		nozzle_separation = 1;
   int		horizontal_passes = 1;
@@ -2413,6 +2419,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
       if (!strcmp(resolution, res->name))
 	{
 	  use_softweave = res->softweave;
+	  use_microweave = res->microweave;
 	  if (!use_softweave)
 	    max_vres = escp2_base_resolution;
 	  xdpi = res->hres;
@@ -2477,6 +2484,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   init.ydpi = ydpi;
   init.xdpi = xdpi;
   init.use_softweave = use_softweave;
+  init.use_microweave = use_microweave;
   init.page_length = page_length;
   init.page_width = page_width;
   init.page_top = page_top;

@@ -611,10 +611,20 @@ dither_set_transition(void *vd, double exponent)
   destroy_matrix(&(d->mat7));
   copy_matrix(&(d->mat6), &(d->mat7));
   exponential_scale_matrix(&(d->mat7), exponent);
-  clone_matrix(&(d->mat7), &(d->c_pick), x_3, 0);
-  clone_matrix(&(d->mat7), &(d->m_pick), 0, 2 * y_3);
-  clone_matrix(&(d->mat7), &(d->y_pick), 2 * x_3, 0);
-  clone_matrix(&(d->mat7), &(d->k_pick), x_3, 2 * y_3);
+  if (d->dither_type & D_ORDERED_BASE)
+    {
+      clone_matrix(&(d->mat7), &(d->c_pick), 2 * x_3, y_3);
+      clone_matrix(&(d->mat7), &(d->m_pick), x_3, 2 * y_3);
+      clone_matrix(&(d->mat7), &(d->y_pick), 0, y_3);
+      clone_matrix(&(d->mat7), &(d->k_pick), 0, 0);
+    }
+  else
+    {
+      clone_matrix(&(d->mat7), &(d->c_pick), x_3, 0);
+      clone_matrix(&(d->mat7), &(d->m_pick), 0, 2 * y_3);
+      clone_matrix(&(d->mat7), &(d->y_pick), 2 * x_3, 0);
+      clone_matrix(&(d->mat7), &(d->k_pick), x_3, 2 * y_3);
+    }
   for (i = 0; i < 65536; i++)
     {
       double dd = i / 65535.0;
@@ -2253,66 +2263,58 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
        * If we're doing ordered dither, and there's no ink, we aren't
        * going to print anything.
        */
-      if (c == 0 && m == 0 && y == 0)
+      if (c > 0 || m > 0 || y > 0)
 	{
-	  goto advance;
-	}
+	  if (black)
+	    {
+	      k = USMIN(c, USMIN(m, y));
+	      if (k < d->densityh)
+		k = 0;
+	      else
+		k = (d->density - 1) - ((d->density - 1 - k) * 2);
+	      c -= k;
+	      m -= k;
+	      y -= k;
+	      ok = k;
+	      if (ok > 0 && d->density != d->black_density)
+		ok = (unsigned) ok * (unsigned) d->black_density / d->density;
+	      if (ok > 65535)
+		ok = 65535;
+	    }
+	  QUANT(15);
 
-      if (black)
-	{
-	  k = USMIN(c, USMIN(m, y));
-	  if (k < d->densityh)
-	    k = 0;
-	  else
-	    k = (d->density - 1) - ((d->density - 1 - k) * 2);
-	  c -= k;
-	  m -= k;
-	  y -= k;
-	  ok = k;
-	  if (ok > 0 && d->density != d->black_density)
-	    ok = (unsigned) ok * (unsigned) d->black_density / d->density;
-	  if (ok > 65535)
-	    ok = 65535;
+	  if (black)
+	    print_color_fast(d, kd, ok,
+			     k, x, row, kptr, NULL, bit, length,
+			     kdither, kdither_very_fast);
+	  print_color_fast(d, kd, oc,
+			   c, x, row, cptr, lcptr, bit, length,
+			   cdither, cdither_very_fast);
+	  print_color_fast(d, kd, om,
+			   m, x, row, mptr, lmptr, bit, length,
+			   mdither, mdither_very_fast);
+	  print_color_fast(d, kd, oy,
+			   y, x, row, yptr, lyptr, bit, length,
+			   ydither, ydither_very_fast);
+	  QUANT(16);
 	}
-      QUANT(15);
-
-      if (black)
-	print_color_fast(d, kd, ok,
-			 k, x, row, kptr, NULL, bit, length,
-			 kdither, kdither_very_fast);
-      print_color_fast(d, kd, oc,
-		       c, x, row, cptr, lcptr, bit, length,
-		       cdither, cdither_very_fast);
-      print_color_fast(d, kd, om,
-		       m, x, row, mptr, lmptr, bit, length,
-		       mdither, mdither_very_fast);
-      print_color_fast(d, kd, oy,
-		       y, x, row, yptr, lyptr, bit, length,
-		       ydither, ydither_very_fast);
-      QUANT(16);
 
       /*****************************************************************
        * Advance the loop
        *****************************************************************/
 
-    advance:
-      if (bit == 1)
+      bit >>= 1;
+      if (bit == 0)
 	{
 	  cptr ++;
-	  if (lcptr)
-	    lcptr ++;
+	  lcptr ++;
 	  mptr ++;
-	  if (lmptr)
-	    lmptr ++;
+	  lmptr ++;
 	  yptr ++;
-	  if (lyptr)
-	    lyptr ++;
-	  if (kptr)
-	    kptr ++;
+	  lyptr ++;
+	  kptr ++;
 	  bit       = 128;
 	}
-      else
-	bit >>= 1;
       QUANT(17);
     }
   /*

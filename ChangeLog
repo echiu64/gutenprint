@@ -1,3 +1,57 @@
+2000-12-11	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.105) (+74 -99)
+	
+	Fix up use of black vs. composite grayscale in fast dither mode.
+	
+2000-12-10	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.104) (+78 -5)
+	
+	More opportunities for blank line elimination
+	
+2000-12-10	<rlk@sourceforge.net>
+
+	Files:	printdefy.y (1.13) (+6 -1)
+	
+	Fix up describe_resolution member.
+	
+2000-12-10	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.103) (+2 -2)
+		print-escp2.c (1.279) (+2 -2)
+	
+	Turn off debug messages by default on Canon driver.
+	
+	Minor update to glossy film in Epson driver.
+	
+2000-12-10	<rlk@sourceforge.net>
+
+	Files:	cups/genppd.c (1.14) (+51 -66)
+		cups/rastertoprinter.c (1.11) (+19 -32)
+	
+	Use new describe_resolution member function to get information about
+	a specific resolution rather than trying to parse it; pass the
+	resolution index number in cupsCompression; set default dithering
+	mode to adaptive hybrid.  Reviewed by Mike.
+	
+2000-12-10	<rlk@sourceforge.net>
+
+	Files:	print-lexmark.c (1.9) (+11 -1)
+		print.h (1.96) (+19 -3)
+		print-ps.c (1.47) (+14 -1)
+		print-pcl.c (1.101) (+18 -1)
+	
+	Add describe_resolution "member" function to printer_t
+	
+2000-12-10	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.61) (+63 -0)
+		print-escp2.c (1.278) (+24 -1)
+		print-canon.c (1.102) (+11 -1)
+	
+	Add describe_resolution "member" function to printer_t
+	
 2000-12-09	<rlk@sourceforge.net>
 
 	Files:	print-escp2.c (1.277) (+8 -7)

@@ -201,11 +201,16 @@ Ghost/stp-md5sum: doit
 Ghost/stp-interfaces.tar.gz: Ghost/stp-md5sum
 	wget -q -O Ghost/stp-interfaces.tar.gz http://www.linuxprinting.org/stp-interfaces.tar.gz
 
-force_aclocal: Ghost/stp-interfaces.tar.gz
+# Until we get the foomatic stuff solved, don't use it in 4.1.
+#force_aclocal: Ghost/stp-interfaces.tar.gz
+#	touch configure.in
+#	-rm -rf Ghost/stp-interfaces
+#	(cd Ghost;tar xzvf stp-interfaces.tar.gz)
+#	-find Ghost/stp-interfaces -name '*~' -exec rm -f '{}' \;
+#	$(MAKE) dist FORCE_ACLOCAL=
+
+force_aclocal:
 	touch configure.in
-	-rm -rf Ghost/stp-interfaces
-	(cd Ghost;tar xzvf stp-interfaces.tar.gz)
-	-find Ghost/stp-interfaces -name '*~' -exec rm -f '{}' \;
 	$(MAKE) dist FORCE_ACLOCAL=
 
 print_gimp.h: Makefile

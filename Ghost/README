@@ -1,12 +1,11 @@
 PROGRAM:
 --------
 
- Gimp-Print 4.0 includes an associated Ghostscript driver, which is
+ Gimp-Print 4.1 includes an associated Ghostscript driver, which is
  named `stp'.  That name originally referred to Epson Stylus Photo
  printers; this is the first Ghostscript driver which supported those
- printers with high quality.  As of 4.0 alpha, the stp driver also
- supports the same HP and Canon printers supported by the rest of the
- gimp-print suite.
+ printers with high quality.  The same driver now supports many Canon,
+ HP, and Lexmark printers.
 
 
 AUTHOR:
@@ -286,6 +285,9 @@ For Epson Stylus printers:
 
 '180 DPI'				 (works on older printers)
 '360 DPI'                                (works on all printers)
+'360 DPI Unidirectional'                 (works on all printers)
+'360 DPI Microweave'                     (works on all printers)
+'360 DPI Microweave Unidirectional'      (works on all printers)
 '360 DPI Softweave'                      (works on printers that support
 					  variable dot sizes, such as
 					  the Epson Stylus Color 740
@@ -294,30 +296,49 @@ For Epson Stylus printers:
 					  variable dot sizes, such as
 					  the Epson Stylus Color 740
 					  and newer)
+'360 DPI High Quality Unidirectional'    (works on printers that support
+					  variable dot sizes, such as
+					  the Epson Stylus Color 740
+					  and newer)
 '720 DPI Microweave'                     (works on older printers)
 '720 DPI Softweave'                      (works on all printers except
 					  for Stylus Color, Stylus
 					  Color 1500, Stylus Color
 					  1520, and Stylus Color 3000)
+'720 DPI Softweave Unidirectional'       (works on all printers except
+					  for Stylus Color, Stylus
+					  Color 1500, Stylus Color
+					  1520, and Stylus Color 3000)
 '720 DPI High Quality'                   (works on all printers except
-					  above and Epson Stylus Color
-					  440/460)
+					  for Stylus Color, Stylus
+					  Color 1500, Stylus Color
+					  1520, and Stylus Color 3000)
+'720 DPI High Quality Unidirectional'    (works on all printers except
+					  for Stylus Color, Stylus
+					  Color 1500, Stylus Color
+					  1520, and Stylus Color 3000)
 '720 DPI Highest Quality'                (works on all printers except
-					  above and Epson Stylus Color
-					  440/460)
+					  for Stylus Color, Stylus
+					  Color 1500, Stylus Color
+					  1520, and Stylus Color 3000)
 '1440 x 720 DPI Microweave'              (works on older 1440x720 dpi printers)
 '1440 x 720 DPI Softweave'               (works on all 1440x720 dpi
+					  printers except for Stylus
+					  Color 1520 and Stylus Color 3000)
+'1440 x 720 DPI Softweave Unidirectional'(works on all 1440x720 dpi
 					  printers except for Stylus
 					  Color 1520 and Stylus Color 3000)
 '1440 x 720 DPI Highest Quality'         (works on all 1440x720 dpi
 					  printers except for Stylus
 					  Color 1520 and Stylus Color 3000)
-'1440 x 1440 DPI Emulated'               (works on all 1440x720 dpi
-					  printers except for Stylus
-					  Color 1520 and Stylus Color 3000)
-'1440 x 2880 DPI Emulated'               (works on all 1440x720 dpi
-					  printers except for Stylus
-					  Color 1520 and Stylus Color 3000)
+'2880 x 720 DPI Softweave'               (works on Stylus Color 680,
+					  Stylus Color 777, Stylus
+					  Color 880, Stylus Color 980,
+					  and Stylus Photo 790)
+'2880 x 720 DPI Softweave Unidirectional'(works on Stylus Color 680,
+					  Stylus Color 777, Stylus
+					  Color 880, Stylus Color 980,
+					  and Stylus Photo 790)
 
 The last two modes use oversampling to emulate higher resolutions than
 the printers actually support.  In some cases they may yield improved
@@ -339,7 +360,7 @@ In general, using resolutions lower than 720 DPI on coated paper will
 yield unsatisfactory results.
 
 
-For PCL printers (including Hewlett-Packard and Lexmark):
+For PCL printers (including Hewlett-Packard and Lexmark 4076):
 
 '150x150 DPI'			(should work on all printers)
 '300x300 DPI'			(should work on all printers, C-RET on
@@ -351,6 +372,16 @@ For PCL printers (including Hewlett-Packard and Lexmark):
 
 Note: the higher resolutions of newer PCL printers using "Photo-Ret" are
 not yet supported.
+
+
+For Lexmark printers (Z52):
+
+'300x300 DPI'
+'600x600 DPI'
+'1200x600 DPI'
+'1200x1200 DPI'
+'2400x1200 DPI'
+
 
 For Canon printers:
 
@@ -518,7 +549,7 @@ consumption.
 'Four Color Standard'
 
 
-For Canon printers:
+For Canon and printers:
 
 'Black'
 'Color'
@@ -601,7 +632,7 @@ For Canon printers:
 'Manual without Pause'
 
 
-For PCL (Hewlett-Packard and Lexmark) printers:
+For PCL (Hewlett-Packard and Lexmark 4076) printers:
 
 'Standard'	(Feed from printer defined source)
 'Manual'
