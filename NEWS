@@ -170,8 +170,8 @@ These release notes contain the following sections:
   The following bugs have been fixed in this release:
 
 1013565 GIMP plugin may not exit at completion
-1013470	QUALITY - ESP R300 generates poor black
-1013465	QUALITY - highlights and shadows blown out
+1013470 QUALITY - ESP R300 generates poor black
+1013465 QUALITY - highlights and shadows blown out
 1003003 CUPS executables linked incorrectly
 1002380 Printing grayscale image w/old printrc file crashes at start
 1001267 GIMP2 plugin does not handle v3 printrc format
@@ -930,8 +930,8 @@ Canon BJC 6100
 Canon BJC 7000
 Canon BJC 7100
 Canon BJC 8200
-Canon CP-100 series	(Experimental)
-Canon CP-220 series	(Experimental)
+Canon CP-100 series     (Experimental)
+Canon CP-220 series     (Experimental)
 Canon S400
 Canon S450
 Canon S800
@@ -1044,7 +1044,7 @@ EPSON Stylus CX-8300
 EPSON Stylus CX-8400
 EPSON CL-700
 EPSON CL-750
-EPSON CL-760	(Experimental)
+EPSON CL-760    (Experimental)
 EPSON EM-900C
 EPSON EM-930C
 EPSON MC-2000
@@ -1059,7 +1059,7 @@ EPSON MJ-8000C
 EPSON PM-700C
 EPSON PM-G700
 EPSON PM-730C
-EPSON PM-740C	(Experimental)
+EPSON PM-740C   (Experimental)
 EPSON PM-750C
 EPSON PM-D750
 EPSON PM-760C
@@ -1069,19 +1069,19 @@ EPSON PM-790PT
 EPSON PM-800C
 EPSON PM-G800   (Experimental)
 EPSON PM-850PT
-EPSON PM-870C	(Experimental)
+EPSON PM-870C   (Experimental)
 EPSON PM-880C
-EPSON PM-930C	(Experimental)
-EPSON PM-940C	(Experimental)
+EPSON PM-930C   (Experimental)
+EPSON PM-940C   (Experimental)
 EPSON PM-950C
-EPSON PM-970C	(Experimental)
-EPSON PM-980C	(Experimental)
+EPSON PM-970C   (Experimental)
+EPSON PM-980C   (Experimental)
 EPSON PM-2000C
 EPSON PM-2200C
 EPSON PM-3000C
 EPSON PM-3300C
 EPSON PM-3500C
-EPSON PM-3700C	(Experimental)
+EPSON PM-3700C  (Experimental)
 EPSON PM-4000PX
 EPSON PM-5000C
 EPSON PM-7000C
@@ -1147,12 +1147,12 @@ Lexmark Z42
 Lexmark Z43
 Lexmark Z52
 Lexmark Z53
-Olympus P-10	(Experimental)
-Olympus P-200	(Experimental)
+Olympus P-10    (Experimental)
+Olympus P-200   (Experimental)
 Olympus P-300 series (Experimental)
-Olympus P-400	(Experimental)
-Olympus P-440	(Experimental)
-Sony UP-DP10	(Experimental)
+Olympus P-400   (Experimental)
+Olympus P-440   (Experimental)
+Sony UP-DP10    (Experimental)
 
 The following is the complete list of printers believed to be
 compatible with Gimp-print, along with recommended drivers.  Some of
@@ -1911,81 +1911,28 @@ Printer-Specific Notes:
       The current list of printers for which the activation sequence
       must be sent is:
 
-      EPSON Stylus C20SX
-      EPSON Stylus C20UX
-      EPSON Stylus C40SX
-      EPSON Stylus C40UX
-      EPSON Stylus C41SX
-      EPSON Stylus C41UX
-      EPSON Stylus C42SX
-      EPSON Stylus C42UX
-      EPSON Stylus C43SX
-      EPSON Stylus C43UX
-      EPSON Stylus C44SX
-      EPSON Stylus C44UX
-      EPSON Stylus C45
-      EPSON Stylus C46
-      EPSON Stylus C50
-      EPSON Stylus C60
-      EPSON Stylus C61
-      EPSON Stylus C62
-      EPSON Stylus C63
-      EPSON Stylus C64
-      EPSON Stylus C65
-      EPSON Stylus C66
-      EPSON Stylus C70
-      EPSON Stylus C80
-      EPSON Stylus C82
-      EPSON Stylus C83
-      EPSON Stylus C84
-      EPSON Stylus C85
-      EPSON Stylus C86
-      EPSON Stylus Color 440
-      EPSON Stylus Color 460
-      EPSON Stylus Color 480
-      EPSON Stylus Color 580
-      EPSON Stylus Color 640
-      EPSON Stylus Color 660
-      EPSON Stylus Color 670
-      EPSON Stylus Color 680
-      EPSON Stylus Color 740
-      EPSON Stylus Color 760
-      EPSON Stylus Color 777
-      EPSON Stylus Color 860
-      EPSON Stylus Color 880
-      EPSON Stylus Color 83
-      EPSON Stylus Color 900
-      EPSON Stylus Color 980
-      EPSON Stylus Color 1160
-      EPSON Stylus Photo EX3
-      EPSON Stylus Photo 720
-      EPSON Stylus Photo 750
-      EPSON Stylus Photo 780/785/790
-      EPSON Stylus Photo 810/820
-      EPSON Stylus Photo 825/830
-      EPSON Stylus Photo 870/875
-      EPSON Stylus Photo 890/895
-      EPSON Stylus Photo 900
-      EPSON Stylus Photo 915
-      EPSON Stylus Photo 925
-      EPSON Stylus Photo 950/960
-      EPSON Stylus Photo 1200
-      EPSON Stylus Photo 1270
-      EPSON Stylus Photo 1280/1290
-      EPSON Stylus Photo 2000P
-      EPSON Stylus Photo 2100/2100
-      EPSON Stylus Photo R200
-      EPSON Stylus Photo R300
-      EPSON Stylus Photo RX500
-      EPSON Stylus Photo RX600
-      EPSON Stylus Scan 2000
-      EPSON Stylus Scan 2500
-      EPSON Stylus CX-3100
-      EPSON Stylus CX-3200
-      EPSON Stylus CX-5100
-      EPSON Stylus CX-5200
-      EPSON Stylus CX-6300
-      EPSON Stylus CX-6400
-      EPSON Stylus CX-6600
-      EPSON Stylus CX-8300
-      EPSON Stylus CX-8400
+      All Epson Stylus C-series printers (e. g. C20SX, C80)
+      All Epson Stylus Photo printers except for the original Stylus
+          Photo, Stylus Photo 700, Stylus Photo 710, and Stylus Photo
+          EX (the Stylus Photo EX3 does require the sequence)
+      All Epson Stylus CX-series multi-function devices (e. g. CX-3100)
+      All Epson Stylus Scan multi-function devices
+      The following Epson Stylus Color printers:
+
+          EPSON Stylus Color 440
+          EPSON Stylus Color 460
+          EPSON Stylus Color 480
+          EPSON Stylus Color 580
+          EPSON Stylus Color 640
+          EPSON Stylus Color 660
+          EPSON Stylus Color 670
+          EPSON Stylus Color 680
+          EPSON Stylus Color 740
+          EPSON Stylus Color 760
+          EPSON Stylus Color 777
+          EPSON Stylus Color 860
+          EPSON Stylus Color 880
+          EPSON Stylus Color 83
+          EPSON Stylus Color 900
+          EPSON Stylus Color 980
+          EPSON Stylus Color 1160
