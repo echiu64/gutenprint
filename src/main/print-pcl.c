@@ -2113,6 +2113,17 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
       stp_deprintf(STP_DBG_PCL, "Unknown media type %s, set to PLAIN.\n", media_type);
       pcl_media_type = PCL_PAPERTYPE_PLAIN;
     }
+
+/*
+ * The HP812C doesn't like glossy paper being selected when using 600x600
+ * C-RET (PhotoRET II). So we use Premium paper instead.
+ *
+ */
+
+    if (do_cretb && pcl_media_type == PCL_PAPERTYPE_GLOSSY) {
+      stp_deprintf(STP_DBG_PCL, "Media type GLOSSY, set to PREMIUM for PhotoRET II.\n");
+      pcl_media_type = PCL_PAPERTYPE_PREMIUM;
+    }
   }
   else
     pcl_media_type = PCL_PAPERTYPE_PLAIN;
