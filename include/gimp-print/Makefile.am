@@ -28,9 +28,7 @@ MAINT_CHARSET = latin1
 
 noinst_HEADERS = gimp-print-intl.h gimp-print-intl-internal.h
 
-if BUILD_LIBGIMPPRINT
 pkginclude_HEADERS = gimp-print.h
-endif
 
 
 ## Clean
