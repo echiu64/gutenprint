@@ -962,6 +962,14 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus CX-3100" driver="escp2-cx3100">
+<color>
+<model value=52>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus CX-3200" driver="escp2-cx3200">
 <color>
 <model value=52>
@@ -970,9 +978,64 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus CX-5100" driver="escp2-cx5100">
+<color>
+<model value=55>
+<gamma value=0.688>
+<density value=1.0>
+<cyan value=0.96>
+<magenta value=1.02>
+<yellow value=1.02>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus CX-5200" driver="escp2-cx5200">
 <color>
 <model value=55>
+<gamma value=0.688>
+<density value=1.0>
+<cyan value=0.96>
+<magenta value=1.02>
+<yellow value=1.02>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus CX-6300" driver="escp2-cx6300">
+<color>
+<model value=61>
+<gamma value=0.688>
+<density value=1.0>
+<cyan value=0.96>
+<magenta value=1.02>
+<yellow value=1.02>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus CX-6400" driver="escp2-cx6400">
+<color>
+<model value=61>
+<gamma value=0.688>
+<density value=1.0>
+<cyan value=0.96>
+<magenta value=1.02>
+<yellow value=1.02>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus CX-8300" driver="escp2-cx8300">
+<color>
+<model value=60>
+<gamma value=0.688>
+<density value=1.0>
+<cyan value=0.96>
+<magenta value=1.02>
+<yellow value=1.02>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus CX-8400" driver="escp2-cx8400">
+<color>
+<model value=60>
 <gamma value=0.688>
 <density value=1.0>
 <cyan value=0.96>

@@ -1125,8 +1125,14 @@ EPSON Stylus Pro 9600           (experimental)
 EPSON Stylus Pro 10000
 EPSON Stylus Scan 2000
 EPSON Stylus Scan 2500
+EPSON Stylus CX-3100
 EPSON Stylus CX-3200
+EPSON Stylus CX-5100
 EPSON Stylus CX-5200
+EPSON Stylus CX-6300
+EPSON Stylus CX-6400
+EPSON Stylus CX-8300
+EPSON Stylus CX-8400
 EPSON CL-700
 EPSON CL-750
 EPSON CL-760    (Experimental)
@@ -1419,8 +1425,14 @@ Epson Stylus Pro 10000         escp2-10000     EPSON Stylus Pro 10000
 Epson Stylus Color Pro XL      escp2-pro-xl    EPSON Stylus Color Pro XL
 Epson Stylus Scan 2000         escp2-scan2000  EPSON Stylus Scan 2000
 Epson Stylus Scan 2500         escp2-scan2500  EPSON Stylus Scan 2500
+Epson Stylus CX3100            escp2-cx3100    EPSON Stylus CX-3100
 Epson Stylus CX3200            escp2-cx3200    EPSON Stylus CX-3200
+Epson Stylus CX5100            escp2-cx5100    EPSON Stylus CX-5100
 Epson Stylus CX5200            escp2-cx5200    EPSON Stylus CX-5200
+Epson Stylus CX6300            escp2-cx6300    EPSON Stylus CX-6300
+Epson Stylus CX6400            escp2-cx6400    EPSON Stylus CX-6400
+Epson Stylus CX8300            escp2-cx8300    EPSON Stylus CX-8300
+Epson Stylus CX8400            escp2-cx8400    EPSON Stylus CX-8400
 Epson CL-700                   escp2-cl700     EPSON CL-700
 Epson CL-750                   escp2-cl750     EPSON CL-750
 Epson CL-760                   escp2-cl760     EPSON CL-760
@@ -1891,5 +1903,11 @@ Printer-Specific Notes:
       EPSON Stylus Photo 2200
       EPSON Stylus Scan 2000
       EPSON Stylus Scan 2500
+      EPSON Stylus CX-3100
       EPSON Stylus CX-3200
+      EPSON Stylus CX-5100
       EPSON Stylus CX-5200
+      EPSON Stylus CX-6300
+      EPSON Stylus CX-6400
+      EPSON Stylus CX-8300
+      EPSON Stylus CX-8400
