@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 4.1.99-b2\n"
-"POT-Creation-Date: 2002-02-14 21:29-0500\n"
+"POT-Creation-Date: 2002-02-15 21:03-0500\n"
 "PO-Revision-Date: 2001-11-09 13:17+0100\n"
 "Last-Translator: Christophe Fergeau <teuf@users.sourceforge.net>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -1317,39 +1317,39 @@ msgstr "Rouleau 36 pouces"
 msgid "44 Inch Roll Paper"
 msgstr "Rouleau 44 pouces"
 
-#: src/main/print-util.c:1263 src/main/print-util.c:1271
+#: src/main/print-util.c:1263 src/main/print-util.c:1272
 #, c-format
-msgid "%s is not a valid %s\n"
+msgid "%s is not a valid parameter of type %s\n"
 msgstr ""
 
-#: src/main/print-util.c:1286
+#: src/main/print-util.c:1288
 #, c-format
 msgid "%s out of range (value %f, min %f, max %f)\n"
 msgstr ""
 
-#: src/main/print-util.c:1301
+#: src/main/print-util.c:1303
 #, c-format
 msgid "%s out of range (value %d, min %d, max %d)\n"
 msgstr ""
 
-#: src/main/print-util.c:1327
+#: src/main/print-util.c:1329
 #, fuzzy
 msgid "Printer does not support color output\n"
 msgstr "L'imprimante %s n'a pas besoin d'un alignement des têtes couleurs.\n"
 
-#: src/main/print-util.c:1345
+#: src/main/print-util.c:1347
 msgid "Image size is not valid\n"
 msgstr ""
 
-#: src/main/print-util.c:1352
+#: src/main/print-util.c:1354
 msgid "Top margin must not be less than zero\n"
 msgstr ""
 
-#: src/main/print-util.c:1358
+#: src/main/print-util.c:1360
 msgid "Left margin must not be less than zero\n"
 msgstr ""
 
-#: src/main/print-util.c:1415
+#: src/main/print-util.c:1417
 #, c-format
 msgid "%s is not a valid dither algorithm\n"
 msgstr ""
