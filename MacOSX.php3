@@ -32,13 +32,15 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <a href="MacOSX.php3#4.2.5"><b>January 26, 2003 -</b></a> Gimp-Print 4.2.5, the newest stable release of Gimp-Print, is now available for download.
+ <a href="MacOSX.php3#4.2.6-pre1"><b>April 30, 2003 -</b></a> Gimp-Print 4.2.6-pre1 is the newest testing release of Gimp-Print.
  </p>
  <p>
- Please help us test USB-to-Parallel cable converters! If you have used one of
- these devices (sucessfully or not) please <a href=
- "https://sourceforge.net/tracker/?func=detail&atid=351537&aid=644565&group_id=1537"
- >add a report to the tracker</a>.  Thanks!
+ <b>April 30, 2003 -</b> ESP Ghostscript version 7.0.5.6 (ESPGS) is now available as a Mac OS X installer package in the downloads section. All Gimp-Print users should update to this version of ESPGS.
+ </p>
+ <p>
+ <p>
+ <a href="MacOSX.php3#4.2.5"><b>January 26, 2003 -</b></a> Gimp-Print 4.2.5, the newest stable release of Gimp-Print, is now available for download.
+ </p>
  <p>
  </p>
  <br>
@@ -124,10 +126,9 @@ require('standard_html_header.php3');
  drivers supporting over 511 printers. The disk-image file includes an OS X
  installer package plus illustrated documentation to easily guide you through
  the printer set-up process. This package requires (but does not include) ESP
- Ghostscript 7.05.5 for Mac OS X (<b>download below and install, if
+ Ghostscript 7.05.6 for Mac OS X (<b>download below and install, if
  necessary</b>).
  </p>
- <!--
  <b>Gimp-Print 4.2.6-pre1</b>
  </td>
  </tr>
@@ -148,22 +149,21 @@ require('standard_html_header.php3');
  <p>
  Gimp-Print 4.2.6-pre1 is the newest pre-release for Mac OS X; it includes bug 
  fixes over 4.2.5, but it may contain new bugs. This package requires (but does
- not include) ESP Ghostscript 7.05.5 for Mac OS X (<b>download below and 
+ not include) ESP Ghostscript for Mac OS X (<b>download below and 
  install, if necessary</b>).
  </p>
--->
- <b>ESP Ghostscript 7.05.5</b>
+ <b>ESP Ghostscript 7.05.6</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/espgs/espgs-7.05.5-0.ppc.dmg?download"
- >espgs-7.05.5-0.ppc.dmg</a>&nbsp;(5.5 MB)
+"http://prdownloads.sourceforge.net/gimp-print/espgs-7.05.6.ppc.dmg?download"
+ >espgs-7.05.6-0.ppc.dmg</a>&nbsp;(5.5 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/espgs/espgs-7.05.5-source.tar.gz?download"
+ "http://prdownloads.sourceforge.net/espgs/espgs-7.05.6-source.tar.gz?download"
  >source</a>)
  </td>
  </tr>
@@ -173,7 +173,7 @@ require('standard_html_header.php3');
  ESP Ghostscript (ESPGS) is an open-source PostScript interpreter derived from
  GNU Ghostscript. This package is required; it provides full support for
  printing from Carbon applications in Mac OS X (<b>there is no need to install
- this package more than once</b>).
+ the same version of this package more than once</b>).
  </p>
  </td>
  </tr>
@@ -228,6 +228,48 @@ require('standard_html_header.php3');
  News Items
  </h3>
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+ <a name ="4.2.6-pre1"></a>
+ <B>Gimp-Print 4.2.6-pre1</B>
+ </TD>
+ <TD align="right" >
+ <B>2003-04-30</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gimp-Print version 4.2.6-pre1 contains the following improvements over
+ <a href= "MacOSX.php3#4.2.5">Gimp-Print 4.2.5</a>:
+ </p>
+<b>Major changes</b>
+ <ol>
+   <li>The Mac OS X user's guide, <em>How to Print with Gimp-Print</em> has
+   been substantially updated.</li>
+   <li>The Mac OS X installer package now includes an "uninstaller" which will
+   completley (and safely) remove the Gimp-Print software.</li>
+   <li>Preliminary support for Epson Stylus C50, Stylus Photo 900, CL-740,
+   PM-870C, PM-930C, PM-970C, and PM-3700C.  The PM-930C and PM-970C
+   are limited to 2880x1440 DPI in this release; this restriction will
+   not be lifted in 4.2.x line.</li>
+   <li>Better conformance to the PPD spec on the part of the CUPS PPD
+   files.</li>
+   <li>Per-page variables in the CUPS driver are now set at the beginning
+   of each page.  This makes it possible to change the page size (for
+   example) in the middle of a document.</li>
+   <li>The PostScript LanguageLevel attribute in the CUPS PPD files now
+   defaults to 3, as all current Ghostscript releases are fully
+   compatible with Level 3 PostScript.</li>
+   <li>Minor speed improvement for the HP LaserJet IIP.</li>
+   <li>The Foomatic data now uses the clear-text printer ID's from
+   Foomatic 3.0, in addition to legacy support for the older numeric
+   ideas.</li>
+   <li>Minor adjustment to the HP DeskJet 340 margins.</li>
+ </ol>
+ &nbsp;
+ </td>
+ </tr>
  <TR bgcolor="#D0D0D0" >
  <TD>
  <a name ="4.2.5"></a>
