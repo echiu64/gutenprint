@@ -45,6 +45,12 @@
 #define OLYMPUS_INTERLACE_LINE	1
 #define OLYMPUS_INTERLACE_PLANE	2
 
+#define OLYMPUS_PLANEORDER_CMY	"\1\2\3"
+#define OLYMPUS_PLANEORDER_YMC	"\3\2\1"
+#define OLYMPUS_PLANEORDER_RGB	OLYMPUS_PLANEORDER_CMY
+#define OLYMPUS_PLANEORDER_BRG	OLYMPUS_PLANEORDER_YMC
+#define OLYMPUS_PLANEORDER_NONE	"\1"
+
 #define OLYMPUS_FEATURE_FULL_WIDTH	0x00000001
 #define OLYMPUS_FEATURE_FULL_HEIGHT	0x00000002
 #define OLYMPUS_FEATURE_BLOCK_ALIGN	0x00000004
@@ -138,7 +144,7 @@ typedef struct /* printer specific parameters */
   const olymp_pagesize_list_t *pages;
   const olymp_printsize_list_t *printsize;
   int interlacing;	/* color interlacing scheme */
-  const char *planes;	/* name and order of ribbons */
+  const char *planes;	/* order of ribbons */
   int block_size;
   int features;		
   void (*printer_init_func)(stp_vars_t *);
@@ -224,14 +230,16 @@ static void p300_printer_init_func(stp_vars_t *v)
 
 static void p300_plane_end_func(stp_vars_t *v)
 {
-  stp_zprintf(v, "\033\033\033P%cS", privdata.plane);
+  const char *c = "CMY";
+  stp_zprintf(v, "\033\033\033P%cS", c[privdata.plane-1]);
   stp_deprintf(STP_DBG_OLYMPUS, "olympus: p300_plane_end_func: %c\n",
-	privdata.plane);
+	c[privdata.plane-1]);
 }
 
 static void p300_block_init_func(stp_vars_t *v)
 {
-  stp_zprintf(v, "\033\033\033W%c", privdata.plane);
+  const char *c = "CMY";
+  stp_zprintf(v, "\033\033\033W%c", c[privdata.plane-1]);
   stp_put16_be(privdata.block_min_y, v);
   stp_put16_be(privdata.block_min_x, v);
   stp_put16_be(privdata.block_max_y, v);
@@ -358,7 +366,7 @@ static void p400_block_init_func(stp_vars_t *v)
   const char *p = stp_get_string_parameter(v, "PageSize");
   int wide = (strcmp(p, "c8x10") == 0 || strcmp(p, "C6") == 0);
 
-  stp_zprintf(v, "\033Z%c", privdata.plane);
+  stp_zprintf(v, "\033Z%c", '3' - privdata.plane + 1);
   if (wide)
     {
       stp_put16_be(privdata.ysize - privdata.block_max_y - 1, v);
@@ -453,7 +461,7 @@ static void cpx00_printer_init_func(stp_vars_t *v)
 static void cpx00_plane_init_func(stp_vars_t *v)
 {
   stp_put16_be(0x4001, v);
-  stp_put16_le(privdata.plane - '1', v);
+  stp_put16_le(3 - privdata.plane, v);
   stp_put32_le(privdata.xsize * privdata.ysize, v);
   stp_zfwrite(zero, 1, 4, v);
 }
@@ -681,7 +689,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &p300_res_list,
     &p300_page_list,
     &p300_printsize_list,
-    OLYMPUS_INTERLACE_PLANE, "YMC",
+    OLYMPUS_INTERLACE_PLANE, OLYMPUS_PLANEORDER_YMC,
     16,
     OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_BLOCK_ALIGN,
     &p300_printer_init_func, NULL,
@@ -696,7 +704,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &res_314dpi_list,
     &p400_page_list,
     &p400_printsize_list,
-    OLYMPUS_INTERLACE_PLANE, "123",
+    OLYMPUS_INTERLACE_PLANE, OLYMPUS_PLANEORDER_YMC,
     180,
     OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT,
     &p400_printer_init_func, NULL,
@@ -711,7 +719,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &res_314dpi_list,
     &cpx00_page_list,
     &cpx00_printsize_list,
-    OLYMPUS_INTERLACE_PLANE, "123",
+    OLYMPUS_INTERLACE_PLANE, OLYMPUS_PLANEORDER_YMC,
     1808,
     OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
       | OLYMPUS_FEATURE_BORDERLESS | OLYMPUS_FEATURE_WHITE_BORDER,
@@ -727,7 +735,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &updp10_res_list,
     &updp10_page_list,
     &updp10_printsize_list,
-    OLYMPUS_INTERLACE_NONE, "123",
+    OLYMPUS_INTERLACE_NONE, OLYMPUS_PLANEORDER_NONE,
     1800,
     OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
       | OLYMPUS_FEATURE_BORDERLESS,
@@ -743,7 +751,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &cx400_res_list,
     &cx400_page_list,
     &cx400_printsize_list,
-    OLYMPUS_INTERLACE_NONE, "CMY",
+    OLYMPUS_INTERLACE_NONE, OLYMPUS_PLANEORDER_NONE,
     2208,
     OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
       | OLYMPUS_FEATURE_BORDERLESS,
@@ -759,7 +767,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &cx400_res_list,
     &cx400_page_list,
     &cx400_printsize_list,
-    OLYMPUS_INTERLACE_NONE, "CMY",
+    OLYMPUS_INTERLACE_NONE, OLYMPUS_PLANEORDER_NONE,
     2208,
     OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
       | OLYMPUS_FEATURE_BORDERLESS,
@@ -1225,10 +1233,8 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   int out_px_left, out_px_right, out_px_top, out_px_bottom;
 
   /* page in 1/72" */
-#if 0
   int page_pt_width  = stp_get_page_width(v);
   int page_pt_height = stp_get_page_height(v);
-#endif
   int page_pt_left = 0;
   int page_pt_right = 0;
   int page_pt_top = 0;
@@ -1287,8 +1293,9 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   out_px_right  = out_px_left + out_px_width;
   out_px_bottom = out_px_top  + out_px_height;
   
-#if 0
-  stp_eprintf(v, "paper (pt)   %d x %d\n"
+
+  stp_deprintf(STP_DBG_OLYMPUS,
+	      "paper (pt)   %d x %d\n"
 	      "image (px)   %d x %d\n"
 	      "image (pt)   %d x %d\n"
 	      "* out (pt)   %d x %d\n"
@@ -1310,7 +1317,7 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
 	      print_px_width, print_px_height,
 	      xdpi, ydpi
 	      );	
-#endif
+
   privdata.xdpi = xdpi;
   privdata.ydpi = ydpi;
   privdata.xsize = print_px_width;
@@ -1428,14 +1435,14 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   c_errdiv = image_px_width / out_px_width;
   c_errmod = image_px_width % out_px_width;
 
-  l = caps->planes;
-  while (*l)
+  for (l = caps->planes; *l ; l++)
     {
       r_errval  = 0;
       r_errlast = -1;
       r_errline = 0;
 
       privdata.plane = *l;
+      stp_deprintf(STP_DBG_OLYMPUS, "olympus: plane %d\n", *l);
 
       /* plane init */
       if (caps->plane_init_func)
@@ -1556,7 +1563,7 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
     	      for (i = 0; i < char_out_width; i++)
 	        {
                   if (caps->interlacing == OLYMPUS_INTERLACE_PLANE)
-  	            j = i * ink_channels + (caps->planes - l + 2);
+  	            j = i * ink_channels + (*l - 1);
   	          else if (caps->interlacing == OLYMPUS_INTERLACE_LINE)
   	            j = (i % out_px_width) + (i / out_px_width);
   	          else  /* OLYMPUS_INTERLACE_NONE */
@@ -1601,11 +1608,6 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
         stp_deprintf(STP_DBG_OLYMPUS, "olympus: caps->plane_end\n");
         (*(caps->plane_end_func))(v);
       }
-  
-      if (caps->interlacing != OLYMPUS_INTERLACE_PLANE)
-  	break;
-
-      l++;
     }
 
   /* printer end */
