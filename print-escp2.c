@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.59  2000/02/06 21:58:06  rlk
+ *   Choice of variable vs. single drop size for new printers
+ *
  *   Revision 1.58  2000/02/06 21:33:33  rlk
  *   Try to fix softweave mode on new printers
  *
@@ -667,6 +670,12 @@ escp2_parameters(int  model,		/* I - Printer model */
   int		i;
   char		**valptrs;
 
+  static char *ink_types[] =
+  {
+    "Variable Dot Size",
+    "Single Dot Size"
+  };
+
   if (count == NULL)
     return (NULL);
 
@@ -734,6 +743,21 @@ escp2_parameters(int  model,		/* I - Printer model */
 	  res++;
 	}
       return (valptrs);
+    }
+  else if (strcmp(name, "InkType") == 0)
+    {
+      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_NORMAL))
+	return NULL;
+      else
+	{
+	  valptrs = malloc(sizeof(char *) * 2);
+	  valptrs[0] = malloc(strlen(ink_types[0]) + 1);
+	  strcpy(valptrs[0], ink_types[0]);
+	  valptrs[1] = malloc(strlen(ink_types[1]) + 1);
+	  strcpy(valptrs[1], ink_types[1]);
+	  *count = 2;
+	  return valptrs;
+	}
     }
   else
     return (NULL);
@@ -1009,6 +1033,7 @@ escp2_print(int       model,		/* I - Model */
   char 		*media_size = v->media_size;
   int 		output_type = v->output_type;
   int		orientation = v->orientation;
+  char          *ink_type = v->ink_type;
   float 	scaling = v->scaling;
   int		top = v->top;
   int		left = v->left;
@@ -1114,7 +1139,8 @@ escp2_print(int       model,		/* I - Model */
 	  return;	  
 	}
     }
-  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
+  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
+      strcmp(ink_type, "Variable Dot Size") == 0)
     bits = 2;
   else
     bits = 1;
