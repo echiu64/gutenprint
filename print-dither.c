@@ -735,7 +735,6 @@ do {									   \
 
 #define INCREMENT_COLOR()						  \
 do {									  \
-  ditherbit = rand();							  \
   if (direction == 1)							  \
     {									  \
       if (bit == 1)							  \
@@ -850,7 +849,10 @@ print_color(dither_t *d, dither_color_t *rv, int base, int adjusted,
 	    virtual_value = dd->value_l +
 	      (dd->value_span * rangepoint / 65536);
 
-	  vmatrix = DITHERPOINT(x, y, 1, d) ^ DITHERPOINT(x, y, 2, d) >> 2;
+	  if (d->dither_type == D_FLOYD)
+	    vmatrix = DITHERPOINT(x, y, 1, d) ^ DITHERPOINT(x, y, 2, d) >> 2;
+	  else
+	    vmatrix = DITHERPOINT((x + y / 3), (y + x / 3), 0, d);
 	  vmatrix = vmatrix * virtual_value / 65536;
 
 	  /*
@@ -972,7 +974,6 @@ dither_black(unsigned short   *gray,		/* I - Grayscale pixels */
 		ditherk,	/* Next error value in buffer */
 		*kerror0,	/* Pointer to current error row */
 		*kerror1;	/* Pointer to next error row */
-  int		ditherbit;	/* Random dithering bitmask */
   dither_t *d = (dither_t *) vd;
   int terminate;
   int direction = row & 1 ? 1 : -1;
@@ -1162,8 +1163,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   /*
    * Main loop starts here!
    */
-  for (ditherbit = rand(),
-	 ditherc = cerror0[0], ditherm = merror0[0], dithery = yerror0[0],
+  for (ditherc = cerror0[0], ditherm = merror0[0], dithery = yerror0[0],
 	 ditherk = kerror0[0];
        x != terminate;
        x += direction,
@@ -1257,6 +1257,8 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	    }
 	  else if (kdarkness < ub)
 	    {
+	      ditherbit = DITHERPOINT(x, row, 0, d) ^
+		(DITHERPOINT(x, row, 2, d) >> 3);
 	      if (rb == 0 || (ditherbit % rb) < (kdarkness - lb))
 		bk = ok;
 	      else
@@ -1355,6 +1357,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.23  2000/04/17 13:22:25  rlk
+ *   Better matrix for ordered dither
+ *
  *   Revision 1.22  2000/04/16 21:55:20  rlk
  *   We really do need to randomize the black transition
  *
