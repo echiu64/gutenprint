@@ -333,39 +333,39 @@ AC_PROG_YACC
 AM_PROG_LEX
 AC_PATH_PROG(BISON_PROG, bison)
 AC_PATH_PROG(YACC_PROG, yacc)
-AC_PATH_PROG(PERL, perl)
-AC_PATH_PROG(CONVERT, convert)
+AC_PATH_PROG(PERL, perl, perl)
+AC_PATH_PROG(CONVERT, convert, convert)
 if test x${CONVERT} = x ; then
   AC_MSG_WARN([PostScript user's guide cannot be regenerated!])
 fi
-AC_PATH_PROG(TEXI2HTML, texi2html)
+AC_PATH_PROG(TEXI2HTML, texi2html, texi2html)
 if test x${TEXI2HTML} = x ; then
   AC_MSG_WARN([HTML documentation cannot be regenerated!])
 fi
-AC_PATH_PROG(DVIPS, dvips)
+AC_PATH_PROG(DVIPS, dvips, dvips)
 if test x${DVIPS} = x ; then
   AC_MSG_WARN([PostScript documentation cannot be regenerated!])
 fi
-AC_PATH_PROG(DB2PDF, db2pdf)
+AC_PATH_PROG(DB2PDF, db2pdf, db2pdf)
 if test x${DB2PDF} = x ; then
   AC_MSG_WARN([PDF user's guide cannot be regenerated!])
 fi
-AC_PATH_PROGS(DVIPDF, dvipdf dvipdfm)
+AC_PATH_PROGS(DVIPDF, dvipdf dvipdfm, dvipdf)
 if test x${DVIPDF} = x ; then
   AC_MSG_WARN([PDF documentation cannot be regenerated!])
 fi
-AC_PATH_PROG(DB2PS, db2ps)
+AC_PATH_PROG(DB2PS, db2ps, dbp2s)
 if test x${DB2PS} = x ; then
   AC_MSG_WARN([PostScript user's guide cannot be regenerated!])
 fi
-AC_PATH_PROG(DB2HTML, db2html)
+AC_PATH_PROG(DB2HTML, db2html, db2html)
 if test x${DB2PS} = x ; then
   AC_MSG_WARN([HTML user's guide cannot be regenerated!])
 fi
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 dnl foomatic checks
 if test x${BUILD_FOOMATIC} = xyes ; then
-  AC_CHECK_PROG(FOOMATIC_KITLOAD, foomatic-kitload, foomatic-kitload)
+  AC_PATH_PROG(FOOMATIC_KITLOAD, foomatic-kitload,,$PATH:/usr/sbin:/usr/local/sbin)
   if test -z "$FOOMATIC_KITLOAD" ; then
     AC_MSG_WARN(Cannot find foomatic-kitload; attempt to install foomatic will fail)
   fi
@@ -471,7 +471,7 @@ if test x${BUILD_CUPS} = xyes ; then
     LIBS="$LIBS -lz"
     AC_DEFINE(HAVE_LIBZ,, [Define if libz is present.])
   fi
-  AC_PATH_PROG(CUPS_CONFIG,cups-config)
+  AC_PATH_PROG(CUPS_CONFIG, cups-config, cups-config)
   if test "x$CUPS_CONFIG" != x; then
     dnl Use values from CUPS config...
     CUPS_LIBS="`$CUPS_CONFIG --ldflags` `$CUPS_CONFIG --image --libs`"

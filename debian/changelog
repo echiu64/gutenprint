@@ -1,4 +1,4 @@
-gimp-print (4.2.0-2) unstable; urgency=low
+gimp-print (4.2.0-3) unstable; urgency=low
 
   * Fix libgimpprint.postinst to use 'if' instead of 'case', removing a
     lintian warning.
@@ -11,8 +11,9 @@ gimp-print (4.2.0-2) unstable; urgency=low
     - Fix locales package description (Eric Sharkey)
     - Change conflicts to replaces (Eric Sharkey)
     - Fix build dependencies (Eric Sharkey)
+  * New package foomatic-db-gimpprint.  Contains foomatic data
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>  Tue,  1 Jan 2002 18:24:34 +0000
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Fri,  1 Feb 2002 21:17:36 +0000
 
 gimp-print (4.2.0-1) unstable; urgency=low
 
