@@ -77,6 +77,7 @@ typedef struct {
     char **yellow_bufs;
     int yellow_data_rows_per_row;
     int active_length;			/* Length of output data */
+    int output_depth;
 } output_t;
 
 #define PCL_MONO 1
@@ -402,12 +403,14 @@ void write_grey(output_t *output,	/* I: data */
 
     for (i=0; i < wholebytes; i++) {
 	for (j=0; j < 8; j++) {
-	    tb[j] = 255- (((buf[i] >> (7-j)) & 1)*255);
+	    tb[j] = (((buf[i] >> (7-j)) & 1));
+	    tb[j] = output->output_depth - tb[j];
 	}
 	(void) fwrite(&tb[0], sizeof(char), 8, write_fd);
     }
     for (j=0; j < crumbs; j++) {
-	tb[j] = 255- (((buf[wholebytes] >> (7-j)) & 1)*255);
+	tb[j] = (((buf[wholebytes] >> (7-j)) & 1));
+	tb[j] = output->output_depth - tb[j];
     }
     (void) fwrite(&tb[0], sizeof(char), (size_t) crumbs, write_fd);
 }
@@ -435,7 +438,7 @@ void write_colour(output_t *output,		/* I: Data buffers */
     cyan_buf = output->cyan_bufs[0];
     magenta_buf = output->magenta_bufs[0];
     yellow_buf = output->yellow_bufs[0];
-    if (image->colour_type == 4)
+    if (image->colour_type == PCL_CMYK)
 	black_buf = output->black_bufs[0];
     else
 	black_buf = NULL;
@@ -459,7 +462,7 @@ void write_colour(output_t *output,		/* I: Data buffers */
 	fprintf(stderr, "%02x ", (unsigned char) yellow_buf[i]);
     }
     fprintf(stderr, "\n");
-    if (image->colour_type == 4) {
+    if (image->colour_type == PCL_CMYK) {
 	fprintf(stderr, "Black: ");
 	for (i=0; i < output->active_length; i++) {
 	    fprintf(stderr, "%02x ", (unsigned char) black_buf[i]);
@@ -468,19 +471,25 @@ void write_colour(output_t *output,		/* I: Data buffers */
     }
 #endif
 
-    if (image->colour_type != 4) {
+    if (image->colour_type != PCL_CMYK) {
 	for (i=0; i < wholebytes; i++) {
 	    for (j=0,jj=0; j < 8; j++,jj+=3) {
-		tb[jj] = 255- (((cyan_buf[i] >> (7-j)) & 1)*255);
-		tb[jj+1] = 255- (((magenta_buf[i] >> (7-j)) & 1)*255);
-		tb[jj+2] = 255- (((yellow_buf[i] >> (7-j)) & 1)*255);
+		tb[jj] = (((cyan_buf[i] >> (7-j)) & 1));
+		tb[jj] = output->output_depth - tb[jj];
+		tb[jj+1] = (((magenta_buf[i] >> (7-j)) & 1));
+		tb[jj+1] = output->output_depth - tb[jj+1];
+		tb[jj+2] = (((yellow_buf[i] >> (7-j)) & 1));
+		tb[jj+2] = output->output_depth - tb[jj+2];
 	    }
 	    (void) fwrite(&tb[0], sizeof(char), (size_t) (8*3), write_fd);
 	}
 	for (j=0,jj=0; j < crumbs; j++,jj+=3) {
-	    tb[jj] = 255- (((cyan_buf[wholebytes] >> (7-j)) & 1)*255);
-	    tb[jj+1] = 255- (((magenta_buf[wholebytes] >> (7-j)) & 1)*255);
-	    tb[jj+2] = 255- (((yellow_buf[wholebytes] >> (7-j)) & 1)*255);
+	    tb[jj] = (((cyan_buf[wholebytes] >> (7-j)) & 1));
+	    tb[jj] = output->output_depth - tb[jj];
+	    tb[jj+1] = (((magenta_buf[wholebytes] >> (7-j)) & 1));
+	    tb[jj+1] = output->output_depth - tb[jj+1];
+	    tb[jj+2] = (((yellow_buf[wholebytes] >> (7-j)) & 1));
+	    tb[jj+2] = output->output_depth - tb[jj+2];
 	}
 	(void) fwrite(&tb[0], sizeof(char), (size_t) crumbs*3, write_fd);
     }
@@ -488,39 +497,45 @@ void write_colour(output_t *output,		/* I: Data buffers */
 	for (i=0; i < wholebytes; i++) {
 	    for (j=0,jj=0; j < 8; j++,jj+=3) {
 #if !defined OUTPUT_CMYK_ONLY_K && !defined OUTPUT_CMYK_ONLY_CMY
-		tb[jj] = 255- ((((cyan_buf[i]|black_buf[i]) >> (7-j)) & 1)*255);
-		tb[jj+1] = 255- ((((magenta_buf[i]|black_buf[i]) >> (7-j)) & 1)*255);
-		tb[jj+2] = 255- ((((yellow_buf[i]|black_buf[i]) >> (7-j)) & 1)*255);
+		tb[jj] = ((((cyan_buf[i]|black_buf[i]) >> (7-j)) & 1));
+		tb[jj+1] = ((((magenta_buf[i]|black_buf[i]) >> (7-j)) & 1));
+		tb[jj+2] = ((((yellow_buf[i]|black_buf[i]) >> (7-j)) & 1));
 #endif
 #ifdef OUTPUT_CMYK_ONLY_K
-		tb[jj] = 255- (((black_buf[i] >> (7-j)) & 1)*255);
-		tb[jj+1] = 255- (((black_buf[i] >> (7-j)) & 1)*255);
-		tb[jj+2] = 255- (((black_buf[i] >> (7-j)) & 1)*255);
+		tb[jj] = (((black_buf[i] >> (7-j)) & 1));
+		tb[jj+1] = (((black_buf[i] >> (7-j)) & 1));
+		tb[jj+2] = (((black_buf[i] >> (7-j)) & 1));
 #endif
 #ifdef OUTPUT_CMYK_ONLY_CMY
-		tb[jj] = 255- (((cyan_buf[i] >> (7-j)) & 1)*255);
-		tb[jj+1] = 255- (((magenta_buf[i] >> (7-j)) & 1)*255);
-		tb[jj+2] = 255- (((yellow_buf[i] >> (7-j)) & 1)*255);
+		tb[jj] = (((cyan_buf[i] >> (7-j)) & 1));
+		tb[jj+1] = (((magenta_buf[i] >> (7-j)) & 1));
+		tb[jj+2] = (((yellow_buf[i] >> (7-j)) & 1));
 #endif
+		tb[jj] = output->output_depth - tb[jj];
+		tb[jj+1] = output->output_depth - tb[jj+1];
+		tb[jj+2] = output->output_depth - tb[jj+2];
 	    }
 	    (void) fwrite(&tb[0], sizeof(char), (size_t) (8*3), write_fd);
 	}
 	for (j=0,jj=0; j < crumbs; j++,jj+=3) {
 #if !defined OUTPUT_CMYK_ONLY_K && !defined OUTPUT_CMYK_ONLY_CMY
-	    tb[jj] = 255- ((((cyan_buf[wholebytes]|black_buf[wholebytes]) >> (7-j)) & 1)*255);
-	    tb[jj+1] = 255- ((((magenta_buf[wholebytes]|black_buf[wholebytes]) >> (7-j)) & 1)*255);
-	    tb[jj+2] = 255- ((((yellow_buf[wholebytes]|black_buf[wholebytes]) >> (7-j)) & 1)*255);
+	    tb[jj] = ((((cyan_buf[wholebytes]|black_buf[wholebytes]) >> (7-j)) & 1));
+	    tb[jj+1] = ((((magenta_buf[wholebytes]|black_buf[wholebytes]) >> (7-j)) & 1));
+	    tb[jj+2] = ((((yellow_buf[wholebytes]|black_buf[wholebytes]) >> (7-j)) & 1));
 #endif
 #ifdef OUTPUT_CMYK_ONLY_K
-	    tb[jj] = 255- (((black_buf[wholebytes] >> (7-j)) & 1)*255);
-	    tb[jj+1] = 255- (((black_buf[wholebytes] >> (7-j)) & 1)*255);
-	    tb[jj+2] = 255- (((black_buf[wholebytes] >> (7-j)) & 1)*255);
+	    tb[jj] = (((black_buf[wholebytes] >> (7-j)) & 1));
+	    tb[jj+1] = (((black_buf[wholebytes] >> (7-j)) & 1));
+	    tb[jj+2] = (((black_buf[wholebytes] >> (7-j)) & 1));
 #endif
 #ifdef OUTPUT_CMYK_ONLY_CMY
-	    tb[jj] = 255- (((cyan_buf[wholebytes] >> (7-j)) & 1)*255);
-	    tb[jj+1] = 255- (((magenta_buf[wholebytes] >> (7-j)) & 1)*255);
-	    tb[jj+2] = 255- (((yellow_buf[wholebytes] >> (7-j)) & 1)*255);
+	    tb[jj] = (((cyan_buf[wholebytes] >> (7-j)) & 1));
+	    tb[jj+1] = (((magenta_buf[wholebytes] >> (7-j)) & 1));
+	    tb[jj+2] = (((yellow_buf[wholebytes] >> (7-j)) & 1));
 #endif
+	    tb[jj] = output->output_depth - tb[jj];
+	    tb[jj+1] = output->output_depth - tb[jj+1];
+	    tb[jj+2] = output->output_depth - tb[jj+2];
 	}
 	(void) fwrite(&tb[0], sizeof(char), (size_t) crumbs*3, write_fd);
     }
@@ -842,9 +857,19 @@ int main(int argc, char *argv[]) {
 
 		filepos = ftell(write_fd);
 
-		fprintf(write_fd, "%10d %10d\n255\n", image_data.image_width,
+		fprintf(write_fd, "%10d %10d\n", image_data.image_width,
 		    image_data.image_height);
 		
+/*
+ * Write the depth of the image
+ */
+
+		if (image_data.black_depth != 0)
+		    output_data.output_depth = image_data.black_depth - 1;
+		else
+		    output_data.output_depth = image_data.cyan_depth - 1;
+		fprintf(write_fd, "%d\n", output_data.output_depth);
+
 		image_row_counter = 0;
 		current_data_row = 0;
 
@@ -916,7 +941,7 @@ int main(int argc, char *argv[]) {
 		if (image_data.image_height == -1) {
 		    image_data.image_height = image_row_counter;
 		    if (fseek(write_fd, filepos, SEEK_SET) != -1) {
-			fprintf(write_fd, "%10d %10d\n255\n", image_data.image_width,
+			fprintf(write_fd, "%10d %10d\n", image_data.image_width,
 			    image_data.image_height);
 			fseek(write_fd, 0L, SEEK_END);
 		    }
@@ -978,6 +1003,9 @@ int main(int argc, char *argv[]) {
 		    break;
 		case 27 :
 		    fprintf(stderr, "A3\n");
+		    break;
+		case 101 :
+		    fprintf(stderr, "Custom\n");
 		    break;
 		default :
 		    fprintf(stderr, "Unknown (%d)\n", numeric_arg);
@@ -1174,48 +1202,75 @@ int main(int argc, char *argv[]) {
 	    case PCL_CONFIGURE :
 		fprintf(stderr, "%s (size=%d)\n", pcl_commands[command_index].description,
 		    numeric_arg);
+
+/*
+ * the data that follows depends on the colour type (buffer[1]). The size
+ * of the data should be 2 + (6 * number of planes).
+ */
+
 		fprintf(stderr, "\tFormat: %d, Output Planes: ", data_buffer[0]);
-		switch (data_buffer[1]) {
+		image_data.colour_type = data_buffer[1]; 	/* # output planes */
+		switch (image_data.colour_type) {
 		    case PCL_MONO :
 			fprintf(stderr, "MONO\n");
+
+/* Size should be 8 */
+
+			if (numeric_arg != 8)
+			    fprintf(stderr, "ERROR: Expected 8 bytes of data, got %d\n", numeric_arg);
+
+			fprintf(stderr, "\tBlack: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[2]<<8)+data_buffer[3],
+			    (data_buffer[4]<<8)+data_buffer[5], data_buffer[7]);
+			image_data.black_depth = data_buffer[7];	/* Black levels */
+			image_data.cyan_depth = 0;
+			image_data.magenta_depth = 0;
+			image_data.yellow_depth = 0;
 			break;
 		    case PCL_CMY :
 			fprintf(stderr, "CMY (one cart)\n");
+
+/* Size should be 20 */
+
+			if (numeric_arg != 20)
+			    fprintf(stderr, "ERROR: Expected 8 bytes of data, got %d\n", numeric_arg);
+
+			fprintf(stderr, "\tCyan: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[2]<<8)+data_buffer[3],
+			    (data_buffer[4]<<8)+data_buffer[5], data_buffer[7]);
+			fprintf(stderr, "\tMagenta: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[8]<<8)+data_buffer[9],
+			    (data_buffer[10]<<8)+data_buffer[11], data_buffer[13]);
+			fprintf(stderr, "\tYellow: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[14]<<8)+data_buffer[15],
+			    (data_buffer[16]<<8)+data_buffer[17], data_buffer[19]);
+			image_data.black_depth = 0;
+			image_data.cyan_depth = data_buffer[7];		/* Cyan levels */
+			image_data.magenta_depth = data_buffer[13];	/* Magenta levels */
+			image_data.yellow_depth = data_buffer[19];	/* Yellow levels */
 			break;
 		    case PCL_CMYK :
 			fprintf(stderr, "CMYK (two cart)\n");
+
+/* Size should be 26 */
+
+			if (numeric_arg != 26)
+			    fprintf(stderr, "ERROR: Expected 8 bytes of data, got %d\n", numeric_arg);
+
+			fprintf(stderr, "\tBlack: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[2]<<8)+data_buffer[3],
+			    (data_buffer[4]<<8)+data_buffer[5], data_buffer[7]);
+			fprintf(stderr, "\tCyan: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[8]<<8)+data_buffer[9],
+			    (data_buffer[10]<<8)+data_buffer[11], data_buffer[13]);
+			fprintf(stderr, "\tMagenta: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[14]<<8)+data_buffer[15],
+			    (data_buffer[16]<<8)+data_buffer[17], data_buffer[19]);
+			fprintf(stderr, "\tYellow: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[20]<<8)+data_buffer[21],
+			    (data_buffer[22]<<8)+data_buffer[23], data_buffer[25]);
+			image_data.black_depth = data_buffer[7];	/* Black levels */
+			image_data.cyan_depth = data_buffer[13];	/* Cyan levels */
+			image_data.magenta_depth = data_buffer[19];	/* Magenta levels */
+			image_data.yellow_depth = data_buffer[25];	/* Yellow levels */
 			break;
 		    default :
 			fprintf(stderr, "Unknown (%d)\n", data_buffer[1]);
 			break;
 		}
-		fprintf(stderr, "\tBlack: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[2]<<8)+data_buffer[3],
-		    (data_buffer[4]<<8)+data_buffer[5], data_buffer[7]);
-		fprintf(stderr, "\tCyan: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[8]<<8)+data_buffer[9],
-		    (data_buffer[10]<<8)+data_buffer[11], data_buffer[13]);
-		fprintf(stderr, "\tMagenta: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[14]<<8)+data_buffer[15],
-		    (data_buffer[16]<<8)+data_buffer[17], data_buffer[19]);
-		fprintf(stderr, "\tYellow: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[20]<<8)+data_buffer[21],
-		    (data_buffer[22]<<8)+data_buffer[23], data_buffer[25]);
 
-		image_data.colour_type = data_buffer[1]; 	/* # output planes */
-		if (image_data.colour_type != PCL_CMY)
-		    image_data.black_depth = data_buffer[7];	/* Black levels */
-		else {
-		    image_data.black_depth = 0;			/* No Black levels */
-		    fprintf(stderr, "\t(ignoring black depth)\n");
-		}
-		if (image_data.colour_type != PCL_MONO) {
-		    image_data.cyan_depth = data_buffer[13];	/* Cyan levels */
-		    image_data.magenta_depth = data_buffer[19];	/* Magenta levels */
-		    image_data.yellow_depth = data_buffer[25];	/* Yellow levels */
-		}
-		else {
-		    image_data.cyan_depth = 0;			/* Cyan levels */
-		    image_data.magenta_depth = 0;		/* Magenta levels */
-		    image_data.yellow_depth = 0;		/* Yellow levels */
-		    fprintf(stderr, "\t(ignoring colour depths)\n");
-		}
 		break;
 
 	    case PCL_DATA :
@@ -1321,6 +1376,10 @@ int main(int argc, char *argv[]) {
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.5  2000/02/28 18:39:24  davehill
+ *   Fixed decoding of "configure data". Added "Custom" to paper sizes.
+ *   Started changes for multiple levels.
+ *
  *   Revision 1.4  2000/02/23 20:33:32  davehill
  *   Added more commands to the commans set.
  *   Now handles repeated commands that share the same prefix.
