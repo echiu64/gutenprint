@@ -50,6 +50,11 @@ libtool_major=`echo $libtoolv | awk -F. '{print $1}'`
 libtool_minor=`echo $libtoolv | awk -F. '{print $2}'`
 libtool_point=`echo $libtoolv | awk -F. '{print $3}'`
 
+gettextizev=`gettextize --version | sed 's,.*[        ]\([0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)\)[a-z]*[   ]*.*,\1,'`
+gettextize_major=`echo $gettextizev | awk -F. '{print $1}'`
+gettextize_minor=`echo $gettextizev | awk -F. '{print $2}'`
+gettextize_point=`echo $gettextizev | awk -F. '{print $3}'`
+
 test "$libtool_major" -le 1 && {
   test "$libtool_minor" -lt 4 || {
     test "$libtool_minor" -eq 4 -a "$libtool_point" -lt 2
@@ -321,6 +326,11 @@ do
 	  echo >> po/ChangeLog
 	  echo 'This file is present only to keep po/Makefile.in.in happy.' >> po/ChangeLog
 	  echo "Running gettextize...  Ignore non-fatal messages."
+	  if [ "$gettextize_major" -gt 0 -o "$gettextize_minor" -ge 11 ] ; then
+	    echo "no" | gettextize --force --copy --intl
+	  else
+	    echo "no" | gettextize --force --copy
+	  fi
 	  echo "no" | gettextize --force --copy
 	  echo "Making $dr/aclocal.m4 writable ..."
 	  test -r $dr/aclocal.m4 && chmod u+w $dr/aclocal.m4

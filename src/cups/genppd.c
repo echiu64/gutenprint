@@ -812,8 +812,8 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     the_papers[cur_opt].height = height;
     the_papers[cur_opt].left   = left;
     the_papers[cur_opt].right  = right;
-    the_papers[cur_opt].bottom = bottom;
-    the_papers[cur_opt].top    = top;
+    the_papers[cur_opt].bottom = height - bottom;
+    the_papers[cur_opt].top    = height - top;
 
     cur_opt++;
   }
@@ -873,7 +873,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     gzprintf(fp, "*MaxMediaWidth:  \"%d\"\n", max_width);
     gzprintf(fp, "*MaxMediaHeight: \"%d\"\n", max_height);
     gzprintf(fp, "*HWMargins:      %d %d %d %d\n",
-	     left, bottom, width - right, height - top);
+	     left, height - bottom, width - right, top);
     gzputs(fp, "*CustomPageSize True: \"pop pop pop <</PageSize[5 -2 roll]/ImagingBBox null>>setpagedevice\"\n");
     gzprintf(fp, "*ParamCustomPageSize Width:        1 points %d %d\n",
              min_width, max_width);

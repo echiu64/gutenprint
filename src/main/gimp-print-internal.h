@@ -348,6 +348,20 @@ extern void stp_fill_uncompressed(stp_softweave_t *sw, int row, int subpass,
 extern int stp_compute_tiff_linewidth(const stp_softweave_t *sw, int n);
 extern int stp_compute_uncompressed_linewidth(const stp_softweave_t *sw, int n);
 
+/*
+ * This is likely to change in the future.  In particular, responsibility
+ * for orientation will likely be transferred to the application from
+ * the library.
+ */
+extern void stp_compute_page_parameters(const stp_printer_t printer,
+					const stp_vars_t v,
+					stp_image_t *image, /* IO */
+					int *page_width, /* O */
+					int *page_height, /* O */
+					int *out_width,	/* O */
+					int *out_height, /* O */
+					int *left, /* O */
+					int *top); /* O */
 
 
 extern void stp_flush_all(void *, int model, int width, int hoffset,

@@ -282,7 +282,8 @@ ps_imageable_area(const stp_printer_t printer,	/* I - Printer model */
 	fright,
 	fbottom,
 	ftop;
-
+  int width, height;
+  ps_media_size(printer, v, &width, &height);
 
   if ((area = ppd_find(stp_get_ppd_file(v), "ImageableArea",
 		       stp_get_media_size(v), NULL))
@@ -293,19 +294,18 @@ ps_imageable_area(const stp_printer_t printer,	/* I - Printer model */
 	{
 	  *left   = (int)fleft;
 	  *right  = (int)fright;
-	  *bottom = (int)fbottom;
-	  *top    = (int)ftop;
+	  *bottom = height - (int)fbottom;
+	  *top    = height - (int)ftop;
 	}
       else
 	*left = *right = *bottom = *top = 0;
     }
   else
     {
-      stp_default_media_size(printer, v, right, top);
       *left   = 18;
-      *right  -= 18;
-      *top    -= 36;
-      *bottom = 36;
+      *right  = width - 18;
+      *top    = 36;
+      *bottom = height - 36;
     }
 }
 
@@ -353,8 +353,6 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
   const char	*media_type = stp_get_media_type(v);
   const char	*media_source = stp_get_media_source(v);
   int 		output_type = stp_get_output_type(v);
-  int		orientation = stp_get_orientation(v);
-  double 	scaling = stp_get_scaling(v);
   int		top = stp_get_top(v);
   int		left = stp_get_left(v);
   int		i, j;		/* Looping vars */
@@ -401,8 +399,6 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
   */
 
   image->init(image);
-  image_height = image->height(image);
-  image_width = image->width(image);
   image_bpp = image->bpp(image);
 
  /*
@@ -415,17 +411,16 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
   * Compute the output size...
   */
 
-  ps_imageable_area(printer, nv, &page_left, &page_right,
-                    &page_bottom, &page_top);
-  stp_compute_page_parameters(page_right, page_left, page_top, page_bottom,
-			  scaling, image_width, image_height, image,
-			  &orientation, &page_width, &page_height,
-			  &out_width, &out_height, &left, &top);
+  out_width = stp_get_width(v);
+  out_height = stp_get_height(v);
 
-  /*
-   * Recompute the image height and width.  If the image has been
-   * rotated, these will change from previously.
-   */
+  ps_imageable_area(printer, nv, &page_left, &page_right, &page_bottom,
+		    &page_top);
+  left -= page_left;
+  top -= page_top;
+  page_width = page_right - page_left;
+  page_height = page_bottom - page_top;
+
   image_height = image->height(image);
   image_width = image->width(image);
 
@@ -441,15 +436,9 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 
   curtime = time(NULL);
 
-  if (left < 0)
-    left = (page_width - out_width) / 2 + page_left;
-  else
-    left += page_left;
+  left += page_left;
 
-  if (top < 0)
-    top  = (page_height + out_height) / 2 + page_bottom;
-  else
-    top = page_height - top + page_bottom;
+  top = page_height - top + page_bottom;
 
   stp_dprintf(STP_DBG_PS, v,
 	      "out_width = %d, out_height = %d\n", out_width, out_height);

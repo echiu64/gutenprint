@@ -50,14 +50,19 @@ libgimpprint_la_SOURCES = \
 	print-pcl.c \
 	print-ps.c \
 	print-util.c \
+	print-vars.c \
+	print-papers.c \
 	print-color.c \
 	print-weave.c \
 	print-version.c \
 	print-dither-matrices.c \
 	print-dither.h \
+	printers.c \
+	print-printers.c \
 	quickmatrix257.h \
 	ran.367.179.h \
-	ran.509.131.h
+	ran.509.131.h \
+	printer.h
 libgimpprint_la_LIBADD = $(GIMPPRINT_DEPLIBS)
 # Uncommment to build an unversioned library (version in soname)
 libgimpprint_la_LDFLAGS = -release $(GIMPPRINT_VERSION) -rpath $(libdir)
@@ -76,10 +81,8 @@ pkgconfigdata_DATA = gimpprint.pc
 
 ## Rules
 
-print-util.lo: print-printers.c $(srcdir)/print-util.c
-
-print-printers.c: ../printdef/printdef $(srcdir)/printers.xml
-	../printdef/printdef < $(srcdir)/printers.xml > print-printers.c
+$(srcdir)/print-printers.c: ../printdef/printdef $(srcdir)/printers.xml
+	../printdef/printdef < $(srcdir)/printers.xml > $(srcdir)/print-printers.c
 
 printdefl.o: printdefy.o
 

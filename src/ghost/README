@@ -1,58 +1,27 @@
 INTRODUCTION:
 -------------
 
-  Gimp-Print 4.3 includes an associated Ghostscript driver, which is
-  named `stp'.  That name originally referred to Epson Stylus Photo
-  printers; this is the first Ghostscript driver which supported those
-  printers with high quality.  The same driver now supports many Canon,
-  HP, and Lexmark printers.
-
-  This driver works with GhostScript 5.50 and 6.51.  It should work
-  with any later releases on the 6.5x GNU Ghostscript line, such as
-  6.52.  Due to incompatibilities between the Aladdin Free Public
-  License (AFPL) and the GNU General Public License (GPL), this driver
-  may not be combined and distributed with versions of GhostScript not
-  covered by the GPL.  We will not fix bugs reported against
-  combinations of this driver with AFPL-only versions of GhostScript.
-
-  GNU Ghostscript 6.53 and 7.05 contains a version of the Gimp-Print
-  driver based on the Gimp-Print 4.2.0 release with a bug fix.
-  Building Gimp-Print is much simpler with Ghostscript 6.53 and 7.05
-  for that reason.
-
-  Gimp-Print includes another driver based on the new IJS protocol.
-  IJS is an initiative to improve the quality and ease of use of
-  printing with Ghostscript.  It permits adding or upgrading drivers
-  without recompiling Ghostscript.  An IJS driver runs in a separate
-  process that communicates with Ghostscript via an IPC channel.  The
-  Gimp-Print IJS driver may be used with AFPL Ghostscript, as it runs
-  in a separate process.
-
-  The original stp driver will not be maintained beyond Gimp-Print
-  4.2; it will be phased out and replaced by the IJS driver
-  (ijsgimpprint).  It supports all of the capabilities of the stp
-  driver, but it is not as mature.  We strongly recommend all users
-  upgrade to a recent version of Ghostscript and use the IJS driver.
-
-  IJS support was incorporated into Ghostscript in GNU Ghostscript
-  6.53 and AFPL Ghostscript 7.04, as IJS 0.32.
-
-  Finally, the distribution also includes a utility named "escputil"
-  that performs many utility functions, such as head cleaning, nozzle
-  alignment, and the like, for Epson Stylus printers.  This is
-  normally compiled by "make" and installed by "make install".
+  Gimp-Print includes a Ghostscript driver based on the IJS protocol.
+  It requires GNU Ghostscript 6.53 or above, AFPL Ghostscript 7.04 or
+  above, or ESP Ghostscript 7.05 or above.  IJS is an initiative to
+  improve the quality and ease of use of printing with Ghostscript.
+  It permits adding or upgrading drivers without recompiling
+  Ghostscript.  An IJS driver runs in a separate process that
+  communicates with Ghostscript via an IPC channel.  The Gimp-Print
+  IJS driver may be used with AFPL Ghostscript, as it runs in a
+  separate process.
 
 
 AUTHOR:
 -------
 
-  The Ghostscript stp driver was originally written by Henryk Richter
-  (buggs@comlab.uni-rostock.de), and was integrated into Gimp-Print
-  during the 3.1 development series.  Gimp-Print itself was originally
-  written by Michael Sweet <mike@easysw.com>, who released up to
-  version 2.0; Robert Krawitz released version 3.0.  The gimp-print
-  development team (http://gimp-print.sourceforge.net) now maintains
-  the entire package.
+  The original Ghostscript stp driver was originally written by Henryk
+  Richter (buggs@comlab.uni-rostock.de), and was integrated into
+  Gimp-Print during the 3.1 development series.  Gimp-Print itself was
+  originally written by Michael Sweet <mike@easysw.com>, who released
+  up to version 2.0; Robert Krawitz released version 3.0.  The
+  gimp-print development team (http://gimp-print.sourceforge.net) now
+  maintains the entire package.
 
   The IJS driver was originally written by Russell Lang, and
   incorporated into Gimp-Print in early 2002.  This driver corresponds
@@ -75,96 +44,6 @@ LICENSE:
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
-
-BUILD AND INSTALLATION OF THE STP DRIVER:
------ --- ------------ -- --- --- -------
-
-For GNU Ghostscript 6.53 and 7.05, and ESP Ghostscript 7.05
-(recommended):
-
-   Building Gimp-Print for GNU Ghostscript 6.53 and 7.05 and ESP
-   Ghostscript 7.05 is much simpler, as the driver is already in the
-   Ghostscript package.  It is sufficient to build and install the
-   Gimp-Print library and Ghostscript.
-
-1) First build and install the core Gimp-Print library.  Run
-
-   ./configure
-   make
-   make install
-
-   in the top level directory (../.. from here).
-
-   "make install" typically needs to be run as root.  You may also
-   need to run "ldconfig" as root following "make install".
-
-   You may optionally run
-
-   ./configure --without-gimp
-
-   if you do not wish to build the Gimp Print plugin.
-
-2) In the Ghostscript source directory, run
-
-   ./configure --with-gimp-print
-   make
-   make install
-
-For Ghostscript 5.50, 6.51, or 6.52:
-
-1) Get a recent Ghostscript (5.50 or 6.51 or its successors) and
-   prepare the sources as described in the documentation (don`t forget
-   zlib, libpng and libjpeg when downloading the source) for compiling
-
-2) You first need to build and install the core Gimp-Print library.
-   Run
-
-   ./configure
-   make
-   make install
-
-   in the top level directory (../.. from here).
-
-   "make install" typically needs to be run as root.  You may also
-   need to run "ldconfig" as root following "make install".
-
-   You may optionally run
-
-   ./configure --without-gimp
-
-   if you do not wish to build the Gimp Print plugin.
-
-3) Copy the file "gdevstp.c" from this directory into the Ghostscript
-   source directory.  Depending upon the version of Ghostscript you
-   use, this may be either the top level of your Ghostscript source
-   distribution, or the "src/" subdirectory.
-
-4) Edit the file "contrib.mak" (in either the top level or src/
-   subdirectory, depending upon your version of Ghostscript) by adding
-   the contents of "contrib.mak.addon", which should have been created
-   by running configure.  Be careful to add *exactly* the contents of
-   this file; if you cut and paste it, you may find that the tab
-   characters in contrib.mak.addon get transformed into spaces, and as
-   a result when you run 'make' it will fail.
-
-   If you reinstall Gimp-Print in a new location (by using configure
-   --prefix, configure --exec-prefix, or configure --includedir), you
-   must edit the contrib.mak file appropriately.  The contrib.mak.addon
-   file in this directory is automatically updated by running configure.
-
-5) Add "$(DD)stp.dev" to the line "DEVICE_DEVS6=..." in the makefile
-   used by Ghostscript (this is usually accessible as "makefile" in
-   the top level Ghostscript source, but that is normally just a
-   symbolic link to a system-specific makefile, such as unix-gcc.mak).
-   If there are multiple lines that start with DEVICE_DEVS6=, you may
-   add this to any such line.  If there is no DEVICE_DEVS6= line, you
-   may add it to any other DEVICE_DEVSx line that is present.
-
-6) Compile and install gs as described in the Ghostscript
-   documentation.  After a successful compiler run you get a new
-   driver named "stp".  Check this by calling "gs -h" with the newly
-   compiled Ghostscript.
 
 
 BUILD AND INSTALLATION OF THE IJS GIMPPRINT DRIVER:
@@ -206,13 +85,13 @@ BUILD AND INSTALLATION OF THE IJS GIMPPRINT DRIVER:
    build and install the IJS driver within the Gimp-Print package.
    This is done as follows, within the Gimp-Print source directory:
 
-   ./configure --with-ijs
+   ./configure --with-ghostscript
    make
    make install
 
    or
 
-   ./configure --with-ijs --with-foomatic
+   ./configure --with-ghostscript --with-foomatic
    make
    make install
 
@@ -221,42 +100,22 @@ BUILD AND INSTALLATION OF THE IJS GIMPPRINT DRIVER:
 
    If you do not wish to build the Gimp Print plugin, you may run
 
-   ./configure --with-ijs --without-gimp
+   ./configure --with-ghostscript --without-gimp
 
-   ./configure --with-ijs --with-foomatic --without-gimp
+   ./configure --with-ghostscript --with-foomatic --without-gimp
 
 
 OPTIONS:
 --------
 
-Overview for the STP Driver:
--------- --- --- --- -------
+Overview
+--------
 
-Options for the stp driver are given in normal Ghostscript
-manner. The resolution of the image calculated by Ghostscript is not
-bound to the resolution of the printer output. It is for example
-possible to specify "-r360" to gs and print the output in 1440x720
-dpi (see below for driver parameter). The result is a somewhat faster
-operation of the driver.
-
-The device name is "stp" (-sDEVICE=stp)
-
-The driver will not permit use of invalid settings.
-
-The options for this driver are very complex.  We strongly recommend
-use of a printer management system such as Foomatic rather than
-configuring a spooler manually with this driver. The driver name used
-by Foomatic is "gimp-print".
-
-Overview for the IJS Driver:
--------- --- --- --- -------
-
-Most options for the ijsgimpprint driver are similar to those for the
-stp driver.  The major difference is that most of the Gimp-Print
-specific options are bundled together into a single option that is
-passed in as a special "-sIjsParams" parameter, and the normal
-Ghostscript "-s" and "-d" flags, indicating whether an option is a
-string or a number, are not used in this special parameter.
+Most of the Gimp-Print specific options are bundled together into a
+single option that is passed in as a special "-sIjsParams" parameter,
+and the normal Ghostscript "-s" and "-d" flags, indicating whether an
+option is a string or a number, are not used in this special
+parameter.
 
 The device name is "ijs" (-sDEVICE=ijs).  In addition, the location of
 the driver program must be specified.  This will typically be
@@ -283,14 +142,12 @@ by Foomatic is "gimp-print-ijs".
 Printer Model Selection:
 ------- ----- ----------
 
-STP: -sModel=name
-IJS: -sDeviceManufacturer=vendor -sDeviceModel=name
+-sDeviceManufacturer=vendor -sDeviceModel=name
 
 This option must be supplied.  There is no default.  The IJS driver
 requires the vendor (it's part of the protocol), but the ijsgimpprint
 driver ignores it.  It should be CANON, EPSON, LEXMARK, or
-HEWLETT-PACKARD.  The value of the -sDeviceModel parameter is the same
-as the value of the -sModel parameter in the stp driver.
+HEWLETT-PACKARD.
 
 The list of available printers is quite long; the current complete
 list is in the NEWS file at top level.  The Driver Name (e. g. pcl-2)
@@ -306,14 +163,13 @@ than for others.
 Print Resolution Selection:
 ----- ---------- ----------
 
-STP: -sQuality=quality
-IJS: -sIjsParams=Quality=quality
+-sIjsParams=Quality=quality
 
 The meaning of this is model-specific.  Two names are listed for each
 resolution; the first (short) name is the value that must be passed to
--sQuality, and the second (long) name is descriptive.  Each printer
-has its own default value; for most printers, this is a reasonable 300
-or 360 DPI resolution.
+-sIjsParams=Quality, and the second (long) name is descriptive.  Each
+printer has its own default value; for most printers, this is a
+reasonable 300 or 360 DPI resolution.
 
 
 For Epson Stylus printers:
@@ -665,11 +521,10 @@ Ink Types
 This is printer type specific.  The option names are case sensitive.
 The option names are case sensitive.  Two names are listed for each
 resolution; the first (short) name is the value that must be passed to
--sInkType, and the second (long) name is descriptive.  Not all ink
-types are supported on all printers.
+-sIjsParams=InkType, and the second (long) name is descriptive.  Not
+all ink types are supported on all printers.
 
-STP: -sInkType=inktype
-IJS: -sIjsParams=InkType=inktype
+-sIjsParams=InkType=inktype
 
 
 For Epson and Lexmark (other than the 4076) printers:
@@ -723,11 +578,10 @@ Media Types
 
 This is printer type specific.  The option names are case sensitive.
 Two names are listed for each resolution; the first (short) name is
-the value that must be passed to -sMediaType, and the second (long) name
-is descriptive.
+the value that must be passed to -sIjsParams=MediaType, and the second
+(long) name is descriptive.
 
-STP: -sMediaType=mediatype
-IJS: -sIjsParams=MediaType=mediatype
+-sIjsParams=MediaType=mediatype
 
 
 For Epson and Lexmark (other than the 4076) inkjet printers:
@@ -791,8 +645,7 @@ Media Sources
 
 This is printer type specific.  The option names are case sensitive.
 
-STP: -sInputSlot=mediasource
-IJS: -sIjsParams=MediaSource=mediasource
+-sIjsParams=MediaSource=mediasource
 
 For Epson printers:
 
@@ -844,10 +697,9 @@ size other than the default; it only tells the driver to set up the
 printer for a different paper size.  The default paper size is
 'Letter'.
 
-STP: -sPAPERSIZE=papersize
-IJS: -sPAPERSIZE=papersize (for known Ghostscript paper sizes)
+-sPAPERSIZE=papersize (for known Ghostscript paper sizes)
   or
-     -dDEVICEWIDTHPOINTS=x -dDEVICEHEIGHTPOINTS=y
+-dDEVICEWIDTHPOINTS=x -dDEVICEHEIGHTPOINTS=y
                where x and y are the width and height of the paper
                respectively, in points (1/72")
 
@@ -878,6 +730,7 @@ w1152h1440      16x20                                           x=1152, y=1440
 w1152h1728      16x24  20x24 for 35 mm                          x=1152, y=1728
 w1440h1728      20x24                                           x=1440, y=1728
 w1440h2160      20x30  24x30 for 35 mm                          x=1440, y=2160
+w1584h2160      22x30  Common watercolor size                   x=1440, y=2160
 w1728h2160      24x30                                           x=1728, y=2160
 w1728h2592      24x36  Sometimes used for 35 mm                 x=1728, y=2592
 w2160h2880      30x40                                           x=2160, y=2880
@@ -1017,26 +870,16 @@ All of the values below are interpreted as being relative to norms for
 a particular printer established through testing, not "absolute"
 values of any kind.
 
-The STP parameter is specified.  The IJS parameter is created by
-removing the "-d" and beginning the options list with -sIjsParams.
-Thus
-
--dCyan=xxx
-
-becomes
-
--sIjsParams=Cyan=xxx
-
--dCyan=xxx       xxx: 0.0 ... 4.0  (1.0)
--dMagenta=xxx    xxx: 0.0 ... 4.0  (1.0)
--dYellow=xxx     xxx: 0.0 ... 4.0  (1.0)
+-sIjsParams=Cyan=xxx       xxx: 0.0 ... 4.0  (1.0)
+-sIjsParams=Magenta=xxx    xxx: 0.0 ... 4.0  (1.0)
+-sIjsParams=Yellow=xxx     xxx: 0.0 ... 4.0  (1.0)
 
  These three options allow specification of the cyan, magenta, and
  yellow levels independently, for rebalancing the levels.  Normally,
  these should be adjusted to yield neutral gray, but they can be used
  for other effects.
 
--dBrightness=xxx xxx: 0.0 ... 2.0  (1.0)
+-sIjsParams=Brightness=xxx xxx: 0.0 ... 2.0  (1.0)
 
  Adjust the brightness of the image.  0.0 gives a fully black image;
  2.0 gives a fully white image.  Values greater than 1 will result in
@@ -1044,12 +887,12 @@ becomes
  1 will result in white not being perfectly clear and shadows turning
  black.
 
--dContrast=xxx   xxx: 0.0 ... 4.0  (1.0)
+-sIjsParams=Contrast=xxx   xxx: 0.0 ... 4.0  (1.0)
 
  Adjust the contrast of the image.  0.0 gives a solid gray for the
  entire image, the exact gray depending upon the brightness chosen.
 
--dGamma=xxx      xxx: 0.1 ... 4.0  (1.0)
+-sIjsParams=Gamma=xxx      xxx: 0.1 ... 4.0  (1.0)
 
  Adjust the gamma of the image, over and above the printer-specific
  correction.  Gamma less than 1.0 will result in a darker image; gamma
@@ -1057,7 +900,7 @@ becomes
  gamma adjustment does not change the endpoints; it merely changes the
  shape of the input->output curve.
 
--dDensity=xxx    xxx: 0.1 ... 2.0  (1.0)
+-sIjsParams=Density=xxx    xxx: 0.1 ... 2.0  (1.0)
 
  Adjust the amount of ink deposited on the paper.  If you've chosen
  the correct paper type and you're getting ink bleeding through the
@@ -1072,16 +915,16 @@ becomes
  above 100%, so if a value specified will result in an excessively
  high density level, it will be silently limited to 1.0.
 
--dSaturation=xxx xxx: 0.0 ... 9.0  (1.0)
+-sIjsParams=Saturation=xxx xxx: 0.0 ... 9.0  (1.0)
 
  Adjust the brilliance of colors.  0.0 results in pure grayscale;
- using this with -dColor=1 is one way of getting grayscale (see below
- under -dColor for a full discussion).  Saturation of less than 1.0
- results in more muted colors; saturation of greater than 1.0 results
- in more vibrant colors.  Very high saturation often results in very
- strange effects, including posterization and banding that might not
- be expected.  For normal purposes, the saturation should generally be
- less than 1.5.
+ using this with -sProcessColorModel=DeviceRGB is one way of getting
+ grayscale (see below under Output Type for a full discussion).
+ Saturation of less than 1.0 results in more muted colors; saturation
+ of greater than 1.0 results in more vibrant colors.  Very high
+ saturation often results in very strange effects, including
+ posterization and banding that might not be expected.  For normal
+ purposes, the saturation should generally be less than 1.5.
 
 
 Dithering Algorithms:
@@ -1089,9 +932,8 @@ Dithering Algorithms:
 
 The option names are case sensitive.  Two names are listed for each
 resolution; the first (short) name is the value that must be passed to
--sDither, and the second (long) name is descriptive.
+-sIjsParams=Dither, and the second (long) name is descriptive.
 
-STP: -sDither=algorithm
 IJS: -sIjsParams=Dither=algorithm
 
 Adaptive        Adaptive Hybrid
@@ -1144,50 +986,42 @@ This is sometimes called "tearing".  Its use is not recommended.
 Output Type
 ------ ----
 
-STP: -dColor=x          x:   0 ...   2  (1 on color printers, 0 otherwise)
-
-0  Grayscale
-1  Color (RGB)
-2  Black and white
-
-IJS:
-
 Black and white: -sProcessColorModel=DeviceGray -dBitsPerSample=1
 Grayscale:       -sProcessColorModel=DeviceGray
 Color (RGB):     -sProcessColorModel=DeviceRGB
 Color (CMYK):    -sProcessColorModel=DeviceCMYK
 
  Choose color vs. grayscale output.  Color output is the default.
- Choosing -dColor=0 results in only black ink (no color ink) being
- used, which is faster and usually results in the most accurate
- grayscale, but at the expense of smoothness.  If you want composite
- color (using a mixture of color and black inks to produce gray), use
- -dColor=1 and -dSaturation=0.0 (see -dSaturation above).
+ Choosing -sProcessColorModel=DeviceGray results in only black ink (no
+ color ink) being used, which is faster and usually results in the
+ most accurate grayscale, but at the expense of smoothness.  If you
+ want composite color (using a mixture of color and black inks to
+ produce gray), use --sProcessColorModel=DeviceRGB and
+ -sIjsParams=Saturation=0.0 (see -sIjsParams=Saturation above).
 
- In addition, using -dColor=0 uses luminance (perceived brightness) of
- red, green, and blue to choose output levels.  Blue of a given
- intensity is perceived to be much darker than red, which in turn
- appears darker than green.  -dColor=1 and -dSaturation=0.0 does not
+ In addition, using -sProcessColorModel=DeviceGray uses luminance
+ (perceived brightness) of red, green, and blue to choose output
+ levels.  Blue of a given intensity is perceived to be much darker
+ than red, which in turn appears darker than green.
+ -sProcessColorModel=DeviceRGB and -sIjsParams=Saturation=0.0 does not
  use luminance.
 
- -dColor=2 prints only black and white (thresholding).  This option
- always uses Fast dithering unless you specify Very Fast.
+ -sProcessColorModel=DeviceGray -dBitsPerSample=1 prints only black
+ and white (thresholding).  This option always uses Fast dithering
+ unless you specify Very Fast.
 
- CMYK output may be used with the IJS driver only.  It is useful if
- you're printing a CMYK graphic and want explicit control over the
- inks.  Generally it yields inferior quality, as Gimp-Print has good
- algorithms for converting RGB (screen) into CMYK (inks) that take
- into account paper type, ink type, and other variables.  In CMYK
- mode, the brightness, contrast, and saturation controls do not
- function.
+ -sProcessColorModel=DeviceCMYK is useful if you're printing a CMYK
+ graphic and want explicit control over the inks.  Generally it yields
+ inferior quality, as Gimp-Print has good algorithms for converting
+ RGB (screen) into CMYK (inks) that take into account paper type, ink
+ type, and other variables.  In CMYK mode, the brightness, contrast,
+ and saturation controls do not function.
 
 
 Image type (to optimize the dither):
 ----- ---- --- -------- --- --------
 
-STP: -dImageType=x x:   0 ...   2  (0)
-
-IJS: -sIjsParams=ImageType=x
+-sIjsParams=ImageType=x
 
 Select the image type most representative of what's being printed.
 
@@ -1225,10 +1059,6 @@ Note that a lot of these options are used for demonstration; generally
 adjusting the density is a bad idea!
 
 Example 1 (print charts to file, using A4 paper, color, 360 dpi):
-gs -sDEVICE=stp -sModel=escp2-ex -dDensity=1.6 -dGamma=1.5 -dSaturation=0.9 \
-   -dBrightness=.4 -dImageType=1 -sPAPERSIZE=a4 \
-   -sOutputFile=itsyourchoice.prn foo.ps
-
 gs -sDEVICE=ijs -sIjsServer=/usr/local/bin/ijsgimpprint \
    -sDeviceManufacturer=EPSON -sDeviceModel=escp2-ex -sPAPERSIZE=a4 \
    -sOutputFile=itsyourchoice.prn \
@@ -1236,10 +1066,6 @@ gs -sDEVICE=ijs -sIjsServer=/usr/local/bin/ijsgimpprint \
    foo.ps
 
 Example 2 (print color photograph to /dev/lp0 at maximum quality):
-gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-870 -dDensity=0.8 \
-   -r1440x720 -sQuality=1440x720hq -sMediaType=GlossyPhoto \
-   -dImageType=2 -sOutputFile=/dev/lp0 foo.ps
-
 gs -sDEVICE=ijs -sIjsServer=/usr/local/bin/ijsgimpprint \
    -sDeviceManufacturer=EPSON -sDeviceModel=escp2-870 \
    -sOutputFile=/dev/lp0 \
@@ -1247,9 +1073,6 @@ gs -sDEVICE=ijs -sIjsServer=/usr/local/bin/ijsgimpprint \
    foo.ps
 
 Example 3 (print pure black text to stdout)
-gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-660 -dDensity=0.8 -r720 \
-   -sQuality=720sw -dColor=2 -sOutputFile=- foo.ps
-
 gs -sDEVICE=ijs -sIjsServer=/usr/local/bin/ijsgimpprint \
    -sDeviceManufacturer=EPSON -sDeviceModel=escp2-660 -dIjsUseOutputFD \
    -sProcessColorModel=DeviceGray -dBitsPerSample=1 -sOutputFile=- \

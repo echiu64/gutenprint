@@ -28,11 +28,7 @@ MAINT_CHARSET = latin1
 
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = \
-	COPYING \
-	README \
-	contrib.mak.addon.in \
-	gdevstp.c
+EXTRA_DIST = README
 
 ## Variables
 
@@ -46,7 +42,7 @@ LIBS = @IJS_LIBS@ $(INTLLIBS) @LIBS@
 
 ## Programs
 
-if BUILD_IJS
+if BUILD_GHOSTSCRIPT
 bin_PROGRAMS = ijsgimpprint
 endif
 

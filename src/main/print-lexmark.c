@@ -1366,8 +1366,8 @@ lexmark_imageable_area(const stp_printer_t printer,	/* I - Printer model */
 
   *left   = caps->border_left;
   *right  = width - caps->border_right;
-  *top    = length - caps->border_top;
-  *bottom = caps->border_bottom;
+  *top    = caps->border_top;
+  *bottom = length - caps->border_bottom;
 
   lxm3200_linetoeject = (length * 1200) / 72;
 }
@@ -1627,12 +1627,12 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
   int		n;		/* Output number */
   unsigned short *out;	/* Output pixels (16-bit) */
   unsigned char	*in;		/* Input pixels */
-  int		page_left,	/* Left margin of page */
-    page_right,	/* Right margin of page */
-    page_top,	/* Top of page */
-    page_bottom,	/* Bottom of page */
-    page_width,	/* Width of page */
+  int page_width,	/* Width of page */
     page_height,	/* Length of page */
+    page_left,
+    page_top,
+    page_right,
+    page_bottom,
     page_true_height,	/* True length of page */
     out_width,	/* Width of image on page in pixles */
     out_height,	/* Length of image on page */
@@ -1685,11 +1685,9 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
   const char	*media_type   = stp_get_media_type(v);
   const char	*media_source = stp_get_media_source(v);
   int 		output_type   = stp_get_output_type(v);
-  int		orientation   = stp_get_orientation(v);
   const char	*ink_type     = stp_get_ink_type(v);
-  double 	scaling       = stp_get_scaling(v);
-  int		top           = stp_get_top(v);
-  int		left          = stp_get_left(v);
+  int		top = stp_get_top(v);
+  int		left = stp_get_left(v);
   stp_vars_t	nv            = stp_allocate_copy(v);
 
   const lexmark_cap_t * caps= lexmark_get_model_capabilities(model);
@@ -1720,8 +1718,6 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
   */
 
   image->init(image);
-  image_height = image->height(image);
-  image_width = image->width(image);
   image_bpp = image->bpp(image);
 
 
@@ -1821,22 +1817,20 @@ densityDivisor /= 1.2;
   * Compute the output size...
   */
 
-  lexmark_imageable_area(printer, nv, &page_left, &page_right,
-			 &page_bottom, &page_top);
+  out_width = stp_get_width(v);
+  out_height = stp_get_height(v);
 
-  stp_compute_page_parameters(page_right, page_left, page_top, page_bottom,
-			  scaling, image_width, image_height, image,
-			  &orientation, &page_width, &page_height,
-			  &out_width, &out_height, &left, &top);
+  lexmark_imageable_area(printer, nv, &page_left, &page_right, &page_bottom,
+			 &page_top);
+  left -= page_left;
+  top -= page_top;
+  page_width = page_right - page_left;
+  page_height = page_bottom - page_top;
 
 #ifdef DEBUG
   stp_erprintf("page_right %d, page_left %d, page_top %d, page_bottom %d, left %d, top %d\n",page_right, page_left, page_top, page_bottom,left, top);
 #endif
 
-  /*
-   * Recompute the image length and width.  If the image has been
-   * rotated, these will change from previously.
-   */
   image_height = image->height(image);
   image_width = image->width(image);
 
@@ -1984,13 +1978,15 @@ densityDivisor /= 1.2;
   stp_erprintf("density is %f\n",stp_get_density(nv));
 #endif
 
+  if (output_type != OUTPUT_RAW_PRINTER && output_type != OUTPUT_RAW_CMYK)
+    {
 #ifdef DEBUG
-  stp_erprintf("density is %f and will be changed to %f  (%f)\n",stp_get_density(nv), stp_get_density(nv)/densityDivisor, densityDivisor);
+      stp_erprintf("density is %f and will be changed to %f  (%f)\n",stp_get_density(nv), stp_get_density(nv)/densityDivisor, densityDivisor);
 #endif
 
-  /* Lexmark do not have differnet pixel sizes. We have to correct the density according the print resolution. */
-  stp_set_density(nv, stp_get_density(nv) / densityDivisor);
-
+      /* Lexmark do not have differnet pixel sizes. We have to correct the density according the print resolution. */
+      stp_set_density(nv, stp_get_density(nv) / densityDivisor);
+    }
 
 
   /*
@@ -2009,7 +2005,8 @@ densityDivisor /= 1.2;
 
   if (media)
     {
-      stp_set_density(nv, stp_get_density(nv) * media->base_density);
+      if (output_type != OUTPUT_RAW_PRINTER && output_type != OUTPUT_RAW_CMYK)
+	stp_set_density(nv, stp_get_density(nv) * media->base_density);
       stp_set_cyan(nv, stp_get_cyan(nv) * media->p_cyan);
       stp_set_magenta(nv, stp_get_magenta(nv) * media->p_magenta);
       stp_set_yellow(nv, stp_get_yellow(nv) * media->p_yellow);
@@ -2018,7 +2015,8 @@ densityDivisor /= 1.2;
     }
   else
     {
-      stp_set_density(nv, stp_get_density(nv) * .8);
+      if (output_type != OUTPUT_RAW_PRINTER && output_type != OUTPUT_RAW_CMYK)
+	stp_set_density(nv, stp_get_density(nv) * .8);
       k_lower *= .1;
       k_upper = .5;
     }

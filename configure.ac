@@ -37,7 +37,7 @@ dnl
 pushdef([GIMPPRINT_NAME],              [gimp-print])
 pushdef([GIMPPRINT_MAJOR_VERSION],     [4])
 pushdef([GIMPPRINT_MINOR_VERSION],     [3])
-pushdef([GIMPPRINT_MICRO_VERSION],     [5])
+pushdef([GIMPPRINT_MICRO_VERSION],     [6])
 pushdef([GIMPPRINT_EXTRA_VERSION],     [])
 pushdef([GIMPPRINT_CURRENT_INTERFACE], [1])
 pushdef([GIMPPRINT_INTERFACE_AGE],     [0])
@@ -220,13 +220,13 @@ STP_ARG_WITH([foomatic],
 
 AC_PATH_PROG(IJS_CONFIG, ijs-config)
 if test -z "${IJS_CONFIG}" ; then
-  BUILD_IJS="no"
+  BUILD_GHOSTSCRIPT="no"
 else
-  BUILD_IJS="yes"
+  BUILD_GHOSTSCRIPT="yes"
 fi
-STP_ARG_WITH([ijs],
-             [build IJS driver],
-             [BUILD_IJS],
+STP_ARG_WITH([ghostscript],
+             [build Ghostscript driver],
+             [BUILD_GHOSTSCRIPT],
              [(automatic)])
 
 STP_ARG_ENABLE([lexmarkutil],
@@ -371,9 +371,9 @@ if test x${BUILD_FOOMATIC} = xyes ; then
 fi
 
 dnl ijs checks
-if test x${BUILD_IJS} = xyes ; then
+if test x${BUILD_GHOSTSCRIPT} = xyes ; then
   if test -z "$IJS_CONFIG" ; then
-    AC_MSG_ERROR(Cannot find ijs-config; please ensure ijs 0.30 is installed);
+    AC_MSG_ERROR(Cannot find ijs-config; please ensure Ghostscript 6.53 or above is installed);
   fi
   IJS_CFLAGS=`$IJS_CONFIG --cflags`
   IJS_LIBS=`$IJS_CONFIG --libs`
@@ -536,7 +536,7 @@ AC_CHECK_FUNC(getopt_long,
 dnl Define what has to be built
 AM_CONDITIONAL(BUILD_FOOMATIC, test x${BUILD_FOOMATIC} = xyes)
 
-AM_CONDITIONAL(BUILD_IJS, test x${BUILD_IJS} = xyes)
+AM_CONDITIONAL(BUILD_GHOSTSCRIPT, test x${BUILD_GHOSTSCRIPT} = xyes)
 
 AM_CONDITIONAL(BUILD_LEXMARKUTIL, test x${BUILD_LEXMARKUTIL} = xyes)
 
@@ -671,15 +671,6 @@ AC_CONFIG_FILES([src/printdef/Makefile])
 AC_CONFIG_FILES([cups-gimpprint.list])
 AC_CONFIG_FILES([test/Makefile])
 AC_CONFIG_FILES([scripts/Makefile])
-AC_CONFIG_FILES([src/ghost/contrib.mak.addon], [
-if test -f src/ghost/contrib.mak.addon ; then
-  sed -e 's;${exec_prefix};'"${literal_exec_prefix};" -e 's;${prefix};'"${literal_prefix};" src/ghost/contrib.mak.addon > src/ghost/contrib.mak.addon.tmp
-  mv src/ghost/contrib.mak.addon.tmp src/ghost/contrib.mak.addon
-fi
-], [
-literal_prefix="`eval echo $prefix`"
-literal_exec_prefix="`eval echo $exec_prefix`"
-])
 AC_CONFIG_COMMANDS([default], [
 echo "Finished configuring."
 echo "Type 'make' to build the package"

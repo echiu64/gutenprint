@@ -40,8 +40,6 @@
  *   Image_note_progress()     - Notify the user of our progress.
  *   Image_progress_conclude() - Close the progress display.
  *   Image_progress_init()     - Initialize progress display.
- *   Image_rotate_ccw()        - Rotate the image counter-clockwise
- *                               (unsupported).
  *   Image_width()             - Return the width of an image.
  */
 
@@ -97,22 +95,12 @@ static stp_image_status_t Image_get_row(stp_image_t *image,
 static int	Image_height(stp_image_t *image);
 static int	Image_width(stp_image_t *image);
 static int	Image_bpp(stp_image_t *image);
-static void	Image_rotate_180(stp_image_t *image);
-static void	Image_rotate_cw(stp_image_t *image);
-static void	Image_rotate_ccw(stp_image_t *image);
 static void	Image_init(stp_image_t *image);
 
 static stp_image_t theImage =
 {
   Image_init,
   NULL,				/* reset */
-  NULL,				/* transpose */
-  NULL,				/* hflip */
-  NULL,				/* vflip */
-  NULL,				/* crop */
-  Image_rotate_ccw,
-  Image_rotate_cw,
-  Image_rotate_180,
   Image_bpp,
   Image_width,
   Image_height,
@@ -391,13 +379,11 @@ main(int  argc,				/* I - Number of command-line arguments */
     stp_set_yellow(v, stp_yellow);
     stp_set_saturation(v, stp_saturation);
     stp_set_density(v, stp_density);
-    stp_set_scaling(v, 0); /* No scaling */
     stp_set_cmap(v, NULL);
     stp_set_page_width(v, cups.header.PageSize[0]);
     stp_set_page_height(v, cups.header.PageSize[1]);
     stp_set_left(v, 0);
     stp_set_top(v, 0);
-    stp_set_orientation(v, ORIENT_PORTRAIT);
     stp_set_gamma(v, stp_gamma);
     stp_set_image_type(v, cups.header.cupsRowCount);
     stp_set_outfunc(v, cups_writefunc);
@@ -454,7 +440,6 @@ main(int  argc,				/* I - Number of command-line arguments */
     */
 
     stp_merge_printvars(v, stp_printer_get_printvars(printer));
-    fprintf(stderr, "DEBUG: stp_get_output_to(v) |%s|\n", stp_get_output_to(v));
     fprintf(stderr, "DEBUG: stp_get_driver(v) |%s|\n", stp_get_driver(v));
     fprintf(stderr, "DEBUG: stp_get_ppd_file(v) |%s|\n", stp_get_ppd_file(v));
     fprintf(stderr, "DEBUG: stp_get_resolution(v) |%s|\n", stp_get_resolution(v));
@@ -464,17 +449,14 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: stp_get_ink_type(v) |%s|\n", stp_get_ink_type(v));
     fprintf(stderr, "DEBUG: stp_get_dither_algorithm(v) |%s|\n", stp_get_dither_algorithm(v));
     fprintf(stderr, "DEBUG: stp_get_output_type(v) |%d|\n", stp_get_output_type(v));
-    fprintf(stderr, "DEBUG: stp_get_orientation(v) |%d|\n", stp_get_orientation(v));
     fprintf(stderr, "DEBUG: stp_get_left(v) |%d|\n", stp_get_left(v));
     fprintf(stderr, "DEBUG: stp_get_top(v) |%d|\n", stp_get_top(v));
     fprintf(stderr, "DEBUG: stp_get_image_type(v) |%d|\n", stp_get_image_type(v));
-    fprintf(stderr, "DEBUG: stp_get_unit(v) |%d|\n", stp_get_unit(v));
     fprintf(stderr, "DEBUG: stp_get_page_width(v) |%d|\n", stp_get_page_width(v));
     fprintf(stderr, "DEBUG: stp_get_page_height(v) |%d|\n", stp_get_page_height(v));
     fprintf(stderr, "DEBUG: stp_get_input_color_model(v) |%d|\n", stp_get_input_color_model(v));
     fprintf(stderr, "DEBUG: stp_get_output_color_model(v) |%d|\n", stp_get_output_color_model(v));
     fprintf(stderr, "DEBUG: stp_get_brightness(v) |%.3f|\n", stp_get_brightness(v));
-    fprintf(stderr, "DEBUG: stp_get_scaling(v) |%.3f|\n", stp_get_scaling(v));
     fprintf(stderr, "DEBUG: stp_get_gamma(v) |%.3f|\n", stp_get_gamma(v));
     fprintf(stderr, "DEBUG: stp_get_contrast(v) |%.3f|\n", stp_get_contrast(v));
     fprintf(stderr, "DEBUG: stp_get_cyan(v) |%.3f|\n", stp_get_cyan(v));
@@ -490,13 +472,15 @@ main(int  argc,				/* I - Number of command-line arguments */
       (printer, v, &(cups.left), &(cups.right), &(cups.bottom), &(cups.top));
     fprintf(stderr, "DEBUG: GIMP-PRINT %d %d %d  %d %d %d\n",
 	    cups.width, cups.left, cups.right, cups.height, cups.top, cups.bottom);
+    stp_set_width(v, cups.right - cups.left);
+    stp_set_height(v, cups.bottom - cups.top);
     cups.right = cups.width - cups.right;
     cups.width = cups.width - cups.left - cups.right;
     cups.width = cups.header.HWResolution[0] * cups.width / 72;
     cups.left = cups.header.HWResolution[0] * cups.left / 72;
     cups.right = cups.header.HWResolution[0] * cups.right / 72;
 
-    cups.top = cups.height - cups.top;
+    cups.bottom = cups.height - cups.bottom;
     cups.height = cups.height - cups.top - cups.bottom;
     cups.height = cups.header.HWResolution[1] * cups.height / 72;
     cups.top = cups.header.HWResolution[1] * cups.top / 72;
@@ -714,7 +698,6 @@ Image_init(stp_image_t *image)		/* I - Image */
   (void)image;
 }
 
-
 /*
  * 'Image_note_progress()' - Notify the user of our progress.
  */
@@ -726,14 +709,12 @@ Image_note_progress(stp_image_t *image,	/* I - Image */
 {
   cups_image_t	*cups;		/* CUPS image */
 
-
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return;
 
   fprintf(stderr, "INFO: Printing page %d, %.0f%%\n",
           cups->page, 100.0 * current / total);
 }
-
 
 /*
  * 'Image_progress_conclude()' - Close the progress display.
@@ -751,7 +732,6 @@ Image_progress_conclude(stp_image_t *image)	/* I - Image */
   fprintf(stderr, "INFO: Finished page %d...\n", cups->page);
 }
 
-
 /*
  * 'Image_progress_init()' - Initialize progress display.
  */
@@ -767,40 +747,6 @@ Image_progress_init(stp_image_t *image)/* I - Image */
 
   fprintf(stderr, "INFO: Starting page %d...\n", cups->page);
 }
-
-
-/*
- * 'Image_rotate_180()' - Rotate the image 180 degrees (unsupported).
- */
-
-static void
-Image_rotate_180(stp_image_t *image)	/* I - Image */
-{
-  (void)image;
-}
-
-
-/*
- * 'Image_rotate_ccw()' - Rotate the image counter-clockwise (unsupported).
- */
-
-static void
-Image_rotate_ccw(stp_image_t *image)	/* I - Image */
-{
-  (void)image;
-}
-
-
-/*
- * 'Image_rotate_cw()' - Rotate the image clockwise (unsupported).
- */
-
-static void
-Image_rotate_cw(stp_image_t *image)	/* I - Image */
-{
-  (void)image;
-}
-
 
 /*
  * 'Image_width()' - Return the width of an image.

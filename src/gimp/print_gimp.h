@@ -58,10 +58,22 @@
 #define PLUG_IN_VERSION		VERSION " - " RELEASE_DATE
 #define PLUG_IN_NAME		"Print"
 
+#define ORIENT_AUTO             -1      /* Best orientation */
+#define ORIENT_PORTRAIT         0       /* Portrait orientation */
+#define ORIENT_LANDSCAPE        1       /* Landscape orientation */
+#define ORIENT_UPSIDEDOWN       2       /* Reverse portrait orientation */
+#define ORIENT_SEASCAPE         3       /* Reverse landscape orientation */
+
 typedef struct		/**** Printer List ****/
 {
   int	active;			/* Do we know about this printer? */
-  char	name[128];		/* Name of printer */
+  char	*name;			/* Name of printer */
+  char  *output_to;
+  float	scaling;		/* Scaling, percent of printable area */
+  int   orientation;
+  int	unit;			/* Units for preview area 0=Inch 1=Metric */
+  int	left_is_valid;
+  int	top_is_valid;
   stp_vars_t v;
 } gp_plist_t;
 
@@ -72,8 +84,8 @@ extern gint    thumbnail_w, thumbnail_h, thumbnail_bpp;
 extern guchar *thumbnail_data;
 extern gint    adjusted_thumbnail_bpp;
 extern guchar *adjusted_thumbnail_data;
+extern guchar *preview_thumbnail_data;
 
-extern stp_vars_t           vars;
 extern gint             plist_count;	   /* Number of system printers */
 extern gint             plist_current;     /* Current system printer */
 extern gp_plist_t         *plist;		  /* System printers */
@@ -81,17 +93,28 @@ extern gint32           image_ID;
 extern const gchar     *image_filename;
 extern gint             image_width;
 extern gint             image_height;
+extern gint             image_true_width;
+extern gint             image_true_height;
+extern gint		printable_width;
+extern gint		printable_height;
 extern stp_printer_t current_printer;
 extern gint             runme;
 extern gint             saveme;
 
 extern GtkWidget *gimp_color_adjust_dialog;
 extern GtkWidget *dither_algo_combo;
-extern stp_vars_t *pv;
+extern gp_plist_t *pv;
 
 /*
  * Function prototypes
  */
+extern void plist_set_output_to(gp_plist_t *p, const char *val);
+extern void plist_set_output_to_n(gp_plist_t *p, const char *val, int n);
+extern const char *plist_get_output_to(const gp_plist_t *p);
+extern void plist_set_name(gp_plist_t *p, const char *val);
+extern void plist_set_name_n(gp_plist_t *p, const char *val, int n);
+extern const char *plist_get_name(const gp_plist_t *p);
+extern void copy_printer(gp_plist_t *vd, const gp_plist_t *vs);
 
 /* How to create an Image wrapping a Gimp drawable */
 extern void  printrc_save (void);
@@ -120,5 +143,14 @@ extern void gimp_set_color_sliders_active(int active);
 extern void gimp_writefunc (void *file, const char *buf, size_t bytes);
 extern void set_adjustment_tooltip(GtkObject *adjustment,
 				   const gchar *tip, const gchar *private);
+
+extern void Image_transpose(stp_image_t *image);
+extern void Image_hflip(stp_image_t *image);
+extern void Image_vflip(stp_image_t *image);
+extern void Image_crop(stp_image_t *image, int left, int top,
+		       int right, int bottom);
+extern void Image_rotate_ccw(stp_image_t *image);
+extern void Image_rotate_cw(stp_image_t *image);
+extern void Image_rotate_180(stp_image_t *image);
 
 #endif  /* __PRINT_GIMP_H__ */

@@ -62,13 +62,6 @@ static stp_image_t theImage =
 {
   Image_init,
   NULL,				/* reset */
-  NULL,				/* transpose */
-  NULL,				/* hflip */
-  NULL,				/* vflip */
-  NULL,				/* crop */
-  NULL,				/* ccw */
-  NULL,				/* cw */
-  NULL,				/* 180 */
   Image_bpp,
   Image_width,
   Image_height,
@@ -210,7 +203,7 @@ main(int argc, char **argv)
   stp_papersize_t pt;
   int left, right, top, bottom;
   const stp_printfuncs_t *printfuncs;
-  int x, y, owidth;
+  int x, y;
   int width, height;
 
   int retval = yyparse();
@@ -375,33 +368,25 @@ main(int argc, char **argv)
     y = 300;
 
   width = right - left;
-  height = top - bottom;
-  top -= stp_papersize_get_height(pt);
-  top = top + height * xtop;
-  left = width * xleft;
-  owidth = width;
+  height = bottom - top;
+  top += height * xtop;
+  left += width * xleft;
   if (levels > width)
     levels = width;
 
+#if 0
   width = (width / levels) * levels;
   height = (height / n_testpatterns) * n_testpatterns;
-  if (hsize > vsize)
-    {
-      stp_set_scaling(v, 100 * hsize);
-      printer_width = width * x / 72;
-      printer_height = vsize / hsize * height * y / 72;
-    }
-  else
-    {
-      stp_set_scaling(v, 100 * vsize);
-      printer_width = hsize / vsize * width * x / 72;
-      printer_height = height * y / 72;
-    }
+#endif
+  stp_set_width(v, width * hsize);
+  stp_set_height(v, height * vsize);
+
+  printer_width = width * x / 72;
+  printer_height = height * y / 72;
 
   bandheight = printer_height / n_testpatterns;
-  stp_set_left(v, left + (hsize * (owidth - width) / 2));
+  stp_set_left(v, left);
   stp_set_top(v, top);
-  stp_set_orientation(v, ORIENT_PORTRAIT);
 
   stp_merge_printvars(v, stp_printer_get_printvars(the_printer));
   if (stp_printer_get_printfuncs(the_printer)->verify(the_printer, v))

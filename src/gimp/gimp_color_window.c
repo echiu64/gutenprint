@@ -36,6 +36,7 @@ gint    thumbnail_w, thumbnail_h, thumbnail_bpp;
 guchar *thumbnail_data;
 gint    adjusted_thumbnail_bpp;
 guchar *adjusted_thumbnail_data;
+guchar *preview_thumbnail_data;
 
 GtkWidget *gimp_color_adjust_dialog;
 
@@ -93,7 +94,7 @@ gimp_dither_algo_callback (GtkWidget *widget,
   for (i = 0; i < stp_dither_algorithm_count (); i ++)
     if (strcasecmp (new_algo, stp_dither_algorithm_text (i)) == 0)
       {
-        stp_set_dither_algorithm (*pv, stp_dither_algorithm_name (i));
+        stp_set_dither_algorithm (pv->v, stp_dither_algorithm_name (i));
         break;
       }
 }
@@ -113,7 +114,7 @@ gimp_build_dither_combo (void)
   gimp_plist_build_combo (dither_algo_combo,
 			  stp_dither_algorithm_count (),
 			  vec,
-			  stp_get_dither_algorithm (*pv),
+			  stp_get_dither_algorithm (pv->v),
 			  stp_default_dither_algorithm (),
 			  &gimp_dither_algo_callback,
 			  &dither_algo_callback_id);
@@ -188,6 +189,7 @@ gimp_create_color_adjust_window (void)
    */
 
   adjusted_thumbnail_data = g_malloc (3 * thumbnail_w * thumbnail_h);
+  preview_thumbnail_data = g_malloc (3 * thumbnail_w * thumbnail_h);
 
   gimp_color_adjust_dialog =
     gimp_dialog_new (_("Print Color Adjust"), "print",
@@ -426,9 +428,9 @@ static void
 gimp_brightness_update (GtkAdjustment *adjustment)
 {
   gimp_invalidate_preview_thumbnail ();
-  if (stp_get_brightness (*pv) != adjustment->value)
+  if (stp_get_brightness (pv->v) != adjustment->value)
     {
-      stp_set_brightness (*pv, adjustment->value);
+      stp_set_brightness (pv->v, adjustment->value);
       gimp_update_adjusted_thumbnail ();
     }
 }
@@ -438,9 +440,9 @@ gimp_contrast_update (GtkAdjustment *adjustment)
 {
   gimp_invalidate_preview_thumbnail ();
 
-  if (stp_get_contrast (*pv) != adjustment->value)
+  if (stp_get_contrast (pv->v) != adjustment->value)
     {
-      stp_set_contrast (*pv, adjustment->value);
+      stp_set_contrast (pv->v, adjustment->value);
       gimp_update_adjusted_thumbnail ();
     }
 }
@@ -450,9 +452,9 @@ gimp_cyan_update (GtkAdjustment *adjustment)
 {
   gimp_invalidate_preview_thumbnail ();
 
-  if (stp_get_cyan (*pv) != adjustment->value)
+  if (stp_get_cyan (pv->v) != adjustment->value)
     {
-      stp_set_cyan (*pv, adjustment->value);
+      stp_set_cyan (pv->v, adjustment->value);
       gimp_update_adjusted_thumbnail ();
     }
 }
@@ -462,9 +464,9 @@ gimp_magenta_update (GtkAdjustment *adjustment)
 {
   gimp_invalidate_preview_thumbnail ();
 
-  if (stp_get_magenta (*pv) != adjustment->value)
+  if (stp_get_magenta (pv->v) != adjustment->value)
     {
-      stp_set_magenta (*pv, adjustment->value);
+      stp_set_magenta (pv->v, adjustment->value);
       gimp_update_adjusted_thumbnail ();
     }
 }
@@ -474,9 +476,9 @@ gimp_yellow_update (GtkAdjustment *adjustment)
 {
   gimp_invalidate_preview_thumbnail ();
 
-  if (stp_get_yellow (*pv) != adjustment->value)
+  if (stp_get_yellow (pv->v) != adjustment->value)
     {
-      stp_set_yellow (*pv, adjustment->value);
+      stp_set_yellow (pv->v, adjustment->value);
       gimp_update_adjusted_thumbnail ();
     }
 }
@@ -486,9 +488,9 @@ gimp_saturation_update (GtkAdjustment *adjustment)
 {
   gimp_invalidate_preview_thumbnail ();
 
-  if (stp_get_saturation (*pv) != adjustment->value)
+  if (stp_get_saturation (pv->v) != adjustment->value)
     {
-      stp_set_saturation (*pv, adjustment->value);
+      stp_set_saturation (pv->v, adjustment->value);
       gimp_update_adjusted_thumbnail ();
     }
 }
@@ -496,9 +498,9 @@ gimp_saturation_update (GtkAdjustment *adjustment)
 static void
 gimp_density_update (GtkAdjustment *adjustment)
 {
-  if (stp_get_density (*pv) != adjustment->value)
+  if (stp_get_density (pv->v) != adjustment->value)
     {
-      stp_set_density (*pv, adjustment->value);
+      stp_set_density (pv->v, adjustment->value);
     }
 }
 
@@ -507,9 +509,9 @@ gimp_gamma_update (GtkAdjustment *adjustment)
 {
   gimp_invalidate_preview_thumbnail ();
 
-  if (stp_get_gamma (*pv) != adjustment->value)
+  if (stp_get_gamma (pv->v) != adjustment->value)
     {
-      stp_set_gamma (*pv, adjustment->value);
+      stp_set_gamma (pv->v, adjustment->value);
       gimp_update_adjusted_thumbnail ();
     }
 }
@@ -537,28 +539,28 @@ void
 gimp_do_color_updates (void)
 {
   gtk_adjustment_set_value (GTK_ADJUSTMENT (brightness_adjustment),
-			    stp_get_brightness (*pv));
+			    stp_get_brightness (pv->v));
 
   gtk_adjustment_set_value (GTK_ADJUSTMENT (gamma_adjustment),
-			    stp_get_gamma (*pv));
+			    stp_get_gamma (pv->v));
 
   gtk_adjustment_set_value (GTK_ADJUSTMENT (contrast_adjustment),
-			    stp_get_contrast (*pv));
+			    stp_get_contrast (pv->v));
 
   gtk_adjustment_set_value (GTK_ADJUSTMENT (cyan_adjustment),
-			    stp_get_cyan (*pv));
+			    stp_get_cyan (pv->v));
 
   gtk_adjustment_set_value (GTK_ADJUSTMENT (magenta_adjustment),
-			    stp_get_magenta (*pv));
+			    stp_get_magenta (pv->v));
 
   gtk_adjustment_set_value (GTK_ADJUSTMENT (yellow_adjustment),
-			    stp_get_yellow (*pv));
+			    stp_get_yellow (pv->v));
 
   gtk_adjustment_set_value (GTK_ADJUSTMENT (saturation_adjustment),
-			    stp_get_saturation (*pv));
+			    stp_get_saturation (pv->v));
 
   gtk_adjustment_set_value (GTK_ADJUSTMENT (density_adjustment),
-			    stp_get_density (*pv));
+			    stp_get_density (pv->v));
 
   gimp_update_adjusted_thumbnail ();
 }
@@ -568,14 +570,14 @@ gimp_set_color_defaults (void)
 {
   const stp_vars_t defvars = stp_default_settings ();
 
-  stp_set_brightness (*pv, stp_get_brightness (defvars));
-  stp_set_gamma (*pv, stp_get_gamma (defvars));
-  stp_set_contrast (*pv, stp_get_contrast (defvars));
-  stp_set_cyan (*pv, stp_get_cyan (defvars));
-  stp_set_magenta (*pv, stp_get_magenta (defvars));
-  stp_set_yellow (*pv, stp_get_yellow (defvars));
-  stp_set_saturation (*pv, stp_get_saturation (defvars));
-  stp_set_density (*pv, stp_get_density (defvars));
+  stp_set_brightness (pv->v, stp_get_brightness (defvars));
+  stp_set_gamma (pv->v, stp_get_gamma (defvars));
+  stp_set_contrast (pv->v, stp_get_contrast (defvars));
+  stp_set_cyan (pv->v, stp_get_cyan (defvars));
+  stp_set_magenta (pv->v, stp_get_magenta (defvars));
+  stp_set_yellow (pv->v, stp_get_yellow (defvars));
+  stp_set_saturation (pv->v, stp_get_saturation (defvars));
+  stp_set_density (pv->v, stp_get_density (defvars));
 
   gimp_do_color_updates ();
 }

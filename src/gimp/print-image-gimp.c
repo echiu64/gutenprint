@@ -94,14 +94,6 @@ static stp_image_status_t Image_get_row(stp_image_t *image,
 static int Image_height(stp_image_t *image);
 static int Image_width(stp_image_t *image);
 static int Image_bpp(stp_image_t *image);
-static void Image_rotate_180(stp_image_t *image);
-static void Image_rotate_cw(stp_image_t *image);
-static void Image_rotate_ccw(stp_image_t *image);
-static void Image_crop(stp_image_t *image,
-		       int left, int top, int right, int bottom);
-static void Image_vflip(stp_image_t *image);
-static void Image_hflip(stp_image_t *image);
-static void Image_transpose(stp_image_t *image);
 static void Image_reset(stp_image_t *image);
 static void Image_init(stp_image_t *image);
 
@@ -109,13 +101,6 @@ static stp_image_t theImage =
 {
   Image_init,
   Image_reset,
-  Image_transpose,
-  Image_hflip,
-  Image_vflip,
-  Image_crop,
-  Image_rotate_ccw,
-  Image_rotate_cw,
-  Image_rotate_180,
   Image_bpp,
   Image_width,
   Image_height,
@@ -158,7 +143,7 @@ Image_reset(stp_image_t *image)
   i->mirror = FALSE;
 }
 
-static void
+void
 Image_transpose(stp_image_t *image)
 {
   Gimp_Image_t *i = (Gimp_Image_t *) (image->rep);
@@ -183,14 +168,14 @@ Image_transpose(stp_image_t *image)
   if (i->mirror) i->ox -= i->w - 1;
 }
 
-static void
+void
 Image_hflip(stp_image_t *image)
 {
   Gimp_Image_t *i = (Gimp_Image_t *) (image->rep);
   i->mirror = !i->mirror;
 }
 
-static void
+void
 Image_vflip(stp_image_t *image)
 {
   Gimp_Image_t *i = (Gimp_Image_t *) (image->rep);
@@ -205,7 +190,7 @@ Image_vflip(stp_image_t *image)
  * of the image.
  */
 
-static void
+void
 Image_crop(stp_image_t *image, int left, int top, int right, int bottom)
 {
   Gimp_Image_t *i = (Gimp_Image_t *) (image->rep);
@@ -241,21 +226,21 @@ Image_crop(stp_image_t *image, int left, int top, int right, int bottom)
   i->h = nh;
 }
 
-static void
+void
 Image_rotate_ccw(stp_image_t *image)
 {
   Image_transpose(image);
   Image_vflip(image);
 }
 
-static void
+void
 Image_rotate_cw(stp_image_t *image)
 {
   Image_transpose(image);
   Image_hflip(image);
 }
 
-static void
+void
 Image_rotate_180(stp_image_t *image)
 {
   Image_vflip(image);

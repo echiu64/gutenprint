@@ -370,3 +370,4 @@ typedef struct escp2_printer
 } escp2_stp_printer_t;
 
 extern const escp2_stp_printer_t stp_escp2_model_capabilities[];
+extern const int stp_escp2_model_limit;

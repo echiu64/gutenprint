@@ -1,10 +1,10 @@
 /*
  * "$Id$"
  *
- *   I18N header file for the gimp-print plugin.
+ *   Print plug-in driver utility functions for the GIMP.
  *
- *   Copyright 1997-2000 Michael Sweet (mike@easysw.com),
- *	Robert Krawitz (rlk@alum.mit.edu) and Michael Natterer (mitch@gimp.org)
+ *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
+ *	Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -21,36 +21,27 @@
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#define OUTPUT_GRAY		0	/* Grayscale output */
-#define OUTPUT_COLOR		1	/* Color output */
-#define OUTPUT_GRAY_COLOR	2 	/* Grayscale output using color */
+#include <sys/types.h>
 
-#define ORIENT_AUTO		-1	/* Best orientation */
-#define ORIENT_PORTRAIT		0	/* Portrait orientation */
-#define ORIENT_LANDSCAPE	1	/* Landscape orientation */
-#define ORIENT_UPSIDEDOWN	2	/* Reverse portrait orientation */
-#define ORIENT_SEASCAPE		3	/* Reverse landscape orientation */
-
-#define IMAGE_LINE_ART		0
-#define IMAGE_SOLID_TONE	1
-#define IMAGE_CONTINUOUS	2
-#define IMAGE_MONOCHROME	3
-#define NIMAGE_TYPES		4
-
-#define COLOR_MODEL_RGB		0
-#define COLOR_MODEL_CMY		1
+typedef struct stp_internal_option
+{
+  char *name;
+  size_t length;
+  char *data;
+  struct stp_internal_option *next;
+  struct stp_internal_option *prev;
+} stp_internal_option_t;
 
 typedef struct					/* Plug-in variables */
 {
-  char	output_to[256],		/* Name of file or command to print to */
-	driver[64],		/* Name of printer "driver" */
-	ppd_file[256],		/* PPD file */
-	resolution[64],		/* Resolution */
-	media_size[64],		/* Media size */
-	media_type[64],		/* Media type */
-	media_source[64],	/* Media source */
-	ink_type[64],		/* Ink or cartridge */
-	dither_algorithm[64];	/* Dithering algorithm */
+  const char	*driver,		/* Name of printer "driver" */
+	*ppd_file,		/* PPD file */
+        *resolution,		/* Resolution */
+	*media_size,		/* Media size */
+	*media_type,		/* Media type */
+	*media_source,		/* Media source */
+	*ink_type,		/* Ink or cartridge */
+	*dither_algorithm;	/* Dithering algorithm */
   int	output_type;		/* Color or grayscale output */
   float	brightness;		/* Output brightness */
   int	left,			/* Offset from left-upper corner, points */
@@ -77,25 +68,6 @@ typedef struct					/* Plug-in variables */
   void *outdata;
   void (*errfunc)(void *data, const char *buffer, size_t bytes);
   void *errdata;
-} stp_vars_t;
-
-typedef struct stp_printer
-{
-  const char	*long_name,			/* Long name for UI */
-	*driver;			/* Short name for printrc file */
-  int	model;				/* Model number */
-  const char *printfuncs;
-  stp_vars_t printvars;
-} stp_printer_t;
-
-typedef union yylv {
-  int ival;
-  double dval;
-  char *sval;
-} YYSTYPE;
-
-extern YYSTYPE yylval;
-extern stp_printer_t thePrinter;
-
-#include "printdefy.h"
-
+  stp_internal_option_t *options;
+  int verified;			/* Ensure that params are OK! */
+} stp_internal_vars_t;

@@ -1898,8 +1898,8 @@ pcl_imageable_area(const stp_printer_t printer,	/* I - Printer model */
 
   *left   = caps->left_margin;
   *right  = width - caps->right_margin;
-  *top    = height - caps->top_margin;
-  *bottom = caps->bottom_margin;
+  *top    = caps->top_margin;
+  *bottom = height - caps->bottom_margin;
 }
 
 static void
@@ -1935,8 +1935,6 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   const char	*media_source = stp_get_media_source(v);
   const char	*ink_type = stp_get_ink_type(v);
   int 		output_type = stp_get_output_type(v);
-  int		orientation = stp_get_orientation(v);
-  double 	scaling = stp_get_scaling(v);
   int		top = stp_get_top(v);
   int		left = stp_get_left(v);
   int		y;		/* Looping vars */
@@ -1949,12 +1947,12 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
 		*yellow,	/* Yellow bitmap data */
 		*lcyan,		/* Light Cyan bitmap data */
 		*lmagenta;	/* Light Magenta bitmap data */
-  int		page_left,	/* Left margin of page */
-		page_right,	/* Right margin of page */
-		page_top,	/* Top of page */
-		page_bottom,	/* Bottom of page */
-		page_width,	/* Width of page */
+  int		page_width,	/* Width of page */
 		page_height,	/* Height of page */
+		page_left,
+		page_top,
+		page_right,
+		page_bottom,
 		out_width,	/* Width of image on page */
 		out_height,	/* Height of image on page */
 		out_bpp,	/* Output bytes per pixel */
@@ -2077,31 +2075,18 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   * Compute the output size...
   */
 
-  pcl_imageable_area(printer, nv, &page_left, &page_right,
-                     &page_bottom, &page_top);
-  stp_deprintf(STP_DBG_PCL,"Before stp_compute_page_parameters()\n");
-  stp_deprintf(STP_DBG_PCL,"page_left = %d, page_right = %d, page_top = %d, page_bottom = %d\n",
-    page_left, page_right, page_top, page_bottom);
-  stp_deprintf(STP_DBG_PCL,"top = %d, left = %d\n", top, left);
-  stp_deprintf(STP_DBG_PCL,"scaling = %f, image_width = %d, image_height = %d\n", scaling,
-    image_width, image_height);
+  out_width = stp_get_width(v);
+  out_height = stp_get_height(v);
 
-  stp_compute_page_parameters(page_right, page_left, page_top, page_bottom,
-			  scaling, image_width, image_height, image,
-			  &orientation, &page_width, &page_height,
-			  &out_width, &out_height, &left, &top);
+  pcl_imageable_area(printer, nv, &page_left, &page_right, &page_bottom,
+		     &page_top);
+  left -= page_left;
+  top -= page_top;
+  page_width = page_right - page_left;
+  page_height = page_bottom - page_top;
 
-  /*
-   * Recompute the image height and width.  If the image has been
-   * rotated, these will change from previously.
-   */
   image_height = image->height(image);
   image_width = image->width(image);
-
-  stp_deprintf(STP_DBG_PCL,"After stp_compute_page_parameters()\n");
-  stp_deprintf(STP_DBG_PCL,"page_width = %d, page_height = %d\n", page_width, page_height);
-  stp_deprintf(STP_DBG_PCL,"out_width = %d, out_height = %d\n", out_width, out_height);
-  stp_deprintf(STP_DBG_PCL,"top = %d, left = %d\n", top, left);
 
  /*
   * Let the user know what we're doing...
@@ -2479,7 +2464,8 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
       stp_dither_set_ink_spread(dither, 14);
       break;
     }
-  stp_dither_set_density(dither, stp_get_density(nv));
+  if (output_type != OUTPUT_RAW_PRINTER && output_type != OUTPUT_RAW_CMYK)
+    stp_dither_set_density(dither, stp_get_density(nv));
 
   in  = stp_malloc(image_width * image_bpp);
   out = stp_malloc(image_width * out_bpp * 2);

@@ -4274,3 +4274,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     &new_init_sequence, &je_deinit_sequence
   },
 };
+
+const int stp_escp2_model_limit =
+sizeof(stp_escp2_model_capabilities) / sizeof(escp2_stp_printer_t);
