@@ -1063,8 +1063,7 @@ fast_indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	}
       else
 	{
-	  if (vars->saturation != 1.0 ||
-	      (hue_map && vars->image_type == IMAGE_SOLID_TONE))
+	  if (vars->saturation != 1.0)
 	    {
 	      calc_rgb_to_hsl(rgb, &h, &s, &v);
 	      if (vars->saturation < 1)
@@ -1077,19 +1076,6 @@ fast_indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 		}
 	      if (s > 1)
 		s = 1.0;
-	      if (hue_map && vars->image_type == IMAGE_SOLID_TONE)
-		{
-		  int ih;
-		  double eh;
-		  h *= 4;
-		  ih = (int) h;
-		  eh = h - (double) ih;
-		  h = hue_map[ih] + eh * (hue_map[ih + 1] - hue_map[ih]);
-		  if (h < 0.0)
-		    h += 6.0;
-		  else if (h >= 6.0)
-		    h -= 6.0;
-		}
 	      calc_hsl_to_rgb(rgb, h, s, v);
 	    }
 	  if (vars->density != 1.0)
@@ -1187,8 +1173,7 @@ fast_rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	}
       else
 	{
-	  if (vars->saturation != 1.0 ||
-	      (hue_map && vars->image_type == IMAGE_SOLID_TONE))
+	  if (vars->saturation != 1.0)
 	    {
 	      calc_rgb_to_hsl(rgbout, &h, &s, &v);
 	      if (vars->saturation < 1)
@@ -1201,19 +1186,6 @@ fast_rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 		}
 	      if (s > 1)
 		s = 1.0;
-	      if (hue_map && vars->image_type == IMAGE_SOLID_TONE)
-		{
-		  int ih;
-		  double eh;
-		  h *= 4;
-		  ih = (int) h;
-		  eh = h - (double) ih;
-		  h = hue_map[ih] + eh * (hue_map[ih + 1] - hue_map[ih]);
-		  if (h < 0.0)
-		    h += 6.0;
-		  else if (h >= 6.0)
-		    h -= 6.0;
-		}
 	      calc_hsl_to_rgb(rgbout, h, s, v);
 	    }
 	  if (ld < 65536)

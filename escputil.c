@@ -438,6 +438,7 @@ do_ink_level(void)
   char buf[1024];
   char *ind;
   int i;
+  int retry;
   if (!raw_device)
     {
       fprintf(stderr, "Obtaining ink levels requires using a raw device.\n");
@@ -459,7 +460,13 @@ do_ink_level(void)
     }
   sleep(1);
   memset(buf, 0, 1024);
-  status = read(fd, buf, 1023);
+  retry = 5;
+  do
+    {
+      sleep(1);
+      status = read(fd, buf, 1023);
+    }
+  while ((status == 0) && (--retry != 0));
   if (status < 0)
     {
       fprintf(stderr, "Cannot read from %s: %s\n", raw_device,strerror(errno));
@@ -503,6 +510,7 @@ do_identify(void)
   int fd;
   int status;
   char buf[1024];
+  int retry;
   if (!raw_device)
     {
       fprintf(stderr, "Printer identification requires using a raw device.\n");
@@ -524,6 +532,13 @@ do_identify(void)
     }
   sleep(1);
   memset(buf, 0, 1024);
+  retry = 5;
+  do
+    {
+      sleep(1);
+      status = read(fd, buf, 1023);
+    }
+  while ((status == 0) && (--retry != 0));
   status = read(fd, buf, 1023);
   if (status < 0)
     {
@@ -651,6 +666,7 @@ do_align(void)
   int notfound = 1;
   printer_t *printer = &printer_list[0];
   char *printer_name = NULL;
+  int retry;
   if (!printer_model)
     {
       char buf[1024];
@@ -683,7 +699,13 @@ do_align(void)
 	}
       sleep(1);
       memset(buf, 0, 1024);
-      status = read(fd, buf, 1023);
+      retry = 5;
+      do
+	{
+	  sleep(1);
+	  status = read(fd, buf, 1023);
+	}
+      while ((status == 0) && (--retry != 0));
       if (status < 0)
 	{
 	  fprintf(stderr, "\nCannot read from %s: %s\n", raw_device,

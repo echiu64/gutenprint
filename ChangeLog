@@ -1,3 +1,92 @@
+2000-11-26	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.273) (+307 -101)
+		print-pcl.c (1.98) (+2 -2)
+		print-lexmark.c (1.7) (+2 -2)
+	
+	Tweak the hue map a bit more
+	
+	Add support for 1440 dpi vertical resolution to Epson driver (in
+	case anyone wants to experiment with this).
+	
+2000-11-26	<rlk@sourceforge.net>
+
+	Files:	cups/Makefile.in (1.21) (+4 -4)
+		cups/README.txt (1.8) (+1 -1)
+	
+	Rename calibrate to cups-calibrate.
+	
+2000-11-25	<rlk@sourceforge.net>
+
+	Files:	print-color.c (1.2) (+3 -6)
+		Ghost/README (1.56) (+2 -2)
+		printers.xml (1.37) (+66 -0)
+		print-pcl.c (1.97) (+36 -12)
+		print-lexmark.c (1.6) (+36 -12)
+		print-escp2.c (1.272) (+65 -27)
+		print-dither.c (1.98) (+11 -2)
+	
+	Increase the resolution of the hue mapper
+	
+	Tweak Epson printers
+	
+	Fix transition issues in dither code
+	
+2000-11-23	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.271) (+11 -11)
+	
+	Tweak the hue adjustments.
+	
+2000-11-21	<rlk@sourceforge.net>
+
+	Files:	FAQ.html (1.2) (+58 -36)
+	
+	Updates
+	
+2000-11-21	<rlk@sourceforge.net>
+
+	Files:	Ghost/README (1.55) (+119 -30)
+	
+	Improved documentation
+	
+2000-11-21	<ttonino@sourceforge.net>
+
+	Files:	FAQ.html (1.1) ( )
+	
+	First attempt at a FAQ.
+	
+2000-11-21	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.97) (+14 -5)
+	
+	Make dither_set_black_levels do something useful.
+	
+2000-11-20	<rlk@sourceforge.net>
+
+	Files:	print-pcl.c (1.96) (+32 -2)
+	
+	Try to address purple problem here, too.
+	
+2000-11-19	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.270) (+34 -36)
+	
+	Minor code cleanup
+	
+2000-11-19	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.58) (+93 -0)
+		print-lexmark.c (1.5) (+31 -4)
+	
+	Color correction
+	
+2000-11-19	<rlk@sourceforge.net>
+
+	Files:	print-lexmark.c (1.4) (+19 -15)
+	
+	Cleanup
+	
 2000-11-19	<rlk@sourceforge.net>
 
 	Files:	print-canon.c (1.96) (+2 -93)
