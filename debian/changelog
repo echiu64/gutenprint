@@ -1,3 +1,9 @@
+gimp-print (5.0.0-alpha2-1) unstable; urgency=low
+
+  * New upstream alpha release.
+
+ -- Roger Leigh <rleigh@debian.org>  Thu,  8 Apr 2004 20:08:11 +0100
+
 gimp-print (5.0.0-alpha1-2) unstable; urgency=low
 
   * Synchronise packaging changes from Debian 4.2.6-4 packaging:
