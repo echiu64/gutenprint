@@ -47,7 +47,11 @@ pkginclude_HEADERS = \
 
 ## Rules
 
-typebuiltins.h: $(stpui_public_h_sources) Makefile
+if MAINTAINER_MODE
+typebuiltins_extra_deps = Makefile
+endif
+
+typebuiltins.h: $(stpui_public_h_sources) $(typebuiltins_extra_deps)
 	( cd $(srcdir) && $(GLIB_MKENUMS) \
 			--fhead "#ifndef STPUI_TYPE_BUILTINS_H\n#define STPUI_TYPE_BUILTINS_H\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
 			--fprod "/* enumerations from \"@filename@\" */\n" \

@@ -80,8 +80,12 @@ stpui_public_h_sources = \
 	$(top_srcdir)/include/gimp-print-ui2/curve.h		\
 	$(top_srcdir)/include/gimp-print-ui2/gammacurve.h
 
+if MAINTAINER_MODE
+typebuiltins_extra_deps = Makefile
+endif
+
 # Really need to depend upon $(stpui_public_h_sources) here...
-typebuiltins.c: Makefile
+typebuiltins.c: $(typebuiltins_extra_deps)
 	( cd $(srcdir) && $(GLIB_MKENUMS) \
 			--fhead "#include <gimp-print-ui2/gimp-print-ui.h>" \
 			--fprod "\n/* enumerations from \"@filename@\" */" \
