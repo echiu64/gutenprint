@@ -180,7 +180,7 @@ query (void)
   gimp_install_procedure ("file_print_gimp",
 			  blurb, help, auth, copy,
 			  PLUG_IN_VERSION,
-			  N_("<Image>/File/Print (Gimp)..."),
+			  N_("<Image>/File/Print..."),
 			  types,
 			  PROC_PLUG_IN,
 			  nargs, 0,
