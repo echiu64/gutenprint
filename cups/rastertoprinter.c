@@ -86,18 +86,8 @@ main(int  argc,				/* I - Number of command-line arguments */
   vars_t		v;		/* Printer driver variables */
   const papersize_t	*size;		/* Paper size */
   char			*buffer;	/* Overflow buffer */
-  static char		*qualities[] =	/* Quality strings for resolution */
-			{
-			  "",
-			  " Softweave",
-			  " Microweave",
-			  " High Quality",
-			  " Highest Quality",
-			  " Emulated",
-			  " DMT",
-			  " monochrome"
-			};
-
+  int		num_opts;		/* Number of printer options */
+  char		**opts;			/* Printer options */
 
  /*
   * Check for valid arguments...
@@ -274,31 +264,28 @@ main(int  argc,				/* I - Number of command-line arguments */
     else
       fprintf(stderr, "ERROR: Unable to get media size!\n");
 
-   /*
-    * The resolution variable needs a big overhaul...
-    */
-
-    if (strncmp(printer->driver, "bjc", 3) == 0 ||
-        strncmp(printer->driver, "pcl", 3) == 0)
-      sprintf(v.resolution, "%dx%d DPI%s",
-	      cups.header.HWResolution[0],
-	      cups.header.HWResolution[1],
-	      qualities[cups.header.cupsCompression]);
-    else if (cups.header.HWResolution[0] == cups.header.HWResolution[1])
-      sprintf(v.resolution, "%d DPI%s",
-	      cups.header.HWResolution[0],
-	      qualities[cups.header.cupsCompression]);
+    opts = (*(printer->parameters))(printer, NULL, "Resolution", &num_opts);
+    if (cups.header.cupsCompression < 0 ||
+	cups.header.cupsCompression >= num_opts)
+      fprintf(stderr, "ERROR: Unable to set printer resolution!\n");
     else
-      sprintf(v.resolution, "%d x %d DPI%s",
-	      cups.header.HWResolution[0],
-	      cups.header.HWResolution[1],
-	      qualities[cups.header.cupsCompression]);
+      strncpy(v.resolution, opts[cups.header.cupsCompression],
+	      sizeof(v.resolution) - 1);
 
    /*
     * Print the page...
     */
 
     merge_printvars(&v, &(printer->printvars));
+    fprintf(stderr, "DEBUG: v.output_to |%s|\n", v.output_to);
+    fprintf(stderr, "DEBUG: v.driver |%s|\n", v.driver);
+    fprintf(stderr, "DEBUG: v.ppd_file |%s|\n", v.ppd_file);
+    fprintf(stderr, "DEBUG: v.resolution |%s|\n", v.resolution);
+    fprintf(stderr, "DEBUG: v.media_size |%s|\n", v.media_size);
+    fprintf(stderr, "DEBUG: v.media_type |%s|\n", v.media_type);
+    fprintf(stderr, "DEBUG: v.media_source |%s|\n", v.media_source);
+    fprintf(stderr, "DEBUG: v.ink_type |%s|\n", v.ink_type);
+    fprintf(stderr, "DEBUG: v.dither_algorithm |%s|\n", v.dither_algorithm);
     if (verify_printer_params(printer, &v))
       (*printer->print)(printer, 1, stdout, &cups, &v);
     else

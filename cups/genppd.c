@@ -222,7 +222,6 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
   gzFile	fp;			/* File to write to */
   char		filename[1024];		/* Filename */
   char		manufacturer[64];	/* Manufacturer name */
-  char		quality[64];		/* Quality string */
   msize_t	*size;			/* Page size */
   int		num_opts;		/* Number of printer options */
   char		**opts;			/* Printer options */
@@ -232,38 +231,7 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
   int		width, length,		/* Page information */
 		bottom, left,
 		top, right;
-  static char	*qualities[] =		/* Quality strings for resolution */
-		{
-		  "",
-		  "Softweave",
-		  "Microweave",
-		  "High",
-		  "Highest",
-		  "Emulated",
-		  "DMT",
-		  "monochrome"
-		};
-  static char	*qnames[] =		/* Quality names for resolution */
-		{
-		  "dpi",
-		  "fast",
-		  "slow",
-		  "hq",
-		  "hq2",
-		  "emul",
-		  "dmt",
-		  "mono"
-		};
-  static char	*dithers[][2] =
-		{
-		  { "Fast", "Fast" },
-		  { "VeryFast", "Very Fast" },
-		  { "Ordered", "Ordered" },
-		  { "AdaptHybrid", "Adaptive Hybrid" },
-		  { "AdaptRandom", "Adaptive Random" },
-		  { "FloydHybrid", "Hybrid Floyd-Steinberg" },
-		  { "FloydRandom", "Random Floyd-Steinberg" }
-		};
+  int		printed_default_resolution = 0;
 
 
  /*
@@ -443,7 +411,10 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
       gzprintf(fp, "*PaperDimension w%dh%d", width, length);
 
     gzprintf(fp, "/%s:\t\"%d %d\"\n", opts[i], width, length);
+    free(opts[i]);
   }
+  if (opts)
+    free(opts);
 
  /*
   * Do we support color?
@@ -512,7 +483,10 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
 	  gzputc(fp, *opt);
 
       gzprintf(fp, "/%s:\t\"<</MediaType(%s)>>setpagedevice\"\n", opts[i], opts[i]);
+      free(opts[i]);
     }
+    if (opts)
+      free(opts);
 
     gzputs(fp, "*CloseUI: *MediaType\n");
   }
@@ -542,8 +516,11 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
 	  gzputc(fp, *opt);
 
       gzprintf(fp, "/%s:\t\"<</MediaClass(%s)>>setpagedevice\"\n", opts[i], opts[i]);
+      free(opts[i]);
     }
 
+    if (opts)
+      free(opts);
     gzputs(fp, "*CloseUI: *InputSlot\n");
   }
 
@@ -553,11 +530,25 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
 
   gzputs(fp, "*OpenUI *Dither: PickOne\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *Dither\n");
-  gzprintf(fp, "*DefaultDither: %s\n", dithers[0][0]);
 
-  for (i = 0; i < (sizeof(dithers) / sizeof(dithers[0])); i ++)
+  for (i = 0; i < num_dither_algos; i ++)
+  {
+    char *s;
+    char *copy = malloc(strlen(dither_algo_names[i] + 1));
+    char *d = copy;
+    s = dither_algo_names[i];
+    do
+    {
+      if (*s != ' ' && *s != '\t' && *s != '-')
+	*d++ = *s;
+    } while (*s++);
+
+    if (i == 0)
+      gzprintf(fp, "*DefaultDither: %s\n", copy);
     gzprintf(fp, "*Dither %s/%s: \"<</OutputType(%s)>>setpagedevice\"\n",
-             dithers[i][0], dithers[i][1], dithers[i][1]);
+             copy, dither_algo_names[i], dither_algo_names[i]);
+    free(copy);
+  }
 
   gzputs(fp, "*CloseUI: *Dither\n");
 
@@ -572,47 +563,41 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
 
   for (i = 0; i < num_opts; i ++)
   {
+    char *s;
+    char *copy = malloc(strlen(opts[i] + 1));
+    char *d = copy;
    /* 
     * Strip resolution name to its essentials...
     */
+    (p->describe_resolution)(p, opts[i], &xdpi, &ydpi);
 
-    quality[0] = '\0';
-    if (sscanf(opts[i], "%d x %d%*s%s", &xdpi, &ydpi, quality) == 1)
-      if (sscanf(opts[i], "%dx%d%*s%s", &xdpi, &ydpi, quality) == 1)
-      {
-	sscanf(opts[i], "%d%*s%s", &xdpi, quality);
-	ydpi = xdpi;
-      }
-
-   /*
-    * Figure out the quality index...
-    */
-
-    for (j = 0; j < (sizeof(qualities) / sizeof(qualities[0])); j ++)
-      if (strcasecmp(quality, qualities[j]) == 0)
-        break;
-
-    if (j >= (sizeof(qualities) / sizeof(qualities[0])))
-      j = 0;
+    /* This should not happen! */
+    if (xdpi == -1 || ydpi == -1)
+      continue;
+    s = opts[i];
+    do
+    {
+      if (*s != ' ' && *s != '\t' && *s != '-')
+	*d++ = *s;
+    } while (*s++);
 
    /*
     * Write the resolution option...
     */
 
-    if (i == 0)
+    if (printed_default_resolution == 0)
     {
-      gzprintf(fp, "*DefaultResolution: %d", xdpi);
-      if (xdpi != ydpi)
-	gzprintf(fp, "x%d", ydpi);
-      gzprintf(fp, "%s\n", qnames[j]);
+      gzprintf(fp, "*DefaultResolution: %s\n", copy);
+      printed_default_resolution = 1;
     }
 
-    gzprintf(fp, "*Resolution %d", xdpi);
-    if (xdpi != ydpi)
-      gzprintf(fp, "x%d", ydpi);
-    gzprintf(fp, "%s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
-             qnames[j], opts[i], xdpi, ydpi, j);
+    gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
+             copy, opts[i], xdpi, ydpi, i);
+    free(copy);
+    free(opts[i]);
   }
+  if (opts)
+    free(opts);
   gzputs(fp, "*CloseUI: *Resolution\n");
 
   gzputs(fp, "*DefaultFont: Courier\n");
