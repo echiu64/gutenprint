@@ -151,7 +151,7 @@ typedef struct dither_channel
   int subchannels;
 
   dither_segment_t *ranges;
-  int *errs[ERROR_ROWS];
+  int **errs;
   unsigned short *vals;
 
   dither_matrix_t pick;
@@ -197,12 +197,14 @@ typedef struct dither
   int oversampling;
   int last_line_was_empty;
   int ptr_offset;
+  int n_channels;
+  int error_rows;
 
   int dither_class;		/* mono, black, or CMYK */
 
   dither_matrix_t dither_matrix;
   dither_matrix_t transition_matrix;
-  dither_channel_t channel[NCOLORS];
+  dither_channel_t *channel;
 
   unsigned short virtual_dot_scale[65536];
   void (*ditherfunc)(const unsigned short *, int, void *, int, int);
@@ -532,7 +534,7 @@ static void
 reverse_row_ends(dither_t *d)
 {
   int i, j;
-  for (i = 0; i < NCOLORS; i++)
+  for (i = 0; i < d->n_channels; i++)
     for (j = 0; j < 2; j++)
       {
 	int tmp = CHANNEL(d, i).row_ends[0][j];
@@ -541,6 +543,56 @@ reverse_row_ends(dither_t *d)
 	CHANNEL(d, i).row_ends[1][j] = tmp;
       }
 }
+
+stp_dither_data_t *
+stp_create_dither_data(void)
+{
+  stp_dither_data_t *ret = stp_malloc(sizeof(stp_dither_data_t));
+  ret->channel_count = 0;
+  ret->c = NULL;
+  return ret;
+}
+
+void
+stp_add_channel(stp_dither_data_t *d, unsigned char *data,
+		unsigned channel, unsigned subchannel)
+{
+  stp_channel_t *chan;
+  if (channel >= d->channel_count)
+    {
+      unsigned oc = d->channel_count;
+      d->c = stp_realloc(d->c, sizeof(stp_channel_t) * (channel + 1));
+      (void) memset(d->c + oc, 0, sizeof(stp_channel_t) * (channel + 1 - oc));
+      d->channel_count = channel + 1;
+    }
+  chan = d->c + channel;
+  if (subchannel >= chan->subchannel_count)
+    {
+      unsigned oc = chan->subchannel_count;
+      chan->c =
+	stp_realloc(chan->c, sizeof(unsigned char *) * (subchannel + 1));
+      (void) memset(chan->c + oc, 0,
+		    sizeof(unsigned char *) * (subchannel + 1 - oc));
+      chan->subchannel_count = subchannel + 1;
+    }
+  chan->c[subchannel] = data;
+}
+
+void
+stp_free_dither_data(stp_dither_data_t *d)
+{
+  int i;
+  for (i = 0; i < d->channel_count; i++)
+    stp_free(d->c[i].c);
+  stp_free(d->c);
+}
+
+#define SET_DITHERFUNC(d, func, v)				\
+do								\
+{								\
+  stp_dprintf(STP_DBG_COLORFUNC, v, "ditherfunc %s\n", #func);	\
+  d->ditherfunc = func;						\
+} while (0)
 
 void *
 stp_init_dither(int in_width, int out_width, int horizontal_aspect,
@@ -551,18 +603,10 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
   stp_simple_dither_range_t r;
   memset(d, 0, sizeof(dither_t));
   d->v = v;
-  r.value = 1.0;
-  r.bit_pattern = 1;
-  r.subchannel = 0;
-  r.dot_size = 1;
-  for (i = 0; i < NCOLORS; i++)
-    stp_dither_set_ranges(d, i, 1, &r, 1.0);
-  d->offset0_table = NULL;
-  d->offset1_table = NULL;
-  d->x_aspect = horizontal_aspect;
-  d->y_aspect = vertical_aspect;
+  d->dither_class = stp_get_output_type(v);
+  d->error_rows = ERROR_ROWS;
 
-  d->dither_type = D_FLOYD_HYBRID;
+  d->dither_type = D_ADAPTIVE_HYBRID;
   for (i = 0; i < num_dither_algos; i++)
     {
       if (!strcmp(stp_get_dither_algorithm(v), _(dither_algos[i].name)))
@@ -571,6 +615,55 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
 	  break;
 	}
     }
+  switch (d->dither_class)
+    {
+    case OUTPUT_MONOCHROME:
+      d->n_channels = 1;
+      SET_DITHERFUNC(d, stp_dither_monochrome, v);
+      break;
+    case OUTPUT_GRAY:
+      d->n_channels = 1;
+      if (d->dither_type & D_FAST_BASE)
+	SET_DITHERFUNC(d, stp_dither_black_fast, v);
+      else if (d->dither_type & D_ORDERED_BASE)
+	SET_DITHERFUNC(d, stp_dither_black_ordered, v);
+      else
+	SET_DITHERFUNC(d, stp_dither_black_ed, v);
+      break;
+    case OUTPUT_COLOR:
+      d->n_channels = 4;
+      if (d->dither_type & D_FAST_BASE)
+	SET_DITHERFUNC(d, stp_dither_cmyk_fast, v);
+      else if (d->dither_type & D_ORDERED_BASE)
+	SET_DITHERFUNC(d, stp_dither_cmyk_ordered, v);
+      else
+	SET_DITHERFUNC(d, stp_dither_cmyk_ed, v);
+      break;
+    case OUTPUT_RAW_CMYK:
+      d->n_channels = 4;
+      if (d->dither_type & D_FAST_BASE)
+	SET_DITHERFUNC(d, stp_dither_raw_cmyk_fast, v);
+      else if (d->dither_type & D_ORDERED_BASE)
+	SET_DITHERFUNC(d, stp_dither_raw_cmyk_ordered, v);
+      else
+	SET_DITHERFUNC(d, stp_dither_raw_cmyk_ed, v);
+      break;
+    }
+  d->channel = stp_malloc(d->n_channels * sizeof(dither_channel_t));
+  memset(d->channel, 0, d->n_channels * sizeof(dither_channel_t));
+  r.value = 1.0;
+  r.bit_pattern = 1;
+  r.subchannel = 0;
+  r.dot_size = 1;
+  for (i = 0; i < d->n_channels; i++)
+    {
+      stp_dither_set_ranges(d, i, 1, &r, 1.0);
+      CHANNEL(d, i).errs = stp_malloc(d->error_rows * sizeof(int *));
+    }
+  d->offset0_table = NULL;
+  d->offset1_table = NULL;
+  d->x_aspect = horizontal_aspect;
+  d->y_aspect = vertical_aspect;
   d->transition = 1.0;
   d->adaptive_input = .75;
 
@@ -615,7 +708,7 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
   stp_dither_set_ink_spread(d, 13);
   stp_dither_set_black_lower(d, .4);
   stp_dither_set_black_upper(d, .7);
-  for (i = 0; i <= NCOLORS; i++)
+  for (i = 0; i <= d->n_channels; i++)
     {
       stp_dither_set_black_level(d, i, 1.0);
       stp_dither_set_randomizer(d, i, 1.0);
@@ -624,37 +717,6 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
   stp_dither_set_ink_darkness(d, ECOLOR_M, 2);
   stp_dither_set_ink_darkness(d, ECOLOR_Y, 1);
   stp_dither_set_density(d, 1.0);
-  d->dither_class = stp_get_output_type(v);
-  switch (d->dither_class)
-    {
-    case OUTPUT_MONOCHROME:
-      d->ditherfunc = stp_dither_monochrome;
-      break;
-    case OUTPUT_GRAY:
-      if (d->dither_type & D_FAST_BASE)
-	d->ditherfunc = stp_dither_black_fast;
-      else if (d->dither_type & D_ORDERED_BASE)
-	d->ditherfunc = stp_dither_black_ordered;
-      else
-	d->ditherfunc = stp_dither_black_ed;
-      break;
-    case OUTPUT_COLOR:
-      if (d->dither_type & D_FAST_BASE)
-	d->ditherfunc = stp_dither_cmyk_fast;
-      else if (d->dither_type & D_ORDERED_BASE)
-	d->ditherfunc = stp_dither_cmyk_ordered;
-      else
-	d->ditherfunc = stp_dither_cmyk_ed;
-      break;
-    case OUTPUT_RAW_CMYK:
-      if (d->dither_type & D_FAST_BASE)
-	d->ditherfunc = stp_dither_raw_cmyk_fast;
-      else if (d->dither_type & D_ORDERED_BASE)
-	d->ditherfunc = stp_dither_raw_cmyk_ordered;
-      else
-	d->ditherfunc = stp_dither_raw_cmyk_ed;
-      break;
-    }
   return d;
 }
 
@@ -662,7 +724,7 @@ static void
 preinit_matrix(dither_t *d)
 {
   int i;
-  for (i = 0; i < NCOLORS; i++)
+  for (i = 0; i < d->n_channels; i++)
     destroy_matrix(&(CHANNEL(d, i).dithermat));
   destroy_matrix(&(d->dither_matrix));
 }
@@ -670,17 +732,21 @@ preinit_matrix(dither_t *d)
 static void
 postinit_matrix(dither_t *d, int x_shear, int y_shear)
 {
-  unsigned x_3, y_3;
+  unsigned rc = (unsigned) ceil(sqrt(d->n_channels));
+  int i, j;
+  int color = 0;
+  unsigned x_n = d->dither_matrix.x_size / rc;
+  unsigned y_n = d->dither_matrix.y_size / rc;
   if (x_shear || y_shear)
     shear_matrix(&(d->dither_matrix), x_shear, y_shear);
-  x_3 = d->dither_matrix.x_size / 3;
-  y_3 = d->dither_matrix.y_size / 3;
-  clone_matrix(&(d->dither_matrix), &(CHANNEL(d, ECOLOR_C).dithermat),
-	       2 * x_3, y_3);
-  clone_matrix(&(d->dither_matrix), &(CHANNEL(d, ECOLOR_M).dithermat),
-	       x_3, 2 * y_3);
-  clone_matrix(&(d->dither_matrix), &(CHANNEL(d, ECOLOR_Y).dithermat), 0, y_3);
-  clone_matrix(&(d->dither_matrix), &(CHANNEL(d, ECOLOR_K).dithermat), 0, 0);
+  for (i = 0; i < rc; i++)
+    for (j = 0; j < rc; j++)
+      if (color < d->n_channels)
+	{
+	  clone_matrix(&(d->dither_matrix), &(CHANNEL(d, color).dithermat),
+		       x_n * i, y_n * j);
+	  color++;
+	}
   stp_dither_set_transition(d, d->transition);
 }
 
@@ -716,23 +782,27 @@ stp_dither_set_matrix(void *vd, const stp_dither_matrix_t *matrix,
 void
 stp_dither_set_transition(void *vd, double exponent)
 {
-  int i;
   dither_t *d = (dither_t *) vd;
-  int x_3 = d->dither_matrix.x_size / 3;
-  int y_3 = d->dither_matrix.y_size / 3;
-  for (i = 0; i < NCOLORS; i++)
+  unsigned rc = (unsigned) ceil(sqrt(d->n_channels));
+  int i, j;
+  int color = 0;
+  unsigned x_n = d->dither_matrix.x_size / rc;
+  unsigned y_n = d->dither_matrix.y_size / rc;
+  for (i = 0; i < d->n_channels; i++)
     destroy_matrix(&(CHANNEL(d, i).pick));
   destroy_matrix(&(d->transition_matrix));
   copy_matrix(&(d->dither_matrix), &(d->transition_matrix));
   d->transition = exponent;
   if (exponent < .999 || exponent > 1.001)
     exponential_scale_matrix(&(d->transition_matrix), exponent);
-  clone_matrix(&(d->transition_matrix), &(CHANNEL(d, ECOLOR_C).pick),
-	       2 * x_3, y_3);
-  clone_matrix(&(d->transition_matrix), &(CHANNEL(d, ECOLOR_M).pick),
-	       x_3, 2 * y_3);
-  clone_matrix(&(d->transition_matrix), &(CHANNEL(d, ECOLOR_Y).pick), 0, y_3);
-  clone_matrix(&(d->transition_matrix), &(CHANNEL(d, ECOLOR_K).pick), 0, 0);
+  for (i = 0; i < rc; i++)
+    for (j = 0; j < rc; j++)
+      if (color < d->n_channels)
+	{
+	  clone_matrix(&(d->dither_matrix), &(CHANNEL(d, color).pick),
+		       x_n * i, y_n * j);
+	  color++;
+	}
   if (exponent < .999 || exponent > 1.001)
     for (i = 0; i < 65536; i++)
       {
@@ -838,7 +908,7 @@ void
 stp_dither_set_black_level(void *vd, int i, double v)
 {
   dither_t *d = (dither_t *) vd;
-  if (i < 0 || i >= NCOLORS)
+  if (i < 0 || i >= d->n_channels)
     return;
   CHANNEL(d, i).k_level = (int) v * 64;
 }
@@ -847,7 +917,7 @@ void
 stp_dither_set_randomizer(void *vd, int i, double v)
 {
   dither_t *d = (dither_t *) vd;
-  if (i < 0 || i >= NCOLORS)
+  if (i < 0 || i >= d->n_channels)
     return;
   CHANNEL(d, i).randomizer = v * 65535;
 }
@@ -856,7 +926,7 @@ void
 stp_dither_set_ink_darkness(void *vd, int i, double v)
 {
   dither_t *d = (dither_t *) vd;
-  if (i < 0 || i >= NCOLORS)
+  if (i < 0 || i >= d->n_channels)
     return;
   CHANNEL(d, i).darkness = (int) (v * 64);
 }
@@ -864,8 +934,9 @@ stp_dither_set_ink_darkness(void *vd, int i, double v)
 void
 stp_dither_set_light_ink(void *vd, int i, double v, double density)
 {
+  dither_t *d = (dither_t *) vd;
   stp_simple_dither_range_t range[2];
-  if (i < 0 || i >= NCOLORS || v <= 0 || v > 1)
+  if (i < 0 || i >= d->n_channels || v <= 0 || v > 1)
     return;
   range[0].bit_pattern = 0;
   range[0].subchannel = 1;
@@ -923,8 +994,6 @@ stp_dither_finalize_ranges(dither_t *d, dither_channel_t *s)
   if (s->nlevels == 1 && s->ranges[0].bits[1] == 1 && s->ranges[0].subchannel[1])
     s->very_fast = 1;
   s->subchannels = max_subchannel + 1;
-  if (s->subchannels < 2)
-    s->subchannels = 2;
   s->row_ends[0] = stp_malloc(s->subchannels * sizeof(int));
   s->row_ends[1] = stp_malloc(s->subchannels * sizeof(int));
   s->ptrs = stp_malloc(s->subchannels * sizeof(char *));
@@ -1095,7 +1164,7 @@ stp_dither_set_ranges(void *vd, int color, int nlevels,
 		      const stp_simple_dither_range_t *ranges, double density)
 {
   dither_t *d = (dither_t *) vd;
-  if (color < 0 || color >= NCOLORS)
+  if (color < 0 || color >= d->n_channels)
     return;
   stp_dither_set_generic_ranges(d, &(CHANNEL(d, color)), nlevels,
 				ranges, density);
@@ -1135,7 +1204,7 @@ stp_free_dither(void *vd)
   dither_t *d = (dither_t *) vd;
   int i;
   int j;
-  for (j = 0; j < NCOLORS; j++)
+  for (j = 0; j < d->n_channels; j++)
     {
       if (CHANNEL(d, j).vals)
 	{
@@ -1157,18 +1226,23 @@ stp_free_dither(void *vd)
 	  stp_free(CHANNEL(d, j).ptrs);
 	  CHANNEL(d, j).ptrs = NULL;
 	}
-      for (i = 0; i < ERROR_ROWS; i++)
+      if (CHANNEL(d, j).errs)
 	{
-	  if (CHANNEL(d, j).errs[i])
+	  for (i = 0; i < d->error_rows; i++)
 	    {
-	      stp_free(CHANNEL(d, j).errs[i]);
-	      CHANNEL(d, j).errs[i] = NULL;
+	      if (CHANNEL(d, j).errs[i])
+		{
+		  stp_free(CHANNEL(d, j).errs[i]);
+		  CHANNEL(d, j).errs[i] = NULL;
+		}
 	    }
+	  stp_free(CHANNEL(d, j).errs);
+	  CHANNEL(d, j).errs = NULL;
 	}
-      stp_free(CHANNEL(d, i).ranges);
-      CHANNEL(d, i).ranges = NULL;
-      destroy_matrix(&(CHANNEL(d, i).pick));
-      destroy_matrix(&(CHANNEL(d, i).dithermat));
+      stp_free(CHANNEL(d, j).ranges);
+      CHANNEL(d, j).ranges = NULL;
+      destroy_matrix(&(CHANNEL(d, j).pick));
+      destroy_matrix(&(CHANNEL(d, j).dithermat));
     }
   if (d->offset0_table)
     {
@@ -1189,7 +1263,7 @@ int
 stp_dither_get_first_position(void *vd, int color, int subchannel)
 {
   dither_t *d = (dither_t *) vd;
-  if (color < 0 || color >= NCOLORS)
+  if (color < 0 || color >= d->n_channels)
     return -1;
   return CHANNEL(d, color).row_ends[0][subchannel];
 }
@@ -1198,7 +1272,7 @@ int
 stp_dither_get_last_position(void *vd, int color, int subchannel)
 {
   dither_t *d = (dither_t *) vd;
-  if (color < 0 || color >= NCOLORS)
+  if (color < 0 || color >= d->n_channels)
     return -1;
   return CHANNEL(d, color).row_ends[0][subchannel];
 }
@@ -1206,7 +1280,7 @@ stp_dither_get_last_position(void *vd, int color, int subchannel)
 static int *
 get_errline(dither_t *d, int row, int color)
 {
-  if (row < 0 || color < 0 || color >= NCOLORS)
+  if (row < 0 || color < 0 || color >= d->n_channels)
     return NULL;
   if (CHANNEL(d, color).errs[row & 1])
     return CHANNEL(d, color).errs[row & 1] + MAX_SPREAD;
@@ -1222,7 +1296,7 @@ get_errline(dither_t *d, int row, int color)
 static unsigned short *
 get_valueline(dither_t *d, int color)
 {
-  if (color < 0 || color >= NCOLORS)
+  if (color < 0 || color >= d->n_channels)
     return NULL;
   if (CHANNEL(d, color).vals)
     return CHANNEL(d, color).vals;
@@ -1381,7 +1455,7 @@ compute_black(const dither_t *d)
 {
   int answer = INT_MAX;
   int i;
-  for (i = 1; i < NCOLORS; i++)
+  for (i = 1; i < d->n_channels; i++)
     answer = USMIN(answer, CHANNEL(d, i).v);
   return answer;
 }
@@ -1832,7 +1906,7 @@ update_cmyk(dither_t *d)
    * lowerbound and density:
    */
 
-  for (i = 1; i < NCOLORS; i++)
+  for (i = 1; i < d->n_channels; i++)
     kdarkness += CHANNEL(d, i).o * CHANNEL(d, i).darkness / 64;
   kdarkness -= d->density2;
 
@@ -1899,7 +1973,7 @@ update_cmyk(dither_t *d)
       else
 	ok = (unsigned) k * (unsigned) ak / density;
 
-      for (i = 1; i < NCOLORS; i++)
+      for (i = 1; i < d->n_channels; i++)
 	{
 	  if (CHANNEL(d, i).k_level == 64)
 	    CHANNEL(d, i).v -= ok;
@@ -1910,7 +1984,7 @@ update_cmyk(dither_t *d)
 	}
     }
   else
-    for (i = 1; i < NCOLORS; i++)
+    for (i = 1; i < d->n_channels; i++)
       CHANNEL(d, i).v = CHANNEL(d, i).o;
   CHANNEL(d, ECOLOR_K).b = bk;
   CHANNEL(d, ECOLOR_K).v = k;
@@ -2055,11 +2129,11 @@ stp_dither_black_ed(const unsigned short   *gray,
 		    int		duplicate_line,
 		    int		  zero_mask)
 {
-
+  int i, j;
   int		x,
 		length;
   unsigned char	bit;
-  int		*error[1][ERROR_ROWS];
+  int		***error;
   int		ditherk;
   dither_t *d = (dither_t *) vd;
   int terminate;
@@ -2078,15 +2152,41 @@ stp_dither_black_ed(const unsigned short   *gray,
   if (d->last_line_was_empty >= 5)
     return;
 
-  error[ECOLOR_K][0] = get_errline(d, row, ECOLOR_K);
-  error[ECOLOR_K][1] = get_errline(d, row + 1, ECOLOR_K);
-
-  memset(error[ECOLOR_K][1], 0, d->dst_width * sizeof(int));
+  error = stp_malloc(d->n_channels * sizeof(int **));
+  for (i = 0; i < d->n_channels; i++)
+    {
+      error[i] = stp_malloc(d->error_rows * sizeof(int *));
+      for (j = 0; j < d->error_rows; j++)
+	error[i][j] = get_errline(d, row + j, i);
+      memset(error[i][j - 1], 0, d->dst_width * sizeof(int));
+    }
+  if (d->last_line_was_empty >= 4)
+    {
+      for (i = 0; i < d->n_channels; i++)
+	{
+	  if (d->last_line_was_empty == 4)
+	    {
+	      for (j = 0; j < d->error_rows - 1; j++)
+		memset(error[i][j], 0, d->dst_width * sizeof(int));
+	    }
+	  stp_free(error[i]);
+	}
+      stp_free(error);
+      return;
+    }
 
   if (d->last_line_was_empty >= 4)
     {
-      if (d->last_line_was_empty == 4)
-	memset(error[ECOLOR_K][0], 0, d->dst_width * sizeof(int));
+      for (i = 0; i < d->n_channels; i++)
+	{
+	  if (d->last_line_was_empty == 4)
+	    {
+	      for (j = 0; j < d->error_rows - 1; j++)
+		memset(error[i][j], 0, d->dst_width * sizeof(int));
+	    }
+	  stp_free(error[i]);
+	}
+      stp_free(error);
       return;
     }
 
@@ -2117,8 +2217,10 @@ stp_dither_black_ed(const unsigned short   *gray,
       ditherk = update_dither(d, ECOLOR_K, d->src_width, direction,
 			      error[ECOLOR_K][0], error[ECOLOR_K][1]);
       ADVANCE_BIDIRECTIONAL(d, bit, gray, direction, 1, xerror, xmod, error,
-			    1, ERROR_ROWS);
+			    1, d->error_rows);
     }
+  for (i = 1; i < d->n_channels; i++)
+    stp_free(error[i]);
   if (direction == -1)
     reverse_row_ends(d);
 }
@@ -2156,7 +2258,7 @@ stp_dither_cmy_fast(const unsigned short  *cmy,
       CHANNEL(d, ECOLOR_M).v = CHANNEL(d, ECOLOR_M).o = cmy[1];
       CHANNEL(d, ECOLOR_Y).v = CHANNEL(d, ECOLOR_Y).o = cmy[2];
 
-      for (i = 1; i < NCOLORS; i++)
+      for (i = 1; i < d->n_channels; i++)
 	print_color_fast(d, &(CHANNEL(d, i)), x, row, bit, length);
       QUANT(16);
       ADVANCE_UNIDIRECTIONAL(d, bit, cmy, 3, xerror, xmod);
@@ -2198,7 +2300,7 @@ stp_dither_cmy_ordered(const unsigned short  *cmy,
       CHANNEL(d, ECOLOR_M).v = CHANNEL(d, ECOLOR_M).o = cmy[1];
       CHANNEL(d, ECOLOR_Y).v = CHANNEL(d, ECOLOR_Y).o = cmy[2];
       QUANT(9);
-      for (i = 1; i < NCOLORS; i++)
+      for (i = 1; i < d->n_channels; i++)
 	print_color_ordered(d, &(CHANNEL(d, i)), x, row, bit, length, 0);
       QUANT(12);
       ADVANCE_UNIDIRECTIONAL(d, bit, cmy, 3, xerror, xmod);
@@ -2213,13 +2315,13 @@ stp_dither_cmy_ed(const unsigned short  *cmy,
 		  int		  duplicate_line,
 		  int		  zero_mask)
 {
+  dither_t	*d = (dither_t *) vd;
   int		x,
     		length;
   unsigned char	bit;
-  int		i, j;
-  int		ndither[NCOLORS];
-  int		*error[NCOLORS][ERROR_ROWS];
-  dither_t	*d = (dither_t *) vd;
+  int		i, j = 0;
+  int		*ndither;
+  int		***error;
 
   int		terminate;
   int		direction = row & 1 ? 1 : -1;
@@ -2236,22 +2338,26 @@ stp_dither_cmy_ed(const unsigned short  *cmy,
   if (d->last_line_was_empty >= 5)
     return;
 
-  for (i = 1; i < NCOLORS; i++)
+  error = stp_malloc(d->n_channels * sizeof(int **));
+  for (i = 1; i < d->n_channels; i++)
     {
-      for (j = 0; j < ERROR_ROWS; j++)
+      error[i] = stp_malloc(d->error_rows * sizeof(int *));
+      for (j = 0; j < d->error_rows; j++)
 	error[i][j] = get_errline(d, row + j, i);
       memset(error[i][j - 1], 0, d->dst_width * sizeof(int));
     }
   if (d->last_line_was_empty >= 4)
     {
-      if (d->last_line_was_empty == 4)
+      for (i = 1; i < d->n_channels; i++)
 	{
-	  for (i = 1; i < NCOLORS; i++)
+	  if (d->last_line_was_empty == 4)
 	    {
-	      for (j = 0; j < ERROR_ROWS - 1; j++)
+	      for (j = 0; j < d->error_rows - 1; j++)
 		memset(error[i][j], 0, d->dst_width * sizeof(int));
 	    }
+	  stp_free(error[i]);
 	}
+      stp_free(error);
       return;
     }
 
@@ -2266,14 +2372,15 @@ stp_dither_cmy_ed(const unsigned short  *cmy,
   if (direction == -1)
     {
       cmy += (3 * (d->src_width - 1));
-      for (i = 1; i < NCOLORS; i++)
+      for (i = 1; i < d->n_channels; i++)
 	{
-	  for (j = 0; j < ERROR_ROWS; j++)
+	  for (j = 0; j < d->error_rows; j++)
 	    error[i][j] += d->dst_width - 1;
 	}
       d->ptr_offset = length - 1;
     }
-  for (i = 1; i < NCOLORS; i++)
+  ndither = stp_malloc(d->n_channels * sizeof(int));
+  for (i = 1; i < d->n_channels; i++)
     ndither[i] = error[i][0][0];
   QUANT(6);
   for (; x != terminate; x += direction)
@@ -2282,7 +2389,7 @@ stp_dither_cmy_ed(const unsigned short  *cmy,
       CHANNEL(d, ECOLOR_M).v = cmy[1];
       CHANNEL(d, ECOLOR_Y).v = cmy[2];
 
-      for (i = 1; i < NCOLORS; i++)
+      for (i = 1; i < d->n_channels; i++)
 	{
 	  QUANT(9);
 	  CHANNEL(d, i).o = CHANNEL(d, i).b = CHANNEL(d, i).v;
@@ -2296,9 +2403,12 @@ stp_dither_cmy_ed(const unsigned short  *cmy,
 
       QUANT(12);
       ADVANCE_BIDIRECTIONAL(d, bit, cmy, direction, 3, xerror, xmod, error,
-			    NCOLORS, ERROR_ROWS);
+			    d->n_channels, d->error_rows);
       QUANT(13);
     }
+  stp_free(ndither);
+  for (i = 1; i < d->n_channels; i++)
+    stp_free(error[i]);
   if (direction == -1)
     reverse_row_ends(d);
 }
@@ -2360,7 +2470,7 @@ stp_dither_cmyk_fast(const unsigned short  *cmy,
 	      else if (k < ub)
 		k = (k - lb) * ub / d->bound_range;
 	    }
-	  for (i = 1; i < NCOLORS; i++)
+	  for (i = 1; i < d->n_channels; i++)
 	    CHANNEL(d, i).v -= k;
 	  ok = k;
 	  if (d->dither_type != D_VERY_FAST)
@@ -2374,7 +2484,7 @@ stp_dither_cmyk_fast(const unsigned short  *cmy,
 	  CHANNEL(d, ECOLOR_K).v = k;
 	  CHANNEL(d, ECOLOR_K).o = ok;
 
-	  for (i = 0; i < NCOLORS; i++)
+	  for (i = 0; i < d->n_channels; i++)
 	    print_color_fast(d, &(CHANNEL(d, i)), x, row, bit, length);
 	  QUANT(16);
 	}
@@ -2425,7 +2535,7 @@ stp_dither_cmyk_ordered(const unsigned short  *cmy,
       CHANNEL(d, ECOLOR_C).v = cmy[0];
       CHANNEL(d, ECOLOR_M).v = cmy[1];
       CHANNEL(d, ECOLOR_Y).v = cmy[2];
-      for (i = 0; i < NCOLORS; i++)
+      for (i = 0; i < d->n_channels; i++)
 	nonzero |= CHANNEL(d, i).o = CHANNEL(d, i).v;
 
       if (nonzero)
@@ -2443,7 +2553,7 @@ stp_dither_cmyk_ordered(const unsigned short  *cmy,
 	    CHANNEL(d, ECOLOR_K).v =
 	      CHANNEL(d, ECOLOR_K).v * d->black_density / d->density;
 
-	  for (i = 0; i < NCOLORS; i++)
+	  for (i = 0; i < d->n_channels; i++)
 	    {
 	      int tmp = print_color_ordered(d, &(CHANNEL(d, i)), x, row, bit,
 					    length, printed_black);
@@ -2467,9 +2577,9 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
   int		x,
 	        length;
   unsigned char	bit;
-  int		i, j;
-  int		ndither[NCOLORS];
-  int		*error[NCOLORS][ERROR_ROWS];
+  int		i, j = 0;
+  int		*ndither;
+  int		***error;
   dither_t	*d = (dither_t *) vd;
 
   int		terminate;
@@ -2495,22 +2605,26 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
     return;
   length = (d->dst_width + 7) / 8;
 
-  for (i = 0; i < NCOLORS; i++)
+  error = stp_malloc(d->n_channels * sizeof(int **));
+  for (i = 0; i < d->n_channels; i++)
     {
-      for (j = 0; j < ERROR_ROWS; j++)
+      error[i] = stp_malloc(d->error_rows * sizeof(int *));
+      for (j = 0; j < d->error_rows; j++)
 	error[i][j] = get_errline(d, row + j, i);
       memset(error[i][j - 1], 0, d->dst_width * sizeof(int));
     }
   if (d->last_line_was_empty >= 4)
     {
-      if (d->last_line_was_empty == 4)
+      for (i = 0; i < d->n_channels; i++)
 	{
-	  for (i = 0; i < NCOLORS; i++)
+	  if (d->last_line_was_empty == 4)
 	    {
-	      for (j = 0; j < ERROR_ROWS - 1; j++)
+	      for (j = 0; j < d->error_rows - 1; j++)
 		memset(error[i][j], 0, d->dst_width * sizeof(int));
 	    }
+	  stp_free(error[i]);
 	}
+      stp_free(error);
       return;
     }
 
@@ -2523,12 +2637,13 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
   if (direction == -1)
     {
       cmy += (3 * (d->src_width - 1));
-      for (i = 0; i < NCOLORS; i++)
-	for (j = 0; j < ERROR_ROWS; j++)
+      for (i = 0; i < d->n_channels; i++)
+	for (j = 0; j < d->error_rows; j++)
 	  error[i][j] += d->dst_width - 1;
       d->ptr_offset = length - 1;
     }
-  for (i = 0; i < NCOLORS; i++)
+  ndither = stp_malloc(d->n_channels * sizeof(int));
+  for (i = 0; i < d->n_channels; i++)
     ndither[i] = error[i][0][0];
   QUANT(6);
   for (; x != terminate; x += direction)
@@ -2538,7 +2653,7 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
       CHANNEL(d, ECOLOR_C).v = cmy[0];
       CHANNEL(d, ECOLOR_M).v = cmy[1];
       CHANNEL(d, ECOLOR_Y).v = cmy[2];
-      for (i = 0; i < NCOLORS; i++)
+      for (i = 0; i < d->n_channels; i++)
 	nonzero |= (CHANNEL(d, i).o = CHANNEL(d, i).v);
 
       if (nonzero)
@@ -2557,7 +2672,7 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
 	  if (CHANNEL(d, ECOLOR_K).v > 0)
 	    update_cmyk(d);
 
-	  for (i = 1; i < NCOLORS; i++)
+	  for (i = 1; i < d->n_channels; i++)
 	    CHANNEL(d, i).b = CHANNEL(d, i).v;
 
 	  QUANT(8);
@@ -2593,7 +2708,7 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
 
 	  CHANNEL(d, ECOLOR_K).o = CHANNEL(d, ECOLOR_K).b;
 
-	  for (i = 0; i < NCOLORS; i++)
+	  for (i = 0; i < d->n_channels; i++)
 	    {
 	      int tmp;
 	      CHANNEL(d, i).v = UPDATE_COLOR(CHANNEL(d, i).v, ndither[i]);
@@ -2605,19 +2720,22 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
 	    }
 	}
       else
-	for (i = 0; i < NCOLORS; i++)
+	for (i = 0; i < d->n_channels; i++)
 	  CHANNEL(d, i).v = UPDATE_COLOR(CHANNEL(d, i).v, ndither[i]);
 
       QUANT(11);
-      for (i = 0; i < NCOLORS; i++)
+      for (i = 0; i < d->n_channels; i++)
 	ndither[i] = update_dither(d, i, d->src_width,
 				   direction, error[i][0], error[i][1]);
 
       QUANT(12);
       ADVANCE_BIDIRECTIONAL(d, bit, cmy, direction, 3, xerror, xmod, error,
-			    NCOLORS, ERROR_ROWS);
+			    d->n_channels, d->error_rows);
       QUANT(13);
     }
+  stp_free(ndither);
+  for (i = 1; i < d->n_channels; i++)
+    stp_free(error[i]);
   if (direction == -1)
     reverse_row_ends(d);
 }
@@ -2657,7 +2775,7 @@ stp_dither_raw_cmyk_fast(const unsigned short  *cmyk,
       CHANNEL(d, ECOLOR_Y).v = cmyk[2];
       CHANNEL(d, ECOLOR_K).v = cmyk[3];
       extra_k = compute_black(d) + CHANNEL(d, ECOLOR_K).v;
-      for (i = 0; i < NCOLORS; i++)
+      for (i = 0; i < d->n_channels; i++)
 	{
 	  CHANNEL(d, i).o = CHANNEL(d, i).v;
 	  if (i != ECOLOR_K)
@@ -2708,7 +2826,7 @@ stp_dither_raw_cmyk_ordered(const unsigned short  *cmyk,
       CHANNEL(d, ECOLOR_M).v = cmyk[1];
       CHANNEL(d, ECOLOR_Y).v = cmyk[2];
       extra_k = compute_black(d) + CHANNEL(d, ECOLOR_K).v;
-      for (i = 0; i < NCOLORS; i++)
+      for (i = 0; i < d->n_channels; i++)
 	{
 	  CHANNEL(d, i).o = CHANNEL(d, i).v;
 	  if (i != ECOLOR_K)
@@ -2733,9 +2851,9 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
   int		x,
     		length;
   unsigned char	bit;
-  int		i, j;
-  int		ndither[NCOLORS];
-  int		*error[NCOLORS][ERROR_ROWS];
+  int		i, j = 0;
+  int		*ndither;
+  int		***error;
   dither_t	*d = (dither_t *) vd;
 
   int		terminate;
@@ -2754,18 +2872,26 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
   if (d->last_line_was_empty >= 5)
     return;
 
-  for (i = 0; i < NCOLORS; i++)
+  error = stp_malloc(d->n_channels * sizeof(int **));
+  for (i = 0; i < d->n_channels; i++)
     {
-      for (j = 0; j < ERROR_ROWS; j++)
+      error[i] = stp_malloc(d->error_rows * sizeof(int *));
+      for (j = 0; j < d->error_rows; j++)
 	error[i][j] = get_errline(d, row + j, i);
       memset(error[i][j - 1], 0, d->dst_width * sizeof(int));
     }
   if (d->last_line_was_empty >= 4)
     {
-      if (d->last_line_was_empty == 4)
-	for (i = 0; i < NCOLORS; i++)
-	  for (j = 0; j < ERROR_ROWS - 1; j++)
-	    memset(error[i][j], 0, d->dst_width * sizeof(int));
+      for (i = 0; i < d->n_channels; i++)
+	{
+	  if (d->last_line_was_empty == 4)
+	    {
+	      for (j = 0; j < d->error_rows - 1; j++)
+		memset(error[i][j], 0, d->dst_width * sizeof(int));
+	    }
+	  stp_free(error[i]);
+	}
+      stp_free(error);
       return;
     }
 
@@ -2780,14 +2906,16 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
   if (direction == -1)
     {
       cmyk += (4 * (d->src_width - 1));
-      for (i = 0; i < NCOLORS; i++)
+      for (i = 0; i < d->n_channels; i++)
 	{
-	  for (j = 0; j < ERROR_ROWS; j++)
+	  for (j = 0; j < d->error_rows; j++)
 	    error[i][j] += d->dst_width - 1;
 	}
       d->ptr_offset = length - 1;
     }
-  for (i = 0; i < NCOLORS; i++)
+
+  ndither = stp_malloc(d->n_channels * sizeof(int));
+  for (i = 0; i < d->n_channels; i++)
     ndither[i] = error[i][0][0];
 
   QUANT(6);
@@ -2799,7 +2927,7 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
       CHANNEL(d, ECOLOR_M).v = cmyk[1];
       CHANNEL(d, ECOLOR_Y).v = cmyk[2];
       extra_k = compute_black(d) + CHANNEL(d, ECOLOR_K).v;
-      for (i = 0; i < NCOLORS; i++)
+      for (i = 0; i < d->n_channels; i++)
 	{
 	  CHANNEL(d, i).o = CHANNEL(d, i).v;
 	  if (i != ECOLOR_K)
@@ -2813,9 +2941,12 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
 	}
       QUANT(12);
       ADVANCE_BIDIRECTIONAL(d, bit, cmyk, direction, 4, xerror, xmod, error,
-			    NCOLORS, ERROR_ROWS);
+			    d->n_channels, d->error_rows);
       QUANT(13);
     }
+  stp_free(ndither);
+  for (i = 1; i < d->n_channels; i++)
+    stp_free(error[i]);
   if (direction == -1)
     reverse_row_ends(d);
 }
@@ -2824,34 +2955,23 @@ void
 stp_dither(const unsigned short  *input,
 	   int           row,
 	   void 	  *vd,
-	   unsigned char *cyan,
-	   unsigned char *lcyan,
-	   unsigned char *magenta,
-	   unsigned char *lmagenta,
-	   unsigned char *yellow,
-	   unsigned char *lyellow,
-	   unsigned char *black,
+	   stp_dither_data_t *dt,
 	   int		  duplicate_line,
 	   int		  zero_mask)
 {
   int i, j;
   dither_t *d = (dither_t *) vd;
-  CHANNEL(d, ECOLOR_K).ptrs[0] = black;
-  CHANNEL(d, ECOLOR_K).ptrs[1] = NULL;
-  CHANNEL(d, ECOLOR_C).ptrs[0] = cyan;
-  CHANNEL(d, ECOLOR_C).ptrs[1] = lcyan;
-  CHANNEL(d, ECOLOR_M).ptrs[0] = magenta;
-  CHANNEL(d, ECOLOR_M).ptrs[1] = lmagenta;
-  CHANNEL(d, ECOLOR_Y).ptrs[0] = yellow;
-  CHANNEL(d, ECOLOR_Y).ptrs[1] = lyellow;
-  for (i = 0; i < NCOLORS; i++)
+  for (i = 0; i < d->n_channels; i++)
     {
-      for (j = 0; j < 2; j++)
-	if (CHANNEL(d, i).ptrs[j])
-	  memset(CHANNEL(d, i).ptrs[j], 0,
-		 (d->dst_width + 7) / 8 * CHANNEL(d, i).signif_bits);
       for (j = 0; j < CHANNEL(d, i).subchannels; j++)
 	{
+	  if (i >= dt->channel_count || j >= dt->c[i].subchannel_count)
+	    CHANNEL(d, i).ptrs[j] = NULL;
+	  else
+	    CHANNEL(d, i).ptrs[j] = dt->c[i].c[j];
+	  if (CHANNEL(d, i).ptrs[j])
+	    memset(CHANNEL(d, i).ptrs[j], 0,
+		   (d->dst_width + 7) / 8 * CHANNEL(d, i).signif_bits);
 	  CHANNEL(d, i).row_ends[0][j] = -1;
 	  CHANNEL(d, i).row_ends[1][j] = -1;
 	}

@@ -1682,6 +1682,7 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
   int  ncolors;
   lexm_privdata_weave privdata;
   void *	weave = NULL;
+  stp_dither_data_t *dt;
 
   lexmark_lineoff_t lineoff_buffer;  /* holds the line offsets of each color */
   int doTestPrint = 0;
@@ -2133,6 +2134,14 @@ densityDivisor /= 1.2;
     }
 
 
+  dt = stp_create_dither_data();
+  stp_add_channel(dt, cols.p.k, ECOLOR_K, 0);
+  stp_add_channel(dt, cols.p.c, ECOLOR_C, 0);
+  stp_add_channel(dt, cols.p.C, ECOLOR_C, 1);
+  stp_add_channel(dt, cols.p.m, ECOLOR_M, 0);
+  stp_add_channel(dt, cols.p.M, ECOLOR_M, 1);
+  stp_add_channel(dt, cols.p.y, ECOLOR_Y, 0);
+  stp_add_channel(dt, cols.p.Y, ECOLOR_Y, 1);
 
   for (y = 0; y < out_height; y ++)   /* go through every pixle line of image */
     {
@@ -2162,8 +2171,7 @@ densityDivisor /= 1.2;
 	}
       /*      stp_erprintf("Let's dither   %d    %d  %d\n", ((y)), buf_length, length);*/
       if (doTestPrint == 0) {
-	stp_dither(out, y, dither, cols.p.c, cols.p.C, cols.p.m, cols.p.M,
-		   cols.p.y, cols.p.Y, cols.p.k, duplicate_line, zero_mask);
+	stp_dither(out, y, dither, dt, duplicate_line, zero_mask);
       } else {
 #ifdef DEBUG
 	readtestprintline(&td, &cols);
@@ -2200,6 +2208,7 @@ densityDivisor /= 1.2;
 
   lexmark_deinit_printer(nv, caps);
 
+  stp_free_dither_data(dt);
 
   if (doTestPrint == 0) {
     stp_free_dither(dither);

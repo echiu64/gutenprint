@@ -1988,6 +1988,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   int		blank_lines,	/* Accumulated blank lines */
 		is_blank,	/* Current line is blank */
 		do_blank;	/* Blank line removal required */
+  stp_dither_data_t *dt;
 
   if (!stp_get_verified(nv))
     {
@@ -2482,6 +2483,14 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   do_blank = 0;
 #endif
 
+  dt = stp_create_dither_data();
+  stp_add_channel(dt, black, ECOLOR_K, 0);
+  stp_add_channel(dt, cyan, ECOLOR_C, 0);
+  stp_add_channel(dt, lcyan, ECOLOR_C, 1);
+  stp_add_channel(dt, magenta, ECOLOR_M, 0);
+  stp_add_channel(dt, lmagenta, ECOLOR_M, 1);
+  stp_add_channel(dt, yellow, ECOLOR_Y, 0);
+
   for (y = 0; y < out_height; y ++)
   {
     int duplicate_line = 1;
@@ -2500,15 +2509,14 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
 		   hue_adjustment, lum_adjustment, NULL);
     }
 
-    stp_dither(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		yellow, NULL, black, duplicate_line, zero_mask);
+    stp_dither(out, y, dither, dt, duplicate_line, zero_mask);
 
-    len_c = stp_dither_get_last_position(dither, ECOLOR_C, 1);
-    len_lc = stp_dither_get_last_position(dither, ECOLOR_C, 0);
-    len_m = stp_dither_get_last_position(dither, ECOLOR_M, 1);
-    len_lm = stp_dither_get_last_position(dither, ECOLOR_M, 0);
-    len_y = stp_dither_get_last_position(dither, ECOLOR_Y, 1);
-    len_k = stp_dither_get_last_position(dither, ECOLOR_K, 1);
+    len_c = stp_dither_get_last_position(dither, ECOLOR_C, 0);
+    len_lc = stp_dither_get_last_position(dither, ECOLOR_C, 1);
+    len_m = stp_dither_get_last_position(dither, ECOLOR_M, 0);
+    len_lm = stp_dither_get_last_position(dither, ECOLOR_M, 1);
+    len_y = stp_dither_get_last_position(dither, ECOLOR_Y, 0);
+    len_k = stp_dither_get_last_position(dither, ECOLOR_K, 0);
 
 /*
  * Blank line removal. If multiple lines are blank then they can be replaced
@@ -2631,6 +2639,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
 
   image->progress_conclude(image);
 
+  stp_free_dither_data(dt);
   stp_free_dither(dither);
 
 

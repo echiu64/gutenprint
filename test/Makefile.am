@@ -30,7 +30,7 @@ AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
 LIBS = @LIBS@ ../lib/libprintut.la $(INTLLIBS) ../lib/libprintut.la
 
-TESTS = testdither run-weavetest
+TESTS = run-testdither run-weavetest
 
 
 ## Programs
@@ -70,4 +70,4 @@ $(LIBGIMPPRINT_LIBS):
 CLEANFILES = $(EXTRA_PROGRAMS) mixed-color-1bit.ppm
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = cyan-sweep.tif parse-escp2 run-weavetest
+EXTRA_DIST = cyan-sweep.tif parse-escp2 run-weavetest run-testdither

@@ -85,6 +85,19 @@ typedef struct
    int subchannel[2];
 } stp_full_dither_range_t;
 
+typedef struct
+{
+  unsigned subchannel_count;
+  unsigned char **c;
+} stp_channel_t;
+
+typedef struct
+{
+  unsigned channel_count;
+  stp_channel_t *c;
+} stp_dither_data_t;
+
+
 typedef struct			/* Weave parameters for a specific row */
 {
   int row;			/* Absolute row # */
@@ -283,13 +296,14 @@ extern int	stp_dither_get_last_position(void *vd, int color, int dark);
 
 extern void	stp_free_dither(void *);
 
+extern stp_dither_data_t *stp_create_dither_data(void);
+extern void	stp_add_channel(stp_dither_data_t *d, unsigned char *data,
+				unsigned channel, unsigned subchannel);
+extern void	stp_free_dither_data(stp_dither_data_t *d);
 
 extern void	stp_dither(const unsigned short *, int, void *,
-			   unsigned char *,
-			   unsigned char *, unsigned char *,
-			   unsigned char *, unsigned char *,
-			   unsigned char *, unsigned char *,
-			   int duplicate_line, int zero_mask);
+			   stp_dither_data_t *, int duplicate_line,
+			   int zero_mask);
 
 extern void	stp_fold(const unsigned char *line, int single_height,
 			 unsigned char *outbuf);
@@ -424,6 +438,7 @@ extern void stp_dprintf(unsigned long level, const stp_vars_t v,
 extern void stp_deprintf(unsigned long level, const char *format, ...);
 
 extern void *stp_malloc (size_t);
+extern void *stp_realloc (void *ptr, size_t);
 extern void stp_free(void *ptr);
 
 /* Uncomment the next line to get performance statistics:

@@ -1093,6 +1093,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   escp2_privdata_t privdata;
   int drop_size;
   int min_nozzles;
+  stp_dither_data_t *dt;
 
   if (!stp_get_verified(nv))
     {
@@ -1497,6 +1498,15 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	}
     }
 
+  dt = stp_create_dither_data();
+  stp_add_channel(dt, black, ECOLOR_K, 0);
+  stp_add_channel(dt, cyan, ECOLOR_C, 0);
+  stp_add_channel(dt, lcyan, ECOLOR_C, 1);
+  stp_add_channel(dt, magenta, ECOLOR_M, 0);
+  stp_add_channel(dt, lmagenta, ECOLOR_M, 1);
+  stp_add_channel(dt, yellow, ECOLOR_Y, 0);
+  stp_add_channel(dt, dyellow, ECOLOR_Y, 1);
+
   QUANT(0);
   for (y = 0; y < out_height; y ++)
     {
@@ -1517,8 +1527,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	}
       QUANT(1);
 
-      stp_dither(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		 yellow, dyellow, black, duplicate_line, zero_mask);
+      stp_dither(out, y, dither, dt, duplicate_line, zero_mask);
       QUANT(2);
 
       stp_write_weave(weave, length, ydpi, model, out_width, left,
@@ -1537,6 +1546,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   stp_flush_all(weave, model, out_width, left, ydpi, xdpi, physical_xdpi);
   QUANT(5);
 
+  stp_free_dither_data(dt);
   stp_free_dither(dither);
 
  /*

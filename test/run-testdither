@@ -1,0 +1,38 @@
+#!/bin/sh
+
+out_status=0
+
+if [ -z "$bits" ] ; then
+    bits='1-bit 2-bit'
+fi
+
+if [ -z "$dither_types" ] ; then
+    dither_types='monochrome gray color photo cmyk photo-cmyk'
+fi
+
+if [ -z "$image_types" ] ; then
+    image_types='mixed white black color-image random'
+fi
+
+if [ -z "$algos" ] ; then
+    algos='Adaptive Ordered Fast VeryFast Floyd'
+fi
+
+if [ -z "$print_image" ] ; then
+    image='no-image'
+fi
+
+for bits in $bits ; do
+    for dither_type in $dither_types  ; do
+	for image_type in $image_types ; do
+	    for algo in $algos ; do
+		echo ./testdither $image $bits $dither_type $image_type $algo
+		./testdither $image $bits $dither_type $image_type $algo
+		status=$?
+		out_status=`expr $out_status + $status`
+	    done
+	done
+    done
+done
+
+exit $out_status

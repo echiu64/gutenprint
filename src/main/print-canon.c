@@ -2309,6 +2309,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
   colormode_t colormode = canon_printhead_colors(ink_type,caps);
   const paper_t *pt;
   const canon_variable_inkset_t *inks;
+  stp_dither_data_t *dt;
 
   if (!stp_get_verified(nv))
     {
@@ -2557,7 +2558,6 @@ canon_print(const stp_printer_t printer,		/* I - Model */
     }
   stp_dither_set_black_lower(dither, k_lower);
   stp_dither_set_black_upper(dither, k_upper);
-  stp_dither_set_adaptive_limit(dither, .75);
 
   if ((inks = canon_inks(caps, res_code, colormode, bits))!=0)
     {
@@ -2635,6 +2635,13 @@ canon_print(const stp_printer_t printer,		/* I - Model */
     }
   }
 
+  dt = stp_create_dither_data();
+  stp_add_channel(dt, black, ECOLOR_K, 0);
+  stp_add_channel(dt, cyan, ECOLOR_C, 0);
+  stp_add_channel(dt, lcyan, ECOLOR_C, 1);
+  stp_add_channel(dt, magenta, ECOLOR_M, 0);
+  stp_add_channel(dt, lmagenta, ECOLOR_M, 1);
+  stp_add_channel(dt, yellow, ECOLOR_Y, 0);
 
   for (y = 0; y < out_length; y ++)
   {
@@ -2654,8 +2661,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
 		   have_sat_adjustment ? sat_adjustment : NULL);
     }
 
-    stp_dither(out, y, dither, cyan, lcyan, magenta, lmagenta,
-	       yellow, 0, black, duplicate_line, zero_mask);
+    stp_dither(out, y, dither, dt, duplicate_line, zero_mask);
 
     canon_write_line(nv, caps, ydpi,
 		     black,    delay_k,
@@ -2685,6 +2691,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
   }
   image->progress_conclude(image);
 
+  stp_free_dither_data(dt);
   stp_free_dither(dither);
 
   /*
