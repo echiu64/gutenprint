@@ -1788,10 +1788,6 @@ stp_initialize_weave(int jets,	/* Width of print head */
 		     int width,	/* bits/pixel */
 		     int linewidth,	/* Width of a line, in pixels */
 		     int lineheight, /* Number of lines that will be printed */
-		     int separation_rows, /* Vertical spacing adjustment */
-				/* for weird printers (1520/3000, */
-				/* although they don't seem to do softweave */
-				/* anyway) */
 		     int first_line, /* First line that will be printed on page */
 		     int phys_lines, /* Total height of the page in rows */
 		     int weave_strategy, /* Which weaving pattern to use */
@@ -1830,23 +1826,27 @@ stp_initialize_weave(int jets,	/* Width of print head */
   sw->oversample = osample * v_subpasses * v_subsample;
   if (sw->oversample > jets)
     {
+      int found = 0;
       for (i = 2; i <= osample; i++)
 	{
 	  if ((osample % i == 0) && (sw->oversample / i <= jets))
 	    {
 	      sw->repeat_count = i;
 	      osample /= i;
-	      goto found;
+	      found = 1;
+	      break;
 	    }
 	}
-      stp_eprintf(v, "Weave error: oversample (%d) > jets (%d)\n",
-		  sw->oversample, jets);
-      stp_free(sw);
-      return 0;
+      if (!found)
+	{
+	  stp_eprintf(v, "Weave error: oversample (%d) > jets (%d)\n",
+		      sw->oversample, jets);
+	  stp_free(sw);
+	  return 0;
+	}
     }
   else
     sw->repeat_count = 1;
- found:
 
   sw->vertical_oversample = v_subsample;
   sw->vertical_subpasses = v_subpasses;
@@ -1895,20 +1895,12 @@ stp_initialize_weave(int jets,	/* Width of print head */
   sw->vmod = 2 * sw->separation * sw->oversample * sw->repeat_count;
   if (sw->virtual_jets > sw->jets)
     sw->vmod *= (sw->virtual_jets + sw->jets - 1) / sw->jets;
-  sw->separation_rows = separation_rows;
 
   sw->bitwidth = width;
   sw->last_pass_offset = 0;
   sw->last_pass = -1;
   sw->current_vertical_subpass = 0;
-  sw->last_color = -1;
   sw->ncolors = ncolors;
-
-  /*
-   * It's possible for the "compression" to actually expand the line by
-   * one part in 128.
-   */
-
   sw->linewidth = linewidth;
   sw->vertical_height = lineheight;
   sw->lineoffsets = allocate_lineoff(sw->vmod, ncolors);
@@ -2175,6 +2167,10 @@ stp_fill_uncompressed(stp_softweave_t *sw, int row, int subpass,
 int
 stp_compute_tiff_linewidth(const stp_softweave_t *sw, int n)
 {
+  /*
+   * It's possible for the "compression" to actually expand the line by
+   * roughly one part in 128.
+   */
   return ((n + 128 + 7) * 129 / 128);
 }
 

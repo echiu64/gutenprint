@@ -152,9 +152,9 @@ typedef struct
 #define MODEL_INIT_STANDARD	0x0ul /* required for this printer, and if */
 #define MODEL_INIT_NEW		0x1ul /* so, what */
 
-#define MODEL_HASBLACK_MASK	0x10ul /* Can this printer print black ink */
-#define MODEL_HASBLACK_YES	0x00ul /* when it is also printing color? */
-#define MODEL_HASBLACK_NO	0x10ul
+#define MODEL_VACUUM_MASK	0x10ul
+#define MODEL_VACUUM_NO		0x00ul
+#define MODEL_VACUUM_YES	0x10ul
 
 #define MODEL_MICROWEAVE_EXCEPTION_MASK   0x60ul
 #define MODEL_MICROWEAVE_EXCEPTION_NORMAL 0x00ul
@@ -202,12 +202,8 @@ typedef struct
 #define MODEL_MICROWEAVE_YES		0x100000ul
 #define MODEL_MICROWEAVE_ENHANCED	0x200000ul
 
-#define MODEL_VACUUM_MASK		0x800000ul
-#define MODEL_VACUUM_NO			0x000000ul
-#define MODEL_VACUUM_YES		0x800000ul
-
 #define MODEL_INIT			(0)
-#define MODEL_HASBLACK			(1)
+#define MODEL_VACUUM			(1)
 #define MODEL_MICROWEAVE_EXCEPTION	(2)
 #define MODEL_GRAYMODE			(3)
 #define MODEL_720DPI_MODE		(4)
@@ -218,8 +214,7 @@ typedef struct
 #define MODEL_XZEROMARGIN		(9)
 #define MODEL_YZEROMARGIN		(10)
 #define MODEL_MICROWEAVE		(11)
-#define MODEL_VACUUM			(12)
-#define MODEL_LIMIT			(13)
+#define MODEL_LIMIT			(12)
 
 typedef struct
 {
@@ -300,7 +295,7 @@ typedef struct
 
 typedef struct escp2_printer
 {
-  model_cap_t	flags;		/* Bitmask of flags, see below */
+  model_cap_t	flags;		/* Bitmask of flags, see above */
 /*****************************************************************************/
   int		nozzles;	/* Number of nozzles per color */
   int		min_nozzles;	/* Minimum number of nozzles per color */

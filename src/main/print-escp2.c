@@ -69,7 +69,7 @@ resid2dotid(int resid)
 static const escp2_printer_attr_t escp2_printer_attrs[] =
 {
   { "init_sequence",	 	0, 4 },
-  { "has_black",	 	4, 1 },
+  { "vacuum",			4, 1 },
   { "microweave_exception",	5, 2 },
   { "graymode",		 	7, 1 },
   { "720dpi_mode",	 	8, 2 },
@@ -80,7 +80,6 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
   { "horizontal_zero_margin",	18, 1 },
   { "vertical_zero_margin",	19, 1 },
   { "microweave",		20, 3 },
-  { "vacuum",			23, 1 },
 };
 
 #define INCH(x)		(72 * x)
@@ -94,6 +93,7 @@ typedef struct
   int initial_vertical_offset;
   int min_nozzles;
   int printed_something;
+  int last_color;
   const physical_subchannel_t **channels;
 } escp2_privdata_t;
 
@@ -291,8 +291,7 @@ verify_resolution(const res_t *res, int model, const stp_vars_t v)
       res->vres >= escp2_min_vres(model, v) &&
       res->hres >= escp2_min_hres(model, v) &&
       (res->microweave == 0 ||
-       !escp2_has_cap(model, MODEL_MICROWEAVE,
-		      MODEL_MICROWEAVE_NO, v)) &&
+       !escp2_has_cap(model, MODEL_MICROWEAVE, MODEL_MICROWEAVE_NO, v)) &&
       (nozzles == 1 ||
        ((res->vres / nozzle_width) * nozzle_width) == res->vres))
     {
@@ -715,8 +714,7 @@ escp2_set_resolution(const escp2_init_t *init)
 static void
 escp2_set_color(const escp2_init_t *init)
 {
-  if (escp2_has_cap(init->model, MODEL_GRAYMODE, MODEL_GRAYMODE_YES,
-		    init->v))
+  if (escp2_has_cap(init->model, MODEL_GRAYMODE, MODEL_GRAYMODE_YES, init->v))
     stp_zprintf(init->v, "\033(K\002%c%c%c", 0, 0,
 		(init->output_type == OUTPUT_GRAY && init->channel_count == 1 ?
 		 1 : 2));
@@ -1161,7 +1159,6 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   int		bits = 1;
   void *	weave = NULL;
   void *	dither;
-  int		separation_rows;
   stp_vars_t	nv = stp_allocate_copy(v);
   escp2_init_t	init;
   int max_vres;
@@ -1189,6 +1186,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   privdata.undersample = 1;
   privdata.initial_vertical_offset = 0;
   privdata.printed_something = 0;
+  privdata.last_color = -1;
   stp_set_driver_data(nv, &privdata);
 
   ink_type = get_inktype(printer, nv, model);
@@ -1291,7 +1289,6 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       nozzle_separation = 1;
     }
 
-  separation_rows = escp2_separation_rows(model, nv);
   bits = escp2_bits(model, resid, nv);
 
  /*
@@ -1417,8 +1414,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   weave = stp_initialize_weave(nozzles, nozzle_separation,
 			       horizontal_passes, vertical_passes,
 			       vertical_oversample, channel_count, bits,
-			       out_width, out_height, separation_rows,
-			       top * physical_ydpi / 72,
+			       out_width, out_height, top * physical_ydpi / 72,
 			       (page_height * physical_ydpi / 72 +
 				escp2_extra_feed(model, nv) * physical_ydpi /
 				escp2_base_resolution(model, nv)),
@@ -1534,7 +1530,7 @@ set_vertical_position(stp_softweave_t *sw, stp_pass_t *pass, int model,
 {
   escp2_privdata_t *pd = (escp2_privdata_t *) stp_get_driver_data(v);
   int advance = pass->logicalpassstart - sw->last_pass_offset -
-    (sw->separation_rows - 1);
+    escp2_separation_rows(model, v) - 1;
   advance *= pd->undersample;
   if (pass->logicalpassstart > sw->last_pass_offset ||
       pd->initial_vertical_offset != 0)
@@ -1560,19 +1556,19 @@ static void
 set_color(stp_softweave_t *sw, stp_pass_t *pass, int model, const stp_vars_t v,
 	  int color)
 {
-  if (sw->last_color != color &&
+  escp2_privdata_t *pd = (escp2_privdata_t *) stp_get_driver_data(v);
+  if (pd->last_color != color &&
       !escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO, v) &&
       (sw->jets == 1 || escp2_has_cap(model, MODEL_VARIABLE_DOT,
 				      MODEL_VARIABLE_NORMAL, v)))
     {
-      escp2_privdata_t *pd = (escp2_privdata_t *) stp_get_driver_data(v);
       int ncolor = pd->channels[color]->color;
       int density = pd->channels[color]->density;
       if (density >= 0)
 	stp_zprintf(v, "\033(r%c%c%c%c", 2, 0, density, ncolor);
       else
 	stp_zprintf(v, "\033r%c", ncolor);
-      sw->last_color = color;
+      pd->last_color = color;
     }
 }
 
@@ -1637,7 +1633,7 @@ send_print_command(stp_softweave_t *sw, stp_pass_t *pass, int model, int color,
       else if (escp2_pseudo_separation_rows(model, v) > 0)
 	ygap *= escp2_pseudo_separation_rows(model, v);
       else
-	ygap *= sw->separation_rows;
+	ygap *= escp2_separation_rows(model, v);
       stp_zprintf(v, "\033.%c%c%c%c%c%c", COMPRESSION, ygap, xgap,
 		  nlines, lwidth & 255, (lwidth >> 8) & 255);
     }

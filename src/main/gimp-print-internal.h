@@ -124,14 +124,14 @@ typedef struct {		/* Offsets from the start of each line */
   unsigned long *v;		/* (really pass) */
 } stp_lineoff_t;
 
-typedef struct {		/* Is this line active? */
+typedef struct {		/* Is this line (really pass) active? */
   int ncolors;
-  char *v;			/* (really pass) */
+  char *v;
 } stp_lineactive_t;
 
 typedef struct {		/* number of rows for a pass */
   int ncolors;
-  int *v;			/* (really pass) */
+  int *v;
 } stp_linecount_t;
 
 typedef struct {		/* Base pointers for each pass */
@@ -175,12 +175,7 @@ typedef struct stp_softweave
   int lineno;
   int vertical_oversample;	/* Vertical oversampling */
   int current_vertical_subpass;
-  int separation_rows;		/* Vertical spacing between rows. */
-				/* This is used for the 1520/3000, which */
-				/* use a funny value for the "print density */
-				/* in the vertical direction". */
   int horizontal_width;		/* Horizontal width, in bits */
-  int last_color;
   int *head_offset;		/* offset of printheads */
   unsigned char *s[MAX_WEAVE];
   unsigned char *fold_buf;
@@ -325,7 +320,7 @@ extern int	stp_pack_uncompressed(const unsigned char *line, int height,
 extern void *stp_initialize_weave(int jets, int separation, int oversample,
 				  int horizontal, int vertical,
 				  int ncolors, int width, int linewidth,
-				  int lineheight, int vertical_row_separation,
+				  int lineheight,
 				  int first_line, int phys_lines, int strategy,
                                   int *head_offset,  /* Get from model - used for 480/580 printers */
 				  stp_vars_t v,
