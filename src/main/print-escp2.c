@@ -1083,11 +1083,24 @@ adjust_density_and_ink_type(escp2_init_t *init, stp_image_t *image)
 	  int resid = init->res->resid;
 	  while (density > 1.0 && resid >= RES_360_M)
 	    {
+	      int tresid = resid - 2;
 	      int bits_now = escp2_bits(init->model, resid, v);
 	      double density_now = escp2_density(init->model, resid, v);
-	      int bits_then = escp2_bits(init->model, resid - 2, v);
-	      double density_then = escp2_density(init->model, resid - 2, v);
-	      int drop_size_then = escp2_ink_type(init->model, resid - 2, v);
+	      int bits_then = escp2_bits(init->model, tresid, v);
+	      double density_then = escp2_density(init->model, tresid, v);
+	      int drop_size_then = escp2_ink_type(init->model, tresid, v);
+
+	      /*
+	       * If the softweave/microweave isn't available at the lower
+	       * resolution, try the drop size for the other flavor.
+	       */
+	      if (drop_size_then == -1)
+		{
+		  tresid ^= 1;
+		  bits_then = escp2_bits(init->model, tresid, v);
+		  density_then = escp2_density(init->model, tresid ,v);
+		  drop_size_then = escp2_ink_type(init->model, tresid, v);
+		}
 
 	      /*
 	       * If we would change the number of bits in the ink type,
@@ -1099,7 +1112,7 @@ adjust_density_and_ink_type(escp2_init_t *init, stp_image_t *image)
 		  drop_size_then == -1)
 		break;
 	      density = density * density_now / density_then / 2;
-	      resid -= 2;
+	      resid = tresid;
 	    }
 	  init->drop_size = escp2_ink_type(init->model, resid, init->v);
 	  init->ink_resid = resid;
