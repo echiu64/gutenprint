@@ -14,6 +14,8 @@ while (<>) {
 	next;
     } elsif (/^----------------------------$/) {
 	next;
+    } elsif (/^revision /) {
+	($ignore, $revision) = split;
     } elsif (/^date: /) {
 	($ignore, $date, $time, $ignore, $author, $ignore) = split;
 	$time =~ s/:[0-9][0-9];$//;
@@ -35,10 +37,10 @@ while (<>) {
 	}
 	if ($logmsgs{$datetimeauthor}) {
 	    $stuff = $logmsgs{$datetimeauthor};
-	    $stuff =~ s/\n/\n\t$currentfile\n/;
+	    $stuff =~ s/\n/\n\t$currentfile ($revision)\n/;
 	    $logmsgs{$datetimeauthor} = $stuff;
 	} else {
-	    $logmsgs{$datetimeauthor} = "Files:\t$currentfile\n\n$body"
+	    $logmsgs{$datetimeauthor} = "Files:\t$currentfile ($revision)\n\n$body"
 	}
     }				# Other junk we ignore
 }
