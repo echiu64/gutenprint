@@ -1707,8 +1707,8 @@ static inline dither_segment_t *find_segment(dither_t *d, dither_channel_t *dc, 
 		dc->temp_range.dot_size[0] = dd->dot_size[0];
 		break;
 	}
-	
-	for (i=0; i < dc->nlevels - 1; i++) {
+
+	for (i=0; i < dc->nlevels; i++) {
 		dd = &(dc->ranges[i]);
 		if (max_dot < dd->dot_size[1]) continue;
 		dc->temp_range.range[1] = dd->range[1];
@@ -2798,8 +2798,12 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
   int		terminate;
   int		direction = row & 1 ? 1 : -1;
   int		xerror, xstep, xmod;
-  double 	aspect = (double) d->y_aspect / d->x_aspect;
-  int		divisor = 4 + 4 * aspect;
+  int		aspect = d->y_aspect / d->x_aspect;
+  int		diffuse_k1 = 1, diffuse_k2 = 2;
+  
+  if (aspect >= 4) { diffuse_k1 = 3; diffuse_k2 = 19; }
+  else if (aspect >= 2) {diffuse_k1 = 2; diffuse_k2 = 7; }
+
 
   length = (d->dst_width + 7) / 8;
   if (!shared_ed_initializer(d, row, duplicate_line, zero_mask, length,
@@ -3015,23 +3019,11 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
       /* At the moment do a simple diffusion directly down and across */
      
       for (i=0; i < NCOLORS; i++) {
-        int fraction = ndither[i] / 2;
+        int fraction = diffuse_k1 * ndither[i] / diffuse_k2;
         error[i][1][0] += fraction;
         ndither[i] -= fraction;
       }
 
-      /* Other spreading around try - Thomas Tonino */
-      /*
-      for (i=0; i < NCOLORS; i++) {
-        int fraction = ndither[i] / divisor;
-        error[i][1][0] += 1*fraction;
-        error[i][1][-2*direction] += 1*fraction;
-        error[i][1][direction] += 2*fraction;
-	ndither[i] -= 4*fraction;
-      }
-      */
-      /* End of new try */    
-      
       QUANT(12);
       ADVANCE_BIDIRECTIONAL(d, bit, cmy, direction, 3, xerror, xmod, error,
 			    NCOLORS, ERROR_ROWS);
