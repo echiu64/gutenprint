@@ -133,7 +133,10 @@ stpi_dither_ordered(stp_vars_t v,
 	    {
 	      if (raw[i] &&
 		  raw[i] >= ditherpoint(d, &(CHANNEL(d, i).dithermat), x))
-		CHANNEL(d, i).ptr[d->ptr_offset] |= bit;
+		{
+		  set_row_ends(&(CHANNEL(d, i)), x);
+		  CHANNEL(d, i).ptr[d->ptr_offset] |= bit;
+		}
 	    }
 	  ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d),
 				 xerror, xstep, xmod);

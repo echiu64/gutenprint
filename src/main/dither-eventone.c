@@ -223,23 +223,32 @@ find_segment(stpi_dither_channel_t *dc, eventone_t *et, int totalink,
   if (totalink < 0)
     totalink = 0;
 
-  { int i;
-    stpi_ink_defn_t *ip;
-
-    for (i=0, ip = dc->ink_list; i < dc->nlevels - 1; i++, ip++) {
-      if (ip->value <= totalink) {
-        lower->bits = ip->bits;
-        lower->range = ip->value;
-      } else {
-        upper->bits = ip->bits;
-        upper->range = ip->value;
-        goto found_segment;
-      }
+  if (dc->nlevels == 1)
+    {
+      lower->bits = 0;
+      lower->range = 0;
+      upper->bits = dc->ink_list[1].bits;
+      upper->range = dc->ink_list[1].value;
     }
+  else
+    {
+      int i;
+      stpi_ink_defn_t *ip;
 
-    upper->bits = ip->bits;
-    upper->range = ip->value;
-  }
+      for (i=0, ip = dc->ink_list; i < dc->nlevels - 1; i++, ip++) {
+	if (ip->value <= totalink) {
+	  lower->bits = ip->bits;
+	  lower->range = ip->value;
+	} else {
+	  upper->bits = ip->bits;
+	  upper->range = ip->value;
+	  goto found_segment;
+	}
+      }
+
+      upper->bits = ip->bits;
+      upper->range = ip->value;
+    }
 
 found_segment:
 

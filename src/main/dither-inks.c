@@ -117,7 +117,7 @@ initialize_channel(stp_vars_t v, int channel, int subchannel)
   stpi_dither_matrix_clone(&(d->dither_matrix), &(dc->dithermat), 0, 0);
   stpi_dither_matrix_clone(&(d->transition_matrix), &(dc->pick), 0, 0);
   shade.dot_sizes = &dot;
-  shade.value = 65535.0;
+  shade.value = 1.0;
   shade.numsizes = 1;
   dot.bit_pattern = 1;
   dot.value = 1.0;
@@ -244,6 +244,11 @@ stpi_dither_finalize_ranges(stp_vars_t v, stpi_dither_channel_t *dc)
 		       d->adaptive_limit);
 	}
     }
+  for (i = 0; i <= dc->nlevels; i++)
+    stpi_dprintf(STPI_DBG_INK, v,
+		 "    ink_list[%d] range %d value %d bits %d\n",
+		 i, dc->ink_list[i].range,
+		 dc->ink_list[i].value, dc->ink_list[i].bits);
   if (dc->nlevels == 1 && dc->ranges[0].upper->bits == 1)
     dc->very_fast = 1;
   else
