@@ -432,6 +432,9 @@ counter=0;
             if (pstate.bpp>2) {
               fprintf(stderr,"Warning! Excessively deep color detected.\n");
             }
+            if (pstate.bpp==0) {
+              fprintf(stderr,"Warning! 0 bit pixels are far too Zen for this software.\n");
+            }
             get2("Error reading number of horizontal dots!\n");
             n=sh * 8 / pstate.bpp;
             get2("Error reading number of vertical dots!\n");
@@ -458,7 +461,7 @@ counter=0;
             }
             switch (c) {
               case 0:  /* uncompressed */
-                bufsize=m*((n*currentbpp+7)/8);
+                bufsize=m*((n*pstate.bpp+7)/8);
                 getn(bufsize,"Error reading raster data!\n");
                 update_page(buf,bufsize,m,n,currentcolor,density);
                 break;
@@ -765,6 +768,7 @@ int main(int argc,char *argv[]){
     fprintf(stderr,"Done reading.\n");
     write_output(fp_w);
     fclose(fp_w);
+    fprintf(stderr,"Segmentation integrity.  (core contained)\n");
 
     return(0);
 }
