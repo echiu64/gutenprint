@@ -71,6 +71,11 @@
 #define ENTRY_WIDTH		64
 #define PREVIEW_SIZE		240	/* Assuming max media size of 24" A2 */
 
+#define IMAGE_LINE_ART		0
+#define IMAGE_SOLID_TONE	1
+#define IMAGE_CONTINUOUS	2
+#define IMAGE_MONOCHROME	3
+
 #ifndef MIN
 #  define MIN(a,b)		((a) < (b) ? (a) : (b))
 #  define MAX(a,b)		((a) > (b) ? (a) : (b))
@@ -152,14 +157,11 @@ extern void Image_progress_init(Image image);
 extern void Image_note_progress(Image image, double current, double total);
 
 
-typedef struct
+typedef struct printer
 {
   char	*long_name,			/* Long name for UI */
 	*driver;			/* Short name for printrc file */
-  int	color,				/* TRUE if supports color */
-	model;				/* Model number */
-  float	gamma,				/* Gamma correction */
-	density;			/* Ink "density" or black level */
+  int	model;				/* Model number */
   char	**(*parameters)(int model, char *ppd_file, char *name, int *count);
 					/* Parameter names */
   void	(*media_size)(int model, char *ppd_file, char *media_size,
@@ -167,9 +169,13 @@ typedef struct
   void	(*imageable_area)(int model, char *ppd_file, char *media_size,
                           int *left, int *right, int *bottom, int *top);
   /* Print function */
-  void	(*print)(int model, int copies, FILE *prn, Image image,
-		 unsigned char *cmap, vars_t *v);
+  void	(*print)(const struct printer *printer, int copies, FILE *prn,
+		 Image image, unsigned char *cmap, vars_t *v);
+  vars_t printvars;
 } printer_t;
+
+extern const printer_t printers[];
+extern const int printer_count;
 
 typedef void 	(*convert_t)(unsigned char *in, unsigned short *out, int width,
 			     int bpp, unsigned char *cmap, vars_t *vars);
