@@ -1,56 +1,78 @@
 <h1>Gimp print FAQ</h1>
 
 <h2>Is it only for Gimp?</h2>
-Gimp-print started out as a driver for The Gimp, the well known image
-manipulation program.
-Early in development versions for Ghostscript and later CUPS were added.
-The emphasis is still on quality color printing,
-though performance gets a lot of attention these days.
+
+<p>Gimp-print started out as a driver for The Gimp, the well known
+image manipulation program.  Early in development versions for
+Ghostscript and later CUPS were added.  The emphasis is still on
+quality color printing, though performance gets a lot of attention
+these days.
  
 <h2>I cannot install it, it complains about missing Gimp files</h2>
-You need to have Gimp development files installed on your system.
-These are called gimp-devel-soomething.rpm on most systems.
 
-<h2>What is the difference between B/W, Line art, solid color and Photo mode?</h2>
-Photo mode does a lot of work to make colors as similar to screen
-presentation as possible.
-This takes time. The other modes are faster, but colors may be off.
-B/W mode does not use color ink when printing.
+<p>You need to have Gimp development files installed on your system.
+These are called gimp-devel-something.rpm on most systems.
+
+<h2>What is the difference between B/W, Line art, solid color and
+Photo mode (or ImageType in Ghostscript)?</h2>
+
+<p>Photo mode does a lot of work to make colors as similar to screen
+presentation as possible.  This takes time. The other modes are
+faster, but colors may be off.  B/W mode does not use color ink when
+printing.
 
 <h2>I selected my printer and it doesn't work at all</h2>
-[troubleshooting lp. queue etc]
+
+<p>Please check your printing system (lp/lpr, etc.) configuration.
 
 <h2>I selected the right printer and nonsense gets printed</h2>
-Printers for which support just has been added may not have been tested,
-as the developers do not have access to the printer. It is worth trying
-different settings. For example, change the resolution to a mainstream
-value as used on that printer. Also photo mode is better tested than the
-optimized versions. When you find out what works and what doesn't, file
-a bug report.
+
+<p>Printers for which support just has been added may not have been
+tested, as the developers do not have access to the printer. It is
+worth trying different settings. For example, change the resolution to
+a mainstream value as used on that printer. Also photo mode is better
+tested than the optimized versions. When you find out what works and
+what doesn't, file a bug report.
+
+<p>One common cause of this is not using "raw" mode when printing from
+the Gimp plugin.  Depending upon your printing system, you will need
+to use either -l (traditional BSD lpd), -oraw (CUPS lpr), or -d (most
+versions of System V lp).  Otherwise the printing system attempts to
+interpret the output as something else, and tries to apply a filter to
+it.
   
 <h2>What's up with the HP Deskjet 1200?</h2>
-HP had sold two printers with the 1200 type designation. The old version is
-300 DPI and has a heating element to dry the ink. It was manufactured
-around 1990.
-The new version is of 2000 vintage has has higher resolution.
+
+<p>HP had sold two printers with the 1200 model designation. The old
+version is 300 DPI and has a heating element to dry the ink. It was
+manufactured around 1990.  The new version is of 2000 vintage has has
+higher resolution.  The one supported by this package is the new
+one???
 
 <h2>I selected selected the right printer and the quality is lousy</h2>
-Try selecting a different resolution or quality setting. Especially lower
-resolutions have a problem putting enough ink on paper. Also, use Photo mode.
-If you find settings that do not work, report these as bugs.
-High resolutions should produce a similar (but smoother) result than
-medium resolutions. Resolutions under a certain printer dependent figure are
-seen as draft-only - for example lower than 360 DPI on Epsons or lower than
-300 DPI on HP.
 
-If you use Ghostscript, make sure the Ghostscript resolution is not set
-higher than the driver resolution. If it is higher, the driver has to throw
-away part of the pixels, leading to uneven strokes in text and slanted lines
-with interruptions.
+<p>Try selecting a different resolution or quality setting. Especially
+lower resolutions have a problem putting enough ink on paper. Also,
+use Photo mode.  If you find settings that do not work, report these
+as bugs.  High resolutions should produce a similar (but smoother)
+result than medium resolutions. Resolutions under a certain printer
+dependent figure are seen as draft-only - for example lower than 360
+DPI on Epsons with standard paper or lower than 300 DPI on HP.
+
+<p>If you use Ghostscript, make sure the Ghostscript resolution is not
+set higher than the driver resolution. If it is higher, the driver has
+to throw away part of the pixels, leading to uneven strokes in text
+and slanted lines with interruptions.
 
 <h2>What is 'interpolated' resolution?</h2>
 
+<p>Interpolated resolution is an experimental way of simulating higher
+resolution than the printer offers by calculating the result at high
+resolution but printing at the maximum resolution offered by the
+printer.  In our experience, when the dither algorithm is working
+properly this merely results in longer processing time and more
+voluminous output with little or no improvement in quality.
 
 <h2>How do I start setting options for Ghostscript?</h2>
-[example config lines]
 
+<p>Please see Ghost/README for more information.
