@@ -169,15 +169,15 @@ typedef struct printer
                           int *left, int *right, int *bottom, int *top);
   /* Print function */
   void	(*print)(const struct printer *printer, int copies, FILE *prn,
-		 Image image, unsigned char *cmap, vars_t *v);
+		 Image image, unsigned char *cmap, const vars_t *v);
   vars_t printvars;
 } printer_t;
 
 extern const printer_t printers[];
 extern const int printer_count;
 
-typedef void 	(*convert_t)(unsigned char *in, unsigned short *out, int width,
-			     int bpp, unsigned char *cmap, vars_t *vars);
+typedef void (*convert_t)(unsigned char *in, unsigned short *out, int width,
+			  int bpp, unsigned char *cmap, const vars_t *vars);
 
 typedef struct
 {
@@ -199,12 +199,12 @@ typedef struct
 
 typedef struct
 {
-  double value_l;
-  double value_h;
-  unsigned bits_l;
-  unsigned bits_h;
-  int isdark_l;
-  int isdark_h;
+   double value_l;
+   double value_h;
+   unsigned bits_l;
+   unsigned bits_h;
+   int isdark_l;
+   int isdark_h;
 } full_dither_range_t;
 
 /*
@@ -253,24 +253,23 @@ extern void	dither_set_y_ranges_complete(void *vd, int nlevels,
 					     const dither_range_t *ranges);
 extern void	dither_set_k_ranges_complete(void *vd, int nlevels,
 					     const dither_range_t *ranges);
-extern void	dither_set_k_ranges_full(void *vd, int nlevels,
-				    const full_dither_range_t *ranges,
-				    double density);
-extern void	dither_set_c_ranges_full(void *vd, int nlevels,
-				    const full_dither_range_t *ranges,
-				    double density);
-extern void	dither_set_m_ranges_full(void *vd, int nlevels,
-				    const full_dither_range_t *ranges,
-				    double density);
-extern void	dither_set_y_ranges_full(void *vd, int nlevels,
-				    const full_dither_range_t *ranges,
-				    double density);
-
+extern void   dither_set_k_ranges_full(void *vd, int nlevels,
+                   const full_dither_range_t *ranges,
+                   double density);
+extern void   dither_set_c_ranges_full(void *vd, int nlevels,
+                   const full_dither_range_t *ranges,
+                   double density);
+extern void   dither_set_m_ranges_full(void *vd, int nlevels,
+                   const full_dither_range_t *ranges,
+                   double density);
+extern void   dither_set_y_ranges_full(void *vd, int nlevels,
+                   const full_dither_range_t *ranges,
+                   double density);
 extern void	dither_set_ink_spread(void *vd, int spread);
+extern void   dither_set_max_ink(void *vd, int, double);
 extern void	dither_set_x_oversample(void *vd, int os);
 extern void	dither_set_y_oversample(void *vd, int os);
-extern void	dither_set_ink_budget(void *vd, unsigned budget);
-extern void	dither_set_max_ink(void *vd, int, double);
+extern void	dither_set_adaptive_divisor(void *vd, unsigned divisor);
 
 
 extern void	free_dither(void *);
@@ -286,17 +285,17 @@ extern void	dither_cmyk(unsigned short *, int, void *, unsigned char *,
 			    unsigned char *, unsigned char *);
 
 extern void	gray_to_gray(unsigned char *, unsigned short *, int, int,
-			     unsigned char *, vars_t *);
+			     unsigned char *, const vars_t *);
 extern void	indexed_to_gray(unsigned char *, unsigned short *, int, int,
-				unsigned char *, vars_t *);
+				unsigned char *, const vars_t *);
 extern void	indexed_to_rgb(unsigned char *, unsigned short *, int, int,
-			       unsigned char *, vars_t *);
+			       unsigned char *, const vars_t *);
 extern void	rgb_to_gray(unsigned char *, unsigned short *, int, int,
-			    unsigned char *, vars_t *);
+			    unsigned char *, const vars_t *);
 extern void	rgb_to_rgb(unsigned char *, unsigned short *, int, int,
-			   unsigned char *, vars_t *);
+			   unsigned char *, const vars_t *);
 extern void	gray_to_rgb(unsigned char *, unsigned short *, int, int,
-			    unsigned char *, vars_t *);
+			    unsigned char *, const vars_t *);
 
 extern void	compute_lut(const vars_t *pv, float app_gamma,
 			    vars_t *uv);
@@ -312,7 +311,8 @@ extern void	escp2_imageable_area(int model, char *ppd_file,
 				     char *media_size, int *left, int *right,
 				     int *bottom, int *top);
 extern void	escp2_print(const printer_t *printer, int copies, FILE *prn,
-			    Image image, unsigned char *cmap, vars_t *v);
+			    Image image, unsigned char *cmap,
+			    const vars_t *v);
 
 
 #ifndef ESCP2_GHOST
@@ -322,7 +322,8 @@ extern void	canon_imageable_area(int model, char *ppd_file,
 				     char *media_size, int *left, int *right,
 				     int *bottom, int *top);
 extern void	canon_print(const printer_t *printer, int copies, FILE *prn,
-			    Image image, unsigned char *cmap, vars_t *v);
+			    Image image, unsigned char *cmap,
+			    const vars_t *v);
 
 
 extern char	**pcl_parameters(int model, char *ppd_file, char *name,
@@ -331,7 +332,8 @@ extern void	pcl_imageable_area(int model, char *ppd_file, char *media_size,
 		                   int *left, int *right, int *bottom,
 				   int *top);
 extern void	pcl_print(const printer_t *printer, int copies, FILE *prn,
-			  Image image, unsigned char *cmap, vars_t *v);
+			  Image image, unsigned char *cmap,
+			  const vars_t *v);
 
 
 extern char	**ps_parameters(int model, char *ppd_file, char *name,
@@ -342,7 +344,8 @@ extern void	ps_imageable_area(int model, char *ppd_file, char *media_size,
 		                  int *left, int *right, int *bottom,
 				  int *top);
 extern void	ps_print(const printer_t *printer, int copies, FILE *prn,
-			 Image image, unsigned char *cmap, vars_t *v);
+			 Image image, unsigned char *cmap,
+			 const vars_t *v);
 #else
 #define canon_parameters NULL
 #define canon_imageable_area NULL
