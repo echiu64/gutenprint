@@ -66,6 +66,7 @@ static stpui_plist_t *current_printer = NULL;
 %token DESTINATION
 %token SCALING
 %token ORIENTATION
+%token AUTOSIZE_ROLL_PAPER
 %token UNIT
 %token DRIVER
 %token LEFT
@@ -107,6 +108,10 @@ Scaling: SCALING tDOUBLE
 
 Orientation: ORIENTATION tINT
 	{ current_printer->orientation = $2; }
+;
+
+Autosize_Roll_Paper: AUTOSIZE_ROLL_PAPER tINT
+	{ current_printer->auto_size_roll_feed_paper = $2; }
 ;
 
 Unit: UNIT tINT
@@ -242,8 +247,9 @@ Parameter: PARAMETER Typed_Param
 Parameters: Parameters Parameter | Empty
 ;
 
-Standard_Value:  Destination | Scaling | Orientation | Unit | Left | Top |
-	Custom_Page_Width | Custom_Page_Height | Output_Type
+Standard_Value:  Destination | Scaling | Orientation | Autosize_Roll_Paper |
+	Unit | Left | Top | Custom_Page_Width | Custom_Page_Height |
+	Output_Type
 
 Standard_Values: Standard_Values Standard_Value | Empty
 ;

@@ -77,6 +77,7 @@ Printer:		DBG(PRINTER); return PRINTER;
 Destination:		DBG(DESTINATION); return DESTINATION;
 Scaling:		DBG(SCALING); return SCALING;
 Orientation:		DBG(ORIENTATION); return ORIENTATION;
+Autosize-Roll-Paper:	DBG(AUTOSIZE_ROLL_PAPER); return AUTOSIZE_ROLL_PAPER;
 Unit:			DBG(UNIT); return UNIT;
 Driver:			DBG(DRIVER); return DRIVER;
 Left:			DBG(LEFT); return LEFT;

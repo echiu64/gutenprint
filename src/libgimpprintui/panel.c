@@ -95,6 +95,7 @@ static GtkWidget *units_label;
 static GtkWidget *custom_size_width;
 static GtkWidget *custom_size_height;
 static GtkWidget *show_all_paper_sizes_button;
+static GtkWidget *auto_paper_size_button;
 
 static GtkWidget *orientation_menu;    /* Orientation menu */
 
@@ -131,6 +132,7 @@ static gboolean frame_valid = FALSE;
 static gboolean need_exposure = FALSE;
 static gboolean suppress_scaling_adjustment = FALSE;
 static gboolean suppress_scaling_callback   = FALSE;
+static gboolean thumbnail_update_pending    = FALSE;
 /*
  * These are semaphores, not true booleans.
  */
@@ -161,6 +163,7 @@ static gdouble image_xres, image_yres; /* Original image resolution */
 static gint do_update_thumbnail = 0;
 static gint saveme = 0;		/* True if printrc should be saved */
 static gint runme = 0;		/* True if print should proceed */
+static gint auto_paper_size = 0; /* True if we're using auto paper size now */
 
 
 
@@ -169,6 +172,7 @@ static void scaling_callback      (GtkWidget *widget);
 static void plist_callback        (GtkWidget *widget, gpointer data);
 static void custom_media_size_callback(GtkWidget *widget, gpointer data);
 static void show_all_paper_sizes_callback(GtkWidget *widget, gpointer data);
+static void auto_paper_size_callback(GtkWidget *widget, gpointer data);
 static void combo_callback        (GtkWidget *widget, gpointer data);
 static void output_type_callback  (GtkWidget *widget, gpointer data);
 static void unit_callback         (GtkWidget *widget, gpointer data);
@@ -1189,6 +1193,16 @@ create_paper_size_frame(void)
     (media_size_table, 2, 3, _("Height:"),
      _("Height of the paper that you wish to print to"),
      custom_media_size_callback);
+
+  vpos++;
+  auto_paper_size_button =
+    gtk_check_button_new_with_label(_("Automatic Paper Size"));
+  gtk_table_attach_defaults
+    (GTK_TABLE(table), auto_paper_size_button, 0, 2, vpos, vpos + 1);
+  gtk_toggle_button_set_active
+    (GTK_TOGGLE_BUTTON(auto_paper_size_button), FALSE);
+  gtk_signal_connect(GTK_OBJECT(auto_paper_size_button), "toggled",
+		     GTK_SIGNAL_FUNC(auto_paper_size_callback), NULL);
 }
 
 static void
@@ -2059,14 +2073,23 @@ invalidate_frame (void)
 static void
 compute_scaling_limits(gdouble *min_ppi_scaling, gdouble *max_ppi_scaling)
 {
-  gdouble min_ppi_scaling1, min_ppi_scaling2;
-  min_ppi_scaling1 = FINCH * (gdouble) image_width / (gdouble) printable_width;
-  min_ppi_scaling2 = FINCH * (gdouble)image_height / (gdouble)printable_height;
-
-  if (min_ppi_scaling1 > min_ppi_scaling2)
-    *min_ppi_scaling = min_ppi_scaling1;
+  if (auto_paper_size)
+    {
+      *min_ppi_scaling =
+	FINCH * (gdouble) image_width / (gdouble) printable_width;
+    }
   else
-    *min_ppi_scaling = min_ppi_scaling2;
+    {
+      gdouble min_ppi_scaling1 =
+	FINCH * (gdouble) image_width / (gdouble) printable_width;
+      gdouble min_ppi_scaling2 =
+	FINCH * (gdouble) image_height / (gdouble) printable_height;
+
+      if (min_ppi_scaling1 > min_ppi_scaling2)
+	*min_ppi_scaling = min_ppi_scaling1;
+      else
+	*min_ppi_scaling = min_ppi_scaling2;
+    }
 
   *max_ppi_scaling = *min_ppi_scaling * 100 / minimum_image_percent;
 }
@@ -2171,6 +2194,8 @@ scaling_callback (GtkWidget *widget)
     suppress_preview_update++;
   gtk_adjustment_changed (GTK_ADJUSTMENT (scaling_adjustment));
   gtk_adjustment_value_changed (GTK_ADJUSTMENT (scaling_adjustment));
+  if (auto_paper_size)
+    set_media_size(stp_get_string_parameter(pv->v, "PageSize"));
   if (widget == scaling_ppi || widget == scaling_percent)
     suppress_preview_update--;
 }
@@ -2279,7 +2304,8 @@ stpui_set_image_resolution(gdouble xres, gdouble yres)
 gint
 stpui_compute_orientation(void)
 {
-  if ((printable_width >= printable_height &&
+  if (auto_paper_size ||
+      (printable_width >= printable_height &&
        image_true_width >= image_true_height) ||
       (printable_height >= printable_width &&
        image_true_height >= image_true_width))
@@ -2573,6 +2599,34 @@ do_all_updates(void)
   preview_update ();
 }
 
+static void
+auto_paper_size_callback(GtkWidget *widget, gpointer data)
+{
+  auto_paper_size =
+    gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(auto_paper_size_button));
+  pv->auto_size_roll_feed_paper = auto_paper_size;
+  set_orientation(pv->orientation);
+  do_all_updates();
+}
+
+static void
+setup_auto_paper_size(void)
+{
+  const stp_papersize_t *ps =
+    stp_get_papersize_by_name(stp_get_string_parameter(pv->v, "PageSize"));
+  if (ps->height == 0 && ps->width != 0)		/* Implies roll feed */
+    {
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(auto_paper_size_button),
+				   pv->auto_size_roll_feed_paper);
+      gtk_widget_show(auto_paper_size_button);
+    }
+  else
+    {
+      gtk_widget_hide(auto_paper_size_button);
+      auto_paper_size = 0;
+    }
+}
+
 /*
  *  plist_callback() - Update the current system printer.
  */
@@ -2753,17 +2807,31 @@ set_media_size(const gchar *new_media_size)
 	  stp_set_page_width (pv->v, size);
 	}
 
+      setup_auto_paper_size();
       if (pap->height == 0)
 	{
 	  int max_w, max_h, min_w, min_h;
 	  stp_get_size_limit(pv->v, &max_w, &max_h, &min_w, &min_h);
-	  size = old_height;
+	  if (auto_paper_size)
+	    {
+	      int l, r, b, t;
+	      stp_set_page_height(pv->v, 0);
+	      old_height = 0;
+	      stp_get_imageable_area(pv->v, &l, &r, &b, &t);
+	      gtk_widget_set_sensitive(GTK_WIDGET(custom_size_height), FALSE);
+	      gtk_entry_set_editable(GTK_ENTRY(custom_size_height), FALSE);
+	      size = print_height;
+	    }
+	  else
+	    {
+	      gtk_widget_set_sensitive (GTK_WIDGET (custom_size_height), TRUE);
+	      gtk_entry_set_editable (GTK_ENTRY (custom_size_height), TRUE);
+	      size = old_height;
+	    }
 	  if (size < min_h)
 	    size = min_h;
 	  else if (size > max_h)
 	    size = max_h;
-	  gtk_widget_set_sensitive (GTK_WIDGET (custom_size_height), TRUE);
-	  gtk_entry_set_editable (GTK_ENTRY (custom_size_height), TRUE);
 	}
       else
 	{
@@ -2793,6 +2861,7 @@ refresh_all_options(gpointer data)
   g_idle_remove_by_data(data);
   do_all_updates();
   do_all_updates();		/* Update twice to pick up cascading changes */
+  return TRUE;
 }
 
 static void
@@ -3753,6 +3822,15 @@ do_preview_thumbnail (void)
   gdk_flush();
 }
 
+static gboolean
+idle_preview_thumbnail(gpointer data)
+{
+  g_idle_remove_by_data(data);
+  do_preview_thumbnail();
+  thumbnail_update_pending = FALSE;
+  return TRUE;
+}
+
 static void
 preview_expose (void)
 {
@@ -3801,6 +3879,14 @@ preview_update (void)
 	  suppress_preview_reset--;
 	}
     }
+  else if (auto_paper_size)
+    {
+      gdouble twidth = .5 + printable_width * pv->scaling / 100;
+
+      print_width = twidth;
+      print_height = twidth * (gdouble) image_height /
+	(gdouble) image_width;
+    }
   else
     {
       /* we do pv->scaling % of height or width, whatever is less */
@@ -3825,6 +3911,10 @@ preview_update (void)
 	    (gdouble) image_height;
 	}
     }
+
+  if (auto_paper_size)
+    set_media_size(stp_get_string_parameter(pv->v, "PageSize"));
+
   stp_set_width(pv->v, print_width);
   stp_set_height(pv->v, print_height);
 
@@ -3851,8 +3941,11 @@ preview_update (void)
   suppress_preview_update--;
 
   /* draw image */
-  if (! suppress_preview_update)
-    do_preview_thumbnail ();
+  if (! suppress_preview_update && !thumbnail_update_pending)
+    {
+      thumbnail_update_pending = TRUE;
+      g_idle_add(idle_preview_thumbnail, (gpointer) &idle_preview_thumbnail);
+    }
 }
 
 /*

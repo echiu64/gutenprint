@@ -137,6 +137,7 @@ stpui_printer_initialize(stpui_plist_t *printer)
   printer->active = 0;
   printer->scaling = 100.0;
   printer->orientation = ORIENT_AUTO;
+  printer->auto_size_roll_feed_paper = 0;
   printer->unit = 0;
   printer->v = stp_vars_create();
   printer->invalid_mask = INVALID_TOP | INVALID_LEFT;
@@ -159,6 +160,7 @@ stpui_plist_copy(stpui_plist_t *vd, const stpui_plist_t *vs)
 /*  vd->active = vs->active; */
   vd->scaling = vs->scaling;
   vd->orientation = vs->orientation;
+  vd->auto_size_roll_feed_paper = vs->auto_size_roll_feed_paper;
   vd->unit = vs->unit;
   vd->invalid_mask = vs->invalid_mask;
   stpui_plist_set_name(vd, stpui_plist_get_name(vs));
@@ -804,6 +806,7 @@ stpui_printrc_save(void)
 	  fprintf(fp, "Destination: \"%s\"\n", stpui_plist_get_output_to(p));
 	  fprintf(fp, "Scaling: %.3f\n", p->scaling);
 	  fprintf(fp, "Orientation: %d\n", p->orientation);
+	  fprintf(fp, "Autosize-Roll-Paper: %d\n", p->auto_size_roll_feed_paper);
 	  fprintf(fp, "Unit: %d\n", p->unit);
 
 	  fprintf(fp, "Left: %d\n", stp_get_left(p->v));

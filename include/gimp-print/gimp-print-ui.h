@@ -62,6 +62,7 @@ typedef struct		/**** Printer List ****/
   float		scaling;      /* Scaling, percent of printable area */
   orient_t	orientation;
   int		unit;	  /* Units for preview area 0=Inch 1=Metric */
+  int		auto_size_roll_feed_paper;
   int		invalid_mask;
   stp_vars_t	v;
 } stpui_plist_t;
