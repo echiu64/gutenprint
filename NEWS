@@ -1,5 +1,5 @@
-Gimp-Print 4.2.5, released January 24, 2003, is a stable release in
-the Gimp-Print 4.2 series.
+Gimp-Print 4.2.6-pre1, released April 18, 2003, is a prerelease in the
+Gimp-Print 4.2 series.
 
 Gimp-Print is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -40,6 +40,34 @@ http://gimp-print.sourceforge.net/MacOSX.php3.
 
 Please read the README file for full instructions on installing this
 package from source code.
+
+
+Gimp-Print 4.2.6-pre1 contains the following major changes over
+Gimp-Print 4.2.5:
+
+1) Preliminary support for Epson Stylus C50, Stylus Photo 900, CL-740,
+   PM-870C, PM-930C, PM-970C, and PM-3700C.  The PM-930C and PM-970C
+   are limited to 2880x1440 DPI in this release; this restriction will
+   not be lifted in 4.2.
+
+2) Better conformance to the PPD spec on the part of the CUPS PPD
+   files.
+
+3) Per-page variables in the CUPS driver are now set at the beginning
+   of each page.  This makes it possible to change the page size (for
+   example) in the middle of a document.
+
+4) The PostScript LanguageLevel attribute in the CUPS PPD files now
+   defaults to 3, as all current Ghostscript releases are fully
+   compatible with Level 3 PostScript.
+
+5) Minor speed improvement for the HP LaserJet IIP.
+
+6) The Foomatic data now uses the clear-text printer ID's from
+   Foomatic 3.0, in addition to legacy support for the older numeric
+   ideas.
+
+7) Minor adjustment to the HP DeskJet 340 margins.
 
 
 Gimp-Print 4.2.5 contains the following major changes over Gimp-Print
