@@ -2708,8 +2708,8 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
     }
   stp_dither_set_density(dither, stp_get_density(nv));
 
-  in  = stp_malloc(image_width * image_bpp);
-  out = stp_malloc(image_width * out_bpp * 2);
+  in  = stp_zalloc(image_width * image_bpp);
+  out = stp_zalloc(image_width * out_bpp * 2);
 
   errdiv  = image_height / out_height;
   errmod  = image_height % out_height;

@@ -2078,8 +2078,8 @@ densityDivisor /= 1.2;
   */
 
 
-  in  = stp_malloc(image_width * image_bpp);
-  out = stp_malloc(image_width * out_bpp * 2);
+  in  = stp_zalloc(image_width * image_bpp);
+  out = stp_zalloc(image_width * out_bpp * 2);
 
   /* calculate the memory we need for one line of the printer image (hopefully we are right) */
 #ifdef DEBUG

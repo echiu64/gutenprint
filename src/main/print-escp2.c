@@ -1548,8 +1548,8 @@ escp2_do_print(const stp_printer_t printer,		/* I - Model */
       colorfunc = stp_choose_colorfunc(output_type, image_bpp, cmap,
 				       &out_bpp, nv);
 
-      in  = stp_malloc(image_width * image_bpp);
-      out = stp_malloc(image_width * out_bpp * 2);
+      in  = stp_zalloc(image_width * image_bpp);
+      out = stp_zalloc(image_width * out_bpp * 2);
 
       errdiv  = image_height / out_height;
       errmod  = image_height % out_height;
