@@ -372,7 +372,7 @@ static const float_param_t float_parameters[] =
       "RedDensity", N_("Red Balance"), N_("Output Level Adjustment"),
       N_("Adjust the red balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1, 1
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 4, 1
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -380,7 +380,7 @@ static const float_param_t float_parameters[] =
       "BlueDensity", N_("Blue Balance"), N_("Output Level Adjustment"),
       N_("Adjust the blue balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2, 1
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 5, 1
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -388,7 +388,7 @@ static const float_param_t float_parameters[] =
       "GlossDensity", N_("Gloss Balance"), N_("Output Level Adjustment"),
       N_("Adjust the gloss balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3, 1
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 6, 1
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -1089,12 +1089,17 @@ set_density_parameter(stp_const_vars_t v,
 		      stp_parameter_t *description,
 		      int color)
 {
+  description->is_active = 0;
   if (stp_get_string_parameter(v, "PrintingMode") &&
       strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0 &&
       using_automatic_settings(v, AUTO_MODE_MANUAL))
-    description->is_active = 1;
-  else
-    description->is_active = 0;
+    {
+      const escp2_inkname_t *ink_name = get_inktype(v);
+      if (ink_name &&
+	  ink_name->channel_set->channel_count > color &&
+	  ink_name->channel_set->channels[color])
+	description->is_active = 1;
+    }
 }  
 
 static void
