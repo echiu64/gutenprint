@@ -701,10 +701,10 @@ olympus_parameters(stp_const_vars_t v, const char *name,
     }
   else if (strcmp(name, "Laminate") == 0)
     {
+      description->bounds.str = stp_string_list_create();
       if (caps->laminate)
         {
           const laminate_list_t *llist = caps->laminate;
-          description->bounds.str = stp_string_list_create();
 
           for (i = 0; i < llist->n_items; i++)
             {
