@@ -130,6 +130,23 @@ Gimp-Print 4.3.24 contains the following major changes over Gimp-Print
    eliminate a common source of error that can yield unpredictable
    results or difficult-to-diagnose errors.
 
+5) The Epson Stylus Photo 2100/2200 now supports 1440x1440 DPI
+   printing.  This mode only barely deposits enough ink to fill the
+   page on most papers.  However, it prints as fast as 1440x720 DPI
+   (although the calculation time is longer) and in some cases offers
+   better quality than both 1440x720 and 2880x1440 DPI.
+
+   Experiments have determined that this printer is very sensitive to
+   the choice of dither algorithm, unidirectional vs. bidirectional
+   printing, resolution, and weave pattern.  In general, it appears
+   that this printer often prints better quality in bidirectional mode
+   than unidirectional.  The Staggered weave pattern in combination
+   with Hybrid EvenTone dithering may also yield better results;
+   Ordered dithering often yields good results, too.
+
+   We recommend that you experiment with settings to identify the
+   settings that work best for you.
+
 
 Gimp-Print 4.3.23 contains the following major changes over Gimp-Print
 4.3.22:
