@@ -99,7 +99,13 @@ ESC (S BC=8 WIDTH4 LENGTH4
 
 ESC (v BC=2 ADVANCE2
 ESC (v BC=4 ADVANCE4
-	Feed vertically ADVANCE "vertical units" (see ESC (U above).
+	Feed vertically ADVANCE "vertical units" (see ESC (U above)
+	from the current print head position.
+
+ESC (V BC=2 ADVANCE2
+ESC (V BC=4 ADVANCE4
+	Feed vertically ADVANCE "vertical units" (see ESC (U above)
+	from the top margin.
 
 ESC ($ BC=4 OFFSET4
 	Set horizontal position to OFFSET from the left margin.  This
@@ -213,3 +219,37 @@ port on the ESC 900 and apparently other new printers.  This must be
 sent BEFORE the initial reset command:
 
 ESC 01 @EJL<space>1284.4<newline>@EJL<space><space><space><space><space><newline>ESC@
+
+
+The proper sequence of initialization commands is:
+
+magic command
+ESC @
+remote mode if needed
+ESC (G
+ESC (U
+ESC (K (if appropriate)
+ESC (i
+ESC U (if needed)
+ESC (s (if appropriate)
+ESC (e
+ESC (C
+ESC (c
+ESC (S
+ESC (D (if needed)
+ESC (V (optional -- this can be accomplished with ESC (v)
+
+For printing, the proper sequence is:
+
+ESC (v
+
+repeat for each color:
+	ESC ($ or ESC (\ or ESC \
+	ESC (r or ESC r (if needed -- not used with ESC i and not needed if
+	    the color has not changed from the previous printed line)
+	ESC . or ESC i  ...data... <return> (0A hex)
+
+To terminate a page:
+
+<formfeed> (0C hex)
+ESC @
