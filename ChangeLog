@@ -1,3 +1,51 @@
+2000-11-26	<rlk@sourceforge.net>
+
+	Files:	RELNOTES (1.33.2.10) (+3 -0)
+	
+	Note rename of calibrate to cups-calibrate for for 4.0.3 release
+	
+2000-11-26	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.56.2.8) (+262 -0)
+	
+	4.0.3 release
+	
+2000-11-26	<rlk@sourceforge.net>
+
+	Files:	cups/Makefile.in (1.17.2.1) (+4 -4)
+		cups/README.txt (1.7.2.1) (+1 -1)
+	
+	Rename calibrate to cups-calibrate
+	
+2000-11-26	<rlk@sourceforge.net>
+
+	Files:	cups/Makefile.in (1.21) (+4 -4)
+		cups/README.txt (1.8) (+1 -1)
+	
+	Rename calibrate to cups-calibrate.
+	
+2000-11-25	<rlk@sourceforge.net>
+
+	Files:	print-color.c (1.2) (+3 -6)
+		Ghost/README (1.56) (+2 -2)
+		printers.xml (1.37) (+66 -0)
+		print-pcl.c (1.97) (+36 -12)
+		print-lexmark.c (1.6) (+36 -12)
+		print-escp2.c (1.272) (+65 -27)
+		print-dither.c (1.98) (+11 -2)
+	
+	Increase the resolution of the hue mapper
+	
+	Tweak Epson printers
+	
+	Fix transition issues in dither code
+	
+2000-11-23	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.271) (+11 -11)
+	
+	Tweak the hue adjustments.
+	
 2000-11-22	<rlk@sourceforge.net>
 
 	Files:	README (1.35.2.4) (+1 -1)
