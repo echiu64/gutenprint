@@ -136,7 +136,8 @@ $supported_printers = array(
 	       '4076' => 'Operational',
 	       'Z42' => 'Needs Testing',
 	       'Z43' => 'Needs Testing',
-	       'Z52' => 'Operational'
+	       'Z52' => 'Operational',
+	       'Z53' => 'Operational'
 	       )
        ),
 'Postscript' => array(
