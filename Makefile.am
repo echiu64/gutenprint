@@ -107,7 +107,7 @@ install-cups: all
 install-ghost: all
 	$(MAKE) -C src/ghost install
 
-## +-+-+-+-+ YES-GIMP +-+-+-+-+
+## @-@-@-@-@ YES-GIMP @-@-@-@-@
 install-gimp: all
 	$(MAKE) -C src/gimp install
 
@@ -132,8 +132,8 @@ CLEANSCRIPTS = \
 CLEANFILES = .gimp-dist .noupdate
 MAINTAINERCLEANFILES = ABOUT-NLS INSTALL aclocal.m4 config.h.in configure Makefile.in stamp-h.in $(addprefix scripts/, $(CLEANSCRIPTS))
 
-## +-+-+-+-+ NO-GIMP +-+-+-+-+
+## @-@-@-@-@ NO-GIMP @-@-@-@-@
 .PHONY: gimp-dist install-cups install-ghost snapshot ChangeLog
-## +-+-+-+-+ YES-GIMP +-+-+-+-+
+## @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 .PHONY: install-gimp html
