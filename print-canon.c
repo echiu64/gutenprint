@@ -742,6 +742,11 @@ canon_print(const printer_t *printer,		/* I - Model */
    *                 or single black cartridge installed
    */
 
+  if (v->image_type == IMAGE_MONOCHROME)
+    {
+      output_type = OUTPUT_GRAY;
+    }
+
   if (printhead == 0 || caps.inks == CANON_INK_K)
     output_type = OUTPUT_GRAY;
   else if (image_bpp < 3 && cmap == NULL && output_type == OUTPUT_COLOR)
@@ -782,7 +787,8 @@ canon_print(const printer_t *printer,		/* I - Model */
   fprintf(stderr,"canon: resolution=%dx%d\n",xdpi,ydpi);
 
   if (!strcmp(resolution+(strlen(resolution)-3),"DMT") && 
-      (caps.features & CANON_CAP_DMT)) {
+      (caps.features & CANON_CAP_DMT) &&
+      v->image_type != IMAGE_MONOCHROME) {
     use_dmt= 1;
     fprintf(stderr,"canon: using drop modulation technology\n");
   }
@@ -1062,20 +1068,22 @@ canon_print(const printer_t *printer,		/* I - Model */
 
       (*colorfunc)(in, out, image_height, image_bpp, cmap, v);
       
-      if (output_type == OUTPUT_GRAY && use_dmt) {
-	dither_black_n(out, x, dither, black, 1);
+      if (output_type == OUTPUT_GRAY)
+	{
+	  if (v->image_type == IMAGE_MONOCHROME)
+	    dither_fastblack(out, x, dither, black);
+	  else if (use_dmt)
+	    dither_black_n(out, x, dither, black, 1);
+	  else
+	    dither_black(out, x, dither, black);
+	} else if (use_dmt) {
+	  dither_cmyk_n(out, x, dither, cyan, lcyan, magenta, lmagenta,
+			yellow, lyellow, black, 1);
 
-      } else if (output_type == OUTPUT_GRAY) {
-	dither_black(out, x, dither, black);
-	
-      } else if (use_dmt) {
-	dither_cmyk_n(out, x, dither, cyan, lcyan, magenta, lmagenta,
-		     yellow, lyellow, black, 1);
-
-      } else {
-	dither_cmyk(out, x, dither, cyan, lcyan, magenta, lmagenta,
-		    yellow, lyellow, black);
-      }
+	} else {
+	  dither_cmyk(out, x, dither, cyan, lcyan, magenta, lmagenta,
+		      yellow, lyellow, black);
+	}
 
       /* fprintf(stderr,"."); */
 
@@ -1131,20 +1139,22 @@ canon_print(const printer_t *printer,		/* I - Model */
 
       (*colorfunc)(in, out, image_width, image_bpp, cmap, v);
 
-      if (output_type == OUTPUT_GRAY && use_dmt) {
-	dither_black_n(out, y, dither, black, 1);
+      if (output_type == OUTPUT_GRAY)
+	{
+	  if (v->image_type == IMAGE_MONOCHROME)
+	    dither_fastblack(out, y, dither, black);
+	  else if (use_dmt)
+	    dither_black_n(out, y, dither, black, 1);
+	  else
+	    dither_black(out, y, dither, black);
+	} else if (use_dmt) {
+	  dither_cmyk_n(out, y, dither, cyan, lcyan, magenta, lmagenta,
+			yellow, lyellow, black, 1);
 
-      } else if (output_type == OUTPUT_GRAY) {
-	dither_black(out, y, dither, black);
-
-      } else if (use_dmt) {
-	dither_cmyk_n(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		     yellow, lyellow, black, 1);
-
-      } else {
-	dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		    yellow, lyellow, black);
-      }
+	} else {
+	  dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
+		      yellow, lyellow, black);
+	}
 
       /* fprintf(stderr,","); */
 
@@ -1528,6 +1538,9 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
 
 /*
  *   $Log$
+ *   Revision 1.35  2000/03/13 13:31:26  rlk
+ *   Add monochrome mode
+ *
  *   Revision 1.34  2000/03/11 17:30:15  rlk
  *   Significant dither changes; addition of line art/solid color/continuous tone modes
  *

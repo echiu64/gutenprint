@@ -753,6 +753,10 @@ pcl_print(const printer_t *printer,		/* I - Model */
  /*
   * Choose the correct color conversion function...
   */
+  if (v->image_type == IMAGE_MONOCHROME)
+    {
+      output_type = OUTPUT_GRAY;
+    }
 
   if (caps.color_type == PCL_COLOR_NONE)
     output_type = OUTPUT_GRAY;
@@ -801,7 +805,8 @@ pcl_print(const printer_t *printer,		/* I - Model */
       ydpi = 300;
   }
 
-  do_cret = (xdpi == 300 && ((caps.color_type & PCL_COLOR_4) == PCL_COLOR_4));
+  do_cret = (xdpi == 300 && ((caps.color_type & PCL_COLOR_4) == PCL_COLOR_4) &&
+	     v->image_type != IMAGE_MONOCHROME);
 
 #ifdef DEBUG
   fprintf(stderr, "do_cret = %d\n", do_cret);
@@ -1233,7 +1238,10 @@ pcl_print(const printer_t *printer,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black(out, x, dither, black);
+	  if (v->image_type == IMAGE_MONOCHROME)
+	    dither_fastblack(out, x, dither, black);
+	  else
+	    dither_black(out, x, dither, black);
           (*writefunc)(prn, black, length, 1);
 	}
 	else
@@ -1322,7 +1330,10 @@ pcl_print(const printer_t *printer,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black(out, y, dither, black);
+	  if (v->image_type == IMAGE_MONOCHROME)
+	    dither_fastblack(out, y, dither, black);
+	  else
+	    dither_black(out, y, dither, black);
           (*writefunc)(prn, black, length, 1);
 	}
 	else
@@ -1499,6 +1510,9 @@ pcl_mode2(FILE          *prn,		/* I - Print file or command */
 
 /*
  *   $Log$
+ *   Revision 1.38  2000/03/13 13:31:26  rlk
+ *   Add monochrome mode
+ *
  *   Revision 1.37  2000/03/11 17:30:15  rlk
  *   Significant dither changes; addition of line art/solid color/continuous tone modes
  *

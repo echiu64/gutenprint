@@ -70,6 +70,7 @@
 #define IMAGE_LINE_ART		0
 #define IMAGE_SOLID_TONE	1
 #define IMAGE_CONTINUOUS	2
+#define IMAGE_MONOCHROME	3
 
 #ifndef MIN
 #  define MIN(a,b)		((a) < (b) ? (a) : (b))
@@ -196,7 +197,9 @@ extern void	dither_set_ink_spread(void *vd, int spread);
 
 extern void	scale_dither(void *vd, int scale);
 extern void	free_dither(void *);
+
 extern void	dither_black(unsigned short *, int, void *, unsigned char *);
+extern void	dither_fastblack(unsigned short *, int, void *, unsigned char *);
 
 extern void	dither_cmyk(unsigned short *, int, void *, unsigned char *,
 			    unsigned char *, unsigned char *,

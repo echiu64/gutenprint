@@ -187,19 +187,34 @@ currently supported Media Selection:
 -sPAPERSIZE=a4
 -sPAPERSIZE=a3
 
--dImageType=x      x:   0 ...   2  (0) (0==line art, 1==solid tones,
-					2==continuous tone photograph
+Image type (to optimize the dither)
+-dImageType=x x:   0 ...   3  (0)
+Select the image type most representative of what's being printed.  
+
+0  Line art (color or gray scale)
+1  Primarily solid colors or smooth gradients (color or gray scale)
+2  Continuous-tone photographs (color or gray scale)
+3  Pure black and white or pre-screened (currently black only)
+
+For mixed documents, options 0 or 1 will probably work best.  Option 0
+will dither faster and yield sharper text, but images will be
+grainier.  Option 1 will yield smoother images, but text will not be
+as sharp and the dither process will be slower.  Option 2 will yield
+the best natural images, but text will be noticeably fuzzy.  Option 3
+is very fast and accurate, but should not be used if there are any
+tones other than pure black and white.
 
 Examples:
 ---------
 
-Example 1 (print to file, color, 360 dpi):
-gs -sDEVICE=stp -sOutputFile=itsyourchoice.prn -dModel=8 -dDensity=0.7 -dGamma=1.5 -dSaturation=0.9 -dBrightness=40 foo.ps
+Example 1 (print charts to file, color, 360 dpi):
+gs -sDEVICE=stp -dModel=8 -dDensity=0.7 -dGamma=1.5 -dSaturation=0.9 -dBrightness=40 -dImageType=1 foo.ps -sOutputFile=itsyourchoice.prn
 
+Example 2 (print color photograph to /dev/lp0 at maximum quality):
+gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -dModel=6 -dDensity=0.8 -r1440 -dQuality=6 -dImageType=2 foo.ps -sOutputFile=/dev/lp0
 
-Example 2 (print to /dev/lp0, color, 720 dpi HQ Mode):
-gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sOutputFile=- -dModel=6 -dDensity=0.8 -r720 -dQuality=4 foo.ps >/dev/lp0
-
+Example 3 (print pure black text to stdout)
+gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -dModel=6 -dDensity=0.8 -r720 -dQuality=2 -dImageType=3 foo.ps -sOutputFile=-
 
 Settings you might try:
 -----------------------

@@ -274,6 +274,7 @@ GtkWidget	*print_dialog,		/* Print dialog window */
 		*image_line_art,
 		*image_solid_tone,
 		*image_continuous_tone,
+		*image_monochrome,
 #if DO_LINEAR
 		*linear_on,		/* Linear toggle, on */
 		*linear_off,		/* Linear toggle, off */
@@ -389,7 +390,7 @@ query(void)
     { PARAM_INT32,	"green",	"Green level" },
     { PARAM_INT32,	"blue",		"Blue level" },
     { PARAM_INT32,	"linear",	"Linear output (0 = normal, 1 = linear)" },
-    { PARAM_INT32,	"image_type",	"Image type (0 = line art, 1 = solid tones, 2 = continuous tone)"},
+    { PARAM_INT32,	"image_type",	"Image type (0 = line art, 1 = solid tones, 2 = continuous tone, 3 = monochrome)"},
     { PARAM_FLOAT,	"saturation",	"Saturation (0-1000%)" },
     { PARAM_FLOAT,	"density",	"Density (0-200%)" },
     { PARAM_STRING,	"ink_type",	"Type of ink or cartridge" },
@@ -1155,6 +1156,17 @@ do_print_dialog(void)
   gtk_signal_connect(GTK_OBJECT(button), "toggled",
 		     (GtkSignalFunc)image_type_callback,
 		     (gpointer)IMAGE_CONTINUOUS);
+  gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
+  gtk_widget_show(button);
+
+  image_monochrome= button =
+    gtk_radio_button_new_with_label(gtk_radio_button_group(GTK_RADIO_BUTTON(button)),
+							   _("Monochrome"));
+  if (vars.image_type == IMAGE_MONOCHROME)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
+  gtk_signal_connect(GTK_OBJECT(button), "toggled",
+		     (GtkSignalFunc)image_type_callback,
+		     (gpointer)IMAGE_MONOCHROME);
   gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
   gtk_widget_show(button);
 
@@ -2449,6 +2461,9 @@ do_misc_updates()
     case IMAGE_CONTINUOUS:
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(image_continuous_tone), TRUE);
       break;
+    case IMAGE_MONOCHROME:
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(image_monochrome), TRUE);
+      break;
     default:
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(image_continuous_tone), TRUE);
       plist[plist_current].v.image_type = IMAGE_CONTINUOUS;
@@ -3414,7 +3429,7 @@ printrc_load(void)
 	}
       else
 	{
-	  strncpy(key.v.ink_type, lineptr, 63);
+	  strncpy(key.v.media_source, lineptr, commaptr - lineptr);
 	  key.v.ink_type[strlen(key.v.ink_type) - 1] = '\0';
 	  lineptr = commaptr + 1;
 	}
@@ -3533,14 +3548,19 @@ printrc_save(void)
     fputs("#PRINTRC " PLUG_IN_VERSION "\n", fp);
 
     for (i = 0, p = plist; i < plist_count; i ++, p ++)
-      fprintf(fp, "%s,%s,%s,%s,%d,%s,%s,%s,%s,%d,%.3f,%d,%d,%d,%.3f,%d,%d,%d,%d,%d,%.3f,%.3f,%s,%d\n",
-              p->name, p->v.output_to, p->v.driver, p->v.ppd_file,
-	      p->v.output_type, p->v.resolution, p->v.media_size,
-	      p->v.media_type, p->v.media_source, p->v.brightness,
-	      p->v.scaling, p->v.orientation, p->v.left, p->v.top,
-	      p->v.gamma, p->v.contrast, p->v.red, p->v.green, p->v.blue,
-	      p->v.linear, p->v.saturation, p->v.density, p->v.ink_type,
-	      p->v.image_type);
+      {
+	fprintf(fp, "%s,%s,%s,%s,%d,%s,%s,%s,%s,",
+		p->name, p->v.output_to, p->v.driver, p->v.ppd_file,
+		p->v.output_type, p->v.resolution, p->v.media_size,
+		p->v.media_type, p->v.media_source);
+	fprintf(fp, "%d,%.3f,%d,%d,%d,%.3f,",
+		p->v.brightness, p->v.scaling, p->v.orientation, p->v.left,
+		p->v.top, p->v.gamma);
+	fprintf(fp, "%d,%d,%d,%d,%d,%.3f,%.3f,%s,%d\n",
+		p->v.contrast, p->v.red, p->v.green, p->v.blue,
+		p->v.linear, p->v.saturation, p->v.density, p->v.ink_type,
+		p->v.image_type);
+      }
     fclose(fp);
   }
   g_free (filename);

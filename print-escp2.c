@@ -765,12 +765,19 @@ escp2_print(const printer_t *printer,		/* I - Model */
   void *	weave;
   void *	dither;
   colormode_t colormode = COLOR_CCMMYK;
-  if (output_type == OUTPUT_GRAY)
+  if (v->image_type == IMAGE_MONOCHROME)
+    {
+      colormode = COLOR_MONOCHROME;
+      output_type = OUTPUT_GRAY;
+      bits = 1;
+    }
+  else if (output_type == OUTPUT_GRAY)
     colormode = COLOR_MONOCHROME;
   else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
     colormode = COLOR_CCMMYK;
   else
     colormode = COLOR_CMYK;
+
 
  /*
   * Setup a read-only pixel region for the entire image...
@@ -835,7 +842,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	      if (nozzles == 0)
 		nozzles = escp2_nozzles(model);
 	    }
-	  nozzles = escp2_nozzles(model);
+	  else
+	    nozzles = escp2_nozzles(model);
 	  nozzle_separation = escp2_nozzle_separation(model);
 	  break;
 	}
@@ -845,7 +853,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	}
     }
   if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
-      use_softweave && strcmp(ink_type, "Single Dot Size") != 0)
+      use_softweave && strcmp(ink_type, "Single Dot Size") != 0 &&
+      v->image_type != IMAGE_MONOCHROME)
     bits = 2;
   else
     bits = 1;
@@ -1107,7 +1116,9 @@ escp2_print(const printer_t *printer,		/* I - Model */
 
       if (bits == 1)
 	{
-	  if (output_type == OUTPUT_GRAY)
+	  if (v->image_type == IMAGE_MONOCHROME)
+	    dither_fastblack(out, x, dither, black);
+	  else if (output_type == OUTPUT_GRAY)
 	    dither_black(out, x, dither, black);
 	  else
 	    dither_cmyk(out, x, dither, cyan, lcyan, magenta, lmagenta,
@@ -1170,7 +1181,9 @@ escp2_print(const printer_t *printer,		/* I - Model */
 
       if (bits == 1)
 	{
-	  if (output_type == OUTPUT_GRAY)
+	  if (v->image_type == IMAGE_MONOCHROME)
+	    dither_fastblack(out, y, dither, black);
+	  else if (output_type == OUTPUT_GRAY)
 	    dither_black(out, y, dither, black);
 	  else
 	    dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
@@ -2612,6 +2625,9 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.115  2000/03/13 13:31:26  rlk
+ *   Add monochrome mode
+ *
  *   Revision 1.114  2000/03/11 17:30:15  rlk
  *   Significant dither changes; addition of line art/solid color/continuous tone modes
  *

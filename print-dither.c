@@ -676,6 +676,212 @@ get_errline(dither_t *d, int row, int color)
  */
 
 /*
+ * Dithering macros (shared between routines)
+ */
+
+#define INCREMENT_BLACK()			\
+do {						\
+  if (direction == 1)				\
+    {						\
+      if (bit == 1)				\
+	{					\
+	  kptr ++;				\
+	  bit       = 128;			\
+	}					\
+      else					\
+	bit >>= 1;				\
+    }						\
+  else						\
+    {						\
+      if (bit == 128)				\
+	{					\
+	  kptr --;				\
+	  bit       = 1;			\
+	}					\
+      else					\
+	bit <<= 1;				\
+    }						\
+						\
+  gray   += xstep;				\
+  xerror += xmod;				\
+  if (xerror >= d->dst_width)			\
+    {						\
+      xerror -= d->dst_width;			\
+      gray   += direction;			\
+    }						\
+  else if (xerror < 0)				\
+    {						\
+      xerror += d->dst_width;			\
+      gray   += direction;			\
+    }      					\
+} while (0)
+
+#define UPDATE_DITHER_BLACK()					\
+do {								\
+  if (k != 0)							\
+    {								\
+      int i, dist, delta;					\
+      int tmpk = k;						\
+      if (tmpk > 65535)						\
+	tmpk = 65535;						\
+								\
+      if (ditherbit & bit)					\
+	{							\
+	  if (offset == 0)					\
+	    dist = 5 * tmpk;					\
+	  else							\
+	    dist = 5 * tmpk / ((offset + 1) * (offset + 1));	\
+	  if (x > 0 && 0 < xdw1)				\
+	    ditherk    = kerror0[direction] + 3 * tmpk;		\
+	}							\
+      else							\
+	{							\
+	  if (offset == 0)					\
+	    dist = 3 * tmpk;					\
+	  else							\
+	    dist = 3 * tmpk / ((offset + 1) * (offset + 1));	\
+	  if (x > 0 && 0 < xdw1)				\
+	    ditherk    = kerror0[direction] + 5 * tmpk;		\
+	}							\
+      delta = dist;						\
+      for (i = -offset; i <= offset; i++)			\
+	{							\
+	  kerror1[i] += delta;					\
+	  if (i < 0)						\
+	    delta += dist;					\
+	  else							\
+	    delta -= dist;					\
+	}							\
+    }								\
+  else								\
+    ditherk = kerror0[direction];				\
+} while (0)
+
+#define INCREMENT_COLOR()						  \
+do {									  \
+  ditherbit = rand();							  \
+  ditherbit0 = ditherbit & 0xffff;					  \
+  ditherbit1 = ((ditherbit >> 8) & 0xffff);				  \
+  ditherbit2 = ((ditherbit >> 16) & 0x7fff) + ((ditherbit & 0x100) << 7); \
+  ditherbit3 = ((ditherbit >> 24) & 0x7f) + ((ditherbit & 1) << 7) +	  \
+    ((ditherbit >> 8) & 0xff00);					  \
+  if (direction == 1)							  \
+    {									  \
+      if (bit == 1)							  \
+	{								  \
+	  cptr ++;							  \
+	  if (lcptr)							  \
+	    lcptr ++;							  \
+	  mptr ++;							  \
+	  if (lmptr)							  \
+	    lmptr ++;							  \
+	  yptr ++;							  \
+	  if (lyptr)							  \
+	    lyptr ++;							  \
+	  if (kptr)							  \
+	    kptr ++;							  \
+	  bit       = 128;						  \
+	}								  \
+      else								  \
+	bit >>= 1;							  \
+    }									  \
+  else									  \
+    {									  \
+      if (bit == 128)							  \
+	{								  \
+	  cptr --;							  \
+	  if (lcptr)							  \
+	    lcptr --;							  \
+	  mptr --;							  \
+	  if (lmptr)							  \
+	    lmptr --;							  \
+	  yptr --;							  \
+	  if (lyptr)							  \
+	    lyptr --;							  \
+	  if (kptr)							  \
+	    kptr --;							  \
+	  bit       = 1;						  \
+	}								  \
+      else								  \
+	bit <<= 1;							  \
+    }									  \
+									  \
+  rgb    += xstep;							  \
+  xerror += xmod;							  \
+  if (xerror >= d->dst_width)						  \
+    {									  \
+      xerror -= d->dst_width;						  \
+      rgb    += 3 * direction;						  \
+    }									  \
+  else if (xerror < 0)							  \
+    {									  \
+      xerror += d->dst_width;						  \
+      rgb    += 3 * direction;						  \
+    }      								  \
+} while (0)
+
+/*
+ * 'dither_fastblack()' - Dither grayscale pixels to black.
+ */
+
+void
+dither_fastblack(unsigned short     *gray,	/* I - Grayscale pixels */
+		 int           	    row,	/* I - Current Y coordinate */
+		 void 		    *vd,
+		 unsigned char 	    *black)	/* O - Black bitmap pixels */
+{
+  int		x,		/* Current X coordinate */
+		xerror,		/* X error count */
+		xstep,		/* X step */
+		xmod,		/* X error modulus */
+		length;		/* Length of output bitmap in bytes */
+  unsigned char	bit,		/* Current bit */
+		*kptr;		/* Current black pixel */
+  int		k;		/* Current black error */
+  dither_t *d = (dither_t *) vd;
+  int terminate;
+  int direction = row & 1 ? 1 : -1;
+
+  bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
+  x = (direction == 1) ? 0 : d->dst_width - 1;
+  terminate = (direction == 1) ? d->dst_width : -1;
+
+  xstep  = d->src_width / d->dst_width;
+  xmod   = d->src_width % d->dst_width;
+  length = (d->dst_width + 7) / 8;
+
+  memset(black, 0, length);
+  kptr = black;
+  xerror = 0;
+  if (direction == -1)
+    {
+      kptr = black + length - 1;
+      xstep = -xstep; 
+      gray += d->src_width - 1;
+      xerror = ((d->dst_width - 1) * xmod) % d->dst_width;
+      xmod = -xmod;
+    }
+
+  for (; x != terminate; x += direction)
+  {
+    k = 65535 - *gray;
+
+    if (k >= 32768)
+    {
+      if (d->horizontal_overdensity == 1)
+	*kptr |= bit;
+      else if (d->kbits++ == d->horizontal_overdensity)
+	{
+	  *kptr |= bit;
+	  d->kbits = 1;
+	}
+    }
+
+    INCREMENT_BLACK();
+  }
+}
+
+/*
  * 'dither_black()' - Dither grayscale pixels to black.
  */
 
@@ -762,77 +968,8 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
       k -= 65535;
     }
 
-    if (k != 0)
-      {
-	int i, dist, delta;
-	int tmpk = k;
-	if (tmpk > 65535)
-	  tmpk = 65535;
-
-	if (ditherbit & bit)
-	  {
-	    if (offset == 0)
-	      dist = 5 * tmpk;
-	    else
-	      dist = 5 * tmpk / ((offset + 1) * (offset + 1));
-	    if (x > 0 && 0 < xdw1)
-	      ditherk    = kerror0[direction] + 3 * tmpk;
-	  }
-	else
-	  {
-	    if (offset == 0)
-	      dist = 3 * tmpk;
-	    else
-	      dist = 3 * tmpk / ((offset + 1) * (offset + 1));
-	    if (x > 0 && 0 < xdw1)
-	      ditherk    = kerror0[direction] + 5 * tmpk;
-	  }
-	delta = dist;
-	for (i = -offset; i <= offset; i++)
-	  {
-	    kerror1[i] += delta;
-	    if (i < 0)
-	      delta += dist;
-	    else
-	      delta -= dist;
-	  }
-      }
-    else
-      ditherk = kerror0[direction];
-
-    if (direction == 1)
-      {
-	if (bit == 1)
-	  {
-	    kptr ++;
-	    bit       = 128;
-	  }
-	else
-	  bit >>= 1;
-      }
-    else
-      {
-	if (bit == 128)
-	  {
-	    kptr --;
-	    bit       = 1;
-	  }
-	else
-	  bit <<= 1;
-      }
-
-    gray   += xstep;
-    xerror += xmod;
-    if (xerror >= d->dst_width)
-      {
-	xerror -= d->dst_width;
-	gray   += direction;
-      }
-    else if (xerror < 0)
-      {
-	xerror += d->dst_width;
-	gray   += direction;
-      }      
+    UPDATE_DITHER_BLACK();
+    INCREMENT_BLACK();
   }
 }
 
@@ -1102,10 +1239,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   if (black)
     memset(black, 0, length);
 
-#ifdef PRINT_DEBUG
-  dbg = fopen("/mnt1/dbg", "a");
-#endif
-
   /*
    * Main loop starts here!
    */
@@ -1145,15 +1278,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
     om = m;
     oy = y;
     k = MIN(c, MIN(m, y));
-#ifdef PRINT_DEBUG
-    xc = c;
-    xm = m;
-    xy = y;
-    xk = k;
-    yc = c;
-    ym = m;
-    yy = y;
-#endif
     maxlevel = MAX(c, MAX(m, y));
 
     if (black != NULL)
@@ -1192,11 +1316,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
         y  = ((unsigned) (65535 - ((rgb[0] + rgb[2]) >> 3))) * yk /
 	  (unsigned) divk;
       }
-#ifdef PRINT_DEBUG
-      yc = c;
-      ym = m;
-      yy = y;
-#endif
 
       /*
        * kdarkness is an artificially computed darkness value for deciding
@@ -1214,10 +1333,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	  ub = d->k_upper;
 	  lb = d->k_lower;
 	  rb = ub - lb;
-#ifdef PRINT_DEBUG
-	  fprintf(dbg, "Black: kd %d ub %d lb %d rb %d test %d range %d\n",
-		  kdarkness, ub, lb, rb, ditherbit % rb, kdarkness - lb);
-#endif
 	  if (kdarkness <= lb)
 	    {
 	      bk = 0;
@@ -1240,9 +1355,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	}
       else
 	{
-#ifdef PRINT_DEBUG
-	  fprintf(dbg, "Black real\n");
-#endif
 	  bk = nk;
 	}
       ck = nk - bk;
@@ -1261,10 +1373,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       if (y > 65535)
 	y = 65535;
       k = bk;
-#ifdef PRINT_DEBUG
-      odk = ditherk;
-      dk = k;
-#endif
       if (k > k_offset + (ditherbit0 >> d->k_randomizer))
 	{
 	  DO_PRINT_COLOR(k);
@@ -1311,98 +1419,12 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
     /*****************************************************************
      * Advance the loop
      *****************************************************************/
-#ifdef PRINT_DEBUG
-    fprintf(dbg, "   x %d y %d  r %d g %d b %d  xc %lld xm %lld xy %lld yc "
-	    "%lld ym %lld yy %lld xk %lld  diff %lld divk %lld  oc %lld om "
-	    "%lld oy %lld ok %lld  c %lld m %lld y %lld k %lld  %c%c%c%c%c%c%c"
-	    "  dk %lld dc %lld dm %lld dy %lld  kd %d ck %d bk %d nk %d ub %d "
-	    "lb %d\n",
-	    x, row,
-	    rgb[0], rgb[1], rgb[2],
-	    xc, xm, xy, yc, ym, yy, xk, diff, divk,
-	    oc, om, oy, ok,
-	    dc, dm, dy, dk,
-	    (*cptr & bit) ? 'c' : ' ',
-	    (lcyan && (*lcptr & bit)) ? 'C' : ' ',
-	    (*mptr & bit) ? 'm' : ' ',
-	    (lmagenta && (*lmptr & bit)) ? 'M' : ' ',
-	    (*yptr & bit) ? 'y' : ' ',
-	    (lyellow && (*lyptr & bit)) ? 'Y' : ' ',
-	    (black && (*kptr & bit)) ? 'k' : ' ',
-	    odk, odc, odm, ody,
-	    kdarkness, ck, bk, nk, ub, lb);
-    fprintf(dbg, "x %d dir %d c %x %x m %x %x y %x %x k %x %x rgb %x bit %x\n",
-	    x, direction, cptr, cyan, mptr, magenta, yptr, yellow, kptr, black,
-	    rgb, bit);
-#endif
 
-    ditherbit = rand();
-    ditherbit0 = ditherbit & 0xffff;
-    ditherbit1 = ((ditherbit >> 8) & 0xffff);
-    ditherbit2 = ((ditherbit >> 16) & 0x7fff) + ((ditherbit & 0x100) << 7);
-    ditherbit3 = ((ditherbit >> 24) & 0x7f) + ((ditherbit & 1) << 7) +
-      ((ditherbit >> 8) & 0xff00);
-    if (direction == 1)
-      {
-	if (bit == 1)
-	  {
-	    cptr ++;
-	    if (lcptr)
-	      lcptr ++;
-	    mptr ++;
-	    if (lmptr)
-	      lmptr ++;
-	    yptr ++;
-	    if (lyptr)
-	      lyptr ++;
-	    if (kptr)
-	      kptr ++;
-	    bit       = 128;
-	  }
-	else
-	  bit >>= 1;
-      }
-    else
-      {
-	if (bit == 128)
-	  {
-	    cptr --;
-	    if (lcptr)
-	      lcptr --;
-	    mptr --;
-	    if (lmptr)
-	      lmptr --;
-	    yptr --;
-	    if (lyptr)
-	      lyptr --;
-	    if (kptr)
-	      kptr --;
-	    bit       = 1;
-	  }
-	else
-	  bit <<= 1;
-      }
-
-    rgb    += xstep;
-    xerror += xmod;
-    if (xerror >= d->dst_width)
-      {
-	xerror -= d->dst_width;
-	rgb    += 3 * direction;
-      }
-    else if (xerror < 0)
-      {
-	xerror += d->dst_width;
-	rgb    += 3 * direction;
-      }      
+    INCREMENT_COLOR();
   }
   /*
    * Main loop ends here!
    */
-#ifdef PRINT_DEBUG
-  fprintf(dbg, "\n");
-  fclose(dbg);
-#endif
 }
 
 
@@ -1531,77 +1553,8 @@ dither_black_n(unsigned short   *gray,		/* I - Grayscale pixels */
 	  }
       }
 
-    if (k != 0)
-      {
-	int i, dist, delta;
-	int tmpk = k;
-	if (tmpk > 65535)
-	  tmpk = 65535;
-
-	if (ditherbit & bit)
-	  {
-	    if (offset == 0)
-	      dist = 5 * tmpk;
-	    else
-	      dist = 5 * tmpk / ((offset + 1) * (offset + 1));
-	    if (x > 0 && 0 < xdw1)
-	      ditherk    = kerror0[direction] + 3 * tmpk;
-	  }
-	else
-	  {
-	    if (offset == 0)
-	      dist = 3 * tmpk;
-	    else
-	      dist = 3 * tmpk / ((offset + 1) * (offset + 1));
-	    if (x > 0 && 0 < xdw1)
-	      ditherk    = kerror0[direction] + 5 * tmpk;
-	  }
-	delta = dist;
-	for (i = -offset; i <= offset; i++)
-	  {
-	    kerror1[i] += delta;
-	    if (i < 0)
-	      delta += dist;
-	    else
-	      delta -= dist;
-	  }
-      }
-    else
-      ditherk = kerror0[direction];
-
-    if (direction == 1)
-      {
-	if (bit == 1)
-	  {
-	    kptr ++;
-	    bit       = 128;
-	  }
-	else
-	  bit >>= 1;
-      }
-    else
-      {
-	if (bit == 128)
-	  {
-	    kptr --;
-	    bit       = 1;
-	  }
-	else
-	  bit <<= 1;
-      }
-
-    gray   += xstep;
-    xerror += xmod;
-    if (xerror >= d->dst_width)
-      {
-	xerror -= d->dst_width;
-	gray   += direction;
-      }
-    else if (xerror < 0)
-      {
-	xerror += d->dst_width;
-	gray   += direction;
-      }      
+    UPDATE_DITHER_BLACK();
+    INCREMENT_BLACK();
   }
 }
 
@@ -2018,65 +1971,7 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
      * Advance the loop
      *****************************************************************/
 
-    ditherbit = rand();
-    ditherbit0 = ditherbit & 0xffff;
-    ditherbit1 = ((ditherbit >> 8) & 0xffff);
-    ditherbit2 = ((ditherbit >> 16) & 0x7fff) + ((ditherbit & 0x100) << 7);
-    ditherbit3 = ((ditherbit >> 24) & 0x7f) + ((ditherbit & 1) << 7) +
-      ((ditherbit >> 8) & 0xff00);
-    if (direction == 1)
-      {
-	if (bit == 1)
-	  {
-	    cptr ++;
-	    if (lcptr)
-	      lcptr ++;
-	    mptr ++;
-	    if (lmptr)
-	      lmptr ++;
-	    yptr ++;
-	    if (lyptr)
-	      lyptr ++;
-	    if (kptr)
-	      kptr ++;
-	    bit       = 128;
-	  }
-	else
-	  bit >>= 1;
-      }
-    else
-      {
-	if (bit == 128)
-	  {
-	    cptr --;
-	    if (lcptr)
-	      lcptr --;
-	    mptr --;
-	    if (lmptr)
-	      lmptr --;
-	    yptr --;
-	    if (lyptr)
-	      lyptr --;
-	    if (kptr)
-	      kptr --;
-	    bit       = 1;
-	  }
-	else
-	  bit <<= 1;
-      }
-
-    rgb    += xstep;
-    xerror += xmod;
-    if (xerror >= d->dst_width)
-      {
-	xerror -= d->dst_width;
-	rgb    += 3 * direction;
-      }
-    else if (xerror < 0)
-      {
-	xerror += d->dst_width;
-	rgb    += 3 * direction;
-      }      
+    INCREMENT_COLOR();
   }
   /*
    * Main loop ends here!
@@ -2085,6 +1980,9 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.13  2000/03/13 13:31:26  rlk
+ *   Add monochrome mode
+ *
  *   Revision 1.12  2000/03/11 23:27:06  rlk
  *   Finish the dither job, and fix up the Ghostscript driver
  *

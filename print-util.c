@@ -220,7 +220,7 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
       else
 	*grayout = vars->lut.composite[grayin[0] * grayin[1] / 255 +
 				      255 - grayin[1]];
-      if (vars->density != 1.0)
+      if (vars->density != 1.0 && vars->image_type != IMAGE_MONOCHROME)
 	{
 	  float t = ((float) *grayout) / 65536.0;
 	  t = (1.0 + ((t - 1.0) * vars->density));
@@ -267,7 +267,7 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
       else
 	*gray = vars->lut.composite[gray_cmap[indexed[0] * indexed[1] / 255]
 				   + 255 - indexed[1]];
-      if (vars->density != 1.0)
+      if (vars->density != 1.0 && vars->image_type != IMAGE_MONOCHROME)
 	{
 	  float t = ((float) *gray) / 65536.0;
 	  t = (1.0 + ((t - 1.0) * vars->density));
@@ -364,7 +364,7 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 				      rgb[1] * LUM_GREEN +
 				      rgb[2] * LUM_BLUE) *
 				     rgb[3] / 25500 + 255 - rgb[3])];
-      if (vars->density != 1.0)
+      if (vars->density != 1.0 && vars->image_type != IMAGE_MONOCHROME)
 	{
 	  float t = ((float) *gray) / 65536.0;
 	  t = (1.0 + ((t - 1.0) * vars->density));
@@ -791,6 +791,9 @@ get_printer_index_by_driver(const char *driver)
 
 /*
  *   $Log$
+ *   Revision 1.87  2000/03/13 13:31:26  rlk
+ *   Add monochrome mode
+ *
  *   Revision 1.86  2000/03/07 02:54:05  rlk
  *   Move CVS history logs to the end of the file
  *
