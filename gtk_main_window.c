@@ -2018,21 +2018,23 @@ static void gtk_preview_update(void)
     print_height = th0;
   }
 
-  paper_left = (PREVIEW_SIZE_HORIZ - 10 * paper_width / 72) / 2;
-  paper_top  = (PREVIEW_SIZE_VERT - 10 * paper_height / 72) / 2;
-  printable_left = paper_left +  10 * left / 72;
-  printable_top  = paper_top + 10 * (paper_height - top) / 72 ;
+  paper_left = (PREVIEW_SIZE_HORIZ - PREVIEW_PPI * paper_width / 72) / 2;
+  paper_top  = (PREVIEW_SIZE_VERT - PREVIEW_PPI * paper_height / 72) / 2;
+  printable_left = paper_left +  PREVIEW_PPI * left / 72;
+  printable_top  = paper_top + PREVIEW_PPI * (paper_height - top) / 72 ;
 
   /* draw paper frame */
 
   gdk_draw_rectangle(preview->widget.window, gc, 0, 
 		     paper_left, paper_top,
-                     10 * paper_width / 72, 10 * paper_height / 72);
+                     PREVIEW_PPI * paper_width / 72,
+                     PREVIEW_PPI * paper_height / 72);
 
   /* draw printable frame */
   gdk_draw_rectangle(preview->widget.window, gc, 0,
                      printable_left, printable_top,
-                     10 * printable_width / 72, 10 * printable_height / 72);
+                     PREVIEW_PPI * printable_width / 72,
+                     PREVIEW_PPI * printable_height / 72);
 
 
   if (vars.left < 0)		/* centre */
@@ -2076,9 +2078,10 @@ static void gtk_preview_update(void)
 
   /* draw image  */
   gdk_draw_rectangle(preview->widget.window, gc, 1,
-		     1 + printable_left + 10 * vars.left / 72, 
-		     1 + printable_top + 10 * vars.top / 72,
-                     10 * print_width / 72, 10 * print_height / 72);
+		     1 + printable_left + PREVIEW_PPI * vars.left / 72, 
+		     1 + printable_top + PREVIEW_PPI * vars.top / 72,
+                     PREVIEW_PPI * print_width / 72,
+                     PREVIEW_PPI * print_height / 72);
   gdk_flush();
 
 }
@@ -2110,8 +2113,8 @@ static void gtk_preview_motion_callback(GtkWidget      *w,
     vars.top  = 72 * (printable_height - print_height) / 20;
   }
 
-  vars.left += 72 * (event->x - mouse_x) / 10;
-  vars.top  += 72 * (event->y - mouse_y) / 10;
+  vars.left += 72 * (event->x - mouse_x) / PREVIEW_PPI;
+  vars.top  += 72 * (event->y - mouse_y) / PREVIEW_PPI;
 
   if (vars.left < 0)
     vars.left = 0;
