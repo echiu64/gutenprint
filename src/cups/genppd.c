@@ -1491,7 +1491,10 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
   gzputs(fp, "*Font ZapfChancery-MediumItalic: Standard \"(001.007S)\" Standard ROM\n");
   gzputs(fp, "*Font ZapfDingbats: Special \"(001.004S)\" Standard ROM\n");
 
-  gzprintf(fp, "\n*%%End of %s.ppd\n", driver);
+  gzprintf(fp, "\n*%%End of stp-%s.%s%s\n",
+           driver,
+           GIMPPRINT_RELEASE_VERSION,
+           ppdext);
 
   gzclose(fp);
 
