@@ -68,7 +68,7 @@ AC_CHECK_LIB(cupsimage,cupsRasterOpen)
 dnl add warnings to compiler switches:
 dnl do this last so messing with switches does not break tests
 if test -n "$GCC"; then
-    CFLAGS="-Wall -fno-rtti $CFLAGS"
+    CFLAGS="-Wall $CFLAGS"
 
     # See if GCC supports -fno-exceptions...
     echo "Testing if GCC supports -fno-exceptions..."

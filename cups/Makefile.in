@@ -49,11 +49,9 @@ RANLIB	=	:
 # Rules...
 #
 
-.SILENT:
 .SUFFIXES:	.c .o
 
 .c.o:
-	echo Compiling $<
 	$(CC) $(CFLAGS) -c $<
 
 
@@ -81,8 +79,8 @@ all:	$(TARGETS)
 #
 
 clean:
+	$(RM) -r ppd
 	$(RM) $(OBJS) $(TARGETS)
-	$(RM) ppd/*
 
 
 #
@@ -90,12 +88,12 @@ clean:
 #
 
 install:
-	echo Installing calibration utility...
+	-echo Installing calibration utility...
 	-$(MKDIR) $(PREFIX)/bin
 	$(CP) calibrate $(PREFIX)/bin
 	$(CHMOD) 755 $(PREFIX)/bin/calibrate
 
-	echo Installing drivers...
+	-echo Installing drivers...
 	-$(MKDIR) $(PREFIX)/lib/cups/backend
 	$(CP) epson $(PREFIX)/lib/cups/backend
 	$(CHMOD) 755 $(PREFIX)/lib/cups/backend/epson
@@ -106,12 +104,12 @@ install:
 	$(CP) commandtoepson $(PREFIX)/lib/cups/filter
 	$(CHMOD) 755 $(PREFIX)/lib/cups/filter/commandtoepson
 
-	echo Installing PPD files...
+	-echo Installing PPD files...
 	-$(MKDIR) $(PREFIX)/share/cups/model
 	$(CP) ppd/* $(PREFIX)/share/cups/model
 	$(CHMOD) a+r $(PREFIX)/share/cups/model/*
 
-	echo Installing new command MIME type...
+	-echo Installing new command MIME type...
 	$(CP) command.types $(PREFIX)/etc/cups
 	$(CHMOD) a+r $(PREFIX)/etc/cups/command.types
 
@@ -121,7 +119,6 @@ install:
 #
 
 calibrate:	calibrate.o
-	echo Linking $@...
 	$(CC) $(LDFLAGS) -o calibrate calibrate.o -lm
 
 
@@ -130,7 +127,6 @@ calibrate:	calibrate.o
 #
 
 commandtoepson:	commandtoepson.o
-	echo Linking $@...
 	$(CC) $(LDFLAGS) -o commandtoepson commandtoepson.o $(LIBS)
 
 
@@ -139,7 +135,6 @@ commandtoepson:	commandtoepson.o
 #
 
 epson:	epson.o
-	echo Linking $@...
 	$(CC) $(LDFLAGS) -o epson epson.o $(LIBS)
 
 
@@ -148,7 +143,6 @@ epson:	epson.o
 #
 
 genppd:	genppd.o libdrv.a
-	echo Linking $@...
 	$(CC) $(LDFLAGS) -o genppd genppd.o libdrv.a $(LIBS)
 
 genppd.o:	cups-print.h cups-printers.c
@@ -159,9 +153,7 @@ genppd.o:	cups-print.h cups-printers.c
 #
 
 ppd:	genppd
-	echo Cleaning old PPD files...
 	$(RM) ppd/*
-	echo Running $@...
 	./genppd
 
 
@@ -170,7 +162,6 @@ ppd:	genppd
 #
 
 libdrv.a:	$(DRVOBJS)
-	echo Archiving $@...
 	$(RM) $@
 	$(AR) $(ARFLAGS) $@ $(DRVOBJS)
 	$(RANLIB) $@
@@ -184,7 +175,6 @@ cups-util.c:	cups-printers.c
 #
 
 rastertoprinter:	rastertoprinter.o libdrv.a
-	echo Linking $@...
 	$(CC) $(LDFLAGS) -o rastertoprinter rastertoprinter.o libdrv.a $(LIBS)
 
 rastertoprinter.o:	cups-print.h cups-quickmatrix257.h cups-ran.367.179.h

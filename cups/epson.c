@@ -37,12 +37,14 @@
  * Include necessary headers.
  */
 
+#include <ctype.h>
 #include <cups/cups.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
 #include <signal.h>
+#include <stdlib.h>
 
 #if defined(WIN32) || defined(__EMX__)
 #  include <io.h>

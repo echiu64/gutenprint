@@ -85,7 +85,6 @@ main(int  argc,
   char	junk[255];
   FILE	*fp;
   float	kd, rd, g;
-  float	temp;
   float	color;
   float	red, green, blue;
   float	cyan, magenta, yellow;
@@ -309,6 +308,7 @@ main(int  argc,
   printf("    %s\n", cupsProfile);
   puts("");
   puts("Calibration is complete.");
+  return 0;
 }
 
 
@@ -690,7 +690,6 @@ send_pass4(FILE       *fp,
 	   const char *profile)
 {
   FILE	*ppm;
-  float p;
   int	x, y, col, width, height;
   int	r, g, b;
   char	line[255];
