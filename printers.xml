@@ -228,6 +228,14 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Color 777" driver="escp2-777">
+<color>
+<model value=32>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Color 800" driver="escp2-800">
 <color>
 <model value=4>
@@ -254,7 +262,7 @@
 
 <printer name="EPSON Stylus Color 880" driver="escp2-880">
 <color>
-<model value=16>
+<model value=33>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>
@@ -270,7 +278,7 @@
 
 <printer name="EPSON Stylus Color 980" driver="escp2-980">
 <color>
-<model value=13>
+<model value=34>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>
@@ -351,7 +359,7 @@
 <printer name="EPSON Stylus Photo 870" driver="escp2-870">
 <color>
 <model value=22>
-<magenta value=1.175>
+#<magenta value=1.175>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>

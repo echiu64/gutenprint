@@ -21,7 +21,8 @@ COMMON_SOURCE = \
 	print-weave.c		\
 	print.h			\
 	quickmatrix257.h	\
-	ran.367.179.h
+	ran.367.179.h		\
+	ran.509.131.h
 
 AUX_COMMON_SOURCE = \
 	print-printers.c
@@ -93,8 +94,8 @@ DOC_DIST = print-color.png docbook.css print-main.png print.html \
 	print-setup.png print.sgml
 
 EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
-	README.dither quickmatrix257.h ran.367.179.h make-deb.sh README.escp2 \
-	escputil.1 \
+	README.dither quickmatrix257.h ran.367.179.h ran.509.131.h \
+	make-deb.sh README.escp2 escputil.1 \
 	$(addprefix Ghost/, $(GHOST_DIST)) \
 	$(addprefix cups/, $(CUPS_DIST)) \
 	$(addprefix Documentation/, $(DOC_DIST)) \
