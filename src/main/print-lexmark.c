@@ -140,7 +140,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 
 
 
-static const double sat_adjustment[49] =
+static const double standard_sat_adjustment[49] =
 {
   1.0,				/* C */
   1.1,
@@ -193,7 +193,7 @@ static const double sat_adjustment[49] =
   1.0				/* C */
 };
 
-static const double lum_adjustment[49] =
+static const double standard_lum_adjustment[49] =
 {
   0.50,				/* C */
   0.6,
@@ -246,9 +246,24 @@ static const double lum_adjustment[49] =
   0.50				/* C */
 };
 
-static const double hue_adjustment[49] =
+static const double standard_hue_adjustment[49] =
 {
   0.00,				/* C */
+  /*  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  -0.60,
+  -0.70,
+  -0.80,			/ * B * /
+  -0.70,
+  -0.60,
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,*/
   0.05,
   0.04,
   0.01,
@@ -299,6 +314,59 @@ static const double hue_adjustment[49] =
   0.00,				/* C */
 };
 
+
+static const double plain_paper_lum_adjustment[49] =
+{
+  1.2,				/* C */
+  1.22,
+  1.28,
+  1.34,
+  1.39,
+  1.42,
+  1.45,
+  1.48,
+  1.5,				/* B */
+  1.4,
+  1.3,
+  1.25,
+  1.2,
+  1.1,
+  1.05,
+  1.05,
+  1.05,				/* M */
+  1.05,
+  1.05,
+  1.05,
+  1.05,
+  1.05,
+  1.05,
+  1.05,
+  1.05,				/* R */
+  1.05,
+  1.05,
+  1.1,
+  1.1,
+  1.1,
+  1.1,
+  1.1,
+  1.1,				/* Y */
+  1.15,
+  1.3,
+  1.45,
+  1.6,
+  1.75,
+  1.9,
+  2.0,
+  2.1,				/* G */
+  2.0,
+  1.8,
+  1.7,
+  1.6,
+  1.5,
+  1.4,
+  1.3,
+  1.2				/* C */
+};
 
 
 /* Codes for possible ink-tank combinations.
@@ -471,6 +539,9 @@ typedef struct {
   int y_raster_res;            /* vertical   resolution for positioning of the printer head in DPI */
   const lexmark_res_t_array *res_parameters; /* resolution specific parameters; last entry has resid = -1 */
   const lexmark_inkname_t *ink_types;  /* type of supported inks */
+  const double *lum_adjustment;
+  const double *hue_adjustment;
+  const double *sat_adjustment;
 } lexmark_cap_t;
 
 
@@ -681,7 +752,8 @@ static const lexmark_cap_t lexmark_model_capabilities[] =
     2400,      /* horizontal resolutio of 2400 dpi for positioning */
     1200,      /* use a vertical resolution of 1200 dpi for positioning */
     &lexmark_reslist_z52,  /* resolution specific parameters of z52 */
-    ink_types_z52  /* supported inks */
+    ink_types_z52,  /* supported inks */
+    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
   },
   { /* Lexmark 3200 */
     m_3200,
@@ -698,7 +770,8 @@ static const lexmark_cap_t lexmark_model_capabilities[] =
     1200,      /* horizontal resolutio of ?? dpi for positioning */
     1200,      /* use a vertical resolution of 1200 dpi for positioning */
     &lexmark_reslist_3200,  /* resolution specific parameters of 3200 */
-    ink_types_3200  /* supported inks */
+    ink_types_3200,  /* supported inks */
+    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
   },
   { /*  */
     m_lex7500,
@@ -715,7 +788,8 @@ static const lexmark_cap_t lexmark_model_capabilities[] =
     1200,      /* horizontal resolutio of ??? dpi for positioning */
     1200,      /* use a vertical resolution of 1200 dpi for positioning */
     &lexmark_reslist_3200,  /* resolution specific parameters of ?? */
-    ink_types_3200  /* supported inks */
+    ink_types_3200,  /* supported inks */
+    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
   },
 };
 
@@ -794,22 +868,22 @@ static const paper_t lexmark_paper_list[] =
 {
   { "Plain", N_("Plain Paper"),
     1, 0, 0.80, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
-    1, 1.0, 0x6b, 0x1a, 0x01, NULL, lum_adjustment, NULL},
+    1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   { "GlossyFilm", N_("Glossy Film"),
     3, 0, 1.00 ,1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-    1, 1.0, 0x6d, 0x00, 0x01, NULL, lum_adjustment, NULL},
+    1, 1.0, 0x6d, 0x00, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   { "Transparency", N_("Transparencies"),
     3, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-    1.0, 1.0, 0x6d, 0x00, 0x02, NULL, lum_adjustment, NULL},
+    1.0, 1.0, 0x6d, 0x00, 0x02, NULL, plain_paper_lum_adjustment, NULL},
   { "Envelope", N_("Envelopes"),
     4, 0, 0.80, .125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-    1, 1.0, 0x6b, 0x1a, 0x01, NULL, lum_adjustment, NULL},
+    1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   { "Matte", N_("Matte Paper"),
     7, 0, 0.85, 1.0, .999, 1.05, .9, 1.05, .9, 1.0, 1.1,
     1, 1.0, 0x00, 0x00, 0x02, NULL, NULL, NULL},
   { "Inkjet", N_("Inkjet Paper"),
     7, 0, 0.85, .25, .6, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-    1, 1.0, 0x6b, 0x1a, 0x01, NULL, lum_adjustment, NULL},
+    1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   { "Coated", N_("Photo Quality Inkjet Paper"),
     7, 0, 1.00, 1.0, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, NULL, NULL},
@@ -818,8 +892,7 @@ static const paper_t lexmark_paper_list[] =
     1, 1.0, 0x67, 0x00, 0x02, NULL, NULL, NULL},
   { "GlossyPhoto", N_("Premium Glossy Photo Paper"),
     8, 0, 1.10, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.03, 1.0,
-    1, 1.0, 0x80, 0x00, 0x02,
-    hue_adjustment, lum_adjustment, sat_adjustment},
+    1, 1.0, 0x80, 0x00, 0x02, NULL, NULL, NULL},
   { "Luster", N_("Premium Luster Photo Paper"),
     8, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1.0, 1.0, 0x80, 0x00, 0x02, NULL, NULL, NULL},
@@ -831,7 +904,7 @@ static const paper_t lexmark_paper_list[] =
     1, 1.0, 0x80, 0x00, 0x02, NULL, NULL, NULL },
   { "Other", N_("Other"),
     0, 0, 0.80, 0.125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-    1, 1.0, 0x6b, 0x1a, 0x01, NULL, lum_adjustment, NULL},
+    1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
 };
 
 static const int paper_type_count = sizeof(lexmark_paper_list) / sizeof(paper_t);
@@ -1003,6 +1076,24 @@ lexmark_print_bidirectional(const stp_printer_t printer,
 {
   const lexmark_res_t *res_para = lexmark_get_resolution_para(printer, resolution);
   return !res_para->unidirectional;
+}
+
+static const double *
+lexmark_lum_adjustment(const lexmark_cap_t * caps, const stp_vars_t v)
+{
+  return (caps->lum_adjustment);
+}
+
+static const double *
+lexmark_hue_adjustment(const lexmark_cap_t * caps, const stp_vars_t v)
+{
+  return (caps->hue_adjustment);
+}
+
+static const double *
+lexmark_sat_adjustment(const lexmark_cap_t * caps, const stp_vars_t v)
+{
+  return (caps->sat_adjustment);
 }
 
 
@@ -1519,6 +1610,8 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
   int  physical_xdpi = 0;
   int  physical_ydpi = 0;
 
+  double lum_adjustment[49], sat_adjustment[49], hue_adjustment[49];
+
   /* weave parameters */
   stp_linebufs_t cols;
   int  nozzle_separation;
@@ -1854,6 +1947,11 @@ densityDivisor /= 1.2;
     k_lower = .5;
   else
     k_lower = .25;
+
+
+
+
+
   
   if (media) 
     {
@@ -1940,6 +2038,34 @@ densityDivisor /= 1.2;
   errlast = -1;
   errline  = 0;
 
+  if (lexmark_lum_adjustment(caps, nv))
+    {
+      for (i = 0; i < 49; i++)
+	{
+	  lum_adjustment[i] = lexmark_lum_adjustment(caps, nv)[i];
+	  if (media && media->lum_adjustment) {
+	    lum_adjustment[i] *= media->lum_adjustment[i];
+	  }
+	}
+    }
+  if (lexmark_sat_adjustment(caps, nv))
+    {
+      for (i = 0; i < 49; i++)
+	{
+	  sat_adjustment[i] = lexmark_sat_adjustment(caps, nv)[i];
+	  if (media && media->sat_adjustment)
+	    sat_adjustment[i] *= media->sat_adjustment[i];
+	}
+    }
+  if (lexmark_hue_adjustment(caps, nv))
+    {
+      for (i = 0; i < 49; i++)
+	{
+	  hue_adjustment[i] = lexmark_hue_adjustment(caps, nv)[i];
+	  if (media && media->hue_adjustment)
+	    hue_adjustment[i] += media->hue_adjustment[i];
+	}
+    }
 
 
 
@@ -1963,7 +2089,7 @@ densityDivisor /= 1.2;
 	  /*	  stp_erprintf("errline %d ,   image height %d\n", errline, image_height);*/
 #if 1
 	  (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap,
-		       media->hue_adjustment, media->lum_adjustment, media->sat_adjustment);
+		       hue_adjustment, lum_adjustment, sat_adjustment);
 #else
 	  (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap,
 		       NULL, NULL, NULL);
