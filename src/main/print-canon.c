@@ -3005,15 +3005,15 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
 
 
   if (bits==2) {
-    memset(in_fold,0,length*2);
-    canon_fold_2bit(line,length,in_fold);
+    memset(in_fold,0,length);
+    canon_fold_2bit(line,length / 2,in_fold);
     in_ptr= in_fold;
     length= (length*8/4); /* 4 pixels in 8bit */
     offset= (offset*8/4); /* 4 pixels in 8bit  */
   }
   if (bits==3) {
-    memset(in_fold,0,length*3);
-    canon_fold_3bit(line,length,in_fold);
+    memset(in_fold,0,length);
+    canon_fold_3bit(line,length / 3,in_fold);
     in_ptr= in_fold;
     length= (length*8)/3;
     offset= (offset/3)*8;
