@@ -44,9 +44,16 @@ Gimp-Print 4.0b1:
    been reduced.  The new default saturation of 1.0 corresponds to a
    saturation level of 0.625 previously.
 
-11) The configure script in 4.0b1 will not function with the Gimp
+11) The configure script in 4.0b1 did not function with the Gimp
    1.1.26 (which was released after 4.0b1) or with certain very
    recent snapshots of GNOME which may contain very new Gimp code.
+
+12) The HP 1220C driver now supports large paper sizes.
+
+13) The Epson Stylus Color 480 now prints.  However, the driver is not
+   very useful, as it is not possible to change the ink cartridge
+   (that can only be done under software control with undocumented
+   commands).
 
 Errata:
 
@@ -79,6 +86,10 @@ Errata:
    (either 1.0.4 or the latest 1.1/1.2 release).  That will install
    gimptool, and you will then be able to build the plug-in.  This
    does not affect the Ghostscript driver.
+
+5) The CUPS drivers do not pass through the media type correctly, so
+   the driver always prints with the default media type, with CUPS
+   1.1.3 and earlier.  CUPS 1.1.4 has the necessary fix.
 
 
 Gimp-Print 4.0b1 contains the following improvements and changes over
