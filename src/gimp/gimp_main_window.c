@@ -2191,7 +2191,8 @@ gimp_setup_update (void)
 
   adjustment =
     gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW (printer_crawler));
-  gtk_adjustment_set_value(adjustment, idx * (adjustment->step_increment + 5));
+  adjustment->step_increment = GTK_CLIST(printer_driver)->row_height;
+  gtk_adjustment_set_value(adjustment, idx * adjustment->step_increment);
 }
 
 /*
