@@ -47,13 +47,15 @@ href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=1088
 can read the release notes and download it here</a>.
 </p>
 
-<H2><font color="#ff0000">Gimp-Print 4.3.3 is released!</font></h2>
+<H2><font color="#ff0000">Gimp-Print 4.3.4 is released!</font></h2>
 
-<P><strong><em><font color="#ff0000">New as of July 14,
-2002!</strong></em></font> Gimp-Print 4.3.3 is released.  This is a
+<P><strong><em><font color="#ff0000">New as of August 20,
+2002!</strong></em></font> Gimp-Print 4.3.4 is released.  This is a
 development release on the Gimp-Print 4.3 development line.  This
-contains a new dithering algorithm, and many mostly internal changes
-to the Epson family driver. <a
+release offers a new raw output mode, permitting a higher level driver
+to pass color information about <em>all</em> printer channels.  This
+is an exciting capability, as it enables color management to be done
+using all available inks.  <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=106365">You
 can read the release notes and download it here</a>.
 </p>
