@@ -34,6 +34,7 @@
 #include <gimp-print/gimp-print-intl-internal.h>
 #include <string.h>
 #include <math.h>
+#include <limits.h>
 #include "dither-impl.h"
 #include "dither-inlined-functions.h"
 
@@ -50,6 +51,7 @@ typedef struct
   int   d2y;
   distance_t	d_sq;
   int	aspect;
+  int   single_aspect;
   int	physical_aspect;
   int	diff_factor;
   stpi_dither_channel_t *dummy_channel;
@@ -66,6 +68,8 @@ typedef struct shade_segment
 
 #define EVEN_C1 256
 #define EVEN_C2 (EVEN_C1 * sqrt(3.0) / 2.0)
+#define EVEN_C1_SINGLE 16384
+#define EVEN_C2_SINGLE (EVEN_C1_SINGLE * sqrt(3.0) / 2.0)
 
 static void
 free_eventone_data(stpi_dither_t *d)
@@ -128,6 +132,7 @@ et_setup(stpi_dither_t *d)
   et->d2y = 2 * et->d_sq.dy;
 
   et->aspect = EVEN_C2 / (xa * ya);
+  et->single_aspect = EVEN_C2_SINGLE / (xa * ya);
   et->d_sq.r_sq = 0;
 
   for (i = 0; i < CHANNEL_COUNT(d); i++) {
@@ -279,6 +284,25 @@ eventone_adjust(stpi_dither_channel_t *dc, eventone_t *et, int dither_point,
   }
   return dither_point;
 }
+
+static inline int
+eventone_adjust_single(stpi_dither_channel_t *dc, eventone_t *et,
+		       int dither_point, unsigned int desired)
+{
+  if (dither_point <= 0)
+    return INT_MIN;
+  else if (dither_point >= 65535)
+    return dither_point;
+  if (desired == 0) {
+    dither_point = INT_MIN;
+  } else {
+    shade_distance_t *shade = (shade_distance_t *) dc->aux_data;
+    dither_point += shade->dis.r_sq * et->single_aspect -
+      (EVEN_C1_SINGLE * 65535) / desired;
+  }
+  return dither_point;
+}
+
 
 static inline void
 find_segment(stpi_dither_channel_t *dc, unsigned inkval,
@@ -523,8 +547,9 @@ stpi_dither_et_single(stp_vars_t v,
     int maximum_value = 0;
     int comparison = 32768;
     stpi_dither_channel_t *best_channel = NULL;
-    int best_channel_value = 4;
+    int best_channel_value = INT_MIN;
     int random_value = ditherpoint(d, &(d->dither_matrix), x);
+    int dummy_point_error = 0;
 
     if (d->stpi_dither_type & D_ORDERED_BASE)
       comparison += (random_value / 16) - 2048;
@@ -548,8 +573,6 @@ stpi_dither_et_single(stp_vars_t v,
 	 */
 	dc->b = find_segment_and_ditherpoint(dc, raw[i],
 					     &(sp->lower), &(sp->upper));
-	if (sp->lower.bits)
-	  print_all_channels = 1;
 	if (dc->b > maximum_value)
 	  maximum_value = dc->b;
 	ddc->b += dc->b;
@@ -558,10 +581,12 @@ stpi_dither_et_single(stp_vars_t v,
       }
     }
 
-    if ((3 * (ddc->b - maximum_value)) < maximum_value)
+#if 0
+    if ((2 * (ddc->b - maximum_value)) < (3 * maximum_value))
       print_all_channels = 1;
+#endif
 
-    if (ddc->b > 16383)
+    if (ddc->b > 65535)
       print_all_channels = 1;
 
     if (ddc->b > 65535) {
@@ -572,14 +597,18 @@ stpi_dither_et_single(stp_vars_t v,
     total_error += eventone_adjust(ddc, et, ddc->v - ddc->b, ddc->b);
 
     for (i=0; i < channel_count; i++) {
-      stpi_dither_channel_t *dc = &CHANNEL(d, (i + random_value) % channel_count);
+      stpi_dither_channel_t *dc = &CHANNEL(d, i);
       
       if (dc->ptr) {
 
-	dc->o = eventone_adjust(dc, et, dc->v - dc->b, dc->b);
+	dc->o = eventone_adjust_single(dc, et, dc->v - dc->b, dc->b);
+	dummy_point_error += dc->o;
 	if (dc->o > best_channel_value) {
 	  best_channel = dc;
-	  best_channel_value = dc->o;
+	  if (dc->o >= 32768)
+	    best_channel_value = INT_MAX;
+	  else
+	    best_channel_value = dc->o;
 	}
       }
     }
@@ -597,18 +626,22 @@ stpi_dither_et_single(stp_vars_t v,
 	shade_distance_t *sp = (shade_distance_t *) dc->aux_data;
 	stpi_ink_defn_t *inkp = &(sp->lower);
 
+	if (dc->o < 0)
+	  dc->o = 0;
+	else if (dc->o > 65535)
+	  dc->o = 65535;
 	point_error += dc->o;
 	if ((print_all_channels && point_error >= comparison) ||
 	    (channels_to_print == 1 && best_channel == dc)) {
 	  point_error -= 65535;
 	  inkp = &(sp->upper);
 	  dc->v -= 131070;
+	  sp->dis = et->d_sq;
 	  if (total_error >= comparison) {
 	    ddc->v -= 131070;
 	    total_error -= 65535;
 	    ssp->dis = et->d_sq;
 	  }
-	  sp->dis = et->d_sq;
 	}
 	if (inkp->bits) {
 	  if (!mask || (*(mask + d->ptr_offset) & bit)) {
@@ -620,7 +653,6 @@ stpi_dither_et_single(stp_vars_t v,
 	}
       }
     }
-
 
     eventone_update(ddc, et, x, direction);
     diffuse_error(ddc, et, x, direction);
