@@ -1,4 +1,4 @@
-This is gimp-print version 4.1.99a2, the second alpha release leading
+This is gimp-print version 4.1.99a3, the third alpha release leading
 up to the 4.2 stable release.  This release is not 4.2.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
@@ -11,6 +11,38 @@ These release notes primarily describe changes visible to the end
 user.  Detailed descriptions of changes may be found in the ChangeLog.
 
 The Gimp Print plugin requires the Gimp 1.2.
+
+Gimp-Print 4.1.99a3 contains the following changes over 4.1.99a2:
+
+1) The Epson driver will now allow page lengths greater than 44" for
+   certain printers (primarily the Stylus Color 760 and newer).
+
+2) The Epson Stylus Color 980 should print with better density.
+
+3) The Stylus Color 480/580 positions the image more accurately on the
+   page.
+
+4) The CUPS driver cleanly aborts printing if an active job is removed
+   from the queue.  It may take up to 30 seconds or so for the printer
+   to stop printing, but the job will terminate cleanly, leaving the
+   printer in a sane state.
+
+5) LaserJet printers now have a sensible default for InputSlot.
+
+6) LaserJet printers support additional media sizes.
+
+7) The Stylus Photo 780/785/790/895, 890, and 1280/1290 should now
+   print to very close to the margins on all sides.  The bottom of the
+   page may have a very small margin left (less than 1 mm).
+
+8) The Epson Stylus Color, Stylus Color 400, Stylus Color 500, Stylus
+   Color Pro XL, and Stylus Color 1500 print correctly again.
+
+9) Changing ink cartridges on the Epson Stylus Color 480/580 will not
+   be supported in at least initial 4.2 releases.  This project
+   appears to be somewhat more complicated and riskier than previously
+   believed.
+
 
 Gimp-Print 4.1.99a2 contains the following changes over 4.1.99a1:
 
