@@ -828,14 +828,14 @@ static const stp_internal_papersize_t paper_sizes[] =
   { N_ ("Custom"), 0, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
 
   { N_ ("89 mm Roll Paper"), 252, 0, 0, 0, 0, 0, PAPERSIZE_METRIC },
-  { N_ ("4\" Roll Paper"), 288, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("5\" Roll Paper"), 360, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { N_ ("4 Inch Roll Paper"), 288, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { N_ ("5 Inch Roll Paper"), 360, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
   { N_ ("210 mm Roll Paper"), 595, 0, 0, 0, 0, 0, PAPERSIZE_METRIC },
-  { N_ ("13\" Roll Paper"), 936, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("22\" Roll Paper"), 1584, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("24\" Roll Paper"), 1728, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("36\" Roll Paper"), 2592, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("44\" Roll Paper"), 3168, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { N_ ("13 Inch Roll Paper"), 936, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { N_ ("22 Inch Roll Paper"), 1584, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { N_ ("24 Inch Roll Paper"), 1728, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { N_ ("36 Inch Roll Paper"), 2592, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { N_ ("44 Inch Roll Paper"), 3168, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
 
   { "",           0,    0, 0, 0, 0, 0, PAPERSIZE_METRIC }
 };
