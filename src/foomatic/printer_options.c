@@ -76,12 +76,14 @@ main(int argc, char **argv)
 		      stp_set_resolution(pv, retval[j].name);
 		      stp_printer_describe_resolution(p, pv, &x, &y);
 		      if (x > 0 && y > 0)
-			printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
-			       stp_printer_get_driver(p), "x_resolution",
-			       retval[j].name, x);
-			printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
-			       stp_printer_get_driver(p), "y_resolution",
-			       retval[j].name, y);
+			{
+			  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
+				 stp_printer_get_driver(p), "x_resolution",
+				 retval[j].name, x);
+			  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
+				 stp_printer_get_driver(p), "y_resolution",
+				 retval[j].name, y);
+			}
 		    }
 		  free((void *)retval[j].name);
 		  free((void *)retval[j].text);
