@@ -1331,20 +1331,20 @@ compute_scaling_limits(gdouble *min_ppi_scaling, gdouble *max_ppi_scaling)
 static void
 scaling_update (GtkAdjustment *adjustment)
 {
-  invalidate_preview_thumbnail ();
   reset_preview ();
 
   if (pv->scaling != adjustment->value)
     {
+      invalidate_preview_thumbnail ();
       if (GTK_TOGGLE_BUTTON (scaling_ppi)->active)
 	pv->scaling = -adjustment->value;
       else
 	pv->scaling = adjustment->value;
-    }
 
-  suppress_scaling_adjustment = TRUE;
-  preview_update ();
-  suppress_scaling_adjustment = FALSE;
+      suppress_scaling_adjustment = TRUE;
+      preview_update ();
+      suppress_scaling_adjustment = FALSE;
+    }
 }
 
 /*
@@ -1421,8 +1421,12 @@ scaling_callback (GtkWidget *widget)
       pv->scaling = 0.0;
     }
 
+  if (widget == scaling_ppi || widget == scaling_percent)
+    suppress_preview_update++;
   gtk_adjustment_changed (GTK_ADJUSTMENT (scaling_adjustment));
   gtk_adjustment_value_changed (GTK_ADJUSTMENT (scaling_adjustment));
+  if (widget == scaling_ppi || widget == scaling_percent)
+    suppress_preview_update--;
 }
 
 /****************************************************************************
@@ -1753,6 +1757,8 @@ plist_callback (GtkWidget *widget,
       plist_build_combo(option->combo, option->count, option->params,
 			(option->accessor)(pv->v), default_parameter,
 			combo_callback, &(option->callback_id), option);
+      if (option->extra)
+	(option->extra)((option->accessor)(pv->v));
     }
 
   if (dither_algo_combo)
@@ -1854,13 +1860,13 @@ combo_callback(GtkWidget *widget, gpointer data)
   list_option_t *option = (list_option_t *)data;
   const gchar *new_value = Combo_get_name(option->combo, option->count,
 					  option->params);
-  invalidate_frame();
-  invalidate_preview_thumbnail();
   reset_preview();
-  if (option->extra)
-    (option->extra)(new_value);
   if (strcmp((option->accessor)(pv->v), new_value) != 0)
     {
+      invalidate_frame();
+      invalidate_preview_thumbnail();
+      if (option->extra)
+	(option->extra)(new_value);
       (option->mutator)(pv->v, new_value);
       preview_update();
     }
@@ -1879,8 +1885,8 @@ orientation_callback (GtkWidget *widget,
     {
       invalidate_preview_thumbnail ();
       set_orientation((gint) data);
+      preview_update ();
     }
-  preview_update ();
 }
 
 /*
@@ -1897,14 +1903,29 @@ output_type_callback (GtkWidget *widget,
       stp_set_output_type (pv->v, (gint) data);
       invalidate_preview_thumbnail ();
       update_adjusted_thumbnail ();
+      if (widget == output_types[0].button)
+	set_color_sliders_active (TRUE);
+      else
+	set_color_sliders_active (FALSE);
+      preview_update ();
     }
+}
 
-  if (widget == output_types[0].button)
-    set_color_sliders_active (TRUE);
-  else
-    set_color_sliders_active (FALSE);
-
-  preview_update ();
+static void
+set_all_entry_values(void)
+{
+  set_entry_value (top_entry, (stp_get_top (pv->v)), 1);
+  set_entry_value (left_entry, (stp_get_left (pv->v)), 1);
+  set_entry_value (bottom_entry, (top + stp_get_top(pv->v) + print_height), 1);
+  set_entry_value (bottom_border_entry,
+                   (paper_height - (stp_get_top (pv->v) + print_height)), 1);
+  set_entry_value (right_entry, (stp_get_left(pv->v) + print_width), 1);
+  set_entry_value (right_border_entry,
+                   (paper_width - (stp_get_left (pv->v) + print_width)), 1);
+  set_entry_value (width_entry, print_width, 1);
+  set_entry_value (height_entry, print_height, 1);
+  set_entry_value (custom_size_width, stp_get_page_width (pv->v), 1);
+  set_entry_value (custom_size_height, stp_get_page_height (pv->v), 1);
 }
 
 /*
@@ -1919,7 +1940,7 @@ unit_callback (GtkWidget *widget,
   if (GTK_TOGGLE_BUTTON (widget)->active)
     {
       pv->unit = (gint) data;
-      preview_update ();
+      set_all_entry_values();
     }
 }
 
@@ -1937,9 +1958,8 @@ image_type_callback (GtkWidget *widget,
       stp_set_image_type (pv->v, (gint) data);
       invalidate_preview_thumbnail ();
       update_adjusted_thumbnail ();
+      preview_update ();
     }
-
-  preview_update ();
 }
 
 static void
@@ -2570,6 +2590,7 @@ do_preview_thumbnail (void)
   /* draw orientation arrow pointing to top-of-paper */
   draw_arrow (preview->widget.window, gcinv, paper_display_left,
 	      paper_display_top);
+  gdk_flush();
 
   opx = preview_x;
   opy = preview_y;
@@ -2590,6 +2611,7 @@ preview_update (void)
   gdouble max_ppi_scaling;   /* Maximum PPI for current page size */
   gdouble min_ppi_scaling;   /* Minimum PPI for current page size */
 
+  suppress_preview_update++;
   stp_printer_get_media_size(current_printer, pv->v,
 			     &paper_width, &paper_height);
 
@@ -2687,25 +2709,12 @@ preview_update (void)
       bottom_is_anchored = 1;
     }
 
-  set_entry_value (top_entry, (stp_get_top (pv->v)), 1);
-  set_entry_value (left_entry, (stp_get_left (pv->v)), 1);
-  set_entry_value (bottom_entry, (top + stp_get_top(pv->v) + print_height), 1);
-  set_entry_value (bottom_border_entry,
-                   (paper_height - (stp_get_top (pv->v) + print_height)), 1);
-  set_entry_value (right_entry, (stp_get_left(pv->v) + print_width), 1);
-  set_entry_value (right_border_entry,
-                   (paper_width - (stp_get_left (pv->v) + print_width)), 1);
-  set_entry_value (width_entry, print_width, 1);
-  set_entry_value (height_entry, print_height, 1);
-  set_entry_value (custom_size_width, stp_get_page_width (pv->v), 1);
-  set_entry_value (custom_size_height, stp_get_page_height (pv->v), 1);
+  set_all_entry_values();
+  suppress_preview_update--;
 
   /* draw image */
   if (! suppress_preview_update)
-    {
-      do_preview_thumbnail ();
-      gdk_flush ();
-    }
+    do_preview_thumbnail ();
 }
 
 /*
