@@ -298,11 +298,15 @@ ps_imageable_area(const stp_printer_t printer,	/* I - Printer model */
 static void
 ps_limit(const stp_printer_t printer,	/* I - Printer model */
 	    const stp_vars_t v,  		/* I */
-	    int  *width,		/* O - Left position in points */
-	    int  *height)		/* O - Top position in points */
+	    int *width,
+	    int *height,
+	    int *min_width,
+	    int *min_height)
 {
   *width =	INT_MAX;
   *height =	INT_MAX;
+  *min_width =	1;
+  *min_height =	1;
 }
 
 /*

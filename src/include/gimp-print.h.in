@@ -291,7 +291,8 @@ typedef struct
                           const stp_vars_t v,
                           int *left, int *right, int *bottom, int *top);
   void  (*limit)(const stp_printer_t printer, const stp_vars_t v,
-                 int *width, int *height);
+                 int *max_width, int *max_height,
+		 int *min_width, int *min_height);
   void  (*print)(const stp_printer_t printer,
                  stp_image_t *image, const stp_vars_t v);
   const char *(*default_parameters)(const stp_printer_t printer,

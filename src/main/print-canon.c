@@ -1765,13 +1765,17 @@ canon_imageable_area(const stp_printer_t printer,	/* I - Printer model */
 static void
 canon_limit(const stp_printer_t printer,	/* I - Printer model */
 	    const stp_vars_t v,  		/* I */
-	    int  *width,		/* O - Left position in points */
-	    int  *length)		/* O - Top position in points */
+	    int *width,
+	    int *height,
+	    int *min_width,
+	    int *min_height)
 {
   const canon_cap_t * caps=
     canon_get_model_capabilities(stp_printer_get_model(printer));
   *width =	caps->max_width;
-  *length =	caps->max_height;
+  *height =	caps->max_height;
+  *min_width = 1;
+  *min_height = 1;
 }
 
 /*

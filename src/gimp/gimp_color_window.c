@@ -165,6 +165,7 @@ void
 gimp_create_color_adjust_window (void)
 {
   GtkWidget *table;
+  GtkWidget *event_box;
   const stp_vars_t lower   = stp_minimum_settings ();
   const stp_vars_t upper   = stp_maximum_settings ();
   const stp_vars_t defvars = stp_default_settings ();
@@ -214,8 +215,13 @@ gimp_create_color_adjust_window (void)
    */
 
   swatch = (GtkDrawingArea *) gtk_drawing_area_new ();
+  event_box = gtk_event_box_new();
+  gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(swatch));
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(event_box),
+		       "Image preview", "Image preview");
+  gtk_widget_show(GTK_WIDGET(event_box));
   gtk_drawing_area_size (swatch, SWATCH_W, SWATCH_H);
-  gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (swatch),
+  gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (event_box),
                     0, 3, 0, 1, 0, 0, 0, 0);
   gtk_signal_connect (GTK_OBJECT (swatch), "expose_event",
                       GTK_SIGNAL_FUNC (gimp_redraw_color_swatch),
@@ -235,6 +241,11 @@ gimp_create_color_adjust_window (void)
 			  stp_get_brightness(defvars) / 100,
 			  stp_get_brightness(defvars) / 10,
 			  3, TRUE, 0, 0, NULL, NULL);
+  set_adjustment_tooltip(tooltips, brightness_adjustment,
+			 "Set the brightness of the print.\n"
+			 "0 is solid black, 2 is solid white",
+			 "Set the brightness of the print.\n"
+			 "0 is solid black, 2 is solid white");
   gtk_signal_connect (GTK_OBJECT (brightness_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_brightness_update),
                       NULL);
@@ -251,6 +262,9 @@ gimp_create_color_adjust_window (void)
 			  stp_get_contrast(defvars) / 100,
 			  stp_get_contrast(defvars) / 10,
 			  3, TRUE, 0, 0, NULL, NULL);
+  set_adjustment_tooltip(tooltips, contrast_adjustment,
+			 "Set the contrast of the print",
+			 "Set the contrast of the print");
   gtk_signal_connect (GTK_OBJECT (contrast_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_contrast_update),
                       NULL);
@@ -267,6 +281,9 @@ gimp_create_color_adjust_window (void)
 			  stp_get_cyan(defvars) / 100,
 			  stp_get_cyan(defvars) / 10,
 			  3, TRUE, 0, 0, NULL, NULL);
+  set_adjustment_tooltip(tooltips, cyan_adjustment,
+			 "Adjust the cyan balance of the print",
+			 "Adjust the cyan balance of the print");
   gtk_signal_connect (GTK_OBJECT (cyan_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_cyan_update),
                       NULL);
@@ -283,6 +300,9 @@ gimp_create_color_adjust_window (void)
 			  stp_get_magenta(defvars) / 100,
 			  stp_get_magenta(defvars) / 10,
 			  3, TRUE, 0, 0, NULL, NULL);
+  set_adjustment_tooltip(tooltips, magenta_adjustment,
+			 "Adjust the magenta balance of the print",
+			 "Adjust the magenta balance of the print");
   gtk_signal_connect (GTK_OBJECT (magenta_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_magenta_update),
                       NULL);
@@ -299,6 +319,9 @@ gimp_create_color_adjust_window (void)
 			  stp_get_yellow(defvars) / 100,
 			  stp_get_yellow(defvars) / 10,
 			  3, TRUE, 0, 0, NULL, NULL);
+  set_adjustment_tooltip(tooltips, yellow_adjustment,
+			 "Adjust the yellow balance of the print",
+			 "Adjust the yellow balance of the print");
   gtk_signal_connect (GTK_OBJECT (yellow_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_yellow_update),
                       NULL);
@@ -315,6 +338,13 @@ gimp_create_color_adjust_window (void)
 			  stp_get_saturation(defvars) / 1000,
 			  stp_get_saturation(defvars) / 100,
 			  3, TRUE, 0, 0, NULL, NULL);
+  set_adjustment_tooltip(tooltips, saturation_adjustment,
+			 "Adjust the saturation (color balance) of the print\n"
+			 "Use zero saturation to produce grayscale output "
+			 "using color and black inks",
+			 "Adjust the saturation (color balance) of the print\n"
+			 "Use zero saturation to produce grayscale output "
+			 "using color and black inks");
   gtk_signal_connect (GTK_OBJECT (saturation_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_saturation_update),
                       NULL);
@@ -331,6 +361,15 @@ gimp_create_color_adjust_window (void)
 			  stp_get_density(defvars) / 1000,
 			  stp_get_density(defvars) / 100,
 			  3, TRUE, 0, 0, NULL, NULL);
+  set_adjustment_tooltip(tooltips, density_adjustment,
+			 "Adjust the density (amount of ink) of the print. "
+			 "Reduce the density if the ink bleeds through the "
+			 "paper or smears; increase the density if black "
+			 "regions are not solid.",
+			 "Adjust the density (amount of ink) of the print. "
+			 "Reduce the density if the ink bleeds through the "
+			 "paper or smears; increase the density if black "
+			 "regions are not solid.");
   gtk_signal_connect (GTK_OBJECT (density_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_density_update),
                       NULL);
@@ -347,6 +386,17 @@ gimp_create_color_adjust_window (void)
 			  stp_get_gamma(defvars) / 1000,
 			  stp_get_gamma(defvars) / 100,
 			  3, TRUE, 0, 0, NULL, NULL);
+  set_adjustment_tooltip(tooltips, gamma_adjustment,
+			 "Adjust the gamma of the print. Larger values will "
+			 "produce a generally brighter print, while smaller "
+			 "values will produce a generally darker print. "
+			 "Black and white will remain the same, unlike with "
+			 "the brightness adjustment.",
+			 "Adjust the gamma of the print. Larger values will "
+			 "produce a generally brighter print, while smaller "
+			 "values will produce a generally darker print. "
+			 "Black and white will remain the same, unlike with "
+			 "the brightness adjustment.");
   gtk_signal_connect (GTK_OBJECT (gamma_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_gamma_update),
                       NULL);
@@ -355,9 +405,31 @@ gimp_create_color_adjust_window (void)
    * Dither algorithm option combo...
    */
   dither_algo_combo = gtk_combo_new ();
+  event_box = gtk_event_box_new();
+  gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(dither_algo_combo));
+  gtk_widget_show(GTK_WIDGET(event_box));
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(event_box),
+		       "Choose the dither algorithm to be used.\n"
+		       "Adaptive Hybrid usually produces the best "
+		       "all-around quality.\n"
+		       "Ordered is faster and produces almost as good "
+		       "quality on photographs.\n"
+		       "Fast and Very Fast are considerably faster, and "
+		       "work well for text and line art.\n"
+		       "Hybrid Floyd-Steinberg generally produces "
+		       "inferior output.",
+		       "Choose the dither algorithm to be used.\n"
+		       "Adaptive Hybrid usually produces the best "
+		       "all-around quality.\n"
+		       "Ordered is faster and produces almost as good "
+		       "quality on photographs.\n"
+		       "Fast and Very Fast are considerably faster, and "
+		       "work well for text and line art.\n"
+		       "Hybrid Floyd-Steinberg generally produces "
+		       "inferior output.");
   gimp_table_attach_aligned (GTK_TABLE (table), 0, 9,
                              _("Dither Algorithm:"), 1.0, 0.5,
-                             dither_algo_combo, 1, TRUE);
+                             event_box, 1, TRUE);
 
   gimp_build_dither_combo ();
 }

@@ -1123,12 +1123,16 @@ lexmark_imageable_area(const stp_printer_t printer,	/* I - Printer model */
 static void
 lexmark_limit(const stp_printer_t printer,	/* I - Printer model */
 	    const stp_vars_t v,  		/* I */
-	    int  *width,		/* O - Left position in points */
-	    int  *length)		/* O - Top position in points */
+	    int *width,
+	    int *height,
+	    int *min_width,
+	    int *min_height)
 {
   const lexmark_cap_t * caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
   *width =	caps->max_width;
-  *length =	caps->max_length;
+  *height =	caps->max_length;
+  *min_width = 1;
+  *min_height = 1;
 }
 
 
