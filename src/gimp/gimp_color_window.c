@@ -95,10 +95,10 @@ build_dither_combo (void)
   if (desc.type == STP_PARAMETER_TYPE_STRING_LIST)
     {
       vec = desc.bounds.str;
-      if (stp_get_string_parameter(pv->v, "DitherAlgorithm")[0] == '\0')
-	stp_set_string_parameter(pv->v, "DitherAlgorithm", desc.deflt.str);
-      else if (stp_string_list_count(vec) == 0)
+      if (vec == NULL || stp_string_list_count(vec) == 0)
 	stp_set_string_parameter(pv->v, "DitherAlgorithm", NULL);
+      else if (stp_get_string_parameter(pv->v, "DitherAlgorithm")[0] == '\0')
+	stp_set_string_parameter(pv->v, "DitherAlgorithm", desc.deflt.str);
     }
 
   plist_build_combo (dither_algo_combo,
