@@ -39,7 +39,7 @@ grep "^AM_GNU_GETTEXT" $srcdir/configure.in >/dev/null && {
 
 #### MRS: The following now only generates a warning, since earlier
 ####      versions of gettext *do* work, they just don't create the
-####      right uninstall crap.
+####      right uninstall code.
 
 gettextv=`gettext --version | head -1 | awk '{print $NF}'`
 gettext_major=`echo $gettextv | awk -F. '{print $1}'`
@@ -54,7 +54,7 @@ test "$gettext_major" -eq 0 && {
   echo
   echo "**Warning**: You must have \`gettext' 0.10.38 or newer installed to"
   echo "create a gimp-print distribution.  Earlier versions of gettext do"
-  echo "not properly uninstall files."
+  echo "not generate the correct 'make uninstall' code."
   echo "Get ftp://alpha.gnu.org/gnu/gettext-0.10.38.tar.gz"
   echo "(or a newer version if it is available)"
 }
@@ -84,7 +84,8 @@ test -n "$NO_AUTOMAKE" || (aclocal --version) < /dev/null > /dev/null 2>&1 || {
 jade_err=0
 
 # Exists?
-test -z "$(type -p jade)" && jade_err=1
+jade_exists=`type -p $jade`
+test -z "$jade_exists" && jade_err=1
 
 # Proper rev?
 test "$jade_err" -eq 0 && {
@@ -113,7 +114,9 @@ test "$jade_err" -eq 0 && {
 
 # Check for existence of dvips
 
-test -z "$(type -p dvips)" && {
+dvipsloc=`type -p dvips`
+
+test -z "$dvipsloc" && {
   echo " "
   echo "***Warning***: You must have \"dvips\" installed to"
   echo "build the Gimp-Print user's guide."
@@ -122,7 +125,9 @@ test -z "$(type -p dvips)" && {
 
 # Check for existence of jadetex
 
-test -z "$(type -p jadetex)" && {
+jadetexloc=`type -p jadetex`
+
+test -z "$jadetexloc" && {
   echo " "
   echo "***Warning***: You must have \"jadetex\" version 3.5 or"
   echo "newer installed to build the Gimp-Print user's guide."
@@ -135,8 +140,10 @@ test -z "$(type -p jadetex)" && {
 
 openjade_err=0
 
+openjadeloc=`type -p openjade`
+
 # Exists?
-test -z "$(type -p openjade)" && openjade_err=1
+test -z "$openjadeloc" && openjade_err=1
 
 # Proper rev?
 test "$openjade_err" -eq 0 && {
@@ -162,7 +169,9 @@ test "$openjade_err" -eq 0 && {
 
 # Check for ps2pdf
 
-test -z "$(type -p ps2pdf)" && {
+ps2pdfloc=`type -p ps2pdf`
+
+test -z "ps2pdfloc" && {
   echo " "
   echo "***Warning***: You must have \"ps2pdf\" installed to"
   echo "build the Gimp-Print user's guide."
@@ -172,26 +181,13 @@ test -z "$(type -p ps2pdf)" && {
   echo " "
 }
 
-# Check for docbook-toys (seems to be SuSE specific?)
-# I will ultimately extract the essence of this and code it into the
-# Makefile.am in the doc/users_guide directory, but for now this will
-# have to do.  AMS 3-oct-2001
-
-test -z "$(type -p dvips)" && {
-  echo " "
-  echo "***Warning***: You must have \"docbook-toys\" installed to"
-  echo "build the Gimp-Print user's guide."
-  echo "Get http://www.suse.de/~ke/docbook-toys-0.15.2.tar.bz2"
-  echo "(or a newer version if available)"
-  echo " "
-}
-
 # Check first for existence and then for proper version of sgmltools-lite >=3.0.2
 
 sgmltools_err=0
 
 # Exists?
-test -z "$(type -p sgmltools)" && sgmltools_err=1
+sgmltoolsloc=`type -p sgmltools`
+test -z "$sgmltoolsloc" && sgmltools_err=1
 
 # Proper rev?
 test "$sgmltools_err" -eq 0 && {
@@ -219,7 +215,8 @@ test "$sgmltools_err" -eq 0 && {
 
 # Check for convert
 
-test -z "$(type -p convert)" && {
+convertloc=`type -p convert`
+test -z "$convertloc" && {
   echo " "
   echo "***Warning***: You must have \"convert\" installed to"
   echo "build the Gimp-Print user's guide."
