@@ -64,6 +64,7 @@ typedef struct
 #define FMAX(a, b) ((a) > (b) ? (a) : (b))
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
 
+
 static inline void
 calc_rgb_to_hsl(unsigned short *rgb, double *hue, double *sat,
 		double *lightness)
@@ -860,10 +861,13 @@ rgb_to_rgb(const stp_vars_t vars,
 	    }
 	  else
 	    {
-	      i0 = rgbin[0];
-	      rgbout[0] = cmap[i0 * 3 + 0] * 257;
-	      rgbout[1] = cmap[i0 * 3 + 1] * 257;
-	      rgbout[2] = cmap[i0 * 3 + 2] * 257;
+	      i0 = rgbin[0] * 3;
+	      i1 = cmap[i0 + 1];
+	      i2 = cmap[i0 + 2];
+	      i0 = cmap[i0];
+	      rgbout[0] = i0 | (i0 << 8);
+	      rgbout[1] = i1 | (i1 << 8);
+	      rgbout[2] = i2 | (i2 << 8);
 	    }
 	  break;
 	case 2:
@@ -876,11 +880,15 @@ rgb_to_rgb(const stp_vars_t vars,
 	    }
 	  else
 	    {
-	      i0 = rgbin[0];
-	      i1 = rgbin[1];
-	      rgbout[0] = (cmap[i0 * 3 + 0] * i1 / 255 + 255 - i1) * 257;
-	      rgbout[1] = (cmap[i0 * 3 + 1] * i1 / 255 + 255 - i1) * 257;
-	      rgbout[2] = (cmap[i0 * 3 + 2] * i1 / 255 + 255 - i1) * 257;
+	      i0 = rgbin[0] * 3;
+	      i3 = rgbin[1];
+	      i1 = cmap[i0 + 1] * i3 / 255 + 255 - i3;
+	      i2 = cmap[i0 + 2] * i3 / 255 + 255 - i3;
+	      i0 = cmap[i0] * i3 / 255 + 255 - i3;
+
+	      rgbout[0] = i0 | (i0 << 8);
+	      rgbout[1] = i1 | (i1 << 8);
+	      rgbout[2] = i2 | (i2 << 8);
 	    }
 	  break;
 	case 3:
@@ -899,9 +907,9 @@ rgb_to_rgb(const stp_vars_t vars,
 	      i0 = rgbin[0];
 	      i1 = rgbin[1];
 	      i2 = rgbin[2];
-	      rgbout[0] = i0 * 257;
-	      rgbout[1] = i1 * 257;
-	      rgbout[2] = i2 * 257;
+	      rgbout[0] = i0 | (i0 << 8);
+	      rgbout[1] = i1 | (i1 << 8);
+	      rgbout[2] = i2 | (i2 << 8);
 	    }
 	  break;
 	case 4:
@@ -915,13 +923,13 @@ rgb_to_rgb(const stp_vars_t vars,
 	    }
 	  else
 	    {
-	      i0 = rgbin[0];
-	      i1 = rgbin[1];
-	      i2 = rgbin[2];
 	      i3 = rgbin[3];
-	      rgbout[0] = (i0 * i3 / 255 + 255 - i3) * 257;
-	      rgbout[1] = (i1 * i3 / 255 + 255 - i3) * 257;
-	      rgbout[2] = (i2 * i3 / 255 + 255 - i3) * 257;
+	      i0 = rgbin[0] * i3 / 255 + 255 - i3;
+	      i1 = rgbin[1] * i3 / 255 + 255 - i3;
+	      i2 = rgbin[2] * i3 / 255 + 255 - i3;
+	      rgbout[0] = i0 | (i0 << 8);
+	      rgbout[1] = i1 | (i1 << 8);
+	      rgbout[2] = i2 | (i2 << 8);
 	    }
 	  break;
 	}
@@ -1113,10 +1121,13 @@ solid_rgb_to_rgb(const stp_vars_t vars,
 	    }
 	  else
 	    {
-	      i0 = rgbin[0];
-	      rgbout[0] = cmap[i0 * 3 + 0] * 257;
-	      rgbout[1] = cmap[i0 * 3 + 1] * 257;
-	      rgbout[2] = cmap[i0 * 3 + 2] * 257;
+	      i0 = rgbin[0] * 3;
+	      i1 = cmap[i0 + 1];
+	      i2 = cmap[i0 + 2];
+	      i0 = cmap[i0];
+	      rgbout[0] = i0 | (i0 << 8);
+	      rgbout[1] = i1 | (i1 << 8);
+	      rgbout[2] = i2 | (i2 << 8);
 	    }
 	  break;
 	case 2:
@@ -1129,11 +1140,15 @@ solid_rgb_to_rgb(const stp_vars_t vars,
 	    }
 	  else
 	    {
-	      i0 = rgbin[0];
-	      i1 = rgbin[1];
-	      rgbout[0] = (cmap[i0 * 3 + 0] * i1 / 255 + 255 - i1) * 257;
-	      rgbout[1] = (cmap[i0 * 3 + 1] * i1 / 255 + 255 - i1) * 257;
-	      rgbout[2] = (cmap[i0 * 3 + 2] * i1 / 255 + 255 - i1) * 257;
+	      i0 = rgbin[0] * 3;
+	      i3 = rgbin[1];
+	      i1 = cmap[i0 + 1] * i3 / 255 + 255 - i3;
+	      i2 = cmap[i0 + 2] * i3 / 255 + 255 - i3;
+	      i0 = cmap[i0] * i3 / 255 + 255 - i3;
+
+	      rgbout[0] = i0 | (i0 << 8);
+	      rgbout[1] = i1 | (i1 << 8);
+	      rgbout[2] = i2 | (i2 << 8);
 	    }
 	  break;
 	case 3:
@@ -1152,9 +1167,9 @@ solid_rgb_to_rgb(const stp_vars_t vars,
 	      i0 = rgbin[0];
 	      i1 = rgbin[1];
 	      i2 = rgbin[2];
-	      rgbout[0] = i0 * 257;
-	      rgbout[1] = i1 * 257;
-	      rgbout[2] = i2 * 257;
+	      rgbout[0] = i0 | (i0 << 8);
+	      rgbout[1] = i1 | (i1 << 8);
+	      rgbout[2] = i2 | (i2 << 8);
 	    }
 	  break;
 	case 4:
@@ -1168,13 +1183,13 @@ solid_rgb_to_rgb(const stp_vars_t vars,
 	    }
 	  else
 	    {
-	      i0 = rgbin[0];
-	      i1 = rgbin[1];
-	      i2 = rgbin[2];
 	      i3 = rgbin[3];
-	      rgbout[0] = (i0 * i3 / 255 + 255 - i3) * 257;
-	      rgbout[1] = (i1 * i3 / 255 + 255 - i3) * 257;
-	      rgbout[2] = (i2 * i3 / 255 + 255 - i3) * 257;
+	      i0 = rgbin[0] * i3 / 255 + 255 - i3;
+	      i1 = rgbin[1] * i3 / 255 + 255 - i3;
+	      i2 = rgbin[2] * i3 / 255 + 255 - i3;
+	      rgbout[0] = i0 | (i0 << 8);
+	      rgbout[1] = i1 | (i1 << 8);
+	      rgbout[2] = i2 | (i2 << 8);
 	    }
 	  break;
 	}
@@ -1343,9 +1358,9 @@ gray_to_rgb(const stp_vars_t vars,
 	  else
 	    {
 	      i0 = grayin[0];
-	      trgb[0] = grayin[0] * 257;
-	      trgb[1] = grayin[0] * 257;
-	      trgb[2] = grayin[0] * 257;
+	      trgb[0] =
+	      trgb[1] =
+	      trgb[2] = i0 | (i0 << 8);
 	    }
 	}
       else
@@ -1359,13 +1374,10 @@ gray_to_rgb(const stp_vars_t vars,
 	    }
 	  else
 	    {
-	      int lookup = (grayin[0] * grayin[1] / 255 + 255 - grayin[1]) *
-		257;
-	      i0 = grayin[0];
-	      i1 = grayin[1];
-	      trgb[0] = lookup;
-	      trgb[1] = lookup;
-	      trgb[2] = lookup;
+	      i0 = (grayin[0] * grayin[1] / 255 + 255 - grayin[1]);
+	      trgb[0] =
+	      trgb[1] =
+	      trgb[2] = i0 | (i0 << 8);
 	    }
 	}
       update_cmyk(trgb);
@@ -1732,19 +1744,38 @@ cmyk_8_to_cmyk(const stp_vars_t vars,
   int i;
   int j;
   int nz[4];
-  double density = 257.0 * stp_get_density(vars);
+  static unsigned short	lut[256];
+  static double density = -1.0;
+  static double print_gamma = -1.0;
+
+
+  if (density != stp_get_density(vars) ||
+      print_gamma != stp_get_gamma(vars))
+  {
+    density     = stp_get_density(vars);
+    print_gamma = stp_get_gamma(vars);
+
+    for (i = 0; i < 256; i ++)
+      lut[i] = 65535.0 * density * pow((double)i / 255.0, print_gamma) + 0.5;
+  }
+
   for (i = 0; i < width; i++)
     {
-      for (j = 0; j < 4; j++)
-	{
-	  nz[j] |= cmykin[j];
-	  if (cmykin[j] == 0)
-	    cmykout[j] = 0;
-	  else
-	    cmykout[j] = cmykin[j] * density;
-	}
-      cmykin += 4;
-      cmykout += 4;
+      j = *cmykin++;
+      nz[0] |= j;
+      *cmykout++ = lut[j];
+
+      j = *cmykin++;
+      nz[1] |= j;
+      *cmykout++ = lut[j];
+
+      j = *cmykin++;
+      nz[2] |= j;
+      *cmykout++ = lut[j];
+
+      j = *cmykin++;
+      nz[3] |= j;
+      *cmykout++ = lut[j];
     }
   if (zero_mask)
     {
@@ -1771,19 +1802,26 @@ cmyk_to_cmyk(const stp_vars_t vars,
   int j;
   int nz[4];
   const unsigned short *scmykin = (const unsigned short *) cmykin;
-  double density = stp_get_density(vars);
+  double density = stp_get_density(vars) * 65535.0;
+  double print_gamma = stp_get_gamma(vars);
+
   for (i = 0; i < width; i++)
     {
-      for (j = 0; j < 4; j++)
-	{
-	  nz[j] |= cmykin[j];
-	  if (cmykin[j] == 0)
-	    cmykout[j] = 0;
-	  else
-	    cmykout[j] = scmykin[j] * density;
-	}
-      scmykin += 4;
-      cmykout += 4;
+      j = *scmykin++;
+      nz[0] |= j;
+      *cmykout++ = density * pow((double)j / 65535.0, print_gamma) + 0.5;
+
+      j = *scmykin++;
+      nz[1] |= j;
+      *cmykout++ = density * pow((double)j / 65535.0, print_gamma) + 0.5;
+
+      j = *scmykin++;
+      nz[2] |= j;
+      *cmykout++ = density * pow((double)j / 65535.0, print_gamma) + 0.5;
+
+      j = *scmykin++;
+      nz[3] |= j;
+      *cmykout++ = density * pow((double)j / 65535.0, print_gamma) + 0.5;
     }
   if (zero_mask)
     {
