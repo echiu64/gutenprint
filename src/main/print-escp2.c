@@ -66,7 +66,7 @@ static int
 resid2dotid(int resid)
 {
   static const int dotidmap[] =
-    { 0, 1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 10, 11, 12, 12 };
+    { 0, 1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 10, 11, 12, 12, 13, 13 };
   if (resid < 0 || resid >= RES_N)
     return -1;
   return dotidmap[resid];

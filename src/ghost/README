@@ -302,6 +302,8 @@ section.  Please see the notes at the end of this section.
 
 2880x1440sw      2880 x 1440 DPI                          (16)
 
+2880x2880sw      2880 x 2880 DPI                          (18)
+
 (*) This setting is the default on all printers supporting this
     setting.
 
@@ -316,7 +318,7 @@ section.  Please see the notes at the end of this section.
     3000, and Stylus Photo, Stylus Photo 700, 720 and EX.
 
 (3) Works on Stylus C70, C80, and C82; and Stylus Photo 950, 960,
-    2100, and 2200.
+    2100, 2200, and PM-950C and PM-970C
 
 (4) Works on older printers with dot spacing of 1/120 inch.  This
     includes the Stylus Color Pro, Pro XL, 400, and 500.
@@ -324,9 +326,9 @@ section.  Please see the notes at the end of this section.
 (5) Works on newer printers with dot spacing of 1/120 inch.  This
     includes the Stylus C20, C40, C41, C42, C60, C61, and C62; the
     Stylus Color 480, 580, 680, 740, 760, 777, 860, 880, 83, and 1160,
-    and the Stylus Photo 750, 780, 785, 790, 810, 820, 825, 830, 870, 875,
-    890, 895, 915, 925, 1270, 1280, 1290, and 2000P, and the Stylus
-    Scan 2000 and 2500.
+    and the Stylus Photo 750, 780, 785, 790, 810, 820, 825, 830, 870,
+    875, 890, 895, 900, 915, 925, 1270, 1280, 1290, and 2000P, and the
+    Stylus Scan 2000 and 2500.
 
 (6) Works on all printers that do not support variable drop sizes.
     This includes the Stylus Color, Stylus Color 400, 440, 460, 500,
@@ -370,9 +372,9 @@ section.  Please see the notes at the end of this section.
 (15) Works on all printers that support 2880x720 DPI.  This includes
     the Stylus C60, C61, C62, C70, C80, and C82, the Stylus Color 680,
     777, 880, 83, and 980, and Stylus Photo 780, 790, 810, 820, 825,
-    830, 890, 915, 925, 950, 960, 1280, and 1290.  This resolution is
-    offered on the Stylus Photo 2100 and 2200, but it actually prints
-    at 2880x1440 DPI.
+    830, 890, 900, 915, 925, 950, 960, 1280, and 1290.  This
+    resolution is offered on the Stylus Photo 2100 and 2200, but it
+    actually prints at 2880x1440 DPI.
 
 (16) Works on Epson Stylus Photo 825, 830, 925, 950, 960, 2100, 2200;
     Stylus C61, C62, C70, C80, C82 ; Stylus Pro 7600 and 9600.  This
@@ -380,10 +382,13 @@ section.  Please see the notes at the end of this section.
     works correctly on at least some such printers.
 
 (17) These settings print at particularly high speed on the Epson
-    Stylus Photo 950, 960, 2100, and 2200 when printing in Four Color
-    Standard or Three Color Composite modes, or when printing in
-    monochrome or grayscale with any ink type other than Two Level
-    Grayscale, Seven Color Photo, or Quadtone.
+    Stylus Photo 950, 960, 2100, and 2200, and PM-950C and PM-970C
+    when printing in Four Color Standard or Three Color Composite
+    modes, or when printing in monochrome or grayscale with any ink
+    type other than Two Level Grayscale, Seven Color Photo, or
+    Quadtone.
+
+(18) Works on the Epson PM-970C
 
 
 The Stylus Pro printers (Stylus Pro 5000, 5500, 7000, 7500, 7600,
@@ -543,8 +548,12 @@ mixing black ink in.  The Epson Stylus Color 1500 cannot mix black ink
 with colored inks; on this printer, Three Color Composite must be
 used.
 
-Photo7          Seven Color Photo (CcMmYKk, for the Epson Stylus
+PhotoCMYK7      Seven Color Photo (CcMmYKk, for the Epson Stylus
                 Photo 2100 and 2200, and Stylus Pro 7600 and 9600)
+Photo7J         Seven Color Photo (CcMmYyK, for the Epson PM-950C and
+                PM-970C)
+PhotoEnhanceJ   Six Color Photo Composite (CcMmYy, for the Epson
+                PM-950C and PM-970C)
 PhotoCMYK       Six Color Photo
 PhotoCMY        Five Color Photo Composite
 CMYK            Four Color Standard
@@ -651,8 +660,8 @@ This is printer type specific.  The option names are case sensitive.
 Epson printers without a roll feed mechanism should not have this set.
 
 For Epson printers with a roll feed mechanism without a paper cutter
-(Stylus Photo 785, 825, 870, 875, 890, 895, 915, 1200, 1270, 1280,
-1290):
+(Stylus Photo 785, 825, 870, 875, 890, 895, 900, 915, 1200, 1270,
+1280, 1290):
 
 Standard        Standard
 Roll            Roll Feed

@@ -2817,8 +2817,10 @@ const escp2_variable_inklist_t stpi_escp2_simple_inks =
     &standard_inks,
     &standard_inks,
     &standard_inks,
+    &standard_inks,
   },
   {
+    &photo_inks,
     &photo_inks,
     &photo_inks,
     &photo_inks,
@@ -2841,8 +2843,10 @@ const escp2_variable_inklist_t stpi_escp2_simple_inks =
     &piezo_quadtone_inks,
     &piezo_quadtone_inks,
     &piezo_quadtone_inks,
+    &piezo_quadtone_inks,
   },
   {
+    &extended_inks,
     &extended_inks,
     &extended_inks,
     &extended_inks,
@@ -2866,6 +2870,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_6pl_inks =
     &escp2_6pl_1440_standard_inks,
     &escp2_6pl_2880_standard_inks,
     &escp2_6pl_2880_standard_inks,
+    &escp2_6pl_2880_standard_inks,
     &escp2_6pl_2880_standard_inks
   },
   {
@@ -2875,6 +2880,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_6pl_inks =
     &escp2_6pl_photo_inks,
     &escp2_6pl_photo_inks,
     &escp2_6pl_1440_photo_inks,
+    &escp2_6pl_2880_photo_inks,
     &escp2_6pl_2880_photo_inks,
     &escp2_6pl_2880_photo_inks,
     &escp2_6pl_2880_photo_inks
@@ -2890,6 +2896,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_6pl_inks =
     &piezo_6pl_1440_quadtone_inks,
     &piezo_6pl_2880_quadtone_inks,
     &piezo_6pl_2880_quadtone_inks,
+    &piezo_6pl_2880_quadtone_inks,
     &piezo_6pl_2880_quadtone_inks
   },
   {
@@ -2899,6 +2906,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_6pl_inks =
     &escp2_6pl_extended_inks,
     &escp2_6pl_extended_inks,
     &escp2_6pl_1440_extended_inks,
+    &escp2_6pl_2880_extended_inks,
     &escp2_6pl_2880_extended_inks,
     &escp2_6pl_2880_extended_inks,
     &escp2_6pl_2880_extended_inks
@@ -2917,6 +2925,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_x80_6pl_inks =
     &escp2_x80_2880_6pl_standard_inks,
     &escp2_x80_2880_6pl_standard_inks,
     &escp2_x80_2880_6pl_standard_inks,
+    &escp2_x80_2880_6pl_standard_inks,
   },
   { NULL, },
   { NULL, },
@@ -2928,6 +2937,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_x80_6pl_inks =
     &piezo_x80_multishot_quadtone_inks,
     &piezo_x80_6pl_quadtone_inks,
     &piezo_x80_1440_6pl_quadtone_inks,
+    &piezo_x80_2880_6pl_quadtone_inks,
     &piezo_x80_2880_6pl_quadtone_inks,
     &piezo_x80_2880_6pl_quadtone_inks,
     &piezo_x80_2880_6pl_quadtone_inks,
@@ -2947,6 +2957,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_4pl_inks =
     &escp2_4pl_2880_standard_inks,
     &escp2_4pl_2880_standard_inks,
     &escp2_4pl_2880_standard_inks,
+    &escp2_4pl_2880_standard_inks,
   },
   {
     &escp2_multishot_photo_inks,
@@ -2955,6 +2966,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_4pl_inks =
     &escp2_multishot_photo_inks,
     &escp2_6pl_photo_inks,
     &escp2_4pl_photo_inks,
+    &escp2_4pl_2880_photo_inks,
     &escp2_4pl_2880_photo_inks,
     &escp2_4pl_2880_photo_inks,
     &escp2_4pl_2880_photo_inks
@@ -2971,6 +2983,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_4pl_inks =
     &piezo_4pl_2880_quadtone_inks,
     &piezo_4pl_2880_quadtone_inks,
     &piezo_4pl_2880_quadtone_inks,
+    &piezo_4pl_2880_quadtone_inks,
   },
  {
     &escp2_multishot_extended_inks,
@@ -2979,6 +2992,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_4pl_inks =
     &escp2_multishot_extended_inks,
     &escp2_6pl_extended_inks,
     &escp2_4pl_extended_inks,
+    &escp2_4pl_2880_extended_inks,
     &escp2_4pl_2880_extended_inks,
     &escp2_4pl_2880_extended_inks,
     &escp2_4pl_2880_extended_inks,
@@ -2997,6 +3011,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_680_4pl_inks =
     &escp2_4pl_2880_standard_inks,
     &escp2_4pl_2880_standard_inks,
     &escp2_4pl_2880_standard_inks,
+    &escp2_4pl_2880_standard_inks,
   },
   { NULL, },
   { NULL, },
@@ -3011,6 +3026,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_680_4pl_inks =
     &piezo_4pl_2880_quadtone_inks,
     &piezo_4pl_2880_quadtone_inks,
     &piezo_4pl_2880_quadtone_inks,
+    &piezo_4pl_2880_quadtone_inks,
   },
   {
     &escp2_680_multishot_standard_inks,
@@ -3019,6 +3035,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_680_4pl_inks =
     &escp2_680_multishot_standard_inks,
     &escp2_680_6pl_standard_inks,
     &escp2_4pl_standard_inks,
+    &escp2_4pl_2880_standard_inks,
     &escp2_4pl_2880_standard_inks,
     &escp2_4pl_2880_standard_inks,
     &escp2_4pl_2880_standard_inks,
@@ -3037,6 +3054,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_3pl_inks =
     &escp2_3pl_2880_standard_inks,
     &escp2_3pl_2880_standard_inks,
     &escp2_3pl_2880_standard_inks,
+    &escp2_3pl_2880_standard_inks,
   },
   { NULL, },
   { NULL, },
@@ -3051,6 +3069,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_3pl_inks =
     &piezo_3pl_2880_quadtone_inks,
     &piezo_3pl_2880_quadtone_inks,
     &piezo_3pl_2880_quadtone_inks,
+    &piezo_3pl_2880_quadtone_inks,
   },
   {
     &escp2_multishot_standard_inks,
@@ -3059,6 +3078,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_3pl_inks =
     &escp2_6pl_standard_980_inks,
     &escp2_3pl_standard_inks,
     &escp2_3pl_1440_standard_inks,
+    &escp2_3pl_2880_standard_inks,
     &escp2_3pl_2880_standard_inks,
     &escp2_3pl_2880_standard_inks,
     &escp2_3pl_2880_standard_inks,
@@ -3077,6 +3097,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_2pl_inks =
     &escp2_2pl_2880_standard_inks,
     &escp2_2pl_2880_standard_inks,
     &escp2_2pl_2880_standard_inks,
+    &escp2_2pl_2880_standard_inks,
   },
   {
     &escp2_2pl_360_photo_inks,
@@ -3085,6 +3106,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_2pl_inks =
     &escp2_2pl_360_photo_inks,
     &escp2_2pl_720_photo_inks,
     &escp2_2pl_1440_photo_inks,
+    &escp2_2pl_2880_photo_inks,
     &escp2_2pl_2880_photo_inks,
     &escp2_2pl_2880_photo_inks,
     &escp2_2pl_2880_photo_inks
@@ -3096,6 +3118,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_2pl_inks =
     &escp2_2pl_360_photoj_inks,
     &escp2_2pl_720_photoj_inks,
     &escp2_2pl_1440_photoj_inks,
+    &escp2_2pl_2880_photoj_inks,
     &escp2_2pl_2880_photoj_inks,
     &escp2_2pl_2880_photoj_inks,
     &escp2_2pl_2880_photoj_inks
@@ -3111,6 +3134,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_2pl_inks =
     &piezo_2pl_2880_quadtone_inks,
     &piezo_2pl_2880_quadtone_inks,
     &piezo_2pl_2880_quadtone_inks,
+    &piezo_2pl_2880_quadtone_inks,
   },
   {
     &escp2_2pl_360_extended_inks,
@@ -3119,6 +3143,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_2pl_inks =
     &escp2_2pl_360_extended_inks,
     &escp2_2pl_720_extended_inks,
     &escp2_2pl_1440_extended_inks,
+    &escp2_2pl_2880_extended_inks,
     &escp2_2pl_2880_extended_inks,
     &escp2_2pl_2880_extended_inks,
     &escp2_2pl_2880_extended_inks,
@@ -3136,9 +3161,11 @@ const escp2_variable_inklist_t stpi_escp2_variable_pigment_inks =
     &escp2_pigment_standard_inks,
     &escp2_pigment_standard_inks,
     &escp2_pigment_standard_inks,
+    &escp2_pigment_standard_inks,
     &escp2_pigment_standard_inks
   },
   {
+    &escp2_pigment_photo_inks,
     &escp2_pigment_photo_inks,
     &escp2_pigment_photo_inks,
     &escp2_pigment_photo_inks,
@@ -3160,9 +3187,11 @@ const escp2_variable_inklist_t stpi_escp2_variable_pigment_inks =
     &piezo_pigment_quadtone_inks,
     &piezo_pigment_quadtone_inks,
     &piezo_pigment_quadtone_inks,
+    &piezo_pigment_quadtone_inks,
     &piezo_pigment_quadtone_inks
   },
   {
+    &escp2_pigment_standard_inks,
     &escp2_pigment_standard_inks,
     &escp2_pigment_standard_inks,
     &escp2_pigment_standard_inks,
@@ -3187,6 +3216,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_4pl_pigment_inks =
     &escp2_4pl_pigment_2880_standard_inks,
     &escp2_4pl_pigment_2880_standard_inks,
     &escp2_4pl_pigment_2880_standard_inks,
+    &escp2_4pl_pigment_2880_standard_inks,
   },
   {
     &escp2_4pl_pigment_low_photo_inks,
@@ -3195,6 +3225,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_4pl_pigment_inks =
     &escp2_4pl_pigment_low_photo_inks,
     &escp2_4pl_pigment_photo_inks,
     &escp2_4pl_pigment_1440_photo_inks,
+    &escp2_4pl_pigment_2880_photo_inks,
     &escp2_4pl_pigment_2880_photo_inks,
     &escp2_4pl_pigment_2880_photo_inks,
     &escp2_4pl_pigment_2880_photo_inks
@@ -3209,6 +3240,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_4pl_pigment_inks =
     &escp2_4pl_pigment_1440_photo2_inks,
     &escp2_4pl_pigment_2880_photo2_inks,
     &escp2_4pl_pigment_2880_photo2_inks,
+    &escp2_4pl_pigment_2880_photo2_inks,
     &escp2_4pl_pigment_2880_photo2_inks
   },
   { NULL, },
@@ -3219,6 +3251,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_4pl_pigment_inks =
     &escp2_4pl_pigment_low_extended_inks,
     &escp2_4pl_pigment_extended_inks,
     &escp2_4pl_pigment_1440_extended_inks,
+    &escp2_4pl_pigment_2880_extended_inks,
     &escp2_4pl_pigment_2880_extended_inks,
     &escp2_4pl_pigment_2880_extended_inks,
     &escp2_4pl_pigment_2880_extended_inks,
@@ -3237,6 +3270,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_3pl_pigment_inks =
     &escp2_3pl_pigment_2880_standard_inks,
     &escp2_3pl_pigment_2880_standard_inks,
     &escp2_3pl_pigment_2880_standard_inks,
+    &escp2_3pl_pigment_2880_standard_inks,
   },
   { NULL, },
   { NULL, },
@@ -3251,6 +3285,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_3pl_pigment_inks =
     &piezo_3pl_pigment_2880_quadtone_inks,
     &piezo_3pl_pigment_2880_quadtone_inks,
     &piezo_3pl_pigment_2880_quadtone_inks,
+    &piezo_3pl_pigment_2880_quadtone_inks,
   },
   {
     &escp2_economy_pigment_standard_inks,
@@ -3262,6 +3297,7 @@ const escp2_variable_inklist_t stpi_escp2_variable_3pl_pigment_inks =
     &escp2_3pl_pigment_2880_standard_inks,
     &escp2_3pl_pigment_2880_standard_inks,
     &escp2_3pl_pigment_2880_standard_inks,
+    &escp2_3pl_pigment_2880_standard_inks,
   },
 };
 
@@ -3269,6 +3305,7 @@ const escp2_variable_inklist_t stpi_escp2_spro10000_inks =
 {
   {
     &standard_inks,
+    &spro10000_standard_inks,
     &spro10000_standard_inks,
     &spro10000_standard_inks,
     &spro10000_standard_inks,
@@ -3287,6 +3324,7 @@ const escp2_variable_inklist_t stpi_escp2_spro10000_inks =
     &spro10000_photo_inks,
     &spro10000_photo_inks,
     &spro10000_photo_inks,
+    &spro10000_photo_inks,
     &spro10000_photo_inks
   },
   { NULL, },
@@ -3294,6 +3332,7 @@ const escp2_variable_inklist_t stpi_escp2_spro10000_inks =
   { NULL, },
   {
     &extended_inks,
+    &spro10000_extended_inks,
     &spro10000_extended_inks,
     &spro10000_extended_inks,
     &spro10000_extended_inks,

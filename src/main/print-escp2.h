@@ -54,26 +54,26 @@ typedef unsigned long model_featureset_t;
  * An entry of -1 in a slot means that this resolution is not available.
  */
 
-typedef int escp2_dot_size_t[13];
+typedef int escp2_dot_size_t[14];
 
 /*
  * Choose the number of bits to use at each resolution.
  */
 
-typedef int escp2_bits_t[13];
+typedef int escp2_bits_t[14];
 
 /*
  * Choose the base resolution to use at each resolution.
  */
 
-typedef int escp2_base_resolutions_t[13];
+typedef int escp2_base_resolutions_t[14];
 
 /*
  * Specify the base density for each available resolution.
  * This obviously depends upon the dot size.
  */
 
-typedef double escp2_densities_t[13];
+typedef double escp2_densities_t[14];
 
 /*
  * Definition of the multi-level inks available to a given printer.
@@ -109,7 +109,9 @@ typedef double escp2_densities_t[13];
 #define RES_2880_720	 15
 #define RES_2880_1440_M	 16
 #define RES_2880_1440	 17
-#define RES_N		 18
+#define RES_2880_2880_M	 18
+#define RES_2880_2880	 19
+#define RES_N		 20
 
 typedef struct escp2_variable_ink
 {
