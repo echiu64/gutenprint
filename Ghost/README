@@ -321,9 +321,9 @@ Dithering Algorithms:
 
 -Dither='algorithm'
 
-'Adaptive Hybrid Floyd-Steinberg'
+'Adaptive Hybrid'
 'Ordered'
-'Adaptive Random Floyd-Steinberg'
+'Adaptive Random'
 'Hybrid Floyd-Steinberg'
 'Random Floyd-Steinberg'
 
