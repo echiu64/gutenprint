@@ -283,6 +283,7 @@ escp2-c20sx             EPSON Stylus C20SX
 escp2-c20ux             EPSON Stylus C20UX
 escp2-c40sx             EPSON Stylus C40SX
 escp2-c40ux             EPSON Stylus C40UX
+escp2-c60               EPSON Stylus C60
 escp2                   EPSON Stylus Color
 escp2-pro               EPSON Stylus Color Pro
 escp2-pro-xl            EPSON Stylus Color Pro XL
@@ -423,146 +424,143 @@ quality (no banding whatsoever, normally), it is extremely slow and
 may eventually damage the print head due to ink pooling.  All printers
 that we are aware of have no such trouble at 360 DPI.
 
-Generally, we recommend use of 360 DPI printing modes for most
-purposes on plain paper.  For higher quality, 720x360 DPI works well.
-Use of 720 DPI and above simply takes more time to compute and print
-the page, with little quality gain.  For economy draft printing, use
-of 180, 360x90, or 360x120 DPI will not produce very dark output, but
-will save ink and time.  360x180 and 360x240 DPI are alternative draft
-modes that use more ink (and in the case of 360x240, more time), but
-approach the quality of 360 DPI.  For printing text on higher quality
-inkjet paper, we recommend 360x180 or 360x240 for economy draft, 360
-or 720x360 for draft, and 720 for final output.
+We generally recommend the following resolutions for the following
+purposes:
 
-On high quality "photo" and "glossy" papers, we recommend use of 720
-DPI for proofing and 1440x720 DPI for final output.  1440x720 DPI
-Highest Quality can be used if microbanding at normal 1440x720 DPI is
-an issue.  This mode uses twice as many passes (and hence twice as
-much time), but all but eliminates any vestiges of banding.  720x360
-may be acceptable for initial proofs, but on may printers it will not
-generate sufficient density (solid blacks and colors).  360 DPI will
-produce very coarse output that may lack sufficient density on these
-high quality papers.  We do not recommend use of the lower resolution
-modes on these papers.
-
-We believe that generally there is little reason to use 2880x720 DPI.
-The actual resolution this produces will not be much better than
-1440x720 DPI, but it will take twice as long to generate the output.
-The exception is on the Stylus Color 980: this printer produces
-sufficiently small dots (3 pl) that they can take advantage of such
-high resolution.  Even in that case, 1440x720 will likely produce more
-than adequate output.  1440x720 DPI Highest Quality takes as long to
-print as 2880x720 Unidirectional, but it generates output much more
-quickly.
+360x90   Fast economy draft output on plain paper (output will be very
+360x120  banded and not very dark). 
+	 
+180      Economy draft output on plain paper (output will not be very
+	 dark).
+	 
+360x180  Draft output on plain paper (output will not be solidly
+360x240  black); economy draft output on good quality inkjet paper.
+	 
+360      Standard quality output on plain paper (output will be
+	 solidly black); draft output on good quality inkjet paper.
+	 
+720x360  High quality output on plain paper; standard output on good
+	 quality inkjet paper; fast proofs on photo-quality paper. 
+	 
+720      Maximum quality on plain paper; high quality on good inkjet
+	 paper; proofs on photo-quality paper.  Generally, there will
+	 be little difference between this and 720x360 on plain paper.
+	 
+1440x720 High quality on photo paper.  Use 1440x720 Highest Quality to
+         reduce microbanding if needed.
+	 
+2880x720 Highest quality on photo paper.  While this may yield
+         slightly improved quality, it will generally not be markedly
+         superior to 1440x720 Highest Quality, except on the Stylus
+         Color 980, where it may yield a noticeable improvement.  It
+         takes as long to print as 1440x720 highest quality, but twice
+         as long to generate the output.
 
 The following resolutions are supported on printers other than the
 Stylus Pro (5000, 5500, 7000, 7500, 9000, 9500, and 10000) printers.
-Resolutions for those printers are listed in a later section.
+Resolutions for those printers are listed in a later section.  Please
+see the notes at the end of this section.
 
-     180 DPI and 360x180 DPI work for draft mode on printers with dot
-     spacing of 1/90 or 1/180 inch.  This includes the Stylus Color,
-     Stylus Color 440, 460, 600, 640, 660, 670, 800, 850, 900, 980,
-     1500, 1520, 3000, and Stylus Photo, Stylus Photo 700, 720 and EX.
-     The 360x90 DPI fast economy resolution will work on all of these
-     printers except for the 800, 850, 900, 1520, and 3000.  It will
-     print substantially faster than 180x180 DPI, at even lower
-     quality.
+360x90dpi        '360 x 90 DPI Fast Economy Draft'          (1)
 
-360x90dpi       '360 x 90 DPI Fast Economy Draft'
+180dpi           '180 DPI Economy Draft'                    (2)
 
-180dpi          '180 DPI Economy Draft'
+360x180dpi       '360 x 180 DPI Draft'                      (2)
 
-360x180dpi      '360 x 180 DPI Draft'
+360x120dpi       '360 x 120 DPI Economy Draft'              (3)
 
-     360x120 DPI and 360x240 DPI work for draft mode on printers with
-     dot spacing of 1/120 inch.  This includes the Stylus C20 and C40,
-     the Stylus Color Pro, 400, 480, 500, 580, 680, 740, 760, 777,
-     860, 880, 83, and 1160, and the Stylus Photo 750, 780, 790, 870,
-     890, 1270, 1280, 1290, and 2000P.
+360x240dpi       '360 x 240 DPI Draft'                      (3)
 
-360x120dpi      '360 x 120 DPI Economy Draft'
+360dpi           '360 DPI'                                  (4)
+360uni           '360 DPI Unidirectional'                   (4)
+360mw            '360 DPI Microweave'                       (4, *)
+360mwuni         '360 DPI Microweave Unidirectional'        (4)
+360sw            '360 DPI'                                  (5, *)
+360swuni         '360 DPI Unidirectional'                   (5)
+360hq            '360 DPI High Quality'                     (5, 6)
+360hquni         '360 DPI High Quality Unidirectional'      (5, 6)
 
-360x240dpi      '360 x 240 DPI Draft'
+720x360sw        '720 x 360 DPI'                            (7, 8)
+720x360swuni     '720 x 360 DPI Unidirectional'             (7, 8)
 
-The following resolutions work on all printers except as noted.
+720mw            '720 DPI Microweave'                       (9)
+720mwuni         '720 DPI Microweave Unidirectional'        (9)
+720sw            '720 DPI'                                  (7)
+720swuni         '720 DPI Unidirectional'                   (7)
+720hq            '720 DPI High Quality'                     (7)
+720hquni         '720 DPI High Quality Unidirectional'      (7)
+720hq2           '720 DPI Highest Quality'                  (7)
 
-360dpi          '360 DPI'                  (works on all printers that
-					    do not support multiple
-					    drop sizes)
-360uni          '360 DPI Unidirectional'   (see previous)
-360mw           '360 DPI Microweave'       (works on all printers that
-					    do not support multiple
-					    drop sizes; this is the
-					    default on such printers)
-360mwuni        '360 DPI Microweave Unidirectional'
-                                           (see previous)
-360sw           '360 DPI'                  (works on printers that support
-                                            variable dot sizes; this is the
-                                            default on such printers)
-360swuni        '360 DPI Unidirectional'   (see previous)
-360hq           '360 DPI High Quality'     (see previous; recommended
-                                            only on processors slower
-                                            than 100 MHz or if
-                                            problems are experienced
-                                            at 720x360)
-360hquni        '360 DPI High Quality Unidirectional'
-                                           (see previous)
+1440x720mw       '1440 x 720 DPI Microweave'                (10)
+1440x720mwuni    '1440 x 720 DPI Microweave Unidirectional' (10)
+1440x720sw       '1440 x 720 DPI'                           (11)
+1440x720mwuni    '1440 x 720 DPI Unidirectional'            (11, 12)
+1440x720hq       '1440 x 720 DPI Highest Quality'           (11)
 
-720x360sw       '720 x 360 DPI'            (works on all printers except
-                                            for Stylus Color, Stylus
-                                            Color 1500, Stylus Color
-                                            1520, and Stylus Color 3000)
-720x360swuni    '720 x 360 DPI Unidirectional'
-                                           (see previous)
+2880x720sw       '2880 x 720 DPI'                           (13)
+2880x720swuni    '2880 x 720 DPI Unidirectional'            (13)
 
-720mw           '720 DPI Microweave'       (works on some, mostly old
-                                            printers; recommended only
-                                            on printers that do not
-                                            support other 720 DPI modes)
-720mwuni        '720 DPI Microweave Unidirectional'
-                                           (see previous)
-720sw           '720 DPI'                  (works on all printers except
-                                            for Stylus Color, Stylus
-                                            Color 1500, Stylus Color
-                                            1520, and Stylus Color 3000)
-720swuni        '720 DPI Unidirectional'   (see previous)
-720hq           '720 DPI High Quality'     (see previous)
-720hquni        '720 DPI High Quality Unidirectional'
-                                           (see previous)
-720hq2          '720 DPI Highest Quality'  (see previous)
+(*) This resolution is the default on all printers supporting this
+    setting.
 
-1440x720mw      '1440 x 720 DPI Microweave'
-                                           (works on some, mostly old
-                                            printers; recommended only
-                                            on printers that do not
-                                            support other 1440x720 DPI
-                                            modes)
-1440x720mwuni   '1440 x 720 DPI Microweave Unidirectional'
-                                           (see previous)
-1440x720sw      '1440 x 720 DPI'           (works on all 1440x720 dpi
-                                            printers except for Stylus
-                                            Color 1520 and 3000)
-1440x720mwuni   '1440 x 720 DPI Unidirectional'
-                                           (works on all 1440x720 dpi
-                                            printers except for Stylus
-                                            Color 1520 and 3000; on
-                                            Stylus Color 900, this
-                                            mode is equivalent to
-                                            1440x720 Highest Quality)
-1440x720hq      '1440 x 720 DPI Highest Quality'
-                                           (works on all 1440x720 dpi
-                                            printers except for Stylus
-                                            Color 900, 1520, and 3000)
+(1) Works on printers that have a basic vertical spacing of 1/90".
+    This includes the Stylus Color, Stylus Color 440, 460, 600, 640,
+    660, 670, and 1500, and Stylus Photo, Stylus Photo 700, 720, and
+    EX.
 
-2880x720sw      '2880 x 720 DPI'           (works on Stylus Color 680,
-                                            777, 880, 83, and 980,
-                                            Stylus Photo 780/790, 890,
-                                            and 1280/1290)
-2880x720swuni   '2880 x 720 DPI Unidirectional'
-                                           (works on Stylus Color 680,
-                                            777, 880, 83, and 980,
-                                            Stylus Photo 780/790, 890,
-                                            and 1280/1290)
+(2) Works on printers that have a basic vertical spacing of 1/90,
+    1/180, or 1/360 inch.  This includes the Stylus Color,
+    Stylus Color 440, 460, 600, 640, 660, 670, 800, 850, 900, 980,
+    1500, 1520, 3000, and Stylus Photo, Stylus Photo 700, 720 and EX.
+
+(3) Works on printers with dot spacing of 1/120 inch.  This includes
+    the Stylus C20, C40, and C60, the Stylus Color Pro, Pro XL, 400, 480,
+    500, 580, 680, 740, 760, 777, 860, 880, 83, and 1160, and the
+    Stylus Photo 750, 780, 790, 870, 890, 1270, 1280, 1290, and 2000P.
+
+(4) Works on all printers that do not support variable drop sizes.
+    This includes the Stylus Color, Stylus Color 400, 440, 460, 500,
+    600, 640, 660, 800, 850, 1500, 1520, and 3000, and Stylus Color
+    Pro, and Stylus Photo, Stylus Photo 700, and EX.
+
+(5) Works on all printers that do support variable drop sizes.  This
+    includes all supported Epson Stylus printers except for those
+    listed in note (1).
+
+(6) Recommended only on processors slower than 200 MHz, the system is
+    heavily loaded with a faster processor, or if problems are
+    experienced at 720x360.
+
+(7) Works on all supported printers except for Stylus Color, Stylus
+    Color 1500, 1520, and 3000.
+
+(8) On printers that do not support variable drop size (see note (4)),
+    this will print as fast as 360 DPI, and faster than 360 DPI High
+    Quality.  It will take twice as long to generate output, which may
+    be important on a heavily loaded system or a processor slower than
+    200 MHz.
+
+(9) Works on some older printers, including the Stylus Color, Stylus
+    Color 400, 500, 600, 800, 850, 1500, 1520, and 3000, and Stylus
+    Color Pro.  Not recommended except for the Stylus Color, Stylus
+    Color 1500, 1520, and 3000.
+
+(10) Works on Stylus Color 600, 800, 850, 1520, and 3000.  Not
+    recommended unless other 1440x720 modes do not work.
+
+(11) Works on all printers that support 1440x720 DPI.  This includes
+    all supported printers except for the Stylus Color, Stylus Color
+    Pro, Pro XL, 400, 440, 460, 480, 500, and 1500, and Stylus Photo.
+    In addition, this may not work correctly on Stylus Color 1520 and
+    Stylus Color 3000.
+
+(12) This is identical to 1440 x 720 Highest Quality (1440x720hq) on
+    the Stylus Color 900.
+
+(13) Works on all printers that support 2880x720 DPI.  This includes
+    the Stylus C60, the Stylus Color 680, 777, 880, 83, and 980, and
+    Stylus Photo 780, 790, 890, 1280, and 1290.
+
 
 The Stylus Pro printers (Stylus Pro 5000, 5500, 7000, 7500, 9000,
 9500, and 10000) support additional microweave modes known as Full
@@ -571,57 +569,56 @@ and 10000 additionally have a mode called MW2.  These modes can only
 be used at certain resolutions.  Stylus Pro printers support the
 following resolutions:
 
-180dpi          '180 DPI'
-180uni          '180 DPI Unidirectional'
+180dpi           '180 DPI'
 
-360dpi          '360 DPI'
-360uni          '360 DPI Unidirectional'
-360mw           '360 DPI Microweave'
-360mwuni        '360 DPI Microweave Unidirectional'
-360fol          '360 DPI Full Overlap'
-360foluni       '360 DPI Full Overlap Unidirectional'
-360fol2         '360 DPI FOL2'
-360fol2uni      '360 DPI FOL2 Unidirectional'
-360mw2          '360 DPI MW2'
-360mw2uni       '360 DPI MW2 Unidirectional'
+360dpi           '360 DPI'
+360uni           '360 DPI Unidirectional'
+360mw            '360 DPI Microweave'
+360mwuni         '360 DPI Microweave Unidirectional'
+360fol           '360 DPI Full Overlap'
+360foluni        '360 DPI Full Overlap Unidirectional'
+360fol2          '360 DPI FOL2'
+360fol2uni       '360 DPI FOL2 Unidirectional'
+360mw2           '360 DPI MW2'
+360mw2uni        '360 DPI MW2 Unidirectional'
 
-720x360dpi      '720 x 360 DPI Default'
-720x360uni      '720 x 360 DPI Default Unidirectional'
-720x360fol      '720 x 360 DPI FOL'
-720x360foluni   '720 x 360 DPI FOL Unidirectional'
-720x360fol2     '720 x 360 DPI FOL2'
-720x360fol2uni  '720 x 360 DPI FOL2 Unidirectional'
-720x360mw2      '720 x 360 DPI MW2'
-720x360mw2uni   '720 x 360 DPI MW2 Unidirectional'
+720x360dpi       '720 x 360 DPI'
+720x360uni       '720 x 360 DPI Unidirectional'
+720x360fol       '720 x 360 DPI FOL'
+720x360foluni    '720 x 360 DPI FOL Unidirectional'
+720x360fol2      '720 x 360 DPI FOL2'
+720x360fol2uni   '720 x 360 DPI FOL2 Unidirectional'
+720x360mw2       '720 x 360 DPI MW2'
+720x360mw2uni    '720 x 360 DPI MW2 Unidirectional'
 
-720mw           '720 DPI Microweave'
-720mwuni        '720 DPI Microweave Unidirectional'
-720dpi          '720 DPI Default'
-720uni          '720 DPI Default Unidirectional'
-720fol          '720 DPI Full Overlap'
-720foluni       '720 DPI Full Overlap Unidirectional'
-720fourp        '720 DPI Four Pass'
-720fourpuni     '720 DPI Four Pass Unidirectional'
+720dpi           '720 DPI'
+720uni           '720 DPI Unidirectional'
+720mw            '720 DPI Microweave'
+720mwuni         '720 DPI Microweave Unidirectional'
+720fol           '720 DPI Full Overlap'
+720foluni        '720 DPI Full Overlap Unidirectional'
+720fourp         '720 DPI Four Pass'
+720fourpuni      '720 DPI Four Pass Unidirectional'
 
-1440x720mw      '1440 x 720 DPI Microweave'
-1440x720mwuni   '1440 x 720 DPI Microweave Unidirectional'
-1440x720dpi     '1440 x 720 DPI Default'
-1440x720uni     '1440 x 720 DPI Default Unidirectional'
-1440x720fol     '1440 x 720 DPI FOL'
-1440x720foluni  '1440 x 720 DPI FOL Unidirectional'
-1440x720fourp   '1440 x 720 DPI Four Pass'
+1440x720dpi      '1440 x 720 DPI'
+1440x720uni      '1440 x 720 DPI Unidirectional'
+1440x720mw       '1440 x 720 DPI Microweave'
+1440x720mwuni    '1440 x 720 DPI Microweave Unidirectional'
+1440x720fol      '1440 x 720 DPI FOL'
+1440x720foluni   '1440 x 720 DPI FOL Unidirectional'
+1440x720fourp    '1440 x 720 DPI Four Pass'
 1440x720fourpuni '1440 x 720 DPI Four Pass Unidirectional'
 
 
 For PCL printers (including Hewlett-Packard and Lexmark 4076):
 
-150dpi          '150x150 DPI'   (should work on all printers)
-300dpi          '300x300 DPI'   (should work on all printers, C-RET on
+150dpi           '150x150 DPI'   (should work on all printers)
+300dpi           '300x300 DPI'   (should work on all printers, C-RET on
                                  DJ 850/855/870/890)
-600x300dpi      '600x300 DPI'   (DJ 6xx/810/812/840/842/895)
-600mono         '600x600 DPI monochrome'
+600x300dpi       '600x300 DPI'   (DJ 6xx/810/812/840/842/895)
+600mono          '600x600 DPI monochrome'
                                 (DJ 6xx (except 69x) /8xx/1100/1120)
-600dpi          '600x600 DPI'   (DJ 69x/840/9xx/1220/2000/2500,
+600dpi           '600x600 DPI'   (DJ 69x/840/9xx/1220/2000/2500,
                                  PhotoSmart P1000/P1100, LJ5/5Si/6)
 
 Note: the higher resolutions of newer PCL printers using "Photo-Ret" are
@@ -630,39 +627,39 @@ not yet supported.
 
 For Lexmark printers other than the 4076:
 
-300x600dpi      '300 DPI x 600 DPI'
-600dpi          '600 DPI'
-600hq           '600 DPI high quality'
-600uni          '600 DPI Unidirectional'
-1200dpi         '1200 DPI'
-1200hq          '1200 DPI high quality'
-1200hq2         '1200 DPI highest quality'
-1200uni         '1200 DPI  Unidirectional'
-2400x1200dpi    '2400 DPI x 1200 DPI'                   (Z52)
-2400x1200hq     '2400 DPI x 1200 DPI high quality'      (Z52)
-2400x1200hq2    '2400 DPI x 1200 DPI highest quality'   (Z52)
+300x600dpi       '300 DPI x 600 DPI'
+600dpi           '600 DPI'
+600hq            '600 DPI high quality'
+600uni           '600 DPI Unidirectional'
+1200dpi          '1200 DPI'
+1200hq           '1200 DPI high quality'
+1200hq2          '1200 DPI highest quality'
+1200uni          '1200 DPI  Unidirectional'
+2400x1200dpi     '2400 DPI x 1200 DPI'                   (Z52)
+2400x1200hq      '2400 DPI x 1200 DPI high quality'      (Z52)
+2400x1200hq2     '2400 DPI x 1200 DPI highest quality'   (Z52)
 
 
 For Canon printers:
 
 1200 DPI printers (BJC 7000, BJC 7100, BJC 8200, BJC 8500):
 
-300dpi          '300x300 DPI'
-300dmt          '300x300 DPI DMT'
-600dpi          '600x600 DPI'
-600dmt          '600x600 DPI DMT'
-1200x600dpi     '1200x600 DPI'
-1200dpi         '1200x1200 DPI'
+300dpi           '300x300 DPI'
+300dmt           '300x300 DPI DMT'
+600dpi           '600x600 DPI'
+600dmt           '600x600 DPI DMT'
+1200x600dpi      '1200x600 DPI'
+1200dpi          '1200x1200 DPI'
 
 1440 DPI printers (BJC 1000, BJC 2000, BJC 3000, BJC 4300, BJC 4400,
     BJC 5100, BJC 5500, BJC 6000, BJC 6100, BJC 6500, BJC 8200):
 
-360dpi          '360x360 DPI'
-360dmt          '360x360 DPI DMT'
-720x360dpi      '720x360 DPI'
-720dpi          '720x720 DPI'
-1440x720dpi     '1440x720 DPI'
-1440dpi         '1440x1440 DPI'
+360dpi           '360x360 DPI'
+360dmt           '360x360 DPI DMT'
+720x360dpi       '720x360 DPI'
+720dpi           '720x720 DPI'
+1440x720dpi      '1440x720 DPI'
+1440dpi          '1440x1440 DPI'
 
 
 Ink Types
@@ -825,8 +822,8 @@ Auto            'Autoselect'
 For Lexmark printers other than the 4076:
 
 Auto            'Auto Sheet Feeder'
-Manual          'Manual with Pause
-ManualNP        'Manual without Pause
+Manual          'Manual with Pause'
+ManualNP        'Manual without Pause'
 
 
 Media Sizes
@@ -1080,14 +1077,25 @@ Fast            'Fast'
 VeryFast        'Very Fast'
 Floyd           'Hybrid Floyd-Steinberg'
 
-We recommend using Adaptive Hybrid (which is the default) with text or
-other fine black detail, or if this is mixed with continuous tone
-images, and Ordered for pure continuous-tone images and photographs
-(no text).  Ordered is somewhat faster than Adaptive Hybrid, and
-normally yields almost identical results.  However, Ordered dithering
-may show small breaks in very fine lines, which may lead to
-undesirable moire patterns and other artifacts; Adaptive Hybrid is
-more resistant to this effect.
+For highest quality, we recommend use of Adaptive Hybrid dithering.
+For continuous tone images, Ordered works just as well and is somewhat
+faster.  Ordered dithering yields noticeably inferior results with
+text and intricate line art, particularly at high resolutions.
+
+Fast dithering, which is a simplified version of ordered dither, is
+significantly faster, but color accuracy is worse, particularly on six
+color printers and printer using variable dot sizes.  On simple four
+color printers, the quality is quite reasonable, although color
+printing will show more speckling in dark tones than Ordered dither.
+For single dot size printers, printing grayscale, this algorithm
+yields almost identical results to Ordered with some performance
+improvement.  On three color printers, the results should be very
+similar to Ordered.
+
+Very Fast is even faster than Fast, with even more loss of quality.
+It shows even more speckling, and the output is heavily patterned.  On
+laser printers, and possibly on certain kinds of text and line art,
+Very Fast dithering may actually yield the best quality.
 
 Error diffusion algorithms (Hybrid Floyd-Steinberg is such an
 algorithm) perform very well at high densities, and are capable of
@@ -1095,25 +1103,7 @@ rendering very fine detail well, but they tend to exhibit artifacts in
 the form of "waves" or "worms" of dots which results in noticeable
 texturing in pale areas.  Furthermore, pale areas immediately adjacent
 to white take a while to "build up" sufficient error to print at all.
-This is sometimes called "tearing".
-
-The Fast algorithm gives the fastest results at the expense of color
-accuracy.  It is a simplified ordered dither.  On simple four color
-printers (or other printers used in four color mode), the quality is
-similar to Ordered, although dark gray rendition is not as good due to
-a simpler transfer between black and colored ink.  With six-color
-printers, color rendition is somewhat worse, but it should be quite
-usable in cases where optimum quality is not critical.  In black and
-white, it is an efficient way to render grayscale, but it may not give
-best results when used with variable dot size printers.  On rare three
-color printers (CMY only) the results should be identical to ordered
-dither.
-
-Very Fast is even faster than Fast, with even more loss of quality.
-It uses a power of 2 matrix that can be looked up more quickly and
-performs certain other optimizations.  On laser printers, and possibly
-on certain kinds of text and line art, Very Fast dithering may
-actually yield the best quality.
+This is sometimes called "tearing".  Its use is not recommended.
 
 
 Output Type
@@ -1138,9 +1128,8 @@ Output Type
  appears darker than green.  -dColor=1 and -dSaturation=0.0 does not
  use luminance.
 
- -dColor=2 prints only black and white (thresholding).  This option is
- extremely fast (particularly when combined with Very Fast dithering)
- for printing pure black and white line art or text.
+ -dColor=2 prints only black and white (thresholding).  This option
+ always uses Fast dithering unless you specify Very Fast.
 
 
 Image type (to optimize the dither):
@@ -1168,6 +1157,12 @@ mode used, composite color will be printed.  This generally offers
 smoother tone, but less purity of gray or black, than pure black ink.
 Furthermore, it is possible to tune the color of the gray (to achieve
 warmer or cooler effects) using the color controls in this fashion.
+
+Specifying a lower GhostScript resolution (with -r) results in faster
+color conversion.  For example, if you print at 1440x720 DPI, but
+specify a Ghostscript resolution of 360 DPI (with -r360), output will
+be significantly faster and there will be much less difference in
+performance between the three image type options.
 
 
 EXAMPLES:

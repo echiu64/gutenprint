@@ -237,6 +237,14 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus C60" driver="escp2-c60">
+<color>
+<model value=33>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Color" driver="escp2">
 <color>
 <model value=0>

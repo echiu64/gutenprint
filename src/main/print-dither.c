@@ -1687,11 +1687,6 @@ print_color_fast(const dither_t *d, dither_channel_t *dc, int x, int y,
   int adjusted = dc->v;
   dither_color_t *rv = &(dc->dither);
   dither_matrix_t *dither_matrix = &(dc->dithermat);
-  int i;
-  int levels = rv->nlevels - 1;
-  int j;
-  unsigned char *tptr;
-  unsigned bits;
 
   if (density <= 0 || adjusted <= 0)
     return;
@@ -1707,6 +1702,11 @@ print_color_fast(const dither_t *d, dither_channel_t *dc, int x, int y,
     }
   else
     {
+      int i;
+      int levels = rv->nlevels - 1;
+      int j;
+      unsigned char *tptr;
+      unsigned bits;
       for (i = levels; i >= 0; i--)
 	{
 	  dither_segment_t *dd = &(rv->ranges[i]);
@@ -2308,17 +2308,23 @@ stp_dither_cmyk_fast(const unsigned short  *cmy,
 	  unsigned lb = d->k_lower;
 	  unsigned ub = d->k_upper;
 	  int k = compute_black(d);
-	  if (k < lb)
-	    k = 0;
-	  else if (k < ub)
-	    k = (k - lb) * ub / d->bound_range;
+	  if (d->dither_type != D_VERY_FAST)
+	    {
+	      if (k < lb)
+		k = 0;
+	      else if (k < ub)
+		k = (k - lb) * ub / d->bound_range;
+	    }
 	  for (i = 1; i < NCOLORS; i++)
 	    CHANNEL(d, i).v -= k;
 	  ok = k;
-	  if (ok > 0 && d->density != d->black_density)
-	    ok = (unsigned) ok * (unsigned) d->black_density / d->density;
-	  if (ok > 65535)
-	    ok = 65535;
+	  if (d->dither_type != D_VERY_FAST)
+	    {
+	      if (ok > 0 && d->density != d->black_density)
+		ok = (unsigned) ok * (unsigned) d->black_density / d->density;
+	      if (ok > 65535)
+		ok = 65535;
+	    }
 	  QUANT(15);
 	  CHANNEL(d, ECOLOR_K).v = k;
 	  CHANNEL(d, ECOLOR_K).o = ok;
