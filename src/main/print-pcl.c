@@ -304,8 +304,7 @@ typedef struct {
   int color_type;		/* 2 print head or one, 2 level or 4 */
   int stp_printer_type;		/* Deskjet/Laserjet and quirks */
 /* The paper size, paper type and paper source codes cannot be combined */
-  const int paper_sizes[NUM_PRINTER_PAPER_SIZES + 1];
-				/* Paper sizes */
+  const short *paper_sizes;	/* Paper sizes */
   const int paper_types[NUM_PRINTER_PAPER_TYPES + 1];
 				/* Paper types */
   const int paper_sources[NUM_PRINTER_PAPER_SOURCES + 1];
@@ -340,6 +339,238 @@ typedef struct {
  * PCL reference guide 2.0, Nov 1999".
  */
 
+static const short standard_papersizes[] =
+{
+  PCL_PAPERSIZE_EXECUTIVE,
+  PCL_PAPERSIZE_STATEMENT,
+  PCL_PAPERSIZE_LETTER,
+  PCL_PAPERSIZE_LEGAL,
+  PCL_PAPERSIZE_A4,
+  -1,
+};
+
+static const short letter_only_papersizes[] =
+{
+  PCL_PAPERSIZE_LETTER,
+  -1
+};
+
+static const short dj340_papersizes[] =
+{
+  PCL_PAPERSIZE_EXECUTIVE,
+  PCL_PAPERSIZE_LETTER,
+  PCL_PAPERSIZE_LEGAL,
+  PCL_PAPERSIZE_A4,
+  -1,
+};
+
+static const short dj400_papersizes[] =
+{
+  PCL_PAPERSIZE_EXECUTIVE,
+  PCL_PAPERSIZE_LETTER,
+  PCL_PAPERSIZE_LEGAL,
+  PCL_PAPERSIZE_A4,
+  PCL_PAPERSIZE_JIS_B5,
+  -1,
+};
+
+static const short dj500_papersizes[] =
+{
+/*    PCL_PAPERSIZE_EXECUTIVE, The 500 doesn't support this, the 520 does */
+  PCL_PAPERSIZE_LETTER,
+  PCL_PAPERSIZE_LEGAL,
+  PCL_PAPERSIZE_A4,
+  PCL_PAPERSIZE_COMMERCIAL10_ENV,
+/*    PCL_PAPERSIZE_DL_ENV,    The 500 doesn't support this, the 520 does */
+  -1,
+};
+
+static const short dj540_papersizes[] =
+{
+  PCL_PAPERSIZE_EXECUTIVE,
+  PCL_PAPERSIZE_LETTER,
+  PCL_PAPERSIZE_LEGAL,
+  PCL_PAPERSIZE_A4,
+  PCL_PAPERSIZE_A5,
+  PCL_PAPERSIZE_JIS_B5,
+  PCL_PAPERSIZE_HAGAKI_CARD,
+  PCL_PAPERSIZE_A6_CARD,
+  PCL_PAPERSIZE_4x6,
+  PCL_PAPERSIZE_5x8,
+  PCL_PAPERSIZE_COMMERCIAL10_ENV,
+  PCL_PAPERSIZE_DL_ENV,
+  PCL_PAPERSIZE_C6_ENV,
+  -1,
+};
+
+static const short dj600_papersizes[] =
+{
+  PCL_PAPERSIZE_EXECUTIVE,
+  PCL_PAPERSIZE_LETTER,
+  PCL_PAPERSIZE_LEGAL,
+  PCL_PAPERSIZE_A4,
+  PCL_PAPERSIZE_A5,
+  PCL_PAPERSIZE_HAGAKI_CARD,
+  PCL_PAPERSIZE_A6_CARD,
+  PCL_PAPERSIZE_4x6,
+  PCL_PAPERSIZE_5x8,
+  PCL_PAPERSIZE_COMMERCIAL10_ENV,
+  PCL_PAPERSIZE_DL_ENV,
+  PCL_PAPERSIZE_C6_ENV,
+  PCL_PAPERSIZE_INVITATION_ENV,
+  -1,
+};
+
+static const short dj1220_papersizes[] =
+{
+  PCL_PAPERSIZE_EXECUTIVE,
+  PCL_PAPERSIZE_LETTER,
+  PCL_PAPERSIZE_LEGAL,
+  PCL_PAPERSIZE_TABLOID,
+  PCL_PAPERSIZE_STATEMENT,
+  PCL_PAPERSIZE_SUPER_B,
+  PCL_PAPERSIZE_A5,
+  PCL_PAPERSIZE_A4,
+  PCL_PAPERSIZE_A3,
+  PCL_PAPERSIZE_JIS_B5,
+  PCL_PAPERSIZE_JIS_B4,
+  PCL_PAPERSIZE_HAGAKI_CARD,
+  PCL_PAPERSIZE_OUFUKU_CARD,
+  PCL_PAPERSIZE_A6_CARD,
+  PCL_PAPERSIZE_4x6,
+  PCL_PAPERSIZE_5x8,
+  PCL_PAPERSIZE_3x5,
+  PCL_PAPERSIZE_HP_CARD,
+  PCL_PAPERSIZE_MONARCH_ENV,
+  PCL_PAPERSIZE_COMMERCIAL10_ENV,
+  PCL_PAPERSIZE_DL_ENV,
+  PCL_PAPERSIZE_C5_ENV,
+  PCL_PAPERSIZE_C6_ENV,
+  PCL_PAPERSIZE_INVITATION_ENV,
+  PCL_PAPERSIZE_JAPANESE_3_ENV,
+  PCL_PAPERSIZE_JAPANESE_4_ENV,
+  PCL_PAPERSIZE_KAKU_ENV,
+  -1,
+};
+
+static const short dj1100_papersizes[] =
+{
+  PCL_PAPERSIZE_EXECUTIVE,
+  PCL_PAPERSIZE_LETTER,
+  PCL_PAPERSIZE_LEGAL,
+  PCL_PAPERSIZE_TABLOID,
+  PCL_PAPERSIZE_STATEMENT,
+  PCL_PAPERSIZE_SUPER_B,
+  PCL_PAPERSIZE_A5,
+  PCL_PAPERSIZE_A4,
+  PCL_PAPERSIZE_A3,
+  PCL_PAPERSIZE_JIS_B5,
+  PCL_PAPERSIZE_JIS_B4,
+  PCL_PAPERSIZE_HAGAKI_CARD,
+  PCL_PAPERSIZE_A6_CARD,
+  PCL_PAPERSIZE_4x6,
+  PCL_PAPERSIZE_5x8,
+  PCL_PAPERSIZE_COMMERCIAL10_ENV,
+  PCL_PAPERSIZE_DL_ENV,
+  PCL_PAPERSIZE_C6_ENV,
+  PCL_PAPERSIZE_INVITATION_ENV,
+  PCL_PAPERSIZE_JAPANESE_3_ENV,
+  PCL_PAPERSIZE_JAPANESE_4_ENV,
+  PCL_PAPERSIZE_KAKU_ENV,
+  -1,
+};
+
+static const short dj1200_papersizes[] =
+{
+  /* This printer is not mentioned in the Comparison tables,
+     so I'll just pick some likely sizes... */
+  PCL_PAPERSIZE_EXECUTIVE,
+  PCL_PAPERSIZE_LETTER,
+  PCL_PAPERSIZE_LEGAL,
+  PCL_PAPERSIZE_A5,
+  PCL_PAPERSIZE_A4,
+  PCL_PAPERSIZE_4x6,
+  PCL_PAPERSIZE_5x8,
+  -1,
+};
+
+static const short dj2000_papersizes[] =
+{
+  PCL_PAPERSIZE_EXECUTIVE,
+  PCL_PAPERSIZE_LETTER,
+  PCL_PAPERSIZE_LEGAL,
+  PCL_PAPERSIZE_A5,
+  PCL_PAPERSIZE_A4,
+  PCL_PAPERSIZE_HAGAKI_CARD,
+  PCL_PAPERSIZE_A6_CARD,
+  PCL_PAPERSIZE_4x6,
+  PCL_PAPERSIZE_5x8,
+  PCL_PAPERSIZE_3x5,
+  PCL_PAPERSIZE_COMMERCIAL10_ENV,
+  PCL_PAPERSIZE_DL_ENV,
+  PCL_PAPERSIZE_C6_ENV,
+  PCL_PAPERSIZE_INVITATION_ENV,
+  -1,
+};
+
+static const short dj2500_papersizes[] =
+{
+  PCL_PAPERSIZE_EXECUTIVE,
+  PCL_PAPERSIZE_LETTER,
+  PCL_PAPERSIZE_LEGAL,
+  PCL_PAPERSIZE_TABLOID,
+  PCL_PAPERSIZE_STATEMENT,
+  PCL_PAPERSIZE_A5,
+  PCL_PAPERSIZE_A4,
+  PCL_PAPERSIZE_A3,
+  PCL_PAPERSIZE_JIS_B5,
+  PCL_PAPERSIZE_JIS_B4,
+  PCL_PAPERSIZE_HAGAKI_CARD,
+  PCL_PAPERSIZE_A6_CARD,
+  PCL_PAPERSIZE_4x6,
+  PCL_PAPERSIZE_5x8,
+  PCL_PAPERSIZE_COMMERCIAL10_ENV,
+  PCL_PAPERSIZE_DL_ENV,
+  -1,
+};
+
+static const short ljsmall_papersizes[] =
+{
+  PCL_PAPERSIZE_EXECUTIVE,
+  PCL_PAPERSIZE_STATEMENT,
+  PCL_PAPERSIZE_LETTER,
+  PCL_PAPERSIZE_LEGAL,
+  PCL_PAPERSIZE_A4,
+  PCL_PAPERSIZE_MONARCH_ENV,
+  PCL_PAPERSIZE_COMMERCIAL10_ENV,
+  PCL_PAPERSIZE_DL_ENV,
+  PCL_PAPERSIZE_C5_ENV,
+  PCL_PAPERSIZE_C6_ENV,
+  -1,
+};
+
+static const short ljbig_papersizes[] =
+{
+  PCL_PAPERSIZE_EXECUTIVE,
+  PCL_PAPERSIZE_STATEMENT,
+  PCL_PAPERSIZE_LETTER,
+  PCL_PAPERSIZE_LEGAL,
+  PCL_PAPERSIZE_TABLOID,
+  PCL_PAPERSIZE_A5,
+  PCL_PAPERSIZE_A4,
+  PCL_PAPERSIZE_A3,
+  PCL_PAPERSIZE_JIS_B5,
+  PCL_PAPERSIZE_JIS_B4,                /* Guess */
+  PCL_PAPERSIZE_4x6,
+  PCL_PAPERSIZE_5x8,
+  PCL_PAPERSIZE_MONARCH_ENV,
+  PCL_PAPERSIZE_COMMERCIAL10_ENV,
+  PCL_PAPERSIZE_DL_ENV,
+  PCL_PAPERSIZE_C5_ENV,
+  PCL_PAPERSIZE_C6_ENV,
+  -1,
+};
+
 static const pcl_cap_t pcl_model_capabilities[] =
 {
   /* Default/unknown printer - assume laserjet */
@@ -351,14 +582,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 10, 10},			/* A4 Margins */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_STATEMENT,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A4,
-      0,
-    },
+    standard_papersizes,
     { -1,			/* No selectable paper types */
     },
     { -1,			/* No selectable paper sources */
@@ -373,10 +597,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {49, 49, 15, 15},
     PCL_COLOR_NONE,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
-    {
-      PCL_PAPERSIZE_LETTER,
-      -1,
-    },
+    letter_only_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -400,10 +621,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {49, 49, 15, 15},
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
-    {
-      PCL_PAPERSIZE_LETTER,
-      -1,
-    },
+    letter_only_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -426,10 +644,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {30, 30, 15, 15},
     PCL_COLOR_NONE,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
-    {
-      PCL_PAPERSIZE_LETTER,
-      -1,
-    },
+    letter_only_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -452,10 +667,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {30, 30, 15, 15},
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
-    {
-      PCL_PAPERSIZE_LETTER,
-      -1,
-    },
+    letter_only_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -478,10 +690,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {49, 49, 15, 15},
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
-    {
-      PCL_PAPERSIZE_LETTER,
-      -1,
-    },
+    letter_only_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -504,13 +713,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {6, 48, 10, 11},	/* from bpd07933.pdf */
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A4,
-      -1,
-    },
+    dj340_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -536,14 +739,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {7, 41, 10, 10},	/* Check/Fix */
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_JIS_B5,
-      -1,
-    },
+    dj400_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -564,15 +760,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {7, 41, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
-    {
-/*    PCL_PAPERSIZE_EXECUTIVE,	The 500 doesn't support this, the 520 does */
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-/*    PCL_PAPERSIZE_DL_ENV,	The 500 doesn't support this, the 520 does */
-      -1,
-    },
+    dj500_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -597,13 +785,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {7, 33, 10, 10},	/* Check/Fix */
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      -1,
-    },
+    dj500_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -629,22 +811,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_A5,
-      PCL_PAPERSIZE_JIS_B5,
-      PCL_PAPERSIZE_HAGAKI_CARD,
-      PCL_PAPERSIZE_A6_CARD,
-      PCL_PAPERSIZE_4x6,
-      PCL_PAPERSIZE_5x8,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      PCL_PAPERSIZE_C6_ENV,
-      -1,
-    },
+    dj540_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -669,15 +836,9 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {5, 33, 10, 10},
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A4,
 /* The 550/560 support COM10 and DL envelope, but the control codes
    are negative, indicating landscape mode. This needs thinking about! */
-      -1,
-    },
+    dj340_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -703,22 +864,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A5,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_HAGAKI_CARD,
-      PCL_PAPERSIZE_A6_CARD,
-      PCL_PAPERSIZE_4x6,
-      PCL_PAPERSIZE_5x8,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      PCL_PAPERSIZE_C6_ENV,
-      PCL_PAPERSIZE_INVITATION_ENV,
-      -1,
-    },
+    dj600_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -740,22 +886,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A5,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_HAGAKI_CARD,
-      PCL_PAPERSIZE_A6_CARD,
-      PCL_PAPERSIZE_4x6,
-      PCL_PAPERSIZE_5x8,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      PCL_PAPERSIZE_C6_ENV,
-      PCL_PAPERSIZE_INVITATION_ENV,
-      -1,
-    },
+    dj600_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -778,22 +909,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK | PCL_COLOR_CMYKcm,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A5,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_HAGAKI_CARD,
-      PCL_PAPERSIZE_A6_CARD,
-      PCL_PAPERSIZE_4x6,
-      PCL_PAPERSIZE_5x8,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      PCL_PAPERSIZE_C6_ENV,
-      PCL_PAPERSIZE_INVITATION_ENV,
-      -1,
-    },
+    dj600_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -816,22 +932,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK | PCL_COLOR_CMYK4,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A5,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_HAGAKI_CARD,
-      PCL_PAPERSIZE_A6_CARD,
-      PCL_PAPERSIZE_4x6,
-      PCL_PAPERSIZE_5x8,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      PCL_PAPERSIZE_C6_ENV,
-      PCL_PAPERSIZE_INVITATION_ENV,
-      -1,
-    },
+    dj600_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -854,22 +955,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK | PCL_COLOR_CMYK4b,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A5,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_HAGAKI_CARD,
-      PCL_PAPERSIZE_A6_CARD,
-      PCL_PAPERSIZE_4x6,
-      PCL_PAPERSIZE_5x8,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      PCL_PAPERSIZE_C6_ENV,
-      PCL_PAPERSIZE_INVITATION_ENV,
-      -1,
-    },
+    dj600_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -892,22 +978,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A5,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_HAGAKI_CARD,
-      PCL_PAPERSIZE_A6_CARD,
-      PCL_PAPERSIZE_4x6,
-      PCL_PAPERSIZE_5x8,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      PCL_PAPERSIZE_C6_ENV,
-      PCL_PAPERSIZE_INVITATION_ENV,
-      -1,
-    },
+    dj600_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -929,36 +1000,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_TABLOID,
-      PCL_PAPERSIZE_STATEMENT,
-      PCL_PAPERSIZE_SUPER_B,
-      PCL_PAPERSIZE_A5,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_A3,
-      PCL_PAPERSIZE_JIS_B5,
-      PCL_PAPERSIZE_JIS_B4,
-      PCL_PAPERSIZE_HAGAKI_CARD,
-      PCL_PAPERSIZE_OUFUKU_CARD,
-      PCL_PAPERSIZE_A6_CARD,
-      PCL_PAPERSIZE_4x6,
-      PCL_PAPERSIZE_5x8,
-      PCL_PAPERSIZE_3x5,
-      PCL_PAPERSIZE_HP_CARD,
-      PCL_PAPERSIZE_MONARCH_ENV,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      PCL_PAPERSIZE_C5_ENV,
-      PCL_PAPERSIZE_C6_ENV,
-      PCL_PAPERSIZE_INVITATION_ENV,
-      PCL_PAPERSIZE_JAPANESE_3_ENV,
-      PCL_PAPERSIZE_JAPANESE_4_ENV,
-      PCL_PAPERSIZE_KAKU_ENV,
-      -1,
-    },
+    dj1220_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -980,31 +1022,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK | PCL_COLOR_CMYK4,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_TABLOID,
-      PCL_PAPERSIZE_STATEMENT,
-      PCL_PAPERSIZE_SUPER_B,
-      PCL_PAPERSIZE_A5,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_A3,
-      PCL_PAPERSIZE_JIS_B5,
-      PCL_PAPERSIZE_JIS_B4,
-      PCL_PAPERSIZE_HAGAKI_CARD,
-      PCL_PAPERSIZE_A6_CARD,
-      PCL_PAPERSIZE_4x6,
-      PCL_PAPERSIZE_5x8,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      PCL_PAPERSIZE_C6_ENV,
-      PCL_PAPERSIZE_INVITATION_ENV,
-      PCL_PAPERSIZE_JAPANESE_3_ENV,
-      PCL_PAPERSIZE_JAPANESE_4_ENV,
-      PCL_PAPERSIZE_KAKU_ENV,
-      -1,
-    },
+    dj1100_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -1030,18 +1048,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
-    {
-/* This printer is not mentioned in the Comparison tables,
-   so I'll just pick some likely sizes... */
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A5,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_4x6,
-      PCL_PAPERSIZE_5x8,
-      -1,
-    },
+    dj1200_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -1067,18 +1074,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
-    {
-/* This printer is not mentioned in the Comparison tables,
-   so I'll just pick some likely sizes... */
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A5,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_4x6,
-      PCL_PAPERSIZE_5x8,
-      -1,
-    },
+    dj1200_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -1104,23 +1100,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A5,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_HAGAKI_CARD,
-      PCL_PAPERSIZE_A6_CARD,
-      PCL_PAPERSIZE_4x6,
-      PCL_PAPERSIZE_5x8,
-      PCL_PAPERSIZE_3x5,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      PCL_PAPERSIZE_C6_ENV,
-      PCL_PAPERSIZE_INVITATION_ENV,
-      -1,
-    },
+    dj2000_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -1148,25 +1128,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_TABLOID,
-      PCL_PAPERSIZE_STATEMENT,
-      PCL_PAPERSIZE_A5,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_A3,
-      PCL_PAPERSIZE_JIS_B5,
-      PCL_PAPERSIZE_JIS_B4,
-      PCL_PAPERSIZE_HAGAKI_CARD,
-      PCL_PAPERSIZE_A6_CARD,
-      PCL_PAPERSIZE_4x6,
-      PCL_PAPERSIZE_5x8,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      -1,
-    },
+    dj2500_papersizes,
     {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
@@ -1196,19 +1158,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_STATEMENT,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_MONARCH_ENV,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      PCL_PAPERSIZE_C5_ENV,
-      PCL_PAPERSIZE_C6_ENV,
-      -1,
-    },
+    ljsmall_papersizes,
     { -1,			/* No selectable paper types */
     },
     {
@@ -1230,19 +1180,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_TIFF,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_STATEMENT,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_MONARCH_ENV,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      PCL_PAPERSIZE_C5_ENV,
-      PCL_PAPERSIZE_C6_ENV,
-      -1,
-    },
+    ljsmall_papersizes,
     { -1,			/* No selectable paper types */
     },
     {
@@ -1264,19 +1202,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_STATEMENT,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_MONARCH_ENV,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      PCL_PAPERSIZE_C5_ENV,
-      PCL_PAPERSIZE_C6_ENV,
-      -1,
-    },
+    ljsmall_papersizes,
     { -1,			/* No selectable paper types */
     },
     {
@@ -1298,19 +1224,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_STATEMENT,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_MONARCH_ENV,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      PCL_PAPERSIZE_C5_ENV,
-      PCL_PAPERSIZE_C6_ENV,
-      -1,
-    },
+    ljsmall_papersizes,
     { -1,			/* No selectable paper types */
     },
     {
@@ -1332,26 +1246,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_STATEMENT,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_TABLOID,
-      PCL_PAPERSIZE_A5,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_A3,
-      PCL_PAPERSIZE_JIS_B5,
-      PCL_PAPERSIZE_JIS_B4,		/* Guess */
-      PCL_PAPERSIZE_4x6,
-      PCL_PAPERSIZE_5x8,
-      PCL_PAPERSIZE_MONARCH_ENV,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      PCL_PAPERSIZE_C5_ENV,
-      PCL_PAPERSIZE_C6_ENV,
-      -1,
-    },
+    ljbig_papersizes,
     { -1,			/* No selectable paper types */
     },
     {
@@ -1373,19 +1268,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_STATEMENT,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_MONARCH_ENV,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      PCL_PAPERSIZE_C5_ENV,
-      PCL_PAPERSIZE_C6_ENV,
-      -1,
-    },
+    ljsmall_papersizes,
     { -1,			/* No selectable paper types */
     },
     {
@@ -1407,26 +1290,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
-    {
-      PCL_PAPERSIZE_EXECUTIVE,
-      PCL_PAPERSIZE_STATEMENT,
-      PCL_PAPERSIZE_LETTER,
-      PCL_PAPERSIZE_LEGAL,
-      PCL_PAPERSIZE_TABLOID,
-      PCL_PAPERSIZE_A5,
-      PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_A3,
-      PCL_PAPERSIZE_JIS_B5,
-      PCL_PAPERSIZE_JIS_B4,		/* Guess */
-      PCL_PAPERSIZE_4x6,
-      PCL_PAPERSIZE_5x8,
-      PCL_PAPERSIZE_MONARCH_ENV,
-      PCL_PAPERSIZE_COMMERCIAL10_ENV,
-      PCL_PAPERSIZE_DL_ENV,
-      PCL_PAPERSIZE_C5_ENV,
-      PCL_PAPERSIZE_C6_ENV,
-      -1,
-    },
+    ljbig_papersizes,
     { -1,			/* No selectable paper types */
     },
     {
@@ -1719,7 +1583,7 @@ static int pcl_convert_media_size(const char *media_size,	/* I: Media size strin
   */
 
   media_code = pcl_string_to_val(media_size, pcl_media_sizes,
-                                 sizeof(pcl_media_sizes) / sizeof(pcl_t));
+                                 NUM_PRINTER_PAPER_SIZES);
 
   stpi_deprintf(STPI_DBG_PCL, "Media Size: %s, Code: %d\n", media_size, media_code);
 
@@ -1731,7 +1595,7 @@ static int pcl_convert_media_size(const char *media_size,	/* I: Media size strin
     caps = pcl_get_model_capabilities(model);
 
     for (i=0; (i<NUM_PRINTER_PAPER_SIZES) && (caps->paper_sizes[i] != -1); i++) {
-      if (media_code == caps->paper_sizes[i])
+      if (media_code == (int) caps->paper_sizes[i])
         return(media_code);		/* Is supported */
     }
 
