@@ -69,6 +69,10 @@ dist-hook:
 	    done \
 	  fi \
 	done
+# Create debian/control
+	DEBIAN_VERSION=`grep "(" debian/changelog | head -1l | sed "s/^[^(]*(//" | sed "s/).*$$//"` ; \
+	UPSTREAM_VERSION=`echo $$DEBIAN_VERSION | sed "s/-[^-]*//"` ; \
+	sed -e "s/#UPSTREAM_VERSION#/$${UPSTREAM_VERSION}/g" <debian/control.in >$(distdir)/debian/control
 # Do some extra magic to make a distribution for GIMP CVS
 	if test -f .gimp-dist ; then \
 	  rm -rf $(distdir)/src/cups $(distdir)/src/escputil $(distdir)/src/foomatic $(distdir)/src/ghost ; \

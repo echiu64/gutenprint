@@ -1,3 +1,9 @@
+gimp-print (4.1.8-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Sun, 27 May 2001 18:19:18 +0100
+
 gimp-print (4.1.7-1) unstable; urgency=low
 
   * libgimpprint-doc is in section `doc'.

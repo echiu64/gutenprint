@@ -178,7 +178,7 @@ libgimpprint		The libgimpprint library (GIMP-Print core).
 libgimpprint-dev	Headers, symlinks, m4 macro (AM_PATH_GIMPPRINT)
 			and gimpprint-config needed to develop programs
 			that link with libgimpprint.
-libgimpprint-doc	Documentation in Info and dvi format.
+libgimpprint-doc	Documentation in Info, dvi and HTML format.
 escputil		The escputil printer tool.
 
 The library symlinks will get packaged without any modification needed
