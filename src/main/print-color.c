@@ -446,51 +446,6 @@ calc_hsl_to_rgb(unsigned short *rgb, double h, double s, double l)
     }
 }
 
-static inline void
-update_cmyk(unsigned short *rgb)
-{
-  int c = 65535 - rgb[0];
-  int m = 65535 - rgb[1];
-  int y = 65535 - rgb[2];
-  int nc, nm, ny;
-  int k;
-  if (c == m && c == y)
-    return;
-  k = FMIN(FMIN(c, m), y);
-
-  /*
-   * This is an attempt to achieve better color balance.  The goal
-   * is to weaken the pure cyan, magenta, and yellow and strengthen
-   * pure red, green, and blue.
-   *
-   * We also don't want S=1 V=1 cyan to be 100% cyan; it's simply
-   * too dark.
-   */
-
-  nc = (c * 7 + FMIN(c, FMAX(m, y)) * 0 + FMAX(m, y) * 0 + k) / 8;
-  nm = (m * 7 + FMIN(m, FMAX(c, y)) * 0 + FMAX(c, y) * 0 + k) / 8;
-  ny = (y * 7 + FMIN(y, FMAX(c, m)) * 0 + FMAX(c, m) * 0 + k) / 8;
-
-  /*
-   * Make sure we didn't go overboard.  We don't want to go too
-   * close to white unnecessarily.
-   */
-  nc = c + (nc - c) / 3;
-  nm = m + (nm - m) / 3;
-  ny = y + (ny - y) / 3;
-
-  if (nc > 65535)
-    nc = 65535;
-  if (nm > 65535)
-    nm = 65535;
-  if (ny > 65535)
-    ny = 65535;
-
-  rgb[0] = 65535 - nc;
-  rgb[1] = 65535 - nm;
-  rgb[2] = 65535 - ny;
-}
-
 /*
  * 'gray_to_gray()' - Convert grayscale image data to grayscale (brightness
  *                    adjusted).
@@ -589,15 +544,18 @@ update_saturation_from_rgb(unsigned short *rgb, double adjust, double isat)
 }
 
 static inline void
-adjust_hsl(unsigned short *rgbout, lut_t *lut, int do_lum, double ssat,
+adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat,
 	   double isat, size_t h_points, size_t s_points, size_t l_points,
 	   int split_saturation)
 {
-  if ((split_saturation || lut->hue_map || (do_lum && lut->lum_map) ||
+  if ((split_saturation || lut->hue_map || lut->lum_map ||
        lut->sat_map) &&
       (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
     {
       double h, s, l;
+      rgbout[0] ^= 65535;
+      rgbout[1] ^= 65535;
+      rgbout[2] ^= 65535;
       calc_rgb_to_hsl(rgbout, &h, &s, &l);
       s = update_saturation(s, ssat, isat);
       if (lut->hue_map)
@@ -660,6 +618,56 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, int do_lum, double ssat,
 	    }
 	}
       calc_hsl_to_rgb(rgbout, h, s, l);
+      rgbout[0] ^= 65535;
+      rgbout[1] ^= 65535;
+      rgbout[2] ^= 65535;
+    }
+}
+
+static inline void
+adjust_hsl_bright(unsigned short *rgbout, lut_t *lut, double ssat,
+	   double isat, size_t h_points, size_t s_points, size_t l_points,
+	   int split_saturation)
+{
+  if ((split_saturation || lut->hue_map || lut->lum_map) &&
+      (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
+    {
+      double h, s, l;
+      rgbout[0] ^= 65535;
+      rgbout[1] ^= 65535;
+      rgbout[2] ^= 65535;
+      calc_rgb_to_hsl(rgbout, &h, &s, &l);
+      s = update_saturation(s, ssat, isat);
+      if (lut->hue_map)
+	{
+	  double nh = h * h_points / 6.0;
+	  double tmp;
+	  if (stp_curve_interpolate_value(lut->hue_map, nh, &tmp))
+	    {
+	      h += tmp;
+	      if (h < 0.0)
+		h += 6.0;
+	      else if (h >= 6.0)
+		h -= 6.0;
+	    }
+	}
+      if (l > 0.0001 && l < .9999)
+	{
+	  if (lut->lum_map)
+	    {
+	      double nh = h * l_points / 6.0;
+	      double el;
+	      if (stp_curve_interpolate_value(lut->lum_map, nh, &el))
+		{
+		  el = 1.0 + (s * (el - 1.0));
+		  l = 1.0 - pow(1.0 - l, el);
+		}
+	    }
+	}
+      calc_hsl_to_rgb(rgbout, h, s, l);
+      rgbout[0] ^= 65535;
+      rgbout[1] ^= 65535;
+      rgbout[2] ^= 65535;
     }
 }
 
@@ -711,15 +719,11 @@ rgb_to_rgb(stp_const_vars_t vars, const unsigned char *in, unsigned short *out)
   size_t h_points = 0;
   size_t l_points = 0;
   size_t s_points = 0;
-  int do_update_cmyk = 1;
-  int do_adjust_lum = 1;
+  int bright_color_adjustment = 0;
 
   if (strcmp(stp_get_string_parameter(vars, "ColorCorrection"),
-	     "HSLAdjust") == 0)
-    do_update_cmyk = 0;
-  if (strcmp(stp_get_string_parameter(vars, "ColorCorrection"),
 	     "Bright") == 0)
-    do_adjust_lum = 0;
+    bright_color_adjustment = 1;
 
   if (lut->hue_map)
     h_points = stp_curve_count_points(lut->hue_map);
@@ -750,14 +754,12 @@ rgb_to_rgb(stp_const_vars_t vars, const unsigned char *in, unsigned short *out)
 	  out[2] = i2 | (i2 << 8);
 	  if ((compute_saturation) && (out[0] != out[1] || out[0] != out[2]))
 	    update_saturation_from_rgb(out, ssat, isat);
-	  out[0] ^= 65535;
-	  out[1] ^= 65535;
-	  out[2] ^= 65535;
-	  adjust_hsl(out, lut, do_adjust_lum, ssat, isat, h_points,
-		     s_points, l_points, split_saturation);
-	  out[0] ^= 65535;
-	  out[1] ^= 65535;
-	  out[2] ^= 65535;
+	  if (bright_color_adjustment)
+	    adjust_hsl_bright(out, lut, ssat, isat, h_points,
+			      s_points, l_points, split_saturation);
+	  else
+	    adjust_hsl(out, lut, ssat, isat, h_points,
+		       s_points, l_points, split_saturation);
 	  lookup_rgb(lut, out, red, green, blue);
 	  o0 = out[0];
 	  o1 = out[1];
@@ -793,10 +795,6 @@ gray_to_rgb(stp_const_vars_t vars, const unsigned char *in,
   const unsigned short *red;
   const unsigned short *green;
   const unsigned short *blue;
-  int do_update_cmyk = 1;
-  if (strcmp(stp_get_string_parameter(vars, "ColorCorrection"),
-	     "HSLAdjust") == 0)
-    do_update_cmyk = 0;
 
   red = stp_curve_get_ushort_data(lut->cyan, &count);
   green = stp_curve_get_ushort_data(lut->magenta, &count);
@@ -814,8 +812,6 @@ gray_to_rgb(stp_const_vars_t vars, const unsigned char *in,
 	{
 	  i0 = in[0];
 	  out[0] = out[1] = out[2] = i0 | (i0 << 8);
-	  if (do_update_cmyk)
-	    update_cmyk(out);
 	  lookup_rgb(lut, out, red, green, blue);
 	  o0 = out[0];
 	  o1 = out[1];
@@ -2099,7 +2095,7 @@ stpi_color_traditional_init(stp_vars_t v,
   if (image_type && strcmp(image_type, "None") != 0)
     {
       if (strcmp(image_type, "Text") == 0)
-	itype = 4;
+	itype = 3;
       else
 	itype = 2;
     }
@@ -2113,10 +2109,8 @@ stpi_color_traditional_init(stp_vars_t v,
 	itype = 2;
       else if (strcmp(color_correction, "None") == 0)
 	itype = 2;
-      else if (strcmp(color_correction, "HSLAdjust") == 0)
-	itype = 3;
       else if (strcmp(color_correction, "Threshold") == 0)
-	itype = 4;
+	itype = 3;
     }
   switch (stp_get_output_type(v))
     {
@@ -2127,9 +2121,8 @@ stpi_color_traditional_init(stp_vars_t v,
 	case 1:
 	  switch (itype)
 	    {
-	    case 4:
-	      SET_COLORFUNC(gray_to_kcmy_line_art);
 	    case 3:
+	      SET_COLORFUNC(gray_to_kcmy_line_art);
 	    case 2:
 	    case 1:
 	      SET_COLORFUNC(gray_to_kcmy);
@@ -2144,9 +2137,8 @@ stpi_color_traditional_init(stp_vars_t v,
 	case 3:
 	  switch (itype)
 	    {
-	    case 4:
-	      SET_COLORFUNC(rgb_to_kcmy_line_art);
 	    case 3:
+	      SET_COLORFUNC(rgb_to_kcmy_line_art);
 	    case 2:
 	    case 1:
 	      SET_COLORFUNC(rgb_to_kcmy);
@@ -2160,9 +2152,8 @@ stpi_color_traditional_init(stp_vars_t v,
 	case 4:
 	  switch (itype)
 	    {
-	    case 4:
-	      SET_COLORFUNC(cmyk_8_to_kcmy_line_art);
 	    case 3:
+	      SET_COLORFUNC(cmyk_8_to_kcmy_line_art);
 	    case 2:
 	    case 1:
 	    case 0:
@@ -2175,9 +2166,8 @@ stpi_color_traditional_init(stp_vars_t v,
 	case 8:
 	  switch (itype)
 	    {
-	    case 4:
-	      SET_COLORFUNC(cmyk_to_kcmy_line_art);
 	    case 3:
+	      SET_COLORFUNC(cmyk_to_kcmy_line_art);
 	    case 2:
 	    case 1:
 	    case 0:
@@ -2199,9 +2189,8 @@ stpi_color_traditional_init(stp_vars_t v,
 	case 3:
 	  switch (itype)
 	    {
-	    case 4:
-	      SET_COLORFUNC(rgb_to_rgb_line_art);
 	    case 3:
+	      SET_COLORFUNC(rgb_to_rgb_line_art);
 	    case 2:
 	    case 1:
 	      SET_COLORFUNC(rgb_to_rgb);
@@ -2215,9 +2204,8 @@ stpi_color_traditional_init(stp_vars_t v,
 	case 1:
 	  switch (itype)
 	    {
-	    case 4:
-	      SET_COLORFUNC(gray_to_rgb_line_art);
 	    case 3:
+	      SET_COLORFUNC(gray_to_rgb_line_art);
 	    case 2:
 	    case 1:
 	      SET_COLORFUNC(gray_to_rgb);
@@ -2249,9 +2237,8 @@ stpi_color_traditional_init(stp_vars_t v,
 	case 1:
 	  switch (itype)
 	    {
-	    case 4:
-	      SET_COLORFUNC(gray_to_gray_line_art);
 	    case 3:
+	      SET_COLORFUNC(gray_to_gray_line_art);
 	    case 2:
 	    case 1:
 	    case 0:
@@ -2265,9 +2252,8 @@ stpi_color_traditional_init(stp_vars_t v,
 	case 3:
 	  switch (itype)
 	    {
-	    case 4:
-	      SET_COLORFUNC(rgb_to_gray_line_art);
 	    case 3:
+	      SET_COLORFUNC(rgb_to_gray_line_art);
 	    case 2:
 	    case 1:
 	    case 0:
@@ -2281,9 +2267,8 @@ stpi_color_traditional_init(stp_vars_t v,
 	case 4:
 	  switch (itype)
 	    {
-	    case 4:
-	      SET_COLORFUNC(cmyk_8_to_gray_line_art);
 	    case 3:
+	      SET_COLORFUNC(cmyk_8_to_gray_line_art);
 	    case 2:
 	    case 1:
 	    case 0:
@@ -2297,9 +2282,8 @@ stpi_color_traditional_init(stp_vars_t v,
 	case 8:
 	  switch (itype)
 	    {
-	    case 4:
-	      SET_COLORFUNC(cmyk_to_gray_line_art);
 	    case 3:
+	      SET_COLORFUNC(cmyk_to_gray_line_art);
 	    case 2:
 	    case 1:
 	    case 0:
@@ -2454,8 +2438,6 @@ stpi_color_traditional_describe_parameter(stp_const_vars_t v,
 		    (description->bounds.str, "Bright", _("Bright"));
 		  stp_string_list_add_string
 		    (description->bounds.str, "Threshold", _("Threshold"));
-		  stp_string_list_add_string
-		    (description->bounds.str, "HSLAdjust", _("HSL-corrected"));
 		  stp_string_list_add_string
 		    (description->bounds.str, "Uncorrected", _("Uncorrected"));
 		  description->deflt.str = "None";
