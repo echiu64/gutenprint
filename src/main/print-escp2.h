@@ -468,6 +468,8 @@ typedef struct escp2_printer
 				/* Print directly to CD */
   short		cd_x_offset;	/* Center of CD (horizontal offset) */
   short		cd_y_offset;	/* Center of CD (vertical offset) */
+  short		cd_page_width;	/* Width of "page" when printing to CD */
+  short		cd_page_height;	/* Height of "page" when printing to CD */
 /*****************************************************************************/
   /* Parameters for escputil */
   short		alignment_passes;
