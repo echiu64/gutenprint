@@ -1296,25 +1296,25 @@ get_errline(dither_t *d, int row, int color)
     }
 }
 
-#define ADVANCE_UNIDIRECTIONAL(d, bit, input, width, xerror, xstep, xmod)	\
-do										\
-{										\
-  bit >>= 1;									\
-  if (bit == 0)									\
-    {										\
-      d->ptr_offset++;								\
-      bit = 128;								\
-    }										\
-  input += xstep;								\
-  if (xmod)									\
-    {										\
-      xerror += xmod;								\
-      if (xerror >= d->dst_width)						\
-	{									\
-	  xerror -= d->dst_width;						\
-	  input += (width);							\
-	}									\
-    }										\
+#define ADVANCE_UNIDIRECTIONAL(d, bit, input, width, xerror, xstep, xmod) \
+do									  \
+{									  \
+  bit >>= 1;								  \
+  if (bit == 0)								  \
+    {									  \
+      d->ptr_offset++;							  \
+      bit = 128;							  \
+    }									  \
+  input += xstep;							  \
+  if (xmod)								  \
+    {									  \
+      xerror += xmod;							  \
+      if (xerror >= d->dst_width)					  \
+	{								  \
+	  xerror -= d->dst_width;					  \
+	  input += (width);						  \
+	}								  \
+    }									  \
 } while (0)
 
 #define ADVANCE_REVERSE(d, bit, input, width, xerror, xstep, xmod)	\
@@ -1339,18 +1339,18 @@ do									\
     }									\
 } while (0)
 
-#define ADVANCE_BIDIRECTIONAL(d, bit, in, dir, width, xer, xstep, xmod, err, N, S) \
-do										   \
-{										   \
-  int i;									   \
-  int j;									   \
-  for (i = 0; i < N; i++)							   \
-    for (j = 0; j < S; j++)							   \
-      err[i][j] += dir;								   \
-  if (dir == 1)									   \
-    ADVANCE_UNIDIRECTIONAL(d, bit, in, width, xer, xstep, xmod);		   \
-  else										   \
-    ADVANCE_REVERSE(d, bit, in, width, xer, xstep, xmod);			   \
+#define ADVANCE_BIDIRECTIONAL(d,bit,in,dir,width,xer,xstep,xmod,err,N,S) \
+do									 \
+{									 \
+  int i;								 \
+  int j;								 \
+  for (i = 0; i < N; i++)						 \
+    for (j = 0; j < S; j++)						 \
+      err[i][j] += dir;							 \
+  if (dir == 1)								 \
+    ADVANCE_UNIDIRECTIONAL(d, bit, in, width, xer, xstep, xmod);	 \
+  else									 \
+    ADVANCE_REVERSE(d, bit, in, width, xer, xstep, xmod);		 \
 } while (0)
 
 /*
@@ -1630,18 +1630,21 @@ print_color(const dither_t *d, dither_channel_t *dc, int x, int y,
 	  bits = subc->bits;
 	  v = subc->value;
 	  dot_size = subc->dot_size;
-	  tptr = dc->ptrs[subchannel] + d->ptr_offset;
-
-	  /*
-	   * Lay down all of the bits in the pixel.
-	   */
-	  if (dontprint < v)
+	  if (dc->ptrs[subchannel])
 	    {
-	      set_row_ends(dc, x, subchannel);
-	      for (j = 1; j <= bits; j += j, tptr += length)
+	      tptr = dc->ptrs[subchannel] + d->ptr_offset;
+
+	      /*
+	       * Lay down all of the bits in the pixel.
+	       */
+	      if (dontprint < v)
 		{
-		  if (j & bits)
-		    tptr[0] |= bit;
+		  set_row_ends(dc, x, subchannel);
+		  for (j = 1; j <= bits; j += j, tptr += length)
+		    {
+		      if (j & bits)
+			tptr[0] |= bit;
+		    }
 		}
 	    }
 	  if (dither_type & D_ORDERED_BASE)
@@ -1772,20 +1775,23 @@ print_color_ordered(const dither_t *d, dither_channel_t *dc, int x, int y,
 	  bits = subc->bits;
 	  v = subc->value;
 	  dot_size = subc->dot_size;
-	  tptr = dc->ptrs[subchannel] + d->ptr_offset;
-
-	  /*
-	   * Lay down all of the bits in the pixel.
-	   */
-	  if (dontprint < v)
+	  if (dc->ptrs[subchannel])
 	    {
-	      set_row_ends(dc, x, subchannel);
-	      for (j = 1; j <= bits; j += j, tptr += length)
+	      tptr = dc->ptrs[subchannel] + d->ptr_offset;
+
+	      /*
+	       * Lay down all of the bits in the pixel.
+	       */
+	      if (dontprint < v)
 		{
-		  if (j & bits)
-		    tptr[0] |= bit;
+		  set_row_ends(dc, x, subchannel);
+		  for (j = 1; j <= bits; j += j, tptr += length)
+		    {
+		      if (j & bits)
+			tptr[0] |= bit;
+		    }
+		  return v;
 		}
-	      return v;
 	    }
 	}
       return 0;
@@ -1839,7 +1845,7 @@ print_color_fast(const dither_t *d, dither_channel_t *dc, int x, int y,
        * After all that, printing is almost an afterthought.
        * Pick the actual dot size (using a matrix here) and print it.
        */
-      if (adjusted >= vmatrix)
+      if (adjusted >= vmatrix && dc->ptrs[subc->subchannel])
 	{
 	  int subchannel = subc->subchannel;
 	  bits = subc->bits;
@@ -2042,20 +2048,24 @@ print_subc(dither_t *d, dither_channel_t *dc, ink_defn_t *ink, int subchannel, u
   int j;
   unsigned char *tptr;
 
-  switch(bits = ink->bits)
-  { case 1:
-      dc->ptrs[subchannel][d->ptr_offset] |= bit;
-      return;
-    case 2:
-      dc->ptrs[subchannel][d->ptr_offset + length] |= bit;
-      return;
-    default:
-      tptr = &dc->ptrs[subchannel][d->ptr_offset];
-      for (j=1; j <= bits; j+=j, tptr += length) {
-        if (j & bits) *tptr |= bit;
-      }
-      return;
-  }
+  if (dc->ptrs[subchannel])
+    {
+      switch(bits = ink->bits)
+	{
+	case 1:
+	  dc->ptrs[subchannel][d->ptr_offset] |= bit;
+	  return;
+	case 2:
+	  dc->ptrs[subchannel][d->ptr_offset + length] |= bit;
+	  return;
+	default:
+	  tptr = &dc->ptrs[subchannel][d->ptr_offset];
+	  for (j=1; j <= bits; j+=j, tptr += length) {
+	    if (j & bits) *tptr |= bit;
+	  }
+	  return;
+	}
+    }
 }
 
 #define EVEN_C1 256
