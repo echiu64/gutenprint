@@ -834,6 +834,13 @@
 <!--
     Miscellaneous sizes
 -->
+    <paper name="w283h425">
+      <description value="10cm x 15cm"/>
+      <comment value="100 x 150mm"/>
+      <width value="283"/>
+      <height value="425"/>
+      <unit value="metric-extended"/>
+    </paper>
     <paper name="w283h420">
       <description value="Hagaki Card"/>
       <comment value="100mm x 148mm"/>
