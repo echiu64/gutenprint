@@ -32,7 +32,10 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <a href="MacOSX.php3#4.2.6-pre2"><b>September 21, 2003 -</b></a> Gimp-Print 4.2.6-pre2 is now available for download.
+ <a href="MacOSX.php3#4.2.6-pre3"><b>November 3, 2003 -</b></a> Gimp-Print 4.2.6-pre3 is now available for download.
+ </p>
+ <p>
+ <a href="MacOSX.php3#uninstall-1.1"><b>November 3, 2003 -</b></a> A Gimp-Print uninstaller is now available for download.
  </p>
  <p>
  <a href="MacOSX.php3#4.3.18"><b>July 08, 2003 -</b></a> Gimp-Print 4.3.18 is the latest Mac OS X release in the developmental line (4.3.x) of Gimp-Print. Currently, the 4.3.x line is not entirely functional in Mac OS X Jaguar. Almost all users should continue to use the 4.2.x line until the current issues with 4.3.x are resolved.  See the <a href="MacOSX.php3#4.3.18">news item</a> for more details, especially if you ever installed 4.3.17.
@@ -130,30 +133,30 @@ require('standard_html_header.php3');
  installer package plus illustrated documentation to easily guide you through
  the printer set-up process. This package requires (but does not include) ESP
  Ghostscript 7.05.6 for Mac OS X (<b>download below and install, if
- necessary</b>).
+ necessary</b>).  ESP Ghostscript is not required for Mac OS X "Panther". 
  </p>
- <b>Gimp-Print 4.2.6-pre2</b>
+ <b>Gimp-Print 4.2.6-pre3</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-pre2.ppc.dmg?download"
- >gimp-print-4.2.6-pre2.ppc.dmg</a>&nbsp;(3.9 MB)
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-pre3.ppc.dmg?download"
+ >gimp-print-4.2.6-pre3.ppc.dmg</a>&nbsp;(5.8 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-pre2.tar.gz?download"
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-pre3.tar.gz?download"
  >source</a>)
  </td>
  </tr>
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 4.2.6-pre2 is the newest pre-release for Mac OS X; it includes bug 
+ Gimp-Print 4.2.6-pre3 is the newest pre-release for Mac OS X; it includes bug 
  fixes over 4.2.5, but it may contain new bugs. On Mac OS X "Jaguar" this 
  package requires (but does not include) ESP Ghostscript (<b>download below and 
- install, if necessary</b>).
+ install, if necessary</b>).  ESP Ghostscript is not required for Mac OS X "Panther". 
  </p>
  <b>Gimp-Print 4.3.18</b>
  </td>
@@ -175,7 +178,24 @@ require('standard_html_header.php3');
  <p>
  Gimp-Print 4.3.18 is the latest Mac OS X release in the 4.3.x developmental line.
  This release represents the state-of-the-art in current Gimp-Print development. As such, while it contains many new and exciting features over the mainline branch (4.2.x), it may also provide unexpected behavior, or it simply may not work at all.  For Mac OS X Jaguar this package requires (but does not include) ESP Ghostscript for Mac OS X (<b>download below and 
- install, if necessary</b>).
+ install, if necessary</b>). ESP Ghostscript is not required for Mac OS X "Panther". 
+ </p>
+ <b>Gimp-Print Uninstaller</b>
+ </td>
+ </tr>
+ <tr>
+ <td bgcolor="#d0ffff" >
+ <a href=
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-uninstaller-1.1.dmg?download"
+ >gimp-print-uninstaller-1.1.dmg</a>&nbsp;(118 KB)
+ </td>
+ <td align="right" >
+ </td>
+ </tr>
+ <tr>
+ <td colspan="2" >
+ <p>
+The Gimp-Print uninstaller will completely remove any version of Gimp-Print that was installed with an official Mac OS X installer package provided by the Gimp-Print project. It will also remove the version of Gimp-Print that is included by default with Mac OS X "Panther" (Mac OS X version 10.3.0). This uninstaller is included with Gimp-Print 4.2.6-pre3 and does not need to be downloaded separately.
  </p>
  <a name="downloadESPGS"></a>
  <b>ESP Ghostscript 7.05.6</b>
@@ -254,6 +274,61 @@ require('standard_html_header.php3');
  News Items
  </h3>
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+ <a name ="uninstall-1.1"></a>
+ <B>Gimp-Print Uninstaller-1.1</B>
+ </TD>
+ <TD align="right" >
+ <B>2003-11-05</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ An uninstaller for all Mac OS X Gimp-Print installer packages is <a href=
+"http://prdownloads.sourceforge.net/gimp-print/gimp-print-uninstaller-1.1.dmg?download"
+ >now available</a> for separate download.
+ This uninstaller is included with the version 4.2.6-pre3 download package, but is available separately
+ for anyone wishing to remove an earlier version of Gimp-Print. The uninstaller will remove every version of 
+ Gimp-Print that has ever been released as a Mac OS X installer package by the Gimp-Print project. It will also remove the version of Gimp-Print that is included by default with Mac OS X "Panther" (10.3.0).
+ It will <em>not</em> remove any version of Gimp-Print that was installed by any means <em>other</em> than an official installer package (this includes command line installs).
+ &nbsp;
+ </td>
+ </tr>
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+ <a name ="4.2.6-pre3"></a>
+ <B>Gimp-Print 4.2.6-pre3</B>
+ </TD>
+ <TD align="right" >
+ <B>2003-11-03</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gimp-Print version 4.2.6-pre3 contains the following improvements over
+ <a href= "MacOSX.php3#4.2.6-pre2">Gimp-Print 4.2.6-pre2</a>:
+ </p>
+<b>Major changes</b>
+ <ol>
+   <li>Support for the Epson Stylus C43/C44, C63/C64, and PX-V500
+   printers, and CX-3100, CX-5100, CX-6300, CX-6400, CX-8300, and
+   CX-8400 multi-function devices (printer function only).</li>
+   <li>Under OS X, the PPD files have better option grouping.</li>
+   <li>Canon printers should now print all pages of a job when the printer
+   is hosted on a Windows system (bug 668342).</li>
+
+</ol>
+<dl>
+<dt><b>The following bug has been fixed in Gimp-Print 4.2.6-pre3</b>:</dt>
+
+<dd>668342 Canon S-450 prints only one page of a job
+</dl>
+ &nbsp;
+ </td>
+ </tr>
  <TR bgcolor="#D0D0D0" >
  <TD>
  <a name ="4.2.6-pre2"></a>
