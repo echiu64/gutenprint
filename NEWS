@@ -13,6 +13,8 @@ Print 4.1.3 contains the following fixes and improvements over 4.1.2:
 1) The source has been completely reorganized.  Please read the README
    file for more information!
 
+2) Improvements to the Lexmark driver.
+
 
 Print 4.1.2 contains the following fixes and improvements over 4.1.1:
 
