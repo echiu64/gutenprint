@@ -117,10 +117,17 @@ Errata:
 
 6) The CUPS drivers do not pass through the media type correctly, so
    the driver always prints with the default media type, with CUPS
-   1.1.3 and earlier.  CUPS 1.1.4 has the necessary fix.
+   1.1.3 and earlier.  CUPS 1.1.4 (which may not be out at the time
+   you read this) has the necessary fix.
 
 7) When printing text with CUPS, under some circumstances the margins
-   are not set correctly.  This is fixed in CUPS 1.1.4.
+   are not set correctly.  This is fixed in CUPS 1.1.4 (which may not
+   be out at the time you read this); no fix is needed (or possible)
+   in gimp-print.
+
+8) The Epson Stylus 480 does not print correctly in all modes.  If an
+   owner steps forward who is willing to work on fixing the code, this
+   may get fixed, otherwise it will not be fixed.
 
 
 Gimp-Print 4.0b1 contains the following improvements and changes over
