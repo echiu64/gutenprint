@@ -1,8 +1,8 @@
 Type of program:
 ----------------
 
- Epson Stylus Photo / Photo EX and Photo 700 colour printer driver for Ghostscript
- version 5.x/6.x offering CMYKcm 6 colour HQ prints.
+ Epson Stylus Photo / Photo EX and Photo 700 colour printer driver for
+ Ghostscript version 5.x/6.x offering CMYKcm 6 colour HQ prints.
 
 
 Author:
@@ -36,6 +36,20 @@ License:
 Installation and Compilation:
 -----------------------------
 
+ - If you downloaded a CVS snapshot of this software, this directory
+   will not include gdevstp-escp2c, gdevstp-print.h, gdevstp-util.c,
+   or gdevstp-dither.c.  To create these files, you must run the
+   following commands from the parent directory:
+
+   aclocal
+   autoconf
+   automake
+   ./configure
+   make ghost
+
+   If this fails (because you do not have the Gimp or any of the
+   autoconfigure tools installed on your system), please download the
+   latest release snapshot from gimp-print.sourceforge.net.
  - Get a recent Ghostscript (5.5 or better) and prepare the sources as
    described in the documentation (don`t forget zlib, libpng and libjpeg
    when downloading the source) for compiling
