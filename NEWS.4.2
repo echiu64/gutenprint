@@ -13,7 +13,8 @@ src/cups/README for more information on these drivers.
 The Gimp Print plugin requires the Gimp 1.2.  It no longer supports
 any release of 1.0 or 1.1.
 
-The CUPS driver requires CUPS 1.1.9 or higher.
+The CUPS driver requires CUPS 1.1.9 or higher (1.1.10 or above is
+highly recommended).
 
 The Ghostscript driver requires Ghostscript 5.10, 5.50, or 6.51.
 
@@ -60,8 +61,13 @@ General User-Visible Changes:
 4) A user's manual (for the CUPS driver and GIMP plugin) is now
    supplied with the package.
 
-4) There is now developer-level texinfo and HTML documentation
-   available for much of the package.
+5) A developer's manual is now supplied with the package.  This
+   describes how to use the library interface, how to tune printers,
+   and other topics.
+
+6) The package is now internationalized.  Full translation is
+   available for Swedish; partial translations are currently available
+   for French, Norwegian, Danish, and British English.
 
 
 Quality Improvements:
@@ -139,13 +145,18 @@ Changes to the CUPS Driver:
 2) The CUPS driver now supports printing CMYK output, as well as RGB,
    grayscale, and black and white.
 
+3) The CUPS PPD files are now translated into several languages.
+
 
 Changes to the Ghostscript Driver:
 
 1) A new, simplified build procedure is provided for use with
    Ghostscript 5.50 and 6.51.  This requires copying only one file
-   into the Ghostscript source directory.  The old method is still
-   available, but we recommend using the new procedure.
+   into the Ghostscript source directory, and links dynamically
+   against the driver library.  This permits upgrades to the 4.2
+   driver library (e. g. to support new printers) without recompiling
+   Ghostscript.  The old method is still available, but we recommend
+   using the new procedure.
 
 2) Printing black and white only images is now accomplished with
    -dColor=2 rather than -dImageType=3.
@@ -205,9 +216,6 @@ Internal changes:
 4) The "unprint" program supplied in the test directory is much more
    functional and accurate than previously.
 
-5) The package is now internationalized.  There are currently no
-   translations available, though.
-
 
 Incompatibilities between 4.0 and 4.2:
 
@@ -248,16 +256,10 @@ Known Limitations:
    supported.  This will not be fixed for 4.2.
 
 4) The drivers for the Epson Stylus Pro printers (5000, 5500, 7000,
-   7500, 9000, 9500, and 10000) are not tested or tuned.  They may not
-   work correctly in all cases, and their outputs are not properly
-   tuned.  In addition, the Epson Stylus C70 and C80 are not fully
-   tested and may not work properly in all modes.
+   7500, 9000, 9500, and 10000) are not tested or tuned.  They are
+   known not to work correctly in many modes.
 
 5) The Canon BJC-8200 and S800 do not produce optimum quality.
-
-6) Some HP printers print poorly at high resolutions using the Glossy
-   Paper setting.  The workaround is to use the Premium Paper
-   setting.
 
 
 Supported Printers:
@@ -333,8 +335,7 @@ EPSON Stylus Photo EX
 EPSON Stylus Photo 720
 EPSON Stylus Photo 750
 EPSON Stylus Photo 780/785/790          (NEW)
-EPSON Stylus Photo 810                  (NEW, not verified)
-EPSON Stylus Photo 820                  (NEW, not verified)
+EPSON Stylus Photo 810/820              (NEW, not verified)
 EPSON Stylus Photo 870/875
 EPSON Stylus Photo 890/895              (NEW)
 EPSON Stylus Photo 1200

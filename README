@@ -1,4 +1,4 @@
-This is Gimp-Print version 4.1.99b3, the third beta release leading
+This is Gimp-Print version 4.1.99b4, the fourth beta release leading
 up to the 4.2 stable release.  Gimp-print is the print facility for
 the Gimp, and in addition a suite of drivers that may be used with
 common UNIX spooling systems using GhostScript or CUPS.  These drivers
@@ -74,12 +74,12 @@ Gimp-Print PPD's with.  Such printers may be identified in any CUPS
 front end (e. g. KUPS, or via the web interface) because they look
 something like this:
 
-                EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-b3(en)
+                EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-b4(en)
 
-If the version number (in this case, 4.1.99-b3) does not match the version
+If the version number (in this case, 4.1.99-b4) does not match the version
 of Gimp-Print that you are installing, you must use Modify Printer to
 force the new PPD file to get installed.  Failure to do so may lead to
-incorrect output and/or other errors.
+incorrect output and/or other errors!
 
 You may also have problems if you have a .lpoptions file that has old
 options set.  If you have problems printing, please remove any
@@ -102,9 +102,12 @@ FOOMATIC
 
 This package includes support for the Foomatic meta-driver package.
 This requires the foomatic-xml distribution.  Foomatic is available
-from http://www.linuxprinting.org/foomatic.html.  It also will soon
-(as of April 2001) be available in Debian unstable.  For best results,
-use the version in cvs.
+from http://www.linuxprinting.org/foomatic.html.  It is also available
+in Debian unstable.  For best results, use the version in cvs.  The
+first version of Foomatic (the one used with Gimp-Print 4.0) is not
+compatible with Gimp-Print 4.2.  Note that the Foomatic driver is
+named `stp' in Gimp-Print 4.0; in Gimp-Print 4.2 it is named
+`gimp-print'.
 
 To build the Foomatic data, you must run:
 
@@ -129,16 +132,16 @@ do that, you must follow this procedure:
        spooler from the website to install the data file and filter.
 
 Note that it almost never makes sense to build the Foomatic driver
-without also building the Ghostscript driver.  Please read the
-instructions above in the GHOSTSCRIPT section.
+without also building the Ghostscript driver, even if Foomatic is to
+be used with CUPS (CUPS-o-matic).  Please read the instructions below
+in the GHOSTSCRIPT section.
 
 If you do not wish to build the Gimp Print plugin, you must run
 
 ./configure --with-foomatic --without-gimp
 
 Please visit http://www.linuxprinting.org/foomatic.html for more
-information on Foomatic.  The current Foomatic data was generated for
-"Phase 2".
+information on Foomatic.
 
 Foomatic provides an alternate interface to CUPS, in addition to an
 interface to lpd and LPRng.
@@ -152,7 +155,7 @@ use of this software for general printing purposes.
 We *strongly* recommend that end users not attempt to use this driver
 directly.  The available options are very complex, and the standard
 printer configuration tools (such as apsfilter and magicfilter) are
-not well designed for drivers such as Gimp-print, and do not provide a
+not designed for drivers such as Gimp-print, and do not provide a
 convenient interface to the driver's capabilities.  We recommend that
 end users either install CUPS, as described above, or use Foomatic to
 configure printer queues.  CUPS is very easy to install, configure,
@@ -217,7 +220,7 @@ DEBIAN
 The Debian packaging has been rewritten from scratch as of 4.1.4.  It
 is compliant with Standards-Version 3.1.1, and is lintian-clean.  It
 should build from source on woody and sid, but will not build on potato.
-There are five separate packages:
+There are six separate packages:
 
 gimp1.2-print		The GIMP Print plugin. Also contains HTML and SGML
 			documentation that is registered with doc-base.
