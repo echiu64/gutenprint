@@ -1933,7 +1933,8 @@ static inline void find_segment(dither_t *d, dither_channel_t *dc, int wetness, 
 	}
 }
 
-#define EVEN_C1 1024
+#define EVEN_C1 256
+#define EVEN_C2 222		/* = sqrt(3)/2 * EVEN_C1 */
 
 static inline void
 eventone_init(dither_t *d, et_chdata_t **cd)
@@ -1956,7 +1957,7 @@ eventone_init(dither_t *d, et_chdata_t **cd)
       et->dy2 = ya * ya;
       et->d2y = 2 * et->dy2;
     
-      et->aspect = EVEN_C1 / (xa * ya);
+      et->aspect = EVEN_C2 / (xa * ya);
     }
   
     et->recip = stp_malloc(65536 * sizeof(int));
