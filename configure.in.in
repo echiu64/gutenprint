@@ -20,16 +20,6 @@ dnl Process this file with autoconf to produce a configure script.
 AC_INIT(src/main/print-dither.c)
 AC_CONFIG_AUX_DIR(scripts)
 
-dnl Compiler options and definitions
-INCLUDES="${INCLUDES} -I\$(top_srcdir)/include -I\$(top_builddir)/include -I\$(top_srcdir)/intl"
-
-AC_ARG_ENABLE(debug, [  --enable-debug          turn on debugging [default=no]],
-[if eval "test x$enable_debug = xyes"; then
-    CFLAGS="${CFLAGS:=} -g"
-else
-    CFLAGS="${CFLAGS:=-O}"
-fi])
-
 PACKAGE="gimp-print"
 
 dnl In the following, there are a the following variants
@@ -117,6 +107,9 @@ dnl define HAVE_GNU_LD if GNU ld is present
 if test "$ac_cv_prog_gnu_ld" = "yes" ; then
   AC_DEFINE(HAVE_GNU_LD,, [Define if GNU ld is present.])
 fi
+
+dnl Compiler options and definitions
+INCLUDES="${INCLUDES} -I\$(top_srcdir)/include -I\$(top_builddir)/include -I\$(top_srcdir)/intl"
 
 dnl Defaults
 dnl figure defaults, prior to $ac_help setup
@@ -206,6 +199,16 @@ AC_ARG_WITH(foomatic,
        AC_MSG_ERROR([bad value ${withval} for --with-foomatic]) ;;
   esac],[AC_MSG_RESULT([${BUILD_FOOMATIC}])])
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
+
+AC_MSG_CHECKING([whether to turn on debugging in build])
+AC_ARG_ENABLE(debug, 
+[  --enable-debug          turn on debugging [default=no]],
+  [case "${enableval}" in
+    yes) CFLAGS="${CFLAGS:=} -g" ; AC_MSG_RESULT([yes]) ;;
+    no) CFLAGS="${CFLAGS:=-O}" ; AC_MSG_RESULT([no]) ;;
+    *) AC_MSG_RESULT([unknown])
+       AC_MSG_ERROR([bad value ${enableval} for --enable-debug]) ;;
+  esac],[CFLAGS="${CFLAGS:=-O}" ; AC_MSG_RESULT([no])])
 
 AC_MSG_CHECKING([whether to build GIMP plugin])
 AC_ARG_WITH(gimp,
@@ -305,24 +308,33 @@ AC_PATH_PROG(BISON_PROG, bison)
 AC_PATH_PROG(YACC_PROG, yacc)
 AC_PATH_PROG(PERL, perl)
 AC_PATH_PROG(CONVERT, convert)
+if test x${CONVERT} = x ; then
+  AC_MSG_WARN([PostScript user's guide cannot be regenerated!])
+fi
 AC_PATH_PROG(TEXI2HTML, texi2html)
 if test x${TEXI2HTML} = x ; then
-  AC_MSG_WARN([html documentation cannot be regenerated!])
+  AC_MSG_WARN([HTML documentation cannot be regenerated!])
 fi
 AC_PATH_PROG(DVIPS, dvips)
 if test x${DVIPS} = x ; then
-  AC_MSG_WARN([PostScript documentation cannot be generated!])
+  AC_MSG_WARN([PostScript documentation cannot be regenerated!])
 fi
 AC_PATH_PROG(DB2PDF, db2pdf)
-AC_PATH_PROG(DB2PS, db2ps)
-AC_PATH_PROG(DB2HTML, db2html)
-AC_PATH_PROG(PS2PDF, ps2pdf)
-AC_PATH_PROG(PDFJADETEX, pdfjadetex)
-if test x${PDFJADETEX} = x ; then
-  AC_MSG_WARN([PDF documentation cannot be generated!])
+if test x${DB2PDF} = x ; then
+  AC_MSG_WARN([PDF user's guide cannot be regenerated!])
 fi
-AC_PATH_PROG(JADE, jade)
-AC_PATH_PROG(PS2PDF, ps2pdf)
+AC_PATH_PROG(DVIPDF, dvipdf)
+if test x${DVIPDF} = x ; then
+  AC_MSG_WARN([PDF documentation cannot be regenerated!])
+fi
+AC_PATH_PROG(DB2PS, db2ps)
+if test x${DB2PS} = x ; then
+  AC_MSG_WARN([PostScript user's guide cannot be regenerated!])
+fi
+AC_PATH_PROG(DB2HTML, db2html)
+if test x${DB2PS} = x ; then
+  AC_MSG_WARN([HTML user's guide cannot be regenerated!])
+fi
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 dnl foomatic checks
 if test x${BUILD_FOOMATIC} = xyes ; then
@@ -574,7 +586,7 @@ if test x${exec_prefix} = xNONE ; then
   fi
 fi
 dnl Fix "bindir" variable if it hasn't been specified...
-if test "${datadir}" = "\${prefix}/share" -a "${cups_prefix}" = "/" ; then
+if test "${bindir}" = "\${prefix}/bin" -a "${cups_prefix}" = "/" ; then
   cups_bindir="/usr/bin"
 else
   cups_bindir="${cups_prefix}/bin"
