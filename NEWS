@@ -97,7 +97,7 @@ Gimp-Print 4.2.3 contains the following major changes over Gimp-Print
      This works with all spoolers.  Here are sample command lines for
      all spoolers, for CUPS the syntax is the same as with the native
      CUPS drivers of GIMP-Print and units are again points ("pt" or
-     nothing, inches ("in"), cm, and mm):
+     nothing), inches ("in"), cm, and mm:
 
 	CUPS: lpr -o PageSize=Custom.500x750cm bigposter.ps
 	LPRng: lpr -Z PageSize=Custom.500x750cm bigposter.ps
