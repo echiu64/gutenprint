@@ -66,10 +66,6 @@
 #define ORIENT_LANDSCAPE	1	/* Landscape orientation */
 
 #define MAX_CARRIAGE_WIDTH	17
-#define MAX_PLIST		100
-#define SCALE_WIDTH		64
-#define ENTRY_WIDTH		64
-#define PREVIEW_SIZE		240	/* Assuming max media size of 24" A2 */
 
 #define IMAGE_LINE_ART		0
 #define IMAGE_SOLID_TONE	1
@@ -113,9 +109,6 @@ typedef struct					/* Plug-in variables */
 	left,			/* Offset from lower-lefthand corner, points */
 	top;			/* ... */
   float gamma;                  /* Gamma */
-  float gamma_red;
-  float gamma_green;
-  float gamma_blue;
   int   contrast,		/* Output Contrast */
 	red,			/* Output red level */
 	green,			/* Output green level */
@@ -200,10 +193,13 @@ extern void	dither_set_lm_levels(void *vd, int nlevels, double *levels);
 extern void	dither_set_y_levels(void *vd, int nlevels, double *levels);
 extern void	dither_set_ly_levels(void *vd, int nlevels, double *levels);
 extern void	dither_set_k_levels(void *vd, int nlevels, double *levels);
+extern void	dither_set_ink_spread(void *vd, int spread);
 
-
+extern void	scale_dither(void *vd, int scale);
 extern void	free_dither(void *);
+
 extern void	dither_black(unsigned short *, int, void *, unsigned char *);
+extern void	dither_fastblack(unsigned short *, int, void *, unsigned char *);
 
 extern void	dither_cmyk(unsigned short *, int, void *, unsigned char *,
 			    unsigned char *, unsigned char *,
@@ -231,20 +227,12 @@ extern void	rgb_to_rgb(unsigned char *, unsigned short *, int, int,
 extern void	gray_to_rgb(unsigned char *, unsigned short *, int, int,
 			    unsigned char *, vars_t *);
 
-extern void	compute_lut(float print_gamma, float app_gamma, vars_t *v);
+extern void	compute_lut(const vars_t *pv, float app_gamma,
+			    vars_t *uv);
 
 
 extern void	default_media_size(int model, char *ppd_file, char *media_size,
 		                   int *width, int *length);
-
-
-extern char	**canon_parameters(int model, char *ppd_file, char *name,
-		                   int *count);
-extern void	canon_imageable_area(int model, char *ppd_file,
-				     char *media_size, int *left, int *right,
-				     int *bottom, int *top);
-extern void	canon_print(const printer_t *printer, int copies, FILE *prn,
-			    Image image, unsigned char *cmap, vars_t *v);
 
 
 extern char	**escp2_parameters(int model, char *ppd_file, char *name,
@@ -253,6 +241,16 @@ extern void	escp2_imageable_area(int model, char *ppd_file,
 				     char *media_size, int *left, int *right,
 				     int *bottom, int *top);
 extern void	escp2_print(const printer_t *printer, int copies, FILE *prn,
+			    Image image, unsigned char *cmap, vars_t *v);
+
+
+#ifndef ESCP2_GHOST
+extern char	**canon_parameters(int model, char *ppd_file, char *name,
+		                   int *count);
+extern void	canon_imageable_area(int model, char *ppd_file,
+				     char *media_size, int *left, int *right,
+				     int *bottom, int *top);
+extern void	canon_print(const printer_t *printer, int copies, FILE *prn,
 			    Image image, unsigned char *cmap, vars_t *v);
 
 
@@ -274,6 +272,18 @@ extern void	ps_imageable_area(int model, char *ppd_file, char *media_size,
 				  int *top);
 extern void	ps_print(const printer_t *printer, int copies, FILE *prn,
 			 Image image, unsigned char *cmap, vars_t *v);
+#else
+#define canon_parameters NULL
+#define canon_imageable_area NULL
+#define canon_print NULL
+#define pcl_parameters NULL
+#define pcl_imageable_area NULL
+#define pcl_print NULL
+#define ps_parameters NULL
+#define ps_imageable_area NULL
+#define ps_print NULL
+#define ps_media_size NULL
+#endif
 
 int		      known_papersizes(void);
 const papersize_t    *get_papersizes(void);
@@ -285,8 +295,6 @@ const printer_t	     *get_printer_by_index(int);
 const printer_t      *get_printer_by_long_name(const char *);
 const printer_t      *get_printer_by_driver(const char *);
 int	              get_printer_index_by_driver(const char *);
-
-void                  gtk_create_main_window(void);
 
 /*
  * End of "$Id$".
