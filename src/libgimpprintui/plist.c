@@ -697,6 +697,7 @@ stpui_printrc_load(void)
 	  stpui_printrc_load_v1(fp);
 	  break;
 	}
+      (void) fclose(fp);
     }
 }
 
@@ -1055,107 +1056,141 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
        */
       usr1_interrupt = 0;
       signal (SIGUSR1, usr1_handler);
-      if (pipe (syncfd) != 0) {
-	do_sync = 0;
-      }
-      if (pipe (pipefd) != 0) {
-	prn = NULL;
-      } else {
-	cpid = fork ();
-	if (cpid < 0) {
+      if (pipe (syncfd) != 0)
+	{
 	  do_sync = 0;
-	  prn = NULL;
-	} else if (cpid == 0) {
-	  /* LPR monitor process.  Printer output is piped to us. */
-	  close(syncfd[0]);
-	  opid = fork ();
-	  if (opid < 0) {
-	    /* Errors will cause the plugin to get a SIGPIPE.  */
-	    exit (1);
-	  } else if (opid == 0) {
-	    dup2 (pipefd[0], 0);
-	    close (pipefd[0]);
-	    close (pipefd[1]);
-	    if (pipe(errfd) == 0) {
-	      opid = fork();
-	      if (opid == 0) { /* Child monitors stderr */
-		stp_outfunc_t errfunc = stpui_get_errfunc();
-		void *errdata = stpui_get_errdata();
-		char buf[4096]; /* calls g_message on anything it sees */
-		close (pipefd[0]);
-		close (pipefd[1]);
-		while (1) {
-		  ssize_t bytes = read(errfd[0], buf, 4095);
-		  if (bytes == 0)
-		    break;
-		  else if (bytes > 0) {
-		    buf[bytes] = '\0';
-		    (*errfunc)(errdata, buf, bytes);
-		  } else {
-		    snprintf(buf, 4095,
-			     "Read messages failed: %s\n", strerror(errno));
-		    (*errfunc)(errdata, buf, strlen(buf));
-		    break;
-		  }
-		}
-		write(syncfd[1], "Done", 5);
-		_exit(0);
-	      } else {
-		dup2 (errfd[1], 2);
-		dup2 (errfd[1], 1);
-		close(errfd[1]);
-		close (pipefd[0]);
-		close (pipefd[1]);
-	      }
-	    }
-	    close(syncfd[1]);
-	    execl("/bin/sh", "/bin/sh", "-c", stpui_plist_get_output_to(printer),
-		  NULL);
-	    /* NOTREACHED */
-	    exit (1);
-	  } else {
-	    /*
-	     * If the print plugin gets SIGKILLed by gimp, we kill lpr
-	     * in turn.  If the plugin signals us with SIGUSR1 that it's
-	     * finished printing normally, we close our end of the pipe,
-	     * and go away.
-	     */
-	    close (syncfd[1]);
-	    close (pipefd[0]);
-	    while (usr1_interrupt == 0) {
-	      if (kill (ppid, 0) < 0) {
-		/* The print plugin has been killed!  */
-		kill (opid, SIGTERM);
-		waitpid (opid, &dummy, 0);
-		close (pipefd[1]);
-		/*
-		 * We do not want to allow cleanup before exiting.
-		 * The exiting parent has already closed the connection
-		 * to the X server; if we try to clean up, we'll notice
-		 * that fact and complain.
-		 */
-		_exit (0);
-	      }
-	      sleep (5);
-	    }
-	    /* We got SIGUSR1.  */
-	    close (pipefd[1]);
-	    /*
-	     * We do not want to allow cleanup before exiting.
-	     * The exiting parent has already closed the connection
-	     * to the X server; if we try to clean up, we'll notice
-	     * that fact and complain.
-	     */
-	    _exit (0);
-	  }
-	} else {
-	  close (syncfd[1]);
-	  close (pipefd[0]);
-	  /* Parent process.  We generate the printer output. */
-	  prn = fdopen (pipefd[1], "w");
-	  /* and fall through... */
 	}
-      }
+      if (pipe (pipefd) != 0)
+	{
+	  prn = NULL;
+	}
+      else
+	{
+	  cpid = fork ();
+	  if (cpid < 0)		/* Error */
+	    {
+	      do_sync = 0;
+	      prn = NULL;
+	    }
+	  else if (cpid == 0)	/* Child 1 (lpr monitor) */
+	    {
+	      /* LPR monitor process.  Printer output is piped to us. */
+	      close(syncfd[0]);
+	      opid = fork ();
+	      if (opid < 0)
+		{
+		  /* Errors will cause the plugin to get a SIGPIPE.  */
+		  exit (1);
+		}
+	      else if (opid == 0) /* Child 2 (error monitor) */
+		{
+		  dup2 (pipefd[0], 0);
+		  close (pipefd[0]);
+		  close (pipefd[1]);
+		  if (pipe(errfd) == 0)
+		    {
+		      opid = fork();
+		      if (opid < 0)
+			_exit(1);
+		      else if (opid == 0) /* Child 3 (monitors stderr) */
+			{ 
+			  stp_outfunc_t errfunc = stpui_get_errfunc();
+			  void *errdata = stpui_get_errdata();
+			  /* calls g_message on anything it sees */
+			  char buf[4096];
+
+			  close (pipefd[0]);
+			  close (pipefd[1]);
+			  while (1)
+			    {
+			      ssize_t bytes = read(errfd[0], buf, 4095);
+			      if (bytes == 0)
+				break;
+			      else if (bytes > 0)
+				{
+				  buf[bytes] = '\0';
+				  (*errfunc)(errdata, buf, bytes);
+				}
+			      else
+				{
+				  snprintf(buf, 4095,
+					   "Read messages failed: %s\n",
+					   strerror(errno));
+				  (*errfunc)(errdata, buf, strlen(buf));
+				  break;
+				}
+			    }
+			  write(syncfd[1], "Done", 5);
+			  _exit(0);
+			}
+		      else	/* lpr monitor */
+			{
+			  (void) close(2);
+			  (void) close(1);
+			  dup2 (errfd[1], 2);
+			  dup2 (errfd[1], 1);
+			  close(errfd[1]);
+			  close (pipefd[0]);
+			  close (pipefd[1]);
+			}
+		    }
+		  close(syncfd[1]);
+		  execl("/bin/sh", "/bin/sh", "-c",
+			stpui_plist_get_output_to(printer), NULL);
+		  /* NOTREACHED */
+		  exit (1);
+		}
+	      else
+		{
+		  /*
+		   * If the print plugin gets SIGKILLed by gimp, we kill lpr
+		   * in turn.  If the plugin signals us with SIGUSR1 that it's
+		   * finished printing normally, we close our end of the pipe,
+		   * and go away.
+		   */
+		  close (0);
+		  close (1);
+		  close (2);
+		  close (syncfd[1]);
+		  close (pipefd[0]);
+		  while (usr1_interrupt == 0)
+		    {
+		      if (kill (ppid, 0) < 0)
+			{
+			  /* The print plugin has been killed!  */
+			  kill (opid, SIGTERM);
+			  waitpid (opid, &dummy, 0);
+			  close (pipefd[1]);
+			  /*
+			   * We do not want to allow cleanup before exiting.
+			   * The exiting parent has already closed the
+			   * connection  to the X server; if we try to clean
+			   * up, we'll notice that fact and complain.
+			   */
+			  _exit (0);
+			}
+		      sleep (5);
+		    }
+		  /* We got SIGUSR1.  */
+		  close (pipefd[1]);
+		  /*
+		   * We do not want to allow cleanup before exiting.
+		   * The exiting parent has already closed the connection
+		   * to the X server; if we try to clean up, we'll notice
+		   * that fact and complain.
+		   */
+		  _exit (0);
+		}
+	    }
+	  else
+	    {
+	      close (syncfd[1]);
+	      close (pipefd[0]);
+	      /* Parent process.  We generate the printer output. */
+	      prn = fdopen (pipefd[1], "w");
+	      /* and fall through... */
+	    }
+	}
     }
   else
     prn = fopen (stpui_plist_get_output_to(printer), "wb");
