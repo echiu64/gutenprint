@@ -1062,6 +1062,8 @@
     <family name="olympus">
       <printer name="Olympus P10" driver="olympus-p10" manufacturer="Olympus" model="2">
       </printer>
+      <printer name="Olympus P200" driver="olympus-p200" manufacturer="Olympus" model="4">
+      </printer>
       <printer name="Olympus P300" driver="olympus-p300" manufacturer="Olympus" model="0">
       </printer>
       <printer name="Olympus P400" driver="olympus-p400" manufacturer="Olympus" model="1">
