@@ -89,7 +89,6 @@ MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = \
 	COPYING \
-	ChangeLog \
 	Makefile \
 	Makefile.am \
 	README \
