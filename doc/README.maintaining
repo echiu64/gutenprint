@@ -1,6 +1,8 @@
 BUILD SCRIPTS: how they work and how to modify them
 ===================================================
 
+A guide to the GIMP-Print build system.
+
 
 Introduction
 ------------
@@ -15,27 +17,39 @@ conventions used in GIMP-Print.
 
 This file is split into the following sections:
 
-o Integration of the autotools
-o Normal use of the tools
-o configure.in.in
-o Makefile.am
-  - Automake basics
-  - Make and subdirectories
-  - Conditional compilation
-  - When automake is not enough...
-o aclocal
-o config.h
-o automake subtleties
-o libtool tricks
-o Testing changes to the build scripts
-o Further information
-o Known problems
+	o Integration of the autotools
+	o Normal use of the tools
+	  - Using CVS
+	  - Setting up the build scripts from CVS
+	  - Building the package
+	o configure.in.in
+	  - Layout
+	  - AC_SUBST
+	  - AC_DEFINE and AC_DEFINE_UNQUOTED
+	  - AM_CONDITIONAL
+	o Makefile.am
+	  - Automake basics
+	  - Make and subdirectories
+	  - Conditional compilation
+	  - When automake is not enough...
+	    + Rule syntax
+	    + Correctly referencing files
+	o aclocal
+	o config.h
+	o libgimpprint and libprintut
+	o automake subtleties
+	o libtool tricks
+	o Testing changes to the build scripts
+	o Further information
+	o Known problems
 
 I hope you find this useful. If any part was not clear, or there was something
 that you would like covering, please let me know!
 
-Roger Leigh <roger@whinlatter.uklinux.net> -- Mon, 19 Feb 2001 15:32:10 +0000
+ -- Roger Leigh <roger@whinlatter.uklinux.net>
 
+ $Id$
+ 
 
 1. Integration of the autotools
 -------------------------------
@@ -56,7 +70,7 @@ CVS, then they will already be present and the following will not be necessary.
 This is probably best demonstrated graphically.  The relationships between the
 files are as follows:
 
-During package setup (from CVS):
+During package setup (from CVS), running autogen.sh:
 
 	                           autogen.sh
 	          configure.in.in ------------> configure.in
@@ -86,27 +100,91 @@ Running configure:
 2. Normal use of the tools
 --------------------------
 
-Building from CVS:
-$ ./autogen.sh [options]
-$ [configure]
-$ make
-$ make [DESTDIR=... VAR1=val1 VARn=valn] install
+This section describes how to use the scripts for basic day-to-day working.
 
-If building from CVS, normally one runs 'autogen.sh' to generate all of the
-scripts.  Then the package can be built by running 'configure' and then 'make'.
-The built package can then be installed with 'make install'. Note that one can
-pass any options to autogen.sh that one would normally pass to configure.
-'./configure --help' will give a complete list of options one can use.
+2.1 Using CVS
+-------------
+The latest working copy of GIMP-Print (HEAD) and all prior releases are
+available from CVS either anonymously (read-only with CVS pserver) or 
+authenticated (read-write with SSH).  The modulename for GIMP-Print is 'print'.
+
+Anonymous CVS access:
+The module you wish to check out must be specified as the modulename.  When
+prompted for a password for anonymous, simply press the Enter key.
+
+	$ cvs -d:pserver:anonymous@cvs.gimp-print.sourceforge.net:/cvsroot/gimp-
+	print login 
+	$ cvs -z3 
+	-d:pserver:anonymous@cvs.gimp-print.sourceforge.net:/cvsroot/gimp-print
+	co modulename
+
+Developer CVS access via SSH:
+Only project developers can access the CVS tree via this method.  SSH1 must be
+installed on your client machine.  Substitute modulename and developername with
+the proper values.  Enter your site password when prompted.  See the sourceforge
+documentation for more details, including how to use RSA keys for 
+authentication.
+
+	$ export CVS_RSH=ssh 
+	$ cvs -z3
+	-ddevelopername@cvs.gimp-print.sourceforge.net:/cvsroot/gimp-print
+	co modulename 
+
+The CVS info documentation has very detailed explanations of everything that
+can be done with CVS.
+
+2.2 Setting up the build scripts from CVS
+-----------------------------------------
+After initially getting a copy of GIMP-Print from CVS, or if any of the scripts
+have changed, simply run autogen.sh:
+
+	$ ./autogen.sh [options]
+
+Note that one can pass any options to autogen.sh that one would normally pass
+to configure.  './configure --help' will give a complete list of options one
+can use.
+
+2.3 Building the package
+------------------------
+The normal method is to run the `configure' script, and then `make'.  The
+package can then be installed with 'make install':
+
+	$ ./configure
+	$ make
+	$ make [DESTDIR=... VAR1=val1 VARn=valn] install
 
 If the build scripts have been modified, it will not normally be necessary to
 re-run autogen.sh: the Makefiles will notice and regenerate themselves, running
 autoconf, automake, aclocal and configure again if needed.  If configure.in.in
 has been modified, re-run autogen.sh manually to regenerate configure.in.
 
-The build is only guaranteed to work if make is run from the top level. It
+The build is only guaranteed to work if make is run from the top level.  It
 should be possible to make individual subdirectories, but sometimes this will
 cause problems e.g. if it depends on some other directory that should have
 been built first.
+
+2.4 Extra make targets
+----------------------
+The Makefiles can do much more than build the package.  `targets' can be
+given to make, which do various things.  They are used as follows:
+
+	$ make target1 target2 ...
+
+Some of the targets available are:
+
+	all			same as make with no targets
+	clean			remove everything generated by 'make all'
+	distclean		as clean, and everything generated by configure
+	maintainer-clean	as distclean, and everything generated by
+				autogen.sh
+	install			install the package
+	uninstall		uninstall the package
+	tags			make tags tables
+	dist			make a distribution
+	distcheck		as dist, but test it as well
+	gimp-dist		package the for inclusion in the GIMP tree
+
+Other targets are available. See Makefile.in for details.
 
 
 3. configure.in.in
@@ -116,6 +194,8 @@ This file is a Bourne shell script with m4 macros embedded in it.  It is parsed
 with sed to produce configure.in, which has hard-coded release dates in it.
 autoconf expands the m4 macros to produce configure.
 
+3.1 Layout
+----------
 The file is split into mostly discrete sections:
 i.    Versioning details (including library versioning)
 ii.   autoconf and automake initialisation
@@ -132,9 +212,56 @@ xii.  CUPS path settings
 xiii. Definitions and substitutions
 xiv.  Parse and output files
 
-There is sometimes some overlap between sections, but any additions should go
-into the appropriate section, if at all possible.  A new section may be created
-if there is no suitable section.
+The ordering of sections is based solely on that some checks depend on checks
+being performed previously.  There is sometimes some overlap between sections,
+but any additions should go into the appropriate section, if at all possible.
+A new section may be created if there is no suitable section.
+
+3.2 AC_SUBST
+------------
+The main use of the configure script is to produce customised Makefiles, and
+other files too.  This is done through the use of AC_SUBST, which makes a
+variable get substituted in a file:
+
+	ESCPUTIL_BIN="escputil"
+	AC_SUBST(ESCPUTIL_BIN)
+
+will replace any instance of @ESCPUTIL_BIN@ in a template file (ending in
+.in'). E.g.
+
+	bin_PROGRAMS = @ESCPUTIL_BIN@
+
+3.3 AC_DEFINE and AC_DEFINE_UNQUOTED
+------------------------------------
+These macros are used to insert a #define in config.h.
+
+	AC_DEFINE(MACRO)
+	
+will cause '#define MACRO 1' to appear in config.h (this will be of the form
+'#undef MACRO' in config.h.in)
+
+AC_DEFINE_UNQUOTED is the same as AC_DEFINE, except that a second option
+can be used to define a string literal.
+
+3.4 AM_CONDITIONAL
+------------------
+This is used to make certain parts of a Makefile conditional depending on
+what happens in configure. It is used in the form:
+
+	AM_CONDITIONAL(NAME, test)
+	where name is the name of the conditional you define, and test
+	is a check that must return true for the conditional to be
+	defined.
+
+This is used in a Makefile.am as follows:
+
+	if NAME
+	[do stuff]
+	endif
+
+Not that only one line can be made conditional, and that you cannot also use
+normal make conditionals.  Its main use is to define macros, or to make a
+rule conditional.
 
 
 4. Makefile.am
@@ -163,39 +290,46 @@ should be ordered in this way.
 -------------------
 Automake parses Makefile.am, and generates rules in Makefile.in depending on
 what it finds.  There are `primary' variables, such as PROGRAMS, SCRIPTS,
-MANS, HEADERS and DATA that describe what type of source one is defining.
-These are coupled with a location to install into.  For example, these are a
-few standard locations: bindir, sbindir, mandir, datadir, pkgdatadir.  You can
+MANS, HEADERS and DATA that describe the type of source one is defining.  These
+are coupled with a location to install into.  For example, these are a few
+standard locations: bindir, sbindir, mandir, datadir, pkgdatadir.  You can
 define your own quite easily.  They are used together as follows:
+
 	bin_PROGRAMS = myprog 	[where bindir=$(prefix)/bin]
 	pkgdata_DATA = datafile1 datafile2 
 				[where pkgdatadir=$(prefix)/share/$(PACKAGE)]
+
 Note! the 'dir' postfix is stripped off the location. I.e. bindir -> bin.
 That is all there is to it! You can use these simple variables to describe
 everything in your source, and where is gets installed to.
     In the case of PROGRAMS, one also has to specify the SOURCES as well.
-E.g. we just said we were building a binary called 'myprog'.  We could
-therefore do:
+E.g. in the example above, a binary called `myprog' was defined.  The sources
+for this program are defined as follows:
+
 	myprog_SOURCES = myprog.c myprog.h
+
 automake will create all of the rules needed to build and install everything.
 An extra point is that suppose one doesn't want to install something?  For this
 there is a 'noinst' macro, so that noinst_PROGRAMS will not ever be installed.
 One might also want noinst_HEADERS. If one wanted to install headers, one would
 define
+
 	includedir=$(prefix)/include
 and then
 	pkgincludedir=$(includedir)/$(PACKAGE).
 Now
 	pkginclude_HEADERS = myheader.h
-will install the header into the correct location.
+
+will install the header into the correct location. Some of the locations in the
+above examples are defined by default. The others must be defined by hand.
     There are also some macros with specific functions.  Any file that is not
-mentioned in a macro, and also DATA and MANS, will have to be put in an
-EXTRA_DIST macro, so that automake knows to distribute them.  Also, some files
-might not be automatically cleaned. There are CLEANFILES, DISTCLEANFILES and
-MAINTAINERCLEANFILES macros for use with the 'clean', 'distclean' and
-'maintainer-clean' make targets respectively. Use with caution!  One does not
-want to clean things that cannot be recreated!  CLEANFILES should be
-regenerated with 'make' as part of the build process, DISTCLEANFILES by
+mentioned in a macro, and also and MANS, will have to be put in an EXTRA_DIST
+macro, so that automake knows to distribute them.
+    Also, some files might not be automatically cleaned. There are CLEANFILES,
+DISTCLEANFILES and MAINTAINERCLEANFILES macros for use with the 'clean',
+'distclean' and 'maintainer-clean' make targets respectively. Use with caution!
+One does not want to clean things that cannot be recreated!  CLEANFILES should
+be regenerated with 'make' as part of the build process, DISTCLEANFILES by
 configure (e.g. Makefiles) and MAINTAINERCLEANFILES should be created by
 'autogen.sh' and the programs it calls (e.g. Makefile.in's which are created by
 automake).
@@ -204,7 +338,9 @@ automake).
 ---------------------------
 If a Makefile.am has a SUBDIRS macro, make will recurse through these
 subdirectories, running make in each one.  e.g. in the top-level Makefile.am:
+
 	SUBDIRS = intl lib man src test po
+
 In this case the order of directories is critical: lib, src and test depend on
 intl being built and src and test depend on lib being built.  Also, test depends
 on libgimpprint in src and po must be run after all the source has been built
@@ -224,8 +360,10 @@ Most of the source is conditionally compiled according to the defaults in
 configure.in.in, which may be overridden by passing options to configure,
 or possibly by the results of configure checks.  Depending on the result,
 configure may substitute what to build into the generated Makefile, e.g.:
+
 	bin_PROGRAMS = @ESCPUTIL_BIN@
 	EXTRA_PROGRAMS = escputil
+
 It is important to have the EXTRA_ macro, as otherwise the source will
 not get distributed.
 
@@ -233,17 +371,36 @@ not get distributed.
 ----------------------------------
 When one wants to do something that is not within the scope of the facilities
 automake provides, one can write one's own rules, just like in any other
-Makefile. These that the following form:
-	target: prerequisites
+Makefile. 
+
+4.4.1 Rule syntax
+Make rules take the following form:
+
+	target ... : prerequisites ...
 		commands
+		...
+		...
 where
-	target is the name of a file to create
+	target is the name of a file (or files) to create
 	prerequisites are files that are needed to make the target
 	commands are commands to make the target
+
 The target will only be made if it does not exist or the timestamp on any of the
 prerequisites is newer, indicating that it is out of date.
     make is a complex program, and this is just the bare basic operation. See
 the GNU make info documentation for a detailed explanation.
+
+4.4.2 Correctly referencing files
+A file may be present either in the _source_ or _build_ directory, which may or
+may not be the same.  The source directory contains the unchanging source files,
+whereas the build directory contains all the generated files, such as
+Makefiles, object code, libraries and executables and also generated headers, C
+source and manual pages.  The macros to use are:
+
+	$(srcdir)	The equivalent directory in the source tree
+	.		The build directory (which is the current directory)
+	$(top_srcdir)	The highest level of the source tree
+	$(top_builddir)	The highest level of the build tree
 
 
 5. aclocal
@@ -271,7 +428,44 @@ something like:
 to acconfig.h
 
 
-7. automake subtleties
+7. libgimpprint and libprintut
+
+Any source that is to link with libgimpprint should include the gimp-print.h
+header. The right way to do this is as follows:
+
+	#ifdef INCLUDE_GIMP_PRINT_H
+	#  include INCLUDE_GIMP_PRINT_H
+	#else
+	#  include <gimp-print.h>
+	#endif
+
+This is so that an installed version of libgimpprint can be linked against.
+    To ensure proper linking, the Makefile.am should have the following:
+
+	program_LDADD = $(LIBGIMPPRINT_LIBS)
+
+The Makefile.am should also include any necessary CFLAGS with:
+
+	INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS)
+
+It is used with INCLUDES and not CFLAGS because is usually is used to specify
+header locations.
+    If a program uses the utility library libprintut, it must include
+libprintut.h:
+
+	#include "../../lib/libprintut.h"
+
+To link, the library must be specified in the same way as for libgimpprint:
+
+	program_LDADD = ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
+
+Note that if it is using gettext, then you have to specify it _twice_. If every
+binary is to link with it, then use LIBS instead:
+
+	LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
+
+
+8. automake subtleties
 ----------------------
 
 Automake parses Makefile.am to produce Makefile.in.  Makefile.am looks much like
@@ -280,6 +474,7 @@ entirely like a normal Makefile.  In particular, automake conditionals are not
 the same as make conditionals in that they only work for single lines, not
 whole blocks of lines.  Therefore if you want to make a rule conditional, just
 surround the 'target: dependencies' line:
+
 	if BUILD_CUPS
 	install-data-local: ppd
 	endif
@@ -288,11 +483,12 @@ surround the 'target: dependencies' line:
 		for ppdfile in * ; do \
 		  $(INSTALL_DATA) $$ppdfile $(DESTDIR)$(cups_modeldir) ; \
 		done
-Another gotcha is that automake adds rules of its own, so you must make sure that
-the names do not clash, or you may get obscure problems occurring.
+
+Another gotcha is that automake adds rules of its own, so you must make sure
+that the names do not clash, or you may get obscure problems occurring.
 
 
-8. libtool tricks
+9. libtool tricks
 -----------------
 
 libtool is used to create shared libraries.  One gotcha with libtool is that if
@@ -309,7 +505,7 @@ install rules do this automatically, but it you write your own, you must take
 this into consideration.
 
 
-9. Testing changes to the build scripts
+10. Testing changes to the build scripts
 ---------------------------------------
 
 If you make a change to one of the scripts, simply running autogen.sh and
@@ -317,28 +513,31 @@ seeing if 'make' and 'make install' work is not enough.  In particular, you
 must check that it does not break 'VPATH' builds where the source and build
 directories are not the same.
 To do this:
-    mkdir /var/tmp/tmp-build
-    cd /var/tmp/tmp-build
-    ~roger/gimp-print/current/configure --with-cups
-    make
-    make DESTDIR=/var/tmp/tmp-inst install
+
+	$ mkdir /var/tmp/tmp-build
+	$ cd /var/tmp/tmp-build
+	$ ~roger/gimp-print/current/configure --with-cups
+	$ make
+	$ make DESTDIR=/var/tmp/tmp-inst install
+
 You should also test that 'make install' works with and without DESTDIR set.
 Note that the current stable gettext release does not support DESTDIR, but the
 CVS version does.  The current gettext also breaks in VPATH due to
 MKINSTALLDIRS being wrongly defined. This is also fixed in CVS.
 
 
-10. Further information
+11. Further information
 -----------------------
 
 autoconf: autoconf.info
 automake: automake.info
+CVS:      cvs.info
 gettext:  gettext.info (but it's not very comprehensive)
 libtool:  libtool.info
 make:     make.info
 
 
-11. Known problems
+12. Known problems
 ------------------
 
 If you have a version of the Gimp older than about 1.1.27, your
