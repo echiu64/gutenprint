@@ -233,11 +233,6 @@ STP_ARG_ENABLE([debug],
                [turn on debugging in build],
                [ENABLE_DEBUG],
                [no])
-if test x$ENABLE_DEBUG = xyes ; then
-  CFLAGS="${CFLAGS:=} -g"
-else
-  CFLAGS="${CFLAGS:=} -O"
-fi
 
 STP_ARG_WITH_DETAILED([readline], ,
                       [use readline],
@@ -400,6 +395,15 @@ packagesrcdir=`cd $srcdir && pwd`
 AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}")
 
 dnl Compiler flags
+if test "$CC" = "gcc" ; then
+  :
+else
+  if test x$ENABLE_DEBUG = xyes ; then
+    CFLAGS="${CFLAGS:=} -g"
+  else
+    CFLAGS="${CFLAGS:=} -O"
+  fi
+fi
 if test "$CC" = "gcc" ; then
   GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -pedantic"
 fi
