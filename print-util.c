@@ -31,6 +31,18 @@
 #  define inline
 #endif /* !__GNUC__ */
 
+typedef struct
+{
+  unsigned steps;
+  unsigned short *composite;
+  unsigned short *red;
+  unsigned short *green;
+  unsigned short *blue;
+  unsigned shiftval;
+  unsigned bin_size;
+  unsigned bin_shift;
+} lut_t;
+
 /*
  * RGB to grayscale luminance constants...
  */
@@ -151,6 +163,7 @@ calc_rgb_to_hsl(unsigned short *rgb, double *hue, double *sat,
   double h, s, l;
   double min, max;
   double delta;
+  int maxval;
 
   red   = rgb[0] / 65535.0;
   green = rgb[1] / 65535.0;
@@ -158,12 +171,30 @@ calc_rgb_to_hsl(unsigned short *rgb, double *hue, double *sat,
 
   if (red > green)
     {
-      max = FMAX(red, blue);
+      if (red > blue)
+	{
+	  max = red;
+	  maxval = 0;
+	}
+      else
+	{
+	  max = blue;
+	  maxval = 2;
+	}
       min = FMIN(green, blue);
     }
   else
     {
-      max = FMAX(green, blue);
+      if (green > blue)
+	{
+	  max = green;
+	  maxval = 1;
+	}
+      else
+	{
+	  max = blue;
+	  maxval = 2;
+	}
       min = FMIN(red, blue);
     }
 
@@ -182,19 +213,17 @@ calc_rgb_to_hsl(unsigned short *rgb, double *hue, double *sat,
       else
 	s = delta / (2 - max - min);
 
-      if (red == max)
+      if (maxval == 0)
 	h = (green - blue) / delta;
-      else if (green == max)
+      else if (maxval == 1)
 	h = 2 + (blue - red) / delta;
       else
 	h = 4 + (red - green) / delta;
 
-      h /= 6.0;
-
       if (h < 0.0)
-	h += 1.0;
-      else if (h > 1.0)
-	h -= 1.0;
+	h += 6.0;
+      else if (h > 6.0)
+	h -= 6.0;
     }
 
   *hue = h;
@@ -206,15 +235,15 @@ static inline double
 hsl_value(double n1, double n2, double hue)
 {
   if (hue < 0)
-    hue += 1.0;
-  else if (hue > 1)
-    hue -= 1.0;
-  if (hue < (1.0 / 6.0))
-    return (n1 + (n2 - n1) * (hue * 6.0));
-  else if (hue < .5)
+    hue += 6.0;
+  else if (hue > 6)
+    hue -= 6.0;
+  if (hue < 1.0)
+    return (n1 + (n2 - n1) * hue);
+  else if (hue < 3.0)
     return (n2);
-  else if (hue < (4.0 / 6.0))
-    return (n1 + (n2 - n1) * (((4.0 / 6.0) - hue) * 6.0));
+  else if (hue < 4.0)
+    return (n1 + (n2 - n1) * (4.0 - hue));
   else
     return (n1);
 }
@@ -235,8 +264,9 @@ calc_hsl_to_rgb(unsigned short *rgb, double h, double s, double l)
   else
     {
       double m1, m2;
-      double h1 = h + (2.0 / 6.0);
-      double h2 = h - (2.0 / 6.0);
+      double h1, h2;
+      h1 = h + 2;
+      h2 = h - 2;
 
       if (l < .5)
 	m2 = l * (1 + s);
@@ -256,9 +286,10 @@ update_cmyk(unsigned short *rgb)
   int m = 65535 - rgb[1];
   int y = 65535 - rgb[2];
   int nc, nm, ny;
-  int k = FMIN(FMIN(c, m), y);
+  int k;
   if (c == m && c == y)
     return;
+  k = FMIN(FMIN(c, m), y);
 
   /*
    * This is an attempt to achieve better color balance.  The goal
@@ -293,64 +324,19 @@ update_cmyk(unsigned short *rgb)
   rgb[2] = 65535 - ny;
 }
 
+/*
+ * A lot of this stuff needs to be factored out of here
+ */
 static inline unsigned short
-lookup_value(unsigned short value, int lut_size, unsigned short *lut)
+lookup_value(unsigned short value, int lut_size, unsigned short *lut,
+	     unsigned shiftval, unsigned bin_size, unsigned bin_shift)
 {
-  unsigned shiftval;
-  unsigned bin_size;
-  unsigned bin_shift;
   unsigned subrange;
   unsigned remainder;
   unsigned below;
   unsigned above;
-  switch (lut_size)
-    {
-    case 65536:
-      return lut[value];
-      break;
-    case 16:
-      shiftval = 4;
-      break;
-    case 32:
-      shiftval = 5;
-      break;
-    case 64:
-      shiftval = 6;
-      break;
-    case 128:
-      shiftval = 7;
-      break;
-    case 256:
-      shiftval = 8;
-      break;
-    case 512:
-      shiftval = 9;
-      break;
-    case 1024:
-      shiftval = 10;
-      break;
-    case 2048:
-      shiftval = 11;
-      break;
-    case 4096:
-      shiftval = 12;
-      break;
-    case 8192:
-      shiftval = 13;
-      break;
-    case 16384:
-      shiftval = 14;
-      break;
-    case 32768:
-      shiftval = 15;
-      break;
-    default:
-      fprintf(stderr, "FATAL ERROR: lookup table not a power of 2!\n");
-      return 0;
-      break;
-    }
-  bin_size = 65536 / lut_size;
-  bin_shift = 16 - shiftval;
+  if (lut_size == 65536)
+    return lut[value];
   subrange = value >> bin_shift;
   remainder = value & (bin_size - 1);
   below = lut[subrange];
@@ -384,6 +370,7 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
   int i1 = -1;
   int use_previous = 0;
   int o0 = 0;
+  lut_t *lut = (lut_t *)(vars->lut);
   while (width > 0)
     {
       if (bpp == 1)
@@ -397,7 +384,7 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 	    {
 	      use_previous = 0;
 	      i0 = grayin[0];
-	      grayout[0] = vars->lut->composite[grayin[0]];
+	      grayout[0] = lut->composite[grayin[0]];
 	    }
 	}
       else
@@ -409,7 +396,7 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 	      use_previous = 0;
 	      i0 = grayin[0];
 	      i1 = grayin[1];
-	      grayout[0] = vars->lut->composite[grayin[0] * grayin[1] / 255 +
+	      grayout[0] = lut->composite[grayin[0] * grayin[1] / 255 +
 					       255 - grayin[1]];
 	    }
 	}
@@ -421,11 +408,10 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 	{
 	  if (vars->density != 1.0 && vars->image_type != IMAGE_MONOCHROME)
 	    {
-	      double t = ((double) grayout[0]) / 65536.0;
-	      t = (1.0 + ((t - 1.0) * vars->density));
+	      double t = (65535.0 + ((grayout[0] - 65535.0) * vars->density));
 	      if (t < 0.0)
 		t = 0.0;
-	      grayout[0] = (unsigned short) (t * 65536.0);
+	      grayout[0] = t + .5;
 	    }
 	  o0 = grayout[0];
 	}
@@ -453,6 +439,7 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
   int o0 = 0;
   int use_previous = 0;
   int i;
+  lut_t *lut = (lut_t *)(vars->lut);
   unsigned char	gray_cmap[256];		/* Grayscale colormap */
 
   /* Really should precompute this silly thing... */
@@ -474,7 +461,7 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 	    {
 	      use_previous = 0;
 	      i0 = indexed[0];
-	      gray[0] = vars->lut->composite[gray_cmap[i0]];
+	      gray[0] = lut->composite[gray_cmap[i0]];
 	    }
 	}
       else
@@ -486,7 +473,7 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 	      use_previous = 0;
 	      i0 = indexed[0];
 	      i1 = indexed[1];
-	      gray[0] = vars->lut->composite[gray_cmap[i0 * i1 / 255]
+	      gray[0] = lut->composite[gray_cmap[i0 * i1 / 255]
 					    + 255 - i1];
 	    }
 	}
@@ -498,11 +485,10 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 	{
 	  if (vars->density != 1.0 && vars->image_type != IMAGE_MONOCHROME)
 	    {
-	      double t = ((double) gray[0]) / 65536.0;
-	      t = (1.0 + ((t - 1.0) * vars->density));
+	      double t = (65535.0 + ((gray[0] - 65535.0) * vars->density));
 	      if (t < 0.0)
 		t = 0.0;
-	      gray[0] = (unsigned short) (t * 65536.0);
+	      gray[0] = t + .5;
 	    }
 	  o0 = gray[0];
 	}
@@ -531,6 +517,7 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
   int i3 = -1;
   int o0 = 0;
   int use_previous = 0;
+  lut_t *lut = (lut_t *)(vars->lut);
   while (width > 0)
     {
       if (bpp == 3)
@@ -546,7 +533,7 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	      i0 = rgb[0];
 	      i1 = rgb[1];
 	      i2 = rgb[2];
-	      gray[0] = vars->lut->composite[(rgb[0] * LUM_RED +
+	      gray[0] = lut->composite[(rgb[0] * LUM_RED +
 					    rgb[1] * LUM_GREEN +
 					    rgb[2] * LUM_BLUE) / 100];
 	    }
@@ -563,7 +550,7 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	      i2 = rgb[2];
 	      i3 = rgb[3];
 	  
-	      gray[0] = vars->lut->composite[((rgb[0] * LUM_RED +
+	      gray[0] = lut->composite[((rgb[0] * LUM_RED +
 					     rgb[1] * LUM_GREEN +
 					     rgb[2] * LUM_BLUE) *
 					    rgb[3] / 25500 + 255 - rgb[3])];
@@ -577,11 +564,10 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	{
 	  if (vars->density != 1.0 && vars->image_type != IMAGE_MONOCHROME)
 	    {
-	      double t = ((double) gray[0]) / 65536.0;
-	      t = (1.0 + ((t - 1.0) * vars->density));
+	      double t = (65535.0 + ((gray[0] - 65535.0) * vars->density));
 	      if (t < 0.0)
 		t = 0.0;
-	      gray[0] = (unsigned short) (t * 65536.0);
+	      gray[0] = t + .5;
 	    }
 	  o0 = gray[0];
 	}
@@ -615,6 +601,10 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
   int o1 = 0;
   int o2 = 0;
   int use_previous = 0;
+  lut_t *lut = (lut_t *)(vars->lut);
+  int compute_saturation = 1;
+  if (ssat > .99999 && ssat < 1.00001)
+    compute_saturation = 0;
   if (ssat > 1)
     isat = 1.0 / ssat;
   while (width > 0)
@@ -695,7 +685,8 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	}
       else
 	{
-	  if (ssat != 1.0 &&(rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
+	  if (compute_saturation &&
+	      (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
 	    {
 	      rgbout[0] = 65535 - rgbout[0];
 	      rgbout[1] = 65535 - rgbout[1];
@@ -717,12 +708,15 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	      rgbout[2] = 65535 - rgbout[2];
 	    }
 	  update_cmyk(rgbout);	/* Fiddle with the INPUT */
-	  rgbout[0] = lookup_value(rgbout[0], vars->lut->steps,
-				   vars->lut->red);
-	  rgbout[1] = lookup_value(rgbout[1], vars->lut->steps,
-				   vars->lut->green);
-	  rgbout[2] = lookup_value(rgbout[2], vars->lut->steps,
-				   vars->lut->blue);
+	  rgbout[0] = lookup_value(rgbout[0], lut->steps,
+				   lut->red, lut->shiftval,
+				   lut->bin_size, lut->bin_shift);
+	  rgbout[1] = lookup_value(rgbout[1], lut->steps,
+				   lut->green, lut->shiftval,
+				   lut->bin_size, lut->bin_shift);
+	  rgbout[2] = lookup_value(rgbout[2], lut->steps,
+				   lut->green, lut->shiftval,
+				   lut->bin_size, lut->bin_shift);
 	  if (ssat > 1.4 &&(rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
 	    {
 	      rgbout[0] = 65535 - rgbout[0];
@@ -795,6 +789,7 @@ gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
   int o0 = 0;
   int o1 = 0;
   int o2 = 0;
+  lut_t *lut = (lut_t *)(vars->lut);
   while (width > 0)
     {
       unsigned short trgb[3];
@@ -839,23 +834,25 @@ gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
       else
 	{
 	  update_cmyk(trgb);
-	  rgbout[0] = lookup_value(trgb[0], vars->lut->steps,
-				   vars->lut->red);
-	  rgbout[1] = lookup_value(trgb[1], vars->lut->steps,
-				   vars->lut->green);
-	  rgbout[2] = lookup_value(trgb[2], vars->lut->steps,
-				   vars->lut->blue);
-	  if (vars->density != 1.0)
+	  rgbout[0] = lookup_value(trgb[0], lut->steps,
+				   lut->red, lut->shiftval,
+				   lut->bin_size, lut->bin_shift);
+	  rgbout[1] = lookup_value(trgb[1], lut->steps,
+				   lut->green, lut->shiftval,
+				   lut->bin_size, lut->bin_shift);
+	  rgbout[2] = lookup_value(trgb[2], lut->steps,
+				   lut->green, lut->shiftval,
+				   lut->bin_size, lut->bin_shift);
+	  if (vars->saturation != 1.0)
 	    {
 	      double t;
 	      int i;
 	      for (i = 0; i < 3; i++)
 		{
-		  t = ((double) rgbout[i]) / 65536.0;
-		  t = (1.0 + ((t - 1.0) * vars->density));
+		  t = (65535.0 + ((rgbout[i] - 65535.0) * vars->density));
 		  if (t < 0.0)
 		    t = 0.0;
-		  rgbout[i] = (unsigned short) (t * 65536.0);
+		  rgbout[i] = t + .5;
 		}
 	    }
 	  o0 = rgbout[0];
@@ -882,6 +879,7 @@ fast_indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
   int o0 = 0;
   int o1 = 0;
   int o2 = 0;
+  lut_t *lut = (lut_t *)(vars->lut);
   int use_previous = 0;
   double isat = 1.0;
   if (vars->saturation > 1)
@@ -900,9 +898,9 @@ fast_indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	    {
 	      use_previous = 0;
 	      i0 = indexed[0];
-	      rgb[0] = vars->lut->red[cmap[i0 * 3 + 0]];
-	      rgb[1] = vars->lut->green[cmap[i0 * 3 + 1]];
-	      rgb[2] = vars->lut->blue[cmap[i0 * 3 + 2]];
+	      rgb[0] = lut->red[cmap[i0 * 3 + 0]];
+	      rgb[1] = lut->green[cmap[i0 * 3 + 1]];
+	      rgb[2] = lut->blue[cmap[i0 * 3 + 2]];
 	    }
 	}
       else
@@ -914,9 +912,9 @@ fast_indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	      use_previous = 0;
 	      i0 = indexed[0];
 	      i1 = indexed[1];
-	      rgb[0] = vars->lut->red[cmap[i0 * 3 + 0] * i1 / 255 + 255 - i1];
-	      rgb[1] = vars->lut->green[cmap[i0 * 3 + 1] * i1 / 255 + 255 -i1];
-	      rgb[2] = vars->lut->blue[cmap[i0 * 3 + 2] * i1 / 255 + 255 - i1];
+	      rgb[0] = lut->red[cmap[i0 * 3 + 0] * i1 / 255 + 255 - i1];
+	      rgb[1] = lut->green[cmap[i0 * 3 + 1] * i1 / 255 + 255 -i1];
+	      rgb[2] = lut->blue[cmap[i0 * 3 + 2] * i1 / 255 + 255 - i1];
 	    }
 	}
       if (use_previous)
@@ -948,11 +946,10 @@ fast_indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	      int i;
 	      for (i = 0; i < 3; i++)
 		{
-		  t = ((double) rgb[i]) / 65536.0;
-		  t = (1.0 + ((t - 1.0) * vars->density));
+		  t = (65535.0 + ((rgb[i] - 65535.0) * vars->density));
 		  if (t < 0.0)
 		    t = 0.0;
-		  rgb[i] = (unsigned short) (t * 65536.0);
+		  rgb[i] = t + .5;
 		}
 	    }
 	  o0 = rgb[0];
@@ -986,6 +983,7 @@ fast_rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
   int o0 = 0;
   int o1 = 0;
   int o2 = 0;
+  lut_t *lut = (lut_t *)(vars->lut);
   int use_previous = 0;
   double isat = 1.0;
   if (vars->saturation > 1)
@@ -1006,9 +1004,9 @@ fast_rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	      i0 = rgbin[0];
 	      i1 = rgbin[1];
 	      i2 = rgbin[2];
-	      rgbout[0] = vars->lut->red[rgbin[0]];
-	      rgbout[1] = vars->lut->green[rgbin[1]];
-	      rgbout[2] = vars->lut->blue[rgbin[2]];
+	      rgbout[0] = lut->red[rgbin[0]];
+	      rgbout[1] = lut->green[rgbin[1]];
+	      rgbout[2] = lut->blue[rgbin[2]];
 	    }
 	}
       else
@@ -1023,9 +1021,9 @@ fast_rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	      i1 = rgbin[1];
 	      i2 = rgbin[2];
 	      i3 = rgbin[3];
-	      rgbout[0] = vars->lut->red[i0 * i3 / 255 + 255 - i3];
-	      rgbout[1] = vars->lut->green[i1 * i3 / 255 + 255 - i3];
-	      rgbout[2] = vars->lut->blue[i2 * i3 / 255 + 255 - i3];
+	      rgbout[0] = lut->red[i0 * i3 / 255 + 255 - i3];
+	      rgbout[1] = lut->green[i1 * i3 / 255 + 255 - i3];
+	      rgbout[2] = lut->blue[i2 * i3 / 255 + 255 - i3];
 	    }
 	}
       if (use_previous)
@@ -1090,6 +1088,7 @@ fast_gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
   int o0 = 0;
   int o1 = 0;
   int o2 = 0;
+  lut_t *lut = (lut_t *)(vars->lut);
   while (width > 0)
     {
       if (bpp == 1)
@@ -1103,9 +1102,9 @@ fast_gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 	    {
 	      use_previous = 0;
 	      i0 = grayin[0];
-	      rgbout[0] = vars->lut->red[grayin[0]];
-	      rgbout[1] = vars->lut->green[grayin[0]];
-	      rgbout[2] = vars->lut->blue[grayin[0]];
+	      rgbout[0] = lut->red[grayin[0]];
+	      rgbout[1] = lut->green[grayin[0]];
+	      rgbout[2] = lut->blue[grayin[0]];
 	    }
 	}
       else
@@ -1119,9 +1118,9 @@ fast_gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 	      use_previous = 0;
 	      i0 = grayin[0];
 	      i1 = grayin[1];
-	      rgbout[0] = vars->lut->red[lookup];
-	      rgbout[1] = vars->lut->green[lookup];
-	      rgbout[2] = vars->lut->blue[lookup];
+	      rgbout[0] = lut->red[lookup];
+	      rgbout[1] = lut->green[lookup];
+	      rgbout[2] = lut->blue[lookup];
 	    }
 	}
       if (use_previous)
@@ -1138,11 +1137,10 @@ fast_gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 	      int i;
 	      for (i = 0; i < 3; i++)
 		{
-		  t = ((double) rgbout[i]) / 65536.0;
-		  t = (1.0 + ((t - 1.0) * vars->density));
+		  t = (65535.0 + ((rgbout[i] - 65535.0) * vars->density));
 		  if (t < 0.0)
 		    t = 0.0;
-		  rgbout[i] = (unsigned short) (t * 65536.0);
+		  rgbout[i] = t + .5;
 		}
 	    }
       	  o0 = rgbout[0];
@@ -1190,12 +1188,18 @@ merge_printvars(vars_t *user, const vars_t *print)
 static lut_t *
 allocate_lut(size_t steps)
 {
+  int i;
   lut_t *ret = malloc(sizeof(lut_t));
   ret->steps = steps;
   ret->composite = malloc(sizeof(unsigned short) * steps);
   ret->red = malloc(sizeof(unsigned short) * steps);
   ret->green = malloc(sizeof(unsigned short) * steps);
   ret->blue = malloc(sizeof(unsigned short) * steps);
+  ret->shiftval = 0;
+  for (i = 1; i < steps; i += i)
+    ret->shiftval++;
+  ret->bin_size = 65536 / steps;
+  ret->bin_shift = 16 - ret->shiftval;
   return ret;
 }
 
@@ -1204,22 +1208,23 @@ free_lut(vars_t *v)
 {
   if (v->lut)
     {
-      if (v->lut->composite)
-	free(v->lut->composite);
-      if (v->lut->red)
-	free(v->lut->red);
-      if (v->lut->green)
-	free(v->lut->green);
-      if (v->lut->blue)
-	free(v->lut->blue);
-      v->lut->steps = 0;
-      v->lut->composite = NULL;
-      v->lut->red = NULL;
-      v->lut->green = NULL;
-      v->lut->blue = NULL;
+      lut_t *lut = (lut_t *)(v->lut);
+      if (lut->composite)
+	free(lut->composite);
+      if (lut->red)
+	free(lut->red);
+      if (lut->green)
+	free(lut->green);
+      if (lut->blue)
+	free(lut->blue);
+      lut->steps = 0;
+      lut->composite = NULL;
+      lut->red = NULL;
+      lut->green = NULL;
+      lut->blue = NULL;
       free(v->lut);
+      v->lut = NULL;
     }
-  v->lut = NULL;
 }
 
 /* #define PRINT_LUT */
@@ -1247,8 +1252,10 @@ compute_lut(size_t steps, vars_t *uv)
   double app_gamma = uv->app_gamma;
   double brightness = uv->brightness;
   double screen_gamma = app_gamma / 1.7;	/* Why 1.7??? */
+  lut_t *lut;
 
   uv->lut = allocate_lut(steps);
+  lut = (lut_t *)(uv->lut);
   for (i = 0; i < steps; i ++)
     {
       double temp_pixel;
@@ -1314,42 +1321,42 @@ compute_lut(size_t steps, vars_t *uv)
        * Finally, fix up print gamma and scale
        */
 
-      pixel = 65535 * (1 - pow(pixel, print_gamma));
-      red_pixel = 65535 * (1 - pow(red_pixel, print_gamma));
-      green_pixel = 65535 * (1 - pow(green_pixel, print_gamma));
-      blue_pixel = 65535 * (1 - pow(blue_pixel, print_gamma));
+      pixel = 65535 * (1 - pow(pixel, print_gamma)) + .5;
+      red_pixel = 65535 * (1 - pow(red_pixel, print_gamma)) + .5;
+      green_pixel = 65535 * (1 - pow(green_pixel, print_gamma)) + .5;
+      blue_pixel = 65535 * (1 - pow(blue_pixel, print_gamma)) + .5;
 
       if (pixel <= 0.0)
-	uv->lut->composite[i] = 0;
+	lut->composite[i] = 0;
       else if (pixel >= 65535.0)
-	uv->lut->composite[i] = 65535;
+	lut->composite[i] = 65535;
       else
-	uv->lut->composite[i] = (unsigned)(pixel);
+	lut->composite[i] = (unsigned)(pixel);
 
       if (red_pixel <= 0.0)
-	uv->lut->red[i] = 0;
+	lut->red[i] = 0;
       else if (red_pixel >= 65535.0)
-	uv->lut->red[i] = 65535;
+	lut->red[i] = 65535;
       else
-	uv->lut->red[i] = (unsigned)(red_pixel);
+	lut->red[i] = (unsigned)(red_pixel);
 
       if (green_pixel <= 0.0)
-	uv->lut->green[i] = 0;
+	lut->green[i] = 0;
       else if (green_pixel >= 65535.0)
-	uv->lut->green[i] = 65535;
+	lut->green[i] = 65535;
       else
-	uv->lut->green[i] = (unsigned)(green_pixel);
+	lut->green[i] = (unsigned)(green_pixel);
 
       if (blue_pixel <= 0.0)
-	uv->lut->blue[i] = 0;
+	lut->blue[i] = 0;
       else if (blue_pixel >= 65535.0)
-	uv->lut->blue[i] = 65535;
+	lut->blue[i] = 65535;
       else
-	uv->lut->blue[i] = (unsigned)(blue_pixel);
+	lut->blue[i] = (unsigned)(blue_pixel);
 #ifdef PRINT_LUT
       fprintf(ltfile, "%3i  %5d  %5d  %5d  %5d  %f %f %f %f  %f %f %f  %f\n",
-	      i, uv->lut->composite[i], uv->lut->red[i],
-	      uv->lut->green[i], uv->lut->blue[i], pixel, red_pixel,
+	      i, lut->composite[i], lut->red[i],
+	      lut->green[i], lut->blue[i], pixel, red_pixel,
 	      green_pixel, blue_pixel, print_gamma, screen_gamma,
 	      print_gamma, app_gamma);
 #endif

@@ -2111,28 +2111,29 @@ escp2_print(const printer_t *printer,		/* I - Model */
   QUANT(0);
   for (y = 0; y < out_height; y ++)
   {
+    int duplicate_line = 1;
     if ((y & 255) == 0)
       Image_note_progress(image, y, out_height);
 
     if (errline != errlast)
     {
       errlast = errline;
+      duplicate_line = 0;
       Image_get_row(image, in, errline);
       (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv);
     }
     QUANT(1);
 
-
     if (nv.image_type == IMAGE_MONOCHROME)
-      dither_fastblack(out, y, dither, black);
+      dither_fastblack(out, y, dither, black, duplicate_line);
     else if (output_type == OUTPUT_GRAY)
-      dither_black(out, y, dither, black);
+      dither_black(out, y, dither, black, duplicate_line);
     else if (nv.image_type == IMAGE_FAST_COLOR)
       dither_cmyk_fast(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		       yellow, 0, black);
+		       yellow, 0, black, duplicate_line);
     else
       dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		  yellow, 0, black);
+		  yellow, 0, black, duplicate_line);
     QUANT(2);
 
     if (use_softweave)
