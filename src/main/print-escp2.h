@@ -515,6 +515,7 @@ extern const res_t *const stpi_escp2_pro_reslist[];
 extern const res_t *const stpi_escp2_sp5000_reslist[];
 extern const res_t *const stpi_escp2_720dpi_reslist[];
 extern const res_t *const stpi_escp2_720dpi_soft_reslist[];
+extern const res_t *const stpi_escp2_g3_720dpi_reslist[];
 extern const res_t *const stpi_escp2_1440dpi_reslist[];
 extern const res_t *const stpi_escp2_2880dpi_reslist[];
 extern const res_t *const stpi_escp2_2880_1440dpi_reslist[];

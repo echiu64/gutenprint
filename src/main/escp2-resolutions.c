@@ -299,7 +299,7 @@ const res_t *const stpi_escp2_sc500_reslist[] =
   NULL
 };
 
-const res_t *const stpi_escp2_720dpi_soft_reslist[] =
+const res_t *const stpi_escp2_g3_720dpi_reslist[] =
 {
   &r_360x90dpi,
 
@@ -312,6 +312,29 @@ const res_t *const stpi_escp2_720dpi_soft_reslist[] =
   &r_360x180dpi,
 
   &r_360mw,
+
+  &r_720x360sw,
+
+  &r_720sw,
+  &r_720hq,
+  &r_720hq2,
+
+  NULL
+};
+
+const res_t *const stpi_escp2_720dpi_soft_reslist[] =
+{
+  &r_360x90dpi,
+
+  &r_360x120sw,
+
+  &r_180dpi,
+
+  &r_360x240sw,
+
+  &r_360x180dpi,
+
+  &r_360sw,
 
   &r_720x360sw,
 

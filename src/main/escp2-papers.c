@@ -29,6 +29,7 @@
 #include <gimp-print/gimp-print-intl-internal.h>
 #include "print-escp2.h"
 
+#if 0
 static const char standard_sat_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 "<gimp-print>\n"
@@ -43,7 +44,24 @@ static const char standard_sat_adj[] =
 "</sequence>\n"
 "</curve>\n"
 "</gimp-print>\n";
+#endif
 
+static const char standard_sat_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
+/* B */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* M */
+/* M */  "1.00 0.95 0.90 0.90 0.90 0.90 0.90 0.90 "  /* R */
+/* R */  "0.90 0.95 0.95 1.00 1.00 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* G */
+/* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
+#if 0
 static const char standard_lum_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 "<gimp-print>\n"
@@ -55,6 +73,22 @@ static const char standard_lum_adj[] =
 /* R */  "0.95 0.96 0.97 0.98 0.99 1.00 1.00 1.00 "  /* Y */
 /* Y */  "1.00 0.97 0.94 0.91 0.87 0.80 0.68 0.61 "  /* G */
 /* G */  "0.54 0.54 0.54 0.54 0.53 0.53 0.52 0.50 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+#endif
+
+static const char standard_lum_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "0.50 0.52 0.56 0.60 0.66 0.71 0.74 0.77 "  /* B */
+/* B */  "0.81 0.79 0.74 0.68 0.70 0.74 0.77 0.82 "  /* M */
+/* M */  "0.88 0.93 0.95 0.97 0.97 0.96 0.95 0.95 "  /* R */
+/* R */  "0.95 0.96 0.97 0.98 0.99 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 0.97 0.94 0.92 0.90 0.88 0.85 0.79 "  /* G */
+/* G */  "0.69 0.64 0.58 0.54 0.54 0.54 0.53 0.51 "  /* C */
 "</sequence>\n"
 "</curve>\n"
 "</gimp-print>\n";
@@ -73,6 +107,7 @@ static const char standard_hue_adj[] =
 "</sequence>\n"
 "</curve>\n"
 "</gimp-print>\n";
+
 
 static const char photo2_sat_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -94,12 +129,12 @@ static const char photo2_lum_adj[] =
 "<gimp-print>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-/* C */  "0.52 0.55 0.62 0.68 0.73 0.78 0.78 0.75 "  /* B */
-/* B */  "0.72 0.70 0.70 0.72 0.78 0.83 0.85 0.88 "  /* M */
-/* M */  "0.98 0.97 0.96 0.95 0.95 0.95 0.95 0.95 "  /* R */
-/* R */  "0.95 0.96 0.97 0.98 0.99 1.00 1.00 1.00 "  /* Y */
-/* Y */  "1.00 0.97 0.94 0.91 0.87 0.80 0.68 0.61 "  /* G */
-/* G */  "0.54 0.54 0.54 0.54 0.53 0.53 0.52 0.50 "  /* C */
+/* C */  "0.39 0.42 0.47 0.54 0.61 0.67 0.73 0.77 "  /* B */
+/* B */  "0.77 0.74 0.67 0.67 0.68 0.71 0.74 0.77 "  /* M */
+/* M */  "0.81 0.86 0.92 0.97 1.00 1.00 1.00 1.00 "  /* R */
+/* R */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 1.00 1.00 0.99 0.98 0.96 0.94 0.90 "  /* G */
+/* G */  "0.85 0.65 0.50 0.41 0.41 0.40 0.39 0.39 "  /* C */
 "</sequence>\n"
 "</curve>\n"
 "</gimp-print>\n";
@@ -109,27 +144,12 @@ static const char photo2_hue_adj[] =
 "<gimp-print>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
-/* C */  "0.00 0.06 0.10 0.10 0.06 -.01 -.09 -.17 "  /* B */
-/* B */  "-.25 -.33 -.38 -.38 -.36 -.34 -.34 -.34 "  /* M */
-/* M */  "-.34 -.34 -.36 -.40 -.50 -.40 -.30 -.20 "  /* R */
+/* C */  "0.00 0.00 0.00 -.02 -.06 -.12 -.18 -.24 "  /* B */
+/* B */  "-.30 -.28 -.28 -.26 -.24 -.22 -.20 -.20 "  /* M */
+/* M */  "-.22 -.28 -.34 -.40 -.50 -.45 -.40 -.30 "  /* R */
 /* R */  "-.12 -.07 -.04 -.02 0.00 0.00 0.00 0.00 "  /* Y */
-/* Y */  "0.00 0.00 0.00 -.05 -.10 -.15 -.22 -.24 "  /* G */
-/* G */  "-.26 -.30 -.33 -.28 -.25 -.20 -.13 -.06 "  /* C */
-"</sequence>\n"
-"</curve>\n"
-"</gimp-print>\n";
-
-static const char photo2_luster_lum_adj[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-/* C */  "0.60 0.62 0.68 0.72 0.76 0.78 0.78 0.75 "  /* B */
-/* B */  "0.72 0.70 0.70 0.72 0.78 0.83 0.85 0.88 "  /* M */
-/* M */  "0.98 0.97 0.96 0.95 0.95 0.95 0.95 0.95 "  /* R */
-/* R */  "0.95 0.96 0.97 0.98 0.99 1.00 1.00 1.00 "  /* Y */
-/* Y */  "1.00 0.95 0.85 0.78 0.74 0.72 0.70 0.68 "  /* G */
-/* G */  "0.63 0.63 0.62 0.62 0.62 0.62 0.62 0.60 "  /* C */
+/* Y */  "0.00 -.00 -.06 -.12 -.18 -.26 -.34 -.42 "  /* G */
+/* G */  "-.50 -.44 -.38 -.31 -.25 -.20 -.13 -.06 "  /* C */
 "</sequence>\n"
 "</curve>\n"
 "</gimp-print>\n";
@@ -144,7 +164,7 @@ static const char sp960_sat_adj[] =
 /* B */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* M */
 /* M */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* R */
 /* R */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* Y */
-/* Y */  "1.00 1.00 1.05 1.10 1.20 1.10 1.05 1.00 "  /* G */
+/* Y */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* G */
 /* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
 "</sequence>\n"
 "</curve>\n"
@@ -155,12 +175,12 @@ static const char sp960_lum_adj[] =
 "<gimp-print>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-/* C */  "0.45 0.49 0.52 0.58 0.65 0.76 0.85 0.75 "  /* B */
-/* B */  "0.68 0.68 0.68 0.68 0.72 0.75 0.85 0.95 "  /* M */
-/* M */  "1.05 1.05 1.05 1.05 1.05 1.05 1.05 1.05 "  /* R */
-/* R */  "1.05 1.05 1.05 1.00 1.00 1.00 1.00 1.00 "  /* Y */
-/* Y */  "1.00 0.95 0.90 0.85 0.80 0.72 0.61 0.54 "  /* G */
-/* G */  "0.48 0.46 0.46 0.46 0.46 0.46 0.46 0.46 "  /* C */
+/* C */  "0.42 0.44 0.50 0.55 0.62 0.68 0.73 0.76 "  /* B */
+/* B */  "0.78 0.72 0.65 0.65 0.67 0.70 0.75 0.80 "  /* M */
+/* M */  "0.90 0.93 0.96 0.98 1.00 1.00 1.00 1.00 "  /* R */
+/* R */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 0.99 0.98 0.97 0.95 0.92 0.90 0.84 "  /* G */
+/* G */  "0.78 0.61 0.50 0.42 0.43 0.43 0.42 0.42 "  /* C */
 "</sequence>\n"
 "</curve>\n"
 "</gimp-print>\n";
@@ -171,108 +191,16 @@ static const char sp960_hue_adj[] =
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
 /* C */  "0.00 0.06 0.10 0.10 0.06 -.01 -.09 -.17 "  /* B */
-/* B */  "-.25 -.33 -.38 -.40 -.42 -.44 -.46 -.48 "  /* M */
-/* M */  "-.50 -.50 -.50 -.52 -.55 -.50 -.40 -.30 "  /* R */
+/* B */  "-.25 -.28 -.28 -.26 -.24 -.22 -.20 -.20 "  /* M */
+/* M */  "-.22 -.28 -.34 -.40 -.50 -.45 -.40 -.30 "  /* R */
 /* R */  "-.22 -.13 -.04 -.02 0.00 0.00 0.00 0.00 "  /* Y */
-/* Y */  "0.00 0.00 -.01 -.07 -.13 -.19 -.25 -.30 "  /* G */
-/* G */  "-.32 -.34 -.36 -.34 -.28 -.21 -.14 -.07 "  /* C */
+/* Y */  "0.00 -.00 -.06 -.14 -.22 -.30 -.38 -.44 "  /* G */
+/* G */  "-.50 -.44 -.38 -.31 -.25 -.20 -.13 -.06 "  /* C */
 "</sequence>\n"
 "</curve>\n"
 "</gimp-print>\n";
-
 
 static const char sp960_matte_sat_adj[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-/* C */  "1.00 1.05 1.10 1.10 1.10 1.10 1.10 1.10 "  /* B */
-/* B */  "1.10 1.10 1.10 1.10 1.10 1.10 1.10 1.10 "  /* M */
-/* M */  "1.10 1.10 1.10 1.10 1.10 1.10 1.10 1.10 "  /* R */
-/* R */  "1.10 1.10 1.10 1.05 1.00 1.00 1.00 1.00 "  /* Y */
-/* Y */  "1.00 1.00 1.05 1.10 1.20 1.20 1.15 1.10 "  /* G */
-/* G */  "1.10 1.10 1.05 1.00 1.00 1.00 1.00 1.00 "  /* C */
-"</sequence>\n"
-"</curve>\n"
-"</gimp-print>\n";
-
-static const char sp960_matte_lum_adj[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-/* C */  "0.45 0.48 0.52 0.56 0.61 0.73 0.82 0.74 "  /* B */
-/* B */  "0.68 0.68 0.68 0.68 0.72 0.75 0.85 0.95 "  /* M */
-/* M */  "1.05 1.05 1.05 1.05 1.05 1.05 1.05 1.05 "  /* R */
-/* R */  "1.05 1.05 1.05 1.00 1.00 1.00 1.00 1.00 "  /* Y */
-/* Y */  "1.00 0.95 0.90 0.85 0.80 0.72 0.61 0.54 "  /* G */
-/* G */  "0.48 0.46 0.46 0.46 0.46 0.46 0.46 0.46 "  /* C */
-"</sequence>\n"
-"</curve>\n"
-"</gimp-print>\n";
-
-static const char sp960_matte_hue_adj[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
-/* C */  "0.00 0.05 0.08 0.08 0.03 -.03 -.10 -.17 "  /* B */
-/* B */  "-.25 -.33 -.38 -.40 -.42 -.44 -.46 -.48 "  /* M */
-/* M */  "-.50 -.50 -.50 -.52 -.55 -.50 -.40 -.30 "  /* R */
-/* R */  "-.22 -.13 -.04 -.02 0.00 0.00 0.00 0.00 "  /* Y */
-/* Y */  "0.00 0.00 -.01 -.07 -.13 -.19 -.25 -.30 "  /* G */
-/* G */  "-.32 -.34 -.36 -.34 -.28 -.21 -.14 -.07 "  /* C */
-"</sequence>\n"
-"</curve>\n"
-"</gimp-print>\n";
-
-
-static const char sp960_pgpp_sat_adj[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-/* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
-/* B */  "1.00 1.00 1.00 1.00 1.00 1.00 1.10 1.20 "  /* M */
-/* M */  "1.20 1.20 1.20 1.20 1.20 1.20 1.20 1.20 "  /* R */
-/* R */  "1.20 1.20 1.15 1.10 1.05 1.00 1.00 1.00 "  /* Y */
-/* Y */  "1.00 1.00 1.00 1.10 1.20 1.30 1.40 1.50 "  /* G */
-/* G */  "1.50 1.40 1.30 1.20 1.10 1.00 1.00 1.00 "  /* C */
-"</sequence>\n"
-"</curve>\n"
-"</gimp-print>\n";
-
-static const char sp960_pgpp_lum_adj[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-/* C */  "0.49 0.52 0.58 0.65 0.73 0.77 0.77 0.75 "  /* B */
-/* B */  "0.69 0.69 0.72 0.80 0.88 0.97 1.10 1.25 "  /* M */
-/* M */  "1.25 1.25 1.22 1.18 1.15 1.15 1.15 1.15 "  /* R */
-/* R */  "1.15 1.15 1.12 1.09 1.06 1.03 1.02 1.01 "  /* Y */
-/* Y */  "1.00 0.95 0.90 0.85 0.80 0.72 0.61 0.54 "  /* G */
-/* G */  "0.54 0.54 0.54 0.54 0.53 0.53 0.52 0.50 "  /* C */
-"</sequence>\n"
-"</curve>\n"
-"</gimp-print>\n";
-
-static const char sp960_pgpp_hue_adj[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
-/* C */  "0.00 0.05 0.08 0.08 0.03 -.03 -.10 -.17 "  /* B */
-/* B */  "-.25 -.33 -.38 -.40 -.42 -.44 -.46 -.48 "  /* M */
-/* M */  "-.50 -.50 -.50 -.52 -.55 -.50 -.40 -.30 "  /* R */
-/* R */  "-.22 -.13 -.04 -.02 0.00 0.00 0.00 0.00 "  /* Y */
-/* Y */  "0.00 0.00 -.01 -.07 -.13 -.19 -.25 -.30 "  /* G */
-/* G */  "-.32 -.34 -.36 -.34 -.28 -.21 -.14 -.07 "  /* C */
-"</sequence>\n"
-"</curve>\n"
-"</gimp-print>\n";
-
-static const char ultra_photo_sat_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 "<gimp-print>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
@@ -287,35 +215,36 @@ static const char ultra_photo_sat_adj[] =
 "</curve>\n"
 "</gimp-print>\n";
 
-static const char ultra_photo_lum_adj[] =
+static const char sp960_matte_lum_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 "<gimp-print>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-/* C */  "0.28 0.29 0.31 0.32 0.33 0.36 0.43 0.52 "  /* B */
-/* B */  "0.62 0.58 0.58 0.58 0.58 0.64 0.70 0.80 "  /* M */
-/* M */  "0.94 0.97 0.98 0.99 1.00 1.02 1.03 1.03 "  /* R */
-/* R */  "1.03 1.03 1.03 1.02 1.01 1.00 1.00 1.00 "  /* Y */
-/* Y */  "1.00 0.94 0.88 0.81 0.70 0.56 0.46 0.39 "  /* G */
-/* G */  "0.35 0.35 0.34 0.33 0.32 0.31 0.30 0.28 "  /* C */
+/* C */  "0.42 0.48 0.56 0.63 0.71 0.78 0.83 0.86 "  /* B */
+/* B */  "0.86 0.75 0.67 0.67 0.67 0.70 0.75 0.80 "  /* M */
+/* M */  "0.90 0.93 0.96 0.98 1.00 1.00 1.00 1.00 "  /* R */
+/* R */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 0.99 0.98 0.97 0.95 0.92 0.90 0.84 "  /* G */
+/* G */  "0.78 0.61 0.50 0.42 0.43 0.43 0.42 0.42 "  /* C */
 "</sequence>\n"
 "</curve>\n"
 "</gimp-print>\n";
 
-static const char ultra_photo_hue_adj[] =
+static const char sp960_matte_hue_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 "<gimp-print>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
-/* C */  "-.06 0.06 0.18 0.30 0.30 0.25 0.16 0.08 "  /* B */
-/* B */  "0.00 -.10 -.20 -.24 -.24 -.25 -.26 -.27 "  /* M */
-/* M */  "-.28 -.32 -.36 -.40 -.45 -.40 -.30 -.20 "  /* R */
-/* R */  "-.12 -.07 -.04 -.02 0.00 0.00 0.00 0.00 "  /* Y */
-/* Y */  "0.00 -.04 -.09 -.16 -.23 -.29 -.33 -.36 "  /* G */
-/* G */  "-.38 -.40 -.42 -.38 -.33 -.25 -.18 -.12 "  /* C */
+/* C */  "0.00 -.02 -.04 -.06 -.12 -.18 -.25 -.30 "  /* B */
+/* B */  "-.30 -.28 -.28 -.26 -.24 -.22 -.20 -.20 "  /* M */
+/* M */  "-.22 -.28 -.34 -.40 -.50 -.45 -.40 -.30 "  /* R */
+/* R */  "-.22 -.13 -.04 -.02 0.00 0.00 0.00 0.00 "  /* Y */
+/* Y */  "0.00 -.00 -.06 -.14 -.22 -.30 -.38 -.44 "  /* G */
+/* G */  "-.50 -.44 -.38 -.31 -.25 -.20 -.13 -.06 "  /* C */
 "</sequence>\n"
 "</curve>\n"
 "</gimp-print>\n";
+
 
 static const char ultra_matte_sat_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -337,12 +266,12 @@ static const char ultra_matte_lum_adj[] =
 "<gimp-print>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-/* C */  "0.31 0.33 0.35 0.42 0.51 0.65 0.75 0.70 "  /* B */
-/* B */  "0.64 0.65 0.67 0.69 0.72 0.80 0.89 0.95 "  /* M */
-/* M */  "0.97 0.97 0.96 0.95 0.95 0.95 0.95 0.95 "  /* R */
+/* C */  "0.31 0.34 0.38 0.45 0.52 0.58 0.65 0.70 "  /* B */
+/* B */  "0.75 0.71 0.65 0.65 0.67 0.70 0.75 0.80 "  /* M */
+/* M */  "0.90 0.93 0.96 0.97 0.97 0.96 0.95 0.95 "  /* R */
 /* R */  "0.95 0.96 0.97 0.98 0.99 1.00 1.00 1.00 "  /* Y */
-/* Y */  "1.00 0.96 0.92 0.85 0.74 0.60 0.50 0.42 "  /* G */
-/* G */  "0.36 0.36 0.35 0.34 0.33 0.32 0.31 0.31 "  /* C */
+/* Y */  "1.00 0.98 0.96 0.94 0.92 0.89 0.85 0.80 "  /* G */
+/* G */  "0.74 0.55 0.44 0.37 0.35 0.34 0.32 0.31 "  /* C */
 "</sequence>\n"
 "</curve>\n"
 "</gimp-print>\n";
@@ -356,7 +285,52 @@ static const char ultra_matte_hue_adj[] =
 /* B */  "-.25 -.28 -.28 -.26 -.24 -.22 -.20 -.20 "  /* M */
 /* M */  "-.22 -.28 -.34 -.40 -.50 -.40 -.30 -.20 "  /* R */
 /* R */  "-.12 -.07 -.04 -.02 0.00 0.00 0.00 0.00 "  /* Y */
-/* Y */  "0.00 -.06 -.12 -.18 -.25 -.31 -.38 -.44 "  /* G */
+/* Y */  "0.00 -.00 -.06 -.14 -.22 -.30 -.38 -.44 "  /* G */
+/* G */  "-.50 -.44 -.38 -.31 -.25 -.20 -.13 -.06 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
+static const char ultra_glossy_sat_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
+/* B */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* M */
+/* M */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* R */
+/* R */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* G */
+/* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
+static const char ultra_glossy_lum_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "0.31 0.35 0.43 0.48 0.55 0.60 0.65 0.70 "  /* B */
+/* B */  "0.75 0.71 0.65 0.65 0.67 0.70 0.75 0.80 "  /* M */
+/* M */  "0.90 0.93 0.96 0.97 0.97 0.96 0.95 0.95 "  /* R */
+/* R */  "0.95 0.96 0.97 0.98 0.99 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 0.98 0.96 0.94 0.92 0.89 0.85 0.80 "  /* G */
+/* G */  "0.74 0.55 0.44 0.37 0.35 0.34 0.32 0.31 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
+static const char ultra_glossy_hue_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
+/* C */  "0.00 0.06 0.10 0.10 0.06 -.01 -.09 -.17 "  /* B */
+/* B */  "-.25 -.28 -.28 -.26 -.24 -.22 -.20 -.20 "  /* M */
+/* M */  "-.22 -.28 -.34 -.40 -.50 -.40 -.30 -.20 "  /* R */
+/* R */  "-.12 -.07 -.04 -.02 0.00 0.00 0.00 0.00 "  /* Y */
+/* Y */  "0.00 -.00 -.06 -.14 -.22 -.30 -.38 -.44 "  /* G */
 /* G */  "-.50 -.44 -.38 -.31 -.25 -.20 -.13 -.06 "  /* C */
 "</sequence>\n"
 "</curve>\n"
@@ -468,43 +442,43 @@ DECLARE_PAPER_ADJUSTMENTS(photo);
 
 static const paper_adjustment_t photo2_adjustments[] =
 {
-  { "Plain", 0.615, .5, 0.5, .1, .9, 1, 1, 1, 1, 1, 1,
+  { "Plain", 0.738, .5, 0.5, .1, .9, 1, 1, 1, 1, 1, 1.2,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
-  { "PlainFast", 0.615, .5, 0.5, .1, .9, 1, 1, 1, 1, 1, 1,
+  { "PlainFast", 0.738, .5, 0.5, .1, .9, 1, 1, 1, 1, 1, 1.2,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
-  { "Postcard", 0.83, .5, 0.5, .1, .9, 1, 1, 1, 1, 1, 1,
+  { "Postcard", 0.83, .5, 0.5, .1, .9, 1, 1, 1, 1, 1, 1.2,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
-  { "GlossyFilm", 1.00, 1.0, 0.5, .2, .999, 1, 1, 1, 1, 1, 1,
+  { "GlossyFilm", 1.00, .5, 0.5, .2, .999, 1, 1, 1, 1, 1, 1,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
-  { "Transparency", 1.00, .75, 0.25, .2, .999, 1, 1, 1, 1, 1, 1,
+  { "Transparency", 1.00, .5, 0.25, .2, .999, 1, 1, 1, 1, 1, 1,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
-  { "Envelope", 0.615, .5, 0.5, .1, .9, 1, 1, 1, 1, 1, 1,
+  { "Envelope", 0.738, .5, 0.5, .1, .9, 1, 1, 1, 1, 1, 1.2,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
-  { "BackFilm", 1.00, .75, 0.25, .2, .999, 1, 1, 1, 1, 1, 1,
+  { "BackFilm", 1.00, .5, 0.25, .2, .999, 1, 1, 1, 1, 1, 1,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
-  { "Matte", 0.85, .8, 0.25, .2, .999, 1, 1, 1, 1, 1, 1,
+  { "Matte", 0.85, .75, 0.4, .3, .999, 1, 1, 1, 1, 1, 1.1,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
-  { "MatteHeavy", 0.85, 1.0, 0.25, .2, .999, 1, 1, 1, 1, 1, 1,
+  { "MatteHeavy", 0.85, .75, .3, .2, .999, 1, 1, 1, 1, 1, 1.1,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
-  { "Inkjet", 0.85, .5, 0.5, .15, .9, 1, 1, 1, 1, 1, 1,
+  { "Inkjet", 0.85, .5, 0.5, .15, .9, 1, 1, 1, 1, 1, 1.1,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
-  { "Coated", 1.00, 1.0, 0.25, .2, .999, 1, 1, 1, 1, 1, 1,
+  { "Coated", 1.00, .5, 0.25, .2, .999, 1, 1, 1, 1, 1, 1.1,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
-  { "Photo", 1.00, 1.0, 0.25, .30, .999, 1, 1, 1, 1, 1, 1,
+  { "Photo", 1.00, .5, 0.25, .2, .999, 1, 1, 1, 1, 1, 1.1,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
-  { "GlossyPhoto", 1.00, 1.0, 0.25, .3, .999, .86, 1, .99, 1, 1, 1,
+  { "GlossyPhoto", 1.0, .5, 0.5, .3, .999, 1, 1, 1, 1, 1, 1,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
-  { "Semigloss", 1.00, 1.0, 0.25, .3, .999, .86, 1, .99, 1, 1, 1,
+  { "Semigloss", 1.0, .5, 0.5, .3, .999, 1, 1, 1, 1, 1, 1,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
-  { "Luster", 1.00, 1.0, 0.25, .3, .999, .86, 1, .99, 1, 1, 1,
-    photo2_hue_adj, photo2_luster_lum_adj, photo2_sat_adj },
-  { "GlossyPaper", 1.00, 1.0, 0.25, .2, .999, 1, 1, 1, 1, 1, 1,
+  { "Luster", 1.0, .5, 0.5, .3, .999, 1, 1, 1, 1, 1, 1,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
-  { "Ilford", .85, 1.0, 0.25, .2, .999, 1, 1, 1, 1, 1, 1,
+  { "GlossyPaper", 1.00, .5, 0.25, .2, .999, 1, 1, 1, 1, 1, 1,
+    photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
+  { "Ilford", .85, .5, 0.25, .2, .999, 1, 1, 1, 1, 1, 1,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj  },
-  { "ColorLife", 1.00, 1.0, 0.25, .2, .9, 1, 1, 1, 1, 1, 1,
+  { "ColorLife", 1.00, .5, 0.25, .2, .9, 1, 1, 1, 1, 1, 1.1,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
-  { "Other", 0.615, .5, 0.5, .1, .9, 1, 1, 1, 1, 1, 1,
+  { "Other", 0.738, .5, 0.5, .1, .9, 1, 1, 1, 1, 1, 1.2,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
 };
 
@@ -519,13 +493,13 @@ static const paper_adjustment_t sp960_adjustments[] =
   { "Postcard",     0.90, .2,  0.4, .1,   .9,   .9, 1, 1, 1, 1, 1,
     sp960_matte_hue_adj, sp960_matte_lum_adj, sp960_matte_sat_adj },
   { "GlossyFilm",   0.9,  .3,  0.4, .2,   .999, 1, 1, 1, 1, 1, 1,
-    sp960_hue_adj, sp960_lum_adj, sp960_sat_adj },
+    sp960_matte_hue_adj, sp960_matte_lum_adj, sp960_matte_sat_adj },
   { "Transparency", 0.9,  .2,  0.4, .1,   .9,   1, 1, 1, 1, 1, 1,
-    sp960_hue_adj, sp960_lum_adj, sp960_sat_adj },
+    sp960_matte_hue_adj, sp960_matte_lum_adj, sp960_matte_sat_adj },
   { "Envelope",     0.86, .2,  0.4, .1,   .9,   1, 1, 1, 1, 1, 1,
     sp960_matte_hue_adj, sp960_matte_lum_adj, sp960_matte_sat_adj },
   { "BackFilm",     0.9,  .2,  0.4, .1,   .9,   1, 1, 1, 1, 1, 1,
-    sp960_hue_adj, sp960_lum_adj, sp960_sat_adj },
+    sp960_matte_hue_adj, sp960_matte_lum_adj, sp960_matte_sat_adj },
   { "Matte",        0.9,  .25, 0.4, .2,   .9,   1, 1, 1, 1, 1, 1,
     sp960_matte_hue_adj, sp960_matte_lum_adj, sp960_matte_sat_adj },
   { "MatteHeavy",   0.9,  .3,  0.4, .2,   .999, 1, 1, 1, 1, 1, 1,
@@ -533,9 +507,9 @@ static const paper_adjustment_t sp960_adjustments[] =
   { "Inkjet",       0.9,  .2,  0.4, .15,  .9,   1, 1, 1, 1, 1, 1,
     sp960_matte_hue_adj, sp960_matte_lum_adj, sp960_matte_sat_adj },
   { "Coated",       0.9,  .3,  0.4, .2,   .999, 1, 1, 1, 1, 1, 1,
-    sp960_hue_adj, sp960_lum_adj, sp960_sat_adj },
+    sp960_matte_hue_adj, sp960_matte_lum_adj, sp960_matte_sat_adj },
   { "Photo",        0.9,  .3,  0.4, .2,   .999, 1, 1, 1, 1, 1, 1,
-    sp960_hue_adj, sp960_lum_adj, sp960_sat_adj },
+    sp960_matte_hue_adj, sp960_matte_lum_adj, sp960_matte_sat_adj },
   { "GlossyPhoto",  0.9,  .3,  0.4, .2,   .999, 1, 1, 1, 1, 1, 1,
     sp960_hue_adj, sp960_lum_adj, sp960_sat_adj },
   { "Semigloss",    0.9,  .3,  0.4, .2,   .999, 1, 1, 1, 1, 1, 1,
@@ -543,11 +517,11 @@ static const paper_adjustment_t sp960_adjustments[] =
   { "Luster",       0.9,  .3,  0.4, .2,   .999, 1, 1, 1, 1, 1, 1,
     sp960_hue_adj, sp960_lum_adj, sp960_sat_adj },
   { "GlossyPaper",  0.9,  .3,  0.4, .15,  .9,   1, 1, 1, 1, 1, 1,
-    sp960_hue_adj, sp960_lum_adj, sp960_sat_adj },
+    sp960_matte_hue_adj, sp960_matte_lum_adj, sp960_matte_sat_adj },
   { "Ilford",       0.85, .3,  0.4, .15, 1.35,  1, 1, 1, 1, 1, 1,
-    sp960_hue_adj, sp960_lum_adj, sp960_sat_adj  },
+    sp960_matte_hue_adj, sp960_matte_lum_adj, sp960_matte_sat_adj  },
   { "ColorLife",    0.9,  .3,  0.4, .15,  .9,   1, 1, 1, 1, 1, 1,
-    sp960_hue_adj, sp960_lum_adj, sp960_sat_adj },
+    sp960_matte_hue_adj, sp960_matte_lum_adj, sp960_matte_sat_adj },
   { "Other",        0.86, .2,  0.4, .1,   .9,   1, 1, 1, 1, 1, 1,
     sp960_matte_hue_adj, sp960_matte_lum_adj, sp960_matte_sat_adj },
 };
@@ -556,95 +530,93 @@ DECLARE_PAPER_ADJUSTMENTS(sp960);
 
 static const paper_adjustment_t ultrachrome_photo_adjustments[] =
 {
-  { "Plain", 0.86, .5, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "PlainFast", 0.86, .5, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "Postcard", 0.83, .5, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "GlossyFilm", 1.00, 1.0, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "Transparency", 1.00, .75, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "Envelope", 0.86, .5, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "BackFilm", 1.00, .75, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "Matte", 0.85, 0.8, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "MatteHeavy", 0.85, 1.0, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "Inkjet", 0.85, .5, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "Coated", 0.85, 1.0, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "Photo", 0.85, 1.0, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "GlossyPhoto", 0.85, 1.0, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "Semigloss", 0.85, 1.0, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "Luster", 0.85, 1.0, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "ArchivalMatte", 0.85, 1.0, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "WaterColorRadiant", 0.765, 1.0, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "GlossyPaper", 0.85, 1.0, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "Ilford", .85, 1.0, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj  },
-  { "ColorLife", 0.85, 1.0, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
-  { "Other", 0.86, .5, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
+  { "Plain", 0.72, .1, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
+  { "PlainFast", 0.72, .1, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
+  { "Postcard", 0.72, .1, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
+  { "GlossyFilm", 0.83, 1.0, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
+  { "Transparency", 0.83, .75, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
+  { "Envelope", 0.72, .1, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
+  { "BackFilm", 0.83, .75, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
+  { "Matte", 0.92, 0.4, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
+  { "MatteHeavy", 0.92, 0.4, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
+  { "Inkjet", 0.72, .5, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
+  { "Coated", 0.83, .5, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
+  { "Photo", 1.0, .75, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
+  { "GlossyPhoto", 0.72, 1, 1, .01, 1.8, 1, 1, 1, 1, 1, .9,
+    ultra_glossy_hue_adj, ultra_glossy_lum_adj, ultra_glossy_sat_adj },
+  { "Semigloss", 0.72, .8, 1, .01, 1.8, 1, 1, 1, 1, 1, .9,
+    ultra_glossy_hue_adj, ultra_glossy_lum_adj, ultra_glossy_sat_adj },
+  { "Luster", 0.72, .8, 1, .01, 1.8, 1, 1, 1, 1, 1, .9,
+    ultra_glossy_hue_adj, ultra_glossy_lum_adj, ultra_glossy_sat_adj },
+  { "ArchivalMatte", 0.92, .4, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
+  { "WaterColorRadiant", 0.92, .4, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
+  { "GlossyPaper", 0.83, 1.0, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
+  { "Ilford", 0.83, 1.0, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj  },
+  { "ColorLife", 0.83, 1.0, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
+  { "Other", 0.72, .1, 1, .01, 1.5, 1, 1, 1, 1, 1, 1.2,
+    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
 };
 
 DECLARE_PAPER_ADJUSTMENTS(ultrachrome_photo);
 
 static const paper_adjustment_t ultrachrome_matte_adjustments[] =
 {
-  { "Plain", 0.86, .1, 1, 0, .999, 1, 1, 1, 1, 1, 1.2,
+  { "Plain", 0.72, .1, 1, 0, .999, 1, 1, 1, 1, 1, 1.2,
     ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "PlainFast", 0.86, .1, 1, 0, .999, 1, 1, 1, 1, 1, 1.2,
+  { "PlainFast", 0.72, .1, 1, 0, .999, 1, 1, 1, 1, 1, 1.2,
     ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "Postcard", 0.86, .1, 1, 0, .999, 1, 1, 1, 1, 1, 1.2,
+  { "Postcard", 0.72, .1, 1, 0, .999, 1, 1, 1, 1, 1, 1.2,
     ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "GlossyFilm", 1.00, .5, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1,
+  { "GlossyFilm", 0.83, .5, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1.2,
     ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "Transparency", 1.00, .5, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1,
+  { "Transparency", 0.83, .5, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1,
     ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "Envelope", 0.86, .2, 1, 0, .999, 1, 1, 1, 1, 1, 1.2,
+  { "Envelope", 0.72, .1, 1, 0, .999, 1, 1, 1, 1, 1, 1.2,
     ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "BackFilm", 1.00, .5, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1,
+  { "BackFilm", 0.83, .5, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1.2,
     ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "Matte", 1.1, 0.4, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1.2,
+  { "Matte", 0.92, 0.4, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1.2,
     ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "MatteHeavy", 1.1, 0.4, 1, .01, 1.25, 1, 1, 1, 1, 1, 1.2,
+  { "MatteHeavy", 0.92, 0.4, .4, .01, 0.999, 1, 1, 1, 1.75, 1, 1.2,
     ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "Inkjet", 0.9, .3, 1, 0, .999, 1, 1, 1, 1, 1, 1.2,
+  { "Inkjet", 0.72, .3, 1, .01, .999, 1, 1, 1, 1, 1, 1.2,
     ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "Coated", 1.0, .4, 1, .01, 1.25, 1, 1, 1, 1, 1, 1.2,
+  { "Coated", 0.83, .4, 1, .01, 1.25, 1, 1, 1, 1, 1, 1.2,
     ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "Photo", 1.00, 0.5, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1,
+  { "Photo", 1.0, 0.5, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1.2,
     ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "GlossyPhoto", 1.0, 0.5, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1,
+  { "GlossyPhoto", 0.72, 1, 1, .01, 1.25, 1, 1, 1, 1, 1, .9,
+    ultra_glossy_hue_adj, ultra_glossy_lum_adj, ultra_glossy_sat_adj },
+  { "Semigloss", 0.72, .8, 1, .01, 1.25, 1, 1, 1, 1, 1, .9,
+    ultra_glossy_hue_adj, ultra_glossy_lum_adj, ultra_glossy_sat_adj },
+  { "Luster", 0.72, .8, 1, .01, 1.25, 1, 1, 1, 1, 1, .9,
+    ultra_glossy_hue_adj, ultra_glossy_lum_adj, ultra_glossy_sat_adj },
+  { "WaterColorRadiant", 0.92, 0.4, 1, .01, 1.25, 1, 1, 1, 1, 1, 1.2,
     ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "Semigloss", 1.0, 0.5, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1,
+  { "GlossyPaper", 0.83, 0.5, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1,
     ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "ArchivalMatte", 1.1, 0.4, 1, .01, 1.25, 1, 1, 1, 1, 1, 1.2,
-    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "WaterColorRadiant", 1.1, 0.4, 1, .01, 1.25, 1, 1, 1, 1, 1, 1.2,
-    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "Luster", 1.00, 0.5, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1,
-    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "GlossyPaper", 1.00, 0.5, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1,
-    ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "Ilford", .85, 0.5, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1,
+  { "Ilford", 0.83, 0.5, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1,
     ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj  },
-  { "ColorLife", 1.00, 0.5, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1,
+  { "ColorLife", 0.83, 0.5, 1, 0.01, 1.25, 1, 1, 1, 1, 1, 1,
     ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
-  { "Other", 0.86, .1, 1, 0, .999, 1, 1, 1, 1, 1, 1.2,
+  { "Other", 0.72, .1, .4, 0, .999, 1, 1, 1, 1.75, 1, 1.2,
     ultra_matte_hue_adj, ultra_matte_lum_adj, ultra_matte_sat_adj },
 };
 

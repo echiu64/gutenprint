@@ -201,65 +201,64 @@ static const escp2_base_resolutions_t pro_base_res =
 /*  0    1     2       3    4      5      6      7 */
 
 static const escp2_densities_t g1_densities =
-{ 2.6, 1.3,  1.3,  0.568, 0.0,   0.0,   0.0,   0.0 };
+{ 2.6, 1.3,  1.3,  0.568, 0.0,   0.0,   0.0,   0.0   };
 
 static const escp2_densities_t g3_densities =
-{ 2.6, 1.3,  0.65,  0.775, 0.388, 0.194, 0.097, 0.049 };
+{ 2.6, 1.3,  0.65, 0.775, 0.388, 0.0,   0.0,   0.0,  };
 
 static const escp2_densities_t c6pl_densities =
-{ 4.0, 2.0,  1.0,  0.568, 0.568, 0.568, 0.284, 0.142 };
+{ 4.0, 2.0,  1.0,  0.568, 0.568, 0.568, 0.0,   0.0   };
 
 static const escp2_densities_t c4pl_densities =
-{ 2.6, 1.3,  0.65, 0.568, 0.523, 0.792, 0.396, 0.198 };
-/*{ 2.6, 1.3,  0.65, 0.375, 0.650, 0.650, 0.325, 0.163 }; */
+{ 2.6, 1.3,  0.65, 0.568, 0.523, 0.792, 0.396, 0.0   };
 
 static const escp2_densities_t c4pl_pigment_densities =
-{ 1.9, 0.96, 0.48, 0.638, 0.718, 0.798, 0.399, 0.200 };
+{ 2.3, 1.15, 0.58, 0.766, 0.388, 0.0,   0.479, 0.0   };
 
 static const escp2_densities_t c3pl_pigment_densities =
-{ 2.6, 1.3,  0.67, 0.692, 0.427, 0.427, 0.427, 0.214 };
+{ 2.6, 1.3,  0.67, 0.692, 0.427, 0.427, 0.427, 0.0   };
 
 static const escp2_densities_t c3pl_densities =
-{ 2.6, 1.3,  0.65, 0.730, 0.7,   0.91,  0.455, 0.228 };
+{ 2.6, 1.3,  0.65, 0.730, 0.7,   0.91,  0.455, 0.0   };
 
 static const escp2_densities_t c2pl_densities =
-{ 2.0, 1.0,  0.5,  0.650, 0.650, 0.650, 0.650, 0.325 };
+{ 2.0, 1.0,  0.5,  0.650, 0.650, 0.0,   0.650, 0.325 };
 
 static const escp2_densities_t c1_8pl_densities =
 { 2.3, 1.15, 0.57, 0.650, 0.650, 0.0,   0.650, 0.360 };
 
 static const escp2_densities_t sc1500_densities =
-{ 2.6, 1.3,  1.3,  0.631, 0.0,   0.0,   0.0,   0.0 };
+{ 2.6, 1.3,  1.3,  0.631, 0.0,   0.0,   0.0,   0.0   };
 
 static const escp2_densities_t sc440_densities =
-{ 4.0, 2.0,  1.0,  0.900, 0.45,  0.45,  0.113, 0.057 };
+{ 4.0, 2.0,  1.0,  0.900, 0.45,  0.0,   0.0,   0.0   };
 
 static const escp2_densities_t sc480_densities =
-{ 2.8, 1.4,  0.7,  0.710, 0.710, 0.546, 0.273, 0.137 };
+{ 2.8, 1.4,  0.7,  0.710, 0.710, 0.546, 0.0,   0.0   };
 
 static const escp2_densities_t sc660_densities =
-{ 4.0, 2.0,  1.0,  0.646, 0.323, 0.162, 0.081, 0.041 };
+{ 4.0, 2.0,  1.0,  0.646, 0.323, 0.0,   0.0,   0.0   };
 
 static const escp2_densities_t sc680_densities =
-{ 3.0, 1.5,  0.75, 0.75, 0.75, 0.75, 0.375, 0.188 };
+{ 3.0, 1.5,  0.75, 0.750, 0.750, 0.750, 0.0,   0.0,  };
 
 static const escp2_densities_t sc980_densities =
-{ 2.6, 1.3,  0.65, 0.511, 0.49,  0.637, 0.455, 0.228 };
+{ 2.6, 1.3,  0.65, 0.511, 0.49,  0.637, 0.455, 0.0   };
 
 static const escp2_densities_t sp700_densities =
-{ 2.6, 1.3,  1.3,  0.775, 0.55,  0.275, 0.138, 0.069 };
+{ 2.6, 1.3,  1.3,  0.775, 0.55,  0.0,   0.0,   0.0   };
 
 static const escp2_densities_t sp2000_densities =
-{ 2.6, 1.3,  0.65, 0.852, 0.438, 0.219, 0.110, 0.055 };
+{ 2.6, 1.3,  0.65, 0.852, 0.438, 0.219, 0.0,   0.0   };
 
 static const escp2_densities_t spro_dye_densities =
-{ 2.6, 1.3,  1.3,  0.775, 0.388, 0.275, 0.138, 0.069 };
+{ 2.6, 1.3,  1.3,  0.775, 0.388, 0.275, 0.0,   0.0   };
 
 static const escp2_densities_t spro_pigment_densities =
-{ 3.0, 1.5,  0.78, 0.775, 0.388, 0.194, 0.097, 0.049 };
+{ 3.0, 1.5,  0.78, 0.775, 0.388, 0.194, 0.0,   0.0   };
 
 static const escp2_densities_t spro10000_densities =
-{ 2.6, 1.3,  0.65, 0.431, 0.216, 0.392, 0.196, 0.098 };
+{ 2.6, 1.3,  0.65, 0.431, 0.216, 0.392, 0.0,   0.0   };
 
 
 static const input_slot_t standard_roll_feed_input_slots[] =
@@ -598,7 +597,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
     1, 7, 0, 0,
     sp700_dotsizes, sp700_densities, &stpi_escp2_simple_drops,
-    stpi_escp2_720dpi_soft_reslist, &stpi_escp2_photo_gen1_inkgroup,
+    stpi_escp2_g3_720dpi_reslist, &stpi_escp2_photo_gen1_inkgroup,
     standard_bits, g3_base_res, &default_input_slot_list,
     &standard_quality_list, NULL, NULL,
     &stpi_escp2_standard_microweave_list
@@ -617,7 +616,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     1, 15, 0, 0,
     sc440_dotsizes, sc440_densities, &stpi_escp2_simple_drops,
-    stpi_escp2_720dpi_soft_reslist, &stpi_escp2_standard_inkgroup,
+    stpi_escp2_g3_720dpi_reslist, &stpi_escp2_standard_inkgroup,
     standard_bits, standard_base_res, &default_input_slot_list,
     &standard_quality_list, NULL, NULL,
     &stpi_escp2_standard_microweave_list
@@ -654,7 +653,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, NULL, NULL,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 13: Stylus Color 900 */
   {
@@ -671,7 +670,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, stc900_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 14: Stylus Photo 750 */
   {
@@ -688,7 +687,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_gen1_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 15: Stylus Photo 1200 */
   {
@@ -705,7 +704,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_gen1_inkgroup,
     variable_bits, variable_base_res, &standard_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 16: Stylus Color 860 */
   {
@@ -722,7 +721,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 17: Stylus Color 1160 */
   {
@@ -739,7 +738,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 18: Stylus Color 660 */
   {
@@ -773,7 +772,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 20: Stylus Photo 720 (Australia) */
   {
@@ -790,7 +789,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_gen1_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 21: Stylus Color 480 */
   {
@@ -807,7 +806,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_720dpi_soft_reslist, &stpi_escp2_x80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 22: Stylus Photo 870/875 */
   {
@@ -824,7 +823,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &standard_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 23: Stylus Photo 1270 */
   {
@@ -841,7 +840,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &standard_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 24: Stylus Color 3000 */
   {
@@ -875,7 +874,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 26: Stylus Photo 2000P */
   {
@@ -892,7 +891,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_pigment_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 27: Stylus Pro 5000 */
   {
@@ -909,7 +908,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_gen1_inkgroup,
     standard_bits, g3_base_res, &spro5000_input_slot_list,
     &standard_quality_list, NULL, NULL,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 28: Stylus Pro 7000 */
   {
@@ -994,7 +993,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_2880dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 33: Stylus Color 880/83/C60 */
   {
@@ -1011,7 +1010,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_2880dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 34: Stylus Color 980 */
   {
@@ -1028,7 +1027,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_2880dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 35: Stylus Photo 780/790/810/820 */
   {
@@ -1045,7 +1044,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_2880dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 36: Stylus Photo 785/890/895/915/935 */
   {
@@ -1062,7 +1061,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_2880dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &standard_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 37: Stylus Photo 1280/1290 */
   {
@@ -1079,7 +1078,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_2880dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &standard_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 38: Stylus Color 580 */
   {
@@ -1096,7 +1095,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_x80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 39: Stylus Color Pro XL */
   {
@@ -1164,7 +1163,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_720dpi_soft_reslist, &stpi_escp2_x80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 43: Stylus C40SX/C40UX/C41SX/C41UX/C42SX/C42UX */
   {
@@ -1181,7 +1180,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_x80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 44: Stylus C70/C80 */
   {
@@ -1198,7 +1197,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_c80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 45: Stylus Color Pro */
   {
@@ -1232,7 +1231,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_superfine_reslist, &stpi_escp2_f360_photo_inkgroup,
     stp950_bits, stp950_base_res, &cutter_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 47: Stylus Photo 2100/2200 */
   {
@@ -1249,7 +1248,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_superfine_reslist, &stpi_escp2_f360_ultrachrome_inkgroup,
     ultrachrome_bits, ultrachrome_base_res, &cutter_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 48: Stylus Pro 7600 */
   {
@@ -1300,7 +1299,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 51: Stylus Photo 925 */
   {
@@ -1317,7 +1316,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &cutter_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 52: Stylus Color C62 */
   {
@@ -1334,7 +1333,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 53: Japanese PM-950C */
   {
@@ -1351,7 +1350,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_superfine_reslist, &stpi_escp2_f360_photo7_japan_inkgroup,
     stp950_bits, stp950_base_res, &cutter_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 54: Stylus Photo EX3 */
   {
@@ -1368,7 +1367,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_gen1_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 55: Stylus C82/CX-5200 */
   {
@@ -1385,7 +1384,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_c80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 56: Stylus C50 */
   {
@@ -1402,7 +1401,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_x80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 57: Japanese PM-970C */
   {
@@ -1419,7 +1418,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_superfine_reslist, &stpi_escp2_f360_photo7_japan_inkgroup,
     c1_8_bits, c1_8_base_res, &cutter_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 58: Japanese PM-930C */
   {
@@ -1436,7 +1435,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_superfine_reslist, &stpi_escp2_photo_gen2_inkgroup,
     c1_8_bits, c1_8_base_res, &cutter_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 59: Stylus C43SX/C43UX/C44SX/C44UX */
   {
@@ -1453,7 +1452,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_1440dpi_reslist, &stpi_escp2_x80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 60: Stylus C84 */
   {
@@ -1470,7 +1469,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_c80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
   /* 61: Stylus Color C63/C64 */
   {
@@ -1487,7 +1486,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_c64_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
-    &stpi_escp2_standard_microweave_list
+    NULL
   },
 };
 

@@ -1061,7 +1061,7 @@ static const shade_set_t stp2000_shades =	/* Stylus Photo 2000 */
 static const shade_set_t ultrachrome_photo_shades =	/* Ultrachrome with photo black ink */
 {
   { 2, { 1.0, 0.48 }},
-  { 2, { 1.0, 0.25 }},
+  { 2, { 1.0, 0.33 }},
   { 2, { 1.0, 0.25 }},
   { 1, { 1.0 }},
   { 1, { 1.0 }},
@@ -1073,7 +1073,7 @@ static const shade_set_t ultrachrome_matte_shades =	/* Ultrachrome with matte bl
 {
   { 2, { 1.0, 0.33 }},
   { 2, { 1.0, 0.33 }},
-  { 2, { 1.0, 0.33 }},
+  { 2, { 1.0, 0.25 }},
   { 1, { 1.0 }},
   { 1, { 1.0 }},
   { 1, { 1.0 }},

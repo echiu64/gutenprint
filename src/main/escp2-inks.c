@@ -110,8 +110,6 @@ static const escp2_dropsize_t escp2_ultrachrome_low_dropsizes =
   { "ultrachrome_low", 3, { 0.16, 0.4, 1.0 } };
 static const escp2_dropsize_t escp2_ultrachrome_720_dropsizes =
   { "ultrachrome_720", 3, { 0.2, 0.45, 1.0 } };
-static const escp2_dropsize_t escp2_ultrachrome_1440_dropsizes =
-  { "ultrachrome_1440", 2, { 0.45, 1.0 } };
 static const escp2_dropsize_t escp2_ultrachrome_2880_dropsizes =
   { "ultrachrome_2880", 1, { 1.0 } };
 
@@ -221,7 +219,7 @@ const escp2_drop_list_t stpi_escp2_variable_ultrachrome_drops =
   &escp2_ultrachrome_low_dropsizes,
   &escp2_ultrachrome_low_dropsizes,
   &escp2_ultrachrome_720_dropsizes,
-  &escp2_ultrachrome_1440_dropsizes,
+  &escp2_ultrachrome_720_dropsizes,
   &escp2_ultrachrome_2880_dropsizes,
   &escp2_ultrachrome_2880_dropsizes,
   &escp2_ultrachrome_2880_dropsizes,
