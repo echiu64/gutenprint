@@ -3,7 +3,7 @@
  *
  *   GIMP-print based raster filter for the Common UNIX Printing System.
  *
- *   Copyright 1993-2001 by Easy Software Products.
+ *   Copyright 1993-2003 by Easy Software Products.
  *
  *   This program is free software; you can redistribute it and/or
  *   modify it under the terms of the GNU General Public License,
@@ -415,13 +415,14 @@ main(int  argc,				/* I - Number of command-line arguments */
   * Figure out which driver to use...
   */
 
-  if ((printer = stp_get_printer_by_driver(ppd->modelname)) == NULL)
-  {
-    fprintf(stderr, "ERROR: Fatal error: Unable to find driver named \"%s\"!\n",
-            ppd->modelname);
-    ppdClose(ppd);
-    return (1);
-  }
+  if ((printer = stp_get_printer_by_long_name(ppd->modelname)) == NULL)
+    if ((printer = stp_get_printer_by_driver(ppd->modelname)) == NULL)
+    {
+      fprintf(stderr, "ERROR: Fatal error: Unable to find driver named \"%s\"!\n",
+              ppd->modelname);
+      ppdClose(ppd);
+      return (1);
+    }
 
   ppdClose(ppd);
 
