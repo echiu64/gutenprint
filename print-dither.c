@@ -1567,9 +1567,12 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	  else
 	    ok = k;
 	  if ( ok > lb )
-	    kl = (unsigned) ( ok - lb ) * d->density / ( d->density - lb );
+	    kl = (unsigned) ( ok - lb ) * (unsigned) d->density /
+	      ( d->density - lb );
 	  else
 	    kl = 0;
+	  if (kl > 65535)
+	    kl = 65535;
 	    
 	   /*
 	    * We have a second value, ks, that will be the scaler.
@@ -1582,7 +1585,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	  else if ( k < lb )
 	    ks = 0;
 	  else
-	    ks = (unsigned) ( k - lb ) * d->density / ( ub - lb );
+	    ks = (unsigned) ( k - lb ) * (unsigned) d->density / ( ub - lb );
+	  if (ks > 65535)
+	    ks = 65535;
 	    
 	/*
 	 * ks is then processed by a second order function that produces
@@ -1592,7 +1597,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
          * ak = ks;
 	 */
 	  ak = 2*ks-ks*ks/d->density;
-	  k = kl * ak / d->density;
+	  k = kl * (unsigned) ak / d->density;
 	  ok = k;
 	  bk = k;
 
@@ -1607,9 +1612,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	     * dark areas from becoming very dull.
 	     */
 	     
-	      c -= k * ak / d->density;
-	      m -= k * ak / d->density;
-	      y -= k * ak / d->density;
+	      c -= (unsigned) k * (unsigned) ak / d->density;
+	      m -= (unsigned) k * (unsigned) ak / d->density;
+	      y -= (unsigned) k * (unsigned) ak / d->density;
 	      if (c < 0)
 		c = 0;
 	      if (m < 0)
