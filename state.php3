@@ -77,6 +77,7 @@ $supported_printers = array(
 	       'BJC 1000' => 'Untested',
 	       'BJC 2000' => 'Untested',
 	       'BJC 3000' => 'Untested',
+	       'BJC 4300' => 'Operational',
 	       'BJC 6000' => 'Operational but incomplete',
 	       'BJC 6100' => 'Untested',
 	       'BJC 7000' => 'Untested',
