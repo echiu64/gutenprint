@@ -122,7 +122,7 @@ if (!$quiet || $verbose) {
 	exit (0);
     } else {
 	print STDOUT "Failed to update any PPD files\n";
-	exit (1);
+	exit (0);
     }
 }
 
