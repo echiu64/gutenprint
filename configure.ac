@@ -484,7 +484,7 @@ else
   fi
 fi
 if test "$CC" = "gcc" ; then
-  GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -pedantic -Werror-implicit-function-declaration -Winline"
+  GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -pedantic -Werror-implicit-function-declaration -Winline -finline-limit=1048576"
   if test x${USE_MAINTAINER_MODE} = xyes ; then
     GNUCFLAGS="${GNUCFLAGS} -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls"
   fi
