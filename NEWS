@@ -99,69 +99,72 @@ These release notes contain the following sections:
      Olympus P-200 and P-400) are now supported; the Olympus P-10 is
      now partially supported.
 
-  4) Additional page sizes are now available for Olympus and related
+  4) Preliminary support for the Epson Stylus C45, C46, C65, C66, C85,
+     C86, CX-6600 and PX-V600.
+
+  5) Additional page sizes are now available for Olympus and related
      photo printers (including certain Canon and Sony dye sublimation
      printers).  In addition, other supported page sizes now work
      correctly on the Canon CP-100.
 
-  5) A problem whereby the CUPS driver was linked incorrectly in
+  6) A problem whereby the CUPS driver was linked incorrectly in
      certain configurations is fixed.
 
-  6) The GIMP 2.0 plugin is now installed correctly in the GIMP 2.0
+  7) The GIMP 2.0 plugin is now installed correctly in the GIMP 2.0
      plugin directory, rather than the GIMP 1.2 directory.
 
-  7) A problem with the GIMP plugin not properly exiting at the
+  8) A problem with the GIMP plugin not properly exiting at the
      completion of printing has been fixed.  This was reported on
      FreeBSD 4.10 and is system dependent.  The symptom is that at
      when the print plugin finished its work it would stick around,
      and actual printing would not start until the GIMP itself was
      exited.
 
-  8) The GIMP plugins now use less screen space by scrolling certain
+  9) The GIMP plugins now use less screen space by scrolling certain
      options.
 
-  9) Black generation has been improved for the Epson Stylus Photo
+  10) Black generation has been improved for the Epson Stylus Photo
      R300 and related printers on many older paper types.  In
      particular, more black ink is now being used, which should give
      more solid shadows with less color shift.
 
-  10) A "predithered" color correction mode is now available, in
+  11) A "predithered" color correction mode is now available, in
      conjunction with a "predithered" dither algorithm.  These very
      fast algorithms assume that the data has already been screened,
      and simply perform a threshold with no correction whatsoever.
      This is useful for certain custom applications.
 
-  11) The GIMP 2.0 plugin now uses new curve widgets, replacing the
+  12) The GIMP 2.0 plugin now uses new curve widgets, replacing the
      GTK+ curve widgets.  These widgets will undergo further
      development, adding new functionality.
 
-  12) A problem with Canon 6-color inkjet printers whereby the
+  13) A problem with Canon 6-color inkjet printers whereby the
      transition between light and dark inks is fixed.  This problem
      was specific to the 4.3/5.0 code line and was a regression from
      4.2.
 
-  13) A problem with Canon printers in DMT mode whereby vertical lines
+  14) A problem with Canon printers in DMT mode whereby vertical lines
      were printed across the page is fixed.  This problem was specific
      to the 4.3/5.0 code line and was a regression from 4.2.
 
-  14) A few problems with the display of the preview window in the GIMP
+  15) A few problems with the display of the preview window in the GIMP
      plugin (both 1.2 and 2.0) are fixed.
 
-  15) Gimp-Print now compiles correctly on Solaris.
+  16) Gimp-Print now compiles correctly on Solaris.
 
-  16) The GIMP 2.0 plugin now handles the version 3 printrc file
+  17) The GIMP 2.0 plugin now handles the version 3 printrc file
      correctly.
 
-  17) The printers.xml file now has a more flexible format that
+  18) The printers.xml file now has a more flexible format that
      permits specifying arbitrary parameters.
 
-  18) A problem trying to print a grayscale file from the GIMP with a
+  19) A problem trying to print a grayscale file from the GIMP with a
      pre-existing printrc file predating Gimp-Print 5.0 alpha-2 has
      been fixed.  Depending upon the system, the bug could cause data
      corruption, a crash at startup, or erroneous display in the
      preview window.
 
-  19) A problem whereby compiling with --enable-static fails in some
+  20) A problem whereby compiling with --enable-static fails in some
      circumstances has been fixed.
 
   The following bugs have been fixed in this release:
@@ -945,17 +948,23 @@ EPSON Stylus C43SX
 EPSON Stylus C43UX
 EPSON Stylus C44SX
 EPSON Stylus C44UX
+EPSON Stylus C45
+EPSON Stylus C46
 EPSON Stylus C50
 EPSON Stylus C60
 EPSON Stylus C61
 EPSON Stylus C62
 EPSON Stylus C63
 EPSON Stylus C64
+EPSON Stylus C65
+EPSON Stylus C66
 EPSON Stylus C70
 EPSON Stylus C80
 EPSON Stylus C82
 EPSON Stylus C83
 EPSON Stylus C84
+EPSON Stylus C85
+EPSON Stylus C86
 EPSON Stylus Color
 EPSON Stylus Color Pro
 EPSON Stylus Color Pro XL
@@ -1030,6 +1039,7 @@ EPSON Stylus CX-5300
 EPSON Stylus CX-5400
 EPSON Stylus CX-6300
 EPSON Stylus CX-6400
+EPSON Stylus CX-6600
 EPSON Stylus CX-8300
 EPSON Stylus CX-8400
 EPSON CL-700
@@ -1078,6 +1088,7 @@ EPSON PM-7000C
 EPSON PM-9000C
 EPSON PM-10000
 EPSON PX-V500
+EPSON PX-V600
 EPSON PX-7000
 EPSON PX-9000
 Fujifilm Printpix CX-400 (Experimental)
@@ -1265,17 +1276,23 @@ Epson Stylus C43SX             escp2-c43sx     EPSON Stylus C43SX
 Epson Stylus C43UX             escp2-c43ux     EPSON Stylus C43UX
 Epson Stylus C44SX             escp2-c44sx     EPSON Stylus C44SX
 Epson Stylus C44UX             escp2-c44ux     EPSON Stylus C44UX
+Epson Stylus C45               escp2-c45       EPSON Stylus C45
+Epson Stylus C46               escp2-c46       EPSON Stylus C46
 Epson Stylus C50               escp2-c50       EPSON Stylus C50
 Epson Stylus C60               escp2-c60       EPSON Stylus C60
 Epson Stylus C61               escp2-c61       EPSON Stylus C61
 Epson Stylus C62               escp2-c62       EPSON Stylus C62
 Epson Stylus C63               escp2-c63       EPSON Stylus C63
 Epson Stylus C64               escp2-c64       EPSON Stylus C64
+Epson Stylus C65               escp2-c65       EPSON Stylus C65
+Epson Stylus C66               escp2-c66       EPSON Stylus C66
 Epson Stylus C70               escp2-c70       EPSON Stylus C70
 Epson Stylus C80               escp2-c80       EPSON Stylus C80
 Epson Stylus C82               escp2-c82       EPSON Stylus C82
 Epson Stylus C83               escp2-c83       EPSON Stylus C83
 Epson Stylus C84               escp2-c84       EPSON Stylus C84
+Epson Stylus C85               escp2-c85       EPSON Stylus C85
+Epson Stylus C86               escp2-c86       EPSON Stylus C86
 Epson Stylus Color             escp2           EPSON Stylus Color
 Epson Stylus Color I           escp2           EPSON Stylus Color
 Epson Stylus Color II          escp2           EPSON Stylus Color
@@ -1361,6 +1378,7 @@ Epson Stylus CX5300            escp2-cx5300    EPSON Stylus CX-5300
 Epson Stylus CX5400            escp2-cx5400    EPSON Stylus CX-5400
 Epson Stylus CX6300            escp2-cx6300    EPSON Stylus CX-6300
 Epson Stylus CX6400            escp2-cx6400    EPSON Stylus CX-6400
+Epson Stylus CX6600            escp2-cx6600    EPSON Stylus CX-6600
 Epson Stylus CX8300            escp2-cx8300    EPSON Stylus CX-8300
 Epson Stylus CX8400            escp2-cx8400    EPSON Stylus CX-8400
 Epson CL-700                   escp2-cl700     EPSON CL-700
@@ -1409,6 +1427,7 @@ Epson PM-7000C                 escp2-pm7000c   EPSON PM-7000C
 Epson PM-9000C                 escp2-pm9000c   EPSON PM-9000C
 Epson PM-10000                 escp2-pm10000   EPSON PM-10000
 Epson PX-V500                  escp2-pxv500    EPSON PX-V500
+Epson PX-V600                  escp2-pxv600    EPSON PX-V600
 Epson PX-7000                  escp2-px7000    EPSON PX-7000
 Epson PX-9000                  escp2-px9000    EPSON PX-9000
 Fujifilm Printpix CX-400       fujifilm-cx400  Fujifilm Printpix CX-400
@@ -1807,13 +1826,14 @@ Generic PCL 6/PCL XL Printer   pcl-6           HP LaserJet 6 series
 Printer-Specific Notes:
 
     * It is strongly recommended that four color mode not be used on
-      the Epson Stylus C63, C64, C70, C80, C82, C83, C84, and CX-5200,
-      and the PX-V500 when printing to glossy papers, as the black ink
-      is formulated differently from the color ink and does not adhere
-      properly to these papers.  Epson Photo Paper, Premium Glossy
-      Photo Paper, Premium Luster Photo Paper, and Premium Semigloss
-      Photo Paper are known to be affected.  If you use the Standard
-      ink type, this will be handled automatically.
+      the Epson Stylus C63, C64, C65, C66, C70, C80, C82, C83, C84,
+      C85, C86, and CX-5200, and the PX-V500 and PX-V600 when printing
+      to glossy papers, as the black ink is formulated differently
+      from the color ink and does not adhere properly to these papers.
+      Epson Photo Paper, Premium Glossy Photo Paper, Premium Luster
+      Photo Paper, and Premium Semigloss Photo Paper are known to be
+      affected.  If you use the Standard ink type, this will be
+      handled automatically.
 
     * The Epson Stylus C70, C80, and C82 appear to support resolutions
       of 1440x1440 and 2880x1440, but these resolutions may not yield
@@ -1903,17 +1923,23 @@ Printer-Specific Notes:
       EPSON Stylus C43UX
       EPSON Stylus C44SX
       EPSON Stylus C44UX
+      EPSON Stylus C45
+      EPSON Stylus C46
       EPSON Stylus C50
       EPSON Stylus C60
       EPSON Stylus C61
       EPSON Stylus C62
       EPSON Stylus C63
       EPSON Stylus C64
+      EPSON Stylus C65
+      EPSON Stylus C66
       EPSON Stylus C70
       EPSON Stylus C80
       EPSON Stylus C82
       EPSON Stylus C83
       EPSON Stylus C84
+      EPSON Stylus C85
+      EPSON Stylus C86
       EPSON Stylus Color 440
       EPSON Stylus Color 460
       EPSON Stylus Color 480
@@ -1960,5 +1986,6 @@ Printer-Specific Notes:
       EPSON Stylus CX-5200
       EPSON Stylus CX-6300
       EPSON Stylus CX-6400
+      EPSON Stylus CX-6600
       EPSON Stylus CX-8300
       EPSON Stylus CX-8400
