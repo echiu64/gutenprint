@@ -17,29 +17,29 @@ $(DD)stp.dev:	$(stp_) $(DD)page.dev
 gdevstp.$(OBJ) : gdevstp.c $(PDEVH) gdevstp-print.h
 	$(CCC) gdevstp.c
 
-gdevstp-util.$(OBJ) : gdevstp-util.c gdevstp-printers.c $(PDEVH) gdevstp-print.h
+gdevstp-util.$(OBJ) : gdevstp-util.c gdevstp-printers.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h
 	$(CCC) gdevstp-util.c
 
-gdevstp-weave.$(OBJ) : gdevstp-weave.c $(PDEVH) gdevstp-print.h
+gdevstp-weave.$(OBJ) : gdevstp-weave.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h
 	$(CCC) gdevstp-weave.c
 
-gdevstp-color.$(OBJ) : gdevstp-color.c $(PDEVH) gdevstp-print.h
+gdevstp-color.$(OBJ) : gdevstp-color.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h
 	$(CCC) gdevstp-color.c
 
-gdevstp-dither.$(OBJ) : gdevstp-dither.c $(PDEVH) gdevstp-print.h
+gdevstp-dither.$(OBJ) : gdevstp-dither.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h
 	$(CCC) gdevstp-dither.c
 
-gdevstp-escp2.$(OBJ) : gdevstp-escp2.c $(PDEVH) gdevstp-print.h
+gdevstp-escp2.$(OBJ) : gdevstp-escp2.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h
 	$(CCC) gdevstp-escp2.c
 
-gdevstp-lexmark.$(OBJ) : gdevstp-lexmark.c $(PDEVH) gdevstp-print.h
+gdevstp-lexmark.$(OBJ) : gdevstp-lexmark.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h
 	$(CCC) gdevstp-lexmark.c
 
-gdevstp-pcl.$(OBJ) : gdevstp-pcl.c $(PDEVH) gdevstp-print.h
+gdevstp-pcl.$(OBJ) : gdevstp-pcl.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h
 	$(CCC) gdevstp-pcl.c
 
-gdevstp-canon.$(OBJ) : gdevstp-canon.c $(PDEVH) gdevstp-print.h
+gdevstp-canon.$(OBJ) : gdevstp-canon.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h
 	$(CCC) gdevstp-canon.c
 
-gdevstp-ps.$(OBJ) : gdevstp-ps.c $(PDEVH) gdevstp-print.h
+gdevstp-ps.$(OBJ) : gdevstp-ps.c $(PDEVH) gdevstp-print.h gdevstp-print-internal.h
 	$(CCC) gdevstp-ps.c

@@ -53,6 +53,7 @@
 #include <cups/raster.h>
 
 #include <gimp-print.h>
+#include <config.h>
 
 /*
  * File handling stuff...

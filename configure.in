@@ -79,8 +79,8 @@ AC_MSG_CHECKING([whether to build CUPS driver])
 AC_ARG_WITH(cups,
 [  --with-cups[=PREFIX]    build CUPS driver [default=no, default PREFIX=PREFIX]],
   [case "${withval}" in
-    yes) BUILD_CUPS="yes" ; AC_MSG_RESULT([yes]) ; cups_prefix="${prefix}" ;;
-    no) BUILD_CUPS="no" ; AC_MSG_RESULT([no]) ; cups_prefix="${prefix}" ;;
+    yes) BUILD_CUPS="yes" ; AC_MSG_RESULT([yes]) ; cups_prefix="/usr" ;;
+    no) BUILD_CUPS="no" ; AC_MSG_RESULT([no]) ; cups_prefix="/usr" ;;
     *) if test -d ${withval} ; then
          BUILD_CUPS="yes"
 	 AC_MSG_RESULT([yes (using specified prefix)])
@@ -245,13 +245,18 @@ if test x${BUILD_CUPS} = xyes ; then
   AC_CHECK_LIB(m,pow,
     CUPS_LIBS="${CUPS_LIBS} -lm")
   AC_CHECK_LIB(z,gzgets,
-    CUPS_LIBS="${CUPS_LIBS} -lz")
+    HAVE_LIBZ=true, HAVE_LIBZ=false)
+  if test x${HAVE_LIBZ} = xtrue ; then
+    CUPS_LIBS="${CUPS_LIBS} -lz"
+    AC_DEFINE(HAVE_LIBZ,1)
+  fi
 dnl Require CUPS 1.1...
   AC_CHECK_LIB(cups,cupsPrintFiles,
     CUPS_LIBS="${CUPS_LIBS} -lcups")
   AC_CHECK_LIB(cupsimage,cupsRasterOpen,
     CUPS_LIBS="${CUPS_LIBS} -lcupsimage",,
     -lcups)
+
 fi
 
 dnl GIMP checks
@@ -297,8 +302,8 @@ AC_CHECK_FUNC(getopt_long,
 
 dnl Define what has to be built
 if test x${BUILD_CUPS} = xyes ; then
-  CUPS_BIN="calibrate"
-  CUPS_NOINST_BIN="canon commandtocanon commandtoepson epson genppd ppd rastertoprinter"
+  CUPS_BIN="cups_calibrate"
+  CUPS_NOINST_BIN="canon commandtocanon commandtoepson epson genppd rastertoprinter"
 fi
 AM_CONDITIONAL(CUPS_INSTALL, test x${BUILD_CUPS} = xyes)
 if test x${BUILD_GIMP} = xyes ; then
@@ -336,7 +341,13 @@ dnl Fix "datadir" variable if it hasn't been specified...
 if test "${datadir}" = "\${prefix}/share" -a "${cups_prefix}" = "/" ; then
   cups_datadir="/usr/share"
 else
-  cups_datadir="${datadir}"
+  cups_datadir="${cups_prefix}/share"
+fi
+dnl Fix "libdir" variable if it hasn't been specified...
+if test "${libdir}" = "\${prefix}/lib" -a "${cups_prefix}" = "/" ; then
+  cups_libdir="/usr/lib"
+else
+  cups_libdir="${cups_prefix}/lib"
 fi
 dnl Fix "sysconfdir" variable if it hasn't been specified...
 if test "${sysconfdir}" = "\${prefix}/etc"; then
@@ -354,6 +365,7 @@ dnl Substitutions
 AC_SUBST(cups_prefix)
 AC_SUBST(cups_exec_prefix)
 AC_SUBST(cups_datadir)
+AC_SUBST(cups_libdir)
 AC_SUBST(cups_sysconfdir)
 AC_SUBST(CUPS_BIN)
 AC_SUBST(CUPS_CFLAGS)

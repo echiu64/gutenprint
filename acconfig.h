@@ -52,6 +52,8 @@
 /* Define if xmalloc is present */
 #undef HAVE_XMALLOC
 
+/* Define if libz is present */
+#undef HAVE_LIBZ
 
 /* Definitions for GNU gettext (taken from gettext source and gettext.info */
 

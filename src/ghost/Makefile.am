@@ -27,7 +27,7 @@ MAINT_CHARSET = latin1
 
 MAINCODE = canon.c color.c dither.c escp2.c lexmark.c pcl.c printers.c ps.c util.c weave.c
 
-MAINHEADERS = print.h quickmatrix257.h ran.367.179.h ran.509.131.h
+MAINHEADERS = print.h print-internal.h quickmatrix257.h ran.367.179.h ran.509.131.h
 
 MAINFILES = $(MAINCODE) $(MAINHEADERS)
 
@@ -35,9 +35,12 @@ if GHOST_BIN
 all-local: $(srcdir)/$(addprefix gdevstp-,$(MAINCODE)) $(srcdir)/$(addprefix gdevstp-,$(MAINHEADERS))
 endif
 
-GHCODE = -e 's/^\\\#include "\(.*\)\.h"$$/\\\#include "gdevstp-\1.h"/'
+GHCODE = -e 's/^\\\#include ["<]gimp-print\(.*\)\.h[">]$$/\\\#include "gdevstp-print\1.h"/'
 
 $(srcdir)/gdevstp-print.h: $(top_srcdir)/src/include/gimp-print.h
+	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $(srcdir)/$@
+
+$(srcdir)/gdevstp-print-internal.h: $(top_srcdir)/src/main/gimp-print-internal.h
 	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $(srcdir)/$@
 
 gdevstp-%.h: $(srcdir)/../main/%.h Makefile
@@ -65,6 +68,7 @@ CLEANFILES = \
  $(srcdir)/gdevstp-ran.509.131.h \
  $(srcdir)/gdevstp-color.c \
  $(srcdir)/gdevstp-print.h \
+ $(srcdir)/gdevstp-print-internal.h \
  $(srcdir)/gdevstp-quickmatrix257.h \
  $(srcdir)/gdevstp-util.c \
  $(srcdir)/gdevstp-weave.c \

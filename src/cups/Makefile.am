@@ -24,13 +24,12 @@ AUTOMAKE_OPTIONS = 1.4 foreign
 MAINT_CHARSET = latin1
 
 PACKAGE = cups
-prefix = @cups_prefix@
-exec_prefix = @cups_exec_prefix@
 datadir = @cups_datadir@
+libdir = @cups_libdir@
 sysconfdir = @cups_sysconfdir@
 
 CFLAGS = @CFLAGS@ $(CUPS_CFLAGS)
-DEFS = @DEFS@ -DCUPS_DATADIR=\"$(cups_exec_prefix)/share/cups\"
+DEFS = @DEFS@ -I. -I$(srcdir) -I../.. -DCUPS_DATADIR=\"$(cups_exec_prefix)/share/cups\"
 INCLUDES = @INCLUDES@
 
 ## Programs
@@ -39,9 +38,9 @@ bin_PROGRAMS = @CUPS_BIN@
 
 noinst_PROGRAMS = @CUPS_NOINST_BIN@
 
-EXTRA_PROGRAMS = calibrate commandtoepson epson genppd rastertoprinter commandtocanon canon
+EXTRA_PROGRAMS = cups_calibrate commandtoepson epson genppd rastertoprinter commandtocanon canon
 
-calibrate_LDADD = -lm
+cups_calibrate_LDADD = -lm
 
 commandtoepson_LDADD = $(CUPS_LIBS)
 
@@ -55,14 +54,11 @@ rastertoprinter_LDADD = $(CUPS_LIBS) $(GIMPPRINT_LIBS)
 
 ## Data
 
-pkgdata_DATA = calibrate.ppm
-
 cups_backend = epson canon
 cups_filter = rastertoprinter commandtoepson commandtocanon
 
 if CUPS_INSTALL
-install-data-local:
-endif
+install-data-local: ppd
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/$(PACKAGE)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/$(PACKAGE)/backend
@@ -72,13 +68,17 @@ endif
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/$(PACKAGE)/model
 	cd ppd ; \
 	for ppdfile in * ; do \
-	  $(INSTALL_DATA) $$ppdfile $(DESTDIR)$(libdir)/$(PACKAGE)/model/ ; \
+	  $(INSTALL_DATA) $$ppdfile $(DESTDIR)$(datadir)/$(PACKAGE)/model/ ; \
 	done
+	$(INSTALL_DATA) calibrate.ppm $(DESTDIR)/$(datadir)/$(PACKAGE)
 	$(mkinstalldirs) $(DESTDIR)/$(sysconfdir)
 	$(mkinstalldirs) $(DESTDIR)/$(sysconfdir)/$(PACKAGE)
 	$(INSTALL_DATA) command.types $(DESTDIR)/$(sysconfdir)/$(PACKAGE)/command.types
-	
+endif
+
 ## Rules
+
+.PHONY: ppd
 
 ppd:    genppd
 	-rm -r ppd/*
@@ -109,7 +109,7 @@ EXTRA_DIST = \
 	COPYING \
 	README \
 	ChangeLog \
-	calibrate.c \
+	cups_calibrate.c \
 	calibrate.ppm \
 	canon.c \
 	command.txt \
