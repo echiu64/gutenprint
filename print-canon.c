@@ -1013,6 +1013,12 @@ canon_print(const printer_t *printer,		/* I - Model */
     dither = init_dither(image_height, out_width, v);
   else
     dither = init_dither(image_width, out_width, v);
+
+  v->density *= printer->printvars.density;
+  if (v->density > 1.0)
+    v->density = 1.0;
+  v->saturation *= printer->printvars.saturation;
+
   switch (v->image_type)
     {
     case IMAGE_LINE_ART:
@@ -1034,9 +1040,6 @@ canon_print(const printer_t *printer,		/* I - Model */
       dither_set_y_ranges_simple(dither, 3, the_levels, v->density);
       dither_set_k_ranges_simple(dither, 3, the_levels, v->density);
     }
-
-  v->density *= printer->printvars.density;
-  v->saturation *= printer->printvars.saturation;
  /*
   * Output the page, rotating as necessary...
   */
@@ -1520,6 +1523,22 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
 
 /*
  *   $Log$
+ *   Revision 1.41  2000/05/04 01:09:04  rlk
+ *   Improve use of black ink to reduce sharp grain.
+ *
+ *   Improve weaving code for some corner cases (this will let us go x8 for some
+ *   important cases, if we really want to print that slowly).
+ *
+ *   Fix ESC 440 softweave
+ *
+ *   Fix use of microweave at 360 dpi (microweave should not be used at 360 on
+ *   any printer).
+ *
+ *   Try to improve dither smoothness a bit.
+ *
+ *   Fix ink constants for ESP 870
+ *   from Jean-Marc Verbavatz <verbavatz@ifrance.com>
+ *
  *   Revision 1.40  2000/04/20 02:49:24  rlk
  *   Clean up the solid color and line art modes a bit.
  *

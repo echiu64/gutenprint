@@ -194,33 +194,33 @@ typedef struct escp2_printer
  * The green and blue will vary somewhat with different inks
  */
 
-static double dot_sizes[] = { 0.5, 0.832, 1.0 };
+static double dot_sizes[] = { 0.5, 0.67, 1.0 };
 
 static simple_dither_range_t variable_dither_ranges[] =
 {
-  { 0.125, 0x1, 0 },
-  { 0.208, 0x2, 0 },
-  { 0.25,  0x3, 0 },
+  { 0.152, 0x1, 0 },
+  { 0.255, 0x2, 0 },
+  { 0.38,  0x3, 0 },
   { 0.5,   0x1, 1 },
-  { 0.832, 0x2, 1 },
+  { 0.67,  0x2, 1 },
   { 1.0,   0x3, 1 }
 };
 
 static simple_dither_range_t standard_dither_ranges[] =
 {
   { 0.5,   0x1, 1 },
-  { 0.832, 0x2, 1 },
+  { 0.67,  0x2, 1 },
   { 1.0,   0x3, 1 }
 };
 
 static simple_dither_range_t mis_sixtone_ranges[] =
 {
-  { 0.15, 0x000001, 1 },      /* LC */
-  { 0.25, 0x000010, 1 },      /* C */
-  { 0.45, 0x000100, 1 },      /* LM */
-  { 0.50, 0x001000, 1 },      /* Y */
-  { 0.75, 0x010000, 1 },      /* M */
-  { 1.00, 0x100000, 1 }               /* K */
+  { 0.15, 0x000001, 1 },	/* LC */
+  { 0.25, 0x000010, 1 },	/* C */
+  { 0.45, 0x000100, 1 },	/* LM */
+  { 0.50, 0x001000, 1 },	/* Y */
+  { 0.75, 0x010000, 1 },	/* M */
+  { 1.00, 0x100000, 1 }		/* K */
 };
 
 /*
@@ -305,12 +305,14 @@ static escp2_printer_t model_capabilities[] =
 
   /* THIRD GENERATION PRINTERS */
   /* 10: Stylus Color 440/460 */
-  /* No, I don't believe the nozzle separation is 7.  Probably it's 8. */
+  /* Thorsten Schnier has confirmed that the separation is 8.  Why on */
+  /* earth anyone would use 21 nozzles when designing a print head is */
+  /* completely beyond me, but there you are... */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_NO),
-    21, 7, 64, 720, 2, 3, INCH_8_5, INCH_14, 9, 9, 9, 18, 1, 0
+    21, 8, 64, 720, 2, 3, INCH_8_5, INCH_14, 9, 9, 9, 18, 1, 0
   },
   /* 11: Stylus Color 640 */
   {
@@ -704,7 +706,8 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi, int xdpi,
     fprintf(prn, "\033(K\002%c%c%c", 0, 0,
 	    (output_type == OUTPUT_GRAY ? 1 : 2));
 
-  fprintf(prn, "\033(i\001%c%c", 0, use_softweave ? 0 : 1);
+  fprintf(prn, "\033(i\001%c%c", 0,
+	  (use_softweave || ydpi < 720) ? 0 : 1);
 
   if (horizontal_passes * vertical_passes * vertical_subsample > 2)
     {
@@ -1196,6 +1199,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
 
   v->density = v->density * printer->printvars.density /
     (real_horizontal_passes * vertical_subsample);
+  if (v->density > 1.0)
+    v->density = 1.0;
   v->saturation *= printer->printvars.saturation;
 
   if (landscape)
@@ -1203,7 +1208,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   else
     dither = init_dither(image_width, out_width, v);
   dither_set_black_levels(dither, 1.5, 1.5, 1.5);
-  dither_set_black_lower(dither, .25);
+  dither_set_black_lower(dither, .4);
   if (use_glossy_film)
     dither_set_black_upper(dither, 1.0);
   else
@@ -1214,8 +1219,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
       dither_set_k_ranges_simple(dither, 3, dot_sizes, v->density);
       if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
 	{
-	  dither_set_c_ranges(dither, 5, variable_dither_ranges, v->density);
-	  dither_set_m_ranges(dither, 5, variable_dither_ranges, v->density);
+	  dither_set_c_ranges(dither, 6, variable_dither_ranges, v->density);
+	  dither_set_m_ranges(dither, 6, variable_dither_ranges, v->density);
 	}
       else
 	{	
@@ -2336,6 +2341,7 @@ typedef struct {
   int oversample;		/* Excess precision per row */
   int realjets;			/* Actual number of jets */
   int pass_adjustment;		/* Magical */
+  int post_pass_adjustment;	/* Even more magical */
   int ncolors;			/* How many colors (1, 4, or 6) */
   int horizontal_width;		/* Line width in output pixels */
   int vertical_height;		/* Image height in output pixels */
@@ -2384,6 +2390,8 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses,
   sw->oversample = osample * v_subpasses * v_subsample;
   sw->vertical_subpasses = v_subpasses;
   sw->njets /= sw->oversample;
+  if (sw->njets == 0)
+    sw->njets = 1;
   sw->vmod = sw->separation * sw->oversample;
   sw->horizontal_weave = osample;
   sw->pass_adjustment = (sw->oversample * sep + jets - 1) / jets;
@@ -2397,6 +2405,10 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses,
   sw->jetsleftover = sw->njets - sw->jetsused;
   sw->weavespan = (sw->jetsused - 1) * sw->separation;
   sw->vertical_oversample = v_subsample;
+  if (sw->separation > sw->njets)
+    sw->post_pass_adjustment = (sw->separation / sw->njets);
+  else
+    sw->post_pass_adjustment = 0;
 
   sw->bitwidth = width;
 
@@ -2537,6 +2549,7 @@ weave_parameters_by_row(const escp2_softweave_t *sw, int row,
   w->jet = divv((row + (sw->realjets * sw->separation) - w->logicalpassstart),
 		sw->separation) - sw->realjets;
   w->jet += sw->jetsused * (sw->oversample - 1);
+  w->pass += sw->post_pass_adjustment;
   if (w->jet >= sw->realjets)
     {
       w->jet -= sw->realjets;
@@ -3026,6 +3039,22 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.135  2000/05/04 01:09:04  rlk
+ *   Improve use of black ink to reduce sharp grain.
+ *
+ *   Improve weaving code for some corner cases (this will let us go x8 for some
+ *   important cases, if we really want to print that slowly).
+ *
+ *   Fix ESC 440 softweave
+ *
+ *   Fix use of microweave at 360 dpi (microweave should not be used at 360 on
+ *   any printer).
+ *
+ *   Try to improve dither smoothness a bit.
+ *
+ *   Fix ink constants for ESP 870
+ *   from Jean-Marc Verbavatz <verbavatz@ifrance.com>
+ *
  *   Revision 1.134  2000/05/02 11:33:57  rlk
  *   Improved dither code.  Deposits significantly less ink than previous version,
  *   and gives better saturation.

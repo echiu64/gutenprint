@@ -1,10 +1,10 @@
 #!/bin/sh
 
-modes='14,7 16,8 20,8 21,7 21,8 24,4 24,6 24,8 24,12 32,8 32,16 48,4 48,6 48,8 48,12 64,4 64,7 64,8 64,16 96,2 96,3 96,6 96,8 128,8 144,6 192,2 192,3 192,6 192,8'
+modes='20,8 21,8 32,8 48,6 64,4 64,8 96,2 128,4 128,8 144,6 192,2'
 passes='1,1,1 2,1,1 1,2,1 1,2,2 1,4,1 2,2,1 1,4,2 2,2,2'
 
-jets='14 16 20 21 24 32 48 64 96 128 144 192'
-separations='2 3 4 6 7 8 12 16'
+jets='20 21 32 48 64 96 128 144 192'
+separations='2 4 6 8'
 
 for jet in $jets ; do
     for sep in $separations ; do
@@ -15,17 +15,17 @@ for jet in $jets ; do
 	    c=`echo $stuff | cut -f3 '-d '`
 	    d=`echo $stuff | cut -f4 '-d '`
 	    e=`echo $stuff | cut -f5 '-d '`
-	    if [ $a -ge `expr $b \* $c \* $d \* $e` ] ; then
-		./escp2-weavetest $stuff 10000 > /dev/null 2>&1
-		if [ $? -ne 0 ] ; then
-		    if [ -n "`echo $modes | grep $jet,$sep`" ] ; then
-			echo -n '*'
-		    else
-			echo -n ' '
-		    fi
-		    echo -n "$stuff  "
-		    ./escp2-weavetest $stuff 10000 | tail -1
+	    ./escp2-weavetest $stuff 10000 > /dev/null 2>&1
+	    if [ $? -ne 0 ] ; then
+		if [ -n "`echo $modes | grep $jet,$sep`" ] ; then
+		    echo -n '*'
+		elif [ $a -lt `expr $b \* $c \* $d \* $e` ] ; then
+		    echo -n '!'
+		else
+		    echo -n ' '
 		fi
+		echo -n "$stuff  "
+		./escp2-weavetest $stuff 10000 | tail -1
 	    fi
 	done
     done

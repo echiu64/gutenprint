@@ -128,21 +128,21 @@ main(int argc, char **argv)
   vpasses = atoi(argv[4]);
   subpasses = atoi(argv[5]);
   nrows = atoi(argv[6]);
-  passstarts = malloc(sizeof(int) * nrows);
-  logpassstarts = malloc(sizeof(int) * nrows);
-  passends = malloc(sizeof(int) * nrows);
-  passcounts = malloc(sizeof(int) * nrows);
-  physpassstuff = malloc(nrows);
-  rowdetail = malloc(nrows * physjets);
-  memset(rowdetail, 0, nrows * physjets);
-  memset(physpassstuff, -1, nrows);
+  passstarts = malloc(sizeof(int) * (nrows + physsep));
+  logpassstarts = malloc(sizeof(int) * (nrows + physsep));
+  passends = malloc(sizeof(int) * (nrows + physsep));
+  passcounts = malloc(sizeof(int) * (nrows + physsep));
+  physpassstuff = malloc((nrows + physsep));
+  rowdetail = malloc((nrows + physsep) * physjets);
+  memset(rowdetail, 0, (nrows + physsep) * physjets);
+  memset(physpassstuff, -1, (nrows + physsep));
 
   sw = initialize_weave(physjets, physsep, hpasses, vpasses, subpasses,
 			COLOR_MONOCHROME, 1, 128, nrows, 1);
   print_header();
   printf("%13s %5s %5s %5s %10s %10s %10s %10s\n", "", "row", "pass", "jet",
 	 "missing", "logical", "physstart", "physend");
-  for (i = 0; i < nrows; i++)
+  for (i = 0; i < (nrows + physsep); i++)
     {
       passstarts[i] = -1;
       passends[i] = -1;
@@ -155,41 +155,51 @@ main(int argc, char **argv)
 	  weave_parameters_by_row((escp2_softweave_t *)sw, i, j, &w);
 	  physrow = w.logicalpassstart + physsep * w.jet;
 	  printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%5d %5d %5d %10d %10d %10d %10d\n",
-		 w.pass < 0 ? (errors++, 'A') : ' ',
-		 w.jet < 0 || w.jet > physjets - 1 ? (errors++, 'B') : ' ',
-		 w.physpassstart > w.row ? (errors++, 'C') : ' ',
-		 w.physpassend < w.row ? (errors++, 'D') : ' ',
-		 w.physpassend == w.row && lastpass + 1 != w.pass ? (errors++, 'E') : ' ',
-		 passstarts[w.pass] != -1 && passstarts[w.pass] !=w.physpassstart ?
-		 (errors++, 'F') : ' ',
-		 passends[w.pass] != -1 && passends[w.pass] !=w.physpassend ?
-		 (errors++, 'G') : ' ',
-		 w.row != physrow ? (errors++, 'H') : ' ',
-		 w.missingstartrows < 0 || w.missingstartrows > physjets - 1 ?
-		 (errors++, 'I') : ' ',
-		 w.physpassstart < 0 ? (errors++, 'J') : ' ',
-		 w.missingstartrows > w.jet ? (errors++, 'K') : ' ',
-		 physpassstuff[w.pass] >= 0 && physpassstuff[w.pass] != j ?
-		 (errors++, 'L') : ' ',
-		 rowdetail[w.pass * physjets + w.jet] == 1 ? (errors++, 'M') :
-		 ' ',
+		 (w.pass < 0 ? (errors++, 'A') : ' '),
+		 (w.jet < 0 || w.jet > physjets - 1 ? (errors++, 'B') : ' '),
+		 (w.physpassstart > w.row ? (errors++, 'C') : ' '),
+		 (w.physpassend < w.row ? (errors++, 'D') : ' '),
+		 (w.physpassend == w.row && lastpass + 1 != w.pass ?
+		  (errors++, 'E') : ' '),
+		 (w.pass >= 0 && w.pass < nrows && passstarts[w.pass] != -1
+		  && passstarts[w.pass] !=w.physpassstart ?
+		  (errors++, 'F') : ' '),
+		 (w.pass >= 0 && w.pass < nrows && passends[w.pass] != -1 &&
+		  passends[w.pass] !=w.physpassend ?
+		  (errors++, 'G') : ' '),
+		 (w.row != physrow ? (errors++, 'H') : ' '),
+		 (w.missingstartrows < 0 || w.missingstartrows > physjets - 1 ?
+		  (errors++, 'I') : ' '),
+		 (w.physpassstart < 0 ? (errors++, 'J') : ' '),
+		 (w.missingstartrows > w.jet ? (errors++, 'K') : ' '),
+		 (w.pass >= 0 && w.pass < nrows &&
+		  physpassstuff[w.pass] >= 0 && physpassstuff[w.pass] != j ?
+		  (errors++, 'L') : ' '),
+		 (w.pass >= 0 && w.pass < nrows && w.jet >= 0 &&
+		  w.jet < physjets &&
+		  rowdetail[w.pass * physjets + w.jet] == 1 ?
+		  (errors++, 'M') : ' '),
 		 w.row, w.pass, w.jet,
 		 w.missingstartrows, w.logicalpassstart, w.physpassstart,
 		 w.physpassend);
-	  if (w.physpassend == w.row)
+	  if (w.pass >= 0 && w.pass < (nrows + physsep))
 	    {
-	      lastpass = w.pass;
-	      passends[w.pass] = -2;
+	      if (w.physpassend == w.row)
+		{
+		  lastpass = w.pass;
+		  passends[w.pass] = -2;
+		}
+	      else
+		passends[w.pass] = w.physpassend;
+	      passstarts[w.pass] = w.physpassstart;
+	      logpassstarts[w.pass] = w.logicalpassstart;
+	      if (w.jet >= 0 && w.jet < physjets)
+		rowdetail[w.pass * physjets + w.jet] = 1;
+	      if (physpassstuff[w.pass] == -1)
+		physpassstuff[w.pass] = j;
+	      if (w.pass > newestpass)
+		newestpass = w.pass;
 	    }
-	  else
-	    passends[w.pass] = w.physpassend;
-	  passstarts[w.pass] = w.physpassstart;
-	  logpassstarts[w.pass] = w.logicalpassstart;
-	  rowdetail[w.pass * physjets + w.jet] = 1;
-	  if (physpassstuff[w.pass] == -1)
-	    physpassstuff[w.pass] = j;
-	  if (w.pass > newestpass)
-	    newestpass = w.pass;
 	}
     }
   printf("Unterminated passes:\n");
