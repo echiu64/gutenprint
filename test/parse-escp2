@@ -1,5 +1,9 @@
 #!/usr/bin/perl
 
+require("getopts.pl");
+
+do Getopts('v');
+
 while (<>) {
     $stuff .= $_;
 }
@@ -21,7 +25,7 @@ $esc = "\033";
 
 $skipcount = 0;
 $curpos = 0;
-$verbose = 0;
+$verbose = $opt_v;
 
 sub do_remote_command {
     print "\n";
