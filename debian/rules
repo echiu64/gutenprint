@@ -99,6 +99,10 @@ binary-arch: build install ChangeLog
 	  mkdir debian/gimp1.2-print/usr/share/doc/gimp1.2-print/html ; \
 	  cp doc/*.html doc/*.png debian/gimp1.2-print/usr/share/doc/gimp1.2-print/html ; \
 	dh_installexamples -a
+	  mkdir -p debian/gimp1.2-print/usr/share/doc/gimp1.2-print/samples
+	  cp -r samples/*.png debian/gimp1.2-print/usr/share/doc/gimp1.2-print/samples
+	  mkdir -p debian/cupsys-driver-gimpprint/usr/share/doc/cupsys-driver-gimpprint/samples
+	  cp -r samples/profile.jpg debian/cupsys-driver-gimpprint/usr/share/doc/cupsys-driver-gimpprint/samples
 #	dh_installmenu -a
 #	dh_installlogrotate -a
 #	dh_installemacsen -a

@@ -1,9 +1,10 @@
-gimp-print (4.1.99-a2-2) unstable; urgency=low
+gimp-print (4.1.99-a2-3) unstable; urgency=low
 
   * New upstream release
   * Remove README.dither from libgimpprint-dev.docs
+  * Add image samples to gimp1.2-print and cupsys-driver-gimpprint
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>  Sat,  9 Jun 2001 22:38:11 +0100
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Thu, 26 Jul 2001 00:27:42 +0100
 
 gimp-print (4.1.7-1) unstable; urgency=low
 
