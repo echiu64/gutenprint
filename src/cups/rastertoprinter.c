@@ -67,6 +67,12 @@
 #endif
 #include "../../lib/libprintut.h"
 
+/* Solaris with gcc has problems because gcc's limits.h doesn't #define */
+/* this */
+#ifndef CHAR_BIT
+#define CHAR_BIT 8
+#endif
+
 /*
  * Structure for page raster data...
  */
