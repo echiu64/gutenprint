@@ -489,14 +489,6 @@ Gimp-Print 4.1.10 contains the following changes over 4.1.8:
    printing very large images.
 
 
-Gimp-Print 4.1.10 has the following known issues:
-
-1) The Canon driver currently produces incorrect or no output on many
-   printers at many resolutions.  This has been the case since roughly
-   4.1.5.  We are aware of this issue, and will fix it as soon as
-   possible.
-
-
 Gimp-Print 4.1.9 was abandoned.
 
 
@@ -582,13 +574,6 @@ Gimp-Print 4.1.8 contains the following changes over 4.1.7:
    (when gcc is used).  While most of the warnings have been cleaned
    up, some of them cannot easily be removed (they're due to issues
    with external header files or other tools, for example).
-
-Gimp-Print 4.1.8 has the following known issues:
-
-1) The Canon driver currently produces incorrect or no output on many
-   printers at many resolutions.  This has been the case since roughly
-   4.1.5.  We are aware of this issue, and will fix it as soon as
-   possible.
 
 
 Gimp-Print 4.1.7 contains the following changes over 4.1.6:
@@ -725,8 +710,6 @@ Gimp-Print 4.1.5 contains the following changes over 4.1.4:
    much more stable binary interface.  Currently, this is in an
    interim state.
 
-The following problem with 4.1.5 is known to exist: printing in at
-least some modes on the Canon BJC-8200 is incorrect.
 
 Gimp-Print 4.1.4 contains the following changes over 4.1.3:
 
