@@ -258,6 +258,7 @@ typedef struct
   const char *hue_adjustment;
   const char *sat_adjustment;
   const ink_channel_t *channels[PHYSICAL_CHANNEL_LIMIT];
+  const char *channel_parameter_names[PHYSICAL_CHANNEL_LIMIT];
 } escp2_inkname_t;
 
 typedef struct

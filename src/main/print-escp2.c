@@ -201,6 +201,30 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
   },
+  {
+    "LightCyanTransition", N_("Light Cyan Transition"),
+    N_("Light Cyan Transition"),
+    STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+    STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+  },
+  {
+    "LightMagentaTransition", N_("Light Magenta Transition"),
+    N_("Light Magenta Transition"),
+    STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+    STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+  },
+  {
+    "DarkYellowTransition", N_("Dark Yellow Transition"),
+    N_("Dark Yellow Transition"),
+    STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+    STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+  },
+  {
+    "GrayTransition", N_("Gray Transition"),
+    N_("Gray Transition"),
+    STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+    STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+  },
   PARAMETER_INT(max_hres),
   PARAMETER_INT(max_vres),
   PARAMETER_INT(min_hres),
@@ -489,6 +513,24 @@ verify_inktype(const escp2_inkname_t *inks, int model, const stp_vars_t v)
     return 1;
 }
 
+static const escp2_inkname_t *
+get_inktype(const stp_vars_t v, int model)
+{
+  const char	*ink_type = stp_get_string_parameter(v, "InkType");
+  const inklist_t *ink_list = escp2_inklist(model, v);
+  int i;
+
+  if (ink_type)
+    {
+      for (i = 0; i < ink_list->n_inks; i++)
+	{
+	  if (strcmp(ink_type, ink_list->inknames[i]->name) == 0)
+	    return ink_list->inknames[i];
+	}
+    }
+  return NULL;
+}
+
 /*
  * 'escp2_parameters()' - Return the parameter values for the given parameter.
  */
@@ -628,6 +670,42 @@ escp2_parameters(const stp_vars_t v, const char *name,
 	description->deflt.boolean = 0;
       else
 	description->is_active = 0;
+    }
+  else if (strcmp(name, "LightCyanTransition") == 0 ||
+	   strcmp(name, "LightMagentaTransition") == 0 ||
+	   strcmp(name, "DarkYellowTransition") == 0 ||
+	   strcmp(name, "GrayTransition") == 0)
+    {
+#if 0
+      const escp2_inkname_t *inktype = get_inktype(v, model);
+      description->is_active = 0;
+      if (inktype)
+	{
+	  int channel_limit = inktype->channel_limit;
+	  if (stp_get_output_type(v) == OUTPUT_GRAY)
+	    channel_limit = 1;
+	  for (i = 0; i < channel_limit; i++)
+	    {
+	      if (inktype->channel_parameter_names[i] &&
+		  strcmp(name, inktype->channel_parameter_names[i]) == 0)
+		{
+		  description->is_active = 1;
+		  description->bounds.dbl.lower = 0;
+		  description->bounds.dbl.upper = 5.0;
+		  description->deflt.dbl = 1.0;
+		  return;
+		}
+	    }
+	}
+#else
+      /* For now, work around a problem with the GUI */
+      /* whereby we can't activate or deactivate an option based on a */
+      /* combo box setting -- rlk 20030317 */
+      description->is_active = 1;
+      description->bounds.dbl.lower = 0;
+      description->bounds.dbl.upper = 5.0;
+      description->deflt.dbl = 1.0;
+#endif
     }
 }
 
@@ -1293,24 +1371,6 @@ count_channels(const escp2_inkname_t *inks)
   return answer;
 }
 
-static const escp2_inkname_t *
-get_inktype(const stp_vars_t v, int model)
-{
-  const char	*ink_type = stp_get_string_parameter(v, "InkType");
-  const inklist_t *ink_list = escp2_inklist(model, v);
-  int i;
-
-  if (ink_type)
-    {
-      for (i = 0; i < ink_list->n_inks; i++)
-	{
-	  if (strcmp(ink_type, ink_list->inknames[i]->name) == 0)
-	    return ink_list->inknames[i];
-	}
-    }
-  return NULL;
-}
-
 static const physical_subchannel_t default_black_subchannels[] =
 {
   { 0, 0, 0 }
@@ -1326,6 +1386,9 @@ static const escp2_inkname_t default_black_ink =
   NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, NULL,
   {
     &default_black_channels, NULL, NULL, NULL
+  },
+  {
+    NULL, NULL, NULL, NULL
   }
 };
 
@@ -1366,11 +1429,16 @@ setup_inks(const escp2_init_t *init)
 	  const escp2_variable_ink_t *ink = (*inks)[i];
 	  if (ink)
 	    {
+	      const char *param = init->inkname->channel_parameter_names[i];
+	      double userval = 1.0;
+	      if (param && stp_check_float_parameter(init->v, param,
+						     STP_PARAMETER_ACTIVE))
+		userval = stp_get_float_parameter(init->v, param);
 	      stpi_dither_set_ranges(nv, i, ink->numranges, ink->range,
-				    ink->density * paper_k_upper);
+				     ink->density * paper_k_upper * userval);
 
 	      stpi_dither_set_shades(nv, i, ink->numshades, ink->shades,
-				    ink->density * paper_k_upper);
+				     ink->density * paper_k_upper * userval);
 	    }
 	}
       stpi_flush_debug_messages(nv);
