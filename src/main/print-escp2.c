@@ -2119,7 +2119,7 @@ static const paper_t escp2_paper_list[] =
    NULL, NULL, NULL},
   {N_("Photo Paper"),                8, 0, 1.00, 1.0, .9, 0, 0, 0, 1, 1.0,
    NULL, NULL, NULL},
-  {N_("Premium Glossy Photo Paper"), 8, 0, 1.00, 1, .999, 0, .03, 0, 1.1, 1.0,
+  {N_("Premium Glossy Photo Paper"), 8, 0, 1.10, 1, .999, 0, .03, 0, 1, 1.0,
    pgpp_hue_adjustment, pgpp_lum_adjustment, pgpp_sat_adjustment},
   {N_("Premium Luster Photo Paper"), 8, 0, 1.00, 1, .999, 0, 0, 0, 1.0, 1.0,
    NULL, NULL, NULL},
