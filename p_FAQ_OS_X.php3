@@ -73,13 +73,13 @@ require('standard_html_header.php3');
  </p>
  <li>
  <h3>
- Printing does not work from "carbon" applications (Adobe Photoshop, Acrobat,
+ Printing does not work from "Carbon" applications (Adobe Photoshop, Acrobat,
  Appleworks, etc...), but I can print from "Cocoa" applications (Preview,
  TextEdit, etc...) just fine. How can I fix this ?
  </h3>
  <p>
  The Gimp-Print drivers for OS X are CUPS plugin filters. In Mac OS 10.2
- and 10.2.1 when users print with CUPS-based drivers from a "carbon"
+ and 10.2.1 when users print with CUPS-based drivers from a "Carbon"
  application the application generates PostScript output instead of the
  OS X native PDF (this is not the case with vendor-supplied printer
  drivers). If <a href=
@@ -264,7 +264,7 @@ require('standard_html_header.php3');
  your printer from your network administrator. If you are the
  administrator for your network consult the documentation that came with
  your network device to learn how to determine this information (if you
- don’t understand the ins and outs of TCP/IP networking you should find
+ don't understand the ins and outs of TCP/IP networking you should find
  a friend who does). If you can't determine the Queue Name for your print
  server try using the default queue first. If that fails try a common
  queue name like lp (lower case LP). If you have the correct IP Address
