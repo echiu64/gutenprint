@@ -795,7 +795,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
            j <= stp_options[i].high;
 	   j += stp_options[i].step)
 	gzprintf(fp, "*%s %d/%.3f: \"\"\n", stp_options[i].name, j, j * 0.001);
-      gzprintf(fp, "*CloseUI *%s\n", stp_options[i].name);
+      gzprintf(fp, "*CloseUI: *%s\n", stp_options[i].name);
     }
 
  /*
