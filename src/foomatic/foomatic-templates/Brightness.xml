@@ -16,9 +16,9 @@
   <constraints>
      <constraint sense="true">
       <driver>@@DRVNAME@@</driver>
-      <arg_defval>1.0</arg_defval>
+      <arg_defval>@@DEFVAL@@</arg_defval>
      </constraint>
   </constraints>
-  <arg_max>2</arg_max>
-  <arg_min>0</arg_min>
+  <arg_max>@@MAXVAL@@</arg_max>
+  <arg_min>@@MINVAL@@</arg_min>
 </option>

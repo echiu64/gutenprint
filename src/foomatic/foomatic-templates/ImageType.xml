@@ -16,13 +16,13 @@
   <constraints>
      <constraint sense="true">
       <driver>@@DRVNAME@@</driver>
-      <arg_defval>ev/258</arg_defval>
+      <arg_defval>@@DRVNAME@@-LineArt</arg_defval>
      </constraint>
   </constraints>
   <enum_vals>
-   <enum_val id="ev/258">
+   <enum_val id="@@DRVNAME@@-LineArt">
     <ev_longname>
-     <en>Line art (color or gray scale)</en>
+     <en>Line art</en>
     </ev_longname>
     <!-- A multilingual <comments> block can appear here, too;
          it should be treated as documentation for the user. -->
@@ -33,22 +33,9 @@
     </ev_shortname>
     <ev_driverval>0</ev_driverval>
    </enum_val>
-   <enum_val id="ev/261">
+   <enum_val id="@@DRVNAME@@-SolidColors">
     <ev_longname>
-     <en>Pure bw or prescreened (currently black-only)</en>
-    </ev_longname>
-    <!-- A multilingual <comments> block can appear here, too;
-         it should be treated as documentation for the user. -->
-    <ev_shortname>
-     <en>Black</en>
-     <!-- Until someone tells me how to learn the user locale in 
-          backends, the shortname must be monolingual in <en>! -->
-    </ev_shortname>
-    <ev_driverval>3</ev_driverval>
-   </enum_val>
-   <enum_val id="ev/259">
-    <ev_longname>
-     <en>Primarily solid colors ro smooth gradients (color or gray scale)</en>
+     <en>Primarily solid colors or smooth gradients</en>
     </ev_longname>
     <!-- A multilingual <comments> block can appear here, too;
          it should be treated as documentation for the user. -->
@@ -59,14 +46,14 @@
     </ev_shortname>
     <ev_driverval>1</ev_driverval>
    </enum_val>
-   <enum_val id="ev/260">
+   <enum_val id="@@DRVNAME@@-Photographs">
     <ev_longname>
-     <en>Continuous-tone photographs (color or gray scale)</en>
+     <en>Continuous-tone photographs</en>
     </ev_longname>
     <!-- A multilingual <comments> block can appear here, too;
          it should be treated as documentation for the user. -->
     <ev_shortname>
-     <en>Photos</en>
+     <en>Photographs</en>
      <!-- Until someone tells me how to learn the user locale in 
           backends, the shortname must be monolingual in <en>! -->
     </ev_shortname>

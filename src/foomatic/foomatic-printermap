@@ -54,9 +54,12 @@
 #gptofoo escp2-720 printer/317545
 #gptofoo escp2-750 printer/60128
 #gptofoo escp2-780 printer/Epson-Stylus_Photo_780
+#gptofoo escp2-785 printer/Epson-Stylus_Photo_785
 #gptofoo escp2-790 printer/Epson-Stylus_Photo_790
 #gptofoo escp2-870 printer/284105
+#gptofoo escp2-875 printer/Epson-Stylus_Photo_875
 #gptofoo escp2-890 printer/Epson-Stylus_Photo_890
+#gptofoo escp2-895 printer/Epson-Stylus_Photo_895
 #gptofoo escp2-1200 printer/167008
 #gptofoo escp2-1270 printer/284169
 #gptofoo escp2-1280 printer/Epson-Stylus_Photo_1280
@@ -68,6 +71,7 @@
 #gptofoo escp2-7500 printer/Epson-Stylus_Pro_7500
 #gptofoo escp2-9000 printer/Epson-Stylus_Pro_9000
 #gptofoo escp2-9500 printer/Epson-Stylus_Pro_9500
+#gptofoo escp2-10000 printer/Epson-Stylus_Pro_10000
 #gptofoo pcl-340 printer/153056
 #gptofoo pcl-400 printer/63040
 #gptofoo pcl-500 printer/58363
