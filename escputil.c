@@ -639,8 +639,60 @@ do_align(void)
   char *printer_name = NULL;
   if (!printer_model)
     {
-      printf("Printer model must be specified with -m.\n");
-      do_help(1);
+      char buf[1024];
+      int fd;
+      int status;
+      char *pos = NULL;
+      char *spos = NULL;
+      if (!raw_device)
+	{
+	  printf("Printer alignment must be done with a raw device or else\n");
+	  printf("the -m option must be used to specify a printer.\n");
+	  do_help(1);
+	}
+      printf("Attempting to detect printer model...");
+      fflush(stdout);
+      fd = open(raw_device, O_RDWR, 0666);
+      if (fd == -1)
+	{
+	  fprintf(stderr, "\nCannot open %s read/write: %s\n", raw_device,
+		  strerror(errno));
+	  exit(1);
+	}
+      bufpos = 0;
+      sprintf(printer_cmd, "\033\001@EJL ID\r\n");
+      if (write(fd, printer_cmd, strlen(printer_cmd)) < strlen(printer_cmd))
+	{
+	  fprintf(stderr, "\nCannot write to %s: %s\n", raw_device,
+		  strerror(errno));
+	  exit(1);
+	}
+      sleep(1);
+      memset(buf, 0, 1024);
+      status = read(fd, buf, 1023);
+      if (status < 0)
+	{
+	  fprintf(stderr, "\nCannot read from %s: %s\n", raw_device,
+		  strerror(errno));
+	  exit(1);
+	}
+      (void) close(fd);
+      pos = strchr(buf, (int) ';');
+      if (pos)
+	pos = strchr(pos + 1, (int) ';');
+      if (pos)
+	pos = strchr(pos, (int) ':');
+      if (pos)
+	spos = strchr(pos, (int) ';');
+      if (!pos)
+	{
+	  fprintf(stderr, "\nCannot detect printer type.  Please use -m to specify your printer model.\n");
+	  do_help(1);
+	}
+      if (spos)
+	*spos = '\000';
+      printer_model = pos + 1;
+      printf("%s\n\n", printer_model);
     }
   while (printer->short_name && notfound)
     {
