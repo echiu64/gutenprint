@@ -151,7 +151,7 @@ libgutenprint_version = -release $(GUTENPRINT_VERSION)
 # Uncomment to build a versioned library
 #libgutenprint_version = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 libgutenprint_la_LDFLAGS = $(libgutenprint_version) \
-	-rpath $(libdir)
+	-rpath $(libdir) -no-undefined
 # libtool currently needs a patch for symbol export to work correctly
 # using a linker version script.
 #	-export-symbols $(srcdir)/libgutenprint.sym
