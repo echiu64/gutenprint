@@ -2398,9 +2398,11 @@ do_color_updates (void)
 	  switch (opt->fast_desc->p_type)
 	    {
 	    case STP_PARAMETER_TYPE_DOUBLE:
-	      gtk_adjustment_set_value
-		(GTK_ADJUSTMENT(opt->info.flt.adjustment),
-		 stp_get_float_parameter(pv->v, opt->fast_desc->name));
+	      if (stp_check_float_parameter(pv->v, opt->fast_desc->name,
+					    STP_PARAMETER_INACTIVE))
+		gtk_adjustment_set_value
+		  (GTK_ADJUSTMENT(opt->info.flt.adjustment),
+		   stp_get_float_parameter(pv->v, opt->fast_desc->name));
 	      if (stp_check_float_parameter(pv->v, opt->fast_desc->name,
 					    STP_PARAMETER_ACTIVE) ||
 		  opt->fast_desc->is_mandatory)
