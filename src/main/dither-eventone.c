@@ -33,6 +33,7 @@
 #include "gimp-print-internal.h"
 #include <gimp-print/gimp-print-intl-internal.h>
 #include <string.h>
+#include <math.h>
 #include "dither-impl.h"
 #include "dither-inlined-functions.h"
 
@@ -42,7 +43,6 @@ typedef struct
   int   d2y;
   stpi_dis_t	d_sq;
   int	aspect;
-  int   ditherval;
 } eventone_t;
 
 
@@ -74,7 +74,7 @@ print_ink(stpi_dither_t *d, unsigned char *tptr, stpi_ink_defn_t *ink,
 }
 
 #define EVEN_C1 256
-#define EVEN_C2 222		/* = sqrt(3)/2 * EVEN_C1 */
+#define EVEN_C2 (EVEN_C1 * sqrt(3.0) / 2.0)
 
 static void
 free_eventone_data(stpi_dither_t *d)
@@ -199,35 +199,35 @@ diffuse_error(stpi_dither_channel_t *dc, eventone_t *et, int diff_factor, int x,
 }
 
 static inline int
-eventone_adjust(stpi_shade_segment_t *sp, eventone_t *et, int dither_point, unsigned int desired, unsigned int dotsize)
+eventone_adjust(stpi_dither_channel_t *dc, eventone_t *et, int dither_point,
+		unsigned int desired)
 {
+  if (dither_point <= 0)
+    return 0;
+  else if (dither_point >= 65535)
+    return 65535;
   if (desired == 0) {
     dither_point = 0;
   } else {
-    dither_point += sp->dis.r_sq * et->aspect;
-    if (desired < dotsize) {
-      dither_point -= (EVEN_C1 * dotsize) / desired;
-    }
-    if (dither_point > 65535) dither_point = 65535;
-    else if (dither_point < 0) dither_point = 0;
+    dither_point += dc->shade.dis.r_sq * et->aspect -
+      (EVEN_C1 * 65535) / desired;
+    if (dither_point > 65535)
+      dither_point = 65535;
+    else if (dither_point < 0)
+      dither_point = 0;
   }
   return dither_point;
 }
 
-static inline int
-find_segment(stpi_dither_channel_t *dc, eventone_t *et, int totalink,
-	     unsigned int baseink, stpi_ink_defn_t *lower,
-	     stpi_ink_defn_t *upper)
+static inline void
+find_segment(stpi_dither_channel_t *dc, unsigned base,
+	     stpi_ink_defn_t *lower, stpi_ink_defn_t *upper)
 {
   lower->range = 0;
   lower->bits = 0;
-  if (totalink < 0)
-    totalink = 0;
 
   if (dc->nlevels == 1)
     {
-      lower->bits = 0;
-      lower->range = 0;
       upper->bits = dc->ink_list[1].bits;
       upper->range = dc->ink_list[1].value;
     }
@@ -237,41 +237,31 @@ find_segment(stpi_dither_channel_t *dc, eventone_t *et, int totalink,
       stpi_ink_defn_t *ip;
 
       for (i=0, ip = dc->ink_list; i < dc->nlevels - 1; i++, ip++) {
-	if (ip->value <= baseink) {
+	if (ip->value <= base) {
 	  lower->bits = ip->bits;
 	  lower->range = ip->value;
 	} else {
 	  upper->bits = ip->bits;
 	  upper->range = ip->value;
-	  goto found_segment;
+	  return;
 	}
       }
 
       upper->bits = ip->bits;
       upper->range = ip->value;
     }
+}
 
-found_segment:
-
-  { unsigned dither_point;
-    if (totalink >= upper->range) {
-      dither_point = 65536;
-    } else if (totalink <= lower->range) {
-      dither_point = 0;
-    } else {
-      if (lower->range == 0) {
-	unsigned where =
-	  ((unsigned) totalink * 65536u) / (unsigned) upper->range;
-	dither_point =
-	  eventone_adjust(&dc->shade, et, where, baseink, upper->range);
-      } else {
-	dither_point =
-	  (((unsigned) totalink - (unsigned) lower->range) * 65536u) /
-	  ((unsigned) upper->range - (unsigned) lower->range);
-      }
-    }
-    return (int) dither_point;
-  }
+static inline int
+find_ditherpoint(stpi_dither_channel_t *dc, int inkval,
+		 stpi_ink_defn_t *lower, stpi_ink_defn_t *upper)
+{
+  if (inkval <= lower->range)
+    return 0;
+  else if (inkval >= upper->range)
+    return 65535;
+  else
+    return (65535 * (inkval - lower->range)) / (upper->range - lower->range);
 }
 
 void
@@ -295,6 +285,7 @@ stpi_dither_et(stp_vars_t v,
   int		xerror, xstep, xmod;
   int		aspect = d->y_aspect / d->x_aspect;
   int		diff_factor;
+  int		range;
   int		channel_count = CHANNEL_COUNT(d);
 
   if (!et_initializer(d, duplicate_line, zero_mask)) return;
@@ -324,13 +315,16 @@ stpi_dither_et(stp_vars_t v,
   xstep  = channel_count * (d->src_width / d->dst_width);
   xmod   = d->src_width % d->dst_width;
   xerror = (xmod * x) % d->dst_width;
-  et->ditherval = 0;
 
   for (; x != terminate; x += direction) {
+
+    range = 0;
+
     for (i=0; i < channel_count; i++) {
       if (CHANNEL(d, i).ptr)
 	{
 	  int inkspot, base;
+	  int place;
 	  stpi_dither_channel_t *dc = &CHANNEL(d, i);
 	  stpi_shade_segment_t *sp = &dc->shade;
 	  stpi_ink_defn_t *inkp;
@@ -340,25 +334,33 @@ stpi_dither_et(stp_vars_t v,
 
 	  /* Incorporate error data from previous line */
 	  base = raw[i];
-	  dc->v += 2 * base + dc->errs[0][x + MAX_SPREAD];
-	  inkspot = dc->v - base;
+	  find_segment(dc, base, &lower, &upper);
+
+	  /*
+	   * Rather than use the absolute value of the point to compute
+	   * the error, use the relative value of the point within
+	   * the range to find the two candidate dot sizes.
+	   */
+	  place = find_ditherpoint(dc, base, &lower, &upper);
+
+	  dc->v += 2 * place + dc->errs[0][x + MAX_SPREAD];
+	  inkspot = dc->v - place;
 
 	  /* Find which are the two candidate dot sizes */
-	  et->ditherval += find_segment(dc, et, inkspot, base, &lower, &upper);
+	  range += eventone_adjust(dc, et, inkspot, place);
 
 	  /* Determine whether to print the larger or smaller dot */
 
 	  inkp = &lower;
-	  if (et->ditherval >= 32768) {
-	    et->ditherval -= 65536;
+	  if (range >= 32768) {
+	    range -= 65535;
 	    inkp = &upper;
+	    dc->v -= 131070;
+	    sp->dis = et->d_sq;
 	  }
 
 	  /* Adjust the error to reflect the dot choice */
 	  if (inkp->bits) {
-
-	    dc->v -= 2 * inkp->range;
-	    sp->dis = et->d_sq;
 
 	    set_row_ends(dc, x);
 
