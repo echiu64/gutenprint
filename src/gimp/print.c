@@ -247,7 +247,7 @@ run (char   *name,		/* I - Name of print program. */
 {
   GDrawable	*drawable;	/* Drawable for image */
   GRunModeType	 run_mode;	/* Current run mode */
-  FILE		*prn;		/* Print file/command */
+  FILE		*prn = NULL;	/* Print file/command */
   int		 ncolors;	/* Number of colors in colormap */
   GParam	*values;	/* Return values */
 #ifdef __EMX__
