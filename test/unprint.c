@@ -136,6 +136,9 @@ extern void reverse_bit_order (unsigned char *buf, int n);
 extern int rle_decode (unsigned char *inbuf, int n, int max);
 extern void parse_canon (FILE *fp_r);
 
+static unsigned get_mask_1[] = { 7, 6, 5, 4, 3, 2, 1, 0 };
+static unsigned get_mask_2[] = { 6, 4, 2, 0 };
+static unsigned get_mask_4[] = { 4, 0 };
 
 static inline int
 get_bits(unsigned char *p, int index)
@@ -152,9 +155,11 @@ get_bits(unsigned char *p, int index)
     case 1:
       return (p[index >> 3] >> (7 - (index & 7))) & 1;
     case 2:
-      return (p[index >> 2] >> ((3 - (index & 3)) << 1)) & 3;
+      b = get_mask_2[index & 3];
+      return (p[index >> 2] >> b) & 3;
     case 4:
-      return (p[index >> 1] >> ((1 - (index & 1)) << 2)) & 0xf;
+      b = get_mask_4[index & 1];
+      return (p[index >> 1] >> b) & 0xf;
     case 8:
       return p[index];
     default:
@@ -168,6 +173,11 @@ get_bits(unsigned char *p, int index)
       return(value);
     }
 }
+
+static unsigned clr_mask_1[] = { 0xfe, 0xfd, 0xfb, 0xf7,
+				 0xef, 0xdf, 0xbf, 0x7f };
+static unsigned clr_mask_2[] = { 0xfc, 0, 0xf3, 0, 0xcf, 0, 0x3f, 0 };
+static unsigned clr_mask_4[] = { 0xf0, 0, 0, 0, 0xf, 0, 0, 0 };
 
 static inline void
 set_bits(unsigned char *p,int index,int value)
@@ -183,16 +193,19 @@ set_bits(unsigned char *p,int index,int value)
   switch (pstate.bpp)
     {
     case 1:
-      p[index >> 3] &= ~(1 << (7 - (index & 7)));
-      p[index >> 3] |= value << (7 - (index & 7));
+      b = (7 - (index & 7));
+      p[index >> 3] &= clr_mask_1[b];
+      p[index >> 3] |= value << b;
       break;
     case 2:
-      p[index >> 2] &= ~(3 << ((3 - (index & 3)) << 1));
-      p[index >> 2] |= value << ((3 - (index & 3)) << 1);
+      b = get_mask_2[index & 3];
+      p[index >> 2] &= clr_mask_2[b];
+      p[index >> 2] |= value << b;
       break;
     case 4:
-      p[index >> 1] &= ~(0xf << ((1 - (index & 1)) << 2));
-      p[index >> 1] |= value << ((1 - (index & 1)) << 2);
+      b = get_mask_4[index & 1];
+      p[index >> 1] &= clr_mask_4[b];
+      p[index >> 1] |= value << b;
       break;
     case 8:
       p[index] = value;
@@ -211,64 +224,31 @@ set_bits(unsigned char *p,int index,int value)
     }
 }
 
+static float ink_colors[8][4] =
+{{ 0,  0,  0,  1 },		/* K */
+ { 1,  0,  1,  1 },		/* M */
+ { 0,  1,  1,  1 },		/* C */
+ { 1,  1,  0,  1 },		/* Y */
+ { 1, .7,  1,  1 },		/* m */
+ { .7, 1,  1,  1 },		/* c */
+ { 1,  1,  .7, 1 },		/* y */
+ { 1,  1,  1,  1 }};
+
+static float bpp_shift[] = { 0, 1, 3, 7, 15, 31, 63, 127, 255 };
+
 static inline void
-mix_ink(ppmpixel p, int color, unsigned int amount)
+mix_ink(ppmpixel p, int color, unsigned int amount, float *ink)
 {
   /* this is pretty crude */
 
   if (amount)
     {
       int i;
-      float ink[3];
       float size;
 
-      size = (float) amount / ((float) (( 1 << pstate.bpp) - 1));
-      switch (color)
-	{
-	case 0:	/* black */
-	  ink[0] = 0;
-	  ink[1] = 0;
-	  ink[2] = 0;
-	  break;
-	case 1:	/* magenta */
-	  ink[0] = 1;
-	  ink[1] = 0;
-	  ink[2] = 1;
-	  break;
-	case 2:	/* cyan */
-	  ink[0] = 0;
-	  ink[1] = 1;
-	  ink[2] = 1;
-	  break;
-	case 3:	/* yellow */
-	  ink[0] = 1;
-	  ink[1] = 1;
-	  ink[2] = 0;
-	  break;
-	case 4:	/* lmagenta */
-	  ink[0] = 1;
-	  ink[1] = 0.7;
-	  ink[2] = 1;
-	  break;
-	case 5:	/* lcyan */
-	  ink[0] = 0.7;
-	  ink[1] = 1;
-	  ink[2] = 1;
-	  break;
-	case 6: /* lyellow */
-	  ink[0] = 1;
-	  ink[1] = 1;
-	  ink[2] = 0.7;
-	  break;
-	default:
-	  fprintf(stderr, "unknown ink %d\n", color);
-	  return;
-	}
+      size = (float) amount / bpp_shift[pstate.bpp];
       for (i = 0; i < 3; i++)
-	{
-	  ink[i] = (1 - size) + size * ink[i];
-	  p[i] *= ink[i];
-	}
+	p[i] *= (1 - size) + size * ink[i];
     }
 }
 
@@ -411,12 +391,13 @@ write_output(FILE *fp_w)
 	{
 	  for (c = 0; c < MAX_INKS; c++)
 	    {
+	      float *ink = ink_colors[c];
 	      if (lt->line[c])
 		{
 		  for (p = lt->startx[c]; p <= lt->stopx[c]; p++)
 		    {
 		      amount = get_bits(lt->line[c], p - lt->startx[c]);
-		      mix_ink(out_row[p - left], c, amount);
+		      mix_ink(out_row[p - left], c, amount, ink);
 		    }
 		}
 	    }
