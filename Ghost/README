@@ -227,6 +227,7 @@ escp2-790		EPSON Stylus Photo 790
 escp2-870		EPSON Stylus Photo 870
 escp2-1200		EPSON Stylus Photo 1200
 escp2-1270		EPSON Stylus Photo 1270
+escp2-1290		EPSON Stylus Photo 1290
 escp2-2000		EPSON Stylus Photo 2000P
 pcl-340			HP DeskJet 340
 pcl-400			HP DeskJet 400
@@ -265,6 +266,7 @@ pcl-4v			HP LaserJet 4V, 4Si
 pcl-5			HP LaserJet 5 series
 pcl-5si			HP LaserJet 5Si
 pcl-6			HP LaserJet 6 series
+lexmark-3200		Lexmark 3200
 lexmark-4076		Lexmark 4076 (PCL printer)
 lexmark-z52             Lexmark Z52
 
