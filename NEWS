@@ -1,4 +1,4 @@
-Gimp-Print 4.3.9, released February 1x, 2003, is a development release of
+Gimp-Print 4.3.9, released February 15, 2003, is a development release of
 this package.
 
 Gimp-Print is a suite of printer drivers that may be used with most
@@ -67,6 +67,14 @@ Gimp-Print 4.3.9 contains the following major changes over Gimp-Print
    back compatible with older versions of the plugin; the current
    plugin can read old printrc files, but the saved format will not be
    understood by older versions of the plugin.
+
+6) The maximum density setting has been increased to 8.0 from 2.0.
+   The density range of 0.1-2.0 did not allow use of sufficient ink
+   for some combinations of paper, ink, and resolution.
+
+7) The Epson driver will automatically attempt to use a larger ink
+   drop size if the density is set high enough such that it is not
+   possible to deposit enough ink with the current setting.
 
 
 Gimp-Print 4.3.8 contains the following major changes over Gimp-Print
