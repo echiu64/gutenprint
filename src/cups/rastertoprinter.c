@@ -193,18 +193,52 @@ print_debug_block(cups_image_t *cups)
 }
 
 static stp_vars_t
-initialize_page(cups_image_t *cups, const stp_printer_t printer)
+initialize_page(cups_image_t *cups, const stp_printer_t printer,
+		cups_option_t *options, int num_options)
 {
   int i;
   const stp_papersize_t	*size;		/* Paper size */
   stp_parameter_list_t params;
   int nparams;
-  stp_vars_t v = stp_vars_create_copy(stp_printer_get_defaults(printer));
+  stp_vars_t v = stp_vars_create();
+  stp_set_printer_defaults(v, printer);
 
   stp_set_float_parameter(v, "AppGamma", 1.0);
-  for (i = 0; i < stp_option_count; i++)
-    stp_set_float_parameter(v, stp_options[i].iname,
-			    stp_options[i].defval / 1000.0);
+  for (i = 0; i < num_options; i++)
+    {
+      cups_option_t *opt = &(options[i]);
+      const char *name;
+      stp_parameter_t desc;
+      if (!opt || !(opt->name) || strlen(opt->name) < 4 ||
+	  strncmp(opt->name, "stp", 3) != 0 ||
+	  strcmp(opt->value, "DEFAULT") == 0)
+	continue;
+      name = opt->name + 3;	/* Skip leading "stp" prefix */
+      stp_describe_parameter(v, name, &desc);
+      switch (desc.p_type)
+	{
+	case STP_PARAMETER_TYPE_STRING_LIST:
+	  stp_set_string_parameter(v, name, opt->value);
+	  break;
+	case STP_PARAMETER_TYPE_INT:
+	  stp_set_int_parameter(v, name, atoi(opt->value));
+	  break;
+	case STP_PARAMETER_TYPE_BOOLEAN:
+	  stp_set_boolean_parameter(v, name,
+				    strcmp(opt->value, "True") == 0 ? 1 : 0);
+	  break;
+	case STP_PARAMETER_TYPE_DOUBLE:
+	  stp_set_float_parameter(v, name, atof(opt->value) * 0.001);
+	  break;
+	case STP_PARAMETER_TYPE_CURVE: /* figure this out later... */
+	case STP_PARAMETER_TYPE_FILE: /* Probably not, security hole! */
+	case STP_PARAMETER_TYPE_RAW: /* figure this out later, too */
+	  break;
+	default:
+	  break;
+	}
+    }
+
   stp_set_page_width(v, cups->header.PageSize[0]);
   stp_set_page_height(v, cups->header.PageSize[1]);
   stp_set_outfunc(v, cups_writefunc);
@@ -219,7 +253,6 @@ initialize_page(cups_image_t *cups, const stp_printer_t printer)
       break;
     case CUPS_CSPACE_K :
       stp_set_output_type(v, OUTPUT_GRAY);
-      stp_set_float_parameter(v, "Density", 4.0);
       break;
     case CUPS_CSPACE_RGB :
       stp_set_output_type(v, OUTPUT_COLOR);
@@ -346,12 +379,9 @@ main(int  argc,				/* I - Number of command-line arguments */
   cups_image_t		cups;		/* CUPS image */
   const char		*ppdfile;	/* PPD environment variable */
   ppd_file_t		*ppd;		/* PPD file */
-  ppd_option_t		*option;	/* PPD option */
   stp_printer_t		printer;	/* Printer driver */
   int			num_options;	/* Number of CUPS options */
   cups_option_t		*options;	/* CUPS options */
-  const char		*val;		/* CUPS option value */
-  int			i;
   stp_vars_t		v = NULL;
 
  /*
@@ -406,18 +436,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   * Get the STP options, if any...
   */
 
-  initialize_stp_options();
-
   num_options = cupsParseOptions(argv[5], 0, &options);
-  for (i = 0; i < stp_option_count; i++)
-    {
-      struct stp_option *opt = &(stp_options[i]);
-      if ((val = cupsGetOption(opt->name, num_options, options)) != NULL)
-	opt->defval = atof(val);
-      else if ((option = ppdFindOption(ppd, opt->name)) != NULL)
-	opt->defval = atof(option->defchoice);
-      opt++;
-    }
 
  /*
   * Figure out which driver to use...
@@ -479,7 +498,7 @@ main(int  argc,				/* I - Number of command-line arguments */
       /*
        * Setup printer driver variables...
        */
-      v = initialize_page(&cups, printer);
+      v = initialize_page(&cups, printer, options, num_options);
       stp_set_page_number(v, cups.page);
       cups.row = 0;
       fprintf(stderr, "PAGE: %d 1\n", cups.page);

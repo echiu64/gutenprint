@@ -125,6 +125,31 @@ typedef struct				/**** Media size values ****/
 		top;			/* Media top margin */
 } paper_t;
 
+const char *special_options[] =
+{
+  "PageSize",
+  "MediaType",
+  "InputSlot",
+  "Resolution",
+  NULL
+};
+
+const char *parameter_class_names[] =
+{
+  N_("Printer Features"),
+  N_("Output Control")
+};
+
+const char *parameter_level_names[] =
+{
+  N_("Standard"),
+  N_("Advanced"),
+  N_("Extra 1"),
+  N_("Extra 2"),
+  N_("Extra 3"),
+  N_("Extra 4")
+};
+
 
 /*
  * Local functions...
@@ -146,6 +171,35 @@ int	write_ppd(const stp_printer_t p, const char *prefix,
  */
 const char *baselocaledir = PACKAGE_LOCALE_DIR;
 
+static int
+is_special_option(const char *name)
+{
+  int i = 0;
+  while (special_options[i])
+    {
+      if (strcmp(name, special_options[i]) == 0)
+	return 1;
+      i++;
+    }
+  return 0;
+}
+
+static void
+print_group_open(FILE *fp, stp_parameter_class_t p_class,
+		 stp_parameter_level_t p_level)
+{
+  gzprintf(fp, "*OpenGroup: STP_%d_%d/%s %s %s\n\n",
+	   p_class, p_level, _("Gimp-Print"),
+	   _(parameter_class_names[p_class]),
+	   _(parameter_level_names[p_level]));
+}
+
+static void
+print_group_close(FILE *fp, stp_parameter_class_t p_class,
+		 stp_parameter_level_t p_level)
+{
+  gzprintf(fp, "*CloseGroup: STP_%d_%d\n\n", p_class, p_level);
+}
 
 /*
  * 'main()' - Process files on the command-line...
@@ -580,7 +634,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 	  const char          *prefix,	/* I - Prefix (directory) for PPD files */
 	  int                 verbose)
 {
-  int		i, j;			/* Looping vars */
+  int		i, j, k, l;		/* Looping vars */
   gzFile	fp;			/* File to write to */
   char		filename[1024];		/* Filename */
   char		pcfilename[13],		/* PCFileName attribute */
@@ -605,6 +659,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 		max_width,
 		max_height;
   stp_parameter_t desc;
+  stp_parameter_list_t param_list;
   const stp_param_string_t *opt;
 
  /*
@@ -767,7 +822,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   for (i = 0; i < num_opts; i++)
   {
-    stp_papersize_t *papersize;
+    const stp_papersize_t *papersize;
     opt = stp_string_list_param(desc.bounds.str, i);
     papersize = stp_get_papersize_by_name(opt->name);
 
@@ -1004,103 +1059,82 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   gzputs(fp, "*CloseUI: *Resolution\n\n");
 
- /*
-  * STP option group...
-  */
+  param_list = stp_get_parameter_list(v);
 
-  gzprintf(fp, "*OpenGroup: STP/%s\n", _("GIMP-print"));
-
-   /*
-    * Image types...
-    */
-
-    gzprintf(fp, "*OpenUI *stpImageType/%s: PickOne\n", _("Image Type"));
-    gzputs(fp, "*OrderDependency: 10 AnySetup *stpImageType\n");
-    gzputs(fp, "*DefaultstpImageType: LineArt\n");
-
-    gzprintf(fp, "*stpImageType LineArt/%s:\t\"<</cupsRowCount 0>>setpagedevice\"\n",
-            _("Line Art"));
-    gzprintf(fp, "*stpImageType SolidTone/%s:\t\"<</cupsRowCount 1>>setpagedevice\"\n",
-            _("Solid Colors"));
-    gzprintf(fp, "*stpImageType Continuous/%s:\t\"<</cupsRowCount 2>>setpagedevice\"\n",
-            _("Photograph"));
-
-    gzputs(fp, "*CloseUI: *stpImageType\n\n");
-
-   /*
-    * Dithering algorithms...
-    */
-
-    stp_describe_parameter(v, "DitherAlgorithm", &desc);
-    num_opts = stp_string_list_count(desc.bounds.str);
-
-    gzprintf(fp, "*OpenUI *stpDither/%s: PickOne\n", _("Dither Algorithm"));
-    gzputs(fp, "*OrderDependency: 10 AnySetup *stpDither\n");
-    gzprintf(fp, "*DefaultstpDither: %s\n", desc.deflt.str);
-
-    for (i = 0; i < num_opts; i ++)
+  for (j = 0; j <= STP_PARAMETER_CLASS_OUTPUT; j++)
     {
-      opt = stp_string_list_param(desc.bounds.str, i);
-      gzprintf(fp, "*stpDither %s/%s: \"<</cupsRowStep %d>>setpagedevice\"\n",
-	       opt->name, opt->text, i);
+      for (k = 0; k <= STP_PARAMETER_LEVEL_ADVANCED4; k++)
+	{
+	  int printed_open_group = 0;
+	  size_t param_count = stp_parameter_list_count(param_list);
+	  for (l = 0; l < param_count; l++)
+	    {
+	      const stp_parameter_t *lparam =
+		stp_parameter_list_param(param_list, l);
+	      if (lparam->p_class != j || lparam->p_level != k ||
+		  is_special_option(lparam->name) ||
+		  (lparam->p_type != STP_PARAMETER_TYPE_STRING_LIST &&
+		   lparam->p_type != STP_PARAMETER_TYPE_BOOLEAN &&
+		   lparam->p_type != STP_PARAMETER_TYPE_DOUBLE))
+		  continue;
+	      if (!printed_open_group)
+		{
+		  print_group_open(fp, j, k);
+		  printed_open_group = 1;
+		}
+	      stp_describe_parameter(v, lparam->name, &desc);
+	      gzprintf(fp, "*OpenUI *stp%s/%s: PickOne\n",
+		       desc.name, _(desc.text));
+	      gzprintf(fp, "*OrderDependency: %d AnySetup *stp%s\n",
+		       100 + l, desc.name);
+	      if (!desc.is_mandatory)
+		{
+		  gzprintf(fp, "*Defaultstp%s: DEFAULT\n", desc.name);
+		  gzprintf(fp, "*stp%s %s/%s: \"\"\n", desc.name, "DEFAULT",
+			   _("Default"));
+		}
+	      switch (desc.p_type)
+		{
+		case STP_PARAMETER_TYPE_STRING_LIST:
+		  if (desc.is_mandatory)
+		    gzprintf(fp, "Defaultstp%s: %s\n",
+			     desc.name, desc.deflt.str);
+		  num_opts = stp_string_list_count(desc.bounds.str);
+		  for (i = 0; i < num_opts; i++)
+		    {
+		      opt = stp_string_list_param(desc.bounds.str, i);
+		      gzprintf(fp, "*stp%s %s/%s: \"\"\n",
+			       desc.name, opt->name, _(opt->text));
+		    }
+		  break;
+		case STP_PARAMETER_TYPE_BOOLEAN:
+		  if (desc.is_mandatory)
+		    gzprintf(fp, "Defaultstp%s: %s\n",
+			     desc.name, desc.deflt.boolean ? "True" : "False");
+		  gzprintf(fp, "*stp%s %s/%s: \"\"\n",
+			   desc.name, "False", _("No"));
+		  gzprintf(fp, "*stp%s %s/%s: \"\"\n",
+			   desc.name, "True", _("Yes"));
+		  break;
+		case STP_PARAMETER_TYPE_DOUBLE:
+		  if (desc.is_mandatory)
+		    gzprintf(fp, "Defaultstp%s: %d\n", desc.name,
+			     (int) (desc.deflt.dbl * 1000));
+		  for (i = desc.bounds.dbl.lower * 1000;
+		       i <= desc.bounds.dbl.upper * 1000 ; i += 50)
+		    gzprintf(fp, "*stp%s %d/%.3f: \"\"\n",
+			     desc.name, i, ((double) i) * .001);
+		  break;
+		default:
+		  break;
+		}
+	      gzprintf(fp, "*CloseUI: *stp%s\n\n", desc.name);
+	      stp_parameter_description_free(&desc);
+	    }
+	  if (printed_open_group)
+	    print_group_close(fp, j, k);
+	}
     }
-    stp_parameter_description_free(&desc);
-
-    gzputs(fp, "*CloseUI: *stpDither\n\n");
-
-   /*
-    * InkTypes...
-    */
-
-    stp_describe_parameter(v, "InkType", &desc);
-    num_opts = stp_string_list_count(desc.bounds.str);
-
-    if (num_opts > 0)
-    {
-      gzprintf(fp, "*OpenUI *stpInkType/%s: PickOne\n", _("Ink Type"));
-      gzputs(fp, "*OrderDependency: 20 AnySetup *stpInkType\n");
-      gzprintf(fp, "*DefaultstpInkType: %s\n", desc.deflt.str);
-
-      for (i = 0; i < num_opts; i ++)
-      {
-       /*
-	* Write the inktype option...
-	*/
-	opt = stp_string_list_param(desc.bounds.str, i);
-	gzprintf(fp, "*stpInkType %s/%s:\t\"<</OutputType(%s)>>setpagedevice\"\n",
-		 opt->name, opt->text, opt->name);
-      }
-
-      gzputs(fp, "*CloseUI: *stpInkType\n\n");
-    }
-    stp_parameter_description_free(&desc);
-
-   /*
-    * Advanced STP options...
-    */
-
-    if (stp_get_output_type(printvars) == OUTPUT_COLOR)
-      num_opts = stp_option_count;
-    else
-      num_opts = 4;
-
-    for (i = 0; i < num_opts; i ++)
-    {
-      gzprintf(fp, "*OpenUI *%s/%s: PickOne\n", stp_options[i].name,
-               stp_options[i].text);
-      gzprintf(fp, "*Default%s: 1000\n", stp_options[i].name);
-      for (j = stp_options[i].low;
-           j <= stp_options[i].high;
-	   j += stp_options[i].step)
-	gzprintf(fp, "*%s %d/%.3f: \"\"\n", stp_options[i].name, j, j * 0.001);
-      gzprintf(fp, "*CloseUI: *%s\n\n", stp_options[i].name);
-    }
-
- /*
-  * End of STP option group...
-  */
-
-  gzputs(fp, "*CloseGroup: STP\n\n");
 
  /*
   * Fonts...
