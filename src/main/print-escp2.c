@@ -296,9 +296,6 @@ verify_resolution(const res_t *res, int model, const stp_vars_t v)
       (res->microweave == 0 ||
        !escp2_has_cap(model, MODEL_MICROWEAVE,
 		      MODEL_MICROWEAVE_NO, v)) &&
-      (res->microweave <= 1 ||
-       escp2_has_cap(model, MODEL_MICROWEAVE,
-		     MODEL_MICROWEAVE_ENHANCED, v)) &&
       (nozzles == 1 ||
        ((res->vres / nozzle_width) * nozzle_width) == res->vres))
     {
@@ -917,6 +914,7 @@ adjust_print_quality(const escp2_init_t *init, void *dither,
   int i;
   const escp2_variable_inkset_t *inks;
   double k_upper, k_lower;
+  double paper_k_upper;
   int		ink_spread;
   /*
    * Compute the LUT.  For now, it's 8 bit, but that may eventually
@@ -944,12 +942,14 @@ adjust_print_quality(const escp2_init_t *init, void *dither,
       stp_set_saturation(nv, stp_get_saturation(nv) * pt->saturation);
       stp_set_gamma(nv, stp_get_gamma(nv) * pt->gamma);
       k_lower *= pt->k_lower_scale;
+      paper_k_upper = pt->k_upper;
       k_upper *= pt->k_upper;
     }
   else				/* Can't find paper type? Assume plain */
     {
       stp_set_density(nv, stp_get_density(nv) * .8);
       k_lower *= .1;
+      paper_k_upper = .5;
       k_upper *= .5;
     }
   stp_set_density(nv, stp_get_density(nv) *
@@ -970,7 +970,7 @@ adjust_print_quality(const escp2_init_t *init, void *dither,
     for (i = 0; i < NCOLORS; i++)
       if ((*inks)[i])
 	stp_dither_set_ranges(dither, i, (*inks)[i]->count, (*inks)[i]->range,
-			      (*inks)[i]->density * k_upper *
+			      (*inks)[i]->density * paper_k_upper *
 			      stp_get_density(nv));
 
   switch (stp_get_image_type(nv))
