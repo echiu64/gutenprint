@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.42  1999/12/22 03:12:17  rlk
+ *   More constant fiddling
+ *
  *   Revision 1.41  1999/12/22 01:34:28  rlk
  *   Reverse direction each pass
  *
@@ -384,11 +387,11 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  */
 
 #define NU_C 1
-#define DE_C 1
+#define DE_C 3
 #define NU_M 1
-#define DE_M 1
+#define DE_M 3
 #define NU_Y 1
-#define DE_Y 1
+#define DE_Y 3
 
 #define I_RATIO_C NU_C / DE_C
 #define I_RATIO_C1 NU_C / (DE_C + NU_C)
@@ -423,9 +426,9 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  * result in greater randomizing.  We use less randomness for black output
  * to avoid production of black speckles in light regions.
  */
-#define C_RANDOMIZER 2
-#define M_RANDOMIZER 2
-#define Y_RANDOMIZER 2
+#define C_RANDOMIZER 4
+#define M_RANDOMIZER 4
+#define Y_RANDOMIZER 4
 #define K_RANDOMIZER 8
 
 #ifdef PRINT_DEBUG
