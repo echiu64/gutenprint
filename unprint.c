@@ -37,6 +37,7 @@ typedef struct {
   int bottom_margin; /* dots */
   int page_length; /* dots */
   int dotsize;
+  int bpp; /* bits per pixel */
   int current_color;
   int xposition; /* dots */
   int yposition; /* dots */
@@ -70,12 +71,12 @@ unsigned char minibuf[256];
 unsigned short bufsize;
 unsigned char ch;
 unsigned short sh;
-int i,m,n,c;
-FILE *fp_r,*fp_w;
 
 pstate_t pstate;
+int unweave;
 
 line_type **page=NULL;
+
 
 /* Color Codes:
    color    Epson1  Epson2   Sequential
@@ -126,7 +127,7 @@ void *myrealloc(void *ptr, size_t size){
   exit(-1);
 }
 
-int get_bits(unsigned char *p,int index,int bpp) {
+int get_bits(unsigned char *p,int index) {
 
   /* p is a pointer to a bit stream, ordered MSb first.  Extract the
    * indexth bpp bit width field and return that value.  Ignore byte
@@ -136,14 +137,14 @@ int get_bits(unsigned char *p,int index,int bpp) {
   int value,b;
   
   value=0;
-  for (b=0;b<bpp;b++) {
+  for (b=0;b<pstate.bpp;b++) {
     value*=2;
-    value|=(p[(index*bpp+b)/8]>>(7-((index*bpp+b)%8)))&1;
+    value|=(p[(index*pstate.bpp+b)/8]>>(7-((index*pstate.bpp+b)%8)))&1;
   }
   return(value);
 }
 
-void set_bits(unsigned char *p,int index,int bpp,int value) {
+void set_bits(unsigned char *p,int index,int value) {
 
   /* p is a pointer to a bit stream, ordered MSb first.  Set the
    * indexth bpp bit width field to value value.  Ignore byte
@@ -152,11 +153,11 @@ void set_bits(unsigned char *p,int index,int bpp,int value) {
 
   int b;
   
-  for (b=bpp-1;b>=0;b--) {
+  for (b=pstate.bpp-1;b>=0;b--) {
     if (value&1) {
-      p[(index*bpp+b)/8]|=1<<(7-((index*bpp+b)%8));
+      p[(index*pstate.bpp+b)/8]|=1<<(7-((index*pstate.bpp+b)%8));
     } else {
-      p[(index*bpp+b)/8]&=~(1<<(7-((index*bpp+b)%8)));
+      p[(index*pstate.bpp+b)/8]&=~(1<<(7-((index*pstate.bpp+b)%8)));
     }
     value/=2;
   }
@@ -166,14 +167,11 @@ void mix_ink(ppmpixel p, int c, unsigned int a) {
 
   /* this is pretty crude */
 
+  int i;
   float ink[3];
   float size;
 
-  if (pstate.dotsize&0x10) {
-    size=(float)a/3.0;
-  } else {
-    size=1.0;
-  }
+  size=(float)a/((float)((1<<pstate.bpp)-1));
   if (a) {
     switch (c) {
       case 0: ink[0]=ink[1]=ink[2]=0;break; /* black */
@@ -192,8 +190,9 @@ void mix_ink(ppmpixel p, int c, unsigned int a) {
 
 }
 
-void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color, int bpp){
+void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color){
 
+  int i;
   int temp,shift,length,lvalue,pvalue,oldstop;
   unsigned char *tempp;
 
@@ -213,27 +212,27 @@ void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color
   
   oldstop=p->stopx[color];
   p->stopx[color]=(stopl>p->stopx[color])?stopl:p->stopx[color];
-  p->line[color]=myrealloc(p->line[color],((p->stopx[color]-p->startx[color]+1)*bpp+7)/8);
-  memset(p->line[color]+((oldstop-p->startx[color]+1)*bpp+7)/8,0,
-          ((p->stopx[color]-p->startx[color]+1)*bpp+7)/8-
-          ((oldstop-p->startx[color]+1)*bpp+7)/8);
+  p->line[color]=myrealloc(p->line[color],((p->stopx[color]-p->startx[color]+1)*pstate.bpp+7)/8);
+  memset(p->line[color]+((oldstop-p->startx[color]+1)*pstate.bpp+7)/8,0,
+          ((p->stopx[color]-p->startx[color]+1)*pstate.bpp+7)/8-
+          ((oldstop-p->startx[color]+1)*pstate.bpp+7)/8);
   for (i=0;i<length;i++) {
-    lvalue=get_bits(l,i,bpp);
-    pvalue=get_bits(p->line[color],i+shift,bpp);
+    lvalue=get_bits(l,i);
+    pvalue=get_bits(p->line[color],i+shift);
     if (0&&pvalue&&lvalue) {
       fprintf(stderr,"Warning!  Double printing detected at x,y=%d!\n",p->startx[color]+i);
     } else {
     pvalue+=lvalue;
-    if (pvalue>(1<<bpp)-1) {
+    if (pvalue>(1<<pstate.bpp)-1) {
 /*      fprintf(stderr,"Warning!  Clipping at x=%d!\n",p->startx[color]+i); */
-      pvalue=(1<<bpp)-1;
+      pvalue=(1<<pstate.bpp)-1;
     }
-    set_bits(p->line[color],i+shift,bpp,pvalue);
+    set_bits(p->line[color],i+shift,pvalue);
     }
   }
 }
 
-void expand_line (unsigned char *src, unsigned char *dst, int length, int bpp, int skip) {
+void expand_line (unsigned char *src, unsigned char *dst, int length, int skip) {
 
   /* src is a pointer to a bit stream which is composed of fields of length
    * bpp starting with the most significant bit of the first byte and
@@ -247,19 +246,22 @@ void expand_line (unsigned char *src, unsigned char *dst, int length, int bpp, i
    * We want to copy each field from the src to the dst, spacing the fields
    * out every skip fields.
    */
+
+  int i;
+
   if (skip==1) { /* the trivial case, this should be faster */
-    memcpy(dst,src,(length*bpp+7)/8);
+    memcpy(dst,src,(length*pstate.bpp+7)/8);
     return;
   }
 
   for (i=0;i<length;i++) {
-    set_bits(dst,i*skip,bpp,get_bits(src,i,bpp));
+    set_bits(dst,i*skip,get_bits(src,i));
   }
 
 }
 
-void write_output(FILE *fp_w,int bpp) {
-  int l,p,left,right,first,last,width,height;
+void write_output(FILE *fp_w) {
+  int c,l,p,left,right,first,last,width,height;
   unsigned int amount;
   ppmpixel pixel;
 
@@ -299,7 +301,7 @@ void write_output(FILE *fp_w,int bpp) {
       memset(pixel,255,3); /* start with white, add inks */
       for (c=0;c<MAX_INKS;c++) {
         if ((page[l])&&(page[l]->line[c])&&(page[l]->startx[c]<=p)&&(page[l]->stopx[c]>=p)) {
-          amount=get_bits(page[l]->line[c],p-page[l]->startx[c],bpp);
+          amount=get_bits(page[l]->line[c],p-page[l]->startx[c]);
           mix_ink(pixel,c,amount);
         }
       }
@@ -308,7 +310,7 @@ void write_output(FILE *fp_w,int bpp) {
   }
 }
 
-void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,int density) {
+void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int density) {
 
   int y,skip,oldstart,oldstop,mi;
   unsigned char *oldline;
@@ -347,61 +349,23 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
       oldstop = -1;
     }
     page[y]->line[color]=(unsigned char *) mycalloc(sizeof(unsigned char),
-                                                    (((n-1)*skip+1)*bpp+7)/8);
+                                                    (((n-1)*skip+1)*pstate.bpp+7)/8);
     page[y]->startx[color]=pstate.xposition;
     page[y]->stopx[color]=pstate.xposition+((n-1)*skip);
-    expand_line(buf+mi*((n*bpp+7)/8),
-                   page[y]->line[color],n,bpp,skip);
+    expand_line(buf+mi*((n*pstate.bpp+7)/8),
+                   page[y]->line[color],n,skip);
     if (oldline) {
-      merge_line(page[y],oldline,oldstart,oldstop,color,bpp);
+      merge_line(page[y],oldline,oldstart,oldstop,color);
     }
   }
   pstate.xposition+=n?(n-1)*skip+1:0;
 }
 
-int main(int argc,char *argv[]){
+void parse_escp2(FILE *fp_r){
 
+  int i,m=0,n=0,c=0;
   int currentcolor,currentbpp,density,eject,got_graphics;
-  int arg,unweave,count,counter;
-
-    unweave=0;
-    fp_r = fp_w = NULL;
-    for (arg=1;arg<argc;arg++) {
-      if (argv[arg][0]=='-') {
-        switch (argv[arg][1]) {
-          case 0:if (fp_r)
-                   fp_w=stdout;
-                 else
-                   fp_r=stdin;
-                 break;
-          case 'u':unweave=1;
-        }
-      } else {
-        if (fp_r) {
-          if (!(fp_w = fopen(argv[arg],"w"))) {
-            perror("Error opening ouput file");
-            exit(-1);
-          }
-        } else {
-          if (!(fp_r = fopen(argv[arg],"r"))) {
-            perror("Error opening input file");
-            exit(-1);
-          }
-        }
-      }
-    }
-    if (!fp_r)
-      fp_r=stdin;
-    if (!fp_w)
-      fp_w=stdout;
-
-    /* FIXME: need fancy shmancy command line options for the following */
-    if (unweave) {
-      pstate.nozzle_separation=1;
-    } else {
-      pstate.nozzle_separation=6;
-    }
-    pstate.nozzles=48;
+  int count,counter;
 
 counter=0;
 #define get1(error) if (!(count=fread(&ch,1,1,fp_r))) {fprintf(stderr,error);eject=1;continue;} else counter+=count;
@@ -437,6 +401,7 @@ counter=0;
               pstate.unidirectional=0;
               pstate.microweave=0;
               pstate.dotsize=0;
+              pstate.bpp=1;
               pstate.page_management_units=360;
               pstate.relative_horizontal_units=180;
               pstate.absolute_horizontal_units=60;
@@ -460,12 +425,15 @@ counter=0;
             get1("Error reading compression mode!\n");
             c=ch;
             get1("Error reading bpp!\n");
-            currentbpp=ch;
-            if (currentbpp>2) {
+            if (ch!=pstate.bpp) {
+              fprintf(stderr,"Warning!  Color depth altered by ESC i.  This could be very very bad.\n");
+              pstate.bpp=ch;
+            }
+            if (pstate.bpp>2) {
               fprintf(stderr,"Warning! Excessively deep color detected.\n");
             }
             get2("Error reading number of horizontal dots!\n");
-            n=sh * 8 / currentbpp;
+            n=sh * 8 / pstate.bpp;
             get2("Error reading number of vertical dots!\n");
             m=sh;
             density=pstate.relative_horizontal_units;
@@ -486,23 +454,16 @@ counter=0;
               m=ch;
               get2("Error reading number of horizontal dots!\n");
               n=sh;
-              if (pstate.dotsize&16) {
-                fprintf(stderr,"WARNING!  ESC . printer command not supported in variable dot size mode!!!\n");
-                fprintf(stderr,"Doing what you mean, not what you say...");
-                currentbpp=2;
-              } else {
-                currentbpp=1;
-              }
               currentcolor=pstate.current_color;
             }
             switch (c) {
               case 0:  /* uncompressed */
                 bufsize=m*((n*currentbpp+7)/8);
                 getn(bufsize,"Error reading raster data!\n");
-                update_page(buf,bufsize,m,n,currentcolor,currentbpp,density);
+                update_page(buf,bufsize,m,n,currentcolor,density);
                 break;
               case 1:  /* run length encoding */
-                for (i=0;(!eject)&&(i<(m*((n*currentbpp+7)/8)));) {
+                for (i=0;(!eject)&&(i<(m*((n*pstate.bpp+7)/8)));) {
                   get1("Error reading counter!\n");
                   if (ch<128) {
                     bufsize=ch+1;
@@ -514,14 +475,14 @@ counter=0;
                   }
                   i+=bufsize;
                 }
-                if (i!=(m*((n*currentbpp+7)/8))) {
+                if (i!=(m*((n*pstate.bpp+7)/8))) {
                   fprintf(stderr,"Error decoding RLE data.\n");
                   fprintf(stderr,"Total bufsize %d, expected %d\n",i,
-                        (m*((n*currentbpp+7)/8)));
+                        (m*((n*pstate.bpp+7)/8)));
                   eject=1;
                   continue;
                 } 
-                update_page(buf,i,m,n,currentcolor,currentbpp,density);
+                update_page(buf,i,m,n,currentcolor,density);
                 break;
               case 2: /* TIFF compression */
                 fprintf(stderr,"TIFF mode not yet supported!\n");
@@ -581,6 +542,7 @@ counter=0;
                 /* FIXME: this is supposed to have more side effects */
                 pstate.microweave=0;
                 pstate.dotsize=0;
+                pstate.bpp=1;
                 break;
               case 'U': /* set page units */
                 switch (bufsize) {
@@ -625,6 +587,11 @@ counter=0;
                     fprintf(stderr,"Changing dotsize while printing not supported.\n");
                   } else {
                     pstate.dotsize=buf[1];
+                    if (pstate.dotsize&0x16) {
+                      pstate.bpp=2;
+                    } else {
+                      pstate.bpp=1;
+                    }
                   }
                 }
                 break;
@@ -748,9 +715,56 @@ counter=0;
             fprintf(stderr,"Warning: Unknown command ESC 0x%X at 0x%08X.\n",ch,counter-2);
       }
     }
-  fprintf(stderr,"Done reading.\n");
-  write_output(fp_w,currentbpp);
-  fclose(fp_w);
+}
 
-  return(0);
+int main(int argc,char *argv[]){
+
+  int arg;
+  FILE *fp_r,*fp_w;
+
+    unweave=0;
+    fp_r = fp_w = NULL;
+    for (arg=1;arg<argc;arg++) {
+      if (argv[arg][0]=='-') {
+        switch (argv[arg][1]) {
+          case 0:if (fp_r)
+                   fp_w=stdout;
+                 else
+                   fp_r=stdin;
+                 break;
+          case 'u':unweave=1;
+        }
+      } else {
+        if (fp_r) {
+          if (!(fp_w = fopen(argv[arg],"w"))) {
+            perror("Error opening ouput file");
+            exit(-1);
+          }
+        } else {
+          if (!(fp_r = fopen(argv[arg],"r"))) {
+            perror("Error opening input file");
+            exit(-1);
+          }
+        }
+      }
+    }
+    if (!fp_r)
+      fp_r=stdin;
+    if (!fp_w)
+      fp_w=stdout;
+
+    /* FIXME: need fancy shmancy command line options for the following */
+    if (unweave) {
+      pstate.nozzle_separation=1;
+    } else {
+      pstate.nozzle_separation=6;
+    }
+    pstate.nozzles=48;
+
+    parse_escp2(fp_r);
+    fprintf(stderr,"Done reading.\n");
+    write_output(fp_w);
+    fclose(fp_w);
+
+    return(0);
 }
