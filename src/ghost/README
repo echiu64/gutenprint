@@ -475,8 +475,8 @@ For Canon printers:
 '1200x600 DPI'
 '1200x1200 DPI'
 
-1440 DPI printers (BJC 1000, BJC 2000, BJC 3000, BJC 4300,
-    BJC 4400, BJC 5100, BJC 5500, BJC 6000, BJC 6100, BJC 6500):
+1440 DPI printers (BJC 1000, BJC 2000, BJC 3000, BJC 4300, BJC 4400,
+    BJC 5100, BJC 5500, BJC 6000, BJC 6100, BJC 6500, BJC 8200):
 
 '180x180 DPI'
 '360x360 DPI'
@@ -560,39 +560,26 @@ Dithering Algorithms:
 'Ordered'
 'Fast'
 'Very Fast'
-'Adaptive Random'
 'Hybrid Floyd-Steinberg'
-'Random Floyd-Steinberg'
 
-We recommend using Adaptive Hybrid (which is the default) in most
-cases.  
+We recommend using Adaptive Hybrid (which is the default) with text or
+other fine black detail, and Ordered for continuous-tone images and
+photographs.  Ordered is somewhat faster than Adaptive Hybrid, and
+normally yields almost identical results.  However, Ordered dithering
+may show small breaks in very fine lines; Adaptive Hybrid is more
+resistant to this effect.
 
-Ordered dithering typically works best in solid-color graphics on four
-color printers, and in very pale regions.  The results on six color
-and variable dot size printers tend to be poor.  It uses an array
-lookup to decide whether to print, and if it is decided to print, what
-sub-color (in 6 color printers) and dot size (in variable dot size) to
-use.  Ordered dither performs poorly on certain kinds of very fine
-detail, such as fine lines.
-
-Error diffusion algorithms (Hybrid Floyd-Steinberg and Random
-Floyd-Steinberg, both of which are modifications on pure
-Floyd-Steinberg) perform very well at high densities, and are capable
-of rendering very fine detail well, but they tend to exhibit artifacts
-in the form of "waves" or "worms" of dots which results in noticeable
+Error diffusion algorithms (Hybrid Floyd-Steinberg is such an
+algorithm) perform very well at high densities, and are capable of
+rendering very fine detail well, but they tend to exhibit artifacts in
+the form of "waves" or "worms" of dots which results in noticeable
 texturing in pale areas.  Furthermore, pale areas immediately adjacent
 to white take a while to "build up" sufficient error to print at all.
-This is sometimes called "tearing".  The only difference between the
-algorithms is that Hybrid Floyd-Steinberg uses an array lookup where
-Random Floyd-Steinberg uses a random number generator.  Hybrid
-Floyd-Steinberg is faster, and probably slightly better.
+This is sometimes called "tearing".
 
 Adaptive dithering usually gives the best results overall.  It uses
-pure ordered dither at low densities, and Floyd-Steinberg at high
-densities.  Adaptive random seldom if ever has any advantages over
-adaptive hybrid, and is considerably slower due to the use of a random
-number generator for each point.  Adaptive hybrid dithering uses an
-array lookup for each point, which is considerably faster.
+ordered dithering in dark regions, and ordered dithering in pale
+regions.
 
 The Fast algorithm gives the fastest results at the expense of color
 accuracy.  It is a simplified ordered dither.  On simple four color
@@ -648,7 +635,7 @@ inks.
 'Three Color Composite'
 
 
-For Canon and printers:
+For Canon, Lexmark (other than 4076), and Compaq printers:
 
 'Black'
 'Color'
@@ -657,7 +644,7 @@ For Canon and printers:
 'Photo'
 
 
-For PCL (Hewlett-Packard and Lexmark) printers:
+For PCL (Hewlett-Packard and Lexmark 4076) printers:
 
 'Color + Black Cartridges'
 'Color + Photo Cartridges' (For Deskjet 69x only)
@@ -704,7 +691,7 @@ For Canon printers:
 'Photo Paper Pro'
 
 
-For PCL (Hewlett-Packard and Lexmark) printers:
+For PCL (Hewlett-Packard and Lexmark 4076) printers:
 
 'Plain'
 'Bond'
