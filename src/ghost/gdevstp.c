@@ -167,6 +167,7 @@ stp_dbg(const char *msg, const privdata_t *stp_data)
 	  stp_get_media_size(stp_data->v));
   fprintf(gs_stderr, "Settings: Model %s\n", stp_get_driver(stp_data->v));
   fprintf(gs_stderr, "Settings: InkType %s\n", stp_get_ink_type(stp_data->v));
+  fprintf(gs_stderr, "Settings: OutputTo %s\n", stp_get_output_to(stp_data->v));
 }
 
 private void
@@ -194,13 +195,16 @@ stp_print_debug(const char *msg, gx_device *pdev,
 private void
 stp_init_vars(void)
 {
+  STP_DEBUG(fprintf(gs_stderr, "Calling "));
   if (! stp_data.v)
     {
+      STP_DEBUG(fprintf(gs_stderr, "and initializing "));
       stp_init();
       stp_data.v = stp_allocate_vars();
       stp_set_driver(stp_data.v, "");
-      stp_set_media_size(stp_data.v, "Letter");
+/*      stp_set_media_size(stp_data.v, "Letter"); */
     }
+  STP_DEBUG(fprintf(gs_stderr, "stp_init_vars\n"));
 }
 
 
@@ -324,6 +328,26 @@ stp_write_int(gs_param_list *plist, const char *name, int value)
   return param_write_int(plist, name, &value);
 }
 
+private char *
+c_strdup(const char *s)
+{
+  char *ret;
+  if (!s)
+    {
+      STP_DEBUG(fprintf(gs_stderr, "c_strdup null ptr\n"));
+      ret = malloc(1);
+      ret[0] = 0;
+      return ret;
+    }
+  else
+    {
+      STP_DEBUG(fprintf(gs_stderr, "c_strdup |%s|\n", s));
+      ret = malloc(strlen(s) + 1);
+      strcpy(ret, s);
+      return ret;
+    }
+}
+
 /*
  * Get parameters.  In addition to the standard and printer
  * parameters, we supply a lot of options to play around with
@@ -340,17 +364,30 @@ stp_get_params(gx_device *pdev, gs_param_list *plist)
   gs_param_string pInputSlot;
   gs_param_string palgorithm;
   gs_param_string pquality;
+  char *pmediatypestr;
+  char *pInputSlotstr;
+  char *pinktypestr;
+  char *pmodelstr;
+  char *palgorithmstr;
+  char *pqualitystr;
   stp_init_vars();
 
   stp_print_debug("stp_get_params(0)", pdev, &stp_data);
   code = gdev_prn_get_params(pdev, plist);
   stp_print_debug("stp_get_params(1)", pdev, &stp_data);
-  param_string_from_string(pmediatype, stp_get_media_type(stp_data.v));
-  param_string_from_string(pInputSlot, stp_get_media_source(stp_data.v));
-  param_string_from_string(pinktype, stp_get_ink_type(stp_data.v));
-  param_string_from_string(pmodel, stp_get_driver(stp_data.v));
-  param_string_from_string(palgorithm, stp_get_dither_algorithm(stp_data.v));
-  param_string_from_string(pquality, stp_get_resolution(stp_data.v));
+  pmodelstr = c_strdup(stp_get_driver(stp_data.v));
+  pInputSlotstr = c_strdup(stp_get_media_source(stp_data.v));
+  pmediatypestr = c_strdup(stp_get_media_type(stp_data.v));
+  pinktypestr = c_strdup(stp_get_ink_type(stp_data.v));
+  palgorithmstr = c_strdup(stp_get_dither_algorithm(stp_data.v));
+  pqualitystr = c_strdup(stp_get_resolution(stp_data.v));
+
+  param_string_from_string(pmodel, pmodelstr);
+  param_string_from_string(pInputSlot, pInputSlotstr);
+  param_string_from_string(pmediatype, pmediatypestr);
+  param_string_from_string(pinktype, pinktypestr);
+  param_string_from_string(palgorithm, palgorithmstr);
+  param_string_from_string(pquality, pqualitystr);
 
   if (code < 0 ||
       (code = stp_write_float(plist, "Cyan", stp_get_cyan(stp_data.v))) < 0 ||
@@ -363,7 +400,7 @@ stp_get_params(gx_device *pdev, gs_param_list *plist)
       (code = stp_write_float(plist, "Gamma", stp_get_gamma(stp_data.v))) < 0 ||
       (code = stp_write_float(plist, "Saturation", stp_get_saturation(stp_data.v))) < 0 ||
       (code = stp_write_float(plist, "Density", stp_get_density(stp_data.v))) < 0 ||
-      (code = param_write_string(plist, "Model", &pinktype)) < 0 ||
+      (code = param_write_string(plist, "Model", &pmodel)) < 0 ||
       (code = param_write_string(plist, "Dither", &palgorithm)) < 0 ||
       (code = param_write_string(plist, "Quality", &pquality)) < 0 ||
       (code = param_write_string(plist, "InkType", &pinktype) < 0) ||
@@ -371,7 +408,16 @@ stp_get_params(gx_device *pdev, gs_param_list *plist)
       (code = param_write_string(plist, "stpMediaType", &pmediatype)) < 0 ||
       (code = param_write_string(plist, "InputSlot", &pInputSlot)) < 0
       )
-    return code;
+    {
+      free(pmodelstr);
+      free(pInputSlotstr);
+      free(pmediatypestr);
+      free(pinktypestr);
+      free(palgorithmstr);
+      free(pqualitystr);
+      STP_DEBUG(fprintf(stderr, "stp_get_params returns %d\n", code));
+      return code;
+    }
 
   return 0;
 }
@@ -427,12 +473,12 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
 
   stp_print_debug("stp_put_params(0)", pdev, &stp_data);
 
-  pmodelstr = strdup(stp_get_driver(stp_data.v));
-  pInputSlotstr = strdup(stp_get_media_source(stp_data.v));
-  pmediatypestr = strdup(stp_get_media_type(stp_data.v));
-  pinktypestr = strdup(stp_get_ink_type(stp_data.v));
-  palgorithmstr = strdup(stp_get_dither_algorithm(stp_data.v));
-  pqualitystr = strdup(stp_get_resolution(stp_data.v));
+  pmodelstr = c_strdup(stp_get_driver(stp_data.v));
+  pInputSlotstr = c_strdup(stp_get_media_source(stp_data.v));
+  pmediatypestr = c_strdup(stp_get_media_type(stp_data.v));
+  pinktypestr = c_strdup(stp_get_ink_type(stp_data.v));
+  palgorithmstr = c_strdup(stp_get_dither_algorithm(stp_data.v));
+  pqualitystr = c_strdup(stp_get_resolution(stp_data.v));
 
   param_string_from_string(pmodel, pmodelstr);
   param_string_from_string(pInputSlot, pInputSlotstr);
@@ -455,7 +501,7 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
   param_read_string(plist, "Dither", &palgorithm);
   param_read_string(plist, "InputSlot", &pInputSlot);
   param_read_string(plist, "stpMediaType", &pmediatype);
-  if (pmediatype.data && strlen(pmediatype.data) == 0)
+  if (!pmediatype.data || pmediatype.size == 0)
     param_read_string(plist, "MediaType", &pmediatype);
   param_read_string(plist, "Model", &pmodel);
   param_read_string(plist, "InkType", &pinktype);
@@ -486,28 +532,18 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
 		    pquality.size, pquality.data));
   stp_set_driver_n(stp_data.v, pmodel.data, pmodel.size);
   printer = stp_get_printer_by_driver(stp_get_driver(stp_data.v));
-  if (!printer)
-    {
-      if (strlen(stp_get_driver(stp_data.v)) == 0)
-	fprintf(gs_stderr, "Printer must be specified with -sModel\n");
-      else
-	fprintf(gs_stderr, "Printer %s is not a known model\n",
-		stp_get_driver(stp_data.v));
-      param_signal_error(plist, "Model", gs_error_rangecheck);
-      code = 100;
-    }
-  else
+  if (printer)
     stp_set_printer_defaults(stp_data.v, printer, NULL);
 
-  if (pmediatype.data && strlen(pmediatype.data) != 0)
+  if (pmediatype.data && pmediatype.size != 0)
     stp_set_media_type_n(stp_data.v, pmediatype.data, pmediatype.size);
-  if (pInputSlot.data && strlen(pInputSlot.data) != 0)
+  if (pInputSlot.data && pInputSlot.size != 0)
     stp_set_media_source_n(stp_data.v, pInputSlot.data, pInputSlot.size);
-  if (pinktype.data && strlen(pinktype.data) != 0)
+  if (pinktype.data && pinktype.size != 0)
     stp_set_ink_type_n(stp_data.v, pinktype.data, pinktype.size);
-  if (palgorithm.data && strlen(palgorithm.data) != 0)
+  if (palgorithm.data && palgorithm.size != 0)
     stp_set_dither_algorithm_n(stp_data.v, palgorithm.data, palgorithm.size);
-  if (pquality.data && strlen(pquality.data) != 0)
+  if (pquality.data && pquality.size != 0)
     stp_set_resolution_n(stp_data.v, pquality.data, pquality.size);
   stp_print_debug("stp_put_params(1)", pdev, &stp_data);
 
@@ -531,6 +567,7 @@ stp_open(gx_device *pdev)
   int left,right,bottom,top,width,height;
   stp_printer_t printer;
   stp_init_vars();
+  stp_print_debug("stp_open", pdev, &stp_data);
   printer = stp_get_printer_by_driver(stp_get_driver(stp_data.v));
   if (!printer)
     {

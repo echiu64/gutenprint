@@ -11,7 +11,7 @@ they use the identical code base.  Please read src/ghost/README and
 src/cups/README for more information on these drivers.
 
 The Gimp Print plugin requires the Gimp 1.2.  It no longer supports
-1.0 or 1.1.
+any release of 1.0 or 1.1.
 
 The CUPS driver requires CUPS 1.1.9 or higher.
 
@@ -31,8 +31,8 @@ Bugs Fixed from 4.0:
 3) A number of minor bugs in scaling and positioning in the Gimp
    plugin are fixed.
 
-4) The CUPS driver no longer allows printing in color to black and
-   white printers.
+4) The CUPS driver no longer allows attempts to print in color to
+   black and white printers.
 
 5) Printing pure black and white (monochrome) to black and white
    printers now works properly, rather than silently being converted
@@ -51,11 +51,11 @@ General User-Visible Changes:
 2) Default printing resolutions are 300x300 or 360x360 DPI for all
    printers, rather than the lowest available resolution.  On Epson
    printers, the default 360x360 printing modes are in many cases
-   higher quality than the default 360x360 mode in 4.2.
+   higher quality than the default 360x360 mode in 4.0.
 
-3) The same defaults apply to all three front ends (the Gimp plugin,
-   the CUPS driver, and the Ghostscript driver) for all driver and
-   printer characteristics.
+3) The same defaults for all driver and printer characteristics apply
+   to all three front ends (the Gimp plugin, the CUPS driver, and the
+   Ghostscript driver).
 
 4) There is now texinfo and HTML documentation available for much of
    the package.
@@ -70,17 +70,19 @@ Quality Improvements:
 
 2) Printed images are much smoother (more even) in texture.  This is
    particularly true on advanced 6-color and variable drop size
-   printers.  The transition in 6-color printers should be invisible
-   to the unaided eye at all but the lowest resolutions.
+   printers.  The transition between light and dark inks in 6-color
+   printers should be invisible to the unaided eye at all but the
+   lowest resolutions.
 
 3) Fine black detail prints much more accurately in color mode than
    previously.
 
-4) Epson printers support a greater range of resolutions, from very
-   low resolution draft mode up to 2880x720 for the newest Epson
-   printers.  This offers a full range of speed/quality tradeoffs for
-   any printing application.  The emulated resolutions in 4.0 have
-   been dropped, as they have not proven to be any improvement.
+4) Epson printers support a greater range of resolutions and quality
+   settings, from very low resolution draft mode up to 2880x720 for
+   the newest Epson printers.  This offers a full range of
+   speed/quality tradeoffs for any printing application.  The emulated
+   resolutions in 4.0 have been dropped, as they have not yielded any
+   improvement in quality.
 
 5) Epson printers print with much better quality to plain paper.
 
@@ -109,7 +111,7 @@ Changes to the Gimp Print plugin:
    on the page.  These options are described in the tooltip help for
    the preview window.
 
-3) The GUI has been considerably rearranged, and we hope is more
+3) The GUI has been considerably rearranged, and we hope it is more
    logical.
 
 4) Printing in black and white is now accomplished in the Output Type
@@ -133,10 +135,6 @@ Changes to the CUPS Driver:
 
 2) The CUPS driver now supports printing CMYK output, as well as RGB,
    grayscale, and black and white.
-
-3) The CUPS driver generates PPD files for the standard CUPS languages
-   (English, French, German, Italian, and Spanish).  These PPD files
-   have not been fully translated at this time.
 
 
 Changes to the Ghostscript Driver:
@@ -234,7 +232,10 @@ Known Limitations:
 
    escputil -u -d
 
-   will not return anything useful.
+   will not return anything useful, and head alignment requires
+   specification of the printer model.  This is not expected to be
+   fixed, as these printers do not have a known way of identifying
+   themselves.
 
 2) The "align color" (-o) command to escputil does not currently work
    on the printers that should support it (Epson Stylus Color 480 and
@@ -249,6 +250,13 @@ Known Limitations:
    tuned.
 
 5) The Canon BJC-8200 and S800 do not produce optimum quality.
+
+6) The Lexmark Z52 driver does not print correctly at 2400x1200 or
+   1200x1200.
+
+7) Some HP printers print poorly at high resolutions using the Glossy
+   Paper setting.  The workaround is to use the Premium Paper
+   setting.
 
 
 Supported Printers:
@@ -284,6 +292,7 @@ EPSON Stylus C20SX                      (NEW)
 EPSON Stylus C20UX                      (NEW)
 EPSON Stylus C40SX                      (NEW)
 EPSON Stylus C40UX                      (NEW)
+EPSON Stylus C60                        (NEW)
 EPSON Stylus Color
 EPSON Stylus Color Pro
 EPSON Stylus Color Pro XL
@@ -297,17 +306,17 @@ EPSON Stylus Color 600
 EPSON Stylus Color 640
 EPSON Stylus Color 660
 EPSON Stylus Color 670
-EPSON Stylus Color 680
+EPSON Stylus Color 680                  (NEW)
 EPSON Stylus Color 740
 EPSON Stylus Color 760
-EPSON Stylus Color 777
+EPSON Stylus Color 777                  (NEW)
 EPSON Stylus Color 800
 EPSON Stylus Color 850
 EPSON Stylus Color 860
-EPSON Stylus Color 880
+EPSON Stylus Color 880                  (NEW)
 EPSON Stylus Color 83                   (NEW)
 EPSON Stylus Color 900
-EPSON Stylus Color 980
+EPSON Stylus Color 980                  (NEW)
 EPSON Stylus Color 1160
 EPSON Stylus Color 1500
 EPSON Stylus Color 1520
