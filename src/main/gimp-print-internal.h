@@ -236,10 +236,6 @@ typedef struct stp_dither_matrix
   const void *data;
 } stp_dither_matrix_t;
 
-extern const stp_dither_matrix_short_t stp_1_1_matrix;
-extern const stp_dither_matrix_short_t stp_2_1_matrix;
-extern const stp_dither_matrix_short_t stp_4_1_matrix;
-
 /*
  * Prototypes...
  */
