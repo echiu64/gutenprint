@@ -316,7 +316,7 @@ sub build_cons {
 		    
 		    push (@PNCONS,
 			  "    <constraint sense='true'>\n",
-			  "      <driver>gimp-print-$stpvers</driver>\n",
+			  "      <driver>gimp-print</driver>\n",
 			  "      <printer>$fooname</printer><!-- gimp-print name: $stpname -->\n",
 			  "      <arg_defval>$foodefval</arg_defval>\n",
 			  "    </constraint>\n");
@@ -337,11 +337,12 @@ sub optmap_pagesize {
 
     # Root around in print-util.c for lines in the pagesize struct
     if (!defined $pagemap) {
-	open PUTIL, "./paper_sizes" or die "Cannot run paper_sizes: $!\n";
+	open PUTIL, "./paper_sizes |" or die "Cannot run paper_sizes: $!\n";
 	while (<PUTIL>) {
 	    chomp;
-	    my ($name, $width, $height) = split;
-	    if ($width > 0 and $height > 0) {
+	    $_ =~ m!^\s*(.+\S)\s+([0-9]+)\s+([0-9]+)\s*$!;
+	    my ($name, $width, $height) = ($1, $2, $3);
+	    if ($width >= 0 and $height >= 0) {
 		$pagemap->{$name} = "$width $height";
 #		print STDERR "PageSize '$name' driverval '$width $height'\n"; 
 	    }
@@ -481,12 +482,12 @@ sub compute_resolutions {
 	    my $r = {'x' => $x,
 		     'y' => $y,
 		     'driverval' => "$x $y",
-		     'ev_key' => get_ev_key("res-$x-$y", "gimp-print-$stpvers")
+		     'ev_key' => get_ev_key("res-$x-$y", "gimp-print")
 		     };
 	    push (@reslist, $r);
 
 	    # Default?
-	    $defval = get_ev_key("res-$x-$y", "gimp-print-$stpvers")
+	    $defval = get_ev_key("res-$x-$y", "gimp-print")
 		if ($qual eq $defaults{$stpname}{'Resolution'});
 
 	    # Note that this resolution value exists
