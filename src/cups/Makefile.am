@@ -59,6 +59,7 @@ cups_filter = rastertoprinter commandtoepson commandtocanon
 
 if CUPS_INSTALL
 install-data-local: ppd
+endif
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/$(PACKAGE)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/$(PACKAGE)/backend
@@ -78,7 +79,6 @@ install-data-local: ppd
 	$(mkinstalldirs) $(DESTDIR)/$(sysconfdir)
 	$(mkinstalldirs) $(DESTDIR)/$(sysconfdir)/$(PACKAGE)
 	$(INSTALL_DATA) command.types $(DESTDIR)/$(sysconfdir)/$(PACKAGE)/command.types
-endif
 
 ## Rules
 
