@@ -53,18 +53,18 @@ print_subc(stpi_dither_t *d, stpi_dither_channel_t *dc, stpi_ink_defn_t *ink, in
   int j;
   unsigned char *tptr;
 
-  if (dc->ptrs[subchannel])
+  if ((tptr = dc->ptrs[subchannel]) != 0)
     {
       switch(bits = ink->bits)
 	{
 	case 1:
-	  dc->ptrs[subchannel][d->ptr_offset] |= bit;
+	  tptr[d->ptr_offset] |= bit;
 	  return;
 	case 2:
-	  dc->ptrs[subchannel][d->ptr_offset + length] |= bit;
+	  tptr[d->ptr_offset + length] |= bit;
 	  return;
 	default:
-	  tptr = &dc->ptrs[subchannel][d->ptr_offset];
+	  tptr = &tptr[d->ptr_offset];
 	  for (j=1; j <= bits; j+=j, tptr += length) {
 	    if (j & bits) *tptr |= bit;
 	  }
@@ -377,6 +377,7 @@ stpi_dither_raw_et(stpi_dither_t *d,
   int		aspect = d->y_aspect / d->x_aspect;
   int		diff_factor;
   int		range;
+  int		channel_count = CHANNEL_COUNT(d);
 
   if (!et_initializer(d, duplicate_line, zero_mask)) return;
 
@@ -399,10 +400,10 @@ stpi_dither_raw_et(stpi_dither_t *d,
     x = d->dst_width - 1;
     terminate = -1;
     d->ptr_offset = length - 1;
-    raw += CHANNEL_COUNT(d) * (d->src_width - 1);
+    raw += channel_count * (d->src_width - 1);
   }
   bit = 1 << (7 - (x & 7));
-  xstep  = CHANNEL_COUNT(d) * (d->src_width / d->dst_width);
+  xstep  = channel_count * (d->src_width / d->dst_width);
   xmod   = d->src_width % d->dst_width;
   xerror = (xmod * x) % d->dst_width;
 
@@ -410,15 +411,14 @@ stpi_dither_raw_et(stpi_dither_t *d,
 
     range = 0;
 
-    for (i=0; i < CHANNEL_COUNT(d); i++) {
+    for (i=0; i < channel_count; i++) {
       int inkspot;
       stpi_shade_segment_t *sp;
       stpi_dither_channel_t *dc = &CHANNEL(d, i);
       stpi_ink_defn_t *inkp;
       stpi_ink_defn_t lower, upper;
 
-      CHANNEL(d, i).o =
-      CHANNEL(d, i).v = raw[i];
+      dc->o = dc->v = raw[i];
 
       advance_eventone_pre(dc, et, x);
 
@@ -430,6 +430,7 @@ stpi_dither_raw_et(stpi_dither_t *d,
       range += find_segment(sp, et, inkspot, sp->base, &lower, &upper);
 
       /* Determine whether to print the larger or smaller dot */
+
       inkp = &lower;
       if (range >= 32768) {
         range -= 65536;
@@ -438,22 +439,24 @@ stpi_dither_raw_et(stpi_dither_t *d,
 
       /* Adjust the error to reflect the dot choice */
       if (inkp->bits) {
-        sp->value -= 2 * inkp->range;
+        int subc = sp->subchannel;
+        
+	sp->value -= 2 * inkp->range;
         sp->dis = et->d_sq;
 
-        set_row_ends(dc, x, sp->subchannel);
+        set_row_ends(dc, x, subc);
 
         /* Do the printing */
-        print_subc(d, dc, inkp, sp->subchannel, bit, length);
+        print_subc(d, dc, inkp, subc, bit, length);
       }
 
       /* Spread the error around to the adjacent dots */
       diffuse_error(dc, et, diff_factor, x, direction);
     }
     if (direction == 1)
-      ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d), xerror, xstep, xmod);
+      ADVANCE_UNIDIRECTIONAL(d, bit, raw, channel_count, xerror, xstep, xmod);
     else
-      ADVANCE_REVERSE(d, bit, raw, CHANNEL_COUNT(d), xerror, xstep, xmod);
+      ADVANCE_REVERSE(d, bit, raw, channel_count, xerror, xstep, xmod);
   }
   if (direction == -1)
     stpi_dither_reverse_row_ends(d);
@@ -480,6 +483,7 @@ stpi_dither_raw_cmyk_et(stpi_dither_t *d,
   int		aspect = d->y_aspect / d->x_aspect;
   int		diff_factor;
   int		range;
+  int		channel_count = CHANNEL_COUNT(d);
 
   if (!et_initializer(d, duplicate_line, zero_mask)) return;
 
@@ -510,13 +514,14 @@ stpi_dither_raw_cmyk_et(stpi_dither_t *d,
   xerror = (xmod * x) % d->dst_width;
 
   for (; x != terminate; x += direction) {
+    { int black = cmyk[3];
+      CHANNEL(d, ECOLOR_K).v =
+      CHANNEL(d, ECOLOR_K).o = black;
 
-    CHANNEL(d, ECOLOR_K).v =
-    CHANNEL(d, ECOLOR_K).o = cmyk[3];
-
-    for (i=1; i < CHANNEL_COUNT(d); i++) {
-      CHANNEL(d, i).o =
-      (CHANNEL(d, i).v = cmyk[i-1]) + CHANNEL(d, ECOLOR_K).v;
+      for (i=1; i < channel_count; i++) {
+        CHANNEL(d, i).o = black +
+        (CHANNEL(d, i).v = cmyk[i-1]);
+      }
     }
 
     /* At this point, the CMYK separation has been done */
@@ -524,7 +529,7 @@ stpi_dither_raw_cmyk_et(stpi_dither_t *d,
 
     range = 0;
 
-    for (i = 0; i < CHANNEL_COUNT(d); i++) {
+    for (i = 0; i < channel_count; i++) {
       int inkspot;
       stpi_shade_segment_t *sp;
       stpi_dither_channel_t *dc = &CHANNEL(d, i);
@@ -549,13 +554,14 @@ stpi_dither_raw_cmyk_et(stpi_dither_t *d,
 
       /* Adjust the error to reflect the dot choice */
       if (inkp->bits) {
+        int subc = sp->subchannel;
         sp->value -= 2 * inkp->range;
         sp->dis = et->d_sq;
 
-        set_row_ends(dc, x, sp->subchannel);
+        set_row_ends(dc, x, subc);
 
         /* Do the printing */
-        print_subc(d, dc, inkp, sp->subchannel, bit, length);
+        print_subc(d, dc, inkp, subc, bit, length);
       }
 
       /* Spread the error around to the adjacent dots */
