@@ -18,14 +18,14 @@ require('standard_html_header.php3');
 including a working download link.</strong>.  We've also added a
 GhostScript driver for Epson Stylus inkjet printers.</p>
 
-<P><strong><em><font color="#ff0000">New as of August 9,
-2000!</font></em></strong> Version 4.0a1 is now released.  This is the
-first alpha release of 4.0 (formerly called 3.2), following the 3.1
+<P><strong><em><font color="#ff0000">New as of August 15,
+2000!</font></em></strong> Version 4.0a2 is now released.  This is the
+second alpha release of 4.0 (formerly called 3.2), following the 3.1
 development cycle.  This version contains a GhostScript driver equal
 to the Print plugin in all respects, including supported printers.
 <strong>Please read the Ghost/README file very carefully if you use
 the Ghostscript driver, as the usage is completely different from
-before!</strong></p>
+3.1.9 and earlier</strong></p>
 
 <P>Please check out <a
 href="https://sourceforge.net/project/?group_id=1537">our
