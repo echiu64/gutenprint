@@ -36,7 +36,7 @@ Users!</font></em></strong></h2>
 <p>There is now a <a
 href="http://gimp-print.sourceforge.net/MacOSX.php3">Gimp-Print web page for
 OS X</a> that answers most questions on how to use Gimp-Print with OS X 10.2
-"Jaguar" and provides direct download links. The final release of Gimp-Print 4.2.2 for Mac OS X Jaguar is available now!</p>
+"Jaguar" and provides direct download links. The final release of Gimp-Print 4.2.4 for Mac OS X Jaguar is available now!</p>
 
 
 <H2><font color="#ff0000">Gimp-Print 4.2.4 is released!</font></h2>
