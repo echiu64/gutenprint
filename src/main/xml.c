@@ -249,9 +249,9 @@ stpi_xml_parse_file(const char *file) /* File to parse */
 
   if (strcmp(cur->value.element.name, "gimp-print") != 0)
     {
-      fprintf(stderr,
-	      "XML file of the wrong type, root node is %s != gimp-print",
-	      cur->value.element.name);
+      stpi_erprintf
+	("XML file of the wrong type, root node is %s != gimp-print",
+	 cur->value.element.name);
       stpi_mxmlDelete(cur);
       return 1;
     }
