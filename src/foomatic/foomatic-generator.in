@@ -40,8 +40,8 @@ my $foomatic3 = ((defined($opt_f)) && ($opt_f >= 2.9));
 
 my $funcs = { 'Model' => { 'OPTCONSTRAINTS' => \&build_model_cons,
 			   'ENUMVALS' => \&build_model_ev },
-	      'Resolution' => { 'OPTCONSTRAINTS' => \&build_resolution_cons,
-				'ENUMVALS' => \&build_resolution_ev },
+	      'RenderResolution' => { 'OPTCONSTRAINTS' => \&build_resolution_cons,
+				  'ENUMVALS' => \&build_resolution_ev },
 	      'PrintoutMode' => { 'OPTCONSTRAINTS' => 
 				      \&build_printoutmode_cons,
 				  'ENUMVALS' => 
@@ -326,12 +326,15 @@ my $optiongroups = { 'PageSize' => 'General',
 		     'InputSlot' => 'General',
 		     'MediaType' => 'General',
 		     'PrintoutMode' => 'General',
-		     'Resolution' => 'General',
+		     'RenderResolution' => 'General',
 		     'Quality' => 'General',
 		     'Color' => 'General',
 		     'ImageType' => 'General'};
 
 my @numericsubs = ('MINVAL', 'MAXVAL');
+
+my $specialoutputfilenames = { 'Resolution' => 'PrinterResolution',
+			       'RenderResolution' => 'Resolution' };
 
 # OK, make the db directory...
 mkdir "foomatic-db", 0755 or
@@ -364,7 +367,8 @@ for $drivertype (@drivertypes) {
 #	die "Cannot open templates directory: $!\n";
 
     for $fooopt (sort (keys(%ev_choices), @floatnumopts_list,
-		 @intnumopts_list), "PrintoutMode", "Model", "gimp-print") {
+		 @intnumopts_list), "PrintoutMode", "Model",
+		 "RenderResolution", "gimp-print") {
 
 	# The "PrintoutMode" option is only supported by Foomatic 2.9.x or
 	# newer (preliminary skipped always, do not remove the 
@@ -461,6 +465,7 @@ for $drivertype (@drivertypes) {
 	}
 
 	# Substitutions for generic template files
+
 	my $lowercaseshortname = lc($fooopt);
 	if ($tmpl !~ /^$fooopt/) {
 	    $template =~ s!\@\@LOWERCASESHORTNAME\@\@!$lowercaseshortname!g;
@@ -480,6 +485,7 @@ for $drivertype (@drivertypes) {
 		$template =~ s!\@\@$substr\@\@!$substitution!g;
 	    }
 	}
+
 	if ($template =~ m!\@\@OPTCONSTRAINTS\@\@!) {
 	    my $substitution = ($num_opt ? build_num_cons($fooopt) : 
 				build_cons($stpopt));
@@ -500,14 +506,18 @@ for $drivertype (@drivertypes) {
 	    }
 	}
 
+	# Any more?
+	grep (m!\@\@([^\@]+)\@\@!g
+	      && do { warn "  Unknown substitution $1 in $fooopt!\n"; },
+	      split("\n",$template));
+
 	# File name for the option XML file
 
 	$tmpl = "${fooopt}.xml" if $tmpl !~ /^$fooopt\.xml$/;
 
-	# Any more?
-	grep (m!\@\@([^\@]+)\@\@!g
-	      && do { warn "  Unknown substitution $1 in $tmpl!\n"; },
-	      split("\n",$template));
+	if (my $f = $specialoutputfilenames->{$fooopt}) {
+	    $tmpl = "${f}.xml";
+	}
 
 	# Finally, write out the new file
 
@@ -964,7 +974,7 @@ sub build_resolution_ev {
 	my ($x, $y) = ($resolutions{$ev}{'x'}, $resolutions{$ev}{'y'});
 
 	#  Put in the basic choice info: ev names, etc
-	my $ev_longname = "$x x $y DPI";
+	my $ev_longname = "$x x $y dpi";
 	my $ev_shortname = get_ev_shortname($ev_longname);
 	my $ev_id = get_ev_key("res-$x-$y", $drvname);
 	my $ev_driverval = "${x}x${y}";
@@ -1607,7 +1617,7 @@ sub getprintoutmode {
 		(defined($stpdata{$stpprn}{'Quality'}) ? 
 		 "Quality=$modeinfo->{$m}{'quality'} " : "") .
 		"GSResolution=$modeinfo->{$m}{'xres'}x" .
-		"$modeinfo->{$m}{'yres'}DPI";
+		"$modeinfo->{$m}{'yres'}dpi";
 	    if (defined($stpdata{$stpprn}{'Color'}{'Color'})) { 
 		# Color printer
 		$modes->{$stpprn}{$m} = $modestr . " OutputType=Color";
@@ -1625,7 +1635,7 @@ sub getprintoutmode {
 		    if(!defined($stpdata{$stpprn}{'Resolution'}{'300dpi'})){
 			die "No '300dpi' mode for $stpprn!";
 		    }
-		    $modes->{$stpprn}{$m} =~ s/600x600DPI/300x300DPI/;
+		    $modes->{$stpprn}{$m} =~ s/600x600dpi/300x300dpi/;
 		    $modes->{$stpprn}{$m} =~ s/600mono/300dpi/;
 		}
 	    } else {
