@@ -52,7 +52,9 @@
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
+#ifdef HAVE_LIBZ
 #include <zlib.h>
+#endif
 
 #include <cups/cups.h>
 #include <cups/raster.h>

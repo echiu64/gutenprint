@@ -127,7 +127,7 @@ vasprintf (result, format, args)
 
 int
 asprintf
-#if __STDC__
+#ifdef __STDC__
      (char **result, const char *format, ...)
 #else
      (result, va_alist)
@@ -138,7 +138,7 @@ asprintf
   va_list args;
   int done;
 
-#if __STDC__
+#ifdef __STDC__
   va_start (args, format);
 #else
   char *format;
@@ -154,7 +154,7 @@ asprintf
 #ifdef TEST
 void
 checkit
-#if __STDC__
+#ifdef __STDC__
      (const char* format, ...)
 #else
      (va_alist)
@@ -164,7 +164,7 @@ checkit
   va_list args;
   char *result;
 
-#if __STDC__
+#ifdef __STDC__
   va_start (args, format);
 #else
   char *format;

@@ -1438,14 +1438,8 @@ stp_minimum_settings()
   return (stp_vars_t) &min_vars;
 }
 
-#if defined DISABLE_NLS || !defined HAVE_VASPRINTF
-#include <stdarg.h>
-
-static int vasprintf (char **result, const char *format, va_list args);
-static int int_vasprintf (char **result, const char *format, va_list *args);
-
 static int
-int_vasprintf (char **result, const char *format, va_list *args)
+stp_int_vasprintf (char **result, const char *format, va_list *args)
 {
   const char *p = format;
   /* Add one to make sure that it is never zero, which might cause malloc
@@ -1522,13 +1516,10 @@ int_vasprintf (char **result, const char *format, va_list *args)
 }
 
 static int
-vasprintf (char **result, const char *format, va_list args)
+stp_vasprintf (char **result, const char *format, va_list args)
 {
-  return int_vasprintf (result, format, &args);
+  return stp_int_vasprintf (result, format, &args);
 }
-#else
-extern int vasprintf (char **result, const char *format, va_list args);
-#endif
 
 void
 stp_zprintf(const stp_vars_t v, const char *format, ...)
@@ -1537,7 +1528,7 @@ stp_zprintf(const stp_vars_t v, const char *format, ...)
   int bytes;
   char *result;
   va_start(args, format);
-  bytes = vasprintf(&result, format, args);
+  bytes = stp_vasprintf(&result, format, args);
   va_end(args);
   (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), result, bytes);
   free(result);
@@ -1571,7 +1562,7 @@ stp_eprintf(const stp_vars_t v, const char *format, ...)
   if (stp_get_errfunc(v))
     {
       va_start(args, format);
-      bytes = vasprintf(&result, format, args);
+      bytes = stp_vasprintf(&result, format, args);
       va_end(args);
       (stp_get_errfunc(v))((void *)(stp_get_errdata(v)), result, bytes);
       free(result);
@@ -1621,7 +1612,7 @@ stp_dprintf(unsigned long level, const stp_vars_t v, const char *format, ...)
   if ((level & stp_debug_level) && stp_get_errfunc(v))
     {
       va_start(args, format);
-      bytes = vasprintf(&result, format, args);
+      bytes = stp_vasprintf(&result, format, args);
       va_end(args);
       (stp_get_errfunc(v))((void *)(stp_get_errdata(v)), result, bytes);
       free(result);
@@ -1638,7 +1629,7 @@ stp_deprintf(unsigned long level, const char *format, ...)
   if (level & stp_debug_level)
     {
       va_start(args, format);
-      bytes = vasprintf(&result, format, args);
+      bytes = stp_vasprintf(&result, format, args);
       va_end(args);
       stp_erprintf("%s", result);
       free(result);
