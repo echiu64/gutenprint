@@ -94,6 +94,16 @@ static void	run(char *, int, GParam *, int *, GParam **);
 static int	do_print_dialog(void);
 static void	brightness_update(GtkAdjustment *);
 static void	brightness_callback(GtkWidget *);
+static void	contrast_update(GtkAdjustment *);
+static void	contrast_callback(GtkWidget *);
+static void	red_update(GtkAdjustment *);
+static void	red_callback(GtkWidget *);
+static void	green_update(GtkAdjustment *);
+static void	green_callback(GtkWidget *);
+static void	blue_update(GtkAdjustment *);
+static void	blue_callback(GtkWidget *);
+static void	gamma_update(GtkAdjustment *);
+static void	gamma_callback(GtkWidget *);
 static void	scaling_update(GtkAdjustment *);
 static void	scaling_callback(GtkWidget *);
 static void	plist_callback(GtkWidget *, gint);
@@ -150,6 +160,11 @@ struct					/* Plug-in variables */
   gint	orientation,		/* Orientation - 0 = port., 1 = land., -1 = auto */
 	left,			/* Offset from lower-lefthand corner, points */
 	top;			/* ... */
+  float gamma;                  /* Gamma */
+  gint  contrast,		/* Output Contrast */
+	red,			/* Output red level */
+	green,			/* Output green level */
+	blue;			/* Output blue level */
 }		vars =
 {
 	"",			/* Name of file or command to print to */
@@ -165,7 +180,12 @@ struct					/* Plug-in variables */
 				/*          -XXX means scale by PPI) */
 	-1,			/* Orientation (-1 = automatic) */
 	-1,			/* X offset (-1 = center) */
-	-1			/* Y offset (-1 = center) */
+	-1,			/* Y offset (-1 = center) */
+	0.0,			/* Screen gamma */
+	100,			/* Contrast */
+	100,			/* Red */
+	100,			/* Green */
+	100			/* Blue */
 };
 
 GtkWidget	*print_dialog,		/* Print dialog window */
@@ -183,6 +203,16 @@ GtkWidget	*print_dialog,		/* Print dialog window */
 		*scaling_ppi,		/* Scale by pixels-per-inch */
 		*brightness_scale,	/* Scale for brightness */
 		*brightness_entry,	/* Text entry widget for brightness */
+		*contrast_scale,	/* Scale for contrast */
+		*contrast_entry,	/* Text entry widget for contrast */
+		*red_scale,		/* Scale for red */
+		*red_entry,		/* Text entry widget for red */
+		*green_scale,		/* Scale for green */
+		*green_entry,		/* Text entry widget for green */
+		*blue_scale,		/* Scale for blue */
+		*blue_entry,		/* Text entry widget for blue */
+		*gamma_scale,		/* Scale for gamma */
+		*gamma_entry,		/* Text entry widget for gamma */
 		*output_gray,		/* Output type toggle, black */
 		*output_color,		/* Output type toggle, color */
 		*setup_dialog,		/* Setup dialog window */
@@ -194,7 +224,12 @@ GtkWidget	*print_dialog,		/* Print dialog window */
 		*file_browser;		/* FSD for print files */
 
 GtkObject	*scaling_adjustment,	/* Adjustment object for scaling */
-		*brightness_adjustment;	/* Adjustment object for brightness */
+		*brightness_adjustment,	/* Adjustment object for brightness */
+		*contrast_adjustment,	/* Adjustment object for contrast */
+		*red_adjustment,	/* Adjustment object for red */
+		*green_adjustment,	/* Adjustment object for green */
+		*blue_adjustment,	/* Adjustment object for blue */
+		*gamma_adjustment;	/* Adjustment object for gamma */
 
 int		num_media_sizes=0;	/* Number of media sizes */
 char		**media_sizes;		/* Media size strings */
@@ -277,7 +312,9 @@ printer_t	printers[] =		/* List of supported printer types */
   { N_("EPSON Stylus Color 1520"),	"escp2-1520",	1,	5,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { N_("EPSON Stylus Color 3000"),	"escp2-3000",	1,	5,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print }
+    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
+  { N_("EPSON Stylus Photo EX"),	"escp2-ex",	1,	7,	0.700,	0.950,
+    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
 };
 
 
@@ -321,7 +358,8 @@ query(void)
     { PARAM_FLOAT,	"scaling",	"Output scaling (0-100%, -PPI)" },
     { PARAM_INT32,	"orientation",	"Output orientation (-1 = auto, 0 = portrait, 1 = landscape)" },
     { PARAM_INT32,	"left",		"Left offset (points, -1 = centered)" },
-    { PARAM_INT32,	"top",		"Top offset (points, -1 = centered)" }
+    { PARAM_INT32,	"top",		"Top offset (points, -1 = centered)" },
+    { PARAM_FLOAT,	"gamma",	"Output gamma (0.1 - 3.0)" },
   };
   static int		nargs = sizeof(args) / sizeof(args[0]);
 
@@ -331,8 +369,8 @@ query(void)
       "file_print",
       _("This plug-in prints images from The GIMP."),
       _("Prints images to PostScript, PCL, or ESC/P2 printers."),
-      "Michael Sweet <mike@easysw.com>",
-      "Copyright 1997-1998 by Michael Sweet",
+      "Michael Sweet <mike@easysw.com> and Robert Krawitz <rlk@alum.mit.edu>",
+      "Copyright 1997-1998 by Michael Sweet, 1999 by Robert Krawitz",
       PLUG_IN_VERSION,
       _("<Image>/File/Print"),
       "RGB*,GRAY*,INDEXED*",
@@ -367,6 +405,8 @@ get_tmp_filename()
  * 'run()' - Run the plug-in...
  */
 
+#define PRINT_LUT
+
 static void
 run(char   *name,		/* I - Name of print program. */
     int    nparams,		/* I - Number of parameters passed in */
@@ -382,8 +422,13 @@ run(char   *name,		/* I - Name of print program. */
   float		brightness,	/* Computed brightness */
 		screen_gamma,	/* Screen gamma correction */
 		print_gamma,	/* Printer gamma correction */
-		pixel;		/* Pixel value */
-  guchar	lut[256];	/* Lookup table for brightness */
+		pixel,		/* Pixel value */
+		red_pixel,	/* Pixel value */
+		green_pixel,	/* Pixel value */
+		blue_pixel,	/* Pixel value */
+		pixel_0;	/* Zero-value pixel -- scale to zero */
+  lut_t		lut;		/* Lookup table for brightness */
+  lut16_t	lut16;		/* 16-bit lookup table for brightness */
   guchar	*cmap;		/* Colormap (indexed images only) */
   int		ncolors;	/* Number of colors in colormap */
   GParam	*values;	/* Return values */
@@ -483,6 +528,31 @@ run(char   *name,		/* I - Name of print program. */
             vars.top = param[15].data.d_int32;
           else
             vars.top = -1;
+
+          if (nparams > 16)
+            vars.gamma = param[16].data.d_float;
+          else
+            vars.top = 0.0;
+
+          if (nparams > 17)
+	    vars.contrast = param[17].data.d_int32;
+	  else
+	    vars.contrast = 100;
+
+          if (nparams > 18)
+	    vars.red = param[18].data.d_int32;
+	  else
+	    vars.red = 100;
+
+          if (nparams > 19)
+	    vars.green = param[19].data.d_int32;
+	  else
+	    vars.green = 100;
+
+          if (nparams > 20)
+	    vars.blue = param[20].data.d_int32;
+	  else
+	    vars.blue = 100;
 	};
 
         for (i = 0; i < (sizeof(printers) / sizeof(printers[0])); i ++)
@@ -513,6 +583,9 @@ run(char   *name,		/* I - Name of print program. */
 
   if (values[0].data.d_status == STATUS_SUCCESS)
   {
+#ifdef PRINT_LUT
+    FILE *ltfile = fopen("/mnt1/lut", "w");
+#endif
    /*
     * Set the tile cache size...
     */
@@ -544,25 +617,166 @@ run(char   *name,		/* I - Name of print program. */
       * Got an output file/command, now compute a brightness lookup table...
       */
 
+      float contrast, red, green, blue;
+      contrast = vars.contrast / 100.0;
+      red = vars.red / 100.0;
+      green = vars.green / 100.0;
+      blue = vars.blue / 100.0;
+      if (red < 0.01)
+	red = 0.01;
+      if (green < 0.01)
+	green = 0.01;
+      if (blue < 0.01)
+	blue = 0.01;
+      
       printer      = printers + current_printer;
       brightness   = 100.0 / vars.brightness;
       screen_gamma = gimp_gamma() * brightness / 1.7;
-      print_gamma  = 1.0 / printer->gamma;
+      if (vars.gamma > 0)
+	print_gamma = 1.0 / vars.gamma;
+      else
+	print_gamma  = 1.0 / printer->gamma;
 
       for (i = 0; i < 256; i ++)
       {
+	/*
+	 * First, perform screen gamma correction
+	 */
         pixel = 1.0 - pow((float)i / 255.0, screen_gamma);
-        pixel = 255.5 - 255.0 * printer->density *
-  	        	pow(brightness * pixel, print_gamma);
+
+	/*
+	 * Second, correct contrast
+	 */
+	pixel = 1.0 + ((pixel - 1.0) * contrast);
+
+	/*
+	 * Third, fix up red, green, blue values
+	 *
+	 * I don't know how to do this correctly.  I think that what I'll do is
+	 * if the correction is less than 1 to multiply it by the correction;
+	 * if it's greater than 1, hinge it around 64K.  Doubtless we can
+	 * do better.  Oh well.
+	 */
+	if (pixel < 0.0)
+	  pixel = 0.0;
+	else if (pixel > 1.0)
+	  pixel = 1.0;
+
+	red_pixel = pow(pixel, 1.0 / (red * red));
+	green_pixel = pow(pixel, 1.0 / (green * green));
+	blue_pixel = pow(pixel, 1.0 / (blue * blue));
+
+	/*
+	 * Finally, fix up print gamma and scale
+	 */
+
+        pixel = 256.0 * (256.0 - 256.0 * printer->density *
+			 pow(brightness * pixel, print_gamma));
+        red_pixel = 256.0 * (256.0 - 256.0 * printer->density *
+			     pow(brightness * red_pixel, print_gamma));
+        green_pixel = 256.0 * (256.0 - 256.0 * printer->density *
+			       pow(brightness * green_pixel, print_gamma));
+        blue_pixel = 256.0 * (256.0 - 256.0 * printer->density *
+			      pow(brightness * blue_pixel, print_gamma));
+
+#if 0
+	if (red > 1.0)
+	  red_pixel = 65536.0 + ((pixel - 65536.0) / red);
+	else
+	  red_pixel = pixel * red;
+	if (green > 1.0)
+	  green_pixel = 65536.0 + ((pixel - 65536.0) / green);
+	else
+	  green_pixel = pixel * green;
+	if (blue > 1.0)
+	  blue_pixel = 65536.0 + ((pixel - 65536.0) / blue);
+	else
+	  blue_pixel = pixel * blue;
+#endif
+
+#if 0
+	if (i == 0)
+	  pixel_0 = pixel;
+	pixel = (pixel - pixel_0) * 65536.0 / (65536.0 - pixel_0);
+#endif
 
 	if (pixel <= 0.0)
-	  lut[i] = 0;
-	else if (pixel >= 255.0)
-	  lut[i] = 255;
+	  {
+	    lut.composite[i] = 0;
+	    lut16.composite[i] = 0;
+	  }
+	else if (pixel >= 65535.0)
+	  {
+	    lut.composite[i] = 255;
+	    lut16.composite[i] = 65535;
+	  }
 	else
-	  lut[i] = (int)pixel;
+	  {
+	    lut.composite[i] = (unsigned) (((float) ((unsigned) (pixel / 256.0))) + 0.5);
+	    lut16.composite[i] = (unsigned)(pixel + 0.5);
+	  }
+
+	if (red_pixel <= 0.0)
+	  {
+	    lut.red[i] = 0;
+	    lut16.red[i] = 0;
+	  }
+	else if (red_pixel >= 65535.0)
+	  {
+	    lut.red[i] = 255;
+	    lut16.red[i] = 65535;
+	  }
+	else
+	  {
+	    lut.red[i] = (unsigned) (((float) ((unsigned) (red_pixel / 256.0))) + 0.5);
+	    lut16.red[i] = (unsigned)(red_pixel + 0.5);
+	  }
+
+	if (green_pixel <= 0.0)
+	  {
+	    lut.green[i] = 0;
+	    lut16.green[i] = 0;
+	  }
+	else if (green_pixel >= 65535.0)
+	  {
+	    lut.green[i] = 255;
+	    lut16.green[i] = 65535;
+	  }
+	else
+	  {
+	    lut.green[i] = (unsigned) (((float) ((unsigned) (green_pixel / 256.0))) + 0.5);
+	    lut16.green[i] = (unsigned)(green_pixel + 0.5);
+	  }
+
+	if (blue_pixel <= 0.0)
+	  {
+	    lut.blue[i] = 0;
+	    lut16.blue[i] = 0;
+	  }
+	else if (blue_pixel >= 65535.0)
+	  {
+	    lut.blue[i] = 255;
+	    lut16.blue[i] = 65535;
+	  }
+	else
+	  {
+	    lut.blue[i] = (unsigned) (((float) ((unsigned) (blue_pixel / 256.0))) + 0.5);
+	    lut16.blue[i] = (unsigned)(blue_pixel + 0.5);
+	  }
+
+#ifdef PRINT_LUT
+	fprintf(ltfile, "%3i  %3d %5d  %3d %5d  %3d %5d  %3d %5d  %f %f %f %f\n",
+		i, lut.composite[i], lut16.composite[i],
+		lut.red[i], lut16.red[i],
+		lut.green[i], lut16.green[i],
+		lut.blue[i], lut16.blue[i],
+		pixel, red_pixel, green_pixel, blue_pixel);
+#endif
       };
 
+#ifdef PRINT_LUT
+      fclose(ltfile);
+#endif
      /*
       * Is the image an Indexed type?  If so we need the colormap...
       */
@@ -583,7 +797,8 @@ run(char   *name,		/* I - Name of print program. */
       (*printer->print)(printer->model, vars.ppd_file, vars.resolution,
                         vars.media_size, vars.media_type, vars.media_source,
                         vars.output_type, vars.orientation, vars.scaling,
-                        vars.left, vars.top, 1, prn, drawable, lut, cmap);
+                        vars.left, vars.top, 1, prn, drawable, &lut, cmap,
+			&lut16);
 
       if (plist_current > 0)
 #ifndef __EMX__
@@ -924,7 +1139,7 @@ do_print_dialog(void)
   gtk_widget_show(box);
 
   brightness_adjustment = scale_data =
-      gtk_adjustment_new((float)vars.brightness, 50.0, 201.0, 1.0, 1.0, 1.0);
+      gtk_adjustment_new((float)vars.brightness, 0.0, 201.0, 1.0, 1.0, 1.0);
 
   gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
 		     (GtkSignalFunc)brightness_update, NULL);
@@ -941,6 +1156,182 @@ do_print_dialog(void)
   gtk_entry_set_text(GTK_ENTRY(entry), s);
   gtk_signal_connect(GTK_OBJECT(entry), "changed",
 		     (GtkSignalFunc)brightness_callback, NULL);
+  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
+  gtk_widget_set_usize(entry, 40, 0);
+  gtk_widget_show(entry);
+
+ /*
+  * Gamma slider...
+  */
+
+  label = gtk_label_new(_("Gamma:"));
+  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(label);
+
+  box = gtk_hbox_new(FALSE, 8);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(box);
+
+  gamma_adjustment = scale_data =
+      gtk_adjustment_new((float)vars.gamma, 0.1, 4.0, 0.001, 0.01, 1.0);
+
+  gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
+		     (GtkSignalFunc)gamma_update, NULL);
+
+  gamma_scale = scale = gtk_hscale_new(GTK_ADJUSTMENT(scale_data));
+  gtk_box_pack_start(GTK_BOX(box), scale, FALSE, FALSE, 0);
+  gtk_widget_set_usize(scale, 200, 0);
+  gtk_scale_set_draw_value(GTK_SCALE(scale), FALSE);
+  gtk_range_set_update_policy(GTK_RANGE(scale), GTK_UPDATE_CONTINUOUS);
+  gtk_widget_show(scale);
+
+  gamma_entry = entry = gtk_entry_new();
+  sprintf(s, "%5.3f", vars.gamma);
+  gtk_entry_set_text(GTK_ENTRY(entry), s);
+  gtk_signal_connect(GTK_OBJECT(entry), "changed",
+		     (GtkSignalFunc)gamma_callback, NULL);
+  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
+  gtk_widget_set_usize(entry, 40, 0);
+  gtk_widget_show(entry);
+
+
+ /*
+  * Contrast slider...
+  */
+
+  label = gtk_label_new(_("Contrast:"));
+  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(label);
+
+  box = gtk_hbox_new(FALSE, 8);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(box);
+
+  contrast_adjustment = scale_data =
+      gtk_adjustment_new((float)vars.contrast, 0.0, 201.0, 1.0, 1.0, 1.0);
+
+  gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
+		     (GtkSignalFunc)contrast_update, NULL);
+
+  contrast_scale = scale = gtk_hscale_new(GTK_ADJUSTMENT(scale_data));
+  gtk_box_pack_start(GTK_BOX(box), scale, FALSE, FALSE, 0);
+  gtk_widget_set_usize(scale, 200, 0);
+  gtk_scale_set_draw_value(GTK_SCALE(scale), FALSE);
+  gtk_range_set_update_policy(GTK_RANGE(scale), GTK_UPDATE_CONTINUOUS);
+  gtk_widget_show(scale);
+
+  contrast_entry = entry = gtk_entry_new();
+  sprintf(s, "%d", vars.contrast);
+  gtk_entry_set_text(GTK_ENTRY(entry), s);
+  gtk_signal_connect(GTK_OBJECT(entry), "changed",
+		     (GtkSignalFunc)contrast_callback, NULL);
+  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
+  gtk_widget_set_usize(entry, 40, 0);
+  gtk_widget_show(entry);
+
+ /*
+  * Red slider...
+  */
+
+  label = gtk_label_new(_("Red:"));
+  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 11, 12, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(label);
+
+  box = gtk_hbox_new(FALSE, 8);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 11, 12, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(box);
+
+  red_adjustment = scale_data =
+      gtk_adjustment_new((float)vars.red, 0.0, 201.0, 1.0, 1.0, 1.0);
+
+  gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
+		     (GtkSignalFunc)red_update, NULL);
+
+  red_scale = scale = gtk_hscale_new(GTK_ADJUSTMENT(scale_data));
+  gtk_box_pack_start(GTK_BOX(box), scale, FALSE, FALSE, 0);
+  gtk_widget_set_usize(scale, 200, 0);
+  gtk_scale_set_draw_value(GTK_SCALE(scale), FALSE);
+  gtk_range_set_update_policy(GTK_RANGE(scale), GTK_UPDATE_CONTINUOUS);
+  gtk_widget_show(scale);
+
+  red_entry = entry = gtk_entry_new();
+  sprintf(s, "%d", vars.red);
+  gtk_entry_set_text(GTK_ENTRY(entry), s);
+  gtk_signal_connect(GTK_OBJECT(entry), "changed",
+		     (GtkSignalFunc)red_callback, NULL);
+  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
+  gtk_widget_set_usize(entry, 40, 0);
+  gtk_widget_show(entry);
+
+ /*
+  * Green slider...
+  */
+
+  label = gtk_label_new(_("Green:"));
+  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 12, 13, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(label);
+
+  box = gtk_hbox_new(FALSE, 8);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 12, 13, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(box);
+
+  green_adjustment = scale_data =
+      gtk_adjustment_new((float)vars.green, 0.0, 201.0, 1.0, 1.0, 1.0);
+
+  gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
+		     (GtkSignalFunc)green_update, NULL);
+
+  green_scale = scale = gtk_hscale_new(GTK_ADJUSTMENT(scale_data));
+  gtk_box_pack_start(GTK_BOX(box), scale, FALSE, FALSE, 0);
+  gtk_widget_set_usize(scale, 200, 0);
+  gtk_scale_set_draw_value(GTK_SCALE(scale), FALSE);
+  gtk_range_set_update_policy(GTK_RANGE(scale), GTK_UPDATE_CONTINUOUS);
+  gtk_widget_show(scale);
+
+  green_entry = entry = gtk_entry_new();
+  sprintf(s, "%d", vars.green);
+  gtk_entry_set_text(GTK_ENTRY(entry), s);
+  gtk_signal_connect(GTK_OBJECT(entry), "changed",
+		     (GtkSignalFunc)green_callback, NULL);
+  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
+  gtk_widget_set_usize(entry, 40, 0);
+  gtk_widget_show(entry);
+
+ /*
+  * Blue slider...
+  */
+
+  label = gtk_label_new(_("Blue:"));
+  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 13, 14, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(label);
+
+  box = gtk_hbox_new(FALSE, 8);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 13, 14, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(box);
+
+  blue_adjustment = scale_data =
+      gtk_adjustment_new((float)vars.blue, 0.0, 201.0, 1.0, 1.0, 1.0);
+
+  gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
+		     (GtkSignalFunc)blue_update, NULL);
+
+  blue_scale = scale = gtk_hscale_new(GTK_ADJUSTMENT(scale_data));
+  gtk_box_pack_start(GTK_BOX(box), scale, FALSE, FALSE, 0);
+  gtk_widget_set_usize(scale, 200, 0);
+  gtk_scale_set_draw_value(GTK_SCALE(scale), FALSE);
+  gtk_range_set_update_policy(GTK_RANGE(scale), GTK_UPDATE_CONTINUOUS);
+  gtk_widget_show(scale);
+
+  blue_entry = entry = gtk_entry_new();
+  sprintf(s, "%d", vars.blue);
+  gtk_entry_set_text(GTK_ENTRY(entry), s);
+  gtk_signal_connect(GTK_OBJECT(entry), "changed",
+		     (GtkSignalFunc)blue_callback, NULL);
   gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
   gtk_widget_set_usize(entry, 40, 0);
   gtk_widget_show(entry);
@@ -1200,6 +1591,256 @@ brightness_callback(GtkWidget *widget)	/* I - Entry widget */
       GTK_ADJUSTMENT(brightness_adjustment)->value = new_value;
 
       gtk_signal_emit_by_name(brightness_adjustment, "value_changed");
+    };
+  };
+}
+
+
+/*
+ * 'contrast_update()' - Update the contrast field using the scale.
+ */
+
+static void
+contrast_update(GtkAdjustment *adjustment)	/* I - New value */
+{
+  char	s[255];					/* Text buffer */
+
+
+  if (vars.contrast != adjustment->value)
+  {
+    vars.contrast = adjustment->value;
+
+    sprintf(s, "%d", vars.contrast);
+
+    gtk_signal_handler_block_by_data(GTK_OBJECT(contrast_entry), NULL);
+    gtk_entry_set_text(GTK_ENTRY(contrast_entry), s);
+    gtk_signal_handler_unblock_by_data(GTK_OBJECT(contrast_entry), NULL);
+
+    preview_update();
+  };
+}
+
+
+/*
+ * 'contrast_callback()' - Update the contrast scale using the text entry.
+ */
+
+static void
+contrast_callback(GtkWidget *widget)	/* I - Entry widget */
+{
+  gint		new_value;		/* New scaling value */
+
+
+  new_value = atoi(gtk_entry_get_text(GTK_ENTRY(widget)));
+
+  if (vars.contrast != new_value)
+  {
+    if ((new_value >= GTK_ADJUSTMENT(contrast_adjustment)->lower) &&
+	(new_value < GTK_ADJUSTMENT(contrast_adjustment)->upper))
+    {
+      GTK_ADJUSTMENT(contrast_adjustment)->value = new_value;
+
+      gtk_signal_emit_by_name(contrast_adjustment, "value_changed");
+    };
+  };
+}
+
+
+/*
+ * 'red_update()' - Update the red field using the scale.
+ */
+
+static void
+red_update(GtkAdjustment *adjustment)	/* I - New value */
+{
+  char	s[255];					/* Text buffer */
+
+
+  if (vars.red != adjustment->value)
+  {
+    vars.red = adjustment->value;
+
+    sprintf(s, "%d", vars.red);
+
+    gtk_signal_handler_block_by_data(GTK_OBJECT(red_entry), NULL);
+    gtk_entry_set_text(GTK_ENTRY(red_entry), s);
+    gtk_signal_handler_unblock_by_data(GTK_OBJECT(red_entry), NULL);
+
+    preview_update();
+  };
+}
+
+
+/*
+ * 'red_callback()' - Update the red scale using the text entry.
+ */
+
+static void
+red_callback(GtkWidget *widget)	/* I - Entry widget */
+{
+  gint		new_value;		/* New scaling value */
+
+
+  new_value = atoi(gtk_entry_get_text(GTK_ENTRY(widget)));
+
+  if (vars.red != new_value)
+  {
+    if ((new_value >= GTK_ADJUSTMENT(red_adjustment)->lower) &&
+	(new_value < GTK_ADJUSTMENT(red_adjustment)->upper))
+    {
+      GTK_ADJUSTMENT(red_adjustment)->value = new_value;
+
+      gtk_signal_emit_by_name(red_adjustment, "value_changed");
+    };
+  };
+}
+
+
+/*
+ * 'green_update()' - Update the green field using the scale.
+ */
+
+static void
+green_update(GtkAdjustment *adjustment)	/* I - New value */
+{
+  char	s[255];					/* Text buffer */
+
+
+  if (vars.green != adjustment->value)
+  {
+    vars.green = adjustment->value;
+
+    sprintf(s, "%d", vars.green);
+
+    gtk_signal_handler_block_by_data(GTK_OBJECT(green_entry), NULL);
+    gtk_entry_set_text(GTK_ENTRY(green_entry), s);
+    gtk_signal_handler_unblock_by_data(GTK_OBJECT(green_entry), NULL);
+
+    preview_update();
+  };
+}
+
+
+/*
+ * 'green_callback()' - Update the green scale using the text entry.
+ */
+
+static void
+green_callback(GtkWidget *widget)	/* I - Entry widget */
+{
+  gint		new_value;		/* New scaling value */
+
+
+  new_value = atoi(gtk_entry_get_text(GTK_ENTRY(widget)));
+
+  if (vars.green != new_value)
+  {
+    if ((new_value >= GTK_ADJUSTMENT(green_adjustment)->lower) &&
+	(new_value < GTK_ADJUSTMENT(green_adjustment)->upper))
+    {
+      GTK_ADJUSTMENT(green_adjustment)->value = new_value;
+
+      gtk_signal_emit_by_name(green_adjustment, "value_changed");
+    };
+  };
+}
+
+
+/*
+ * 'blue_update()' - Update the blue field using the scale.
+ */
+
+static void
+blue_update(GtkAdjustment *adjustment)	/* I - New value */
+{
+  char	s[255];					/* Text buffer */
+
+
+  if (vars.blue != adjustment->value)
+  {
+    vars.blue = adjustment->value;
+
+    sprintf(s, "%d", vars.blue);
+
+    gtk_signal_handler_block_by_data(GTK_OBJECT(blue_entry), NULL);
+    gtk_entry_set_text(GTK_ENTRY(blue_entry), s);
+    gtk_signal_handler_unblock_by_data(GTK_OBJECT(blue_entry), NULL);
+
+    preview_update();
+  };
+}
+
+
+/*
+ * 'blue_callback()' - Update the blue scale using the text entry.
+ */
+
+static void
+blue_callback(GtkWidget *widget)	/* I - Entry widget */
+{
+  gint		new_value;		/* New scaling value */
+
+
+  new_value = atoi(gtk_entry_get_text(GTK_ENTRY(widget)));
+
+  if (vars.blue != new_value)
+  {
+    if ((new_value >= GTK_ADJUSTMENT(blue_adjustment)->lower) &&
+	(new_value < GTK_ADJUSTMENT(blue_adjustment)->upper))
+    {
+      GTK_ADJUSTMENT(blue_adjustment)->value = new_value;
+
+      gtk_signal_emit_by_name(blue_adjustment, "value_changed");
+    };
+  };
+}
+
+
+/*
+ * 'gamma_update()' - Update the gamma field using the scale.
+ */
+
+static void
+gamma_update(GtkAdjustment *adjustment)	/* I - New value */
+{
+  char	s[255];					/* Text buffer */
+
+
+  if (vars.gamma != adjustment->value)
+  {
+    vars.gamma = adjustment->value;
+
+    sprintf(s, "%5.3f", vars.gamma);
+
+    gtk_signal_handler_block_by_data(GTK_OBJECT(gamma_entry), NULL);
+    gtk_entry_set_text(GTK_ENTRY(gamma_entry), s);
+    gtk_signal_handler_unblock_by_data(GTK_OBJECT(gamma_entry), NULL);
+
+    preview_update();
+  };
+}
+
+
+/*
+ * 'gamma_callback()' - Update the gamma scale using the text entry.
+ */
+
+static void
+gamma_callback(GtkWidget *widget)	/* I - Entry widget */
+{
+  gint		new_value;		/* New scaling value */
+
+
+  new_value = atoi(gtk_entry_get_text(GTK_ENTRY(widget)));
+
+  if (vars.gamma != new_value)
+  {
+    if ((new_value >= GTK_ADJUSTMENT(gamma_adjustment)->lower) &&
+	(new_value < GTK_ADJUSTMENT(gamma_adjustment)->upper))
+    {
+      GTK_ADJUSTMENT(gamma_adjustment)->value = new_value;
+
+      gtk_signal_emit_by_name(gamma_adjustment, "value_changed");
     };
   };
 }
@@ -2119,7 +2760,7 @@ get_printers(void)
   {
     while (fgets(line, sizeof(line), pfile) != NULL &&
            plist_count < MAX_PLIST)
-      if (strchr(line, ':') != NULL)
+      if (strchr(line, ':') != NULL && line[0] != ' ' && line[0] != '\t')
       {
         *strchr(line, ':') = '\0';
         strcpy(plist[plist_count].name, line);

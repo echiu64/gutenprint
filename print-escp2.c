@@ -26,12 +26,13 @@
  *   escp2_imageable_area() - Return the imageable area of the page.
  *   escp2_print()          - Print an image to an EPSON printer.
  *   escp2_write()          - Send ESC/P2 graphics using TIFF packbits compression.
+ *   escp2_write6()         - Send 6-color ESC/P2 graphics using TIFF packbits compression.
  *
  * Revision History:
  *
  *   $Log$
- *   Revision 1.1.1.1  1999/09/12 00:10:31  rlk
- *   1.1.8 baseline
+ *   Revision 1.2  1999/09/12 00:12:24  rlk
+ *   Current best stuff
  *
  *   Revision 1.11  1999/05/29 16:35:26  yosh
  *   * configure.in
@@ -184,6 +185,10 @@
  *   Initial revision
  */
 
+/*
+ * Stylus Photo EX added by Robert Krawitz <rlk@alum.mit.edu> August 30, 1999
+ */
+
 #include "print.h"
 #include "libgimp/stdplugins-intl.h"
 
@@ -192,6 +197,7 @@
  */
 
 static void	escp2_write(FILE *, unsigned char *, int, int, int, int, int, int);
+static void	escp2_write6(FILE *, unsigned char *, int, int, int, int, int, int, int);
 
 
 /*
@@ -283,6 +289,13 @@ escp2_imageable_area(int  model,	/* I - Printer model */
         *bottom = 40;
         break;
 
+    case 7 :
+        *left   = 9;
+        *right  = width - 9;
+        *top    = length;
+        *bottom = 49;
+        break;
+
     case 3 :
     case 4 :
     case 5 :
@@ -314,18 +327,22 @@ escp2_print(int       model,		/* I - Model */
             int       copies,		/* I - Number of copies */
             FILE      *prn,		/* I - File to print to */
             GDrawable *drawable,	/* I - Image to print */
-            guchar    *lut,		/* I - Brightness lookup table */
-            guchar    *cmap)		/* I - Colormap (for indexed images) */
+            lut_t     *lut,		/* I - Brightness lookup table */
+            guchar    *cmap,		/* I - Colormap (for indexed images) */
+	    lut16_t   *lut16)		/* I - Brightness lookup table (16-bit) */
 {
   int		x, y;		/* Looping vars */
   int		xdpi, ydpi;	/* Resolution */
   int		n;		/* Output number */
   GPixelRgn	rgn;		/* Image region */
+  unsigned short *out16;	/* Output pixels (16-bit) */
   unsigned char	*in,		/* Input pixels */
 		*out,		/* Output pixels */
 		*black,		/* Black bitmap data */
 		*cyan,		/* Cyan bitmap data */
 		*magenta,	/* Magenta bitmap data */
+		*lcyan,		/* Light cyan bitmap data */
+		*lmagenta,	/* Light magenta bitmap data */
 		*yellow;	/* Yellow bitmap data */
   int		page_left,	/* Left margin of page */
 		page_right,	/* Right margin of page */
@@ -346,7 +363,8 @@ escp2_print(int       model,		/* I - Model */
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
-  convert_t	colorfunc;	/* Color conversion function... */
+  convert_t	colorfunc = 0;	/* Color conversion function... */
+  convert16_t	colorfunc16 = 0;	/* Color conversion function... */
 
 
  /*
@@ -368,7 +386,12 @@ escp2_print(int       model,		/* I - Model */
     out_bpp = 3;
 
     if (drawable->bpp >= 3)
-      colorfunc = rgb_to_rgb;
+      {
+	if (model == 7)
+	  colorfunc16 = rgb_to_rgb16;
+	else
+	  colorfunc = rgb_to_rgb;
+      }
     else
       colorfunc = indexed_to_rgb;
   }
@@ -534,24 +557,6 @@ escp2_print(int       model,		/* I - Model */
         break;
   };
 
-  fwrite("\033(C\002\000", 5, 1, prn);		/* Page length */
-  n = ydpi * page_length / 72;
-  putc(n & 255, prn);
-  putc(n >> 8, prn);
-
-  fwrite("\033(c\004\000", 5, 1, prn);		/* Top/bottom margins */
-  n = ydpi * (page_length - page_top) / 72;
-  putc(n & 255, prn);
-  putc(n >> 8, prn);
-  n = ydpi * (page_length - page_bottom) / 72;
-  putc(n & 255, prn);
-  putc(n >> 8, prn);
-
-  fwrite("\033(V\002\000", 5, 1, prn);		/* Absolute vertical position */
-  n = ydpi * (page_length - top) / 72;
-  putc(n & 255, prn);
-  putc(n >> 8, prn);
-
   switch (model)				/* Printer specific initialization */
   {
     case 0 : /* ESC */
@@ -586,7 +591,47 @@ escp2_print(int       model,		/* I - Model */
         if (ydpi > 360)
       	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
         break;
+    case 7 : /* ESP EX */
+        if (ydpi > 360)
+	  {
+#if 1
+	    fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
+	    fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
+	    fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Micro dots */
+#else
+	    fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
+	    fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Super micro dots */
+#endif
+	  }
+	else
+	  fwrite("\033(e\002\000\000\003", 7, 1, prn);	/* Whatever dots */
+        break;
+
+#if 0
+	if (output_type == OUTPUT_GRAY)
+	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black printing */
+	else
+	  fwrite("\033(K\002\000\000\002", 7, 1, prn);	/* Color printing */
+#endif
   };
+
+  fwrite("\033(C\002\000", 5, 1, prn);		/* Page length */
+  n = ydpi * page_length / 72;
+  putc(n & 255, prn);
+  putc(n >> 8, prn);
+
+  fwrite("\033(c\004\000", 5, 1, prn);		/* Top/bottom margins */
+  n = ydpi * (page_length - page_top) / 72;
+  putc(n & 255, prn);
+  putc(n >> 8, prn);
+  n = ydpi * (page_length - page_bottom) / 72;
+  putc(n & 255, prn);
+  putc(n >> 8, prn);
+
+  fwrite("\033(V\002\000", 5, 1, prn);		/* Absolute vertical position */
+  n = ydpi * (page_length - top) / 72;
+  putc(n & 255, prn);
+  putc(n >> 8, prn);
 
  /*
   * Convert image size to printer resolution...
@@ -608,6 +653,8 @@ escp2_print(int       model,		/* I - Model */
     black   = g_malloc(length);
     cyan    = NULL;
     magenta = NULL;
+    lcyan    = NULL;
+    lmagenta = NULL;
     yellow  = NULL;
   }
   else
@@ -620,6 +667,13 @@ escp2_print(int       model,		/* I - Model */
       black = g_malloc(length);
     else
       black = NULL;
+    if (model == 7) {
+      lcyan = g_malloc(length);
+      lmagenta = g_malloc(length);
+    } else {
+      lcyan = NULL;
+      lmagenta = NULL;
+    }
   };
     
  /*
@@ -629,6 +683,7 @@ escp2_print(int       model,		/* I - Model */
   if (landscape)
   {
     in  = g_malloc(drawable->height * drawable->bpp);
+    out16 = g_malloc(drawable->height * out_bpp * 2);
     out = g_malloc(drawable->height * out_bpp);
 
     errdiv  = drawable->width / out_height;
@@ -653,12 +708,27 @@ escp2_print(int       model,		/* I - Model */
         gimp_pixel_rgn_get_col(&rgn, in, errline, 0, drawable->height);
       };
 
-      (*colorfunc)(in, out, drawable->height, drawable->bpp, lut, cmap);
+      if (colorfunc)
+	(*colorfunc)(in, out, drawable->height, drawable->bpp, lut, cmap);
+      else if (colorfunc16)
+	(*colorfunc16)(in, out16, drawable->height, drawable->bpp, lut16, cmap);
 
       if (output_type == OUTPUT_GRAY)
       {
         dither_black(out, x, drawable->height, out_width, black);
         escp2_write(prn, black, length, 0, ydpi, model, out_width, left);
+      }
+      else if (model == 7)
+      {
+        dither_cmyk6_16(out16, x, drawable->height, out_width, cyan, magenta,
+			lcyan, lmagenta, yellow, black);
+
+        escp2_write6(prn, lcyan, length, 1, 2, ydpi, model, out_width, left);
+        escp2_write6(prn, lmagenta, length, 1, 1, ydpi, model, out_width, left);
+        escp2_write6(prn, yellow, length, 0, 4, ydpi, model, out_width, left);
+        escp2_write6(prn, cyan, length, 0, 2, ydpi, model, out_width, left);
+        escp2_write6(prn, magenta, length, 0, 1, ydpi, model, out_width, left);
+	escp2_write6(prn, black, length, 0, 0, ydpi, model, out_width, left);
       }
       else
       {
@@ -687,6 +757,7 @@ escp2_print(int       model,		/* I - Model */
   {
     in  = g_malloc(drawable->width * drawable->bpp);
     out = g_malloc(drawable->width * out_bpp);
+    out16 = g_malloc(drawable->width * out_bpp * 2);
 
     errdiv  = drawable->height / out_height;
     errmod  = drawable->height % out_height;
@@ -710,12 +781,27 @@ escp2_print(int       model,		/* I - Model */
         gimp_pixel_rgn_get_row(&rgn, in, 0, errline, drawable->width);
       };
 
-      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut, cmap);
+      if (colorfunc)
+	(*colorfunc)(in, out, drawable->width, drawable->bpp, lut, cmap);
+      else if (colorfunc16)
+	(*colorfunc16)(in, out16, drawable->width, drawable->bpp, lut16, cmap);
 
       if (output_type == OUTPUT_GRAY)
       {
         dither_black(out, y, drawable->width, out_width, black);
         escp2_write(prn, black, length, 0, ydpi, model, out_width, left);
+      }
+      else if (model == 7)
+      {
+        dither_cmyk6_16(out16, y, drawable->width, out_width, cyan, magenta,
+			lcyan, lmagenta, yellow, black);
+
+        escp2_write6(prn, lcyan, length, 1, 2, ydpi, model, out_width, left);
+        escp2_write6(prn, lmagenta, length, 1, 1, ydpi, model, out_width, left);
+        escp2_write6(prn, yellow, length, 0, 4, ydpi, model, out_width, left);
+        escp2_write6(prn, cyan, length, 0, 2, ydpi, model, out_width, left);
+        escp2_write6(prn, magenta, length, 0, 1, ydpi, model, out_width, left);
+	escp2_write6(prn, black, length, 0, 0, ydpi, model, out_width, left);
       }
       else
       {
@@ -913,6 +999,155 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
   fwrite(comp_buf, comp_ptr - comp_buf, 1, prn);
 }
 
+void
+escp2_write6(FILE          *prn,	/* I - Print file or command */
+	     unsigned char *line,	/* I - Output bitmap data */
+	     int           length,	/* I - Length of bitmap data */
+	     int	   density,     /* I - 0 for dark, 1 for light */
+	     int           plane,	/* I - True if this is the last plane */
+	     int           ydpi,	/* I - Vertical resolution */
+	     int           model,	/* I - Printer model */
+	     int           width,	/* I - Printed width */
+	     int           offset)	/* I - Offset from left side */
+{
+  unsigned char	comp_buf[1536],		/* Compression buffer */
+		*comp_ptr,		/* Current slot in buffer */
+		*start,			/* Start of compressed data */
+		repeat;			/* Repeating char */
+  int		count,			/* Count of compressed bytes */
+		tcount;			/* Temporary count < 128 */
+  static int    last_density = 0;       /* Last density printed */
+  static int	last_plane = 0;		/* Last color plane printed */
+
+
+ /*
+  * Don't send blank lines...
+  */
+
+  if (line[0] == 0 && memcmp(line, line + 1, length - 1) == 0)
+    return;
+
+ /*
+  * Compress using TIFF "packbits" run-length encoding...
+  */
+
+  comp_ptr = comp_buf;
+
+  while (length > 0)
+  {
+   /*
+    * Get a run of non-repeated chars...
+    */
+
+    start  = line;
+    line   += 2;
+    length -= 2;
+
+    while (length > 0 && (line[-2] != line[-1] || line[-1] != line[0]))
+    {
+      line ++;
+      length --;
+    };
+
+    line   -= 2;
+    length += 2;
+
+   /*
+    * Output the non-repeated sequences (max 128 at a time).
+    */
+
+    count = line - start;
+    while (count > 0)
+    {
+      tcount = count > 128 ? 128 : count;
+
+      comp_ptr[0] = tcount - 1;
+      memcpy(comp_ptr + 1, start, tcount);
+
+      comp_ptr += tcount + 1;
+      start    += tcount;
+      count    -= tcount;
+    };
+
+    if (length <= 0)
+      break;
+
+   /*
+    * Find the repeated sequences...
+    */
+
+    start  = line;
+    repeat = line[0];
+
+    line ++;
+    length --;
+
+    while (length > 0 && *line == repeat)
+    {
+      line ++;
+      length --;
+    };
+
+   /*
+    * Output the repeated sequences (max 128 at a time).
+    */
+
+    count = line - start;
+    while (count > 0)
+    {
+      tcount = count > 128 ? 128 : count;
+
+      comp_ptr[0] = 1 - tcount;
+      comp_ptr[1] = repeat;
+
+      comp_ptr += 2;
+      count    -= tcount;
+    };
+  };
+
+ /*
+  * Set the print head position.
+  */
+
+  putc('\r', prn);
+  fprintf(prn, "\033\\%c%c", offset & 255, offset >> 8);
+
+ /*
+  * Set the color if necessary...
+  */
+
+  if (last_plane != plane || last_density != density)
+  {
+    last_plane = plane;
+    last_density = density;
+    fprintf(prn, "\033(r\002%c%c%c", 0, density, plane);
+  };
+
+ /*
+  * Send a line of raster graphics...
+  */
+
+  switch (ydpi)				/* Raster graphics header */
+  {
+    case 180 :
+        fwrite("\033.\001\024\024\001", 6, 1, prn);
+        break;
+    case 360 :
+        fwrite("\033.\001\012\012\001", 6, 1, prn);
+        break;
+    case 720 :
+        if (model == 3)
+          fwrite("\033.\001\050\005\001", 6, 1, prn);
+        else
+          fwrite("\033.\001\005\005\001", 6, 1, prn);
+        break;
+  };
+
+  putc(width & 255, prn);		/* Width of raster line in pixels */
+  putc(width >> 8, prn);
+
+  fwrite(comp_buf, comp_ptr - comp_buf, 1, prn);
+}
 
 /*
  * End of "$Id$".

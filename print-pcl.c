@@ -34,8 +34,8 @@
  * Revision History:
  *
  *   $Log$
- *   Revision 1.1.1.1  1999/09/12 00:10:31  rlk
- *   1.1.8 baseline
+ *   Revision 1.2  1999/09/12 00:12:24  rlk
+ *   Current best stuff
  *
  *   Revision 1.11  1999/05/29 16:35:27  yosh
  *   * configure.in
@@ -404,8 +404,9 @@ pcl_print(int       model,		/* I - Model */
           int       copies,		/* I - Number of copies */
           FILE      *prn,		/* I - File to print to */
           GDrawable *drawable,		/* I - Image to print */
-          guchar    *lut,		/* I - Brightness lookup table */
-          guchar    *cmap)		/* I - Colormap (for indexed images) */
+          lut_t     *lut,		/* I - Brightness lookup table */
+	  guchar    *cmap,		/* I - Colormap (for indexed images) */
+	  lut16_t   *lut16)		/* I - Brightness lookup table (16-bit) */
 {
   int		x, y;		/* Looping vars */
   int		xdpi, ydpi;	/* Resolution */

@@ -67,6 +67,22 @@
 
 typedef struct
 {
+  guchar composite[256];
+  guchar red[256];
+  guchar green[256];
+  guchar blue[256];
+} lut_t;
+
+typedef struct
+{
+  gushort composite[256];
+  gushort red[256];
+  gushort green[256];
+  gushort blue[256];
+} lut16_t;
+
+typedef struct
+{
   char	*long_name,			/* Long name for UI */
 	*short_name;			/* Short name for printrc file */
   int	color,				/* TRUE if supports color */
@@ -83,11 +99,14 @@ typedef struct
                  char *media_size, char *media_type, char *media_source,
                  int output_type, int orientation, float scaling, int left,
                  int top, int copies, FILE *prn, GDrawable *drawable,
-                 guchar *lut, guchar *cmap);	/* Print function */
+                 lut_t *lut, guchar *cmap, lut16_t *lut16);	/* Print function */
 } printer_t;
 
 typedef void (*convert_t)(guchar *in, guchar *out, int width, int bpp,
-                          guchar *lut, guchar *cmap);
+                          lut_t *lut, guchar *cmap);
+
+typedef void (*convert16_t)(guchar *in, gushort *out, int width, int bpp,
+			    lut16_t *lut, guchar *cmap);
 
 
 /*
@@ -97,11 +116,18 @@ typedef void (*convert_t)(guchar *in, guchar *out, int width, int bpp,
 extern void	dither_black(guchar *, int, int, int, unsigned char *);
 extern void	dither_cmyk(guchar *, int, int, int, unsigned char *,
 		            unsigned char *, unsigned char *, unsigned char *);
-extern void	gray_to_gray(guchar *, guchar *, int, int, guchar *, guchar *);
-extern void	indexed_to_gray(guchar *, guchar *, int, int, guchar *, guchar *);
-extern void	indexed_to_rgb(guchar *, guchar *, int, int, guchar *, guchar *);
-extern void	rgb_to_gray(guchar *, guchar *, int, int, guchar *, guchar *);
-extern void	rgb_to_rgb(guchar *, guchar *, int, int, guchar *, guchar *);
+extern void	dither_cmyk6(guchar *, int, int, int, unsigned char *,
+			     unsigned char *, unsigned char *, unsigned char *,
+			     unsigned char *, unsigned char *);
+extern void	dither_cmyk6_16(gushort *, int, int, int, unsigned char *,
+				unsigned char *, unsigned char *, unsigned char *,
+				unsigned char *, unsigned char *);
+extern void	gray_to_gray(guchar *, guchar *, int, int, lut_t *, guchar *);
+extern void	indexed_to_gray(guchar *, guchar *, int, int, lut_t *, guchar *);
+extern void	indexed_to_rgb(guchar *, guchar *, int, int, lut_t *, guchar *);
+extern void	rgb_to_gray(guchar *, guchar *, int, int, lut_t *, guchar *);
+extern void	rgb_to_rgb(guchar *, guchar *, int, int, lut_t *, guchar *);
+extern void	rgb_to_rgb16(guchar *, gushort *, int, int, lut16_t *, guchar *);
 
 extern void	default_media_size(int model, char *ppd_file, char *media_size,
 		                   int *width, int *length);
@@ -114,7 +140,8 @@ extern void	escp2_print(int model, char *ppd_file, char *resolution,
 		            char *media_size, char *media_type, char *media_source,
 		            int output_type, int orientation, float scaling,
 		            int left, int top, int copies, FILE *prn,
-		            GDrawable *drawable, guchar *lut, guchar *cmap);
+		            GDrawable *drawable, lut_t *lut, guchar *cmap,
+			    lut16_t *lut16);
 
 extern char	**pcl_parameters(int model, char *ppd_file, char *name,
 		                 int *count);
@@ -124,7 +151,8 @@ extern void	pcl_print(int model, char *ppd_file, char *resolution,
 		          char *media_size, char *media_type, char *media_source,
 		          int output_type, int orientation, float scaling,
 		          int left, int top, int copies, FILE *prn,
-		          GDrawable *drawable, guchar *lut, guchar *cmap);
+		          GDrawable *drawable, lut_t *lut, guchar *cmap,
+			  lut16_t *lut16);
 
 extern char	**ps_parameters(int model, char *ppd_file, char *name,
 		                int *count);
@@ -136,7 +164,8 @@ extern void	ps_print(int model, char *ppd_file, char *resolution,
 		         char *media_size, char *media_type, char *media_source,
 		         int output_type, int orientation, float scaling,
 		         int left, int top, int copies, FILE *prn,
-		         GDrawable *drawable, guchar *lut, guchar *cmap);
+		         GDrawable *drawable, lut_t *lut, guchar *cmap,
+			 lut16_t *lut16);
 
 
 /*
