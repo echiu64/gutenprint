@@ -72,17 +72,14 @@ require('standard_html_header.php3');
  </a>
  <dl>
  <dd><a href="p_FAQ_OS_X.php3#usbSetup">
- <h4>
  USB connection
- </h4></a>
+ </a>
  <dd><a href="p_FAQ_OS_X.php3#networkSetup">
- <h4>
  Network connection
- </h4></a>
+ </a>
  <dd><a href="p_FAQ_OS_X.php3#sambaSetup">
- <h4>
  Windows printer via SAMBA
- </h4></a>
+ </a>
  </dl>
  <li><a href="p_FAQ_OS_X.php3#whereAreTheSettings">
  OK, my printer is printing now, but how do I change the print settings
@@ -93,9 +90,11 @@ require('standard_html_header.php3');
  </a>
  </ol>
  <ol>
- <li><a name="description">
+ <br>
+ <br>
+ <a name="description">
  <h3>
- What is Gimp-Print for Jaguar and Darwin? Why would I want to install it?
+ <li>What is Gimp-Print for Jaguar and Darwin? Why would I want to install it?
  </h3></a>
  <p>
  Gimp-Print is a package of high quality printer drivers for Mac OS X
@@ -111,9 +110,9 @@ require('standard_html_header.php3');
  excellent drivers for many printers that are otherwise unsupported on
  Mac OS X.
  </p>
- <li><a name="getMoreInfo">
+ <a name="getMoreInfo">
  <h3>
- How can I find out more information about Gimp-Print? Where can I get
+ <li>How can I find out more information about Gimp-Print? Where can I get
  the newest version?
  </h3></a>
  <p>
@@ -121,9 +120,9 @@ require('standard_html_header.php3');
  to check the <a href= "http://gimp-print.sourceforge.net/MacOSX.php3"
  >Gimp-Print web page</a>.
  </p>
- <li><a name="contactInfo">
+ <a name="contactInfo">
  <h3>
- I've read this entire document but I'm still having problems. How can I
+ <li>I've read this entire document but I'm still having problems. How can I
  contact the developers?
  </h3></a>
  <p>
@@ -142,17 +141,17 @@ require('standard_html_header.php3');
  Please browse the forums before posting as your question may already be
  answered.
  </p>
- <li><a name="didntReadTheInstructions">
+ <a name="didntReadTheInstructions">
  <h3>
- I do not see the "Advanced" option in Print Center. How can I find it?
+ <li>I do not see the "Advanced" option in Print Center. How can I find it?
  </h3></a>
  <p>
  Make sure you are holding down the <em>option</em> key (on the keyboard)
  when you click the <tt>Add Printer</tt> button.
  </p>
- <li><a name="espgs">
+ <a name="espgs">
  <h3>
- Printing does not work from "Carbon" applications (Adobe Photoshop, Acrobat,
+ <li>Printing does not work from "Carbon" applications (Adobe Photoshop, Acrobat,
  Appleworks, etc...), but I can print from "Cocoa" applications (Preview,
  TextEdit, etc...) just fine. How can I fix this ?
  </h3></a>
@@ -169,9 +168,9 @@ require('standard_html_header.php3');
  "http://prdownloads.sourceforge.net/espgs/espgs-7.05.5-0.ppc.dmg?download"
  >Mac OS X installer</a> and run it.
  </p>
- <li><a name="tellMeMore">
+ <a name="tellMeMore">
  <h3>
- I want to know more about the new printing system in Mac OS X Jaguar. How do
+ <li>I want to know more about the new printing system in Mac OS X Jaguar. How do
  the various components like CUPS, Gimp-Print, Ghostscript, etc... interact?
  </h3></a>
  <p>
@@ -203,9 +202,9 @@ require('standard_html_header.php3');
  applications submit a PDF for printing. Certain PostScript centric programs
  such as Adobe applications cause the second filter chain to run.
  </p>
- <li><a name="tcpip">
+ <a name="tcpip">
   <h3>
-  I'm trying to set up TCP/IP printing for my Epson 1520 (900N, etc...) with
+ <li> I'm trying to set up TCP/IP printing for my Epson 1520 (900N, etc...) with
  type-B ethernet card. HELP!!!
  </h3></a>
   <p>  
@@ -231,7 +230,7 @@ require('standard_html_header.php3');
  printer and computer need unique addresses on the same network (subnet). You
  can achieve this by using TCP/IP settings for your printer that are very
  similar to those of your Mac. <b>System Preferences/Network</b> will show you
- your Mac's settings. Here's an example:<pre>
+ your Mac's settings. Here's an example:</p><pre>
   Mac network settings                    Printer network settings
        IP Address: 192.168.0.100                   IP Address: 192.168.0.95
       Subnet Mask: 255.255.255.0                  Subnet Mask: 255.255.255.0
@@ -240,23 +239,23 @@ require('standard_html_header.php3');
  <p>It would be prudent to open <b>/Applications/Utilities/Network Utility</b>
  and Ping the new address before you assign it to your printer, just to make
  sure that the address is not already in use. Start the ping and wait; after a
- brief delay you should get <pre>ping: sendto: Host is down</pre> which
+ brief delay you should get </p><pre>ping: sendto: Host is down</pre><p> which
  indicates that the address is probably available. Set the Epson with the new
  TCP/IP settings and run Ping again to the same address. This time you should
- get an almost immediate response: 
+ get an almost immediate response:</p> 
  
  <pre>PING 192.168.0.95 (192.168.0.95): 56 data bytes 
  64 bytes from 192.168.0.95: icmp_seq=0 ttl=64 time=3.304 ms 
  </pre>
- If you don't get a response from Ping you won't be able to print; go back and
+ <p>If you don't get a response from Ping you won't be able to print; go back and
  try a different IP Address.
  As soon as you can ping the printer from your Mac go to page 3 of <em>How
  to Print with Gimp-Print</em> (or the set up section in this FAQ) and follow
  the instructions for TCP/IP setup.
  </p>
- <li><a name="escp2-7600">
+ <a name="escp2-7600">
  <h3>
- I can not print to my Epson Stylus Pro 7600, but it's supposed to be supported.
+ <li>I can not print to my Epson Stylus Pro 7600, but it's supposed to be supported.
  </h3></a>
  <p>  
  That driver is broken in the 4.2.2 release. Try using the 4.2.3-pre1 release,
@@ -264,9 +263,9 @@ require('standard_html_header.php3');
  output quality may be less than you expect. Keep checking the Gimp-Print web
  site for newer releases that may offer more improvements for this driver.  
  </p>
- <li><a name="installer">
+ <a name="installer">
  <h3>
- What files are installed by the Gimp-Print installer for Jaguar and
+ <li>What files are installed by the Gimp-Print installer for Jaguar and
  Darwin? Where are they installed? I want to remove them; how do I do it?
  </h3></a>
  <p>
@@ -285,9 +284,9 @@ require('standard_html_header.php3');
  admin password (yours if you're the only user on your system) to use
  sudo.
  </p>
- <li><a name="uninstaller">
+ <a name="uninstaller">
  <h3>
- The Gimp-Print installer for Jaguar is very nice, thanks for providing
+ <li>The Gimp-Print installer for Jaguar is very nice, thanks for providing
  it. But, why haven't you provided me with an easy way to remove the
  Gimp-Print files from my system?
  </h3></a>
@@ -306,9 +305,9 @@ require('standard_html_header.php3');
  solution available!</em> A future version may include an "uninstall"
  utility.
  </p>
- <li><a name="pslevel1">
+ <a name="pslevel1">
  <h3>
- The list of supported printers says that PostScript Level 1 printing is
+ <li>The list of supported printers says that PostScript Level 1 printing is
  supported, but I can't use Gimp-Print to print to my Level 1 printer
  (Laserwriter plus, Laserwriter IINT, etc...). What's wrong?
  </h3></a>
@@ -319,17 +318,17 @@ require('standard_html_header.php3');
  Ghostscript</a> and some special printing "filters". A solution to this
  problem may become available in the future.
  </p>
- <li><a name="version">
+ <a name="version">
  <h3>
- Which versions of Mac OS are compatible with Gimp-Print?
+ <li>Which versions of Mac OS are compatible with Gimp-Print?
  </h3></a>
  <p>
  Gimp-Print is compatible with Mac OS X version 10.2.x (Jaguar) or later.
  It does not work with version 10.1.x or 10.0.x or any version of Mac OS 9.
  </p>
- <li><a name="versionX">
+ <a name="versionX">
  <h3>
- I have never heard of version "10.1.x" but I have 10.1.5, does
+ <li>I have never heard of version "10.1.x" but I have 10.1.5, does
  Gimp-Print work with that?
  </h3></a>
  <p>
@@ -337,9 +336,9 @@ require('standard_html_header.php3');
  ...,10.1.5. So, if you want to use Gimp-Print you should upgrade to at
  least 10.2.
  </p>
- <li><a name="supportedPrinters">
+ <a name="supportedPrinters">
  <h3>
- Is my printer supported by Gimp-Print?
+ <li>Is my printer supported by Gimp-Print?
  </h3></a>
  <p>
  There is a comprehensive <a href=
@@ -352,9 +351,9 @@ require('standard_html_header.php3');
  still be able to print by trying the driver for a printer that is similar
  to yours, but the results may disappoint you.
  </p>
- <li><a name="generalSetup">
+ <a name="generalSetup">
  <h3>
- OK, I just installed Gimp-Print on Mac OS 10.2 (or later) and I tried to
+ <li>OK, I just installed Gimp-Print on Mac OS 10.2 (or later) and I tried to
  print but I can't figure out how to set up my printer in print center.
  </h3></a>
  <p>
@@ -377,9 +376,9 @@ require('standard_html_header.php3');
  <p>
  see question on supported printers.
  </p>
- <li><a name="usbSetup">
+ <a name="usbSetup">
  <h4>
- USB connection
+ <li>USB connection
  </h4></a>
  If your printer is supported by Gimp-Print and it is connected directly
  to your Mac with a USB cable then you should follow these steps to set
@@ -414,9 +413,9 @@ require('standard_html_header.php3');
  <li> Print a test page.
  </p>
  </ol>
- <li><a name="networkSetup">
+ <a name="networkSetup">
  <h4>
- Network connection
+ <li>Network connection
  </h4></a>
  If your printer is supported by Gimp-Print and it is available over
  TCP/IP via a built-in network card (such as the Epson 10/100 ethernet
@@ -453,9 +452,9 @@ require('standard_html_header.php3');
  <li> Print a test page.
  </ol>
  </p>
- <li><a name="sambaSetup">
+ <a name="sambaSetup">
  <h4>
- Windows printer via SAMBA
+ <li>Windows printer via SAMBA
  </h4></a>
  If you want to print to a shared printer connected to a Windows XP
  computer try these instructions (this procedure has not been thoroughly
@@ -495,9 +494,9 @@ require('standard_html_header.php3');
  </ol>
  </ul>
  </p>
- <li><a name="whereAreTheSettings">
+ <a name="whereAreTheSettings">
  <h3>
- OK, my printer is printing now, but how do I change the print settings
+ <li>OK, my printer is printing now, but how do I change the print settings
  like paper type and resolution?
  </h3></a>
  <p>
@@ -505,9 +504,9 @@ require('standard_html_header.php3');
  sheet is open. Just click on the popup menu that says "<tt>Copies &
  Pages</tt>" and choose "<tt>Printer Features</tt>".
  </p>
- <li><a name="whatSettings">
+ <a name="whatSettings">
  <h3>
- Ok, I found all the settings, but what do they do?
+ <li>Ok, I found all the settings, but what do they do?
  </h3></a>
  <p>
  Please see the <! a href= "http://Gimp-Print.sourceforge.net/p_FAQ.php3"
