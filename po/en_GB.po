@@ -1283,7 +1283,7 @@ msgstr ""
 #. Specify language of PPD translation
 #: src/cups/genppd.c:415
 msgid "English"
-msgstr ""
+msgstr "English-GB"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
 #: src/cups/genppd.c:417
