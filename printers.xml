@@ -217,6 +217,14 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Color 480" driver="escp2-480">
+<color>
+<model value=21>
+<gamma value=0.585>
+<density value=0.646>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Color 600" driver="escp2-600">
 <color>
 <model value=3>
