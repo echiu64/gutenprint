@@ -354,11 +354,7 @@ typedef struct {
   int vertical_subsample;
 } res_t;
 
-#ifndef ESCP2_GHOST
-static
-#endif
-const 
-res_t escp2_reslist[] = {
+static const res_t escp2_reslist[] = {
   { "360 DPI", 360, 360, 0, 1, 1, 1 },
   { "720 DPI Microweave", 720, 720, 0, 1, 1, 1 },
   { "720 DPI Softweave", 720, 720, 1, 1, 1, 1 },
@@ -372,6 +368,18 @@ res_t escp2_reslist[] = {
   /* { "1440 x 720 DPI Two-pass Microweave", 2880, 720, 0, 1, 1 }, */
   { "", 0, 0, 0, 0, 0 }
 };
+
+#ifdef ESCP2_GHOST
+const char *
+escp2_resname(int resolution)
+{
+  if (resolution < 0 ||
+      resolution >= ((sizeof(escp2_reslist) / sizeof(res_t)) - 1))
+    return NULL;
+  else
+    return escp2_reslist[resolution].name;
+}
+#endif
 
 static int
 escp2_has_cap(int model, model_featureset_t featureset,
@@ -1105,9 +1113,9 @@ escp2_print(const printer_t *printer,		/* I - Model */
   v->saturation *= printer->printvars.saturation;
 
   if (landscape)
-    dither = init_dither(image_height, out_width);
+    dither = init_dither(image_height, out_width, v);
   else
-    dither = init_dither(image_width, out_width);
+    dither = init_dither(image_width, out_width, v);
   if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
     {
       dither_set_black_levels(dither, 1.5, 1.5, 1.5);
@@ -2882,6 +2890,9 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.122  2000/04/16 21:31:32  rlk
+ *   Choice of dithering algorithms
+ *
  *   Revision 1.121  2000/04/16 02:52:39  rlk
  *   New dithering code
  *

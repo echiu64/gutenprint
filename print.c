@@ -124,6 +124,7 @@ vars_t vars =
 	"",			/* Type of output media */
 	"",			/* Source of output media */
 	"",			/* Ink type */
+	"",			/* Dither algorithm */
 	100,			/* Output brightness */
 	100.0,			/* Scaling (100% means entire printable area, */
 				/*          -XXX means scale by PPI) */
@@ -152,10 +153,6 @@ gint32          image_ID;	        /* image ID */
 
 int image_width;
 int image_height;
-
-int num_dither_algos = 0;
-char** dither_algo_names = 0;
-char* cur_dither_name = 0;
 
 /*
  * 'main()' - Main entry - just call gimp_main()...
@@ -216,6 +213,7 @@ query (void)
     { PARAM_FLOAT,	"saturation",	"Saturation (0-1000%)" },
     { PARAM_FLOAT,	"density",	"Density (0-200%)" },
     { PARAM_STRING,	"ink_type",	"Type of ink or cartridge" },
+    { PARAM_STRING,	"dither_algorithm", "Dither algorithm" },
   };
   static gint nargs = sizeof(args) / sizeof(args[0]);
 
@@ -467,6 +465,11 @@ run (char   *name,		/* I - Name of print program. */
 	    strcpy (vars.ink_type, param[24].data.d_string);
 	  else
 	    memset (vars.ink_type, 0, 64);
+
+	  if (nparams > 26)
+	    strcpy (vars.dither_algorithm, param[25].data.d_string);
+	  else
+	    memset (vars.dither_algorithm, 0, 64);
 	}
 
       current_printer = get_printer_by_driver (vars.driver);
@@ -667,6 +670,65 @@ initialize_printer(plist_t *printer)
   printer->v.density = vars.density;
 }
 
+#define GET_MANDATORY_STRING_PARAM(param)		\
+do {							\
+  if ((commaptr = strchr(lineptr, ',')) == NULL)	\
+    continue;						\
+  strncpy(key.param, lineptr, commaptr - line);		\
+  key.param[commaptr - lineptr] = '\0';			\
+  lineptr = commaptr + 1;				\
+} while (0)
+
+#define GET_MANDATORY_INT_PARAM(param)			\
+do {							\
+  if ((commaptr = strchr(lineptr, ',')) == NULL)	\
+    continue;						\
+  key.param = atoi(lineptr);				\
+  lineptr = commaptr + 1;				\
+} while (0)
+
+#define GET_OPTIONAL_STRING_PARAM(param)			\
+do {								\
+  if ((commaptr = strchr(lineptr, ',')) == NULL)		\
+    {								\
+      strcpy(key.v.param, lineptr);				\
+      keepgoing = 0;						\
+      key.v.param[strlen(key.v.param) - 1] = '\0';		\
+    }								\
+  else								\
+    {								\
+      strncpy(key.v.param, lineptr, commaptr - lineptr);	\
+      key.v.param[commaptr - lineptr] = '\0';			\
+      lineptr = commaptr + 1;					\
+    }								\
+} while (0)
+
+#define GET_OPTIONAL_INT_PARAM(param)					\
+do {									\
+  if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))	\
+    {									\
+      keepgoing = 0;							\
+    }									\
+  else									\
+    {									\
+      key.v.param = atoi(lineptr);					\
+      lineptr = commaptr + 1;						\
+    }									\
+} while (0)
+
+#define GET_OPTIONAL_FLOAT_PARAM(param)					\
+do {									\
+  if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))	\
+    {									\
+      keepgoing = 0;							\
+    }									\
+  else									\
+    {									\
+      key.v.param = atof(lineptr);					\
+      lineptr = commaptr + 1;						\
+    }									\
+} while (0)
+
 /*
  * 'printrc_load()' - Load the printer resource configuration file.
  */
@@ -726,233 +788,43 @@ printrc_load(void)
       if (line[0] == '#')
         continue;	/* Comment */
       initialize_printer(&key);
+      lineptr = line;
      /*
       * Read the command-delimited printer definition data.  Note that
       * we can't use sscanf because %[^,] fails if the string is empty...
       */
 
-      if ((commaptr = strchr(line, ',')) == NULL)
-        continue;	/* Skip old printer definitions */
+      GET_MANDATORY_STRING_PARAM(name);
+      GET_MANDATORY_STRING_PARAM(v.output_to);
+      GET_MANDATORY_STRING_PARAM(v.driver);
 
-      strncpy(key.name, line, commaptr - line);
-      key.name[commaptr - line] = '\0';
-      lineptr = commaptr + 1;
-
-      if ((commaptr = strchr(lineptr, ',')) == NULL)
-        continue;	/* Skip bad printer definitions */
-
-      strncpy(key.v.output_to, lineptr, commaptr - lineptr);
-      key.v.output_to[commaptr - lineptr] = '\0';
-      lineptr = commaptr + 1;
-
-      if ((commaptr = strchr(lineptr, ',')) == NULL)
-        continue;	/* Skip bad printer definitions */
-
-      strncpy(key.v.driver, lineptr, commaptr - lineptr);
-      key.v.driver[commaptr - lineptr] = '\0';
       if (! get_printer_by_driver(key.v.driver))
 	continue;
-      lineptr = commaptr + 1;
 
-      if ((commaptr = strchr(lineptr, ',')) == NULL)
-        continue;	/* Skip bad printer definitions */
+      GET_MANDATORY_STRING_PARAM(v.ppd_file);
+      GET_MANDATORY_INT_PARAM(v.output_type);
+      GET_MANDATORY_STRING_PARAM(v.resolution);
+      GET_MANDATORY_STRING_PARAM(v.media_size);
+      GET_MANDATORY_STRING_PARAM(v.media_type);
 
-      strncpy(key.v.ppd_file, lineptr, commaptr - lineptr);
-      key.v.ppd_file[commaptr - lineptr] = '\0';
-      lineptr = commaptr + 1;
-
-      if ((commaptr = strchr(lineptr, ',')) == NULL)
-        continue;	/* Skip bad printer definitions */
-
-      key.v.output_type = atoi(lineptr);
-      lineptr = commaptr + 1;
-
-      if ((commaptr = strchr(lineptr, ',')) == NULL)
-        continue;	/* Skip bad printer definitions */
-
-      strncpy(key.v.resolution, lineptr, commaptr - lineptr);
-      key.v.resolution[commaptr - lineptr] = '\0';
-      lineptr = commaptr + 1;
-
-      if ((commaptr = strchr(lineptr, ',')) == NULL)
-        continue;	/* Skip bad printer definitions */
-
-      strncpy(key.v.media_size, lineptr, commaptr - lineptr);
-      key.v.media_size[commaptr - lineptr] = '\0';
-      lineptr = commaptr + 1;
-
-      if ((commaptr = strchr(lineptr, ',')) == NULL)
-        continue;	/* Skip bad printer definitions */
-
-      strncpy(key.v.media_type, lineptr, commaptr - lineptr);
-      key.v.media_type[commaptr - lineptr] = '\0';
-      lineptr = commaptr + 1;
-
-      if ((commaptr = strchr(lineptr, ',')) == NULL)
-	{
-	  strcpy(key.v.media_source, lineptr);
-	  keepgoing = 0;
-	  key.v.media_source[strlen(key.v.media_source) - 1] = '\0';  /* Drop NL */
-	}
-      else
-	{
-	  strncpy(key.v.media_source, lineptr, commaptr - lineptr);
-	  key.v.media_source[commaptr - lineptr] = '\0';
-	  lineptr = commaptr + 1;
-	}
-
-
-      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
-	{
-	  keepgoing = 0;
-	}
-      else
-	{
-	  key.v.brightness = atoi(lineptr);
-	  lineptr = commaptr + 1;
-	}
+      GET_OPTIONAL_STRING_PARAM(media_source);
+      GET_OPTIONAL_INT_PARAM(brightness);
+      GET_OPTIONAL_FLOAT_PARAM(scaling);
+      GET_OPTIONAL_INT_PARAM(orientation);
+      GET_OPTIONAL_INT_PARAM(left);
+      GET_OPTIONAL_INT_PARAM(top);
+      GET_OPTIONAL_FLOAT_PARAM(gamma);
+      GET_OPTIONAL_INT_PARAM(contrast);
+      GET_OPTIONAL_INT_PARAM(red);
+      GET_OPTIONAL_INT_PARAM(green);
+      GET_OPTIONAL_INT_PARAM(blue);
+      GET_OPTIONAL_INT_PARAM(linear);
+      GET_OPTIONAL_FLOAT_PARAM(saturation);
+      GET_OPTIONAL_FLOAT_PARAM(density);
+      GET_OPTIONAL_STRING_PARAM(ink_type);
+      GET_OPTIONAL_INT_PARAM(image_type);
+      GET_OPTIONAL_STRING_PARAM(dither_algorithm);
 	  
-      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
-	{
-	  keepgoing = 0;
-	}
-      else
-	{
-	  key.v.scaling = atof(lineptr);
-	  lineptr = commaptr + 1;
-	}
-	  
-      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
-	{
-	  keepgoing = 0;
-	}
-      else
-	{
-	  key.v.orientation = atoi(lineptr);
-	  lineptr = commaptr + 1;
-	}
-	  
-      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
-	{
-	  keepgoing = 0;
-	}
-      else
-	{
-	  key.v.left = atoi(lineptr);
-	  lineptr = commaptr + 1;
-	}
-	  
-      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
-	{
-	  keepgoing = 0;
-	}
-      else
-	{
-	  key.v.top = atoi(lineptr);
-	  lineptr = commaptr + 1;
-	}
-	  
-      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
-	{
-	  keepgoing = 0;
-	}
-      else
-	{
-	  key.v.gamma = atof(lineptr);
-	  lineptr = commaptr + 1;
-	}
-	  
-      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
-	{
-	  keepgoing = 0;
-	}
-      else
-	{
-	  key.v.contrast = atoi(lineptr);
-	  lineptr = commaptr + 1;
-	}
-	  
-      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
-	{
-	  keepgoing = 0;
-	}
-      else
-	{
-	  key.v.red = atoi(lineptr);
-	  lineptr = commaptr + 1;
-	}
-	  
-      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
-	{
-	  keepgoing = 0;
-	}
-      else
-	{
-	  key.v.green = atoi(lineptr);
-	  lineptr = commaptr + 1;
-	}
-	  
-      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
-	{
-	  keepgoing = 0;
-	}
-      else
-	{
-	  key.v.blue = atoi(lineptr);
-	  lineptr = commaptr + 1;
-	}
-	  
-      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
-	{
-	  keepgoing = 0;
-	}
-      else
-	{
-	  key.v.linear = atoi(lineptr);
-	  lineptr = commaptr + 1;
-	}
-
-      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
-	{
-	  keepgoing = 0;
-	}
-      else
-	{
-	  key.v.saturation = atof(lineptr);
-	  lineptr = commaptr + 1;
-	}
-	  
-      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
-	{
-	  keepgoing = 0;
-	}
-      else
-	{
-	  key.v.density = atof(lineptr);
-	  lineptr = commaptr + 1;
-	}
-
-      if (keepgoing == 0 || ((commaptr = strchr(lineptr, ',')) == NULL))
-	{
-	  keepgoing = 0;
-	  key.v.ink_type[0] = '\0';
-	}
-      else
-	{
-	  strncpy(key.v.media_source, lineptr, commaptr - lineptr);
-	  key.v.ink_type[strlen(key.v.ink_type) - 1] = '\0';
-	  lineptr = commaptr + 1;
-	}
-	  
-      if ((keepgoing == 0))
-	{
-	  keepgoing = 0;
-	}
-      else
-	{
-	  key.v.image_type = atoi(lineptr);
-	}
-
 /*
  * The format of the list is the File printer followed by a qsort'ed list
  * of system printers. So, if we want to update the file printer, it is
@@ -1065,10 +937,10 @@ printrc_save(void)
 	fprintf(fp, "%d,%.3f,%d,%d,%d,%.3f,",
 		p->v.brightness, p->v.scaling, p->v.orientation, p->v.left,
 		p->v.top, p->v.gamma);
-	fprintf(fp, "%d,%d,%d,%d,%d,%.3f,%.3f,%s,%d\n",
+	fprintf(fp, "%d,%d,%d,%d,%d,%.3f,%.3f,%s,%d,%s\n",
 		p->v.contrast, p->v.red, p->v.green, p->v.blue,
 		p->v.linear, p->v.saturation, p->v.density, p->v.ink_type,
-		p->v.image_type);
+		p->v.image_type, p->v.dither_algorithm);
       }
     fclose(fp);
   }

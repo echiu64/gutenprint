@@ -67,6 +67,9 @@
 #define DITHERPOINT(x, y, m, d) \
 ((d)->ordered_dither_matrix##m[MODOP##m((x), MATRIX_SIZE##m)][MODOP##m((y), MATRIX_SIZE##m)])
 
+#define D_FLOYD 0
+#define D_ORDERED 1
+
 typedef struct dither_segment
 {
   unsigned range_l;		/* Bottom of range */
@@ -122,6 +125,8 @@ typedef struct dither
 
   int x_oversample;
   int y_oversample;
+
+  int dither_type;
 
   dither_color_t c_dither;
   dither_color_t m_dither;
@@ -229,7 +234,7 @@ calc_ordered_point_5(unsigned x, unsigned y, int steps, int multiplier,
   
 
 void *
-init_dither(int in_width, int out_width)
+init_dither(int in_width, int out_width, vars_t *v)
 {
   int x, y;
   dither_t *d = malloc(sizeof(dither_t));
@@ -268,10 +273,17 @@ init_dither(int in_width, int out_width)
 	  d->ordered_dither_matrix2[x][y] * 65536 / (MATRIX_SIZE2_2 - 1);
       }
 
+  if (!strcmp(v->dither_algorithm, "Modified Floyd-Steinberg"))
+    d->dither_type = D_FLOYD;
+  else if (!strcmp(v->dither_algorithm, "Ordered"))
+    d->dither_type = D_ORDERED;
+  else
+    d->dither_type = D_FLOYD;
+
   d->spread = 13;
   d->src_width = in_width;
   d->dst_width = out_width;
-  d->density = 4096;
+  d->density = 65536;
   d->k_lower = 26214;		/* .4 */
   d->k_upper = 45875;		/* .7 */
   d->lc_level = 32768;
@@ -316,7 +328,7 @@ dither_set_density(void *vd, double density)
     density = 0;
   d->k_upper = d->k_upper * density;
   d->k_lower = d->k_lower * density;
-  d->density = (int) ((4096 * density) + .5);
+  d->density = (int) ((65536 * density) + .5);
 }
 
 void
@@ -681,51 +693,48 @@ do {						\
     }      					\
 } while (0)
 
-#define UPDATE_DITHER(r, d2, x, width)					\
-do {									\
-  int tmp##r = r;							\
-  int i, dist;								\
-  int offset;								\
-  int delta;								\
-  if (tmp##r != 0)							\
-    {									\
-      int myspread;							\
-      offset = (65535 - (o##r & 0xffff)) >> odb;			\
-      if (offset > x)							\
-	offset = x;							\
-      else if (offset > xdw1)						\
-	offset = xdw1;							\
-      if (tmp##r > 65535)						\
-	tmp##r = 65535;							\
-      myspread = (ditherbit##d2 & 3) + 2 + (x & 1);			\
-      if (offset == 0)							\
-	dist = myspread * tmp##r;					\
-      else								\
-	dist = myspread * tmp##r / ((offset + 1) * (offset + 1));	\
-      if (x > 0 && 0 < xdw1)						\
-	dither##r    = r##error0[direction] + (8 - myspread) * tmp##r;	\
-      delta = dist;							\
-      for (i = -offset; i <= offset; i++)				\
-	{								\
-	  r##error1[i] += delta;					\
-	  if (i < 0)							\
-	    delta += dist;						\
-	  else								\
-	    delta -= dist;						\
-	}								\
-    }									\
-  else									\
-    dither##r = r##error0[direction];					\
+#define UPDATE_DITHER(r, x, width)					   \
+do {									   \
+  if (d->dither_type == D_FLOYD)					   \
+    {									   \
+      int tmp##r = r;							   \
+      int i, dist;							   \
+      int offset;							   \
+      int delta;							   \
+      if (tmp##r != 0)							   \
+	{								   \
+	  int myspread;							   \
+	  offset = (65535 - (o##r & 0xffff)) >> odb;			   \
+	  if (offset > x)						   \
+	    offset = x;							   \
+	  else if (offset > xdw1)					   \
+	    offset = xdw1;						   \
+	  if (tmp##r > 65535)						   \
+	    tmp##r = 65535;						   \
+	  myspread = 4;							   \
+	  if (offset == 0)						   \
+	    dist = myspread * tmp##r;					   \
+	  else								   \
+	    dist = myspread * tmp##r / ((offset + 1) * (offset + 1));	   \
+	  if (x > 0 && 0 < xdw1)					   \
+	    dither##r    = r##error0[direction] + (8 - myspread) * tmp##r; \
+	  delta = dist;							   \
+	  for (i = -offset; i <= offset; i++)				   \
+	    {								   \
+	      r##error1[i] += delta;					   \
+	      if (i < 0)						   \
+		delta += dist;						   \
+	      else							   \
+		delta -= dist;						   \
+	    }								   \
+	}								   \
+      else								   \
+	dither##r = r##error0[direction];				   \
+    }									   \
 } while (0)
 
 #define INCREMENT_COLOR()						  \
 do {									  \
-  ditherbit = rand();							  \
-  ditherbit0 = ditherbit & 0xffff;					  \
-  ditherbit1 = ((ditherbit >> 8) & 0xffff);				  \
-  ditherbit2 = ((ditherbit >> 16) & 0x7fff) + ((ditherbit & 0x100) << 7); \
-  ditherbit3 = ((ditherbit >> 24) & 0x7f) + ((ditherbit & 1) << 7) +	  \
-    ((ditherbit >> 8) & 0xff00);					  \
   if (direction == 1)							  \
     {									  \
       if (bit == 1)							  \
@@ -783,10 +792,13 @@ do {									  \
 
 #define UPDATE_COLOR(r)				\
 do {						\
-  if (dither##r >= 0)				\
-    r += dither##r >> 3;			\
-  else						\
-    r += dither##r / 8;				\
+  if (d->dither_type == D_FLOYD)		\
+    {						\
+      if (dither##r >= 0)			\
+	r += dither##r >> 3;			\
+      else					\
+	r += dither##r / 8;			\
+    }						\
 } while (0)
 
 static int
@@ -992,10 +1004,9 @@ dither_black(unsigned short   *gray,		/* I - Grayscale pixels */
       xmod = -xmod;
     }
 
-  for (ditherbit = rand() & 0xffff, ditherk = kerror0[0];
+  for (ditherk = kerror0[0];
        x != terminate;
-       ditherbit = rand() & 0xffff,
-	 x += direction,
+       x += direction,
 	 kerror0 += direction,
 	 kerror1 += direction)
   {
@@ -1003,10 +1014,17 @@ dither_black(unsigned short   *gray,		/* I - Grayscale pixels */
 
     k = 65535 - *gray;
     ok = k;
-    UPDATE_COLOR(k);
-    k = print_color(d, &(d->k_dither), ok, ok, x, row, kptr, NULL, bit,
-		    length, 0, 0);
-    UPDATE_DITHER(k, , x, d->src_width);
+    if (d->dither_type == D_FLOYD)
+      {
+	UPDATE_COLOR(k);
+	k = print_color(d, &(d->k_dither), ok, k, x, row, kptr, NULL, bit,
+			length, 0, 0);
+	UPDATE_DITHER(k, x, d->src_width);
+      }
+    else
+      print_color(d, &(d->k_dither), k, k, x, row, kptr, NULL, bit,
+		  length, 0, 0);
+
     INCREMENT_BLACK();
   }
 }
@@ -1058,18 +1076,17 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		*kerror0,	/* Pointer to current error row */
 		*kerror1;	/* Pointer to next error row */
   int		ditherbit;	/* Random dither bitmask */
-  int nk;
-  int ck;
-  int bk;
-  int ub, lb;
-  int ditherbit0, ditherbit1, ditherbit2, ditherbit3;
-  int	density;
-  dither_t *d = (dither_t *) vd;
+  int		nk;
+  int		ck;
+  int		bk;
+  int		ub, lb;
+  int		density;
+  dither_t	*d = (dither_t *) vd;
 
-  int terminate;
-  int direction = row & 1 ? 1 : -1;
-  int odb = d->spread;
-  int ddw1 = d->dst_width - 1;
+  int		terminate;
+  int		direction = row & 1 ? 1 : -1;
+  int		odb = d->spread;
+  int		ddw1 = d->dst_width - 1;
 
   bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
   x = (direction == 1) ? 0 : d->dst_width - 1;
@@ -1146,13 +1163,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
    */
   for (ditherbit = rand(),
 	 ditherc = cerror0[0], ditherm = merror0[0], dithery = yerror0[0],
-	 ditherk = kerror0[0],
-	 ditherbit0 = ditherbit & 0xffff,
-	 ditherbit1 = ((ditherbit >> 8) & 0xffff),
-	 ditherbit2 = (((ditherbit >> 16) & 0x7fff) +
-		       ((ditherbit & 0x100) << 7)),
-	 ditherbit3 = (((ditherbit >> 24) & 0x7f) + ((ditherbit & 1) << 7) +
-		       ((ditherbit >> 8) & 0xff00));
+	 ditherk = kerror0[0];
        x != terminate;
        x += direction,
 	 cerror0 += direction,
@@ -1224,7 +1235,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
        * empirically determined.
        */
       ok = k;
-      nk = k + (ditherk) / 8;
+      UPDATE_COLOR(k);
       oc = c;
       om = m;
       oy = y;
@@ -1288,7 +1299,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       if (tk != k)
 	printed_black = 1;
       k = tk;
-      UPDATE_DITHER(k, 1, x, d->src_width);
+      UPDATE_DITHER(k, x, d->src_width);
     }
     else
     {
@@ -1326,9 +1337,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 			x, row, yptr, lyptr, bit, length, 1, 1);
       }
 
-    UPDATE_DITHER(c, 2, x, d->dst_width);
-    UPDATE_DITHER(m, 3, x, d->dst_width);
-    UPDATE_DITHER(y, 0, x, d->dst_width);
+    UPDATE_DITHER(c, x, d->dst_width);
+    UPDATE_DITHER(m, x, d->dst_width);
+    UPDATE_DITHER(y, x, d->dst_width);
 
     /*****************************************************************
      * Advance the loop
@@ -1343,6 +1354,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.21  2000/04/16 21:31:32  rlk
+ *   Choice of dithering algorithms
+ *
  *   Revision 1.20  2000/04/16 02:52:39  rlk
  *   New dithering code
  *

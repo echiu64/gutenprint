@@ -47,10 +47,6 @@ extern GtkObject *gamma_adjustment;
 static GtkWidget *dither_algo_button = NULL;
 static GtkWidget *dither_algo_menu   = NULL;
 
-extern gint    num_dither_algos;
-extern gchar **dither_algo_names;
-extern gchar  *cur_dither_name;
-
 static void gimp_brightness_update (GtkAdjustment *adjustment);
 static void gimp_saturation_update (GtkAdjustment *adjustment);
 static void gimp_density_update    (GtkAdjustment *adjustment);
@@ -358,7 +354,7 @@ gimp_build_dither_menu (void)
       g_print ("item[%d] = \'%s\'\n", i, dither_algo_names[i]);
 #endif /* DEBUG */
 
-      if (strcmp (dither_algo_names[i], cur_dither_name) == 0)
+      if (strcmp (dither_algo_names[i], vars.dither_algorithm) == 0)
 	{
 	  gtk_option_menu_set_history (GTK_OPTION_MENU (dither_algo_button), i);
 	  break;
@@ -376,12 +372,9 @@ static void
 gimp_dither_algo_callback (GtkWidget *widget,
 			   gpointer   data)
 {
-  gint i;
-
-  i = (gint) data;
-
-  if (i >= 0 && i < num_dither_algos)
-    cur_dither_name = dither_algo_names[i];
+  strcpy(vars.dither_algorithm, dither_algo_names[(gint) data]);
+  strcpy(plist[plist_current].v.dither_algorithm,
+	 dither_algo_names[(gint) data]);
 }
 
 #endif  /* ! GIMP_1_0 */

@@ -59,9 +59,6 @@ static GtkWidget* gamma_entry;         /* Text entry widget for gamma */
 static GtkWidget* dismiss_button;      /* Action area dismiss button */
 static GtkWidget* dither_algo_button;  /* Button for dither type menu */
 static GtkWidget* dither_algo_menu = NULL;  /* dither menu */
-extern int num_dither_algos;
-extern char** dither_algo_names;
-extern char* cur_dither_name;
 
 extern GtkObject* brightness_adjustment;  /* Adjustment object for brightness */
 extern GtkObject* saturation_adjustment;  /* Adjustment object for saturation */
@@ -90,7 +87,7 @@ static void gtk_blue_callback(GtkWidget *);
 static void gtk_gamma_update(GtkAdjustment *);
 static void gtk_gamma_callback(GtkWidget *);
 static void gtk_close_adjust_callback(void);
-static void gtk_dither_algo_callback(void);
+static void gtk_dither_algo_callback(GtkWidget *, gint);
 static void gtk_build_dither_menu(void);
 
 
@@ -1079,7 +1076,7 @@ static void gtk_build_dither_menu()
 	printf("item[%d] = \'%s\'\n", i, dither_algo_names[i]);
 #endif /* DEBUG */
 
-	if (strcmp(dither_algo_names[i], cur_dither_name) == 0)
+	if (strcmp(dither_algo_names[i], vars.dither_algorithm) == 0)
 	{
 	    gtk_option_menu_set_history(GTK_OPTION_MENU(dither_algo_button), i);
 	    break;
@@ -1099,6 +1096,11 @@ static void gtk_build_dither_menu()
  * gtk_dither_algo_Callback()
  *
  ****************************************************************************/
-static void gtk_dither_algo_callback()
+static void
+gtk_dither_algo_callback (GtkWidget *widget,
+			  gint   data)
 {
+  strcpy(vars.dither_algorithm, dither_algo_names[data]);
+  strcpy(plist[plist_current].v.dither_algorithm,
+	 dither_algo_names[data]);
 }

@@ -179,6 +179,11 @@ x: 0..7 (0)
 6  1440 x 720 DPI Highest Quality        (works on selected printers)
 7  1440 x 720 DPI Two-pass               (works on some printers)
 
+Dithering Algorithm:
+-dDither=x
+0  Modified Floyd-Steinberg
+1  Ordered
+
 currently supported Media Selection:
 (important: always use lower case names)
 

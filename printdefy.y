@@ -105,6 +105,7 @@ output_the_printer()
   printf("      \"\",\n");	/* media_type */
   printf("      \"\",\n");	/* media_source */
   printf("      \"\",\n");	/* ink_type */
+  printf("      \"\",\n");	/* dither_algorithm */
   printf("      %d,\n", thePrinter.printvars.brightness);
   printf("      1.0,\n");	/* scaling */
   printf("      -1,\n");	/* orientation */
@@ -117,7 +118,7 @@ output_the_printer()
   printf("      %d,\n", thePrinter.printvars.blue);
   printf("      0,\n");		/* linear */
   printf("      %.3f,\n", thePrinter.printvars.saturation);
-  printf("      %.3f\n", thePrinter.printvars.density);
+  printf("      %.3f,\n", thePrinter.printvars.density);
   printf("    }\n");
   printf("  },\n");
 }

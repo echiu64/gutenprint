@@ -1549,9 +1549,9 @@ pcl_print(const printer_t *printer,		/* I - Model */
   v->saturation *= printer->printvars.saturation;
 
   if (landscape)
-    dither = init_dither(image_height, out_width);
+    dither = init_dither(image_height, out_width, v);
   else
-    dither = init_dither(image_width, out_width);
+    dither = init_dither(image_width, out_width, v);
   switch (v->image_type)
     {
     case IMAGE_LINE_ART:
@@ -1913,6 +1913,9 @@ pcl_mode2(FILE          *prn,		/* I - Print file or command */
 
 /*
  *   $Log$
+ *   Revision 1.43  2000/04/16 21:31:32  rlk
+ *   Choice of dithering algorithms
+ *
  *   Revision 1.42  2000/04/16 02:52:39  rlk
  *   New dithering code
  *

@@ -105,7 +105,8 @@ typedef struct					/* Plug-in variables */
 	media_size[64],		/* Media size */
 	media_type[64],		/* Media type */
 	media_source[64],	/* Media source */
-	ink_type[64];		/* Ink or cartridge */
+	ink_type[64],		/* Ink or cartridge */
+	dither_algorithm[64];	/* Dithering algorithm */
   int	brightness;		/* Output brightness */
   float	scaling;		/* Scaling, percent of printable area */
   int	orientation,		/* Orientation - 0 = port., 1 = land.,
@@ -198,7 +199,7 @@ typedef struct
  * Prototypes...
  */
 
-extern void *	init_dither(int in_width, int out_width);
+extern void *	init_dither(int in_width, int out_width, vars_t *vars);
 extern void	dither_set_density(void *vd, double);
 extern void 	dither_set_black_lower(void *vd, double);
 extern void 	dither_set_black_upper(void *vd, double);
@@ -327,16 +328,19 @@ extern void	ps_print(const printer_t *printer, int copies, FILE *prn,
 #define ps_media_size NULL
 #endif
 
-int		      known_papersizes(void);
-const papersize_t    *get_papersizes(void);
-const papersize_t    *get_papersize_by_name(const char *);
+extern int	      		known_papersizes(void);
+extern const papersize_t	*get_papersizes(void);
+extern const papersize_t	*get_papersize_by_name(const char *);
 
-int		      known_printers(void);
-const printer_t      *get_printers(void);
-const printer_t	     *get_printer_by_index(int);
-const printer_t      *get_printer_by_long_name(const char *);
-const printer_t      *get_printer_by_driver(const char *);
-int	              get_printer_index_by_driver(const char *);
+extern int			known_printers(void);
+extern const printer_t		*get_printers(void);
+extern const printer_t		*get_printer_by_index(int);
+extern const printer_t		*get_printer_by_long_name(const char *);
+extern const printer_t		*get_printer_by_driver(const char *);
+extern int			get_printer_index_by_driver(const char *);
+
+extern int			num_dither_algos;
+extern char			*dither_algo_names[];
 
 #endif /* PRINT_HEADER */
 /*
