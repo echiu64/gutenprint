@@ -121,7 +121,7 @@ int stpi_paper_destroy(stp_papersize_t pt)
   if (paper_list == NULL)
     {
       stpi_erprintf("No papers found: "
-		   "is STPI_MODULE_PATH correct?\n");
+		   "is STP_MODULE_PATH correct?\n");
       stpi_paper_list_init();
 #ifdef DEBUG
       fprintf (stderr, "stpi_paper_destroy(): initialising paper_list...\n");
@@ -152,7 +152,7 @@ stp_known_papersizes(void)
   if (paper_list == NULL)
     {
       stpi_erprintf("No papers found: "
-		   "is STPI_MODULE_PATH correct?\n");
+		   "is STP_MODULE_PATH correct?\n");
       stpi_paper_list_init();
     }
 
@@ -230,7 +230,7 @@ stp_get_papersize_by_name(const char *name)
   if (paper_list == NULL)
     {
       stpi_erprintf("No papers found: "
-		   "is STPI_MODULE_PATH correct?\n");
+		   "is STP_MODULE_PATH correct?\n");
       stpi_paper_list_init();
     }
 
@@ -248,7 +248,7 @@ stp_get_papersize_by_index(int index)
   if (paper_list == NULL)
     {
       stpi_erprintf("No papers found: "
-		   "is STPI_MODULE_PATH correct?\n");
+		   "is STP_MODULE_PATH correct?\n");
       stpi_paper_list_init();
     }
 
