@@ -39,6 +39,12 @@ require('standard_html_header.php3');
   I'm trying to set up TCP/IP printing for my Epson 1520 (900N, etc...) with
  type-B ethernet card. HELP!!!
  </a>
+ <li><a href="p_FAQ_OS_X.php3#1394">
+ How can I print using FireWire (IEEE 1394)?
+ </a>
+ <li><a href="p_FAQ_OS_X.php3#pap">
+ How can I print using AppleTalk?
+ </a>
  <li><a href="p_FAQ_OS_X.php3#InDesign">
  I am having trouble printing with Gimp-Print from Adobe InDesign.
  </a>
@@ -307,6 +313,40 @@ require('standard_html_header.php3');
  to Print with Gimp-Print</em> (or the set up section in this FAQ) and follow
  the instructions for TCP/IP setup.
  </p>
+  <a name="1394">
+ <h3>
+ <li>
+ How can I print using FireWire (IEEE 1394)?
+ </h3></a>
+ <p>
+ In a nutshell, you can't. Not yet.  CUPS uses "backends" to transfer the driver code to the printer. On Mac OS X Gimp-Print uses CUPS and since there is not yet a FireWire backend available for Mac OS X you can't print with Gimp-Print over Firewire.  You <em>can</em> print to a printer that has a FireWire port, you simply need to use a <em>different</em> port, such as the USB port, an ethernet port, or the parallel port via a converter.
+ </p>
+  <a name="pap">
+ <h3>
+ <li>
+ How can I print using AppleTalk?
+ </h3></a>
+ <p>
+To set up Appletalk (PAP) printing you first need to open the terminal and type "atlookup" at the command line. After a delay you should get a (possibly long) list of appletalk devices on your network. You want to find the entry for your printer and use that info to form a PAP URI that you will enter in Print Center when you set up the printer.
+</p><p>
+When you type "atlookup" it should look something like this:
+</p><pre>
+
+	macosx% atlookup 
+	Found 2 entries in zone *
+	ff00.2f.80      Stylus PHOTO EX:EPSONLQ2
+	ff5f.39.80      imac:Darwin
+</pre><p>
+For this example, here is the corresponding pap URI that you would enter in "Device URI" for device (pap) using the Print Center "Advanced" setup:
+</p><pre>
+
+	pap://*/Stylus%20PHOTO%20EX/EPSONLQ2
+</pre><p>
+Note that the colon is replaced with a forward slash and any spaces in any names must be replaced with "%20" in the URI.
+Here it is more generically:
+</p><pre>
+	pap://zone/Appletalk_Device_Name/protocol
+</pre>
  <a name="InDesign">
  <h3>
  <li>
