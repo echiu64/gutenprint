@@ -27,7 +27,7 @@ MAINT_CHARSET = latin1
 ## Variables
 
 AM_CFLAGS = $(GNUCFLAGS)
-INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
+INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
 LIBS = @LIBS@ ../lib/libprintut.la $(INTLLIBS) ../lib/libprintut.la
 
 TESTS = testdither run-weavetest
