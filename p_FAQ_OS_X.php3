@@ -180,9 +180,9 @@ my printer in print center.
 </h3>
 </p>
 <p>
-The Gimp-Print 4.2.2-rc3 installer package (and all later
+The Gimp-Print 4.2.2 installer package (and all later
 versions) contains an illustrated set-up guide called
-"Setting up printers.pdf" located at the root level of the
+"How to Print with Gimp-Print" located at the root level of the
 installer disk image. This guide will walk you through the
 printer set-up process for USB and TCP/IP printers. If you
 don't have access to this set-up guide the following
