@@ -1,9 +1,9 @@
 INTRODUCTION
 
-    This is Gimp-Print version 4.3.1, a development release in the 4.3
+    This is Gimp-Print version 4.3.2, a development release in the 4.3
     line.  Gimp-print is the print facility for the Gimp, and in
     addition a suite of drivers that may be used with common UNIX
-    spooling systems using GhostScript or CUPS.  These drivers provide
+    spooling systems using Ghostscript or CUPS.  These drivers provide
     printing quality for UNIX/Linux in many cases equal to or better
     than proprietary vendor-supplied drivers, and can be used for many
     of the most demanding printing tasks.
@@ -27,6 +27,7 @@ BASIC INSTALLATION
       - A user's manual
       - A Print plug-in for the GIMP
       - A standard Ghostscript driver, stp
+      - A utility to administer Epson printers, escputil
       - An IJS-based Ghostscript driver
       - A CUPS (Common UNIX Printing System) driver
       - Support for the Foomatic spooler configuration system
@@ -50,7 +51,8 @@ BASIC INSTALLATION
 
     Note: This package requires the use of GNU Make to compile.  On
     systems with both GNU make and another make installed, GNU make
-    may be named `gmake' or `gnumake'
+    may be named `gmake' or `gnumake'.  BSD users in particular will
+    need to use 'gmake'.
 
 
 THE GIMP
@@ -75,11 +77,12 @@ THE GIMP
 
     If you have installed the Gimp as a precompiled package
     (e. g. from an RPM), you will need to install the gimp-devel
-    package as well as the gimp package.  The gimp package as supplied
-    in most distributions only contains what's needed to run the Gimp.
-    The gimp-devel package contains additional files required to
-    actually build new plugins.  On some systems, you will also need
-    to install gtk-devel and glib-devel packages as well.
+    (sometimes called gimp-developer, or something similar) package as
+    well as the gimp package.  The gimp package as supplied in most
+    distributions only contains what's needed to run the Gimp, not the
+    additional files needed to build GIMP-based applications and
+    plugins such as the Print plugin.  On some systems, you will also
+    need to install gtk-devel and glib-devel packages as well.
 
     If you have installed the Gimp from source on Linux: after running
     make install, you must run ldconfig as root before attempting to
@@ -89,7 +92,7 @@ THE GIMP
 CUPS
 
     Gimp-print 4.2 requires CUPS 1.1.9 or higher.  We recommend use of
-    1.1.12; that release of CUPS features better internationalization
+    1.1.14; that release of CUPS features better internationalization
     and fixes some important bugs.
 
     This package includes a CUPS driver that may be built, allowing
@@ -101,24 +104,30 @@ CUPS
     make install
     /etc/software/init.d/cups restart
 
-    The last command varies with your operating system.  It is
-    typically /etc/init.d/cups, /etc/rc.d/cups, or even
-    /etc/rc.d/init.d/cups.
+    The last command varies with your operating system; the purpose is
+    to restart the CUPS server (daemon) so that it sees the newly
+    installed driver.  It is typically /etc/init.d/cups,
+    /etc/rc.d/cups, or even /etc/rc.d/init.d/cups.  Your system may
+    have a different way to restart the CUPS server.  OS X uses the
+    following command:
 
-    NOTE: If you are using CUPS 1.1.11 or higher, and you have a
-    USB-connected printer, you must have a printer connected to each
-    USB port that you plan to use and powered on when you restart
-    CUPS.  If you do not do so, you will not be able to perform the
-    following step (reinstalling the printer), as described below.
+    sudo /System/Library/StartupItems/PrintingServices/PrintingServices.sh restart
+  
+    NOTE for Linux (at least) users: If you are using CUPS 1.1.11 or
+    higher, and you have a USB-connected printer, you must have a
+    printer connected to each USB port that you plan to use and
+    powered on when you restart CUPS.  If you do not do so, you will
+    not be able to perform the following step (reinstalling the
+    printer), as described below.
 
     Following this, you must reinstall any printers that you are using
     Gimp-Print PPD's with.  Such printers may be identified in any
     CUPS front end (e. g. KUPS, or via the web interface) because they
     look something like this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.3.2(en)
 
-    If the version number (in this case, 4.2.0) does not match
+    If the version number (in this case, 4.3.2) does not match
     the version of Gimp-Print that you are installing, you must use
     Modify Printer to force the new PPD file to get installed.
     Failure to do so may lead to incorrect output and/or other errors!
@@ -149,22 +158,23 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     apparent when you use a CUPS front end to select a PPD file and
     you see something like this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.3.2(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.3.2(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.3.2(en)
 
     rather than this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(sv)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(fr)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.3.2(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.3.2(sv)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.3.2(fr)
 
     you may wish to turn off the translation of PPD files:
 
     ./configure --with-cups --without-translated-ppds
 
-    You may also wish to do this to reduce the number of PPD files
-    installed on your system
+    You may also wish to do this to greatly reduce the number of PPD
+    files installed on your system, as the number of translations is
+    large and growing.
 
     The PPD files associated with this driver are for Level 2
     PostScript.  CUPS implements most level 3 PostScript, but there
@@ -184,13 +194,36 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
 
     ./configure --with-cups --without-gimp
 
+    If you have installed CUPS as a precompiled package (e. g. it's
+    the standard printing system that your distribution uses), you may
+    need to install a separate development package (typically called
+    "cups-devel" or "cups-developer").  The CUPS package typically
+    installed by most distributions only contains the components
+    needed to run CUPS, not those required to build additional CUPS
+    drivers.
+
     We recommend that all users who wish to use this package for
-    general purpose printing install CUPS and use that as their
+    general purpose printing install either CUPS or use Foomatic with
+    the IJS driver (both described below) and use that as their
     printing system, rather than the traditional lpd or lp systems.
     It is much simpler to manage than lpd, and provides an excellent
     web-based interface for both administration and use.  Please visit
     http://www.cups.org for information on downloading and installing
     CUPS.
+
+    PRINTING TO A WINDOWS-HOSTED PRINTER: There have been numerous
+    reports of incomplete printing to Windows-hosted printers.  The
+    symptoms are that the bottom of the last page is incomplete.  The
+    lower the printing resolution, the more of the page is cut off.
+    This does not happen in all configurations; it appears to be more
+    common printing to a Windows 95/98/ME-hosted printer.  This is not
+    thought to be a Gimp-print bug.  This is listed as bug 510185.
+
+    One user has reported success by disabling bidirectional support
+    in the printer's setting on the Windows box (this is NOT the same
+    thing as using a unidirectional mode such as 720 DPI
+    Unidirectional; this refers to the printer port).  This will
+    disable the ink monitor utility.
 
 
 FOOMATIC
@@ -202,7 +235,7 @@ FOOMATIC
     first version of Foomatic (the one used with Gimp-Print 4.0) is not
     compatible with Gimp-Print 4.2.  Note that the Foomatic driver is
     named `stp' in Gimp-Print 4.0; in Gimp-Print 4.2 it is named
-    `gimp-print' for the GhostScript ("stp") driver and "gimp-print-ijs"
+    `gimp-print' for the Ghostscript ("stp") driver and "gimp-print-ijs"
     for the IJS driver. The data for the Gimp-Print 4.0 driver is not
     compatible with the 4.2 driver.
 
@@ -213,8 +246,7 @@ FOOMATIC
 
     or
 
-    /usr/local/sbin/foomatic-kitload (if /usr/local/sbin is not on
-    your PATH).
+    /usr/local/sbin/foomatic-kitload (if /usr/local/sbin is not on your PATH).
 
     If you don't have Foomatic installed, or the version that is
     installed is too old, please download the Foomatic package from
@@ -227,14 +259,14 @@ FOOMATIC
     make
     make install
 
-    for obtaining the Foomatic data only for the GhostScript ("stp")
+    for obtaining the Foomatic data only for the Ghostscript ("stp")
     driver or
 
     ./configure --with-ijs --with-foomatic
     make
     make install
 
-    for obtaining the Foomatic data for both the GhostScript ("stp")
+    for obtaining the Foomatic data for both the Ghostscript ("stp")
     driver and the IJS driver (note that this also build the IJS
     interface itself, so you have to follow the instructions in
     src/ghost/README, too).
@@ -273,7 +305,8 @@ GHOSTSCRIPT
     This package includes a Ghostscript driver that may be built,
     allowing use of this software for general printing purposes.  This
     package requires Ghostscript 5.50 or 6.51.  Later releases in the
-    6.5x GNU Ghostscript branch (e. g. 6.52) should also work.
+    6.5x GNU Ghostscript branch (e. g. 6.52) should also work.  There is
+    a simpler build procedure for GNU Ghostscript 6.53 and 7.05.
 
     Please read src/ghost/README for more information, including how
     to build and install it, and available options; the build
@@ -318,15 +351,27 @@ IJS
     driver runs in a separate process from Ghostscript itself, the IJS
     driver may be used with AFPL Ghostscript (7.04 and above).
 
-    Use of the IJS driver is described in src/ghost/README.
+    The basic way to build the IJS driver is
+
+    ./configure --with-ijs [--without-gimp]
+    make
+    make install
+
+    You must have the IJS libraries installed for this to work.
+    Instructions for that are included with GNU Ghostscript 6.53 and
+    beyond, and AFPL Ghostscript 7.04 and beyond.
+
+    Detailed instructions for building and using the IJS driver is
+    described in src/ghost/README.
 
 
 PRINTER-SPECIFIC NOTES:
 
-    * The Epson Stylus C70 and C80 may give better results using Three
-      Color Composite printing on Premium Glossy Photo Paper and Premium
-      Semigloss.  Epson's proprietary drivers are thought to do this on
-      these papers.
+    * The Epson Stylus C70 and C80 will give better results using
+      Three Color Composite printing on Premium Glossy Photo Paper and
+      Premium Semigloss.  Epson's proprietary drivers do this on these
+      papers.  The black ink is formulated differently from the
+      others, and does not adhere properly to these special papers.
 
     * The Epson Stylus C70 and C80 appear to support resolutions of
       1440x1440 and 2880x1440, but these resolutions may not yield any
@@ -346,11 +391,14 @@ PRINTER-SPECIFIC NOTES:
     * Many Epson printers (specifically, the Epson Stylus Color 740
       and all newer printers) will not respond to ASCII text without a
       special "activation" sequence (specifically, this command takes
-      the printers out of "packet mode").  Therefore, the common
-      suggestion to test a printer port by sending plain text to it
-      will not work for these printers.  These printers are, however,
-      able to print plain text *after* the activation sequence is
-      sent.
+      the printers out of "packet mode").  A brand new printer, or one
+      that has been connected to a Windows system, may or may not work
+      in packet mode.  Therefore, the common suggestion to test a
+      printer port by sending plain text to it may not work for these
+      printers; failure to print in this fashion is not a positive
+      indication that the printer or the connection is malfunctioning.
+      These printers are, however, able to print plain text *after*
+      the activation sequence is sent.
 
       A suggestion would be to use the escputil command to print a
       test pattern:
@@ -526,11 +574,13 @@ KNOWN BUILD ISSUES
       as KUPS or http://localhost:631 to display many copies of each
       PPD file, all in the English (en) language.  In fact, the PPD
       files should be translated into Swedish, Polish, Norwegian,
-      French, Danish, and British English.  With CUPS 1.1.10 and
-      lower, there should be two copies of the (en) PPD file, and one
-      copy each of (sv), (no), (fr), (pl) and (da).  With CUPS 1.1.11
-      and above, there should be (en), (en_GB), (sv), (no), (fr),
-      (pl), and (da) PPD files.
+      French, Danish, Spanish, Slovakian, Greek, British English,
+      Dutch, German, and Portuguese.  With CUPS 1.1.10 and lower,
+      there should be two copies of the (en) PPD file, and one copy
+      each of (sv), (no), (fr), (pl), (da), (sk), (el), (es), (nl),
+      (de), and (pt).  With CUPS 1.1.11 and above, there should be
+      (en), (en_GB), (sv), (no), (fr), (pl), (da), (sk), (el), (es),
+      (nl), (de), and (pt) PPD files.
 
       The PPD files are created by a program named "genppd" in the
       src/cups directory.  This program is called once for each
@@ -544,10 +594,7 @@ KNOWN BUILD ISSUES
 	  ppd/C/pcl-4.ppd.gz:*LanguageVersion: English
 	  ppd/da/pcl-4.ppd.gz:*LanguageVersion: Danish
 	  ppd/en_GB/pcl-4.ppd.gz:*LanguageVersion: English-GB
-	  ppd/fr/pcl-4.ppd.gz:*LanguageVersion: French
-	  ppd/no/pcl-4.ppd.gz:*LanguageVersion: Norwegian
-	  ppd/no/pcl-4.ppd.gz:*LanguageVersion: Polish
-	  ppd/sv/pcl-4.ppd.gz:*LanguageVersion: Swedish
+	  ...
 
       If the PPD file for each language has a different language
       version, the genppd program operated correctly.  If instead the
@@ -557,10 +604,7 @@ KNOWN BUILD ISSUES
 	  ppd/C/pcl-4.ppd.gz:*LanguageVersion: English
 	  ppd/da/pcl-4.ppd.gz:*LanguageVersion: English
 	  ppd/en_GB/pcl-4.ppd.gz:*LanguageVersion: English
-	  ppd/fr/pcl-4.ppd.gz:*LanguageVersion: English
-	  ppd/no/pcl-4.ppd.gz:*LanguageVersion: English
-	  ppd/no/pcl-4.ppd.gz:*LanguageVersion: English
-	  ppd/sv/pcl-4.ppd.gz:*LanguageVersion: English
+	  ...
 
       the program did not operate correctly.
 
@@ -751,10 +795,11 @@ PACKAGING
       + "calibrate.ppm" belongs in /usr/share/cups.
 
       The PPD's packaged with Gimp-print are rather bulky, about 1 MB
-      for each language installed.  At present, six language
+      for each language installed.  At present, twelve language
       translations are installed, in addition to the US English
-      defaults: GB English, Swedish, Danish, Norwegian, French, and
-      Polish.  You may wish to install these selectively.
+      defaults: GB English, Swedish, Danish, Norwegian, French,
+      Polish, Slovakian, Greek, Spanish, Dutch, German, and
+      Portuguese.  You may wish to install these selectively.
 
       Please see KNOWN BUILD ISSUES above for more discussion about
       build issues related to the PPD files.
@@ -767,10 +812,21 @@ PACKAGING
       installed.
 
     * We recommend that you replace the Print plugin bundled with the
-      Gimp (1.2.0~1.2.2) with the Gimp Print plugin in this
-      distribution.  The plugin in the Gimp 1.2 tree is based on the
-      older Gimp-Print 4.0 source base; 4.2 supports more printers
+      Gimp (any 1.2 version) with the Gimp Print plugin in this
+      distribution.  There are various ways to do this; you can run
+      'make gimp-dist' from top level and untar the resulting tarball
+      into the Gimp source directory prior to building the Gimp, or
+      you can install the plugin (src/gimp/print) over an existing
+      Gimp Print plugin.  The plugin in the Gimp 1.2 tree is based on
+      the older Gimp-Print 4.0 source base; 4.2 supports more printers
       with better quality, and has more features than 4.0.
+
+      We are working with the GIMP development team to replace the
+      current Print plugin (which contains the entire source required
+      to build the driver) with a smaller base containing just the
+      plugin itself.  This will allow compatibility with at least all
+      4.2-based releases of Gimp-Print, allowing upgrading the plugin
+      by simply upgrading the libgimpprint library.
 
     * Please read the release notes carefully!
 
@@ -796,6 +852,7 @@ DEBIAN
 			    and SGML documentation that is registered
 			    with doc-base.
     cupsys-driver-gimpprint The CUPS driver and PPD files.
+    foomatic-db-gimpprint   Foomatic data files for gimp-print drivers.
     libgimpprint1	    The libgimpprint library (GIMP-Print core).
     libgimpprint-dev	    Headers, symlinks, m4 macro
 			    (AM_PATH_GIMPPRINT) and gimpprint-config
