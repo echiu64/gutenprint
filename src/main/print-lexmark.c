@@ -60,7 +60,6 @@
 #define true  1
 
 typedef struct lexm_privdata_weave {
-  stp_vars_t    v;
   int           bidirectional;
   unsigned char *outbuf;
 } lexm_privdata_weave;
@@ -1257,7 +1256,7 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
   int  nozzle_separation;
   int  horizontal_passes;
   int  ncolors;
-  lexm_privdata_weave privdata_weave;
+  lexm_privdata_weave privdata;
   void *	weave = NULL;
 
   stp_lineoff_t lineoff_buffer;  /* holds the line offsets of each color */
@@ -1540,9 +1539,9 @@ lexmark_describe_resolution(printer,
 
   /* initialize soft weaveing */
 
-  privdata_weave.v = nv;
-  privdata_weave.bidirectional = lexmark_print_bidirectional(printer, resolution);
-  privdata_weave.outbuf = stp_malloc((((((pass_length/8)*11))+40) * out_width)+200);
+  privdata.bidirectional = lexmark_print_bidirectional(printer, resolution);
+  privdata.outbuf = stp_malloc((((((pass_length/8)*11))+40) * out_width)+200);
+  stp_set_driver_data(nv, &privdata);
   /*  lxm_nozzles_used = 1;*/
   weave = stp_initialize_weave(lxm_nozzles_used, nozzle_separation,
 			       horizontal_passes, res_para_ptr->vertical_passes,
@@ -1554,8 +1553,8 @@ lexmark_describe_resolution(printer,
 						     /caps->y_raster_res),
 			       (page_height * ydpi) / 72,
 			       1, /* weave_strategy */
-			       lexmark_head_offset(model, ydpi, (ncolors==6), &lineoff_buffer),
-			       &privdata_weave, flush_pass,
+			       (int *)lexmark_head_offset(model, ydpi, (ncolors==6), &lineoff_buffer),
+			       nv, flush_pass,
 			       stp_fill_uncompressed,  /* fill_start */
 			       stp_pack_uncompressed,  /* pack */
 			       stp_compute_uncompressed_linewidth);  /* compute_linewidth */
@@ -1734,9 +1733,9 @@ lexmark_describe_resolution(printer,
             fprintf(stderr, "Let's go stp_write_weave\n");
 	      fprintf(stderr, "length %d\n", length);
 #endif
+
       stp_write_weave(weave, length, ydpi, model, out_width, left,
-		      xdpi, physical_xdpi, &cols);
-      
+		      xdpi, physical_xdpi, (const unsigned char **)cols.v);
       
       errval += errmod;
       errline += errdiv;
@@ -1765,8 +1764,8 @@ lexmark_describe_resolution(printer,
   stp_free_lut(nv);
   free(in);
   free(out);
-  if (privdata_weave.outbuf != NULL) {
-    free(privdata_weave.outbuf);/* !!!!!!!!!!!!!! */
+  if (privdata.outbuf != NULL) {
+    free(privdata.outbuf);/* !!!!!!!!!!!!!! */
   }
 
   if (cols.p.k != NULL) free(cols.p.k);
@@ -2353,8 +2352,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	   int hoffset, int ydpi, int xdpi, int physical_xdpi,
 	   int vertical_subpass)
 {
-  const lexm_privdata_weave *privdata_weave = (sw->v);
-  const stp_vars_t nv = privdata_weave->v;
+  const stp_vars_t nv = (sw->v);
   stp_lineoff_t *lineoffs = stp_get_lineoffsets_by_pass(sw, passno);
   const stp_linebufs_t *bufs = stp_get_linebases_by_pass(sw, passno);
   stp_pass_t *pass = stp_get_pass_by_pass(sw, passno);
@@ -2364,6 +2362,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 
   int prn_mode;
   int direction = 0;
+  const lexm_privdata_weave *privdata_weave = stp_get_driver_data(nv);
   const lexmark_cap_t * caps= lexmark_get_model_capabilities(model);
   int paperShift;
   Lexmark_head_colors head_colors[3]={{0, NULL,     0,  64/2, 64},
@@ -2521,26 +2520,6 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
     if (privdata_weave->bidirectional) {
       direction = (direction +1) & 1;
     }
-  } 
-  if (0)/*(bufs[0].p.k != NULL)*/ {
-    /* we print black */
-    lexmark_write(nv,		/* I - Print file or command */
-		  privdata_weave->outbuf,/*unsigned char *prnBuf,   mem block to buffer output */
-		  &paperShift,           /* int *paperShift, */
-		  direction,                     /* int direction, */
-		  sw->jets,       /* num of inks to print */
-		  caps,                  /* const lexmark_cap_t *   caps,	    I - Printer model */
-		  xdpi,                  /* int xresolution, */
-		  2,                     /* yCount,*/
-		  head_colors,           /* Lexmark_head_colors *head_colors, */
-		  (lwidth+7)/8, /* length,	 I - Length of bitmap data of one line in bytes */
-		  prn_mode | COLOR_MODE_K,       /* mode,	 I - Which color */
-		  ydpi,                  /* ydpi,	 I - Vertical resolution */
-		  lwidth,      /* width, 	 I - Printed width in pixles*/
-		  hoffset+microoffset,   /* offset  I - Offset from left side in x_raster_res DPI */
-		  0                      /* dmt */);
-    if (privdata_weave->bidirectional)
-      direction = (direction +1) & 1;
   } 
   /* store paper position in respect if there was a paper shift */
   sw->last_pass_offset = pass->logicalpassstart - (paperShift / (caps->y_raster_res/ydpi));
