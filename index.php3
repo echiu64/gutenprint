@@ -37,6 +37,16 @@ Users!</font></em></strong></H2>
 href="http://www.allosx.com/1030154694/index_html">This article on All
 OS X</a> explains how to use Gimp-Print 4.2.1 with OS X 10.2 "Jaguar".</p>
 
+<H2><font color="#ff0000">Gimp-Print 4.2.2-rc3 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of September 6,
+2002!</strong></em></font> Gimp-Print 4.2.2-rc3 is released.  This is
+a prerelease for Gimp-Print 4.2.2.  In addition to the source, an
+installation kit for Macintosh OS X 10.2 is available!  Please read
+the release notes <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
+</p>
+
 <H2><font color="#ff0000">Gimp-Print 4.3.3 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of July 14,
