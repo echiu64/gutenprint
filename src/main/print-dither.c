@@ -536,7 +536,7 @@ reverse_row_ends(dither_t *d)
 stp_dither_data_t *
 stp_create_dither_data(void)
 {
-  stp_dither_data_t *ret = stp_malloc(sizeof(stp_dither_data_t));
+  stp_dither_data_t *ret = stp_zalloc(sizeof(stp_dither_data_t));
   ret->channel_count = 0;
   ret->c = NULL;
   return ret;
@@ -588,9 +588,8 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
 		int vertical_aspect, stp_vars_t v)
 {
   int i;
-  dither_t *d = stp_malloc(sizeof(dither_t));
+  dither_t *d = stp_zalloc(sizeof(dither_t));
   stp_simple_dither_range_t r;
-  memset(d, 0, sizeof(dither_t));
   d->v = v;
   d->dither_class = stp_get_output_type(v);
   d->error_rows = ERROR_ROWS;
@@ -638,8 +637,7 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
 	SET_DITHERFUNC(d, stp_dither_raw_cmyk_ed, v);
       break;
     }
-  d->channel = stp_malloc(d->n_channels * sizeof(dither_channel_t));
-  memset(d->channel, 0, d->n_channels * sizeof(dither_channel_t));
+  d->channel = stp_zalloc(d->n_channels * sizeof(dither_channel_t));
   r.value = 1.0;
   r.bit_pattern = 1;
   r.subchannel = 0;
@@ -647,7 +645,7 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
   for (i = 0; i < d->n_channels; i++)
     {
       stp_dither_set_ranges(d, i, 1, &r, 1.0);
-      CHANNEL(d, i).errs = stp_malloc(d->error_rows * sizeof(int *));
+      CHANNEL(d, i).errs = stp_zalloc(d->error_rows * sizeof(int *));
     }
   d->offset0_table = NULL;
   d->offset1_table = NULL;
@@ -983,9 +981,9 @@ stp_dither_finalize_ranges(dither_t *d, dither_channel_t *s)
   if (s->nlevels == 1 && s->ranges[0].bits[1] == 1 && s->ranges[0].subchannel[1])
     s->very_fast = 1;
   s->subchannels = max_subchannel + 1;
-  s->row_ends[0] = stp_malloc(s->subchannels * sizeof(int));
-  s->row_ends[1] = stp_malloc(s->subchannels * sizeof(int));
-  s->ptrs = stp_malloc(s->subchannels * sizeof(char *));
+  s->row_ends[0] = stp_zalloc(s->subchannels * sizeof(int));
+  s->row_ends[1] = stp_zalloc(s->subchannels * sizeof(int));
+  s->ptrs = stp_zalloc(s->subchannels * sizeof(char *));
   stp_dprintf(STP_DBG_INK, d->v,
 	      "  bit_max %d signif_bits %d\n", s->bit_max, s->signif_bits);
 }
@@ -1007,7 +1005,7 @@ stp_dither_set_generic_ranges(dither_t *d, dither_channel_t *s, int nlevels,
 
   s->nlevels = nlevels > 1 ? nlevels + 1 : nlevels;
   s->ranges = (dither_segment_t *)
-    stp_malloc(s->nlevels * sizeof(dither_segment_t));
+    stp_zalloc(s->nlevels * sizeof(dither_segment_t));
   s->bit_max = 0;
   s->density = density * 65535;
   stp_dprintf(STP_DBG_INK, d->v,
@@ -1103,7 +1101,7 @@ stp_dither_set_generic_ranges_full(dither_t *d, dither_channel_t *s,
   s->nlevels = nlevels > 1 ? nlevels + 1 : nlevels;
   s->nlevels = nlevels+1;
   s->ranges = (dither_segment_t *)
-    stp_malloc(s->nlevels * sizeof(dither_segment_t));
+    stp_zalloc(s->nlevels * sizeof(dither_segment_t));
   s->bit_max = 0;
   s->density = density * 65535;
   stp_dprintf(STP_DBG_INK, d->v,
@@ -1276,8 +1274,7 @@ get_errline(dither_t *d, int row, int color)
   else
     {
       int size = 2 * MAX_SPREAD + (16 * ((d->dst_width + 7) / 8));
-      CHANNEL(d, color).errs[row & 1] = stp_malloc(size * sizeof(int));
-      memset(CHANNEL(d, color).errs[row & 1], 0, size * sizeof(int));
+      CHANNEL(d, color).errs[row & 1] = stp_zalloc(size * sizeof(int));
       return CHANNEL(d, color).errs[row & 1] + MAX_SPREAD;
     }
 }
@@ -1292,7 +1289,7 @@ get_valueline(dither_t *d, int color)
   else
     {
       int size = (8 * ((d->dst_width + 7) / 8));
-      CHANNEL(d, color).vals = stp_malloc(size * sizeof(unsigned short));
+      CHANNEL(d, color).vals = stp_zalloc(size * sizeof(unsigned short));
       return CHANNEL(d, color).vals;
     }
 }

@@ -1192,7 +1192,7 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
     unsigned int height_limit, width_limit;
     unsigned int min_height_limit, min_width_limit;
     int papersizes = stp_known_papersizes();
-    valptrs = stp_malloc(sizeof(stp_param_t) * papersizes);
+    valptrs = stp_zalloc(sizeof(stp_param_t) * papersizes);
     *count = 0;
 
     width_limit  = caps->max_paper_width;
@@ -1223,7 +1223,7 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
 
     res =  *(caps->res_parameters); /* get resolution specific parameters of printer */
     for (i=0; res[i].hres; i++); /* get number of entries */
-    valptrs = stp_malloc(sizeof(stp_param_t) * i);
+    valptrs = stp_zalloc(sizeof(stp_param_t) * i);
 
     /* check for allowed resolutions */
     while (res->hres)
@@ -1238,7 +1238,7 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
   else if (strcmp(name, "InkType") == 0)
   {
     for (i = 0; caps->ink_types[i].name != NULL; i++); /* get number of entries */
-    valptrs = stp_malloc(sizeof(stp_param_t) * i);
+    valptrs = stp_zalloc(sizeof(stp_param_t) * i);
 
     *count = 0;
     for (i = 0; caps->ink_types[i].name != NULL; i++)
@@ -1252,7 +1252,7 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
   else if (strcmp(name, "MediaType") == 0)
   {
     int nmediatypes = paper_type_count;
-    valptrs = stp_malloc(sizeof(stp_param_t) * nmediatypes);
+    valptrs = stp_zalloc(sizeof(stp_param_t) * nmediatypes);
     for (i = 0; i < nmediatypes; i++)
     {
       valptrs[i].name = c_strdup(lexmark_paper_list[i].name);
@@ -1269,7 +1269,7 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
   else
     return (NULL);
 
-  valptrs = stp_malloc(*count * sizeof(stp_param_t));
+  valptrs = stp_zalloc(*count * sizeof(stp_param_t));
   for (i = 0; i < *count; i ++)
   {
     /* translate media_types and media_sources */
@@ -1576,18 +1576,6 @@ static void paper_shift(const stp_vars_t v, int offset, const lexmark_cap_t * ca
 #ifdef DEBUG
 	stp_erprintf("Lines to eject: %d\n", lxm3200_linetoeject);
 #endif
-}
-
-
-/*
- *  'alloc_buffer()' allocates buffer and fills it with 0
- */
-static unsigned char *
-lexmark_alloc_buffer(int size)
-{
-  unsigned char *buf= stp_malloc(size);
-  if (buf) memset(buf,0,size);
-  return buf;
 }
 
 /*
@@ -1929,25 +1917,25 @@ densityDivisor /= 1.2;
 
 
   if ((printMode & COLOR_MODE_C) == COLOR_MODE_C) {
-    cols.p.c = lexmark_alloc_buffer(buf_length+10);
+    cols.p.c = stp_zalloc(buf_length+10);
   }
   if ((printMode & COLOR_MODE_Y) == COLOR_MODE_Y) {
-    cols.p.y = lexmark_alloc_buffer(buf_length+10);
+    cols.p.y = stp_zalloc(buf_length+10);
   }
   if ((printMode & COLOR_MODE_M) == COLOR_MODE_M) {
-    cols.p.m = lexmark_alloc_buffer(buf_length+10);
+    cols.p.m = stp_zalloc(buf_length+10);
   }
   if ((printMode & COLOR_MODE_K) == COLOR_MODE_K) {
-    cols.p.k = lexmark_alloc_buffer(buf_length+10);
+    cols.p.k = stp_zalloc(buf_length+10);
   }
   if ((printMode & COLOR_MODE_LC) == COLOR_MODE_LC) {
-    cols.p.C = lexmark_alloc_buffer(buf_length+10);
+    cols.p.C = stp_zalloc(buf_length+10);
   }
   if ((printMode & COLOR_MODE_LY) == COLOR_MODE_LY) {
-    cols.p.Y = lexmark_alloc_buffer(buf_length+10);
+    cols.p.Y = stp_zalloc(buf_length+10);
   }
   if ((printMode & COLOR_MODE_LM) == COLOR_MODE_LM) {
-    cols.p.M = lexmark_alloc_buffer(buf_length+10);
+    cols.p.M = stp_zalloc(buf_length+10);
   }
 
 

@@ -224,8 +224,7 @@ static const stp_internal_vars_t max_vars =
 stp_vars_t
 stp_allocate_vars(void)
 {
-  void *retval = stp_malloc(sizeof(stp_internal_vars_t));
-  memset(retval, 0, sizeof(stp_internal_vars_t));
+  void *retval = stp_zalloc(sizeof(stp_internal_vars_t));
   stp_copy_vars(retval, (stp_vars_t)&default_vars);
   return (retval);
 }
@@ -1592,6 +1591,14 @@ stp_malloc (size_t size)
       fputs("Virtual memory exhausted.\n", stderr);
       exit (EXIT_FAILURE);
     }
+  return (memptr);
+}
+
+void *
+stp_zalloc (size_t size)
+{
+  register void *memptr = stp_malloc(size);
+  (void) memset(memptr, 0, size);
   return (memptr);
 }
 

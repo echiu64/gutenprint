@@ -1626,7 +1626,7 @@ canon_parameters(const stp_printer_t printer,	/* I - Printer model */
   {
     int height_limit, width_limit;
     int papersizes = stp_known_papersizes();
-    valptrs = stp_malloc(sizeof(stp_param_t) * papersizes);
+    valptrs = stp_zalloc(sizeof(stp_param_t) * papersizes);
     *count = 0;
 
     width_limit = caps->max_width;
@@ -1650,7 +1650,7 @@ canon_parameters(const stp_printer_t printer,	/* I - Printer model */
     int x,y;
     int c= 0;
     int t;
-    valptrs = stp_malloc(sizeof(stp_param_t) * 10);
+    valptrs = stp_zalloc(sizeof(stp_param_t) * 10);
 
     for (x=1; x<6; x++) {
       for (y=x-1; y<x+1; y++) {
@@ -1681,7 +1681,7 @@ canon_parameters(const stp_printer_t printer,	/* I - Printer model */
   else if (strcmp(name, "InkType") == 0)
   {
     int c= 0;
-    valptrs = stp_malloc(sizeof(stp_param_t) * 5);
+    valptrs = stp_zalloc(sizeof(stp_param_t) * 5);
     /* used internally: do not translate */
     if ((caps->inks & CANON_INK_K))
     {
@@ -1715,7 +1715,7 @@ canon_parameters(const stp_printer_t printer,	/* I - Printer model */
   {
     *count = sizeof(canon_paper_list) / sizeof(canon_paper_list[0]);
 
-    valptrs = stp_malloc(*count * sizeof(stp_param_t));
+    valptrs = stp_zalloc(*count * sizeof(stp_param_t));
 
     for (i = 0; i < *count; i ++)
     {
@@ -1728,7 +1728,7 @@ canon_parameters(const stp_printer_t printer,	/* I - Printer model */
     *count = 3;
     p = media_sources;
 
-    valptrs = stp_malloc(*count * sizeof(stp_param_t));
+    valptrs = stp_zalloc(*count * sizeof(stp_param_t));
     for (i = 0; i < *count; i ++)
     {
       /* translate media_sources */
@@ -1878,7 +1878,7 @@ canon_cmd(const stp_vars_t v, /* I - the printer         */
 	  ...        /* I - the args themselves */
 	  )
 {
-  unsigned char *buffer = stp_malloc(num + 1);
+  unsigned char *buffer = stp_zalloc(num + 1);
   int i;
   va_list ap;
 
@@ -2202,19 +2202,6 @@ canon_deinit_printer(const stp_vars_t v, canon_init_t *init)
   canon_cmd(v,ESC40,0,0);
 }
 
-
-/*
- *  'alloc_buffer()' allocates buffer and fills it with 0
- */
-static unsigned char *
-canon_alloc_buffer(int size)
-{
-  unsigned char *buf= stp_malloc(size);
-  if (buf)
-    memset(buf,0,size);
-  return buf;
-}
-
 /*
  * 'advance_buffer()' - Move (num) lines of length (len) down one line
  *                      and sets first line to 0s
@@ -2475,7 +2462,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
   stp_deprintf(STP_DBG_CANON,"canon: buflength is %d!\n",buf_length);
 
   if (colormode==COLOR_MONOCHROME) {
-    black   = canon_alloc_buffer(buf_length*(delay_k+1));
+    black   = stp_zalloc(buf_length*(delay_k+1));
     cyan    = NULL;
     magenta = NULL;
     lcyan   = NULL;
@@ -2483,21 +2470,21 @@ canon_print(const stp_printer_t printer,		/* I - Model */
     yellow  = NULL;
     lyellow = NULL;
   } else {
-    cyan    = canon_alloc_buffer(buf_length*(delay_c+1));
-    magenta = canon_alloc_buffer(buf_length*(delay_m+1));
-    yellow  = canon_alloc_buffer(buf_length*(delay_y+1));
+    cyan    = stp_zalloc(buf_length*(delay_c+1));
+    magenta = stp_zalloc(buf_length*(delay_m+1));
+    yellow  = stp_zalloc(buf_length*(delay_y+1));
 
     if (colormode!=COLOR_CMY)
-      black = canon_alloc_buffer(buf_length*(delay_k+1));
+      black = stp_zalloc(buf_length*(delay_k+1));
     else
       black = NULL;
 
     if (colormode==COLOR_CCMMYK || colormode==COLOR_CCMMYYK) {
       use_6color= 1;
-      lcyan = canon_alloc_buffer(buf_length*(delay_lc+1));
-      lmagenta = canon_alloc_buffer(buf_length*(delay_lm+1));
+      lcyan = stp_zalloc(buf_length*(delay_lc+1));
+      lmagenta = stp_zalloc(buf_length*(delay_lm+1));
       if (colormode==CANON_INK_CcMmYyK)
-	lyellow = canon_alloc_buffer(buf_length*(delay_lc+1));
+	lyellow = stp_zalloc(buf_length*(delay_lc+1));
       else
 	lyellow = NULL;
     } else {
@@ -2596,8 +2583,8 @@ canon_print(const stp_printer_t printer,		/* I - Model */
     }
   stp_dither_set_density(dither, stp_get_density(nv));
 
-  in  = stp_malloc(image_width * image_bpp);
-  out = stp_malloc(image_width * out_bpp * 2);
+  in  = stp_zalloc(image_width * image_bpp);
+  out = stp_zalloc(image_width * out_bpp * 2);
 
   errdiv  = image_height / out_length;
   errmod  = image_height % out_length;

@@ -438,6 +438,7 @@ extern void stp_dprintf(unsigned long level, const stp_vars_t v,
 extern void stp_deprintf(unsigned long level, const char *format, ...);
 
 extern void *stp_malloc (size_t);
+extern void *stp_zalloc (size_t);
 extern void *stp_realloc (void *ptr, size_t);
 extern void stp_free(void *ptr);
 
