@@ -353,12 +353,21 @@ static const input_slot_t cd_cutter_roll_feed_input_slots[] =
     { 6, "IR\002\000\000\000"}
   },
   {
+    "Manual",
+    N_("Manual Feed"),
+    0,
+    0,
+    0,
+    { 36, "PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001" },
+    { 6, "IR\002\000\000\000"}
+  },
+  {
     "CD",
     N_("Print to CD"),
     1,
     0,
     0,
-    { 16, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000" },
+    { 36, "PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001" },
     { 6, "IR\002\000\000\000"}
   },
   {
@@ -399,12 +408,21 @@ static const input_slot_t cd_roll_feed_input_slots[] =
     { 6, "IR\002\000\000\000"}
   },
   {
+    "Manual",
+    N_("Manual Feed"),
+    0,
+    0,
+    0,
+    { 36, "PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001" },
+    { 6, "IR\002\000\000\000"}
+  },
+  {
     "CD",
     N_("Print to CD"),
     1,
     0,
     0,
-    { 16, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000" },
+    { 36, "PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001" },
     { 6, "IR\002\000\000\000"}
   },
   {
@@ -1627,7 +1645,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     4, 15, 0, 0,
     p3pl_dotsizes, p3pl_densities, &stpi_escp2_variable_3pl_pmg_drops,
     stpi_escp2_superfine_reslist, &stpi_escp2_photo_gen3_inkgroup,
-    variable_bits, variable_base_res, &cd_cutter_roll_feed_input_slot_list,
+    variable_bits, variable_base_res, &cd_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL
   },
