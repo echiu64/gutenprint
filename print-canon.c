@@ -172,6 +172,14 @@ static canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1, 
     0 
   },
+  { /* Canon BJC 8200 */
+    8200, 
+    11*72, 17*72, 
+    1200,1200, 
+    CANON_INK_CMYK | CANON_INK_CcMmYK, 
+    CANON_SLOT_ASF1, 
+    0 
+  },
   
   /* extremely fuzzy models */
 
@@ -198,14 +206,6 @@ static canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1, 
     CANON_CAP_CMD61 | CANON_CAP_DMT 
-  },
-  { /* Canon BJC 8200 */
-    8200, 
-    11*72, 17*72, 
-    1200,1200, 
-    CANON_INK_CMYK | CANON_INK_CcMmYK, 
-    CANON_SLOT_ASF1, 
-    0 
   },
   { /* Canon BJC 8500 */
     8500, 
@@ -246,6 +246,7 @@ canon_media_type(const char *name, canon_cap_t caps)
   if (!strcmp(name,"High Gloss Film"))       return  8;
   if (!strcmp(name,"Glossy Photo Paper"))    return  9;
   if (!strcmp(name,"Glossy Photo Cards"))    return 10;
+  if (!strcmp(name,"Photo Paper Pro"))       return 11;
 
   fprintf(stderr,"canon: Unknown media type '%s' - reverting to plain\n",name);
   return 1;
@@ -329,7 +330,8 @@ canon_parameters(int  model,		/* I - Printer model */
                   ("T-Shirt Transfers"),
                   ("High Gloss Film"),
                   ("Glossy Photo Paper"),
-                  ("Glossy Photo Cards")
+                  ("Glossy Photo Cards"),
+                  ("Photo Paper Pro")
                 };
   static char   *media_sources[] =
                 {
@@ -374,27 +376,33 @@ canon_parameters(int  model,		/* I - Printer model */
     int c= 0;
     valptrs = malloc(sizeof(char *) * 10);
     if (!(caps.max_xdpi%300)) {
+
       if ( 300<=x && 300<=y)
 	valptrs[c++]= c_strdup("300x300 DPI");
       if ( 600<=x && 600<=y)
 	valptrs[c++]= c_strdup("600x600 DPI");
-      if (1200<=x && 600<=y)
+      if (1200==x && 600==y)
 	valptrs[c++]= c_strdup("1200x600 DPI");
       if (1200<=x && 1200<=y)
 	valptrs[c++]= c_strdup("1200x1200 DPI");
+
     } else if (!(caps.max_xdpi%180)) {
+
       if ( 180<=x && 180<=y)
 	valptrs[c++]= c_strdup("180x180 DPI");
       if ( 360<=x && 360<=y)
 	valptrs[c++]= c_strdup("360x360 DPI");
       if ( 360<=x && 360<=y && (caps.features&CANON_CAP_DMT))
 	valptrs[c++]= c_strdup("360x360 DPI w/ DMT");
-      if ( 720<=x && 360<=y)
+      if ( 720==x && 360==y)
 	valptrs[c++]= c_strdup("720x360 DPI");
       if ( 720<=x && 720<=y)
 	valptrs[c++]= c_strdup("720x720 DPI");
-      if (1440<=x && 720<=y)
+      if (1440==x && 720==y)
 	valptrs[c++]= c_strdup("1440x720 DPI");
+      if (1440<=x &&1440<=y)
+	valptrs[c++]= c_strdup("1440x1440 DPI");
+
     } else {
       fprintf(stderr,"canon: unknown resolution multiplier for model %d\n",
 	      caps.model);
@@ -422,7 +430,7 @@ canon_parameters(int  model,		/* I - Printer model */
   }
   else if (strcmp(name, "MediaType") == 0)
   {
-    *count = 12;
+    *count = 11;
     p = media_types;
   }
   else if (strcmp(name, "InputSlot") == 0)
@@ -523,10 +531,10 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
 {
 #define MEDIACODES 11
   static unsigned char mediacode_63[] = {
-    0x00,0x00,0x02,0x03,0x04,0x08,0x07,0x03,0x06,0x05,0x05
+    0x00,0x00,0x02,0x03,0x04,0x08,0x07,0x03,0x06,0x05,0x05,0x09
   };
   static unsigned char mediacode_6c[] = {
-    0x00,0x00,0x02,0x03,0x04,0x08,0x07,0x03,0x06,0x05,0x0a
+    0x00,0x00,0x02,0x03,0x04,0x08,0x07,0x03,0x06,0x05,0x0a,0x09
   };
   
   #define ESC28 "\x1b\x28"
@@ -1014,15 +1022,33 @@ canon_print(const printer_t *printer,		/* I - Model */
   if (black)    fputc('K',stderr);
   fprintf(stderr,"\n");
 
+  v->density *= printer->printvars.density * ydpi / xdpi;
+  if (v->density > 1.0)
+    v->density = 1.0;
+  v->saturation *= printer->printvars.saturation;
+
   if (landscape)
     dither = init_dither(image_height, out_width, v);
   else
     dither = init_dither(image_width, out_width, v);
 
-  v->density *= printer->printvars.density;
-  if (v->density > 1.0)
-    v->density = 1.0;
-  v->saturation *= printer->printvars.saturation;
+  dither_set_black_levels(dither, 1.0, 1.0, 1.0);
+  dither_set_black_lower(dither, .4 / ((1 << (use_dmt+1)) - 1));
+  /* 
+  if (use_glossy_film) 
+  */
+  dither_set_black_upper(dither, .999);
+  /*
+  else
+    dither_set_black_upper(dither, .999);
+  */
+
+  if (!use_dmt) {
+    dither_set_light_inks(dither, 
+			  (lcyan)   ? (.25) : (0.0), 
+			  (lmagenta)? (.25) : (0.0), 
+			  (lyellow) ? (.25) : (0.0), v->density);
+  }
 
   switch (v->image_type)
     {
@@ -1153,9 +1179,9 @@ canon_print(const printer_t *printer,		/* I - Model */
 		       cyan,     delay_c, 
 		       magenta,  delay_m, 
 		       yellow,   delay_y, 
-		       lyellow,  delay_ly, 
 		       lcyan,    delay_lc, 
 		       lmagenta, delay_lm,
+		       lyellow,  delay_ly, 
 		       length, out_width, left, use_dmt);
 
       /* fprintf(stderr,"!"); */
