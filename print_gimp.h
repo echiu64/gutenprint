@@ -31,6 +31,15 @@
 
 #include <gtk/gtk.h>
 
+/*
+ * We define GIMP_ENABLE_COMPAT_CRUFT here because we are still using
+ * the old API names. This is because we have to support 1.0 as well.
+ * This define is required as the default in Gimp was changed 24 Aug 00.
+ * This should be removed when we stop supporting 1.0.
+ */
+
+#define GIMP_ENABLE_COMPAT_CRUFT
+
 #include <libgimp/gimp.h>
 #include <libgimp/gimpui.h>
 
