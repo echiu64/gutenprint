@@ -1496,7 +1496,7 @@ msgstr "%s ist kein Rasteralgorythmus\n"
 #.
 #: src/cups/genppd.c:443
 msgid "English"
-msgstr "German-DE"
+msgstr "German"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
 #: src/cups/genppd.c:445

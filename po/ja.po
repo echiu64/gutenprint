@@ -1494,7 +1494,7 @@ msgstr "%s は適切なディザ方式ではありません\n"
 #.
 #: src/cups/genppd.c:443
 msgid "English"
-msgstr "英語"
+msgstr "Japanese"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
 #: src/cups/genppd.c:445
