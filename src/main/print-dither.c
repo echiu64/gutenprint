@@ -48,7 +48,7 @@
 #define D_FAST_BASE 16
 #define D_FAST (D_FAST_BASE)
 #define D_VERY_FAST (D_FAST_BASE + 1)
-#define D_ERROR_DIFFUSION_2 32
+#define D_EVENTONE 32
 
 #define DITHER_FAST_STEPS (6)
 
@@ -66,7 +66,7 @@ static const dither_algo_t dither_algos[] =
   { "Fast",	N_ ("Fast"),                   D_FAST },
   { "VeryFast",	N_ ("Very Fast"),              D_VERY_FAST },
   { "Floyd",	N_ ("Hybrid Floyd-Steinberg"), D_FLOYD_HYBRID },
-  { "Error",     N_ ("Error Diffusion"), D_ERROR_DIFFUSION_2 }
+  { "Even",     N_ ("EvenTone"),               D_EVENTONE }
 };
 
 static const int num_dither_algos = sizeof(dither_algos)/sizeof(dither_algo_t);
@@ -214,7 +214,7 @@ static void stp_dither_raw_cmyk_ordered(const unsigned short *, int,
 					dither_t *, int, int);
 static void stp_dither_raw_cmyk_ed(const unsigned short *, int, dither_t *,
 				   int, int);
-static void stp_dither_cmyk_ed2(const unsigned short *, int, dither_t *,
+static void stp_dither_cmyk_et(const unsigned short *, int, dither_t *,
 				   int, int);
 
 
@@ -448,8 +448,8 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
 	case D_ORDERED:
 	  SET_DITHERFUNC(d, stp_dither_cmyk_ordered, v);
 	  break;
-	case D_ERROR_DIFFUSION_2:
-	  SET_DITHERFUNC(d, stp_dither_cmyk_ed2, v);
+	case D_EVENTONE:
+	  SET_DITHERFUNC(d, stp_dither_cmyk_et, v);
 	  break;
 	default:
 	  SET_DITHERFUNC(d, stp_dither_cmyk_ed, v);
@@ -2778,7 +2778,7 @@ stp_setup_et(dither_t *d)
  */
 
 static void
-stp_dither_cmyk_ed2(const unsigned short  *cmy,
+stp_dither_cmyk_et(const unsigned short  *cmy,
 		   int           row,
 		   dither_t 	 *d,
 		   int		 duplicate_line,
@@ -2854,31 +2854,24 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	}
       }
 
+      CHANNEL(d, ECOLOR_K).b = 0;
+
       for (i=1; i < NCOLORS; i++) {
         int value = cmy[i-1];
 
 	CHANNEL(d, i).o = value;				/* Remember value we want printed here */
+	CHANNEL(d, i).v = value;
 	if (i == 1 || value < CHANNEL(d, ECOLOR_K).o)
 	    CHANNEL(d, ECOLOR_K).o = value;			/* Set black to minimum of C,M,Y */
       }
 
-      if (CHANNEL(d, ECOLOR_K).o < d->k_lower) {
-	CHANNEL(d, ECOLOR_K).o = 0;				/* Use CMY for black instead */
-      } else {
-	if (CHANNEL(d, ECOLOR_K).o < d->k_upper) {
-	  unsigned k_frac =  CHANNEL(d, ECOLOR_K).o - d->k_lower;	/* Quadratic in this region */
-	  CHANNEL(d, ECOLOR_K).o = d->k_upper * k_frac / d->bound_range;
-	  CHANNEL(d, ECOLOR_K).o = (CHANNEL(d, ECOLOR_K).o * k_frac) / d->bound_range;
-	}
-	for (i=1; i < NCOLORS; i++) {
-	  CHANNEL(d, i).o -= CHANNEL(d, ECOLOR_K).o;
-	}
-	/* Adjust black amount based on black density */
-	if (d->density != d->black_density) {
-	  CHANNEL(d, ECOLOR_K).o =
-	    (unsigned)CHANNEL(d, ECOLOR_K).o * (unsigned)d->black_density / d->density;
-	}
+      CHANNEL(d, ECOLOR_K).v = CHANNEL(d, ECOLOR_K).o;
+      if (CHANNEL(d, ECOLOR_K).v > 0) {
+        update_cmyk(d);
       }
+
+      for (i = 1; i < d->n_channels; i++)
+	CHANNEL(d, i).b = CHANNEL(d, i).v;
 
       for (i=0; i < NCOLORS; i++) {
         int value;
@@ -2890,7 +2883,7 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	  wetness[i] = 0;
 	}
 
-	value = ndither[i] + CHANNEL(d, i).o / 2;		/* Only use half of cmy[] to avoid dark->light problems */
+	value = ndither[i] + CHANNEL(d, i).b / 2;		/* Only use half of cmy[] to avoid dark->light problems */
 	
 	if (value < 0) value = 0;				/* Dither can make this value negative */
 	CHANNEL(d, i).v = value;				/* Colour to print at this pixel location */
@@ -2910,14 +2903,13 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	  /* Adjust for Eventone here */
 	  if (dr[i]->value[0] == 0) {
 	    int t;
-	    if (CHANNEL(d, i).o > dr[i]->value[1]) {
-	      t = 0;
-	    } else if (CHANNEL(d, i).o < dr[i]->value[0]) {
+	    if (CHANNEL(d, i).b < dr[i]->value[0]) {
 	      t = et->recip[0];
+	    } else if (CHANNEL(d, i).b > dr[i]->value[1]) {
+	      t = 0;
 	    } else {
-	      t = et->recip[65535 * (CHANNEL(d, i).o - dr[i]->value[0]) / dr[i]->value_span];
+	      t = et->recip[65535 * (CHANNEL(d, i).b - dr[i]->value[0]) / dr[i]->value_span];
 	    }
-
 	    ri[i] += r_sq[i] * et->aspect - t;
 	    if (ri[i] > 65535) ri[i] = 65535;
 	    else if (ri[i] < 0) ri[i] = 0;
@@ -2938,6 +2930,7 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 
       { int point[NCOLORS];
 	int useblack = 0;		/* Do we print black at all? */
+	int printed_black;
 
         for (i=0; i < NCOLORS; i++) {
 	  if (pick & (1 << i)) {
@@ -2947,7 +2940,7 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	  }
 	}
 
-        CHANNEL(d, ECOLOR_K).b = point[ECOLOR_K];
+        printed_black = point[ECOLOR_K];
 	if (d->black_density != d->density) {
 	  point[ECOLOR_K] = (unsigned)point[ECOLOR_K] * (unsigned)d->density / d->black_density;
 	}
@@ -2959,6 +2952,9 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	    dy[i] = et->dy2;
 	  }
 	  et->r_sq[i][x] = r_sq[i] + dy[i];
+	  if (et->r_sq[i][x] > 65535) {
+	    et->r_sq[i][x] = 65535;
+	  }
 	  et->dx[i][x] = dx[i];
 	  et->dy[i][x] = dy[i] + et->d2y;
         }
@@ -2988,9 +2984,9 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
         }
 
         /* Adjust error values for dither */
-	ndither[ECOLOR_K] += CHANNEL(d, ECOLOR_K).o - CHANNEL(d, ECOLOR_K).b;
+	ndither[ECOLOR_K] += CHANNEL(d, ECOLOR_K).b - printed_black;
         for (i=1; i < NCOLORS; i++) {
-	  ndither[i] += CHANNEL(d, i).o + point[ECOLOR_K] - point[i];
+	  ndither[i] += CHANNEL(d, i).b + point[ECOLOR_K] - point[i];
         }
       }
 
@@ -3017,11 +3013,19 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 
       /* Diffuse the error round a bit */
       /* At the moment do a simple diffusion directly down and across */
-     
+
+      /*
       for (i=0; i < NCOLORS; i++) {
         int fraction = diffuse_k1 * ndither[i] / diffuse_k2;
         error[i][1][0] += fraction;
         ndither[i] -= fraction;
+      }
+      */
+      for (i=0; i < NCOLORS; i++) {
+        int fraction = (ndither[i] + 5) / 10;
+	error[i][1][0] += 3 * fraction;
+	error[i][1][-direction] += 2 * fraction;
+	ndither[i] -= 5 * fraction;
       }
 
       QUANT(12);
