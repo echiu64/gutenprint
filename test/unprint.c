@@ -79,9 +79,11 @@ typedef struct {
 
 typedef unsigned char ppmpixel[3];
 
-unsigned char buf[256*256];
+unsigned char *buf;
+unsigned valid_bufsize;
 unsigned char minibuf[256];
-unsigned short bufsize;
+unsigned bufsize;
+unsigned save_bufsize;
 unsigned char ch;
 unsigned short sh;
 
@@ -674,9 +676,9 @@ void parse_escp2(FILE *fp_r)
               fprintf(stderr,"Warning! 0 bit pixels are far too Zen for this software.\n");
             }
             get2("Error reading number of horizontal dots!\n");
-            n=sh * 8 / pstate.bpp;
+            n=(unsigned) sh * 8 / pstate.bpp;
             get2("Error reading number of vertical dots!\n");
-            m=sh;
+            m=(unsigned) sh;
             density=pstate.horizontal_spacing;
             ch=0; /* make sure ch!='.' and fall through */
         case '.': /* transfer raster image */
@@ -697,6 +699,11 @@ void parse_escp2(FILE *fp_r)
               n=sh;
               currentcolor=pstate.current_color;
             }
+	    if (valid_bufsize < m*((n*pstate.bpp+7)/8))
+	      {
+		buf = realloc(buf, m*((n*pstate.bpp+7)/8));
+		valid_bufsize = m*((n*pstate.bpp+7)/8);
+	      }
             switch (c) {
               case 0:  /* uncompressed */
                 bufsize=m*((n*pstate.bpp+7)/8);
@@ -993,6 +1000,7 @@ void parse_escp2(FILE *fp_r)
 		  i=(buf[3]<<24)|(buf[2]<<16)|(buf[1]<<8)|buf[0];
 		  fprintf(stderr, "Setting paper width to %d (%.3f)\n", i,
 			  (double) i / pstate.page_management_units);
+		  i=(buf[7]<<24)|(buf[6]<<16)|(buf[5]<<8)|buf[4];
 		  fprintf(stderr, "Setting paper height to %d (%.3f)\n", i,
 			  (double) i / pstate.page_management_units);
 		  break;
@@ -1435,6 +1443,8 @@ int main(int argc,char *argv[])
     pstate.nozzle_separation=1;
   }
   pstate.nozzles=96;
+  buf = malloc(256 * 256);
+  valid_bufsize = 256 * 256;
 
   UNPRINT= getenv("UNPRINT");
   if ((UNPRINT)&&(!strcmp(UNPRINT,"canon"))) {
