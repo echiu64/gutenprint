@@ -25,8 +25,8 @@ This program allows you to calibrate the color output of printers using the
 .PP
 Please note that this program \fBonly\fP works with the \fBGimp-Print\fR
 \fICUPS\fR or \fIESP Print Pro\fR drivers. If you are using the Gimp-Print
-\fIstp\fR driver of GhostScript or the drivers of the Gimp-Print plug-in for
-\fIThe GIMP\fR, the calibration will not work.
+\fIstp\fR or \fIijsgimmprint\fR driver for GhostScript or the drivers for the
+Gimp-Print plug-in for \fIThe GIMP\fR, the calibration will not work.
 .PP
 These drivers are identified by the text \fICUPS+GIMP-print\fR or \fIESP Print
 Pro\fR in the model description displayed by the CUPS web interface, KUPS, the
