@@ -13,9 +13,10 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 <STYLE TYPE="text/css">
 <!-- /* Hide content from old browsers */
 
-P {
-	font-size: 10pt;
-	font-family: Geneva, sans-serif;
+p,ul,ol,dl
+ {
+	font-size: 11pt;
+	font-family: Arial, sans-serif;
 	color: #000000;
 }
 
@@ -36,7 +37,7 @@ H1 {
 
 <TABLE BORDER="0">
 <TR><TD>
-<? includeImage('top_image','Welcome to the gimp-print Website',0) ?>
+<? includeImage('top_image','Welcome to the gimp-print Website','1') ?>
 </TD><TD>
 <P>
 <a
