@@ -1459,7 +1459,7 @@ stp_minimum_settings()
       va_start(args, format);						\
       bytes = vsnprintf(result, current_allocation, format, args);	\
       va_end(args);							\
-      if (bytes >= 0 && bytes <= current_allocation)			\
+      if (bytes >= 0 && bytes < current_allocation)			\
 	break;								\
       else								\
 	{								\
@@ -1467,7 +1467,7 @@ stp_minimum_settings()
 	  if (bytes < 0)						\
 	    current_allocation *= 2;					\
 	  else								\
-	    current_allocation = bytes;					\
+	    current_allocation = bytes + 1;				\
 	  result = stp_malloc(current_allocation);			\
 	}								\
     }									\
