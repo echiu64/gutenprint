@@ -63,7 +63,8 @@ AS = @AS@
 CATALOGS =  cs.gmo da.gmo de.gmo fi.gmo fr.gmo hu.gmo it.gmo ja.gmo ko.gmo nl.gmo no.gmo pl.gmo ru.gmo sv.gmo
 CATOBJEXT = .gmo
 CC = /opt/pgcc-2.95.1/bin/gcc
-CFLAGS = -O6 -funroll-all-loops -mstack-align-double -march=pentiumpro -Wall
+CFLAGS = -O6 -g -funroll-all-loops -mstack-align-double -march=pentiumpro -Wall
+#CFLAGS=-g
 CPP = gcc -E
 CPPFLAGS = 
 DATADIRNAME = share

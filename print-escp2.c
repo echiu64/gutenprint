@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.19  1999/11/02 23:11:16  rlk
+ *   Good weave code
+ *
  *   Revision 1.18  1999/11/02 03:11:17  rlk
  *   Remove dead code
  *
@@ -242,16 +245,14 @@
 
 #include "print.h"
 
-#define Static
-
 /*
  * Local functions...
  */
 
-Static void	escp2_write(FILE *, unsigned char *, int, int, int, int, int, int, int);
-Static void initialize_weave(int jets, int separation);
-Static void escp2_flush(int model, int width, int hoffset, int ydpi, FILE *prn);
-Static void
+static void	escp2_write(FILE *, unsigned char *, int, int, int, int, int, int, int);
+static void initialize_weave(int jets, int separation);
+static void escp2_flush(int model, int width, int hoffset, int ydpi, FILE *prn);
+static void
 escp2_write_weave(FILE *, int, int, int, int, int,
 		  unsigned char *c,
 		  unsigned char *m,
@@ -318,13 +319,13 @@ int model_capabilities[] =
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO),
 };
 
-Static int
+static int
 escp2_has_cap(int model, int featureset, int class)
 {
   return ((model_capabilities[model] & featureset) == class);
 }
 
-Static int
+static int
 escp2_cap(int model, int featureset)
 {
   return (model_capabilities[model] & featureset);
@@ -1067,34 +1068,34 @@ typedef union {
   } p;
 } linebufs_t;
 
-Static char *linebufs;
-Static lineoff_t *lineoffsets;
-Static linebufs_t *linebases;
-Static int *linecounts;
-Static pass_t *passes;
-Static int last_pass_offset;
-Static int last_pass;
+static unsigned char *linebufs;
+static lineoff_t *lineoffsets;
+static linebufs_t *linebases;
+static int *linecounts;
+static pass_t *passes;
+static int last_pass_offset;
+static int last_pass;
 
-Static int njets;
-Static int separation;
+static int njets;
+static int separation;
 
-Static int weavefactor;
-Static int jetsused;
-Static int initialoffset;
-Static int jetsleftover;
-Static int weavespan;
+static int weavefactor;
+static int jetsused;
+static int initialoffset;
+static int jetsleftover;
+static int weavespan;
 
-Static int currentpass;
-Static int currentline;
+static int currentpass;
+static int currentline;
 
-Static int color_indices[16] = { 0, 1, 2, -1,
+static int color_indices[16] = { 0, 1, 2, -1,
 				 3, -1, -1, -1,
 				 -1, 4, 5, -1,
 				 -1, -1, -1, -1 };
-Static int colors[6] = { 0, 1, 2, 4, 1, 2 };
-Static int densities[6] = { 0, 0, 0, 0, 1, 1 };
+static int colors[6] = { 0, 1, 2, 4, 1, 2 };
+static int densities[6] = { 0, 0, 0, 0, 1, 1 };
 
-Static int
+static int
 get_color_by_params(int plane, int density)
 {
   if (plane > 4 || plane < 0 || density > 1 || density < 0)
@@ -1102,7 +1103,7 @@ get_color_by_params(int plane, int density)
   return color_indices[density * 8 + plane];
 }
 
-Static void
+static void
 initialize_weave(int jets, int sep)
 {
   int i;
@@ -1116,7 +1117,7 @@ initialize_weave(int jets, int sep)
   njets = jets;
 
   weavefactor = jets / separation;
-  jetsused = ((weavefactor) * separation);
+  jetsused = jets /* ((weavefactor) * separation) */;
   initialoffset = (jetsused - weavefactor - 1) * separation;
   jetsleftover = njets - jetsused + 1;
   weavespan = (jetsused - 1) * separation;
@@ -1127,7 +1128,7 @@ initialize_weave(int jets, int sep)
   last_pass_offset = 0;
   last_pass = -1;
 
-  linebufs = malloc(6 * 1536 * weavespan * jetsused);
+  linebufs = malloc(6 * 1536 * separation * jetsused);
   lineoffsets = malloc(separation * sizeof(lineoff_t));
   linebases = malloc(separation * sizeof(linebufs_t));
   passes = malloc(separation * sizeof(pass_t));
@@ -1146,31 +1147,31 @@ initialize_weave(int jets, int sep)
     }
 }
 
-Static lineoff_t *
+static lineoff_t *
 get_lineoffsets(int row)
 {
   return &(lineoffsets[row % separation]);
 }
 
-Static int *
+static int *
 get_linecount(int row)
 {
   return &(linecounts[row % separation]);
 }
 
-Static const linebufs_t *
+static const linebufs_t *
 get_linebases(int row)
 {
   return &(linebases[row % separation]);
 }
 
-Static pass_t *
+static pass_t *
 get_pass(int row_or_pass)
 {
   return &(passes[row_or_pass % separation]);
 }
 
-Static void
+static void
 weave_parameters_by_row(int row, weave_t *w)
 {
   int passblockstart = (row + initialoffset) / jetsused;
@@ -1199,7 +1200,7 @@ weave_parameters_by_row(int row, weave_t *w)
   w->missingstartrows = (w->physpassstart - w->logicalpassstart) / separation;
 }
 
-Static void
+static void
 fillin_start_rows(int row, int width, int missingstartrows)
 {
   lineoff_t *offsets = get_lineoffsets(row);
@@ -1247,7 +1248,7 @@ fillin_start_rows(int row, int width, int missingstartrows)
     offsets->v[j] = 2 * i;
 }
 
-Static void
+static void
 initialize_row(int row, int width)
 {
   weave_t w;
@@ -1273,7 +1274,7 @@ initialize_row(int row, int width)
     }
 }
 
-Static void
+static void
 flush_pass(int passno, int model, int width, int hoffset, int ydpi, FILE *prn)
 {
   int j;
@@ -1345,21 +1346,19 @@ flush_pass(int passno, int model, int width, int hoffset, int ydpi, FILE *prn)
   pass->pass = -1;
 }
 
-Static void
+static void
 add_to_row(int row, unsigned char *buf, size_t nbytes, int plane, int density)
 {
   weave_t w;
   int color = get_color_by_params(plane, density);
   lineoff_t *lineoffs = get_lineoffsets(row);
   const linebufs_t *bufs = get_linebases(row);
-  if (color < 0)
-    return;
   weave_parameters_by_row(row, &w);
   memcpy(bufs->v[color] + lineoffs->v[color], buf, nbytes);
   lineoffs->v[color] += nbytes;
 }
 
-Static void
+static void
 finalize_row(int row, int model, int width, int hoffset, int ydpi, FILE *prn)
 {
   weave_t w;
@@ -1373,7 +1372,7 @@ finalize_row(int row, int model, int width, int hoffset, int ydpi, FILE *prn)
     }
 }
 
-Static void
+static void
 escp2_flush(int model, int width, int hoffset, int ydpi, FILE *prn)
 {
   while (1)
@@ -1385,7 +1384,7 @@ escp2_flush(int model, int width, int hoffset, int ydpi, FILE *prn)
     }
 }
 
-Static void
+static void
 escp2_pack(unsigned char *line,
 	   int length,
 	   unsigned char *comp_buf,
@@ -1395,9 +1394,6 @@ escp2_pack(unsigned char *line,
   unsigned char repeat;			/* Repeating char */
   int count;			/* Count of compressed bytes */
   int tcount;			/* Temporary count < 128 */
-
-  if (line[0] == 0 && memcmp(line, line + 1, length - 1) == 0)
-    return;
 
   /*
    * Compress using TIFF "packbits" run-length encoding...
@@ -1478,7 +1474,7 @@ escp2_pack(unsigned char *line,
     }
 }
 
-Static void
+static void
 escp2_write_weave(FILE          *prn,	/* I - Print file or command */
 		  int           length,	/* I - Length of bitmap data */
 		  int           ydpi,	/* I - Vertical resolution */
@@ -1526,7 +1522,7 @@ escp2_write_weave(FILE          *prn,	/* I - Print file or command */
  * 'escp2_write()' - Send ESC/P2 graphics using TIFF packbits compression.
  */
 
-Static void
+static void
 escp2_write(FILE          *prn,	/* I - Print file or command */
 	     unsigned char *line,	/* I - Output bitmap data */
 	     int           length,	/* I - Length of bitmap data */
