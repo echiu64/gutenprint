@@ -31,8 +31,13 @@ September 17, 2002 - <a href="http://sourceforge.net/users/tylerb/">tb</a>
  </p>
  <p>
  For full compatibility with all Mac OS X applications (such as Adobe
- Pagemaker, Appleworks, etc...), we recommend Mac users <a href="http://sourceforge.net/project/showfiles.php?group_id=18073&release_id=109322">download and
- install ESP Ghostscript 7.05.5</a>, an open source PostScript interpreter. Installing ESP Ghostscipt is simple and there is no additional set-up required. 
+ Pagemaker, Appleworks, etc...), we recommend Mac users install <a href=
+"http://sourceforge.net/project/showfiles.php?group_id=18073&release_id=109322"
+>ESP Ghostscript 7.05.5</a> (or later), an OS X-compatible open source
+ PostScript interpreter. Installing ESP Ghostscipt is simple when you use the
+ available <a href= 
+"http://prdownloads.sourceforge.net/espgs/espgs-7.05.5-0.ppc.dmg?download"
+>Mac OS X version</a>, and no additional set-up is required. 
  </p>
  <h2>
  <strong><em><font color=#ff0000>Read the FAQ!</font></em></strong>
