@@ -179,7 +179,7 @@ AC_ARG_WITH(translated-ppds,
     yes) BUILD_TRANSLATED_PPDS="yes" ; AC_MSG_RESULT([yes]) ;;
     no) BUILD_TRANSLATED_PPDS="no" ; AC_MSG_RESULT([no]) ;;
     *) AC_MSG_RESULT([unknown])
-       AC_MSG_ERROR([bad value ${withval} for --with-translate_ppds]) ;;
+       AC_MSG_ERROR([bad value ${withval} for --with-translated-ppds]) ;;
   esac],[AC_MSG_RESULT([${BUILD_TRANSLATED_PPDS}])])
 
 AC_MSG_CHECKING([whether to use level 3 PostScript])
