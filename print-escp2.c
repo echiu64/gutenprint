@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.32  1999/12/11 01:46:13  rlk
+ *   Better weaving code -- not absolutely complete yet
+ *
  *   Revision 1.31  1999/12/05 22:10:53  rlk
  *   minor, prep for release
  *
@@ -1514,6 +1517,8 @@ static int weavespan;		/* How many rows total are bracketed by */
 static int horizontal_weave;	/* Number of horizontal passes required */
 				/* This is > 1 for some of the ultra-high */
 				/* resolution modes */
+static int vertical_subpasses;
+static int vmod;
 
 /*
  * Mapping between color and linear index.  The colors are
@@ -1539,7 +1544,7 @@ get_color_by_params(int plane, int density)
  * Initialize the weave parameters
  */
 static void
-initialize_weave(int jets, int sep, int horizontal_passes)
+initialize_weave(int jets, int sep, int v_subpasses)
 {
   int i;
   int k;
@@ -1551,11 +1556,14 @@ initialize_weave(int jets, int sep, int horizontal_passes)
   else
     separation = sep;
   njets = jets;
-  if (horizontal_passes <= 0)
-    horizontal_passes = 1;
-  horizontal_weave = horizontal_passes;
+  if (v_subpasses <= 0)
+    v_subpasses = 1;
+  vertical_subpasses = v_subpasses;
+  njets /= vertical_subpasses;
+  vmod = separation * vertical_subpasses;
+  horizontal_weave = 1;
 
-  weavefactor = jets / separation;
+  weavefactor = njets / separation;
   jetsused = ((weavefactor) * separation);
   initialoffset = (jetsused - weavefactor - 1) * separation;
   jetsleftover = njets - jetsused + 1;
@@ -1564,15 +1572,15 @@ initialize_weave(int jets, int sep, int horizontal_passes)
   last_pass_offset = 0;
   last_pass = -1;
 
-  linebufs = malloc(6 * 1536 * separation * jetsused * horizontal_passes);
-  lineoffsets = malloc(separation * sizeof(lineoff_t) * horizontal_passes);
-  linebases = malloc(separation * sizeof(linebufs_t) * horizontal_passes);
-  passes = malloc(separation * sizeof(pass_t));
-  linecounts = malloc(separation * sizeof(int));
+  linebufs = malloc(6 * 1536 * vmod * jetsused * horizontal_weave);
+  lineoffsets = malloc(vmod * sizeof(lineoff_t) * horizontal_weave);
+  linebases = malloc(vmod * sizeof(linebufs_t) * horizontal_weave);
+  passes = malloc(vmod * sizeof(pass_t));
+  linecounts = malloc(vmod * sizeof(int));
 
   bufbase = linebufs;
   
-  for (i = 0; i < separation; i++)
+  for (i = 0; i < vmod; i++)
     {
       int j;
       passes[i].pass = -1;
@@ -1580,35 +1588,11 @@ initialize_weave(int jets, int sep, int horizontal_passes)
 	{
 	  for (j = 0; j < 6; j++)
 	    {
-	      linebases[i * horizontal_weave + k].v[j] = bufbase;
+	      linebases[k * vmod + i].v[j] = bufbase;
 	      bufbase += 1536 * jetsused;
 	    }
 	}
     }
-}
-
-static lineoff_t *
-get_lineoffsets(int row)
-{
-  return &(lineoffsets[horizontal_weave * (row % separation)]);
-}
-
-static int *
-get_linecount(int row)
-{
-  return &(linecounts[row % separation]);
-}
-
-static const linebufs_t *
-get_linebases(int row)
-{
-  return &(linebases[horizontal_weave * (row % separation)]);
-}
-
-static pass_t *
-get_pass(int row_or_pass)
-{
-  return &(passes[row_or_pass % separation]);
 }
 
 /*
@@ -1618,33 +1602,96 @@ get_pass(int row_or_pass)
  */
 
 static void
-weave_parameters_by_row(int row, weave_t *w)
+weave_parameters_by_row(int row, int vertical_subpass, weave_t *w)
 {
   int passblockstart = (row + initialoffset) / jetsused;
-  int internaljetsused = jetsused;
-  int internallogicalpassstart;
+  int internaljetsused = jetsused * vertical_subpasses;
+  int subpass_adjustment;
+
   w->row = row;
   w->pass = (passblockstart - (separation - 1)) +
     (separation + row - passblockstart - 1) % separation;
-  internallogicalpassstart = (w->pass * jetsused) - initialoffset +
+  subpass_adjustment = ((w->pass + 1) / separation) % vertical_subpasses;
+  subpass_adjustment = vertical_subpasses - subpass_adjustment - 1;
+  vertical_subpass = (vertical_subpass + subpass_adjustment) % vertical_subpasses;
+  w->pass += separation * vertical_subpass;
+  w->logicalpassstart = (w->pass * jetsused) - initialoffset +
     (w->pass % separation);
-  if (internallogicalpassstart < 0)
-    {
-      internaljetsused -=
-	(((separation - 1) - internallogicalpassstart) / separation);
-      internallogicalpassstart += separation *
-	(((separation - 1) - internallogicalpassstart) / separation);
-    }
-  w->logicalpassstart =  internallogicalpassstart;
   w->jet = ((row - w->logicalpassstart) / separation);
-  if (internallogicalpassstart >= 0)
-    w->physpassstart = internallogicalpassstart;
+  w->jet += jetsused * (vertical_subpasses - 1);
+  w->logicalpassstart = w->row - (w->jet * separation);
+  if (w->logicalpassstart >= 0)
+    w->physpassstart = w->logicalpassstart;
   else
-    w->physpassstart = internallogicalpassstart +
-      (separation * ((separation - internallogicalpassstart) / separation));
+    w->physpassstart = w->logicalpassstart +
+      (separation * ((separation - 1 - w->logicalpassstart) / separation));
   w->physpassend = (internaljetsused - 1) * separation +
-    internallogicalpassstart;
+    w->logicalpassstart;
   w->missingstartrows = (w->physpassstart - w->logicalpassstart) / separation;
+  if (w->pass < 0)
+    {
+      w->logicalpassstart -= w->pass * separation;
+      w->physpassend -= w->pass * separation;
+      w->jet += w->pass;
+      w->missingstartrows += w->pass;
+    }
+  w->pass++;
+}
+
+static lineoff_t *
+get_lineoffsets(int row, int subpass)
+{
+  weave_t w;
+  weave_parameters_by_row(row, subpass, &w);
+  return &(lineoffsets[w.pass % vmod]);
+}
+
+static int *
+get_linecount(int row, int subpass)
+{
+  weave_t w;
+  weave_parameters_by_row(row, subpass, &w);
+  return &(linecounts[w.pass % vmod]);
+}
+
+static const linebufs_t *
+get_linebases(int row, int subpass)
+{
+  weave_t w;
+  weave_parameters_by_row(row, subpass, &w);
+  return &(linebases[w.pass % vmod]);
+}
+
+static pass_t *
+get_pass_by_row(int row, int subpass)
+{
+  weave_t w;
+  weave_parameters_by_row(row, subpass, &w);
+  return &(passes[w.pass % vmod]);
+}
+
+static lineoff_t *
+get_lineoffsets_by_pass(int pass)
+{
+  return &(lineoffsets[pass % vmod]);
+}
+
+static int *
+get_linecount_by_pass(int pass)
+{
+  return &(linecounts[pass % vmod]);
+}
+
+static const linebufs_t *
+get_linebases_by_pass(int pass)
+{
+  return &(linebases[pass % vmod]);
+}
+
+static pass_t *
+get_pass_by_pass(int pass)
+{
+  return &(passes[pass % vmod]);
 }
 
 /*
@@ -1658,14 +1705,15 @@ weave_parameters_by_row(int row, weave_t *w)
  */
 
 static void
-fillin_start_rows(int row, int width, int missingstartrows)
+fillin_start_rows(int row, int subpass, int width, int missingstartrows)
 {
-  lineoff_t *offsets = get_lineoffsets(row);
-  const linebufs_t *bufs = get_linebases(row);
+  lineoff_t *offsets = get_lineoffsets(row, subpass);
+  const linebufs_t *bufs = get_linebases(row, subpass);
   int i = 0;
   int k = 0;
   int j;
   int m;
+  width = (width + (vertical_subpasses - 1)) / vertical_subpasses;
   for (k = 0; k < missingstartrows; k++)
     {
       int bytes_to_fill = width;
@@ -1720,24 +1768,28 @@ static void
 initialize_row(int row, int width)
 {
   weave_t w;
-  weave_parameters_by_row(row, &w);
-  if (w.physpassstart == row)
+  int i;
+  for (i = 0; i < vertical_subpasses; i++)
     {
-      lineoff_t *lineoffs = get_lineoffsets(row);
-      int *linecount = get_linecount(row);
-      int j, k;
-      pass_t *pass = get_pass(row);
-      pass->pass = w.pass;
-      pass->missingstartrows = w.missingstartrows;
-      pass->logicalpassstart = w.logicalpassstart;
-      pass->physpassstart = w.physpassstart;
-      pass->physpassend = w.physpassend;
-      for (k = 0; k < horizontal_weave; k++)
-	for (j = 0; j < 6; j++)
-	  lineoffs[k].v[j] = 0;
-      *linecount = 0;
-      if (w.missingstartrows > 0)
-	fillin_start_rows(row, width, w.missingstartrows);
+      weave_parameters_by_row(row, i, &w);
+      if (w.physpassstart == row)
+	{
+	  lineoff_t *lineoffs = get_lineoffsets(row, i);
+	  int *linecount = get_linecount(row, i);
+	  int j, k;
+	  pass_t *pass = get_pass_by_row(row, i);
+	  pass->pass = w.pass;
+	  pass->missingstartrows = w.missingstartrows;
+	  pass->logicalpassstart = w.logicalpassstart;
+	  pass->physpassstart = w.physpassstart;
+	  pass->physpassend = w.physpassend;
+	  for (k = 0; k < horizontal_weave; k++)
+	    for (j = 0; j < 6; j++)
+	      lineoffs[k].v[j] = 0;
+	  *linecount = 0;
+	  if (w.missingstartrows > 0)
+	    fillin_start_rows(row, i, width, w.missingstartrows);
+	}
     }
 }
 
@@ -1752,11 +1804,11 @@ flush_pass(int passno, int model, int width, int hoffset, int ydpi,
 {
   int j;
   int k;
-  lineoff_t *lineoffs = get_lineoffsets(passno);
-  const linebufs_t *bufs = get_linebases(passno);
-  pass_t *pass = get_pass(passno);
-  int *linecount = get_linecount(passno);
-  int lwidth = (width + (horizontal_weave - 1)) / horizontal_weave;
+  lineoff_t *lineoffs = get_lineoffsets_by_pass(passno);
+  const linebufs_t *bufs = get_linebases_by_pass(passno);
+  pass_t *pass = get_pass_by_pass(passno);
+  int *linecount = get_linecount_by_pass(passno);
+  int lwidth = (width + (vertical_subpasses - 1)) / vertical_subpasses;
 #if 0
   fprintf(stderr, "Flushing pass %d start %d last %d\n", passno, pass->physpassstart, last_pass_offset);
 #endif
@@ -1784,9 +1836,9 @@ flush_pass(int passno, int model, int width, int hoffset, int ydpi,
 	      /* separation */
 	      fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
 		      ((hoffset * 1440 / ydpi) +
-		       (k & (horizontal_weave >> 1))) & 255,
+		       (k & (vertical_subpasses >> 1))) & 255,
 		      ((hoffset * 1440 / ydpi) +
-		       (k & (horizontal_weave >> 1))) >> 8);
+		       (k & (vertical_subpasses >> 1))) >> 8);
 	    }
 	  else if (densities[j] > 0)
 	    continue;
@@ -1833,30 +1885,34 @@ flush_pass(int passno, int model, int width, int hoffset, int ydpi,
 
 static void
 add_to_row(int row, unsigned char *buf, size_t nbytes, int plane, int density,
-	   int horizontal)
+	   int subpass)
 {
   weave_t w;
   int color = get_color_by_params(plane, density);
-  lineoff_t *lineoffs = get_lineoffsets(row);
-  const linebufs_t *bufs = get_linebases(row);
-  weave_parameters_by_row(row, &w);
-  memcpy(bufs[horizontal].v[color] + lineoffs[horizontal].v[color],
+  lineoff_t *lineoffs = get_lineoffsets(row, subpass);
+  const linebufs_t *bufs = get_linebases(row, subpass);
+  weave_parameters_by_row(row, subpass, &w);
+  memcpy(bufs[0].v[color] + lineoffs[0].v[color],
 	 buf, nbytes);
-  lineoffs[horizontal].v[color] += nbytes;
+  lineoffs[0].v[color] += nbytes;
 }
 
 static void
 finalize_row(int row, int model, int width, int hoffset, int ydpi, int xdpi,
 	     FILE *prn)
 {
-  weave_t w;
-  int *lines = get_linecount(row);
-  weave_parameters_by_row(row, &w);
-  (*lines)++;
-  if (w.physpassend == row)
+  int i;
+  for (i = 0; i < vertical_subpasses; i++)
     {
-      pass_t *pass = get_pass(row);
-      flush_pass(pass->pass, model, width, hoffset, ydpi, xdpi, prn);
+      weave_t w;
+      int *lines = get_linecount(row, i);
+      weave_parameters_by_row(row, i, &w);
+      (*lines)++;
+      if (w.physpassend == row)
+	{
+	  pass_t *pass = get_pass_by_row(row, i);
+	  flush_pass(pass->pass, model, width, hoffset, ydpi, xdpi, prn);
+	}
     }
 }
 
@@ -1865,7 +1921,7 @@ escp2_flush(int model, int width, int hoffset, int ydpi, int xdpi, FILE *prn)
 {
   while (1)
     {
-      pass_t *pass = get_pass(last_pass + 1);
+      pass_t *pass = get_pass_by_pass(last_pass + 1);
       if (pass->pass < 0)
 	return;
       flush_pass(pass->pass, model, width, hoffset, ydpi, xdpi, prn);
@@ -2018,16 +2074,16 @@ escp2_write_weave(FILE          *prn,	/* I - Print file or command */
   
   if (c)
     {
-      if (horizontal_weave > 1)
+      if (vertical_subpasses > 1)
 	{
-	  if (horizontal_weave == 2)
+	  if (vertical_subpasses == 2)
 	    escp2_unpack_2(length, c, s[0], s[1]);
 	  else
 	    escp2_unpack_4(length, c, s[0], s[1], s[2], s[3]);
-	  for (i = 0; i < horizontal_weave; i++)
+	  for (i = 0; i < vertical_subpasses; i++)
 	    {
 	      escp2_pack(s[i],
-			 (length + horizontal_weave - 1) / horizontal_weave,
+			 (length + vertical_subpasses - 1) / vertical_subpasses,
 			 comp_buf, &comp_ptr);
 	      add_to_row(lineno, comp_buf, comp_ptr - comp_buf, 2, 0, i);
 	    }
@@ -2041,16 +2097,16 @@ escp2_write_weave(FILE          *prn,	/* I - Print file or command */
 
   if (m)
     {
-      if (horizontal_weave > 1)
+      if (vertical_subpasses > 1)
 	{
-	  if (horizontal_weave == 2)
+	  if (vertical_subpasses == 2)
 	    escp2_unpack_2(length, m, s[0], s[1]);
 	  else
 	    escp2_unpack_4(length, m, s[0], s[1], s[2], s[3]);
-	  for (i = 0; i < horizontal_weave; i++)
+	  for (i = 0; i < vertical_subpasses; i++)
 	    {
 	      escp2_pack(s[i],
-			 (length + horizontal_weave - 1) / horizontal_weave,
+			 (length + vertical_subpasses - 1) / vertical_subpasses,
 			 comp_buf, &comp_ptr);
 	      add_to_row(lineno, comp_buf, comp_ptr - comp_buf, 1, 0, i);
 	    }
@@ -2064,16 +2120,16 @@ escp2_write_weave(FILE          *prn,	/* I - Print file or command */
 
   if (y)
     {
-      if (horizontal_weave > 1)
+      if (vertical_subpasses > 1)
 	{
-	  if (horizontal_weave == 2)
+	  if (vertical_subpasses == 2)
 	    escp2_unpack_2(length, y, s[0], s[1]);
 	  else
 	    escp2_unpack_4(length, y, s[0], s[1], s[2], s[3]);
-	  for (i = 0; i < horizontal_weave; i++)
+	  for (i = 0; i < vertical_subpasses; i++)
 	    {
 	      escp2_pack(s[i],
-			 (length + horizontal_weave - 1) / horizontal_weave,
+			 (length + vertical_subpasses - 1) / vertical_subpasses,
 			 comp_buf, &comp_ptr);
 	      add_to_row(lineno, comp_buf, comp_ptr - comp_buf, 4, 0, i);
 	    }
@@ -2087,16 +2143,16 @@ escp2_write_weave(FILE          *prn,	/* I - Print file or command */
 
   if (k)
     {
-      if (horizontal_weave > 1)
+      if (vertical_subpasses > 1)
 	{
-	  if (horizontal_weave == 2)
+	  if (vertical_subpasses == 2)
 	    escp2_unpack_2(length, k, s[0], s[1]);
 	  else
 	    escp2_unpack_4(length, k, s[0], s[1], s[2], s[3]);
-	  for (i = 0; i < horizontal_weave; i++)
+	  for (i = 0; i < vertical_subpasses; i++)
 	    {
 	      escp2_pack(s[i],
-			 (length + horizontal_weave - 1) / horizontal_weave,
+			 (length + vertical_subpasses - 1) / vertical_subpasses,
 			 comp_buf, &comp_ptr);
 	      add_to_row(lineno, comp_buf, comp_ptr - comp_buf, 0, 0, i);
 	    }
@@ -2110,16 +2166,16 @@ escp2_write_weave(FILE          *prn,	/* I - Print file or command */
 
   if (C)
     {
-      if (horizontal_weave > 1)
+      if (vertical_subpasses > 1)
 	{
-	  if (horizontal_weave == 2)
+	  if (vertical_subpasses == 2)
 	    escp2_unpack_2(length, C, s[0], s[1]);
 	  else
 	    escp2_unpack_4(length, C, s[0], s[1], s[2], s[3]);
-	  for (i = 0; i < horizontal_weave; i++)
+	  for (i = 0; i < vertical_subpasses; i++)
 	    {
 	      escp2_pack(s[i],
-			 (length + horizontal_weave - 1) / horizontal_weave,
+			 (length + vertical_subpasses - 1) / vertical_subpasses,
 			 comp_buf, &comp_ptr);
 	      add_to_row(lineno, comp_buf, comp_ptr - comp_buf, 2, 1, i);
 	    }
@@ -2133,16 +2189,16 @@ escp2_write_weave(FILE          *prn,	/* I - Print file or command */
 
   if (M)
     {
-      if (horizontal_weave > 1)
+      if (vertical_subpasses > 1)
 	{
-	  if (horizontal_weave == 2)
+	  if (vertical_subpasses == 2)
 	    escp2_unpack_2(length, M, s[0], s[1]);
 	  else
 	    escp2_unpack_4(length, M, s[0], s[1], s[2], s[3]);
-	  for (i = 0; i < horizontal_weave; i++)
+	  for (i = 0; i < vertical_subpasses; i++)
 	    {
 	      escp2_pack(s[i],
-			 (length + horizontal_weave - 1) / horizontal_weave,
+			 (length + vertical_subpasses - 1) / vertical_subpasses,
 			 comp_buf, &comp_ptr);
 	      add_to_row(lineno, comp_buf, comp_ptr - comp_buf, 1, 1, i);
 	    }
