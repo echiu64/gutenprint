@@ -427,9 +427,6 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
 void
 list_devices(void)
 {
-  static const char *funky_hex = "0123456789abcdefghijklmnopqrstuvwxyz";
-				/* Funky hex numbering used for some devices */
-
 #ifdef __linux
   int	i;			/* Looping var */
   int	fd;			/* File descriptor */
