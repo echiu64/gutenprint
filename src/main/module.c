@@ -43,7 +43,7 @@ typedef struct stpi_internal_module_class
 } stpi_internal_module_class_t;
 
 
-static void module_list_freefunc(stpi_list_item_t *item);
+static void module_list_freefunc(void *item);
 static int stpi_module_register(stpi_module_t *module);
 #ifdef USE_DLOPEN
 static void *stpi_dlsym(void *handle, const char *symbol, const char *modulename);
@@ -89,9 +89,9 @@ static stpi_list_t *module_list = NULL;
  * Callback for removing a module from stpi_module_list.
  */
 static void
-module_list_freefunc(stpi_list_item_t *item /* module to remove */)
+module_list_freefunc(void *item /* module to remove */)
 {
-  stpi_module_t *module = (stpi_module_t *) stpi_list_item_get_data(item);
+  stpi_module_t *module = (stpi_module_t *) item;
   if (module && module->exit) /* Call the module exit function */
     module->exit();
 #if defined(USE_LTDL) || defined(USE_DLOPEN)
