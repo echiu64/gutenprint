@@ -733,7 +733,7 @@ stp_dbg(const char *msg, const stp_vars_t v)
 	  stp_get_output_type(v), stp_get_image_type(v));
   fprintf(stderr, "Settings: Quality %s\n", stp_get_resolution(v));
   fprintf(stderr, "Settings: Dither %s\n", stp_get_dither_algorithm(v));
-  fprintf(stderr, "Settings: InputSlot %s\n", stp_get_media_source(v));
+  fprintf(stderr, "Settings: MediaSource %s\n", stp_get_media_source(v));
   fprintf(stderr, "Settings: MediaType %s\n", stp_get_media_type(v));
   fprintf(stderr, "Settings: MediaSize %s\n", stp_get_media_size(v));
   fprintf(stderr, "Settings: Model %s\n", stp_get_driver(v));
