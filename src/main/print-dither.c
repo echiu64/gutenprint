@@ -1667,83 +1667,6 @@ print_color_fast(const dither_t *d, dither_channel_t *dc, int x, int y,
     }
 }
 
-#define V_WHITE		0
-#define V_CYAN		(1<<ECOLOR_C)
-#define V_MAGENTA	(1<<ECOLOR_M)
-#define V_YELLOW	(1<<ECOLOR_Y)
-#define V_BLUE		(V_CYAN|V_MAGENTA)
-#define V_GREEN		(V_CYAN|V_YELLOW)
-#define V_RED		(V_MAGENTA|V_YELLOW)
-#define V_BLACK		(V_CYAN|V_MAGENTA|V_YELLOW)
-
-static inline int
-pick_vertex(int c, int m, int y)
-{
-	int best;
-	int tmax, vmax;
-	
-	if (c+m+y <= 65535) {
-		best = V_WHITE; vmax = 65535-c-m-y;					/* White */
-		if (c > vmax) { best = V_CYAN; vmax = c; }				/* Cyan */
-		if (m > vmax) { best = V_MAGENTA; vmax = m; }				/* Magenta */
-		if (y > vmax) { best = V_YELLOW; vmax = y; }				/* Yellow */
-	} else if (c+m+y >= 2*65535) {
-		best = V_BLACK; vmax = c+m+y-2*65535; 					/* Black */
-		if ((tmax = 65535-y) > vmax) {best = V_BLUE; vmax = tmax; }		/* Blue */
-		if ((tmax = 65535-m) > vmax) {best = V_GREEN; vmax = tmax; }		/* Green */
-		if ((tmax = 65535-c) > vmax) {best = V_RED; vmax = tmax; }		/* Red */
-	} else if (m+c <= 65535) {
-		if (m+y <= 65535) {
-			best = V_GREEN; vmax = c+m+y-65535;				/* Green */
-			if (m > vmax) {best = V_MAGENTA; vmax = m;}			/* Magenta */
-			if ((tmax = 65535-m-y) > vmax) {best = V_CYAN; vmax = tmax;}	/* Cyan */
-			if ((tmax = 65535-c-m) > vmax) {best = V_YELLOW; vmax = tmax;}	/* Yellow */
-		} else {
-			best = V_RED; vmax = m+y-65535;					/* Red */
-			if (c > vmax) { best = V_GREEN; vmax = c;}			/* Green */
-			if ((tmax = 65535-y) > vmax) {best = V_MAGENTA; vmax = tmax;}	/* Magenta */
-			if ((tmax = 65535-m-c) > vmax) {best = V_YELLOW; vmax = tmax;}	/* Yellow */
-		}
-	} else {
-		if (m+y > 65535) {
-			best = V_MAGENTA; vmax = 2*65535-m-c-y;				/* Magenta */
-			if ((tmax = c+m-65535) > vmax) { best = V_BLUE; vmax = tmax; }	/* Blue */
-			if ((tmax = y+m-65535) > vmax) { best = V_RED; vmax = tmax; }	/* Red */
-			if ((tmax = 65535-m) > vmax) { best = V_GREEN; vmax = tmax; }	/* Green */
-		} else {
-			best = V_CYAN; vmax = 65535-y-m; 				/* Cyan */
-			if ((tmax = c+m-65535) > vmax) { best = V_BLUE; vmax = tmax; }	/* Blue */
-			if ((tmax = 65535-c) > vmax) { best = V_MAGENTA; vmax = tmax; }	/* Magenta */
-			if (y > vmax) { best = V_GREEN; vmax = y;}			/* Green */
-		}
-	}
-	return best;
-}
-
-static inline void find_segment(dither_t *d, dither_channel_t *dc, int max_dot, int density, dither_segment_t *range)
-{
-	int i;
-	ink_defn_t *di;
-
-	range->lower = range->upper = dc->ranges[0].lower;
-
-	for (i = dc->nlevels-1; i > 0; i--) {
-		di = dc->ranges[i].lower;
-		if (density < di->value) continue;
-		if (max_dot < di->dot_size) continue;
-		range->lower = di;
-		range->upper = di;
-		break;
-	}
-
-	for (; i < dc->nlevels; i++) {
-		di = dc->ranges[i].upper;
-		if (max_dot < di->dot_size) continue;
-		range->upper = di;
-		if (density < di->value) break;
-	}
-}
-
 static inline void
 update_cmyk(dither_t *d)
 {
@@ -1906,6 +1829,299 @@ shared_ed_initializer(dither_t *d,
   return 1;
 }
 
+
+#define V_WHITE		0
+#define V_CYAN		(1<<ECOLOR_C)
+#define V_MAGENTA	(1<<ECOLOR_M)
+#define V_YELLOW	(1<<ECOLOR_Y)
+#define V_BLUE		(V_CYAN|V_MAGENTA)
+#define V_GREEN		(V_CYAN|V_YELLOW)
+#define V_RED		(V_MAGENTA|V_YELLOW)
+#define V_BLACK		(V_CYAN|V_MAGENTA|V_YELLOW)
+
+static inline int
+pick_vertex(int c, int m, int y, int k)
+{
+	int best;
+	int tmax, vmax;
+	
+	if (c+m+y <= 65535) {
+		best = V_WHITE; vmax = 65535-c-m-y;					/* White */
+		if (c > vmax) { best = V_CYAN; vmax = c; }				/* Cyan */
+		if (m > vmax) { best = V_MAGENTA; vmax = m; }				/* Magenta */
+		if (y > vmax) { best = V_YELLOW; vmax = y; }				/* Yellow */
+	} else if (c+m+y >= 2*65535) {
+		best = V_BLACK; vmax = c+m+y-2*65535; 					/* Black */
+		if ((tmax = 65535-y) > vmax) {best = V_BLUE; vmax = tmax; }		/* Blue */
+		if ((tmax = 65535-m) > vmax) {best = V_GREEN; vmax = tmax; }		/* Green */
+		if ((tmax = 65535-c) > vmax) {best = V_RED; vmax = tmax; }		/* Red */
+	} else if (m+c <= 65535) {
+		if (m+y <= 65535) {
+			best = V_GREEN; vmax = c+m+y-65535;				/* Green */
+			if (m > vmax) {best = V_MAGENTA; vmax = m;}			/* Magenta */
+			if ((tmax = 65535-m-y) > vmax) {best = V_CYAN; vmax = tmax;}	/* Cyan */
+			if ((tmax = 65535-c-m) > vmax) {best = V_YELLOW; vmax = tmax;}	/* Yellow */
+		} else {
+			best = V_RED; vmax = m+y-65535;					/* Red */
+			if (c > vmax) { best = V_GREEN; vmax = c;}			/* Green */
+			if ((tmax = 65535-y) > vmax) {best = V_MAGENTA; vmax = tmax;}	/* Magenta */
+			if ((tmax = 65535-m-c) > vmax) {best = V_YELLOW; vmax = tmax;}	/* Yellow */
+		}
+	} else {
+		if (m+y > 65535) {
+			best = V_MAGENTA; vmax = 2*65535-m-c-y;				/* Magenta */
+			if ((tmax = c+m-65535) > vmax) { best = V_BLUE; vmax = tmax; }	/* Blue */
+			if ((tmax = y+m-65535) > vmax) { best = V_RED; vmax = tmax; }	/* Red */
+			if ((tmax = 65535-m) > vmax) { best = V_GREEN; vmax = tmax; }	/* Green */
+		} else {
+			best = V_CYAN; vmax = 65535-y-m; 				/* Cyan */
+			if ((tmax = c+m-65535) > vmax) { best = V_BLUE; vmax = tmax; }	/* Blue */
+			if ((tmax = 65535-c) > vmax) { best = V_MAGENTA; vmax = tmax; }	/* Magenta */
+			if (y > vmax) { best = V_GREEN; vmax = y;}			/* Green */
+		}
+	}
+
+	if (k >= 32768) {
+		best |= (1 << ECOLOR_K);
+	}
+
+	return best;
+}
+
+typedef struct {
+	int dx, dy, r_sq, wetness, ri, point;
+	int maxdot_dens;		/* Max dot size * density */
+	int maxdot_wet;			/* Maximum wetness allowed */
+	dither_segment_t dr;
+} et_chdata_t;
+
+static inline void find_segment(dither_t *d, dither_channel_t *dc, int wetness, int density, dither_segment_t *range)
+{
+	int i;
+	ink_defn_t *di;
+	int max_dot;
+	
+	if (wetness < 0) max_dot = 0;
+	else max_dot = wetness >> 16;
+
+	range->lower = range->upper = dc->ranges[0].lower;
+
+	for (i = dc->nlevels-1; i > 0; i--) {
+		di = dc->ranges[i].lower;
+		if (density < di->value) continue;
+		if (max_dot < di->dot_size) continue;
+		range->lower = di;
+		range->upper = di;
+		break;
+	}
+
+	for (; i < dc->nlevels; i++) {
+		di = dc->ranges[i].upper;
+		if (max_dot < di->dot_size) continue;
+		range->upper = di;
+		if (density < di->value) break;
+	}
+}
+
+#define EVEN_C1 1024
+
+static inline void
+eventone_init(dither_t *d, et_chdata_t **cd)
+{
+  int i;
+  eventone_t *et = d->eventone;
+
+  if (!et) {
+
+    et = stp_zalloc(sizeof(eventone_t));
+
+    { int xa, ya;
+      xa = d->x_aspect / d->y_aspect;
+      if (xa == 0) xa = 1;
+      et->dx2 = xa * xa;
+      et->d2x = 2 * et->dx2;
+  
+      ya = d->y_aspect / d->x_aspect;
+      if (ya == 0) ya = 1;
+      et->dy2 = ya * ya;
+      et->d2y = 2 * et->dy2;
+    
+      et->aspect = EVEN_C1 / (xa * ya);
+    }
+  
+    et->recip = stp_malloc(65536 * sizeof(int));
+    et->dx = stp_malloc(sizeof(int *) * d->n_channels);
+    et->dy = stp_malloc(sizeof(int *) * d->n_channels);
+    et->r_sq = stp_malloc(sizeof(int *) * d->n_channels);
+  
+    for (i=0; i < d->n_channels; i++) {
+      int x;
+      et->dx[i] = stp_malloc(sizeof(int) * d->dst_width);
+      et->dy[i] = stp_malloc(sizeof(int) * d->dst_width);
+      et->r_sq[i] = stp_zalloc(sizeof(int) * d->dst_width);
+      for (x = 0; x < d->dst_width; x++) {
+	et->dx[i][x] = et->dx2;
+	et->dy[i][x] = et->dy2;
+      }
+    }
+
+    for (i=0; i < 65536; i++) {
+      if (i == 0)
+        et->recip[i] = EVEN_C1 * 65536;
+      else
+        et->recip[i] = EVEN_C1 * 65536 / i;
+    }
+
+    for (i = 0; i < d->n_channels; i++) {
+      CHANNEL(d, i).ranges[0].lower->value = 0;
+      CHANNEL(d, i).ranges[0].lower->range = 0;
+      CHANNEL(d, i).ranges[0].lower->bits = 0;
+      CHANNEL(d, i).ranges[0].lower->subchannel = 0;
+      CHANNEL(d, i).ranges[0].lower->dot_size = 0;
+    }
+
+    d->eventone = et;
+  }
+
+  { et_chdata_t *p;
+    *cd = stp_malloc(sizeof(et_chdata_t) * d->n_channels);
+
+    for (i = 0, p = *cd; i < d->n_channels; i++, p++)
+    {
+      p->wetness = 0;
+      p->maxdot_dens = CHANNEL(d, i).maxdot * d->density;
+      p->maxdot_wet = (65536 + d->density) * CHANNEL(d, i).maxdot;
+      p->dx = et->dx2;
+      p->dy = et->dy2;
+      p->r_sq = 0;
+    }
+  }
+}
+
+static inline void
+advance_eventone_pre(dither_t *d, et_chdata_t *cd, eventone_t *et, int x)
+{
+  int i;
+
+  for (i=0; i < d->n_channels; cd++, i++) {
+    if (cd->r_sq + cd->dx <= et->r_sq[i][x]) {			/* Do our eventone calculations */
+      cd->r_sq += cd->dx;					/* Nearest pixel same as last one */
+      cd->dx += et->d2x;
+    } else {
+      cd->dx = et->dx[i][x];					/* Nearest pixel is from a previous line */
+      cd->dy = et->dy[i][x];
+      cd->r_sq = et->r_sq[i][x];
+    }
+  }
+}
+
+static inline void
+advance_eventone_post(dither_t *d, et_chdata_t *cd, eventone_t *et, int x)
+{
+  int i;
+  int t;
+
+  for (i=0; i < d->n_channels; cd++, i++) {
+    if (cd->point > 0) {
+      cd->r_sq = 0;
+      cd->dx = et->dx2;
+      cd->dy = et->dy2;
+    }
+    t = et->r_sq[i][x] + et->dy[i][x];
+    et->dy[i][x] += et->d2y;
+    if (cd->r_sq + cd->dy < t) {
+      t = cd->r_sq + cd->dy;
+      et->dx[i][x] = cd->dx;
+      et->dy[i][x] = cd->dy + et->d2y;
+    }
+    if (t > 65535) {
+      t = 65535;
+    }
+    et->r_sq[i][x] = t;
+  }
+}
+
+static inline int
+eventone_adjust(dither_segment_t *range, eventone_t *et, int r_sq, int base, int value)
+{
+  unsigned upper;
+  unsigned lower;
+  unsigned value_span;
+  int ditherpoint;
+	
+  lower = range->lower->value;
+  upper = range->upper->value;
+  value_span = upper - lower;
+
+  if (value >= upper) {
+    ditherpoint = 65535;
+  } else {
+    if (value <= lower) {
+      ditherpoint = 0;
+    } else {
+      ditherpoint = ((unsigned)(value - lower) << 16) / value_span;
+    }
+    /* Adjust for Eventone here */
+    if (lower == 0) {
+      ditherpoint += r_sq * et->aspect;
+      if (base < upper) {
+	ditherpoint -= et->recip[(base << 16) / value_span];
+      }
+      if (ditherpoint > 65535) ditherpoint = 65535;
+      else if (ditherpoint < 0) ditherpoint = 0;
+    }
+  }
+  return ditherpoint;
+}
+
+static inline void
+print_all_inks(dither_t *d, et_chdata_t *cd, int print_inks, int pick, unsigned char bit, int length)
+{
+  int i, mask;
+  for (i = 0, mask = 1; i < d->n_channels; mask <<= 1, cd++, i++) {
+    int j;
+    ink_defn_t *subc;
+    int bits;
+    unsigned char *tptr;
+    
+    if (!(print_inks & mask)) continue;
+    
+    subc = (pick & mask) ? cd->dr.upper : cd->dr.lower;
+    bits = subc->bits;
+    if (bits == 0) continue;
+
+    tptr = CHANNEL(d, i).ptrs[subc->subchannel] + d->ptr_offset;
+    cd->wetness += subc->dot_size << 16;
+    
+    for (j=1; j <= bits; j+=j, tptr += length) {
+      if (j & bits) *tptr |= bit;
+    }
+  }
+}
+
+static inline void
+diffuse_error(dither_t *d, int *ndither, int ***error, int aspect, int direction, int do_diffuse)
+{
+  int i;
+  int fraction, frac_2, frac_3;
+  int *err;
+  
+  if (do_diffuse) {
+    for (i=0; i < d->n_channels; i++, ndither++, error++) {
+      fraction = (*ndither + 5) / 10;
+      frac_2 = fraction + fraction;
+      frac_3 = frac_2 + fraction;
+      err = (*error)[1];
+      err[0] += frac_3;
+      err[-aspect] += frac_2;
+      *ndither += (*error)[0][direction] - frac_2 - frac_3;
+    }
+  } else {
+    for (i=0; i<d->n_channels; i++) {
+      *ndither++ += (*error++)[0][direction];
+    }
+  }
+}
 
 /*
  * Dithering functions!
@@ -2734,58 +2950,6 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
     reverse_row_ends(d);
 }
 
-#define EVEN_C1 1024
-
-static eventone_t *
-stp_setup_et(dither_t *d)
-{
-  eventone_t	*et;
-
-  et = stp_zalloc(sizeof(eventone_t));
-
-  { int xa, ya;
-    xa = d->x_aspect / d->y_aspect;
-    if (xa == 0) xa = 1;
-    et->dx2 = xa * xa;
-    et->d2x = 2 * et->dx2;
-  
-    ya = d->y_aspect / d->x_aspect;
-    if (ya == 0) ya = 1;
-    et->dy2 = ya * ya;
-    et->d2y = 2 * et->dy2;
-    
-    et->aspect = EVEN_C1 / (xa * ya);
-  }
-  
-  et->recip = stp_malloc(65536 * sizeof(int));
-  et->dx = stp_malloc(sizeof(int *) * d->n_channels);
-  et->dy = stp_malloc(sizeof(int *) * d->n_channels);
-  et->r_sq = stp_malloc(sizeof(int *) * d->n_channels);
-  
-  { int i;
-    for (i=0; i < d->n_channels; i++) {
-      int x;
-      et->dx[i] = stp_malloc(sizeof(int) * d->dst_width);
-      et->dy[i] = stp_malloc(sizeof(int) * d->dst_width);
-      et->r_sq[i] = stp_zalloc(sizeof(int) * d->dst_width);
-      for (x = 0; x < d->dst_width; x++) {
-        et->dx[i][x] = et->dx2;
-	et->dy[i][x] = et->dy2;
-      }
-    }
-
-    for (i=0; i < 65536; i++) {
-      if (i == 0)
-        et->recip[i] = EVEN_C1 * 65536;
-      else
-        et->recip[i] = EVEN_C1 * 65536 / i;
-    }
-  }
-
-  d->eventone = et;
-  return et;
-}
-
 /* This code uses the Eventone dither algorithm. This is described
  * at the website http://www.artofcode.com/eventone/
  * This algorithm is covered by US Patents 5,055,942 and 5,917,614
@@ -2807,19 +2971,14 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
   int		i;
   int		*ndither;
   eventone_t	*et;
-  
-  struct	channel_data {
-  	int dx, dy, r_sq, wetness, ri, point;
-	int maxdot_dens;		/* Max dot size * density */
-	int maxdot_wet;			/* Maximum wetness allowed */
-	dither_segment_t dr;
-  } *cd;
+  et_chdata_t	*cd;
 
   int		***error;
   int		terminate;
   int		direction = row & 1 ? 1 : -1;
   int		xerror, xstep, xmod;
   int		aspect = d->y_aspect / d->x_aspect;
+  int		aspect_m1;
   
   if (!CHANNEL(d, ECOLOR_K).ptrs[0])
     {
@@ -2829,39 +2988,16 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 
   if (aspect >= 4) { aspect = 4; }
   else if (aspect >= 2) { aspect = 2; }
+  else aspect = 1;
+  aspect_m1 = aspect - 1;
 
   length = (d->dst_width + 7) / 8;
   if (!shared_ed_initializer(d, row, duplicate_line, zero_mask, length,
 			     direction, &error, &ndither))
     return;
 
-  cd = stp_malloc(sizeof(struct channel_data) * d->n_channels);
-
+  eventone_init(d, &cd);
   et = d->eventone;
-  if (!et) {
-    et = stp_setup_et(d);
-
-    for (i = 0; i < d->n_channels; i++)
-    {
-      CHANNEL(d, i).ranges[0].lower->value = 0;
-      CHANNEL(d, i).ranges[0].lower->range = 0;
-      CHANNEL(d, i).ranges[0].lower->bits = 0;
-      CHANNEL(d, i).ranges[0].lower->subchannel = 0;
-      CHANNEL(d, i).ranges[0].lower->dot_size = 0;
-    }
-  }
-
-  for (i = 0; i < d->n_channels; i++)
-  {
-      struct channel_data *p = &cd[i];
-      p->wetness = 0;
-      p->maxdot_dens = CHANNEL(d, i).maxdot * d->density;
-      p->maxdot_wet = (65536 + d->density) * CHANNEL(d, i).maxdot;
-      p->dx = et->dx2;
-      p->dy = et->dy2;
-      p->r_sq = 0;
-      ndither[i] = 0;
-  }      
 
   x = (direction == 1) ? 0 : d->dst_width - 1;
   bit = 1 << (7 - (x & 7));
@@ -2869,26 +3005,16 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
   xmod   = d->src_width % d->dst_width;
   xerror = (xmod * x) % d->dst_width;
   terminate = (direction == 1) ? d->dst_width : -1;
-  if (direction == -1)
-    {
-      cmy += (3 * (d->src_width - 1));
-    }
+  if (direction == -1) {
+    cmy += (3 * (d->src_width - 1));
+    aspect = -aspect;
+  }
 
   QUANT(6);
   for (; x != terminate; x += direction)
     { int pick, print_inks;
       
-      for (i=0; i < d->n_channels; i++) {
-	struct channel_data *p = &cd[i];
-	if (p->r_sq + p->dx <= et->r_sq[i][x]) {			/* Do our eventone calculations */
-	  p->r_sq += p->dx;					/* Nearest pixel same as last one */
-	  p->dx += et->d2x;
-	} else {
-	  p->dx = et->dx[i][x];					/* Nearest pixel is from a previous line */
-	  p->dy = et->dy[i][x];
-	  p->r_sq = et->r_sq[i][x];
-	}
-      }
+      advance_eventone_pre(d, cd, et, x);
 
       CHANNEL(d, ECOLOR_K).b = 0;
 
@@ -2908,64 +3034,25 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 	
       for (i = 1; i < d->n_channels; i++)
 	CHANNEL(d, i).b = CHANNEL(d, i).v;
-
+	
       for (i=0; i < d->n_channels; i++) {
         int value;
 	int base;
-	int maxwet;
-	unsigned value_span;
-	unsigned upper;
-	unsigned lower;
-	struct channel_data *p = &cd[i];
+	et_chdata_t *p = &cd[i];
 
-        ndither[i] += error[i][0][0];
-	
-	if ((p->wetness -= p->maxdot_dens) < 0) {
-	  p->wetness = 0;
-	}
+	if ((p->wetness -= p->maxdot_dens) < 0) p->wetness = 0;
 
 	base = CHANNEL(d, i).b;
-	value = 2 * ndither[i] + base;
-
+	value = ndither[i] + base;
 	if (i != ECOLOR_K) value += CHANNEL(d, ECOLOR_K).v;
-	
 	if (value < 0) value = 0;				/* Dither can make this value negative */
 	
-	maxwet = p->maxdot_wet - p->wetness;
-	if (maxwet < 0) maxwet = 0;
-	else maxwet >>= 16;
-
-        find_segment(d, &CHANNEL(d, i), maxwet, value, &p->dr);
-	lower = p->dr.lower->value;
-	upper = p->dr.upper->value;
-	value_span = upper - lower;
-
-	if (value >= upper) {
-	  p->ri = 65535;
-	} else if (value <= lower) {
-	  p->ri = 0;
-	} else {
-	  p->ri = ((unsigned)(value - lower) << 16) / value_span;
-	  /* Adjust for Eventone here */
-	  if (lower == 0) {
-	    int t;
-	    if (base >= upper) {
-	      t = 0;
-	    } else {
-	      t = et->recip[(base << 16) / value_span];
-	    }
-	    p->ri += p->r_sq * et->aspect - t;
-	    if (p->ri > 65535) p->ri = 65535;
-	    else if (p->ri < 0) p->ri = 0;
-	  }
-	}
+        find_segment(d, &CHANNEL(d, i), p->maxdot_wet - p->wetness, value, &p->dr);
+	
+	p->ri = eventone_adjust(&p->dr, et, p->r_sq, base, value);
       }
-
-      pick = pick_vertex(cd[ECOLOR_C].ri, cd[ECOLOR_M].ri, cd[ECOLOR_Y].ri);
-
-      if (cd[ECOLOR_K].ri >= 32768) {
-	pick |= (1 << ECOLOR_K);
-      }
+	
+      pick = pick_vertex(cd[ECOLOR_C].ri, cd[ECOLOR_M].ri, cd[ECOLOR_Y].ri, cd[ECOLOR_K].ri);
 
       /* Compute the values we're going to use (ignoring black's influence) */
       /* And find out whether the bigger black dot would be more suitable than the small one */
@@ -2988,20 +3075,7 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 	  adjusted_black = (unsigned)printed_black * (unsigned)d->density / d->black_density;
 	}
 
-	for (i=0; i < d->n_channels; i++) {
-	  struct channel_data *p = &cd[i];
-	  if (p->point > 0) {
-	    p->r_sq = 0;
-	    p->dx = et->dx2;
-	    p->dy = et->dy2;
-	  }
-	  et->r_sq[i][x] = p->r_sq + p->dy;
-	  if (et->r_sq[i][x] > 65535) {
-	    et->r_sq[i][x] = 65535;
-	  }
-	  et->dx[i][x] = p->dx;
-	  et->dy[i][x] = p->dy + et->d2y;
-        }
+	advance_eventone_post(d, cd, et, x);
 
         /* Only print the black ink if it means we can avoid printing another ink, otherwise we're just wasting ink */
 
@@ -3029,67 +3103,25 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 	}
 
         /* Adjust error values for dither */
-	ndither[ECOLOR_K] += CHANNEL(d, ECOLOR_K).b - printed_black;
+	ndither[ECOLOR_K] += 2 * (CHANNEL(d, ECOLOR_K).b - printed_black);
         for (i=1; i < d->n_channels; i++) {
-	  ndither[i] += CHANNEL(d, i).b - cd[i].point;
+	  ndither[i] += 2 * (CHANNEL(d, i).b - cd[i].point);
         }
       }
 
       /* Now we can finally print it! */
-
-      for (i = 0; i < d->n_channels; i++) {
-        int j;
-	ink_defn_t *subc;
-	int bits;
-	unsigned char *tptr;
-	
-        if (!(print_inks & (1 << i))) continue;
-
-	subc = (pick & (1 << i)) ? cd[i].dr.upper : cd[i].dr.lower;
-	bits = subc->bits;
-	if (bits == 0) continue;
-	
-	tptr = CHANNEL(d, i).ptrs[subc->subchannel] + d->ptr_offset;
-	cd[i].wetness += subc->dot_size << 16;
-	
-	for (j=1; j <= bits; j+=j, tptr += length) {
-	  if (j & bits) *tptr |= bit;
-	}
-      }
+      
+      print_all_inks(d, cd, print_inks, pick, bit, length);
 
       QUANT(11);
   
-
       /* Diffuse the error round a bit */
-      /* Diffuse across, down, and backwards diagonally */
-      /* If doing Nx1, then only diffuse to the next row every N dots */
-
-      if ((x & (aspect-1)) == 0) {
-	for (i=0; i < d->n_channels; i++) {
-	  int fraction;
-	  int frac_2;
-	  int frac_3;
-	  int base;
-
-	  fraction = (ndither[i] + 5) / 10;
-	  
-	  frac_2 = fraction + fraction;
-	  frac_3 = frac_2 + fraction;
-	  
-	  error[i][1][0] += frac_3;
-	  error[i][1][-direction*aspect] += frac_2;
-	  ndither[i] -= frac_2 + frac_3;
-	}
-      }
+      diffuse_error(d, ndither, error, aspect, direction, ((x & aspect_m1)==0));
 
       QUANT(12);
       ADVANCE_BIDIRECTIONAL(d, bit, cmy, direction, 3, xerror, xmod, error,
 			    d->n_channels, ERROR_ROWS);
       QUANT(13);
-    }
-    /* Save the resulting error for the next line */
-    for (i=0; i < d->n_channels; i++) {
-      error[i][1][-direction] += ndither[i];
     }
 
     stp_free(cd);
