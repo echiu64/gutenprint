@@ -644,29 +644,10 @@ sub build_model_ev {
 	#  Put in the basic choice info: ev names, etc
 	my $ev_shortname = $ev;
 	my $ev_longname = $printer_name{$ev};
+	my $make = $printer_make{$ev};
 	my $ev_shortname = get_ev_shortname($ev);
 	my $ev_id = get_ev_key($ev, $drvname);
 	my $ev_driverval;
-	my $make;
-	if ($ev =~ /^escp2/) {
-	    $make = "EPSON";
-	} elsif ($ev =~ /^bjc/) {
-	    $make = "CANON";
-	} elsif ($ev =~ /^canon/) {
-	    $make = "CANON";
-	} elsif ($ev =~ /^pcl/) {
-	    $make = "HEWLETT-PACKARD";
-	} elsif ($ev =~ /^lexmark/) {
-	    $make = "LEXMARK";
-	} elsif ($ev =~ /^olympus/) {
-	    $make = "OLYMPUS";
-	} elsif ($ev =~ /^sony/) {
-	    $make = "SONY";
-	} elsif ($ev =~ /^fujifilm/) {
-	    $make = "FUJIFILM";
-	} else {
-	    die "Could not determine printer manufacturer from \"$ev\"!\n";
-	}
 	$ev_driverval = "-sDeviceManufacturer=$make -sDeviceModel=$ev";
 	push (@vals,
 	      "    <enum_val id='$ev_id'>\n",

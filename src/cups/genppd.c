@@ -651,7 +651,6 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
   int		i, j, k, l;		/* Looping vars */
   gzFile	fp;			/* File to write to */
   char		filename[1024];		/* Filename */
-  char		manufacturer[64];	/* Manufacturer name */
   int		num_opts;		/* Number of printer options */
   int		xdpi, ydpi;		/* Resolution info */
   stp_vars_t	v;			/* Variable info */
@@ -660,6 +659,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 		top, right;
   const char	*driver;		/* Driver name */
   const char	*long_name;		/* Driver long name */
+  const char	*manufacturer;		/* Manufacturer of printer */
   stp_const_vars_t	printvars;		/* Printer option names */
   paper_t	*the_papers;		/* Media sizes */
   int		cur_opt;		/* Current option */
@@ -681,6 +681,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 
   driver     = stp_printer_get_driver(p);
   long_name  = stp_printer_get_long_name(p);
+  manufacturer = stp_printer_get_manufacturer(p);
   printvars  = stp_printer_get_defaults(p);
   the_papers = NULL;
   cur_opt    = 0;
@@ -736,8 +737,6 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
   * Write a standard header...
   */
 
-  sscanf(long_name, "%63s", manufacturer);
-
   if (verbose)
     fprintf(stderr, "Writing %s...\n", filename);
   else
@@ -779,12 +778,6 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 
   gzprintf(fp, "*PCFileName:	\"STP%05d.PPD\"\n",
 	   stp_get_printer_index_by_driver(driver));
-
- /*
-  * The Manufacturer, for now, is the first word of the long driver
-  * name.
-  */
-
   gzprintf(fp, "*Manufacturer:	\"%s\"\n", manufacturer);
 
  /*
