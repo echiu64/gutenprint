@@ -47,6 +47,8 @@ print_SOURCES = \
 
 print_LDADD = $(GIMP_LIBS) $(GIMPPRINT_LIBS)
 
+print_DEPENDENCIES = $(GIMPPRINT_LIBS)
+
 $(GIMPPRINT_LIBS):
 	make -C ../main
 

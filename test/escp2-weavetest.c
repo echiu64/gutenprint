@@ -159,7 +159,7 @@ main(int argc, char **argv)
   memset(current_slot, 0, (sizeof(int) * vmod));
 
   sw = initialize_weave(physjets, physsep, hpasses, vpasses, subpasses,
-			COLOR_MONOCHROME, 1, 128, nrows, 1, first_line,
+			1, 1, 128, nrows, 1, first_line,
 			phys_lines, strategy, NULL);
   print_header();
   printf("%15s %5s %5s %5s %10s %10s %10s %10s\n", "", "row", "pass", "jet",

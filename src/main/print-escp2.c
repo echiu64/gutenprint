@@ -38,25 +38,6 @@
 #  define inline
 #endif /* !__GNUC__ */
 
-typedef enum {
-  COLOR_MONOCHROME,
-  COLOR_CMYK,
-  COLOR_CCMMYK,
-  COLOR_CCMMYYK
-} colormode_t;
-
-/*
- * Mapping between color and linear index.  The colors are
- * black, magenta, cyan, yellow, light magenta, light cyan
- */
-
-static const int color_indices[16] = { 0, 1, 2, -1,
-				       3, -1, -1, -1,
-				       -1, 4, 5, -1,
-				       6, -1, -1, -1 };
-static const int colors[7] = { 0, 1, 2, 4, 1, 2, 4};
-static const int densities[7] = { 0, 0, 0, 0, 1, 1, 1 };
-
 #ifndef WEAVETEST
 
 static void
@@ -67,7 +48,7 @@ escp2_write_microweave(FILE *, const unsigned char *,
 		       int, int, int, int, int, int, int, const stp_vars_t *);
 static void *initialize_weave(int jets, int separation, int oversample,
 			      int horizontal, int vertical,
-			      colormode_t colormode, int width, int linewidth,
+			      int ncolors, int width, int linewidth,
 			      int lineheight, int vertical_row_separation,
 			      int first_line, int phys_lines, int strategy,
 			      const stp_vars_t *v);
@@ -75,10 +56,7 @@ static void escp2_flush_all(void *, int model, int width, int hoffset,
 			    int ydpi, int xdpi, int physical_xdpi, FILE *prn);
 static void
 escp2_write_weave(void *, FILE *, int, int, int, int, int, int, int,
-		  const unsigned char *c, const unsigned char *m,
-		  const unsigned char *y, const unsigned char *k,
-		  const unsigned char *C, const unsigned char *M,
-		  const unsigned char *DY);
+		  const unsigned char *cols[]);
 static void escp2_init_microweave(int);
 static void escp2_free_microweave(void);
 
@@ -235,6 +213,33 @@ colors2inkset(int colors)
     default:
       return -1;
     }
+}
+
+typedef enum {
+  COLOR_MONOCHROME,
+  COLOR_CMYK,
+  COLOR_CCMMYK,
+  COLOR_CCMMYYK
+} colormode_t;
+
+/*
+ * Mapping between color and linear index.  The colors are
+ * black, magenta, cyan, yellow, light magenta, light cyan
+ */
+
+static const int color_indices[16] = { 0, 1, 2, -1,
+				       3, -1, -1, -1,
+				       -1, 4, 5, -1,
+				       6, -1, -1, -1 };
+static const int colors[7] = { 0, 1, 2, 4, 1, 2, 4};
+static const int densities[7] = { 0, 0, 0, 0, 1, 1, 1 };
+
+static inline int
+get_color_by_params(int plane, int density)
+{
+  if (plane > 4 || plane < 0 || density > 1 || density < 0)
+    return -1;
+  return color_indices[density * 8 + plane];
 }
 
 typedef escp2_variable_inkset_t *escp2_variable_inklist_t[INKTYPE_N][INKSET_N][RES_N / 2];
@@ -2465,6 +2470,7 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
   const paper_t *pt;
   double k_upper, k_lower;
   int max_vres;
+  const unsigned char *cols[7];
 
   memcpy(&nv, v, sizeof(stp_vars_t));
 
@@ -2696,17 +2702,42 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
 	break;
     }
   }
+  cols[0] = black;
+  cols[1] = magenta;
+  cols[2] = cyan;
+  cols[3] = yellow;
+  cols[4] = lmagenta;
+  cols[5] = lcyan;
+  cols[6] = dyellow;
 
   if (use_softweave)
-    /* Epson printers are currently all 720 physical dpi vertically */
-    weave = initialize_weave(nozzles, nozzle_separation, horizontal_passes,
-			     vertical_passes, vertical_oversample, colormode,
-			     bits,
-			     out_width * escp2_xres(model, &nv) /physical_ydpi,
-			     out_height, separation_rows,
-			     top * physical_ydpi / 72,
-			     page_height * physical_ydpi / 72, use_softweave,
-			     &nv);
+    {
+      int ncolors = 0;
+      switch (colormode)
+	{
+	case COLOR_MONOCHROME:
+	  ncolors = 1;
+	  break;
+	case COLOR_CMYK:
+	  ncolors = 4;
+	  break;
+	case COLOR_CCMMYK:
+	  ncolors = 6;
+	  break;
+	case COLOR_CCMMYYK:
+	  ncolors = 7;
+	  break;
+	}
+      /* Epson printers are currently all 720 physical dpi vertically */
+      weave = initialize_weave(nozzles, nozzle_separation, horizontal_passes,
+			       vertical_passes, vertical_oversample, ncolors,
+			       bits, (out_width * escp2_xres(model, &nv) /
+				      physical_ydpi),
+			       out_height, separation_rows,
+			       top * physical_ydpi / 72,
+			       page_height * physical_ydpi / 72, use_softweave,
+			       &nv);
+    }
   else
     escp2_init_microweave(top * ydpi / 72);
 
@@ -2838,9 +2869,7 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
 
     if (use_softweave)
       escp2_write_weave(weave, prn, length, ydpi, model, out_width, left,
-			xdpi, physical_xdpi,
-			cyan, magenta, yellow, black, lcyan, lmagenta,
-			dyellow);
+			xdpi, physical_xdpi, cols);
     else
       escp2_write_microweave(prn, black, cyan, magenta, yellow, lcyan,
 			     lmagenta, dyellow, length, xdpi, ydpi, model,
@@ -3422,13 +3451,6 @@ typedef struct {
 } escp2_softweave_t;
 
 #ifndef WEAVETEST
-static inline int
-get_color_by_params(int plane, int density)
-{
-  if (plane > 4 || plane < 0 || density > 1 || density < 0)
-    return -1;
-  return color_indices[density * 8 + plane];
-}
 #endif
 
 
@@ -3452,7 +3474,7 @@ initialize_weave(int jets,	/* Width of print head */
 		 int osample,	/* Horizontal oversample */
 		 int v_subpasses, /* Vertical passes */
 		 int v_subsample, /* Vertical oversampling */
-		 colormode_t colormode,	/* mono, 4 color, 6 color */
+		 int ncolors,
 		 int width,	/* bits/pixel */
 		 int linewidth,	/* Width of a line, in pixels */
 		 int lineheight, /* Number of lines that will be printed */
@@ -3512,21 +3534,7 @@ initialize_weave(int jets,	/* Width of print head */
   sw->current_vertical_subpass = 0;
   sw->last_color = -1;
 
-  switch (colormode)
-    {
-    case COLOR_MONOCHROME:
-      sw->ncolors = 1;
-      break;
-    case COLOR_CMYK:
-      sw->ncolors = 4;
-      break;
-    case COLOR_CCMMYK:
-      sw->ncolors = 6;
-      break;
-    case COLOR_CCMMYYK:
-      sw->ncolors = 7;
-      break;
-    }
+  sw->ncolors = ncolors;
 
   /*
    * It's possible for the "compression" to actually expand the line by
@@ -3804,6 +3812,8 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
   int *linecount = get_linecount_by_pass(sw, passno);
   int lwidth = (width + (sw->horizontal_weave - 1)) / sw->horizontal_weave;
   int microoffset = vertical_subpass & (sw->horizontal_weave - 1);
+  int advance = pass->logicalpassstart - sw->last_pass_offset -
+    (sw->separation_rows - 1);
   if (ydpi > escp2_max_vres(model, sw->v))
     ydpi = escp2_max_vres(model, sw->v);
   for (j = 0; j < sw->ncolors; j++)
@@ -3815,8 +3825,6 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	}
       if (pass->logicalpassstart > sw->last_pass_offset)
 	{
-	  int advance = pass->logicalpassstart - sw->last_pass_offset -
-	    (sw->separation_rows - 1);
 	  int a0 = advance         % 256;
 	  int a1 = (advance >> 8)  % 256;
 	  int a2 = (advance >> 16) % 256;
@@ -3881,8 +3889,8 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 		    *linecount + pass->missingstartrows);
 	  else if (escp2_pseudo_separation_rows(model, sw->v) > 0)
 	    fprintf(prn, "\033.%c%c%c%c", 1,
-		    ydotsep * escp2_pseudo_separation_rows(model, sw->v) , xdotsep,
-		    *linecount + pass->missingstartrows);
+		    ydotsep * escp2_pseudo_separation_rows(model, sw->v) ,
+		    xdotsep, *linecount + pass->missingstartrows);
 	  else
 	    fprintf(prn, "\033.%c%c%c%c", 1, ydotsep * sw->separation_rows,
 		    xdotsep, *linecount + pass->missingstartrows);
@@ -3899,8 +3907,8 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	}
 
       fwrite(bufs[0].v[j], lineoffs[0].v[j], 1, prn);
-      lineoffs[0].v[j] = 0;
       putc('\r', prn);
+      lineoffs[0].v[j] = 0;
     }
   *linecount = 0;
   sw->last_pass = pass->pass;
@@ -3993,13 +4001,7 @@ escp2_write_weave(void *        vsw,
 		  int           offset,	/* I - Offset from left side of page */
 		  int		xdpi,
 		  int		physical_xdpi,
-		  const unsigned char *c,
-		  const unsigned char *m,
-		  const unsigned char *y,
-		  const unsigned char *k,
-		  const unsigned char *C,
-		  const unsigned char *M,
-		  const unsigned char *Y)
+		  const unsigned char *cols[])
 {
   escp2_softweave_t *sw = (escp2_softweave_t *) vsw;
   static unsigned char *s[8];
@@ -4013,14 +4015,6 @@ escp2_write_weave(void *        vsw,
   int i, j;
   int setactive;
   int h_passes = sw->horizontal_weave * sw->vertical_subpasses;
-  const unsigned char *cols[7];
-  cols[0] = k;
-  cols[1] = m;
-  cols[2] = c;
-  cols[3] = y;
-  cols[4] = M;
-  cols[5] = C;
-  cols[6] = Y;
   if (!fold_buf)
     fold_buf = malloc(COMPBUFWIDTH);
   if (!comp_buf)
