@@ -61,6 +61,7 @@
 #include <stdio.h>
 #include <signal.h>
 #include <unistd.h>
+#include <string.h>
 
 #define MIN(x, y) ((x) <= (y) ? (x) : (y))
 
@@ -173,7 +174,7 @@ const static int color_indices[16] = { 0, 1, 2, -1,
 const static int colors[6] = { 0, 1, 2, 4, 1, 2 };
 const static int densities[6] = { 0, 0, 0, 0, 1, 1 };
 
-static int
+int
 get_color_by_params(int plane, int density)
 {
   if (plane > 4 || plane < 0 || density > 1 || density < 0)
@@ -339,62 +340,6 @@ weave_parameters_by_row(const escp2_softweave_t *sw, int row,
 			    sw->separation);
 }
 
-static lineoff_t *
-get_lineoffsets(const escp2_softweave_t *sw, int row, int subpass)
-{
-  weave_t w;
-  weave_parameters_by_row(sw, row, subpass, &w);
-  return &(sw->lineoffsets[w.pass % sw->vmod]);
-}
-
-static int *
-get_linecount(const escp2_softweave_t *sw, int row, int subpass)
-{
-  weave_t w;
-  weave_parameters_by_row(sw, row, subpass, &w);
-  return &(sw->linecounts[w.pass % sw->vmod]);
-}
-
-static const linebufs_t *
-get_linebases(const escp2_softweave_t *sw, int row, int subpass)
-{
-  weave_t w;
-  weave_parameters_by_row(sw, row, subpass, &w);
-  return &(sw->linebases[w.pass % sw->vmod]);
-}
-
-static pass_t *
-get_pass_by_row(const escp2_softweave_t *sw, int row, int subpass)
-{
-  weave_t w;
-  weave_parameters_by_row(sw, row, subpass, &w);
-  return &(sw->passes[w.pass % sw->vmod]);
-}
-
-static lineoff_t *
-get_lineoffsets_by_pass(const escp2_softweave_t *sw, int pass)
-{
-  return &(sw->lineoffsets[pass % sw->vmod]);
-}
-
-static int *
-get_linecount_by_pass(const escp2_softweave_t *sw, int pass)
-{
-  return &(sw->linecounts[pass % sw->vmod]);
-}
-
-static const linebufs_t *
-get_linebases_by_pass(const escp2_softweave_t *sw, int pass)
-{
-  return &(sw->linebases[pass % sw->vmod]);
-}
-
-static pass_t *
-get_pass_by_pass(const escp2_softweave_t *sw, int pass)
-{
-  return &(sw->passes[pass % sw->vmod]);
-}
-
 int
 main(int argc, char **argv)
 {
@@ -471,8 +416,7 @@ main(int argc, char **argv)
 		 ' ',
 		 w.row, w.pass, w.jet,
 		 w.missingstartrows, w.logicalpassstart, w.physpassstart,
-		 w.physpassend,
-		 rowdetail[w.pass * physjets + w.jet]);
+		 w.physpassend);
 	  if (w.physpassend == w.row)
 	    {
 	      lastpass = w.pass;
@@ -505,5 +449,6 @@ main(int argc, char **argv)
 	       i, logpassstarts[i]);
     }
   printf("%d total errors\n", errors);
+  destroy_weave(sw);
   return 0;
 }

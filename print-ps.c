@@ -33,6 +33,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.16  2000/02/10 03:01:52  rlk
+ *   Turn on warnings
+ *
  *   Revision 1.15  2000/02/09 02:56:27  rlk
  *   Put lut inside vars
  *
@@ -92,128 +95,6 @@
  *
  *   Revision 1.11  1999/04/15 21:49:01  yosh
  *   * applied gimp-lecorfec-99041[02]-0, changes follow
- *
- *   * plug-ins/FractalExplorer/Dialogs.h (make_color_map):
- *   replaced free with free to fix segfault.
- *
- *   * plug-ins/Lighting/lighting_preview.c (compute_preview):
- *   allocate xpostab and ypostab only when needed (it could also be
- *   allocated on stack with a compilation-fixed size like MapObject).
- *   It avoids to lose some Kb on each preview :)
- *   Also reindented (unfortunate C-c C-q) some other lines.
- *
- *   * plug-ins/Lighting/lighting_main.c (run):
- *   release allocated postabs.
- *
- *   * plug-ins/Lighting/lighting_ui.c:
- *   callbacks now have only one argument because gck widget use
- *   gtk_signal_connect_object. Caused segfault for scale widget.
- *
- *   * plug-ins/autocrop/autocrop.c (doit):
- *   return if image has only background (thus fixing a segfault).
- *
- *   * plug-ins/emboss/emboss.c (pluginCore, emboss_do_preview):
- *   replaced malloc/free with malloc/free (unneeded, but
- *   shouldn't everyone use glib calls ? :)
- *
- *   * plug-ins/flame/flame.c :
- *   replaced a segfaulting free, and several harmless malloc/free pairs.
- *
- *   * plug-ins/flame/megawidget.c (mw_preview_build):
- *   replaced harmless malloc/free pair.
- *   Note : mwp->bits is malloc'ed but seems to be never freed.
- *
- *   * plug-ins/fractaltrace/fractaltrace.c (pixels_free):
- *   replaced a bunch of segfaulting free.
- *   (pixels_get, dialog_show): replaced gtk_signal_connect_object
- *   with gtk_signal_connect to accomodate callbacks (caused STRANGE
- *   dialog behaviour, coz you destroyed buttons one by one).
- *
- *   * plug-ins/illusion/illusion.c (dialog):
- *   same gtk_signal_connect_object replacement for same reasons.
- *
- *   * plug-ins/libgck/gck/gckcolor.c :
- *   changed all gck_rgb_to_color* functions to use a static GdkColor
- *   instead of a malloc'ed area. Provided reentrant functions with
- *   the old behaviour (gck_rgb_to_color*_r). Made some private functions
- *   static, too.
- *   gck_rgb_to_gdkcolor now use the new functions while
- *   gck_rgb_to_gdkcolor_r is the reentrant version.
- *   Also affected by this change: gck_gc_set_foreground and
- *   gck_gc_set_background (no more free(color)).
- *
- *   * plug-ins/libgck/gck/gckcolor.h :
- *   added the gck_rgb_to_gdkcolor_r proto.
- *
- *   * plug-ins/lic/lic.c (ok_button_clicked, cancel_button_clicked) :
- *   segfault on gtk_widget_destroy, now calls gtk_main_quit.
- *   (dialog_destroy) : segfault on window closure when called by
- *   "destroy" event. Now called by "delete_event".
- *
- *   * plug-ins/megawidget/megawidget.c (mw_preview_build):
- *   replaced harmless malloc/free pair.
- *   Note : mwp->bits is malloc'ed but seems to be never freed.
- *
- *   * plug-ins/png/png.c (load_image):
- *   replaced 2 segfaulting free.
- *
- *   * plug-ins/print/print-ps.c (ps_print):
- *   replaced a segfaulting free (called many times :).
- *
- *   * plug-ins/sgi/sgi.c (load_image, save_image):
- *   replaced a bunch of segfaulting free, and did some harmless
- *   inits to avoid a few gcc warnings.
- *
- *   * plug-ins/wind/wind.c (render_wind):
- *   replaced a segfaulting free.
- *   (render_blast): replaced harmless malloc/free pair.
- *
- *   * plug-ins/bmp/bmpread.c (ReadImage):
- *   yet another free()/free() problem fixed.
- *
- *   * plug-ins/exchange/exchange.c (real_exchange):
- *   ditto.
- *
- *   * plug-ins/fp/fp.h: added Frames_Check_Button_In_A_Box proto.
- *   * plug-ins/fp/fp_gtk.c: closing subdialogs via window manager
- *   wasn't handled, thus leading to errors and crashes.
- *   Now delete_event signals the dialog control button
- *   to close a dialog with the good way.
- *
- *   * plug-ins/ifscompose/ifscompose.c (value_pair_create):
- *   tried to set events mask on scale widget (a NO_WINDOW widget).
- *
- *   * plug-ins/png/png.c (save_image):
- *   Replaced 2 free() with free() for malloc'ed memory.
- *   Mysteriously I corrected the loading bug but not the saving one :)
- *
- *   -Yosh
- *
- *   Revision 1.10  1998/08/28 23:01:46  yosh
- *   * acconfig.h
- *   * configure.in
- *   * app/main.c: added check for putenv and #ifdefed it's usage since NeXTStep is
- *   lame
- *
- *   * libgimp/gimp.c
- *   * app/main.c
- *   * app/plug_in.c: conditionally compile shared mem stuff so platforms without
- *   it can still work
- *
- *   * plug-ins/CEL/CEL.c
- *   * plug-ins/palette/palette.c
- *   * plug-ins/print/print-escp2.c
- *   * plug-ins/print/print-pcl.c
- *   * plug-ins/print/print-ps.c: s/strdup/g_strdup/ for portability
- *
- *   -Yosh
- *
- *   Revision 1.9  1998/05/17 07:16:47  yosh
- *   0.99.31 fun
- *
- *   updated print plugin
- *
- *   -Yosh
  *
  *   Revision 1.13  1998/05/15  21:01:51  mike
  *   Updated image positioning code (invert top and center left/top independently)
@@ -276,6 +157,7 @@
 
 #include "print.h"
 #include <time.h>
+#include <string.h>
 
 /*#define DEBUG*/
 
@@ -312,16 +194,6 @@ ps_parameters(int  model,	/* I - Printer model */
 		lname[255],
 		loption[255];
   char		**valptrs;
-  static char	*media_sizes[] =
-		{
-		  ("Letter"),
-		  ("Legal"),
-		  ("A4"),
-		  ("Tabloid"),
-		  ("A3"),
-		  ("12x18")
-		};
-
 
   if (count == NULL)
     return (NULL);

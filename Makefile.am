@@ -29,6 +29,7 @@ INCLUDES = \
 
 AM_CPPFLAGS = \
         -DLOCALEDIR=\""$(localedir)"\"	\
+	-Wall				\
 	@LP_DEF@			\
 	@LPSTAT_DEF@			\
 	@LPR_DEF@			\

@@ -73,6 +73,7 @@
 #else
 #include <libgimp/gimpintl.h>
 #include <locale.h>
+#include <stdio.h>
 
 #ifndef LOCALEDIR
 #define LOCALEDIR g_strconcat (gimp_data_directory (), \
@@ -185,7 +186,9 @@ static void	preview_button_callback(GtkWidget *, GdkEventButton *);
 static void	preview_motion_callback(GtkWidget *, GdkEventMotion *);
 static void	top_callback(GtkWidget *);
 static void	left_callback(GtkWidget *);
+#if 0
 static void	cleanupfunc(void);
+#endif
 
 /*
  * Globals...
@@ -332,11 +335,12 @@ MAIN()
 
 static int print_finished = 0;
 
+#if 0
 void
 cleanupfunc(void)
 {
 }
-  
+#endif
 
 /*
  * 'query()' - Respond to a plug-in query...
@@ -2313,7 +2317,6 @@ plist_callback(GtkWidget *widget,	/* I - Driver option menu */
                gint      data)		/* I - Data */
 {
   int		i;			/* Looping var */
-  printer_t	*printer;		/* Printer driver entry */
   plist_t	*p;
 
 
@@ -2603,7 +2606,6 @@ close_callback(void)
 static void
 setup_open_callback(void)
 {
-  int	i;	/* Looping var */
   int idx;
 
   current_printer = get_printer_by_driver(plist[plist_current].v.driver);
@@ -3333,10 +3335,11 @@ static void
 get_system_printers(void)
 {
   int	i;
+  char defname[17];
+#if defined(LPC_COMMAND) || defined(LPSTAT_COMMAND)
   FILE	*pfile;
-  char	line[129],
-	name[17],
-	defname[17];
+  char	line[129], name[17];
+#endif
 #ifdef __EMX__
   BYTE  pnum;
 #endif
