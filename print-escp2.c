@@ -714,7 +714,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     1, 1, 128, 720, INCH(17), INCH(55), 8, 9, 9, 49, 4, 0,
     { 3, 2, -1, 1, 1, 1, 1 },
-    { 2.0, 1.3, 1.3, .646, 0, .646, 0, 0, 0 },
+    { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_4color_inks
   },
 
