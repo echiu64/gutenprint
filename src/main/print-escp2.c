@@ -624,7 +624,7 @@ static void
 print_remote_param(const stp_vars_t v, const char *param, const char *value)
 {
   unsigned bytes = 2 + strlen(param) + strlen(value);
-  stp_zprintf(v, "\033(R%c%c%c%s:%s", BYTE(bytes, 0), BYTE(bytes, 1), 0,
+  stp_zprintf(v, "\033(R%c%c%c%s:%s", (bytes & 0xff), ((bytes >> 8) & 0xff), 0,
 	      param, value);
   stp_zprintf(v, "\033%c%c%c", 0, 0, 0);
 }
@@ -703,11 +703,9 @@ escp2_set_remote_sequence(const escp2_init_t *init)
       print_remote_int_param(init->v, "Initial_vertical_offset", init->initial_vertical_offset);
       print_remote_int_param(init->v, "Total_channels", init->total_channels);
       print_remote_int_param(init->v, "Use_black_parameters", init->use_black_parameters);
-      print_remote_int_param(init->v, "Channel_limit", init->channel_limit);
       print_remote_int_param(init->v, "Use_fast_360", init->use_fast_360);
       print_remote_param(init->v, "Ink name", init->inkname->name);
       print_remote_int_param(init->v, "  is_color", init->inkname->is_color);
-      print_remote_int_param(init->v, "  channels", init->inkname->channel_limit);
       print_remote_int_param(init->v, "  inkset", init->inkname->inkset);
       stp_puts("\033@", init->v);
     }
