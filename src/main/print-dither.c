@@ -1279,21 +1279,6 @@ get_errline(dither_t *d, int row, int color)
     }
 }
 
-static unsigned short *
-get_valueline(dither_t *d, int color)
-{
-  if (color < 0 || color >= d->n_channels)
-    return NULL;
-  if (CHANNEL(d, color).vals)
-    return CHANNEL(d, color).vals;
-  else
-    {
-      int size = (8 * ((d->dst_width + 7) / 8));
-      CHANNEL(d, color).vals = stp_zalloc(size * sizeof(unsigned short));
-      return CHANNEL(d, color).vals;
-    }
-}
-
 #define ADVANCE_UNIDIRECTIONAL(d, bit, input, width, xerror, xmod)	\
 do									\
 {									\
