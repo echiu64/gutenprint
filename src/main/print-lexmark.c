@@ -570,6 +570,11 @@ static const lexmark_inkname_t ink_types_z52[] =
      { OUTPUT_COLOR,      5, COLOR_MODE_CcMcY,  192/3,   0, 0, 10, head_offset_cCmMyk },
      { OUTPUT_GRAY,       1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cCmMyk }, /* we ignor CMY, use black */
      { OUTPUT_RAW_CMYK,   5, COLOR_MODE_CcMcY,  192/3,   0, 0, 10, head_offset_cCmMyk }}},
+  { "Gray",     N_("Black"),     
+    {{ OUTPUT_GRAY,       1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },
+     { OUTPUT_COLOR,      1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },
+     { OUTPUT_MONOCHROME, 1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },
+     { OUTPUT_RAW_CMYK,   1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk }}},
   { NULL, NULL }
 };
 
@@ -843,7 +848,7 @@ lexmark_get_ink_type(const char *name, int output_type, const lexmark_cap_t * ca
 }
 
 static const lexmark_inkparam_t *
-lexmark_get_ink_parameter(const char *name, int output_type, const lexmark_cap_t * caps)
+lexmark_get_ink_parameter(const char *name, int output_type, const lexmark_cap_t * caps, stp_vars_t nv)
 {
   int i;
   const lexmark_inkname_t *ink_type = lexmark_get_ink_type(name, output_type, caps);
@@ -1545,14 +1550,21 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
   const lexmark_cap_t * caps= lexmark_get_model_capabilities(model);
   const lexmark_res_t *res_para_ptr = lexmark_get_resolution_para(printer, resolution);
   const paper_t *media = get_media_type(media_type,caps);
-  const lexmark_inkparam_t *ink_parameter = lexmark_get_ink_parameter(ink_type, output_type, caps);
+  const lexmark_inkparam_t *ink_parameter = lexmark_get_ink_parameter(ink_type, output_type, caps, nv);
 
+
+  if (ink_parameter == NULL)
+    {
+      stp_eprintf(nv, "Illegal Ink Type specified; cannot print.\n");
+      return;
+    }
 
   if (!stp_get_verified(nv))
     {
       stp_eprintf(nv, "Print options not verified; cannot print.\n");
       return;
     }
+
 
   /*
   * Setup a read-only pixel region for the entire image...
@@ -1570,8 +1582,9 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
    *                 or single black cartridge installed
    */
 
-  if ((caps->inks == LEXMARK_INK_K) &&
-      output_type != OUTPUT_MONOCHROME)
+  if ((ink_parameter->used_colors == COLOR_MODE_K) || 
+      ((caps->inks == LEXMARK_INK_K) &&
+       output_type != OUTPUT_MONOCHROME))
     {
       output_type = OUTPUT_GRAY;
       stp_set_output_type(nv, OUTPUT_GRAY);
