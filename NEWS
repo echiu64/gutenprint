@@ -1,9 +1,14 @@
-                          -*- Mode: Text -*-
-
 Gimp-Print 4.2.2, released September 12, 2002, is a stable release in
 the Gimp-Print 4.2 series.  This release primarily offers bug fixes
 and support for all Epson Stylus printers announced since Gimp-Print
 4.2.1.
+
+Gimp-Print is a suite of printer drivers that may be used with most
+common UNIX print spooling systems, including CUPS, lpr, LPRng, or
+others.  These drivers provide high quality printing for UNIX
+(including Macintosh OS X 10.2 and newer) and Linux systems in many
+cases equal to or better than proprietary vendor-supplied drivers, and
+can be used for many of the most demanding printing tasks.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
 and CUPS drivers, including Foomatic data.
@@ -32,8 +37,8 @@ Adobe applications) that generate PostScript rather than PDF output.
 Directions for that are also available at
 http://gimp-print.sourceforge.net.
 
-Please read the README file for full instructions on building and
-installing this package.
+Please read the README file for full instructions on installing this
+package.
 
 
 
@@ -564,6 +569,9 @@ Many variations on these printers are also supported.  Generally, the
 Epson printers are fully supported, although not fully tuned in all
 cases; the Canon, HP, and Lexmark printers vary.  Printers listed as
 NEW are newly introduced into Gimp-Print 4.2.2.
+
+Please see the printer-specific notes section following the list of
+printers for any instructions specific to your printer.
 
 PostScript level 1        (GIMP Plugin only)
 PostScript level 2        (GIMP Plugin only)
@@ -1143,3 +1151,120 @@ Xerox DocuPrint P12            pcl-2           HP LaserJet II series
 Xerox DocuPrint P1202          pcl-6           HP LaserJet 6 series
 Xerox DocuPrint P8e            pcl-4           HP LaserJet 4 series
 Xerox Document Centre 400      pcl-4           HP LaserJet 4 series
+
+
+Printer-Specific Notes:
+
+    * The Epson Stylus C70, C80, and C82 will give better results
+      using Three Color Composite printing on Premium Glossy Photo
+      Paper and Premium Semigloss.  Epson's proprietary drivers do
+      this on these papers.  The black ink is formulated differently
+      from the others, and does not adhere properly to these special
+      papers.
+
+    * The Epson Stylus C70, C80, and C82 appear to support resolutions
+      of 1440x1440 and 2880x1440, but these resolutions may not yield
+      any improvement over 2880x720.  Experiments suggest that
+      1440x1440 yields slightly better results than 2880x720 on Epson
+      Photo Paper, but somewhat inferior results on Premium Glossy
+      Photo Paper.  2880x1440 yields essentially no additional
+      improvement on Photo Paper, and intermediate results on Premium
+      Glossy Photo Paper.
+
+      We expect that 1440x1440 would yield maximum improvement over
+      2880x720 on line art with very fine detail.  It is unlikely that
+      2880x1440 would yield any significant additional improvement.
+
+      Note that these resolutions are not officially supported by Epson,
+      and may not work on all C70, C80, and C82 printers.
+
+    * Many Epson printers (specifically, the Epson Stylus Color 740
+      and all newer printers) will not respond to ASCII text without a
+      special "activation" sequence (specifically, this command takes
+      the printers out of "packet mode").  A brand new printer, or one
+      that has been connected to a Windows system, may or may not work
+      in packet mode.  Therefore, the common suggestion to test a
+      printer port by sending plain text to it may not work for these
+      printers; failure to print in this fashion is not a positive
+      indication that the printer or the connection is malfunctioning.
+      These printers are, however, able to print plain text *after*
+      the activation sequence is sent.
+
+      A suggestion would be to use the escputil command to print a
+      test pattern:
+
+      escputil -n -u -P printer
+
+      or
+
+      escputil -n -u -r /dev/lp0
+
+      The `-u' option will send the activation sequence.  In addition
+      to printing the test pattern (if at least unidirectional
+      communication is set up), this will enable printing plain ASCII
+      text, at least until the printer is powered off (or used under
+      Windows).
+
+      To test bidirectional communication, the command
+
+      escputil -i -u -r /dev/lp0
+
+      is a good choice, as it will print (to the screen) the amount of
+      ink in the printer.
+
+      Note that this activation sequence is both unnecessary and
+      incorrect on older printers.
+
+      The current list of printers for which the activation sequence
+      must be sent is:
+
+      EPSON Stylus C20SX
+      EPSON Stylus C20UX
+      EPSON Stylus C40SX
+      EPSON Stylus C40UX
+      EPSON Stylus C41SX
+      EPSON Stylus C41UX
+      EPSON Stylus C42SX
+      EPSON Stylus C42UX
+      EPSON Stylus C60
+      EPSON Stylus C61
+      EPSON Stylus C62
+      EPSON Stylus C70
+      EPSON Stylus C80
+      EPSON Stylus C82
+      EPSON Stylus Color 440
+      EPSON Stylus Color 460
+      EPSON Stylus Color 480
+      EPSON Stylus Color 580
+      EPSON Stylus Color 640
+      EPSON Stylus Color 660
+      EPSON Stylus Color 670
+      EPSON Stylus Color 680
+      EPSON Stylus Color 740
+      EPSON Stylus Color 760
+      EPSON Stylus Color 777
+      EPSON Stylus Color 860
+      EPSON Stylus Color 880
+      EPSON Stylus Color 83
+      EPSON Stylus Color 900
+      EPSON Stylus Color 980
+      EPSON Stylus Color 1160
+      EPSON Stylus Photo 720
+      EPSON Stylus Photo 750
+      EPSON Stylus Photo 780/785/790
+      EPSON Stylus Photo 810/820
+      EPSON Stylus Photo 825/830
+      EPSON Stylus Photo 870/875
+      EPSON Stylus Photo 890/895
+      EPSON Stylus Photo 915
+      EPSON Stylus Photo 925
+      EPSON Stylus Photo 950
+      EPSON Stylus Photo 960
+      EPSON Stylus Photo 1200
+      EPSON Stylus Photo 1270
+      EPSON Stylus Photo 1280/1290
+      EPSON Stylus Photo 2000P
+      EPSON Stylus Photo 2100
+      EPSON Stylus Photo 2200
+      EPSON Stylus Scan 2000
+      EPSON Stylus Scan 2500
