@@ -937,11 +937,11 @@ int pcl_convert_media_size(const char *media_size,	/* I: Media size string */
  * 'pcl_parameters()' - Return the parameter values for the given parameter.
  */
 
-char **				/* O - Parameter values */
-pcl_parameters(int  model,	/* I - Printer model */
-               char *ppd_file,	/* I - PPD file (not used) */
-               char *name,	/* I - Name of parameter */
-               int  *count)	/* O - Number of values */
+char **					/* O - Parameter values */
+pcl_parameters(const printer_t *printer,/* I - Printer model */
+               char *ppd_file,		/* I - PPD file (not used) */
+               char *name,		/* I - Name of parameter */
+               int  *count)		/* O - Number of values */
 {
   int		i;
   char		**valptrs;
@@ -961,10 +961,10 @@ pcl_parameters(int  model,	/* I - Printer model */
   if (name == NULL)
     return (NULL);
 
-  caps = pcl_get_model_capabilities(model);
+  caps = pcl_get_model_capabilities(printer->model);
 
 #ifdef DEBUG
-  fprintf(stderr, "Printer model = %d\n", model);
+  fprintf(stderr, "Printer model = %d\n", printer->model);
   fprintf(stderr, "PageWidth = %d, PageLength = %d\n", caps.max_width, caps.max_height);
   fprintf(stderr, "Margins: top = %d, bottom = %d, left = %d, right = %d\n",
     caps.top_margin, caps.bottom_margin, caps.left_margin, caps.right_margin);
@@ -989,7 +989,7 @@ pcl_parameters(int  model,	/* I - Printer model */
 	      papersizes[i].width <= caps.max_width &&
 	      papersizes[i].length <= caps.max_height &&
               ((use_custom == 1) || ((use_custom == 0) &&
-              (pcl_convert_media_size(papersizes[i].name, model) != -1)))
+              (pcl_convert_media_size(papersizes[i].name, printer->model) != -1)))
              )
 	    {
 	      valptrs[*count] = malloc(strlen(papersizes[i].name) + 1);
@@ -1075,7 +1075,7 @@ pcl_parameters(int  model,	/* I - Printer model */
  */
 
 void
-pcl_imageable_area(int  model,		/* I - Printer model */
+pcl_imageable_area(const printer_t *printer,	/* I - Printer model */
                    char *ppd_file,	/* I - PPD file (not used) */
                    char *media_size,	/* I - Media size */
                    int  *left,		/* O - Left position in points */
@@ -1086,9 +1086,9 @@ pcl_imageable_area(int  model,		/* I - Printer model */
   int	width, length;			/* Size of page */
   pcl_cap_t caps;			/* Printer caps */
 
-  caps = pcl_get_model_capabilities(model);
+  caps = pcl_get_model_capabilities(printer->model);
 
-  default_media_size(model, ppd_file, media_size, &width, &length);
+  default_media_size(printer, ppd_file, media_size, &width, &length);
 
 /*
  * Note: The margins actually vary with paper size, but since you can
@@ -1229,7 +1229,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
   * Compute the output size...
   */
 
-  pcl_imageable_area(model, ppd_file, media_size, &page_left, &page_right,
+  pcl_imageable_area(printer, ppd_file, media_size, &page_left, &page_right,
                      &page_bottom, &page_top);
   compute_page_parameters(page_right, page_left, page_top, page_bottom,
 			  scaling, image_width, image_height, image,
@@ -1264,7 +1264,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
   * to correct "top" below.
   */
 
-  default_media_size(model, ppd_file, media_size, &tempwidth, &templength);
+  default_media_size(printer, ppd_file, media_size, &tempwidth, &templength);
 
   pcl_media_size = pcl_convert_media_size(media_size, model);
 

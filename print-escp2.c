@@ -613,12 +613,13 @@ escp2_pseudo_separation_rows(int model)
  */
 
 char **					/* O - Parameter values */
-escp2_parameters(int  model,		/* I - Printer model */
+escp2_parameters(const printer_t *printer,	/* I - Printer model */
                  char *ppd_file,	/* I - PPD file (not used) */
                  char *name,		/* I - Name of parameter */
                  int  *count)		/* O - Number of values */
 {
   int		i;
+  int		model = printer->model;
   char		**valptrs;
 
   static char *ink_types[] =
@@ -729,7 +730,7 @@ escp2_parameters(int  model,		/* I - Printer model */
  */
 
 void
-escp2_imageable_area(int  model,	/* I - Printer model */
+escp2_imageable_area(const printer_t *printer,	/* I - Printer model */
                      char *ppd_file,	/* I - PPD file (not used) */
                      char *media_size,	/* I - Media size */
                      int  *left,	/* O - Left position in points */
@@ -739,11 +740,11 @@ escp2_imageable_area(int  model,	/* I - Printer model */
 {
   int	width, length;			/* Size of page */
 
-  default_media_size(model, ppd_file, media_size, &width, &length);
-  *left =	escp2_left_margin(model);
-  *right =	width - escp2_right_margin(model);
-  *top =	length - escp2_top_margin(model);
-  *bottom =	escp2_bottom_margin(model);
+  default_media_size(printer, ppd_file, media_size, &width, &length);
+  *left =	escp2_left_margin(printer->model);
+  *right =	width - escp2_right_margin(printer->model);
+  *top =	length - escp2_top_margin(printer->model);
+  *bottom =	escp2_bottom_margin(printer->model);
 }
 
 static void
@@ -988,7 +989,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
  /*
   * Compute the output size...
   */
-  escp2_imageable_area(model, ppd_file, media_size, &page_left, &page_right,
+  escp2_imageable_area(printer, ppd_file, media_size, &page_left, &page_right,
                        &page_bottom, &page_top);
 
   compute_page_parameters(page_right, page_left, page_top, page_bottom,
@@ -1046,7 +1047,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
  /*
   * Send ESC/P2 initialization commands...
   */
-  default_media_size(model, ppd_file, media_size, &n, &page_length);
+  default_media_size(printer, ppd_file, media_size, &n, &page_length);
   page_length += (39 + (escp2_nozzles(model) * 2) *
 		  escp2_nozzle_separation(model)) / 10; /* Top and bottom */
   page_top = 0;

@@ -1578,7 +1578,7 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
   */
   gtk_build_dither_menu();
 
-  media_sizes = (*(current_printer->parameters))(current_printer->model,
+  media_sizes = (*(current_printer->parameters))(current_printer,
                                                  p->v.ppd_file,
                                                  "PageSize", &num_media_sizes);
 
@@ -1602,7 +1602,7 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
     free(media_types);
   }
 
-  media_types = (*(current_printer->parameters))(current_printer->model,
+  media_types = (*(current_printer->parameters))(current_printer,
 						 p->v.ppd_file,
 						 "MediaType",
 						 &num_media_types);
@@ -1624,7 +1624,7 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
     free(media_sources);
   }
 
-  media_sources = (*(current_printer->parameters))(current_printer->model,
+  media_sources = (*(current_printer->parameters))(current_printer,
 						   p->v.ppd_file,
 						   "InputSlot",
 						   &num_media_sources);
@@ -1647,7 +1647,7 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
     free(ink_types);
   }
 
-  ink_types = (*(current_printer->parameters))(current_printer->model,
+  ink_types = (*(current_printer->parameters))(current_printer,
 					       p->v.ppd_file,
 					       "InkType", &num_ink_types);
   if (vars.ink_type[0] == '\0' && ink_types != NULL)
@@ -1668,7 +1668,7 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
     free(resolutions);
   }
 
-  resolutions = (*(current_printer->parameters))(current_printer->model,
+  resolutions = (*(current_printer->parameters))(current_printer,
 						 p->v.ppd_file,
 						 "Resolution",
 						 &num_resolutions);
@@ -2101,10 +2101,10 @@ static void gtk_preview_update(void)
   }
 
 
-  (*current_printer->media_size)(current_printer->model, vars.ppd_file,
+  (*current_printer->media_size)(current_printer, vars.ppd_file,
 				 vars.media_size, &paper_width, &paper_height);
 
-  (*current_printer->imageable_area)(current_printer->model, vars.ppd_file,
+  (*current_printer->imageable_area)(current_printer, vars.ppd_file,
 				     vars.media_size, &left, &right,
 				     &bottom, &top);
 

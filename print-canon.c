@@ -352,7 +352,7 @@ c_strdup(const char *s)
  */
 
 char **					/* O - Parameter values */
-canon_parameters(int  model,		/* I - Printer model */
+canon_parameters(const printer_t *printer,	/* I - Printer model */
                  char *ppd_file,	/* I - PPD file (not used) */
                  char *name,		/* I - Name of parameter */
                  int  *count)		/* O - Number of values */
@@ -382,7 +382,7 @@ canon_parameters(int  model,		/* I - Printer model */
                   ("Manual without Pause"),
                 };
 
-  canon_cap_t caps= canon_get_model_capabilities(model);
+  canon_cap_t caps= canon_get_model_capabilities(printer->model);
 
   if (count == NULL)
     return (NULL);
@@ -500,7 +500,7 @@ canon_parameters(int  model,		/* I - Printer model */
  */
 
 void
-canon_imageable_area(int  model,	/* I - Printer model */
+canon_imageable_area(const printer_t *printer,	/* I - Printer model */
                      char *ppd_file,	/* I - PPD file (not used) */
                      char *media_size,	/* I - Media size */
                      int  *left,	/* O - Left position in points */
@@ -510,9 +510,9 @@ canon_imageable_area(int  model,	/* I - Printer model */
 {
   int	width, length;			/* Size of page */
 
-  canon_cap_t caps= canon_get_model_capabilities(model);
+  canon_cap_t caps= canon_get_model_capabilities(printer->model);
 
-  default_media_size(model, ppd_file, media_size, &width, &length);
+  default_media_size(printer, ppd_file, media_size, &width, &length);
 
   *left   = caps.border_left;
   *right  = width - caps.border_right;
@@ -851,7 +851,7 @@ canon_print(const printer_t *printer,		/* I - Model */
   * Compute the output size...
   */
 
-  canon_imageable_area(model, ppd_file, media_size, &page_left, &page_right,
+  canon_imageable_area(printer, ppd_file, media_size, &page_left, &page_right,
                        &page_bottom, &page_top);
 
   compute_page_parameters(page_right, page_left, page_top, page_bottom,
@@ -862,7 +862,7 @@ canon_print(const printer_t *printer,		/* I - Model */
   image_height = Image_height(image);
   image_width = Image_width(image);
 
-  default_media_size(model, ppd_file, media_size, &n, &page_length);
+  default_media_size(printer, ppd_file, media_size, &n, &page_length);
 
   /*
   PUT("top        ",top,72);

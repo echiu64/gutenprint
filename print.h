@@ -178,11 +178,13 @@ typedef struct printer
   char	*long_name,			/* Long name for UI */
 	*driver;			/* Short name for printrc file */
   int	model;				/* Model number */
-  char	**(*parameters)(int model, char *ppd_file, char *name, int *count);
+  char	**(*parameters)(const struct printer *printer, char *ppd_file,
+                        char *name, int *count);
 					/* Parameter names */
-  void	(*media_size)(int model, char *ppd_file, char *media_size,
-                      int *width, int *length);
-  void	(*imageable_area)(int model, char *ppd_file, char *media_size,
+  void	(*media_size)(const struct printer *printer, char *ppd_file,
+                      char *media_size, int *width, int *length);
+  void	(*imageable_area)(const struct printer *printer, char *ppd_file,
+                          char *media_size,
                           int *left, int *right, int *bottom, int *top);
   /* Print function */
   void	(*print)(const struct printer *printer, int copies, FILE *prn,
@@ -310,13 +312,13 @@ extern void	free_lut(vars_t *v);
 extern void	compute_lut(size_t steps, vars_t *v);
 
 
-extern void	default_media_size(int model, char *ppd_file, char *media_size,
-		                   int *width, int *length);
+extern void	default_media_size(const printer_t *printer, char *ppd_file,
+				   char *media_size, int *width, int *length);
 
 
-extern char	**escp2_parameters(int model, char *ppd_file, char *name,
-				   int *count);
-extern void	escp2_imageable_area(int model, char *ppd_file,
+extern char	**escp2_parameters(const printer_t *printer, char *ppd_file,
+				   char *name, int *count);
+extern void	escp2_imageable_area(const printer_t *printer, char *ppd_file,
 				     char *media_size, int *left, int *right,
 				     int *bottom, int *top);
 extern void	escp2_print(const printer_t *printer, int copies, FILE *prn,
@@ -324,31 +326,32 @@ extern void	escp2_print(const printer_t *printer, int copies, FILE *prn,
 
 
 #ifndef ESCP2_GHOST
-extern char	**canon_parameters(int model, char *ppd_file, char *name,
-		                   int *count);
-extern void	canon_imageable_area(int model, char *ppd_file,
+extern char	**canon_parameters(const printer_t *printer, char *ppd_file,
+		                   char *name, int *count);
+extern void	canon_imageable_area(const printer_t *printer, char *ppd_file,
 				     char *media_size, int *left, int *right,
 				     int *bottom, int *top);
 extern void	canon_print(const printer_t *printer, int copies, FILE *prn,
 			    Image image, const vars_t *v);
 
 
-extern char	**pcl_parameters(int model, char *ppd_file, char *name,
-		                 int *count);
-extern void	pcl_imageable_area(int model, char *ppd_file, char *media_size,
+extern char	**pcl_parameters(const printer_t *printer, char *ppd_file,
+		                 char *name, int *count);
+extern void	pcl_imageable_area(const printer_t *printer, char *ppd_file,
+				   char *media_size,
 		                   int *left, int *right, int *bottom,
 				   int *top);
 extern void	pcl_print(const printer_t *printer, int copies, FILE *prn,
 			  Image image, const vars_t *v);
 
 
-extern char	**ps_parameters(int model, char *ppd_file, char *name,
-		                int *count);
-extern void	ps_media_size(int model, char *ppd_file, char *media_size,
-		              int *width, int *length);
-extern void	ps_imageable_area(int model, char *ppd_file, char *media_size,
-		                  int *left, int *right, int *bottom,
-				  int *top);
+extern char	**ps_parameters(const printer_t *printer, char *ppd_file,
+		                char *name, int *count);
+extern void	ps_media_size(const printer_t *printer, char *ppd_file,
+		              char *media_size, int *width, int *length);
+extern void	ps_imageable_area(const printer_t *printer, char *ppd_file,
+		                  char *media_size, int *left, int *right,
+		                  int *bottom, int *top);
 extern void	ps_print(const printer_t *printer, int copies, FILE *prn,
 			 Image image, const vars_t *v);
 #else

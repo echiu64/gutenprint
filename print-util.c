@@ -830,7 +830,8 @@ get_papersize_by_name(const char *name)
 }
 
 void
-default_media_size(int  model,		/* I - Printer model */
+default_media_size(const printer_t *printer,
+					/* I - Printer model (not used) */
         	   char *ppd_file,	/* I - PPD file (not used) */
         	   char *media_size,	/* I - Media size */
         	   int  *width,		/* O - Width in points */

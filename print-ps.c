@@ -63,11 +63,11 @@ static char	*ppd_find(char *, char *, char *, int *);
  * 'ps_parameters()' - Return the parameter values for the given parameter.
  */
 
-char **				/* O - Parameter values */
-ps_parameters(int  model,	/* I - Printer model */
-              char *ppd_file,	/* I - PPD file (not used) */
-              char *name,	/* I - Name of parameter */
-              int  *count)	/* O - Number of values */
+char **					/* O - Parameter values */
+ps_parameters(const printer_t *printer,	/* I - Printer model */
+              char *ppd_file,		/* I - PPD file (not used) */
+              char *name,		/* I - Name of parameter */
+              int  *count)		/* O - Number of values */
 {
   int		i;
   char		line[1024],
@@ -154,7 +154,7 @@ ps_parameters(int  model,	/* I - Printer model */
  */
 
 void
-ps_media_size(int  model,		/* I - Printer model */
+ps_media_size(const printer_t *printer,	/* I - Printer model */
               char *ppd_file,		/* I - PPD file (not used) */
               char *media_size,		/* I - Media size */
               int  *width,		/* O - Width in points */
@@ -171,7 +171,7 @@ ps_media_size(int  model,		/* I - Printer model */
   if ((dimensions = ppd_find(ppd_file, "PaperDimension", media_size, NULL)) != NULL)
     sscanf(dimensions, "%d%d", width, length);
   else
-    default_media_size(model, ppd_file, media_size, width, length);
+    default_media_size(printer, ppd_file, media_size, width, length);
 }
 
 
@@ -180,7 +180,7 @@ ps_media_size(int  model,		/* I - Printer model */
  */
 
 void
-ps_imageable_area(int  model,		/* I - Printer model */
+ps_imageable_area(const printer_t *printer,	/* I - Printer model */
                   char *ppd_file,	/* I - PPD file (not used) */
                   char *media_size,	/* I - Media size */
                   int  *left,		/* O - Left position in points */
@@ -212,7 +212,7 @@ ps_imageable_area(int  model,		/* I - Printer model */
   }
   else
   {
-    default_media_size(model, ppd_file, media_size, right, top);
+    default_media_size(printer, ppd_file, media_size, right, top);
     *left   = 18;
     *right  -= 18;
     *top    -= 36;
@@ -297,7 +297,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
   * Compute the output size...
   */
 
-  ps_imageable_area(model, ppd_file, media_size, &page_left, &page_right,
+  ps_imageable_area(printer, ppd_file, media_size, &page_left, &page_right,
                     &page_bottom, &page_top);
   compute_page_parameters(page_right, page_left, page_top, page_bottom,
 			  scaling, image_width, image_height, image,
