@@ -15,9 +15,9 @@
 .\" You should have received a copy of the GNU General Public License
 .\" along with this program; if not, write to the Free Software
 .\" Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-.TH GIMPPRINT-IMAGETYPES 7 "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "Gimp-Print Manual Pages"
+.TH GIMPPRINT\-IMAGETYPES 7 "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "Gimp-Print Manual Pages"
 .SH NAME
-gimpprint-imagetypes \- Gimp-Print image types
+gimpprint\-imagetypes \- Gimp-Print image types
 .SH DESCRIPTION
 Gimp-Print includes several image types which can be used to optimise
 the dither, depending on the type of image you wish to print.
@@ -66,14 +66,14 @@ version.
 .PP
 This manual page was written by Roger Leigh (roger@whinlatter.uklinux.net)
 .SH SEE ALSO
-.BR gimpprint-color (7),
-.BR gimpprint-dithers (7),
-.BR gimpprint-inktypes (7),
-.BR gimpprint-mediasizes (7),
-.BR gimpprint-mediasources (7),
-.BR gimpprint-mediatypes (7),
-.BR gimpprint-models (7),
-.BR gimpprint-resolutions (7).
+.BR gimpprint\-color (7),
+.BR gimpprint\-dithers (7),
+.BR gimpprint\-inktypes (7),
+.BR gimpprint\-mediasizes (7),
+.BR gimpprint\-mediasources (7),
+.BR gimpprint\-mediatypes (7),
+.BR gimpprint\-models (7),
+.BR gimpprint\-resolutions (7).
 .\"#
 .\"# The following sets edit modes for GNU EMACS
 .\"# Local Variables:

@@ -15,9 +15,9 @@
 .\" You should have received a copy of the GNU General Public License
 .\" along with this program; if not, write to the Free Software
 .\" Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-.TH GIMPPRINT-COLOR 7 "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "Gimp-Print Manual Pages"
+.TH GIMPPRINT\-COLOR 7 "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "Gimp-Print Manual Pages"
 .SH NAME
-gimpprint-color \- Gimp-Print color balancing
+gimpprint\-color \- Gimp-Print color balancing
 .SH DESCRIPTION
 Gimp-Print includes several color balancing controls.  These may be
 used to adjust the original image's brightness and contrast and gamma,
@@ -90,14 +90,14 @@ version.
 .PP
 This manual page was written by Roger Leigh (roger@whinlatter.uklinux.net)
 .SH SEE ALSO
-.BR gimpprint-dithers (7),
-.BR gimpprint-imagetypes (7),
-.BR gimpprint-inktypes (7),
-.BR gimpprint-mediasizes (7),
-.BR gimpprint-mediasources (7),
-.BR gimpprint-mediatypes (7),
-.BR gimpprint-models (7),
-.BR gimpprint-resolutions (7).
+.BR gimpprint\-dithers (7),
+.BR gimpprint\-imagetypes (7),
+.BR gimpprint\-inktypes (7),
+.BR gimpprint\-mediasizes (7),
+.BR gimpprint\-mediasources (7),
+.BR gimpprint\-mediatypes (7),
+.BR gimpprint\-models (7),
+.BR gimpprint\-resolutions (7).
 .\"#
 .\"# The following sets edit modes for GNU EMACS
 .\"# Local Variables:
