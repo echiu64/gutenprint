@@ -98,7 +98,111 @@ void *mymalloc(size_t size){
   exit(-1);
 }
 
+void *myrealloc(void *ptr, size_t size){
+  void *p;
+  if ((p=realloc(ptr,size))||(size==0))
+    return(p);
+
+  fprintf(stderr,"Buy some RAM, dude!");
+  exit(-1);
+}
+
+int get_bits(unsigned char *p,int index,int bpp) {
+
+  /* p is a pointer to a bit stream, ordered MSb first.  Extract the
+   * indexth bpp bit width field and return that value.  Ignore byte
+   * boundries.
+   */
+
+  int value,b;
+  
+  value=0;
+  for (b=0;b<bpp;b++) {
+    value*=2;
+    value|=(p[(index*bpp+b)/8]>>(7-((index*bpp+b)%8)))&1;
+  }
+  return(value);
+}
+
+void set_bits(unsigned char *p,int index,int bpp,int value) {
+
+  /* p is a pointer to a bit stream, ordered MSb first.  Set the
+   * indexth bpp bit width field to value value.  Ignore byte
+   * boundries.
+   */
+
+  int b;
+  
+  for (b=bpp-1;b>=0;b--) {
+    if (value&1) {
+      p[(index*bpp+b)/8]|=1<<(7-((index*bpp+b)%8));
+    } else {
+      p[(index*bpp+b)/8]&=~(1<<(7-((index*bpp+b)%8)));
+    }
+    value/=2;
+  }
+}
+
 void mix_ink(ppmpixel p, int c, unsigned int a) {
+
+}
+
+void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color){
+
+  int temp,shift,length,bpp,lvalue,pvalue;
+  unsigned char *tempp;
+
+  if (startl<p->startx[color]) { /* l should be to the right of p */
+    temp=p->startx[color];
+    p->startx[color]=startl;
+    startl=temp;
+    temp=p->stopx[color];
+    p->stopx[color]=stopl;
+    stopl=temp;
+    tempp=p->line[color];
+    p->line[color]=l;
+    l=tempp;
+  }
+  shift=startl-p->startx[color];
+  length=stopl-startl;
+  
+  p->stopx[color]=(stopl>p->stopx[color])?stopl:p->stopx[color];
+  p->line[color]=myrealloc(p->line[color],((p->stopx[color]-p->startx[color]+1)*bpp+7)/8);
+
+ bpp=pstate.dotsize&0x16?2:1;
+ for (i=0;i<length;i++) {
+   lvalue=get_bits(l,i,bpp);
+   pvalue=get_bits(p->line[color],i+shift,bpp);
+   pvalue+=lvalue;
+   if (pvalue>(1<<bpp)-1) {
+     pvalue=(1<<bpp)-1;
+   }
+   set_bits(p->line[color],i+shift,bpp,pvalue);
+ }
+}
+
+void expand_line (unsigned char *src, unsigned char *dst, int length, int bpp, int skip) {
+
+  /* src is a pointer to a bit stream which is composed of fields of length
+   * bpp starting with the most significant bit of the first byte and
+   * proceding from there with no regard to byte boundaries.  For the
+   * existing Epson printers, bpp is 1 or 2, which means fields will never
+   * cross byte boundaries.  However, if bpp were 3, this would undoubtedly
+   * happen.  This routine will make no assumptions about bpp, and handle each
+   * bit individually.  It's slow, but, it's the only way that will work in
+   * the general case of arbitrary bpp.
+   *
+   * We want to copy each field from the src to the dst, spacing the fields
+   * out every skip fields.
+   */
+  if (skip==1) { /* the trivial case, this should be faster */
+    memcpy(dst,src,(length*bpp+7)/8);
+    return;
+  }
+
+  for (i=0;i<length;i++) {
+    set_bits(dst,i*skip,bpp,get_bits(src,i,bpp));
+  }
 
 }
 
@@ -139,7 +243,7 @@ void write_output(FILE *fp_w) {
     for (p=left;p<=right;p++) {
       memset(pixel,255,3);
       for (c=0;c<MAX_INKS;c++) {
-        if ((page[l])&&(page[l]->startx[c]<=p)&&(page[l]->stopx[c]>=p)) {
+        if ((page[l])&&(page[l]->line[c])&&(page[l]->startx[c]<=p)&&(page[l]->stopx[c]>=p)) {
           if (pstate.dotsize==0x10) {
             amount=(page[l]->line[c][(p-page[l]->startx[c])/4]>>
                           ((p-page[l]->startx[c])%4))&0x3;
@@ -157,7 +261,8 @@ void write_output(FILE *fp_w) {
 
 void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,int density) {
 
-  int y,skip;
+  int y,skip,oldstart,oldstop;
+  unsigned char *oldline;
 
   skip=pstate.relative_horizontal_units/density;
 
@@ -178,21 +283,28 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
     if (!(page[y])) {
       page[y]=(line_type *) mycalloc(sizeof(line_type),1);
     }
-    if (!page[y]->line[color]) {
-       page[y]->line[color]=(unsigned char *) mycalloc(sizeof(unsigned char),
-                                                       bufsize*skip);
-       page[y]->startx[color]=pstate.xposition;
-       page[y]->stopx[color]=pstate.xposition+n*skip;
-       memcpy(page[y]->line[color],buf,bufsize);
+    if (page[y]->line[color]) {
+       oldline=page[y]->line[color];
+       oldstart=page[y]->startx[color];
+       oldstop=page[y]->stopx[color];
     } else {
-       fprintf(stderr,"FIXME: double printing not yet supported.\n");
+      oldline=NULL;
+    }
+    page[y]->line[color]=(unsigned char *) mycalloc(sizeof(unsigned char),
+                                                    bufsize*skip);
+    page[y]->startx[color]=pstate.xposition;
+    page[y]->stopx[color]=pstate.xposition+n*skip;
+    expand_line(buf,page[y]->line[color],n,bpp,skip);
+    if (oldline) {
+      merge_line(page[y],oldline,oldstart,oldstop,color);
     }
   }
+  pstate.xposition+=n;
 }
 
 main(int argc,char *argv[]){
 
-int currentcolor,currentbpp,density,eject;
+int currentcolor,currentbpp,density,eject,got_graphics;
 
     if(argc == 1){
         fp_r = stdin;
@@ -220,9 +332,10 @@ int currentcolor,currentbpp,density,eject;
 #define getn(n,error) if (!fread(buf,1,n,fp_r)){fprintf(stderr,error);exit(-1);}
 
     eject=0;
+    got_graphics=0;
     while ((!eject)&&(fread(&ch,1,1,fp_r))){
       if (ch!=0x1b) {
-        fprintf(stderr,"Corrupt file?  No ESC found.\n");
+        fprintf(stderr,"Corrupt file?  No ESC found.  Found: %X\n",ch);
         continue;
       }
       get1("Corrupt file.  No command found.\n");
@@ -255,6 +368,9 @@ int currentcolor,currentbpp,density,eject;
             c=ch;
             get1("Error reading bpp!\n");
             currentbpp=ch;
+            if (currentbpp>2) {
+              fprintf(stderr,"Warning! Excessively deep color detected.\n");
+            }
             get2("Error reading number of horizontal dots!\n");
             n=sh;
             get2("Error reading number of vertical dots!\n");
@@ -262,6 +378,7 @@ int currentcolor,currentbpp,density,eject;
             density=pstate.relative_horizontal_units;
             ch=0; /* make sure ch!='.' and fall through */
         case '.': /* transfer raster image */
+            got_graphics=1;
             if (ch=='.') {
               get1("Error reading compression mode!\n");
               c=ch;
@@ -313,6 +430,7 @@ int currentcolor,currentbpp,density,eject;
             get2("Error reading relative horizontal position.\n");
             if (pstate.xposition+(signed short)sh<0) {
               fprintf(stderr,"Warning! Attempt to move to -X region ignored.\n");
+              fprintf(stderr,"   Command:  ESC %c %X %X   Original Position: %d\n",ch,minibuf[0],minibuf[1],pstate.xposition);
             } else  /* FIXME: Where is the right margin??? */
               pstate.xposition+=(signed short)sh;
             break;
@@ -385,7 +503,11 @@ int currentcolor,currentbpp,density,eject;
                 if ((bufsize!=2)||(buf[0]!=0)||((buf[1]>4)&&(buf[1]!=0x10))) {
                   fprintf(stderr,"Malformed dotsize setting command.\n");
                 } else {
-                  pstate.dotsize=buf[1];
+                  if (got_graphics) {
+                    fprintf(stderr,"Changing dotsize while printing not supported.\n");
+                  } else {
+                    pstate.dotsize=buf[1];
+                  }
                 }
                 break;
               case 'c': /* set page format */
@@ -480,10 +602,12 @@ int currentcolor,currentbpp,density,eject;
                   }
                 }
                 break;
-              case '/': /* set relative horizontal position */
+              case 0x5C: /* set relative horizontal position 700/EX */
+              case '/': /* set relative horizontal position  740/750/1200 */
                 i=(buf[3]<<24)|(buf[2]<<16)|(buf[1]<<8)|buf[0];
                 if (pstate.xposition+i<0) {
                   fprintf(stderr,"Warning! Attempt to move to -X region ignored.\n");
+                  fprintf(stderr,"   Command:  ESC ( %c %X %X %X %X  Original position: %d\n",ch,buf[0],buf[1],buf[2],buf[3],pstate.xposition);
                 } else  /* FIXME: Where is the right margin??? */
                   pstate.xposition+=i;
                 break;
