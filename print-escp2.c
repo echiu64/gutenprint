@@ -30,6 +30,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.10  1999/10/25 00:16:12  rlk
+ *   Comment
+ *
  *   Revision 1.9  1999/10/21 01:27:37  rlk
  *   More progress toward full 16-bit rendering
  *
@@ -940,7 +943,7 @@ escp2_write(FILE          *prn,	/* I - Print file or command */
 	     unsigned char *line,	/* I - Output bitmap data */
 	     int           length,	/* I - Length of bitmap data */
 	     int	   density,     /* I - 0 for dark, 1 for light */
-	     int           plane,	/* I - True if this is the last plane */
+	     int           plane,	/* I - Which color */
 	     int           ydpi,	/* I - Vertical resolution */
 	     int           model,	/* I - Printer model */
 	     int           width,	/* I - Printed width */
