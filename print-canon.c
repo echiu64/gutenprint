@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.6  2000/02/03 01:12:27  rlk
+ *   Ink type
+ *
  *   Revision 1.5  2000/02/02 18:36:25  gandy
  *   Minor cleanups of code and debugging messages
  *
@@ -226,6 +229,14 @@ canon_parameters(int  model,		/* I - Printer model */
                   ("Manual with Pause"),
                   ("Manual without Pause"),
                 };
+  static char   *ink_types[] =
+  {
+    "Black",
+    "Color",
+    "Black/Color",
+    "Photo/Color",
+    "Photo"
+  };
 
   canon_cap_t caps= canon_get_model_capabilities(model);
 
@@ -282,17 +293,17 @@ canon_parameters(int  model,		/* I - Printer model */
     *count= c;
     p= valptrs;
   }
-  else if (strcmp(name, "PrintHead") == 0)
+  else if (strcmp(name, "InkType") == 0)
   {
     int c= 0;
     valptrs = malloc(sizeof(char *) * 5);
     if ((caps.inks & CANON_INK_K))       valptrs[c++]= strdup("Black");
-    if ((caps.inks == CANON_INK_CMY))    valptrs[c++]= strdup("Color");
-    if ((caps.inks == CANON_INK_CMYK))   valptrs[c++]= strdup("Black/Color");
-    if ((caps.inks == CANON_INK_CcMmYK)) valptrs[c++]= strdup("Photo/Color");
-    if ((caps.inks == CANON_INK_CcMmYy)) valptrs[c++]= strdup("Photo/Color");
+    if ((caps.inks & CANON_INK_CMY))    valptrs[c++]= strdup("Color");
+    if ((caps.inks & CANON_INK_CMYK))   valptrs[c++]= strdup("Black/Color");
+    if ((caps.inks & CANON_INK_CcMmYK)) valptrs[c++]= strdup("Photo/Color");
+    if ((caps.inks & CANON_INK_CcMmYy)) valptrs[c++]= strdup("Photo/Color");
     *count = c;
-    p = media_sources;
+    p = valptrs;
   }
   else if (strcmp(name, "MediaType") == 0)
   {

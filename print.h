@@ -95,7 +95,8 @@ typedef struct					/* Plug-in variables */
   char	resolution[64],		/* Resolution */
 	media_size[64],		/* Media size */
 	media_type[64],		/* Media type */
-	media_source[64];	/* Media source */
+	media_source[64],	/* Media source */
+	ink_type[64];		/* Ink or cartridge */
   int	brightness;		/* Output brightness */
   float	scaling;		/* Scaling, percent of printable area */
   int	orientation,		/* Orientation - 0 = port., 1 = land.,
