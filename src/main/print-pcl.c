@@ -331,12 +331,87 @@ static const pcl_cap_t pcl_model_capabilities[] =
     { -1,			/* No selectable paper sources */
     },
   },
+  /* DesignJet 230 */
+  { 10230,
+    36 * 72, 100 * 12 * 72,
+    5 * 72, 583 * 72 / 100,		/* Min paper size */
+    PCL_RES_300_300 | PCL_RES_600_600,
+    49, 49, 15, 15,
+    PCL_COLOR_NONE,
+    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
+    {
+      PCL_PAPERSIZE_LETTER,
+      -1,
+    },
+    {
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    {
+      PCL_PAPERSOURCE_STANDARD,
+      -1,
+    },
+  },
+  /* DesignJet 250C */
+  { 10250,
+    36 * 72, 100 * 12 * 72,
+    5 * 72, 583 * 72 / 100,		/* Min paper size */
+    PCL_RES_300_300 | PCL_RES_600_600_MONO,
+    49, 49, 15, 15,
+    PCL_COLOR_CMYK,
+    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
+    {
+      PCL_PAPERSIZE_LETTER,
+      -1,
+    },
+    {
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    {
+      PCL_PAPERSOURCE_STANDARD,
+      -1,
+    },
+  },
   /* DesignJet 750C */
-  { 750,
-    36 * 72, 100 * 12 * 72, /* Length limited to 51" in sheet mode */
+  { 10750,
+    36 * 72, 100 * 12 * 72,
     5 * 72, 583 * 72 / 100,		/* Min paper size */
     PCL_RES_300_300 | PCL_RES_600_600_MONO,
     30, 30, 15, 15,
+    PCL_COLOR_CMYK,
+    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
+    {
+      PCL_PAPERSIZE_LETTER,
+      -1,
+    },
+    {
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    {
+      PCL_PAPERSOURCE_STANDARD,
+      -1,
+    },
+  },
+  /* DesignJet 2500C/3500C */
+  { 12500,	/* Deskjet 2500 already has "2500" */
+    44 * 72, 100 * 12 * 72,
+    5 * 72, 583 * 72 / 100,		/* Min paper size */
+    PCL_RES_300_300 | PCL_RES_600_600_MONO,
+    49, 49, 15, 15,
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
     {
