@@ -174,6 +174,37 @@ reasonable 300 or 360 DPI resolution.
 
 For Epson Stylus printers:
 
+*** Note: The driver resolution setting has been extensively
+    overhauled in recent 4.3 releases.  The result is that all
+    printers offer fewer choices of resolution.  In particular, the
+    choice of unidirectional vs. bidirectional has been moved to a
+    separate option, and the number of choices within each resolution
+    (e. g. high quality and highest quality) has been reduced, so that
+    only choices that give useful quality/printing speed tradeoffs
+    have been retained.  For example, printers offering 1440x720 DPI
+    generally do not offer 720 DPI Highest Quality.
+
+    In Gimp-Print 4.2, very high resolutions generally offered
+    significantly better linearization than lower resolutions on
+    variable drop size printers, due to the way drop size computation
+    and photo ink choices were made.  As of 4.3.15, results are much
+    more uniform across resolutions, which may allow printing at a
+    lower resolution in many cases.  In some cases, print quality at
+    720 DPI may be very close to the quality achieved at 2880x1440
+    DPI, with the only difference being slightly more microbanding at
+    the lower resolution.  In other cases, the quality difference may
+    be more noticeable, but not grossly so.
+
+    Unlike typical OEM drivers, Gimp-Print allows any choice of
+    resolution with any paper, so it is possible to select extremely
+    high resolution with plain paper or very low resolution with high
+    quality photo paper.  Some common sense should be used; there's
+    rarely any reason to print above 720 DPI on plain paper, and
+    resolutions below 720 DPI will generally yield grossly inferior
+    results on photo papers.
+
+    The list here is currently not up to date.
+
 Within each specified resolution, the quality is generally listed from
 worst to best (and generally higher quality means lower speed).  For
 example, 360 DPI Unidirectional is usually better than 360 DPI.
