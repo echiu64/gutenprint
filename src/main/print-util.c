@@ -1298,6 +1298,7 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
   int answer = 1;
   const stp_printfuncs_t *printfuncs = stp_printer_get_printfuncs(p);
   const stp_vars_t printvars = stp_printer_get_printvars(p);
+  const char *ppd_file = stp_get_ppd_file(v);
 
   /*
    * Note that in raw CMYK mode the user is responsible for not sending
@@ -1312,7 +1313,7 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
   if (strlen(stp_get_media_size(v)) > 0)
     {
       const char *checkval = stp_get_media_size(v);
-      vptr = (*printfuncs->parameters)(p, NULL, "PageSize", &count);
+      vptr = (*printfuncs->parameters)(p, ppd_file, "PageSize", &count);
       answer &= verify_param(checkval, vptr, count, "page size", v);
     }
   else
@@ -1332,28 +1333,28 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
   if (strlen(stp_get_media_type(v)) > 0)
     {
       const char *checkval = stp_get_media_type(v);
-      vptr = (*printfuncs->parameters)(p, NULL, "MediaType", &count);
+      vptr = (*printfuncs->parameters)(p, ppd_file, "MediaType", &count);
       answer &= verify_param(checkval, vptr, count, "media type", v);
     }
 
   if (strlen(stp_get_media_source(v)) > 0)
     {
       const char *checkval = stp_get_media_source(v);
-      vptr = (*printfuncs->parameters)(p, NULL, "InputSlot", &count);
+      vptr = (*printfuncs->parameters)(p, ppd_file, "InputSlot", &count);
       answer &= verify_param(checkval, vptr, count, "media source", v);
     }
 
   if (strlen(stp_get_resolution(v)) > 0)
     {
       const char *checkval = stp_get_resolution(v);
-      vptr = (*printfuncs->parameters)(p, NULL, "Resolution", &count);
+      vptr = (*printfuncs->parameters)(p, ppd_file, "Resolution", &count);
       answer &= verify_param(checkval, vptr, count, "resolution", v);
     }
 
   if (strlen(stp_get_ink_type(v)) > 0)
     {
       const char *checkval = stp_get_ink_type(v);
-      vptr = (*printfuncs->parameters)(p, NULL, "InkType", &count);
+      vptr = (*printfuncs->parameters)(p, ppd_file, "InkType", &count);
       answer &= verify_param(checkval, vptr, count, "ink type", v);
     }
 
