@@ -1,6 +1,6 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.2.2-rc2, released August 22, 2002, is the second release
+Gimp-Print 4.2.2-rc3, released September 2, 2002, is the third release
 candidate for Gimp-Print 4.2.2.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
@@ -21,8 +21,40 @@ or APFL GhostScript 7.04 or later.
 Please read the README file for full instructions on building and
 installing this package.
 
+Gimp-Print 4.2.2-rc3 contains the following major changes over
+Gimp-Print 4.2.2-rc1:
+
+  1) A problem introduced in Gimp-Print 4.2.2-rc2 whereby printing to
+     Epson printers failed or produced otherwise incorrect results is
+     fixed.
+
+  2) A problem printing to a CUPS-spooled printer using the PS2 driver
+     in the Gimp plug-in is fixed.
+
+  3) When using the native CUPS driver with a printer requiring
+     margins to the left and right, the right margin was previously
+     too wide.  The margin is now correct.
+
+The following bugs have been fixed in Gimp-Print 4.2.2-rc3:
+
+597964 Epson 660 wrong margins
+599505 PS2 printing from GIMP broken with CUPS
+600249 gimp-print output too narrow in CUPS
+601637 Resolution set incorrectly
+
+The following bugs are presently open in Gimp-Print 4.2.2-rc3:
+
+538097 Poor quality printing on Canon s400
+549677 Incorrect scaling on Canon BJC-1000
+581168 BJC 250 just spits out pages
+596538 Cutting on Epson Stylus Photo 925 does not work
+599029 Fast printing not supported on Epson 950, 960
+602933 Poor quality on Canon S800
+603702 HP LaserJet 5L print is too light
+
+
 Gimp-Print 4.2.2-rc2 contains the following major changes over
-Gimp-Print 4.2.2-rc2:
+Gimp-Print 4.2.2-rc1:
 
   1) Support for Epson Stylus C41, C42, C61, C62, C82; Stylus Photo
      830, Stylus Photo 915, Stylus Photo 925.
@@ -42,15 +74,6 @@ Gimp-Print 4.2.2-rc2:
 The following bug has been fixed in Gimp-Print 4.2.2-rc2:
 
 598341 get_system_printers() problem with dups.
-
-The following bugs are presently open in Gimp-Print 4.2.2-rc2:
-
-538097 Printing on Canon s400
-549677 Still problems with scaling in 4.2.1
-581168 BJC 250 just spits out pages
-596538 Cutting on Epson Stylus Photo 925
-597964 Epson 660 wrong margins
-599029 Fast printing not supported on 950, 960
 
 
 Gimp-Print 4.2.2-rc1 contains the following major changes over
