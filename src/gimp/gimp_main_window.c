@@ -118,6 +118,7 @@ static GtkWidget *printer_crawler;     /* Scrolled Window for menu */
 static GtkWidget *printer_combo;       /* Combo for menu */
 static gint plist_callback_id = -1;
 static GtkWidget *ppd_file;            /* PPD file entry */
+static GtkWidget *ppd_box;
 static GtkWidget *ppd_label;           /* PPD file entry */
 static GtkWidget *ppd_button;          /* PPD file browse button */
 static GtkWidget *output_cmd;          /* Output command text entry */
@@ -549,8 +550,8 @@ create_positioning_frame (void)
   gtk_widget_show (frame);
 
   table = gtk_table_new (1, 1, FALSE);
+  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 2);
-  gtk_table_set_col_spacing (GTK_TABLE (table), 1, 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 2);
   gtk_container_set_border_width (GTK_CONTAINER (table), 4);
   gtk_container_add (GTK_CONTAINER (frame), table);
@@ -576,7 +577,7 @@ create_positioning_frame (void)
   set_help_data (orientation_menu,
 		 _("Select the orientation: portrait, landscape, "
 		   "upside down, or seascape (upside down landscape)"));
-  table_attach_aligned (GTK_TABLE (table), 0, 0, _("Orientation:"), 1.0, 0.5,
+  table_attach_aligned (GTK_TABLE (table), 1, 0, _("Orientation:"), 1.0, 0.5,
 			orientation_menu, 3, TRUE);
 
   sep = gtk_hseparator_new ();
@@ -610,8 +611,12 @@ create_positioning_frame (void)
    * Center options
    */
 
+  sep = gtk_hseparator_new ();
+  gtk_table_attach_defaults (GTK_TABLE (table), sep, 0, 4, 5, 6);
+  gtk_widget_show (sep);
+
   box = gtk_hbox_new (TRUE, 4);
-  table_attach_aligned (GTK_TABLE (table), 0, 6, _("Center:"), 1.0, 0.5,
+  table_attach_aligned (GTK_TABLE (table), 0, 7, _("Center:"), 1.0, 0.5,
 			box, 3, FALSE);
 
   recenter_vertical_button = create_positioning_button
@@ -629,7 +634,6 @@ static void
 create_printer_dialog (void)
 {
   GtkWidget *table;
-  GtkWidget *box;
   GtkWidget *label;
   GtkWidget *event_box;
   gint       i;
@@ -648,7 +652,8 @@ create_printer_dialog (void)
    * Top-level table for dialog.
    */
 
-  table = gtk_table_new (1, 1, FALSE);
+  table = gtk_table_new (5, 2, FALSE);
+  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 8);
@@ -712,21 +717,21 @@ create_printer_dialog (void)
                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (ppd_label);
 
-  box = gtk_hbox_new (FALSE, 8);
-  gtk_table_attach (GTK_TABLE (table), box, 1, 2, 3, 4,
+  ppd_box = gtk_hbox_new (FALSE, 8);
+  gtk_table_attach (GTK_TABLE (table), ppd_box, 1, 2, 3, 4,
                     GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show (box);
 
   ppd_file = gtk_entry_new ();
-  gtk_box_pack_start (GTK_BOX (box), ppd_file, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (ppd_box), ppd_file, TRUE, TRUE, 0);
   gtk_widget_show (ppd_file);
 
   set_help_data(ppd_file,_("Enter the correct PPD filename for your printer"));
 
   ppd_button = gtk_button_new_with_label (_("Browse"));
   gtk_misc_set_padding (GTK_MISC (GTK_BIN (ppd_button)->child), 2, 0);
-  gtk_box_pack_start (GTK_BOX (box), ppd_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (ppd_box), ppd_button, FALSE, FALSE, 0);
   gtk_widget_show (ppd_button);
+  gtk_widget_show (ppd_box);
 
   set_help_data(ppd_button,
 		_("Choose the correct PPD filename for your printer"));
@@ -797,6 +802,7 @@ create_new_printer_dialog (void)
 		     NULL);
 
   table = gtk_table_new (1, 1, FALSE);
+  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 8);
@@ -860,6 +866,7 @@ static void
 create_printer_settings_frame (void)
 {
   GtkWidget *table;
+  GtkWidget *sep;
   GtkWidget *printer_hbox;
   GtkWidget *media_size_table;
   GtkWidget *button;
@@ -872,6 +879,7 @@ create_printer_settings_frame (void)
   create_new_printer_dialog ();
 
   table = gtk_table_new (1, 1, FALSE);
+  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 2);
   gtk_table_set_row_spacings (GTK_TABLE (table), 2);
   gtk_container_set_border_width (GTK_CONTAINER (table), 4);
@@ -932,6 +940,11 @@ create_printer_settings_frame (void)
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
                       GTK_SIGNAL_FUNC (new_printer_open_callback), NULL);
 
+  sep = gtk_hseparator_new ();
+  gtk_table_attach_defaults (GTK_TABLE (table), sep, 0, 4, vpos, vpos + 1);
+  gtk_widget_show (sep);
+  vpos++;
+
   /*
    * Media size combo box.
    */
@@ -943,6 +956,8 @@ create_printer_settings_frame (void)
    */
 
   media_size_table = gtk_table_new (1, 1, FALSE);
+  gtk_container_set_resize_mode(GTK_CONTAINER(media_size_table),
+				GTK_RESIZE_IMMEDIATE);
   table_attach_aligned(GTK_TABLE (table), 0, vpos++, _("Dimensions:"),
 		       1.0, 0.5, media_size_table, 2, TRUE);
 
@@ -986,6 +1001,7 @@ create_scaling_frame (void)
   gtk_widget_show (vbox);
 
   table = gtk_table_new (1, 1, FALSE);
+  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
@@ -1017,6 +1033,7 @@ create_scaling_frame (void)
    */
 
   table = gtk_table_new (1, 1, FALSE);
+  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_box_pack_start (GTK_BOX (box), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
@@ -1061,6 +1078,7 @@ create_scaling_frame (void)
    */
 
   table = gtk_table_new (1, 1, FALSE);
+  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 2);
   gtk_box_pack_start (GTK_BOX (box), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
@@ -1071,12 +1089,31 @@ create_scaling_frame (void)
     (table, 0, 1, _("Height:"), _("Set the height of the print"));
 
   /*
+   * The "image size" button
+   */
+
+  scaling_image = gtk_button_new_with_label (_("Use Original\nImage Size"));
+  gtk_misc_set_padding (GTK_MISC (GTK_BIN (scaling_image)->child), 8, 4);
+  gtk_box_pack_start (GTK_BOX (box), scaling_image, FALSE, TRUE, 0);
+  gtk_widget_show (scaling_image);
+
+  set_help_data(scaling_image,
+		_("Set the print size to the size of the image"));
+  gtk_signal_connect (GTK_OBJECT (scaling_image), "clicked",
+                      GTK_SIGNAL_FUNC (scaling_callback), NULL);
+
+  sep = gtk_vseparator_new ();
+  gtk_box_pack_start (GTK_BOX (box), sep, FALSE, FALSE, 8);
+  gtk_widget_show (sep);
+
+  /*
    * The units toggles
    */
 
   table = gtk_table_new (1, 1, FALSE);
+  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-  gtk_box_pack_start (GTK_BOX (box), table, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (box), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
 
   event_box = gtk_event_box_new ();
@@ -1104,26 +1141,13 @@ create_scaling_frame (void)
 			 GTK_SIGNAL_FUNC(unit_callback), (gpointer) i);
     }
 
-  /*
-   * The "image size" button
-   */
-
-  scaling_image = gtk_button_new_with_label (_("Use Original\nImage Size"));
-  gtk_misc_set_padding (GTK_MISC (GTK_BIN (scaling_image)->child), 8, 4);
-  gtk_box_pack_end (GTK_BOX (box), scaling_image, FALSE, TRUE, 0);
-  gtk_widget_show (scaling_image);
-
-  set_help_data(scaling_image,
-		_("Set the print size to the size of the image"));
-  gtk_signal_connect (GTK_OBJECT (scaling_image), "clicked",
-                      GTK_SIGNAL_FUNC (scaling_callback), NULL);
-
 }
 
 static void
 create_image_settings_frame (void)
 {
   GtkWidget *vbox;
+  GtkWidget *hbox;
   GtkWidget *table;
   GtkWidget *label;
   GtkWidget *event_box;
@@ -1140,6 +1164,7 @@ create_image_settings_frame (void)
   gtk_widget_show (vbox);
 
   table = gtk_table_new (1, 1, FALSE);
+  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
@@ -1170,8 +1195,9 @@ create_image_settings_frame (void)
    */
 
   table = gtk_table_new (1, 1, FALSE);
+  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-  gtk_table_set_row_spacing (GTK_TABLE (table), 2, 4);
+/*  gtk_table_set_row_spacing (GTK_TABLE (table), 2, 4); */
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
 
@@ -1191,14 +1217,27 @@ create_image_settings_frame (void)
     group = create_radio_button(&(output_types[i]), group, table, 0, i,
 				output_type_callback);
 
+  sep = gtk_hseparator_new ();
+  gtk_box_pack_start (GTK_BOX (vbox), sep, FALSE, FALSE, 0);
+  gtk_widget_show (sep);
+
   /*
    *  Color adjust button
    */
+  hbox = gtk_hbox_new (FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
+  gtk_widget_show(hbox);
+  label = gtk_label_new("");
+  gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 0);
+  gtk_widget_show(label);
 
   adjust_color_button = gtk_button_new_with_label (_("Adjust Output..."));
   gtk_misc_set_padding (GTK_MISC (GTK_BIN (adjust_color_button)->child), 4, 0);
-  table_attach_aligned(GTK_TABLE (table), 0, output_type_count,
-		       NULL, 0.5, 0.5, adjust_color_button, 1, TRUE);
+  gtk_box_pack_start (GTK_BOX (hbox), adjust_color_button, FALSE, FALSE, 0);
+  gtk_widget_show(adjust_color_button);
+  label = gtk_label_new("");
+  gtk_box_pack_end(GTK_BOX(hbox), label, TRUE, TRUE, 0);
+  gtk_widget_show(label);
 
   set_help_data(adjust_color_button,
 		_("Adjust color balance, brightness, contrast, "
@@ -1502,71 +1541,6 @@ set_orientation(int orientation)
   update_adjusted_thumbnail();
 }
 
-/*
- *  do_misc_updates() - Build an option menu for the given parameters.
- */
-static void
-do_misc_updates (void)
-{
-  gint i;
-  suppress_preview_update++;
-  set_orientation(pv->orientation);
-  invalidate_preview_thumbnail ();
-  preview_update ();
-
-  if (pv->scaling < 0)
-    {
-      gdouble tmp = -pv->scaling;
-      gdouble max_ppi_scaling;
-      gdouble min_ppi_scaling;
-
-      compute_scaling_limits(&min_ppi_scaling, &max_ppi_scaling);
-
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi), TRUE);
-      GTK_ADJUSTMENT (scaling_adjustment)->lower = min_ppi_scaling;
-      GTK_ADJUSTMENT (scaling_adjustment)->upper = max_ppi_scaling;
-      GTK_ADJUSTMENT (scaling_adjustment)->value = tmp;
-      gtk_adjustment_changed (GTK_ADJUSTMENT (scaling_adjustment));
-      gtk_adjustment_value_changed (GTK_ADJUSTMENT (scaling_adjustment));
-    }
-  else
-    {
-      gdouble tmp = pv->scaling;
-
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_percent), TRUE);
-      GTK_ADJUSTMENT (scaling_adjustment)->lower = MINIMUM_IMAGE_PERCENT;
-      GTK_ADJUSTMENT (scaling_adjustment)->upper = 100.0;
-      GTK_ADJUSTMENT (scaling_adjustment)->value = tmp;
-      gtk_signal_emit_by_name (scaling_adjustment, "changed");
-      gtk_signal_emit_by_name (scaling_adjustment, "value_changed");
-    }
-
-  for (i = 0; i < output_type_count; i++)
-    {
-      if (output_types[i].value == stp_get_output_type(pv->v))
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_types[i].button),
-				     TRUE);
-    }
-
-  do_color_updates ();
-
-  gtk_option_menu_set_history (GTK_OPTION_MENU (orientation_menu),
-			       pv->orientation + 1);
-
-  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(units[pv->unit].checkbox),
-			       TRUE);
-
-  for (i = 0; i < image_type_count; i++)
-    {
-      if (image_types[i].value == stp_get_image_type(pv->v))
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(image_types[i].button),
-				     TRUE);
-    }
-
-  suppress_preview_update--;
-  preview_update ();
-}
-
 static void
 position_button_callback(GtkWidget *widget, gpointer data)
 {
@@ -1629,6 +1603,95 @@ position_callback (GtkWidget *widget)
   preview_update ();
 }
 
+static void
+do_all_updates(void)
+{
+  gint i;
+  suppress_preview_update++;
+  set_orientation(pv->orientation);
+  invalidate_preview_thumbnail ();
+  preview_update ();
+
+  if (pv->scaling < 0)
+    {
+      gdouble tmp = -pv->scaling;
+      gdouble max_ppi_scaling;
+      gdouble min_ppi_scaling;
+
+      compute_scaling_limits(&min_ppi_scaling, &max_ppi_scaling);
+
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi), TRUE);
+      GTK_ADJUSTMENT (scaling_adjustment)->lower = min_ppi_scaling;
+      GTK_ADJUSTMENT (scaling_adjustment)->upper = max_ppi_scaling;
+      GTK_ADJUSTMENT (scaling_adjustment)->value = tmp;
+      gtk_adjustment_changed (GTK_ADJUSTMENT (scaling_adjustment));
+      gtk_adjustment_value_changed (GTK_ADJUSTMENT (scaling_adjustment));
+    }
+  else
+    {
+      gdouble tmp = pv->scaling;
+
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_percent), TRUE);
+      GTK_ADJUSTMENT (scaling_adjustment)->lower = MINIMUM_IMAGE_PERCENT;
+      GTK_ADJUSTMENT (scaling_adjustment)->upper = 100.0;
+      GTK_ADJUSTMENT (scaling_adjustment)->value = tmp;
+      gtk_signal_emit_by_name (scaling_adjustment, "changed");
+      gtk_signal_emit_by_name (scaling_adjustment, "value_changed");
+    }
+
+  for (i = 0; i < output_type_count; i++)
+    {
+      if (output_types[i].value == stp_get_output_type(pv->v))
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_types[i].button),
+				     TRUE);
+    }
+
+  do_color_updates ();
+
+  gtk_option_menu_set_history (GTK_OPTION_MENU (orientation_menu),
+			       pv->orientation + 1);
+
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(units[pv->unit].checkbox),
+			       TRUE);
+
+  for (i = 0; i < image_type_count; i++)
+    {
+      if (image_types[i].value == stp_get_image_type(pv->v))
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(image_types[i].button),
+				     TRUE);
+    }
+
+  suppress_preview_update--;
+  preview_update ();
+
+  /*
+   * Now get option parameters.
+   */
+
+  for (i = 0; i < list_option_count; i++)
+    {
+      list_option_t *option = &(the_list_options[i]);
+      const gchar *default_parameter =
+	stp_printer_get_default_parameter(current_printer, pv->v,option->name);
+      if (option->params)
+	stp_param_list_free(option->params);
+      option->params = stp_printer_get_parameters
+	(current_printer, pv->v, option->name);
+      if (stp_get_parameter(pv->v, option->name)[0] == '\0')
+	stp_set_parameter(pv->v, option->name, default_parameter);
+      else if (option->params == NULL)
+	stp_set_parameter(pv->v, option->name, NULL);
+      plist_build_combo(option->combo, option->params,
+			stp_get_parameter(pv->v, option->name),
+			default_parameter, combo_callback,
+			&(option->callback_id), option);
+      if (option->extra)
+	(option->extra)(stp_get_parameter(pv->v, option->name));
+    }
+
+  build_dither_combo ();
+}
+
 /*
  *  plist_callback() - Update the current system printer.
  */
@@ -1637,7 +1700,6 @@ plist_callback (GtkWidget *widget,
 		gpointer   data)
 {
   gint         i;
-  const gchar *default_parameter;
 
   invalidate_frame ();
   invalidate_preview_thumbnail ();
@@ -1668,40 +1730,8 @@ plist_callback (GtkWidget *widget,
     current_printer = stp_get_printer_by_driver (stp_get_driver (pv->v));
 
   suppress_preview_update++;
-  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (dither_algo_combo)->entry),
-                      stp_get_parameter (pv->v, "DitherAlgorithm"));
-
   setup_update ();
-
-  do_misc_updates ();
-
-  /*
-   * Now get option parameters.
-   */
-
-  for (i = 0; i < list_option_count; i++)
-    {
-      list_option_t *option = &(the_list_options[i]);
-      if (option->params)
-	stp_param_list_free(option->params);
-      option->params = stp_printer_get_parameters
-	(current_printer, pv->v, option->name);
-      default_parameter =
-	stp_printer_get_default_parameter(current_printer, pv->v,option->name);
-      if (stp_get_parameter(pv->v, option->name)[0] == '\0')
-	stp_set_parameter(pv->v, option->name, default_parameter);
-      else if (option->params == NULL)
-	stp_set_parameter(pv->v, option->name, NULL);
-      plist_build_combo(option->combo, option->params,
-			stp_get_parameter(pv->v, option->name),
-			default_parameter, combo_callback,
-			&(option->callback_id), option);
-      if (option->extra)
-	(option->extra)(stp_get_parameter(pv->v, option->name));
-    }
-
-  build_dither_combo ();
-
+  do_all_updates();
   suppress_preview_update--;
   preview_update ();
 }
@@ -1981,15 +2011,13 @@ setup_update (void)
 
   if (strncmp (stp_get_driver (pv->v),"ps", 2) == 0)
     {
+      gtk_widget_show (ppd_box);
       gtk_widget_show (ppd_label);
-      gtk_widget_show (ppd_file);
-      gtk_widget_show (ppd_button);
     }
   else
     {
+      gtk_widget_hide (ppd_box);
       gtk_widget_hide (ppd_label);
-      gtk_widget_hide (ppd_file);
-      gtk_widget_hide (ppd_button);
     }
 
   gtk_entry_set_text (GTK_ENTRY (output_cmd), plist_get_output_to (pv));
@@ -2096,30 +2124,31 @@ print_driver_callback (GtkWidget      *widget, /* I - Driver list */
 		       GdkEventButton *event,
 		       gpointer        data)   /* I - Data */
 {
+  static int calling_print_driver_callback = 0;
   stp_vars_t printvars;
-
+  if (calling_print_driver_callback)
+    return;
+  calling_print_driver_callback++;
   invalidate_frame ();
   invalidate_preview_thumbnail ();
   reset_preview ();
   data = gtk_clist_get_row_data (GTK_CLIST (widget), row);
   current_printer = stp_get_printer_by_index ((gint) data);
+  printvars = stp_printer_get_printvars (current_printer);
   gtk_label_set_text (GTK_LABEL (printer_model_label),
                       gettext (stp_printer_get_long_name (current_printer)));
+  stp_set_driver(pv->v, stp_printer_get_driver(current_printer));
 
   if (strncmp (stp_printer_get_driver (current_printer), "ps", 2) == 0)
     {
       gtk_widget_show (ppd_label);
-      gtk_widget_show (ppd_file);
-      gtk_widget_show (ppd_button);
+      gtk_widget_show (ppd_box);
     }
   else
     {
       gtk_widget_hide (ppd_label);
-      gtk_widget_hide (ppd_file);
-      gtk_widget_hide (ppd_button);
+      gtk_widget_hide (ppd_box);
     }
-
-  printvars = stp_printer_get_printvars (current_printer);
 
   if (stp_get_output_type (printvars) == OUTPUT_COLOR)
     {
@@ -2131,6 +2160,11 @@ print_driver_callback (GtkWidget      *widget, /* I - Driver list */
 				    TRUE);
       gtk_widget_set_sensitive (output_types[0].button, FALSE);
     }
+  suppress_preview_update++;
+  do_all_updates();
+  suppress_preview_update--;
+  preview_update ();
+  calling_print_driver_callback--;
 }
 
 /*
