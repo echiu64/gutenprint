@@ -50,7 +50,7 @@ require('standard_html_header.php3');
  <p>
  If you're having problems it's a good bet that you're not the only one.
  If you can't find a solution to your problem in this FAQ or in <em>How
- to Print with Gimp–Print</em>, located on the installer disk, your next
+ to Print with Gimp-Print</em>, located on the installer disk, your next
  stop should be the Gimp-Print project <a href=
  "http://sourceforge.net/forum/?group_id=1537" >forums</a>. If you've
  looked through the forums and you still can't find a reference to your
@@ -90,6 +90,15 @@ require('standard_html_header.php3');
  "http://prdownloads.sourceforge.net/espgs/espgs-7.05.5-0.ppc.dmg?download"
  >Mac OS X installer</a> and run it.
  </p>
+ <li>
+ <h3>
+ I cannnot print to my Epson Stylus Pro 7600, but it's supposed to be supported.
+ </h3>
+ <p>  
+ That driver is currently busted. Keep checking the webpage for the next
+ available update to Gimp-Print.
+ </p>
+
  <li>
  <h3>
  What files are installed by the Gimp-Print installer for Jaguar and
