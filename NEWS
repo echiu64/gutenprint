@@ -1,4 +1,4 @@
-Gimp-Print 4.3.20, released September 1, 2003, is a development
+Gimp-Print 4.3.21, released September XX, 2003, is a development
 release of this package.  Like all development releases, this version
 is considered unstable and should only be used by those individuals
 tolerant of the likelihood of problems.  Individuals desiring a stable
@@ -20,11 +20,14 @@ the Gimp are not supported).  You may need to install a package named
 
 The CUPS driver requires CUPS 1.1.15 or higher.  You may need to
 install a package named "cups-devel" or the like on many
-distributions.
+distributions.  We strongly recommend using CUPS with Gimp-Print as a
+general-purpose printing solution.
 
-The Foomatic data will work with either Foomatic 2.x or 3.x.  Foomatic
-3.x has additional capabilities that this package detects and takes
-advantage of.
+We do not currently recommend using Foomatic, as the Foomatic data
+generator included with Gimp-Print offers very limited capabilities.
+This will be fixed in a future release.  The Foomatic data will work
+with either Foomatic 2.x or 3.x.  Foomatic 3.x has additional
+capabilities that this package detects and takes advantage of.
 
 The IJS-based GhostScript plugin driver requires GNU Ghostscript 6.53
 or later, ESP Ghostscript 7.05 or later, or APFL GhostScript 7.04 or
@@ -37,6 +40,105 @@ this package.
 
 Please read the README file for full instructions on installing this
 package.
+
+Gimp-Print 4.3.21 contains the following major changes over Gimp-Print
+4.3.20:
+
+1) This release offers further improvements in quality.  The specific
+   improvements are described below.
+
+   The driver now attempts to use as many small drops as possible
+   before starting to use larger drops when printing on variable drop
+   size printers.  This improves the texture of midtones, particularly
+   at lower resolutions (extremely high resolutions typically only use
+   the smallest drop size available).  The result is that 1440x720
+   DPI, or in some cases even 720 DPI, now offers quality almost
+   identical to higher (and slower) resolutions such as 2880x720 and
+   2880x1440 DPI.
+
+   The driver also uses more light ink prior to switching to dark ink
+   (for 6 and 7 color printers).  This improves smoothness in
+   midtones.  Furthermore, the transition between light and dark ink
+   is adaptive, depending upon the amount of black (both black ink and
+   black component printed with color inks) in addition to the color
+   being printed.  This allows use of more dark ink in darker regions,
+   reducing the likelihood of overloading the paper and producing a
+   darker gray tone.  The combination of these two changes increases
+   ink usage in some cases (mostly saturated midtones, where more
+   light ink is used) and decreases it in others (mid grays).
+
+   The color correction has been further tweaked based on observations
+   of behavior in 4.3.20.  In particular, the desaturation in dark
+   tones has been tweaked to achieve a better match and smoother
+   transitions.
+
+   Finally, the black generation has been changed, producing more
+   solid dark tones.  Instead of a linear ramp between the point at
+   black ink starts to be introduced and the point at which the gray
+   component is printed with all black, the black generation now uses
+   an exponential (gamma) curve whose exponent depends upon the
+   printer and the paper in use.  This produces more solid dark grays
+   while avoiding either a sharp transition from muddy grays using
+   only color inks, excessive grain from use of too much black ink in
+   lighter grays, or lack of contrast in dark tones caused by too much
+   black ink.
+
+   At present, only the Epson driver utilizes these changes.
+
+2) Individual Epson printers have been retuned, producing closer
+   matches between different printers and papers.  Specific
+   improvements:
+
+   * The new Stylus Photo series (780, 785, 790, 810, 820, 830, 870,
+     890, 895, 900, 915, 925, 935, 1270, 1280, and 1290) has improved
+     dark tones without muddiness.  In addition, the drop sizes at 720
+     and 1440x720 DPI have been recalibrated, producing much better
+     results in the midtones at these resolutions.
+
+     The color correction curves of these printers have also been
+     recalibrated on a variety of papers, in particular producing
+     better blue and red tones.
+
+     These printers also benefit greatly from all of the improvements
+     described above, and produce quality very close to photographic
+     prints.
+
+   * The Stylus C70/C80/C82/C84 densities have been recalibrated on a
+     variety of papers, eliminating excessive ink usage on high
+     quality papers.
+
+   * The Stylus Photo 950 and 960 drop sizes have been recalibrated,
+     improving results significantly at 1440x720 DPI and to a lesser
+     extent at 720 DPI.  In addition, the color correction curves have
+     been adjusted, particularly for blue hues.  These changes will
+     benefit the equivalent Japanese market printers (PM-950C,
+     PM-970C, and PM-980C) if the dark yellow ink is not used.
+
+   * The Stylus Photo 2100 and 2200 have been recalibrated on a
+     variety of papers, using both matte and photo black ink.  In
+     addition, the color correction curves have been adjusted.  The
+     results thus far are excellent, but at present the cyan and green
+     hues are still too dark.
+
+     These improvements should apply to other printers using
+     UltraChrome inks (Stylus Pro 7600 and 9600).
+
+   * The Stylus Color 680/777 ink drop sizes at 720 DPI have been
+     adjusted.
+
+3) Preliminary support for the Sony UP-DP10 has been added, including
+   the laminate pattern feature.
+
+4) Olympus and Olympus-compatible printers have been color-tuned.
+
+5) Preliminary support for the Epson Stylus C84.
+
+6) Margins for the Epson Stylus C70, C80, and C82 have been
+   corrected.
+
+7) The Postscript driver now produces proper alignment on the page
+   (bug 802621).
+
 
 Gimp-Print 4.3.20 contains the following major changes over Gimp-Print
 4.3.19:
