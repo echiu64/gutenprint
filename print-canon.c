@@ -222,7 +222,7 @@ static canon_cap_t canon_model_capabilities[] =
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYyK,
     CANON_SLOT_ASF1,
-    0
+    CANON_CAP_CMD6d | CANON_CAP_CMD70
   },
   { /* Canon BJC 7100 */
     7100,
