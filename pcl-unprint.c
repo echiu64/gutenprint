@@ -1,9 +1,9 @@
 /*
  * "$Id$"
  *
- * pclunprint.c - convert an HP PCL file into an image file for viewing.
+ *   pclunprint.c - convert an HP PCL file into an image file for viewing.
  *
- * Dave Hill <dave@minnie.demon.co.uk>
+ *   Copyright 2000 Dave Hill (dave@minnie.demon.co.uk)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -800,6 +800,7 @@ int main(int argc, char *argv[])
     output_data.lmagenta_data_rows_per_row = 0;
     output_data.active_length = 0;
 
+    id = id;				/* Remove compiler warning */
     received_rows = NULL;
 
     if(argc == 1){
