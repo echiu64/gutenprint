@@ -240,7 +240,6 @@ gimp_create_main_window (void)
    */
 
   adjusted_thumbnail_data = malloc(3 * thumbnail_w * thumbnail_h);
-  gimp_update_adjusted_thumbnail ();
 
   /*
    * Create the main dialog
@@ -939,6 +938,7 @@ gimp_create_main_window (void)
    */
 
   gimp_plist_callback (NULL, (gpointer) plist_current);
+  gimp_update_adjusted_thumbnail ();
 
   gtk_widget_show (print_dialog);
 }

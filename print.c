@@ -387,15 +387,6 @@ run (char   *name,		/* I - Name of print program. */
     {
     case RUN_INTERACTIVE:
       /*
-       * Possibly retrieve data...
-       */
-      gimp_get_data (PLUG_IN_NAME, &vars);
-      vars.page_width = 0;
-      vars.page_height = 0;
-
-      current_printer = get_printer_by_driver (vars.driver);
-
-      /*
        * Get information from the dialog...
        */
 

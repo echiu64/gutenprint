@@ -1,5 +1,5 @@
-This is the Print plugin for the Gimp, version 4.0b1.  This is the
-first beta of the 4.0 stable release.  It is not 4.0.
+This is the Print plugin for the Gimp, version 4.0b2.  This is the
+second beta of the 4.0 stable release.  It is not 4.0.
 
 This software also comes with GhostScript and CUPS drivers.  The
 support for printers in GhostScript and CUPS is identical to the
@@ -8,6 +8,20 @@ identical code base.  Please read Ghost/README and CUPS/README.txt for
 more information on this.
 
 This plugin can be compiled against either Gimp 1.1 or 1.0.
+
+Gimp-Print 4.0b2 contains the following improvements and changes over
+Gimp-Print 4.0b1:
+
+1) The files 'cups/command.types' and 'cups/calibrate.ppm' are now
+   present.
+
+2) The arguments to escputil have changed.  Instead of -l or -o to
+   specify old or new series printers, the argument -m is used to
+   specify the actual printer model.
+
+3) Print dot size at 360 DPI is now correct on the Epson Stylus Photo
+   720.
+
 
 Gimp-Print 4.0b1 contains the following improvements and changes over
 Gimp-Print 4.0a3:
