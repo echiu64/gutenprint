@@ -21,6 +21,7 @@ LIBRARIES = /lib
 HEADERS = /include
 GIMPVERSION = 1.1
 BINDIR = $(PREFIX)/$(LIBRARIES)/gimp/$(GIMPVERSION)/plug-ins
+GIMPINCLUDE = -I$(PREFIX)$(HEADERS)/libgimp
 GLIBINCLUDE = -I/usr/local/glib/include -I/usr/lib/glib/include
 LOCALEDIR=/usr/local/share/locale
 X11DIR = /usr/X11R6
