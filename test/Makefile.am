@@ -30,7 +30,7 @@ AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
 LIBS = @LIBS@ ../lib/libprintut.la $(INTLLIBS) ../lib/libprintut.la
 
-TESTS = testdither
+TESTS = testdither run-weavetest
 
 
 ## Programs
