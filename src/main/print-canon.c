@@ -56,7 +56,12 @@
 #include <limits.h>
 #endif
 #include "module.h"
-#include "printers.h"
+
+/* Solaris with gcc has problems because gcc's limits.h doesn't #define */
+/* this */
+#ifndef CHAR_BIT
+#define CHAR_BIT 8
+#endif
 
 #if (0)
 #define EXPERIMENTAL_STUFF 0
