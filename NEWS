@@ -136,7 +136,11 @@ These release notes contain the following sections:
      programs to inspect and test this thoroughly and report issues.
      There may be minor compatible API changes.
 
-  10) More header files have been documented with Doxygen.
+  10) The libprintut utility library has been removed.  Its
+      functionality has been subsumed into the core Gimp-Print
+      library.
+
+  11) More header files have been documented with Doxygen.
 
 ================================================================
 
