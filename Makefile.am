@@ -85,6 +85,7 @@ GHOST_DIST= COPYING ChangeLog README contrib.mak.addon \
 
 CUPS_DIST = CHANGES.txt LICENSE.txt Makefile.in README.txt configure \
 	commandtoepson.c epson.c genppd.c rastertoprinter.c calibrate.c \
+	calibrate.ppm command.types \
 	$(CUPSCOPY)
 
 DOC_DIST = print-color.png docbook.css print-main.png print.html \
