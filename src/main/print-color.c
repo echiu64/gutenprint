@@ -588,7 +588,10 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat,
 		    {
 		      isadj = (1.0 / isreflection) * (isreflection - sadj);
 		      sisadj = sqrt(isadj);
+/*
 		      s *= isadj * sisadj;
+*/
+		      s *= sqrt(isadj * sisadj);
 		    }
 		  if (el < .9999)
 		    {
