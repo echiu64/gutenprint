@@ -89,7 +89,9 @@ m4data_DATA = gimpprint.m4
 
 pkgconfigdata_DATA = gimpprint.pc
 
-pkgxmldata_DATA = printers.xml
+pkgxmldata_DATA = \
+	papers.xml \
+	printers.xml
 
 
 ## Rules
