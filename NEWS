@@ -107,64 +107,70 @@ These release notes contain the following sections:
      printers).  In addition, other supported page sizes now work
      correctly on the Canon CP-100.
 
-  6) A problem whereby the CUPS driver was linked incorrectly in
+  6) Ink drop sizes have been retuned for all 2880 DPI capable Epson
+     Stylus printers that use 4 pl drops (e. g. Stylus Color 880,
+     Stylus Photo 780).  These should give better results at
+     resolutions below 2880x720 DPI.  Please let us know if they don't
+     on any given printer.
+
+  7) A problem whereby the CUPS driver was linked incorrectly in
      certain configurations is fixed.
 
-  7) The GIMP 2.0 plugin is now installed correctly in the GIMP 2.0
+  8) The GIMP 2.0 plugin is now installed correctly in the GIMP 2.0
      plugin directory, rather than the GIMP 1.2 directory.
 
-  8) A problem with the GIMP plugin not properly exiting at the
+  9) A problem with the GIMP plugin not properly exiting at the
      completion of printing has been fixed.  This was reported on
      FreeBSD 4.10 and is system dependent.  The symptom is that at
      when the print plugin finished its work it would stick around,
      and actual printing would not start until the GIMP itself was
      exited.
 
-  9) The GIMP plugins now use less screen space by scrolling certain
+  10) The GIMP plugins now use less screen space by scrolling certain
      options.
 
-  10) Black generation has been improved for the Epson Stylus Photo
+  11) Black generation has been improved for the Epson Stylus Photo
      R300 and related printers on many older paper types.  In
      particular, more black ink is now being used, which should give
      more solid shadows with less color shift.
 
-  11) A "predithered" color correction mode is now available, in
+  12) A "predithered" color correction mode is now available, in
      conjunction with a "predithered" dither algorithm.  These very
      fast algorithms assume that the data has already been screened,
      and simply perform a threshold with no correction whatsoever.
      This is useful for certain custom applications.
 
-  12) The GIMP 2.0 plugin now uses new curve widgets, replacing the
+  13) The GIMP 2.0 plugin now uses new curve widgets, replacing the
      GTK+ curve widgets.  These widgets will undergo further
      development, adding new functionality.
 
-  13) A problem with Canon 6-color inkjet printers whereby the
+  14) A problem with Canon 6-color inkjet printers whereby the
      transition between light and dark inks is fixed.  This problem
      was specific to the 4.3/5.0 code line and was a regression from
      4.2.
 
-  14) A problem with Canon printers in DMT mode whereby vertical lines
+  15) A problem with Canon printers in DMT mode whereby vertical lines
      were printed across the page is fixed.  This problem was specific
      to the 4.3/5.0 code line and was a regression from 4.2.
 
-  15) A few problems with the display of the preview window in the GIMP
+  16) A few problems with the display of the preview window in the GIMP
      plugin (both 1.2 and 2.0) are fixed.
 
-  16) Gimp-Print now compiles correctly on Solaris.
+  17) Gimp-Print now compiles correctly on Solaris.
 
-  17) The GIMP 2.0 plugin now handles the version 3 printrc file
+  18) The GIMP 2.0 plugin now handles the version 3 printrc file
      correctly.
 
-  18) The printers.xml file now has a more flexible format that
+  19) The printers.xml file now has a more flexible format that
      permits specifying arbitrary parameters.
 
-  19) A problem trying to print a grayscale file from the GIMP with a
+  20) A problem trying to print a grayscale file from the GIMP with a
      pre-existing printrc file predating Gimp-Print 5.0 alpha-2 has
      been fixed.  Depending upon the system, the bug could cause data
      corruption, a crash at startup, or erroneous display in the
      preview window.
 
-  20) A problem whereby compiling with --enable-static fails in some
+  21) A problem whereby compiling with --enable-static fails in some
      circumstances has been fixed.
 
   The following bugs have been fixed in this release:

@@ -53,19 +53,19 @@ static const escp2_dropsize_t escp2_x80_1440_6pl_dropsizes =
 static const escp2_dropsize_t escp2_x80_2880_6pl_dropsizes =
   { "x80_2880_6pl", 1, { 1.0 } };
 
-/* Stylus Color 777 */
-static const escp2_dropsize_t escp2_680_low_dropsizes =
+/* 2880 DPI capable 4 picolitre printers */
+static const escp2_dropsize_t escp2_new_low_dropsizes =
   { "680_low", 3, { 0.375, 0.75, 1.0 } };
-static const escp2_dropsize_t escp2_680_6pl_dropsizes =
+static const escp2_dropsize_t escp2_new_6pl_dropsizes =
   { "680_6pl", 3, { 0.375, 0.50, 1.0 } };
-static const escp2_dropsize_t escp2_680_4pl_dropsizes =
+static const escp2_dropsize_t escp2_new_4pl_dropsizes =
   { "680_4pl", 3, { 0.50, 0.75, 1.0 } };
-
-/* All other 4 picolitre printers */
-static const escp2_dropsize_t escp2_4pl_dropsizes =
-  { "4pl", 3, { 0.33, 0.50, 1.0 } };
 static const escp2_dropsize_t escp2_4pl_2880_dropsizes =
   { "4pl_2880", 1, { 1.0 } };
+
+/* 1440 DPI capable printers */
+static const escp2_dropsize_t escp2_4pl_dropsizes =
+  { "4pl", 3, { 0.33, 0.50, 1.0 } };
 
 /* Stylus Color 900/980 */
 static const escp2_dropsize_t escp2_3pl_dropsizes =
@@ -187,7 +187,7 @@ const escp2_drop_list_t stpi_escp2_variable_x80_6pl_drops =
   &escp2_x80_2880_6pl_dropsizes,
 };
 
-const escp2_drop_list_t stpi_escp2_variable_4pl_drops =
+const escp2_drop_list_t stpi_escp2_variable_1440_4pl_drops =
 {
   &escp2_low_dropsizes,
   &escp2_low_dropsizes,
@@ -199,13 +199,13 @@ const escp2_drop_list_t stpi_escp2_variable_4pl_drops =
   &escp2_4pl_2880_dropsizes,
 };
 
-const escp2_drop_list_t stpi_escp2_variable_680_4pl_drops =
+const escp2_drop_list_t stpi_escp2_variable_2880_4pl_drops =
 {
-  &escp2_680_low_dropsizes,
-  &escp2_680_low_dropsizes,
-  &escp2_680_low_dropsizes,
-  &escp2_680_6pl_dropsizes,
-  &escp2_680_4pl_dropsizes,
+  &escp2_new_low_dropsizes,
+  &escp2_new_low_dropsizes,
+  &escp2_new_low_dropsizes,
+  &escp2_new_6pl_dropsizes,
+  &escp2_new_4pl_dropsizes,
   &escp2_4pl_2880_dropsizes,
   &escp2_4pl_2880_dropsizes,
   &escp2_4pl_2880_dropsizes,
