@@ -2491,7 +2491,8 @@ gimp_update_adjusted_thumbnail (void)
 
   stp_set_density(*pv, old_density);
 
-  gimp_redraw_color_swatch ();
+  if (!preview_valid)
+    gimp_redraw_color_swatch ();
   gimp_preview_update ();
 }
 
@@ -2565,13 +2566,20 @@ gimp_do_preview_thumbnail(gint paper_left, gint paper_top, gint orient)
   static gint opy = 0;
   static gint oph = 0;
   static gint opw = 0;
-  gint frame_is_clear = 0;
-  int preview_was_valid = preview_valid;
 
   gint preview_x = 1 + printable_left + preview_ppi * stp_get_left(*pv) / 72;
   gint preview_y = 1 + printable_top + preview_ppi * stp_get_top(*pv) / 72;
   gint preview_w = MAX (1, (preview_ppi * print_width) / 72 - 1);
   gint preview_h = MAX (1, (preview_ppi * print_height) / 72 - 1);
+
+  if (gc == NULL)
+    {
+      gc = gdk_gc_new (preview->widget.window);
+      gcinv = gdk_gc_new (preview->widget.window);
+      gdk_gc_set_function (gcinv, GDK_INVERT);
+      gcset = gdk_gc_new (preview->widget.window);
+      gdk_gc_set_function (gcset, GDK_SET);
+    }
 
   if (!preview_valid)
     {
@@ -2662,15 +2670,6 @@ gimp_do_preview_thumbnail(gint paper_left, gint paper_top, gint orient)
       preview_valid = 1;
     }
 
-  if (gc == NULL)
-    {
-      gc = gdk_gc_new (preview->widget.window);
-      gcinv = gdk_gc_new (preview->widget.window);
-      gdk_gc_set_function (gcinv, GDK_INVERT);
-      gcset = gdk_gc_new (preview->widget.window);
-      gdk_gc_set_function (gcset, GDK_SET);
-    }
-
   if (!frame_valid)
     {
       gdk_window_clear (preview->widget.window);
@@ -2686,10 +2685,8 @@ gimp_do_preview_thumbnail(gint paper_left, gint paper_top, gint orient)
 			  MAX(2, preview_ppi * printable_width / 72),
 			  MAX(2, preview_ppi * printable_height / 72));
       frame_valid = 1;
-      frame_is_clear = 1;
     }
-
-  if (!frame_is_clear)
+  else
     {
       if (opx + opw <= preview_x || opy + oph <= preview_y ||
 	  preview_x + preview_w <= opx || preview_y + preview_h <= opy)
