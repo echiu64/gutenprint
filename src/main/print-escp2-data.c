@@ -4915,7 +4915,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     c1_8_bits, c1_8_base_res, &standard_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
-  /* 59: Stylus C43SX/C43UX/C44SX/C44UX */
+  /* 59: Stylus C43SX/C43UX/C44SX/C44UX (WRONG -- Really entry 43!) */
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |

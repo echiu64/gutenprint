@@ -1,4 +1,4 @@
-Gimp-Print 4.2.6-pre2, released September 15, 2003, is a prerelease in
+Gimp-Print 4.2.6-pre3, released November 1, 2003, is a prerelease in
 the Gimp-Print 4.2 series.
 
 Gimp-Print is a suite of printer drivers that may be used with most
@@ -40,6 +40,23 @@ http://gimp-print.sourceforge.net/MacOSX.php3.
 
 Please read the README file for full instructions on installing this
 package from source code.
+
+
+Gimp-Print 4.2.6-pre3 contains the following major changes over
+Gimp-Print 4.2.6-pre2:
+
+1) Support for the Epson Stylus C43/C44, C63/C64, and PX-V500
+   printers, and CX-3100, CX-5100, CX-6300, CX-6400, CX-8300, and
+   CX-8400 multi-function devices (printer function only).
+
+2) Under OS X, the PPD files have better option grouping.
+
+3) Canon printers should now print all pages of a job when the printer
+   is hosted on a Windows system (bug 668342).
+
+The following bug has been fixed in Gimp-Print 4.2.6-pre3:
+
+668342 Canon S-450 prints only one page of a job
 
 
 Gimp-Print 4.2.6-pre2 contains the following major changes over
@@ -1054,6 +1071,10 @@ EPSON Stylus C41SX
 EPSON Stylus C41UX
 EPSON Stylus C42SX
 EPSON Stylus C42UX
+EPSON Stylus C43SX
+EPSON Stylus C43UX
+EPSON Stylus C44SX
+EPSON Stylus C44UX
 EPSON Stylus C50                (experimental)
 EPSON Stylus C60
 EPSON Stylus C61
@@ -1063,8 +1084,8 @@ EPSON Stylus C64                (experimental)
 EPSON Stylus C70
 EPSON Stylus C80
 EPSON Stylus C82
-EPSON Stylus C83                (experimental)
-EPSON Stylus C84                (experimental)
+EPSON Stylus C83
+EPSON Stylus C84
 EPSON Stylus Color
 EPSON Stylus Color Pro
 EPSON Stylus Color Pro XL
@@ -1343,6 +1364,10 @@ Epson Stylus C41SX             escp2-c41sx     EPSON Stylus C41SX
 Epson Stylus C41UX             escp2-c41ux     EPSON Stylus C41UX
 Epson Stylus C42SX             escp2-c42sx     EPSON Stylus C42SX
 Epson Stylus C42UX             escp2-c42ux     EPSON Stylus C42UX
+Epson Stylus C43SX             escp2-c43sx     EPSON Stylus C43SX
+Epson Stylus C43UX             escp2-c43ux     EPSON Stylus C43UX
+Epson Stylus C44SX             escp2-c44sx     EPSON Stylus C44SX
+Epson Stylus C44UX             escp2-c44ux     EPSON Stylus C44UX
 Epson Stylus C50               escp2-c50       EPSON Stylus C50
 Epson Stylus C60               escp2-c60       EPSON Stylus C60
 Epson Stylus C61               escp2-c61       EPSON Stylus C61

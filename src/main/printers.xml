@@ -298,6 +298,46 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus C43SX" driver="escp2-c43sx">
+<color>
+<model value=43>
+<gamma value=0.585>
+<density value=1.0>
+<magenta value=0.95>
+<yellow value=0.9>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus C43UX" driver="escp2-c43ux">
+<color>
+<model value=43>
+<gamma value=0.585>
+<density value=1.0>
+<magenta value=0.95>
+<yellow value=0.9>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus C44SX" driver="escp2-c44sx">
+<color>
+<model value=43>
+<gamma value=0.585>
+<density value=1.0>
+<magenta value=0.95>
+<yellow value=0.9>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus C44UX" driver="escp2-c44ux">
+<color>
+<model value=43>
+<gamma value=0.585>
+<density value=1.0>
+<magenta value=0.95>
+<yellow value=0.9>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus C50" driver="escp2-c50">
 <color>
 <model value=56>
