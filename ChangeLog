@@ -1,5 +1,17 @@
 2000-06-17	<rlk@sourceforge.net>
 
+	Files:	print_gimp.h (1.19) (+2 -2)
+	
+	Fix the release date
+	
+2000-06-17	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.17) (+49 -0)
+	
+	3.1.6 release point
+	
+2000-06-17	<rlk@sourceforge.net>
+
 	Files:	ChangeLog (1.16) (+71 -0)
 		run-weavetest (1.14) (+1 -1)
 		print_gimp.h (1.18) (+2 -2)
