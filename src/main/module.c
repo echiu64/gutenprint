@@ -76,8 +76,8 @@ static stpi_module_t *static_modules[] =
     &escp2_LTX_stpi_module_data,
     &pcl_LTX_stpi_module_data,
     &lexmark_LTX_stpi_module_data,
-    &raw_LTX_stpi_module_data,
     &olympus_LTX_stpi_module_data,
+    &raw_LTX_stpi_module_data,
     NULL
   };
 #endif
