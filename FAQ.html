@@ -1,6 +1,14 @@
-<h1>Gimp print FAQ</h1>
+<html>
+<head>
+<title>The Gimp-Print FAQ</title>
+</head>
 
-<h2>Is it only for Gimp?</h2>
+<body>
+<h2>Gimp print FAQ</h2>
+
+<ol>
+
+<p><li><h3>Is it only for Gimp?</h3>
 
 <p>Gimp-print started out as a driver for The Gimp, the well known
 image manipulation program.  Early in development versions for
@@ -8,24 +16,24 @@ Ghostscript and later CUPS were added.  The emphasis is still on
 quality color printing, though performance gets a lot of attention
 these days.
  
-<h2>I cannot install it, it complains about missing Gimp files</h2>
+<p><li><h3>I cannot install it, it complains about missing Gimp files</h3>
 
 <p>You need to have Gimp development files installed on your system.
 These are called gimp-devel-something.rpm on most systems.
 
-<h2>What is the difference between B/W, Line art, solid color and
-Photo mode (or ImageType in Ghostscript)?</h2>
+<p><li><h3>What is the difference between B/W, Line art, solid color and
+Photo mode (or ImageType in Ghostscript)?</h3>
 
 <p>Photo mode does a lot of work to make colors as similar to screen
 presentation as possible.  This takes time. The other modes are
 faster, but colors may be off.  B/W mode does not use color ink when
 printing.
 
-<h2>I selected my printer and it doesn't work at all</h2>
+<p><li><h3>I selected my printer and it doesn't work at all</h3>
 
 <p>Please check your printing system (lp/lpr, etc.) configuration.
 
-<h2>I selected the right printer and nonsense gets printed</h2>
+<p><li><h3>I selected the right printer and nonsense gets printed</h3>
 
 <p>Printers for which support just has been added may not have been
 tested, as the developers do not have access to the printer. It is
@@ -41,7 +49,7 @@ versions of System V lp).  Otherwise the printing system attempts to
 interpret the output as something else, and tries to apply a filter to
 it.
   
-<h2>What's up with the HP Deskjet 1200?</h2>
+<p><li><h3>What's up with the HP Deskjet 1200?</h3>
 
 <p>HP had sold two printers with the 1200 model designation. The old
 version is 300 DPI and has a heating element to dry the ink. It was
@@ -49,7 +57,7 @@ manufactured around 1990.  The new version is of 2000 vintage has has
 higher resolution.  The one supported by this package is the new
 one???
 
-<h2>I selected selected the right printer and the quality is lousy</h2>
+<p><li><h3>I selected the right printer and the quality is lousy</h3>
 
 <p>Try selecting a different resolution or quality setting. Especially
 lower resolutions have a problem putting enough ink on paper. Also,
@@ -64,7 +72,7 @@ set higher than the driver resolution. If it is higher, the driver has
 to throw away part of the pixels, leading to uneven strokes in text
 and slanted lines with interruptions.
 
-<h2>What is 'interpolated' resolution?</h2>
+<p><li><h3>What is 'interpolated' resolution?</h3>
 
 <p>Interpolated resolution is an experimental way of simulating higher
 resolution than the printer offers by calculating the result at high
@@ -73,6 +81,21 @@ printer.  In our experience, when the dither algorithm is working
 properly this merely results in longer processing time and more
 voluminous output with little or no improvement in quality.
 
-<h2>How do I start setting options for Ghostscript?</h2>
+<p><li><h3>How do I start setting options for Ghostscript?</h3>
 
 <p>Please see Ghost/README for more information.
+
+<p><li><h3><tt>escputil -i</tt> or <tt>escputil -d</tt> fails as follows:</h3>
+
+<p><pre>
+% escputil -r /dev/lp0 -i
+
+[ ... license info omitted ... ]
+
+Cannot read from /dev/lp0: Invalid argument
+</pre>
+
+<p>You need to rebuild your kernel with CONFIG_PRINTER_READBACK
+enabled.
+
+</body></html>
