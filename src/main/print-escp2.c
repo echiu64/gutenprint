@@ -501,10 +501,22 @@ escp2_imageable_area(const stp_printer_t printer,	/* I - Printer model */
   int	width, height;			/* Size of page */
   int	rollfeed;			/* Roll feed selected */
   int model = stp_printer_get_model(printer);
+  const char *input_slot = stp_get_media_source(v);
 
-  rollfeed = (strcmp(stp_get_media_source(v), "Roll") == 0);
-
-  stp_default_media_size(printer, v, &width, &height);
+  if (input_slot && strlen(input_slot) > 0)
+    {
+      int i;
+      const input_slot_list_t *slots = escp2_input_slots(model, v);
+      for (i = 0; i < slots->n_input_slots; i++)
+	{
+	  if (slots->slots[i].name &&
+	      strcmp(input_slot, slots->slots[i].name) == 0)
+	    {
+	      rollfeed = slots->slots[i].is_roll_feed;
+	      break;
+	    }
+	}
+    }
 
   if (rollfeed)
     {
