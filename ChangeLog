@@ -1,5 +1,24 @@
 2000-09-20	<rlk@sourceforge.net>
 
+	Files:	Makefile.am (1.66) (+2 -1)
+	
+	Need one more file in the CUPS distribution
+	
+2000-09-20	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.44) (+131 -0)
+		README (1.30) (+6 -9)
+	
+	4.0b1
+	
+2000-09-20	<rlk@sourceforge.net>
+
+	Files:	RELNOTES (1.25) (+46 -42)
+	
+	Slight reorganization
+	
+2000-09-20	<rlk@sourceforge.net>
+
 	Files:	cups/Makefile.in (1.14) (+3 -3)
 	
 	Fix make clean
