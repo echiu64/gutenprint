@@ -208,6 +208,8 @@
 #gptofoo escp2-scan2500 printer/Epson-Stylus_Scan_2500
 #gptofoo escp2-cx3100 printer/Epson-Stylus_CX3100
 #gptofoo escp2-cx3200 printer/Epson-Stylus_CX3200
+#gptofoo escp2-cx3600 printer/Epson-Stylus_CX3600
+#gptofoo escp2-cx3650 printer/Epson-Stylus_CX3650
 #gptofoo escp2-cx4600 printer/Epson-Stylus_CX4600
 #gptofoo escp2-cx5100 printer/Epson-Stylus_CX5100
 #gptofoo escp2-cx5200 printer/Epson-Stylus_CX5200
