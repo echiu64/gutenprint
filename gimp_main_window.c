@@ -1776,6 +1776,8 @@ gimp_file_cancel_callback (void)
   gtk_widget_set_sensitive (print_dialog, TRUE);
 }
 
+#define FMAX(a,b) ((a) > (b) ? (a) : (b))
+
 /*
  *  gimp_preview_update_callback() -
  */
@@ -1962,7 +1964,7 @@ gimp_preview_update (void)
 
   gtk_signal_handler_block_by_data (GTK_OBJECT (bottom_border_entry), NULL);
   g_snprintf(s, sizeof (s), "%.2f",
-	     (paper_height - (vars.top + print_height)) / unit_scaler);
+	     (paper_height - (top + vars.top + print_height)) / unit_scaler);
   gtk_entry_set_text (GTK_ENTRY (bottom_border_entry), s);
   gtk_signal_handler_unblock_by_data (GTK_OBJECT (bottom_border_entry), NULL);
 
@@ -1974,7 +1976,7 @@ gimp_preview_update (void)
 
   gtk_signal_handler_block_by_data (GTK_OBJECT (right_border_entry), NULL);
   g_snprintf (s, sizeof (s), "%.2f",
-	      (paper_width - (vars.left + print_width)) / unit_scaler);
+	      (paper_width - (left + vars.left + print_width)) / unit_scaler);
   gtk_entry_set_text (GTK_ENTRY (right_border_entry), s);
   gtk_signal_handler_unblock_by_data (GTK_OBJECT (right_border_entry), NULL);
 
@@ -1992,8 +1994,8 @@ gimp_preview_update (void)
   gdk_draw_rectangle(preview->widget.window, gc, 1,
 		     1 + printable_left + preview_ppi * vars.left / 72,
 		     1 + printable_top + preview_ppi * vars.top / 72,
-                     (preview_ppi * print_width + 71) / 72,
-                     (preview_ppi * print_height + 71) / 72);
+                     FMAX(1, (preview_ppi * print_width) / 72),
+                     FMAX(1, (preview_ppi * print_height) / 72));
 
   /* draw orientation arrow pointing to top-of-paper */
   {
