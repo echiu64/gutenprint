@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-02-09 22:37+0000\n"
+"POT-Creation-Date: 2001-02-21 12:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -73,59 +73,59 @@ msgstr ""
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr ""
 
-#: src/main/print-canon.c:1098 src/main/print-canon.c:1389
-#: src/main/print-escp2.c:1727 src/main/print-lexmark.c:529
+#: src/main/print-canon.c:1111 src/main/print-canon.c:1402
+#: src/main/print-escp2.c:1868 src/main/print-lexmark.c:529
 #: src/main/print-lexmark.c:738
 msgid "Plain Paper"
 msgstr ""
 
-#: src/main/print-canon.c:1099 src/main/print-canon.c:1390
-#: src/main/print-escp2.c:1731 src/main/print-lexmark.c:530
+#: src/main/print-canon.c:1112 src/main/print-canon.c:1403
+#: src/main/print-escp2.c:1872 src/main/print-lexmark.c:530
 #: src/main/print-lexmark.c:739
 msgid "Transparencies"
 msgstr ""
 
-#: src/main/print-canon.c:1100 src/main/print-canon.c:1391
+#: src/main/print-canon.c:1113 src/main/print-canon.c:1404
 #: src/main/print-lexmark.c:531 src/main/print-lexmark.c:740
 msgid "Back Print Film"
 msgstr ""
 
-#: src/main/print-canon.c:1101 src/main/print-canon.c:1392
+#: src/main/print-canon.c:1114 src/main/print-canon.c:1405
 #: src/main/print-lexmark.c:532 src/main/print-lexmark.c:741
 msgid "Fabric Sheets"
 msgstr ""
 
-#: src/main/print-canon.c:1102 src/main/print-canon.c:1393
+#: src/main/print-canon.c:1115 src/main/print-canon.c:1406
 #: src/main/print-lexmark.c:533 src/main/print-lexmark.c:742
 msgid "Envelope"
 msgstr ""
 
-#: src/main/print-canon.c:1103 src/main/print-canon.c:1394
+#: src/main/print-canon.c:1116 src/main/print-canon.c:1407
 #: src/main/print-lexmark.c:534 src/main/print-lexmark.c:743
 msgid "High Resolution Paper"
 msgstr ""
 
-#: src/main/print-canon.c:1104 src/main/print-canon.c:1395
+#: src/main/print-canon.c:1117 src/main/print-canon.c:1408
 #: src/main/print-lexmark.c:535 src/main/print-lexmark.c:744
 msgid "T-Shirt Transfers"
 msgstr ""
 
-#: src/main/print-canon.c:1105 src/main/print-canon.c:1396
+#: src/main/print-canon.c:1118 src/main/print-canon.c:1409
 #: src/main/print-lexmark.c:536 src/main/print-lexmark.c:745
 msgid "High Gloss Film"
 msgstr ""
 
-#: src/main/print-canon.c:1106 src/main/print-canon.c:1397
+#: src/main/print-canon.c:1119 src/main/print-canon.c:1410
 #: src/main/print-lexmark.c:537 src/main/print-lexmark.c:746
 msgid "Glossy Photo Paper"
 msgstr ""
 
-#: src/main/print-canon.c:1107 src/main/print-canon.c:1398
+#: src/main/print-canon.c:1120 src/main/print-canon.c:1411
 #: src/main/print-lexmark.c:538 src/main/print-lexmark.c:747
 msgid "Glossy Photo Cards"
 msgstr ""
 
-#: src/main/print-canon.c:1108 src/main/print-canon.c:1399
+#: src/main/print-canon.c:1121 src/main/print-canon.c:1412
 #: src/main/print-lexmark.c:539 src/main/print-lexmark.c:748
 msgid "Photo Paper Pro"
 msgstr ""
@@ -145,339 +145,359 @@ msgstr ""
 #. { N_ ("Premium Glossy Photo Paper"), 0x00, 0.90, 1.00, .9 },
 #. { N_ ("Photo Quality Glossy Paper"), 0x00, 1.00, 1.00, .9 },
 #.
-#: src/main/print-canon.c:1124 src/main/print-escp2.c:1741
+#: src/main/print-canon.c:1137 src/main/print-escp2.c:1882
 msgid "Other"
 msgstr ""
 
 #. used internally: do not translate
-#: src/main/print-canon.c:1163 src/main/print-canon.c:1403
+#: src/main/print-canon.c:1176 src/main/print-canon.c:1416
 #: src/main/print-lexmark.c:550 src/main/print-lexmark.c:752
 msgid "Auto Sheet Feeder"
 msgstr ""
 
-#: src/main/print-canon.c:1164 src/main/print-canon.c:1404
+#: src/main/print-canon.c:1177 src/main/print-canon.c:1417
 #: src/main/print-lexmark.c:551 src/main/print-lexmark.c:753
 msgid "Manual with Pause"
 msgstr ""
 
-#: src/main/print-canon.c:1165 src/main/print-canon.c:1405
+#: src/main/print-canon.c:1178 src/main/print-canon.c:1418
 #: src/main/print-lexmark.c:552 src/main/print-lexmark.c:754
 msgid "Manual without Pause"
 msgstr ""
 
 #. used internally: do not translate
-#: src/main/print-canon.c:1177 src/main/print-canon.c:1200
-#: src/main/print-canon.c:1476 src/main/print-lexmark.c:565
+#: src/main/print-canon.c:1190 src/main/print-canon.c:1213
+#: src/main/print-canon.c:1489 src/main/print-lexmark.c:565
 #: src/main/print-lexmark.c:812
 msgid "Black"
 msgstr ""
 
 #: src/gimp/gimp_main_window.c:798 src/gimp/gtk_main_window.c:632
-#: src/main/print-canon.c:1178 src/main/print-canon.c:1201
-#: src/main/print-canon.c:1478 src/main/print-lexmark.c:566
+#: src/main/print-canon.c:1191 src/main/print-canon.c:1214
+#: src/main/print-canon.c:1491 src/main/print-lexmark.c:566
 #: src/main/print-lexmark.c:814
 msgid "Color"
 msgstr "Colour"
 
-#: src/main/print-canon.c:1179 src/main/print-canon.c:1202
-#: src/main/print-canon.c:1480 src/main/print-lexmark.c:567
+#: src/main/print-canon.c:1192 src/main/print-canon.c:1215
+#: src/main/print-canon.c:1493 src/main/print-lexmark.c:567
 #: src/main/print-lexmark.c:816
 msgid "Black/Color"
 msgstr "Black/Colour"
 
-#: src/main/print-canon.c:1180 src/main/print-canon.c:1203
-#: src/main/print-canon.c:1482 src/main/print-lexmark.c:568
+#: src/main/print-canon.c:1193 src/main/print-canon.c:1216
+#: src/main/print-canon.c:1495 src/main/print-lexmark.c:568
 #: src/main/print-lexmark.c:818 src/main/print-lexmark.c:820
 msgid "Photo/Color"
 msgstr "Photo/Colour"
 
-#: src/main/print-canon.c:1181 src/main/print-lexmark.c:569
+#: src/main/print-canon.c:1194 src/main/print-lexmark.c:569
 msgid "Photo"
 msgstr ""
 
-#: src/main/print-canon.c:1182 src/main/print-canon.c:1204
-#: src/main/print-canon.c:1484
+#: src/main/print-canon.c:1195 src/main/print-canon.c:1217
+#: src/main/print-canon.c:1497
 msgid "Black/Photo Color"
 msgstr "Black/Photo Color"
 
 #. used internally: do not translate
 #. built ins:
-#: src/main/print-canon.c:1227 src/main/print-lexmark.c:593
+#: src/main/print-canon.c:1240 src/main/print-lexmark.c:593
 #: src/main/print-util.c:231
 msgid "A5"
 msgstr ""
 
 #. 297mm x  420mm
-#: src/main/print-canon.c:1228 src/main/print-lexmark.c:594
+#: src/main/print-canon.c:1241 src/main/print-lexmark.c:594
 #: src/main/print-util.c:230
 msgid "A4"
 msgstr ""
 
-#: src/main/print-canon.c:1229 src/main/print-lexmark.c:595
+#: src/main/print-canon.c:1242 src/main/print-lexmark.c:595
 msgid "B5"
 msgstr ""
 
 #. US Exec (7.25 x 10.5 in)
-#: src/main/print-canon.c:1230 src/main/print-lexmark.c:596
+#: src/main/print-canon.c:1243 src/main/print-lexmark.c:596
 #: src/main/print-pcl.c:103 src/main/print-util.c:185
 msgid "Letter"
 msgstr ""
 
 #. US Letter (8.5 x 11 in)
-#: src/main/print-canon.c:1231 src/main/print-lexmark.c:597
+#: src/main/print-canon.c:1244 src/main/print-lexmark.c:597
 #: src/main/print-pcl.c:104 src/main/print-util.c:186
 msgid "Legal"
 msgstr ""
 
-#: src/main/print-canon.c:1232 src/main/print-lexmark.c:598
+#: src/main/print-canon.c:1245 src/main/print-lexmark.c:598
 msgid "Envelope 10"
 msgstr ""
 
-#: src/main/print-canon.c:1233 src/main/print-lexmark.c:599
+#: src/main/print-canon.c:1246 src/main/print-lexmark.c:599
 msgid "Envelope DL"
 msgstr ""
 
-#: src/main/print-canon.c:1234 src/main/print-lexmark.c:600
+#: src/main/print-canon.c:1247 src/main/print-lexmark.c:600
 msgid "Letter+"
 msgstr ""
 
-#: src/main/print-canon.c:1235 src/main/print-lexmark.c:601
+#: src/main/print-canon.c:1248 src/main/print-lexmark.c:601
 msgid "A4+"
 msgstr ""
 
-#: src/main/print-canon.c:1236
+#: src/main/print-canon.c:1249
 msgid "Canon 4x2"
 msgstr ""
 
-#: src/main/print-canon.c:1358 src/main/print-pcl.c:217
+#: src/main/print-canon.c:1371 src/main/print-pcl.c:217
 msgid "150x150 DPI"
 msgstr ""
 
-#: src/main/print-canon.c:1360 src/main/print-lexmark.c:648
+#: src/main/print-canon.c:1373 src/main/print-lexmark.c:648
 msgid "180x180 DPI"
 msgstr ""
 
 #. used internally: do not translate
-#: src/main/print-canon.c:2115 src/main/print-dither.c:83
-#: src/main/print-escp2.c:2805
+#: src/main/print-canon.c:2128 src/main/print-dither.c:86
+#: src/main/print-escp2.c:2981
 msgid "Ordered"
 msgstr ""
 
-#: src/main/print-dither.c:82
+#: src/main/print-dither.c:85
 msgid "Adaptive Hybrid"
 msgstr ""
 
-#: src/main/print-dither.c:84
+#: src/main/print-dither.c:87
 msgid "Fast"
 msgstr ""
 
-#: src/main/print-dither.c:85
+#: src/main/print-dither.c:88
 msgid "Very Fast"
 msgstr ""
 
-#: src/main/print-dither.c:86
+#: src/main/print-dither.c:89
 msgid "Adaptive Random"
 msgstr ""
 
-#: src/main/print-dither.c:87
+#: src/main/print-dither.c:90
 msgid "Hybrid Floyd-Steinberg"
 msgstr ""
 
-#: src/main/print-dither.c:88
+#: src/main/print-dither.c:91
 msgid "Random Floyd-Steinberg"
 msgstr ""
 
-#: src/main/print-escp2.c:1675
+#: src/main/print-escp2.c:1809
 msgid "180 x 120 DPI"
 msgstr ""
 
-#: src/main/print-escp2.c:1676
+#: src/main/print-escp2.c:1810
 msgid "180 x 120 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:1677
+#: src/main/print-escp2.c:1811
 msgid "360 x 120 DPI"
 msgstr ""
 
-#: src/main/print-escp2.c:1678
+#: src/main/print-escp2.c:1812
 msgid "360 x 120 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:1679
+#: src/main/print-escp2.c:1813
 msgid "180 DPI"
 msgstr ""
 
-#: src/main/print-escp2.c:1680
+#: src/main/print-escp2.c:1814
 msgid "180 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:1681
+#: src/main/print-escp2.c:1815
 msgid "360 DPI"
 msgstr ""
 
-#: src/main/print-escp2.c:1682
+#: src/main/print-escp2.c:1816
 msgid "360 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:1683
+#: src/main/print-escp2.c:1817
 msgid "360 DPI Microweave"
 msgstr ""
 
-#: src/main/print-escp2.c:1684
+#: src/main/print-escp2.c:1818
 msgid "360 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:1685
+#: src/main/print-escp2.c:1819
 msgid "360 DPI Softweave"
 msgstr ""
 
-#: src/main/print-escp2.c:1686
+#: src/main/print-escp2.c:1820
 msgid "360 DPI High Quality"
 msgstr ""
 
-#: src/main/print-escp2.c:1687
+#: src/main/print-escp2.c:1821
 msgid "360 DPI High Quality Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:1688
+#: src/main/print-escp2.c:1822
 msgid "720 DPI Microweave"
 msgstr ""
 
-#: src/main/print-escp2.c:1689
+#: src/main/print-escp2.c:1823
 msgid "720 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:1690
+#: src/main/print-escp2.c:1824
 msgid "720 DPI Softweave"
 msgstr ""
 
-#: src/main/print-escp2.c:1691
+#: src/main/print-escp2.c:1825
 msgid "720 DPI Softweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:1692
+#: src/main/print-escp2.c:1826
 msgid "720 DPI High Quality"
 msgstr ""
 
-#: src/main/print-escp2.c:1693
+#: src/main/print-escp2.c:1827
 msgid "720 DPI High Quality Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:1694
+#: src/main/print-escp2.c:1828
 msgid "720 DPI Highest Quality"
 msgstr ""
 
-#: src/main/print-escp2.c:1695
+#: src/main/print-escp2.c:1829
 msgid "1440 x 720 DPI Microweave"
 msgstr ""
 
-#: src/main/print-escp2.c:1696
+#: src/main/print-escp2.c:1830
 msgid "1440 x 720 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:1697
+#: src/main/print-escp2.c:1831
 msgid "1440 x 720 DPI Softweave"
 msgstr ""
 
-#: src/main/print-escp2.c:1698
+#: src/main/print-escp2.c:1832
 msgid "1440 x 720 DPI Softweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:1699
+#: src/main/print-escp2.c:1833
 msgid "1440 x 720 DPI Highest Quality"
 msgstr ""
 
-#: src/main/print-escp2.c:1700
+#: src/main/print-escp2.c:1834
 msgid "1440 x 1440 DPI Softweave"
 msgstr ""
 
-#: src/main/print-escp2.c:1701
+#: src/main/print-escp2.c:1835
 msgid "1440 x 1440 DPI Highest Quality"
 msgstr ""
 
-#: src/main/print-escp2.c:1702
+#: src/main/print-escp2.c:1836
 msgid "2880 x 720 DPI Softweave"
 msgstr ""
 
-#: src/main/print-escp2.c:1703
+#: src/main/print-escp2.c:1837
 msgid "2880 x 720 DPI Softweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:1704
+#: src/main/print-escp2.c:1838
 msgid "2880 x 1440 DPI Softweave"
 msgstr ""
 
-#: src/main/print-escp2.c:1728
+#: src/main/print-escp2.c:1840
+msgid "1440 x 360 DPI Softweave"
+msgstr ""
+
+#: src/main/print-escp2.c:1841
+msgid "1440 x 360 DPI Softweave Unidirectional"
+msgstr ""
+
+#: src/main/print-escp2.c:1842
+msgid "1440 x 360 DPI High Quality"
+msgstr ""
+
+#: src/main/print-escp2.c:1843
+msgid "1440 x 360 DPI High Quality Uni"
+msgstr ""
+
+#: src/main/print-escp2.c:1844
+msgid "1440 x 360 DPI Highest Quality"
+msgstr ""
+
+#: src/main/print-escp2.c:1869
 msgid "Plain Paper Fast Load"
 msgstr ""
 
 #. 7.25 * 10.5in
-#: src/main/print-escp2.c:1729 src/main/print-util.c:189
+#: src/main/print-escp2.c:1870 src/main/print-util.c:189
 msgid "Postcard"
 msgstr ""
 
-#: src/main/print-escp2.c:1730
+#: src/main/print-escp2.c:1871
 msgid "Glossy Film"
 msgstr ""
 
-#: src/main/print-escp2.c:1732
+#: src/main/print-escp2.c:1873
 msgid "Envelopes"
 msgstr ""
 
-#: src/main/print-escp2.c:1733
+#: src/main/print-escp2.c:1874
 msgid "Back Light Film"
 msgstr ""
 
-#: src/main/print-escp2.c:1734
+#: src/main/print-escp2.c:1875
 msgid "Matte Paper"
 msgstr ""
 
-#: src/main/print-escp2.c:1735
+#: src/main/print-escp2.c:1876
 msgid "Inkjet Paper"
 msgstr ""
 
-#: src/main/print-escp2.c:1736
+#: src/main/print-escp2.c:1877
 msgid "Photo Quality Inkjet Paper"
 msgstr ""
 
-#: src/main/print-escp2.c:1737
+#: src/main/print-escp2.c:1878
 msgid "Photo Paper"
 msgstr ""
 
-#: src/main/print-escp2.c:1738
+#: src/main/print-escp2.c:1879
 msgid "Premium Glossy Photo Paper"
 msgstr ""
 
-#: src/main/print-escp2.c:1739
+#: src/main/print-escp2.c:1880
 msgid "Premium Luster Photo Paper"
 msgstr ""
 
-#: src/main/print-escp2.c:1740
+#: src/main/print-escp2.c:1881
 msgid "Photo Quality Glossy Paper"
 msgstr ""
 
-#: src/main/print-escp2.c:1920 src/main/print-escp2.c:2480
+#: src/main/print-escp2.c:2084 src/main/print-escp2.c:2645
 msgid "Six Color Photo"
 msgstr "Six Colour Photo"
 
-#: src/main/print-escp2.c:1921 src/main/print-escp2.c:2473
+#: src/main/print-escp2.c:2085 src/main/print-escp2.c:2638
 msgid "Four Color Standard"
 msgstr "Four Colour Standard"
 
 #: src/gimp/gimp_main_window.c:1133 src/gimp/gtk_color_window.c:1088
 #: src/gimp/gtk_main_window.c:1251 src/gimp/gtk_main_window.c:1320
-#: src/main/print-escp2.c:2029 src/main/print-pcl.c:191
+#: src/main/print-escp2.c:2193 src/main/print-pcl.c:191
 msgid "Standard"
 msgstr ""
 
 #. Size of page
 #. Roll feed selected
-#: src/main/print-escp2.c:2030 src/main/print-escp2.c:2055
-#: src/main/print-escp2.c:2178 src/main/print-escp2.c:2373
+#: src/main/print-escp2.c:2194 src/main/print-escp2.c:2219
+#: src/main/print-escp2.c:2342 src/main/print-escp2.c:2537
 msgid "Roll Feed"
 msgstr ""
 
-#: src/main/print-escp2.c:2482
+#: src/main/print-escp2.c:2647
 msgid "Seven Color Enhanced"
 msgstr "Seven Colour Enhanced"
 
@@ -1582,6 +1602,6 @@ msgstr ""
 #.
 #: src/gimp/print.c:986 src/gimp/print.c:987 src/gimp/print.c:1068
 #: src/gimp/print.c:1069 src/gimp/print.c:1172 src/gimp/print.c:1173
-#: src/gimp/print.c:1411
+#: src/gimp/print.c:1387
 msgid "File"
 msgstr ""

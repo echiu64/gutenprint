@@ -128,6 +128,18 @@ BUILD_TEST=no
 PLUG_IN_PATH="admin-bin"
 AC_DIVERT_POP()dnl
 
+dnl Check if we are a part of the GIMP source tree, or independent
+dnl and adjust defaults accordingly
+AC_MSG_CHECKING([for the presence of the GIMP source tree])
+if test -f ../../gimptool.1.in ; then
+  AC_MSG_RESULT([yes])
+  GIMP_SOURCE_TREE_SUBDIR=yes
+  BUILD_LIBGIMPPRINT=no
+else
+  AC_MSG_RESULT([no])
+  GIMP_SOURCE_TREE_SUBDIR=no
+fi
+
 AM_MAINTAINER_MODE
 if test x${USE_MAINTAINER_MODE} = xyes ; then
   MAINTAINER_MODE=true

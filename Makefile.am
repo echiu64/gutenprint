@@ -56,8 +56,20 @@ dist-hook:
 	    done \
 	  fi \
 	done
+# Do some extra magic to make a distribution for GIMP CVS
+	if test -f .gimp-dist ; then \
+	  rm -rf $(distdir)/src/cups $(distdir)/src/ghost ; \
+	  rm -rf $(distdir)/scripts $(distdir)/test ; \
+	  rm -rf $(distdir)/ABOUT-NLS $(distdir)/INSTALL $(distdir)/aclocal.m4 $(distdir)/config.h.in $(distdir)/stamp-h.in ; \
+	  find $(distdir) -name Makefile.in -print | xargs --no-run-if-empty rm ; \
+	  rm -f .gimp-dist ; \
+	fi
 
-.PHONY: install-gimp install-cups install-ghost snapshot
+.PHONY: gimp-dist install-gimp install-cups install-ghost snapshot
+
+gimp-dist:
+	touch .gimp-dist
+	$(MAKE) dist distdir=$(PACKAGE)-$(VERSION)-GIMP-CVS-DIST
 
 install-gimp: all
 	$(MAKE) -C src/gimp install
@@ -80,6 +92,7 @@ CLEANSCRIPTS = \
 	missing \
 	mkinstalldirs
 
+CLEANFILES = .gimp-dist
 MAINTAINERCLEANFILES = ABOUT-NLS INSTALL aclocal.m4 config.h.in configure Makefile.in stamp-h.in $(addprefix scripts/, $(CLEANSCRIPTS)) .noupdate
 
 .PHONY: ChangeLog
