@@ -86,9 +86,9 @@
  */
 
 #ifdef HAVE_LIBZ
-#  define PPDEXT ".ppd.gz"
+static const char *ppdext = ".ppd.gz";
 #else
-#  define PPDEXT ".ppd"
+static const char *ppdext = ".ppd";
 #  define gzFile FILE *
 #  define gzopen fopen
 #  define gzclose fclose
@@ -597,8 +597,8 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   * Skip the PostScript drivers...
   */
 
-  if (strcmp(driver, "ps") == 0 ||
-      strcmp(driver, "ps2") == 0)
+  if (strcmp(stp_printer_get_family(p), "ps") == 0 ||
+      strcmp(stp_printer_get_family(p), "raw") == 0)
     return (0);
 
  /*
@@ -615,7 +615,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 	  exit (EXIT_FAILURE);
 	}
     }
-  sprintf(filename, "%s/%s" PPDEXT, prefix, driver);
+  snprintf(filename, sizeof(filename) - 1, "%s/%s%s", prefix, driver, ppdext);
 
  /*
   * Open the PPD file...
