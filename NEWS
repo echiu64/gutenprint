@@ -24,12 +24,12 @@ later.
 
 We recommend that Macintosh OS X (10.2 or later; this package will not
 work with any 10.0 or 10.1 release) users download the precompiled
-package from http://gimp-print.sourceforge.net rather than attempt to
-build this package from source, as building this package is quite
-difficult on OS X.  We further recommend that Macintosh OS X users
-download ESP GhostScript, to permit printing from applications (such
-as most Adobe applications) that generate PostScript rather than PDF
-output.  Directions for that are also available at
+installer package from http://gimp-print.sourceforge.net rather than
+attempt to build this package from source, as using the installer is
+much simpler.  We further recommend that Macintosh OS X users install
+ESP GhostScript, to permit printing from applications (such as most
+Adobe applications) that generate PostScript rather than PDF output.
+Directions for that are also available at
 http://gimp-print.sourceforge.net.
 
 Please read the README file for full instructions on building and
