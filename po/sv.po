@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
-"POT-Creation-Date: 2002-03-02 12:39-0500\n"
-"PO-Revision-Date: 2002-02-16 03:18+0100\n"
+"POT-Creation-Date: 2002-03-13 20:28-0500\n"
+"PO-Revision-Date: 2002-02-14 02:39+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -2247,25 +2247,27 @@ msgstr ""
 
 #: src/escputil/escputil.c:985
 msgid "About to save settings..."
-msgstr ""
+msgstr "Redo att spara inställningar..."
 
 #: src/escputil/escputil.c:991
 msgid "failed!\n"
-msgstr ""
+msgstr "misslyckades!\n"
 
 #: src/escputil/escputil.c:992
 msgid ""
 "Your settings were not saved successfully.  You must repeat the\n"
 "alignment procedure.\n"
 msgstr ""
+"Dina inställningar kunde inte sparas. Du måste upprepa\n"
+"justeringsproceduren.\n"
 
 #: src/escputil/escputil.c:996
 msgid "succeeded!\n"
-msgstr ""
+msgstr "lyckades!\n"
 
 #: src/escputil/escputil.c:997
 msgid "Your alignment settings have been saved to the printer.\n"
-msgstr ""
+msgstr "Dina justeringsinställningar har sparats i skrivaren.\n"
 
 #: src/escputil/escputil.c:1002
 msgid "Unrecognized command.\n"
@@ -2299,20 +2301,19 @@ msgid "Press enter to continue > "
 msgstr "Tryck retur för att fortsätta > "
 
 #: src/escputil/escputil.c:1042
-#, fuzzy
 msgid ""
 "Please inspect the print, and choose the best pair of lines in each "
 "pattern.\n"
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
-"Granska utskriften, och välj det bästa linjeparet i mönster nummer %d,\n"
-"och mata sedan in sidan i inmatningsfacket. Skriv in ett parnummer,\n"
-"\"?\" för hjälp, eller \"r\" för att upprepa försöket med detta mönster.\n"
+"Granska utskriften och välj det bästa linjeparet i varje mönster.\n"
+"Skriv in ett parnummer, \"?\" för hjälp, eller \"r\" för att upprepa\n"
+"proceduren.\n"
 
 #: src/escputil/escputil.c:1048
 #, c-format
 msgid "Pass #%d"
-msgstr ""
+msgstr "Pass nummer %d"
 
 #: src/escputil/escputil.c:1054 src/escputil/escputil.c:1099
 msgid "Please insert a fresh sheet of paper.\n"
@@ -2332,13 +2333,12 @@ msgid "The best pair of lines should be numbered between 1 and %d.\n"
 msgstr "Det bästa linjeparet bör vara numrerat mellan 1 och %d.\n"
 
 #: src/escputil/escputil.c:1091
-#, fuzzy
 msgid "Attempting to set alignment..."
-msgstr "Försöker detektera skrivarmodell..."
+msgstr "Försöker ställa in justering..."
 
 #: src/escputil/escputil.c:1094
 msgid "succeeded.\n"
-msgstr ""
+msgstr "lyckades.\n"
 
 #: src/escputil/escputil.c:1095
 #, c-format
@@ -2348,6 +2348,10 @@ msgid ""
 "pattern %d.  If it is not, you should repeat the process to get the best\n"
 "quality printing.\n"
 msgstr ""
+"Kontrollera att justeringen är korrekt. När justeringsmönstret har\n"
+"skrivits ut igen bör du försäkra dig om att det bästa mönstret för varje\n"
+"rad är mönster %d. Om det inte är det bör du upprepa proceduren för att\n"
+"få bästa utskriftsresultat.\n"
 
 #: src/escputil/escputil.c:1110
 #, c-format
