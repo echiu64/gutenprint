@@ -58,26 +58,6 @@ typedef struct
   size_t bytes;
 } debug_msgbuf_t;
 
-typedef struct
-{
-  enum
-    {
-      TYPE_INVALID,
-      TYPE_STRING,
-      TYPE_FILE
-    } xtype;
-  union
-  {
-    FILE *f;
-    struct
-    {
-      char *data;
-      off_t offset;
-    } s;
-  } d;
-} xio_t;
-
-
 /*
  * We cannot avoid use of the (non-ANSI) vsnprintf here; ANSI does
  * not provide a safe, length-limited sprintf function.
