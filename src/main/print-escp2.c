@@ -429,6 +429,7 @@ static escp2_variable_ink_t standard_3pl_1440_ink =
 static stp_simple_dither_range_t standard_3pl_2880_dither_ranges[] =
 {
   { 1.0,   0x1, 1, 1 },
+  { 3.0, 0x2, 1, 2 }
 };
 
 static escp2_variable_ink_t standard_3pl_2880_ink =
@@ -1112,7 +1113,7 @@ typedef struct escp2_printer_attribute
 
 #define MODEL_INIT_MASK		0xfull /* Is a special init sequence */
 #define MODEL_INIT_STANDARD	0x0ull /* required for this printer, and if */
-#define MODEL_INIT_900		0x1ull /* so, what */
+#define MODEL_INIT_NEW		0x1ull /* so, what */
 
 #define MODEL_HASBLACK_MASK	0x10ull /* Can this printer print black ink */
 #define MODEL_HASBLACK_YES	0x00ull /* when it is also printing color? */
@@ -1363,7 +1364,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 13: Stylus Color 900 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
@@ -1376,7 +1377,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 14: Stylus Photo 750 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
@@ -1389,7 +1390,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 15: Stylus Photo 1200 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
@@ -1402,7 +1403,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 16: Stylus Color 860 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
@@ -1415,7 +1416,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 17: Stylus Color 1160 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
@@ -1428,7 +1429,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 18: Stylus Color 660 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
@@ -1441,7 +1442,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 19: Stylus Color 760 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
@@ -1454,7 +1455,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 20: Stylus Photo 720 (Australia) */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
@@ -1467,7 +1468,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 21: Stylus Color 480 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO 
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
@@ -1480,7 +1481,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 22: Stylus Photo 870 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
@@ -1493,7 +1494,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 23: Stylus Photo 1270 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
@@ -1519,7 +1520,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 25: Stylus Color 670 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
@@ -1532,7 +1533,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 26: Stylus Photo 2000P */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
@@ -1545,7 +1546,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 27: Stylus Pro 5000 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
@@ -1558,7 +1559,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 28: Stylus Pro 7000 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
@@ -1571,7 +1572,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 29: Stylus Pro 7500 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_SELECTABLE
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_SELECTABLE
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
@@ -1584,7 +1585,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 30: Stylus Pro 9000 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
@@ -1597,7 +1598,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 31: Stylus Pro 9500 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_SELECTABLE
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_SELECTABLE
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
@@ -1610,7 +1611,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 32: Stylus Color 777/680 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
@@ -1623,7 +1624,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 33: Stylus Color 880/83 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
@@ -1636,20 +1637,20 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 34: Stylus Color 980 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     96, 2, 192, 1, 360, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     2880, 720,
     { -1, 1, 0x11, 1, 0x10, -1, 0x10, -1, -1, -1, 0x10 },
-    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .323, .365, .1825, .1825, .0913 },
+    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .323, .365, .91, .91, .455 },
     &variable_3pl_4color_inks, standard_lum_adjustment, standard_hue_adjustment,
     standard_sat_adjustment
   },
   /* 35: Stylus Photo 790 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_YES),
@@ -1662,7 +1663,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 36: Stylus Photo 890 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
@@ -1675,7 +1676,7 @@ static escp2_stp_printer_t model_capabilities[] =
   },
   /* 37: Stylus Photo 1290 */
   {
-    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
@@ -2210,7 +2211,7 @@ escp2_reset_printer(const stp_vars_t *v, escp2_init_t *init)
    * the input.  It only needs to be done once per printer evidently, but
    * it needs to be done.
    */
-  if (escp2_has_cap(init->model, MODEL_INIT, MODEL_INIT_900, init->v))
+  if (escp2_has_cap(init->model, MODEL_INIT, MODEL_INIT_NEW, init->v))
     stp_zprintf(v, "%c%c%c\033\001@EJL 1284.4\n@EJL     \n\033@", 0, 0, 0);
 
   stp_puts("\033@", v); 				/* ESC/P2 reset */
