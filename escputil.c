@@ -275,7 +275,6 @@ do_print_cmd(void)
     fclose(pfile);
   else
     pclose(pfile);
-  pclose(pfile);
   return 0;
 }
 
