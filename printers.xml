@@ -473,3 +473,10 @@
 <language value=canon>
 </printer>
 
+<printer name="Lexmark 4076" driver="lexmark-4076">
+<nocolor>
+<model value=500>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
