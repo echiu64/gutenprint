@@ -101,8 +101,8 @@ typedef struct {
   float saturation; /* 1   */
   float density;    /* 0.8 */
   int model;        /* see gdevstp-print.h for model list
-                       default: 6 == stylus photo 
-                    */
+                       default: 6 == stylus photo */
+  int image_type;   /* 0 = line art, 1 = solid color, 2 = continuous tone */
   char media[100];  /* "Letter", "Legal", "A4", "A3"      */
   int  top;         /* top margin size in 1/72 inches     */
   int  bottom;      /* bottom margin size in 1/72 inches  */
@@ -118,19 +118,20 @@ private uint stp_raster;
 private byte *stp_row;
 private gx_device_printer *stp_pdev;
 static privdata_t stp_data = { 100, /* r          */
-                                  100, /* g          */
-                                  100, /* b          */
-                                  100, /* bright     */
-                                  100, /* cont       */
-                                  0,   /* lin        */
-                                  1,   /* gamma      */
-                                  0,   /* resnr      */
-                                  1,   /* color      */
-                                  1,   /* saturation */
-                                  0.8, /* density    */
-                                  6,   /* model      */
-                                  "A4" /* media      */
-                                 };
+			       100, /* g          */
+			       100, /* b          */
+			       100, /* bright     */
+			       100, /* cont       */
+			       0,   /* lin        */
+			       1,   /* gamma      */
+			       0,   /* resnr      */
+			       1,   /* color      */
+			       1,   /* saturation */
+			       0.8, /* density    */
+			       7,   /* model      */
+			       0,   /* image type */
+			       "A4" /* media      */
+};
 
 /* ------ Private definitions ------ */
 
@@ -201,6 +202,7 @@ private int stp_print_page(gx_device_printer * pdev, FILE * file)
     stp_vars.red        = stp_data.red;        /*100;*/
     stp_vars.green      = stp_data.green;      /*100;*/
     stp_vars.blue       = stp_data.blue;       /*100;*/
+    stp_vars.image_type = stp_data.image_type;
     stp_vars.linear     = 0;
  
     strcpy(stp_vars.ppd_file,"");           /* no ppd file by now */
@@ -340,70 +342,73 @@ private int stp_get_params(gx_device *pdev, gs_param_list *plist)
 /* Yeah, I could have used a list for the options but... */
 private int stp_put_params(gx_device *pdev, gs_param_list *plist)
 {
-    gs_param_string pmedia;
-	int red    = stp_data.red;
-    int green  = stp_data.green;
-    int blue   = stp_data.blue;
-    int bright = stp_data.brightness;
-    int cont   = stp_data.contrast;
-    int model  = stp_data.model;
-    int color  = stp_data.color;
-    int qual   = stp_data.resnr;
-	float gamma = stp_data.gamma;
-	float sat = stp_data.saturation;
-	float den = stp_data.density;
-	int code   = 0;
+  gs_param_string pmedia;
+  int red    = stp_data.red;
+  int green  = stp_data.green;
+  int blue   = stp_data.blue;
+  int bright = stp_data.brightness;
+  int cont   = stp_data.contrast;
+  int model  = stp_data.model;
+  int color  = stp_data.color;
+  int qual   = stp_data.resnr;
+  int itype  = stp_data.image_type;
+  float gamma = stp_data.gamma;
+  float sat = stp_data.saturation;
+  float den = stp_data.density;
+  int code   = 0;
 
-    param_string_from_string(pmedia, stp_data.media);
+  param_string_from_string(pmedia, stp_data.media);
 
-	code = stp_put_param_int(plist, "Red", &red, 0, 200, code);
-	code = stp_put_param_int(plist, "Green", &green, 0, 200, code);
-	code = stp_put_param_int(plist, "Blue", &blue, 0, 200, code);
-	code = stp_put_param_int(plist, "Brightness", &bright, 0, 400, code);
-	code = stp_put_param_int(plist, "Contrast", &cont, 25, 400, code);
-	code = stp_put_param_int(plist, "Color", &color, 0, 1, code);
-	code = stp_put_param_int(plist, "Model", &model, 0, 15, code);
-	code = stp_put_param_int(plist, "Quality", &qual, 0, 7, code);
-	code = stp_put_param_float(plist, "Gamma", &gamma, 0.1, 3., code);
-	code = stp_put_param_float(plist, "Saturation", &sat, 0.1, 9., code);
-	code = stp_put_param_float(plist, "Density", &den, 0.1, 2., code);
+  code = stp_put_param_int(plist, "Red", &red, 0, 200, code);
+  code = stp_put_param_int(plist, "Green", &green, 0, 200, code);
+  code = stp_put_param_int(plist, "Blue", &blue, 0, 200, code);
+  code = stp_put_param_int(plist, "Brightness", &bright, 0, 400, code);
+  code = stp_put_param_int(plist, "Contrast", &cont, 25, 400, code);
+  code = stp_put_param_int(plist, "Color", &color, 0, 1, code);
+  code = stp_put_param_int(plist, "Model", &model, 0, 17, code);
+  code = stp_put_param_int(plist, "Quality", &qual, 0, 7, code);
+  code = stp_put_param_int(plist, "ImageType", &itype, 0, 2, code);
+  code = stp_put_param_float(plist, "Gamma", &gamma, 0.1, 3., code);
+  code = stp_put_param_float(plist, "Saturation", &sat, 0.1, 9., code);
+  code = stp_put_param_float(plist, "Density", &den, 0.1, 2., code);
 
-    if( param_read_string(plist, "PAPERSIZE", &pmedia) == 0)
-	{
-/*
-	 fprintf(stderr,"Media defined: %s\n",pmedia.data);
-*/
-	}
-
-	if ( code < 0 )
-	  return code;
-
-	stp_data.red = red;
-    stp_data.green = green;
-    stp_data.blue = blue;
-    stp_data.brightness = bright;
-    stp_data.contrast = cont;
-    stp_data.model = model;
-    stp_data.color = color;
-    stp_data.resnr = qual;
-    strcpy(stp_data.media,pmedia.data);
-    stp_data.gamma = gamma;
-    stp_data.saturation = sat;
-    stp_data.density = den;
-
+  if( param_read_string(plist, "PAPERSIZE", &pmedia) == 0)
     {
-	 byte a;
-	 
-     a = *stp_data.media;
-     a &= 255-32;      /* quick`n`dirty lcase->ucase for first letter ;-) */
-     *stp_data.media = a;
-#if 0
-	 fprintf(stderr,"Media defined: %s\n",stp_data.media);
-#endif
+      /*
+	fprintf(stderr,"Media defined: %s\n",pmedia.data);
+      */
     }
 
-    code = gdev_prn_put_params(pdev, plist);
-	return code;
+  if ( code < 0 )
+    return code;
+
+  stp_data.red = red;
+  stp_data.green = green;
+  stp_data.blue = blue;
+  stp_data.brightness = bright;
+  stp_data.contrast = cont;
+  stp_data.model = model;
+  stp_data.color = color;
+  stp_data.resnr = qual;
+  stp_data.image_type = itype;
+  strcpy(stp_data.media,pmedia.data);
+  stp_data.gamma = gamma;
+  stp_data.saturation = sat;
+  stp_data.density = den;
+
+  {
+    byte a;
+	 
+    a = *stp_data.media;
+    a &= 255-32;      /* quick`n`dirty lcase->ucase for first letter ;-) */
+    *stp_data.media = a;
+#if 0
+    fprintf(stderr,"Media defined: %s\n",stp_data.media);
+#endif
+  }
+
+  code = gdev_prn_put_params(pdev, plist);
+  return code;
 }
 
 private int stp_put_param_int(gs_param_list *plist,

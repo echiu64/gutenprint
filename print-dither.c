@@ -762,28 +762,43 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
       k -= 65535;
     }
 
-    if (ditherbit & bit)
-    {
-      int tmpk = k;
-      if (tmpk > 65535)
-	tmpk = 65535;
-      kerror1[-offset] += tmpk;
-      kerror1[0] += 3 * tmpk;
-      kerror1[offset] += tmpk;
-      if (x > 0 && 0 < xdw1)
-	ditherk    = kerror0[direction] + 3 * tmpk;
-    }
+    if (k != 0)
+      {
+	int i, dist, delta;
+	int tmpk = k;
+	if (tmpk > 65535)
+	  tmpk = 65535;
+
+	if (ditherbit & bit)
+	  {
+	    if (offset == 0)
+	      dist = 5 * tmpk;
+	    else
+	      dist = 5 * tmpk / ((offset + 1) * (offset + 1));
+	    if (x > 0 && 0 < xdw1)
+	      ditherk    = kerror0[direction] + 3 * tmpk;
+	  }
+	else
+	  {
+	    if (offset == 0)
+	      dist = 3 * tmpk;
+	    else
+	      dist = 3 * tmpk / ((offset + 1) * (offset + 1));
+	    if (x > 0 && 0 < xdw1)
+	      ditherk    = kerror0[direction] + 5 * tmpk;
+	  }
+	delta = dist;
+	for (i = -offset; i <= offset; i++)
+	  {
+	    kerror1[i] += delta;
+	    if (i < 0)
+	      delta += dist;
+	    else
+	      delta -= dist;
+	  }
+      }
     else
-    {
-      int tmpk = k;
-      if (tmpk > 65535)
-	tmpk = 65535;
-      kerror1[-offset] += tmpk;
-      kerror1[0] += tmpk;
-      kerror1[offset] += tmpk;
-      if (x > 0 && 0 < xdw1)
-	ditherk    = kerror0[direction] + 5 * tmpk;
-    }
+      ditherk = kerror0[direction];
 
     if (direction == 1)
       {
@@ -1516,28 +1531,43 @@ dither_black_n(unsigned short   *gray,		/* I - Grayscale pixels */
 	  }
       }
 
-    if (ditherbit & bit)
-    {
-      int tmpk = k;
-      if (tmpk > 65535)
-	tmpk = 65535;
-      kerror1[-offset] += tmpk;
-      kerror1[0] += 3 * tmpk;
-      kerror1[offset] += tmpk;
-      if (x > 0 && 0 < xdw1)
-	ditherk    = kerror0[direction] + 3 * tmpk;
-    }
+    if (k != 0)
+      {
+	int i, dist, delta;
+	int tmpk = k;
+	if (tmpk > 65535)
+	  tmpk = 65535;
+
+	if (ditherbit & bit)
+	  {
+	    if (offset == 0)
+	      dist = 5 * tmpk;
+	    else
+	      dist = 5 * tmpk / ((offset + 1) * (offset + 1));
+	    if (x > 0 && 0 < xdw1)
+	      ditherk    = kerror0[direction] + 3 * tmpk;
+	  }
+	else
+	  {
+	    if (offset == 0)
+	      dist = 3 * tmpk;
+	    else
+	      dist = 3 * tmpk / ((offset + 1) * (offset + 1));
+	    if (x > 0 && 0 < xdw1)
+	      ditherk    = kerror0[direction] + 5 * tmpk;
+	  }
+	delta = dist;
+	for (i = -offset; i <= offset; i++)
+	  {
+	    kerror1[i] += delta;
+	    if (i < 0)
+	      delta += dist;
+	    else
+	      delta -= dist;
+	  }
+      }
     else
-    {
-      int tmpk = k;
-      if (tmpk > 65535)
-	tmpk = 65535;
-      kerror1[-offset] += tmpk;
-      kerror1[0] += tmpk;
-      kerror1[offset] += tmpk;
-      if (x > 0 && 0 < xdw1)
-	ditherk    = kerror0[direction] + 5 * tmpk;
-    }
+      ditherk = kerror0[direction];
 
     if (direction == 1)
       {
@@ -2055,6 +2085,9 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.12  2000/03/11 23:27:06  rlk
+ *   Finish the dither job, and fix up the Ghostscript driver
+ *
  *   Revision 1.11  2000/03/11 17:30:15  rlk
  *   Significant dither changes; addition of line art/solid color/continuous tone modes
  *

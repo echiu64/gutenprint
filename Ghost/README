@@ -141,7 +141,6 @@ Color Balancing Values: (min,max,default)
 -dSaturation=xxx xxx: 0.1 ... 9.0  (1.0)
 -dColor=x          x:   0 ...   1  (1) (0==gray, 1==color) 
 
-
 Printer Model Selection:
 -dModel=xx
 
@@ -163,6 +162,7 @@ xx: 0...15 (6)
 14  Stylus Photo 750
 15  Stylus Photo 1200
 16  Stylus Photo 860
+17  Stylus Color 1160
 
 Note that not all printers are fully functional yet.
 
@@ -187,6 +187,8 @@ currently supported Media Selection:
 -sPAPERSIZE=a4
 -sPAPERSIZE=a3
 
+-dImageType=x      x:   0 ...   2  (0) (0==line art, 1==solid tones,
+					2==continuous tone photograph
 
 Examples:
 ---------
@@ -196,7 +198,7 @@ gs -sDEVICE=stp -sOutputFile=itsyourchoice.prn -dModel=8 -dDensity=0.7 -dGamma=1
 
 
 Example 2 (print to /dev/lp0, color, 720 dpi HQ Mode):
-gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sOutputFile=- -dModel=6 -dDensity=0.8 -r720 -dQuality=4 >/dev/lp0 foo.ps
+gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sOutputFile=- -dModel=6 -dDensity=0.8 -r720 -dQuality=4 foo.ps >/dev/lp0
 
 
 Settings you might try:

@@ -90,6 +90,10 @@ driver epson-gs-and-gimp-driver-0.1 {
          value = "16"
          desc = "Photo 860"
       }
+      choice "PHOTO1160" {
+         value = "17"
+         desc = "Photo 860"
+      }
    }
 
    option {
@@ -116,15 +120,15 @@ driver epson-gs-and-gimp-driver-0.1 {
       }
       choice "DPI1440A" {
          value = "5"
-         desc = "1220x720dpi Softweave"
+         desc = "1440x720dpi Softweave"
       }
       choice "DPI1440A" {
          value = "6"
-         desc = "1220x720dpi Highest Quality"
+         desc = "1440x720dpi Highest Quality"
       }
       choice "DPI1440A" {
          value = "7"
-         desc = "1220x720dpi Two-pass"
+         desc = "1440x720dpi Two-pass"
          help = "untested"
       }
    }
@@ -158,6 +162,22 @@ driver epson-gs-and-gimp-driver-0.1 {
       choice "GREYSCALE" {
           value = "0"
           desc = "Greyscale"
+      }
+   }
+
+   option {
+      var = "IMAGETYPE"
+      choice "LINEART" {
+          value = "0"
+	  desc = "Line Art"
+      }
+      choice "SOLIDTONE" {
+          value = "1"
+	  desc = "Solid Tones"
+      }
+      choice "CONTINUOUSTONE" {
+          value = "2"
+	  desc = "Continuous Tone Photo"
       }
    }
 
@@ -233,6 +253,7 @@ driver epson-gs-and-gimp-driver-0.1 {
 	     -dColor=$COLOR \
 	     -dModel=$MODEL \
 	     -dQuality=$QUALITY \
+	     -dImageType=$IMAGETYPE \
              -sOutputFile=$OUTPUT $INPUT
       }
    }
