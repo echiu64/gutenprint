@@ -134,14 +134,26 @@ get_bits(unsigned char *p,int index)
    */
 
   int value,b;
-  unsigned addr = (index*pstate.bpp);
-
-  value=0;
-  for (b=0;b<pstate.bpp;b++) {
-    value*=2;
-    value|=(p[(addr + b) >> 3] >> (7-((addr + b) & 7)))&1;
-  }
-  return(value);
+  unsigned addr;
+  switch (pstate.bpp)
+    {
+    case 1:
+      return (p[index >> 3] >> (7 - (index & 7))) & 1;
+    case 2:
+      return (p[index >> 2] >> ((3 - (index & 3)) << 1)) & 3;
+    case 4:
+      return (p[index >> 1] >> ((1 - (index & 1)) << 2)) & 0xf;
+    case 8:
+      return p[index];
+    default:
+      addr = (index*pstate.bpp);
+      value=0;
+      for (b=0;b<pstate.bpp;b++) {
+	value*=2;
+	value|=(p[(addr + b) >> 3] >> (7-((addr + b) & 7)))&1;
+      }
+      return(value);
+    }
 }
 
 static inline void 
@@ -155,14 +167,33 @@ set_bits(unsigned char *p,int index,int value)
 
   int b;
 
-  for (b=pstate.bpp-1;b>=0;b--) {
-    if (value&1) {
-      p[(index*pstate.bpp+b)/8]|=1<<(7-((index*pstate.bpp+b)%8));
-    } else {
-      p[(index*pstate.bpp+b)/8]&=~(1<<(7-((index*pstate.bpp+b)%8)));
+  switch (pstate.bpp)
+    {
+    case 1:
+      p[index >> 3] &= ~(1 << (7 - (index & 7)));
+      p[index >> 3] |= value << (7 - (index & 7));
+      break;
+    case 2:
+      p[index >> 2] &= ~(3 << ((3 - (index & 3)) << 1));
+      p[index >> 2] |= value << ((3 - (index & 3)) << 1);
+      break;
+    case 4:
+      p[index >> 1] &= ~(0xf << ((1 - (index & 1)) << 2));
+      p[index >> 1] |= value << ((1 - (index & 1)) << 2);
+      break;
+    case 8:
+      p[index] = value;
+      break;
+    default:
+      for (b=pstate.bpp-1;b>=0;b--) {
+	if (value&1) {
+	  p[(index*pstate.bpp+b)/8]|=1<<(7-((index*pstate.bpp+b)%8));
+	} else {
+	  p[(index*pstate.bpp+b)/8]&=~(1<<(7-((index*pstate.bpp+b)%8)));
+	}
+	value/=2;
+      }
     }
-    value/=2;
-  }
 }
 
 static inline void 
@@ -646,7 +677,6 @@ void parse_escp2(FILE *fp_r)
                   eject=1;
                   continue;
                 }
-		fprintf(stderr, ".");
                 update_page(buf,i,m,n,currentcolor,density);
                 break;
               case 2: /* TIFF compression */
@@ -681,7 +711,7 @@ void parse_escp2(FILE *fp_r)
         case 'r': /* select printing color */
             get1("Error reading color.\n");
             if ((ch<=4)&&(ch!=3)) {
-              pstate.current_color=ch;
+              pstate.current_color=seqcolor(ch);
             } else {
               fprintf(stderr,"Invalid color %d.\n",ch);
             }
@@ -801,7 +831,7 @@ void parse_escp2(FILE *fp_r)
                 }
                 break;
               case 'e': /* set dot size */
-                if ((bufsize!=2)||(buf[0]!=0)||((buf[1]>4)&&(buf[1]!=0x10)&&(buf[1]!=0x11))) {
+                if ((bufsize!=2)||(buf[0]!=0)) {
                   fprintf(stderr,"Malformed dotsize setting command.\n");
                 } else {
                   if (got_graphics) {
