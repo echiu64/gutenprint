@@ -118,8 +118,6 @@ static gint suppress_preview_reset = 0;
 static gint physical_orientation = -2; /* Actual orientation */
 static gint preview_thumbnail_w = 0;
 static gint preview_thumbnail_h = 0;
-static gint bottom_is_anchored = 0;
-static gint right_is_anchored = 0;
 
 static gint printable_width;	/* Width of page */
 static gint printable_height;	/* Height of page */
@@ -2371,7 +2369,6 @@ do_preview_thumbnail (void)
   gint printable_display_width, printable_display_height;
   int bottom = stp_get_top(pv->v) + stp_get_height(pv->v);
   int right = stp_get_left(pv->v) + stp_get_width(pv->v);
-  int offset;
 
   preview_ppi = PREVIEW_SIZE_HORIZ * FINCH / (gdouble) paper_width;
 
@@ -2406,36 +2403,14 @@ do_preview_thumbnail (void)
 
   preview_r = 1 + paper_display_left + preview_ppi * right / INCH;
   preview_b = 1 + paper_display_top + preview_ppi * bottom / INCH;
-
-  preview_w = MIN(printable_display_width - 1,
-		  MAX(3, (preview_ppi * print_width) / INCH));
-  preview_h = MIN(printable_display_height - 1,
-		  MAX(3, (preview_ppi * print_height) / INCH));
-
-  /*
-   * Sometimes due to rounding we wind up with width != right - left.
-   * When that happens, try to keep the edge of the image closest to the
-   * edge of the paper constant.
-   */
-  offset = preview_r - preview_w - preview_x;
-  if (right_is_anchored)
-    {
-      preview_x += offset;
-      right_is_anchored = 0;
-    }
-
-  offset = preview_b - preview_h - preview_y;
-  if (bottom_is_anchored)
-    {
-      preview_y += offset;
-      bottom_is_anchored = 0;
-    }
+  preview_w = preview_r - preview_x;
+  preview_h = preview_b - preview_y;
 
 
   if (preview_w + preview_x > printable_display_left + printable_display_width)
-    preview_x--;
+    preview_w--;
   if (preview_h + preview_y > printable_display_top + printable_display_height)
-    preview_y--;
+    preview_h--;
 
   if (gc == NULL)
     {
@@ -2690,10 +2665,7 @@ preview_update (void)
 
   /* we leave stp_get_left(pv->v) etc. relative to printable area */
   if (stp_get_left (pv->v) > right - print_width)
-    {
-      stp_set_left (pv->v, right - print_width);
-      right_is_anchored = 1;
-    }
+    stp_set_left (pv->v, right - print_width);
 
   if (!pv->top_is_valid)
     {
@@ -2704,10 +2676,7 @@ preview_update (void)
     stp_set_top(pv->v, top);
 
   if (stp_get_top (pv->v) > bottom - print_height)
-    {
-      stp_set_top (pv->v, bottom - print_height);
-      bottom_is_anchored = 1;
-    }
+    stp_set_top (pv->v, bottom - print_height);
 
   set_all_entry_values();
   suppress_preview_update--;
