@@ -97,7 +97,7 @@ typedef struct dither_matrix
 } dither_matrix_t;
 
 extern void stpi_dither_matrix_iterated_init(dither_matrix_t *mat, size_t size,
-					     size_t exp, const unsigned *array);
+					     size_t exponent, const unsigned *array);
 extern void stpi_dither_matrix_shear(dither_matrix_t *mat,
 				     int x_shear, int y_shear);
 extern void stpi_dither_matrix_init(dither_matrix_t *mat, int x_size,

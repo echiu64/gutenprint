@@ -36,6 +36,7 @@
 #endif
 #include <math.h>
 #include <string.h>
+#include "dither.h"
 #include "dither-impl.h"
 #include "generic-options.h"
 
