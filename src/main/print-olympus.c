@@ -384,12 +384,11 @@ olympus_describe_resolution(stp_const_vars_t v, int *x, int *y)
  * olympus_print()
  */
 static int
-olympus_print(stp_const_vars_t v, stp_image_t *image)
+olympus_do_print(stp_vars_t v, stp_image_t *image)
 {
   int i, j;
   int y, min_y, max_y, max_progress;		/* Looping vars */
   int min_x, max_x;
-  stp_vars_t	nv = stp_vars_create_copy(v);
   int out_channels;
   unsigned short *final_out = NULL;
   unsigned char  *char_out;
@@ -433,14 +432,13 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
   char *l, layers[] = "YMC";
   unsigned char *zeros;
 
-  if (!stp_verify(nv))
+  if (!stp_verify(v))
     {
-      stpi_eprintf(nv, _("Print options not verified; cannot print.\n"));
-      stp_vars_free(nv);
+      stpi_eprintf(v, _("Print options not verified; cannot print.\n"));
       return 0;
     }
 
-  stp_describe_resolution(nv, &xdpi, &ydpi);
+  stp_describe_resolution(v, &xdpi, &ydpi);
   olympus_imageable_area(v, &page_pt_left, &page_pt_right,
 	&page_pt_bottom, &page_pt_top);
 
@@ -493,62 +491,60 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
       || out_px_height - image_px_height < -2
       || out_px_height - image_px_height > 2)
     {
-      stpi_eprintf(nv, _("This driver is under development.\n\n"
+      stpi_eprintf(v, _("This driver is under development.\n\n"
         "It can't rescale your image at present. \n"
 	"Your print job is canceled now(!).\n"
 	"Please scale your image suitably and try it again.\n"
 	"Thank you."));
-      stp_vars_free(nv);
       return 0;
     }
 
   
-  stpi_set_output_color_model(nv, COLOR_MODEL_CMY);
+  stpi_set_output_color_model(v, COLOR_MODEL_CMY);
   
   if (ink_type)
     {
       for (i = 0; i < ink_count; i++)
 	if (strcmp(ink_type, inks[i].name) == 0)
 	  {
-	    stpi_set_output_color_model(nv, inks[i].color_model);
+	    stpi_set_output_color_model(v, inks[i].color_model);
 	    ink_channels = inks[i].output_channels;
 	    break;
 	  }
     }
 
-  stpi_channel_reset(nv);
+  stpi_channel_reset(v);
   for (i = 0; i < ink_channels; i++)
-    stpi_channel_add(nv, i, 0, 1.0);
+    stpi_channel_add(v, i, 0, 1.0);
 
-  out_channels = stpi_color_init(nv, image, 256);
+  out_channels = stpi_color_init(v, image, 256);
 
   if (out_channels != ink_channels && out_channels != 1 && ink_channels != 1)
     {
-      stpi_eprintf(nv, _("Internal error!  Output channels or input channels must be 1\n"));
-      stp_vars_free(nv);
+      stpi_eprintf(v, _("Internal error!  Output channels or input channels must be 1\n"));
       return 0;
     }
 
   if (out_channels != ink_channels)
     final_out = stpi_malloc(print_px_width * ink_channels * 2);
 
-  stp_set_float_parameter(nv, "Density", 1.0);
+  stp_set_float_parameter(v, "Density", 1.0);
 
   stpi_image_progress_init(image);
 
   zeros = stpi_zalloc(print_px_width+1);
   
   /* printer init */
-  stpi_zfwrite("\033\033\033C\033N", 1, 6, nv);
-  stpi_putc(copies, nv);
-  stpi_zfwrite("\033F", 1, 2, nv);
-  stpi_putc(hi_speed >> 8, nv);
-  stpi_putc(hi_speed & 0xff, nv);
-  stpi_zfwrite("\033MS\xff\xff\xff\033Z", 1, 8, nv);
-  stpi_putc(xdpi >> 8, nv);
-  stpi_putc(xdpi & 0xff, nv);
-  stpi_putc(ydpi >> 8, nv);
-  stpi_putc(ydpi & 0xff, nv);
+  stpi_zfwrite("\033\033\033C\033N", 1, 6, v);
+  stpi_putc(copies, v);
+  stpi_zfwrite("\033F", 1, 2, v);
+  stpi_putc(hi_speed >> 8, v);
+  stpi_putc(hi_speed & 0xff, v);
+  stpi_zfwrite("\033MS\xff\xff\xff\033Z", 1, 8, v);
+  stpi_putc(xdpi >> 8, v);
+  stpi_putc(xdpi & 0xff, v);
+  stpi_putc(ydpi >> 8, v);
+  stpi_putc(ydpi & 0xff, v);
   
   
   l = layers;
@@ -572,21 +568,21 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
       if ((y % 16) == 0)
         {
         /* block init */
-	stpi_zfwrite("\033\033\033W", 1, 4, nv);
-	stpi_putc(*l, nv);
-	stpi_putc(y >> 8, nv);
-	stpi_putc(y & 0xff, nv);
+	stpi_zfwrite("\033\033\033W", 1, 4, v);
+	stpi_putc(*l, v);
+	stpi_putc(y >> 8, v);
+	stpi_putc(y & 0xff, v);
 
 	min_x = (caps->need_empty_cols ? 0 : out_px_left);
-	stpi_putc(min_x >> 8, nv);
-	stpi_putc(min_x & 0xff, nv);
+	stpi_putc(min_x >> 8, v);
+	stpi_putc(min_x & 0xff, v);
 	
-	stpi_putc((y + 15) >> 8, nv);
-	stpi_putc((y + 15) & 0xff, nv);
+	stpi_putc((y + 15) >> 8, v);
+	stpi_putc((y + 15) & 0xff, v);
 	
 	max_x = (caps->need_empty_cols ? print_px_width - 1 : out_px_right);
-	stpi_putc(max_x >> 8, nv);
-	stpi_putc(max_x & 0xff, nv);
+	stpi_putc(max_x >> 8, v);
+	stpi_putc(max_x & 0xff, v);
 	}
       
 
@@ -597,22 +593,22 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
         }
       if (y < out_px_top || y >= out_px_bottom)
         {
-	stpi_zfwrite((char *) zeros, 1, print_px_width, nv);
+	stpi_zfwrite((char *) zeros, 1, print_px_width, v);
 	}
       else
         {
         if (caps->need_empty_cols && out_px_left > 0)
 	  {
-          stpi_zfwrite((char *) zeros, 1, out_px_left, nv);
+          stpi_zfwrite((char *) zeros, 1, out_px_left, v);
 /* stpi_erprintf("left %d ", out_px_left); */
 	  }
 
-        if (stpi_color_get_row(nv, image, y - out_px_top, &zero_mask))
+        if (stpi_color_get_row(v, image, y - out_px_top, &zero_mask))
           {
   	  status = 2;
   	  break;
           }
-	out = stpi_channel_get_input(nv);
+	out = stpi_channel_get_input(v);
         real_out = out;
         if (out_channels != ink_channels)
   	{
@@ -640,26 +636,36 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
   	for (i = 0; i < out_px_width; i++)
   	  char_out[i] = real_out[i * ink_channels + (layers - l + 2)] / 257;
   
-	stpi_zfwrite((char *) real_out, 1, out_px_width, nv);
+	stpi_zfwrite((char *) real_out, 1, out_px_width, v);
 /* stpi_erprintf("data %d ", out_px_width); */
         if (caps->need_empty_cols && out_px_right < print_px_width)
 	  {
-          stpi_zfwrite((char *) zeros, 1, print_px_width - out_px_right, nv);
+          stpi_zfwrite((char *) zeros, 1, print_px_width - out_px_right, v);
 /* stpi_erprintf("right %d ", print_px_width - out_px_right); */
 	  }
 /* stpi_erprintf("\n"); */
 	}
       }
       /* layer end */
-      stpi_zfwrite("\033\033\033P", 1, 4, nv);
-      stpi_putc(*l, nv);
-      stpi_zfwrite("S", 1, 1, nv);
+      stpi_zfwrite("\033\033\033P", 1, 4, v);
+      stpi_putc(*l, v);
+      stpi_zfwrite("S", 1, 1, v);
 
       l++;
     }
   stpi_image_progress_conclude(image);
   if (final_out)
     stpi_free(final_out);
+  return status;
+}
+
+static int
+olympus_print(stp_const_vars_t v, stp_image_t *image)
+{
+  int status;
+  stp_vars_t nv = stp_vars_create_copy(v);
+  stpi_prune_inactive_options(nv);
+  status = olympus_do_print(nv, image);
   stp_vars_free(nv);
   return status;
 }
