@@ -182,7 +182,7 @@ require('standard_html_header.php3');
  &nbsp;
  </p>
  <h3>
- <font color=#ff0000>Gimp-Print is open source!</font>
+ Project Notes
  </h3>
  <p>
  Gimp-Print is available in source code form under the GPL (GNU General Public
@@ -191,9 +191,6 @@ require('standard_html_header.php3');
  "http://www.cups.org/" >CUPS</a>, the open-source print spooler built-in to
  Mac OS X Jaguar.
  </p>
- <h3>
- Project Notes
- </h3>
  <p>
  Gimp-Print should not be confused with GIMP, the open-source GNU Image
  Manipulation Program. Gimp-Print originated as the print facility for GIMP,
