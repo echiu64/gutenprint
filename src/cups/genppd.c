@@ -333,6 +333,8 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
     * Get the media size...
     */
 
+    if (strcmp(opts[i], "Custom") == 0)
+      continue;
     stp_set_media_size(v, opts[i]);
 
     (*(printfuncs->media_size))(p, v, &width, &height);
@@ -362,6 +364,8 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
    /*
     * Get the media size...
     */
+    if (strcmp(opts[i], "Custom") == 0)
+      continue;
     stp_set_media_size(v, opts[i]);
 
     (*(printfuncs->media_size))(p, v, &width, &height);
@@ -389,6 +393,8 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
     * Get the media size and margins...
     */
 
+    if (strcmp(opts[i], "Custom") == 0)
+      continue;
     stp_set_media_size(v, opts[i]);
 
     (*(printfuncs->media_size))(p, v, &width, &height);
@@ -417,6 +423,8 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
     * Get the media size...
     */
 
+    if (strcmp(opts[i], "Custom") == 0)
+      continue;
     stp_set_media_size(v, opts[i]);
 
     (*(printfuncs->media_size))(p, v, &width, &height);
