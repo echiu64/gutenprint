@@ -5,21 +5,23 @@ by Charles Briscoe-Smith and Robert Krawitz
 
 
 
-The Epson Stylus Color/Photo printers don't have memory to print
-using all of the nozzles in the print head.  For example, the Stylus Photo
-700/EX has 32 nozzles.  At 720 dpi, with an 8" wide image, a single line
-requires (8 * 720 * 6 / 8) bytes, or 4320 bytes (because the Stylus Photo
-printers have 6 ink colors).  To use 32 nozzles would require 138240 bytes.
-It's actually worse than that, though, because the nozzles are spaced 8
-rows apart.  Therefore, in order to store enough data to permit sending the
-page as a simple raster, the printer would require enough memory to store
-256 rows, or 1105920 bytes.  Considering that the Photo EX can print
-11" wide, we're looking at more like 1.5 MB.  In fact, these printers are
-capable of 1440 dpi horizontal resolution.  This would require 3 MB.  The
+The Epson Stylus Color/Photo printers don't have memory to print using
+all of the nozzles in the print head.  For example, the Stylus Photo
+700/EX has 32 nozzles.  At 720 dpi, with an 8" wide image, a single
+line requires (8 * 720 * 6 / 8) bytes, or 4320 bytes (because the
+Stylus Photo printers have 6 ink colors).  To use 32 nozzles per color
+would require 138240 bytes.  It's actually worse than that, though,
+because the nozzles are spaced 8 rows apart.  Therefore, in order to
+store enough data to permit sending the page as a simple raster, the
+printer would require enough memory to store 256 rows, or 1105920
+bytes.  Considering that the Photo EX can print 11" wide, we're
+looking at more like 1.5 MB.  In fact, these printers are capable of
+1440 dpi horizontal resolution.  This would require 3 MB.  The
 printers actually have 64K-256K.
 
 With the newer (740/750 and later) printers it's even worse, since these
-printers support multiple dot sizes.  But that's neither here nor there.
+printers support multiple dot sizes; of course, the even newer
+2880x720 printers don't help either.
 
 Older Epson printers had a mode called MicroWeave (tm).  In this mode,
 the host fed the printer individual rows of dots, and the printer
