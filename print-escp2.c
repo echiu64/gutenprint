@@ -234,7 +234,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    64, 4, 128, 720, 2, 0, 2, INCH(17 / 2), INCH(14), 8, 9, 0, 24, 1, 4
+    64, 4, 128, 720, 2, 0, 2, INCH(17 / 2), INCH(14), 8, 9, 59, 24, 1, 4
   },
   /* 6: Stylus Color 1520 */
   {
@@ -460,33 +460,31 @@ typedef struct escp_init
   int bits;
 } escp_init_t;
 
-static double dot_sizes[] = { 0.550, 0.700, 1.0 };
-
 static simple_dither_range_t variable_dither_ranges[] =
 {
-  { 0.137, 0x1, 0, 1 },
-/*  { 0.233, 0x2, 0, 2 },
+  { 0.15,  0x1, 0, 1 },
+/*  { 0.227, 0x2, 0, 2 },
   { 0.333, 0x3, 0, 3 }, */
-  { 0.550, 0x1, 1, 1 },
-  { 0.700, 0x2, 1, 2 },
+  { 0.45,  0x1, 1, 1 },
+  { 0.68,  0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
 
 static simple_dither_range_t standard_dither_ranges[] =
 {
-  { 0.550, 0x1, 1, 1 },
-  { 0.7,   0x2, 1, 2 },
+  { 0.45,  0x1, 1, 1 },
+  { 0.68,  0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
 
 static simple_dither_range_t mis_sixtone_ranges[] =
 {
-  { 0.15, 0x000001, 1, 1 },	/* LC */
-  { 0.25, 0x000010, 1, 1 },	/* C */
-  { 0.45, 0x000100, 1, 1 },	/* LM */
-  { 0.50, 0x001000, 1, 1 },	/* Y */
-  { 0.75, 0x010000, 1, 1 },	/* M */
-  { 1.00, 0x100000, 1, 1 }	/* K */
+  { 0.15, 0x01, 1, 1 },	/* LC */
+  { 0.25, 0x02, 1, 1 },	/* C */
+  { 0.45, 0x04, 1, 1 },	/* LM */
+  { 0.50, 0x08, 1, 1 },	/* Y */
+  { 0.75, 0x10, 1, 1 },	/* M */
+  { 1.00, 0x20, 1, 1 }	/* K */
 };
 
 typedef struct {
@@ -1315,28 +1313,33 @@ escp2_print(const printer_t *printer,		/* I - Model */
     dither_set_adaptive_divisor(dither, 4);
   if (bits == 2)
     {
-      int dsize = (sizeof(variable_dither_ranges) /
-		   sizeof(simple_dither_range_t));
-      dither_set_y_ranges_simple(dither, 3, dot_sizes, nv.density);
-      dither_set_k_ranges_simple(dither, 3, dot_sizes, nv.density);
+      int dsize6 = (sizeof(variable_dither_ranges) /
+		    sizeof(simple_dither_range_t));
+      int dsize4 = (sizeof(standard_dither_ranges) /
+		    sizeof(simple_dither_range_t));
+      dither_set_y_ranges(dither, dsize4, standard_dither_ranges, nv.density);
+      dither_set_k_ranges(dither, dsize4, standard_dither_ranges, nv.density);
       if (use_6color)
 	{
 	  dither_set_transition(dither, .7);
-	  dither_set_c_ranges(dither, dsize, variable_dither_ranges,
+	  dither_set_c_ranges(dither, dsize6, variable_dither_ranges,
 			      nv.density);
-	  dither_set_m_ranges(dither, dsize, variable_dither_ranges,
+	  dither_set_m_ranges(dither, dsize6, variable_dither_ranges,
 			      nv.density);
 	}
       else
 	{
 	  dither_set_transition(dither, .5);
-	  dither_set_c_ranges_simple(dither, 3, dot_sizes, nv.density);
-	  dither_set_m_ranges_simple(dither, 3, dot_sizes, nv.density);
+	  dither_set_c_ranges(dither, dsize4, standard_dither_ranges,
+			      nv.density);
+	  dither_set_m_ranges(dither, dsize4, standard_dither_ranges,
+			      nv.density);
 	}
     }
   else if (use_6color)
     dither_set_light_inks(dither, .33, .33, 0.0, nv.density * .75);
-
+  if (!strcmp(nv.dither_algorithm, "Ordered"))
+    dither_set_transition(dither, 1);
 
   switch (nv.image_type)
     {
