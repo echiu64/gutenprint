@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
-"POT-Creation-Date: 2002-05-10 21:11-0400\n"
+"POT-Creation-Date: 2002-06-05 19:56-0400\n"
 "PO-Revision-Date: 2002-04-29 00:38GMT\n"
 "Last-Translator: Gustavo D. Vranjes <gvranjes@abaconet.com.ar>\n"
 "Language-Team: Castellano <es@li.org>\n"
@@ -133,24 +133,24 @@ msgstr "Manual con Pausa"
 msgid "Manual without Pause"
 msgstr "Manual sin Pausa"
 
-#: src/escputil/escputil.c:584 src/main/print-canon.c:1689
+#: src/escputil/escputil.c:584 src/main/print-canon.c:1688
 #: src/main/print-lexmark.c:666
 msgid "Black"
 msgstr "Negro"
 
-#: src/main/print-canon.c:1694
+#: src/main/print-canon.c:1693
 msgid "CMY Color"
 msgstr "Color CMY (Cian/Mag/Amar)"
 
-#: src/main/print-canon.c:1699
+#: src/main/print-canon.c:1698
 msgid "CMYK Color"
 msgstr "Color CMYK (Cian/Mag/Amar/Negro)"
 
-#: src/main/print-canon.c:1704
+#: src/main/print-canon.c:1703
 msgid "Photo CcMmY Color"
 msgstr "Color CcMmY para Fotografía"
 
-#: src/main/print-canon.c:1709
+#: src/main/print-canon.c:1708
 msgid "Photo CcMmYK Color"
 msgstr "Color CcMmYK para Fotografía"
 
@@ -2934,33 +2934,38 @@ msgstr "Opción desconocida %s\n"
 msgid "%.0f of %.0f\n"
 msgstr "%.0f of %.0f\n"
 
-#: src/ghost/ijsgimpprint.c:844
+#: src/ghost/ijsgimpprint.c:838
+#, c-format
+msgid "ijs_server_get_page_header failed %d\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:849
 #, c-format
 msgid "image_init failed %d\n"
 msgstr "falló image_init %d\n"
 
-#: src/ghost/ijsgimpprint.c:855
+#: src/ghost/ijsgimpprint.c:860
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
 msgstr "No puedo abrir el descriptor de archivo: %s\n"
 
-#: src/ghost/ijsgimpprint.c:867
+#: src/ghost/ijsgimpprint.c:872
 #, c-format
 msgid "Unable to open %s: %s\n"
 msgstr "No puedo abrir %s: %s\n"
 
-#: src/ghost/ijsgimpprint.c:879
+#: src/ghost/ijsgimpprint.c:884
 #, c-format
 msgid "Unknown printer %s\n"
 msgstr "Impresora desconocida %s\n"
 
-#: src/ghost/ijsgimpprint.c:910
+#: src/ghost/ijsgimpprint.c:915
 msgid "Bad parameters; cannot continue!\n"
 msgstr "¡Parámetros malos, no puedo continuar!\n"
 
-#: src/ghost/ijsgimpprint.c:920
-#, c-format
-msgid "Get next row failed at %d\n"
+#: src/ghost/ijsgimpprint.c:925
+#, fuzzy, c-format
+msgid "Get next row failed at %.0f\n"
 msgstr "Traer próxima fila falló en %d\n"
 
 #~ msgid "Plain Paper Fast Load"

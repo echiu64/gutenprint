@@ -34,7 +34,7 @@ Gimp-Print 4.2.2-pre1:
   3) An internal problem that caused crashes on some systems (in
      stp_vasprintf) has been fixed.
 
-The following bugs have been fixed in 4.2.1:
+The following bugs have been fixed in 4.2.2-pre2:
 
 565091 IJS driver fails on very large images
 565092 Crash in stp_vasprintf on some systems

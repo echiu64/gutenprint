@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Gimp-print 4.2.1\n"
-"POT-Creation-Date: 2002-05-10 21:11-0400\n"
+"POT-Creation-Date: 2002-06-05 19:56-0400\n"
 "PO-Revision-Date: 2002-03-15 20:31+0100\n"
 "Last-Translator: Hylke Witjens <hylke@wwd.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -132,24 +132,24 @@ msgstr "Handmatig met pauze"
 msgid "Manual without Pause"
 msgstr "Handmatig zonder pauze"
 
-#: src/escputil/escputil.c:584 src/main/print-canon.c:1689
+#: src/escputil/escputil.c:584 src/main/print-canon.c:1688
 #: src/main/print-lexmark.c:666
 msgid "Black"
 msgstr "Zwart"
 
-#: src/main/print-canon.c:1694
+#: src/main/print-canon.c:1693
 msgid "CMY Color"
 msgstr "CMY kleuren"
 
-#: src/main/print-canon.c:1699
+#: src/main/print-canon.c:1698
 msgid "CMYK Color"
 msgstr "CMYK Kleuren"
 
-#: src/main/print-canon.c:1704
+#: src/main/print-canon.c:1703
 msgid "Photo CcMmY Color"
 msgstr "Foto CcMmY kleuren"
 
-#: src/main/print-canon.c:1709
+#: src/main/print-canon.c:1708
 msgid "Photo CcMmYK Color"
 msgstr "Foto CcMmYK Kleuren"
 
@@ -2730,33 +2730,38 @@ msgstr "Onbekende optie %s\n"
 msgid "%.0f of %.0f\n"
 msgstr "%.0f van %.0f\n"
 
-#: src/ghost/ijsgimpprint.c:844
+#: src/ghost/ijsgimpprint.c:838
+#, c-format
+msgid "ijs_server_get_page_header failed %d\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:849
 #, c-format
 msgid "image_init failed %d\n"
 msgstr "image_init faalde %d\n"
 
-#: src/ghost/ijsgimpprint.c:855
+#: src/ghost/ijsgimpprint.c:860
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:867
+#: src/ghost/ijsgimpprint.c:872
 #, c-format
 msgid "Unable to open %s: %s\n"
 msgstr "Lukt niet om %s:%s te openen\n"
 
-#: src/ghost/ijsgimpprint.c:879
+#: src/ghost/ijsgimpprint.c:884
 #, c-format
 msgid "Unknown printer %s\n"
 msgstr "Onbekende printer %s\n"
 
-#: src/ghost/ijsgimpprint.c:910
+#: src/ghost/ijsgimpprint.c:915
 msgid "Bad parameters; cannot continue!\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:920
-#, c-format
-msgid "Get next row failed at %d\n"
+#: src/ghost/ijsgimpprint.c:925
+#, fuzzy, c-format
+msgid "Get next row failed at %.0f\n"
 msgstr "Zoek volgende rij faalde op %d\n"
 
 #~ msgid "Plain Paper Fast Load"

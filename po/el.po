@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 1.0\n"
-"POT-Creation-Date: 2002-05-10 21:11-0400\n"
+"POT-Creation-Date: 2002-06-05 19:56-0400\n"
 "PO-Revision-Date: 2001-12-29 20:10+0000\n"
 "Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -154,27 +154,27 @@ msgstr "Σελίδα εγχειριδίου"
 msgid "Manual without Pause"
 msgstr ""
 
-#: src/escputil/escputil.c:584 src/main/print-canon.c:1689
+#: src/escputil/escputil.c:584 src/main/print-canon.c:1688
 #: src/main/print-lexmark.c:666
 msgid "Black"
 msgstr "Μαύρο"
 
-#: src/main/print-canon.c:1694
+#: src/main/print-canon.c:1693
 #, fuzzy
 msgid "CMY Color"
 msgstr "+ Χρώμα"
 
-#: src/main/print-canon.c:1699
+#: src/main/print-canon.c:1698
 #, fuzzy
 msgid "CMYK Color"
 msgstr "+ Χρώμα"
 
-#: src/main/print-canon.c:1704
+#: src/main/print-canon.c:1703
 #, fuzzy
 msgid "Photo CcMmY Color"
 msgstr "Επιλογή Ειδικού Χρώματος"
 
-#: src/main/print-canon.c:1709
+#: src/main/print-canon.c:1708
 #, fuzzy
 msgid "Photo CcMmYK Color"
 msgstr "Επιλογή Ειδικού Χρώματος"
@@ -2769,33 +2769,38 @@ msgstr "¶γνωστος κωδικός op %u"
 msgid "%.0f of %.0f\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:844
+#: src/ghost/ijsgimpprint.c:838
+#, c-format
+msgid "ijs_server_get_page_header failed %d\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:849
 #, c-format
 msgid "image_init failed %d\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:855
+#: src/ghost/ijsgimpprint.c:860
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:867
+#: src/ghost/ijsgimpprint.c:872
 #, fuzzy, c-format
 msgid "Unable to open %s: %s\n"
 msgstr "¶νοιγμα αρχείου %s αδύνατον\n"
 
-#: src/ghost/ijsgimpprint.c:879
+#: src/ghost/ijsgimpprint.c:884
 #, fuzzy, c-format
 msgid "Unknown printer %s\n"
 msgstr "¶γνωστος κωδικός op %u"
 
-#: src/ghost/ijsgimpprint.c:910
+#: src/ghost/ijsgimpprint.c:915
 msgid "Bad parameters; cannot continue!\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:920
+#: src/ghost/ijsgimpprint.c:925
 #, c-format
-msgid "Get next row failed at %d\n"
+msgid "Get next row failed at %.0f\n"
 msgstr ""
 
 #, fuzzy

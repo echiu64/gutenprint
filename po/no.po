@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 0.3\n"
-"POT-Creation-Date: 2002-05-10 21:11-0400\n"
+"POT-Creation-Date: 2002-06-05 19:56-0400\n"
 "PO-Revision-Date: 2002-02-23 12:53+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian/Bokmaal <no@li.org>\n"
@@ -132,24 +132,24 @@ msgstr "Manuell med pause"
 msgid "Manual without Pause"
 msgstr "Manuell uten pause"
 
-#: src/escputil/escputil.c:584 src/main/print-canon.c:1689
+#: src/escputil/escputil.c:584 src/main/print-canon.c:1688
 #: src/main/print-lexmark.c:666
 msgid "Black"
 msgstr "Sort"
 
-#: src/main/print-canon.c:1694
+#: src/main/print-canon.c:1693
 msgid "CMY Color"
 msgstr "CMY-farge"
 
-#: src/main/print-canon.c:1699
+#: src/main/print-canon.c:1698
 msgid "CMYK Color"
 msgstr "CMYK-farge"
 
-#: src/main/print-canon.c:1704
+#: src/main/print-canon.c:1703
 msgid "Photo CcMmY Color"
 msgstr "Foto CcMmY-farge"
 
-#: src/main/print-canon.c:1709
+#: src/main/print-canon.c:1708
 msgid "Photo CcMmYK Color"
 msgstr "Foto CcMmYK-farge"
 
@@ -2585,33 +2585,38 @@ msgstr "Ukjent flagg %s\n"
 msgid "%.0f of %.0f\n"
 msgstr "%.0f av %.0f\n"
 
-#: src/ghost/ijsgimpprint.c:844
+#: src/ghost/ijsgimpprint.c:838
+#, c-format
+msgid "ijs_server_get_page_header failed %d\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:849
 #, c-format
 msgid "image_init failed %d\n"
 msgstr "image_init feilet %d\n"
 
-#: src/ghost/ijsgimpprint.c:855
+#: src/ghost/ijsgimpprint.c:860
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
 msgstr "Kan ikke åpne fildeskriptor: %s\n"
 
-#: src/ghost/ijsgimpprint.c:867
+#: src/ghost/ijsgimpprint.c:872
 #, c-format
 msgid "Unable to open %s: %s\n"
 msgstr "Kan ikke åpne %s: %s\n"
 
-#: src/ghost/ijsgimpprint.c:879
+#: src/ghost/ijsgimpprint.c:884
 #, c-format
 msgid "Unknown printer %s\n"
 msgstr "Ukjent skriver %s\n"
 
-#: src/ghost/ijsgimpprint.c:910
+#: src/ghost/ijsgimpprint.c:915
 msgid "Bad parameters; cannot continue!\n"
 msgstr "Ugyldige parametere; kan ikke fortsette!\n"
 
-#: src/ghost/ijsgimpprint.c:920
-#, c-format
-msgid "Get next row failed at %d\n"
+#: src/ghost/ijsgimpprint.c:925
+#, fuzzy, c-format
+msgid "Get next row failed at %.0f\n"
 msgstr "Henting av neste rad feilet ved %d\n"
 
 #~ msgid "360 DPI"
