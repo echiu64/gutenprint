@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.75  2000/02/13 17:24:24  rlk
+ *   More modes in run-weavetest, and attempt to handle column spacing in escp2
+ *
  *   Revision 1.74  2000/02/13 03:14:26  rlk
  *   Bit of an oops here about printer models; also start on print-gray-using-color mode for better quality
  *
@@ -429,6 +432,9 @@ typedef model_cap_t model_class_t;
 #define MODEL_MAKE_SEPARATION(x) 	(((long long) (x)) << 32)
 #define MODEL_GET_SEPARATION(x)	(((x) & MODEL_SEPARATION_MASK) >> 32)
 
+#define MODEL_XRES_MASK		0xfff000000000ll
+#define MODEL_MAKE_XRES(x) 	(((long long) (x)) << 36)
+#define MODEL_GET_XRES(x)	((((long long) x) & MODEL_XRES_MASK) >> 36)
 
 #define PHYSICAL_BPI 720
 #define MAX_OVERSAMPLED 4
@@ -471,94 +477,95 @@ typedef model_cap_t model_class_t;
 model_cap_t model_capabilities[] =
 {
   /* FIRST GENERATION PRINTERS */
-  /* Stylus Color */
+  /* 0: Stylus Color */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_DEFAULT | MODEL_INIT_COLOR
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_VARIABLE_NORMAL
+   | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(1) | MODEL_MAKE_SEPARATION(1)),
-  /* Stylus Color Pro/Pro XL/400/500 */
+  /* 1: Stylus Color Pro/Pro XL/400/500 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_DEFAULT | MODEL_INIT_PRO
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_VARIABLE_NORMAL
+   | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(8)),
-  /* Stylus Color 1500 */
+  /* 2: Stylus Color 1500 */
   (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_DEFAULT | MODEL_INIT_1500
    | MODEL_HASBLACK_NO | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_VARIABLE_NORMAL
+   | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(1) | MODEL_MAKE_SEPARATION(1)),
-  /* Stylus Color 600 */
+  /* 3: Stylus Color 600 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_600
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_600
-   | MODEL_VARIABLE_NORMAL
-   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(1) | MODEL_MAKE_SEPARATION(1)),
-  /* Stylus Color 800/850 */
+   | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
+   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
+  /* 4: Stylus Color 800 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_600
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_VARIABLE_NORMAL
-   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(8)),
-  /* Stylus Color 850 */
+   | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
+   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(64) | MODEL_MAKE_SEPARATION(8)),
+  /* 5: Stylus Color 850 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_COLOR
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_VARIABLE_NORMAL
+   | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(64) | MODEL_MAKE_SEPARATION(8)),
-  /* Stylus Color 1520/3000 */
+  /* 6: Stylus Color 1520/3000 */
   (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_600 | MODEL_INIT_600
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_VARIABLE_NORMAL
+   | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(64) | MODEL_MAKE_SEPARATION(8)),
 
   /* SECOND GENERATION PRINTERS */
-  /* Stylus Photo 700 */
+  /* 7: Stylus Photo 700 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
-   | MODEL_VARIABLE_NORMAL
+   | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
-  /* Stylus Photo EX */
+  /* 8: Stylus Photo EX */
   (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
-   | MODEL_VARIABLE_NORMAL
+   | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
-  /* Stylus Photo */
+  /* 9: Stylus Photo */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
-   | MODEL_VARIABLE_NORMAL
+   | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
 
   /* THIRD GENERATION PRINTERS */
-  /* Stylus Color 440 */
+  /* 10: Stylus Color 440 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_440
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_VARIABLE_NORMAL
+   | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(21) | MODEL_MAKE_SEPARATION(7)),
-  /* Stylus Color 640 */
+  /* 11: Stylus Color 640 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_440
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_VARIABLE_NORMAL
+   | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
-  /* Stylus Color 740 */
+  /* 12: Stylus Color 740 */
   (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_600 | MODEL_INIT_440
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_VARIABLE_4
+   | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
-  /* Stylus Color 900 */
+  /* 13: Stylus Color 900 */
+  /* Dale Pontius thinks the spacing is 3 jets??? */
   (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_600 | MODEL_INIT_440
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_VARIABLE_4
-   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(96) | MODEL_MAKE_SEPARATION(6)),
-  /* Stylus Photo 750, 870 */
+   | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(720)
+   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(96) | MODEL_MAKE_SEPARATION(3)),
+  /* 14: Stylus Photo 750, 870 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO2
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT
-   | MODEL_VARIABLE_4
+   | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
-  /* Stylus Photo 1200, 1270 */
+  /* 15: Stylus Photo 1200, 1270 */
   (MODEL_PAPER_1319 | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO2
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
-   | MODEL_VARIABLE_4
+   | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
-  /* Stylus Color 860 */
+  /* 16: Stylus Color 860 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_COLOR
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_VARIABLE_NORMAL
+   | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
 };
 
@@ -611,6 +618,12 @@ static int
 escp2_nozzle_separation(int model)
 {
   return MODEL_GET_SEPARATION(model_capabilities[model]);
+}
+
+static int
+escp2_xres(int model)
+{
+  return MODEL_GET_XRES(model_capabilities[model]);
 }
 
 /*
@@ -688,8 +701,10 @@ escp2_parameters(int  model,		/* I - Printer model */
 	      int nozzles = escp2_nozzles(model);
 	      int separation = escp2_nozzle_separation(model);
 	      int max_weave = nozzles / separation;
-	      if (! res->softweave ||
-		  (nozzles > 1 && res->vertical_passes <= max_weave))
+	      if ((((720 / escp2_xres(model)) * res->horizontal_passes *
+		    res->vertical_passes) <= 4) &&
+		  (! res->softweave ||
+		   (nozzles > 1 && res->vertical_passes <= max_weave)))
 		{
 		  valptrs[*count] = malloc(strlen(res->name) + 1);
 		  strcpy(valptrs[*count], res->name);
@@ -1107,6 +1122,8 @@ escp2_print(int       model,		/* I - Model */
 	  use_softweave = res->softweave;
 	  horizontal_passes = res->horizontal_passes;
 	  vertical_passes = res->vertical_passes;
+	  if (use_softweave && escp2_xres(model) < 720)
+	    vertical_passes *= 720 / escp2_xres(model);
 	  xdpi = res->hres;
 	  ydpi = res->vres;
 	  nozzles = escp2_nozzles(model);
