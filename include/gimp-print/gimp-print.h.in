@@ -511,6 +511,8 @@ stp_string_list_duplicate_params(const stp_param_string_t *list, size_t count);
  * to 1.
  *
  * A wrapped curve has the same value at x=0 and x=1.
+ * The wrap mode of a curve cannot be changed except by routines that
+ * destroy the old curve entirely (e. g. stp_curve_copy, stp_curve_read).
  */
 
 extern stp_curve_t stp_curve_allocate(stp_curve_wrap_mode_t wrap);
@@ -521,6 +523,7 @@ extern void stp_curve_destroy(stp_curve_t curve);
 /*
  * Set the lower and upper bounds on a curve.  If any existing points
  * on the curve are outside of the bounds, FALSE is returned.
+ * To change the bounds adjusting data as required, use stp_curve_rescale.
  */
 extern int stp_curve_set_bounds(stp_curve_t curve, double low, double high);
 extern void stp_curve_get_bounds(const stp_curve_t curve,
@@ -577,10 +580,8 @@ extern const double *stp_curve_get_data(const stp_curve_t curve, size_t *count);
  * If the gamma value is illegal (0, infinity, or NaN), FALSE is returned.
  * It is also illegal, and FALSE is returned, to set gamma on a wrap-mode
  * curve.
- *
- * The number of points must not exceed 65536.
  */
-extern int stp_curve_set_gamma(stp_curve_t curve, size_t count, double gamma);
+extern int stp_curve_set_gamma(stp_curve_t curve, double gamma);
 
 /*
  * Return the gamma value of the curve.  A returned value of 0 indicates
@@ -669,7 +670,8 @@ extern int stp_curve_read(FILE *f, stp_curve_t curve);
 extern int stp_curve_read_string(const char *text, stp_curve_t curve);
 
 /*
- * Compose two curves, creating a third curve.
+ * Compose two curves, creating a third curve.  Only add and multiply
+ * composition is currently supported.
  *
  * If element-wise composition fails, an error is returned.
  *

@@ -128,7 +128,7 @@ main(int argc, char **argv)
   printf("allocate 2\n");
   curve2 = stp_curve_allocate(STP_CURVE_WRAP_NONE);
   printf("set gamma 1\n");
-  if (!stp_curve_set_gamma(curve1, 64, 1.2))
+  if (!stp_curve_set_gamma(curve1, 1.2))
     {
       printf("set_gamma failed!\n");
       global_error_count++;
@@ -136,7 +136,7 @@ main(int argc, char **argv)
   stp_curve_print(stdout, curve1);
   fprintf(stdout, "\n");
   printf("set gamma 2\n");
-  if (!stp_curve_set_gamma(curve2, 64, -1.2))
+  if (!stp_curve_set_gamma(curve2, -1.2))
     {
       printf("set_gamma failed!\n");
       global_error_count++;
@@ -151,6 +151,15 @@ main(int argc, char **argv)
     }
   else
     stp_curve_print(stdout, curve3);
+  fprintf(stdout, "\n");
+  printf("resample 1\n");
+  if (!stp_curve_resample(curve1, 64))
+    {
+      printf("resample failed!\n");
+      global_error_count++;
+    }
+  else
+    stp_curve_print(stdout, curve1);
   fprintf(stdout, "\n");
   stp_curve_destroy(curve3);
   printf("compose multiply\n");
@@ -188,5 +197,6 @@ main(int argc, char **argv)
   stp_curve_destroy(curve1);
   stp_curve_destroy(curve2);
 
-  return 0;
+  printf("%d total errors\n", global_error_count);
+  return global_error_count ? 0 : 1;
 }
