@@ -1677,10 +1677,11 @@ do_all_updates(void)
       if (desc.type == STP_PARAMETER_TYPE_STRING_LIST)
 	{
 	  option->params = desc.bounds.str;
-	  if (stp_get_string_parameter(pv->v, option->name)[0] == '\0')
-	    stp_set_string_parameter(pv->v, option->name, desc.deflt.str);
-	  else if (option->params == NULL)
+	  if (option->params == NULL ||
+	      stp_string_list_count(desc.bounds.str) == 0)
 	    stp_set_string_parameter(pv->v, option->name, NULL);
+	  else if (stp_get_string_parameter(pv->v, option->name)[0] == '\0')
+	    stp_set_string_parameter(pv->v, option->name, desc.deflt.str);
 	}
       plist_build_combo(option->combo, option->params,
 			stp_get_string_parameter(pv->v, option->name),
