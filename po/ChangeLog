@@ -1,0 +1,9 @@
+2001-01-02  Roger Leigh  <roger@whinlatter.uklinux.net>
+
+	* Created po/POTFILES.in with current source locations.
+
+	* Created po/ChangeLog
+
+Local variables:
+mode: change-log
+End:
