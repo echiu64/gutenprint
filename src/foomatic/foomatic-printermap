@@ -13,6 +13,8 @@
 #gptofoo bjc-3000 printer/129472
 #gptofoo bjc-4300 printer/60544
 #gptofoo bjc-4300 printer/309929
+#gptofoo bjc-4300 printer/Canon-S100
+#gptofoo bjc-4300 printer/60448
 #gptofoo bjc-4400 printer/62240
 #gptofoo bjc-6000 printer/71392
 #gptofoo bjc-6100 printer/317225
@@ -21,9 +23,13 @@
 #gptofoo bjc-7000 printer/60672
 #gptofoo bjc-7100 printer/114656
 #gptofoo bjc-8200 printer/123776
+#gptofoo bjc-8200 printer/Canon-S500
+#gptofoo bjc-8200 printer/Canon-S600
+#gptofoo bjc-8200 printer/Canon-S630
 #gptofoo bjc-s400 printer/602258
 #gptofoo bjc-s450 printer/479986
 #gptofoo bjc-s800 printer/Canon-S800
+#gptofoo bjc-s800 printer/Canon-S300
 #gptofoo bjc-s4500 printer/602386
 #gptofoo escp2-c20sx printer/Epson-Stylus_C20SX
 #gptofoo escp2-c20ux printer/Epson-Stylus_C20UX
@@ -33,6 +39,9 @@
 #gptofoo escp2-c70 printer/Epson-Stylus_C70
 #gptofoo escp2-c80 printer/Epson-Stylus_C80
 #gptofoo escp2 printer/61184
+#gptofoo escp2 printer/25696
+#gptofoo escp2 printer/61216
+#gptofoo escp2 printer/61248
 #gptofoo escp2-pro printer/25824
 #gptofoo escp2-pro-xl printer/65856
 #gptofoo escp2-400 printer/62912
