@@ -657,70 +657,138 @@ compute_lut(const vars_t *pv,
  * 'default_media_size()' - Return the size of a default page size.
  */
 
+/*
+ * Sizes are converted to 1|72in, then rounded down so that we don't
+ * print off the edge of the paper.
+ */
 const static papersize_t paper_sizes[] =
 {
-  { "A10",      73,   104,	PAPERSIZE_METRIC },
-  { "A9",       104,  246,	PAPERSIZE_METRIC },
-  { "A8",       146,  295,	PAPERSIZE_METRIC },
-  { "A7",       209,  295,	PAPERSIZE_METRIC },
-  { "A6", 	295,  417,	PAPERSIZE_METRIC },
-  { "A5", 	424,  597,	PAPERSIZE_METRIC },
-  { "A4", 	595,  842,	PAPERSIZE_METRIC },
-  { "A3", 	842,  1191,	PAPERSIZE_METRIC },
-  { "A2", 	1188, 1683,	PAPERSIZE_METRIC },
-  { "A1",       1683, 2383,	PAPERSIZE_METRIC },
-  { "A0",       2383, 3370,	PAPERSIZE_METRIC },
-  { "2A",       3370, 4767,	PAPERSIZE_METRIC },
-  { "4A",       4767, 6740,	PAPERSIZE_METRIC },
+  /* Common imperial page sizes */
+  { "Postcard", 283,  416, PAPERSIZE_ENGLISH },	/* 100mm x 147mm */
+  { "4x6",      288,  432, PAPERSIZE_ENGLISH },
+  { "5x7",      360,  504, PAPERSIZE_ENGLISH },
+  { "5x8",      360,  576, PAPERSIZE_ENGLISH },
+  { "6x8",      432,  576, PAPERSIZE_ENGLISH },
+  { "8x10",     576,  720, PAPERSIZE_ENGLISH },
+  { "Manual",   396,  612, PAPERSIZE_ENGLISH },	/* 5.5in x 8.5in */
+  { "Letter",   612,  792, PAPERSIZE_ENGLISH },	/* 8.5in x 11in */
+  { "Legal",    612, 1008, PAPERSIZE_ENGLISH },	/* 8.5in x 14in */
+  { "Tabloid",  792, 1224, PAPERSIZE_ENGLISH },	/*  11in x 17in */
+  { "12x18",    864, 1296, PAPERSIZE_ENGLISH },
+  { "13x19",    936, 1368, PAPERSIZE_ENGLISH },
 
-  { "B10 ISO", 	87,   124,	PAPERSIZE_METRIC },
-  { "B9 ISO", 	124,  175,	PAPERSIZE_METRIC },
-  { "B8 ISO", 	175,  249,	PAPERSIZE_METRIC },
-  { "B7 ISO", 	249,  354,	PAPERSIZE_METRIC },
-  { "B6 ISO", 	354,  498,	PAPERSIZE_METRIC },
-  { "B5 ISO", 	498,  708,	PAPERSIZE_METRIC },
-  { "B4 ISO", 	708,  1000,	PAPERSIZE_METRIC },
-  { "B3 ISO", 	1000, 1417,	PAPERSIZE_METRIC },
-  { "B2 ISO", 	1417, 2004,	PAPERSIZE_METRIC },
-  { "B1 ISO", 	2004, 2834,	PAPERSIZE_METRIC },
-  { "B0 ISO", 	2834, 4007,	PAPERSIZE_METRIC },
-  { "2B ISO", 	4007, 5669,	PAPERSIZE_METRIC },
-  { "4B ISO", 	5669, 8015,	PAPERSIZE_METRIC },
+  /* International Paper Sizes (mostly taken from BS4000:1968) */
+
+  /*
+   * "A" series: Paper and boards, trimmed sizes
+   *
+   * "A" sizes are in the ratio 1 : sqrt(2).  A0 has a total area
+   * of 1 square metre.  Everything is rounded to the nearest
+   * millimetre.  Thus, A0 is 841mm x 1189mm.  Every other A
+   * size is obtained by doubling or halving another A size.
+   */
+  { "4A",       4767, 6740, PAPERSIZE_METRIC },	/* 1682mm x 2378mm */
+  { "2A",       3370, 4767, PAPERSIZE_METRIC },	/* 1189mm x 1682mm */
+  { "A0",       2383, 3370, PAPERSIZE_METRIC },	/*  841mm x 1189mm */
+  { "A1",       1683, 2383, PAPERSIZE_METRIC },	/*  594mm x  841mm */
+  { "A2",       1190, 1683, PAPERSIZE_METRIC },	/*  420mm x  594mm */
+  { "A3",        841, 1190, PAPERSIZE_METRIC },	/*  297mm x  420mm */
+  { "A4",        595,  841, PAPERSIZE_METRIC },	/*  210mm x  297mm */
+  { "A5",        419,  595, PAPERSIZE_METRIC },	/*  148mm x  210mm */
+  { "A6",        297,  419, PAPERSIZE_METRIC },	/*  105mm x  148mm */
+  { "A7",        209,  297, PAPERSIZE_METRIC },	/*   74mm x  105mm */
+  { "A8",        147,  209, PAPERSIZE_METRIC },	/*   52mm x   74mm */
+  { "A9",        104,  147, PAPERSIZE_METRIC },	/*   37mm x   52mm */
+  { "A10",        73,  104, PAPERSIZE_METRIC },	/*   26mm x   37mm */
+
+  /*
+   * Stock sizes for normal trims.
+   * Allowance for trim is 3 millimetres.
+   */
+  { "RA0",      2437, 3458, PAPERSIZE_METRIC },	/*  860mm x 1220mm */
+  { "RA1",      1729, 2437, PAPERSIZE_METRIC },	/*  610mm x  860mm */
+  { "RA2",      1218, 1729, PAPERSIZE_METRIC },	/*  430mm x  610mm */
+  { "RA3",       864, 1218, PAPERSIZE_METRIC },	/*  305mm x  430mm */
+  { "RA4",       609,  864, PAPERSIZE_METRIC },	/*  215mm x  305mm */
+
+  /*
+   * Stock sizes for bled work or extra trims.
+   */
+  { "SRA0",     2551, 3628, PAPERSIZE_METRIC },	/*  900mm x 1280mm */
+  { "SRA1",     1814, 2551, PAPERSIZE_METRIC },	/*  640mm x  900mm */
+  { "SRA2",     1275, 1814, PAPERSIZE_METRIC },	/*  450mm x  640mm */
+  { "SRA3",      907, 1275, PAPERSIZE_METRIC },	/*  320mm x  450mm */
+  { "SRA4",      637,  907, PAPERSIZE_METRIC },	/*  225mm x  320mm */
+
+  /*
+   * "B" series: Posters, wall charts and similar items.
+   */
+  { "4B ISO",   5669, 8016, PAPERSIZE_METRIC },	/* 2000mm x 2828mm */
+  { "2B ISO",   4008, 5669, PAPERSIZE_METRIC },	/* 1414mm x 2000mm */
+  { "B0 ISO",   2834, 4008, PAPERSIZE_METRIC },	/* 1000mm x 1414mm */
+  { "B1 ISO",   2004, 2834, PAPERSIZE_METRIC },	/*  707mm x 1000mm */
+  { "B2 ISO",   1417, 2004, PAPERSIZE_METRIC },	/*  500mm x  707mm */
+  { "B3 ISO",   1000, 1417, PAPERSIZE_METRIC },	/*  353mm x  500mm */
+  { "B4 ISO",    708, 1000, PAPERSIZE_METRIC },	/*  250mm x  353mm */
+  { "B5 ISO",    498,  708, PAPERSIZE_METRIC },	/*  176mm x  250mm */
+  { "B6 ISO",    354,  498, PAPERSIZE_METRIC },	/*  125mm x  176mm */
+  { "B7 ISO",    249,  354, PAPERSIZE_METRIC },	/*   88mm x  125mm */
+  { "B8 ISO",    175,  249, PAPERSIZE_METRIC },	/*   62mm x   88mm */
+  { "B9 ISO",    124,  175, PAPERSIZE_METRIC },	/*   44mm x   62mm */
+  { "B10 ISO",    87,  124, PAPERSIZE_METRIC },	/*   31mm x   44mm */
   
-  { "B10 JIS", 	90,   127,	PAPERSIZE_METRIC },
-  { "B9 JIS", 	127,  180,	PAPERSIZE_METRIC },
-  { "B8 JIS", 	180,  257,	PAPERSIZE_METRIC },
-  { "B7 JIS", 	257,  362,	PAPERSIZE_METRIC },
-  { "B6 JIS", 	362,  518,	PAPERSIZE_METRIC },
-  { "B5 JIS", 	518,  727,	PAPERSIZE_METRIC },
-  { "B4 JIS", 	727,  1029,	PAPERSIZE_METRIC },
-  { "B3 JIS", 	1029, 1459,	PAPERSIZE_METRIC },
-  { "B2 JIS", 	1459, 2063,	PAPERSIZE_METRIC },
-  { "B1 JIS", 	2063, 2919,	PAPERSIZE_METRIC },
-  { "B0 JIS", 	2919, 4127,	PAPERSIZE_METRIC },
+  { "B0 JIS",   2919, 4127, PAPERSIZE_METRIC },
+  { "B1 JIS",   2063, 2919, PAPERSIZE_METRIC },
+  { "B2 JIS",   1459, 2063, PAPERSIZE_METRIC },
+  { "B3 JIS",   1029, 1459, PAPERSIZE_METRIC },
+  { "B4 JIS",    727, 1029, PAPERSIZE_METRIC },
+  { "B5 JIS",    518,  727, PAPERSIZE_METRIC },
+  { "B6 JIS",    362,  518, PAPERSIZE_METRIC },
+  { "B7 JIS",    257,  362, PAPERSIZE_METRIC },
+  { "B8 JIS",    180,  257, PAPERSIZE_METRIC },
+  { "B9 JIS",    127,  180, PAPERSIZE_METRIC },
+  { "B10 JIS",    90,  127, PAPERSIZE_METRIC },
 
-  { "C10",      79,   113,	PAPERSIZE_METRIC },
-  { "C9",       113,  161,	PAPERSIZE_METRIC },
-  { "C8",       161,  228,	PAPERSIZE_METRIC },
-  { "C7",       228,  322,	PAPERSIZE_METRIC },
-  { "C6", 	322,  458,	PAPERSIZE_METRIC },
-  { "C5", 	458,  649,	PAPERSIZE_METRIC },
-  { "C4", 	649,  918,	PAPERSIZE_METRIC },
-  { "C3", 	918,  1298,	PAPERSIZE_METRIC },
-  { "C2", 	1298, 1839,	PAPERSIZE_METRIC },
-  { "C1",       1839, 2599,	PAPERSIZE_METRIC },
-  { "C0",       2599, 3676,	PAPERSIZE_METRIC },
+  /*
+   * "C" series: Envelopes or folders suitable for A size stationery.
+   */
+  { "C0",       2599, 3676, PAPERSIZE_METRIC },	/*  917mm x 1297mm */
+  { "C1",       1836, 2599, PAPERSIZE_METRIC },	/*  648mm x  917mm */
+  { "C2",       1298, 1836, PAPERSIZE_METRIC },	/*  458mm x  648mm */
+  { "C3",        918, 1298, PAPERSIZE_METRIC },	/*  324mm x  458mm */
+  { "C4",        649,  918, PAPERSIZE_METRIC },	/*  229mm x  324mm */
+  { "C5",        459,  649, PAPERSIZE_METRIC },	/*  162mm x  229mm */
+  { "B6/C4",     354,  918, PAPERSIZE_METRIC },	/*  125mm x  324mm */
+  { "C6",        323,  459, PAPERSIZE_METRIC },	/*  114mm x  162mm */
+  { "DL",        311,  623, PAPERSIZE_METRIC },	/*  110mm x  220mm */
+  { "C7/6",      229,  459, PAPERSIZE_METRIC },	/*   81mm x  162mm */
+  { "C7",        229,  323, PAPERSIZE_METRIC },	/*   81mm x  114mm */
+  { "C8",        161,  229, PAPERSIZE_METRIC },	/*   57mm x   81mm */
+  { "C9",        113,  161, PAPERSIZE_METRIC },	/*   40mm x   57mm */
+  { "C10",        79,  113, PAPERSIZE_METRIC },	/*   28mm x   40mm */
 
-  { "Postcard", 283,  416,	PAPERSIZE_ENGLISH },
-  { "4x6",	288,  432,	PAPERSIZE_ENGLISH },
-  { "5x8", 	360,  576,	PAPERSIZE_ENGLISH },
-  { "8x10", 	576,  720,	PAPERSIZE_ENGLISH },
-  { "Letter", 	612,  792,	PAPERSIZE_ENGLISH },
-  { "Legal", 	612,  1008,	PAPERSIZE_ENGLISH },
-  { "Tabloid",  792,  1214,	PAPERSIZE_ENGLISH },
-  { "12x18", 	864,  1296,	PAPERSIZE_ENGLISH },
-  { "13x19", 	936,  1368,	PAPERSIZE_ENGLISH },
-  { "", 	0,    0,	PAPERSIZE_ENGLISH }
+  /*
+   * Sizes for book production
+   * The BPIF and the Publishers Association jointly recommend ten
+   * standard metric sizes for case-bound titles as follows:
+   */
+  { "Crown Quarto",       535,  697, PAPERSIZE_METRIC }, /* 189mm x 246mm */
+  { "Large Crown Quarto", 569,  731, PAPERSIZE_METRIC }, /* 201mm x 258mm */
+  { "Demy Quarto",        620,  782, PAPERSIZE_METRIC }, /* 219mm x 276mm */
+  { "Royal Quarto",       671,  884, PAPERSIZE_METRIC }, /* 237mm x 312mm */
+/*{ "ISO A4",             595,  841, PAPERSIZE_METRIC },    210mm x 297mm */
+  { "Crown Octavo",       348,  527, PAPERSIZE_METRIC }, /* 123mm x 186mm */
+  { "Large Crown Octavo", 365,  561, PAPERSIZE_METRIC }, /* 129mm x 198mm */
+  { "Demy Octavo",        391,  612, PAPERSIZE_METRIC }, /* 138mm x 216mm */
+  { "Royal Octavo",       442,  663, PAPERSIZE_METRIC }, /* 156mm x 234mm */
+/*{ "ISO A5",             419,  595, PAPERSIZE_METRIC },    148mm x 210mm */
+
+  /* Paperback sizes in common usage */
+  { "Small paperback",         314, 504, PAPERSIZE_METRIC }, /* 111mm x 178mm */
+  { "Penguin small paperback", 314, 513, PAPERSIZE_METRIC }, /* 111mm x 181mm */
+  { "Penguin large paperback", 365, 561, PAPERSIZE_METRIC }, /* 129mm x 198mm */
+
+  { "",           0,    0, PAPERSIZE_METRIC }
 };
 
 int
