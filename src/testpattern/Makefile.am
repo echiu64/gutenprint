@@ -58,9 +58,7 @@ printers_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
 
 ## Data
 
-if BUILD_TESTPATTERN
 pkgdata_DATA = testpattern.sample extended.sample
-endif
 
 
 ## Clean
