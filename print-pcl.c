@@ -532,9 +532,11 @@ pcl_parameters(int  model,	/* I - Printer model */
   static char	*media_types[] =
 		{
 		  ("Plain"),
+		  ("Bond"),
 		  ("Premium"),
 		  ("Glossy"),
-		  ("Transparency")
+		  ("Transparency"),
+		  ("Photo")
 		};
   static char	*media_sources[] =
 		{
@@ -597,7 +599,7 @@ pcl_parameters(int  model,	/* I - Printer model */
     }
     else
     {
-      *count = 4;
+      *count = 6;
       p = media_types;
     }
   }
@@ -1003,30 +1005,36 @@ pcl_print(const printer_t *printer,		/* I - Model */
       fputs("\033*o1M", prn);			/* Quality = presentation */
       if (strcmp(media_type, "Plain") == 0)	/* Set media type */
         fputs("\033&l0M", prn);
+      else if (strcmp(media_type, "Bond") == 0)
+        fputs("\033&l1M", prn);
       else if (strcmp(media_type, "Premium") == 0)
         fputs("\033&l2M", prn);
       else if (strcmp(media_type, "Glossy") == 0)
         fputs("\033&l3M", prn);
       else if (strcmp(media_type, "Transparency") == 0)
         fputs("\033&l4M", prn);
+      else if (strcmp(media_type, "Photo") == 0)
+        fputs("\033&l5M", prn);
     }
     else
     {
       fputs("\033*r2Q", prn);			/* Quality (high) */
       fputs("\033*o2Q", prn);			/* Shingling (4 passes) */
 
- /* Depletion depends on media type and colour mode. */
+ /* Depletion depends on media type and cart type. */
 
       if ((strcmp(media_type, "Plain") == 0)
-        | (strcmp(media_type, "Transparency") == 0)) {
-        if (output_type != OUTPUT_GRAY)
+	|| (strcmp(media_type, "Bond") == 0)
+	|| (strcmp(media_type, "Photo") == 0)) {
+      if ((caps.color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
           fputs("\033*o2D", prn);			/* Depletion 25% */
         else
           fputs("\033*o5D", prn);			/* Depletion 50% with gamma correction */
       }
 
       else if ((strcmp(media_type, "Premium") == 0)
-             | (strcmp(media_type, "Glossy") == 0))
+             || (strcmp(media_type, "Glossy") == 0)
+             || (strcmp(media_type, "Transparency") == 0))
         fputs("\033*o1D", prn);			/* Depletion none */
     }
   }
@@ -1510,6 +1518,10 @@ pcl_mode2(FILE          *prn,		/* I - Print file or command */
 
 /*
  *   $Log$
+ *   Revision 1.39  2000/03/20 21:03:31  davehill
+ *   Added "Bond" and "Photo" paper types to pcl-unprint and print-pcl.
+ *   Corrected Depletion output for old Deskjets in print-pcl.
+ *
  *   Revision 1.38  2000/03/13 13:31:26  rlk
  *   Add monochrome mode
  *
