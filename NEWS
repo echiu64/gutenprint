@@ -73,6 +73,21 @@ Gimp-Print 4.2.6-pre1:
 
 11) The man pages have been updated.
 
+12) On Mac OS X when using the provided installer package the PPDs are
+    now stored in the standard PPD location 
+
+          /Library/Printers/PPDs/Contents/Resources/en.lproj
+
+    rather than in
+
+          /usr/share/cups/model/C
+
+    which is different from all previous releases. This change was
+    made for performance reasons (memory usage).  As a consequence,
+    the PPDs will no longer be available for printer setup when
+    using the CUPS web admin. The Apple provided Print Center application
+    is not affected by this change.
+
 The following bugs have been fixed in Gimp-Print 4.2.6-pre2:
 
 806902 CUPS quality degrades on multi-page jobs (4.2.6-pre1 only)
