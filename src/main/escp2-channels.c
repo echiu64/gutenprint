@@ -136,6 +136,13 @@ static const physical_subchannel_t c80_yellow_subchannels[] =
 
 DECLARE_INK_CHANNEL(c80_yellow);
 
+static const physical_subchannel_t f360_standard_yellow_subchannels[] =
+{
+  { 4, -1, 1, "YellowDensity", NULL }
+};
+
+DECLARE_INK_CHANNEL(f360_standard_yellow);
+
 static const physical_subchannel_t photo_black_subchannels[] =
 {
   { 0, 0, 0, "BlackDensity", NULL }
@@ -481,6 +488,20 @@ static const escp2_inkname_t c80_four_color_standard_inkset =
   &c80_cmyk_channel_set
 };
 
+static const ink_channel_t *const f360_cmyk_channels[] =
+{
+  &standard_black_channel, &f360_standard_cyan_channel,
+  &f360_standard_magenta_channel, &standard_yellow_channel
+};
+
+DECLARE_CHANNEL_SET(f360_cmyk);
+
+static const escp2_inkname_t f360_four_color_standard_inkset =
+{
+  "CMYK", N_("Four Color Standard"), INKSET_CMYK,
+  &f360_cmyk_channel_set
+};
+
 
 /*
  ****************************************************************
@@ -543,7 +564,7 @@ static const escp2_inkname_t six_color_photo_inkset =
 
 static const ink_channel_t *const f360_photo_channels[] =
 {
-  &f360_photo_black_channel, &f360_photo_cyan_channel,
+  &photo_black_channel, &f360_photo_cyan_channel,
   &f360_photo_magenta_channel, &f360_photo_yellow_channel
 };
 
@@ -769,6 +790,12 @@ static const escp2_inkname_t c80_four_color_extended_inkset =
 {
   "PhysicalCMYK", N_("Four Color Raw"), INKSET_EXTENDED,
   &c80_cmyk_channel_set
+};
+
+static const escp2_inkname_t f360_four_color_extended_inkset =
+{
+  "PhysicalCMYK", N_("Four Color Raw"), INKSET_EXTENDED,
+  &f360_cmyk_channel_set
 };
 
 
@@ -1064,11 +1091,11 @@ static const escp2_inkname_t *const f360_photo_ink_types[] =
 {
   &f360_six_color_photo_inkset,
   &f360_five_color_photo_composite_inkset,
-  &four_color_standard_inkset,
+  &f360_four_color_standard_inkset,
   &three_color_composite_inkset,
   &one_color_extended_inkset,
   &three_color_extended_inkset,
-  &four_color_extended_inkset,
+  &f360_four_color_extended_inkset,
   &f360_five_color_extended_inkset,
   &f360_six_color_extended_inkset,
 };
