@@ -353,7 +353,7 @@ usr1_handler (int signal)
   usr1_interrupt = 1;
 }
 
-void
+static void
 gimp_writefunc(void *file, const char *buf, size_t bytes)
 {
   FILE *prn = (FILE *)file;
