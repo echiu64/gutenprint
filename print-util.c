@@ -90,16 +90,15 @@ calc_rgb_to_hsl(unsigned short *rgb, double *hue, double *sat,
     }
 
   l = (max + min) / 2.0;
+  delta = max - min;
 
-  if (max == min)
+  if (delta < .000001)	/* Suggested by Eugene Anikin <eugene@anikin.com> */
     {
       s = 0.0;
       h = 0.0;
     }
   else
     {
-      delta = max - min;
-
       if (l <= .5)
 	s = delta / (max + min);
       else
@@ -145,7 +144,7 @@ hsl_value(double n1, double n2, double hue)
 static inline void
 calc_hsl_to_rgb(unsigned short *rgb, double h, double s, double l)
 {
-  if (s == 0.0)
+  if (s < .0000001)
     {
       if (l > 1)
 	l = 1;
