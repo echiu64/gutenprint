@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
-"POT-Creation-Date: 2002-06-05 19:56-0400\n"
-"PO-Revision-Date: 2002-02-14 02:39+0100\n"
+"POT-Creation-Date: 2002-06-30 22:06+0200\n"
+"PO-Revision-Date: 2002-06-30 22:16+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -134,62 +134,52 @@ msgstr "Manuell med paus"
 msgid "Manual without Pause"
 msgstr "Manuell utan paus"
 
-#: src/escputil/escputil.c:584 src/main/print-canon.c:1688
-#: src/main/print-lexmark.c:666
+#: src/main/print-canon.c:1689 src/main/print-lexmark.c:666
+#: src/escputil/escputil.c:584
 msgid "Black"
 msgstr "Svart"
 
-#: src/main/print-canon.c:1693
+#: src/main/print-canon.c:1694
 msgid "CMY Color"
 msgstr "CMY-färg"
 
-#: src/main/print-canon.c:1698
+#: src/main/print-canon.c:1699
 msgid "CMYK Color"
 msgstr "CMYK-färg"
 
-#: src/main/print-canon.c:1703
+#: src/main/print-canon.c:1704
 msgid "Photo CcMmY Color"
 msgstr "CcMmY-fotofärg"
 
-#: src/main/print-canon.c:1708
+#: src/main/print-canon.c:1709
 msgid "Photo CcMmYK Color"
 msgstr "CcMmYK-fotofärg"
 
-#: src/main/print-dither.c:64
+#. Note to translators: "EvenTone" is the proper name, rather than a
+#. descriptive name, of this algorithm.
+#: src/main/print-dither.c:66
+msgid "EvenTone"
+msgstr "EvenTone"
+
+#: src/main/print-dither.c:67
 msgid "Adaptive Hybrid"
 msgstr "Adaptiv hybrid"
 
-#: src/main/print-dither.c:65
+#: src/main/print-dither.c:68
 msgid "Ordered"
 msgstr "Sorterad"
 
-#: src/main/print-dither.c:66
+#: src/main/print-dither.c:69
 msgid "Fast"
 msgstr "Snabb"
 
-#: src/main/print-dither.c:67
+#: src/main/print-dither.c:70
 msgid "Very Fast"
 msgstr "Mycket snabb"
 
-#: src/main/print-dither.c:68
+#: src/main/print-dither.c:71
 msgid "Hybrid Floyd-Steinberg"
 msgstr "Hybrid Floyd-Steinberg"
-
-#. Note to translators: "EvenTone" is the proper name, rather than a
-#. descriptive name, of this algorithm.
-#: src/main/print-dither.c:71
-#, fuzzy
-msgid "EvenTone"
-msgstr "Kuvert"
-
-#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2.c:481
-#: src/main/print-pcl.c:202
-msgid "Standard"
-msgstr "Standard"
-
-#: src/main/print-escp2.c:483
-msgid "Roll Feed"
-msgstr "Rullmatning"
 
 #. name                                                    hres vres softw v_pass overs unidir resid
 #: src/main/print-lexmark.c:622 src/main/print-lexmark.c:708
@@ -331,6 +321,10 @@ msgstr "Snabbtorkande foto"
 #: src/main/print-pcl.c:163
 msgid "Quick-dry Transparency"
 msgstr "Snabbtorkande genomskinligt"
+
+#: src/main/print-pcl.c:202 src/gimp/gimp_main_window.c:1616
+msgid "Standard"
+msgstr "Standard"
 
 #: src/main/print-pcl.c:203 src/main/print-util.c:547
 msgid "Manual"
@@ -974,9 +968,8 @@ msgstr "A2-inbjudan"
 
 #. US A2 invitation
 #: src/main/print-util.c:796
-#, fuzzy
 msgid "Monarch Envelope"
-msgstr "Kuvert"
+msgstr "Monarkkuvert"
 
 #. Monarch envelope (3.875 * 7.5)
 #: src/main/print-util.c:798
@@ -1910,7 +1903,7 @@ msgstr ""
 
 #: src/escputil/escputil.c:946 src/escputil/escputil.c:953
 #: src/escputil/escputil.c:966 src/escputil/escputil.c:982
-#: src/escputil/escputil.c:1049 src/escputil/escputil.c:1190
+#: src/escputil/escputil.c:1049 src/escputil/escputil.c:1183
 msgid "> "
 msgstr "> "
 
@@ -1956,7 +1949,7 @@ msgstr ""
 
 #: src/escputil/escputil.c:985
 msgid "About to save settings..."
-msgstr "Redo att spara inställningar..."
+msgstr "Kommer att spara inställningar..."
 
 #: src/escputil/escputil.c:991
 msgid "failed!\n"
@@ -1967,7 +1960,7 @@ msgid ""
 "Your settings were not saved successfully.  You must repeat the\n"
 "alignment procedure.\n"
 msgstr ""
-"Dina inställningar kunde inte sparas. Du måste upprepa\n"
+"Dina inställningar sparades inte utan problem. Du måste upprepa\n"
 "justeringsproceduren.\n"
 
 #: src/escputil/escputil.c:996
@@ -1976,7 +1969,7 @@ msgstr "lyckades!\n"
 
 #: src/escputil/escputil.c:997
 msgid "Your alignment settings have been saved to the printer.\n"
-msgstr "Dina justeringsinställningar har sparats i skrivaren.\n"
+msgstr "Dina justeringsinställningar har sparats till skrivaren.\n"
 
 #: src/escputil/escputil.c:1002
 msgid "Unrecognized command.\n"
@@ -2005,7 +1998,7 @@ msgstr ""
 
 #: src/escputil/escputil.c:1035 src/escputil/escputil.c:1057
 #: src/escputil/escputil.c:1100 src/escputil/escputil.c:1169
-#: src/escputil/escputil.c:1180
+#: src/escputil/escputil.c:1191 src/escputil/escputil.c:1234
 msgid "Press enter to continue > "
 msgstr "Tryck retur för att fortsätta > "
 
@@ -2016,40 +2009,41 @@ msgid ""
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
 "Granska utskriften och välj det bästa linjeparet i varje mönster.\n"
-"Skriv in ett parnummer, \"?\" för hjälp, eller \"r\" för att upprepa\n"
+"Skriv in ett parnummer, \"?\" för hjälp, eller \"r\" för att upprepa "
 "proceduren.\n"
 
-#: src/escputil/escputil.c:1048
+#: src/escputil/escputil.c:1048 src/escputil/escputil.c:1182
 #, c-format
 msgid "Pass #%d"
-msgstr "Pass nummer %d"
+msgstr "Pass %d"
 
 #: src/escputil/escputil.c:1054 src/escputil/escputil.c:1099
+#: src/escputil/escputil.c:1188 src/escputil/escputil.c:1233
 msgid "Please insert a fresh sheet of paper.\n"
 msgstr "Mata in ett nytt pappersark.\n"
 
-#: src/escputil/escputil.c:1073 src/escputil/escputil.c:1209
+#: src/escputil/escputil.c:1073 src/escputil/escputil.c:1207
 msgid "Number out of range!\n"
 msgstr "Numret är utanför intervallet!\n"
 
-#: src/escputil/escputil.c:1078 src/escputil/escputil.c:1214
+#: src/escputil/escputil.c:1078 src/escputil/escputil.c:1212
 msgid "I cannot understand what you typed!\n"
 msgstr "Jag kan inte förstå vad du skrev!\n"
 
-#: src/escputil/escputil.c:1084
+#: src/escputil/escputil.c:1084 src/escputil/escputil.c:1218
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
 msgstr "Det bästa linjeparet bör vara numrerat mellan 1 och %d.\n"
 
-#: src/escputil/escputil.c:1091
+#: src/escputil/escputil.c:1091 src/escputil/escputil.c:1225
 msgid "Attempting to set alignment..."
 msgstr "Försöker ställa in justering..."
 
-#: src/escputil/escputil.c:1094
+#: src/escputil/escputil.c:1094 src/escputil/escputil.c:1228
 msgid "succeeded.\n"
 msgstr "lyckades.\n"
 
-#: src/escputil/escputil.c:1095
+#: src/escputil/escputil.c:1095 src/escputil/escputil.c:1229
 #, c-format
 msgid ""
 "Please verify that the alignment is correct.  After the alignment pattern\n"
@@ -2057,10 +2051,10 @@ msgid ""
 "pattern %d.  If it is not, you should repeat the process to get the best\n"
 "quality printing.\n"
 msgstr ""
-"Kontrollera att justeringen är korrekt. När justeringsmönstret har\n"
+"Verifiera att justeringen är korrekt. Efter det att justeringsmönstret\n"
 "skrivits ut igen bör du försäkra dig om att det bästa mönstret för varje\n"
-"rad är mönster %d. Om det inte är det bör du upprepa proceduren för att\n"
-"få bästa utskriftsresultat.\n"
+"linje är mönster %d. Om det inte är det bör du upprepa proceduren för\n"
+"att få bästa utskriftskvalitet.\n"
 
 #: src/escputil/escputil.c:1110
 #, c-format
@@ -2130,34 +2124,16 @@ msgstr ""
 msgid "Printer %s does not require color head alignment.\n"
 msgstr "Skrivaren %s kräver inte justering av färgutskriftshuvudet.\n"
 
-#: src/escputil/escputil.c:1178
+#: src/escputil/escputil.c:1176
 msgid ""
-"Please re-insert the same alignment sheet in the printer when it is\n"
-"finished printing.\n"
+"Please inspect the print, and choose the pattern in each set.\n"
+"Type a pattern number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
-"Mata in samma justeringspapper i skrivaren efter det att utskriften\n"
-"är klar.\n"
+"Granska utskriften och välj mönstret i varje par.\n"
+"Skriv in ett mönsternummer, \"?\" för hjälp, eller \"r\" för att upprepa "
+"proceduren.\n"
 
-#: src/escputil/escputil.c:1184
-msgid ""
-"Inspect the alignment sheet, and determine which pattern is the smoothest.\n"
-"This pattern will appear to have the least ``grain''.\n"
-"If you cannot find a smooth pattern, please select the number for the\n"
-"best pattern, and repeat the procedure.\n"
-"Type a pattern number, or '?' for help.\n"
-msgstr ""
-"Granska justeringspappret och bestäm vilket mönster som är mjukast.\n"
-"Detta mönster har den minsta kornigheten.\n"
-"Om du inte kan hitta ett mjukt mönster bör du välja numret för det\n"
-"bästa mönstret och upprepa proceduren.\n"
-"Ange ett mönsternummer, eller \"?\" för hjälp.\n"
-
-#: src/escputil/escputil.c:1220
-#, c-format
-msgid "The best pattern should be numbered between 1 and %d.\n"
-msgstr "Det bästa mönstret ska vara numrerat mellan 1 och %d.\n"
-
-#: src/escputil/escputil.c:1264
+#: src/escputil/escputil.c:1275
 msgid "Error in input\n"
 msgstr "Fel i indata\n"
 
@@ -2929,7 +2905,7 @@ msgstr "%.0f av %.0f\n"
 #: src/ghost/ijsgimpprint.c:838
 #, c-format
 msgid "ijs_server_get_page_header failed %d\n"
-msgstr ""
+msgstr "ijs_server_get_page_header misslyckades %d\n"
 
 #: src/ghost/ijsgimpprint.c:849
 #, c-format
@@ -2956,9 +2932,54 @@ msgid "Bad parameters; cannot continue!\n"
 msgstr "Felaktiga parametrar; kan inte fortsätta!\n"
 
 #: src/ghost/ijsgimpprint.c:925
-#, fuzzy, c-format
+#, c-format
 msgid "Get next row failed at %.0f\n"
-msgstr "Hämtande av nästa rad misslyckades vid %d\n"
+msgstr "Hämtande av nästa rad misslyckades vid %.0f\n"
+
+#~ msgid "Roll Feed"
+#~ msgstr "Rullmatning"
+
+#~ msgid "13x19"
+#~ msgstr "13×19"
+
+#~ msgid "Monarch"
+#~ msgstr "Monarch"
+
+#~ msgid "Long 3"
+#~ msgstr "Long 3"
+
+#~ msgid "Long 4"
+#~ msgstr "Long 4"
+
+#~ msgid "Kaku"
+#~ msgstr "Kaku"
+
+#~ msgid "HP Greeting Card"
+#~ msgstr "HP-gratulationskort"
+
+#~ msgid ""
+#~ "Please re-insert the same alignment sheet in the printer when it is\n"
+#~ "finished printing.\n"
+#~ msgstr ""
+#~ "Mata in samma justeringspapper i skrivaren efter det att utskriften\n"
+#~ "är klar.\n"
+
+#~ msgid ""
+#~ "Inspect the alignment sheet, and determine which pattern is the "
+#~ "smoothest.\n"
+#~ "This pattern will appear to have the least ``grain''.\n"
+#~ "If you cannot find a smooth pattern, please select the number for the\n"
+#~ "best pattern, and repeat the procedure.\n"
+#~ "Type a pattern number, or '?' for help.\n"
+#~ msgstr ""
+#~ "Granska justeringspappret och bestäm vilket mönster som är mjukast.\n"
+#~ "Detta mönster har den minsta kornigheten.\n"
+#~ "Om du inte kan hitta ett mjukt mönster bör du välja numret för det\n"
+#~ "bästa mönstret och upprepa proceduren.\n"
+#~ "Ange ett mönsternummer, eller \"?\" för hjälp.\n"
+
+#~ msgid "The best pattern should be numbered between 1 and %d.\n"
+#~ msgstr "Det bästa mönstret ska vara numrerat mellan 1 och %d.\n"
 
 #~ msgid "Plain Paper Fast Load"
 #~ msgstr "Snabbladdning av vanligt papper"
@@ -3138,24 +3159,6 @@ msgstr "Hämtande av nästa rad misslyckades vid %d\n"
 # Jag tror inte detta ska skrivas samman, jfr snarlika meddelanden
 #~ msgid "Six Color Enhanced Composite"
 #~ msgstr "Sexfärgs förbättrad sammansatt"
-
-#~ msgid "13x19"
-#~ msgstr "13×19"
-
-#~ msgid "Monarch"
-#~ msgstr "Monarch"
-
-#~ msgid "Long 3"
-#~ msgstr "Long 3"
-
-#~ msgid "Long 4"
-#~ msgstr "Long 4"
-
-#~ msgid "Kaku"
-#~ msgstr "Kaku"
-
-#~ msgid "HP Greeting Card"
-#~ msgstr "HP-gratulationskort"
 
 #~ msgid ""
 #~ "Please insert your alignment test page in the printer once more\n"
