@@ -68,35 +68,70 @@ typedef struct
 
 /* #define PCL_NO_CUSTOM_PAPERSIZES */
 
+#define PCL_PAPERSIZE_EXECUTIVE		1
 #define PCL_PAPERSIZE_LETTER		2
 #define PCL_PAPERSIZE_LEGAL		3
-#define PCL_PAPERSIZE_TABLOID		4
+#define PCL_PAPERSIZE_TABLOID		6	/* "Ledger" */
+#define PCL_PAPERSIZE_STATEMENT		15	/* Called "Manual" in print-util */
+#define PCL_PAPERSIZE_SUPER_B		16	/* Called "13x19" in print-util */
 #define PCL_PAPERSIZE_A5		25
 #define PCL_PAPERSIZE_A4		26
 #define PCL_PAPERSIZE_A3		27
 #define PCL_PAPERSIZE_JIS_B5		45
 #define PCL_PAPERSIZE_JIS_B4		46
+#define PCL_PAPERSIZE_HAGAKI_CARD	71
+#define PCL_PAPERSIZE_OUFUKU_CARD	72
+#define PCL_PAPERSIZE_A6_CARD		73
 #define PCL_PAPERSIZE_4x6		74
 #define PCL_PAPERSIZE_5x8		75
+#define PCL_PAPERSIZE_3x5		78
+#define PCL_PAPERSIZE_MONARCH_ENV	80
+#define PCL_PAPERSIZE_COMMERCIAL10_ENV	81
+#define PCL_PAPERSIZE_DL_ENV		90
+#define PCL_PAPERSIZE_C5_ENV		91
+#define PCL_PAPERSIZE_C6_ENV		92
 #define PCL_PAPERSIZE_CUSTOM		101	/* Custom size */
+#define PCL_PAPERSIZE_INVITATION_ENV	109
+#define PCL_PAPERSIZE_JAPANESE_3_ENV	110
+#define PCL_PAPERSIZE_JAPANESE_4_ENV	111
+#define PCL_PAPERSIZE_KAKU_ENV		113
+#define PCL_PAPERSIZE_HP_CARD		114	/* HP Greeting card!?? */
 
 /*
  * This data comes from the HP documentation "Deskjet 1220C and 1120C
- * PCL reference guide 2.0, Nov 1999"
+ * PCL reference guide 2.0, Nov 1999". NOTE: The names *must* match
+ * those in print-util.c for the lookups to work properly!
  */
 
 const static pcl_t pcl_media_sizes[] =
 {
+    {"Executive", PCL_PAPERSIZE_EXECUTIVE},		/* US Exec (7.25 x 10.5 in) */
     {"Letter", PCL_PAPERSIZE_LETTER},			/* US Letter (8.5 x 11 in) */
     {"Legal", PCL_PAPERSIZE_LEGAL},			/* US Legal (8.5 x 14 in) */
     {"Tabloid", PCL_PAPERSIZE_TABLOID},			/* US Tabloid (11 x 17 in) */
+    {"Manual", PCL_PAPERSIZE_STATEMENT},		/* US Manual/Statement (5.5 x 8.5 in) */
+    {"13x19", PCL_PAPERSIZE_SUPER_B},			/* US 13x19/Super B (13 x 19 in) */
     {"A5", PCL_PAPERSIZE_A5},				/* ISO/JIS A5 (148 x 210 mm) */
     {"A4", PCL_PAPERSIZE_A4},				/* ISO/JIS A4 (210 x 297 mm) */
     {"A3", PCL_PAPERSIZE_A3},				/* ISO/JIS A3 (297 x 420 mm) */
-    {"B5", PCL_PAPERSIZE_JIS_B5},			/* JIS B5 (182 x 257 mm). */
-    {"B4", PCL_PAPERSIZE_JIS_B4},			/* JIS B4 (257 x 364 mm). */
+    {"B5 JIS", PCL_PAPERSIZE_JIS_B5},			/* JIS B5 (182 x 257 mm). */
+    {"B4 JIS", PCL_PAPERSIZE_JIS_B4},			/* JIS B4 (257 x 364 mm). */
+    {"Hagaki Card", PCL_PAPERSIZE_HAGAKI_CARD},		/* Japanese Hagaki Card (100 x 148 mm) */
+    {"Oufuku Card", PCL_PAPERSIZE_OUFUKU_CARD},		/* Japanese Oufuku Card (148 x 200 mm) */
+    {"A6", PCL_PAPERSIZE_A6_CARD},			/* ISO/JIS A6 card */
     {"4x6", PCL_PAPERSIZE_4x6},				/* US Index card (4 x 6 in) */
     {"5x8", PCL_PAPERSIZE_5x8},				/* US Index card (5 x 8 in) */
+    {"3x5", PCL_PAPERSIZE_3x5},				/* US Index card (3 x 5 in) */
+    {"Monarch", PCL_PAPERSIZE_MONARCH_ENV},		/* Monarch Envelope (3 7/8 x 7 1/2 in) */
+    {"Commercial 10", PCL_PAPERSIZE_COMMERCIAL10_ENV},	/* US Commercial 10 Envelope (4.125 x 9.5 in) Portrait */
+    {"DL", PCL_PAPERSIZE_DL_ENV},			/* DL envelope (110 x 220 mm) Portrait */
+    {"C5", PCL_PAPERSIZE_C5_ENV},			/* C5 envelope (162 x 229 mm) */
+    {"C6", PCL_PAPERSIZE_C6_ENV},			/* C6 envelope (114 x 162 mm) */
+    {"A2 Invitation", PCL_PAPERSIZE_INVITATION_ENV},	/* US A2 Invitation envelope (4 3/8 x 5 3/4 in) */
+    {"Long 3", PCL_PAPERSIZE_JAPANESE_3_ENV},		/* Japanese Long Envelope #3 (120 x 235 mm) */
+    {"Long 4", PCL_PAPERSIZE_JAPANESE_4_ENV},		/* Japanese Long Envelope #4 (90 x 205 mm) */
+    {"Kaku", PCL_PAPERSIZE_KAKU_ENV},			/* Japanese Kaku Envelope (240 x 332.1 mm) */
+    {"HP Greeting Card", PCL_PAPERSIZE_HP_CARD}, 	/* Hp greeting card (size?? */
 };
 #define NUM_PRINTER_PAPER_SIZES	(sizeof(pcl_media_sizes) / sizeof(pcl_t))
 
@@ -242,8 +277,8 @@ typedef struct {
  * 500, 500c, 510, 520, 550c, 560c.
  * The rest use Media Type and Print Quality.
  *
- * This data comes from the hpdj ghostscript driver by Martin Lottermoser,
- * which in turn comes from the HP documentation.
+ * This data comes from the HP documentation "Deskjet 1220C and 1120C
+ * PCL reference guide 2.0, Nov 1999". 
  */
 
 pcl_cap_t pcl_model_capabilities[] =
@@ -274,6 +309,7 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ,
     {
+      PCL_PAPERSIZE_EXECUTIVE,
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A4,
@@ -302,6 +338,7 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ,
     {
+      PCL_PAPERSIZE_EXECUTIVE,
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A4,
@@ -327,9 +364,12 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_NONE,
     PCL_PRINTER_DJ,
     {
+/*    PCL_PAPERSIZE_EXECUTIVE,	The 500 doesn't support this, the 520 does */
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A4,
+      PCL_PAPERSIZE_COMMERCIAL10_ENV,
+/*    PCL_PAPERSIZE_DL_ENV,	The 500 doesn't support this, the 520 does */
       -1,
     },
     {
@@ -354,9 +394,19 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF,
     {
+/*    PCL_PAPERSIZE_EXECUTIVE,	The 500C doesn't support this, the 540C does */
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A4,
+/*    PCL_PAPERSIZE_A5,		The 500C doesn't support this, the 540C does */
+/*    PCL_PAPERSIZE_JIS_B5,	Ditto */
+/*    PCL_PAPERSIZE_HAGAKI,	Ditto */
+/*    PCL_PAPERSIZE_A6,		Ditto */
+/*    PCL_PAPERSIZE_4x6,	Ditto */
+/*    PCL_PAPERSIZE_5x8,	Ditto */
+      PCL_PAPERSIZE_COMMERCIAL10_ENV,
+/*    PCL_PAPERSIZE_DL_ENV,	Ditto */
+/*    PCL_PAPERSIZE_C6_ENV,	Ditto */
       -1,
     },
     {
@@ -381,9 +431,12 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF,
     {
+      PCL_PAPERSIZE_EXECUTIVE,
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A4,
+/* The 550/560 support COM10 and DL envelope, but the control codes
+   are negative, indicating landscape mode. This needs thinking about! */
       -1,
     },
     {
@@ -409,12 +462,19 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
     {
+      PCL_PAPERSIZE_EXECUTIVE,
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A5,
       PCL_PAPERSIZE_A4,
+      PCL_PAPERSIZE_HAGAKI_CARD,
+      PCL_PAPERSIZE_A6_CARD,
       PCL_PAPERSIZE_4x6,
       PCL_PAPERSIZE_5x8,
+      PCL_PAPERSIZE_COMMERCIAL10_ENV,
+      PCL_PAPERSIZE_DL_ENV,
+      PCL_PAPERSIZE_C6_ENV,
+      PCL_PAPERSIZE_INVITATION_ENV,
       -1,
     },
     {
@@ -437,13 +497,19 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
     {
+      PCL_PAPERSIZE_EXECUTIVE,
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A5,
       PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_JIS_B5,
+      PCL_PAPERSIZE_HAGAKI_CARD,
+      PCL_PAPERSIZE_A6_CARD,
       PCL_PAPERSIZE_4x6,
       PCL_PAPERSIZE_5x8,
+      PCL_PAPERSIZE_COMMERCIAL10_ENV,
+      PCL_PAPERSIZE_DL_ENV,
+      PCL_PAPERSIZE_C6_ENV,
+      PCL_PAPERSIZE_INVITATION_ENV,
       -1,
     },
     {
@@ -467,13 +533,19 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
     {
+      PCL_PAPERSIZE_EXECUTIVE,
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A5,
       PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_JIS_B5,
+      PCL_PAPERSIZE_HAGAKI_CARD,
+      PCL_PAPERSIZE_A6_CARD,
       PCL_PAPERSIZE_4x6,
       PCL_PAPERSIZE_5x8,
+      PCL_PAPERSIZE_COMMERCIAL10_ENV,
+      PCL_PAPERSIZE_DL_ENV,
+      PCL_PAPERSIZE_C6_ENV,
+      PCL_PAPERSIZE_INVITATION_ENV,
       -1,
     },
     {
@@ -497,13 +569,19 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
     {
+      PCL_PAPERSIZE_EXECUTIVE,
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A5,
       PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_JIS_B5,
+      PCL_PAPERSIZE_HAGAKI_CARD,
+      PCL_PAPERSIZE_A6_CARD,
       PCL_PAPERSIZE_4x6,
       PCL_PAPERSIZE_5x8,
+      PCL_PAPERSIZE_COMMERCIAL10_ENV,
+      PCL_PAPERSIZE_DL_ENV,
+      PCL_PAPERSIZE_C6_ENV,
+      PCL_PAPERSIZE_INVITATION_ENV,
       -1,
     },
     {
@@ -527,13 +605,19 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
     {
+      PCL_PAPERSIZE_EXECUTIVE,
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A5,
       PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_JIS_B5,
+      PCL_PAPERSIZE_HAGAKI_CARD,
+      PCL_PAPERSIZE_A6_CARD,
       PCL_PAPERSIZE_4x6,
       PCL_PAPERSIZE_5x8,
+      PCL_PAPERSIZE_COMMERCIAL10_ENV,
+      PCL_PAPERSIZE_DL_ENV,
+      PCL_PAPERSIZE_C6_ENV,
+      PCL_PAPERSIZE_INVITATION_ENV,
       -1,
     },
     {
@@ -549,23 +633,40 @@ pcl_cap_t pcl_model_capabilities[] =
   },
   /* Deskjet 1100C, 1120C, 1220C */
   { 1100,
-    12 * 72, 18 * 72,
+    13 * 72, 19 * 72,
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO,
     3, 33, 18, 18,
     PCL_COLOR_CMYK | PCL_COLOR_CMYK4,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
     {
+      PCL_PAPERSIZE_EXECUTIVE,
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_TABLOID,
+      PCL_PAPERSIZE_STATEMENT,
+      PCL_PAPERSIZE_SUPER_B,
       PCL_PAPERSIZE_A5,
       PCL_PAPERSIZE_A4,
       PCL_PAPERSIZE_A3,
       PCL_PAPERSIZE_JIS_B5,
       PCL_PAPERSIZE_JIS_B4,
+      PCL_PAPERSIZE_HAGAKI_CARD,
+/*    PCL_PAPERSIZE_OUFUKU_CARD,	1220C supports, rest don't */
+      PCL_PAPERSIZE_A6_CARD,
       PCL_PAPERSIZE_4x6,
       PCL_PAPERSIZE_5x8,
+/*    PCL_PAPERSIZE_3x5,		1220C supports, rest don't */
+/*    PCL_PAPERSIZE_HP_CARD,		1220C supports, rest don't */
+/*    PCL_PAPERSIZE_MONARCH_ENV,	1220C supports, rest don't */
+      PCL_PAPERSIZE_COMMERCIAL10_ENV,
+      PCL_PAPERSIZE_DL_ENV,
+/*    PCL_PAPERSIZE_C5_ENV,		1220C supports, rest don't */
+      PCL_PAPERSIZE_C6_ENV,
+      PCL_PAPERSIZE_INVITATION_ENV,
+      PCL_PAPERSIZE_JAPANESE_3_ENV,
+      PCL_PAPERSIZE_JAPANESE_4_ENV,
+      PCL_PAPERSIZE_KAKU_ENV,
       -1,
     },
     {
@@ -591,11 +692,13 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
     {
+/* This printer is not mentioned in the Comparison tables,
+   so I'll just pick some likely sizes... */
+      PCL_PAPERSIZE_EXECUTIVE,
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A5,
       PCL_PAPERSIZE_A4,
-      PCL_PAPERSIZE_JIS_B5,
       PCL_PAPERSIZE_4x6,
       PCL_PAPERSIZE_5x8,
       -1,
@@ -623,12 +726,20 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
     {
+      PCL_PAPERSIZE_EXECUTIVE,
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A5,
       PCL_PAPERSIZE_A4,
+      PCL_PAPERSIZE_HAGAKI_CARD,
+      PCL_PAPERSIZE_A6_CARD,
       PCL_PAPERSIZE_4x6,
       PCL_PAPERSIZE_5x8,
+      PCL_PAPERSIZE_3x5,
+      PCL_PAPERSIZE_COMMERCIAL10_ENV,
+      PCL_PAPERSIZE_DL_ENV,
+      PCL_PAPERSIZE_C6_ENV,
+      PCL_PAPERSIZE_INVITATION_ENV,
       -1,
     },
     {
@@ -649,22 +760,29 @@ pcl_cap_t pcl_model_capabilities[] =
   },
   /* Deskjet 2500 */
   { 2500,
-    12 * 72, 18 * 72,
+    13 * 72, 19 * 72,
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO,
     12, 12, 18, 18,
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
     {
+      PCL_PAPERSIZE_EXECUTIVE,
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_TABLOID,
+      PCL_PAPERSIZE_STATEMENT,
       PCL_PAPERSIZE_A5,
       PCL_PAPERSIZE_A4,
       PCL_PAPERSIZE_A3,
       PCL_PAPERSIZE_JIS_B5,
       PCL_PAPERSIZE_JIS_B4,
+      PCL_PAPERSIZE_HAGAKI_CARD,
+      PCL_PAPERSIZE_A6_CARD,
       PCL_PAPERSIZE_4x6,
       PCL_PAPERSIZE_5x8,
+      PCL_PAPERSIZE_COMMERCIAL10_ENV,
+      PCL_PAPERSIZE_DL_ENV,
       -1,
     },
     {
@@ -760,7 +878,7 @@ pcl_cap_t pcl_model_capabilities[] =
   },
   /* LaserJet 4V, 4Si, 5Si */
   { 5,
-    12 * 72, 18 * 72,
+    13 * 72, 19 * 72,
     PCL_RES_150_150 | PCL_RES_300_300,
     12, 12, 18, 18,
     PCL_COLOR_NONE,
