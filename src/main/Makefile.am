@@ -41,6 +41,7 @@ bin_SCRIPTS = gimpprint-config
 
 libgimpprint_la_SOURCES = \
 	gimp-print-internal.h \
+	list.h \
 	print-lexmark.c \
 	print-canon.c \
 	print-dither.c \
@@ -50,7 +51,6 @@ libgimpprint_la_SOURCES = \
 	print-pcl.c \
 	print-ps.c \
 	print-list.c \
-	print-list.h \
 	print-util.c \
 	print-vars.c \
 	print-papers.c \
