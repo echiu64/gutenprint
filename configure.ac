@@ -474,7 +474,22 @@ AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}")
 
 dnl Compiler flags
 if test "$CC" = "gcc" ; then
-  :
+  AC_MSG_CHECKING([GCC version])
+  gccversion="`gcc -dumpversion`"
+  gccmajor="`echo $gccversion | sed 's/\..*//'`"
+  if test "$gccmajor" -ge 3 ; then
+    AC_MSG_RESULT([${gccversion} (gcc $gccmajor), enabling inline limit])
+    GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -pedantic -Werror-implicit-function-declaration -Winline -finline-limit=1048576"
+  else
+    AC_MSG_RESULT([${gccversion} (gcc $gccmajor), not enabling inline limit])
+    GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -pedantic -Werror-implicit-function-declaration -Winline"
+  fi
+  if test x${USE_MAINTAINER_MODE} = xyes ; then
+    GNUCFLAGS="${GNUCFLAGS} -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls"
+  fi
+  if test x$ENABLE_PROFILE = xyes ; then
+    GNUCFLAGS="${GNUCFLAGS:=} -pg"
+  fi
 else
   if test x$ENABLE_DEBUG = xyes ; then
     CFLAGS="${CFLAGS:=} -g"
@@ -483,15 +498,6 @@ else
   fi
   if test x$ENABLE_PROFILE = xyes ; then
     CFLAGS="${CFLAGS:=} -pg"
-  fi
-fi
-if test "$CC" = "gcc" ; then
-  GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -pedantic -Werror-implicit-function-declaration -Winline -finline-limit=1048576"
-  if test x${USE_MAINTAINER_MODE} = xyes ; then
-    GNUCFLAGS="${GNUCFLAGS} -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls"
-  fi
-  if test x$ENABLE_PROFILE = xyes ; then
-    GNUCFLAGS="${GNUCFLAGS:=} -pg"
   fi
 fi
 AC_SUBST(GNUCFLAGS)
