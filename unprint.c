@@ -377,18 +377,23 @@ int currentcolor,currentbpp,density,eject,got_graphics;
       /* fprintf(stderr,"Got a %X.\n",ch); */
       switch (ch) {
         case '@': /* initialize printer */
-            pstate.unidirectional=0;
-            pstate.microweave=0;
-            pstate.dotsize=0;
-            pstate.page_management_units=360;
-            pstate.relative_horizontal_units=180;
-            pstate.absolute_horizontal_units=60;
-            pstate.relative_vertical_units=360;
-            pstate.absolute_vertical_units=360;
-            pstate.top_margin=120;
-            pstate.bottom_margin=
-              pstate.page_length=22*360; /* 22 inches is default ??? */
-            pstate.monomode=0;
+            if (page) {
+              eject=1;
+              continue;
+            } else {
+              pstate.unidirectional=0;
+              pstate.microweave=0;
+              pstate.dotsize=0;
+              pstate.page_management_units=360;
+              pstate.relative_horizontal_units=180;
+              pstate.absolute_horizontal_units=60;
+              pstate.relative_vertical_units=360;
+              pstate.absolute_vertical_units=360;
+              pstate.top_margin=120;
+              pstate.bottom_margin=
+                pstate.page_length=22*360; /* 22 inches is default ??? */
+              pstate.monomode=0;
+            }
             break;
         case 'U': /* turn unidirectional mode on/off */
             get1("Error reading unidirectionality.\n");
