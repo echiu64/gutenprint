@@ -268,9 +268,8 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat, double isat,
 	{
 	  double nh = oh * lum_count / 6.0;
 	  double oel = interpolate_value(lum_map,nh);
-	  double el = 1.0 - ((1.0 - oel) * pow(s,0.85));
-	  double iel=1.0-el;
-	  double sreflection = 0.3 + (iel / 3.0);
+	  double el = 1.0 + s*(oel-1.0);
+	  double sreflection = 0.560 - el/7.0; /*+iel/3.0;*/
 	  double isreflection = 1.0 - sreflection;
 	  double sadj = l - sreflection;
 
@@ -280,29 +279,28 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat, double isat,
 	  double weight;
 	  double g;
 	  double l2;
-	  double s2;
+	  double is,s2;
 
-	  g = 1.0 + (el - 1.0) * 6.0;
-	  lumhigh = g * l + (1.0 - g);
-	  lummid = el * l;
-	  lumshad = el * l;
-	  weight = pow(l, 2.2);
-	  l2 = (1.0 - weight) * lumshad + weight * lumhigh;
-	  weight = (2 * pow(l, 0.75) - 1.0);
-	  weight *= weight;
-	  l2 = weight * l2 + (1.0 - weight) * lummid;
+	  g=-4.0 + el * 5.0;
+	  lumhigh=g * l + (1.0 - g);
+	  lummid=lumshad=el * l;
+	  weight=pow(l,2.2);
+	  l2=lumshad + weight * (lumhigh-lumshad);
+	  weight=(2*pow(l,0.75)-1.0);
+	  weight*=weight;
+	  l2=lummid + weight * (l2-lummid);
 
-	  s = pow(s, 0.92 - (1.0 - oel) * 0.30);
+	  s=pow(s,0.62+oel*0.3);
+	  l=l2;
 
-	  if (sadj > 0)
+	  if(sadj > 0)
 	    {
-	      double depth = (1.0 - el) * 1.0;
-	      weight = sadj / isreflection;
-	      s2 = (1.0 - pow(weight, 1.3));
-	      s *= (1.0 - depth) +
-		(depth * ((s2 * s2) + ((1.0 - s2) * (1.0 - ((1.0 - l) * 5)))));
+	      double depth=s*(0.85-el*0.85);
+	      double sl=sadj/isreflection;
+	      weight=pow(1.0-sl,2.8*el+0.25)-0.40;
+	      s2=pow(0.5,-22*weight*weight);
+	      s-=depth*(s/s2);
 	    }
-	  l = l2;
 	}
       if (lut->sat_map.d_cache)
 	{
