@@ -268,10 +268,7 @@ typedef struct {
 
 /*
  * FIXME - the 520 shouldn't be lumped in with the 500 as it supports
- * more paper sizes. The same with the 540C and 500C.
- *
- * FIXME: the 540c is lumped in with the 500c in this driver, but the
- * 540c supports media type and print quality but the 500c doesn't
+ * more paper sizes.
  *
  * The following models use depletion, raster quality and shingling:-
  * 500, 500c, 510, 520, 550c, 560c.
@@ -386,7 +383,7 @@ pcl_cap_t pcl_model_capabilities[] =
       -1,
     },
   },
-  /* Deskjet 500C, 540C */
+  /* Deskjet 500C */
   { 501,
     17 * 72 / 2, 14 * 72,
     PCL_RES_150_150 | PCL_RES_300_300,
@@ -394,19 +391,48 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF,
     {
-/*    PCL_PAPERSIZE_EXECUTIVE,	The 500C doesn't support this, the 540C does */
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A4,
-/*    PCL_PAPERSIZE_A5,		The 500C doesn't support this, the 540C does */
-/*    PCL_PAPERSIZE_JIS_B5,	Ditto */
-/*    PCL_PAPERSIZE_HAGAKI,	Ditto */
-/*    PCL_PAPERSIZE_A6,		Ditto */
-/*    PCL_PAPERSIZE_4x6,	Ditto */
-/*    PCL_PAPERSIZE_5x8,	Ditto */
       PCL_PAPERSIZE_COMMERCIAL10_ENV,
-/*    PCL_PAPERSIZE_DL_ENV,	Ditto */
-/*    PCL_PAPERSIZE_C6_ENV,	Ditto */
+      -1,
+    },
+    {
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    {
+      PCL_PAPERSOURCE_MANUAL,
+      PCL_PAPERSOURCE_DJ_TRAY,
+      -1,
+    },
+  },
+  /* Deskjet 540C */
+  { 540,
+    17 * 72 / 2, 14 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300,
+    7, 33, 18, 18,
+    PCL_COLOR_CMY,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
+      PCL_PRINTER_CUSTOM_SIZE,
+    {
+      PCL_PAPERSIZE_EXECUTIVE,
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A4,
+      PCL_PAPERSIZE_A5,
+      PCL_PAPERSIZE_JIS_B5,
+      PCL_PAPERSIZE_HAGAKI_CARD,
+      PCL_PAPERSIZE_A6_CARD,
+      PCL_PAPERSIZE_4x6,
+      PCL_PAPERSIZE_5x8,
+      PCL_PAPERSIZE_COMMERCIAL10_ENV,
+      PCL_PAPERSIZE_DL_ENV,
+      PCL_PAPERSIZE_C6_ENV,
       -1,
     },
     {
