@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.5  2000/02/02 18:36:25  gandy
+ *   Minor cleanups of code and debugging messages
+ *
  *   Revision 1.4  2000/02/02 18:25:27  gandy
  *   Prepared the driver for one of K/CMY/CMYK/CcMmYK/CcMmYy printing
  *
@@ -48,14 +51,6 @@
  *   
  */
 
-/* Driver Capabilities
- *---------------------
- *
- * BJC 6000: CMYK
- *
- *
- *
- */
 
 /* TODO-LIST 
  *
@@ -262,7 +257,6 @@ canon_parameters(int  model,		/* I - Printer model */
 	(*count)++;
       }
     }
-    fprintf(stderr,"canon: PageSize ok.\n");
     return (valptrs);
   }
   else if (strcmp(name, "Resolution") == 0)
@@ -285,7 +279,6 @@ canon_parameters(int  model,		/* I - Printer model */
 	      caps.model);
       return 0;
     }
-    fprintf(stderr,"canon: Resolution ok.\n");
     *count= c;
     p= valptrs;
   }
@@ -780,9 +773,9 @@ canon_print(int       model,		/* I - Model */
 
   left = ydpi * (left - page_left) / 72;
 
-  fprintf(stderr,"canon: image-top  is %04x = % 4d = %f\" = %f mm\n",
+  fprintf(stderr,"canon: image-top  is %04x =% 5d = %f\" = %f mm\n",
           top,top,top/(1.*ydpi),top/(ydpi/25.4));
-  fprintf(stderr,"canon: image-left is %04x = % 4d = %f\" = %f mm\n",
+  fprintf(stderr,"canon: image-left is %04x =% 5d = %f\" = %f mm\n",
           left,left,left/(1.*ydpi),left/(ydpi/25.4));
 
   if(xdpi==1440){
@@ -794,11 +787,11 @@ canon_print(int       model,		/* I - Model */
     delay_lm= 0;
     delay_ly= 0;
     delay_max= 330;
-    fprintf(stderr,"delay on!\n");
+    fprintf(stderr,"canon: delay on!\n");
   } else {
     delay_k= delay_c= delay_m= delay_y= delay_lc= delay_lm= delay_ly=0;
     delay_max=0;
-    fprintf(stderr,"delay off!\n");
+    fprintf(stderr,"canon: delay off!\n");
   }
 
  /*
@@ -984,7 +977,8 @@ canon_print(int       model,		/* I - Model */
    */
 
   if (delay_max) {
-    fprintf(stderr,"\nFlushing %d possibly delayed buffers!\n",delay_max);
+    fprintf(stderr,"\ncanon: flushing %d possibly delayed buffers\n",
+	    delay_max);
     for (y= 0; y<delay_max; y++) {
       canon_write_line(prn,
 		       black,    delay_k,
@@ -1007,7 +1001,7 @@ canon_print(int       model,		/* I - Model */
     }
   }
 
-  fprintf(stderr,"\nDONE!\n");
+  fprintf(stderr,"\ncanon: done\n");
 
  /*
   * Cleanup...
@@ -1016,19 +1010,13 @@ canon_print(int       model,		/* I - Model */
   free(in);
   free(out);
 
-  if (black != NULL)
-    free(black);
-  if (cyan != NULL)
-    {
-      free(cyan);
-      free(magenta);
-      free(yellow);
-    }
-  if (lcyan != NULL)
-    {
-      free(lcyan);
-      free(lmagenta);
-    }
+  if (black != NULL)    free(black);
+  if (cyan != NULL)     free(cyan);
+  if (magenta != NULL)  free(magenta);
+  if (yellow != NULL)   free(yellow);
+  if (lcyan != NULL)    free(lcyan);
+  if (lmagenta != NULL) free(lmagenta);
+  if (lyellow != NULL)  free(lyellow);
 
   /* eject page */
   fputc(0x0c,prn); 
