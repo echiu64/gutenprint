@@ -107,6 +107,7 @@ print_debug_params(stp_vars_t v)
   print_remote_int_param(v, "Xdpi", pd->res->hres);
   print_remote_int_param(v, "Use_softweave", pd->res->softweave);
   print_remote_int_param(v, "Use_microweave", pd->res->microweave);
+  print_remote_int_param(v, "Use_microweave", pd->use_printer_weave);
   print_remote_int_param(v, "Page_left", pd->page_left);
   print_remote_int_param(v, "Page_right", pd->page_right);
   print_remote_int_param(v, "Page_top", pd->page_top);
@@ -298,7 +299,10 @@ static void
 escp2_set_microweave(stp_vars_t v)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  stpi_send_command(v, "\033(i", "bc", pd->res->microweave);
+  int microweave_parm = 0;
+  if (pd->microweave)
+    microweave_parm = pd->microweave->value;
+  stpi_send_command(v, "\033(i", "bc", microweave_parm);
 }
 
 static void

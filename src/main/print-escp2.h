@@ -319,6 +319,20 @@ typedef enum
   AUTO_MODE_MANUAL
 } auto_mode_t;
 
+typedef struct
+{
+  const char *name;
+  const char *text;
+  short value;
+} microweave_t;
+
+typedef struct
+{
+  const char *name;
+  size_t n_microweaves;
+  const microweave_t *microweaves;
+} microweave_list_t;
+
 #define MODEL_COMMAND_MASK	0xful /* What general command set does */
 #define MODEL_COMMAND_1998	0x0ul
 #define MODEL_COMMAND_1999	0x1ul /* The 1999 series printers */
@@ -464,6 +478,8 @@ typedef struct escp2_printer
   const quality_list_t *quality_list;
   const stp_raw_t *preinit_sequence;
   const stp_raw_t *postinit_remote_sequence;
+/*****************************************************************************/
+  const microweave_list_t *const microweaves;
 } stpi_escp2_printer_t;
 
 extern const stpi_escp2_printer_t stpi_escp2_model_capabilities[];
@@ -523,6 +539,12 @@ extern const inkgroup_t stpi_escp2_f360_ultrachrome_inkgroup;
 
 extern const escp2_inkname_t stpi_escp2_default_black_inkset;
 
+extern const microweave_list_t stpi_escp2_standard_microweave_list;
+extern const microweave_list_t stpi_escp2_sp2200_microweave_list;
+extern const microweave_list_t stpi_escp2_pro7000_microweave_list;
+extern const microweave_list_t stpi_escp2_pro7500_microweave_list;
+extern const microweave_list_t stpi_escp2_pro7600_microweave_list;
+
 typedef struct
 {
   /* Basic print head parameters */
@@ -580,8 +602,10 @@ typedef struct
 				   to print a complete row */
   int physical_xdpi;		/* Horizontal distance between dots in pass */
   const res_t *res;		/* Description of the printing resolution */
+  const microweave_t *microweave; /* Microweave parameters */
+  int use_printer_weave;	/* Use the printer weaving mechanism */
 
-  /* Page parameters */		/* Indexed from top left */
+  /* page parameters */		/* Indexed from top left */
   int page_left;		/* Left edge of page (points) */
   int page_right;		/* Right edge of page (points) */
   int page_top;			/* Top edge of page (points) */

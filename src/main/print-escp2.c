@@ -158,6 +158,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
+    "Microweave", N_("Microweave"),
+    N_("Microweave"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
+  },
+  {
     "PrintingDirection", N_("Printing Direction"),
     N_("Printing direction (unidirectional is higher quality, but slower)"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
@@ -489,6 +495,7 @@ DEF_SIMPLE_ACCESSOR(alignment_passes, int)
 DEF_SIMPLE_ACCESSOR(alignment_choices, int)
 DEF_SIMPLE_ACCESSOR(alternate_alignment_passes, int)
 DEF_SIMPLE_ACCESSOR(alternate_alignment_choices, int)
+DEF_COMPOSITE_ACCESSOR(microweaves, const microweave_list_t *)
 
 DEF_ROLL_ACCESSOR(left_margin, unsigned)
 DEF_ROLL_ACCESSOR(right_margin, unsigned)
@@ -683,6 +690,45 @@ get_input_slot(stp_const_vars_t v)
     }
   return NULL;
 }
+
+static const microweave_t *
+get_microweave(stp_const_vars_t v)
+{
+  int i;
+  const microweave_list_t *p = escp2_microweaves(v);
+  if (p)
+    {
+      const char *name = stp_get_string_parameter(v, "Microweave");
+      int microweave_count = p->n_microweaves;
+      if (name)
+	{
+	  for (i = 0; i < microweave_count; i++)
+	    {
+	      if (!strcmp(name, p->microweaves[i].name))
+		return &(p->microweaves[i]);
+	    }
+	}
+    }
+  return NULL;
+}
+
+static int
+use_microweave(stp_const_vars_t v)
+{
+  const res_t *res = escp2_find_resolution(v);
+  const microweave_list_t *microweaves = escp2_microweaves(v);
+  if (!microweaves)
+    return 0;
+  else if (!res)
+    return 1;
+  else if (!(res->softweave))
+    return 1;
+  else if (res->microweave)
+    return 1;
+  else
+    return 0;
+}
+  
 
 static const paper_t *
 get_media_type(stp_const_vars_t v)
@@ -1197,6 +1243,29 @@ escp2_parameters(stp_const_vars_t v, const char *name,
 				       _(slots->slots[i].text));
 	  description->deflt.str =
 	    stp_string_list_param(description->bounds.str, 0)->name;
+	}
+      else
+	description->is_active = 0;
+    }
+  else if (strcmp(name, "Microweave") == 0)
+    {
+      const res_t *res = escp2_find_resolution(v);
+      const microweave_list_t *microweaves = escp2_microweaves(v);
+      int nmicroweaves = 0;
+      if (use_microweave(v) && (!res || res->microweave))
+	nmicroweaves = microweaves->n_microweaves;
+      description->bounds.str = stp_string_list_create();
+      if (nmicroweaves)
+	{
+	  stp_string_list_add_string(description->bounds.str, "None",
+				     _("Standard"));
+	  for (i = 0; i < nmicroweaves; i++)
+	    stp_string_list_add_string(description->bounds.str,
+				       microweaves->microweaves[i].name,
+				       _(microweaves->microweaves[i].text));
+	  description->deflt.str = "None";
+	  if (!using_automatic_settings(v, AUTO_MODE_MANUAL))
+	    description->is_active = 0;
 	}
       else
 	description->is_active = 0;
@@ -1926,8 +1995,7 @@ static void
 setup_microweave_parameters(stp_vars_t v)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  pd->horizontal_passes =
-    pd->res->hres / escp2_base_res(v, compute_resid(pd->res));
+  pd->horizontal_passes = 1;
   pd->nozzles = 1;
   pd->nozzle_separation = 1;
   pd->min_nozzles = 1;
@@ -1957,6 +2025,15 @@ setup_head_parameters(stp_vars_t v)
 	compute_channel_count(pd->inkname, pd->logical_channels);
     }
 
+  pd->use_printer_weave = use_microweave(v);
+  if (pd->use_printer_weave)
+    {
+      pd->microweave = get_microweave(v);
+      if (pd->res->softweave && pd->microweave && pd->microweave->value == 0)
+	pd->microweave = NULL;
+    }
+  
+
   if (escp2_has_cap(v, MODEL_FAST_360, MODEL_FAST_360_YES) &&
       (pd->inkname->inkset == INKSET_CMYK || pd->physical_channels == 1) &&
       pd->res->hres == pd->physical_xdpi && pd->res->vres == 360)
@@ -1967,10 +2044,10 @@ setup_head_parameters(stp_vars_t v)
   /*
    * Set up the printer-specific parameters (weaving)
    */
-  if (pd->res->softweave)
-    setup_softweave_parameters(v);
-  else
+  if (pd->use_printer_weave)
     setup_microweave_parameters(v);
+  else
+    setup_softweave_parameters(v);
   pd->separation_rows = escp2_separation_rows(v);
   pd->pseudo_separation_rows = escp2_pseudo_separation_rows(v);
   pd->extra_720dpi_separation = escp2_extra_720dpi_separation(v);
