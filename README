@@ -38,7 +38,10 @@ If you have installed the Gimp from source on Linux: after running
 make install, you must run ldconfig as root before attempting to build
 this plugin.
 
-Gimp-print 4.1 requires the Gimp 1.2.
+Gimp-print 4.1 requires the Gimp 1.2.  As of Gimp-print 4.1.6, the
+plugin will no longer compile against the Gimp 1.0 or 1.1.  While the
+plugin should continue to compile against the Gimp 1.1.21 and above
+(in the 1.1 line), such use is not supported.
 
 
 GHOSTSCRIPT
