@@ -1,6 +1,6 @@
 INTRODUCTION
 
-    This is Gimp-Print version 5.0.0 Alpha 1, the first public alpha
+    This is Gimp-Print version 5.0.0 Alpha 2, the second public alpha
     release (technology preview) in the line that will eventually lead
     to Gimp-Print 5.0.  Gimp-Print is a suite of printer drivers that
     may be used with most common UNIX print spooling systems,
@@ -154,9 +154,9 @@ CUPS
     CUPS front end (e. g. KUPS, or via the web interface) because they
     look something like this:
 
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha1(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha2(en)
 
-    If the version number (in this case, 5.0.0-alpha1) does not match
+    If the version number (in this case, 5.0.0-alpha2) does not match
     the version of Gimp-Print that you are installing, you must use
     Modify Printer to force the new PPD file to get installed.
     Failure to do so may lead to incorrect output and/or other errors!
@@ -187,15 +187,15 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     apparent when you use a CUPS front end to select a PPD file and
     you see something like this:
 
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha1(en)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha1(en)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha1(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha2(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha2(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha2(en)
 
     rather than this:
 
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha1(en)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha1(sv)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha1(fr)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha2(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha2(sv)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha2(fr)
 
     you may wish to turn off the translation of PPD files:
 
@@ -248,17 +248,13 @@ FOOMATIC
     available from http://www.linuxprinting.org/foomatic.html.  It is
     also available in Debian unstable.  For best results, use the
     version in cvs.  The first version of Foomatic (the one used with
-    Gimp-Print 4.0) is not compatible with Gimp-Print 4.3.  Note that
+    Gimp-Print 4.0) is not compatible with Gimp-Print 5.0.  Note that
     the Foomatic driver is named `stp' in Gimp-Print 4.0; in
     Gimp-Print 4.2 (and early 4.3) it is named `gimp-print' for the
     Ghostscript ("stp") driver and "gimp-print-ijs" for the IJS
-    driver.  In 4.3 only the "gimp-print-ijs" data is present.  The
-    data for the Gimp-Print 4.0 driver is not compatible with the 4.3
+    driver.  In 5.0 only the "gimp-print-ijs" data is present.  The
+    data for the Gimp-Print 4.2 driver is not compatible with the 5.0
     driver.
-
-    Note that at this time the Foomatic support in Gimp-Print 4.3 is
-    very minimal; it is being rewritten to enable the additional
-    options available with Gimp-Print 4.3.
 
     To verify that you have an appropriate version of Foomatic, please
     run

@@ -1,7 +1,7 @@
-Welcome to Gimp-Print 5.0 Alpha!  Please read these release notes
+Welcome to Gimp-Print 5.0 Alpha 2!  Please read these release notes
 carefully.
 
-Gimp-Print 5.0.0-alpha1 is the first alpha release (technology preview)
+Gimp-Print 5.0.0-alpha2 is the second alpha release (technology preview)
 in the line that will eventually lead to Gimp-Print 5.0.  It is based
 on the 4.3 series that has been in development for two years, and
 includes many improvements over the very popular 4.2 series.  This
@@ -19,6 +19,9 @@ quality and functionality, and can be used for demanding printing
 tasks requiring flexibility and high quality.  This software package
 includes the Print plug-in for the GIMP and Ghostscript and CUPS
 drivers, as well as Foomatic data.
+
+Gimp-Print currently contains over 200 drivers supporting in excess of
+600 printer models.
 
 The Print plug-in for the GIMP requires the GIMP 1.2 (more recent
 versions of the GIMP, such as 1.3, are not supported at present).  You
@@ -44,10 +47,6 @@ uses the IJS package included with these versions of Ghostscript to
 create a driver that may be built much more easily than traditional
 Ghostscript drivers.  The options for this driver are very complex,
 and it is normally used with the Foomatic driver integration system.
-At the present time, the Foomatic data generation for Gimp-Print is
-incomplete, and we do not recommend using it with Gimp-Print 5.0 alpha
-as most of the new options will not be available.  This will be
-remedied prior to release of the final 5.0.
 
 Users of Macintosh OS X 10.2 (Jaguar) and 10.3 (Panther) can use this
 package, as the printing system is based on CUPS.  For ease of
@@ -58,17 +57,74 @@ attempt to build it themselves.
 
 NOTE: This package will not work with any version of OS X 10.0 and
 10.1 (such as 10.1.5), as those systems do not use CUPS as their
-printing system.  This is NOT going to change; you must upgrade to at
-least OS X 10.2 in order to use this package.  The reason why is that
-OS X 10.2 and above use CUPS as the basis of the printing system.  OS
-X 10.0 and 10.1 use a different system that would require a separate
-driver, and we do not plan to write that driver.
+printing system.  This is NOT going to be fixed; you must upgrade to
+at least OS X 10.2 in order to use this package.  The reason why is
+that OS X 10.2 and above use CUPS as the basis of the printing system.
+OS X 10.0 and 10.1 use a different system that would require a
+separate driver, and we do not plan to write that driver.
 
 The README file included with this package provides full instructions
 on building and installing Gimp-Print.
 
 While Gimp-Print 5.0 is not finalized, it contains many improvements
 and changes from 4.2, as follows:
+
+* Major changes between Gimp-Print 5.0.0 alpha 1 and 5.0.0 alpha 2:
+
+  1) A fully functional Foomatic data generator is included with this
+     package.  This data generator permits Foomatic users to take full
+     advantage of the new features in Gimp-Print 5.0, other than
+     curves.
+
+  2) The color architecture has been extensively revised.  It now
+     accepts data in 8 or 16 bit formats in grayscale, whitescale,
+     RGB, CMY, CMYK, KCMY, and raw (printer-specific) input layouts.
+     It also allows black and white or color output (as appropriate
+     for the printer) for all input types.  The API has undergone
+     significant changes, the last such changes expected in the 5.0
+     line.
+
+     These changes create an extensible, flexible, and logical base
+     for building printing applications.
+
+     Due to the extensive and somewhat pervasive nature of these
+     changes, this release is likely to be less stable than
+     5.0.0-alpha1.  These changes will in the long run improve
+     stability by simplifying the interface and implementation, but
+     initially some instability should be expected.
+
+  3) New color correction options have been added: desaturated
+     (printing grayscale using color inks), density corrected (linear
+     input, but correcting for density), and raw (completely
+     unprocessed).  Density correction and raw are useful for
+     color-managed printing applications that wish to do their own
+     linearization.
+
+  4) Doxygen has been introduced as the framework to build developer
+     documentation for the package.  There is considerable additional
+     work required to complete this.  In addition, the TeXinfo source
+     has been replaced by DocBook/XML.
+
+  5) The Epson Stylus Photo R200, R300, RX500, and RX600 printers are
+     now fully supported as printers (other than printing to CD's) and
+     work optimally at all resolutions.
+
+  6) The package now generates CMYKRB for the Epson Stylus Photo
+     R800.  This printer is not tuned, so results are not likely to be
+     optimal.
+
+  7) The CUPS driver now reports pages starting with page 1 rather
+     than page 0 as was previously the case.
+
+  8) The source package has been shrunk considerably by eliminating
+     the Postscript user's guide and duplicate images for the user's
+     guide.  The user's guide is now distributed exclusively in PDF
+     format.
+
+  9) Valgrind has been run over the package and a number of memory
+     issues have been fixed.
+
+  Please see the change log for full information.
 
 
 * General User-Visible Changes:
@@ -319,10 +375,24 @@ and changes from 4.2, as follows:
      based on the paper type loaded by the user.  Similarly, there is
      no default for the input slot or ink set.
 
-  10) A new Threshold color correction mode has been added, that
+  10) A new Threshold color correction mode has been added that
      produces either all-on or all-off of each color.  This is similar
      to the Monochrome mode in 4.2, except that it works for color as
      well as black.
+
+  11) A new Desaturated color correction mode has been added that
+     produces gray (desaturated) output using color inks.
+
+  12) A new Density color correction mode has been added that corrects
+     only for density.  This will normally produce excessively dark
+     output.  However, applications that wish to use their own
+     linearization curves may wish to use this interface to prevent
+     Gimp-Print from performing its own linearization.
+
+  13) A new Raw color correction mode has been added that performs no
+     correction whatsoever on the input.  This mode may be used by
+     applications that wish to perform their own ink limiting and
+     linearization.
 
 
 * Changes to the Print plugin for the GIMP:
@@ -485,9 +555,9 @@ and changes from 4.2, as follows:
   2) Printing to CD probably does not work correctly on the Epson
      Stylus Photo 900 and the Stylus Photo R300, although for
      different reasons.  On the Stylus Photo 900, the positioning is
-     most likely incorrect, while there have been reports that the
-     manual feed tray is not selected correctly on the Stylus Photo
-     R300.  We do not have an estimated time for a fix.
+     most likely incorrect, while the manual feed tray is not selected
+     correctly on the Stylus Photo R300.  We do not have an estimated
+     time for a fix.
 
   3) The Canon, Hewlett-Packard, and Lexmark drivers do not offer all
      of the additional options and improvements that the Epson driver
@@ -497,14 +567,10 @@ and changes from 4.2, as follows:
   4) Translation to other languages other than US-English is not
      supported in this release.  This will be fixed prior to 5.0.
 
-  5) The Foomatic printer data management system is not completely
-     supported in this release, as noted above.  This will be fixed
-     prior to 5.0.
-
-  6) Support for the Canon S200 has not yet been ported forward from
+  5) Support for the Canon S200 has not yet been ported forward from
      4.2.
 
-  7) This release is probably slower than 4.2 in many cases,
+  6) This release is probably slower than 4.2 in many cases,
      particularly when using High Accuracy (which is the default color
      correction in most cases) or Bright color correction.  It is
      possible that this release will not be able to drive some
@@ -513,10 +579,10 @@ and changes from 4.2, as follows:
      present.  We expect to improve the performance prior to final
      release.
 
-  8) The user's manual and developer's guide have not been updated for
+  7) The user's manual and developer's guide have not been updated for
      this release.
 
-  9) The CUPS PPD update script (cups-genppdupdate.5.0) will not
+  8) The CUPS PPD update script (cups-genppdupdate.5.0) will not
      update PPD files from 4.2 or from 4.3 prior to 4.3.21.
 
 
@@ -574,12 +640,19 @@ and changes from 4.2, as follows:
      system for driver writers that matches the coordinate system of
      printers, and the ability to do true full bleed.
 
-  6) Complete overhaul of the black generation in CMYK output.  Black
+  6) The specification of color correction, input, and output modes
+     has been completely revised, permitting applications to specify
+     input mode, output mode, channel bit depth, and color correction
+     completely independently.  This architecture is also more
+     extensible.  The implementation is not finalized, but the
+     interface is not likely to change substantially.
+
+  7) Complete overhaul of the black generation in CMYK output.  Black
      generation is now performed in the color code rather than the
      dither code.  This simplifies the dither code, puts the CMYK
      generation where it should be, and improves overall flexibility.
 
-  7) Complete overhaul of the multi-tone (photo or quadtone) ink
+  8) Complete overhaul of the multi-tone (photo or quadtone) ink
      processing architecture (channels).  Instead of being processed
      as part of the dithering code as in 4.2, where ink drops of
      lighter inks were assigned virtual values proportional to their
@@ -623,33 +696,33 @@ and changes from 4.2, as follows:
        ink channels directly.  This facility was used to create a
        mechanism to more accurately tune printer inks.
 
-  8) Use of true XML to store data about printers and paper sizes, and
+  9) Use of true XML to store data about printers and paper sizes, and
      to represent new data types (sequences, curves, and arrays).
      This uses the "mxml" XML library, a fast, lightweight XML parser
      written by Mike Sweet for this project.  Currently, the use of
      XML (as opposed to compiled-in data) is limited, but we expect
      that this will change beyond the initial 5.0 release.
 
-  9) In addition to parameters, internal components such as family
+  10) In addition to parameters, internal components such as family
      drivers, color drivers, etc. can store arbitrary data in the
      basic stp_vars_t object.  This facility is used to simplify the
      internal driver API; the family driver no longer needs to keep
      track of dither, color, etc. information itself.
 
-  10) The Epson Stylus family driver has been decomposed into more
+  11) The Epson Stylus family driver has been decomposed into more
      functionally distinct units.  The data schema has been
      considerably improved, and the code itself broken into more
      easily maintained units.
 
-  11) The build system has been updated with a more contemporary
+  12) The build system has been updated with a more contemporary
      toolchain based on autoconf 2.5 and gettext 0.11.
 
-  12) The Print plugin for the GIMP has been decomposed into a UI
+  13) The Print plugin for the GIMP has been decomposed into a UI
      library and the core plugin.  The user interface library is a
      pure GTK1-based library; the tiny GIMP plugin is a client of this
      library.
 
-  13) Printer characteristics are exposed to the application level as
+  14) Printer characteristics are exposed to the application level as
      read-only parameters.  This permits the escputil utility to not
      duplicate information stored in the printer driver.
 
@@ -1707,7 +1780,10 @@ Printer-Specific Notes:
       EPSON Stylus Photo 1280/1290
       EPSON Stylus Photo 2000P
       EPSON Stylus Photo 2100/2100
+      EPSON Stylus Photo R200
       EPSON Stylus Photo R300
+      EPSON Stylus Photo RX500
+      EPSON Stylus Photo RX600
       EPSON Stylus Scan 2000
       EPSON Stylus Scan 2500
       EPSON Stylus CX-3100
