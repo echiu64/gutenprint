@@ -478,9 +478,9 @@ send_print_command(stp_vars_t v, stpi_pass_t *pass, int color, int nlines)
     {
       int ncolor = pd->channels[color]->color;
       int subchannel = pd->channels[color]->subchannel;
+      int nwidth = pd->bitwidth * ((lwidth + 7) / 8);
       if (subchannel >= 0)
 	ncolor |= (subchannel << 4);
-      int nwidth = pd->bitwidth * ((lwidth + 7) / 8);
       stpi_send_command(v, "\033i", "ccchh", ncolor, COMPRESSION,
 			pd->bitwidth, nwidth, nlines);
     }    
