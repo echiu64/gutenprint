@@ -597,13 +597,16 @@ get_input_slot(stp_const_vars_t v)
   if (input_slot && strlen(input_slot) > 0)
     {
       const input_slot_list_t *slots = escp2_input_slots(v);
-      for (i = 0; i < slots->n_input_slots; i++)
+      if (slots)
 	{
-	  if (slots->slots[i].name &&
-	      strcmp(input_slot, slots->slots[i].name) == 0)
+	  for (i = 0; i < slots->n_input_slots; i++)
 	    {
-	      return &(slots->slots[i]);
-	      break;
+	      if (slots->slots[i].name &&
+		  strcmp(input_slot, slots->slots[i].name) == 0)
+		{
+		  return &(slots->slots[i]);
+		  break;
+		}
 	    }
 	}
     }
@@ -614,15 +617,18 @@ static const paper_t *
 get_media_type(stp_const_vars_t v)
 {
   int i;
-  const char *name = stp_get_string_parameter(v, "MediaType");
   const paperlist_t *p = escp2_paperlist(v);
-  int paper_type_count = p->paper_count;
-  if (name)
+  if (p)
     {
-      for (i = 0; i < paper_type_count; i++)
+      const char *name = stp_get_string_parameter(v, "MediaType");
+      int paper_type_count = p->paper_count;
+      if (name)
 	{
-	  if (!strcmp(name, p->papers[i].name))
-	    return &(p->papers[i]);
+	  for (i = 0; i < paper_type_count; i++)
+	    {
+	      if (!strcmp(name, p->papers[i].name))
+		return &(p->papers[i]);
+	    }
 	}
     }
   return NULL;
@@ -732,7 +738,7 @@ get_default_inktype(stp_const_vars_t v)
 {
   const inklist_t *ink_list = escp2_inklist(v);
   const paper_t *paper_type = get_media_type(v);
-  if (!ink_list)
+  if (!ink_list || !paper_type)
     return NULL;
   if (paper_type && paper_type->preferred_ink_type)
     return paper_type->preferred_ink_type;
@@ -740,13 +746,16 @@ get_default_inktype(stp_const_vars_t v)
 	   stp_check_string_parameter(v, "Resolution", STP_PARAMETER_ACTIVE))
     {
       const res_t *res = escp2_find_resolution(v);
-      int resid = compute_resid(res);
-      if (res->vres == 360 && res->hres == escp2_base_res(v, resid))
+      if (res)
 	{
-	  int i;
-	  for (i = 0; i < ink_list->n_inks; i++)
-	    if (strcmp(ink_list->inknames[i]->name, "CMYK") == 0)
-	      return ink_list->inknames[i]->name;
+	  int resid = compute_resid(res);
+	  if (res->vres == 360 && res->hres == escp2_base_res(v, resid))
+	    {
+	      int i;
+	      for (i = 0; i < ink_list->n_inks; i++)
+		if (strcmp(ink_list->inknames[i]->name, "CMYK") == 0)
+		  return ink_list->inknames[i]->name;
+	    }
 	}
     }
   return ink_list->inknames[0]->name;
