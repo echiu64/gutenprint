@@ -4,6 +4,8 @@ gimp-print (4.1.7-1) unstable; urgency=low
   * Change debian/rules to use separate binary-arch and binary-indep
     targets
 
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Fri,  4 May 2001 11:00:15 +0100
+
 gimp-print (4.1.5-2) unstable; urgency=low
 
   * Clean up build process so that things work even if some scripts
