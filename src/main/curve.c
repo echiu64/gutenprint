@@ -346,22 +346,103 @@ stp_curve_get_point(const stp_curve_t curve, size_t where, double *data)
 }
 
 int
-stp_curve_rescale(stp_curve_t curve, double scale)
+stp_curve_rescale(stp_curve_t curve, double scale,
+		  stp_curve_compose_t mode, stp_curve_bounds_t bounds_mode)
 {
   stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
   int i;
+  double nblo;
+  double nbhi;
+  double nrlo;
+  double nrhi;
+
   check_curve(icurve);
-  if (! finite(scale * icurve->bhi) || ! finite(scale * icurve->blo))
+  nblo = icurve->blo;
+  nbhi = icurve->bhi;
+  nrlo = icurve->rlo;
+  nrhi = icurve->rhi;
+  if (bounds_mode == STP_CURVE_BOUNDS_RESCALE)
+    {
+      switch (mode)
+	{
+	case STP_CURVE_COMPOSE_ADD:
+	  nblo += scale;
+	  nbhi += scale;
+	  break;
+	case STP_CURVE_COMPOSE_SUBTRACT:
+	  nblo -= scale;
+	  nbhi -= scale;
+	  break;
+	case STP_CURVE_COMPOSE_MULTIPLY:
+	  nblo *= scale;
+	  nbhi *= scale;
+	  break;
+	case STP_CURVE_COMPOSE_DIVIDE:
+	  if (scale == 0.0)
+	    return 0;
+	  nblo /= scale;
+	  nbhi /= scale;
+	  break;
+	case STP_CURVE_COMPOSE_EXPONENTIATE:
+	  if (scale == 0.0)
+	    return 0;
+	  nblo = pow(nblo, scale);
+	  nbhi = pow(nbhi, scale);
+	  break;
+	default:
+	  return 0;
+	}
+    }
+
+  if (! finite(nbhi) || ! finite(nblo))
     return 0;
-  icurve->bhi *= scale;
-  icurve->blo *= scale;
-  icurve->rhi *= scale;
-  icurve->rlo *= scale;
-  icurve->gamma = 0.0;
+
+  nrlo = nbhi;
+  nrhi = nblo;
+
   if (icurve->point_count)
     {
+      double *tmp = stp_malloc(sizeof(double) * icurve->real_point_count);
       for (i = 0; i < icurve->real_point_count; i++)
-	icurve->data[i] *= scale;
+	{
+	  switch (mode)
+	    {
+	    case STP_CURVE_COMPOSE_ADD:
+	      tmp[i] = icurve->data[i] + scale;
+	      break;
+	    case STP_CURVE_COMPOSE_SUBTRACT:
+	      tmp[i] = icurve->data[i] - scale;
+	      break;
+	    case STP_CURVE_COMPOSE_MULTIPLY:
+	      tmp[i] = icurve->data[i] * scale;
+	      break;
+	    case STP_CURVE_COMPOSE_DIVIDE:
+	      tmp[i] = icurve->data[i] / scale;
+	      break;
+	    case STP_CURVE_COMPOSE_EXPONENTIATE:
+	      tmp[i] = pow(icurve->data[i], scale);
+	      break;
+	    }
+	  if (tmp[i] > nbhi || tmp[i] < nblo)
+	    {
+	      if (bounds_mode == STP_CURVE_BOUNDS_ERROR)
+		{
+		  stp_free(tmp);
+		  return(0);
+		}
+	      else if (tmp[i] > nbhi)
+		tmp[i] = nbhi;
+	      else
+		tmp[i] = nblo;
+	    }
+	  if (tmp[i] < nrlo)
+	    nrlo = tmp[i];
+	  if (tmp[i] > nrhi)
+	    nrhi = tmp[i];
+	}
+      icurve->gamma = 0.0;
+      stp_free(icurve->data);
+      icurve->data = tmp;
       compute_intervals(icurve);
     }
   return 1;
@@ -373,6 +454,7 @@ stp_curve_print(FILE *f, const stp_curve_t curve)
   stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
   int i;
   check_curve(icurve);
+  setlocale(LC_ALL, "C");
   fprintf(f, "%s;%s;%s;%d;%g;%g;%g;",
 	  "STP_CURVE",
 	  wrap_mode_names[icurve->wrap_mode],
@@ -384,6 +466,7 @@ stp_curve_print(FILE *f, const stp_curve_t curve)
   if (icurve->point_count)
     for (i = 0; i < icurve->point_count; i++)
       fprintf(f, "%g;", icurve->data[i]);
+  setlocale(LC_ALL, "");
 }
 
 char *
@@ -396,6 +479,7 @@ stp_curve_print_string(const stp_curve_t curve)
   int cur_size = 0;
   check_curve(icurve);
   retval = stp_zalloc(ret_size);
+  setlocale(LC_ALL, "C");
   while (1)
     {
       cur_size = snprintf(retval, ret_size - 1, "%s;%s;%s;%d;%g;%g;%g;",
@@ -432,6 +516,7 @@ stp_curve_print_string(const stp_curve_t curve)
 	      break;
 	    }
 	}
+  setlocale(LC_ALL, "");
   return retval;
 }
 
@@ -467,6 +552,7 @@ stp_curve_read(FILE *f, stp_curve_t curve)
     }
   if (wrap_mode < 0)
     return 0;
+  setlocale(LC_ALL, "C");
   ret = stp_curve_allocate(wrap_mode);
   iret = (stp_internal_curve_t *) ret;
 
@@ -514,10 +600,12 @@ stp_curve_read(FILE *f, stp_curve_t curve)
   scan_curve_range(iret);
   stp_curve_copy(curve, ret);
   stp_curve_destroy(ret);
+  setlocale(LC_ALL, "");
   return 1;
 
  bad:
   stp_curve_destroy(ret);
+  setlocale(LC_ALL, "");
   return 0;
 }
 
@@ -554,6 +642,7 @@ stp_curve_read_string(const char *text, stp_curve_t curve)
     }
   if (wrap_mode < 0)
     return 0;
+  setlocale(LC_ALL, "C");
   ret = stp_curve_allocate(wrap_mode);
   iret = (stp_internal_curve_t *) ret;
 
@@ -604,10 +693,12 @@ stp_curve_read_string(const char *text, stp_curve_t curve)
   scan_curve_range(iret);
   stp_curve_copy(curve, ret);
   stp_curve_destroy(ret);
+  setlocale(LC_ALL, "");
   return offset;
 
  bad:
   stp_curve_destroy(ret);
+  setlocale(LC_ALL, "");
   return 0;
 }
 

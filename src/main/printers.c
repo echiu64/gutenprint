@@ -317,7 +317,6 @@ verify_curve_param(const stp_vars_t v, const char *parameter,
 		    stp_parameter_t *desc)
 {
   const stp_curve_t curve = stp_get_curve_parameter(v, parameter);
-  size_t i;
   if (curve == 0)
     {
       stp_eprintf(v, _("No points present for curve %s\n"), parameter);

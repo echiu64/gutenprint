@@ -254,6 +254,13 @@ typedef enum
   STP_CURVE_COMPOSE_EXPONENTIATE
 } stp_curve_compose_t;
 
+typedef enum
+{
+  STP_CURVE_BOUNDS_RESCALE,	/* Rescale the bounds */
+  STP_CURVE_BOUNDS_CLIP,	/* Clip the curve to the existing bounds */
+  STP_CURVE_BOUNDS_ERROR	/* Error if bounds are violatedx */
+} stp_curve_bounds_t;
+
 /*
  * Representation of a choice list of strings.  The choices themselves
  * consist of a key and a human-readable name.  The list object is
@@ -622,7 +629,9 @@ extern int stp_curve_resample(stp_curve_t curve, size_t points);
  *
  * Note that this currently destroys the gamma property of the curve.
  */
-extern int stp_curve_rescale(stp_curve_t curve, double scale);
+extern int stp_curve_rescale(stp_curve_t curve, double scale,
+			     stp_curve_compose_t mode,
+			     stp_curve_bounds_t bounds_mode);
 
 /*
  * Print and read back the value of a curve.  The printable
