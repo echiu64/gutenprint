@@ -55,6 +55,7 @@ static void gimp_red_update        (GtkAdjustment *adjustment);
 static void gimp_green_update      (GtkAdjustment *adjustment);
 static void gimp_blue_update       (GtkAdjustment *adjustment);
 static void gimp_gamma_update      (GtkAdjustment *adjustment);
+static void gimp_set_color_defaults(void);
 
 static void gimp_dither_algo_callback (GtkWidget *widget,
 				       gpointer   data);
@@ -80,6 +81,8 @@ gimp_create_color_adjust_window (void)
 		     GTK_WIN_POS_MOUSE,
 		     FALSE, TRUE, FALSE,
 
+		     _("Set Defaults"), gimp_set_color_defaults,
+		     NULL, NULL, NULL, FALSE, FALSE,
 		     _("Close"), gtk_widget_hide,
 		     NULL, 1, NULL, TRUE, TRUE,
 
@@ -325,6 +328,19 @@ gimp_do_color_updates(void)
 
   gtk_adjustment_set_value (GTK_ADJUSTMENT (density_adjustment),
 			    plist[plist_current].v.density);
+}
+
+void
+gimp_set_color_defaults(void)
+{
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (brightness_adjustment), 100);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (gamma_adjustment), 1.0);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (contrast_adjustment), 100);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (red_adjustment), 100);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (green_adjustment), 100);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (blue_adjustment), 100);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (saturation_adjustment), 1.0);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (density_adjustment), 1.0);
 }
 
 void
