@@ -922,7 +922,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 8, 360, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
-    { -1, 2, 0x11, 4, 0x11, -1, 0x11 },
+    { -1, 2, 0x12, 4, 0x11, -1, 0x11 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_6color_inks
   },
