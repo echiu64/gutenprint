@@ -751,23 +751,9 @@ do_print_dialog (gchar *proc_name)
 static void
 initialize_printer(plist_t *printer)
 {
-  printer->v.output_type = vars.output_type;
-  printer->v.scaling = vars.scaling;
-  printer->v.orientation = vars.orientation;
-  printer->v.left = 0;
-  printer->v.top = 0;
-  printer->v.unit = 0;
-  printer->v.gamma = vars.gamma;
-  printer->v.contrast = vars.contrast;
-  printer->v.brightness = vars.brightness;
-  printer->v.red = vars.red;
-  printer->v.green = vars.green;
-  printer->v.blue = vars.blue;
-  printer->v.linear = vars.linear;
-  printer->v.image_type = vars.image_type;
-  printer->v.saturation = vars.saturation;
-  printer->v.density = vars.density;
-  printer->v.app_gamma = vars.app_gamma;
+  printer->name[0] = '\0';
+  printer->active=0;
+  memcpy(&(printer->v), &vars, sizeof(vars));
 }
 
 #define GET_MANDATORY_STRING_PARAM(param)		\
@@ -958,6 +944,10 @@ printrc_load(void)
 	    }
           else
     	    {
+#ifdef DEBUG
+              fprintf(stderr, "Adding new printer from printrc file: %s\n",
+                key.name);
+#endif
 	      check_plist(plist_count + 1);
 	      p = plist + plist_count;
 	      memcpy(p, &key, sizeof(plist_t));
@@ -1032,6 +1022,10 @@ printrc_save(void)
     * Write the contents of the printer list...
     */
 
+#ifdef DEBUG
+    fprintf(stderr, "Number of printers: %d\n", plist_count);
+#endif
+
     fputs("#PRINTRC " PLUG_IN_VERSION "\n", fp);
 
     for (i = 0, p = plist; i < plist_count; i ++, p ++)
@@ -1047,6 +1041,11 @@ printrc_save(void)
 		p->v.contrast, p->v.red, p->v.green, p->v.blue,
 		p->v.linear, p->v.image_type, p->v.saturation, p->v.density,
 		p->v.ink_type, p->v.dither_algorithm, p->v.unit);
+
+#ifdef DEBUG
+        fprintf(stderr, "Wrote printer %d: %s\n", i, p->name);
+#endif
+
       }
     fclose(fp);
   } else {
@@ -1093,11 +1092,11 @@ get_system_printers(void)
 
   check_plist(1);
   plist_count = 1;
+  initialize_printer(&plist[0]);
   strcpy(plist[0].name, _("File"));
   plist[0].v.output_to[0] = '\0';
   strcpy(plist[0].v.driver, "ps2");
   plist[0].v.output_type = OUTPUT_COLOR;
-  initialize_printer(&plist[0]);
 
 #ifdef LPC_COMMAND
   if ((pfile = popen(LPC_COMMAND " status < /dev/null", "r")) != NULL)
@@ -1112,10 +1111,10 @@ get_system_printers(void)
 	{
 	  check_plist(plist_count + 1);
 	  *strchr(line, ':') = '\0';
+	  initialize_printer(&plist[plist_count]);
 	  strcpy(plist[plist_count].name, line);
 	  sprintf(plist[plist_count].v.output_to,LPR_COMMAND" -P%s -l",line);
 	  strcpy(plist[plist_count].v.driver, "ps2");
-	  initialize_printer(&plist[plist_count]);
 	  plist_count ++;
 	}
     }
@@ -1132,10 +1131,10 @@ get_system_printers(void)
 	  (sscanf(line, "Printer: %s", name) == 1))
       {
 	check_plist(plist_count + 1);
+	initialize_printer(&plist[plist_count]);
 	strcpy(plist[plist_count].name, name);
 	sprintf(plist[plist_count].v.output_to, LP_COMMAND " -s -d%s", name);
         strcpy(plist[plist_count].v.driver, "ps2");
-	initialize_printer(&plist[plist_count]);
         plist_count ++;
       }
       else
@@ -1152,10 +1151,10 @@ get_system_printers(void)
       for (i = 1; i <= pnum; i++)
 	{
 	  check_plist(plist_count + 1);
+	  initialize_printer(&plist[plist_count]);
 	  sprintf(plist[plist_count].name, "LPT%d:", i);
 	  sprintf(plist[plist_count].v.output_to, "PRINT /D:LPT%d /B ", i);
           strcpy(plist[plist_count].v.driver, "ps2");
-	  initialize_printer(&plist[plist_count]);
           plist_count ++;
 	}
     }
