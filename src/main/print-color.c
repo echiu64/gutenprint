@@ -33,6 +33,7 @@
 #include "gimp-print-internal.h"
 #include <gimp-print/gimp-print-intl-internal.h>
 #include <math.h>
+#include <string.h>
 #include <limits.h>
 
 #ifdef __GNUC__
