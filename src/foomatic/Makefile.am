@@ -72,8 +72,10 @@ endif
 
 if BUILD_IJS
 FOOMATIC_GENERATOR_EXTRA_OPTS = -d all
+FOOMATIC_IJS = yes
 else
 FOOMATIC_GENERATOR_EXTRA_OPTS = -d noijs
+FOOMATIC_IJS =
 endif
 
 all-local: $(INSTALL_DATA_LOCAL_DEPS)
@@ -82,9 +84,17 @@ install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
 	  if test -n "$(DESTDIR)" ; then \
 	    $(mkinstalldirs) $(DESTDIR)`$(FOOMATIC_KITLOAD) -l` ; \
-	    $(FOOMATIC_KITLOAD) -d $(DESTDIR) -k foomatic-db ; \
+	    $(FOOMATIC_KITLOAD) -d $(DESTDIR) -k foomatic-db-gimp-print ; \
 	  else \
-	    $(FOOMATIC_KITLOAD) -k foomatic-db ; \
+	    $(FOOMATIC_KITLOAD) -k foomatic-db-gimp-print ; \
+	  fi ; \
+	  if test -n "$(FOOMATIC_IJS)" ; then \
+	    if test -n "$(DESTDIR)" ; then \
+	      $(mkinstalldirs) $(DESTDIR)`$(FOOMATIC_KITLOAD) -l` ; \
+	      $(FOOMATIC_KITLOAD) -d $(DESTDIR) -k foomatic-db-gimp-print-ijs ; \
+	    else \
+	      $(FOOMATIC_KITLOAD) -k foomatic-db-gimp-print-ijs ; \
+	    fi ; \
 	  fi ; \
 	fi
 
@@ -94,7 +104,7 @@ clean-local:
 foomatic-data: foomatic-stamp
 
 foomatic-stamp: foomatic-generator foomatic-printermap $(EXTRA_PROGRAMS)
-	-$(RM) -r foomatic-db
+	-$(RM) -r foomatic-db-*
 	./foomatic-generator -m $(srcdir)/foomatic-printermap -t $(srcdir)/foomatic-templates $(FOOMATIC_GENERATOR_EXTRA_OPTS)
 	touch foomatic-stamp
 

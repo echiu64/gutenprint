@@ -182,14 +182,6 @@ my $generalsubs = { 'STPVER' => $stpvers,
 
 my @numericsubs = ('MINVAL', 'MAXVAL', 'DEFVAL');
 
-# OK, make the db heirarchy alongside the templates one...
-mkdir 'foomatic-db', 0755 or die "Cannot create directory foomatic-db: $!\n"
-    unless -d 'foomatic-db';
-mkdir 'foomatic-db/opt', 0755 or die "Cannot create directory foomatic-db/opt: $!\n"
-    unless -d 'foomatic-db/opt';
-mkdir 'foomatic-db/driver', 0755 or die "Cannot create directory foomatic-db/driver: $!\n"
-    unless -d 'foomatic-db/driver';
-
 # Now do stuff, already.  Do the substitution into each file...
 my $tmpl;
 for $drivertype (@drivertypes) {
@@ -198,6 +190,17 @@ for $drivertype (@drivertypes) {
     my $drvname = "$drivernameprefix$drivertypesuffix";
     $generalsubs->{'DRVNAME'} = $drvname;
     print "Generating Foomatic data for driver \"$drvname\"...\n";
+
+    # OK, make the db heirarchy alongside the templates one...
+    mkdir "foomatic-db-$drvname", 0755 or
+	die "Cannot create directory foomatic-db-$drvname: $!\n"
+     	    unless -d "foomatic-db-$drvname";
+    mkdir "foomatic-db-$drvname/opt", 0755 or 
+	die "Cannot create directory foomatic-db-$drvname/opt: $!\n"
+	    unless -d "foomatic-db-$drvname/opt";
+    mkdir "foomatic-db-$drvname/driver", 0755 or
+	die "Cannot create directory foomatic-db-$drvname/driver: $!\n"
+	    unless -d 'foomatic-db-$drvname/driver';
 
     opendir TDIR, "$templatedir-$drivertype" or
 	die "Cannot open templates directory: $!\n";
@@ -252,10 +255,10 @@ for $drivertype (@drivertypes) {
 	# Finally, write out the new file
 
 	# Options are under opt/
-	my $dbfilename = lc("foomatic-db/opt/$drvname-$tmpl");
+	my $dbfilename = lc("foomatic-db-$drvname/opt/$drvname-$tmpl");
 
 	# Special case the actual driver file under driver/
-	$dbfilename = "foomatic-db/driver/$drvname.xml"
+	$dbfilename = "foomatic-db-$drvname/driver/$drvname.xml"
 	    if ($tmpl eq 'gimp-print.xml');
 
 	open NEWF, "> $dbfilename" or die "Cannot create $dbfilename: $!";
