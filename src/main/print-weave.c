@@ -1805,6 +1805,9 @@ stp_initialize_weave(int jets,	/* Width of print head */
     if(sw->head_offset[i] > maxHeadOffset)
       maxHeadOffset = sw->head_offset[i];
 
+  sw->virtual_jets = sw->jets;
+  if (maxHeadOffset > 0)
+    sw->virtual_jets += (maxHeadOffset + sw->separation - 1) / sw->separation;
   last_line = first_line + lineheight - 1 + maxHeadOffset;
 
   sw->weaveparm = initialize_weave_params(sw->separation, sw->jets,
@@ -1818,7 +1821,8 @@ stp_initialize_weave(int jets,	/* Width of print head */
    * at the start or end.
    */
   sw->vmod = 2 * sw->separation * sw->oversample * sw->repeat_count;
-  sw->vmod = 2 * sw->separation * sw->oversample * sw->repeat_count;
+  if (sw->virtual_jets > sw->jets)
+    sw->vmod *= (sw->virtual_jets + sw->jets - 1) / sw->jets;
   sw->separation_rows = separation_rows;
 
   sw->bitwidth = width;
@@ -2019,7 +2023,7 @@ check_linebases(stp_softweave_t *sw, int row, int cpass, int head_offset,
     (stp_linebufs_t *)stp_get_linebases(sw, row, cpass, head_offset);
   if (!(bufs[0].v[color]))
     bufs[0].v[color] =
-      stp_malloc(sw->jets * sw->bitwidth * sw->horizontal_width);
+      stp_malloc(sw->virtual_jets * sw->bitwidth * sw->horizontal_width);
 }
 
 /*
@@ -2176,10 +2180,10 @@ add_to_row(stp_softweave_t *sw, int row, unsigned char *buf, size_t nbytes,
 {
   size_t place = lineoffs[0].v[color];
   size_t count = linecount[0].v[color];
-  if (place + nbytes > sw->jets * sw->bitwidth * sw->horizontal_width)
+  if (place + nbytes > sw->virtual_jets * sw->bitwidth * sw->horizontal_width)
     {
       stp_eprintf(sw->v, "Buffer overflow: limit %d, actual %d, count %d\n",
-		  sw->jets * sw->bitwidth * sw->horizontal_width,
+		  sw->virtual_jets * sw->bitwidth * sw->horizontal_width,
 		  place + nbytes, count);
       exit(1);
     }

@@ -170,6 +170,8 @@ typedef struct stp_softweave
   int last_pass;		/* Number of the most recently printed pass */
 
   int jets;			/* Number of jets per color */
+  int virtual_jets;		/* Number of jets per color, taking into */
+				/* account the head offset */
   int separation;		/* Offset from one jet to the next in rows */
   void *weaveparm;		/* Weave calculation parameter block */
 
