@@ -1039,9 +1039,12 @@ printrc_load(void)
 	  if (strcmp(_("File"), key.name) == 0
 	      && strcmp(plist[0].name, _("File")) == 0)
 	  {
-	    p = &plist[0];
-	    memcpy(p, &key, sizeof(plist_t));
-	    p->active = 1;
+	    if (get_printer_by_driver(key.v.driver))
+	      {
+		p = &plist[0];
+		memcpy(p, &key, sizeof(plist_t));
+		p->active = 1;
+	      }
 	  }
 	  else
 	  {
@@ -1136,9 +1139,12 @@ printrc_load(void)
 	if (strcmp(_("File"), key.name) == 0
 	    && strcmp(plist[0].name, _("File")) == 0)
 	  {
-	    p = &plist[0];
-	    memcpy(p, &key, sizeof(plist_t));
-	    p->active = 1;
+	    if (get_printer_by_driver(key.v.driver))
+	      {
+		p = &plist[0];
+		memcpy(p, &key, sizeof(plist_t));
+		p->active = 1;
+	      }
 	  }
 	else
 	  {
