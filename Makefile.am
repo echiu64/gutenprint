@@ -85,11 +85,6 @@ dist-hook:
 	$(FIND) $(distdir) -name '#*' -print | xargs $(RM) -rf
 	$(FIND) $(distdir) -name '*~' -print | xargs $(RM) -rf
 
-maintainer-clean-local:
-	$(FIND) . -name '.*' -type f -print | xargs $(RM) -f
-	$(FIND) . -name '#*' -type f -print | xargs $(RM) -f
-	$(FIND) . -name '*~' -type f -print | xargs $(RM) -f
-
 install-cups: all
 	cd src/cups ; \
 	$(MAKE) install
