@@ -36,5 +36,16 @@ while ( list( $key, $val ) = each( $GLOBALS['supported_printers']) ) {
 ?>
 </ul>
 
+<p>The following printers are not all officially supported, but they
+have been reported to work with the listed driver.  In some cases,
+they may work incompletely, or they may not actually work at all.</p>
+
+<table>
+<?
+while ( list( $key, $val ) = each( $GLOBALS['all_known_printers']) ) {
+      echo '<tr><td>' . $key . '</td><td>' . $val . '</td></tr>'
+}
+?>
+</table>
 
 <?require('standard_html_footer.php3');?>
