@@ -39,7 +39,7 @@ static char *id="@(#) $Id$";
 FILE *read_fd,*write_fd;
 char read_buffer[1024];
 char data_buffer[MAX_DATA];
-char initial_command[10];
+char initial_command[3];
 int initial_command_index;
 char final_command;
 int numeric_arg;
@@ -47,6 +47,7 @@ int numeric_arg;
 int read_pointer;
 int read_size;
 int eof;
+int combined_command = 0;
 
 /*
  * Data about the image
@@ -85,7 +86,10 @@ typedef struct {
 #define PCL_CMYK 4
 
 #define PCL_COMPRESSION_NONE 0
+#define PCL_COMPRESSION_RUNLENGTH 1
 #define PCL_COMPRESSION_TIFF 2
+#define PCL_COMPRESSION_DELTA 3
+#define PCL_COMPRESSION_CRDR 9		/* Compressed row delta replacement */
 
 /* PCL COMMANDS */
 
@@ -113,17 +117,17 @@ typedef struct {
 #define PCL_DATA_LAST 22
 #define PCL_PRINT_QUALITY 23
 #define PCL_PJL_COMMAND 24
-#define PCL_UNK1 25
-#define PCL_UNK2 26
+#define PCL_GRAY_BALANCE 25
+#define PCL_UNK1 26
 #define PCL_PAGE_ORIENTATION 27
 #define PCL_VERTICAL_CURSOR_POSITIONING_BY_DOTS 28
 #define PCL_HORIZONTAL_CURSOR_POSITIONING_BY_DOTS 29
-#define PCL_UNK3 30
+#define PCL_UNIT_OF_MEASURE 30
 #define PCL_RELATIVE_VERTICAL_PIXEL_MOVEMENT 31
 #define PCL_PALETTE_CONFIGURATION 32
 
 typedef struct{
-    char *initial_command;		/* First part of command */
+    char initial_command[3];		/* First part of command */
     char final_command;			/* Last part of command */
     int has_data;			/* Data follows */
     int command;			/* Command name */
@@ -132,38 +136,50 @@ typedef struct{
 
 commands_t pcl_commands[] =
     {
-        { "E", '\0', 0, PCL_RESET, "PCL RESET" },
-	{ "&l", 'A', 0, PCL_MEDIA_SIZE , "Media Size" },
-	{ "&l", 'L', 0, PCL_PERF_SKIP , "Perf. Skip" },
-	{ "&l", 'E', 0, PCL_TOP_MARGIN , "Top Margin" },
-	{ "&l", 'M', 0, PCL_MEDIA_TYPE , "Media Type" },
-	{ "&l", 'H', 0, PCL_MEDIA_SOURCE, "Media Source" },
-	{ "*o", 'Q', 0, PCL_SHINGLING, "Raster Graphics Shingling" },
-	{ "*r", 'Q', 0, PCL_RASTERGRAPHICS_QUALITY, "Raster Graphics Quality" },
-	{ "*o", 'D', 0, PCL_DEPLETION, "Depletion" },
-	{ "*g", 'W', 1, PCL_CONFIGURE, "Extended Configure" },
-	{ "*t", 'R', 0, PCL_RESOLUTION, "Resolution" },
-	{ "*r", 'U', 0, PCL_COLOURTYPE, "Colour Type" },
-	{ "*b", 'M', 0, PCL_COMPRESSIONTYPE, "Compression Type" },
+/* Two-character sequences ESC <x> */
+	{ "E", '\0', 0, PCL_RESET, "PCL RESET" },
+	{ "%", '\0', 0, PCL_PJL_COMMAND, "PJL Command" },	/* Special! */
+/* Parameterised sequences */
+/* Raster positioning */
 	{ "&a", 'H', 0, PCL_LEFTRASTER_POS, "Left Raster Position" },
 	{ "&a", 'V', 0, PCL_TOPRASTER_POS, "Top Raster Position" },
-	{ "*r", 'S', 0, PCL_RASTER_WIDTH, "Raster Width" },
-	{ "*r", 'T', 0, PCL_RASTER_HEIGHT, "Raster Height" },
-	{ "*r", 'A', 0, PCL_START_RASTER, "Start Raster Graphics" },
-	{ "*rB", '\0', 0, PCL_END_RASTER, "End Raster Graphics"},
-	{ "*rC", '\0', 0, PCL_END_RASTER_NEW, "End Raster Graphics" },
+/* Media */
+	{ "&l", 'A', 0, PCL_MEDIA_SIZE , "Media Size" },
+	{ "&l", 'E', 0, PCL_TOP_MARGIN , "Top Margin" },
+	{ "&l", 'H', 0, PCL_MEDIA_SOURCE, "Media Source" },
+	{ "&l", 'L', 0, PCL_PERF_SKIP , "Perf. Skip" },
+	{ "&l", 'M', 0, PCL_MEDIA_TYPE , "Media Type" },
+	{ "&l", 'O', 0, PCL_PAGE_ORIENTATION, "Page Orientation" },
+/* Units */
+	{ "&u", 'D', 0, PCL_UNIT_OF_MEASURE, "Unit of Measure" },	/* from bpd05446 */
+/* Raster data */
+	{ "*b", 'B', 0, PCL_GRAY_BALANCE, "Gray Balance" },	/* from PCL Developer's Guide 6.0 */
+	{ "*b", 'M', 0, PCL_COMPRESSIONTYPE, "Compression Type" },
 	{ "*b", 'V', 1, PCL_DATA, "Data, intermediate" },
 	{ "*b", 'W', 1, PCL_DATA_LAST, "Data, last" },
-	{ "*o", 'M', 0, PCL_PRINT_QUALITY, "Print Quality" },
-	{ "%", 'X', 0, PCL_PJL_COMMAND, "PJL Command" },	/* Special! */
-	{ "*b", 'B', 0, PCL_UNK1, "Unknown 1" },
-	{ "*o", 'W', 1, PCL_UNK2, "Unknown 2" },
-	{ "&l", 'O', 0, PCL_PAGE_ORIENTATION, "Page Orientation" },
-	{ "*p", 'Y', 0, PCL_VERTICAL_CURSOR_POSITIONING_BY_DOTS, "Vertical Cursor Positioning by Dots" },
-	{ "*p", 'X', 0, PCL_HORIZONTAL_CURSOR_POSITIONING_BY_DOTS, "Horizontal Cursor Positioning by Dots" },
-	{ "&u", 'D', 0, PCL_UNK3, "Unknown 3" },
 	{ "*b", 'Y', 0, PCL_RELATIVE_VERTICAL_PIXEL_MOVEMENT, "Relative Vertical Pixel Movement" },
+/* Palette */
 	{ "*d", 'W', 1, PCL_PALETTE_CONFIGURATION, "Palette Configuration" },
+/* Plane configuration */
+	{ "*g", 'W', 1, PCL_CONFIGURE, "Configure Raster Data" },
+/* Raster Graphics */
+	{ "*o", 'D', 0, PCL_DEPLETION, "Depletion" },
+	{ "*o", 'M', 0, PCL_PRINT_QUALITY, "Print Quality" },
+	{ "*o", 'Q', 0, PCL_SHINGLING, "Raster Graphics Shingling" },
+	{ "*o", 'W', 1, PCL_UNK1, "Unknown 1" },
+/* Cursor Positioning */
+	{ "*p", 'X', 0, PCL_HORIZONTAL_CURSOR_POSITIONING_BY_DOTS, "Horizontal Cursor Positioning by Dots" },
+	{ "*p", 'Y', 0, PCL_VERTICAL_CURSOR_POSITIONING_BY_DOTS, "Vertical Cursor Positioning by Dots" },
+/* Raster graphics */
+	{ "*r", 'A', 0, PCL_START_RASTER, "Start Raster Graphics" },
+	{ "*r", 'B', 0, PCL_END_RASTER, "End Raster Graphics"},
+	{ "*r", 'C', 0, PCL_END_RASTER_NEW, "End Raster Graphics" },
+	{ "*r", 'Q', 0, PCL_RASTERGRAPHICS_QUALITY, "Raster Graphics Quality" },
+	{ "*r", 'S', 0, PCL_RASTER_WIDTH, "Raster Width" },
+	{ "*r", 'T', 0, PCL_RASTER_HEIGHT, "Raster Height" },
+	{ "*r", 'U', 0, PCL_COLOURTYPE, "Colour Type" },
+/* Resolution */
+	{ "*t", 'R', 0, PCL_RESOLUTION, "Resolution" },
    };
 
 /*
@@ -176,7 +192,7 @@ int pcl_find_command() {
     int i;
 
     for (i=0; i < num_commands; i++) {
-        if ((strcmp(initial_command, pcl_commands[i].initial_command) == 0) &&
+	if ((strcmp(initial_command, pcl_commands[i].initial_command) == 0) &&
 	    (final_command == pcl_commands[i].final_command))
 		return(i);
     }
@@ -191,20 +207,20 @@ int pcl_find_command() {
 void fill_buffer() {
 
     if ((read_pointer == -1) || (read_pointer >= read_size)) {
-        read_size = (int) fread(&read_buffer, sizeof(char), 1024, read_fd);
+	read_size = (int) fread(&read_buffer, sizeof(char), 1024, read_fd);
 
 #ifdef DEBUG
-        fprintf(stderr, "Read %d characters\n", read_size);
+	fprintf(stderr, "Read %d characters\n", read_size);
 #endif
 
-        if (read_size == 0) {
+	if (read_size == 0) {
 #ifdef DEBUG
-            fprintf(stderr, "No More to read!\n");
+	    fprintf(stderr, "No More to read!\n");
 #endif
-            eof = 1;
-            return;
-        }
-        read_pointer = 0;
+	    eof = 1;
+	    return;
+	}
+	read_pointer = 0;
     }
 }
 
@@ -217,70 +233,88 @@ void pcl_read_command() {
 
     char c;
     int minus;
-    int skip_prefix;
+    int skipped_chars;
 
 /* 
-   The format of a PCL command is: ESC <x> <y> [n] <z>
-   where x, y and z are characters, and [n] is an optional number.
-   Some commands are followed by data, in this case, [n] is the
-   number of bytes to read.
-   An exception is "ESC E" (reset), also "ESC %-12345X<command>\n"
+   Precis from the PCL Developer's Guide 6.0:-
 
-   The fun is that it is possible to abbreviate commands if the
-   command prefix is the same, e.g. ESC & 26 A 0L is the same as
-   ESC & 26 A ESC 0 L
+   There are two formats for PCL commands; "Two Character" and
+   "Parameterised".
+
+   A "Two Character" command is: ESC <x>, where <x> has a decimal
+   value between 48 and 126 (inclusive).
+
+   A "Parameterised" command is: ESC <x> <y> [n] <z>
+   where x, y and z are characters, and [n] is an optional number.
+   The character <x> has a decimal value between 33 and 47 (incl).
+   The character <y> has a decimal value between 96 and 126 (incl).
+
+   Some commands are followed by data, in this case, [n] is the
+   number of bytes to read, otherwise <n> is a numeric argument.
+   The number <n> can consist of +, - and 0-9 (and .).
+
+   The character <z> is either in the range 64-94 for a termination
+   or 96-126 for a combined command. (The ref guide gives these
+   as "96-126" and "64-96" which cannot be right as 96 appears twice!)
+
+   It is possible to combine parameterised commands if the
+   command prefix is the same, e.g. ESC & l 26 a 0 L is the same as
+   ESC & l 26 A ESC & l 0 L. The key to this is that the terminator for
+   the first command is in the range 96-126 (lower case).
+
+   There is a problem with the "PJL command" (ESC %) as it does not
+   conform to this specification, so we have to check for it specifically!
 */
+
+#define PCL_DIGIT(c) (((unsigned int) c >= 48) && ((unsigned int) c <= 57))
+#define PCL_TWOCHAR(c) (((unsigned int) c >= 48) && ((unsigned int) c <= 126))
+#define PCL_PARAM(c) (((unsigned int) c >= 33) && ((unsigned int) c <= 47))
+#define PCL_PARAM2(c) (((unsigned int) c >= 96) && ((unsigned int) c <= 126))
+#define PCL_COMBINED_TERM(c) (((unsigned int) c >= 96) && ((unsigned int) c <= 126))
+#define PCL_TERM(c) (((unsigned int) c >= 64) && ((unsigned int) c <= 94))
+#define PCL_CONVERT_TERM(c) (c - (char) 32)
 
     numeric_arg=0;
     minus = 0;
     final_command = '\0';
-    skip_prefix = 0;		/* Process normally */
 
     fill_buffer();
     if (eof == 1)
-        return;
+	return;
 
 /* First character must be ESC, otherwise we have gone wrong! */
 
-    c = read_buffer[read_pointer];
-    read_pointer++;
+    c = read_buffer[read_pointer++];
 #ifdef DEBUG
     fprintf(stderr, "Got %c\n", c);
 #endif
-    if(c != (char) 0x1b) {
 
 /*
- * If this is a digit, or minus, and the last command was valid,
- * then assume that this command shares the same prefix. Of
- * course an unknown command followed by data followed by
- * a repeated command will fool us completely!
+ * If we are not in a "combined command", we are looking for ESC
  */
 
-	if ((isdigit(c) || (c == '-')) && (initial_command_index != 0)) {
-#ifdef DEBUG
-	    fprintf(stderr, "Possible start of repeated command.\n");
-#endif
-	    skip_prefix = 1;
-        }
-	else {
-	    fprintf(stderr, "ERROR: No ESC found (out of sync?) searching...\n");
+    if (combined_command == 0) {
+
+	if(c != (char) 0x1b) {
+
+	    fprintf(stderr, "ERROR: No ESC found (out of sync?) searching... ");
+
 /*
  * all we can do is to chew through the file looking for another ESC.
  */
 
+	    skipped_chars = 0;
 	    while (c != (char) 0x1b) {
+		skipped_chars++;
 		fill_buffer();
 		if (eof == 1) {
 		    fprintf(stderr, "ERROR: EOF looking for ESC!\n");
 		    return;
 		}
-		c = read_buffer[read_pointer];
-		read_pointer++;
+		c = read_buffer[read_pointer++];
 	    }
+	    fprintf(stderr, "%d characters skipped.\n", skipped_chars);
 	}
-    }
-
-    if (skip_prefix == 0) {
 
 /*
  * We got an ESC, process normally
@@ -296,20 +330,34 @@ void pcl_read_command() {
 
 /* Get first command letter */
 
-	c = read_buffer[read_pointer];
-	initial_command[initial_command_index] = c;
+	c = read_buffer[read_pointer++];
+	initial_command[initial_command_index++] = c;
 
 #ifdef DEBUG
 	fprintf(stderr, "Got %c\n", c);
 #endif
 
-	read_pointer++;
+/* Check to see if this character forms a "two character" command,
+   or is a PJL command. */
 
-	initial_command_index++;
+	if (PCL_TWOCHAR(c)
+	    || (c == '%')) {
+#ifdef DEBUG
+	    fprintf(stderr, "Two character or PJL command\n");
+#endif
+	    initial_command[initial_command_index] = '\0';
+	    return;
+	}	/* two character check */
 
-/* Now keep going until we find a numeric, or another ESC, or EOF */
+/* Now check for a "parameterised" sequence. */
 
-	while (1) {
+	else if (PCL_PARAM(c)) {
+#ifdef DEBUG
+	    fprintf(stderr, "Parameterised command\n");
+#endif
+
+/* Get the next character in the command */
+
 	    fill_buffer();
 	    if (eof == 1) {
 
@@ -320,66 +368,109 @@ void pcl_read_command() {
 		initial_command[initial_command_index] = '\0';
 		return;
 	    }
-	    c = read_buffer[read_pointer];
-	    if (c == (char) 0x1b) {
-
+	    c = read_buffer[read_pointer++];
 #ifdef DEBUG
-		fprintf(stderr, "Got another ESC!\n");
+	    fprintf(stderr, "Got %c\n", c);
 #endif
 
+/* Check that it is legal and store it */
+
+	    if (PCL_PARAM2(c)) {
+		initial_command[initial_command_index++] = c;
+		initial_command[initial_command_index] = '\0';
+
+/* Get the next character in the command then fall into the numeric part */
+
+		fill_buffer();
+		if (eof == 1) {
+
+#ifdef DEBUG
+		    fprintf(stderr, "EOF in middle of command!\n");
+#endif
+		    eof = 0;		/* Ignore it */
+		    return;
+		}
+		c = read_buffer[read_pointer++];
+#ifdef DEBUG
+		fprintf(stderr, "Got %c\n", c);
+#endif
+
+	    }
+	    else {
+		fprintf(stderr, "ERROR: Illegal second character %c in parameterised command.\n",
+		    c);
 		initial_command[initial_command_index] = '\0';
 		return;
 	    }
-	    if (iscntrl(c) != 0) {
+	}	/* Parameterised check */
 
-#ifdef DEBUG
-		fprintf(stderr, "Got a control char!\n");
-#endif
+/* If we get here, the command is illegal */
 
-		initial_command[initial_command_index] = '\0';
+	else {
+	    fprintf(stderr, "ERROR: Illegal first character %c in command.\n",
+		c);
+	    initial_command[initial_command_index] = '\0';
+	    return;
+	}
+    }						/* End of (combined_command) */
+
+/*
+   We get here if either this is a combined sequence, or we have processed
+   the beginning of a parameterised sequence. There is an optional number
+   next, which may be preceeded by "+" or "-". FIXME We should also handle
+   decimal points.
+*/
+
+    if ((c == '-') || (c == '+') || (PCL_DIGIT(c))) {
+	if (c == '-')
+	    minus = 1;
+	else if (c == '+')
+	    minus = 0;
+	else
+	    numeric_arg = (int) (c - '0');
+
+/* Continue until non-numeric seen */
+
+	while (1) {
+	    fill_buffer();
+	    if (eof == 1) {
+		fprintf(stderr, "ERROR: EOF in middle of command!\n");
 		return;
 	    }
+	    c = read_buffer[read_pointer++];
 
 #ifdef DEBUG
 	    fprintf(stderr, "Got %c\n", c);
 #endif
 
-	    read_pointer++;
-	    if ((isdigit(c)) || (c == '-'))
-		break;
-	    initial_command[initial_command_index] = c;
-	    initial_command_index++;
+	    if (! PCL_DIGIT(c)) {
+		break;		/* End of loop */
+	    }
+	    numeric_arg = (10 * numeric_arg) + (int) (c - '0');
 	}
-
-	initial_command[initial_command_index] = '\0';
     }
 
-    if (c == '-')
-	minus = 1;
-    else
-	numeric_arg = (int) (c - '0');
+/*
+   We fell out of the loop when we read a non-numeric character.
+   Treat this as the terminating character and check for a combined
+   command. We should check that the letter is a valid terminator,
+   but it doesn't matter as we'll just not recognize the command!
+ */
 
-    while (1) {
-        fill_buffer();
-        if (eof == 1) {
-            fprintf(stderr, "ERROR: EOF in middle of command!\n");
-            return;
-        }
-        c = read_buffer[read_pointer];
-
+    combined_command = (PCL_COMBINED_TERM(c) != 0);
+    if (combined_command == 1) {
 #ifdef DEBUG
-        fprintf(stderr, "Got %c\n", c);
+	fprintf(stderr, "Combined command\n");
 #endif
-
-        read_pointer++;
-        if (! isdigit(c)) {
-            final_command = toupper(c);
-	    if (minus == 1)
-		numeric_arg = -numeric_arg;
-            return;
-        }
-        numeric_arg = (10 * numeric_arg) + (int) (c - '0');
+	final_command = PCL_CONVERT_TERM(c);
     }
+    else
+	final_command = c;
+
+    if (minus == 1)
+	numeric_arg = -numeric_arg;
+
+    return;
 }
 
 /*
@@ -694,32 +785,32 @@ int main(int argc, char *argv[]) {
     received_rows = NULL;
 
     if(argc == 1){
-        read_fd = stdin;
-        write_fd = stdout;
+	read_fd = stdin;
+	write_fd = stdout;
     }
     else if(argc == 2){
-        read_fd = fopen(argv[1],"r");
-        write_fd = stdout;
+	read_fd = fopen(argv[1],"r");
+	write_fd = stdout;
     }
     else {
-        if(*argv[1] == '-'){
-            read_fd = stdin;
-            write_fd = fopen(argv[2],"w");
-        }
-        else {
-            read_fd = fopen(argv[1],"r");
-            write_fd = fopen(argv[2],"w");
-        }
+	if(*argv[1] == '-'){
+	    read_fd = stdin;
+	    write_fd = fopen(argv[2],"w");
+	}
+	else {
+	    read_fd = fopen(argv[1],"r");
+	    write_fd = fopen(argv[2],"w");
+	}
     }
 
     if (read_fd == (FILE *)NULL) {
-        fprintf(stderr, "ERROR: Error Opening input file.\n");
-        exit (EXIT_FAILURE);
+	fprintf(stderr, "ERROR: Error Opening input file.\n");
+	exit (EXIT_FAILURE);
     }
 
     if (write_fd == (FILE *)NULL) {
-        fprintf(stderr, "ERROR: Error Opening output file.\n");
-        exit (EXIT_FAILURE);
+	fprintf(stderr, "ERROR: Error Opening output file.\n");
+	exit (EXIT_FAILURE);
     }
 
     read_pointer=-1;
@@ -733,25 +824,25 @@ int main(int argc, char *argv[]) {
     pcl_reset(&image_data);
 
     while (1) {
-        pcl_read_command();
-        if (eof == 1) {
+	pcl_read_command();
+	if (eof == 1) {
 #ifdef DEBUG
-            fprintf(stderr, "EOF while reading command.\n");
+	    fprintf(stderr, "EOF while reading command.\n");
 #endif
-            (void) fclose(read_fd);
-            (void) fclose(write_fd);
-            exit(EXIT_SUCCESS);
-        }
+	    (void) fclose(read_fd);
+	    (void) fclose(write_fd);
+	    exit(EXIT_SUCCESS);
+	}
 
 #ifdef DEBUG
-        fprintf(stderr, "initial_command: %s, numeric_arg: %d, final_command: %c\n",
-            initial_command, numeric_arg, final_command);
+	fprintf(stderr, "initial_command: %s, numeric_arg: %d, final_command: %c\n",
+	    initial_command, numeric_arg, final_command);
 #endif
 
 	command_index = pcl_find_command();
-        if (command_index == -1) {
-            fprintf(stderr, "ERROR: Unknown (and unhandled) command: %s%d%c\n", initial_command,
-                numeric_arg, final_command);
+	if (command_index == -1) {
+	    fprintf(stderr, "ERROR: Unknown (and unhandled) command: %s%d%c\n", initial_command,
+		numeric_arg, final_command);
 /* We may have to skip some data here */
 	}
 	else {
@@ -775,13 +866,12 @@ int main(int argc, char *argv[]) {
 			fprintf(stderr, "ERROR: Unexpected EOF whilst reading data\n");
 			exit(EXIT_FAILURE);
 		    }
-		    data_buffer[i] = read_buffer[read_pointer];
+		    data_buffer[i] = read_buffer[read_pointer++];
 
 #ifdef DEBUG
 		    fprintf(stderr, "%02x ", (unsigned char) data_buffer[i]);
 #endif
 
-		    read_pointer++;
 		}
 
 #ifdef DEBUG
@@ -815,22 +905,22 @@ int main(int argc, char *argv[]) {
 		if ((image_data.black_depth != 0) &&
 		    (image_data.black_depth != 2)) {
 		    fprintf(stderr, "Sorry, only 2 level black dithers handled.\n");
-		    i++;
+/*		    i++; */
 		}
 		if ((image_data.cyan_depth != 0) &&
 		    (image_data.cyan_depth != 2)) {
 		    fprintf(stderr, "Sorry, only 2 level cyan dithers handled.\n");
-		    i++;
+/*		    i++; */
 		}
 		if ((image_data.magenta_depth != 0) &&
 		    (image_data.magenta_depth != 2)) {
 		    fprintf(stderr, "Sorry, only 2 level magenta dithers handled.\n");
-		    i++;
+/*		    i++; */
 		}
 		if ((image_data.yellow_depth != 0) &&
 		    (image_data.yellow_depth != 2)) {
 		    fprintf(stderr, "Sorry, only 2 level yellow dithers handled.\n");
-		    i++;
+/*		    i++; */
 		}
 
 		if ((image_data.compression_type != PCL_COMPRESSION_NONE) &&
@@ -1028,13 +1118,16 @@ int main(int argc, char *argv[]) {
 		    fprintf(stderr, "Premium\n");
 		    break;
 		case 3 :
-		    fprintf(stderr, "Glossy\n");
+		    fprintf(stderr, "Glossy/Photo\n");
 		    break;
 		case 4 :
 		    fprintf(stderr, "Transparency\n");
 		    break;
 		case 5 :
-		    fprintf(stderr, "Photo\n");
+		    fprintf(stderr, "Quick-dry Photo\n");
+		    break;
+		case 6 :
+		    fprintf(stderr, "Quick-dry Transparency\n");
 		    break;
 		default :
 		    fprintf(stderr, "Unknown (%d)\n", numeric_arg);
@@ -1049,7 +1142,7 @@ int main(int argc, char *argv[]) {
 		    fprintf(stderr, "EJECT\n");
 		    break;
 		case 1 :
-		    fprintf(stderr, "Tray 2\n");
+		    fprintf(stderr, "LJ Tray 2 or Portable CSF or DJ Tray\n");
 		    break;
 		case 2 :
 		    fprintf(stderr, "Manual\n");
@@ -1058,13 +1151,16 @@ int main(int argc, char *argv[]) {
 		    fprintf(stderr, "Envelope\n");
 		    break;
 		case 4 :
-		    fprintf(stderr, "Tray 3\n");
+		    fprintf(stderr, "LJ Tray 3 or Desktop CSF or DJ Tray 2\n");
 		    break;
 		case 5 :
-		    fprintf(stderr, "Tray 4\n");
+		    fprintf(stderr, "LJ Tray 4 or DJ optional\n");
+		    break;
+		case 7 :
+		    fprintf(stderr, "DJ Autosource\n");
 		    break;
 		case 8 :
-		    fprintf(stderr, "Tray 1\n");
+		    fprintf(stderr, "LJ Tray 1\n");
 		    break;
 		default :
 		    fprintf(stderr, "Unknown (%d)\n", numeric_arg);
@@ -1155,6 +1251,8 @@ int main(int argc, char *argv[]) {
 	    case PCL_HORIZONTAL_CURSOR_POSITIONING_BY_DOTS :
 	    case PCL_RELATIVE_VERTICAL_PIXEL_MOVEMENT :
 	    case PCL_PALETTE_CONFIGURATION :
+	    case PCL_UNIT_OF_MEASURE :
+	    case PCL_GRAY_BALANCE :
 		fprintf(stderr, "%s: %d (ignored)", pcl_commands[command_index].description, numeric_arg);
 		if (pcl_commands[command_index].has_data == 1) {
 		    fprintf(stderr, " Data: ");
@@ -1198,8 +1296,14 @@ int main(int argc, char *argv[]) {
 		    case PCL_COMPRESSION_NONE :
 			fprintf(stderr, "NONE\n");
 			break;
+		    case PCL_COMPRESSION_RUNLENGTH :
+			fprintf(stderr, "Runlength\n");
+			break;
 		    case PCL_COMPRESSION_TIFF :
 			fprintf(stderr, "TIFF\n");
+			break;
+		    case PCL_COMPRESSION_CRDR :
+			fprintf(stderr, "Compressed Row Delta Replacement\n");
 			break;
 		    default :
 			fprintf(stderr, "Unknown (%d)\n", image_data.compression_type);
@@ -1220,75 +1324,85 @@ int main(int argc, char *argv[]) {
 	    case PCL_CONFIGURE :
 		fprintf(stderr, "%s (size=%d)\n", pcl_commands[command_index].description,
 		    numeric_arg);
+		fprintf(stderr, "\tFormat: %d\n", data_buffer[0]);
+		if (data_buffer[0] == 2) {
 
 /*
  * the data that follows depends on the colour type (buffer[1]). The size
  * of the data should be 2 + (6 * number of planes).
  */
 
-		fprintf(stderr, "\tFormat: %d, Output Planes: ", data_buffer[0]);
-		image_data.colour_type = data_buffer[1]; 	/* # output planes */
-		switch (image_data.colour_type) {
-		    case PCL_MONO :
-			fprintf(stderr, "MONO\n");
+		    fprintf(stderr, "\tOutput Planes: ");
+		    image_data.colour_type = data_buffer[1]; 	/* # output planes */
+		    switch (image_data.colour_type) {
+			case PCL_MONO :
+			    fprintf(stderr, "MONO\n");
 
 /* Size should be 8 */
 
-			if (numeric_arg != 8)
-			    fprintf(stderr, "ERROR: Expected 8 bytes of data, got %d\n", numeric_arg);
+			    if (numeric_arg != 8)
+				fprintf(stderr, "ERROR: Expected 8 bytes of data, got %d\n", numeric_arg);
 
-			fprintf(stderr, "\tBlack: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[2]<<8)+(unsigned char)data_buffer[3],
-			    ((unsigned char) data_buffer[4]<<8)+(unsigned char) data_buffer[5], data_buffer[7]);
-			image_data.black_depth = data_buffer[7];	/* Black levels */
-			image_data.cyan_depth = 0;
-			image_data.magenta_depth = 0;
-			image_data.yellow_depth = 0;
-			break;
-		    case PCL_CMY :
-			fprintf(stderr, "CMY (one cart)\n");
+			    fprintf(stderr, "\tBlack: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[2]<<8)+(unsigned char)data_buffer[3],
+				((unsigned char) data_buffer[4]<<8)+(unsigned char) data_buffer[5], data_buffer[7]);
+			    image_data.black_depth = data_buffer[7];	/* Black levels */
+			    image_data.cyan_depth = 0;
+			    image_data.magenta_depth = 0;
+			    image_data.yellow_depth = 0;
+			    break;
+			case PCL_CMY :
+			    fprintf(stderr, "CMY (one cart)\n");
 
 /* Size should be 20 */
 
-			if (numeric_arg != 20)
-			    fprintf(stderr, "ERROR: Expected 8 bytes of data, got %d\n", numeric_arg);
+			    if (numeric_arg != 20)
+				fprintf(stderr, "ERROR: Expected 20 bytes of data, got %d\n", numeric_arg);
 
-			fprintf(stderr, "\tCyan: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[2]<<8)+(unsigned char) data_buffer[3],
-			    ((unsigned char) data_buffer[4]<<8)+(unsigned char) data_buffer[5], data_buffer[7]);
-			fprintf(stderr, "\tMagenta: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[8]<<8)+(unsigned char) data_buffer[9],
+			    fprintf(stderr, "\tCyan: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[2]<<8)+(unsigned char) data_buffer[3],
+				((unsigned char) data_buffer[4]<<8)+(unsigned char) data_buffer[5], data_buffer[7]);
+			    fprintf(stderr, "\tMagenta: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[8]<<8)+(unsigned char) data_buffer[9],
 			    ((unsigned char) data_buffer[10]<<8)+(unsigned char) data_buffer[11], data_buffer[13]);
-			fprintf(stderr, "\tYellow: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[14]<<8)+(unsigned char) data_buffer[15],
-			    ((unsigned char) data_buffer[16]<<8)+(unsigned char) data_buffer[17], data_buffer[19]);
-			image_data.black_depth = 0;
-			image_data.cyan_depth = data_buffer[7];		/* Cyan levels */
-			image_data.magenta_depth = data_buffer[13];	/* Magenta levels */
-			image_data.yellow_depth = data_buffer[19];	/* Yellow levels */
-			break;
-		    case PCL_CMYK :
-			fprintf(stderr, "CMYK (two cart)\n");
+			    fprintf(stderr, "\tYellow: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[14]<<8)+(unsigned char) data_buffer[15],
+				((unsigned char) data_buffer[16]<<8)+(unsigned char) data_buffer[17], data_buffer[19]);
+			    image_data.black_depth = 0;
+			    image_data.cyan_depth = data_buffer[7];		/* Cyan levels */
+			    image_data.magenta_depth = data_buffer[13];	/* Magenta levels */
+			    image_data.yellow_depth = data_buffer[19];	/* Yellow levels */
+			    break;
+			case PCL_CMYK :
+			    fprintf(stderr, "CMYK (two cart)\n");
 
 /* Size should be 26 */
 
-			if (numeric_arg != 26)
-			    fprintf(stderr, "ERROR: Expected 8 bytes of data, got %d\n", numeric_arg);
+			    if (numeric_arg != 26)
+				fprintf(stderr, "ERROR: Expected 26 bytes of data, got %d\n", numeric_arg);
 
-			fprintf(stderr, "\tBlack: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[2]<<8)+(unsigned char) data_buffer[3],
-			    ((unsigned char) data_buffer[4]<<8)+(unsigned char) data_buffer[5], data_buffer[7]);
-			fprintf(stderr, "\tCyan: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[8]<<8)+(unsigned char) data_buffer[9],
-			    ((unsigned char) data_buffer[10]<<8)+(unsigned char) data_buffer[11], data_buffer[13]);
-			fprintf(stderr, "\tMagenta: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[14]<<8)+(unsigned char) data_buffer[15],
-			    ((unsigned char) data_buffer[16]<<8)+(unsigned char) data_buffer[17], data_buffer[19]);
-			fprintf(stderr, "\tYellow: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[20]<<8)+(unsigned char) data_buffer[21],
-			    ((unsigned char) data_buffer[22]<<8)+(unsigned char) data_buffer[23], data_buffer[25]);
-			image_data.black_depth = data_buffer[7];	/* Black levels */
-			image_data.cyan_depth = data_buffer[13];	/* Cyan levels */
-			image_data.magenta_depth = data_buffer[19];	/* Magenta levels */
-			image_data.yellow_depth = data_buffer[25];	/* Yellow levels */
-			break;
-		    default :
-			fprintf(stderr, "Unknown (%d)\n", data_buffer[1]);
-			break;
+			    fprintf(stderr, "\tBlack: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[2]<<8)+(unsigned char) data_buffer[3],
+				((unsigned char) data_buffer[4]<<8)+(unsigned char) data_buffer[5], data_buffer[7]);
+			    fprintf(stderr, "\tCyan: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[8]<<8)+(unsigned char) data_buffer[9],
+				((unsigned char) data_buffer[10]<<8)+(unsigned char) data_buffer[11], data_buffer[13]);
+			    fprintf(stderr, "\tMagenta: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[14]<<8)+(unsigned char) data_buffer[15],
+				((unsigned char) data_buffer[16]<<8)+(unsigned char) data_buffer[17], data_buffer[19]);
+			    fprintf(stderr, "\tYellow: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[20]<<8)+(unsigned char) data_buffer[21],
+				((unsigned char) data_buffer[22]<<8)+(unsigned char) data_buffer[23], data_buffer[25]);
+			    image_data.black_depth = data_buffer[7];	/* Black levels */
+			    image_data.cyan_depth = data_buffer[13];	/* Cyan levels */
+			    image_data.magenta_depth = data_buffer[19];	/* Magenta levels */
+			    image_data.yellow_depth = data_buffer[25];	/* Yellow levels */
+			    break;
+			default :
+			    fprintf(stderr, "Unknown (%d)\n", data_buffer[1]);
+			    break;
+		    }
 		}
-
+		else {
+		    fprintf(stderr, "Unknown format %d\n", data_buffer[0]);
+		    fprintf(stderr, "Data: ");
+		    for (i=0; i < numeric_arg; i++) {
+			fprintf(stderr, "%02x ", (unsigned char) data_buffer[i]);
+		    }
+		    fprintf(stderr, "\n");
+		}
 		break;
 
 	    case PCL_DATA :
@@ -1358,12 +1472,11 @@ int main(int argc, char *argv[]) {
 		    while (c != '\n') {
 			fill_buffer();
 			if (eof == 1) {
-			    fprintf(stderr, "ERROR: EOF looking for EOL!\n");
+			    fprintf(stderr, "\n");
 			    break;
 			}
-			c = read_buffer[read_pointer];
+			c = read_buffer[read_pointer++];
 			fprintf(stderr, "%c", c);
-			read_pointer++;
 		    }
 		}
 		break;
@@ -1391,8 +1504,6 @@ int main(int argc, char *argv[]) {
 		break;
 
 	    case PCL_UNK1 :
-	    case PCL_UNK2 :
-	    case PCL_UNK3 :
 		fprintf(stderr, "ERROR: Unknown command: %s%d%c", initial_command,
 		    numeric_arg, final_command);
 		if (pcl_commands[command_index].has_data == 1) {
@@ -1416,6 +1527,11 @@ int main(int argc, char *argv[]) {
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.8  2000/04/13 19:10:58  davehill
+ *   Rewrote the "parser".
+ *   Only try to decode Configure Raster Data if format is 2.
+ *   Added descriptions of some extra escape sequences.
+ *
  *   Revision 1.7  2000/03/21 19:10:37  davehill
  *   Use unsigned when calculating resolutions. Updated some commands.
  *
