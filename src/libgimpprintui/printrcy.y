@@ -263,6 +263,7 @@ Parameters: Parameters Parameter | Empty
 Standard_Value:  Destination | Scaling | Orientation | Autosize_Roll_Paper |
 	Unit | Left | Top | Custom_Page_Width | Custom_Page_Height |
 	Output_Type
+;
 
 Standard_Values: Standard_Values Standard_Value | Empty
 ;
@@ -288,6 +289,7 @@ Show_All_Paper_Sizes: SHOW_ALL_PAPER_SIZES tBOOLEAN
 ;
 
 Global: Current_Printer | Show_All_Paper_Sizes
+;
 
 Globals: Globals Global | Empty
 ;
