@@ -115,7 +115,6 @@ dnl *_CFLAGS:   cflags for compiling libraries and example progs
 dnl *_LIBS:     libraries for linking programs. ONLY to be used
 dnl             to generate ${gimpprint_libs}
 dnl *_LIBDEPS:  libraries for linking libraries against
-dnl *_requires: package depdendencies for pkg-config
 dnl *_libdeps:  library dependencies for pkg-config
 dnl *_cflags:   cflags for pkg-config
 dnl *_libs:     libs for pkg-config
@@ -128,8 +127,6 @@ gimpprint_ui_version=${GIMPPRINT_VERSION}
 gimpprintui2_version=${GIMPPRINT_VERSION}
 
 GIMPPRINT_UI_LIBDEPS="${GIMPPRINT_UI_LIBDEPS} \$(GIMPPRINT_LIBS)"
-gimpprint_ui_requires="${gimpprint_ui_requires} gimpprint"
-gimpprintui2_requires="${gimpprint_ui_requires} gimpprint gimpui-2.0"
 
 
 dnl Specify a configuration file.
@@ -236,6 +233,12 @@ STP_ARG_ENABLE([cups-level3-ppds],
                [generate PostScript level 3 PPD files],
                [USE_LEVEL3_PS],
                [(automatic)])
+
+STATIC_GENPPD="$enable_static"
+STP_ARG_ENABLE([static-genppd],
+               [build a statically-linked cups-genppd and rastertogimpprint],
+	       [STATIC_GENPPD],
+	       [(automatic)])
 
 AC_PATH_PROG(FOOMATIC_CONFIGURE, foomatic-configure)
 if test -z "${FOOMATIC_CONFIGURE}" ; then
@@ -349,8 +352,7 @@ fi
 
 AM_PATH_GTK(1.2.0,
   BUILD_LIBGIMPPRINTUI="yes"
-  GIMPPRINT_UI_LIBDEPS="${GIMPPRINT_UI_LIBDEPS} ${GTK_LIBS}"
-  gimpprint_ui_libdeps="${gimpprint_ui_libdeps} ${GTK_LIBS}",
+  GIMPPRINT_UI_LIBDEPS="${GIMPPRINT_UI_LIBDEPS} ${GTK_LIBS}",
   BUILD_LIBGIMPPRINTUI="no")
 
 STP_ARG_WITH([gimp],
@@ -382,8 +384,7 @@ fi
 PKG_CHECK_MODULES([GTK2], [gtk+-2.0],
                   [HAVE_GTK2=yes
                    BUILD_LIBGIMPPRINTUI2=yes
-                   GIMPPRINTUI2_LIBDEPS="${GIMPPRINTUI2_LIBDEPS} ${GTK2_LIBS}"
-                   gimpprintui2_libdeps="${gimpprintui2_libdeps} ${GTK2_LIBS}"],
+                   GIMPPRINTUI2_LIBDEPS="${GIMPPRINTUI2_LIBDEPS} ${GTK2_LIBS}"],
                   [HAVE_GTK2=no
 	           BUILD_LIBGIMPPRINTUI2=no])
 PKG_CHECK_MODULES([GIMP2], [gimpui-2.0], [HAVE_GTK2=yes], [HAVE_GTK2=no])
@@ -802,7 +803,7 @@ else
 fi
 AM_CONDITIONAL(BUILD_MODULES, test x$MODULE = xtrue)
 
-AM_CONDITIONAL(BUILD_GENPPD_STATIC, test x"$enable_static" = xyes)
+AM_CONDITIONAL(BUILD_GENPPD_STATIC, test x"$STATIC_GENPPD" = xyes)
 
 if test "$enable_static" = no -a "$BUILD_CUPS" = yes ; then
   AC_MSG_WARN([--enable-static is disabled, but CUPS is being built.])
@@ -885,20 +886,6 @@ AC_SUBST(PLUG_IN_PATH)
 
 dnl Output files
 
-STP_CONFIG_PKGCONFIG_IN([gimpprint],
-                        [Gimp-Print],
-                        [Gimp-Print Top Quality Printer Drivers],
-                        [src/main])
-STP_CONFIG_PKGCONFIG_IN([gimpprint-ui],
-                        [Gimp-Print-UI (GTK+-1.2 version)],
-                        [Gimp-Print Top Quality Printer Drivers - GTK+-1.2 User Interface],
-			[src/libgimpprintui])
-STP_CONFIG_PKGCONFIG_IN([gimpprintui2],
-                        [Gimp-Print-UI (GTK+-2.0 version)],
-                        [Gimp-Print Top Quality Printer Drivers - GTK+-2.0 User Interface],
-			[src/libgimpprintui])
-
-
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([debian/Makefile])
 AC_CONFIG_FILES([doc/Makefile])
@@ -948,7 +935,7 @@ AC_CONFIG_FILES([src/gimp/Makefile])
 AC_CONFIG_FILES([src/main/Makefile])
 AC_CONFIG_FILES([src/main/gimpprint.pc])
 AC_CONFIG_FILES([src/libgimpprintui/Makefile])
-AC_CONFIG_FILES([src/libgimpprintui/gimpprint-ui.pc])
+AC_CONFIG_FILES([src/libgimpprintui/gimpprintui.pc])
 AC_CONFIG_FILES([src/libgimpprintui/gimpprintui2.pc])
 AC_CONFIG_FILES([cups-gimpprint.list])
 AC_CONFIG_FILES([test/Makefile])
