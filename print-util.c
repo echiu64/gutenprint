@@ -1638,7 +1638,7 @@ const static papersize_t paper_sizes[] =
    * millimetre.  Thus, A0 is 841mm x 1189mm.  Every other A
    * size is obtained by doubling or halving another A size.
    */
-  { "4A",       4768, 6849, PAPERSIZE_METRIC },	/* 1682mm x 2378mm */
+  { "4A",       4768, 6749, PAPERSIZE_METRIC },	/* 1682mm x 2378mm */
   { "2A",       3370, 4768, PAPERSIZE_METRIC },	/* 1189mm x 1682mm */
   { "A0",       2384, 3370, PAPERSIZE_METRIC },	/*  841mm x 1189mm */
   { "A1",       1684, 2384, PAPERSIZE_METRIC },	/*  594mm x  841mm */
@@ -1805,7 +1805,7 @@ get_papersize_by_size(int l, int w)
       else
 	{
 	  int myscore = paper_size_mismatch(l, w, val);
-	  if (myscore < score && myscore < 10)
+	  if (myscore < score && myscore < 20)
 	    {
 	      ref = val;
 	      score = myscore;
