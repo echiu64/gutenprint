@@ -26,14 +26,12 @@ href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 site</a> for quick and easy setup.</p>
 
 </p>
-<H2><font color="#ff0000">Gimp-Print 4.1.9 is
+<H2><font color="#ff0000">Gimp-Print 4.1.99-a2 is
 released!</font></h2>
 
-<P><strong><em><font color="#ff0000">New as of June 8
-2001!</strong></em></font> Gimp-Print 4.1.9, a development release in
-the 4.1 line, is out.  This offers a number of improvements in the
-print plugin, untested (thus far) support for the high-end Epson
-Stylus Pro printers, and much more.</p>
+<P><strong><em><font color="#ff0000">New as of July 26
+2001!</strong></em></font> Gimp-Print 4.1.99-a2, an alpha release in
+the 4.2 line, is out.  This offers many new features and bug fixes.</p>
 
 <H2><font color="#ff0000"><blink>Gimp-Print 4.0.5 is
 released!</blink></font></h2>
