@@ -16,8 +16,10 @@ Print 3.1.3 contains the following improvements over Print 3.1.2:
 1) Completely revamped dithering algorithms.  These algorithms should
    be faster and easier to maintain in addition to better,
    particularly on more advanced printers.  There are additional
-   choices for dithering algorithms: an ordered dither, and a modified
-   Floyd-Steinberg error diffusion.
+   choices for dithering algorithms: an ordered dither, and two kinds
+   of Floyd-Steinberg error diffusion.  There are also adaptive error
+   diffusion algorithms, in which ordered dithering is used in certain
+   circumstances.
 
 2) The user interface has been heavily revamped.  There are currently
    two options, one based on the Gimp native toolkit and one based on
@@ -26,7 +28,8 @@ Print 3.1.3 contains the following improvements over Print 3.1.2:
 
 4) Support for additional Hewlett-Packard printers and media.
 
-3) Bug fixes for Epson printers, the GhostScript driver, 
+3) Bug fixes for Epson printers, the GhostScript driver, and many
+   other things.
 
 
 Print 3.1.2 contains the following improvements over Print 3.1.1:
