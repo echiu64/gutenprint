@@ -46,12 +46,6 @@ Some tips on tuning the output:
   highlights.  Lower gamma values are darker, but with better tonal
   range in the highlights.
 
-* Be very careful with the contrast control.  Adjusting it more than a
-  few points will likely result in very strange behavior, particularly
-  in the highlights.  It's currently implemented as a linear control,
-  which is not really the right thing.  It should define an s-shaped
-  curve.
-
 * Different brands of ink yield different results.  I've found that
   third party inks on Epson printers are generally too cyan.  The
   correction for excessive cyan is to add red (or reduce blue and
