@@ -165,8 +165,7 @@ print_all_testpatterns() {
 	    for c in $StandardColorCorrections ; do
 		for d in $StandardModes ; do
 		    for e in $StandardBitDepths ; do
-			set_message "$a $b $c $d $e
-    "
+			set_message "$a $b $c $d $e"
 			print_one_testpattern "escp2-r800" $d $e $b $c $a "$extra" "$the_message" | $print_command
 			the_message=""
 		    done
@@ -176,8 +175,7 @@ print_all_testpatterns() {
     done
     for a in $StandardColorCorrections ; do
 	for b in $StandardBitDepths ; do
-	    set_message "Color extended 8 CMYKRB $a $b
-    "
+	    set_message "Color extended 8 CMYKRB $a $b"
 	    print_one_testpattern "escp2-r800" "extended 8" $b CMYKRB $a Color "$extra" "$the_message" | $print_command
 	    the_message=""
 	done
