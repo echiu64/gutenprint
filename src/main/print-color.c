@@ -1633,8 +1633,8 @@ static void
 stp_compute_lut(stp_vars_t v, size_t steps)
 {
   stp_curve_t hue = stp_get_curve_parameter(v, "HueMap");
-  stp_curve_t lum = stp_get_curve_parameter(v, "SatMap");
-  stp_curve_t sat = stp_get_curve_parameter(v, "LumMap");
+  stp_curve_t lum = stp_get_curve_parameter(v, "LumMap");
+  stp_curve_t sat = stp_get_curve_parameter(v, "SatMap");
   stp_curve_t composite_curve = stp_get_curve_parameter(v, "CompositeCurve");
   stp_curve_t cyan_curve = stp_get_curve_parameter(v, "CyanCurve");
   stp_curve_t magenta_curve = stp_get_curve_parameter(v, "MagentaCurve");
