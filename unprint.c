@@ -1210,7 +1210,7 @@ int main(int argc,char *argv[]){
     fprintf(stderr,"Done reading.\n");
     write_output(fp_w);
     fclose(fp_w);
-    fprintf(stderr,"Segmentation integrity.  (core contained)\n");
+    fprintf(stderr,"Image dump complete.\n");
 
     return(0);
 }
