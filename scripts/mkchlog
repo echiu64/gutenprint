@@ -123,9 +123,8 @@ while (<>) {
     } elsif (/^date: /) {
 	($ignore, $date, $time, $ignore, $author, $ignore, $ignore,
 	 $ignore, $plus, $minus, $ignore) = split;
-	$time =~ s/:[0-9][0-9];$//;
+	$time =~ s/[0-9]:[0-9][0-9];$//;
 	$author =~ s/;$//;
-	$datetimeauthor = "$date $time $author";
 	$body = "";
 	$firstline = 1;
 	while (<>) {
@@ -140,6 +139,7 @@ while (<>) {
 		$firstline = 0;
 	    }
 	}
+	$datetimeauthor = "$date $time $author $body";
 	if ($skipme == 0) {
 	    if ($logmsgs{$datetimeauthor}) {
 		$stuff = $logmsgs{$datetimeauthor};
@@ -154,7 +154,7 @@ while (<>) {
 
 @chlog = reverse sort keys %logmsgs;
 foreach $_ (@chlog) {
-    ($date, $time, $author) = split;
+    ($date, $time, $author, $junk) = split;
     $date =~ s,/,-,g;
     $msg = $logmsgs{$_};
     print "$date\t<$author\@sourceforge.net>\n\n";
