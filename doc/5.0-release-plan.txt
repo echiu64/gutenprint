@@ -1,0 +1,942 @@
+		RELEASE PROSPECTUS FOR GIMP-PRINT 5.0
+
+Robert Krawitz
+June 7, 2003
+
+*DRAFT*
+
+
+This memo contains my recommendations for the release of the next
+major release of Gimp-Print.  I recommend numbering it 5.0 rather than
+4.4.  It has substantial architectural changes from 4.0 and is vastly
+more capable.  Many key subsystems have been completely overhauled.
+
+Architectural changes include:
+------------- ------- -------
+
+  1) A modular architecture for family drivers.  A "family driver" is
+     a collection of printer drivers for one group of printers sharing
+     a common programming architecture, e. g. ESC/P2, PCL, Lexmark,
+     Canon.
+
+  2) A modular architecture for color processing.  This architecture
+     will enable us, or others, to provide color management without
+     having to change the internal interfaces within Gimp-Print.
+
+  3) New composite data types.  Gimp-Print 5.0 defines additional data
+     types.  These types include:
+
+     * Sequences, curves, and arrays.  A sequence is a primitive
+       vector of numbers data type; curves and arrays provide
+       additional capabilities such as interpolation (for curves) and
+       multiple dimensions (for arrays).
+
+     * Lists are a general ordered container of named objects of
+       arbitrary type.  They are used throughout the core library, but
+       are not presently exported as such, although derived types
+       are.  The creator of a list can specify constructor,
+       destructor, name comparison, copy, and sort operations on list
+       members.
+
+     * Parameters, which are part of the options system described
+       below.  In addition to storing values and descriptions of the
+       parameter, parameters can be queried to determine defaults and
+       constraints.  Parameter lists (which use the list container
+       internally) are also defined as part of this.
+
+     * String lists are used in various ways; in particular, they are
+       used by the parameter system to inform programs of the
+       available choices of values for string-valued parameters.
+
+  4) Complete overhaul of the options system.  Rather than offering a
+     fixed set of operations, family drivers, color modules, etc. can
+     now offer a wide variety of options using a predefined set of
+     data types.  The data types currently supported are strings
+     picked from a list, floating point numbers, integers, curves,
+     arrays, Boolean values, and filenames.
+
+     The new options system provides a flexible way for drivers to
+     inform applications of default values and UI hints, the ability
+     to selectively enable and disable options, and a generalized way
+     of verifying legality of option choices.
+
+  5) The coordinate system has been changed from bottom left to top
+     left of the page, and the printable area can now extend beyond
+     the edge of the page.  The result is a more intuitive coordinate
+     system for driver writers that matches the coordinate system of
+     printers, and the ability to do true full bleed.
+
+  6) Complete overhaul of the black generation in CMYK output.  Black
+     generation is now performed in the color code rather than the
+     dither code.  This simplifies the dither code, puts the CMYK
+     generation where it should be, and improves overall flexibility.
+
+  7) Complete overhaul of the multi-tone (photo or quadtone) ink
+     processing architecture (channels).  Instead of being processed
+     as part of the dithering code as in 4.2, where ink drops of
+     lighter inks were assigned virtual values proportional to their
+     darkness as well as their size, this is now processed after the
+     initial color conversion.  This has a number of major advantages:
+
+     * As the actual amount of ink to be printed is visible to the
+       color code, the color code can do ink limiting without fear
+       that the dither code will change the amount of ink to be
+       printed.
+
+     * It ensures that the same proportions of inks will be printed at
+       any density and resolution.  In 4.2, the ramp from light to
+       dark ink varied depending upon the dot sizes available and
+       hence the resolution.  This has already been demonstrated to
+       yield much better linearity and much more neutral gray scale
+       with even very modest tuning effort.
+
+     * It enables use of all drop sizes of all ink tones.  In 4.2, we
+       could not use the smallest drop size of dark ink, because the
+       virtual dot size of a small dot of dark ink is typically close
+       to the virtual dot size of a large dot of small ink.  This
+       would yield very sharp transition, and perhaps even result in
+       more light ink printed in darker regions than in lighter
+       regions.  With channel processing separate from dithering, this
+       concern no longer exists; we can safely use small drops of dark
+       ink, improving smoothness.
+
+     * It enables the color code to do ink limiting intelligently
+       without concern that the dither code will rearrange things
+       behind its back.
+
+     * It greatly simplifies the specification of inks.  With drop
+       size and darkness orthogonal, family drivers can greatly
+       simplify their tables of inks.
+
+     * Dither algorithms can choose to ignore smaller drop sizes if
+       they wish to offer fast operation.
+
+     * Applications with special requirements can now access the raw
+       ink channels directly.  This facility was used to create a
+       mechanism to more accurately tune printer inks.
+
+  8) Use of true XML to store data about printers and paper sizes, and
+     to represent new data types (sequences, curves, and arrrays).
+     This currently uses libxml2; we may instead opt to use a lighter
+     weight XML parser written by Mike Sweet.  Currently, the use of
+     XML (as opposed to compiled-in data) is limited, but we expect
+     that this will change beyond the initial 5.0 release.
+
+  9) In addition to parameters, internal components such as family
+     drivers, color drivers, etc. can store arbitrary data in the
+     basic stp_vars_t object.  This facility is used to simplify the
+     internal driver API; the family driver no longer needs to keep
+     track of dither, color, etc. information itself.
+
+  10) The Epson Stylus family driver has been decomposed into more
+     functionally distinct units.  The data schema has been
+     considerably improved, and the code itself broken into more
+     easily maintained units.
+
+  11) The build system has been updated with a more contemporary
+     toolchain based on autoconf 2.5 and gettext 0.11.
+
+  12) The Print plugin for the GIMP has been decomposed into a UI
+     library and the core plugin.  The user interface library is a
+     pure GTK1-based library; the tiny GIMP plugin is a client of this
+     library.
+
+
+Internal quality improvements include:
+-------- ------- ------------ -------
+
+  1) Improved test suite with improved coverage.
+
+  2) The library has been audited for const-correctness.
+
+  3) Valgrind has been used to fix memory leaks and other memory usage
+     problems.
+
+
+Major user-visible changes include:
+----- ------------ ------- -------
+
+  1) Significantly improved output quality from the Epson driver
+     (which has been fully converted to using the new architecture).
+     The new channel architecture directly contributed to this
+     improvement.
+
+  2) Many more user-accessible options, with some grouping of these
+     options (much more work remains to be done).
+
+  3) Simplification of the resolution settings for the Epson driver.
+     Redundant resolution choices have been eliminated, and
+     unidirectional vs. bidirectional has been eliminated.
+
+  4) The old monochrome dithering option (which did a hard threshold
+     dithering on the black channel) has been replaced by a
+     generalized thresholding color driver.  Due to other
+     improvements, this is as fast as the monochrome option was in
+     4.2.
+
+  5) The monolithic (stp) Ghostscript driver has been removed.  The
+     only supported Ghostscript driver in Gimp-Print 5.0 is an
+     IJS-based one.
+
+  6) The Print plugin for the GIMP uses a new printrc format (v2) that
+     permits full use of the new options system.  It can read the v1
+     format.
+
+
+Proposed release criteria:
+-------- ------- --------
+
+    * Changes that would be incompatible with the initial release on the
+      new line (4.4.0 or 5.0.0) that must be done within 12-24 months of
+      release in order to be a viable solution are mandatory for this
+      release.
+
+      "Incompatible" to me means that applications dynamically linked
+      against the baseline libgimpprint would not function correctly in
+      the presence of a newer library on the same branch.  It also means
+      things that will work fundamentally differently for the user.  This
+      is intentionally vague; one person's fundamental difference is
+      another's minor change.  For example, a change in output such that
+      profiles generated for one release don't work well with the next
+      release may or may not be fundamental.
+
+      Note that it may not be necessary that a change be made in its
+      entirety here.  If we can add a hook to enable us to add the
+      capability after initial release, that may suffice.  For example, if
+      we determine that ICC profiling will be necessary 6 months after
+      initial release, it may be sufficient to have the hooks needed to
+      add this in later.  In this case, the hooks may be mandatory for
+      initial release even if ICC profiling isn't.  This is purely an
+      example; it's not taking a position on ICC profiling per se.
+
+    * Significant quality or functionality regressions from 4.2.  This
+      again is not cut and dried.  We may find, for example, that overall
+      quality is greatly improved over 4.2, but there are a few corner
+      cases with minor degradations.  This is a judgment call.
+
+    * Major performance/memory consumption regressions from 4.2.  I would
+      take a very hard line against these being mandatory in most cases; a
+      moderate performance loss in the highest quality settings might not
+      be an issue, especially if there are other settings yielding good
+      quality that are close in performance.  The average computer will be
+      considerably faster by the end of this year than it was in late
+      2001.  To my mind, the regression has to be bad enough to really
+      constitute a functional regression.
+
+    * Changes whose absence would make the release fundamentally not
+      useful for important classes of use.  This is a real can of worms,
+      because just about everyone will consider their own use to be
+      "important", and with good justification.  There will be some very
+      hard choices to make here.
+
+
+Recommended new feature list:
+----------- --- ------- ----
+
+This does not include printer tuning, regression testing, and bug
+fixing.
+
+Definitions of these priorities:
+
+MANDATORY: an unresolved mandatory item will result in a release that
+  is not usable by a broad segment of the user base.  While a
+  MANDATORY feature is typically not an outright bug, the effect is
+  that end users will experience a major loss of functionality
+  compared with 4.2.
+
+CRITICAL: functionality that is required for a high quality release.
+  Critical functionality items are items that will be expected by a
+  broad class of users, and which may be difficult to fix after
+  initial 5.0 release, but which will not render the software
+  unusable.
+
+IMPORTANT: functionality that is expected by a broad class of users,
+  or which will significantly improve our ability to maintain and
+  develop Gimp-Print, but which can be resolved after initial release
+  compatibly.  In many cases, the distinction between IMPORTANT and
+  CRITICAL hinges on the ability to change or add the functionality
+  after initial release, without requiring incompatible API changes.
+
+
+    * Mandatory:
+
+X     + Elimination of libxml2 dependency.  OS X and at least some
+        commercial UNIX variants do not bundle this with the OS, so
+        this is a stopper.
+
+	Needed for ALPHA.
+
+      + GUI reorganization.  The Print plugin is almost unusable right
+        now due to the bewildering complexity of the interface.
+
+	Needed for BETA, possibly during ALPHA.
+
+X     * Update of the Foomatic data to the new data scheme.  The
+        Foomatic data generation currently uses modified 4.2
+        technology.
+
+	Needed during ALPHA.
+
+
+    * Critical:
+
+X     + Exposure of printer characteristics to the application level.
+        This would allow printers to specify read-only parameters,
+        such as the ordering of page output.  This would permit the
+        PPD files to store the correct page order so that CUPS or
+        Foomatic could give Ghostscript the correct options.
+
+	Needed for BETA.
+
+      + Piecewise linear curves.  This is a more economical storage
+        format for typical cases, and is much more useful for cubic
+        spline interpolation than a dense curve is.
+
+	Needed during ALPHA.
+
+X     + Investigation of printing to non-rectangular pages
+        (e. g. direct printing to CD's).  This is seen as an important
+        end-user capability.
+
+	Investigation needed during ALPHA.  Changes, if any, may be
+	doable in BETA.
+
+X     + Change stp_parameter_class_t to a string instead of an enum,
+        and subclass the parameter type (e. g. output->color
+        controls).
+
+	Needed by early ALPHA.
+
+X     + A single quality parameter that provides a bundle of settings
+        appropriate for what's being printed.
+
+	This change would be highly desirable from an ease of use
+	perspective (which is a long-standing weak point for
+	Gimp-print).
+
+	This would likely require specification of the media type
+	(which must be set to whatever the user loads into the
+	printer; it is an independent parameter) and output intent in
+	addition to quality.
+
+	For example, given the selection of paper type (if required)
+        and image intent, appropriate choices of resolution, ink type,
+        image optimization, dithering, etc. would be made.
+
+	Needed for BETA.
+
+X     + Ink limiting.  The ability to limit the amount of ink
+        deposited on the paper is important to ensuring good quality
+        with dark tones without oversaturating the paper.  Many glossy
+        papers in particular require that the amount of ink be
+        carefully limited to avoid pooling.  The ink limiting needs to
+        be done intelligently.
+
+	This is marginal critical functionality.  It can be done after
+	release, but not providing (and, where necessary,
+	implementing) ink limiting may yield poor quality results.
+	Changing the ink limiting after initial release could affect
+	profiles generated against the initial release.
+
+	Needed during ALPHA.
+
+X     + Support for 8 bit linearized, and 16 bit linearized and
+	non-linearized, color inputs, in at least grayscale, RGB, CMY,
+	CMYK, and printer-specific.
+
+	This is marginally critical; it's critical mainly because we
+	may have to make incompatible API changes after release to
+	resolve this.  Currently we offer 8-bit linearized RGB and
+	grayscale, 8-bit partially linearized CMYK, and 16-bit
+	non-linearized CMYK and printer-specific.  These appear to be
+	the most critical right now.  Of the options we don't offer,
+	8-bit fully linearized CMYK is likely the most important,
+	followed by 16-bit linearized CMYK, 16-bit linearized RGB,
+	16-bit non-linearized RGB, and 16-bit linearized
+	printer-specific.
+
+	Needed during ALPHA.
+
+
+    * Important:
+
+      + XML profiles.
+
+	Needed early in ALPHA if we are to do it at all.
+
+      + Header file reorganization.  The purpose of this project is to
+        create a supported internal API for modules.
+
+	Needed by early ALPHA, as change is pervasive.
+
+      + Color management.  This is of strategic importance, but is not
+        a release stopper as it can be added modularly after release.
+        However, it's a quality perception issue.
+
+	Desirable for BETA.
+
+      + Investigation of a native OS X printer application layered on
+        Gimp-print.
+
+	No specific timeframe; the earlier the better.
+
+      + Drop size matching tool, in support of general quality
+        tuning.  This tool isn't interesting in and of itself, but
+        it's a useful developer tool.
+
+	Needed by early ALPHA.  This change is likely to be risky, as
+	it would require the ability to change the dither object on
+	the fly.	
+
+      + Investigation of OS X requirements for mtink (or similar)
+        distribution.
+
+	Needed during ALPHA, to allow preparation time.
+
+      + Update family drivers other than Epson driver to be
+        data-driven.
+
+	If this is to be done, it should be done by BETA.
+
+
+Proposed release schedule:
+-------- ------- --------
+
+Alpha freeze (slush)		July 15
+Alpha 1				July 25
+Alpha 2				August 8
+Alpha 3				August 22
+Beta freeze			September 5
+Beta 1				September 12
+Beta 2				October 3
+Beta 3				October 24
+Release freeze			November 7
+RC1				Movember 14
+RC2 (if needed)			November 21
+Release				November 28
+
+
+Proposed phase criteria:
+-------- ----- --------
+
+Alpha entry:
+
+    Alpha software should be usable by early adopters who would like
+    to pick up significant enhancements over 4.2, but who want to be
+    able to get useful work done.  There may be significant
+    workarounds required, but nothing too arcane.
+
+    All architectural changes must be substantially complete.  If
+    there is significant missing critical functionality, we need to
+    decide whether to adjust the schedule or defer the functionality.
+
+    There is no restriction on performance or quality tuning or point
+    quality improvement.
+
+    There is no restriction on user interface changes.
+
+    There is no restriction on component changes.
+
+    After alpha entry, any changes to public header files (header
+    files intended for applications to use) must be discussed in
+    advance on the mailing list.  Major changes to internal header
+    header files not specific to individual components should likewise
+    be discussed.
+
+    OS X builds and packages should start at this point.
+
+Alpha exit and Beta freeze:
+
+    All tests pass.
+
+    No memory leaks or other errors from valgrind (exact cases TBD).
+
+    Agreement by core development team is required to declare alpha
+    exit.
+
+Beta 1 entry:
+
+    Beta software should be usable by mainstream early adopters who
+    want to be able to get useful work done with a minimum of
+    surprises.  There may be some workarounds required.  Translation
+    and documentation need not be complete.
+
+    All architectural changes must be complete.  If there is missing
+    critical functionality, we again need to decide whether to adjust
+    the schedule or defer the functionality.  Deferring functionality
+    requires demonstration that it constitutes a showstopper.
+
+    There should be no changes to public header files after this
+    point.  Any changes to internal non-component header files should
+    be discussed on the list.
+
+    There is no restriction on point quality improvements or tuning.
+    Pervasive quality tuning (e. g. significant changes to how the
+    color or dither code changes) should be discussed and approved by
+    the core developers prior to being checked in.
+
+    Documentation should start at this point.
+
+Beta 2 entry:
+
+    End users should require an absolute minimum of workarounds at
+    this point.  There may be point bugs in specific cases; there
+    should not be any regressions from 4.2.
+
+    There should be no string changes at this point.  This build
+    should contain the frozen .po file for translation.
+
+    There should be at most only minimal changes to internal header
+    files at this point, and the development team must carefully
+    weigh the benefits against the risks.
+
+    There may be some point quality improvements at this point, but
+    they should be evaluated carefully.
+
+    Package release notes (delta from 4.2) should be started.
+
+Beta 3 entry:
+
+    End users should be able to use this software with good
+    confidence.  There should be very few bugs left at this stage.
+
+    There should be no changes to internal header files at this point.
+
+    Quality tuning should be complete.
+
+RC1 entry:
+
+    The software should be complete except possibly for final
+    translations and documentation, but those should be close to
+    complete.
+
+    Release notes (delta from 4.2) should be available at this point.
+
+    Only true showstopper bugs should be fixed at this point.  All
+    commits should be approved by the development team.
+
+RC2 entry:
+
+    There should not be an RC2.  If this is needed, it should be for
+    minor documentation changes and final translations only.
+
+Release:
+
+    The entire package should be complete, and all agreed-upon bugs
+    fixed.    
+
+
+This schedule and phase criteria is based on the 4.0 and 4.2 release
+cycles, as described below.  This schedule is heavily weighted by the
+4.2 release, which I believe went extremely well and which I would
+like to use as a model.
+
+    4.0:
+	    Alpha   - 08/09/2000 (3 releases)
+	    Beta    - 09/22/2000 (3 beta + 1 RC)
+	    Release - 10/28/2000 (4 releases)
+	    4.0.4   - 11/27/2000 (this was the first really stable release)
+
+	    So we effectively had a 6 week alpha and 9 week beta, since
+	    the first month of our "stable" release cycle really wasn't.
+	    We had 3 alpha and 8 beta releases.
+
+    4.2:
+	    Alpha   - 07/14/2001 (3 releases)
+	    Beta    - 09/07/2001 (4 releases + 1 RC)
+	    Release - 11/23/2001 (first release was solid)
+
+	    This was 8 weeks of alpha and 11 weeks of beta
+
+    We've generally made significant changes (but not major rework) in
+    alpha, but we've been fairly strict about locking down beta.  In my
+    view, alpha should be stable enough that fairly adventurous users are
+    willing to use it for production, and beta should be such that
+    mainstream early adopters would be comfortable if they can back out if
+    need be.  I personally favor a longer beta cycle with perhaps the last
+    few betas being release candidates.  Compressing beta merely means
+    that there will be more releases early in the cycle as we catch up on
+    issues.
+
+    The trend would suggest about 2 months of alpha and 3 months of beta.
+    So to release in early December we'd need to go alpha in early July
+    and beta in early September, with releases every 3 weeks or so.  This
+    doesn't give us a lot of time.  It suggests that we need to be
+    finishing up any sweeping rearchitecture work quickly, and smaller
+    rearchitecture projects need to complete in the next month or two.
+
+    We should go back and review the release notes from 4.1 and 4.2 alpha
+    and beta releases to determine where we are quality-wise compared to
+    similar points in the last release cycle.  If our quality is better
+    than it was at similar points, I'd rather use the time to try to
+    release early or do more testing rather than cram more features in.
+    If it looks worse, we need to re-evaluate the schedule or redirect
+    effort rather than release with subpar quality.
+
+
+Potential remaining changes in 5.0 need to be carefully evaluated:
+--------- --------- ------- -- --- ---- -- -- --------- ---------
+
+This is the complete list of potential tasks.
+
+    * Internal architecture:
+
+      + Push-based input model (application pushes data into driver rather
+	than driver asking for data)
+
+	This does not appear to me to be mandatory for this release,
+	although changing it later would be incompatible.  The primary
+	motivation for this that I see is to enable multi-threaded
+	performance improvements.  This is moderate risk,
+	moderate-high effort, currently low return.
+
+      + Giving the image layer access to the driver data (by passing the
+	stp_vars_t to it along with the buffer information)
+
+	This is low effort and low risk to implement.  However, it
+	poses quality risks, as image layers could easily violate
+	implied rules by mutating data.  Unclear what return.
+
+      + Allowing options to be changed part way through the page.
+
+	This is high effort (from a quality assurance), high risk, low
+	return as a general capability.  The main purpose of this
+	would be to assist testing and tuning activities.  It could
+	perhaps be done as a back door.
+
+      + Header file reorganization, to expose internal API's intended for
+	developers to write modules against.
+
+	This is moderate effort, moderate risk, moderate return..  The
+	risk involved is in regards doing it well, so that we don't
+	have to do it again later (which would be disruptive).
+
+      + Source file reorganization, to put module sources into separate
+	directories from the main source.
+
+	I think this would be desirable, even though it would break
+	the version history.  Whether it needs to be done in the 5.0
+	timeframe, though, is another matter.
+
+	This is moderate effort, high risk, low short-term but
+	moderate long-term return.  It would lose a lot of version
+	history, making it a lot harder for us to analyze regressions.
+
+      + Project reorganization, to put the applications into separate
+	release packages.
+
+	This would probably just make life more difficult for users.
+	I don't recommend it.
+
+      + XML profiles (independent of color management -- this would allow
+	tuning drop sizes, 6-color and third-party inksets, and saving the
+	Gimp-print settings away).
+
+	This change would be highly desirable indeed.  It would enable
+	us to make changes in the future by just distributing new
+	data.  It could also be used to allow users to save bundles of
+	settings, so this may be multiple projects.
+
+	High effort, moderate-high risk, high return.  The benefits
+	would be great.
+
+      + Array-typed parameters.  This would enable e. g. specifying the
+	ink densities for quadtones as members of an array, rather than
+	having to statically name them.
+
+	This might not be too easy to do compatibly, but whether there
+	are any really critical use cases is another matter.
+
+	Moderate-high effort, moderate risk, likely moderate return.
+
+      + Exposure of more internal printer parameters (such as ink
+	description, which way pages are printed, etc.) to the application
+	level.
+
+	This would be highly desirable, if for no other reason than to
+	tell genppd what the correct ordering is for pages.  
+
+	Low-moderate effort (mostly in design), low-moderate risk,
+	high return.  The primary risk factor is ensuring that this
+	information is correct and is used correctly.
+
+    * Color:
+
+      + Fully pipelined color architecture, including ability to chain
+	together color modules
+
+	The most obvious use for this would be to generalize the
+	channel code, by making the CMYK and photo/quadtone
+	conversions simply be color modules.  Beyond that, it's not
+	clear what the use case would be.
+
+	High effort, high risk, low short-term return.  This would
+	need significant effort to ensure that no corner cases are
+	missed.
+
+      + Color management (Argyll or LCMS would appear to be the leading
+	contenders, but we need to evaluate them and possibly others).  This
+	feature is specifically for color management, distinct from internal
+	capabilities that permit color management.
+
+	This is strategically important, but not clearly a release
+	stopper.  We need to understand CUPS and OS X plans.
+
+	High-very high effort, moderate risk, likely very high return.
+	Argyll has a very obscure build procedure that is not ready
+	for production use; LCMS is unknown.  Primary risk is in
+	testing and quality control, although third-party exposure is
+	in there, too.
+
+      + Support for arbitrary (or at least 1, 8, and 16 bit) color inputs,
+	both linearized and non-linearized, in at least grayscale, RGB, CMY,
+	CMYK, and printer-specific.
+
+	We need a use case for 8-bit pre-linearized inputs (which
+	would seem to be useless from a quality perspective) and
+	16-bit non-linearized inputs (which looks more likely).
+
+	Moderate-high effort, moderate risk, likely moderate return..
+	Large testing effort.
+
+      + Support for other input color spaces (e. g. CMYKOG, spot color
+	channels).  An option would be to implement this kind of
+	capability in the color interface, but not implement these
+	specialized inputs.
+
+	I don't believe this is necessary at this time.  If it becomes
+	necessary, it could be done via the raw interface.
+
+	Very high effort, high risk, likely low return at present.
+	Would require at a minimum header file change (which may or
+	may not be compatible).
+
+    * Screening:
+
+      + Loadable dither modules
+
+	I don't believe this to be critical, but we may need more
+	research.  If somebody wants to implement e. g. pseudo-offset
+	screening, this would be needed.
+
+	Moderate effort, low risk, low return..
+
+      + Support for dithering other than 16-bit values (1, 4, 8, and
+	floating point are the most obvious candidates).  This is a
+	performance issue more than anything else.  Again, an option would
+	be to implement this kind of interface, but not necessarily
+	implement instances of it.
+
+	We need to understand the performance profile.
+
+	Moderate effort, moderate risk (primary issue is enumerating
+	all the cases), low-moderate return.
+
+      + Improvements to adaptive hybrid, which is somewhat broken right
+	now (arguably a fix)
+
+	We need to compare a variety of use cases with 4.2 to
+	determine if there is any regression.
+
+	Moderate-high effort, moderate-high risk, unknown return.
+	Main issue is testing.
+
+      + Further improvements and cleanup to Even Tone.
+
+	This is just a quality improvement.
+
+	Moderate effort, moderate risk (primarily regression risk),
+	potentially moderate return.
+
+      + Support for Even Better Screening (a newer screening algorithm
+	Raph Levien came up with)
+
+	???
+
+	Likely to be high effort, low risk, completely unknown return.
+
+      + Splitting out initialization for the dither algorithms, to reduce
+	the work for algorithms that don't need certain facilities (such
+	as the pick matrix, or any dither matrix at all).
+
+	This would be nice to do, but it could be done later and it's
+	not going to affect the user experience.
+
+	Moderate effort, moderate risk, low short-term but high
+	long-term return.
+
+    * Family drivers:
+
+      + Conversion of the family driver data to XML formats (rather than
+	being compiled in)
+
+	Highly desirable, but can probably be done later without any
+	compatibility issues.
+
+	High-very high effort, high risk (ensuring that the data is
+	re-created correctly in new format), in intermediate-long term
+	high return.
+
+      + Update of the family drivers other than the Epson driver.
+
+	This really needs to be done, but would it stop a release,
+	since it's not a regression?
+
+	Moderate-high effort, moderate risk, very high return.
+
+      + Removal of the Postscript family driver (possibly putting it in
+	libgimpprintui, so that the GIMP plugin would have access to it).
+
+	The Postscript driver is really a fairly ugly hack
+	specifically for the GIMP plugin.  This would be a really good
+	test of the module system.
+
+	Moderate effort, moderate risk, low return.
+
+      + Completion of the Olympus driver (to handle image sizes that don't
+	match the page size)
+
+	This is really a bug fix.  Unknown effort and risk, high
+	return (in terms of quality).
+
+      + Enhancements to the raw driver
+
+	No obvious use case.  This project is too ill-defined to
+	evaluate risk, effort, and return.
+
+      + TIFF driver
+
+	No obvious use case.  Effort likely moderate-high, risk low,
+	return unclear.
+
+      + Other family drivers
+
+	Anybody want to write any?
+
+    * Support infrastructure:
+
+      + Support for non-rectangular paper sizes (e. g. for CD's)
+
+	We need to understand what this means.  Is this something we
+	could simply trust the application to do?
+
+	Project needs to be defined better, but potentially high
+	benefit.
+
+      + Piecewise linear curves
+
+	This would be highly desirable to simplify things.  It would
+	be a much better format for PPD files.
+
+	Effort moderate, risk moderate-high, benefit moderate-high.
+
+      + Constant or logarithmic list search time
+
+	No clear use case.
+
+	Effort moderate, risk moderate, benefit presently low.
+
+    * User interface:
+
+      + GUI reorganization, particularly for the output controls
+
+	This needs to be done for the Print plugin to be usable.
+
+	Effort high, risk moderate, benefit very high.
+
+      + Qt/KDE GUI
+
+	No clear driver.
+
+	Effort high, risk moderate (mostly quality and schedule),
+	benefit unknown.
+
+      + Native OS X GUI/printer application
+
+	This needs investigation.  A lot of the problems with 4.2
+	really turn out to be OS X/CUPS interactions.
+
+	Effort and risk likely high-very high; benefit potentially
+	very high.  Need more info on CUPS/OS X futures.
+
+      + GTK2+ GUI for newer versions of the GIMP
+
+	Does not need to be synchronized with 5.0 release.
+
+	Effort and risk likely moderate-high; benefit low in the short
+	term but very high in the long term.
+
+      + Change stp_parameter_class_t to a string instead of an enum
+      + Add subclasses to stp_parameters to hint user interfaces
+
+	These two changes would be highly desirable, and can't be done
+	compatibly.  This should be done at the latest in early alpha.
+
+	Effort moderate, risk moderate (architectural), benefit likely
+	high.
+
+      + Support a new "quality" parameter that provides a bundle of
+        settings appropriate for whatever else is being printed.
+
+	Effort low-moderate, risk moderate (mostly quality-related),
+	benefit very high (ease of use).
+
+    * Performance:
+
+      + Sharing color/dither setup data across pages to amortize away
+	startup overhead
+
+	What's the use case?
+
+	Effort moderate, risk moderate-high (with potentially high
+	quality risk due to ability of user to change things behind
+	the driver's back), benefit unknown.  Potential solutions
+	might involve caching data.
+
+    * CUPS driver:
+
+      + Use the new CUPS data types (possibly breaking compatibility with
+	older versions of CUPS)
+
+	Need to understand better.
+
+	Effort, risk, and benefit unknown.
+
+    * Tools:
+
+      + Color matching tool (to allow matching 6 color, quadtone, and
+	hextone inks).  My conception of this is that it would print a
+	solid bar with the lighter colored ink and a sweep with the darker
+	colored ink, and having the user pick where along the bar the
+	tones match.
+
+	There's already a prototype that does just this (not with a
+	nice interface, though), and it helped a lot.  But do we need
+	to refine it?
+
+	Effort low-high (depending upon how sophisticated we make it),
+	risk low-moderate, benefit beyond current "tool" unknown.
+
+      + Drop size matching tool.  Same idea.
+
+	This would also be very useful, but it would require some kind
+	of support at the dithering level to work.
+
+	Effort moderate, risk high (due to support at the dithering
+	level), benefit unknown.
+
+    * Release engineering:
+
+      + Update the developer and user documentation.
+
+	Mandatory.
+
+      + Rehosting the project.  Sourceforge doesn't provide very good
+	tools for bug tracking, in particular (it's really lacking
+	compared to Bugzilla).
+
+	Doing this post-release would be confusing.
+
+      + Distribute mtink with the OS X package.
+
+	Need to understand OS X requirements.
