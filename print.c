@@ -2116,33 +2116,42 @@ plist_build_menu(GtkWidget *option,				/* I - Option button */
 static void
 do_misc_updates()
 {
-  GtkAdjustment adj;
-
+  char s[255];
   vars.scaling = plist[plist_current].scaling;
   vars.orientation = plist[plist_current].orientation;
   vars.left = plist[plist_current].left;
   vars.top = plist[plist_current].top;
-  preview_update();
-#if 0
-  vars.brightness = -1;
-  vars.gamma = -1;
-  vars.contrast = -1;
-  vars.red = -1;
-  vars.green = -1;
-  vars.blue = -1;
-  vars.linear = plist[plist_current].linear;
-  vars.saturation = -1;
-  vars.density = -1;
-#endif
+
+  if (plist[plist_current].scaling < 0)
+    {
+      float tmp = -plist[plist_current].scaling;
+      plist[plist_current].scaling = -plist[plist_current].scaling;
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_ppi), TRUE);
+      GTK_ADJUSTMENT(scaling_adjustment)->lower = 50.0;
+      GTK_ADJUSTMENT(scaling_adjustment)->upper = 1201.0;
+      sprintf(s, "%.1f", tmp);
+      GTK_ADJUSTMENT(scaling_adjustment)->value = tmp;
+      gtk_signal_handler_block_by_data(GTK_OBJECT(scaling_entry), NULL);
+      gtk_entry_set_text(GTK_ENTRY(scaling_entry), s);
+      gtk_signal_handler_unblock_by_data(GTK_OBJECT(scaling_entry), NULL);
+      gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
+    }
+  else
+    {
+      float tmp = plist[plist_current].scaling;
+      GTK_ADJUSTMENT(scaling_adjustment)->lower = 5.0;
+      GTK_ADJUSTMENT(scaling_adjustment)->upper = 101.0;
+      sprintf(s, "%.1f", tmp);
+      GTK_ADJUSTMENT(scaling_adjustment)->value = tmp;
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_percent), TRUE);
+      gtk_signal_handler_block_by_data(GTK_OBJECT(scaling_entry), NULL);
+      gtk_entry_set_text(GTK_ENTRY(scaling_entry), s);
+      gtk_signal_handler_unblock_by_data(GTK_OBJECT(scaling_entry), NULL);
+      gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
+    }    
 
   GTK_ADJUSTMENT(brightness_adjustment)->value = plist[plist_current].brightness;
   gtk_signal_emit_by_name(brightness_adjustment, "value_changed");
-
-  GTK_ADJUSTMENT(scaling_adjustment)->value = plist[plist_current].scaling;
-  gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
-
-  GTK_ADJUSTMENT(scaling_adjustment)->value = plist[plist_current].scaling;
-  gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
 
   GTK_ADJUSTMENT(gamma_adjustment)->value = plist[plist_current].gamma;
   gtk_signal_emit_by_name(gamma_adjustment, "value_changed");
@@ -2165,35 +2174,17 @@ do_misc_updates()
   GTK_ADJUSTMENT(density_adjustment)->value = plist[plist_current].density;
   gtk_signal_emit_by_name(density_adjustment, "value_changed");
 
+  if (plist[plist_current].output_type == OUTPUT_GRAY)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_gray), TRUE);
+  else
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_color), TRUE);
 
-#if 0
-  adj.value = plist[plist_current].brightness;
-  brightness_update(&adj);
+  if (plist[plist_current].linear == 0)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linear_off), TRUE);
+  else
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linear_off), TRUE);
 
-  adj.value = plist[plist_current].scaling;
-  scaling_update(&adj);
-
-  adj.value = plist[plist_current].gamma;
-  gamma_update(&adj);
-
-  adj.value = plist[plist_current].contrast;
-  contrast_update(&adj);
-
-  adj.value = plist[plist_current].red;
-  red_update(&adj);
-
-  adj.value = plist[plist_current].green;
-  green_update(&adj);
-
-  adj.value = plist[plist_current].blue;
-  blue_update(&adj);
-
-  adj.value = plist[plist_current].saturation;
-  saturation_update(&adj);
-
-  adj.value = plist[plist_current].density;
-  density_update(&adj);
-#endif
+  preview_update();
 }
 
 /*
@@ -2231,16 +2222,6 @@ plist_callback(GtkWidget *widget,	/* I - Driver option menu */
   strcpy(vars.resolution, p->resolution);
   strcpy(vars.output_to, p->command);
   do_misc_updates();
-
-  if (p->output_type == OUTPUT_GRAY)
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_gray), TRUE);
-  else
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_color), TRUE);
-
-  if (p->linear == 0)
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linear_off), TRUE);
-  else
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linear_off), TRUE);
 
  /*
   * Now get option parameters...
