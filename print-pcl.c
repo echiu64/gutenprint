@@ -254,6 +254,7 @@ typedef struct {
 #define PCL_COLOR_CMYK		2	/* Two print heads */
 #define PCL_COLOR_CMYK4		4	/* CRet printing */
 #define PCL_COLOR_CMYKcm	8	/* CMY + Photo Cart */
+#define PCL_COLOR_CMYK4b	16	/* CRet for HP840c */
 
 #define PCL_PRINTER_LJ		1
 #define PCL_PRINTER_DJ		2
@@ -519,9 +520,9 @@ static pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 6xx series, plus 810/812/840/842/895 */
   { 601,
     17 * 72 / 2, 14 * 72,
-    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300 | PCL_RES_600_600_MONO,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300 /*| PCL_RES_600_600_MONO */| PCL_RES_600_600 | PCL_RES_1200_600,
     0, 33, 18, 18,
-    PCL_COLOR_CMYK,
+    PCL_COLOR_CMYK | PCL_COLOR_CMYK4b,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
     {
@@ -1423,6 +1424,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
   void *	dither;
   pcl_cap_t	caps;		/* Printer capabilities */
   int		do_cret,	/* 300 DPI CRet printing */
+  		do_cretb,	/* 600 DPI CRet printing HP 840C*/
 		do_6color,	/* CMY + cmK printing */
 		planes;		/* # of output planes */
   int		pcl_media_size, /* PCL media size code */
@@ -1474,6 +1476,8 @@ pcl_print(const printer_t *printer,		/* I - Model */
 
   do_cret = (xdpi >= 300 && ((caps.color_type & PCL_COLOR_CMYK4) == PCL_COLOR_CMYK4) &&
 	     nv.image_type != IMAGE_MONOCHROME);
+  do_cret = do_cretb = (xdpi >= 600 && ydpi >= 600 && ((caps.color_type & PCL_COLOR_CMYK4b) == PCL_COLOR_CMYK4b) &&
+			nv.image_type != IMAGE_MONOCHROME);
 
 #ifdef DEBUG
   fprintf(stderr, "do_cret = %d\n", do_cret);
@@ -1528,7 +1532,15 @@ pcl_print(const printer_t *printer,		/* I - Model */
   * Send PCL initialization commands...
   */
 
+  if (do_cretb)
+    {
+      fputs("\033*rbC", prn);	/* End raster graphics */
+    }
   fputs("\033E", prn); 				/* PCL reset */
+  if (do_cretb)
+    {
+      fprintf(prn, "\033%%-12345X@PJL ENTER LANGUAGE=PCL3GUI\n");
+    }
 
  /*
   * Set media size
@@ -1673,7 +1685,13 @@ pcl_print(const printer_t *printer,		/* I - Model */
       putc(ydpi >> 8, prn);
       putc(ydpi, prn);
       putc(0, prn);
-      putc(do_cret ? 4 : 2, prn);
+      if (do_cretb)
+	{
+	  putc(2, prn);
+	}
+      else{
+	  putc(do_cret ? 4 : 2, prn);
+      }
     }
 
     if (planes != 1) {
@@ -1758,6 +1776,11 @@ pcl_print(const printer_t *printer,		/* I - Model */
   fprintf(prn, "\033*r%dS", out_width);		/* Set raster width */
   fprintf(prn, "\033*r%dT", out_height);	/* Set raster height */
 
+  if (do_cretb)
+    {
+      /* Move to top left of printed area */
+      fprintf(prn, "\033*p%dY", 0); /* ERROR: Her er der måske et problem */
+    }
   fputs("\033*r1A", prn); 			/* Start GFX */
 
  /*
@@ -1901,9 +1924,14 @@ pcl_print(const printer_t *printer,		/* I - Model */
       {
 	dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
 		    yellow, NULL, black, duplicate_line);
-
-        (*writefunc)(prn, black + length / 2, length / 2, 0);
-        (*writefunc)(prn, black, length / 2, 0);
+	
+	if(do_cretb){
+	  //	  (*writefunc)(prn, black + length / 2, 0, 0);
+	  (*writefunc)(prn, black, length, 0);
+	}else{
+	  (*writefunc)(prn, black + length / 2, length / 2, 0);
+	  (*writefunc)(prn, black, length / 2, 0);
+	}
         (*writefunc)(prn, cyan + length / 2, length / 2, 0);
         (*writefunc)(prn, cyan, length / 2, 0);
         (*writefunc)(prn, magenta + length / 2, length / 2, 0);
@@ -1996,7 +2024,11 @@ pcl_print(const printer_t *printer,		/* I - Model */
     fputs("\033*rB", prn);
 
   fputs("\033&l0H", prn);		/* Eject page */
-  fputs("\033E", prn);			/* PCL reset */
+  if (do_cretb)
+    {
+      fprintf(prn, "\033%%-12345X\n");
+    }
+  fputs("\033E", prn); 				/* PCL reset */
 }
 
 
