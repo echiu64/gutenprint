@@ -652,14 +652,14 @@ create_printer_dialog (void)
    * Top-level table for dialog.
    */
 
-  table = gtk_table_new (5, 2, FALSE);
+  table = gtk_table_new (4, 2, FALSE);
   gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 8);
   gtk_table_set_row_spacing (GTK_TABLE (table), 0, 100);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (setup_dialog)->vbox), table,
-                      FALSE, FALSE, 0);
+                      TRUE, TRUE, 0);
   gtk_widget_show (table);
 
   /*
@@ -673,8 +673,8 @@ create_printer_dialog (void)
   gtk_widget_show (label);
 
   event_box = gtk_event_box_new ();
-  gtk_table_attach (GTK_TABLE (table), event_box, 1, 3, 0, 2,
-                    GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach (GTK_TABLE (table), event_box, 1, 2, 0, 2,
+                    GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
   gtk_widget_show (event_box);
 
   set_help_data (event_box, _("Select your printer model"));
