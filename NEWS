@@ -1,4 +1,4 @@
-Gimp-Print 4.3.15, released June 1, 2003, is a development release of
+Gimp-Print 4.3.16, released June 7, 2003, is a development release of
 this package.  Like all development releases, this version is
 considered unstable and should only be used by those individuals
 tolerant of the likelihood of problems.  Individuals desiring a stable
@@ -46,17 +46,20 @@ package.
 Gimp-Print 4.3.16 contains the following major changes over Gimp-Print
 4.3.15:
 
-1) There are many quality improvements for Epson Stylus printers.  All
-   users of 4.3 who are using an Epson printer (particularly newer
-   models of photo printers) should take this release.  Specific
-   improvements include:
+1) There are many quality and functionality improvements for Epson
+   Stylus printers.  All users of 4.3 who are using an Epson printer
+   (particularly newer models of photo printers) should take this
+   release.  Specific quality improvements include:
 
    * Most photo printers have been retuned for significantly improved
      color quality.  In particular, color casts when printing grays
      are greatly reduced.
 
    * The Epson Stylus Photo 2200 (using Photo Black ink) now prints
-     correct blacks, and with correct density.
+     correct blacks, and with correct density.  The Photo Black ink
+     has been tuned with Premium Glossy Photo Paper and Premium
+     Semigloss Photo Paper.  We recommend using the default setting
+     for Ink Type (which is 7-color photo) at all times.
 
    * The Epson Stylus Photo 950/960, 2100/2200, PM-950C, and PM-970C
      had a minor color registration bug in 6 and 7 color modes; in
@@ -65,16 +68,37 @@ Gimp-Print 4.3.16 contains the following major changes over Gimp-Print
      images, but may have been visible when printing solid colors with
      sharply-defined edges.
 
+   * Support for Epson Premium Semigloss and Archival Matte papers has
+     been added (Archival Matte for the Stylus Photo 2100/2200 and
+     Stylus Pro 7600 and 9600 only).
+
+   * Support for Epson UltraChrome Ink with Matte Black has been
+     added.  The combination of Matte Black ink and Archival Matte
+     paper has been tuned, at least for the Stylus Photo 2200.  We
+     recommend using the default setting for Ink Type (which is
+     7-color photo) at all times.
+
    * Internally, there have been many changes to the data organization
-     in the driver, which will permit adding additional ink sets, such
-     as matte black ink for models using UltraChrome inks.
+     in the driver.
 
-2) A few compilation problems have been fixed.
+   The Epson Stylus Pro 7600 and 9600 should work well, although this
+   is untested and we would appreciate volunteers.  It's likely that
+   the dot sizes on these printers are different from the 2200; most
+   likely resolutions below the highest resolution will not work
+   optimally, although 2880x1440 should use the same drop size on all
+   UltraChrome printers.
 
-3) A new modular interface to the color code has been created.  This
+   We recommend using the Color mode and default setting for Ink Type
+   at all times with UltraChrome ink.  These inks appear to have been
+   designed to work together as a set, and very strong color shifts
+   *will* occur if this is not done.
+
+4) A few compilation problems have been fixed.
+
+5) A new modular interface to the color code has been created.  This
    will permit addition of color management later.
 
-4) The user interface now enables and disables options based on other
+6) The user interface now enables and disables options based on other
    option settings more accurately.
 
 
