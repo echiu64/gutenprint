@@ -348,7 +348,7 @@ For Canon printers:
 Dithering Algorithms:
 --------- -----------
 
--Dither='algorithm'
+-sDither='algorithm'
 
 'Adaptive Hybrid'
 'Ordered'
