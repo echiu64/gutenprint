@@ -87,6 +87,7 @@ static const res_t *escp2_find_resolution(int model, const stp_vars_t v,
 typedef struct
 {
   int undersample;
+  int denominator;
   int initial_vertical_offset;
   int min_nozzles;
   int printed_something;
@@ -1187,6 +1188,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 
 
   privdata.undersample = 1;
+  privdata.denominator = 1;
   privdata.initial_vertical_offset = 0;
   privdata.printed_something = 0;
   privdata.last_color = -1;
@@ -1214,6 +1216,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   resid = res->resid;
   undersample = res->vertical_undersample;
   privdata.undersample = res->vertical_undersample;
+  privdata.denominator = res->vertical_denominator;
 
   physical_xdpi = escp2_base_res(model, resid, nv);
   if (physical_xdpi > xdpi)
@@ -1296,6 +1299,8 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       channels_in_use = setup_ink_types(ink_type, &privdata, cols, head_offset,
 					dt, channel_limit, length * bits);
     }
+  if (channels_in_use == 1)
+    head_offset[0] = 0;
   if (escp2_has_cap(model, MODEL_FAST_360, MODEL_FAST_360_YES, nv) &&
       (ink_type->inkset == INKSET_CMYK || channels_in_use == 1) &&
       xdpi == 360 && ydpi == 360)
@@ -1589,6 +1594,7 @@ set_horizontal_position(stp_softweave_t *sw, stp_pass_t *pass, int model,
 			int xdpi, int vertical_subpass)
 {
   int microoffset = vertical_subpass & (sw->horizontal_weave - 1);
+  escp2_privdata_t *pd = (escp2_privdata_t *) stp_get_driver_data(v);
   if (!escp2_has_advanced_command_set(model, v) &&
       (xdpi <= escp2_base_resolution(model, v) ||
        escp2_max_hres(model, v) < 1440))
@@ -1601,14 +1607,15 @@ set_horizontal_position(stp_softweave_t *sw, stp_pass_t *pass, int model,
 	   (escp2_has_advanced_command_set(model, v) &&
 	    escp2_has_cap(model, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES, v)))
     {
-      int pos = ((hoffset * xdpi / ydpi) + microoffset);
+      int pos = ((hoffset * xdpi * pd->denominator / ydpi) + microoffset);
       if (pos > 0)
 	stp_zprintf(v, "\033($%c%c%c%c%c%c", 4, 0,
 		    BYTE(pos, 0), BYTE(pos, 1), BYTE(pos, 2), BYTE(pos, 3));
     }
   else
     {
-      int pos = ((hoffset * escp2_max_hres(model, v) / ydpi) + microoffset);
+      int pos = ((hoffset * escp2_max_hres(model, v) * pd->denominator / ydpi)+
+		 microoffset);
       if (pos > 0)
 	stp_zprintf(v, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
 		    BYTE(pos, 0), BYTE(pos, 1));
