@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.39.2.1  2000/01/13 03:32:34  rlk
+ *   silliness
+ *
  *   Revision 1.39  2000/01/13 03:25:31  rlk
  *   bug fix from mainline
  *
@@ -374,7 +377,7 @@ typedef model_cap_t model_class_t;
 #define MODEL_NOZZLES_MASK	0xff000000
 #define MODEL_MAKE_NOZZLES(x) 	((long long) ((x)) << 24)
 #define MODEL_GET_NOZZLES(x) 	(((x) & MODEL_NOZZLES_MASK) >> 24)
-#define MODEL_SEPARATION_MASK	0xf00000000l
+#define MODEL_SEPARATION_MASK	0xf00000000ll
 #define MODEL_MAKE_SEPARATION(x) 	(((long long) (x)) << 32)
 #define MODEL_GET_SEPARATION(x)	(((x) & MODEL_SEPARATION_MASK) >> 32)
 
