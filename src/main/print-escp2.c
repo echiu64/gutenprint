@@ -1325,7 +1325,7 @@ static const escp2_dot_size_t sc720_dotsizes =
 { 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x11,   -1, 0x11,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc660_dotsizes =
-{    3,    3,   -1,    3,    0,    3,    0,   -1,    0,   -1,   -1,   -1 };
+{    3,    3,   -1,    3,    0,   -1,    0,   -1,    0,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc480_dotsizes =
 { 0x13,   -1, 0x13,   -1, 0x13,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1 };
@@ -1827,11 +1827,11 @@ static const escp2_stp_printer_t model_capabilities[] =
   {
     (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
-     | MODEL_COMMAND_1998 | MODEL_GRAYMODE_YES | MODEL_MICROWEAVE_YES
+     | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_MICROWEAVE_YES
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
-    32, 1, 4, 64, 1, 2, 720, 720, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 8, 360, 720, 720, 14400, -1,
+    32, 1, 4, 32, 1, 4, 720, 720, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
+    9, 9, 0, 9, 9, 9, 0, 26, 0, 1, 8, 360, 720, 720, 14400, -1,
     default_head_offset, 0, 0, 1440, 720, sc660_dotsizes,sc660_densities,
     &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2135,7 +2135,7 @@ static const escp2_stp_printer_t model_capabilities[] =
     &spro10000_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
   },
-  /* 42: Stylus Color C20SX/C40SX */
+  /* 42: Stylus Color C20SX/C20UX */
   {
     (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
@@ -2148,7 +2148,7 @@ static const escp2_stp_printer_t model_capabilities[] =
     &variable_x80_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
   },
-  /* 43: Stylus Color C20UX/C40UX */
+  /* 43: Stylus Color C40SX/C40UX */
   {
     (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
