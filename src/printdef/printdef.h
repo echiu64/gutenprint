@@ -22,7 +22,6 @@
  */
 
 #include <gimp-print.h>
-#include <gimp-print-internal.h>
 
 typedef union yylv {
   int ival;

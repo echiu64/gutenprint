@@ -25,7 +25,6 @@
 #endif
 #include <stdio.h>
 #include <gimp-print.h>
-#include <gimp-print-internal.h>
 
 char *params[] =
 {

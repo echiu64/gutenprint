@@ -60,7 +60,9 @@ pkgdata_DATA = calibrate.ppm
 cups_backend = epson canon
 cups_filter = rastertoprinter commandtoepson commandtocanon
 
+if CUPS_INSTALL
 install-data-local:
+endif
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/$(PACKAGE)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/$(PACKAGE)/backend
@@ -98,8 +100,7 @@ dist-hook:
 	done
 
 clean-local:
-	-rm -rf ppd/*
-	-rmdir ppd
+	-rm -rf ppd
 
 CLEANFILES = $(EXTRA_PROGRAMS)
 MAINTAINERCLEANFILES = Makefile.in

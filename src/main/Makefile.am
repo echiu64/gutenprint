@@ -34,6 +34,7 @@ EXTRA_LTLIBRARIES = libgimpprint.la
 lib_LTLIBRARIES = @MAIN_BIN@
 
 libgimpprint_la_SOURCES = \
+	gimp-print-internal.h \
 	print-lexmark.c \
 	print-canon.c \
 	print-dither.c \
