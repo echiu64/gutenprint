@@ -1,5 +1,6 @@
-Gimp-Print 4.2.4-pre2, released November 15, 2002, is a prerelease in
-the stable Gimp-Print 4.2 series.
+Gimp-Print 4.2.4-rc1, released November 19, 2002, is a release
+candidate for Gimp-Print 4.2.4 the stable Gimp-Print 4.2 series (it is
+not Gimp-Print 4.2.4).
 
 Gimp-Print is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -40,6 +41,44 @@ available at http://gimp-print.sourceforge.net.
 Please read the README file for full instructions on installing this
 package.
 
+Gimp-Print 4.2.4-rc1 contains the following fixes and changes over
+Gimp-Print 4.2.4-pre2:
+
+  1) Support for the HP DesignJet 230, 250, 430, 450, 455, 488, 700,
+     2500, and 3500 printers.
+
+  2) PCL laser printers (pcl-2, pcl-3, pcl-4, pcl-5, and pcl-6),
+     including HP LaserJet printers and many other models, now print
+     black correctly (previously it was printed as a medium gray).
+
+  3) PCL laser printers now have correct margins on A4 paper.
+
+The following bugs have been fixed in Gimp-Print 4.2.4-rc1:
+
+631936 HP DesignJet Margin Problems
+619537 QUALITY - Poor quality w/ Lexmark OprtaE+ and pcl-4
+603702 QUALITY-HP LaserJet 5L print is too light
+
+The following bugs are currently open:
+
+409612 Minor positioning prob on 4x6 glossy
+538097 QUALITY-Poor quality printing on Canon s400
+549677 Incorrect scaling on Canon BJC-1000
+557868 QUALITY-Washed out color under Gimp on HP560c
+581168 Canon BJC 250 just spits out pages
+601767 Mac OS X: Canon BJC 2100 does not print multiple pages
+602933 QUALITY-Poor quality on Canon S800
+613054 Mac OS X: Printing from InDesign 2.0 on OS 10.2.1
+614882 QUALITY - Problems with CANON BJC-55 - Gimp-Print
+619299 QUALITY - brightness adjustment problem
+621668 Epson Stylus full bleed prints have slight margin
+625780 Epson Stylus Pro 5000 does not print
+627266 Epson Stylus Pro Autoselect paper feed broken
+627978 QUALITY: Canon BJC-6500 has magenta cast.
+631937 HP DesignJet Sheet Cutter Problem
+639356 Build system: The version of libtool is too old
+
+
 Gimp-Print 4.2.4-pre2 contains the following fixes and changes over
 Gimp-Print 4.2.4-pre1:
 
@@ -54,27 +93,6 @@ Gimp-Print 4.2.4-pre1:
 The following bug has been fixed in Gimp-Print 4.2.4-pre2:
 
 631993 Macintosh OS X: Custom page size problems w/some apps
-
-The following bugs are currently open:
-
-409612 Minor positioning prob on 4x6 glossy
-538097 QUALITY-Poor quality printing on Canon s400
-549677 Incorrect scaling on Canon BJC-1000
-557868 QUALITY-Washed out color under Gimp on HP560c
-581168 Canon BJC 250 just spits out pages
-601767 Mac OS X: Canon BJC 2100 does not print multiple pages
-602933 QUALITY-Poor quality on Canon S800
-603702 QUALITY-HP LaserJet 5L print is too light
-613054 Mac OS X: Printing from InDesign 2.0 on OS 10.2.1
-614882 QUALITY - Problems with CANON BJC-55 - Gimp-Print
-619299 QUALITY - brightness adjustment problem
-619537 QUALITY - Poor quality w/ Lexmark OprtaE+ and pcl-4
-621668 Epson Stylus full bleed prints have slight margin
-625780 Epson Stylus Pro 5000 does not print
-627266 Epson Stylus Pro Autoselect paper feed broken
-627978 QUALITY: Canon BJC-6500 has magenta cast.
-631936 HP DesignJet Margin Problems
-631937 HP DesignJet Sheet Cutter Problem
 
 
 
