@@ -715,6 +715,7 @@ dnl Substitutions
 AC_SUBST(cups_prefix)
 AC_SUBST(cups_exec_prefix)
 AC_SUBST(cups_bindir)
+AC_SUBST(cups_sbindir)
 AC_SUBST(cups_conf_datadir)
 AC_SUBST(cups_conf_serverbin)
 AC_SUBST(cups_conf_serverroot)

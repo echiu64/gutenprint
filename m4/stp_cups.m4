@@ -142,6 +142,12 @@ if test "${bindir}" = "\${prefix}/bin" -a "${cups_prefix}" = "/" ; then
 else
   cups_bindir="${cups_prefix}/bin"
 fi
+# Fix "sbindir" variable if it hasn't been specified...
+if test "${sbindir}" = "\${prefix}/sbin" -a "${cups_prefix}" = "/" ; then
+  cups_sbindir="/usr/sbin"
+else
+  cups_sbindir="${cups_prefix}/sbin"
+fi
 
 # Get explicit CUPS directories if possible
 if test "x$CUPS_CONFIG" != x; then
