@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.49.2.1  2000/01/13 23:41:29  rlk
+ *   Deal with null black pointer
+ *
  *   Revision 1.49  2000/01/08 23:30:37  rlk
  *   Some tweaking
  *
@@ -979,7 +982,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
     density += (c + m + y) >> overdensity_bits;
 /*     density >>= 1; */
 
-    if (! (*kptr & bit))
+    if (!kptr || !(*kptr & bit))
       {
 	PRINT_COLOR(cyan, c, C, 1, 2);
 	PRINT_COLOR(magenta, m, M, 2, 3);
