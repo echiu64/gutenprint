@@ -564,7 +564,7 @@ static const escp2_inkname_t six_color_photo_inkset =
 
 static const ink_channel_t *const f360_photo_channels[] =
 {
-  &photo_black_channel, &f360_photo_cyan_channel,
+  &f360_photo_black_channel, &f360_photo_cyan_channel,
   &f360_photo_magenta_channel, &f360_photo_yellow_channel
 };
 
@@ -963,8 +963,8 @@ static const shade_set_t stp2000_shades =	/* Stylus Photo 2000 */
 static const shade_set_t ultrachrome_photo_shades =	/* Ultrachrome with photo black ink */
 {
   { 2, { 1.0, 0.48 }},
-  { 2, { 1.0, 0.32 }},
-  { 2, { 1.0, 0.35 }},
+  { 2, { 1.0, 0.25 }},
+  { 2, { 1.0, 0.25 }},
   { 1, { 1.0 }},
   { 1, { 1.0 }},
   { 1, { 1.0 }},
