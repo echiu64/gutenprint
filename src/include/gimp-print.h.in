@@ -302,8 +302,10 @@ extern int stp_init (void);
 extern const char * stp_printer_get_long_name (const stp_printer_t p);
 extern const char * stp_printer_get_driver (const stp_printer_t p);
 extern int stp_printer_get_model (const stp_printer_t p);
-extern const stp_printfuncs_t *stp_printer_get_printfuncs (const stp_printer_t p);
+extern const stp_printfuncs_t *stp_printer_get_printfuncs(const stp_printer_t);
 extern const stp_vars_t stp_printer_get_printvars (const stp_printer_t p);
+extern void stp_set_printer_defaults(stp_vars_t, const stp_printer_t,
+				     const char *ppd_file);
 
 extern stp_vars_t stp_allocate_vars (void);
 extern void stp_copy_vars (stp_vars_t vd, const stp_vars_t vs);

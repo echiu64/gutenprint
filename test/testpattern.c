@@ -110,10 +110,6 @@ static stp_image_t theImage =
   NULL
 };
 
-typedef const char *(*defparm_t)(const stp_printer_t printer,
-				 const char *ppd_file,
-				 const char *name);
-
 testpattern_t *
 get_next_testpattern(void)
 {
@@ -169,7 +165,6 @@ main(int argc, char **argv)
   stp_papersize_t pt;
   int left, right, top, bottom;
   const stp_printfuncs_t *printfuncs;
-  defparm_t defparms;
   int x, y, owidth;
   int width, height;
 
@@ -291,53 +286,37 @@ main(int argc, char **argv)
 	  return 1;
 	}
     }
+  stp_set_printer_defaults(v, the_printer, NULL);
   stp_set_outfunc(v, writefunc);
   stp_set_errfunc(v, writefunc);
   stp_set_outdata(v, stdout);
   stp_set_errdata(v, stderr);
   printfuncs = stp_printer_get_printfuncs(the_printer);
-  defparms = printfuncs->default_parameters;
   stp_set_density(v, density);
   if (resolution)
     stp_set_resolution(v, resolution);
-  else
-    stp_set_resolution(v, (*defparms) (the_printer, NULL, "Resolution"));
   if (ink_type)
     stp_set_ink_type(v, ink_type);
-  else
-    stp_set_ink_type(v, (*defparms) (the_printer, NULL, "InkType"));
   if (media_type)
     stp_set_media_type(v, media_type);
-  else
-    stp_set_media_type(v, (*defparms) (the_printer, NULL, "MediaType"));
   if (media_source)
     stp_set_media_source(v, media_source);
-  else
-    stp_set_media_source(v, (*defparms) (the_printer, NULL, "InputSlot"));
   if (media_size)
     stp_set_media_size(v, media_size);
-  else
-    stp_set_media_size(v, (*defparms) (the_printer, NULL, "PageSize"));
   if (dither_algorithm)
     stp_set_dither_algorithm(v, dither_algorithm);
-  else
-    stp_set_dither_algorithm(v, stp_default_dither_algorithm());
-  stp_set_driver(v, printer);
 
   stp_set_output_type(v, OUTPUT_RAW_CMYK);
 
-  (printfuncs->imageable_area)(the_printer, v, &left, &right, &bottom, &top);
-
-  if (media_size)
-    pt = stp_get_papersize_by_name(media_size);
-  else
-    pt = stp_get_papersize_by_name((*defparms)(the_printer, NULL, "PageSize"));
+  pt = stp_get_papersize_by_name(stp_get_media_size(v));
   if (!pt)
     {
       fprintf(stderr, "Papersize %s unknown\n", media_size);
       return 1;
     }
 
+  (printfuncs->imageable_area)(the_printer, v, &left, &right, &bottom, &top);
+  (printfuncs->describe_resolution)(the_printer, stp_get_resolution(v),&x, &y);
 
   width = right - left;
   height = top - bottom;
@@ -345,7 +324,6 @@ main(int argc, char **argv)
   top = top + height * xtop;
   left = width * xleft;
   owidth = width;
-  (printfuncs->describe_resolution)(the_printer, stp_get_resolution(v),&x, &y);
   if (levels > width)
     levels = width;
 

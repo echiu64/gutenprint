@@ -1117,6 +1117,25 @@ stp_compute_page_parameters(int page_right,	/* I */
     *top  = (*page_height - *out_height) / 2;
 }
 
+void
+stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p,
+			 const char *ppd_file)
+{
+  const stp_printfuncs_t *printfuncs = stp_printer_get_printfuncs(p);
+  stp_set_resolution(v, ((printfuncs->default_parameters)
+			 (p, ppd_file, "Resolution")));
+  stp_set_ink_type(v, ((printfuncs->default_parameters)
+		       (p, ppd_file, "InkType")));
+  stp_set_media_type(v, ((printfuncs->default_parameters)
+			 (p, ppd_file, "MediaType")));
+  stp_set_media_source(v, ((printfuncs->default_parameters)
+			   (p, ppd_file, "InputSlot")));
+  stp_set_media_size(v, ((printfuncs->default_parameters)
+			 (p, ppd_file, "PageSize")));
+  stp_set_dither_algorithm(v, stp_default_dither_algorithm());
+  stp_set_driver(v, p);
+}
+
 int
 stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
 {

@@ -85,12 +85,7 @@ typedef int escp2_dot_size_t[11];
 
 /*
  * Specify the base density for each available resolution.
- * This obviously depends upon the dot size.  Experience suggests that
- * variable dot size mode (0x10) on the 870 requires the density
- * derived from the printer base and the resolution to be multiplied
- * by 3.3.  Using dot size 0x11 requires the density to be multiplied
- * by 2.2.
- */
+ * This obviously depends upon the dot size.
 
 typedef double escp2_densities_t[12];
 
@@ -253,6 +248,8 @@ static const stp_simple_dither_range_t photo_6pl_dither_ranges[] =
 {
   { 0.0845,  0x1, 0, 1 },
   { 0.13, 0x2, 0, 2 },
+/*  { 0.26, 0x3, 0, 3 }, */
+/*  { 0.325, 0x1, 1, 1 }, */
   { 0.5,   0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
