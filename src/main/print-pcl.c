@@ -706,9 +706,22 @@ static const pcl_cap_t pcl_model_capabilities[] =
     basic_papertypes,
     standard_papersources,
   },
-  /* DesignJet 2500C/3500C (44" wide) */
+  /* DesignJet 2000C/2500C (36" wide) */
   { 12500,	/* Deskjet 2500 already has "2500" */
-    44 * 72, 150 * 12 * 72,		/* 150ft in roll mode, 64" in sheet */
+    36 * 72, 150 * 12 * 72,		/* 150ft in roll mode, 64" in sheet */
+    830 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
+    PCL_RES_300_300 | PCL_RES_600_600_MONO,
+    {49, 49, 15, 15},		/* Check/Fix */
+    {49, 49, 15, 15},
+    PCL_COLOR_CMYK,
+    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
+    letter_only_papersizes,
+    basic_papertypes,
+    standard_papersources,
+  },
+  /* DesignJet 3000C/3500C (54" wide) */
+  { 13500,	/* Deskjet 2500 already has "2500" */
+    54 * 72, 150 * 12 * 72,		/* 150ft in roll mode, 64" in sheet */
     830 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
     PCL_RES_300_300 | PCL_RES_600_600_MONO,
     {49, 49, 15, 15},		/* Check/Fix */
