@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.35  1999/12/11 15:26:27  rlk
+ *   hopefully get borders right
+ *
  *   Revision 1.34  1999/12/11 04:52:35  rlk
  *   bug fixes
  *
@@ -558,7 +561,7 @@ escp2_imageable_area(int  model,	/* I - Printer model */
         *left   = 9;
         *right  = width - 9;
         *top    = length;
-        *bottom = 49;
+        *bottom = 80;
         break;
 
   case MODEL_IMAGEABLE_600:
@@ -955,6 +958,8 @@ escp2_print(int       model,		/* I - Model */
   putc(n & 255, prn);
   putc(n >> 8, prn);
   n = ydpi * (page_length - page_bottom) / 72;
+  if (use_softweave)
+    n += 320 * ydpi / 720;
   putc(n & 255, prn);
   putc(n >> 8, prn);
 
