@@ -5,7 +5,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2001-06-07 19:52-0400\n"
+"POT-Creation-Date: 2001-06-07 20:57-0400\n"
 "PO-Revision-Date: 2001-02-07 21:33+0\n"
 "Last-Translator: Roger Leigh <roger@whinlatter.uklinux.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1783,12 +1783,12 @@ msgstr "TEST: Printer:"
 msgid "Printing..."
 msgstr "TEST: Printing..."
 
-#: src/gimp/print.c:184
+#: src/gimp/print.c:164
 msgid "<Image>/File/Print..."
 msgstr "TEST: <Image>/File/Print..."
 
-#: src/gimp/print.c:754 src/gimp/print.c:755 src/gimp/print.c:865
-#: src/gimp/print.c:1237
+#: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:833
+#: src/gimp/print.c:1190
 msgid "File"
 msgstr "TEST: File"
 

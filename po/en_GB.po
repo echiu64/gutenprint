@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-06-07 19:52-0400\n"
+"POT-Creation-Date: 2001-06-07 20:57-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1726,11 +1726,11 @@ msgstr ""
 msgid "Printing..."
 msgstr ""
 
-#: src/gimp/print.c:184
+#: src/gimp/print.c:164
 msgid "<Image>/File/Print..."
 msgstr ""
 
-#: src/gimp/print.c:754 src/gimp/print.c:755 src/gimp/print.c:865
-#: src/gimp/print.c:1237
+#: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:833
+#: src/gimp/print.c:1190
 msgid "File"
 msgstr ""
