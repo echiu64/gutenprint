@@ -66,12 +66,11 @@ ignores it.  It should be CANON, EPSON, LEXMARK, or HEWLETT-PACKARD.  The value
 of the \-sDeviceModel parameter is the same as the value of the -sModel
 parameter in the old stp driver.
 .IP
-.TS H
+.TS
 li li
 lb l.
 Model name	Description
 _
-.\".TH
 bjc-30	CANON BJC 30
 bjc-50	CANON BJC 50
 bjc-55	CANON BJC 55
@@ -300,11 +299,10 @@ We generally recommend the following resolutions for the following
 purposes:
 .PP
 .IP
-.TS H
+.TS
 li li.
 Resolution	Recommended use
 _
-.\".TH
 .T&
 lb lw(4i)
 lb ^.
@@ -377,12 +375,11 @@ Stylus Pro (5000, 5500, 7000, 7500, 9000, 9500, and 10000) printers.
 Resolutions for those printers are listed in a later section.  Please
 see the notes at the end of this section.
 .PP
-.TS H
+.TS
 li li li
 lb l l.
 Quality	Description	Note
 _
-.\".TH
 360x90dpi	360 x 90 DPI Fast Economy Draft	(1)
 180dpi	180 DPI Economy Draft	(2)
 360x180dpi	360 x 180 DPI Draft	(2)
@@ -500,12 +497,11 @@ as Full Overlap (FOL), Four Pass, and FOL2.  The Stylus Pro 5500,
 These modes can only be used at certain resolutions.  Stylus Pro
 printers support the following resolutions:
 .PP
-.TS H
+.TS
 li li
 lb l.
 Quality	Description
 _
-.\".TH
 180dpi	180 DPI
 360dpi	360 DPI
 360uni	360 DPI Unidirectional
@@ -546,12 +542,11 @@ _
 In addition, the Stylus Pro 7600 and 9600 printers support the
 following resolutions:
 .PP
-.TS H
+.TS
 li li
 lb l.
 Quality	Description
 _
-.\".TH
 2880x720dpi	2880 x 720 DPI
 2880x720uni	2880 x 720 DPI Unidirectional
 2880x720mw	2880 x 720 DPI Microweave
@@ -582,12 +577,11 @@ _
 In addition, the Stylus Pro 7600 and 9600 printers support the
 following resolutions:
 .PP
-.TS H
+.TS
 li li
 lb lw(3i).
 Quality	Description
 _
-.\".TH
 150dpi	150x150 DPI (should work on all printers)
 300dpi	T{
 .na
@@ -609,12 +603,11 @@ Note: the higher resolutions of newer PCL printers using "Photo-Ret" are
 not yet supported.
 .SS Lexmark printers (other than the 4076)
 .SS
-.TS H
+.TS
 li li
 lb l.
 Quality	Description
 _
-.\".TH
 300x600dpi	300 DPI x 600 DPI
 600dpi	600 DPI
 600hq	600 DPI high quality
@@ -630,12 +623,11 @@ _
 .SS Canon printers
 1200 DPI printers (BJC 7000, BJC 7100, BJC 8200, BJC 8500):
 .PP
-.TS H
+.TS
 li li
 lb l.
 Quality	Description
 _
-.\".TH
 300x300dpi	300x300 DPI
 300x300dmt	300x300 DPI DMT
 600x600dpi	600x600 DPI
@@ -647,12 +639,11 @@ _
 1440 DPI printers (BJC 1000, BJC 2000, BJC 3000, BJC 4300, BJC 4400,
     BJC 5100, BJC 5500, BJC 6000, BJC 6100, BJC 6500, BJC 8200):
 .PP
-.TS H
+.TS
 li li
 lb l.
 Quality	Description
 _
-.\".TH
 360x360dpi	360x360 DPI
 360x360dmt	360x360 DPI DMT
 720x360dpi	720x360 DPI
@@ -680,12 +671,11 @@ may produce a smoother image than that produced by mixing black ink in.  The
 Epson Stylus Color 1500 cannot mix black ink with colored inks; on this
 printer, Three Color Composite must be used.
 .PP
-.TS H
+.TS
 li li
 lb lw(4i).
 Ink Type	Description
 _
-.\".TH
 Photo7	T{
 .na
 Seven Color Photo (CcMmYKk, for the Epson Stylus Photo 2100 and 2200, and
@@ -706,12 +696,11 @@ Pro 7600 and 9600)
 T}
 .TE
 .SS Canon printers
-.TS H
+.TS
 li li
 lb l.
 Ink Type	Description
 _
-.\".TH
 Gray	Black
 RGB	Color
 CMYK	Black/Color
@@ -719,12 +708,11 @@ PhotoCMY	Photo/Color
 PhotoCMYK	Photo
 .TE
 .SS PCL (Hewlett-Packard and Lexmark 4076) color printers
-.TS H
+.TS
 li li
 lb l.
 Ink Type	Description
 _
-.\".TH
 CMYK	Color + Black Cartridges
 Photo	Color + Photo Cartridges (For Deskjet 69x only)
 .TE
@@ -737,12 +725,11 @@ allow any value to be specified for the ink type.
 .PP
 This is printer type specific.  The option names are case sensitive.
 .SS Epson and Lexmark (other than the 4076) inkjet printers
-.TS H
+.TS
 li li
 lb l.
 Media Type	Description
 _
-.\".TH
 Plain	Plain Paper
 PlainFast	Plain Paper Fast Load
 Postcard	Postcard
@@ -768,12 +755,11 @@ rollers.  Use of the highest quality printing modes (1440x720 highest quality
 and 2880x720 unidirectional) produces the best result on such papers, probably
 because printing is slower and there is more time for the ink to dry.
 .SS Canon printers
-.TS H
+.TS
 li li
 lb l.
 Media Type	Description
 _
-.\".TH
 Plain	Plain Paper
 Transparency	Transparencies
 BackFilm	Back Print Film
@@ -787,12 +773,11 @@ GlossyCards	Glossy Photo Cards
 GlossyPro	Photo Paper Pro
 .TE
 .SS PCL (Hewlett-Packard and Lexmark 4076) inkjet printers
-.TS H
+.TS
 li li
 lb l.
 Media Type	Description
 _
-.\".TH
 Plain	Plain
 Bond	Bond
 Premium	Premium
@@ -810,12 +795,11 @@ PCL laser printers do not allow specification of any media type.
 This is printer type specific.  The option names are case sensitive.
 .PP
 .SS Epson printers
-.TS H
+.TS
 li li
 lb lw(4i).
 Media Source	Description
 _
-.\".TH
 Standard	Standard
 Roll	T{
 .na
@@ -824,12 +808,11 @@ Roll Feed (for certain Stylus Photo and Stylus Pro models only)
 T}
 .TE
 .SS Canon printers
-.TS H
+.TS
 li li
 lb l.
 Media Source	Description
 _
-.\".TH
 Auto	Auto Sheet Feeder
 Manual	Manual with Pause
 ManualNP	Manual without Pause
@@ -837,12 +820,11 @@ ManualNP	Manual without Pause
 .SS PCL (Hewlett-Packard and Lexmark 4076) printers
 Different printers allow different choices out of this set.
 .PP
-.TS H
+.TS
 li li
 lb l.
 Media Source	Description
 _
-.\".TH
 Standard	Standard (Feed from printer defined source)
 Manual	Manual
 MultiPurpose	Tray 1
@@ -857,12 +839,11 @@ Optional	Optional Source
 Auto	Autoselect
 .TE
 .SS Lexmark printers (other than the 4076)
-.TS H
+.TS
 li li
 lb l.
 Media Source	Description
 _
-.\".TH
 Auto	Auto Sheet Feeder
 Manual	Manual with Pause
 ManualNP	Manual without Pause
@@ -884,12 +865,11 @@ set GhostScript up to use a paper size other than the default; it only tells
 the driver to set up the printer for a different paper size.  The default paper
 size is "Letter".
 .SS Common English paper sizes
-.TS H
+.TS
 li li li li li
 lb l l n n.
 Media Size	Description	Comment	x\fR(pt)\fP	y\fR(pt)\fP
 _
-.\".TH
 Letter	Letter	8.5in x 11in	612	792
 Legal	Legal	8.5in x 14in	612	1008
 Tabloid	Tabloid	11in x 17in	792	1224
@@ -906,12 +886,11 @@ TabloidExtra	12x18		864	1296
 SuperB	13x19		936	1368
 .TE
 .SS Common photographic paper sizes
-.TS H
+.TS
 li li li li li
 lb l l n n.
 Media Size	Description	Comment	x\fR(pt)\fP	y\fR(pt)\fP
 _
-.\".TH
 w576h864	8x12	Sometimes used for 35 mm	576	864
 w792h1008	11x14		792	1008
 w1152h1440	16x20		1152	1440
@@ -930,12 +909,11 @@ of 1 square metre.  Everything is rounded to the nearest
 millimetre.  Thus, A0 is 841mm x 1189mm.  Every other A
 size is obtained by doubling or halving another A size.
 .PP
-.TS H
+.TS
 li li li li li
 lb l l n n.
 Media Size	Description	Comment	x\fR(pt)\fP	y\fR(pt)\fP
 _
-.\".TH
 w4768h6749	4A	1682mm x 2378mm	4768	6749
 w3370h4768	2A	1189mm x 1682mm	3370	4768
 A0	A0	841mm x 1189mm	2384	3370
@@ -973,12 +951,11 @@ w637h907	SRA4	225mm x  320mm	637	907
 .PP
 "B" series: Posters, wall charts and similar items.
 .PP
-.TS H
+.TS
 li li li li li
 lb l l n n.
 Media Size	Description	Comment	x\fR(pt)\fP	y\fR(pt)\fP
 _
-.\".TH
 w5669h8016	4B ISO	2000mm x 2828mm	5669	8016
 w4008h5669	2B ISO	1414mm x 2000mm	4008	5669
 ISOB0	B0 ISO	1000mm x 1414mm	2834	4008
@@ -1007,12 +984,11 @@ B10	B10 JIS		90	127
 .PP
 "C" series: Envelopes or folders suitable for A size stationery.
 .PP
-.TS H
+.TS
 li li li li li
 lb l l n n.
 Media Size	Description	Comment	x\fR(pt)\fP	y\fR(pt)\fP
 _
-.\".TH
 C0	C0	917mm x 1297mm	2599	3676
 C1	C1	648mm x  917mm	1836	2599
 C2	C2	458mm x  648mm	1298	1836
@@ -1030,12 +1006,11 @@ C10	C10	28mm x   40mm	79	113
 .TE
 .SS US CAD standard paper sizes
 .PP
-.TS H
+.TS
 li li li li li
 lb l l n n.
 Media Size	Description	Comment	x\fR(pt)\fP	y\fR(pt)\fP
 _
-.\".TH
 ARCHA	ArchA	9x12in	648	864
 ARCHB	ArchB	12x18in	864	1296
 ARCHC	ArchC	18x24in	1296	1728
@@ -1043,12 +1018,11 @@ ARCHD	ArchD	24x36in	1728	2592
 ARCHE	ArchE	36x48in	2592	3456
 .TE
 .SS Foolscap
-.TS H
+.TS
 li li li li li
 lb l l n n.
 Media Size	Description	Comment	x\fR(pt)\fP	y\fR(pt)\fP
 _
-.\".TH
 w612h936	American foolscap		612	936
 w648h936	European foolscap		648	936
 .TE
@@ -1056,12 +1030,11 @@ w648h936	European foolscap		648	936
 The BPIF and the Publishers Association jointly recommend ten standard metric
 sizes for case-bound titles as follows:
 .PP
-.TS H
+.TS
 li li li li li
 lb l l n n.
 Media Size	Description	Comment	x\fR(pt)\fP	y\fR(pt)\fP
 _
-.\".TH
 w535h697	Crown Quarto	189mm x 246mm	535	697
 w569h731	Large Crown Quarto	201mm x 258mm	569	731
 w620h782	Demy Quarto	219mm x 276mm	620	782
@@ -1072,23 +1045,21 @@ w391h612	Demy Octavo	138mm x 216mm	391	612
 w442h663	Royal Octavo	156mm x 234mm	442	663
 .TE
 .SS Paperback sizes in common usage
-.TS H
+.TS
 li li li li li
 lb l l n n.
 Media Size	Description	Comment	x\fR(pt)\fP	y\fR(pt)\fP
 _
-.\".TH
 w314h504	Small paperback	111mm x 178mm	314	504
 w314h513	Penguin small paperback	111mm x 181mm	314	513
 w365h561	Penguin large paperback	129mm x 198mm	365	561
 .TE
 .SS Miscellaneous sizes
-.TS H
+.TS
 li li li li li
 lb l l n n.
 Media Size	Description	Comment	x\fR(pt)\fP	y\fR(pt)\fP
 _
-.\".TH
 w283h420	Hagaki Card	100 x 148 mm	283	420
 w420h567	Oufuku Card	148 x 200 mm	420	567
 w340h666	Long 3	Japanese long envelope #3	340	666
@@ -1156,12 +1127,11 @@ generally be less than 1.5.
 \fBDither\fP=\fIalgorithm\fP
 Possible values for \fIalgorithm\fP are:
 .IP
-.TS H
+.TS
 li li
 lb l.
 Dither Algorithm	Description
 _
-.\".TH
 Adaptive	Adaptive Hybrid
 EvenTone	EvenTone screening (experimental)  
 Ordered	Ordered 
@@ -1248,12 +1218,11 @@ This option can be used to optimize the dither.
 \fBImageType\fP=\fIval\fP
 Possible values are:
 .IP
-.TS H
+.TS
 li li
 lb lw(4i).
 Value	Description
 _
-.\".TH
 1	T{
 .na
 Line art (color or gray scale)
