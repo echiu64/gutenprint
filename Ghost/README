@@ -287,7 +287,7 @@ For PCL printers (including Hewlett-Packard and Lexmark):
 '150x150 DPI'
 '300x300 DPI'
 '600x300 DPI'
-'600x600 DPI (mono only)'
+'600x600 DPI monochrome'
 '600x600 DPI'
 '1200x1200 DPI'
 '2400x1200 DPI'
@@ -298,9 +298,9 @@ For Canon printers:
 1200 DPI printers (BJC 7000, BJC 7100, BJC 8200, BJC 8500):
 
 '300x300 DPI'
-'300x300 DPI w/ DMT'
+'300x300 DPI DMT'
 '600x600 DPI'
-'600x600 DPI w/ DMT'
+'600x600 DPI DMT'
 '1200x600 DPI'
 '1200x1200 DPI'
 
@@ -309,7 +309,7 @@ For Canon printers:
 
 '180x180 DPI'
 '360x360 DPI'
-'360x360 DPI w/ DMT'
+'360x360 DPI DMT'
 '720x360 DPI'
 '720x720 DPI'
 '1440x720 DPI'
@@ -486,8 +486,8 @@ gs -sDEVICE=stp -sModel=escp2-ex -dDensity=1.6 -dGamma=1.5 -dSaturation=0.9 \
    -dBrightness=40 -dImageType=1 -sOutputFile=itsyourchoice.prn foo.ps
 
 Example 2 (print color photograph to /dev/lp0 at maximum quality):
-gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-870 -dDensity=0.8 -r1440 \
-   -sQuality='1440 x 720 DPI Highest Quality' -dImageType=2 \
+gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-870 -dDensity=0.8 \
+   -r1440x720 -sQuality='1440 x 720 DPI Highest Quality' -dImageType=2 \
    -sOutputFile=/dev/lp0 foo.ps
 
 Example 3 (print pure black text to stdout)

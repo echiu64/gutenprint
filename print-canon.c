@@ -446,11 +446,11 @@ canon_parameters(const printer_t *printer,	/* I - Printer model */
       if ( 300<=x && 300<=y)
 	valptrs[c++]= c_strdup("300x300 DPI");
       if ( 300<=x && 300<=y && (caps.features&CANON_CAP_DMT))
-	valptrs[c++]= c_strdup("300x300 DPI w/ DMT");
+	valptrs[c++]= c_strdup("300x300 DPI DMT");
       if ( 600<=x && 600<=y)
 	valptrs[c++]= c_strdup("600x600 DPI");
       if ( 600<=x && 600<=y && (caps.features&CANON_CAP_DMT))
-	valptrs[c++]= c_strdup("600x600 DPI w/ DMT");
+	valptrs[c++]= c_strdup("600x600 DPI DMT");
       if (1200==x && 600==y)
 	valptrs[c++]= c_strdup("1200x600 DPI");
       if (1200<=x && 1200<=y)
@@ -463,7 +463,7 @@ canon_parameters(const printer_t *printer,	/* I - Printer model */
       if ( 360<=x && 360<=y)
 	valptrs[c++]= c_strdup("360x360 DPI");
       if ( 360<=x && 360<=y && (caps.features&CANON_CAP_DMT))
-	valptrs[c++]= c_strdup("360x360 DPI w/ DMT");
+	valptrs[c++]= c_strdup("360x360 DPI DMT");
       if ( 720==x && 360==y)
 	valptrs[c++]= c_strdup("720x360 DPI");
       if ( 720<=x && 720<=y)

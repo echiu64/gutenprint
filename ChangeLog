@@ -1,3 +1,101 @@
+2000-08-09	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.205) (+31 -45)
+	
+	More minor tuning
+	
+2000-08-09	<rlk@sourceforge.net>
+
+	Files:	Ghost/gdevstp.c (1.32) (+12 -3)
+	
+	Try yet again to solve the problem of printing only half the page in
+	the GS driver.
+	
+2000-08-08	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.204) (+7 -7)
+	
+	Tweaks for the EX/700
+	
+2000-08-08	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.48) (+2 -2)
+	
+	Back out accidental change
+	
+2000-08-08	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.203) (+265 -90)
+		printers.xml (1.20) (+30 -30)
+	
+	Use tables to generate dot size and density information rather than
+	heuristics.  This makes it possible to pick optimum dot size for each
+	resolution.
+	
+	Print correctly to bottom of image in oversampled modes.
+	
+2000-08-06	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.47) (+11 -11)
+	
+	Make compile lines a bit more compact
+	
+2000-08-06	<rlk@sourceforge.net>
+
+	Files:	Ghost/.cvsignore (1.4) (+5 -1)
+	
+	update cvsignore
+	
+2000-08-06	<rlk@sourceforge.net>
+
+	Files:	cups/.cvsignore (1.1) ( )
+	
+	cvsignore
+	
+2000-08-06	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.71) (+2 -20)
+		Ghost/gdevstp.c (1.31) (+148 -179)
+		Ghost/README (1.31) (+2 -2)
+		print.h (1.73) (+3 -2)
+		print-ps.c (1.38) (+2 -1)
+		print-pcl.c (1.68) (+2 -1)
+		print-image-gimp.c (1.6) (+8 -2)
+		print-escp2.c (1.202) (+4 -4)
+	
+	Clean up the Ghostscript driver.
+	
+	Rename the oversampled ESCP modes.
+	
+2000-08-06	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.27) (+297 -0)
+		print_gimp.h (1.24) (+2 -2)
+		configure.in (1.22) (+4 -1)
+		RELNOTES (1.16) (+48 -16)
+		README (1.21) (+12 -2)
+		Makefile.am (1.46) (+19 -5)
+	
+	Start preparations for release.
+	
+2000-08-06	<rlk@sourceforge.net>
+
+	Files:	Ghost/gdevstp.c (1.30) (+29 -31)
+	
+	gs_param_strings are counted strings, not null-delimited.
+	
+2000-08-06	<rlk@sourceforge.net>
+
+	Files:	Ghost/README (1.30) (+2 -2)
+	
+	Fix dither algorithm names
+	
+2000-08-06	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.201) (+2 -2)
+	
+	Fix for the 640.
+	
 2000-08-05	<rlk@sourceforge.net>
 
 	Files:	Makefile.am (1.45) (+1 -1)

@@ -320,7 +320,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(11), INCH(17), 9, 9, 0, 24, 1, 0,
-    { 3, 3, -1, 1, -1, 1 },
+    { -1, 3, -1, 1, -1, 1 },
     { 1, 1, .775, .775, .387, .387, .193, .0966 }
   },
   /* 9: Stylus Photo */

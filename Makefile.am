@@ -8,18 +8,28 @@ bin_PROGRAMS = unprint escp2-weavetest pcl-unprint escputil
 
 noinst_PROGRAMS = printdef
 
-print_SOURCES = \
+COMMON_SOURCE = \
 	print-canon.c   	\
 	print-dither.c		\
 	print-escp2.c		\
 	print-pcl.c		\
 	print-ps.c      	\
 	print-util.c		\
-	print-image-gimp.c	\
 	print-weave.c		\
+	print.h			\
+	quickmatrix257.h	\
+	ran.367.179.h
+
+AUX_COMMON_SOURCE = \
+	print-printers.c
+
+ALL_COMMON_SOURCE = $(COMMON_SOURCE) $(AUX_COMMON_SOURCE)
+
+print_SOURCES = \
+	$(COMMON_SOURCE)	\
+	print-image-gimp.c	\
 	print-intl.h		\
 	print.c			\
-	print.h			\
 	gimp_color_window.c	\
 	gimp_main_window.c	\
         gtk_color_window.c	\
@@ -42,8 +52,10 @@ unprint_SOURCES = unprint.c
 escp2_weavetest_SOURCES = escp2-weavetest.c
 pcl_unprint_SOURCES = pcl-unprint.c
 
+GCOPY=	$(addprefix gdevstp-, $(patsubst print-%,%, $(ALL_COMMON_SOURCE)))
+
 CLEANFILES = printdefl.c printdefy.c printdefy.h print-printers.c \
-	$(addprefix Ghost/gdevstp-, $(GCOPY))
+	$(addprefix Ghost/, $(GCOPY))
 
 MAINTAINERCLEANFILES = configure Makefile.in aclocal.m4
 
@@ -63,11 +75,9 @@ AM_CPPFLAGS =\
 
 print_LDADD = $(GIMP_LIBS)
 
-GCOPY=  dither.c escp2.c pcl.c ps.c canon.c util.c printers.c weave.c \
-	print.h quickmatrix257.h ran.367.179.h
 GHOST_DIST= COPYING ChangeLog README contrib.mak.addon \
 	gdevstp.c gdevstp.h gs-stp.pdq com-stp.ppd devs.mak.addon-5.10 \
-	debian-patch debian-patch-stp $(addprefix gdevstp-, $(GCOPY))
+	debian-patch debian-patch-stp $(GCOPY)
 
 EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
 	README.dither quickmatrix257.h ran.367.179.h make-deb.sh README.escp2 \
@@ -93,7 +103,8 @@ uninstall-libexecPROGRAMS: $(libexec_PROGRAMS)
 .PHONY: files ghost ChangeLog force_aclocal
 
 ChangeLog:
-	cvs log | perl ./mkchlog > ChangeLog
+	cvs log | perl ./mkchlog > ChangeLog.tmp
+	mv ChangeLog.tmp ChangeLog
 
 files:
 	@files=`ls $(DISTFILES) 2> /dev/null`; for p in $$files; do \
@@ -102,7 +113,7 @@ files:
 
 GHCODE=-e 's/^\\\#include "\(.*\)\.h"$$/\\\#include "gdevstp-\1.h"/'
 
-ghost: $(addprefix Ghost/gdevstp-, $(GCOPY))
+ghost: $(addprefix Ghost/, $(GCOPY))
 
 Ghost/gdevstp-%.h: %.h Makefile
 	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $@
@@ -112,7 +123,6 @@ Ghost/gdevstp-%: print-% Makefile
 
 FORCE_ACLOCAL=PLEASE\ RUN\ make\ gdist\ rather\ than\ make\ dist
 
-echo:
 gdist: force_aclocal
 
 force_aclocal:
