@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.65  2000/02/05 20:57:39  rlk
+ *   Minor reorg
+ *
  *   Revision 1.64  2000/02/05 20:02:10  rlk
  *   some more silly problems
  *
@@ -356,21 +359,32 @@
 #define ERROR_ROWS 2
 #define NCOLORS (4)
 
-typedef union error
-{
-  struct
-  {
-    int c[ERROR_ROWS];
-    int m[ERROR_ROWS];
-    int y[ERROR_ROWS];
-    int k[ERROR_ROWS];
-  } c;
-  int v[4][ERROR_ROWS];
+typedef int errline_t[MAX_CARRIAGE_WIDTH*MAX_BPI+1];
+
+typedef struct {
+  int *errs[ERROR_ROWS][NCOLORS];
 } error_t;
 
-error_t *nerror = 0;
+#define ECOLOR_C 0
+#define ECOLOR_M 1
+#define ECOLOR_Y 2
+#define ECOLOR_K 3
 
-static int error[ERROR_ROWS][NCOLORS][MAX_CARRIAGE_WIDTH*MAX_BPI+1];
+
+static int *
+get_errline(int row, int color)
+{
+  static error_t error;
+  if (row < 0 || color < 0 || color >= NCOLORS)
+    return NULL;
+  if (error.errs[row & 1][color])
+    return error.errs[row & 1][color];
+  else
+    {
+      error.errs[row & 1][color] = malloc(sizeof(errline_t));
+      return error.errs[row & 1][color];
+    }
+}
 
 /*
  * Dithering functions!
@@ -531,7 +545,10 @@ static dither_t dither_info;
 void
 init_dither(void)
 {
-  (void) memset(error, 0, sizeof(error));
+  int i, j;
+  for (i = 0; i < 2; i++)
+    for (j = 0; j < 4; j++)
+      memset(get_errline(i, j), 0, sizeof(errline_t));
   dither_info.cbits = 1;
   dither_info.lcbits = 1;
   dither_info.mbits = 1;
@@ -702,8 +719,8 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
   xmod   = src_width % dst_width;
   length = (dst_width + 7) / 8;
 
-  kerror0 = error[row & 1][3];
-  kerror1 = error[1 - (row & 1)][3];
+  kerror0 = get_errline(row, ECOLOR_K);
+  kerror1 = get_errline(row + 1, ECOLOR_K);
   memset(kerror1, 0, dst_width * sizeof(int));
 
   memset(black, 0, length);
@@ -1039,17 +1056,17 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   xmod   = src_width % dst_width;
   length = (dst_width + 7) / 8;
 
-  cerror0 = error[row & 1][0];
-  cerror1 = error[1 - (row & 1)][0];
+  cerror0 = get_errline(row, ECOLOR_C);
+  cerror1 = get_errline(row + 1, ECOLOR_C);
 
-  merror0 = error[row & 1][1];
-  merror1 = error[1 - (row & 1)][1];
+  merror0 = get_errline(row, ECOLOR_M);
+  merror1 = get_errline(row + 1, ECOLOR_M);
 
-  yerror0 = error[row & 1][2];
-  yerror1 = error[1 - (row & 1)][2];
+  yerror0 = get_errline(row, ECOLOR_Y);
+  yerror1 = get_errline(row + 1, ECOLOR_Y);
 
-  kerror0 = error[row & 1][3];
-  kerror1 = error[1 - (row & 1)][3];
+  kerror0 = get_errline(row, ECOLOR_K);
+  kerror1 = get_errline(row + 1, ECOLOR_K);
   memset(kerror1, 0, dst_width * sizeof(int));
   memset(cerror1, 0, dst_width * sizeof(int));
   memset(merror1, 0, dst_width * sizeof(int));
@@ -1454,8 +1471,8 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
   xmod   = src_width % dst_width;
   length = (dst_width + 7) / 8;
 
-  kerror0 = error[row & 1][3];
-  kerror1 = error[1 - (row & 1)][3];
+  kerror0 = get_errline(row, ECOLOR_K);
+  kerror1 = get_errline(row + 1, ECOLOR_K);
   memset(kerror1, 0, dst_width * sizeof(int));
 
   memset(black, 0, length);
@@ -1716,17 +1733,17 @@ dither_cmyk4(unsigned short  *rgb,	/* I - RGB pixels */
   xmod   = src_width % dst_width;
   length = (dst_width + 7) / 8;
 
-  cerror0 = error[row & 1][0];
-  cerror1 = error[1 - (row & 1)][0];
+  cerror0 = get_errline(row, ECOLOR_C);
+  cerror1 = get_errline(row + 1, ECOLOR_C);
 
-  merror0 = error[row & 1][1];
-  merror1 = error[1 - (row & 1)][1];
+  merror0 = get_errline(row, ECOLOR_M);
+  merror1 = get_errline(row + 1, ECOLOR_M);
 
-  yerror0 = error[row & 1][2];
-  yerror1 = error[1 - (row & 1)][2];
+  yerror0 = get_errline(row, ECOLOR_Y);
+  yerror1 = get_errline(row + 1, ECOLOR_Y);
 
-  kerror0 = error[row & 1][3];
-  kerror1 = error[1 - (row & 1)][3];
+  kerror0 = get_errline(row, ECOLOR_K);
+  kerror1 = get_errline(row + 1, ECOLOR_K);
   memset(kerror1, 0, dst_width * sizeof(int));
   memset(cerror1, 0, dst_width * sizeof(int));
   memset(merror1, 0, dst_width * sizeof(int));
