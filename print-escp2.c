@@ -660,9 +660,9 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    32, 8, 32, 8, 720, 720, INCH(17 / 2), INCH(14), 8, 9, 0, 24, 1, 0,
-    { 4, 4, -1, 2, 2, -1, 2 },
-    { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
+    32, 8, 32, 8, 720, 360, INCH(17 / 2), INCH(14), 8, 9, 0, 24, 1, 0,
+    { 4, 4, -1, 2, 2, -1, 1 },
+    { 2.0, 1.3, 1.3, .775, .775, .55, .55, .275, .138 },
     &simple_4color_inks
   },
   /* 4: Stylus Color 800 */
@@ -671,9 +671,9 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    64, 4, 64, 4, 720, 720, INCH(17 / 2), INCH(14), 8, 9, 9, 40, 1, 4,
-    { 3, 3, -1, 1, 1, -1, 1 },
-    { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
+    64, 4, 64, 4, 720, 360, INCH(17 / 2), INCH(14), 8, 9, 9, 40, 1, 4,
+    { 3, 3, -1, 1, 1, -1, 4 },
+    { 2.0, 1.3, 1.3, .775, .775, .55, .55, .275, .138 },
     &simple_4color_inks
   },
   /* 5: Stylus Color 850 */
@@ -682,9 +682,9 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    64, 4, 128, 2, 720, 720, INCH(17 / 2), INCH(14), 9, 9, 9, 40, 1, 4,
-    { 3, 3, -1, 1, 1, -1, 1 },
-    { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
+    64, 4, 128, 2, 720, 360, INCH(17 / 2), INCH(14), 9, 9, 9, 40, 1, 4,
+    { 3, 3, -1, 1, 1, -1, 4 },
+    { 2.0, 1.3, 1.3, .775, .775, .55, .55, .275, .138 },
     &simple_4color_inks
   },
   /* 6: Stylus Color 1520 */
@@ -693,9 +693,9 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
-    1, 1, 1, 1, 720, 720, INCH(17), INCH(55), 8, 9, 9, 49, 4, 0,
-    { 3, 3, -1, 1, 1, -1, 1 },
-    { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
+    64, 4, 64, 4, 720, 360, INCH(17), INCH(55), 8, 9, 9, 40, 1, 4,
+    { 3, 3, -1, 1, 1, -1, 4 },
+    { 2.0, 1.3, 1.3, .775, .775, .55, .55, .275, .138 },
     &simple_4color_inks
   },
 
@@ -778,7 +778,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    96, 4, 192, 2, 360, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
+    96, 4, 192, 2, 360, 180, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 1, 0x11, 1, 0x10, 1, 0x10 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_3pl_inks
@@ -899,9 +899,9 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
-    1, 1, 1, 1, 720, 720, INCH(17), INCH(55), 8, 9, 9, 49, 4, 0,
-    { 3, 3, -1, 1, 1, -1, 1 },
-    { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
+    64, 4, 64, 4, 720, 360, INCH(17), INCH(55), 8, 9, 9, 40, 1, 4,
+    { 3, 3, -1, 1, 1, -1, 4 },
+    { 2.0, 1.3, 1.3, .775, .775, .55, .55, .275, .138 },
     &simple_4color_inks
   },
   /* 25: Stylus Color 670 */
@@ -1681,14 +1681,28 @@ escp2_set_printhead_resolution(FILE *prn, escp_init_t *init)
       init->use_softweave)
     {
       /* Magic resolution cookie */
-      if (init->output_type == OUTPUT_GRAY)
-	fprintf(prn, "\033(D%c%c%c%c%c%c", 4, 0, 14400 % 256, 14400 / 256,
-		escp2_black_nozzle_separation(init->model) * 14400 / 720,
-		14400 / escp2_xres(init->model));
+      if (init->xdpi > 720)
+	{
+	  if (init->output_type == OUTPUT_GRAY)
+	    fprintf(prn, "\033(D%c%c%c%c%c%c", 4, 0, 14400 % 256, 14400 / 256,
+		    escp2_black_nozzle_separation(init->model) * 14400 / 720,
+		    14400 / escp2_enhanced_xres(init->model));
+	  else
+	    fprintf(prn, "\033(D%c%c%c%c%c%c", 4, 0, 14400 % 256, 14400 / 256,
+		    escp2_nozzle_separation(init->model) * 14400 / 720,
+		    14400 / escp2_enhanced_xres(init->model));
+	}
       else
-	fprintf(prn, "\033(D%c%c%c%c%c%c", 4, 0, 14400 % 256, 14400 / 256,
-		escp2_nozzle_separation(init->model) * 14400 / 720,
-		14400 / escp2_xres(init->model));
+	{
+	  if (init->output_type == OUTPUT_GRAY)
+	    fprintf(prn, "\033(D%c%c%c%c%c%c", 4, 0, 14400 % 256, 14400 / 256,
+		    escp2_black_nozzle_separation(init->model) * 14400 / 720,
+		    14400 / escp2_xres(init->model));
+	  else
+	    fprintf(prn, "\033(D%c%c%c%c%c%c", 4, 0, 14400 % 256, 14400 / 256,
+		    escp2_nozzle_separation(init->model) * 14400 / 720,
+		    14400 / escp2_xres(init->model));
+	}
     }
 }
 
@@ -2762,6 +2776,255 @@ escp2_unpack_4(int length,
     escp2_unpack_4_1(length, in, out0, out1, out2, out3);
   else
     escp2_unpack_4_2(length, in, out0, out1, out2, out3);
+}
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+#define SH80 0
+#define SH81 8
+#define SH82 16
+#define SH83 24
+#define SH84 32
+#define SH85 40
+#define SH86 48
+#define SH87 56
+#else
+#define SH80 56
+#define SH81 48
+#define SH82 40
+#define SH83 32
+#define SH84 24
+#define SH85 16
+#define SH86 8
+#define SH87 0
+#endif
+
+static void
+escp2_unpack_8_1(int length,
+		 const unsigned char *in,
+		 unsigned char *out0,
+		 unsigned char *out1,
+		 unsigned char *out2,
+		 unsigned char *out3,
+		 unsigned char *out4,
+		 unsigned char *out5,
+		 unsigned char *out6,
+		 unsigned char *out7)
+{
+  int i;
+  int limit = (length + 7) / 8;
+  memset(out0, 0, limit);
+  memset(out1, 0, limit);
+  memset(out2, 0, limit);
+  memset(out3, 0, limit);
+  memset(out4, 0, limit);
+  memset(out5, 0, limit);
+  memset(out6, 0, limit);
+  memset(out7, 0, limit);
+  for (i = 0; i < limit; i++)
+    {
+      unsigned long long inll = ((const int *) in)[0];
+      if (inll > 0)
+	{
+	  unsigned char ob0 = 0;
+	  unsigned char ob1 = 0;
+	  unsigned char ob2 = 0;
+	  unsigned char ob3 = 0;
+	  unsigned char ob4 = 0;
+	  unsigned char ob5 = 0;
+	  unsigned char ob6 = 0;
+	  unsigned char ob7 = 0;
+	  unsigned char inbyte = (inll >> SH80) & 0xff;
+	  ob0 = ((inbyte & (1 << 7)) << 0);
+	  ob1 = ((inbyte & (1 << 6)) << 1);
+	  ob2 = ((inbyte & (1 << 5)) << 2);
+	  ob3 = ((inbyte & (1 << 4)) << 3);
+	  ob4 = ((inbyte & (1 << 3)) << 4);
+	  ob5 = ((inbyte & (1 << 2)) << 5);
+	  ob6 = ((inbyte & (1 << 1)) << 6);
+	  ob7 = ((inbyte & (1 << 0)) << 7);
+	  inbyte = (inll >> SH81) & 0xff;
+	  ob0 += ((inbyte & (1 << 7)) >> 1);
+	  ob1 += ((inbyte & (1 << 6)) << 0);
+	  ob2 += ((inbyte & (1 << 5)) << 1);
+	  ob3 += ((inbyte & (1 << 4)) << 2);
+	  ob4 += ((inbyte & (1 << 3)) << 3);
+	  ob5 += ((inbyte & (1 << 2)) << 4);
+	  ob6 += ((inbyte & (1 << 1)) << 5);
+	  ob7 += ((inbyte & (1 << 0)) << 6);
+	  inbyte = (inll >> SH82) & 0xff;
+	  ob0 += ((inbyte & (1 << 7)) >> 2);
+	  ob1 += ((inbyte & (1 << 6)) >> 1);
+	  ob2 += ((inbyte & (1 << 5)) << 0);
+	  ob3 += ((inbyte & (1 << 4)) << 1);
+	  ob4 += ((inbyte & (1 << 3)) << 2);
+	  ob5 += ((inbyte & (1 << 2)) << 3);
+	  ob6 += ((inbyte & (1 << 1)) << 4);
+	  ob7 += ((inbyte & (1 << 0)) << 5);
+	  inbyte = (inll >> SH83) & 0xff;
+	  ob0 += ((inbyte & (1 << 7)) >> 3);
+	  ob1 += ((inbyte & (1 << 6)) >> 2);
+	  ob2 += ((inbyte & (1 << 5)) >> 1);
+	  ob3 += ((inbyte & (1 << 4)) << 0);
+	  ob4 += ((inbyte & (1 << 3)) << 1);
+	  ob5 += ((inbyte & (1 << 2)) << 2);
+	  ob6 += ((inbyte & (1 << 1)) << 3);
+	  ob7 += ((inbyte & (1 << 0)) << 4);
+	  inbyte = (inll >> SH84) & 0xff;
+	  ob0 += ((inbyte & (1 << 7)) >> 4);
+	  ob1 += ((inbyte & (1 << 6)) >> 3);
+	  ob2 += ((inbyte & (1 << 5)) >> 2);
+	  ob3 += ((inbyte & (1 << 4)) >> 1);
+	  ob4 += ((inbyte & (1 << 3)) << 0);
+	  ob5 += ((inbyte & (1 << 2)) << 1);
+	  ob6 += ((inbyte & (1 << 1)) << 2);
+	  ob7 += ((inbyte & (1 << 0)) << 3);
+	  inbyte = (inll >> SH85) & 0xff;
+	  ob0 += ((inbyte & (1 << 7)) >> 5);
+	  ob1 += ((inbyte & (1 << 6)) >> 4);
+	  ob2 += ((inbyte & (1 << 5)) >> 3);
+	  ob3 += ((inbyte & (1 << 4)) >> 2);
+	  ob4 += ((inbyte & (1 << 3)) >> 1);
+	  ob5 += ((inbyte & (1 << 2)) << 0);
+	  ob6 += ((inbyte & (1 << 1)) << 1);
+	  ob7 += ((inbyte & (1 << 0)) << 2);
+	  inbyte = (inll >> SH86) & 0xff;
+	  ob0 += ((inbyte & (1 << 7)) >> 6);
+	  ob1 += ((inbyte & (1 << 6)) >> 5);
+	  ob2 += ((inbyte & (1 << 5)) >> 4);
+	  ob3 += ((inbyte & (1 << 4)) >> 3);
+	  ob4 += ((inbyte & (1 << 3)) >> 2);
+	  ob5 += ((inbyte & (1 << 2)) >> 1);
+	  ob6 += ((inbyte & (1 << 1)) << 0);
+	  ob7 += ((inbyte & (1 << 0)) << 1);
+	  inbyte = (inll >> SH87) & 0xff;
+	  ob0 += ((inbyte & (1 << 7)) >> 7);
+	  ob1 += ((inbyte & (1 << 6)) >> 6);
+	  ob2 += ((inbyte & (1 << 5)) >> 5);
+	  ob3 += ((inbyte & (1 << 4)) >> 4);
+	  ob4 += ((inbyte & (1 << 3)) >> 3);
+	  ob5 += ((inbyte & (1 << 2)) >> 2);
+	  ob6 += ((inbyte & (1 << 1)) >> 1);
+	  ob7 += ((inbyte & (1 << 0)) << 0);
+	  out0[i] = ob0;
+	  out1[i] = ob1;
+	  out2[i] = ob2;
+	  out3[i] = ob3;
+	  out4[i] = ob4;
+	  out5[i] = ob5;
+	  out6[i] = ob6;
+	  out7[i] = ob7;
+	}
+      in += 8;
+    }
+}
+
+static void
+escp2_unpack_8_2(int length,
+		 const unsigned char *in,
+		 unsigned char *out0,
+		 unsigned char *out1,
+		 unsigned char *out2,
+		 unsigned char *out3,
+		 unsigned char *out4,
+		 unsigned char *out5,
+		 unsigned char *out6,
+		 unsigned char *out7)
+{
+  int i;
+  int limit = (length + 7) / 8;
+  memset(out0, 0, limit);
+  memset(out1, 0, limit);
+  memset(out2, 0, limit);
+  memset(out3, 0, limit);
+  memset(out4, 0, limit);
+  memset(out5, 0, limit);
+  memset(out6, 0, limit);
+  memset(out7, 0, limit);
+  for (i = 0; i < limit; i++)
+    {
+      unsigned long long inll = ((const int *) in)[0];
+      if (inll > 0)
+	{
+	  unsigned char ob0 = 0;
+	  unsigned char ob1 = 0;
+	  unsigned char ob2 = 0;
+	  unsigned char ob3 = 0;
+	  unsigned char ob4 = 0;
+	  unsigned char ob5 = 0;
+	  unsigned char ob6 = 0;
+	  unsigned char ob7 = 0;
+	  unsigned char inbyte = (inll >> SH80) & 0xff;
+	  ob0 = ((inbyte & (3 << 6)) << 0);
+	  ob1 = ((inbyte & (3 << 4)) << 2);
+	  ob2 = ((inbyte & (3 << 2)) << 4);
+	  ob3 = ((inbyte & (3 << 0)) << 6);
+	  inbyte = (inll >> SH81) & 0xff;
+	  ob4 = ((inbyte & (3 << 6)) << 0);
+	  ob5 = ((inbyte & (3 << 4)) << 2);
+	  ob6 = ((inbyte & (3 << 2)) << 4);
+	  ob7 = ((inbyte & (3 << 0)) << 6);
+	  inbyte = (inll >> SH82) & 0xff;
+	  ob0 += ((inbyte & (3 << 6)) >> 2);
+	  ob1 += ((inbyte & (3 << 4)) << 0);
+	  ob2 += ((inbyte & (3 << 2)) << 2);
+	  ob3 += ((inbyte & (3 << 0)) << 4);
+	  inbyte = (inll >> SH83) & 0xff;
+	  ob4 += ((inbyte & (3 << 6)) >> 2);
+	  ob5 += ((inbyte & (3 << 4)) << 0);
+	  ob6 += ((inbyte & (3 << 2)) << 2);
+	  ob7 += ((inbyte & (3 << 0)) << 4);
+	  inbyte = (inll >> SH84) & 0xff;
+	  ob0 += ((inbyte & (3 << 6)) >> 4);
+	  ob1 += ((inbyte & (3 << 4)) >> 2);
+	  ob2 += ((inbyte & (3 << 2)) << 0);
+	  ob3 += ((inbyte & (3 << 0)) << 2);
+	  inbyte = (inll >> SH85) & 0xff;
+	  ob4 += ((inbyte & (3 << 6)) >> 4);
+	  ob5 += ((inbyte & (3 << 4)) >> 2);
+	  ob6 += ((inbyte & (3 << 2)) << 0);
+	  ob7 += ((inbyte & (3 << 0)) << 2);
+	  inbyte = (inll >> SH86) & 0xff;
+	  ob0 += ((inbyte & (3 << 6)) >> 6);
+	  ob1 += ((inbyte & (3 << 4)) >> 4);
+	  ob2 += ((inbyte & (3 << 2)) >> 2);
+	  ob3 += ((inbyte & (3 << 0)) << 0);
+	  inbyte = (inll >> SH87) & 0xff;
+	  ob4 += ((inbyte & (3 << 6)) >> 6);
+	  ob5 += ((inbyte & (3 << 4)) >> 4);
+	  ob6 += ((inbyte & (3 << 2)) >> 2);
+	  ob7 += ((inbyte & (3 << 0)) << 0);
+	  out0[i] = ob0;
+	  out1[i] = ob1;
+	  out2[i] = ob2;
+	  out3[i] = ob3;
+	  out4[i] = ob4;
+	  out5[i] = ob5;
+	  out6[i] = ob6;
+	  out7[i] = ob7;
+	}
+      in += 8;
+    }
+}
+
+static void
+escp2_unpack_8(int length,
+	       int bits,
+	       const unsigned char *in,
+	       unsigned char *out0,
+	       unsigned char *out1,
+	       unsigned char *out2,
+	       unsigned char *out3,
+	       unsigned char *out4,
+	       unsigned char *out5,
+	       unsigned char *out6,
+	       unsigned char *out7)
+{
+  if (bits == 1)
+    escp2_unpack_8_1(length, in, out0, out1, out2, out3,
+		     out4, out5, out6, out7);
+  else
+    escp2_unpack_8_2(length, in, out0, out1, out2, out3,
+		     out4, out5, out6, out7);
 }
 
 static int
@@ -4001,6 +4264,10 @@ escp2_write_weave(void *        vsw,
 		case 4:
 		  escp2_unpack_4(length, sw->bitwidth, in,
 				 s[0], s[1], s[2], s[3]);
+		case 8:
+		  escp2_unpack_8(length, sw->bitwidth, in,
+				 s[0], s[1], s[2], s[3],
+				 s[4], s[5], s[6], s[7]);
 		  break;
 		}
 	      switch (sw->vertical_subpasses)
