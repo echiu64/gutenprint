@@ -3876,7 +3876,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     variable_bits, variable_base_res, &default_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
-  /* 36: Stylus Photo 785/890/895 */
+  /* 36: Stylus Photo 785/890/895/915 */
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
@@ -4101,7 +4101,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     variable_bits, variable_base_res, &default_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
-  /* 51: Stylus Photo 915/925 */
+  /* 51: Stylus Photo 925 */
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
