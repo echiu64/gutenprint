@@ -179,7 +179,7 @@ while ($tmpl=readdir(TDIR)) {
 
 #    print STDERR "Argnamemap '$fooopt' => '$stpopt'\n";
 
-    open TMPL, "foomatic-templates/$tmpl";
+    open TMPL, "$templatedir/$tmpl";
     my @datafile = <TMPL>;
     close TMPL;
 
