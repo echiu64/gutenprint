@@ -30,7 +30,9 @@ AM_CPPFLAGS =\
  -DLOCALEDIR=\""$(localedir)"\" \
  @MAINTAINER_CFLAGS@
 
-noinst_PROGRAMS = printer_options
+noinst_PROGRAMS = @FOOMATIC_NOINST_BIN@
+
+EXTRA_PROGRAMS = printer_options
 
 printer_options_SOURCES = printer_options.c
 printer_options_LDADD = -lm $(LIBGIMPPRINT_LIBS)
@@ -42,3 +44,17 @@ $(LIBGIMPPRINT_LIBS):
 EXTRA_DIST = cyan-sweep.tif parse-escp2 run-weavetest
 CLEANFILES = $(noinst_PROGRAMS)
 MAINTAINERCLEANFILES = Makefile.in
+
+if BUILD_FOOMATIC
+install-data-local: foomatic-data
+endif
+	foomatic-kitload -k foomatic-db
+
+install: @FOOMATIC_INSTALL@
+
+clean-local:
+	-rm -rf foomatic-db
+
+foomatic-data: printer_options
+	-rm -rf foomatic-db
+	./foomatic-generator

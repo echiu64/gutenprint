@@ -365,6 +365,14 @@ dnl Require CUPS 1.1...
 
 fi
 
+dnl foomatic checks
+if test x${BUILD_FOOMATIC} = xyes ; then
+  AC_CHECK_PROG(FOOMATIC_KITLOAD, foomatic-kitload, foomatic-kitload)
+  if test -z "$FOOMATIC_KITLOAD" ; then
+    AC_MSG_WARN(Cannot find foomatic-kitload; attempt to install foomatic will fail)
+  fi
+fi
+
 dnl GIMP checks
 if test x${BUILD_GIMP} = xyes -o -n "${BUILD_PACKAGE}" ; then
   AM_PATH_GIMP(1.0.0,
@@ -412,6 +420,15 @@ AC_CHECK_FUNC(getopt_long,
   LIBOBJS="${LIBOBJS} getopt.o getopt1.o")
 
 dnl Define what has to be built
+if test x${BUILD_FOOMATIC} = xyes ; then
+  FOOMATIC_NOINST_BIN="printer_options"
+  FOOMATIC_INSTALL="install-am"
+else
+  FOOMATIC_INSTALL=""
+fi
+
+AM_CONDITIONAL(BUILD_FOOMATIC, test x${BUILD_FOOMATIC} = xyes)
+
 if test x${BUILD_CUPS} = xyes ; then
   CUPS_BIN="cups-calibrate"
   CUPS_BACKEND_BIN="epson canon"
@@ -460,7 +477,7 @@ else
   )
 fi
 if test x${BUILD_TEST} = xyes ; then
-  TEST_BIN="escp2-weavetest printer_options unprint escp2-unprint pcl-unprint bjc-unprint"
+  TEST_BIN="escp2-weavetest unprint escp2-unprint pcl-unprint bjc-unprint"
 fi
 
 dnl CUPS path setup
@@ -530,6 +547,8 @@ AC_SUBST(CUPS_INSTALL)
 AC_SUBST(CUPS_LIBS)
 AC_SUBST(CUPS_MAN)
 AC_SUBST(CUPS_NOINST_BIN)
+AC_SUBST(FOOMATIC_NOINST_BIN)
+AC_SUBST(FOOMATIC_INSTALL)
 AC_SUBST(ESCPUTIL_BIN)
 AC_SUBST(ESCPUTIL_MAN)
 AC_SUBST(GIMP_BIN)

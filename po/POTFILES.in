@@ -37,6 +37,8 @@ src/gimp/print.c
 test/escp2-unprint.c
 test/escp2-weavetest.c
 test/pcl-unprint.c
-test/printer_options.c
 test/testdither.c
 test/unprint.c
+
+# Foomatic-related sources
+src/foomatic/printer_options.c
