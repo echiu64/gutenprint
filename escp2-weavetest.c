@@ -109,7 +109,7 @@ main(int argc, char **argv)
   memset(physpassstuff, -1, nrows);
 
   sw = initialize_weave(physjets, physsep, hpasses, vpasses, subpasses,
-			COLOR_MONOCHROME, 1, 128);
+			COLOR_MONOCHROME, 1, 128, 1);
   printf("%13s %5s %5s %5s %10s %10s %10s %10s\n", "", "row", "pass", "jet",
 	 "missing", "logical", "physstart", "physend");
   for (i = 0; i < nrows; i++)
