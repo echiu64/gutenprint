@@ -37,6 +37,10 @@ grep "^AM_GNU_GETTEXT" $srcdir/configure.in >/dev/null && {
   }
 }
 
+#### MRS: The following now only generates a warning, since earlier
+####      versions of gettext *do* work, they just don't create the
+####      right uninstall crap.
+
 gettextv=`gettext --version | head -1 | awk '{print $NF}'`
 gettext_major=`echo $gettextv | awk -F. '{print $1}'`
 gettext_minor=`echo $gettextv | awk -F. '{print $2}'`
@@ -48,11 +52,11 @@ test "$gettext_major" -eq 0 && {
   }
 } && {
   echo
-  echo "**Error**: You must have \`gettext' 0.10.38 or newer installed to"
-  echo "compile gimp-print."
+  echo "**Warning**: You must have \`gettext' 0.10.38 or newer installed to"
+  echo "create a gimp-print distribution.  Earlier versions of gettext do"
+  echo "not properly uninstall files."
   echo "Get ftp://alpha.gnu.org/gnu/gettext-0.10.38.tar.gz"
   echo "(or a newer version if it is available)"
-  DIE=1
 }
 
 (automake --version) < /dev/null > /dev/null 2>&1 || {
@@ -85,10 +89,7 @@ test -z "$(type -p jade)" && jade_err=1
 # Proper rev?
 test "$jade_err" -eq 0 && {
 #  echo "Checking for proper revision of jade..."
-  tmp_file=$(mktemp /tmp/jade_conf.XXXXXX)
-  jade -v < /dev/null > $tmp_file 2>&1
-  jade_version=`grep -i "jade version" $tmp_file | awk -F\" '{print $2}'`
-  rm $tmp_file
+  jade_version=`jade -v < /dev/null 2>&1 | grep -i "jade version" | awk -F\" '{print $2}'`
 
   jade_version_major=`echo $jade_version | awk -F. '{print $1}'`
   jade_version_minor=`echo $jade_version | awk -F. '{print $2}'`
@@ -140,10 +141,7 @@ test -z "$(type -p openjade)" && openjade_err=1
 # Proper rev?
 test "$openjade_err" -eq 0 && {
 #  echo "Checking for proper revision of openjade..."
-  tmp_file=$(mktemp /tmp/open_jade.XXXXXX)
-  openjade -v < /dev/null > $tmp_file 2>&1
-  openjade_version=`grep -i "openjade version" $tmp_file | awk -F\" '{print $2}'`
-  rm $tmp_file
+  openjade_version=`openjade -v < /dev/null 2>&1 | grep -i "openjade version" $tmp_file | awk -F\" '{print $2}'`
 
   openjade_version_major=`echo $openjade_version | awk -F. '{print $1}'`
   openjade_version_minor=`echo $openjade_version | awk -F. '{print $2}'`
@@ -198,7 +196,7 @@ test -z "$(type -p sgmltools)" && sgmltools_err=1
 # Proper rev?
 test "$sgmltools_err" -eq 0 && {
 #  echo "Checking for proper revision of sgmltools..."
-  sgmltools_version="$(sgmltools --version | awk '{print $3}')"
+  sgmltools_version=`sgmltools --version | awk '{print $3}'`
 
   sgmltools_version_major=`echo $sgmltools_version | awk -F. '{print $1}'`
   sgmltools_version_minor=`echo $sgmltools_version | awk -F. '{print $2}'`
