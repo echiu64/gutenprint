@@ -23,6 +23,13 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.3  2000/02/16 00:59:19  rlk
+ *   1) Use correct convert functions (canon, escp2, pcl, ps).
+ *
+ *   2) Fix gray_to_rgb increment (print-util)
+ *
+ *   3) Fix dither update (print-dither)
+ *
  *   Revision 1.2  2000/02/07 01:35:05  rlk
  *   Try to improve variable dot stuff
  *
@@ -798,7 +805,8 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
     else if (x > d->dst_width - offset - 1)
       offset = d->dst_width - x - 1;
 
-    if (k > ditherbit)
+    if (k > 32768 + ((ditherbit >> d->k_randomizer) -
+		     (32768 >> d->k_randomizer)))
     {
       if (d->kbits++ == d->horizontal_overdensity)
 	{
@@ -814,7 +822,7 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
       kerror1[0] += 3 * k;
       kerror1[offset] += k;
       if (x > 0 && x < (d->dst_width - 1))
-	ditherk    = kerror0[1] + 3 * k;
+	ditherk    = kerror0[direction] + 3 * k;
     }
     else
     {
@@ -822,7 +830,7 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
       kerror1[0] += k;
       kerror1[offset] += k;
       if (x > 0 && x < (d->dst_width - 1))
-	ditherk    = kerror0[1] + 5 * k;
+	ditherk    = kerror0[direction] + 5 * k;
     }
 
     if (direction == 1)
@@ -1544,7 +1552,7 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
       kerror1[0] += 3 * k;
       kerror1[offset] += k;
       if (x > 0 && x < (d->dst_width - 1))
-	ditherk    = kerror0[1] + 3 * k;
+	ditherk    = kerror0[direction] + 3 * k;
     }
     else
     {
@@ -1552,7 +1560,7 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
       kerror1[0] += k;
       kerror1[offset] += k;
       if (x > 0 && x < (d->dst_width - 1))
-	ditherk    = kerror0[1] + 5 * k;
+	ditherk    = kerror0[direction] + 5 * k;
     }
 
     if (direction == 1)

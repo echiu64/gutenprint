@@ -38,6 +38,13 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.73  2000/02/16 00:59:19  rlk
+ *   1) Use correct convert functions (canon, escp2, pcl, ps).
+ *
+ *   2) Fix gray_to_rgb increment (print-util)
+ *
+ *   3) Fix dither update (print-dither)
+ *
  *   Revision 1.72  2000/02/13 03:14:26  rlk
  *   Bit of an oops here about printer models; also start on print-gray-using-color mode for better quality
  *
@@ -844,7 +851,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 }
 
 /*
- * 'rgb_to_rgb()' - Convert rgb image data to RGB.
+ * 'gray_to_rgb()' - Convert gray image data to RGB.
  */
 
 void
@@ -856,7 +863,7 @@ gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 	   vars_t  		*vars		/* I - Saturation */
 	   )
 {
-  if (bpp == 3)
+  if (bpp == 1)
   {
    /*
     * No alpha in image...
@@ -865,8 +872,8 @@ gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
     while (width > 0)
     {
       rgbout[0] = vars->lut.red[grayin[0]];
-      rgbout[1] = vars->lut.green[grayin[1]];
-      rgbout[2] = vars->lut.blue[grayin[2]];
+      rgbout[1] = vars->lut.green[grayin[0]];
+      rgbout[2] = vars->lut.blue[grayin[0]];
       if (vars->density != 1.0)
 	{
 	  float t;

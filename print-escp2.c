@@ -31,6 +31,13 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.80  2000/02/16 00:59:19  rlk
+ *   1) Use correct convert functions (canon, escp2, pcl, ps).
+ *
+ *   2) Fix gray_to_rgb increment (print-util)
+ *
+ *   3) Fix dither update (print-dither)
+ *
  *   Revision 1.79  2000/02/16 00:00:43  rlk
  *   Put pclunprint in build, and use actual weave code in weavetest
  *
@@ -1145,11 +1152,7 @@ escp2_print(int       model,		/* I - Model */
   else if (output_type == OUTPUT_GRAY_COLOR)
   {
     out_bpp = 3;
-
-    if (image_bpp >= 3)
-      colorfunc = gray_to_rgb;
-    else
-      colorfunc = indexed_to_rgb;
+    colorfunc = gray_to_rgb;
   }
   else
   {
