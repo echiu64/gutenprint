@@ -3549,7 +3549,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       stp_set_gamma(nv, stp_get_gamma(nv) * pt->gamma);
     }
   else				/* Can't find paper type? Assume plain */
-    stp_set_density(nv, stp_get_density(nv) * .5);
+    stp_set_density(nv, stp_get_density(nv) * .8);
   stp_set_density(nv, stp_get_density(nv) * escp2_density(model, resid, nv));
   if (stp_get_density(nv) > 1.0)
     stp_set_density(nv, 1.0);
@@ -3579,7 +3579,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     }
   else
     {
-      k_lower *= .5;
+      k_lower *= .1;
       k_upper = .5;
     }
   stp_dither_set_black_lower(dither, k_lower);
