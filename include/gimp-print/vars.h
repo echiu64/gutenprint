@@ -21,6 +21,10 @@
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+/**
+ * @file vars.h
+ * @brief Print job functions.
+ */
 
 #ifndef __GIMP_PRINT_VARS_H__
 #define __GIMP_PRINT_VARS_H__
@@ -29,157 +33,175 @@
 extern "C" {
 #endif
 
-
-/*
- * Constants...
- */
-
-/*
- * Opaque representation of printer setttings.
+/**
+ * The vars data type contains all the information about a print job,
+ * this includes information such as the printer model, paper size,
+ * print resolution etc.  Most of these job options are expressed as
+ * parameters which vary according to the model and other options
+ * selected.
  *
  * The representation of printer settings has changed dramatically from 4.2.
  * All (well most, anyway) settings outside of basics such as the printer
  * model and sizing settings are now typed parameters.
+ *
+ * @defgroup vars vars
+ * @{
  */
+
+/** The vars opaque data type. */
 typedef void *stp_vars_t;
+/** The constant vars opaque data type. */
 typedef const void *stp_const_vars_t;
 
-
-/*
+/**
+ * Parameter types.
  * The following types are permitted for a printer setting.  Not all
  * are currently implemented.
  */
 typedef enum
 {
-  STP_PARAMETER_TYPE_STRING_LIST, /* Single string choice from a list */
-  STP_PARAMETER_TYPE_INT,	/* Integer */
-  STP_PARAMETER_TYPE_BOOLEAN,	/* Boolean */
-  STP_PARAMETER_TYPE_DOUBLE,	/* Floating point number */
-  STP_PARAMETER_TYPE_CURVE,	/* Curve */
-  STP_PARAMETER_TYPE_FILE,	/* Filename (NYI, need to consider security) */
-  STP_PARAMETER_TYPE_RAW,	/* Raw, opaque data */
-  STP_PARAMETER_TYPE_ARRAY,     /* Array */
-  STP_PARAMETER_TYPE_INVALID
+  STP_PARAMETER_TYPE_STRING_LIST, /*!< Single string choice from a list. */
+  STP_PARAMETER_TYPE_INT,	/*!< Integer. */
+  STP_PARAMETER_TYPE_BOOLEAN,	/*!< Boolean. */
+  STP_PARAMETER_TYPE_DOUBLE,	/*!< Floating point number. */
+  STP_PARAMETER_TYPE_CURVE,	/*!< Curve. */
+  STP_PARAMETER_TYPE_FILE,	/*!< Filename (NYI, need to consider security). */
+  STP_PARAMETER_TYPE_RAW,	/*!< Raw, opaque data. */
+  STP_PARAMETER_TYPE_ARRAY,     /*!< Array. */
+  STP_PARAMETER_TYPE_INVALID    /*!< Invalid type (should never be used). */
 } stp_parameter_type_t;
 
-/*
- * What kind of setting this is, for purpose of user interface.
+/**
+ * Parameter class.
+ * What kind of setting this is, for the purpose of user interface
+ * representation.
  */
 typedef enum
 {
-  STP_PARAMETER_CLASS_FEATURE,	/* Printer feature */
-  STP_PARAMETER_CLASS_OUTPUT,	/* Output control */
-  STP_PARAMETER_CLASS_CORE,	/* Core Gimp-Print parameter */
-  STP_PARAMETER_CLASS_INVALID
+  STP_PARAMETER_CLASS_FEATURE,	/*!< Printer feature. */
+  STP_PARAMETER_CLASS_OUTPUT,	/*!< Output control. */
+  STP_PARAMETER_CLASS_CORE,	/*!< Core Gimp-Print parameter. */
+  STP_PARAMETER_CLASS_INVALID   /*!< Invalid class (should never be used). */
 } stp_parameter_class_t;
 
-/*
+/**
+ * Parameter level.
  * What "level" a setting is at, for UI design.
  */
 typedef enum
 {
-  STP_PARAMETER_LEVEL_BASIC,
-  STP_PARAMETER_LEVEL_ADVANCED,
-  STP_PARAMETER_LEVEL_ADVANCED1,
-  STP_PARAMETER_LEVEL_ADVANCED2,
-  STP_PARAMETER_LEVEL_ADVANCED3,
-  STP_PARAMETER_LEVEL_ADVANCED4,
-  STP_PARAMETER_LEVEL_INTERNAL,	/* Parameters used only within Gimp-Print */
-  STP_PARAMETER_LEVEL_EXTERNAL,	/* Parameters used only outside Gimp-Print */
-  STP_PARAMETER_LEVEL_INVALID
+  STP_PARAMETER_LEVEL_BASIC,     /*!< Basic parameter, shown by all UIs. */
+  STP_PARAMETER_LEVEL_ADVANCED,  /*!< Advanced parameter, shown by advanced UIs. */
+  STP_PARAMETER_LEVEL_ADVANCED1, /*!< Advanced1 parameter, shown by advanced UIs. */
+  STP_PARAMETER_LEVEL_ADVANCED2, /*!< Advanced2 parameter, shown by advanced UIs. */
+  STP_PARAMETER_LEVEL_ADVANCED3, /*!< Advanced3 parameter, shown by advanced UIs. */
+  STP_PARAMETER_LEVEL_ADVANCED4, /*!< Advanced4 parameter, shown by advanced UIs. */
+  STP_PARAMETER_LEVEL_INTERNAL,	 /*!< Parameters used only within Gimp-Print. */
+  STP_PARAMETER_LEVEL_EXTERNAL,	 /*!< Parameters used only outside Gimp-Print. */
+  STP_PARAMETER_LEVEL_INVALID    /*!< Invalid level (should never be used). */
 } stp_parameter_level_t;
 
-/*
+/**
+ * Parameter activity.
  * Whether a parameter is currently active (i. e. whether its value
  * should be used by the driver or not).  All parameters default to being
  * active unless explicitly "turned off".
  */
 typedef enum
 {
-  STP_PARAMETER_INACTIVE,
-  STP_PARAMETER_DEFAULTED,
-  STP_PARAMETER_ACTIVE
+  STP_PARAMETER_INACTIVE,  /*!< Parameter is inactive (unused). */
+  STP_PARAMETER_DEFAULTED, /*!< Parameter is set to its default value. */
+  STP_PARAMETER_ACTIVE     /*!< Parameter is active (used). */
 } stp_parameter_activity_t;
 
 
-/*
+/**
+ * String parameter.
  * Representation of a choice list of strings.  The choices themselves
  * consist of a key and a human-readable name.  The list object is
  * opaque.
  */
 typedef struct
 {
-  const char	*name,	/* Option name */
-		*text;	/* Human-readable (translated) text */
+  const char	*name,	/*!< Option name (key, untranslated). */
+		*text;	/*!< Human-readable (translated) text. */
 } stp_param_string_t;
 
+/** The string_list opaque data type. */
 typedef void *stp_string_list_t;
+/** The contant string_list opaque data type. */
 typedef const void *stp_const_string_list_t;
 
 /*
  * Other parameter types
  */
 
+/** Raw parameter. */
 typedef struct
 {
-  size_t bytes;
-  const void *data;
+  size_t bytes;     /*!< Size of data. */
+  const void *data; /*!< Raw data. */
 } stp_raw_t;
 
+/** double_bound (range) parameter. */
 typedef struct
 {
-  double lower;
-  double upper;
+  double lower; /*!< Lower bound. */
+  double upper; /*!< Upper bound. */
 } stp_double_bound_t;
 
+/** int_bound (range) parameter. */
 typedef struct
 {
-  int lower;
-  int upper;
+  int lower; /*!< Lower bound. */
+  int upper; /*!< Upper bound. */
 } stp_int_bound_t;
 
-/*
- * Description of a parameter
- */
+/** Parameter destription. */
 typedef struct
 {
-  const char *name;		/* Internal name (key) */
-  const char *text;		/* User-visible name */
-  const char *category;		/* User-visible category name */
-  const char *help;		/* Help string */
-  stp_parameter_type_t p_type;
-  stp_parameter_class_t p_class;
-  stp_parameter_level_t p_level;
-  unsigned char is_mandatory;
-  unsigned char is_active;
-  unsigned char channel;
-  unsigned char verify_this_parameter;	/* Should the verify system check this? */
+  const char *name;		 /*!< Internal name (key). */
+  const char *text;		 /*!< User-visible name. */
+  const char *category;		 /*!< User-visible category name. */
+  const char *help;		 /*!< Help string. */
+  stp_parameter_type_t p_type;   /*!< Parameter type. */
+  stp_parameter_class_t p_class; /*!< Parameter class. */
+  stp_parameter_level_t p_level; /*!< Parameter level. */
+  unsigned char is_mandatory;              /*!< The parameter is required, even when set inactive. */
+  unsigned char is_active;                 /*!< Is the parameter active? */
+  unsigned char channel;                   /*!< UNUSED? */
+  unsigned char verify_this_parameter;	 /*!< Should the verify system check this parameter? */
   unsigned char read_only;
-  union				/* Limits on the values */
-  {				/* the parameter may take */
-    stp_curve_t curve;
-    stp_double_bound_t dbl;
-    stp_int_bound_t integer;
-    stp_string_list_t str;
-    stp_array_t array;
-  } bounds;
-  union				/* Default value of the parameter */
+  union
   {
-    stp_curve_t curve;
-    double dbl;
-    int integer;
-    int boolean;
-    const char *str;
-    stp_array_t array;
-  } deflt;
+    stp_curve_t curve;       /*!< curve parameter value. */
+    stp_double_bound_t dbl;  /*!< double_bound parameter value. */
+    stp_int_bound_t integer; /*!< int_bound parameter value. */
+    stp_string_list_t str;   /*!< string_list parameter value. */
+    stp_array_t array;       /*!< array parameter value. */
+  } bounds; /*!< Limits on the values the parameter may take. */
+  union
+  {
+    stp_curve_t curve; /*!< Default curve parameter value. */
+    double dbl;        /*!< Default double_bound parameter value. */
+    int integer;       /*!< Default int_bound parameter value. */
+    int boolean;       /*!< Default string_list parameter value. */
+    const char *str;   /*!< Default string_list parameter value. */
+    stp_array_t array; /*!< Default array parameter value. */
+  } deflt; /*!< Default value of the parameter. */
 } stp_parameter_t;
 
+/** The parameter_list opaque data type. */
 typedef void *stp_parameter_list_t;
+/** The constant parameter_list opaque data type. */
 typedef const void *stp_const_parameter_list_t;
 
-
-/*
+/**
  * Output function supplied by the calling application.
+ * This is used to report error information.
+ * @param data the output data to store buffer in.
+ * @param buffer the data to output.
+ * @param bytes the size of buffer (in bytes).
  */
 typedef void (*stp_outfunc_t) (void *data, const char *buffer, size_t bytes);
 
@@ -190,73 +212,234 @@ typedef void (*stp_outfunc_t) (void *data, const char *buffer, size_t bytes);
 *                                                               *
 ****************************************************************/
 
-/*
- * Constructors, destructors
+/**
+ * Create a new vars object.
+ * @returns the newly created vars object.
  */
 extern stp_vars_t stp_vars_create(void);
-extern void stp_vars_copy(stp_vars_t vd, stp_const_vars_t vs);
-extern stp_vars_t stp_vars_create_copy(stp_const_vars_t vs);
+
+/**
+ * Copy a vars object.
+ * Both dest and source must be valid vars objects previously
+ * created with stp_vars_create().
+ * @param dest the destination vars.
+ * @param source the source vars.
+ */
+extern void stp_vars_copy(stp_vars_t dest, stp_const_vars_t source);
+
+/**
+ * Copy and allocate a vars object.
+ * source must be a valid vars object previously created with
+ * stp_vars_create().
+ * @param source the source vars.
+ * @returns the new copy of the vars.
+ */
+extern stp_vars_t stp_vars_create_copy(stp_const_vars_t source);
+
+/**
+ * Destroy a vars object.
+ * It is an error to destroy the vars more than once.
+ * @param v the vars to destroy.
+ */
 extern void stp_vars_free(stp_vars_t v);
 
-/* 
- * Set/get the name of the printer driver
+/**
+ * Set the name of the printer driver.
+ * @param v the vars to use.
+ * @param val the name to set.
  */
 extern void stp_set_driver(stp_vars_t v, const char *val);
+
+/**
+ * Set the name of the printer driver.
+ * @param v the vars to use.
+ * @param val the name to set.
+ * @param bytes the length of val (in bytes).
+ */
 extern void stp_set_driver_n(stp_vars_t v, const char *val, int bytes);
+
+/**
+ * Get the name of the printer driver.
+ * @returns the name of the printer driver (must not be freed).
+ */
 extern const char *stp_get_driver(stp_const_vars_t v);
 
-/*
- * Set/get the name of the color conversion routine, if not default
+/**
+ * Set the name of the color conversion routine, if not the default.
+ * @param v the vars to use.
+ * @param val the name to set.
  */
 extern void stp_set_color_conversion(stp_vars_t v, const char *val);
+
+/**
+ * Set the name of the color conversion routine, if not the default.
+ * @param v the vars to use.
+ * @param val the name to set.
+ * @param bytes the length of val (in bytes).
+ */
 extern void stp_set_color_conversion_n(stp_vars_t v, const char *val, int bytes);
+
+/**
+ * Get the name of the color conversion routine.
+ * @returns the name of the color conversion routine (must not be freed).
+ */
 extern const char *stp_get_color_conversion(stp_const_vars_t v);
 
 /*
  * Set/get the position and size of the image
  */
+
+/**
+ * Set the left edge of the image.
+ * @param v the vars to use.
+ * @param val the value to set.
+ */
 extern void stp_set_left(stp_vars_t v, int val);
+
+/**
+ * Get the left edge of the image.
+ * @returns the left edge.
+ */
 extern int stp_get_left(stp_const_vars_t v);
 
+/**
+ * Set the top edge of the image.
+ * @param v the vars to use.
+ * @param val the value to set.
+ */
 extern void stp_set_top(stp_vars_t v, int val);
+
+/**
+ * Get the top edge of the image.
+ * @returns the left edge.
+ */
 extern int stp_get_top(stp_const_vars_t v);
 
+/**
+ * Set the width of the image.
+ * @param v the vars to use.
+ * @param val the value to set.
+ */
 extern void stp_set_width(stp_vars_t v, int val);
+
+/**
+ * Get the width edge of the image.
+ * @returns the left edge.
+ */
 extern int stp_get_width(stp_const_vars_t v);
 
+/**
+ * Set the height of the image.
+ * @param v the vars to use.
+ * @param val the value to set.
+ */
 extern void stp_set_height(stp_vars_t v, int val);
+
+/**
+ * Get the height of the image.
+ * @returns the left edge.
+ */
 extern int stp_get_height(stp_const_vars_t v);
 
 /*
  * For custom page widths, these functions may be used.
  */
+
+/**
+ * Set the page width.
+ * @param v the vars to use.
+ * @param val the value to set.
+ */
 extern void stp_set_page_width(stp_vars_t v, int val);
+
+/**
+ * Get the page width.
+ * @returns the page width.
+ */
 extern int stp_get_page_width(stp_const_vars_t v);
 
+/**
+ * Set the page height.
+ * @param v the vars to use.
+ * @param val the value to set.
+ */
 extern void stp_set_page_height(stp_vars_t v, int val);
+
+/**
+ * Get the page height.
+ * @returns the page height.
+ */
 extern int stp_get_page_height(stp_const_vars_t v);
 
-/*
- * These functions are used to print output and diagnostic information
- * respectively.  These must be supplied by the caller.  Outdata and
- * errdata are passed as arguments to outfunc and errfunc; typically
- * they will be file descriptors.
+/**
+ * Set the function used to print output information.
+ * These must be supplied by the caller.  outdata is passed as an
+ * arguments to outfunc; typically it will be a file descriptor.
+ * @param v the vars to use.
+ * @param val the value to set.
  */
 extern void stp_set_outfunc(stp_vars_t v, stp_outfunc_t val);
+
+/**
+ * Get the function used to print output information.
+ * @param v the vars to use.
+ * @returns the outfunc.
+ */
 extern stp_outfunc_t stp_get_outfunc(stp_const_vars_t v);
 
+/**
+ * Set the function used to print error and diagnostic information.
+ * These must be supplied by the caller.  errdata is passed as an
+ * arguments to errfunc; typically it will be a file descriptor.
+ * @param v the vars to use.
+ * @param val the value to set.
+ */
 extern void stp_set_errfunc(stp_vars_t v, stp_outfunc_t val);
+
+/**
+ * Get the function used to print output information.
+ * @param v the vars to use.
+ * @returns the outfunc.
+ */
 extern stp_outfunc_t stp_get_errfunc(stp_const_vars_t v);
 
+/**
+ * Set the output data.
+ * @param v the vars to use.
+ * @param val the output data.  This will typically be a file
+ * descriptor, but it is entirely up to the caller exactly what type
+ * this might be.
+ */
 extern void stp_set_outdata(stp_vars_t v, void *val);
+
+/**
+ * Get the output data.
+ * @param v the vars to use.
+ * @returns the output data.
+ */
 extern void *stp_get_outdata(stp_const_vars_t v);
 
+/**
+ * Set the error data.
+ * @param v the vars to use.
+ * @param val the error data.  This will typically be a file
+ * descriptor, but it is entirely up to the caller exactly what type
+ * this might be.
+ */
 extern void stp_set_errdata(stp_vars_t v, void *val);
+
+/**
+ * Get the error data.
+ * @param v the vars to use.
+ * @returns the output data.
+ */
 extern void *stp_get_errdata(stp_const_vars_t v);
 
-/*
+/**
  * Merge defaults for a printer with user-chosen settings.
- * This is likely to go away.
+ * @deprecated This is likely to go away.
+ * @param user the destination vars.
+ * @param print the vars to merge into user.
  */
 extern void stp_merge_printvars(stp_vars_t user, stp_const_vars_t print);
 
@@ -267,204 +450,717 @@ extern void stp_merge_printvars(stp_vars_t user, stp_const_vars_t print);
 *                                                               *
 ****************************************************************/
 
-/*
+/**
  * List the available parameters for the currently chosen settings.
  * This does not fill in the bounds and defaults; it merely provides
  * a list of settings.  To fill in detailed information for a setting,
  * use stp_describe_parameter.
+ * @param v the vars to use.
+ * @returns a list of available parameters (must be freed with
+ * stp_parameter_list_free()).
  */
-
 extern stp_parameter_list_t stp_get_parameter_list(stp_const_vars_t v);
 
+/**
+ * List the number of available parameters for the currently chosen
+ * settings.
+ * @param list the parameter_list to use.
+ * @returns the number of parameters.
+ */
 extern size_t stp_parameter_list_count(stp_const_parameter_list_t list);
 
+/**
+ * Find a parameter by its name.
+ * @param list the parameter_list to use.
+ * @param name the name of the parameter.
+ * @returns a pointer to the parameter (must not be freed), or NULL if
+ * no parameter was found.
+ */
 extern const stp_parameter_t *
 stp_parameter_find(stp_const_parameter_list_t list, const char *name);
 
+/**
+ * Find a parameter by its index number.
+ * @param list the parameter_list to use.
+ * @param item the index number of the parameter (must not be greater
+ * than stp_parameter_list_count - 1).
+ * @returns a pointer to the parameter (must not be freed), or NULL if
+ * no parameter was found.
+ */
 extern const stp_parameter_t *
 stp_parameter_list_param(stp_const_parameter_list_t list, size_t item);
 
+/**
+ * Destroy a parameter_list.
+ * It is an error to destroy the parameter_list more than once.
+ * @param list the parameter_list to destroy.
+ */
 extern void stp_parameter_list_free(stp_parameter_list_t list);
 
+/**
+ * Create a parameter_list.
+ * @returns the newly created parameter_list.
+ */
 extern stp_parameter_list_t stp_parameter_list_create(void);
 
+/**
+ * Add a parameter to a parameter_list.
+ * @param list the parameter_list to use.
+ * @param item the parameter to add.
+ */
 extern void stp_parameter_list_add_param(stp_parameter_list_t list,
 					 const stp_parameter_t *item);
 
+/**
+ * Copy and allocate a parameter_list.
+ * A new parameter_list will be created, and then the contents of
+ * source will be
+ * copied into it.
+ * @param list the source parameter_list.
+ * @returns the new copy of the parameter_list.
+ */
 extern stp_parameter_list_t
 stp_parameter_list_copy(stp_const_parameter_list_t list);
 
+/**
+ * Append one parameter_list to another.
+ * @param list the destination list (to append to).
+ * @param append the list of paramters to append.  Each item that does
+ * not already exist in list will be appended.
+ */
 extern void
 stp_parameter_list_append(stp_parameter_list_t list,
 			  stp_const_parameter_list_t append);
 
+/**
+ * Describe a parameter in detail.
+ * All of the parameter fields will be populated.
+ * @param v the vars to use.
+ * @param name the name of the parameter.
+ * @param description a pointer to an stp_parameter_t to store the
+ * parameter description in.
+ */
 extern void
 stp_describe_parameter(stp_const_vars_t v, const char *name,
 		       stp_parameter_t *description);
 
+/**
+ * Destroy a parameter description.
+ * This must be called even if the stp_parameter_t was not allocated
+ * with malloc, since some members are dynamically allocated.
+ * @param description the parameter description to destroy.
+ */
 extern void stp_parameter_description_free(stp_parameter_t *description);
 
+/**
+ * Find a parameter by its name from a vars object.
+ * @param v the vars to use.
+ * @param name the name of the parameter.
+ * @returns a pointer to the parameter (must not be freed), or NULL if
+ * no parameter was found.
+ */
 extern const stp_parameter_t *
 stp_parameter_find_in_settings(stp_const_vars_t v, const char *name);
 
-/*
- * Manipulators for different parameter types.
- * The "set" routines set the value of the parameter.
- *
- * The "set_n" variants for string and file take a counted string
- * rather than a null-terminated string.  It is illegal for a NULL
- * to be present inside the string.
- *
- * The "set_default" routines set the value if the parameter is not
- * already set.  This avoids having to check if the parameter is set
- * prior to setting it, if you do not want to override the existing
- * value.
- *
- * The "get" routines return the value of the parameter.
- *
- * The "check" routines check if the parameter is set.
+/**
+ * Set a string parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
  */
-
 extern void stp_set_string_parameter(stp_vars_t v, const char *parameter,
 				     const char *value);
+
+/**
+ * Set a string parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set (must not contain NUL).
+ * @param bytes the length of value (in bytes).
+ */
 extern void stp_set_string_parameter_n(stp_vars_t v, const char *parameter,
 				       const char *value, size_t bytes);
+
+/**
+ * Set a file parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
+ */
 extern void stp_set_file_parameter(stp_vars_t v, const char *parameter,
 				   const char *value);
+
+/**
+ * Set a file parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set (must not contain NUL).
+ * @param bytes the length of value (in bytes).
+ */
 extern void stp_set_file_parameter_n(stp_vars_t v, const char *parameter,
 				     const char *value, size_t bytes);
+
+/**
+ * Set a float parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
+ */
 extern void stp_set_float_parameter(stp_vars_t v, const char *parameter,
 				    double value);
+
+/**
+ * Set an integer parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
+ */
 extern void stp_set_int_parameter(stp_vars_t v, const char *parameter,
 				  int value);
+
+/**
+ * Set a boolean parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
+ */
 extern void stp_set_boolean_parameter(stp_vars_t v, const char *parameter,
 				      int value);
+
+/**
+ * Set a curve parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
+ */
 extern void stp_set_curve_parameter(stp_vars_t v, const char *parameter,
 				    stp_const_curve_t value);
+
+/**
+ * Set an array parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
+ */
 extern void stp_set_array_parameter(stp_vars_t v, const char *parameter,
 				    stp_const_array_t value);
+
+/**
+ * Set a raw parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
+ * @param bytes the length of value (in bytes).
+ */
 extern void stp_set_raw_parameter(stp_vars_t v, const char *parameter,
 				  const void *value, size_t bytes);
 
-extern void stp_scale_float_parameter(stp_vars_t v, const char *param,
+/**
+ * Multiply the value of a float parameter by a scaling factor.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param scale the factor to multiply the value by.
+ */
+extern void stp_scale_float_parameter(stp_vars_t v, const char *parameter,
 				      double scale);
 
+/**
+ * Set a default string parameter.
+ * The value is set if the parameter is not already set.  This avoids
+ * having to check if the parameter is set prior to setting it, if you
+ * do not want to override the existing value.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
+ */
 extern void stp_set_default_string_parameter(stp_vars_t v,
 					     const char *parameter,
 					     const char *value);
+
+/**
+ * Set a default string parameter.
+ * The value is set if the parameter is not already set.  This avoids
+ * having to check if the parameter is set prior to setting it, if you
+ * do not want to override the existing value.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set (must not contain NUL).
+ * @param bytes the length of value (in bytes).
+ */
 extern void stp_set_default_string_parameter_n(stp_vars_t v,
 					       const char *parameter,
 					       const char *value, size_t bytes);
+
+/**
+ * Set a default file parameter.
+ * The value is set if the parameter is not already set.  This avoids
+ * having to check if the parameter is set prior to setting it, if you
+ * do not want to override the existing value.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
+ */
 extern void stp_set_default_file_parameter(stp_vars_t v,
 					   const char *parameter,
 					   const char *value);
+
+/**
+ * Set a default file parameter.
+ * The value is set if the parameter is not already set.  This avoids
+ * having to check if the parameter is set prior to setting it, if you
+ * do not want to override the existing value.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set (must not contain NUL).
+ * @param bytes the length of value (in bytes).
+ */
 extern void stp_set_default_file_parameter_n(stp_vars_t v,
 					     const char *parameter,
 					     const char *value, size_t bytes);
+
+/**
+ * Set a default float parameter.
+ * The value is set if the parameter is not already set.  This avoids
+ * having to check if the parameter is set prior to setting it, if you
+ * do not want to override the existing value.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
+ */
 extern void stp_set_default_float_parameter(stp_vars_t v,
 					    const char *parameter,
 					    double value);
+
+/**
+ * Set a default integer parameter.
+ * The value is set if the parameter is not already set.  This avoids
+ * having to check if the parameter is set prior to setting it, if you
+ * do not want to override the existing value.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
+ */
 extern void stp_set_default_int_parameter(stp_vars_t v,
 					  const char *parameter,
 					  int value);
+
+/**
+ * Set a default boolean parameter.
+ * The value is set if the parameter is not already set.  This avoids
+ * having to check if the parameter is set prior to setting it, if you
+ * do not want to override the existing value.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
+ */
 extern void stp_set_default_boolean_parameter(stp_vars_t v,
 					      const char *parameter,
 					      int value);
+
+/**
+ * Set a default curve parameter.
+ * The value is set if the parameter is not already set.  This avoids
+ * having to check if the parameter is set prior to setting it, if you
+ * do not want to override the existing value.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
+ */
 extern void stp_set_default_curve_parameter(stp_vars_t v,
 					    const char *parameter,
 					    stp_const_curve_t value);
+
+/**
+ * Set a default array parameter.
+ * The value is set if the parameter is not already set.  This avoids
+ * having to check if the parameter is set prior to setting it, if you
+ * do not want to override the existing value.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
+ */
 extern void stp_set_default_array_parameter(stp_vars_t v,
 					    const char *parameter,
 					    stp_const_array_t value);
+
+/**
+ * Set a default raw parameter.
+ * The value is set if the parameter is not already set.  This avoids
+ * having to check if the parameter is set prior to setting it, if you
+ * do not want to override the existing value.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
+ * @param bytes the length of value (in bytes).
+ */
 extern void stp_set_default_raw_parameter(stp_vars_t v,
 					  const char *parameter,
 					  const void *value, size_t bytes);
 
+/**
+ * Get a string parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the string, or NULL if no parameter was found.
+ */
 extern const char *stp_get_string_parameter(stp_const_vars_t v,
-					    const char *param);
+					    const char *parameter);
+
+/**
+ * Get a file parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the filename, or NULL if no parameter was found.
+ */
 extern const char *stp_get_file_parameter(stp_const_vars_t v,
-					  const char *param);
+					  const char *parameter);
+
+/**
+ * Get a float parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the float value.
+ */
 extern double stp_get_float_parameter(stp_const_vars_t v,
-					    const char *param);
+					    const char *parameter);
+
+/**
+ * Get an integer parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the integer value.
+ */
 extern int stp_get_int_parameter(stp_const_vars_t v,
-				 const char *param);
+				 const char *parameter);
+
+/**
+ * Get a boolean parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the boolean value.
+ */
 extern int stp_get_boolean_parameter(stp_const_vars_t v,
-				     const char *param);
+				     const char *parameter);
+
+/**
+ * Get a curve parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the curve, or NULL if no parameter was found.
+ */
 extern stp_const_curve_t stp_get_curve_parameter(stp_const_vars_t v,
-						 const char *param);
+						 const char *parameter);
+
+/**
+ * Get an array parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the array, or NULL if no parameter was found.
+ */
 extern stp_const_array_t stp_get_array_parameter(stp_const_vars_t v,
-						 const char *param);
+						 const char *parameter);
+
+/**
+ * Get a raw parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the raw data, or NULL if no parameter was found.
+ */
 extern const stp_raw_t *stp_get_raw_parameter(stp_const_vars_t v,
-					      const char *param);
+					      const char *parameter);
 
-extern void stp_clear_string_parameter(stp_vars_t v, const char *param);
-extern void stp_clear_file_parameter(stp_vars_t v, const char *param);
-extern void stp_clear_float_parameter(stp_vars_t v, const char *param);
-extern void stp_clear_int_parameter(stp_vars_t v, const char *param);
-extern void stp_clear_boolean_parameter(stp_vars_t v, const char *param);
-extern void stp_clear_curve_parameter(stp_vars_t v, const char *param);
-extern void stp_clear_array_parameter(stp_vars_t v, const char *param);
-extern void stp_clear_raw_parameter(stp_vars_t v, const char *param);
+/**
+ * Clear a string parameter.
+ * The parameter is set to NULL.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ */
+extern void stp_clear_string_parameter(stp_vars_t v, const char *parameter);
 
+/**
+ * Clear a file parameter.
+ * The parameter is set to NULL.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ */
+extern void stp_clear_file_parameter(stp_vars_t v, const char *parameter);
+
+/**
+ * Clear (remove) a float parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ */
+extern void stp_clear_float_parameter(stp_vars_t v, const char *parameter);
+
+/**
+ * Clear (remove) an integer parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ */
+extern void stp_clear_int_parameter(stp_vars_t v, const char *parameter);
+
+/**
+ * Clear (remove) a boolean parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ */
+extern void stp_clear_boolean_parameter(stp_vars_t v, const char *parameter);
+
+/**
+ * Clear a curve parameter.
+ * The parameter is set to NULL.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ */
+extern void stp_clear_curve_parameter(stp_vars_t v, const char *parameter);
+
+/**
+ * Clear an array parameter.
+ * The parameter is set to NULL.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ */
+extern void stp_clear_array_parameter(stp_vars_t v, const char *parameter);
+
+/**
+ * Clear a raw parameter.
+ * The parameter is set to NULL.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ */
+extern void stp_clear_raw_parameter(stp_vars_t v, const char *parameter);
+
+/**
+ * Set the activity of a string parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the activity status to set (should be set to
+ * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
+ */
 extern void stp_set_string_parameter_active(stp_const_vars_t v,
-					    const char *param,
+					    const char *parameter,
 					    stp_parameter_activity_t active);
+
+/**
+ * Set the activity of a file parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the activity status to set (should be set to
+ * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
+ */
 extern void stp_set_file_parameter_active(stp_const_vars_t v,
-					  const char *param,
+					  const char *parameter,
 					  stp_parameter_activity_t active);
+
+/**
+ * Set the activity of a float parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the activity status to set (should be set to
+ * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
+ */
 extern void stp_set_float_parameter_active(stp_const_vars_t v,
-					 const char *param,
+					 const char *parameter,
 					 stp_parameter_activity_t active);
+
+/**
+ * Set the activity of an integer parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the activity status to set (should be set to
+ * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
+ */
 extern void stp_set_int_parameter_active(stp_const_vars_t v,
-					 const char *param,
+					 const char *parameter,
 					 stp_parameter_activity_t active);
+
+/**
+ * Set the activity of a boolean parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the activity status to set (should be set to
+ * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
+ */
 extern void stp_set_boolean_parameter_active(stp_const_vars_t v,
-					     const char *param,
+					     const char *parameter,
 					     stp_parameter_activity_t active);
+
+/**
+ * Set the activity of a curveparameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the activity status to set (should be set to
+ * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
+ */
 extern void stp_set_curve_parameter_active(stp_const_vars_t v,
-					   const char *param,
+					   const char *parameter,
 					   stp_parameter_activity_t active);
+
+/**
+ * Set the activity of an array parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the activity status to set (should be set to
+ * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
+ */
 extern void stp_set_array_parameter_active(stp_const_vars_t v,
-					   const char *param,
+					   const char *parameter,
 					   stp_parameter_activity_t active);
+
+/**
+ * Set the activity of a raw parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the activity status to set (should be set to
+ * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
+ */
 extern void stp_set_raw_parameter_active(stp_const_vars_t v,
-					 const char *param,
+					 const char *parameter,
 					 stp_parameter_activity_t active);
 
-extern int stp_check_string_parameter(stp_const_vars_t v, const char *param,
+/**
+ * Check if a string parameter is set.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the minimum activity status.
+ */
+extern int stp_check_string_parameter(stp_const_vars_t v, const char *parameter,
 				      stp_parameter_activity_t active);
-extern int stp_check_file_parameter(stp_const_vars_t v, const char *param,
+
+/**
+ * Check if a file parameter is set.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the minimum activity status.
+ */
+extern int stp_check_file_parameter(stp_const_vars_t v, const char *parameter,
 				    stp_parameter_activity_t active);
-extern int stp_check_float_parameter(stp_const_vars_t v, const char *param,
+
+/**
+ * Check if a float parameter is set.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the minimum activity status.
+ */
+extern int stp_check_float_parameter(stp_const_vars_t v, const char *parameter,
 				     stp_parameter_activity_t active);
-extern int stp_check_int_parameter(stp_const_vars_t v, const char *param,
+
+/**
+ * Check if an integer parameter is set.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the minimum activity status.
+ */
+extern int stp_check_int_parameter(stp_const_vars_t v, const char *parameter,
 				   stp_parameter_activity_t active);
-extern int stp_check_boolean_parameter(stp_const_vars_t v, const char *param,
+
+/**
+ * Check if a boolean parameter is set.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the minimum activity status.
+ */
+extern int stp_check_boolean_parameter(stp_const_vars_t v, const char *parameter,
 				       stp_parameter_activity_t active);
-extern int stp_check_curve_parameter(stp_const_vars_t v, const char *param,
+
+/**
+ * Check if a curve parameter is set.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the minimum activity status.
+ */
+extern int stp_check_curve_parameter(stp_const_vars_t v, const char *parameter,
 				     stp_parameter_activity_t active);
-extern int stp_check_array_parameter(stp_const_vars_t v, const char *param,
+
+/**
+ * Check if an array parameter is set.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the minimum activity status.
+ */
+extern int stp_check_array_parameter(stp_const_vars_t v, const char *parameter,
 				     stp_parameter_activity_t active);
-extern int stp_check_raw_parameter(stp_const_vars_t v, const char *param,
+
+/**
+ * Check if a raw parameter is set.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the minimum activity status.
+ */
+extern int stp_check_raw_parameter(stp_const_vars_t v, const char *parameter,
 				   stp_parameter_activity_t active);
 
+/**
+ * Get the activity status of a string parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the activity status.
+ */
 extern stp_parameter_activity_t
-stp_get_string_parameter_active(stp_const_vars_t v, const char *param);
-extern stp_parameter_activity_t
-stp_get_file_parameter_active(stp_const_vars_t v, const char *param);
-extern stp_parameter_activity_t
-stp_get_float_parameter_active(stp_const_vars_t v, const char *param);
-extern stp_parameter_activity_t
-stp_get_int_parameter_active(stp_const_vars_t v, const char *param);
-extern stp_parameter_activity_t
-stp_get_boolean_parameter_active(stp_const_vars_t v, const char *param);
-extern stp_parameter_activity_t
-stp_get_curve_parameter_active(stp_const_vars_t v, const char *param);
-extern stp_parameter_activity_t
-stp_get_array_parameter_active(stp_const_vars_t v, const char *param);
-extern stp_parameter_activity_t
-stp_get_raw_parameter_active(stp_const_vars_t v, const char *param);
+stp_get_string_parameter_active(stp_const_vars_t v, const char *parameter);
 
+/**
+ * Get the activity status of a file parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the activity status.
+ */
+extern stp_parameter_activity_t
+stp_get_file_parameter_active(stp_const_vars_t v, const char *parameter);
+
+/**
+ * Get the activity status of a float parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the activity status.
+ */
+extern stp_parameter_activity_t
+stp_get_float_parameter_active(stp_const_vars_t v, const char *parameter);
+
+/**
+ * Get the activity status of an integer parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the activity status.
+ */
+extern stp_parameter_activity_t
+stp_get_int_parameter_active(stp_const_vars_t v, const char *parameter);
+
+/**
+ * Get the activity status of a boolean parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the activity status.
+ */
+extern stp_parameter_activity_t
+stp_get_boolean_parameter_active(stp_const_vars_t v, const char *parameter);
+
+/**
+ * Get the activity status of a curve parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the activity status.
+ */
+extern stp_parameter_activity_t
+stp_get_curve_parameter_active(stp_const_vars_t v, const char *parameter);
+
+/**
+ * Get the activity status of an array parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the activity status.
+ */
+extern stp_parameter_activity_t
+stp_get_array_parameter_active(stp_const_vars_t v, const char *parameter);
+
+/**
+ * Get the activity status of a raw parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the activity status.
+ */
+extern stp_parameter_activity_t
+stp_get_raw_parameter_active(stp_const_vars_t v, const char *parameter);
 
 
 
@@ -474,17 +1170,22 @@ stp_get_raw_parameter_active(stp_const_vars_t v, const char *param);
 *                                                               *
 ****************************************************************/
 
-/*
+/**
+ * Get the media (paper) size.
  * Retrieve the media size of the media type set in V, expressed in units
  * of 1/72".  If the media size is invalid, width and height will be set
  * to -1.  Values of 0 for width or height indicate that the dimension
  * is variable, so that custom page sizes or roll paper can be used.
  * In this case, the size limit should be used to determine maximum and
  * minimum values permitted.
+ * @param v the vars to use.
+ * @param width a pointer to an int to store the media width in.
+ * @param height a pointer to an int to store the media height in.
  */
 extern void stp_get_media_size(stp_const_vars_t v, int *width, int *height);
 
-/*
+/**
+ * Get the imagable area of the page.
  * Retrieve the boundaries of the printable area of the page.  In combination
  * with the media size, this can be used to determine the actual printable
  * region, which callers can use to place the image precisely.  The
@@ -498,44 +1199,62 @@ extern void stp_get_media_size(stp_const_vars_t v, int *width, int *height);
  * Returned values may be negative if a printer is capable of full bleed
  * by printing beyond the physical boundaries of the page.
  *
- * If the media size stored in V is invalid, the return value
+ * If the media size stored in V is invalid, the return values
  * will be indeterminate.  It is up to the user to specify legal values.
+ * @param v the vars to use.
+ * @param left a pointer to a int to store the left edge in.
+ * @param right a pointer to a int to store the right edge in.
+ * @param bottom a pointer to a int to store the bottom edge in.
+ * @param top a pointer to a int to store the top edge in.
  */
 extern void stp_get_imageable_area(stp_const_vars_t v, int *left, int *right,
 				   int *bottom, int *top);
 
-/*
+/**
+ * Get the media size limits.
  * Retrieve the minimum and maximum size limits for custom media sizes
  * with the current printer settings.
+ * @param v the vars to use.
+ * @param max_width a pointer to a int to store the maximum width in.
+ * @param max_height a pointer to a int to store the maximum height in.
+ * @param min_width a pointer to a int to store the minimum width in.
+ * @param min_height a pointer to a int to store the minimum height in.
  */
 extern void
 stp_get_size_limit(stp_const_vars_t v, int *max_width, int *max_height,
 		   int *min_width, int *min_height);
 
 
-/*
+/**
  * Retrieve the printing resolution of the selected resolution.  If the
  * resolution is invalid, -1 will be returned in both x and y.
+ * @param v the vars to use.
+ * @param x a pointer to a int to store the horizontal resolution in.
+ * @param y a pointer to a int to store the vertical resolution in.
  */
 extern void stp_describe_resolution(stp_const_vars_t v, int *x, int *y);
 
-/*
+/**
+ * Verify parameters.
  * Verify that the parameters selected are consistent with those allowed
  * by the driver.  This must be called prior to printing; failure to do
- * so will result in printing failing.  Status of 0 represents failure;
- * status of 1 represents success; other status values are reserved.
+ * so will result in printing failing.
+ * @param v the vars to use.
+ * @returns 0 on failure, 1 on success; other status values are reserved.
  */
 extern int stp_verify(stp_vars_t v);
 
-/*
- * Default global settings.  The main use of this is to provide a usable
- * stp_vars_t for purposes of parameter inquiry in the absence of a
- * specific printer.  This is currently used in a variety of places
- * to get information on the standard color parameters without querying
- * a particular printer.
+/**
+ * Get default global settings.  The main use of this is to provide a
+ * usable stp_vars_t for purposes of parameter inquiry in the absence
+ * of a specific printer.  This is currently used in a variety of
+ * places to get information on the standard color parameters without
+ * querying a particular printer.
+ * @returns the default settings.
  */
 extern stp_const_vars_t stp_default_settings(void);
 
+  /** @} */
 
 #ifdef __cplusplus
   }
