@@ -35,6 +35,7 @@
 #include <math.h>
 #include <limits.h>
 #include "vars.h"
+#include <string.h>
 
 static const stp_internal_vars_t default_vars =
 {

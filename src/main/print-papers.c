@@ -34,6 +34,8 @@
 #include <gimp-print/gimp-print-intl-internal.h>
 #include <math.h>
 #include <limits.h>
+#include <string.h>
+#include <stdlib.h>
 
 typedef struct
 {

@@ -34,6 +34,7 @@
 #include <gimp-print/gimp-print-intl-internal.h>
 #include <math.h>
 #include <limits.h>
+#include <string.h>
 
 #ifdef __GNUC__
 #define inline __inline__
