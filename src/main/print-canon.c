@@ -216,8 +216,8 @@ typedef struct canon_variable_printmode
  */
 static const stp_simple_dither_range_t canon_dither_ranges_Cc_1bit[] =
 {
-  { 0.25, 0x1, 0, 1 },
-  { 1.0,  0x1, 1, 1 }
+  { 0.25, 0x1, 1, 1 },
+  { 1.0,  0x1, 0, 1 }
 };
 
 static const canon_variable_ink_t canon_ink_Cc_1bit =
@@ -233,8 +233,8 @@ static const canon_variable_ink_t canon_ink_Cc_1bit =
  */
 static const stp_simple_dither_range_t canon_dither_ranges_Mm_1bit[] =
 {
-  { 0.26, 0x1, 0, 1 },
-  { 1.0,  0x1, 1, 1 }
+  { 0.26, 0x1, 1, 1 },
+  { 1.0,  0x1, 0, 1 }
 };
 
 static const canon_variable_ink_t canon_ink_Mm_1bit =
@@ -251,9 +251,9 @@ static const canon_variable_ink_t canon_ink_Mm_1bit =
  */
 static const stp_simple_dither_range_t canon_dither_ranges_X_2bit[] =
 {
-  { 0.45,  0x1, 1, 1 },
-  { 0.68,  0x2, 1, 2 },
-  { 1.0,   0x3, 1, 3 }
+  { 0.45,  0x1, 0, 1 },
+  { 0.68,  0x2, 0, 2 },
+  { 1.0,   0x3, 0, 3 }
 };
 
 static const canon_variable_ink_t canon_ink_X_2bit =
@@ -269,12 +269,12 @@ static const canon_variable_ink_t canon_ink_X_2bit =
  */
 static const stp_simple_dither_range_t canon_dither_ranges_Xx_2bit[] =
 {
-  { 0.15,  0x1, 0, 1 },
-  { 0.227, 0x2, 0, 2 },
-/*  { 0.333, 0x3, 0, 3 }, */
-  { 0.45,  0x1, 1, 1 },
-  { 0.68,  0x2, 1, 2 },
-  { 1.0,   0x3, 1, 3 }
+  { 0.15,  0x1, 1, 1 },
+  { 0.227, 0x2, 1, 2 },
+/*{ 0.333, 0x3, 1, 3 }, */
+  { 0.45,  0x1, 0, 1 },
+  { 0.68,  0x2, 0, 2 },
+  { 1.0,   0x3, 0, 3 }
 };
 
 static const canon_variable_ink_t canon_ink_Xx_2bit =
@@ -297,12 +297,12 @@ static const canon_variable_ink_t canon_ink_Xx_2bit =
  */
 static const stp_simple_dither_range_t canon_dither_ranges_X_3bit[] =
 {
-  { 0.45,  0x1, 1, 1 },
-  { 0.55,  0x2, 1, 2 },
-  { 0.66,  0x3, 1, 3 },
-  { 0.77,  0x4, 1, 4 },
-  { 0.88,  0x5, 1, 5 },
-  { 1.0,   0x6, 1, 6 }
+  { 0.45,  0x1, 0, 1 },
+  { 0.55,  0x2, 0, 2 },
+  { 0.66,  0x3, 0, 3 },
+  { 0.77,  0x4, 0, 4 },
+  { 0.88,  0x5, 0, 5 },
+  { 1.0,   0x6, 0, 6 }
 };
 
 static const canon_variable_ink_t canon_ink_X_3bit =
@@ -318,16 +318,16 @@ static const canon_variable_ink_t canon_ink_X_3bit =
  */
 static const stp_simple_dither_range_t canon_dither_ranges_Xx_3bit[] =
 {
-  { 0.15,  0x1, 0, 1 },
-  { 0.227, 0x2, 0, 2 },
-  { 0.333, 0x3, 0, 3 },
-/*  { 0.333, 0x3, 0, 3 }, */
-  { 0.45,  0x1, 1, 1 },
-  { 0.55,  0x2, 1, 2 },
-  { 0.66,  0x3, 1, 3 },
-  { 0.77,  0x4, 1, 4 },
-  { 0.88,  0x5, 1, 5 },
-  { 1.0,   0x6, 1, 6 }
+  { 0.15,  0x1, 1, 1 },
+  { 0.227, 0x2, 1, 2 },
+  { 0.333, 0x3, 1, 3 },
+/*  { 0.333, 0x3, 1, 3 }, */
+  { 0.45,  0x1, 0, 1 },
+  { 0.55,  0x2, 0, 2 },
+  { 0.66,  0x3, 0, 3 },
+  { 0.77,  0x4, 0, 4 },
+  { 0.88,  0x5, 0, 5 },
+  { 1.0,   0x6, 0, 6 }
 };
 
 static const canon_variable_ink_t canon_ink_Xx_3bit =

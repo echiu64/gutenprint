@@ -64,7 +64,7 @@ typedef struct
 {
   double value;
   unsigned bit_pattern;
-  int is_dark;
+  int subchannel;
   unsigned dot_size;
 } stp_simple_dither_range_t;
 
@@ -74,7 +74,7 @@ typedef struct
   double lower;
   double upper;
   unsigned bit_pattern;
-  int is_dark;
+  int subchannel;
   unsigned dot_size;
 } stp_dither_range_t;
 
@@ -82,7 +82,7 @@ typedef struct
 {
    double value[2];
    unsigned bits[2];
-   int isdark[2];
+   int subchannel[2];
 } stp_full_dither_range_t;
 
 typedef struct			/* Weave parameters for a specific row */
