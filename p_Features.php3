@@ -68,5 +68,6 @@ Lexmark printers.</li></p>
 
 <p><li>Extensive documentation for both users and developers.</li></p>
 
+</ul>
 
 <?require('standard_html_footer.php3');?>
