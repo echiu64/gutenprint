@@ -1,6 +1,6 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.2.0, released November 24, 2001, is the latest stable release
+Gimp-Print 4.2.1, released XXX XX, 2002, is the latest stable release
 of this package.  This release offers numerous improvements over the
 previous stable release, 4.0
 
@@ -17,6 +17,43 @@ later GNU Ghostscript release based on 6.51 (e. g. 6.52).
 
 Please read the README file for full instructions on building and
 installing this package.
+
+Gimp-Print 4.2.1 contains the following major changes and fixes over
+Gimp-Print 4.2.0:
+
+  1) The escputil command is now translated properly.
+
+  2) The Ghostscript documentation lists resolutions for Canon
+     printers correctly.
+
+  3) Problems printing to various late model Epson Stylus Photo
+     printers have been fixed.
+
+  4) It is now possible to print at all resolutions on large format
+     PCL printers.
+
+  5) A new IJS-based Ghostscript driver is provided, for Ghostscript
+     6.53 and 7.04.  This driver may be used with both GNU and AFPL
+     Ghostscript.
+
+  6) A Slovak translation is now provided.
+
+  7) Stylus Pro printers can now print to letter size (and smaller)
+     paper.  In 4.2.0 the driver did not allow printing smaller than
+     tabloid size.
+
+  8) A bug in the Ghostscript driver caused slightly poor print
+     quality at high resolutions on Epson printers.  The same bug may
+     have had other side effects on other printers.
+
+  9) The margins and printable areas have been adjusted on some Epson
+     printers.
+
+  10) Miscellaneous fixes for the Lexmark Z42.
+
+  11) Certain paper types and other issues on late model Stylus Photo
+      printers (780, 810/820, and 1280/1290) have been fixed.
+
 
 Gimp-Print 4.2 contains the following major changes over Gimp-Print
 4.0:

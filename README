@@ -1,7 +1,7 @@
 INTRODUCTION
 
-    This is Gimp-Print version 4.2.0, the first stable release in the
-    4.2 line.  Gimp-print is the print facility for the Gimp, and in
+    This is Gimp-Print version 4.2.1, a stable release in the 4.2
+    line.  Gimp-print is the print facility for the Gimp, and in
     addition a suite of drivers that may be used with common UNIX
     spooling systems using GhostScript or CUPS.  These drivers provide
     printing quality for UNIX/Linux in many cases equal to or better
@@ -119,9 +119,9 @@ CUPS
     CUPS front end (e. g. KUPS, or via the web interface) because they
     look something like this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.1(en)
 
-    If the version number (in this case, 4.2.0) does not match
+    If the version number (in this case, 4.2.1) does not match
     the version of Gimp-Print that you are installing, you must use
     Modify Printer to force the new PPD file to get installed.
     Failure to do so may lead to incorrect output and/or other errors!
@@ -152,15 +152,15 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     apparent when you use a CUPS front end to select a PPD file and
     you see something like this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.1(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.1(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.1(en)
 
     rather than this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(sv)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.0(fr)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.1(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.1(sv)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.1(fr)
 
     you may wish to turn off the translation of PPD files:
 
