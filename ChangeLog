@@ -1,3 +1,34 @@
+2000-10-23	<davehill@sourceforge.net>
+
+	Files:	print-pcl.c (1.89) (+45 -6)
+		printers.xml (1.31) (+1 -1)
+	
+	Updated to latest version of Tommy's patch, plus fixed 8xx C-RET.
+	
+2000-10-22	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.93) (+2 -2)
+	
+	Fixed small bug leading to wrong horizontal offsets for xdpi != ydpi
+	
+2000-10-22	<gandy@sourceforge.net>
+
+	Files:	cups/Makefile.in (1.18) (+25 -4)
+		cups/commandtocanon.c (1.1) ( )
+		cups/canon.c (1.1) ( )
+	
+	Added preliminary support for canon printers in cups - alls existing commands
+	are working except for ink level determination. Some canon specific commands
+	are missing for lack of cups-commands files.
+	
+2000-10-22	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.92) (+8 -2)
+	
+	Changed fallback behaviour for unspecified inktypes: CMYK, CMY or K are
+	used if available. This makes color printing with cups possible even with
+	missing InkType specifications.
+	
 2000-10-21	<rlk@sourceforge.net>
 
 	Files:	escputil.c (1.16) (+2 -1)
