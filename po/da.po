@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 0.3\n"
-"POT-Creation-Date: 2001-11-03 23:16-0500\n"
+"POT-Creation-Date: 2001-11-05 19:42-0500\n"
 "PO-Revision-Date: 2001-10-19 20:53+0200\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -1302,54 +1302,54 @@ msgstr ""
 #. * Use the English name of your language here, e.g. "Swedish" instead of
 #. * "Svenska".
 #.
-#: src/cups/genppd.c:469
+#: src/cups/genppd.c:451
 msgid "English"
 msgstr "Danish"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
-#: src/cups/genppd.c:471
+#: src/cups/genppd.c:453
 msgid "ISOLatin1"
 msgstr ""
 
-#: src/cups/genppd.c:647
+#: src/cups/genppd.c:629
 msgid "Media Type"
 msgstr ""
 
-#: src/cups/genppd.c:673
+#: src/cups/genppd.c:655
 msgid "Media Source"
 msgstr ""
 
-#: src/cups/genppd.c:697
+#: src/cups/genppd.c:679
 msgid "Resolution"
 msgstr "Opløsning"
 
 #.
 #. * Image types...
 #.
-#: src/cups/genppd.c:737
+#: src/cups/genppd.c:719
 msgid "Image Type"
 msgstr "Bildetype"
 
-#: src/cups/genppd.c:742 src/gimp/gimp_main_window.c:1314
+#: src/cups/genppd.c:724 src/gimp/gimp_main_window.c:1314
 msgid "Line Art"
 msgstr "Linje-kunst"
 
-#: src/cups/genppd.c:744 src/gimp/gimp_main_window.c:1328
+#: src/cups/genppd.c:726 src/gimp/gimp_main_window.c:1328
 msgid "Solid Colors"
 msgstr "Farve"
 
-#: src/cups/genppd.c:746 src/gimp/gimp_main_window.c:1343
+#: src/cups/genppd.c:728 src/gimp/gimp_main_window.c:1343
 msgid "Photograph"
 msgstr ""
 
 #.
 #. * Dithering algorithms...
 #.
-#: src/cups/genppd.c:754
+#: src/cups/genppd.c:736
 msgid "Dither Algorithm"
 msgstr "Dither-algoritme"
 
-#: src/cups/genppd.c:773
+#: src/cups/genppd.c:755
 msgid "Ink Type"
 msgstr "Blæktype"
 

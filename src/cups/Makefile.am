@@ -174,6 +174,7 @@ ppd-stamp: genppd
 	-mkdir ppd
 	for language in C $(ALL_LINGUAS) ; do \
 	  mkdir ppd/$$language ; \
+	  echo "$$language:" ; \
 	  LANGUAGE=$$language ./genppd --prefix=ppd/$$language --catalog=`pwd`/catalog/share/locale ; \
 	done
 	$(RM) -r catalog
