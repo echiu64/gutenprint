@@ -395,7 +395,7 @@ query(void)
       _("This plug-in prints images from The GIMP."),
       _("Prints images to PostScript, PCL, or ESC/P2 printers."),
       "Michael Sweet <mike@easysw.com> and Robert Krawitz <rlk@alum.mit.edu>",
-      "Copyright 1997-1999 by Michael Sweet and Robert Krawitz",
+      "Copyright 1997-2000 by Michael Sweet and Robert Krawitz",
       PLUG_IN_VERSION,
       N_("<Image>/File/Print..."),
       "RGB*,GRAY*,INDEXED*",
