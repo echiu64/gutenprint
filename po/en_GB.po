@@ -654,14 +654,14 @@ msgid "`%s' is not a valid %s\n"
 msgstr "`%s' is not a valid %s\n"
 
 #: src/main/printers.c:409
-#, fuzzy, c-format
+#, c-format
 msgid "%s must be between %f and %f (is %f)\n"
-msgstr "%s must be between %f and %f\n"
+msgstr "%s must be between %f and %f (is %f)\n"
 
 #: src/main/printers.c:429
-#, fuzzy, c-format
+#, c-format
 msgid "%s must be between %d and %d (is %d)\n"
-msgstr "%s must be between %d and %d\n"
+msgstr "%s must be between %d and %d (is %d)\n"
 
 #: src/main/printers.c:458
 #, c-format
@@ -773,11 +773,11 @@ msgstr "Full Bleed"
 
 #: src/main/print-escp2.c:125
 msgid "Adjust dot size as necessary"
-msgstr ""
+msgstr "Adjust dot size as necessary"
 
 #: src/main/print-escp2.c:126
 msgid "Adjust dot size as necessary to achieve desired density"
-msgstr ""
+msgstr "Adjust dot size as necessary to achieve desired density"
 
 #: src/main/print-escp2.c:131 src/main/print-escp2.c:132
 msgid "Light Cyan Transition"
@@ -1082,7 +1082,7 @@ msgstr "Super B 13x19"
 
 #: src/main/xmli18n-tmp.h:16
 msgid "Engineering C 17x22"
-msgstr ""
+msgstr "Engineering C 17x22"
 
 #: src/main/xmli18n-tmp.h:17
 msgid "8x12"
@@ -1993,9 +1993,8 @@ msgid "EPSON CL-750"
 msgstr "EPSON CL-750"
 
 #: src/main/xmli18n-tmp.h:244
-#, fuzzy
 msgid "EPSON CL-760"
-msgstr "EPSON CL-750"
+msgstr "EPSON CL-760"
 
 #: src/main/xmli18n-tmp.h:245
 msgid "EPSON EM-900C"
@@ -2050,9 +2049,8 @@ msgid "EPSON PM-730C"
 msgstr "EPSON PM-730C"
 
 #: src/main/xmli18n-tmp.h:258
-#, fuzzy
 msgid "EPSON PM-740C"
-msgstr "EPSON PM-700C"
+msgstr "EPSON PM-740C"
 
 #: src/main/xmli18n-tmp.h:259
 msgid "EPSON PM-750C"
@@ -2083,18 +2081,16 @@ msgid "EPSON PM-850PT"
 msgstr "EPSON PM-850PT"
 
 #: src/main/xmli18n-tmp.h:266
-#, fuzzy
 msgid "EPSON PM-870C"
-msgstr "EPSON PM-700C"
+msgstr "EPSON PM-870C"
 
 #: src/main/xmli18n-tmp.h:267
 msgid "EPSON PM-880C"
 msgstr "EPSON PM-880C"
 
 #: src/main/xmli18n-tmp.h:268
-#, fuzzy
 msgid "EPSON PM-930C"
-msgstr "EPSON EM-930C"
+msgstr "EPSON PM-930C"
 
 #: src/main/xmli18n-tmp.h:269
 msgid "EPSON PM-950C"
@@ -2125,9 +2121,8 @@ msgid "EPSON PM-3500C"
 msgstr "EPSON PM-3500C"
 
 #: src/main/xmli18n-tmp.h:276
-#, fuzzy
 msgid "EPSON PM-3700C"
-msgstr "EPSON PM-700C"
+msgstr "EPSON PM-3700C"
 
 #: src/main/xmli18n-tmp.h:277
 msgid "EPSON PM-4000PX"
@@ -2391,7 +2386,7 @@ msgstr "LEXMARK Z53"
 
 #: src/main/xmli18n-tmp.h:342
 msgid "Olympus P300"
-msgstr ""
+msgstr "Olympus P300"
 
 #: src/main/xmli18n-tmp.h:343
 msgid "RAW DATA 16 bit"
