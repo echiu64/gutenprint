@@ -222,9 +222,12 @@ ESC (R BC=8 00 R E M O T E 1
 
 After all data has been sent, a form feed byte should be sent.
 
-In addition, there is one special command required to enable the USB
-port on the ESC 900 and apparently other new printers.  This must be
-sent BEFORE the initial reset command:
+All newer Epson printers (STC 440, STP 750) require the following
+command to be sent at least once to enable printing at all.  This
+command specifically takes the printer out of the Epson packet mode
+communication protocol (whatever that is) and enables normal data
+transfer.  Sending it multiple times is is not harmful, so it is
+normally sent at the beginning of each job:
 
 ESC 01 @EJL<space>1284.4<newline>@EJL<space><space><space><space><space><newline>ESC@
 
@@ -381,19 +384,23 @@ manual.  Much of this information is interpreted; none is tested.
 
 				     xx=00 selects the "Feed paper
 				     sequence setting"; yy can take
-				     on values of either 00 or 01.
-				     01 appears to be the one most
-				     commonly set by Epson drivers.
-				     On a STP 870, the following values
-				     of yy have been observed:
-				     01 when printing on "plain paper"
-				     03 for "photo quality glossy film"
-					or "ink jet transparencies"
-				     06 for "matte paper - heavyweight"
-				     07 for "360dpi ink jet paper" or
-					"photo quality ink jet paper"
-				     08 for "photo paper" or "premium
-					glossy photo paper"
+				     on the following values (on the
+				     STP 870, at any rate):
+				     0	 default
+				     1	 plain paper
+				     2	 postcards
+				     3	 film (photo quality glossy
+				         film, transparencies)
+				     4	 envelopes
+				     5	 plain paper
+				     6	 back light film (although
+				         this has been observed with
+					 heavyweight matte paper).
+				     7	 matte paper (observed with
+					 360 dpi inkjet paper, and
+					 photo quality inkjet paper)
+				     8	 photo paper
+
 				     Experimentation suggests that this
 				     setting changes details of how the
 				     printer's cut sheet feeder works,
@@ -402,14 +409,16 @@ manual.  Much of this information is interpreted; none is tested.
 
 				     xx=01 controls the platen gap
 				     setting; yy=00 is the default,
-				     yy=01 is "high".
+				     yy=1 or 2 are higher settings
 
-				     xx=02 has been observed on the STP
-				     870, where yy=01 when printing on
-				     "plain paper", "360dpi ink jet
-				     paper" or "ink jet transparencies",
-				     and yy=00 for all other paper
-				     type settings.
+				     xx=02 controls paper loading
+				     speed (0 is normal, 1 is fast, 2
+				     is slow).  It appears that 1 is
+				     used when printing on "plain
+				     paper", "360dpi ink jet paper" or
+				     "ink jet transparencies", and
+				     yy=00 for all other paper type
+				     settings.
 
    * PP BC=3 00 xx yy                Set Paper Path.  xx=2 indicates
 				     manual feed, xx=3 is for roll
@@ -467,8 +476,9 @@ manual.  Much of this information is interpreted; none is tested.
 				     vertical trim lines at the left
 				     and right margins.
 
-				     On a Stylus Color 3000 and a Stylus
-				     Photo 870, the value 0x5 was observed
+				     On a Stylus Color 3000 and a
+				     Stylus Photo 870, the value 0x5
+				     was observed (and documented)
 				     where the 0x14 is listed.
 
    * PH BC=2 00 xx		     Select Paper Thickness.  Set the
