@@ -205,7 +205,8 @@ FOOMATIC
     first version of Foomatic (the one used with Gimp-Print 4.0) is not
     compatible with Gimp-Print 4.2.  Note that the Foomatic driver is
     named `stp' in Gimp-Print 4.0; in Gimp-Print 4.2 it is named
-    `gimp-print'.  The data for the Gimp-Print 4.0 driver is not
+    `gimp-print' for the GhostScript ("stp") driver and "gimp-print-ijs"
+    for the IJS driver. The data for the Gimp-Print 4.0 driver is not
     compatible with the 4.2 driver.
 
     To verify that you have an appropriate version of Foomatic, please
@@ -229,29 +230,45 @@ FOOMATIC
     make
     make install
 
+    for obtaining the Foomatic data only for the GhostScript ("stp")
+    driver or
+
+    ./configure --with-ijs --with-foomatic
+    make
+    make install
+
+    for obtaining the Foomatic data for both the GhostScript ("stp")
+    driver and the IJS driver (note that this also build the IJS
+    interface itself, so you have to follow the instructions in
+    src/ghost/README, too).
+
     The "make install" step will add the necessary data to your
     Foomatic installation.  It must be run as root.  It will fail if
     Foomatic is not installed or your Foomatic is too old.  Now you
     can either set up a queue for your printer with
     "foomatic-configure" (see USAGE file in the Foomatic package) or
-    generate the printer description file for your spooler and
-    configure your printer as described on the spooler-specific web
-    pages of linuxprinting.org.
+    generate the printer description file for your spooler (with 
+    "foomatic-datafile") and configure your printer as described on
+    the spooler-specific web pages of linuxprinting.org.
 
     Note that it almost never makes sense to build the Foomatic driver
-    without also building the Ghostscript driver, even if Foomatic is
-    to be used with CUPS (CUPS-o-matic).  Please read the instructions
-    below in the GHOSTSCRIPT section.
+    without also building the Ghostscript driver or the IJS driver, 
+    even if Foomatic is to be used with CUPS (CUPS-O-Matic).  Please 
+    read the instructions below in the GHOSTSCRIPT section.
 
     If you do not wish to build the Gimp Print plugin, you must run
 
     ./configure --with-foomatic --without-gimp
 
+    or
+
+    ./configure --with-ijs --with-foomatic --without-gimp
+
     Please visit http://www.linuxprinting.org/foomatic.html for more
     information on Foomatic.
 
     Foomatic provides an alternate interface to CUPS, in addition to
-    an interface to lpd and LPRng.
+    an interface to LPD, LPRng, GNUlpr, PDQ, and PPR.
 
 
 GHOSTSCRIPT
