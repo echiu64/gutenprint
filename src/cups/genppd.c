@@ -63,6 +63,12 @@
 #include <gimp-print/gimp-print.h>
 #endif
 #ifdef ENABLE_NLS
+#define gettext gettext__
+#define dgettext dgettext__
+#define dcgettext dcgettext__
+#define ngettext ngettext__
+#define dngettext dngettext__
+#define dcngettext dcngettext__
 
 #ifdef INCLUDE_LOCALE_H
 INCLUDE_LOCALE_H
@@ -146,7 +152,7 @@ static struct				/**** STP numeric options ****/
 void	initialize_stp_options(void);
 void	usage(void);
 int	write_ppd(const stp_printer_t p, const char *prefix,
-	          const char *language);
+	          const char *language, int verbose);
 
 
 /*
@@ -163,10 +169,13 @@ main(int  argc,			/* I - Number of command-line arguments */
   const char	*language;	/* Language */
   const char    *catalog = NULL;/* Catalog location */
   stp_printer_t	printer;	/* Pointer to printer driver */
+  int           verbose = 0;
   static struct option long_options[] =
 		{		/* Command-line options */
 		  /* name,	has_arg,		flag	val */
 		  {"help",	no_argument,		0,	0},
+		  {"verbose",	no_argument,		0,	0},
+		  {"quiet",	no_argument,		0,	0},
 		  {"catalog",	required_argument,	0,	0},
 		  {"prefix",	required_argument,	0,	0},
 		  {0,		0,			0,	0}
@@ -199,6 +208,18 @@ main(int  argc,			/* I - Number of command-line arguments */
 	  if (strncmp(long_options[option_index].name, "help", 4) == 0)
           {
 	    usage();
+	    break;
+          }
+
+	  if (strncmp(long_options[option_index].name, "verbose", 7) == 0)
+          {
+	    verbose = 1;
+	    break;
+          }
+
+	  if (strncmp(long_options[option_index].name, "quiet", 5) == 0)
+          {
+	    verbose = 0;
 	    break;
           }
 
@@ -274,9 +295,11 @@ main(int  argc,			/* I - Number of command-line arguments */
   {
     printer = stp_get_printer_by_index(i);
 
-    if (printer && write_ppd(printer, prefix, language))
+    if (printer && write_ppd(printer, prefix, language, verbose))
       return (1);
   }
+  if (!verbose)
+    fprintf(stderr, "\n");
 
   return (0);
 }
@@ -358,7 +381,8 @@ usage(void)
 int					/* O - Exit status */
 write_ppd(const stp_printer_t p,	/* I - Printer driver */
 	  const char          *prefix,	/* I - Prefix (directory) for PPD files */
-	  const char          *language)/* I - Language/locale */
+	  const char          *language,/* I - Language/locale */
+	  int                 verbose)
 {
   int		i, j;			/* Looping vars */
   gzFile	fp;			/* File to write to */
@@ -425,7 +449,10 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   sscanf(long_name, "%63s", manufacturer);
 
-  fprintf(stderr, "Writing %s...\n", filename);
+  if (verbose)
+    fprintf(stderr, "Writing %s...\n", filename);
+  else
+    fprintf(stderr, ".");
 
   gzputs(fp, "*PPD-Adobe: \"4.3\"\n");
   gzputs(fp, "*%PPD file for CUPS/GIMP-print.\n");
@@ -838,6 +865,100 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   stp_free_vars(v);
   return (0);
+}
+
+#include "gettextP.h"
+
+#ifdef gettext
+#undef gettext
+#endif
+#ifdef dgettext
+#undef dgettext
+#endif
+#ifdef dcgettext
+#undef dcgettext
+#endif
+#ifdef ngettext
+#undef ngettext
+#endif
+#ifdef dngettext
+#undef dngettext
+#endif
+#ifdef dcngettext
+#undef dcngettext
+#endif
+#ifdef textdomain
+#undef textdomain
+#endif
+#ifdef bindtextdomain
+#undef bindtextdomain
+#endif
+#ifdef bind_textdomain_codeset
+#undef bind_textdomain_codeset
+#endif
+
+char *
+gettext (const char *msgid)
+{
+  return gettext__ (msgid);
+}
+
+
+char *
+dgettext (const char *domainname, const char *msgid)
+{
+  return dgettext__ (domainname, msgid);
+}
+
+
+char *
+dcgettext (const char *domainname, const char *msgid, int category)
+{
+  return dcgettext__ (domainname, msgid, category);
+}
+
+
+char *
+ngettext (const char *msgid1, const char *msgid2, unsigned long n)
+{
+  return ngettext__ (msgid1, msgid2, n);
+}
+
+
+char *
+dngettext (const char *domainname, const char *msgid1, const char *msgid2,
+	   unsigned long n)
+{
+  return dngettext__ (domainname, msgid1, msgid2, n);
+}
+
+
+char *
+dcngettext (const char *domainname, const char *msgid1, const char *msgid2,
+	    unsigned long n, int category)
+{
+  return dcngettext__ (domainname, msgid1, msgid2, n, category);
+}
+
+
+char *
+textdomain (const char *domainname)
+{
+  return textdomain__ (domainname);
+}
+
+
+char *
+bindtextdomain (const char *domainname, const char *dirname)
+{
+  return bindtextdomain__ (domainname, dirname);
+}
+
+
+char *
+bind_textdomain_codeset (const char *domainname, const char *codeset)
+{
+  return bind_textdomain_codeset__ (domainname, codeset);
 }
 
 /*
