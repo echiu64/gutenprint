@@ -179,6 +179,13 @@
 <language value=canon>
 </printer>
 
+<printer name="CANON S200" driver="bjc-s200">
+<color>
+# model number 4202 is the USB product ID of the Canon S200x
+<model value=4202>
+<language value=canon>
+</printer>
+
 <printer name="CANON S400" driver="bjc-s400">
 <color>
 <model value=3000>

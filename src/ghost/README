@@ -449,6 +449,7 @@ bjc-6500                CANON BJC 6500
 bjc-7000                CANON BJC 7000
 bjc-7100                CANON BJC 7100
 bjc-8200                CANON BJC 8200
+bjc-s200                CANON S200
 bjc-s400                CANON S400
 bjc-s450                CANON S450
 bjc-s800                CANON S800
@@ -468,6 +469,8 @@ escp2-c62               EPSON Stylus C62
 escp2-c70               EPSON Stylus C70
 escp2-c80               EPSON Stylus C80
 escp2-c82               EPSON Stylus C82
+escp2-c83               EPSON Stylus C83
+escp2-c84               EPSON Stylus C84
 escp2                   EPSON Stylus Color
 escp2-pro               EPSON Stylus Color Pro
 escp2-pro-xl            EPSON Stylus Color Pro XL

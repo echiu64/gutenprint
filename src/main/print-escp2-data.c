@@ -2470,60 +2470,60 @@ DECLARE_INK_CHANNEL(c80_quadtone);
 
 static const physical_subchannel_t f360_standard_cyan_subchannels[] =
 {
-  { 2, -1, 1, "CyanDensity", NULL }
+  { 2, -1, 1 }
 };
 
 DECLARE_INK_CHANNEL(f360_standard_cyan);
 
 static const physical_subchannel_t f360_standard_magenta_subchannels[] =
 {
-  { 1, -1, 1, "MagentaDensity", NULL }
+  { 1, -1, 1 }
 };
 
 DECLARE_INK_CHANNEL(f360_standard_magenta);
 
 static const physical_subchannel_t f360_photo_black_subchannels[] =
 {
-  { 0, 0, 1, "BlackDensity", NULL }
+  { 0, 0, 1 }
 };
 
 DECLARE_INK_CHANNEL(f360_photo_black);
 
 static const physical_subchannel_t f360_photo_yellow_subchannels[] =
 {
-  { 4, 0, 1, "YellowDensity", NULL }
+  { 4, 0, 1 }
 };
 
 DECLARE_INK_CHANNEL(f360_photo_yellow);
 
 static const physical_subchannel_t f360_photo2_yellow_subchannels[] =
 {
-  { 4, 2, 0, "YellowDensity", NULL },
-  { 4, 0, 1, "YellowDensity", "DarkYellowTransition" }
+  { 4, 2, 0 },
+  { 4, 0, 1 }
 };
 
 DECLARE_INK_CHANNEL(f360_photo2_yellow);
 
 static const physical_subchannel_t f360_photo2_black_subchannels[] =
 {
-  { 0, 0, 1, "BlackDensity", NULL },
-  { 0, 1, 0, "BlackDensity", "GrayTransition" }
+  { 0, 0, 1 },
+  { 0, 1, 0 }
 };
 
 DECLARE_INK_CHANNEL(f360_photo2_black);
 
 static const physical_subchannel_t f360_photo_cyan_subchannels[] =
 {
-  { 2, 0, 1, "CyanDensity", NULL },
-  { 2, 1, 0, "CyanDensity", "LightCyanTransition" }
+  { 2, 0, 1 },
+  { 2, 1, 0 }
 };
 
 DECLARE_INK_CHANNEL(f360_photo_cyan);
 
 static const physical_subchannel_t f360_photo_magenta_subchannels[] =
 {
-  { 1, 0, 1, "MagentaDensity", NULL },
-  { 1, 1, 0, "MagentaDensity", "LightMagentaTransition" }
+  { 1, 0, 1 },
+  { 1, 1, 0 }
 };
 
 DECLARE_INK_CHANNEL(f360_photo_magenta);
@@ -2669,7 +2669,7 @@ static const escp2_inkname_t c80_piezo_quadtone_inkset =
 
 static const escp2_inkname_t f360_six_color_photo_inkset =
 {
-  "PhotoCMYK", N_("Six Color Photo"), 1, 4, INKSET_CcMmYK, .5, 1.0,
+  "PhotoCMYK", N_("Six Color Photo"), 1, INKSET_CcMmYK, .5, 1.0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &f360_photo_black_channels, &f360_photo_cyan_channels,
@@ -2679,7 +2679,7 @@ static const escp2_inkname_t f360_six_color_photo_inkset =
 
 static const escp2_inkname_t f360_five_color_photo_composite_inkset =
 {
-  "PhotoCMY", N_("Five Color Photo Composite"), 1, 4, INKSET_CcMmYK, 0, 0,
+  "PhotoCMY", N_("Five Color Photo Composite"), 1, INKSET_CcMmYK, 0, 0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &f360_photo_cyan_channels,
@@ -2689,7 +2689,7 @@ static const escp2_inkname_t f360_five_color_photo_composite_inkset =
 
 static const escp2_inkname_t f360_j_seven_color_enhanced_inkset =
 {
-  "Photo7J", N_("Seven Color Enhanced"), 1, 4, INKSET_CcMmYyK, .5, 1.0,
+  "Photo7J", N_("Seven Color Enhanced"), 1, INKSET_CcMmYyK, .5, 1.0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &f360_photo_black_channels, &f360_photo_cyan_channels,
@@ -2699,7 +2699,7 @@ static const escp2_inkname_t f360_j_seven_color_enhanced_inkset =
 
 static const escp2_inkname_t f360_j_six_color_enhanced_composite_inkset =
 {
-  "PhotoEnhanceJ", N_("Six Color Enhanced Composite"), 1, 4, INKSET_CcMmYyK, .5, 1.0,
+  "PhotoEnhanceJ", N_("Six Color Enhanced Composite"), 1, INKSET_CcMmYyK, .5, 1.0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &f360_photo_cyan_channels,
@@ -2709,7 +2709,7 @@ static const escp2_inkname_t f360_j_six_color_enhanced_composite_inkset =
 
 static const escp2_inkname_t f360_seven_color_photo_inkset =
 {
-  "PhotoCMYK7", N_("Seven Color Photo"), 1, 4, INKSET_CcMmYKk, .05 , 1.0,
+  "PhotoCMYK7", N_("Seven Color Photo"), 1, INKSET_CcMmYKk, .05 , 1.0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &f360_photo2_black_channels, &f360_photo_cyan_channels,
@@ -2719,7 +2719,7 @@ static const escp2_inkname_t f360_seven_color_photo_inkset =
 
 static const escp2_inkname_t f360_two_color_grayscale_inkset =
 {
-  "Gray2", N_("Two Level Grayscale"), 0, 1, INKSET_CcMmYKk, 0, 0,
+  "Gray2", N_("Two Level Grayscale"), 0, INKSET_CcMmYKk, 0, 0,
   NULL, NULL, NULL,
   {
     &f360_photo2_black_channels
@@ -2838,7 +2838,7 @@ static const escp2_inkname_t *const f360_photo7_ink_types[] =
   &two_color_grayscale_inkset
 };
 
-DECLARE_INKLIST(photo7);
+DECLARE_INKLIST(f360_photo7);
 
 
 

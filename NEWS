@@ -1011,6 +1011,7 @@ CANON BJC 6100
 CANON BJC 7000
 CANON BJC 7100
 CANON BJC 8200
+CANON S200                      (experimental)  
 CANON S400
 CANON S450
 CANON S800
@@ -1094,7 +1095,7 @@ EPSON Stylus CX-3200
 EPSON Stylus CX-5200
 EPSON CL-700
 EPSON CL-750
-EPSON CL-760	(Experimental)
+EPSON CL-760    (Experimental)
 EPSON EM-900C
 EPSON EM-930C
 EPSON MC-2000
@@ -1108,7 +1109,7 @@ EPSON MJ-6000C
 EPSON MJ-8000C
 EPSON PM-700C
 EPSON PM-730C
-EPSON PM-740C	(Experimental)
+EPSON PM-740C   (Experimental)
 EPSON PM-750C
 EPSON PM-760C
 EPSON PM-770C
@@ -1116,9 +1117,9 @@ EPSON PM-780C
 EPSON PM-790PT
 EPSON PM-800C
 EPSON PM-850PT
-EPSON PM-870C	(Experimental)
+EPSON PM-870C   (Experimental)
 EPSON PM-880C
-EPSON PM-930C	(Experimental)
+EPSON PM-930C   (Experimental)
 EPSON PM-950C
 EPSON PM-970C                   (experimental)
 EPSON PM-2000C
@@ -1126,7 +1127,7 @@ EPSON PM-2200C
 EPSON PM-3000C
 EPSON PM-3300C
 EPSON PM-3500C
-EPSON PM-3700C	(Experimental)
+EPSON PM-3700C  (Experimental)
 EPSON PM-4000PX
 EPSON PM-5000C
 EPSON PM-7000C
@@ -1261,6 +1262,7 @@ Canon LBP-1000                 pcl-6           HP LaserJet 6 series
 Canon LBP-1260                 pcl-6           HP LaserJet 6 series
 Canon LBP-1760                 pcl-6           HP LaserJet 6 series
 Canon S100                     bjc-4300        CANON BJC 4300
+Canon S200                     bjc-s200        CANON S200
 Canon S300                     bjc-s800        CANON S800
 Canon S400                     bjc-s400        CANON S400
 Canon S450                     bjc-s450        CANON S450
