@@ -277,6 +277,7 @@ pcl-5			HP LaserJet 5 series
 pcl-5si			HP LaserJet 5Si
 pcl-6			HP LaserJet 6 series
 lexmark-4076		Lexmark 4076 (PCL printer)
+lexmark-z52             Lexmark Z52
 
 Most or all of the Epson Stylus printers are fully functional.  The
 others vary.  In particular, all of the listed Epson Stylus Photo

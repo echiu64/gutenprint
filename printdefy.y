@@ -39,6 +39,7 @@ extern int yylex(void);
 #define EESCP2 2
 #define EPCL 3
 #define EPS 4
+#define ELEXMARK 5
 
 void
 initialize_the_printer(const char *name, const char *driver)
@@ -97,6 +98,14 @@ output_the_printer(void)
       printf("    %s,\n", "ps_limit");
       printf("    %s,\n", "ps_print");
       printf("    %s,\n", "ps_default_resolution");
+      break;
+    case 5:
+      printf("    %s,\n", "lexmark_parameters");
+      printf("    %s,\n", "default_media_size");
+      printf("    %s,\n", "lexmark_imageable_area");
+      printf("    %s,\n", "lexmark_limit");
+      printf("    %s,\n", "lexmark_print");
+      printf("    %s,\n", "lexmark_default_resolution");
       break;
     default:
       printf("    %s,\n", "NULL");
@@ -186,6 +195,8 @@ language:		tBEGIN LANGUAGE VALUE ASSIGN tCLASS tEND
 	    thePrinter.printvars.linear = EPCL;
 	  else if (!strcmp($5, "ps"))
 	    thePrinter.printvars.linear = EPS;
+	  else if (!strcmp($5, "lexmark"))
+	    thePrinter.printvars.linear = ELEXMARK;
 	}
 ;
 brightness:		tBEGIN BRIGHTNESS VALUE ASSIGN tDOUBLE tEND

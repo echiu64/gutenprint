@@ -693,3 +693,11 @@
 <density value=0.786>
 <language value=pcl>
 </printer>
+
+<printer name="Lexmark Z52" driver="lexmark-z52">
+<color>
+<model value=10052>
+<gamma value=0.818>
+<density value=0.786>
+<language value=lexmark>
+</printer>

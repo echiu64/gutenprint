@@ -11,6 +11,7 @@ EXTRA_PROGRAMS=escp2-weavetest printer_options unprint pcl-unprint
 noinst_PROGRAMS = printdef
 
 COMMON_SOURCE = \
+	print-lexmark.c   	\
 	print-canon.c   	\
 	print-dither.c		\
 	print-escp2.c		\

@@ -316,6 +316,18 @@ extern void	default_media_size(const printer_t *printer, const vars_t *v,
 				   int *width, int *length);
 
 
+extern char	**lexmark_parameters(const printer_t *printer, char *ppd_file,
+		                   char *name, int *count);
+extern void	lexmark_imageable_area(const printer_t *printer, const vars_t *v,
+				     int *left, int *right,
+				     int *bottom, int *top);
+extern void	lexmark_limit(const printer_t *printer, const vars_t *v,
+			    int *width, int *length);
+extern void	lexmark_print(const printer_t *printer, int copies, FILE *prn,
+			    Image image, const vars_t *v);
+extern const char *lexmark_default_resolution(const printer_t *printer);
+
+
 extern char	**escp2_parameters(const printer_t *printer, char *ppd_file,
 				   char *name, int *count);
 extern void	escp2_imageable_area(const printer_t *printer, const vars_t *v,
