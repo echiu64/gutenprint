@@ -211,7 +211,6 @@ for (<PRINTERS>) {
 	my $deviceclass = $1;
 	if ($opt_o) {
 	    # Translate the Foomatic IDs to the old (numerical) ones
-	    print "##### $foomaticid\n";
 	    $foomaticid = $oldid{$foomaticid} 
 	        if defined($oldid{$foomaticid});
 	}
