@@ -1836,8 +1836,6 @@ escp2_print_data(stp_vars_t v, stp_image_t *image)
 	  errline ++;
 	}
     }
-  stpi_image_progress_conclude(image);
-  stpi_flush_all(v);
   return 1;
 }
 
@@ -1881,13 +1879,13 @@ escp2_print_page(stp_vars_t v, stp_image_t *image)
   setup_inks(v);
 
   status = escp2_print_data(v, image);
+  stpi_image_progress_conclude(image);
+  stpi_flush_all(v);
+  stpi_escp2_terminate_page(v);
 
   /*
    * Cleanup...
    */
-  if (!pd->printed_something)
-    stpi_send_command(v, "\n", "");
-  stpi_send_command(v, "\f", "");	/* Eject page */
   for (i = 0; i < pd->channels_in_use; i++)
     if (pd->cols[i])
       stpi_free(pd->cols[i]);

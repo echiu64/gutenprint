@@ -621,3 +621,15 @@ stpi_escp2_flush_pass(stp_vars_t v, int passno, int vertical_subpass)
       linecount[0].v[j] = 0;
     }
 }
+
+void
+stpi_escp2_terminate_page(stp_vars_t v)
+{
+  escp2_privdata_t *pd = get_privdata(v);
+  if (pd->input_slot->roll_feed_cut_flags != ROLL_FEED_DONT_EJECT)
+    {
+      if (!pd->printed_something)
+	stpi_send_command(v, "\n", "");
+      stpi_send_command(v, "\f", "");	/* Eject page */
+    }
+}

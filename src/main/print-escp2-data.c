@@ -275,7 +275,7 @@ static const input_slot_t standard_roll_feed_input_slots[] =
     "Roll",
     N_("Roll Feed"),
     1,
-    0,
+    ROLL_FEED_DONT_EJECT,
     { 16, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001" },
     { 6, "IR\002\000\000\002" }
   }
@@ -301,7 +301,7 @@ static const input_slot_t cutter_roll_feed_input_slots[] =
     "RollCutPage",
     N_("Roll Feed (cut each page)"),
     1,
-    1,
+    ROLL_FEED_CUT_ALL,
     { 16, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001" },
     { 6, "IR\002\000\000\002" }
   },
@@ -309,7 +309,7 @@ static const input_slot_t cutter_roll_feed_input_slots[] =
     "RollCutNone",
     N_("Roll Feed (do not cut)"),
     1,
-    0,
+    ROLL_FEED_DONT_EJECT,
     { 16, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001" },
     { 6, "IR\002\000\000\002" }
   }
