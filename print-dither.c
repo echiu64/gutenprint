@@ -853,7 +853,7 @@ do {									\
 	    sub = d->l##r##_level + (l##r##_level * cutoff / 65536);	\
 	  if (ditherbit##d1 > cutoff)					\
 	    {								\
-	      DO_PRINT_COLOR(r);					\
+	      DO_PRINT_COLOR(l##r);					\
 	    }								\
 	  else								\
 	    {								\
@@ -885,7 +885,7 @@ do {									\
 	offset = xdw1;							\
       if (tmp##r > 65535)						\
 	tmp##r = 65535;							\
-      myspread = 3;							\
+      myspread = (ditherbit##d2 & 3) + 2 + (x & 1);			\
       if (offset == 0)							\
 	dist = myspread * tmp##r;					\
       else								\
@@ -1876,6 +1876,9 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.18  2000/03/22 00:53:06  rlk
+ *   Some more minor dithering fixup
+ *
  *   Revision 1.17  2000/03/21 01:58:48  rlk
  *   dumb typo
  *
