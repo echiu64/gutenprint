@@ -345,7 +345,7 @@ stp_curve_free(stp_curve_t curve)
 }
 
 void
-stp_curve_copy(stp_curve_t dest, const stp_curve_t source)
+stp_curve_copy(stp_curve_t dest, stp_const_curve_t source)
 {
   stpi_internal_curve_t *idest = (stpi_internal_curve_t *) dest;
   const stpi_internal_curve_t *isource = (const stpi_internal_curve_t *) source;
@@ -361,7 +361,7 @@ stp_curve_copy(stp_curve_t dest, const stp_curve_t source)
 }
 
 stp_curve_t
-stp_curve_create_copy(const stp_curve_t curve)
+stp_curve_create_copy(stp_const_curve_t curve)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   stp_curve_t ret;
@@ -380,7 +380,7 @@ stp_curve_set_bounds(stp_curve_t curve, double low, double high)
 }
 
 void
-stp_curve_get_bounds(const stp_curve_t curve, double *low, double *high)
+stp_curve_get_bounds(stp_const_curve_t curve, double *low, double *high)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
@@ -394,7 +394,7 @@ stp_curve_get_bounds(const stp_curve_t curve, double *low, double *high)
  * code will clip them to the bounds.
  */
 void
-stp_curve_get_range(const stp_curve_t curve, double *low, double *high)
+stp_curve_get_range(stp_const_curve_t curve, double *low, double *high)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
@@ -402,7 +402,7 @@ stp_curve_get_range(const stp_curve_t curve, double *low, double *high)
 }
 
 size_t
-stp_curve_count_points(const stp_curve_t curve)
+stp_curve_count_points(stp_const_curve_t curve)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
@@ -410,7 +410,7 @@ stp_curve_count_points(const stp_curve_t curve)
 }
 
 stp_curve_wrap_mode_t
-stp_curve_get_wrap(const stp_curve_t curve)
+stp_curve_get_wrap(stp_const_curve_t curve)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
@@ -429,7 +429,7 @@ stp_curve_set_interpolation_type(stp_curve_t curve, stp_curve_type_t itype)
 }
 
 stp_curve_type_t
-stp_curve_get_interpolation_type(const stp_curve_t curve)
+stp_curve_get_interpolation_type(stp_const_curve_t curve)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
@@ -450,7 +450,7 @@ stp_curve_set_gamma(stp_curve_t curve, double gamma)
 }
 
 double
-stp_curve_get_gamma(const stp_curve_t curve)
+stp_curve_get_gamma(stp_const_curve_t curve)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
@@ -501,7 +501,7 @@ stp_curve_set_data(stp_curve_t curve, size_t count, const double *data)
  * guarantee it across non-const calls.
  */
 const double *
-stp_curve_get_data(const stp_curve_t curve, size_t *count)
+stp_curve_get_data(stp_const_curve_t curve, size_t *count)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   const double *ret;
@@ -550,7 +550,7 @@ DEFINE_DATA_SETTER(unsigned short, ushort)
 
 #define DEFINE_DATA_ACCESSOR(t, name)				         \
 const t *								 \
-stp_curve_get_##name##_data(const stp_curve_t curve, size_t *count)      \
+stp_curve_get_##name##_data(stp_const_curve_t curve, size_t *count)      \
 {									 \
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;       \
   stp_sequence_t seq;                                                    \
@@ -570,7 +570,7 @@ DEFINE_DATA_ACCESSOR(unsigned short, ushort)
 
 
 stp_curve_t
-stp_curve_get_subrange(const stp_curve_t curve, size_t start, size_t count)
+stp_curve_get_subrange(stp_const_curve_t curve, size_t start, size_t count)
 {
   stp_curve_t retval;
   size_t ncount;
@@ -591,7 +591,7 @@ stp_curve_get_subrange(const stp_curve_t curve, size_t start, size_t count)
 }
 
 int
-stp_curve_set_subrange(stp_curve_t curve, const stp_curve_t range,
+stp_curve_set_subrange(stp_curve_t curve, stp_const_curve_t range,
 		       size_t start)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
@@ -635,7 +635,7 @@ stp_curve_set_point(stp_curve_t curve, size_t where, double data)
 }
 
 int
-stp_curve_get_point(const stp_curve_t curve, size_t where, double *data)
+stp_curve_get_point(stp_const_curve_t curve, size_t where, double *data)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
@@ -645,7 +645,7 @@ stp_curve_get_point(const stp_curve_t curve, size_t where, double *data)
 }
 
 stp_sequence_t
-stp_curve_get_sequence(const stp_curve_t curve)
+stp_curve_get_sequence(stp_const_curve_t curve)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
@@ -771,7 +771,7 @@ stpi_curve_check_parameters(stp_curve_t *curve, size_t points)
 }
 
 static inline double
-interpolate_gamma_internal(const stp_curve_t curve, double where)
+interpolate_gamma_internal(stp_const_curve_t curve, double where)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   double gamma = icurve->gamma;
@@ -796,7 +796,7 @@ interpolate_gamma_internal(const stp_curve_t curve, double where)
 }
 
 static inline double
-interpolate_point_internal(const stp_curve_t curve, double where)
+interpolate_point_internal(stp_const_curve_t curve, double where)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   int integer = where;
@@ -852,7 +852,7 @@ interpolate_point_internal(const stp_curve_t curve, double where)
 }
 
 int
-stp_curve_interpolate_value(const stp_curve_t curve, double where,
+stp_curve_interpolate_value(stp_const_curve_t curve, double where,
 			    double *result)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
@@ -972,7 +972,7 @@ create_gamma_curve(stp_curve_t *retval, double lo, double hi, double gamma,
 }
 
 static int
-interpolate_points(const stp_curve_t a, const stp_curve_t b,
+interpolate_points(stp_const_curve_t a, stp_const_curve_t b,
 		   stp_curve_compose_t mode,
 		   int points, double *tmp_data)
 {
@@ -1011,7 +1011,7 @@ interpolate_points(const stp_curve_t a, const stp_curve_t b,
 
 int
 stp_curve_compose(stp_curve_t *retval,
-		  const stp_curve_t a, const stp_curve_t b,
+		  stp_const_curve_t a, stp_const_curve_t b,
 		  stp_curve_compose_t mode, int points)
 {
   stp_curve_t ret;
@@ -1228,7 +1228,7 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
 
 
 static xmlNodePtr
-stp_xmltree_create_from_curve(stp_curve_t curve)  /* The curve */
+stp_xmltree_create_from_curve(stp_const_curve_t curve)  /* The curve */
 {
   stp_curve_wrap_mode_t wrapmode;
   stp_curve_type_t interptype;
@@ -1316,7 +1316,7 @@ stp_xmltree_create_from_curve(stp_curve_t curve)  /* The curve */
 }
 
 static xmlDocPtr
-xmldoc_create_from_curve(stp_curve_t curve)
+xmldoc_create_from_curve(stp_const_curve_t curve)
 {
   xmlDocPtr xmldoc;
   xmlNodePtr rootnode;
@@ -1350,7 +1350,7 @@ xmldoc_create_from_curve(stp_curve_t curve)
 }
 
 int
-stp_curve_write(FILE *file, stp_curve_t curve)  /* The curve */
+stp_curve_write(FILE *file, stp_const_curve_t curve)  /* The curve */
 {
   xmlDocPtr xmldoc = NULL;
   xmlCharEncodingHandlerPtr xmlenc;
@@ -1382,7 +1382,7 @@ stp_curve_write(FILE *file, stp_curve_t curve)  /* The curve */
 }
 
 char *
-stp_curve_write_string(stp_curve_t curve)  /* The curve */
+stp_curve_write_string(stp_const_curve_t curve)  /* The curve */
 {
   xmlDocPtr xmldoc = NULL;
   xmlChar *output = NULL;

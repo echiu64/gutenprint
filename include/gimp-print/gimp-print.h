@@ -194,6 +194,7 @@ typedef struct stp_image
  * Opaque representation of a printer model
  */
 typedef void *stp_printer_t;
+typedef const void *stp_const_printer_t;
 
 /*
  * Opaque representation of printer setttings.
@@ -203,6 +204,7 @@ typedef void *stp_printer_t;
  * model and sizing settings are now typed parameters.
  */
 typedef void *stp_vars_t;
+typedef const void *stp_const_vars_t;
 
 /*
  * The following types are permitted for a printer setting.  Not all
@@ -272,6 +274,7 @@ typedef struct
 } stp_param_string_t;
 
 typedef void *stp_string_list_t;
+typedef const void *stp_const_string_list_t;
 
 /*
  * Other parameter types
@@ -329,6 +332,7 @@ typedef struct
 } stp_parameter_t;
 
 typedef void *stp_parameter_list_t;
+typedef const void *stp_const_parameter_list_t;
 
 /*
  * Paper size
@@ -368,18 +372,18 @@ typedef void (*stp_outfunc_t) (void *data, const char *buffer, size_t bytes);
 ****************************************************************/
 
 extern int stp_printer_model_count(void);
-extern const stp_printer_t stp_get_printer_by_index(int idx);
-extern const stp_printer_t stp_get_printer_by_long_name(const char *long_name);
-extern const stp_printer_t stp_get_printer_by_driver(const char *driver);
-extern const stp_printer_t stp_get_printer(const stp_vars_t v);
+extern stp_const_printer_t stp_get_printer_by_index(int idx);
+extern stp_const_printer_t stp_get_printer_by_long_name(const char *long_name);
+extern stp_const_printer_t stp_get_printer_by_driver(const char *driver);
+extern stp_const_printer_t stp_get_printer(stp_const_vars_t v);
 extern int stp_get_printer_index_by_driver(const char *driver);
 
-extern const char *stp_printer_get_long_name(const stp_printer_t p);
-extern const char *stp_printer_get_driver(const stp_printer_t p);
-extern const char *stp_printer_get_family(const stp_printer_t p);
-extern int stp_printer_get_model(const stp_printer_t p);
-extern const stp_vars_t stp_printer_get_defaults(const stp_printer_t p);
-extern void stp_set_printer_defaults(stp_vars_t, const stp_printer_t);
+extern const char *stp_printer_get_long_name(stp_const_printer_t p);
+extern const char *stp_printer_get_driver(stp_const_printer_t p);
+extern const char *stp_printer_get_family(stp_const_printer_t p);
+extern int stp_printer_get_model(stp_const_printer_t p);
+extern stp_const_vars_t stp_printer_get_defaults(stp_const_printer_t p);
+extern void stp_set_printer_defaults(stp_vars_t, stp_const_printer_t);
 
 
 /****************************************************************
@@ -389,46 +393,46 @@ extern void stp_set_printer_defaults(stp_vars_t, const stp_printer_t);
 ****************************************************************/
 
 extern stp_vars_t stp_vars_create(void);
-extern void stp_vars_copy(stp_vars_t vd, const stp_vars_t vs);
-extern stp_vars_t stp_vars_create_copy(const stp_vars_t vs);
+extern void stp_vars_copy(stp_vars_t vd, stp_const_vars_t vs);
+extern stp_vars_t stp_vars_create_copy(stp_const_vars_t vs);
 extern void stp_vars_free(stp_vars_t v);
 
 extern void stp_set_driver(stp_vars_t v, const char *val);
 extern void stp_set_driver_n(stp_vars_t v, const char *val, int bytes);
-extern const char *stp_get_driver(const stp_vars_t v);
+extern const char *stp_get_driver(stp_const_vars_t v);
 
 extern void stp_set_left(stp_vars_t v, int val);
-extern int stp_get_left(const stp_vars_t v);
+extern int stp_get_left(stp_const_vars_t v);
 
 extern void stp_set_top(stp_vars_t v, int val);
-extern int stp_get_top(const stp_vars_t v);
+extern int stp_get_top(stp_const_vars_t v);
 
 extern void stp_set_width(stp_vars_t v, int val);
-extern int stp_get_width(const stp_vars_t v);
+extern int stp_get_width(stp_const_vars_t v);
 
 extern void stp_set_height(stp_vars_t v, int val);
-extern int stp_get_height(const stp_vars_t v);
+extern int stp_get_height(stp_const_vars_t v);
 
 extern void stp_set_job_mode(stp_vars_t, stp_job_mode_t);
-extern stp_job_mode_t stp_get_job_mode(const stp_vars_t);
+extern stp_job_mode_t stp_get_job_mode(stp_const_vars_t);
 
 extern void stp_set_page_number(stp_vars_t, int);
-extern int stp_get_page_number(const stp_vars_t);
+extern int stp_get_page_number(stp_const_vars_t);
 
 /*
  * For custom page widths, these functions may be used.
  */
 extern void stp_set_page_width(stp_vars_t v, int val);
-extern int stp_get_page_width(const stp_vars_t v);
+extern int stp_get_page_width(stp_const_vars_t v);
 
 extern void stp_set_page_height(stp_vars_t v, int val);
-extern int stp_get_page_height(const stp_vars_t v);
+extern int stp_get_page_height(stp_const_vars_t v);
 
 /*
  * Set output type.  This is likely to change further.
  */
 extern void stp_set_output_type(stp_vars_t v, int val);
-extern int stp_get_output_type(const stp_vars_t v);
+extern int stp_get_output_type(stp_const_vars_t v);
 
 /*
  * Input color model refers to how the data is being sent to the
@@ -442,7 +446,7 @@ extern int stp_get_output_type(const stp_vars_t v);
  * This is subject to change.
  */
 extern void stp_set_input_color_model(stp_vars_t v, int val);
-extern int stp_get_input_color_model(const stp_vars_t v);
+extern int stp_get_input_color_model(stp_const_vars_t v);
 
 /*
  * These functions are used to print output and diagnostic information
@@ -450,23 +454,23 @@ extern int stp_get_input_color_model(const stp_vars_t v);
  * errdata are passed as arguments to outfunc and errfunc; typically
  * they will be file descriptors.
  */
-extern void stp_set_outfunc(const stp_vars_t v, stp_outfunc_t val);
-extern stp_outfunc_t stp_get_outfunc(const stp_vars_t v);
+extern void stp_set_outfunc(stp_vars_t v, stp_outfunc_t val);
+extern stp_outfunc_t stp_get_outfunc(stp_const_vars_t v);
 
-extern void stp_set_errfunc(const stp_vars_t v, stp_outfunc_t val);
-extern stp_outfunc_t stp_get_errfunc(const stp_vars_t v);
+extern void stp_set_errfunc(stp_vars_t v, stp_outfunc_t val);
+extern stp_outfunc_t stp_get_errfunc(stp_const_vars_t v);
 
 extern void stp_set_outdata(stp_vars_t v, void *val);
-extern void *stp_get_outdata(const stp_vars_t v);
+extern void *stp_get_outdata(stp_const_vars_t v);
 
 extern void stp_set_errdata(stp_vars_t v, void *val);
-extern void *stp_get_errdata(const stp_vars_t v);
+extern void *stp_get_errdata(stp_const_vars_t v);
 
 /*
  * Merge defaults for a printer with user-chosen settings.
  * This is likely to go away.
  */
-extern void stp_merge_printvars(stp_vars_t user, const stp_vars_t print);
+extern void stp_merge_printvars(stp_vars_t user, stp_const_vars_t print);
 
 
 /****************************************************************
@@ -482,15 +486,15 @@ extern void stp_merge_printvars(stp_vars_t user, const stp_vars_t print);
  * use stp_describe_parameter.
  */
 
-extern stp_parameter_list_t stp_get_parameter_list(const stp_vars_t v);
+extern stp_parameter_list_t stp_get_parameter_list(stp_const_vars_t v);
 
-extern size_t stp_parameter_list_count(const stp_parameter_list_t list);
-
-extern const stp_parameter_t *
-stp_parameter_find(const stp_parameter_list_t list, const char *name);
+extern size_t stp_parameter_list_count(stp_const_parameter_list_t list);
 
 extern const stp_parameter_t *
-stp_parameter_list_param(const stp_parameter_list_t list, size_t item);
+stp_parameter_find(stp_const_parameter_list_t list, const char *name);
+
+extern const stp_parameter_t *
+stp_parameter_list_param(stp_const_parameter_list_t list, size_t item);
 
 extern void stp_parameter_list_free(stp_parameter_list_t list);
 
@@ -500,20 +504,20 @@ extern void stp_parameter_list_add_param(stp_parameter_list_t list,
 					 const stp_parameter_t *item);
 
 extern stp_parameter_list_t
-stp_parameter_list_copy(const stp_parameter_list_t list);
+stp_parameter_list_copy(stp_const_parameter_list_t list);
 
 extern void
 stp_parameter_list_append(stp_parameter_list_t list,
-			  const stp_parameter_list_t append);
+			  stp_const_parameter_list_t append);
 
 extern void
-stp_describe_parameter(const stp_vars_t v, const char *name,
+stp_describe_parameter(stp_const_vars_t v, const char *name,
 		       stp_parameter_t *description);
 
 extern void stp_parameter_description_free(stp_parameter_t *description);
 
 extern const stp_parameter_t *
-stp_parameter_find_in_settings(const stp_vars_t v, const char *name);
+stp_parameter_find_in_settings(stp_const_vars_t v, const char *name);
 
 /*
  * Manipulators for different parameter types.
@@ -548,13 +552,13 @@ extern void stp_set_int_parameter(stp_vars_t v, const char *parameter,
 extern void stp_set_boolean_parameter(stp_vars_t v, const char *parameter,
 				      int value);
 extern void stp_set_curve_parameter(stp_vars_t v, const char *parameter,
-				    const stp_curve_t value);
+				    stp_const_curve_t value);
 extern void stp_set_array_parameter(stp_vars_t v, const char *parameter,
-				    const stp_array_t value);
+				    stp_const_array_t value);
 extern void stp_set_raw_parameter(stp_vars_t v, const char *parameter,
 				  const void *value, int bytes);
 
-extern void stp_scale_float_parameter(const stp_vars_t v, const char *param,
+extern void stp_scale_float_parameter(stp_vars_t v, const char *param,
 				      double scale);
 
 extern void stp_set_default_string_parameter(stp_vars_t v,
@@ -580,98 +584,98 @@ extern void stp_set_default_boolean_parameter(stp_vars_t v,
 					      int value);
 extern void stp_set_default_curve_parameter(stp_vars_t v,
 					    const char *parameter,
-					    const stp_curve_t value);
+					    stp_const_curve_t value);
 extern void stp_set_default_array_parameter(stp_vars_t v,
 					    const char *parameter,
-					    const stp_array_t value);
+					    stp_const_array_t value);
 extern void stp_set_default_raw_parameter(stp_vars_t v,
 					  const char *parameter,
 					  const void *value, int bytes);
 
-extern const char *stp_get_string_parameter(const stp_vars_t v,
+extern const char *stp_get_string_parameter(stp_const_vars_t v,
 					    const char *param);
-extern const char *stp_get_file_parameter(const stp_vars_t v,
+extern const char *stp_get_file_parameter(stp_const_vars_t v,
 					  const char *param);
-extern double stp_get_float_parameter(const stp_vars_t v,
+extern double stp_get_float_parameter(stp_const_vars_t v,
 					    const char *param);
-extern int stp_get_int_parameter(const stp_vars_t v,
+extern int stp_get_int_parameter(stp_const_vars_t v,
 				 const char *param);
-extern int stp_get_boolean_parameter(const stp_vars_t v,
+extern int stp_get_boolean_parameter(stp_const_vars_t v,
 				     const char *param);
-extern const stp_curve_t stp_get_curve_parameter(const stp_vars_t v,
+extern stp_const_curve_t stp_get_curve_parameter(stp_const_vars_t v,
 						 const char *param);
-extern const stp_array_t stp_get_array_parameter(const stp_vars_t v,
+extern stp_const_array_t stp_get_array_parameter(stp_const_vars_t v,
 						 const char *param);
-extern const stp_raw_t *stp_get_raw_parameter(const stp_vars_t v,
+extern const stp_raw_t *stp_get_raw_parameter(stp_const_vars_t v,
 					      const char *param);
 
-extern void stp_clear_string_parameter(const stp_vars_t v, const char *param);
-extern void stp_clear_file_parameter(const stp_vars_t v, const char *param);
-extern void stp_clear_float_parameter(const stp_vars_t v, const char *param);
-extern void stp_clear_int_parameter(const stp_vars_t v, const char *param);
-extern void stp_clear_boolean_parameter(const stp_vars_t v, const char *param);
-extern void stp_clear_curve_parameter(const stp_vars_t v, const char *param);
-extern void stp_clear_array_parameter(const stp_vars_t v, const char *param);
-extern void stp_clear_raw_parameter(const stp_vars_t v, const char *param);
+extern void stp_clear_string_parameter(stp_vars_t v, const char *param);
+extern void stp_clear_file_parameter(stp_vars_t v, const char *param);
+extern void stp_clear_float_parameter(stp_vars_t v, const char *param);
+extern void stp_clear_int_parameter(stp_vars_t v, const char *param);
+extern void stp_clear_boolean_parameter(stp_vars_t v, const char *param);
+extern void stp_clear_curve_parameter(stp_vars_t v, const char *param);
+extern void stp_clear_array_parameter(stp_vars_t v, const char *param);
+extern void stp_clear_raw_parameter(stp_vars_t v, const char *param);
 
-extern void stp_set_string_parameter_active(const stp_vars_t v,
+extern void stp_set_string_parameter_active(stp_const_vars_t v,
 					    const char *param,
 					    stp_parameter_activity_t active);
-extern void stp_set_file_parameter_active(const stp_vars_t v,
+extern void stp_set_file_parameter_active(stp_const_vars_t v,
 					  const char *param,
 					  stp_parameter_activity_t active);
-extern void stp_set_float_parameter_active(const stp_vars_t v,
+extern void stp_set_float_parameter_active(stp_const_vars_t v,
 					 const char *param,
 					 stp_parameter_activity_t active);
-extern void stp_set_int_parameter_active(const stp_vars_t v,
+extern void stp_set_int_parameter_active(stp_const_vars_t v,
 					 const char *param,
 					 stp_parameter_activity_t active);
-extern void stp_set_boolean_parameter_active(const stp_vars_t v,
+extern void stp_set_boolean_parameter_active(stp_const_vars_t v,
 					     const char *param,
 					     stp_parameter_activity_t active);
-extern void stp_set_curve_parameter_active(const stp_vars_t v,
+extern void stp_set_curve_parameter_active(stp_const_vars_t v,
 					   const char *param,
 					   stp_parameter_activity_t active);
-extern void stp_set_array_parameter_active(const stp_vars_t v,
+extern void stp_set_array_parameter_active(stp_const_vars_t v,
 					   const char *param,
 					   stp_parameter_activity_t active);
-extern void stp_set_raw_parameter_active(const stp_vars_t v,
+extern void stp_set_raw_parameter_active(stp_const_vars_t v,
 					 const char *param,
 					 stp_parameter_activity_t active);
 
-extern int stp_check_string_parameter(const stp_vars_t v, const char *param,
+extern int stp_check_string_parameter(stp_const_vars_t v, const char *param,
 				      stp_parameter_activity_t active);
-extern int stp_check_file_parameter(const stp_vars_t v, const char *param,
+extern int stp_check_file_parameter(stp_const_vars_t v, const char *param,
 				    stp_parameter_activity_t active);
-extern int stp_check_float_parameter(const stp_vars_t v, const char *param,
+extern int stp_check_float_parameter(stp_const_vars_t v, const char *param,
 				     stp_parameter_activity_t active);
-extern int stp_check_int_parameter(const stp_vars_t v, const char *param,
+extern int stp_check_int_parameter(stp_const_vars_t v, const char *param,
 				   stp_parameter_activity_t active);
-extern int stp_check_boolean_parameter(const stp_vars_t v, const char *param,
+extern int stp_check_boolean_parameter(stp_const_vars_t v, const char *param,
 				       stp_parameter_activity_t active);
-extern int stp_check_curve_parameter(const stp_vars_t v, const char *param,
+extern int stp_check_curve_parameter(stp_const_vars_t v, const char *param,
 				     stp_parameter_activity_t active);
-extern int stp_check_array_parameter(const stp_vars_t v, const char *param,
+extern int stp_check_array_parameter(stp_const_vars_t v, const char *param,
 				     stp_parameter_activity_t active);
-extern int stp_check_raw_parameter(const stp_vars_t v, const char *param,
+extern int stp_check_raw_parameter(stp_const_vars_t v, const char *param,
 				   stp_parameter_activity_t active);
 
 extern stp_parameter_activity_t
-stp_get_string_parameter_active(const stp_vars_t v, const char *param);
+stp_get_string_parameter_active(stp_const_vars_t v, const char *param);
 extern stp_parameter_activity_t
-stp_get_file_parameter_active(const stp_vars_t v, const char *param);
+stp_get_file_parameter_active(stp_const_vars_t v, const char *param);
 extern stp_parameter_activity_t
-stp_get_float_parameter_active(const stp_vars_t v, const char *param);
+stp_get_float_parameter_active(stp_const_vars_t v, const char *param);
 extern stp_parameter_activity_t
-stp_get_int_parameter_active(const stp_vars_t v, const char *param);
+stp_get_int_parameter_active(stp_const_vars_t v, const char *param);
 extern stp_parameter_activity_t
-stp_get_boolean_parameter_active(const stp_vars_t v, const char *param);
+stp_get_boolean_parameter_active(stp_const_vars_t v, const char *param);
 extern stp_parameter_activity_t
-stp_get_curve_parameter_active(const stp_vars_t v, const char *param);
+stp_get_curve_parameter_active(stp_const_vars_t v, const char *param);
 extern stp_parameter_activity_t
-stp_get_array_parameter_active(const stp_vars_t v, const char *param);
+stp_get_array_parameter_active(stp_const_vars_t v, const char *param);
 extern stp_parameter_activity_t
-stp_get_raw_parameter_active(const stp_vars_t v, const char *param);
+stp_get_raw_parameter_active(stp_const_vars_t v, const char *param);
 
 
 /****************************************************************
@@ -683,12 +687,12 @@ stp_get_raw_parameter_active(const stp_vars_t v, const char *param);
 extern stp_string_list_t stp_string_list_create(void);
 extern void stp_string_list_free(stp_string_list_t list);
 
-extern stp_param_string_t *stp_string_list_param(const stp_string_list_t,
+extern stp_param_string_t *stp_string_list_param(stp_const_string_list_t,
 						 size_t element);
 
-extern size_t stp_string_list_count(const stp_string_list_t list);
+extern size_t stp_string_list_count(stp_const_string_list_t list);
 
-extern stp_string_list_t stp_string_list_create_copy(const stp_string_list_t);
+extern stp_string_list_t stp_string_list_create_copy(stp_const_string_list_t);
 
 extern void stp_string_list_add_string(stp_string_list_t list,
 				       const char *name, const char *text);
@@ -727,7 +731,7 @@ extern const stp_papersize_t *stp_get_papersize_by_index(int index);
  * In this case, the size limit should be used to determine maximum and
  * minimum values permitted.
  */
-extern void stp_get_media_size(const stp_vars_t v, int *width, int *height);
+extern void stp_get_media_size(stp_const_vars_t v, int *width, int *height);
 
 /*
  * Retrieve the boundaries of the printable area of the page.  In combination
@@ -746,7 +750,7 @@ extern void stp_get_media_size(const stp_vars_t v, int *width, int *height);
  * If the media size stored in V is invalid, the return value
  * will be indeterminate.  It is up to the user to specify legal values.
  */
-extern void stp_get_imageable_area(const stp_vars_t v, int *left, int *right,
+extern void stp_get_imageable_area(stp_const_vars_t v, int *left, int *right,
 				   int *bottom, int *top);
 
 /*
@@ -754,7 +758,7 @@ extern void stp_get_imageable_area(const stp_vars_t v, int *left, int *right,
  * with the current printer settings.
  */
 extern void
-stp_get_size_limit(const stp_vars_t v, int *max_width, int *max_height,
+stp_get_size_limit(stp_const_vars_t v, int *max_width, int *max_height,
 		   int *min_width, int *min_height);
 
 
@@ -762,7 +766,7 @@ stp_get_size_limit(const stp_vars_t v, int *max_width, int *max_height,
  * Retrieve the printing resolution of the selected resolution.  If the
  * resolution is invalid, -1 will be returned in both x and y.
  */
-extern void stp_describe_resolution(const stp_vars_t v, int *x, int *y);
+extern void stp_describe_resolution(stp_const_vars_t v, int *x, int *y);
 
 /*
  * Verify that the parameters selected are consistent with those allowed
@@ -770,7 +774,7 @@ extern void stp_describe_resolution(const stp_vars_t v, int *x, int *y);
  * so will result in printing failing.  Status of 0 represents failure;
  * status of 1 represents success; other status values are reserved.
  */
-extern int stp_verify(const stp_vars_t v);
+extern int stp_verify(stp_vars_t v);
 
 /*
  * Default global settings.  The main use of this is to provide a usable
@@ -779,7 +783,7 @@ extern int stp_verify(const stp_vars_t v);
  * to get information on the standard color parameters without querying
  * a particular printer.
  */
-extern const stp_vars_t stp_default_settings(void);
+extern stp_const_vars_t stp_default_settings(void);
 
 
 /****************************************************************
@@ -797,14 +801,14 @@ extern int stp_init(void);
  * Actually print the image.  Return value of 0 represents failure; status of 1
  * represents success; status of 2 represents abort requested by the driver.
  */
-extern int stp_print(const stp_vars_t v, stp_image_t *image);
+extern int stp_print(stp_const_vars_t v, stp_image_t *image);
 
 /*
  * Must be called prior to the first call to stp_print().
  */
-extern int stp_start_job(const stp_vars_t, stp_image_t *image);
+extern int stp_start_job(stp_const_vars_t, stp_image_t *image);
 
-extern int stp_end_job(const stp_vars_t, stp_image_t *image);
+extern int stp_end_job(stp_const_vars_t, stp_image_t *image);
 
 /*
  * Set the encoding that all translated strings are output in.

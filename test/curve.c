@@ -25,6 +25,9 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#ifdef __GNU_LIBRARY__
+#include <getopt.h>
+#endif
 
 #define DEBUG_SIGNAL
 #define MIN(x, y) ((x) <= (y) ? (x) : (y))
@@ -34,10 +37,20 @@
 #include <gimp-print/gimp-print.h>
 #endif
 
-
 int global_test_count = 0;
 int global_error_count = 0;
-int verbose = 1;
+int verbose = 0;
+int quiet = 0;
+
+#ifdef __GNU_LIBRARY__
+
+struct option optlist[] =
+{
+  { "quiet",		0,	NULL,	(int) 'q' },
+  { "verbose",		0,	NULL,	(int) 'v' },
+  { NULL,		0,	NULL,	0 	  }
+};
+#endif
 
 static void
 TEST(const char *name)
@@ -220,7 +233,32 @@ main(int argc, char **argv)
   stp_curve_t curve2;
   stp_curve_t curve3;
 
-  stp_init(); /* Why does this cause a segfault? */
+  while (1)
+    {
+#ifdef __GNU_LIBRARY__
+      int option_index = 0;
+      int c = getopt_long(argc, argv, "qv", optlist, &option_index);
+#else
+      int c = getopt(argc, argv, "qv");
+#endif
+      if (c == -1)
+	break;
+      switch (c)
+	{
+	case 'q':
+	  quiet = 1;
+	  verbose = 0;
+	  break;
+	case 'v':
+	  quiet = 0;
+	  verbose = 1;
+	  break;
+	default:
+	  break;
+	}
+    }
+
+  stp_init();
 
   TEST("creation of XML string from curve");
   curve1 = stp_curve_create(STP_CURVE_WRAP_AROUND);
@@ -261,7 +299,8 @@ main(int argc, char **argv)
       curve2 = NULL;
     }
 
-  printf("Testing known bad curves...\n");
+  if (!quiet)
+    printf("Testing known bad curves...\n");
   for (i = 0; i < bad_curve_count; i++)
     {
       stp_curve_t bad = NULL;
@@ -269,8 +308,11 @@ main(int argc, char **argv)
       if ((bad = stp_curve_create_from_string(bad_curves[i])) != NULL)
 	{
 	  TEST_FAIL();
-	  stp_curve_write(stdout, bad);
-	  fprintf(stdout, "\n");
+	  if (!quiet)
+	    {
+	      stp_curve_write(stdout, bad);
+	      fprintf(stdout, "\n");
+	    }
 	  stp_curve_free(bad);
 	  bad = NULL;
 	}
@@ -278,7 +320,8 @@ main(int argc, char **argv)
 	TEST_PASS();
     }
 
-  printf("Testing known good curves...\n");
+  if (!quiet)
+    printf("Testing known good curves...\n");
   for (i = 0; i < good_curve_count; i++)
     {
       if (curve2)
@@ -295,8 +338,11 @@ main(int argc, char **argv)
 	  if (tmp && strcmp((const char *) tmp, good_curves[i]))
 	    {
 	      TEST_FAIL();
-	      printf("%s", tmp);
-	      printf("%s", good_curves[i]);
+	      if (!quiet)
+		{
+		  printf("%s", tmp);
+		  printf("%s", good_curves[i]);
+		}
 	    }
 	  else
 	    {
@@ -504,7 +550,8 @@ main(int argc, char **argv)
       stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_MULTIPLY, -1))
     {
       TEST_FAIL();
-      printf("compose with different wrap mode should fail!\n");
+      if (!quiet)
+	printf("compose with different wrap mode should fail!\n");
     }
   else
     TEST_PASS();

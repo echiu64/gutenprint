@@ -47,24 +47,24 @@ extern "C" {
 #endif
 #endif
 
-extern void stpi_zprintf(const stp_vars_t v, const char *format, ...)
+extern void stpi_zprintf(stp_const_vars_t v, const char *format, ...)
        __attribute__((format(__printf__, 2, 3)));
 
 extern void stpi_zfwrite(const char *buf, size_t bytes, size_t nitems,
-			 const stp_vars_t v);
+			 stp_const_vars_t v);
 
-extern void stpi_putc(int ch, const stp_vars_t v);
-extern void stpi_put16_le(unsigned short sh, const stp_vars_t v);
-extern void stpi_put16_be(unsigned short sh, const stp_vars_t v);
-extern void stpi_put32_le(unsigned int sh, const stp_vars_t v);
-extern void stpi_put32_be(unsigned int sh, const stp_vars_t v);
-extern void stpi_puts(const char *s, const stp_vars_t v);
-extern void stpi_send_command(const stp_vars_t v, const char *command,
+extern void stpi_putc(int ch, stp_const_vars_t v);
+extern void stpi_put16_le(unsigned short sh, stp_const_vars_t v);
+extern void stpi_put16_be(unsigned short sh, stp_const_vars_t v);
+extern void stpi_put32_le(unsigned int sh, stp_const_vars_t v);
+extern void stpi_put32_be(unsigned int sh, stp_const_vars_t v);
+extern void stpi_puts(const char *s, stp_const_vars_t v);
+extern void stpi_send_command(stp_const_vars_t v, const char *command,
 			      const char *format, ...);
 
 extern void stpi_erputc(int ch);
 
-extern void stpi_eprintf(const stp_vars_t v, const char *format, ...)
+extern void stpi_eprintf(stp_const_vars_t v, const char *format, ...)
        __attribute__((format(__printf__, 2, 3)));
 extern void stpi_erprintf(const char *format, ...)
        __attribute__((format(__printf__, 1, 2)));
@@ -106,13 +106,13 @@ extern void stpi_xio_free(void *ixio);
 #define STPI_DBG_XML            0x10000
 extern unsigned long stpi_debug_level;
 
-extern void stpi_dprintf(unsigned long level, const stp_vars_t v,
+extern void stpi_dprintf(unsigned long level, stp_const_vars_t v,
 			 const char *format, ...)
        __attribute__((format(__printf__, 3, 4)));
 extern void stpi_deprintf(unsigned long level, const char *format, ...)
        __attribute__((format(__printf__, 2, 3)));
-extern void stpi_init_debug_messages(const stp_vars_t v);
-extern void stpi_flush_debug_messages(const stp_vars_t v);
+extern void stpi_init_debug_messages(stp_const_vars_t v);
+extern void stpi_flush_debug_messages(stp_const_vars_t v);
 
 
 extern void *stpi_malloc (size_t);
@@ -142,7 +142,9 @@ extern void stpi_abort(void);
 ****************************************************************/
 
 typedef void *stpi_list_item_t;
+typedef const void *stpi_const_list_item_t;
 typedef void *stpi_list_t;
+typedef const void *stpi_const_list_t;
 typedef void (*node_freefunc)(stpi_list_item_t *);
 typedef void *(*node_copyfunc)(const stpi_list_item_t *);
 typedef const char *(*node_namefunc)(const stpi_list_item_t *);
@@ -187,7 +189,7 @@ extern stpi_list_item_t *stpi_list_item_next(stpi_list_item_t *item);
 extern void *stpi_list_item_get_data(const stpi_list_item_t *item);
 extern int stpi_list_item_set_data(stpi_list_item_t *item,
 				  void *data);
-extern void stpi_default_media_size(const stp_vars_t v,
+extern void stpi_default_media_size(stp_const_vars_t v,
 				    int *width, int *height);
 
 /*

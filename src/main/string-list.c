@@ -84,20 +84,20 @@ stp_string_list_free(stp_string_list_t list)
 }
 
 stp_param_string_t *
-stp_string_list_param(const stp_string_list_t list, size_t element)
+stp_string_list_param(stp_const_string_list_t list, size_t element)
 {
   return (stp_param_string_t *) stpi_list_item_get_data
     (stpi_list_get_item_by_index((stpi_list_t *)list, element));
 }
 
 size_t
-stp_string_list_count(const stp_string_list_t list)
+stp_string_list_count(stp_const_string_list_t list)
 {
   return stpi_list_get_length((stpi_list_t *)list);
 }
 
 stp_string_list_t
-stp_string_list_create_copy(const stp_string_list_t list)
+stp_string_list_create_copy(stp_const_string_list_t list)
 {
   return (stp_string_list_t) stpi_list_copy((stpi_list_t *)list);
 }

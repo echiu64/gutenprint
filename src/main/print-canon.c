@@ -639,7 +639,7 @@ typedef struct
   int ydpi;
 } canon_privdata_t;
 
-static void canon_write_line(const stp_vars_t);
+static void canon_write_line(stp_const_vars_t);
 
 
 /* Codes for possible ink-tank combinations.
@@ -1386,7 +1386,7 @@ canon_printhead_colors(const char *name, const canon_cap_t * caps)
 }
 
 static unsigned char
-canon_size_type(const stp_vars_t v, const canon_cap_t * caps)
+canon_size_type(stp_const_vars_t v, const canon_cap_t * caps)
 {
   const stp_papersize_t *pp = stp_get_papersize_by_size(stp_get_page_height(v),
 							stp_get_page_width(v));
@@ -1551,7 +1551,7 @@ canon_inks(const canon_cap_t * caps, int res_code, int colors, int bits)
 }
 
 static void
-canon_describe_resolution(const stp_vars_t v, int *x, int *y)
+canon_describe_resolution(stp_const_vars_t v, int *x, int *y)
 {
   const char *resolution = stp_get_string_parameter(v, "Resolution");
   const canon_res_t *res = canon_resolutions;
@@ -1583,7 +1583,7 @@ static stp_param_string_t media_sources[] =
  */
 
 static stp_parameter_list_t
-canon_list_parameters(const stp_vars_t v)
+canon_list_parameters(stp_const_vars_t v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
   int i;
@@ -1593,7 +1593,7 @@ canon_list_parameters(const stp_vars_t v)
 }
 
 static void
-canon_parameters(const stp_vars_t v, const char *name,
+canon_parameters(stp_const_vars_t v, const char *name,
 		 stp_parameter_t *description)
 {
   int		i;
@@ -1718,7 +1718,7 @@ canon_parameters(const stp_vars_t v, const char *name,
  */
 
 static void
-internal_imageable_area(const stp_vars_t v,   /* I */
+internal_imageable_area(stp_const_vars_t v,   /* I */
 			int  use_paper_margins,
 			int  *left,	/* O - Left position in points */
 			int  *right,	/* O - Right position in points */
@@ -1758,7 +1758,7 @@ internal_imageable_area(const stp_vars_t v,   /* I */
 }
 
 static void
-canon_imageable_area(const stp_vars_t v,   /* I */
+canon_imageable_area(stp_const_vars_t v,   /* I */
                      int  *left,	/* O - Left position in points */
                      int  *right,	/* O - Right position in points */
                      int  *bottom,	/* O - Bottom position in points */
@@ -1768,7 +1768,7 @@ canon_imageable_area(const stp_vars_t v,   /* I */
 }
 
 static void
-canon_limit(const stp_vars_t v,  		/* I */
+canon_limit(stp_const_vars_t v,  		/* I */
 	    int *width,
 	    int *height,
 	    int *min_width,
@@ -1786,7 +1786,7 @@ canon_limit(const stp_vars_t v,  		/* I */
  * 'canon_cmd()' - Sends a command with variable args
  */
 static void
-canon_cmd(const stp_vars_t v, /* I - the printer         */
+canon_cmd(stp_const_vars_t v, /* I - the printer         */
 	  const char *ini, /* I - 2 bytes start code  */
 	  const char cmd,  /* I - command code        */
 	  int  num,  /* I - number of arguments */
@@ -1826,7 +1826,7 @@ canon_cmd(const stp_vars_t v, /* I - the printer         */
 /* ESC [K --  -- reset printer:
  */
 static void
-canon_init_resetPrinter(const stp_vars_t v, canon_init_t *init)
+canon_init_resetPrinter(stp_const_vars_t v, canon_init_t *init)
 {
   unsigned long f=init->caps->features;
   if (f & (CANON_CAP_ACKSHORT))
@@ -1842,7 +1842,7 @@ canon_init_resetPrinter(const stp_vars_t v, canon_init_t *init)
 /* ESC (a -- 0x61 -- cmdSetPageMode --:
  */
 static void
-canon_init_setPageMode(const stp_vars_t v, canon_init_t *init)
+canon_init_setPageMode(stp_const_vars_t v, canon_init_t *init)
 {
   if (!(init->caps->features & CANON_CAP_a))
     return;
@@ -1854,7 +1854,7 @@ canon_init_setPageMode(const stp_vars_t v, canon_init_t *init)
 /* ESC (b -- 0x62 -- -- set data compression:
  */
 static void
-canon_init_setDataCompression(const stp_vars_t v, canon_init_t *init)
+canon_init_setDataCompression(stp_const_vars_t v, canon_init_t *init)
 {
   if (!(init->caps->features & CANON_CAP_b))
     return;
@@ -1865,7 +1865,7 @@ canon_init_setDataCompression(const stp_vars_t v, canon_init_t *init)
 /* ESC (c -- 0x63 -- cmdSetColor --:
  */
 static void
-canon_init_setColor(const stp_vars_t v, canon_init_t *init)
+canon_init_setColor(stp_const_vars_t v, canon_init_t *init)
 {
   unsigned char
     arg_63_1, arg_63_2, arg_63_3;
@@ -1912,7 +1912,7 @@ canon_init_setColor(const stp_vars_t v, canon_init_t *init)
 /* ESC (d -- 0x64 -- -- set raster resolution:
  */
 static void
-canon_init_setResolution(const stp_vars_t v, canon_init_t *init)
+canon_init_setResolution(stp_const_vars_t v, canon_init_t *init)
 {
   if (!(init->caps->features & CANON_CAP_d))
     return;
@@ -1925,7 +1925,7 @@ canon_init_setResolution(const stp_vars_t v, canon_init_t *init)
 /* ESC (g -- 0x67 -- cmdSetPageMargins --:
  */
 static void
-canon_init_setPageMargins(const stp_vars_t v, canon_init_t *init)
+canon_init_setPageMargins(stp_const_vars_t v, canon_init_t *init)
 {
   /* TOFIX: what exactly is to be sent?
    * Is it the printable length or the bottom border?
@@ -1952,7 +1952,7 @@ canon_init_setPageMargins(const stp_vars_t v, canon_init_t *init)
 /* ESC (l -- 0x6c -- cmdSetTray --:
  */
 static void
-canon_init_setTray(const stp_vars_t v, canon_init_t *init)
+canon_init_setTray(stp_const_vars_t v, canon_init_t *init)
 {
   unsigned char
     arg_6c_1 = 0x00,
@@ -1976,7 +1976,7 @@ canon_init_setTray(const stp_vars_t v, canon_init_t *init)
 /* ESC (m -- 0x6d --  -- :
  */
 static void
-canon_init_setPrintMode(const stp_vars_t v, canon_init_t *init)
+canon_init_setPrintMode(stp_const_vars_t v, canon_init_t *init)
 {
   unsigned char
     arg_6d_1 = 0x03, /* color printhead? */
@@ -2012,7 +2012,7 @@ canon_init_setPrintMode(const stp_vars_t v, canon_init_t *init)
 /* ESC (p -- 0x70 -- cmdSetPageMargins2 --:
  */
 static void
-canon_init_setPageMargins2(const stp_vars_t v, canon_init_t *init)
+canon_init_setPageMargins2(stp_const_vars_t v, canon_init_t *init)
 {
   /* TOFIX: what exactly is to be sent?
    * Is it the printable length or the bottom border?
@@ -2038,7 +2038,7 @@ canon_init_setPageMargins2(const stp_vars_t v, canon_init_t *init)
 /* ESC (q -- 0x71 -- setPageID -- :
  */
 static void
-canon_init_setPageID(const stp_vars_t v, canon_init_t *init)
+canon_init_setPageID(stp_const_vars_t v, canon_init_t *init)
 {
   if (!(init->caps->features & CANON_CAP_q))
     return;
@@ -2049,7 +2049,7 @@ canon_init_setPageID(const stp_vars_t v, canon_init_t *init)
 /* ESC (r -- 0x72 --  -- :
  */
 static void
-canon_init_setX72(const stp_vars_t v, canon_init_t *init)
+canon_init_setX72(stp_const_vars_t v, canon_init_t *init)
 {
   if (!(init->caps->features & CANON_CAP_r))
     return;
@@ -2060,7 +2060,7 @@ canon_init_setX72(const stp_vars_t v, canon_init_t *init)
 /* ESC (t -- 0x74 -- cmdSetImage --:
  */
 static void
-canon_init_setImage(const stp_vars_t v, canon_init_t *init)
+canon_init_setImage(stp_const_vars_t v, canon_init_t *init)
 {
   unsigned char
     arg_74_1 = 0x01, /* 1 bit per pixel */
@@ -2100,7 +2100,7 @@ canon_init_setImage(const stp_vars_t v, canon_init_t *init)
 }
 
 static void
-canon_init_printer(const stp_vars_t v, canon_init_t *init)
+canon_init_printer(stp_const_vars_t v, canon_init_t *init)
 {
   int mytop;
   /* init printer */
@@ -2125,7 +2125,7 @@ canon_init_printer(const stp_vars_t v, canon_init_t *init)
 }
 
 static void
-canon_deinit_printer(const stp_vars_t v, canon_init_t *init)
+canon_deinit_printer(stp_const_vars_t v, canon_init_t *init)
 {
   /* eject page */
   stpi_putc(0x0c,v);
@@ -2159,7 +2159,7 @@ setup_column(canon_privdata_t *privdata, int col, int buf_length)
 }
 
 static void
-canon_printfunc(const stp_vars_t v)
+canon_printfunc(stp_const_vars_t v)
 {
   int i;
   canon_privdata_t *pd = (canon_privdata_t *) stpi_get_component_data(v, "Driver");
@@ -2184,7 +2184,7 @@ set_ink_ranges(stp_vars_t v, const canon_variable_ink_t *ink, int color)
  * 'canon_print()' - Print an image to a CANON printer.
  */
 static int
-canon_do_print(const stp_vars_t v, stp_image_t *image)
+canon_do_print(stp_vars_t v, stp_image_t *image)
 {
   int i;
   int		status = 1;
@@ -2592,7 +2592,7 @@ canon_do_print(const stp_vars_t v, stp_image_t *image)
 }
 
 static int
-canon_print(const stp_vars_t v, stp_image_t *image)
+canon_print(stp_const_vars_t v, stp_image_t *image)
 {
   int status;
   stp_vars_t nv = stp_vars_create_copy(v);
@@ -2827,7 +2827,7 @@ canon_shift_buffer2(unsigned char *line,int length,int bits)
  */
 
 static int
-canon_write(const stp_vars_t v,		/* I - Print file or command */
+canon_write(stp_const_vars_t v,		/* I - Print file or command */
 	    const canon_cap_t *   caps,	        /* I - Printer model */
 	    unsigned char *line,	/* I - Output bitmap data */
 	    int           length,	/* I - Length of bitmap data */
@@ -2922,7 +2922,7 @@ canon_write(const stp_vars_t v,		/* I - Print file or command */
 
 
 static void
-canon_write_line(const stp_vars_t v)
+canon_write_line(stp_const_vars_t v)
 {
   canon_privdata_t *pd =
     (canon_privdata_t *) stpi_get_component_data(v, "Driver");

@@ -102,7 +102,7 @@ stp_array_destroy(stp_array_t array)
 }
 
 void stp_array_copy(stp_array_t dest,
-		       const stp_array_t source)
+		       stp_const_array_t source)
 {
   stpi_internal_array_t *idest = (stpi_internal_array_t *) dest;
   stpi_internal_array_t *isource = (stpi_internal_array_t *) source;
@@ -117,7 +117,7 @@ void stp_array_copy(stp_array_t dest,
 }
 
 stp_array_t
-stp_array_create_copy(const stp_array_t array)
+stp_array_create_copy(stp_const_array_t array)
 {
   stpi_internal_array_t *ia = (stpi_internal_array_t *) array;
   stp_array_t ret;
@@ -144,7 +144,7 @@ stp_array_set_size(stp_array_t array, int x_size, int y_size)
 
 
 void
-stp_array_get_size(const stp_array_t array, int *x_size, int *y_size)
+stp_array_get_size(stp_const_array_t array, int *x_size, int *y_size)
 {
   stpi_internal_array_t *ia = (stpi_internal_array_t *) array;
   check_array(ia);
@@ -168,7 +168,7 @@ stp_array_set_data(stp_array_t array,
 
 
 void
-stp_array_get_data(const stp_array_t array, size_t *size,
+stp_array_get_data(stp_const_array_t array, size_t *size,
 		   const double **data)
 {
   stpi_internal_array_t *ia = (stpi_internal_array_t *) array;
@@ -192,7 +192,7 @@ stp_array_set_point(stp_array_t array, int x, int y,
 }
 
 int
-stp_array_get_point(const stp_array_t array, int x, int y,
+stp_array_get_point(stp_const_array_t array, int x, int y,
 		    double *data)
 {
   stpi_internal_array_t *ia = (stpi_internal_array_t *) array;
@@ -206,7 +206,7 @@ stp_array_get_point(const stp_array_t array, int x, int y,
 
 
 const stp_sequence_t
-stp_array_get_sequence(const stp_array_t array)
+stp_array_get_sequence(stp_const_array_t array)
 {
   stpi_internal_array_t *ia = (stpi_internal_array_t *) array;
   check_array(ia);

@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 
   if (curve)
     {
-      xmlChar *output;
+      char *output;
       if ((stp_curve_write(stdout, curve)) == 0)
         fprintf(stderr, "curve successfully created\n");
       else
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
       output = stp_curve_write_string(curve);
       if (output)
 	{
-	  fprintf(stderr, "%s", (const char *) output);
+	  fprintf(stderr, "%s", output);
 	  fprintf(stderr, "curve string successfully created\n");
 	  xmlFree(output);
 	}

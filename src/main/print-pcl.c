@@ -46,8 +46,8 @@
 /*
  * Local functions...
  */
-static void	pcl_mode0(const stp_vars_t, unsigned char *, int, int);
-static void	pcl_mode2(const stp_vars_t, unsigned char *, int, int);
+static void	pcl_mode0(stp_const_vars_t, unsigned char *, int, int);
+static void	pcl_mode2(stp_const_vars_t, unsigned char *, int, int);
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 typedef struct
@@ -55,7 +55,7 @@ typedef struct
   int do_blank;
   int blank_lines;
   unsigned char *comp_buf;
-  void (*writefunc)(const stp_vars_t, unsigned char *, int, int);	/* PCL output function */
+  void (*writefunc)(stp_const_vars_t, unsigned char *, int, int);	/* PCL output function */
   int do_cret;
   int do_cretb;
   int do_6color;
@@ -267,7 +267,7 @@ static const pcl_t pcl_resolutions[] =
 #define NUM_RESOLUTIONS		(sizeof(pcl_resolutions) / sizeof (pcl_t))
 
 static void
-pcl_describe_resolution(const stp_vars_t v, int *x, int *y)
+pcl_describe_resolution(stp_const_vars_t v, int *x, int *y)
 {
   int i;
   const char *resolution = stp_get_string_parameter(v, "Resolution");
@@ -1773,7 +1773,7 @@ pcl_papersize_valid(const stp_papersize_t *pt,
  */
 
 static stp_parameter_list_t
-pcl_list_parameters(const stp_vars_t v)
+pcl_list_parameters(stp_const_vars_t v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
   int i;
@@ -1783,7 +1783,7 @@ pcl_list_parameters(const stp_vars_t v)
 }
 
 static void
-pcl_parameters(const stp_vars_t v, const char *name,
+pcl_parameters(stp_const_vars_t v, const char *name,
 	       stp_parameter_t *description)
 {
   int		model = stpi_get_model_id(v);
@@ -1913,7 +1913,7 @@ pcl_parameters(const stp_vars_t v, const char *name,
  * 'pcl_imageable_area()' - Return the imageable area of the page.
  */
 static void
-internal_imageable_area(const stp_vars_t v,     /* I */
+internal_imageable_area(stp_const_vars_t v,     /* I */
 			int  use_paper_margins,
 			int  *left,	/* O - Left position in points */
 			int  *right,	/* O - Right position in points */
@@ -1981,7 +1981,7 @@ internal_imageable_area(const stp_vars_t v,     /* I */
 }
 
 static void
-pcl_imageable_area(const stp_vars_t v,     /* I */
+pcl_imageable_area(stp_const_vars_t v,     /* I */
                    int  *left,		/* O - Left position in points */
                    int  *right,		/* O - Right position in points */
                    int  *bottom,	/* O - Bottom position in points */
@@ -1991,7 +1991,7 @@ pcl_imageable_area(const stp_vars_t v,     /* I */
 }
 
 static void
-pcl_limit(const stp_vars_t v,  		/* I */
+pcl_limit(stp_const_vars_t v,  		/* I */
 	  int *width,
 	  int *height,
 	  int *min_width,
@@ -2009,7 +2009,7 @@ pcl_limit(const stp_vars_t v,  		/* I */
  */
 
 static void
-pcl_printfunc(const stp_vars_t v)
+pcl_printfunc(stp_vars_t v)
 {
   pcl_privdata_t *pd = (pcl_privdata_t *) stpi_get_component_data(v, "Driver");
   int do_blank = pd->do_blank;
@@ -2122,7 +2122,7 @@ pcl_printfunc(const stp_vars_t v)
 }  
 
 static int
-pcl_do_print(const stp_vars_t v, stp_image_t *image)
+pcl_do_print(stp_vars_t v, stp_image_t *image)
 {
   int i;
   pcl_privdata_t privdata;
@@ -2741,7 +2741,7 @@ pcl_do_print(const stp_vars_t v, stp_image_t *image)
 }
 
 static int
-pcl_print(const stp_vars_t v, stp_image_t *image)
+pcl_print(stp_const_vars_t v, stp_image_t *image)
 {
   int status;
   stp_vars_t nv = stp_vars_create_copy(v);
@@ -2771,7 +2771,7 @@ static const stpi_printfuncs_t stpi_pcl_printfuncs =
  */
 
 static void
-pcl_mode0(const stp_vars_t v,		/* I - Print file or command */
+pcl_mode0(stp_const_vars_t v,		/* I - Print file or command */
           unsigned char *line,		/* I - Output bitmap data */
           int           height,		/* I - Height of bitmap data */
           int           last_plane)	/* I - True if this is the last plane */
@@ -2786,7 +2786,7 @@ pcl_mode0(const stp_vars_t v,		/* I - Print file or command */
  */
 
 static void
-pcl_mode2(const stp_vars_t v,		/* I - Print file or command */
+pcl_mode2(stp_const_vars_t v,		/* I - Print file or command */
           unsigned char *line,		/* I - Output bitmap data */
           int           height,		/* I - Height of bitmap data */
           int           last_plane)	/* I - True if this is the last plane */

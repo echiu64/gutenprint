@@ -266,9 +266,9 @@ stpi_destroy_component_data(stp_vars_t vv, const char *name)
 }
 
 void *
-stpi_get_component_data(stp_vars_t vv, const char *name)
+stpi_get_component_data(stp_const_vars_t vv, const char *name)
 {
-  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;
+  const stpi_internal_vars_t *v = (const stpi_internal_vars_t *) vv;
   stpi_list_item_t *item;
   check_vars(v);
   item = stpi_list_get_item_by_name(v->internal_data, name);
@@ -313,7 +313,7 @@ initialize_standard_vars(void)
     }
 }
 
-const stp_vars_t
+stp_const_vars_t
 stp_default_settings(void)
 {
   initialize_standard_vars();
@@ -373,7 +373,7 @@ stp##i##_set_##s##_n(stp_vars_t vv, const char *val, int n)	\
 }								\
 								\
 const char *							\
-stp##i##_get_##s(const stp_vars_t vv)				\
+stp##i##_get_##s(stp_const_vars_t vv)				\
 {								\
   stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;	\
   check_vars(v);						\
@@ -391,7 +391,7 @@ stp##i##_set_##s(stp_vars_t vv, t val)				\
 }								\
 								\
 u t								\
-stp##i##_get_##s(const stp_vars_t vv)				\
+stp##i##_get_##s(stp_const_vars_t vv)				\
 {								\
   stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;	\
   check_vars(v);						\
@@ -430,7 +430,7 @@ stpi_set_verified(stp_vars_t vv, int val)
 }
 
 int
-stpi_get_verified(const stp_vars_t vv)
+stpi_get_verified(stp_const_vars_t vv)
 {
   stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;
   check_vars(v);
@@ -539,7 +539,7 @@ stp_clear_string_parameter(stp_vars_t v, const char *parameter)
 }
 
 const char *
-stp_get_string_parameter(const stp_vars_t v, const char *parameter)
+stp_get_string_parameter(stp_const_vars_t v, const char *parameter)
 {
   stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
   stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_STRING_LIST];
@@ -582,7 +582,7 @@ stp_clear_raw_parameter(stp_vars_t v, const char *parameter)
 }
 
 const stp_raw_t *
-stp_get_raw_parameter(const stp_vars_t v, const char *parameter)
+stp_get_raw_parameter(stp_const_vars_t v, const char *parameter)
 {
   stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
   stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_RAW];
@@ -654,7 +654,7 @@ stp_clear_file_parameter(stp_vars_t v, const char *parameter)
 }
 
 const char *
-stp_get_file_parameter(const stp_vars_t v, const char *parameter)
+stp_get_file_parameter(stp_const_vars_t v, const char *parameter)
 {
   stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
   stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
@@ -671,7 +671,7 @@ stp_get_file_parameter(const stp_vars_t v, const char *parameter)
 
 void
 stp_set_curve_parameter(stp_vars_t v, const char *parameter,
-			const stp_curve_t curve)
+			stp_const_curve_t curve)
 {
   stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
   stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_CURVE];
@@ -703,7 +703,7 @@ stp_set_curve_parameter(stp_vars_t v, const char *parameter,
 
 void
 stp_set_default_curve_parameter(stp_vars_t v, const char *parameter,
-				const stp_curve_t curve)
+				stp_const_curve_t curve)
 {
   stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
   stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_CURVE];
@@ -730,8 +730,8 @@ stp_clear_curve_parameter(stp_vars_t v, const char *parameter)
   stp_set_curve_parameter(v, parameter, NULL);
 }
 
-const stp_curve_t
-stp_get_curve_parameter(const stp_vars_t v, const char *parameter)
+stp_const_curve_t
+stp_get_curve_parameter(stp_const_vars_t v, const char *parameter)
 {
   stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
   stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_CURVE];
@@ -748,7 +748,7 @@ stp_get_curve_parameter(const stp_vars_t v, const char *parameter)
 
 void
 stp_set_array_parameter(stp_vars_t v, const char *parameter,
-			const stp_array_t array)
+			stp_const_array_t array)
 {
   stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
   stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_ARRAY];
@@ -780,7 +780,7 @@ stp_set_array_parameter(stp_vars_t v, const char *parameter,
 
 void
 stp_set_default_array_parameter(stp_vars_t v, const char *parameter,
-				const stp_array_t array)
+				stp_const_array_t array)
 {
   stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
   stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_ARRAY];
@@ -807,8 +807,8 @@ stp_clear_array_parameter(stp_vars_t v, const char *parameter)
   stp_set_array_parameter(v, parameter, NULL);
 }
 
-const stp_array_t
-stp_get_array_parameter(const stp_vars_t v, const char *parameter)
+stp_const_array_t
+stp_get_array_parameter(stp_const_vars_t v, const char *parameter)
 {
   stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
   stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_ARRAY];
@@ -879,7 +879,7 @@ stp_clear_int_parameter(stp_vars_t v, const char *parameter)
 }
 
 int
-stp_get_int_parameter(const stp_vars_t v, const char *parameter)
+stp_get_int_parameter(stp_const_vars_t v, const char *parameter)
 {
   stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
   stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_INT];
@@ -974,7 +974,7 @@ stp_clear_boolean_parameter(stp_vars_t v, const char *parameter)
 }
 
 int
-stp_get_boolean_parameter(const stp_vars_t v, const char *parameter)
+stp_get_boolean_parameter(stp_const_vars_t v, const char *parameter)
 {
   stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
   stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_BOOLEAN];
@@ -1063,7 +1063,7 @@ stp_clear_float_parameter(stp_vars_t v, const char *parameter)
 }
 
 double
-stp_get_float_parameter(const stp_vars_t v, const char *parameter)
+stp_get_float_parameter(stp_const_vars_t v, const char *parameter)
 {
   stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
   stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_DOUBLE];
@@ -1096,7 +1096,7 @@ stp_get_float_parameter(const stp_vars_t v, const char *parameter)
 }
 
 void
-stp_scale_float_parameter(const stp_vars_t v, const char *parameter,
+stp_scale_float_parameter(stp_vars_t v, const char *parameter,
 			  double scale)
 {
   if (stp_check_float_parameter(v, parameter, STP_PARAMETER_INACTIVE))
@@ -1105,7 +1105,7 @@ stp_scale_float_parameter(const stp_vars_t v, const char *parameter,
 }
 
 static int
-check_parameter_generic(const stp_vars_t v, stp_parameter_type_t p_type,
+check_parameter_generic(stp_const_vars_t v, stp_parameter_type_t p_type,
 			const char *parameter, stp_parameter_activity_t active)
 {
   const stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
@@ -1119,7 +1119,7 @@ check_parameter_generic(const stp_vars_t v, stp_parameter_type_t p_type,
 
 #define CHECK_FUNCTION(type, index)					\
 int									\
-stp_check_##type##_parameter(const stp_vars_t v, const char *parameter,	\
+stp_check_##type##_parameter(stp_const_vars_t v, const char *parameter,	\
 			     stp_parameter_activity_t active)		\
 {									\
   return check_parameter_generic(v, index, parameter, active);		\
@@ -1135,7 +1135,7 @@ CHECK_FUNCTION(array, STP_PARAMETER_TYPE_ARRAY)
 CHECK_FUNCTION(raw, STP_PARAMETER_TYPE_RAW)
 
 static stp_parameter_activity_t
-get_parameter_active_generic(const stp_vars_t v, stp_parameter_type_t p_type,
+get_parameter_active_generic(stp_const_vars_t v, stp_parameter_type_t p_type,
 			     const char *parameter)
 {
   const stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
@@ -1149,7 +1149,7 @@ get_parameter_active_generic(const stp_vars_t v, stp_parameter_type_t p_type,
 
 #define GET_PARAMETER_ACTIVE_FUNCTION(type, index)			     \
 stp_parameter_activity_t						     \
-stp_get_##type##_parameter_active(const stp_vars_t v, const char *parameter) \
+stp_get_##type##_parameter_active(stp_const_vars_t v, const char *parameter) \
 {									     \
   return get_parameter_active_generic(v, index, parameter);		     \
 }
@@ -1164,7 +1164,7 @@ GET_PARAMETER_ACTIVE_FUNCTION(array, STP_PARAMETER_TYPE_ARRAY)
 GET_PARAMETER_ACTIVE_FUNCTION(raw, STP_PARAMETER_TYPE_RAW)
 
 static void
-set_parameter_active_generic(const stp_vars_t v, stp_parameter_type_t p_type,
+set_parameter_active_generic(stp_const_vars_t v, stp_parameter_type_t p_type,
 			     const char *parameter,
 			     stp_parameter_activity_t active)
 {
@@ -1178,7 +1178,7 @@ set_parameter_active_generic(const stp_vars_t v, stp_parameter_type_t p_type,
 
 #define SET_PARAMETER_ACTIVE_FUNCTION(type, index)			     \
 void									     \
-stp_set_##type##_parameter_active(const stp_vars_t v, const char *parameter, \
+stp_set_##type##_parameter_active(stp_const_vars_t v, const char *parameter, \
 				  stp_parameter_activity_t active)	     \
 {									     \
   set_parameter_active_generic(v, index, parameter, active);		     \
@@ -1213,7 +1213,7 @@ stpi_fill_parameter_settings(stp_parameter_t *desc,
 }
 
 void
-stp_vars_copy(stp_vars_t vd, const stp_vars_t vs)
+stp_vars_copy(stp_vars_t vd, stp_const_vars_t vs)
 {
   int i;
   stpi_internal_vars_t *vvd = (stpi_internal_vars_t *)vd;
@@ -1272,7 +1272,7 @@ stpi_prune_inactive_options(stp_vars_t v)
 }
 
 stp_vars_t
-stp_vars_create_copy(const stp_vars_t vs)
+stp_vars_create_copy(stp_const_vars_t vs)
 {
   stp_vars_t vd = stp_vars_create();
   stp_vars_copy(vd, vs);
@@ -1280,7 +1280,7 @@ stp_vars_create_copy(const stp_vars_t vs)
 }
 
 void
-stp_merge_printvars(stp_vars_t user, const stp_vars_t print)
+stp_merge_printvars(stp_vars_t user, stp_const_vars_t print)
 {
   int i;
   stp_parameter_list_t params = stp_get_parameter_list(print);
@@ -1317,7 +1317,7 @@ stp_merge_printvars(stp_vars_t user, const stp_vars_t print)
 }
 
 void
-stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p)
+stp_set_printer_defaults(stp_vars_t v, stp_const_printer_t p)
 {
   stp_parameter_list_t *params;
   int count;
@@ -1401,7 +1401,7 @@ stp_parameter_list_add_param(stp_parameter_list_t list,
 }
 
 stp_parameter_list_t
-stp_get_parameter_list(const stp_vars_t v)
+stp_get_parameter_list(stp_const_vars_t v)
 {
   stp_parameter_list_t ret = stp_parameter_list_create();
   stp_parameter_list_t tmp_list;
@@ -1422,7 +1422,7 @@ stp_get_parameter_list(const stp_vars_t v)
 }
 
 void
-stp_describe_parameter(const stp_vars_t v, const char *name,
+stp_describe_parameter(stp_const_vars_t v, const char *name,
 		       stp_parameter_t *description)
 {
   description->p_type = STP_PARAMETER_TYPE_INVALID;
@@ -1464,7 +1464,7 @@ stp_parameter_description_free(stp_parameter_t *desc)
 }
 
 const stp_parameter_t *
-stp_parameter_find_in_settings(const stp_vars_t v, const char *name)
+stp_parameter_find_in_settings(stp_const_vars_t v, const char *name)
 {
   stp_parameter_list_t param_list = stp_get_parameter_list(v);
   const stp_parameter_t *param = stp_parameter_find(param_list, name);
@@ -1473,14 +1473,14 @@ stp_parameter_find_in_settings(const stp_vars_t v, const char *name)
 }
 
 size_t
-stp_parameter_list_count(const stp_parameter_list_t list)
+stp_parameter_list_count(stp_const_parameter_list_t list)
 {
   stpi_list_t *ilist = (stpi_list_t *)list;
   return stpi_list_get_length(ilist);
 }
 
 const stp_parameter_t *
-stp_parameter_find(const stp_parameter_list_t list, const char *name)
+stp_parameter_find(stp_const_parameter_list_t list, const char *name)
 {
   stpi_list_t *ilist = (stpi_list_t *)list;
   stpi_list_item_t *item = stpi_list_get_item_by_name(ilist, name);
@@ -1491,7 +1491,7 @@ stp_parameter_find(const stp_parameter_list_t list, const char *name)
 }
 
 const stp_parameter_t *
-stp_parameter_list_param(const stp_parameter_list_t list, size_t item)
+stp_parameter_list_param(stp_const_parameter_list_t list, size_t item)
 {
   stpi_list_t *ilist = (stpi_list_t *)list;
   if (item >= stpi_list_get_length(ilist))
@@ -1508,7 +1508,7 @@ stp_parameter_list_free(stp_parameter_list_t list)
 }
 
 stp_parameter_list_t
-stp_parameter_list_copy(const stp_parameter_list_t list)
+stp_parameter_list_copy(stp_const_parameter_list_t list)
 {
   stpi_list_t *ret = stp_parameter_list_create();
   int i;
@@ -1520,7 +1520,7 @@ stp_parameter_list_copy(const stp_parameter_list_t list)
 
 void
 stp_parameter_list_append(stp_parameter_list_t list,
-			  const stp_parameter_list_t append)
+			  stp_const_parameter_list_t append)
 {
   int i;
   stpi_list_t *ilist = (stpi_list_t *)list;

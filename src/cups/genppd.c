@@ -162,7 +162,7 @@ int     checkcat (const struct dirent *localedir);
 void    printlangs(char** langs);
 void    printmodels(int verbose);
 void *  xmalloc (size_t size);
-int	write_ppd(const stp_printer_t p, const char *prefix,
+int	write_ppd(stp_const_printer_t p, const char *prefix,
 	          int verbose);
 
 
@@ -213,7 +213,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
   int		i;		    /* Looping var */
   const char	*prefix;	    /* Directory prefix for output */
   const char	*language = NULL;   /* Language */
-  stp_printer_t	printer;	    /* Pointer to printer driver */
+  stp_const_printer_t	printer;	    /* Pointer to printer driver */
   int           verbose = 0;        /* Verbose messages */
   char          **langs = NULL;     /* Available translations */
   char          **models = NULL;    /* Models to output, all if NULL */
@@ -540,7 +540,7 @@ void printlangs(char **langs)
 
 void printmodels(int verbose)
 {
-  stp_printer_t p;
+  stp_const_printer_t p;
   int i;
 
   for (i = 0; i < stp_printer_model_count(); i++)
@@ -631,7 +631,7 @@ xmalloc (size_t size)
  */
 
 int					/* O - Exit status */
-write_ppd(const stp_printer_t p,	/* I - Printer driver */
+write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	  const char          *prefix,	/* I - Prefix (directory) for PPD files */
 	  int                 verbose)
 {
@@ -650,7 +650,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 		top, right;
   const char	*driver;		/* Driver name */
   const char	*long_name;		/* Driver long name */
-  stp_vars_t	printvars;		/* Printer option names */
+  stp_const_vars_t	printvars;		/* Printer option names */
   paper_t	*the_papers;		/* Media sizes */
   int		cur_opt;		/* Current option */
   struct stat   dir;                    /* prefix dir status */

@@ -39,7 +39,7 @@ main(int argc, char **argv)
   stp_init();
   for (i = 0; i < stp_printer_model_count(); i++)
     {
-      const stp_printer_t p = stp_get_printer_by_index(i);
+      stp_const_printer_t p = stp_get_printer_by_index(i);
       printf("$printer_name{'%s'} = '%s';\n", stp_printer_get_driver(p),
 	     stp_printer_get_long_name(p));
     }

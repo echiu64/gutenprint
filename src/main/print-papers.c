@@ -215,7 +215,7 @@ stp_get_papersize_by_size(int l, int w)
 }
 
 void
-stpi_default_media_size(const stp_vars_t v,	/* I */
+stpi_default_media_size(stp_const_vars_t v,	/* I */
 			int  *width,		/* O - Width in points */
 			int  *height) 		/* O - Height in points */
 {

@@ -104,7 +104,7 @@ check_printer(const stpi_internal_printer_t *p)
     }
 }
 
-const stp_printer_t
+stp_const_printer_t
 stp_get_printer_by_index(int idx)
 {
   stpi_list_item_t *printer;
@@ -117,7 +117,7 @@ stp_get_printer_by_index(int idx)
   printer = stpi_list_get_item_by_index(printer_list, idx);
   if (printer == NULL)
     return NULL;
-  return (const stp_printer_t) stpi_list_item_get_data(printer);
+  return (stp_const_printer_t) stpi_list_item_get_data(printer);
 }
 
 static void
@@ -146,7 +146,7 @@ stpi_printer_long_namefunc(const stpi_list_item_t *item)
 }
 
 const char *
-stp_printer_get_long_name(const stp_printer_t p)
+stp_printer_get_long_name(stp_const_printer_t p)
 {
   const stpi_internal_printer_t *val = (const stpi_internal_printer_t *) p;
   check_printer(val);
@@ -154,13 +154,13 @@ stp_printer_get_long_name(const stp_printer_t p)
 }
 
 const char *
-stp_printer_get_driver(const stp_printer_t p)
+stp_printer_get_driver(stp_const_printer_t p)
 {
   return stp_get_driver(stp_printer_get_defaults(p));
 }
 
 const char *
-stp_printer_get_family(const stp_printer_t p)
+stp_printer_get_family(stp_const_printer_t p)
 {
   const stpi_internal_printer_t *val = (const stpi_internal_printer_t *) p;
   check_printer(val);
@@ -168,7 +168,7 @@ stp_printer_get_family(const stp_printer_t p)
 }
 
 int
-stp_printer_get_model(const stp_printer_t p)
+stp_printer_get_model(stp_const_printer_t p)
 {
   const stpi_internal_printer_t *val = (const stpi_internal_printer_t *) p;
   check_printer(val);
@@ -176,15 +176,15 @@ stp_printer_get_model(const stp_printer_t p)
 }
 
 static const stpi_printfuncs_t *
-stpi_get_printfuncs(const stp_printer_t p)
+stpi_get_printfuncs(stp_const_printer_t p)
 {
   const stpi_internal_printer_t *val = (const stpi_internal_printer_t *) p;
   check_printer(val);
   return val->printfuncs;
 }
 
-const stp_vars_t
-stp_printer_get_defaults(const stp_printer_t p)
+stp_const_vars_t
+stp_printer_get_defaults(stp_const_printer_t p)
 {
   const stpi_internal_printer_t *val = (const stpi_internal_printer_t *) p;
   check_printer(val);
@@ -193,7 +193,7 @@ stp_printer_get_defaults(const stp_printer_t p)
 
 
 
-const stp_printer_t
+stp_const_printer_t
 stp_get_printer_by_long_name(const char *long_name)
 {
   stpi_list_item_t *printer;
@@ -206,10 +206,10 @@ stp_get_printer_by_long_name(const char *long_name)
   printer = stpi_list_get_item_by_long_name(printer_list, long_name);
   if (!printer)
     return NULL;
-  return (const stp_printer_t) stpi_list_item_get_data(printer);
+  return (stp_const_printer_t) stpi_list_item_get_data(printer);
 }
 
-const stp_printer_t
+stp_const_printer_t
 stp_get_printer_by_driver(const char *driver)
 {
   stpi_list_item_t *printer;
@@ -222,7 +222,7 @@ stp_get_printer_by_driver(const char *driver)
   printer = stpi_list_get_item_by_name(printer_list, driver);
   if (!printer)
     return NULL;
-  return (const stp_printer_t) stpi_list_item_get_data(printer);
+  return (stp_const_printer_t) stpi_list_item_get_data(printer);
 }
 
 int
@@ -232,28 +232,28 @@ stp_get_printer_index_by_driver(const char *driver)
   int idx = 0;
   for (idx = 0; idx < stp_printer_model_count(); idx++)
     {
-      const stp_printer_t val = stp_get_printer_by_index(idx);
+      stp_const_printer_t val = stp_get_printer_by_index(idx);
       if (!strcmp(stp_printer_get_driver(val), driver))
 	return idx;
     }
   return -1;
 }
 
-const stp_printer_t
-stp_get_printer(const stp_vars_t v)
+stp_const_printer_t
+stp_get_printer(stp_const_vars_t v)
 {
   return stp_get_printer_by_driver(stp_get_driver(v));
 }
 
 int
-stpi_get_model_id(const stp_vars_t v)
+stpi_get_model_id(stp_const_vars_t v)
 {
-  const stp_printer_t p = stp_get_printer(v);
+  stp_const_printer_t p = stp_get_printer(v);
   return stp_printer_get_model(p);
 }
 
 stp_parameter_list_t
-stpi_printer_list_parameters(const stp_vars_t v)
+stpi_printer_list_parameters(stp_const_vars_t v)
 {
   const stpi_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
@@ -261,7 +261,7 @@ stpi_printer_list_parameters(const stp_vars_t v)
 }
 
 void
-stpi_printer_describe_parameter(const stp_vars_t v, const char *name,
+stpi_printer_describe_parameter(stp_const_vars_t v, const char *name,
 			       stp_parameter_t *description)
 {
   const stpi_printfuncs_t *printfuncs =
@@ -270,7 +270,7 @@ stpi_printer_describe_parameter(const stp_vars_t v, const char *name,
 }
 
 void
-stp_get_media_size(const stp_vars_t v, int *width, int *height)
+stp_get_media_size(stp_const_vars_t v, int *width, int *height)
 {
   const stpi_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
@@ -278,7 +278,7 @@ stp_get_media_size(const stp_vars_t v, int *width, int *height)
 }
 
 void
-stp_get_imageable_area(const stp_vars_t v,
+stp_get_imageable_area(stp_const_vars_t v,
 		       int *left, int *right, int *bottom, int *top)
 {
   const stpi_printfuncs_t *printfuncs =
@@ -287,7 +287,7 @@ stp_get_imageable_area(const stp_vars_t v,
 }
 
 void
-stp_get_size_limit(const stp_vars_t v, int *max_width, int *max_height,
+stp_get_size_limit(stp_const_vars_t v, int *max_width, int *max_height,
 		   int *min_width, int *min_height)
 {
   const stpi_printfuncs_t *printfuncs =
@@ -296,7 +296,7 @@ stp_get_size_limit(const stp_vars_t v, int *max_width, int *max_height,
 }
 
 void
-stp_describe_resolution(const stp_vars_t v, int *x, int *y)
+stp_describe_resolution(stp_const_vars_t v, int *x, int *y)
 {
   const stpi_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
@@ -304,7 +304,7 @@ stp_describe_resolution(const stp_vars_t v, int *x, int *y)
 }
 
 int
-stp_verify(const stp_vars_t v)
+stp_verify(stp_vars_t v)
 {
   const stpi_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
@@ -318,7 +318,7 @@ stp_verify(const stp_vars_t v)
 }
 
 int
-stp_print(const stp_vars_t v, stp_image_t *image)
+stp_print(stp_const_vars_t v, stp_image_t *image)
 {
   const stpi_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
@@ -326,7 +326,7 @@ stp_print(const stp_vars_t v, stp_image_t *image)
 }
 
 int
-stp_start_job(const stp_vars_t v, stp_image_t *image)
+stp_start_job(stp_const_vars_t v, stp_image_t *image)
 {
   const stpi_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
@@ -339,7 +339,7 @@ stp_start_job(const stp_vars_t v, stp_image_t *image)
 }
 
 int
-stp_end_job(const stp_vars_t v, stp_image_t *image)
+stp_end_job(stp_const_vars_t v, stp_image_t *image)
 {
   const stpi_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
@@ -352,7 +352,7 @@ stp_end_job(const stp_vars_t v, stp_image_t *image)
 }
 
 static int
-verify_string_param(const stp_vars_t v, const char *parameter,
+verify_string_param(stp_const_vars_t v, const char *parameter,
 		    stp_parameter_t *desc)
 {
   int answer = 1;
@@ -397,7 +397,7 @@ verify_string_param(const stp_vars_t v, const char *parameter,
 }
 
 static int
-verify_double_param(const stp_vars_t v, const char *parameter,
+verify_double_param(stp_const_vars_t v, const char *parameter,
 		    stp_parameter_t *desc)
 {
   if (desc->is_mandatory ||
@@ -417,7 +417,7 @@ verify_double_param(const stp_vars_t v, const char *parameter,
 }
 
 static int
-verify_int_param(const stp_vars_t v, const char *parameter,
+verify_int_param(stp_const_vars_t v, const char *parameter,
 		 stp_parameter_t *desc)
 {
   if (desc->is_mandatory ||
@@ -439,7 +439,7 @@ verify_int_param(const stp_vars_t v, const char *parameter,
 }
 
 static int
-verify_curve_param(const stp_vars_t v, const char *parameter,
+verify_curve_param(stp_const_vars_t v, const char *parameter,
 		    stp_parameter_t *desc)
 {
   int answer = 1;
@@ -447,7 +447,7 @@ verify_curve_param(const stp_vars_t v, const char *parameter,
       (desc->is_mandatory ||
        stp_check_curve_parameter(v, parameter, STP_PARAMETER_ACTIVE)))
     {
-      stp_curve_t checkval = stp_get_curve_parameter(v, parameter);
+      stp_const_curve_t checkval = stp_get_curve_parameter(v, parameter);
       if (checkval)
 	{
 	  double u0, l0;
@@ -477,7 +477,7 @@ verify_curve_param(const stp_vars_t v, const char *parameter,
 }
 
 static int
-verify_param(const stp_vars_t v, const char *parameter)
+verify_param(stp_const_vars_t v, const char *parameter)
 {
   stp_parameter_t desc;
   stp_describe_parameter(v, parameter, &desc);
@@ -548,19 +548,19 @@ fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
 }
 
 int
-stpi_verify_printer_params(const stp_vars_t v)
+stpi_verify_printer_params(stp_const_vars_t v)
 {
   errbuf_t errbuf;
   stp_outfunc_t ofunc = stp_get_errfunc(v);
   void *odata = stp_get_errdata(v);
 
   stp_parameter_list_t params;
-  const stp_printer_t p = stp_get_printer(v);
+  stp_const_printer_t p = stp_get_printer(v);
   int nparams;
   int i;
   int answer = 1;
   int left, top, bottom, right;
-  const stp_vars_t printvars = stp_printer_get_defaults(p);
+  stp_const_vars_t printvars = stp_printer_get_defaults(p);
   const char *pagesize = stp_get_string_parameter(v, "PageSize");
 
   stp_set_errfunc((stp_vars_t) v, fill_buffer_writefunc);
@@ -651,7 +651,7 @@ stpi_verify_printer_params(const stp_vars_t v)
   stp_parameter_list_free(params);
   stp_set_errfunc((stp_vars_t) v, ofunc);
   stp_set_errdata((stp_vars_t) v, odata);
-  stpi_set_verified(v, answer);
+  stpi_set_verified((stp_vars_t) v, answer);
   if (errbuf.bytes > 0)
     {
       stpi_eprintf(v, "%s", errbuf.data);

@@ -93,7 +93,7 @@ static int dither_parameter_count =
 sizeof(dither_parameters) / sizeof(const stp_parameter_t);
 
 stp_parameter_list_t
-stpi_dither_list_parameters(const stp_vars_t v)
+stpi_dither_list_parameters(stp_const_vars_t v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
   int i;
@@ -103,7 +103,7 @@ stpi_dither_list_parameters(const stp_vars_t v)
 }
 
 void
-stpi_dither_describe_parameter(const stp_vars_t v, const char *name,
+stpi_dither_describe_parameter(stp_const_vars_t v, const char *name,
 			       stp_parameter_t *description)
 {
   int i;

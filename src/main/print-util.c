@@ -108,7 +108,7 @@ typedef struct
 }
 
 void
-stpi_zprintf(const stp_vars_t v, const char *format, ...)
+stpi_zprintf(stp_const_vars_t v, const char *format, ...)
 {
   char *result;
   int bytes;
@@ -140,13 +140,13 @@ stpi_catprintf(char **strp, const char *format, ...)
   
 
 void
-stpi_zfwrite(const char *buf, size_t bytes, size_t nitems, const stp_vars_t v)
+stpi_zfwrite(const char *buf, size_t bytes, size_t nitems, stp_const_vars_t v)
 {
   (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), buf, bytes * nitems);
 }
 
 void
-stpi_putc(int ch, const stp_vars_t v)
+stpi_putc(int ch, stp_const_vars_t v)
 {
   unsigned char a = (unsigned char) ch;
   (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), (char *) &a, 1);
@@ -155,21 +155,21 @@ stpi_putc(int ch, const stp_vars_t v)
 #define BYTE(expr, byteno) (((expr) >> (8 * byteno)) & 0xff)
 
 void
-stpi_put16_le(unsigned short sh, const stp_vars_t v)
+stpi_put16_le(unsigned short sh, stp_const_vars_t v)
 {
   stpi_putc(BYTE(sh, 0), v);
   stpi_putc(BYTE(sh, 1), v);
 }
 
 void
-stpi_put16_be(unsigned short sh, const stp_vars_t v)
+stpi_put16_be(unsigned short sh, stp_const_vars_t v)
 {
   stpi_putc(BYTE(sh, 1), v);
   stpi_putc(BYTE(sh, 0), v);
 }
 
 void
-stpi_put32_le(unsigned int in, const stp_vars_t v)
+stpi_put32_le(unsigned int in, stp_const_vars_t v)
 {
   stpi_putc(BYTE(in, 0), v);
   stpi_putc(BYTE(in, 1), v);
@@ -178,7 +178,7 @@ stpi_put32_le(unsigned int in, const stp_vars_t v)
 }
 
 void
-stpi_put32_be(unsigned int in, const stp_vars_t v)
+stpi_put32_be(unsigned int in, stp_const_vars_t v)
 {
   stpi_putc(BYTE(in, 3), v);
   stpi_putc(BYTE(in, 2), v);
@@ -187,13 +187,13 @@ stpi_put32_be(unsigned int in, const stp_vars_t v)
 }
 
 void
-stpi_puts(const char *s, const stp_vars_t v)
+stpi_puts(const char *s, stp_const_vars_t v)
 {
   (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), s, strlen(s));
 }
 
 void
-stpi_send_command(const stp_vars_t v, const char *command,
+stpi_send_command(stp_const_vars_t v, const char *command,
 		 const char *format, ...)
 {
   int i = 0;
@@ -285,7 +285,7 @@ stpi_send_command(const stp_vars_t v, const char *command,
 }
 
 void
-stpi_eprintf(const stp_vars_t v, const char *format, ...)
+stpi_eprintf(stp_const_vars_t v, const char *format, ...)
 {
   int bytes;
   if (stp_get_errfunc(v))
@@ -338,7 +338,7 @@ stpi_init_debug(void)
 }
 
 void
-stpi_dprintf(unsigned long level, const stp_vars_t v, const char *format, ...)
+stpi_dprintf(unsigned long level, stp_const_vars_t v, const char *format, ...)
 {
   int bytes;
   stpi_init_debug();
@@ -376,7 +376,7 @@ fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
 }
 
 void
-stpi_init_debug_messages(const stp_vars_t v)
+stpi_init_debug_messages(stp_const_vars_t v)
 {
   int verified_flag = stpi_get_verified(v);
   debug_msgbuf_t *msgbuf = stpi_malloc(sizeof(debug_msgbuf_t));
@@ -386,17 +386,17 @@ stpi_init_debug_messages(const stp_vars_t v)
   msgbuf->bytes = 0;
   stp_set_errfunc((stp_vars_t) v, fill_buffer_writefunc);
   stp_set_errdata((stp_vars_t) v, msgbuf);
-  stpi_set_verified(v, verified_flag);
+  stpi_set_verified((stp_vars_t) v, verified_flag);
 }
 
 void
-stpi_flush_debug_messages(const stp_vars_t v)
+stpi_flush_debug_messages(stp_const_vars_t v)
 {
   int verified_flag = stpi_get_verified(v);
   debug_msgbuf_t *msgbuf = (debug_msgbuf_t *)stp_get_errdata(v);
   stp_set_errfunc((stp_vars_t) v, msgbuf->ofunc);
   stp_set_errdata((stp_vars_t) v, msgbuf->odata);
-  stpi_set_verified(v, verified_flag);
+  stpi_set_verified((stp_vars_t) v, verified_flag);
   if (msgbuf->bytes > 0)
     {
       stpi_eprintf(v, "%s", msgbuf->data);
@@ -714,7 +714,7 @@ int quantify_first_time = 1;
 struct timeval quantify_cur_time;
 struct timeval quantify_prev_time;
 
-void print_timers(const stp_vars_t v)
+void print_timers(stp_const_vars_t v)
 {
   int i;
 

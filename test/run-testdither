@@ -2,6 +2,10 @@
 
 out_status=0
 
+if [ $# -eq 0 ] ; then
+   quiet=quiet
+fi
+
 if [ -z "$bits" ] ; then
     bits='1-bit 2-bit'
 fi
@@ -22,11 +26,12 @@ if [ -z "$print_image" ] ; then
     image='no-image'
 fi
 
-for bits in $bits ; do
-    for dither_type in $dither_types  ; do
-	for image_type in $image_types ; do
-	    for algo in $algos ; do
-		./testdither $image $bits $dither_type $image_type $algo
+for algo in $algos ; do
+    echo -n "Testing $algo:"
+    for bits in $bits ; do
+        for dither_type in $dither_types  ; do
+	    for image_type in $image_types ; do
+		./testdither $quiet $image $bits $dither_type $image_type $algo
 		status=$?
 		if [ "$status" -ne 0 ] ; then
 		    echo ./testdither $image $bits $dither_type $image_type $algo failed
@@ -35,6 +40,7 @@ for bits in $bits ; do
 	    done
 	done
     done
+    echo
 done
 
 exit $out_status

@@ -40,15 +40,15 @@ extern void stpi_allocate_component_data(stp_vars_t v,
 					 stpi_free_data_func_t freefunc,
 					 void *data);
 extern void stpi_destroy_component_data(stp_vars_t v, const char *name);
-extern void *stpi_get_component_data(stp_vars_t v, const char *name);
+extern void *stpi_get_component_data(stp_const_vars_t v, const char *name);
 
-extern int stpi_get_verified(const stp_vars_t);
+extern int stpi_get_verified(stp_const_vars_t);
 extern void stpi_set_verified(stp_vars_t, int value);
 
-extern void stpi_copy_options(stp_vars_t vd, const stp_vars_t vs);
+extern void stpi_copy_options(stp_vars_t vd, stp_const_vars_t vs);
 
 extern void stpi_set_output_color_model(stp_vars_t v, int val);
-extern int stpi_get_output_color_model(const stp_vars_t v);
+extern int stpi_get_output_color_model(stp_const_vars_t v);
 
 extern void
 stpi_fill_parameter_settings(stp_parameter_t *desc,

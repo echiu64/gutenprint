@@ -228,7 +228,7 @@ static void set_controls_active (GtkObject *checkbutton, gpointer optno);
 static void update_adjusted_thumbnail (void);
 
 static void set_media_size(const gchar *new_media_size);
-static stp_printer_t tmp_printer = NULL;
+static stp_const_printer_t tmp_printer = NULL;
 
 static option_t *current_options = NULL;
 static int current_option_count = 0;
@@ -269,7 +269,7 @@ static guchar *adjusted_thumbnail_data;
 static guchar *preview_thumbnail_data;
 
 static void
-set_gtk_curve_values(GtkWidget *gcurve, stp_curve_t seed)
+set_gtk_curve_values(GtkWidget *gcurve, stp_const_curve_t seed)
 {
   if (stp_curve_get_gamma(seed))
     {
@@ -326,16 +326,18 @@ open_curve_editor(GtkObject *button, gpointer xopt)
     {
       GtkWidget *gcurve =
 	GTK_WIDGET(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
-      stp_curve_t seed = stp_get_curve_parameter(pv->v, opt->fast_desc->name);
+      stp_const_curve_t seed =
+	stp_get_curve_parameter(pv->v, opt->fast_desc->name);
+      stp_curve_t nseed = NULL;
       if (!seed)
 	seed = opt->info.curve.deflt;
       if (seed)
-	seed = stp_curve_create_copy(seed);
+	nseed = stp_curve_create_copy(seed);
       gtk_widget_set_sensitive(GTK_WIDGET(opt->checkbox), FALSE);
       gtk_widget_show(GTK_WIDGET(opt->info.curve.dialog));
       set_gtk_curve_values(gcurve, seed);
       opt->info.curve.is_visible = TRUE;
-      opt->info.curve.current = seed;
+      opt->info.curve.current = nseed;
       invalidate_preview_thumbnail();
       update_adjusted_thumbnail();
     }
@@ -349,7 +351,7 @@ set_default_curve_callback(GtkObject *button, gpointer xopt)
   option_t *opt = (option_t *)xopt;
   GtkWidget *gcurve =
     GTK_WIDGET(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
-  stp_curve_t seed = opt->info.curve.deflt;
+  stp_const_curve_t seed = opt->info.curve.deflt;
   set_gtk_curve_values(gcurve, seed);
   set_stp_curve_values(gcurve, opt);
   invalidate_preview_thumbnail();
@@ -363,7 +365,7 @@ set_previous_curve_callback(GtkObject *button, gpointer xopt)
   option_t *opt = (option_t *)xopt;
   GtkWidget *gcurve =
     GTK_WIDGET(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
-  stp_curve_t seed = opt->info.curve.current;
+  stp_const_curve_t seed = opt->info.curve.current;
   if (!seed)
     seed = opt->info.curve.deflt;
   set_gtk_curve_values(gcurve, seed);
@@ -440,7 +442,7 @@ stpui_create_curve(option_t *opt,
 		   gint column,
 		   gint row,
 		   const gchar *text,
-		   stp_curve_t deflt,
+		   stp_const_curve_t deflt,
 		   gboolean is_optional)
 {
   double lower, upper;
@@ -640,7 +642,7 @@ build_a_combo(option_t *option)
 }
 
 static void
-populate_options(const stp_vars_t v)
+populate_options(stp_const_vars_t v)
 {
   stp_parameter_list_t params = stp_get_parameter_list(v);
   int i;
@@ -808,6 +810,7 @@ populate_option_table(GtkWidget *table, int p_class)
   for (i = 0; i < current_option_count; i++)
     {
       option_t *opt = &(current_options[i]);
+      stp_const_curve_t xcurve;
       const stp_parameter_t *desc = opt->fast_desc;
       if (desc->p_class == p_class)
 	{
@@ -840,8 +843,11 @@ populate_option_table(GtkWidget *table, int p_class)
 					       STP_PARAMETER_INACTIVE);
 	      break;
 	    case STP_PARAMETER_TYPE_CURVE:
-	      opt->info.curve.current =
-		stp_get_curve_parameter(pv->v, opt->fast_desc->name);
+	      xcurve = stp_get_curve_parameter(pv->v, opt->fast_desc->name);
+	      if (xcurve)
+		opt->info.curve.current = stp_curve_create_copy(xcurve);
+	      else
+		opt->info.curve.current = NULL;
 	      stpui_create_curve(opt, GTK_TABLE(table), 0,
 				 vpos[desc->p_level][desc->p_type]++,
 				 _(desc->text), opt->info.curve.deflt,
@@ -1318,7 +1324,7 @@ create_printer_dialog (void)
 
   for (i = 0; i < stp_printer_model_count (); i ++)
     {
-      stp_printer_t the_printer = stp_get_printer_by_index (i);
+      stp_const_printer_t the_printer = stp_get_printer_by_index (i);
 
       if (strcmp(stp_printer_get_long_name (the_printer), "") != 0 &&
 	  strcmp(stp_printer_get_family(the_printer), "raw") != 0)
@@ -3048,7 +3054,7 @@ new_printer_ok_callback (void)
 static void
 pop_ppd_box(void)
 {
-  const stp_vars_t v = stp_printer_get_defaults(tmp_printer);
+  stp_const_vars_t v = stp_printer_get_defaults(tmp_printer);
   if (stp_parameter_find_in_settings(v, "PPDFile")) 
     {
       gtk_widget_show (ppd_label);
@@ -3320,13 +3326,13 @@ initialize_thumbnail(void)
 }
 
 static int
-compute_thumbnail(const stp_vars_t v)
+compute_thumbnail(stp_const_vars_t v)
 {
   priv_t priv;
   int answer = 1;
   stp_image_t *im = stpui_image_thumbnail_new(thumbnail_data, thumbnail_w,
 					      thumbnail_h, thumbnail_bpp);
-  const stp_vars_t nv = stp_vars_create_copy(v);
+  stp_vars_t nv = stp_vars_create_copy(v);
   stp_set_driver(nv, "raw-data-8");
   stp_set_top(nv, 0);
   stp_set_left(nv, 0);

@@ -44,7 +44,7 @@
 #endif
 
 /* Color conversion function */
-typedef void (*stp_convert_t) (const stp_vars_t vars, const unsigned char *in,
+typedef void (*stp_convert_t) (stp_const_vars_t vars, const unsigned char *in,
                                unsigned short *out, int *zero_mask,
                                int width, int bpp);
 
@@ -509,7 +509,7 @@ update_cmyk(unsigned short *rgb)
  */
 
 static void
-gray_to_gray(const stp_vars_t vars,
+gray_to_gray(stp_const_vars_t vars,
 	     const unsigned char *grayin,
 	     unsigned short *grayout,
 	     int *zero_mask,
@@ -547,7 +547,7 @@ gray_to_gray(const stp_vars_t vars,
  */
 
 static void
-rgb_to_gray(const stp_vars_t vars,
+rgb_to_gray(stp_const_vars_t vars,
 	    const unsigned char *rgb,
 	    unsigned short *gray,
 	    int *zero_mask,
@@ -714,7 +714,7 @@ lookup_rgb(lut_t *lut, unsigned short *rgbout,
  */
 
 static void
-rgb_to_rgb(const stp_vars_t vars,
+rgb_to_rgb(stp_const_vars_t vars,
 	   const unsigned char *rgbin,
 	   unsigned short *rgbout,
 	   int *zero_mask,
@@ -811,7 +811,7 @@ rgb_to_rgb(const stp_vars_t vars,
  */
 
 static void
-gray_to_rgb(const stp_vars_t vars,
+gray_to_rgb(stp_const_vars_t vars,
 	    const unsigned char	*grayin,
 	    unsigned short *rgbout,
 	    int *zero_mask,
@@ -881,7 +881,7 @@ gray_to_rgb(const stp_vars_t vars,
  */
 
 static void
-fast_rgb_to_rgb(const stp_vars_t vars,
+fast_rgb_to_rgb(stp_const_vars_t vars,
 		const unsigned char *rgbin,
 		unsigned short *rgbout,
 		int *zero_mask,
@@ -956,7 +956,7 @@ fast_rgb_to_rgb(const stp_vars_t vars,
  */
 
 static void
-fast_gray_to_rgb(const stp_vars_t vars,
+fast_gray_to_rgb(stp_const_vars_t vars,
 		 const unsigned char *grayin,
 		 unsigned short *rgbout,
 		 int *zero_mask,
@@ -1017,7 +1017,7 @@ fast_gray_to_rgb(const stp_vars_t vars,
 }
 
 static stp_curve_t
-compute_gcr_curve(const stp_vars_t vars)
+compute_gcr_curve(stp_const_vars_t vars)
 {
   stp_curve_t curve;
   lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
@@ -1073,7 +1073,7 @@ compute_gcr_curve(const stp_vars_t vars)
 }
 
 static void
-generic_rgb_to_cmyk(const stp_vars_t vars,
+generic_rgb_to_cmyk(stp_const_vars_t vars,
 		    const unsigned short *in,
 		    unsigned short *out,
 		    int *zero_mask,
@@ -1165,7 +1165,7 @@ generic_rgb_to_cmyk(const stp_vars_t vars,
 
 #define RGB_TO_CMYK_FUNC(name)						\
 static void								\
-name##_to_cmyk(const stp_vars_t vars,					\
+name##_to_cmyk(stp_const_vars_t vars,					\
 	       const unsigned char *in,					\
 	       unsigned short *out,					\
 	       int *zero_mask,						\
@@ -1185,7 +1185,7 @@ RGB_TO_CMYK_FUNC(rgb)
 RGB_TO_CMYK_FUNC(fast_rgb)
 
 static void
-cmyk_8_to_cmyk(const stp_vars_t vars,
+cmyk_8_to_cmyk(stp_const_vars_t vars,
 	       const unsigned char *cmykin,
 	       unsigned short *cmykout,
 	       int *zero_mask,
@@ -1235,7 +1235,7 @@ cmyk_8_to_cmyk(const stp_vars_t vars,
 }
 
 static void
-cmyk_8_to_gray(const stp_vars_t vars,
+cmyk_8_to_gray(stp_const_vars_t vars,
 	       const unsigned char *cmykin,
 	       unsigned short *grayout,
 	       int *zero_mask,
@@ -1270,7 +1270,7 @@ cmyk_8_to_gray(const stp_vars_t vars,
 }
 
 static void
-raw_to_raw(const stp_vars_t vars,
+raw_to_raw(stp_const_vars_t vars,
 	   const unsigned char *rawin,
 	   unsigned short *rawout,
 	   int *zero_mask,
@@ -1305,7 +1305,7 @@ raw_to_raw(const stp_vars_t vars,
 }
 
 static void
-cmyk_to_cmyk(const stp_vars_t vars,
+cmyk_to_cmyk(stp_const_vars_t vars,
 	     const unsigned char *cmykin,
 	     unsigned short *cmykout,
 	     int *zero_mask,
@@ -1338,7 +1338,7 @@ cmyk_to_cmyk(const stp_vars_t vars,
 }
 
 static void
-cmyk_to_gray(const stp_vars_t vars,
+cmyk_to_gray(stp_const_vars_t vars,
 	     const unsigned char *cmykin,
 	     unsigned short *grayout,
 	     int *zero_mask,
@@ -1364,7 +1364,7 @@ cmyk_to_gray(const stp_vars_t vars,
 }
 
 int
-stpi_color_get_row(const stp_vars_t v, stp_image_t *image, int row,
+stpi_color_get_row(stp_const_vars_t v, stp_image_t *image, int row,
 		  unsigned short *out, int *zero_mask)
 {
   const lut_t *lut = (const lut_t *)(stpi_get_component_data(v, "Color"));
@@ -1610,14 +1610,14 @@ invert_curve(stp_curve_t curve, int in_model, int out_model)
 static void
 stpi_compute_lut(stp_vars_t v, size_t steps)
 {
-  stp_curve_t hue = NULL;
-  stp_curve_t lum = NULL;
-  stp_curve_t sat = NULL;
-  stp_curve_t composite_curve = NULL;
-  stp_curve_t cyan_curve = NULL;
-  stp_curve_t magenta_curve = NULL;
-  stp_curve_t yellow_curve = NULL;
-  stp_curve_t black_curve = NULL;
+  stp_const_curve_t hue = NULL;
+  stp_const_curve_t lum = NULL;
+  stp_const_curve_t sat = NULL;
+  stp_const_curve_t composite_curve = NULL;
+  stp_const_curve_t cyan_curve = NULL;
+  stp_const_curve_t magenta_curve = NULL;
+  stp_const_curve_t yellow_curve = NULL;
+  stp_const_curve_t black_curve = NULL;
   /*
    * Got an output file/command, now compute a brightness lookup table...
    */
@@ -1958,7 +1958,7 @@ initialize_standard_curves(void)
 }
 
 stp_parameter_list_t
-stpi_color_list_parameters(const stp_vars_t v)
+stpi_color_list_parameters(stp_const_vars_t v)
 {
   stpi_list_t *ret = stp_parameter_list_create();
   int i;
@@ -1971,7 +1971,7 @@ stpi_color_list_parameters(const stp_vars_t v)
 }
 
 void
-stpi_color_describe_parameter(const stp_vars_t v, const char *name,
+stpi_color_describe_parameter(stp_const_vars_t v, const char *name,
 			      stp_parameter_t *description)
 {
   int i;

@@ -135,11 +135,11 @@ typedef struct testdata {
   char *input_line;
 } testdata;
 
-const stp_vars_t  *dbgfileprn;
+stp_const_vars_t  *dbgfileprn;
 int  lex_show_lcount, lex_show_length;
 
-const stp_vars_t lex_open_tmp_file();
-const stp_vars_t lex_write_tmp_file(const stp_vars_t ofile, void *data,int length);
+stp_const_vars_t lex_open_tmp_file();
+stp_const_vars_t lex_write_tmp_file(stp_const_vars_t ofile, void *data,int length);
 static void testprint(testdata *td);
 static void readtestprintline(testdata *td, lexmark_linebufs_t *linebufs);
 #endif
@@ -940,7 +940,7 @@ lexmark_size_type
 /* This method is actually not used.
    Is there a possibility to set such value ???????????? */
 static unsigned char
-lexmark_size_type(const stp_vars_t v, const lexmark_cap_t * caps)
+lexmark_size_type(stp_const_vars_t v, const lexmark_cap_t * caps)
 {
   const stp_papersize_t *pp = stp_get_papersize_by_size(stp_get_page_height(v),
 							stp_get_page_width(v));
@@ -1017,26 +1017,26 @@ lexmark_print_bidirectional(int model, const char *resolution)
 }
 
 static const char *
-lexmark_lum_adjustment(const lexmark_cap_t * caps, const stp_vars_t v)
+lexmark_lum_adjustment(const lexmark_cap_t * caps, stp_const_vars_t v)
 {
   return (caps->lum_adjustment);
 }
 
 static const char *
-lexmark_hue_adjustment(const lexmark_cap_t * caps, const stp_vars_t v)
+lexmark_hue_adjustment(const lexmark_cap_t * caps, stp_const_vars_t v)
 {
   return (caps->hue_adjustment);
 }
 
 static const char *
-lexmark_sat_adjustment(const lexmark_cap_t * caps, const stp_vars_t v)
+lexmark_sat_adjustment(const lexmark_cap_t * caps, stp_const_vars_t v)
 {
   return (caps->sat_adjustment);
 }
 
 
 static void
-lexmark_describe_resolution(const stp_vars_t v, int *x, int *y)
+lexmark_describe_resolution(stp_const_vars_t v, int *x, int *y)
 {
   const char *resolution = stp_get_string_parameter(v, "Resolution");
   const lexmark_res_t *res =
@@ -1067,7 +1067,7 @@ static stp_param_string_t media_sources[] =
  */
 
 static stp_parameter_list_t
-lexmark_list_parameters(const stp_vars_t v)
+lexmark_list_parameters(stp_const_vars_t v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
   int i;
@@ -1077,7 +1077,7 @@ lexmark_list_parameters(const stp_vars_t v)
 }
 
 static void
-lexmark_parameters(const stp_vars_t v, const char *name,
+lexmark_parameters(stp_const_vars_t v, const char *name,
 		   stp_parameter_t *description)
 {
   int		i;
@@ -1171,7 +1171,7 @@ lexmark_parameters(const stp_vars_t v, const char *name,
  */
 
 static void
-internal_imageable_area(const stp_vars_t v,   /* I */
+internal_imageable_area(stp_const_vars_t v,   /* I */
 			int  use_paper_margins,
 			int  *left,	/* O - Left position in points */
 			int  *right,	/* O - Right position in points */
@@ -1212,7 +1212,7 @@ internal_imageable_area(const stp_vars_t v,   /* I */
 }
 
 static void
-lexmark_imageable_area(const stp_vars_t v,   /* I */
+lexmark_imageable_area(stp_const_vars_t v,   /* I */
 		       int  *left,	/* O - Left position in points */
 		       int  *right,	/* O - Right position in points */
 		       int  *bottom,	/* O - Bottom position in points */
@@ -1222,7 +1222,7 @@ lexmark_imageable_area(const stp_vars_t v,   /* I */
 }
 
 static void
-lexmark_limit(const stp_vars_t v,  		/* I */
+lexmark_limit(stp_const_vars_t v,  		/* I */
 	      int *width,
 	      int *height,
 	      int *min_width,
@@ -1238,7 +1238,7 @@ lexmark_limit(const stp_vars_t v,  		/* I */
 
 
 static int
-lexmark_init_printer(const stp_vars_t v, const lexmark_cap_t * caps,
+lexmark_init_printer(stp_const_vars_t v, const lexmark_cap_t * caps,
 		     int output_type,
 		     const char *source_str,
 		     int xdpi, int ydpi,
@@ -1321,7 +1321,7 @@ lexmark_init_printer(const stp_vars_t v, const lexmark_cap_t * caps,
   return 1;
 }
 
-static void lexmark_deinit_printer(const stp_vars_t v, const lexmark_cap_t * caps)
+static void lexmark_deinit_printer(stp_const_vars_t v, const lexmark_cap_t * caps)
 {
 
 	switch(caps->model)	{
@@ -1388,7 +1388,7 @@ static void lexmark_deinit_printer(const stp_vars_t v, const lexmark_cap_t * cap
 
 /* paper_shift() -- shift paper in printer -- units are unknown :-)
  */
-static void paper_shift(const stp_vars_t v, int offset, const lexmark_cap_t * caps)
+static void paper_shift(stp_const_vars_t v, int offset, const lexmark_cap_t * caps)
 {
 	switch(caps->model)	{
 		case m_z52:
@@ -1455,7 +1455,7 @@ lexmark_advance_buffer(unsigned char *buf, int len, int num)
    in a correct way.
 */
 static int
-lexmark_do_print(const stp_vars_t v, stp_image_t *image)
+lexmark_do_print(stp_vars_t v, stp_image_t *image)
 {
   int		status = 1;
   int		y;		/* Looping vars */
@@ -2011,7 +2011,7 @@ densityDivisor /= 1.2;
 }
 
 static int
-lexmark_print(const stp_vars_t v, stp_image_t *image)
+lexmark_print(stp_const_vars_t v, stp_image_t *image)
 {
   int status;
   stp_vars_t nv = stp_vars_create_copy(v);
@@ -2258,7 +2258,7 @@ typedef struct Lexmark_head_colors {
 
 
 static int
-lexmark_write(const stp_vars_t v,		/* I - Print file or command */
+lexmark_write(stp_const_vars_t v,		/* I - Print file or command */
 	      unsigned char *prnBuf,      /* mem block to buffer output */
 	      int *paperShift,
 	      int direction,
@@ -2515,9 +2515,9 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 
 
 #ifdef DEBUG
-const stp_vars_t lex_open_tmp_file() {
+stp_const_vars_t lex_open_tmp_file() {
   int i;
-  const stp_vars_t ofile;
+  stp_const_vars_t ofile;
   char tmpstr[256];
 
       stpi_erprintf(" create file !\n");
@@ -2539,12 +2539,12 @@ const stp_vars_t lex_open_tmp_file() {
   return ofile;
 }
 
-void lex_tmp_file_deinit(const stp_vars_t file) {
+void lex_tmp_file_deinit(stp_const_vars_t file) {
   stpi_erprintf("Close file %lx\n", file);
   fclose(file);
 }
 
-const stp_vars_t lex_write_tmp_file(const stp_vars_t ofile, void *data,int length) {
+stp_const_vars_t lex_write_tmp_file(stp_const_vars_t ofile, void *data,int length) {
   fwrite(data, 1, length, ofile);
 }
 
@@ -2555,7 +2555,7 @@ const stp_vars_t lex_write_tmp_file(const stp_vars_t ofile, void *data,int lengt
 static void
 flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
 {
-  const stp_vars_t nv = (sw->v);
+  stp_const_vars_t nv = (sw->v);
   stpi_lineoff_t        *lineoffs   = stpi_get_lineoffsets_by_pass(sw, passno);
   stpi_lineactive_t     *lineactive = stpi_get_lineactive_by_pass(sw, passno);
   const stpi_linebufs_t *bufs       = stpi_get_linebases_by_pass(sw, passno);

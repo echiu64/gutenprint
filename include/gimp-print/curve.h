@@ -35,6 +35,7 @@ extern "C" {
  */
 
 typedef void *stp_curve_t;
+typedef const void *stp_const_curve_t;
 
 typedef enum
 {
@@ -75,8 +76,8 @@ typedef enum
  */
 
 extern stp_curve_t stp_curve_create(stp_curve_wrap_mode_t wrap);
-extern stp_curve_t stp_curve_create_copy(const stp_curve_t curve);
-extern void stp_curve_copy(stp_curve_t dest, const stp_curve_t source);
+extern stp_curve_t stp_curve_create_copy(stp_const_curve_t curve);
+extern void stp_curve_copy(stp_curve_t dest, stp_const_curve_t source);
 extern void stp_curve_free(stp_curve_t curve);
 
 /*
@@ -85,27 +86,27 @@ extern void stp_curve_free(stp_curve_t curve);
  * To change the bounds adjusting data as required, use stp_curve_rescale.
  */
 extern int stp_curve_set_bounds(stp_curve_t curve, double low, double high);
-extern void stp_curve_get_bounds(const stp_curve_t curve,
+extern void stp_curve_get_bounds(stp_const_curve_t curve,
 				 double *low, double *high);
 
-extern stp_curve_wrap_mode_t stp_curve_get_wrap(const stp_curve_t curve);
+extern stp_curve_wrap_mode_t stp_curve_get_wrap(stp_const_curve_t curve);
 
 /*
  * Get the lowest and highest value of points in the curve.
  * This does not account for any interpolation that may place
  * intermediate points outside of the curve.
  */
-extern void stp_curve_get_range(const stp_curve_t curve,
+extern void stp_curve_get_range(stp_const_curve_t curve,
 				double *low, double *high);
 
 /*
  * Return the number of allocated points in the curve.
  */
-extern size_t stp_curve_count_points(const stp_curve_t curve);
+extern size_t stp_curve_count_points(stp_const_curve_t curve);
 
 extern int stp_curve_set_interpolation_type(stp_curve_t curve,
 					    stp_curve_type_t itype);
-extern stp_curve_type_t stp_curve_get_interpolation_type(const stp_curve_t curve);
+extern stp_curve_type_t stp_curve_get_interpolation_type(stp_const_curve_t curve);
 
 /*
  * Set all data points of the curve.  If any of the data points fall outside
@@ -140,7 +141,7 @@ extern int stp_curve_set_ushort_data(stp_curve_t curve,
  * the number of points in the curve, and count must be at least 2.
  * The return curve is a non-wrapping curve.
  */
-extern stp_curve_t stp_curve_get_subrange(const stp_curve_t curve,
+extern stp_curve_t stp_curve_get_subrange(stp_const_curve_t curve,
 					  size_t start, size_t count);
 
 /*
@@ -148,7 +149,7 @@ extern stp_curve_t stp_curve_get_subrange(const stp_curve_t curve,
  * range must fit within both the bounds and the number of points in the
  * first curve.
  */
-extern int stp_curve_set_subrange(stp_curve_t curve, const stp_curve_t range,
+extern int stp_curve_set_subrange(stp_curve_t curve, stp_const_curve_t range,
 				  size_t start);
 
 /*
@@ -160,29 +161,29 @@ extern int stp_curve_set_subrange(stp_curve_t curve, const stp_curve_t range,
  * If the curve is a pure gamma curve (no associated points),
  * a null pointer is returned and the count is 0.
  */
-extern const double *stp_curve_get_data(const stp_curve_t curve, size_t *count);
+extern const double *stp_curve_get_data(stp_const_curve_t curve, size_t *count);
 
 
-extern const float *stp_curve_get_float_data(const stp_curve_t curve,
+extern const float *stp_curve_get_float_data(stp_const_curve_t curve,
 					     size_t *count);
-extern const long *stp_curve_get_long_data(const stp_curve_t curve,
+extern const long *stp_curve_get_long_data(stp_const_curve_t curve,
 					   size_t *count);
-extern const unsigned long *stp_curve_get_ulong_data(const stp_curve_t curve,
+extern const unsigned long *stp_curve_get_ulong_data(stp_const_curve_t curve,
 						     size_t *count);
-extern const int *stp_curve_get_int_data(const stp_curve_t curve,
+extern const int *stp_curve_get_int_data(stp_const_curve_t curve,
 					 size_t *count);
-extern const unsigned int *stp_curve_get_uint_data(const stp_curve_t curve,
+extern const unsigned int *stp_curve_get_uint_data(stp_const_curve_t curve,
 						   size_t *count);
-extern const short *stp_curve_get_short_data(const stp_curve_t curve,
+extern const short *stp_curve_get_short_data(stp_const_curve_t curve,
 					     size_t *count);
-extern const unsigned short *stp_curve_get_ushort_data(const stp_curve_t curve,
+extern const unsigned short *stp_curve_get_ushort_data(stp_const_curve_t curve,
 						       size_t *count);
 
 /*
  * Get the underlying stp_sequence_t data structure which stp_curve_t
  * is derived from.  This can be used for fast access to the raw data.
  */
-extern stp_sequence_t stp_curve_get_sequence(const stp_curve_t curve);
+extern stp_sequence_t stp_curve_get_sequence(stp_const_curve_t curve);
 
 /*
  * Set the gamma of a curve.  This replaces all existing points along
@@ -202,7 +203,7 @@ extern int stp_curve_set_gamma(stp_curve_t curve, double gamma);
  * Return the gamma value of the curve.  A returned value of 0 indicates
  * that the curve does not have a valid gamma value.
  */
-extern double stp_curve_get_gamma(const stp_curve_t curve);
+extern double stp_curve_get_gamma(stp_const_curve_t curve);
 
 /*
  * Set a point along the curve.  Return FALSE if data is outside the valid
@@ -216,7 +217,7 @@ extern int stp_curve_set_point(stp_curve_t curve, size_t where, double data);
  * Get a point along the curve.  If 'where' is outside of the number of valid
  * points, FALSE is returned and the value of data is not changed.
  */
-extern int stp_curve_get_point(const stp_curve_t curve, size_t where,
+extern int stp_curve_get_point(stp_const_curve_t curve, size_t where,
 			       double *data);
 
 /*
@@ -226,7 +227,7 @@ extern int stp_curve_get_point(const stp_curve_t curve, size_t where,
  * (as could happen with spline interpolation), the value is clipped
  * to the range.
  */
-extern int stp_curve_interpolate_value(const stp_curve_t curve,
+extern int stp_curve_interpolate_value(stp_const_curve_t curve,
 				       double where, double *result);
 
 /*
@@ -272,8 +273,8 @@ extern int stp_curve_rescale(stp_curve_t curve, double scale,
  * NOTE that these calls are not thread-safe!  These routines may
  * manipulate the locale to achieve a safe representation.
  */
-extern int stp_curve_write(FILE *file, stp_curve_t curve);
-extern char *stp_curve_write_string(stp_curve_t curve);
+extern int stp_curve_write(FILE *file, stp_const_curve_t curve);
+extern char *stp_curve_write_string(stp_const_curve_t curve);
 
 extern stp_curve_t stp_curve_create_from_file(const char* file);
 extern stp_curve_t stp_curve_create_from_string(const char* string);
@@ -305,7 +306,7 @@ extern stp_curve_t stp_curve_create_from_string(const char* string);
  */
 
 extern int stp_curve_compose(stp_curve_t *retval,
-			     const stp_curve_t a, const stp_curve_t b,
+			     stp_const_curve_t a, stp_const_curve_t b,
 			     stp_curve_compose_t mode, int points);
 
 

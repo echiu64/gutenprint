@@ -87,7 +87,7 @@ static int the_parameter_count =
 sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
 static stp_parameter_list_t
-raw_list_parameters(const stp_vars_t v)
+raw_list_parameters(stp_const_vars_t v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
   int i;
@@ -97,7 +97,7 @@ raw_list_parameters(const stp_vars_t v)
 }
 
 static void
-raw_parameters(const stp_vars_t v, const char *name,
+raw_parameters(stp_const_vars_t v, const char *name,
 	       stp_parameter_t *description)
 {
   int		i;
@@ -130,7 +130,7 @@ raw_parameters(const stp_vars_t v, const char *name,
  */
 
 static void
-raw_imageable_area(const stp_vars_t v,
+raw_imageable_area(stp_const_vars_t v,
 		   int  *left,
 		   int  *right,
 		   int  *bottom,
@@ -143,7 +143,7 @@ raw_imageable_area(const stp_vars_t v,
 }
 
 static void
-raw_limit(const stp_vars_t v,			/* I */
+raw_limit(stp_const_vars_t v,			/* I */
 	    int *width, int *height,
 	    int *min_width, int *min_height)
 {
@@ -154,7 +154,7 @@ raw_limit(const stp_vars_t v,			/* I */
 }
 
 static void
-raw_describe_resolution(const stp_vars_t v, int *x, int *y)
+raw_describe_resolution(stp_const_vars_t v, int *x, int *y)
 {
   *x = 72;
   *y = 72;
@@ -164,7 +164,7 @@ raw_describe_resolution(const stp_vars_t v, int *x, int *y)
  * 'escp2_print()' - Print an image to an EPSON printer.
  */
 static int
-raw_print(const stp_vars_t v, stp_image_t *image)
+raw_print(stp_const_vars_t v, stp_image_t *image)
 {
   int		model = stpi_get_model_id(v);
   int width = stp_get_page_width(v);

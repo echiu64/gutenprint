@@ -107,9 +107,9 @@ extern void stpi_dither_matrix_init_short(dither_matrix_t *mat, int x_size,
 					  int y_size,
 					  const unsigned short *array,
 					  int transpose, int prescaled);
-extern int stpi_dither_matrix_validate_array(const stp_array_t array);
+extern int stpi_dither_matrix_validate_array(stp_const_array_t array);
 extern void stpi_dither_matrix_init_from_dither_array(dither_matrix_t *mat,
-						      const stp_array_t array,
+						      stp_const_array_t array,
 						      int transpose);
 extern void stpi_dither_matrix_destroy(dither_matrix_t *mat);
 extern void stpi_dither_matrix_clone(const dither_matrix_t *src,
@@ -163,10 +163,10 @@ typedef struct stpi_shade
   const stpi_dotsize_t *dot_sizes;
 } stpi_shade_t;
 
-extern stp_parameter_list_t stpi_dither_list_parameters(const stp_vars_t v);
+extern stp_parameter_list_t stpi_dither_list_parameters(stp_const_vars_t v);
 
 extern void
-stpi_dither_describe_parameter(const stp_vars_t v, const char *name,
+stpi_dither_describe_parameter(stp_const_vars_t v, const char *name,
 			       stp_parameter_t *description);
 
 extern void stpi_dither_init(stp_vars_t v, stp_image_t *image,
@@ -179,7 +179,7 @@ extern void stpi_dither_set_iterated_matrix(stp_vars_t v, size_t edge,
 extern void stpi_dither_set_matrix(stp_vars_t v, const stpi_dither_matrix_t *mat,
 				   int transpose, int x_shear, int y_shear);
 extern void stpi_dither_set_matrix_from_dither_array(stp_vars_t v,
-						     const stp_array_t array,
+						     stp_const_array_t array,
 						     int transpose);
 extern void stpi_dither_set_transition(stp_vars_t v, double);
 extern void stpi_dither_set_randomizer(stp_vars_t v, int color, double);

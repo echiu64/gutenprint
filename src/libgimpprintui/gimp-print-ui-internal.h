@@ -74,7 +74,7 @@ typedef struct
   GtkWidget *gamma_curve;
   const char *help_text;
   stp_curve_t current;
-  stp_curve_t deflt;
+  stp_const_curve_t deflt;
   gboolean is_visible;
 } curve_option_t;
 
@@ -159,7 +159,7 @@ extern int stpui_plist_add(const stpui_plist_t *key, int add_only);
 extern stpui_plist_t *stpui_plist_create(const char *name, const char *driver);
 extern void stpui_printer_initialize(stpui_plist_t *printer);
 extern const char *stpui_combo_get_name(GtkWidget   *combo,
-				  const stp_string_list_t options);
+				  stp_const_string_list_t options);
 extern void stpui_set_adjustment_tooltip(GtkObject *adjustment,
 					 const gchar *tip);
 extern void stpui_set_help_data(GtkWidget *widget, const gchar *tooltip);

@@ -196,7 +196,7 @@ main(int argc, char **argv)
 {
   int c;
   stp_vars_t v;
-  stp_printer_t the_printer;
+  stp_const_printer_t the_printer;
   const stp_papersize_t *pt;
   int left, right, top, bottom;
   int x, y;

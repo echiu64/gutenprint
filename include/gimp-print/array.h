@@ -37,27 +37,28 @@ extern "C" {
 
 
 typedef void *stp_array_t;
+typedef const void *stp_const_array_t;
 
 
 extern stp_array_t stp_array_create(int x_size, int y_size);
 extern void stp_array_destroy(stp_array_t array);
 
-extern void stp_array_copy(stp_array_t dest, const stp_array_t source);
-extern stp_array_t stp_array_create_copy(const stp_array_t array);
+extern void stp_array_copy(stp_array_t dest, stp_const_array_t source);
+extern stp_array_t stp_array_create_copy(stp_const_array_t array);
 
 extern int stp_array_set_size(stp_array_t array, int x_size, int y_size);
-extern void stp_array_get_size(const stp_array_t array, int *x_size, int *y_size);
+extern void stp_array_get_size(stp_const_array_t array, int *x_size, int *y_size);
 
 extern int stp_array_set_data(stp_array_t array, const double *data);
-extern void stp_array_get_data(const stp_array_t array, size_t *size,
+extern void stp_array_get_data(stp_const_array_t array, size_t *size,
 			       const double **data);
 
 extern int stp_array_set_point(stp_array_t array, int x, int y,
 			       double data);
-extern int stp_array_get_point(const stp_array_t array, int x, int y,
+extern int stp_array_get_point(stp_const_array_t array, int x, int y,
 			       double *data);
 
-extern const stp_sequence_t stp_array_get_sequence(const stp_array_t array);
+extern const stp_sequence_t stp_array_get_sequence(stp_const_array_t array);
 
 
 #ifdef __cplusplus

@@ -817,7 +817,7 @@ stpui_create_new_combo(option_t *option, GtkWidget *table,
 
 const char *
 stpui_combo_get_name(GtkWidget   *combo,
-		     const stp_string_list_t options)
+		     stp_const_string_list_t options)
 {
   if (options)
     {

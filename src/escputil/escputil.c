@@ -194,9 +194,9 @@ typedef struct
   int ink_change;
   int color_passes;
   int color_choices;
-} stp_printer_t;
+} escp_printer_t;
 
-stp_printer_t printer_list[] =
+escp_printer_t printer_list[] =
 {
   { "C20sx",	N_("Stylus C20sx"),	3,	15,	0,	2,	9 },
   { "C20ux",	N_("Stylus C20ux"),	3,	15,	0,	2,	9 },
@@ -292,7 +292,7 @@ int isnew = 0;
 static void
 print_models(void)
 {
-  stp_printer_t *printer = &printer_list[0];
+  escp_printer_t *printer = &printer_list[0];
   while (printer->short_name)
     {
       printf("%10s      %s\n", printer->short_name, _(printer->long_name));
@@ -879,10 +879,10 @@ printer_error(void)
   exit(1);
 }
 
-static stp_printer_t *
+static escp_printer_t *
 get_printer(void)
 {
-  stp_printer_t *printer = &printer_list[0];
+  escp_printer_t *printer = &printer_list[0];
   if (!printer_model)
     {
       char buf[1024];
@@ -1042,7 +1042,7 @@ do_align(void)
   long answer;
   char *endptr;
   int curpass;
-  const stp_printer_t *printer = get_printer();
+  const escp_printer_t *printer = get_printer();
   int passes = printer->passes;
   int choices = printer->choices;
   const char *printer_name = printer->long_name;
@@ -1170,7 +1170,7 @@ do_align_color(void)
   long answer;
   char *endptr;
   int curpass;
-  const stp_printer_t *printer = get_printer();
+  const escp_printer_t *printer = get_printer();
   int passes = printer->color_passes;
   int choices = printer->color_choices;
   const char *printer_name = printer->long_name;

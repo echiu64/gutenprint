@@ -340,7 +340,7 @@ list_all_parameters(void)
       g_hash_table_insert(hash, g_strdup("MediaName"), (gpointer) 1);
       for (i = 0; i < printer_count; i++)
 	{
-	  const stp_printer_t printer = stp_get_printer_by_index(i);
+	  stp_const_printer_t printer = stp_get_printer_by_index(i);
 	  stp_parameter_list_t params =
 	    stp_get_parameter_list(stp_printer_get_defaults(printer));
 	  size_t count = stp_parameter_list_count(params);
@@ -439,7 +439,7 @@ gimp_get_cb (void *get_cb_data,
 {
   IMAGE *img = (IMAGE *)get_cb_data;
   stp_vars_t v = img->v;
-  stp_printer_t printer = stp_get_printer(v);
+  stp_const_printer_t printer = stp_get_printer(v);
   GimpParamList *pl = img->params;
   GimpParamList *curs;
   const char *val = NULL;
@@ -558,7 +558,7 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
     ;				/* We don't care who makes it */
   else if (strcmp(key, "DeviceModel") == 0)
     {
-      stp_printer_t printer = stp_get_printer_by_driver(vbuf);
+      stp_const_printer_t printer = stp_get_printer_by_driver(vbuf);
       stp_set_driver(img->v, vbuf);
       if (printer &&
 	  strcmp(stp_printer_get_family(printer), "ps") != 0 &&
@@ -826,7 +826,7 @@ gimp_image_note_progress(stp_image_t *image, double current, double total)
 /**********************************************************/
 
 static const char *
-safe_get_string_parameter(const stp_vars_t v, const char *param)
+safe_get_string_parameter(stp_const_vars_t v, const char *param)
 {
   const char *val = stp_get_string_parameter(v, param);
   if (val)
@@ -836,7 +836,7 @@ safe_get_string_parameter(const stp_vars_t v, const char *param)
 }
 
 static void
-stp_dbg(const char *msg, const stp_vars_t v)
+stp_dbg(const char *msg, stp_const_vars_t v)
 {
   fprintf(stderr, "Settings: Model %s\n", stp_get_driver(v));
   fprintf(stderr,"%s Settings: c: %f  m: %f  y: %f\n", msg,
@@ -877,7 +877,7 @@ main (int argc, char **argv)
   int page = 0;
   IMAGE img;
   stp_image_t si;
-  stp_printer_t printer = NULL;
+  stp_const_printer_t printer = NULL;
   FILE *f = NULL;
   int l, t, r, b, w, h;
   int width, height;

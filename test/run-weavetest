@@ -71,5 +71,6 @@ fi
 		fi
 	    done
 	done
+	echo -n "." 1>&2
     done
 done) | sed 's/,/ /g' |  ./escp2-weavetest | $extracmd

@@ -149,7 +149,7 @@ stpi_dither_matrix_shear(dither_matrix_t *mat, int x_shear, int y_shear)
 }
 
 int
-stpi_dither_matrix_validate_array(const stp_array_t array)
+stpi_dither_matrix_validate_array(stp_const_array_t array)
 {
   double low, high;
   stp_sequence_t seq;
@@ -164,7 +164,7 @@ stpi_dither_matrix_validate_array(const stp_array_t array)
 
 void
 stpi_dither_matrix_init_from_dither_array(dither_matrix_t *mat,
-				  const stp_array_t array,
+				  stp_const_array_t array,
 				  int transpose)
 {
   int x, y;
@@ -413,7 +413,7 @@ stpi_dither_set_matrix(stp_vars_t v, const stpi_dither_matrix_t *matrix,
 
 void
 stpi_dither_set_matrix_from_dither_array(stp_vars_t v,
-					 const stp_array_t array,
+					 stp_const_array_t array,
 					 int transpose)
 {
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");

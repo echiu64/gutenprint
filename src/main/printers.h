@@ -47,19 +47,19 @@ extern "C" {
 
 typedef struct
 {
-  stp_parameter_list_t (*list_parameters)(const stp_vars_t v);
-  void  (*parameters)(const stp_vars_t v, const char *name,
+  stp_parameter_list_t (*list_parameters)(stp_const_vars_t v);
+  void  (*parameters)(stp_const_vars_t v, const char *name,
 		      stp_parameter_t *);
-  void  (*media_size)(const stp_vars_t v, int *width, int *height);
-  void  (*imageable_area)(const stp_vars_t v,
+  void  (*media_size)(stp_const_vars_t v, int *width, int *height);
+  void  (*imageable_area)(stp_const_vars_t v,
 			  int *left, int *right, int *bottom, int *top);
-  void  (*limit)(const stp_vars_t v, int *max_width, int *max_height,
+  void  (*limit)(stp_const_vars_t v, int *max_width, int *max_height,
                  int *min_width, int *min_height);
-  int   (*print)(const stp_vars_t v, stp_image_t *image);
-  void  (*describe_resolution)(const stp_vars_t v, int *x, int *y);
-  int   (*verify)(const stp_vars_t v);
-  int   (*start_job)(const stp_vars_t v, stp_image_t *image);
-  int   (*end_job)(const stp_vars_t v, stp_image_t *image);
+  int   (*print)(stp_const_vars_t v, stp_image_t *image);
+  void  (*describe_resolution)(stp_const_vars_t v, int *x, int *y);
+  int   (*verify)(stp_const_vars_t v);
+  int   (*start_job)(stp_const_vars_t v, stp_image_t *image);
+  int   (*end_job)(stp_const_vars_t v, stp_image_t *image);
 } stpi_printfuncs_t;
 
 typedef struct stpi_internal_family
@@ -68,17 +68,17 @@ typedef struct stpi_internal_family
   stpi_list_t             *printer_list; /* list of printers */
 } stpi_internal_family_t;
 
-extern int stpi_get_model_id(const stp_vars_t v);
+extern int stpi_get_model_id(stp_const_vars_t v);
 
-extern int stpi_verify_printer_params(const stp_vars_t);
+extern int stpi_verify_printer_params(stp_const_vars_t);
 
 extern int stpi_family_register(stpi_list_t *family);
 extern int stpi_family_unregister(stpi_list_t *family);
 
-extern stp_parameter_list_t stpi_printer_list_parameters(const stp_vars_t v);
+extern stp_parameter_list_t stpi_printer_list_parameters(stp_const_vars_t v);
 
 extern void
-stpi_printer_describe_parameter(const stp_vars_t v, const char *name,
+stpi_printer_describe_parameter(stp_const_vars_t v, const char *name,
 				stp_parameter_t *description);
 
 

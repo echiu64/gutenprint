@@ -42,7 +42,7 @@ main(int argc, char **argv)
     {
       stp_parameter_list_t params;
       int nparams;
-      const stp_printer_t p = stp_get_printer_by_index(i);
+      stp_const_printer_t p = stp_get_printer_by_index(i);
       const char *driver = stp_printer_get_driver(p);
       const char *family = stp_printer_get_family(p);
       stp_vars_t pv = stp_vars_create_copy(stp_printer_get_defaults(p));
