@@ -59,7 +59,7 @@ static char	*ppd_find(const char *, const char *, const char *, int *);
  */
 
 char **					/* O - Parameter values */
-ps_parameters(const printer_t *printer,	/* I - Printer model */
+ps_parameters(const stp_printer_t *printer,	/* I - Printer model */
               char *ppd_file,		/* I - PPD file (not used) */
               char *name,		/* I - Name of parameter */
               int  *count)		/* O - Number of values */
@@ -95,7 +95,7 @@ ps_parameters(const printer_t *printer,	/* I - Printer model */
     {
       if (strcmp(name, "PageSize") == 0)
 	{
-	  const papersize_t *papersizes = get_papersizes();
+	  const stp_papersize_t *papersizes = get_papersizes();
 	  valptrs = malloc(sizeof(char *) * known_papersizes());
 	  *count = 0;
 	  for (i = 0; i < known_papersizes(); i++)
@@ -149,8 +149,8 @@ ps_parameters(const printer_t *printer,	/* I - Printer model */
  */
 
 void
-ps_media_size(const printer_t *printer,	/* I - Printer model */
-	      const vars_t *v,		/* I */
+ps_media_size(const stp_printer_t *printer,	/* I - Printer model */
+	      const stp_vars_t *v,		/* I */
               int  *width,		/* O - Width in points */
               int  *height)		/* O - Height in points */
 {
@@ -176,8 +176,8 @@ ps_media_size(const printer_t *printer,	/* I - Printer model */
  */
 
 void
-ps_imageable_area(const printer_t *printer,	/* I - Printer model */
-		  const vars_t *v,      /* I */
+ps_imageable_area(const stp_printer_t *printer,	/* I - Printer model */
+		  const stp_vars_t *v,      /* I */
                   int  *left,		/* O - Left position in points */
                   int  *right,		/* O - Right position in points */
                   int  *bottom,		/* O - Bottom position in points */
@@ -217,8 +217,8 @@ ps_imageable_area(const printer_t *printer,	/* I - Printer model */
 }
 
 void
-ps_limit(const printer_t *printer,	/* I - Printer model */
-	    const vars_t *v,  		/* I */
+ps_limit(const stp_printer_t *printer,	/* I - Printer model */
+	    const stp_vars_t *v,  		/* I */
 	    int  *width,		/* O - Left position in points */
 	    int  *height)		/* O - Top position in points */
 {
@@ -227,7 +227,7 @@ ps_limit(const printer_t *printer,	/* I - Printer model */
 }
 
 const char *
-ps_default_resolution(const printer_t *printer)
+ps_default_resolution(const stp_printer_t *printer)
 {
   return "default";
 }
@@ -236,7 +236,7 @@ ps_default_resolution(const printer_t *printer)
  * This is really bogus...
  */
 void
-ps_describe_resolution(const printer_t *printer,
+ps_describe_resolution(const stp_printer_t *printer,
 			const char *resolution, int *x, int *y)
 {
   *x = -1;
@@ -250,10 +250,10 @@ ps_describe_resolution(const printer_t *printer,
  */
 
 void
-ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
+ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
          FILE      *prn,		/* I - File to print to */
          Image     image,		/* I - Image to print */
-	 const vars_t    *v)
+	 const stp_vars_t    *v)
 {
   unsigned char *cmap = v->cmap;
   int		model = printer->model;
@@ -283,7 +283,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
 		out_ps_height,	/* Output height (Level 2 output) */
 		out_offset;	/* Output offset (Level 2 output) */
   time_t	curtime;	/* Current time of day */
-  convert_t	colorfunc;	/* Color conversion function... */
+  stp_convert_t	colorfunc;	/* Color conversion function... */
   char		*command;	/* PostScript command */
   int		order,		/* Order of command */
 		num_commands;	/* Number of commands */
@@ -295,9 +295,9 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
   int           image_height,
                 image_width,
                 image_bpp;
-  vars_t	nv;
+  stp_vars_t	nv;
 
-  memcpy(&nv, v, sizeof(vars_t));
+  memcpy(&nv, v, sizeof(stp_vars_t));
  /*
   * Setup a read-only pixel region for the entire image...
   */

@@ -82,9 +82,9 @@ main(int  argc,				/* I - Number of command-line arguments */
   cups_image_t		cups;		/* CUPS image */
   const char		*ppdfile;	/* PPD environment variable */
   ppd_file_t		*ppd;		/* PPD file */
-  const printer_t	*printer;	/* Printer driver */  
-  vars_t		v;		/* Printer driver variables */
-  const papersize_t	*size;		/* Paper size */
+  const stp_printer_t	*printer;	/* Printer driver */  
+  stp_vars_t		v;		/* Printer driver variables */
+  const stp_papersize_t	*size;		/* Paper size */
   char			*buffer;	/* Overflow buffer */
   int		num_opts;		/* Number of printer options */
   char		**opts;			/* Printer options */

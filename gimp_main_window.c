@@ -42,15 +42,15 @@
 #define PREVIEW_SIZE_VERT  320 /* Assuming max media size of 24" A2 */
 #define PREVIEW_SIZE_HORIZ 280 /* Assuming max media size of 24" A2 */
 
-extern vars_t           vars;
+extern stp_vars_t           vars;
 extern gint             plist_count;	   /* Number of system printers */
 extern gint             plist_current;     /* Current system printer */
-extern plist_t         *plist;		  /* System printers */
+extern stp_plist_t         *plist;		  /* System printers */
 extern gint32           image_ID;
 extern const gchar     *image_filename;
 extern gint             image_width;
 extern gint             image_height;
-extern const printer_t *current_printer;
+extern const stp_printer_t *current_printer;
 extern gint             runme;
 extern gint             saveme;
 
@@ -210,7 +210,7 @@ gimp_create_main_window (void)
   GtkWidget *media_size_hbox;
   GtkWidget *ppvbox;
   GtkWidget *table;
-  GtkWidget *printer_table;
+  GtkWidget *stp_printer_table;
 
   GtkWidget *label;
   GtkWidget *button;
@@ -231,7 +231,7 @@ gimp_create_main_window (void)
   gint       i;
   gchar      s[100];
 
-  const printer_t *the_printer = get_printer_by_index (0);
+  const stp_printer_t *the_printer = get_printer_by_index (0);
   gchar *plug_in_name;
 
   /*
@@ -486,7 +486,7 @@ gimp_create_main_window (void)
   gtk_container_add (GTK_CONTAINER (frame), vbox);
   gtk_widget_show (vbox);
 
-  table = printer_table = gtk_table_new (9, 2, FALSE);
+  table = stp_printer_table = gtk_table_new (9, 2, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 4);
   gtk_container_set_border_width (GTK_CONTAINER (table), 4);
@@ -598,7 +598,7 @@ gimp_create_main_window (void)
 
   if (vars.scaling < 0.0)
     {
-      const vars_t *lower = print_minimum_settings();
+      const stp_vars_t *lower = print_minimum_settings();
       gdouble max_ppi_scaling;
       gdouble min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
       min_ppi_scaling1 = 72.0 * (gdouble) image_width /
@@ -618,7 +618,7 @@ gimp_create_main_window (void)
     }
   else
     {
-      const vars_t *lower = print_minimum_settings();
+      const stp_vars_t *lower = print_minimum_settings();
       scaling_adjustment =
         gimp_scale_entry_new (GTK_TABLE (table), 0, 0,
                               _("Scaling:"), 200, 75,
@@ -833,7 +833,7 @@ gimp_create_main_window (void)
   }
 
   box = gtk_hbox_new (FALSE, 6);
-  gimp_table_attach_aligned (GTK_TABLE (printer_table), 0, 0,
+  gimp_table_attach_aligned (GTK_TABLE (stp_printer_table), 0, 0,
                              _("Printer:"), 1.0, 0.5,
                              box, 1, TRUE);
 
@@ -1024,7 +1024,7 @@ gimp_scaling_update (GtkAdjustment *adjustment)
 static void
 gimp_scaling_callback (GtkWidget *widget)
 {
-  const vars_t *lower = print_minimum_settings ();
+  const stp_vars_t *lower = print_minimum_settings ();
   gdouble max_ppi_scaling;
   gdouble min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
   gdouble current_scale;
@@ -1163,7 +1163,7 @@ gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 static void
 gimp_do_misc_updates (void)
 {
-  const vars_t *lower = print_minimum_settings ();
+  const stp_vars_t *lower = print_minimum_settings ();
 
   vars.scaling     = plist[plist_current].v.scaling;
   vars.orientation = plist[plist_current].v.orientation;
@@ -1347,7 +1347,7 @@ gimp_plist_callback (GtkWidget *widget,
 		     gpointer   data)
 {
   gint     i;
-  plist_t *p;
+  stp_plist_t *p;
   int		num_media_sizes;
   char		**media_sizes;
   int		num_media_types;	/* Number of media types */
@@ -1559,7 +1559,7 @@ gimp_media_size_callback (GtkWidget *widget,
     }
   else
     {
-      const papersize_t *pap;
+      const stp_papersize_t *pap;
       const gchar *new_media_size = Combo_get_text (media_size_combo);
       pap = get_papersize_by_name(new_media_size);
       if (pap)
@@ -1973,7 +1973,7 @@ void
 gimp_update_adjusted_thumbnail (void)
 {
   gint      x, y;
-  convert_t colourfunc;
+  stp_convert_t colourfunc;
   gushort   out[3 * THUMBNAIL_MAXW];
   guchar   *adjusted_data = adjusted_thumbnail_data;
   gfloat    old_density = vars.density;

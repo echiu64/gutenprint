@@ -30,10 +30,10 @@
 
 #include "print-intl.h"
 
-extern vars_t vars;
+extern stp_vars_t vars;
 extern int plist_count;	     /* Number of system printers */
 extern int plist_current;    /* Current system printer */
-extern plist_t  *plist;       /* System printers */
+extern stp_plist_t  *plist;       /* System printers */
 
 GtkWidget* gtk_color_adjust_dialog;
 
@@ -105,9 +105,9 @@ void gtk_create_color_adjust_window(void)
     GtkWidget*  box;            /* Box container */
     GtkWidget*  scale;  /* Scale widget */
     GtkWidget*  entry;  /* Text entry widget */
-    const vars_t *lower = print_minimum_settings();
-    const vars_t *upper = print_maximum_settings();
-    const vars_t *defvars = print_default_settings();
+    const stp_vars_t *lower = print_minimum_settings();
+    const stp_vars_t *upper = print_maximum_settings();
+    const stp_vars_t *defvars = print_default_settings();
 
     GtkObject*  scale_data;  /* Scale data (limits) */
     char s[100]; /* Text string */

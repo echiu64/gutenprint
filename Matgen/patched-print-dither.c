@@ -276,11 +276,11 @@ calc_ordered_point(unsigned x, unsigned y, int steps, int multiplier,
 
 
 void *
-init_dither(int in_width, int out_width, vars_t *v)
+init_dither(int in_width, int out_width, stp_vars_t *v)
 {
   int x, y;
   dither_t *d = malloc(sizeof(dither_t));
-  simple_dither_range_t r;
+  stp_simple_dither_range_t r;
   memset(d, 0, sizeof(dither_t));
   r.value = 1.0;
   r.bit_pattern = 1;
@@ -433,7 +433,7 @@ dither_set_ink_darkness(void *vd, double c, double m, double y)
 void
 dither_set_light_inks(void *vd, double c, double m, double y, double density)
 {
-  simple_dither_range_t range[2];
+  stp_simple_dither_range_t range[2];
   range[0].bit_pattern = 1;
   range[0].is_dark = 0;
   range[1].value = 1;
@@ -462,7 +462,7 @@ dither_set_light_inks(void *vd, double c, double m, double y, double density)
 
 static void
 dither_set_ranges(dither_color_t *s, int nlevels,
-		  const simple_dither_range_t *ranges, double density)
+		  const stp_simple_dither_range_t *ranges, double density)
 {
   int i;
   unsigned lbit;
@@ -567,7 +567,7 @@ dither_set_ranges(dither_color_t *s, int nlevels,
 }
 
 void
-dither_set_c_ranges(void *vd, int nlevels, const simple_dither_range_t *ranges,
+dither_set_c_ranges(void *vd, int nlevels, const stp_simple_dither_range_t *ranges,
 		    double density)
 {
   dither_t *d = (dither_t *) vd;
@@ -578,7 +578,7 @@ void
 dither_set_c_ranges_simple(void *vd, int nlevels, const double *levels,
 			   double density)
 {
-  simple_dither_range_t *r = malloc(nlevels * sizeof(simple_dither_range_t));
+  stp_simple_dither_range_t *r = malloc(nlevels * sizeof(stp_simple_dither_range_t));
   int i;
   for (i = 0; i < nlevels; i++)
     {
@@ -592,7 +592,7 @@ dither_set_c_ranges_simple(void *vd, int nlevels, const double *levels,
 }
 
 void
-dither_set_m_ranges(void *vd, int nlevels, const simple_dither_range_t *ranges,
+dither_set_m_ranges(void *vd, int nlevels, const stp_simple_dither_range_t *ranges,
 		    double density)
 {
   dither_t *d = (dither_t *) vd;
@@ -603,7 +603,7 @@ void
 dither_set_m_ranges_simple(void *vd, int nlevels, const double *levels,
 			   double density)
 {
-  simple_dither_range_t *r = malloc(nlevels * sizeof(simple_dither_range_t));
+  stp_simple_dither_range_t *r = malloc(nlevels * sizeof(stp_simple_dither_range_t));
   int i;
   for (i = 0; i < nlevels; i++)
     {
@@ -617,7 +617,7 @@ dither_set_m_ranges_simple(void *vd, int nlevels, const double *levels,
 }
   
 void
-dither_set_y_ranges(void *vd, int nlevels, const simple_dither_range_t *ranges,
+dither_set_y_ranges(void *vd, int nlevels, const stp_simple_dither_range_t *ranges,
 		    double density)
 {
   dither_t *d = (dither_t *) vd;
@@ -628,7 +628,7 @@ void
 dither_set_y_ranges_simple(void *vd, int nlevels, const double *levels,
 			   double density)
 {
-  simple_dither_range_t *r = malloc(nlevels * sizeof(simple_dither_range_t));
+  stp_simple_dither_range_t *r = malloc(nlevels * sizeof(stp_simple_dither_range_t));
   int i;
   for (i = 0; i < nlevels; i++)
     {
@@ -642,7 +642,7 @@ dither_set_y_ranges_simple(void *vd, int nlevels, const double *levels,
 }
   
 void
-dither_set_k_ranges(void *vd, int nlevels, const simple_dither_range_t *ranges,
+dither_set_k_ranges(void *vd, int nlevels, const stp_simple_dither_range_t *ranges,
 		    double density)
 {
   dither_t *d = (dither_t *) vd;
@@ -653,7 +653,7 @@ void
 dither_set_k_ranges_simple(void *vd, int nlevels, const double *levels,
 			   double density)
 {
-  simple_dither_range_t *r = malloc(nlevels * sizeof(simple_dither_range_t));
+  stp_simple_dither_range_t *r = malloc(nlevels * sizeof(stp_simple_dither_range_t));
   int i;
   for (i = 0; i < nlevels; i++)
     {

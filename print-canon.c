@@ -122,7 +122,7 @@ typedef struct canon_densities
 
 typedef struct canon_variable_ink
 {
-  simple_dither_range_t *range;
+  stp_simple_dither_range_t *range;
   int count;
   double density;
 } canon_variable_ink_t;
@@ -176,7 +176,7 @@ typedef struct canon_variable_inklist
 
 
 
-static simple_dither_range_t photo_cyan_dither_ranges[] =
+static stp_simple_dither_range_t photo_cyan_dither_ranges[] =
 {
   { 0.25, 0x1, 0, 1 },
   { 1.0,  0x1, 1, 1 }
@@ -185,11 +185,11 @@ static simple_dither_range_t photo_cyan_dither_ranges[] =
 static canon_variable_ink_t photo_cyan_ink =
 {
   photo_cyan_dither_ranges,
-  sizeof(photo_cyan_dither_ranges) / sizeof(simple_dither_range_t),
+  sizeof(photo_cyan_dither_ranges) / sizeof(stp_simple_dither_range_t),
   .75
 };
 
-static simple_dither_range_t photo_magenta_dither_ranges[] =
+static stp_simple_dither_range_t photo_magenta_dither_ranges[] =
 {
   { 0.26, 0x1, 0, 1 },
   { 1.0,  0x1, 1, 1 }
@@ -198,12 +198,12 @@ static simple_dither_range_t photo_magenta_dither_ranges[] =
 static canon_variable_ink_t photo_magenta_ink =
 {
   photo_magenta_dither_ranges,
-  sizeof(photo_magenta_dither_ranges) / sizeof(simple_dither_range_t),
+  sizeof(photo_magenta_dither_ranges) / sizeof(stp_simple_dither_range_t),
   .75
 };
 
 
-static simple_dither_range_t photo_6pl_dither_ranges[] =
+static stp_simple_dither_range_t photo_6pl_dither_ranges[] =
 {
   { 0.15,  0x1, 0, 1 },
   { 0.227, 0x2, 0, 2 },
@@ -216,12 +216,12 @@ static simple_dither_range_t photo_6pl_dither_ranges[] =
 static canon_variable_ink_t photo_6pl_ink =
 {
   photo_6pl_dither_ranges,
-  sizeof(photo_6pl_dither_ranges) / sizeof(simple_dither_range_t),
+  sizeof(photo_6pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
 
-static simple_dither_range_t photo_6pl_1440_dither_ranges[] =
+static stp_simple_dither_range_t photo_6pl_1440_dither_ranges[] =
 {
   { 0.30,  0x1, 0, 1 },
   { 0.90,  0x1, 1, 1 },
@@ -231,12 +231,12 @@ static simple_dither_range_t photo_6pl_1440_dither_ranges[] =
 static canon_variable_ink_t photo_6pl_1440_ink =
 {
   photo_6pl_1440_dither_ranges,
-  sizeof(photo_6pl_1440_dither_ranges) / sizeof(simple_dither_range_t),
+  sizeof(photo_6pl_1440_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
 
-static simple_dither_range_t photo_pigment_dither_ranges[] =
+static stp_simple_dither_range_t photo_pigment_dither_ranges[] =
 { /* MRS: Not calibrated! */
   { 0.15,  0x1, 0, 1 },
   { 0.227, 0x2, 0, 2 },
@@ -247,12 +247,12 @@ static simple_dither_range_t photo_pigment_dither_ranges[] =
 static canon_variable_ink_t photo_pigment_ink =
 {
   photo_pigment_dither_ranges,
-  sizeof(photo_pigment_dither_ranges) / sizeof(simple_dither_range_t),
+  sizeof(photo_pigment_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
 
-static simple_dither_range_t photo_4pl_dither_ranges[] =
+static stp_simple_dither_range_t photo_4pl_dither_ranges[] =
 {
   { 0.15,  0x1, 0, 1 },
   { 0.227, 0x2, 0, 2 },
@@ -265,11 +265,11 @@ static simple_dither_range_t photo_4pl_dither_ranges[] =
 static canon_variable_ink_t photo_4pl_ink =
 {
   photo_4pl_dither_ranges,
-  sizeof(photo_4pl_dither_ranges) / sizeof(simple_dither_range_t),
+  sizeof(photo_4pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
-static simple_dither_range_t photo_4pl_1440_dither_ranges[] =
+static stp_simple_dither_range_t photo_4pl_1440_dither_ranges[] =
 {
   { 0.30,  0x1, 0, 1 },
   { 0.90,  0x1, 1, 1 },
@@ -279,12 +279,12 @@ static simple_dither_range_t photo_4pl_1440_dither_ranges[] =
 static canon_variable_ink_t photo_4pl_1440_ink =
 {
   photo_4pl_1440_dither_ranges,
-  sizeof(photo_4pl_1440_dither_ranges) / sizeof(simple_dither_range_t),
+  sizeof(photo_4pl_1440_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
 
-static simple_dither_range_t standard_6pl_dither_ranges[] =
+static stp_simple_dither_range_t standard_6pl_dither_ranges[] =
 {
   { 0.45,  0x1, 1, 1 },
   { 0.68,  0x2, 1, 2 },
@@ -294,12 +294,12 @@ static simple_dither_range_t standard_6pl_dither_ranges[] =
 static canon_variable_ink_t standard_6pl_ink =
 {
   standard_6pl_dither_ranges,
-  sizeof(standard_6pl_dither_ranges) / sizeof(simple_dither_range_t),
+  sizeof(standard_6pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
 
-static simple_dither_range_t standard_6pl_1440_dither_ranges[] =
+static stp_simple_dither_range_t standard_6pl_1440_dither_ranges[] =
 {
   { 0.90,  0x1, 1, 1 },
   { 1.36,  0x2, 1, 2 }
@@ -308,12 +308,12 @@ static simple_dither_range_t standard_6pl_1440_dither_ranges[] =
 static canon_variable_ink_t standard_6pl_1440_ink =
 {
   standard_6pl_1440_dither_ranges,
-  sizeof(standard_6pl_1440_dither_ranges) / sizeof(simple_dither_range_t),
+  sizeof(standard_6pl_1440_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
 
-static simple_dither_range_t standard_pigment_dither_ranges[] =
+static stp_simple_dither_range_t standard_pigment_dither_ranges[] =
 { /* MRS: Not calibrated! */
   { 0.55,  0x1, 1, 1 },
   { 1.0,   0x2, 1, 2 }
@@ -322,12 +322,12 @@ static simple_dither_range_t standard_pigment_dither_ranges[] =
 static canon_variable_ink_t standard_pigment_ink =
 {
   standard_pigment_dither_ranges,
-  sizeof(standard_pigment_dither_ranges) / sizeof(simple_dither_range_t),
+  sizeof(standard_pigment_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
 
-static simple_dither_range_t standard_4pl_dither_ranges[] =
+static stp_simple_dither_range_t standard_4pl_dither_ranges[] =
 {
   { 0.45,  0x1, 1, 1 },
   { 0.68,  0x2, 1, 2 },
@@ -337,11 +337,11 @@ static simple_dither_range_t standard_4pl_dither_ranges[] =
 static canon_variable_ink_t standard_4pl_ink =
 {
   standard_4pl_dither_ranges,
-  sizeof(standard_4pl_dither_ranges) / sizeof(simple_dither_range_t),
+  sizeof(standard_4pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
-static simple_dither_range_t standard_4pl_1440_dither_ranges[] =
+static stp_simple_dither_range_t standard_4pl_1440_dither_ranges[] =
 {
   { 0.90,  0x1, 1, 1 },
   { 1.36,  0x2, 1, 2 },
@@ -350,12 +350,12 @@ static simple_dither_range_t standard_4pl_1440_dither_ranges[] =
 static canon_variable_ink_t standard_4pl_1440_ink =
 {
   standard_4pl_1440_dither_ranges,
-  sizeof(standard_4pl_1440_dither_ranges) / sizeof(simple_dither_range_t),
+  sizeof(standard_4pl_1440_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
 
-static simple_dither_range_t standard_3pl_dither_ranges[] =
+static stp_simple_dither_range_t standard_3pl_dither_ranges[] =
 {
   { 0.225, 0x1, 1, 1 },
   { 0.68,  0x2, 1, 2 },
@@ -365,12 +365,12 @@ static simple_dither_range_t standard_3pl_dither_ranges[] =
 static canon_variable_ink_t standard_3pl_ink =
 {
   standard_3pl_dither_ranges,
-  sizeof(standard_3pl_dither_ranges) / sizeof(simple_dither_range_t),
+  sizeof(standard_3pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
 
-static simple_dither_range_t standard_3pl_1440_dither_ranges[] =
+static stp_simple_dither_range_t standard_3pl_1440_dither_ranges[] =
 {
   { 0.45, 0x1, 1, 1 },
   { 1.36,  0x2, 1, 2 },
@@ -379,12 +379,12 @@ static simple_dither_range_t standard_3pl_1440_dither_ranges[] =
 static canon_variable_ink_t standard_3pl_1440_ink =
 {
   standard_3pl_1440_dither_ranges,
-  sizeof(standard_3pl_1440_dither_ranges) / sizeof(simple_dither_range_t),
+  sizeof(standard_3pl_1440_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
 
-static simple_dither_range_t photo_multishot_dither_ranges[] =
+static stp_simple_dither_range_t photo_multishot_dither_ranges[] =
 {
   { 0.1097, 0x1, 0, 1 },
   { 0.227,  0x2, 0, 2 },
@@ -398,12 +398,12 @@ static simple_dither_range_t photo_multishot_dither_ranges[] =
 static canon_variable_ink_t photo_multishot_ink =
 {
   photo_multishot_dither_ranges,
-  sizeof(photo_multishot_dither_ranges) / sizeof(simple_dither_range_t),
+  sizeof(photo_multishot_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
 
-static simple_dither_range_t standard_multishot_dither_ranges[] =
+static stp_simple_dither_range_t standard_multishot_dither_ranges[] =
 {
   { 0.28,  0x1, 1, 1 },
   { 0.58,  0x2, 1, 2 },
@@ -414,7 +414,7 @@ static simple_dither_range_t standard_multishot_dither_ranges[] =
 static canon_variable_ink_t standard_multishot_ink =
 {
   standard_multishot_dither_ranges,
-  sizeof(standard_multishot_dither_ranges) / sizeof(simple_dither_range_t),
+  sizeof(standard_multishot_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
@@ -1217,9 +1217,9 @@ canon_printhead_colors(const char *name, canon_cap_t caps)
 }
 
 static unsigned char
-canon_size_type(const vars_t *v, canon_cap_t caps)
+canon_size_type(const stp_vars_t *v, canon_cap_t caps)
 {
-  const papersize_t *pp = get_papersize_by_size(v->page_height, v->page_width);
+  const stp_papersize_t *pp = get_papersize_by_size(v->page_height, v->page_width);
   if (pp)
     {
       const char *name = pp->name;
@@ -1351,7 +1351,7 @@ canon_inks(canon_cap_t caps, int res_code, int colors, int bits)
 
 
 const char *
-canon_default_resolution(const printer_t *printer)
+canon_default_resolution(const stp_printer_t *printer)
 {
   canon_cap_t caps= canon_get_model_capabilities(printer->model);
   if (!(caps.max_xdpi%150))
@@ -1361,7 +1361,7 @@ canon_default_resolution(const printer_t *printer)
 }
 
 void
-canon_describe_resolution(const printer_t *printer,
+canon_describe_resolution(const stp_printer_t *printer,
 			const char *resolution, int *x, int *y)
 {
   *x = -1;
@@ -1375,7 +1375,7 @@ canon_describe_resolution(const printer_t *printer,
  */
 
 char **					/* O - Parameter values */
-canon_parameters(const printer_t *printer,	/* I - Printer model */
+canon_parameters(const stp_printer_t *printer,	/* I - Printer model */
                  char *ppd_file,	/* I - PPD file (not used) */
                  char *name,		/* I - Name of parameter */
                  int  *count)		/* O - Number of values */
@@ -1417,7 +1417,7 @@ canon_parameters(const printer_t *printer,	/* I - Printer model */
 
   if (strcmp(name, "PageSize") == 0) {
     int height_limit, width_limit;
-    const papersize_t *papersizes = get_papersizes();
+    const stp_papersize_t *papersizes = get_papersizes();
     valptrs = malloc(sizeof(char *) * known_papersizes());
     *count = 0;
 
@@ -1510,8 +1510,8 @@ canon_parameters(const printer_t *printer,	/* I - Printer model */
  */
 
 void
-canon_imageable_area(const printer_t *printer,	/* I - Printer model */
-		     const vars_t *v,   /* I */
+canon_imageable_area(const stp_printer_t *printer,	/* I - Printer model */
+		     const stp_vars_t *v,   /* I */
                      int  *left,	/* O - Left position in points */
                      int  *right,	/* O - Right position in points */
                      int  *bottom,	/* O - Bottom position in points */
@@ -1530,8 +1530,8 @@ canon_imageable_area(const printer_t *printer,	/* I - Printer model */
 }
 
 void
-canon_limit(const printer_t *printer,	/* I - Printer model */
-	    const vars_t *v,  		/* I */
+canon_limit(const stp_printer_t *printer,	/* I - Printer model */
+	    const stp_vars_t *v,  		/* I */
 	    int  *width,		/* O - Left position in points */
 	    int  *length)		/* O - Top position in points */
 {
@@ -1595,7 +1595,7 @@ canon_cmd(FILE *prn, /* I - the printer         */
 static void
 canon_init_printer(FILE *prn, canon_cap_t caps,
 		   int output_type, const paper_t *pt,
-		   const vars_t *v, int print_head,
+		   const stp_vars_t *v, int print_head,
 		   const char *source_str,
 		   int xdpi, int ydpi,
 		   int page_width, int page_height,
@@ -1761,10 +1761,10 @@ canon_advance_buffer(unsigned char *buf, int len, int num)
  * 'canon_print()' - Print an image to a CANON printer.
  */
 void
-canon_print(const printer_t *printer,		/* I - Model */
+canon_print(const stp_printer_t *printer,		/* I - Model */
             FILE      *prn,		/* I - File to print to */
 	    Image     image,		/* I - Image to print */
-	    const vars_t    *v)
+	    const stp_vars_t    *v)
 {
   unsigned char *cmap = v->cmap;
   int		model = printer->model;
@@ -1813,14 +1813,14 @@ canon_print(const printer_t *printer,		/* I - Model */
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
-  convert_t	colorfunc = 0;	/* Color conversion function... */
+  stp_convert_t	colorfunc = 0;	/* Color conversion function... */
   int           bits= 1;
   int           image_height,
                 image_width,
                 image_bpp;
   int		ink_spread;
   void *	dither;
-  vars_t	nv;
+  stp_vars_t	nv;
   int           res_code;
   int           use_6color= 0;
   double k_upper, k_lower;
@@ -1832,7 +1832,7 @@ canon_print(const printer_t *printer,		/* I - Model */
   canon_variable_inkset_t *inks;
 
 
-  memcpy(&nv, v, sizeof(vars_t));
+  memcpy(&nv, v, sizeof(stp_vars_t));
   /*
   PUT("top        ",top,72);
   PUT("left       ",left,72);

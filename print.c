@@ -50,7 +50,7 @@
 
 static void	printrc_load(void);
 void	        printrc_save(void);
-static int	compare_printers(plist_t *p1, plist_t *p2);
+static int	compare_printers(stp_plist_t *p1, stp_plist_t *p2);
 static void	get_system_printers(void);
 
 static void	query (void);
@@ -80,7 +80,7 @@ GPlugInInfo	PLUG_IN_INFO =		/* Plug-in information */
   run,   /* run_proc   */
 };
 
-vars_t vars =
+stp_vars_t vars =
 {
 	"",			/* Name of file or command to print to */
 	"ps2",			/* Name of printer "driver" */
@@ -115,11 +115,11 @@ vars_t vars =
 
 int		plist_current = 0,	/* Current system printer */
 		plist_count = 0;	/* Number of system printers */
-plist_t		*plist;			/* System printers */
+stp_plist_t		*plist;			/* System printers */
 
 int		saveme = FALSE;		/* True if print should proceed */
 int		runme = FALSE;		/* True if print should proceed */
-const printer_t *current_printer = 0;	/* Current printer index */
+const stp_printer_t *current_printer = 0;	/* Current printer index */
 gint32          image_ID;	        /* image ID */
 
 const char *image_filename;
@@ -135,14 +135,14 @@ check_plist(int count)
   else if (current_plist_size == 0)
     {
       current_plist_size = count;
-      plist = malloc(current_plist_size * sizeof(plist_t));
+      plist = malloc(current_plist_size * sizeof(stp_plist_t));
     }
   else
     {
       current_plist_size *= 2;
       if (current_plist_size < count)
 	current_plist_size = count;
-      plist = realloc(plist, current_plist_size * sizeof(plist_t));
+      plist = realloc(plist, current_plist_size * sizeof(stp_plist_t));
     }
 }
 
@@ -753,12 +753,12 @@ do_print_dialog (gchar *proc_name)
 }
 
 static void
-initialize_printer(plist_t *printer)
+initialize_printer(stp_plist_t *printer)
 {
-  const vars_t *def = print_default_settings();
+  const stp_vars_t *def = print_default_settings();
   printer->name[0] = '\0';
   printer->active=0;
-  memcpy(&(printer->v), def, sizeof(vars_t));
+  memcpy(&(printer->v), def, sizeof(stp_vars_t));
 }
 
 #define GET_MANDATORY_STRING_PARAM(param)		\
@@ -815,9 +815,9 @@ do {									\
     }									\
   else									\
     {									\
-      const vars_t *maxvars = print_maximum_settings();			\
-      const vars_t *minvars = print_minimum_settings();			\
-      const vars_t *defvars = print_default_settings();			\
+      const stp_vars_t *maxvars = print_maximum_settings();			\
+      const stp_vars_t *minvars = print_minimum_settings();			\
+      const stp_vars_t *defvars = print_default_settings();			\
       key.v.param = atof(lineptr);					\
       if (key.v.param > 0 &&						\
 	  (key.v.param > 2 * maxvars->param ||				\
@@ -854,7 +854,7 @@ printrc_load(void)
   char		line[1024],	/* Line in printrc file */
 		*lineptr,	/* Pointer in line */
 		*commaptr;	/* Pointer to next comma */
-  plist_t	*p = 0,		/* Current printer */
+  stp_plist_t	*p = 0,		/* Current printer */
 		key;		/* Search key */
 #if (GIMP_MINOR_VERSION == 0)
   char		*home;		/* Home dir */
@@ -902,7 +902,7 @@ printrc_load(void)
     * File exists - read the contents and update the printer list...
     */
 
-    (void) memset(&key, 0, sizeof(plist_t));
+    (void) memset(&key, 0, sizeof(stp_plist_t));
     (void) memset(line, 0, 1024);
     while (fgets(line, sizeof(line), fp) != NULL)
     {
@@ -977,19 +977,19 @@ printrc_load(void)
 	    printf("Updated File printer directly\n");
 #endif
 	    p = &plist[0];
-	    memcpy(p, &key, sizeof(plist_t));
+	    memcpy(p, &key, sizeof(stp_plist_t));
 	    p->active = 1;
 	  }
         else
 	  {
-            if ((p = psearch(&key, plist + 1, plist_count - 1, sizeof(plist_t),
+            if ((p = psearch(&key, plist + 1, plist_count - 1, sizeof(stp_plist_t),
                          (int (*)(const void *, const void *))compare_printers))
 	        != NULL)
 	      {
 #ifdef DEBUG
 	        printf("Updating printer %s.\n", key.name);
 #endif
-	        memcpy(p, &key, sizeof(plist_t));
+	        memcpy(p, &key, sizeof(stp_plist_t));
 	        p->active = 1;
 	      }
             else
@@ -1000,7 +1000,7 @@ printrc_load(void)
 #endif
 	        check_plist(plist_count + 1);
 	        p = plist + plist_count;
-	        memcpy(p, &key, sizeof(plist_t));
+	        memcpy(p, &key, sizeof(stp_plist_t));
 	        p->active = 0;
 	        plist_count++;
 	      }
@@ -1058,7 +1058,7 @@ printrc_load(void)
 	    if (get_printer_by_driver(key.v.driver))
 	      {
 		p = &plist[0];
-		memcpy(p, &key, sizeof(plist_t));
+		memcpy(p, &key, sizeof(stp_plist_t));
 		p->active = 1;
 	      }
 	  }
@@ -1067,19 +1067,19 @@ printrc_load(void)
 	    if (get_printer_by_driver(key.v.driver))
 	      {
 		p = psearch(&key, plist + 1, plist_count - 1,
-			    sizeof(plist_t),
+			    sizeof(stp_plist_t),
 			    (int (*)(const void *, const void *)) compare_printers);
 		if (p == NULL)
 		  {
 		    check_plist(plist_count + 1);
 		    p = plist + plist_count;
 		    plist_count++;
-		    memcpy(p, &key, sizeof(plist_t));
+		    memcpy(p, &key, sizeof(stp_plist_t));
 		    p->active = 0;
 		  }
 		else
 		  {
-		    memcpy(p, &key, sizeof(plist_t));
+		    memcpy(p, &key, sizeof(stp_plist_t));
 		    p->active = 1;
 		  }
 	      }
@@ -1162,7 +1162,7 @@ printrc_load(void)
 	    if (get_printer_by_driver(key.v.driver))
 	      {
 		p = &plist[0];
-		memcpy(p, &key, sizeof(plist_t));
+		memcpy(p, &key, sizeof(stp_plist_t));
 		p->active = 1;
 	      }
 	  }
@@ -1171,19 +1171,19 @@ printrc_load(void)
 	    if (get_printer_by_driver(key.v.driver))
 	      {
 		p = psearch(&key, plist + 1, plist_count - 1,
-			    sizeof(plist_t),
+			    sizeof(stp_plist_t),
 			    (int (*)(const void *, const void *)) compare_printers);
 		if (p == NULL)
 		  {
 		    check_plist(plist_count + 1);
 		    p = plist + plist_count;
 		    plist_count++;
-		    memcpy(p, &key, sizeof(plist_t));
+		    memcpy(p, &key, sizeof(stp_plist_t));
 		    p->active = 0;
 		  }
 		else
 		  {
-		    memcpy(p, &key, sizeof(plist_t));
+		    memcpy(p, &key, sizeof(stp_plist_t));
 		    p->active = 1;
 		  }
 	      }
@@ -1231,7 +1231,7 @@ printrc_save(void)
   FILE		*fp;		/* Printrc file */
   char	       *filename;	/* Printrc filename */
   int		i;		/* Looping var */
-  plist_t	*p;		/* Current printer */
+  stp_plist_t	*p;		/* Current printer */
 #if (GIMP_MINOR_VERSION == 0)
   char		*home;		/* Home dir */
 #endif
@@ -1347,8 +1347,8 @@ printrc_save(void)
  */
 
 static int
-compare_printers(plist_t *p1,	/* I - First printer to compare */
-                 plist_t *p2)	/* I - Second printer to compare */
+compare_printers(stp_plist_t *p1,	/* I - First printer to compare */
+                 stp_plist_t *p2)	/* I - Second printer to compare */
 {
   return (strcmp(p1->name, p2->name));
 }
@@ -1501,7 +1501,7 @@ get_system_printers(void)
 #endif
 
   if (plist_count > 2)
-    qsort(plist + 1, plist_count - 1, sizeof(plist_t),
+    qsort(plist + 1, plist_count - 1, sizeof(stp_plist_t),
           (int (*)(const void *, const void *))compare_printers);
 
   if (defname[0] != '\0' && vars.output_to[0] == '\0')

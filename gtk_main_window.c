@@ -39,15 +39,15 @@
 #define PREVIEW_SIZE_VERT  240 /* Assuming max media size of 24" A2 */
 #define PREVIEW_SIZE_HORIZ 240 /* Assuming max media size of 24" A2 */
 
-extern vars_t vars;
+extern stp_vars_t vars;
 extern int plist_count;	     /* Number of system printers */
 extern int plist_current;    /* Current system printer */
-extern plist_t  *plist;       /* System printers */
+extern stp_plist_t  *plist;       /* System printers */
 extern gint32 image_ID;
 extern const char *image_filename;
 extern int image_width;
 extern int image_height;
-extern const printer_t *current_printer;
+extern const stp_printer_t *current_printer;
 extern int runme;
 extern int saveme;
 extern GtkWidget* gtk_color_adjust_dialog;
@@ -209,7 +209,7 @@ void gtk_create_main_window(void)
 #endif
     GSList*    image_type_group;  /* Grouping for image type */
 
-    const printer_t *the_printer = get_printer_by_index(0);
+    const stp_printer_t *the_printer = get_printer_by_index(0);
 
     static char   *orients[] =    /* Orientation strings */
     {
@@ -1587,7 +1587,7 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
 			       gint      data)    /* I - Data */
 {
   int		i;			/* Looping var */
-  plist_t	*p;
+  stp_plist_t	*p;
   int		num_media_sizes;
   char		**media_sizes;
 

@@ -80,7 +80,7 @@ typedef struct
 {
   int topoffset;   /* top offset in pixels */
   int bottom;
-  vars_t v;
+  stp_vars_t v;
 } privdata_t;
 
 /* global variables, RO for subfunctions */
@@ -189,10 +189,10 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
   stp_image_t theImage;
   private int printvars_merged = 0;
   int code;			/* return code */
-  const printer_t *printer = NULL;
+  const stp_printer_t *printer = NULL;
   uint stp_raster;
   byte *stp_row;
-  const papersize_t *p;
+  const stp_papersize_t *p;
 
   stp_print_dbg("stp_print_page", pdev, &stp_data);
   code = 0;
@@ -222,7 +222,7 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
 
   stp_data.v.scaling = -pdev->x_pixels_per_inch; /* resolution of image */
 
-  /* compute lookup table: lut_t*,float dest_gamma,float app_gamma,vars_t* */
+  /* compute lookup table: lut_t*,float dest_gamma,float app_gamma,stp_vars_t* */
   stp_data.v.app_gamma = 1.7;
 
   stp_data.topoffset = 0;
@@ -243,7 +243,7 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
     (*printer->print)(printer,		/* I - Model */
 		      file,		/* I - File to print to */
 		      &theImage,	/* I - Image to print (dummy) */
-		      &stp_data.v);	/* vars_t * */
+		      &stp_data.v);	/* stp_vars_t * */
   else
     code = 1;
 
@@ -350,8 +350,8 @@ gsncpy(char *d, const gs_param_string *s, int limit)
 private int
 stp_put_params(gx_device *pdev, gs_param_list *plist)
 {
-  const vars_t *lower = print_minimum_settings();
-  const vars_t *upper = print_maximum_settings();
+  const stp_vars_t *lower = print_minimum_settings();
+  const stp_vars_t *upper = print_maximum_settings();
   gs_param_string pmediatype;
   gs_param_string pInputSlot;
   gs_param_string pinktype;
@@ -491,7 +491,7 @@ stp_open(gx_device *pdev)
   /* Change the margins if necessary. */
   float st[4];
   int left,right,bottom,top,width,height;
-  const printer_t *printer = get_printer_by_driver(stp_data.v.driver);
+  const stp_printer_t *printer = get_printer_by_driver(stp_data.v.driver);
   if (!printer)
     {
       if (strlen(stp_data.v.driver) == 0)

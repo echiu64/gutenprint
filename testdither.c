@@ -63,25 +63,25 @@ unsigned short	white_line[IMAGE_WIDTH * 3],
 		random_line[IMAGE_WIDTH * 3];
 
 
-simple_dither_range_t normal_1bit_ranges[] =
+stp_simple_dither_range_t normal_1bit_ranges[] =
 {
   { 1.0,  0x1, 1, 1 }
 };
 
-simple_dither_range_t normal_2bit_ranges[] =
+stp_simple_dither_range_t normal_2bit_ranges[] =
 {
   { 0.45,  0x1, 1, 1 },
   { 0.68,  0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
 
-simple_dither_range_t photo_1bit_ranges[] =
+stp_simple_dither_range_t photo_1bit_ranges[] =
 {
   { 0.33, 0x1, 0, 1 },
   { 1.0,  0x1, 1, 1 }
 };
 
-simple_dither_range_t photo_2bit_ranges[] =
+stp_simple_dither_range_t photo_2bit_ranges[] =
 {
   { 0.15,  0x1, 0, 1 },
   { 0.227, 0x2, 0, 2 },
@@ -118,14 +118,14 @@ main(int  argc,				/* I - Number of command-line arguments */
 		lmagenta[BUFFER_SIZE],	/* Light magenta bitmap data */
 		yellow[BUFFER_SIZE];	/* Yellow bitmap data */
   void		*dither;		/* Dither data */
-  convert_t	colorfunc;		/* Color conversion function... */
+  stp_convert_t	colorfunc;		/* Color conversion function... */
   unsigned short rgb[IMAGE_WIDTH * 3],	/* RGB buffer */
 		gray[IMAGE_WIDTH];	/* Grayscale buffer */
   int		write_image;		/* Write the image to disk? */
   FILE		*fp;			/* PPM/PGM output file */
   char		filename[1024];		/* Name of file */
   time_t	start, end;		/* Start and end times */
-  vars_t	v;			/* Dither variables */
+  stp_vars_t	v;			/* Dither variables */
   static char	*dither_types[] =	/* Different dithering modes */
 		{
 		  "gray",

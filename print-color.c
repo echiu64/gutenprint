@@ -272,7 +272,7 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 	     int    	width,		/* I - Width of row */
 	     int    	bpp,		/* I - Bytes-per-pixel in grayin */
 	     unsigned char *cmap,	/* I - Colormap (unused) */
-	     const vars_t	*vars,
+	     const stp_vars_t	*vars,
 	     const double *hue_map,
 	     const double *lum_map,
 	     const double *sat_map
@@ -339,7 +339,7 @@ gray_to_monochrome(unsigned char *grayin,	/* I - RGB pixels */
 		   int    	width,		/* I - Width of row */
 		   int    	bpp,		/* I - Bytes-per-pixel in grayin */
 		   unsigned char *cmap,		/* I - Colormap (unused) */
-		   const vars_t	*vars,
+		   const stp_vars_t	*vars,
 		   const double *hue_map,
 		   const double *lum_map,
 		   const double *sat_map
@@ -407,7 +407,7 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 		int    width,			/* I - Width of row */
 		int    bpp,			/* I - bpp in indexed */
 		unsigned char *cmap,		/* I - Colormap */
-		const vars_t   *vars,
+		const stp_vars_t   *vars,
 		const double *hue_map,
 		const double *lum_map,
 		const double *sat_map
@@ -483,7 +483,7 @@ indexed_to_monochrome(unsigned char *indexed,	/* I - Indexed pixels */
 		      int    width,		/* I - Width of row */
 		      int    bpp,		/* I - bpp in indexed */
 		      unsigned char *cmap,	/* I - Colormap */
-		      const vars_t   *vars,
+		      const stp_vars_t   *vars,
 		      const double *hue_map,
 		      const double *lum_map,
 		      const double *sat_map
@@ -560,7 +560,7 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	    int    width,		/* I - Width of row */
 	    int    bpp,			/* I - Bytes-per-pixel in RGB */
 	    unsigned char *cmap,	/* I - Colormap (unused) */
-	    const vars_t   *vars,
+	    const stp_vars_t   *vars,
 	    const double *hue_map,
 	    const double *lum_map,
 	    const double *sat_map
@@ -638,7 +638,7 @@ rgb_to_monochrome(unsigned char *rgb,	/* I - RGB pixels */
 		  int    width,		/* I - Width of row */
 		  int    bpp,		/* I - Bytes-per-pixel in RGB */
 		  unsigned char *cmap,	/* I - Colormap (unused) */
-		  const vars_t   *vars,
+		  const stp_vars_t   *vars,
 		  const double *hue_map,
 		  const double *lum_map,
 		  const double *sat_map
@@ -717,7 +717,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	   int    		width,		/* I - Width of row */
 	   int    		bpp,		/* I - Bytes/pix in indexed */
 	   unsigned char 	*cmap,		/* I - Colormap */
-	   const vars_t  	*vars,
+	   const stp_vars_t  	*vars,
 	   const double *hue_map,
 	   const double *lum_map,
 	   const double *sat_map
@@ -949,7 +949,7 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	       int    width,		/* I - Width of row */
 	       int    bpp,		/* I - Bytes-per-pixel in indexed */
 	       unsigned char *cmap,	/* I - Colormap */
-	       const vars_t   *vars,
+	       const stp_vars_t   *vars,
 	       const double *hue_map,
 	       const double *lum_map,
 	       const double *sat_map
@@ -969,7 +969,7 @@ gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 	    int    		width,		/* I - Width of row */
 	    int    		bpp,		/* I - Bytes/pix in indexed */
 	    unsigned char 	*cmap,		/* I - Colormap */
-	    const vars_t  	*vars,
+	    const stp_vars_t  	*vars,
 	    const double *hue_map,
 	    const double *lum_map,
 	    const double *sat_map
@@ -1063,7 +1063,7 @@ fast_indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 		    int    width,		/* I - Width of row */
 		    int    bpp,		/* I - Bytes-per-pixel in indexed */
 		    unsigned char *cmap,	/* I - Colormap */
-		    const vars_t   *vars,
+		    const stp_vars_t   *vars,
 		    const double *hue_map,
 		    const double *lum_map,
 		    const double *sat_map
@@ -1167,7 +1167,7 @@ fast_rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 		int    		width,		/* I - Width of row */
 		int    		bpp,		/* I - Bytes/pix in indexed */
 		unsigned char 	*cmap,		/* I - Colormap */
-		const vars_t  	*vars,
+		const stp_vars_t  	*vars,
 		const double *hue_map,
 		const double *lum_map,
 		const double *sat_map
@@ -1277,7 +1277,7 @@ fast_gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 		 int    	width,		/* I - Width of row */
 		 int    	bpp,		/* I - Bytes/pix in indexed */
 		 unsigned char 	*cmap,		/* I - Colormap */
-		 const vars_t  	*vars,
+		 const stp_vars_t  	*vars,
 		 const double *hue_map,
 		 const double *lum_map,
 		 const double *sat_map
@@ -1373,7 +1373,7 @@ allocate_lut(size_t steps)
 }
 
 void
-free_lut(vars_t *v)
+free_lut(stp_vars_t *v)
 {
   if (v->lut)
     {
@@ -1399,7 +1399,7 @@ free_lut(vars_t *v)
 /* #define PRINT_LUT */
 
 void
-compute_lut(size_t steps, vars_t *uv)
+compute_lut(size_t steps, stp_vars_t *uv)
 {
   double	pixel,		/* Pixel value */
 		red_pixel,	/* Pixel value */
@@ -1547,12 +1547,12 @@ compute_lut(size_t steps, vars_t *uv)
 #endif
 }
 
-convert_t
+stp_convert_t
 choose_colorfunc(int output_type,
 		 int image_bpp,
 		 const unsigned char *cmap,
 		 int *out_bpp,
-		 const vars_t *v)
+		 const stp_vars_t *v)
 {
   if (v->image_type == IMAGE_MONOCHROME)
     {

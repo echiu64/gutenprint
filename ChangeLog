@@ -1,3 +1,104 @@
+2001-01-15	<rlk@sourceforge.net>
+
+	Files:	FAQ.html (1.3) (+34 -11)
+	
+	Fix the HTML.
+	
+2001-01-15	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.301) (+4 -4)
+	
+	One more 7 color fix
+	
+	Increase the compression buffer size for 2880 DPI.
+	
+2001-01-14	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.300) (+11 -10)
+	
+	Free dark yellow if it exists.
+	
+2001-01-10	<sharkey@sourceforge.net>
+
+	Files:	Ghost/debian-patch (1.3) (+6 -5)
+	
+	Adjust patch to apply cleanly to new gs5.10-10.1 sources from Debian.
+	
+	Change my email address to sharkey@debian.org in the changelog.
+	
+2001-01-10	<sharkey@sourceforge.net>
+
+	Files:	make-deb.sh (1.4) (+1 -1)
+	
+	Treat testing/unstable the same as woody.
+	
+2001-01-07	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.83) (+2 -1)
+	
+	Turnf off FORCE_ACLOCAL hack
+	
+2001-01-07	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.82) (+1 -1)
+	
+	Put change log in correct location
+	
+2001-01-06	<rlk@sourceforge.net>
+
+	Files:	README (1.41) (+1 -1)
+	
+	Note new autoheader requirement.
+	
+2001-01-06	<rleigh@sourceforge.net>
+
+	Files:	config.h.in (1.2) (+0 -0)
+	
+	Removed config.h.in now acconfig.h is available.
+	
+2001-01-06	<rleigh@sourceforge.net>
+
+	Files:	acconfig.h (1.1) ( )
+	
+	Add acconfig.h to generate config.h.in with autoheader
+	
+2001-01-05	<rlk@sourceforge.net>
+
+	Files:	config.h.in (1.1) ( )
+		escputil.c (1.25) (+3 -3)
+		configure.in (1.45) (+3 -1)
+	
+	Emergency fix to configure to allow config.h to be created.
+	
+2001-01-05	<rlk@sourceforge.net>
+
+	Files:	escputil.c (1.24) (+3 -1)
+		Ghost/README (1.62) (+1 -0)
+		printers.xml (1.45) (+10 -1)
+		print-escp2.c (1.299) (+15 -2)
+	
+	Add Stylus Photo 890
+	
+2001-01-04	<rlk@sourceforge.net>
+
+	Files:	Ghost/README (1.61) (+2 -0)
+	
+	Lexmark 3200 and Epson Stylus Photo 1290
+	
+2001-01-04	<rlk@sourceforge.net>
+
+	Files:	printers.xml (1.44) (+10 -10)
+	
+	Put Lexmark printers in numerical order
+	
+2001-01-04	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.69) (+132 -0)
+		printers.xml (1.43) (+9 -0)
+		print-escp2.c (1.298) (+14 -1)
+	
+	Support the Stylus Photo 1290
+	
 2001-01-03	<rwisi@sourceforge.net>
 
 	Files:	print-lexmark.c (1.17) (+1207 -463)

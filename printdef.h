@@ -30,7 +30,7 @@ typedef union yylv {
 } YYSTYPE;
 
 extern YYSTYPE yylval;
-extern printer_t thePrinter;
+extern stp_printer_t thePrinter;
 
 #include "printdefy.h"
 

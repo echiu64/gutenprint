@@ -59,7 +59,7 @@
  * Printer definition data from cups-printers.c...
  */
 
-extern const printer_t	printers[];
+extern const stp_printer_t	printers[];
 extern const int	printer_count;
 
 
@@ -148,7 +148,7 @@ msize_t	sizes[] =
  */
 
 void	usage(void);
-int	write_ppd(const printer_t *p, const char *prefix);
+int	write_ppd(const stp_printer_t *p, const char *prefix);
 
 
 /*
@@ -161,7 +161,7 @@ main(int  argc,			/* I - Number of command-line arguments */
 {
   int		i;		/* Looping var */
   char		*prefix;	/* Directory prefix for output */
-  const printer_t *p;		/* Current printer */
+  const stp_printer_t *p;		/* Current printer */
 
 
   prefix = "ppd";
@@ -215,7 +215,7 @@ usage(void)
  */
 
 int					/* O - Exit status */
-write_ppd(const printer_t *p,		/* I - Printer driver */
+write_ppd(const stp_printer_t *p,		/* I - Printer driver */
 	  const char      *prefix)	/* I - Prefix (directory) for PPD files */
 {
   int		i, j;			/* Looping vars */
@@ -227,7 +227,7 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
   char		**opts;			/* Printer options */
   char		*opt;			/* Pointer into option string */
   int		xdpi, ydpi;		/* Resolution info */
-  vars_t	v;			/* Variable info */
+  stp_vars_t	v;			/* Variable info */
   int		width, height,		/* Page information */
 		bottom, left,
 		top, right;

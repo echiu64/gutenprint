@@ -527,9 +527,9 @@ lexmark_size_type
 /* This method is actually not used.
    Is there a possibility to set such value ???????????? */
 static unsigned char
-lexmark_size_type(const vars_t *v, lexmark_cap_t caps)
+lexmark_size_type(const stp_vars_t *v, lexmark_cap_t caps)
 {
-  const papersize_t *pp = get_papersize_by_size(v->page_height, v->page_width);
+  const stp_papersize_t *pp = get_papersize_by_size(v->page_height, v->page_width);
   if (pp)
     {
       const char *name = pp->name;
@@ -565,7 +565,7 @@ c_strdup(const char *s)
 }
 
 const char *
-lexmark_default_resolution(const printer_t *printer)
+lexmark_default_resolution(const stp_printer_t *printer)
 {
   lexmark_cap_t caps= lexmark_get_model_capabilities(printer->model);
   if (!(caps.max_xdpi%300))
@@ -575,7 +575,7 @@ lexmark_default_resolution(const printer_t *printer)
 }
 
 void
-lexmark_describe_resolution(const printer_t *printer,
+lexmark_describe_resolution(const stp_printer_t *printer,
 			    const char *resolution, int *x, int *y)
 {
   *x = -1;
@@ -589,7 +589,7 @@ lexmark_describe_resolution(const printer_t *printer,
  */
 
 char **					/* O - Parameter values */
-lexmark_parameters(const printer_t *printer,	/* I - Printer model */
+lexmark_parameters(const stp_printer_t *printer,	/* I - Printer model */
 		   char *ppd_file,	/* I - PPD file (not used) */
 		   char *name,		/* I - Name of parameter */
 		   int  *count)		/* O - Number of values */
@@ -631,7 +631,7 @@ lexmark_parameters(const printer_t *printer,	/* I - Printer model */
 
   if (strcmp(name, "PageSize") == 0) {
     int height_limit, width_limit;
-    const papersize_t *papersizes = get_papersizes();
+    const stp_papersize_t *papersizes = get_papersizes();
     valptrs = malloc(sizeof(char *) * known_papersizes());
     *count = 0;
 
@@ -726,8 +726,8 @@ lexmark_parameters(const printer_t *printer,	/* I - Printer model */
  */
 
 void
-lexmark_imageable_area(const printer_t *printer,	/* I - Printer model */
-const vars_t *v,   /* I */
+lexmark_imageable_area(const stp_printer_t *printer,	/* I - Printer model */
+const stp_vars_t *v,   /* I */
                      int  *left,	/* O - Left position in points */
                      int  *right,	/* O - Right position in points */
                      int  *bottom,	/* O - Bottom position in points */
@@ -748,8 +748,8 @@ const vars_t *v,   /* I */
 }
 
 void
-lexmark_limit(const printer_t *printer,	/* I - Printer model */
-	    const vars_t *v,  		/* I */
+lexmark_limit(const stp_printer_t *printer,	/* I - Printer model */
+	    const stp_vars_t *v,  		/* I */
 	    int  *width,		/* O - Left position in points */
 	    int  *length)		/* O - Top position in points */
 {
@@ -763,7 +763,7 @@ lexmark_limit(const printer_t *printer,	/* I - Printer model */
 static void
 lexmark_init_printer(FILE *prn, lexmark_cap_t caps,
 		   int output_type, const char *media_str,
-		   const vars_t *v, int print_head,
+		   const stp_vars_t *v, int print_head,
 		   const char *source_str,
 		   int xdpi, int ydpi,
 		   int page_width, int page_height,
@@ -1007,10 +1007,10 @@ void setcol2(char *a, int al) {
    printing every second pixel, which is not so simpe to handle in this method).
 */
 void
-lexmark_print(const printer_t *printer,		/* I - Model */
+lexmark_print(const stp_printer_t *printer,		/* I - Model */
 	      FILE      *prn,		/* I - File to print to */
 	      Image     image,		/* I - Image to print */
-	      const vars_t    *v)
+	      const stp_vars_t    *v)
 {
   /*const int VERTSIZE=192;*/
   unsigned char *cmap = v->cmap;
@@ -1061,13 +1061,13 @@ lexmark_print(const printer_t *printer,		/* I - Model */
     errval,		/* Current error value */
     errline,	/* Current raster line */
     errlast;	/* Last raster line loaded */
-  convert_t	colorfunc = 0;	/* Color conversion function... */
+  stp_convert_t	colorfunc = 0;	/* Color conversion function... */
   int           image_height,
     image_width,
     image_bpp;
   int           use_dmt = 0;
   void *	dither;
-  vars_t	nv;
+  stp_vars_t	nv;
   int           actPassHeight=0;  /* dots which have actually to be printed */
   unsigned char *outbuf;    /* mem block to buffer output */
   int yi, yl;
@@ -1087,7 +1087,7 @@ lexmark_print(const printer_t *printer,		/* I - Model */
 
 
 
-  memcpy(&nv, v, sizeof(vars_t));
+  memcpy(&nv, v, sizeof(stp_vars_t));
 
   /*
   * Setup a read-only pixel region for the entire image...

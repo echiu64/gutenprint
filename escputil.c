@@ -131,9 +131,9 @@ typedef struct
   char *long_name;
   int passes;
   int choices;
-} printer_t;
+} stp_printer_t;
 
-printer_t printer_list[] =
+stp_printer_t printer_list[] =
 {
   { "color",	"Stylus Color",		1,	7 },
   { "pro",	"Stylus Color Pro",	1,	7 },
@@ -193,7 +193,7 @@ int isUSB = 0;
 void
 do_help(int code)
 {
-  printer_t *printer = &printer_list[0];
+  stp_printer_t *printer = &printer_list[0];
   printf("%s", help_msg);
   printf("Available models are:\n");
   while (printer->short_name)
@@ -677,7 +677,7 @@ do_align(void)
   int choices = 0;
   int curpass;
   int notfound = 1;
-  printer_t *printer = &printer_list[0];
+  stp_printer_t *printer = &printer_list[0];
   char *printer_name = NULL;
   int retry;
   if (!printer_model)

@@ -124,28 +124,28 @@ typedef struct					/* Plug-in variables */
   int	page_height;		/* Height of page in points */
   void  *lut;			/* Look-up table */
   unsigned char *cmap;		/* Color map */
-} vars_t;
+} stp_vars_t;
 
 typedef struct		/**** Printer List ****/
 {
   int	active;			/* Do we know about this printer? */
   char	name[128];		/* Name of printer */
-  vars_t v;
-} plist_t;
+  stp_vars_t v;
+} stp_plist_t;
 
 typedef enum papersize_unit
 {
   PAPERSIZE_ENGLISH,
   PAPERSIZE_METRIC
-} papersize_unit_t;
+} stp_papersize_unit_t;
 
 typedef struct
 {
   char name[32];
   unsigned width;
   unsigned height;
-  papersize_unit_t paper_unit;
-} papersize_t;
+  stp_papersize_unit_t paper_unit;
+} stp_papersize_t;
 
 /*
  * Abstract data type for interfacing with the image creation program
@@ -243,7 +243,7 @@ extern void Image_progress_conclude(Image image);
  *       roll feed, and the like.
  *
  * void (*media_size)(const struct printer *printer,
- *                    const vars_t *v,
+ *                    const stp_vars_t *v,
  *                    int *width,
  *                    int *height)
  *
@@ -253,7 +253,7 @@ extern void Image_progress_conclude(Image image);
  *   size.  WIDTH and HEIGHT are expressed in units of 1/72".
  *
  * void (*imageable_area)(const struct printer *printer,
- *                        const vars_t *v,
+ *                        const stp_vars_t *v,
  *                        int *left,
  *                        int *right,
  *                        int *bottom,
@@ -268,7 +268,7 @@ extern void Image_progress_conclude(Image image);
  *   1/72".
  *
  * void (*limit)(const struct printer *printer,
- *               const vars_t *v,
+ *               const stp_vars_t *v,
  *               int *width,
  *               int *height)
  *
@@ -278,7 +278,7 @@ extern void Image_progress_conclude(Image image);
  * void (*print)(const struct printer *printer,
  *               FILE *prn,
  *               Image image,
- *               const vars_t *v)
+ *               const stp_vars_t *v)
  *
  *   prints a page.  The variable settings provided in V are used to control
  *   the printing; PRN is a file pointer that the raw printer output
@@ -309,27 +309,27 @@ typedef struct printer
   int	model;				/* Model number */
   char	**(*parameters)(const struct printer *printer, char *ppd_file,
                         char *name, int *count);
-  void	(*media_size)(const struct printer *printer, const vars_t *v,
+  void	(*media_size)(const struct printer *printer, const stp_vars_t *v,
 		      int *width, int *height);
-  void	(*imageable_area)(const struct printer *printer, const vars_t *v,
+  void	(*imageable_area)(const struct printer *printer, const stp_vars_t *v,
                           int *left, int *right, int *bottom, int *top);
-  void	(*limit)(const struct printer *printer, const vars_t *v,
+  void	(*limit)(const struct printer *printer, const stp_vars_t *v,
 		 int *width, int *height);
   void	(*print)(const struct printer *printer, FILE *prn,
-		 Image image, const vars_t *v);
+		 Image image, const stp_vars_t *v);
   const char *(*default_resolution)(const struct printer *printer);
   void  (*describe_resolution)(const struct printer *printer,
 			       const char *resolution, int *x, int *y);
-  vars_t printvars;
-} printer_t;
+  stp_vars_t printvars;
+} stp_printer_t;
 
 /*
  * hue_map is an array of 49 doubles representing the mapping of hue
  * from (0..6) to (0..6) in increments of .125.  The hue_map is in CMY space,
  * so hue=0 is cyan.
  */
-typedef void (*convert_t)(unsigned char *in, unsigned short *out, int width,
-			  int bpp, unsigned char *cmap, const vars_t *vars,
+typedef void (*stp_convert_t)(unsigned char *in, unsigned short *out, int width,
+			  int bpp, unsigned char *cmap, const stp_vars_t *vars,
 			  const double *hue_map, const double *lum_map,
 			  const double *sat_map);
 
@@ -339,7 +339,7 @@ typedef struct
   unsigned bit_pattern;
   int is_dark;
   unsigned dot_size;
-} simple_dither_range_t;
+} stp_simple_dither_range_t;
 
 typedef struct
 {
@@ -349,7 +349,7 @@ typedef struct
   unsigned bit_pattern;
   int is_dark;
   unsigned dot_size;
-} dither_range_t;
+} stp_dither_range_t;
 
 typedef struct
 {
@@ -359,14 +359,14 @@ typedef struct
    unsigned bits_h;
    int isdark_l;
    int isdark_h;
-} full_dither_range_t;
+} stp_full_dither_range_t;
 
 /*
  * Prototypes...
  */
 
 extern void *	init_dither(int in_width, int out_width, int horizontal_aspect,
-			    int vertical_aspect, vars_t *vars);
+			    int vertical_aspect, stp_vars_t *vars);
 extern void	dither_set_transition(void *vd, double);
 extern void	dither_set_density(void *vd, double);
 extern void	dither_set_black_density(void *vd, double);
@@ -377,15 +377,15 @@ extern void 	dither_set_randomizers(void *vd, double, double, double, double);
 extern void 	dither_set_ink_darkness(void *vd, double, double, double);
 extern void 	dither_set_light_inks(void *vd, double, double, double, double);
 extern void	dither_set_ranges(void *vd, int color, int nlevels,
-				  const simple_dither_range_t *ranges,
+				  const stp_simple_dither_range_t *ranges,
 				  double density);
 extern void	dither_set_ranges_full(void *vd, int color, int nlevels,
-				       const full_dither_range_t *ranges,
+				       const stp_full_dither_range_t *ranges,
 				       double density);
 extern void	dither_set_ranges_simple(void *vd, int color, int nlevels,
 					 const double *levels, double density);
 extern void	dither_set_ranges_complete(void *vd, int color, int nlevels,
-					   const dither_range_t *ranges);
+					   const stp_dither_range_t *ranges);
 extern void	dither_set_ink_spread(void *vd, int spread);
 extern void	dither_set_max_ink(void *vd, int, double);
 extern void	dither_set_x_oversample(void *vd, int os);
@@ -444,87 +444,94 @@ extern void	stp_unpack_8(int height, int bits, const unsigned char *in,
 extern int	stp_pack(const unsigned char *line, int height,
 			 unsigned char *comp_buf, unsigned char **comp_ptr);
 
-extern void	merge_printvars(vars_t *user, const vars_t *print);
-extern void	free_lut(vars_t *v);
-extern void	compute_lut(size_t steps, vars_t *v);
+extern void	merge_printvars(stp_vars_t *user, const stp_vars_t *print);
+extern void	free_lut(stp_vars_t *v);
+extern void	compute_lut(size_t steps, stp_vars_t *v);
 
 
-extern void	default_media_size(const printer_t *printer, const vars_t *v,
-				   int *width, int *height);
+extern void	default_media_size(const stp_printer_t *printer,
+				   const stp_vars_t *v, int *width,
+				   int *height);
 
 
-extern char	**lexmark_parameters(const printer_t *printer, char *ppd_file,
-		                   char *name, int *count);
-extern void	lexmark_imageable_area(const printer_t *printer, const vars_t *v,
-				     int *left, int *right,
-				     int *bottom, int *top);
-extern void	lexmark_limit(const printer_t *printer, const vars_t *v,
-			    int *width, int *height);
-extern void	lexmark_print(const printer_t *printer, FILE *prn,
-			    Image image, const vars_t *v);
-extern const char *lexmark_default_resolution(const printer_t *printer);
+extern char	**lexmark_parameters(const stp_printer_t *printer,
+				     char *ppd_file, char *name, int *count);
+extern void	lexmark_imageable_area(const stp_printer_t *printer,
+				       const stp_vars_t *v,
+				       int *left, int *right,
+				       int *bottom, int *top);
+extern void	lexmark_limit(const stp_printer_t *printer,
+			      const stp_vars_t *v,
+			      int *width, int *height);
+extern void	lexmark_print(const stp_printer_t *printer, FILE *prn,
+			    Image image, const stp_vars_t *v);
+extern const char *lexmark_default_resolution(const stp_printer_t *printer);
 extern void     lexmark_describe_resolution(const struct printer *printer,
 					    const char *resolution,
 					    int *x, int *y);
 
 
-extern char	**escp2_parameters(const printer_t *printer, char *ppd_file,
-				   char *name, int *count);
-extern void	escp2_imageable_area(const printer_t *printer, const vars_t *v,
+extern char	**escp2_parameters(const stp_printer_t *printer,
+				   char *ppd_file, char *name, int *count);
+extern void	escp2_imageable_area(const stp_printer_t *printer,
+				     const stp_vars_t *v,
 				     int *left, int *right,
 				     int *bottom, int *top);
-extern void	escp2_limit(const printer_t *printer, const vars_t *v,
+extern void	escp2_limit(const stp_printer_t *printer, const stp_vars_t *v,
 			    int *width, int *height);
-extern void	escp2_print(const printer_t *printer, FILE *prn,
-			    Image image, const vars_t *v);
-extern const char *escp2_default_resolution(const printer_t *printer);
+extern void	escp2_print(const stp_printer_t *printer, FILE *prn,
+			    Image image, const stp_vars_t *v);
+extern const char *escp2_default_resolution(const stp_printer_t *printer);
 extern void     escp2_describe_resolution(const struct printer *printer,
 					  const char *resolution,
 					  int *x, int *y);
 
 
-extern char	**canon_parameters(const printer_t *printer, char *ppd_file,
-		                   char *name, int *count);
-extern void	canon_imageable_area(const printer_t *printer, const vars_t *v,
+extern char	**canon_parameters(const stp_printer_t *printer,
+				   char *ppd_file, char *name, int *count);
+extern void	canon_imageable_area(const stp_printer_t *printer,
+				     const stp_vars_t *v,
 				     int *left, int *right,
 				     int *bottom, int *top);
-extern void	canon_limit(const printer_t *printer, const vars_t *v,
+extern void	canon_limit(const stp_printer_t *printer, const stp_vars_t *v,
 			    int *width, int *height);
-extern void	canon_print(const printer_t *printer, FILE *prn,
-			    Image image, const vars_t *v);
-extern const char *canon_default_resolution(const printer_t *printer);
+extern void	canon_print(const stp_printer_t *printer, FILE *prn,
+			    Image image, const stp_vars_t *v);
+extern const char *canon_default_resolution(const stp_printer_t *printer);
 extern void     canon_describe_resolution(const struct printer *printer,
 					  const char *resolution,
 					  int *x, int *y);
 
 
-extern char	**pcl_parameters(const printer_t *printer, char *ppd_file,
+extern char	**pcl_parameters(const stp_printer_t *printer, char *ppd_file,
 		                 char *name, int *count);
-extern void	pcl_imageable_area(const printer_t *printer, const vars_t *v,
+extern void	pcl_imageable_area(const stp_printer_t *printer,
+				   const stp_vars_t *v,
 		                   int *left, int *right,
 				   int *bottom, int *top);
-extern void	pcl_limit(const printer_t *printer, const vars_t *v,
+extern void	pcl_limit(const stp_printer_t *printer, const stp_vars_t *v,
 			  int *width, int *height);
-extern void	pcl_print(const printer_t *printer, FILE *prn,
-			  Image image, const vars_t *v);
-extern const char *pcl_default_resolution(const printer_t *printer);
+extern void	pcl_print(const stp_printer_t *printer, FILE *prn,
+			  Image image, const stp_vars_t *v);
+extern const char *pcl_default_resolution(const stp_printer_t *printer);
 extern void     pcl_describe_resolution(const struct printer *printer,
 					const char *resolution,
 					int *x, int *y);
 
 
-extern char	**ps_parameters(const printer_t *printer, char *ppd_file,
+extern char	**ps_parameters(const stp_printer_t *printer, char *ppd_file,
 		                char *name, int *count);
-extern void	ps_media_size(const printer_t *printer, const vars_t *v,
-			      int *width, int *height);
-extern void	ps_imageable_area(const printer_t *printer, const vars_t *v,
+extern void	ps_media_size(const stp_printer_t *printer,
+			      const stp_vars_t *v, int *width, int *height);
+extern void	ps_imageable_area(const stp_printer_t *printer,
+				  const stp_vars_t *v,
 				  int *left, int *right,
 		                  int *bottom, int *top);
-extern void	ps_limit(const printer_t *printer, const vars_t *v,
+extern void	ps_limit(const stp_printer_t *printer, const stp_vars_t *v,
 			 int *width, int *height);
-extern void	ps_print(const printer_t *printer, FILE *prn,
-			 Image image, const vars_t *v);
-extern const char *ps_default_resolution(const printer_t *printer);
+extern void	ps_print(const stp_printer_t *printer, FILE *prn,
+			 Image image, const stp_vars_t *v);
+extern const char *ps_default_resolution(const stp_printer_t *printer);
 extern void     ps_describe_resolution(const struct printer *printer,
 				       const char *resolution,
 				       int *x, int *y);
@@ -532,21 +539,22 @@ extern void     ps_describe_resolution(const struct printer *printer,
 extern const char *default_dither_algorithm(void);
 
 extern int	      		known_papersizes(void);
-extern const papersize_t	*get_papersizes(void);
-extern const papersize_t	*get_papersize_by_name(const char *);
-extern const papersize_t 	*get_papersize_by_size(int l, int w);
+extern const stp_papersize_t	*get_papersizes(void);
+extern const stp_papersize_t	*get_papersize_by_name(const char *);
+extern const stp_papersize_t 	*get_papersize_by_size(int l, int w);
 
 extern int			known_printers(void);
-extern const printer_t		*get_printers(void);
-extern const printer_t		*get_printer_by_index(int);
-extern const printer_t		*get_printer_by_long_name(const char *);
-extern const printer_t		*get_printer_by_driver(const char *);
+extern const stp_printer_t	*get_printers(void);
+extern const stp_printer_t	*get_printer_by_index(int);
+extern const stp_printer_t	*get_printer_by_long_name(const char *);
+extern const stp_printer_t	*get_printer_by_driver(const char *);
 extern int			get_printer_index_by_driver(const char *);
 
 extern int			num_dither_algos;
 extern char			*dither_algo_names[];
-extern convert_t choose_colorfunc(int, int, const unsigned char *, int *,
-				  const vars_t *);
+extern stp_convert_t 		choose_colorfunc(int, int,
+						 const unsigned char *, int *,
+						 const stp_vars_t *);
 extern void
 compute_page_parameters(int page_right, int page_left, int page_top,
 			int page_bottom, double scaling, int image_width,
@@ -555,10 +563,10 @@ compute_page_parameters(int page_right, int page_left, int page_top,
 			int *out_height, int *left, int *top);
 
 extern int
-verify_printer_params(const printer_t *, const vars_t *);
-extern const vars_t *print_default_settings(void);
-extern const vars_t *print_maximum_settings(void);
-extern const vars_t *print_minimum_settings(void);
+verify_printer_params(const stp_printer_t *, const stp_vars_t *);
+extern const stp_vars_t *print_default_settings(void);
+extern const stp_vars_t *print_maximum_settings(void);
+extern const stp_vars_t *print_minimum_settings(void);
 
 #ifdef QUANTIFY
 /* Used for performance analysis - to be called before and after
