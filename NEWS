@@ -46,6 +46,8 @@ over Gimp-Print 4.2.1-pre3:
   8) Additional Epson, Canon, Okidata, and Kyocera laser printers have
      been tested.
 
+  9) Foomatic data for the IJS interface of GIMP-Print is generated now.
+
 The following bugs are fixed in 4.2.1-pre4:
 
 533400 Very fast dithering works incorrectly
