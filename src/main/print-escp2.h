@@ -283,6 +283,7 @@ typedef struct
 {
   const char *name;
   const char *text;
+  short is_cd;
   short is_roll_feed;
   unsigned roll_feed_cut_flags;
   const stp_raw_t init_sequence;
@@ -457,6 +458,9 @@ typedef struct escp2_printer
   short		m_roll_right_margin;	/* Right margin, points */
   short		m_roll_top_margin;	/* Absolute top margin, points */
   short		m_roll_bottom_margin;	/* Absolute bottom margin, points */
+				/* Print directly to CD */
+  short		cd_x_offset;	/* Center of CD (horizontal offset) */
+  short		cd_y_offset;	/* Center of CD (vertical offset) */
 /*****************************************************************************/
   /* Parameters for escputil */
   short		alignment_passes;
@@ -614,6 +618,10 @@ typedef struct
   int page_width;		/* Page width (points) */
   int page_height;		/* Page height (points) */
   int page_true_height;		/* Physical page height (points) */
+  int cd_x_offset;		/* CD X offset (micro units) */
+  int cd_y_offset;		/* CD Y offset (micro units) */
+  int cd_outer_radius;		/* CD radius (micro units) */
+  int cd_inner_radius;		/* CD radius (micro units) */
 
   /* Image parameters */	/* Indexed from top left */
   int image_height;		/* Height of printed region (points) */

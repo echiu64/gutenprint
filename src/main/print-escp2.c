@@ -34,6 +34,7 @@
 #include "gimp-print-internal.h"
 #include <string.h>
 #include <assert.h>
+#include <math.h>
 #include "print-escp2.h"
 #include "module.h"
 #include "weave.h"
@@ -270,6 +271,8 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(alignment_choices),
   PARAMETER_INT(alternate_alignment_passes),
   PARAMETER_INT(alternate_alignment_choices),
+  PARAMETER_INT(cd_x_offset),
+  PARAMETER_INT(cd_y_offset),
   PARAMETER_RAW(preinit_sequence),
   PARAMETER_RAW(postinit_remote_sequence)
 };
@@ -492,6 +495,8 @@ DEF_SIMPLE_ACCESSOR(max_paper_width, unsigned)
 DEF_SIMPLE_ACCESSOR(max_paper_height, unsigned)
 DEF_SIMPLE_ACCESSOR(min_paper_width, unsigned)
 DEF_SIMPLE_ACCESSOR(min_paper_height, unsigned)
+DEF_SIMPLE_ACCESSOR(cd_x_offset, int)
+DEF_SIMPLE_ACCESSOR(cd_y_offset, int)
 DEF_SIMPLE_ACCESSOR(extra_feed, unsigned)
 DEF_SIMPLE_ACCESSOR(pseudo_separation_rows, int)
 DEF_SIMPLE_ACCESSOR(base_separation, int)
@@ -1118,13 +1123,24 @@ escp2_parameters(stp_const_vars_t v, const char *name,
   else if (strcmp(name, "PageSize") == 0)
     {
       int papersizes = stp_known_papersizes();
+      const input_slot_t *slot = get_input_slot(v);
       description->bounds.str = stp_string_list_create();
-      for (i = 0; i < papersizes; i++)
+      if (slot && slot->is_cd)
 	{
-	  const stp_papersize_t *pt = stp_get_papersize_by_index(i);
-	  if (verify_papersize(v, pt))
-	    stp_string_list_add_string(description->bounds.str,
-				       pt->name, pt->text);
+	  stp_string_list_add_string
+	    (description->bounds.str, "CD5Inch", "CD - 5 inch");
+	  stp_string_list_add_string
+	    (description->bounds.str, "CD3Inch", "CD - 3 inch");
+	}	  
+      else
+	{
+	  for (i = 0; i < papersizes; i++)
+	    {
+	      const stp_papersize_t *pt = stp_get_papersize_by_index(i);
+	      if (verify_papersize(v, pt))
+		stp_string_list_add_string(description->bounds.str,
+					   pt->name, pt->text);
+	    }
 	}
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
@@ -1446,51 +1462,54 @@ internal_imageable_area(stp_const_vars_t v, int use_paper_margins,
 {
   int	width, height;			/* Size of page */
   int	rollfeed = 0;			/* Roll feed selected */
-  const char *input_slot = stp_get_string_parameter(v, "InputSlot");
+  int	cd = 0;			/* CD selected */
   const char *media_size = stp_get_string_parameter(v, "PageSize");
   int left_margin = 0;
   int right_margin = 0;
   int bottom_margin = 0;
   int top_margin = 0;
   const stp_papersize_t *pt = NULL;
+  const input_slot_t *input_slot = NULL;
 
   if (media_size && use_paper_margins)
     pt = stp_get_papersize_by_name(media_size);
 
-  if (input_slot && strlen(input_slot) > 0)
+  input_slot = get_input_slot(v);
+  if (input_slot)
     {
-      int i;
-      const input_slot_list_t *slots = escp2_input_slots(v);
-      for (i = 0; i < slots->n_input_slots; i++)
-	{
-	  if (slots->slots[i].name &&
-	      strcmp(input_slot, slots->slots[i].name) == 0)
-	    {
-	      rollfeed = slots->slots[i].is_roll_feed;
-	      break;
-	    }
-	}
+      cd = input_slot->is_cd;
+      rollfeed = input_slot->is_roll_feed;
     }
 
   stpi_default_media_size(v, &width, &height);
-  if (pt)
+  if (cd)
     {
-      left_margin = pt->left;
-      right_margin = pt->right;
-      bottom_margin = pt->bottom;
-      top_margin = pt->top;
+      left_margin = 0;
+      right_margin = 0;
+      bottom_margin = 0;
+      top_margin = 0;
     }
+  else
+    {
+      if (pt)
+	{
+	  left_margin = pt->left;
+	  right_margin = pt->right;
+	  bottom_margin = pt->bottom;
+	  top_margin = pt->top;
+	}
 
-  left_margin = imax(left_margin, escp2_left_margin(v, rollfeed));
-  right_margin = imax(right_margin, escp2_right_margin(v, rollfeed));
-  bottom_margin = imax(bottom_margin, escp2_bottom_margin(v, rollfeed));
-  top_margin = imax(top_margin, escp2_top_margin(v, rollfeed));
-
+      left_margin = imax(left_margin, escp2_left_margin(v, rollfeed));
+      right_margin = imax(right_margin, escp2_right_margin(v, rollfeed));
+      bottom_margin = imax(bottom_margin, escp2_bottom_margin(v, rollfeed));
+      top_margin = imax(top_margin, escp2_top_margin(v, rollfeed));
+    }
   *left =	left_margin;
   *right =	width - right_margin;
   *top =	top_margin;
   *bottom =	height - bottom_margin;
-  if (escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
+  if (!cd &&
+      escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
       stp_get_boolean_parameter(v, "FullBleed"))
     {
       *left -= 80 / (360 / 72);	/* 80 per the Epson manual */
@@ -2114,20 +2133,39 @@ setup_page(stp_vars_t v)
   int n;
   escp2_privdata_t *pd = get_privdata(v);
   const input_slot_t *input_slot = get_input_slot(v);
+  int extra_left = 0;
+  int extra_top = 0;
 
   stpi_default_media_size(v, &n, &(pd->page_true_height));
   internal_imageable_area(v, 0, &pd->page_left, &pd->page_right,
 			  &pd->page_bottom, &pd->page_top);
 
+  if (input_slot && input_slot->is_cd && escp2_cd_x_offset(v) > 0)
+    {
+      int left_center = escp2_cd_x_offset(v);
+      int top_center = escp2_cd_y_offset(v);
+      pd->cd_inner_radius = 43 * pd->micro_units * 10 / 254 / 2;
+      pd->cd_outer_radius = pd->page_right * pd->micro_units / 72 / 2;
+      pd->cd_x_offset =
+	((pd->page_right / 2) - stp_get_left(v)) * pd->micro_units / 72;
+      pd->cd_y_offset =
+	((pd->page_right / 2) - stp_get_top(v)) * pd->micro_units / 72;
+      extra_left = left_center - (pd->page_right / 2);
+      extra_top = top_center - (pd->page_bottom / 2);
+    }
+
+  pd->page_right += extra_left + 1;
   pd->page_width = pd->page_right - pd->page_left;
-  pd->image_left = stp_get_left(v) - pd->page_left;
+  pd->image_left = stp_get_left(v) - pd->page_left + extra_left;
   pd->image_width = stp_get_width(v);
   pd->image_scaled_width = pd->image_width * pd->res->hres / 72;
   pd->image_left_position = pd->image_left * pd->micro_units / 72;
 
 
+  pd->page_bottom += extra_top + 1;
+  pd->page_true_height += extra_top + 1;
   pd->page_height = pd->page_bottom - pd->page_top;
-  pd->image_top = stp_get_top(v) - pd->page_top;
+  pd->image_top = stp_get_top(v) - pd->page_top + extra_top;
   pd->image_height = stp_get_height(v);
   pd->image_scaled_height = pd->image_height * pd->res->vres / 72;
 
@@ -2141,6 +2179,49 @@ setup_page(stp_vars_t v)
     }
 }
 
+static void
+set_mask(unsigned char *cd_mask, int x_center, int scaled_x_where,
+	 int limit, int invert)
+{
+  int clear_val = invert ? 255 : 0;
+  int set_val = invert ? 0 : 255;
+  int first_x_on = x_center - scaled_x_where;
+  int first_x_off = x_center + scaled_x_where;
+  if (first_x_on < 0)
+    first_x_on = 0;
+  if (first_x_on > limit)
+    first_x_on = limit;
+  if (first_x_off < 0)
+    first_x_off = 0;
+  if (first_x_off > limit)
+    first_x_off = limit;
+  first_x_on += 7;
+  if (first_x_off > (first_x_on - 7))
+    {
+      int first_x_on_byte = first_x_on / 8;
+      int first_x_on_mod = 7 - (first_x_on % 8);
+      int first_x_on_extra = ((1 << first_x_on_mod) - 1) ^ clear_val;
+      int first_x_off_byte = first_x_off / 8;
+      int first_x_off_mod = 7 - (first_x_off % 8);
+      int first_x_off_extra = ((1 << 8) - (1 << first_x_off_mod)) ^ clear_val;
+      if (first_x_off_byte < first_x_on_byte)
+	{
+	  /* This can happen, if 6 or fewer points are turned on */
+	  cd_mask[first_x_on_byte] = first_x_on_extra & first_x_off_extra;
+	}
+      else
+	{
+	  if (first_x_on_extra != clear_val)
+	    cd_mask[first_x_on_byte - 1] = first_x_on_extra;
+	  if (first_x_off_byte > first_x_on_byte)
+	    memset(cd_mask + first_x_on_byte, set_val,
+		   first_x_off_byte - first_x_on_byte);
+	  if (first_x_off_extra != clear_val)
+	    cd_mask[first_x_off_byte] = first_x_off_extra;
+	}
+    }
+}  
+
 static int
 escp2_print_data(stp_vars_t v, stp_image_t *image)
 {
@@ -2151,6 +2232,17 @@ escp2_print_data(stp_vars_t v, stp_image_t *image)
   int errlast = -1;
   int errline  = 0;
   int y;
+  double outer_r_sq = 0;
+  double inner_r_sq = 0;
+  int x_center = pd->cd_x_offset * pd->res->hres / pd->micro_units;
+  int y_center = pd->cd_y_offset * pd->res->vres / pd->micro_units;
+  unsigned char *cd_mask = NULL;
+  if (pd->cd_outer_radius > 0)
+    {
+      cd_mask = stpi_malloc((pd->image_scaled_width + 7) / 8);
+      outer_r_sq = (double) pd->cd_outer_radius * (double) pd->cd_outer_radius;
+      inner_r_sq = (double) pd->cd_inner_radius * (double) pd->cd_inner_radius;
+    }
 
   stpi_image_progress_init(image);
 
@@ -2169,7 +2261,31 @@ escp2_print_data(stp_vars_t v, stp_image_t *image)
 	    return 2;
 	}
 
-      stpi_dither(v, y, duplicate_line, zero_mask, NULL);
+      if (cd_mask)
+	{
+	  int y_distance_from_center = y_center - y;
+	  if (y_distance_from_center < 0)
+	    y_distance_from_center = -y_distance_from_center;
+	  memset(cd_mask, 0, (pd->image_scaled_width + 7) / 8);
+	  if (y_distance_from_center < pd->cd_outer_radius)
+	    {
+	      double y_sq = (double) y_distance_from_center *
+		(double) y_distance_from_center;
+	      int x_where = sqrt(outer_r_sq - y_sq) + .5;
+	      int scaled_x_where = x_where * pd->res->hres / pd->micro_units;
+	      set_mask(cd_mask, x_center, scaled_x_where,
+		       pd->image_scaled_width, 0);
+	      if (y_distance_from_center < pd->cd_inner_radius)
+		{
+		  x_where = sqrt(inner_r_sq - y_sq) + .5;
+		  scaled_x_where = x_where * pd->res->hres / pd->micro_units;
+		  set_mask(cd_mask, x_center, scaled_x_where,
+			   pd->image_scaled_width, 1);
+		}
+	    }
+	}
+
+      stpi_dither(v, y, duplicate_line, zero_mask, cd_mask);
 
       stpi_write_weave(v, pd->cols);
       errval += errmod;
@@ -2180,6 +2296,8 @@ escp2_print_data(stp_vars_t v, stp_image_t *image)
 	  errline ++;
 	}
     }
+  if (cd_mask)
+    stpi_free(cd_mask);
   return 1;
 }
 
