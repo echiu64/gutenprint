@@ -663,6 +663,9 @@ static void canon_write_line(const stp_vars_t, const canon_cap_t *, int,
 #define CANON_CAP_g         0x1000ul
 #define CANON_CAP_ACKSHORT  0x2000ul
 
+#define CANON_CAP_STD0 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|\
+                        CANON_CAP_l|CANON_CAP_q|CANON_CAP_t)
+
 #define CANON_CAP_STD1 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|CANON_CAP_l|\
                         CANON_CAP_m|CANON_CAP_p|CANON_CAP_q|CANON_CAP_t)
 
@@ -697,7 +700,7 @@ static const canon_cap_t canon_model_capabilities[] =
     11, 9, 10, 18,
     CANON_INK_K,
     CANON_SLOT_ASF1,
-    CANON_CAP_STD1 | CANON_CAP_a,
+    CANON_CAP_STD0 | CANON_CAP_a,
     {-1,0,0,0,-1,-1}, /* max res of 720x360 !! */
     {1,1,1,1,1,1},
     CANON_INK(canon_ink_standard),
@@ -713,7 +716,7 @@ static const canon_cap_t canon_model_capabilities[] =
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
-    CANON_CAP_STD1 | CANON_CAP_DMT,
+    CANON_CAP_STD0 | CANON_CAP_DMT,
     {0,0,-1,-1,-1,-1}, /* ??? */
     {1,1,1,1,1,1},
     CANON_INK(canon_ink_standard),
@@ -729,7 +732,7 @@ static const canon_cap_t canon_model_capabilities[] =
     11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
-    CANON_CAP_STD1 | CANON_CAP_a | CANON_CAP_DMT,
+    CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_DMT,
     {-1,-1,0,0,-1,-1}, /* max res of 720x360 !! */
     {1,1,1,1,1,1},
     CANON_INK(canon_ink_standard),
@@ -794,7 +797,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD1 | CANON_CAP_r | CANON_CAP_DMT | CANON_CAP_ACKSHORT,
-    {-1,-1,0,-1,-1,-1},
+    {-1,0,0,-1,-1,-1},
     {1,1,1,1,1,1},
     CANON_INK(canon_ink_superphoto),
     standard_lum_adjustment,
@@ -817,7 +820,7 @@ static const canon_cap_t canon_model_capabilities[] =
     11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMY,
     CANON_SLOT_ASF1,
-    CANON_CAP_STD1 | CANON_CAP_a,
+    CANON_CAP_STD0 | CANON_CAP_a,
     {0,0,-1,-1,-1,-1},
     {1,1,1,1,1,1},
     CANON_INK(canon_ink_standard),
@@ -832,7 +835,7 @@ static const canon_cap_t canon_model_capabilities[] =
     11, 9, 10, 18,
     CANON_INK_CMYK,
     CANON_SLOT_ASF1,
-    CANON_CAP_STD1 | CANON_CAP_a,
+    CANON_CAP_STD0 | CANON_CAP_a,
     {0,0,-1,-1,-1,-1},
     {1,1,1,1,1,1},
     CANON_INK(canon_ink_standard),
@@ -847,7 +850,7 @@ static const canon_cap_t canon_model_capabilities[] =
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
-    CANON_CAP_STD1 | CANON_CAP_a | CANON_CAP_r | CANON_CAP_DMT,
+    CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_DMT, /*FIX? should have _r? */
     {-1,0,0,0,-1,-1},
     {1,1,1,1,1,1},
     CANON_INK(canon_ink_standard),
@@ -892,7 +895,7 @@ static const canon_cap_t canon_model_capabilities[] =
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYyK,
     CANON_SLOT_ASF1,
-    CANON_CAP_STD1,
+    CANON_CAP_STD0,
     {-1,0,0,0,-1,-1},
     {1,1,1,1,1,1},
     CANON_INK(canon_ink_standard),
@@ -915,7 +918,7 @@ static const canon_cap_t canon_model_capabilities[] =
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
-    CANON_CAP_STD1 | CANON_CAP_DMT,
+    CANON_CAP_STD0 | CANON_CAP_DMT,
     {-1,0,0,0,-1,-1},
     {1,1,1,1,1,1},
     CANON_INK(canon_ink_standard),
@@ -930,7 +933,7 @@ static const canon_cap_t canon_model_capabilities[] =
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
-    CANON_CAP_STD1 | CANON_CAP_a,
+    CANON_CAP_STD0 | CANON_CAP_a,
     {0,0,-1,-1,-1,-1},
     {1,1,1,1,1,1},
     CANON_INK(canon_ink_standard),
@@ -960,7 +963,7 @@ static const canon_cap_t canon_model_capabilities[] =
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
-    CANON_CAP_STD1,
+    CANON_CAP_STD0,
     {-1,0,0,-1,0,-1},
     {1,1,1,1,1,1},
     CANON_INK(canon_ink_standard),
@@ -1945,7 +1948,7 @@ canon_deinit_printer(const stp_vars_t v, canon_init_t *init)
   /* say goodbye */
   canon_cmd(v,ESC28,0x62,1,0);
   if (init->caps->features & CANON_CAP_a)
-    canon_cmd(v,ESC28,0x61, 1, 0x00);
+    canon_cmd(v,ESC28,0x61, 1, 0);
   canon_cmd(v,ESC40,0,0);
 }
 
