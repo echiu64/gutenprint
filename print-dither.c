@@ -2588,7 +2588,7 @@ dither_cmyk_ed(const unsigned short  *rgb,	/* I - RGB pixels */
 	  c = UPDATE_COLOR(c, ndither[ECOLOR_C]);
 	  m = UPDATE_COLOR(m, ndither[ECOLOR_M]);
 	  y = UPDATE_COLOR(y, ndither[ECOLOR_Y]);
-	  k = UPDATE_COLOR(k, ndither[ECOLOR_K]);
+	  k = UPDATE_COLOR(0, ndither[ECOLOR_K]);
 	  goto out;
 	}
 
