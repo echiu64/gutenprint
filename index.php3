@@ -12,8 +12,14 @@ require('standard_html_header.php3');
 ### Content Below  ###
 # Please remember to use <P> </P> tags !  ?>
 
-
 <P>A project to enhance the Print plugin for the GIMP.</P>
+
+<P><strong>We have fixed the download page!  Our apologies for not
+including a working download link.</strong></p>
+
+<P>Please check out <a
+href="https://sourceforge.net/project/?group_id=1537">our
+project page</a>, which contains a lot more information about us!</p>
 
 <p><a href="http://www.gimp.org">The Gimp</a> is an image editor and
 manipulator comparable in many ways to <a
