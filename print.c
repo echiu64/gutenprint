@@ -112,6 +112,7 @@ static void	media_type_callback(GtkWidget *, gint);
 static void	media_source_callback(GtkWidget *, gint);
 static void	resolution_callback(GtkWidget *, gint);
 static void	output_type_callback(GtkWidget *, gint);
+static void	linear_callback(GtkWidget *, gint);
 static void	orientation_callback(GtkWidget *, gint);
 static void	print_callback(void);
 static void	cancel_callback(void);
@@ -165,6 +166,7 @@ struct					/* Plug-in variables */
 	red,			/* Output red level */
 	green,			/* Output green level */
 	blue;			/* Output blue level */
+  gint	linear;			/* Linear density (mostly for testing!) */
 }		vars =
 {
 	"",			/* Name of file or command to print to */
@@ -185,7 +187,8 @@ struct					/* Plug-in variables */
 	100,			/* Contrast */
 	100,			/* Red */
 	100,			/* Green */
-	100			/* Blue */
+	100,			/* Blue */
+	0			/* Linear */
 };
 
 GtkWidget	*print_dialog,		/* Print dialog window */
@@ -215,6 +218,8 @@ GtkWidget	*print_dialog,		/* Print dialog window */
 		*gamma_entry,		/* Text entry widget for gamma */
 		*output_gray,		/* Output type toggle, black */
 		*output_color,		/* Output type toggle, color */
+		*linear_on,		/* Linear toggle, on */
+		*linear_off,		/* Linear toggle, off */
 		*setup_dialog,		/* Setup dialog window */
 		*printer_driver,	/* Printer driver widget */
 		*ppd_file,		/* PPD file entry */
@@ -360,6 +365,11 @@ query(void)
     { PARAM_INT32,	"left",		"Left offset (points, -1 = centered)" },
     { PARAM_INT32,	"top",		"Top offset (points, -1 = centered)" },
     { PARAM_FLOAT,	"gamma",	"Output gamma (0.1 - 3.0)" },
+    { PARAM_INT32,	"contrast",	"Top offset (points, -1 = centered)" },
+    { PARAM_INT32,	"red",		"Top offset (points, -1 = centered)" },
+    { PARAM_INT32,	"green",	"Top offset (points, -1 = centered)" },
+    { PARAM_INT32,	"blue",		"Top offset (points, -1 = centered)" },
+    { PARAM_INT32,	"linear",	"Linear output (0 = normal, 1 = linear)" },
   };
   static int		nargs = sizeof(args) / sizeof(args[0]);
 
@@ -532,7 +542,7 @@ run(char   *name,		/* I - Name of print program. */
           if (nparams > 16)
             vars.gamma = param[16].data.d_float;
           else
-            vars.top = 0.0;
+            vars.gamma = 0.0;
 
           if (nparams > 17)
 	    vars.contrast = param[17].data.d_int32;
@@ -553,6 +563,11 @@ run(char   *name,		/* I - Name of print program. */
 	    vars.blue = param[20].data.d_int32;
 	  else
 	    vars.blue = 100;
+
+          if (nparams > 21)
+            vars.linear = param[21].data.d_int32;
+          else
+            vars.linear = 0;
 	};
 
         for (i = 0; i < (sizeof(printers) / sizeof(printers[0])); i ++)
@@ -630,8 +645,16 @@ run(char   *name,		/* I - Name of print program. */
 	blue = 0.01;
       
       printer      = printers + current_printer;
-      brightness   = 100.0 / vars.brightness;
-      screen_gamma = gimp_gamma() * brightness / 1.7;
+      if (vars.linear)
+	{
+	  screen_gamma = gimp_gamma() / 1.7;
+	  brightness   = vars.brightness / 100.0;
+	}
+      else
+	{
+	  brightness   = 100.0 / vars.brightness;
+	  screen_gamma = gimp_gamma() * brightness / 1.7;
+	}
       if (vars.gamma > 0)
 	print_gamma = 1.0 / vars.gamma;
       else
@@ -639,138 +662,170 @@ run(char   *name,		/* I - Name of print program. */
 
       for (i = 0; i < 256; i ++)
       {
-	/*
-	 * First, perform screen gamma correction
-	 */
-        pixel = 1.0 - pow((float)i / 255.0, screen_gamma);
+	if (vars.linear)
+	  {
+	    double adjusted_pixel;
+	    pixel = adjusted_pixel = (float) i / 255.0;
 
-	/*
-	 * Second, correct contrast
-	 */
-	pixel = 0.5 + ((pixel - 0.5) * contrast);
+	    if (brightness < 1.0)
+	      adjusted_pixel = adjusted_pixel * brightness;
+	    else if (brightness > 1.0)
+	      adjusted_pixel = 1.0 - ((1.0 - adjusted_pixel) / brightness);
 
-	/*
-	 * Third, fix up red, green, blue values
-	 *
-	 * I don't know how to do this correctly.  I think that what I'll do is
-	 * if the correction is less than 1 to multiply it by the correction;
-	 * if it's greater than 1, hinge it around 64K.  Doubtless we can
-	 * do better.  Oh well.
-	 */
-	if (pixel < 0.0)
-	  pixel = 0.0;
-	else if (pixel > 1.0)
-	  pixel = 1.0;
+	    if (pixel < 0)
+	      adjusted_pixel = 0;
+	    else if (pixel > 1.0)
+	      adjusted_pixel = 1.0;
 
-	red_pixel = pow(pixel, 1.0 / (red * red));
-	green_pixel = pow(pixel, 1.0 / (green * green));
-	blue_pixel = pow(pixel, 1.0 / (blue * blue));
+	    adjusted_pixel = pow(adjusted_pixel,
+				 print_gamma * screen_gamma * printer->gamma);
 
-	/*
-	 * Finally, fix up print gamma and scale
-	 */
+	    adjusted_pixel *= 65535.0;
 
-        pixel = 256.0 * (256.0 - 256.0 * printer->density *
-			 pow(brightness * pixel, print_gamma));
-        red_pixel = 256.0 * (256.0 - 256.0 * printer->density *
-			     pow(brightness * red_pixel, print_gamma));
-        green_pixel = 256.0 * (256.0 - 256.0 * printer->density *
-			       pow(brightness * green_pixel, print_gamma));
-        blue_pixel = 256.0 * (256.0 - 256.0 * printer->density *
-			      pow(brightness * blue_pixel, print_gamma));
+	    red_pixel = green_pixel = blue_pixel = adjusted_pixel;
+	    lut.composite[i] = adjusted_pixel / 256;
+	    lut16.composite[i] = adjusted_pixel;
+	    lut.red[i] = adjusted_pixel / 256;
+	    lut16.red[i] = adjusted_pixel;
+	    lut.green[i] = adjusted_pixel / 256;
+	    lut16.green[i] = adjusted_pixel;
+	    lut.blue[i] = adjusted_pixel / 256;
+	    lut16.blue[i] = adjusted_pixel;
+	  } else {
+	  
+	    /*
+	     * First, perform screen gamma correction
+	     */
+	    pixel = 1.0 - pow((float)i / 255.0, screen_gamma);
+
+	    /*
+	     * Second, correct contrast
+	     */
+	    pixel = 0.5 + ((pixel - 0.5) * contrast);
+
+	    /*
+	     * Third, fix up red, green, blue values
+	     *
+	     * I don't know how to do this correctly.  I think that what I'll do is
+	     * if the correction is less than 1 to multiply it by the correction;
+	     * if it's greater than 1, hinge it around 64K.  Doubtless we can
+	     * do better.  Oh well.
+	     */
+	    if (pixel < 0.0)
+	      pixel = 0.0;
+	    else if (pixel > 1.0)
+	      pixel = 1.0;
+
+	    red_pixel = pow(pixel, 1.0 / (red * red));
+	    green_pixel = pow(pixel, 1.0 / (green * green));
+	    blue_pixel = pow(pixel, 1.0 / (blue * blue));
+
+	    /*
+	     * Finally, fix up print gamma and scale
+	     */
+
+	    pixel = 256.0 * (256.0 - 256.0 * printer->density *
+			     pow(brightness * pixel, print_gamma));
+	    red_pixel = 256.0 * (256.0 - 256.0 * printer->density *
+				 pow(brightness * red_pixel, print_gamma));
+	    green_pixel = 256.0 * (256.0 - 256.0 * printer->density *
+				   pow(brightness * green_pixel, print_gamma));
+	    blue_pixel = 256.0 * (256.0 - 256.0 * printer->density *
+				  pow(brightness * blue_pixel, print_gamma));
 
 #if 0
-	if (red > 1.0)
-	  red_pixel = 65536.0 + ((pixel - 65536.0) / red);
-	else
-	  red_pixel = pixel * red;
-	if (green > 1.0)
-	  green_pixel = 65536.0 + ((pixel - 65536.0) / green);
-	else
-	  green_pixel = pixel * green;
-	if (blue > 1.0)
-	  blue_pixel = 65536.0 + ((pixel - 65536.0) / blue);
-	else
-	  blue_pixel = pixel * blue;
+	    if (red > 1.0)
+	      red_pixel = 65536.0 + ((pixel - 65536.0) / red);
+	    else
+	      red_pixel = pixel * red;
+	    if (green > 1.0)
+	      green_pixel = 65536.0 + ((pixel - 65536.0) / green);
+	    else
+	      green_pixel = pixel * green;
+	    if (blue > 1.0)
+	      blue_pixel = 65536.0 + ((pixel - 65536.0) / blue);
+	    else
+	      blue_pixel = pixel * blue;
 #endif
 
 #if 0
-	if (i == 0)
-	  pixel_0 = pixel;
-	pixel = (pixel - pixel_0) * 65536.0 / (65536.0 - pixel_0);
+	    if (i == 0)
+	      pixel_0 = pixel;
+	    pixel = (pixel - pixel_0) * 65536.0 / (65536.0 - pixel_0);
 #endif
 
-	if (pixel <= 0.0)
-	  {
-	    lut.composite[i] = 0;
-	    lut16.composite[i] = 0;
-	  }
-	else if (pixel >= 65535.0)
-	  {
-	    lut.composite[i] = 255;
-	    lut16.composite[i] = 65535;
-	  }
-	else
-	  {
-	    lut.composite[i] = (unsigned) (((float) ((unsigned) (pixel / 256.0))) + 0.5);
-	    lut16.composite[i] = (unsigned)(pixel + 0.5);
-	  }
+	    if (pixel <= 0.0)
+	      {
+		lut.composite[i] = 0;
+		lut16.composite[i] = 0;
+	      }
+	    else if (pixel >= 65535.0)
+	      {
+		lut.composite[i] = 255;
+		lut16.composite[i] = 65535;
+	      }
+	    else
+	      {
+		lut.composite[i] = (unsigned) (((float) ((unsigned) (pixel / 256.0))) + 0.5);
+		lut16.composite[i] = (unsigned)(pixel + 0.5);
+	      }
 
-	if (red_pixel <= 0.0)
-	  {
-	    lut.red[i] = 0;
-	    lut16.red[i] = 0;
-	  }
-	else if (red_pixel >= 65535.0)
-	  {
-	    lut.red[i] = 255;
-	    lut16.red[i] = 65535;
-	  }
-	else
-	  {
-	    lut.red[i] = (unsigned) (((float) ((unsigned) (red_pixel / 256.0))) + 0.5);
-	    lut16.red[i] = (unsigned)(red_pixel + 0.5);
-	  }
+	    if (red_pixel <= 0.0)
+	      {
+		lut.red[i] = 0;
+		lut16.red[i] = 0;
+	      }
+	    else if (red_pixel >= 65535.0)
+	      {
+		lut.red[i] = 255;
+		lut16.red[i] = 65535;
+	      }
+	    else
+	      {
+		lut.red[i] = (unsigned) (((float) ((unsigned) (red_pixel / 256.0))) + 0.5);
+		lut16.red[i] = (unsigned)(red_pixel + 0.5);
+	      }
 
-	if (green_pixel <= 0.0)
-	  {
-	    lut.green[i] = 0;
-	    lut16.green[i] = 0;
-	  }
-	else if (green_pixel >= 65535.0)
-	  {
-	    lut.green[i] = 255;
-	    lut16.green[i] = 65535;
-	  }
-	else
-	  {
-	    lut.green[i] = (unsigned) (((float) ((unsigned) (green_pixel / 256.0))) + 0.5);
-	    lut16.green[i] = (unsigned)(green_pixel + 0.5);
-	  }
+	    if (green_pixel <= 0.0)
+	      {
+		lut.green[i] = 0;
+		lut16.green[i] = 0;
+	      }
+	    else if (green_pixel >= 65535.0)
+	      {
+		lut.green[i] = 255;
+		lut16.green[i] = 65535;
+	      }
+	    else
+	      {
+		lut.green[i] = (unsigned) (((float) ((unsigned) (green_pixel / 256.0))) + 0.5);
+		lut16.green[i] = (unsigned)(green_pixel + 0.5);
+	      }
 
-	if (blue_pixel <= 0.0)
-	  {
-	    lut.blue[i] = 0;
-	    lut16.blue[i] = 0;
+	    if (blue_pixel <= 0.0)
+	      {
+		lut.blue[i] = 0;
+		lut16.blue[i] = 0;
+	      }
+	    else if (blue_pixel >= 65535.0)
+	      {
+		lut.blue[i] = 255;
+		lut16.blue[i] = 65535;
+	      }
+	    else
+	      {
+		lut.blue[i] = (unsigned) (((float) ((unsigned) (blue_pixel / 256.0))) + 0.5);
+		lut16.blue[i] = (unsigned)(blue_pixel + 0.5);
+	      }
 	  }
-	else if (blue_pixel >= 65535.0)
-	  {
-	    lut.blue[i] = 255;
-	    lut16.blue[i] = 65535;
-	  }
-	else
-	  {
-	    lut.blue[i] = (unsigned) (((float) ((unsigned) (blue_pixel / 256.0))) + 0.5);
-	    lut16.blue[i] = (unsigned)(blue_pixel + 0.5);
-	  }
-
 #ifdef PRINT_LUT
-	fprintf(ltfile, "%3i  %3d %5d  %3d %5d  %3d %5d  %3d %5d  %f %f %f %f\n",
+	fprintf(ltfile, "%3i  %3d %5d  %3d %5d  %3d %5d  %3d %5d  %f %f %f %f  %f %f %f\n",
 		i, lut.composite[i], lut16.composite[i],
 		lut.red[i], lut16.red[i],
 		lut.green[i], lut16.green[i],
 		lut.blue[i], lut16.blue[i],
-		pixel, red_pixel, green_pixel, blue_pixel);
+		pixel, red_pixel, green_pixel, blue_pixel, print_gamma,
+		screen_gamma, printer->gamma);
 #endif
       };
 
@@ -858,6 +913,7 @@ do_print_dialog(void)
 		*box;		/* Box container */
   GtkObject	*scale_data;	/* Scale data (limits) */
   GSList	*group;		/* Grouping for output type */
+  GSList	*linear_group;	/* Grouping for linear scale */
   gint		argc;		/* Fake argc for GUI */
   gchar		**argv;		/* Fake argv for GUI */
   static char	*orients[] =	/* Orientation strings */
@@ -1066,6 +1122,25 @@ do_print_dialog(void)
   gtk_signal_connect(GTK_OBJECT(button), "toggled",
 		     (GtkSignalFunc)output_type_callback,
 		     (gpointer)OUTPUT_COLOR);
+  gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
+  gtk_widget_show(button);
+
+  linear_off = button = gtk_radio_button_new_with_label(NULL, _("Normal scale"));
+  linear_group = gtk_radio_button_group(GTK_RADIO_BUTTON(button));
+  if (vars.linear == 0)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
+  gtk_signal_connect(GTK_OBJECT(button), "toggled",
+		     (GtkSignalFunc)linear_callback,
+		     (gpointer)0);
+  gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
+  gtk_widget_show(button);
+
+  linear_on = button = gtk_radio_button_new_with_label(linear_group, _("Linear scale"));
+  if (vars.linear == 1)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
+  gtk_signal_connect(GTK_OBJECT(button), "toggled",
+		     (GtkSignalFunc)linear_callback,
+		     (gpointer)1);
   gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
   gtk_widget_show(button);
 
@@ -2181,6 +2256,20 @@ output_type_callback(GtkWidget *widget,	/* I - Output type button */
   {
     vars.output_type = data;
     plist[plist_current].output_type = data;
+  };
+}
+
+/*
+ * 'linear_callback()' - Update the current linear gradient mode...
+ */
+
+static void
+linear_callback(GtkWidget *widget,	/* I - Output type button */
+		gint      data)	/* I - Data */
+{
+  if (GTK_TOGGLE_BUTTON(widget)->active)
+  {
+    vars.linear = data;
   };
 }
 
