@@ -3147,6 +3147,12 @@ escp2_set_margins(const stp_vars_t v, escp2_init_t *init)
 {
   int l = init->ydpi * (init->page_height - init->page_bottom) / 72;
   int t = init->ydpi * (init->page_height - init->page_top) / 72;
+
+  if (escp2_has_cap(init->model, MODEL_YZEROMARGIN, MODEL_YZEROMARGIN_YES,
+		    init->v))
+    /* Make the page 2/10" higher (probably ignored by the printer anyway) */
+    l += 144 * 720 / init->ydpi;
+
   if (escp2_has_cap(init->model, MODEL_COMMAND, MODEL_COMMAND_PRO, init->v) ||
       (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT,
 		       MODEL_VARIABLE_NORMAL, init->v)) &&
