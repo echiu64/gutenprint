@@ -30,7 +30,6 @@ MAINT_CHARSET = latin1
 EXTRA_DIST = \
 	changelog \
 	compat \
-	config \
 	control \
 	control.in \
 	copyright \
