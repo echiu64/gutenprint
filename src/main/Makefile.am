@@ -71,6 +71,7 @@ endif
 
 libgimpprint_la_SOURCES = \
 	$(libgimpprint_modules) \
+	color.h \
 	curve.c \
 	dither.h \
 	dither-matrices.h \
@@ -91,6 +92,7 @@ libgimpprint_la_SOURCES = \
 	print-weave.c \
 	print-version.c \
 	printers.c \
+	printlist.h \
 	image.c \
 	printers.h \
 	string-list.c \
