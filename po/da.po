@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 0.3\n"
-"POT-Creation-Date: 2001-10-28 17:50-0500\n"
+"POT-Creation-Date: 2001-11-01 19:46-0500\n"
 "PO-Revision-Date: 2001-10-19 20:53+0200\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -74,12 +74,12 @@ msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: flaget `-W %s' tillader ikke argumenter\n"
 
 #: src/main/print-canon.c:1310 src/main/print-escp2.c:1655
-#: src/main/print-escp2.c:1714 src/main/print-lexmark.c:857
+#: src/main/print-escp2.c:1714 src/main/print-lexmark.c:882
 msgid "Plain Paper"
 msgstr ""
 
 #: src/main/print-canon.c:1311 src/main/print-escp2.c:1667
-#: src/main/print-escp2.c:1726 src/main/print-lexmark.c:863
+#: src/main/print-escp2.c:1726 src/main/print-lexmark.c:888
 msgid "Transparencies"
 msgstr ""
 
@@ -120,24 +120,24 @@ msgid "Photo Paper Pro"
 msgstr ""
 
 #: src/main/print-canon.c:1321 src/main/print-escp2.c:1701
-#: src/main/print-escp2.c:1760 src/main/print-lexmark.c:893
+#: src/main/print-escp2.c:1760 src/main/print-lexmark.c:918
 msgid "Other"
 msgstr "Andet"
 
-#: src/main/print-canon.c:1594 src/main/print-lexmark.c:1108
+#: src/main/print-canon.c:1594 src/main/print-lexmark.c:1133
 msgid "Auto Sheet Feeder"
 msgstr ""
 
-#: src/main/print-canon.c:1595 src/main/print-lexmark.c:1109
+#: src/main/print-canon.c:1595 src/main/print-lexmark.c:1134
 msgid "Manual with Pause"
 msgstr ""
 
-#: src/main/print-canon.c:1596 src/main/print-lexmark.c:1110
+#: src/main/print-canon.c:1596 src/main/print-lexmark.c:1135
 msgid "Manual without Pause"
 msgstr ""
 
 #: src/escputil/escputil.c:577 src/main/print-canon.c:1689
-#: src/main/print-lexmark.c:632
+#: src/main/print-lexmark.c:639
 msgid "Black"
 msgstr "Sort"
 
@@ -188,12 +188,12 @@ msgid "Postcard"
 msgstr ""
 
 #: src/main/print-escp2.c:1664 src/main/print-escp2.c:1723
-#: src/main/print-lexmark.c:860
+#: src/main/print-lexmark.c:885
 msgid "Glossy Film"
 msgstr ""
 
 #: src/main/print-escp2.c:1670 src/main/print-escp2.c:1729
-#: src/main/print-lexmark.c:866
+#: src/main/print-lexmark.c:891
 msgid "Envelopes"
 msgstr ""
 
@@ -202,42 +202,42 @@ msgid "Back Light Film"
 msgstr ""
 
 #: src/main/print-escp2.c:1676 src/main/print-escp2.c:1735
-#: src/main/print-lexmark.c:869
+#: src/main/print-lexmark.c:894
 msgid "Matte Paper"
 msgstr ""
 
 #: src/main/print-escp2.c:1679 src/main/print-escp2.c:1738
-#: src/main/print-lexmark.c:872
+#: src/main/print-lexmark.c:897
 msgid "Inkjet Paper"
 msgstr ""
 
 #: src/main/print-escp2.c:1682 src/main/print-escp2.c:1741
-#: src/main/print-lexmark.c:875
+#: src/main/print-lexmark.c:900
 msgid "Photo Quality Inkjet Paper"
 msgstr ""
 
 #: src/main/print-escp2.c:1685 src/main/print-escp2.c:1744
-#: src/main/print-lexmark.c:878
+#: src/main/print-lexmark.c:903
 msgid "Photo Paper"
 msgstr ""
 
 #: src/main/print-escp2.c:1688 src/main/print-escp2.c:1747
-#: src/main/print-lexmark.c:881
+#: src/main/print-lexmark.c:906
 msgid "Premium Glossy Photo Paper"
 msgstr ""
 
 #: src/main/print-escp2.c:1692 src/main/print-escp2.c:1751
-#: src/main/print-lexmark.c:884
+#: src/main/print-lexmark.c:909
 msgid "Premium Luster Photo Paper"
 msgstr ""
 
 #: src/main/print-escp2.c:1695 src/main/print-escp2.c:1754
-#: src/main/print-lexmark.c:887
+#: src/main/print-lexmark.c:912
 msgid "Photo Quality Glossy Paper"
 msgstr ""
 
 #: src/main/print-escp2.c:1698 src/main/print-escp2.c:1757
-#: src/main/print-lexmark.c:890
+#: src/main/print-lexmark.c:915
 msgid "Ilford Heavy Paper"
 msgstr ""
 
@@ -477,13 +477,13 @@ msgstr ""
 msgid "Six Color Enhanced Composite"
 msgstr ""
 
-#: src/main/print-escp2.c:3000 src/main/print-lexmark.c:622
-#: src/main/print-lexmark.c:702
+#: src/main/print-escp2.c:3000 src/main/print-lexmark.c:629
+#: src/main/print-lexmark.c:709
 msgid "Six Color Photo"
 msgstr ""
 
-#: src/main/print-escp2.c:3001 src/main/print-lexmark.c:627
-#: src/main/print-lexmark.c:707
+#: src/main/print-escp2.c:3001 src/main/print-lexmark.c:634
+#: src/main/print-lexmark.c:714
 msgid "Five Color Photo Composite"
 msgstr ""
 
@@ -491,13 +491,13 @@ msgstr ""
 #. *                                                        h_catridge_offset
 #. *                                                           h_direction_offset
 #. *                                                               head_offset
-#: src/main/print-escp2.c:3002 src/main/print-lexmark.c:612
-#: src/main/print-lexmark.c:692
+#: src/main/print-escp2.c:3002 src/main/print-lexmark.c:619
+#: src/main/print-lexmark.c:699
 msgid "Four Color Standard"
 msgstr ""
 
-#: src/main/print-escp2.c:3003 src/main/print-lexmark.c:617
-#: src/main/print-lexmark.c:697
+#: src/main/print-escp2.c:3003 src/main/print-lexmark.c:624
+#: src/main/print-lexmark.c:704
 msgid "Three Color Composite"
 msgstr ""
 
@@ -511,51 +511,51 @@ msgid "Roll Feed"
 msgstr ""
 
 #. name                                                    hres vres softw v_pass overs unidir resid
-#: src/main/print-lexmark.c:588 src/main/print-lexmark.c:674
+#: src/main/print-lexmark.c:595 src/main/print-lexmark.c:681
 msgid "300 DPI x 600 DPI"
 msgstr ""
 
-#: src/main/print-lexmark.c:589 src/main/print-lexmark.c:675
+#: src/main/print-lexmark.c:596 src/main/print-lexmark.c:682
 msgid "600 DPI"
 msgstr ""
 
-#: src/main/print-lexmark.c:590 src/main/print-lexmark.c:676
+#: src/main/print-lexmark.c:597 src/main/print-lexmark.c:683
 msgid "600 DPI high quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:591 src/main/print-lexmark.c:677
+#: src/main/print-lexmark.c:598 src/main/print-lexmark.c:684
 msgid "600 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-lexmark.c:592 src/main/print-lexmark.c:678
+#: src/main/print-lexmark.c:599 src/main/print-lexmark.c:685
 msgid "1200 DPI"
 msgstr ""
 
-#: src/main/print-lexmark.c:593 src/main/print-lexmark.c:679
+#: src/main/print-lexmark.c:600 src/main/print-lexmark.c:686
 msgid "1200 DPI high quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:594 src/main/print-lexmark.c:680
+#: src/main/print-lexmark.c:601 src/main/print-lexmark.c:687
 msgid "1200 DPI highest quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:595 src/main/print-lexmark.c:681
+#: src/main/print-lexmark.c:602 src/main/print-lexmark.c:688
 msgid "1200 DPI  Unidirectional"
 msgstr ""
 
-#: src/main/print-lexmark.c:596
+#: src/main/print-lexmark.c:603
 msgid "2400 DPI x 1200 DPI"
 msgstr ""
 
-#: src/main/print-lexmark.c:597
+#: src/main/print-lexmark.c:604
 msgid "2400 DPI x 1200 DPI high quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:598
+#: src/main/print-lexmark.c:605
 msgid "2400 DPI x 1200 DPI highest quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:600
+#: src/main/print-lexmark.c:607
 msgid "test print"
 msgstr ""
 

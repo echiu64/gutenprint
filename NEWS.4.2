@@ -89,7 +89,7 @@ Quality Improvements:
    lines at high resolution.
 
 4) Epson printers support a greater range of resolutions and quality
-   settings, from very low resolution draft mode up to 2880x720 for
+   settings, from very low resolution draft mode up to 2880x1440 for
    the newest Epson printers.  This offers a full range of
    speed/quality tradeoffs for any printing application.  The emulated
    resolutions in 4.0 have been dropped, as they do not yield any
@@ -232,7 +232,7 @@ Known Limitations:
    580, and C20SX, C20UX, C40SX, and C40UX).
 
 3) Changing ink cartridges on the Epson Stylus Color 480/580 is not
-   supported.  This will not be fixed for 4.2.
+   supported.
 
 4) The drivers for the Epson Stylus Pro printers (5000, 5500, 7000,
    7500, 9000, 9500, and 10000) are only partially tested and tuned.
@@ -247,16 +247,21 @@ Known Limitations:
    780/785/895, 890, 1280/1290, and 810/820) do not produce optimum
    quality on Premium Glossy Photo Paper.  In particular, color
    quality may not be at quite as high a standard as it is on the
-   older Photo Paper.  The difference is subtle.  Tuning the color
-   output may or may not improve the quality. 
+   older Photo Paper.  The difference is subtle; for most purposes the
+   output quality will be superb.  Tuning the color output may or may
+   not improve the quality.
 
 
 Printer-Specific Notes:
 
-1) The Epson Stylus C80 may give better results using Three Color
-   Composite printing on Premium Glossy Photo Paper and Premium
+1) The Epson Stylus C70 and C80 may give better results using Three
+   Color Composite printing on Premium Glossy Photo Paper and Premium
    Semigloss.  Epson's proprietary drivers are thought to do this on
    these papers.
+
+2) The Epson Stylus C70 and C80 support resolutions of 1440x1440 and
+   2880x1440, but these resolutions may not yield any improvement over
+   2880x720 (in fact, the quality may be worse at these resolutions.
 
 
 Internal changes:

@@ -1,6 +1,6 @@
 INTRODUCTION
 
-    This is Gimp-Print version 4.1.99b4, the fourth beta release
+    This is Gimp-Print version 4.1.99rc1, the first release candidate
     leading up to the 4.2 stable release.  Gimp-print is the print
     facility for the Gimp, and in addition a suite of drivers that may
     be used with common UNIX spooling systems using GhostScript or
