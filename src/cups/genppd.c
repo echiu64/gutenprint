@@ -687,10 +687,8 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   */
 
 
-  
   if (stat(prefix, &dir) && !S_ISDIR(dir.st_mode))
     {
-      printf ("***B***\n");
       if (mkdir(prefix, 0777))
 	{
 	  printf("cups-genppd: Cannot create directory %s: %s\n",
