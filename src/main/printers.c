@@ -759,32 +759,6 @@ stp_verify_printer_params(stp_vars_t *v)
   return answer;
 }
 
-
-typedef struct
-{
-  const char *property;
-  const char *parameter;
-} stpi_xml_prop_t;
-
-static const stpi_xml_prop_t stpi_xml_props[] =
-{
-  { "black", "BlackGamma" },
-  { "cyan", "CyanGamma" },
-  { "yellow", "YellowGamma" },
-  { "magenta", "MagentaGamma" },
-  { "brightness", "Brightness" },
-  { "gamma", "Gamma" },
-  { "density", "Density" },
-  { "saturation", "Saturation" },
-  { "blackdensity", "BlackDensity" },
-  { "cyandensity", "CyanDensity" },
-  { "yellowdensity", "YellowDensity" },
-  { "magentadensity", "MagentaDensity" },
-  { "gcrlower", "GCRLower" },
-  { "gcrupper", "GCRupper" },
-  { NULL, NULL }
-};
-
 int
 stp_family_register(stp_list_t *family)
 {
@@ -862,31 +836,10 @@ stp_printer_create_from_xmltree(stp_mxml_node_t *printer, /* The printer node */
 {
   stp_mxml_node_t *prop;                                  /* Temporary node pointer */
   const char *stmp;                                    /* Temporary string */
- /* props[] (unused) is the correct tag sequence */
-  /*  const char *props[] =
-    {
-      "model",
-      "black",
-      "cyan",
-      "yellow",
-      "magenta",
-      "brightness",
-      "gamma",
-      "density",
-      "saturation",
-      "blackgamma",
-      "cyangamma",
-      "yellowgamma",
-      "magentagamma",
-      "gcrlower",
-      "gcrupper",
-      NULL
-      };*/
   stp_printer_t *outprinter;                 /* Generated printer */
   int
     driver = 0,                                       /* Check driver */
-    long_name = 0,                                    /* Check long_name */
-    model = 0;                                        /* Check model */
+    long_name = 0;
 
   outprinter = stp_zalloc(sizeof(stp_printer_t));
   if (!outprinter)
@@ -903,6 +856,7 @@ stp_printer_create_from_xmltree(stp_mxml_node_t *printer, /* The printer node */
 
   outprinter->long_name = stp_strdup(stp_mxmlElementGetAttr(printer, "name"));
   outprinter->manufacturer = stp_strdup(stp_mxmlElementGetAttr(printer, "manufacturer"));
+  outprinter->model = stp_xmlstrtol(stp_mxmlElementGetAttr(printer, "model"));
   outprinter->family = stp_strdup((const char *) family);
 
   if (stp_get_driver(outprinter->printvars))
@@ -918,38 +872,71 @@ stp_printer_create_from_xmltree(stp_mxml_node_t *printer, /* The printer node */
       if (prop->type == STP_MXML_ELEMENT)
 	{
 	  const char *prop_name = prop->value.element.name;
-	  if (!strcmp(prop_name, "model"))
+	  if (!strcmp(prop_name, "parameter"))
 	    {
-	      stmp = stp_mxmlElementGetAttr(prop, "value");
-	      if (stmp)
+	      const char *p_type = stp_mxmlElementGetAttr(prop, "type");
+	      const char *p_name = stp_mxmlElementGetAttr(prop, "name");
+	      stp_mxml_node_t *child = prop->child;
+	      if (!p_type || !p_name)
+		stp_erprintf("Bad property on driver %s\n", outprinter->driver);
+	      else if (strcmp(p_type, "float") == 0)
 		{
-		  outprinter->model = stp_xmlstrtol(stmp);
-		  model = 1;
+		  if (child->type == STP_MXML_TEXT)
+		    stp_set_float_parameter
+		      (outprinter->printvars, p_name,
+		       stp_xmlstrtod(child->value.text.string));
 		}
-	    }
-	  else
-	    {
-	      const stpi_xml_prop_t *stp_prop = stpi_xml_props;
-	      while (stp_prop->property)
+	      else if (strcmp(p_type, "integer") == 0)
 		{
-		  if (!strcmp(prop_name, stp_prop->property))
+		  if (child->type == STP_MXML_TEXT)
+		    stp_set_int_parameter
+		      (outprinter->printvars, p_name,
+		       (int) stp_xmlstrtol(child->value.text.string));
+		}
+	      else if (strcmp(p_type, "boolean") == 0)
+		{
+		  if (child->type == STP_MXML_TEXT)
+		    stp_set_boolean_parameter
+		      (outprinter->printvars, p_name,
+		       (int) stp_xmlstrtol(child->value.text.string));
+		}
+	      else if (strcmp(p_type, "string") == 0)
+		{
+		  if (child->type == STP_MXML_TEXT)
+		    stp_set_string_parameter
+		      (outprinter->printvars, p_name, child->value.text.string);
+		}
+	      else if (strcmp(p_type, "curve") == 0)
+		{
+		  stp_curve_t *curve = stp_curve_create_from_xmltree(child);
+		  if (curve)
 		    {
-		      stmp = stp_mxmlElementGetAttr(prop, "value");
-		      if (stmp)
-			{
-			  stp_set_float_parameter(outprinter->printvars,
-						  stp_prop->parameter,
-						  (float) stp_xmlstrtod(stmp));
-			  break;
-			}
+		      stp_set_curve_parameter(outprinter->printvars,
+					      p_name, curve);
+		      stp_curve_destroy(curve);
 		    }
-		  stp_prop++;
+		}
+	      else if (strcmp(p_type, "array") == 0)
+		{
+		  stp_array_t *array = stp_array_create_from_xmltree(child);
+		  if (array)
+		    {
+		      stp_set_array_parameter(outprinter->printvars,
+					      p_name, array);
+		      stp_array_destroy(array);
+		    }
+		}
+	      else
+		{
+		  stp_erprintf("Bad property %s type %s on driver %s\n",
+			       p_name, p_type, outprinter->driver);
+		  continue;
 		}
 	    }
 	}
       prop = prop->next;
     }
-  if (driver && long_name && model && printfuncs)
+  if (driver && long_name && printfuncs)
     {
       if (stp_get_debug_level() & STP_DBG_XML)
 	{
