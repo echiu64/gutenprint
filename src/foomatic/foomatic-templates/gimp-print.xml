@@ -7,6 +7,11 @@
  </execution>
  <comments>
   <en>
+    &lt;b&gt;This page provides data for the GIMP-Print 4.2.x series,
+    if you are using GIMP-Print 4.0.x, go to the &quot;&lt;a
+    href=&quot;show_driver.cgi?driver=stp&quot;&gt;stp&lt;/a&gt;&quot;
+    page.&lt;/b&gt;&lt;p&gt;
+
     GIMP-Print supports a wide variety of Epson Stylus, HP DeskJet,
     LaserJet, Canon BubbleJet, Lexmark inkjet printers, with the
     primary goal being uncompromising quality.  Epson Stylus printers
