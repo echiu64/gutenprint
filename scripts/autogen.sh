@@ -211,8 +211,8 @@ test "$sgmltools_err" -eq 0 && {
 
   test "$sgmltools_err" -eq 1 && {
     echo " "
-    echo "***Warning***: You must have \"sgmltools-lite\" version 3.0.2 or newer installed to"
-    echo "build the Gimp-Print user's guide."
+    echo "***Warning***: You must have \"sgmltools-lite\" version 3.0.2"
+    echo "or newer installed to build the Gimp-Print user's guide."
     echo "Get http://prdownloads.sourceforge.net/projects/sgmltools-lite/sgmltools-lite-3.0.2.tar.gz"
     echo "(or a newer version if available)"
     echo " "
