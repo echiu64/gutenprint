@@ -30,6 +30,8 @@ AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
 LIBS = @LIBS@ ../lib/libprintut.la $(INTLLIBS) ../lib/libprintut.la
 
+TESTS = testdither
+
 
 ## Programs
 TEST_BIN = testdither escp2-weavetest unprint escp2-unprint pcl-unprint bjc-unprint
