@@ -235,6 +235,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     v.page_width  = cups.header.PageSize[0];
     v.page_height = cups.header.PageSize[1];
     v.orientation = ORIENT_PORTRAIT;
+    v.gamma       = 1.7;
 
     if (cups.header.cupsColorSpace == CUPS_CSPACE_W)
       v.output_type = OUTPUT_GRAY;
