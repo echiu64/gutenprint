@@ -26,7 +26,6 @@ for bits in $bits ; do
     for dither_type in $dither_types  ; do
 	for image_type in $image_types ; do
 	    for algo in $algos ; do
-		echo ./testdither $image $bits $dither_type $image_type $algo
 		./testdither $image $bits $dither_type $image_type $algo
 		status=$?
 		out_status=`expr $out_status + $status`

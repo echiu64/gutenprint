@@ -142,7 +142,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   unsigned short rgb[IMAGE_WIDTH * 4],	/* RGB buffer */
 		gray[IMAGE_WIDTH];	/* Grayscale buffer */
   int		write_image;		/* Write the image to disk? */
-  FILE		*fp;			/* PPM/PGM output file */
+  FILE		*fp = NULL;		/* PPM/PGM output file */
   char		filename[1024];		/* Name of file */
   stp_vars_t	v;			/* Dither variables */
   static const char	*dither_types[] =	/* Different dithering modes */
@@ -340,6 +340,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   * Open the PPM/PGM file...
   */
 
+
   sprintf(filename, "%s-%s-%s-%dbit.%s", image_types[image_type],
 	  dither_types[dither_type],
 	  dither_name ? dither_name : stp_default_dither_algorithm(),
@@ -347,25 +348,22 @@ main(int  argc,				/* I - Number of command-line arguments */
 	  (dither_type == DITHER_GRAY || dither_type == DITHER_MONOCHROME) ?
 	  "pgm" : "ppm");
 
+  printf("%s ", filename);
+  
   if (write_image)
-  {
-    if ((fp = fopen(filename, "wb")) != NULL)
     {
-      puts(filename);
-      if (dither_type == DITHER_GRAY || dither_type == DITHER_MONOCHROME)
-	fputs("P5\n", fp);
-      else
-	fputs("P6\n", fp);
+      if ((fp = fopen(filename, "wb")) != NULL)
+	{
+	  puts(filename);
+	  if (dither_type == DITHER_GRAY || dither_type == DITHER_MONOCHROME)
+	    fputs("P5\n", fp);
+	  else
+	    fputs("P6\n", fp);
 
-      fprintf(fp, "%d\n%d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT);
-    }
-    else
-      perror(filename);
-  }
-  else
-    {
-      puts(filename);
-      fp = NULL;
+	  fprintf(fp, "%d\n%d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT);
+	}
+      else
+	perror("Create");
     }
 
  /*
@@ -395,7 +393,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   for (i = 0; i < IMAGE_HEIGHT; i ++)
   {
-    if ((i & 15) == 0)
+    if ((i & 63) == 0)
     {
       printf("\rProcessing row %d...", i);
       fflush(stdout);
@@ -435,8 +433,8 @@ main(int  argc,				/* I - Number of command-line arguments */
   if (fp != NULL)
     fclose(fp);
 
-  printf("\rTotal dither time for %d pixels is %.3f seconds, or %.2f pixels/sec.\n",
-         IMAGE_WIDTH * IMAGE_HEIGHT, compute_interval(&tv1, &tv2),
+  printf("\r%s Total dither time for %d pixels is %.3f seconds, or %.2f pixels/sec.\n",
+         filename, IMAGE_WIDTH * IMAGE_HEIGHT, compute_interval(&tv1, &tv2),
 	 (float)(IMAGE_WIDTH * IMAGE_HEIGHT) / compute_interval(&tv1, &tv2));
   return 0;
 }
