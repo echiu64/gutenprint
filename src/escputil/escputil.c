@@ -90,7 +90,7 @@ struct option optlist[] =
   { "align-head",	0,	NULL,	(int) 'a' },
   { "align-color",	0,	NULL,	(int) 'o' },
   { "status",           0,      NULL,   (int) 's' },
-  { "usb",		0,	NULL,	(int) 'u' },
+  { "new",		0,	NULL,	(int) 'u' },
   { "help",		0,	NULL,	(int) 'h' },
   { "identify",		0,	NULL,	(int) 'd' },
   { "model",		1,	NULL,	(int) 'm' },
@@ -122,7 +122,8 @@ Usage: escputil [-c | -n | -a | -i | -o | -s | -d]\n\
     -d|--identify      Query the printer for make and model information.\n\
                        This requires read/write access to the raw printer\n\
                        device.\n\
-    -u|--usb           The printer is connected via USB.\n\
+    -u|--new           The printer is a new printer (Stylus Color 740 or\n\
+                       newer).\n\
     -h|--help          Print this help message.\n\
     -q|--quiet         Suppress the banner.\n\
     -m|--model         Specify the precise printer model for head alignment.\n";
@@ -150,7 +151,7 @@ Usage: escputil [-c | -n | -a | -i | -o | -s | -d]\n\
           read/write access to the raw printer device.\n\
     -d Query the printer for make and model information.  This\n\
           requires read/write access to the raw printer device.\n\
-    -u The printer is connected via USB.\n\
+    -u The printer is a new printer (Stylus Color 740 or newer).\n\
     -h Print this help message.\n\
     -q Suppress the banner.\n\
     -m Specify the precise printer model for head alignment.\n";
@@ -233,7 +234,7 @@ char *raw_device = NULL;
 char *printer_model = NULL;
 char printer_cmd[1025];
 int bufpos = 0;
-int isUSB = 0;
+int isnew = 0;
 
 void
 do_help(int code)
@@ -261,7 +262,7 @@ static void
 initialize_print_cmd(void)
 {
   bufpos = 0;
-  if (isUSB)
+  if (isnew)
     exit_packet_mode();
 }
 
@@ -325,7 +326,7 @@ main(int argc, char **argv)
 	  strcpy(printer_model, optarg);
 	  break;
 	case 'u':
-	  isUSB = 1;
+	  isnew = 1;
 	  break;
 	case 'h':
 	  do_help(0);
