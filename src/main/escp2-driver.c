@@ -626,7 +626,8 @@ void
 stpi_escp2_terminate_page(stp_vars_t v)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  if (pd->input_slot->roll_feed_cut_flags != ROLL_FEED_DONT_EJECT)
+  if (!pd->input_slot ||
+      pd->input_slot->roll_feed_cut_flags != ROLL_FEED_DONT_EJECT)
     {
       if (!pd->printed_something)
 	stpi_send_command(v, "\n", "");
