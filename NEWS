@@ -72,6 +72,13 @@ Gimp-Print 4.3.21 contains the following major changes over Gimp-Print
    tones has been tweaked to achieve a better match and smoother
    transitions.
 
+   The EvenTone dither algorithm has significant improvements in
+   smoothness when multiple drop sizes are used, particularly for
+   black-only prints.  In addition, certain artifacts in the light
+   midtones have been eliminated.  There are some very weak new
+   artifacts that may occur in regions of transition between drop
+   sizes, but in most cases these will not be visible.
+
    Finally, the black generation has been changed, producing more
    solid dark tones.  Instead of a linear ramp between the point at
    black ink starts to be introduced and the point at which the gray
