@@ -145,7 +145,7 @@ stp_printer_t printer_list[] =
   { "400",	"Stylus Color 400",	1,	7 },
   { "440",	"Stylus Color 440",	1,	15 },
   { "460",	"Stylus Color 460",	1,	15 },
-  { "460",	"Stylus Color 480",	3,	15 },
+  { "480",	"Stylus Color 480",	3,	15 },
   { "500",	"Stylus Color 500",	1,	7 },
   { "580",	"Stylus Color 580",	3,	15 },
   { "600",	"Stylus Color 600",	1,	7 },
