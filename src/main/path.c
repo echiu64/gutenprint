@@ -187,7 +187,7 @@ stp_path_split(stp_list_t *list, /* List to add directories to */
 
       if (len && !(len == 1 && !end))
 	{
-	  dir = (char *) stp_malloc(sizeof(char) * len);
+	  dir = (char *) stp_malloc(len + 1);
 	  strncpy(dir, start, len);
 	  dir[len] = '\0';
 	  stp_list_item_create(list, stp_list_get_end(list), dir);
