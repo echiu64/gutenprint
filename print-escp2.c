@@ -2859,16 +2859,17 @@ escp2_print(const printer_t *printer,		/* I - Model */
   if (black != NULL)
     free(black);
   if (cyan != NULL)
-    {
-      free(cyan);
-      free(magenta);
-      free(yellow);
-    }
+    free(cyan);
+  if (magenta != NULL)
+    free(magenta);
+  if (yellow != NULL)
+    free(yellow);
   if (lcyan != NULL)
-    {
-      free(lcyan);
-      free(lmagenta);
-    }
+    free(lcyan);
+  if (lmagenta != NULL)
+    free(lmagenta);
+  if (dyellow != NULL)
+    free(dyellow);
 
   escp2_deinit_printer(prn, &init);
 #ifdef QUANTIFY
