@@ -1754,7 +1754,7 @@ cmyk_8_to_cmyk(const stp_vars_t vars,
   static double density = -1.0;
   static double print_gamma = -1.0;
 
-
+  memset(nz, 0, sizeof(nz));
   if (density != stp_get_density(vars) ||
       print_gamma != stp_get_gamma(vars))
   {
@@ -1809,6 +1809,7 @@ cmyk_to_cmyk(const stp_vars_t vars,
   int nz[4];
   const unsigned short *scmykin = (const unsigned short *) cmykin;
 
+  memset(nz, 0, sizeof(nz));
   for (i = 0; i < width; i++)
     {
       for (j = 0; j < 4; j++)
