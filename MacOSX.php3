@@ -77,7 +77,10 @@ require('standard_html_header.php3');
  "http://sourceforge.net/tracker/?group_id=1537&amp;atid=101537" >bug tracker</a>
  then you should file a <a href=
  "http://sourceforge.net/tracker/?group_id=1537&amp;atid=201537" >support
- request</a> against it.
+ request</a> against it. If there is a feature missing from Gimp-Print that you 
+ would like to see added please file a <a href=
+ "https://sourceforge.net/tracker/?atid=351537&group_id=1537&func=browse"
+ >feature request</a>.
  </p>
  </td>
  </tr>
