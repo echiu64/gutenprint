@@ -782,7 +782,8 @@ Image_note_progress(stp_image_t *image,	/* I - Image */
     return;
 
   fprintf(stderr, "INFO: Printing page %d, %.0f%%\n",
-          cups->page, 100.0 * current / total);
+          cups->page +1, 100.0 * current / total);
+    /* cups->page + 1 because users expect 1-based counting */
 }
 
 
