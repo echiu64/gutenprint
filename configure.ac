@@ -503,14 +503,15 @@ dnl The following is used to build a "utility library" in lib/
 AC_REPLACE_FUNCS(xgetcwd xmalloc)
 AC_CHECK_FUNC(asprintf,
   AC_DEFINE(HAVE_ASPRINTF,, [Define if you have the `asprintf' function.]),
-  LIBOBJS="${LIBOBJS} vasprintf.o")
+  AC_LIBOBJ(vasprintf))
 AC_CHECK_FUNC(vasprintf,
   AC_DEFINE(HAVE_VASPRINTF,, [Define if you have the `vasprintf' function.]),
-  LIBOBJS="${LIBOBJS} vasprintf.o")
+  AC_LIBOBJ(vasprintf))
 AC_SUBST(PRINT_VASPRINTF)
 AC_CHECK_FUNC(getopt_long,
   AC_DEFINE(HAVE_GETOPT_LONG,, [Define if you have the `getopt_long' function.]),
-  LIBOBJS="${LIBOBJS} getopt.o getopt1.o")
+  AC_LIBOBJ(getopt)
+  AC_LIBOBJ(getopt1))
 
 dnl Define what has to be built
 AM_CONDITIONAL(BUILD_FOOMATIC, test x${BUILD_FOOMATIC} = xyes)
@@ -568,8 +569,11 @@ AM_CONDITIONAL(USE_NLS, test x${USE_NLS} = xyes)
 
 
 dnl Define LTLIBOBJS
-LTLIBOBJS=`echo "$LIBOBJS" | sed 's/\.o/.lo/g'`
+AC_CONFIG_COMMANDS_PRE(
+[LTLIBOBJS=`echo "$LIBOBJS" | sed 's/\.o/.lo/g'`
+AC_SUBST(LTLIBOBJS)
 LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
+AC_SUBST(LTALLOCA)])
 
 dnl Definitions
 AC_DEFINE_UNQUOTED(CUPS_DATADIR, "${cups_exec_prefix}/share/cups", [CUPS data directory.])
@@ -625,8 +629,6 @@ AC_SUBST(INCLUDES)
 LIBGIMPPRINT_LIBS="${LIBGIMPPRINT_LIBS} ${GIMPPRINT_DEPLIBS}"
 AC_SUBST(LIBGIMPPRINT_LIBS)
 AC_SUBST(LIBREADLINE_DEPS)
-AC_SUBST(LTLIBOBJS)
-AC_SUBST(LTALLOCA)
 AC_SUBST(MAIN_BIN)
 AC_SUBST(MAIN_DAT)
 AC_SUBST(MAIN_MAN)
