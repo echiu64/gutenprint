@@ -3127,7 +3127,6 @@ combo_callback(GtkWidget *widget, gpointer data)
   const gchar *value =
     stp_get_string_parameter(pv->v, option->fast_desc->name);
   reset_preview();
-  fprintf(stderr, "value %p %s new_value %p\n", value, value, new_value);
   if (!value || strcmp(value, new_value) != 0)
     {
       invalidate_frame();
