@@ -588,7 +588,7 @@ dnl Compiler flags
 if test x$ac_compiler_gnu = "xyes"; then
   STP_ADD_COMPILER_ARGS([-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -Werror-implicit-function-declaration -Winline -finline-limit=1048576],, [GNUCFLAGS])
   if test x${USE_MAINTAINER_MODE} = xyes ; then
-    STP_ADD_COMPILER_ARGS([-pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls], GNUCFLAGS)
+    STP_ADD_COMPILER_ARGS([-pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls],, [GNUCFLAGS])
   fi
 else
   if test x$ENABLE_DEBUG = xyes ; then
