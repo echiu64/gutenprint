@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.3  1999/09/15 02:53:58  rlk
+ *   Remove some stuff that seems to have no effect
+ *
  *   Revision 1.2  1999/09/12 00:12:24  rlk
  *   Current best stuff
  *
@@ -541,6 +544,10 @@ escp2_print(int       model,		/* I - Model */
 
   fputs("\033@", prn); 				/* ESC/P2 reset */
 
+#if 0
+  if (model == 7)
+    fwrite("\033(R\010\000\000REMOTE1PM\002\000\000\000SN\003\000\000\000\003MS\010\000\000\000\010\000\364\013x\017\033\000\000\000", 42, 1, prn);
+#endif
   fwrite("\033(G\001\000\001", 6, 1, prn);	/* Enter graphics mode */
   switch (ydpi)					/* Set line feed increment */
   {
@@ -597,6 +604,9 @@ escp2_print(int       model,		/* I - Model */
 #if 1
 	    fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
 	    fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
+#if 0
+	    fwrite("\033\031", 2, 1, prn); /* ??? */
+#endif
 	    fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Micro dots */
 #else
 	    fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
