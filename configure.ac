@@ -558,7 +558,11 @@ dnl Set PACKAGE_LIB_DIR in config.h.
 AH_TEMPLATE(PACKAGE_LIB_DIR,, [Package lib directory])
 if test "x${libdir}" = 'x${exec_prefix}/lib'; then
   if test "x${exec_prefix}" = "xNONE"; then
-    PACKAGE_LIB_DIR="${ac_default_prefix}/lib/${PACKAGE}"
+    if test "x${prefix}" = "xNONE"; then
+      PACKAGE_LIB_DIR="${ac_default_prefix}/lib/${PACKAGE}"
+    else
+      PACKAGE_LIB_DIR="${prefix}/lib/${PACKAGE}"
+    fi
   else
     PACKAGE_LIB_DIR="${exec_prefix}/lib/${PACKAGE}"
   fi
