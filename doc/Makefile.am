@@ -34,8 +34,7 @@ DOCS = \
  print-main.png \
  print-setup.png \
  print.html \
- print.sgml \
- html-stamp
+ print.sgml
 
 
 ## Data
@@ -47,24 +46,43 @@ gimpprint_TEXINFOS = overview.texi copying.texi gpl.texi introduction.texi using
 
 ## Rules
 
+# Symlink to distributed html manual, if possible
 all-local: html
-
+	if test -d $(srcdir)/manual-html ; then \
+	  if test "$(srcdir)" = "." ; then \
+	    echo "all-local: Not removing manual-html" ; \
+	  else \
+	    rm -rf manual-html ; \
+	    ln -s $(srcdir)/manual-html manual-html ; \
+	  fi \
+	else \
+	  echo "all-local: $(srcdir)/manual-html not found" ; \
+	fi
+	
 html: html-stamp
 
 ## Note the rather weird way of setting the exit status; this is because
 ## texi2html doesn't set the exit status.
-html-stamp: gimpprint.texi $(gimpprint_TEXINFOS)
-	stat=1; \
-	if test x$(TEXI2HTML_PROG) != x ; then \
-	  rm -rf manual-html ; \
-	  mkdir manual-html ; \
-	  cd manual-html ; \
-	    $(TEXI2HTML_PROG) -menu -split_node -number -expandinfo \
+html-stamp: $(srcdir)/gimpprint.texi $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS))
+	if test x$(TEXI2HTML_PROG) = x ; then \
+	  echo "html-stamp: texi2html not found: not regenerating HTML manual" ; \
+	else \
+	  stat=1; \
+	  rm -rf manual-html-tmp ; \
+	  mkdir manual-html-tmp ; \
+	  cd manual-html-tmp ; \
+	  $(TEXI2HTML_PROG) -menu -split_node -number -expandinfo \
 	    -I ../$(srcdir) ../$(srcdir)/gimpprint.texi 2>&1 | grep . ; \
 	    stat=$$? ; stat=`expr 1 - $$stat` ; \
-	fi; \
+	fi ; \
 	exit $$stat
+	rm -rf manual-html ; \
+	mv manual-html-tmp manual-html ; \
 	touch html-stamp
+
+ps: gimpprint.ps
+gimpprint.ps: gimpprint.dvi
+	$(DVIPS_PROG) -o gimpprint.ps gimpprint.dvi
 
 dist-hook: html
 	for dir in manual-html ; do \
@@ -78,15 +96,22 @@ dist-hook: html
 	  fi \
 	done
 
+clean-local:
+	if test $(srcdir) = "." ; then \
+	  echo "clean-local: Not removing manual-html" ; \
+	else \
+	  rm -rf html-stamp manual-html ; \
+	fi
+	rm -rf manual-html-tmp
+
 maintainer-clean-local:
 	rm -rf manual-html
 
 
 ## Clean
 
-DISTCLEANFILES = html-stamp
-MAINTAINERCLEANFILES = Makefile.in
+MAINTAINERCLEANFILES = Makefile.in html-stamp
 
-EXTRA_DIST = $(DOCS)
+EXTRA_DIST = $(DOCS) html-stamp
 
 .PHONY: html

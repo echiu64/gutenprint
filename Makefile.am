@@ -98,6 +98,9 @@ install-ghost: all
 html:
 	$(MAKE) -C doc html
 
+ps:
+	$(MAKE) -C doc ps
+
 snapshot:
 	$(MAKE) dist distdir=$(PACKAGE)`date +"%Y%m%d"`
 

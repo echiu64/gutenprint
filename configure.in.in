@@ -275,7 +275,11 @@ AC_PATH_PROG(YACC_PROG, yacc)
 AC_PATH_PROG(PERL_PROG, perl)
 AC_PATH_PROG(TEXI2HTML_PROG, texi2html)
 if test x${TEXI2HTML_PROG} = x ; then
-  AC_MSG_WARN([html documentation will not be regenerated!])
+  AC_MSG_WARN([html documentation cannot be regenerated!])
+fi
+AC_PATH_PROG(DVIPS_PROG, dvips)
+if test x${DVIPS_PROG} = x ; then
+  AC_MSG_WARN([PostScript documentation cannot be generated!])
 fi
 dnl foomatic checks
 if test x${BUILD_FOOMATIC} = xyes ; then
@@ -555,10 +559,10 @@ Makefile doc/Makefile intl/Makefile lib/Makefile man/Makefile
 man/cups-calibrate.8 man/escputil.1 man/gimpprint.3
 man/gimpprint-config.1 po/Makefile.in src/Makefile src/cups/Makefile
 src/escputil/Makefile src/foomatic/Makefile
-src/foomatic/foomatic-generator src/ghost/Makefile src/gimp/Makefile
-src/include/Makefile src/include/gimp-print.h src/main/Makefile
-src/main/gimpprint-config src/printdef/Makefile test/Makefile
-src/ghost/contrib.mak.addon
+src/foomatic/foomatic-generator src/ghost/Makefile src/ghost/contrib.mak.addon 
+src/gimp/Makefile src/include/Makefile src/include/gimp-print.h
+src/main/Makefile src/main/gimpprint-config src/printdef/Makefile
+test/Makefile
 ],[
 chmod +x src/main/gimpprint-config
 chmod +x src/foomatic/foomatic-generator
