@@ -64,6 +64,56 @@ Installation and Compilation:
  successful compiler run you got a new driver named "stp". Check 
  this by calling "gs -h" with the newly compiled ghostscript.
 
+Debian users can try the following (contributed by Stuart Miles):
+
+Download the debianised sources for gs-aladdin and libjpeg
+
+# apt-get gs-aladdin libjpeg
+
+This will download the .dsc, orig.tar.gz and diff.gz files, unpack and
+patch the files for you.
+
+Rename the libjpegxxx directory to libjpeg.
+
+Under the gs contrib directory make an stp subdir and copy in the
+gdevstp* files, copy in the README file and rename it README.stp, in
+the same directory you'll also need a contrib.mak.diff file. I'll have
+to send that to you seperately, I'm at work at the moment and don't
+have the files with me.
+
+BTW, I had to modify your contrib.mak.addon by stripping out all the
+$(DD) parts, I also removed the $(DD) from the unix-gcc.mak entry, I
+don't know what they tie up with in your version of the source but
+they don't match anything in mine.
+
+Under the gs/debian directory is a file called rules, this file is a
+script which controls the compilation of gs and the building of the
+debian package, this needs to be amended to add the actions required
+to build the stp driver. Again, I'll have to send you a copy of the
+file tonight, I'll also include a .diff against the original.
+
+Once all the files are in place go into the gs directory and:
+
+# debian/rules binary
+
+The script will copy the sourcefiles and README.stp into the main gs
+directory, patch contrib.mak, add the stp entry to unix-gcc.mak,
+compile gs, package it all up as a .deb package
+(gs-aladdin_5.50-8.deb) and put the resulting file in the directory
+above gs.
+
+To install it:
+
+# dpkg -i gs-aladdin_5.50-8.deb
+
+NB.
+#include <standard disclaimers>
+
+What I've done works for me, to be really neat and tidy other files
+need modifying to ensure that this custom package gets marked as such
+and _not_ an official package. 
+
+
 
 Options:
 --------
@@ -168,16 +218,6 @@ http://www.picante.com/~gtaylor/pht/
 Bugs and Limitations:
 ---------------------
 
-- In softweave modes (2,3,4,5,6,7) there is a bigger top margin (by 0.36 inch = 9.6 mm).
-- I experienced some problems with pure grayscale printing (-dColor=0) with
-  my Photo 700 printer where the escp2 driver didn`t add linefeeds to 
-  the output code in softweave modes.
-  Workaround1: -dSaturation=0.1 and -dColor=1 (side effect: less grainyness due to 6 color
-               prints)
-  Workaround2: -dQuality=0 , 1 or 5 in conjunction with -dColor=0
-  Workaround3: For fast operation with pure b/w or grayscle images such as
-               texts try the "uniprint" driver.
-- All printers except Photo700 and all paper sizes other than DIN A4 are 
-  untested.
+- The top margin is too large.
 - The escp2 driver isn`t optimized at the moment so be patient when trying
   the 720 and 1440x720 dpi color modes.
