@@ -44,27 +44,25 @@ endif
 
 all-local: $(ALL_LOCAL_DEPS)
 
-GHCODE = -e 's/^\\\#include "\(.*\)\.h"$$/\\\#include "gdevstp-\1.h"/' -e 's/^\\\#include <gimp-print\(.*\)\.h>$$/\\\#include "gdevstp-print\1.h"/'
+GHCODE = -e 's/print-printers.c/gdevstp-printers.c/' -e 's/^\\\#include "\(.*\)\.h"$$/\\\#include "gdevstp-\1.h"/' -e 's/^\\\#include <gimp-print\(.*\)\.h>$$/\\\#include "gdevstp-print\1.h"/'
 
 $(srcdir)/gdevstp-print.h: $(top_srcdir)/src/include/gimp-print.h
-	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $(srcdir)/$@
+	sed $(GHCODE) $< > $(srcdir)/$@
 
 $(srcdir)/gdevstp-print-internal.h: $(top_srcdir)/src/main/gimp-print-internal.h
-	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $(srcdir)/$@
+	sed $(GHCODE) $< > $(srcdir)/$@
 
 $(srcdir)/gdevstp-print-intl-internal.h: $(top_srcdir)/src/main/gimp-print-intl-internal.h
-	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $(srcdir)/$@
+	sed $(GHCODE) $< > $(srcdir)/$@
 
 gdevstp-%.h: $(srcdir)/../main/%.h Makefile
-	cd $(srcdir) ; \
-	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $@
+	cd $(srcdir) ; sed $(GHCODE) $< > $@
 
 gdevstp-printers.c: ../main/print-printers.c
-	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $(srcdir)/$@
+	sed $(GHCODE) $< > $@
 
 gdevstp-%: $(srcdir)/../main/print-% Makefile
-	cd $(srcdir) ; \
-	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $@
+	cd $(srcdir) ; sed $(GHCODE) $< > $@
 
 ../main/print-printers.c: ../printdef/printdef $(srcdir)/../main/printers.xml
 	../printdef/printdef < $(srcdir)/../main/printers.xml > $(top_builddir)/src/main/print-printers.c
