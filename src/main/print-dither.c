@@ -247,7 +247,7 @@ static ditherfunc_t
   stp_dither_raw_cmyk_very_fast,
   stp_dither_raw_cmyk_ordered,
   stp_dither_raw_cmyk_ed,
-/*  stp_dither_raw_cmyk_et, */
+  stp_dither_raw_cmyk_et,
   stp_dither_raw_fast,
   stp_dither_raw_very_fast,
   stp_dither_raw_ordered,
@@ -544,7 +544,7 @@ stp_set_dither_function(dither_t *d, int image_bpp)
 	case D_ORDERED:
 	  RETURN_DITHERFUNC(stp_dither_raw_cmyk_ordered, d->v);
 	case D_EVENTONE:
-/*	  RETURN_DITHERFUNC(stp_dither_raw_cmyk_et, d->v); */
+	  RETURN_DITHERFUNC(stp_dither_raw_cmyk_et, d->v);
 	default:
 	  RETURN_DITHERFUNC(stp_dither_raw_cmyk_ed, d->v);
 	}
@@ -3170,7 +3170,14 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
     reverse_row_ends(d);
 }
 
-#if 0
+/* This code uses the Eventone dither algorithm. This is described
+ * at the website http://www.artofcode.com/eventone/
+ * This algorithm is covered by US Patents 5,055,942 and 5,917,614
+ * and was invented by Raph Levien <raph@acm.org>
+ * It was made available to be used free of charge in open source
+ * code.
+ */
+
 static void
 stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
 		   int           row,
@@ -3178,19 +3185,19 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
 		   int		 duplicate_line,
 		   int		 zero_mask)
 {
+  static const int diff_factors[] = {1, 10, 16, 23, 32};
+
   int		x,
 	        length;
   unsigned char	bit;
   int		i;
-  int		*ndither;
-  eventone_t	*et;
-  et_chdata_t	*cd;
 
-  int		***error;
   int		terminate;
-  int		direction = row & 1 ? 1 : -1;
+  int		direction;
   int		xerror, xstep, xmod;
   int		aspect = d->y_aspect / d->x_aspect;
+  int		diff_factor;
+  int		range;
 
   if (d->n_ghost_channels)
     {
@@ -3198,136 +3205,97 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
       return;
     }
 
+  if (!CHANNEL(d,0).shades) {
+    stp_dither_raw_cmyk_ed(cmyk, row, d, duplicate_line, zero_mask);
+    return;
+  }
+
+  if (!et_initializer(d, duplicate_line, zero_mask)) return;
+
   if (aspect >= 4) { aspect = 4; }
   else if (aspect >= 2) { aspect = 2; }
   else aspect = 1;
 
+  diff_factor = diff_factors[aspect];
   length = (d->dst_width + 7) / 8;
-  if (!shared_ed_initializer(d, row, duplicate_line, zero_mask, length,
-			     direction, &error, &ndither))
-    return;
 
-  eventone_init(d, &cd);
-  et = d->eventone;
-
-  x = (direction == 1) ? 0 : d->dst_width - 1;
+  if (row & 1) {
+    direction = 1;
+    x = 0;
+    terminate = d->dst_width;
+    d->ptr_offset = 0;
+  } else {
+    direction = -1;
+    x = d->dst_width - 1;
+    terminate = -1;
+    d->ptr_offset = length - 1;
+    cmyk += 4 * (d->src_width - 1);
+  }
   bit = 1 << (7 - (x & 7));
   xstep  = 4 * (d->src_width / d->dst_width);
   xmod   = d->src_width % d->dst_width;
   xerror = (xmod * x) % d->dst_width;
-  terminate = (direction == 1) ? d->dst_width : -1;
-  if (direction == -1) {
-    cmyk += (4 * (d->src_width - 1));
-  }
 
-  QUANT(6);
-  for (; x != terminate; x += direction)
-    { unsigned pick = 0, print_inks;
-      int range = 0;
-      unsigned channel_mask;
-      et_chdata_t *p;
+  for (; x != terminate; x += direction) {
 
-      { int value = cmyk[3];		/* Order of input is C,M,Y,K */
-	CHANNEL(d, ECOLOR_K).o = value;				/* Remember value we want printed here */
-	CHANNEL(d, ECOLOR_K).v = value;
-	CHANNEL(d, ECOLOR_K).b = value;
-      }
+    CHANNEL(d, ECOLOR_K).v =
+    CHANNEL(d, ECOLOR_K).o = cmyk[3];
 
-      for (i=1; i < CHANNEL_COUNT(d); i++) {
-        int value = cmyk[i-1];
-	CHANNEL(d, i).o = value;				/* Remember value we want printed here */
-	CHANNEL(d, i).v = value;
-	CHANNEL(d, i).b = value;
-      }
-
-      for (i=0, channel_mask = 1, p = cd; i < CHANNEL_COUNT(d); i++, channel_mask <<= 1, p++) {
-        int value;
-	int base;
-	int maxwet;
-	dis_t *etd = &et->dis[i][x];
-
-	advance_eventone_pre(&p->dis, et, etd);
-
-	if ((p->wetness -= p->maxdot_dens) < 0) p->wetness = 0;
-
-	base = CHANNEL(d, i).b;
-	value = ndither[i] + base;
-	if (value < 0) value = 0;				/* Dither can make this value negative */
-
-        maxwet = (CHANNEL(d, i).b * CHANNEL(d, i).maxdot >> 1)
-	 + p->maxdot_wet - p->wetness;
-
-        find_segment(d, &CHANNEL(d, i), maxwet, value, &p->dr);
-
-	range += eventone_adjust(&p->dr, et, p->dis.r_sq, base, value);
-	if (range >= 32768) {
-	  pick |= channel_mask;
-	  range -= 65536;
-	  value = p->dr.upper->value;
-	} else {
-	  value = p->dr.lower->value;
-	}
-        /* Adjust error values for dither */
-	ndither[i] += 2 * (base - value);
-	p->point = value;
-	advance_eventone_post(p, et, etd);
-      }
-
-      { int useblack = 0;		/* Do we print black at all? */
-	int printed_black;
-	int adjusted_black;
-
-        printed_black = cd[ECOLOR_K].point;
-	adjusted_black = printed_black;
-	if (printed_black > 0 && d->black_density != d->density) {
-	  adjusted_black = (unsigned)printed_black * (unsigned)d->density / d->black_density;
-	}
-
-        /* Only print the black ink if it means we can avoid printing another ink, otherwise we're just wasting ink */
-
-        if (printed_black > 0) {
-	  for (i=1; i < CHANNEL_COUNT(d); i++) {
-            if (cd[i].point <= adjusted_black) {
-	      useblack = 1;
-	      break;
-	    }
-          }
-	}
-
-	/* Find which channels we actually print */
-
-	/* Adjust colours to print based on black ink */
-        if (useblack) {
-	  print_inks = (1 << ECOLOR_K);
-	  for (i=1; i < CHANNEL_COUNT(d); i++) {
-	    if (cd[i].point > adjusted_black) {
-	      print_inks |= (1 << i);
-	    }
-	  }
-        } else {
-	  print_inks = (1 << ECOLOR_C)|(1 << ECOLOR_M)|(1<<ECOLOR_Y);
-	}
-      }
-
-      /* Now we can finally print it! */
-
-      print_all_inks(d, cd, print_inks, pick, bit, length);
-
-      QUANT(11);
-
-      /* Diffuse the error round a bit */
-      diffuse_error(d, ndither, error, aspect, direction);
-
-      QUANT(12);
-      ADVANCE_BIDIRECTIONAL(d, bit, cmyk, direction, 4, xerror, xmod, error,
-			    CHANNEL_COUNT(d), d->error_rows);
-      QUANT(13);
+    for (i=1; i < CHANNEL_COUNT(d); i++) {
+      CHANNEL(d, i).o =
+      (CHANNEL(d, i).v = cmyk[i-1]) + CHANNEL(d, ECOLOR_K).v;
     }
 
-    stp_free(cd);
-    shared_ed_deinitializer(d, error, ndither);
+    /* At this point, the CMYK separation has been done */
+    /* And the results are in CHANNEL(d, i).v */
+
+    range = 0;
+
+    for (i = 0; i < CHANNEL_COUNT(d); i++) {
+      int inkspot;
+      shade_segment_t *sp;
+      dither_channel_t *dc = &CHANNEL(d, i);
+      ink_defn_t *inkp;
+      ink_defn_t lower, upper;
+
+      advance_eventone_pre(dc, d->eventone, x);
+
+      /* Split data into sub-channels */
+      /* And incorporate error data from previous line */
+      sp =  split_shades(dc, x, &inkspot);
+
+      /* Find which are the two candidate dot sizes */
+      range += find_segment(sp, d->eventone, inkspot, sp->base, &lower, &upper);
+
+      /* Determine whether to print the larger or smaller dot */
+      inkp = &lower;
+      if (range >= 32768) {
+        range -= 65536;
+        inkp = &upper;
+      }
+
+      /* Adjust the error to reflect the dot choice */
+      if (inkp->bits) {
+        sp->value -= 2 * inkp->range;
+        sp->dis = d->eventone->d_sq;
+
+        set_row_ends(dc, x, sp->subchannel);
+
+        /* Do the printing */
+        print_subc(d, dc, inkp, sp->subchannel, bit, length);
+      }
+
+      /* Spread the error around to the adjacent dots */
+      diffuse_error(dc, d->eventone, diff_factor, x, direction);
+    }
+    if (direction == 1)
+      ADVANCE_UNIDIRECTIONAL(d, bit, cmyk, 4, xerror, xstep, xmod);
+    else
+      ADVANCE_REVERSE(d, bit, cmyk, 4, xerror, xstep, xmod);
+  }
+  if (direction == -1)
+    reverse_row_ends(d);
 }
-#endif
 
 static void
 stp_dither_raw_fast(const unsigned short  *raw,
