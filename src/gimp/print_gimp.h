@@ -81,12 +81,7 @@ extern guchar *preview_thumbnail_data;
 extern gint             plist_count;	   /* Number of system printers */
 extern gint             plist_current;     /* Current system printer */
 extern gp_plist_t         *plist;		  /* System printers */
-extern gint32           image_ID;
 extern const gchar     *image_filename;
-extern gint             image_true_width;
-extern gint             image_true_height;
-extern gint		printable_width;
-extern gint		printable_height;
 extern stp_printer_t current_printer;
 extern gint             runme;
 extern gint             saveme;
@@ -106,10 +101,8 @@ extern void plist_set_name_n(gp_plist_t *p, const char *val, int n);
 extern const char *plist_get_name(const gp_plist_t *p);
 extern void copy_printer(gp_plist_t *vd, const gp_plist_t *vs);
 
-/* How to create an Image wrapping a Gimp drawable */
 extern void  printrc_save (void);
 
-extern stp_image_t *Image_GimpDrawable_new(GimpDrawable *drawable);
 extern int add_printer(const gp_plist_t *key, int add_only);
 extern void initialize_printer(gp_plist_t *printer);
 extern void update_adjusted_thumbnail (void);
@@ -138,8 +131,13 @@ extern void table_attach_aligned(GtkTable *table, gint column, gint row,
 				 const gchar *label_text, gfloat xalign,
 				 gfloat yalign, GtkWidget *widget,
 				 gint colspan, gboolean left_align);
+extern gint compute_orientation(void);
+extern void set_image_dimensions(gint width, gint height);
+extern void set_image_resolution(gdouble xres, gdouble yres);
+extern guchar *get_thumbnail_data(gint *width, gint *height, gint *bpp);
 
-
+/* How to create an Image wrapping a Gimp drawable */
+extern stp_image_t *Image_GimpDrawable_new(GimpDrawable *drawable);
 extern void Image_transpose(stp_image_t *image);
 extern void Image_hflip(stp_image_t *image);
 extern void Image_vflip(stp_image_t *image);

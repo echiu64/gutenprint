@@ -196,8 +196,8 @@ create_color_adjust_window (void)
 
   thumbnail_w = THUMBNAIL_MAXW;
   thumbnail_h = THUMBNAIL_MAXH;
-  thumbnail_data = gimp_image_get_thumbnail_data (image_ID, &thumbnail_w,
-                                                  &thumbnail_h, &thumbnail_bpp);
+  thumbnail_data =
+    get_thumbnail_data (&thumbnail_w, &thumbnail_h, &thumbnail_bpp);
 
   /*
    * thumbnail_w and thumbnail_h have now been adjusted to the actual

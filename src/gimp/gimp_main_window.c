@@ -105,33 +105,35 @@ static gint frame_valid = 0;
 static gint need_exposure = 0;
 
 static GtkDrawingArea *preview = NULL;	/* Preview drawing area widget */
-static gint            mouse_x;		/* Last mouse X */
-static gint            mouse_y;		/* Last mouse Y */
-static gint	       orig_top;	/* Previous position */
-static gint	       orig_left;	/* Previous position */
-static gint	       buttons_pressed = 0;
-static gint	       preview_active = 0;
-static gint	       buttons_mask = 0;
-static gint	       move_constraint = 0;
-static gint            mouse_button = -1;	/* Button being dragged with */
-static gint	       suppress_preview_reset = 0;
-static gint	       physical_orientation = -2; /* Actual orientation */
-static gint	       preview_thumbnail_w = 0;
-static gint	       preview_thumbnail_h = 0;
-static gint	       bottom_is_anchored = 0;
-static gint	       right_is_anchored = 0;
+static gint mouse_x;		/* Last mouse X */
+static gint mouse_y;		/* Last mouse Y */
+static gint orig_top;	/* Previous position */
+static gint orig_left;	/* Previous position */
+static gint buttons_pressed = 0;
+static gint preview_active = 0;
+static gint buttons_mask = 0;
+static gint move_constraint = 0;
+static gint mouse_button = -1;	/* Button being dragged with */
+static gint suppress_preview_reset = 0;
+static gint physical_orientation = -2; /* Actual orientation */
+static gint preview_thumbnail_w = 0;
+static gint preview_thumbnail_h = 0;
+static gint bottom_is_anchored = 0;
+static gint right_is_anchored = 0;
 
-gint            printable_width;	/* Width of page */
-gint            printable_height;	/* Height of page */
-static gint            print_width;	/* Printed width of image */
-static gint            print_height;	/* Printed height of image */
-static gint	       left, right;	        /* Imageable area */
-static gint            top, bottom;
-static gint	       paper_width, paper_height;	/* Physical width */
+static gint printable_width;	/* Width of page */
+static gint printable_height;	/* Height of page */
+static gint print_width;	/* Printed width of image */
+static gint print_height;	/* Printed height of image */
+static gint left, right;	        /* Imageable area */
+static gint top, bottom;
+static gint paper_width, paper_height;	/* Physical width */
 static gint image_width;
 static gint image_height;
-gint image_true_width;
-gint image_true_height;
+static gint image_true_width;
+static gint image_true_height;
+static gdouble image_xres;
+static gdouble image_yres;
 
 static void scaling_update        (GtkAdjustment *adjustment);
 static void scaling_callback      (GtkWidget *widget);
@@ -292,6 +294,18 @@ void
 set_help_data(GtkWidget *widget, const gchar *tooltip)
 {
   gimp_help_set_help_data(widget, tooltip, NULL);
+}
+
+static void
+enable_help(void)
+{
+  gimp_help_enable_tooltips();
+}
+
+static void
+disable_help(void)
+{
+  gimp_help_disable_tooltips();
 }
 
 void
@@ -1291,7 +1305,7 @@ reset_preview(void)
 {
   if (!suppress_preview_reset)
     {
-      gimp_help_enable_tooltips();
+      enable_help();
       buttons_pressed = preview_active = 0;
     }
 }
@@ -1390,10 +1404,9 @@ scaling_callback (GtkWidget *widget)
     }
   else if (widget == scaling_image)
     {
-      gdouble xres, yres;
+      gdouble yres = image_yres;
 
       invalidate_preview_thumbnail ();
-      gimp_image_get_resolution (image_ID, &xres, &yres);
 
       GTK_ADJUSTMENT (scaling_adjustment)->lower = min_ppi_scaling;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = max_ppi_scaling;
@@ -1478,20 +1491,38 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
   gtk_widget_show (combo);
 }
 
+void
+set_image_dimensions(gint width, gint height)
+{
+  image_true_width = width;
+  image_true_height = height;
+}
+
+void
+set_image_resolution(gdouble xres, gdouble yres)
+{
+  image_xres = xres;
+  image_yres = yres;
+}
+
+gint
+compute_orientation(void)
+{
+  if ((printable_width >= printable_height &&
+       image_true_width >= image_true_height) ||
+      (printable_height >= printable_width &&
+       image_true_height >= image_true_width))
+    return ORIENT_PORTRAIT;
+  else
+    return ORIENT_LANDSCAPE;
+}
+
 static void
 set_orientation(int orientation)
 {
   pv->orientation = orientation;
   if (orientation == ORIENT_AUTO)
-    {
-      if ((printable_width >= printable_height &&
-	   image_true_width >= image_true_height) ||
-	  (printable_height >= printable_width &&
-	   image_true_height >= image_true_width))
-	orientation = ORIENT_PORTRAIT;
-      else
-	orientation = ORIENT_LANDSCAPE;
-    }
+    orientation = compute_orientation();
   physical_orientation = orientation;
   switch (orientation)
     {
@@ -2050,23 +2081,22 @@ new_printer_open_callback (void)
   gtk_widget_show (new_printer_dialog);
 }
 
+static void
+set_printer(void)
+{
+  stp_set_driver (pv->v, stp_printer_get_driver (current_printer));
+  plist_set_output_to (pv, gtk_entry_get_text (GTK_ENTRY (output_cmd)));
+  stp_set_ppd_file (pv->v, gtk_entry_get_text (GTK_ENTRY (ppd_file)));
+  plist_callback (NULL, (gpointer) plist_current);
+}
+
 /*
  *  setup_ok_callback() -
  */
 static void
 setup_ok_callback (void)
 {
-  reset_preview ();
-  invalidate_frame ();
-  invalidate_preview_thumbnail ();
-  stp_set_driver (pv->v, stp_printer_get_driver (current_printer));
-
-  plist_set_output_to (pv, gtk_entry_get_text (GTK_ENTRY (output_cmd)));
-
-  stp_set_ppd_file (pv->v, gtk_entry_get_text (GTK_ENTRY (ppd_file)));
-
-  plist_callback (NULL, (gpointer) plist_current);
-
+  set_printer();
   gtk_widget_hide (setup_dialog);
 }
 
@@ -2079,29 +2109,20 @@ new_printer_ok_callback (void)
   const gchar *data = gtk_entry_get_text (GTK_ENTRY (new_printer_entry));
   gp_plist_t   key;
 
-  invalidate_frame ();
-  invalidate_preview_thumbnail ();
-  reset_preview ();
-  initialize_printer (&key);
-  (void) strncpy (key.name, data, sizeof(key.name) - 1);
-
-  if (strlen (key.name))
+  if (strlen(data))
     {
+      memset(&key, 0, sizeof(key));
+      initialize_printer (&key);
       copy_printer(&key, pv);
+      plist_set_name(&key, data);
+
       key.active = 0;
 
       if (add_printer (&key, 1))
 	{
 	  plist_current = plist_count - 1;
 	  build_printer_combo ();
-
-	  stp_set_driver (pv->v, stp_printer_get_driver (current_printer));
-
-	  plist_set_output_to(pv, gtk_entry_get_text (GTK_ENTRY (output_cmd)));
-
-	  stp_set_ppd_file (pv->v, gtk_entry_get_text (GTK_ENTRY (ppd_file)));
-
-	  plist_callback (NULL, (gpointer) plist_current);
+	  set_printer();
 	}
     }
 
@@ -2707,7 +2728,7 @@ preview_button_callback (GtkWidget      *widget,
 	  buttons_mask = 1 << event->button;
 	  buttons_pressed++;
 	  preview_active = 1;
-	  gimp_help_disable_tooltips ();
+	  disable_help();
 	  if (event->state & GDK_SHIFT_MASK)
 	    move_constraint = MOVE_CONSTRAIN;
 	  else
@@ -2717,7 +2738,7 @@ preview_button_callback (GtkWidget      *widget,
 	{
 	  if ((buttons_mask & (1 << event->button)) == 0)
 	    {
-	      gimp_help_enable_tooltips ();
+	      enable_help();
 	      preview_active = -1;
 	      stp_set_left (pv->v, orig_left);
 	      stp_set_top (pv->v, orig_top);
@@ -2741,7 +2762,7 @@ preview_button_callback (GtkWidget      *widget,
       buttons_mask &= ~(1 << event->button);
       if (buttons_pressed == 0)
 	{
-	  gimp_help_enable_tooltips ();
+	  enable_help ();
 	  preview_active = 0;
 	}
     }

@@ -86,7 +86,7 @@ gp_plist_t	*plist;			/* System printers */
 int		saveme = FALSE;		/* True if print should proceed */
 int		runme = FALSE;		/* True if print should proceed */
 stp_printer_t current_printer = 0;	/* Current printer index */
-gint32          image_ID;	        /* image ID */
+static gint32          image_ID;	        /* image ID */
 
 const char *image_filename;
 
@@ -317,6 +317,12 @@ gimp_writefunc(void *file, const char *buf, size_t bytes)
   fwrite(buf, 1, bytes, prn);
 }
 
+guchar *
+get_thumbnail_data(gint *width, gint *height, gint *bpp)
+{
+  return gimp_image_get_thumbnail_data(image_ID, width, height, bpp);
+}
+
 /*
  * 'run()' - Run the plug-in...
  */
@@ -349,6 +355,7 @@ run (char   *name,		/* I - Name of print program. */
 		cpid = 0,	/* PID of control/monitor process */
 		pipefd[2];	/* Fds of the pipe connecting all the above */
   int		dummy;
+  gdouble xres, yres;
 #ifdef DEBUG_STARTUP
   while (SDEBUG)
     ;
@@ -424,9 +431,9 @@ run (char   *name,		/* I - Name of print program. */
    */
 
   drawable = gimp_drawable_get (drawable_ID);
-
-  image_true_width  = drawable->width;
-  image_true_height = drawable->height;
+  set_image_dimensions(drawable->width, drawable->height);
+  gimp_image_get_resolution (image_ID, &xres, &yres);
+  set_image_resolution(xres, yres);
 
   /*
    * See how we will run
@@ -643,15 +650,7 @@ run (char   *name,		/* I - Name of print program. */
 	   */
 	  orientation = gimp_vars.orientation;
 	  if (orientation == ORIENT_AUTO)
-	    {
-	      if ((printable_width >= printable_height &&
-		   image_true_width >= image_true_height) ||
-		  (printable_height >= printable_width &&
-		   image_true_height >= image_true_width))
-		orientation = ORIENT_PORTRAIT;
-	      else
-		orientation = ORIENT_LANDSCAPE;
-	    }
+	    orientation = compute_orientation();
 	  switch (orientation)
 	    {
 	    case ORIENT_PORTRAIT:
