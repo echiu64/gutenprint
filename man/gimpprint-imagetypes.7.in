@@ -20,7 +20,7 @@
 gimpprint-imagetypes \- Gimp-Print image types
 .SH DESCRIPTION
 Gimp-Print includes several image types which can be used to optimise
-the dither, depeding on the type of image you wish to print.
+the dither, depending on the type of image you wish to print.
 .SH IMAGE TYPE
 Possible values are:
 .PP
