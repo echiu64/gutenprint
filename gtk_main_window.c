@@ -59,8 +59,10 @@ static GtkWidget* print_dialog;           /* Print dialog window */
 static GtkWidget* recenter_button;
 static GtkWidget* left_entry;
 static GtkWidget* right_entry;
+static GtkWidget* width_entry;
 static GtkWidget* top_entry;
 static GtkWidget* bottom_entry;
+static GtkWidget* height_entry;
 static GtkWidget* media_size;             /* Media size option button */
 static GtkWidget* media_size_menu=NULL;   /* Media size menu */
 static GtkWidget* media_type;             /* Media type option button */
@@ -361,6 +363,42 @@ void gtk_create_main_window(void)
     gtk_widget_set_usize(entry, 60, 0);
     gtk_widget_show(entry);
 
+    label = gtk_label_new(_("Width:"));
+    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+    gtk_table_attach(GTK_TABLE(table),
+		     label, 0, 1, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
+    gtk_widget_show(label);
+    box = gtk_hbox_new(FALSE, 8);
+    gtk_table_attach(GTK_TABLE(table),
+		     box, 1, 2, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
+    gtk_widget_show(box);
+    width_entry = entry = gtk_entry_new();
+    sprintf(s, "%.3f", fabs(vars.left));
+    gtk_entry_set_text(GTK_ENTRY(entry), s);
+    gtk_signal_connect(GTK_OBJECT(entry), "activate",
+		       (GtkSignalFunc)gtk_position_callback, NULL);
+    gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
+    gtk_widget_set_usize(entry, 60, 0);
+    gtk_widget_show(entry);
+
+    label = gtk_label_new(_("Height:"));
+    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+    gtk_table_attach(GTK_TABLE(table),
+		     label, 2, 3, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
+    gtk_widget_show(label);
+    box = gtk_hbox_new(FALSE, 8);
+    gtk_table_attach(GTK_TABLE(table),
+		     box, 3, 4, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
+    gtk_widget_show(box);
+    height_entry = entry = gtk_entry_new();
+    sprintf(s, "%.3f", fabs(vars.left));
+    gtk_entry_set_text(GTK_ENTRY(entry), s);
+    gtk_signal_connect(GTK_OBJECT(entry), "activate",
+		       (GtkSignalFunc)gtk_position_callback, NULL);
+    gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
+    gtk_widget_set_usize(entry, 60, 0);
+    gtk_widget_show(entry);
+
     /***
      * Media size option menu...
      ***/
@@ -615,7 +653,7 @@ void gtk_create_main_window(void)
     gtk_table_attach(GTK_TABLE(table),
 		     label,
 		     0, 1,
-		     10, 11,
+		     11, 12,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(label);
@@ -624,7 +662,7 @@ void gtk_create_main_window(void)
     gtk_table_attach(GTK_TABLE(table),
 		     box,
 		     1, 4,
-		     10, 11,
+		     11, 12,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(box);
@@ -680,7 +718,7 @@ void gtk_create_main_window(void)
     gtk_table_attach(GTK_TABLE(table),
 		     label,
 		     0, 1,
-		     11, 12,
+		     12, 13,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(label);
@@ -689,7 +727,7 @@ void gtk_create_main_window(void)
     gtk_table_attach(GTK_TABLE(table),
 		     box,
 		     1, 4,
-		     11, 12,
+		     12, 13,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(box);
@@ -753,7 +791,7 @@ void gtk_create_main_window(void)
     box = gtk_hbox_new(FALSE, 8);
     gtk_table_attach(GTK_TABLE(table),
 		     box,
-		     3, 4, 12, 13,
+		     3, 4, 13, 14,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(box);
@@ -1353,6 +1391,26 @@ static void gtk_position_callback(GtkWidget *widget)
     {
       gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
       vars.left = ((new_value + 1.0 / 144) * 72) - (left + print_width);
+    }
+  else if (widget == width_entry)
+    {
+      gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
+      if (vars.scaling >= 0) {
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_ppi), TRUE);
+	gtk_scaling_callback (scaling_ppi);
+      }
+      GTK_ADJUSTMENT(scaling_adjustment)->value = image_width / new_value;
+      gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
+    }
+  else if (widget == height_entry)
+    {
+      gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
+      if (vars.scaling >= 0) {
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_ppi), TRUE);
+	gtk_scaling_callback (scaling_ppi);
+      }
+      GTK_ADJUSTMENT(scaling_adjustment)->value = image_height / new_value;
+      gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
     }
   else if (widget == recenter_button)
     {
@@ -2075,6 +2133,16 @@ static void gtk_preview_update(void)
   sprintf(s, "%.2f", (left + vars.left + print_width) / 72.0);
   gtk_entry_set_text(GTK_ENTRY(right_entry), s);
   gtk_signal_handler_unblock_by_data(GTK_OBJECT(right_entry), NULL);
+
+  gtk_signal_handler_block_by_data(GTK_OBJECT(width_entry), NULL);
+  sprintf(s, "%.2f", print_width / 72.0);
+  gtk_entry_set_text(GTK_ENTRY(width_entry), s);
+  gtk_signal_handler_unblock_by_data(GTK_OBJECT(width_entry), NULL);
+
+  gtk_signal_handler_block_by_data(GTK_OBJECT(height_entry), NULL);
+  sprintf(s, "%.2f", print_height / 72.0);
+  gtk_entry_set_text(GTK_ENTRY(height_entry), s);
+  gtk_signal_handler_unblock_by_data(GTK_OBJECT(height_entry), NULL);
 
   /* draw image  */
   gdk_draw_rectangle(preview->widget.window, gc, 1,

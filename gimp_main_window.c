@@ -54,8 +54,10 @@ static GtkWidget *print_dialog;           /* Print dialog window */
 static GtkWidget *recenter_button;
 static GtkWidget *left_entry;
 static GtkWidget *right_entry;
+static GtkWidget *width_entry;
 static GtkWidget *top_entry;
 static GtkWidget *bottom_entry;
+static GtkWidget *height_entry;
 static GtkWidget *media_size;             /* Media size option button */
 static GtkWidget *media_size_menu=NULL;   /* Media size menu */
 static GtkWidget *media_type;             /* Media type option button */
@@ -282,7 +284,7 @@ gimp_create_main_window (void)
                          GDK_BUTTON_PRESS_MASK |
                          GDK_BUTTON_RELEASE_MASK);
 
-  table = gtk_table_new (3, 4, FALSE);
+  table = gtk_table_new (4, 4, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 4);
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
@@ -339,6 +341,28 @@ gimp_create_main_window (void)
   gtk_widget_set_usize (entry, 60, 0);
   gimp_table_attach_aligned (GTK_TABLE (table), 2, 2,
                              _("Bottom:"), 1.0, 0.5,
+                             entry, 1, TRUE);
+
+  width_entry = entry = gtk_entry_new ();
+  g_snprintf (s, sizeof (s), "%.3f", fabs (vars.left));
+  gtk_entry_set_text (GTK_ENTRY (entry), s);
+  gtk_signal_connect (GTK_OBJECT (entry), "activate",
+                      GTK_SIGNAL_FUNC (gimp_position_callback),
+		      NULL);
+  gtk_widget_set_usize (entry, 60, 0);
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 3,
+                             _("Width:"), 1.0, 0.5,
+                             entry, 1, TRUE);
+
+  height_entry = entry = gtk_entry_new ();
+  g_snprintf (s, sizeof (s), "%.3f", fabs (vars.left));
+  gtk_entry_set_text (GTK_ENTRY (entry), s);
+  gtk_signal_connect (GTK_OBJECT (entry), "activate",
+                      GTK_SIGNAL_FUNC (gimp_position_callback),
+		      NULL);
+  gtk_widget_set_usize (entry, 60, 0);
+  gimp_table_attach_aligned (GTK_TABLE (table), 2, 3,
+                             _("Height:"), 1.0, 0.5,
                              entry, 1, TRUE);
 
   /*
@@ -1057,6 +1081,26 @@ gimp_position_callback (GtkWidget *widget)
       gfloat new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
       vars.left = ((new_value + 1.0 / 144) * 72) - (left + print_width);
     }
+  else if (widget == width_entry)
+    {
+      gfloat new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
+      if (vars.scaling >= 0) {
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi), TRUE);
+        gimp_scaling_callback (scaling_ppi);
+      }
+      GTK_ADJUSTMENT (scaling_adjustment)->value = image_width / new_value;
+      gtk_signal_emit_by_name (scaling_adjustment, "value_changed");
+    }
+  else if (widget == height_entry)
+    {
+      gfloat new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
+      if (vars.scaling >= 0) {
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi), TRUE);
+        gimp_scaling_callback (scaling_ppi);
+      }
+      GTK_ADJUSTMENT (scaling_adjustment)->value = image_height / new_value;
+      gtk_signal_emit_by_name (scaling_adjustment, "value_changed");
+    }
   else if (widget == recenter_button)
     {
       vars.left = -1;
@@ -1712,6 +1756,16 @@ gimp_preview_update (void)
 
   gtk_entry_set_text (GTK_ENTRY (right_entry), s);
   gtk_signal_handler_unblock_by_data (GTK_OBJECT (right_entry), NULL);
+
+  gtk_signal_handler_block_by_data (GTK_OBJECT (width_entry), NULL);
+  g_snprintf (s, sizeof (s), "%.2f", print_width / 72.0);
+  gtk_entry_set_text (GTK_ENTRY (width_entry), s);
+  gtk_signal_handler_unblock_by_data (GTK_OBJECT (width_entry), NULL);
+
+  gtk_signal_handler_block_by_data (GTK_OBJECT (height_entry), NULL);
+  g_snprintf(s, sizeof (s), "%.2f", print_height / 72.0);
+  gtk_entry_set_text (GTK_ENTRY (height_entry), s);
+  gtk_signal_handler_unblock_by_data (GTK_OBJECT (height_entry), NULL);
 
   /* draw image */
   gdk_draw_rectangle(preview->widget.window, gc, 1,
