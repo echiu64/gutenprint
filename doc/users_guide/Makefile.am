@@ -180,26 +180,24 @@ install-data-local: $(STANDARD_TARGETS)
 	    $(INSTALL_DATA) $(srcdir)/$(MANUAL).pdf $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
 	  fi ; \
 	  if test -d $(HTMLDIR) ; then \
-	    cd $(HTMLDIR) ; \
+	    HTMLGENDIR="$(HTMLDIR)" ; \
 	  elif test -d $(srcdir)/$(HTMLDIR) ; then \
-	    cd $(srcdir)/$(HTMLDIR) ; \
+	    HTMLGENDIR="$(srcdir)/$(HTMLDIR)" ; \
 	  else \
 	    exit 1 ; \
 	  fi ; \
-	  for file in *.html *.css ; do \
+	  for file in $$HTMLGENDIR/*.html $$HTMLGENDIR/*.css ; do \
 	    if test -f $$file ; then \
 	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html ; \
 	    fi ; \
 	  done ; \
-	  cd figures ; \
-	  for file in *.png ; do \
+	  for file in $$HTMLGENDIR/figures/*.png ; do \
 	    if test -f $$file ; then \
 	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/figures ; \
 	    fi ; \
 	  done ; \
-	  if test -d ../stylesheet-images ; then \
-	    cd ../stylesheet-images ; \
-	    for file in * ; do \
+	  if test -d $$HTMLGENDIR/stylesheet-images ; then \
+	    for file in $$HTMLGENDIR/stylesheet-images/* ; do \
 	      if test -f $$file ; then \
 	        $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/stylesheet-images ; \
 	      fi ; \
