@@ -83,64 +83,78 @@ INSTALLATION AND COMPILATION:
  successful compiler run you got a new driver named "stp". Check 
  this by calling "gs -h" with the newly compiled ghostscript.
 
-Debian users can try the following (contributed by Stuart Miles):
-versions are current as of 12th August 2000:
 
-Download the debianised sources for gs-aladdin and libjpeg:
 
-# apt-get source gs libjpeg
+Debian users can try the following (contributed by Stuart Miles and
+updated by Dan Christensen <jdc@julian.uwo.ca>): versions are current
+as of 5 October 2000:
 
-(Make sure you have a deb-src entry in /etc/apt/sources.list first!
-See the sources.list(5) man page for more info on setting up apt.)
+Download the debianised sources for gs-aladdin and libjpeg to the 
+directory containing the print-x.xxx directory: 
 
-This will download the .dsc, orig.tar.gz and diff.gz files, unpack and
-patch the files for you.
+# apt-get source gs libjpeg62 
 
-Rename the libjpegxxx (currently libjpeg62) directory to libjpeg.
+(Make sure you have a deb-src entry in /etc/apt/sources.list first! 
+See the sources.list(5) man page for more info on setting up apt.) 
 
-To compile gs you _may_ also need the following installed:
+The name of the libjpeg package may vary. 
 
-zlib1g-dev_1%3a1.1.3-5_i386.deb
-svgalibg1-dev_0.96-5_i386.deb
-libpng0-dev_0.96-5_i386.deb
-vflib2-dev_2.25.1-4_i386.deb
+This will download the .dsc, orig.tar.gz and diff.gz files, unpack and 
+patch the files for you. 
 
-or their current equivalent.
+Rename the libjpegxxx (currently libjpeg6b-6b) directory to libjpeg. 
 
-Under the gs contrib directory make an stp subdir and copy in the
-gdevstp* files, copy in the README file and rename it README.stp, in
-the same directory you'll also need a contrib.mak.addon file.
+To compile gs you will also need the following installed: 
 
-Under the gs/debian directory is a file called rules, this file is a
-script which controls the compilation of gs and the building of the
-debian package, this needs to be amended to add the actions required
-to build the stp driver. Copy the debian-patch file into the /debian 
-directory and use this file to patch the /rules and /control files.
-Copy the debian-patch-stp file to /debian/patches and rename the file
-/stp.
+# apt-get install sharutils zlib1g-dev svgalibg1-dev libpng2-dev vflib2-dev 
 
-Once all the files are in place go into the gs directory and:
+The name of the packages may vary. The above corresponds to 
 
-# debian/rules binary
+sharutils 4.2.1-2 shar, unshar, uuencode, uudecode 
+zlib1g-dev 1.1.3-11 compression library - development 
+svgalibg1-dev 1.4.1-2 Shared, non-x, graphics library used by Ghos 
+libpng2-dev 1.0.8-1 PNG library - development 
+vflib2-dev 2.25.1-5 Vector Font Library for Japanese Character C 
 
-The script will copy the sourcefiles and README.stp into the main gs
-directory, patch contrib.mak, add the stp entry to unix-gcc.mak,
-compile gs, package it all up as a .deb package
-(gs-stp_5.10-9.1_i386.deb) and put the resulting file in the directory
-above gs.
+but current versions (and possibly older versions) will probably 
+work as well. 
 
-To install it:
+Next do the following: 
 
-# dpkg -i gs-stp_5.10-9.1_i386.deb
+# mkdir gs-x.xx/contrib/stp 
+# cd print-x.xxx/Ghost 
+# cp gdevstp* *.mak.addon* ../../gs-x.xx/contrib/stp 
+# cp README ../../gs-x.xx/contrib/stp/README.stp 
+# cp debian-patch ../../gs-x.xx/debian 
+# cp debian-patch-stp ../../gs-x.xx/debian/patches/stp 
+# cd ../../gs-x.xx/debian 
+# patch < debian-patch [patches control and rules files] 
+# chmod u+x addentry [maybe this should be fixed in the tar file?] 
+# cd .. [now we are in gs-x.xx] 
+# debian/rules binary 
 
-NB.
-#include <standard disclaimers>
+The rules script will copy the sourcefiles and README.stp into the 
+main gs directory, patch contrib.mak, add the stp entry to 
+unix-gcc.mak, compile gs, package it all up as a .deb package 
+(gs-stp_5.10-9.1_i386.deb) and put the resulting file in the directory 
+above gs. 
 
-This is not an official Debian package.  This method works for at
-least one person.  To be really neat and tidy other files need
-modifying to ensure that this custom package gets marked as such and
-_not_ an official package.
+To install it: 
 
+# cd .. 
+# dpkg -i gs-stp_5.10-9.1_i386.deb 
+
+If you have gs or gs-aladdin installed, it will be removed. 
+
+NB. 
+#include <standard disclaimers> 
+
+This is not an official Debian package. This method works for at 
+least one person. To be really neat and tidy other files need 
+modifying to ensure that this custom package gets marked as such and 
+_not_ an official package. The only problem I've found is that I 
+the gs-pdfencrypt insists on having gs installed rather than gs-stp. 
+If you know how to fix this, please update this README. 
 
 
 OPTIONS:
