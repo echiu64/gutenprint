@@ -1132,7 +1132,6 @@ gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
     {
       list = g_list_append (list, _("Standard"));
       gtk_combo_set_popdown_strings (GTK_COMBO (combo), list);
-      g_list_free (list);
       *callback_id = -1;
       gtk_widget_set_sensitive (combo, FALSE);
       gtk_widget_show (combo);
@@ -1140,7 +1139,7 @@ gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
     }
 
   for (i = 0; i < num_items; i ++)
-    list = g_list_append (list, gettext (items[i]));
+    list = g_list_append (list, strdup(gettext (items[i])));
 
   gtk_combo_set_popdown_strings (GTK_COMBO (combo), list);
 
@@ -1155,7 +1154,7 @@ gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
       break;
 
   if (i == num_items)
-    gtk_entry_set_text (entry, gettext (items[0]));
+    gtk_entry_set_text (entry, strdup(gettext (items[0])));
 
   gtk_combo_set_value_in_list (GTK_COMBO (combo), TRUE, FALSE);
   gtk_widget_set_sensitive (combo, TRUE);
@@ -1400,9 +1399,12 @@ gimp_plist_callback (GtkWidget *widget,
 			  gimp_media_size_callback,
 			  &media_size_callback_id);
 
-  for (i = 0; i < num_media_sizes; i ++)
-    free (media_sizes[i]);
-  free (media_sizes);
+  if (num_media_sizes > 0)
+    {
+      for (i = 0; i < num_media_sizes; i ++)
+	free (media_sizes[i]);
+      free (media_sizes);
+    }
 
   media_types = (*(stp_printer_get_printfuncs(current_printer)->parameters)) (current_printer,
 						  stp_get_ppd_file(p->v),
