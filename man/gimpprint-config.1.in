@@ -33,7 +33,6 @@ linker flags that should be used to compile and link programs that use
 that are included with \fIGIMP-PRINT\fP.
 
 .SH OPTIONS
-.l
 \fIgimpprint-config\fP accepts the following options:
 .TP 8
 .B  \-\-version

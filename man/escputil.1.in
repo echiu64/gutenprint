@@ -31,7 +31,6 @@ include head alignment, head cleaning, nozzle check, printer
 identification, and retrieval of ink level from the printer.
 
 .SH OPTIONS
-.l
 \fIescputil\fP accepts the following options:
 .TP 8
 .B \-P, \-\-printer-name \fI<printer>\fP
