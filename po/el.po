@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 1.0\n"
-"POT-Creation-Date: 2002-12-22 13:38-0500\n"
+"POT-Creation-Date: 2003-01-04 22:57-0500\n"
 "PO-Revision-Date: 2001-12-29 20:10+0000\n"
 "Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -146,41 +146,41 @@ msgstr ""
 msgid "Other"
 msgstr "Άλλα"
 
-#: src/main/print-canon.c:1409 src/main/print-lexmark.c:972
+#: src/main/print-canon.c:1419 src/main/print-lexmark.c:982
 #, fuzzy
 msgid "Auto Sheet Feeder"
 msgstr "Αυτόματη απόκρυψη"
 
-#: src/main/print-canon.c:1410 src/main/print-lexmark.c:973
+#: src/main/print-canon.c:1420 src/main/print-lexmark.c:983
 #, fuzzy
 msgid "Manual with Pause"
 msgstr "Σελίδα εγχειριδίου"
 
-#: src/main/print-canon.c:1411 src/main/print-lexmark.c:974
+#: src/main/print-canon.c:1421 src/main/print-lexmark.c:984
 msgid "Manual without Pause"
 msgstr ""
 
-#: src/escputil/escputil.c:600 src/main/print-canon.c:1493
+#: src/escputil/escputil.c:615 src/main/print-canon.c:1503
 #: src/main/print-lexmark.c:488
 msgid "Black"
 msgstr "Μαύρο"
 
-#: src/main/print-canon.c:1496
+#: src/main/print-canon.c:1506
 #, fuzzy
 msgid "CMY Color"
 msgstr "+ Χρώμα"
 
-#: src/main/print-canon.c:1499
+#: src/main/print-canon.c:1509
 #, fuzzy
 msgid "CMYK Color"
 msgstr "+ Χρώμα"
 
-#: src/main/print-canon.c:1502
+#: src/main/print-canon.c:1512
 #, fuzzy
 msgid "Photo CcMmY Color"
 msgstr "Επιλογή Ειδικού Χρώματος"
 
-#: src/main/print-canon.c:1505
+#: src/main/print-canon.c:1515
 #, fuzzy
 msgid "Photo CcMmYK Color"
 msgstr "Επιλογή Ειδικού Χρώματος"
@@ -212,22 +212,6 @@ msgstr "Ταχεία"
 
 #: src/main/print-dither.c:72
 msgid "Hybrid Floyd-Steinberg"
-msgstr ""
-
-#: src/main/print-escp2.c:356 src/main/print-escp2.c:478
-#: src/main/print-escp2.c:511 src/main/print-escp2.c:528
-#: src/main/print-escp2.c:1165
-#, fuzzy, c-format
-msgid "Model %d out of range.\n"
-msgstr "Αριθμός Σελίδων"
-
-#: src/main/print-escp2.c:1160
-msgid "Print options not verified; cannot print.\n"
-msgstr ""
-
-#: src/main/print-escp2.c:1192
-#, c-format
-msgid "This printer does not support raw printer output at depth %d\n"
 msgstr ""
 
 #: src/main/print-escp2-data.c:2805 src/main/print-escp2-data.c:2815
@@ -746,40 +730,56 @@ msgstr "2880 x 1440 DPI"
 msgid "2880 x 1440 DPI Four Pass Unidirectional"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1474 src/main/print-escp2-data.c:4093
-#: src/main/print-escp2-data.c:4117 src/main/print-escp2-data.c:4148
+#: src/libgimpprintui/panel.c:1517 src/main/print-escp2-data.c:4093
+#: src/main/print-escp2-data.c:4119 src/main/print-escp2-data.c:4153
 #: src/main/print-pcl.c:202
 msgid "Standard"
 msgstr "Κανονικό"
 
-#: src/main/print-escp2-data.c:4100 src/main/print-escp2-data.c:4155
+#: src/main/print-escp2-data.c:4101 src/main/print-escp2-data.c:4161
 #, fuzzy
 msgid "Roll Feed"
 msgstr "Ρόλος"
 
-#: src/main/print-escp2-data.c:4124
+#: src/main/print-escp2-data.c:4127
 msgid "Roll Feed (cut each page)"
 msgstr ""
 
-#: src/main/print-escp2-data.c:4131
+#: src/main/print-escp2-data.c:4135
 msgid "Roll Feed (do not cut)"
 msgstr ""
 
-#: src/main/print-escp2-data.c:4172
+#: src/main/print-escp2-data.c:4179
 msgid "Cut Sheet Bin 1"
 msgstr ""
 
-#: src/main/print-escp2-data.c:4179
+#: src/main/print-escp2-data.c:4187
 msgid "Cut Sheet Bin 2"
 msgstr ""
 
-#: src/main/print-escp2-data.c:4186
+#: src/main/print-escp2-data.c:4195
 #, fuzzy
 msgid "Cut Sheet Autoselect"
 msgstr "Απεπιλογή"
 
-#: src/main/print-escp2-data.c:4193
+#: src/main/print-escp2-data.c:4203
 msgid "Manual Selection"
+msgstr ""
+
+#: src/main/print-escp2.c:395 src/main/print-escp2.c:518
+#: src/main/print-escp2.c:563 src/main/print-escp2.c:580
+#: src/main/print-escp2.c:1212
+#, fuzzy, c-format
+msgid "Model %d out of range.\n"
+msgstr "Αριθμός Σελίδων"
+
+#: src/main/print-escp2.c:1207 src/main/print-raw.c:184
+msgid "Print options not verified; cannot print.\n"
+msgstr ""
+
+#: src/main/print-escp2.c:1240
+#, c-format
+msgid "This printer does not support raw printer output at depth %d\n"
 msgstr ""
 
 #. name                                                    hres vres softw v_pass overs unidir resid
@@ -945,13 +945,898 @@ msgstr "1200x600 DPI"
 msgid "2400x600 DPI"
 msgstr "2400x600 DPI"
 
-#: src/main/print-pcl.c:1563
+#: src/main/print-pcl.c:1566
 msgid "Color + Black Cartridges"
 msgstr ""
 
-#: src/main/print-pcl.c:1564
+#: src/main/print-pcl.c:1567
 msgid "Color + Photo Cartridges"
 msgstr ""
+
+#: src/main/print-raw.c:190
+msgid "Image dimensions must match paper dimensions"
+msgstr ""
+
+#: src/main/print-raw.c:210
+msgid "Internal error!  Output channels or input channels must be 1\n"
+msgstr ""
+
+#: src/main/print-vars.c:81 src/main/print-vars.c:101
+#: src/main/print-vars.c:121
+#, fuzzy
+msgid "ps2"
+msgstr "στιγ."
+
+#
+#: src/main/print-vars.c:141
+#, fuzzy
+msgid "Page Size"
+msgstr "Μέγεθος"
+
+#: src/main/print-vars.c:142
+#, fuzzy
+msgid "Size of the paper being printed to"
+msgstr "Επιλέξτε τον φάκελο που θέλετε να ανοίξετε"
+
+#: src/cups/genppd.c:854 src/main/print-vars.c:147
+#, fuzzy
+msgid "Media Type"
+msgstr "Είδος MIME"
+
+#: src/main/print-vars.c:148
+msgid "Type of media (plain paper, photo paper, etc.)"
+msgstr ""
+
+#: src/cups/genppd.c:879 src/main/print-vars.c:153
+#, fuzzy
+msgid "Media Source"
+msgstr "Ανοικτό Λογισμικό"
+
+#: src/main/print-vars.c:154
+msgid "Source (input slot) of the media"
+msgstr ""
+
+#: src/cups/genppd.c:984 src/main/print-vars.c:159
+#, fuzzy
+msgid "Ink Type"
+msgstr "Τύπος MIME"
+
+#: src/libgimpprintui/panel.c:225 src/main/print-vars.c:160
+#, fuzzy
+msgid "Type of ink in the printer"
+msgstr "Αρχείο κειμένου προς συμπερίληψη στην αναφορά"
+
+#: src/main/print-vars.c:165
+#, fuzzy
+msgid "Resolutions"
+msgstr "Ανάλυση"
+
+#: src/libgimpprintui/panel.c:228 src/main/print-vars.c:166
+msgid "Resolution and quality of the print"
+msgstr ""
+
+#: src/cups/genppd.c:961 src/main/print-vars.c:171
+msgid "Dither Algorithm"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1172 src/main/print-vars.c:172
+msgid ""
+"Choose the dither algorithm to be used.\n"
+"Adaptive Hybrid usually produces the best all-around quality.\n"
+"EvenTone is a new, experimental algorithm that often produces excellent "
+"results.\n"
+"Ordered is faster and produces almost as good quality on photographs.\n"
+"Fast and Very Fast are considerably faster, and work well for text and line "
+"art.\n"
+"Hybrid Floyd-Steinberg generally produces inferior output."
+msgstr ""
+
+#: src/main/print-vars.c:182
+#, fuzzy
+msgid "Brightness"
+msgstr "Εργασία"
+
+#: src/main/print-vars.c:183
+msgid "Brightness of the print (0 is solid black, 2 is solid white)"
+msgstr ""
+
+#: src/main/print-vars.c:188
+#, fuzzy
+msgid "Contrast"
+msgstr "Αντίθεση"
+
+#: src/main/print-vars.c:189
+msgid "Contrast of the print (0 is solid gray)"
+msgstr ""
+
+#: src/main/print-vars.c:194
+#, fuzzy
+msgid "Density"
+msgstr "Πυκνότητα"
+
+#: src/main/print-vars.c:195
+msgid ""
+"Adjust the density (amount of ink) of the print. Reduce the density if the "
+"ink bleeds through the paper or smears; increase the density if black "
+"regions are not solid."
+msgstr ""
+
+#
+#: src/main/print-vars.c:203
+#, fuzzy
+msgid "Gamma"
+msgstr "Γάμμα"
+
+#: src/main/print-vars.c:204
+msgid ""
+"Adjust the gamma of the print. Larger values will produce a generally "
+"brighter print, while smaller values will produce a generally darker print. "
+"Black and white will remain the same, unlike with the brightness adjustment."
+msgstr ""
+
+#
+#: src/main/print-vars.c:213
+#, fuzzy
+msgid "AppGamma"
+msgstr "Γάμμα"
+
+#: src/main/print-vars.c:214
+msgid "Gamma value assumed by application"
+msgstr ""
+
+#: src/escputil/escputil.c:616 src/main/print-vars.c:219
+msgid "Cyan"
+msgstr "Κυανό"
+
+#: src/main/print-vars.c:220
+#, fuzzy
+msgid "Adjust the cyan balance"
+msgstr "Στο κέντρο της οθόνης"
+
+#: src/escputil/escputil.c:617 src/main/print-vars.c:225
+#, fuzzy
+msgid "Magenta"
+msgstr "μώβ"
+
+#: src/main/print-vars.c:226
+#, fuzzy
+msgid "Adjust the magenta balance"
+msgstr "Στο κέντρο της οθόνης"
+
+#: src/escputil/escputil.c:618 src/main/print-vars.c:231
+msgid "Yellow"
+msgstr "Κίτρινο"
+
+#: src/main/print-vars.c:232
+#, fuzzy
+msgid "Adjust the yellow balance"
+msgstr "Στο κέντρο της οθόνης"
+
+#
+#: src/main/print-vars.c:237
+#, fuzzy
+msgid "Saturation"
+msgstr "Κορεσμός:"
+
+#: src/main/print-vars.c:238
+msgid ""
+"Adjust the saturation (color balance) of the print\n"
+"Use zero saturation to produce grayscale output using color and black inks"
+msgstr ""
+
+#: src/main/printers.c:348
+#, c-format
+msgid "Value must be set for %s\n"
+msgstr ""
+
+#: src/main/printers.c:361 src/main/printers.c:366
+#, c-format
+msgid "`%s' is not a valid %s\n"
+msgstr ""
+
+#: src/main/printers.c:378
+#, c-format
+msgid "%s must be between %f and %f\n"
+msgstr ""
+
+#: src/main/printers.c:393
+#, c-format
+msgid "%s must be between %d and %d\n"
+msgstr ""
+
+#: src/main/printers.c:428
+#, fuzzy, c-format
+msgid "Unknown type parameter %s (%d)\n"
+msgstr "Άγνωστος κωδικός op %u"
+
+#: src/main/printers.c:443
+#, c-format
+msgid "%s out of range (value %d, min %d, max %d)\n"
+msgstr ""
+
+#: src/main/printers.c:498
+msgid "Printer does not support color output\n"
+msgstr ""
+
+#: src/main/printers.c:513
+msgid "Image size is not valid\n"
+msgstr ""
+
+#: src/main/printers.c:522
+msgid "Top margin must not be less than zero\n"
+msgstr ""
+
+#: src/main/printers.c:528
+msgid "Left margin must not be less than zero\n"
+msgstr ""
+
+#: src/main/printers.c:534
+msgid "Height must be greater than zero\n"
+msgstr ""
+
+#: src/main/printers.c:540
+msgid "Width must be greater than zero\n"
+msgstr ""
+
+#: src/main/printers.c:546
+#, fuzzy
+msgid "Image is too wide for the page\n"
+msgstr "Ελάττωση του μεγέθους της εικόνας στο μισό"
+
+#: src/main/printers.c:552
+msgid "Image is too long for the page\n"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:215
+#, fuzzy
+msgid "Media Type:"
+msgstr "Τύπος MIME:"
+
+#: src/libgimpprintui/panel.c:216
+msgid "Type of media you're printing to"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:218
+#, fuzzy
+msgid "Media Size:"
+msgstr "Μέγεθος Χ:"
+
+#: src/libgimpprintui/panel.c:219
+msgid "Size of paper that you wish to print to"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:221
+#, fuzzy
+msgid "Media Source:"
+msgstr "Ανοικτό Λογισμικό"
+
+#: src/libgimpprintui/panel.c:222
+msgid "Source (input slot) of media you're printing to"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:224
+#, fuzzy
+msgid "Ink Type:"
+msgstr "Τύπος Στοιχείου:"
+
+#: src/libgimpprintui/panel.c:227
+#, fuzzy
+msgid "Resolution:"
+msgstr "Ανάλυση"
+
+#: src/libgimpprintui/panel.c:237
+#, fuzzy
+msgid "Inch"
+msgstr "ίντσα"
+
+#: src/libgimpprintui/panel.c:237
+msgid "Set the base unit of measurement to inches"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:239
+msgid "cm"
+msgstr "cm"
+
+#: src/libgimpprintui/panel.c:239
+msgid "Set the base unit of measurement to centimetres"
+msgstr ""
+
+#
+#: src/libgimpprintui/panel.c:241
+#, fuzzy
+msgid "Points"
+msgstr "Εκτύπωση"
+
+#: src/libgimpprintui/panel.c:241
+#, fuzzy
+msgid "Set the base unit of measurement to points (1/72\")"
+msgstr "Επιλέγει γραμματοσειρές για επικόλληση"
+
+#: src/libgimpprintui/panel.c:243
+msgid "mm"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:243
+#, fuzzy
+msgid "Set the base unit of measurement to millimetres"
+msgstr "Επιλέγει γραμματοσειρές για επικόλληση"
+
+#: src/libgimpprintui/panel.c:245
+msgid "Pica"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:245
+#, fuzzy
+msgid "Set the base unit of measurement to picas (1/12\")"
+msgstr "Επιλέγει γραμματοσειρές για επικόλληση"
+
+#
+#: src/libgimpprintui/panel.c:252
+msgid "Color"
+msgstr "Χρώμα"
+
+#: src/libgimpprintui/panel.c:252
+#, fuzzy
+msgid "Color output"
+msgstr "Κύλιση όταν υπάρχει νέα έξοδος"
+
+#: src/libgimpprintui/panel.c:253
+msgid "Grayscale"
+msgstr "Κλίμακα του γκρι"
+
+#: src/libgimpprintui/panel.c:254
+msgid "Print in shades of gray using black ink"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:255
+#, fuzzy
+msgid "Black and White"
+msgstr "Μαυ_ρόασπρο"
+
+#: src/libgimpprintui/panel.c:256
+msgid "Print in black and white (no color, and no shades of gray)"
+msgstr ""
+
+#: src/cups/genppd.c:946 src/libgimpprintui/panel.c:265
+#, fuzzy
+msgid "Line Art"
+msgstr "Γραμμή"
+
+#: src/libgimpprintui/panel.c:265
+msgid "Fastest and brightest color for text and line art"
+msgstr ""
+
+#: src/cups/genppd.c:948 src/libgimpprintui/panel.c:267
+msgid "Solid Colors"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:268
+msgid "Best for images dominated by regions of solid color"
+msgstr ""
+
+#: src/cups/genppd.c:950 src/libgimpprintui/panel.c:270
+#, fuzzy
+msgid "Photograph"
+msgstr "Κρυπτογραφία"
+
+#: src/libgimpprintui/panel.c:271
+msgid ""
+"Slowest, but most accurate and smoothest color for continuous tone images "
+"and photographs"
+msgstr ""
+
+#.
+#. * Create the main dialog
+#.
+#: src/libgimpprintui/panel.c:349
+#, fuzzy, c-format
+msgid "%s -- Print v%s"
+msgstr "%s έκδοση %s"
+
+#
+#: src/libgimpprintui/panel.c:358
+msgid "About"
+msgstr "Περί"
+
+#: src/libgimpprintui/panel.c:360
+#, fuzzy
+msgid ""
+"Print and\n"
+"Save Settings"
+msgstr "Αποθήκευση Ρυθμίσεων"
+
+#: src/libgimpprintui/panel.c:362
+#, fuzzy
+msgid ""
+"Save\n"
+"Settings"
+msgstr "Αποθήκευση Ρυθμίσεων"
+
+#
+#: src/libgimpprintui/panel.c:364
+msgid "Print"
+msgstr "Εκτύπωση"
+
+#
+#: src/libgimpprintui/panel.c:366 src/libgimpprintui/panel.c:572
+#: src/libgimpprintui/panel.c:726
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#
+#: src/libgimpprintui/panel.c:406
+msgid "Preview"
+msgstr "Προεπισκόπηση"
+
+#: src/libgimpprintui/panel.c:429
+msgid ""
+"Position the image on the page.\n"
+"Click and drag with the primary button to position the image.\n"
+"Click and drag with the second button to move the image with finer "
+"precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of "
+"the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image "
+"to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return "
+"to its original position."
+msgstr ""
+
+#: src/libgimpprintui/panel.c:475
+msgid "Position"
+msgstr "Θέση"
+
+#: src/libgimpprintui/panel.c:493
+msgid "Auto"
+msgstr "Αυτόματο"
+
+# Not sure how the terms "portrait" and "landscape" are usually
+# translated; if anyone knows what the term in the Greek version
+# of MSWindoze is and if it is better (or equally good), maybe we
+# would want to use that for consistency and for the sake of newbies?
+#: src/libgimpprintui/panel.c:495
+msgid "Portrait"
+msgstr "Πορτραίτο"
+
+#: src/libgimpprintui/panel.c:497
+msgid "Landscape"
+msgstr "Οριζόντιος"
+
+#: src/libgimpprintui/panel.c:499
+#, fuzzy
+msgid "Upside down"
+msgstr "Ανάποδα"
+
+#: src/libgimpprintui/panel.c:501
+msgid "Seascape"
+msgstr "Tοπίο"
+
+#: src/libgimpprintui/panel.c:505
+msgid ""
+"Select the orientation: portrait, landscape, upside down, or seascape "
+"(upside down landscape)"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:507
+#, fuzzy
+msgid "Orientation:"
+msgstr "Προσανατολισμός"
+
+#: src/libgimpprintui/panel.c:519
+msgid "Left:"
+msgstr "Αριστερά:"
+
+#: src/libgimpprintui/panel.c:520
+msgid "Distance from the left of the paper to the image"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:522
+msgid "Top:"
+msgstr "Πάνω:"
+
+#: src/libgimpprintui/panel.c:523
+msgid "Distance from the top of the paper to the image"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:525
+msgid "Right:"
+msgstr "Δεξιά:"
+
+#: src/libgimpprintui/panel.c:526
+#, fuzzy
+msgid "Distance from the left of the paper to the right of the image"
+msgstr "Εστίαση για προσαρμογή του ύψους της σελίδας"
+
+#: src/libgimpprintui/panel.c:528
+#, fuzzy
+msgid "Right Border:"
+msgstr "Δεξιόχειρας"
+
+#: src/libgimpprintui/panel.c:529
+msgid "Distance from the right of the paper to the image"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:531
+msgid "Bottom:"
+msgstr "Κάτω:"
+
+#: src/libgimpprintui/panel.c:532
+#, fuzzy
+msgid "Distance from the top of the paper to bottom of the image"
+msgstr "Εστίαση για προσαρμογή του ύψους της σελίδας"
+
+#: src/libgimpprintui/panel.c:534
+#, fuzzy
+msgid "Bottom Border:"
+msgstr "Πλαίσιο Εικονιδίου:"
+
+#: src/libgimpprintui/panel.c:535
+msgid "Distance from the bottom of the paper to the image"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:546
+#, fuzzy
+msgid "Center:"
+msgstr "Κέντρο"
+
+#: src/libgimpprintui/panel.c:550
+#, fuzzy
+msgid "Vertically"
+msgstr "Κατακόρυ_φα"
+
+#: src/libgimpprintui/panel.c:551
+#, fuzzy
+msgid "Center the image vertically on the paper"
+msgstr "Περιστροφή εικόνας για κάθετα ταμπλώ"
+
+#
+#: src/libgimpprintui/panel.c:553
+msgid "Both"
+msgstr "Και τα δύο"
+
+#: src/libgimpprintui/panel.c:554
+#, fuzzy
+msgid "Center the image on the paper"
+msgstr "Αλλαγή του μεγέθους σελίδας"
+
+#: src/libgimpprintui/panel.c:556
+#, fuzzy
+msgid "Horizontally"
+msgstr "_Οριζόντια"
+
+#: src/libgimpprintui/panel.c:557
+msgid "Center the image horizontally on the paper"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:568
+msgid "Setup Printer"
+msgstr "Ρύθμιση Εκτυπωτή"
+
+#
+#: src/libgimpprintui/panel.c:570 src/libgimpprintui/panel.c:724
+#: src/libgimpprintui/panel.c:758
+msgid "OK"
+msgstr "Εντάξει"
+
+#.
+#. * Printer driver option menu.
+#.
+#: src/libgimpprintui/panel.c:595 src/libgimpprintui/panel.c:833
+#, fuzzy
+msgid "Printer Model:"
+msgstr "Όνομα εκτυπωτή:"
+
+#
+#: src/libgimpprintui/panel.c:606
+#, fuzzy
+msgid "Select your printer model"
+msgstr "Επιλογή εκτυπωτή"
+
+#.
+#. * PPD file.
+#.
+#: src/libgimpprintui/panel.c:641
+#, fuzzy
+msgid "PPD File:"
+msgstr "Αρχείο Ταυτότητας Διεργασίας: "
+
+#: src/libgimpprintui/panel.c:655
+msgid "Enter the correct PPD filename for your printer"
+msgstr ""
+
+#
+#: src/libgimpprintui/panel.c:657
+msgid "Browse"
+msgstr "Εξερεύνηση"
+
+#: src/libgimpprintui/panel.c:664
+msgid "Choose the correct PPD filename for your printer"
+msgstr ""
+
+#
+#.
+#. * Print command.
+#.
+#: src/libgimpprintui/panel.c:672
+msgid "Command:"
+msgstr "Εντολή:"
+
+#: src/libgimpprintui/panel.c:684
+msgid ""
+"Enter the correct command to print to your printer. Note: Please do not "
+"remove the `-l' or `-oraw' from the command string, or printing will "
+"probably fail!"
+msgstr ""
+
+#.
+#. * Output file selection dialog.
+#.
+#: src/libgimpprintui/panel.c:692
+#, fuzzy
+msgid "Print To File?"
+msgstr "Εκτύπωση σε Αρχείο"
+
+#.
+#. * PPD file selection dialog.
+#.
+#: src/libgimpprintui/panel.c:705
+#, fuzzy
+msgid "PPD File?"
+msgstr " Αρχείο "
+
+#
+#: src/libgimpprintui/panel.c:722
+#, fuzzy
+msgid "Define New Printer"
+msgstr "Επιλογή εκτυπωτή"
+
+#: src/libgimpprintui/panel.c:742 src/libgimpprintui/panel.c:829
+#, fuzzy
+msgid "Printer Name:"
+msgstr "Όνομα εκτυπωτή:"
+
+#: src/libgimpprintui/panel.c:746
+#, fuzzy
+msgid "Enter the name you wish to give this logical printer"
+msgstr "Εισάγετε τον αριθμό γραμμής στον οποίο θέλετε να πάτε."
+
+#: src/libgimpprintui/panel.c:756
+#, fuzzy
+msgid "About Gimp-Print "
+msgstr "Σημείο Προσάρτησης: "
+
+#: src/libgimpprintui/panel.c:764
+#, fuzzy
+msgid "Gimp-Print Version "
+msgstr "Εκτύπωση σε: "
+
+#: src/libgimpprintui/panel.c:764
+msgid ""
+"\n"
+"\n"
+"Copyright (C) 1997-2001 Michael Sweet, Robert Krawitz,\n"
+"and the rest of the Gimp-Print Development Team.\n"
+"\n"
+"Please visit our web site at http://gimp-print.sourceforge.net.\n"
+"\n"
+"This program is free software; you can redistribute it and/or modify\n"
+"it under the terms of the GNU General Public License as published by\n"
+"the Free Software Foundation; either version 2 of the License, or\n"
+"(at your option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"GNU General Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License\n"
+"along with this program; if not, write to the Free Software\n"
+"Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:814
+#, fuzzy
+msgid "Printer Settings"
+msgstr "Ρυθμίσεις Επιλογέα"
+
+#: src/libgimpprintui/panel.c:827
+msgid ""
+"Select the name of the printer (not the type, or model, of printer) that you "
+"wish to print to"
+msgstr ""
+
+#.
+#. * Setup printer button
+#.
+#: src/libgimpprintui/panel.c:846
+#, fuzzy
+msgid "Setup Printer..."
+msgstr "Ρύθμιση Εκτυπωτή"
+
+#: src/libgimpprintui/panel.c:847
+msgid ""
+"Choose the printer model, PPD file, and command that is used to print to "
+"this printer"
+msgstr ""
+
+#
+#.
+#. * New printer button
+#.
+#: src/libgimpprintui/panel.c:860
+#, fuzzy
+msgid "New Printer..."
+msgstr "Εκτύπωση..."
+
+#: src/libgimpprintui/panel.c:861
+msgid ""
+"Define a new logical printer. This can be used to name a collection of "
+"settings that you wish to remember for future use."
+msgstr ""
+
+#: src/libgimpprintui/panel.c:888
+msgid "Dimensions:"
+msgstr "Διαστάσεις:"
+
+#: src/libgimpprintui/panel.c:892 src/libgimpprintui/panel.c:1014
+msgid "Width:"
+msgstr "Πλάτος:"
+
+#: src/libgimpprintui/panel.c:893
+#, fuzzy
+msgid "Width of the paper that you wish to print to"
+msgstr "Επιλέξτε τον φάκελο που θέλετε να ανοίξετε"
+
+#: src/libgimpprintui/panel.c:897 src/libgimpprintui/panel.c:1016
+msgid "Height:"
+msgstr "Ύψος:"
+
+#: src/libgimpprintui/panel.c:898
+#, fuzzy
+msgid "Height of the paper that you wish to print to"
+msgstr "Επιλέξτε τον φάκελο που θέλετε να ανοίξετε"
+
+#
+#: src/libgimpprintui/panel.c:921
+msgid "Size"
+msgstr "Μέγεθος"
+
+#: src/libgimpprintui/panel.c:942
+#, fuzzy
+msgid "Scaling:"
+msgstr "Αποθήκευση:"
+
+#: src/libgimpprintui/panel.c:946
+#, fuzzy
+msgid "Set the scale (size) of the image"
+msgstr "Ελάττωση του μεγέθους της εικόνας στο μισό"
+
+#: src/libgimpprintui/panel.c:978
+msgid ""
+"Select whether scaling is measured as percent of available page size or "
+"number of output dots per inch"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:981
+msgid "Percent"
+msgstr "Ποσοστό"
+
+#: src/libgimpprintui/panel.c:986
+#, fuzzy
+msgid "Scale the print to the size of the page"
+msgstr "Ελάττωση του μεγέθους της εικόνας στο μισό"
+
+#
+#: src/libgimpprintui/panel.c:990
+#, fuzzy
+msgid "PPI"
+msgstr "ΑΡΙΘΜ.ΔΙΕΡΓΑΣΙΑΣ"
+
+#: src/libgimpprintui/panel.c:995
+msgid "Scale the print to the number of dots per inch"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1014
+#, fuzzy
+msgid "Set the width of the print"
+msgstr "Το πλάτος του μαραφετιού"
+
+#: src/libgimpprintui/panel.c:1016
+#, fuzzy
+msgid "Set the height of the print"
+msgstr "Εστίαση για προσαρμογή του ύψους της σελίδας"
+
+#.
+#. * The "image size" button
+#.
+#: src/libgimpprintui/panel.c:1022
+#, fuzzy
+msgid ""
+"Use Original\n"
+"Image Size"
+msgstr "Αρχικό _Μέγεθος"
+
+#: src/libgimpprintui/panel.c:1028
+#, fuzzy
+msgid "Set the print size to the size of the image"
+msgstr "Ορισμός παραμετροποιημένου μεγέθους για την εικόνα"
+
+#: src/libgimpprintui/panel.c:1051
+#, fuzzy
+msgid "Units:"
+msgstr "&Μονάδες:"
+
+#: src/libgimpprintui/panel.c:1056
+#, fuzzy
+msgid "Select the base unit of measurement for printing"
+msgstr "Επιλέγει γραμματοσειρές για επικόλληση"
+
+#: src/libgimpprintui/panel.c:1093
+#, fuzzy
+msgid "Print Color Adjust"
+msgstr "Πρωτεύωντα Χρώματα"
+
+#: src/libgimpprintui/panel.c:1096
+#, fuzzy
+msgid "Set Defaults"
+msgstr "Ορισμός Προκαθορισμένων Τιμών"
+
+#
+#: src/libgimpprintui/panel.c:1098
+msgid "Close"
+msgstr "Κλείσιμο"
+
+#: src/libgimpprintui/panel.c:1130
+#, fuzzy
+msgid "Image preview"
+msgstr "Παρατηρητής Εικόνων"
+
+#: src/libgimpprintui/panel.c:1165
+msgid "Dither Algorithm:"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1186
+msgid "Curve:"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1209
+#, fuzzy
+msgid "Image / Output Settings"
+msgstr "Ρυθμίσεις Εισόδου/Εξόδου IRC"
+
+#: src/libgimpprintui/panel.c:1223
+#, fuzzy
+msgid "Image Type:"
+msgstr "Τύπος Στοιχείου:"
+
+#: src/libgimpprintui/panel.c:1228
+msgid "Optimize the output for the type of image being printed"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1255
+#, fuzzy
+msgid "Output Type:"
+msgstr "Byte Εξόδου"
+
+#: src/libgimpprintui/panel.c:1259
+#, fuzzy
+msgid "Select the desired output type"
+msgstr "Επιλογή αρχείου προς αποθήκευση"
+
+#: src/libgimpprintui/panel.c:1280
+msgid "Adjust Output..."
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1289
+msgid ""
+"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgstr ""
+
+#
+#: src/libgimpprintui/plist.c:357 src/libgimpprintui/plist.c:358
+#: src/libgimpprintui/plist.c:437 src/libgimpprintui/plist.c:800
+msgid "File"
+msgstr "Αρχείο"
 
 #. Specify language of PPD translation
 #. Translators: Specify the language of the PPD translation.
@@ -968,16 +1853,6 @@ msgstr "Greek"
 msgid "ISOLatin1"
 msgstr "Λάτιν"
 
-#: src/cups/genppd.c:854
-#, fuzzy
-msgid "Media Type"
-msgstr "Είδος MIME"
-
-#: src/cups/genppd.c:879
-#, fuzzy
-msgid "Media Source"
-msgstr "Ανοικτό Λογισμικό"
-
 #: src/cups/genppd.c:902
 msgid "Resolution"
 msgstr "Ανάλυση"
@@ -990,35 +1865,12 @@ msgstr "Ανάλυση"
 msgid "Image Type"
 msgstr "Είδος MIME"
 
-#: src/cups/genppd.c:946 src/gimp/gimp_main_window.c:262
-#, fuzzy
-msgid "Line Art"
-msgstr "Γραμμή"
-
-#: src/cups/genppd.c:948 src/gimp/gimp_main_window.c:264
-msgid "Solid Colors"
-msgstr ""
-
-#: src/cups/genppd.c:950 src/gimp/gimp_main_window.c:267
-#, fuzzy
-msgid "Photograph"
-msgstr "Κρυπτογραφία"
-
-#: src/cups/genppd.c:961
-msgid "Dither Algorithm"
-msgstr ""
-
-#: src/cups/genppd.c:984
-#, fuzzy
-msgid "Ink Type"
-msgstr "Τύπος MIME"
-
-#: src/escputil/escputil.c:64
+#: src/escputil/escputil.c:66
 #, fuzzy
 msgid "Escputil version "
 msgstr "%s έκδοση %s"
 
-#: src/escputil/escputil.c:65
+#: src/escputil/escputil.c:67
 #, fuzzy
 msgid ""
 ", Copyright (C) 2000-2001 Robert Krawitz\n"
@@ -1031,7 +1883,7 @@ msgstr ""
 "λογισμικο, και μπορείτε να το αναδιανείμετε βάσει των συνθηκών της Γενικής "
 "Δημόσιας Άδειας GNU (GNU General Public Licence)."
 
-#: src/escputil/escputil.c:70
+#: src/escputil/escputil.c:72
 msgid ""
 "Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
@@ -1050,7 +1902,7 @@ msgid ""
 "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:110
+#: src/escputil/escputil.c:112
 msgid ""
 "Usage: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
 "                [-P printer | -r device] [-u] [-q] [-m model]\n"
@@ -1093,7 +1945,7 @@ msgid ""
 "alignment.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:148
+#: src/escputil/escputil.c:150
 msgid ""
 "Usage: escputil [OPTIONS] [COMMAND]\n"
 "Usage: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
@@ -1132,451 +1984,441 @@ msgid ""
 "    -m Specify the precise printer model for head alignment.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:199
+#: src/escputil/escputil.c:201
 msgid "Stylus C20sx"
 msgstr "Stylus C20sx"
 
-#: src/escputil/escputil.c:200
+#: src/escputil/escputil.c:202
 msgid "Stylus C20ux"
 msgstr "Stylus C20ux"
 
-#: src/escputil/escputil.c:201
+#: src/escputil/escputil.c:203
 msgid "Stylus C40sx"
 msgstr "Stylus C40sx"
 
-#: src/escputil/escputil.c:202
-msgid "Stylus C40ux"
-msgstr "Stylus C40ux"
-
-#: src/escputil/escputil.c:203
-#, fuzzy
-msgid "Stylus C41sx"
-msgstr "Stylus C40sx"
-
 #: src/escputil/escputil.c:204
-#, fuzzy
-msgid "Stylus C41ux"
+msgid "Stylus C40ux"
 msgstr "Stylus C40ux"
 
 #: src/escputil/escputil.c:205
 #, fuzzy
-msgid "Stylus C42sx"
+msgid "Stylus C41sx"
 msgstr "Stylus C40sx"
 
 #: src/escputil/escputil.c:206
 #, fuzzy
-msgid "Stylus C42ux"
+msgid "Stylus C41ux"
 msgstr "Stylus C40ux"
 
 #: src/escputil/escputil.c:207
+#, fuzzy
+msgid "Stylus C42sx"
+msgstr "Stylus C40sx"
+
+#: src/escputil/escputil.c:208
+#, fuzzy
+msgid "Stylus C42ux"
+msgstr "Stylus C40ux"
+
+#: src/escputil/escputil.c:209
 msgid "Stylus C60"
 msgstr "Stylus C60"
 
-#: src/escputil/escputil.c:208
+#: src/escputil/escputil.c:210
 #, fuzzy
 msgid "Stylus C61"
 msgstr "Stylus C60"
 
-#: src/escputil/escputil.c:209
+#: src/escputil/escputil.c:211
 #, fuzzy
 msgid "Stylus C62"
 msgstr "Stylus C60"
 
-#: src/escputil/escputil.c:210
+#: src/escputil/escputil.c:212
 msgid "Stylus C70"
 msgstr "Stylus C70"
 
-#: src/escputil/escputil.c:211
+#: src/escputil/escputil.c:213
 msgid "Stylus C80"
 msgstr "Stylus C80"
 
-#: src/escputil/escputil.c:212
+#: src/escputil/escputil.c:214
 #, fuzzy
 msgid "Stylus C82"
 msgstr "Stylus C80"
 
-#: src/escputil/escputil.c:213
+#: src/escputil/escputil.c:215
 msgid "Stylus Color"
 msgstr "Stylus Color"
 
-#: src/escputil/escputil.c:214
+#: src/escputil/escputil.c:216
 msgid "Stylus Color Pro"
 msgstr "Stylus Color Pro"
 
-#: src/escputil/escputil.c:215
+#: src/escputil/escputil.c:217
 msgid "Stylus Color Pro XL"
 msgstr "Stylus Color Pro XL"
 
-#: src/escputil/escputil.c:216
+#: src/escputil/escputil.c:218
 msgid "Stylus Color 400"
 msgstr "Stylus Color 400"
 
-#: src/escputil/escputil.c:217
+#: src/escputil/escputil.c:219
 msgid "Stylus Color 440"
 msgstr "Stylus Color 440"
 
-#: src/escputil/escputil.c:218
+#: src/escputil/escputil.c:220
 msgid "Stylus Color 460"
 msgstr "Stylus Color 460"
 
-#: src/escputil/escputil.c:219
+#: src/escputil/escputil.c:221
 msgid "Stylus Color 480"
 msgstr "Stylus Color 480"
 
-#: src/escputil/escputil.c:220
+#: src/escputil/escputil.c:222
 msgid "Stylus Color 500"
 msgstr "Stylus Color 500"
 
-#: src/escputil/escputil.c:221
+#: src/escputil/escputil.c:223
 msgid "Stylus Color 580"
 msgstr "Stylus Color 580"
 
-#: src/escputil/escputil.c:222
+#: src/escputil/escputil.c:224
 msgid "Stylus Color 600"
 msgstr "Stylus Color 600"
 
-#: src/escputil/escputil.c:223
+#: src/escputil/escputil.c:225
 msgid "Stylus Color 640"
 msgstr "Stylus Color 640"
 
-#: src/escputil/escputil.c:224
+#: src/escputil/escputil.c:226
 msgid "Stylus Color 660"
 msgstr "Stylus Color 660"
 
-#: src/escputil/escputil.c:225
+#: src/escputil/escputil.c:227
 msgid "Stylus Color 670"
 msgstr "Stylus Color 670"
 
-#: src/escputil/escputil.c:226
+#: src/escputil/escputil.c:228
 msgid "Stylus Color 680"
 msgstr "Stylus Color 680"
 
-#: src/escputil/escputil.c:227
+#: src/escputil/escputil.c:229
 msgid "Stylus Color 740"
 msgstr "Stylus Color 740"
 
-#: src/escputil/escputil.c:228
+#: src/escputil/escputil.c:230
 msgid "Stylus Color 760"
 msgstr "Stylus Color 760"
 
-#: src/escputil/escputil.c:229
+#: src/escputil/escputil.c:231
 msgid "Stylus Color 777"
 msgstr "Stylus Color 777"
 
-#: src/escputil/escputil.c:230
+#: src/escputil/escputil.c:232
 msgid "Stylus Color 800"
 msgstr "Stylus Color 800"
 
-#: src/escputil/escputil.c:231
+#: src/escputil/escputil.c:233
 msgid "Stylus Color 850"
 msgstr "Stylus Color 850"
 
-#: src/escputil/escputil.c:232
+#: src/escputil/escputil.c:234
 msgid "Stylus Color 860"
 msgstr "Stylus Color 860"
 
-#: src/escputil/escputil.c:233
+#: src/escputil/escputil.c:235
 msgid "Stylus Color 880"
 msgstr "Stylus Color 880"
 
-#: src/escputil/escputil.c:234
+#: src/escputil/escputil.c:236
 msgid "Stylus Color 83"
 msgstr "Stylus Color 83"
 
-#: src/escputil/escputil.c:235
+#: src/escputil/escputil.c:237
 msgid "Stylus Color 900"
 msgstr "Stylus Color 900"
 
-#: src/escputil/escputil.c:236
+#: src/escputil/escputil.c:238
 msgid "Stylus Color 980"
 msgstr "Stylus Color 980"
 
-#: src/escputil/escputil.c:237
+#: src/escputil/escputil.c:239
 msgid "Stylus Color 1160"
 msgstr "Stylus Color 1160"
 
-#: src/escputil/escputil.c:238
+#: src/escputil/escputil.c:240
 msgid "Stylus Color 1500"
 msgstr "Stylus Color 1500"
 
-#: src/escputil/escputil.c:239
+#: src/escputil/escputil.c:241
 msgid "Stylus Color 1520"
 msgstr "Stylus Color 1520"
 
-#: src/escputil/escputil.c:240
+#: src/escputil/escputil.c:242
 msgid "Stylus Color 3000"
 msgstr "Stylus Color 3000"
 
-#: src/escputil/escputil.c:241
+#: src/escputil/escputil.c:243
 #, fuzzy
 msgid "Stylus Photo"
 msgstr "Slashdot"
 
-#: src/escputil/escputil.c:242
+#: src/escputil/escputil.c:244
 msgid "Stylus Photo 700"
 msgstr "Stylus Photo 700"
 
-#: src/escputil/escputil.c:243
+#: src/escputil/escputil.c:245
 msgid "Stylus Photo EX"
 msgstr "Stylus Photo EX"
 
-#: src/escputil/escputil.c:244
+#: src/escputil/escputil.c:246
 msgid "Stylus Photo 720"
 msgstr "Stylus Photo 720"
 
-#: src/escputil/escputil.c:245
+#: src/escputil/escputil.c:247
 msgid "Stylus Photo 750"
 msgstr "Stylus Photo 750"
 
-#: src/escputil/escputil.c:246
+#: src/escputil/escputil.c:248
 msgid "Stylus Photo 780"
 msgstr "Stylus Photo 780"
 
-#: src/escputil/escputil.c:247
+#: src/escputil/escputil.c:249
 msgid "Stylus Photo 785"
 msgstr "Stylus Photo 785"
 
-#: src/escputil/escputil.c:248
+#: src/escputil/escputil.c:250
 msgid "Stylus Photo 790"
 msgstr "Stylus Photo 790"
 
-#: src/escputil/escputil.c:249
+#: src/escputil/escputil.c:251
 msgid "Stylus Photo 810"
 msgstr "Stylus Photo 810"
 
-#: src/escputil/escputil.c:250
+#: src/escputil/escputil.c:252
 msgid "Stylus Photo 820"
 msgstr "Stylus Photo 820"
 
-#: src/escputil/escputil.c:251
+#: src/escputil/escputil.c:253
 #, fuzzy
 msgid "Stylus Photo 830"
 msgstr "Stylus Photo 780"
 
-#: src/escputil/escputil.c:252
+#: src/escputil/escputil.c:254
 msgid "Stylus Photo 870"
 msgstr "Stylus Photo 870"
 
-#: src/escputil/escputil.c:253
+#: src/escputil/escputil.c:255
 msgid "Stylus Photo 875"
 msgstr "Stylus Photo 875"
 
-#: src/escputil/escputil.c:254
+#: src/escputil/escputil.c:256
 msgid "Stylus Photo 890"
 msgstr "Stylus Photo 890"
 
-#: src/escputil/escputil.c:255
-msgid "Stylus Photo 895"
-msgstr "Stylus Photo 895"
-
-#: src/escputil/escputil.c:256
-#, fuzzy
-msgid "Stylus Photo 915"
-msgstr "Stylus Photo 895"
-
 #: src/escputil/escputil.c:257
-#, fuzzy
-msgid "Stylus Photo 925"
+msgid "Stylus Photo 895"
 msgstr "Stylus Photo 895"
 
 #: src/escputil/escputil.c:258
 #, fuzzy
+msgid "Stylus Photo 915"
+msgstr "Stylus Photo 895"
+
+#: src/escputil/escputil.c:259
+#, fuzzy
+msgid "Stylus Photo 925"
+msgstr "Stylus Photo 895"
+
+#: src/escputil/escputil.c:260
+#, fuzzy
 msgid "Stylus Photo 950"
 msgstr "Stylus Photo 750"
 
-#: src/escputil/escputil.c:259
+#: src/escputil/escputil.c:261
 #, fuzzy
 msgid "Stylus Photo 960"
 msgstr "Stylus Photo 790"
 
-#: src/escputil/escputil.c:260
+#: src/escputil/escputil.c:262
 msgid "Stylus Photo 1200"
 msgstr "Stylus Photo 1200"
 
-#: src/escputil/escputil.c:261
+#: src/escputil/escputil.c:263
 msgid "Stylus Photo 1270"
 msgstr "Stylus Photo 1270"
 
-#: src/escputil/escputil.c:262
+#: src/escputil/escputil.c:264
 msgid "Stylus Photo 1280"
 msgstr "Stylus Photo 1280"
 
-#: src/escputil/escputil.c:263
+#: src/escputil/escputil.c:265
 msgid "Stylus Photo 1290"
 msgstr "Stylus Photo 1290"
 
-#: src/escputil/escputil.c:264
+#: src/escputil/escputil.c:266
 msgid "Stylus Photo 2000P"
 msgstr "Stylus Photo 2000P"
 
-#: src/escputil/escputil.c:265
+#: src/escputil/escputil.c:267
 #, fuzzy
 msgid "Stylus Photo 2100"
 msgstr "Stylus Photo 1200"
 
-#: src/escputil/escputil.c:266
+#: src/escputil/escputil.c:268
 #, fuzzy
 msgid "Stylus Photo 2200"
 msgstr "Stylus Photo 1200"
 
-#: src/escputil/escputil.c:267
+#: src/escputil/escputil.c:269
 msgid "Stylus Pro 5000"
 msgstr "Stylus Pro 5000"
 
-#: src/escputil/escputil.c:268
+#: src/escputil/escputil.c:270
 msgid "Stylus Pro 5500"
 msgstr "Stylus Pro 5500"
 
-#: src/escputil/escputil.c:269
+#: src/escputil/escputil.c:271
 msgid "Stylus Pro 7000"
 msgstr "Stylus Pro 7000"
 
-#: src/escputil/escputil.c:270
+#: src/escputil/escputil.c:272
 msgid "Stylus Pro 7500"
 msgstr "Stylus Pro 7500"
 
-#: src/escputil/escputil.c:271
+#: src/escputil/escputil.c:273
 #, fuzzy
 msgid "Stylus Pro 7600"
 msgstr "Stylus Pro 7000"
 
-#: src/escputil/escputil.c:272
+#: src/escputil/escputil.c:274
 msgid "Stylus Pro 9000"
 msgstr "Stylus Pro 9000"
 
-#: src/escputil/escputil.c:273
+#: src/escputil/escputil.c:275
 msgid "Stylus Pro 9500"
 msgstr "Stylus Pro 9500"
 
-#: src/escputil/escputil.c:274
+#: src/escputil/escputil.c:276
 #, fuzzy
 msgid "Stylus Pro 9600"
 msgstr "Stylus Pro 9000"
 
-#: src/escputil/escputil.c:275
+#: src/escputil/escputil.c:277
 msgid "Stylus Pro 10000"
 msgstr "Stylus Pro 10000"
 
-#: src/escputil/escputil.c:276
+#: src/escputil/escputil.c:278
 msgid "Stylus Scan 2000"
 msgstr "Stylus Scan 2000"
 
-#: src/escputil/escputil.c:277
+#: src/escputil/escputil.c:279
 msgid "Stylus Scan 2500"
 msgstr "Stylus Scan 2500"
 
-#: src/escputil/escputil.c:364 src/escputil/escputil.c:373
+#: src/escputil/escputil.c:366 src/escputil/escputil.c:375
 #, fuzzy
 msgid "You may only specify one printer or raw device."
 msgstr "Μπορείτε να αποθηκεύσετε μια μόνο διεύθυνση τη φορά.\n"
 
-#: src/escputil/escputil.c:382
+#: src/escputil/escputil.c:384
 #, fuzzy
 msgid "You may only specify one printer model."
 msgstr "Μπορείτε να αποθηκεύσετε μια μόνο διεύθυνση τη φορά.\n"
 
-#: src/escputil/escputil.c:402
+#: src/escputil/escputil.c:404
 #, fuzzy, c-format
 msgid "Unknown option %c\n"
 msgstr "Άγνωστος κωδικός op %u"
 
-#: src/escputil/escputil.c:462
+#: src/escputil/escputil.c:464
 #, fuzzy, c-format
 msgid "Cannot open device %s: %s\n"
 msgstr "Άνοιγμα αρχείου %s αδύνατον\n"
 
-#: src/escputil/escputil.c:485
+#: src/escputil/escputil.c:487
 #, fuzzy, c-format
 msgid "Cannot print to printer %s with %s\n"
 msgstr "Δεν είναι δυνατό να γίνει καταχώρηση αποθήκευσης με κέλυφος"
 
-#: src/escputil/escputil.c:498 src/escputil/escputil.c:508
+#: src/escputil/escputil.c:500 src/escputil/escputil.c:510
 #, fuzzy
 msgid "Unable to send command to printer\n"
 msgstr "Ανεπιτυχής σύνδεση στο πιλότο"
 
-#: src/escputil/escputil.c:601
-msgid "Cyan"
-msgstr "Κυανό"
-
-#: src/escputil/escputil.c:602
-#, fuzzy
-msgid "Magenta"
-msgstr "μώβ"
-
-#: src/escputil/escputil.c:603
-msgid "Yellow"
-msgstr "Κίτρινο"
-
-#: src/escputil/escputil.c:604
-#, fuzzy
-msgid "Light Cyan"
-msgstr "Ψιλή Βροχή"
-
-#: src/escputil/escputil.c:605
-#, fuzzy
-msgid "Light Magenta"
-msgstr "Ψιλή Βροχή"
-
-#: src/escputil/escputil.c:606
-msgid "Black/Dark Yellow"
+#: src/escputil/escputil.c:561
+msgid "Read from printer timed out\n"
 msgstr ""
 
-#: src/escputil/escputil.c:620
-msgid "Obtaining ink levels requires using a raw device.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:626 src/escputil/escputil.c:701
-#: src/escputil/escputil.c:744
-#, fuzzy, c-format
-msgid "Cannot open %s read/write: %s\n"
-msgstr "Άνοιγμα αρχείου %s αδύνατον\n"
-
-#: src/escputil/escputil.c:635 src/escputil/escputil.c:712
-#: src/escputil/escputil.c:753
-#, fuzzy, c-format
-msgid "Cannot write to %s: %s\n"
-msgstr "Εγγραφή αδύνατη: %s"
-
-#: src/escputil/escputil.c:642 src/escputil/escputil.c:719
-#: src/escputil/escputil.c:760
+#: src/escputil/escputil.c:563
 #, fuzzy, c-format
 msgid "Cannot read from %s: %s\n"
 msgstr "Δεν είναι δυνατό να ελεγχθεί ο φάκελος: %s: %s"
 
-#: src/escputil/escputil.c:652
+#: src/escputil/escputil.c:619
+#, fuzzy
+msgid "Light Cyan"
+msgstr "Ψιλή Βροχή"
+
+#: src/escputil/escputil.c:620
+#, fuzzy
+msgid "Light Magenta"
+msgstr "Ψιλή Βροχή"
+
+#: src/escputil/escputil.c:621
+msgid "Black/Dark Yellow"
+msgstr ""
+
+#: src/escputil/escputil.c:635
+msgid "Obtaining ink levels requires using a raw device.\n"
+msgstr ""
+
+#: src/escputil/escputil.c:641 src/escputil/escputil.c:712
+#: src/escputil/escputil.c:751
+#, fuzzy, c-format
+msgid "Cannot open %s read/write: %s\n"
+msgstr "Άνοιγμα αρχείου %s αδύνατον\n"
+
+#: src/escputil/escputil.c:650 src/escputil/escputil.c:723
+#: src/escputil/escputil.c:760
+#, fuzzy, c-format
+msgid "Cannot write to %s: %s\n"
+msgstr "Εγγραφή αδύνατη: %s"
+
+#: src/escputil/escputil.c:663
 #, fuzzy
 msgid "Cannot parse output from printer\n"
 msgstr "Αδυναμία ανοίγματος αρχείου εξόδου: %s\n"
 
-#: src/escputil/escputil.c:656
+#: src/escputil/escputil.c:667
 #, fuzzy
 msgid "Ink color"
 msgstr " χρώμα"
 
-#: src/escputil/escputil.c:656
+#: src/escputil/escputil.c:667
 #, fuzzy
 msgid "Percent remaining"
 msgstr "Επί τοις εκατό ελεύθερο"
 
-#: src/escputil/escputil.c:695
+#: src/escputil/escputil.c:706
 msgid "Printer identification requires using a raw device.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:738
+#: src/escputil/escputil.c:745
 msgid "Printer status requires using a raw device.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:781
+#: src/escputil/escputil.c:784
 #, fuzzy
 msgid "Cleaning heads...\n"
 msgstr "Ανάγνωση επικεφαλίδων..."
 
-#: src/escputil/escputil.c:790
+#: src/escputil/escputil.c:793
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:794
+#: src/escputil/escputil.c:797
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -1615,7 +2457,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/escputil/escputil.c:829
+#: src/escputil/escputil.c:832
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -1651,40 +2493,33 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/escputil/escputil.c:873
+#: src/escputil/escputil.c:876
 msgid "Unable to send command to the printer, exiting.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:891
+#: src/escputil/escputil.c:894
 msgid ""
 "Printer alignment must be done with a raw device or else\n"
 "the -m option must be used to specify a printer.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:895
+#: src/escputil/escputil.c:898
 msgid "Attempting to detect printer model..."
 msgstr ""
 
-#: src/escputil/escputil.c:900
+#: src/escputil/escputil.c:903
 #, fuzzy, c-format
 msgid ""
 "\n"
 "Cannot open %s read/write: %s\n"
 msgstr "Άνοιγμα αρχείου %s αδύνατον\n"
 
-#: src/escputil/escputil.c:908
+#: src/escputil/escputil.c:911
 #, fuzzy, c-format
 msgid ""
 "\n"
 "Cannot write to %s: %s\n"
 msgstr "Εγγραφή αδύνατη: %s"
-
-#: src/escputil/escputil.c:914
-#, fuzzy, c-format
-msgid ""
-"\n"
-"Cannot read from %s: %s\n"
-msgstr "Δεν είναι δυνατό να ελεγχθεί ο φάκελος: %s: %s"
 
 #: src/escputil/escputil.c:927
 msgid ""
@@ -1897,673 +2732,15 @@ msgstr ""
 msgid "Error in input\n"
 msgstr "Σφάλμα προσθήκης λίστας"
 
-#: src/gimp/gimp_color_window.c:183
-#, fuzzy
-msgid "Print Color Adjust"
-msgstr "Πρωτεύωντα Χρώματα"
-
-#: src/gimp/gimp_color_window.c:187
-#, fuzzy
-msgid "Set Defaults"
-msgstr "Ορισμός Προκαθορισμένων Τιμών"
-
-#
-#: src/gimp/gimp_color_window.c:189
-msgid "Close"
-msgstr "Κλείσιμο"
-
-#: src/gimp/gimp_color_window.c:221
-#, fuzzy
-msgid "Image preview"
-msgstr "Παρατηρητής Εικόνων"
-
-#: src/gimp/gimp_color_window.c:256
-msgid "Dither Algorithm:"
-msgstr ""
-
-#: src/gimp/gimp_color_window.c:263
-msgid ""
-"Choose the dither algorithm to be used.\n"
-"Adaptive Hybrid usually produces the best all-around quality.\n"
-"EvenTone is a new, experimental algorithm that often produces excellent "
-"results.\n"
-"Ordered is faster and produces almost as good quality on photographs.\n"
-"Fast and Very Fast are considerably faster, and work well for text and line "
-"art.\n"
-"Hybrid Floyd-Steinberg generally produces inferior output."
-msgstr ""
-
-#: src/gimp/gimp_color_window.c:277
-msgid "Curve:"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:212
-#, fuzzy
-msgid "Media Type:"
-msgstr "Τύπος MIME:"
-
-#: src/gimp/gimp_main_window.c:213
-msgid "Type of media you're printing to"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:215
-#, fuzzy
-msgid "Media Size:"
-msgstr "Μέγεθος Χ:"
-
-#: src/gimp/gimp_main_window.c:216
-msgid "Size of paper that you wish to print to"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:218
-#, fuzzy
-msgid "Media Source:"
-msgstr "Ανοικτό Λογισμικό"
-
-#: src/gimp/gimp_main_window.c:219
-msgid "Source (input slot) of media you're printing to"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:221
-#, fuzzy
-msgid "Ink Type:"
-msgstr "Τύπος Στοιχείου:"
-
-#: src/gimp/gimp_main_window.c:222
-#, fuzzy
-msgid "Type of ink in the printer"
-msgstr "Αρχείο κειμένου προς συμπερίληψη στην αναφορά"
-
-#: src/gimp/gimp_main_window.c:224
-#, fuzzy
-msgid "Resolution:"
-msgstr "Ανάλυση"
-
-#: src/gimp/gimp_main_window.c:225
-msgid "Resolution and quality of the print"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:234
-#, fuzzy
-msgid "Inch"
-msgstr "ίντσα"
-
-#: src/gimp/gimp_main_window.c:234
-msgid "Set the base unit of measurement to inches"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:236
-msgid "cm"
-msgstr "cm"
-
-#: src/gimp/gimp_main_window.c:236
-msgid "Set the base unit of measurement to centimetres"
-msgstr ""
-
-#
-#: src/gimp/gimp_main_window.c:238
-#, fuzzy
-msgid "Points"
-msgstr "Εκτύπωση"
-
-#: src/gimp/gimp_main_window.c:238
-#, fuzzy
-msgid "Set the base unit of measurement to points (1/72\")"
-msgstr "Επιλέγει γραμματοσειρές για επικόλληση"
-
-#: src/gimp/gimp_main_window.c:240
-msgid "mm"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:240
-#, fuzzy
-msgid "Set the base unit of measurement to millimetres"
-msgstr "Επιλέγει γραμματοσειρές για επικόλληση"
-
-#: src/gimp/gimp_main_window.c:242
-msgid "Pica"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:242
-#, fuzzy
-msgid "Set the base unit of measurement to picas (1/12\")"
-msgstr "Επιλέγει γραμματοσειρές για επικόλληση"
-
-#
-#: src/gimp/gimp_main_window.c:249
-msgid "Color"
-msgstr "Χρώμα"
-
-#: src/gimp/gimp_main_window.c:249
-#, fuzzy
-msgid "Color output"
-msgstr "Κύλιση όταν υπάρχει νέα έξοδος"
-
-#: src/gimp/gimp_main_window.c:250
-msgid "Grayscale"
-msgstr "Κλίμακα του γκρι"
-
-#: src/gimp/gimp_main_window.c:251
-msgid "Print in shades of gray using black ink"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:252
-#, fuzzy
-msgid "Black and White"
-msgstr "Μαυ_ρόασπρο"
-
-#: src/gimp/gimp_main_window.c:253
-msgid "Print in black and white (no color, and no shades of gray)"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:262
-msgid "Fastest and brightest color for text and line art"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:265
-msgid "Best for images dominated by regions of solid color"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:268
-msgid ""
-"Slowest, but most accurate and smoothest color for continuous tone images "
-"and photographs"
-msgstr ""
-
-#.
-#. * Create the main dialog
-#.
-#: src/gimp/gimp_main_window.c:459
-#, fuzzy, c-format
-msgid "%s -- Print v%s"
-msgstr "%s έκδοση %s"
-
-#
-#: src/gimp/gimp_main_window.c:468
-msgid "About"
-msgstr "Περί"
-
-#: src/gimp/gimp_main_window.c:470
-#, fuzzy
-msgid ""
-"Print and\n"
-"Save Settings"
-msgstr "Αποθήκευση Ρυθμίσεων"
-
-#: src/gimp/gimp_main_window.c:472
-#, fuzzy
-msgid ""
-"Save\n"
-"Settings"
-msgstr "Αποθήκευση Ρυθμίσεων"
-
-#
-#: src/gimp/gimp_main_window.c:474
-msgid "Print"
-msgstr "Εκτύπωση"
-
-#
-#: src/gimp/gimp_main_window.c:476 src/gimp/gimp_main_window.c:661
-#: src/gimp/gimp_main_window.c:815
-msgid "Cancel"
-msgstr "Ακύρωση"
-
-#
-#: src/gimp/gimp_main_window.c:516
-msgid "Preview"
-msgstr "Προεπισκόπηση"
-
-#: src/gimp/gimp_main_window.c:539
-msgid ""
-"Position the image on the page.\n"
-"Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer "
-"precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of "
-"the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image "
-"to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return "
-"to its original position."
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:563
-msgid "Position"
-msgstr "Θέση"
-
-#: src/gimp/gimp_main_window.c:581
-msgid "Auto"
-msgstr "Αυτόματο"
-
-# Not sure how the terms "portrait" and "landscape" are usually
-# translated; if anyone knows what the term in the Greek version
-# of MSWindoze is and if it is better (or equally good), maybe we
-# would want to use that for consistency and for the sake of newbies?
-#: src/gimp/gimp_main_window.c:583
-msgid "Portrait"
-msgstr "Πορτραίτο"
-
-#: src/gimp/gimp_main_window.c:585
-msgid "Landscape"
-msgstr "Οριζόντιος"
-
-#: src/gimp/gimp_main_window.c:587
-#, fuzzy
-msgid "Upside down"
-msgstr "Ανάποδα"
-
-#: src/gimp/gimp_main_window.c:589
-msgid "Seascape"
-msgstr "Tοπίο"
-
-#: src/gimp/gimp_main_window.c:593
-msgid ""
-"Select the orientation: portrait, landscape, upside down, or seascape "
-"(upside down landscape)"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:595
-#, fuzzy
-msgid "Orientation:"
-msgstr "Προσανατολισμός"
-
-#: src/gimp/gimp_main_window.c:607
-msgid "Left:"
-msgstr "Αριστερά:"
-
-#: src/gimp/gimp_main_window.c:608
-msgid "Distance from the left of the paper to the image"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:610
-msgid "Top:"
-msgstr "Πάνω:"
-
-#: src/gimp/gimp_main_window.c:611
-msgid "Distance from the top of the paper to the image"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:613
-msgid "Right:"
-msgstr "Δεξιά:"
-
-#: src/gimp/gimp_main_window.c:614
-#, fuzzy
-msgid "Distance from the left of the paper to the right of the image"
-msgstr "Εστίαση για προσαρμογή του ύψους της σελίδας"
-
-#: src/gimp/gimp_main_window.c:616
-#, fuzzy
-msgid "Right Border:"
-msgstr "Δεξιόχειρας"
-
-#: src/gimp/gimp_main_window.c:617
-msgid "Distance from the right of the paper to the image"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:619
-msgid "Bottom:"
-msgstr "Κάτω:"
-
-#: src/gimp/gimp_main_window.c:620
-#, fuzzy
-msgid "Distance from the top of the paper to bottom of the image"
-msgstr "Εστίαση για προσαρμογή του ύψους της σελίδας"
-
-#: src/gimp/gimp_main_window.c:622
-#, fuzzy
-msgid "Bottom Border:"
-msgstr "Πλαίσιο Εικονιδίου:"
-
-#: src/gimp/gimp_main_window.c:623
-msgid "Distance from the bottom of the paper to the image"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:634
-#, fuzzy
-msgid "Center:"
-msgstr "Κέντρο"
-
-#: src/gimp/gimp_main_window.c:638
-#, fuzzy
-msgid "Vertically"
-msgstr "Κατακόρυ_φα"
-
-#: src/gimp/gimp_main_window.c:639
-#, fuzzy
-msgid "Center the image vertically on the paper"
-msgstr "Περιστροφή εικόνας για κάθετα ταμπλώ"
-
-#
-#: src/gimp/gimp_main_window.c:641
-msgid "Both"
-msgstr "Και τα δύο"
-
-#: src/gimp/gimp_main_window.c:642
-#, fuzzy
-msgid "Center the image on the paper"
-msgstr "Αλλαγή του μεγέθους σελίδας"
-
-#: src/gimp/gimp_main_window.c:644
-#, fuzzy
-msgid "Horizontally"
-msgstr "_Οριζόντια"
-
-#: src/gimp/gimp_main_window.c:645
-msgid "Center the image horizontally on the paper"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:656
-msgid "Setup Printer"
-msgstr "Ρύθμιση Εκτυπωτή"
-
-#
-#: src/gimp/gimp_main_window.c:659 src/gimp/gimp_main_window.c:813
-#: src/gimp/gimp_main_window.c:848
-msgid "OK"
-msgstr "Εντάξει"
-
-#.
-#. * Printer driver option menu.
-#.
-#: src/gimp/gimp_main_window.c:684 src/gimp/gimp_main_window.c:923
-#, fuzzy
-msgid "Printer Model:"
-msgstr "Όνομα εκτυπωτή:"
-
-#
-#: src/gimp/gimp_main_window.c:695
-#, fuzzy
-msgid "Select your printer model"
-msgstr "Επιλογή εκτυπωτή"
-
-#.
-#. * PPD file.
-#.
-#: src/gimp/gimp_main_window.c:729
-#, fuzzy
-msgid "PPD File:"
-msgstr "Αρχείο Ταυτότητας Διεργασίας: "
-
-#: src/gimp/gimp_main_window.c:743
-msgid "Enter the correct PPD filename for your printer"
-msgstr ""
-
-#
-#: src/gimp/gimp_main_window.c:745
-msgid "Browse"
-msgstr "Εξερεύνηση"
-
-#: src/gimp/gimp_main_window.c:752
-msgid "Choose the correct PPD filename for your printer"
-msgstr ""
-
-#
-#.
-#. * Print command.
-#.
-#: src/gimp/gimp_main_window.c:760
-msgid "Command:"
-msgstr "Εντολή:"
-
-#: src/gimp/gimp_main_window.c:772
-msgid ""
-"Enter the correct command to print to your printer. Note: Please do not "
-"remove the `-l' or `-oraw' from the command string, or printing will "
-"probably fail!"
-msgstr ""
-
-#.
-#. * Output file selection dialog.
-#.
-#: src/gimp/gimp_main_window.c:780
-#, fuzzy
-msgid "Print To File?"
-msgstr "Εκτύπωση σε Αρχείο"
-
-#.
-#. * PPD file selection dialog.
-#.
-#: src/gimp/gimp_main_window.c:793
-#, fuzzy
-msgid "PPD File?"
-msgstr " Αρχείο "
-
-#
-#: src/gimp/gimp_main_window.c:810
-#, fuzzy
-msgid "Define New Printer"
-msgstr "Επιλογή εκτυπωτή"
-
-#: src/gimp/gimp_main_window.c:831 src/gimp/gimp_main_window.c:919
-#, fuzzy
-msgid "Printer Name:"
-msgstr "Όνομα εκτυπωτή:"
-
-#: src/gimp/gimp_main_window.c:835
-#, fuzzy
-msgid "Enter the name you wish to give this logical printer"
-msgstr "Εισάγετε τον αριθμό γραμμής στον οποίο θέλετε να πάτε."
-
-#: src/gimp/gimp_main_window.c:845
-#, fuzzy
-msgid "About Gimp-Print "
-msgstr "Σημείο Προσάρτησης: "
-
-#: src/gimp/gimp_main_window.c:854
-#, fuzzy
-msgid "Gimp-Print Version "
-msgstr "Εκτύπωση σε: "
-
-#: src/gimp/gimp_main_window.c:854
-msgid ""
-"\n"
-"\n"
-"Copyright (C) 1997-2001 Michael Sweet, Robert Krawitz,\n"
-"and the rest of the Gimp-Print Development Team.\n"
-"\n"
-"Please visit our web site at http://gimp-print.sourceforge.net.\n"
-"\n"
-"This program is free software; you can redistribute it and/or modify\n"
-"it under the terms of the GNU General Public License as published by\n"
-"the Free Software Foundation; either version 2 of the License, or\n"
-"(at your option) any later version.\n"
-"\n"
-"This program is distributed in the hope that it will be useful,\n"
-"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-"GNU General Public License for more details.\n"
-"\n"
-"You should have received a copy of the GNU General Public License\n"
-"along with this program; if not, write to the Free Software\n"
-"Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:904
-#, fuzzy
-msgid "Printer Settings"
-msgstr "Ρυθμίσεις Επιλογέα"
-
-#: src/gimp/gimp_main_window.c:917
-msgid ""
-"Select the name of the printer (not the type, or model, of printer) that you "
-"wish to print to"
-msgstr ""
-
-#.
-#. * Setup printer button
-#.
-#: src/gimp/gimp_main_window.c:936
-#, fuzzy
-msgid "Setup Printer..."
-msgstr "Ρύθμιση Εκτυπωτή"
-
-#: src/gimp/gimp_main_window.c:937
-msgid ""
-"Choose the printer model, PPD file, and command that is used to print to "
-"this printer"
-msgstr ""
-
-#
-#.
-#. * New printer button
-#.
-#: src/gimp/gimp_main_window.c:950
-#, fuzzy
-msgid "New Printer..."
-msgstr "Εκτύπωση..."
-
-#: src/gimp/gimp_main_window.c:951
-msgid ""
-"Define a new logical printer. This can be used to name a collection of "
-"settings that you wish to remember for future use."
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:978
-msgid "Dimensions:"
-msgstr "Διαστάσεις:"
-
-#: src/gimp/gimp_main_window.c:982 src/gimp/gimp_main_window.c:1104
-msgid "Width:"
-msgstr "Πλάτος:"
-
-#: src/gimp/gimp_main_window.c:983
-#, fuzzy
-msgid "Width of the paper that you wish to print to"
-msgstr "Επιλέξτε τον φάκελο που θέλετε να ανοίξετε"
-
-#: src/gimp/gimp_main_window.c:987 src/gimp/gimp_main_window.c:1106
-msgid "Height:"
-msgstr "Ύψος:"
-
-#: src/gimp/gimp_main_window.c:988
-#, fuzzy
-msgid "Height of the paper that you wish to print to"
-msgstr "Επιλέξτε τον φάκελο που θέλετε να ανοίξετε"
-
-#
-#: src/gimp/gimp_main_window.c:1011
-msgid "Size"
-msgstr "Μέγεθος"
-
-#: src/gimp/gimp_main_window.c:1032
-#, fuzzy
-msgid "Scaling:"
-msgstr "Αποθήκευση:"
-
-#: src/gimp/gimp_main_window.c:1036
-#, fuzzy
-msgid "Set the scale (size) of the image"
-msgstr "Ελάττωση του μεγέθους της εικόνας στο μισό"
-
-#: src/gimp/gimp_main_window.c:1068
-msgid ""
-"Select whether scaling is measured as percent of available page size or "
-"number of output dots per inch"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1071
-msgid "Percent"
-msgstr "Ποσοστό"
-
-#: src/gimp/gimp_main_window.c:1076
-#, fuzzy
-msgid "Scale the print to the size of the page"
-msgstr "Ελάττωση του μεγέθους της εικόνας στο μισό"
-
-#
-#: src/gimp/gimp_main_window.c:1080
-#, fuzzy
-msgid "PPI"
-msgstr "ΑΡΙΘΜ.ΔΙΕΡΓΑΣΙΑΣ"
-
-#: src/gimp/gimp_main_window.c:1085
-msgid "Scale the print to the number of dots per inch"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1104
-#, fuzzy
-msgid "Set the width of the print"
-msgstr "Το πλάτος του μαραφετιού"
-
-#: src/gimp/gimp_main_window.c:1106
-#, fuzzy
-msgid "Set the height of the print"
-msgstr "Εστίαση για προσαρμογή του ύψους της σελίδας"
-
-#.
-#. * The "image size" button
-#.
-#: src/gimp/gimp_main_window.c:1112
-#, fuzzy
-msgid ""
-"Use Original\n"
-"Image Size"
-msgstr "Αρχικό _Μέγεθος"
-
-#: src/gimp/gimp_main_window.c:1118
-#, fuzzy
-msgid "Set the print size to the size of the image"
-msgstr "Ορισμός παραμετροποιημένου μεγέθους για την εικόνα"
-
-#: src/gimp/gimp_main_window.c:1141
-#, fuzzy
-msgid "Units:"
-msgstr "&Μονάδες:"
-
-#: src/gimp/gimp_main_window.c:1146
-#, fuzzy
-msgid "Select the base unit of measurement for printing"
-msgstr "Επιλέγει γραμματοσειρές για επικόλληση"
-
-#: src/gimp/gimp_main_window.c:1180
-#, fuzzy
-msgid "Image / Output Settings"
-msgstr "Ρυθμίσεις Εισόδου/Εξόδου IRC"
-
-#: src/gimp/gimp_main_window.c:1194
-#, fuzzy
-msgid "Image Type:"
-msgstr "Τύπος Στοιχείου:"
-
-#: src/gimp/gimp_main_window.c:1199
-msgid "Optimize the output for the type of image being printed"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1226
-#, fuzzy
-msgid "Output Type:"
-msgstr "Byte Εξόδου"
-
-#: src/gimp/gimp_main_window.c:1230
-#, fuzzy
-msgid "Select the desired output type"
-msgstr "Επιλογή αρχείου προς αποθήκευση"
-
-#: src/gimp/gimp_main_window.c:1251
-msgid "Adjust Output..."
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1260
-msgid ""
-"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
-msgstr ""
-
-#: src/gimp/print-image-gimp.c:303
+#: src/gimp/print-image-gimp.c:413
 #, fuzzy
 msgid "Printing..."
 msgstr "Εκτυπώνεται .."
 
-#: src/gimp/print.c:267
+#: src/gimp/print.c:136
 #, fuzzy
 msgid "<Image>/File/Print..."
 msgstr "<Image>/Φίλτρα/Κείμενο/FreeType..."
-
-#
-#: src/gimp/print.c:872 src/gimp/print.c:873 src/gimp/print.c:960
-#: src/gimp/print.c:1313
-msgid "File"
-msgstr "Αρχείο"
 
 #: src/ghost/ijsgimpprint.c:140
 #, c-format
@@ -2588,7 +2765,7 @@ msgstr ""
 msgid "Printer %s is not a known model\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:719
+#: src/ghost/ijsgimpprint.c:718
 #, c-format
 msgid "%.0f of %.0f\n"
 msgstr ""
@@ -2618,18 +2795,20 @@ msgstr "Άνοιγμα αρχείου %s αδύνατον\n"
 msgid "Unknown printer %s\n"
 msgstr "Άγνωστος κωδικός op %u"
 
-#: src/ghost/ijsgimpprint.c:907
+#: src/ghost/ijsgimpprint.c:906
 msgid "Bad parameters; cannot continue!\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:917
+#: src/ghost/ijsgimpprint.c:916
 #, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr ""
 
 #, fuzzy
-#~ msgid "ps2"
-#~ msgstr "στιγ."
+#~ msgid ""
+#~ "\n"
+#~ "Cannot read from %s: %s\n"
+#~ msgstr "Δεν είναι δυνατό να ελεγχθεί ο φάκελος: %s: %s"
 
 #
 #~ msgid "Letter"
@@ -2948,14 +3127,6 @@ msgstr ""
 #~ msgstr "Ορισμένο από το χρήστη"
 
 #, fuzzy
-#~ msgid "Brightness:"
-#~ msgstr "Εργασία"
-
-#, fuzzy
-#~ msgid "Contrast:"
-#~ msgstr "Αντίθεση"
-
-#, fuzzy
 #~ msgid "Set the contrast of the print"
 #~ msgstr "Στο κέντρο της οθόνης"
 
@@ -2964,37 +3135,12 @@ msgstr ""
 #~ msgstr "Κυανό"
 
 #, fuzzy
-#~ msgid "Adjust the cyan balance of the print"
-#~ msgstr "Στο κέντρο της οθόνης"
-
-#, fuzzy
 #~ msgid "Magenta:"
 #~ msgstr "μώβ"
 
 #, fuzzy
-#~ msgid "Adjust the magenta balance of the print"
-#~ msgstr "Στο κέντρο της οθόνης"
-
-#, fuzzy
 #~ msgid "Yellow:"
 #~ msgstr "Κίτρινο"
-
-#, fuzzy
-#~ msgid "Adjust the yellow balance of the print"
-#~ msgstr "Στο κέντρο της οθόνης"
-
-#
-#~ msgid "Saturation:"
-#~ msgstr "Κορεσμός:"
-
-#, fuzzy
-#~ msgid "Density:"
-#~ msgstr "Πυκνότητα"
-
-#
-#, fuzzy
-#~ msgid "Gamma:"
-#~ msgstr "Γάμμα"
 
 #, fuzzy
 #~ msgid "Unknown option %s\n"

@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
-"POT-Creation-Date: 2002-12-22 13:38-0500\n"
+"POT-Creation-Date: 2003-01-04 22:57-0500\n"
 "PO-Revision-Date: 2001-10-18 11:53+0100\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -130,36 +130,36 @@ msgstr ""
 msgid "Other"
 msgstr "Inne"
 
-#: src/main/print-canon.c:1409 src/main/print-lexmark.c:972
+#: src/main/print-canon.c:1419 src/main/print-lexmark.c:982
 msgid "Auto Sheet Feeder"
 msgstr ""
 
-#: src/main/print-canon.c:1410 src/main/print-lexmark.c:973
+#: src/main/print-canon.c:1420 src/main/print-lexmark.c:983
 msgid "Manual with Pause"
 msgstr ""
 
-#: src/main/print-canon.c:1411 src/main/print-lexmark.c:974
+#: src/main/print-canon.c:1421 src/main/print-lexmark.c:984
 msgid "Manual without Pause"
 msgstr ""
 
-#: src/escputil/escputil.c:600 src/main/print-canon.c:1493
+#: src/escputil/escputil.c:615 src/main/print-canon.c:1503
 #: src/main/print-lexmark.c:488
 msgid "Black"
 msgstr "Czarny"
 
-#: src/main/print-canon.c:1496
+#: src/main/print-canon.c:1506
 msgid "CMY Color"
 msgstr ""
 
-#: src/main/print-canon.c:1499
+#: src/main/print-canon.c:1509
 msgid "CMYK Color"
 msgstr ""
 
-#: src/main/print-canon.c:1502
+#: src/main/print-canon.c:1512
 msgid "Photo CcMmY Color"
 msgstr ""
 
-#: src/main/print-canon.c:1505
+#: src/main/print-canon.c:1515
 msgid "Photo CcMmYK Color"
 msgstr ""
 
@@ -188,22 +188,6 @@ msgstr ""
 
 #: src/main/print-dither.c:72
 msgid "Hybrid Floyd-Steinberg"
-msgstr ""
-
-#: src/main/print-escp2.c:356 src/main/print-escp2.c:478
-#: src/main/print-escp2.c:511 src/main/print-escp2.c:528
-#: src/main/print-escp2.c:1165
-#, c-format
-msgid "Model %d out of range.\n"
-msgstr ""
-
-#: src/main/print-escp2.c:1160
-msgid "Print options not verified; cannot print.\n"
-msgstr ""
-
-#: src/main/print-escp2.c:1192
-#, c-format
-msgid "This printer does not support raw printer output at depth %d\n"
 msgstr ""
 
 #: src/main/print-escp2-data.c:2805 src/main/print-escp2-data.c:2815
@@ -716,38 +700,54 @@ msgstr "2880 x 1440 DPI"
 msgid "2880 x 1440 DPI Four Pass Unidirectional"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1474 src/main/print-escp2-data.c:4093
-#: src/main/print-escp2-data.c:4117 src/main/print-escp2-data.c:4148
+#: src/libgimpprintui/panel.c:1517 src/main/print-escp2-data.c:4093
+#: src/main/print-escp2-data.c:4119 src/main/print-escp2-data.c:4153
 #: src/main/print-pcl.c:202
 msgid "Standard"
 msgstr ""
 
-#: src/main/print-escp2-data.c:4100 src/main/print-escp2-data.c:4155
+#: src/main/print-escp2-data.c:4101 src/main/print-escp2-data.c:4161
 msgid "Roll Feed"
 msgstr ""
 
-#: src/main/print-escp2-data.c:4124
+#: src/main/print-escp2-data.c:4127
 msgid "Roll Feed (cut each page)"
 msgstr ""
 
-#: src/main/print-escp2-data.c:4131
+#: src/main/print-escp2-data.c:4135
 msgid "Roll Feed (do not cut)"
 msgstr ""
 
-#: src/main/print-escp2-data.c:4172
+#: src/main/print-escp2-data.c:4179
 msgid "Cut Sheet Bin 1"
 msgstr ""
 
-#: src/main/print-escp2-data.c:4179
+#: src/main/print-escp2-data.c:4187
 msgid "Cut Sheet Bin 2"
 msgstr ""
 
-#: src/main/print-escp2-data.c:4186
+#: src/main/print-escp2-data.c:4195
 msgid "Cut Sheet Autoselect"
 msgstr ""
 
-#: src/main/print-escp2-data.c:4193
+#: src/main/print-escp2-data.c:4203
 msgid "Manual Selection"
+msgstr ""
+
+#: src/main/print-escp2.c:395 src/main/print-escp2.c:518
+#: src/main/print-escp2.c:563 src/main/print-escp2.c:580
+#: src/main/print-escp2.c:1212
+#, c-format
+msgid "Model %d out of range.\n"
+msgstr ""
+
+#: src/main/print-escp2.c:1207 src/main/print-raw.c:184
+msgid "Print options not verified; cannot print.\n"
+msgstr ""
+
+#: src/main/print-escp2.c:1240
+#, c-format
+msgid "This printer does not support raw printer output at depth %d\n"
 msgstr ""
 
 #. name                                                    hres vres softw v_pass overs unidir resid
@@ -896,13 +896,809 @@ msgstr "1200x600 DPI"
 msgid "2400x600 DPI"
 msgstr "2400x600 DPI"
 
-#: src/main/print-pcl.c:1563
+#: src/main/print-pcl.c:1566
 msgid "Color + Black Cartridges"
 msgstr ""
 
-#: src/main/print-pcl.c:1564
+#: src/main/print-pcl.c:1567
 msgid "Color + Photo Cartridges"
 msgstr ""
+
+#: src/main/print-raw.c:190
+msgid "Image dimensions must match paper dimensions"
+msgstr ""
+
+#: src/main/print-raw.c:210
+msgid "Internal error!  Output channels or input channels must be 1\n"
+msgstr ""
+
+#: src/main/print-vars.c:81 src/main/print-vars.c:101
+#: src/main/print-vars.c:121
+msgid "ps2"
+msgstr ""
+
+#: src/main/print-vars.c:141
+#, fuzzy
+msgid "Page Size"
+msgstr "Rozmiar"
+
+#: src/main/print-vars.c:142
+msgid "Size of the paper being printed to"
+msgstr ""
+
+#: src/cups/genppd.c:854 src/main/print-vars.c:147
+msgid "Media Type"
+msgstr ""
+
+#: src/main/print-vars.c:148
+msgid "Type of media (plain paper, photo paper, etc.)"
+msgstr ""
+
+#: src/cups/genppd.c:879 src/main/print-vars.c:153
+msgid "Media Source"
+msgstr ""
+
+#: src/main/print-vars.c:154
+msgid "Source (input slot) of the media"
+msgstr ""
+
+#: src/cups/genppd.c:984 src/main/print-vars.c:159
+msgid "Ink Type"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:225 src/main/print-vars.c:160
+msgid "Type of ink in the printer"
+msgstr ""
+
+#: src/main/print-vars.c:165
+#, fuzzy
+msgid "Resolutions"
+msgstr "Rozdzielczo¶æ"
+
+#: src/libgimpprintui/panel.c:228 src/main/print-vars.c:166
+msgid "Resolution and quality of the print"
+msgstr ""
+
+#: src/cups/genppd.c:961 src/main/print-vars.c:171
+msgid "Dither Algorithm"
+msgstr "Algorytm ditherowania"
+
+#: src/libgimpprintui/panel.c:1172 src/main/print-vars.c:172
+msgid ""
+"Choose the dither algorithm to be used.\n"
+"Adaptive Hybrid usually produces the best all-around quality.\n"
+"EvenTone is a new, experimental algorithm that often produces excellent "
+"results.\n"
+"Ordered is faster and produces almost as good quality on photographs.\n"
+"Fast and Very Fast are considerably faster, and work well for text and line "
+"art.\n"
+"Hybrid Floyd-Steinberg generally produces inferior output."
+msgstr ""
+
+#: src/main/print-vars.c:182
+#, fuzzy
+msgid "Brightness"
+msgstr "Jasno¶æ:"
+
+#: src/main/print-vars.c:183
+msgid "Brightness of the print (0 is solid black, 2 is solid white)"
+msgstr ""
+
+#: src/main/print-vars.c:188
+#, fuzzy
+msgid "Contrast"
+msgstr "Kontrast:"
+
+#: src/main/print-vars.c:189
+msgid "Contrast of the print (0 is solid gray)"
+msgstr ""
+
+#: src/main/print-vars.c:194
+#, fuzzy
+msgid "Density"
+msgstr "Gêsto¶æ:"
+
+#: src/main/print-vars.c:195
+msgid ""
+"Adjust the density (amount of ink) of the print. Reduce the density if the "
+"ink bleeds through the paper or smears; increase the density if black "
+"regions are not solid."
+msgstr ""
+
+#: src/main/print-vars.c:203
+#, fuzzy
+msgid "Gamma"
+msgstr "Gamma:"
+
+#: src/main/print-vars.c:204
+msgid ""
+"Adjust the gamma of the print. Larger values will produce a generally "
+"brighter print, while smaller values will produce a generally darker print. "
+"Black and white will remain the same, unlike with the brightness adjustment."
+msgstr ""
+
+#: src/main/print-vars.c:213
+#, fuzzy
+msgid "AppGamma"
+msgstr "Gamma:"
+
+#: src/main/print-vars.c:214
+msgid "Gamma value assumed by application"
+msgstr ""
+
+#: src/escputil/escputil.c:616 src/main/print-vars.c:219
+msgid "Cyan"
+msgstr "Niebieskozielony"
+
+#: src/main/print-vars.c:220
+msgid "Adjust the cyan balance"
+msgstr ""
+
+#: src/escputil/escputil.c:617 src/main/print-vars.c:225
+msgid "Magenta"
+msgstr "Purpurowy"
+
+#: src/main/print-vars.c:226
+msgid "Adjust the magenta balance"
+msgstr ""
+
+#: src/escputil/escputil.c:618 src/main/print-vars.c:231
+msgid "Yellow"
+msgstr "¯ó³æ"
+
+#: src/main/print-vars.c:232
+msgid "Adjust the yellow balance"
+msgstr ""
+
+#: src/main/print-vars.c:237
+#, fuzzy
+msgid "Saturation"
+msgstr "Nasycenie:"
+
+#: src/main/print-vars.c:238
+msgid ""
+"Adjust the saturation (color balance) of the print\n"
+"Use zero saturation to produce grayscale output using color and black inks"
+msgstr ""
+
+#: src/main/printers.c:348
+#, c-format
+msgid "Value must be set for %s\n"
+msgstr ""
+
+#: src/main/printers.c:361 src/main/printers.c:366
+#, c-format
+msgid "`%s' is not a valid %s\n"
+msgstr ""
+
+#: src/main/printers.c:378
+#, c-format
+msgid "%s must be between %f and %f\n"
+msgstr ""
+
+#: src/main/printers.c:393
+#, c-format
+msgid "%s must be between %d and %d\n"
+msgstr ""
+
+#: src/main/printers.c:428
+#, fuzzy, c-format
+msgid "Unknown type parameter %s (%d)\n"
+msgstr "Nieznana opcja %c\n"
+
+#: src/main/printers.c:443
+#, c-format
+msgid "%s out of range (value %d, min %d, max %d)\n"
+msgstr ""
+
+#: src/main/printers.c:498
+msgid "Printer does not support color output\n"
+msgstr ""
+
+#: src/main/printers.c:513
+msgid "Image size is not valid\n"
+msgstr ""
+
+#: src/main/printers.c:522
+msgid "Top margin must not be less than zero\n"
+msgstr ""
+
+#: src/main/printers.c:528
+msgid "Left margin must not be less than zero\n"
+msgstr ""
+
+#: src/main/printers.c:534
+msgid "Height must be greater than zero\n"
+msgstr ""
+
+#: src/main/printers.c:540
+msgid "Width must be greater than zero\n"
+msgstr ""
+
+#: src/main/printers.c:546
+msgid "Image is too wide for the page\n"
+msgstr ""
+
+#: src/main/printers.c:552
+msgid "Image is too long for the page\n"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:215
+msgid "Media Type:"
+msgstr "Typ papieru:"
+
+#: src/libgimpprintui/panel.c:216
+msgid "Type of media you're printing to"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:218
+msgid "Media Size:"
+msgstr "Rozmiar papieru:"
+
+#: src/libgimpprintui/panel.c:219
+msgid "Size of paper that you wish to print to"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:221
+msgid "Media Source:"
+msgstr "¬ród³o papieru:"
+
+#: src/libgimpprintui/panel.c:222
+msgid "Source (input slot) of media you're printing to"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:224
+msgid "Ink Type:"
+msgstr "Typ tuszu:"
+
+#: src/libgimpprintui/panel.c:227
+msgid "Resolution:"
+msgstr "Rozdzielczo¶æ:"
+
+#: src/libgimpprintui/panel.c:237
+msgid "Inch"
+msgstr "Cal"
+
+#: src/libgimpprintui/panel.c:237
+msgid "Set the base unit of measurement to inches"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:239
+msgid "cm"
+msgstr "cm"
+
+#: src/libgimpprintui/panel.c:239
+msgid "Set the base unit of measurement to centimetres"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:241
+#, fuzzy
+msgid "Points"
+msgstr "Wydrukuj"
+
+#: src/libgimpprintui/panel.c:241
+msgid "Set the base unit of measurement to points (1/72\")"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:243
+msgid "mm"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:243
+msgid "Set the base unit of measurement to millimetres"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:245
+msgid "Pica"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:245
+msgid "Set the base unit of measurement to picas (1/12\")"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:252
+msgid "Color"
+msgstr "Kolor"
+
+#: src/libgimpprintui/panel.c:252
+msgid "Color output"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:253
+msgid "Grayscale"
+msgstr "Odcienie szaro¶ci"
+
+#: src/libgimpprintui/panel.c:254
+msgid "Print in shades of gray using black ink"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:255
+msgid "Black and White"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:256
+msgid "Print in black and white (no color, and no shades of gray)"
+msgstr ""
+
+#: src/cups/genppd.c:946 src/libgimpprintui/panel.c:265
+msgid "Line Art"
+msgstr "Rysunek kresk±"
+
+#: src/libgimpprintui/panel.c:265
+msgid "Fastest and brightest color for text and line art"
+msgstr ""
+
+#: src/cups/genppd.c:948 src/libgimpprintui/panel.c:267
+msgid "Solid Colors"
+msgstr "Jednolite p³aszczyzny"
+
+#: src/libgimpprintui/panel.c:268
+msgid "Best for images dominated by regions of solid color"
+msgstr ""
+
+#: src/cups/genppd.c:950 src/libgimpprintui/panel.c:270
+msgid "Photograph"
+msgstr "Fotografia"
+
+#: src/libgimpprintui/panel.c:271
+msgid ""
+"Slowest, but most accurate and smoothest color for continuous tone images "
+"and photographs"
+msgstr ""
+
+#.
+#. * Create the main dialog
+#.
+#: src/libgimpprintui/panel.c:349
+#, c-format
+msgid "%s -- Print v%s"
+msgstr "%s -- Drukowanie v%s"
+
+#: src/libgimpprintui/panel.c:358
+msgid "About"
+msgstr "Informacje o"
+
+#: src/libgimpprintui/panel.c:360
+msgid ""
+"Print and\n"
+"Save Settings"
+msgstr ""
+"Ustawienia drukowania\n"
+"i zapisu"
+
+#: src/libgimpprintui/panel.c:362
+msgid ""
+"Save\n"
+"Settings"
+msgstr ""
+"Zapisz\n"
+"ustawienia"
+
+#: src/libgimpprintui/panel.c:364
+msgid "Print"
+msgstr "Wydrukuj"
+
+#: src/libgimpprintui/panel.c:366 src/libgimpprintui/panel.c:572
+#: src/libgimpprintui/panel.c:726
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: src/libgimpprintui/panel.c:406
+msgid "Preview"
+msgstr "Podgl±d"
+
+#: src/libgimpprintui/panel.c:429
+msgid ""
+"Position the image on the page.\n"
+"Click and drag with the primary button to position the image.\n"
+"Click and drag with the second button to move the image with finer "
+"precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of "
+"the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image "
+"to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return "
+"to its original position."
+msgstr ""
+
+#: src/libgimpprintui/panel.c:475
+msgid "Position"
+msgstr "Po³o¿enie"
+
+#: src/libgimpprintui/panel.c:493
+msgid "Auto"
+msgstr "Automatycznie"
+
+#: src/libgimpprintui/panel.c:495
+msgid "Portrait"
+msgstr "Portret"
+
+#: src/libgimpprintui/panel.c:497
+msgid "Landscape"
+msgstr "Pejza¿"
+
+#: src/libgimpprintui/panel.c:499
+msgid "Upside down"
+msgstr "Z góry na dó³"
+
+#: src/libgimpprintui/panel.c:501
+msgid "Seascape"
+msgstr "Pejza¿"
+
+#: src/libgimpprintui/panel.c:505
+msgid ""
+"Select the orientation: portrait, landscape, upside down, or seascape "
+"(upside down landscape)"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:507
+msgid "Orientation:"
+msgstr "U³o¿enie:"
+
+#: src/libgimpprintui/panel.c:519
+msgid "Left:"
+msgstr "Lewa:"
+
+#: src/libgimpprintui/panel.c:520
+msgid "Distance from the left of the paper to the image"
+msgstr "Odleg³o¶æ od lewej krawêdzi papieru do obrazu"
+
+#: src/libgimpprintui/panel.c:522
+msgid "Top:"
+msgstr "Góra:"
+
+#: src/libgimpprintui/panel.c:523
+msgid "Distance from the top of the paper to the image"
+msgstr "Odleg³o¶æ od górnej krawêdzi papieru do obrazu"
+
+#: src/libgimpprintui/panel.c:525
+msgid "Right:"
+msgstr "Prawa:"
+
+#: src/libgimpprintui/panel.c:526
+msgid "Distance from the left of the paper to the right of the image"
+msgstr "Odleg³o¶æ od lewej krawêdzi papieru do prawej krawêdzi obrazu"
+
+#: src/libgimpprintui/panel.c:528
+msgid "Right Border:"
+msgstr "Prawa krawêd¼:"
+
+#: src/libgimpprintui/panel.c:529
+msgid "Distance from the right of the paper to the image"
+msgstr "Odleg³o¶æ od prawej krawêdzi papieru do obrazu"
+
+#: src/libgimpprintui/panel.c:531
+msgid "Bottom:"
+msgstr "Dó³:"
+
+#: src/libgimpprintui/panel.c:532
+#, fuzzy
+msgid "Distance from the top of the paper to bottom of the image"
+msgstr "Odleg³o¶æ od górnej krawêdzi papieru do dolnej krawêdzi obrazu"
+
+#: src/libgimpprintui/panel.c:534
+msgid "Bottom Border:"
+msgstr "Dolna krawêd¼"
+
+#: src/libgimpprintui/panel.c:535
+msgid "Distance from the bottom of the paper to the image"
+msgstr "Odleg³o¶æ od dolnej krawêdzi papieru do obrazu"
+
+#: src/libgimpprintui/panel.c:546
+msgid "Center:"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:550
+msgid "Vertically"
+msgstr "Pionowo"
+
+#: src/libgimpprintui/panel.c:551
+msgid "Center the image vertically on the paper"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:553
+msgid "Both"
+msgstr "Oba"
+
+#: src/libgimpprintui/panel.c:554
+msgid "Center the image on the paper"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:556
+msgid "Horizontally"
+msgstr "Poziomo"
+
+#: src/libgimpprintui/panel.c:557
+msgid "Center the image horizontally on the paper"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:568
+msgid "Setup Printer"
+msgstr "Ustawienia drukarki"
+
+#: src/libgimpprintui/panel.c:570 src/libgimpprintui/panel.c:724
+#: src/libgimpprintui/panel.c:758
+msgid "OK"
+msgstr "OK"
+
+#.
+#. * Printer driver option menu.
+#.
+#: src/libgimpprintui/panel.c:595 src/libgimpprintui/panel.c:833
+msgid "Printer Model:"
+msgstr "Model drukarki:"
+
+#: src/libgimpprintui/panel.c:606
+msgid "Select your printer model"
+msgstr ""
+
+#.
+#. * PPD file.
+#.
+#: src/libgimpprintui/panel.c:641
+msgid "PPD File:"
+msgstr "Plik PPD:"
+
+#: src/libgimpprintui/panel.c:655
+msgid "Enter the correct PPD filename for your printer"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:657
+msgid "Browse"
+msgstr "Przegl±daj"
+
+#: src/libgimpprintui/panel.c:664
+msgid "Choose the correct PPD filename for your printer"
+msgstr ""
+
+#.
+#. * Print command.
+#.
+#: src/libgimpprintui/panel.c:672
+msgid "Command:"
+msgstr "Polecenie:"
+
+#: src/libgimpprintui/panel.c:684
+msgid ""
+"Enter the correct command to print to your printer. Note: Please do not "
+"remove the `-l' or `-oraw' from the command string, or printing will "
+"probably fail!"
+msgstr ""
+
+#.
+#. * Output file selection dialog.
+#.
+#: src/libgimpprintui/panel.c:692
+msgid "Print To File?"
+msgstr "Wydrukowaæ do pliku?"
+
+#.
+#. * PPD file selection dialog.
+#.
+#: src/libgimpprintui/panel.c:705
+msgid "PPD File?"
+msgstr "Plik PPD?"
+
+#: src/libgimpprintui/panel.c:722
+msgid "Define New Printer"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:742 src/libgimpprintui/panel.c:829
+msgid "Printer Name:"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:746
+msgid "Enter the name you wish to give this logical printer"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:756
+msgid "About Gimp-Print "
+msgstr ""
+
+#: src/libgimpprintui/panel.c:764
+msgid "Gimp-Print Version "
+msgstr ""
+
+#: src/libgimpprintui/panel.c:764
+msgid ""
+"\n"
+"\n"
+"Copyright (C) 1997-2001 Michael Sweet, Robert Krawitz,\n"
+"and the rest of the Gimp-Print Development Team.\n"
+"\n"
+"Please visit our web site at http://gimp-print.sourceforge.net.\n"
+"\n"
+"This program is free software; you can redistribute it and/or modify\n"
+"it under the terms of the GNU General Public License as published by\n"
+"the Free Software Foundation; either version 2 of the License, or\n"
+"(at your option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"GNU General Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License\n"
+"along with this program; if not, write to the Free Software\n"
+"Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:814
+msgid "Printer Settings"
+msgstr "Ustawienia drukarki"
+
+#: src/libgimpprintui/panel.c:827
+msgid ""
+"Select the name of the printer (not the type, or model, of printer) that you "
+"wish to print to"
+msgstr ""
+
+#.
+#. * Setup printer button
+#.
+#: src/libgimpprintui/panel.c:846
+msgid "Setup Printer..."
+msgstr ""
+
+#: src/libgimpprintui/panel.c:847
+msgid ""
+"Choose the printer model, PPD file, and command that is used to print to "
+"this printer"
+msgstr ""
+
+#.
+#. * New printer button
+#.
+#: src/libgimpprintui/panel.c:860
+msgid "New Printer..."
+msgstr ""
+
+#: src/libgimpprintui/panel.c:861
+msgid ""
+"Define a new logical printer. This can be used to name a collection of "
+"settings that you wish to remember for future use."
+msgstr ""
+
+#: src/libgimpprintui/panel.c:888
+msgid "Dimensions:"
+msgstr "Wymiary:"
+
+#: src/libgimpprintui/panel.c:892 src/libgimpprintui/panel.c:1014
+msgid "Width:"
+msgstr "Szeroko¶æ:"
+
+#: src/libgimpprintui/panel.c:893
+msgid "Width of the paper that you wish to print to"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:897 src/libgimpprintui/panel.c:1016
+msgid "Height:"
+msgstr "Wysoko¶æ:"
+
+#: src/libgimpprintui/panel.c:898
+msgid "Height of the paper that you wish to print to"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:921
+msgid "Size"
+msgstr "Rozmiar"
+
+#: src/libgimpprintui/panel.c:942
+msgid "Scaling:"
+msgstr "Skalowanie:"
+
+#: src/libgimpprintui/panel.c:946
+msgid "Set the scale (size) of the image"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:978
+msgid ""
+"Select whether scaling is measured as percent of available page size or "
+"number of output dots per inch"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:981
+msgid "Percent"
+msgstr "Procent"
+
+#: src/libgimpprintui/panel.c:986
+msgid "Scale the print to the size of the page"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:990
+msgid "PPI"
+msgstr "PPI"
+
+#: src/libgimpprintui/panel.c:995
+msgid "Scale the print to the number of dots per inch"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1014
+msgid "Set the width of the print"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1016
+msgid "Set the height of the print"
+msgstr ""
+
+#.
+#. * The "image size" button
+#.
+#: src/libgimpprintui/panel.c:1022
+msgid ""
+"Use Original\n"
+"Image Size"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1028
+msgid "Set the print size to the size of the image"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1051
+msgid "Units:"
+msgstr "Jednostki:"
+
+#: src/libgimpprintui/panel.c:1056
+msgid "Select the base unit of measurement for printing"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1093
+msgid "Print Color Adjust"
+msgstr "Regulacja koloru wydruku"
+
+#: src/libgimpprintui/panel.c:1096
+msgid "Set Defaults"
+msgstr "Ustaw domy¶lne"
+
+#: src/libgimpprintui/panel.c:1098
+msgid "Close"
+msgstr "Zamknij"
+
+#: src/libgimpprintui/panel.c:1130
+msgid "Image preview"
+msgstr "Podgl±d obrazu"
+
+#: src/libgimpprintui/panel.c:1165
+msgid "Dither Algorithm:"
+msgstr "Algorytm ditherowania:"
+
+#: src/libgimpprintui/panel.c:1186
+msgid "Curve:"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1209
+msgid "Image / Output Settings"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1223
+msgid "Image Type:"
+msgstr "Typ obrazu:"
+
+#: src/libgimpprintui/panel.c:1228
+msgid "Optimize the output for the type of image being printed"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1255
+msgid "Output Type:"
+msgstr "Typ wyj¶ciowy:"
+
+#: src/libgimpprintui/panel.c:1259
+msgid "Select the desired output type"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1280
+msgid "Adjust Output..."
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1289
+msgid ""
+"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgstr ""
+
+#: src/libgimpprintui/plist.c:357 src/libgimpprintui/plist.c:358
+#: src/libgimpprintui/plist.c:437 src/libgimpprintui/plist.c:800
+msgid "File"
+msgstr "Plik"
 
 #. Specify language of PPD translation
 #. Translators: Specify the language of the PPD translation.
@@ -918,14 +1714,6 @@ msgstr "Polish"
 msgid "ISOLatin1"
 msgstr "ISOLatin2"
 
-#: src/cups/genppd.c:854
-msgid "Media Type"
-msgstr ""
-
-#: src/cups/genppd.c:879
-msgid "Media Source"
-msgstr ""
-
 #: src/cups/genppd.c:902
 msgid "Resolution"
 msgstr "Rozdzielczo¶æ"
@@ -937,31 +1725,11 @@ msgstr "Rozdzielczo¶æ"
 msgid "Image Type"
 msgstr "Typ obrazu"
 
-#: src/cups/genppd.c:946 src/gimp/gimp_main_window.c:262
-msgid "Line Art"
-msgstr "Rysunek kresk±"
-
-#: src/cups/genppd.c:948 src/gimp/gimp_main_window.c:264
-msgid "Solid Colors"
-msgstr "Jednolite p³aszczyzny"
-
-#: src/cups/genppd.c:950 src/gimp/gimp_main_window.c:267
-msgid "Photograph"
-msgstr "Fotografia"
-
-#: src/cups/genppd.c:961
-msgid "Dither Algorithm"
-msgstr "Algorytm ditherowania"
-
-#: src/cups/genppd.c:984
-msgid "Ink Type"
-msgstr ""
-
-#: src/escputil/escputil.c:64
+#: src/escputil/escputil.c:66
 msgid "Escputil version "
 msgstr ""
 
-#: src/escputil/escputil.c:65
+#: src/escputil/escputil.c:67
 msgid ""
 ", Copyright (C) 2000-2001 Robert Krawitz\n"
 "Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -l'\n"
@@ -969,7 +1737,7 @@ msgid ""
 "under certain conditions; type 'escputil -l' for details.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:70
+#: src/escputil/escputil.c:72
 msgid ""
 "Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
@@ -988,7 +1756,7 @@ msgid ""
 "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:110
+#: src/escputil/escputil.c:112
 msgid ""
 "Usage: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
 "                [-P printer | -r device] [-u] [-q] [-m model]\n"
@@ -1031,7 +1799,7 @@ msgid ""
 "alignment.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:148
+#: src/escputil/escputil.c:150
 msgid ""
 "Usage: escputil [OPTIONS] [COMMAND]\n"
 "Usage: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
@@ -1070,440 +1838,431 @@ msgid ""
 "    -m Specify the precise printer model for head alignment.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:199
+#: src/escputil/escputil.c:201
 msgid "Stylus C20sx"
 msgstr "Stylus C20sx"
 
-#: src/escputil/escputil.c:200
+#: src/escputil/escputil.c:202
 msgid "Stylus C20ux"
 msgstr "Stylus C20ux"
 
-#: src/escputil/escputil.c:201
+#: src/escputil/escputil.c:203
 msgid "Stylus C40sx"
 msgstr "Stylus C40sx"
 
-#: src/escputil/escputil.c:202
-msgid "Stylus C40ux"
-msgstr "Stylus C40ux"
-
-#: src/escputil/escputil.c:203
-#, fuzzy
-msgid "Stylus C41sx"
-msgstr "Stylus C40sx"
-
 #: src/escputil/escputil.c:204
-#, fuzzy
-msgid "Stylus C41ux"
+msgid "Stylus C40ux"
 msgstr "Stylus C40ux"
 
 #: src/escputil/escputil.c:205
 #, fuzzy
-msgid "Stylus C42sx"
+msgid "Stylus C41sx"
 msgstr "Stylus C40sx"
 
 #: src/escputil/escputil.c:206
 #, fuzzy
-msgid "Stylus C42ux"
+msgid "Stylus C41ux"
 msgstr "Stylus C40ux"
 
 #: src/escputil/escputil.c:207
+#, fuzzy
+msgid "Stylus C42sx"
+msgstr "Stylus C40sx"
+
+#: src/escputil/escputil.c:208
+#, fuzzy
+msgid "Stylus C42ux"
+msgstr "Stylus C40ux"
+
+#: src/escputil/escputil.c:209
 msgid "Stylus C60"
 msgstr "Stylus C60"
 
-#: src/escputil/escputil.c:208
+#: src/escputil/escputil.c:210
 #, fuzzy
 msgid "Stylus C61"
 msgstr "Stylus C60"
 
-#: src/escputil/escputil.c:209
+#: src/escputil/escputil.c:211
 #, fuzzy
 msgid "Stylus C62"
 msgstr "Stylus C60"
 
-#: src/escputil/escputil.c:210
+#: src/escputil/escputil.c:212
 msgid "Stylus C70"
 msgstr "Stylus C70"
 
-#: src/escputil/escputil.c:211
+#: src/escputil/escputil.c:213
 msgid "Stylus C80"
 msgstr "Stylus C80"
 
-#: src/escputil/escputil.c:212
+#: src/escputil/escputil.c:214
 #, fuzzy
 msgid "Stylus C82"
 msgstr "Stylus C80"
 
-#: src/escputil/escputil.c:213
+#: src/escputil/escputil.c:215
 msgid "Stylus Color"
 msgstr "Stylus Color"
 
-#: src/escputil/escputil.c:214
+#: src/escputil/escputil.c:216
 msgid "Stylus Color Pro"
 msgstr "Stylus Color Pro"
 
-#: src/escputil/escputil.c:215
+#: src/escputil/escputil.c:217
 msgid "Stylus Color Pro XL"
 msgstr "Stylus Color Pro XL"
 
-#: src/escputil/escputil.c:216
+#: src/escputil/escputil.c:218
 msgid "Stylus Color 400"
 msgstr "Stylus Color 400"
 
-#: src/escputil/escputil.c:217
+#: src/escputil/escputil.c:219
 msgid "Stylus Color 440"
 msgstr "Stylus Color 440"
 
-#: src/escputil/escputil.c:218
+#: src/escputil/escputil.c:220
 msgid "Stylus Color 460"
 msgstr "Stylus Color 460"
 
-#: src/escputil/escputil.c:219
+#: src/escputil/escputil.c:221
 msgid "Stylus Color 480"
 msgstr "Stylus Color 480"
 
-#: src/escputil/escputil.c:220
+#: src/escputil/escputil.c:222
 msgid "Stylus Color 500"
 msgstr "Stylus Color 500"
 
-#: src/escputil/escputil.c:221
+#: src/escputil/escputil.c:223
 msgid "Stylus Color 580"
 msgstr "Stylus Color 580"
 
-#: src/escputil/escputil.c:222
+#: src/escputil/escputil.c:224
 msgid "Stylus Color 600"
 msgstr "Stylus Color 600"
 
-#: src/escputil/escputil.c:223
+#: src/escputil/escputil.c:225
 msgid "Stylus Color 640"
 msgstr "Stylus Color 640"
 
-#: src/escputil/escputil.c:224
+#: src/escputil/escputil.c:226
 msgid "Stylus Color 660"
 msgstr "Stylus Color 660"
 
-#: src/escputil/escputil.c:225
+#: src/escputil/escputil.c:227
 msgid "Stylus Color 670"
 msgstr "Stylus Color 670"
 
-#: src/escputil/escputil.c:226
+#: src/escputil/escputil.c:228
 msgid "Stylus Color 680"
 msgstr "Stylus Color 680"
 
-#: src/escputil/escputil.c:227
+#: src/escputil/escputil.c:229
 msgid "Stylus Color 740"
 msgstr "Stylus Color 740"
 
-#: src/escputil/escputil.c:228
+#: src/escputil/escputil.c:230
 msgid "Stylus Color 760"
 msgstr "Stylus Color 760"
 
-#: src/escputil/escputil.c:229
+#: src/escputil/escputil.c:231
 msgid "Stylus Color 777"
 msgstr "Stylus Color 777"
 
-#: src/escputil/escputil.c:230
+#: src/escputil/escputil.c:232
 msgid "Stylus Color 800"
 msgstr "Stylus Color 800"
 
-#: src/escputil/escputil.c:231
+#: src/escputil/escputil.c:233
 msgid "Stylus Color 850"
 msgstr "Stylus Color 850"
 
-#: src/escputil/escputil.c:232
+#: src/escputil/escputil.c:234
 msgid "Stylus Color 860"
 msgstr "Stylus Color 860"
 
-#: src/escputil/escputil.c:233
+#: src/escputil/escputil.c:235
 msgid "Stylus Color 880"
 msgstr "Stylus Color 880"
 
-#: src/escputil/escputil.c:234
+#: src/escputil/escputil.c:236
 msgid "Stylus Color 83"
 msgstr "Stylus Color 83"
 
-#: src/escputil/escputil.c:235
+#: src/escputil/escputil.c:237
 msgid "Stylus Color 900"
 msgstr "Stylus Color 900"
 
-#: src/escputil/escputil.c:236
+#: src/escputil/escputil.c:238
 msgid "Stylus Color 980"
 msgstr "Stylus Color 980"
 
-#: src/escputil/escputil.c:237
+#: src/escputil/escputil.c:239
 msgid "Stylus Color 1160"
 msgstr "Stylus Color 1160"
 
-#: src/escputil/escputil.c:238
+#: src/escputil/escputil.c:240
 msgid "Stylus Color 1500"
 msgstr "Stylus Color 1500"
 
-#: src/escputil/escputil.c:239
+#: src/escputil/escputil.c:241
 msgid "Stylus Color 1520"
 msgstr "Stylus Color 1520"
 
-#: src/escputil/escputil.c:240
+#: src/escputil/escputil.c:242
 msgid "Stylus Color 3000"
 msgstr "Stylus Color 3000"
 
-#: src/escputil/escputil.c:241
+#: src/escputil/escputil.c:243
 msgid "Stylus Photo"
 msgstr "Stylus Photo"
 
-#: src/escputil/escputil.c:242
+#: src/escputil/escputil.c:244
 msgid "Stylus Photo 700"
 msgstr "Stylus Photo 700"
 
-#: src/escputil/escputil.c:243
+#: src/escputil/escputil.c:245
 msgid "Stylus Photo EX"
 msgstr "Stylus Photo EX"
 
-#: src/escputil/escputil.c:244
+#: src/escputil/escputil.c:246
 msgid "Stylus Photo 720"
 msgstr "Stylus Photo 720"
 
-#: src/escputil/escputil.c:245
+#: src/escputil/escputil.c:247
 msgid "Stylus Photo 750"
 msgstr "Stylus Photo 750"
 
-#: src/escputil/escputil.c:246
+#: src/escputil/escputil.c:248
 msgid "Stylus Photo 780"
 msgstr "Stylus Photo 780"
 
-#: src/escputil/escputil.c:247
+#: src/escputil/escputil.c:249
 msgid "Stylus Photo 785"
 msgstr "Stylus Photo 785"
 
-#: src/escputil/escputil.c:248
+#: src/escputil/escputil.c:250
 msgid "Stylus Photo 790"
 msgstr "Stylus Photo 790"
 
-#: src/escputil/escputil.c:249
+#: src/escputil/escputil.c:251
 msgid "Stylus Photo 810"
 msgstr "Stylus Photo 810"
 
-#: src/escputil/escputil.c:250
+#: src/escputil/escputil.c:252
 msgid "Stylus Photo 820"
 msgstr "Stylus Photo 820"
 
-#: src/escputil/escputil.c:251
+#: src/escputil/escputil.c:253
 #, fuzzy
 msgid "Stylus Photo 830"
 msgstr "Stylus Photo 780"
 
-#: src/escputil/escputil.c:252
+#: src/escputil/escputil.c:254
 msgid "Stylus Photo 870"
 msgstr "Stylus Photo 870"
 
-#: src/escputil/escputil.c:253
+#: src/escputil/escputil.c:255
 msgid "Stylus Photo 875"
 msgstr "Stylus Photo 875"
 
-#: src/escputil/escputil.c:254
+#: src/escputil/escputil.c:256
 msgid "Stylus Photo 890"
 msgstr "Stylus Photo 890"
 
-#: src/escputil/escputil.c:255
-msgid "Stylus Photo 895"
-msgstr "Stylus Photo 895"
-
-#: src/escputil/escputil.c:256
-#, fuzzy
-msgid "Stylus Photo 915"
-msgstr "Stylus Photo 895"
-
 #: src/escputil/escputil.c:257
-#, fuzzy
-msgid "Stylus Photo 925"
+msgid "Stylus Photo 895"
 msgstr "Stylus Photo 895"
 
 #: src/escputil/escputil.c:258
 #, fuzzy
+msgid "Stylus Photo 915"
+msgstr "Stylus Photo 895"
+
+#: src/escputil/escputil.c:259
+#, fuzzy
+msgid "Stylus Photo 925"
+msgstr "Stylus Photo 895"
+
+#: src/escputil/escputil.c:260
+#, fuzzy
 msgid "Stylus Photo 950"
 msgstr "Stylus Photo 750"
 
-#: src/escputil/escputil.c:259
+#: src/escputil/escputil.c:261
 #, fuzzy
 msgid "Stylus Photo 960"
 msgstr "Stylus Photo 790"
 
-#: src/escputil/escputil.c:260
+#: src/escputil/escputil.c:262
 msgid "Stylus Photo 1200"
 msgstr "Stylus Photo 1200"
 
-#: src/escputil/escputil.c:261
+#: src/escputil/escputil.c:263
 msgid "Stylus Photo 1270"
 msgstr "Stylus Photo 1270"
 
-#: src/escputil/escputil.c:262
+#: src/escputil/escputil.c:264
 msgid "Stylus Photo 1280"
 msgstr "Stylus Photo 1280"
 
-#: src/escputil/escputil.c:263
+#: src/escputil/escputil.c:265
 msgid "Stylus Photo 1290"
 msgstr "Stylus Photo 1290"
 
-#: src/escputil/escputil.c:264
+#: src/escputil/escputil.c:266
 msgid "Stylus Photo 2000P"
 msgstr "Stylus Photo 2000P"
 
-#: src/escputil/escputil.c:265
+#: src/escputil/escputil.c:267
 #, fuzzy
 msgid "Stylus Photo 2100"
 msgstr "Stylus Photo 1200"
 
-#: src/escputil/escputil.c:266
+#: src/escputil/escputil.c:268
 #, fuzzy
 msgid "Stylus Photo 2200"
 msgstr "Stylus Photo 1200"
 
-#: src/escputil/escputil.c:267
+#: src/escputil/escputil.c:269
 msgid "Stylus Pro 5000"
 msgstr "Stylus Pro 5000"
 
-#: src/escputil/escputil.c:268
+#: src/escputil/escputil.c:270
 msgid "Stylus Pro 5500"
 msgstr "Stylus Pro 5500"
 
-#: src/escputil/escputil.c:269
+#: src/escputil/escputil.c:271
 msgid "Stylus Pro 7000"
 msgstr "Stylus Pro 7000"
 
-#: src/escputil/escputil.c:270
+#: src/escputil/escputil.c:272
 msgid "Stylus Pro 7500"
 msgstr "Stylus Pro 7500"
 
-#: src/escputil/escputil.c:271
+#: src/escputil/escputil.c:273
 #, fuzzy
 msgid "Stylus Pro 7600"
 msgstr "Stylus Pro 7000"
 
-#: src/escputil/escputil.c:272
+#: src/escputil/escputil.c:274
 msgid "Stylus Pro 9000"
 msgstr "Stylus Pro 9000"
 
-#: src/escputil/escputil.c:273
+#: src/escputil/escputil.c:275
 msgid "Stylus Pro 9500"
 msgstr "Stylus Pro 9500"
 
-#: src/escputil/escputil.c:274
+#: src/escputil/escputil.c:276
 #, fuzzy
 msgid "Stylus Pro 9600"
 msgstr "Stylus Pro 9000"
 
-#: src/escputil/escputil.c:275
+#: src/escputil/escputil.c:277
 msgid "Stylus Pro 10000"
 msgstr "Stylus Pro 10000"
 
-#: src/escputil/escputil.c:276
+#: src/escputil/escputil.c:278
 msgid "Stylus Scan 2000"
 msgstr "Stylus Scan 2000"
 
-#: src/escputil/escputil.c:277
+#: src/escputil/escputil.c:279
 msgid "Stylus Scan 2500"
 msgstr "Stylus Scan 2500"
 
-#: src/escputil/escputil.c:364 src/escputil/escputil.c:373
+#: src/escputil/escputil.c:366 src/escputil/escputil.c:375
 msgid "You may only specify one printer or raw device."
 msgstr "Mo¿na podaæ tylko jedn± drukarkê lub surowe urz±dzenie."
 
-#: src/escputil/escputil.c:382
+#: src/escputil/escputil.c:384
 msgid "You may only specify one printer model."
 msgstr "Mo¿na podaæ tylko jeden model drukarki."
 
-#: src/escputil/escputil.c:402
+#: src/escputil/escputil.c:404
 #, c-format
 msgid "Unknown option %c\n"
 msgstr "Nieznana opcja %c\n"
 
-#: src/escputil/escputil.c:462
+#: src/escputil/escputil.c:464
 #, c-format
 msgid "Cannot open device %s: %s\n"
 msgstr "Nie mo¿na otworzyæ urz±dzenia %s: %s\n"
 
-#: src/escputil/escputil.c:485
+#: src/escputil/escputil.c:487
 #, c-format
 msgid "Cannot print to printer %s with %s\n"
 msgstr "Nie mo¿na wydrukowaæ na drukarce %s przy u¿yciu %s\n"
 
-#: src/escputil/escputil.c:498 src/escputil/escputil.c:508
+#: src/escputil/escputil.c:500 src/escputil/escputil.c:510
 msgid "Unable to send command to printer\n"
 msgstr "Nie mo¿na wys³aæ polecenia do drukarki\n"
 
-#: src/escputil/escputil.c:601
-msgid "Cyan"
-msgstr "Niebieskozielony"
-
-#: src/escputil/escputil.c:602
-msgid "Magenta"
-msgstr "Purpurowy"
-
-#: src/escputil/escputil.c:603
-msgid "Yellow"
-msgstr "¯ó³æ"
-
-#: src/escputil/escputil.c:604
-msgid "Light Cyan"
+#: src/escputil/escputil.c:561
+msgid "Read from printer timed out\n"
 msgstr ""
 
-#: src/escputil/escputil.c:605
-msgid "Light Magenta"
-msgstr ""
-
-#: src/escputil/escputil.c:606
-msgid "Black/Dark Yellow"
-msgstr ""
-
-#: src/escputil/escputil.c:620
-msgid "Obtaining ink levels requires using a raw device.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:626 src/escputil/escputil.c:701
-#: src/escputil/escputil.c:744
-#, c-format
-msgid "Cannot open %s read/write: %s\n"
-msgstr ""
-
-#: src/escputil/escputil.c:635 src/escputil/escputil.c:712
-#: src/escputil/escputil.c:753
-#, c-format
-msgid "Cannot write to %s: %s\n"
-msgstr "Nie mo¿na zapisaæ do %s: %s\n"
-
-#: src/escputil/escputil.c:642 src/escputil/escputil.c:719
-#: src/escputil/escputil.c:760
+#: src/escputil/escputil.c:563
 #, c-format
 msgid "Cannot read from %s: %s\n"
 msgstr "Nie mo¿na odczytaæ z %s: %s\n"
 
-#: src/escputil/escputil.c:652
+#: src/escputil/escputil.c:619
+msgid "Light Cyan"
+msgstr ""
+
+#: src/escputil/escputil.c:620
+msgid "Light Magenta"
+msgstr ""
+
+#: src/escputil/escputil.c:621
+msgid "Black/Dark Yellow"
+msgstr ""
+
+#: src/escputil/escputil.c:635
+msgid "Obtaining ink levels requires using a raw device.\n"
+msgstr ""
+
+#: src/escputil/escputil.c:641 src/escputil/escputil.c:712
+#: src/escputil/escputil.c:751
+#, c-format
+msgid "Cannot open %s read/write: %s\n"
+msgstr ""
+
+#: src/escputil/escputil.c:650 src/escputil/escputil.c:723
+#: src/escputil/escputil.c:760
+#, c-format
+msgid "Cannot write to %s: %s\n"
+msgstr "Nie mo¿na zapisaæ do %s: %s\n"
+
+#: src/escputil/escputil.c:663
 msgid "Cannot parse output from printer\n"
 msgstr ""
 
-#: src/escputil/escputil.c:656
+#: src/escputil/escputil.c:667
 msgid "Ink color"
 msgstr ""
 
-#: src/escputil/escputil.c:656
+#: src/escputil/escputil.c:667
 msgid "Percent remaining"
 msgstr ""
 
-#: src/escputil/escputil.c:695
+#: src/escputil/escputil.c:706
 msgid "Printer identification requires using a raw device.\n"
 msgstr "Do zidentyfikowania drukarki nale¿y u¿yæ surowego urz±dzenia.\n"
 
-#: src/escputil/escputil.c:738
+#: src/escputil/escputil.c:745
 msgid "Printer status requires using a raw device.\n"
 msgstr "Do uzyskania stanu drukarki nale¿y u¿yæ surowego urz±dzenia.\n"
 
-#: src/escputil/escputil.c:781
+#: src/escputil/escputil.c:784
 msgid "Cleaning heads...\n"
 msgstr "Czyszczenie g³owic...\n"
 
-#: src/escputil/escputil.c:790
+#: src/escputil/escputil.c:793
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:794
+#: src/escputil/escputil.c:797
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -1542,7 +2301,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/escputil/escputil.c:829
+#: src/escputil/escputil.c:832
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -1578,28 +2337,28 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/escputil/escputil.c:873
+#: src/escputil/escputil.c:876
 msgid "Unable to send command to the printer, exiting.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:891
+#: src/escputil/escputil.c:894
 msgid ""
 "Printer alignment must be done with a raw device or else\n"
 "the -m option must be used to specify a printer.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:895
+#: src/escputil/escputil.c:898
 msgid "Attempting to detect printer model..."
 msgstr ""
 
-#: src/escputil/escputil.c:900
+#: src/escputil/escputil.c:903
 #, c-format
 msgid ""
 "\n"
 "Cannot open %s read/write: %s\n"
 msgstr ""
 
-#: src/escputil/escputil.c:908
+#: src/escputil/escputil.c:911
 #, c-format
 msgid ""
 "\n"
@@ -1607,15 +2366,6 @@ msgid ""
 msgstr ""
 "\n"
 "Nie mo¿na zapisaæ do %s: %s\n"
-
-#: src/escputil/escputil.c:914
-#, c-format
-msgid ""
-"\n"
-"Cannot read from %s: %s\n"
-msgstr ""
-"\n"
-"Nie mo¿na odczytaæ z %s: %s\n"
 
 #: src/escputil/escputil.c:927
 msgid ""
@@ -1819,598 +2569,13 @@ msgstr ""
 msgid "Error in input\n"
 msgstr ""
 
-#: src/gimp/gimp_color_window.c:183
-msgid "Print Color Adjust"
-msgstr "Regulacja koloru wydruku"
-
-#: src/gimp/gimp_color_window.c:187
-msgid "Set Defaults"
-msgstr "Ustaw domy¶lne"
-
-#: src/gimp/gimp_color_window.c:189
-msgid "Close"
-msgstr "Zamknij"
-
-#: src/gimp/gimp_color_window.c:221
-msgid "Image preview"
-msgstr "Podgl±d obrazu"
-
-#: src/gimp/gimp_color_window.c:256
-msgid "Dither Algorithm:"
-msgstr "Algorytm ditherowania:"
-
-#: src/gimp/gimp_color_window.c:263
-msgid ""
-"Choose the dither algorithm to be used.\n"
-"Adaptive Hybrid usually produces the best all-around quality.\n"
-"EvenTone is a new, experimental algorithm that often produces excellent "
-"results.\n"
-"Ordered is faster and produces almost as good quality on photographs.\n"
-"Fast and Very Fast are considerably faster, and work well for text and line "
-"art.\n"
-"Hybrid Floyd-Steinberg generally produces inferior output."
-msgstr ""
-
-#: src/gimp/gimp_color_window.c:277
-msgid "Curve:"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:212
-msgid "Media Type:"
-msgstr "Typ papieru:"
-
-#: src/gimp/gimp_main_window.c:213
-msgid "Type of media you're printing to"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:215
-msgid "Media Size:"
-msgstr "Rozmiar papieru:"
-
-#: src/gimp/gimp_main_window.c:216
-msgid "Size of paper that you wish to print to"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:218
-msgid "Media Source:"
-msgstr "¬ród³o papieru:"
-
-#: src/gimp/gimp_main_window.c:219
-msgid "Source (input slot) of media you're printing to"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:221
-msgid "Ink Type:"
-msgstr "Typ tuszu:"
-
-#: src/gimp/gimp_main_window.c:222
-msgid "Type of ink in the printer"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:224
-msgid "Resolution:"
-msgstr "Rozdzielczo¶æ:"
-
-#: src/gimp/gimp_main_window.c:225
-msgid "Resolution and quality of the print"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:234
-msgid "Inch"
-msgstr "Cal"
-
-#: src/gimp/gimp_main_window.c:234
-msgid "Set the base unit of measurement to inches"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:236
-msgid "cm"
-msgstr "cm"
-
-#: src/gimp/gimp_main_window.c:236
-msgid "Set the base unit of measurement to centimetres"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:238
-#, fuzzy
-msgid "Points"
-msgstr "Wydrukuj"
-
-#: src/gimp/gimp_main_window.c:238
-msgid "Set the base unit of measurement to points (1/72\")"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:240
-msgid "mm"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:240
-msgid "Set the base unit of measurement to millimetres"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:242
-msgid "Pica"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:242
-msgid "Set the base unit of measurement to picas (1/12\")"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:249
-msgid "Color"
-msgstr "Kolor"
-
-#: src/gimp/gimp_main_window.c:249
-msgid "Color output"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:250
-msgid "Grayscale"
-msgstr "Odcienie szaro¶ci"
-
-#: src/gimp/gimp_main_window.c:251
-msgid "Print in shades of gray using black ink"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:252
-msgid "Black and White"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:253
-msgid "Print in black and white (no color, and no shades of gray)"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:262
-msgid "Fastest and brightest color for text and line art"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:265
-msgid "Best for images dominated by regions of solid color"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:268
-msgid ""
-"Slowest, but most accurate and smoothest color for continuous tone images "
-"and photographs"
-msgstr ""
-
-#.
-#. * Create the main dialog
-#.
-#: src/gimp/gimp_main_window.c:459
-#, c-format
-msgid "%s -- Print v%s"
-msgstr "%s -- Drukowanie v%s"
-
-#: src/gimp/gimp_main_window.c:468
-msgid "About"
-msgstr "Informacje o"
-
-#: src/gimp/gimp_main_window.c:470
-msgid ""
-"Print and\n"
-"Save Settings"
-msgstr ""
-"Ustawienia drukowania\n"
-"i zapisu"
-
-#: src/gimp/gimp_main_window.c:472
-msgid ""
-"Save\n"
-"Settings"
-msgstr ""
-"Zapisz\n"
-"ustawienia"
-
-#: src/gimp/gimp_main_window.c:474
-msgid "Print"
-msgstr "Wydrukuj"
-
-#: src/gimp/gimp_main_window.c:476 src/gimp/gimp_main_window.c:661
-#: src/gimp/gimp_main_window.c:815
-msgid "Cancel"
-msgstr "Anuluj"
-
-#: src/gimp/gimp_main_window.c:516
-msgid "Preview"
-msgstr "Podgl±d"
-
-#: src/gimp/gimp_main_window.c:539
-msgid ""
-"Position the image on the page.\n"
-"Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer "
-"precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of "
-"the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image "
-"to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return "
-"to its original position."
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:563
-msgid "Position"
-msgstr "Po³o¿enie"
-
-#: src/gimp/gimp_main_window.c:581
-msgid "Auto"
-msgstr "Automatycznie"
-
-#: src/gimp/gimp_main_window.c:583
-msgid "Portrait"
-msgstr "Portret"
-
-#: src/gimp/gimp_main_window.c:585
-msgid "Landscape"
-msgstr "Pejza¿"
-
-#: src/gimp/gimp_main_window.c:587
-msgid "Upside down"
-msgstr "Z góry na dó³"
-
-#: src/gimp/gimp_main_window.c:589
-msgid "Seascape"
-msgstr "Pejza¿"
-
-#: src/gimp/gimp_main_window.c:593
-msgid ""
-"Select the orientation: portrait, landscape, upside down, or seascape "
-"(upside down landscape)"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:595
-msgid "Orientation:"
-msgstr "U³o¿enie:"
-
-#: src/gimp/gimp_main_window.c:607
-msgid "Left:"
-msgstr "Lewa:"
-
-#: src/gimp/gimp_main_window.c:608
-msgid "Distance from the left of the paper to the image"
-msgstr "Odleg³o¶æ od lewej krawêdzi papieru do obrazu"
-
-#: src/gimp/gimp_main_window.c:610
-msgid "Top:"
-msgstr "Góra:"
-
-#: src/gimp/gimp_main_window.c:611
-msgid "Distance from the top of the paper to the image"
-msgstr "Odleg³o¶æ od górnej krawêdzi papieru do obrazu"
-
-#: src/gimp/gimp_main_window.c:613
-msgid "Right:"
-msgstr "Prawa:"
-
-#: src/gimp/gimp_main_window.c:614
-msgid "Distance from the left of the paper to the right of the image"
-msgstr "Odleg³o¶æ od lewej krawêdzi papieru do prawej krawêdzi obrazu"
-
-#: src/gimp/gimp_main_window.c:616
-msgid "Right Border:"
-msgstr "Prawa krawêd¼:"
-
-#: src/gimp/gimp_main_window.c:617
-msgid "Distance from the right of the paper to the image"
-msgstr "Odleg³o¶æ od prawej krawêdzi papieru do obrazu"
-
-#: src/gimp/gimp_main_window.c:619
-msgid "Bottom:"
-msgstr "Dó³:"
-
-#: src/gimp/gimp_main_window.c:620
-#, fuzzy
-msgid "Distance from the top of the paper to bottom of the image"
-msgstr "Odleg³o¶æ od górnej krawêdzi papieru do dolnej krawêdzi obrazu"
-
-#: src/gimp/gimp_main_window.c:622
-msgid "Bottom Border:"
-msgstr "Dolna krawêd¼"
-
-#: src/gimp/gimp_main_window.c:623
-msgid "Distance from the bottom of the paper to the image"
-msgstr "Odleg³o¶æ od dolnej krawêdzi papieru do obrazu"
-
-#: src/gimp/gimp_main_window.c:634
-msgid "Center:"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:638
-msgid "Vertically"
-msgstr "Pionowo"
-
-#: src/gimp/gimp_main_window.c:639
-msgid "Center the image vertically on the paper"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:641
-msgid "Both"
-msgstr "Oba"
-
-#: src/gimp/gimp_main_window.c:642
-msgid "Center the image on the paper"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:644
-msgid "Horizontally"
-msgstr "Poziomo"
-
-#: src/gimp/gimp_main_window.c:645
-msgid "Center the image horizontally on the paper"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:656
-msgid "Setup Printer"
-msgstr "Ustawienia drukarki"
-
-#: src/gimp/gimp_main_window.c:659 src/gimp/gimp_main_window.c:813
-#: src/gimp/gimp_main_window.c:848
-msgid "OK"
-msgstr "OK"
-
-#.
-#. * Printer driver option menu.
-#.
-#: src/gimp/gimp_main_window.c:684 src/gimp/gimp_main_window.c:923
-msgid "Printer Model:"
-msgstr "Model drukarki:"
-
-#: src/gimp/gimp_main_window.c:695
-msgid "Select your printer model"
-msgstr ""
-
-#.
-#. * PPD file.
-#.
-#: src/gimp/gimp_main_window.c:729
-msgid "PPD File:"
-msgstr "Plik PPD:"
-
-#: src/gimp/gimp_main_window.c:743
-msgid "Enter the correct PPD filename for your printer"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:745
-msgid "Browse"
-msgstr "Przegl±daj"
-
-#: src/gimp/gimp_main_window.c:752
-msgid "Choose the correct PPD filename for your printer"
-msgstr ""
-
-#.
-#. * Print command.
-#.
-#: src/gimp/gimp_main_window.c:760
-msgid "Command:"
-msgstr "Polecenie:"
-
-#: src/gimp/gimp_main_window.c:772
-msgid ""
-"Enter the correct command to print to your printer. Note: Please do not "
-"remove the `-l' or `-oraw' from the command string, or printing will "
-"probably fail!"
-msgstr ""
-
-#.
-#. * Output file selection dialog.
-#.
-#: src/gimp/gimp_main_window.c:780
-msgid "Print To File?"
-msgstr "Wydrukowaæ do pliku?"
-
-#.
-#. * PPD file selection dialog.
-#.
-#: src/gimp/gimp_main_window.c:793
-msgid "PPD File?"
-msgstr "Plik PPD?"
-
-#: src/gimp/gimp_main_window.c:810
-msgid "Define New Printer"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:831 src/gimp/gimp_main_window.c:919
-msgid "Printer Name:"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:835
-msgid "Enter the name you wish to give this logical printer"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:845
-msgid "About Gimp-Print "
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:854
-msgid "Gimp-Print Version "
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:854
-msgid ""
-"\n"
-"\n"
-"Copyright (C) 1997-2001 Michael Sweet, Robert Krawitz,\n"
-"and the rest of the Gimp-Print Development Team.\n"
-"\n"
-"Please visit our web site at http://gimp-print.sourceforge.net.\n"
-"\n"
-"This program is free software; you can redistribute it and/or modify\n"
-"it under the terms of the GNU General Public License as published by\n"
-"the Free Software Foundation; either version 2 of the License, or\n"
-"(at your option) any later version.\n"
-"\n"
-"This program is distributed in the hope that it will be useful,\n"
-"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-"GNU General Public License for more details.\n"
-"\n"
-"You should have received a copy of the GNU General Public License\n"
-"along with this program; if not, write to the Free Software\n"
-"Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:904
-msgid "Printer Settings"
-msgstr "Ustawienia drukarki"
-
-#: src/gimp/gimp_main_window.c:917
-msgid ""
-"Select the name of the printer (not the type, or model, of printer) that you "
-"wish to print to"
-msgstr ""
-
-#.
-#. * Setup printer button
-#.
-#: src/gimp/gimp_main_window.c:936
-msgid "Setup Printer..."
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:937
-msgid ""
-"Choose the printer model, PPD file, and command that is used to print to "
-"this printer"
-msgstr ""
-
-#.
-#. * New printer button
-#.
-#: src/gimp/gimp_main_window.c:950
-msgid "New Printer..."
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:951
-msgid ""
-"Define a new logical printer. This can be used to name a collection of "
-"settings that you wish to remember for future use."
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:978
-msgid "Dimensions:"
-msgstr "Wymiary:"
-
-#: src/gimp/gimp_main_window.c:982 src/gimp/gimp_main_window.c:1104
-msgid "Width:"
-msgstr "Szeroko¶æ:"
-
-#: src/gimp/gimp_main_window.c:983
-msgid "Width of the paper that you wish to print to"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:987 src/gimp/gimp_main_window.c:1106
-msgid "Height:"
-msgstr "Wysoko¶æ:"
-
-#: src/gimp/gimp_main_window.c:988
-msgid "Height of the paper that you wish to print to"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1011
-msgid "Size"
-msgstr "Rozmiar"
-
-#: src/gimp/gimp_main_window.c:1032
-msgid "Scaling:"
-msgstr "Skalowanie:"
-
-#: src/gimp/gimp_main_window.c:1036
-msgid "Set the scale (size) of the image"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1068
-msgid ""
-"Select whether scaling is measured as percent of available page size or "
-"number of output dots per inch"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1071
-msgid "Percent"
-msgstr "Procent"
-
-#: src/gimp/gimp_main_window.c:1076
-msgid "Scale the print to the size of the page"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1080
-msgid "PPI"
-msgstr "PPI"
-
-#: src/gimp/gimp_main_window.c:1085
-msgid "Scale the print to the number of dots per inch"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1104
-msgid "Set the width of the print"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1106
-msgid "Set the height of the print"
-msgstr ""
-
-#.
-#. * The "image size" button
-#.
-#: src/gimp/gimp_main_window.c:1112
-msgid ""
-"Use Original\n"
-"Image Size"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1118
-msgid "Set the print size to the size of the image"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1141
-msgid "Units:"
-msgstr "Jednostki:"
-
-#: src/gimp/gimp_main_window.c:1146
-msgid "Select the base unit of measurement for printing"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1180
-msgid "Image / Output Settings"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1194
-msgid "Image Type:"
-msgstr "Typ obrazu:"
-
-#: src/gimp/gimp_main_window.c:1199
-msgid "Optimize the output for the type of image being printed"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1226
-msgid "Output Type:"
-msgstr "Typ wyj¶ciowy:"
-
-#: src/gimp/gimp_main_window.c:1230
-msgid "Select the desired output type"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1251
-msgid "Adjust Output..."
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1260
-msgid ""
-"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
-msgstr ""
-
-#: src/gimp/print-image-gimp.c:303
+#: src/gimp/print-image-gimp.c:413
 msgid "Printing..."
 msgstr "Drukowanie..."
 
-#: src/gimp/print.c:267
+#: src/gimp/print.c:136
 msgid "<Image>/File/Print..."
 msgstr "<Image>/Plik/Wydrukuj..."
-
-#: src/gimp/print.c:872 src/gimp/print.c:873 src/gimp/print.c:960
-#: src/gimp/print.c:1313
-msgid "File"
-msgstr "Plik"
 
 #: src/ghost/ijsgimpprint.c:140
 #, c-format
@@ -2435,7 +2600,7 @@ msgstr ""
 msgid "Printer %s is not a known model\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:719
+#: src/ghost/ijsgimpprint.c:718
 #, c-format
 msgid "%.0f of %.0f\n"
 msgstr ""
@@ -2465,14 +2630,21 @@ msgstr "Nie mo¿na otworzyæ urz±dzenia %s: %s\n"
 msgid "Unknown printer %s\n"
 msgstr "Nieznana opcja %c\n"
 
-#: src/ghost/ijsgimpprint.c:907
+#: src/ghost/ijsgimpprint.c:906
 msgid "Bad parameters; cannot continue!\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:917
+#: src/ghost/ijsgimpprint.c:916
 #, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "Cannot read from %s: %s\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Nie mo¿na odczytaæ z %s: %s\n"
 
 #~ msgid "3x5"
 #~ msgstr "3x5"
@@ -2713,12 +2885,6 @@ msgstr ""
 #~ msgid "Monarch Envelope"
 #~ msgstr "Koperta"
 
-#~ msgid "Brightness:"
-#~ msgstr "Jasno¶æ:"
-
-#~ msgid "Contrast:"
-#~ msgstr "Kontrast:"
-
 #~ msgid "Cyan:"
 #~ msgstr "Niebieskozielony:"
 
@@ -2727,15 +2893,6 @@ msgstr ""
 
 #~ msgid "Yellow:"
 #~ msgstr "¯ó³ty:"
-
-#~ msgid "Saturation:"
-#~ msgstr "Nasycenie:"
-
-#~ msgid "Density:"
-#~ msgstr "Gêsto¶æ:"
-
-#~ msgid "Gamma:"
-#~ msgstr "Gamma:"
 
 #, fuzzy
 #~ msgid "Unknown option %s\n"

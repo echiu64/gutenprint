@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print Version 4.2.3\n"
-"POT-Creation-Date: 2002-12-22 13:38-0500\n"
+"POT-Creation-Date: 2003-01-04 22:57-0500\n"
 "PO-Revision-Date: 2002-10-07 19:10+0900\n"
 "Last-Translator: Takeshi AIHANA <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -126,36 +126,36 @@ msgstr "フォト用紙 Pro"
 msgid "Other"
 msgstr "その他"
 
-#: src/main/print-canon.c:1409 src/main/print-lexmark.c:972
+#: src/main/print-canon.c:1419 src/main/print-lexmark.c:982
 msgid "Auto Sheet Feeder"
 msgstr "自動給紙"
 
-#: src/main/print-canon.c:1410 src/main/print-lexmark.c:973
+#: src/main/print-canon.c:1420 src/main/print-lexmark.c:983
 msgid "Manual with Pause"
 msgstr "ポーズ付き手動給紙"
 
-#: src/main/print-canon.c:1411 src/main/print-lexmark.c:974
+#: src/main/print-canon.c:1421 src/main/print-lexmark.c:984
 msgid "Manual without Pause"
 msgstr "ポーズなし手動給紙"
 
-#: src/escputil/escputil.c:600 src/main/print-canon.c:1493
+#: src/escputil/escputil.c:615 src/main/print-canon.c:1503
 #: src/main/print-lexmark.c:488
 msgid "Black"
 msgstr "黒色"
 
-#: src/main/print-canon.c:1496
+#: src/main/print-canon.c:1506
 msgid "CMY Color"
 msgstr "CMY 色"
 
-#: src/main/print-canon.c:1499
+#: src/main/print-canon.c:1509
 msgid "CMYK Color"
 msgstr "CMYK 色"
 
-#: src/main/print-canon.c:1502
+#: src/main/print-canon.c:1512
 msgid "Photo CcMmY Color"
 msgstr "フォト CcMmY 色"
 
-#: src/main/print-canon.c:1505
+#: src/main/print-canon.c:1515
 msgid "Photo CcMmYK Color"
 msgstr "フォト CcMmYK 色"
 
@@ -184,22 +184,6 @@ msgstr "超高速方式"
 #: src/main/print-dither.c:72
 msgid "Hybrid Floyd-Steinberg"
 msgstr "ハイブリッド・フロイド-スタインバーグ方式"
-
-#: src/main/print-escp2.c:356 src/main/print-escp2.c:478
-#: src/main/print-escp2.c:511 src/main/print-escp2.c:528
-#: src/main/print-escp2.c:1165
-#, fuzzy, c-format
-msgid "Model %d out of range.\n"
-msgstr "範囲外のペア番号です！\n"
-
-#: src/main/print-escp2.c:1160
-msgid "Print options not verified; cannot print.\n"
-msgstr ""
-
-#: src/main/print-escp2.c:1192
-#, fuzzy, c-format
-msgid "This printer does not support raw printer output at depth %d\n"
-msgstr "プリンタはカラー印刷をサポートしていません\n"
 
 #: src/main/print-escp2-data.c:2805 src/main/print-escp2-data.c:2815
 #: src/main/print-escp2-data.c:2825 src/main/print-lexmark.c:473
@@ -684,40 +668,56 @@ msgstr "2880 x 1440 DPI Four Pass"
 msgid "2880 x 1440 DPI Four Pass Unidirectional"
 msgstr "2880 x 1440 DPI Four Pass Unidirectional"
 
-#: src/gimp/gimp_main_window.c:1474 src/main/print-escp2-data.c:4093
-#: src/main/print-escp2-data.c:4117 src/main/print-escp2-data.c:4148
+#: src/libgimpprintui/panel.c:1517 src/main/print-escp2-data.c:4093
+#: src/main/print-escp2-data.c:4119 src/main/print-escp2-data.c:4153
 #: src/main/print-pcl.c:202
 msgid "Standard"
 msgstr "標準"
 
-#: src/main/print-escp2-data.c:4100 src/main/print-escp2-data.c:4155
+#: src/main/print-escp2-data.c:4101 src/main/print-escp2-data.c:4161
 msgid "Roll Feed"
 msgstr "ロール式給紙"
 
-#: src/main/print-escp2-data.c:4124
+#: src/main/print-escp2-data.c:4127
 msgid "Roll Feed (cut each page)"
 msgstr ""
 
-#: src/main/print-escp2-data.c:4131
+#: src/main/print-escp2-data.c:4135
 msgid "Roll Feed (do not cut)"
 msgstr ""
 
-#: src/main/print-escp2-data.c:4172
+#: src/main/print-escp2-data.c:4179
 msgid "Cut Sheet Bin 1"
 msgstr ""
 
-#: src/main/print-escp2-data.c:4179
+#: src/main/print-escp2-data.c:4187
 msgid "Cut Sheet Bin 2"
 msgstr ""
 
-#: src/main/print-escp2-data.c:4186
+#: src/main/print-escp2-data.c:4195
 #, fuzzy
 msgid "Cut Sheet Autoselect"
 msgstr "自動選択"
 
-#: src/main/print-escp2-data.c:4193
+#: src/main/print-escp2-data.c:4203
 msgid "Manual Selection"
 msgstr ""
+
+#: src/main/print-escp2.c:395 src/main/print-escp2.c:518
+#: src/main/print-escp2.c:563 src/main/print-escp2.c:580
+#: src/main/print-escp2.c:1212
+#, fuzzy, c-format
+msgid "Model %d out of range.\n"
+msgstr "範囲外のペア番号です！\n"
+
+#: src/main/print-escp2.c:1207 src/main/print-raw.c:184
+msgid "Print options not verified; cannot print.\n"
+msgstr ""
+
+#: src/main/print-escp2.c:1240
+#, fuzzy, c-format
+msgid "This printer does not support raw printer output at depth %d\n"
+msgstr "プリンタはカラー印刷をサポートしていません\n"
 
 #. name                                                    hres vres softw v_pass overs unidir resid
 #: src/main/print-lexmark.c:444 src/main/print-lexmark.c:530
@@ -865,13 +865,879 @@ msgstr "1200x600 DPI"
 msgid "2400x600 DPI"
 msgstr "2400x600 DPI"
 
-#: src/main/print-pcl.c:1563
+#: src/main/print-pcl.c:1566
 msgid "Color + Black Cartridges"
 msgstr "カラー + 黒カートリッジ"
 
-#: src/main/print-pcl.c:1564
+#: src/main/print-pcl.c:1567
 msgid "Color + Photo Cartridges"
 msgstr "カラー + フォト・カートリッジ"
+
+#: src/main/print-raw.c:190
+msgid "Image dimensions must match paper dimensions"
+msgstr ""
+
+#: src/main/print-raw.c:210
+msgid "Internal error!  Output channels or input channels must be 1\n"
+msgstr ""
+
+#: src/main/print-vars.c:81 src/main/print-vars.c:101
+#: src/main/print-vars.c:121
+msgid "ps2"
+msgstr "ps2"
+
+#: src/main/print-vars.c:141
+#, fuzzy
+msgid "Page Size"
+msgstr "画像のサイズ"
+
+#: src/main/print-vars.c:142
+#, fuzzy
+msgid "Size of the paper being printed to"
+msgstr "印刷する用紙のサイズです。"
+
+#: src/cups/genppd.c:854 src/main/print-vars.c:147
+msgid "Media Type"
+msgstr "用紙の種類"
+
+#: src/main/print-vars.c:148
+msgid "Type of media (plain paper, photo paper, etc.)"
+msgstr ""
+
+#: src/cups/genppd.c:879 src/main/print-vars.c:153
+msgid "Media Source"
+msgstr "給紙方法"
+
+#: src/main/print-vars.c:154
+#, fuzzy
+msgid "Source (input slot) of the media"
+msgstr "印刷時の給紙方式です。"
+
+#: src/cups/genppd.c:984 src/main/print-vars.c:159
+msgid "Ink Type"
+msgstr "インクの種類"
+
+#: src/libgimpprintui/panel.c:225 src/main/print-vars.c:160
+msgid "Type of ink in the printer"
+msgstr "印刷時のインクの種類です。"
+
+#: src/main/print-vars.c:165
+#, fuzzy
+msgid "Resolutions"
+msgstr "解像度"
+
+#: src/libgimpprintui/panel.c:228 src/main/print-vars.c:166
+msgid "Resolution and quality of the print"
+msgstr "印刷時の解像度と品質です。"
+
+#: src/cups/genppd.c:961 src/main/print-vars.c:171
+msgid "Dither Algorithm"
+msgstr "ディザ方式"
+
+#: src/libgimpprintui/panel.c:1172 src/main/print-vars.c:172
+#, fuzzy
+msgid ""
+"Choose the dither algorithm to be used.\n"
+"Adaptive Hybrid usually produces the best all-around quality.\n"
+"EvenTone is a new, experimental algorithm that often produces excellent "
+"results.\n"
+"Ordered is faster and produces almost as good quality on photographs.\n"
+"Fast and Very Fast are considerably faster, and work well for text and line "
+"art.\n"
+"Hybrid Floyd-Steinberg generally produces inferior output."
+msgstr ""
+"使用するディザリング方式を選択します。\n"
+"\"アダプティブ・ハイブリッド方式\": 一般的に最適な品質を提供します。\n"
+"\"適応順序方式\": 高速で写真などの高品質な出力を提供します。\n"
+"\"高速方式\",\"超高速方式\": かなり高速に印刷し、テキストやラインアートに適し"
+"ています。\n"
+"\"ハイブリッド・フロイド-スタインバーグ方式\": 一般的に低品質な出力を提供しま"
+"す。"
+
+#: src/main/print-vars.c:182
+#, fuzzy
+msgid "Brightness"
+msgstr "明るさ:"
+
+#: src/main/print-vars.c:183
+#, fuzzy
+msgid "Brightness of the print (0 is solid black, 2 is solid white)"
+msgstr ""
+"印刷する明るさをセットします。\n"
+"(0.0方向: 暗く 2.0方向: 明るく)"
+
+#: src/main/print-vars.c:188
+#, fuzzy
+msgid "Contrast"
+msgstr "コントラスト:"
+
+#: src/main/print-vars.c:189
+msgid "Contrast of the print (0 is solid gray)"
+msgstr ""
+
+#: src/main/print-vars.c:194
+#, fuzzy
+msgid "Density"
+msgstr "濃度:"
+
+#: src/main/print-vars.c:195
+msgid ""
+"Adjust the density (amount of ink) of the print. Reduce the density if the "
+"ink bleeds through the paper or smears; increase the density if black "
+"regions are not solid."
+msgstr ""
+"印刷時の濃度 (インクの量) を調整します。\n"
+"用紙に大量のインクが付いたり汚れたりする場合は濃度を低くして下さい;\n"
+"黒の部分がまばらになる場合は濃度を高くして下さい。"
+
+#: src/main/print-vars.c:203
+#, fuzzy
+msgid "Gamma"
+msgstr "ガンマ:"
+
+#: src/main/print-vars.c:204
+msgid ""
+"Adjust the gamma of the print. Larger values will produce a generally "
+"brighter print, while smaller values will produce a generally darker print. "
+"Black and white will remain the same, unlike with the brightness adjustment."
+msgstr ""
+"印刷時のガンマ値を調整します。\n"
+"値を大きくすると一般的に明るい印刷になり、小さくすると暗い印刷になります。\n"
+"明るさの調整とは異なり、黒色と白色は同じままです。"
+
+#: src/main/print-vars.c:213
+#, fuzzy
+msgid "AppGamma"
+msgstr "ガンマ:"
+
+#: src/main/print-vars.c:214
+msgid "Gamma value assumed by application"
+msgstr ""
+
+#: src/escputil/escputil.c:616 src/main/print-vars.c:219
+msgid "Cyan"
+msgstr "シアン (C)"
+
+#: src/main/print-vars.c:220
+#, fuzzy
+msgid "Adjust the cyan balance"
+msgstr "印刷時のシアン色のバランスを調整します。"
+
+#: src/escputil/escputil.c:617 src/main/print-vars.c:225
+msgid "Magenta"
+msgstr "マゼンタ (M)"
+
+#: src/main/print-vars.c:226
+#, fuzzy
+msgid "Adjust the magenta balance"
+msgstr "印刷時のマゼンタ色のバランスを調整します。"
+
+#: src/escputil/escputil.c:618 src/main/print-vars.c:231
+msgid "Yellow"
+msgstr "黄色 (Y)"
+
+#: src/main/print-vars.c:232
+#, fuzzy
+msgid "Adjust the yellow balance"
+msgstr "印刷時の黄色のバランスを調整します。"
+
+#: src/main/print-vars.c:237
+#, fuzzy
+msgid "Saturation"
+msgstr "彩度:"
+
+#: src/main/print-vars.c:238
+msgid ""
+"Adjust the saturation (color balance) of the print\n"
+"Use zero saturation to produce grayscale output using color and black inks"
+msgstr ""
+"印刷時の彩度 (カラー・バランス) を調整します。\n"
+"カラーと黒の両方のインクを使ってグレースケール出力する場合は 0 にして下さい。"
+
+#: src/main/printers.c:348
+#, c-format
+msgid "Value must be set for %s\n"
+msgstr ""
+
+#: src/main/printers.c:361 src/main/printers.c:366
+#, fuzzy, c-format
+msgid "`%s' is not a valid %s\n"
+msgstr "%s は種類 %s に対する適切なパラメータではありません\n"
+
+#: src/main/printers.c:378
+#, c-format
+msgid "%s must be between %f and %f\n"
+msgstr ""
+
+#: src/main/printers.c:393
+#, c-format
+msgid "%s must be between %d and %d\n"
+msgstr ""
+
+#: src/main/printers.c:428
+#, fuzzy, c-format
+msgid "Unknown type parameter %s (%d)\n"
+msgstr "プリンタ %s が不明です\n"
+
+#: src/main/printers.c:443
+#, c-format
+msgid "%s out of range (value %d, min %d, max %d)\n"
+msgstr "%s の範囲を越えました (現在の値 %d, 最小 %d, 最大 %d)\n"
+
+#: src/main/printers.c:498
+#, fuzzy
+msgid "Printer does not support color output\n"
+msgstr "プリンタはカラー印刷をサポートしていません\n"
+
+#: src/main/printers.c:513
+msgid "Image size is not valid\n"
+msgstr "画像サイズが正しくありません\n"
+
+#: src/main/printers.c:522
+msgid "Top margin must not be less than zero\n"
+msgstr "上マージンは 0 より小さくしないで下さい\n"
+
+#: src/main/printers.c:528
+msgid "Left margin must not be less than zero\n"
+msgstr "左マージンは 0 より小さくしないで下さい\n"
+
+#: src/main/printers.c:534
+#, fuzzy
+msgid "Height must be greater than zero\n"
+msgstr "左マージンは 0 より小さくしないで下さい\n"
+
+#: src/main/printers.c:540
+#, fuzzy
+msgid "Width must be greater than zero\n"
+msgstr "上マージンは 0 より小さくしないで下さい\n"
+
+#: src/main/printers.c:546
+#, fuzzy
+msgid "Image is too wide for the page\n"
+msgstr "用紙サイズを 100 とした場合の比率です。"
+
+#: src/main/printers.c:552
+msgid "Image is too long for the page\n"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:215
+msgid "Media Type:"
+msgstr "用紙の種類:"
+
+#: src/libgimpprintui/panel.c:216
+msgid "Type of media you're printing to"
+msgstr "印刷する用紙の種類です。"
+
+#: src/libgimpprintui/panel.c:218
+msgid "Media Size:"
+msgstr "用紙サイズ:"
+
+#: src/libgimpprintui/panel.c:219
+msgid "Size of paper that you wish to print to"
+msgstr "印刷する用紙のサイズです。"
+
+#: src/libgimpprintui/panel.c:221
+msgid "Media Source:"
+msgstr "給紙方法:"
+
+#: src/libgimpprintui/panel.c:222
+msgid "Source (input slot) of media you're printing to"
+msgstr "印刷時の給紙方式です。"
+
+#: src/libgimpprintui/panel.c:224
+msgid "Ink Type:"
+msgstr "インクの種類:"
+
+#: src/libgimpprintui/panel.c:227
+msgid "Resolution:"
+msgstr "解像度:"
+
+#: src/libgimpprintui/panel.c:237
+msgid "Inch"
+msgstr "インチ"
+
+#: src/libgimpprintui/panel.c:237
+msgid "Set the base unit of measurement to inches"
+msgstr "基本単位をインチにします。"
+
+#: src/libgimpprintui/panel.c:239
+msgid "cm"
+msgstr "センチメートル"
+
+#: src/libgimpprintui/panel.c:239
+msgid "Set the base unit of measurement to centimetres"
+msgstr "基本単位をセンチメートルにします。"
+
+#: src/libgimpprintui/panel.c:241
+#, fuzzy
+msgid "Points"
+msgstr "印刷"
+
+#: src/libgimpprintui/panel.c:241
+#, fuzzy
+msgid "Set the base unit of measurement to points (1/72\")"
+msgstr "基本単位をインチにします。"
+
+#: src/libgimpprintui/panel.c:243
+msgid "mm"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:243
+#, fuzzy
+msgid "Set the base unit of measurement to millimetres"
+msgstr "基本単位をセンチメートルにします。"
+
+#: src/libgimpprintui/panel.c:245
+msgid "Pica"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:245
+#, fuzzy
+msgid "Set the base unit of measurement to picas (1/12\")"
+msgstr "基本単位をインチにします。"
+
+#: src/libgimpprintui/panel.c:252
+msgid "Color"
+msgstr "カラー"
+
+#: src/libgimpprintui/panel.c:252
+msgid "Color output"
+msgstr "カラーで印刷します。"
+
+#: src/libgimpprintui/panel.c:253
+msgid "Grayscale"
+msgstr "グレースケール"
+
+#: src/libgimpprintui/panel.c:254
+msgid "Print in shades of gray using black ink"
+msgstr "黒インクを使ってグレーの影を付けて印刷します。"
+
+#: src/libgimpprintui/panel.c:255
+msgid "Black and White"
+msgstr "黒と白"
+
+#: src/libgimpprintui/panel.c:256
+msgid "Print in black and white (no color, and no shades of gray)"
+msgstr "黒色と白色を使って印刷します (カラーではありません。影も付きません)。"
+
+#: src/cups/genppd.c:946 src/libgimpprintui/panel.c:265
+msgid "Line Art"
+msgstr "ライン・アート"
+
+#: src/libgimpprintui/panel.c:265
+msgid "Fastest and brightest color for text and line art"
+msgstr "テキストやラインアート向けに一番明るく高速印刷します。"
+
+#: src/cups/genppd.c:948 src/libgimpprintui/panel.c:267
+msgid "Solid Colors"
+msgstr "無地の色"
+
+#: src/libgimpprintui/panel.c:268
+msgid "Best for images dominated by regions of solid color"
+msgstr "格子上の色で構成された画像を最適化します。"
+
+#: src/cups/genppd.c:950 src/libgimpprintui/panel.c:270
+msgid "Photograph"
+msgstr "写真"
+
+#: src/libgimpprintui/panel.c:271
+msgid ""
+"Slowest, but most accurate and smoothest color for continuous tone images "
+"and photographs"
+msgstr ""
+"低速ですが、連続したトーン画像や写真向けにもっとも精密で滑らかにします。"
+
+#.
+#. * Create the main dialog
+#.
+#: src/libgimpprintui/panel.c:349
+#, c-format
+msgid "%s -- Print v%s"
+msgstr "%s -- 印刷 v%s"
+
+#: src/libgimpprintui/panel.c:358
+msgid "About"
+msgstr "情報"
+
+#: src/libgimpprintui/panel.c:360
+msgid ""
+"Print and\n"
+"Save Settings"
+msgstr ""
+"印刷と\n"
+"設定の保存"
+
+#: src/libgimpprintui/panel.c:362
+msgid ""
+"Save\n"
+"Settings"
+msgstr ""
+"設定の\n"
+"保存"
+
+#: src/libgimpprintui/panel.c:364
+msgid "Print"
+msgstr "印刷"
+
+#: src/libgimpprintui/panel.c:366 src/libgimpprintui/panel.c:572
+#: src/libgimpprintui/panel.c:726
+msgid "Cancel"
+msgstr "取り消し"
+
+#: src/libgimpprintui/panel.c:406
+msgid "Preview"
+msgstr "プレビュー"
+
+#: src/libgimpprintui/panel.c:429
+msgid ""
+"Position the image on the page.\n"
+"Click and drag with the primary button to position the image.\n"
+"Click and drag with the second button to move the image with finer "
+"precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of "
+"the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image "
+"to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return "
+"to its original position."
+msgstr ""
+"印刷時の画像の位置を設定します。\n"
+"マウスの左ボタンでドラッグした場所に画像が配置されます。\n"
+"マウスの右ボタンでドラッグすると、細かいレベルで画像を移動します; 約 1/72 イ"
+"ンチ単位で移動することが可能です。\n"
+"マウスの中ボタンでドラッグすると、画像の大きさの単位で移動することが可能で"
+"す。\n"
+"[SHIFT] キーを押しながらマウスをドラッグすると、水平または垂直方向にのみ画像"
+"を移動することが可能です。\n"
+"ドラッグ中に別のボタンをクリックすると、画像は元の場所に戻ります。"
+
+#: src/libgimpprintui/panel.c:475
+msgid "Position"
+msgstr "位置"
+
+#: src/libgimpprintui/panel.c:493
+msgid "Auto"
+msgstr "自動"
+
+#: src/libgimpprintui/panel.c:495
+msgid "Portrait"
+msgstr "縦置き"
+
+#: src/libgimpprintui/panel.c:497
+msgid "Landscape"
+msgstr "横置き"
+
+#: src/libgimpprintui/panel.c:499
+msgid "Upside down"
+msgstr "上下"
+
+#: src/libgimpprintui/panel.c:501
+msgid "Seascape"
+msgstr "横長"
+
+#: src/libgimpprintui/panel.c:505
+msgid ""
+"Select the orientation: portrait, landscape, upside down, or seascape "
+"(upside down landscape)"
+msgstr ""
+"用紙の方向を選択します: 縦置き、横置き、上下、または横長 (上下つきの横置き)"
+
+#: src/libgimpprintui/panel.c:507
+msgid "Orientation:"
+msgstr "用紙の向き:"
+
+#: src/libgimpprintui/panel.c:519
+msgid "Left:"
+msgstr "左側:"
+
+#: src/libgimpprintui/panel.c:520
+msgid "Distance from the left of the paper to the image"
+msgstr "用紙の左端から画像までの距離です。"
+
+#: src/libgimpprintui/panel.c:522
+msgid "Top:"
+msgstr "上側:"
+
+#: src/libgimpprintui/panel.c:523
+msgid "Distance from the top of the paper to the image"
+msgstr "用紙の上端から画像までの距離です。"
+
+#: src/libgimpprintui/panel.c:525
+msgid "Right:"
+msgstr "右側:"
+
+#: src/libgimpprintui/panel.c:526
+msgid "Distance from the left of the paper to the right of the image"
+msgstr "用紙の左端から画像の右端までの距離です。"
+
+#: src/libgimpprintui/panel.c:528
+msgid "Right Border:"
+msgstr "右側の縁:"
+
+#: src/libgimpprintui/panel.c:529
+msgid "Distance from the right of the paper to the image"
+msgstr "用紙の右端から画像までの距離です。"
+
+#: src/libgimpprintui/panel.c:531
+msgid "Bottom:"
+msgstr "下側:"
+
+#: src/libgimpprintui/panel.c:532
+#, fuzzy
+msgid "Distance from the top of the paper to bottom of the image"
+msgstr "用紙の上端から画像の下端までの距離です。"
+
+#: src/libgimpprintui/panel.c:534
+msgid "Bottom Border:"
+msgstr "下側の縁:"
+
+#: src/libgimpprintui/panel.c:535
+msgid "Distance from the bottom of the paper to the image"
+msgstr "用紙の下端から画像までの距離です。"
+
+#: src/libgimpprintui/panel.c:546
+msgid "Center:"
+msgstr "中心:"
+
+#: src/libgimpprintui/panel.c:550
+msgid "Vertically"
+msgstr "垂直"
+
+#: src/libgimpprintui/panel.c:551
+msgid "Center the image vertically on the paper"
+msgstr "用紙の垂直方向の中心にします。"
+
+#: src/libgimpprintui/panel.c:553
+msgid "Both"
+msgstr "両端"
+
+#: src/libgimpprintui/panel.c:554
+msgid "Center the image on the paper"
+msgstr "用紙の中心にします。"
+
+#: src/libgimpprintui/panel.c:556
+msgid "Horizontally"
+msgstr "水平"
+
+#: src/libgimpprintui/panel.c:557
+msgid "Center the image horizontally on the paper"
+msgstr "用紙の水平方向の中心にします。"
+
+#: src/libgimpprintui/panel.c:568
+msgid "Setup Printer"
+msgstr "プリンタの選択"
+
+#: src/libgimpprintui/panel.c:570 src/libgimpprintui/panel.c:724
+#: src/libgimpprintui/panel.c:758
+msgid "OK"
+msgstr "OK"
+
+#.
+#. * Printer driver option menu.
+#.
+#: src/libgimpprintui/panel.c:595 src/libgimpprintui/panel.c:833
+msgid "Printer Model:"
+msgstr "プリンタの型式:"
+
+#: src/libgimpprintui/panel.c:606
+msgid "Select your printer model"
+msgstr "お使いのプリンタを選択します。"
+
+#.
+#. * PPD file.
+#.
+#: src/libgimpprintui/panel.c:641
+msgid "PPD File:"
+msgstr "PPD ファイル:"
+
+#: src/libgimpprintui/panel.c:655
+msgid "Enter the correct PPD filename for your printer"
+msgstr "お使いのプリンタ用の PPD ファイル名を入力します。"
+
+#: src/libgimpprintui/panel.c:657
+msgid "Browse"
+msgstr "参照"
+
+#: src/libgimpprintui/panel.c:664
+msgid "Choose the correct PPD filename for your printer"
+msgstr "お使いのプリンタ用の PPD ファイルを選択します。"
+
+#.
+#. * Print command.
+#.
+#: src/libgimpprintui/panel.c:672
+msgid "Command:"
+msgstr "コマンド:"
+
+#: src/libgimpprintui/panel.c:684
+msgid ""
+"Enter the correct command to print to your printer. Note: Please do not "
+"remove the `-l' or `-oraw' from the command string, or printing will "
+"probably fail!"
+msgstr ""
+"お使いのプリンタ向けの印刷コマンドを入力します。【注記】: '-l' または '-"
+"oraw' オプションを削除しないで下さい。印刷に失敗します！"
+
+#.
+#. * Output file selection dialog.
+#.
+#: src/libgimpprintui/panel.c:692
+msgid "Print To File?"
+msgstr "ファイルに印刷しますか？"
+
+#.
+#. * PPD file selection dialog.
+#.
+#: src/libgimpprintui/panel.c:705
+msgid "PPD File?"
+msgstr "PPD ファイルですか？"
+
+#: src/libgimpprintui/panel.c:722
+msgid "Define New Printer"
+msgstr "新しいプリンタの定義"
+
+#: src/libgimpprintui/panel.c:742 src/libgimpprintui/panel.c:829
+msgid "Printer Name:"
+msgstr "プリンタ名:"
+
+#: src/libgimpprintui/panel.c:746
+msgid "Enter the name you wish to give this logical printer"
+msgstr "利用する論理プリンタ名を指定します。"
+
+#: src/libgimpprintui/panel.c:756
+msgid "About Gimp-Print "
+msgstr "Gimp-Print"
+
+#: src/libgimpprintui/panel.c:764
+msgid "Gimp-Print Version "
+msgstr "Gimp-Print バージョン "
+
+#: src/libgimpprintui/panel.c:764
+msgid ""
+"\n"
+"\n"
+"Copyright (C) 1997-2001 Michael Sweet, Robert Krawitz,\n"
+"and the rest of the Gimp-Print Development Team.\n"
+"\n"
+"Please visit our web site at http://gimp-print.sourceforge.net.\n"
+"\n"
+"This program is free software; you can redistribute it and/or modify\n"
+"it under the terms of the GNU General Public License as published by\n"
+"the Free Software Foundation; either version 2 of the License, or\n"
+"(at your option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"GNU General Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License\n"
+"along with this program; if not, write to the Free Software\n"
+"Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+msgstr ""
+"\n"
+"\n"
+"Copyright (C) 1997-2001 Michael Sweet, Robert Krawitz,\n"
+"そして Gimp-Print 開発チーム。\n"
+"\n"
+"ホームページ <http://gimp-print.sourceforge.net> にお越し下さい。\n"
+"\n"
+"このプログラムはフリーソフトウェアです; フリーソフトウェア財団が発行する\n"
+"GNU 公有使用許諾契約書の第二版またはそれ以降の版の下で改変・修正・再配布が\n"
+"認められています。\n"
+"\n"
+"このプログラムは便利に使ってもらえるように配布されていますが、\n"
+"完全に無保証です; 商用利用またはある特定の目的における適合性の保証も\n"
+"ありません。詳細は GNU 公有使用許諾契約書をご覧下さい。\n"
+"\n"
+"貴方は、このプログラムに適応した GNU 公有使用許諾契約書のコピーを\n"
+"受け取る必要があります; もし受け取っていない場合は、\n"
+"Free Software Foundation, Inc., 56 Temple Place - \n"
+"Suite 330, Boston, MA 02111-1307, USA まで連絡して下さい。\n"
+
+#: src/libgimpprintui/panel.c:814
+msgid "Printer Settings"
+msgstr "プリンタの設定"
+
+#: src/libgimpprintui/panel.c:827
+msgid ""
+"Select the name of the printer (not the type, or model, of printer) that you "
+"wish to print to"
+msgstr "お使いのプリンタ (プリンタの型式ではありません) 名を選択します。"
+
+#.
+#. * Setup printer button
+#.
+#: src/libgimpprintui/panel.c:846
+msgid "Setup Printer..."
+msgstr "プリンタの選択..."
+
+#: src/libgimpprintui/panel.c:847
+msgid ""
+"Choose the printer model, PPD file, and command that is used to print to "
+"this printer"
+msgstr "プリンタの型式と PPD ファイル、印刷コマンドを選択します。"
+
+#.
+#. * New printer button
+#.
+#: src/libgimpprintui/panel.c:860
+msgid "New Printer..."
+msgstr "新しいプリンタ..."
+
+#: src/libgimpprintui/panel.c:861
+msgid ""
+"Define a new logical printer. This can be used to name a collection of "
+"settings that you wish to remember for future use."
+msgstr ""
+"新規に論理プリンタを定義します。これは次回使用するために覚えておきたい設定名"
+"に使用されます。"
+
+#: src/libgimpprintui/panel.c:888
+msgid "Dimensions:"
+msgstr "寸法:"
+
+#: src/libgimpprintui/panel.c:892 src/libgimpprintui/panel.c:1014
+msgid "Width:"
+msgstr "幅:"
+
+#: src/libgimpprintui/panel.c:893
+msgid "Width of the paper that you wish to print to"
+msgstr "印刷する用紙の幅です。"
+
+#: src/libgimpprintui/panel.c:897 src/libgimpprintui/panel.c:1016
+msgid "Height:"
+msgstr "高さ:"
+
+#: src/libgimpprintui/panel.c:898
+msgid "Height of the paper that you wish to print to"
+msgstr "印刷する用紙の高さです。"
+
+#: src/libgimpprintui/panel.c:921
+msgid "Size"
+msgstr "画像のサイズ"
+
+#: src/libgimpprintui/panel.c:942
+msgid "Scaling:"
+msgstr "拡大縮小:"
+
+#: src/libgimpprintui/panel.c:946
+msgid "Set the scale (size) of the image"
+msgstr "画像サイズの拡大縮小を行います。"
+
+#: src/libgimpprintui/panel.c:978
+msgid ""
+"Select whether scaling is measured as percent of available page size or "
+"number of output dots per inch"
+msgstr ""
+"拡大縮小の単位として、用紙サイズに対する百分率 (比率) か、ドット数/インチを選"
+"択します。"
+
+#: src/libgimpprintui/panel.c:981
+msgid "Percent"
+msgstr "比率"
+
+#: src/libgimpprintui/panel.c:986
+msgid "Scale the print to the size of the page"
+msgstr "用紙サイズを 100 とした場合の比率です。"
+
+#: src/libgimpprintui/panel.c:990
+msgid "PPI"
+msgstr "PPI"
+
+#: src/libgimpprintui/panel.c:995
+msgid "Scale the print to the number of dots per inch"
+msgstr "画像のドット数/インチです。"
+
+#: src/libgimpprintui/panel.c:1014
+msgid "Set the width of the print"
+msgstr "印刷時の幅をセットします。"
+
+#: src/libgimpprintui/panel.c:1016
+msgid "Set the height of the print"
+msgstr "印刷時の高さをセットします。"
+
+#.
+#. * The "image size" button
+#.
+#: src/libgimpprintui/panel.c:1022
+msgid ""
+"Use Original\n"
+"Image Size"
+msgstr ""
+"オリジナルの\n"
+"サイズの利用"
+
+#: src/libgimpprintui/panel.c:1028
+msgid "Set the print size to the size of the image"
+msgstr "画像のオリジナル・サイズを印刷サイズにします。"
+
+#: src/libgimpprintui/panel.c:1051
+msgid "Units:"
+msgstr "単位:"
+
+#: src/libgimpprintui/panel.c:1056
+msgid "Select the base unit of measurement for printing"
+msgstr "印刷時の基本単位を選択します。"
+
+#: src/libgimpprintui/panel.c:1093
+msgid "Print Color Adjust"
+msgstr "印刷カラー調整"
+
+#: src/libgimpprintui/panel.c:1096
+msgid "Set Defaults"
+msgstr "初期値に戻す"
+
+#: src/libgimpprintui/panel.c:1098
+msgid "Close"
+msgstr "閉じる"
+
+#: src/libgimpprintui/panel.c:1130
+msgid "Image preview"
+msgstr "画像のプレビュー"
+
+#: src/libgimpprintui/panel.c:1165
+msgid "Dither Algorithm:"
+msgstr "ディザリング方式:"
+
+#: src/libgimpprintui/panel.c:1186
+msgid "Curve:"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1209
+msgid "Image / Output Settings"
+msgstr "画像 / 出力設定"
+
+#: src/libgimpprintui/panel.c:1223
+msgid "Image Type:"
+msgstr "画像の種類:"
+
+#: src/libgimpprintui/panel.c:1228
+msgid "Optimize the output for the type of image being printed"
+msgstr "印刷する画像の種類から出力結果を最適化します。"
+
+#: src/libgimpprintui/panel.c:1255
+msgid "Output Type:"
+msgstr "出力の種類:"
+
+#: src/libgimpprintui/panel.c:1259
+msgid "Select the desired output type"
+msgstr "出力する形態を選択します。"
+
+#: src/libgimpprintui/panel.c:1280
+msgid "Adjust Output..."
+msgstr "出力の調整..."
+
+#: src/libgimpprintui/panel.c:1289
+msgid ""
+"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgstr ""
+"カラーバランス、明るさ、コントラスト、彩度とディザリング方式を調整します。"
+
+#: src/libgimpprintui/plist.c:357 src/libgimpprintui/plist.c:358
+#: src/libgimpprintui/plist.c:437 src/libgimpprintui/plist.c:800
+msgid "File"
+msgstr "ファイル"
 
 #. Specify language of PPD translation
 #. Translators: Specify the language of the PPD translation.
@@ -887,14 +1753,6 @@ msgstr "英語"
 msgid "ISOLatin1"
 msgstr "ISO ラテン１"
 
-#: src/cups/genppd.c:854
-msgid "Media Type"
-msgstr "用紙の種類"
-
-#: src/cups/genppd.c:879
-msgid "Media Source"
-msgstr "給紙方法"
-
 #: src/cups/genppd.c:902
 msgid "Resolution"
 msgstr "解像度"
@@ -906,31 +1764,11 @@ msgstr "解像度"
 msgid "Image Type"
 msgstr "画像の種類"
 
-#: src/cups/genppd.c:946 src/gimp/gimp_main_window.c:262
-msgid "Line Art"
-msgstr "ライン・アート"
-
-#: src/cups/genppd.c:948 src/gimp/gimp_main_window.c:264
-msgid "Solid Colors"
-msgstr "無地の色"
-
-#: src/cups/genppd.c:950 src/gimp/gimp_main_window.c:267
-msgid "Photograph"
-msgstr "写真"
-
-#: src/cups/genppd.c:961
-msgid "Dither Algorithm"
-msgstr "ディザ方式"
-
-#: src/cups/genppd.c:984
-msgid "Ink Type"
-msgstr "インクの種類"
-
-#: src/escputil/escputil.c:64
+#: src/escputil/escputil.c:66
 msgid "Escputil version "
 msgstr "Escputil バージョン "
 
-#: src/escputil/escputil.c:65
+#: src/escputil/escputil.c:67
 msgid ""
 ", Copyright (C) 2000-2001 Robert Krawitz\n"
 "Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -l'\n"
@@ -942,7 +1780,7 @@ msgstr ""
 "これはフリーソフトウェアでいくつかの条件の下で再配布を\n"
 "歓迎します; 詳細は `escputil -l` でご覧下さい。\n"
 
-#: src/escputil/escputil.c:70
+#: src/escputil/escputil.c:72
 msgid ""
 "Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
@@ -975,7 +1813,7 @@ msgstr ""
 "Free Software Foundation, Inc., 56 Temple Place - \n"
 "Suite 330, Boston, MA 02111-1307, USA まで連絡して下さい。\n"
 
-#: src/escputil/escputil.c:110
+#: src/escputil/escputil.c:112
 msgid ""
 "Usage: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
 "                [-P printer | -r device] [-u] [-q] [-m model]\n"
@@ -1060,7 +1898,7 @@ msgstr ""
 "    -m|--model         ヘッドを一列に並べるために、正確なプリンタの型式を指定"
 "する。\n"
 
-#: src/escputil/escputil.c:148
+#: src/escputil/escputil.c:150
 msgid ""
 "Usage: escputil [OPTIONS] [COMMAND]\n"
 "Usage: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
@@ -1134,426 +1972,417 @@ msgstr ""
 "    -q バナーを表示しない。\n"
 "    -m ヘッドを一列に並べるために、正確なプリンタの型式を指定する。\n"
 
-#: src/escputil/escputil.c:199
+#: src/escputil/escputil.c:201
 msgid "Stylus C20sx"
 msgstr "Stylus C20sx"
 
-#: src/escputil/escputil.c:200
+#: src/escputil/escputil.c:202
 msgid "Stylus C20ux"
 msgstr "Stylus C20ux"
 
-#: src/escputil/escputil.c:201
+#: src/escputil/escputil.c:203
 msgid "Stylus C40sx"
 msgstr "Stylus C40sx"
 
-#: src/escputil/escputil.c:202
+#: src/escputil/escputil.c:204
 msgid "Stylus C40ux"
 msgstr "Stylus C40ux"
 
-#: src/escputil/escputil.c:203
+#: src/escputil/escputil.c:205
 msgid "Stylus C41sx"
 msgstr "Stylus C41sx"
 
-#: src/escputil/escputil.c:204
+#: src/escputil/escputil.c:206
 msgid "Stylus C41ux"
 msgstr "Stylus C41ux"
 
-#: src/escputil/escputil.c:205
+#: src/escputil/escputil.c:207
 msgid "Stylus C42sx"
 msgstr "Stylus C42sx"
 
-#: src/escputil/escputil.c:206
+#: src/escputil/escputil.c:208
 msgid "Stylus C42ux"
 msgstr "Stylus C42ux"
 
-#: src/escputil/escputil.c:207
+#: src/escputil/escputil.c:209
 msgid "Stylus C60"
 msgstr "Stylus C60"
 
-#: src/escputil/escputil.c:208
+#: src/escputil/escputil.c:210
 msgid "Stylus C61"
 msgstr "Stylus C61"
 
-#: src/escputil/escputil.c:209
+#: src/escputil/escputil.c:211
 msgid "Stylus C62"
 msgstr "Stylus C62"
 
-#: src/escputil/escputil.c:210
+#: src/escputil/escputil.c:212
 msgid "Stylus C70"
 msgstr "Stylus C70"
 
-#: src/escputil/escputil.c:211
+#: src/escputil/escputil.c:213
 msgid "Stylus C80"
 msgstr "Stylus C80"
 
-#: src/escputil/escputil.c:212
+#: src/escputil/escputil.c:214
 msgid "Stylus C82"
 msgstr "Stylus C82"
 
-#: src/escputil/escputil.c:213
+#: src/escputil/escputil.c:215
 msgid "Stylus Color"
 msgstr "Stylus Color"
 
-#: src/escputil/escputil.c:214
+#: src/escputil/escputil.c:216
 msgid "Stylus Color Pro"
 msgstr "Stylus Color Pro"
 
-#: src/escputil/escputil.c:215
+#: src/escputil/escputil.c:217
 msgid "Stylus Color Pro XL"
 msgstr "Stylus Color Pro XL"
 
-#: src/escputil/escputil.c:216
+#: src/escputil/escputil.c:218
 msgid "Stylus Color 400"
 msgstr "Stylus Color 400"
 
-#: src/escputil/escputil.c:217
+#: src/escputil/escputil.c:219
 msgid "Stylus Color 440"
 msgstr "Stylus Color 440"
 
-#: src/escputil/escputil.c:218
+#: src/escputil/escputil.c:220
 msgid "Stylus Color 460"
 msgstr "Stylus Color 460"
 
-#: src/escputil/escputil.c:219
+#: src/escputil/escputil.c:221
 msgid "Stylus Color 480"
 msgstr "Stylus Color 480"
 
-#: src/escputil/escputil.c:220
+#: src/escputil/escputil.c:222
 msgid "Stylus Color 500"
 msgstr "Stylus Color 500"
 
-#: src/escputil/escputil.c:221
+#: src/escputil/escputil.c:223
 msgid "Stylus Color 580"
 msgstr "Stylus Color 580"
 
-#: src/escputil/escputil.c:222
+#: src/escputil/escputil.c:224
 msgid "Stylus Color 600"
 msgstr "Stylus Color 600"
 
-#: src/escputil/escputil.c:223
+#: src/escputil/escputil.c:225
 msgid "Stylus Color 640"
 msgstr "Stylus Color 640"
 
-#: src/escputil/escputil.c:224
+#: src/escputil/escputil.c:226
 msgid "Stylus Color 660"
 msgstr "Stylus Color 660"
 
-#: src/escputil/escputil.c:225
+#: src/escputil/escputil.c:227
 msgid "Stylus Color 670"
 msgstr "Stylus Color 670"
 
-#: src/escputil/escputil.c:226
+#: src/escputil/escputil.c:228
 msgid "Stylus Color 680"
 msgstr "Stylus Color 680"
 
-#: src/escputil/escputil.c:227
+#: src/escputil/escputil.c:229
 msgid "Stylus Color 740"
 msgstr "Stylus Color 740"
 
-#: src/escputil/escputil.c:228
+#: src/escputil/escputil.c:230
 msgid "Stylus Color 760"
 msgstr "Stylus Color 760"
 
-#: src/escputil/escputil.c:229
+#: src/escputil/escputil.c:231
 msgid "Stylus Color 777"
 msgstr "Stylus Color 777"
 
-#: src/escputil/escputil.c:230
+#: src/escputil/escputil.c:232
 msgid "Stylus Color 800"
 msgstr "Stylus Color 800"
 
-#: src/escputil/escputil.c:231
+#: src/escputil/escputil.c:233
 msgid "Stylus Color 850"
 msgstr "Stylus Color 850"
 
-#: src/escputil/escputil.c:232
+#: src/escputil/escputil.c:234
 msgid "Stylus Color 860"
 msgstr "Stylus Color 860"
 
-#: src/escputil/escputil.c:233
+#: src/escputil/escputil.c:235
 msgid "Stylus Color 880"
 msgstr "Stylus Color 880"
 
-#: src/escputil/escputil.c:234
+#: src/escputil/escputil.c:236
 msgid "Stylus Color 83"
 msgstr "Stylus Color 83"
 
-#: src/escputil/escputil.c:235
+#: src/escputil/escputil.c:237
 msgid "Stylus Color 900"
 msgstr "Stylus Color 900"
 
-#: src/escputil/escputil.c:236
+#: src/escputil/escputil.c:238
 msgid "Stylus Color 980"
 msgstr "Stylus Color 980"
 
-#: src/escputil/escputil.c:237
+#: src/escputil/escputil.c:239
 msgid "Stylus Color 1160"
 msgstr "Stylus Color 1160"
 
-#: src/escputil/escputil.c:238
+#: src/escputil/escputil.c:240
 msgid "Stylus Color 1500"
 msgstr "Stylus Color 1500"
 
-#: src/escputil/escputil.c:239
+#: src/escputil/escputil.c:241
 msgid "Stylus Color 1520"
 msgstr "Stylus Color 1520"
 
-#: src/escputil/escputil.c:240
+#: src/escputil/escputil.c:242
 msgid "Stylus Color 3000"
 msgstr "Stylus Color 3000"
 
-#: src/escputil/escputil.c:241
+#: src/escputil/escputil.c:243
 msgid "Stylus Photo"
 msgstr "Stylus Photo"
 
-#: src/escputil/escputil.c:242
+#: src/escputil/escputil.c:244
 msgid "Stylus Photo 700"
 msgstr "Stylus Photo 700"
 
-#: src/escputil/escputil.c:243
+#: src/escputil/escputil.c:245
 msgid "Stylus Photo EX"
 msgstr "Stylus Photo EX"
 
-#: src/escputil/escputil.c:244
+#: src/escputil/escputil.c:246
 msgid "Stylus Photo 720"
 msgstr "Stylus Photo 720"
 
-#: src/escputil/escputil.c:245
+#: src/escputil/escputil.c:247
 msgid "Stylus Photo 750"
 msgstr "Stylus Photo 750"
 
-#: src/escputil/escputil.c:246
+#: src/escputil/escputil.c:248
 msgid "Stylus Photo 780"
 msgstr "Stylus Photo 780"
 
-#: src/escputil/escputil.c:247
+#: src/escputil/escputil.c:249
 msgid "Stylus Photo 785"
 msgstr "Stylus Photo 785"
 
-#: src/escputil/escputil.c:248
+#: src/escputil/escputil.c:250
 msgid "Stylus Photo 790"
 msgstr "Stylus Photo 790"
 
-#: src/escputil/escputil.c:249
+#: src/escputil/escputil.c:251
 msgid "Stylus Photo 810"
 msgstr "Stylus Photo 810"
 
-#: src/escputil/escputil.c:250
+#: src/escputil/escputil.c:252
 msgid "Stylus Photo 820"
 msgstr "Stylus Photo 820"
 
-#: src/escputil/escputil.c:251
+#: src/escputil/escputil.c:253
 msgid "Stylus Photo 830"
 msgstr "Stylus Photo 830"
 
-#: src/escputil/escputil.c:252
+#: src/escputil/escputil.c:254
 msgid "Stylus Photo 870"
 msgstr "Stylus Photo 870"
 
-#: src/escputil/escputil.c:253
+#: src/escputil/escputil.c:255
 msgid "Stylus Photo 875"
 msgstr "Stylus Photo 875"
 
-#: src/escputil/escputil.c:254
+#: src/escputil/escputil.c:256
 msgid "Stylus Photo 890"
 msgstr "Stylus Photo 890"
 
-#: src/escputil/escputil.c:255
+#: src/escputil/escputil.c:257
 msgid "Stylus Photo 895"
 msgstr "Stylus Photo 895"
 
-#: src/escputil/escputil.c:256
+#: src/escputil/escputil.c:258
 msgid "Stylus Photo 915"
 msgstr "Stylus Photo 915"
 
-#: src/escputil/escputil.c:257
+#: src/escputil/escputil.c:259
 msgid "Stylus Photo 925"
 msgstr "Stylus Photo 925"
 
-#: src/escputil/escputil.c:258
+#: src/escputil/escputil.c:260
 msgid "Stylus Photo 950"
 msgstr "Stylus Photo 950"
 
-#: src/escputil/escputil.c:259
+#: src/escputil/escputil.c:261
 msgid "Stylus Photo 960"
 msgstr "Stylus Photo 960"
 
-#: src/escputil/escputil.c:260
+#: src/escputil/escputil.c:262
 msgid "Stylus Photo 1200"
 msgstr "Stylus Photo 1200"
 
-#: src/escputil/escputil.c:261
+#: src/escputil/escputil.c:263
 msgid "Stylus Photo 1270"
 msgstr "Stylus Photo 1270"
 
-#: src/escputil/escputil.c:262
+#: src/escputil/escputil.c:264
 msgid "Stylus Photo 1280"
 msgstr "Stylus Photo 1280"
 
-#: src/escputil/escputil.c:263
+#: src/escputil/escputil.c:265
 msgid "Stylus Photo 1290"
 msgstr "Stylus Photo 1290"
 
-#: src/escputil/escputil.c:264
+#: src/escputil/escputil.c:266
 msgid "Stylus Photo 2000P"
 msgstr "Stylus Photo 2000P"
 
-#: src/escputil/escputil.c:265
+#: src/escputil/escputil.c:267
 msgid "Stylus Photo 2100"
 msgstr "Stylus Photo 2100"
 
-#: src/escputil/escputil.c:266
+#: src/escputil/escputil.c:268
 msgid "Stylus Photo 2200"
 msgstr "Stylus Photo 2200"
 
-#: src/escputil/escputil.c:267
+#: src/escputil/escputil.c:269
 msgid "Stylus Pro 5000"
 msgstr "Stylus Pro 5000"
 
-#: src/escputil/escputil.c:268
+#: src/escputil/escputil.c:270
 msgid "Stylus Pro 5500"
 msgstr "Stylus Pro 5500"
 
-#: src/escputil/escputil.c:269
+#: src/escputil/escputil.c:271
 msgid "Stylus Pro 7000"
 msgstr "Stylus Pro 7000"
 
-#: src/escputil/escputil.c:270
+#: src/escputil/escputil.c:272
 msgid "Stylus Pro 7500"
 msgstr "Stylus Pro 7500"
 
-#: src/escputil/escputil.c:271
+#: src/escputil/escputil.c:273
 msgid "Stylus Pro 7600"
 msgstr "Stylus Pro 7600"
 
-#: src/escputil/escputil.c:272
+#: src/escputil/escputil.c:274
 msgid "Stylus Pro 9000"
 msgstr "Stylus Pro 9000"
 
-#: src/escputil/escputil.c:273
+#: src/escputil/escputil.c:275
 msgid "Stylus Pro 9500"
 msgstr "Stylus Pro 9500"
 
-#: src/escputil/escputil.c:274
+#: src/escputil/escputil.c:276
 msgid "Stylus Pro 9600"
 msgstr "Stylus Pro 9600"
 
-#: src/escputil/escputil.c:275
+#: src/escputil/escputil.c:277
 msgid "Stylus Pro 10000"
 msgstr "Stylus Pro 10000"
 
-#: src/escputil/escputil.c:276
+#: src/escputil/escputil.c:278
 msgid "Stylus Scan 2000"
 msgstr "Stylus Scan 2000"
 
-#: src/escputil/escputil.c:277
+#: src/escputil/escputil.c:279
 msgid "Stylus Scan 2500"
 msgstr "Stylus Scan 2500"
 
-#: src/escputil/escputil.c:364 src/escputil/escputil.c:373
+#: src/escputil/escputil.c:366 src/escputil/escputil.c:375
 msgid "You may only specify one printer or raw device."
 msgstr "プリンタまたは低レベルのデバイスを一つ指定することが可能です。"
 
-#: src/escputil/escputil.c:382
+#: src/escputil/escputil.c:384
 msgid "You may only specify one printer model."
 msgstr "プリンタの型式を一つ指定することが可能です。"
 
-#: src/escputil/escputil.c:402
+#: src/escputil/escputil.c:404
 #, c-format
 msgid "Unknown option %c\n"
 msgstr "不明なオプション %c\n"
 
-#: src/escputil/escputil.c:462
+#: src/escputil/escputil.c:464
 #, c-format
 msgid "Cannot open device %s: %s\n"
 msgstr "デバイス %s を開けません: %s\n"
 
-#: src/escputil/escputil.c:485
+#: src/escputil/escputil.c:487
 #, c-format
 msgid "Cannot print to printer %s with %s\n"
 msgstr "プリンタ %s に %s を使って印刷することができません\n"
 
-#: src/escputil/escputil.c:498 src/escputil/escputil.c:508
+#: src/escputil/escputil.c:500 src/escputil/escputil.c:510
 msgid "Unable to send command to printer\n"
 msgstr "プリンタにコマンドを送信できません\n"
 
-#: src/escputil/escputil.c:601
-msgid "Cyan"
-msgstr "シアン (C)"
-
-#: src/escputil/escputil.c:602
-msgid "Magenta"
-msgstr "マゼンタ (M)"
-
-#: src/escputil/escputil.c:603
-msgid "Yellow"
-msgstr "黄色 (Y)"
-
-#: src/escputil/escputil.c:604
-msgid "Light Cyan"
-msgstr "明るいシアン"
-
-#: src/escputil/escputil.c:605
-msgid "Light Magenta"
-msgstr "明るいマゼンタ"
-
-#: src/escputil/escputil.c:606
-msgid "Black/Dark Yellow"
+#: src/escputil/escputil.c:561
+msgid "Read from printer timed out\n"
 msgstr ""
 
-#: src/escputil/escputil.c:620
-msgid "Obtaining ink levels requires using a raw device.\n"
-msgstr "低レベル・デバイスを利用するために必要なインク・レベルを取得します。\n"
-
-#: src/escputil/escputil.c:626 src/escputil/escputil.c:701
-#: src/escputil/escputil.c:744
-#, c-format
-msgid "Cannot open %s read/write: %s\n"
-msgstr "%s を読み書きモードで開けません: %s\n"
-
-#: src/escputil/escputil.c:635 src/escputil/escputil.c:712
-#: src/escputil/escputil.c:753
-#, c-format
-msgid "Cannot write to %s: %s\n"
-msgstr "%s に書き込めません; %s\n"
-
-#: src/escputil/escputil.c:642 src/escputil/escputil.c:719
-#: src/escputil/escputil.c:760
+#: src/escputil/escputil.c:563
 #, c-format
 msgid "Cannot read from %s: %s\n"
 msgstr "%s から読み込めません: %s\n"
 
-#: src/escputil/escputil.c:652
+#: src/escputil/escputil.c:619
+msgid "Light Cyan"
+msgstr "明るいシアン"
+
+#: src/escputil/escputil.c:620
+msgid "Light Magenta"
+msgstr "明るいマゼンタ"
+
+#: src/escputil/escputil.c:621
+msgid "Black/Dark Yellow"
+msgstr ""
+
+#: src/escputil/escputil.c:635
+msgid "Obtaining ink levels requires using a raw device.\n"
+msgstr "低レベル・デバイスを利用するために必要なインク・レベルを取得します。\n"
+
+#: src/escputil/escputil.c:641 src/escputil/escputil.c:712
+#: src/escputil/escputil.c:751
+#, c-format
+msgid "Cannot open %s read/write: %s\n"
+msgstr "%s を読み書きモードで開けません: %s\n"
+
+#: src/escputil/escputil.c:650 src/escputil/escputil.c:723
+#: src/escputil/escputil.c:760
+#, c-format
+msgid "Cannot write to %s: %s\n"
+msgstr "%s に書き込めません; %s\n"
+
+#: src/escputil/escputil.c:663
 msgid "Cannot parse output from printer\n"
 msgstr "プリンタからの出力を解析できません\n"
 
-#: src/escputil/escputil.c:656
+#: src/escputil/escputil.c:667
 msgid "Ink color"
 msgstr "インクの色"
 
-#: src/escputil/escputil.c:656
+#: src/escputil/escputil.c:667
 msgid "Percent remaining"
 msgstr "残りの割合"
 
-#: src/escputil/escputil.c:695
+#: src/escputil/escputil.c:706
 msgid "Printer identification requires using a raw device.\n"
 msgstr "低レベル・デバイスを利用するためにプリンタ識別子が必要です。\n"
 
-#: src/escputil/escputil.c:738
+#: src/escputil/escputil.c:745
 msgid "Printer status requires using a raw device.\n"
 msgstr "低レベル・デバイスを利用するためにプリンタの状態が必要です。\n"
 
-#: src/escputil/escputil.c:781
+#: src/escputil/escputil.c:784
 msgid "Cleaning heads...\n"
 msgstr "ヘッドの清掃中...\n"
 
-#: src/escputil/escputil.c:790
+#: src/escputil/escputil.c:793
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
 msgstr ""
 "ノズルをチェックします。プリンタの中に用紙が確実に存在していることを確認して"
 "下さい。\n"
 
-#: src/escputil/escputil.c:794
+#: src/escputil/escputil.c:797
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -1629,7 +2458,7 @@ msgstr ""
 "あとでその設定を保存したい場合は、もう一度同じ手順を行って下さい。\n"
 "この作業を行っている最中に電源を OFF にしないで下さい。\n"
 
-#: src/escputil/escputil.c:829
+#: src/escputil/escputil.c:832
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -1695,11 +2524,11 @@ msgstr ""
 "さい。\n"
 "この作業を行っている最中に電源を OFF にしないで下さい。\n"
 
-#: src/escputil/escputil.c:873
+#: src/escputil/escputil.c:876
 msgid "Unable to send command to the printer, exiting.\n"
 msgstr "プリンタにコマンドを送信できません。終了します。\n"
 
-#: src/escputil/escputil.c:891
+#: src/escputil/escputil.c:894
 msgid ""
 "Printer alignment must be done with a raw device or else\n"
 "the -m option must be used to specify a printer.\n"
@@ -1707,11 +2536,11 @@ msgstr ""
 "等間隔の印刷は低レベル・デバイスを使うか、あるいは\n"
 "'-m' オプションでプリンタを特定して使用するようにして下さい。\n"
 
-#: src/escputil/escputil.c:895
+#: src/escputil/escputil.c:898
 msgid "Attempting to detect printer model..."
 msgstr "プリンタの型式を検出中です..."
 
-#: src/escputil/escputil.c:900
+#: src/escputil/escputil.c:903
 #, c-format
 msgid ""
 "\n"
@@ -1720,7 +2549,7 @@ msgstr ""
 "\n"
 "%s を読み書きモードで開けません: %s\n"
 
-#: src/escputil/escputil.c:908
+#: src/escputil/escputil.c:911
 #, c-format
 msgid ""
 "\n"
@@ -1728,15 +2557,6 @@ msgid ""
 msgstr ""
 "\n"
 "%s に書き込めません: %s\n"
-
-#: src/escputil/escputil.c:914
-#, c-format
-msgid ""
-"\n"
-"Cannot read from %s: %s\n"
-msgstr ""
-"\n"
-"%s から読み込めません: %s\n"
 
 #: src/escputil/escputil.c:927
 msgid ""
@@ -2009,648 +2829,13 @@ msgstr ""
 msgid "Error in input\n"
 msgstr "入力エラー\n"
 
-#: src/gimp/gimp_color_window.c:183
-msgid "Print Color Adjust"
-msgstr "印刷カラー調整"
-
-#: src/gimp/gimp_color_window.c:187
-msgid "Set Defaults"
-msgstr "初期値に戻す"
-
-#: src/gimp/gimp_color_window.c:189
-msgid "Close"
-msgstr "閉じる"
-
-#: src/gimp/gimp_color_window.c:221
-msgid "Image preview"
-msgstr "画像のプレビュー"
-
-#: src/gimp/gimp_color_window.c:256
-msgid "Dither Algorithm:"
-msgstr "ディザリング方式:"
-
-#: src/gimp/gimp_color_window.c:263
-#, fuzzy
-msgid ""
-"Choose the dither algorithm to be used.\n"
-"Adaptive Hybrid usually produces the best all-around quality.\n"
-"EvenTone is a new, experimental algorithm that often produces excellent "
-"results.\n"
-"Ordered is faster and produces almost as good quality on photographs.\n"
-"Fast and Very Fast are considerably faster, and work well for text and line "
-"art.\n"
-"Hybrid Floyd-Steinberg generally produces inferior output."
-msgstr ""
-"使用するディザリング方式を選択します。\n"
-"\"アダプティブ・ハイブリッド方式\": 一般的に最適な品質を提供します。\n"
-"\"適応順序方式\": 高速で写真などの高品質な出力を提供します。\n"
-"\"高速方式\",\"超高速方式\": かなり高速に印刷し、テキストやラインアートに適し"
-"ています。\n"
-"\"ハイブリッド・フロイド-スタインバーグ方式\": 一般的に低品質な出力を提供しま"
-"す。"
-
-#: src/gimp/gimp_color_window.c:277
-msgid "Curve:"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:212
-msgid "Media Type:"
-msgstr "用紙の種類:"
-
-#: src/gimp/gimp_main_window.c:213
-msgid "Type of media you're printing to"
-msgstr "印刷する用紙の種類です。"
-
-#: src/gimp/gimp_main_window.c:215
-msgid "Media Size:"
-msgstr "用紙サイズ:"
-
-#: src/gimp/gimp_main_window.c:216
-msgid "Size of paper that you wish to print to"
-msgstr "印刷する用紙のサイズです。"
-
-#: src/gimp/gimp_main_window.c:218
-msgid "Media Source:"
-msgstr "給紙方法:"
-
-#: src/gimp/gimp_main_window.c:219
-msgid "Source (input slot) of media you're printing to"
-msgstr "印刷時の給紙方式です。"
-
-#: src/gimp/gimp_main_window.c:221
-msgid "Ink Type:"
-msgstr "インクの種類:"
-
-#: src/gimp/gimp_main_window.c:222
-msgid "Type of ink in the printer"
-msgstr "印刷時のインクの種類です。"
-
-#: src/gimp/gimp_main_window.c:224
-msgid "Resolution:"
-msgstr "解像度:"
-
-#: src/gimp/gimp_main_window.c:225
-msgid "Resolution and quality of the print"
-msgstr "印刷時の解像度と品質です。"
-
-#: src/gimp/gimp_main_window.c:234
-msgid "Inch"
-msgstr "インチ"
-
-#: src/gimp/gimp_main_window.c:234
-msgid "Set the base unit of measurement to inches"
-msgstr "基本単位をインチにします。"
-
-#: src/gimp/gimp_main_window.c:236
-msgid "cm"
-msgstr "センチメートル"
-
-#: src/gimp/gimp_main_window.c:236
-msgid "Set the base unit of measurement to centimetres"
-msgstr "基本単位をセンチメートルにします。"
-
-#: src/gimp/gimp_main_window.c:238
-#, fuzzy
-msgid "Points"
-msgstr "印刷"
-
-#: src/gimp/gimp_main_window.c:238
-#, fuzzy
-msgid "Set the base unit of measurement to points (1/72\")"
-msgstr "基本単位をインチにします。"
-
-#: src/gimp/gimp_main_window.c:240
-msgid "mm"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:240
-#, fuzzy
-msgid "Set the base unit of measurement to millimetres"
-msgstr "基本単位をセンチメートルにします。"
-
-#: src/gimp/gimp_main_window.c:242
-msgid "Pica"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:242
-#, fuzzy
-msgid "Set the base unit of measurement to picas (1/12\")"
-msgstr "基本単位をインチにします。"
-
-#: src/gimp/gimp_main_window.c:249
-msgid "Color"
-msgstr "カラー"
-
-#: src/gimp/gimp_main_window.c:249
-msgid "Color output"
-msgstr "カラーで印刷します。"
-
-#: src/gimp/gimp_main_window.c:250
-msgid "Grayscale"
-msgstr "グレースケール"
-
-#: src/gimp/gimp_main_window.c:251
-msgid "Print in shades of gray using black ink"
-msgstr "黒インクを使ってグレーの影を付けて印刷します。"
-
-#: src/gimp/gimp_main_window.c:252
-msgid "Black and White"
-msgstr "黒と白"
-
-#: src/gimp/gimp_main_window.c:253
-msgid "Print in black and white (no color, and no shades of gray)"
-msgstr "黒色と白色を使って印刷します (カラーではありません。影も付きません)。"
-
-#: src/gimp/gimp_main_window.c:262
-msgid "Fastest and brightest color for text and line art"
-msgstr "テキストやラインアート向けに一番明るく高速印刷します。"
-
-#: src/gimp/gimp_main_window.c:265
-msgid "Best for images dominated by regions of solid color"
-msgstr "格子上の色で構成された画像を最適化します。"
-
-#: src/gimp/gimp_main_window.c:268
-msgid ""
-"Slowest, but most accurate and smoothest color for continuous tone images "
-"and photographs"
-msgstr ""
-"低速ですが、連続したトーン画像や写真向けにもっとも精密で滑らかにします。"
-
-#.
-#. * Create the main dialog
-#.
-#: src/gimp/gimp_main_window.c:459
-#, c-format
-msgid "%s -- Print v%s"
-msgstr "%s -- 印刷 v%s"
-
-#: src/gimp/gimp_main_window.c:468
-msgid "About"
-msgstr "情報"
-
-#: src/gimp/gimp_main_window.c:470
-msgid ""
-"Print and\n"
-"Save Settings"
-msgstr ""
-"印刷と\n"
-"設定の保存"
-
-#: src/gimp/gimp_main_window.c:472
-msgid ""
-"Save\n"
-"Settings"
-msgstr ""
-"設定の\n"
-"保存"
-
-#: src/gimp/gimp_main_window.c:474
-msgid "Print"
-msgstr "印刷"
-
-#: src/gimp/gimp_main_window.c:476 src/gimp/gimp_main_window.c:661
-#: src/gimp/gimp_main_window.c:815
-msgid "Cancel"
-msgstr "取り消し"
-
-#: src/gimp/gimp_main_window.c:516
-msgid "Preview"
-msgstr "プレビュー"
-
-#: src/gimp/gimp_main_window.c:539
-msgid ""
-"Position the image on the page.\n"
-"Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer "
-"precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of "
-"the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image "
-"to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return "
-"to its original position."
-msgstr ""
-"印刷時の画像の位置を設定します。\n"
-"マウスの左ボタンでドラッグした場所に画像が配置されます。\n"
-"マウスの右ボタンでドラッグすると、細かいレベルで画像を移動します; 約 1/72 イ"
-"ンチ単位で移動することが可能です。\n"
-"マウスの中ボタンでドラッグすると、画像の大きさの単位で移動することが可能で"
-"す。\n"
-"[SHIFT] キーを押しながらマウスをドラッグすると、水平または垂直方向にのみ画像"
-"を移動することが可能です。\n"
-"ドラッグ中に別のボタンをクリックすると、画像は元の場所に戻ります。"
-
-#: src/gimp/gimp_main_window.c:563
-msgid "Position"
-msgstr "位置"
-
-#: src/gimp/gimp_main_window.c:581
-msgid "Auto"
-msgstr "自動"
-
-#: src/gimp/gimp_main_window.c:583
-msgid "Portrait"
-msgstr "縦置き"
-
-#: src/gimp/gimp_main_window.c:585
-msgid "Landscape"
-msgstr "横置き"
-
-#: src/gimp/gimp_main_window.c:587
-msgid "Upside down"
-msgstr "上下"
-
-#: src/gimp/gimp_main_window.c:589
-msgid "Seascape"
-msgstr "横長"
-
-#: src/gimp/gimp_main_window.c:593
-msgid ""
-"Select the orientation: portrait, landscape, upside down, or seascape "
-"(upside down landscape)"
-msgstr ""
-"用紙の方向を選択します: 縦置き、横置き、上下、または横長 (上下つきの横置き)"
-
-#: src/gimp/gimp_main_window.c:595
-msgid "Orientation:"
-msgstr "用紙の向き:"
-
-#: src/gimp/gimp_main_window.c:607
-msgid "Left:"
-msgstr "左側:"
-
-#: src/gimp/gimp_main_window.c:608
-msgid "Distance from the left of the paper to the image"
-msgstr "用紙の左端から画像までの距離です。"
-
-#: src/gimp/gimp_main_window.c:610
-msgid "Top:"
-msgstr "上側:"
-
-#: src/gimp/gimp_main_window.c:611
-msgid "Distance from the top of the paper to the image"
-msgstr "用紙の上端から画像までの距離です。"
-
-#: src/gimp/gimp_main_window.c:613
-msgid "Right:"
-msgstr "右側:"
-
-#: src/gimp/gimp_main_window.c:614
-msgid "Distance from the left of the paper to the right of the image"
-msgstr "用紙の左端から画像の右端までの距離です。"
-
-#: src/gimp/gimp_main_window.c:616
-msgid "Right Border:"
-msgstr "右側の縁:"
-
-#: src/gimp/gimp_main_window.c:617
-msgid "Distance from the right of the paper to the image"
-msgstr "用紙の右端から画像までの距離です。"
-
-#: src/gimp/gimp_main_window.c:619
-msgid "Bottom:"
-msgstr "下側:"
-
-#: src/gimp/gimp_main_window.c:620
-#, fuzzy
-msgid "Distance from the top of the paper to bottom of the image"
-msgstr "用紙の上端から画像の下端までの距離です。"
-
-#: src/gimp/gimp_main_window.c:622
-msgid "Bottom Border:"
-msgstr "下側の縁:"
-
-#: src/gimp/gimp_main_window.c:623
-msgid "Distance from the bottom of the paper to the image"
-msgstr "用紙の下端から画像までの距離です。"
-
-#: src/gimp/gimp_main_window.c:634
-msgid "Center:"
-msgstr "中心:"
-
-#: src/gimp/gimp_main_window.c:638
-msgid "Vertically"
-msgstr "垂直"
-
-#: src/gimp/gimp_main_window.c:639
-msgid "Center the image vertically on the paper"
-msgstr "用紙の垂直方向の中心にします。"
-
-#: src/gimp/gimp_main_window.c:641
-msgid "Both"
-msgstr "両端"
-
-#: src/gimp/gimp_main_window.c:642
-msgid "Center the image on the paper"
-msgstr "用紙の中心にします。"
-
-#: src/gimp/gimp_main_window.c:644
-msgid "Horizontally"
-msgstr "水平"
-
-#: src/gimp/gimp_main_window.c:645
-msgid "Center the image horizontally on the paper"
-msgstr "用紙の水平方向の中心にします。"
-
-#: src/gimp/gimp_main_window.c:656
-msgid "Setup Printer"
-msgstr "プリンタの選択"
-
-#: src/gimp/gimp_main_window.c:659 src/gimp/gimp_main_window.c:813
-#: src/gimp/gimp_main_window.c:848
-msgid "OK"
-msgstr "OK"
-
-#.
-#. * Printer driver option menu.
-#.
-#: src/gimp/gimp_main_window.c:684 src/gimp/gimp_main_window.c:923
-msgid "Printer Model:"
-msgstr "プリンタの型式:"
-
-#: src/gimp/gimp_main_window.c:695
-msgid "Select your printer model"
-msgstr "お使いのプリンタを選択します。"
-
-#.
-#. * PPD file.
-#.
-#: src/gimp/gimp_main_window.c:729
-msgid "PPD File:"
-msgstr "PPD ファイル:"
-
-#: src/gimp/gimp_main_window.c:743
-msgid "Enter the correct PPD filename for your printer"
-msgstr "お使いのプリンタ用の PPD ファイル名を入力します。"
-
-#: src/gimp/gimp_main_window.c:745
-msgid "Browse"
-msgstr "参照"
-
-#: src/gimp/gimp_main_window.c:752
-msgid "Choose the correct PPD filename for your printer"
-msgstr "お使いのプリンタ用の PPD ファイルを選択します。"
-
-#.
-#. * Print command.
-#.
-#: src/gimp/gimp_main_window.c:760
-msgid "Command:"
-msgstr "コマンド:"
-
-#: src/gimp/gimp_main_window.c:772
-msgid ""
-"Enter the correct command to print to your printer. Note: Please do not "
-"remove the `-l' or `-oraw' from the command string, or printing will "
-"probably fail!"
-msgstr ""
-"お使いのプリンタ向けの印刷コマンドを入力します。【注記】: '-l' または '-"
-"oraw' オプションを削除しないで下さい。印刷に失敗します！"
-
-#.
-#. * Output file selection dialog.
-#.
-#: src/gimp/gimp_main_window.c:780
-msgid "Print To File?"
-msgstr "ファイルに印刷しますか？"
-
-#.
-#. * PPD file selection dialog.
-#.
-#: src/gimp/gimp_main_window.c:793
-msgid "PPD File?"
-msgstr "PPD ファイルですか？"
-
-#: src/gimp/gimp_main_window.c:810
-msgid "Define New Printer"
-msgstr "新しいプリンタの定義"
-
-#: src/gimp/gimp_main_window.c:831 src/gimp/gimp_main_window.c:919
-msgid "Printer Name:"
-msgstr "プリンタ名:"
-
-#: src/gimp/gimp_main_window.c:835
-msgid "Enter the name you wish to give this logical printer"
-msgstr "利用する論理プリンタ名を指定します。"
-
-#: src/gimp/gimp_main_window.c:845
-msgid "About Gimp-Print "
-msgstr "Gimp-Print"
-
-#: src/gimp/gimp_main_window.c:854
-msgid "Gimp-Print Version "
-msgstr "Gimp-Print バージョン "
-
-#: src/gimp/gimp_main_window.c:854
-msgid ""
-"\n"
-"\n"
-"Copyright (C) 1997-2001 Michael Sweet, Robert Krawitz,\n"
-"and the rest of the Gimp-Print Development Team.\n"
-"\n"
-"Please visit our web site at http://gimp-print.sourceforge.net.\n"
-"\n"
-"This program is free software; you can redistribute it and/or modify\n"
-"it under the terms of the GNU General Public License as published by\n"
-"the Free Software Foundation; either version 2 of the License, or\n"
-"(at your option) any later version.\n"
-"\n"
-"This program is distributed in the hope that it will be useful,\n"
-"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-"GNU General Public License for more details.\n"
-"\n"
-"You should have received a copy of the GNU General Public License\n"
-"along with this program; if not, write to the Free Software\n"
-"Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
-msgstr ""
-"\n"
-"\n"
-"Copyright (C) 1997-2001 Michael Sweet, Robert Krawitz,\n"
-"そして Gimp-Print 開発チーム。\n"
-"\n"
-"ホームページ <http://gimp-print.sourceforge.net> にお越し下さい。\n"
-"\n"
-"このプログラムはフリーソフトウェアです; フリーソフトウェア財団が発行する\n"
-"GNU 公有使用許諾契約書の第二版またはそれ以降の版の下で改変・修正・再配布が\n"
-"認められています。\n"
-"\n"
-"このプログラムは便利に使ってもらえるように配布されていますが、\n"
-"完全に無保証です; 商用利用またはある特定の目的における適合性の保証も\n"
-"ありません。詳細は GNU 公有使用許諾契約書をご覧下さい。\n"
-"\n"
-"貴方は、このプログラムに適応した GNU 公有使用許諾契約書のコピーを\n"
-"受け取る必要があります; もし受け取っていない場合は、\n"
-"Free Software Foundation, Inc., 56 Temple Place - \n"
-"Suite 330, Boston, MA 02111-1307, USA まで連絡して下さい。\n"
-
-#: src/gimp/gimp_main_window.c:904
-msgid "Printer Settings"
-msgstr "プリンタの設定"
-
-#: src/gimp/gimp_main_window.c:917
-msgid ""
-"Select the name of the printer (not the type, or model, of printer) that you "
-"wish to print to"
-msgstr "お使いのプリンタ (プリンタの型式ではありません) 名を選択します。"
-
-#.
-#. * Setup printer button
-#.
-#: src/gimp/gimp_main_window.c:936
-msgid "Setup Printer..."
-msgstr "プリンタの選択..."
-
-#: src/gimp/gimp_main_window.c:937
-msgid ""
-"Choose the printer model, PPD file, and command that is used to print to "
-"this printer"
-msgstr "プリンタの型式と PPD ファイル、印刷コマンドを選択します。"
-
-#.
-#. * New printer button
-#.
-#: src/gimp/gimp_main_window.c:950
-msgid "New Printer..."
-msgstr "新しいプリンタ..."
-
-#: src/gimp/gimp_main_window.c:951
-msgid ""
-"Define a new logical printer. This can be used to name a collection of "
-"settings that you wish to remember for future use."
-msgstr ""
-"新規に論理プリンタを定義します。これは次回使用するために覚えておきたい設定名"
-"に使用されます。"
-
-#: src/gimp/gimp_main_window.c:978
-msgid "Dimensions:"
-msgstr "寸法:"
-
-#: src/gimp/gimp_main_window.c:982 src/gimp/gimp_main_window.c:1104
-msgid "Width:"
-msgstr "幅:"
-
-#: src/gimp/gimp_main_window.c:983
-msgid "Width of the paper that you wish to print to"
-msgstr "印刷する用紙の幅です。"
-
-#: src/gimp/gimp_main_window.c:987 src/gimp/gimp_main_window.c:1106
-msgid "Height:"
-msgstr "高さ:"
-
-#: src/gimp/gimp_main_window.c:988
-msgid "Height of the paper that you wish to print to"
-msgstr "印刷する用紙の高さです。"
-
-#: src/gimp/gimp_main_window.c:1011
-msgid "Size"
-msgstr "画像のサイズ"
-
-#: src/gimp/gimp_main_window.c:1032
-msgid "Scaling:"
-msgstr "拡大縮小:"
-
-#: src/gimp/gimp_main_window.c:1036
-msgid "Set the scale (size) of the image"
-msgstr "画像サイズの拡大縮小を行います。"
-
-#: src/gimp/gimp_main_window.c:1068
-msgid ""
-"Select whether scaling is measured as percent of available page size or "
-"number of output dots per inch"
-msgstr ""
-"拡大縮小の単位として、用紙サイズに対する百分率 (比率) か、ドット数/インチを選"
-"択します。"
-
-#: src/gimp/gimp_main_window.c:1071
-msgid "Percent"
-msgstr "比率"
-
-#: src/gimp/gimp_main_window.c:1076
-msgid "Scale the print to the size of the page"
-msgstr "用紙サイズを 100 とした場合の比率です。"
-
-#: src/gimp/gimp_main_window.c:1080
-msgid "PPI"
-msgstr "PPI"
-
-#: src/gimp/gimp_main_window.c:1085
-msgid "Scale the print to the number of dots per inch"
-msgstr "画像のドット数/インチです。"
-
-#: src/gimp/gimp_main_window.c:1104
-msgid "Set the width of the print"
-msgstr "印刷時の幅をセットします。"
-
-#: src/gimp/gimp_main_window.c:1106
-msgid "Set the height of the print"
-msgstr "印刷時の高さをセットします。"
-
-#.
-#. * The "image size" button
-#.
-#: src/gimp/gimp_main_window.c:1112
-msgid ""
-"Use Original\n"
-"Image Size"
-msgstr ""
-"オリジナルの\n"
-"サイズの利用"
-
-#: src/gimp/gimp_main_window.c:1118
-msgid "Set the print size to the size of the image"
-msgstr "画像のオリジナル・サイズを印刷サイズにします。"
-
-#: src/gimp/gimp_main_window.c:1141
-msgid "Units:"
-msgstr "単位:"
-
-#: src/gimp/gimp_main_window.c:1146
-msgid "Select the base unit of measurement for printing"
-msgstr "印刷時の基本単位を選択します。"
-
-#: src/gimp/gimp_main_window.c:1180
-msgid "Image / Output Settings"
-msgstr "画像 / 出力設定"
-
-#: src/gimp/gimp_main_window.c:1194
-msgid "Image Type:"
-msgstr "画像の種類:"
-
-#: src/gimp/gimp_main_window.c:1199
-msgid "Optimize the output for the type of image being printed"
-msgstr "印刷する画像の種類から出力結果を最適化します。"
-
-#: src/gimp/gimp_main_window.c:1226
-msgid "Output Type:"
-msgstr "出力の種類:"
-
-#: src/gimp/gimp_main_window.c:1230
-msgid "Select the desired output type"
-msgstr "出力する形態を選択します。"
-
-#: src/gimp/gimp_main_window.c:1251
-msgid "Adjust Output..."
-msgstr "出力の調整..."
-
-#: src/gimp/gimp_main_window.c:1260
-msgid ""
-"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
-msgstr ""
-"カラーバランス、明るさ、コントラスト、彩度とディザリング方式を調整します。"
-
-#: src/gimp/print-image-gimp.c:303
+#: src/gimp/print-image-gimp.c:413
 msgid "Printing..."
 msgstr "印刷中..."
 
-#: src/gimp/print.c:267
+#: src/gimp/print.c:136
 msgid "<Image>/File/Print..."
 msgstr "<Image>/File/印刷..."
-
-#: src/gimp/print.c:872 src/gimp/print.c:873 src/gimp/print.c:960
-#: src/gimp/print.c:1313
-msgid "File"
-msgstr "ファイル"
 
 #: src/ghost/ijsgimpprint.c:140
 #, c-format
@@ -2675,7 +2860,7 @@ msgstr "プリンタを -s型式 を使って指定して下さい\n"
 msgid "Printer %s is not a known model\n"
 msgstr "プリンタ %s は不明な型式です\n"
 
-#: src/ghost/ijsgimpprint.c:719
+#: src/ghost/ijsgimpprint.c:718
 #, c-format
 msgid "%.0f of %.0f\n"
 msgstr "%.0f / %.0f\n"
@@ -2705,17 +2890,21 @@ msgstr "%s を開けません: %s\n"
 msgid "Unknown printer %s\n"
 msgstr "プリンタ %s が不明です\n"
 
-#: src/ghost/ijsgimpprint.c:907
+#: src/ghost/ijsgimpprint.c:906
 msgid "Bad parameters; cannot continue!\n"
 msgstr "おかしなパラメータ; 続行できません！\n"
 
-#: src/ghost/ijsgimpprint.c:917
+#: src/ghost/ijsgimpprint.c:916
 #, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr "%.0f で次の低レベルフィールドを取得します\n"
 
-#~ msgid "ps2"
-#~ msgstr "ps2"
+#~ msgid ""
+#~ "\n"
+#~ "Cannot read from %s: %s\n"
+#~ msgstr ""
+#~ "\n"
+#~ "%s から読み込めません: %s\n"
 
 #~ msgid "Letter"
 #~ msgstr "レター"
@@ -3078,23 +3267,8 @@ msgstr "%.0f で次の低レベルフィールドを取得します\n"
 #~ msgid "44 Inch Roll Paper"
 #~ msgstr "44 インチロール紙"
 
-#~ msgid "%s is not a valid parameter of type %s\n"
-#~ msgstr "%s は種類 %s に対する適切なパラメータではありません\n"
-
 #~ msgid "%s out of range (value %f, min %f, max %f)\n"
 #~ msgstr "%s の範囲を越えました (現在の値 %f, 最小 %f, 最大 %f)\n"
-
-#~ msgid "%s out of range (value %d, min %d, max %d)\n"
-#~ msgstr "%s の範囲を越えました (現在の値 %d, 最小 %d, 最大 %d)\n"
-
-#~ msgid "Image size is not valid\n"
-#~ msgstr "画像サイズが正しくありません\n"
-
-#~ msgid "Top margin must not be less than zero\n"
-#~ msgstr "上マージンは 0 より小さくしないで下さい\n"
-
-#~ msgid "Left margin must not be less than zero\n"
-#~ msgstr "左マージンは 0 より小さくしないで下さい\n"
 
 #~ msgid "%s is not a valid dither algorithm\n"
 #~ msgstr "%s は適切なディザ方式ではありません\n"
@@ -3125,76 +3299,17 @@ msgstr "%.0f で次の低レベルフィールドを取得します\n"
 #~ msgid "The best pattern should be numbered between 1 and %d.\n"
 #~ msgstr "最適なパターンは 1 と %d の間の番号にして下さい。\n"
 
-#~ msgid "Brightness:"
-#~ msgstr "明るさ:"
-
-#~ msgid ""
-#~ "Set the brightness of the print.\n"
-#~ "0 is solid black, 2 is solid white"
-#~ msgstr ""
-#~ "印刷する明るさをセットします。\n"
-#~ "(0.0方向: 暗く 2.0方向: 明るく)"
-
-#~ msgid "Contrast:"
-#~ msgstr "コントラスト:"
-
 #~ msgid "Set the contrast of the print"
 #~ msgstr "印刷時のコントラストをセットします。"
 
 #~ msgid "Cyan:"
 #~ msgstr "シアン:"
 
-#~ msgid "Adjust the cyan balance of the print"
-#~ msgstr "印刷時のシアン色のバランスを調整します。"
-
 #~ msgid "Magenta:"
 #~ msgstr "マゼンタ:"
 
-#~ msgid "Adjust the magenta balance of the print"
-#~ msgstr "印刷時のマゼンタ色のバランスを調整します。"
-
 #~ msgid "Yellow:"
 #~ msgstr "黄色:"
-
-#~ msgid "Adjust the yellow balance of the print"
-#~ msgstr "印刷時の黄色のバランスを調整します。"
-
-#~ msgid "Saturation:"
-#~ msgstr "彩度:"
-
-#~ msgid ""
-#~ "Adjust the saturation (color balance) of the print\n"
-#~ "Use zero saturation to produce grayscale output using color and black inks"
-#~ msgstr ""
-#~ "印刷時の彩度 (カラー・バランス) を調整します。\n"
-#~ "カラーと黒の両方のインクを使ってグレースケール出力する場合は 0 にして下さ"
-#~ "い。"
-
-#~ msgid "Density:"
-#~ msgstr "濃度:"
-
-#~ msgid ""
-#~ "Adjust the density (amount of ink) of the print. Reduce the density if "
-#~ "the ink bleeds through the paper or smears; increase the density if black "
-#~ "regions are not solid."
-#~ msgstr ""
-#~ "印刷時の濃度 (インクの量) を調整します。\n"
-#~ "用紙に大量のインクが付いたり汚れたりする場合は濃度を低くして下さい;\n"
-#~ "黒の部分がまばらになる場合は濃度を高くして下さい。"
-
-#~ msgid "Gamma:"
-#~ msgstr "ガンマ:"
-
-#~ msgid ""
-#~ "Adjust the gamma of the print. Larger values will produce a generally "
-#~ "brighter print, while smaller values will produce a generally darker "
-#~ "print. Black and white will remain the same, unlike with the brightness "
-#~ "adjustment."
-#~ msgstr ""
-#~ "印刷時のガンマ値を調整します。\n"
-#~ "値を大きくすると一般的に明るい印刷になり、小さくすると暗い印刷になりま"
-#~ "す。\n"
-#~ "明るさの調整とは異なり、黒色と白色は同じままです。"
 
 #~ msgid "Parameter %s out of range (value %f, min %f, max %f)\n"
 #~ msgstr "パラメータ %s は範囲外です (値 %f, 最小値 %f, 最大値 %f)\n"
