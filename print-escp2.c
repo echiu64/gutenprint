@@ -778,7 +778,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 144, 2, 360, INCH(11), INCH(17), 9, 9, 0, 9, 1, 0,
     { -1, 3, 0x10, 3, 0x10, 3, 0x10 },
-    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
+    { 2.0, 2.0, 2.0, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_4color_inks
   },
   /* 13: Stylus Color 900 */
@@ -920,10 +920,10 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    48, 6, 144, 2, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
+    32, 8, 64, 4, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 3, 0x12, 3, 0x11, -1, 0x10 },
-    { 2.0, 1.3, 1.3, .431, .710, .216, .533, .2665, .1333 },
-    &variable_4pl_4color_inks
+    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
+    &variable_6pl_4color_inks
   },
   /* 26: Stylus Photo 2000P */
   {
@@ -3727,7 +3727,6 @@ initialize_row(const escp2_softweave_t *sw, int row, int width)
  * these days I'll unify it.
  */
 static void
-
 flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	   int hoffset, int ydpi, int xdpi, FILE *prn, int vertical_subpass)
 {
