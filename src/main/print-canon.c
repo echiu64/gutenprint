@@ -47,9 +47,11 @@
 #include <gimp-print-internal.h>
 #include <gimp-print-intl-internal.h>
 
-#if (0)
+#if (1)
 #define DEBUG 1 
 #endif
+
+#define USE_3BIT_FOLD_TYPE 2
 
 /*
  * For each printer, we can select from a variety of dot sizes.
@@ -765,12 +767,12 @@ static const canon_cap_t canon_model_capabilities[] =
   { /* Canon BJC 8200 */
     8200,
     11*72, 17*72,
-    150, 1200,1200, 4,
+    150, 600,600, 4,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD1 | CANON_CAP_r | CANON_CAP_DMT | CANON_CAP_ACKSHORT,
-    {-1,0,0,-1,0,-1},
+    {-1,-1,0,-1,-1,-1},
     {1,1,1,1,1,1},
     CANON_INK(canon_ink_superphoto),
     standard_lum_adjustment,
@@ -1786,11 +1788,15 @@ canon_init_setImage(const stp_vars_t v, canon_init_t *init)
 
   /* workaround for the bjc8200 in 6color mode - not really understood */
   if (init->caps->model==8200) {
-    arg_74_1= 0xff;
-    arg_74_2= 0x90;
-    arg_74_3= 0x04;
     if (init->colormode==COLOR_CCMMYK) {
+      arg_74_1= 0xff;
+      arg_74_2= 0x90;
+      arg_74_3= 0x04;
       init->bits=3; 
+    } else {
+      arg_74_1= 0x01;
+      arg_74_2= 0x00;
+      arg_74_3= 0x01;
     }
   }
 
@@ -2460,6 +2466,12 @@ canon_fold_2bit(const unsigned char *line,
   }
 }
 
+#ifndef USE_3BIT_FOLD_TYPE
+#error YOU MUST CHOOSE A VALUE FOR USE_3BIT_FOLD_TYPE
+#endif
+
+#if USE_3BIT_FOLD_TYPE == 1
+
 static void
 canon_fold_3bit(const unsigned char *line,
 		int single_length,
@@ -2499,6 +2511,22 @@ canon_fold_3bit(const unsigned char *line,
   }
 }
 
+#elif USE_3BIT_FOLD_TYPE == 2
+
+static void
+canon_fold_3bit(const unsigned char *line,
+		int single_length,
+		unsigned char *outbuf)
+{
+  int i;
+  for (i = 0; i < single_length; i++) {
+    outbuf += 3;
+  }
+}
+
+#else
+#error 3BIT FOLD TYPE NOT IMPLEMENTED
+#endif
 
 static void
 canon_shift_buffer(unsigned char *line,int length,int bits)
