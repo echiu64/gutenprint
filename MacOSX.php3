@@ -32,7 +32,7 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <a href="#4.2.3"><b>October 21, 2002 -</b></a> Gimp-Print 4.2.3, the newest stable release, is now available for download.
+ <a href="MacOSX.php3#4.2.3"><b>October 21, 2002 -</b></a> Gimp-Print 4.2.3, the newest stable release, is now available for download.
  </p>
  <br>
  </td>
