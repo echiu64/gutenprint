@@ -447,10 +447,6 @@ get_tmp_filename()
  * 'run()' - Run the plug-in...
  */
 
-#if 0
-#define PRINT_LUT
-#endif
-
 static void
 run(char   *name,		/* I - Name of print program. */
     int    nparams,		/* I - Number of parameters passed in */
