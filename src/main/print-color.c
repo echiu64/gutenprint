@@ -1104,6 +1104,405 @@ RGB_TO_KCMY_FUNC(rgb)
 RGB_TO_KCMY_FUNC(fast_rgb)
 
 static unsigned
+gray_to_kcmy_line_art(stp_const_vars_t vars, const unsigned char *in,
+		      unsigned short *out)
+{
+  int i;
+  int z = 1;
+  int input_color_model = stp_get_input_color_model(vars);
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
+  int width = lut->image_width;
+  memset(out, 0, width * 4 * sizeof(unsigned short));
+
+  if (input_color_model == COLOR_MODEL_CMY)
+    {
+      for (i = 0; i < width; i++, out += 4, in++)
+	{
+	  if (in[0] >= 128)
+	    {
+	      z = 0;
+	      out[0] = 65535;
+	    }
+	}
+    }
+  else
+    {
+      for (i = 0; i < width; i++, out += 4, in++)
+	{
+	  if (in[0] < 128)
+	    {
+	      z = 0;
+	      out[0] = 65535;
+	    }
+	}
+    }
+  return z;
+}
+
+static unsigned
+rgb_to_kcmy_line_art(stp_const_vars_t vars, const unsigned char *in,
+		     unsigned short *out)
+{
+  int i;
+  int z = 15;
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
+  int width = lut->image_width;
+  memset(out, 0, width * 4 * sizeof(unsigned short));
+  for (i = 0; i < width; i++, out += 4, in += 3)
+    {
+      unsigned c = 255 - in[0];
+      unsigned m = 255 - in[1];
+      unsigned y = 255 - in[2];
+      unsigned k = (c < m ? (c < y ? c : y) : (m < y ? m : y));
+      if (k >= 128)
+	{
+	  c -= k;
+	  m -= k;
+	  y -= k;
+	}
+      if (k >= 128)
+	{
+	  z &= 0xe;
+	  out[0] = 65535;
+	}
+      if (c >= 128)
+	{
+	  z &= 0xd;
+	  out[1] = 65535;
+	}
+      if (m >= 128)
+	{
+	  z &= 0xb;
+	  out[2] = 65535;
+	}
+      if (y >= 128)
+	{
+	  z &= 0x7;
+	  out[3] = 65535;
+	}
+    }
+  return z;
+}
+
+static unsigned
+cmyk_8_to_kcmy_line_art(stp_const_vars_t vars, const unsigned char *in,
+		      unsigned short *out)
+{
+  int i;
+  int z = 15;
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
+  int width = lut->image_width;
+  memset(out, 0, width * 4 * sizeof(unsigned short));
+  for (i = 0; i < width; i++, out += 4, in += 4)
+    {
+      if (in[3])
+	{
+	  z &= 0xe;
+	  out[0] = 65535;
+	}
+      if (in[0])
+	{
+	  z &= 0xd;
+	  out[1] = 65535;
+	}
+      if (in[1])
+	{
+	  z &= 0xb;
+	  out[2] = 65535;
+	}
+      if (in[2])
+	{
+	  z &= 0x7;
+	  out[3] = 65535;
+	}
+    }
+  return z;
+}
+
+static unsigned
+cmyk_to_kcmy_line_art(stp_const_vars_t vars, const unsigned char *in,
+		      unsigned short *out)
+{
+  int i;
+  int z = 15;
+  const unsigned short *s_in = (const unsigned short *) in;
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
+  int width = lut->image_width;
+  memset(out, 0, width * 4 * sizeof(unsigned short));
+  for (i = 0; i < width; i++, out += 4, s_in += 4)
+    {
+      if (s_in[3])
+	{
+	  z &= 0xe;
+	  out[0] = 65535;
+	}
+      if (s_in[0])
+	{
+	  z &= 0xd;
+	  out[1] = 65535;
+	}
+      if (s_in[1])
+	{
+	  z &= 0xb;
+	  out[2] = 65535;
+	}
+      if (s_in[2])
+	{
+	  z &= 0x7;
+	  out[3] = 65535;
+	}
+    }
+  return z;
+}      
+
+static unsigned
+gray_to_rgb_line_art(stp_const_vars_t vars, const unsigned char *in,
+		     unsigned short *out)
+{
+  int i;
+  int z = 7;
+  int input_color_model = stp_get_input_color_model(vars);
+  int output_color_model = stpi_get_output_color_model(vars);
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
+  int width = lut->image_width;
+  memset(out, 0, width * 3 * sizeof(unsigned short));
+
+  if (input_color_model == output_color_model)
+    {
+      for (i = 0; i < width; i++, out += 3, in++)
+	{
+	  if (in[0] >= 128)
+	    {
+	      z = 0;
+	      out[0] = 65535;
+	      out[1] = 65535;
+	      out[2] = 65535;
+	    }
+	}
+    }
+  else
+    {
+      for (i = 0; i < width; i++, out += 4, in++)
+	{
+	  if (in[0] < 128)
+	    {
+	      z = 0;
+	      out[0] = 65535;
+	      out[1] = 65535;
+	      out[2] = 65535;
+	    }
+	}
+    }
+  return z;
+}
+
+static unsigned
+rgb_to_rgb_line_art(stp_const_vars_t vars, const unsigned char *in,
+		    unsigned short *out)
+{
+  int i;
+  int z = 7;
+  int input_color_model = stp_get_input_color_model(vars);
+  int output_color_model = stpi_get_output_color_model(vars);
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
+  int width = lut->image_width;
+  memset(out, 0, width * 3 * sizeof(unsigned short));
+  if (input_color_model == output_color_model)
+    {
+      for (i = 0; i < width; i++, out += 3, in += 3)
+	{
+	  if (in[0] >= 128)
+	    {
+	      z &= 6;
+	      out[0] = 65535;
+	    }
+	  if (in[1] >= 128)
+	    {
+	      z &= 5;
+	      out[1] = 65535;
+	    }
+	  if (in[2] >= 128)
+	    {
+	      z &= 3;
+	      out[2] = 65535;
+	    }
+	}
+    }
+  else
+    {
+      for (i = 0; i < width; i++, out += 3, in += 3)
+	{
+	  if (in[0] < 128)
+	    {
+	      z &= 6;
+	      out[0] = 65535;
+	    }
+	  if (in[1] < 128)
+	    {
+	      z &= 5;
+	      out[1] = 65535;
+	    }
+	  if (in[2] < 128)
+	    {
+	      z &= 3;
+	      out[2] = 65535;
+	    }
+	}
+    }
+  return z;
+}
+
+static unsigned
+gray_to_gray_line_art(stp_const_vars_t vars, const unsigned char *in,
+		      unsigned short *out)
+{
+  int i;
+  int z = 1;
+  int input_color_model = stp_get_input_color_model(vars);
+  int output_color_model = stpi_get_output_color_model(vars);
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
+  int width = lut->image_width;
+  memset(out, 0, width * sizeof(unsigned short));
+
+  if (input_color_model == output_color_model)
+    {
+      for (i = 0; i < width; i++, out++, in++)
+	{
+	  if (in[0] >= 128)
+	    {
+	      z = 0;
+	      out[0] = 65535;
+	    }
+	}
+    }
+  else
+    {
+      for (i = 0; i < width; i++, out++, in++)
+	{
+	  if (in[0] < 128)
+	    {
+	      z = 0;
+	      out[0] = 65535;
+	    }
+	}
+    }
+  return z;
+}
+
+static unsigned
+rgb_to_gray_line_art(stp_const_vars_t vars, const unsigned char *in,
+		     unsigned short *out)
+{
+  int i;
+  int z = 1;
+  int output_color_model = stpi_get_output_color_model(vars);
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
+  int width = lut->image_width;
+  memset(out, 0, width * sizeof(unsigned short));
+  if (output_color_model == COLOR_MODEL_RGB)
+    {
+      for (i = 0; i < width; i++, out++, in += 3)
+	{
+	  unsigned gval = in[0] + in[1] + in[2];
+	  if (gval >= 128 * 3)
+	    {
+	      out[0] = 65535;
+	      z = 0;
+	    }
+	}
+    }
+  else
+    {
+      for (i = 0; i < width; i++, out++, in += 3)
+	{
+	  unsigned gval = in[0] + in[1] + in[2];
+	  if (gval < 128 * 3)
+	    {
+	      out[0] = 65535;
+	      z = 0;
+	    }
+	}
+    }
+  return z;
+}
+
+static unsigned
+cmyk_8_to_gray_line_art(stp_const_vars_t vars, const unsigned char *in,
+		      unsigned short *out)
+{
+  int i;
+  int z = 1;
+  int output_color_model = stpi_get_output_color_model(vars);
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
+  int width = lut->image_width;
+  memset(out, 0, width * sizeof(unsigned short));
+  if (output_color_model == COLOR_MODEL_CMY)
+    {
+      for (i = 0; i < width; i++, out++, in += 4)
+	{
+	  unsigned gval = in[0] + in[1] + in[2] + in[3];
+	  if (gval >= 128 * 4)
+	    {
+	      out[0] = 65535;
+	      z = 0;
+	    }
+	}
+    }
+  else
+    {
+      for (i = 0; i < width; i++, out++, in += 4)
+	{
+	  unsigned gval = in[0] + in[1] + in[2] + in[3];
+	  if (gval < 128 * 4)
+	    {
+	      out[0] = 65535;
+	      z = 0;
+	    }
+	}
+    }
+  return z;
+}
+
+static unsigned
+cmyk_to_gray_line_art(stp_const_vars_t vars, const unsigned char *in,
+		      unsigned short *out)
+{
+  int i;
+  int z = 1;
+  const unsigned short *s_in = (const unsigned short *) in;
+  int output_color_model = stpi_get_output_color_model(vars);
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
+  int width = lut->image_width;
+  memset(out, 0, width * sizeof(unsigned short));
+  if (output_color_model == COLOR_MODEL_CMY)
+    {
+      for (i = 0; i < width; i++, out++, s_in += 4)
+	{
+	  unsigned gval = s_in[0] + s_in[1] + s_in[2] + s_in[3];
+	  if (gval >= 128 * 4)
+	    {
+	      out[0] = 65535;
+	      z = 0;
+	    }
+	}
+    }
+  else
+    {
+      for (i = 0; i < width; i++, out++, s_in += 4)
+	{
+	  unsigned gval = s_in[0] + s_in[1] + s_in[2] + s_in[3];
+	  if (gval < 128 * 4)
+	    {
+	      out[0] = 65535;
+	      z = 0;
+	    }
+	}
+    }
+  return z;
+}
+      
+
+static unsigned
 cmyk_8_to_kcmy(stp_const_vars_t vars, const unsigned char *in,
 	       unsigned short *out)
 {
@@ -1656,11 +2055,11 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
 		    linear_contrast_adjustment);
 }
 
-static void
-set_null_colorfunc(void)
-{
-  stpi_erprintf("No colorfunc chosen!\n");
-}
+#define SET_NULL_COLORFUNC						     \
+  stpi_erprintf								     \
+  ("No colorfunc chosen at line %d: bpp %d image type %d output type %d!\n", \
+   __LINE__, image_bpp, itype, stp_get_output_type(v))
+
 
 #define SET_COLORFUNC(x)						     \
 stpi_dprintf(STPI_DBG_COLORFUNC, v,					     \
@@ -1686,7 +2085,7 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
   lut->image_width = stpi_image_width(image);
   if (image_type)
     {
-      if (strcmp(image_type, "LineArt") == 0)
+      if (strcmp(image_type, "Uncorrected") == 0)
 	itype = 0;
       else if (strcmp(image_type, "Solid") == 0)
 	itype = 1;
@@ -1694,6 +2093,8 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
 	itype = 2;
       else if (strcmp(image_type, "HSLAdjust") == 0)
 	itype = 3;
+      else if (strcmp(image_type, "LineArt") == 0)
+	itype = 4;
     }
   switch (stp_get_output_type(v))
     {
@@ -1704,6 +2105,8 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
 	case 1:
 	  switch (itype)
 	    {
+	    case 4:
+	      SET_COLORFUNC(gray_to_kcmy_line_art);
 	    case 3:
 	    case 2:
 	    case 1:
@@ -1711,7 +2114,7 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
 	    case 0:
 	      SET_COLORFUNC(fast_gray_to_kcmy);
 	    default:
-	      set_null_colorfunc();
+	      SET_NULL_COLORFUNC;
 	      SET_COLORFUNC(NULL);
 	      break;
 	    }
@@ -1719,6 +2122,8 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
 	case 3:
 	  switch (itype)
 	    {
+	    case 4:
+	      SET_COLORFUNC(rgb_to_kcmy_line_art);
 	    case 3:
 	    case 2:
 	    case 1:
@@ -1726,16 +2131,42 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
 	    case 0:
 	      SET_COLORFUNC(fast_rgb_to_kcmy);
 	    default:
-	      set_null_colorfunc();
+	      SET_NULL_COLORFUNC;
 	      SET_COLORFUNC(NULL);
 	    }
 	  break;
 	case 4:
-	  SET_COLORFUNC(cmyk_8_to_kcmy);
+	  switch (itype)
+	    {
+	    case 4:
+	      SET_COLORFUNC(cmyk_8_to_kcmy_line_art);
+	    case 3:
+	    case 2:
+	    case 1:
+	    case 0:
+	      SET_COLORFUNC(cmyk_8_to_kcmy);
+	    default:
+	      SET_NULL_COLORFUNC;
+	      SET_COLORFUNC(NULL);
+	    }	      
+	  break;
 	case 8:
-	  SET_COLORFUNC(cmyk_to_kcmy);
+	  switch (itype)
+	    {
+	    case 4:
+	      SET_COLORFUNC(cmyk_to_kcmy_line_art);
+	    case 3:
+	    case 2:
+	    case 1:
+	    case 0:
+	      SET_COLORFUNC(cmyk_to_kcmy);
+	    default:
+	      SET_NULL_COLORFUNC;
+	      SET_COLORFUNC(NULL);
+	    }	      
+	  break;
 	default:
-	  set_null_colorfunc();
+	  SET_NULL_COLORFUNC;
 	  SET_COLORFUNC(NULL);
 	}
       break;
@@ -1746,6 +2177,8 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
 	case 3:
 	  switch (itype)
 	    {
+	    case 4:
+	      SET_COLORFUNC(rgb_to_rgb_line_art);
 	    case 3:
 	    case 2:
 	    case 1:
@@ -1753,13 +2186,15 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
 	    case 0:
 	      SET_COLORFUNC(fast_rgb_to_rgb);
 	    default:
-	      set_null_colorfunc();
+	      SET_NULL_COLORFUNC;
 	      SET_COLORFUNC(NULL);
 	    }
 	  break;
 	case 1:
 	  switch (itype)
 	    {
+	    case 4:
+	      SET_COLORFUNC(gray_to_rgb_line_art);
 	    case 3:
 	    case 2:
 	    case 1:
@@ -1767,20 +2202,20 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
 	    case 0:
 	      SET_COLORFUNC(fast_gray_to_rgb);
 	    default:
-	      set_null_colorfunc();
+	      SET_NULL_COLORFUNC;
 	      SET_COLORFUNC(NULL);
 	      break;
 	    }
 	  break;
 	default:
-	  set_null_colorfunc();
+	  SET_NULL_COLORFUNC;
 	  SET_COLORFUNC(NULL);
 	}
       break;
     case OUTPUT_RAW_PRINTER:
       if ((image_bpp & 1) || image_bpp < 2 || image_bpp > 64)
 	{
-	  set_null_colorfunc();
+	  SET_NULL_COLORFUNC;
 	  SET_COLORFUNC(NULL);
 	}
       lut->out_channels = image_bpp / 2;
@@ -1790,20 +2225,76 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
       switch (image_bpp)
 	{
 	case 1:
-	  SET_COLORFUNC(gray_to_gray);
+	  switch (itype)
+	    {
+	    case 4:
+	      SET_COLORFUNC(gray_to_gray_line_art);
+	    case 3:
+	    case 2:
+	    case 1:
+	    case 0:
+	      SET_COLORFUNC(gray_to_gray);
+	    default:
+	      SET_NULL_COLORFUNC;
+	      SET_COLORFUNC(NULL);
+	      break;
+	    }
+	  break;
 	case 3:
-	  SET_COLORFUNC(rgb_to_gray);
+	  switch (itype)
+	    {
+	    case 4:
+	      SET_COLORFUNC(rgb_to_gray_line_art);
+	    case 3:
+	    case 2:
+	    case 1:
+	    case 0:
+	      SET_COLORFUNC(rgb_to_gray);
+	    default:
+	      SET_NULL_COLORFUNC;
+	      SET_COLORFUNC(NULL);
+	      break;
+	    }
+	  break;
 	case 4:
-	  SET_COLORFUNC(cmyk_8_to_gray);
+	  switch (itype)
+	    {
+	    case 4:
+	      SET_COLORFUNC(cmyk_8_to_gray_line_art);
+	    case 3:
+	    case 2:
+	    case 1:
+	    case 0:
+	      SET_COLORFUNC(cmyk_8_to_gray);
+	    default:
+	      SET_NULL_COLORFUNC;
+	      SET_COLORFUNC(NULL);
+	      break;
+	    }
+	  break;
 	case 8:
-	  SET_COLORFUNC(cmyk_to_gray);
+	  switch (itype)
+	    {
+	    case 4:
+	      SET_COLORFUNC(cmyk_to_gray_line_art);
+	    case 3:
+	    case 2:
+	    case 1:
+	    case 0:
+	      SET_COLORFUNC(cmyk_to_gray);
+	    default:
+	      SET_NULL_COLORFUNC;
+	      SET_COLORFUNC(NULL);
+	      break;
+	    }
+	  break;
 	default:
-	  set_null_colorfunc();
+	  SET_NULL_COLORFUNC;
 	  SET_COLORFUNC(NULL);
 	}
       break;
     default:
-      set_null_colorfunc();
+      SET_NULL_COLORFUNC;
       SET_COLORFUNC(NULL);
     }
   lut->in_data = stpi_malloc(stpi_image_width(image) * image_bpp);
@@ -1913,14 +2404,16 @@ stpi_color_describe_parameter(stp_const_vars_t v, const char *name,
 		{
 		  description->bounds.str = stp_string_list_create();
 		  stp_string_list_add_string
+		    (description->bounds.str, "Photograph", _("Photographs"));
+		  stp_string_list_add_string
+		    (description->bounds.str, "Solid", _("Solid Colors"));
+		  stp_string_list_add_string
 		    (description->bounds.str, "LineArt", _("Line Art"));
 		  stp_string_list_add_string
 		    (description->bounds.str, "HSLAdjust", _("HSL-corrected"));
 		  stp_string_list_add_string
-		    (description->bounds.str, "Solid", _("Solid Colors"));
-		  stp_string_list_add_string
-		    (description->bounds.str, "Photograph", _("Photographs"));
-		  description->deflt.str = "LineArt";
+		    (description->bounds.str, "Uncorrected", _("Uncorrected"));
+		  description->deflt.str = "Photograph";
 		}
 	      break;
 	    default:
