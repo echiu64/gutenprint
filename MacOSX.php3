@@ -32,16 +32,16 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <a href="MacOSX.php3#4.2.7"><b>July 14, 2004 -</b></a> Gimp-Print 4.2.7 is now available for download. This is the most recent stable release of Gimp-Print, and very likely the last version to be released in the 4.2.x series.
- </p>
- <p>
- <a href="MacOSX.php3#5.0.0-alpha1"><b>January 11, 2004 -</b></a> Gimp-Print 
- 5.0.0-alpha1 is now available for download. Gimp-Print 5.0.0-alpha1 is the
- first alpha release (technology preview) in the Gimp-Print 5.0 line.  It is
+ <a href="MacOSX.php3#5.0.0-beta1"><b>July 30, 2004 -</b></a> Gimp-Print 
+ 5.0.0-beta1 is now available for download. Gimp-Print 5.0.0-beta1 is the
+ first beta release in the Gimp-Print 5.0 line.  It is
  based on the 4.3 series that has been in development for two years, and
 includes many improvements over the very popular 4.2 series.  This
 release is not considered to be a fully stable release, but we've been
 using it and we believe that it will be useful for many purposes.
+ </p>
+ <p>
+ <a href="MacOSX.php3#4.2.7"><b>July 14, 2004 -</b></a> Gimp-Print 4.2.7 is now available for download. This is the most recent stable release of Gimp-Print, and very likely the last version to be released in the 4.2.x series.
  </p>
 <p>
  </p>
@@ -159,26 +159,26 @@ it includes bug fixes and new features over 4.2.5. On Mac OS X "Jaguar" this
  install, if necessary</b>).  ESP Ghostscript is not required for Mac OS X "Panther". 
  </p>
 --!>
- <b>Gimp-Print 5.0.0-alpha1</b>
+ <b>Gimp-Print 5.0.0-beta1</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-5.0.0-alpha1.ppc.dmg?download"
- >gimp-print-5.0.0-alpha1.ppc.dmg</a>&nbsp;(6.7 MB)
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-5.0.0-beta1.ppc.dmg?download"
+ >gimp-print-5.0.0-beta1.ppc.dmg</a>&nbsp;(6.8 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-5.0.0-alpha1.tar.bz2?download"
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-5.0.0-beta1.tar.bz2?download"
  >source</a>)
  </td>
  </tr>
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 5.0.0-alpha1 is the first Mac OS X release in the new 5.0 series. 
- This release represents the state-of-the-art in current Gimp-Print development, but it is currently only alpha quality software. As such, while it contains many new and exciting features over the 4.2.x series, it may also provide unexpected behavior.  For Mac OS X Jaguar this package requires (but does not include) ESP Ghostscript for Mac OS X (<b>download below and 
+ Gimp-Print 5.0.0-beta1 is the first Mac OS X release in the new 5.0 series. 
+ This release represents the state-of-the-art in current Gimp-Print development, but it is currently only beta1 quality software. As such, while it contains many new and exciting features over the 4.2.x series, it may also provide unexpected behavior.  For Mac OS X Jaguar this package requires (but does not include) ESP Ghostscript for Mac OS X (<b>download below and 
  install, if necessary</b>). ESP Ghostscript is not required for Mac OS X "Panther". 
  </p>
  <b>Gimp-Print Uninstaller</b>
@@ -273,6 +273,29 @@ delayed. All new development is focused on the 5.0 series.
  News Items
  </h3>
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+  <a name ="5.0.0-beta1"></a>
+ <B>Gimp-Print 5.0.0-beta1</B>
+ </TD>
+ <TD align="right" >
+ <B>2004-07-30</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gimp-Print  5.0.0-beta1 is the first beta release in the 5.x series. The changes between 5.0.0-beta1 and 5.0.0-alpha1 are too numerous to list here, so please see the release notes for more information.
+</p><p>
+
+Please note that as of 5.0.0-beta1 the behavior of the Mac OS X installer has changed.
+The installer will now permit Gimp-Print 4.2.x and Gimp-Print 5.0 to be installed simultaneously, so that printer queues may be created using either driver.
+If you do not wish to retain your existing installation of Gimp-Print 4.2.x simply click on the <strong>Customize</strong> button available on the last screen of the installer and check the box for &quot;Gimp-Print 4.2.x uninstaller&quot;
+</p><p>
+Please also note that the installer will update any existing 4.2.x printer queue for use with 5.0. If you wish to continue using Gimp-Print 4.2.x after installing 5.0 you will need to manually create a new printer queue, or use Print Center/Printer Setup Utility to change the driver.
+</p>
+ </td>
+ </tr>
  <TR bgcolor="#D0D0D0" >
  <TD>
   <a name ="4.2.7"></a>
