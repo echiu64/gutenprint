@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.27  1999/11/14 00:57:11  rlk
+ *   Mix black in sooner gives better density.
+ *
  *   Revision 1.26  1999/11/13 02:31:29  rlk
  *   Finally!  Good settings!
  *
@@ -355,7 +358,7 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
 #define RATIO_Y DE_Y / NU_Y
 #define RATIO_Y1 (DE_Y + NU_Y) / NU_Y
 
-#define KDARKNESS_LOWER (96 * 256)
+#define KDARKNESS_LOWER (32 * 256)
 #define KDARKNESS_UPPER (224 * 256)
 
 #define C_RANDOMIZER 1
