@@ -1,4 +1,4 @@
-This is Gimp-Print version 4.1.99a3, the third alpha release leading
+This is Gimp-Print version 4.1.99b1, the first beta release leading
 up to the 4.2 stable release.  Gimp-print is the print facility for
 the Gimp, and in addition a suite of drivers that may be used with
 common UNIX spooling systems using GhostScript or CUPS.  These drivers
@@ -88,7 +88,7 @@ Gimp-Print PPD's with.  Such printers may be identified in any CUPS
 front end (e. g. KUPS, or via the web interface) because they look
 something like this:
 
-                EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.8(en)
+                EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-b1(en)
 
 If the version number (in this case, 4.1.8) does not match the version
 of Gimp-Print that you are installing, you must use Modify Printer to

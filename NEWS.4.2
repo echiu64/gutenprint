@@ -21,25 +21,6 @@ Gimp-Print 4.2 contains the following major changes over Gimp-Print
 4.0:
 
 
-Incompatibilities between 4.0 and 4.2:
-
-1) The options for the Ghostscript driver have changed incompatibly
-   between 4.0 and 4.2.  Please read src/ghost/README for more
-   information.
-
-2) The PPD files for the 4.2 CUPS driver are incompatible with the 4.0
-   driver, and vice versa.  You must reinstall all of your print
-   queues to use the new driver.
-
-3) The Foomatic data in the 4.2 distribution is generated during the
-   build of the package, rather than being distributed statically.  It
-   requires the latest version of the Foomatic driver, and is
-   incompatible with the Foomatic data in 4.0.
-
-4) Printing pure black and white (not grayscale) images is different.
-   The changes will be explained in the sections for each front end.
-
-
 Bugs Fixed from 4.0:
 
 1) A problem with fine black data printing incorrectly in 4.0 has been
@@ -226,6 +207,25 @@ Internal changes:
    translations available, though.
 
 
+Incompatibilities between 4.0 and 4.2:
+
+1) The options for the Ghostscript driver have changed incompatibly
+   between 4.0 and 4.2.  Please read src/ghost/README for more
+   information.
+
+2) The PPD files for the 4.2 CUPS driver are incompatible with the 4.0
+   driver, and vice versa.  You must reinstall all of your print
+   queues to use the new driver.
+
+3) The Foomatic data in the 4.2 distribution is generated during the
+   build of the package, rather than being distributed statically.  It
+   requires the latest version of the Foomatic driver, and is
+   incompatible with the Foomatic data in 4.0.
+
+4) Printing pure black and white (not grayscale) images is different.
+   The changes will be explained in the sections for each front end.
+
+
 Known Limitations:
 
 1) The Epson Stylus C40UX (and very likely other printers in the C20
@@ -239,10 +239,8 @@ Known Limitations:
    on the printers that should support it (Epson Stylus Color 480 and
    580, and C20SX, C20UX, C40SX, and C40UX).
 
-3) Changing ink cartridges on the Epson Stylus Color 480/580 will not
-   be supported in at least initial 4.2 releases.  This project
-   appears to be somewhat more complicated and riskier than previously
-   believed.
+3) Changing ink cartridges on the Epson Stylus Color 480/580 is not
+   supported.
 
 4) The drivers for the Epson Stylus Pro printers (5000, 5500, 7000,
    7500, 9000, 9500, and 10000) are not tested or tuned.  They may not

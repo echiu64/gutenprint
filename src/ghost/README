@@ -224,6 +224,8 @@ OPTIONS:
  dpi (see below for driver parameter). The result is a somewhat faster
  operation of the driver.
 
+ The driver will not permit use of invalid settings.
+
 Printer Model Selection:
 ------- ----- ----------
 
@@ -316,7 +318,7 @@ pcl-560                 HP DeskJet 560C
 pcl-600                 HP DeskJet 600/600C (Single Cartridge)
 pcl-601                 HP DeskJet 600 series (2 Cartridge)
 pcl-690                 HP DeskJet 690 series (Photo-Ink capable)
-pcl-750			HP DesignJet 750
+pcl-750                 HP DesignJet 750
 pcl-810                 HP DeskJet 810C
 pcl-812                 HP DeskJet 812C
 pcl-840                 HP DeskJet 840C
@@ -438,19 +440,19 @@ Resolutions for those printers are listed in a later section.
 360x120uni      '360 x 120 DPI Unidirectional'
 
 360dpi          '360 DPI'                  (works on all printers
-					    except for Stylus C20 and
-					    C40, and Stylus Color 480
-					    and 580)
+                                            except for Stylus C20 and
+                                            C40, and Stylus Color 480
+                                            and 580)
 360uni          '360 DPI Unidirectional'   (works on all printers
-					    except for Stylus C20 and
-					    C40, and Stylus Color 480
-					    and 580)
+                                            except for Stylus C20 and
+                                            C40, and Stylus Color 480
+                                            and 580)
 360mw           '360 DPI Microweave'       (works on all printers
-					    except for Stylus C20, C40,
-					    Stylus Color, Stylus Color Pro,
-					    Stylus Color 480, and 580)
+                                            except for Stylus C20, C40,
+                                            Stylus Color, Stylus Color Pro,
+                                            Stylus Color 480, and 580)
 360mwuni        '360 DPI Microweave Unidirectional'
-					   (see previous)
+                                           (see previous)
 360sw           '360 DPI Softweave'        (works on printers that support
                                             variable dot sizes, such as
                                             the Epson Stylus Color 740
@@ -458,10 +460,10 @@ Resolutions for those printers are listed in a later section.
 360swuni        '360 DPI Softweave Unidirectional'
                                            (see previous)
 360hq           '360 DPI High Quality'     (see previous; recommended
-					    only on processors slower
-					    than 100 MHz or if
-					    problems are experienced
-					    at 720x360)
+                                            only on processors slower
+                                            than 100 MHz or if
+                                            problems are experienced
+                                            at 720x360)
 360hquni        '360 DPI High Quality Unidirectional'
                                            (see previous)
 
@@ -702,8 +704,9 @@ other fine black detail, or if this is mixed with continuous tone
 images, and Ordered for pure continuous-tone images and photographs
 (no text).  Ordered is somewhat faster than Adaptive Hybrid, and
 normally yields almost identical results.  However, Ordered dithering
-may show small breaks in very fine lines; Adaptive Hybrid is more
-resistant to this effect.
+may show small breaks in very fine lines, which may lead to
+undesirable moire patterns and other artifacts; Adaptive Hybrid is
+more resistant to this effect.
 
 Error diffusion algorithms (Hybrid Floyd-Steinberg is such an
 algorithm) perform very well at high densities, and are capable of
@@ -759,10 +762,10 @@ mixing black ink in.  The Epson Stylus Color 1500 cannot mix black ink
 with colored inks; on this printer, Three Color Composite must be
 used.
 
-As of this writing (April 2001), no seven color printers are sold in
-North America.  When such a printer is sold, the Seven Color Enhanced
-and Six Color Enhanced Composite modes will utilize all of these
-inks.
+As of this writing (September 2001), no seven color printers are sold
+in North America.  When such a printer is sold, the Seven Color
+Enhanced and Six Color Enhanced Composite modes will utilize all of
+these inks.
 
 Photo7          'Seven Color Enhanced'
 PhotoEnhance    'Six Color Enhanced Composite'

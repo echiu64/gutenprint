@@ -1,4 +1,4 @@
-This is gimp-print version 4.1.99a3, the third alpha release leading
+This is gimp-print version 4.1.99b1, the first beta release leading
 up to the 4.2 stable release.  This release is not 4.2.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
@@ -11,6 +11,42 @@ These release notes primarily describe changes visible to the end
 user.  Detailed descriptions of changes may be found in the ChangeLog.
 
 The Gimp Print plugin requires the Gimp 1.2.
+
+Gimp-Print 4.1.99b1 contains the following changes over 4.1.99a3:
+
+1) Fixes for the Lexmark driver.
+
+2) The print plugin now stores the current printer name correctly in
+   all cases (broke in 4.1.99-a3).
+
+3) The PCL driver prints correctly in all resolutions (broke in
+   4.1.99-a3).
+
+4) The driver supports minimum, as well as maximum, paper sizes for
+   printers.
+
+5) Fix margins for some Epson printers.  On many printers, it's
+   possible to print closer to the top and bottom of the page when
+   using softweave than otherwise; the driver now changes the margins
+   dynamically depending upon the settings.  See bug 231885.
+
+6) The Foomatic driver now displays human-readable names (broke in
+   4.1.99-a3).
+
+7) The print plugin has tooltips for most functionality.
+
+8) The printer driver list in the print plugin should be displayed in
+   the correct position (with the currently active printer visible).
+
+9) The default resolution for Epson printers supporting variable drop
+   size printing (essentially the Stylus Color 740 and newer) has been
+   changed from 360 DPI to 360 DPI Softweave.  This will produce much
+   better output.
+
+10) The preview in the Gimp plugin is much smoother (does not flash to
+   nearly as great a degree) when moving, resizing, or changing the
+   color settings of the image.
+
 
 Gimp-Print 4.1.99a3 contains the following changes over 4.1.99a2:
 
