@@ -69,11 +69,10 @@ static GtkTooltips *tool_tips  = NULL;
 
 /* This main() can be changed to another function name which you
  * call to do printing in your own application.  I am leaving it
- * as main() so that it can be compiled to create a standalone executable
- * for demonstration purposes.
+ * as main() so that it can be compiled to create a standalone executable.
  */
 int gimp_print_gui( FILE *, unsigned, unsigned );
-void run(char *, int, GimpParam *, int *, GimpParam **);
+void runit( char *, int *, GimpParam **);
 void prepare_gimp_drawable_get( GimpDrawable *drawable );
 FILE *RGB_image;
 
@@ -84,7 +83,6 @@ int main( int argc, char *argv[])
 int gimp_print_gui( FILE *fpgimpprint, unsigned height, unsigned width )
 #endif
 {                            
-  GimpParam param[3];        
   int nreturn_vals;       
   GimpParam retval, *return_vals;   
   GimpDrawable drawable;
@@ -110,13 +108,6 @@ int gimp_print_gui( FILE *fpgimpprint, unsigned height, unsigned width )
 #endif
 
   tool_tips = gtk_tooltips_new();
-
-  param[0].type = GIMP_PDB_INT32;   
-  param[0].data.d_int32 = GIMP_RUN_INTERACTIVE;  
-                                        
-  param[1].type = GIMP_PDB_IMAGE;   
-  image_ID = 0;
-  param[1].data.d_image = image_ID; /* image_ID does nothing */
 
   /* Do three things to set up your image */
 
@@ -166,13 +157,10 @@ int gimp_print_gui( FILE *fpgimpprint, unsigned height, unsigned width )
      {
         RGB_image = fpgimpprint;
 
-        param[2].type = GIMP_PDB_DRAWABLE; 
-        param[2].data.d_drawable = drawable_ID = 0; /* drawable_ID is unused in my version */
-                                           
         return_vals = &retval;             
                                            
         /* send along all parameters even if some are not used */
-        run( "file_print_gimp", 3, param, &nreturn_vals, &return_vals );    
+        runit( "file_print_gimp", &nreturn_vals, &return_vals );    
 
         if( argc == 5 && *argv[4] == '1' )
            unlink( argv[1] );
@@ -1263,7 +1251,10 @@ gimp_standard_help_func (const gchar *help_data)
 gchar*
 gimp_personal_rc_file( gchar *basename)
 {
-  puts( gimp_directory() );
+  printf( "%s (I wonder what happens if this directory does not exist)\nAlso, I need to clean up the code.\nBut, basically this first version works, dpace Jan/2003.\n",
+          gimp_directory() 
+        );
+  fflush(stdout);
 
   return g_strconcat( gimp_directory(),
 		      G_DIR_SEPARATOR_S,
@@ -1445,3 +1436,203 @@ gimp_data_directory (void)
   return gimp_data_dir;
 }
 #endif
+
+
+
+/*******************************************************
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+#include "../../lib/libprintut.h"
+
+#include <gimp-print/gimp-print-ui.h>
+#include "print_gimp.h"
+
+#include <sys/types.h>
+#include <signal.h>
+#include <ctype.h>
+#include <sys/wait.h>
+
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+
+#include "print-intl.h"
+********************************************************/
+
+void	run (char *, int, GimpParam *, int *, GimpParam **);
+static int	do_print_dialog (char *proc_name);
+
+/*
+ * Work around GIMP library not being const-safe.  This is a very ugly
+ * hack, but the excessive warnings generated can mask more serious
+ * problems.
+ */
+
+#define BAD_CONST_CHAR char *
+
+/*
+ * Globals...
+ */
+
+static stpui_plist_t gimp_vars;
+
+static gint32    image_ID_printc;   /* image ID */
+
+
+static guchar *
+stpui_get_thumbnail_data_function(void *image_ID_printc, gint *width, gint *height,
+				  gint *bpp, gint page)
+{
+  return gimp_image_get_thumbnail_data((gint) image_ID_printc, width, height, bpp);
+}
+
+void
+runit(char   *name,		/* I - Name of print program. */
+     int    *nreturn_vals,	/* O - Number of return values */
+     GimpParam **return_vals)	/* O - Return values */
+{
+  GimpDrawable	*drawable;	/* Drawable for image */
+  GimpParam	*values;	/* Return values */
+  gint32         drawable_ID;   /* drawable ID */
+  GimpExportReturnType export = GIMP_EXPORT_CANCEL;    /* return value of gimp_export_image() */
+  gdouble xres, yres;
+  const char *image_filename;
+  stp_image_t *image;
+
+ /*
+  * Initialise libgimpprint
+  */
+
+  stp_init();
+
+#ifdef INIT_I18N_UI
+  INIT_I18N_UI();
+#else
+  /*
+   * With GCC and glib 1.2, there will be a warning here about braces in
+   * expressions.  Getting rid of it causes more problems than it solves.
+   * In particular, turning on -ansi on the command line causes a number of
+   * other useful things, such as strcasecmp, popen, and snprintf to go away
+   */
+  INIT_LOCALE (PACKAGE);
+#endif
+
+  stpui_printer_initialize(&gimp_vars);
+  stp_set_input_color_model(gimp_vars.v, COLOR_MODEL_RGB);
+  /*
+   * Initialize parameter data...
+   */
+
+  values = g_new (GimpParam, 1);
+
+  values[0].type          = GIMP_PDB_STATUS;
+  values[0].data.d_status = GIMP_PDB_SUCCESS;
+
+  *nreturn_vals = 1;
+  *return_vals  = values;
+
+  image_filename = gimp_image_get_filename(image_ID_printc);
+  if (strchr(image_filename, '/'))
+    image_filename = strrchr(image_filename, '/') + 1;
+  stpui_set_image_filename(image_filename);
+
+  /*  eventually export the image */
+  gimp_ui_init ("print", TRUE);
+  export = gimp_export_image (&image_ID_printc, &drawable_ID, "Print",
+				  (GIMP_EXPORT_CAN_HANDLE_RGB |
+				   GIMP_EXPORT_CAN_HANDLE_GRAY |
+				   GIMP_EXPORT_CAN_HANDLE_INDEXED |
+				   GIMP_EXPORT_CAN_HANDLE_ALPHA));
+  if( export == GIMP_EXPORT_CANCEL)
+  {
+     *nreturn_vals = 1;
+     values[0].data.d_status = GIMP_PDB_EXECUTION_ERROR;
+     return;
+  }
+
+  /*
+   * Get drawable...
+   */
+
+  drawable = gimp_drawable_get (drawable_ID);
+  stpui_set_image_dimensions(drawable->width, drawable->height);
+  gimp_image_get_resolution (image_ID_printc, &xres, &yres);
+  stpui_set_image_resolution(xres, yres);
+  image = Image_GimpDrawable_new(drawable, image_ID_printc);
+  stp_set_float_parameter(gimp_vars.v, "AppGamma", gimp_gamma());
+
+  /*
+   * Get information from the dialog...
+   */
+   
+  if(do_print_dialog (name))
+  {
+     stpui_plist_copy(&gimp_vars, stpui_get_current_printer());
+   
+     /*
+      * Print the image...
+      */
+     if (values[0].data.d_status == GIMP_PDB_SUCCESS)
+     {
+         /*
+          * Set the tile cache size...
+          */
+   
+         if (drawable->height > drawable->width)
+	   gimp_tile_cache_ntiles ((drawable->height + gimp_tile_width () - 1) /
+				   gimp_tile_width () + 1);
+         else
+	   gimp_tile_cache_ntiles ((drawable->width + gimp_tile_width () - 1) /
+				   gimp_tile_width () + 1);
+   
+         if (! stpui_print(&gimp_vars, image))
+	     values[0].data.d_status = GIMP_PDB_EXECUTION_ERROR;
+   
+         /*
+          * Store data...
+          * FIXME! This is broken!
+          */
+   
+#if 0
+      gimp_set_data (PLUG_IN_NAME, vars, sizeof (vars));
+#endif
+     }
+   
+     /*
+      * Detach from the drawable...
+      */
+     gimp_drawable_detach (drawable);
+  }
+  if( export == GIMP_EXPORT_EXPORT)
+    gimp_image_delete (image_ID_printc);
+  stp_vars_free(gimp_vars.v);
+}
+
+/*
+ * 'do_print_dialog()' - Pop up the print dialog...
+ */
+
+static void
+gimp_writefunc(void *file, const char *buf, size_t bytes)
+{
+  FILE *prn = (FILE *)file;
+  fwrite(buf, 1, bytes, prn);
+}
+
+static gint
+do_print_dialog (gchar *proc_name)
+{
+ /*
+  * Generate the filename for the current user...
+  */
+  char *filename = gimp_personal_rc_file ((BAD_CONST_CHAR) "printrc");
+  stpui_set_printrc_file(filename);
+  g_free(filename);
+  stpui_set_errfunc(gimp_writefunc);
+  stpui_set_errdata(stderr);
+  stpui_set_thumbnail_func(stpui_get_thumbnail_data_function);
+  stpui_set_thumbnail_data((void *) image_ID_printc);
+  return stpui_do_print_dialog();
+}
+
