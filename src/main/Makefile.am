@@ -48,6 +48,7 @@ canon_la_LDFLAGS = -module -avoid-version
 
 escp2_la_SOURCES = \
 	print-escp2.c \
+	escp2-driver.c \
 	print-escp2.h \
 	print-escp2-data.c \
 	escp2-channels.c \

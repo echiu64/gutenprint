@@ -390,6 +390,105 @@ extern const res_t stpi_escp2_sc500_reslist[];
 extern const res_t stpi_escp2_sc640_reslist[];
 extern const res_t stpi_escp2_sc660_reslist[];
 
+typedef struct
+{
+  /* Basic print head parameters */
+  int nozzles;			/* Number of nozzles */
+  int min_nozzles;		/* Fewest nozzles we're allowed to use */
+  int nozzle_separation;	/* Nozzle separation, in dots */
+  int *head_offset;		/* Head offset (for C80-type printers) */
+  int max_head_offset;		/* Largest head offset */
+  int page_management_units;	/* Page management units (dpi) */
+  int vertical_units;		/* Vertical units (dpi) */
+  int horizontal_units;		/* Horizontal units (dpi) */
+  int micro_units;		/* Micro-units for horizontal positioning */
+  int unit_scale;		/* Scale factor for units */
+
+  /* Ink parameters */
+  int bitwidth;			/* Number of bits per ink drop */
+  int drop_size;		/* ID of the drop size we're using */
+  int ink_resid;		/* Array index for the drop set we're using */
+  const escp2_inkname_t *inkname; /* Description of the ink set */
+  int rescale_density;		/* Do we want to rescale the density? */
+
+  /* Ink channels */
+  int logical_channels;		/* Number of logical ink channels (e.g.CMYK) */
+  int physical_channels;	/* Number of physical channels (e.g. CcMmYK) */
+  int channels_in_use;		/* Number of channels we're using
+				   FIXME merge with physical_channels! */
+  unsigned char **cols;		/* Output dithered data */
+  const physical_subchannel_t **channels; /* Description of each channel */
+
+  /* Miscellaneous printer control */
+  int use_black_parameters;	/* Can we use (faster) black head parameters */
+  int use_fast_360;		/* Can we use fast 360 DPI 4 color mode */
+  int advanced_command_set;	/* Uses one of the advanced command sets */
+  int use_extended_commands;	/* Do we use the extended commands? */
+  const input_slot_t *input_slot; /* Input slot description */
+  const paper_t *paper_type;	/* Paper type */
+  const stp_raw_t *init_sequence; /* Initialization sequence */
+  const stp_raw_t *deinit_sequence; /* De-initialization sequence */
+  model_featureset_t command_set; /* Which command set this printer supports */
+  int variable_dots;		/* Print supports variable dot sizes */
+  int has_vacuum;		/* Printer supports vacuum command */
+  int has_graymode;		/* Printer supports fast grayscale mode */
+  int base_separation;		/* Basic unit of separation */
+  int resolution_scale;		/* Scale factor for ESC(D command */
+  int printing_resolution;	/* Printing resolution for this resolution */
+  int separation_rows;		/* Row separation scaling */
+  int pseudo_separation_rows;	/* Special row separation for some printers */
+  int extra_720dpi_separation;	/* Sepcial separation needed at 720 DPI */
+
+  /* weave parameters */
+  int horizontal_passes;	/* Number of horizontal passes required
+				   to print a complete row */
+  int physical_xdpi;		/* Horizontal distance between dots in pass */
+  const res_t *res;		/* Description of the printing resolution */
+
+  /* Page parameters */		/* Indexed from top left */
+  int page_left;		/* Left edge of page (points) */
+  int page_right;		/* Right edge of page (points) */
+  int page_top;			/* Top edge of page (points) */
+  int page_bottom;		/* Bottom edge of page (points) */
+  int page_width;		/* Page width (points) */
+  int page_height;		/* Page height (points) */
+  int page_true_height;		/* Physical page height (points) */
+
+  /* Image parameters */	/* Indexed from top left */
+  int image_height;		/* Height of printed region (points) */
+  int image_width;		/* Width of printed region (points) */
+  int image_top;		/* First printed row (points) */
+  int image_left;		/* Left edge of image (points) */
+  int image_scaled_width;	/* Width of printed region (dots) */
+  int image_scaled_height;	/* Height of printed region (dots) */
+  int image_left_position;	/* Left dot position of image */
+
+  /* Transitory state */
+  int printed_something;	/* Have we actually printed anything? */
+  int initial_vertical_offset;	/* Vertical offset for C80-type printers */
+  int printing_initial_vertical_offset;	/* Vertical offset, for print cmd */
+  int last_color;		/* Last color we printed */
+  int last_pass_offset;		/* Starting row of last pass we printed */
+
+} escp2_privdata_t;
+
+extern void stpi_escp2_init_printer(stp_vars_t v);
+extern void stpi_escp2_deinit_printer(stp_vars_t v);
+extern void stpi_escp2_flush_pass(stp_vars_t v, int passno,
+				  int vertical_subpass);
+
+#ifdef TEST_UNCOMPRESSED
+#define COMPRESSION (0)
+#define FILLFUNC stpi_fill_uncompressed
+#define COMPUTEFUNC stpi_compute_uncompressed_linewidth
+#define PACKFUNC stpi_pack_uncompressed
+#else
+#define COMPRESSION (1)
+#define FILLFUNC stpi_fill_tiff
+#define COMPUTEFUNC stpi_compute_tiff_linewidth
+#define PACKFUNC stpi_pack_tiff
+#endif
+
 #endif /* GIMP_PRINT_INTERNAL_ESCP2_H */
 /*
  * End of "$Id$".
