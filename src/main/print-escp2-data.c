@@ -3327,7 +3327,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     32, 1, 4, 32, 1, 4,
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    10, 10, 9, 25, 10, 10, 9, 25, 10, 10, 9, 0, 10, 10, 9, 0,
+    9, 9, 9, 9, 9, 9, 9, 26, 9, 9, 9, 0, 9, 9, 9, 0,
     0, 1, 8, 0, 0, 0, 8,
     sc660_dotsizes,sc660_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
