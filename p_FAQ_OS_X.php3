@@ -28,6 +28,12 @@ require('standard_html_header.php3');
  to the installer screen where I select the destination volume, there is a large 
  red exclamation mark and I can't install it.
  </a>
+ <li><a href="p_FAQ_OS_X.php3#noPPDsInCUPSWebAdmin">
+ After installing Gimp-Print 4.2.6 (or later), when I go to set up a printer via
+ the CUPS web interface I get to the point where I need to choose a driver, but the
+ Gimp-Print drivers (PPDs) are not listed there. They use to be there in Gimp-Print
+ 4.2.5 so where did they go?
+ </a>
  <li><a href="p_FAQ_OS_X.php3#didntReadTheInstructions">
  I do not see the "Advanced" option in Print Center. How can I find it?
  </a>
@@ -223,9 +229,30 @@ require('standard_html_header.php3');
  uninstaller and remove any other versions of Gimp-Print.
 <br><br>
  Please note that when you run the uninstaller you will most likely want to click <b>Customize</b> and skip the <b>Gimp-Print printer remover</b> option, which you accomplish by removing the check from the box. If you skip this option your current Gimp-Print printers will be preserved, which is likely what you want. Otherwise, your printers will be removed and you may need to go through the <a href="p_FAQ_OS_X.php3#usbSetup">secret option-click-elbow process</a> again to recreate them.
-
  </p>
- <a name="didntReadTheInstructions"></a>
+<a name="noPPDsInCUPSWebAdmin"></a>
+ <li><h3>
+ With Gimp-Print 4.2.6 (or later), when I go to set up a printer via
+ the CUPS web interface I get to the point where I need to choose a driver, but the
+ Gimp-Print drivers (PPDs) are not listed there. They use to be there in Gimp-Print
+ 4.2.5 so where did they go?
+ </h3>
+   <p>On Mac OS X when using the provided installer package the PPDs are
+    now stored in the standard PPD location
+   <pre>/Library/Printers/PPDs/Contents/Resources/en.lproj</pre>
+   rather than in
+   <pre>/usr/share/cups/model/C</pre>
+   which is different from all previous releases. This change was
+    made primarily for performance reasons, but it also allows for normal users to find them if need be (the old PPD path is hidden from users in the Mac OS X Finder).  As a consequence of this change,
+    the PPDs will no longer be available for printer setup when
+    using the CUPS web admin; the Apple provided Print Center application
+    is not affected by this change. If you want or need to use the CUPS web
+ admin to create a printer (if you need to create a serial printer, for example)
+ you can still use the CUPS web admin to create the printer, but you will need to
+ select one of the available models and then open Print Center/Printer Setup Utility 
+ and change the driver to the correct Gimp-Print model (select the printer in the list, choose "Show info..." and select the correct model).
+</p>
+<a name="didntReadTheInstructions"></a>
  <li><h3>
  I do not see the "Advanced" option in Print Center. How can I find it?
  </h3>
