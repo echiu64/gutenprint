@@ -322,7 +322,6 @@ if test x${PDFJADETEX} = x ; then
   AC_MSG_WARN([PDF documentation cannot be generated!])
 fi
 AC_PATH_PROG(JADE, jade)
-AC_PATH_PROG(GZIP, gzip)
 AC_PATH_PROG(PS2PDF, ps2pdf)
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 dnl foomatic checks
