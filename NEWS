@@ -1013,6 +1013,7 @@ Lexmark Z43
 Lexmark Z52
 Lexmark Z53
 Olympus P-300 series (Experimental)
+Olympus P-400 series (Experimental)
 
 The following is the complete list of printers believed to be
 compatible with Gimp-print, along with recommended drivers.  Some of
@@ -1528,9 +1529,10 @@ Okidata Okipage 14ex           pcl-4           HP LaserJet 4 series
 Okidata Super 6e               pcl-4l          HP LaserJet 4L
 Olivetti JP350S                pcl-2           HP LaserJet II series
 Olivetti PG 306                pcl-2           HP LaserJet II series
-Olympus P-300E                 olympus-p300    Olympus P-300 series
-Olympus P-300U                 olympus-p300    Olympus P-300 series
-Olympus P-330NE                olympus-p300    Olympus P-300 series
+Olympus P-300E                 olympus-p300    Olympus P300
+Olympus P-300U                 olympus-p300    Olympus P300
+Olympus P-330NE                olympus-p300    Olympus P300
+Olympus P-400                  olympus-p400    Olympus P400
 PCPI 1030                      pcl-2           HP LaserJet II series
 Panasonic KX-P4410             pcl-2           HP LaserJet II series
 Panasonic KX-P4450             pcl-3           HP LaserJet III series

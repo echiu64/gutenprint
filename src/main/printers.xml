@@ -1415,6 +1415,10 @@
         <color value="true"/>
         <model value="0"/>
       </printer>
+      <printer name="OLYMPUS P400" driver="olympus-p400">
+        <color value="true"/>
+        <model value="1"/>
+      </printer>
     </family>
     <family name="raw">
       <printer name="RAW DATA 16 bit" driver="raw-data-16">

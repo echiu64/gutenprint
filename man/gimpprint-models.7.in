@@ -209,6 +209,8 @@ lexmark\-z42	Lexmark Z42
 lexmark\-z43	Lexmark Z43
 lexmark\-z52	Lexmark Z52
 lexmark\-z53	Lexmark Z53
+olympus\-p300	Olympus P300
+olympus\-p400	Olympus P400
 .TE
 .SH COPYRIGHT
 Copyright \(co 2001 Michael Sweet (mike@easysw.com) and Robert Krawitz
