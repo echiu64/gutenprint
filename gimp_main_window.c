@@ -25,6 +25,7 @@
 #include "print_gimp.h"
 
 #ifndef GIMP_1_0
+
 #define MAX_PREVIEW_PPI        (20)
 
 #include "print-intl.h"
@@ -93,7 +94,7 @@ static GtkWidget *printandsave_button;
 static GtkWidget *adjust_color_button;
 
 static GtkObject *scaling_adjustment;	/* Adjustment object for scaling */
-static int suppress_scaling_adjustment = 0;
+static gboolean   suppress_scaling_adjustment = FALSE;
 
 static gint    num_media_types = 0;	/* Number of media types */
 static gchar **media_types;		/* Media type strings */
@@ -107,8 +108,8 @@ static gchar **resolutions;		/* Resolution strings */
 
 static GtkDrawingArea *preview;		/* Preview drawing area widget */
 static gint            mouse_x;		/* Last mouse X */
-static gint            mouse_y,		/* Last mouse Y */
-  		       mouse_button;	/* Button being dragged with */
+static gint            mouse_y;		/* Last mouse Y */
+static gint            mouse_button;	/* Button being dragged with */
 
 static gint            printable_left;	/* Left pixel column of page */
 static gint            printable_top;	/* Top pixel row of page */
@@ -136,7 +137,7 @@ static void gimp_resolution_callback   (GtkWidget     *widget,
 					gpointer       data);
 static void gimp_output_type_callback  (GtkWidget     *widget,
 					gpointer       data);
-static void gimp_unit_callback  (GtkWidget     *widget,
+static void gimp_unit_callback         (GtkWidget     *widget,
 					gpointer       data);
 #ifdef DO_LINEAR
 static void gimp_linear_callback       (GtkWidget     *widget,
@@ -152,11 +153,11 @@ static void gimp_setup_open_callback   (void);
 static void gimp_setup_ok_callback     (void);
 static void gimp_ppd_browse_callback   (void);
 static void gimp_ppd_ok_callback       (void);
-static void gimp_print_driver_callback(GtkWidget *,
-				       gint,
-				       gint,
-				       GdkEventButton *,
-				       gpointer);
+static void gimp_print_driver_callback (GtkWidget *,
+					gint,
+					gint,
+					GdkEventButton *,
+					gpointer);
 
 static void gimp_file_ok_callback      (void);
 static void gimp_file_cancel_callback  (void);
@@ -173,9 +174,9 @@ static void gimp_image_type_callback         (GtkWidget      *widget,
 					      gpointer        data);
 
 extern void gimp_create_color_adjust_window  (void);
-extern void gimp_build_dither_menu    (void);
+extern void gimp_build_dither_menu           (void);
 
-static int preview_ppi = 10;
+static gint preview_ppi = 10;
 
 /*
  *  gimp_create_main_window()
@@ -195,10 +196,10 @@ gimp_create_main_window (void)
   GtkWidget *button;
   GtkWidget *entry;
   GtkWidget *menu;
-  GtkWidget* list;       /* List of drivers */
+  GtkWidget *list;       /* List of drivers */
   GtkWidget *item;
   GtkWidget *option;
-  GtkWidget* combo;      /* Combo box */
+  GtkWidget *combo;      /* Combo box */
   GtkWidget *box;
   GSList    *group;
 #ifdef DO_LINEAR
@@ -220,7 +221,7 @@ gimp_create_main_window (void)
 
   print_dialog = dialog =
     gimp_dialog_new (plug_in_name, "print",
-                     gimp_plugin_help_func, "filters/print.html",
+                     gimp_standard_help_func, "filters/print.html",
                      GTK_WIN_POS_MOUSE,
                      FALSE, TRUE, FALSE,
 
@@ -732,7 +733,7 @@ gimp_create_main_window (void)
 
   setup_dialog = dialog =
     gimp_dialog_new (_("Setup"), "print",
-                     gimp_plugin_help_func, "filters/print.html",
+                     gimp_standard_help_func, "filters/print.html",
                      GTK_WIN_POS_MOUSE,
                      FALSE, TRUE, FALSE,
 
@@ -887,9 +888,9 @@ gimp_scaling_update (GtkAdjustment *adjustment)
       plist[plist_current].v.scaling = vars.scaling;
     }
 
-  suppress_scaling_adjustment = 1;
+  suppress_scaling_adjustment = TRUE;
   gimp_preview_update ();
-  suppress_scaling_adjustment = 0;
+  suppress_scaling_adjustment = FALSE;
 }
 
 /*
