@@ -1675,13 +1675,13 @@ static inline dither_segment_t *find_segment(dither_t *d, dither_channel_t *dc, 
 
 	for (i = dc->nlevels-1; i > 0; i--) {
 		dd = &(dc->ranges[i]);
-		if (density <= dd->range[0]) continue;
+		if (density <= dd->value[0]) continue;
 		return dd;
 	}
 	/* I want the bottom of the first range to say "no ink to print" */
 	dd = &dc->ranges[0];
-	dd->range[0] = 0;
-	dd->value[0] = 0;
+	dd->range[0] = 0; dd->range_span = dd->range[1];
+	dd->value[0] = 0; dd->value_span = dd->value[1];
 	dd->bits[0] = 0;
 	return dd;
 }
@@ -2702,7 +2702,7 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 
   for (i = 1; i < NCOLORS; i++)
     {
-      threshold[i] = CHANNEL(d, i).ranges[0].range[1] / 4 - 1;
+      threshold[i] = CHANNEL(d, i).ranges[0].value[1] / 4 - 1;
     }
 
   x = (direction == 1) ? 0 : d->dst_width - 1;
@@ -2724,14 +2724,6 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
       for (i=1; i < NCOLORS; i++) {
         int value;
 	value = cmy[i-1];
-	CHANNEL(d, i).b = value;				/* Original before modifying for density */
-	value *= CHANNEL(d, i).density / 256;
-	value /= 256;
-	value *= d->density / 256;
-	value /= 256;
-	if (d->density != d->black_density) {
-	  value *= d->density / d->black_density;
-	}
 	CHANNEL(d, i).o = value;				/* Remember value we want printed here */
 
 	value = threshold[i] + ndither[i] + CHANNEL(d, i).o / 2;
@@ -2745,9 +2737,12 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
       }
 
       /* Adjust black amount based on black density */
-      CHANNEL(d, ECOLOR_K).v = (CHANNEL(d, ECOLOR_K).o * (d->black_density/256)) / 256;
-      CHANNEL(d, ECOLOR_K).v *= CHANNEL(d, ECOLOR_K).density / 256;
-      CHANNEL(d, ECOLOR_K).v /= 256;
+      if (d->density != d->black_density) {
+        CHANNEL(d, ECOLOR_K).v =
+          (unsigned)CHANNEL(d, ECOLOR_K).o * (unsigned)d->black_density / d->density;
+      } else {
+        CHANNEL(d, ECOLOR_K).v = CHANNEL(d, ECOLOR_K).o;
+      }
 
       { int ri[NCOLORS];
 
@@ -2760,12 +2755,14 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
         /* Ignore amount of black at this stage */
       
         for (i=1; i < NCOLORS; i++) {
-	  if (CHANNEL(d, i).v > dr[i]->range[1]) {
+	  if (CHANNEL(d, i).v > dr[i]->value[1]) {
 	    ri[i] = 65355;
-	  } else if (CHANNEL(d, i).v < dr[i]->range[0]) {
+	  } else if (CHANNEL(d, i).v < dr[i]->value[0]) {
 	    ri[i] = 0;
+	  } else if (dr[i]->value_span != 0) {
+	    ri[i] = (65535 * (CHANNEL(d, i).v - dr[i]->value[0])) / dr[i]->value_span;
 	  } else {
-	    ri[i] = (65535 * (CHANNEL(d, i).v - dr[i]->range[0])) / dr[i]->range_span;
+	    ri[i] = 32768;  /* doesn't matter really */
 	  }
 	}
         /* Now we can find out what to really print */
@@ -2780,23 +2777,31 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
         int blacksize = 1;		/* Assume large black is OK */
 	int useblack = 0;		/* Do we print black at all? */
 
-        point[ECOLOR_K] = dr[ECOLOR_K]->range[blacksize] * 65535 / d->black_density;
+        point[ECOLOR_K] = dr[ECOLOR_K]->value[blacksize];
+	if (d->black_density != d->density) {
+	  point[ECOLOR_K] = (unsigned)point[ECOLOR_K] * (unsigned)d->density / d->black_density;
+	}
 
         for (i=1; i < NCOLORS; i++) {
           if (pick & (1 << i)) {
-	    point[i] = dr[i]->range[1];
+	    point[i] = dr[i]->value[1];
 	    if (point[i] < point[ECOLOR_K]) {
 	      blacksize = 0;		/* Use small black instead */
 	    }
 	  } else {
-	    point[i] = dr[i]->range[0];
+	    point[i] = dr[i]->value[0];
 	    if (CHANNEL(d, i).v < point[ECOLOR_K]) {
 	      blacksize = 0;		/* Use small black instead */
 	    }
 	  }
         }
 
-        point[ECOLOR_K] = dr[ECOLOR_K]->range[blacksize] * 65535 / d->black_density;
+        if (blacksize == 0) {
+	  point[ECOLOR_K] = dr[ECOLOR_K]->value[blacksize];
+	  if (d->black_density != d->density) {
+	    point[ECOLOR_K] = (unsigned)point[ECOLOR_K] * (unsigned)d->density / d->black_density;
+	  }
+	}
 
         /* We know which sizes of each colour we want to use, and also the size of the black ink. */
         /* Only print the black ink if it means we can avoid printing another ink, otherwise we're just wasting ink */
