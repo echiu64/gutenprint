@@ -44,9 +44,9 @@
 #endif
 
 /* Color conversion function */
-typedef void (*stp_convert_t) (stp_const_vars_t vars, const unsigned char *in,
-                               unsigned short *out, int *zero_mask,
-                               int width, int bpp);
+typedef unsigned (*stp_convert_t)(stp_const_vars_t vars,
+				  const unsigned char *in,
+				  unsigned short *out);
 
 typedef struct
 {
@@ -54,6 +54,8 @@ typedef struct
   unsigned char *in_data;
   int image_bpp;
   int image_width;
+  int out_channels;
+  int channels_are_initialized;
   stp_convert_t colorfunc;
   stp_curve_t composite;
   stp_curve_t black;
@@ -76,7 +78,7 @@ typedef struct
   int color_only;
 } float_param_t;
 
-static float_param_t float_parameters[] =
+static const float_param_t float_parameters[] =
 {
   {
     {
@@ -153,38 +155,6 @@ static float_param_t float_parameters[] =
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, 3
     }, 0.0, 4.0, 1.0, 1
-  },
-  {
-    {
-      "CyanDensity", N_("Cyan Balance"),
-      N_("Adjust the cyan balance"),
-      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1
-    }, 0.0, 2.0, 1.0, 1
-  },
-  {
-    {
-      "MagentaDensity", N_("Magenta Balance"),
-      N_("Adjust the magenta balance"),
-      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2
-    }, 0.0, 2.0, 1.0, 1
-  },
-  {
-    {
-      "YellowDensity", N_("Yellow Balance"),
-      N_("Adjust the yellow balance"),
-      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3
-    }, 0.0, 2.0, 1.0, 1
-  },
-  {
-    {
-      "BlackDensity", N_("Black Balance"),
-      N_("Adjust the black balance"),
-      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0
-    }, 0.0, 2.0, 1.0, 1
   },
   {
     {
@@ -508,52 +478,44 @@ update_cmyk(unsigned short *rgb)
  *                    adjusted).
  */
 
-static void
-gray_to_gray(stp_const_vars_t vars,
-	     const unsigned char *grayin,
-	     unsigned short *grayout,
-	     int *zero_mask,
-	     int width,
-	     int bpp)
+static unsigned
+gray_to_gray(stp_const_vars_t vars, const unsigned char *in,
+	     unsigned short *out)
 {
   int i0 = -1;
   int o0 = 0;
   int nz = 0;
   lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
+  int i;
   size_t count;
   const unsigned short *composite;
   stp_curve_resample(lut->composite, 256);
   composite = stp_curve_get_ushort_data(lut->composite, &count);
 
-  while (width > 0)
+  for (i = 0; i < lut->image_width; i++)
     {
-      if (i0 != grayin[0])
+      if (i0 != in[0])
 	{
-	  i0 = grayin[0];
+	  i0 = in[0];
 	  o0 = composite[i0];
 	  nz |= o0;
 	}
-      grayout[0] = o0;
-      grayin ++;
-      grayout ++;
-      width --;
+      out[0] = o0;
+      in ++;
+      out ++;
     }
-  if (zero_mask)
-    *zero_mask = nz ? 0 : 1;
+  return nz != 0;
 }
 
 /*
  * 'rgb_to_gray()' - Convert RGB image data to grayscale.
  */
 
-static void
-rgb_to_gray(stp_const_vars_t vars,
-	    const unsigned char *rgb,
-	    unsigned short *gray,
-	    int *zero_mask,
-	    int width,
-	    int bpp)
+static unsigned
+rgb_to_gray(stp_const_vars_t vars, const unsigned char *in,
+	    unsigned short *out)
 {
+  int i;
   int i0 = -1;
   int i1 = -1;
   int i2 = -1;
@@ -565,26 +527,22 @@ rgb_to_gray(stp_const_vars_t vars,
   stp_curve_resample(lut->composite, 256);
   composite = stp_curve_get_ushort_data(lut->composite, &count);
 
-  if (width <= 0)
-    return;
-  while (width)
+  for (i = 0; i < lut->image_width; i++)
     {
-      if (i0 != rgb[0] || i1 != rgb[1] || i2 != rgb[2])
+      if (i0 != in[0] || i1 != in[1] || i2 != in[2])
 	{
-	  i0 = rgb[0];
-	  i1 = rgb[1];
-	  i2 = rgb[2];
+	  i0 = in[0];
+	  i1 = in[1];
+	  i2 = in[2];
 	  o0 = composite[(i0 * LUM_RED + i1 * LUM_GREEN + i2 * LUM_BLUE) /
 			 100];
 	  nz |= o0;
 	}
-      gray[0] = o0;
-      rgb += 3;
-      gray ++;
-      width --;
+      out[0] = o0;
+      in += 3;
+      out ++;
     }
-  if (zero_mask)
-    *zero_mask = nz ? 0 : 1;
+  return nz != 0;
 }
 
 static inline double
@@ -713,14 +671,10 @@ lookup_rgb(lut_t *lut, unsigned short *rgbout,
  * 'rgb_to_rgb()' - Convert rgb image data to RGB.
  */
 
-static void
-rgb_to_rgb(stp_const_vars_t vars,
-	   const unsigned char *rgbin,
-	   unsigned short *rgbout,
-	   int *zero_mask,
-	   int width,
-	   int bpp)
+static unsigned
+rgb_to_rgb(stp_const_vars_t vars, const unsigned char *in, unsigned short *out)
 {
+  int i;
   double isat = 1.0;
   double ssat = stp_get_float_parameter(vars, "Saturation");
   size_t count;
@@ -763,61 +717,51 @@ rgb_to_rgb(stp_const_vars_t vars,
     ssat = sqrt(ssat);
   if (ssat > 1)
     isat = 1.0 / ssat;
-  while (width > 0)
+  for (i = 0; i < lut->image_width; i++)
     {
-      if (i0 == rgbin[0] && i1 == rgbin[1] && i2 == rgbin[2])
+      if (i0 == in[0] && i1 == in[1] && i2 == in[2])
 	{
-	  rgbout[0] = o0;
-	  rgbout[1] = o1;
-	  rgbout[2] = o2;
+	  out[0] = o0;
+	  out[1] = o1;
+	  out[2] = o2;
 	}
       else
 	{
-	  i0 = rgbin[0];
-	  i1 = rgbin[1];
-	  i2 = rgbin[2];
-	  rgbout[0] = i0 | (i0 << 8);
-	  rgbout[1] = i1 | (i1 << 8);
-	  rgbout[2] = i2 | (i2 << 8);
-	  if ((compute_saturation) &&
-	      (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
-	    update_saturation_from_rgb(rgbout, ssat, isat);
+	  i0 = in[0];
+	  i1 = in[1];
+	  i2 = in[2];
+	  out[0] = i0 | (i0 << 8);
+	  out[1] = i1 | (i1 << 8);
+	  out[2] = i2 | (i2 << 8);
+	  if ((compute_saturation) && (out[0] != out[1] || out[0] != out[2]))
+	    update_saturation_from_rgb(out, ssat, isat);
 	  if (do_update_cmyk)
-	    update_cmyk(rgbout);	/* Fiddle with the INPUT */
-	  lookup_rgb(lut, rgbout, red, green, blue);
-	  adjust_hsl(rgbout, lut, do_adjust_lum, ssat, isat, h_points,
+	    update_cmyk(out);	/* Fiddle with the INPUT */
+	  lookup_rgb(lut, out, red, green, blue);
+	  adjust_hsl(out, lut, do_adjust_lum, ssat, isat, h_points,
 		     s_points, l_points, split_saturation);
-	  o0 = rgbout[0];
-	  o1 = rgbout[1];
-	  o2 = rgbout[2];
+	  o0 = out[0];
+	  o1 = out[1];
+	  o2 = out[2];
 	  nz0 |= o0;
 	  nz1 |= o1;
 	  nz2 |= o2;
 	}
-      rgbin += bpp;
-      rgbout += 3;
-      width --;
+      in += lut->image_bpp;
+      out += 3;
     }
-  if (zero_mask)
-    {
-      *zero_mask = nz0 ? 0 : 1;
-      *zero_mask |= nz1 ? 0 : 2;
-      *zero_mask |= nz2 ? 0 : 4;
-    }
+  return (nz0 ? 0 : 1) +  (nz1 ? 0 : 2) +  (nz2 ? 0 : 4);
 }
 
 /*
  * 'gray_to_rgb()' - Convert gray image data to RGB.
  */
 
-static void
-gray_to_rgb(stp_const_vars_t vars,
-	    const unsigned char	*grayin,
-	    unsigned short *rgbout,
-	    int *zero_mask,
-	    int width,
-	    int bpp)
+static unsigned
+gray_to_rgb(stp_const_vars_t vars, const unsigned char *in,
+	    unsigned short *out)
 {
+  int i;
   int i0 = -1;
   int o0 = 0;
   int o1 = 0;
@@ -839,40 +783,32 @@ gray_to_rgb(stp_const_vars_t vars,
   green = stp_curve_get_ushort_data(lut->magenta, &count);
   blue = stp_curve_get_ushort_data(lut->yellow, &count);
 
-  while (width > 0)
+  for (i = 0; i < lut->image_width; i++)
     {
-      if (i0 == grayin[0])
+      if (i0 == in[0])
 	{
-	  rgbout[0] = o0;
-	  rgbout[1] = o1;
-	  rgbout[2] = o2;
+	  out[0] = o0;
+	  out[1] = o1;
+	  out[2] = o2;
 	}
       else
 	{
-	  i0 = grayin[0];
-	  rgbout[0] =
-	    rgbout[1] =
-	    rgbout[2] = i0 | (i0 << 8);
+	  i0 = in[0];
+	  out[0] = out[1] = out[2] = i0 | (i0 << 8);
 	  if (do_update_cmyk)
-	    update_cmyk(rgbout);
-	  lookup_rgb(lut, rgbout, red, green, blue);
-	  o0 = rgbout[0];
-	  o1 = rgbout[1];
-	  o2 = rgbout[2];
+	    update_cmyk(out);
+	  lookup_rgb(lut, out, red, green, blue);
+	  o0 = out[0];
+	  o1 = out[1];
+	  o2 = out[2];
 	  nz0 |= o0;
 	  nz1 |= o1;
 	  nz2 |= o2;
 	}
-      grayin += bpp;
-      rgbout += 3;
-      width --;
+      in += lut->image_bpp;
+      out += 3;
     }
-  if (zero_mask)
-    {
-      *zero_mask = nz0 ? 0 : 1;
-      *zero_mask |= nz1 ? 0 : 2;
-      *zero_mask |= nz2 ? 0 : 4;
-    }
+  return (nz0 ? 0 : 1) +  (nz1 ? 0 : 2) +  (nz2 ? 0 : 4);
 }
 
 
@@ -880,14 +816,11 @@ gray_to_rgb(stp_const_vars_t vars,
  * 'rgb_to_rgb()' - Convert rgb image data to RGB.
  */
 
-static void
-fast_rgb_to_rgb(stp_const_vars_t vars,
-		const unsigned char *rgbin,
-		unsigned short *rgbout,
-		int *zero_mask,
-		int width,
-		int bpp)
+static unsigned
+fast_rgb_to_rgb(stp_const_vars_t vars, const unsigned char *in,
+		unsigned short *out)
 {
+  int i;
   int i0 = -1;
   int i1 = -1;
   int i2 = -1;
@@ -914,55 +847,46 @@ fast_rgb_to_rgb(stp_const_vars_t vars,
 
   if (saturation > 1)
     isat = 1.0 / saturation;
-  while (width > 0)
+  for (i = 0; i < lut->image_width; i++)
     {
-      if (i0 == rgbin[0] && i1 == rgbin[1] && i2 == rgbin[2])
+      if (i0 == in[0] && i1 == in[1] && i2 == in[2])
 	{
-	  rgbout[0] = o0;
-	  rgbout[1] = o1;
-	  rgbout[2] = o2;
+	  out[0] = o0;
+	  out[1] = o1;
+	  out[2] = o2;
 	}
       else
 	{
-	  i0 = rgbin[0];
-	  i1 = rgbin[1];
-	  i2 = rgbin[2];
-	  rgbout[0] = red[rgbin[0]];
-	  rgbout[1] = green[rgbin[1]];
-	  rgbout[2] = blue[rgbin[2]];
+	  i0 = in[0];
+	  i1 = in[1];
+	  i2 = in[2];
+	  out[0] = red[in[0]];
+	  out[1] = green[in[1]];
+	  out[2] = blue[in[2]];
 	  if (saturation != 1.0)
-	    update_saturation_from_rgb(rgbout, saturation, isat);
-	  o0 = rgbout[0];
-	  o1 = rgbout[1];
-	  o2 = rgbout[2];
+	    update_saturation_from_rgb(out, saturation, isat);
+	  o0 = out[0];
+	  o1 = out[1];
+	  o2 = out[2];
 	  nz0 |= o0;
 	  nz1 |= o1;
 	  nz2 |= o2;
 	}
-      rgbin += bpp;
-      rgbout += 3;
-      width --;
+      in += lut->image_bpp;
+      out += 3;
     }
-  if (zero_mask)
-    {
-      *zero_mask = nz0 ? 0 : 1;
-      *zero_mask |= nz1 ? 0 : 2;
-      *zero_mask |= nz2 ? 0 : 4;
-    }
+  return (nz0 ? 0 : 1) +  (nz1 ? 0 : 2) +  (nz2 ? 0 : 4);
 }
 
 /*
  * 'gray_to_rgb()' - Convert gray image data to RGB.
  */
 
-static void
-fast_gray_to_rgb(stp_const_vars_t vars,
-		 const unsigned char *grayin,
-		 unsigned short *rgbout,
-		 int *zero_mask,
-		 int width,
-		 int bpp)
+static unsigned
+fast_gray_to_rgb(stp_const_vars_t vars, const unsigned char *in,
+		 unsigned short *out)
 {
+  int i;
   int i0 = -1;
   int o0 = 0;
   int o1 = 0;
@@ -983,37 +907,31 @@ fast_gray_to_rgb(stp_const_vars_t vars,
   green = stp_curve_get_ushort_data(lut->magenta, &count);
   blue = stp_curve_get_ushort_data(lut->yellow, &count);
 
-  while (width > 0)
+  for (i = 0; i < lut->image_width; i++)
     {
-      if (i0 == grayin[0])
+      if (i0 == in[0])
 	{
-	  rgbout[0] = o0;
-	  rgbout[1] = o1;
-	  rgbout[2] = o2;
+	  out[0] = o0;
+	  out[1] = o1;
+	  out[2] = o2;
 	}
       else
 	{
-	  i0 = grayin[0];
-	  rgbout[0] = red[grayin[0]];
-	  rgbout[1] = green[grayin[0]];
-	  rgbout[2] = blue[grayin[0]];
-	  o0 = rgbout[0];
-	  o1 = rgbout[1];
-	  o2 = rgbout[2];
+	  i0 = in[0];
+	  out[0] = red[in[0]];
+	  out[1] = green[in[0]];
+	  out[2] = blue[in[0]];
+	  o0 = out[0];
+	  o1 = out[1];
+	  o2 = out[2];
 	  nz0 |= o0;
 	  nz1 |= o1;
 	  nz2 |= o2;
 	}
-      grayin += bpp;
-      rgbout += 3;
-      width --;
+      in += lut->image_bpp;
+      out += 3;
     }
-  if (zero_mask)
-    {
-      *zero_mask = nz0 ? 0 : 1;
-      *zero_mask |= nz1 ? 0 : 2;
-      *zero_mask |= nz2 ? 0 : 4;
-    }
+  return (nz0 ? 0 : 1) +  (nz1 ? 0 : 2) +  (nz2 ? 0 : 4);
 }
 
 static stp_curve_t
@@ -1072,21 +990,21 @@ compute_gcr_curve(stp_const_vars_t vars)
   return curve;
 }
 
-static void
-generic_rgb_to_cmyk(stp_const_vars_t vars,
-		    const unsigned short *in,
-		    unsigned short *out,
-		    int *zero_mask,
-		    int width,
-		    int bpp)
+static unsigned
+generic_rgb_to_kcmy(stp_const_vars_t vars, const unsigned short *in,
+		    unsigned short *out)
 {
   lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
+  int width = lut->image_width;
   int step = 65535 / (lut->steps - 1); /* 1 or 257 */
 
   const unsigned short *gcr_lookup;
   const unsigned short *black_lookup;
   size_t points;
   int i;
+  int j;
+  int nz[4];
+  unsigned retval = 0;
 
   if (!lut->gcr_curve)
     {
@@ -1113,18 +1031,18 @@ generic_rgb_to_cmyk(stp_const_vars_t vars,
   gcr_lookup = stp_curve_get_ushort_data(lut->gcr_curve, &points);
   stp_curve_resample(lut->black, lut->steps);
   black_lookup = stp_curve_get_ushort_data(lut->black, &points);
+  memset(nz, 0, sizeof(nz));
 
   for (i = 0; i < width; i++, out += 4, in += 3)
     {
-      int j;
       int c = in[0];
       int m = in[1];
       int y = in[2];
       int k = FMIN(c, FMIN(m, y));
       for (j = 0; j < 3; j++)
-	out[j] = in[j];
+	out[j + 1] = in[j];
       if (k == 0)
-	out[3] = 0;
+	out[0] = 0;
       else
 	{
 	  int where, resid;
@@ -1144,58 +1062,58 @@ generic_rgb_to_cmyk(stp_const_vars_t vars,
 	  if (kk > k)
 	    kk = k;
 	  if (lut->steps == 65536)
-	    out[3] = black_lookup[kk];
+	    out[0] = black_lookup[kk];
 	  else
 	    {
 	      where = kk / step;
 	      resid = kk % step;
 	      if (resid)
-		out[3] = black_lookup[where] +
+		out[0] = black_lookup[where] +
 		  (black_lookup[where + 1] - black_lookup[where]) * resid /
 		  step;
 	      else
-		out[3] = black_lookup[where];
+		out[0] = black_lookup[where];
 	    }
-	  for (j = 0; j < 3; j++)
+	  for (j = 1; j < 4; j++)
 	    out[j] -= kk;
 	}
+      for (j = 0; j < 4; j++)
+	nz[j] |= out[j];
     }
+  for (j = 0; j < 4; j++)
+    if (nz[j] == 0)
+      retval |= (1 << j);
+  return retval;
 }
 
-#define RGB_TO_CMYK_FUNC(name)						\
-static void								\
-name##_to_cmyk(stp_const_vars_t vars,					\
-	       const unsigned char *in,					\
-	       unsigned short *out,					\
-	       int *zero_mask,						\
-	       int width,						\
-	       int bpp)							\
+#define RGB_TO_KCMY_FUNC(name)						\
+static unsigned								\
+name##_to_kcmy(stp_const_vars_t vars, const unsigned char *in,		\
+	       unsigned short *out)					\
 {									\
   lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));	\
   if (!lut->cmy_tmp)							\
-    lut->cmy_tmp = stpi_malloc(4 * 2 * width);				\
-  name##_to_rgb(vars, in, lut->cmy_tmp, zero_mask, width, bpp);		\
-  generic_rgb_to_cmyk(vars, lut->cmy_tmp, out, zero_mask, width, bpp);	\
+    lut->cmy_tmp = stpi_malloc(4 * 2 * lut->image_width);		\
+  name##_to_rgb(vars, in, lut->cmy_tmp);				\
+  return generic_rgb_to_kcmy(vars, lut->cmy_tmp, out);			\
 }
 
-RGB_TO_CMYK_FUNC(gray)
-RGB_TO_CMYK_FUNC(fast_gray)
-RGB_TO_CMYK_FUNC(rgb)
-RGB_TO_CMYK_FUNC(fast_rgb)
+RGB_TO_KCMY_FUNC(gray)
+RGB_TO_KCMY_FUNC(fast_gray)
+RGB_TO_KCMY_FUNC(rgb)
+RGB_TO_KCMY_FUNC(fast_rgb)
 
-static void
-cmyk_8_to_cmyk(stp_const_vars_t vars,
-	       const unsigned char *cmykin,
-	       unsigned short *cmykout,
-	       int *zero_mask,
-	       int width,
-	       int bpp)
+static unsigned
+cmyk_8_to_kcmy(stp_const_vars_t vars, const unsigned char *in,
+	       unsigned short *out)
 {
   int i;
+  unsigned retval = 0;
   int j;
   int nz[4];
-  static unsigned short	lut[256];
+  static unsigned short	vlut[256];
   static double print_gamma = -1.0;
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
 
   memset(nz, 0, sizeof(nz));
   if (print_gamma != stp_get_float_parameter(vars, "Gamma"))
@@ -1203,49 +1121,44 @@ cmyk_8_to_cmyk(stp_const_vars_t vars,
     print_gamma = stp_get_float_parameter(vars, "Gamma");
 
     for (i = 0; i < 256; i ++)
-      lut[i] = 65535.0 * pow((double)i / 255.0, print_gamma) + 0.5;
+      vlut[i] = 65535.0 * pow((double)i / 255.0, print_gamma) + 0.5;
   }
 
-  for (i = 0; i < width; i++)
+  for (i = 0; i < lut->image_width; i++)
     {
-      j = *cmykin++;
-      nz[0] |= j;
-      *cmykout++ = lut[j];
-
-      j = *cmykin++;
-      nz[1] |= j;
-      *cmykout++ = lut[j];
-
-      j = *cmykin++;
-      nz[2] |= j;
-      *cmykout++ = lut[j];
-
-      j = *cmykin++;
+      j = *in++;
       nz[3] |= j;
-      *cmykout++ = lut[j];
+      out[3] = vlut[j];
+
+      j = *in++;
+      nz[0] |= j;
+      out[0] = vlut[j];
+
+      j = *in++;
+      nz[1] |= j;
+      out[1] = vlut[j];
+
+      j = *in++;
+      nz[2] |= j;
+      out[2] = vlut[j];
+
+      out += 4;
     }
-  if (zero_mask)
-    {
-      *zero_mask = nz[0] ? 0 : 1;
-      *zero_mask |= nz[1] ? 0 : 2;
-      *zero_mask |= nz[2] ? 0 : 4;
-      *zero_mask |= nz[3] ? 0 : 8;
-    }
+  for (i = 0; i < 4; i++)
+    retval += nz[i] ? 0 : 1 << i;
+  return retval;
 }
 
-static void
-cmyk_8_to_gray(stp_const_vars_t vars,
-	       const unsigned char *cmykin,
-	       unsigned short *grayout,
-	       int *zero_mask,
-	       int width,
-	       int bpp)
+static unsigned
+cmyk_8_to_gray(stp_const_vars_t vars, const unsigned char *in,
+	       unsigned short *out)
 {
   int i;
   int j;
   int nz[4];
-  static unsigned short	lut[256];
+  static unsigned short	vlut[256];
   static double print_gamma = -1.0;
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color")); 
 
   memset(nz, 0, sizeof(nz));
   if (print_gamma != stp_get_float_parameter(vars, "Gamma"))
@@ -1253,125 +1166,119 @@ cmyk_8_to_gray(stp_const_vars_t vars,
     print_gamma = stp_get_float_parameter(vars, "Gamma");
 
     for (i = 0; i < 256; i ++)
-      lut[i] = 65535.0 * pow((double)i / 255.0, print_gamma) + 0.5;
+      vlut[i] = 65535.0 * pow((double)i / 255.0, print_gamma) + 0.5;
   }
 
-  for (i = 0; i < width; i++)
+  for (i = 0; i < lut->image_width; i++)
     {
-      j = *cmykin++;
+      j = *in++;
       nz[0] |= j;
-      *grayout++ = lut[j];
+      *out++ = vlut[j];
     }
-  if (zero_mask)
-    {
-      *zero_mask = nz[0] ? 0 : 1;
-    }
+  return nz[0] ? 0 : 1;
 }
 
-static void
-raw_to_raw(stp_const_vars_t vars,
-	   const unsigned char *rawin,
-	   unsigned short *rawout,
-	   int *zero_mask,
-	   int width,
-	   int bpp)
+static unsigned
+raw_to_raw(stp_const_vars_t vars, const unsigned char *in,
+	   unsigned short *out)
 {
   int i;
   int j;
+  unsigned retval = 0;
   int nz[32];
   int colors;
-  const unsigned short *srawin = (const unsigned short *) rawin;
-  colors = bpp / 2;
+  const unsigned short *usin = (const unsigned short *) in;
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
+  colors = lut->image_bpp / 2;
 
   memset(nz, 0, sizeof(nz));
-  for (i = 0; i < width; i++)
+  for (i = 0; i < lut->image_width; i++)
     {
       for (j = 0; j < colors; j++)
 	{
-	  nz[j] |= srawin[j];
-	  rawout[j] = srawin[j];
+	  nz[j] |= usin[j];
+	  out[j] = usin[j];
 	}
-      srawin += colors;
-      rawout += colors;
+      usin += colors;
+      out += colors;
     }
-  if (zero_mask)
-    {
-      *zero_mask = 0;
-      for (i = 0; i < colors; i++)
-	if (! nz[i])
-	  *zero_mask |= 1 << i;
-    }
+  for (i = 0; i < colors; i++)
+    retval += nz[i] ? 0 : 1 << i;
+  return retval;
 }
 
-static void
-cmyk_to_cmyk(stp_const_vars_t vars,
-	     const unsigned char *cmykin,
-	     unsigned short *cmykout,
-	     int *zero_mask,
-	     int width,
-	     int bpp)
+static unsigned
+cmyk_to_kcmy(stp_const_vars_t vars, const unsigned char *in,
+	     unsigned short *out)
 {
   int i;
   int j;
+  unsigned retval = 0;
   int nz[4];
-  const unsigned short *scmykin = (const unsigned short *) cmykin;
+  const unsigned short *usin = (const unsigned short *) in;
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
 
   memset(nz, 0, sizeof(nz));
-  for (i = 0; i < width; i++)
+  for (i = 0; i < lut->image_width; i++)
     {
+      out[0] = usin[3];
+      out[1] = usin[0];
+      out[2] = usin[1];
+      out[3] = usin[2];
       for (j = 0; j < 4; j++)
-	{
-	  nz[j] |= scmykin[j];
-	  cmykout[j] = scmykin[j];
-	}
-      scmykin += 4;
-      cmykout += 4;
+	nz[j] |= out[j];
+      usin += 4;
+      out += 4;
     }
-  if (zero_mask)
-    {
-      *zero_mask = nz[0] ? 0 : 1;
-      *zero_mask |= nz[1] ? 0 : 2;
-      *zero_mask |= nz[2] ? 0 : 4;
-      *zero_mask |= nz[3] ? 0 : 8;
-    }
+  for (i = 0; i < 4; i++)
+    retval += nz[i] ? 0 : 1 << i;
+  return retval;
 }
 
-static void
-cmyk_to_gray(stp_const_vars_t vars,
-	     const unsigned char *cmykin,
-	     unsigned short *grayout,
-	     int *zero_mask,
-	     int width,
-	     int bpp)
+static unsigned
+cmyk_to_gray(stp_const_vars_t vars, const unsigned char *in,
+	     unsigned short *out)
 {
   int i;
   int nz[4];
-  const unsigned short *scmykin = (const unsigned short *) cmykin;
+  const unsigned short *usin = (const unsigned short *) in;
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
 
   memset(nz, 0, sizeof(nz));
-  for (i = 0; i < width; i++)
+  for (i = 0; i < lut->image_width; i++)
     {
-      nz[0] |= scmykin[0];
-      grayout[0] = scmykin[0];
-      scmykin += 4;
-      grayout += 1;
+      nz[0] |= usin[0];
+      out[0] = usin[0];
+      usin += 4;
+      out += 1;
     }
-  if (zero_mask)
-    {
-      *zero_mask = nz[0] ? 0 : 1;
-    }
+  return nz[0] ? 0 : 1;
+}
+
+static void
+initialize_channels(stp_vars_t v, stp_image_t *image)
+{
+  lut_t *lut = (lut_t *)(stpi_get_component_data(v, "Color"));
+  stpi_channel_initialize((stp_vars_t) v, image, lut->out_channels);
+  lut->channels_are_initialized = 1;
 }
 
 int
 stpi_color_get_row(stp_const_vars_t v, stp_image_t *image, int row,
-		  unsigned short *out, int *zero_mask)
+		   unsigned *zero_mask)
 {
   const lut_t *lut = (const lut_t *)(stpi_get_component_data(v, "Color"));
-  unsigned char *in = lut->in_data;
-  if (stpi_image_get_row(image, in, lut->image_width * lut->image_bpp, row) !=
-      STP_IMAGE_STATUS_OK)
+  unsigned zero;
+  if (stpi_image_get_row(image, lut->in_data,
+			 lut->image_width * lut->image_bpp, row)
+      != STP_IMAGE_STATUS_OK)
     return 2;
-  (lut->colorfunc)(v, in, out, zero_mask, lut->image_width, lut->image_bpp);
+  if (!lut->channels_are_initialized)
+    initialize_channels((stp_vars_t) v, image);
+  zero = (lut->colorfunc)(v, lut->in_data, stpi_channel_get_input(v));
+  if (zero_mask)
+    *zero_mask = zero;
+  stpi_channel_convert(v, zero_mask);
   return 0;
 }
 
@@ -1399,6 +1306,7 @@ allocate_lut(void)
   ret->in_data = NULL;
   ret->colorfunc = NULL;
   ret->cmy_tmp = NULL;
+  ret->channels_are_initialized = 0;
   return ret;
 }
 
@@ -1751,11 +1659,12 @@ set_null_colorfunc(void)
   stpi_erprintf("No colorfunc chosen!\n");
 }
 
-#define SET_COLORFUNC(x)						    \
-stpi_dprintf(STPI_DBG_COLORFUNC, v,					    \
-	    "at line %d stp_choose_colorfunc(type %d bpp %d) ==> %s, %d\n", \
-	    __LINE__, stp_get_output_type(v), image_bpp, #x, out_channels); \
-lut->colorfunc = x;							    \
+#define SET_COLORFUNC(x)						     \
+stpi_dprintf(STPI_DBG_COLORFUNC, v,					     \
+	     "at line %d stp_choose_colorfunc(type %d bpp %d) ==> %s, %d\n", \
+	     __LINE__, stp_get_output_type(v), image_bpp, #x,		     \
+	     lut->out_channels);					     \
+lut->colorfunc = x;							     \
 break
 
 int
@@ -1763,7 +1672,6 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
 {
   const char *image_type = stp_get_string_parameter(v, "ImageOptimization");
   int itype = 0;
-  int out_channels = 0;
   int image_bpp = stpi_image_bpp(image);
   lut_t *lut;
   if (steps != 256 && steps != 65536)
@@ -1787,7 +1695,7 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
   switch (stp_get_output_type(v))
     {
     case OUTPUT_RAW_CMYK:
-      out_channels = 4;
+      lut->out_channels = 4;
       switch (image_bpp)
 	{
 	case 1:
@@ -1796,9 +1704,9 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
 	    case 3:
 	    case 2:
 	    case 1:
-	      SET_COLORFUNC(gray_to_cmyk);
+	      SET_COLORFUNC(gray_to_kcmy);
 	    case 0:
-	      SET_COLORFUNC(fast_gray_to_cmyk);
+	      SET_COLORFUNC(fast_gray_to_kcmy);
 	    default:
 	      set_null_colorfunc();
 	      SET_COLORFUNC(NULL);
@@ -1811,25 +1719,25 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
 	    case 3:
 	    case 2:
 	    case 1:
-	      SET_COLORFUNC(rgb_to_cmyk);
+	      SET_COLORFUNC(rgb_to_kcmy);
 	    case 0:
-	      SET_COLORFUNC(fast_rgb_to_cmyk);
+	      SET_COLORFUNC(fast_rgb_to_kcmy);
 	    default:
 	      set_null_colorfunc();
 	      SET_COLORFUNC(NULL);
 	    }
 	  break;
 	case 4:
-	  SET_COLORFUNC(cmyk_8_to_cmyk);
+	  SET_COLORFUNC(cmyk_8_to_kcmy);
 	case 8:
-	  SET_COLORFUNC(cmyk_to_cmyk);
+	  SET_COLORFUNC(cmyk_to_kcmy);
 	default:
 	  set_null_colorfunc();
 	  SET_COLORFUNC(NULL);
 	}
       break;
     case OUTPUT_COLOR:
-      out_channels = 3;
+      lut->out_channels = 3;
       switch (image_bpp)
 	{
 	case 3:
@@ -1872,10 +1780,10 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
 	  set_null_colorfunc();
 	  SET_COLORFUNC(NULL);
 	}
-      out_channels = image_bpp / 2;
+      lut->out_channels = image_bpp / 2;
       SET_COLORFUNC(raw_to_raw);
     case OUTPUT_GRAY:
-      out_channels = 1;
+      lut->out_channels = 1;
       switch (image_bpp)
 	{
 	case 1:
@@ -1896,7 +1804,7 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
       SET_COLORFUNC(NULL);
     }
   lut->in_data = stpi_malloc(stpi_image_width(image) * image_bpp);
-  return out_channels;
+  return lut->out_channels;
 }
 
 static void
@@ -1980,7 +1888,7 @@ stpi_color_describe_parameter(stp_const_vars_t v, const char *name,
     return;
   for (i = 0; i < float_parameter_count; i++)
     {
-      float_param_t *param = &(float_parameters[i]);
+      const float_param_t *param = &(float_parameters[i]);
       if (strcmp(name, param->param.name) == 0)
 	{
 	  stpi_fill_parameter_settings(description, &(param->param));

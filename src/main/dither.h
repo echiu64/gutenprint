@@ -123,32 +123,6 @@ extern void stpi_dither_matrix_set_row(dither_matrix_t *mat, int y);
 extern stp_array_t stpi_find_standard_dither_array(int x_aspect, int y_aspect);
 
 
-
-typedef struct
-{
-  double value;
-  unsigned bit_pattern;
-  int subchannel;
-  unsigned dot_size;
-} stpi_dither_range_simple_t;
-
-typedef struct
-{
-  double value;
-  double lower;
-  double upper;
-  unsigned bit_pattern;
-  int subchannel;
-  unsigned dot_size;
-} stpi_dither_range_t;
-
-typedef struct
-{
-   double value[2];
-   unsigned bits[2];
-   int subchannel[2];
-} stpi_dither_range_full_t;
-
 typedef struct stpi_dotsize
 {
   unsigned bit_pattern;
@@ -158,7 +132,6 @@ typedef struct stpi_dotsize
 typedef struct stpi_shade
 {
   double value;
-  int subchannel;
   int numsizes;
   const stpi_dotsize_t *dot_sizes;
 } stpi_shade_t;
@@ -183,22 +156,14 @@ extern void stpi_dither_set_matrix_from_dither_array(stp_vars_t v,
 						     int transpose);
 extern void stpi_dither_set_transition(stp_vars_t v, double);
 extern void stpi_dither_set_randomizer(stp_vars_t v, int color, double);
-extern void stpi_dither_set_ranges(stp_vars_t v, int color, int nlevels,
-				   const stpi_dither_range_simple_t *ranges,
-				   double density);
-extern void stpi_dither_set_ranges_full(stp_vars_t v, int color, int nlevels,
-					const stpi_dither_range_full_t *ranges,
-					double density);
-extern void stpi_dither_set_ranges_and_shades_simple(stp_vars_t v,
-						     int color, int nlevels,
-						     const double *levels,
-						     double density);
 extern void stpi_dither_set_ink_spread(stp_vars_t v, int spread);
 extern void stpi_dither_set_adaptive_limit(stp_vars_t v, double limit);
 extern int stpi_dither_get_first_position(stp_vars_t v, int color, int subchan);
 extern int stpi_dither_get_last_position(stp_vars_t v, int color, int subchan);
-extern void stpi_dither_set_shades(stp_vars_t v, int color, int nshades,
-				   const stpi_shade_t *shades, double density);
+extern void stpi_dither_set_inks_simple(stp_vars_t v, int color, int nlevels,
+					const double *levels, double density);
+extern void stpi_dither_set_inks(stp_vars_t v, int color, int nshades,
+				 const stpi_shade_t *shades, double density);
 
 extern void stpi_dither_add_channel(stp_vars_t v, unsigned char *data,
 				    unsigned channel, unsigned subchannel);
@@ -206,10 +171,18 @@ extern void stpi_dither_add_channel(stp_vars_t v, unsigned char *data,
 extern unsigned char *stpi_dither_get_channel(stp_vars_t v,
 					      unsigned channel,
 					      unsigned subchannel);
+extern void stpi_dither_set_density_adjustment(stp_vars_t v,
+					       int color, int subchannel,
+					       double adjustment);
 
-extern void stpi_dither(stp_vars_t v, int row, const unsigned short *input,
-			int duplicate_line, int zero_mask);
+extern void stpi_dither(stp_vars_t v, int row, int duplicate_line,
+			int zero_mask);
 
+#ifdef STPI_TESTDITHER
+extern void stpi_dither_internal(stp_vars_t v, int row,
+				 const unsigned short *input,
+				 int duplicate_line, int zero_mask);
+#endif
 
 #ifdef __cplusplus
   }

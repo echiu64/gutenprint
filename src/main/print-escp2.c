@@ -77,6 +77,15 @@ static const res_t *escp2_find_resolution(stp_const_vars_t v,
   STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1		\
 }
 
+typedef struct
+{
+  const stp_parameter_t param;
+  double min;
+  double max;
+  double defval;
+  int color_only;
+} float_param_t;
+
 static const stp_parameter_t the_parameters[] =
 {
   {
@@ -127,30 +136,6 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_OUTPUT,
     STP_PARAMETER_LEVEL_ADVANCED4, 1, 1, -1
   },
-  {
-    "LightCyanTransition", N_("Light Cyan Transition"),
-    N_("Light Cyan Transition"),
-    STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-    STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
-  },
-  {
-    "LightMagentaTransition", N_("Light Magenta Transition"),
-    N_("Light Magenta Transition"),
-    STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-    STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
-  },
-  {
-    "DarkYellowTransition", N_("Dark Yellow Transition"),
-    N_("Dark Yellow Transition"),
-    STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-    STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
-  },
-  {
-    "GrayTransition", N_("Gray Transition"),
-    N_("Gray Transition"),
-    STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-    STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
-  },
   PARAMETER_INT(max_hres),
   PARAMETER_INT(max_vres),
   PARAMETER_INT(min_hres),
@@ -189,6 +174,102 @@ static const stp_parameter_t the_parameters[] =
 
 static int the_parameter_count =
 sizeof(the_parameters) / sizeof(const stp_parameter_t);
+
+static const float_param_t float_parameters[] =
+{
+  {
+    {
+      "CyanDensity", N_("Cyan Balance"),
+      N_("Adjust the cyan balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "MagentaDensity", N_("Magenta Balance"),
+      N_("Adjust the magenta balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "YellowDensity", N_("Yellow Balance"),
+      N_("Adjust the yellow balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "BlackDensity", N_("Black Balance"),
+      N_("Adjust the black balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "LightCyanTransition", N_("Light Cyan Transition"),
+      N_("Light Cyan Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "LightMagentaTransition", N_("Light Magenta Transition"),
+      N_("Light Magenta Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "DarkYellowTransition", N_("Dark Yellow Transition"),
+      N_("Dark Yellow Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "GrayTransition", N_("Gray Transition"),
+      N_("Gray Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "Gray3Transition", N_("Dark Gray Transition"),
+      N_("Dark Gray Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "Gray2Transition", N_("Mid Gray Transition"),
+      N_("Medium Gray Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "Gray1Transition", N_("Light Gray Transition"),
+      N_("Light Gray Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+    }, 0.0, 5.0, 1.0, 1
+  },
+};    
+
+static int float_parameter_count =
+sizeof(float_parameters) / sizeof(const float_param_t);
+
 
 static escp2_privdata_t *
 get_privdata(stp_vars_t v)
@@ -550,6 +631,8 @@ escp2_list_parameters(stp_const_vars_t v)
   int i;
   for (i = 0; i < the_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(the_parameters[i]));
+  for (i = 0; i < float_parameter_count; i++)
+    stp_parameter_list_add_param(ret, &(float_parameters[i].param));
   return ret;
 }
 
@@ -561,6 +644,17 @@ escp2_parameters(stp_const_vars_t v, const char *name,
   description->p_type = STP_PARAMETER_TYPE_INVALID;
   if (name == NULL)
     return;
+
+  for (i = 0; i < float_parameter_count; i++)
+    if (strcmp(name, float_parameters[i].param.name) == 0)
+      {
+	stpi_fill_parameter_settings(description,
+				     &(float_parameters[i].param));
+	description->deflt.dbl = float_parameters[i].defval;
+	description->bounds.dbl.upper = float_parameters[i].max;
+	description->bounds.dbl.lower = float_parameters[i].min;
+	return;
+      }
 
   for (i = 0; i < the_parameter_count; i++)
     if (strcmp(name, the_parameters[i].name) == 0)
@@ -677,6 +771,7 @@ escp2_parameters(stp_const_vars_t v, const char *name,
     {
       description->deflt.boolean = 1;
     }
+#if 0
   else if (strcmp(name, "LightCyanTransition") == 0 ||
 	   strcmp(name, "LightMagentaTransition") == 0 ||
 	   strcmp(name, "DarkYellowTransition") == 0 ||
@@ -719,6 +814,7 @@ escp2_parameters(stp_const_vars_t v, const char *name,
 	}
 #endif
     }
+#endif
 }
 
 static const res_t *
@@ -1053,7 +1149,7 @@ count_channels(const escp2_inkname_t *inks)
 
 static const physical_subchannel_t default_black_subchannels[] =
 {
-  { 0, 0, 0 }
+  { 0, 0, 0, "BlackDensity", NULL }
 };
 
 static const ink_channel_t default_black_channels =
@@ -1066,9 +1162,6 @@ static const escp2_inkname_t default_black_ink =
   NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, NULL,
   {
     &default_black_channels, NULL, NULL, NULL
-  },
-  {
-    NULL, NULL, NULL, NULL
   }
 };
 
@@ -1086,37 +1179,50 @@ compute_channel_count(const escp2_inkname_t *ink_type, int channel_limit)
   return physical_channels;
 }
 
+static double
+get_double_param(stp_vars_t v, const char *param)
+{
+  if (param && stp_check_float_parameter(v, param, STP_PARAMETER_ACTIVE))
+    return stp_get_float_parameter(v, param);
+  else
+    return 1.0;
+}
+
 static void
 setup_inks(stp_vars_t v)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  int i;
+  int i, j;
   const escp2_variable_inkset_t *inks;
   const paper_t *pt;
   double paper_k_upper = 0.5;
+  const escp2_inkname_t *ink_type = pd->inkname;
 
   pt = pd->paper_type;
   if (pt)
     paper_k_upper = pt->k_upper;
-  inks = escp2_inks(v, pd->ink_resid, pd->inkname->inkset);
+  inks = escp2_inks(v, pd->ink_resid, ink_type->inkset);
   if (inks)
     {
       stpi_init_debug_messages(v);
       for (i = 0; i < pd->logical_channels; i++)
 	{
 	  const escp2_variable_ink_t *ink = (*inks)[i];
-	  if (ink)
+	  const ink_channel_t *channel = ink_type->channels[i];
+	  if (ink && channel)
 	    {
-	      const char *param = pd->inkname->channel_parameter_names[i];
-	      double userval = 1.0;
-	      if (param && stp_check_float_parameter(v, param,
-						     STP_PARAMETER_ACTIVE))
-		userval = stp_get_float_parameter(v, param);
-	      stpi_dither_set_ranges(v, i, ink->numranges, ink->range,
-				     ink->darkness * paper_k_upper * userval);
-
-	      stpi_dither_set_shades(v, i, ink->numshades, ink->shades,
-				     ink->darkness * paper_k_upper * userval);
+	      const char *param = channel->subchannels[0].channel_density;
+	      double userval = get_double_param(v, param);
+	      stpi_dither_set_inks(v, i, ink->numshades, ink->shades,
+				   ink->darkness * paper_k_upper * userval);
+	      for (j = 0; j < channel->n_subchannels; j++)
+		{
+		  const char *subparam =
+		    channel->subchannels[j].subchannel_scale;
+		  double scale = userval * get_double_param(v, subparam);
+		  scale *= get_double_param(v, "Density");
+		  stpi_dither_set_density_adjustment(v, i, j, scale);
+		}
 	    }
 	}
       stpi_flush_debug_messages(v);
@@ -1140,7 +1246,8 @@ setup_head_offset(stp_vars_t v)
 	  int j;
 	  for (j = 0; j < channel->n_subchannels; j++)
 	    {
-	      pd->head_offset[channel_id] = channel->channels[j].head_offset;
+	      pd->head_offset[channel_id] =
+		channel->subchannels[j].head_offset;
 	      channel_id++;
 	    }
 	}
@@ -1198,7 +1305,7 @@ allocate_channels(stp_vars_t v, int line_length)
 	  for (j = 0; j < channel->n_subchannels; j++)
 	    {
 	      pd->cols[channel_id] = stpi_zalloc(line_length);
-	      pd->channels[channel_id] = &(channel->channels[j]);
+	      pd->channels[channel_id] = &(channel->subchannels[j]);
 	      stpi_dither_add_channel(v, pd->cols[channel_id], i, j);
 	      channel_id++;
 	    }
@@ -1386,7 +1493,7 @@ setup_page(stp_vars_t v)
 }
 
 static int
-escp2_print_data(stp_vars_t v, stp_image_t *image, unsigned short *out)
+escp2_print_data(stp_vars_t v, stp_image_t *image)
 {
   escp2_privdata_t *pd = get_privdata(v);
   int errdiv  = stpi_image_height(image) / pd->image_scaled_height;
@@ -1402,7 +1509,7 @@ escp2_print_data(stp_vars_t v, stp_image_t *image, unsigned short *out)
   for (y = 0; y < pd->image_scaled_height; y ++)
     {
       int duplicate_line = 1;
-      int zero_mask;
+      unsigned zero_mask;
       if ((y & 63) == 0)
 	stpi_image_note_progress(image, y, pd->image_scaled_height);
 
@@ -1410,12 +1517,12 @@ escp2_print_data(stp_vars_t v, stp_image_t *image, unsigned short *out)
 	{
 	  errlast = errline;
 	  duplicate_line = 0;
-	  if (stpi_color_get_row(v, image, errline, out, &zero_mask))
+	  if (stpi_color_get_row(v, image, errline, &zero_mask))
 	    return 2;
 	}
       QUANT(1);
 
-      stpi_dither(v, y, out, duplicate_line, zero_mask);
+      stpi_dither(v, y, duplicate_line, zero_mask);
       QUANT(2);
 
       stpi_write_weave(v, pd->cols);
@@ -1441,7 +1548,6 @@ escp2_print_page(stp_vars_t v, stp_image_t *image)
   int status;
   int i;
   escp2_privdata_t *pd = get_privdata(v);
-  unsigned short *out;	/* Output pixels (16-bit) */
   int out_channels;		/* Output bytes per pixel */
   int line_width = (pd->image_scaled_width + 7) / 8 * pd->bitwidth;
 
@@ -1475,14 +1581,11 @@ escp2_print_page(stp_vars_t v, stp_image_t *image)
   allocate_channels(v, line_width);
   setup_inks(v);
 
-  out = stpi_malloc(stpi_image_width(image) * out_channels * 2);
-
-  status = escp2_print_data(v, image, out);
+  status = escp2_print_data(v, image);
 
   /*
    * Cleanup...
    */
-  stpi_free(out);
   if (!pd->printed_something)
     stpi_send_command(v, "\n", "");
   stpi_send_command(v, "\f", "");	/* Eject page */

@@ -88,9 +88,9 @@ compute_black(const stpi_dither_t *d)
 }
 
 static inline void
-set_row_ends(stpi_dither_channel_t *dc, int x, int subchannel)
+set_row_ends(stpi_dither_channel_t *dc, int x)
 {
-  if (dc->row_ends[0][subchannel] == -1)
-    dc->row_ends[0][subchannel] = x;
-  dc->row_ends[1][subchannel] = x;
+  if (dc->row_ends[0] == -1)
+    dc->row_ends[0] = x;
+  dc->row_ends[1] = x;
 }

@@ -110,7 +110,7 @@ static int the_parameter_count =
 sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
 static stp_parameter_list_t
-olympus_list_parameters(const stp_vars_t v)
+olympus_list_parameters(stp_const_vars_t v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
   int i;
@@ -120,7 +120,7 @@ olympus_list_parameters(const stp_vars_t v)
 }
 
 static void
-olympus_parameters(const stp_vars_t v, const char *name,
+olympus_parameters(stp_const_vars_t v, const char *name,
 	       stp_parameter_t *description)
 {
   int		i;
@@ -189,24 +189,24 @@ olympus_parameters(const stp_vars_t v, const char *name,
 
 
 static void
-olympus_imageable_area(const stp_vars_t v,
+olympus_imageable_area(stp_const_vars_t v,
 		   int  *left,
 		   int  *right,
 		   int  *bottom,
 		   int  *top)
 {
+  int width, height;
   int model = stpi_get_model_id(v);
+  stpi_default_media_size(v, &width, &height);
   
   *left = olympus_model_capabilities[model].border_left;
   *top = olympus_model_capabilities[model].border_top;
-  *right = stp_get_page_width(v)
-             - olympus_model_capabilities[model].border_right;
-  *bottom = stp_get_page_height(v)
-             - olympus_model_capabilities[model].border_bottom;
+  *right = width - olympus_model_capabilities[model].border_right;
+  *bottom = height - olympus_model_capabilities[model].border_bottom;
 }
 
 static void
-olympus_limit(const stp_vars_t v,			/* I */
+olympus_limit(stp_const_vars_t v,			/* I */
 	    int *width, int *height,
 	    int *min_width, int *min_height)
 {
@@ -217,7 +217,7 @@ olympus_limit(const stp_vars_t v,			/* I */
 }
 
 static void
-olympus_describe_resolution(const stp_vars_t v, int *x, int *y)
+olympus_describe_resolution(stp_const_vars_t v, int *x, int *y)
 {
   const char *resolution = stp_get_string_parameter(v, "Resolution");
   *x = -1;
@@ -231,20 +231,19 @@ olympus_describe_resolution(const stp_vars_t v, int *x, int *y)
  * olympus_print()
  */
 static int
-olympus_print(const stp_vars_t v, stp_image_t *image)
+olympus_print(stp_const_vars_t v, stp_image_t *image)
 {
   int i, j;
   int y;		/* Looping vars */
   stp_vars_t	nv = stp_vars_create_copy(v);
   int out_channels;
-  unsigned short *out;	/* Output pixels (16-bit) */
   unsigned short *final_out = NULL;
   unsigned char  *char_out;
   unsigned short *real_out;
   int status = 1;
   int ink_channels = 1;
   const char *ink_type = stp_get_string_parameter(nv, "InkType");
-  int zero_mask;
+  unsigned zero_mask;
 
   int xdpi, ydpi;	/* Resolution */
 
@@ -347,6 +346,10 @@ olympus_print(const stp_vars_t v, stp_image_t *image)
 	  }
     }
 
+  stpi_channel_reset(nv);
+  for (i = 0; i < ink_channels; i++)
+    stpi_channel_add(nv, i, 0, 1.0, 1.0);
+
   out_channels = stpi_color_init(nv, image, 256);
 
   if (out_channels != ink_channels && out_channels != 1 && ink_channels != 1)
@@ -355,8 +358,6 @@ olympus_print(const stp_vars_t v, stp_image_t *image)
       stp_vars_free(nv);
       return 0;
     }
-
-  out = stpi_malloc(print_width * out_channels * 2);
 
   if (out_channels != ink_channels)
     final_out = stpi_malloc(print_width * ink_channels * 2);
@@ -398,6 +399,7 @@ olympus_print(const stp_vars_t v, stp_image_t *image)
     for (y = (image_top & 0xfff0); y <= ((image_bottom - 1) | 0x000f); y++)
 #endif
       {
+      unsigned short *out;
       if ((y % 16) == 0)
         {
         /* block init */
@@ -425,19 +427,19 @@ olympus_print(const stp_vars_t v, stp_image_t *image)
           stpi_zfwrite((char *) zeros, 1, image_left, nv);
 /* stpi_erprintf("left %d ", image_left); */
 	  }
-        real_out = out;
         if ((y & 63) == 0)
           {
     	  stpi_image_note_progress(image, MAX_PROGRESS/3 * (l - layers) + y / 3,
             MAX_PROGRESS);
           }
 
-        if (stpi_color_get_row(nv, image, y - image_top, out, &zero_mask))
+        if (stpi_color_get_row(nv, image, y - image_top, &zero_mask))
           {
   	  status = 2;
   	  break;
           }
-
+	out = stpi_channel_get_input(nv);
+        real_out = out;
         if (out_channels != ink_channels)
   	{
   	  real_out = final_out;
@@ -484,7 +486,6 @@ olympus_print(const stp_vars_t v, stp_image_t *image)
   stpi_image_progress_conclude(image);
   if (final_out)
     stpi_free(final_out);
-  stpi_free(out);
   stp_vars_free(nv);
   return status;
 }

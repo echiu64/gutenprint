@@ -44,6 +44,7 @@ typedef struct
 {
   int color_model;
   int output_channels;
+  int rotate_channels;
   const char *name;
 } ink_t;
 
@@ -64,11 +65,12 @@ static const raw_printer_t raw_model_capabilities[] =
 
 static const ink_t inks[] =
 {
-  { COLOR_MODEL_RGB, 3, "RGB" },
-  { COLOR_MODEL_CMY, 3, "CMY" },
-  { COLOR_MODEL_CMY, 4, "CMYK" },
-  { COLOR_MODEL_RGB, 1, "RGBGray" },
-  { COLOR_MODEL_CMY, 1, "CMYGray" },
+  { COLOR_MODEL_RGB, 3, 0, "RGB" },
+  { COLOR_MODEL_CMY, 3, 0, "CMY" },
+  { COLOR_MODEL_CMY, 4, 1, "CMYK" },
+  { COLOR_MODEL_CMY, 4, 0, "KCMY" },
+  { COLOR_MODEL_RGB, 1, 0, "RGBGray" },
+  { COLOR_MODEL_CMY, 1, 0, "CMYGray" },
 };
 
 static const int ink_count = sizeof(inks) / sizeof(ink_t);
@@ -173,11 +175,11 @@ raw_print(stp_const_vars_t v, stp_image_t *image)
   int		y;		/* Looping vars */
   stp_vars_t	nv = stp_vars_create_copy(v);
   int out_channels;
-  unsigned short *out;	/* Output pixels (16-bit) */
   unsigned short *final_out = NULL;
   int		status = 1;
   int bytes_per_channel = raw_model_capabilities[model].output_bits / 8;
   int ink_channels = 1;
+  int rotate_output = 0;
   const char *ink_type = stp_get_string_parameter(nv, "InkType");
 
   stpi_prune_inactive_options(nv);
@@ -201,9 +203,14 @@ raw_print(stp_const_vars_t v, stp_image_t *image)
 	  {
 	    stpi_set_output_color_model(nv, inks[i].color_model);
 	    ink_channels = inks[i].output_channels;
+	    rotate_output = inks[i].rotate_channels;
 	    break;
 	  }
     }
+
+  stpi_channel_reset(nv);
+  for (i = 0; i < ink_channels; i++)
+    stpi_channel_add(nv, i, 0, 1.0, 1.0);
 
   if (bytes_per_channel == 1)
     out_channels = stpi_color_init(nv, image, 256);
@@ -217,7 +224,6 @@ raw_print(stp_const_vars_t v, stp_image_t *image)
       return 0;
     }
 
-  out = stpi_malloc(width * out_channels * 2);
   if (out_channels != ink_channels)
     final_out = stpi_malloc(width * ink_channels * 2);
 
@@ -227,14 +233,29 @@ raw_print(stp_const_vars_t v, stp_image_t *image)
 
   for (y = 0; y < height; y++)
     {
-      unsigned short *real_out = out;
-      int zero_mask;
+      unsigned short *out;
+      unsigned short *real_out;
+      unsigned zero_mask;
       if ((y & 63) == 0)
 	stpi_image_note_progress(image, y, height);
-      if (stpi_color_get_row(nv, image, y, out, &zero_mask))
+      if (stpi_color_get_row(nv, image, y, &zero_mask))
 	{
 	  status = 2;
 	  break;
+	}
+      out = stpi_channel_get_input(nv);
+      real_out = out;
+      if (rotate_output)
+	{
+	  unsigned short *tmp_out = real_out;
+	  for (i = 0; i < width; i++)
+	    {
+	      unsigned short tmp = tmp_out[0];
+	      for (j = 0; j < ink_channels - 1; j++)
+		tmp_out[j] = tmp_out[j + 1];
+	      tmp_out[ink_channels - 1] = tmp;
+	      tmp_out += ink_channels;
+	    }
 	}
       if (out_channels != ink_channels)
 	{
@@ -265,12 +286,11 @@ raw_print(stp_const_vars_t v, stp_image_t *image)
 	    char_out[i] = real_out[i] / 257;
 	}
       stpi_zfwrite((char *) real_out,
-		  width * ink_channels * bytes_per_channel, 1, nv);
+		   width * ink_channels * bytes_per_channel, 1, nv);
     }
   stpi_image_progress_conclude(image);
   if (final_out)
     stpi_free(final_out);
-  stpi_free(out);
   stp_vars_free(nv);
   return status;
 }

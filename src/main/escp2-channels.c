@@ -84,142 +84,142 @@ static const ink_channel_t name##_channels =			\
 
 static const physical_subchannel_t standard_black_subchannels[] =
 {
-  { 0, -1, 0 }
+  { 0, -1, 0, "BlackDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(standard_black);
 
 static const physical_subchannel_t x80_black_subchannels[] =
 {
-  { 0, -1, 48 }
+  { 0, -1, 48, "BlackDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(x80_black);
 
 static const physical_subchannel_t c80_black_subchannels[] =
 {
-  { 0, -1, 0 }
+  { 0, -1, 0, "BlackDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(c80_black);
 
 static const physical_subchannel_t standard_cyan_subchannels[] =
 {
-  { 2, -1, 0 }
+  { 2, -1, 0, "CyanDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(standard_cyan);
 
 static const physical_subchannel_t x80_cyan_subchannels[] =
 {
-  { 2, -1, 96 }
+  { 2, -1, 96, "CyanDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(x80_cyan);
 
 static const physical_subchannel_t c80_cyan_subchannels[] =
 {
-  { 2, -1, 0 }
+  { 2, -1, 0, "CyanDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(c80_cyan);
 
 static const physical_subchannel_t standard_magenta_subchannels[] =
 {
-  { 1, -1, 0 }
+  { 1, -1, 0, "MagentaDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(standard_magenta);
 
 static const physical_subchannel_t x80_magenta_subchannels[] =
 {
-  { 1, -1, 48 }
+  { 1, -1, 48, "MagentaDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(x80_magenta);
 
 static const physical_subchannel_t c80_magenta_subchannels[] =
 {
-  { 1, -1, 120 }
+  { 1, -1, 120, "MagentaDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(c80_magenta);
 
 static const physical_subchannel_t standard_yellow_subchannels[] =
 {
-  { 4, -1, 0 }
+  { 4, -1, 0, "YellowDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(standard_yellow);
 
 static const physical_subchannel_t x80_yellow_subchannels[] =
 {
-  { 4, -1, 0 }
+  { 4, -1, 0, "YellowDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(x80_yellow);
 
 static const physical_subchannel_t c80_yellow_subchannels[] =
 {
-  { 4, -1, 240 }
+  { 4, -1, 240, "YellowDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(c80_yellow);
 
 static const physical_subchannel_t photo_black_subchannels[] =
 {
-  { 0, 0, 0 }
+  { 0, 0, 0, "BlackDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(photo_black);
 
 static const physical_subchannel_t extended_black_subchannels[] =
 {
-  { 0, 1, 0 }
+  { 0, 1, 0, "BlackDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(extended_black);
 
 static const physical_subchannel_t photo_cyan_subchannels[] =
 {
-  { 2, 0, 0 },
-  { 2, 1, 0 }
+  { 2, 0, 0, "CyanDensity", NULL },
+  { 2, 1, 0, "CyanDensity", "LightCyanTransition" }
 };
 
 DECLARE_INK_CHANNEL(photo_cyan);
 
 static const physical_subchannel_t extended_cyan_subchannels[] =
 {
-  { 2, 1, 0 }
+  { 2, 1, 0, "CyanDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(extended_cyan);
 
 static const physical_subchannel_t photo_magenta_subchannels[] =
 {
-  { 1, 0, 0 },
-  { 1, 1, 0 }
+  { 1, 0, 0, "MagentaDensity", NULL },
+  { 1, 1, 0, "MagentaDensity", "LightMagentaTransition" }
 };
 
 DECLARE_INK_CHANNEL(photo_magenta);
 
 static const physical_subchannel_t extended_magenta_subchannels[] =
 {
-  { 1, 1, 0 }
+  { 1, 1, 0, "MagentaDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(extended_magenta);
 
 static const physical_subchannel_t photo_yellow_subchannels[] =
 {
-  { 4, 0, 0 }
+  { 4, 0, 0, "YellowDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(photo_yellow);
 
 static const physical_subchannel_t extended_yellow_subchannels[] =
 {
-  { 4, 1, 0 }
+  { 4, 1, 0, "YellowDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(extended_yellow);
@@ -227,36 +227,36 @@ DECLARE_INK_CHANNEL(extended_yellow);
 /* For Japanese 7-color printers, with dark yellow */
 static const physical_subchannel_t photo2_yellow_subchannels[] =
 {
-  { 4, 0, 0 },
-  { 4, 2, 0 }
+  { 4, 2, 0, "YellowDensity", NULL },
+  { 4, 0, 0, "YellowDensity", "DarkYellowTransition" }
 };
 
 DECLARE_INK_CHANNEL(photo2_yellow);
 
 static const physical_subchannel_t photo2_black_subchannels[] =
 {
-  { 0, 0, 0 },
-  { 0, 1, 0 }
+  { 0, 0, 0, "BlackDensity", NULL },
+  { 0, 1, 0, "BlackDensity", "GrayTransition" }
 };
 
 DECLARE_INK_CHANNEL(photo2_black);
 
 static const physical_subchannel_t quadtone_subchannels[] =
 {
-  { 4, -1, 0 },
-  { 1, -1, 0 },
-  { 2, -1, 0 },
-  { 0, -1, 0 }
+  { 0, -1, 0, "BlackDensity", NULL },
+  { 2, -1, 0, "BlackDensity", "Gray3Transition" },
+  { 1, -1, 0, "BlackDensity", "Gray2Transition" },
+  { 4, -1, 0, "BlackDensity", "Gray1Transition" },
 };
 
 DECLARE_INK_CHANNEL(quadtone);
 
 static const physical_subchannel_t c80_quadtone_subchannels[] =
 {
-  { 4, -1, 240 },
-  { 1, -1, 120 },
-  { 2, -1, 0 },
-  { 0, -1, 0 }
+  { 0, -1, 0, "BlackDensity", NULL },
+  { 2, -1, 0, "BlackDensity", "Gray3Transition" },
+  { 1, -1, 120, "BlackDensity", "Gray2Transition" },
+  { 4, -1, 240, "BlackDensity", "Gray1Transition" },
 };
 
 DECLARE_INK_CHANNEL(c80_quadtone);
@@ -268,9 +268,6 @@ static const escp2_inkname_t three_color_composite_inkset =
   {
     NULL, &standard_cyan_channels,
     &standard_magenta_channels, &standard_yellow_channels
-  },
-  {
-    NULL, NULL, NULL, NULL
   }
 };
 
@@ -281,9 +278,6 @@ static const escp2_inkname_t x80_three_color_composite_inkset =
   {
     NULL, &x80_cyan_channels,
     &x80_magenta_channels, &x80_yellow_channels
-  },
-  {
-    NULL, NULL, NULL, NULL
   }
 };
 
@@ -294,9 +288,6 @@ static const escp2_inkname_t c80_three_color_composite_inkset =
   {
     NULL, &c80_cyan_channels,
     &c80_magenta_channels, &c80_yellow_channels
-  },
-  {
-    NULL, NULL, NULL, NULL
   }
 };
 
@@ -307,9 +298,6 @@ static const escp2_inkname_t four_color_standard_inkset =
   {
     &standard_black_channels, &standard_cyan_channels,
     &standard_magenta_channels, &standard_yellow_channels
-  },
-  {
-    NULL, NULL, NULL, NULL
   }
 };
 
@@ -320,9 +308,6 @@ static const escp2_inkname_t x80_four_color_standard_inkset =
   {
     &x80_black_channels, &x80_cyan_channels,
     &x80_magenta_channels, &x80_yellow_channels
-  },
-  {
-    NULL, NULL, NULL, NULL
   }
 };
 
@@ -333,9 +318,6 @@ static const escp2_inkname_t c80_four_color_standard_inkset =
   {
     &c80_black_channels, &c80_cyan_channels,
     &c80_magenta_channels, &c80_yellow_channels
-  },
-  {
-    NULL, NULL, NULL, NULL
   }
 };
 
@@ -346,9 +328,6 @@ static const escp2_inkname_t six_color_photo_inkset =
   {
     &photo_black_channels, &photo_cyan_channels,
     &photo_magenta_channels, &photo_yellow_channels
-  },
-  {
-    NULL, "LightCyanTransition", "LightMagentaTransition", NULL
   }
 };
 
@@ -359,9 +338,6 @@ static const escp2_inkname_t five_color_photo_composite_inkset =
   {
     NULL, &photo_cyan_channels,
     &photo_magenta_channels, &photo_yellow_channels
-  },
-  {
-    NULL, "LightCyanTransition", "LightMagentaTransition", NULL
   }
 };
 
@@ -372,10 +348,6 @@ static const escp2_inkname_t j_seven_color_enhanced_inkset =
   {
     &photo_black_channels, &photo_cyan_channels,
     &photo_magenta_channels, &photo2_yellow_channels
-  },
-  {
-    NULL,
-    "LightCyanTransition", "LightMagentaTransition", "DarkYellowTransition"
   }
 };
 
@@ -386,10 +358,6 @@ static const escp2_inkname_t j_six_color_enhanced_composite_inkset =
   {
     NULL, &standard_cyan_channels,
     &standard_magenta_channels, &standard_yellow_channels
-  },
-  {
-    NULL,
-    "LightCyanTransition", "LightMagentaTransition", "DarkYellowTransition"
   }
 };
 
@@ -400,9 +368,6 @@ static const escp2_inkname_t seven_color_photo_inkset =
   {
     &photo2_black_channels, &photo_cyan_channels,
     &photo_magenta_channels, &photo_yellow_channels
-  },
-  {
-    "GrayTransition", "LightCyanTransition", "LightMagentaTransition", NULL
   }
 };
 
@@ -412,9 +377,6 @@ static const escp2_inkname_t two_color_grayscale_inkset =
   NULL, NULL, NULL,
   {
     &photo2_black_channels, NULL, NULL, NULL
-  },
-  {
-    "GrayTransition", NULL, NULL, NULL
   }
 };
 
@@ -424,9 +386,6 @@ static const escp2_inkname_t one_color_extended_inkset =
   NULL, NULL, NULL,
   {
     &standard_black_channels
-  },
-  {
-    NULL
   }
 };
 
@@ -436,9 +395,6 @@ static const escp2_inkname_t two_color_extended_inkset =
   NULL, NULL, NULL,
   {
     &photo_black_channels, &extended_black_channels,
-  },
-  {
-    NULL, NULL
   }
 };
 
@@ -449,9 +405,6 @@ static const escp2_inkname_t three_color_extended_inkset =
   {
     &standard_cyan_channels, &standard_magenta_channels,
     &standard_yellow_channels
-  },
-  {
-    NULL, NULL, NULL
   }
 };
 
@@ -461,9 +414,6 @@ static const escp2_inkname_t x80_three_color_extended_inkset =
   NULL, NULL, NULL,
   {
     &x80_cyan_channels, &x80_magenta_channels, &x80_yellow_channels
-  },
-  {
-    NULL, NULL, NULL
   }
 };
 
@@ -473,9 +423,6 @@ static const escp2_inkname_t c80_three_color_extended_inkset =
   NULL, NULL, NULL,
   {
     &c80_cyan_channels, &c80_magenta_channels, &c80_yellow_channels
-  },
-  {
-    NULL, NULL, NULL
   }
 };
 
@@ -486,9 +433,6 @@ static const escp2_inkname_t four_color_extended_inkset =
   {
     &standard_black_channels, &standard_cyan_channels,
     &standard_magenta_channels, &standard_yellow_channels
-  },
-  {
-    NULL, NULL, NULL, NULL
   }
 };
 
@@ -499,9 +443,6 @@ static const escp2_inkname_t x80_four_color_extended_inkset =
   {
     &x80_black_channels, &x80_cyan_channels,
     &x80_magenta_channels, &x80_yellow_channels
-  },
-  {
-    NULL, NULL, NULL, NULL
   }
 };
 
@@ -512,9 +453,6 @@ static const escp2_inkname_t c80_four_color_extended_inkset =
   {
     &c80_black_channels, &c80_cyan_channels,
     &c80_magenta_channels, &c80_yellow_channels
-  },
-  {
-    NULL, NULL, NULL, NULL
   }
 };
 
@@ -526,9 +464,6 @@ static const escp2_inkname_t five_color_extended_inkset =
     &standard_cyan_channels, &extended_cyan_channels,
     &standard_magenta_channels, &extended_magenta_channels,
     &photo_yellow_channels
-  },
-  {
-    NULL, NULL, NULL, NULL, NULL
   }
 };
 
@@ -540,9 +475,6 @@ static const escp2_inkname_t six_color_extended_inkset =
     &photo_black_channels, &standard_cyan_channels, &extended_cyan_channels,
     &standard_magenta_channels, &extended_magenta_channels,
     &photo_yellow_channels
-  },
-  {
-    NULL, NULL, NULL, NULL, NULL, NULL
   }
 };
 
@@ -554,9 +486,6 @@ static const escp2_inkname_t seven_color_extended_inkset =
     &photo_black_channels, &extended_black_channels, &standard_cyan_channels,
     &extended_cyan_channels, &standard_magenta_channels,
     &extended_magenta_channels, &photo_yellow_channels
-  },
-  {
-    NULL, NULL, NULL, NULL, NULL, NULL, NULL
   }
 };
 
@@ -566,9 +495,6 @@ static const escp2_inkname_t piezo_quadtone_inkset =
   NULL, NULL, NULL,
   {
     &quadtone_channels, NULL, NULL, NULL
-  },
-  {
-    "GrayTransition", NULL, NULL, NULL
   }
 };
 
@@ -578,9 +504,6 @@ static const escp2_inkname_t c80_piezo_quadtone_inkset =
   NULL, NULL, NULL,
   {
     &c80_quadtone_channels, NULL, NULL, NULL
-  },
-  {
-    "GrayTransition", NULL, NULL, NULL
   }
 };
 

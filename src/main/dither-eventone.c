@@ -46,7 +46,8 @@ typedef struct
 
 
 static inline void
-print_subc(stpi_dither_t *d, unsigned char *tptr, stpi_ink_defn_t *ink, int subchannel, unsigned char bit, int length)
+print_ink(stpi_dither_t *d, unsigned char *tptr, stpi_ink_defn_t *ink,
+	  unsigned char bit, int length)
 {
   int bits;
   int j;
@@ -133,8 +134,8 @@ et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
   }
 
   if (!duplicate_line) {
-    if ((zero_mask & ((1 << d->n_input_channels) - 1)) !=
-	((1 << d->n_input_channels) - 1)) {
+    if ((zero_mask & ((1 << CHANNEL_COUNT(d)) - 1)) !=
+	((1 << CHANNEL_COUNT(d)) - 1)) {
 	d->last_line_was_empty = 0;
     } else {
 	d->last_line_was_empty++;
@@ -353,13 +354,14 @@ found_segment:
   }
 }
 
-static void
-stpi_dither_raw_et(stpi_dither_t *d,
-		  int row,
-		  const unsigned short *raw,
-		  int duplicate_line,
-		  int zero_mask)
+void
+stpi_dither_et(stp_vars_t v,
+	       int row,
+	       const unsigned short *raw,
+	       int duplicate_line,
+	       int zero_mask)
 {
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   eventone_t *et;
   static const int diff_factors[] = {1, 10, 16, 23, 32};
 
@@ -409,46 +411,48 @@ stpi_dither_raw_et(stpi_dither_t *d,
     range = 0;
 
     for (i=0; i < channel_count; i++) {
-      int inkspot;
-      stpi_shade_segment_t *sp;
-      stpi_dither_channel_t *dc = &CHANNEL(d, i);
-      stpi_ink_defn_t *inkp;
-      stpi_ink_defn_t lower, upper;
+      if (CHANNEL(d, i).ptr)
+	{
+	  int inkspot;
+	  stpi_shade_segment_t *sp;
+	  stpi_dither_channel_t *dc = &CHANNEL(d, i);
+	  stpi_ink_defn_t *inkp;
+	  stpi_ink_defn_t lower, upper;
 
-      dc->o = dc->v = raw[i];
+	  dc->o = dc->v = raw[i];
 
-      advance_eventone_pre(dc, et, x);
+	  advance_eventone_pre(dc, et, x);
 
-      /* Split data into sub-channels */
-      /* And incorporate error data from previous line */
-      sp =  split_shades(dc, x, &inkspot);
+	  /* Split data into sub-channels */
+	  /* And incorporate error data from previous line */
+	  sp =  split_shades(dc, x, &inkspot);
 
-      /* Find which are the two candidate dot sizes */
-      range += find_segment(sp, et, inkspot, sp->base, &lower, &upper);
+	  /* Find which are the two candidate dot sizes */
+	  range += find_segment(sp, et, inkspot, sp->base, &lower, &upper);
 
-      /* Determine whether to print the larger or smaller dot */
+	  /* Determine whether to print the larger or smaller dot */
 
-      inkp = &lower;
-      if (range >= 32768) {
-        range -= 65536;
-        inkp = &upper;
-      }
+	  inkp = &lower;
+	  if (range >= 32768) {
+	    range -= 65536;
+	    inkp = &upper;
+	  }
 
-      /* Adjust the error to reflect the dot choice */
-      if (inkp->bits) {
-        int subc = sp->subchannel;
+	  /* Adjust the error to reflect the dot choice */
+	  if (inkp->bits) {
 
-        sp->value -= 2 * inkp->range;
-        sp->dis = et->d_sq;
+	    sp->value -= 2 * inkp->range;
+	    sp->dis = et->d_sq;
 
-        set_row_ends(dc, x, subc);
+	    set_row_ends(dc, x);
 
-        /* Do the printing */
-        print_subc(d, dc->ptrs[subc], inkp, subc, bit, length);
-      }
+	    /* Do the printing */
+	    print_ink(d, dc->ptr, inkp, bit, length);
+	  }
 
-      /* Spread the error around to the adjacent dots */
-      diffuse_error(dc, et, diff_factor, x, direction);
+	  /* Spread the error around to the adjacent dots */
+	  diffuse_error(dc, et, diff_factor, x, direction);
+	}
     }
     if (direction == 1)
       ADVANCE_UNIDIRECTIONAL(d, bit, raw, channel_count, xerror, xstep, xmod);
@@ -457,135 +461,4 @@ stpi_dither_raw_et(stpi_dither_t *d,
   }
   if (direction == -1)
     stpi_dither_reverse_row_ends(d);
-}
-
-static void
-stpi_dither_raw_cmyk_et(stpi_dither_t *d,
-		       int row,
-		       const unsigned short *cmyk,
-		       int duplicate_line,
-		       int zero_mask)
-{
-  eventone_t *et;
-  static const int diff_factors[] = {1, 10, 16, 23, 32};
-
-  int		x,
-	        length;
-  unsigned char	bit;
-  int		i;
-
-  int		terminate;
-  int		direction;
-  int		xerror, xstep, xmod;
-  int		aspect = d->y_aspect / d->x_aspect;
-  int		diff_factor;
-  int		range;
-  int		channel_count = CHANNEL_COUNT(d);
-
-  if (!et_initializer(d, duplicate_line, zero_mask)) return;
-
-  et = (eventone_t *) d->aux_data;
-
-  if (aspect >= 4) { aspect = 4; }
-  else if (aspect >= 2) { aspect = 2; }
-  else aspect = 1;
-
-  diff_factor = diff_factors[aspect];
-  length = (d->dst_width + 7) / 8;
-
-  if (row & 1) {
-    direction = 1;
-    x = 0;
-    terminate = d->dst_width;
-    d->ptr_offset = 0;
-  } else {
-    direction = -1;
-    x = d->dst_width - 1;
-    terminate = -1;
-    d->ptr_offset = length - 1;
-    cmyk += 4 * (d->src_width - 1);
-  }
-  bit = 1 << (7 - (x & 7));
-  xstep  = 4 * (d->src_width / d->dst_width);
-  xmod   = d->src_width % d->dst_width;
-  xerror = (xmod * x) % d->dst_width;
-
-  for (; x != terminate; x += direction) {
-    { int black = cmyk[3];
-      CHANNEL(d, ECOLOR_K).v =
-      CHANNEL(d, ECOLOR_K).o = black;
-
-      for (i=1; i < channel_count; i++) {
-        CHANNEL(d, i).o = black +
-        (CHANNEL(d, i).v = cmyk[i-1]);
-      }
-    }
-
-    /* At this point, the CMYK separation has been done */
-    /* And the results are in CHANNEL(d, i).v */
-
-    range = 0;
-
-    for (i = 0; i < channel_count; i++) {
-      int inkspot;
-      stpi_shade_segment_t *sp;
-      stpi_dither_channel_t *dc = &CHANNEL(d, i);
-      stpi_ink_defn_t *inkp;
-      stpi_ink_defn_t lower, upper;
-
-      advance_eventone_pre(dc, et, x);
-
-      /* Split data into sub-channels */
-      /* And incorporate error data from previous line */
-      sp =  split_shades(dc, x, &inkspot);
-
-      /* Find which are the two candidate dot sizes */
-      range += find_segment(sp, et, inkspot, sp->base, &lower, &upper);
-
-      /* Determine whether to print the larger or smaller dot */
-      inkp = &lower;
-      if (range >= 32768) {
-        range -= 65536;
-        inkp = &upper;
-      }
-
-      /* Adjust the error to reflect the dot choice */
-      if (inkp->bits) {
-        int subc = sp->subchannel;
-        sp->value -= 2 * inkp->range;
-        sp->dis = et->d_sq;
-
-        set_row_ends(dc, x, subc);
-
-        /* Do the printing */
-        print_subc(d, dc->ptrs[subc], inkp, subc, bit, length);
-      }
-
-      /* Spread the error around to the adjacent dots */
-      diffuse_error(dc, et, diff_factor, x, direction);
-    }
-    if (direction == 1)
-      ADVANCE_UNIDIRECTIONAL(d, bit, cmyk, 4, xerror, xstep, xmod);
-    else
-      ADVANCE_REVERSE(d, bit, cmyk, 4, xerror, xstep, xmod);
-  }
-  if (direction == -1)
-    stpi_dither_reverse_row_ends(d);
-}
-
-void
-stpi_dither_et(stp_vars_t v,
-	      int row,
-	      const unsigned short *input,
-	      int duplicate_line,
-	      int zero_mask)
-{
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
-  if (CHANNEL(d, 0).shades == 0)
-    stpi_dither_ed(v, row, input, duplicate_line, zero_mask);
-  else if (d->dither_class != OUTPUT_RAW_CMYK ||
-	   d->n_ghost_channels > 0)
-    stpi_dither_raw_et(d, row, input, duplicate_line, zero_mask);
-  else
-    stpi_dither_raw_cmyk_et(d, row, input, duplicate_line, zero_mask);
 }

@@ -82,14 +82,8 @@ static const stpi_dotsize_t single_dotsize[] =
 
 static const stpi_shade_t photo_dither_shades[] =
 {
-  { 0.3333, 1, 1, single_dotsize },
-  { 1.0000, 0, 1, single_dotsize },
-};
-
-static const stpi_dither_range_simple_t photo_dither_ranges[] =
-{
-  { 0.25, 0x1, 1, 1 },
-  { 1.00, 0x1, 0, 1 }
+  { 0.3333, 1, single_dotsize },
+  { 1.0000, 1, single_dotsize },
 };
 
 /*
@@ -1530,6 +1524,70 @@ static const stp_parameter_t the_parameters[] =
 static int the_parameter_count =
 sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
+typedef struct
+{
+  const stp_parameter_t param;
+  double min;
+  double max;
+  double defval;
+  int color_only;
+} float_param_t;
+
+static const float_param_t float_parameters[] =
+{
+  {
+    {
+      "CyanDensity", N_("Cyan Balance"),
+      N_("Adjust the cyan balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "MagentaDensity", N_("Magenta Balance"),
+      N_("Adjust the magenta balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "YellowDensity", N_("Yellow Balance"),
+      N_("Adjust the yellow balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "BlackDensity", N_("Black Balance"),
+      N_("Adjust the black balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "LightCyanTransition", N_("Light Cyan Transition"),
+      N_("Light Cyan Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "LightMagentaTransition", N_("Light Magenta Transition"),
+      N_("Light Magenta Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+    }, 0.0, 5.0, 1.0, 1
+  },
+};    
+
+static int float_parameter_count =
+sizeof(float_parameters) / sizeof(const float_param_t);
+
 /*
  * Convert a name into it's option value
  */
@@ -1620,20 +1678,10 @@ static const stpi_dotsize_t variable_dotsizes[] =
   { 0x3, 1.0 }
 };
 
-static const stpi_shade_t variable_dither_shades[] =
+static const stpi_shade_t variable_shades[] =
 {
-  { 0.38, 1, 3, variable_dotsizes },
-  { 1.0, 0, 3, variable_dotsizes }
-};
-
-static const stpi_dither_range_simple_t variable_dither_ranges[] =
-{
-  { 0.152, 0x1, 1 },
-  { 0.255, 0x2, 1 },
-  { 0.38,  0x3, 1 },
-  { 0.5,   0x1, 0 },
-  { 0.67,  0x2, 0 },
-  { 1.0,   0x3, 0 }
+  { 0.38, 3, variable_dotsizes },
+  { 1.0, 3, variable_dotsizes }
 };
 
 /*
@@ -1779,6 +1827,8 @@ pcl_list_parameters(stp_const_vars_t v)
   int i;
   for (i = 0; i < the_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(the_parameters[i]));
+  for (i = 0; i < float_parameter_count; i++)
+    stp_parameter_list_add_param(ret, &(float_parameters[i].param));
   return ret;
 }
 
@@ -1809,6 +1859,17 @@ pcl_parameters(stp_const_vars_t v, const char *name,
     caps->a4_margins.left_margin, caps->a4_margins.right_margin);
   stpi_deprintf(STPI_DBG_PCL, "Resolutions: %d\n", caps->resolutions);
   stpi_deprintf(STPI_DBG_PCL, "ColorType = %d, PrinterType = %d\n", caps->color_type, caps->stp_printer_type);
+
+  for (i = 0; i < float_parameter_count; i++)
+    if (strcmp(name, float_parameters[i].param.name) == 0)
+      {
+	stpi_fill_parameter_settings(description,
+				     &(float_parameters[i].param));
+	description->deflt.dbl = float_parameters[i].defval;
+	description->bounds.dbl.upper = float_parameters[i].max;
+	description->bounds.dbl.lower = float_parameters[i].min;
+	return;
+      }
 
   for (i = 0; i < the_parameter_count; i++)
     if (strcmp(name, the_parameters[i].name) == 0)
@@ -2121,6 +2182,15 @@ pcl_printfunc(stp_vars_t v)
     }
 }  
 
+static double
+get_double_param(stp_vars_t v, const char *param)
+{
+  if (param && stp_check_float_parameter(v, param, STP_PARAMETER_ACTIVE))
+    return stp_get_float_parameter(v, param);
+  else
+    return 1.0;
+}
+
 static int
 pcl_do_print(stp_vars_t v, stp_image_t *image)
 {
@@ -2138,7 +2208,6 @@ pcl_do_print(stp_vars_t v, stp_image_t *image)
   int		left = stp_get_left(v);
   int		y;		/* Looping vars */
   int		xdpi, ydpi;	/* Resolution */
-  unsigned short *out;
   unsigned char *black,		/* Black bitmap data */
 		*cyan,		/* Cyan bitmap data */
 		*magenta,	/* Magenta bitmap data */
@@ -2159,7 +2228,7 @@ pcl_do_print(stp_vars_t v, stp_image_t *image)
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
-  int		zero_mask;
+  unsigned	zero_mask;
   int           image_height,
                 image_width,
                 image_bpp;
@@ -2574,6 +2643,19 @@ pcl_do_print(stp_vars_t v, stp_image_t *image)
 #endif
   stpi_dither_init(v, image, out_width, xdpi, ydpi);
 
+  if (black)
+    stpi_dither_add_channel(v, black, ECOLOR_K, 0);
+  if (cyan)
+    stpi_dither_add_channel(v, cyan, ECOLOR_C, 0);
+  if (lcyan)
+    stpi_dither_add_channel(v, lcyan, ECOLOR_C, 1);
+  if (magenta)
+    stpi_dither_add_channel(v, magenta, ECOLOR_M, 0);
+  if (lmagenta)
+    stpi_dither_add_channel(v, lmagenta, ECOLOR_M, 1);
+  if (yellow)
+    stpi_dither_add_channel(v, yellow, ECOLOR_Y, 0);
+
 /* Ensure that density does not exceed 1.0 */
 
   stpi_deprintf(STPI_DBG_PCL, "Density: %f\n", stp_get_float_parameter(v, "Density"));
@@ -2583,10 +2665,10 @@ pcl_do_print(stp_vars_t v, stp_image_t *image)
 
   if (privdata.do_cret)			/* 4-level printing for 800/1120 */
     {
-      stpi_dither_set_ranges_and_shades_simple
+      stpi_dither_set_inks_simple
 	(v, ECOLOR_Y, 3, dot_sizes_use, density);
       if (!privdata.do_cretb)
-        stpi_dither_set_ranges_and_shades_simple
+        stpi_dither_set_inks_simple
 	  (v, ECOLOR_K, 3, dot_sizes_use, density);
 
       /* Note: no printer I know of does both CRet (4-level) and 6 colour, but
@@ -2594,32 +2676,49 @@ pcl_do_print(stp_vars_t v, stp_image_t *image)
 
       if (privdata.do_6color)			/* Photo for 69x */
 	{
-	  stpi_dither_set_ranges
-	    (v, ECOLOR_C, 6, variable_dither_ranges, density);
-	  stpi_dither_set_ranges
-	    (v, ECOLOR_M, 6, variable_dither_ranges, density);
-	  stpi_dither_set_shades
-	    (v, ECOLOR_C, 6, variable_dither_shades, density);
-	  stpi_dither_set_shades
-	    (v, ECOLOR_M, 6, variable_dither_shades, density);
+	  stpi_dither_set_inks(v, ECOLOR_C, 6, variable_shades, density);
+	  stpi_dither_set_inks(v, ECOLOR_M, 6, variable_shades, density);
 	}
       else
 	{
-	  stpi_dither_set_ranges_and_shades_simple
-	    (v, ECOLOR_C, 3, dot_sizes_use, density);
-	  stpi_dither_set_ranges_and_shades_simple
-	    (v, ECOLOR_M, 3, dot_sizes_use, density);
+	  stpi_dither_set_inks_simple(v, ECOLOR_C, 3, dot_sizes_use, density);
+	  stpi_dither_set_inks_simple(v, ECOLOR_M, 3, dot_sizes_use, density);
 	}
     }
   else if (privdata.do_6color)
     {
       /* Set light inks for 6 colour printers.
 	 Numbers copied from print-escp2.c */
-      stpi_dither_set_ranges(v, ECOLOR_C, 2, photo_dither_ranges, density);
-      stpi_dither_set_ranges(v, ECOLOR_M, 2, photo_dither_ranges, density);
-      stpi_dither_set_shades(v, ECOLOR_C, 2, photo_dither_shades, density);
-      stpi_dither_set_shades(v, ECOLOR_M, 2, photo_dither_shades, density);
+      stpi_dither_set_inks(v, ECOLOR_C, 2, photo_dither_shades, density);
+      stpi_dither_set_inks(v, ECOLOR_M, 2, photo_dither_shades, density);
     }
+  if (black)
+    stpi_dither_set_density_adjustment(v, ECOLOR_K, 0,
+				       get_double_param(v, "BlackDensity") *
+				       get_double_param(v, "Density"));
+  if (cyan)
+    stpi_dither_set_density_adjustment(v, ECOLOR_C, 0,
+				       get_double_param(v, "CyanDensity") *
+				       get_double_param(v, "Density"));
+  if (magenta)
+    stpi_dither_set_density_adjustment(v, ECOLOR_M, 0,
+				       get_double_param(v, "MagentaDensity") *
+				       get_double_param(v, "Density"));
+  if (yellow)
+    stpi_dither_set_density_adjustment(v, ECOLOR_Y, 0,
+				       get_double_param(v, "YellowDensity") *
+				       get_double_param(v, "Density"));
+  if (lcyan)
+    stpi_dither_set_density_adjustment
+      (v, ECOLOR_C, 1, (get_double_param(v, "CyanDensity") *
+			get_double_param(v, "LightCyanTransition") *
+			get_double_param(v, "Density")));
+  if (lmagenta)
+    stpi_dither_set_density_adjustment
+      (v, ECOLOR_M, 1, (get_double_param(v, "MagentaDensity") *
+			get_double_param(v, "LightMagentaTransition") *
+			get_double_param(v, "Density")));
+    
 
   if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE))
     {
@@ -2640,8 +2739,6 @@ pcl_do_print(stp_vars_t v, stp_image_t *image)
 
   out_channels = stpi_color_init(v, image, 65536);
 
-  out = stpi_malloc(image_width * out_channels * 2);
-
   errdiv  = image_height / out_height;
   errmod  = image_height % out_height;
   errval  = 0;
@@ -2654,19 +2751,6 @@ pcl_do_print(stp_vars_t v, stp_image_t *image)
 #else
   privdata.do_blank = 0;
 #endif
-
-  if (black)
-    stpi_dither_add_channel(v, black, ECOLOR_K, 0);
-  if (cyan)
-    stpi_dither_add_channel(v, cyan, ECOLOR_C, 0);
-  if (lcyan)
-    stpi_dither_add_channel(v, lcyan, ECOLOR_C, 1);
-  if (magenta)
-    stpi_dither_add_channel(v, magenta, ECOLOR_M, 0);
-  if (lmagenta)
-    stpi_dither_add_channel(v, lmagenta, ECOLOR_M, 1);
-  if (yellow)
-    stpi_dither_add_channel(v, yellow, ECOLOR_Y, 0);
   stpi_allocate_component_data(v, "Driver", NULL, NULL, &privdata);
 
   for (y = 0; y < out_height; y ++)
@@ -2678,13 +2762,13 @@ pcl_do_print(stp_vars_t v, stp_image_t *image)
     {
       errlast = errline;
       duplicate_line = 0;
-      if (stpi_color_get_row(v, image, errline, out, &zero_mask))
+      if (stpi_color_get_row(v, image, errline, &zero_mask))
 	{
 	  status = 2;
 	  break;
 	}
     }
-    stpi_dither(v, y, out, duplicate_line, zero_mask);
+    stpi_dither(v, y, duplicate_line, zero_mask);
     pcl_printfunc(v);
     stpi_deprintf(STPI_DBG_PCL,"pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
 		  y, errline, errval, errmod, out_height);
@@ -2712,8 +2796,6 @@ pcl_do_print(stp_vars_t v, stp_image_t *image)
  /*
   * Cleanup...
   */
-
-  stpi_free(out);
 
   if (black != NULL)
     stpi_free(black);

@@ -98,18 +98,6 @@ typedef struct dither_segment
 
 typedef struct
 {
-  unsigned subchannel_count;
-  unsigned char **c;
-} stpi_dither_channel_data_t;
-
-typedef struct
-{
-  unsigned channel_count;
-  stpi_dither_channel_data_t *c;
-} stpi_dither_data_t;
-
-typedef struct
-{
   int dx;
   int dy;
   int r_sq;
@@ -141,9 +129,6 @@ typedef struct dither_channel
 				/* threshold values (0-65535).  With ordered */
 				/* dithering, how much randomness is added */
 				/* to the matrix value. */
-  int k_level;			/* Amount of each ink (in 64ths) required */
-				/* to create equivalent black */
-  int nlevels;
   unsigned bit_max;
   unsigned signif_bits;
   unsigned density;
@@ -154,7 +139,6 @@ typedef struct dither_channel
   int o;
   int b;
   int very_fast;
-  int subchannels;
 
   int maxdot;			/* Maximum dot size */
 
@@ -163,14 +147,17 @@ typedef struct dither_channel
   stpi_shade_segment_t *shades;
   int numshades;
 
+  int nlevels;
   stpi_dither_segment_t *ranges;
+
+  int error_rows;
   int **errs;
   unsigned short *vals;
 
   dither_matrix_t pick;
   dither_matrix_t dithermat;
-  int *row_ends[2];
-  unsigned char **ptrs;
+  int row_ends[2];
+  unsigned char *ptr;
 } stpi_dither_channel_t;
 
 typedef struct dither
@@ -202,21 +189,20 @@ typedef struct dither
   int oversampling;
   int last_line_was_empty;
   int ptr_offset;
-  int n_channels;
-  int n_input_channels;
-  int n_ghost_channels;		/* FIXME: For composite grayscale
-  				 * This is a really ugly way of doing this.
-  				 * Of course, ultimately we'll eliminate
-  				 * the CMYK special casing, which will
-  				 * get rid of this. */
   int error_rows;
 
   int dither_class;		/* mono, black, or CMYK */
 
+  int finalized;		/* When dither is first called, calculate
+				 * some things */
+
   dither_matrix_t dither_matrix;
   dither_matrix_t transition_matrix;
   stpi_dither_channel_t *channel;
-  stpi_dither_data_t dt;
+  unsigned channel_count;
+  unsigned total_channel_count;
+  unsigned *channel_index;
+  unsigned *subchannel_count;
 
   unsigned short virtual_dot_scale[65536];
   stpi_ditherfunc_t *ditherfunc;
@@ -224,10 +210,8 @@ typedef struct dither
   void (*aux_freefunc)(struct dither *);
 } stpi_dither_t;
 
-#define CHANNEL(d, c) ((d)->channel[(c) + (d)->n_ghost_channels])
-#define PHYSICAL_CHANNEL(d, c) ((d)->channel[(c)])
-#define CHANNEL_COUNT(d) ((d)->n_channels - (d)->n_ghost_channels)
-#define PHYSICAL_CHANNEL_COUNT(d) ((d)->n_channels)
+#define CHANNEL(d, c) ((d)->channel[(c)])
+#define CHANNEL_COUNT(d) ((d)->total_channel_count)
 
 #define USMIN(a, b) ((a) < (b) ? (a) : (b))
 
@@ -239,6 +223,10 @@ extern stpi_ditherfunc_t stpi_dither_ed;
 extern stpi_ditherfunc_t stpi_dither_et;
 
 extern void stpi_dither_reverse_row_ends(stpi_dither_t *d);
+extern int stpi_dither_translate_channel(stp_vars_t v, unsigned channel,
+					 unsigned subchannel);
+extern void stpi_dither_channel_destroy(stpi_dither_channel_t *channel);
+extern void stpi_dither_finalize(stp_vars_t v);
 
 
 #define ADVANCE_UNIDIRECTIONAL(d, bit, input, width, xerror, xstep, xmod) \

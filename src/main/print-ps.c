@@ -323,11 +323,11 @@ ps_print(stp_const_vars_t v, stp_image_t *image)
   const char	*media_type = stp_get_string_parameter(v, "MediaType");
   const char	*media_source = stp_get_string_parameter(v, "InputSlot");
   int 		output_type = stp_get_output_type(v);
+  unsigned short *out = NULL;
   int		top = stp_get_top(v);
   int		left = stp_get_left(v);
   int		i, j;		/* Looping vars */
   int		y;		/* Looping vars */
-  unsigned short	*out;		/* Output pixels for printer */
   int		page_left,	/* Left margin of page */
 		page_right,	/* Right margin of page */
 		page_top,	/* Top of page */
@@ -340,7 +340,7 @@ ps_print(stp_const_vars_t v, stp_image_t *image)
 		out_ps_height,	/* Output height (Level 2 output) */
 		out_offset;	/* Output offset (Level 2 output) */
   time_t	curtime;	/* Current time of day */
-  int		zero_mask;
+  unsigned	zero_mask;
   char		*command;	/* PostScript command */
   const char	*temp;		/* Temporary string pointer */
   int		order,		/* Order of command */
@@ -552,9 +552,15 @@ ps_print(stp_const_vars_t v, stp_image_t *image)
           (double)out_height / ((double)image_height));
   setlocale(LC_ALL, "");
 
-  out_channels = stpi_color_init(nv, image, 256);
+  stpi_channel_reset(nv);
+  stpi_channel_add(nv, 0, 0, 1.0, 1.0);
+  if (output_type == OUTPUT_COLOR)
+    {
+      stpi_channel_add(nv, 1, 0, 1.0, 1.0);
+      stpi_channel_add(nv, 2, 0, 1.0, 1.0);
+    }
 
-  out = stpi_zalloc((image_width * out_channels + 3) * 2);
+  out_channels = stpi_color_init(nv, image, 256);
 
   if (model == 0)
   {
@@ -574,12 +580,13 @@ ps_print(stp_const_vars_t v, stp_image_t *image)
       if ((y & 15) == 0)
 	stpi_image_note_progress(image, y, image_height);
 
-      if (stpi_color_get_row(nv, image, y, out, &zero_mask))
+      if (stpi_color_get_row(nv, image, y, &zero_mask))
 	{
 	  status = 2;
 	  break;
 	}
 
+      out = stpi_channel_get_input(nv);
       ps_hex(v, out, image_width * out_channels);
     }
   }
@@ -617,11 +624,13 @@ ps_print(stp_const_vars_t v, stp_image_t *image)
       if ((y & 15) == 0)
 	stpi_image_note_progress(image, y, image_height);
 
-      if (stpi_color_get_row(nv, image, y, out + out_offset, &zero_mask))
+      /* FIXME!!! */
+      if (stpi_color_get_row(nv, image, y /*, out + out_offset */ , &zero_mask))
 	{
 	  status = 2;
 	  break;
 	}
+      out = stpi_channel_get_input(nv);
 
       out_ps_height = out_offset + image_width * out_channels;
 
@@ -642,7 +651,8 @@ ps_print(stp_const_vars_t v, stp_image_t *image)
   }
   stpi_image_progress_conclude(image);
 
-  stpi_free(out);
+  if (out)
+    stpi_free(out);
 
   stpi_puts("grestore\n", v);
   stpi_puts("showpage\n", v);

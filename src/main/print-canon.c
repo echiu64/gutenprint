@@ -168,8 +168,6 @@ typedef struct canon_densities
 
 typedef struct canon_variable_ink
 {
-  const stpi_dither_range_simple_t *range;
-  int count;
   double density;
   const stpi_shade_t *shades;
   int numshades;
@@ -235,19 +233,16 @@ typedef struct canon_variable_printmode
  * if you get better results. Please send mail to thaller@ph.tum.de
  */
 
-#define DECLARE_INK2(name, density)					\
-static const canon_variable_ink_t name##_ink =				\
-{									\
-  name##_dither_ranges,							\
-  sizeof(name##_dither_ranges) / sizeof(stpi_dither_range_simple_t),	\
-  density,								\
-  name##_shades,							\
-  sizeof(name##_shades) / sizeof(stpi_shade_t)				\
+#define DECLARE_INK(name, density)		\
+static const canon_variable_ink_t name##_ink =	\
+{						\
+  density,					\
+  name##_shades,				\
+  sizeof(name##_shades) / sizeof(stpi_shade_t)	\
 }
 
-#define SHADE(density, subchannel, name)				\
-{  density, subchannel,							\
-   sizeof(name)/sizeof(stpi_dotsize_t), name  }
+#define SHADE(density, name)				\
+{ density, sizeof(name)/sizeof(stpi_dotsize_t), name }
 
 /*
  * Dither ranges specifically for Cyan/LightCyan (see NOTE above)
@@ -259,38 +254,26 @@ static const stpi_dotsize_t single_dotsize[] =
   { 0x1, 1.0 }
 };
 
-static const stpi_dither_range_simple_t canon_Cc_1bit_dither_ranges[] =
-{
-  { 0.25, 0x1, 1, 1 },
-  { 1.0,  0x1, 0, 1 }
-};
-
 static const stpi_shade_t canon_Cc_1bit_shades[] =
 {
-  SHADE(0.25, 1, single_dotsize),
-  SHADE(1.0,  0, single_dotsize)
+  SHADE(1.0, single_dotsize),
+  SHADE(0.25, single_dotsize),
 };
 
-DECLARE_INK2(canon_Cc_1bit, 0.75);
+DECLARE_INK(canon_Cc_1bit, 0.75);
 
 /*
  * Dither ranges specifically for Magenta/LightMagenta (see NOTE above)
  *
  */
 
-static const stpi_dither_range_simple_t canon_Mm_1bit_dither_ranges[] =
-{
-  { 0.26, 0x1, 1, 1 },
-  { 1.0,  0x1, 0, 1 }
-};
-
 static const stpi_shade_t canon_Mm_1bit_shades[] =
 {
-  SHADE(0.26, 1, single_dotsize),
-  SHADE(1.0,  0, single_dotsize)
+  SHADE(1.0, single_dotsize),
+  SHADE(0.26, single_dotsize),
 };
 
-DECLARE_INK2(canon_Mm_1bit, 0.75);
+DECLARE_INK(canon_Mm_1bit, 0.75);
 
 /*
  * Dither ranges specifically for any Color and 2bit/pixel (see NOTE above)
@@ -305,39 +288,22 @@ static const stpi_dotsize_t two_bit_dotsize[] =
 
 static const stpi_shade_t canon_X_2bit_shades[] =
 {
-  SHADE(1.0,  0, two_bit_dotsize)
+  SHADE(1.0, two_bit_dotsize)
 };
 
-static const stpi_dither_range_simple_t canon_X_2bit_dither_ranges[] =
-{
-  { 0.45,  0x1, 0, 1 },
-  { 0.68,  0x2, 0, 2 },
-  { 1.0,   0x3, 0, 3 }
-};
-
-DECLARE_INK2(canon_X_2bit, 1.0);
+DECLARE_INK(canon_X_2bit, 1.0);
 
 /*
  * Dither ranges specifically for any Color/LightColor and 2bit/pixel
  * (see NOTE above)
  */
-static const stpi_dither_range_simple_t canon_Xx_2bit_dither_ranges[] =
-{
-  { 0.15,  0x1, 1, 1 },
-  { 0.227, 0x2, 1, 2 },
-/*{ 0.333, 0x3, 1, 3 }, */
-  { 0.45,  0x1, 0, 1 },
-  { 0.68,  0x2, 0, 2 },
-  { 1.0,   0x3, 0, 3 }
-};
-
 static const stpi_shade_t canon_Xx_2bit_shades[] =
 {
-  SHADE(0.33, 1, two_bit_dotsize),
-  SHADE(1.0,  0, two_bit_dotsize)
+  SHADE(1.0, two_bit_dotsize),
+  SHADE(0.33, two_bit_dotsize),
 };
 
-DECLARE_INK2(canon_Xx_2bit, 1.0);
+DECLARE_INK(canon_Xx_2bit, 1.0);
 
 /*
  * Dither ranges specifically for any Color and 3bit/pixel
@@ -360,47 +326,24 @@ static const stpi_dotsize_t three_bit_dotsize[] =
   { 0x6, 1.0 }
 };
 
-static const stpi_dither_range_simple_t canon_X_3bit_dither_ranges[] =
-{
-  { 0.45,  0x1, 0, 1 },
-  { 0.55,  0x2, 0, 2 },
-  { 0.66,  0x3, 0, 3 },
-  { 0.77,  0x4, 0, 4 },
-  { 0.88,  0x5, 0, 5 },
-  { 1.0,   0x6, 0, 6 }
-};
-
 static const stpi_shade_t canon_X_3bit_shades[] =
 {
-  SHADE(1.0,  0, three_bit_dotsize)
+  SHADE(1.0, three_bit_dotsize)
 };
 
-DECLARE_INK2(canon_X_3bit, 1.0);
+DECLARE_INK(canon_X_3bit, 1.0);
 
 /*
  * Dither ranges specifically for any Color/LightColor and 3bit/pixel
  * (see NOTE above)
  */
-static const stpi_dither_range_simple_t canon_Xx_3bit_dither_ranges[] =
-{
-  { 0.15,  0x1, 1, 1 },
-  { 0.227, 0x2, 1, 2 },
-  { 0.333, 0x3, 1, 3 },
-  { 0.45,  0x1, 0, 1 },
-  { 0.55,  0x2, 0, 2 },
-  { 0.66,  0x3, 0, 3 },
-  { 0.77,  0x4, 0, 4 },
-  { 0.88,  0x5, 0, 5 },
-  { 1.0,   0x6, 0, 6 }
-};
-
 static const stpi_shade_t canon_Xx_3bit_shades[] =
 {
-  SHADE(0.33, 1, three_bit_dotsize),
-  SHADE(1.0,  0, three_bit_dotsize)
+  SHADE(1.0, three_bit_dotsize),
+  SHADE(0.33, three_bit_dotsize),
 };
 
-DECLARE_INK2(canon_Xx_3bit, 1.0);
+DECLARE_INK(canon_Xx_3bit, 1.0);
 
 
 /* Inkset for printing in CMY and 1bit/pixel */
@@ -1306,6 +1249,78 @@ static const stp_parameter_t the_parameters[] =
 static int the_parameter_count =
 sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
+typedef struct
+{
+  const stp_parameter_t param;
+  double min;
+  double max;
+  double defval;
+  int color_only;
+} float_param_t;
+
+static const float_param_t float_parameters[] =
+{
+  {
+    {
+      "CyanDensity", N_("Cyan Balance"),
+      N_("Adjust the cyan balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "MagentaDensity", N_("Magenta Balance"),
+      N_("Adjust the magenta balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "YellowDensity", N_("Yellow Balance"),
+      N_("Adjust the yellow balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "BlackDensity", N_("Black Balance"),
+      N_("Adjust the black balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "LightCyanTransition", N_("Light Cyan Transition"),
+      N_("Light Cyan Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "LightMagentaTransition", N_("Light Magenta Transition"),
+      N_("Light Magenta Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "LightYellowTransition", N_("Light Yellow Transition"),
+      N_("Light Yellow Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+    }, 0.0, 5.0, 1.0, 1
+  },
+};    
+
+static int float_parameter_count =
+sizeof(float_parameters) / sizeof(const float_param_t);
+
 static const paper_t *
 get_media_type(const char *name)
 {
@@ -1599,6 +1614,8 @@ canon_list_parameters(stp_const_vars_t v)
   int i;
   for (i = 0; i < the_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(the_parameters[i]));
+  for (i = 0; i < float_parameter_count; i++)
+    stp_parameter_list_add_param(ret, &(float_parameters[i].param));
   return ret;
 }
 
@@ -1614,6 +1631,17 @@ canon_parameters(stp_const_vars_t v, const char *name,
 
   if (name == NULL)
     return;
+
+  for (i = 0; i < float_parameter_count; i++)
+    if (strcmp(name, float_parameters[i].param.name) == 0)
+      {
+	stpi_fill_parameter_settings(description,
+				     &(float_parameters[i].param));
+	description->deflt.dbl = float_parameters[i].defval;
+	description->bounds.dbl.upper = float_parameters[i].max;
+	description->bounds.dbl.lower = float_parameters[i].min;
+	return;
+      }
 
   for (i = 0; i < the_parameter_count; i++)
     if (strcmp(name, the_parameters[i].name) == 0)
@@ -2179,15 +2207,27 @@ canon_printfunc(stp_vars_t v)
   
 }
 
+static double
+get_double_param(stp_vars_t v, const char *param)
+{
+  if (param && stp_check_float_parameter(v, param, STP_PARAMETER_ACTIVE))
+    return stp_get_float_parameter(v, param);
+  else
+    return 1.0;
+}
+
 static void
-set_ink_ranges(stp_vars_t v, const canon_variable_ink_t *ink, int color)
+set_ink_ranges(stp_vars_t v, const canon_variable_ink_t *ink, int color,
+	       const char *channel_param, const char *subchannel_param)
 {
   if (!ink)
     return;
-  stpi_dither_set_ranges(v, color, ink->count, ink->range,
-			 ink->density * stp_get_float_parameter(v, "Density"));
-  stpi_dither_set_shades(v, color, ink->numshades, ink->shades,
-			 ink->density * stp_get_float_parameter(v, "Density"));
+  stpi_dither_set_inks(v, color, ink->numshades, ink->shades,
+		       ink->density * stp_get_float_parameter(v, "Density"));
+  stpi_dither_set_density_adjustment
+    (v, color, 1, (get_double_param(v, channel_param) *
+		   get_double_param(v, subchannel_param) *
+		   get_double_param(v, "Density")));
 }
 
 /*
@@ -2208,7 +2248,6 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
   int		y;		/* Looping vars */
   int		xdpi, ydpi;	/* Resolution */
   int		n;		/* Output number */
-  unsigned short *out;	/* Output pixels (16-bit) */
   canon_privdata_t privdata;
   int		page_width,	/* Width of page */
 		page_height,	/* Length of page */
@@ -2226,7 +2265,7 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
-  int		zero_mask;
+  unsigned	zero_mask;
   int           bits= 1;
   int           image_height,
                 image_width,
@@ -2484,13 +2523,35 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
     stp_set_default_float_parameter(v, "GCRUpper", k_upper);
   stpi_dither_init(v, image, out_width, xdpi, ydpi);
 
+  for (i = 0; i < 7; i++)
+    {
+      if (privdata.cols[i])
+	stpi_dither_add_channel(v, privdata.cols[i], channel_color_map[i],
+				subchannel_color_map[i]);
+    }
+
   if ((inks = canon_inks(caps, res_code, colormode, bits))!=0)
     {
-      set_ink_ranges(v, inks->c, ECOLOR_C);
-      set_ink_ranges(v, inks->m, ECOLOR_M);
-      set_ink_ranges(v, inks->y, ECOLOR_Y);
-      set_ink_ranges(v, inks->k, ECOLOR_K);
+      set_ink_ranges(v, inks->c, ECOLOR_C, "MagentaDensity",
+		     "LightCyanTransition");
+      set_ink_ranges(v, inks->m, ECOLOR_M, "MagentaDensity",
+		     "LightMagentaTransition");
+      set_ink_ranges(v, inks->y, ECOLOR_Y, "YellowDensity",
+		     "LightYellowTransition");
+      set_ink_ranges(v, inks->k, ECOLOR_K, "BlackDensity", NULL);
     }
+  stpi_dither_set_density_adjustment
+    (v, ECOLOR_C, 0,
+     get_double_param(v, "CyanDensity") * get_double_param(v, "Density"));
+  stpi_dither_set_density_adjustment
+    (v, ECOLOR_M, 0,
+     get_double_param(v, "MagentaDensity") * get_double_param(v, "Density"));
+  stpi_dither_set_density_adjustment
+    (v, ECOLOR_Y, 0,
+     get_double_param(v, "YellowDensity") * get_double_param(v, "Density"));
+  stpi_dither_set_density_adjustment
+    (v, ECOLOR_K, 0,
+     get_double_param(v, "BlackDensity") * get_double_param(v, "Density"));
 
   errdiv  = image_height / out_height;
   errmod  = image_height % out_height;
@@ -2529,15 +2590,6 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
     }
 
   out_channels = stpi_color_init(v, image, 65536);
-
-  out = stpi_zalloc(image_width * out_channels * 2);
-
-  for (i = 0; i < 7; i++)
-    {
-      if (privdata.cols[i])
-	stpi_dither_add_channel(v, privdata.cols[i], channel_color_map[i],
-				subchannel_color_map[i]);
-    }
   stpi_allocate_component_data(v, "Driver", NULL, NULL, &privdata);
 
   privdata.emptylines = 0;
@@ -2551,14 +2603,14 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
     {
       errlast = errline;
       duplicate_line = 0;
-      if (stpi_color_get_row(v, image, errline, out, &zero_mask))
+      if (stpi_color_get_row(v, image, errline, &zero_mask))
 	{
 	  status = 2;
 	  break;
 	}
     }
 
-    stpi_dither(v, y, out, duplicate_line, zero_mask);
+    stpi_dither(v, y, duplicate_line, zero_mask);
     canon_printfunc(v);
     errval += errmod;
     errline += errdiv;
@@ -2590,8 +2642,6 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
  /*
   * Cleanup...
   */
-
-  stpi_free(out);
 
   for (i = 0; i < 7; i++)
     if (privdata.cols[i])

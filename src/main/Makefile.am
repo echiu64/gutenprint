@@ -89,6 +89,7 @@ endif
 libgimpprint_la_SOURCES = \
 	array.c \
 	bit-ops.c \
+	channel.c \
 	color.h \
 	curve.c \
 	dither.h \

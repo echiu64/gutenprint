@@ -49,16 +49,18 @@
 static int *
 get_errline(stpi_dither_t *d, int row, int color)
 {
+  stpi_dither_channel_t *dc;
   if (row < 0 || color < 0 || color >= CHANNEL_COUNT(d))
     return NULL;
-  if (CHANNEL(d, color).errs[row & 1])
-    return CHANNEL(d, color).errs[row & 1] + MAX_SPREAD;
-  else
+  dc = &(CHANNEL(d, color));
+  if (!dc->errs)
+    dc->errs = stpi_zalloc(d->error_rows * sizeof(int *));
+  if (!dc->errs[row % dc->error_rows])
     {
       int size = 2 * MAX_SPREAD + (16 * ((d->dst_width + 7) / 8));
-      CHANNEL(d, color).errs[row & 1] = stpi_zalloc(size * sizeof(int));
-      return CHANNEL(d, color).errs[row & 1] + MAX_SPREAD;
+      dc->errs[row % dc->error_rows] = stpi_zalloc(size * sizeof(int));
     }
+  return dc->errs[row % dc->error_rows] + MAX_SPREAD;
 }
 
 /*
@@ -153,11 +155,9 @@ print_color(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
   unsigned vmatrix;
   int i;
   int j;
-  int subchannel;
   unsigned char *tptr;
   unsigned bits;
   unsigned v;
-  unsigned dot_size;
   int levels = dc->nlevels - 1;
   int dither_value = adjusted;
   stpi_dither_segment_t *dd;
@@ -294,7 +294,7 @@ print_color(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
        * After all that, printing is almost an afterthought.
        * Pick the actual dot size (using a matrix here) and print it.
        */
-      if (dither_value >= vmatrix)
+      if (dither_value > 0 && dither_value >= vmatrix)
 	{
 	  stpi_ink_defn_t *subc;
 
@@ -308,20 +308,18 @@ print_color(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
 	      else
 		subc = lower;
 	    }
-	  subchannel = subc->subchannel;
 	  bits = subc->bits;
 	  v = subc->value;
-	  dot_size = subc->dot_size;
-	  if (dc->ptrs[subchannel])
+	  if (dc->ptr)
 	    {
-	      tptr = dc->ptrs[subchannel] + d->ptr_offset;
+	      tptr = dc->ptr + d->ptr_offset;
 
 	      /*
 	       * Lay down all of the bits in the pixel.
 	       */
 	      if (dontprint < v)
 		{
-		  set_row_ends(dc, x, subchannel);
+		  set_row_ends(dc, x);
 		  for (j = 1; j <= bits; j += j, tptr += length)
 		    {
 		      if (j & bits)
@@ -359,10 +357,12 @@ shared_ed_initializer(stpi_dither_t *d,
 		      int **ndither)
 {
   int i, j;
+  for (i = 0; i < CHANNEL_COUNT(d); i++)
+    CHANNEL(d, i).error_rows = 2;
   if (!duplicate_line)
     {
-      if ((zero_mask & ((1 << d->n_input_channels) - 1)) !=
-	  ((1 << d->n_input_channels) - 1))
+      if ((zero_mask & ((1 << CHANNEL_COUNT(d)) - 1)) !=
+	  ((1 << CHANNEL_COUNT(d)) - 1))
 	d->last_line_was_empty = 0;
       else
 	d->last_line_was_empty++;
@@ -412,12 +412,12 @@ shared_ed_deinitializer(stpi_dither_t *d,
   SAFE_FREE(ndither);
 }
 
-static void
-stpi_dither_raw_ed(stp_vars_t v,
-		  int row,
-		  const unsigned short *raw,
-		  int duplicate_line,
-		  int zero_mask)
+void
+stpi_dither_ed(stp_vars_t v,
+	       int row,
+	       const unsigned short *raw,
+	       int duplicate_line,
+	       int zero_mask)
 {
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   int		x,
@@ -451,14 +451,17 @@ stpi_dither_raw_ed(stp_vars_t v,
     {
       for (i = 0; i < CHANNEL_COUNT(d); i++)
 	{
-	  CHANNEL(d, i).v = raw[i];
-	  CHANNEL(d, i).o = CHANNEL(d, i).v;
-	  CHANNEL(d, i).b = CHANNEL(d, i).v;
-	  CHANNEL(d, i).v = UPDATE_COLOR(CHANNEL(d, i).v, ndither[i]);
-	  CHANNEL(d, i).v = print_color(d, &(CHANNEL(d, i)), x, row, bit,
-					length, 0, d->stpi_dither_type);
-	  ndither[i] = update_dither(d, i, d->src_width,
-				     direction, error[i][0], error[i][1]);
+	  if (CHANNEL(d, i).ptr)
+	    {
+	      CHANNEL(d, i).v = raw[i];
+	      CHANNEL(d, i).o = CHANNEL(d, i).v;
+	      CHANNEL(d, i).b = CHANNEL(d, i).v;
+	      CHANNEL(d, i).v = UPDATE_COLOR(CHANNEL(d, i).v, ndither[i]);
+	      CHANNEL(d, i).v = print_color(d, &(CHANNEL(d, i)), x, row, bit,
+					    length, 0, d->stpi_dither_type);
+	      ndither[i] = update_dither(d, i, d->src_width,
+					 direction, error[i][0], error[i][1]);
+	    }
 	}
       QUANT(12);
       ADVANCE_BIDIRECTIONAL(d, bit, raw, direction, CHANNEL_COUNT(d), xerror,
@@ -468,84 +471,4 @@ stpi_dither_raw_ed(stp_vars_t v,
   shared_ed_deinitializer(d, error, ndither);
   if (direction == -1)
     stpi_dither_reverse_row_ends(d);
-}
-
-static void
-stpi_dither_raw_cmyk_ed(stp_vars_t v,
-		       int row,
-		       const unsigned short *cmyk,
-		       int duplicate_line,
-		       int zero_mask)
-{
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
-  int		x,
-    		length;
-  unsigned char	bit;
-  int		i;
-  int		*ndither;
-  int		***error;
-
-  int		terminate;
-  int		direction = row & 1 ? 1 : -1;
-  int xerror, xstep, xmod;
-
-  length = (d->dst_width + 7) / 8;
-  if (!shared_ed_initializer(d, row, duplicate_line, zero_mask, length,
-			     direction, &error, &ndither))
-    return;
-
-  x = (direction == 1) ? 0 : d->dst_width - 1;
-  bit = 1 << (7 - (x & 7));
-  xstep  = 4 * (d->src_width / d->dst_width);
-  xmod   = d->src_width % d->dst_width;
-  xerror = (xmod * x) % d->dst_width;
-  terminate = (direction == 1) ? d->dst_width : -1;
-
-  if (direction == -1)
-    cmyk += (4 * (d->src_width - 1));
-
-  QUANT(6);
-  for (; x != terminate; x += direction)
-    {
-      int extra_k;
-      CHANNEL(d, ECOLOR_K).v = cmyk[3];
-      CHANNEL(d, ECOLOR_C).v = cmyk[0];
-      CHANNEL(d, ECOLOR_M).v = cmyk[1];
-      CHANNEL(d, ECOLOR_Y).v = cmyk[2];
-      extra_k = CHANNEL(d, ECOLOR_K).v;
-      for (i = 0; i < CHANNEL_COUNT(d); i++)
-	{
-	  CHANNEL(d, i).o = CHANNEL(d, i).v;
-	  if (i != ECOLOR_K)
-	    CHANNEL(d, i).o += extra_k;
-	  CHANNEL(d, i).b = CHANNEL(d, i).v;
-	  CHANNEL(d, i).v = UPDATE_COLOR(CHANNEL(d, i).v, ndither[i]);
-	  CHANNEL(d, i).v = print_color(d, &(CHANNEL(d, i)), x, row, bit,
-					length, 0, d->stpi_dither_type);
-	  ndither[i] = update_dither(d, i, d->src_width,
-				     direction, error[i][0], error[i][1]);
-	}
-      QUANT(12);
-      ADVANCE_BIDIRECTIONAL(d, bit, cmyk, direction, 4, xerror, xstep, xmod, error,
-			    CHANNEL_COUNT(d), d->error_rows);
-      QUANT(13);
-    }
-  shared_ed_deinitializer(d, error, ndither);
-  if (direction == -1)
-    stpi_dither_reverse_row_ends(d);
-}
-
-void
-stpi_dither_ed(stp_vars_t v,
-	      int row,
-	      const unsigned short *input,
-	      int duplicate_line,
-	      int zero_mask)
-{
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
-  if (d->dither_class != OUTPUT_RAW_CMYK ||
-      d->n_ghost_channels > 0)
-    stpi_dither_raw_ed(v, row, input, duplicate_line, zero_mask);
-  else
-    stpi_dither_raw_cmyk_ed(v, row, input, duplicate_line, zero_mask);
 }

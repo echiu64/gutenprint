@@ -83,12 +83,11 @@ print_color_fast(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y
        * After all that, printing is almost an afterthought.
        * Pick the actual dot size (using a matrix here) and print it.
        */
-      if (adjusted >= vmatrix && dc->ptrs[subc->subchannel])
+      if (adjusted > 0 && adjusted >= vmatrix)
 	{
-	  int subchannel = subc->subchannel;
 	  bits = subc->bits;
-	  tptr = dc->ptrs[subchannel] + d->ptr_offset;
-	  set_row_ends(dc, x, subchannel);
+	  tptr = dc->ptr + d->ptr_offset;
+	  set_row_ends(dc, x);
 
 	  /*
 	   * Lay down all of the bits in the pixel.
@@ -103,23 +102,22 @@ print_color_fast(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y
     }
 }
 
-static void
-stpi_dither_raw_fast(stp_vars_t v,
-		    int row,
-		    const unsigned short *raw,
-		    int duplicate_line,
-		    int zero_mask)
+void
+stpi_dither_fast(stp_vars_t v,
+		 int row,
+		 const unsigned short *raw,
+		 int duplicate_line,
+		 int zero_mask)
 {
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
-  int		x,
-		length;
+  int x, length;
   unsigned char	bit;
   int i;
 
   int dst_width = d->dst_width;
   int xerror, xstep, xmod;
-  if ((zero_mask & ((1 << d->n_input_channels) - 1)) ==
-      ((1 << d->n_input_channels) - 1))
+  if ((zero_mask & ((1 << CHANNEL_COUNT(d)) - 1)) ==
+      ((1 << CHANNEL_COUNT(d)) - 1))
     return;
 
   length = (d->dst_width + 7) / 8;
@@ -134,79 +132,15 @@ stpi_dither_raw_fast(stp_vars_t v,
     {
       for (i = 0; i < CHANNEL_COUNT(d); i++)
 	{
-	  CHANNEL(d, i).v = raw[i];
-	  CHANNEL(d, i).o = CHANNEL(d, i).v;
-	  if (CHANNEL(d, i).ptrs[0])
-	    print_color_fast(d, &(CHANNEL(d, i)), x, row, bit, length);
+	  if (CHANNEL(d, i).ptr)
+	    {
+	      CHANNEL(d, i).v = raw[i];
+	      CHANNEL(d, i).o = CHANNEL(d, i).v;
+	      print_color_fast(d, &(CHANNEL(d, i)), x, row, bit, length);
+	    }
 	}
       QUANT(16);
       ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d), xerror, xstep, xmod);
       QUANT(17);
     }
-}
-
-static void
-stpi_dither_raw_cmyk_fast(stp_vars_t v,
-			 int row,
-			 const unsigned short *cmyk,
-			 int duplicate_line,
-			 int zero_mask)
-{
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
-  int		x,
-		length;
-  unsigned char	bit;
-  int i;
-
-  int dst_width = d->dst_width;
-  int xerror, xstep, xmod;
-
-  if ((zero_mask & ((1 << d->n_input_channels) - 1)) ==
-      ((1 << d->n_input_channels) - 1))
-    return;
-
-  length = (d->dst_width + 7) / 8;
-
-  bit = 128;
-  xstep  = 4 * (d->src_width / d->dst_width);
-  xmod   = d->src_width % d->dst_width;
-  xerror = 0;
-  x = 0;
-
-  QUANT(14);
-  for (; x != dst_width; x++)
-    {
-      int extra_k;
-      CHANNEL(d, ECOLOR_C).v = cmyk[0];
-      CHANNEL(d, ECOLOR_M).v = cmyk[1];
-      CHANNEL(d, ECOLOR_Y).v = cmyk[2];
-      CHANNEL(d, ECOLOR_K).v = cmyk[3];
-      extra_k = CHANNEL(d, ECOLOR_K).v;
-      for (i = 0; i < CHANNEL_COUNT(d); i++)
-	{
-	  CHANNEL(d, i).o = CHANNEL(d, i).v;
-	  if (i != ECOLOR_K)
-	    CHANNEL(d, i).o += extra_k;
-	  if (CHANNEL(d, i).ptrs[0])
-	    print_color_fast(d, &(CHANNEL(d, i)), x, row, bit, length);
-	}
-      QUANT(16);
-      ADVANCE_UNIDIRECTIONAL(d, bit, cmyk, 4, xerror, xstep, xmod);
-      QUANT(17);
-    }
-}
-
-void
-stpi_dither_fast(stp_vars_t v,
-		int row,
-		const unsigned short *input,
-		int duplicate_line,
-		int zero_mask)
-{
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
-  if (d->dither_class != OUTPUT_RAW_CMYK ||
-      d->n_ghost_channels > 0)
-    stpi_dither_raw_fast(v, row, input, duplicate_line, zero_mask);
-  else
-    stpi_dither_raw_cmyk_fast(v, row, input, duplicate_line, zero_mask);
 }

@@ -87,8 +87,6 @@ typedef double escp2_densities_t[RES_N];
 
 typedef struct escp2_variable_ink
 {
-  const stpi_dither_range_simple_t *range;
-  int numranges;
   double darkness;
   const stpi_shade_t *shades;
   int numshades;
@@ -200,11 +198,13 @@ typedef struct
   int color;
   int subchannel;
   int head_offset;
+  const char *channel_density;
+  const char *subchannel_scale;
 } physical_subchannel_t;
 
 typedef struct
 {
-  const physical_subchannel_t *channels;
+  const physical_subchannel_t *subchannels;
   int n_subchannels;
 } ink_channel_t;
 
@@ -231,7 +231,6 @@ typedef struct
   const char *hue_adjustment;
   const char *sat_adjustment;
   const ink_channel_t *channels[PHYSICAL_CHANNEL_LIMIT];
-  const char *channel_parameter_names[PHYSICAL_CHANNEL_LIMIT];
 } escp2_inkname_t;
 
 typedef struct

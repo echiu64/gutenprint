@@ -28,9 +28,12 @@
 #else
 #include <gimp-print/gimp-print.h>
 #endif
+#define STPI_TESTDITHER
+
 #include "../lib/libprintut.h"
 #include "../src/main/gimp-print-internal.h"
 #include "../src/main/weave.h"
+#include "../src/main/dither.h"
 #include "../src/main/bit-ops.h"
 #include <stdio.h>
 #include <sys/time.h>
@@ -72,31 +75,41 @@ unsigned short	white_line[IMAGE_WIDTH * 4],
 		random_line[IMAGE_WIDTH * 4];
 
 
-stpi_dither_range_simple_t normal_1bit_ranges[] =
+#define SHADE(density, name)					\
+{  density, sizeof(name)/sizeof(stpi_dotsize_t), name  }
+
+static const stpi_dotsize_t single_dotsize[] =
 {
-  { 1.0,  0x1, 0, 1 }
+  { 0x1, 1.0 }
 };
 
-stpi_dither_range_simple_t normal_2bit_ranges[] =
+static const stpi_dotsize_t variable_dotsizes[] =
 {
-  { 0.45,  0x1, 0, 1 },
-  { 0.68,  0x2, 0, 2 },
-  { 1.0,   0x3, 0, 3 }
+  { 0x1, 0.28 },
+  { 0x2, 0.58 },
+  { 0x3, 1.0  }
 };
 
-stpi_dither_range_simple_t photo_1bit_ranges[] =
+static const stpi_shade_t normal_1bit_shades[] =
 {
-  { 0.33, 0x1, 1, 1 },
-  { 1.0,  0x1, 0, 1 }
+  SHADE(1.0, single_dotsize)
 };
 
-stpi_dither_range_simple_t photo_2bit_ranges[] =
+static const stpi_shade_t photo_1bit_shades[] =
 {
-  { 0.15,  0x1, 1, 1 },
-  { 0.227, 0x2, 1, 2 },
-  { 0.45,  0x1, 0, 1 },
-  { 0.68,  0x2, 0, 2 },
-  { 1.0,   0x3, 0, 3 }
+  SHADE(0.33, single_dotsize),
+  SHADE(1.0, single_dotsize)
+};
+
+static const stpi_shade_t normal_2bit_shades[] =
+{
+  SHADE(1.0, variable_dotsizes)
+};
+
+static const stpi_shade_t photo_2bit_shades[] =
+{
+  SHADE(0.33, variable_dotsizes),
+  SHADE(1.0, variable_dotsizes)
 };
 
 
@@ -302,6 +315,27 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   stpi_dither_init(v, &theImage, IMAGE_WIDTH, 1, 1);
 
+ /*
+  * Now dither the "page"...
+  */
+
+  switch (stpi_dither_type)
+    {
+    case DITHER_PHOTO:
+    case DITHER_PHOTO_CMYK :
+      stpi_dither_add_channel(v, lcyan, ECOLOR_C, 1);
+      stpi_dither_add_channel(v, lmagenta, ECOLOR_M, 1);
+      /* FALLTHROUGH */
+    case DITHER_COLOR:
+    case DITHER_CMYK :
+      stpi_dither_add_channel(v, cyan, ECOLOR_C, 0);
+      stpi_dither_add_channel(v, magenta, ECOLOR_M, 0);
+      stpi_dither_add_channel(v, yellow, ECOLOR_Y, 0);
+      /* FALLTHROUGH */
+    case DITHER_GRAY:
+      stpi_dither_add_channel(v, black, ECOLOR_K, 0);
+    }
+
   if (stpi_dither_type == DITHER_PHOTO)
     stp_set_float_parameter(v, "GCRLower", 0.4 / dither_bits + 0.1);
   else
@@ -315,11 +349,11 @@ main(int  argc,				/* I - Number of command-line arguments */
         switch (dither_bits)
 	{
 	  case 1 :
-              stpi_dither_set_ranges(v, ECOLOR_K, 1, normal_1bit_ranges, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_K, 1, normal_1bit_shades, 1.0);
 	      break;
 	  case 2 :
 	      stpi_dither_set_transition(v, 0.5);
-              stpi_dither_set_ranges(v, ECOLOR_K, 3, normal_2bit_ranges, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_K, 1, normal_2bit_shades, 1.0);
 	      break;
        }
        break;
@@ -328,17 +362,17 @@ main(int  argc,				/* I - Number of command-line arguments */
         switch (dither_bits)
 	{
 	  case 1 :
-              stpi_dither_set_ranges(v, ECOLOR_C, 1, normal_1bit_ranges, 1.0);
-              stpi_dither_set_ranges(v, ECOLOR_M, 1, normal_1bit_ranges, 1.0);
-              stpi_dither_set_ranges(v, ECOLOR_Y, 1, normal_1bit_ranges, 1.0);
-              stpi_dither_set_ranges(v, ECOLOR_K, 1, normal_1bit_ranges, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_C, 1, normal_1bit_shades, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_M, 1, normal_1bit_shades, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_Y, 1, normal_1bit_shades, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_K, 1, normal_1bit_shades, 1.0);
 	      break;
 	  case 2 :
 	      stpi_dither_set_transition(v, 0.5);
-              stpi_dither_set_ranges(v, ECOLOR_C, 3, normal_2bit_ranges, 1.0);
-              stpi_dither_set_ranges(v, ECOLOR_M, 3, normal_2bit_ranges, 1.0);
-              stpi_dither_set_ranges(v, ECOLOR_Y, 3, normal_2bit_ranges, 1.0);
-              stpi_dither_set_ranges(v, ECOLOR_K, 3, normal_2bit_ranges, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_C, 1, normal_2bit_shades, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_M, 1, normal_2bit_shades, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_Y, 1, normal_2bit_shades, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_K, 1, normal_2bit_shades, 1.0);
 	      break;
        }
        break;
@@ -347,17 +381,17 @@ main(int  argc,				/* I - Number of command-line arguments */
         switch (dither_bits)
 	{
 	  case 1 :
-              stpi_dither_set_ranges(v, ECOLOR_C, 2, photo_1bit_ranges, 1.0);
-              stpi_dither_set_ranges(v, ECOLOR_M, 2, photo_1bit_ranges, 1.0);
-              stpi_dither_set_ranges(v, ECOLOR_Y, 1, normal_1bit_ranges, 1.0);
-              stpi_dither_set_ranges(v, ECOLOR_K, 1, normal_1bit_ranges, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_C, 2, photo_1bit_shades, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_M, 2, photo_1bit_shades, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_Y, 1, normal_1bit_shades, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_K, 1, normal_1bit_shades, 1.0);
 	      break;
 	  case 2 :
 	      stpi_dither_set_transition(v, 0.7);
-              stpi_dither_set_ranges(v, ECOLOR_C, 5, photo_2bit_ranges, 1.0);
-              stpi_dither_set_ranges(v, ECOLOR_M, 5, photo_2bit_ranges, 1.0);
-              stpi_dither_set_ranges(v, ECOLOR_Y, 3, normal_2bit_ranges, 1.0);
-              stpi_dither_set_ranges(v, ECOLOR_K, 3, normal_2bit_ranges, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_C, 2, photo_2bit_shades, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_M, 2, photo_2bit_shades, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_Y, 1, normal_2bit_shades, 1.0);
+              stpi_dither_set_inks(v, ECOLOR_K, 1, normal_2bit_shades, 1.0);
 	      break;
        }
        break;
@@ -394,27 +428,6 @@ main(int  argc,				/* I - Number of command-line arguments */
 	perror("Create");
     }
 
- /*
-  * Now dither the "page"...
-  */
-
-  switch (stpi_dither_type)
-    {
-    case DITHER_PHOTO:
-    case DITHER_PHOTO_CMYK :
-      stpi_dither_add_channel(v, lcyan, ECOLOR_C, 1);
-      stpi_dither_add_channel(v, lmagenta, ECOLOR_M, 1);
-      /* FALLTHROUGH */
-    case DITHER_COLOR:
-    case DITHER_CMYK :
-      stpi_dither_add_channel(v, cyan, ECOLOR_C, 0);
-      stpi_dither_add_channel(v, magenta, ECOLOR_M, 0);
-      stpi_dither_add_channel(v, yellow, ECOLOR_Y, 0);
-      /* FALLTHROUGH */
-    case DITHER_GRAY:
-      stpi_dither_add_channel(v, black, ECOLOR_K, 0);
-    }
-
   (void) gettimeofday(&tv1, NULL);
 
   for (i = 0; i < IMAGE_HEIGHT; i ++)
@@ -429,21 +442,21 @@ main(int  argc,				/* I - Number of command-line arguments */
     {
       case DITHER_GRAY :
           image_get_row(gray, i);
-	  stpi_dither(v, i, gray, 0, 0);
+	  stpi_dither_internal(v, i, gray, 0, 0);
 	  if (fp)
 	    write_gray(fp, black);
 	  break;
       case DITHER_COLOR :
       case DITHER_CMYK :
           image_get_row(rgb, i);
-	  stpi_dither(v, i, rgb, 0, 0);
+	  stpi_dither_internal(v, i, rgb, 0, 0);
 	  if (fp)
 	    write_color(fp, cyan, magenta, yellow, black);
 	  break;
       case DITHER_PHOTO :
       case DITHER_PHOTO_CMYK :
           image_get_row(rgb, i);
-	  stpi_dither(v, i, rgb, 0, 0);
+	  stpi_dither_internal(v, i, rgb, 0, 0);
 	  if (fp)
 	    write_photo(fp, cyan, lcyan, magenta, lmagenta, yellow, black);
 	  break;

@@ -349,8 +349,8 @@ preinit_matrix(stp_vars_t v)
 {
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   int i;
-  for (i = 0; i < PHYSICAL_CHANNEL_COUNT(d); i++)
-    stpi_dither_matrix_destroy(&(PHYSICAL_CHANNEL(d, i).dithermat));
+  for (i = 0; i < CHANNEL_COUNT(d); i++)
+    stpi_dither_matrix_destroy(&(CHANNEL(d, i).dithermat));
   stpi_dither_matrix_destroy(&(d->dither_matrix));
 }
 
@@ -358,7 +358,7 @@ static void
 postinit_matrix(stp_vars_t v, int x_shear, int y_shear)
 {
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
-  unsigned rc = 1 + (unsigned) ceil(sqrt(PHYSICAL_CHANNEL_COUNT(d)));
+  unsigned rc = 1 + (unsigned) ceil(sqrt(CHANNEL_COUNT(d)));
   int i, j;
   int color = 0;
   unsigned x_n = d->dither_matrix.x_size / rc;
@@ -367,10 +367,10 @@ postinit_matrix(stp_vars_t v, int x_shear, int y_shear)
     stpi_dither_matrix_shear(&(d->dither_matrix), x_shear, y_shear);
   for (i = 0; i < rc; i++)
     for (j = 0; j < rc; j++)
-      if (color < PHYSICAL_CHANNEL_COUNT(d))
+      if (color < CHANNEL_COUNT(d))
 	{
 	  stpi_dither_matrix_clone(&(d->dither_matrix),
-				  &(PHYSICAL_CHANNEL(d, color).dithermat),
+				  &(CHANNEL(d, color).dithermat),
 				  x_n * i, y_n * j);
 	  color++;
 	}
@@ -422,13 +422,13 @@ void
 stpi_dither_set_transition(stp_vars_t v, double exponent)
 {
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
-  unsigned rc = 1 + (unsigned) ceil(sqrt(PHYSICAL_CHANNEL_COUNT(d)));
+  unsigned rc = 1 + (unsigned) ceil(sqrt(CHANNEL_COUNT(d)));
   int i, j;
   int color = 0;
   unsigned x_n = d->dither_matrix.x_size / rc;
   unsigned y_n = d->dither_matrix.y_size / rc;
-  for (i = 0; i < PHYSICAL_CHANNEL_COUNT(d); i++)
-    stpi_dither_matrix_destroy(&(PHYSICAL_CHANNEL(d, i).pick));
+  for (i = 0; i < CHANNEL_COUNT(d); i++)
+    stpi_dither_matrix_destroy(&(CHANNEL(d, i).pick));
   stpi_dither_matrix_destroy(&(d->transition_matrix));
   stpi_dither_matrix_copy(&(d->dither_matrix), &(d->transition_matrix));
   d->transition = exponent;
@@ -436,10 +436,10 @@ stpi_dither_set_transition(stp_vars_t v, double exponent)
     stpi_dither_matrix_scale_exponentially(&(d->transition_matrix), exponent);
   for (i = 0; i < rc; i++)
     for (j = 0; j < rc; j++)
-      if (color < PHYSICAL_CHANNEL_COUNT(d))
+      if (color < CHANNEL_COUNT(d))
 	{
 	  stpi_dither_matrix_clone(&(d->dither_matrix),
-				  &(PHYSICAL_CHANNEL(d, color).pick),
+				  &(CHANNEL(d, color).pick),
 				  x_n * i, y_n * j);
 	  color++;
 	}
