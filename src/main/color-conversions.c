@@ -552,11 +552,11 @@ fromname##_to_##toname(const stp_vars_t *vars, const unsigned char *in,	\
     {									\
       lut->printed_colorfunc = 1;					\
       stp_dprintf(STP_DBG_COLORFUNC, vars,				\
-		   "Colorfunc is %s_%d_to_%s, %s, %s, %d\n",		\
+		   "Colorfunc is %s_%d_to_%s, %s, %s, %d, %d\n",	\
 		   #fromname, lut->channel_depth, #toname,		\
 		   lut->input_color_description->name,			\
 		   lut->output_color_description->name,			\
-		   lut->invert_output);					\
+		   lut->steps, lut->invert_output);			\
     }									\
   if (lut->channel_depth == 8)						\
     return fromname##_8_to_##toname(vars, in, out);			\
