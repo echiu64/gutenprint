@@ -78,7 +78,8 @@ escp2_write_microweave(FILE *, const unsigned char *,
 static void *initialize_weave(int jets, int separation, int oversample,
 			      int horizontal, int vertical,
 			      colormode_t colormode, int width, int linewidth,
-			      int lineheight, int vertical_row_separation);
+			      int lineheight, int vertical_row_separation,
+			      int first_line, int phys_lines);
 static void escp2_flush(void *, int model, int width, int hoffset, int ydpi,
 			int xdpi, FILE *prn);
 static void
@@ -198,29 +199,31 @@ static double dot_sizes[] = { 0.5, 0.67, 1.0 };
 
 static simple_dither_range_t variable_dither_ranges[] =
 {
-  { 0.152, 0x1, 0 },
-  { 0.255, 0x2, 0 },
-  { 0.38,  0x3, 0 },
-  { 0.5,   0x1, 1 },
-  { 0.67,  0x2, 1 },
-  { 1.0,   0x3, 1 }
+  { 0.152, 0x1, 0, 1 },
+  { 0.255, 0x2, 0, 2 },
+  { 0.38,  0x3, 0, 3 },
+#if 0
+  { 0.5,   0x1, 1, 1 },
+#endif
+  { 0.67,  0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
 };
 
 static simple_dither_range_t standard_dither_ranges[] =
 {
-  { 0.5,   0x1, 1 },
-  { 0.67,  0x2, 1 },
-  { 1.0,   0x3, 1 }
+  { 0.5,   0x1, 1, 1 },
+  { 0.67,  0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
 };
 
 static simple_dither_range_t mis_sixtone_ranges[] =
 {
-  { 0.15, 0x000001, 1 },	/* LC */
-  { 0.25, 0x000010, 1 },	/* C */
-  { 0.45, 0x000100, 1 },	/* LM */
-  { 0.50, 0x001000, 1 },	/* Y */
-  { 0.75, 0x010000, 1 },	/* M */
-  { 1.00, 0x100000, 1 }		/* K */
+  { 0.15, 0x000001, 1, 1 },	/* LC */
+  { 0.25, 0x000010, 1, 1 },	/* C */
+  { 0.45, 0x000100, 1, 1 },	/* LM */
+  { 0.50, 0x001000, 1, 1 },	/* Y */
+  { 0.75, 0x010000, 1, 1 },	/* M */
+  { 1.00, 0x100000, 1, 1 }	/* K */
 };
 
 /*
@@ -242,7 +245,7 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO),
-    48, 6, 48, 720, -1, 1, INCH_8_5, INCH_14, 14, 14, 9, 49, 1, 0
+    48, 6, 48, 720, -1, 1, INCH_8_5, INCH_14, 14, 14, 0, 20, 1, 0
   },
   /* 2: Stylus Color 1500 */
   {
@@ -256,21 +259,21 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    32, 8, 32, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 9, 49, 1, 0
+    32, 8, 32, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 20, 1, 0
   },
   /* 4: Stylus Color 800 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    64, 4, 64, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 9, 49, 1, 0
+    64, 4, 64, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 20, 1, 0
   },
   /* 5: Stylus Color 850 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    64, 4, 128, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 9, 49, 1, 0
+    64, 4, 128, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 20, 1, 0
   },
   /* 6: Stylus Color 1520/3000 */
   {
@@ -286,21 +289,21 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES),
-    32, 8, 32, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 9, 49, 1, 0
+    32, 8, 32, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
   },
   /* 8: Stylus Photo EX */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES),
-    32, 8, 32, 720, 0, 3, INCH_11, INCH_17, 9, 9, 9, 49, 1, 0
+    32, 8, 32, 720, 0, 3, INCH_11, INCH_17, 9, 9, 0, 20, 1, 0
   },
   /* 9: Stylus Photo */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO),
-    32, 8, 32, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 9, 49, 1, 0
+    32, 8, 32, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
   },
 
   /* THIRD GENERATION PRINTERS */
@@ -312,21 +315,21 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_NO),
-    21, 8, 64, 720, 2, 3, INCH_8_5, INCH_14, 9, 9, 9, 18, 1, 0
+    21, 8, 64, 720, 2, 3, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
   },
   /* 11: Stylus Color 640 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    32, 8, 64, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 9, 18, 1, 0
+    32, 8, 64, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
   },
   /* 12: Stylus Color 740 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    48, 6, 144, 360, 0, 3, INCH_11, INCH_17, 9, 9, 9, 18, 1, 0
+    48, 6, 144, 360, 0, 3, INCH_11, INCH_17, 9, 9, 0, 20, 1, 0
   },
   /* 13: Stylus Color 900 */
   /* Dale Pontius thinks the spacing is 3 jets??? */
@@ -335,49 +338,49 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_900 | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    96, 2, 192, 360, 0, 1, INCH_11, INCH_17, 9, 9, 9, 18, 1, 0
+    96, 2, 192, 360, 0, 1, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
   },
   /* 14: Stylus Photo 750, 870 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES),
-    48, 6, 48, 360, 0, 4, INCH_8_5, INCH_14, 9, 9, 9, 18, 1, 0
+    48, 6, 48, 360, 0, 4, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
   },
   /* 15: Stylus Photo 1200, 1270 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES),
-    48, 6, 48, 360, 0, 4, INCH_13, INCH_19, 9, 9, 9, 18, 1, 0
+    48, 6, 48, 360, 0, 4, INCH_13, INCH_19, 9, 9, 0, 20, 1, 0
   },
   /* 16: Stylus Color 860 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    48, 6, 144, 360, 0, 2, INCH_8_5, INCH_14, 9, 9, 9, 18, 1, 0
+    48, 6, 144, 360, 0, 2, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
   },
   /* 17: Stylus Color 1160 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    48, 6, 144, 360, 0, 2, INCH_13, INCH_19, 9, 9, 9, 18, 1, 0
+    48, 6, 144, 360, 0, 2, INCH_13, INCH_19, 9, 9, 0, 20, 1, 0
   },
   /* 18: Stylus Color 660 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    32, 8, 64, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 9, 18, 1, 8
+    32, 8, 64, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 8
   },
   /* 19: Stylus Color 760 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    48, 6, 144, 360, 0, 3, INCH_8_5, INCH_14, 9, 9, 9, 18, 1, 0
+    48, 6, 144, 360, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
   },
 
 };
@@ -780,12 +783,15 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi, int xdpi,
 	      escp2_nozzle_separation(model) * 14400 / 720,
 	      14400 / escp2_xres(model));
 
-      fwrite("\033(v\004\000", 5, 1, prn);     /* Absolute vertical position */
-      n = ydpi * top / 72;
-      putc(n & 255, prn);
-      putc(n >> 8, prn);
-      putc(0, prn);
-      putc(0, prn);
+      if (!use_softweave)
+	{
+	  fwrite("\033(v\004\000", 5, 1, prn); /* Absolute vertical position */
+	  n = ydpi * top / 72;
+	  putc(n & 255, prn);
+	  putc(n >> 8, prn);
+	  putc(0, prn);
+	  putc(0, prn);
+	}
     }
   else
     {
@@ -816,10 +822,13 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi, int xdpi,
 		  (((page_length * 720 / 72) >> 24) & 0xff));
 	}
 
-      fwrite("\033(V\002\000", 5, 1, prn);    /* Absolute vertical position */
-      n = ydpi * top / 72;
-      putc(n & 255, prn);
-      putc(n >> 8, prn);
+      if (!use_softweave)
+	{
+	  fwrite("\033(V\002\000", 5, 1, prn); /* Absolute vertical position */
+	  n = ydpi * top / 72;
+	  putc(n & 255, prn);
+	  putc(n >> 8, prn);
+	}
     }
 }
 
@@ -893,6 +902,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   colormode_t colormode = COLOR_CCMMYK;
   int		separation_rows = escp2_separation_rows(model);
   int		use_glossy_film = 0;
+  int		ink_spread;
 
   if (!strcmp(media_type, "Glossy Film"))
     use_glossy_film = 1;
@@ -991,6 +1001,10 @@ escp2_print(const printer_t *printer,		/* I - Model */
     bits = 2;
   else
     bits = 1;
+#if 0
+  /*
+   * We think we've fixed softweave finally!
+   */
   if (!use_softweave)
     {
       /*
@@ -1002,7 +1016,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 			  escp2_nozzle_separation(model) + 5) / 10;
       top += extra_points;
     }
-
+#endif
  /*
   * Compute the output size...
   */
@@ -1186,9 +1200,11 @@ escp2_print(const printer_t *printer,		/* I - Model */
     }
   }
   if (use_softweave)
+    /* Epson printers are all 720 physical dpi */
     weave = initialize_weave(nozzles, nozzle_separation, horizontal_passes,
 			     vertical_passes, vertical_subsample, colormode,
-			     bits, out_width, out_height, separation_rows);
+			     bits, out_width, out_height, separation_rows,
+			     top * 720 / 72, page_height * 720 / 72);
   else
     escp2_init_microweave();
       
@@ -1219,8 +1235,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
       dither_set_k_ranges_simple(dither, 3, dot_sizes, v->density);
       if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
 	{
-	  dither_set_c_ranges(dither, 6, variable_dither_ranges, v->density);
-	  dither_set_m_ranges(dither, 6, variable_dither_ranges, v->density);
+	  dither_set_c_ranges(dither, 5, variable_dither_ranges, v->density);
+	  dither_set_m_ranges(dither, 5, variable_dither_ranges, v->density);
 	}
       else
 	{	
@@ -1230,7 +1246,13 @@ escp2_print(const printer_t *printer,		/* I - Model */
     }
   else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
     dither_set_light_inks(dither, .25, .25, 0.0, v->density);
-	  
+
+#if 0
+  if (bits == 1)
+    dither_set_ink_budget(dither, 2);
+  else
+    dither_set_ink_budget(dither, 6);
+#endif
   switch (v->image_type)
     {
     case IMAGE_LINE_ART:
@@ -1240,10 +1262,12 @@ escp2_print(const printer_t *printer,		/* I - Model */
       dither_set_ink_spread(dither, 15);
       break;
     case IMAGE_CONTINUOUS:
+      ink_spread = 13;
       if (ydpi > 720)
-      dither_set_ink_spread(dither, 14);
-      else
-      dither_set_ink_spread(dither, 13);
+	ink_spread++;
+      if (bits > 1)
+	ink_spread++;
+      dither_set_ink_spread(dither, ink_spread);
       break;
     }	    
   dither_set_density(dither, v->density);
@@ -2219,6 +2243,14 @@ typedef struct {
   int ncolors;			/* How many colors (1, 4, or 6) */
   int horizontal_width;		/* Line width in output pixels */
   int vertical_height;		/* Image height in output pixels */
+  int firstline;		/* Actual first line (referenced to paper) */
+  int page_lines;		/* Number of lines on the paper (physical) */
+  int header;			/* Number of initial lines that cannot be */
+				/* printed with normal weave */
+  int footer;			/* Number of trailing lines that cannot be */
+				/* printed with normal weave */
+  int header_passes;		/* Extra passes printed at the beginning */
+  int last_real_pass;		/* Do not touch this upon pain of death */
 
   int bitwidth;			/* Bits per pixel */
   int lineno;
@@ -2243,14 +2275,37 @@ get_color_by_params(int plane, int density)
 
 /*
  * Initialize the weave parameters
+ *
+ * Rules:
+ *
+ * 1) Currently, osample * v_subpasses * v_subsample <= 4
+ *
+ * 2) first_line >= 0
+ *
+ * 3) line_height < physlines
+ *
+ * 4) phys_lines >= 2 * jets * sep
  */
 static void *
-initialize_weave(int jets, int sep, int osample, int v_subpasses,
-		 int v_subsample, colormode_t colormode, int width,
-		 int linewidth, int lineheight, int separation_rows)
+initialize_weave(int jets,	/* Width of print head */
+		 int sep,	/* Separation in rows between jets */
+		 int osample,	/* Horizontal oversample */
+		 int v_subpasses, /* Vertical passes */
+		 int v_subsample, /* Vertical oversampling */
+		 colormode_t colormode,	/* mono, 4 color, 6 color */
+		 int width,	/* bits/pixel */
+		 int linewidth,	/* Width of a line, in pixels */
+		 int lineheight, /* Number of lines that will be printed */
+		 int separation_rows, /* Vertical spacing adjustment */
+				/* for weird printers (1520/3000, */
+				/* although they don't seem to do softweave */
+				/* anyway) */
+		 int first_line, /* First line that will be printed on page */
+		 int phys_lines) /* Total height of the page in rows */
 {
   int i;
   int k;
+  int lastline;
   escp2_softweave_t *sw = malloc(sizeof (escp2_softweave_t));
   if (jets <= 1)
     sw->separation = 1;
@@ -2271,6 +2326,28 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses,
   sw->horizontal_weave = osample;
   sw->pass_adjustment = (sw->oversample * sep + jets - 1) / jets;
   sw->separation_rows = separation_rows;
+  sw->firstline = first_line;
+  if (first_line < sw->realjets * sw->separation)
+    {
+      sw->header = (sw->realjets * sw->separation) - first_line;
+      if (sw->header < sw->separation)
+	sw->header_passes = sw->header * sw->oversample;
+      else
+	sw->header_passes = sw->separation * sw->oversample;
+    }
+  else
+    {
+      sw->header = 0;
+      sw->header_passes = 0;
+    }
+  lastline = first_line + lineheight;
+  if (lastline > phys_lines)
+    phys_lines = lastline + 1;
+  sw->page_lines = phys_lines;
+  if (lastline > phys_lines - (sw->realjets * sw->separation))
+    sw->footer = phys_lines - first_line - (sw->realjets * sw->separation);
+  else
+    sw->footer = lastline;
 
   sw->weavefactor = (sw->njets + sw->separation - 1) / sw->separation;
   sw->jetsused = MIN(((sw->weavefactor) * sw->separation), sw->njets);
@@ -2284,6 +2361,7 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses,
     sw->post_pass_adjustment = (sw->separation / sw->njets);
   else
     sw->post_pass_adjustment = 0;
+  sw->last_real_pass = -1;
 
   sw->bitwidth = width;
 
@@ -2359,6 +2437,24 @@ destroy_weave(void *vsw)
   free(vsw);
 }
 
+static int
+footer(void *vsw)
+{
+  escp2_softweave_t *sw = (escp2_softweave_t *) vsw;
+  return sw->footer;
+}
+
+#ifdef WEAVETEST
+
+static void
+set_last_pass(void *vsw, int pass)
+{
+  escp2_softweave_t *sw = (escp2_softweave_t *) vsw;
+  sw->last_pass = pass;
+}
+
+#endif
+
 /*
  * Compute the weave parameters for the given row.  This computation is
  * rather complex, and I need to go back and write down very carefully
@@ -2402,51 +2498,119 @@ modd(int x, int y)
  * what's going on here.  That is, if I can figure it out myself :-)
  */
 
+static inline int
+roundup(int x, int y)
+{
+  if (x < 0)
+    return -(y * divv(-x, y));
+  else
+    return y * divv((x + y - 1), y);
+}
+
+static inline int
+rounddown(int x, int y)
+{
+  if (x < 0)
+    return -(y * divv((y - x - 1), y));
+  else
+    return y * divv(x, y);
+}
+
 static void
 weave_parameters_by_row(const escp2_softweave_t *sw, int row,
 			int vertical_subpass, weave_t *w)
 {
-  int passblockstart = divv((row + sw->initialoffset), sw->jetsused);
-  int internaljetsused = sw->jetsused * sw->oversample;
-  int subpass_adjustment;
-
   w->row = row;
-  w->pass = sw->pass_adjustment + (passblockstart - (sw->separation - 1)) +
-    modd((sw->separation + row - passblockstart), sw->separation);
-  subpass_adjustment = modd(divv((sw->separation + w->pass + 1),
-				 sw->separation), sw->oversample);
-  subpass_adjustment = sw->oversample - subpass_adjustment - 1;
-  vertical_subpass = modd((sw->oversample + vertical_subpass +
-			   subpass_adjustment), sw->oversample);
-  w->pass += sw->separation * vertical_subpass;
-  w->logicalpassstart = (w->pass * sw->jetsused) - sw->initialoffset -
-    (sw->weavefactor * sw->separation) +
-    modd((w->pass + sw->separation - 2), sw->separation);
-  w->jet = divv((row + (sw->realjets * sw->separation) - w->logicalpassstart),
-		sw->separation) - sw->realjets;
-  w->jet += sw->jetsused * (sw->oversample - 1);
-  w->pass += sw->post_pass_adjustment;
-  if (w->jet >= sw->realjets)
+  if (row < sw->header)
     {
-      w->jet -= sw->realjets;
-      w->pass += sw->vmod;
+      int passbase;
+      row = row + (sw->realjets * sw->separation) - sw->header;
+      passbase = row % sw->separation;
+      w->pass = passbase * sw->oversample + vertical_subpass;
+      w->logicalpassstart = passbase + sw->header -
+	(sw->realjets * sw->separation);
+      if (w->logicalpassstart >= 0)
+	w->physpassstart = w->logicalpassstart;
+      else
+	w->physpassstart = w->logicalpassstart +
+	  roundup(-w->logicalpassstart, sw->separation);
+      w->jet = (w->row - w->logicalpassstart) / sw->separation;
+      if (w->logicalpassstart >= 0)
+	w->missingstartrows = 0;
+      else
+	w->missingstartrows = (sw->separation - w->logicalpassstart - 1) /
+	  sw->separation;
+      w->physpassend = w->logicalpassstart +
+	((sw->realjets - 1) * sw->separation);
+      if (sw->header_passes < sw->separation * sw->oversample)
+	w->pass -= ((sw->separation * sw->oversample) - sw->header_passes);
+      if (w->pass > sw->last_real_pass)
+	((escp2_softweave_t *) sw)->last_real_pass = w->pass;
     }
-  else if (w->jet < 0)
+  else if (row >= sw->footer)
     {
-      w->jet += sw->realjets;
-      w->pass -= sw->vmod;
+      int passbase;
+      row -= sw->footer;
+      passbase = row % sw->separation;
+      w->pass = passbase * sw->oversample + vertical_subpass +
+	sw->last_real_pass + 1;
+      w->logicalpassstart = passbase + sw->footer;
+      w->physpassstart = w->logicalpassstart;
+      w->jet = row / sw->separation;
+      w->missingstartrows = 0;
+      w->physpassend = w->logicalpassstart +
+	(sw->realjets - 1) * sw->separation;
     }
-  w->logicalpassstart = w->row - (w->jet * sw->separation);
-  if (w->logicalpassstart >= 0)
-    w->physpassstart = w->logicalpassstart;
   else
-    w->physpassstart = w->logicalpassstart +
-      (sw->separation * divv((sw->separation - 1 - w->logicalpassstart),
-			     sw->separation));
-  w->physpassend = (internaljetsused - 1) * sw->separation +
-    w->logicalpassstart;
-  w->missingstartrows = divv((w->physpassstart - w->logicalpassstart),
-			    sw->separation);
+    {
+      int passblockstart;
+      int internaljetsused = sw->jetsused * sw->oversample;
+      int subpass_adjustment;
+      row -= sw->header;
+      passblockstart = divv((row + sw->initialoffset), sw->jetsused);
+      w->pass = sw->pass_adjustment + (passblockstart - (sw->separation - 1)) +
+	modd((sw->separation + row - passblockstart), sw->separation);
+      subpass_adjustment = modd(divv((sw->separation + w->pass + 1),
+				     sw->separation), sw->oversample);
+      subpass_adjustment = sw->oversample - subpass_adjustment - 1;
+      vertical_subpass = modd((sw->oversample + vertical_subpass +
+			       subpass_adjustment), sw->oversample);
+      w->pass += sw->separation * vertical_subpass;
+      w->logicalpassstart = (w->pass * sw->jetsused) - sw->initialoffset -
+	(sw->weavefactor * sw->separation) +
+	modd((w->pass + sw->separation - 2), sw->separation);
+      w->jet = divv((row + (sw->realjets * sw->separation) -
+		     w->logicalpassstart), sw->separation) - sw->realjets;
+      w->jet += sw->jetsused * (sw->oversample - 1);
+      w->pass += sw->post_pass_adjustment;
+      if (w->jet >= sw->realjets)
+	{
+	  w->jet -= sw->realjets;
+	  w->pass += sw->vmod;
+	}
+      else if (w->jet < 0)
+	{
+	  w->jet += sw->realjets;
+	  w->pass -= sw->vmod;
+	}
+      w->logicalpassstart = row - (w->jet * sw->separation);
+      if (w->logicalpassstart >= 0)
+	w->physpassstart = w->logicalpassstart;
+      else
+	w->physpassstart = w->logicalpassstart +
+	  (sw->separation * divv((sw->separation - 1 - w->logicalpassstart),
+				 sw->separation));
+      w->physpassend = (internaljetsused - 1) * sw->separation +
+	w->logicalpassstart;
+      w->missingstartrows = divv((w->physpassstart - w->logicalpassstart),
+				 sw->separation);
+      w->logicalpassstart += sw->header;
+      w->physpassend += sw->header;
+      w->physpassstart += sw->header;
+      w->pass += sw->header_passes;
+      if (w->pass > sw->last_real_pass)
+	((escp2_softweave_t *) sw)->last_real_pass = w->pass;
+    }
 }
 
 #ifndef WEAVETEST
@@ -2631,18 +2795,24 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
   int *linecount = get_linecount_by_pass(sw, passno);
   int lwidth = (width + (sw->horizontal_weave - 1)) / sw->horizontal_weave;
   int microoffset = vertical_subpass & (sw->horizontal_weave - 1);
+  int initial_extra = 0;
   if (ydpi > 720)
     ydpi = 720;
   if (passno == 0)
-    sw->last_pass_offset = pass->logicalpassstart;
+    {
+      if (sw->firstline >= sw->realjets * sw->separation)
+	initial_extra = sw->firstline - sw->realjets * sw->separation;
+      sw->last_pass_offset = pass->logicalpassstart;
+    }
   for (j = 0; j < sw->ncolors; j++)
     {
       if (lineactive[0].v[j] == 0)
 	continue;
-      if (pass->logicalpassstart > sw->last_pass_offset)
+      if (pass->logicalpassstart > sw->last_pass_offset ||
+	  initial_extra > 0)
 	{
 	  int advance = pass->logicalpassstart - sw->last_pass_offset -
-	    (sw->separation_rows - 1);
+	    (sw->separation_rows - 1) + initial_extra;
 	  int alo = advance % 256;
 	  int ahi = advance / 256;
 	  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
@@ -2768,11 +2938,12 @@ finalize_row(escp2_softweave_t *sw, int row, int model, int width,
       (*lines)++;
       if (w.physpassend == row)
 	{
-	  pass_t *pass = get_pass_by_row(sw, row, i);
-	  flush_pass(sw, pass->pass, model, width, hoffset, ydpi, xdpi, prn,
-		     i);
+	  if (w.pass >= 0)
+	    flush_pass(sw, w.pass, model, width, hoffset, ydpi, xdpi, prn, i);
 	}
     }
+  if (row == footer(sw) - 1)
+    escp2_flush(sw, model, width, hoffset, ydpi, xdpi, prn);
 }
 
 static void
@@ -2931,6 +3102,18 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.139  2000/05/13 03:22:46  rlk
+ *   Allow printing to the top edge and much closer to the bottom on Epson
+ *   printers (major change in the softweave code).
+ *
+ *   Performance tweaks in the dither routines and in the color conversion
+ *   routine (this needs to be ported to the other conversion routines in
+ *   print-util.c).
+ *
+ *   Support for some kind of ink limiting in the dither code.  Not clear that
+ *   this really does very well (it may make things ugly); we may rip it back
+ *   out.
+ *
  *   Revision 1.138  2000/05/05 12:25:16  rlk
  *   Set ink size
  *

@@ -1,3 +1,10 @@
+2000-05-07	<rlk@sourceforge.net>
+
+	Files:	ChangeLog
+		RELNOTES
+	
+	3.1.4 release
+	
 2000-05-06	<rlk@sourceforge.net>
 
 	Files:	gtk_color_window.c

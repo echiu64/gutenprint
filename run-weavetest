@@ -5,6 +5,7 @@ passes='1,1,1 2,1,1 1,2,1 1,2,2 1,4,1 2,2,1 1,4,2 2,2,2'
 
 jets='20 21 32 48 64 96 128 144 192'
 separations='2 4 6 8'
+rows=10000
 
 for jet in $jets ; do
     for sep in $separations ; do
@@ -15,18 +16,27 @@ for jet in $jets ; do
 	    c=`echo $stuff | cut -f3 '-d '`
 	    d=`echo $stuff | cut -f4 '-d '`
 	    e=`echo $stuff | cut -f5 '-d '`
-	    ./escp2-weavetest $stuff 10000 > /dev/null 2>&1
-	    if [ $? -ne 0 ] ; then
-		if [ -n "`echo $modes | grep $jet,$sep`" ] ; then
-		    echo -n '*'
-		elif [ $a -lt `expr $b \* $c \* $d \* $e` ] ; then
-		    echo -n '!'
-		else
-		    echo -n ' '
-		fi
-		echo -n "$stuff  "
-		./escp2-weavetest $stuff 10000 | tail -1
-	    fi
+	    start=`expr $a \* $b`
+	    s1=`expr $start - 1`
+	    for f in 0 41 $start $s1 ; do
+		end=`expr $rows + $f + $start`
+		end1=`expr $rows + $f`
+		end2=`expr $rows + $f + 35`
+		for g in $end $end1 $end2 ; do
+		    ./escp2-weavetest $stuff $rows $f $g > /dev/null 2>&1
+		    if [ $? -ne 0 ] ; then
+			if [ -n "`echo $modes | grep $jet,$sep`" ] ; then
+			    echo -n '*'
+			elif [ $a -lt `expr $b \* $c \* $d \* $e` ] ; then
+			    echo -n '!'
+			else
+			    echo -n ' '
+			fi
+			echo -n "$stuff $rows $f $g "
+			./escp2-weavetest $stuff $rows $f $g | tail -1
+		    fi
+		done
+	    done
 	done
     done
 done

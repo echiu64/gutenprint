@@ -87,7 +87,10 @@ K  The number of missing start rows of this pass is greater than the\n\
    jet used to print the current row.\n\
 L  The subpass printed by the current pass is not consistent with an earlier\n\
    record of the subpass printed by this pass.\n\
-M  The same physical row is being printed more than once.\n";
+M  The same physical row is being printed more than once.\n\
+N  Two different active passes are in the same slot.\n\
+O  Number of missing start rows is incorrect.\n\
+P  Physical row number out of bounds.\n";
 
 
 static void
@@ -111,14 +114,17 @@ main(int argc, char **argv)
   int *passcounts;
   char *physpassstuff;
   char *rowdetail;
+  int *current_slot;
   int nrows;
   int physjets;
   int physsep;
   int hpasses, vpasses, subpasses;
+  int vmod;
+  int first_line, phys_lines;
   void *sw;
-  if (argc != 7)
+  if (argc != 9)
     {
-      fprintf(stderr, "Usage: %s jets separation hpasses vpasses subpasses rows\n",
+      fprintf(stderr, "Usage: %s jets separation hpasses vpasses subpasses rows start end\n",
 	      argv[0]);
       return 2;
     }
@@ -128,20 +134,28 @@ main(int argc, char **argv)
   vpasses = atoi(argv[4]);
   subpasses = atoi(argv[5]);
   nrows = atoi(argv[6]);
+  first_line = atoi(argv[7]);
+  phys_lines = atoi(argv[8]);
   passstarts = malloc(sizeof(int) * (nrows + physsep));
   logpassstarts = malloc(sizeof(int) * (nrows + physsep));
   passends = malloc(sizeof(int) * (nrows + physsep));
   passcounts = malloc(sizeof(int) * (nrows + physsep));
+  vmod = physsep * hpasses * vpasses * subpasses;
+  current_slot = malloc(sizeof(int) * vmod);
   physpassstuff = malloc((nrows + physsep));
   rowdetail = malloc((nrows + physsep) * physjets);
   memset(rowdetail, 0, (nrows + physsep) * physjets);
   memset(physpassstuff, -1, (nrows + physsep));
+  memset(current_slot, 0, (sizeof(int) * vmod));
 
   sw = initialize_weave(physjets, physsep, hpasses, vpasses, subpasses,
-			COLOR_MONOCHROME, 1, 128, nrows, 1);
+			COLOR_MONOCHROME, 1, 128, nrows, 1, first_line,
+			phys_lines);
   print_header();
-  printf("%13s %5s %5s %5s %10s %10s %10s %10s\n", "", "row", "pass", "jet",
+  printf("%15s %5s %5s %5s %10s %10s %10s %10s\n", "", "row", "pass", "jet",
 	 "missing", "logical", "physstart", "physend");
+  for (i = 0; i < vmod; i++)
+    current_slot[i] = -1;
   for (i = 0; i < (nrows + physsep); i++)
     {
       passstarts[i] = -1;
@@ -149,12 +163,25 @@ main(int argc, char **argv)
     }
   for (i = 0; i < nrows; i++)
     {
+      if (i == footer(sw))
+	{	
+	  for (j = 0; j < vmod; j++)
+	    current_slot[j] = -1;
+	  set_last_pass(sw, newestpass);
+	  lastpass = newestpass;
+	  for (j = newestpass - vmod + 1; j <= newestpass; j++)
+	    {
+	      if (j < 0)
+		continue;
+	      passends[j] = -2;
+	    }
+	}
       for (j = 0; j < hpasses * vpasses * subpasses; j++)
 	{
 	  int physrow;
 	  weave_parameters_by_row((escp2_softweave_t *)sw, i, j, &w);
 	  physrow = w.logicalpassstart + physsep * w.jet;
-	  printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%5d %5d %5d %10d %10d %10d %10d\n",
+	  printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%5d %5d %5d %10d %10d %10d %10d\n",
 		 (w.pass < 0 ? (errors++, 'A') : ' '),
 		 (w.jet < 0 || w.jet > physjets - 1 ? (errors++, 'B') : ' '),
 		 (w.physpassstart > w.row ? (errors++, 'C') : ' '),
@@ -179,6 +206,14 @@ main(int argc, char **argv)
 		  w.jet < physjets &&
 		  rowdetail[w.pass * physjets + w.jet] == 1 ?
 		  (errors++, 'M') : ' '),
+		 (current_slot[w.pass % vmod] != -1 &&
+		  current_slot[w.pass % vmod] != w.pass ?
+		  (errors++, 'N') : ' '),
+		 (w.physpassstart == w.row && w.jet != w.missingstartrows ?
+		  (errors++, 'O') : ' '),
+		 ((w.logicalpassstart + first_line < 0) ||
+		  (w.physpassend + first_line >= phys_lines) ?
+		  (errors++, 'P') : ' '),
 		 w.row, w.pass, w.jet,
 		 w.missingstartrows, w.logicalpassstart, w.physpassstart,
 		 w.physpassend);
@@ -188,9 +223,13 @@ main(int argc, char **argv)
 		{
 		  lastpass = w.pass;
 		  passends[w.pass] = -2;
+		  current_slot[w.pass % vmod] = -1;
 		}
 	      else
-		passends[w.pass] = w.physpassend;
+		{
+		  passends[w.pass] = w.physpassend;
+		  current_slot[w.pass % vmod] = w.pass;
+		}
 	      passstarts[w.pass] = w.physpassstart;
 	      logpassstarts[w.pass] = w.logicalpassstart;
 	      if (w.jet >= 0 && w.jet < physjets)
@@ -205,16 +244,19 @@ main(int argc, char **argv)
   printf("Unterminated passes:\n");
   for (i = 0; i <= newestpass; i++)
     if (passends[i] >= -1 && passends[i] < nrows)
-      printf("%d %d\n", i, passends[i]);
+      {
+	printf("%d %d\n", i, passends[i]);
+	errors++;
+      }
   printf("Last terminated pass: %d\n", lastpass);
   printf("Pass starts:\n");
-  for (i = 0; i < newestpass; i++)
+  for (i = 0; i <= newestpass; i++)
     {
       if (i == 0)
 	printf("%c %d %d\n", ' ', i, logpassstarts[i]);
       else
 	printf("%c %d %d\n",
-	       logpassstarts[i] <= logpassstarts[i - 1] ? (errors++, 'N') : ' ',
+	       logpassstarts[i] < logpassstarts[i - 1] ? (errors++, 'Q') : ' ',
 	       i, logpassstarts[i]);
     }
   printf("%d total errors\n", errors);

@@ -51,7 +51,7 @@
 /* rgb/hsv conversions taken from Gimp common/autostretch_hsv.c */
 
 
-static void
+static inline void
 calc_rgb_to_hsv(unsigned short *rgb, double *hue, double *sat, double *val)
 {
   double red, green, blue;
@@ -123,7 +123,7 @@ calc_rgb_to_hsv(unsigned short *rgb, double *hue, double *sat, double *val)
   *val = v;
 }
 
-static void
+static inline void
 calc_hsv_to_rgb(unsigned short *rgb, double h, double s, double v)
 {
   double hue, saturation, value;
@@ -391,6 +391,8 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	   vars_t  		*vars		/* I - Saturation */
 	   )
 {
+  unsigned ld = vars->density * 65536;
+  double is = 1.0 / vars->saturation;
   while (width > 0)
     {
       double h, s, v;
@@ -412,23 +414,20 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	  rgbout[2] = vars->lut->blue[rgbin[2] * rgbin[3] / 255 +
 				    255 - rgbin[3]];
 	}
-      if (vars->saturation != 1.0)
+      if (is != 1.0)
 	{
 	  calc_rgb_to_hsv(rgbout, &h, &s, &v);
-	  s = pow(s, 1.0 / vars->saturation);
+	  s = pow(s, is);
 	  calc_hsv_to_rgb(rgbout, h, s, v);
 	}
-      if (vars->density != 1.0)
+      if (ld < 65536)
 	{
-	  float t;
 	  int i;
 	  for (i = 0; i < 3; i++)
 	    {
-	      t = ((float) rgbout[i]) / 65536.0;
-	      t = (1.0 + ((t - 1.0) * vars->density));
-	      if (t < 0.0)
-		t = 0.0;
-	      rgbout[i] = (unsigned short) (t * 65536.0);
+	      unsigned t = rgbout[i];
+	      t = 65535 - (65535 - t) * ld / 65536;
+	      rgbout[i] = (unsigned short) t;
 	    }
 	}
       rgbin += bpp;
@@ -791,6 +790,18 @@ get_printer_index_by_driver(const char *driver)
 
 /*
  *   $Log$
+ *   Revision 1.90  2000/05/13 03:22:46  rlk
+ *   Allow printing to the top edge and much closer to the bottom on Epson
+ *   printers (major change in the softweave code).
+ *
+ *   Performance tweaks in the dither routines and in the color conversion
+ *   routine (this needs to be ported to the other conversion routines in
+ *   print-util.c).
+ *
+ *   Support for some kind of ink limiting in the dither code.  Not clear that
+ *   this really does very well (it may make things ugly); we may rip it back
+ *   out.
+ *
  *   Revision 1.89  2000/04/20 02:42:54  rlk
  *   Reduce initial memory footprint.
  *
