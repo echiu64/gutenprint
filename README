@@ -102,7 +102,7 @@ THE GIMP
 CUPS
 
     Gimp-print 4.2 requires CUPS 1.1.9 or higher.  We recommend use of
-    1.1.12; that release of CUPS features better internationalization
+    1.1.14; that release of CUPS features better internationalization
     and fixes some important bugs.
 
     This package includes a CUPS driver that may be built, allowing
@@ -200,6 +200,14 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
 
     ./configure --with-cups --without-gimp
 
+    If you have installed CUPS as a precompiled package (e. g. it's
+    the standard printing system that your distribution uses), you may
+    need to install a separate development package (typically called
+    "cups-devel" or "cups-developer").  The CUPS package typically
+    installed by most distributions only contains the components
+    needed to run CUPS, not those required to build additional CUPS
+    drivers.
+
     We recommend that all users who wish to use this package for
     general purpose printing install either CUPS or use Foomatic with
     the IJS driver (both described below) and use that as their
@@ -230,8 +238,7 @@ FOOMATIC
 
     or
 
-    /usr/local/sbin/foomatic-kitload (if /usr/local/sbin is not on
-    your PATH).
+    /usr/local/sbin/foomatic-kitload (if /usr/local/sbin is not on your PATH).
 
     If you don't have Foomatic installed, or the version that is
     installed is too old, please download the Foomatic package from
@@ -289,20 +296,19 @@ GHOSTSCRIPT
 
     This package includes a Ghostscript driver that may be built,
     allowing use of this software for general printing purposes.  This
-    package requires Ghostscript 5.10, 5.50, or 6.51.  Later releases
-    in the 6.5x GNU Ghostscript branch (e. g. 6.52) should also work.
+    package requires Ghostscript 5.10, 5.50, 6.51, and 6.52.  There is
+    a simpler build procedure for GNU Ghostscript 6.53 and 7.05.
 
     Please read src/ghost/README for more information, including how
     to build and install it, and available options; the build
     procedure here merely creates the necessary source files that you
     must add to your Ghostscript source.  The directions vary for
-    different versions of Ghostscript.  Only Ghostscript 5.50 and 6.51
-    (and its successors in the 6.5x line) are currently supported.  In
-    particular, versions of Ghostscript that are not licensed under
-    the GNU General Public License (GPL) are not supported, and this
-    driver may not be distributed with such a version.  If you wish to
-    use Gimp-Print with AFPL Ghostscript, you may do so via the
-    IJS-based driver, described below.
+    different versions of Ghostscript.  Only GNU Ghostscript 5.10 and
+    above.  In particular, versions of Ghostscript that are not
+    licensed under the GNU General Public License (GPL) are not
+    supported, and this driver may not be distributed with such a
+    version.  If you wish to use Gimp-Print with AFPL Ghostscript, you
+    may do so via the IJS-based driver, described below.
 
     We *strongly* recommend that end users not attempt to use this
     driver directly.  The available options are very complex, and the
@@ -315,7 +321,7 @@ GHOSTSCRIPT
     recommended solution.
 
     Note that many of the options to the Ghostscript driver are
-    incompatible with the options used prior to release 4.1.99-a3.
+    incompatible with the options used prior to release 4.2.0.
     Please read src/ghost/README for information on the current
     options.
 
@@ -343,7 +349,8 @@ IJS
     make install
 
     You must have the IJS libraries installed for this to work.
-    Instructions for that are included with Ghostscript 6.53 and 7.04.
+    Instructions for that are included with GNU Ghostscript 6.53 and
+    beyond, and AFPL Ghostscript 7.04 and beyond.
 
     Detailed instructions for building and using the IJS driver is
     described in src/ghost/README.

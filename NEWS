@@ -1,8 +1,11 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.2.1-pre5, released March 30, 2002, is a pre-release of
-Gimp-Print 4.2.1.  This prerelease offers a number of fixes and
-improvements over 4.2.0
+Gimp-Print 4.2.1, released April 26, 2002, is a stable release in the
+Gimp-Print 4.2 line.  This release primarily contains bug fixes; the
+one major piece of new functionality is an IJS-based Ghostscript
+plugin driver.  Please check the supported printers list for a
+complete list of supported printers; there have been a few additions
+from 4.2.0.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
 and CUPS drivers, including Foomatic data.
@@ -16,30 +19,102 @@ it is possible to print true CMYK.
 The Ghostscript driver requires GNU Ghostscript 5.10, 5.50, 6.51, or any
 later GNU Ghostscript release based on 6.51 (e. g. 6.52).
 
-The IJS GhostScript plugin driver requires GNU GhostScript 6.53 or later
+The IJS GhostScript plugin driver requires GNU Ghostscript 6.53 or later
 or APFL GhostScript 7.04 or later.
 
 Please read the README file for full instructions on building and
 installing this package.
 
-Gimp-Print 4.2.1-pre5 contains the following major changes and fixes
-over Gimp-Print 4.2.1-pre4:
 
-  1) A number of bug fixes to the IJS driver (please see below for
-     details).
+Gimp-Print 4.2.1 contains the following major changes over Gimp-Print
+4.2.0:
 
-  2) Under some circumstances, the PCL driver could overflow an
-     internal buffer, potentially causing a crash.
+* Major Bugs Fixed:
 
-  3) The user's manual has been updated, and a section on escputil
-     added.
+  1) Canon printers should now print with correct scaling at all
+     supported resolutions, and the CMYK printers should print with
+     optimum quality.  However, the photo printers (which use special
+     cartridges with light cyan and magenta inks) are currently unable
+     to use the photo cartridges; they are limited to ordinary CMYK
+     printing.
 
-The following bugs are fixed in 4.2.1-pre5:
+  2) The escputil command is translated.
 
-539013 IJS driver mispositions image on page
-538500 PCL driver crash
-538497 IJS driver sets incorrect paper size
+  3) It is now possible to print at all resolutions on large format
+     PCL printers.
+
+  4) The Ghostscript driver now prints with the same quality as the
+     other drivers at all resolutions on all printers (in 4.2.0, Epson
+     printers printed with poor quality at high resolutions).
+
+  5) CUPS PPD files should operate correctly with the Adobe PostScript
+     driver (and other PostScript drivers).
+
+  6) Gimp-Print now builds successfully on Solaris, IRIX, AIX, and
+     Macintosh OS X.
+
+* New Functionality:
+
+  1) A new driver, based on the IJS architecture, is included in this
+     release.  This driver is compatible with GNU Ghostscript 6.53 and
+     above, and AFPL Ghostscript 7.04 and above.  IJS is a new
+     architecture for Ghostscript drivers; rather than having to build
+     the driver into Ghostscript, the driver runs as a separate
+     process.  Foomatic data is provided for this driver.
+
+  2) New translations for the Slovak, Greek, and Dutch languages are
+     provided.
+
+* Quality Improvements:
+
+  1) Additional tuning has been done for some Epson Stylus printers,
+     in particular the Stylus Pro 5500, 7500, and 9500.
+
+  2) Epson Stylus Pro printers can now print to letter size (and
+     smaller) paper.
+
+  3) The Very Fast dither algorithm has been sped up in certain cases.
+
+  4) Some quality improvements for the Epson 680/777 driver.
+
+* Exceptions and Workarounds:
+
+  1) If you have built and installed the foomatic-db-gimpprint package
+     from any gimp-print 4.2.1-pre* tarball, or from CVS, you will
+     need to manually remove it prior to installing the final 4.2.1
+     debs.  This is because it has been renamed to
+     foomatic-db-gimp-print to match the foomatic naming scheme.
+     There is only a guaranteed upgrade path between official releases
+     to avoid unnecessary dependency complexities.
+
+The following bugs have been fixed in 4.2.1:
+
+485156 Debian build broken in 4.2.0
+488865 escputil isn't translated
+493772 360dpi is not a valid resolution
+493838 canon print scaling broken
+496813 Z42 issues
+499200 ESP 1280/1290 need special deinit code
+499203 ESP 780/820 have different paper codes
+499299 z42 border
+502713 Restricted resolution on DesignJet
+507767 Parameters not set in CUPS driver
+507770 Unset parameters in Ghostscript driver
+507773 Old-style GS build broken
+516268 Erroneous comparison
+518224 makeinfo fails during build
+521694 CUPS build broken in 4.2.1-pre1
+525779 Buffering bug in epson cups backend
+528922 rastertoprinter doesn't log pages
+533400 Very fast dithering works incorrectly
+537248 IJS driver mis-handles -r option
 537293 IJS/foomatic driver crashes printing grayscale
+538497 IJS driver sets incorrect paper size
+538500 PCL driver crash
+539013 IJS driver mispositions image on page
+540307 Syntax error in CloseUI in PPD files
+543562 Portability issues
+548844 OS X support
 
 The following critical bug has been reported against all 4.2 releases
 to date and is unresolved in this release.  The symptoms are that
@@ -52,118 +127,6 @@ underlying problem is in Gimp-print or in other software.
 
 510185 Incomplete print to Windows-hosted printers
 
-
-Gimp-Print 4.2.1-pre4 contains the following major changes and fixes
-over Gimp-Print 4.2.1-pre3:
-
-  1) The CUPS drivers will now output the complete page when the job
-     completes rather than waiting for the next job under some
-     circumstances.
-
-  2) Page logging works correctly in CUPS.
-
-  3) The CUPS driver now offers both interrupt-driven and polled
-     parallel ports for BSD; under some circumstances, the polled port
-     is faster.
-
-  4) A Dutch translation has been added.
-
-  5) Quality improvements for pigment-based Epson Stylus Pro printers
-     (5500, 7500, and 9500).
-
-  6) Very fast dithering now works correctly.
-
-  7) Epson Stylus Pro printers now print correctly positioned on roll
-     feed paper, and will not attempt to print to the edge of the
-     page.
-
-  8) Additional Epson, Canon, Okidata, and Kyocera laser printers have
-     been tested.
-
-  9) Foomatic data for the IJS interface of GIMP-Print is generated now.
-
-The following bugs are fixed in 4.2.1-pre4:
-
-533400 Very fast dithering works incorrectly
-525779 Buffering bug in epson cups backend
-528922 rastertoprinter doesn't log pages
-537248 IJS driver mis-handles -r option
-
-
-Gimp-Print 4.2.1-pre3 contains the following major changes and fixes
-over Gimp-Print 4.2.1-pre2:
-
-  1) Canon printers should now print with correct scaling at all
-     supported resolutions.  This is the first stage in fixing the
-     Canon driver.
-
-The following bug is fixed in 4.2.1-pre3:
-
-493838 canon print scaling broken
-
-
-Gimp-Print 4.2.1-pre2 contains the following major changes and fixes
-over Gimp-Print 4.2.1-pre1:
-
-  1) The CUPS driver will now build properly, as in 4.2.0.
-
-  2) The Lexmark Z53 has been verified to work with the Z52 driver,
-     and is now supported.
-
-  3) The align command in escputil has been simplified.
-
-
-Gimp-Print 4.2.1-pre1 contains the following major changes and fixes
-over Gimp-Print 4.2.0:
-
-  1) The escputil command is now translated properly.
-
-  2) The Ghostscript documentation lists resolutions for Canon
-     printers correctly.
-
-  3) Miscellaneous problems printing to various late model Epson
-     Stylus Photo printers have been fixed.
-
-  4) It is now possible to print at all resolutions on large format
-     PCL printers.
-
-  5) A new IJS-based Ghostscript driver is provided, for Ghostscript
-     6.53 and above, and 7.04 and above.  This driver may be used with
-     both GNU and AFPL Ghostscript.
-
-  6) New Slovak and Greek translations are provided.
-
-  7) Stylus Pro printers can now print to letter size (and smaller)
-     paper.  In 4.2.0 the driver did not allow printing smaller than
-     tabloid size.
-
-  8) A bug in the Ghostscript driver caused slightly poor print
-     quality at high resolutions on Epson printers.  The same bug may
-     have had other side effects on other printers.
-
-  9) The margins and printable areas have been adjusted on some Epson
-     printers.
-
-  10) Miscellaneous fixes for the Lexmark Z42.
-
-  11) Certain paper types and other issues on late model Stylus Photo
-     printers (780, 810/820, and 1280/1290) have been fixed.
-
-The following bugs are fixed in 4.2.1-pre1:
-
-485156 Debian build broken in 4.2.0
-488865 escputil isn't translated
-493772 360dpi is not a valid resolution
-496813 Z42 issues
-499200 ESP 1280/1290 need special deinit code
-499203 ESP 780/820 have different paper codes
-499299 z42 border
-502713 Restricted resolution on DesignJet
-507767 Parameters not set in CUPS driver
-507770 Unset parameters in Ghostscript driver
-507773 Old-style GS build broken
-516268 Erroneous comparison
-518224 makeinfo fails during build
 
 
 Gimp-Print 4.2 contains the following major changes over Gimp-Print
