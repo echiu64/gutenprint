@@ -29,7 +29,8 @@ BASIC INSTALLATION
       - The core driver, libgimpprint.so
       - A user's manual
       - A Print plug-in for the GIMP
-      - A Ghostscript driver, stp
+      - A standard Ghostscript driver, stp
+      - An IJS-based Ghostscript driver
       - A CUPS (Common UNIX Printing System) driver
       - Support for the Foomatic spooler configuration system
 
@@ -260,6 +261,18 @@ GHOSTSCRIPT
     package requires Ghostscript 5.50 or 6.51.  Later releases in the
     6.5x GNU Ghostscript branch (e. g. 6.52) should also work.
 
+    Please read src/ghost/README for more information, including how
+    to build and install it, and available options; the build
+    procedure here merely creates the necessary source files that you
+    must add to your Ghostscript source.  The directions vary for
+    different versions of Ghostscript.  Only Ghostscript 5.50 and 6.51
+    (and its successors in the 6.5x line) are currently supported.  In
+    particular, versions of Ghostscript that are not licensed under
+    the GNU General Public License (GPL) are not supported, and this
+    driver may not be distributed with such a version.  If you wish to
+    use Gimp-Print with AFPL Ghostscript, you may do so via the
+    IJS-based driver, described below.
+
     We *strongly* recommend that end users not attempt to use this
     driver directly.  The available options are very complex, and the
     standard printer configuration tools (such as apsfilter and
@@ -270,19 +283,28 @@ GHOSTSCRIPT
     CUPS is very easy to install, configure, and use, and is the
     recommended solution.
 
-    Please read src/ghost/README for more information, including how
-    to build and install it, and available options; the build
-    procedure here merely creates the necessary source files that you
-    must add to your Ghostscript source.  The directions vary for
-    different versions of Ghostscript.  Only Ghostscript 5.50 and 6.51
-    (and its successors in the 6.5x line) are currently supported.  In
-    particular, versions of Ghostscript that are not licensed under
-    the GNU General Public License (GPL) are not supported, and this
-    driver may not be distributed with such a version.
-
     Note that many of the options to the Ghostscript driver are
     incompatible with the options used prior to release 4.2.  Please
     read src/ghost/README for information on the current options.
+
+    This driver will not be developed beyond the 4.2 release series.
+    It will be replaced by the IJS driver, described below.
+
+
+IJS
+
+    This package includes an IJS-based Ghostscript driver.  As
+    paraphrased from the Ghostscript documentation, IJS is a
+    relatively new initiative to improve the quality and ease of use
+    of inkjet printing with Ghostscript.  Using IJS, one can add new
+    drivers, or upgrade existing ones, without recompiling
+    Ghostscript.  IJS drivers run as separate processes that
+    communicate with Ghostscript via an IPC channel.  As the basic IJS
+    implementation is licensed compatibly with the GPL, and as the
+    driver runs in a separate process from Ghostscript itself, the IJS
+    driver may be used with AFPL Ghostscript (7.04 and above).
+
+    Use of the IJS driver is described in src/ghost/README.
 
 
 PRINTER-SPECIFIC NOTES:

@@ -842,7 +842,7 @@ man/gimpprint.3 man/gimpprint-config.1 po/Makefile.in samples/Makefile
 src/Makefile src/escputil/Makefile src/gimp/Makefile
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 cups-gimpprint.list man/cups-calibrate.8 src/testpattern/Makefile
-src/cups/Makefile src/foomatic/Makefile src/ijs/Makefile test/Makefile
+src/cups/Makefile src/foomatic/Makefile test/Makefile
 src/foomatic/foomatic-generator src/ghost/Makefile src/ghost/contrib.mak.addon
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 src/main/Makefile src/main/gimpprint-config 

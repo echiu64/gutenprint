@@ -38,6 +38,7 @@
 #include <unistd.h>
 #include <ijs.h>
 #include <ijs_server.h>
+#include <errno.h>
 
 
 /* WARNING:
@@ -71,6 +72,7 @@ typedef struct _IMAGE
   IjsServerCtx *ctx;
   stp_vars_t v;
   char *filename;	/* OutputFile */
+  int fd;		/* OutputFD + 1 (so that 0 is invalid) */
   int width;		/* pixels */
   int height;		/* pixels */
   int bps;		/* bytes per sample */
@@ -268,7 +270,7 @@ gimp_list_cb (void *list_cb_data,
 	      char *val_buf,
 	      int val_size)
 {
-  const char *param_list = "OutputFile,DeviceManufacturer,DeviceModel,Quality,MediaName,MediaType,MediaSource,InkType,Dither,ImageType,Brightness,Gamma,Contrast,Cyan,Magenta,Yellow,Saturation,Density,PrintableArea,PrintableTopLeft,TopLeft,Dpi";
+  const char *param_list = "OutputFile,OutputFD,DeviceManufacturer,DeviceModel,Quality,MediaName,MediaType,MediaSource,InkType,Dither,ImageType,Brightness,Gamma,Contrast,Cyan,Magenta,Yellow,Saturation,Density,PrintableArea,PrintableTopLeft,TopLeft,Dpi";
   int size = strlen (param_list);
 
   fprintf (stderr, "gimp_list_cb\n");
@@ -426,6 +428,8 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	free(img->filename);
       img->filename = strdup(vbuf);
     }
+  else if (strcmp(key, "OutputFD") == 0)
+    img->fd = atoi(vbuf) + 1;
   else if (strcmp(key, "DeviceManufacturer") == 0)
     ;				/* We don't care who makes it */
   else if (strcmp(key, "DeviceModel") == 0)
@@ -741,7 +745,7 @@ main (int argc, char **argv)
   IMAGE img;
   stp_image_t si;
   stp_printer_t printer = NULL;
-  FILE *f;
+  FILE *f = NULL;
 
   memset(&img, 0, sizeof(img));
 
@@ -798,6 +802,7 @@ main (int argc, char **argv)
 
   do
     {
+
       status = ijs_server_get_page_header(img.ctx, &ph);
       if (status)
 	break;
@@ -814,21 +819,27 @@ main (int argc, char **argv)
 
       if (page == 0)
 	{
-	  if (!img.filename || strlen(img.filename) == 0)
-	    status = -1;
-	  if (status) 
+	  if (img.fd)
 	    {
-	      fprintf(stderr, "img.filename failed %d\n", status);
-	      break;
+	      f = fdopen(img.fd - 1, "wb");
+	      if (!f)
+		{
+		  fprintf(stderr, "Unable to open file descriptor: %s\n",
+			  strerror(errno));
+		  status = -1;
+		  break;
+		}
 	    }
-
-	  /* FIX - also support popen */
-	  if ((f = fopen(img.filename, "wb")) == (FILE *)NULL)
-	    status = -1;
-	  if (status) 
+	  else if (img.filename && strlen(img.filename) > 0)
 	    {
-	      fprintf(stderr, "fopen img.filename failed %d\n", status);
-	      break;
+	      f = fopen(img.filename, "wb");
+	      if (!f)
+		{
+		  status = -1;
+		  fprintf(stderr, "fopen %s failed: %s\n", img.filename,
+			  strerror(errno));
+		  break;
+		}
 	    }
 
 	  /* Printer data to file */
@@ -885,6 +896,10 @@ main (int argc, char **argv)
       image_finish(&img);
     }
   while (status == 0);
+  if (f)
+    {
+      fclose(f);
+    }
 
   if (status > 0)
     status = 0; /* normal exit */
