@@ -90,22 +90,29 @@ These release notes contain the following sections:
      file names have been changed accordingly.  All programs using
      Gutenprint will need to be changed appropriately.
 
-  2) The package now compiles on all GIMP 2.x releases.
+  2) The package now compiles on all GIMP 2.x releases, such as 2.0
+     and 2.2.
 
-  3) Unitone and Hybrid Unitone dithering have been disabled in this
+  3) The GIMP plugin (both 1.2 and 2.x) now offers a copy count
+     option, to permit printing multiple copies of an image as a
+     single operation.
+
+  4) The Canon Selphy CP-400 and CP-500 are now supported.
+
+  5) Unitone and Hybrid Unitone dithering have been disabled in this
      release due to some output problems that have been discovered.
      We recommend use of EvenTone or Hybrid EvenTone dithering instead.  
 
-  4) Color correction has been tweaked to improve tonality and hue.
+  6) Color correction has been tweaked to improve tonality and hue.
 
-  5) Shared libraries now build correctly on AIX.
+  7) Shared libraries now build correctly on AIX.
 
-  6) The Print plugin for the GIMP now handles unnamed images
+  8) The Print plugin for the GIMP now handles unnamed images
      correctly.
 
-  7) Various minor compilation problems have been fixed.
+  9) Various minor compilation problems have been fixed.
 
-  8) The Epson Stylus C65 and C66 has been retuned to improve quality
+  10) The Epson Stylus C65 and C66 has been retuned to improve quality
      at 720x360 DPI.  On these printers, the 720x360 DPI mode produces
      significantly better output quality than on most other printers.
 
@@ -113,6 +120,8 @@ These release notes contain the following sections:
      same tunings as the C65 and C66.  We would appreciate people
      trying both the C64 and C66 drivers with this printer and
      reporting to us which driver produces better output.
+
+  11) Various minor build problems have been resolved.
 
 ================================================================
 
@@ -982,6 +991,8 @@ Canon BJC 7100
 Canon BJC 8200
 Canon CP-100 series     (Experimental)
 Canon CP-220 series     (Experimental)
+Canon CP-400 series     (Experimental)
+Canon CP-500 series     (Experimental)
 Canon S400
 Canon S450
 Canon S800
