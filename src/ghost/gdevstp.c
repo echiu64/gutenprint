@@ -99,7 +99,8 @@ static void Image_progress_conclude(stp_image_t *image);
 static void Image_note_progress(stp_image_t *image,
 				double current, double total);
 static void Image_progress_init(stp_image_t *image);
-static void Image_get_row(stp_image_t *image, unsigned char *data, int row);
+static stp_image_status_t Image_get_row(stp_image_t *image,
+					unsigned char *data, int row);
 static int Image_height(stp_image_t *image);
 static int Image_width(stp_image_t *image);
 static int Image_bpp(stp_image_t *image);
@@ -522,7 +523,7 @@ stp_open(gx_device *pdev)
 ***********************************************************************/
 
 /* get one row of the image */
-private void
+private stp_image_status_t
 Image_get_row(stp_image_t *image, unsigned char *data, int row)
 {
   stp_priv_image_t *im = (stp_priv_image_t *) (image->rep);
@@ -550,6 +551,7 @@ Image_get_row(stp_image_t *image, unsigned char *data, int row)
       gdev_prn_copy_scan_lines(im->dev, (im->data->topoffset + row) * ratio,
 			       data, im->raster);
     }
+  return STP_IMAGE_OK;
 }
 
 /* return bpp of picture (24 here) */

@@ -101,11 +101,17 @@ extern const char* stp_check_version (unsigned int required_major,
  * Printer driver control structure.  See "print.c" for the actual list...
  */
 
-typedef enum papersize_unit
+typedef enum stp_papersize_unit
 {
   PAPERSIZE_ENGLISH,
   PAPERSIZE_METRIC
 } stp_papersize_unit_t;
+
+typedef enum stp_image_status
+{
+  STP_IMAGE_OK,
+  STP_IMAGE_ABORT
+} stp_image_status_t;
 
 /*
  * Abstract data type for interfacing with the image creation program
@@ -127,7 +133,8 @@ typedef struct stp_image
   int  (*bpp)(struct stp_image *image);
   int  (*width)(struct stp_image *image);
   int  (*height)(struct stp_image *image);
-  void (*get_row)(struct stp_image *image, unsigned char *data, int row);
+  stp_image_status_t (*get_row)(struct stp_image *image, unsigned char *data,
+				int row);
   const char *(*get_appname)(struct stp_image *image);
   void (*progress_init)(struct stp_image *image);
   void (*note_progress)(struct stp_image *image, double current, double total);

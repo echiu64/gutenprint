@@ -81,9 +81,10 @@ static void	cancel_job(int sig);
 static const char *Image_get_appname(stp_image_t *image);
 static void	 Image_progress_conclude(stp_image_t *image);
 static void	Image_note_progress(stp_image_t *image,
-				double current, double total);
+				    double current, double total);
 static void	Image_progress_init(stp_image_t *image);
-static void	Image_get_row(stp_image_t *image, unsigned char *data, int row);
+static stp_image_status_t Image_get_row(stp_image_t *image,
+					unsigned char *data, int row);
 static int	Image_height(stp_image_t *image);
 static int	Image_width(stp_image_t *image);
 static int	Image_bpp(stp_image_t *image);
@@ -114,6 +115,7 @@ static stp_image_t theImage =
   NULL
 };
 
+static volatile stp_image_status_t Image_status;
 
 /*
  * 'main()' - Main entry and processing of driver.
@@ -169,6 +171,8 @@ main(int  argc,				/* I - Number of command-line arguments */
     fputs("ERROR: rastertoprinter job-id user title copies options [file]\n", stderr);
     return (1);
   }
+
+  Image_status = STP_IMAGE_OK;
 
  /*
   * Get the PPD file...
@@ -530,46 +534,9 @@ cups_writefunc(void *file, const char *buf, size_t bytes)
 void
 cancel_job(int sig)			/* I - Signal */
 {
-  int	i;				/* Looping var */
-
-
   (void)sig;
 
- /*
-  * WARNING:
-  *
-  * The code you are about to see is a hack.  In the event a real
-  * cancel method is provided with each printer driver, this code
-  * will be replaced with the appropriate printer driver call to
-  * eject the current page and reset the printer to a known state.
-  *
-  * This is only a hack.
-  *
-  * This code will likely only work for HP and EPSON printers.
-  * It *may* work with Canon printers.  It almost certainly will
-  * not work with Lexmark printers.
-  */
-
- /*
-  * Send out lots of NUL bytes to clear out any pending raster data...
-  */
-
-  for (i = 0; i < 2000; i ++)
-    putchar(0);
-
- /*
-  * Send both the PCL and EPSON reset sequences...
-  */
-
-  printf("\033@\033E");
-
- /*
-  * Flush buffers and exit...
-  */
-
-  fflush(stdout);
-
-  exit(0);
+  Image_status = STP_IMAGE_ABORT;
 }
 
 
@@ -620,7 +587,7 @@ Image_get_appname(stp_image_t *image)		/* I - Image */
  * 'Image_get_row()' - Get one row of the image.
  */
 
-void
+stp_image_status_t
 Image_get_row(stp_image_t   *image,	/* I - Image */
 	      unsigned char *data,	/* O - Row */
 	      int           row)	/* I - Row number (unused) */
@@ -630,7 +597,7 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
 
 
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
-    return;
+    return STP_IMAGE_ABORT;
 
   if (cups->row < cups->header.cupsHeight)
   {
@@ -647,6 +614,7 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
   }
   else
     memset(data, 255, cups->header.cupsBytesPerLine);
+  return Image_status;
 }
 
 
