@@ -664,8 +664,8 @@ stpi_dither_ut(stp_vars_t v,
 	    dc->v -= 131070;
 	    sp->dis = et->d_sq;
 	  }
-	} else if (channels_to_print >= 1 && best_channel == dc ||
-		   channels_to_print >= 2 && second_best_channel == dc) {
+	} else if ((channels_to_print >= 1 && best_channel == dc) ||
+		   (channels_to_print >= 2 && second_best_channel == dc)) {
 	  inkp = &(sp->upper);
 	  dc->v -= 131070;
 	  sp->dis = et->d_sq;
