@@ -3179,6 +3179,7 @@ new_printer_ok_callback (void)
 	  free(key.name);
 	  free(key.output_to);
 	  stpui_plist_current = stpui_plist_count - 1;
+	  pv = &(stpui_plist[stpui_plist_current]);
 	  build_printer_combo ();
 	  set_printer();
 	}
