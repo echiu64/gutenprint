@@ -2325,8 +2325,8 @@ static void gtk_preview_update(void)
   gdk_draw_rectangle(preview->widget.window, gc, 1,
                      1 + printable_left + preview_ppi * vars.left / 72,
                      1 + printable_top + preview_ppi * vars.top / 72,
-                     preview_ppi * print_width / 72,
-                     preview_ppi * print_height / 72);
+                     (preview_ppi * print_width + 71) / 72,
+                     (preview_ppi * print_height + 71) / 72);
 
   /* draw orientation arrow pointing to top-of-paper */
   {
