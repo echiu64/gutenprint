@@ -1,5 +1,11 @@
 2000-10-12	<rlk@sourceforge.net>
 
+	Files:	ChangeLog (1.53) (+60 -0)
+	
+	4.0b3 release
+	
+2000-10-12	<rlk@sourceforge.net>
+
 	Files:	gimp_main_window.c (1.67) (+4 -2)
 	
 	116696: gcc dependency
