@@ -3,7 +3,7 @@
 require('functions.php3');
 ###############################################
 ##    Set title of this page here    ##########
-$title = 'gimp-print Print Plugin';
+$title = 'Gimp-Print Printer Drivers';
 ###############################################
 ###############################################
 require('standard_html_header.php3');
@@ -29,10 +29,11 @@ released!</blink></font></h2>
 
 <P><strong><em><font color="#ff0000">New as of May 9,
 2001!</strong></em></font> Gimp-Print 4.1.7, a development release in
-the 4.1 line, is out.  This features greatly improved print quality,
-more supported printers, and other major improvements.  Also note that
-the PPD files used by the native CUPS driver are not forward or
-backward compatible with the PPD files in any of the 4.0 releases.</p>
+the 4.1 line, is out.  This features greatly improved print quality
+(most notably in color fidelity), more supported printers, and other
+major improvements.  Also note that the PPD files used by the native
+CUPS driver are not forward or backward compatible with the PPD files
+in any of the 4.0 releases.</p>
 
 <P><strong><em><font color="#ff0000">New as of December 22,
 2000!</strong></em></font> Daniele Berti has packaged up rpm's of
