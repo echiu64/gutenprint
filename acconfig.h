@@ -92,8 +92,5 @@
 /* Define if maintainer-mode is used */
 #undef HAVE_MAINTAINER_MODE
 
-/* Gnome definitions (from glade acconfig.h) */
-#undef HAVE_LIBSM
+/* Package locale directory */
 #undef PACKAGE_LOCALE_DIR
-#undef PACKAGE_DATA_DIR
-#undef PACKAGE_SOURCE_DIR
