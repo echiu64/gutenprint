@@ -40,7 +40,6 @@ $supported_printers = array(
 		'EPSON Stylus Color 400' => 'Fully Operational',
 		'EPSON Stylus Color 440' => 'Fully Operational',
 		'EPSON Stylus Color 460' => 'Needs Testing',
-		'EPSON Stylus Color 480' => 'Needs Testing',
 		'EPSON Stylus Color 500' => 'Fully Operational',
 		'EPSON Stylus Color 600' => 'Fully Operational',
 		'EPSON Stylus Color 640' => 'Fully Operational',
