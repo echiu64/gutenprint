@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
 "POT-Creation-Date: 2003-12-02 19:49-0500\n"
-"PO-Revision-Date: 2003-09-30 20:44+0100\n"
+"PO-Revision-Date: 2003-12-07 12:36+0000\n"
 "Last-Translator: Roger Leigh <roger@whinlatter.uklinux.net>\n"
 "Language-Team: British English\n"
 "MIME-Version: 1.0\n"
@@ -81,18 +81,16 @@ msgid "EvenTone"
 msgstr "EvenTone"
 
 #: src/main/dither-main.c:48
-#, fuzzy
 msgid "Hybrid EvenTone"
-msgstr "EvenTone"
+msgstr "Hybrid EvenTone"
 
 #: src/main/dither-main.c:49
-#, fuzzy
 msgid "UniTone"
-msgstr "EvenTone"
+msgstr "UniTone"
 
 #: src/main/dither-main.c:50
 msgid "Hybrid UniTone"
-msgstr ""
+msgstr "Hybrid UniTone"
 
 #: src/main/dither-main.c:51
 msgid "Adaptive Hybrid"
@@ -127,9 +125,8 @@ msgstr "Density"
 #: src/main/print-lexmark.c:344 src/main/print-pcl.c:1169
 #: src/main/print-pcl.c:1177 src/main/print-pcl.c:1185
 #: src/main/print-pcl.c:1193
-#, fuzzy
 msgid "Output Level Adjustment"
-msgstr "Fine Adjustment"
+msgstr "Output Level Adjustment"
 
 #: src/main/dither-main.c:76
 msgid ""
@@ -146,9 +143,8 @@ msgid "Dither Algorithm"
 msgstr "Dither Algorithm"
 
 #: src/main/dither-main.c:84
-#, fuzzy
 msgid "Screening Adjustment"
-msgstr "Fine Adjustment"
+msgstr "Screening Adjustment"
 
 #: src/main/dither-main.c:85
 msgid ""
@@ -371,9 +367,8 @@ msgstr "Page Size"
 #: src/main/print-pcl.c:1128 src/main/print-pcl.c:1134 src/main/print-ps.c:67
 #: src/main/print-ps.c:73 src/main/print-ps.c:79 src/main/print-ps.c:85
 #: src/main/print-ps.c:97
-#, fuzzy
 msgid "Basic Printer Setup"
-msgstr "Printer Features"
+msgstr "Basic Printer Setup"
 
 #: src/main/print-canon.c:1224 src/main/print-escp2.c:127
 #: src/main/print-lexmark.c:268 src/main/print-pcl.c:1117
@@ -427,7 +422,7 @@ msgstr "Ink Type"
 #: src/main/print-lexmark.c:291 src/main/print-pcl.c:1140
 #: src/main/print-ps.c:91 src/main/print-raw.c:81
 msgid "Advanced Printer Setup"
-msgstr ""
+msgstr "Advanced Printer Setup"
 
 #: src/main/print-canon.c:1248 src/main/print-escp2.c:156
 #: src/main/print-escp2.c:162 src/main/print-lexmark.c:292
@@ -449,7 +444,7 @@ msgstr "Ink Channels"
 #: src/main/print-escp2.c:227 src/main/print-lexmark.c:297
 #: src/main/print-pcl.c:1146
 msgid "Advanced Printer Functionality"
-msgstr ""
+msgstr "Advanced Printer Functionality"
 
 #: src/main/print-canon.c:1276 src/main/print-escp2.c:281
 #: src/main/print-lexmark.c:320 src/main/print-pcl.c:1169
@@ -505,9 +500,8 @@ msgstr "Light Cyan Transition"
 #: src/main/print-escp2.c:353 src/main/print-escp2.c:361
 #: src/main/print-lexmark.c:352 src/main/print-lexmark.c:360
 #: src/main/print-pcl.c:1201 src/main/print-pcl.c:1209
-#, fuzzy
 msgid "Advanced Ink Adjustment"
-msgstr "Fine Adjustment"
+msgstr "Advanced Ink Adjustment"
 
 #: src/main/print-canon.c:1316 src/main/print-canon.c:1317
 #: src/main/print-escp2.c:321 src/main/print-escp2.c:322
@@ -559,9 +553,8 @@ msgstr "Colour Correction"
 
 #: src/main/print-color.c:95 src/main/print-color.c:103
 #: src/main/print-color.c:111 src/main/print-color.c:171
-#, fuzzy
 msgid "Basic Image Adjustment"
-msgstr "Fine Adjustment"
+msgstr "Basic Image Adjustment"
 
 #: src/main/print-color.c:96
 msgid "Color correction to be applied"
@@ -588,9 +581,8 @@ msgid "Linear Contrast Adjustment"
 msgstr "Linear Contrast Adjustment"
 
 #: src/main/print-color.c:119
-#, fuzzy
 msgid "Advanced Image Control"
-msgstr "Manual Control"
+msgstr "Advanced Image Control"
 
 #: src/main/print-color.c:120
 msgid "Use linear vs. fixed end point contrast adjustment"
@@ -666,9 +658,8 @@ msgstr "Ink Limit"
 #: src/main/print-color.c:182 src/main/print-color.c:190
 #: src/main/print-color.c:198 src/main/print-color.c:206
 #: src/main/print-color.c:313
-#, fuzzy
 msgid "Advanced Output Control"
-msgstr "Output Control"
+msgstr "Advanced Output Control"
 
 #: src/main/print-color.c:183
 msgid "Limit the total ink printed to the page"
@@ -705,9 +696,8 @@ msgstr "Composite Curve"
 #: src/main/print-color.c:249 src/main/print-color.c:257
 #: src/main/print-color.c:265 src/main/print-color.c:273
 #: src/main/print-color.c:281
-#, fuzzy
 msgid "Output Curves"
-msgstr "Output Order"
+msgstr "Output Curves"
 
 #: src/main/print-color.c:250
 msgid "Composite (Grayscale) curve"
@@ -752,7 +742,7 @@ msgstr "Hue Map"
 #: src/main/print-color.c:289 src/main/print-color.c:297
 #: src/main/print-color.c:305
 msgid "Advanced HSL Curves"
-msgstr ""
+msgstr "Advanced HSL Curves"
 
 #: src/main/print-color.c:290
 msgid "Hue adjustment curve"
@@ -907,9 +897,8 @@ msgid "Roll Feed (do not cut)"
 msgstr "Roll Feed (do not cut)"
 
 #: src/main/print-escp2-data.c:355 src/main/print-escp2-data.c:401
-#, fuzzy
 msgid "Print to CD"
-msgstr "Print To File?"
+msgstr "Print to CD"
 
 #: src/main/print-escp2-data.c:457
 msgid "Cut Sheet Bin 1"
@@ -964,9 +953,8 @@ msgid "Automatic Printing Mode"
 msgstr "Automatic Printing Mode"
 
 #: src/main/print-escp2.c:108 src/main/print-escp2.c:120
-#, fuzzy
 msgid "Basic Output Adjustment"
-msgstr "Fine Adjustment"
+msgstr "Basic Output Adjustment"
 
 #: src/main/print-escp2.c:109
 msgid "Automatic printing mode"
@@ -989,9 +977,8 @@ msgid "Printing Direction"
 msgstr "Printing Direction"
 
 #: src/main/print-escp2.c:167 src/main/print-escp2.c:179
-#, fuzzy
 msgid "Advanced Output Adjustment"
-msgstr "Fine Adjustment"
+msgstr "Advanced Output Adjustment"
 
 #: src/main/print-escp2.c:168
 msgid "Printing direction (unidirectional is higher quality, but slower)"
@@ -1003,11 +990,11 @@ msgstr "Full Bleed"
 
 #: src/main/print-escp2.c:179
 msgid "Interleave Method"
-msgstr ""
+msgstr "Interleave Method"
 
 #: src/main/print-escp2.c:180
 msgid "Interleave pattern to use"
-msgstr ""
+msgstr "Interleave pattern to use"
 
 #: src/main/print-escp2.c:185
 msgid "Adjust dot size as necessary"
@@ -1091,23 +1078,23 @@ msgstr "Unidirectional"
 
 #: src/main/print-escp2.c:1316
 msgid "Alternate Fill"
-msgstr ""
+msgstr "Alternate Fill"
 
 #: src/main/print-escp2.c:1318
 msgid "Ascending Fill"
-msgstr ""
+msgstr "Ascending Fill"
 
 #: src/main/print-escp2.c:1320
 msgid "Descending Fill"
-msgstr ""
+msgstr "Descending Fill"
 
 #: src/main/print-escp2.c:1322
 msgid "Ascending Double"
-msgstr ""
+msgstr "Ascending Double"
 
 #: src/main/print-escp2.c:1324
 msgid "Nearest Neighbor Avoidance"
-msgstr ""
+msgstr "Nearest Neighbour Avoidance"
 
 #: src/main/print-escp2.c:1596
 #, c-format
@@ -1348,11 +1335,11 @@ msgstr "Postcard"
 
 #: src/main/xmli18n-tmp.h:6
 msgid "CD - 5 inch"
-msgstr ""
+msgstr "CD - 5 inch"
 
 #: src/main/xmli18n-tmp.h:7
 msgid "CD - 3 inch"
-msgstr ""
+msgstr "CD - 3 inch"
 
 #: src/main/xmli18n-tmp.h:9
 msgid "3x5"
@@ -1780,7 +1767,7 @@ msgstr "Penguin large paperback"
 
 #: src/main/xmli18n-tmp.h:116
 msgid "10cm x 15cm"
-msgstr ""
+msgstr "10cm x 15cm"
 
 #: src/main/xmli18n-tmp.h:117
 msgid "Hagaki Card"
@@ -1816,20 +1803,19 @@ msgstr "Monarch Envelope"
 
 #: src/main/xmli18n-tmp.h:125
 msgid "4x5 3/8"
-msgstr ""
+msgstr "4x5 3/8"
 
 #: src/main/xmli18n-tmp.h:126
-#, fuzzy
 msgid "4x7"
-msgstr "5x7"
+msgstr "4x7"
 
 #: src/main/xmli18n-tmp.h:127
 msgid "CP_L"
-msgstr ""
+msgstr "CP_L"
 
 #: src/main/xmli18n-tmp.h:128
 msgid "Card"
-msgstr ""
+msgstr "Card"
 
 #: src/main/xmli18n-tmp.h:129
 msgid "Custom"
@@ -2300,9 +2286,8 @@ msgid "EPSON Stylus Photo 2200"
 msgstr "EPSON Stylus Photo 2200"
 
 #: src/main/xmli18n-tmp.h:246
-#, fuzzy
 msgid "EPSON Stylus Photo R300"
-msgstr "EPSON Stylus Photo 700"
+msgstr "EPSON Stylus Photo R300"
 
 #: src/main/xmli18n-tmp.h:247
 msgid "EPSON Stylus Pro 5000"
@@ -2365,24 +2350,20 @@ msgid "EPSON Stylus CX-5200"
 msgstr "EPSON Stylus CX-5200"
 
 #: src/main/xmli18n-tmp.h:262
-#, fuzzy
 msgid "EPSON Stylus CX-6300"
-msgstr "EPSON Stylus CX-3200"
+msgstr "EPSON Stylus CX-6300"
 
 #: src/main/xmli18n-tmp.h:263
-#, fuzzy
 msgid "EPSON Stylus CX-6400"
-msgstr "EPSON Stylus CX-3100"
+msgstr "EPSON Stylus CX-6400"
 
 #: src/main/xmli18n-tmp.h:264
-#, fuzzy
 msgid "EPSON Stylus CX-8300"
-msgstr "EPSON Stylus CX-3200"
+msgstr "EPSON Stylus CX-8300"
 
 #: src/main/xmli18n-tmp.h:265
-#, fuzzy
 msgid "EPSON Stylus CX-8400"
-msgstr "EPSON Stylus CX-3100"
+msgstr "EPSON Stylus CX-8400"
 
 #: src/main/xmli18n-tmp.h:266
 msgid "EPSON CL-700"
@@ -2553,19 +2534,16 @@ msgid "EPSON PM-10000"
 msgstr "EPSON PM-10000"
 
 #: src/main/xmli18n-tmp.h:308
-#, fuzzy
 msgid "EPSON PM-D750"
-msgstr "EPSON PM-750C"
+msgstr "EPSON PM-D750"
 
 #: src/main/xmli18n-tmp.h:309
-#, fuzzy
 msgid "EPSON PM-G700"
-msgstr "EPSON PM-700C"
+msgstr "EPSON PM-G700"
 
 #: src/main/xmli18n-tmp.h:310
-#, fuzzy
 msgid "EPSON PM-G800"
-msgstr "EPSON PM-800C"
+msgstr "EPSON PM-G800"
 
 #: src/main/xmli18n-tmp.h:311
 msgid "EPSON PX-V500"
@@ -2829,7 +2807,7 @@ msgstr "SONY UP-DP10"
 
 #: src/main/xmli18n-tmp.h:376
 msgid "FUJIFILM CX-400"
-msgstr ""
+msgstr "FUJIFILM CX-400"
 
 #: src/main/xmli18n-tmp.h:377
 msgid "RAW DATA 16 bit"
@@ -4160,356 +4138,3 @@ msgstr "Bad parameters; cannot continue!\n"
 #, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr "Get next row failed at %.0f\n"
-
-#, fuzzy
-#~ msgid "PrinterWeave"
-#~ msgstr "Printer Name:"
-
-#~ msgid "ps2"
-#~ msgstr "ps2"
-
-#~ msgid "HSL-corrected"
-#~ msgstr "HSL-corrected"
-
-#~ msgid "Olympus P300"
-#~ msgstr "Olympus P300"
-
-#~ msgid "Image Type"
-#~ msgstr "Image Type"
-
-#~ msgid "Optimize the settings for the type of image to be printed"
-#~ msgstr "Optimise the settings for the type of image to be printed"
-
-#~ msgid "Photographs"
-#~ msgstr "Photographs"
-
-#~ msgid "Solid Colors"
-#~ msgstr "Solid Colours"
-
-#~ msgid "Stylus C20sx"
-#~ msgstr "Stylus C20sx"
-
-#~ msgid "Stylus C20ux"
-#~ msgstr "Stylus C20ux"
-
-#~ msgid "Stylus C40sx"
-#~ msgstr "Stylus C40sx"
-
-#~ msgid "Stylus C40ux"
-#~ msgstr "Stylus C40ux"
-
-#~ msgid "Stylus C41sx"
-#~ msgstr "Stylus C41sx"
-
-#~ msgid "Stylus C41ux"
-#~ msgstr "Stylus C41ux"
-
-#~ msgid "Stylus C42sx"
-#~ msgstr "Stylus C42sx"
-
-#~ msgid "Stylus C42ux"
-#~ msgstr "Stylus C42ux"
-
-#~ msgid "Stylus C50"
-#~ msgstr "Stylus C50"
-
-#~ msgid "Stylus C60"
-#~ msgstr "Stylus C60"
-
-#~ msgid "Stylus C61"
-#~ msgstr "Stylus C61"
-
-#~ msgid "Stylus C62"
-#~ msgstr "Stylus C62"
-
-#~ msgid "Stylus C70"
-#~ msgstr "Stylus C70"
-
-#~ msgid "Stylus C80"
-#~ msgstr "Stylus C80"
-
-#~ msgid "Stylus C82"
-#~ msgstr "Stylus C82"
-
-#~ msgid "Stylus Color"
-#~ msgstr "Stylus Colour"
-
-#~ msgid "Stylus Color Pro"
-#~ msgstr "Stylus Colour Pro"
-
-#~ msgid "Stylus Color Pro XL"
-#~ msgstr "Stylus Colour Pro XL"
-
-#~ msgid "Stylus Color 400"
-#~ msgstr "Stylus Colour 400"
-
-#~ msgid "Stylus Color 440"
-#~ msgstr "Stylus Colour 440"
-
-#~ msgid "Stylus Color 460"
-#~ msgstr "Stylus Colour 460"
-
-#~ msgid "Stylus Color 480"
-#~ msgstr "Stylus Colour 480"
-
-#~ msgid "Stylus Color 500"
-#~ msgstr "Stylus Colour 500"
-
-#~ msgid "Stylus Color 580"
-#~ msgstr "Stylus Colour 580"
-
-#~ msgid "Stylus Color 600"
-#~ msgstr "Stylus Colour 600"
-
-#~ msgid "Stylus Color 640"
-#~ msgstr "Stylus Colour 640"
-
-#~ msgid "Stylus Color 660"
-#~ msgstr "Stylus Colour 660"
-
-#~ msgid "Stylus Color 670"
-#~ msgstr "Stylus Colour 670"
-
-#~ msgid "Stylus Color 680"
-#~ msgstr "Stylus Colour 680"
-
-#~ msgid "Stylus Color 740"
-#~ msgstr "Stylus Colour 740"
-
-#~ msgid "Stylus Color 760"
-#~ msgstr "Stylus Colour 760"
-
-#~ msgid "Stylus Color 777"
-#~ msgstr "Stylus Colour 777"
-
-#~ msgid "Stylus Color 800"
-#~ msgstr "Stylus Colour 800"
-
-#~ msgid "Stylus Color 850"
-#~ msgstr "Stylus Colour 850"
-
-#~ msgid "Stylus Color 860"
-#~ msgstr "Stylus Colour 860"
-
-#~ msgid "Stylus Color 880"
-#~ msgstr "Stylus Colour 880"
-
-#~ msgid "Stylus Color 83"
-#~ msgstr "Stylus Colour 83"
-
-#~ msgid "Stylus Color 900"
-#~ msgstr "Stylus Colour 900"
-
-#~ msgid "Stylus Color 980"
-#~ msgstr "Stylus Colour 980"
-
-#~ msgid "Stylus Color 1160"
-#~ msgstr "Stylus Colour 1160"
-
-#~ msgid "Stylus Color 1500"
-#~ msgstr "Stylus Colour 1500"
-
-#~ msgid "Stylus Color 1520"
-#~ msgstr "Stylus Colour 1520"
-
-#~ msgid "Stylus Color 3000"
-#~ msgstr "Stylus Colour 3000"
-
-#~ msgid "Stylus Photo"
-#~ msgstr "Stylus Photo"
-
-#~ msgid "Stylus Photo 700"
-#~ msgstr "Stylus Photo 700"
-
-#~ msgid "Stylus Photo EX"
-#~ msgstr "Stylus Photo EX"
-
-#~ msgid "Stylus Photo 720"
-#~ msgstr "Stylus Photo 720"
-
-#~ msgid "Stylus Photo 750"
-#~ msgstr "Stylus Photo 750"
-
-#~ msgid "Stylus Photo 780"
-#~ msgstr "Stylus Photo 780"
-
-#~ msgid "Stylus Photo 785"
-#~ msgstr "Stylus Photo 785"
-
-#~ msgid "Stylus Photo 790"
-#~ msgstr "Stylus Photo 790"
-
-#~ msgid "Stylus Photo 810"
-#~ msgstr "Stylus Photo 810"
-
-#~ msgid "Stylus Photo 820"
-#~ msgstr "Stylus Photo 820"
-
-#~ msgid "Stylus Photo 830"
-#~ msgstr "Stylus Photo 830"
-
-#~ msgid "Stylus Photo 870"
-#~ msgstr "Stylus Photo 870"
-
-#~ msgid "Stylus Photo 875"
-#~ msgstr "Stylus Photo 875"
-
-#~ msgid "Stylus Photo 890"
-#~ msgstr "Stylus Photo 890"
-
-#~ msgid "Stylus Photo 895"
-#~ msgstr "Stylus Photo 895"
-
-#~ msgid "Stylus Photo 900"
-#~ msgstr "Stylus Photo 900"
-
-#~ msgid "Stylus Photo 915"
-#~ msgstr "Stylus Photo 915"
-
-#~ msgid "Stylus Photo 925"
-#~ msgstr "Stylus Photo 925"
-
-#~ msgid "Stylus Photo 950"
-#~ msgstr "Stylus Photo 950"
-
-#~ msgid "Stylus Photo 960"
-#~ msgstr "Stylus Photo 960"
-
-#~ msgid "Stylus Photo 1200"
-#~ msgstr "Stylus Photo 1200"
-
-#~ msgid "Stylus Photo 1270"
-#~ msgstr "Stylus Photo 1270"
-
-#~ msgid "Stylus Photo 1280"
-#~ msgstr "Stylus Photo 1280"
-
-#~ msgid "Stylus Photo 1290"
-#~ msgstr "Stylus Photo 1290"
-
-#~ msgid "Stylus Photo 2000P"
-#~ msgstr "Stylus Photo 2000P"
-
-#~ msgid "Stylus Photo 2100"
-#~ msgstr "Stylus Photo 2100"
-
-#~ msgid "Stylus Photo 2200"
-#~ msgstr "Stylus Photo 2200"
-
-#~ msgid "Stylus Pro 5000"
-#~ msgstr "Stylus Pro 5000"
-
-#~ msgid "Stylus Pro 5500"
-#~ msgstr "Stylus Pro 5500"
-
-#~ msgid "Stylus Pro 7000"
-#~ msgstr "Stylus Pro 7000"
-
-#~ msgid "Stylus Pro 7500"
-#~ msgstr "Stylus Pro 7500"
-
-#~ msgid "Stylus Pro 7600"
-#~ msgstr "Stylus Pro 7600"
-
-#~ msgid "Stylus Pro 9000"
-#~ msgstr "Stylus Pro 9000"
-
-#~ msgid "Stylus Pro 9500"
-#~ msgstr "Stylus Pro 9500"
-
-#~ msgid "Stylus Pro 9600"
-#~ msgstr "Stylus Pro 9600"
-
-#~ msgid "Stylus Pro 10000"
-#~ msgstr "Stylus Pro 10000"
-
-#~ msgid "Stylus Scan 2000"
-#~ msgstr "Stylus Scan 2000"
-
-#~ msgid "Stylus Scan 2500"
-#~ msgstr "Stylus Scan 2500"
-
-#~ msgid ""
-#~ "Please read these instructions very carefully before proceeding.\n"
-#~ "\n"
-#~ "This utility lets you align the color print head of your Epson Stylus "
-#~ "inkjet\n"
-#~ "printer.  Misuse of this utility may cause your print quality to degrade\n"
-#~ "and possibly damage your printer.  This utility has not been reviewed by\n"
-#~ "Seiko Epson for correctness, and is offered with no warranty at all.  "
-#~ "The\n"
-#~ "entire risk of using this utility lies with you.\n"
-#~ "\n"
-#~ "This utility prints %d overprinting test patterns on one piece of paper.\n"
-#~ "That is, it prints one pattern and ejects the page.  You must then "
-#~ "reinsert\n"
-#~ "the same page, and it will print another pattern.  Each pattern consists "
-#~ "of\n"
-#~ "a set of choices numbered between %d and %d.\n"
-#~ "\n"
-#~ "When you inspect the patterns, you should find one patch to have the\n"
-#~ "smoothest texture (least ``grain'').  You should inspect the patches "
-#~ "very\n"
-#~ "carefully to choose the best one.  We suggest using Photo Quality Inkjet\n"
-#~ "Paper or a similar high quality paper for this test.  If you do not find\n"
-#~ "a smooth pattern, you should repeat the test.\n"
-#~ "\n"
-#~ "After you inspect the choices and select a patch, you will be offered "
-#~ "the\n"
-#~ "choices of (s)aving the result in the printer, (r)epeating the process,\n"
-#~ "or (q)uitting without saving.  Quitting will not restore the previous\n"
-#~ "settings, but powering the printer off and back on will.  If you quit,\n"
-#~ "you must repeat the entire process if you wish to later save the "
-#~ "results.\n"
-#~ "It is essential that you not turn your printer off during this "
-#~ "procedure.\n"
-#~ "\n"
-#~ "WARNING: THIS FUNCTION IS NOT YET TESTED!  It may not work, and it may\n"
-#~ "damage your printer!\n"
-#~ msgstr ""
-#~ "Please read these instructions very carefully before proceeding.\n"
-#~ "\n"
-#~ "This utility lets you align the colour print head of your Epson Stylus "
-#~ "inkjet\n"
-#~ "printer.  Misuse of this utility may cause your print quality to degrade\n"
-#~ "and possibly damage your printer.  This utility has not been reviewed by\n"
-#~ "Seiko Epson for correctness, and is offered with no warranty at all.  "
-#~ "The\n"
-#~ "entire risk of using this utility lies with you.\n"
-#~ "\n"
-#~ "This utility prints %d overprinting test patterns on one piece of paper.\n"
-#~ "That is, it prints one pattern and ejects the page.  You must then "
-#~ "reinsert\n"
-#~ "the same page, and it will print another pattern.  Each pattern consists "
-#~ "of\n"
-#~ "a set of choices numbered between %d and %d.\n"
-#~ "\n"
-#~ "When you inspect the patterns, you should find one patch to have the\n"
-#~ "smoothest texture (least ``grain'').  You should inspect the patches "
-#~ "very\n"
-#~ "carefully to choose the best one.  We suggest using Photo Quality Inkjet\n"
-#~ "Paper or a similar high quality paper for this test.  If you do not find\n"
-#~ "a smooth pattern, you should repeat the test.\n"
-#~ "\n"
-#~ "After you inspect the choices and select a patch, you will be offered "
-#~ "the\n"
-#~ "choices of (s)aving the result in the printer, (r)epeating the process,\n"
-#~ "or (q)uitting without saving.  Quitting will not restore the previous\n"
-#~ "settings, but powering the printer off and back on will.  If you quit,\n"
-#~ "you must repeat the entire process if you wish to later save the "
-#~ "results.\n"
-#~ "It is essential that you not turn your printer off during this "
-#~ "procedure.\n"
-#~ "\n"
-#~ "WARNING: THIS FUNCTION IS NOT YET TESTED!  It may not work, and it may\n"
-#~ "damage your printer!\n"
-
-#~ msgid "Printer %s does not require color head alignment.\n"
-#~ msgstr "Printer %s does not require colour head alignment.\n"
-
-#~ msgid ""
-#~ "Please inspect the print, and choose the pattern in each set.\n"
-#~ "Type a pattern number, '?' for help, or 'r' to repeat the procedure.\n"
-#~ msgstr ""
-#~ "Please inspect the print, and choose the pattern in each set.\n"
-#~ "Type a pattern number, '?' for help, or 'r' to repeat the procedure.\n"
