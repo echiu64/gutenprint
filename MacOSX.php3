@@ -32,6 +32,14 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
+ <a href="MacOSX.php3#4.2.5-pre1"><b>December 09, 2002 -</b></a> Gimp-Print 4.2.5-pre1, a pre-release of the upcoming Gimp-Print 4.2.5, is now available for testing. This version fixes many bugs with Epson printers!
+ </p>
+ <p>
+ Please help us test USB-to-Parallel cable converters! If you have used one of
+ these devices (sucessfully or not) please <a href=
+ "https://sourceforge.net/tracker/?func=detail&atid=351537&aid=644565&group_id=1537"
+ >add a report to the tracker</a>.  Thanks!
+ <p>
  <a href="MacOSX.php3#4.2.4"><b>November 25, 2002 -</b></a> Gimp-Print 4.2.4, the newest stable release, is now available for download.
  </p>
  <br>
@@ -120,7 +128,6 @@ require('standard_html_header.php3');
  Ghostscript 7.05.5 for Mac OS X (<b>download below and install, if
  necessary</b>).
  </p>
- <!-- save for 4.2.5
  <b>Gimp-Print 4.2.5-pre1</b>
  </td>
  </tr>
@@ -128,7 +135,7 @@ require('standard_html_header.php3');
  <td bgcolor="#d0ffff" >
  <a href=
  "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.5-pre1.ppc.dmg?download"
- >gimp-print-4.2.5-pre1.ppc.dmg</a>&nbsp;(5.3 MB)
+ >gimp-print-4.2.5-pre1.ppc.dmg</a>&nbsp;(5.2 MB)
  </td>
  <td align="right" >
  (<a href=
@@ -144,7 +151,6 @@ require('standard_html_header.php3');
  ESP Ghostscript 7.05.5 for Mac OS X (<b>download below and install, if
  necessary</b>).
  </p>
- -->
  <b>ESP Ghostscript 7.05.5</b>
  </td>
  </tr>
@@ -221,6 +227,70 @@ require('standard_html_header.php3');
  News Items
  </h3>
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+ <a name ="4.2.5-pre1"></a>
+ <B>Gimp-Print 4.2.5-pre1</B>
+ </TD>
+ <TD align="right" >
+ <B>2002-12-09</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gimp-Print version 4.2.5-pre1 is the first pre-release of the upcoming
+ Gimp-Print 4.2.5; it contains the following improvements over <a href=
+ "MacOSX.php3#4.2.4">Gimp-Print 4.2.4</a>:
+ </p>
+<b>Major Improvements</b>
+ <ol>
+   <li>The Epson Stylus Photo 950/960/PM-950C and 2100/2200 are now tuned.
+   The 950 and 960 are fully tuned, while the 2100 and 2200 are fully
+   tuned with Photographic Black ink.  Matte Black ink on the
+   2100/2200, and dark yellow ink on the PM-950C, are not tuned at
+   this point.<br><br>
+   As a special note, all of these printers print especially fast at
+   360 DPI in Four Color Standard mode (in color, grayscale, and
+   monochrome).  For this reason, we recommend use of Four Color
+   Standard for printing text and low-resolution graphics on plain
+   paper with these printers.</li>
+   <li>Epson Stylus Photo printers with an automatic paper cutter option
+   (the Stylus Photo 925, 950/960/PM-950C, and 2100/2200) now enable
+   the cutter.  This has received some testing, but has not been
+   tested comprehensively.</li>
+   <li>The Epson Stylus Pro 5000 should now print correctly, although this
+   is not yet tested.</li>
+   <li>The Epson Stylus Color 640 now prints properly in grayscale and
+   monochrome at 720 DPI and above.</li>
+   <li>DESTDIR now works with 'make install' in the Gimp plugin
+   directory (this is generally of interest only to packagers).</li>
+   <li>The user manual should now install correctly on all platforms.</li>
+   <li>The version of libtool used to build this release has been changed
+   to 1.4.3.  This enables the packaged source to compile correctly on
+   a few architectures (this is generally of interest only to
+   packagers).</li>
+   <li>Updates to the Debian packaging (this is of interest only to Debian
+   packagers).</li>
+   <li>The Mac OS X installer package now automatically updates the PPD file
+   for every existing Gimp-Print printer (queue) in Print Center.</li>
+ </ol>
+ <dl>
+<dt><b>The following bugs have been fixed in Gimp-Print 4.2.5-pre1</b>:</dt>
+
+<dd>596538 Epson Stylus Photo 925 etc. paper cutter is not functional
+<dd>599029 Epson: Maximum speed printing not supported on 950, 960
+<dd>625780 Epson Stylus Pro 5000 does not print
+<dd>639356 Build system: libtool 1.4.2 does not work on all platforms
+<dd>641628 QUALITY: Epson Stylus 2200 print quality is low in 7-color
+<dd>645895 Epson stc640 does not print at 720dpi and above
+<dd>646158 Build:DESTDIR broken in make install in print plugin
+<dd>649253 QUALITY - Epson 950/960 problems in all resolutions
+</dl><dl>
+ </dl>
+ &nbsp;
+ </td>
+ </tr>
  <TR bgcolor="#D0D0D0" >
  <TD>
  <a name ="4.2.4"></a>
