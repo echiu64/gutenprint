@@ -301,7 +301,9 @@ AC_CHECK_FUNC(getopt_long,
 dnl Define what has to be built
 if test x${BUILD_CUPS} = xyes ; then
   CUPS_BIN="cups-calibrate"
-  CUPS_NOINST_BIN="canon commandtocanon commandtoepson epson genppd rastertoprinter"
+  CUPS_BACKEND_BIN="epson canon"
+  CUPS_FILTER_BIN="rastertoprinter commandtoepson commandtocanon"
+  CUPS_NOINST_BIN="genppd"
 fi
 AM_CONDITIONAL(CUPS_INSTALL, test x${BUILD_CUPS} = xyes)
 if test x${BUILD_GIMP} = xyes ; then
@@ -367,6 +369,8 @@ AC_SUBST(cups_datadir)
 AC_SUBST(cups_libdir)
 AC_SUBST(cups_sysconfdir)
 AC_SUBST(CUPS_BIN)
+AC_SUBST(CUPS_BACKEND_BIN)
+AC_SUBST(CUPS_FILTER_BIN)
 AC_SUBST(CUPS_CFLAGS)
 AC_SUBST(CUPS_LIBS)
 AC_SUBST(CUPS_NOINST_BIN)
