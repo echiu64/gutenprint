@@ -853,8 +853,8 @@ escp2_describe_resolution(const stp_vars_t v, int *x, int *y)
       if (resolution && strcmp(resolution, res->name) == 0 &&
 	  verify_resolution(v, res))
 	{
-	  *x = res->external_hres;
-	  *y = res->external_vres;
+	  *x = res->hres;
+	  *y = res->vres;
 	  return;
 	}
       res++;
