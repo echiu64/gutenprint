@@ -50,12 +50,14 @@ extern int asprintf (char **result, const char *format, ...);
 /*
  * ECOLOR_K must be 0
  */
-#define ECOLOR_K 0
-#define ECOLOR_C 1
-#define ECOLOR_M 2
-#define ECOLOR_Y 3
+#define ECOLOR_K  0
+#define ECOLOR_C  1
+#define ECOLOR_M  2
+#define ECOLOR_Y  3
+#define ECOLOR_LC 4
+#define ECOLOR_LM 5
+#define ECOLOR_LY 6
 #define NCOLORS (4)
-#define NCHANNELS (7)
 #define MAX_WEAVE (8)
 
 typedef struct
@@ -114,57 +116,24 @@ typedef struct			/* Weave parameters for a specific pass */
   int subpass;
 } stp_pass_t;
 
-typedef union {			/* Offsets from the start of each line */
-  unsigned long v[NCHANNELS];		/* (really pass) */
-  struct {
-    unsigned long k;
-    unsigned long m;
-    unsigned long c;
-    unsigned long y;
-    unsigned long M;
-    unsigned long C;
-    unsigned long Y;
-  } p;
+typedef struct {		/* Offsets from the start of each line */
+  int ncolors;
+  unsigned long *v;		/* (really pass) */
 } stp_lineoff_t;
 
-typedef union {			/* Is this line active? */
-  char v[NCHANNELS];			/* (really pass) */
-  struct {
-    char k;
-    char m;
-    char c;
-    char y;
-    char M;
-    char C;
-    char Y;
-  } p;
+typedef struct {		/* Is this line active? */
+  int ncolors;
+  char *v;			/* (really pass) */
 } stp_lineactive_t;
 
-typedef union {		/* number of rows for a pass */
-  int v[NCHANNELS];		/* (really pass) */
-  struct {
-    int k;
-    int m;
-    int c;
-    int y;
-    int M;
-    int C;
-    int Y;
-  } p;
+typedef struct {		/* number of rows for a pass */
+  int ncolors;
+  int *v;			/* (really pass) */
 } stp_linecount_t;
 
-
-typedef union {			/* Base pointers for each pass */
-  unsigned char *v[NCHANNELS];
-  struct {
-    unsigned char *k;
-    unsigned char *m;
-    unsigned char *c;
-    unsigned char *y;
-    unsigned char *M;
-    unsigned char *C;
-    unsigned char *Y;
-  } p;
+typedef struct {		/* Base pointers for each pass */
+  int ncolors;
+  unsigned char **v;
 } stp_linebufs_t;
 
 typedef struct stp_softweave
@@ -194,7 +163,7 @@ typedef struct stp_softweave
   int vmod;			/* Number of banks of passes */
   int oversample;		/* Excess precision per row */
   int repeat_count;		/* How many times a pass is repeated */
-  int ncolors;			/* How many colors (1, 4, or 6) */
+  int ncolors;			/* How many colors */
   int linewidth;		/* Line width in input pixels */
   int vertical_height;		/* Image height in output pixels */
   int firstline;		/* Actual first line (referenced to paper) */
@@ -209,7 +178,7 @@ typedef struct stp_softweave
 				/* in the vertical direction". */
   int horizontal_width;		/* Horizontal width, in bits */
   int last_color;
-  int head_offset[NCHANNELS];		/* offset of printheads */
+  int *head_offset;		/* offset of printheads */
   unsigned char *s[MAX_WEAVE];
   unsigned char *fold_buf;
   unsigned char *comp_buf;

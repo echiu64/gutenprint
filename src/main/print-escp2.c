@@ -1229,7 +1229,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   offset_ptr = escp2_head_offset(model, nv);
   max_head_offset = 0;
   if (ncolors > 1)
-    for (i = 0; i < NCHANNELS; i++)
+    for (i = 0; i < ncolors; i++)
       {
 	head_offset[i] = offset_ptr[i] * ydpi /
 	  escp2_base_separation(model, nv);

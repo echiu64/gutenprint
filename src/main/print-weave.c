@@ -1698,6 +1698,62 @@ stp_pack_tiff(const unsigned char *line,
  * -- Robert Krawitz <rlk@alum.mit.edu) November 3, 1999
  */
 
+static stp_lineoff_t *
+allocate_lineoff(int count, int ncolors)
+{
+  int i;
+  stp_lineoff_t *retval = stp_malloc(count * sizeof(stp_lineoff_t));
+  for (i = 0; i < count; i++)
+    {
+      retval[i].ncolors = ncolors;
+      retval[i].v = stp_malloc(ncolors * sizeof(unsigned long));
+      memset(retval[i].v, 0, ncolors * sizeof(unsigned long));
+    }
+  return (retval);
+}
+
+static stp_lineactive_t *
+allocate_lineactive(int count, int ncolors)
+{
+  int i;
+  stp_lineactive_t *retval = stp_malloc(count * sizeof(stp_lineactive_t));
+  for (i = 0; i < count; i++)
+    {
+      retval[i].ncolors = ncolors;
+      retval[i].v = stp_malloc(ncolors * sizeof(char));
+      memset(retval[i].v, 0, ncolors * sizeof(char));
+    }
+  return (retval);
+}
+
+static stp_linecount_t *
+allocate_linecount(int count, int ncolors)
+{
+  int i;
+  stp_linecount_t *retval = stp_malloc(count * sizeof(stp_linecount_t));
+  for (i = 0; i < count; i++)
+    {
+      retval[i].ncolors = ncolors;
+      retval[i].v = stp_malloc(ncolors * sizeof(int));
+      memset(retval[i].v, 0, ncolors * sizeof(int));
+    }
+  return (retval);
+}
+
+static stp_linebufs_t *
+allocate_linebuf(int count, int ncolors)
+{
+  int i;
+  stp_linebufs_t *retval = stp_malloc(count * sizeof(stp_linebufs_t));
+  for (i = 0; i < count; i++)
+    {
+      retval[i].ncolors = ncolors;
+      retval[i].v = stp_malloc(ncolors * sizeof(unsigned char *));
+      memset(retval[i].v, 0, ncolors * sizeof(unsigned char *));
+    }
+  return (retval);
+}
+
 /*
  * Initialize the weave parameters
  *
@@ -1802,15 +1858,16 @@ stp_initialize_weave(int jets,	/* Width of print head */
    * setup printhead offsets.
    * for monochrome (bw) printing, the offsets are 0.
    */
+  sw->head_offset = stp_malloc(ncolors * sizeof(int));
   if(ncolors > 1)
-    for(i=0; i<NCHANNELS; i++)
+    for(i = 0; i < ncolors; i++)
       sw->head_offset[i] = head_offset[i];
   else
-    for(i=0; i<NCHANNELS; i++)
+    for(i = 0; i < ncolors; i++)
       sw->head_offset[i] = 0;
 
   maxHeadOffset = 0;
-  for(i=0; i<NCHANNELS; i++)
+  for(i = 0; i < ncolors; i++)
     if(sw->head_offset[i] > maxHeadOffset)
       maxHeadOffset = sw->head_offset[i];
 
@@ -1848,15 +1905,12 @@ stp_initialize_weave(int jets,	/* Width of print head */
 
   sw->linewidth = linewidth;
   sw->vertical_height = lineheight;
-  sw->lineoffsets = stp_malloc(sw->vmod * sizeof(stp_lineoff_t));
-  memset(sw->lineoffsets, 0, sw->vmod * sizeof(stp_lineoff_t));
-  sw->lineactive = stp_malloc(sw->vmod * sizeof(stp_lineactive_t));
-  memset(sw->lineactive, 0, sw->vmod * sizeof(stp_lineactive_t));
-  sw->linebases = stp_malloc(sw->vmod * sizeof(stp_linebufs_t));
+  sw->lineoffsets = allocate_lineoff(sw->vmod, ncolors);
+  sw->lineactive = allocate_lineactive(sw->vmod, ncolors);
+  sw->linebases = allocate_linebuf(sw->vmod, ncolors);
   sw->passes = stp_malloc(sw->vmod * sizeof(stp_pass_t));
   memset(sw->passes, 0, sw->vmod * sizeof(stp_pass_t));
-  sw->linecounts = stp_malloc(sw->vmod * sizeof(stp_linecount_t));
-  memset(sw->linecounts, 0, sw->vmod * sizeof(stp_linecount_t));
+  sw->linecounts = allocate_linecount(sw->vmod, ncolors);
   sw->rcache = -2;
   sw->vcache = -2;
   sw->fill_start = fill_start;
@@ -1884,10 +1938,7 @@ stp_destroy_weave(void *vsw)
 {
   int i, j;
   stp_softweave_t *sw = (stp_softweave_t *) vsw;
-  stp_free(sw->linecounts);
   stp_free(sw->passes);
-  stp_free(sw->lineactive);
-  stp_free(sw->lineoffsets);
   if (sw->fold_buf)
     stp_free(sw->fold_buf);
   if (sw->comp_buf)
@@ -1902,8 +1953,16 @@ stp_destroy_weave(void *vsw)
 	  if (sw->linebases[i].v[j])
 	    stp_free(sw->linebases[i].v[j]);
 	}
+      stp_free(sw->linecounts[i].v);
+      stp_free(sw->linebases[i].v);
+      stp_free(sw->lineactive[i].v);
+      stp_free(sw->lineoffsets[i].v);
     }
+  stp_free(sw->linecounts);
+  stp_free(sw->lineactive);
+  stp_free(sw->lineoffsets);
   stp_free(sw->linebases);
+  stp_free(sw->head_offset);
   stp_destroy_weave_params(sw->weaveparm);
   stp_free(vsw);
 }
