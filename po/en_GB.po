@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
 "POT-Creation-Date: 2004-06-26 09:42-0400\n"
-"PO-Revision-Date: 2004-02-08 20:10+0000\n"
+"PO-Revision-Date: 2004-07-04 13:19+0100\n"
 "Last-Translator: Roger Leigh <rleigh@debian.org>\n"
 "Language-Team: British English\n"
 "MIME-Version: 1.0\n"
@@ -392,9 +392,8 @@ msgstr "Advanced Printer Functionality"
 #: src/main/print-canon.c:1257 src/main/print-escp2.c:283
 #: src/main/print-lexmark.c:301 src/main/print-pcl.c:1182
 #: src/main/print-ps.c:102 src/main/print-raw.c:86
-#, fuzzy
 msgid "Printing Mode"
-msgstr "Printer Model:"
+msgstr "Printing Mode"
 
 #: src/main/print-canon.c:1257 src/main/print-color.c:184
 #: src/main/print-color.c:192 src/main/print-color.c:200
@@ -402,14 +401,13 @@ msgstr "Printer Model:"
 #: src/main/print-escp2.c:289 src/main/print-lexmark.c:301
 #: src/main/print-pcl.c:1182 src/main/print-ps.c:102 src/main/print-raw.c:86
 msgid "Core Parameter"
-msgstr ""
+msgstr "Core Parameter"
 
 #: src/main/print-canon.c:1258 src/main/print-escp2.c:284
 #: src/main/print-lexmark.c:302 src/main/print-pcl.c:1183
 #: src/main/print-ps.c:103 src/main/print-raw.c:87
-#, fuzzy
 msgid "Printing Output Mode"
-msgstr "Automatic Printing Mode"
+msgstr "Printing Output Mode"
 
 #: src/main/print-canon.c:1280 src/main/print-escp2.c:345
 #: src/main/print-lexmark.c:324 src/main/print-pcl.c:1211
@@ -522,18 +520,16 @@ msgstr "Colour"
 #: src/main/print-canon.c:1814 src/main/print-escp2.c:1537
 #: src/main/print-lexmark.c:1284 src/main/print-pcl.c:1728
 #: src/main/print-ps.c:169 src/main/print-raw.c:137
-#, fuzzy
 msgid "Black and White"
-msgstr "Black Balance"
+msgstr "Black and White"
 
 #: src/main/print-color.c:50
 msgid "High Accuracy"
 msgstr "High Accuracy"
 
 #: src/main/print-color.c:51
-#, fuzzy
 msgid "Bright Colors"
-msgstr "Print Colour Adjust"
+msgstr "Bright Colours"
 
 #: src/main/print-color.c:52
 msgid "Uncorrected"
@@ -541,7 +537,7 @@ msgstr "Uncorrected"
 
 #: src/main/print-color.c:53
 msgid "Desaturated"
-msgstr ""
+msgstr "Desaturated"
 
 #: src/main/print-color.c:54
 msgid "Threshold"
@@ -549,17 +545,15 @@ msgstr "Threshold"
 
 #: src/main/print-color.c:56
 msgid "Raw"
-msgstr ""
+msgstr "Raw"
 
 #: src/main/print-color.c:165 src/main/print-color.c:405
-#, fuzzy
 msgid "Channel "
-msgstr "Cancel"
+msgstr "Channel "
 
 #: src/main/print-color.c:165
-#, fuzzy
 msgid " Gamma"
-msgstr "Gamma"
+msgstr " Gamma"
 
 #: src/main/print-color.c:165 src/main/print-color.c:240
 #: src/main/print-color.c:250 src/main/print-color.c:258
@@ -571,7 +565,7 @@ msgstr "Gamma"
 
 #: src/main/print-color.c:166
 msgid "Gamma for raw channel "
-msgstr ""
+msgstr "Gamma for raw channel "
 
 #: src/main/print-color.c:176
 msgid "Color Correction"
@@ -588,44 +582,40 @@ msgstr "Colour correction to be applied"
 
 #: src/main/print-color.c:184
 msgid "Channel Bit Depth"
-msgstr ""
+msgstr "Channel Bit Depth"
 
 #: src/main/print-color.c:185
 msgid "Bit depth per channel"
-msgstr ""
+msgstr "Bit depth per channel"
 
 #: src/main/print-color.c:192
 msgid "Input Image Type"
-msgstr ""
+msgstr "Input Image Type"
 
 #: src/main/print-color.c:193
 msgid "Input image type"
-msgstr ""
+msgstr "Input image type"
 
 #: src/main/print-color.c:200
-#, fuzzy
 msgid "Output Image Type"
-msgstr "Output Type:"
+msgstr "Output Image Type"
 
 #: src/main/print-color.c:201
-#, fuzzy
 msgid "Output image type"
-msgstr "Output Type:"
+msgstr "Output image type"
 
 #: src/main/print-color.c:208 src/main/print-color.c:209
 #: src/main/print-escp2.c:289
-#, fuzzy
 msgid "Raw Channels"
-msgstr "Ink Channels"
+msgstr "Raw Channels"
 
 #: src/main/print-color.c:216
 msgid "Brightness"
 msgstr "Brightness"
 
 #: src/main/print-color.c:217
-#, fuzzy
 msgid "Brightness of the print"
-msgstr "Set the height of the print"
+msgstr "Brightness of the print"
 
 #: src/main/print-color.c:224
 msgid "Contrast"
@@ -648,19 +638,14 @@ msgid "Use linear vs. fixed end point contrast adjustment"
 msgstr "Use linear vs. fixed end point contrast adjustment"
 
 #: src/main/print-color.c:240
-#, fuzzy
 msgid "Composite Gamma"
-msgstr "Composite (Grayscale) curve"
+msgstr "Composite Gamma"
 
 #: src/main/print-color.c:241
-#, fuzzy
 msgid ""
 "Adjust the gamma of the print. Larger values will produce a generally "
 "brighter print, while smaller values will produce a generally darker print. "
-msgstr ""
-"Adjust the gamma of the print. Larger values will produce a generally "
-"brighter print, while smaller values will produce a generally darker print. "
-"Black and white will remain the same, unlike with the brightness adjustment."
+msgstr "Adjust the gamma of the print. Larger values will produce a generally brighter print, while smaller values will produce a generally darker print. "
 
 #: src/main/print-color.c:250
 msgid "AppGamma"
@@ -699,30 +684,27 @@ msgstr "Adjust the yellow gamma"
 
 #: src/main/print-color.c:282
 msgid "Red"
-msgstr ""
+msgstr "Red"
 
 #: src/main/print-color.c:283
-#, fuzzy
 msgid "Adjust the red gamma"
-msgstr "Adjust the yellow gamma"
+msgstr "Adjust the red gamma"
 
 #: src/main/print-color.c:290
 msgid "Green"
-msgstr ""
+msgstr "Green"
 
 #: src/main/print-color.c:291
-#, fuzzy
 msgid "Adjust the green gamma"
-msgstr "Adjust the magenta gamma"
+msgstr "Adjust the green gamma"
 
 #: src/main/print-color.c:298
 msgid "Blue"
-msgstr ""
+msgstr "Blue"
 
 #: src/main/print-color.c:299
-#, fuzzy
 msgid "Adjust the blue gamma"
-msgstr "Adjust the yellow gamma"
+msgstr "Adjust the blue gamma"
 
 #: src/main/print-color.c:306
 msgid "Saturation"
@@ -775,9 +757,8 @@ msgid "Upper bound of gray component reduction"
 msgstr "Upper bound of gray component reduction"
 
 #: src/main/print-color.c:405
-#, fuzzy
 msgid " Curve"
-msgstr "Cyan Curve"
+msgstr " Curve"
 
 #: src/main/print-color.c:406 src/main/print-color.c:416
 #: src/main/print-color.c:424 src/main/print-color.c:432
@@ -789,7 +770,7 @@ msgstr "Output Curves"
 
 #: src/main/print-color.c:406
 msgid "Curve for raw channel "
-msgstr ""
+msgstr "Curve for raw channel "
 
 #: src/main/print-color.c:416
 msgid "Cyan Curve"
@@ -824,44 +805,36 @@ msgid "Black curve"
 msgstr "Black curve"
 
 #: src/main/print-color.c:448
-#, fuzzy
 msgid "Red Curve"
-msgstr "Yellow Curve"
+msgstr "Red Curve"
 
 #: src/main/print-color.c:449
-#, fuzzy
 msgid "Red curve"
-msgstr "Yellow curve"
+msgstr "Red curve"
 
 #: src/main/print-color.c:456
-#, fuzzy
 msgid "Green Curve"
-msgstr "Magenta Curve"
+msgstr "Green Curve"
 
 #: src/main/print-color.c:457
-#, fuzzy
 msgid "Green curve"
-msgstr "Magenta curve"
+msgstr "Green curve"
 
 #: src/main/print-color.c:464
-#, fuzzy
 msgid "Blue Curve"
-msgstr "Black Curve"
+msgstr "Blue Curve"
 
 #: src/main/print-color.c:465
-#, fuzzy
 msgid "Blue curve"
-msgstr "Black curve"
+msgstr "Blue curve"
 
 #: src/main/print-color.c:472
-#, fuzzy
 msgid "White Curve"
-msgstr "Composite Curve"
+msgstr "White Curve"
 
 #: src/main/print-color.c:473
-#, fuzzy
 msgid "White curve"
-msgstr "Composite Curve"
+msgstr "White curve"
 
 #: src/main/print-color.c:480
 msgid "Hue Map"
@@ -953,9 +926,8 @@ msgid "%s out of range (value %d, min %d, max %d)\n"
 msgstr "%s out of range (value %d, min %d, max %d)\n"
 
 #: src/main/printers.c:681
-#, fuzzy
 msgid "Page size is not valid\n"
-msgstr "Image size is not valid\n"
+msgstr "Page size is not valid\n"
 
 #: src/main/printers.c:702
 #, c-format
@@ -980,14 +952,14 @@ msgstr "Width must be greater than zero\n"
 msgid ""
 "Image is too wide for the page: left margin is %d, width %d, right edge is %"
 "d\n"
-msgstr ""
+msgstr "Image is too wide for the page: left margin is %d, width %d, right edge is %d\n"
 
 #: src/main/printers.c:733
 #, c-format
 msgid ""
 "Image is too long for the page: top margin is %d, height %d, bottom edge is %"
 "d\n"
-msgstr ""
+msgstr "Image is too long for the page: top margin is %d, height %d, bottom edge is %d\n"
 
 #: src/main/print-escp2-data.c:283 src/main/print-escp2-data.c:311
 #: src/main/print-escp2-data.c:348 src/main/print-escp2-data.c:394
@@ -1101,11 +1073,11 @@ msgstr "Printing direction (unidirectional is higher quality, but slower)"
 
 #: src/main/print-escp2.c:223
 msgid "Borderless"
-msgstr ""
+msgstr "Borderless"
 
 #: src/main/print-escp2.c:224
 msgid "Print without borders"
-msgstr ""
+msgstr "Print without borders"
 
 #: src/main/print-escp2.c:229
 msgid "Interleave Method"
@@ -1149,37 +1121,31 @@ msgstr "Alternate Alignment Choices"
 
 #: src/main/print-escp2.c:290
 msgid "Raw Channel Count"
-msgstr ""
+msgstr "Raw Channel Count"
 
 #: src/main/print-escp2.c:377
-#, fuzzy
 msgid "Red Balance"
-msgstr "Yellow Balance"
+msgstr "Red Balance"
 
 #: src/main/print-escp2.c:378
-#, fuzzy
 msgid "Adjust the red balance"
-msgstr "Adjust the yellow balance"
+msgstr "Adjust the red balance"
 
 #: src/main/print-escp2.c:385
-#, fuzzy
 msgid "Blue Balance"
-msgstr "Black Balance"
+msgstr "Blue Balance"
 
 #: src/main/print-escp2.c:386
-#, fuzzy
 msgid "Adjust the blue balance"
-msgstr "Adjust the black balance"
+msgstr "Adjust the blue balance"
 
 #: src/main/print-escp2.c:393
-#, fuzzy
 msgid "Gloss Balance"
-msgstr "Yellow Balance"
+msgstr "Gloss Balance"
 
 #: src/main/print-escp2.c:394
-#, fuzzy
 msgid "Adjust the gloss balance"
-msgstr "Adjust the yellow balance"
+msgstr "Adjust the gloss balance"
 
 #: src/main/print-escp2.c:417 src/main/print-escp2.c:418
 msgid "Dark Yellow Transition"
@@ -1440,11 +1406,11 @@ msgstr "2400×600 DPI"
 
 #: src/main/print-pcl.c:1188
 msgid "Double-Sided Printing"
-msgstr ""
+msgstr "Double-Sided Printing"
 
 #: src/main/print-pcl.c:1189
 msgid "Duplex/Tumble Setting"
-msgstr ""
+msgstr "Duplex/Tumble Setting"
 
 #: src/main/print-pcl.c:1420
 msgid "Color + Black Cartridges"
@@ -1456,15 +1422,15 @@ msgstr "Colour + Photo Cartridges"
 
 #: src/main/print-pcl.c:1432
 msgid "Off"
-msgstr ""
+msgstr "Off"
 
 #: src/main/print-pcl.c:1433
 msgid "Long Edge (Standard)"
-msgstr ""
+msgstr "Long Edge (Standard)"
 
 #: src/main/print-pcl.c:1434
 msgid "Short Edge (Flip)"
-msgstr ""
+msgstr "Short Edge (Flip)"
 
 #: src/main/print-ps.c:96
 msgid "PPDFile"
@@ -1580,7 +1546,7 @@ msgstr "24x30"
 
 #: src/main/xmli18n-tmp.h:28
 msgid "Super A1 24x36"
-msgstr ""
+msgstr "Super A1 24x36"
 
 #: src/main/xmli18n-tmp.h:29
 msgid "30x40"
@@ -1595,9 +1561,8 @@ msgid "2A"
 msgstr "2A"
 
 #: src/main/xmli18n-tmp.h:32
-#, fuzzy
 msgid "Super A0"
-msgstr "Super Photo"
+msgstr "Super A0"
 
 #: src/main/xmli18n-tmp.h:33
 msgid "A0"
@@ -1736,9 +1701,8 @@ msgid "B10 ISO"
 msgstr "B10 ISO"
 
 #: src/main/xmli18n-tmp.h:67
-#, fuzzy
 msgid "Super B0 JIS"
-msgstr "B0 JIS"
+msgstr "Super B0 JIS"
 
 #: src/main/xmli18n-tmp.h:68
 msgid "B0 JIS"
@@ -2041,124 +2005,100 @@ msgid "PostScript Level 2"
 msgstr "PostScript Level 2"
 
 #: src/main/xmli18n-tmp.h:143
-#, fuzzy
 msgid "Canon BJC 30"
-msgstr "CANON BJC 30"
+msgstr "Canon BJC 30"
 
 #: src/main/xmli18n-tmp.h:144
-#, fuzzy
 msgid "Canon BJC 50"
-msgstr "CANON BJC 50"
+msgstr "Canon BJC 50"
 
 #: src/main/xmli18n-tmp.h:145
-#, fuzzy
 msgid "Canon BJC 55"
-msgstr "CANON BJC 55"
+msgstr "Canon BJC 55"
 
 #: src/main/xmli18n-tmp.h:146
-#, fuzzy
 msgid "Canon BJC 80"
-msgstr "CANON BJC 80"
+msgstr "Canon BJC 80"
 
 #: src/main/xmli18n-tmp.h:147
-#, fuzzy
 msgid "Canon BJC 85"
-msgstr "CANON BJC 85"
+msgstr "Canon BJC 85"
 
 #: src/main/xmli18n-tmp.h:148
-#, fuzzy
 msgid "Canon BJC 210"
-msgstr "CANON BJC 210"
+msgstr "Canon BJC 210"
 
 #: src/main/xmli18n-tmp.h:149
-#, fuzzy
 msgid "Canon BJC 240"
-msgstr "CANON BJC 240"
+msgstr "Canon BJC 240"
 
 #: src/main/xmli18n-tmp.h:150
-#, fuzzy
 msgid "Canon BJC 250"
-msgstr "CANON BJC 250"
+msgstr "Canon BJC 250"
 
 #: src/main/xmli18n-tmp.h:151
-#, fuzzy
 msgid "Canon BJC 1000"
-msgstr "CANON BJC 1000"
+msgstr "Canon BJC 1000"
 
 #: src/main/xmli18n-tmp.h:152
-#, fuzzy
 msgid "Canon BJC 2000"
-msgstr "CANON BJC 2000"
+msgstr "Canon BJC 2000"
 
 #: src/main/xmli18n-tmp.h:153
-#, fuzzy
 msgid "Canon BJC 3000"
-msgstr "CANON BJC 3000"
+msgstr "Canon BJC 3000"
 
 #: src/main/xmli18n-tmp.h:154
-#, fuzzy
 msgid "Canon BJC 4300"
-msgstr "CANON BJC 4300"
+msgstr "Canon BJC 4300"
 
 #: src/main/xmli18n-tmp.h:155
-#, fuzzy
 msgid "Canon BJC 4400 photo"
-msgstr "CANON BJC 4400 photo"
+msgstr "Canon BJC 4400 photo"
 
 #: src/main/xmli18n-tmp.h:156
-#, fuzzy
 msgid "Canon BJC 6000"
-msgstr "CANON BJC 6000"
+msgstr "Canon BJC 6000"
 
 #: src/main/xmli18n-tmp.h:157
-#, fuzzy
 msgid "Canon BJC 6100"
-msgstr "CANON BJC 6100"
+msgstr "Canon BJC 6100"
 
 #: src/main/xmli18n-tmp.h:158
-#, fuzzy
 msgid "Canon BJC 6200"
-msgstr "CANON BJC 6200"
+msgstr "Canon BJC 6200"
 
 #: src/main/xmli18n-tmp.h:159
-#, fuzzy
 msgid "Canon BJC 6500"
-msgstr "CANON BJC 6500"
+msgstr "Canon BJC 6500"
 
 #: src/main/xmli18n-tmp.h:160
-#, fuzzy
 msgid "Canon BJC 7000"
-msgstr "CANON BJC 7000"
+msgstr "Canon BJC 7000"
 
 #: src/main/xmli18n-tmp.h:161
-#, fuzzy
 msgid "Canon BJC 7100"
-msgstr "CANON BJC 7100"
+msgstr "Canon BJC 7100"
 
 #: src/main/xmli18n-tmp.h:162
-#, fuzzy
 msgid "Canon BJC 8200"
-msgstr "CANON BJC 8200"
+msgstr "Canon BJC 8200"
 
 #: src/main/xmli18n-tmp.h:163
-#, fuzzy
 msgid "Canon S400"
-msgstr "CANON S400"
+msgstr "Canon S400"
 
 #: src/main/xmli18n-tmp.h:164
-#, fuzzy
 msgid "Canon S450"
-msgstr "CANON S450"
+msgstr "Canon S450"
 
 #: src/main/xmli18n-tmp.h:165
-#, fuzzy
 msgid "Canon S800"
-msgstr "CANON S800"
+msgstr "Canon S800"
 
 #: src/main/xmli18n-tmp.h:166
-#, fuzzy
 msgid "Canon S4500"
-msgstr "CANON S4500"
+msgstr "Canon S4500"
 
 #: src/main/xmli18n-tmp.h:167
 msgid "EPSON Stylus C20SX"
@@ -2485,28 +2425,24 @@ msgid "EPSON Stylus Photo 2200"
 msgstr "EPSON Stylus Photo 2200"
 
 #: src/main/xmli18n-tmp.h:248
-#, fuzzy
 msgid "EPSON Stylus Photo R200"
-msgstr "EPSON Stylus Photo 1200"
+msgstr "EPSON Stylus Photo R200"
 
 #: src/main/xmli18n-tmp.h:249
 msgid "EPSON Stylus Photo R300"
 msgstr "EPSON Stylus Photo R300"
 
 #: src/main/xmli18n-tmp.h:250
-#, fuzzy
 msgid "EPSON Stylus Photo RX500"
-msgstr "EPSON Stylus Photo R300"
+msgstr "EPSON Stylus Photo RX500"
 
 #: src/main/xmli18n-tmp.h:251
-#, fuzzy
 msgid "EPSON Stylus Photo RX600"
-msgstr "EPSON Stylus Photo R300"
+msgstr "EPSON Stylus Photo RX600"
 
 #: src/main/xmli18n-tmp.h:252
-#, fuzzy
 msgid "EPSON Stylus Photo R800"
-msgstr "EPSON Stylus Photo R300"
+msgstr "EPSON Stylus Photo R800"
 
 #: src/main/xmli18n-tmp.h:253
 msgid "EPSON Stylus Pro 5000"
@@ -2569,14 +2505,12 @@ msgid "EPSON Stylus CX-5200"
 msgstr "EPSON Stylus CX-5200"
 
 #: src/main/xmli18n-tmp.h:268
-#, fuzzy
 msgid "EPSON Stylus CX-5300"
-msgstr "EPSON Stylus CX-8300"
+msgstr "EPSON Stylus CX-5300"
 
 #: src/main/xmli18n-tmp.h:269
-#, fuzzy
 msgid "EPSON Stylus CX-5400"
-msgstr "EPSON Stylus CX-8400"
+msgstr "EPSON Stylus CX-5400"
 
 #: src/main/xmli18n-tmp.h:270
 msgid "EPSON Stylus CX-6300"
@@ -2787,19 +2721,16 @@ msgid "EPSON PX-9000"
 msgstr "EPSON PX-9000"
 
 #: src/main/xmli18n-tmp.h:322
-#, fuzzy
 msgid "Apple Color StyleWriter 4100"
-msgstr "APPLE Colour StyleWriter 4100"
+msgstr "Apple Colour StyleWriter 4100"
 
 #: src/main/xmli18n-tmp.h:323
-#, fuzzy
 msgid "Apple Color StyleWriter 4500"
-msgstr "APPLE Colour StyleWriter 4500"
+msgstr "Apple Colour StyleWriter 4500"
 
 #: src/main/xmli18n-tmp.h:324
-#, fuzzy
 msgid "Apple Color StyleWriter 6500"
-msgstr "APPLE Colour StyleWriter 6500"
+msgstr "Apple Colour StyleWriter 6500"
 
 #: src/main/xmli18n-tmp.h:325
 msgid "HP DeskJet 340"
@@ -2986,14 +2917,12 @@ msgid "HP LaserJet 4L"
 msgstr "HP LaserJet 4L"
 
 #: src/main/xmli18n-tmp.h:371
-#, fuzzy
 msgid "HP LaserJet 4V"
-msgstr "HP LaserJet 4L"
+msgstr "HP LaserJet 4V"
 
 #: src/main/xmli18n-tmp.h:372
-#, fuzzy
 msgid "HP LaserJet 4Si"
-msgstr "HP LaserJet 5Si"
+msgstr "HP LaserJet 4Si"
 
 #: src/main/xmli18n-tmp.h:373
 msgid "HP LaserJet 5 series"
@@ -3009,49 +2938,47 @@ msgstr "HP LaserJet 6 series"
 
 #: src/main/xmli18n-tmp.h:376
 msgid "Lexmark 4076"
-msgstr ""
+msgstr "Lexmark 4076"
 
 #: src/main/xmli18n-tmp.h:377
 msgid "Lexmark Z42"
-msgstr ""
+msgstr "Lexmark Z42"
 
 #: src/main/xmli18n-tmp.h:378
 msgid "Lexmark Z43"
-msgstr ""
+msgstr "Lexmark Z43"
 
 #: src/main/xmli18n-tmp.h:379
 msgid "Lexmark Z52"
-msgstr ""
+msgstr "Lexmark Z52"
 
 #: src/main/xmli18n-tmp.h:380
 msgid "Lexmark Z53"
-msgstr ""
+msgstr "Lexmark Z53"
 
 #: src/main/xmli18n-tmp.h:381
 msgid "Olympus P300"
-msgstr ""
+msgstr "Olympus P300"
 
 #: src/main/xmli18n-tmp.h:382
 msgid "Olympus P400"
-msgstr ""
+msgstr "Olympus P400"
 
 #: src/main/xmli18n-tmp.h:383
-#, fuzzy
 msgid "Canon CP100"
-msgstr "CANON CP100"
+msgstr "Canon CP100"
 
 #: src/main/xmli18n-tmp.h:384
-#, fuzzy
 msgid "Sony UP-DP10"
-msgstr "SONY UP-DP10"
+msgstr "Sony UP-DP10"
 
 #: src/main/xmli18n-tmp.h:385
 msgid "Fujifilm Printpix CX-400"
-msgstr ""
+msgstr "Fujifilm Printpix CX-400"
 
 #: src/main/xmli18n-tmp.h:386
 msgid "Fujifilm Printpix CX-550"
-msgstr ""
+msgstr "Fujifilm Printpix CX-550"
 
 #: src/main/xmli18n-tmp.h:387
 msgid "RAW DATA 16 bit"
@@ -3114,22 +3041,20 @@ msgid "Print in shades of gray using black ink"
 msgstr "Print in shades of gray using black ink"
 
 #: src/libgimpprintui/panel.c:290
-#, fuzzy
 msgid "Standard Command"
-msgstr "Standard"
+msgstr "Standard Command"
 
 #: src/libgimpprintui/panel.c:290
 msgid "Use standard print command"
-msgstr ""
+msgstr "Use standard print command"
 
 #: src/libgimpprintui/panel.c:291
-#, fuzzy
 msgid "Custom Command"
-msgstr "Command:"
+msgstr "Custom Command"
 
 #: src/libgimpprintui/panel.c:291
 msgid "Use custom print command"
-msgstr ""
+msgstr "Use custom print command"
 
 #: src/libgimpprintui/panel.c:292 src/libgimpprintui/plist.c:623
 #: src/libgimpprintui/plist.c:706
@@ -3137,9 +3062,8 @@ msgid "File"
 msgstr "File"
 
 #: src/libgimpprintui/panel.c:292
-#, fuzzy
 msgid "Print to a file"
-msgstr "Print To File?"
+msgstr "Print to a file"
 
 #: src/libgimpprintui/panel.c:507
 msgid "Edit Curve..."
@@ -3361,14 +3285,12 @@ msgid "Setup Printer"
 msgstr "Setup Printer"
 
 #: src/libgimpprintui/panel.c:1432
-#, fuzzy
 msgid "Printer Make:"
-msgstr "Printer Name:"
+msgstr "Printer Make:"
 
 #: src/libgimpprintui/panel.c:1443
-#, fuzzy
 msgid "Select the make of your printer"
-msgstr "Select your printer model"
+msgstr "Select the make of your printer"
 
 #: src/libgimpprintui/panel.c:1461 src/libgimpprintui/panel.c:1753
 msgid "Printer Model:"
@@ -3395,37 +3317,30 @@ msgid "Choose the correct PPD filename for your printer"
 msgstr "Choose the correct PPD filename for your printer"
 
 #: src/libgimpprintui/panel.c:1572
-#, fuzzy
 msgid ""
 "Select the name of the output queue (not the type, or model, of printer) "
 "that you wish to print to"
-msgstr ""
-"Select the name of the printer (not the type, or model, of printer) that you "
-"wish to print to"
+msgstr "Select the name of the output queue (not the type, or model, of printer) that you wish to print to"
 
 #: src/libgimpprintui/panel.c:1574
-#, fuzzy
 msgid "Printer Queue:"
-msgstr "Printer Name:"
+msgstr "Printer Queue:"
 
 #: src/libgimpprintui/panel.c:1590
-#, fuzzy
 msgid "Enter the correct command to print to your printer. "
-msgstr "Enter the correct PPD filename for your printer"
+msgstr "Enter the correct command to print to your printer. "
 
 #: src/libgimpprintui/panel.c:1601
 msgid "Enter the file to print to. "
-msgstr ""
+msgstr "Enter the file to print to. "
 
 #: src/libgimpprintui/panel.c:1609
-#, fuzzy
 msgid "File to print to"
-msgstr "test print"
+msgstr "File to print to"
 
 #: src/libgimpprintui/panel.c:1617
-#, fuzzy
 msgid "Print To File"
-msgstr "Print To File?"
+msgstr "Print To File"
 
 #: src/libgimpprintui/panel.c:1647
 msgid "Define New Printer"
@@ -3643,41 +3558,39 @@ msgstr "Select the base unit of measurement for printing"
 
 #: src/libgimpprintui/plist.c:88 src/libgimpprintui/plist.c:95
 msgid "System V lp"
-msgstr ""
+msgstr "System V lp"
 
 #: src/libgimpprintui/plist.c:93
 msgid "CUPS"
-msgstr ""
+msgstr "CUPS"
 
 #: src/libgimpprintui/plist.c:97
 msgid "Berkeley lpd (/etc/lpc)"
-msgstr ""
+msgstr "Berkeley lpd (/etc/lpc)"
 
 #: src/libgimpprintui/plist.c:99
 msgid "Berkeley lpd (/usr/bsd/lpc)"
-msgstr ""
+msgstr "Berkeley lpd (/usr/bsd/lpc)"
 
 #: src/libgimpprintui/plist.c:101
 msgid "Berkeley lpd (/usr/etc/lpc"
-msgstr ""
+msgstr "Berkeley lpd (/usr/etc/lpc"
 
 #: src/libgimpprintui/plist.c:103
 msgid "Berkeley lpd (/usr/libexec/lpc)"
-msgstr ""
+msgstr "Berkeley lpd (/usr/libexec/lpc)"
 
 #: src/libgimpprintui/plist.c:105
 msgid "Berkeley lpd (/usr/sbin/lpc)"
-msgstr ""
+msgstr "Berkeley lpd (/usr/sbin/lpc)"
 
 #: src/libgimpprintui/plist.c:958
-#, fuzzy
 msgid "Printer"
-msgstr "Print"
+msgstr "Printer"
 
 #: src/libgimpprintui/plist.c:1134
-#, fuzzy
 msgid "(Default Printer)"
-msgstr "Setup Printer"
+msgstr "(Default Printer)"
 
 #: src/cups/genppd.c:140
 msgid "Printer Features"
@@ -3973,23 +3886,20 @@ msgid "Cannot read from %s: %s\n"
 msgstr "Cannot read from %s: %s\n"
 
 #: src/escputil/escputil.c:529
-#, fuzzy
 msgid "Light Cyan/Red"
-msgstr "Light Cyan"
+msgstr "Light Cyan/Red"
 
 #: src/escputil/escputil.c:530
-#, fuzzy
 msgid "Light Magenta/Blue"
-msgstr "Light Magenta"
+msgstr "Light Magenta/Blue"
 
 #: src/escputil/escputil.c:531
 msgid "Black/Dark Yellow"
 msgstr "Black/Dark Yellow"
 
 #: src/escputil/escputil.c:532
-#, fuzzy
 msgid "Gloss Optimizer"
-msgstr "Glossy Film"
+msgstr "Gloss Optimiser"
 
 #: src/escputil/escputil.c:551
 msgid ""
@@ -4461,105 +4371,3 @@ msgstr "Bad parameters; cannot continue!\n"
 #, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr "Get next row failed at %.0f\n"
-
-#~ msgid "Brightness of the print (0 is solid black, 2 is solid white)"
-#~ msgstr "Brightness of the print (0 is solid black, 2 is solid white)"
-
-#~ msgid "HP LaserJet 4V, 4Si"
-#~ msgstr "HP LaserJet 4V, 4Si"
-
-#~ msgid "LEXMARK 4076"
-#~ msgstr "LEXMARK 4076"
-
-#~ msgid "LEXMARK Z42"
-#~ msgstr "LEXMARK Z42"
-
-#~ msgid "LEXMARK Z43"
-#~ msgstr "LEXMARK Z43"
-
-#~ msgid "LEXMARK Z52"
-#~ msgstr "LEXMARK Z52"
-
-#~ msgid "LEXMARK Z53"
-#~ msgstr "LEXMARK Z53"
-
-#~ msgid "OLYMPUS P300"
-#~ msgstr "OLYMPUS P300"
-
-#~ msgid "OLYMPUS P400"
-#~ msgstr "OLYMPUS P400"
-
-#~ msgid "FUJIFILM CX-400"
-#~ msgstr "FUJIFILM CX-400"
-
-#~ msgid ""
-#~ "Enter the correct command to print to your printer. Note: Please do not "
-#~ "remove the `-l' or `-oraw' from the command string, or printing will "
-#~ "probably fail!"
-#~ msgstr ""
-#~ "Enter the correct command to print to your printer. Note: Please do not "
-#~ "remove the `-l' or `-oraw' from the command string, or printing will "
-#~ "probably fail!"
-
-#~ msgid "PPD File?"
-#~ msgstr "PPD File?"
-
-#~ msgid "%s: option `%s' is ambiguous\n"
-#~ msgstr "%s: option `%s' is ambiguous\n"
-
-#~ msgid "%s: option `--%s' doesn't allow an argument\n"
-#~ msgstr "%s: option `--%s' doesn't allow an argument\n"
-
-#~ msgid "%s: option `%c%s' doesn't allow an argument\n"
-#~ msgstr "%s: option `%c%s' doesn't allow an argument\n"
-
-#~ msgid "%s: option `%s' requires an argument\n"
-#~ msgstr "%s: option `%s' requires an argument\n"
-
-#~ msgid "%s: unrecognized option `--%s'\n"
-#~ msgstr "%s: unrecognised option `--%s'\n"
-
-#~ msgid "%s: unrecognized option `%c%s'\n"
-#~ msgstr "%s: unrecognised option `%c%s'\n"
-
-#~ msgid "%s: illegal option -- %c\n"
-#~ msgstr "%s: illegal option -- %c\n"
-
-#~ msgid "%s: invalid option -- %c\n"
-#~ msgstr "%s: invalid option -- %c\n"
-
-#~ msgid "%s: option requires an argument -- %c\n"
-#~ msgstr "%s: option requires an argument -- %c\n"
-
-#~ msgid "%s: option `-W %s' is ambiguous\n"
-#~ msgstr "%s: option `-W %s' is ambiguous\n"
-
-#~ msgid "%s: option `-W %s' doesn't allow an argument\n"
-#~ msgstr "%s: option `-W %s' doesn't allow an argument\n"
-
-#~ msgid "Bright"
-#~ msgstr "Bright"
-
-#~ msgid "Printer does not support color output\n"
-#~ msgstr "Printer does not support colour output\n"
-
-#~ msgid "Image is too wide for the page\n"
-#~ msgstr "Image is too wide for the page\n"
-
-#~ msgid "Image is too long for the page\n"
-#~ msgstr "Image is too long for the page\n"
-
-#~ msgid "Full Bleed"
-#~ msgstr "Full Bleed"
-
-#~ msgid "Internal error!  Output channels or input channels must be 1\n"
-#~ msgstr "Internal error!  Output channels or input channels must be 1\n"
-
-#~ msgid "traditional"
-#~ msgstr "traditional"
-
-#~ msgid "24x36"
-#~ msgstr "24x36"
-
-#~ msgid "%.0f of %.0f\n"
-#~ msgstr "%.0f of %.0f\n"
