@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
-"POT-Creation-Date: 2001-11-05 19:42-0500\n"
+"POT-Creation-Date: 2001-11-06 18:51-0500\n"
 "PO-Revision-Date: 2001-11-05 21:42+0100\n"
 "Last-Translator: Roger Leigh <roger@whinlatter.uklinux.net>\n"
 "Language-Team: British English\n"
@@ -2267,6 +2267,7 @@ msgid "Aligning phase %d, and starting phase %d.\n"
 msgstr "Aligning phase %d, and starting phase %d.\n"
 
 #: src/escputil/escputil.c:1107
+#, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
 "\n"
@@ -3066,20 +3067,20 @@ msgstr "<Image>/File/Print..."
 msgid "File"
 msgstr "File"
 
-msgid "Center the image vertically on the paper!"
-msgstr "Centre the image vertically on the paper!"
+#~ msgid "Center the image vertically on the paper!"
+#~ msgstr "Centre the image vertically on the paper!"
 
-msgid "Center the image on the paper!"
-msgstr "Centre the image on the paper!"
+#~ msgid "Center the image on the paper!"
+#~ msgstr "Centre the image on the paper!"
 
-msgid "Black/Color"
-msgstr "Black/Colour"
+#~ msgid "Black/Color"
+#~ msgstr "Black/Colour"
 
-msgid "Photo/Color/Black"
-msgstr "Photo/Colour/Black"
+#~ msgid "Photo/Color/Black"
+#~ msgstr "Photo/Colour/Black"
 
-msgid "Photo/Color"
-msgstr "Photo/Colour"
+#~ msgid "Photo/Color"
+#~ msgstr "Photo/Colour"
 
-msgid "Black/Photo Color"
-msgstr "Black/Photo Colour"
+#~ msgid "Black/Photo Color"
+#~ msgstr "Black/Photo Colour"
