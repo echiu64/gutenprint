@@ -1,11 +1,11 @@
-@node New Printer, ,ESC/P2, Appendices
-@appendix Adding a new printer
+@node New Printer, Problems, ESC/P2, Top
+@chapter Adding a new printer
 @cindex adding a printer
 @cindex printer, adding
 @cindex new printer
 
 
-This appendix covers adding a new ESCP/2, PCL, or Canon printer.
+This chapter covers adding a new ESCP/2, PCL, or Canon printer.
 Writing a new driver module is not covered.
 
 The three steps to adding a printer are:
@@ -30,7 +30,7 @@ upper-level application), and in the appropriate driver file
 @end menu
 
 @node printers.xml, Driver file, , New Printer
-@appendixsection @file{printers.xml}
+@section @file{printers.xml}
 
 @file{printers.xml} is an XML-like file (there's no formal DTD) that
 contains very simple printer definitions.  A typical definition follows:
@@ -98,7 +98,7 @@ extend, and it's buzzword-compliant.
 
 
 @node Driver file, Epson inkjet printers, printers.xml, New Printer
-@appendixsection The driver file
+@section The driver file
 @cindex driver file
 
 Adding a new printer to a driver module (@file{print-escp2.c},
@@ -127,7 +127,7 @@ printers.
 
 
 @node Epson inkjet printers, Tuning Epson printers, Driver file, New Printer
-@appendixsection Epson inkjet printers
+@section Epson inkjet printers
 @cindex Epson inkjet printers
 
 The @samp{model_capabilities} vector in @file{print-escp2.c} contains
@@ -472,7 +472,7 @@ simply read the code.
 
 
 @node Tuning Epson printers, Canon inkjet printers, Epson inkjet printers, New Printer
-@appendixsection Tuning the printer
+@section Tuning the printer
 @cindex tuning the printer
 @cindex printer, tuning
 
@@ -609,7 +609,7 @@ well for me.
 
 
 @node Canon inkjet printers, , Tuning Epson printers, New Printer
-@appendixsection Canon inkjet printers
+@section Canon inkjet printers
 
 Basically, a new Canon printer can be added to @file{print-canon.c} in a
 similar way as described above for the epson inkjet printers. The main

@@ -55,8 +55,8 @@ by the Foundation.
 @end ifinfo
 
 @titlepage
-@title GIMP-Print
-@subtitle The print plugin for the GIMP
+@title GIMP-Print Developer's Manual
+@subtitle The print plugin for the GIMP, and printing library
 @subtitle Version @value{VERSION}, @value{UPDATED}
 @author The GIMP-Print Project
 
@@ -92,8 +92,9 @@ by the Free Software Foundation.
 @comment  node-name,  next,  previous,  up
 @top The print plugin for the GIMP and printing library
 
-This file documents the libgimpprint library and associated programs used
-for high quality printing. This edition documents version @value{VERSION}.
+This is the Developer's Manual for GIMP-Print.  This manual documents the
+libgimpprint library and associated programs used for high quality printing.
+This edition documents version @value{VERSION}.
 
 @xref{Problems}, for information on how to report problems with
 GIMP-Print.
@@ -108,9 +109,11 @@ GIMP-Print.
 * Using libgimpprint::          Examples of how to use libgimpprint.
 * Integrating libgimpprint::    Using libgimpprint in your own packages.
 * Functions::                   libgimpprint function reference.
-* Programs::                    Using GIMP-Print programs.
+* Dithering::                   Dither algorithms.
+* Weaving::                     Weaving algorithms.
+* ESC/P2::                      Epson ESC/P2 printer control language.
+* New Printer::                 Adding a new printer to libgimpprint.
 * Problems::                    Reporting bugs.
-* Appendices::                  Additional information.
 * Data Type and Variable Index::  Index of data types and variables.
 * Function and Macro Index::    Index of functions and macros.
 * Concept Index::               Index of concepts.
@@ -122,9 +125,11 @@ GIMP-Print.
 @include using.texi
 @include integrating.texi
 @include functions.texi
-@include programs.texi
+@include dither.texi
+@include weave.texi
+@include escp2.texi
+@include new-printer.texi
 @include problems.texi
-@include appendices.texi
 @include indices.texi
 
 @bye

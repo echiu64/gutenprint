@@ -1,4 +1,4 @@
-@node Functions, Programs, Integrating libgimpprint, Top
+@node Functions, Dithering, Integrating libgimpprint, Top
 @chapter Functions
 @cindex functions
 
@@ -413,7 +413,7 @@ This is an opaque data type, whose structure is not visible to the
 user.
 @end deftypevr
 
-@deftypefun void stp_set_option(stp_vars_t @var{v}, const char *@var{name}, const char *@var{data}, int @var{bytes})
+@deftypefun void stp_set_option (stp_vars_t @var{v}, const char *@var{name}, const char *@var{data}, int @var{bytes})
 
 @end deftypefun
 

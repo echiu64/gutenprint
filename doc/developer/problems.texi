@@ -1,4 +1,4 @@
-@node Problems, Appendices, Programs, Top
+@node Problems, Data Type and Variable Index, New Printer, Top
 @chapter Reporting Bugs
 @cindex bugs
 @cindex problems

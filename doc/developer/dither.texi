@@ -1,5 +1,5 @@
-@node Dithering, Weaving, Appendices, Appendices
-@appendix Dithering
+@node Dithering, Weaving, Functions, Top
+@chapter Dithering
 @cindex dithering
 
 The dithering code in @file{print-dither.c} attempts to reproduce

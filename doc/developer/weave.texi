@@ -1,5 +1,5 @@
-@node Weaving, ESC/P2, Dithering, Appendices
-@appendix Weaving for inkjet printers
+@node Weaving, ESC/P2, Dithering, Top
+@chapter Weaving for inkjet printers
 @cindex weaving
 
 @noindent
@@ -12,7 +12,7 @@ by Charles Briscoe-Smith and Robert Krawitz.
 
 
 @node Weaving introduction, Weaving algorithms, , Weaving
-@appendixsection Introduction
+@section Introduction
 
 The Epson Stylus Color/Photo printers don't have memory to print using
 all of the nozzles in the print head.  For example, the Stylus Photo
@@ -125,7 +125,7 @@ specifically for this purpose.
 
 
 @node Weaving algorithms, , Weaving introduction, Weaving
-@appendixsection Weaving algorithms
+@section Weaving algorithms
 @cindex weaving algorithms
 
 I considered a few algorithms to perform the weave.  The first one I
@@ -176,7 +176,7 @@ taken another approach.
 @end menu
 
 @node Simple weaving algorithms, Perfect weaving, Weaving algorithms, Weaving algorithms
-@appendixsubsec Simple weaving algorithms
+@subsection Simple weaving algorithms
 
 The initial problem is to calculate the starting position of each
 pass; the row number of the printer's top jet when printing that pass.
@@ -255,7 +255,7 @@ naive implementation might look like this:
 
 
 @node Perfect weaving, Weaving collisions, Simple weaving algorithms, Weaving algorithms
-@appendixsubsec  Perfect weaving
+@subsection  Perfect weaving
 @cindex perfect weave
 
 This simple weave pattern prints every row, but will give conspicuous
@@ -455,7 +455,7 @@ Let's look at a few more examples of perfect weaves:
 
 
 @node Weaving collisions, What is perfect weaving?, Perfect weaving, Weaving algorithms
-@appendixsubsec Weaving collisions
+@subsection Weaving collisions
 @cindex collisions
 @cindex weaving collisions
 
@@ -512,7 +512,7 @@ rows by @samp{*}:
 @end example
 
 @node What is perfect weaving?, Oversampling, Weaving collisions, Weaving algorithms
-@appendixsubsec What makes a ``perfect'' weave?
+@subsection What makes a ``perfect'' weave?
 @cindex perfect weave
 
 So what causes the perfect weave cases to be perfect, and the other
@@ -1093,7 +1093,7 @@ refinements we need to consider: oversampling, and filling in the
 missing rows at the start of the weave.
 
 @node Oversampling, , What is perfect weaving?, Weaving algorithms
-@appendixsubsec Oversampling
+@subsection Oversampling
 @cindex oversampling
 
 By oversampling, we mean printing on the same row more than once.
