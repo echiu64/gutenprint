@@ -491,7 +491,7 @@ else
   )
 fi
 if test x${BUILD_TEST} = xyes ; then
-  TEST_BIN="escp2-weavetest unprint escp2-unprint pcl-unprint bjc-unprint"
+  TEST_BIN="testdither escp2-weavetest unprint escp2-unprint pcl-unprint bjc-unprint"
 fi
 
 dnl CUPS path setup
