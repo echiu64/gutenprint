@@ -953,8 +953,8 @@ do_final_alignment(void)
 	  break;
 	case 'r':
 	case 'R':
-	  printf(_("Please confirm by typing 'r' again that you wish to repeat the\n"));
-	  printf(_("alignment process:\n"));
+	  printf(_("Please confirm by typing 'r' again that you wish to repeat the\n"
+		   "alignment process:\n"));
 	  fflush(stdout);
 	  inbuf = do_get_input(_("> "));
 	  if (inbuf[0] == 'r' || inbuf[0] == 'R')
