@@ -31,21 +31,28 @@ grep "^AM_GNU_GETTEXT" $srcdir/configure.in >/dev/null && {
   (gettext --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "**Error**: You must have \`gettext' installed to compile gimp-print."
-    echo "Get ftp://alpha.gnu.org/gnu/gettext-0.10.35.tar.gz"
+    echo "Get ftp://alpha.gnu.org/gnu/gettext-0.10.38.tar.gz"
     echo "(or a newer version if it is available)"
     DIE=1
   }
 }
 
-grep "^AM_GNOME_GETTEXT" $srcdir/configure.in >/dev/null && {
-  grep "sed.*POTFILES" $srcdir/configure.in >/dev/null || \
-  (gettext --version) < /dev/null > /dev/null 2>&1 || {
-    echo
-    echo "**Error**: You must have \`gettext' installed to compile gimp-print."
-    echo "Get ftp://alpha.gnu.org/gnu/gettext-0.10.35.tar.gz"
-    echo "(or a newer version if it is available)"
-    DIE=1
+gettextv=`gettext --version | head -1 | awk '{print $NF}'`
+gettext_major=`echo $gettextv | awk -F. '{print $1}'`
+gettext_minor=`echo $gettextv | awk -F. '{print $2}'`
+gettext_point=`echo $gettextv | awk -F. '{print $3}'`
+
+test "$gettext_major" -eq 0 && {
+  test "$gettext_minor" -lt 10 || {
+    test "$gettext_minor" -eq 10 -a "$gettext_point" -lt 38
   }
+} && {
+  echo
+  echo "**Error**: You must have \`gettext' 0.10.38 or newer installed to"
+  echo "compile gimp-print."
+  echo "Get ftp://alpha.gnu.org/gnu/gettext-0.10.38.tar.gz"
+  echo "(or a newer version if it is available)"
+  DIE=1
 }
 
 (automake --version) < /dev/null > /dev/null 2>&1 || {
