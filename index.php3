@@ -29,11 +29,17 @@ site</a> for quick and easy setup.</p>
 UNIX Printing System) for the easiest setup.</p>
 
 </p>
-<H2><font color="#ff0000">Gimp-Print 4.1.99-b2 is
+<H2><font color="#ff0000">Gimp-Print 4.1.99-b3 is
 released!</font></h2>
 
-<P><strong><em><font color="#ff0000">New as of September 20,
-2001!</strong></em></font> Gimp-Print 4.1.99-b2, a beta release in
+<P><strong><em><font color="#ff0000">New as of October 15,
+2000!</strong></em></font> Daniele Berti has updated his rpm's of
+GhostScript 5.50 with the Gimp-Print stp driver (4.0.5).  It's
+available at <a
+href="http://space.tin.it/computer/wvtberti/linux/stp_driver/gs_stp.htm">http://space.tin.it/computer/wvtberti/linux/stp_driver/gs_stp.htm</a>.</p>
+
+<P><strong><em><font color="#ff0000">New as of October 7,
+2001!</strong></em></font> Gimp-Print 4.1.99-b3, a beta release in
 the 4.2 line, is out.  This offers some important bug fixes and some
 improvements, and is quite close to the final release of 4.2.</p>
 
@@ -44,12 +50,6 @@ released!</font></h2>
 stable release of 4.0, has been released.  This features support for
 the Epson Stylus Color 680/777 and Stylus Pro 7500, and a few bug
 fixes.</p>
-
-<P><strong><em><font color="#ff0000">New as of December 22,
-2000!</strong></em></font> Daniele Berti has packaged up rpm's of
-GhostScript 5.50 with the Gimp-Print stp driver (4.0.4).  It's
-available at <a
-href="http://space.tin.it/computer/livbe/linux/stp_driver/gs_stp.htm">http://space.tin.it/computer/livbe/linux/stp_driver/gs_stp.htm</a>.</p>
 
 <P><strong><em><font color="#ff0000">New as of November 27,
 2000!</strong></em></font> Gimp-Print 4.0.4 is out.  All users of the
