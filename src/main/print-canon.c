@@ -984,7 +984,7 @@ static const canon_cap_t canon_model_capabilities[] =
 
   { /* Canon BJC 210 *//* heads: BC-02 BC-05 BC-06 */
     210, 1,
-    842, 17*72,
+    618, 936,      /* 8.58" x 13 " */
     90, 720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMY,
@@ -1002,7 +1002,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 240 *//* heads: BC-02 BC-05 BC-06 */
     240, 1,
-    842, 17*72,
+    618, 936,      /* 8.58" x 13 " */
     90, 720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMY,
@@ -1020,7 +1020,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 250 *//* heads: BC-02 BC-05 BC-06 */
     250, 1,
-    842, 17*72,
+    618, 936,      /* 8.58" x 13 " */
     90, 720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMY,
