@@ -421,7 +421,7 @@ AC_CHECK_FUNC(getopt_long,
 
 dnl Define what has to be built
 if test x${BUILD_FOOMATIC} = xyes ; then
-  FOOMATIC_NOINST_BIN="printer_options"
+  FOOMATIC_NOINST_BIN="printer_options paper_sizes gimp-print-version"
   FOOMATIC_INSTALL="install-am"
 else
   FOOMATIC_INSTALL=""
