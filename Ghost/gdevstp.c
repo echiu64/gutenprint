@@ -186,12 +186,26 @@ stp_print_debug(const char *msg, gx_device *pdev,
 
 
 /*----------- Write out a in escp2 format. ---------------*/
+private const printer_t * get_escp2_printer_by_model(int model)
+{
+  int i;
+
+  /* Ugh */
+  for (i = 0; i < known_printers(); i++)
+    {
+      const printer_t *printer = get_printer_by_index(i);
+      if (printer->model == model &&
+	  printer->print == escp2_print)
+	return printer;
+    }
+  fprintf(stderr, "Unknown printer model\n");
+  return NULL;
+}
+
 private int stp_print_page(gx_device_printer * pdev, FILE * file)
 {
   int code;			/* return code */
-  int model;
   const printer_t *printer = NULL;
-  int i;
 
   stp_print_dbg("stp_print_page", pdev, &stp_data);
   code = 0;
@@ -206,23 +220,11 @@ private int stp_print_page(gx_device_printer * pdev, FILE * file)
   fprintf(stderr,"1 step done!");
 #endif
 
-  model = stp_data.model;                 /* 6 = Stylus Photo  */
-
-  /* Ugh */
-  for (i = 0; i < known_printers(); i++)
-    {
-      printer = get_printer_by_index(i);
-      if (printer->model == model &&
-	  printer->print == escp2_print)
-	break;
-    }
-  if (printer->model != model &&
-      printer->print != escp2_print)
-    {
-      fprintf(stderr, "Unknown printer model\n");
-      code = 1;
-      return code;
-    }
+  printer = get_escp2_printer_by_model(stp_data.model); /* 6 = Stylus Photo  */
+  if (printer == NULL) {
+    code = 1;
+    return code;
+  }
 
   strcpy(stp_data.v.resolution, escp2_resname(stp_data.resnr));
   strcpy(stp_data.v.dither_algorithm, dither_algo_names[stp_data.algnr]);
@@ -468,7 +470,7 @@ stp_open(gx_device *pdev)
   float st[4];
   int left,right,bottom,top,width,length;
   char none[5];
-  printer_t *printer = get_printer_by_index(stp_data.model);
+  const printer_t *printer = get_escp2_printer_by_model(stp_data.model);
   if (!printer)
     return (-1);
 
