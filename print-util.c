@@ -37,6 +37,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.12  1999/10/23 20:26:48  rlk
+ *   Move LUT calculation to print-util
+ *
  *   Revision 1.11  1999/10/21 01:27:37  rlk
  *   More progress toward full 16-bit rendering
  *
@@ -2436,6 +2439,227 @@ calc_hsv_to_rgb16(gushort *rgb, double h, double s, double v)
   
 }
 
+void
+compute_lut(lut_t *lut,
+	    lut16_t *lut16,
+	    int icontrast,
+	    float red,
+	    float green,
+	    float blue,
+	    int ibrightness,
+	    float print_gamma,
+	    float gimp_gamma,
+	    float user_gamma,
+	    int linear,
+	    float printer_density,
+	    float user_density)
+{
+  float		brightness,	/* Computed brightness */
+		screen_gamma,	/* Screen gamma correction */
+		pixel,		/* Pixel value */
+		red_pixel,	/* Pixel value */
+		green_pixel,	/* Pixel value */
+		blue_pixel;	/* Pixel value */
+  int i;
+#ifdef PRINT_LUT
+  FILE *ltfile = fopen("/mnt1/lut", "w");
+#endif
+  /*
+   * Got an output file/command, now compute a brightness lookup table...
+   */
+
+  float contrast;
+  contrast = icontrast / 100.0;
+  red = 100.0 / red ;
+  green = 100.0 / green;
+  blue = 100.0 / blue;
+  if (red < 0.01)
+    red = 0.01;
+  if (green < 0.01)
+    green = 0.01;
+  if (blue < 0.01)
+    blue = 0.01;
+      
+  if (linear)
+    {
+      screen_gamma = gimp_gamma / 1.7;
+      brightness   = ibrightness / 100.0;
+    }
+  else
+    {
+      brightness   = 100.0 / ibrightness;
+      screen_gamma = gimp_gamma * brightness / 1.7;
+    }
+
+  print_gamma = user_gamma / print_gamma;
+
+  for (i = 0; i < 256; i ++)
+    {
+      if (linear)
+	{
+	  double adjusted_pixel;
+	  pixel = adjusted_pixel = (float) i / 255.0;
+
+	  if (brightness < 1.0)
+	    adjusted_pixel = adjusted_pixel * brightness;
+	  else if (brightness > 1.0)
+	    adjusted_pixel = 1.0 - ((1.0 - adjusted_pixel) / brightness);
+
+	  if (pixel < 0)
+	    adjusted_pixel = 0;
+	  else if (pixel > 1.0)
+	    adjusted_pixel = 1.0;
+
+	  adjusted_pixel = pow(adjusted_pixel,
+			       print_gamma * screen_gamma * print_gamma);
+
+	  adjusted_pixel *= 65535.0;
+
+	  red_pixel = green_pixel = blue_pixel = adjusted_pixel;
+	  lut->composite[i] = adjusted_pixel / 256;
+	  lut16->composite[i] = adjusted_pixel;
+	  lut->red[i] = adjusted_pixel / 256;
+	  lut16->red[i] = adjusted_pixel;
+	  lut->green[i] = adjusted_pixel / 256;
+	  lut16->green[i] = adjusted_pixel;
+	  lut->blue[i] = adjusted_pixel / 256;
+	  lut16->blue[i] = adjusted_pixel;
+	} else {
+	  
+	  /*
+	   * First, perform screen gamma correction
+	   */
+	  pixel = 1.0 - pow((float)i / 255.0, screen_gamma);
+
+	  /*
+	   * Second, correct contrast
+	   */
+	  pixel = 0.5 + ((pixel - 0.5) * contrast);
+
+	  /*
+	   * Third, fix up red, green, blue values
+	   *
+	   * I don't know how to do this correctly.  I think that what I'll do is
+	   * if the correction is less than 1 to multiply it by the correction;
+	   * if it's greater than 1, hinge it around 64K.  Doubtless we can
+	   * do better.  Oh well.
+	   */
+	  if (pixel < 0.0)
+	    pixel = 0.0;
+	  else if (pixel > 1.0)
+	    pixel = 1.0;
+
+	  red_pixel = pow(pixel, 1.0 / (red * red));
+	  green_pixel = pow(pixel, 1.0 / (green * green));
+	  blue_pixel = pow(pixel, 1.0 / (blue * blue));
+
+	  /*
+	   * Finally, fix up print gamma and scale
+	   */
+
+	  pixel = 256.0 * (256.0 - 256.0 * printer_density * user_density *
+			   pow(brightness * pixel, print_gamma));
+	  red_pixel = 256.0 * (256.0 - 256.0 * printer_density * user_density *
+			       pow(brightness * red_pixel, print_gamma));
+	  green_pixel = 256.0 * (256.0 - 256.0 * printer_density * user_density *
+				 pow(brightness * green_pixel, print_gamma));
+	  blue_pixel = 256.0 * (256.0 - 256.0 * printer_density * user_density *
+				pow(brightness * blue_pixel, print_gamma));
+
+#if 0
+	  if (red > 1.0)
+	    red_pixel = 65536.0 + ((pixel - 65536.0) / red);
+	  else
+	    red_pixel = pixel * red;
+	  if (green > 1.0)
+	    green_pixel = 65536.0 + ((pixel - 65536.0) / green);
+	  else
+	    green_pixel = pixel * green;
+	  if (blue > 1.0)
+	    blue_pixel = 65536.0 + ((pixel - 65536.0) / blue);
+	  else
+	    blue_pixel = pixel * blue;
+#endif
+
+	  if (pixel <= 0.0)
+	    {
+	      lut->composite[i] = 0;
+	      lut16->composite[i] = 0;
+	    }
+	  else if (pixel >= 65535.0)
+	    {
+	      lut->composite[i] = 255;
+	      lut16->composite[i] = 65535;
+	    }
+	  else
+	    {
+	      lut->composite[i] = (unsigned) (((float) ((unsigned) (pixel / 256.0))) + 0.5);
+	      lut16->composite[i] = (unsigned)(pixel + 0.5);
+	    }
+
+	  if (red_pixel <= 0.0)
+	    {
+	      lut->red[i] = 0;
+	      lut16->red[i] = 0;
+	    }
+	  else if (red_pixel >= 65535.0)
+	    {
+	      lut->red[i] = 255;
+	      lut16->red[i] = 65535;
+	    }
+	  else
+	    {
+	      lut->red[i] = (unsigned) (((float) ((unsigned) (red_pixel / 256.0))) + 0.5);
+	      lut16->red[i] = (unsigned)(red_pixel + 0.5);
+	    }
+
+	  if (green_pixel <= 0.0)
+	    {
+	      lut->green[i] = 0;
+	      lut16->green[i] = 0;
+	    }
+	  else if (green_pixel >= 65535.0)
+	    {
+	      lut->green[i] = 255;
+	      lut16->green[i] = 65535;
+	    }
+	  else
+	    {
+	      lut->green[i] = (unsigned) (((float) ((unsigned) (green_pixel / 256.0))) + 0.5);
+	      lut16->green[i] = (unsigned)(green_pixel + 0.5);
+	    }
+
+	  if (blue_pixel <= 0.0)
+	    {
+	      lut->blue[i] = 0;
+	      lut16->blue[i] = 0;
+	    }
+	  else if (blue_pixel >= 65535.0)
+	    {
+	      lut->blue[i] = 255;
+	      lut16->blue[i] = 65535;
+	    }
+	  else
+	    {
+	      lut->blue[i] = (unsigned) (((float) ((unsigned) (blue_pixel / 256.0))) + 0.5);
+	      lut16->blue[i] = (unsigned)(blue_pixel + 0.5);
+	    }
+	}
+#ifdef PRINT_LUT
+      fprintf(ltfile, "%3i  %3d %5d  %3d %5d  %3d %5d  %3d %5d  %f %f %f %f  %f %f %f\n",
+	      i, lut->composite[i], lut16->composite[i],
+	      lut->red[i], lut16->red[i],
+	      lut->green[i], lut16->green[i],
+	      lut->blue[i], lut16->blue[i],
+	      pixel, red_pixel, green_pixel, blue_pixel, print_gamma,
+	      screen_gamma, print_gamma);
+#endif
+    }
+
+#ifdef PRINT_LUT
+  fclose(ltfile);
+#endif
+}
 /*
  * End of "$Id$".
  */

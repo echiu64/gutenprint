@@ -207,6 +207,11 @@ extern void calc_hsv_to_rgb(guchar *rgb, double h, double s, double v);
 extern void calc_rgb_to_hsv(guchar *rgb, double *hue, double *sat,
 			    double *val);
 
+extern void compute_lut(lut_t *lut, lut16_t *lut16, int icontrast,
+			float red, float green, float blue, int ibrightness,
+			float print_gamma, float gimp_gamma, float user_gamma,
+			int linear, float printer_density, float user_density);
+
 /*
  * End of "$Id$".
  */
