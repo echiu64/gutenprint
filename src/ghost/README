@@ -57,16 +57,22 @@ BUILD AND INSTALLATION:
    installed on your system.  If you wish to use the older method (or
    you're using Ghostscript 5.10), which actually installs all of the
    Gimp-Print source files into your Ghostscript source tree, please
-   skip to step 7.
+   skip to step 7.  We strongly recommend that all Ghostscript users,
+   except for those who cannot upgrade from 5.10, use the new method.
 
 
 3) The recommended (newer) method requires you to build and install
    Gimp-print, and links against the installed libgimpprint.so or
-   libgimpprint.a.
+   libgimpprint.a.  Run
 
-   Run "./configure" in the top level directory (../.. from here),
-   "make", and "make install".  You may also need to run "ldconfig" as
-   root following "make install".
+   ./configure
+   make
+   make install
+
+   in the top level directory (../.. from here).
+
+   "make install" typically needs to be run as root.  You may also
+   need to run "ldconfig" as root following "make install".
 
    You may optionally run
 
@@ -94,16 +100,29 @@ BUILD AND INSTALLATION:
    file in this directory is automatically updated by running
    configure.
 
-6) Skip to step 9.
+6) Skip to step 11.
 
 
 7) If you are using Ghostscript 5.10, or prefer to use the old, tried
-   and true method for building the driver, copy all "*.c" and "*.h"
-   files to the Ghostscript source directory.  Depending upon the
-   version of Ghostscript you use, this may be either the top level of
-   your Ghostscript source distribution, or the "src/" subdirectory.
+   and true method for building the driver, run
 
-8) If you are using Ghostscript 5.50 or 6.51: edit the file
+   ./configure --with-ghost
+   make
+
+   in the top level directory (../.. from here).
+
+   You may optionally run
+
+   ./configure --without-gimp --with-ghost
+
+   if you do not wish to build the Gimp Print plugin.
+
+8) Copy all "*.c" and "*.h" files from this directory to the
+   Ghostscript source directory.  Depending upon the version of
+   Ghostscript you use, this may be either the top level of your
+   Ghostscript source distribution, or the "src/" subdirectory.
+
+9) If you are using Ghostscript 5.50 or 6.51: edit the file
    "contrib.mak" (in either the top level or src/ subdirectoy,
    depending upon your version of Ghostscript) by adding the contents
    of "contrib.mak.addon.old".  Be careful to add *exactly* the
@@ -111,7 +130,7 @@ BUILD AND INSTALLATION:
    the tab characters in contrib.mak.addon get transformed into
    spaces, and as a result when you run 'make' it will fail.
 
-8) If you are using Ghostscript 5.10: edit the file "devs.mak" (in
+10) If you are using Ghostscript 5.10: edit the file "devs.mak" (in
    either the top level or src/ subdirectoy, depending upon your
    version of Ghostscript) by adding the contents of
    "devs.mak.addon-5.10".  Be careful to add *exactly* the contents of
@@ -120,7 +139,7 @@ BUILD AND INSTALLATION:
    a result when you run 'make' it will fail.
 
 
-10) Add "$(DD)stp.dev" to the line "DEVICE_DEVS6=..." in the makefile
+11) Add "$(DD)stp.dev" to the line "DEVICE_DEVS6=..." in the makefile
    used by Ghostscript (this is usually accessible as "makefile" in
    the top level Ghostscript source, but that is normally just a
    symbolic link to a system-specific makefile, such as unix-gcc.mak).
@@ -128,15 +147,15 @@ BUILD AND INSTALLATION:
    add this to any such line.  If there is no DEVICE_DEVS6= line, you
    may add it to any other DEVICE_DEVSx line that is present.
 
-11) Compile and install gs as described in the Ghostscript
+12) Compile and install gs as described in the Ghostscript
    documentation.  After a successful compiler run you got a new
-   driver named "stp". Check this by calling "gs -h" with the newly
+   driver named "stp".  Check this by calling "gs -h" with the newly
    compiled Ghostscript.
 
 The distribution includes a utility named "escputil" that performs
 many utility functions, such as head cleaning, nozzle alignment, and
-the like.  This is normally compiled by "make" and installed by "make
-install".
+the like, for Epson Stylus printers.  This is normally compiled by
+"make" and installed by "make install".
 
 
 DEBIAN:
@@ -230,6 +249,8 @@ Printer Model Selection:
 ------- ----- ----------
 
 -sModel=name
+
+This option must be supplied.  There is no default.
 
 bjc-30                  CANON BJC 30
 bjc-50                  CANON BJC 50
@@ -364,15 +385,20 @@ Print Resolution Selection:
 
 The meaning of this is model-specific.  Two names are listed for each
 resolution; the first (short) name is the value that must be passed to
--sQuality, and the second (long) name is descriptive.
+-sQuality, and the second (long) name is descriptive.  Each printer
+has its own default value; for most printers, this is a reasonable 300
+or 360 DPI resolution.
 
-For Epson Stylus printers, within each specified resolution, the
-quality is generally listed from worst to best (and generally higher
-quality means lower speed).  For example, 360 DPI Unidirectional is
-better than 360 DPI.  Characteristics of specific models and
-individual printers may affect the orderings to some degree; on many
-printers, unidirectional printing will improve quality substantially
-more than using an otherwise better quality printing mode.
+
+For Epson Stylus printers:
+
+Within each specified resolution, the quality is generally listed from
+worst to best (and generally higher quality means lower speed).  For
+example, 360 DPI Unidirectional is usually better than 360 DPI.
+Characteristics of specific models and individual printers may affect
+the orderings to some degree; on many printers, with certain papers,
+unidirectional printing will improve quality substantially more than
+using an otherwise better quality printing mode.
 
 "Softweave", "High Quality", and "Highest Quality" use algorithms
 within the driver to generate the sequence of rows printed.  On
@@ -395,20 +421,31 @@ at low printing resolutions.  Many printers do not support this kind
 of printing at resolutions of 720 DPI and above, and some printers
 that do actually print just one row (using just one nozzle per color)
 at a time.  While this particular use will produce extremely high
-quality (no banding whatsoever, normally), it may eventually damage
-the print head due to ink pooling.  All printers that we are aware of
-have no such trouble at 360 DPI.
+quality (no banding whatsoever, normally), it is extremely slow and
+may eventually damage the print head due to ink pooling.  All printers
+that we are aware of have no such trouble at 360 DPI.
 
 Generally, we recommend use of 360 DPI printing modes for most
-purposes on plain paper (perhaps 720x360 for the best quality output).
+purposes on plain paper.  For higher quality, 720x360 DPI works well.
 Use of 720 DPI and above simply takes more time to compute and print
-the page, with little quality gain.  For draft purposes, use of 180 or
-360x120 DPI will not produce solidly black output, but will save ink
-and time.  On high quality "photo" papers, we recommend use of 720 DPI
-for proofing and 1440x720 DPI for final output.  720x360 may be
-acceptable for initial proofs, but on may printers it will not
-generate sufficient density.  360 DPI will produce very coarse output
-that may lack sufficient density on these high quality papers.
+the page, with little quality gain.  For economy draft printing, use
+of 180 or 360x120 DPI will not produce very dark output, but will save
+ink and time.  360x180 and 360x240 DPI are alternative draft modes
+that use more ink (and in the case of 360x240, more time), but
+approach the quality of 360 DPI.  For printing text on higher quality
+inkjet paper, we recommend 360x180 or 360x240 for economy draft, 360
+or 720x360 for draft, and 720 for final output.
+
+On high quality "photo" and "glossy" papers, we recommend use of 720
+DPI for proofing and 1440x720 DPI for final output.  1440x720 DPI
+Highest Quality can be used if microbanding at normal 1440x720 DPI is
+an issue.  This mode uses twice as many passes (and hence twice as
+much time), but all but eliminates any vestiges of banding.  720x360
+may be acceptable for initial proofs, but on may printers it will not
+generate sufficient density (solid blacks and colors).  360 DPI will
+produce very coarse output that may lack sufficient density on these
+high quality papers.  We do not recommend use of the lower resolution
+modes on these papers.
 
 We believe that generally there is little reason to use 2880x720 DPI.
 The actual resolution this produces will not be much better than
@@ -416,28 +453,39 @@ The actual resolution this produces will not be much better than
 The exception is on the Stylus Color 980: this printer produces
 sufficiently small dots (3 pl) that they can take advantage of such
 high resolution.  Even in that case, 1440x720 will likely produce more
-than adequate output.
+than adequate output.  1440x720 DPI Highest Quality takes as long to
+print as 2880x720 Unidirectional, but it generates output much more
+quickly.
 
 The following resolutions are supported on printers other than the
 Stylus Pro (5000, 5500, 7000, 7500, 9000, 9500, and 10000) printers.
 Resolutions for those printers are listed in a later section.
 
-     180 DPI works for draft mode on printers with dot spacing of 1/90
-     or 1/180 inch.  This includes the Stylus Color, Stylus Color 440,
-     460, 600, 640, 660, 670, 800, 850, 900, 980, 980, 1500, 1520,
-     3000, and Stylus Photo, Stylus Photo 700, 720 and EX.
+     180 DPI and 360x180 DPI work for draft mode on printers with dot
+     spacing of 1/90 or 1/180 inch.  This includes the Stylus Color,
+     Stylus Color 440, 460, 600, 640, 660, 670, 800, 850, 900, 980,
+     980, 1500, 1520, 3000, and Stylus Photo, Stylus Photo 700, 720
+     and EX.
 
 180dpi          '180 DPI'
 180uni          '180 DPI Unidirectional'
 
-     360x120 DPI works for draft mode on printers with dot spacing of
-     1/120 inch.  This includes the Stylus C20 and C40, the Stylus
-     Color Pro, 400, 480, 500, 580, 680, 740, 760, 777, 860, 880, 83,
-     and 1160, and the Stylus Photo 750, 780, 790, 870, 890, 1270,
-     1280, 1290, and 2000P.
+360x180dpi      '360 x 180 DPI'
+360x180uni      '360 x 180 DPI Unidirectional'
+
+     360x120 DPI and 360x240 DPI work for draft mode on printers with
+     dot spacing of 1/120 inch.  This includes the Stylus C20 and C40,
+     the Stylus Color Pro, 400, 480, 500, 580, 680, 740, 760, 777,
+     860, 880, 83, and 1160, and the Stylus Photo 750, 780, 790, 870,
+     890, 1270, 1280, 1290, and 2000P.
 
 360x120dpi      '360 x 120 DPI'
 360x120uni      '360 x 120 DPI Unidirectional'
+
+360x240dpi      '360 x 240 DPI'
+360x240uni      '360 x 240 DPI Unidirectional'
+
+The following resolutions work on all printers except as noted.
 
 360dpi          '360 DPI'                  (works on all printers
                                             except for Stylus C20 and
@@ -450,13 +498,17 @@ Resolutions for those printers are listed in a later section.
 360mw           '360 DPI Microweave'       (works on all printers
                                             except for Stylus C20, C40,
                                             Stylus Color, Stylus Color Pro,
-                                            Stylus Color 480, and 580)
+                                            Stylus Color 480, and 580;
+                                            the is the default on
+                                            printers that do not
+                                            support variable dot sizes)
 360mwuni        '360 DPI Microweave Unidirectional'
                                            (see previous)
 360sw           '360 DPI Softweave'        (works on printers that support
                                             variable dot sizes, such as
                                             the Epson Stylus Color 740
-                                            and newer)
+                                            and newer; this is the
+                                            default on such printers)
 360swuni        '360 DPI Softweave Unidirectional'
                                            (see previous)
 360hq           '360 DPI High Quality'     (see previous; recommended
@@ -588,13 +640,19 @@ Note: the higher resolutions of newer PCL printers using "Photo-Ret" are
 not yet supported.
 
 
-For Lexmark printers (Z52):
+For Lexmark printers other than the 4076:
 
-300dpi          '300x300 DPI'
-600dpi          '600x600 DPI'
-1200x600dpi     '1200x600 DPI'
-1200dpi         '1200x1200 DPI'
-2400x1200dpi    '2400x1200 DPI'
+300x600dpi      '300 DPI x 600 DPI'
+600dpi          '600 DPI'
+600hq           '600 DPI high quality'
+600uni          '600 DPI Unidirectional'
+1200dpi         '1200 DPI'
+1200hq          '1200 DPI high quality'
+1200hq2         '1200 DPI highest quality'
+1200uni         '1200 DPI  Unidirectional'
+2400x1200dpi    '2400 DPI x 1200 DPI'                   (Z52)
+2400x1200hq     '2400 DPI x 1200 DPI high quality'      (Z52)
+2400x1200hq2    '2400 DPI x 1200 DPI highest quality'   (Z52)
 
 
 For Canon printers:
@@ -619,121 +677,6 @@ For Canon printers:
 1440dpi         '1440x1440 DPI'
 
 
-Color Balancing Values: (min,max,default)
------ --------- ------- -----------------
-
-All of the values below are interpreted as being relative to norms for
-a particular printer established through testing, not "absolute"
-values of any kind.
-
--dCyan=xxx       xxx: 0.0 ... 4.0  (1.0)
--dMagenta=xxx    xxx: 0.0 ... 4.0  (1.0)
--dYellow=xxx     xxx: 0.0 ... 4.0  (1.0)
-
- These three options allow specification of the cyan, magenta, and
- yellow levels independently, for rebalancing the levels.  Normally,
- these should be adjusted to yield neutral gray, but they can be used
- for other effects.
-
--dBrightness=xxx xxx: 0.0 ... 2.0  (1.0)
-
- Adjust the brightness of the image.  0.0 gives a fully black image;
- 2.0 gives a fully white image.  Values greater than 1 will result in
- black not being solid and highlights turning white; values less than
- 1 will result in white not being perfectly clear and shadows turning
- black.
-
--dContrast=xxx   xxx: 0.0 ... 4.0  (1.0)
-
- Adjust the contrast of the image.  0.0 gives a solid gray for the
- entire image, the exact gray depending upon the brightness chosen.
-
--dGamma=xxx      xxx: 0.1 ... 4.0  (1.0)
-
- Adjust the gamma of the image, over and above the printer-specific
- correction.  Gamma less than 1.0 will result in a darker image; gamma
- greater than 1.0 will result in a lighter image.  Unlike brightness,
- gamma adjustment does not change the endpoints; it merely changes the
- shape of the input->output curve.
-
--dDensity=xxx    xxx: 0.1 ... 2.0  (1.0)
-
- Adjust the amount of ink deposited on the paper.  If you've chosen
- the correct paper type and you're getting ink bleeding through the
- paper or puddling, try reducing the density to the lowest value you
- can while still achieving solid black.  If you're not getting solid
- black, even with the contrast and brightness at 1.0, try increasing
- the density.
-
- All of the printers supported here actually need less than 100% ink
- density in most cases, so the actual density is something other than
- the nominal density setting.  The effective density setting cannot go
- above 100%, so if a value specified will result in an excessively
- high density level, it will be silently limited to 1.0.
-
--dSaturation=xxx xxx: 0.0 ... 9.0  (1.0)
-
- Adjust the brilliance of colors.  0.0 results in pure grayscale;
- using this with -dColor=1 is one way of getting grayscale (see below
- under -dColor for a full discussion).  Saturation of less than 1.0
- results in more muted colors; saturation of greater than 1.0 results
- in more vibrant colors.  Very high saturation often results in very
- strange effects, including posterization and banding that might not
- be expected.  For normal purposes, the saturation should generally be
- less than 1.5.
-
-
-Dithering Algorithms:
---------- -----------
-
-The option names are case sensitive.  Two names are listed for each
-resolution; the first (short) name is the value that must be passed to
--sDither, and the second (long) name is descriptive.
-
--sDither=algorithm
-
-Adaptive        'Adaptive Hybrid'
-Ordered         'Ordered'
-Fast            'Fast'
-VeryFast        'Very Fast'
-Floyd           'Hybrid Floyd-Steinberg'
-
-We recommend using Adaptive Hybrid (which is the default) with text or
-other fine black detail, or if this is mixed with continuous tone
-images, and Ordered for pure continuous-tone images and photographs
-(no text).  Ordered is somewhat faster than Adaptive Hybrid, and
-normally yields almost identical results.  However, Ordered dithering
-may show small breaks in very fine lines, which may lead to
-undesirable moire patterns and other artifacts; Adaptive Hybrid is
-more resistant to this effect.
-
-Error diffusion algorithms (Hybrid Floyd-Steinberg is such an
-algorithm) perform very well at high densities, and are capable of
-rendering very fine detail well, but they tend to exhibit artifacts in
-the form of "waves" or "worms" of dots which results in noticeable
-texturing in pale areas.  Furthermore, pale areas immediately adjacent
-to white take a while to "build up" sufficient error to print at all.
-This is sometimes called "tearing".
-
-The Fast algorithm gives the fastest results at the expense of color
-accuracy.  It is a simplified ordered dither.  On simple four color
-printers (or other printers used in four color mode), the quality is
-similar to Ordered, although dark gray rendition is not as good due to
-a simpler transfer between black and colored ink.  With six-color
-printers, color rendition is somewhat worse, but it should be quite
-usable in cases where optimum quality is not critical.  In black and
-white, it is an efficient way to render grayscale, but it may not give
-best results when used with variable dot size printers.  On rare three
-color printers (CMY only) the results should be identical to ordered
-dither.
-
-Very Fast is even faster than Fast, with even more loss of quality.
-It uses a power of 2 matrix that can be looked up more quickly and
-performs certain other optimizations.  On laser printers, and possibly
-on certain kinds of text and line art, Very Fast dithering may
-actually yield the best quality.
-
-
 Ink Types
 --- -----
 
@@ -746,7 +689,7 @@ types are supported on all printers.
 -sInkType=inktype
 
 
-For Epson printers:
+For Epson and Lexmark (other than the 4076) printers:
 
 Six color printers can print using four color inks or all six colors.
 Six color mode is recommended for photographs.  Four color mode may be
@@ -774,7 +717,7 @@ CMYK            'Four Color Standard'
 RGB             'Three Color Composite'
 
 
-For Canon, Lexmark (other than 4076), and Compaq printers:
+For Canon printers:
 
 Gray            'Black'
 RGB             'Color'
@@ -800,7 +743,7 @@ is descriptive.
 -sMediaType=mediatype
 
 
-For Epson printers:
+For Epson and Lexmark (other than the 4076) printers:
 
 Plain           'Plain Paper'
 PlainFast       'Plain Paper Fast Load'
@@ -815,7 +758,17 @@ Coated          'Photo Quality Inkjet Paper'
 GlossyPhoto     'Premium Glossy Photo Paper'
 Luster          'Premium Luster Photo Paper'
 Photo           'Photo Paper'
+Glossy          'Photo Quality Glossy Paper'
+Ilford          'Ilford Heavy Paper'
 Other           'Other'
+
+We have found that glossy photo papers not specifically designed for
+Epson printers generally perform poorly in Epson printers.  The ink
+tends to pool on the paper, causing muddy shadows and possibly leaving
+ink on the printer rollers.  Use of the highest quality printing modes
+(1440x720 highest quality and 2880x720 unidirectional) produces the
+best result on such papers, probably because printing is slower and
+there is more time for the ink to dry.
 
 
 For Canon printers:
@@ -851,13 +804,11 @@ This is printer type specific.  The option names are case sensitive.
 
 -sInputSlot=mediasource
 
-No media sources are currently defined for Epson printers.  At
-present, only the single sheet feeder can be used.
-
 For Epson printers:
 
 Standard        'Standard'
-Roll            'Roll Feed'
+Roll            'Roll Feed'     (for certain Stylus Photo and Stylus
+                                Pro models only)
 
 
 For Canon printers:
@@ -883,12 +834,20 @@ Optional        'Optional Source'
 Auto            'Autoselect'
 
 
+For Lexmark printers other than the 4076:
+
+Auto            'Auto Sheet Feeder'
+Manual          'Manual with Pause
+ManualNP        'Manual without Pause
+
+
 Media Sizes
 ----- -----
 
-This is printer-specific.  The option names are case-sensitive.  Two
-names are listed for each resolution; the first (short) name is the
-value that must be passed to -sPaperSize, and the second (long) name is
+This is printer-specific; we cannot list the correct values for each
+printer here.  The option names are case-sensitive.  Two names are
+listed for each resolution; the first (short) name is the value that
+must be passed to -sPaperSize, and the second (long) name is
 descriptive.  This option does not set GhostScript up to use a paper
 size other than the default; it only tells the driver to set up the
 printer for a different paper size.  The default paper size is
@@ -1037,12 +996,14 @@ w365h561        'Large Crown Octavo'    129mm x 198mm
 w391h612        'Demy Octavo'           138mm x 216mm
 w442h663        'Royal Octavo'          156mm x 234mm
 
-   Paperback sizes in common usage
+   * Paperback sizes in common usage
+
 w314h504        'Small paperback'               111mm x 178mm
 w314h513        'Penguin small paperback'       111mm x 181mm
 w365h561        'Penguin large paperback'       129mm x 198mm
 
-   Miscellaneous sizes
+   * Miscellaneous sizes
+
 w283h420        'Hagaki Card'                   100 x 148 mm
 w420h567        'Oufuku Card'                   148 x 200 mm
 w340h666        'Long 3'                        Japanese long envelope #3
@@ -1050,6 +1011,121 @@ w255h581        'Long 4'                        Japanese long envelope #4
 w680h941        'Kaku'                          Japanese Kaku envelope #4
 COM10           'Commercial 10'                 US Commercial 10 env
 w315h414        'A2 Invitation'                 US A2 invitation
+
+
+Color Balancing Values: (min,max,default)
+----- --------- ------- -----------------
+
+All of the values below are interpreted as being relative to norms for
+a particular printer established through testing, not "absolute"
+values of any kind.
+
+-dCyan=xxx       xxx: 0.0 ... 4.0  (1.0)
+-dMagenta=xxx    xxx: 0.0 ... 4.0  (1.0)
+-dYellow=xxx     xxx: 0.0 ... 4.0  (1.0)
+
+ These three options allow specification of the cyan, magenta, and
+ yellow levels independently, for rebalancing the levels.  Normally,
+ these should be adjusted to yield neutral gray, but they can be used
+ for other effects.
+
+-dBrightness=xxx xxx: 0.0 ... 2.0  (1.0)
+
+ Adjust the brightness of the image.  0.0 gives a fully black image;
+ 2.0 gives a fully white image.  Values greater than 1 will result in
+ black not being solid and highlights turning white; values less than
+ 1 will result in white not being perfectly clear and shadows turning
+ black.
+
+-dContrast=xxx   xxx: 0.0 ... 4.0  (1.0)
+
+ Adjust the contrast of the image.  0.0 gives a solid gray for the
+ entire image, the exact gray depending upon the brightness chosen.
+
+-dGamma=xxx      xxx: 0.1 ... 4.0  (1.0)
+
+ Adjust the gamma of the image, over and above the printer-specific
+ correction.  Gamma less than 1.0 will result in a darker image; gamma
+ greater than 1.0 will result in a lighter image.  Unlike brightness,
+ gamma adjustment does not change the endpoints; it merely changes the
+ shape of the input->output curve.
+
+-dDensity=xxx    xxx: 0.1 ... 2.0  (1.0)
+
+ Adjust the amount of ink deposited on the paper.  If you've chosen
+ the correct paper type and you're getting ink bleeding through the
+ paper or puddling, try reducing the density to the lowest value you
+ can while still achieving solid black.  If you're not getting solid
+ black, even with the contrast and brightness at 1.0, try increasing
+ the density.
+
+ All of the printers supported here actually need less than 100% ink
+ density in most cases, so the actual density is something other than
+ the nominal density setting.  The effective density setting cannot go
+ above 100%, so if a value specified will result in an excessively
+ high density level, it will be silently limited to 1.0.
+
+-dSaturation=xxx xxx: 0.0 ... 9.0  (1.0)
+
+ Adjust the brilliance of colors.  0.0 results in pure grayscale;
+ using this with -dColor=1 is one way of getting grayscale (see below
+ under -dColor for a full discussion).  Saturation of less than 1.0
+ results in more muted colors; saturation of greater than 1.0 results
+ in more vibrant colors.  Very high saturation often results in very
+ strange effects, including posterization and banding that might not
+ be expected.  For normal purposes, the saturation should generally be
+ less than 1.5.
+
+
+Dithering Algorithms:
+--------- -----------
+
+The option names are case sensitive.  Two names are listed for each
+resolution; the first (short) name is the value that must be passed to
+-sDither, and the second (long) name is descriptive.
+
+-sDither=algorithm
+
+Adaptive        'Adaptive Hybrid'
+Ordered         'Ordered'
+Fast            'Fast'
+VeryFast        'Very Fast'
+Floyd           'Hybrid Floyd-Steinberg'
+
+We recommend using Adaptive Hybrid (which is the default) with text or
+other fine black detail, or if this is mixed with continuous tone
+images, and Ordered for pure continuous-tone images and photographs
+(no text).  Ordered is somewhat faster than Adaptive Hybrid, and
+normally yields almost identical results.  However, Ordered dithering
+may show small breaks in very fine lines, which may lead to
+undesirable moire patterns and other artifacts; Adaptive Hybrid is
+more resistant to this effect.
+
+Error diffusion algorithms (Hybrid Floyd-Steinberg is such an
+algorithm) perform very well at high densities, and are capable of
+rendering very fine detail well, but they tend to exhibit artifacts in
+the form of "waves" or "worms" of dots which results in noticeable
+texturing in pale areas.  Furthermore, pale areas immediately adjacent
+to white take a while to "build up" sufficient error to print at all.
+This is sometimes called "tearing".
+
+The Fast algorithm gives the fastest results at the expense of color
+accuracy.  It is a simplified ordered dither.  On simple four color
+printers (or other printers used in four color mode), the quality is
+similar to Ordered, although dark gray rendition is not as good due to
+a simpler transfer between black and colored ink.  With six-color
+printers, color rendition is somewhat worse, but it should be quite
+usable in cases where optimum quality is not critical.  In black and
+white, it is an efficient way to render grayscale, but it may not give
+best results when used with variable dot size printers.  On rare three
+color printers (CMY only) the results should be identical to ordered
+dither.
+
+Very Fast is even faster than Fast, with even more loss of quality.
+It uses a power of 2 matrix that can be looked up more quickly and
+performs certain other optimizations.  On laser printers, and possibly
+on certain kinds of text and line art, Very Fast dithering may
+actually yield the best quality.
 
 
 Output Type
@@ -1089,11 +1165,14 @@ Select the image type most representative of what's being printed.
 1  Primarily solid colors or smooth gradients (color or gray scale)
 2  Continuous-tone photographs (color or gray scale)
 
-Option 2 provides greatly improved color quality.  Option 0 will
-dither faster and yield sharper text, but at some possible cost to
-color accuracy and/or smoothness.  Option 1 may yield smoother images
-and/or more accurate color.  Option 2 will yield the best natural
-images, but is quite slow.
+Option 0 is the fastest.  It generates strong, but not particularly
+accurate, colors.  There may be some fairly sharp color transitions in
+this mode.
+
+Option 1 generates more accurate colors, but is slower.
+
+Option 2 generates the most accurate colors, but is considerably
+slower.
 
 Note that any of the modes may be used with either color or black &
 white output.  If black and white output is requested, but a color

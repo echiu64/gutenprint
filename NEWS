@@ -1,4 +1,4 @@
-This is gimp-print version 4.1.99b1, the first beta release leading
+This is gimp-print version 4.1.99b2, the second beta release leading
 up to the 4.2 stable release.  This release is not 4.2.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
@@ -11,6 +11,15 @@ These release notes primarily describe changes visible to the end
 user.  Detailed descriptions of changes may be found in the ChangeLog.
 
 The Gimp Print plugin requires the Gimp 1.2.
+
+Gimp-Print 4.1.99b2 contains the following changes over 4.1.99b1:
+
+1) The Postscript driver now prints correctly (broken in 4.1.99b1).
+
+2) Most Epson printers now have available additional draft resolutions
+   of 360x180 or 360x240 DPI.  These offer better print quality than
+   180 and 360x120 DPI.
+
 
 Gimp-Print 4.1.99b1 contains the following changes over 4.1.99a3:
 

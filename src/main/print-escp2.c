@@ -2182,6 +2182,7 @@ typedef struct
   int vertical_oversample;
   int unidirectional;
   int vertical_undersample;
+  int vertical_denominator;
   int resid;
 } res_t;
 
@@ -2197,132 +2198,158 @@ typedef struct
 static const res_t escp2_reslist[] =
 {
   { "360x120dpi", N_("360 x 120 DPI"),
-   360,  120,  1,0,1,1,0,3,0 },
+    360,  120,  1,0,1,1,0,3,1,0 },
   { "360x120uni", N_("360 x 120 DPI Unidirectional"),
-    360,  120,  1,0,1,1,1,3,0 },
+    360,  120,  1,0,1,1,1,3,1,0 },
+
+  { "360x240dpi", N_("360 x 240 DPI"),
+    360,  240,  1,0,1,1,0,3,2,0 },
+  { "360x240uni", N_("360 x 240 DPI Unidirectional"),
+    360,  240,  1,0,1,1,1,3,2,0 },
+
   { "180dpi", N_("180 DPI"),
-    180,  180,  0,0,1,1,0,1,2 },
+    180,  180,  0,0,1,1,0,1,1,2 },
   { "180uni", N_("180 DPI Unidirectional"),
-    180,  180,  0,0,1,1,1,1,2 },
+    180,  180,  0,0,1,1,1,1,1,2 },
+
+  { "360x180dpi", N_("360 x 180 DPI"),
+    360,  180,  0,0,1,1,0,1,1,2 },
+  { "360x180uni", N_("360 x 180 DPI Unidirectional"),
+    360,  180,  0,0,1,1,1,1,1,2 },
+
   { "360sw", N_("360 DPI Softweave"),
-    360,  360,  1,0,1,1,0,1,5 },
+    360,  360,  1,0,1,1,0,1,1,5 },
   { "360swuni", N_("360 DPI Softweave Unidirectional"),
-    360,  360,  1,0,1,1,1,1,5 },
+    360,  360,  1,0,1,1,1,1,1,5 },
   { "360mw", N_("360 DPI Microweave"),
-    360,  360,  0,1,1,1,0,1,4 },
+    360,  360,  0,1,1,1,0,1,1,4 },
   { "360mwuni", N_("360 DPI Microweave Unidirectional"),
-    360,  360,  0,1,1,1,1,1,4 },
+    360,  360,  0,1,1,1,1,1,1,4 },
   { "360dpi", N_("360 DPI"),
-    360,  360,  0,0,1,1,0,1,4 },
+    360,  360,  0,0,1,1,0,1,1,4 },
   { "360uni", N_("360 DPI Unidirectional"),
-    360,  360,  0,0,1,1,1,1,4 },
+    360,  360,  0,0,1,1,1,1,1,4 },
   { "360fol", N_("360 DPI Full Overlap"),
-    360,  360,  0,2,1,1,0,1,4 },
+    360,  360,  0,2,1,1,0,1,1,4 },
   { "360foluni", N_("360 DPI Full Overlap Unidirectional"),
-    360,  360,  0,2,1,1,1,1,4 },
+    360,  360,  0,2,1,1,1,1,1,4 },
   { "360fol2", N_("360 DPI FOL2"),
-    360,  360,  0,4,1,1,0,1,4 },
+    360,  360,  0,4,1,1,0,1,1,4 },
   { "360fol2uni", N_("360 DPI FOL2 Unidirectional"),
-    360,  360,  0,4,1,1,1,1,4 },
+    360,  360,  0,4,1,1,1,1,1,4 },
   { "360mw2", N_("360 DPI MW2"),
-    360,  360,  0,5,1,1,0,1,4 },
+    360,  360,  0,5,1,1,0,1,1,4 },
   { "360mw2uni", N_("360 DPI MW2 Unidirectional"),
-    360,  360,  0,5,1,1,1,1,4 },
+    360,  360,  0,5,1,1,1,1,1,4 },
+
   { "720x360sw", N_("720 x 360 DPI Softweave"),
-    720,  360,  1,0,1,1,0,2,7 },
+    720,  360,  1,0,1,1,0,2,1,7 },
   { "720x360swuni", N_("720 x 360 DPI Softweave Unidirectional"),
-    720,  360,  1,0,1,1,1,2,7 },
+    720,  360,  1,0,1,1,1,2,1,7 },
   { "720x360dpi", N_("720 x 360 DPI Default"),
-    720,  360,  0,48,1,1,0,2,7},
+    720,  360,  0,48,1,1,0,2,1,7},
   { "720x360uni", N_("720 x 360 DPI Default Unidirectional"),
-    720,  360,  0,48,1,1,1,2,7},
+    720,  360,  0,48,1,1,1,2,1,7},
   { "720x360mw", N_("720 x 360 DPI Microweave"),
-    720,  360,  0,49,1,1,0,2,7},
+    720,  360,  0,49,1,1,0,2,1,7},
   { "720x360mwuni", N_("720 x 360 DPI Microweave Unidirectional"),
-    720,  360,  0,49,1,1,1,2,7},
+    720,  360,  0,49,1,1,1,2,1,7},
   { "720x360fol", N_("720 x 360 DPI FOL"),
-    720,  360,  0,2,1,1,0,2,7 },
+    720,  360,  0,2,1,1,0,2,1,7 },
   { "720x360foluni", N_("720 x 360 DPI FOL Unidirectional"),
-    720,  360,  0,2,1,1,1,2,7 },
+    720,  360,  0,2,1,1,1,2,1,7 },
   { "720x360fol2", N_("720 x 360 DPI FOL2"),
-    720,  360,  0,4,1,1,0,2,7 },
+    720,  360,  0,4,1,1,0,2,1,7 },
   { "720x360fol2uni", N_("720 x 360 DPI FOL2 Unidirectional"),
-    720,  360,  0,4,1,1,1,2,7 },
+    720,  360,  0,4,1,1,1,2,1,7 },
   { "720x360mw2", N_("720 x 360 DPI MW2"),
-    720,  360,  0,5,1,1,0,2,7 },
+    720,  360,  0,5,1,1,0,2,1,7 },
   { "720x360mw2uni", N_("720 x 360 DPI MW2 Unidirectional"),
-    720,  360,  0,5,1,1,1,2,7 },
+    720,  360,  0,5,1,1,1,2,1,7 },
+
   { "720dpi", N_("720 DPI Default"),
-    720,  720,  1,48,1,1,0,1,8},
+    720,  720,  1,48,1,1,0,1,1,8},
   { "720uni", N_("720 DPI Default Unidirectional"),
-    720,  720,  1,48,1,1,1,1,8},
+    720,  720,  1,48,1,1,1,1,1,8},
   { "720mw", N_("720 DPI Microweave"),
-    720,  720,  0,1,1,1,0,1,8 },
+    720,  720,  0,1,1,1,0,1,1,8 },
   { "720mwuni", N_("720 DPI Microweave Unidirectional"),
-    720,  720,  0,1,1,1,1,1,8 },
+    720,  720,  0,1,1,1,1,1,1,8 },
   { "720fol", N_("720 DPI Full Overlap"),
-    720,  720,  0,2,1,1,0,1,8 },
+    720,  720,  0,2,1,1,0,1,1,8 },
   { "720foluni", N_("720 DPI Full Overlap Unidirectional"),
-    720,  720,  0,2,1,1,1,1,8 },
+    720,  720,  0,2,1,1,1,1,1,8 },
   { "720fourp", N_("720 DPI Four Pass"),
-    720,  720,  0,3,1,1,0,1,8 },
+    720,  720,  0,3,1,1,0,1,1,8 },
   { "720fourpuni", N_("720 DPI Four Pass Unidirectional"),
-    720,  720,  0,3,1,1,1,1,8 },
+    720,  720,  0,3,1,1,1,1,1,8 },
   { "720sw", N_("720 DPI Softweave"),
-    720,  720,  1,0,1,1,0,1,9 },
+    720,  720,  1,0,1,1,0,1,1,9 },
   { "720swuni", N_("720 DPI Softweave Unidirectional"),
-    720,  720,  1,0,1,1,1,1,9 },
+    720,  720,  1,0,1,1,1,1,1,9 },
   { "720hq", N_("720 DPI High Quality"),
-    720,  720,  1,0,2,1,0,1,9 },
+    720,  720,  1,0,2,1,0,1,1,9 },
   { "720hquni", N_("720 DPI High Quality Unidirectional"),
-    720,  720,  1,0,2,1,1,1,9 },
+    720,  720,  1,0,2,1,1,1,1,9 },
   { "720hq2", N_("720 DPI Highest Quality"),
-    720,  720,  1,0,4,1,1,1,9 },
+    720,  720,  1,0,4,1,1,1,1,9 },
+
   { "1440x720dpi", N_("1440 x 720 DPI Default"),
-    1440, 720, 1,48,1,1,0,1,10},
+    1440, 720, 1,48,1,1,0,1,1,10},
   { "1440x720uni", N_("1440 x 720 DPI Default Unidirectional"),
-    1440, 720, 1,48,1,1,1,1,10},
+    1440, 720, 1,48,1,1,1,1,1,10},
   { "1440x720mw", N_("1440 x 720 DPI Microweave"),
-    1440, 720,  0,1,1,1,0,1,10},
+    1440, 720,  0,1,1,1,0,1,1,10},
   { "1440x720mwuni", N_("1440 x 720 DPI Microweave Unidirectional"),
-    1440, 720,  0,1,1,1,1,1,10},
+    1440, 720,  0,1,1,1,1,1,1,10},
   { "1440x720fol", N_("1440 x 720 DPI FOL"),
-    1440, 720,  0,2,1,1,0,1,10},
+    1440, 720,  0,2,1,1,0,1,1,10},
   { "1440x720foluni", N_("1440 x 720 DPI FOL Unidirectional"),
-    1440, 720,  0,2,1,1,1,1,10},
+    1440, 720,  0,2,1,1,1,1,1,10},
   { "1440x720fourp", N_("1440 x 720 DPI Four Pass"),
-    1440, 720,  0,3,1,1,0,1,10},
+    1440, 720,  0,3,1,1,0,1,1,10},
   { "1440x720fourpuni", N_("1440 x 720 DPI Four Pass Unidirectional"),
-    1440, 720,  0,3,1,1,1,1,10},
+    1440, 720,  0,3,1,1,1,1,1,10},
   { "1440x720sw", N_("1440 x 720 DPI Softweave"),
-    1440, 720,  1,0,1,1,0,1,11},
+    1440, 720,  1,0,1,1,0,1,1,11},
   { "1440x720swuni", N_("1440 x 720 DPI Softweave Unidirectional"),
-    1440, 720,  1,0,1,1,1,1,11},
+    1440, 720,  1,0,1,1,1,1,1,11},
   { "1440x720hq2", N_("1440 x 720 DPI Highest Quality"),
-    1440, 720,  1,0,2,1,1,1,11},
-  { "1440x1440sw", N_("1440 x 1440 DPI Softweave"),
-    1440, 1440, 1,0,1,1,1,1,13},
-  { "1440x1440hq2", N_("1440 x 1440 DPI Highest Quality"),
-    1440, 1440, 1,0,2,1,1,1,13},
+    1440, 720,  1,0,2,1,1,1,1,11},
+
   { "2880x720sw", N_("2880 x 720 DPI Softweave"),
-    2880, 720,  1,0,1,1,0,1,15},
+    2880, 720,  1,0,1,1,0,1,1,15},
   { "2880x720swuni", N_("2880 x 720 DPI Softweave Unidirectional"),
-    2880, 720,  1,0,1,1,1,1,15},
+    2880, 720,  1,0,1,1,1,1,1,15},
+
+  /*
+   * Nothing thus far supports 1440 DPI vertical resolution
+   */
+  { "1440x1440sw", N_("1440 x 1440 DPI Softweave"),
+    1440, 1440, 1,0,1,1,1,1,1,13},
+  { "1440x1440hq2", N_("1440 x 1440 DPI Highest Quality"),
+    1440, 1440, 1,0,2,1,1,1,1,13},
+
   { "2880x1440sw", N_("2880 x 1440 DPI Softweave"),
-    2880, 1440, 1,0,1,1,1,1,15},
+    2880, 1440, 1,0,1,1,1,1,1,15},
 #ifdef HAVE_MAINTAINER_MODE
+  /*
+   * These resolutions have no practical use; they're neither as good as
+   * nor any faster than 720x720 DPI.  They exist to permit testing
+   * 2880x720 (4:1 aspect) on 1440x720 printers.
+   */
   { "1440x360sw", N_("1440 x 360 DPI Softweave"),
-    1440, 360,  1,0,1,1,0,1,9 },
+    1440, 360,  1,0,1,1,0,1,1,9 },
   { "1440x360swuni", N_("1440 x 360 DPI Softweave Unidirectional"),
-    1440, 360,  1,0,1,1,1,1,9 },
+    1440, 360,  1,0,1,1,1,1,1,9 },
   { "1440x360hq", N_("1440 x 360 DPI High Quality"),
-    1440, 360,  1,0,2,1,0,1,9 },
+    1440, 360,  1,0,2,1,0,1,1,9 },
   { "1440x360hquni", N_("1440 x 360 DPI High Quality Uni"),
-    1440, 360,  1,0,2,1,1,1,9 },
+    1440, 360,  1,0,2,1,1,1,1,9 },
   { "1440x360hq2", N_("1440 x 360 DPI Highest Quality"),
-    1440, 360,  1,0,4,1,1,1,9 },
+    1440, 360,  1,0,4,1,1,1,1,9 },
 #endif
-  { "", "", 0, 0, 0, 0, 0, 0, -1 }
+  { "", "", 0, 0, 0, 0, 0, 0, 1, -1 }
 };
 
 static const double plain_paper_lum_adjustment[49] =
@@ -3634,6 +3661,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   int		y;		/* Looping vars */
   int		xdpi, ydpi;	/* Resolution */
   int		undersample;
+  int		undersample_denominator;
   int		resid;
   int		physical_ydpi;
   int		physical_xdpi;
@@ -3787,6 +3815,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   ydpi = res->vres;
   resid = res->resid;
   undersample = res->vertical_undersample;
+  undersample_denominator = res->vertical_denominator;
   privdata.undersample = res->vertical_undersample;
   vertical_passes = res->vertical_passes;
   vertical_oversample = res->vertical_oversample;
@@ -3922,7 +3951,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   out_width  = xdpi * out_width / 72;
   out_height = ydpi * out_height / 72;
 
-  left = physical_ydpi * undersample * left / 72;
+  left = physical_ydpi * undersample * left / 72 / undersample_denominator;
 
  /*
   * Adjust for zero-margin printing...
@@ -3934,7 +3963,8 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       * In zero-margin mode, the origin is about 3/20" to the left of the
       * paper's left edge.
       */
-      left += 92 * physical_ydpi * undersample / max_vres;
+      left += 92 * physical_ydpi * undersample / max_vres /
+	undersample_denominator;
     }
 
  /*
