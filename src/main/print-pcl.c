@@ -44,11 +44,21 @@
 /*
  * Local functions...
  */
-static void	pcl_mode0(const stp_vars_t, unsigned char *, unsigned char *,
-			  int, int);
-static void	pcl_mode2(const stp_vars_t, unsigned char *, unsigned char *,
-			  int, int);
+static void	pcl_mode0(const stp_vars_t, unsigned char *, int, int);
+static void	pcl_mode2(const stp_vars_t, unsigned char *, int, int);
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
+
+typedef struct
+{
+  int do_blank;
+  int blank_lines;
+  unsigned char *comp_buf;
+  void (*writefunc)(const stp_vars_t, unsigned char *, int, int);	/* PCL output function */
+  int do_cret;
+  int do_cretb;
+  int do_6color;
+  int height;
+} pcl_privdata_t;
 
 /*
  * Generic define for a name/value set
@@ -62,6 +72,17 @@ typedef struct
   int		p0;
   int		p1;
 } pcl_t;
+
+static const stpi_dotsize_t single_dotsize[] =
+{
+  { 0x1, 1.0 }
+};
+
+static const stpi_shade_t photo_dither_shades[] =
+{
+  { 0.3333, 1, 1, single_dotsize },
+  { 1.0000, 0, 1, single_dotsize },
+};
 
 static const stpi_dither_range_simple_t photo_dither_ranges[] =
 {
@@ -1570,6 +1591,21 @@ static const char * pcl_val_to_text(int code,			/* I: Code */
 }
 
 static const double dot_sizes[] = { 0.5, 0.832, 1.0 };
+static const double dot_sizes_cret[] = { 1.0, 1.0, 1.0 };
+
+static const stpi_dotsize_t variable_dotsizes[] =
+{
+  { 0x1, 0.5 },
+  { 0x2, 0.67 },
+  { 0x3, 1.0 }
+};
+
+static const stpi_shade_t variable_dither_shades[] =
+{
+  { 0.38, 1, 3, variable_dotsizes },
+  { 1.0, 0, 3, variable_dotsizes }
+};
+
 static const stpi_dither_range_simple_t variable_dither_ranges[] =
 {
   { 0.152, 0x1, 1 },
@@ -1952,10 +1988,124 @@ pcl_limit(const stp_vars_t v,  		/* I */
  * 'pcl_print()' - Print an image to an HP printer.
  */
 
+static void
+pcl_printfunc(const stp_vars_t v)
+{
+  pcl_privdata_t *pd = (pcl_privdata_t *) stpi_get_driver_data(v);
+  int do_blank = pd->do_blank;
+  unsigned char *black = stpi_dither_get_channel(v, ECOLOR_K, 0);
+  unsigned char *cyan = stpi_dither_get_channel(v, ECOLOR_K, 0);
+  unsigned char *lcyan = stpi_dither_get_channel(v, ECOLOR_K, 0);
+  unsigned char *magenta = stpi_dither_get_channel(v, ECOLOR_K, 0);
+  unsigned char *lmagenta = stpi_dither_get_channel(v, ECOLOR_K, 0);
+  unsigned char *yellow = stpi_dither_get_channel(v, ECOLOR_K, 0);
+  int len_c = stpi_dither_get_last_position(v, ECOLOR_C, 0);
+  int len_lc = stpi_dither_get_last_position(v, ECOLOR_C, 1);
+  int len_m = stpi_dither_get_last_position(v, ECOLOR_M, 0);
+  int len_lm = stpi_dither_get_last_position(v, ECOLOR_M, 1);
+  int len_y = stpi_dither_get_last_position(v, ECOLOR_Y, 0);
+  int len_k = stpi_dither_get_last_position(v, ECOLOR_K, 0);
+  int is_blank = (do_blank && (len_c == -1) && (len_lc == -1) &&
+		  (len_m == -1) && (len_lm == -1) && (len_y == -1) &&
+		  (len_k == -1));
+  int height = pd->height;
+  int output_type = stp_get_output_type(v);
+
+  if (is_blank && (pd->blank_lines != 0))	/* repeated blank line */
+    {
+      pd->blank_lines++;
+    }
+  else				/* Not blank, or is first one */
+    {
+      if (! is_blank)
+	{
+	  if (pd->blank_lines > 1)		/* Output accumulated lines */
+	    {
+	      pd->blank_lines--;		/* correct for one already output */
+	      stpi_deprintf(STPI_DBG_PCL, "Blank Lines = %d\n", pd->blank_lines);
+	      stpi_zprintf(v, "\033*b%dY", pd->blank_lines);
+	      pd->blank_lines=0;
+	    }
+	  else;
+	}
+      else
+	{
+	  pd->blank_lines++;
+	}
+
+      if (pd->do_cret)
+	{
+	  /*
+	   * 4-level (CRet) dithers...
+	   */
+	  if (output_type == OUTPUT_GRAY)
+	    {
+	      (*(pd->writefunc))(v, black + height / 2, height / 2, 0);
+	      (*(pd->writefunc))(v, black, height / 2, 1);
+	    }
+	  else
+	    {
+	      if(pd->do_cretb)
+		{
+		  /*	    (*(pd->writefunc))(v, black + height / 2, 0, 0); */
+		  (*(pd->writefunc))(v, black, height/2, 0);
+		}
+	      else
+		{
+		  (*(pd->writefunc))(v, black + height / 2, height / 2, 0);
+		  (*(pd->writefunc))(v, black, height / 2, 0);
+		}
+	      (*(pd->writefunc))(v, cyan + height / 2, height / 2, 0);
+	      (*(pd->writefunc))(v, cyan, height / 2, 0);
+	      (*(pd->writefunc))(v, magenta + height / 2, height / 2, 0);
+	      (*(pd->writefunc))(v, magenta, height / 2, 0);
+	      (*(pd->writefunc))(v, yellow + height / 2, height / 2, 0);
+	      if (pd->do_6color)
+		{
+		  (*(pd->writefunc))(v, yellow, height / 2, 0);
+		  (*(pd->writefunc))(v, lcyan + height / 2, height / 2, 0);
+		  (*(pd->writefunc))(v, lcyan, height / 2, 0);
+		  (*(pd->writefunc))(v, lmagenta + height / 2, height / 2, 0);
+		  (*(pd->writefunc))(v, lmagenta, height / 2, 1);		/* Last plane set on light magenta */
+		}
+	      else
+		(*(pd->writefunc))(v, yellow, height / 2, 1);		/* Last plane set on yellow */
+	    }
+	}
+      else
+	{
+	  /*
+	   * Standard 2-level dithers...
+	   */
+
+	  if (output_type == OUTPUT_GRAY)
+	    {
+	      (*(pd->writefunc))(v, black, height, 1);
+	    }
+	  else
+	    {
+	      if (black != NULL)
+		(*(pd->writefunc))(v, black, height, 0);
+	      (*(pd->writefunc))(v, cyan, height, 0);
+	      (*(pd->writefunc))(v, magenta, height, 0);
+	      if (pd->do_6color)
+		{
+		  (*(pd->writefunc))(v, yellow, height, 0);
+		  (*(pd->writefunc))(v, lcyan, height, 0);
+		  (*(pd->writefunc))(v, lmagenta, height, 1);		/* Last plane set on light magenta */
+		}
+	      else
+		(*(pd->writefunc))(v, yellow, height, 1);		/* Last plane set on yellow */
+	    }
+	}
+    }
+}  
+
 static int
-pcl_print(const stp_vars_t v, stp_image_t *image)
+pcl_do_print(const stp_vars_t v, stp_image_t *image)
 {
   int i;
+  pcl_privdata_t privdata;
   int		status = 1;
   int		model = stpi_get_model_id(v);
   const char	*resolution = stp_get_string_parameter(v, "Resolution");
@@ -1984,48 +2134,31 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 		out_width,	/* Width of image on page */
 		out_height,	/* Height of image on page */
 		out_channels,	/* Output bytes per pixel */
-		height,		/* Height of raster data */
 		errdiv,		/* Error dividend */
 		errmod,		/* Error modulus */
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
   int		zero_mask;
-  void		(*writefunc)(const stp_vars_t, unsigned char *, unsigned char *,
-		int, int);	/* PCL output function */
   int           image_height,
                 image_width,
                 image_bpp;
   const pcl_cap_t *caps;		/* Printer capabilities */
-  int		do_cret = 0,	/* 300 DPI CRet printing */
-  		do_cretb = 0,	/* 600 DPI CRet printing HP 840C*/
-		do_6color = 0,	/* CMY + cmK printing */
-		planes = 3;	/* # of output planes */
+  int		planes = 3;	/* # of output planes */
   int		pcl_media_size, /* PCL media size code */
 		pcl_media_type, /* PCL media type code */
 		pcl_media_source;	/* PCL media source code */
-  const double *dot_sizes_use,dot_sizes_cret[]={1.0,1.0,1.0};         /* The dot size used */
-  stp_vars_t	nv = stp_vars_create_copy(v);
+  const double *dot_sizes_use;
   const stp_papersize_t *pp;
-  int		len_c,		/* Active length of Cyan buffers */
-		len_lc,		/* Ditto Light Cyan */
-		len_m,		/* Ditto Magenta */
-		len_lm,		/* Ditto Light Magenta */
-		len_y, 		/* Ditto Cyan */
-		len_k;		/* Ditto Black */
-  int		blank_lines,	/* Accumulated blank lines */
-		is_blank,	/* Current line is blank */
-		do_blank;	/* Blank line removal required */
-  unsigned char *comp_buf;	/* Scratch buffer for pcl_mode2 */
   int		the_top_margin,	/* Corrected top margin */
 		the_left_margin;	/* Corrected left margin */
   stp_curve_t   lum_adjustment;
   stp_curve_t   hue_adjustment;
+  double density;
 
-  stpi_prune_inactive_options(nv);
-  if (!stp_verify(nv))
+  if (!stp_verify(v))
     {
-      stpi_eprintf(nv, "Print options not verified; cannot print.\n");
+      stpi_eprintf(v, "Print options not verified; cannot print.\n");
       return 0;
     }
 
@@ -2071,34 +2204,34 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
     {
       stpi_eprintf(v, "600x600 resolution only available in MONO\n");
       output_type = OUTPUT_GRAY;
-      stp_set_output_type(nv, OUTPUT_GRAY);
+      stp_set_output_type(v, OUTPUT_GRAY);
     }
 
   if (caps->color_type == PCL_COLOR_NONE)
     {
       output_type = OUTPUT_GRAY;
-      stp_set_output_type(nv, OUTPUT_GRAY);
+      stp_set_output_type(v, OUTPUT_GRAY);
     }
-  stpi_set_output_color_model(nv, COLOR_MODEL_CMY);
+  stpi_set_output_color_model(v, COLOR_MODEL_CMY);
 
-  do_cret = (xdpi >= 300 &&
+  privdata.do_cret = (xdpi >= 300 &&
 	     ((caps->color_type & PCL_COLOR_CMYK4) == PCL_COLOR_CMYK4));
-  do_cretb = (xdpi >= 600 && ydpi >= 600 &&
+  privdata.do_cretb = (xdpi >= 600 && ydpi >= 600 &&
 	      ((caps->color_type & PCL_COLOR_CMYK4b) == PCL_COLOR_CMYK4b) &&
 	      output_type != OUTPUT_GRAY);
-  if (do_cretb){
-    do_cret = 1;
+  if (privdata.do_cretb){
+    privdata.do_cret = 1;
     dot_sizes_use=dot_sizes_cret;
   }else{
     dot_sizes_use=dot_sizes;
   }
 
-  stpi_deprintf(STPI_DBG_PCL, "do_cret = %d\n", do_cret);
-  stpi_deprintf(STPI_DBG_PCL, "do_cretb = %d\n", do_cretb);
+  stpi_deprintf(STPI_DBG_PCL, "privdata.do_cret = %d\n", privdata.do_cret);
+  stpi_deprintf(STPI_DBG_PCL, "privdata.do_cretb = %d\n", privdata.do_cretb);
 
   if (ink_type)
-    do_6color = (strcmp(ink_type, "Photo") == 0);
-  stpi_deprintf(STPI_DBG_PCL, "do_6color = %d\n", do_6color);
+    privdata.do_6color = (strcmp(ink_type, "Photo") == 0);
+  stpi_deprintf(STPI_DBG_PCL, "privdata.do_6color = %d\n", privdata.do_6color);
 
  /*
   * Compute the output size...
@@ -2107,7 +2240,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   out_width = stp_get_width(v);
   out_height = stp_get_height(v);
 
-  internal_imageable_area(nv, 0, &page_left, &page_right,
+  internal_imageable_area(v, 0, &page_left, &page_right,
 			  &page_bottom, &page_top);
   left -= page_left;
   top -= page_top;
@@ -2127,12 +2260,12 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   * Send PCL initialization commands...
   */
 
-  if (do_cretb)
+  if (privdata.do_cretb)
     {
       stpi_puts("\033*rbC", v);	/* End raster graphics */
     }
   stpi_puts("\033E", v); 				/* PCL reset */
-  if (do_cretb)
+  if (privdata.do_cretb)
     {
       stpi_zprintf(v, "\033%%-12345X@PJL ENTER LANGUAGE=PCL3GUI\n");
     }
@@ -2214,7 +2347,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
  *
  */
 
-    if (do_cretb && pcl_media_type == PCL_PAPERTYPE_GLOSSY) {
+    if (privdata.do_cretb && pcl_media_type == PCL_PAPERTYPE_GLOSSY) {
       stpi_deprintf(STPI_DBG_PCL, "Media type GLOSSY, set to PREMIUM for PhotoRET II.\n");
       pcl_media_type = PCL_PAPERTYPE_PREMIUM;
     }
@@ -2255,7 +2388,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
     }
   }
 
-  if ((xdpi != ydpi) || (do_cret) || (do_6color))
+  if ((xdpi != ydpi) || (privdata.do_cret) || (privdata.do_6color))
 						/* Set resolution using CRD */
   {
 
@@ -2268,7 +2401,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
       if ((caps->color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
         planes = 3;
       else
-        if (do_6color)
+        if (privdata.do_6color)
           planes = 6;
         else
           planes = 4;
@@ -2280,18 +2413,18 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
     stpi_putc(planes, v);				/* # output planes */
 
     if (planes != 3) {		/* Black resolution */
-      stpi_send_command(v, "", "HHH", xdpi, ydpi, (do_cretb || !do_cret) ? 2 : 4);
+      stpi_send_command(v, "", "HHH", xdpi, ydpi, (privdata.do_cretb || !privdata.do_cret) ? 2 : 4);
     }
 
     if (planes != 1) {		/* Cyan, magenta, yellow resolutions */
-      stpi_send_command(v, "", "HHH", xdpi, ydpi, do_cret ? 4 : 2);
-      stpi_send_command(v, "", "HHH", xdpi, ydpi, do_cret ? 4 : 2);
-      stpi_send_command(v, "", "HHH", xdpi, ydpi, do_cret ? 4 : 2);
+      stpi_send_command(v, "", "HHH", xdpi, ydpi, privdata.do_cret ? 4 : 2);
+      stpi_send_command(v, "", "HHH", xdpi, ydpi, privdata.do_cret ? 4 : 2);
+      stpi_send_command(v, "", "HHH", xdpi, ydpi, privdata.do_cret ? 4 : 2);
     }
     if (planes == 6)		/* LC, LM resolutions */
     {
-      stpi_send_command(v, "", "HHH", xdpi, ydpi, do_cret ? 4 : 2);
-      stpi_send_command(v, "", "HHH", xdpi, ydpi, do_cret ? 4 : 2);
+      stpi_send_command(v, "", "HHH", xdpi, ydpi, privdata.do_cret ? 4 : 2);
+      stpi_send_command(v, "", "HHH", xdpi, ydpi, privdata.do_cret ? 4 : 2);
     }
   }
   else
@@ -2338,7 +2471,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   stpi_deprintf(STPI_DBG_PCL, "left %d margin %d top %d margin %d width %d height %d\n",
 	  left, the_left_margin, top, the_top_margin, out_width, out_height);
 
-  if (!do_cretb) {
+  if (!privdata.do_cretb) {
     stpi_zprintf(v, "\033&a%dH", 10 * left);		/* Set left raster position */
     stpi_zprintf(v, "\033&a%dV", 10 * (top + the_top_margin));
 				/* Set top raster position */
@@ -2346,7 +2479,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   stpi_zprintf(v, "\033*r%dS", out_width);		/* Set raster width */
   stpi_zprintf(v, "\033*r%dT", out_height);	/* Set raster height */
 
-  if (do_cretb)
+  if (privdata.do_cretb)
     {
       /* Move to top left of printed area */
       stpi_zprintf(v, "\033*p%dY", (top + the_top_margin)*4); /* Measured in dots. */
@@ -2358,13 +2491,13 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   * Allocate memory for the raster data...
   */
 
-  height = (out_width + 7) / 8;
-  if (do_cret)
-    height *= 2;
+  privdata.height = (out_width + 7) / 8;
+  if (privdata.do_cret)
+    privdata.height *= 2;
 
   if (output_type == OUTPUT_GRAY)
   {
-    black   = stpi_malloc(height);
+    black   = stpi_malloc(privdata.height);
     cyan    = NULL;
     magenta = NULL;
     yellow  = NULL;
@@ -2373,18 +2506,18 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   }
   else
   {
-    cyan    = stpi_malloc(height);
-    magenta = stpi_malloc(height);
-    yellow  = stpi_malloc(height);
+    cyan    = stpi_malloc(privdata.height);
+    magenta = stpi_malloc(privdata.height);
+    yellow  = stpi_malloc(privdata.height);
 
     if ((caps->color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
       black = NULL;
     else
-      black = stpi_malloc(height);
-    if (do_6color)
+      black = stpi_malloc(privdata.height);
+    if (privdata.do_6color)
     {
-      lcyan    = stpi_malloc(height);
-      lmagenta = stpi_malloc(height);
+      lcyan    = stpi_malloc(privdata.height);
+      lmagenta = stpi_malloc(privdata.height);
     }
     else
     {
@@ -2398,70 +2531,80 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 #ifndef PCL_DEBUG_DISABLE_COMPRESSION
   if ((caps->stp_printer_type & PCL_PRINTER_TIFF) == PCL_PRINTER_TIFF)
   {
-    comp_buf = stpi_malloc((height + 128 + 7) * 129 / 128);
-    writefunc = pcl_mode2;
+    privdata.comp_buf = stpi_malloc((privdata.height + 128 + 7) * 129 / 128);
+    privdata.writefunc = pcl_mode2;
   }
   else
 #endif
   {
-    comp_buf = NULL;
-    writefunc = pcl_mode0;
+    privdata.comp_buf = NULL;
+    privdata.writefunc = pcl_mode0;
   }
 
 /* Set up dithering for special printers. */
 
 #if 1		/* Leave alone for now */
-  if (!stp_check_float_parameter(nv, "GCRLower", STP_PARAMETER_ACTIVE))
-    stp_set_default_float_parameter(nv, "GCRLower", .3);
-  if (!stp_check_float_parameter(nv, "GCRUpper", STP_PARAMETER_ACTIVE))
-    stp_set_default_float_parameter(nv, "GCRUpper", .999);
+  if (!stp_check_float_parameter(v, "GCRLower", STP_PARAMETER_ACTIVE))
+    stp_set_default_float_parameter(v, "GCRLower", .3);
+  if (!stp_check_float_parameter(v, "GCRUpper", STP_PARAMETER_ACTIVE))
+    stp_set_default_float_parameter(v, "GCRUpper", .999);
 #endif
-  stpi_dither_init(nv, image, out_width, xdpi, ydpi);
+  stpi_dither_init(v, image, out_width, xdpi, ydpi);
 
 /* Ensure that density does not exceed 1.0 */
 
-  stpi_deprintf(STPI_DBG_PCL, "Density: %f\n", stp_get_float_parameter(nv, "Density"));
-  if (stp_get_float_parameter(nv, "Density") > 1.0)
-    stp_set_float_parameter(nv, "Density", 1.0);
+  stpi_deprintf(STPI_DBG_PCL, "Density: %f\n", stp_get_float_parameter(v, "Density"));
+  if (stp_get_float_parameter(v, "Density") > 1.0)
+    stp_set_float_parameter(v, "Density", 1.0);
+  density = stp_get_float_parameter(v, "Density");
 
-  if (do_cret)				/* 4-level printing for 800/1120 */
+  if (privdata.do_cret)			/* 4-level printing for 800/1120 */
     {
-      stpi_dither_set_ranges_simple(nv, ECOLOR_Y, 3, dot_sizes_use, stp_get_float_parameter(nv, "Density"));
-      if (!do_cretb)
-        stpi_dither_set_ranges_simple(nv, ECOLOR_K, 3, dot_sizes_use, stp_get_float_parameter(nv, "Density"));
+      stpi_dither_set_ranges_and_shades_simple
+	(v, ECOLOR_Y, 3, dot_sizes_use, density);
+      if (!privdata.do_cretb)
+        stpi_dither_set_ranges_and_shades_simple
+	  (v, ECOLOR_K, 3, dot_sizes_use, density);
 
-/* Note: no printer I know of does both CRet (4-level) and 6 colour, but
-   what the heck. variable_dither_ranges copied from print-escp2.c */
+      /* Note: no printer I know of does both CRet (4-level) and 6 colour, but
+	 what the heck. variable_dither_ranges copied from print-escp2.c */
 
-      if (do_6color)			/* Photo for 69x */
+      if (privdata.do_6color)			/* Photo for 69x */
 	{
-	  stpi_dither_set_ranges(nv, ECOLOR_C, 6, variable_dither_ranges,
-			    stp_get_float_parameter(nv, "Density"));
-	  stpi_dither_set_ranges(nv, ECOLOR_M, 6, variable_dither_ranges,
-			    stp_get_float_parameter(nv, "Density"));
+	  stpi_dither_set_ranges
+	    (v, ECOLOR_C, 6, variable_dither_ranges, density);
+	  stpi_dither_set_ranges
+	    (v, ECOLOR_M, 6, variable_dither_ranges, density);
+	  stpi_dither_set_shades
+	    (v, ECOLOR_C, 6, variable_dither_shades, density);
+	  stpi_dither_set_shades
+	    (v, ECOLOR_M, 6, variable_dither_shades, density);
 	}
       else
 	{
-	  stpi_dither_set_ranges_simple(nv, ECOLOR_C, 3, dot_sizes_use, stp_get_float_parameter(nv, "Density"));
-	  stpi_dither_set_ranges_simple(nv, ECOLOR_M, 3, dot_sizes_use, stp_get_float_parameter(nv, "Density"));
+	  stpi_dither_set_ranges_and_shades_simple
+	    (v, ECOLOR_C, 3, dot_sizes_use, density);
+	  stpi_dither_set_ranges_and_shades_simple
+	    (v, ECOLOR_M, 3, dot_sizes_use, density);
 	}
     }
-  else if (do_6color)
+  else if (privdata.do_6color)
     {
-/* Set light inks for 6 colour printers. Numbers copied from print-escp2.c */
-      stpi_dither_set_ranges(nv, ECOLOR_C, 2, photo_dither_ranges,
-			    stp_get_float_parameter(nv, "Density"));
-      stpi_dither_set_ranges(nv, ECOLOR_M, 2, photo_dither_ranges,
-			    stp_get_float_parameter(nv, "Density"));
+      /* Set light inks for 6 colour printers.
+	 Numbers copied from print-escp2.c */
+      stpi_dither_set_ranges(v, ECOLOR_C, 2, photo_dither_ranges, density);
+      stpi_dither_set_ranges(v, ECOLOR_M, 2, photo_dither_ranges, density);
+      stpi_dither_set_shades(v, ECOLOR_C, 2, photo_dither_shades, density);
+      stpi_dither_set_shades(v, ECOLOR_M, 2, photo_dither_shades, density);
     }
 
-  if (!stp_check_curve_parameter(nv, "HueMap", STP_PARAMETER_ACTIVE))
+  if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE))
     {
       hue_adjustment = stp_curve_create_read_string(standard_hue_adjustment);
-      stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
+      stp_set_curve_parameter(v, "HueMap", hue_adjustment);
       stp_curve_free(hue_adjustment);
     }
-  if (!stp_check_curve_parameter(nv, "LumMap", STP_PARAMETER_ACTIVE))
+  if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE))
     {
       lum_adjustment = stp_curve_create_read_string(standard_lum_adjustment);
       stp_curve_free(lum_adjustment);
@@ -2469,10 +2612,10 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   if (output_type == OUTPUT_COLOR && black)
     {
       output_type = OUTPUT_RAW_CMYK;
-      stp_set_output_type(nv, OUTPUT_RAW_CMYK);
+      stp_set_output_type(v, OUTPUT_RAW_CMYK);
     }
 
-  out_channels = stpi_color_init(nv, image, 65536);
+  out_channels = stpi_color_init(v, image, 65536);
 
   out = stpi_malloc(image_width * out_channels * 2);
 
@@ -2481,21 +2624,23 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   errval  = 0;
   errlast = -1;
   errline  = 0;
-  blank_lines = 0;
-  is_blank = 0;
+  privdata.blank_lines = 0;
+  privdata.do_blank = 0;
 #ifndef PCL_DEBUG_DISABLE_BLANKLINE_REMOVAL
-  do_blank = ((caps->stp_printer_type & PCL_PRINTER_BLANKLINE) ==
-		PCL_PRINTER_BLANKLINE);
+  privdata.do_blank = ((caps->stp_printer_type & PCL_PRINTER_BLANKLINE) ==
+		       PCL_PRINTER_BLANKLINE);
 #else
-  do_blank = 0;
+  privdata.do_blank = 0;
 #endif
+  privdata.blank_lines = 0;
 
-  stpi_dither_add_channel(nv, black, ECOLOR_K, 0);
-  stpi_dither_add_channel(nv, cyan, ECOLOR_C, 0);
-  stpi_dither_add_channel(nv, lcyan, ECOLOR_C, 1);
-  stpi_dither_add_channel(nv, magenta, ECOLOR_M, 0);
-  stpi_dither_add_channel(nv, lmagenta, ECOLOR_M, 1);
-  stpi_dither_add_channel(nv, yellow, ECOLOR_Y, 0);
+  stpi_dither_add_channel(v, black, ECOLOR_K, 0);
+  stpi_dither_add_channel(v, cyan, ECOLOR_C, 0);
+  stpi_dither_add_channel(v, lcyan, ECOLOR_C, 1);
+  stpi_dither_add_channel(v, magenta, ECOLOR_M, 0);
+  stpi_dither_add_channel(v, lmagenta, ECOLOR_M, 1);
+  stpi_dither_add_channel(v, yellow, ECOLOR_Y, 0);
+  stpi_set_driver_data(v, &privdata);
 
   for (y = 0; y < out_height; y ++)
   {
@@ -2506,124 +2651,16 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
     {
       errlast = errline;
       duplicate_line = 0;
-      if (stpi_color_get_row(nv, image, errline, out, &zero_mask))
+      if (stpi_color_get_row(v, image, errline, out, &zero_mask))
 	{
 	  status = 2;
 	  break;
 	}
     }
-    stpi_dither(nv, y, out, duplicate_line, zero_mask);
-    len_c = stpi_dither_get_last_position(nv, ECOLOR_C, 0);
-    len_lc = stpi_dither_get_last_position(nv, ECOLOR_C, 1);
-    len_m = stpi_dither_get_last_position(nv, ECOLOR_M, 0);
-    len_lm = stpi_dither_get_last_position(nv, ECOLOR_M, 1);
-    len_y = stpi_dither_get_last_position(nv, ECOLOR_Y, 0);
-    len_k = stpi_dither_get_last_position(nv, ECOLOR_K, 0);
-
-/*
- * Blank line removal. If multiple lines are blank then they can be replaced
- * by "Relative Vertical Pixel Movement" command. However, since there are
- * apparently some faulty implementations, we always output the first line,
- * then suppress the rest. This ensures that the printers's buffers are really
- * empty. As suggested by Mike Sweet.
- */
-
-    is_blank = (do_blank && (len_c == -1) && (len_lc == -1) && (len_m == -1)
-	&& (len_lm == -1) && (len_y == -1) && (len_k == -1));
+    stpi_dither(v, y, out, duplicate_line, zero_mask);
+    pcl_printfunc(v);
     stpi_deprintf(STPI_DBG_PCL,"pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
-           y, errline, errval, errmod, out_height);
-
-    if (is_blank && (blank_lines != 0))	/* repeated blank line */
-    {
-      blank_lines++;
-    }
-    else				/* Not blank, or is first one */
-    {
-      if (! is_blank)
-      {
-        if (blank_lines > 1)		/* Output accumulated lines */
-        {
-	  blank_lines--;		/* correct for one already output */
-	  stpi_deprintf(STPI_DBG_PCL, "Blank Lines = %d\n", blank_lines);
-	  stpi_zprintf(v, "\033*b%dY", blank_lines);
-	  blank_lines=0;
-        }
-	else;
-      }
-      else
-      {
-	blank_lines++;
-      }
-
-      if (do_cret)
-      {
-       /*
-        * 4-level (CRet) dithers...
-        */
-        if (output_type == OUTPUT_GRAY)
-        {
-          (*writefunc)(v, comp_buf, black + height / 2, height / 2, 0);
-          (*writefunc)(v, comp_buf, black, height / 2, 1);
-        }
-        else
-        {
-	  if(do_cretb)
-	  {
-/*	    (*writefunc)(v, comp_buf, black + height / 2, 0, 0); */
-	    (*writefunc)(v, comp_buf, black, height/2, 0);
-	  }
-	  else
-	  {
-	    (*writefunc)(v, comp_buf, black + height / 2, height / 2, 0);
-	    (*writefunc)(v, comp_buf, black, height / 2, 0);
-	  }
-          (*writefunc)(v, comp_buf, cyan + height / 2, height / 2, 0);
-          (*writefunc)(v, comp_buf, cyan, height / 2, 0);
-          (*writefunc)(v, comp_buf, magenta + height / 2, height / 2, 0);
-          (*writefunc)(v, comp_buf, magenta, height / 2, 0);
-          (*writefunc)(v, comp_buf, yellow + height / 2, height / 2, 0);
-          if (do_6color)
-          {
-            (*writefunc)(v, comp_buf, yellow, height / 2, 0);
-            (*writefunc)(v, comp_buf, lcyan + height / 2, height / 2, 0);
-            (*writefunc)(v, comp_buf, lcyan, height / 2, 0);
-            (*writefunc)(v, comp_buf, lmagenta + height / 2, height / 2, 0);
-            (*writefunc)(v, comp_buf, lmagenta, height / 2, 1);		/* Last plane set on light magenta */
-          }
-          else
-            (*writefunc)(v, comp_buf, yellow, height / 2, 1);		/* Last plane set on yellow */
-        }
-      }
-      else
-      {
-       /*
-        * Standard 2-level dithers...
-        */
-
-        if (output_type == OUTPUT_GRAY)
-        {
-          (*writefunc)(v, comp_buf, black, height, 1);
-        }
-        else
-        {
-          if (black != NULL)
-            (*writefunc)(v, comp_buf, black, height, 0);
-          (*writefunc)(v, comp_buf, cyan, height, 0);
-          (*writefunc)(v, comp_buf, magenta, height, 0);
-          if (do_6color)
-          {
-            (*writefunc)(v, comp_buf, yellow, height, 0);
-            (*writefunc)(v, comp_buf, lcyan, height, 0);
-            (*writefunc)(v, comp_buf, lmagenta, height, 1);		/* Last plane set on light magenta */
-          }
-          else
-            (*writefunc)(v, comp_buf, yellow, height, 1);		/* Last plane set on yellow */
-        }
-      }
-    }
-    stpi_deprintf(STPI_DBG_PCL,"pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
-           y, errline, errval, errmod, out_height);
-
+		  y, errline, errval, errmod, out_height);
     errval += errmod;
     errline += errdiv;
     if (errval >= out_height)
@@ -2635,17 +2672,17 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 
 /* Output trailing blank lines (may not be required?) */
 
-  if (blank_lines > 1)
+  if (privdata.blank_lines > 1)
   {
-    blank_lines--;		/* correct for one already output */
-    stpi_deprintf(STPI_DBG_PCL, "Blank Lines = %d\n", blank_lines);
-    stpi_zprintf(v, "\033*b%dY", blank_lines);
-    blank_lines=0;
+    privdata.blank_lines--;		/* correct for one already output */
+    stpi_deprintf(STPI_DBG_PCL, "Blank Lines = %d\n", privdata.blank_lines);
+    stpi_zprintf(v, "\033*b%dY", privdata.blank_lines);
+    privdata.blank_lines=0;
   }
 
   stpi_image_progress_conclude(image);
 
-  stpi_dither_free(nv);
+  stpi_dither_free(v);
 
 
  /*
@@ -2668,8 +2705,8 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
     stpi_free(lmagenta);
   }
 
-  if (comp_buf != NULL)
-    stpi_free(comp_buf);
+  if (privdata.comp_buf != NULL)
+    stpi_free(privdata.comp_buf);
 
   if ((caps->stp_printer_type & PCL_PRINTER_NEW_ERG) == PCL_PRINTER_NEW_ERG)
     stpi_puts("\033*rC", v);
@@ -2677,11 +2714,21 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
     stpi_puts("\033*rB", v);
 
   stpi_puts("\033&l0H", v);		/* Eject page */
-  if (do_cretb)
+  if (privdata.do_cretb)
     {
       stpi_zprintf(v, "\033%%-12345X\n");
     }
   stpi_puts("\033E", v); 				/* PCL reset */
+  return status;
+}
+
+static int
+pcl_print(const stp_vars_t v, stp_image_t *image)
+{
+  int status;
+  stp_vars_t nv = stp_vars_create_copy(v);
+  stpi_prune_inactive_options(nv);
+  status = pcl_do_print(nv, image);
   stp_vars_free(nv);
   return status;
 }
@@ -2707,7 +2754,6 @@ static const stpi_printfuncs_t stpi_pcl_printfuncs =
 
 static void
 pcl_mode0(const stp_vars_t v,		/* I - Print file or command */
-          unsigned char *comp_buf,	/* I - scratch buffer (not used) */
           unsigned char *line,		/* I - Output bitmap data */
           int           height,		/* I - Height of bitmap data */
           int           last_plane)	/* I - True if this is the last plane */
@@ -2723,11 +2769,12 @@ pcl_mode0(const stp_vars_t v,		/* I - Print file or command */
 
 static void
 pcl_mode2(const stp_vars_t v,		/* I - Print file or command */
-          unsigned char *comp_buf,	/* I - Scratch Buffer */
           unsigned char *line,		/* I - Output bitmap data */
           int           height,		/* I - Height of bitmap data */
           int           last_plane)	/* I - True if this is the last plane */
 {
+  pcl_privdata_t *privdata = (pcl_privdata_t *) stpi_get_driver_data(v);
+  unsigned char *comp_buf = privdata->comp_buf;
   unsigned char	*comp_ptr;		/* Current slot in buffer */
 
   stpi_pack_tiff(line, height, comp_buf, &comp_ptr, NULL, NULL);

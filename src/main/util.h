@@ -51,7 +51,7 @@ extern void stpi_zprintf(const stp_vars_t v, const char *format, ...)
        __attribute__((format(__printf__, 2, 3)));
 
 extern void stpi_zfwrite(const char *buf, size_t bytes, size_t nitems,
-			const stp_vars_t v);
+			 const stp_vars_t v);
 
 extern void stpi_putc(int ch, const stp_vars_t v);
 extern void stpi_put16_le(unsigned short sh, const stp_vars_t v);
@@ -60,7 +60,7 @@ extern void stpi_put32_le(unsigned int sh, const stp_vars_t v);
 extern void stpi_put32_be(unsigned int sh, const stp_vars_t v);
 extern void stpi_puts(const char *s, const stp_vars_t v);
 extern void stpi_send_command(const stp_vars_t v, const char *command,
-			     const char *format, ...);
+			      const char *format, ...);
 
 extern void stpi_erputc(int ch);
 
@@ -107,7 +107,7 @@ extern void stpi_xio_free(void *ixio);
 extern unsigned long stpi_debug_level;
 
 extern void stpi_dprintf(unsigned long level, const stp_vars_t v,
-			const char *format, ...)
+			 const char *format, ...)
        __attribute__((format(__printf__, 3, 4)));
 extern void stpi_deprintf(unsigned long level, const char *format, ...)
        __attribute__((format(__printf__, 2, 3)));
@@ -147,9 +147,9 @@ extern int stpi_list_destroy(stpi_list_t *list);
 extern stpi_list_item_t *stpi_list_get_start(stpi_list_t *list);
 extern stpi_list_item_t *stpi_list_get_end(stpi_list_t *list);
 extern stpi_list_item_t *stpi_list_get_item_by_index(stpi_list_t *list,
-						   int index);
+						     int index);
 extern stpi_list_item_t *stpi_list_get_item_by_name(stpi_list_t *list,
-						  const char *name);
+						    const char *name);
 extern stpi_list_item_t *stpi_list_get_item_by_long_name(stpi_list_t *list,
 						       const char *long_name);
 extern int stpi_list_get_length(stpi_list_t *list);

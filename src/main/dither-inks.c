@@ -287,21 +287,31 @@ stpi_dither_set_ranges(stp_vars_t v, int color, int nlevels,
 }
 
 void
-stpi_dither_set_ranges_simple(stp_vars_t v, int color, int nlevels,
-			     const double *levels, double density)
+stpi_dither_set_ranges_and_shades_simple(stp_vars_t v, int color, int nlevels,
+					 const double *levels, double density)
 {
   stpi_dither_range_simple_t *r =
     stpi_malloc(nlevels * sizeof(stpi_dither_range_simple_t));
+  stpi_shade_t s;
+  stpi_dotsize_t *d = stpi_malloc(nlevels * sizeof(stpi_dotsize_t));
   int i;
+  s.dot_sizes = d;
+  s.subchannel = 0;
+  s.numsizes = nlevels;
+
   for (i = 0; i < nlevels; i++)
     {
       r[i].bit_pattern = i + 1;
       r[i].dot_size = i + 1;
       r[i].value = levels[i];
       r[i].subchannel = 0;
+      d[i].bit_pattern = i + 1;
+      d[i].value = levels[i];
     }
   stpi_dither_set_ranges(v, color, nlevels, r, density);
+  stpi_dither_set_shades(v, color, nlevels, &s, density);
   stpi_free(r);
+  stpi_free(d);
 }
 
 void

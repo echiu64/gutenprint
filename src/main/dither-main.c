@@ -103,7 +103,7 @@ stpi_dither_list_parameters(const stp_vars_t v)
 
 void
 stpi_dither_describe_parameter(const stp_vars_t v, const char *name,
-			      stp_parameter_t *description)
+			       stp_parameter_t *description)
 {
   int i;
   description->p_type = STP_PARAMETER_TYPE_INVALID;
@@ -132,9 +132,22 @@ stpi_dither_describe_parameter(const stp_vars_t v, const char *name,
     }
 }
 
+unsigned char *
+stpi_dither_get_channel(stp_vars_t v, unsigned channel, unsigned subchannel)
+{
+  stpi_dither_data_t *d = &(((stpi_dither_t *) stpi_get_dither_data(v))->dt);
+  stpi_dither_channel_data_t *chan;
+  if (channel >= d->channel_count)
+    return NULL;
+  chan = d->c + channel;
+  if (subchannel >= chan->subchannel_count)
+    return NULL;
+  return chan->c[subchannel];
+}
+
 void
 stpi_dither_add_channel(stp_vars_t v, unsigned char *data,
-		       unsigned channel, unsigned subchannel)
+			unsigned channel, unsigned subchannel)
 {
   stpi_dither_data_t *d = &(((stpi_dither_t *) stpi_get_dither_data(v))->dt);
   stpi_dither_channel_data_t *chan;
@@ -160,11 +173,11 @@ stpi_dither_add_channel(stp_vars_t v, unsigned char *data,
   chan->c[subchannel] = data;
 }
 
-#define RETURN_DITHERFUNC(func, v)				\
-do								\
-{								\
+#define RETURN_DITHERFUNC(func, v)					\
+do									\
+{									\
   stpi_dprintf(STPI_DBG_COLORFUNC, v, "ditherfunc %s\n", #func);	\
-  return (func);						\
+  return (func);							\
 } while (0)
 
 static stpi_ditherfunc_t *
@@ -202,7 +215,7 @@ stpi_set_dither_function(stp_vars_t v, int image_bpp)
 
 void
 stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
-		int xdpi, int ydpi)
+		 int xdpi, int ydpi)
 {
   int i;
   int in_width = stpi_image_width(image);
@@ -211,6 +224,10 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
   stpi_dither_range_simple_t r;
   const stpi_dotsize_t ds = {1, 1.0};
   stpi_shade_t shade;
+  static const char *channels[] =
+    {
+      "BlackDensity", "CyanDensity", "MagentaDensity", "YellowDensity"
+    };
 
   stpi_set_dither_data(v, d);
 
@@ -263,33 +280,10 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
       /* stpi_dither_set_shades(v, i, 1, &shade, 1.0); */
       PHYSICAL_CHANNEL(d, i).errs = stpi_zalloc(d->error_rows * sizeof(int *));
       PHYSICAL_CHANNEL(d, i).density_adjustment = 1;
-      switch (i)
-	{
-	case 0:
-	  if (stp_check_float_parameter(v, "BlackDensity",
-					STP_PARAMETER_ACTIVE))
-	    PHYSICAL_CHANNEL(d, i).density_adjustment =
-	      stp_get_float_parameter(v, "BlackDensity");
-	  break;
-	case 1:
-	  if (stp_check_float_parameter(v, "CyanDensity",
-					STP_PARAMETER_ACTIVE))
-	    PHYSICAL_CHANNEL(d, i).density_adjustment =
-	      stp_get_float_parameter(v, "CyanDensity");
-	  break;
-	case 2:
-	  if (stp_check_float_parameter(v, "MagentaDensity",
-					STP_PARAMETER_ACTIVE))
-	    PHYSICAL_CHANNEL(d, i).density_adjustment =
-	      stp_get_float_parameter(v, "MagentaDensity");
-	  break;
-	case 3:
-	  if (stp_check_float_parameter(v, "YellowDensity",
-					STP_PARAMETER_ACTIVE))
-	    PHYSICAL_CHANNEL(d, i).density_adjustment =
-	      stp_get_float_parameter(v, "YellowDensity");
-	  break;
-	}
+      if (i < sizeof(channels) / sizeof(const char *) &&
+	  (stp_check_float_parameter(v, channels[i], STP_PARAMETER_ACTIVE)))
+	PHYSICAL_CHANNEL(d, i).density_adjustment =
+	  stp_get_float_parameter(v, channels[i]);
       PHYSICAL_CHANNEL(d, i).density_adjustment *= d->fdensity;
       PHYSICAL_CHANNEL(d, i).sqrt_density_adjustment =
 	sqrt(PHYSICAL_CHANNEL(d, i).density_adjustment);
@@ -483,7 +477,7 @@ stpi_dither_get_last_position(stp_vars_t v, int color, int subchannel)
 
 void
 stpi_dither(stp_vars_t v, int row, const unsigned short *input,
-	   int duplicate_line, int zero_mask)
+	    int duplicate_line, int zero_mask)
 {
   int i, j;
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);

@@ -88,28 +88,28 @@ typedef struct dither_matrix
 } dither_matrix_t;
 
 extern void stpi_dither_matrix_iterated_init(dither_matrix_t *mat, size_t size,
-					    size_t exp, const unsigned *array);
+					     size_t exp, const unsigned *array);
 extern void stpi_dither_matrix_shear(dither_matrix_t *mat,
-				    int x_shear, int y_shear);
+				     int x_shear, int y_shear);
 extern void stpi_dither_matrix_init(dither_matrix_t *mat, int x_size,
-				   int y_size, const unsigned int *array,
-				   int transpose, int prescaled);
+				    int y_size, const unsigned int *array,
+				    int transpose, int prescaled);
 extern void stpi_dither_matrix_init_short(dither_matrix_t *mat, int x_size,
-					 int y_size,
-					 const unsigned short *array,
-					 int transpose, int prescaled);
+					  int y_size,
+					  const unsigned short *array,
+					  int transpose, int prescaled);
 extern int stpi_dither_matrix_validate_curve(const stp_curve_t curve);
 extern void stpi_dither_matrix_init_from_curve(dither_matrix_t *mat,
-					      const stp_curve_t curve,
-					      int transpose);
+					       const stp_curve_t curve,
+					       int transpose);
 extern void stpi_dither_matrix_destroy(dither_matrix_t *mat);
 extern void stpi_dither_matrix_clone(const dither_matrix_t *src,
-				    dither_matrix_t *dest,
-				    int x_offset, int y_offset);
+				     dither_matrix_t *dest,
+				     int x_offset, int y_offset);
 extern void stpi_dither_matrix_copy(const dither_matrix_t *src,
-				   dither_matrix_t *dest);
+				    dither_matrix_t *dest);
 extern void stpi_dither_matrix_scale_exponentially(dither_matrix_t *mat,
-						  double exponent);
+						   double exponent);
 extern void stpi_dither_matrix_set_row(dither_matrix_t *mat, int y);
 extern stp_curve_t stpi_find_standard_dither_matrix(int x_aspect, int y_aspect);
 
@@ -158,45 +158,50 @@ extern stp_parameter_list_t stpi_dither_list_parameters(const stp_vars_t v);
 
 extern void
 stpi_dither_describe_parameter(const stp_vars_t v, const char *name,
-			      stp_parameter_t *description);
+			       stp_parameter_t *description);
 
 extern void stpi_dither_init(stp_vars_t v, stp_image_t *image,
-			    int out_width, int xdpi, int ydpi);
+			     int out_width, int xdpi, int ydpi);
 extern void stpi_dither_set_iterated_matrix(stp_vars_t v, size_t edge,
-					   size_t iterations,
-					   const unsigned *data,
-					   int prescaled,
-					   int x_shear, int y_shear);
+					    size_t iterations,
+					    const unsigned *data,
+					    int prescaled,
+					    int x_shear, int y_shear);
 extern void stpi_dither_set_matrix(stp_vars_t v, const stpi_dither_matrix_t *mat,
-				  int transpose, int x_shear, int y_shear);
+				   int transpose, int x_shear, int y_shear);
 extern void stpi_dither_set_matrix_from_curve(stp_vars_t v,
-					     const stp_curve_t curve,
-					     int transpose);
+					      const stp_curve_t curve,
+					      int transpose);
 extern void stpi_dither_set_transition(stp_vars_t v, double);
 extern void stpi_dither_set_randomizer(stp_vars_t v, int color, double);
 extern void stpi_dither_set_ranges(stp_vars_t v, int color, int nlevels,
-				  const stpi_dither_range_simple_t *ranges,
-				  double density);
+				   const stpi_dither_range_simple_t *ranges,
+				   double density);
 extern void stpi_dither_set_ranges_full(stp_vars_t v, int color, int nlevels,
-				       const stpi_dither_range_full_t *ranges,
-				       double density);
-extern void stpi_dither_set_ranges_simple(stp_vars_t v, int color, int nlevels,
-					 const double *levels,
-					 double density);
+					const stpi_dither_range_full_t *ranges,
+					double density);
+extern void stpi_dither_set_ranges_and_shades_simple(stp_vars_t v,
+						     int color, int nlevels,
+						     const double *levels,
+						     double density);
 extern void stpi_dither_set_ink_spread(stp_vars_t v, int spread);
 extern void stpi_dither_set_adaptive_limit(stp_vars_t v, double limit);
 extern int stpi_dither_get_first_position(stp_vars_t v, int color, int subchan);
 extern int stpi_dither_get_last_position(stp_vars_t v, int color, int subchan);
 extern void stpi_dither_set_shades(stp_vars_t v, int color, int nshades,
-				  const stpi_shade_t *shades, double density);
+				   const stpi_shade_t *shades, double density);
 
 extern void stpi_dither_free(stp_vars_t v);
 
 extern void stpi_dither_add_channel(stp_vars_t v, unsigned char *data,
-				   unsigned channel, unsigned subchannel);
+				    unsigned channel, unsigned subchannel);
+
+extern unsigned char *stpi_dither_get_channel(stp_vars_t v,
+					      unsigned channel,
+					      unsigned subchannel);
 
 extern void stpi_dither(stp_vars_t v, int row, const unsigned short *input,
-		       int duplicate_line, int zero_mask);
+			int duplicate_line, int zero_mask);
 
 
 #ifdef __cplusplus
