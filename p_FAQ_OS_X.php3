@@ -345,14 +345,17 @@ require('standard_html_header.php3');
  (typically) hidden BSD unix layer of Jaguar. You shouldn't need to
  remove Gimp-Print in order to restore your previous printing capability.
  Just delete any Gimp-Print printers that are set up in Print Center. That
- said, you can remove the Gimp-Print capability from your system by simply
- removing the directory where the printer "driver" files are stored. Here
- is the path: <tt>/usr/share/cups/model/C/</tt> some ways to remove this
- folder/directory are to either boot into mac os 9 and drag the "C"
- folder to the trash or you can issue this command in a terminal:
- <tt>sudo rm -R /usr/share/cups/model/C/</tt> you will need to enter an
- admin password (yours if you're the only user on your system) to use
- sudo.
+ said, if you are really fired up about saving the 8.2MB of disk space you can
+use a tip provided by Wil Shipley to get rid of those pesky files.
+</p><p>
+In a Terminal window type the following command to remove Gimp-Print 4.2.3
+</p>
+<pre>lsbom -f -l -s /Library/Receipts/Gimp-Print-4.2.3.pkg/Contents/Archive.bom | (cd /; sudo xargs rm)</pre
+<p>
+ To remove a different version of Gimp-Print simply change the version in the
+ command to the appropriate value.  
+ You will need to enter an admin password (yours if you're the only user on
+ your system) to use sudo.
  </p>
  <a name="uninstaller">
  <h3>
@@ -361,19 +364,9 @@ require('standard_html_header.php3');
  Gimp-Print files from my system?
  </h3></a>
  <p>
- The Gimp-Print files need to be installed into the BSD layer because
- that's where the <a href= "http://www.cups.org/" >CUPS</a> print spooler
- is located. On any Jaguar system capable of using Gimp-Print the total
- size of the installed files is negligible. Leaving the Gimp-Print files
- in place will not cause any problems. Trying to remove the files and
- mistakenly removing some unrelated files (which is very easy to do)
- <em>will</em> cause problems. There is currently no "uninstaller"
- shipped with the OS X package because the people working hard to provide
- you with Gimp-Print in an easy to use manner, for free, thought that it
- was more important to spend their limited time on getting it working -
- <em>for many people using Jaguar, Gimp-Print is the only printing
- solution available!</em> A future version may include an "uninstall"
- utility.
+ An unistaller is under development.  Again, if you delete all of the Gimp-Print
+ Printers from your Print Center "Printer List" the software will be completely
+ disabled. If you simply <em>must</em> remove the files then see the answer to the preceding question.
  </p>
  <a name="pslevel1">
  <h3>
