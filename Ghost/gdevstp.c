@@ -539,6 +539,11 @@ void Image_get_col(Image img,unsigned char *data,int column)
  /* dummy function, Landscape printing unsupported atm */
 }
 
+void Image_rotate_ccw(Image img)
+{
+ /* dummy function, Landscape printing unsupported atm */
+}
+
 void Image_init(Image image)
 {
  /* dummy function */
