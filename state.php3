@@ -81,12 +81,14 @@ $supported_printers = array(
 	),
 'Canon (<strong><em>New!</em></strong>)' => array(
        'BJC Range' => array(
+	       'BJC 30'   => 'Operational',
 	       'BJC 1000' => 'Untested',
 	       'BJC 2000' => 'Untested',
 	       'BJC 3000' => 'Untested',
 	       'BJC 4300' => 'Operational',
-	       'BJC 6000' => 'Operational but incomplete',
+	       'BJC 6000' => 'Operational',
 	       'BJC 6100' => 'Untested',
+               'BJC 6200' => 'Operational',
 	       'BJC 7000' => 'Untested',
 	       'BJC 7100' => 'Untested',
 	       'BJC 8200' => 'Operational'
