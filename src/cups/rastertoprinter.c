@@ -339,8 +339,6 @@ main(int  argc,				/* I - Number of command-line arguments */
 				  stp_options[i].defval / 1000.0);
 	stp_set_page_width(v, cups.header.PageSize[0]);
 	stp_set_page_height(v, cups.header.PageSize[1]);
-	stp_set_left(v, 0);
-	stp_set_top(v, 0);
 	stp_set_outfunc(v, cups_writefunc);
 	stp_set_errfunc(v, cups_writefunc);
 	stp_set_outdata(v, stdout);
@@ -435,6 +433,8 @@ main(int  argc,				/* I - Number of command-line arguments */
 	    cups.width, cups.left, cups.right, cups.height, cups.top, cups.bottom);
     stp_set_width(v, cups.right - cups.left);
     stp_set_height(v, cups.bottom - cups.top);
+    stp_set_left(v, cups.left);
+    stp_set_top(v, cups.top);
     cups.right = cups.width - cups.right;
     cups.width = cups.width - cups.left - cups.right;
     cups.width = cups.header.HWResolution[0] * cups.width / 72;
