@@ -1,7 +1,7 @@
-This is Gimp-Print version 4.1.99a1, the first alpha release leading up
-to the 4.2 stable release.  Gimp-print is the print facility for the
-Gimp, and in addition a suite of drivers that may be used with common
-UNIX spooling systems using GhostScript or CUPS.  These drivers
+This is Gimp-Print version 4.1.99a2, the second alpha release leading
+up to the 4.2 stable release.  Gimp-print is the print facility for
+the Gimp, and in addition a suite of drivers that may be used with
+common UNIX spooling systems using GhostScript or CUPS.  These drivers
 provide printing quality for UNIX/Linux in many cases equal to or
 better than proprietary vendor-supplied drivers, and can be used for
 many of the most demanding printing tasks.

@@ -1,5 +1,5 @@
-This is gimp-print version 4.1.99a1, the first alpha release leading up
-to the 4.2 stable release.  This release is not 4.2.
+This is gimp-print version 4.1.99a2, the second alpha release leading
+up to the 4.2 stable release.  This release is not 4.2.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
 and CUPS drivers.  The support for printers in GhostScript and CUPS is
@@ -11,6 +11,31 @@ These release notes primarily describe changes visible to the end
 user.  Detailed descriptions of changes may be found in the ChangeLog.
 
 The Gimp Print plugin requires the Gimp 1.2.
+
+Gimp-Print 4.1.99a2 contains the following changes over 4.1.99a1:
+
+1) A segmentation violation (crash) in certain modes using Epson and
+   Lexmark printers is fixed.
+
+2) In the Gimp plugin, moving the preview image should now work
+   properly in all cases.  In recent releases, it did not move
+   properly if the scaling was set to pixels per inch (PPI) rather
+   than percent.
+
+3) The stp driver has been qualified against GhostScript 6.51 (the
+   newest GNU release).
+
+4) The stp driver (in GhostScript) can now be built against an
+   installed libgimpprint.  This is a much less invasive build
+   procedure, and results in a smaller GhostScript binary when lined
+   dynamically.
+
+5) Pure black and white (monochrome) printing now works properly on
+   grayscale printers.  Previously it was converted silently to
+   grayscale.
+
+6) Some improvements for the Canon BJC-7000.
+
 
 Gimp-Print 4.1.99a1 contains the following changes over 4.1.10:
 
