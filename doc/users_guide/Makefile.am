@@ -120,9 +120,8 @@ tmp-all-local: html
 	fi
 
 clean-local:
-	rm -f $(OUTPUTS)
+	rm -fr $(OUTPUTS)
 	rm -f *.tex *.log *.aux *.dvi *.tgz
-	rm -fr $(MANUAL)
 	rm -fr $(MANUAL).junk
 	rm -f $(MANUAL).out
 	rm -fr db2html.*
