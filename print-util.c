@@ -34,6 +34,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.5  1999/10/03 23:57:20  rlk
+ *   Various improvements
+ *
  *   Revision 1.4  1999/09/18 15:18:47  rlk
  *   A bit more random
  *
@@ -901,8 +904,20 @@ dither_cmyk6(guchar        *rgb,	/* I - RGB pixels */
 #define KDARKNESS_LIMIT16 (KDARKNESS_LIMIT * 256)
 #endif
 
-#define KDARKNESS_LOWER_16 (80 * 256)
+#define KDARKNESS_LOWER_16 (32 * 256)
 #define KDARKNESS_UPPER_16 (144 * 256)
+
+#define ERROR_DIFFUSION_DIV 8
+
+#define C_RANDOMIZER 4
+#define M_RANDOMIZER 4
+#define Y_RANDOMIZER 4
+#define K_RANDOMIZER 4
+
+static long long next_c = 32767;
+static long long next_m = 32767;
+static long long next_y = 32767;
+static long long next_k = 32767;
 
 void
 dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
@@ -1092,7 +1107,7 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 #endif
       /* Need to do the diffuse-the-black-into-cmyk thing here, too */
       ok = k;
-      nk = k + (ditherk) / 8;
+      nk = k + (ditherk) / ERROR_DIFFUSION_DIV;
       if (kdarkness < KDARKNESS_UPPER_16)
 	{
 	  if (ak < (KDARKNESS_UPPER_16 - kdarkness) * KDARKNESS_LOWER_16 / KDARKNESS_UPPER_16)
@@ -1136,7 +1151,7 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
       odk = ditherk;
       dk = k;
 #endif
-      if (k > 32767 + ((ditherbit0 / 2) - 16384))
+      if (k > (32767 + ((ditherbit0 / K_RANDOMIZER) - (32768 / K_RANDOMIZER))))
 	{
 	  *kptr |= bit;
 	  k -= 65535;
@@ -1174,7 +1189,7 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
      * Cyan
      *****************************************************************/
     oc = c;
-    c += (ditherc) / 8;
+    c += (ditherc) / ERROR_DIFFUSION_DIV;
 #ifdef PRINT_DEBUG
     odc = ditherc;
     dc = c;
@@ -1182,17 +1197,18 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 
     if ((oc <= (65536 * I_RATIO_C1 * 2 / 3)))
       {
-	if (c > (32767 + (((long long) ditherbit2 / 1) - 32768)) * I_RATIO_C1)
+	if (c > (32767 + (((long long) ditherbit2 / C_RANDOMIZER) - (32768 / C_RANDOMIZER))) * I_RATIO_C1)
 	  {
 #ifdef PRINT_DEBUG
 	    fprintf(dbg, "Case 1: oc %lld c %lld test %lld\n", oc, c,
 		    (32767 + (((long long) ditherbit2 / 1) - 32768)) * I_RATIO_C1);
 #endif
-	    *lcptr |= bit;
+	    if (! (*kptr & bit))
+	      *lcptr |= bit;
 	    c -= 65535 * I_RATIO_C1;
 	  }
       }
-    else if (c > ((32767 + (((long long) ditherbit2 / 1) - 32768)) * oc / 65536))
+    else if (c > (32767 + (((long long) ditherbit2 / C_RANDOMIZER) - (32768 / C_RANDOMIZER))))
       {
 	if (ditherbit1 >
 	    ((oc - (65536 * I_RATIO_C1 * 2 / 3)) * 65536 /
@@ -1206,7 +1222,8 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 		    ((oc - (65536 * I_RATIO_C1 * 2 / 3)) * 65536 /
 		     (65536 - (65536 * I_RATIO_C1 * 2 / 3))));
 #endif
-	    *lcptr |= bit;
+	    if (! (*kptr & bit))
+	      *lcptr |= bit;
 	    c -= 65535 * I_RATIO_C1;
 	  }
 	else
@@ -1219,7 +1236,8 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 		    ((oc - (65536 * I_RATIO_C1 * 2 / 3)) * 65536 /
 		     (65536 - (65536 * I_RATIO_C1 * 2 / 3))));
 #endif
-	    *cptr |= bit;
+	    if (! (*kptr & bit))
+	      *cptr |= bit;
 	    c -= 65535;
 	  }
       }
@@ -1240,7 +1258,7 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
      * Magenta
      *****************************************************************/
     om = m;
-    m += (ditherm) / 8;
+    m += (ditherm) / ERROR_DIFFUSION_DIV;
 #ifdef PRINT_DEBUG
     odm = ditherm;
     dm = m;
@@ -1248,17 +1266,18 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 
     if ((om <= (65536 * I_RATIO_M1 * 2 / 3)))
       {
-	if (m > (32767 + (((long long) ditherbit1 / 1) - 32768)) * I_RATIO_M1)
+	if (m > (32767 + (((long long) ditherbit1 / M_RANDOMIZER) - (32768 / M_RANDOMIZER))) * I_RATIO_M1)
 	  {
 #ifdef PRINT_DEBUG
 	    fprintf(dbg, "Case 1: om %lld m %lld test %lld\n", om, m,
 		    (32767 + (((long long) ditherbit1 / 1) - 32768)) * I_RATIO_M1);
 #endif
-	    *lmptr |= bit;
+	    if (! (*kptr & bit))
+	      *lmptr |= bit;
 	    m -= 65535 * I_RATIO_M1;
 	  }
       }
-    else if (m > ((32767 + (((long long) ditherbit1 / 1) - 32768)) * om / 65536))
+    else if (m > (32767 + (((long long) ditherbit1 / M_RANDOMIZER) - (32768 / M_RANDOMIZER))))
       {
 	if (ditherbit1 >
 	    ((om - (65536 * I_RATIO_M1 * 2 / 3)) * 65536 /
@@ -1272,7 +1291,8 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 		    ((om - (65536 * I_RATIO_M1 * 2 / 3)) * 65536 /
 		     (65536 - (65536 * I_RATIO_M1 * 2 / 3))));
 #endif
-	    *lmptr |= bit;
+	    if (! (*kptr & bit))
+	      *lmptr |= bit;
 	    m -= 65535 * I_RATIO_M1;
 	  }
 	else
@@ -1285,7 +1305,8 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 		    ((om - (65536 * I_RATIO_M1 * 2 / 3)) * 65536 /
 		     (65536 - (65536 * I_RATIO_M1 * 2 / 3))));
 #endif
-	    *mptr |= bit;
+	    if (! (*kptr & bit))
+	      *mptr |= bit;
 	    m -= 65535;
 	  }
       }
@@ -1303,7 +1324,7 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 
 
     oy = y;
-    y += (dithery) / 8;
+    y += (dithery) / ERROR_DIFFUSION_DIV;
 #ifdef PRINT_DEBUG
     ody = dithery;
     dy = y;
@@ -1313,9 +1334,10 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
     /*****************************************************************
      * Yellow
      *****************************************************************/
-    if (y > (32767 + ((ditherbit3 / 1) - 32768)))
+    if (y > (32767 + (((long long) ditherbit3 / Y_RANDOMIZER) - (32768 / Y_RANDOMIZER))))
     {
-      *yptr |= bit;
+      if (! (*kptr & bit))
+	*yptr |= bit;
       y -= 65535;
     };
 
@@ -1373,6 +1395,13 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 	 * This should be faster than regenerating the random number from
 	 * scratch
 	 */
+	ditherbit = rand();
+	ditherbit0 = ditherbit & 0xffff;
+	ditherbit1 = ((ditherbit >> 8) & 0xffff);
+	ditherbit2 = ((ditherbit >> 16) & 0x7fff) + ((ditherbit & 0x100) << 7);
+	ditherbit3 = ((ditherbit >> 24) & 0x7f) + ((ditherbit & 1) << 7) +
+	  ((ditherbit >> 8) & 0xff00);
+#if 0
 	int dithertmp0 = (ditherbit1 >> 14) ^ ((ditherbit3 &0x3fff) << 2);
 	int dithertmp1 = (ditherbit2 >> 14) ^ ((ditherbit2 &0x3fff) << 2);
 	int dithertmp2 = (ditherbit3 >> 14) ^ ((ditherbit1 &0x3fff) << 2);
@@ -1381,6 +1410,7 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 	ditherbit1 = dithertmp1;
 	ditherbit2 = dithertmp2;
 	ditherbit3 = dithertmp3;
+#endif
 	bit >>= 1;
       }
 

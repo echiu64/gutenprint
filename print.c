@@ -619,9 +619,9 @@ run(char   *name,		/* I - Name of print program. */
 
       float contrast, red, green, blue;
       contrast = vars.contrast / 100.0;
-      red = vars.red / 100.0;
-      green = vars.green / 100.0;
-      blue = vars.blue / 100.0;
+      red = 100.0 / vars.red ;
+      green = 100.0 / vars.green;
+      blue = 100.0 / vars.blue;
       if (red < 0.01)
 	red = 0.01;
       if (green < 0.01)

@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.4  1999/10/03 23:57:20  rlk
+ *   Various improvements
+ *
  *   Revision 1.3  1999/09/15 02:53:58  rlk
  *   Remove some stuff that seems to have no effect
  *
@@ -546,7 +549,10 @@ escp2_print(int       model,		/* I - Model */
 
 #if 0
   if (model == 7)
-    fwrite("\033(R\010\000\000REMOTE1PM\002\000\000\000SN\003\000\000\000\003MS\010\000\000\000\010\000\364\013x\017\033\000\000\000", 42, 1, prn);
+    {
+      fwrite("\033@", 2, 1, prn);
+      fwrite("\033(R\010\000\000REMOTE1PM\002\000\000\000SN\003\000\000\000\003MS\010\000\000\000\010\000\364\013x\017\033\000\000\000", 42, 1, prn);
+    }
 #endif
   fwrite("\033(G\001\000\001", 6, 1, prn);	/* Enter graphics mode */
   switch (ydpi)					/* Set line feed increment */
@@ -604,9 +610,7 @@ escp2_print(int       model,		/* I - Model */
 #if 1
 	    fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
 	    fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
-#if 0
-	    fwrite("\033\031", 2, 1, prn); /* ??? */
-#endif
+	    fwrite("\033\0311", 3, 1, prn); /* ??? */
 	    fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Micro dots */
 #else
 	    fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
@@ -733,12 +737,12 @@ escp2_print(int       model,		/* I - Model */
         dither_cmyk6_16(out16, x, drawable->height, out_width, cyan, magenta,
 			lcyan, lmagenta, yellow, black);
 
-        escp2_write6(prn, lcyan, length, 1, 2, ydpi, model, out_width, left);
-        escp2_write6(prn, lmagenta, length, 1, 1, ydpi, model, out_width, left);
-        escp2_write6(prn, yellow, length, 0, 4, ydpi, model, out_width, left);
+	escp2_write6(prn, black, length, 0, 0, ydpi, model, out_width, left);
         escp2_write6(prn, cyan, length, 0, 2, ydpi, model, out_width, left);
         escp2_write6(prn, magenta, length, 0, 1, ydpi, model, out_width, left);
-	escp2_write6(prn, black, length, 0, 0, ydpi, model, out_width, left);
+        escp2_write6(prn, yellow, length, 0, 4, ydpi, model, out_width, left);
+        escp2_write6(prn, lcyan, length, 1, 2, ydpi, model, out_width, left);
+        escp2_write6(prn, lmagenta, length, 1, 1, ydpi, model, out_width, left);
       }
       else
       {
@@ -1120,8 +1124,6 @@ escp2_write6(FILE          *prn,	/* I - Print file or command */
   */
 
   putc('\r', prn);
-  fprintf(prn, "\033\\%c%c", offset & 255, offset >> 8);
-
  /*
   * Set the color if necessary...
   */
@@ -1132,6 +1134,12 @@ escp2_write6(FILE          *prn,	/* I - Print file or command */
     last_density = density;
     fprintf(prn, "\033(r\002%c%c%c", 0, density, plane);
   };
+
+  if (model == 7)
+    fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
+	    (offset * 1440 / ydpi) & 255, (offset * 1440 / ydpi) >> 8);
+  else
+    fprintf(prn, "\033\\%c%c", offset & 255, offset >> 8);
 
  /*
   * Send a line of raster graphics...
@@ -1148,7 +1156,11 @@ escp2_write6(FILE          *prn,	/* I - Print file or command */
     case 720 :
         if (model == 3)
           fwrite("\033.\001\050\005\001", 6, 1, prn);
-        else
+#if 0
+        else if (model == 7)
+          fwrite("\033.\000\050\005\040", 6, 1, prn);
+#endif
+	else
           fwrite("\033.\001\005\005\001", 6, 1, prn);
         break;
   };
