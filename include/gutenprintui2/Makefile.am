@@ -39,11 +39,11 @@ stpui_public_h_sources =	\
 stpui_built_public_sources = \
 	typebuiltins.h
 
-
+if BUILD_LIBGUTENPRINTUI2
 pkginclude_HEADERS = \
 	$(stpui_public_h_sources) \
 	$(stpui_built_public_sources)
-
+endif
 
 ## Rules
 

@@ -31,9 +31,10 @@ pkgincludedir = $(includedir)/gutenprintui
 
 ## Data
 
+if BUILD_LIBGUTENPRINTUI
 pkginclude_HEADERS = \
 	gutenprintui.h
-
+endif
 
 ## Clean
 
