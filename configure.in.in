@@ -897,7 +897,8 @@ AC_OUTPUT([
 Makefile doc/Makefile doc/users_guide/Makefile
 include/Makefile include/gimp-print/Makefile include/gimp-print/gimp-print.h
 intl/Makefile lib/Makefile man/Makefile man/escputil.1
-man/gimpprint.3 man/gimpprint-config.1 po/Makefile.in samples/Makefile
+man/gimpprint.3 man/gimpprint-config.1
+man/ijsgimpprint.1 po/Makefile.in samples/Makefile
 src/Makefile src/escputil/Makefile src/gimp/Makefile
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 cups-gimpprint.list man/cups-calibrate.8 src/testpattern/Makefile
