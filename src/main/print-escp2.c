@@ -1298,6 +1298,9 @@ static const double c6pl_densities[] =
 static const double c3pl_densities[] =
 { 2.0, 1.3, 1.3, .65, .65, .646, .73, .7, .7, 1, 1, .91, .91, .455 };
 
+static const double sc980_densities[] =
+{ 2.0, 1.3, 1.3, .65, .65, .646, .511, .49, .49, 1, 1, .637, .637, .455 };
+
 static const double c4pl_densities[] =
 { 2.0, 1.3, 1.3, .65, .65, .431, .710, .216, .784, .216, .784, .392, .392, .196 };
 
@@ -1927,7 +1930,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_VACUUM_NO),
     96, 2, 192, 1, 360, 360, INCH(17 / 2), INCH(1200), 9, 9, 0, 9, 192, 1, 0,
     360, 720, 720, 14400,
-    default_head_offset, 2880, 720, c3pl_dotsizes, c3pl_densities,
+    default_head_offset, 2880, 720, c3pl_dotsizes, sc980_densities,
     &variable_3pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
   },
