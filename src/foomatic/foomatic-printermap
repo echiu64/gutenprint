@@ -11,6 +11,7 @@
 #gptofoo bjc-2000 printer/Canon-BJC-2010
 #gptofoo bjc-3000 printer/129472
 #gptofoo bjc-4300 printer/60544
+#gptofoo bjc-4300 printer/309929
 #gptofoo bjc-4400 printer/62240
 #gptofoo bjc-6000 printer/71392
 #gptofoo bjc-6100 printer/317225
@@ -111,6 +112,7 @@
 #gptofoo pcl-690 printer/70560
 #gptofoo pcl-690 printer/HP-DeskJet_695C
 #gptofoo pcl-690 printer/68672
+#gptofoo pcl-690 printer/413737
 #gptofoo pcl-750 printer/HP-DesignJet_750
 #gptofoo pcl-750 printer/122496
 #gptofoo pcl-810 printer/156105
