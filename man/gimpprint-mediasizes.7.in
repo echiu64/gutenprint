@@ -170,10 +170,15 @@ lb l l n n.
 Media Size	Description	Comment	x\fR(pt)\fP	y\fR(pt)\fP
 _
 ARCHA	ArchA	9x12in	648	864
+ARCHA_transverse	ArchA transverse	12x9in	864	648
 ARCHB	ArchB	12x18in	864	1296
+ARCHB_transverse	ArchB transverse	18x12in	1296	864
 ARCHC	ArchC	18x24in	1296	1728
+ARCHC_transverse	ArchC transverse	24x18in	1728	1296
 ARCHD	ArchD	24x36in	1728	2592
+ARCHD_transverse	ArchD transverse	36x24in	2592	1728
 ARCHE	ArchE	36x48in	2592	3456
+ARCHE_transverse	ArchE transverse	48x36in	3456	2592
 .TE
 .SS Foolscap
 .TS

@@ -1299,11 +1299,16 @@ C10             C10            28mm x   40mm                    x=79, y=113
 
    * US CAD standard paper sizes
 
-ARCHA           ArchA          9x12in                           x=648, y=864
-ARCHB           ArchB          12x18in                          x=864, y=1296
-ARCHC           ArchC          18x24in                          x=1296, y=1728
-ARCHD           ArchD          24x36in                          x=1728, y=2592
-ARCHE           ArchE          36x48in                          x=2592, y=3456
+ARCHA           ArchA              9x12in                       x=648, y=864
+ARCHA_trans     ArchA transverse  12x9 in                       x=864, y=648
+ARCHB           ArchB             12x18in                       x=864, y=1296
+ARCHB_trans     ArchB transverse  18x12in                       x=1296, y=864
+ARCHC           ArchC             18x24in                       x=1296, y=1728
+ARCHC_trans     ArchC transverse  24x18in                       x=1728, y=1296
+ARCHD           ArchD             24x36in                       x=1728, y=2592
+ARCHD_trans     ArchD transverse  36x24in                       x=2592, y=1728
+ARCHE           ArchE             36x48in                       x=2592, y=3456
+ARCHE_trans     ArchE transverse  48x36in                       x=3456, y=2592
 
    * Foolscap
 

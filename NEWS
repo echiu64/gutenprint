@@ -104,6 +104,11 @@ Gimp-Print 4.2.4 contains the following major changes over Gimp-Print
      gimpprint(3), ijsgimpprint(1), escputil(1), and cups-calibrate(8)
      for more information.
 
+  5) Transverse versions of the US CAD standard paper sizes (ArchA,
+     ArchB, ArchC, ArchD, and ArchE) have been added.  This permits
+     printing e. g. ArchD size (24x36) plots on ArchE (36 inch wide)
+     paper.
+
 
 * Exceptions and Workarounds:
 
