@@ -1196,7 +1196,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   */
 
   stp_describe_parameter(v, "Quality", &desc);
-  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST && desc.is_active)
     {
       stp_clear_string_parameter(v, "Resolution");
       has_quality_parameter = 1;
@@ -1225,7 +1225,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   */
 
   stp_describe_parameter(v, "ImageType", &desc);
-  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST && desc.is_active)
     {
       has_image_type_parameter = 1;
       gzprintf(fp, "*OpenUI *StpImageType/%s: PickOne\n", _(desc.text));

@@ -219,8 +219,8 @@ stpi_describe_generic_parameter(const stp_vars_t *v, const char *name,
 	}
       description->deflt.str = "Standard";
 #else
-      description->bounds.str = NULL;
-      description->p_type = STP_PARAMETER_TYPE_INVALID;
+      description->bounds.str = stp_string_list_create();
+      description->is_active = 0;
 #endif
     }
   else if (strcmp(name, "ImageType") == 0)
