@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
-"POT-Creation-Date: 2003-11-01 19:54-0500\n"
+"POT-Creation-Date: 2003-11-04 19:53-0500\n"
 "PO-Revision-Date: 2001-10-18 11:53+0100\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -401,63 +401,63 @@ msgid "Resolution and quality of the print"
 msgstr ""
 
 #: src/main/print-canon.c:1248 src/main/print-canon.c:1249
-#: src/main/print-escp2.c:221 src/main/print-escp2.c:222
+#: src/main/print-escp2.c:227 src/main/print-escp2.c:228
 #: src/main/print-lexmark.c:297 src/main/print-lexmark.c:298
 #: src/main/print-pcl.c:1146 src/main/print-pcl.c:1147
 msgid "Ink Channels"
 msgstr ""
 
-#: src/main/print-canon.c:1271 src/main/print-escp2.c:273
+#: src/main/print-canon.c:1271 src/main/print-escp2.c:279
 #: src/main/print-lexmark.c:320 src/main/print-pcl.c:1169
 msgid "Cyan Balance"
 msgstr ""
 
-#: src/main/print-canon.c:1272 src/main/print-escp2.c:274
+#: src/main/print-canon.c:1272 src/main/print-escp2.c:280
 #: src/main/print-lexmark.c:321 src/main/print-pcl.c:1170
 msgid "Adjust the cyan balance"
 msgstr ""
 
-#: src/main/print-canon.c:1279 src/main/print-escp2.c:281
+#: src/main/print-canon.c:1279 src/main/print-escp2.c:287
 #: src/main/print-lexmark.c:328 src/main/print-pcl.c:1177
 #, fuzzy
 msgid "Magenta Balance"
 msgstr "Purpurowy"
 
-#: src/main/print-canon.c:1280 src/main/print-escp2.c:282
+#: src/main/print-canon.c:1280 src/main/print-escp2.c:288
 #: src/main/print-lexmark.c:329 src/main/print-pcl.c:1178
 msgid "Adjust the magenta balance"
 msgstr ""
 
-#: src/main/print-canon.c:1287 src/main/print-escp2.c:289
+#: src/main/print-canon.c:1287 src/main/print-escp2.c:295
 #: src/main/print-lexmark.c:336 src/main/print-pcl.c:1185
 #, fuzzy
 msgid "Yellow Balance"
 msgstr "¯ó³æ"
 
-#: src/main/print-canon.c:1288 src/main/print-escp2.c:290
+#: src/main/print-canon.c:1288 src/main/print-escp2.c:296
 #: src/main/print-lexmark.c:337 src/main/print-pcl.c:1186
 msgid "Adjust the yellow balance"
 msgstr ""
 
-#: src/main/print-canon.c:1295 src/main/print-escp2.c:297
+#: src/main/print-canon.c:1295 src/main/print-escp2.c:303
 #: src/main/print-lexmark.c:344 src/main/print-pcl.c:1193
 msgid "Black Balance"
 msgstr ""
 
-#: src/main/print-canon.c:1296 src/main/print-escp2.c:298
+#: src/main/print-canon.c:1296 src/main/print-escp2.c:304
 #: src/main/print-lexmark.c:345 src/main/print-pcl.c:1194
 msgid "Adjust the black balance"
 msgstr ""
 
 #: src/main/print-canon.c:1303 src/main/print-canon.c:1304
-#: src/main/print-escp2.c:305 src/main/print-escp2.c:306
+#: src/main/print-escp2.c:311 src/main/print-escp2.c:312
 #: src/main/print-lexmark.c:352 src/main/print-lexmark.c:353
 #: src/main/print-pcl.c:1201 src/main/print-pcl.c:1202
 msgid "Light Cyan Transition"
 msgstr ""
 
 #: src/main/print-canon.c:1311 src/main/print-canon.c:1312
-#: src/main/print-escp2.c:313 src/main/print-escp2.c:314
+#: src/main/print-escp2.c:319 src/main/print-escp2.c:320
 #: src/main/print-lexmark.c:360 src/main/print-lexmark.c:361
 #: src/main/print-pcl.c:1209 src/main/print-pcl.c:1210
 msgid "Light Magenta Transition"
@@ -811,8 +811,9 @@ msgstr ""
 
 #: src/main/print-escp2-data.c:268 src/main/print-escp2-data.c:294
 #: src/main/print-escp2-data.c:328 src/main/print-escp2-data.c:415
-#: src/main/print-escp2.c:1180 src/main/print-escp2.c:1261
-#: src/main/print-pcl.c:227 src/libgimpprintui/panel.c:2254
+#: src/main/print-escp2.c:1186 src/main/print-escp2.c:1267
+#: src/main/print-escp2.c:1297 src/main/print-pcl.c:227
+#: src/libgimpprintui/panel.c:2254
 msgid "Standard"
 msgstr ""
 
@@ -919,96 +920,124 @@ msgid "Full Bleed"
 msgstr ""
 
 #: src/main/print-escp2.c:179
-msgid "Adjust dot size as necessary"
+msgid "Weave Method"
 msgstr ""
 
 #: src/main/print-escp2.c:180
+msgid "Weave pattern to use"
+msgstr ""
+
+#: src/main/print-escp2.c:185
+msgid "Adjust dot size as necessary"
+msgstr ""
+
+#: src/main/print-escp2.c:186
 msgid "Adjust dot size as necessary to achieve desired density"
 msgstr ""
 
-#: src/main/print-escp2.c:185 src/main/print-escp2.c:186
+#: src/main/print-escp2.c:191 src/main/print-escp2.c:192
 #, fuzzy
 msgid "Output Order"
 msgstr "Typ wyj¶ciowy:"
 
-#: src/main/print-escp2.c:191 src/main/print-escp2.c:192
+#: src/main/print-escp2.c:197 src/main/print-escp2.c:198
 msgid "Alignment Passes"
 msgstr ""
 
-#: src/main/print-escp2.c:197 src/main/print-escp2.c:198
+#: src/main/print-escp2.c:203 src/main/print-escp2.c:204
 msgid "Alignment Choices"
 msgstr ""
 
-#: src/main/print-escp2.c:203 src/main/print-escp2.c:204
+#: src/main/print-escp2.c:209 src/main/print-escp2.c:210
 msgid "Ink change command"
 msgstr ""
 
-#: src/main/print-escp2.c:209 src/main/print-escp2.c:210
+#: src/main/print-escp2.c:215 src/main/print-escp2.c:216
 msgid "Alternate Alignment Passes"
 msgstr ""
 
-#: src/main/print-escp2.c:215 src/main/print-escp2.c:216
+#: src/main/print-escp2.c:221 src/main/print-escp2.c:222
 msgid "Alternate Alignment Choices"
 msgstr ""
 
-#: src/main/print-escp2.c:321 src/main/print-escp2.c:322
+#: src/main/print-escp2.c:327 src/main/print-escp2.c:328
 msgid "Dark Yellow Transition"
 msgstr ""
 
-#: src/main/print-escp2.c:329 src/main/print-escp2.c:330
+#: src/main/print-escp2.c:335 src/main/print-escp2.c:336
 msgid "Gray Transition"
 msgstr ""
 
-#: src/main/print-escp2.c:337 src/main/print-escp2.c:338
+#: src/main/print-escp2.c:343 src/main/print-escp2.c:344
 msgid "Dark Gray Transition"
 msgstr ""
 
-#: src/main/print-escp2.c:345
+#: src/main/print-escp2.c:351
 msgid "Mid Gray Transition"
 msgstr ""
 
-#: src/main/print-escp2.c:346
+#: src/main/print-escp2.c:352
 msgid "Medium Gray Transition"
 msgstr ""
 
-#: src/main/print-escp2.c:353 src/main/print-escp2.c:354
+#: src/main/print-escp2.c:359 src/main/print-escp2.c:360
 msgid "Light Gray Transition"
 msgstr ""
 
-#: src/main/print-escp2.c:1102
+#: src/main/print-escp2.c:1108
 #, fuzzy
 msgid "Full Manual Control"
 msgstr "Typ wyj¶ciowy:"
 
-#: src/main/print-escp2.c:1104
+#: src/main/print-escp2.c:1110
 msgid "Automatic Setting Control"
 msgstr ""
 
-#: src/main/print-escp2.c:1127
+#: src/main/print-escp2.c:1133
 #, fuzzy
 msgid "Manual Control"
 msgstr "Typ wyj¶ciowy:"
 
-#: src/main/print-escp2.c:1277 src/cups/genppd.c:1119
+#: src/main/print-escp2.c:1283 src/cups/genppd.c:1119
 #, fuzzy
 msgid "Automatic"
 msgstr "Rozmiar"
 
-#: src/main/print-escp2.c:1279
+#: src/main/print-escp2.c:1285
 msgid "Bidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:1281
+#: src/main/print-escp2.c:1287
 #, fuzzy
 msgid "Unidirectional"
 msgstr "1440 x 720 DPI"
 
-#: src/main/print-escp2.c:1548
+#: src/main/print-escp2.c:1299
+msgid "Alternate Fill"
+msgstr ""
+
+#: src/main/print-escp2.c:1301
+msgid "Ascending Fill"
+msgstr ""
+
+#: src/main/print-escp2.c:1303
+msgid "Descending Fill"
+msgstr ""
+
+#: src/main/print-escp2.c:1305
+msgid "Ascending Double"
+msgstr ""
+
+#: src/main/print-escp2.c:1307
+msgid "Nearest Neighbor Avoidance"
+msgstr ""
+
+#: src/main/print-escp2.c:1574
 #, c-format
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr ""
 
-#: src/main/print-escp2.c:2222 src/main/print-raw.c:188
+#: src/main/print-escp2.c:2261 src/main/print-raw.c:188
 msgid "Print options not verified; cannot print.\n"
 msgstr ""
 
