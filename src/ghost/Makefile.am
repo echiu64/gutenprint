@@ -30,12 +30,8 @@ MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = \
 	COPYING \
-	Makefile \
-	Makefile.am \
 	README \
 	contrib.mak.addon.in \
-	debian-patch \
-	debian-patch-stp \
 	gdevstp.c
 
 ## Variables
