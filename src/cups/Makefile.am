@@ -114,6 +114,7 @@ install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	    for ppdfile in * ; do \
 	      (cd ../..; $(INSTALL_DATA) ppd/$$language/$$ppdfile $(DESTDIR)$(cups_modeldir)/$$language) ; \
 	    done; \
+	  cd ..; \
 	  done \
 	fi
 
