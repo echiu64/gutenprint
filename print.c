@@ -49,6 +49,7 @@
 #endif
 
 #include <signal.h>
+#include <sys/wait.h>
 #ifdef __EMX__
 #define INCL_DOSDEVICES
 #define INCL_DOSERRORS
@@ -293,6 +294,18 @@ get_tmp_filename()
 #endif
 
 /*
+ * 'usr1_handler()' - Make a note when we receive SIGUSR1.
+ */
+
+static volatile int usr1_interrupt;
+
+static void
+usr1_handler (int signal)
+{
+  usr1_interrupt = 1;
+}
+
+/*
  * 'run()' - Run the plug-in...
  */
 
@@ -318,6 +331,11 @@ run (char   *name,		/* I - Name of print program. */
 #ifndef GIMP_1_0
   GimpExportReturnType export = EXPORT_CANCEL;    /* return value of gimp_export_image() */
 #endif
+  int		ppid = getpid (), /* PID of plugin */
+		opid,		/* PID of output process */
+		cpid = 0,	/* PID of control/monitor process */
+		pipefd[2];	/* Fds of the pipe connecting all the above */
+  int		dummy;
 
   INIT_LOCALE ("gimp-print");
 
@@ -531,7 +549,62 @@ run (char   *name,		/* I - Name of print program. */
 
       if (plist_current > 0)
 #ifndef __EMX__
-	prn = popen (vars.output_to, "w");
+      {
+	/*
+	 * The following IPC code is only necessary because the GIMP kills
+	 * plugins with SIGKILL if its "Cancel" button is pressed; this
+	 * gives the plugin no chance whatsoever to clean up after itself.
+	 */
+	usr1_interrupt = 0;
+	signal (SIGUSR1, usr1_handler);
+	if (pipe (pipefd) != 0) {
+	  prn = NULL;
+	} else {
+	  cpid = fork ();
+	  if (cpid < 0) {
+	    prn = NULL;
+	  } else if (cpid == 0) {
+	    /* LPR monitor process.  Printer output is piped to us. */
+	    opid = fork ();
+	    if (opid < 0) {
+	      /* Errors will cause the plugin to get a SIGPIPE.  */
+	      exit (1);
+	    } else if (opid == 0) {
+	      dup2 (pipefd[0], 0);
+	      close (pipefd[0]);
+	      close (pipefd[1]);
+	      execl("/bin/sh", "/bin/sh", "-c", vars.output_to, NULL);
+	      exit (1);
+	    } else {
+	      /*
+	       * If the print plugin gets SIGKILLed by gimp, we kill lpr
+	       * in turn.  If the plugin signals us with SIGUSR1 that it's
+	       * finished printing normally, we close our end of the pipe,
+	       * and go away.
+	       */
+	      close (pipefd[0]);
+	      while (usr1_interrupt == 0) {
+	        if (kill (ppid, 0) < 0) {
+		  /* The print plugin has been killed!  */
+		  kill (opid, SIGTERM);
+		  waitpid (opid, &dummy, 0);
+		  close (pipefd[1]);
+		  exit (0);
+	        }
+	        sleep (5);
+	      }
+	      /* We got SIGUSR1.  */
+	      close (pipefd[1]);
+	      exit (0);
+	    }
+	  } else {
+	    close (pipefd[0]);
+	    /* Parent process.  We generate the printer output. */
+	    prn = fdopen (pipefd[1], "w");
+	    /* and fall through... */
+	  }
+	}
+      }
 #else
       /* OS/2 PRINT command doesn't support print from stdin, use temp file */
       prn = (tmpfile = get_tmp_filename ()) ? fopen (tmpfile, "w") : NULL;
@@ -566,7 +639,11 @@ run (char   *name,		/* I - Name of print program. */
 
 	  if (plist_current > 0)
 #ifndef __EMX__
-	    pclose (prn);
+	  {
+	    fclose (prn);
+	    kill (cpid, SIGUSR1);
+	    waitpid (cpid, &dummy, 0);
+	  }
 #else
 	  { /* PRINT temp file */
 	    char *s;
