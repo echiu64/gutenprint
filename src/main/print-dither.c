@@ -78,19 +78,30 @@ static const int num_dither_algos = sizeof(dither_algos)/sizeof(dither_algo_t);
 #define MAX_SPREAD 32
 
 /*
+ * An end of a dither segment, describing one ink
+ */
+
+typedef struct ink_defn
+{
+  unsigned range;
+  unsigned value;
+  unsigned bits;
+  unsigned dot_size;
+  int subchannel;
+} ink_defn_t;
+ 
+/*
  * A segment of the entire 0-65535 intensity range.
  */
+
 typedef struct dither_segment
 {
-  unsigned range[2];		/* Bottom, top of range */
-  unsigned value[2];		/* Value of lower, upper ink */
-  unsigned bits[2];		/* Bit pattern of lower, upper */
-  unsigned range_span;		/* Span (to avoid calculation on the fly) */
-  unsigned value_span;		/* Span of values */
-  unsigned dot_size[2];		/* Size of lower, upper dot */
-  int subchannel[2];		/* Is lower, upper value dark ink? */
-  int is_same_ink;		/* Are both endpoints using the same dots? */
-  int is_equal;			/* Are both endpoints using the same ink? */
+  ink_defn_t *lower;
+  ink_defn_t *upper;
+  unsigned range_span;
+  unsigned value_span;
+  int is_same_ink;
+  int is_equal;
 } dither_segment_t;
 
 typedef struct dither_channel
@@ -116,9 +127,12 @@ typedef struct dither_channel
   int subchannels;
 
   int maxdot;			/* Maximum dot size */
+  int maxdot_dens;		/* Max dot size * density */
+  int maxdot_wet;		/* Maximum wetness allowed */
+
+  ink_defn_t *ink_list;
 
   dither_segment_t *ranges;
-  dither_segment_t temp_range;
   int **errs;
   unsigned short *vals;
 
@@ -786,40 +800,43 @@ stp_dither_finalize_ranges(dither_t *d, dither_channel_t *s)
 
   for (i = 0; i < s->nlevels; i++)
     {
-      if (s->ranges[i].subchannel[0] > max_subchannel)
-	max_subchannel = s->ranges[i].subchannel[0];
-      if (s->ranges[i].subchannel[1] > max_subchannel)
-	max_subchannel = s->ranges[i].subchannel[1];
-      if (s->ranges[i].subchannel[0] == s->ranges[i].subchannel[1] &&
-	  s->ranges[i].dot_size[0] == s->ranges[i].dot_size[1])
+      if (s->ranges[i].lower->subchannel > max_subchannel)
+	max_subchannel = s->ranges[i].lower->subchannel;
+      if (s->ranges[i].upper->subchannel > max_subchannel)
+	max_subchannel = s->ranges[i].upper->subchannel;
+      if (s->ranges[i].lower->subchannel == s->ranges[i].upper->subchannel &&
+	  s->ranges[i].lower->dot_size == s->ranges[i].upper->dot_size)
 	s->ranges[i].is_same_ink = 1;
       else
 	s->ranges[i].is_same_ink = 0;
       if (s->ranges[i].range_span > 0 &&
 	  (s->ranges[i].value_span > 0 ||
-	   s->ranges[i].subchannel[0] != s->ranges[i].subchannel[1]))
+	   s->ranges[i].lower->subchannel != s->ranges[i].upper->subchannel))
 	s->ranges[i].is_equal = 0;
       else
 	s->ranges[i].is_equal = 1;
 
-      if (s->ranges[i].dot_size[0] > s->maxdot) s->maxdot = s->ranges[i].dot_size[0];
-      if (s->ranges[i].dot_size[1] > s->maxdot) s->maxdot = s->ranges[i].dot_size[1];
+      if (s->ranges[i].lower->dot_size > s->maxdot) s->maxdot = s->ranges[i].lower->dot_size;
+      if (s->ranges[i].upper->dot_size > s->maxdot) s->maxdot = s->ranges[i].upper->dot_size;
 
       stp_dprintf(STP_DBG_INK, d->v,
 		  "    level %d value[0] %d value[1] %d range[0] %d range[1] %d\n",
-		  i, s->ranges[i].value[0], s->ranges[i].value[1],
-		  s->ranges[i].range[0], s->ranges[i].range[1]);
+		  i, s->ranges[i].lower->value, s->ranges[i].upper->value,
+		  s->ranges[i].lower->range, s->ranges[i].upper->range);
       stp_dprintf(STP_DBG_INK, d->v,
 		  "       bits[0] %d bits[1] %d subchannel[0] %d subchannel[1] %d\n",
-		  s->ranges[i].bits[0], s->ranges[i].bits[1],
-		  s->ranges[i].subchannel[0], s->ranges[i].subchannel[1]);
+		  s->ranges[i].lower->bits, s->ranges[i].upper->bits,
+		  s->ranges[i].lower->subchannel, s->ranges[i].upper->subchannel);
       stp_dprintf(STP_DBG_INK, d->v,
 		  "       rangespan %d valuespan %d same_ink %d equal %d\n",
 		  s->ranges[i].range_span, s->ranges[i].value_span,
 		  s->ranges[i].is_same_ink, s->ranges[i].is_equal);
     }
-  if (s->nlevels == 1 && s->ranges[0].bits[1] == 1 && s->ranges[0].subchannel[1])
+  /* ??? Is this correct ??? */
+  if (s->nlevels == 1 && s->ranges[0].upper->bits == 1 && s->ranges[0].upper->subchannel)
     s->very_fast = 1;
+  s->maxdot_dens = s->maxdot * d->density;
+  s->maxdot_wet = (65536 + d->density) * s->maxdot;
   s->subchannels = max_subchannel + 1;
   s->row_ends[0] = stp_zalloc(s->subchannels * sizeof(int));
   s->row_ends[1] = stp_zalloc(s->subchannels * sizeof(int));
@@ -842,6 +859,8 @@ stp_dither_set_generic_ranges(dither_t *d, dither_channel_t *s, int nlevels,
   s->nlevels = nlevels > 1 ? nlevels + 1 : nlevels;
   s->ranges = (dither_segment_t *)
     stp_zalloc(s->nlevels * sizeof(dither_segment_t));
+  s->ink_list = (ink_defn_t *)
+    stp_zalloc((s->nlevels + 1) * sizeof(ink_defn_t));
   s->bit_max = 0;
   s->density = density * 65535;
   stp_dprintf(STP_DBG_INK, d->v,
@@ -851,70 +870,60 @@ stp_dither_set_generic_ranges(dither_t *d, dither_channel_t *s, int nlevels,
     stp_dprintf(STP_DBG_INK, d->v,
 		"  level %d value %f pattern %x subchannel %d\n", i,
 		ranges[i].value, ranges[i].bit_pattern, ranges[i].subchannel);
-  s->ranges[0].range[0] = 0;
-  s->ranges[0].value[0] = ranges[0].value * 65535.0;
-  s->ranges[0].bits[0] = ranges[0].bit_pattern;
-  s->ranges[0].subchannel[0] = ranges[0].subchannel;
-  s->ranges[0].dot_size[0] = ranges[0].dot_size;
+  s->ranges[0].lower = &s->ink_list[0];
+  s->ranges[0].upper = &s->ink_list[1];
+  s->ink_list[0].range = 0;
+  s->ink_list[0].value = ranges[0].value * 65535.0;
+  s->ink_list[0].bits = ranges[0].bit_pattern;
+  s->ink_list[0].subchannel = ranges[0].subchannel;
+  s->ink_list[0].dot_size = ranges[0].dot_size;
   if (nlevels == 1)
-    s->ranges[0].range[1] = 65535;
+    s->ink_list[1].range = 65535;
   else
-    s->ranges[0].range[1] = ranges[0].value * 65535.0 * density;
-  if (s->ranges[0].range[1] > 65535)
-    s->ranges[0].range[1] = 65535;
-  s->ranges[0].value[1] = ranges[0].value * 65535.0;
-  if (s->ranges[0].value[1] > 65535)
-    s->ranges[0].value[1] = 65535;
-  s->ranges[0].bits[1] = ranges[0].bit_pattern;
+    s->ink_list[1].range = ranges[0].value * 65535.0 * density;
+  if (s->ink_list[1].range > 65535)
+    s->ink_list[1].range = 65535;
+  s->ink_list[1].value = ranges[0].value * 65535.0;
+  if (s->ink_list[1].value > 65535)
+    s->ink_list[1].value = 65535;
+  s->ink_list[1].bits = ranges[0].bit_pattern;
   if (ranges[0].bit_pattern > s->bit_max)
     s->bit_max = ranges[0].bit_pattern;
-  s->ranges[0].subchannel[1] = ranges[0].subchannel;
-  s->ranges[0].dot_size[1] = ranges[0].dot_size;
-  s->ranges[0].range_span = s->ranges[0].range[1];
+  s->ink_list[1].subchannel = ranges[0].subchannel;
+  s->ink_list[1].dot_size = ranges[0].dot_size;
+  s->ranges[0].range_span = s->ranges[0].upper->range;
   s->ranges[0].value_span = 0;
   if (s->nlevels > 1)
     {
-      for (i = 0; i < nlevels - 1; i++)
+      for (i = 1; i < nlevels; i++)
 	{
 	  int l = i + 1;
-	  s->ranges[l].range[0] = s->ranges[i].range[1];
-	  s->ranges[l].value[0] = s->ranges[i].value[1];
-	  s->ranges[l].bits[0] = s->ranges[i].bits[1];
-	  s->ranges[l].subchannel[0] = s->ranges[i].subchannel[1];
-	  s->ranges[l].dot_size[0] = s->ranges[i].dot_size[1];
-	  if (i == nlevels - 1)
-	    s->ranges[l].range[1] = 65535;
-	  else
-	    s->ranges[l].range[1] =
-	      (ranges[l].value + ranges[l].value) * 32768.0 * density;
-	  if (s->ranges[l].range[1] > 65535)
-	    s->ranges[l].range[1] = 65535;
-	  s->ranges[l].value[1] = ranges[l].value * 65535.0;
-	  if (s->ranges[l].value[1] > 65535)
-	    s->ranges[l].value[1] = 65535;
-	  s->ranges[l].bits[1] = ranges[l].bit_pattern;
-	  if (ranges[l].bit_pattern > s->bit_max)
-	    s->bit_max = ranges[l].bit_pattern;
-	  s->ranges[l].subchannel[1] = ranges[l].subchannel;
-	  s->ranges[l].dot_size[1] = ranges[l].dot_size;
-	  s->ranges[l].range_span =
-	    s->ranges[l].range[1] - s->ranges[l].range[0];
-	  s->ranges[l].value_span =
-	    s->ranges[l].value[1] - s->ranges[l].value[0];
+	  s->ranges[i].lower = &s->ink_list[i];
+	  s->ranges[i].upper = &s->ink_list[l];
+
+	  s->ink_list[l].range =
+	    (ranges[i].value + ranges[i].value) * 32768.0 * density;
+	  if (s->ink_list[l].range > 65535)
+	    s->ink_list[l].range = 65535;
+	  s->ink_list[l].value = ranges[i].value * 65535.0;
+	  if (s->ink_list[l].value > 65535)
+	    s->ink_list[l].value = 65535;
+	  s->ink_list[l].bits = ranges[i].bit_pattern;
+	  if (ranges[i].bit_pattern > s->bit_max)
+	    s->bit_max = ranges[i].bit_pattern;
+	  s->ink_list[l].subchannel = ranges[i].subchannel;
+	  s->ink_list[l].dot_size = ranges[i].dot_size;
+	  s->ranges[i].range_span =
+	    s->ink_list[l].range - s->ink_list[i].range;
+	  s->ranges[i].value_span =
+	    s->ink_list[l].value - s->ink_list[i].value;
 	}
-      i++;
-      s->ranges[i].range[0] = s->ranges[i - 1].range[1];
-      s->ranges[i].value[0] = s->ranges[i - 1].value[1];
-      s->ranges[i].bits[0] = s->ranges[i - 1].bits[1];
-      s->ranges[i].subchannel[0] = s->ranges[i - 1].subchannel[1];
-      s->ranges[i].dot_size[0] = s->ranges[i - 1].dot_size[1];
-      s->ranges[i].range[1] = 65535;
-      s->ranges[i].value[1] = s->ranges[i].value[0];
-      s->ranges[i].bits[1] = s->ranges[i].bits[0];
-      s->ranges[i].subchannel[1] = s->ranges[i].subchannel[0];
-      s->ranges[i].dot_size[1] = s->ranges[i].dot_size[0];
-      s->ranges[i].range_span = s->ranges[i].range[1] - s->ranges[i].range[0];
-      s->ranges[i].value_span = s->ranges[i].value[1] - s->ranges[i].value[0];
+      s->ranges[i].lower = &s->ink_list[i];
+      s->ranges[i].upper = &s->ink_list[i+1];
+      s->ink_list[i+1] = s->ink_list[i];
+      s->ink_list[i+1].range = 65535;
+      s->ranges[i].range_span = s->ink_list[i+1].range - s->ink_list[i].range;
+      s->ranges[i].value_span = s->ink_list[i+1].value - s->ink_list[i].value;
     }
   stp_dither_finalize_ranges(d, s);
 }
@@ -930,10 +939,12 @@ stp_dither_set_generic_ranges_full(dither_t *d, dither_channel_t *s,
   SAFE_FREE(s->row_ends[0]);
   SAFE_FREE(s->row_ends[1]);
   SAFE_FREE(s->ptrs);
-  s->nlevels = nlevels > 1 ? nlevels + 1 : nlevels;
+
   s->nlevels = nlevels+1;
   s->ranges = (dither_segment_t *)
     stp_zalloc(s->nlevels * sizeof(dither_segment_t));
+  s->ink_list = (ink_defn_t *)
+    stp_zalloc((s->nlevels * 2) * sizeof(ink_defn_t));
   s->bit_max = 0;
   s->density = density * 65535;
   stp_dprintf(STP_DBG_INK, d->v,
@@ -952,27 +963,25 @@ stp_dither_set_generic_ranges_full(dither_t *d, dither_channel_t *s,
 	{
 	  if (ranges[i].bits[k] > s->bit_max)
 	    s->bit_max = ranges[i].bits[k];
-	  s->ranges[j].dot_size[k] = ranges[i].bits[k]; /* FIXME */
-	  s->ranges[j].value[k] = ranges[i].value[k] * 65535;
-	  s->ranges[j].range[k] = s->ranges[j].value[k]*density;
-	  s->ranges[j].bits[k] = ranges[i].bits[k];
-	  s->ranges[j].subchannel[k] = ranges[i].subchannel[k];
+	  s->ink_list[2*j+k].dot_size = ranges[i].bits[k]; /* FIXME */
+	  s->ink_list[2*j+k].value = ranges[i].value[k] * 65535;
+	  s->ink_list[2*j+k].range = s->ink_list[2*j+k].value*density;
+	  s->ink_list[2*j+k].bits = ranges[i].bits[k];
+	  s->ink_list[2*j+k].subchannel = ranges[i].subchannel[k];
 	}
-    s->ranges[j].range_span = s->ranges[j].range[1]-s->ranges[j].range[0];
-    s->ranges[j].value_span = s->ranges[j].value[1]-s->ranges[j].value[0];
-    j++;
-  }
-  s->ranges[j].range[0] = s->ranges[j - 1].range[1];
-  s->ranges[j].value[0] = s->ranges[j - 1].value[1];
-  s->ranges[j].bits[0] = s->ranges[j - 1].bits[1];
-  s->ranges[j].subchannel[0] = s->ranges[j - 1].subchannel[1];
-  s->ranges[j].dot_size[0] = s->ranges[j - 1].dot_size[1];
-  s->ranges[j].range[1] = 65535;
-  s->ranges[j].value[1] = 65535;
-  s->ranges[j].bits[1] = s->ranges[j].bits[0];
-  s->ranges[j].subchannel[1] = s->ranges[j].subchannel[0];
-  s->ranges[j].dot_size[1] = s->ranges[j].dot_size[0];
-  s->ranges[j].range_span = s->ranges[j].range[1] - s->ranges[j].range[0];
+      s->ranges[j].lower = &s->ink_list[2*j];
+      s->ranges[j].upper = &s->ink_list[2*j+1];
+      s->ranges[j].range_span = s->ranges[j].upper->range - s->ranges[j].lower->range;
+      s->ranges[j].value_span = s->ranges[j].upper->value - s->ranges[j].lower->value;
+      j++;
+    }
+  s->ink_list[2*j] = s->ink_list[2*(j-1)+1];
+  s->ink_list[2*j+1] = s->ink_list[2*j];
+  s->ink_list[2*j+1].range = 65535;
+  s->ink_list[2*j+1].value = 65535;	/* ??? Is this correct ??? */
+  s->ranges[j].lower = &s->ink_list[2*j];
+  s->ranges[j].upper = &s->ink_list[2*j+1];
+  s->ranges[j].range_span = s->ranges[j].upper->range - s->ranges[j].lower->range;
   s->ranges[j].value_span = 0;
   s->nlevels = j+1;
   stp_dither_finalize_ranges(d, s);
@@ -1271,6 +1280,8 @@ print_color(const dither_t *d, dither_channel_t *dc, int x, int y,
   int levels = dc->nlevels - 1;
   int dither_value = adjusted;
   dither_segment_t *dd;
+  ink_defn_t *lower;
+  ink_defn_t *upper;
 
   if (base <= 0 || density <= 0 ||
       (adjusted <= 0 && !(dither_type & D_ADAPTIVE_BASE)))
@@ -1290,7 +1301,7 @@ print_color(const dither_t *d, dither_channel_t *dc, int x, int y,
     {
       dd = &(dc->ranges[i]);
 
-      if (density <= dd->range[0])
+      if (density <= dd->lower->range)
 	continue;
 
       /*
@@ -1320,9 +1331,13 @@ print_color(const dither_t *d, dither_channel_t *dc, int x, int y,
        * We scale the input linearly against the top and bottom of the
        * range.
        */
+       
+      lower = dd->lower;
+      upper = dd->upper;
+      
       if (!dd->is_equal)
 	rangepoint =
-	  ((unsigned) (density - dd->range[0])) * 65535 / dd->range_span;
+	  ((unsigned) (density - lower->range)) * 65535 / dd->range_span;
 
       /*
        * Compute the virtual dot size that we're going to print.
@@ -1331,11 +1346,11 @@ print_color(const dither_t *d, dither_channel_t *dc, int x, int y,
        */
 
       if (dd->value_span == 0)
-	virtual_value = dd->value[1];
+	virtual_value = upper->value;
       else if (dd->range_span == 0)
-	virtual_value = (dd->value[1] + dd->value[0]) / 2;
+	virtual_value = (upper->value + lower->value) / 2;
       else
-	virtual_value = dd->value[0] +
+	virtual_value = lower->value +
 	  (dd->value_span * d->virtual_dot_scale[rangepoint] / 65535);
 
       /*
@@ -1399,22 +1414,22 @@ print_color(const dither_t *d, dither_channel_t *dc, int x, int y,
        */
       if (dither_value >= vmatrix)
 	{
-	  int subc;
+	  ink_defn_t *subc;
 
 	  if (dd->is_same_ink)
-	    subc = 1;
+	    subc = upper;
 	  else
 	    {
 	      rangepoint = rangepoint * dc->density / 65535u;
 	      if (rangepoint >= ditherpoint(d, pick_matrix, x))
-		subc = 1;
+		subc = upper;
 	      else
-		subc = 0;
+		subc = lower;
 	    }
-	  subchannel = dd->subchannel[subc];
-	  bits = dd->bits[subc];
-	  v = dd->value[subc];
-	  dot_size = dd->dot_size[subc];
+	  subchannel = subc->subchannel;
+	  bits = subc->bits;
+	  v = subc->value;
+	  dot_size = subc->dot_size;
 	  tptr = dc->ptrs[subchannel] + d->ptr_offset;
 
 	  /*
@@ -1460,6 +1475,8 @@ print_color_ordered(const dither_t *d, dither_channel_t *dc, int x, int y,
   int levels = dc->nlevels - 1;
   int dither_value = adjusted;
   dither_segment_t *dd;
+  ink_defn_t *lower;
+  ink_defn_t *upper;
 
   if (adjusted <= 0 || density <= 0)
     return 0;
@@ -1478,7 +1495,7 @@ print_color_ordered(const dither_t *d, dither_channel_t *dc, int x, int y,
     {
       dd = &(dc->ranges[i]);
 
-      if (density <= dd->range[0])
+      if (density <= dd->lower->range)
 	continue;
 
       /*
@@ -1490,11 +1507,15 @@ print_color_ordered(const dither_t *d, dither_channel_t *dc, int x, int y,
        * We scale the input linearly against the top and bottom of the
        * range.
        */
+
+      lower = dd->lower;
+      upper = dd->upper;
+
       if (dd->is_equal)
 	rangepoint = 32768;
       else
 	rangepoint =
-	  ((unsigned) (density - dd->range[0])) * 65535 / dd->range_span;
+	  ((unsigned) (density - lower->range)) * 65535 / dd->range_span;
 
       /*
        * Compute the virtual dot size that we're going to print.
@@ -1503,11 +1524,11 @@ print_color_ordered(const dither_t *d, dither_channel_t *dc, int x, int y,
        */
 
       if (dd->value_span == 0)
-	virtual_value = dd->value[1];
+	virtual_value = upper->value;
       else if (dd->range_span == 0)
-	virtual_value = (dd->value[1] + dd->value[0]) / 2;
+	virtual_value = (upper->value + lower->value) / 2;
       else
-	virtual_value = dd->value[0] +
+	virtual_value = lower->value +
 	  (dd->value_span * d->virtual_dot_scale[rangepoint] / 65535);
 
       /*
@@ -1535,22 +1556,22 @@ print_color_ordered(const dither_t *d, dither_channel_t *dc, int x, int y,
        */
       if (dither_value >= vmatrix)
 	{
-	  int subc;
+	  ink_defn_t *subc;
 
 	  if (dd->is_same_ink)
-	    subc = 1;
+	    subc = upper;
 	  else
 	    {
 	      rangepoint = rangepoint * dc->density / 65535u;
 	      if (rangepoint >= ditherpoint(d, pick_matrix, x))
-		subc = 1;
+		subc = upper;
 	      else
-		subc = 0;
+		subc = lower;
 	    }
-	  subchannel = dd->subchannel[subc];
-	  bits = dd->bits[subc];
-	  v = dd->value[subc];
-	  dot_size = dd->dot_size[subc];
+	  subchannel = subc->subchannel;
+	  bits = subc->bits;
+	  v = subc->value;
+	  dot_size = subc->dot_size;
 	  tptr = dc->ptrs[subchannel] + d->ptr_offset;
 
 	  /*
@@ -1593,23 +1614,26 @@ print_color_fast(const dither_t *d, dither_channel_t *dc, int x, int y,
       unsigned vmatrix;
       unsigned rangepoint;
       unsigned dpoint;
-      unsigned subc;
-      if (density <= dd->range[0])
+      unsigned range0;
+      ink_defn_t *subc;
+
+      range0 = dd->lower->range;
+      if (density <= range0)
 	continue;
       dpoint = ditherpoint(d, dither_matrix, x);
 
       if (dd->is_same_ink)
-	subc = 1;
+	subc = dd->upper;
       else
 	{
-	  rangepoint = ((density - dd->range[0]) << 16) / dd->range_span;
+	  rangepoint = ((density - range0) << 16) / dd->range_span;
 	  rangepoint = (rangepoint * dc->density) >> 16;
 	  if (rangepoint >= dpoint)
-	    subc = 1;
+	    subc = dd->upper;
 	  else
-	    subc = 0;
+	    subc = dd->lower;
 	}
-      vmatrix = (dd->value[subc] * dpoint) >> 16;
+      vmatrix = (subc->value * dpoint) >> 16;
 
       /*
        * After all that, printing is almost an afterthought.
@@ -1617,8 +1641,8 @@ print_color_fast(const dither_t *d, dither_channel_t *dc, int x, int y,
        */
       if (adjusted >= vmatrix)
 	{
-	  int subchannel = dd->subchannel[subc];
-	  bits = dd->bits[subc];
+	  int subchannel = subc->subchannel;
+	  bits = subc->bits;
 	  tptr = dc->ptrs[subchannel] + d->ptr_offset;
 	  set_row_ends(dc, x, subchannel);
 
@@ -1691,39 +1715,28 @@ pick_vertex(const int cmy[])
 	return best;
 }
 
-static inline dither_segment_t *find_segment(dither_t *d, dither_channel_t *dc, int max_dot, int density)
+static inline void find_segment(dither_t *d, dither_channel_t *dc, int max_dot, int density, dither_segment_t *range)
 {
 	int i;
-	dither_segment_t *dd;
+	ink_defn_t *di;
 
-	memset(&dc->temp_range, 0, sizeof(dc->temp_range));
+	range->lower = range->upper = dc->ranges[0].lower;
 
 	for (i = dc->nlevels-1; i > 0; i--) {
-		dd = &(dc->ranges[i]);
-		if (density < dd->value[0]) continue;
-		if (max_dot < dd->dot_size[0]) continue;
-		dc->temp_range.range[0] = dd->range[0];
-		dc->temp_range.value[0] = dd->value[0];
-		dc->temp_range.bits[0] = dd->bits[0];
-		dc->temp_range.subchannel[0] = dd->subchannel[0];
-		dc->temp_range.dot_size[0] = dd->dot_size[0];
+		di = dc->ranges[i].lower;
+		if (density < di->value) continue;
+		if (max_dot < di->dot_size) continue;
+		range->lower = di;
+		range->upper = di;
 		break;
 	}
 
-	for (i=0; i < dc->nlevels; i++) {
-		dd = &(dc->ranges[i]);
-		if (max_dot < dd->dot_size[1]) continue;
-		dc->temp_range.range[1] = dd->range[1];
-		dc->temp_range.value[1] = dd->value[1];
-		dc->temp_range.bits[1] = dd->bits[1];
-		dc->temp_range.subchannel[1] = dd->subchannel[1];
-		dc->temp_range.dot_size[1] = dd->dot_size[1];
-		if (density < dd->value[1]) break;
+	for (; i < dc->nlevels; i++) {
+		di = dc->ranges[i].upper;
+		if (max_dot < di->dot_size) continue;
+		range->upper = di;
+		if (density < di->value) break;
 	}
-
-	dc->temp_range.range_span = dc->temp_range.range[1] - dc->temp_range.range[0];
-	dc->temp_range.value_span = dc->temp_range.value[1] - dc->temp_range.value[0];
-	return &dc->temp_range;
 }
 
 static inline void
@@ -2790,11 +2803,10 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 	        length;
   unsigned char	bit;
   int		i;
-  int		blackmod;
   int		*ndither;
   eventone_t	*et;
   int		dx[NCOLORS], dy[NCOLORS], r_sq[NCOLORS];
-  int		et_lo[NCOLORS], et_hi[NCOLORS];
+  int		et_lo[NCOLORS], et_hi[NCOLORS], et_range[NCOLORS];
   int		wetness[NCOLORS];
   int		***error;
 
@@ -2816,20 +2828,29 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
   if (!et) {
     et = stp_setup_et(d);
     if (!et) return;
+
+    for (i = 0; i < NCOLORS; i++)
+    {
+      CHANNEL(d, i).ranges[0].lower->value = 0;
+      CHANNEL(d, i).ranges[0].lower->range = 0;
+      CHANNEL(d, i).ranges[0].lower->bits = 0;
+      CHANNEL(d, i).ranges[0].lower->subchannel = 0;
+      CHANNEL(d, i).ranges[0].lower->dot_size = 0;
+    }
   }
 
   for (i = 0; i < NCOLORS; i++)
-    {
+  {
+      et_hi[i] = CHANNEL(d, i).ranges[0].upper->value / 20;
+      et_lo[i] = 0;
+      et_range[i] = et_hi[i] - et_lo[i];
       ndither[i] = 0;
       wetness[i] = 0;
-      et_hi[i] = CHANNEL(d, i).ranges[0].value[1] / 20;
-      et_lo[i] = 0;
       dx[i] = et->dx2;
       dy[i] = et->dy2;
       r_sq[i] = 0;
-    }
+  }      
 
-  blackmod = 0;
   x = (direction == 1) ? 0 : d->dst_width - 1;
   bit = 1 << (7 - (x & 7));
   xstep  = 3 * (d->src_width / d->dst_width);
@@ -2844,7 +2865,7 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
   QUANT(6);
   for (; x != terminate; x += direction)
     { int pick, print_inks;
-      dither_segment_t *dr[NCOLORS];
+      dither_segment_t dr[NCOLORS];
       int ri[NCOLORS];
       
       for (i=0; i < NCOLORS; i++) {
@@ -2879,53 +2900,57 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 
       for (i=0; i < NCOLORS; i++) {
         int value;
+	int base;
 	int maxwet;
+	unsigned value_span;
+	unsigned upper;
+	unsigned lower;
 
         ndither[i] += error[i][0][0];
 	
-	if ((wetness[i] -= CHANNEL(d, i).maxdot * d->density) < 0) {
+	if ((wetness[i] -= CHANNEL(d, i).maxdot_dens) < 0) {
 	  wetness[i] = 0;
 	}
 
-	value = ndither[i] + CHANNEL(d, i).b;
-	if (CHANNEL(d, i).b > et_hi[i]) {
+	base = CHANNEL(d, i).b;
+	value = ndither[i] + base;
+	if (base >= et_hi[i]) {
 	  value += ndither[i];
-	} else if (CHANNEL(d, i).b >et_lo[i]) {
-	  value += ndither[i] * (CHANNEL(d, i).b - et_lo[i]) / (et_hi[i] - et_lo[i]);
+	} else if (base > et_lo[i]) {
+	  value += ndither[i] * (base - et_lo[i]) / et_range[i];
 	}
-	  
+
 	if (i != ECOLOR_K) value += CHANNEL(d, ECOLOR_K).v;
 	
 	if (value < 0) value = 0;				/* Dither can make this value negative */
 	
-	maxwet = (65536 + d->density) * CHANNEL(d, i).maxdot - wetness[i];
+	maxwet = CHANNEL(d, i).maxdot_wet - wetness[i];
 	if (maxwet < 0) maxwet = 0;
-	maxwet >>= 16;
+	else maxwet >>= 16;
 
-        dr[i] = find_segment(d, &CHANNEL(d, i), maxwet, value);
+        find_segment(d, &CHANNEL(d, i), maxwet, value, &dr[i]);
+	lower = dr[i].lower->value;
+	upper = dr[i].upper->value;
+	value_span = upper - lower;
 
-	if (value > dr[i]->value[1]) {
+	if (value >= upper) {
 	  ri[i] = 65535;
-	} else if (value < dr[i]->value[0]) {
+	} else if (value <= lower) {
 	  ri[i] = 0;
-	} else if (dr[i]->value_span != 0) {
-	  ri[i] = (65535 * (value - dr[i]->value[0])) / dr[i]->value_span;
+	} else {
+	  ri[i] = ((unsigned)(value - lower) << 16) / value_span;
 	  /* Adjust for Eventone here */
-	  if (dr[i]->value[0] == 0) {
+	  if (lower == 0) {
 	    int t;
-	    if (CHANNEL(d, i).b < dr[i]->value[0]) {
-	      t = et->recip[0];
-	    } else if (CHANNEL(d, i).b > dr[i]->value[1]) {
+	    if (base >= upper) {
 	      t = 0;
 	    } else {
-	      t = et->recip[65535 * (CHANNEL(d, i).b - dr[i]->value[0]) / dr[i]->value_span];
+	      t = et->recip[(base << 16) / value_span];
 	    }
 	    ri[i] += r_sq[i] * et->aspect - t;
 	    if (ri[i] > 65535) ri[i] = 65535;
 	    else if (ri[i] < 0) ri[i] = 0;
 	  }
-	} else {
-	    ri[i] = 32768;  /* doesn't matter really */
 	}
       }
 
@@ -2944,14 +2969,14 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 
         for (i=0; i < NCOLORS; i++) {
 	  if (pick & (1 << i)) {
-	    point[i] = dr[i]->value[1];
+	    point[i] = dr[i].upper->value;
 	  } else {
-	    point[i] = dr[i]->value[0];
+	    point[i] = dr[i].lower->value;
 	  }
 	}
 
         printed_black = point[ECOLOR_K];
-	if (d->black_density != d->density) {
+	if (printed_black > 0 && d->black_density != d->density) {
 	  point[ECOLOR_K] = (unsigned)point[ECOLOR_K] * (unsigned)d->density / d->black_density;
 	}
 
@@ -2971,12 +2996,14 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 
         /* Only print the black ink if it means we can avoid printing another ink, otherwise we're just wasting ink */
 
-        for (i=1; i < NCOLORS; i++) {
-          if (point[i] <= point[ECOLOR_K]) {
-	    useblack = 1;
-	    break;
-	  }
-        }
+        if (printed_black > 0) {
+	  for (i=1; i < NCOLORS; i++) {
+            if (point[i] <= point[ECOLOR_K]) {
+	      useblack = 1;
+	      break;
+	    }
+          }
+	}
 	
 	/* Find which channels we actually print */
 
@@ -3006,14 +3033,18 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 
       for (i = 0; i < NCOLORS; i++) {
         int j;
-	int subc = (pick & (1 << i)) ? 1 : 0;
-	int bits = dr[i]->bits[subc];
-	int subchannel = dr[i]->subchannel[subc];
-	unsigned char *tptr = CHANNEL(d, i).ptrs[subchannel] + d->ptr_offset;
+	ink_defn_t *subc;
+	int bits;
+	unsigned char *tptr;
 	
         if (!(print_inks & (1 << i))) continue;
 
-	wetness[i] += dr[i]->dot_size[subc] << 16;
+	subc = (pick & (1 << i)) ? dr[i].upper : dr[i].lower;
+	bits = subc->bits;
+	if (bits == 0) continue;
+	
+	tptr = CHANNEL(d, i).ptrs[subc->subchannel] + d->ptr_offset;
+	wetness[i] += subc->dot_size << 16;
 	
 	for (j=1; j <= bits; j+=j, tptr += length) {
 	  if (j & bits) *tptr |= bit;
@@ -3024,27 +3055,30 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
   
 
       /* Diffuse the error round a bit */
-      /* At the moment do a simple diffusion directly down and across */
+      /* Diffuse across, down, and backwards diagonally */
+      /* If doing Nx1, then only diffuse to the next row every N dots */
 
-      /*
-      for (i=0; i < NCOLORS; i++) {
-        int fraction = diffuse_k1 * ndither[i] / diffuse_k2;
-        error[i][1][0] += fraction;
-        ndither[i] -= fraction;
-      }
-      */
       if ((x & (aspect-1)) == 0) {
 	for (i=0; i < NCOLORS; i++) {
 	  int fraction = 0;
-	  if (CHANNEL(d, i).b > et_lo[i]) {
+	  int frac_2;
+	  int frac_3;
+	  int base;
+
+	  base = CHANNEL(d, i).b;
+	  if (base > et_lo[i]) {
 	    fraction = (ndither[i] + 5) / 10;
-	    if (CHANNEL(d, i).b < et_hi[i]) {
-	      fraction = fraction * (CHANNEL(d, i).b - et_lo[i]) / (et_hi[i] - et_lo[i]);
+	    if (base < et_hi[i]) {
+	      fraction = fraction * (base - et_lo[i]) / et_range[i];
 	    }
 	  }
-	  error[i][1][0] += 3 * fraction;
-	  error[i][1][-direction*aspect] += 2 * fraction;
-	  ndither[i] -= 5 * fraction;
+	  
+	  frac_2 = fraction + fraction;
+	  frac_3 = frac_2 + fraction;
+	  
+	  error[i][1][0] += frac_3;
+	  error[i][1][-direction*aspect] += frac_2;
+	  ndither[i] -= frac_2 + frac_3;
 	}
       }
 
