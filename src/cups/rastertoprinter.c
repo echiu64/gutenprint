@@ -363,7 +363,7 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
     cups->adjusted_height = cups->header.cupsHeight;
   fprintf(stderr, "DEBUG: Gimp-Print CUPS settings w %d %d l %d r %d  h %d %d t %d b %d\n",
 	  cups->width, cups->adjusted_width, cups->left, cups->right,
-	  cups->height, cups->adjusted_width, cups->top, cups->bottom);
+	  cups->height, cups->adjusted_height, cups->top, cups->bottom);
 
   return v;
 }
