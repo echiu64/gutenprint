@@ -3531,7 +3531,23 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
    */
   pt = get_media_type(stp_get_media_type(nv));
   if (pt)
-    stp_set_density(nv, stp_get_density(nv) * pt->base_density);
+    {
+      stp_set_density(nv, stp_get_density(nv) * pt->base_density);
+      if (ncolors >= 5)
+	{
+	  stp_set_cyan(nv, stp_get_cyan(nv) * pt->p_cyan);
+	  stp_set_magenta(nv, stp_get_magenta(nv) * pt->p_magenta);
+	  stp_set_yellow(nv, stp_get_yellow(nv) * pt->p_yellow);
+	}
+      else
+	{
+	  stp_set_cyan(nv, stp_get_cyan(nv) * pt->cyan);
+	  stp_set_magenta(nv, stp_get_magenta(nv) * pt->magenta);
+	  stp_set_yellow(nv, stp_get_yellow(nv) * pt->yellow);
+	}
+      stp_set_saturation(nv, stp_get_saturation(nv) * pt->saturation);
+      stp_set_gamma(nv, stp_get_gamma(nv) * pt->gamma);
+    }
   else				/* Can't find paper type? Assume plain */
     stp_set_density(nv, stp_get_density(nv) * .5);
   stp_set_density(nv, stp_get_density(nv) * escp2_density(model, resid, nv));
@@ -3539,20 +3555,6 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     stp_set_density(nv, 1.0);
   if (ncolors == 1)
     stp_set_gamma(nv, stp_get_gamma(nv) / .8);
-  if (ncolors >= 5)
-    {
-      stp_set_cyan(nv, stp_get_cyan(nv) * pt->p_cyan);
-      stp_set_magenta(nv, stp_get_magenta(nv) * pt->p_magenta);
-      stp_set_yellow(nv, stp_get_yellow(nv) * pt->p_yellow);
-    }
-  else
-    {
-      stp_set_cyan(nv, stp_get_cyan(nv) * pt->cyan);
-      stp_set_magenta(nv, stp_get_magenta(nv) * pt->magenta);
-      stp_set_yellow(nv, stp_get_yellow(nv) * pt->yellow);
-    }
-  stp_set_saturation(nv, stp_get_saturation(nv) * pt->saturation);
-  stp_set_gamma(nv, stp_get_gamma(nv) * pt->gamma);
   stp_compute_lut(nv, 256);
 
  /*
