@@ -1448,7 +1448,7 @@
 <nocolor>
 <model value=2>
 <gamma value=1.000>
-<density value=0.596>
+<density value=1.000>
 <language value=pcl>
 </printer>
 
@@ -1456,7 +1456,7 @@
 <nocolor>
 <model value=3>
 <gamma value=1.000>
-<density value=0.596>
+<density value=1.000>
 <language value=pcl>
 </printer>
 
@@ -1464,7 +1464,7 @@
 <nocolor>
 <model value=6>
 <gamma value=1.000>
-<density value=0.615>
+<density value=1.000>
 <language value=pcl>
 </printer>
 
@@ -1472,7 +1472,7 @@
 <nocolor>
 <model value=4>
 <gamma value=1.000>
-<density value=0.615>
+<density value=1.000>
 <language value=pcl>
 </printer>
 
@@ -1480,7 +1480,7 @@
 <nocolor>
 <model value=5>
 <gamma value=1.000>
-<density value=0.615>
+<density value=1.000>
 <language value=pcl>
 </printer>
 
@@ -1488,7 +1488,7 @@
 <nocolor>
 <model value=6>
 <gamma value=1.000>
-<density value=0.615>
+<density value=1.000>
 <language value=pcl>
 </printer>
 
@@ -1496,7 +1496,7 @@
 <nocolor>
 <model value=7>
 <gamma value=1.000>
-<density value=0.615>
+<density value=1.000>
 <language value=pcl>
 </printer>
 
@@ -1504,7 +1504,7 @@
 <nocolor>
 <model value=6>
 <gamma value=1.000>
-<density value=0.615>
+<density value=1.000>
 <language value=pcl>
 </printer>
 
