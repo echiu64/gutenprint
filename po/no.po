@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 0.3\n"
-"POT-Creation-Date: 2001-10-16 20:47-0400\n"
+"POT-Creation-Date: 2001-10-17 19:50-0400\n"
 "PO-Revision-Date: 2001-10-14 20:53+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian/Bokmaal <no@li.org>\n"
@@ -1898,228 +1898,176 @@ msgstr ""
 msgid "Unable to send command to the printer, exiting.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:877 src/escputil/escputil.c:1153
-msgid "Printer alignment must be done with a raw device or else\n"
+#: src/escputil/escputil.c:867
+msgid ""
+"Printer alignment must be done with a raw device or else\n"
+"the -m option must be used to specify a printer.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:878 src/escputil/escputil.c:1154
-msgid "the -m option must be used to specify a printer.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:881 src/escputil/escputil.c:1157
+#: src/escputil/escputil.c:871
 msgid "Attempting to detect printer model..."
 msgstr ""
 
-#: src/escputil/escputil.c:886 src/escputil/escputil.c:1162
+#: src/escputil/escputil.c:876
 #, c-format
 msgid ""
 "\n"
 "Cannot open %s read/write: %s\n"
 msgstr ""
 
-#: src/escputil/escputil.c:894 src/escputil/escputil.c:1170
+#: src/escputil/escputil.c:884
 #, c-format
 msgid ""
 "\n"
 "Cannot write to %s: %s\n"
 msgstr ""
 
-#: src/escputil/escputil.c:901 src/escputil/escputil.c:1177
+#: src/escputil/escputil.c:890
 #, c-format
 msgid ""
 "\n"
 "Cannot read from %s: %s\n"
 msgstr ""
 
-#: src/escputil/escputil.c:915 src/escputil/escputil.c:1191
+#: src/escputil/escputil.c:903
 msgid ""
 "\n"
-"Cannot detect printer type.  Please use -m to specify your printer model.\n"
+"Cannot detect printer type.\n"
+"Please use -m to specify your printer model.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:938 src/escputil/escputil.c:1214
+#: src/escputil/escputil.c:920
 #, c-format
 msgid "Printer model %s is not known.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:944 src/escputil/escputil.c:1226
-#, c-format
-msgid "This procedure assumes that your printer is an Epson %s.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:946 src/escputil/escputil.c:1228
-msgid "If this is not your printer model, please type control-C now and\n"
-msgstr ""
-
-#: src/escputil/escputil.c:947
+#: src/escputil/escputil.c:931
 msgid ""
-"choose your actual printer model.\n"
-"\n"
+"Please inspect the final output very carefully to ensure that your\n"
+"printer is in proper alignment. You may now:\n"
+"  (s)ave the results in the printer,\n"
+"  (q)uit without saving the results, or\n"
+"  (r)epeat the entire process from the beginning.\n"
+"You will then be asked to confirm your choice.\n"
+"What do you want to do (s, q, r)?\n"
 msgstr ""
 
-#: src/escputil/escputil.c:948
-msgid "Please place a sheet of paper in your printer to begin the head\n"
-msgstr ""
-
-#: src/escputil/escputil.c:949 src/escputil/escputil.c:1232
-msgid "alignment procedure.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:950 src/escputil/escputil.c:977
-#: src/escputil/escputil.c:1013 src/escputil/escputil.c:1233
-#: src/escputil/escputil.c:1244
-msgid "Press enter to continue > "
-msgstr ""
-
-#: src/escputil/escputil.c:960
-msgid "Please inspect the print, and choose the best pair of lines\n"
-msgstr ""
-
-#: src/escputil/escputil.c:962
-#, c-format
-msgid "in pattern #%d, and then insert a fresh page in the input tray.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:965
-#, c-format
-msgid "in pattern #%d, and then reinsert the page in the input tray.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:967
-msgid "Type a pair number, '?' for help, or 'r' to retry this pattern.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:969 src/escputil/escputil.c:1035
-#: src/escputil/escputil.c:1042 src/escputil/escputil.c:1055
-#: src/escputil/escputil.c:1071 src/escputil/escputil.c:1254
-#: src/escputil/escputil.c:1302 src/escputil/escputil.c:1309
-#: src/escputil/escputil.c:1322 src/escputil/escputil.c:1338
+#: src/escputil/escputil.c:939 src/escputil/escputil.c:946
+#: src/escputil/escputil.c:959 src/escputil/escputil.c:975
+#: src/escputil/escputil.c:1046 src/escputil/escputil.c:1187
 msgid "> "
 msgstr ""
 
-#: src/escputil/escputil.c:974 src/escputil/escputil.c:1012
-msgid "Please insert a fresh sheet of paper.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:993 src/escputil/escputil.c:1273
-msgid "Number out of range!\n"
-msgstr ""
-
-#: src/escputil/escputil.c:998 src/escputil/escputil.c:1278
-msgid "I cannot understand what you typed!\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1004
-#, c-format
-msgid "The best pair of lines should be numbered between 1 and %d.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1011
-#, c-format
-msgid "Aligning phase %d, and performing final test.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1016
-#, c-format
-msgid "Aligning phase %d, and starting phase %d.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1027 src/escputil/escputil.c:1294
-msgid "Please inspect the final output very carefully to ensure that your\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1028 src/escputil/escputil.c:1295
-msgid "printer is in proper alignment. You may now:\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1029 src/escputil/escputil.c:1296
-#, fuzzy
-msgid "  (s)ave the results in the printer,\n"
-msgstr "Sett kontrast for utskriften"
-
-#: src/escputil/escputil.c:1030 src/escputil/escputil.c:1297
-msgid "  (q)uit without saving the results, or\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1031 src/escputil/escputil.c:1298
-msgid "  (r)epeat the entire process from the beginning.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1032 src/escputil/escputil.c:1299
-msgid "You will then be asked to confirm your choice.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1033 src/escputil/escputil.c:1300
-msgid "What do you want to do (s, q, r)?\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1040 src/escputil/escputil.c:1307
+#: src/escputil/escputil.c:944
 msgid ""
 "Please confirm by typing 'q' again that you wish to quit without saving:\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1045 src/escputil/escputil.c:1312
-msgid "OK, your printer is aligned, but the alignment has not been saved.\n"
+#: src/escputil/escputil.c:949
+msgid ""
+"OK, your printer is aligned, but the alignment has not been saved.\n"
+"If you wish to save the alignment, you must repeat this process.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1046 src/escputil/escputil.c:1313
-msgid "If you wish to save the alignment, you must repeat this process.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1052 src/escputil/escputil.c:1319
+#: src/escputil/escputil.c:956
 msgid "Please confirm by typing 'r' again that you wish to repeat the\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1053 src/escputil/escputil.c:1320
+#: src/escputil/escputil.c:957
 msgid "alignment process:\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1058 src/escputil/escputil.c:1325
+#: src/escputil/escputil.c:962
 msgid "Repeating the alignment process.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1064 src/escputil/escputil.c:1331
-msgid "This will permanently alter the configuration of your printer.\n"
+#: src/escputil/escputil.c:968
+msgid ""
+"This will permanently alter the configuration of your printer.\n"
+"WARNING: this procedure has not been approved by Seiko Epson, and\n"
+"it may damage your printer. Proceed?\n"
+"Please confirm by typing 's' again that you wish to save the settings\n"
+"to your printer:\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1065 src/escputil/escputil.c:1332
-msgid "WARNING: this procedure has not been approved by Seiko Epson, and\n"
+#: src/escputil/escputil.c:978
+msgid ""
+"Please insert your alignment test page in the printer once more\n"
+"for the final save of your alignment settings.  When the printer\n"
+"feeds the page through, your settings have been saved.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1066 src/escputil/escputil.c:1333
-msgid "it may damage your printer. Proceed?\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1067 src/escputil/escputil.c:1334
-msgid "Please confirm by typing 's' again that you wish to save the settings\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1068 src/escputil/escputil.c:1335
-#, fuzzy
-msgid "to your printer:\n"
-msgstr "Sett opp skriver"
-
-#: src/escputil/escputil.c:1074 src/escputil/escputil.c:1341
-msgid "Please insert your alignment test page in the printer once more\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1075 src/escputil/escputil.c:1342
-msgid "for the final save of your alignment settings.  When the printer\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1076 src/escputil/escputil.c:1343
-msgid "feeds the page through, your settings have been saved.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1088 src/escputil/escputil.c:1355
+#: src/escputil/escputil.c:992
 msgid "Unrecognized command.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1091 src/escputil/escputil.c:1358
+#: src/escputil/escputil.c:995
 msgid "Final command was not confirmed.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1095
+#: src/escputil/escputil.c:1000
+#, c-format
+msgid ""
+"This procedure assumes that your printer is an Epson %s.\n"
+"If this is not your printer model, please type control-C now and\n"
+"choose your actual printer model.\n"
+"\n"
+"Please place a sheet of paper in your printer to begin the head\n"
+"alignment procedure.\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1025 src/escputil/escputil.c:1054
+#: src/escputil/escputil.c:1090 src/escputil/escputil.c:1166
+#: src/escputil/escputil.c:1177
+msgid "Press enter to continue > "
+msgstr ""
+
+#: src/escputil/escputil.c:1036
+#, c-format
+msgid ""
+"Please inspect the print, and choose the best pair of lines\n"
+"in pattern #%d, and then insert a fresh page in the input tray.\n"
+"Type a pair number, '?' for help, or 'r' to retry this pattern.\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1041
+#, c-format
+msgid ""
+"Please inspect the print, and choose the best pair of lines\n"
+"in pattern #%d, and then reinsert the page in the input tray.\n"
+"Type a pair number, '?' for help, or 'r' to retry this pattern.\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1051
+msgid "Please insert a fresh sheet of paper.\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1070 src/escputil/escputil.c:1206
+msgid "Number out of range!\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1075 src/escputil/escputil.c:1211
+msgid "I cannot understand what you typed!\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1081
+#, c-format
+msgid "The best pair of lines should be numbered between 1 and %d.\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1088
+#, c-format
+msgid ""
+"Aligning phase %d, and performing final test.\n"
+"Please insert a fresh sheet of paper.\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1093
+#, c-format
+msgid "Aligning phase %d, and starting phase %d.\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1107
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -2153,58 +2101,32 @@ msgid ""
 "damage your printer!\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1219
+#: src/escputil/escputil.c:1157
 #, c-format
 msgid "Printer %s does not require color head alignment.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1229
-msgid "choose your actual printer model.\n"
+#: src/escputil/escputil.c:1175
+msgid ""
+"Please re-insert the same alignment sheet in the printer when it is\n"
+"finished printing.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1230
-msgid "\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1231
-msgid "Please place a fresh sheet of paper in your printer to begin the head\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1242
-msgid "Please re-insert the same alignment sheet in the printer when it is\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1243
-msgid "finished printing.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1248
+#: src/escputil/escputil.c:1181
 msgid ""
 "Inspect the alignment sheet, and determine which pattern is the smoothest.\n"
+"This pattern will appear to have the least ``grain''.\n"
+"If you cannot find a smooth pattern, please select the number for the\n"
+"best pattern, and repeat the procedure.\n"
+"Type a pattern number, or '?' for help.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1249
-msgid "This pattern will appear to have the least ``grain''.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1250
-msgid "If you cannot find a smooth pattern, please select the number for the\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1251
-msgid "best pattern, and repeat the procedure.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1252
-msgid "Type a pattern number, or '?' for help.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1284
+#: src/escputil/escputil.c:1217
 #, c-format
 msgid "The best pattern should be numbered between 1 and %d.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1393
+#: src/escputil/escputil.c:1261
 msgid "Error in input\n"
 msgstr ""
 
@@ -2841,3 +2763,11 @@ msgstr "<Image>/Filter/Farger/Alien Map"
 #: src/gimp/print.c:1184
 msgid "File"
 msgstr "Fil"
+
+#, fuzzy
+#~ msgid "  (s)ave the results in the printer,\n"
+#~ msgstr "Sett kontrast for utskriften"
+
+#, fuzzy
+#~ msgid "to your printer:\n"
+#~ msgstr "Sett opp skriver"
