@@ -1,3 +1,67 @@
+2000-12-24	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.292) (+210 -143)
+		printers.xml (1.41) (+0 -8)
+	
+	Tune (somewhat) the 870/1270.
+	
+	Prep for release 4.0.2.
+	
+2000-12-24	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.105) (+1 -2)
+		cups/rastertoprinter.c (1.12) (+3 -3)
+		Ghost/gdevstp.c (1.46) (+1 -2)
+		printers.xml (1.40) (+0 -56)
+		print.h (1.98) (+135 -9)
+		print.c (1.130) (+3 -3)
+		print-ps.c (1.48) (+1 -2)
+		print-pcl.c (1.105) (+1 -2)
+		print-lexmark.c (1.13) (+1 -2)
+		print-escp2.c (1.291) (+19 -20)
+		print-dither.c (1.113) (+8 -3)
+		print-color.c (1.7) (+2 -2)
+	
+	More color tweaking for Epson printers.
+	
+	Comments in print.h.
+	
+	Remove copies argument to print function; nothing implements it, and
+	this isn't really the right place to do it.
+	
+2000-12-23	<rleigh@sourceforge.net>
+
+	Files:	escputil.c (1.22) (+1 -30)
+	
+	Removed old commented-out code
+	
+2000-12-23	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.67) (+48 -0)
+		Ghost/README (1.59) (+9 -9)
+		print-pcl.c (1.104) (+29 -29)
+		print-lexmark.c (1.12) (+29 -29)
+		print-escp2.c (1.290) (+29 -29)
+		configure.in (1.42) (+1 -2)
+		RELNOTES (1.36) (+16 -1)
+		README (1.39) (+1 -1)
+	
+	Improve color some more
+	
+2000-12-22	<rlk@sourceforge.net>
+
+	Files:	escputil.c (1.21) (+2 -2)
+	
+	Typo here
+	
+2000-12-22	<rleigh@sourceforge.net>
+
+	Files:	Makefile.am (1.79) (+2 -0)
+		escputil.c (1.20) (+101 -27)
+		configure.in (1.41) (+14 -0)
+	
+	Added GNU readline support to escputil
+	
 2000-12-22	<rlk@sourceforge.net>
 
 	Files:	print-escp2.c (1.289) (+5 -5)
