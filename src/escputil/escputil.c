@@ -169,8 +169,10 @@ typedef struct
 
 stp_printer_t printer_list[] =
 {
-  { "C20",	"Stylus C20",		3,	15,	0,	2,	9 },
-  { "C40",	"Stylus C40",		3,	15,	0,	2,	9 },
+  { "C20sx",	"Stylus C20sx",		3,	15,	0,	2,	9 },
+  { "C20ux",	"Stylus C20ux",		3,	15,	0,	2,	9 },
+  { "C40sx",	"Stylus C40sx",		3,	15,	0,	2,	9 },
+  { "C40ux",	"Stylus C40ux",		3,	15,	0,	2,	9 },
   { "color",	"Stylus Color",		1,	7,	0,	0,	0 },
   { "pro",	"Stylus Color Pro",	1,	7,	0,	0,	0 },
   { "pro-xl",	"Stylus Color Pro XL",	1,	7,	0,	0,	0 },
@@ -246,16 +248,6 @@ do_help(int code)
     }
   exit(code);
 }
-
-#if 0
-static void
-enter_packet_mode(void)
-{
-  static char hdr[] = "\000\000\000\033\001@EJL 1284.4\n@EJL\n@EJL\n\033@";
-  memcpy(printer_cmd + bufpos, hdr, sizeof(hdr) - 1); /* DON'T include null! */
-  bufpos += sizeof(hdr) - 1;
-}
-#endif
 
 static void
 exit_packet_mode(void)
@@ -476,10 +468,8 @@ read_from_printer(int fd, char *buf, int bufsize)
       (void) poll(&ufds, 1, 1000);
 #endif
       status = read(fd, buf, bufsize - 1);
-#ifndef HAVE_POLL
       if (status <= 0)
 	sleep(1);
-#endif
     }
   while ((status == 0) && (--retry != 0));
   return status;
@@ -507,30 +497,6 @@ do_remote_cmd(const char *cmd, int nargs, ...)
   memcpy(printer_cmd + bufpos, remote_trailer, sizeof(remote_trailer) - 1);
   bufpos += sizeof(remote_trailer) - 1;
 }
-
-#if 0
-static void
-do_packet_cmd(const char *cmd, int nargs, ...)
-{
-  int i;
-  unsigned char *sptr = (unsigned char *) printer_cmd + bufpos + 3;
-  va_list args;
-  va_start(args, nargs);
-
-  memcpy(printer_cmd + bufpos, "pcp", 3);
-  bufpos += 5;
-  sptr[0] = ((nargs + 4) >> 8) % 256;
-  sptr[1] = (nargs + 4) % 256;
-  memcpy(printer_cmd + bufpos, cmd, 2);
-  bufpos += 2;
-  printer_cmd[bufpos] = nargs % 256;
-  printer_cmd[bufpos + 1] = (nargs >> 8) % 256;
-  if (nargs > 0)
-    for (i = 0; i < nargs; i++)
-      printer_cmd[bufpos + 2 + i] = va_arg(args, int);
-  bufpos += 2 + nargs;
-}
-#endif
 
 static void
 add_newlines(int count)
@@ -579,7 +545,8 @@ do_ink_level(void)
 	      strerror(errno));
       exit(1);
     }
-  do_remote_cmd("IQ", 1, 1);
+  initialize_print_cmd();
+  do_remote_cmd("ST", 2, 0, 1);
   add_resets(2);
   if (write(fd, printer_cmd, bufpos) < bufpos)
     {
@@ -592,7 +559,10 @@ do_ink_level(void)
       fprintf(stderr, "Cannot read from %s: %s\n", raw_device,strerror(errno));
       exit(1);
     }
-  ind = strchr(buf, 'I');
+  ind = buf;
+  do
+    ind = strchr(ind, 'I');
+  while (ind && ind[1] != 'Q' && (ind[1] != '\0' && ind[2] != ':'));
   if (!ind || ind[1] != 'Q' || ind[2] != ':')
     {
       fprintf(stderr, "Cannot parse output from printer\n");
@@ -620,6 +590,11 @@ do_ink_level(void)
       printf("%20s    %3d\n", colors[i], val);
       ind += 2;
     }
+  initialize_print_cmd();
+  do_remote_cmd("ST", 2, 0, 0);
+  add_resets(2);
+  (void) write(fd, printer_cmd, bufpos);
+  (void) read(fd, buf, 1024);
   (void) close(fd);
   exit(0);
 }
@@ -642,6 +617,9 @@ do_identify(void)
 	      strerror(errno));
       exit(1);
     }
+  initialize_print_cmd();
+  add_resets(2);
+  (void) write(fd, printer_cmd, bufpos);
   bufpos = 0;
   sprintf(printer_cmd, "\033\001@EJL ID\r\n");
   if (write(fd, printer_cmd, strlen(printer_cmd)) < strlen(printer_cmd))
@@ -696,6 +674,11 @@ do_status(void)
     }
   while ((where = strchr(buf, ';')) != NULL)
     *where = '\n';
+  initialize_print_cmd();
+  do_remote_cmd("ST", 2, 0, 0);
+  add_resets(2);
+  (void) write(fd, printer_cmd, bufpos);
+  (void) read(fd, buf, 1024);
   printf("%s\n", buf);
   (void) close(fd);
   exit(0);
