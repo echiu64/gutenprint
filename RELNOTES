@@ -1,8 +1,7 @@
-This is the Print plugin for the Gimp, version 3.1.3.  This is a
-development release, the first on the 3.1 branch.  If this software
-causes your print head to zoom off the end of your printer, spilling
-ink all over your 1000 year old Persian rug, don't blame us.
-Remember, you installed the software.
+This is the Print plugin for the Gimp, version 3.1.4.  This is a
+development release.  If this software causes your print head to zoom
+off the end of your printer, spilling ink all over your 1000 year old
+Persian rug, don't blame us.  Remember, you installed the software.
 
 This software also comes with a GhostScript driver for Epson Stylus
 printers.  The support for Epson Stylus printers in the GhostScript
@@ -10,6 +9,16 @@ driver is identical to the support for these printers in the Print
 plugin -- they use the identical code base.
 
 This plugin can be compiled against either Gimp 1.1 or 1.0.
+
+Print 3.1.4 contains the following improvements over Print 3.1.3:
+
+1) Support for the Hewlett-Packard DeskJet 960.
+
+2) Print quality improvements.
+
+3) Some print speed optimizations.
+
+4) Major fix for hybrid Floyd-Steinberg dithering
 
 Print 3.1.3 contains the following improvements over Print 3.1.2:
 

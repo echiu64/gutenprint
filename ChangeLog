@@ -1,3 +1,254 @@
+2000-05-06	<rlk@sourceforge.net>
+
+	Files:	gtk_color_window.c
+	
+	Allow density up to 3
+	
+2000-05-06	<rlk@sourceforge.net>
+
+	Files:	print-dither.c
+	
+	Convert UPDATE_DITHER from a macro to a function.  This should make it
+	easier to profile this code (it needs it, badly!).  We can always make
+	this inline if need be.
+	
+	Point optimizations in dither_cmyk.
+	
+	Silly bug in hybrid Floyd-Steinberg.  It actually looks quite nice
+	now!
+	
+2000-05-05	<davehill@sourceforge.net>
+
+	Files:	pcl-unprint.c
+	
+	Cope with DJ690 photo without crashing. It doesn't actually decode them
+	properly (yet).
+	
+2000-05-05	<davehill@sourceforge.net>
+
+	Files:	printers.xml
+	
+	Added DJ690.
+	
+2000-05-05	<davehill@sourceforge.net>
+
+	Files:	print-pcl.c
+	
+	Added DJ690 Photo mode (thanks to Henk Verleye).
+	
+2000-05-05	<mitsch@sourceforge.net>
+
+	Files:	print.c
+	
+	Check for (GIMP_MINOR_VERSION == 0) instead of GIMP_1_0 when deciding
+	where to look for printrc.
+	
+2000-05-05	<gandy@sourceforge.net>
+
+	Files:	print.c
+	
+	printrc_save() now prints a warning if it cannot open the save-file
+	
+2000-05-05	<gandy@sourceforge.net>
+
+	Files:	print.c
+	
+	Small extension to lpstat output parsing to make it work with lprng without
+	breaking anything...
+	
+2000-05-05	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c
+	
+	Set ink size
+	
+2000-05-05	<gandy@sourceforge.net>
+
+	Files:	print-canon.c
+	
+	Better handling of canon send buffer
+	
+2000-05-05	<rlk@sourceforge.net>
+
+	Files:	print-dither.c
+		print-escp2.c
+	
+	Minor cleanup
+	
+2000-05-05	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c
+	
+	Optimize out head motion and color commands where possible.
+	We can still optimize out some horizontal movements.
+	Avoid printing color in *pure* black.
+	
+2000-05-04	<mitsch@sourceforge.net>
+
+	Files:	print.c
+		print_gimp.h
+	
+	- Use the new libgimp function gimp_ui_init(). This requires Gimp 1.1.21
+	  or better.
+	- Correctly delete the export image if the user canceled the dialog.
+	- Fixed an "unused variable" warning in get_system_printers().
+	
+2000-05-04	<rlk@sourceforge.net>
+
+	Files:	escp2-weavetest.c
+		run-weavetest
+		print-pcl.c
+		print-escp2.c
+		print-canon.c
+	
+	Improve use of black ink to reduce sharp grain.
+	
+	Improve weaving code for some corner cases (this will let us go x8 for some
+	important cases, if we really want to print that slowly).
+	
+	Fix ESC 440 softweave
+	
+	Fix use of microweave at 360 dpi (microweave should not be used at 360 on
+	any printer).
+	
+	Try to improve dither smoothness a bit.
+	
+	Fix ink constants for ESP 870
+	from Jean-Marc Verbavatz <verbavatz@ifrance.com>
+	
+2000-05-03	<rlk@sourceforge.net>
+
+	Files:	print-dither.c
+	
+	Avoid out of range problems
+	
+2000-05-03	<mitsch@sourceforge.net>
+
+	Files:	print_gimp.h
+	
+	Require Gimp 1.1.16 or better for the "Gimp" ui.
+	
+2000-05-02	<rlk@sourceforge.net>
+
+	Files:	print-dither.c
+		print-escp2.c
+	
+	Improved dither code.  Deposits significantly less ink than previous version,
+	and gives better saturation.
+	
+2000-04-29	<rlk@sourceforge.net>
+
+	Files:	README
+		Ghost/gdevstp.c
+		printers.xml
+		print_gimp.h
+		print-escp2.c
+		escp2-weavetest.c
+		configure.in
+	
+	Preliminary support for Stylus Color 760
+	
+	Fix one corner case with weave computation (there are lots left!)
+	
+	Prep for 3.1.4
+	
+2000-04-29	<rlk@sourceforge.net>
+
+	Files:	print-dither.c
+	
+	Improve photo and line art mode
+	
+2000-04-29	<rlk@sourceforge.net>
+
+	Files:	RedHat/ghostscript-5.50.spec
+		RedHat/gs.spec.diff
+		RedHat/gimp-print.spec
+	
+	Spec files for Red Hat RPM's, from Mark Hindess <beanz@uklinux.net>
+	
+2000-04-27	<rlk@sourceforge.net>
+
+	Files:	print-ps.c
+	
+	Fix copyright
+	
+2000-04-27	<rlk@sourceforge.net>
+
+	Files:	print-dither.c
+	
+	Comments
+	
+2000-04-27	<rlk@sourceforge.net>
+
+	Files:	print-dither.c
+	
+	Add Thomas Tonino's 23x23 matrix
+	
+2000-04-26	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c
+	
+	Support glossy film
+	
+2000-04-26	<rlk@sourceforge.net>
+
+	Files:	print-dither.c
+	
+	Minor improvements
+	
+2000-04-26	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c
+	
+	try again for 660
+	
+2000-04-25	<rlk@sourceforge.net>
+
+	Files:	printers.xml
+	
+	The other part of the Epson Stylus 660
+	
+2000-04-24	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c
+	
+	Try to support Epson 660
+	
+2000-04-24	<rlk@sourceforge.net>
+
+	Files:	print-dither.c
+	
+	Give the primary more weight, and the other colors less weight, in the
+	density calculation.  The previous weights resulted in too much dark
+	ink mixing in, which caused excessive graininess in some situations.
+	
+2000-04-24	<rlk@sourceforge.net>
+
+	Files:	gtk_main_window.c
+		Ghost/README
+		print-escp2.c
+		print-dither.c
+	
+	fix warning in gtk_main_window.c
+	
+	Add perturbed ordered dither (perturbed to break up the fine diagonal
+	lines characteristic of the matrix used).
+	
+	Improve transfer function for Epson photo printers (change the
+	constants).
+	
+2000-04-23	<rlk@sourceforge.net>
+
+	Files:	Makefile.am
+	
+	Include gs-stp.pdq
+	
+2000-04-22	<rlk@sourceforge.net>
+
+	Files:	ChangeLog
+	
+	Update change log for 3.1.3
+	
 2000-04-22	<rlk@sourceforge.net>
 
 	Files:	configure.in
