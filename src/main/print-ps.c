@@ -368,8 +368,12 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
   _fsetmode(v, "t");
 #endif
   stp_puts("%!PS-Adobe-3.0\n", v);
+#ifdef HAVE_CONFIG_H
   stp_zprintf(v, "%%%%Creator: %s/Gimp-Print %s (%s)\n",
 	      image->get_appname(image), VERSION, RELEASE_DATE);
+#else
+  stp_zprintf(v, "%%%%Creator: %s/Gimp-Print\n", image->get_appname(image));
+#endif
   stp_zprintf(v, "%%%%CreationDate: %s", ctime(&curtime));
   stp_puts("%%Copyright: 1997-2000 by Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)\n", v);
   stp_zprintf(v, "%%%%BoundingBox: %d %d %d %d\n",
