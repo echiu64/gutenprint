@@ -1,4 +1,4 @@
-Gimp-Print 4.3.21, released September XX, 2003, is a development
+Gimp-Print 4.3.21, released September 24, 2003, is a development
 release of this package.  Like all development releases, this version
 is considered unstable and should only be used by those individuals
 tolerant of the likelihood of problems.  Individuals desiring a stable
@@ -123,9 +123,9 @@ Gimp-Print 4.3.21 contains the following major changes over Gimp-Print
 
    * The Stylus Photo 2100 and 2200 have been recalibrated on a
      variety of papers, using both matte and photo black ink.  In
-     addition, the color correction curves have been adjusted.  The
-     results thus far are excellent, but at present the cyan and green
-     hues are still too dark.
+     addition, the color correction curves have been adjusted and
+     should give excellent color reproduction, particularly on glossy
+     papers.
 
      These improvements should apply to other printers using
      UltraChrome inks (Stylus Pro 7600 and 9600).
@@ -146,6 +146,12 @@ Gimp-Print 4.3.21 contains the following major changes over Gimp-Print
 
 7) The Postscript driver now produces proper alignment on the page
    (bug 802621).
+
+8) The Canon driver should now print all pages of a job correctly (bug
+   668342).
+
+9) Draft printing modes on the Epson Stylus Color 660 should now work
+   correctly (bug 808289).
 
 
 Gimp-Print 4.3.20 contains the following major changes over Gimp-Print
@@ -1752,25 +1758,26 @@ Generic PCL 6/PCL XL Printer   pcl-6           HP LaserJet 6 series
 
 Printer-Specific Notes:
 
-    * The Epson Stylus C70, C80, and C82 will give better results
-      using Three Color Composite printing on Premium Glossy Photo
-      Paper and Premium Semigloss.  Epson's proprietary drivers do
-      this on these papers.  The black ink is formulated differently
-      from the others, and does not adhere properly to these special
-      papers.
+    * It is strongly recommended that four color mode not be used on
+      the Epson Stylus C63, C64, C70, C80, C82, C83, C84, and CX-5200,
+      and the PX-V500 when printing to glossy papers, as the black ink
+      is formulated differently from the color ink and does not adhere
+      properly to these papers.  Epson Photo Paper, Premium Glossy
+      Photo Paper, Premium Luster Photo Paper, and Premium Semigloss
+      Photo Paper are known to be affected.  If you use the Standard
+      ink type, this will be handled automatically.
 
     * The Epson Stylus C70, C80, and C82 appear to support resolutions
       of 1440x1440 and 2880x1440, but these resolutions may not yield
-      any improvement over 2880x720.  Experiments suggest that
-      1440x1440 yields slightly better results than 2880x720 on Epson
-      Photo Paper, but somewhat inferior results on Premium Glossy
-      Photo Paper.  2880x1440 yields essentially no additional
-      improvement on Photo Paper, and intermediate results on Premium
-      Glossy Photo Paper.
-
-      We expect that 1440x1440 would yield maximum improvement over
-      2880x720 on line art with very fine detail.  It is unlikely that
-      2880x1440 would yield any significant additional improvement.
+      any improvement over 2880x720 or even 1440x720 DPI.  Due to
+      improvements in the driver, these extremely high resolutions
+      will offer very little if any improvement when printing
+      photographs or other continuous-tone images.  For printing line
+      art with extremely fine detail these resolutions may offer some
+      improvement due to the nature of the printed image.  We expect
+      that 1440x1440 would yield maximum improvement over 2880x720 on
+      line art with very fine detail.  It is unlikely that 2880x1440
+      would yield any significant additional improvement.
 
       Note that these resolutions are not officially supported by
       Epson on the C70 and C80, and may not work on all C70 and C80
@@ -1824,13 +1831,21 @@ Printer-Specific Notes:
       EPSON Stylus C41UX
       EPSON Stylus C42SX
       EPSON Stylus C42UX
+      EPSON Stylus C43SX
+      EPSON Stylus C43UX
+      EPSON Stylus C44SX
+      EPSON Stylus C44UX
       EPSON Stylus C50
       EPSON Stylus C60
       EPSON Stylus C61
       EPSON Stylus C62
+      EPSON Stylus C63
+      EPSON Stylus C64
       EPSON Stylus C70
       EPSON Stylus C80
       EPSON Stylus C82
+      EPSON Stylus C83
+      EPSON Stylus C84
       EPSON Stylus Color 440
       EPSON Stylus Color 460
       EPSON Stylus Color 480
