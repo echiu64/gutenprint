@@ -1763,7 +1763,7 @@ canon_advance_buffer(unsigned char *buf, int len, int num)
 void
 canon_print(const stp_printer_t *printer,		/* I - Model */
             FILE      *prn,		/* I - File to print to */
-	    Image     image,		/* I - Image to print */
+	    stp_image_t *image,		/* I - Image to print */
 	    const stp_vars_t    *v)
 {
   unsigned char *cmap = v->cmap;
@@ -1842,10 +1842,10 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
   * Setup a read-only pixel region for the entire image...
   */
 
-  Image_init(image);
-  image_height = Image_height(image);
-  image_width = Image_width(image);
-  image_bpp = Image_bpp(image);
+  image->init(image);
+  image_height = image->height(image);
+  image_width = image->width(image);
+  image_bpp = image->bpp(image);
 
   /* force grayscale if image is grayscale
    *                 or single black cartridge installed
@@ -1904,8 +1904,8 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
    * Recompute the image length and width.  If the image has been
    * rotated, these will change from previously.
    */
-  image_height = Image_height(image);
-  image_width = Image_width(image);
+  image_height = image->height(image);
+  image_width = image->width(image);
 
   stp_default_media_size(printer, &nv, &n, &page_true_height);
 
@@ -1923,7 +1923,7 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
   PUT("out_length", out_length,ydpi);
   */
 
-  Image_progress_init(image);
+  image->progress_init(image);
 
   PUT("top     ",top,72);
   PUT("left    ",left,72);
@@ -2148,13 +2148,13 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
   {
     int duplicate_line = 1;
     if ((y & 63) == 0)
-      Image_note_progress(image, y, out_length);
+      image->note_progress(image, y, out_length);
 
     if (errline != errlast)
     {
       errlast = errline;
       duplicate_line = 0;
-      Image_get_row(image, in, errline);
+      image->get_row(image, in, errline);
       (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv, NULL, NULL,
 		   NULL);
     }
@@ -2201,7 +2201,7 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
       errline ++;
     }
   }
-  Image_progress_conclude(image);
+  image->progress_conclude(image);
 
   stp_free_dither(dither);
 

@@ -1571,7 +1571,7 @@ pcl_limit(const stp_printer_t *printer,	/* I - Printer model */
 void
 pcl_print(const stp_printer_t *printer,		/* I - Model */
           FILE      *prn,		/* I - File to print to */
-          Image     image,		/* I - Image to print */
+          stp_image_t *image,		/* I - Image to print */
 	  const stp_vars_t    *v)
 {
   unsigned char *cmap = v->cmap;
@@ -1636,10 +1636,10 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
   * Setup a read-only pixel region for the entire image...
   */
 
-  Image_init(image);
-  image_height = Image_height(image);
-  image_width = Image_width(image);
-  image_bpp = Image_bpp(image);
+  image->init(image);
+  image_height = image->height(image);
+  image_width = image->width(image);
+  image_bpp = image->bpp(image);
 
  /*
   * Figure out the output resolution...
@@ -1711,8 +1711,8 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
    * Recompute the image height and width.  If the image has been
    * rotated, these will change from previously.
    */
-  image_height = Image_height(image);
-  image_width = Image_width(image);
+  image_height = image->height(image);
+  image_width = image->width(image);
 
 #ifdef DEBUG
   printf("After stp_compute_page_parameters()\n");
@@ -1725,7 +1725,7 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
   * Let the user know what we're doing...
   */
 
-  Image_progress_init(image);
+  image->progress_init(image);
 
  /*
   * Send PCL initialization commands...
@@ -2106,13 +2106,13 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
            y, errline, errval, errmod, out_height);
 #endif /* DEBUG */
     if ((y & 63) == 0)
-      Image_note_progress(image, y, out_height);
+      image->note_progress(image, y, out_height);
 
     if (errline != errlast)
     {
       errlast = errline;
       duplicate_line = 0;
-      Image_get_row(image, in, errline);
+      image->get_row(image, in, errline);
       (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv,
 		   hue_adjustment, lum_adjustment, NULL);
     }
@@ -2200,7 +2200,7 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
       errline ++;
     }
   }
-  Image_progress_conclude(image);
+  image->progress_conclude(image);
 
   stp_free_dither(dither);
 

@@ -633,26 +633,6 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
   return (0);
 }
 
-
-void Image_init(Image image) {}
-void Image_reset(Image image) {}
-void Image_transpose(Image image) {}
-void Image_hflip(Image image) {}
-void Image_vflip(Image image) {}
-void Image_crop(Image image, int left, int top, int right, int bottom) {}
-void Image_rotate_ccw(Image image) {}
-void Image_rotate_cw(Image image) {}
-void Image_rotate_180(Image image) {}
-int  Image_bpp(Image image) { return (0); }
-int  Image_width(Image image) { return (0); }
-int  Image_height(Image image) { return (0); }
-void Image_get_row(Image image, unsigned char *data, int row) {}
-
-const char *Image_get_appname(Image image) { return (NULL); }
-void Image_progress_init(Image image) {}
-void Image_note_progress(Image image, double current, double total) {}
-void Image_progress_conclude(Image image) {}
-
 /*
  * End of "$Id$".
  */

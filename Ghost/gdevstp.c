@@ -125,9 +125,43 @@ typedef struct
   gx_device_printer *dev;
   privdata_t *data;
   uint raster;
-} stp_image_t;
+} stp_priv_image_t;
 
+static const char *Image_get_appname(stp_image_t *image);
+static void Image_progress_conclude(stp_image_t *image);
+static void Image_note_progress(stp_image_t *image,
+				double current, double total);
+static void Image_progress_init(stp_image_t *image);
+static void Image_get_row(stp_image_t *image, unsigned char *data, int row);
+static int Image_height(stp_image_t *image);
+static int Image_width(stp_image_t *image);
+static int Image_bpp(stp_image_t *image);
+static void Image_rotate_180(stp_image_t *image);
+static void Image_rotate_cw(stp_image_t *image);
+static void Image_rotate_ccw(stp_image_t *image);
+static void Image_init(stp_image_t *image);
 
+static stp_image_t theImage =
+{
+  Image_init,
+  NULL,				/* reset */
+  NULL,				/* transpose */
+  NULL,				/* hflip */
+  NULL,				/* vflip */
+  NULL,				/* crop */
+  Image_rotate_ccw,
+  Image_rotate_cw,
+  Image_rotate_180,
+  Image_bpp,
+  Image_width,
+  Image_height,
+  Image_get_row,
+  Image_get_appname,
+  Image_progress_init,
+  Image_note_progress,
+  Image_progress_conclude,
+  NULL
+};
 
 /* ------ Private definitions ------ */
 
@@ -186,13 +220,14 @@ stp_print_debug(const char *msg, gx_device *pdev,
 private int
 stp_print_page(gx_device_printer * pdev, FILE * file)
 {
-  stp_image_t theImage;
+  stp_priv_image_t gsImage;
   private int printvars_merged = 0;
   int code;			/* return code */
   const stp_printer_t *printer = NULL;
   uint stp_raster;
   byte *stp_row;
   const stp_papersize_t *p;
+  theImage.rep = &gsImage;
 
   stp_print_dbg("stp_print_page", pdev, &stp_data);
   code = 0;
@@ -235,10 +270,10 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
       NULL)
     strcpy(stp_data.v.media_size, p->name);
   stp_print_dbg("stp_print_page", pdev, &stp_data);
-    
-  theImage.dev = pdev;
-  theImage.data = &stp_data;
-  theImage.raster = stp_raster;
+
+  gsImage.dev = pdev;
+  gsImage.data = &stp_data;
+  gsImage.raster = stp_raster;
   if (stp_verify_printer_params(printer, &(stp_data.v)))
     (*printer->print)(printer,		/* I - Model */
 		      file,		/* I - File to print to */
@@ -539,10 +574,10 @@ stp_open(gx_device *pdev)
 ***********************************************************************/
 
 /* get one row of the image */
-void
-Image_get_row(Image image, unsigned char *data, int row)
+private void
+Image_get_row(stp_image_t *image, unsigned char *data, int row)
 {
-  stp_image_t *im = (stp_image_t *) image;
+  stp_priv_image_t *im = (stp_priv_image_t *) (image->rep);
   memset(data, 0, im->dev->width * 3);
   if (im->dev->x_pixels_per_inch == im->dev->y_pixels_per_inch)
     {
@@ -570,17 +605,17 @@ Image_get_row(Image image, unsigned char *data, int row)
 }
 
 /* return bpp of picture (24 here) */
-int
-Image_bpp(Image image)
+private int
+Image_bpp(stp_image_t *image)
 {
   return 3;
 }
 
 /* return width of picture */
-int
-Image_width(Image image)
+private int
+Image_width(stp_image_t *image)
 {
-  stp_image_t *im = (stp_image_t *) image;
+  stp_priv_image_t *im = (stp_priv_image_t *) (image->rep);
   return im->dev->width;
 }
 
@@ -591,10 +626,10 @@ Image_width(Image image)
   input
 
 */
-int
-Image_height(Image image)
+private int
+Image_height(stp_image_t *image)
 {
-  stp_image_t *im = (stp_image_t *) image;
+  stp_priv_image_t *im = (stp_priv_image_t *) (image->rep);
   float tmp,tmp2;
 
   tmp = im->data->v.top + im->data->bottom; /* top margin + bottom margin */
@@ -612,51 +647,51 @@ Image_height(Image image)
   return (int)tmp2;
 }
 
-void
-Image_rotate_ccw(Image img)
+private void
+Image_rotate_ccw(stp_image_t *image)
 {
  /* dummy function, Landscape printing unsupported atm */
 }
 
-void
-Image_rotate_cw(Image img)
+private void
+Image_rotate_cw(stp_image_t *image)
 {
  /* dummy function, Seascape printing unsupported atm */
 }
 
-void
-Image_rotate_180(Image img)
+private void
+Image_rotate_180(stp_image_t *image)
 {
  /* dummy function,  upside down printing unsupported atm */
 }
 
-void
-Image_init(Image image)
+private void
+Image_init(stp_image_t *image)
 {
  /* dummy function */
 }
 
-void
-Image_progress_init(Image image)
+private void
+Image_progress_init(stp_image_t *image)
 {
  /* dummy function */
 }
 
 /* progress display */
-void
-Image_note_progress(Image image, double current, double total)
+private void
+Image_note_progress(stp_image_t *image, double current, double total)
 {
   STP_DEBUG(fprintf(gs_stderr, "."));
 }
 
-void
-Image_progress_conclude(Image image)
+private void
+Image_progress_conclude(stp_image_t *image)
 {
   STP_DEBUG(fprintf(gs_stderr, "\n"));
 }
 
-const char *
-Image_get_appname(Image image)
+private const char *
+Image_get_appname(stp_image_t *image)
 {
   return "GhostScript/stp";
 }

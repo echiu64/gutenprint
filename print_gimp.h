@@ -52,6 +52,13 @@
 #define PLUG_IN_VERSION		VERSION " - " RELEASE_DATE
 #define PLUG_IN_NAME		"Print"
 
+typedef struct		/**** Printer List ****/
+{
+  int	active;			/* Do we know about this printer? */
+  char	name[128];		/* Name of printer */
+  stp_vars_t v;
+} stp_plist_t;
+
 /*
  * Constants for GUI...
  */
@@ -69,6 +76,6 @@
  */
 
 /* How to create an Image wrapping a Gimp drawable */
-extern Image Image_GDrawable_new(GDrawable *drawable);
+extern stp_image_t *Image_GDrawable_new(GDrawable *drawable);
 
 #endif  /* __PRINT_GIMP_H__ */

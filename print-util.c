@@ -515,20 +515,20 @@ stp_default_dither_algorithm(void)
 
 void
 stp_compute_page_parameters(int page_right,	/* I */
-			int page_left, /* I */
-			int page_top, /* I */
-			int page_bottom, /* I */
-			double scaling, /* I */
-			int image_width, /* I */
-			int image_height, /* I */
-			Image image, /* IO */
-			int *orientation, /* IO */
-			int *page_width, /* O */
-			int *page_height, /* O */
-			int *out_width,	/* O */
-			int *out_height, /* O */
-			int *left, /* O */
-			int *top) /* O */
+			    int page_left, /* I */
+			    int page_top, /* I */
+			    int page_bottom, /* I */
+			    double scaling, /* I */
+			    int image_width, /* I */
+			    int image_height, /* I */
+			    stp_image_t *image, /* IO */
+			    int *orientation, /* IO */
+			    int *page_width, /* O */
+			    int *page_height, /* O */
+			    int *out_width,	/* O */
+			    int *out_height, /* O */
+			    int *left, /* O */
+			    int *top) /* O */
 {
   *page_width  = page_right - page_left;
   *page_height = page_top - page_bottom;
@@ -545,14 +545,14 @@ stp_compute_page_parameters(int page_right,	/* I */
     }
 
   if (*orientation == ORIENT_LANDSCAPE)
-      Image_rotate_ccw(image);
+      image->rotate_ccw(image);
   else if (*orientation == ORIENT_UPSIDEDOWN)
-      Image_rotate_180(image);
+      image->rotate_180(image);
   else if (*orientation == ORIENT_SEASCAPE)
-      Image_rotate_cw(image);
+      image->rotate_cw(image);
 
-  image_width  = Image_width(image);
-  image_height = Image_height(image);
+  image_width  = image->width(image);
+  image_height = image->height(image);
 
   /*
    * Calculate width/height...

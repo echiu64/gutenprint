@@ -182,6 +182,8 @@ Printer Model Selection:
 -sModel=name
 
 bjc-30			CANON BJC 30
+bjc-55			CANON BJC 55
+bjc-85			CANON BJC 85
 bjc-1000		CANON BJC 1000
 bjc-2000		CANON BJC 2000
 bjc-3000		CANON BJC 3000

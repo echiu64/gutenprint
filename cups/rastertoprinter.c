@@ -69,6 +69,41 @@ typedef struct
   cups_page_header_t	header;		/* Page header from file */
 } cups_image_t;
 
+static const char *Image_get_appname(stp_image_t *image);
+static void Image_progress_conclude(stp_image_t *image);
+static void Image_note_progress(stp_image_t *image,
+				double current, double total);
+static void Image_progress_init(stp_image_t *image);
+static void Image_get_row(stp_image_t *image, unsigned char *data, int row);
+static int Image_height(stp_image_t *image);
+static int Image_width(stp_image_t *image);
+static int Image_bpp(stp_image_t *image);
+static void Image_rotate_180(stp_image_t *image);
+static void Image_rotate_cw(stp_image_t *image);
+static void Image_rotate_ccw(stp_image_t *image);
+static void Image_init(stp_image_t *image);
+
+static stp_image_t theImage =
+{
+  Image_init,
+  NULL,				/* reset */
+  NULL,				/* transpose */
+  NULL,				/* hflip */
+  NULL,				/* vflip */
+  NULL,				/* crop */
+  Image_rotate_ccw,
+  Image_rotate_cw,
+  Image_rotate_180,
+  Image_bpp,
+  Image_width,
+  Image_height,
+  Image_get_row,
+  Image_get_appname,
+  Image_progress_init,
+  Image_note_progress,
+  Image_progress_conclude,
+  NULL
+};
 
 /*
  * 'main()' - Main entry and processing of driver.
@@ -89,6 +124,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   int		num_opts;		/* Number of printer options */
   char		**opts;			/* Printer options */
 
+  theImage.rep = &cups;
  /*
   * Check for valid arguments...
   */
@@ -287,7 +323,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: v.ink_type |%s|\n", v.ink_type);
     fprintf(stderr, "DEBUG: v.dither_algorithm |%s|\n", v.dither_algorithm);
     if (stp_verify_printer_params(printer, &v))
-      (*printer->print)(printer, stdout, &cups, &v);
+      (*printer->print)(printer, stdout, &theImage, &v);
     else
       fputs("ERROR: Invalid printer settings!\n", stderr);
 
@@ -334,13 +370,13 @@ main(int  argc,				/* I - Number of command-line arguments */
  * 'Image_bpp()' - Return the bytes-per-pixel of an image.
  */
 
-int				/* O - Bytes per pixel */
-Image_bpp(Image image)		/* I - Image */
+static int				/* O - Bytes per pixel */
+Image_bpp(stp_image_t *image)		/* I - Image */
 {
   cups_image_t	*cups;		/* CUPS image */
 
 
-  if ((cups = (cups_image_t *)image) == NULL)
+  if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return (0);
 
  /*
@@ -359,8 +395,8 @@ Image_bpp(Image image)		/* I - Image */
  * 'Image_get_appname()' - Get the application we are running.
  */
 
-const char *				/* O - Application name */
-Image_get_appname(Image image)		/* I - Image */
+static const char *				/* O - Application name */
+Image_get_appname(stp_image_t *image)		/* I - Image */
 {
   (void)image;
 
@@ -373,14 +409,14 @@ Image_get_appname(Image image)		/* I - Image */
  */
 
 void
-Image_get_row(Image         image,	/* I - Image */
-              unsigned char *data,	/* O - Row */
+Image_get_row(stp_image_t   *image,	/* I - Image */
+	      unsigned char *data,	/* O - Row */
 	      int           row)	/* I - Row number (unused) */
 {
   cups_image_t	*cups;			/* CUPS image */
 
 
-  if ((cups = (cups_image_t *)image) == NULL)
+  if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return;
 
   if (cups->row < cups->header.cupsHeight)
@@ -397,13 +433,13 @@ Image_get_row(Image         image,	/* I - Image */
  * 'Image_height()' - Return the height of an image.
  */
 
-int				/* O - Height in pixels */
-Image_height(Image image)	/* I - Image */
+static int				/* O - Height in pixels */
+Image_height(stp_image_t *image)	/* I - Image */
 {
   cups_image_t	*cups;		/* CUPS image */
 
 
-  if ((cups = (cups_image_t *)image) == NULL)
+  if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return (0);
 
   return (cups->header.cupsHeight);
@@ -414,8 +450,8 @@ Image_height(Image image)	/* I - Image */
  * 'Image_init()' - Initialize an image.
  */
 
-void
-Image_init(Image image)		/* I - Image */
+static void
+Image_init(stp_image_t *image)		/* I - Image */
 {
   (void)image;
 }
@@ -426,14 +462,14 @@ Image_init(Image image)		/* I - Image */
  */
 
 void
-Image_note_progress(Image  image,	/* I - Image */
-                    double current,	/* I - Current progress */
+Image_note_progress(stp_image_t *image,	/* I - Image */
+		    double current,	/* I - Current progress */
 		    double total)	/* I - Maximum progress */
 {
   cups_image_t	*cups;		/* CUPS image */
 
 
-  if ((cups = (cups_image_t *)image) == NULL)
+  if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return;
 
   fprintf(stderr, "INFO: Printing page %d, %.0f%%\n",
@@ -445,13 +481,13 @@ Image_note_progress(Image  image,	/* I - Image */
  * 'Image_progress_conclude()' - Close the progress display.
  */
 
-void
-Image_progress_conclude(Image image)	/* I - Image */
+static void
+Image_progress_conclude(stp_image_t *image)	/* I - Image */
 {
   cups_image_t	*cups;		/* CUPS image */
 
 
-  if ((cups = (cups_image_t *)image) == NULL)
+  if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return;
 
   fprintf(stderr, "INFO: Finished page %d...\n", cups->page);
@@ -462,13 +498,13 @@ Image_progress_conclude(Image image)	/* I - Image */
  * 'Image_progress_init()' - Initialize progress display.
  */
 
-void
-Image_progress_init(Image image)/* I - Image */
+static void
+Image_progress_init(stp_image_t *image)/* I - Image */
 {
   cups_image_t	*cups;		/* CUPS image */
 
 
-  if ((cups = (cups_image_t *)image) == NULL)
+  if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return;
 
   fprintf(stderr, "INFO: Starting page %d...\n", cups->page);
@@ -479,8 +515,8 @@ Image_progress_init(Image image)/* I - Image */
  * 'Image_rotate_180()' - Rotate the image 180 degrees (unsupported).
  */
 
-void
-Image_rotate_180(Image image)	/* I - Image */
+static void
+Image_rotate_180(stp_image_t *image)	/* I - Image */
 {
   (void)image;
 }
@@ -490,8 +526,8 @@ Image_rotate_180(Image image)	/* I - Image */
  * 'Image_rotate_ccw()' - Rotate the image counter-clockwise (unsupported).
  */
 
-void
-Image_rotate_ccw(Image image)	/* I - Image */
+static void
+Image_rotate_ccw(stp_image_t *image)	/* I - Image */
 {
   (void)image;
 }
@@ -501,8 +537,8 @@ Image_rotate_ccw(Image image)	/* I - Image */
  * 'Image_rotate_cw()' - Rotate the image clockwise (unsupported).
  */
 
-void
-Image_rotate_cw(Image image)	/* I - Image */
+static void
+Image_rotate_cw(stp_image_t *image)	/* I - Image */
 {
   (void)image;
 }
@@ -512,18 +548,17 @@ Image_rotate_cw(Image image)	/* I - Image */
  * 'Image_width()' - Return the width of an image.
  */
 
-int				/* O - Width in pixels */
-Image_width(Image image)	/* I - Image */
+static int				/* O - Width in pixels */
+Image_width(stp_image_t *image)	/* I - Image */
 {
   cups_image_t	*cups;		/* CUPS image */
 
 
-  if ((cups = (cups_image_t *)image) == NULL)
+  if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return (0);
 
   return (cups->header.cupsWidth);
 }
-
 
 /*
  * End of "$Id$".

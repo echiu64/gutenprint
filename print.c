@@ -625,7 +625,7 @@ run (char   *name,		/* I - Name of print program. */
 
       if (prn != NULL)
 	{
-	  Image image = Image_GDrawable_new(drawable);
+	  stp_image_t *image = Image_GDrawable_new(drawable);
 	  vars.app_gamma = gimp_gamma();
 	  stp_merge_printvars(&vars, &(current_printer->printvars));
 

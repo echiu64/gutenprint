@@ -126,13 +126,6 @@ typedef struct					/* Plug-in variables */
   unsigned char *cmap;		/* Color map */
 } stp_vars_t;
 
-typedef struct		/**** Printer List ****/
-{
-  int	active;			/* Do we know about this printer? */
-  char	name[128];		/* Name of printer */
-  stp_vars_t v;
-} stp_plist_t;
-
 typedef enum papersize_unit
 {
   PAPERSIZE_ENGLISH,
@@ -151,29 +144,29 @@ typedef struct
  * Abstract data type for interfacing with the image creation program
  * (in this case, the Gimp).
  */
-typedef void *Image;
 
-/* For how to create an Image wrapping a Gimp drawable, see print_gimp.h */
-
-extern void Image_init(Image image);
-extern void Image_reset(Image image);
-extern void Image_transpose(Image image);
-extern void Image_hflip(Image image);
-extern void Image_vflip(Image image);
-extern void Image_crop(Image image, int left, int top, int right, int bottom);
-extern void Image_rotate_ccw(Image image);
-extern void Image_rotate_cw(Image image);
-extern void Image_rotate_180(Image image);
-extern int  Image_bpp(Image image);
-extern int  Image_width(Image image);
-extern int  Image_height(Image image);
-extern void Image_get_row(Image image, unsigned char *data, int row);
-
-extern const char *Image_get_appname(Image image);
-extern void Image_progress_init(Image image);
-extern void Image_note_progress(Image image, double current, double total);
-extern void Image_progress_conclude(Image image);
-
+typedef struct stp_image
+{
+  void (*init)(struct stp_image *image);
+  void (*reset)(struct stp_image *image);
+  void (*transpose)(struct stp_image *image);
+  void (*hflip)(struct stp_image *image);
+  void (*vflip)(struct stp_image *image);
+  void (*crop)(struct stp_image *image,
+	       int left, int top, int right, int bottom);
+  void (*rotate_ccw)(struct stp_image *image);
+  void (*rotate_cw)(struct stp_image *image);
+  void (*rotate_180)(struct stp_image *image);
+  int  (*bpp)(struct stp_image *image);
+  int  (*width)(struct stp_image *image);
+  int  (*height)(struct stp_image *image);
+  void (*get_row)(struct stp_image *image, unsigned char *data, int row);
+  const char *(*get_appname)(struct stp_image *image);
+  void (*progress_init)(struct stp_image *image);
+  void (*note_progress)(struct stp_image *image, double current, double total);
+  void (*progress_conclude)(struct stp_image *image);
+  void *rep;
+} stp_image_t;
 
 /*
  * Definition of a printer.  A printer definition contains some data
@@ -316,7 +309,7 @@ typedef struct printer
   void	(*limit)(const struct printer *printer, const stp_vars_t *v,
 		 int *width, int *height);
   void	(*print)(const struct printer *printer, FILE *prn,
-		 Image image, const stp_vars_t *v);
+		 stp_image_t *image, const stp_vars_t *v);
   const char *(*default_resolution)(const struct printer *printer);
   void  (*describe_resolution)(const struct printer *printer,
 			       const char *resolution, int *x, int *y);
@@ -328,10 +321,10 @@ typedef struct printer
  * from (0..6) to (0..6) in increments of .125.  The hue_map is in CMY space,
  * so hue=0 is cyan.
  */
-typedef void (*stp_convert_t)(unsigned char *in, unsigned short *out, int width,
-			  int bpp, unsigned char *cmap, const stp_vars_t *vars,
-			  const double *hue_map, const double *lum_map,
-			  const double *sat_map);
+typedef void (*stp_convert_t)(unsigned char *in, unsigned short *out,
+			      int width, int bpp, unsigned char *cmap,
+			      const stp_vars_t *vars, const double *hue_map,
+			      const double *lum_map, const double *sat_map);
 
 typedef struct
 {
@@ -365,27 +358,31 @@ typedef struct
  * Prototypes...
  */
 
-extern void *	stp_init_dither(int in_width, int out_width, int horizontal_aspect,
-			    int vertical_aspect, stp_vars_t *vars);
+extern void *	stp_init_dither(int in_width, int out_width,
+				int horizontal_aspect,
+				int vertical_aspect, stp_vars_t *vars);
 extern void	stp_dither_set_transition(void *vd, double);
 extern void	stp_dither_set_density(void *vd, double);
 extern void	stp_dither_set_black_density(void *vd, double);
 extern void 	stp_dither_set_black_lower(void *vd, double);
 extern void 	stp_dither_set_black_upper(void *vd, double);
 extern void	stp_dither_set_black_levels(void *vd, double, double, double);
-extern void 	stp_dither_set_randomizers(void *vd, double, double, double, double);
+extern void 	stp_dither_set_randomizers(void *vd, double, double, double,
+					   double);
 extern void 	stp_dither_set_ink_darkness(void *vd, double, double, double);
-extern void 	stp_dither_set_light_inks(void *vd, double, double, double, double);
+extern void 	stp_dither_set_light_inks(void *vd, double, double, double,
+					  double);
 extern void	stp_dither_set_ranges(void *vd, int color, int nlevels,
-				  const stp_simple_dither_range_t *ranges,
-				  double density);
+				      const stp_simple_dither_range_t *ranges,
+				      double density);
 extern void	stp_dither_set_ranges_full(void *vd, int color, int nlevels,
-				       const stp_full_dither_range_t *ranges,
-				       double density);
+					   const stp_full_dither_range_t *ranges,
+					   double density);
 extern void	stp_dither_set_ranges_simple(void *vd, int color, int nlevels,
-					 const double *levels, double density);
+					     const double *levels,
+					     double density);
 extern void	stp_dither_set_ranges_complete(void *vd, int color, int nlevels,
-					   const stp_dither_range_t *ranges);
+					       const stp_dither_range_t *ranges);
 extern void	stp_dither_set_ink_spread(void *vd, int spread);
 extern void	stp_dither_set_max_ink(void *vd, int, double);
 extern void	stp_dither_set_x_oversample(void *vd, int os);
@@ -397,25 +394,26 @@ extern void	stp_free_dither(void *);
 
 
 extern void	stp_dither_monochrome(const unsigned short *, int, void *,
-				 unsigned char *, int duplicate_line);
+				      unsigned char *, int duplicate_line);
 
 extern void	stp_dither_black(const unsigned short *, int, void *,
-			     unsigned char *, int duplicate_line);
+				 unsigned char *, int duplicate_line);
 
 extern void	stp_dither_cmyk(const unsigned short *, int, void *,
-			    unsigned char *,
-			    unsigned char *, unsigned char *,
-			    unsigned char *, unsigned char *,
-			    unsigned char *, unsigned char *,
-			    int duplicate_line);
+				unsigned char *,
+				unsigned char *, unsigned char *,
+				unsigned char *, unsigned char *,
+				unsigned char *, unsigned char *,
+				int duplicate_line);
 
 
 extern void *	stp_initialize_weave_params(int S, int J, int O,
-		                        int firstrow, int lastrow,
-		                        int pageheight, int strategy);
+					    int firstrow, int lastrow,
+					    int pageheight, int strategy);
 extern void	stp_calculate_row_parameters(void *w, int row, int subpass,
-		                         int *pass, int *jet, int *startrow,
-					 int *phantomrows, int *jetsused);
+					     int *pass, int *jet,
+					     int *startrow, int *phantomrows,
+					     int *jetsused);
 extern void	stp_destroy_weave_params(void *vw);
 
 extern void	stp_fold(const unsigned char *line, int single_height,
@@ -450,8 +448,8 @@ extern void	stp_compute_lut(size_t steps, stp_vars_t *v);
 
 
 extern void	stp_default_media_size(const stp_printer_t *printer,
-				   const stp_vars_t *v, int *width,
-				   int *height);
+				       const stp_vars_t *v, int *width,
+				       int *height);
 
 
 extern char	**lexmark_parameters(const stp_printer_t *printer,
@@ -464,7 +462,7 @@ extern void	lexmark_limit(const stp_printer_t *printer,
 			      const stp_vars_t *v,
 			      int *width, int *height);
 extern void	lexmark_print(const stp_printer_t *printer, FILE *prn,
-			    Image image, const stp_vars_t *v);
+			      stp_image_t *image, const stp_vars_t *v);
 extern const char *lexmark_default_resolution(const stp_printer_t *printer);
 extern void     lexmark_describe_resolution(const struct printer *printer,
 					    const char *resolution,
@@ -480,7 +478,7 @@ extern void	escp2_imageable_area(const stp_printer_t *printer,
 extern void	escp2_limit(const stp_printer_t *printer, const stp_vars_t *v,
 			    int *width, int *height);
 extern void	escp2_print(const stp_printer_t *printer, FILE *prn,
-			    Image image, const stp_vars_t *v);
+			    stp_image_t *image, const stp_vars_t *v);
 extern const char *escp2_default_resolution(const stp_printer_t *printer);
 extern void     escp2_describe_resolution(const struct printer *printer,
 					  const char *resolution,
@@ -496,7 +494,7 @@ extern void	canon_imageable_area(const stp_printer_t *printer,
 extern void	canon_limit(const stp_printer_t *printer, const stp_vars_t *v,
 			    int *width, int *height);
 extern void	canon_print(const stp_printer_t *printer, FILE *prn,
-			    Image image, const stp_vars_t *v);
+			    stp_image_t *image, const stp_vars_t *v);
 extern const char *canon_default_resolution(const stp_printer_t *printer);
 extern void     canon_describe_resolution(const struct printer *printer,
 					  const char *resolution,
@@ -512,7 +510,7 @@ extern void	pcl_imageable_area(const stp_printer_t *printer,
 extern void	pcl_limit(const stp_printer_t *printer, const stp_vars_t *v,
 			  int *width, int *height);
 extern void	pcl_print(const stp_printer_t *printer, FILE *prn,
-			  Image image, const stp_vars_t *v);
+			  stp_image_t *image, const stp_vars_t *v);
 extern const char *pcl_default_resolution(const stp_printer_t *printer);
 extern void     pcl_describe_resolution(const struct printer *printer,
 					const char *resolution,
@@ -530,7 +528,7 @@ extern void	ps_imageable_area(const stp_printer_t *printer,
 extern void	ps_limit(const stp_printer_t *printer, const stp_vars_t *v,
 			 int *width, int *height);
 extern void	ps_print(const stp_printer_t *printer, FILE *prn,
-			 Image image, const stp_vars_t *v);
+			 stp_image_t *image, const stp_vars_t *v);
 extern const char *ps_default_resolution(const stp_printer_t *printer);
 extern void     ps_describe_resolution(const struct printer *printer,
 				       const char *resolution,
@@ -552,15 +550,15 @@ extern int			stp_get_printer_index_by_driver(const char *);
 
 extern int			num_dither_algos;
 extern char			*dither_algo_names[];
-extern stp_convert_t 		stp_choose_colorfunc(int, int,
-						 const unsigned char *, int *,
-						 const stp_vars_t *);
+extern stp_convert_t 	stp_choose_colorfunc(int, int,
+					     const unsigned char *, int *,
+					     const stp_vars_t *);
 extern void
 stp_compute_page_parameters(int page_right, int page_left, int page_top,
-			int page_bottom, double scaling, int image_width,
-			int image_height, Image image, int *orientation,
-			int *page_width, int *page_height, int *out_width,
-			int *out_height, int *left, int *top);
+			    int page_bottom, double scaling, int image_width,
+			    int image_height, stp_image_t *image, int *orientation,
+			    int *page_width, int *page_height, int *out_width,
+			    int *out_height, int *left, int *top);
 
 extern int
 stp_verify_printer_params(const stp_printer_t *, const stp_vars_t *);

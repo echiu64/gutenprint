@@ -252,7 +252,7 @@ ps_describe_resolution(const stp_printer_t *printer,
 void
 ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
          FILE      *prn,		/* I - File to print to */
-         Image     image,		/* I - Image to print */
+         stp_image_t *image,		/* I - Image to print */
 	 const stp_vars_t    *v)
 {
   unsigned char *cmap = v->cmap;
@@ -302,10 +302,10 @@ ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
   * Setup a read-only pixel region for the entire image...
   */
 
-  Image_init(image);
-  image_height = Image_height(image);
-  image_width = Image_width(image);
-  image_bpp = Image_bpp(image);
+  image->init(image);
+  image_height = image->height(image);
+  image_width = image->width(image);
+  image_bpp = image->bpp(image);
 
  /*
   * Choose the correct color conversion function...
@@ -328,14 +328,14 @@ ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
    * Recompute the image height and width.  If the image has been
    * rotated, these will change from previously.
    */
-  image_height = Image_height(image);
-  image_width = Image_width(image);
+  image_height = image->height(image);
+  image_width = image->width(image);
 
  /*
   * Let the user know what we're doing...
   */
 
-  Image_progress_init(image);
+  image->progress_init(image);
 
  /*
   * Output a standard PostScript header with DSC comments...
@@ -364,7 +364,7 @@ ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
   _fsetmode(prn, "t");
 #endif
   fputs("%!PS-Adobe-3.0\n", prn);
-  fprintf(prn, "%%%%Creator: %s\n", Image_get_appname(image));
+  fprintf(prn, "%%%%Creator: %s\n", image->get_appname(image));
   fprintf(prn, "%%%%CreationDate: %s", ctime(&curtime));
   fputs("%%Copyright: 1997-2000 by Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)\n", prn);
   fprintf(prn, "%%%%BoundingBox: %d %d %d %d\n",
@@ -480,9 +480,9 @@ ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
     for (y = 0; y < image_height; y ++)
     {
       if ((y & 15) == 0)
-	Image_note_progress(image, y, image_height);
+	image->note_progress(image, y, image_height);
 
-      Image_get_row(image, in, y);
+      image->get_row(image, in, y);
       (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv, NULL, NULL, NULL);
 
       ps_hex(prn, out, image_width * out_bpp);
@@ -520,9 +520,9 @@ ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
     for (y = 0, out_offset = 0; y < image_height; y ++)
     {
       if ((y & 15) == 0)
-	Image_note_progress(image, y, image_height);
+	image->note_progress(image, y, image_height);
 
-      Image_get_row(image, in, y);
+      image->get_row(image, in, y);
       (*colorfunc)(in, out + out_offset, image_width, image_bpp, cmap, &nv,
 		   NULL, NULL, NULL);
 
@@ -543,7 +543,7 @@ ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
         memcpy(out, out + out_ps_height - out_offset, out_offset);
     }
   }
-  Image_progress_conclude(image);
+  image->progress_conclude(image);
 
   stp_free_lut(&nv);
   free(in);
