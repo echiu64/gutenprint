@@ -303,7 +303,7 @@ parameter_float: PARAMETER_FLOAT tSTRING tDOUBLE
 
 parameter_curve: PARAMETER_CURVE tSTRING tSTRING
 	{
-	  stp_curve_t curve = stp_curve_create_from_string($3);
+	  stp_curve_t *curve = stp_curve_create_from_string($3);
 	  if (curve)
 	    {
 	      stp_set_curve_parameter(global_vars, $2, curve);
