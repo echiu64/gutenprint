@@ -41,6 +41,17 @@ http://gimp-print.sourceforge.net/MacOSX.php3.
 Please read the README file for full instructions on installing this
 package.
 
+Gimp-Print 4.2.5-pre2 contains the following major changes over
+Gimp-Print 4.2.5-pre1:
+
+1) If Foomatic 2.9.x is installed, the Foomatic data will be generated
+   with additional features: Once the options are put into groups
+   ("General", "PrintoutMode", "Adjustment") and a new "PrintoutMode" 
+   option will be added, which lets the user choose pre-configurations
+   for common printing tasks, but still adjust the individual options.
+   If an older version of Foomatic is installed, the Foomatic data will
+   stay as before.
+
 
 Gimp-Print 4.2.5-pre1 contains the following major changes over
 Gimp-Print 4.2.4:
@@ -78,15 +89,7 @@ Gimp-Print 4.2.4:
    a few architectures (this is generally of interest only to
    packagers).
 
-8) If Foomatic 2.9.x is installed, the Foomatic data will be generated
-   with additional features: Once the options are put into groups
-   ("General", "PrintoutMode", "Adjustment") and a new "PrintoutMode" 
-   option will be added, which lets the user choose pre-configurations
-   for common printing tasks, but still adjust the individual options.
-   If an older version of Foomatic is installed, the Foomatic data will
-   stay as before.
-
-9) Updates to the Debian packaging (this is of interest only to Debian
+8) Updates to the Debian packaging (this is of interest only to Debian
    packagers).
 
 The following bugs have been fixed in Gimp-Print 4.2.5-pre1:
