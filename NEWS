@@ -14,9 +14,6 @@ can be used for many of the most demanding printing tasks.
 This software includes the Print plug-in for the Gimp, and Ghostscript
 and CUPS drivers, including Foomatic data.
 
-This package requires libxml2 2.5 or above.  You may need to install a
-package named "libxml2-devel" or the like on many distributions.
-
 The Print plugin for the Gimp requires the Gimp 1.2 (later versions of
 the Gimp are not supported).  You may need to install a package named
 "gimp-devel" or the like on many distributions.
