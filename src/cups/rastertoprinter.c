@@ -124,7 +124,7 @@ set_special_parameter(stp_vars_t v, const char *name, int choice)
 {
   stp_parameter_t desc;
   stp_describe_parameter(v, name, &desc);
-  if (desc.type == STP_PARAMETER_TYPE_STRING_LIST)
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
     {
       if (choice >= stp_string_list_count(desc.bounds.str))
 	fprintf(stderr, "ERROR: Unable to set %s!\n", name);
@@ -390,7 +390,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 	for (i = 0; i < nparams; i++)
 	  {
 	    const stp_parameter_t *p = stp_parameter_list_param(params, i);
-	    switch (p->type)
+	    switch (p->p_type)
 	      {
 	      case STP_PARAMETER_TYPE_STRING_LIST:
 		fprintf(stderr, "DEBUG: stp_get_%s(v) |%s|\n",

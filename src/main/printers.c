@@ -113,7 +113,6 @@ stp_init_printer_list(void)
 	  else
 	    break;
 	}
-
       stp_list_item_create(stp_printer_list,
 			   stp_list_get_end(stp_printer_list),
 			   (void *) printer);
@@ -241,9 +240,17 @@ stp_get_model(const stp_vars_t v)
   return stp_printer_get_model(p);
 }
 
+stp_parameter_list_t
+stp_printer_list_parameters(const stp_vars_t v)
+{
+  const stp_printfuncs_t *printfuncs =
+    stp_printer_get_printfuncs(stp_get_printer(v));
+  return (printfuncs->list_parameters)(v);
+}
+
 void
-stp_describe_parameter(const stp_vars_t v, const char *name,
-		       stp_parameter_t *description)
+stp_printer_describe_parameter(const stp_vars_t v, const char *name,
+			       stp_parameter_t *description)
 {
   const stp_printfuncs_t *printfuncs =
     stp_printer_get_printfuncs(stp_get_printer(v));
@@ -334,66 +341,79 @@ static int
 verify_string_param(const stp_vars_t v, const char *parameter,
 		    stp_parameter_t *desc)
 {
-  const char *checkval = stp_get_string_parameter(v, parameter);
-  stp_string_list_t vptr = desc->bounds.str;
-  size_t count = stp_string_list_count(vptr);
-  int answer = 0;
-  int i;
-  if (checkval == NULL)
+  if (desc->is_mandatory || stp_check_string_parameter(v, parameter))
     {
-      if (count == 0)
-	return 1;
-      else
+      const char *checkval = stp_get_string_parameter(v, parameter);
+      stp_string_list_t vptr = desc->bounds.str;
+      size_t count = stp_string_list_count(vptr);
+      int answer = 0;
+      int i;
+      if (checkval == NULL)
 	{
-	  stp_eprintf(v, _("Value must be set for %s\n"), parameter);
-	  return 0;
+	  if (count == 0)
+	    return 1;
+	  else
+	    {
+	      stp_eprintf(v, _("Value must be set for %s\n"), parameter);
+	      return 0;
+	    }
 	}
-    }
-  if (count > 0)
-    {
-      for (i = 0; i < count; i++)
-	if (!strcmp(checkval, stp_string_list_param(vptr, i)->name))
-	  {
-	    answer = 1;
-	    break;
-	  }
-      if (!answer)
+      if (count > 0)
+	{
+	  for (i = 0; i < count; i++)
+	    if (!strcmp(checkval, stp_string_list_param(vptr, i)->name))
+	      {
+		answer = 1;
+		break;
+	      }
+	  if (!answer)
+	    stp_eprintf(v, _("`%s' is not a valid %s\n"), checkval, parameter);
+	}
+      else if (strlen(checkval) == 0)
+	answer = 1;
+      else
 	stp_eprintf(v, _("`%s' is not a valid %s\n"), checkval, parameter);
+      stp_string_list_free(vptr);
+      return answer;
     }
-  else if (strlen(checkval) == 0)
-    answer = 1;
   else
-    stp_eprintf(v, _("`%s' is not a valid %s\n"), checkval, parameter);
-  stp_string_list_free(vptr);
-  return answer;
+    return 1;
 }
 
 static int
 verify_double_param(const stp_vars_t v, const char *parameter,
 		    stp_parameter_t *desc)
 {
-  double checkval = stp_get_float_parameter(v, parameter);
-  if (checkval < desc->bounds.dbl.lower || checkval > desc->bounds.dbl.upper)
+  if (desc->is_mandatory || stp_check_float_parameter(v, parameter))
     {
-      stp_eprintf(v, _("%s must be between %f and %f\n"),
-		  parameter, desc->bounds.dbl.lower, desc->bounds.dbl.upper);
-      return 0;
+      double checkval = stp_get_float_parameter(v, parameter);
+      if (checkval < desc->bounds.dbl.lower ||
+	  checkval > desc->bounds.dbl.upper)
+	{
+	  stp_eprintf(v, _("%s must be between %f and %f\n"),
+		      parameter, desc->bounds.dbl.lower,
+		      desc->bounds.dbl.upper);
+	  return 0;
+	}
     }
   return 1;
 }
 
 static int
 verify_int_param(const stp_vars_t v, const char *parameter,
-		    stp_parameter_t *desc)
+		 stp_parameter_t *desc)
 {
-  int checkval = stp_get_int_parameter(v, parameter);
-  if (checkval < desc->bounds.integer.lower ||
-      checkval > desc->bounds.integer.upper)
+  if (desc->is_mandatory || stp_check_int_parameter(v, parameter))
     {
-      stp_eprintf(v, _("%s must be between %d and %d\n"),
-		  parameter, desc->bounds.integer.lower,
-		  desc->bounds.integer.upper);
-      return 0;
+      int checkval = stp_get_int_parameter(v, parameter);
+      if (checkval < desc->bounds.integer.lower ||
+	  checkval > desc->bounds.integer.upper)
+	{
+	  stp_eprintf(v, _("%s must be between %d and %d\n"),
+		      parameter, desc->bounds.integer.lower,
+		      desc->bounds.integer.upper);
+	  return 0;
+	}
     }
   return 1;
 }
@@ -411,7 +431,7 @@ verify_param(const stp_vars_t v, const char *parameter)
 {
   stp_parameter_t desc;
   stp_describe_parameter(v, parameter, &desc);
-  switch (desc.type)
+  switch (desc.p_type)
     {
     case STP_PARAMETER_TYPE_STRING_LIST:
       return verify_string_param(v, parameter, &desc);
@@ -426,7 +446,7 @@ verify_param(const stp_vars_t v, const char *parameter)
       return 1;			/* No way to verify this here */
     default:
       stp_eprintf(v, _("Unknown type parameter %s (%d)\n"),
-		  parameter, desc.type);
+		  parameter, desc.p_type);
       return 0;
     }
 }
@@ -564,7 +584,7 @@ stp_verify_printer_params(const stp_vars_t v)
   for (i = 0; i < nparams; i++)
     {
       const stp_parameter_t *p = stp_parameter_list_param(params, i);
-      if (p->class != STP_PARAMETER_CLASS_PAGE_SIZE)
+      if (p->p_class != STP_PARAMETER_CLASS_PAGE_SIZE)
 	answer &= verify_param(v, p->name);
     }
   stp_parameter_list_destroy(params);

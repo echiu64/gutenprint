@@ -63,12 +63,8 @@ extern const stp_vars_t stp_minimum_settings(void);
 extern const stp_vars_t stp_maximum_settings(void);
 
 extern void
-stp_describe_internal_parameter(const stp_vars_t v, const char *name,
-				stp_parameter_t *description);
-
-extern void
-stp_fill_parameter_settings(stp_parameter_t *desc, const char *name);
-
+stp_fill_parameter_settings(stp_parameter_t *desc,
+			    const stp_parameter_t *param);
 
 #endif /* GIMP_PRINT_INTERNAL_VARS_H */
 /*

@@ -132,11 +132,14 @@ typedef struct
 } stp_dither_data_t;
 
 
-extern void stp_dither_algorithms(stp_string_list_t);
-extern const char *stp_get_default_dither_algorithm(void);
+extern stp_parameter_list_t stp_dither_list_parameters(const stp_vars_t v);
 
-extern void *	stp_dither_init(int in_width, int out_width, int bpp,
-				int xdpi, int ydpi, stp_vars_t vars);
+extern void
+stp_dither_describe_parameter(const stp_vars_t v, const char *name,
+			      stp_parameter_t *description);
+
+extern void *	stp_dither_init(stp_vars_t v, stp_image_t *image,
+				int out_width, int xdpi, int ydpi);
 extern void	stp_dither_set_iterated_matrix(void *vd, size_t edge,
 					       size_t iterations,
 					       const unsigned *data,

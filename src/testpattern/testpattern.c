@@ -336,14 +336,14 @@ main(int argc, char **argv)
   stp_set_outdata(v, stdout);
   stp_set_errdata(v, stderr);
   stp_set_float_parameter(v, "Density", density);
-  
+
   params = stp_list_parameters(v);
   count = stp_parameter_list_count(params);
   for (i = 0; i < count; i++)
     {
       const stp_parameter_t *p = stp_parameter_list_param(params, i);
       const char *val = stp_get_string_parameter(tv, p->name);
-      if (p->type == STP_PARAMETER_TYPE_STRING_LIST && val && strlen(val) > 0)
+      if (p->p_type == STP_PARAMETER_TYPE_STRING_LIST && val && strlen(val) > 0)
 	stp_set_string_parameter(v, p->name, val);
     }
   stp_parameter_list_destroy(params);

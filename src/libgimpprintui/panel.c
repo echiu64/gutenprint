@@ -1137,9 +1137,9 @@ create_color_adjust_window (void)
       color_option_t *opt = &(color_options[i]);
       stp_parameter_t desc;
       stp_describe_parameter(stp_default_settings(), opt->name, &desc);
-      if (desc.type == STP_PARAMETER_TYPE_DOUBLE &&
-	  desc.class == STP_PARAMETER_CLASS_OUTPUT &&
-	  desc.level == STP_PARAMETER_LEVEL_BASIC)
+      if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE &&
+	  desc.p_class == STP_PARAMETER_CLASS_OUTPUT &&
+	  desc.p_level == STP_PARAMETER_LEVEL_BASIC)
 	{
 	  opt->adjustment =
 	    stpui_scale_entry_new(GTK_TABLE(table), 0, i + 1, _(desc.text),
@@ -1685,7 +1685,7 @@ build_dither_combo (void)
   stp_parameter_t desc;
   const gchar *algo = stp_get_string_parameter(pv->v, "DitherAlgorithm");
   stp_describe_parameter(pv->v, "DitherAlgorithm", &desc);
-  if (desc.type == STP_PARAMETER_TYPE_STRING_LIST)
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
     {
       vec = desc.bounds.str;
       if (vec == NULL || stp_string_list_count(vec) == 0)
@@ -1794,7 +1794,7 @@ do_all_updates(void)
 	  option->params = NULL;
 	}
       stp_describe_parameter(pv->v, option->name, &desc);
-      if (desc.type == STP_PARAMETER_TYPE_STRING_LIST)
+      if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
 	{
 	  const gchar *val = stp_get_string_parameter(pv->v, option->name);
 	  option->params = desc.bounds.str;

@@ -40,8 +40,8 @@
 #include <stdio.h>
 
 #ifdef _MSC_VER
-#define strncasecmp(s,t,n) _strnicmp(s,t,n) 
-#define strcasecmp(s,t) _stricmp(s,t) 
+#define strncasecmp(s,t,n) _strnicmp(s,t,n)
+#define strcasecmp(s,t) _stricmp(s,t)
 #endif
 
 /*
@@ -59,6 +59,43 @@ static const char	*ps_ppd_file = NULL;
 static void	ps_hex(const stp_vars_t, unsigned short *, int);
 static void	ps_ascii85(const stp_vars_t, unsigned short *, int, int);
 static char	*ppd_find(const char *, const char *, const char *, int *);
+
+static const stp_parameter_t the_parameters[] =
+{
+  {
+    "PageSize", N_("Page Size"),
+    N_("Size of the paper being printed to"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  {
+    "MediaType", N_("Media Type"),
+    N_("Type of media (plain paper, photo paper, etc.)"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  {
+    "InputSlot", N_("Media Source"),
+    N_("Source (input slot) of the media"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  {
+    "InkType", N_("Ink Type"),
+    N_("Type of ink in the printer"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  {
+    "Resolution", N_("Resolutions"),
+    N_("Resolution and quality of the print"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+};
+
+static int the_parameter_count =
+sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
 /*
  * 'ps_parameters()' - Return the parameter values for the given parameter.
@@ -78,6 +115,16 @@ is_standard_param(const char *name)
     return 0;
 }
 
+static stp_parameter_list_t
+ps_list_parameters(const stp_vars_t v)
+{
+  stp_parameter_list_t *ret = stp_parameter_list_create();
+  int i;
+  for (i = 0; i < the_parameter_count; i++)
+    stp_parameter_list_add_param(ret, &(the_parameters[i]));
+  return ret;
+}
+
 static void
 ps_parameters(const stp_vars_t v, const char *name,
 	      stp_parameter_t *description)
@@ -88,7 +135,7 @@ ps_parameters(const stp_vars_t v, const char *name,
 		loption[255],
 		*ltext;
   const char *ppd_file = stp_get_ppd_file(v);
-  description->type = STP_PARAMETER_TYPE_INVALID;
+  description->p_type = STP_PARAMETER_TYPE_INVALID;
   description->deflt.str = 0;
 
   if (name == NULL)
@@ -108,12 +155,18 @@ ps_parameters(const stp_vars_t v, const char *name,
       ps_ppd_file = ppd_file;
   }
 
+  for (i = 0; i < the_parameter_count; i++)
+    if (strcmp(name, the_parameters[i].name) == 0)
+      {
+	stp_fill_parameter_settings(description, &(the_parameters[i]));
+	break;
+      }
+
   if (ps_ppd == NULL)
     {
       if (strcmp(name, "PageSize") == 0)
 	{
 	  int papersizes = stp_known_papersizes();
-	  stp_fill_parameter_settings(description, name);
 	  description->bounds.str = stp_string_list_allocate();
 	  for (i = 0; i < papersizes; i++)
 	    {
@@ -123,22 +176,17 @@ ps_parameters(const stp_vars_t v, const char *name,
 		  (description->bounds.str,
 		   stp_papersize_get_name(pt), stp_papersize_get_text(pt));
 	    }
-	  description->type = STP_PARAMETER_TYPE_STRING_LIST;
 	  description->deflt.str =
 	    stp_string_list_param(description->bounds.str, 0)->name;
 	}
       else if (is_standard_param(name))
 	{
 	  description->bounds.str = stp_string_list_allocate();
-	  description->type = STP_PARAMETER_TYPE_STRING_LIST;
-	}	  
-      else
-	stp_describe_internal_parameter(v, name, description);
+	}
       return;
     }
 
   rewind(ps_ppd);
-  stp_fill_parameter_settings(description, name);
   description->bounds.str = stp_string_list_allocate();
 
   while (fgets(line, sizeof(line), ps_ppd) != NULL)
@@ -160,18 +208,18 @@ ps_parameters(const stp_vars_t v, const char *name,
 			       loption, ltext);
     }
   }
-  if (stp_string_list_count(description->bounds.str) > 0)
+
+  if (is_standard_param(name))
     {
-      description->type = STP_PARAMETER_TYPE_STRING_LIST;
-      description->deflt.str =
-	stp_string_list_param(description->bounds.str, 0)->name;
+      if (stp_string_list_count(description->bounds.str) > 0)
+	description->deflt.str =
+	  stp_string_list_param(description->bounds.str, 0)->name;
     }
-  else if (!is_standard_param(name))
+  else
     {
       stp_string_list_free(description->bounds.str);
       description->bounds.str = NULL;
-      description->type = STP_PARAMETER_TYPE_INVALID;
-      stp_describe_internal_parameter(v, name, description);
+      description->p_type = STP_PARAMETER_TYPE_INVALID;
     }
   return;
 }
@@ -822,6 +870,7 @@ ppd_find(const char *ppd_file,	/* I - Name of PPD file */
 
 const stp_printfuncs_t stp_ps_printfuncs =
 {
+  ps_list_parameters,
   ps_parameters,
   ps_media_size,
   ps_imageable_area,

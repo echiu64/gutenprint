@@ -1149,6 +1149,43 @@ static const paper_t canon_paper_list[] = {
 
 static const int paper_type_count = sizeof(canon_paper_list) / sizeof(paper_t);
 
+static const stp_parameter_t the_parameters[] =
+{
+  {
+    "PageSize", N_("Page Size"),
+    N_("Size of the paper being printed to"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  {
+    "MediaType", N_("Media Type"),
+    N_("Type of media (plain paper, photo paper, etc.)"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  {
+    "InputSlot", N_("Media Source"),
+    N_("Source (input slot) of the media"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  {
+    "InkType", N_("Ink Type"),
+    N_("Type of ink in the printer"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  {
+    "Resolution", N_("Resolutions"),
+    N_("Resolution and quality of the print"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+};
+
+static int the_parameter_count =
+sizeof(the_parameters) / sizeof(const stp_parameter_t);
+
 static const paper_t *
 get_media_type(const char *name)
 {
@@ -1426,6 +1463,16 @@ static stp_param_string_t media_sources[] =
  * 'canon_parameters()' - Return the parameter values for the given parameter.
  */
 
+static stp_parameter_list_t
+canon_list_parameters(const stp_vars_t v)
+{
+  stp_parameter_list_t *ret = stp_parameter_list_create();
+  int i;
+  for (i = 0; i < the_parameter_count; i++)
+    stp_parameter_list_add_param(ret, &(the_parameters[i]));
+  return ret;
+}
+
 static void
 canon_parameters(const stp_vars_t v, const char *name,
 		 stp_parameter_t *description)
@@ -1434,12 +1481,17 @@ canon_parameters(const stp_vars_t v, const char *name,
 
   const canon_cap_t * caps=
     canon_get_model_capabilities(stp_get_model(v));
-  description->type = STP_PARAMETER_TYPE_INVALID;
+  description->p_type = STP_PARAMETER_TYPE_INVALID;
 
   if (name == NULL)
     return;
 
-  stp_fill_parameter_settings(description, name);
+  for (i = 0; i < the_parameter_count; i++)
+    if (strcmp(name, the_parameters[i].name) == 0)
+      {
+	stp_fill_parameter_settings(description, &(the_parameters[i]));
+	break;
+      }
   if (strcmp(name, "PageSize") == 0)
   {
     int height_limit, width_limit;
@@ -1537,8 +1589,6 @@ canon_parameters(const stp_vars_t v, const char *name,
 				media_sources[i].name,
 				_(media_sources[i].text));
   }
-  else
-    stp_describe_internal_parameter(v, name, description);
 }
 
 
@@ -2241,7 +2291,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   * Output the page...
   */
 
-  dither = stp_dither_init(image_width, out_width, image_bpp, xdpi, ydpi, nv);
+  dither = stp_dither_init(nv, image, out_width, xdpi, ydpi);
 
   for (i = 0; i <= NCOLORS; i++)
     stp_dither_set_black_level(dither, i, 1.0);
@@ -2451,6 +2501,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
 
 const stp_printfuncs_t stp_canon_printfuncs =
 {
+  canon_list_parameters,
   canon_parameters,
   stp_default_media_size,
   canon_imageable_area,

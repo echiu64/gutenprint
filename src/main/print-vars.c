@@ -46,19 +46,18 @@ typedef struct					/* Plug-in variables */
   int	cookie;
   const char *driver;		/* Name of printer "driver" */
   int	output_type;		/* Color or grayscale output */
-  const char *ppd_file;		/* PPD file */
+  int	image_type;		/* Image type (line art etc.) */
+  float app_gamma;		/* Application gamma */
+  int	input_color_model;	/* Color model for this device */
+  int	output_color_model;	/* Color model for this device */
+  stp_job_mode_t job_mode;
   int	left;			/* Offset from left-upper corner, points */
   int	top;			/* ... */
   int	width;			/* Width of the image, points */
   int	height;			/* ... */
-  int	image_type;		/* Image type (line art etc.) */
-  float app_gamma;		/* Application gamma */
   int	page_width;		/* Width of page in points */
   int	page_height;		/* Height of page in points */
-  int	input_color_model;	/* Color model for this device */
-  int	output_color_model;	/* Color model for this device */
   int	page_number;
-  stp_job_mode_t job_mode;
   stp_list_t *params[STP_PARAMETER_TYPE_INVALID];
   void  *color_data;		/* Private data of the color module */
   void	*(*copy_color_data_func)(const stp_vars_t);
@@ -73,194 +72,6 @@ typedef struct					/* Plug-in variables */
   int verified;			/* Ensure that params are OK! */
 } stp_internal_vars_t;
 
-static int standard_vars_initialized = 0;
-
-static stp_internal_vars_t default_vars =
-{
-	COOKIE_VARS,
-	N_ ("ps2"),	       	/* Name of printer "driver" */
-	OUTPUT_COLOR,		/* Color or grayscale output */
-	"",			/* Name of PPD file */
-	-1,			/* left */
-	-1,			/* top */
-	-1,			/* width */
-	-1,			/* height */
-	IMAGE_CONTINUOUS,	/* Image type */
-	1.0,			/* Application gamma placeholder */
-	0,			/* Page width */
-	0,			/* Page height */
-	COLOR_MODEL_RGB,	/* Input color model */
-	COLOR_MODEL_RGB,	/* Output color model */
-	0,			/* Page number */
-	STP_JOB_MODE_PAGE	/* Job mode */
-};
-
-static stp_internal_vars_t min_vars =
-{
-	COOKIE_VARS,
-	N_ ("ps2"),		/* Name of printer "driver" */
-	0,			/* Color or grayscale output */
-	"",			/* Name of PPD file */
-	-1,			/* left */
-	-1,			/* top */
-	-1,			/* width */
-	-1,			/* height */
-	0,			/* Image type */
-	1.0,			/* Application gamma placeholder */
-	0,			/* Page width */
-	0,			/* Page height */
-	0,			/* Input color model */
-	0,			/* Output color model */
-	0,			/* Page number */
-	STP_JOB_MODE_PAGE	/* Job mode */
-};
-
-static stp_internal_vars_t max_vars =
-{
-	COOKIE_VARS,
-	N_ ("ps2"),		/* Name of printer "driver" */
-	OUTPUT_RAW_PRINTER,	/* Color or grayscale output */
-	"",			/* Name of PPD file */
-	-1,			/* left */
-	-1,			/* top */
-	-1,			/* width */
-	-1,			/* height */
-	NIMAGE_TYPES - 1,	/* Image type */
-	1.0,			/* Application gamma placeholder */
-	0,			/* Page width */
-	0,			/* Page height */
-	NCOLOR_MODELS - 1,	/* Input color model */
-	NCOLOR_MODELS - 1,	/* Output color model */
-	INT_MAX,		/* Page number */
-	STP_JOB_MODE_JOB	/* Job mode */
-};
-
-static const stp_parameter_t global_parameters[] =
-  {
-    {
-      "PageSize", N_("Page Size"),
-      N_("Size of the paper being printed to"),
-      STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
-      STP_PARAMETER_LEVEL_BASIC
-    },
-    {
-      "MediaType", N_("Media Type"),
-      N_("Type of media (plain paper, photo paper, etc.)"),
-      STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-      STP_PARAMETER_LEVEL_BASIC
-    },
-    {
-      "InputSlot", N_("Media Source"),
-      N_("Source (input slot) of the media"),
-      STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-      STP_PARAMETER_LEVEL_BASIC
-    },
-    {
-      "InkType", N_("Ink Type"),
-      N_("Type of ink in the printer"),
-      STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-      STP_PARAMETER_LEVEL_BASIC
-    },
-    {
-      "Resolution", N_("Resolutions"),
-      N_("Resolution and quality of the print"),
-      STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-      STP_PARAMETER_LEVEL_BASIC
-    },
-    {
-      "DitherAlgorithm", N_("Dither Algorithm"),
-      N_("Choose the dither algorithm to be used.\n"
-	 "Adaptive Hybrid usually produces the best all-around quality.\n"
-	 "EvenTone is a new, experimental algorithm that often produces excellent results.\n"
-	 "Ordered is faster and produces almost as good quality on photographs.\n"
-	 "Fast and Very Fast are considerably faster, and work well for text and line art.\n"
-	 "Hybrid Floyd-Steinberg generally produces inferior output."),
-      STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC
-    },
-    {
-      "Brightness", N_("Brightness"),
-      N_("Brightness of the print (0 is solid black, 2 is solid white)"),
-      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC
-    },
-    {
-      "Contrast", N_("Contrast"),
-      N_("Contrast of the print (0 is solid gray)"),
-      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC
-    },
-    {
-      "Density", N_("Density"),
-      N_("Adjust the density (amount of ink) of the print. "
-	 "Reduce the density if the ink bleeds through the "
-	 "paper or smears; increase the density if black "
-	 "regions are not solid."),
-      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC
-    },
-    {
-      "Gamma", N_("Gamma"),
-      N_("Adjust the gamma of the print. Larger values will "
-	 "produce a generally brighter print, while smaller "
-	 "values will produce a generally darker print. "
-	 "Black and white will remain the same, unlike with "
-	 "the brightness adjustment."),
-      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC
-    },
-    {
-      "AppGamma", N_("AppGamma"),
-      N_("Gamma value assumed by application"),
-      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED
-    },
-    {
-      "Cyan", N_("Cyan"),
-      N_("Adjust the cyan balance"),
-      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC
-    },
-    {
-      "Magenta", N_("Magenta"),
-      N_("Adjust the magenta balance"),
-      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC
-    },
-    {
-      "Yellow", N_("Yellow"),
-      N_("Adjust the yellow balance"),
-      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC
-    },
-    {
-      "Saturation", N_("Saturation"),
-      N_("Adjust the saturation (color balance) of the print\n"
-	 "Use zero saturation to produce grayscale output "
-	 "using color and black inks"),
-      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC
-    },
-  };
-
-const stp_vars_t
-stp_default_settings(void)
-{
-  return (stp_vars_t) &default_vars;
-}
-
-const stp_vars_t
-stp_maximum_settings(void)
-{
-  return (stp_vars_t) &max_vars;
-}
-
-const stp_vars_t
-stp_minimum_settings(void)
-{
-  return (stp_vars_t) &min_vars;
-}
-
 typedef struct
 {
   char *name;
@@ -273,6 +84,44 @@ typedef struct
     stp_raw_t rval;
   } value;
 } value_t;
+
+static int standard_vars_initialized = 0;
+
+static stp_internal_vars_t default_vars =
+{
+	COOKIE_VARS,
+	N_ ("ps2"),	       	/* Name of printer "driver" */
+	OUTPUT_COLOR,		/* Color or grayscale output */
+	IMAGE_LINE_ART,		/* Type of image */
+	1.0,			/* Application gamma placeholder */
+	COLOR_MODEL_RGB,	/* Input color model */
+	COLOR_MODEL_RGB,	/* Output color model */
+	STP_JOB_MODE_PAGE	/* Job mode */
+};
+
+static stp_internal_vars_t min_vars =
+{
+	COOKIE_VARS,
+	N_ ("ps2"),		/* Name of printer "driver" */
+	0,			/* Color or grayscale output */
+	IMAGE_LINE_ART,		/* Type of image */
+	1.0,			/* Application gamma placeholder */
+	0,			/* Input color model */
+	0,			/* Output color model */
+	STP_JOB_MODE_PAGE	/* Job mode */
+};
+
+static stp_internal_vars_t max_vars =
+{
+	COOKIE_VARS,
+	N_ ("ps2"),		/* Name of printer "driver" */
+	OUTPUT_RAW_PRINTER,	/* Color or grayscale output */
+	IMAGE_CONTINUOUS,	/* Type of image */
+	1.0,			/* Application gamma placeholder */
+	NCOLOR_MODELS - 1,	/* Input color model */
+	NCOLOR_MODELS - 1,	/* Output color model */
+	STP_JOB_MODE_JOB	/* Job mode */
+};
 
 static const char *
 value_namefunc(const stp_list_item_t *item)
@@ -300,6 +149,16 @@ value_freefunc(stp_list_item_t *item)
     }
   stp_free(v->name);
   stp_free(v);
+}
+
+static stp_list_t *
+create_vars_list(void)
+
+{
+  stp_list_t *ret = stp_list_create();
+  stp_list_set_freefunc(ret, value_freefunc);
+  stp_list_set_namefunc(ret, value_namefunc);
+  return ret;
 }
 
 static value_t *
@@ -335,22 +194,13 @@ value_copy(const stp_list_item_t *item)
 }
 
 static stp_list_t *
-create_vars_list(void)
-{
-  stp_list_t *ret = stp_list_create();
-  stp_list_set_freefunc(ret, value_freefunc);
-  stp_list_set_namefunc(ret, value_namefunc);
-  return ret;
-}
-  
-static stp_list_t *
 copy_value_list(const stp_list_t *src)
 {
   stp_list_t *ret = create_vars_list();
   stp_list_item_t *item = stp_list_get_start((stp_list_t *)src);
   while (item)
     {
-      stp_list_item_create(ret, NULL, value_copy(item));
+      stp_list_item_create(ret, stp_list_get_end(ret), value_copy(item));
       item = stp_list_item_next(item);
     }
   return ret;
@@ -392,7 +242,29 @@ initialize_standard_vars(void)
       stp_set_float_parameter((stp_vars_t) &min_vars, "Density", 0.1);
       stp_set_float_parameter((stp_vars_t) &max_vars, "Density", 2.0);
       stp_set_float_parameter((stp_vars_t) &default_vars, "Density", 1.0);
+      standard_vars_initialized = 1;
     }
+}
+
+const stp_vars_t
+stp_default_settings(void)
+{
+  initialize_standard_vars();
+  return (stp_vars_t) &default_vars;
+}
+
+const stp_vars_t
+stp_maximum_settings(void)
+{
+  initialize_standard_vars();
+  return (stp_vars_t) &max_vars;
+}
+
+const stp_vars_t
+stp_minimum_settings(void)
+{
+  initialize_standard_vars();
+  return (stp_vars_t) &min_vars;
 }
 
 stp_vars_t
@@ -439,7 +311,6 @@ stp_vars_free(stp_vars_t vv)
   for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
     stp_list_destroy(v->params[i]);
   SAFE_FREE(v->driver);
-  SAFE_FREE(v->ppd_file);
   stp_free(v);
 }
 
@@ -571,7 +442,7 @@ set_raw_parameter(stp_list_t *list, const char *parameter, const char *value,
 	  v = stp_malloc(sizeof(value_t));
 	  v->name = stp_strdup(parameter);
 	  v->typ = typ;
-	  stp_list_item_create(list, NULL, v);
+	  stp_list_item_create(list, stp_list_get_end(list), v);
 	}
       v->value.rval.data = stp_malloc(bytes + 1);
       memcpy(v->value.rval.data, value, bytes);
@@ -702,7 +573,7 @@ stp_set_curve_parameter(stp_vars_t v, const char *parameter,
 	  val = stp_malloc(sizeof(value_t));
 	  val->name = stp_strdup(parameter);
 	  val->typ = STP_PARAMETER_TYPE_CURVE;
-	  stp_list_item_create(list, NULL, val);
+	  stp_list_item_create(list, stp_list_get_end(list), val);
 	}
       val->value.cval = stp_curve_allocate_copy(curve);
     }
@@ -742,7 +613,7 @@ stp_set_int_parameter(stp_vars_t v, const char *parameter, int ival)
       val = stp_malloc(sizeof(value_t));
       val->name = stp_strdup(parameter);
       val->typ = STP_PARAMETER_TYPE_INT;
-      stp_list_item_create(list, NULL, val);
+      stp_list_item_create(list, stp_list_get_end(list), val);
     }
   val->value.ival = ival;
 }
@@ -779,7 +650,7 @@ stp_set_float_parameter(stp_vars_t v, const char *parameter, double dval)
       val = stp_malloc(sizeof(value_t));
       val->name = stp_strdup(parameter);
       val->typ = STP_PARAMETER_TYPE_DOUBLE;
-      stp_list_item_create(list, NULL, val);
+      stp_list_item_create(list, stp_list_get_end(list), val);
     }
   val->value.dval = dval;
 }
@@ -855,31 +726,26 @@ stp_check_raw_parameter(const stp_vars_t v, const char *parameter)
 }
 
 void
-stp_fill_parameter_settings(stp_parameter_t *desc, const char *name)
+stp_fill_parameter_settings(stp_parameter_t *desc,
+			    const stp_parameter_t *param)
 {
-  const stp_parameter_t *param = global_parameters;
-  while (param->name)
+  if (param)
     {
-      if (strcmp(name, param->name) == 0)
-	{
-	  desc->type = param->type;
-	  desc->level = param->level;
-	  desc->class = param->class;
-	  desc->name = stp_strdup(param->name);
-	  desc->text = stp_strdup(param->text);
-	  desc->help = stp_strdup(param->help);
-	  return;
-	}
-      param++;
+      desc->p_type = param->p_type;
+      desc->p_level = param->p_level;
+      desc->p_class = param->p_class;
+      desc->is_mandatory = param->is_mandatory;
+      desc->name = stp_strdup(param->name);
+      desc->text = stp_strdup(param->text);
+      desc->help = stp_strdup(param->help);
+      return;
     }
 }
 
 void
 stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
 {
-  int count;
   int i;
-  stp_parameter_list_t params;
   stp_internal_vars_t *vvd = (stp_internal_vars_t *)vd;
   const stp_internal_vars_t *vvs = (const stp_internal_vars_t *)vs;
 
@@ -917,8 +783,6 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
   stp_set_errdata(vd, stp_get_errdata(vs));
   stp_set_outfunc(vd, stp_get_outfunc(vs));
   stp_set_errfunc(vd, stp_get_errfunc(vs));
-  params = stp_list_parameters(vs);
-  count = stp_parameter_list_count(params);
   stp_set_verified(vd, stp_get_verified(vs));
 }
 
@@ -940,9 +804,9 @@ stp_merge_printvars(stp_vars_t user, const stp_vars_t print)
   for (i = 0; i < count; i++)
     {
       const stp_parameter_t *p = stp_parameter_list_param(params, i);
-      if (p->type == STP_PARAMETER_TYPE_DOUBLE &&
-	  p->class == STP_PARAMETER_CLASS_OUTPUT &&
-	  p->level == STP_PARAMETER_LEVEL_BASIC)
+      if (p->p_type == STP_PARAMETER_TYPE_DOUBLE &&
+	  p->p_class == STP_PARAMETER_CLASS_OUTPUT &&
+	  p->p_level == STP_PARAMETER_LEVEL_BASIC)
 	{
 	  stp_parameter_t desc;
 	  double usrval = stp_get_float_parameter(user, p->name);
@@ -978,50 +842,13 @@ stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p)
   for (i = 0; i < count; i++)
     {
       const stp_parameter_t *p = stp_parameter_list_param(params, i);
-      if (p->type == STP_PARAMETER_TYPE_STRING_LIST)
+      if (p->p_type == STP_PARAMETER_TYPE_STRING_LIST)
 	{
 	  stp_describe_parameter(v, p->name, &desc);
 	  stp_set_string_parameter(v, p->name, desc.deflt.str);
 	  stp_string_list_free(desc.bounds.str);
 	}
     }
-}
-
-void
-stp_describe_internal_parameter(const stp_vars_t v, const char *name,
-				stp_parameter_t *description)
-{
-  stp_parameter_list_t list;
-  const stp_parameter_t *param;
-  if (strcmp(name, "DitherAlgorithm") == 0)
-    {
-      stp_fill_parameter_settings(description, name);
-      description->bounds.str = stp_string_list_allocate();
-      stp_dither_algorithms(description->bounds.str);
-      description->deflt.str =
-	stp_string_list_param(description->bounds.str, 0)->name;
-      return;
-    }
-  list = stp_list_parameters(v);
-  param = stp_parameter_find(list, name);
-  stp_parameter_list_destroy(list);
-
-  if (param && param->type == STP_PARAMETER_TYPE_DOUBLE &&
-      strcmp(name, param->name) == 0)
-    {
-      stp_fill_parameter_settings(description, name);
-      if (description->type == STP_PARAMETER_TYPE_DOUBLE)
-	{
-	  description->bounds.dbl.lower =
-	    stp_get_float_parameter(stp_minimum_settings(), name);
-	  description->bounds.dbl.upper =
-	    stp_get_float_parameter(stp_maximum_settings(), name);
-	  description->deflt.dbl =
-	    stp_get_float_parameter(stp_default_settings(), name);
-	}
-      return;
-    }
-  description->type = STP_PARAMETER_TYPE_INVALID;
 }
 
 static const char *
@@ -1040,24 +867,56 @@ param_longnamefunc(const stp_list_item_t *item)
   return param->text;
 }
 
-static stp_list_t *
+stp_parameter_list_t
 stp_parameter_list_create(void)
 {
   stp_list_t *ret = stp_list_create();
   stp_list_set_namefunc(ret, param_namefunc);
   stp_list_set_long_namefunc(ret, param_longnamefunc);
-  return ret;
+  return (stp_parameter_list_t) ret;
+}
+
+void
+stp_parameter_list_add_param(stp_parameter_list_t list,
+			     const stp_parameter_t *item)
+{
+  stp_list_t *ilist = (stp_list_t *) list;
+  stp_list_item_create(ilist, stp_list_get_end(ilist), (void *) item);
 }
 
 stp_parameter_list_t
 stp_list_parameters(const stp_vars_t v)
 {
-  stp_list_t *ret = stp_parameter_list_create();
-  int i;
-  for (i = 0; i < (sizeof(global_parameters) / sizeof(const stp_parameter_t));
-       i++)
-    stp_list_item_create(ret, NULL, (void *) &(global_parameters[i]));
+  stp_parameter_list_t ret = stp_parameter_list_create();
+  stp_parameter_list_t tmp_list;
+
+  tmp_list = stp_printer_list_parameters(v);
+  stp_parameter_list_append(ret, tmp_list);
+  stp_parameter_list_destroy(tmp_list);
+
+  tmp_list = stp_color_list_parameters(v);
+  stp_parameter_list_append(ret, tmp_list);
+  stp_parameter_list_destroy(tmp_list);
+
+  tmp_list = stp_dither_list_parameters(v);
+  stp_parameter_list_append(ret, tmp_list);
+  stp_parameter_list_destroy(tmp_list);
+
   return ret;
+}
+
+void
+stp_describe_parameter(const stp_vars_t v, const char *name,
+		       stp_parameter_t *description)
+{
+  description->p_type = STP_PARAMETER_TYPE_INVALID;
+  stp_printer_describe_parameter(v, name, description);
+  if (description->p_type != STP_PARAMETER_TYPE_INVALID)
+    return;
+  stp_color_describe_parameter(v, name, description);
+  if (description->p_type != STP_PARAMETER_TYPE_INVALID)
+    return;
+  stp_dither_describe_parameter(v, name, description);
 }
 
 size_t
@@ -1102,7 +961,8 @@ stp_parameter_list_copy(const stp_parameter_list_t list)
   int i;
   size_t count = stp_parameter_list_count(list);
   for (i = 0; i < count; i++)
-    stp_list_item_create(ret, NULL, (void *)stp_parameter_list_param(list, i));
+    stp_list_item_create(ret, stp_list_get_end(ret),
+			 (void *)stp_parameter_list_param(list, i));
   return ret;
 }
 
@@ -1114,6 +974,6 @@ stp_parameter_list_append(stp_parameter_list_t list,
   stp_list_t *ilist = (stp_list_t *)list;
   size_t count = stp_parameter_list_count(append);
   for (i = 0; i < count; i++)
-    stp_list_item_create(ilist, NULL,
-			 (void *) stp_parameter_list_param(list, i));
+    stp_list_item_create(ilist, stp_list_get_end(ilist),
+			 (void *) stp_parameter_list_param(append, i));
 }

@@ -124,6 +124,35 @@ writefunc(void *file, const char *buf, size_t bytes)
   fwrite(buf, 1, bytes, prn);
 }
 
+static int global_bpp = 0;
+
+static int
+image_bpp(stp_image_t *image)
+{
+  return global_bpp;
+}
+
+static int
+image_width(stp_image_t *image)
+{
+  return IMAGE_WIDTH;
+}
+
+static stp_image_t theImage =
+{
+  NULL,
+  NULL,
+  image_bpp,
+  image_width,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};
+
 /*
  * 'main()' - Test dithering code for performance measurement.
  */
@@ -270,7 +299,7 @@ main(int  argc,				/* I - Number of command-line arguments */
       break;
     }
 
-  dither = stp_dither_init(IMAGE_WIDTH, IMAGE_WIDTH, bpp, 1, 1, v);
+  dither = stp_dither_init(v, &theImage, IMAGE_WIDTH, 1, 1);
 
   for (i = 0; i < NCOLORS; i++)
     stp_dither_set_black_level(dither, i, 1.0);
@@ -352,7 +381,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 	  "pgm" : "ppm");
 
   printf("%s ", filename);
-  
+
   if (write_image)
     {
       if ((fp = fopen(filename, "wb")) != NULL)

@@ -45,7 +45,7 @@ main(int argc, char **argv)
   for (i = 0; i < nparams; i++)
     {
       const stp_parameter_t *p = stp_parameter_list_param(params, i);
-      if (p->type == STP_PARAMETER_TYPE_DOUBLE)
+      if (p->p_type == STP_PARAMETER_TYPE_DOUBLE)
 	{
 	  stp_describe_parameter(stp_default_settings(),
 				 p->name, &desc);
@@ -56,7 +56,7 @@ main(int argc, char **argv)
 	  printf("$stp_values{'DEFVAL'}{'%s'} = %.3f\n",
 		 p->name, desc.deflt.dbl);
 	}
-      else if (p->type == STP_PARAMETER_TYPE_INT)
+      else if (p->p_type == STP_PARAMETER_TYPE_INT)
 	{
 	  stp_describe_parameter(stp_default_settings(),
 				 p->name, &desc);

@@ -1,19 +1,19 @@
 /*
  * instead_of_gimp_main.c creates a stand-alone, executable version of gimp-print GUI.
  *
- * This file changes gimp-print so that it is NOT a plug-in for gimp. 
+ * This file changes gimp-print so that it is NOT a plug-in for gimp.
  * This set of functions replace the gimp.c gimp_main() and a host
  * of other functions so that you can send images to gimp-print GUI
- * without having to use gimp. 
+ * without having to use gimp.
  *
- * I intend to use Gtk drawable screens as my source of image data. 
- * I have an application which draws on such a drawable.  With this, 
- * instead_of_gimp_main.c file, I can link gimp-print to my application and use 
- * it as my print dialog. To do this, simply replace main() with your own print 
- * function name and link this in with your application and all the 
+ * I intend to use Gtk drawable screens as my source of image data.
+ * I have an application which draws on such a drawable.  With this,
+ * instead_of_gimp_main.c file, I can link gimp-print to my application and use
+ * it as my print dialog. To do this, simply replace main() with your own print
+ * function name and link this in with your application and all the
  * gimp/print.c, et cetera, functions or you can call it as a separate executable
- * and use arguments to name the image filename and height and width. 
- * If you have a different source of image data other than Gtk, then this project 
+ * and use arguments to name the image filename and height and width.
+ * If you have a different source of image data other than Gtk, then this project
  * will be a good starting point to adapt your images for use with gimp-print GUI.
  *
  * My tactic is to imitate all the gimp_*...() functions in this file so the
@@ -29,7 +29,7 @@
  * to write my own version of print-image-gimp.c rather than imitate
  * all the gimp_*() functions.  But, this would make my work incompatible
  * with future versions of gimp-print GUI.  So, I guess I will stick with
- * my plan A and write all gimp_*() functions.  Someone in the future might 
+ * my plan A and write all gimp_*() functions.  Someone in the future might
  * do plan B. I write this so the reader has a good hint at how this all works.
  * It is more than I got from the current documentation. :-)
  * DPace Nov, 27, 2002.
@@ -79,9 +79,9 @@ int main( int argc, char *argv[])
 #else
 int gimpprint_panel( FILE *fpgimpprint, unsigned height, unsigned width )
 #endif
-{                            
-  int nreturn_vals;       
-  GimpParam retval, *return_vals;   
+{
+  int nreturn_vals;
+  GimpParam retval, *return_vals;
   GimpDrawable drawable;
   gint32 image_ID = 0, drawable_ID = 0;
   gchar *image_filename;
@@ -126,7 +126,7 @@ int gimpprint_panel( FILE *fpgimpprint, unsigned height, unsigned width )
      drawable.tiles = NULL;         /* I don't use this. the normal tiles */
      drawable.shadow_tiles = NULL;  /* I don't use this. the shadow tiles */
      prepare_gimp_drawable_get( &drawable ); /*insert our drawable into gimp_drawable_get()*/
-                                         
+
      /* Three */
      /* Set the static FILE *RGB_image so that all the ...get_row(), ...get_col()
         functions can find the image data. The format is simple for now (Dec/2002).
@@ -138,7 +138,7 @@ int gimpprint_panel( FILE *fpgimpprint, unsigned height, unsigned width )
             GdkImage *im;
 
             im = gdk_image_get( pixm,
-                       0, 
+                       0,
                        0,
                        drawarea->allocation.width,
                        drawarea->allocation.height
@@ -153,10 +153,10 @@ int gimpprint_panel( FILE *fpgimpprint, unsigned height, unsigned width )
      {
         RGB_image = fpgimpprint;
 
-        return_vals = &retval;             
-                                           
+        return_vals = &retval;
+
         /* send along all parameters even if some are not used */
-        runit( image_filename, height, width, "file_print_gimp", &nreturn_vals, &return_vals );    
+        runit( image_filename, height, width, "file_print_gimp", &nreturn_vals, &return_vals );
 
         if( argc == 5 && *argv[4] == '1' )
            unlink( argv[1] );
@@ -210,7 +210,7 @@ gimp_ui_init (const gchar *prog_name,
    */
 /*
   if( preview )
-    gtk_preview_set_gamma( 1.0 );   gimp_gamma 
+    gtk_preview_set_gamma( 1.0 );   gimp_gamma
 */
 
   initialized = TRUE;
@@ -248,7 +248,7 @@ GimpDrawable *drawable_get()
   {
      /* This should never happen
         if you first called prepare_gimp_drawable_get(drawable )
-        to load up your image properly as shown in main() 
+        to load up your image properly as shown in main()
       */
 
      a_drawable.id = 1;
@@ -262,7 +262,7 @@ GimpDrawable *drawable_get()
 
      return( &a_drawable );
   }
-     
+
   return( thedrawable );
 }
 
@@ -369,7 +369,7 @@ void gimp_pixel_rgn_get_row( GimpPixelRgn *rgn,
 
   bpp = rgn->drawable->bpp;
 
-  fseek( RGB_image, bpp * yy * rgn->drawable->width, SEEK_SET); 
+  fseek( RGB_image, bpp * yy * rgn->drawable->width, SEEK_SET);
 
   fread( buf, bpp * width, sizeof(char), RGB_image);
 
@@ -393,7 +393,7 @@ void gimp_pixel_rgn_get_col( GimpPixelRgn *rgn,
   for( ; yy < end; yy++)
   {
      /* move to the right xx and down yy rows */
-     fseek( RGB_image, bpp * (xx + yy*rgn->drawable->width), SEEK_SET); 
+     fseek( RGB_image, bpp * (xx + yy*rgn->drawable->width), SEEK_SET);
      if( fread( buf, bpp, sizeof(char), RGB_image) != bpp )
         break;
      buf += bpp;
@@ -465,7 +465,7 @@ gchar*
 gimp_personal_rc_file( gchar *basename)
 {
   printf( "%s (I wonder what happens if this directory does not exist)\nAlso, I need to clean up the code.\nBut, basically this first version works, dpace Jan/2003.\n",
-          gimp_directory() 
+          gimp_directory()
         );
   fflush(stdout);
 
@@ -479,15 +479,15 @@ gimp_personal_rc_file( gchar *basename)
 /**
  * gimp_directory:
  *
- * Returns the user-specific GIMP settings directory. If the environment 
- * variable GIMP_DIRECTORY exists, it is used. If it is an absolute path, 
- * it is used as is.  If it is a relative path, it is taken to be a 
- * subdirectory of the home directory. If it is relative path, and no home 
+ * Returns the user-specific GIMP settings directory. If the environment
+ * variable GIMP_DIRECTORY exists, it is used. If it is an absolute path,
+ * it is used as is.  If it is a relative path, it is taken to be a
+ * subdirectory of the home directory. If it is relative path, and no home
  * directory can be determined, it is taken to be a subdirectory of
  * gimp_data_directory().
  *
- * The usual case is that no GIMP_DIRECTORY environment variable exists, 
- * and then we use the GIMPDIR subdirectory of the home directory. If no 
+ * The usual case is that no GIMP_DIRECTORY environment variable exists,
+ * and then we use the GIMPDIR subdirectory of the home directory. If no
  * home directory exists, we use a per-user subdirectory of
  * gimp_data_directory().
  * In any case, we always return some non-empty string, whether it
@@ -545,10 +545,10 @@ static gint32    image_ID_printc;   /* image ID */
 
 
 static guchar *
-stpui_get_thumbnail_data_function(void *image_ID_printc, 
-                                  gint *ww, 
+stpui_get_thumbnail_data_function(void *image_ID_printc,
+                                  gint *ww,
                                   gint *hh,
-				  gint *bpp, 
+				  gint *bpp,
                                   gint page)
 {
   /* gimp's version seems to call image_thumbnail_invoker(); in gimp.../app/  */
@@ -576,8 +576,8 @@ stpui_get_thumbnail_data_function(void *image_ID_printc,
 
   if(success == TRUE)
   {
-    req_width = *ww; 
-    req_height = *hh; 
+    req_width = *ww;
+    req_height = *hh;
 
     /* I grabbed this part from thumbnail_invoker(). I'm not sure if I need this. */
     if( req_width <= 128 && req_height <= 128)
@@ -585,7 +585,7 @@ stpui_get_thumbnail_data_function(void *image_ID_printc,
         /* Adjust the width/height ratio */
         dwidth = drawable->width;
         dheight = drawable->height;
- 
+
         if( dwidth > dheight)
           req_height = (req_width * dheight) / dwidth;
         else
@@ -598,9 +598,9 @@ stpui_get_thumbnail_data_function(void *image_ID_printc,
     *bpp = drawable->bpp;   /* we set bpp. It isn't telling us. */
     end = ( *ww * *hh );
     bufstart = buf = malloc( *bpp * end );
- 
+
  /*printf("\ninside thumbnail ww=%d,hh=%d,end=%d, bpp=%d\n", *ww,*hh,end,*bpp ); fflush(stdout);*/
- 
+
     if( buf == NULL )
     {
        puts("malloc failed in ...thumbnail_data()");
@@ -609,10 +609,10 @@ stpui_get_thumbnail_data_function(void *image_ID_printc,
     else
     {
       fseek( RGB_image, 0, SEEK_SET ); /* start of image */
- 
+
       incw = (float)drawable->width / (float)(*ww);
       inc_h = (float)drawable->height / (float)(*hh);
- 
+
       for( iih=yy=iiw=xx=0; xx < end; )
       {
 	 for(bb = 0; bb < *bpp; bb++)
@@ -621,39 +621,39 @@ stpui_get_thumbnail_data_function(void *image_ID_printc,
                break;
             ++buf;
          }
- 
+
          ++xx;
          ++iiw;
- 
+
          /* calc how far across drawable->width we should be if not for *ww less than width */
          /* ie. a thumbnail is small so skip some pixels */
          imitatew = (float)xx * incw;
          for( ; iiw < imitatew; ++iiw )
          {
               /* fseek( RGB_image, *bpp, SEEK_CUR );  throw away extra pixels */
-            
+
               buf -= (*bpp);
               for( bb=0; bb < *bpp; ++bb, ++buf )
-              { 
+              {
                 /* average together extra pixels instead of dumping them */
                 /* to get a more detailed image */
- 
-                if( fread( &clr, 1, sizeof(char), RGB_image) == 1 )  
-                { 
+
+                if( fread( &clr, 1, sizeof(char), RGB_image) == 1 )
+                {
                    *buf = (guchar)( ( (unsigned)(*buf) + (unsigned)(clr) ) / 2);
                 }
               }
          }
- 
-         if( (xx % (*ww)) == 0 ) /* have we moved to a new line yet?*/ 
+
+         if( (xx % (*ww)) == 0 ) /* have we moved to a new line yet?*/
          {
             /* what about skipping extra height lines? */
- 
+
             yy = xx / (*ww); /* we are on line number yy */
- 
-            /* calc how far down drawable->height we should be 
+
+            /* calc how far down drawable->height we should be
                if not for *hh less than height */
- 
+
             /* ie. a thumbnail is small so skip some lines */
             imitateh = (gfloat)yy * inc_h;
             for( ; iih < imitateh; ++iih )
@@ -666,9 +666,9 @@ stpui_get_thumbnail_data_function(void *image_ID_printc,
 }
 
 void
-runit(gchar *image_filename, 
-      gdouble height, 
-      gdouble width, 
+runit(gchar *image_filename,
+      gdouble height,
+      gdouble width,
       char   *name,		/* I - Name of print program. */
       int    *nreturn_vals,	/* O - Number of return values */
       GimpParam **return_vals)	/* O - Return values */
@@ -725,11 +725,11 @@ runit(gchar *image_filename,
   /*
    * Get information from the dialog...
    */
-   
+
   if( do_print_dialog( name) )
   {
      stpui_plist_copy(&gimp_vars, stpui_get_current_printer());
-   
+
      /*
       * Print the image...
       */
@@ -738,27 +738,27 @@ runit(gchar *image_filename,
          /*
           * Set the tile cache size...
           */
-   
+
          if( height > width)
 	   gimp_tile_cache_ntiles (( (guint)height + gimp_tile_width () - 1) /
 				   gimp_tile_width () + 1);
          else
 	   gimp_tile_cache_ntiles (( (guint)width + gimp_tile_width () - 1) /
 				   gimp_tile_width () + 1);
-   
+
          if (! stpui_print(&gimp_vars, image))
 	     values[0].data.d_status = GIMP_PDB_EXECUTION_ERROR;
-   
+
          /*
           * Store data...
           * FIXME! This is broken!
           */
-   
+
 #if 0
       gimp_set_data (PLUG_IN_NAME, vars, sizeof (vars));
 #endif
      }
-   
+
   }
   stp_vars_free(gimp_vars.v);
 }

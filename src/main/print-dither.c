@@ -63,7 +63,7 @@ typedef struct
 static const dither_algo_t dither_algos[] =
 {
   /* Note to translators: "EvenTone" is the proper name, rather than a */
-  /* descriptive name, of this algorithm. */  
+  /* descriptive name, of this algorithm. */
   { "EvenTone", N_ ("EvenTone"),               D_EVENTONE },
   { "Adaptive",	N_ ("Adaptive Hybrid"),        D_ADAPTIVE_HYBRID },
   { "Ordered",	N_ ("Ordered"),                D_ORDERED },
@@ -90,7 +90,7 @@ typedef struct ink_defn
   unsigned dot_size;
   int subchannel;
 } ink_defn_t;
- 
+
 /*
  * A segment of the entire 0-65535 intensity range.
  */
@@ -266,13 +266,56 @@ static const unsigned sq2[] =
   3, 1
 };
 
+static const stp_parameter_t dither_parameters[] =
+{
+  {
+    "DitherAlgorithm", N_("Dither Algorithm"),
+    N_("Choose the dither algorithm to be used.\n"
+       "Adaptive Hybrid usually produces the best all-around quality.\n"
+       "EvenTone is a new, experimental algorithm that often produces excellent results.\n"
+       "Ordered is faster and produces almost as good quality on photographs.\n"
+       "Fast and Very Fast are considerably faster, and work well for text and line art.\n"
+       "Hybrid Floyd-Steinberg generally produces inferior output."),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_OUTPUT,
+    STP_PARAMETER_LEVEL_BASIC
+  },
+};
+
+static int dither_parameter_count =
+sizeof(dither_parameters) / sizeof(const stp_parameter_t);
+
+stp_parameter_list_t
+stp_dither_list_parameters(const stp_vars_t v)
+{
+  stp_parameter_list_t *ret = stp_parameter_list_create();
+  int i;
+  for (i = 0; i < dither_parameter_count; i++)
+    stp_parameter_list_add_param(ret, &(dither_parameters[i]));
+  return ret;
+}
+
 void
-stp_dither_algorithms(stp_string_list_t valptrs)
+stp_dither_describe_parameter(const stp_vars_t v, const char *name,
+			      stp_parameter_t *description)
 {
   int i;
-  for (i = 0; i < num_dither_algos; i++)
-    stp_string_list_add_param(valptrs, dither_algos[i].name,
-			     _(dither_algos[i].text));
+  description->p_type = STP_PARAMETER_TYPE_INVALID;
+  if (name == NULL)
+    return;
+  description->deflt.str = NULL;
+  if (strcmp(name, "DitherAlgorithm") == 0)
+    {
+      stp_fill_parameter_settings(description, &(dither_parameters[0]));
+      description->bounds.str = stp_string_list_allocate();
+      for (i = 0; i < num_dither_algos; i++)
+	{
+	  const dither_algo_t *dt = &dither_algos[i];
+	  stp_string_list_add_param(description->bounds.str,
+				    dt->name, dt->text);
+	}
+      description->deflt.str =
+	stp_string_list_param(description->bounds.str, 0)->name;
+    }
 }
 
 /*
@@ -498,10 +541,12 @@ stp_set_dither_function(dither_t *d, int image_bpp)
 }
 
 void *
-stp_dither_init(int in_width, int out_width, int image_bpp,
-		int xdpi, int ydpi, stp_vars_t v)
+stp_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
+		int xdpi, int ydpi)
 {
   int i;
+  int in_width = stp_image_width(image);
+  int image_bpp = stp_image_bpp(image);
   dither_t *d = stp_zalloc(sizeof(dither_t));
   stp_dither_range_simple_t r;
   d->v = v;
@@ -551,7 +596,7 @@ stp_dither_init(int in_width, int out_width, int image_bpp,
       stp_dither_set_matrix_from_curve
 	(d, stp_get_curve_parameter(v, "DitherMatrix"));
     }
-  else	   
+  else
     {
       stp_dither_matrix_t *mat;
       int transposed = 0;
@@ -903,7 +948,7 @@ stp_dither_finalize_ranges(dither_t *d, dither_channel_t *s)
     s->very_fast = 1;
   else
     s->very_fast = 0;
-	       
+
   s->subchannels = max_subchannel + 1;
   s->row_ends[0] = stp_zalloc(s->subchannels * sizeof(int));
   s->row_ends[1] = stp_zalloc(s->subchannels * sizeof(int));
@@ -1411,10 +1456,10 @@ print_color(const dither_t *d, dither_channel_t *dc, int x, int y,
        * We scale the input linearly against the top and bottom of the
        * range.
        */
-       
+
       lower = dd->lower;
       upper = dd->upper;
-      
+
       if (!dd->is_equal)
 	rangepoint =
 	  ((unsigned) (density - lower->range)) * 65535 / dd->range_span;
@@ -1920,7 +1965,7 @@ static inline void find_segment(dither_t *d, dither_channel_t *dc, int wetness, 
 	int i;
 	ink_defn_t *di;
 	int max_dot;
-	
+
 	if (wetness < 0) max_dot = 0;
 	else max_dot = wetness >> 16;
 
@@ -1961,19 +2006,19 @@ eventone_init(dither_t *d, et_chdata_t **cd)
       if (xa == 0) xa = 1;
       et->d_sq.dx = xa * xa;
       et->d2x = 2 * et->d_sq.dx;
-  
+
       ya = d->y_aspect / d->x_aspect;
       if (ya == 0) ya = 1;
       et->d_sq.dy = ya * ya;
       et->d2y = 2 * et->d_sq.dy;
-    
+
       et->aspect = EVEN_C2 / (xa * ya);
       et->d_sq.r_sq = 0;
     }
-  
+
     et->recip = stp_malloc(65536 * sizeof(int));
     et->dis = stp_malloc(sizeof(dis_t *) * PHYSICAL_CHANNEL_COUNT(d));
-  
+
     for (i=0; i < PHYSICAL_CHANNEL_COUNT(d); i++) {
       int x;
       et->dis[i] = stp_malloc(sizeof(dis_t) * d->dst_width);
@@ -2024,7 +2069,7 @@ advance_eventone_pre(dis_t *cdd, eventone_t *et, dis_t *etd)
     *cdd = *etd;					/* Nearest pixel is from a previous line */
   }
 }
-		
+
 
 static inline void
 advance_eventone_post(et_chdata_t *cd, eventone_t *et, dis_t *etd)
@@ -2057,7 +2102,7 @@ eventone_adjust(dither_segment_t *range, eventone_t *et, int r_sq, int base, int
   unsigned lower;
   unsigned value_span;
   int ditherpoint;
-	
+
   lower = range->lower->value;
   upper = range->upper->value;
   value_span = upper - lower;
@@ -2092,7 +2137,7 @@ print_all_inks(dither_t *d, et_chdata_t *cd, int print_inks, unsigned pick, unsi
     ink_defn_t *subc;
     int bits;
     unsigned char *tptr;
-    
+
     if (!(print_inks & mask)) continue;
     subc = (pick & mask) ? cd->dr.upper : cd->dr.lower;
     if (!(CHANNEL(d, i).ptrs[subc->subchannel]))
@@ -2103,7 +2148,7 @@ print_all_inks(dither_t *d, et_chdata_t *cd, int print_inks, unsigned pick, unsi
 
     tptr = CHANNEL(d, i).ptrs[subc->subchannel] + d->ptr_offset;
     cd->wetness += subc->dot_size << 16;
-    
+
     if (bits == 1) {
       *tptr |= bit;
     } else {
@@ -2122,7 +2167,7 @@ diffuse_error(dither_t *d, int *ndither, int ***error, int aspect, int direction
   int *err;
   static const int diff_fact[] = {1, 10, 16, 23, 32};
   int factor = diff_fact[aspect];
-  
+
   for (i=0; i < CHANNEL_COUNT(d); i++, ndither++, error++) {
     fraction = (*ndither + (factor>>1)) / factor;
     frac_2 = fraction + fraction;
@@ -2618,7 +2663,7 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
   int		direction = row & 1 ? 1 : -1;
   int		xerror, xstep, xmod;
   int		aspect = d->y_aspect / d->x_aspect;
-  
+
   if (d->n_ghost_channels)
     {
       stp_dither_raw_et(cmy, row, d, duplicate_line, zero_mask);
@@ -2653,7 +2698,7 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
       int range = 0;
       unsigned channel_mask;
       et_chdata_t *p;
-      
+
       CHANNEL(d, ECOLOR_K).b = 0;
 
       for (i=1; i < CHANNEL_COUNT(d); i++) {
@@ -2669,7 +2714,7 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
       if (CHANNEL(d, ECOLOR_K).v > 0) {
         update_cmyk(d);
       }
-	
+
       for (i = 1; i < CHANNEL_COUNT(d); i++)
 	CHANNEL(d, i).b = CHANNEL(d, i).v;
 
@@ -2689,9 +2734,9 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 
         maxwet = (CHANNEL(d, i).b * CHANNEL(d, i).maxdot >> 1)
 	 + p->maxdot_wet - p->wetness;
-	
+
         find_segment(d, &CHANNEL(d, i), maxwet, value, &p->dr);
-	
+
 	range += eventone_adjust(&p->dr, et, p->dis.r_sq, base, value);
 	if (range >= 32768) {
 	  pick |= channel_mask;
@@ -2736,11 +2781,11 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
       }
 
       /* Now we can finally print it! */
-      
+
       print_all_inks(d, cd, print_inks, pick, bit, length);
 
       QUANT(11);
-  
+
       /* Diffuse the error round a bit */
       diffuse_error(d, ndither, error, aspect, direction);
 
@@ -2996,7 +3041,7 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
   int		direction = row & 1 ? 1 : -1;
   int		xerror, xstep, xmod;
   int		aspect = d->y_aspect / d->x_aspect;
-  
+
   if (aspect >= 4) { aspect = 4; }
   else if (aspect >= 2) { aspect = 2; }
   else aspect = 1;
@@ -3025,13 +3070,13 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
       int range = 0;
       unsigned channel_mask;
       et_chdata_t *p;
-      
+
       { int value = cmyk[3];		/* Order of input is C,M,Y,K */
 	CHANNEL(d, ECOLOR_K).o = value;				/* Remember value we want printed here */
 	CHANNEL(d, ECOLOR_K).v = value;
 	CHANNEL(d, ECOLOR_K).b = value;
       }
-      
+
       for (i=1; i < CHANNEL_COUNT(d); i++) {
         int value = cmyk[i-1];
 	CHANNEL(d, i).o = value;				/* Remember value we want printed here */
@@ -3052,12 +3097,12 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
 	base = CHANNEL(d, i).b;
 	value = ndither[i] + base;
 	if (value < 0) value = 0;				/* Dither can make this value negative */
-	
+
         maxwet = (CHANNEL(d, i).b * CHANNEL(d, i).maxdot >> 1)
 	 + p->maxdot_wet - p->wetness;
-	
+
         find_segment(d, &CHANNEL(d, i), maxwet, value, &p->dr);
-	
+
 	range += eventone_adjust(&p->dr, et, p->dis.r_sq, base, value);
 	if (range >= 32768) {
 	  pick |= channel_mask;
@@ -3071,7 +3116,7 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
 	p->point = value;
 	advance_eventone_post(p, et, etd);
       }
-	
+
       { int useblack = 0;		/* Do we print black at all? */
 	int printed_black;
 	int adjusted_black;
@@ -3092,7 +3137,7 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
 	    }
           }
 	}
-	
+
 	/* Find which channels we actually print */
 
 	/* Adjust colours to print based on black ink */
@@ -3109,11 +3154,11 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
       }
 
       /* Now we can finally print it! */
-      
+
       print_all_inks(d, cd, print_inks, pick, bit, length);
 
       QUANT(11);
-  
+
       /* Diffuse the error round a bit */
       diffuse_error(d, ndither, error, aspect, direction);
 
@@ -3340,9 +3385,9 @@ stp_dither_raw_et(const unsigned short  *raw,
   unsigned      print_inks = (1 << CHANNEL_COUNT(d)) - 1;
 
   if (aspect >= 4)
-    aspect = 4; 
+    aspect = 4;
   else if (aspect >= 2)
-    aspect = 2; 
+    aspect = 2;
   else aspect = 1;
 
   length = (d->dst_width + 7) / 8;
@@ -3371,7 +3416,7 @@ stp_dither_raw_et(const unsigned short  *raw,
       int i;
       int range = 0;
       et_chdata_t *p;
-      
+
       for (i = 0, channel_mask = 1, p = cd; i < CHANNEL_COUNT(d); i++, channel_mask <<= 1, p++)
 	{
 	  int value = raw[i];
@@ -3382,7 +3427,7 @@ stp_dither_raw_et(const unsigned short  *raw,
 	  CHANNEL(d, i).b = value;
 	  CHANNEL(d, i).v = value;
 	  CHANNEL(d, i).o = value;
-	  
+
 	  advance_eventone_pre(&p->dis, et, etd);
 
 	  if ((p->wetness -= p->maxdot_dens) < 0)
@@ -3391,12 +3436,12 @@ stp_dither_raw_et(const unsigned short  *raw,
 	  value = ndither[i] + base;
 	  if (value < 0)  /* Dither can make this value negative */
 	    value = 0;
-	
+
 	  maxwet = (CHANNEL(d, i).b * CHANNEL(d,i).maxdot >> 1)
 	    + p->maxdot_wet - p->wetness;
-	
+
 	  find_segment(d, &CHANNEL(d, i), maxwet, value, &p->dr);
-	
+
 	  range += eventone_adjust(&p->dr, et, p->dis.r_sq, base, value);
 	  if (range >= 32768) {
 	    pick |= channel_mask;
@@ -3412,11 +3457,11 @@ stp_dither_raw_et(const unsigned short  *raw,
 	}
 
       /* Now we can finally print it! */
-      
+
       print_all_inks(d, cd, print_inks, pick, bit, length);
 
       QUANT(11);
-  
+
       /* Diffuse the error round a bit */
       diffuse_error(d, ndither, error, aspect, direction);
 

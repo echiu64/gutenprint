@@ -71,17 +71,51 @@ static const ink_t inks[] =
 
 static const int ink_count = sizeof(inks) / sizeof(ink_t);
 
+static const stp_parameter_t the_parameters[] =
+{
+  {
+    "PageSize", N_("Page Size"),
+    N_("Size of the paper being printed to"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  {
+    "InkType", N_("Ink Type"),
+    N_("Type of ink in the printer"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+};
+
+static int the_parameter_count =
+sizeof(the_parameters) / sizeof(const stp_parameter_t);
+
+static stp_parameter_list_t
+raw_list_parameters(const stp_vars_t v)
+{
+  stp_parameter_list_t *ret = stp_parameter_list_create();
+  int i;
+  for (i = 0; i < the_parameter_count; i++)
+    stp_parameter_list_add_param(ret, &(the_parameters[i]));
+  return ret;
+}
+
 static void
 raw_parameters(const stp_vars_t v, const char *name,
 	       stp_parameter_t *description)
 {
   int		i;
-  description->type = STP_PARAMETER_TYPE_INVALID;
+  description->p_type = STP_PARAMETER_TYPE_INVALID;
   if (name == NULL)
     return;
 
-  stp_fill_parameter_settings(description, name);
   description->deflt.str = NULL;
+  for (i = 0; i < the_parameter_count; i++)
+    if (strcmp(name, the_parameters[i].name) == 0)
+      {
+	stp_fill_parameter_settings(description, &(the_parameters[i]));
+	break;
+      }
   if (strcmp(name, "PageSize") == 0)
     {
       int papersizes = stp_known_papersizes();
@@ -109,19 +143,7 @@ raw_parameters(const stp_vars_t v, const char *name,
 				  inks[i].name, inks[i].name);
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
-    }      
-  else if ((strcmp(name, "Resolution") == 0) ||
-	   (strcmp(name, "MediaType") == 0) ||
-	   (strcmp(name, "InputSlot") == 0))
-    {
-      description->bounds.str = stp_string_list_allocate();
-	stp_string_list_add_param(description->bounds.str,
-				  "Standard", "Standard");
-      description->deflt.str =
-	stp_string_list_param(description->bounds.str, 0)->name;
     }
-  else
-    stp_describe_internal_parameter(v, name, description);
 }
 
 /*
@@ -272,6 +294,7 @@ raw_print(const stp_vars_t v, stp_image_t *image)
 
 const stp_printfuncs_t stp_raw_printfuncs =
 {
+  raw_list_parameters,
   raw_parameters,
   stp_default_media_size,
   raw_imageable_area,

@@ -239,6 +239,43 @@ static const char plain_paper_lum_adjustment[] =
 static const int lr_shift_color[10] = { 9, 18, 2*18 }; /* vertical distance between ever 2nd  inkjet (related to resolution) */
 static const int lr_shift_black[10] = { 9, 18, 2*18 }; /* vertical distance between ever 2nd  inkjet (related to resolution) */
 
+static const stp_parameter_t the_parameters[] =
+{
+  {
+    "PageSize", N_("Page Size"),
+    N_("Size of the paper being printed to"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  {
+    "MediaType", N_("Media Type"),
+    N_("Type of media (plain paper, photo paper, etc.)"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  {
+    "InputSlot", N_("Media Source"),
+    N_("Source (input slot) of the media"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  {
+    "InkType", N_("Ink Type"),
+    N_("Type of ink in the printer"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  {
+    "Resolution", N_("Resolutions"),
+    N_("Resolution and quality of the print"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+};
+
+static int the_parameter_count =
+sizeof(the_parameters) / sizeof(const stp_parameter_t);
+
 /* returns the offset of the first jet when printing in the other direction */
 static int get_lr_shift(int mode)
 {
@@ -781,7 +818,7 @@ lexmark_get_ink_type(const char *name, int output_type, const lexmark_cap_t * ca
     for (i=0; ((ink_type[i].name != NULL) &&
 	       (strcmp(name, ink_type[i].name)  != 0)); i++) ;
   return &(ink_type[i]);
-      
+
 }
 
 static const lexmark_inkparam_t *
@@ -989,6 +1026,16 @@ static stp_param_string_t media_sources[] =
  * 'lexmark_parameters()' - Return the parameter values for the given parameter.
  */
 
+static stp_parameter_list_t
+lexmark_list_parameters(const stp_vars_t v)
+{
+  stp_parameter_list_t *ret = stp_parameter_list_create();
+  int i;
+  for (i = 0; i < the_parameter_count; i++)
+    stp_parameter_list_add_param(ret, &(the_parameters[i]));
+  return ret;
+}
+
 static void
 lexmark_parameters(const stp_vars_t v, const char *name,
 		   stp_parameter_t *description)
@@ -996,11 +1043,16 @@ lexmark_parameters(const stp_vars_t v, const char *name,
   int		i;
 
   const lexmark_cap_t * caps= lexmark_get_model_capabilities(stp_get_model(v));
-  description->type = STP_PARAMETER_TYPE_INVALID;
+  description->p_type = STP_PARAMETER_TYPE_INVALID;
 
   if (name == NULL)
     return;
-  stp_fill_parameter_settings(description, name);
+  for (i = 0; i < the_parameter_count; i++)
+    if (strcmp(name, the_parameters[i].name) == 0)
+      {
+	stp_fill_parameter_settings(description, &(the_parameters[i]));
+	break;
+      }
 
   if (strcmp(name, "PageSize") == 0)
   {
@@ -1075,8 +1127,6 @@ lexmark_parameters(const stp_vars_t v, const char *name,
 			       media_sources[i].name,
 			       _(media_sources[i].name));
   }
-  else
-    stp_describe_internal_parameter(v, name, description);
 }
 
 /*
@@ -1773,7 +1823,7 @@ densityDivisor /= 1.2;
   stp_erprintf("density is %f\n",stp_get_float_parameter(nv, "Density"));
 #endif
 
-  dither = stp_dither_init(image_width, out_width, image_bpp, xdpi, ydpi, nv);
+  dither = stp_dither_init(nv, image, out_width, xdpi, ydpi);
 
   for (i = 0; i <= NCOLORS; i++)
     stp_dither_set_black_level(dither, i, 1.0);
@@ -1956,6 +2006,7 @@ densityDivisor /= 1.2;
 
 const stp_printfuncs_t stp_lexmark_printfuncs =
 {
+  lexmark_list_parameters,
   lexmark_parameters,
   stp_default_media_size,
   lexmark_imageable_area,
@@ -2512,7 +2563,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 
 #ifdef DEBUG
   stp_erprintf("Lexmark: flush_pass, here we are !\n");
-  stp_erprintf("  passno %i, sw->ncolors %i, width %d, lwidth %d, linecount k % d, linecount m % d, bitwidth %d\n", 
+  stp_erprintf("  passno %i, sw->ncolors %i, width %d, lwidth %d, linecount k % d, linecount m % d, bitwidth %d\n",
 	       passno, sw->ncolors, width, lwidth, /*linecount[0].p.k, linecount[0].p.m,*/ sw->bitwidth);
   stp_erprintf("microoffset %d, vertical_subpass %d, sw->horizontal_weave %d\n", microoffset,vertical_subpass, sw->horizontal_weave);
 
@@ -2551,7 +2602,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
   /* calculate paper shift and adapt actual resoution to physical positioning resolution */
   paperShift = (pass->logicalpassstart - sw->last_pass_offset) * (caps->y_raster_res/ydpi);
 
-      
+
       /*** do we have to print something with the color cartridge ? ***/
       if ((ECOLOR_C < sw->ncolors) && (lineactive[0].v[ECOLOR_C] > 0))
 	{
@@ -2612,7 +2663,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	if (privdata_weave->bidirectional)
 	  privdata_weave->direction = (privdata_weave->direction +1) & 1;
       }
-      
+
 
       /*** do we have to print somthing with black or photo cartridge ? ***/
       /* we print with the photo or black cartidge */
@@ -2655,7 +2706,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
       }
     else
       {
-	if ((ECOLOR_K < sw->ncolors) && (lineactive[0].v[ECOLOR_K] > 0)) 
+	if ((ECOLOR_K < sw->ncolors) && (lineactive[0].v[ECOLOR_K] > 0))
 	  {
 	    /* we have black cartridge; we have to print with all 208 jets at once */
 	    head_colors[0].line = bufs[0].v[ECOLOR_K];
@@ -2671,7 +2722,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	    head_colors[1].head_nozzle_start = 0;
 	    head_colors[1].head_nozzle_end = 0;
 	  }
-	else 
+	else
 	  {
 	    head_colors[2].line = NULL;
 	    head_colors[2].used_jets = 0;
@@ -2689,7 +2740,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
       }
 
      if ((head_colors[0].line != 0) || (head_colors[1].line != 0) || (head_colors[2].line != 0)) {
-       
+
     lexmark_write(nv,		/* I - Print file or command */
 		  privdata_weave->outbuf,/*unsigned char *prnBuf,   mem block to buffer output */
 		  &paperShift,           /* int *paperShift, */

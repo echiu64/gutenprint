@@ -133,6 +133,96 @@ typedef struct escp2_init
   stp_vars_t v;
 } escp2_init_t;
 
+#define PARAMETER_INT(s)				\
+{							\
+  "escp2_" #s, "escp2_" #s, NULL,			\
+  STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,	\
+  STP_PARAMETER_LEVEL_ADVANCED4, 0			\
+}
+
+#define PARAMETER_RAW(s)				\
+{							\
+  "escp2_" #s, "escp2_" #s, NULL,			\
+  STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,	\
+  STP_PARAMETER_LEVEL_ADVANCED4, 0			\
+}
+
+static const stp_parameter_t the_parameters[] =
+{
+  {
+    "PageSize", N_("Page Size"),
+    N_("Size of the paper being printed to"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  {
+    "MediaType", N_("Media Type"),
+    N_("Type of media (plain paper, photo paper, etc.)"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  {
+    "InputSlot", N_("Media Source"),
+    N_("Source (input slot) of the media"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  {
+    "InkType", N_("Ink Type"),
+    N_("Type of ink in the printer"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  {
+    "Resolution", N_("Resolutions"),
+    N_("Resolution and quality of the print"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1
+  },
+  PARAMETER_INT(max_hres),
+  PARAMETER_INT(max_vres),
+  PARAMETER_INT(min_hres),
+  PARAMETER_INT(min_vres),
+  PARAMETER_INT(nozzles),
+  PARAMETER_INT(black_nozzles),
+  PARAMETER_INT(fast_nozzles),
+  PARAMETER_INT(min_nozzles),
+  PARAMETER_INT(min_black_nozzles),
+  PARAMETER_INT(min_fast_nozzles),
+  PARAMETER_INT(nozzle_separation),
+  PARAMETER_INT(black_nozzle_separation),
+  PARAMETER_INT(fast_nozzle_separation),
+  PARAMETER_INT(separation_rows),
+  PARAMETER_INT(max_paper_width),
+  PARAMETER_INT(max_paper_height),
+  PARAMETER_INT(min_paper_width),
+  PARAMETER_INT(min_paper_height),
+  PARAMETER_INT(extra_feed),
+  PARAMETER_INT(pseudo_separation_rows),
+  PARAMETER_INT(base_separation),
+  PARAMETER_INT(base_resolution),
+  PARAMETER_INT(enhanced_resolution),
+  PARAMETER_INT(resolution_scale),
+  PARAMETER_INT(initial_vertical_offset),
+  PARAMETER_INT(black_initial_vertical_offset),
+  PARAMETER_INT(max_black_resolution),
+  PARAMETER_INT(zero_margin_offset),
+  PARAMETER_INT(extra_720dpi_separation),
+  PARAMETER_INT(physical_channels),
+  PARAMETER_INT(left_margin),
+  PARAMETER_INT(right_margin),
+  PARAMETER_INT(top_margin),
+  PARAMETER_INT(bottom_margin),
+  PARAMETER_INT(roll_left_margin),
+  PARAMETER_INT(roll_right_margin),
+  PARAMETER_INT(roll_top_margin),
+  PARAMETER_INT(roll_bottom_margin),
+  PARAMETER_RAW(preinit_sequence),
+  PARAMETER_RAW(postinit_remote_sequence)
+};
+
+static int the_parameter_count =
+sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
 static int
 escp2_has_cap(int model, escp2_model_option_t feature,
@@ -220,14 +310,6 @@ DEF_SIMPLE_ACCESSOR(zero_margin_offset, int)
 DEF_SIMPLE_ACCESSOR(extra_720dpi_separation, int)
 DEF_SIMPLE_ACCESSOR(physical_channels, int)
 
-DEF_RAW_ACCESSOR(preinit_sequence, const stp_raw_t *)
-DEF_RAW_ACCESSOR(postinit_remote_sequence, const stp_raw_t *)
-
-DEF_COMPOSITE_ACCESSOR(paperlist, const paperlist_t *)
-DEF_COMPOSITE_ACCESSOR(reslist, const res_t *)
-DEF_COMPOSITE_ACCESSOR(inklist, const inklist_t *)
-DEF_COMPOSITE_ACCESSOR(input_slots, const input_slot_list_t *)
-
 DEF_MICROWEAVE_ACCESSOR(left_margin, unsigned)
 DEF_MICROWEAVE_ACCESSOR(right_margin, unsigned)
 DEF_MICROWEAVE_ACCESSOR(top_margin, unsigned)
@@ -236,6 +318,14 @@ DEF_MICROWEAVE_ACCESSOR(roll_left_margin, unsigned)
 DEF_MICROWEAVE_ACCESSOR(roll_right_margin, unsigned)
 DEF_MICROWEAVE_ACCESSOR(roll_top_margin, unsigned)
 DEF_MICROWEAVE_ACCESSOR(roll_bottom_margin, unsigned)
+
+DEF_RAW_ACCESSOR(preinit_sequence, const stp_raw_t *)
+DEF_RAW_ACCESSOR(postinit_remote_sequence, const stp_raw_t *)
+
+DEF_COMPOSITE_ACCESSOR(paperlist, const paperlist_t *)
+DEF_COMPOSITE_ACCESSOR(reslist, const res_t *)
+DEF_COMPOSITE_ACCESSOR(inklist, const inklist_t *)
+DEF_COMPOSITE_ACCESSOR(input_slots, const input_slot_list_t *)
 
 static int
 escp2_ink_type(int model, int resid, const stp_vars_t v)
@@ -383,13 +473,23 @@ verify_inktype(const escp2_inkname_t *inks, int model, const stp_vars_t v)
  * 'escp2_parameters()' - Return the parameter values for the given parameter.
  */
 
+static stp_parameter_list_t
+escp2_list_parameters(const stp_vars_t v)
+{
+  stp_parameter_list_t *ret = stp_parameter_list_create();
+  int i;
+  for (i = 0; i < the_parameter_count; i++)
+    stp_parameter_list_add_param(ret, &(the_parameters[i]));
+  return ret;
+}
+
 static void
 escp2_parameters(const stp_vars_t v, const char *name,
 		 stp_parameter_t *description)
 {
   int		i;
   int model = stp_get_model(v);
-  description->type = STP_PARAMETER_TYPE_INVALID;
+  description->p_type = STP_PARAMETER_TYPE_INVALID;
   if (model < 0 || model >= stp_escp2_model_limit)
     {
       stp_eprintf(v, _("Model %d out of range.\n"), model);
@@ -399,7 +499,13 @@ escp2_parameters(const stp_vars_t v, const char *name,
   if (name == NULL)
     return;
 
-  stp_fill_parameter_settings(description, name);
+  for (i = 0; i < the_parameter_count; i++)
+    if (strcmp(name, the_parameters[i].name) == 0)
+      {
+	stp_fill_parameter_settings(description, &(the_parameters[i]));
+	break;
+      }
+
   description->deflt.str = NULL;
   if (strcmp(name, "PageSize") == 0)
     {
@@ -479,8 +585,6 @@ escp2_parameters(const stp_vars_t v, const char *name,
 	    stp_string_list_param(description->bounds.str, 0)->name;
 	}
     }
-  else
-    stp_describe_internal_parameter(v, name, description);
 }
 
 static const res_t *
@@ -1511,8 +1615,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 				   FILLFUNC, PACKFUNC, COMPUTEFUNC);
 
       stp_set_output_color_model(nv, COLOR_MODEL_CMY);
-      dither = stp_dither_init(stp_image_width(image), out_width,
-			       stp_image_bpp(image), xdpi, ydpi, nv);
+      dither = stp_dither_init(nv, image, out_width, xdpi, ydpi);
 
       out_channels = adjust_print_quality(&init, dither, image);
 
@@ -1621,6 +1724,7 @@ escp2_job_end(const stp_vars_t v, stp_image_t *image)
 
 const stp_printfuncs_t stp_escp2_printfuncs =
 {
+  escp2_list_parameters,
   escp2_parameters,
   stp_default_media_size,
   escp2_imageable_area,

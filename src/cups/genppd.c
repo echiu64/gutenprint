@@ -523,7 +523,7 @@ checkcat (const struct dirent *localedir)
 	  status = 1;
 	}
      }
- 
+
   free (catpath);
 
   errno = savederr;
@@ -539,7 +539,7 @@ void *
 xmalloc (size_t size)
 {
   register void *p = NULL;
-  
+
   if ((p = malloc (size)) == NULL)
     {
       fprintf (stderr, "cups-genppd: Memory allocation failed: %s.\n",

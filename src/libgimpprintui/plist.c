@@ -485,7 +485,7 @@ stpui_printrc_load(void)
 
 	get_optional_string_param(key.v, "InputSlot", &lineptr, &keepgoing);
 	get_optional_float_param(key.v, "Brightness", &lineptr, &keepgoing);
-	
+
         GET_OPTIONAL_INTERNAL_FLOAT_PARAM(scaling);
         GET_OPTIONAL_INTERNAL_INT_PARAM(orientation);
         GET_OPTIONAL_INT_PARAM(left);
@@ -599,7 +599,7 @@ stpui_printrc_load(void)
 	  stp_parameter_t desc;
 	  stp_curve_t curve;
 	  stp_describe_parameter(key.v, keyword, &desc);
-	  switch (desc.type)
+	  switch (desc.p_type)
 	    {
 	    case STP_PARAMETER_TYPE_STRING_LIST:
 	    case STP_PARAMETER_TYPE_FILE:
@@ -622,7 +622,7 @@ stpui_printrc_load(void)
 	    default:
 	      if (strlen(value))
 		printf("Unrecognized keyword `%s' in printrc; value `%s' (%d)\n",
-		       keyword, value, desc.type);
+		       keyword, value, desc.p_type);
 	    }
 	}
       }
@@ -710,7 +710,7 @@ stpui_printrc_save(void)
 	    const stp_parameter_t *param = stp_parameter_list_param(params, j);
 	    if (strcmp(param->name, "AppGamma") == 0)
 	      continue;
-	    switch (param->type)
+	    switch (param->p_type)
 	      {
 	      case STP_PARAMETER_TYPE_STRING_LIST:
 	      case STP_PARAMETER_TYPE_FILE:

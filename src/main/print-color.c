@@ -64,6 +64,134 @@ typedef struct
   stp_curve_t sat_map;
 } lut_t;
 
+typedef struct
+{
+  const stp_parameter_t param;
+  double min;
+  double max;
+  double defval;
+} float_param_t;
+
+static float_param_t the_parameters[] =
+{
+  {
+    {
+      "Brightness", N_("Brightness"),
+      N_("Brightness of the print (0 is solid black, 2 is solid white)"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC, 1
+    }, 0.0, 2.0, 1.0
+  },
+  {
+    {
+      "Contrast", N_("Contrast"),
+      N_("Contrast of the print (0 is solid gray)"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC, 1
+    }, 0.0, 4.0, 1.0
+  },
+  {
+    {
+      "Density", N_("Density"),
+      N_("Adjust the density (amount of ink) of the print. "
+	 "Reduce the density if the ink bleeds through the "
+	 "paper or smears; increase the density if black "
+	 "regions are not solid."),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC, 1
+    }, 0.1, 2.0, 1.0
+  },
+  {
+    {
+      "Gamma", N_("Gamma"),
+      N_("Adjust the gamma of the print. Larger values will "
+	 "produce a generally brighter print, while smaller "
+	 "values will produce a generally darker print. "
+	 "Black and white will remain the same, unlike with "
+	 "the brightness adjustment."),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC, 1
+    }, 0.1, 4.0, 1.0
+  },
+  {
+    {
+      "AppGamma", N_("AppGamma"),
+      N_("Gamma value assumed by application"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 1
+    }, 0.1, 4.0, 1.0
+  },
+  {
+    {
+      "Cyan", N_("Cyan"),
+      N_("Adjust the cyan balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC, 1
+    }, 0.0, 4.0, 1.0
+  },
+  {
+    {
+      "Magenta", N_("Magenta"),
+      N_("Adjust the magenta balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC, 1
+    }, 0.0, 4.0, 1.0
+  },
+  {
+    {
+      "Yellow", N_("Yellow"),
+      N_("Adjust the yellow balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC, 1
+    }, 0.0, 4.0, 1.0
+  },
+  {
+    {
+      "Saturation", N_("Saturation"),
+      N_("Adjust the saturation (color balance) of the print\n"
+	 "Use zero saturation to produce grayscale output "
+	 "using color and black inks"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC, 1
+    }, 0.0, 9.0, 1.0
+  },
+  {
+    {
+      "HueMap", N_("Hue Map"),
+      N_("Hue adjustment curve"),
+      STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0
+    }, 0, 0, 0
+  },
+  {
+    {
+      "SatMap", N_("Saturation Map"),
+      N_("Saturation adjustment curve"),
+      STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0
+    }
+  },
+  {
+    {
+      "LumMap", N_("Luminosity Map"),
+      N_("Luminosity adjustment curve"),
+      STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0
+    }
+  },
+  {
+    {
+      "ImageOptimization", N_("Image Type"),
+      N_("Optimize the settings for the type of image to be printed"),
+      STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_BASIC, 0
+    },
+  }
+};
+
+static const int the_parameter_count =
+sizeof(the_parameters) / sizeof(float_param_t);
+
 /*
  * RGB to grayscale luminance constants...
  */
@@ -1674,4 +1802,58 @@ stp_color_init(stp_vars_t v,
     }
   lut->in_data = stp_malloc(stp_image_width(image) * image_bpp);
   return out_channels;
+}
+
+stp_parameter_list_t
+stp_color_list_parameters(const stp_vars_t v)
+{
+  stp_list_t *ret = stp_parameter_list_create();
+  int i;
+  for (i = 0; i < the_parameter_count; i++)
+    stp_parameter_list_add_param(ret, &(the_parameters[i].param));
+  return ret;
+}
+
+void
+stp_color_describe_parameter(const stp_vars_t v, const char *name,
+			      stp_parameter_t *description)
+{
+  int i;
+  description->p_type = STP_PARAMETER_TYPE_INVALID;
+  if (name == NULL)
+    return;
+  for (i = 0; i < the_parameter_count; i++)
+    {
+      if (strcmp(name, the_parameters[i].param.name) == 0)
+	{
+	  stp_fill_parameter_settings(description, &(the_parameters[i].param));
+	  switch (the_parameters[i].param.p_type)
+	    {
+	    case STP_PARAMETER_TYPE_DOUBLE:
+	      description->bounds.dbl.upper = the_parameters[i].max;
+	      description->bounds.dbl.lower = the_parameters[i].min;
+	      description->deflt.dbl = the_parameters[i].defval;
+	      break;
+	    case STP_PARAMETER_TYPE_CURVE:
+	      description->deflt.curve = NULL;
+	      break;
+	    case STP_PARAMETER_TYPE_STRING_LIST:
+	      if (!strcmp(the_parameters[i].param.name, "ImageOptimization"))
+		{
+		  description->bounds.str = stp_string_list_allocate();
+		  stp_string_list_add_param
+		    (description->bounds.str, "LineArt", _("Line Art"));
+		  stp_string_list_add_param
+		    (description->bounds.str, "Solid", _("Solid Colors"));
+		  stp_string_list_add_param
+		    (description->bounds.str, "Photograph", _("Photographs"));
+		  description->deflt.str = "LineArt";
+		}
+	      break;
+	    default:
+	      break;
+	    }
+	  return;
+	}
+    }
 }

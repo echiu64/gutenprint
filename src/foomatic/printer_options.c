@@ -62,7 +62,7 @@ main(int argc, char **argv)
 	  stp_parameter_t desc;
 	  count = 0;
 	  stp_describe_parameter(pv, p->name, &desc);
-	  if (desc.type == STP_PARAMETER_TYPE_STRING_LIST)
+	  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
 	    {
 	      count = stp_string_list_count(desc.bounds.str);
 	      if (count > 0)

@@ -83,7 +83,7 @@ initialize_stp_options(void)
     {
       struct stp_option *opt = &(stp_options[i]);
       stp_describe_parameter(stp_default_settings(), opt->iname, &desc);
-      if (desc.type != STP_PARAMETER_TYPE_DOUBLE)
+      if (desc.p_type != STP_PARAMETER_TYPE_DOUBLE)
 	{
 	  fprintf(stderr, "Parameter %s isn't right!\n", opt->iname);
 	  exit(1);

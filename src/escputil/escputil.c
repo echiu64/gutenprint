@@ -333,7 +333,7 @@ main(int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 #endif
-  
+
   while (1)
     {
 #ifdef __GNU_LIBRARY__

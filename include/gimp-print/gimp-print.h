@@ -239,7 +239,12 @@ typedef enum stp_parameter_level
 {
   STP_PARAMETER_LEVEL_INVALID,
   STP_PARAMETER_LEVEL_BASIC,
-  STP_PARAMETER_LEVEL_ADVANCED
+  STP_PARAMETER_LEVEL_ADVANCED,
+  STP_PARAMETER_LEVEL_ADVANCED1,
+  STP_PARAMETER_LEVEL_ADVANCED2,
+  STP_PARAMETER_LEVEL_ADVANCED3,
+  STP_PARAMETER_LEVEL_ADVANCED4,
+  STP_PARAMETER_LEVEL_ADVANCED5
 } stp_parameter_level_t;
 
 /*
@@ -318,9 +323,10 @@ typedef struct
   const char *name;		/* Internal name (key) */
   const char *text;		/* User-visible name */
   const char *help;		/* Help string */
-  stp_parameter_type_t type;
-  stp_parameter_class_t class;
-  stp_parameter_level_t level;
+  stp_parameter_type_t p_type;
+  stp_parameter_class_t p_class;
+  stp_parameter_level_t p_level;
+  int is_mandatory;
   union				/* Limits on the values */
   {				/* the parameter may take */
     stp_double_bound_t curve;
@@ -489,6 +495,11 @@ extern const stp_parameter_t *
 stp_parameter_list_param(const stp_parameter_list_t list, size_t item);
 
 extern void stp_parameter_list_destroy(stp_parameter_list_t list);
+
+stp_parameter_list_t stp_parameter_list_create(void);
+
+extern void stp_parameter_list_add_param(stp_parameter_list_t list,
+					 const stp_parameter_t *item);
 
 extern stp_parameter_list_t
 stp_parameter_list_copy(const stp_parameter_list_t list);

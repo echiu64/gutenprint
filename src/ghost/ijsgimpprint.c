@@ -128,7 +128,7 @@ image_init(IMAGE *img, IjsPageHeader *ph)
       img->output_type = OUTPUT_COLOR;
       /* 24-bit colour */
     }
-  else if ((img->bps == 8) && (img->n_chan == 4) && 
+  else if ((img->bps == 8) && (img->n_chan == 4) &&
 	   (strncmp(ph->cs, DeviceCMYK, strlen(DeviceCMYK)) == 0))
     {
       STP_DEBUG(fprintf(stderr, "output CMYK\n"));
@@ -487,7 +487,7 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  if (ah >= 0)
 	    stp_set_top(img->v, ah);
 	}
-    }      
+    }
   else if (strcmp(key, "PaperSize") == 0)
     {
       double w, h;
@@ -534,7 +534,7 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
       stp_curve_t curve;
       stp_parameter_t desc;
       stp_describe_parameter(img->v, key, &desc);
-      switch (desc.type)
+      switch (desc.p_type)
 	{
 	case STP_PARAMETER_TYPE_STRING_LIST:
 	  stp_set_string_parameter(img->v, key, vbuf);
@@ -555,7 +555,7 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  if (code == 0)
 	    stp_set_int_parameter(img->v, key, i);
 	default:
-	  STP_DEBUG(fprintf(stderr, "Bad parameter %s %d\n", key, desc.type));
+	  STP_DEBUG(fprintf(stderr, "Bad parameter %s %d\n", key, desc.p_type));
 	}
     }
 
@@ -600,7 +600,7 @@ static int
 gimp_image_bpp(stp_image_t *image)
 {
   IMAGE *img = (IMAGE *)(image->rep);
-  STP_DEBUG(fprintf(stderr, "gimp_image_bpp: bps=%d n_chan=%d returning %d\n", 
+  STP_DEBUG(fprintf(stderr, "gimp_image_bpp: bps=%d n_chan=%d returning %d\n",
 		    img->bps, img->n_chan, (img->bps * img->n_chan + 7) / 8));
   return (img->bps * img->n_chan + 7) / 8;
 }
@@ -649,7 +649,7 @@ image_next_row(IMAGE *img)
   return status;
 }
 
-static stp_image_status_t 
+static stp_image_status_t
 gimp_image_get_row(stp_image_t *image, unsigned char *data, size_t byte_limit,
 		   int row)
 {
@@ -880,12 +880,12 @@ main (int argc, char **argv)
 	}
 
 
-      img.total_bytes = (double) ((ph.n_chan * ph.bps * ph.width + 7) >> 3) 
+      img.total_bytes = (double) ((ph.n_chan * ph.bps * ph.width + 7) >> 3)
 	* (double) ph.height;
       img.bytes_left = img.total_bytes;
 
       stp_set_float_parameter(img.v, "AppGamma", 1.7);
-      stp_set_output_type(img.v, img.output_type); 
+      stp_set_output_type(img.v, img.output_type);
       stp_get_media_size(img.v, &w, &h);
       stp_get_imageable_area(img.v, &l, &r, &b, &t);
       width = r - l;
@@ -924,7 +924,7 @@ main (int argc, char **argv)
     }
   while (status == 0);
   stp_end_job(img.v, &si);
-      
+
   if (f)
     {
       fclose(f);

@@ -384,7 +384,7 @@ Image_get_row(stp_image_t *image, unsigned char *data, size_t byte_limit,
 	    }
 
 	}
-    }      
+    }
   if (im->mirror)
     {
       /* Flip row -- probably inefficiently */

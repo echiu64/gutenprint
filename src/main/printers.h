@@ -46,6 +46,7 @@ extern "C" {
 
 typedef struct
 {
+  stp_parameter_list_t (*list_parameters)(const stp_vars_t v);
   void  (*parameters)(const stp_vars_t v, const char *name,
 		      stp_parameter_t *);
   void  (*media_size)(const stp_vars_t v, int *width, int *height);
@@ -66,6 +67,12 @@ extern const stp_printfuncs_t *stp_printer_get_printfuncs(const stp_printer_t p)
 
 extern int stp_verify_printer_params(const stp_vars_t);
 extern int stp_init_printer_list(void);
+
+extern stp_parameter_list_t stp_printer_list_parameters(const stp_vars_t v);
+
+extern void
+stp_printer_describe_parameter(const stp_vars_t v, const char *name,
+			       stp_parameter_t *description);
 
 
 #ifdef __cplusplus
