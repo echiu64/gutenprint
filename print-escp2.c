@@ -31,6 +31,18 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.39.2.2  2000/02/11 23:53:22  rlk
+ *   print 3.0.6 fixes
+ *
+ *   Revision 1.39.2.2  2000/02/11 23:44:39  rlk
+ *   3.0.6
+ *
+ *   Revision 1.13  2000/01/26 16:00:47  neo
+ *   updated print plug-in
+ *
+ *
+ *   --Sven
+ *
  *   Revision 1.39.2.1  2000/01/13 03:32:34  rlk
  *   silliness
  *
@@ -1040,7 +1052,11 @@ escp2_print(int       model,		/* I - Model */
       if (output_type == OUTPUT_GRAY)
       {
         dither_black(out, x, image_height, out_width, black);
-        escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
+	if (use_softweave)
+	  escp2_write_weave(prn, length, ydpi, model, out_width, left, xdpi,
+			    cyan, magenta, yellow, black, lcyan, lmagenta);
+	else
+	  escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
       }
       else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
       {
@@ -1128,7 +1144,11 @@ escp2_print(int       model,		/* I - Model */
       if (output_type == OUTPUT_GRAY)
       {
         dither_black(out, y, image_width, out_width, black);
-        escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
+	if (use_softweave)
+	  escp2_write_weave(prn, length, ydpi, model, out_width, left, xdpi,
+			    cyan, magenta, yellow, black, lcyan, lmagenta);
+	else
+	  escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
       }
       else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
       {
@@ -1564,6 +1584,7 @@ static int vertical_subpasses;	/* Number of passes per line (for better */
 				/* quality) */
 static int vmod;		/* Number of banks of passes */
 static int oversample;		/* Excess precision per row */
+static int is_monochrome = 0;
 
 /*
  * Mapping between color and linear index.  The colors are
@@ -1867,7 +1888,7 @@ flush_pass(int passno, int model, int width, int hoffset, int ydpi,
     {
       for (j = 0; j < 6; j++)
 	{
-	  if (lineoffs[k].v[j] == 0)
+	  if (lineoffs[k].v[j] == 0 || (j > 0 && is_monochrome))
 	    continue;
 	  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
 	    fprintf(prn, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
@@ -2145,6 +2166,10 @@ escp2_write_weave(FILE          *prn,	/* I - Print file or command */
   cols[3] = y;
   cols[4] = M;
   cols[5] = C;
+  if (!c)
+    is_monochrome = 1;
+  else
+    is_monochrome = 0;
 
   initialize_row(lineno, width);
   
