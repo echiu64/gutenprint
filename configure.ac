@@ -441,8 +441,8 @@ if test x${BUILD_GHOSTSCRIPT} = xyes ; then
 fi
 
 dnl GNU gettext checks.
-dnl AM_GNU_GETTEXT_VERSION([0.10.40])
-AM_GNU_GETTEXT([use-libtool])
+AM_GNU_GETTEXT_VERSION([0.11.5])
+AM_GNU_GETTEXT([external])
 
 dnl Set PACKAGE_LOCALE_DIR in config.h
 AH_TEMPLATE(PACKAGE_LOCALE_DIR, [Package locale directory])
@@ -583,8 +583,10 @@ if test x${HAVE_READLINE_READLINE_H} = xtrue ; then
 fi
 AC_CHECK_HEADERS(dlfcn.h, [HAVE_DLFCN_H=true])
 AC_CHECK_HEADERS(fcntl.h)
+AC_CHECK_HEADERS(limits.h)
+AC_CHECK_HEADERS(locale.h)
 AC_CHECK_HEADERS(ltdl.h, [HAVE_LTDL_H=true])
-AC_CHECK_HEADERS(stdarg.h)
+AC_CHECK_HEADERS(stdarg.h stdlib.h string.h)
 AC_CHECK_HEADERS(sys/time.h sys/types.h)
 AC_CHECK_HEADERS(time.h)
 AC_CHECK_HEADERS(unistd.h)
@@ -780,7 +782,6 @@ AC_CONFIG_FILES([doc/users_guide/Makefile])
 AC_CONFIG_FILES([include/Makefile])
 AC_CONFIG_FILES([include/gimp-print/Makefile])
 AC_CONFIG_FILES([include/gimp-print/gimp-print-version.h])
-AC_CONFIG_FILES([intl/Makefile])
 AC_CONFIG_FILES([lib/Makefile])
 AC_CONFIG_FILES([man/Makefile])
 AC_CONFIG_FILES([man/cups-calibrate.8])

@@ -16,10 +16,6 @@ else
   mkdir m4local
 fi
 
-if test -f configure.in ; then
-  rm -f configure.in
-fi
-
 libtoolv=`libtool --version | head -1 | sed 's,.*[        ]\([0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)*\)[a-z]*[   ].*,\1,'`
 libtool_major=`echo $libtoolv | awk -F. '{print $1}'`
 libtool_minor=`echo $libtoolv | awk -F. '{print $2}'`
@@ -36,11 +32,9 @@ test "$libtool_major" -le 1 && {
   echo "**Warning**: You should have \`libtool' 1.4.3 or newer installed to"
   echo "create a gimp-print distribution.  Earlier versions of gettext do"
   echo "not generate correct code for all platforms."
-  echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.4.3.tar.gz"
+  echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.5.tar.gz"
   echo "(or a newer version if it is available)"
-  echo "For now, making \`configure.in' a symbolic link to \`configure.ac'"
-  echo "to work around a bug in libtool < 1.4.2a"
-  ln -s configure.ac configure.in
+  DIE=1
 }
 
 (autoconf --version) < /dev/null > /dev/null 2>&1 || {
@@ -65,18 +59,12 @@ test -f $srcdir/ChangeLog || echo > $srcdir/ChangeLog
   }
 }
 
-gettextizev=`gettextize --version | head -1 | sed 's,.*[        ]\([0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)*\)[a-z]*[   ]*.*,\1,'`
-gettextize_major=`echo $gettextizev | awk -F. '{print $1}'`
-gettextize_minor=`echo $gettextizev | awk -F. '{print $2}'`
-gettextize_point=`echo $gettextizev | awk -F. '{print $3}'`
-
-
 grep "^AM_GNU_GETTEXT" $srcdir/configure.ac >/dev/null && {
   grep "sed.*POTFILES" $srcdir/configure.ac >/dev/null || \
   (gettext --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "**Error**: You must have \`gettext' installed to compile gimp-print."
-    echo "Get ftp://ftp.gnu.org/pub/gnu/gettext/gettext-0.10.40.tar.gz"
+    echo "Get ftp://ftp.gnu.org/pub/gnu/gettext/gettext-0.11.5.tar.gz"
     echo "(or a newer version if it is available)"
     DIE=1
   }
@@ -92,22 +80,31 @@ gettext_minor=`echo $gettextv | awk -F. '{print $2}'`
 gettext_point=`echo $gettextv | awk -F. '{print $3}'`
 
 test "$gettext_major" -eq 0 && {
-  test "$gettext_minor" -lt 10 || {
-    test "$gettext_minor" -eq 10 -a "$gettext_point" -lt 38
+  test "$gettext_minor" -lt 11 || {
+    test "$gettext_minor" -eq 5
   }
 } && {
   echo
-  echo "**Warning**: You must have \`gettext' 0.10.38 or newer installed to"
+  echo "**Warning**: You must have \`gettext' 0.11.5 or newer installed to"
   echo "create a gimp-print distribution.  Earlier versions of gettext do"
   echo "not generate the correct 'make uninstall' code."
   echo "Get ftp://ftp.gnu.org/gnu/gettext/gettext-0.10.40.tar.gz"
   echo "(or a newer version if it is available)"
 }
 
+(autopoint --version) < /dev/null > /dev/null 2>&1 || {
+  echo
+  echo "**Error**: You must have \`autopoint' installed to compile gimp-print."
+  echo "Get ftp://ftp.gnu.org/pub/gnu/gettext/gettext-0.11.5.tar.gz"
+  echo "(or a newer version if it is available)"
+  DIE=1
+  NO_AUTOMAKE=yes
+}
+
 (automake --version) < /dev/null > /dev/null 2>&1 || {
   echo
   echo "**Error**: You must have \`automake' installed to compile gimp-print."
-  echo "Get ftp://ftp.gnu.org/pub/gnu/automake/automake-1.3.tar.gz"
+  echo "Get ftp://ftp.gnu.org/pub/gnu/automake/automake-1.7.tar.gz"
   echo "(or a newer version if it is available)"
   DIE=1
   NO_AUTOMAKE=yes
@@ -119,7 +116,7 @@ test -n "$NO_AUTOMAKE" || (aclocal --version) < /dev/null > /dev/null 2>&1 || {
   echo
   echo "**Error**: Missing \`aclocal'.  The version of \`automake'"
   echo "installed doesn't appear recent enough."
-  echo "Get ftp://ftp.gnu.org/pub/gnu/automake/automake-1.3.tar.gz"
+  echo "Get ftp://ftp.gnu.org/pub/gnu/automake/automake-1.7.tar.gz"
   echo "(or a newer version if it is available)"
   DIE=1
 }
@@ -327,12 +324,8 @@ do
 	  echo 'This ChangeLog is redundant. Please see the main ChangeLog for i18n changes.' > po/ChangeLog
 	  echo >> po/ChangeLog
 	  echo 'This file is present only to keep po/Makefile.in.in happy.' >> po/ChangeLog
-	  echo "Running gettextize...  Ignore non-fatal messages."
-	  if [ "$gettextize_major" -gt 0 -o "$gettextize_minor" -ge 11 ] ; then
-	    echo "no" | gettextize --force --copy --intl
-	  else
-	    echo "no" | gettextize --force --copy
-	  fi
+	  echo "Running autopoint...  Ignore non-fatal messages."
+	    autopoint --force
 	  echo "Making $dr/aclocal.m4 writable ..."
 	  test -r $dr/aclocal.m4 && chmod u+w $dr/aclocal.m4
         fi

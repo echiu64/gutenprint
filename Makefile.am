@@ -30,7 +30,7 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
-SUBDIRS = include intl lib src samples test po man doc debian scripts
+SUBDIRS = include lib src samples test po man doc debian scripts
 DISTDIRS = m4 m4extra
 
 

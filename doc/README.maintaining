@@ -58,11 +58,11 @@ something that you would like covering, please let me know!
 To build Gimp-Print from CVS, or to regenerate the build scripts after
 modifying them, you need to install a number of GNU tools:
 
-i.   GNU autoconf (2.53 is buggy; 2.54 recommended)
-ii.  GNU automake (at least 1.5; 1.6 or 1.7 recommended)
-iii. GNU libtool (at least 1.4.2; a newer version is recommended)
-iv.  GNU gettext (0.10.x; 0.11.x do not work properly)
-v.   GNU make (theoretically not essential, but recommended)
+i.   GNU autoconf (at least 2.54)
+ii.  GNU automake (at least 1.5; 1.7 recommended)
+iii. GNU libtool (at least 1.4.3; 1.5 recommended)
+iv.  GNU gettext (at least 0.11.x)
+v.   GNU make (any recent version)
 
 GNU autoconf made some incompatible changes between the 2.13 and 2.50
 stable releases.  You cannot use a configure.in written for 2.13 with
@@ -94,9 +94,9 @@ configure with a program suffix.  You will, however, need to update a
 symlink manually, perhaps using one in your home bindir.  automake 1.4
 works with autoconf2.13; autoconf1.5 works with autoconf2.13 and 2.5x
 but is old; automake1.6+ will only work with new 2.5x autoconf
-versions but are the current releases.  I suggest using 1.4 and
-1.6/1.7 together.  Different versions of autoconf need separate
-aclocal directories, to prevent m4 macros clashing.
+versions but are the current releases.  I suggest using 1.4 and 1.7
+together.  Different versions of autoconf need separate aclocal
+directories, to prevent m4 macros clashing.
 
 GNU gettext 0.11.x (current) releases will not work properly with
 current CVS Gimp-Print because of changes to gettextize.  We need to
@@ -629,3 +629,10 @@ gimp.m4 (in /usr/share/aclocal or equivalent) will be incorrect.  You
 should install the version of gimp.m4 from scripts/ prior to use.
 This should only be a problem when building from CVS; the configure
 script included in released versions will not have this problem.
+
+
+
+
+Local Variables:
+mode: text
+End:
