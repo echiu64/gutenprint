@@ -85,6 +85,14 @@ Custom_Page_Width:	DBG(CUSTOM_PAGE_WIDTH); return CUSTOM_PAGE_WIDTH;
 Custom_Page_Height:	DBG(CUSTOM_PAGE_HEIGHT); return CUSTOM_PAGE_HEIGHT;
 Output_Type:		DBG(OUTPUT_TYPE); return OUTPUT_TYPE;
 Parameter		DBG(PARAMETER); return PARAMETER;
+Queue-Name:		DBG(QUEUE_NAME); return QUEUE_NAME;
+Output-Filename:	DBG(OUTPUT_FILENAME); return OUTPUT_FILENAME;
+Extra-Printer-Options:	DBG(EXTRA_PRINTER_OPTIONS); return EXTRA_PRINTER_OPTIONS;
+Custom-Command:		DBG(CUSTOM_COMMAND); return CUSTOM_COMMAND;
+Command-Type:		DBG(COMMAND_TYPE); return COMMAND_TYPE;
+Global-Settings:	DBG(GLOBAL_SETTINGS); return GLOBAL_SETTINGS;
+End-Global-Settings:	DBG(END_GLOBAL_SETTINGS); return END_GLOBAL_SETTINGS;
+Global:			DBG(GLOBAL); return GLOBAL;
 
 Int			DBG(pINT); return pINT;
 String			DBG(pSTRING_LIST); return pSTRING_LIST;

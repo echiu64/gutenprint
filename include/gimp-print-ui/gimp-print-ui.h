@@ -55,11 +55,26 @@ typedef enum
   ORIENT_SEASCAPE = 3
 } orient_t;
 
+/*
+ * If this is changed, command_options[] in panel.c must be appropriately
+ * updated.
+ */
+typedef enum
+{
+  COMMAND_TYPE_DEFAULT,
+  COMMAND_TYPE_CUSTOM,
+  COMMAND_TYPE_FILE
+} command_t;
+
 typedef struct		/**** Printer List ****/
 {
-  int		active;		/* Do we know about this printer? */
   char		*name;		/* Name of printer */
-  char		*output_to;
+  command_t	command_type;
+  char		*queue_name;
+  char		*extra_printer_options;
+  char		*custom_command;
+  char		*current_standard_command;
+  char		*output_filename;
   float		scaling;      /* Scaling, percent of printable area */
   orient_t	orientation;
   int		unit;	  /* Units for preview area 0=Inch 1=Metric */
@@ -84,16 +99,43 @@ typedef struct stpui_image
 /*
  * Function prototypes
  */
-extern void stpui_plist_set_output_to(stpui_plist_t *p, const char *val);
-extern void stpui_plist_set_output_to_n(stpui_plist_t *p, const char *val, int n);
-extern const char *stpui_plist_get_output_to(const stpui_plist_t *p);
 extern void stpui_plist_set_name(stpui_plist_t *p, const char *val);
 extern void stpui_plist_set_name_n(stpui_plist_t *p, const char *val, int n);
 extern const char *stpui_plist_get_name(const stpui_plist_t *p);
+
+extern void stpui_plist_set_queue_name(stpui_plist_t *p, const char *val);
+extern void stpui_plist_set_queue_name_n(stpui_plist_t *p, const char *val, int n);
+extern const char *stpui_plist_get_queue_name(const stpui_plist_t *p);
+
+extern void stpui_plist_set_output_filename(stpui_plist_t *p, const char *val);
+extern void stpui_plist_set_output_filename_n(stpui_plist_t *p, const char *val, int n);
+extern const char *stpui_plist_get_output_filename(const stpui_plist_t *p);
+
+extern void stpui_plist_set_extra_printer_options(stpui_plist_t *p, const char *val);
+extern void stpui_plist_set_extra_printer_options_n(stpui_plist_t *p, const char *val, int n);
+extern const char *stpui_plist_get_extra_printer_options(const stpui_plist_t *p);
+
+extern void stpui_plist_set_custom_command(stpui_plist_t *p, const char *val);
+extern void stpui_plist_set_custom_command_n(stpui_plist_t *p, const char *val, int n);
+extern const char *stpui_plist_get_custom_command(const stpui_plist_t *p);
+
+extern void stpui_plist_set_current_standard_command(stpui_plist_t *p, const char *val);
+extern void stpui_plist_set_current_standard_command_n(stpui_plist_t *p, const char *val, int n);
+extern const char *stpui_plist_get_current_standard_command(const stpui_plist_t *p);
+
+extern void stpui_plist_set_command_type(stpui_plist_t *p, command_t val);
+extern command_t stpui_plist_get_command_type(const stpui_plist_t *p);
+
+extern void stpui_set_global_parameter(const char *param, const char *value);
+extern const char *stpui_get_global_parameter(const char *param);
+
 extern void stpui_plist_copy(stpui_plist_t *vd, const stpui_plist_t *vs);
 extern int stpui_plist_add(const stpui_plist_t *key, int add_only);
 extern void stpui_printer_initialize(stpui_plist_t *printer);
 extern const stpui_plist_t *stpui_get_current_printer(void);
+
+extern char *stpui_build_standard_print_command(const stpui_plist_t *plist,
+						const stp_printer_t *printer);
 
 extern void stpui_set_printrc_file(const char *name);
 extern const char * stpui_get_printrc_file(void);

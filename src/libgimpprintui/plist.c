@@ -26,6 +26,7 @@
 #endif
 
 #include <gimp-print/gimp-print-intl-internal.h>
+#include <gimp-print/gimp-print.h>
 #include <gimp-print-ui/gimp-print-ui.h>
 #include "gimp-print-ui-internal.h"
 
@@ -41,6 +42,13 @@
 #include <sys/wait.h>
 
 
+typedef enum
+{
+  PRINTERS_NONE,
+  PRINTERS_LPC,
+  PRINTERS_LPSTAT
+} printer_system_t;
+
 static int	compare_printers (stpui_plist_t *p1, stpui_plist_t *p2);
 
 int		stpui_plist_current = 0,	/* Current system printer */
@@ -51,6 +59,8 @@ static char *printrc_name = NULL;
 static char *image_type;
 static gint image_raw_channels = 0;
 static gint image_channel_depth = 8;
+static stp_string_list_t *default_parameters = NULL;
+stp_string_list_t *stpui_system_print_queues;
 
 #define SAFE_FREE(x)			\
 do						\
@@ -59,6 +69,121 @@ do						\
     g_free((char *)(x));			\
   ((x)) = NULL;					\
 } while (0)
+
+typedef struct
+{
+  const char *printing_system_name;
+  const char *printing_system_text;
+  const char *print_command;
+  const char *queue_select;
+  const char *raw_flag;
+  const char *key_file;
+  const char *scan_command;
+} print_system_t;
+
+/*
+ * Generic printing system, based on SysV lp
+ */
+static const print_system_t default_printing_system =
+  { "SysV", N_("System V lp"), "lp -s", "-d", "-oraw", "/usr/bin/lp",
+    "/usr/bin/lpstat -v | grep -i '^device for ' | awk '{print $3}' | sed 's/://'" };
+
+static print_system_t known_printing_systems[] =
+{
+  { "CUPS", N_("CUPS"), "lp -s", "-d", "-oraw", "/usr/sbin/cupsd",
+    "/usr/bin/lpstat -v | grep -i '^device for ' | awk '{print $3}' | sed 's/://'" },
+  { "SysV", N_("System V lp"), "lp -s", "-d", "-oraw", "/usr/bin/lp",
+    "/usr/bin/lpstat -v | grep -i '^device for ' | awk '{print $3}' | sed 's/://'" },
+  { "lpd", N_("Berkeley lpd (/etc/lpc)"), "lpr", "-P", "-l", "/etc/lpc",
+    "/etc/lpc status | grep '^...*:' | sed 's/:.*//'" },
+  { "lpd", N_("Berkeley lpd (/usr/bsd/lpc)"), "lpr", "-P", "-l", "/usr/bsd/lpc",
+    "/usr/bsd/lpc status | grep '^...*:' | sed 's/:.*//'" },
+  { "lpd", N_("Berkeley lpd (/usr/etc/lpc"), "lpr", "-P", "-l", "/usr/etc/lpc",
+    "/usr/etc/lpc status | grep '^...*:' | sed 's/:.*//'" },
+  { "lpd", N_("Berkeley lpd (/usr/libexec/lpc)"), "lpr", "-P", "-l", "/usr/libexec/lpc",
+    "/usr/libexec/lpc status | grep '^...*:' | sed 's/:.*//'" },
+  { "lpd", N_("Berkeley lpd (/usr/sbin/lpc)"), "lpr", "-P", "-l", "/usr/sbin/lpc",
+    "/usr/sbin/lpc status | grep '^...*:' | sed 's/:.*//'" },
+};
+
+static unsigned print_system_count = sizeof(known_printing_systems) / sizeof(print_system_t);
+
+static const print_system_t *global_printing_system = NULL;
+
+static void
+initialize_default_parameters(void)
+{
+  default_parameters = stp_string_list_create();
+  stp_string_list_add_string(default_parameters, "PrintingSystem", "Autodetect");
+  stp_string_list_add_string(default_parameters, "PrintCommand", "");
+  stp_string_list_add_string(default_parameters, "QueueSelect", "");
+  stp_string_list_add_string(default_parameters, "RawOutputFlag", "");
+  stp_string_list_add_string(default_parameters, "ScanOnStartup", "False");
+  stp_string_list_add_string(default_parameters, "ScanPrintersCommand", "");
+}
+
+void
+stpui_set_global_parameter(const char *param, const char *value)
+{
+  stp_string_list_remove_string(default_parameters, param);
+  stp_string_list_add_string(default_parameters, param, value);
+}
+
+const char *
+stpui_get_global_parameter(const char *param)
+{
+  stp_param_string_t *ps = stp_string_list_find(default_parameters, param);
+  if (ps)
+    return ps->text;
+  else
+    return NULL;
+}
+
+static const print_system_t *
+identify_print_system(void)
+{
+  int i;
+  if (!global_printing_system)
+    {
+      for (i = 0; i < print_system_count; i++)
+	{
+	  if (!access(known_printing_systems[i].key_file, R_OK))
+	    {
+	      global_printing_system = &(known_printing_systems[i]);
+	      break;
+	    }
+	}
+      if (!global_printing_system)
+	global_printing_system = &default_printing_system;
+    }
+  return global_printing_system;
+}
+
+char *
+stpui_build_standard_print_command(const stpui_plist_t *plist,
+				   const stp_printer_t *printer)
+{
+  const char *queue_name = stpui_plist_get_queue_name(plist);
+  const char *extra_options = stpui_plist_get_extra_printer_options(plist);
+  const char *family = stp_printer_get_family(printer);
+  int raw = 0;
+  char *print_cmd;
+  if (!queue_name)
+    queue_name = "";
+  identify_print_system();
+  if (strcmp(family, "ps") == 0)
+    raw = 0;
+  else
+    raw = 1;
+  stp_asprintf(&print_cmd, "%s %s %s %s%s%s",
+	       global_printing_system->print_command,
+	       queue_name[0] ? global_printing_system->queue_select : "",
+	       queue_name[0] ? queue_name : "",
+	       raw ? global_printing_system->raw_flag : "",
+	       extra_options ? " " : "",
+	       extra_options ? extra_options : "");
+  return print_cmd;
+}
 
 void
 stpui_set_printrc_file(const char *name)
@@ -84,52 +209,57 @@ stpui_get_printrc_file(void)
   return printrc_name;
 }
 
-void
-stpui_plist_set_output_to(stpui_plist_t *p, const char *val)
-{
-  if (p->output_to == val)
-    return;
-  SAFE_FREE(p->output_to);
-  p->output_to = g_strdup(val);
+#define PLIST_ACCESSORS(name)						\
+void									\
+stpui_plist_set_##name(stpui_plist_t *p, const char *val)		\
+{									\
+  if (p->name == val)							\
+    return;								\
+  SAFE_FREE(p->name);							\
+  p->name = g_strdup(val);						\
+}									\
+									\
+void									\
+stpui_plist_set_##name##_n(stpui_plist_t *p, const char *val, int n)	\
+{									\
+  if (p->name == val)							\
+    return;								\
+  SAFE_FREE(p->name);							\
+  p->name = g_strndup(val, n);						\
+}									\
+									\
+const char *								\
+stpui_plist_get_##name(const stpui_plist_t *p)				\
+{									\
+  return p->name;							\
 }
+
+PLIST_ACCESSORS(output_filename)
+PLIST_ACCESSORS(name)
+PLIST_ACCESSORS(queue_name)
+PLIST_ACCESSORS(extra_printer_options)
+PLIST_ACCESSORS(custom_command)
+PLIST_ACCESSORS(current_standard_command)
 
 void
-stpui_plist_set_output_to_n(stpui_plist_t *p, const char *val, int n)
+stpui_plist_set_command_type(stpui_plist_t *p, command_t val)
 {
-  if (p->output_to == val)
-    return;
-  SAFE_FREE(p->output_to);
-  p->output_to = g_strndup(val, n);
+  switch (val)
+    {
+    case COMMAND_TYPE_DEFAULT:
+    case COMMAND_TYPE_CUSTOM:
+    case COMMAND_TYPE_FILE:
+      p->command_type = val;
+      break;
+    default:
+      p->command_type = COMMAND_TYPE_DEFAULT;
+    }
 }
 
-const char *
-stpui_plist_get_output_to(const stpui_plist_t *p)
+command_t
+stpui_plist_get_command_type(const stpui_plist_t *p)
 {
-  return p->output_to;
-}
-
-void
-stpui_plist_set_name(stpui_plist_t *p, const char *val)
-{
-  if (p->name == val)
-    return;
-  SAFE_FREE(p->name);
-  p->name = g_strdup(val);
-}
-
-void
-stpui_plist_set_name_n(stpui_plist_t *p, const char *val, int n)
-{
-  if (p->name == val)
-    return;
-  SAFE_FREE(p->name);
-  p->name = g_strndup(val, n);
-}
-
-const char *
-stpui_plist_get_name(const stpui_plist_t *p)
-{
-  return p->name;
+  return p->command_type;
 }
 
 void
@@ -154,9 +284,13 @@ void
 stpui_printer_initialize(stpui_plist_t *printer)
 {
   char tmp[32];
-  stpui_plist_set_output_to(printer, "");
   stpui_plist_set_name(printer, "");
-  printer->active = 0;
+  stpui_plist_set_output_filename(printer, "");
+  stpui_plist_set_queue_name(printer, "");
+  stpui_plist_set_extra_printer_options(printer, "");
+  stpui_plist_set_custom_command(printer, "");
+  stpui_plist_set_current_standard_command(printer, "");
+  printer->command_type = COMMAND_TYPE_DEFAULT;
   printer->scaling = 100.0;
   printer->orientation = ORIENT_AUTO;
   printer->auto_size_roll_feed_paper = 0;
@@ -180,7 +314,11 @@ static void
 stpui_plist_destroy(stpui_plist_t *printer)
 {
   SAFE_FREE(printer->name);
-  SAFE_FREE(printer->output_to);
+  SAFE_FREE(printer->queue_name);
+  SAFE_FREE(printer->extra_printer_options);
+  SAFE_FREE(printer->custom_command);
+  SAFE_FREE(printer->current_standard_command);
+  SAFE_FREE(printer->output_filename);
   stp_vars_destroy(printer->v);
 }
 
@@ -190,14 +328,18 @@ stpui_plist_copy(stpui_plist_t *vd, const stpui_plist_t *vs)
   if (vs == vd)
     return;
   stp_vars_copy(vd->v, vs->v);
-/*  vd->active = vs->active; */
   vd->scaling = vs->scaling;
   vd->orientation = vs->orientation;
   vd->auto_size_roll_feed_paper = vs->auto_size_roll_feed_paper;
   vd->unit = vs->unit;
   vd->invalid_mask = vs->invalid_mask;
+  vd->command_type = vs->command_type;
   stpui_plist_set_name(vd, stpui_plist_get_name(vs));
-  stpui_plist_set_output_to(vd, stpui_plist_get_output_to(vs));
+  stpui_plist_set_queue_name(vd, stpui_plist_get_queue_name(vs));
+  stpui_plist_set_extra_printer_options(vd, stpui_plist_get_extra_printer_options(vs));
+  stpui_plist_set_custom_command(vd, stpui_plist_get_custom_command(vs));
+  stpui_plist_set_current_standard_command(vd, stpui_plist_get_current_standard_command(vs));
+  stpui_plist_set_output_filename(vd, stpui_plist_get_output_filename(vs));
 }
 
 static stpui_plist_t *
@@ -409,17 +551,18 @@ stpui_plist_create(const char *name, const char *driver)
   memset(&key, 0, sizeof(key));
   stpui_printer_initialize(&key);
   key.invalid_mask = 0;
-  if (strcmp(name, "File") == 0)
-    stpui_plist_set_name(&key, _("File"));
-  else
-    stpui_plist_set_name(&key, name);
+  stpui_plist_set_name(&key, name);
   stp_set_driver(key.v, driver);
   if (stpui_plist_add(&key, 0))
     answer = psearch(&key, stpui_plist, stpui_plist_count,
 		     sizeof(stpui_plist_t),
 		     (int (*)(const void *, const void *)) compare_printers);
-  g_free(key.name);
-  g_free(key.output_to);
+  SAFE_FREE(key.name);
+  SAFE_FREE(key.queue_name);
+  SAFE_FREE(key.extra_printer_options);
+  SAFE_FREE(key.custom_command);
+  SAFE_FREE(key.current_standard_command);
+  SAFE_FREE(key.output_filename);
   stp_vars_destroy(key.v);
   return answer;
 }
@@ -433,25 +576,9 @@ stpui_plist_add(const stpui_plist_t *key, int add_only)
    * always first in the list, else call psearch.
    */
   stpui_plist_t *p;
-  if (strcmp(_("File"), key->name) == 0 &&
-      strcmp(stpui_plist[0].name, _("File")) == 0)
+  if (stp_get_printer(key->v))
     {
-      if (add_only)
-	return 0;
-      if (stp_get_printer(key->v))
-	{
-#ifdef DEBUG
-	  fprintf(stderr, "Updated File printer directly\n");
-#endif
-	  p = &stpui_plist[0];
-	  stpui_plist_copy(p, key);
-	  p->active = 1;
-	}
-      return 1;
-    }
-  else if (stp_get_printer(key->v))
-    {
-      p = psearch(key, stpui_plist + 1, stpui_plist_count - 1,
+      p = psearch(key, stpui_plist, stpui_plist_count,
 		  sizeof(stpui_plist_t),
 		  (int (*)(const void *, const void *)) compare_printers);
       if (p == NULL)
@@ -464,6 +591,10 @@ stpui_plist_add(const stpui_plist_t *key, int add_only)
 	  p = stpui_plist + stpui_plist_count;
 	  stpui_plist_count++;
 	  stpui_plist_copy(p, key);
+	  if (strlen(stpui_plist_get_queue_name(p)) == 0 &&
+	      stp_string_list_is_present(stpui_system_print_queues,
+					 stpui_plist_get_name(p)))
+	    stpui_plist_set_queue_name(p, stpui_plist_get_name(p));
 	}
       else
 	{
@@ -490,7 +621,6 @@ stpui_printrc_load_v0(FILE *fp)
   (void) memset(&key, 0, sizeof(stpui_plist_t));
   stpui_printer_initialize(&key);
   key.name = g_strdup(_("File"));
-  key.active = 1;
   while (fgets(line, sizeof(line), fp) != NULL)
     {
       /*
@@ -507,7 +637,7 @@ stpui_printrc_load_v0(FILE *fp)
        */
 
       GET_MANDATORY_INTERNAL_STRING_PARAM(name);
-      GET_MANDATORY_INTERNAL_STRING_PARAM(output_to);
+      GET_MANDATORY_INTERNAL_STRING_PARAM(custom_command);
       GET_MANDATORY_STRING_PARAM(driver);
 
       if (! stp_get_printer(key.v))
@@ -559,7 +689,6 @@ stpui_printrc_load_v0(FILE *fp)
       GET_OPTIONAL_INTERNAL_INT_PARAM(unit);
       stpui_plist_add(&key, 0);
       g_free(key.name);
-      g_free(key.output_to);
       stp_vars_destroy(key.v);
     }
   stpui_plist_current = 0;
@@ -575,7 +704,6 @@ stpui_printrc_load_v1(FILE *fp)
   (void) memset(&key, 0, sizeof(stpui_plist_t));
   stpui_printer_initialize(&key);
   key.name = g_strdup(_("File"));
-  key.active = 1;
   while (fgets(line, sizeof(line), fp) != NULL)
     {
       /*
@@ -639,7 +767,7 @@ stpui_printrc_load_v1(FILE *fp)
 	  stpui_plist_set_name(&key, value);
 	}
       else if (strcasecmp("destination", keyword) == 0)
-	stpui_plist_set_output_to(&key, value);
+	stpui_plist_set_custom_command(&key, value);
       else if (strcasecmp("driver", keyword) == 0)
 	stp_set_driver(key.v, value);
       else if (strcasecmp("ppd-file", keyword) == 0)
@@ -735,7 +863,6 @@ stpui_printrc_load_v1(FILE *fp)
       stpui_plist_add(&key, 0);
       stp_vars_destroy(key.v);
       g_free(key.name);
-      g_free(key.output_to);
     }
   if (current_printer)
     {
@@ -783,9 +910,9 @@ stpui_printrc_load(void)
   FILE		*fp;		/* Printrc file */
   char		line[1024];	/* Line in printrc file */
   int		format = 0;	/* rc file format version */
-  int		system_printers; /* printer count before reading printrc */
   const char *filename = stpui_get_printrc_file();
 
+  initialize_default_parameters();
   check_plist(1);
 
  /*
@@ -793,8 +920,6 @@ stpui_printrc_load(void)
   */
 
   stpui_get_system_printers();
-
-  system_printers = stpui_plist_count - 1;
 
   if ((fp = fopen(filename, "r")) != NULL)
     {
@@ -828,6 +953,8 @@ stpui_printrc_load(void)
 	}
       (void) fclose(fp);
     }
+  else
+    stpui_plist_create(_("Printer"), "ps2");
 }
 
 /*
@@ -838,6 +965,7 @@ stpui_printrc_save(void)
 {
   FILE		*fp;		/* Printrc file */
   int		i;		/* Looping var */
+  size_t global_settings_count = stp_string_list_count(default_parameters);
   stpui_plist_t	*p;		/* Current printer */
   const char *filename = stpui_get_printrc_file();
 
@@ -854,12 +982,20 @@ stpui_printrc_save(void)
       fprintf(stderr, "Number of printers: %d\n", stpui_plist_count);
 #endif
 
-      fputs("#PRINTRCv2 written by Gimp-Print " PLUG_IN_VERSION "\n", fp);
+      fputs("#PRINTRCv2 written by Gimp-Print " PLUG_IN_VERSION "\n\n", fp);
 
-      fprintf(fp, "Current-Printer: \"%s\"\n",
+      fprintf(fp, "Global-Settings:\n");
+      fprintf(fp, "  Current-Printer: \"%s\"\n",
 	      stpui_plist[stpui_plist_current].name);
-      fprintf(fp, "Show-All-Paper-Sizes: %s\n",
+      fprintf(fp, "  Show-All-Paper-Sizes: %s\n",
 	      stpui_show_all_paper_sizes ? "True" : "False");
+      for (i = 0; i < global_settings_count; i++)
+	{
+	  stp_param_string_t *ps = stp_string_list_param(default_parameters, i);
+	  fprintf(fp, "  %s \"%s\"\n", ps->name, ps->text);
+	}
+      fprintf(fp, "End-Global-Settings:\n");
+
       for (i = 0, p = stpui_plist; i < stpui_plist_count; i ++, p ++)
 	{
 	  int count;
@@ -868,16 +1004,20 @@ stpui_printrc_save(void)
 	  count = stp_parameter_list_count(params);
 	  fprintf(fp, "\nPrinter: \"%s\" \"%s\"\n",
 		  p->name, stp_get_driver(p->v));
-	  fprintf(fp, "Destination: \"%s\"\n", stpui_plist_get_output_to(p));
-	  fprintf(fp, "Scaling: %.3f\n", p->scaling);
-	  fprintf(fp, "Orientation: %d\n", p->orientation);
-	  fprintf(fp, "Autosize-Roll-Paper: %d\n", p->auto_size_roll_feed_paper);
-	  fprintf(fp, "Unit: %d\n", p->unit);
+	  fprintf(fp, "  Command-Type: %d\n", p->command_type);
+	  fprintf(fp, "  Queue-Name: \"%s\"\n", p->queue_name);
+	  fprintf(fp, "  Output-Filename: \"%s\"\n", p->output_filename);
+	  fprintf(fp, "  Extra-Printer-Options: \"%s\"\n", p->extra_printer_options);
+	  fprintf(fp, "  Custom-Command: \"%s\"\n", p->custom_command);
+	  fprintf(fp, "  Scaling: %.3f\n", p->scaling);
+	  fprintf(fp, "  Orientation: %d\n", p->orientation);
+	  fprintf(fp, "  Autosize-Roll-Paper: %d\n", p->auto_size_roll_feed_paper);
+	  fprintf(fp, "  Unit: %d\n", p->unit);
 
-	  fprintf(fp, "Left: %d\n", stp_get_left(p->v));
-	  fprintf(fp, "Top: %d\n", stp_get_top(p->v));
-	  fprintf(fp, "Custom_Page_Width: %d\n", stp_get_page_width(p->v));
-	  fprintf(fp, "Custom_Page_Height: %d\n", stp_get_page_height(p->v));
+	  fprintf(fp, "  Left: %d\n", stp_get_left(p->v));
+	  fprintf(fp, "  Top: %d\n", stp_get_top(p->v));
+	  fprintf(fp, "  Custom_Page_Width: %d\n", stp_get_page_width(p->v));
+	  fprintf(fp, "  Custom_Page_Height: %d\n", stp_get_page_height(p->v));
 
 	  for (j = 0; j < count; j++)
 	    {
@@ -889,7 +1029,7 @@ stpui_printrc_save(void)
 		case STP_PARAMETER_TYPE_STRING_LIST:
 		  if (stp_check_string_parameter(p->v, param->name,
 						 STP_PARAMETER_INACTIVE))
-		    fprintf(fp, "Parameter %s String %s \"%s\"\n",
+		    fprintf(fp, "  Parameter %s String %s \"%s\"\n",
 			    param->name,
 			    ((stp_get_string_parameter_active
 			      (p->v, param->name) == STP_PARAMETER_ACTIVE) ?
@@ -899,7 +1039,7 @@ stpui_printrc_save(void)
 		case STP_PARAMETER_TYPE_FILE:
 		  if (stp_check_file_parameter(p->v, param->name,
 						 STP_PARAMETER_INACTIVE))
-		    fprintf(fp, "Parameter %s File %s \"%s\"\n", param->name,
+		    fprintf(fp, "  Parameter %s File %s \"%s\"\n", param->name,
 			    ((stp_get_file_parameter_active
 			      (p->v, param->name) == STP_PARAMETER_ACTIVE) ?
 			     "True" : "False"),
@@ -908,7 +1048,7 @@ stpui_printrc_save(void)
 		case STP_PARAMETER_TYPE_DOUBLE:
 		  if (stp_check_float_parameter(p->v, param->name,
 						 STP_PARAMETER_INACTIVE))
-		    fprintf(fp, "Parameter %s Double %s %f\n", param->name,
+		    fprintf(fp, "  Parameter %s Double %s %f\n", param->name,
 			    ((stp_get_float_parameter_active
 			      (p->v, param->name) == STP_PARAMETER_ACTIVE) ?
 			     "True" : "False"),
@@ -917,7 +1057,7 @@ stpui_printrc_save(void)
 		case STP_PARAMETER_TYPE_INT:
 		  if (stp_check_int_parameter(p->v, param->name,
 						 STP_PARAMETER_INACTIVE))
-		    fprintf(fp, "Parameter %s Int %s %d\n", param->name,
+		    fprintf(fp, "  Parameter %s Int %s %d\n", param->name,
 			    ((stp_get_int_parameter_active
 			      (p->v, param->name) == STP_PARAMETER_ACTIVE) ?
 			     "True" : "False"),
@@ -926,7 +1066,7 @@ stpui_printrc_save(void)
 		case STP_PARAMETER_TYPE_BOOLEAN:
 		  if (stp_check_boolean_parameter(p->v, param->name,
 						 STP_PARAMETER_INACTIVE))
-		    fprintf(fp, "Parameter %s Boolean %s %s\n", param->name,
+		    fprintf(fp, "  Parameter %s Boolean %s %s\n", param->name,
 			    ((stp_get_boolean_parameter_active
 			      (p->v, param->name) == STP_PARAMETER_ACTIVE) ?
 			     "True" : "False"),
@@ -941,7 +1081,7 @@ stpui_printrc_save(void)
 			stp_get_curve_parameter(p->v, param->name);
 		      if (curve)
 			{
-			  fprintf(fp, "Parameter %s Curve %s '",
+			  fprintf(fp, "  Parameter %s Curve %s '",
 				  param->name,
 				  ((stp_get_curve_parameter_active
 				    (p->v, param->name) ==
@@ -982,177 +1122,45 @@ compare_printers(stpui_plist_t *p1, stpui_plist_t *p2)
  * 'stpui_get_system_printers()' - Get a complete list of printers from the spooler.
  */
 
-#define PRINTERS_NONE	0
-#define PRINTERS_LPC	1
-#define PRINTERS_LPSTAT	2
-
 void
 stpui_get_system_printers(void)
 {
-  int   i;			/* Looping var */
-  int	type;			/* 0 = none, 1 = lpc, 2 = lpstat */
-  char	command[255];		/* Command to run */
-  char  defname[128];		/* Default printer name */
   FILE *pfile;			/* Pipe to status command */
-  char  line[255];		/* Line from status command */
-  char	*ptr;			/* Pointer into line */
-  char  name[128];		/* Printer name from status command */
-  static const char	*lpcs[] =	/* Possible locations of LPC... */
-		{
-		  "/etc"
-		  "/usr/bsd",
-		  "/usr/etc",
-		  "/usr/libexec",
-		  "/usr/sbin"
-		};
+  char  line[1025];		/* Line from status command */
 
- /*
-  * Setup defaults...
-  */
-
-  defname[0] = '\0';
-
-  check_plist(1);
-  stpui_plist_count = 1;
-  stpui_plist_set_name(&(stpui_plist[0]), _("File"));
-  stpui_plist[0].active = 1;
-  stp_set_driver(stpui_plist[0].v, "ps2");
-  stp_set_string_parameter(stpui_plist[0].v, "PrintingMode", "Color");
-
- /*
-  * Figure out what command to run...  We use lpstat if it is available over
-  * lpc since Solaris, CUPS, etc. provide both commands.  No need to list
-  * each printer twice...
-  */
-
-  if (!access("/usr/bin/lpstat", X_OK))
-  {
-    strcpy(command, "/usr/bin/lpstat -d -p");
-    type = PRINTERS_LPSTAT;
-  }
-  else
-  {
-    for (i = 0; i < (sizeof(lpcs) / sizeof(lpcs[0])); i ++)
-    {
-      sprintf(command, "%s/lpc", lpcs[i]);
-
-      if (!access(command, X_OK))
-        break;
-    }
-
-    if (i < (sizeof(lpcs) / sizeof(lpcs[0])))
-    {
-      strcat(command, " status < /dev/null");
-      type = PRINTERS_LPC;
-    }
-    else
-      type = PRINTERS_NONE;
-  }
+  stpui_system_print_queues = stp_string_list_create();
+  stp_string_list_add_string(stpui_system_print_queues, "",
+			     _("(Default Printer)"));
 
  /*
   * Run the command, if any, to get the available printers...
   */
 
-  if (type > PRINTERS_NONE)
+  identify_print_system();
+  if (global_printing_system)
   {
-    if ((pfile = popen(command, "r")) != NULL)
+    if ((pfile = popen(global_printing_system->scan_command, "r")) != NULL)
     {
      /*
       * Read input as needed...
       */
 
       while (fgets(line, sizeof(line), pfile) != NULL)
-        switch (type)
 	{
-	  char *result;
-	  case PRINTERS_LPC :
-	      if (!strncmp(line, "Press RETURN to continue", 24) &&
-		  (ptr = strchr(line, ':')) != NULL &&
-		  (strlen(ptr) - 2) < (ptr - line))
-		strcpy(line, ptr + 2);
-
-	      if ((ptr = strchr(line, ':')) != NULL &&
-	          line[0] != ' ' && line[0] != '\t')
-              {
-		int printer_exists = 0;
-		*ptr = '\0';
-                /* check for duplicate printers--yes, they can happen,
-                 * and it makes gimp-print forget everything about the
-                 * printer */
-                for (i = 1; i < stpui_plist_count; i++)
-                  if (strcmp(line, stpui_plist[i].name) == 0)
-		    {
-		      printer_exists = 1;
-		      break;
-		    }
-		if (printer_exists)
-		  break;
-
-		check_plist(stpui_plist_count + 1);
-		stpui_plist_set_name(&(stpui_plist[stpui_plist_count]), line);
-#ifdef DEBUG
-                fprintf(stderr, "Adding new printer from lpc: <%s>\n",
-                  line);
-#endif
-		result = g_strdup_printf("lpr -l -P%s", line);
-		stpui_plist_set_output_to(&(stpui_plist[stpui_plist_count]), result);
-		g_free(result);
-		stp_set_driver(stpui_plist[stpui_plist_count].v, "ps2");
-		stpui_plist[stpui_plist_count].active = 1;
-		stpui_plist_count ++;
-	      }
-	      break;
-
-	  case PRINTERS_LPSTAT :
-	      if ((sscanf(line, "printer %127s", name) == 1) ||
-		  (sscanf(line, "Printer: %127s", name) == 1))
-	      {
-		int printer_exists = 0;
-                /* check for duplicate printers--yes, they can happen,
-                 * and it makes gimp-print forget everything about the
-                 * printer */
-                for (i = 1; i < stpui_plist_count; i++)
-                  if (strcmp(name, stpui_plist[i].name) == 0)
-		    {
-		      printer_exists = 1;
-		      break;
-		    }
-		if (printer_exists)
-		  break;
-		check_plist(stpui_plist_count + 1);
-		stpui_plist_set_name(&(stpui_plist[stpui_plist_count]), name);
-#ifdef DEBUG
-                fprintf(stderr, "Adding new printer from lpc: <%s>\n",
-                  name);
-#endif
-		result = g_strdup_printf("lp -oraw -s -d%s", name);
-		stpui_plist_set_output_to(&(stpui_plist[stpui_plist_count]), result);
-		g_free(result);
-		stp_set_driver(stpui_plist[stpui_plist_count].v, "ps2");
-		stpui_plist[stpui_plist_count].active = 1;
-        	stpui_plist_count ++;
-	      }
-	      else
-        	sscanf(line, "system default destination: %127s", defname);
-	      break;
+	  char *tmp_ptr;
+	  if ((tmp_ptr = strchr(line, '\n')))
+	    tmp_ptr[0] = '\0';
+	  if ((tmp_ptr = strchr(line, '\r')))
+	    tmp_ptr[0] = '\0';
+	  if (strlen(line) > 0)
+	    {
+	      if (!stp_string_list_is_present(stpui_system_print_queues, line))
+		stp_string_list_add_string(stpui_system_print_queues,
+					   line, line);
+	    }
 	}
-
       pclose(pfile);
     }
-  }
-
-  if (stpui_plist_count > 2)
-    qsort(stpui_plist + 1, stpui_plist_count - 1, sizeof(stpui_plist_t),
-          (int (*)(const void *, const void *))compare_printers);
-
-  if (defname[0] != '\0')
-  {
-    for (i = 0; i < stpui_plist_count; i ++)
-      if (strcmp(defname, stpui_plist[i].name) == 0)
-        break;
-
-    if (i < stpui_plist_count)
-      stpui_plist_current = i;
   }
 }
 
@@ -1204,7 +1212,8 @@ stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
    * Open the file/execute the print command...
    */
 
-  if (stpui_plist_current > 0)
+  if (stpui_plist_get_command_type(printer) == COMMAND_TYPE_DEFAULT ||
+      stpui_plist_get_command_type(printer) == COMMAND_TYPE_CUSTOM)
     {
       /*
        * The following IPC code is only necessary because the GIMP kills
@@ -1286,6 +1295,14 @@ stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
 			}
 		      else	/* Child 2 (printer command) */
 			{
+			  const char *command;
+			  if (stpui_plist_get_command_type(printer) ==
+			      COMMAND_TYPE_DEFAULT)
+			    command =
+			      stpui_build_standard_print_command
+			      (printer, stp_get_printer(printer->v));
+			  else
+			    command = stpui_plist_get_custom_command(printer);
 			  (void) close(2);
 			  (void) close(1);
 			  dup2 (errfd[1], 2);
@@ -1294,8 +1311,7 @@ stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
 			  close (pipefd[0]);
 			  close (pipefd[1]);
 			  close(syncfd[1]);
-			  execl("/bin/sh", "/bin/sh", "-c",
-				stpui_plist_get_output_to(printer), NULL);
+			  execl("/bin/sh", "/bin/sh", "-c", command, NULL);
 			  /* NOTREACHED */
 			  _exit (1);
 			}
@@ -1360,7 +1376,7 @@ stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
 	}
     }
   else
-    prn = fopen (stpui_plist_get_output_to(printer), "wb");
+    prn = fopen (stpui_plist_get_output_filename(printer), "wb");
 
   if (prn != NULL)
     {
@@ -1419,9 +1435,10 @@ stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
 	  return 0;
 	}
 
-      if (stpui_plist_current > 0)
+      if (stpui_plist_get_command_type(printer) == COMMAND_TYPE_DEFAULT ||
+	  stpui_plist_get_command_type(printer) == COMMAND_TYPE_CUSTOM)
 	{
-	  fclose (prn);
+	  pclose (prn);
 	  kill (cpid, SIGUSR1);
 	  waitpid (cpid, &dummy, 0);
 	}

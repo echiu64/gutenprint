@@ -42,8 +42,8 @@ libgimpprintui_la_SOURCES =			\
 	printrcy.y				\
 	printrcl.l				\
 	printrc.h				\
-	panel.c					\
 	plist.c					\
+	panel.c					\
 	ui-utils.c				\
 	print-image-thumbnail.c			\
 	gimp-print-ui-internal.h
@@ -60,7 +60,7 @@ libgimpprintui_la_LDFLAGS = -release $(GIMPPRINT_VERSION) -rpath $(libdir) -stat
 AM_LFLAGS = -i
 AM_YFLAGS = -d
 
-printrcl.o: printrcy.o
+printrcy.o: printrcl.o
 plist.o: printrcy.o
 
 ## Data

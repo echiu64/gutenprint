@@ -86,6 +86,13 @@ stp_string_list_param(const stp_string_list_t *list, size_t element)
     (stp_list_get_item_by_index((const stp_list_t *)list, element));
 }
 
+stp_param_string_t *
+stp_string_list_find(const stp_string_list_t *list, const char *name)
+{
+  return (stp_param_string_t *) stp_list_item_get_data
+    (stp_list_get_item_by_name((const stp_list_t *)list, name));
+}
+
 size_t
 stp_string_list_count(const stp_string_list_t *list)
 {
@@ -120,20 +127,23 @@ stp_string_list_add_string(stp_string_list_t *list,
   stp_list_item_create((stp_list_t *) list, NULL, new_string);
 }
 
+void
+stp_string_list_remove_string(stp_string_list_t *list,
+			      const char *name)
+{
+  stp_list_item_t *item =
+    stp_list_get_item_by_name((const stp_list_t *) list, name);
+  if (item)
+    stp_list_item_destroy((stp_list_t *) list, item);
+}
+
 int
 stp_string_list_is_present(const stp_string_list_t *list,
 			   const char *value)
 {
-  if (list && value)
-    {
-      size_t i = 0;
-      size_t count = stp_string_list_count(list);
-      for (i = 0; i < count; i++)
-	{
-	  stp_param_string_t *p = stp_string_list_param(list, i);
-	  if (strcmp(p->name, value) == 0)
-	    return 1;
-	}
-    }
-  return 0;
+  if (list && value &&
+      stp_list_get_item_by_name((const stp_list_t *) list, value))
+    return 1;
+  else
+    return 0;
 }

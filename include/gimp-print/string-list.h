@@ -60,8 +60,10 @@ extern void
 stp_string_list_destroy(stp_string_list_t *list);
 
 extern stp_param_string_t *
-stp_string_list_param(const stp_string_list_t *list,
-		      size_t element);
+stp_string_list_param(const stp_string_list_t *list, size_t element);
+
+extern stp_param_string_t *
+stp_string_list_find(const stp_string_list_t *list, const char *name);
 
 extern size_t
 stp_string_list_count(const stp_string_list_t *list);
@@ -72,6 +74,9 @@ stp_string_list_create_copy(const stp_string_list_t *list);
 extern void
 stp_string_list_add_string(stp_string_list_t *list,
 			   const char *name, const char *text);
+
+extern void
+stp_string_list_remove_string(stp_string_list_t *list, const char *name);
 
 extern stp_string_list_t *
 stp_string_list_create_from_params(const stp_param_string_t *list,

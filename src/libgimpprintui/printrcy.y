@@ -58,6 +58,7 @@ static stpui_plist_t *current_printer = NULL;
 %token <sval> tBOOLEAN
 %token <sval> tSTRING
 %token <sval> tWORD
+%token <sval> tGSWORD
 
 %token CURRENT_PRINTER
 %token SHOW_ALL_PAPER_SIZES
@@ -75,6 +76,14 @@ static stpui_plist_t *current_printer = NULL;
 %token OUTPUT_TYPE
 %token PRINTRC_HDR
 %token PARAMETER
+%token QUEUE_NAME
+%token OUTPUT_FILENAME
+%token EXTRA_PRINTER_OPTIONS
+%token CUSTOM_COMMAND
+%token COMMAND_TYPE
+%token GLOBAL_SETTINGS
+%token GLOBAL
+%token END_GLOBAL_SETTINGS
 %token pINT
 %token pSTRING_LIST
 %token pFILE
@@ -94,10 +103,59 @@ Printer: PRINTER tSTRING tSTRING
 	}
 ;
 
+/*
+ * Destination is obsolete; ignore it.
+ */
 Destination: DESTINATION tSTRING
 	{
-	  stpui_plist_set_output_to(current_printer, $2);
-	  g_free($2);
+	  if ($2)
+	    g_free($2);
+	}
+;
+
+Queue_Name: QUEUE_NAME tSTRING
+	{
+	  if ($2)
+	    {
+	      stpui_plist_set_queue_name(current_printer, $2);
+	      g_free($2);
+	    }
+	}
+;
+
+Output_Filename: OUTPUT_FILENAME tSTRING
+	{
+	  if ($2)
+	    {
+	      stpui_plist_set_output_filename(current_printer, $2);
+	      g_free($2);
+	    }
+	}
+;
+
+Extra_Printer_Options: EXTRA_PRINTER_OPTIONS tSTRING
+	{
+	  if ($2)
+	    {
+	      stpui_plist_set_extra_printer_options(current_printer, $2);
+	      g_free($2);
+	    }
+	}
+;
+
+Custom_Command: CUSTOM_COMMAND tSTRING
+	{
+	  if ($2)
+	    {
+	      stpui_plist_set_custom_command(current_printer, $2);
+	      g_free($2);
+	    }
+	}
+;
+
+Command_Type: COMMAND_TYPE tINT
+	{
+	  stpui_plist_set_command_type(current_printer, $2);
 	}
 ;
 
@@ -262,7 +320,8 @@ Parameters: Parameters Parameter | Empty
 
 Standard_Value:  Destination | Scaling | Orientation | Autosize_Roll_Paper |
 	Unit | Left | Top | Custom_Page_Width | Custom_Page_Height |
-	Output_Type
+	Output_Type | Queue_Name | Output_Filename | Extra_Printer_Options |
+	Custom_Command | Command_Type
 ;
 
 Standard_Values: Standard_Values Standard_Value | Empty
@@ -291,10 +350,33 @@ Show_All_Paper_Sizes: SHOW_ALL_PAPER_SIZES tBOOLEAN
 Global: Current_Printer | Show_All_Paper_Sizes
 ;
 
-Globals: Globals Global | Empty
+Old_Globals: Current_Printer Show_All_Paper_Sizes
 ;
 
-Thing: PRINTRC_HDR Globals Printers
+New_Global_Setting: tWORD tSTRING
+	{
+	  if ($2)
+	    {
+	      stpui_set_global_parameter($1, $2);
+	      g_free($2);
+	    }
+	  g_free($1);
+	}
+;
+
+Global_Setting: Global | New_Global_Setting
+;
+
+Global_Settings: Global_Settings Global_Setting | Empty
+;
+
+Global_Subblock: GLOBAL_SETTINGS Global_Settings END_GLOBAL_SETTINGS
+;
+
+Global_Block: Global_Subblock | Old_Globals | Empty
+;
+
+Thing: PRINTRC_HDR Global_Block Printers
 ;
 
 %%
