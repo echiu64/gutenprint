@@ -1,4 +1,4 @@
-Gimp-Print 4.3.21, released September 24, 2003, is a development
+Gimp-Print 4.3.22, released November 1, 2003, is a development
 release of this package.  Like all development releases, this version
 is considered unstable and should only be used by those individuals
 tolerant of the likelihood of problems.  Individuals desiring a stable
@@ -40,6 +40,94 @@ this package.
 
 Please read the README file for full instructions on installing this
 package.
+
+
+Gimp-Print 4.3.22 contains the following major changes over Gimp-Print
+4.3.21:
+
+1) This release offers further improvements in quality for most Epson
+   printers.  All printers have been retuned, with particular
+   improvements in the transitions between light and dark inks and
+   between composite CMY and black.  In addition, green and blue hues
+   have been improved significantly, and consistency across papers and
+   between printers has been improved.
+
+2) There have likely been some improvements in quality for other color
+   inkjet printers (Canon, Lexmark, and HP) due to the parameters for
+   Epson printers being copied into these drivers, but this is
+   currently untested.
+
+3) Even Tone dithering has been improved somewhat.  The transition
+   between different drop sizes is now computed with the Even Tone
+   algorithm, yielding better quality, and the error diffusion in this
+   algorithm has also been improved, yielding better smoothness.
+
+4) The parameters for the Epson Stylus C43 and C44 printers have been
+   corrected, so these printers now print correctly.
+
+5) Startup time (both for Gimp-Print programs as a whole and for
+   individual pages) has been improved somewhat due to the XML files
+   describing various components being loaded only when necessary.
+   Some of the XML files are quite large, and loading them at startup
+   is fairly time consuming (on the order of a second typically).  In
+   addition, this will reduce problems in the future due to
+   dependencies between the XML files now being resolved explicitly.
+
+6) The Sony UP-DP10 lamination feature has been fixed.
+
+7) Borderless capability for Olympus and Sony printers has been added.
+
+8) Additional paper sizes for Olympus and Sony printers have been
+   added.
+
+9) A bug in the CUPS driver whereby a thin black line was sometimes
+   printed at the very top of the page has been fixed.
+
+10) The CUPS PPD files are not built if the CUPS driver is not built,
+   unless --with-cups-ppds is supplied (previously --without-cups did
+   not disable building the PPD files).
+
+11) The test pattern generator has been substantially rewritten, with
+   many syntactic and functional improvements.  In particular, it can
+   now generate 8 and 16 bit inputs in both RGB and CMYK, and it is no
+   longer limited to 7 channels.  It can also accept multiple input
+   patterns in one file.
+
+12) The Fujifilm CX-400 is now supported.
+
+13) The Epson Stylus CX-6300, CX-6400, CX-8300, and CX-8400 are now
+   supported.
+
+14) The color code has been partially rewritten, and now permits
+   16-bit RGB and grayscale inputs in addition to the CMYK inputs.
+   The 16-bit RGB and gray/whitescale inputs are corrected by the
+   driver, unlike the 16-bit CMYK input, which is raw.
+
+15) The Epson Stylus Color 440, 640, 660, and 670 now position the
+   paper correctly horizontally.
+
+16) The head configurations for the Epson Stylus Color 400, 500, 600,
+   800, and 1520 have been adjusted.
+
+17) The paper positioning controls in the GIMP plugin have been
+   rearranged slightly for better consistency.
+
+18) The GIMP plugin now allows aligning an image to a fixed grid, with
+   grid lines spaced according to the percentage of page size.  To
+   move the image along this grid, use control-middle button.
+
+19) Microweave is now a separate control for Epson Stylus printers
+   that support it.  This simplifies the resolution lists for some
+   printers, particularly the Stylus Pro printers.
+
+20) The compiler options for gcc have been changed to permit inlining
+   larger procedures.  This improves dither performance somewhat.
+
+21) Horizontal image positioning on the Epson Stylus 640 and similar
+   printers has been fixed (bug 819581).
+
+22) All remaining vestiges of gimpprint-config have been removed.
+
 
 Gimp-Print 4.3.21 contains the following major changes over Gimp-Print
 4.3.20:
