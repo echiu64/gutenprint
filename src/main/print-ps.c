@@ -204,11 +204,7 @@ ps_parameters(const stp_vars_t v, const char *name,
     description->deflt.str =
       stp_string_list_param(description->bounds.str, 0)->name;
   else
-    {
-      stp_string_list_free(description->bounds.str);
-      description->is_active = 0;
-      description->bounds.str = NULL;
-    }
+    description->is_active = 0;
   return;
 }
 
