@@ -93,20 +93,15 @@ pdf: $(MANUAL).pdf
 
 ps: $(MANUAL).ps
 
-ps.gz: $(MANUAL).ps.gz
-
 $(MANUAL).ps:  $(MANUAL).sgml $(EPS_IMAGES)
-	sed -e 's/\.png"/.eps"/g' -e 's/FORMAT="PNG"/FORMAT="EPS"/g' $(srcdir)/$(MANUAL).sgml > $(MANUAL)_eps.sgml 
+	sed -e 's/\.png"/.eps"/g' -e 's/FORMAT="PNG"/FORMAT="EPS"/g' $(srcdir)/$(MANUAL).sgml > $(MANUAL)_eps.sgml
 	$(DB2PS) $(MANUAL)_eps.sgml
 	mv $(MANUAL)_eps.ps $(MANUAL).ps
 	$(RM) $(MANUAL)_eps.*
 
 %.eps:
+	if test ! -d figures ; then mkdir figures ; fi
 	$(CONVERT) $(srcdir)/$(basename $@).png EPS2:$@
-
-$(MANUAL).ps.gz: $(MANUAL).ps
-	$(RM) $(MANUAL).ps.gz
-	$(GZIP) -9 $(MANUAL).ps
 
 html: html-stamp
 
@@ -156,22 +151,27 @@ install-data-local: $(STANDARD_TARGETS)
 uninstall-local:
 	$(RM) -r $(DESTDIR)$(datadir)/$(PACKAGE)/doc
 
-clean-local: clean-figures
+clean-local:
 	if test $(srcdir) = "." ; then \
 	  echo "clean-local: Not removing $(HTMLDIR)" ; \
+	  echo 'clean-local: Not removing $(MANUAL).pdf' ; \
+	  echo 'clean-local: Not removing $(MANUAL).ps' ; \
+	  echo 'clean-local: Not removing EPS figures' ; \
 	else \
-	  $(RM) html-stamp $(HTMLDIR) ; \
+	  $(RM) $(MANUAL).pdf $(MANUAL).ps ; \
+	  $(RM) -r html-stamp $(HTMLDIR) ; \
+	  $(RM) -r $(EPS_IMAGES) ; \
 	fi
-	$(RM) -r $(MANUAL).pdf $(MANUAL).ps
-	$(RM) *.tex *.log *.aux *.dvi *.gz *.out *.junk *.out *.fot
+	$(RM) -r *.tex *.log *.aux *.dvi *.gz *.out *.junk *.out *.fot
 	$(RM) -r db2html*
 	$(RM) -r DB2HTML*
 
-clean-figures:
-	$(RM) figures/*.eps figures/*.pdf
+veryclean: clean maintainer-clean-local
 
 maintainer-clean-local:
 	$(RM) -r $(HTMLDIR) html-stamp
+	$(RM) $(MANUAL).pdf $(MANUAL).ps
+	$(RM) -r $(EPS_IMAGES)
 
 #
 # This is my (so far failed) attempt to create an index for this documentation.
@@ -193,7 +193,7 @@ maintainer-clean-local:
 #		gimp-print-users-guide-4.1.99-b3.sgml
 #
 #
-# END failed attempt at index creation.  
+# END failed attempt at index creation.
 #
 
 help:
@@ -203,15 +203,17 @@ help:
 	@echo "    ps      - creates PostScript documentation"
 	@echo "    pdf     - creates PDF documentation"
 	@echo "    html    - creates HTML documentation"
-	@echo "    clean   - deletes machine generated files"
+	@echo "    clean   - deletes machine generated files, but not outputs"
+	@echo "    veryclean - deletes output files in addition"
 	@echo "    help    - prints this help text"
 	@echo "  "
 
 
 ## Clean
 
-CLEANFILES = $(EPS_IMAGES) $(PDF_IMAGES)
-
 MAINTAINERCLEANFILES = Makefile.in html-stamp
 
-EXTRA_DIST = README $(MANUAL).sgml
+
+EXTRA_DIST = README $(MANUAL).sgml html-stamp
+
+.PHONY: docs html ps pdf help
