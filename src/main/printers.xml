@@ -1102,3 +1102,14 @@
 <yellow value=1.0>
 <language value=lexmark>
 </printer>
+
+<printer name="LEXMARK Z42" driver="lexmark-z42">
+<color>
+<model value=10042>
+<gamma value=0.5>
+<density value=2.0>
+<magenta value=0.95>
+<yellow value=1.0>
+<language value=lexmark>
+</printer>
+
