@@ -32,7 +32,7 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <a href="MacOSX.php3#4.3.18"><b>July 08, 2003 -</b></a> Gimp-Print 4.3.18 is the latest Mac OS X release in the developmental line (4.3.x) of Gimp-Print. Currently, the 4.3.x line is not entirely functional in Mac OS X Jaguar. Almost all users should continue to use the 4.2.x line until the current issues with 4.3.x are resolved.  See the <a href="MacOSX.php3#4.3.18">release notes</a> for more details, especially if you ever installed 4.3.17.
+ <a href="MacOSX.php3#4.3.18"><b>July 08, 2003 -</b></a> Gimp-Print 4.3.18 is the latest Mac OS X release in the developmental line (4.3.x) of Gimp-Print. Currently, the 4.3.x line is not entirely functional in Mac OS X Jaguar. Almost all users should continue to use the 4.2.x line until the current issues with 4.3.x are resolved.  See the <a href="MacOSX.php3#4.3.18">news item</a> for more details, especially if you ever installed 4.3.17.
  </p>
  <p>
  <a href="MacOSX.php3#4.2.6-pre1"><b>April 30, 2003 -</b></a> Gimp-Print 4.2.6-pre1 is the newest testing release of Gimp-Print.
