@@ -315,6 +315,8 @@ main(int  argc,				/* I - Number of command-line arguments */
     cups.page ++;
     cups.row = 0;
 
+    fprintf(stderr, "PAGE: %d 1\n", cups.page);
+
    /*
     * Debugging info...
     */
