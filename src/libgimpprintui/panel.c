@@ -337,6 +337,8 @@ open_curve_editor(GtkObject *button, gpointer xopt)
       gtk_widget_show(GTK_WIDGET(opt->info.curve.dialog));
       set_gtk_curve_values(gcurve, seed);
       opt->info.curve.is_visible = TRUE;
+      if (opt->info.curve.current)
+	stp_curve_free(opt->info.curve.current);
       opt->info.curve.current = nseed;
       invalidate_preview_thumbnail();
       update_adjusted_thumbnail();
@@ -386,6 +388,7 @@ set_curve_callback(GtkObject *button, gpointer xopt)
   opt->info.curve.is_visible = FALSE;
   set_stp_curve_values(gcurve, opt);
   stp_curve_free(opt->info.curve.current);
+  opt->info.curve.current = NULL;
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail();
   return 1;
@@ -427,6 +430,7 @@ cancel_curve_callback(GtkObject *button, gpointer xopt)
       stp_set_curve_parameter(pv->v, opt->fast_desc->name,
 			      opt->info.curve.current);
       stp_curve_free(opt->info.curve.current);
+      opt->info.curve.current = NULL;
       gtk_widget_hide(opt->info.curve.dialog);
       gtk_widget_set_sensitive(GTK_WIDGET(opt->checkbox), TRUE);
       opt->info.curve.is_visible = FALSE;
@@ -681,6 +685,8 @@ populate_options(stp_const_vars_t v)
 	      gtk_widget_destroy(GTK_WIDGET(opt->info.curve.label));
 	      gtk_widget_destroy(GTK_WIDGET(opt->info.curve.button));
 	      gtk_widget_destroy(GTK_WIDGET(opt->info.curve.dialog));
+	      if (opt->info.curve.current)
+		stp_curve_free(opt->info.curve.current);
 	      break;
 	    case STP_PARAMETER_TYPE_BOOLEAN:
 	      gtk_widget_destroy(GTK_WIDGET(opt->info.bool.checkbox));
