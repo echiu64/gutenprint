@@ -112,55 +112,29 @@ typedef struct {
 
 /* PCL COMMANDS */
 
-#define PCL_RESET 1
-#define PCL_MEDIA_SIZE 2
-#define PCL_PERF_SKIP 3
-#define PCL_TOP_MARGIN 4
-#define PCL_MEDIA_TYPE 5
-#define PCL_MEDIA_SOURCE 6
-#define PCL_SHINGLING 7
-#define PCL_RASTERGRAPHICS_QUALITY 8
-#define PCL_DEPLETION 9
-#define PCL_CONFIGURE 10
-#define PCL_RESOLUTION 11
-#define PCL_COLOURTYPE 12
-#define PCL_COMPRESSIONTYPE 13
-#define PCL_LEFTRASTER_POS 14
-#define PCL_TOPRASTER_POS 15
-#define PCL_RASTER_WIDTH 16
-#define PCL_RASTER_HEIGHT 17
-#define PCL_START_RASTER 18
-#define PCL_END_RASTER 19
-#define PCL_END_COLOUR_RASTER 20
-#define PCL_DATA 21
-#define PCL_DATA_LAST 22
-#define PCL_PRINT_QUALITY 23
-#define PCL_ENTER_PJL 24
-#define PCL_GRAY_BALANCE 25
-#define PCL_DRIVER_CONFIG 26
-#define PCL_PAGE_ORIENTATION 27
-#define PCL_VERTICAL_CURSOR_POSITIONING_BY_DOTS 28
-#define PCL_HORIZONTAL_CURSOR_POSITIONING_BY_DOTS 29
-#define PCL_UNIT_OF_MEASURE 30
-#define PCL_RELATIVE_VERTICAL_PIXEL_MOVEMENT 31
-#define PCL_PALETTE_CONFIGURATION 32
-#define PCL_LPI 33
-#define PCL_CPI 34
-#define PCL_PAGE_LENGTH 35
-#define PCL_NUM_COPIES 36
-#define PCL_DUPLEX 37
-#define PCL_MEDIA_SIDE 38
-#define RTL_CONFIGURE 39
-#define PCL_ENTER_PCL 40
-#define PCL_ENTER_HPGL2 41
-#define PCL_NEGATIVE_MOTION 42
-#define PCL_MEDIA_DEST 43
+typedef enum {
+	PCL_RESET = 1,PCL_MEDIA_SIZE,PCL_PERF_SKIP,PCL_TOP_MARGIN,PCL_MEDIA_TYPE,
+	PCL_MEDIA_SOURCE,PCL_SHINGLING,PCL_RASTERGRAPHICS_QUALITY,PCL_DEPLETION,
+	PCL_CONFIGURE,PCL_RESOLUTION,PCL_COLOURTYPE,PCL_COMPRESSIONTYPE,
+	PCL_LEFTRASTER_POS,PCL_TOPRASTER_POS,PCL_RASTER_WIDTH,PCL_RASTER_HEIGHT,
+	PCL_START_RASTER,PCL_END_RASTER,PCL_END_COLOUR_RASTER,PCL_DATA,PCL_DATA_LAST,
+	PCL_PRINT_QUALITY,PCL_ENTER_PJL,PCL_GRAY_BALANCE,PCL_DRIVER_CONFIG,
+	PCL_PAGE_ORIENTATION,PCL_VERTICAL_CURSOR_POSITIONING_BY_DOTS,
+	PCL_HORIZONTAL_CURSOR_POSITIONING_BY_DOTS,PCL_UNIT_OF_MEASURE,
+	PCL_RELATIVE_VERTICAL_PIXEL_MOVEMENT,PCL_PALETTE_CONFIGURATION,
+	PCL_LPI,PCL_CPI,PCL_PAGE_LENGTH,PCL_NUM_COPIES,PCL_DUPLEX,
+	PCL_MEDIA_SIDE,RTL_CONFIGURE,PCL_ENTER_PCL,PCL_ENTER_HPGL2,
+	PCL_NEGATIVE_MOTION,PCL_MEDIA_DEST,PCL_JOB_SEPARATION,
+	PCL_LEFT_OFFSET_REGISTRATION,PCL_TOP_OFFSET_REGISTRATION,
+	PCL_PRINT_DIRECTION,PCL_LEFT_MARGIN,PCL_RIGHT_MARGIN,
+	PCL_RESET_MARGINS,PCL_TEXT_LENGTH
+} command_t;
 
 typedef struct {
   const char initial_command[3];		/* First part of command */
   const char final_command;			/* Last part of command */
-  int has_data;			/* Data follows */
-  int command;			/* Command name */
+  int has_data;					/* Data follows */
+  command_t command;				/* Command name */
   const char *description;			/* Text for printing */
 } commands_t;
 
@@ -168,14 +142,18 @@ const commands_t pcl_commands[] =
     {
 /* Two-character sequences ESC <x> */
 	{ "E", '\0', 0, PCL_RESET, "PCL RESET" },
+	{ "9", '\0', 0, PCL_RESET_MARGINS, "Reset Margins" },
 	{ "%", 'A', 0, PCL_ENTER_PCL, "PCL mode" },
 	{ "%", 'B', 0, PCL_ENTER_HPGL2, "HPGL/2 mode" },
-	{ "%", 'X', 0, PCL_ENTER_PJL, "PJL mode" },
+	{ "%", 'X', 0, PCL_ENTER_PJL, "UEL/Enter PJL mode" },
 /* Parameterised sequences */
 /* Raster positioning */
 	{ "&a", 'G', 0, PCL_MEDIA_SIDE, "Set Media Side" },
 	{ "&a", 'H', 0, PCL_LEFTRASTER_POS, "Left Raster Position" },
+	{ "&a", 'L', 0, PCL_LEFT_MARGIN, "Left Margin by Column" },
+	{ "&a", 'M', 0, PCL_RIGHT_MARGIN, "Right Margin by Column" },
 	{ "&a", 'N', 0, PCL_NEGATIVE_MOTION, "Negative Motion" },
+	{ "&a", 'P', 0, PCL_PRINT_DIRECTION, "Print Direction" },
 	{ "&a", 'V', 0, PCL_TOPRASTER_POS, "Top Raster Position" },
 /* Characters */
 	{ "&k", 'H', 0, PCL_CPI, "Characters per Inch" },
@@ -183,6 +161,7 @@ const commands_t pcl_commands[] =
 	{ "&l", 'A', 0, PCL_MEDIA_SIZE , "Media Size" },
 	{ "&l", 'D', 0, PCL_LPI , "Lines per Inch" },
 	{ "&l", 'E', 0, PCL_TOP_MARGIN , "Top Margin" },
+	{ "&l", 'F', 0, PCL_TEXT_LENGTH , "Text Length" },
 	{ "&l", 'G', 0, PCL_MEDIA_DEST, "Media Destination" },
 	{ "&l", 'H', 0, PCL_MEDIA_SOURCE, "Media Source" },
 	{ "&l", 'L', 0, PCL_PERF_SKIP , "Perf. Skip" },
@@ -190,7 +169,10 @@ const commands_t pcl_commands[] =
 	{ "&l", 'O', 0, PCL_PAGE_ORIENTATION, "Page Orientation" },
 	{ "&l", 'P', 0, PCL_PAGE_LENGTH, "Page Length in Lines" },
 	{ "&l", 'S', 0, PCL_DUPLEX, "Duplex mode" },
+	{ "&l", 'T', 0, PCL_JOB_SEPARATION, "Job Separation" },
+	{ "&l", 'U', 0, PCL_LEFT_OFFSET_REGISTRATION, "Left Offset Registration" },
 	{ "&l", 'X', 0, PCL_NUM_COPIES, "Number of copies" },
+	{ "&l", 'Z', 0, PCL_TOP_OFFSET_REGISTRATION, "Top Offset Registration" },
 /* Units */
 	{ "&u", 'D', 0, PCL_UNIT_OF_MEASURE, "Unit of Measure" },	/* from bpd05446 */
 /* Raster data */
@@ -821,7 +803,7 @@ int main(int argc, char *argv[])
 {
 
     int command_index;
-    int command;
+    command_t command;
     int i, j;				/* Loop/general variables */
     int image_row_counter = -1;		/* Count of current row */
     int current_data_row = -1;		/* Count of data rows received for this output row */
@@ -962,6 +944,10 @@ int main(int argc, char *argv[])
 	    case PCL_RESET :
 		fprintf(stderr, "%s\n", pcl_commands[command_index].description);
 		pcl_reset(&image_data);
+		break;
+
+	    case PCL_RESET_MARGINS :
+		fprintf(stderr, "%s\n", pcl_commands[command_index].description);
 		break;
 
 	    case PCL_START_RASTER :
@@ -1151,6 +1137,7 @@ int main(int argc, char *argv[])
 			fprintf(stderr, "\t%d rows processed.\n", image_row_counter);
 
 		    image_data.image_height = -1;
+		    image_row_counter = -1;
 
 		    if (output_data.black_data_rows_per_row != 0) {
 			for (i=0; i < output_data.black_data_rows_per_row; i++) {
@@ -1159,6 +1146,7 @@ int main(int argc, char *argv[])
 			stp_free(output_data.black_bufs);
 			output_data.black_bufs = NULL;
 		    }
+		    output_data.black_data_rows_per_row = 0;
 		    if (output_data.cyan_data_rows_per_row != 0) {
 			for (i=0; i < output_data.cyan_data_rows_per_row; i++) {
 			    stp_free(output_data.cyan_bufs[i]);
@@ -1166,6 +1154,7 @@ int main(int argc, char *argv[])
 			stp_free(output_data.cyan_bufs);
 			output_data.cyan_bufs = NULL;
 		    }
+		    output_data.cyan_data_rows_per_row = 0;
 		    if (output_data.magenta_data_rows_per_row != 0) {
 			for (i=0; i < output_data.magenta_data_rows_per_row; i++) {
 			    stp_free(output_data.magenta_bufs[i]);
@@ -1173,6 +1162,7 @@ int main(int argc, char *argv[])
 			stp_free(output_data.magenta_bufs);
 			output_data.magenta_bufs = NULL;
 		    }
+		    output_data.magenta_data_rows_per_row = 0;
 		    if (output_data.yellow_data_rows_per_row != 0) {
 			for (i=0; i < output_data.yellow_data_rows_per_row; i++) {
 			    stp_free(output_data.yellow_bufs[i]);
@@ -1180,6 +1170,7 @@ int main(int argc, char *argv[])
 			stp_free(output_data.yellow_bufs);
 			output_data.yellow_bufs = NULL;
 		    }
+		    output_data.yellow_data_rows_per_row = 0;
 		    if (output_data.lcyan_data_rows_per_row != 0) {
 			for (i=0; i < output_data.lcyan_data_rows_per_row; i++) {
 			    stp_free(output_data.lcyan_bufs[i]);
@@ -1187,6 +1178,7 @@ int main(int argc, char *argv[])
 			stp_free(output_data.lcyan_bufs);
 			output_data.lcyan_bufs = NULL;
 		    }
+		    output_data.lcyan_data_rows_per_row = 0;
 		    if (output_data.lmagenta_data_rows_per_row != 0) {
 			for (i=0; i < output_data.lmagenta_data_rows_per_row; i++) {
 			    stp_free(output_data.lmagenta_bufs[i]);
@@ -1194,6 +1186,7 @@ int main(int argc, char *argv[])
 			stp_free(output_data.lmagenta_bufs);
 			output_data.lmagenta_bufs = NULL;
 		    }
+		    output_data.lmagenta_data_rows_per_row = 0;
 		    stp_free(received_rows);
 		    received_rows = NULL;
 		}
@@ -1429,11 +1422,16 @@ int main(int argc, char *argv[])
 	    case PCL_CPI :
 	    case PCL_PAGE_LENGTH :
 	    case PCL_NUM_COPIES :
-	    case PCL_MEDIA_SIDE :
 	    case RTL_CONFIGURE :
 	    case PCL_ENTER_PCL :
 	    case PCL_NEGATIVE_MOTION :
-	    case PCL_MEDIA_DEST :
+	    case PCL_JOB_SEPARATION :
+	    case PCL_LEFT_OFFSET_REGISTRATION :
+	    case PCL_TOP_OFFSET_REGISTRATION :
+	    case PCL_PRINT_DIRECTION :
+	    case PCL_LEFT_MARGIN :
+	    case PCL_RIGHT_MARGIN :
+	    case PCL_TEXT_LENGTH :
 		fprintf(stderr, "%s: %d (ignored)", pcl_commands[command_index].description, numeric_arg);
 		if (pcl_commands[command_index].has_data == 1) {
 		    fprintf(stderr, " Data: ");
@@ -1710,6 +1708,41 @@ int main(int argc, char *argv[])
 		    break;
 		case 3 :
 		    fprintf(stderr, "Reverse Landscape");
+		    break;
+		default :
+		    fprintf(stderr, "Unknown (%d)", numeric_arg);
+		    break;
+		}
+		fprintf(stderr, " (ignored)\n");
+		break;
+
+	    case PCL_MEDIA_SIDE :
+		fprintf(stderr, "%s: ", pcl_commands[command_index].description);
+		switch (numeric_arg) {
+		case 0 :
+		    fprintf(stderr, "Next side");
+		    break;
+		case 1 :
+		    fprintf(stderr, "Front side");
+		    break;
+		case 2 :
+		    fprintf(stderr, "Back side");
+		    break;
+		default :
+		    fprintf(stderr, "Unknown (%d)", numeric_arg);
+		    break;
+		}
+		fprintf(stderr, " (ignored)\n");
+		break;
+
+	    case PCL_MEDIA_DEST :
+		fprintf(stderr, "%s: ", pcl_commands[command_index].description);
+		switch (numeric_arg) {
+		case 1 :
+		    fprintf(stderr, "Upper Output bin");
+		    break;
+		case 2 :
+		    fprintf(stderr, "Lower (Rear) Output bin");
 		    break;
 		default :
 		    fprintf(stderr, "Unknown (%d)", numeric_arg);
