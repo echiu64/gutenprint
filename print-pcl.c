@@ -1390,19 +1390,6 @@ pcl_print(const printer_t *printer,		/* I - Model */
   image_bpp = Image_bpp(image);
 
  /*
-  * Choose the correct color conversion function...
-  */
-  if (nv.image_type == IMAGE_MONOCHROME)
-    {
-      output_type = OUTPUT_GRAY;
-    }
-
-  if (caps.color_type == PCL_COLOR_NONE)
-    output_type = OUTPUT_GRAY;
-
-  colorfunc = choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, &nv);
-
- /*
   * Figure out the output resolution...
   */
 
@@ -1412,12 +1399,24 @@ pcl_print(const printer_t *printer,		/* I - Model */
   fprintf(stderr,"pcl: resolution=%dx%d\n",xdpi,ydpi);
 #endif
 
+ /*
+  * Choose the correct color conversion function...
+  */
   if (((caps.resolutions & PCL_RES_600_600_MONO) == PCL_RES_600_600_MONO) &&
       output_type != OUTPUT_GRAY && xdpi == 600 && ydpi == 600) {
-      fprintf(stderr, "600x600 resolution only available in MONO, changed to 300x300\n");
-      xdpi = 300;
-      ydpi = 300;
+      fprintf(stderr, "600x600 resolution only available in MONO\n");
+      output_type = OUTPUT_GRAY;
   }
+
+  if (nv.image_type == IMAGE_MONOCHROME)
+    {
+      output_type = OUTPUT_GRAY;
+    }
+
+  if (caps.color_type == PCL_COLOR_NONE)
+    output_type = OUTPUT_GRAY;
+
+  colorfunc = choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, &nv);
 
   do_cret = (xdpi >= 300 && ((caps.color_type & PCL_COLOR_CMYK4) == PCL_COLOR_CMYK4) &&
 	     nv.image_type != IMAGE_MONOCHROME);
