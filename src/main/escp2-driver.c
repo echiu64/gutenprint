@@ -476,8 +476,10 @@ send_print_command(stp_vars_t v, stpi_pass_t *pass, int color, int nlines)
     pd->horizontal_passes;
   if (pd->command_set == MODEL_COMMAND_PRO || pd->variable_dots)
     {
-      int ncolor = pd->channels[color]->color |
-	(pd->channels[color]->subchannel << 4);
+      int ncolor = pd->channels[color]->color;
+      int subchannel = pd->channels[color]->subchannel;
+      if (subchannel >= 0)
+	ncolor |= (subchannel << 4);
       int nwidth = pd->bitwidth * ((lwidth + 7) / 8);
       stpi_send_command(v, "\033i", "ccchh", ncolor, COMPRESSION,
 			pd->bitwidth, nwidth, nlines);
