@@ -341,7 +341,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 144, 360, 2, 0, 2, INCH(13), INCH(44), 9, 9, 0, 9, 1, 0
   },
-  /* 18: Stylus Color 660/670 */
+  /* 18: Stylus Color 660 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
@@ -397,7 +397,15 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     1, 1, 128, 720, 2, -1, 2, INCH(17), INCH(55), 8, 9, 9, 49, 4, 0
   },
-  /* 25: Stylus Pro 5000 */
+  /* 25: Stylus Color 670 */
+  {
+    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
+     | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
+     | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
+    48, 8, 144, 720, 3, 0, 3, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 8
+  },
+  /* 26: Stylus Pro 5000 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_NORMAL
@@ -405,7 +413,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 360, 2, 0, 4, INCH(13), INCH(1200), 9, 9, 0, 9, 1, 0
   },
-  /* 26: Stylus Pro 7000 */
+  /* 27: Stylus Pro 7000 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_NORMAL
@@ -413,7 +421,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 360, 2, 0, 4, INCH(24), INCH(1200), 9, 9, 0, 9, 1, 0
   },
-  /* 27: Stylus Pro 7500 */
+  /* 28: Stylus Pro 7500 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_SELECTABLE
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_NORMAL
@@ -421,7 +429,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 360, 2, 0, 4, INCH(24), INCH(1200), 9, 9, 0, 9, 1, 0
   },
-  /* 28: Stylus Pro 9000 */
+  /* 29: Stylus Pro 9000 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_NORMAL
@@ -429,7 +437,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 360, 2, 0, 4, INCH(44), INCH(1200), 9, 9, 0, 9, 1, 0
   },
-  /* 29: Stylus Pro 9500 */
+  /* 30: Stylus Pro 9500 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_SELECTABLE
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_NORMAL
@@ -457,12 +465,13 @@ typedef struct escp_init
   int vertical_passes;
   int vertical_oversample;
   int bits;
+  const char *paper_type;
 } escp_init_t;
 
 static simple_dither_range_t variable_dither_ranges[] =
 {
   { 0.15,  0x1, 0, 1 },
-  { 0.227, 0x2, 0, 2 },
+/*  { 0.227, 0x2, 0, 2 }, */
 /*  { 0.333, 0x3, 0, 3 }, */
   { 0.45,  0x1, 1, 1 },
   { 0.68,  0x2, 1, 2 },
@@ -525,17 +534,46 @@ static const ink_t escp2_inklist[] = {
   { "MIS Six Tone Monochrome", 0, 0, 1, NULL, mis_sixtone_ranges }
 };
 
-#ifdef ESCP2_GHOST
-const char *
-escp2_resname(int resolution)
+typedef struct {
+  const char name[65];
+  int paper_feed_sequence;
+  int platen_gap;
+} paper_t;
+
+static const paper_t escp2_paper_list[] = {
+  { "Plain Paper", 1, 0 },
+  { "Plain Paper Fast Load", 5, 0 },
+  { "Postcard", 2, 0 },
+  { "Glossy Film", 3, 0 },
+  { "Transparencies", 3, 0 },
+  { "Envelopes", 4, 0 },
+  { "Back Light Film", 6, 0 },
+  { "Matte Paper", 7, 0 },
+  { "Inkjet Paper", 7, 0 },
+  { "Photo Quality Inkjet Paper", 7, 0 },
+  { "Photo Paper", 8, 0 },
+  { "Other", 0, 0 },
+};
+
+static const int paper_type_count = sizeof(escp2_paper_list) / sizeof(paper_t);
+
+const paper_t *
+get_media_type(const char *name)
 {
-  if (resolution < 0 ||
-      resolution >= ((sizeof(escp2_reslist) / sizeof(res_t)) - 1))
-    return NULL;
-  else
-    return escp2_reslist[resolution].name;
+  int i;
+  for (i = 0; i < paper_type_count; i++)
+    {
+      if (!strcmp(name, escp2_paper_list[i].name))
+	return &(escp2_paper_list[i]);
+    }
+  return NULL;
 }
-#endif
+
+const char *
+escp2_default_resolution(const printer_t *printer)
+{
+  return escp2_reslist[0].name;
+}
 
 static int
 escp2_has_cap(int model, model_featureset_t featureset,
@@ -654,12 +692,6 @@ escp2_parameters(const printer_t *printer,	/* I - Printer model */
     "Four Color Standard"
   };
 
-  static char *media_types[] =
-  {
-    "Standard Paper",
-    "Glossy Film"
-  };
-
   if (count == NULL)
     return (NULL);
 
@@ -736,12 +768,12 @@ escp2_parameters(const printer_t *printer,	/* I - Printer model */
     }
   else if (strcmp(name, "MediaType") == 0)
     {
-      int nmediatypes = sizeof(media_types) / sizeof(char *);
+      int nmediatypes = paper_type_count;
       valptrs = malloc(sizeof(char *) * nmediatypes);
       for (i = 0; i < nmediatypes; i++)
 	{
-	  valptrs[i] = malloc(strlen(media_types[i]) + 1);
-	  strcpy(valptrs[i], media_types[i]);
+	  valptrs[i] = malloc(strlen(escp2_paper_list[i].name) + 1);
+	  strcpy(valptrs[i], escp2_paper_list[i].name);
 	}
       *count = nmediatypes;
       return valptrs;
@@ -757,8 +789,7 @@ escp2_parameters(const printer_t *printer,	/* I - Printer model */
 
 void
 escp2_imageable_area(const printer_t *printer,	/* I - Printer model */
-                     char *ppd_file,	/* I - PPD file (not used) */
-                     char *media_size,	/* I - Media size */
+		     const vars_t *v,   /* I */
                      int  *left,	/* O - Left position in points */
                      int  *right,	/* O - Right position in points */
                      int  *bottom,	/* O - Bottom position in points */
@@ -766,11 +797,21 @@ escp2_imageable_area(const printer_t *printer,	/* I - Printer model */
 {
   int	width, length;			/* Size of page */
 
-  default_media_size(printer, ppd_file, media_size, &width, &length);
+  default_media_size(printer, v, &width, &length);
   *left =	escp2_left_margin(printer->model);
   *right =	width - escp2_right_margin(printer->model);
   *top =	length - escp2_top_margin(printer->model);
   *bottom =	escp2_bottom_margin(printer->model);
+}
+
+void
+escp2_limit(const printer_t *printer,	/* I - Printer model */
+	    const vars_t *v,  		/* I */
+	    int  *width,		/* O - Left position in points */
+	    int  *length)		/* O - Top position in points */
+{
+  *width =	escp2_max_paper_width(printer->model);
+  *length =	escp2_max_paper_height(printer->model);
 }
 
 static void
@@ -793,12 +834,26 @@ escp2_set_remote_sequence(FILE *prn, escp_init_t *init)
   /* Magic remote mode commands, whatever they do */
   if (escp2_has_cap(init->model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999))
     {
+      int feed_sequence = 0;
+      int platen_gap = 0;
+      const paper_t *p = get_media_type(init->paper_type);
+      if (p)
+	{
+	  feed_sequence = p->paper_feed_sequence;
+	  platen_gap = p->platen_gap;
+	}
       fprintf(prn, /* Enter remote mode */
                    "\033(R\010%c%cREMOTE1"
                    /* Function unknown */
                    "PM\002%c%c%c"
                    /* Set mechanism sequence */
-                   "SN\003%c%c%c\001", 0, 0, 0, 0, 0, 0, 0, 0);
+                   "SN\003%c%c%c%c"
+                   /* Set  */
+                   "SN\003%c%c%c%c",
+	      0, 0,
+	      0, 0, 0,
+	      0, 0, 0, feed_sequence,
+	      0, 0, 1, platen_gap);
       if (escp2_has_cap(init->model, MODEL_ZEROMARGIN_MASK,
                                      MODEL_ZEROMARGIN_YES))
 	fprintf(prn, /* Set zero-margin print mode */
@@ -994,9 +1049,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 {
   unsigned char *cmap = v->cmap;
   int		model = printer->model;
-  char 		*ppd_file = v->ppd_file;
   char 		*resolution = v->resolution;
-  char 		*media_size = v->media_size;
   char		*media_type = v->media_type;
   int 		output_type = v->output_type;
   int		orientation = v->orientation;
@@ -1048,15 +1101,12 @@ escp2_print(const printer_t *printer,		/* I - Model */
   void *	dither;
   colormode_t colormode = COLOR_CCMMYK;
   int		separation_rows = escp2_separation_rows(model);
-  int		use_glossy_film = 0;
   int		ink_spread;
   vars_t	nv;
   escp_init_t	init;
 
   memcpy(&nv, v, sizeof(vars_t));
 
-  if (!strcmp(media_type, "Glossy Film"))
-    use_glossy_film = 1;
   if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES) &&
       strcmp(ink_type, "Four Color Standard") != 0 &&
       nv.image_type != IMAGE_MONOCHROME)
@@ -1096,7 +1146,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
  /*
   * Compute the output size...
   */
-  escp2_imageable_area(printer, ppd_file, media_size, &page_left, &page_right,
+  escp2_imageable_area(printer, &nv, &page_left, &page_right,
                        &page_bottom, &page_top);
 
   compute_page_parameters(page_right, page_left, page_top, page_bottom,
@@ -1153,7 +1203,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
  /*
   * Send ESC/P2 initialization commands...
   */
-  default_media_size(printer, ppd_file, media_size, &n, &page_length);
+  default_media_size(printer, &nv, &n, &page_length);
   page_length += (39 + (escp2_nozzles(model) * 2) *
 		  escp2_nozzle_separation(model)) / 10; /* Top and bottom */
   page_top = 0;
@@ -1171,6 +1221,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   init.vertical_passes = vertical_passes;
   init.vertical_oversample = vertical_oversample;
   init.bits = bits;
+  init.paper_type = media_type;
 
   escp2_init_printer(prn, &init);
 
@@ -1272,10 +1323,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
     dither_set_black_lower(dither, .4 / bits + .1);
   else
     dither_set_black_lower(dither, .25 / bits);
-  if (use_glossy_film)
-    dither_set_black_upper(dither, .999);
-  else
-    dither_set_black_upper(dither, .6);
+  dither_set_black_upper(dither, .999);
   if (bits == 2)
     {
       if (use_6color)
@@ -1345,6 +1393,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 
   for (y = 0; y < out_height; y ++)
   {
+    int i, j;
     if ((y & 255) == 0)
       Image_note_progress(image, y, out_height);
 

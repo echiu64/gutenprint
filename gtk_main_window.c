@@ -2134,11 +2134,10 @@ static void gtk_preview_update(void)
   double unit_scaler;
 
 
-  (*current_printer->media_size)(current_printer, vars.ppd_file,
-				 vars.media_size, &paper_width, &paper_height);
+  (*current_printer->media_size)(current_printer, &vars, &paper_width,
+				 &paper_height);
 
-  (*current_printer->imageable_area)(current_printer, vars.ppd_file,
-				     vars.media_size, &left, &right,
+  (*current_printer->imageable_area)(current_printer, &vars, &left, &right,
 				     &bottom, &top);
 
   /* Rationalise things a bit by measuring everything from the top left */

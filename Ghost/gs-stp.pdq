@@ -47,6 +47,8 @@ most Epson Stylus inkjet printers."
     }
   }
 
+  # This is completely wrong for anything but Epson printers
+
   option {
     var = "EOPT_4"
     desc = "Driver Resolution"
@@ -91,83 +93,296 @@ most Epson Stylus inkjet printers."
       desc = "Emulated 2880 x 720 DPI"
       value = "9"
     }
+    choice "10" {
+      value = "10"
+    }
+    choice "11" {
+      value = "11"
+    }
+    choice "12" {
+      value = "12"
+    }
   }
 
   option {
     var = "EOPT_3"
     desc = "Printer Model Selection"
     default_choice ""
-    choice "17" {
-      desc = "Stylus Color 1160"
-      value = "17"
+    choice "ps" {
+      desc = "PostScript Level 1"
+      value = "ps"
     }
-    choice "0" {
-      desc = "Stylus Color"
-      value = "0"
+    choice "ps2" {
+      desc = "PostScript Level 2"
+      value = "ps2"
     }
-    choice "1" {
-      desc = "Stylus Color Pro/Pro XL/400/500"
-      value = "1"
+    choice "pcl-340" {
+      desc = "HP DeskJet 340"
+      value = "pcl-340"
     }
-    choice "2" {
-      desc = "Stylus Color 1500"
-      value = "2"
+    choice "pcl-400" {
+      desc = "HP DeskJet 400"
+      value = "pcl-400"
     }
-    choice "3" {
-      desc = "Stylus Color 600"
-      value = "3"
+    choice "pcl-500" {
+      desc = "HP DeskJet 500"
+      value = "pcl-500"
     }
-    choice "4" {
-      desc = "Stylus Color 800"
-      value = "4"
+    choice "pcl-520" {
+      desc = "HP DeskJet 520"
+      value = "pcl-520"
     }
-    choice "5" {
-      desc = "Stylus Color 850"
-      value = "5"
+    choice "pcl-501" {
+      desc = "HP DeskJet 500C"
+      value = "pcl-501"
     }
-    choice "6" {
-      desc = "Stylus Color 1520/3000"
-      value = "6"
+    choice "pcl-540" {
+      desc = "HP DeskJet 540C"
+      value = "pcl-540"
     }
-    choice "7" {
-      desc = "Stylus Photo 700"
-      value = "7"
+    choice "pcl-550" {
+      desc = "HP DeskJet 550C, 560C"
+      value = "pcl-550"
     }
-    choice "8" {
-      desc = "Stylus Photo EX"
-      value = "8"
+    choice "pcl-600" {
+      desc = "HP DeskJet 600/600C"
+      value = "pcl-600"
     }
-    choice "9" {
-      desc = "Stylus Photo"
-      value = "9"
+    choice "pcl-601" {
+      desc = "HP DeskJet 600 series"
+      value = "pcl-601"
     }
-    choice "10" {
-      desc = "Stylus Color 440/640"
-      value = "10"
+    choice "pcl-690" {
+      desc = "HP DeskJet 690 series"
+      value = "pcl-690"
     }
-    choice "11" {
-      desc = "Stylus Color 640"
-      value = "11"
+    choice "pcl-800" {
+      desc = "HP DeskJet 800 series"
+      value = "pcl-800"
     }
-    choice "12" {
-      desc = "Stylus Color 740"
-      value = "12"
+    choice "pcl-900" {
+      desc = "HP DeskJet 900 series"
+      value = "pcl-900"
     }
-    choice "13" {
-      desc = "Stylus Color 900"
-      value = "13"
+    choice "pcl-1100" {
+      desc = "HP DeskJet 1100C"
+      value = "pcl-1100"
     }
-    choice "14" {
-      desc = "Stylus Photo 750"
-      value = "14"
+    choice "pcl-1120" {
+      desc = "HP DeskJet 1120C"
+      value = "pcl-1120"
     }
-    choice "15" {
-      desc = "Stylus Photo 1200"
-      value = "15"
+    choice "pcl-1220" {
+      desc = "HP DeskJet, 1220C"
+      value = "pcl-1220"
     }
-    choice "16" {
-      desc = "Stylus Photo 860"
-      value = "16"
+    choice "pcl-1200" {
+      desc = "HP DeskJet 1200C"
+      value = "pcl-1200"
+    }
+    choice "pcl-1600" {
+      desc = "HP DeskJet 1600C"
+      value = "pcl-1600"
+    }
+    choice "pcl-2000" {
+      desc = "HP DeskJet 2000 series"
+      value = "pcl-2000"
+    }
+    choice "pcl-2500" {
+      desc = "HP DeskJet 2500 series"
+      value = "pcl-2500"
+    }
+    choice "pcl-2" {
+      desc = "HP LaserJet II series"
+      value = "pcl-2"
+    }
+    choice "pcl-3" {
+      desc = "HP LaserJet III series"
+      value = "pcl-3"
+    }
+    choice "pcl-4" {
+      desc = "HP LaserJet 4 series"
+      value = "pcl-4"
+    }
+    choice "pcl-4v" {
+      desc = "HP LaserJet 4V, 4Si"
+      value = "pcl-4v"
+    }
+    choice "pcl-5" {
+      desc = "HP LaserJet 5 series"
+      value = "pcl-5"
+    }
+    choice "pcl-5si" {
+      desc = "HP LaserJet 5Si"
+      value = "pcl-5si"
+    }
+    choice "pcl-6" {
+      desc = "HP LaserJet 6 series"
+      value = "pcl-6"
+    }
+    choice "escp2" {
+      desc = "EPSON Stylus Color"
+      value = "escp2"
+    }
+    choice "escp2-pro" {
+      desc = "EPSON Stylus Color Pro"
+      value = "escp2-pro"
+    }
+    choice "escp2-pro-xl" {
+      desc = "EPSON Stylus Color Pro XL"
+      value = "escp2-pro-xl"
+    }
+    choice "escp2-400" {
+      desc = "EPSON Stylus Color 400"
+      value = "escp2-400"
+    }
+    choice "escp2-440" {
+      desc = "EPSON Stylus Color 440"
+      value = "escp2-440"
+    }
+    choice "escp2-460" {
+      desc = "EPSON Stylus Color 460"
+      value = "escp2-460"
+    }
+    choice "escp2-480" {
+      desc = "EPSON Stylus Color 480"
+      value = "escp2-480"
+    }
+    choice "escp2-500" {
+      desc = "EPSON Stylus Color 500"
+      value = "escp2-500"
+    }
+    choice "escp2-600" {
+      desc = "EPSON Stylus Color 600"
+      value = "escp2-600"
+    }
+    choice "escp2-640" {
+      desc = "EPSON Stylus Color 640"
+      value = "escp2-640"
+    }
+    choice "escp2-660" {
+      desc = "EPSON Stylus Color 660"
+      value = "escp2-660"
+    }
+    choice "escp2-670" {
+      desc = "EPSON Stylus Color 670"
+      value = "escp2-670"
+    }
+    choice "escp2-740" {
+      desc = "EPSON Stylus Color 740"
+      value = "escp2-740"
+    }
+    choice "escp2-760" {
+      desc = "EPSON Stylus Color 760"
+      value = "escp2-760"
+    }
+    choice "escp2-800" {
+      desc = "EPSON Stylus Color 800"
+      value = "escp2-800"
+    }
+    choice "escp2-850" {
+      desc = "EPSON Stylus Color 850"
+      value = "escp2-850"
+    }
+    choice "escp2-860" {
+      desc = "EPSON Stylus Color 860"
+      value = "escp2-860"
+    }
+    choice "escp2-900" {
+      desc = "EPSON Stylus Color 900"
+      value = "escp2-900"
+    }
+    choice "escp2-1160" {
+      desc = "EPSON Stylus Color 1160"
+      value = "escp2-1160"
+    }
+    choice "escp2-1500" {
+      desc = "EPSON Stylus Color 1500"
+      value = "escp2-1500"
+    }
+    choice "escp2-1520" {
+      desc = "EPSON Stylus Color 1520"
+      value = "escp2-1520"
+    }
+    choice "escp2-3000" {
+      desc = "EPSON Stylus Color 3000"
+      value = "escp2-3000"
+    }
+    choice "escp2-photo" {
+      desc = "EPSON Stylus Photo"
+      value = "escp2-photo"
+    }
+    choice "escp2-700" {
+      desc = "EPSON Stylus Photo 700"
+      value = "escp2-700"
+    }
+    choice "escp2-ex" {
+      desc = "EPSON Stylus Photo EX"
+      value = "escp2-ex"
+    }
+    choice "escp2-720" {
+      desc = "EPSON Stylus Photo 720"
+      value = "escp2-720"
+    }
+    choice "escp2-750" {
+      desc = "EPSON Stylus Photo 750"
+      value = "escp2-750"
+    }
+    choice "escp2-870" {
+      desc = "EPSON Stylus Photo 870"
+      value = "escp2-870"
+    }
+    choice "escp2-1200" {
+      desc = "EPSON Stylus Photo 1200"
+      value = "escp2-1200"
+    }
+    choice "escp2-1270" {
+      desc = "EPSON Stylus Photo 1270"
+      value = "escp2-1270"
+    }
+    choice "bjc-1000" {
+      desc = "CANON BJC 1000"
+      value = "bjc-1000"
+    }
+    choice "bjc-2000" {
+      desc = "CANON BJC 2000"
+      value = "bjc-2000"
+    }
+    choice "bjc-3000" {
+      desc = "CANON BJC 3000"
+      value = "bjc-3000"
+    }
+    choice "bjc-4300" {
+      desc = "CANON BJC 4300"
+      value = "bjc-4300"
+    }
+    choice "bjc-4400" {
+      desc = "CANON BJC 4400 photo"
+      value = "bjc-4400"
+    }
+    choice "bjc-6000" {
+      desc = "CANON BJC 6000"
+      value = "bjc-6000"
+    }
+    choice "bjc-6100" {
+      desc = "CANON BJC 6100"
+      value = "bjc-6100"
+    }
+    choice "bjc-7000" {
+      desc = "CANON BJC 7000"
+      value = "bjc-7000"
+    }
+    choice "bjc-7100" {
+      desc = "CANON BJC 7100"
+      value = "bjc-7100"
+    }
+    choice "bjc-8200" {
+      desc = "CANON BJC 8200"
+      value = "bjc-8200"
+    }
+    choice "lexmark-4076" {
+      desc = "Lexmark 4076"
+      value = "lexmark-4076"
     }
   }
 
@@ -298,21 +513,21 @@ most Epson Stylus inkjet printers."
     var = "OPT_Gamma"
     desc = "Gamma"
     def_value "1"
-    help = "Gamma Level Minimum value: 0.1, Maximum value: 0.1"
+    help = "Gamma Level Minimum value: 0.1, Maximum value: 3"
   }
 
   argument {
     var = "OPT_Density"
     desc = "Density"
     def_value "1"
-    help = "Density Level Minimum value: 0.1, Maximum value: 0.1"
+    help = "Density Level Minimum value: 0.1, Maximum value: 2"
   }
 
   argument {
     var = "OPT_Saturation"
     desc = "Saturation"
     def_value "1"
-    help = "Saturation Level Minimum value: 0.1, Maximum value: 0.1"
+    help = "Saturation Level Minimum value: 0, Maximum value: 0.1"
   }
 
   language_driver ps {

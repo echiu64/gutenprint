@@ -70,27 +70,38 @@ output_the_printer(void)
       printf("    %s,\n", "canon_parameters");
       printf("    %s,\n", "default_media_size");
       printf("    %s,\n", "canon_imageable_area");
+      printf("    %s,\n", "canon_limit");
       printf("    %s,\n", "canon_print");
+      printf("    %s,\n", "canon_default_resolution");
       break;
     case 2:
       printf("    %s,\n", "escp2_parameters");
       printf("    %s,\n", "default_media_size");
       printf("    %s,\n", "escp2_imageable_area");
+      printf("    %s,\n", "escp2_limit");
       printf("    %s,\n", "escp2_print");
+      printf("    %s,\n", "escp2_default_resolution");
       break;
     case 3:
       printf("    %s,\n", "pcl_parameters");
       printf("    %s,\n", "default_media_size");
       printf("    %s,\n", "pcl_imageable_area");
+      printf("    %s,\n", "pcl_limit");
       printf("    %s,\n", "pcl_print");
+      printf("    %s,\n", "pcl_default_resolution");
       break;
     case 4:
       printf("    %s,\n", "ps_parameters");
       printf("    %s,\n", "ps_media_size");
       printf("    %s,\n", "ps_imageable_area");
+      printf("    %s,\n", "ps_limit");
       printf("    %s,\n", "ps_print");
+      printf("    %s,\n", "ps_default_resolution");
       break;
     default:
+      printf("    %s,\n", "NULL");
+      printf("    %s,\n", "NULL");
+      printf("    %s,\n", "NULL");
       printf("    %s,\n", "NULL");
       printf("    %s,\n", "NULL");
       printf("    %s,\n", "NULL");

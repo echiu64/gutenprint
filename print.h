@@ -121,6 +121,8 @@ typedef struct					/* Plug-in variables */
   int	image_type;		/* Image type (line art etc.) */
   int	unit;			/* Units for preview area 0=Inch 1=Metric */
   float app_gamma;		/* Application gamma */
+  int	page_width;		/* Width of page in points */
+  int	page_height;		/* Height of page in points */
   lut_t *lut;			/* Look-up table */
   unsigned char *cmap;		/* Color map */
 } vars_t;
@@ -181,14 +183,16 @@ typedef struct printer
   char	**(*parameters)(const struct printer *printer, char *ppd_file,
                         char *name, int *count);
 					/* Parameter names */
-  void	(*media_size)(const struct printer *printer, char *ppd_file,
-                      char *media_size, int *width, int *length);
-  void	(*imageable_area)(const struct printer *printer, char *ppd_file,
-                          char *media_size,
+  void	(*media_size)(const struct printer *printer, const vars_t *v,
+		      int *width, int *length);
+  void	(*imageable_area)(const struct printer *printer, const vars_t *v,
                           int *left, int *right, int *bottom, int *top);
+  void	(*limit)(const struct printer *printer, const vars_t *v,
+		 int *width, int *length);
   /* Print function */
   void	(*print)(const struct printer *printer, int copies, FILE *prn,
 		 Image image, const vars_t *v);
+  const char *(*default_resolution)(const struct printer *printer);
   vars_t printvars;
 } printer_t;
 
@@ -310,64 +314,65 @@ extern void	free_lut(vars_t *v);
 extern void	compute_lut(size_t steps, vars_t *v);
 
 
-extern void	default_media_size(const printer_t *printer, char *ppd_file,
-				   char *media_size, int *width, int *length);
+extern void	default_media_size(const printer_t *printer, const vars_t *v,
+				   int *width, int *length);
 
 
 extern char	**escp2_parameters(const printer_t *printer, char *ppd_file,
 				   char *name, int *count);
-extern void	escp2_imageable_area(const printer_t *printer, char *ppd_file,
-				     char *media_size, int *left, int *right,
+extern void	escp2_imageable_area(const printer_t *printer, const vars_t *v,
+				     int *left, int *right,
 				     int *bottom, int *top);
+extern void	escp2_limit(const printer_t *printer, const vars_t *v,
+			    int *width, int *length);
 extern void	escp2_print(const printer_t *printer, int copies, FILE *prn,
 			    Image image, const vars_t *v);
+extern const char *escp2_default_resolution(const printer_t *printer);
 
 
-#ifndef ESCP2_GHOST
 extern char	**canon_parameters(const printer_t *printer, char *ppd_file,
 		                   char *name, int *count);
-extern void	canon_imageable_area(const printer_t *printer, char *ppd_file,
-				     char *media_size, int *left, int *right,
+extern void	canon_imageable_area(const printer_t *printer, const vars_t *v,
+				     int *left, int *right,
 				     int *bottom, int *top);
+extern void	canon_limit(const printer_t *printer, const vars_t *v,
+			    int *width, int *length);
 extern void	canon_print(const printer_t *printer, int copies, FILE *prn,
 			    Image image, const vars_t *v);
+extern const char *canon_default_resolution(const printer_t *printer);
 
 
 extern char	**pcl_parameters(const printer_t *printer, char *ppd_file,
 		                 char *name, int *count);
-extern void	pcl_imageable_area(const printer_t *printer, char *ppd_file,
-				   char *media_size,
-		                   int *left, int *right, int *bottom,
-				   int *top);
+extern void	pcl_imageable_area(const printer_t *printer, const vars_t *v,
+		                   int *left, int *right,
+				   int *bottom, int *top);
+extern void	pcl_limit(const printer_t *printer, const vars_t *v,
+			  int *width, int *length);
 extern void	pcl_print(const printer_t *printer, int copies, FILE *prn,
 			  Image image, const vars_t *v);
+extern const char *pcl_default_resolution(const printer_t *printer);
 
 
 extern char	**ps_parameters(const printer_t *printer, char *ppd_file,
 		                char *name, int *count);
-extern void	ps_media_size(const printer_t *printer, char *ppd_file,
-		              char *media_size, int *width, int *length);
-extern void	ps_imageable_area(const printer_t *printer, char *ppd_file,
-		                  char *media_size, int *left, int *right,
+extern void	ps_media_size(const printer_t *printer, const vars_t *v,
+			      int *width, int *length);
+extern void	ps_imageable_area(const printer_t *printer, const vars_t *v,
+				  int *left, int *right,
 		                  int *bottom, int *top);
+extern void	ps_limit(const printer_t *printer, const vars_t *v,
+			 int *width, int *length);
 extern void	ps_print(const printer_t *printer, int copies, FILE *prn,
 			 Image image, const vars_t *v);
-#else
-#define canon_parameters NULL
-#define canon_imageable_area NULL
-#define canon_print NULL
-#define pcl_parameters NULL
-#define pcl_imageable_area NULL
-#define pcl_print NULL
-#define ps_parameters NULL
-#define ps_imageable_area NULL
-#define ps_print NULL
-#define ps_media_size NULL
-#endif
+extern const char *ps_default_resolution(const printer_t *printer);
+
+extern const char *default_dither_algorithm(void);
 
 extern int	      		known_papersizes(void);
 extern const papersize_t	*get_papersizes(void);
 extern const papersize_t	*get_papersize_by_name(const char *);
+extern const papersize_t 	*get_papersize_by_size(int l, int w);
 
 extern int			known_printers(void);
 extern const printer_t		*get_printers(void);
@@ -386,6 +391,9 @@ compute_page_parameters(int page_right, int page_left, int page_top,
 			int image_height, Image image, int *orientation,
 			int *page_width, int *page_height, int *out_width,
 			int *out_height, int *left, int *top);
+
+extern int
+verify_printer_params(const printer_t *, const vars_t *);
 
 #endif /* PRINT_HEADER */
 /*

@@ -228,6 +228,12 @@ const static pcl_t pcl_resolutions[] =
 };
 #define NUM_RESOLUTIONS		(sizeof(pcl_resolutions) / sizeof (pcl_t))
 
+const char *
+pcl_default_resolution(const printer_t *printer)
+{
+  return pcl_resolutions[0].pcl_name;
+}
+
 /*
  * Printer capability data
  */
@@ -1220,8 +1226,7 @@ pcl_parameters(const printer_t *printer,/* I - Printer model */
 
 void
 pcl_imageable_area(const printer_t *printer,	/* I - Printer model */
-                   char *ppd_file,	/* I - PPD file (not used) */
-                   char *media_size,	/* I - Media size */
+		   const vars_t *v,     /* I */
                    int  *left,		/* O - Left position in points */
                    int  *right,		/* O - Right position in points */
                    int  *bottom,	/* O - Bottom position in points */
@@ -1232,7 +1237,7 @@ pcl_imageable_area(const printer_t *printer,	/* I - Printer model */
 
   caps = pcl_get_model_capabilities(printer->model);
 
-  default_media_size(printer, ppd_file, media_size, &width, &length);
+  default_media_size(printer, v, &width, &length);
 
 /*
  * Note: The margins actually vary with paper size, but since you can
@@ -1245,6 +1250,16 @@ pcl_imageable_area(const printer_t *printer,	/* I - Printer model */
   *bottom = caps.bottom_margin;
 }
 
+void
+pcl_limit(const printer_t *printer,	/* I - Printer model */
+	  const vars_t *v,  		/* I */
+	  int  *width,			/* O - Left position in points */
+	  int  *length)			/* O - Top position in points */
+{
+  pcl_cap_t caps= pcl_get_model_capabilities(printer->model);
+  *width =	caps.max_width;
+  *length =	caps.max_height;
+}
 
 /*
  * 'pcl_print()' - Print an image to an HP printer.
@@ -1259,9 +1274,8 @@ pcl_print(const printer_t *printer,		/* I - Model */
 {
   unsigned char *cmap = v->cmap;
   int		model = printer->model;
-  char 		*ppd_file = v->ppd_file;
   char 		*resolution = v->resolution;
-  char 		*media_size = v->media_size;
+  const char	*media_size;
   char 		*media_type = v->media_type;
   char 		*media_source = v->media_source;
   char 		*ink_type = v->ink_type;
@@ -1310,6 +1324,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
 		pcl_media_type, /* PCL media type code */
 		pcl_media_source;	/* PCL media source code */
   vars_t	nv;
+  const papersize_t *pp;
 
   memcpy(&nv, v, sizeof(vars_t));
   caps = pcl_get_model_capabilities(model);
@@ -1371,7 +1386,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
   * Compute the output size...
   */
 
-  pcl_imageable_area(printer, ppd_file, media_size, &page_left, &page_right,
+  pcl_imageable_area(printer, &nv, &page_left, &page_right,
                      &page_bottom, &page_top);
 #ifdef DEBUG
   printf("Before compute_page_parameters()\n");
@@ -1412,6 +1427,13 @@ pcl_print(const printer_t *printer,		/* I - Model */
  /*
   * Set media size
   */
+
+  if (strlen(v->media_size) > 0)
+    media_size = v->media_size;
+  else if ((pp = get_papersize_by_size(v->page_height, v->page_width)) != NULL)
+    media_size = pp->name;
+  else
+    media_size = "";
 
   pcl_media_size = pcl_convert_media_size(media_size, model);
 

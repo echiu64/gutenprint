@@ -4,22 +4,34 @@ stp_=$(GLOBJ)gdevstp.$(OBJ) \
 	$(GLOBJ)gdevstp-dither.$(OBJ) \
 	$(GLOBJ)gdevstp-util.$(OBJ) \
 	$(GLOBJ)gdevstp-weave.$(OBJ) \
-	$(GLOBJ)gdevstp-escp2.$(OBJ)
+	$(GLOBJ)gdevstp-escp2.$(OBJ) \
+	$(GLOBJ)gdevstp-pcl.$(OBJ) \
+	$(GLOBJ)gdevstp-canon.$(OBJ) \
+	$(GLOBJ)gdevstp-ps.$(OBJ)
 
 $(DD)stp.dev:	$(stp_) $(DD)page.dev
 	$(SETPDEV) $(DD)stp $(stp_)
 
 $(GLOBJ)gdevstp.$(OBJ) : $(GLSRC)gdevstp.c $(PDEVH)
-	$(GLCC) -DESCP2_GHOST $(GLO_)gdevstp.$(OBJ) $(C_) $(GLSRC)gdevstp.c
+	$(GLCC) $(GLO_)gdevstp.$(OBJ) $(C_) $(GLSRC)gdevstp.c
 
 $(GLOBJ)gdevstp-util.$(OBJ) : $(GLSRC)gdevstp-util.c $(PDEVH)
-	$(GLCC) -DESCP2_GHOST $(GLO_)gdevstp-util.$(OBJ) $(C_) $(GLSRC)gdevstp-util.c
+	$(GLCC) $(GLO_)gdevstp-util.$(OBJ) $(C_) $(GLSRC)gdevstp-util.c
 
 $(GLOBJ)gdevstp-weave.$(OBJ) : $(GLSRC)gdevstp-weave.c $(PDEVH)
-	$(GLCC) -DESCP2_GHOST $(GLO_)gdevstp-weave.$(OBJ) $(C_) $(GLSRC)gdevstp-weave.c
+	$(GLCC) $(GLO_)gdevstp-weave.$(OBJ) $(C_) $(GLSRC)gdevstp-weave.c
 
 $(GLOBJ)gdevstp-dither.$(OBJ) : $(GLSRC)gdevstp-dither.c $(PDEVH)
-	$(GLCC) -DESCP2_GHOST $(GLO_)gdevstp-dither.$(OBJ) $(C_) $(GLSRC)gdevstp-dither.c
+	$(GLCC) $(GLO_)gdevstp-dither.$(OBJ) $(C_) $(GLSRC)gdevstp-dither.c
 
 $(GLOBJ)gdevstp-escp2.$(OBJ) : $(GLSRC)gdevstp-escp2.c $(PDEVH)
-	$(GLCC) -DESCP2_GHOST $(GLO_)gdevstp-escp2.$(OBJ) $(C_) $(GLSRC)gdevstp-escp2.c
+	$(GLCC) $(GLO_)gdevstp-escp2.$(OBJ) $(C_) $(GLSRC)gdevstp-escp2.c
+
+$(GLOBJ)gdevstp-pcl.$(OBJ) : $(GLSRC)gdevstp-pcl.c $(PDEVH)
+	$(GLCC) $(GLO_)gdevstp-pcl.$(OBJ) $(C_) $(GLSRC)gdevstp-pcl.c
+
+$(GLOBJ)gdevstp-canon.$(OBJ) : $(GLSRC)gdevstp-canon.c $(PDEVH)
+	$(GLCC) $(GLO_)gdevstp-canon.$(OBJ) $(C_) $(GLSRC)gdevstp-canon.c
+
+$(GLOBJ)gdevstp-ps.$(OBJ) : $(GLSRC)gdevstp-ps.c $(PDEVH)
+	$(GLCC) $(GLO_)gdevstp-ps.$(OBJ) $(C_) $(GLSRC)gdevstp-ps.c

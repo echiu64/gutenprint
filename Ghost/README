@@ -1,25 +1,25 @@
-Type of program:
-----------------
+PROGRAM:
+--------
 
- Epson Stylus Color/Photo color printer driver for
- Ghostscript version 5.x/6.x offering CMYK 4 color and
- CMYKcm 6 color HQ prints.
+ Driver for Epson, Canon, and PCL printers based on the gimp-print
+ plugin.  This driver is capable of producing very high quality 4 and
+ 6 color prints.
 
 
-Author:
+AUTHOR:
 -------
 
  This Ghostscript frontend is written by
  Henryk Richter (buggs@comlab.uni-rostock.de).
 
- Used Escp2 driver for Epson printers by Michael Sweet (mike@easysw.com) and
+ Uses the gimp-print core by Michael Sweet (mike@easysw.com) and
  Robert Krawitz (rlk@alum.mit.edu).
 
  Currently maintained by the Gimp-Print development team
  (http://gimp-print.sourceforge.net).
 
 
-License:
+LICENSE:
 --------
 
   This program is free software; you can redistribute it and/or modify it
@@ -37,12 +37,12 @@ License:
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 
-Installation and Compilation:
+INSTALLATION AND COMPILATION:
 -----------------------------
 
  - If you downloaded a CVS snapshot of this software, this directory
-   will not include gdevstp-escp2c, gdevstp-print.h, gdevstp-util.c,
-   or gdevstp-dither.c.  To create these files, you must run the
+   will not include many of the source files that are generated from
+   the gimp-print source.  To create these files, you must run the
    following commands from the parent directory:
 
    aclocal
@@ -124,7 +124,7 @@ _not_ an official package.
 
 
 
-Options:
+OPTIONS:
 --------
 
  Options for the stp driver are given in normal ghostscript
@@ -152,77 +152,128 @@ Color Balancing Values: (min,max,default)
 Printer Model Selection:
 ------- ----- ----------
 
--dModel=xx
+-sModel=name
 
-0   Stylus Color
-1   Stylus Color Pro/Pro XL/400/500
-2   Stylus Color 1500
-3   Stylus Color 600
-4   Stylus Color 800
-5   Stylus Color 850
-6   Stylus Color 1520
-7   Stylus Photo 700
-8   Stylus Photo EX
-9   Stylus Photo
-10  Stylus Color 440/460
-11  Stylus Color 640
-12  Stylus Color 740
-13  Stylus Color 900
-14  Stylus Photo 750
-15  Stylus Photo 1200
-16  Stylus Color 860
-17  Stylus Color 1160
-18  Stylus Color 660/670
-19  Stylus Color 760
-20  Stylus Photo 720
-21  Stylus Color 480
-22  Stylus Photo 870
-23  Stylus Photo 1270
-24  Stylus Color 3000
+bjc-1000		CANON BJC 1000
+bjc-2000		CANON BJC 2000
+bjc-3000		CANON BJC 3000
+bjc-4300		CANON BJC 4300
+bjc-4400		CANON BJC 4400 photo
+bjc-6000		CANON BJC 6000
+bjc-6100		CANON BJC 6100
+bjc-7000		CANON BJC 7000
+bjc-7100		CANON BJC 7100
+bjc-8200		CANON BJC 8200
+escp2			EPSON Stylus Color
+escp2-pro		EPSON Stylus Color Pro
+escp2-pro-xl		EPSON Stylus Color Pro XL
+escp2-400		EPSON Stylus Color 400
+escp2-440		EPSON Stylus Color 440
+escp2-460		EPSON Stylus Color 460
+escp2-480		EPSON Stylus Color 480
+escp2-500		EPSON Stylus Color 500
+escp2-600		EPSON Stylus Color 600
+escp2-640		EPSON Stylus Color 640
+escp2-660		EPSON Stylus Color 660
+escp2-670		EPSON Stylus Color 670
+escp2-740		EPSON Stylus Color 740
+escp2-760		EPSON Stylus Color 760
+escp2-800		EPSON Stylus Color 800
+escp2-850		EPSON Stylus Color 850
+escp2-860		EPSON Stylus Color 860
+escp2-900		EPSON Stylus Color 900
+escp2-1160		EPSON Stylus Color 1160
+escp2-1500		EPSON Stylus Color 1500
+escp2-1520		EPSON Stylus Color 1520
+escp2-3000		EPSON Stylus Color 3000
+escp2-photo		EPSON Stylus Photo
+escp2-700		EPSON Stylus Photo 700
+escp2-ex		EPSON Stylus Photo EX
+escp2-720		EPSON Stylus Photo 720
+escp2-750		EPSON Stylus Photo 750
+escp2-870		EPSON Stylus Photo 870
+escp2-1200		EPSON Stylus Photo 1200
+escp2-1270		EPSON Stylus Photo 1270
+pcl-340			HP DeskJet 340
+pcl-400			HP DeskJet 400
+pcl-500			HP DeskJet 500
+pcl-520			HP DeskJet 520
+pcl-501			HP DeskJet 500C
+pcl-540			HP DeskJet 540C
+pcl-550			HP DeskJet 550C
+pcl-560			HP DeskJet 560C
+pcl-600			HP DeskJet 600/600C
+pcl-601			HP DeskJet 600 series
+pcl-690			HP DeskJet 690 series
+pcl-800			HP DeskJet 800 series
+pcl-900			HP DeskJet 900 series
+pcl-1100		HP DeskJet 1100C
+pcl-1120		HP DeskJet 1120C
+pcl-1220		HP DeskJet 1220C
+pcl-1200		HP DeskJet 1200C
+pcl-1600		HP DeskJet 1600C
+pcl-2000		HP DeskJet 2000 series
+pcl-2500		HP DeskJet 2500 series
+pcl-2			HP LaserJet II series
+pcl-3			HP LaserJet III series
+pcl-4			HP LaserJet 4 series
+pcl-4v			HP LaserJet 4V, 4Si
+pcl-5			HP LaserJet 5 series
+pcl-5si			HP LaserJet 5Si
+pcl-6			HP LaserJet 6 series
+lexmark-4076		Lexmark 4076 (PCL printer)
 
-Most or all of these printers are fully functional.
+Most or all of the Epson Stylus printers are fully functional.  The
+others vary.  In particular, all of the listed Epson Stylus Photo
+printers print in full 6-color photo mode; most of the others do not.
+The color output has also been better tuned for Epson Stylus printers
+than for others.
 
 
 Print Resolution Selection:
 ----- ---------- ----------
 
--dQuality=x
+The meaning of this is model-specific.
 
-0  360 DPI                               (works on all printers)
-1  720 DPI Microweave                    (works on all printers)
-2  720 DPI Softweave                     (works on all printers except
+For Epson Stylus printers:
+
+-sQuality='
+
+'360 DPI'                                (works on all printers)
+'720 DPI Microweave'                     (works on all printers)
+'720 DPI Softweave'                      (works on all printers except
 					  for Stylus Color, Stylus
 					  Color 1500, Stylus Color
 					  1520, and Stylus Color 3000)
-3  720 DPI High Quality                  (works on all printers except
+'720 DPI High Quality'                   (works on all printers except
 					  above and Epson Stylus Color
 					  440/460/480)
-4  720 DPI Highest Quality               (works on all printers except
+'720 DPI Highest Quality'                (works on all printers except
 					  above and Epson Stylus Color
 					  440/460/480)
-5  1440 x 720 DPI Microweave             (works on all 1440x720 dpi printers)
-6  1440 x 720 DPI Softweave              (works on all 1440x720 dpi
+'1440 x 720 DPI Microweave'              (works on all 1440x720 dpi printers)
+'1440 x 720 DPI Softweave'               (works on all 1440x720 dpi
 					  printers except for Stylus
 					  Color 1520 and Stylus Color 3000)
-7  1440 x 720 DPI Highest Quality        (works on all 1440x720 dpi
+'1440 x 720 DPI Highest Quality'         (works on all 1440x720 dpi
 					  printers except for Stylus
 					  Color 1520 and Stylus Color 3000)
-8  Emulated 1440 x 1440 DPI              (works on all 1440x720 dpi
+'1440 x 720 DPI Enhanced'                (works on all 1440x720 dpi
 					  printers except for Stylus
 					  Color 1520 and Stylus Color 3000)
-9  Emulated 1440 x 2880 DPI              (works on all 1440x720 dpi
+'1440 x 2880 DPI Super'                  (works on all 1440x720 dpi
 					  printers except for Stylus
 					  Color 1520 and Stylus Color 3000)
 
-Modes 8 and 9 use oversampling to emulate higher resolutions than the
-printers support.  In some cases they may yield improved output
-quality, but they are slower than the lower resolution modes.  Modes
-1, 2, 3, and 4 all dither the same way, but use the printer
-differently to obtain different tradeoffs between printing time and
-banding reduction.  Likewise with modes 5, 6, and 7.
+The last two modes use oversampling to emulate higher resolutions than
+the printers actually support.  In some cases they may yield improved
+output quality, but they are slower than the lower resolution modes.
+The other 1440x720 modes use the printer in different ways to to
+achieve different tradeoffs of quality vs. performance; likewise with
+the 720 DPI modes.
 
-Modes 1 and 5 are extremely slow on many printers.  Not all printers
-can do Microweave properly, particularly at 1440x720 DPI.  If
+The Microweave modes are extremely slow on many printers.  Not all
+printers can do Microweave properly, particularly at 1440x720 DPI.  If
 Microweave is used with these printers, the printing will be done one
 row at a time.  In addition to being extremely slow (but often
 extremely high quality), this may be harmful to the print head and may
@@ -230,16 +281,51 @@ cause clogging, due to ink pooling in the print head.  If your printer
 is capable of non-Microweave modes, there is seldom any advantage to
 be had from using Microweave.
 
+
+For PCL printers (including Hewlett-Packard and Lexmark):
+
+'150x150 DPI'
+'300x300 DPI'
+'600x300 DPI'
+'600x600 DPI (mono only)'
+'600x600 DPI'
+'1200x1200 DPI'
+'2400x1200 DPI'
+
+
+For Canon printers:
+
+1200 DPI printers (BJC 7000, BJC 7100, BJC 8200, BJC 8500):
+
+'300x300 DPI'
+'300x300 DPI w/ DMT'
+'600x600 DPI'
+'600x600 DPI w/ DMT'
+'1200x600 DPI'
+'1200x1200 DPI'
+
+1440 DPI printers (BJC 1000, BJC 2000, BJC 3000, BJC 4300,
+    BJC 4400, BJC 5100, BJC 5500, BJC 6000, BJC 6100, BJC 6500):
+
+'180x180 DPI'
+'360x360 DPI'
+'360x360 DPI w/ DMT'
+'720x360 DPI'
+'720x720 DPI'
+'1440x720 DPI'
+'1440x1440 DPI'
+
+
 Dithering Algorithms:
 --------- -----------
 
--dDither=x
+-Dither='algorithm'
 
-0  Adaptive Hybrid Floyd-Steinberg
-1  Ordered
-2  Adaptive Random Floyd-Steinberg
-3  Hybrid Floyd-Steinberg
-4  Random Floyd-Steinberg
+'Adaptive Hybrid Floyd-Steinberg'
+'Ordered'
+'Adaptive Random Floyd-Steinberg'
+'Hybrid Floyd-Steinberg'
+'Random Floyd-Steinberg'
 
 Hybrid algorithms use error diffusion, but a matrix is used when a
 random number is required.  Adaptive algorithms use error diffusion
@@ -253,27 +339,123 @@ six color printers.
 Adaptive hybrid dithering usually gives the best results overall.
 
 
-Currently supported Media Selection:
---------- --------- ----- ----------
-
-(important: always use lower case names)
-
--sPAPERSIZE=letter
--sPAPERSIZE=legal
--sPAPERSIZE=a4
--sPAPERSIZE=a3
-
-
 Ink Types
 --- -----
+
+This is printer type specific.  The option names are case sensitive.
+Not all ink types are supported on all printers.
+
+-sInkType='ink type'
+
+
+For Epson printers:
 
 Six color printers can print using four color inks or all six colors.
 Six color mode is recommended for photographs.  Four color mode may be
 useful when printing text with embedded graphics to reduce ink
 consumption.
 
--sInkType='Six Color Photo'
--sInkType='Four Color Standard'
+'Six Color Photo'
+'Four Color Standard'
+
+
+For Canon printers:
+
+'Black'
+'Color'
+'Black/Color'
+'Photo/Color'
+'Photo'
+
+
+For PCL (Hewlett-Packard and Lexmark) printers:
+
+'Color + Black Cartridges'
+'Color + Photo Cartridges'
+
+
+Media Types
+----- -----
+
+This is printer type specific.  The option names are case sensitive.
+
+-sMediaType='media type'
+
+
+For Epson printers:
+
+'Plain Paper'
+'Plain Paper Fast Load'
+'Postcard'
+'Glossy Film'
+'Transparencies'
+'Envelopes'
+'Back Light Film'
+'Matte Paper'
+'Inkjet Paper'
+'Photo Quality Inkjet Paper'
+'Photo Paper'
+'Other'
+
+
+For Canon printers:
+
+'Plain Paper'
+'Transparencies'
+'Back Print Film'
+'Fabric Sheets'
+'Envelope'
+'High Resolution Paper'
+'T-Shirt Transfers'
+'High Gloss Film'
+'Glossy Photo Paper'
+'Glossy Photo Cards'
+'Photo Paper Pro'
+
+
+For PCL (Hewlett-Packard and Lexmark) printers:
+
+'Plain'
+'Bond'
+'Premium'
+'Glossy/Photo'
+'Transparency'
+'Quick-dry Photo'
+'Quick-dry Transparency'
+
+
+Media Sources
+----- -------
+
+This is printer type specific.  The option names are case sensitive.
+
+-sMediaSource='media source'
+
+No media sources are currently defined for Epson printers.  At
+present, only the single sheet feeder can be used.
+
+
+For Canon printers:
+
+'Auto Sheet Feeder'
+'Manual with Pause'
+'Manual without Pause'
+
+
+For PCL (Hewlett-Packard and Lexmark) printers:
+
+'Manual'
+'Tray 1'
+'Tray 2'
+'Tray 3'
+'Tray 4'
+'Portable Sheet Feeder'
+'Desktop Sheet Feeder'
+'Tray'
+'Tray 2'
+'Optional Source'
+'Autoselect'
+
 
 
 Image type (to optimize the dither):
@@ -291,28 +473,29 @@ For mixed documents, options 0 or 1 will probably work best.  Option 0
 will dither faster and yield sharper text, but images will be
 grainier.  Option 1 will yield smoother images, but text will not be
 as sharp and the dither process will be slower.  Option 2 will yield
-the best natural images, but text may be noticeably fuzzy.  Option 3
-is very fast and accurate, but should not be used if there are any
-tones other than pure black and white.
+the best natural images, but is quite slow.  Option 3 is very fast and
+accurate, but should not be used if there are any tones other than
+pure black and white.
 
 
-Examples:
+EXAMPLES:
 ---------
 
 Example 1 (print charts to file, color, 360 dpi):
-gs -sDEVICE=stp -dModel=8 -dDensity=0.7 -dGamma=1.5 -dSaturation=0.9 \
+gs -sDEVICE=stp -sModel=escp2-ex -dDensity=1.6 -dGamma=1.5 -dSaturation=0.9 \
    -dBrightness=40 -dImageType=1 -sOutputFile=itsyourchoice.prn foo.ps
 
 Example 2 (print color photograph to /dev/lp0 at maximum quality):
-gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -dModel=6 -dDensity=0.8 -r1440 \
-   -dQuality=6 -dImageType=2 -sOutputFile=/dev/lp0 foo.ps
+gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-870 -dDensity=0.8 -r1440 \
+   -sQuality='1440 x 720 DPI Highest Quality' -dImageType=2 \
+   -sOutputFile=/dev/lp0 foo.ps
 
 Example 3 (print pure black text to stdout)
-gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -dModel=6 -dDensity=0.8 -r720 \
-   -dQuality=2 -dImageType=3 -sOutputFile=- foo.ps
+gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-660 -dDensity=0.8 -r720 \
+   -sQuality='720 DPI Softweave' -dImageType=3 -sOutputFile=- foo.ps
 
 
-PDQ and CUPS
+PDQ AND CUPS
 ------------
 
 The PDQ driver declaration in file gs-stp.pdq can be used with PDQ
@@ -324,18 +507,18 @@ Printer->Add Printer.
 The PPD file com-stp.ppd can be used with CUPS.
 
 For more information, see the Printing HOWTO
-http://www.picante.com/~gtaylor/pht/
+http://www.linuxprinting.org/~gtaylor/howto/
 
 A new, experimental printer configuration method may be found at the
 following locations, depending upon the printing method that you
 currently use:
 
-LPD: http://www.picante.com/~gtaylor/pht/lpd-doc.html
-PDQ: http://www.picante.com/~gtaylor/pht/pdq-doc.html
-CUPS: http://www.picante.com/~gtaylor/pht/cups-doc.html
+LPD: http://www.linuxprinting.org/lpd-doc.html
+PDQ: http://www.linuxprinting.org/pdq-doc.html
+CUPS: http://www.linuxprinting.org/cups-doc.html
 
 
-Bugs and Limitations:
+BUGS AND LIMITATIONS:
 ---------------------
 
 - This driver is relatively slow, and memory-hungry with large paper

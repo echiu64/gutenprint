@@ -33,7 +33,15 @@
 <language value=pcl>
 </printer>
 
-<printer name="HP DeskJet 500, 520" driver="pcl-500">
+<printer name="HP DeskJet 500" driver="pcl-500">
+<nocolor>
+<model value=500>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 520" driver="pcl-520">
 <nocolor>
 <model value=500>
 <gamma value=0.818>
@@ -57,7 +65,15 @@
 <language value=pcl>
 </printer>
 
-<printer name="HP DeskJet 550C, 560C" driver="pcl-550">
+<printer name="HP DeskJet 550C" driver="pcl-550">
+<color>
+<model value=550>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 560C" driver="pcl-560">
 <color>
 <model value=550>
 <gamma value=0.818>
@@ -105,7 +121,7 @@
 <language value=pcl>
 </printer>
 
-<printer name="HP DeskJet 1100C, 1120C, 1220C" driver="pcl-1100">
+<printer name="HP DeskJet 1100C" driver="pcl-1100">
 <color>
 <model value=1100>
 <gamma value=0.818>
@@ -113,7 +129,31 @@
 <language value=pcl>
 </printer>
 
-<printer name="HP DeskJet 1200C, 1600C" driver="pcl-1200">
+<printer name="HP DeskJet 1120C" driver="pcl-1120">
+<color>
+<model value=1100>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet, 1220C" driver="pcl-1220">
+<color>
+<model value=1100>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 1200C" driver="pcl-1200">
+<color>
+<model value=1200>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 1600C" driver="pcl-1600">
 <color>
 <model value=1200>
 <gamma value=0.818>
@@ -209,7 +249,7 @@
 <language value=escp2>
 </printer>
 
-<printer name="EPSON Stylus Color Pro XL" driver="escp2-pro">
+<printer name="EPSON Stylus Color Pro XL" driver="escp2-pro-xl">
 <color>
 <model value=1>
 <gamma value=0.597>
@@ -217,7 +257,7 @@
 <language value=escp2>
 </printer>
 
-<printer name="EPSON Stylus Color 400" driver="escp2-pro">
+<printer name="EPSON Stylus Color 400" driver="escp2-400">
 <color>
 <model value=1>
 <gamma value=0.597>
@@ -233,7 +273,7 @@
 <language value=escp2>
 </printer>
 
-<printer name="EPSON Stylus Color 460" driver="escp2-440">
+<printer name="EPSON Stylus Color 460" driver="escp2-460">
 <color>
 <model value=10>
 <gamma value=0.585>
@@ -249,7 +289,7 @@
 <language value=escp2>
 </printer>
 
-<printer name="EPSON Stylus Color 500" driver="escp2-pro">
+<printer name="EPSON Stylus Color 500" driver="escp2-500">
 <color>
 <model value=1>
 <gamma value=0.597>
@@ -281,9 +321,9 @@
 <language value=escp2>
 </printer>
 
-<printer name="EPSON Stylus Color 670" driver="escp2-660">
+<printer name="EPSON Stylus Color 670" driver="escp2-670">
 <color>
-<model value=18>
+<model value=25>
 <gamma value=0.585>
 <density value=0.646>
 <language value=escp2>
@@ -297,7 +337,7 @@
 <language value=escp2>
 </printer>
 
-<printer name="EPSON Stylus Color 760" driver="escp2-740">
+<printer name="EPSON Stylus Color 760" driver="escp2-760">
 <color>
 <model value=19>
 <gamma value=0.585>
@@ -361,7 +401,7 @@
 <language value=escp2>
 </printer>
 
-<printer name="EPSON Stylus Color 3000" driver="escp2-1520">
+<printer name="EPSON Stylus Color 3000" driver="escp2-3000">
 <color>
 <model value=24>
 <gamma value=0.585>

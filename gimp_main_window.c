@@ -1746,11 +1746,10 @@ gimp_preview_update (void)
   gint          paper_left, paper_top;
   double		unit_scaler = 72.0;
 
-  (*current_printer->media_size) (current_printer, vars.ppd_file,
-				  vars.media_size, &paper_width, &paper_height);
+  (*current_printer->media_size)(current_printer, &vars, &paper_width,
+				 &paper_height);
 
-  (*current_printer->imageable_area) (current_printer, vars.ppd_file,
-				      vars.media_size, &left, &right,
+  (*current_printer->imageable_area) (current_printer, &vars, &left, &right,
 				      &bottom, &top);
 
   /* Rationalise things a bit by measuring everything from the top left */

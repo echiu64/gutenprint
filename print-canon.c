@@ -271,7 +271,9 @@ static canon_cap_t canon_get_model_capabilities(int model)
       return canon_model_capabilities[i];
     }
   }
+#ifdef DEBUG
   fprintf(stderr,"canon: model %d not found in capabilities list.\n",model);
+#endif
   return canon_model_capabilities[0];
 }
 
@@ -290,7 +292,9 @@ canon_media_type(const char *name, canon_cap_t caps)
   if (!strcmp(name,"Glossy Photo Cards"))    return 10;
   if (!strcmp(name,"Photo Paper Pro"))       return 11;
 
+#ifdef DEBUG
   fprintf(stderr,"canon: Unknown media type '%s' - reverting to plain\n",name);
+#endif
   return 1;
 }
 
@@ -301,7 +305,9 @@ canon_source_type(const char *name, canon_cap_t caps)
   if (!strcmp(name,"Manual with Pause"))    return 0;
   if (!strcmp(name,"Manual without Pause")) return 1;
 
+#ifdef DEBUG
   fprintf(stderr,"canon: Unknown source type '%s' - reverting to auto\n",name);
+#endif
   return 4;
 }
 
@@ -314,28 +320,36 @@ canon_printhead_type(const char *name, canon_cap_t caps)
   if (!strcmp(name,"Photo/Color")) return 3;
   if (!strcmp(name,"Photo"))       return 4;
 
+#ifdef DEBUG
   fprintf(stderr,"canon: Unknown head combo '%s' - reverting to black\n",name);
+#endif
   return 0;
 }
 
 static unsigned char
-canon_size_type(const char *name, canon_cap_t caps)
+canon_size_type(const vars_t *v, canon_cap_t caps)
 {
-  /* built ins: */
-  if (!strcmp(name,"A5"))          return 0x01;
-  if (!strcmp(name,"A4"))          return 0x03;
-  if (!strcmp(name,"B5"))          return 0x08;
-  if (!strcmp(name,"Letter"))      return 0x0d;
-  if (!strcmp(name,"Legal"))       return 0x0f;
-  if (!strcmp(name,"Envelope 10")) return 0x16;
-  if (!strcmp(name,"Envelope DL")) return 0x17;
-  if (!strcmp(name,"Letter+"))     return 0x2a;
-  if (!strcmp(name,"A4+"))         return 0x2b;
-  if (!strcmp(name,"Canon 4x2"))   return 0x2d;
-
+  const papersize_t *pp = get_papersize_by_size(v->page_height, v->page_width);
+  if (pp)
+    {
+      const char *name = pp->name;
+      /* built ins: */
+      if (!strcmp(name,"A5"))          return 0x01;
+      if (!strcmp(name,"A4"))          return 0x03;
+      if (!strcmp(name,"B5"))          return 0x08;
+      if (!strcmp(name,"Letter"))      return 0x0d;
+      if (!strcmp(name,"Legal"))       return 0x0f;
+      if (!strcmp(name,"Envelope 10")) return 0x16;
+      if (!strcmp(name,"Envelope DL")) return 0x17;
+      if (!strcmp(name,"Letter+"))     return 0x2a;
+      if (!strcmp(name,"A4+"))         return 0x2b;
+      if (!strcmp(name,"Canon 4x2"))   return 0x2d;
+    }
   /* custom */
 
+#ifdef DEBUG
   fprintf(stderr,"canon: Unknown paper size '%s' - using custom\n",name);
+#endif
   return 0;
 }
 
@@ -345,6 +359,35 @@ c_strdup(const char *s)
   char *ret = malloc(strlen(s) + 1);
   strcpy(ret, s);
   return ret;
+}
+
+static char *
+canon_resolutions[] =
+{
+  "300x300 DPI",
+  "300x300 DPI w/ DMT",
+  "600x600 DPI",
+  "600x600 DPI w/ DMT",
+  "1200x600 DPI",
+  "1200x1200 DPI",
+  "180x180 DPI",
+  "360x360 DPI",
+  "360x360 DPI w/ DMT",
+  "720x360 DPI",
+  "720x720 DPI",
+  "1440x720 DPI",
+  "1440x1440 DPI",
+  NULL
+};
+
+const char *
+canon_default_resolution(const printer_t *printer)
+{
+  canon_cap_t caps= canon_get_model_capabilities(printer->model);
+  if (!(caps.max_xdpi%300))
+    return "300x300 DPI";
+  else
+    return "180x180 DPI";
 }
 
 /*
@@ -450,8 +493,10 @@ canon_parameters(const printer_t *printer,	/* I - Printer model */
 	valptrs[c++]= c_strdup("1440x1440 DPI");
 
     } else {
+#ifdef DEBUG
       fprintf(stderr,"canon: unknown resolution multiplier for model %d\n",
 	      caps.model);
+#endif
       return 0;
     }
     *count= c;
@@ -501,8 +546,7 @@ canon_parameters(const printer_t *printer,	/* I - Printer model */
 
 void
 canon_imageable_area(const printer_t *printer,	/* I - Printer model */
-                     char *ppd_file,	/* I - PPD file (not used) */
-                     char *media_size,	/* I - Media size */
+		     const vars_t *v,   /* I */
                      int  *left,	/* O - Left position in points */
                      int  *right,	/* O - Right position in points */
                      int  *bottom,	/* O - Bottom position in points */
@@ -512,12 +556,23 @@ canon_imageable_area(const printer_t *printer,	/* I - Printer model */
 
   canon_cap_t caps= canon_get_model_capabilities(printer->model);
 
-  default_media_size(printer, ppd_file, media_size, &width, &length);
+  default_media_size(printer, v, &width, &length);
 
   *left   = caps.border_left;
   *right  = width - caps.border_right;
   *top    = length - caps.border_top;
   *bottom = caps.border_bottom;
+}
+
+void
+canon_limit(const printer_t *printer,	/* I - Printer model */
+	    const vars_t *v,  		/* I */
+	    int  *width,		/* O - Left position in points */
+	    int  *length)		/* O - Top position in points */
+{
+  canon_cap_t caps= canon_get_model_capabilities(printer->model);
+  *width =	caps.max_width;
+  *length =	caps.max_height;
 }
 
 /*
@@ -542,9 +597,11 @@ canon_cmd(FILE *prn, /* I - the printer         */
     buffer = malloc(num);
     bufsize= num;
     if (!buffer) {
+#ifdef DEBUG
       fprintf(stderr,"\ncanon: *** buffer allocation failed...\n");
       fprintf(stderr,"canon: *** command 0x%02x with %d args dropped\n\n",
 	      cmd,num);
+#endif
       return;
     }
   }
@@ -564,12 +621,16 @@ canon_cmd(FILE *prn, /* I - the printer         */
   }
 }
 
+#ifdef DEBUG
 #define PUT(WHAT,VAL,RES) fprintf(stderr,"canon: "WHAT" is %04x =% 5d = %f\" = %f mm\n",(VAL),(VAL),(VAL)/(1.*RES),(VAL)/(RES/25.4))
+#else
+#define PUT(WHAT,VAL,RES) do {} while (0)
+#endif
 
 static void
 canon_init_printer(FILE *prn, canon_cap_t caps,
 		   int output_type, char *media_str,
-		   char *size_str, int print_head,
+		   const vars_t *v, int print_head,
 		   char *source_str,
 		   int xdpi, int ydpi,
 		   int page_width, int page_height,
@@ -613,7 +674,7 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
   int printable_width=  page_width*10/12;
   int printable_height= page_height*10/12;
 
-  arg_6d_a= canon_size_type(size_str,caps);
+  arg_6d_a= canon_size_type(v,caps);
   if (!arg_6d_a) arg_6d_b= 1;
 
   if (caps.model<3000)
@@ -658,9 +719,11 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
   }
 
   /*
+#ifdef DEBUG
   fprintf(stderr,"canon: printable size = %dx%d (%dx%d) %02x%02x %02x%02x\n",
 	  page_width,page_height,printable_width,printable_height,
 	  arg_70_1,arg_70_2,arg_70_3,arg_70_4);
+#endif
   */
 
   /* init printer */
@@ -738,9 +801,7 @@ canon_print(const printer_t *printer,		/* I - Model */
 {
   unsigned char *cmap = v->cmap;
   int		model = printer->model;
-  char 		*ppd_file = v->ppd_file;
   char 		*resolution = v->resolution;
-  char 		*media_size = v->media_size;
   char          *media_type = v->media_type;
   char          *media_source = v->media_source;
   int 		output_type = v->output_type;
@@ -838,20 +899,24 @@ canon_print(const printer_t *printer,		/* I - Model */
   */
 
   sscanf(resolution,"%dx%d",&xdpi,&ydpi);
+#ifdef DEBUG
   fprintf(stderr,"canon: resolution=%dx%d\n",xdpi,ydpi);
+#endif
 
   if (!strcmp(resolution+(strlen(resolution)-3),"DMT") &&
       (caps.features & CANON_CAP_DMT) &&
       nv.image_type != IMAGE_MONOCHROME) {
     use_dmt= 1;
+#ifdef DEBUG
     fprintf(stderr,"canon: using drop modulation technology\n");
+#endif
   }
 
  /*
   * Compute the output size...
   */
 
-  canon_imageable_area(printer, ppd_file, media_size, &page_left, &page_right,
+  canon_imageable_area(printer, &nv, &page_left, &page_right,
                        &page_bottom, &page_top);
 
   compute_page_parameters(page_right, page_left, page_top, page_bottom,
@@ -862,7 +927,7 @@ canon_print(const printer_t *printer,		/* I - Model */
   image_height = Image_height(image);
   image_width = Image_width(image);
 
-  default_media_size(printer, ppd_file, media_size, &n, &page_length);
+  default_media_size(printer, &nv, &n, &page_length);
 
   /*
   PUT("top        ",top,72);
@@ -884,7 +949,7 @@ canon_print(const printer_t *printer,		/* I - Model */
   PUT("left    ",left,72);
 
   canon_init_printer(prn, caps, output_type, media_type,
-		     media_size, printhead, media_source,
+		     &nv, printhead, media_source,
 		     xdpi, ydpi, page_width, page_height,
 		     top,left,use_dmt);
 
@@ -913,11 +978,15 @@ canon_print(const printer_t *printer,		/* I - Model */
     delay_lm= 224;
     delay_ly= 0;
     delay_max= 336;
+#ifdef DEBUG
     fprintf(stderr,"canon: delay on!\n");
+#endif
   } else {
     delay_k= delay_c= delay_m= delay_y= delay_lc= delay_lm= delay_ly=0;
     delay_max=0;
+#ifdef DEBUG
     fprintf(stderr,"canon: delay off!\n");
+#endif
   }
 
  /*
@@ -932,7 +1001,9 @@ canon_print(const printer_t *printer,		/* I - Model */
     buf_length= length;
   }
 
+#ifdef DEBUG
   fprintf(stderr,"canon: buflength is %d!\n",buf_length);
+#endif
 
   if (output_type == OUTPUT_GRAY) {
     black   = canon_alloc_buffer(buf_length*(delay_k+1));
@@ -965,6 +1036,7 @@ canon_print(const printer_t *printer,		/* I - Model */
       lyellow = NULL;
     }
   }
+#ifdef DEBUG
   fprintf(stderr,"canon: driver will use colors ");
   if (cyan)     fputc('C',stderr);
   if (lcyan)    fputc('c',stderr);
@@ -974,6 +1046,7 @@ canon_print(const printer_t *printer,		/* I - Model */
   if (lyellow)  fputc('y',stderr);
   if (black)    fputc('K',stderr);
   fprintf(stderr,"\n");
+#endif
 
   nv.density *= ydpi / xdpi;
   if (nv.density > 1.0)
@@ -1061,7 +1134,9 @@ canon_print(const printer_t *printer,		/* I - Model */
 		    yellow, lyellow, black);
       }
 
+#ifdef DEBUG
     /* fprintf(stderr,","); */
+#endif
 
     canon_write_line(prn, caps, ydpi,
 		     black,    delay_k,
@@ -1073,7 +1148,9 @@ canon_print(const printer_t *printer,		/* I - Model */
 		     lyellow,  delay_ly,
 		     length, out_width, left, use_dmt);
 
+#ifdef DEBUG
     /* fprintf(stderr,"!"); */
+#endif
 
     canon_advance_buffer(black,   buf_length,delay_k);
     canon_advance_buffer(cyan,    buf_length,delay_c);
@@ -1099,8 +1176,10 @@ canon_print(const printer_t *printer,		/* I - Model */
    */
 
   if (delay_max) {
+#ifdef DEBUG
     fprintf(stderr,"\ncanon: flushing %d possibly delayed buffers\n",
 	    delay_max);
+#endif
     for (y= 0; y<delay_max; y++) {
 
       canon_write_line(prn, caps, ydpi,
@@ -1113,7 +1192,9 @@ canon_print(const printer_t *printer,		/* I - Model */
 		       lyellow,  delay_ly,
 		       length, out_width, left, use_dmt);
 
+#ifdef DEBUG
       /* fprintf(stderr,"-"); */
+#endif
 
       canon_advance_buffer(black,   buf_length,delay_k);
       canon_advance_buffer(cyan,    buf_length,delay_c);
@@ -1374,7 +1455,9 @@ canon_write(FILE          *prn,		/* I - Print file or command */
   /* send packed empty lines if any */
 
   if (*empty) {
+#ifdef DEBUG
     /* fprintf(stderr,"<%d%c>",*empty,("CMYKcmy"[coloridx])); */
+#endif
     fwrite("\x1b\x28\x65\x02\x00", 5, 1, prn);
     fputc((*empty) >> 8 , prn);
     fputc((*empty) & 255, prn);

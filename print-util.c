@@ -1115,24 +1115,44 @@ get_papersize_by_name(const char *name)
   return NULL;
 }
 
+const papersize_t *
+get_papersize_by_size(int l, int w)
+{
+  const papersize_t *val = &(paper_sizes[0]);
+  while (strlen(val->name) > 0)
+    {
+      if (val->width == w && val->length == l)
+	return val;
+      val++;
+    }
+  return NULL;
+}
+
 void
 default_media_size(const printer_t *printer,
 					/* I - Printer model (not used) */
-        	   char *ppd_file,	/* I - PPD file (not used) */
-        	   char *media_size,	/* I - Media size */
+		   const vars_t *v,	/* I */
         	   int  *width,		/* O - Width in points */
         	   int  *length)	/* O - Length in points */
 {
-  const papersize_t *papersize = get_papersize_by_name(media_size);
-  if (!papersize)
+  if (v->page_width > 0 && v->page_height > 0)
     {
-      *width = 1;
-      *length = 1;
+      *width = v->page_width;
+      *length = v->page_height;
     }
   else
     {
-      *width = papersize->width;
-      *length = papersize->length;
+      const papersize_t *papersize = get_papersize_by_name(v->media_size);
+      if (!papersize)
+	{
+	  *width = 1;
+	  *length = 1;
+	}
+      else
+	{
+	  *width = papersize->width;
+	  *length = papersize->length;
+	}
     }
 }
 
@@ -1199,6 +1219,12 @@ get_printer_index_by_driver(const char *driver)
       val++;
     }
   return -1;
+}
+
+const char *
+default_dither_algorithm(void)
+{
+  return dither_algo_names[0];
 }
 
 convert_t
@@ -1350,4 +1376,120 @@ compute_page_parameters(int page_right,	/* I */
 
   if (*top < 0)
     *top  = (*page_height - *out_height) / 2;
+}
+
+int
+verify_printer_params(const printer_t *p, const vars_t *v)
+{
+  char **vptr;
+  int count;
+  int i;
+  int answer = 1;
+
+  if (strlen(v->media_size) > 0)
+    {
+      vptr = (*p->parameters)(p, NULL, "PageSize", &count);
+      if (count > 0)
+	{
+	  for (i = 0; i < count; i++)
+	    if (!strcmp(v->media_size, vptr[i]))
+	      goto good_page_size;
+	  answer = 0;
+	  fprintf(stderr, "%s is not a valid page size\n", v->media_size);
+	}
+    good_page_size:
+      for (i = 0; i < count; i++)
+	free(vptr[i]);
+      free(vptr);
+    }
+  else
+    {
+      int height, width;
+      (*p->limit)(p, v, &width, &height);
+#if 0
+      fprintf(stderr, "limit %d %d dims %d %d\n", width, height,
+	      v->page_width, v->page_height);
+#endif
+      if (v->page_height <= 0 || v->page_height > height ||
+	  v->page_width <= 0 || v->page_width > width)
+	{
+	  answer = 0;
+	  fprintf(stderr, "Image size is not valid\n");
+	}
+    }
+
+  if (strlen(v->media_type) > 0)
+    {
+      vptr = (*p->parameters)(p, NULL, "MediaType", &count);
+      if (count > 0)
+	{
+	  for (i = 0; i < count; i++)
+	    if (!strcmp(v->media_type, vptr[i]))
+	      goto good_media_type;
+	  answer = 0;
+	  fprintf(stderr, "%s is not a valid media type\n", v->media_type);
+	}
+    good_media_type:
+      for (i = 0; i < count; i++)
+	free(vptr[i]);
+      free(vptr);
+    }
+
+  if (strlen(v->media_source) > 0)
+    {
+      vptr = (*p->parameters)(p, NULL, "InputSlot", &count);
+      if (count > 0)
+	{
+	  for (i = 0; i < count; i++)
+	    if (!strcmp(v->media_source, vptr[i]))
+	      goto good_media_source;
+	  answer = 0;
+	  fprintf(stderr, "%s is not a valid media source\n", v->media_source);
+	}
+    good_media_source:
+      for (i = 0; i < count; i++)
+	free(vptr[i]);
+      free(vptr);
+    }
+
+  if (strlen(v->resolution) > 0)
+    {
+      vptr = (*p->parameters)(p, NULL, "Resolution", &count);
+      if (count > 0)
+	{
+	  for (i = 0; i < count; i++)
+	    if (!strcmp(v->resolution, vptr[i]))
+	      goto good_resolution;
+	  answer = 0;
+	  fprintf(stderr, "%s is not a valid resolution\n", v->resolution);
+	}
+    good_resolution:
+      for (i = 0; i < count; i++)
+	free(vptr[i]);
+      free(vptr);
+    }
+
+  if (strlen(v->ink_type) > 0)
+    {
+      vptr = (*p->parameters)(p, NULL, "InkType", &count);
+      if (count > 0)
+	{
+	  for (i = 0; i < count; i++)
+	    if (!strcmp(v->ink_type, vptr[i]))
+	      goto good_ink_type;
+	  answer = 0;
+	  fprintf(stderr, "%s is not a valid ink type\n", v->ink_type);
+	}
+    good_ink_type:
+      for (i = 0; i < count; i++)
+	free(vptr[i]);
+      free(vptr);
+    }
+
+  for (i = 0; i < num_dither_algos; i++)
+    if (!strcmp(v->dither_algorithm, dither_algo_names[i]))
+      return answer;
+
+  fprintf(stderr, "%s is not a valid dither algorithm\n", v->dither_algorithm);
+  return 0;
 }

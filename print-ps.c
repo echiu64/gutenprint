@@ -38,6 +38,7 @@
 #include "print.h"
 #include <time.h>
 #include <string.h>
+#include <limits.h>
 
 /*#define DEBUG*/
 
@@ -56,7 +57,7 @@ static char	*ps_ppd_file = NULL;
 
 static void	ps_hex(FILE *, unsigned short *, int);
 static void	ps_ascii85(FILE *, unsigned short *, int, int);
-static char	*ppd_find(char *, char *, char *, int *);
+static char	*ppd_find(const char *, const char *, const char *, int *);
 
 
 /*
@@ -155,8 +156,7 @@ ps_parameters(const printer_t *printer,	/* I - Printer model */
 
 void
 ps_media_size(const printer_t *printer,	/* I - Printer model */
-              char *ppd_file,		/* I - PPD file (not used) */
-              char *media_size,		/* I - Media size */
+	      const vars_t *v,		/* I */
               int  *width,		/* O - Width in points */
               int  *length)		/* O - Length in points */
 {
@@ -168,10 +168,12 @@ ps_media_size(const printer_t *printer,	/* I - Printer model */
          media_size, width, length);
 #endif /* DEBUG */
 
-  if ((dimensions = ppd_find(ppd_file, "PaperDimension", media_size, NULL)) != NULL)
+  if ((dimensions = ppd_find(v->ppd_file, "PaperDimension", v->media_size,
+			     NULL))
+      != NULL)
     sscanf(dimensions, "%d%d", width, length);
   else
-    default_media_size(printer, ppd_file, media_size, width, length);
+    default_media_size(printer, v, width, length);
 }
 
 
@@ -181,8 +183,7 @@ ps_media_size(const printer_t *printer,	/* I - Printer model */
 
 void
 ps_imageable_area(const printer_t *printer,	/* I - Printer model */
-                  char *ppd_file,	/* I - PPD file (not used) */
-                  char *media_size,	/* I - Media size */
+		  const vars_t *v,      /* I */
                   int  *left,		/* O - Left position in points */
                   int  *right,		/* O - Right position in points */
                   int  *bottom,		/* O - Bottom position in points */
@@ -195,7 +196,8 @@ ps_imageable_area(const printer_t *printer,	/* I - Printer model */
 	ftop;
 
 
-  if ((area = ppd_find(ppd_file, "ImageableArea", media_size, NULL)) != NULL)
+  if ((area = ppd_find(v->ppd_file, "ImageableArea", v->media_size, NULL))
+      != NULL)
   {
 #ifdef DEBUG
     printf("area = \'%s\'\n", area);
@@ -212,7 +214,7 @@ ps_imageable_area(const printer_t *printer,	/* I - Printer model */
   }
   else
   {
-    default_media_size(printer, ppd_file, media_size, right, top);
+    default_media_size(printer, v, right, top);
     *left   = 18;
     *right  -= 18;
     *top    -= 36;
@@ -220,6 +222,21 @@ ps_imageable_area(const printer_t *printer,	/* I - Printer model */
   }
 }
 
+void
+ps_limit(const printer_t *printer,	/* I - Printer model */
+	    const vars_t *v,  		/* I */
+	    int  *width,		/* O - Left position in points */
+	    int  *length)		/* O - Top position in points */
+{
+  *width =	INT_MAX;
+    *length =	INT_MAX;
+}
+
+const char *
+ps_default_resolution(const printer_t *printer)
+{
+  return "default";
+}
 
 /*
  * 'ps_print()' - Print an image to a PostScript printer.
@@ -297,7 +314,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
   * Compute the output size...
   */
 
-  ps_imageable_area(printer, ppd_file, media_size, &page_left, &page_right,
+  ps_imageable_area(printer, &nv, &page_left, &page_right,
                     &page_bottom, &page_top);
   compute_page_parameters(page_right, page_left, page_top, page_bottom,
 			  scaling, image_width, image_height, image,
@@ -641,9 +658,9 @@ ps_ascii85(FILE   *prn,		/* I - File to print to */
  */
 
 static char *			/* O - Control string */
-ppd_find(char *ppd_file,	/* I - Name of PPD file */
-         char *name,		/* I - Name of parameter */
-         char *option,		/* I - Value of parameter */
+ppd_find(const char *ppd_file,	/* I - Name of PPD file */
+         const char *name,		/* I - Name of parameter */
+         const char *option,		/* I - Value of parameter */
          int  *order)		/* O - Order of the control string */
 {
   char		line[1024],	/* Line from file */
