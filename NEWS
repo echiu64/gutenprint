@@ -99,14 +99,14 @@ Gimp-Print 4.2.3 contains the following major changes over Gimp-Print
      CUPS drivers of GIMP-Print and units are again points ("pt" or
      nothing), inches ("in"), cm, and mm:
 
-	CUPS: lpr -o PageSize=Custom.500x750cm bigposter.ps
-	LPRng: lpr -Z PageSize=Custom.500x750cm bigposter.ps
-	GNUlpr: lpr -o PageSize=Custom.500x750cm bigposter.ps
-	LPD: lpr -JPageSize=Custom.500x750cm bigposter.ps
-	PPR: ppr -F "*PageSize Custom" -i 500x750cm bigposter.ps
+	CUPS: lpr -o PageSize=Custom.500x750mm bigposter.ps
+	LPRng: lpr -Z PageSize=Custom.500x750mm bigposter.ps
+	GNUlpr: lpr -o PageSize=Custom.500x750mm bigposter.ps
+	LPD: lpr -JPageSize=Custom.500x750mm bigposter.ps
+	PPR: ppr -F "*PageSize Custom" -i 500x750mm bigposter.ps
 	PDQ: pdq -oPageSize_Custom -aPageWidth=500
-		 -aPageHeight=750 -oPageSizeUnit_cm bigposter.ps
-	No spooler: directomatic -o PageSize=Custom.500x750cm bigposter.ps
+		 -aPageHeight=750 -oPageSizeUnit_mm bigposter.ps
+	No spooler: directomatic -o PageSize=Custom.500x750mm bigposter.ps
 
      This works with both the GhostScript "stp" and the IJS interface
      of GIMP-Print.
