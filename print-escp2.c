@@ -118,6 +118,7 @@ typedef struct escp2_printer
   int		black_nozzles;	/* Number of black nozzles (may be extra) */
   int		xres;		/* Normal distance between dots in */
 				/* softweave mode (inverse inches) */
+  int		lowres_dot_size;/* Dot size to use in softweave mode */
   int		softweave_dot_size;/* Dot size to use in softweave mode */
   int		microweave_dot_size; /* Dot size to use in microweave mode */
   int		max_paper_width; /* Maximum paper width, in points*/
@@ -302,49 +303,49 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_NO),
-    1, 1, 1, 720, -1, -1, INCH_8_5, INCH_14, 14, 14, 9, 49, 1, 0
+    1, 1, 1, 720, 1, -1, 1, INCH_8_5, INCH_14, 14, 14, 9, 49, 1, 0
   },
   /* 1: Stylus Color Pro/Pro XL/400/500 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO),
-    48, 6, 48, 720, -1, 1, INCH_8_5, INCH_14, 14, 14, 0, 24, 1, 0
+    48, 6, 48, 720, 1, -1, 1, INCH_8_5, INCH_14, 14, 14, 0, 24, 1, 0
   },
   /* 2: Stylus Color 1500 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_NO
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO),
-    1, 1, 1, 720, -1, 1, INCH_11, INCH_17, 14, 14, 9, 49, 1, 0
+    1, 1, 1, 720, 1, -1, 1, INCH_11, INCH_17, 14, 14, 9, 49, 1, 0
   },
   /* 3: Stylus Color 600 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    32, 8, 32, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 24, 1, 0
+    32, 8, 32, 720, 2, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 24, 1, 0
   },
   /* 4: Stylus Color 800 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    64, 4, 64, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 24, 1, 4
+    64, 4, 64, 720, 2, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 24, 1, 4
   },
   /* 5: Stylus Color 850 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    64, 4, 128, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 24, 1, 4
+    64, 4, 128, 720, 2, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 24, 1, 4
   },
   /* 6: Stylus Color 1520/3000 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    1, 1, 128, 720, -1, 2, INCH_16_5, INCH_24, 8, 9, 9, 49, 4, 0
+    1, 1, 128, 720, 2, -1, 2, INCH_16_5, INCH_24, 8, 9, 9, 49, 4, 0
   },
 
   /* SECOND GENERATION PRINTERS */
@@ -353,21 +354,21 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES),
-    32, 8, 32, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 24, 1, 0
+    32, 8, 32, 720, 3, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 24, 1, 0
   },
   /* 8: Stylus Photo EX */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES),
-    32, 8, 32, 720, 0, 3, INCH_11, INCH_17, 9, 9, 0, 24, 1, 0
+    32, 8, 32, 720, 3, 0, 3, INCH_11, INCH_17, 9, 9, 0, 24, 1, 0
   },
   /* 9: Stylus Photo */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO),
-    32, 8, 32, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 24, 1, 0
+    32, 8, 32, 720, 3, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 24, 1, 0
   },
 
   /* THIRD GENERATION PRINTERS */
@@ -379,21 +380,21 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_NO),
-    21, 8, 64, 720, 2, 3, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
+    21, 8, 64, 720, 3, 2, 3, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
   },
   /* 11: Stylus Color 640 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    32, 8, 64, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
+    32, 8, 64, 720, 3, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
   },
   /* 12: Stylus Color 740 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    48, 6, 144, 360, 0, 3, INCH_11, INCH_17, 9, 9, 0, 9, 1, 0
+    48, 6, 144, 360, 3, 0, 3, INCH_11, INCH_17, 9, 9, 0, 9, 1, 0
   },
   /* 13: Stylus Color 900 */
   /* Dale Pontius thinks the spacing is 3 jets??? */
@@ -402,49 +403,49 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_900 | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    96, 2, 192, 360, 0, 1, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
+    96, 2, 192, 360, 1, 0, 1, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
   },
   /* 14: Stylus Photo 750, 870 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES),
-    48, 6, 48, 360, 0, 4, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
+    48, 6, 48, 360, 2, 0, 4, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
   },
   /* 15: Stylus Photo 1200, 1270 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES),
-    48, 6, 48, 360, 0, 4, INCH_13, INCH_19, 9, 9, 0, 9, 1, 0
+    48, 6, 48, 360, 2, 0, 4, INCH_13, INCH_19, 9, 9, 0, 9, 1, 0
   },
   /* 16: Stylus Color 860 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    48, 6, 144, 360, 0, 2, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
+    48, 6, 144, 360, 2, 0, 2, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
   },
   /* 17: Stylus Color 1160 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    48, 6, 144, 360, 0, 2, INCH_13, INCH_19, 9, 9, 0, 9, 1, 0
+    48, 6, 144, 360, 2, 0, 2, INCH_13, INCH_19, 9, 9, 0, 9, 1, 0
   },
   /* 18: Stylus Color 660 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    32, 8, 64, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 8
+    32, 8, 64, 720, 3, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 8
   },
   /* 19: Stylus Color 760 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    48, 6, 144, 360, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
+    48, 6, 144, 360, 3, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
   },
 
 };
@@ -542,6 +543,12 @@ static unsigned
 escp2_xres(int model)
 {
   return (model_capabilities[model].xres);
+}
+
+static int
+escp2_lowres_ink(int model)
+{
+  return (model_capabilities[model].lowres_dot_size);
 }
 
 static int
@@ -748,6 +755,7 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi, int xdpi,
     ydpi = 720;
   l = ydpi * page_length / 72;
   t = ydpi * page_top / 72;
+  top = ydpi * top / 72;
 
   /*
    * Hack that seems to be necessary for these silly things to print.
@@ -794,7 +802,9 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi, int xdpi,
     fprintf(prn, "\033U%c", 0);
 
   /* Dot size */
-  if (!use_softweave)
+  if (ydpi < 720)
+    fprintf(prn, "\033(e\002%c%c%c", 0, 0, escp2_lowres_ink(model));
+  else if (!use_softweave)
     {
       if (escp2_micro_ink(model) > 0)
 	fprintf(prn, "\033(e\002%c%c%c", 0, 0, escp2_micro_ink(model));
@@ -839,7 +849,7 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi, int xdpi,
 
       if (!use_softweave || ydpi < 720)
 	fprintf(prn, "\033(v\004%c%c%c%c%c", 0,
-		top & 0xff, top >> 8, (top >> 16) & 0xff, (top >> 24) & 0xff);
+		top & 0xff, (top >> 8) & 0xff, (top >> 16) & 0xff, (top >> 24) & 0xff);
     }
   else
     {
