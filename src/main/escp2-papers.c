@@ -231,6 +231,48 @@ static const paper_adjustment_t sp780_photo_adjustments[] =
 
 DECLARE_PAPER_ADJUSTMENTS(sp780_photo);
 
+static const paper_adjustment_t sp960_adjustments[] =
+{
+  { "Plain", 0.769, .25, .9, .9, 1.05, 1.15, 1, 1.0,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { "PlainFast", 0.769, .25, .9, .9, 1.05, 1.15, 1, 1.0,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { "Postcard", 0.83, .3, .9, .9, 1.0, 1.1, 1, 1.0,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { "GlossyFilm", 1.00, .5, .999, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { "Transparency", 1.00, .5, .999, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { "Envelope", 0.769, .25, .9, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { "BackFilm", 1.00, .5, .999, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, NULL, NULL },
+  { "Matte", 0.85, .5, .999, .9, 1.0, 1.1, 1, 1.0,
+    NULL, NULL, NULL },
+  { "Inkjet", 0.85, .3, .9, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { "Coated", 1.00, .5, .999, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, NULL, NULL },
+  { "Photo", 1.00, .5, .9, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, NULL, NULL },
+  { "GlossyPhoto", 0.9, .4, 1.3, 1.0, 1.0, 1.0, 1, 1.0,
+    pgpp_hue_adjustment, pgpp_lum_adjustment, pgpp_sat_adjustment },
+  { "Semigloss", 0.9, .4, 1.3, 1.0, 1.0, 1.0, 1, 1.0,
+    pgpp_hue_adjustment, pgpp_lum_adjustment, pgpp_sat_adjustment },
+  { "Luster", 1.00, .5, .999, 1.0, 1.0, 1.0, 1.0, 1.0,
+    NULL, NULL, NULL },
+  { "GlossyPaper", 1.00, .5, .999, 1.0, 1.0, 1.0, 1.0, 1.0,
+    NULL, NULL, NULL },
+  { "Ilford", .85, .4, 1.35, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, NULL, NULL  },
+  { "ColorLife", 1.00, .4, .9, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, NULL, NULL },
+  { "Other", 0.769, .25, .9, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, plain_paper_lum_adjustment, NULL },
+};
+
+DECLARE_PAPER_ADJUSTMENTS(sp960);
+
 static const paper_adjustment_t ultrachrome_photo_adjustments[] =
 {
   { "Plain", 0.769, .02, 1.5, 1.0, 1.0, 1.0, 1, 1.0,

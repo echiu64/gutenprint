@@ -386,6 +386,7 @@ extern const paperlist_t stpi_escp2_c80_paper_list;
 extern const paper_adjustment_list_t stpi_escp2_standard_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_photo_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_sp780_photo_paper_adjustment_list;
+extern const paper_adjustment_list_t stpi_escp2_sp960_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_ultrachrome_photo_paper_adjustment_list;
 
 extern const res_t *const stpi_escp2_superfine_reslist[];

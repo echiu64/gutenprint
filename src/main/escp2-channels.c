@@ -584,7 +584,7 @@ static const escp2_inkname_t f360_ultra_photo_six_color_photo_inkset =
 static const escp2_inkname_t f360_six_color_photo_inkset =
 {
   "PhotoCMYK", N_("Six Color Photo"), 1, 4, INKSET_CcMmYK,
-  &stpi_escp2_photo_paper_adjustment_list,
+  &stpi_escp2_sp960_paper_adjustment_list,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &f360_photo_black_channels, &f360_photo_cyan_channels,
