@@ -84,7 +84,8 @@ GHOST_DIST= COPYING ChangeLog README contrib.mak.addon \
 	debian-patch debian-patch-stp $(GCOPY)
 
 CUPS_DIST = CHANGES.txt LICENSE.txt Makefile.in README.txt configure \
-	commandtoepson.c epson.c genppd.c rastertoprinter.c $(CUPSCOPY)
+	commandtoepson.c epson.c genppd.c rastertoprinter.c calibrate.c \
+	$(CUPSCOPY)
 
 DOC_DIST = print-color.png docbook.css print-main.png print.html \
 	print-setup.png print.sgml
