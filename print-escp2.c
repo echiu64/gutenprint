@@ -234,7 +234,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    64, 4, 128, 720, 2, 0, 2, INCH(17 / 2), INCH(14), 8, 9, 59, 24, 1, 4
+    64, 4, 128, 720, 2, 0, 2, INCH(17 / 2), INCH(14), 8, 9, 0, 24, 1, 4
   },
   /* 6: Stylus Color 1520 */
   {
@@ -1195,7 +1195,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
       * In zero-margin mode, the origin is about 3/20" to the left of the
       * paper's left edge.
       */
-      left += 108;
+      left += 96;
     }
 
  /*
