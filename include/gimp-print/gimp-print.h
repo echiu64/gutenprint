@@ -715,7 +715,7 @@ stp_string_list_is_present(stp_string_list_t list, const char *value);
 extern int stp_known_papersizes(void);
 extern const stp_papersize_t *stp_get_papersize_by_name(const char *name);
 extern const stp_papersize_t *stp_get_papersize_by_size(int l, int w);
-extern const stp_papersize_t *stp_get_papersize_by_index(int index);
+extern const stp_papersize_t *stp_get_papersize_by_index(int idx);
 
 /****************************************************************
 *                                                               *

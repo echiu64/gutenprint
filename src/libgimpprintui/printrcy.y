@@ -42,7 +42,6 @@ extern int yylex(void);
 char *quotestrip(const char *i);
 char *endstrip(const char *i);
 
-extern int mylineno;
 extern char* yytext;
 
 static int yyerror( const char *s )

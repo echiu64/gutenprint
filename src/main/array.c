@@ -101,11 +101,11 @@ stp_array_destroy(stp_array_t array)
   stpi_free(ia);
 }
 
-void stp_array_copy(stp_array_t dest,
-		       stp_const_array_t source)
+void stp_array_copy(stp_array_t dest, stp_const_array_t source)
 {
   stpi_internal_array_t *idest = (stpi_internal_array_t *) dest;
-  stpi_internal_array_t *isource = (stpi_internal_array_t *) source;
+  const stpi_internal_array_t *isource =
+    (const stpi_internal_array_t *) source;
   check_array(idest);
   check_array(isource);
 
@@ -119,7 +119,7 @@ void stp_array_copy(stp_array_t dest,
 stp_array_t
 stp_array_create_copy(stp_const_array_t array)
 {
-  stpi_internal_array_t *ia = (stpi_internal_array_t *) array;
+  const stpi_internal_array_t *ia = (const stpi_internal_array_t *) array;
   stp_array_t ret;
   check_array(ia);
   ret = stp_array_create(0, 0); /* gets freed next */
@@ -142,22 +142,18 @@ stp_array_set_size(stp_array_t array, int x_size, int y_size)
   return 1;
 }
 
-
 void
 stp_array_get_size(stp_const_array_t array, int *x_size, int *y_size)
 {
-  stpi_internal_array_t *ia = (stpi_internal_array_t *) array;
+  const stpi_internal_array_t *ia = (const stpi_internal_array_t *) array;
   check_array(ia);
   *x_size = ia->x_size;
   *y_size = ia->y_size;
   return;
 }
 
-
-
 int
-stp_array_set_data(stp_array_t array,
-		   const double *data)
+stp_array_set_data(stp_array_t array, const double *data)
 {
   stpi_internal_array_t *ia = (stpi_internal_array_t *) array;
   check_array(ia);
@@ -166,20 +162,16 @@ stp_array_set_data(stp_array_t array,
   return 1;
 }
 
-
 void
-stp_array_get_data(stp_const_array_t array, size_t *size,
-		   const double **data)
+stp_array_get_data(stp_const_array_t array, size_t *size, const double **data)
 {
-  stpi_internal_array_t *ia = (stpi_internal_array_t *) array;
+  const stpi_internal_array_t *ia = (const stpi_internal_array_t *) array;
   check_array(ia);
   stp_sequence_get_data(ia->data, size, data);
 }
 
-
 int
-stp_array_set_point(stp_array_t array, int x, int y,
-		       double data)
+stp_array_set_point(stp_array_t array, int x, int y, double data)
 {
   stpi_internal_array_t *ia = (stpi_internal_array_t *) array;
   check_array(ia);
@@ -187,15 +179,13 @@ stp_array_set_point(stp_array_t array, int x, int y,
   if (((ia->x_size * x) + y) >= (ia->x_size * ia->y_size))
     return 0;
 
-  return stp_sequence_set_point(ia->data,
-				(ia->x_size * x) + y, data);
+  return stp_sequence_set_point(ia->data, (ia->x_size * x) + y, data);
 }
 
 int
-stp_array_get_point(stp_const_array_t array, int x, int y,
-		    double *data)
+stp_array_get_point(stp_const_array_t array, int x, int y, double *data)
 {
-  stpi_internal_array_t *ia = (stpi_internal_array_t *) array;
+  const stpi_internal_array_t *ia = (const stpi_internal_array_t *) array;
   check_array(ia);
 
   if (((ia->x_size * x) + y) >= ia->x_size * ia->y_size)
@@ -204,11 +194,10 @@ stp_array_get_point(stp_const_array_t array, int x, int y,
 				(ia->x_size * x) + y, data);
 }
 
-
-const stp_sequence_t
+stp_const_sequence_t
 stp_array_get_sequence(stp_const_array_t array)
 {
-  stpi_internal_array_t *ia = (stpi_internal_array_t *) array;
+  const stpi_internal_array_t *ia = (const stpi_internal_array_t *) array;
   check_array(ia);
 
   return ia->data;

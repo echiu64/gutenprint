@@ -172,7 +172,7 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
 
   stpi_initialize_weave(v, physjets, physsep, hpasses, vpasses, subpasses,
 			     7, 1, 128, nrows, first_line,
-			     phys_lines, strategy, head_offset, flush_pass,
+			     phys_lines, head_offset, strategy, flush_pass,
 			     stpi_fill_tiff, stpi_pack_tiff,
 			     stpi_compute_tiff_linewidth);
 
@@ -318,88 +318,121 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
   if (!quiet || (quiet == 1 && total_errors > 0))
     printf("%d total error%s\n", total_errors, total_errors == 1 ? "" : "s");
   stp_vars_free(v);
-  if (total_errors > 0)
-    return 1;
-  else
-    return 0;
+  return total_errors;
 }
 
-
-int
-main(int argc, char **argv)
+static int
+run_weavetest_from_stdin(void)
 {
   int nrows;
   int physjets;
   int physsep;
   int hpasses, vpasses, subpasses;
   int first_line, phys_lines;
-  int strategy = 1;
   int color_jet_arrangement;
-  int quiet = 0;
-  int status = 0;
-
- /*
-  * Initialise libgimpprint
-  */
-
-  stp_init();
-
-  if (argc == 1)
+  int strategy;
+  int previous_strategy = -1;
+  int previous_jets = -1;
+  int previous_separation = -1;
+  int total_cases = 0;
+  int failures = 0;
+  char linebuf[4096];
+  while (fgets(linebuf, 4096, stdin))
     {
-      int total_cases = 0;
-      int failures = 0;
-      char linebuf[4096];
-      while (fgets(linebuf, 4096, stdin))
+      int retval;
+      (void) sscanf(linebuf, "%d%d%d%d%d%d%d%d%d%d", &physjets, &physsep,
+		    &hpasses, &vpasses, &subpasses, &nrows, &first_line,
+		    &phys_lines, &color_jet_arrangement, &strategy);
+      fflush(stdout);
+      if (vpasses * subpasses > physjets)
+	continue;
+      retval = run_one_weavetest(physjets, physsep, hpasses, vpasses,
+				 subpasses, nrows, first_line, phys_lines,
+				 color_jet_arrangement, strategy, 2);
+      if (getenv("QUIET"))
 	{
-	  int retval;
-	  (void) sscanf(linebuf, "%d%d%d%d%d%d%d%d%d%d", &physjets, &physsep,
-			&hpasses, &vpasses, &subpasses, &nrows, &first_line,
-			&phys_lines, &color_jet_arrangement, &strategy);
-	  fflush(stdout);
-	  if (vpasses * subpasses > physjets)
-	    continue;
-	  printf("%d %d %d %d %d %d %d %d %d ", physjets, physsep, hpasses,
-			vpasses, subpasses, nrows, first_line, phys_lines,
-			color_jet_arrangement);
-	  retval = run_one_weavetest(physjets, physsep, hpasses, vpasses,
-				     subpasses, nrows, first_line, phys_lines,
-				     color_jet_arrangement, strategy, 1);
-	  total_cases++;
-	  if (retval)
-	    failures++;
-	  else
-	    putc('\n', stdout);
-	  fflush(stdout);
-	  status |= retval;
+	  /* Assume that we're running within run-weavetest, and */
+	  /* print out the heartbeat */
+	      
+	  if (previous_strategy != strategy)
+	    {
+	      printf("%s%d:", previous_strategy == -1 ? "" : "\n", strategy);
+	      previous_jets = -1;
+	      previous_separation = -1;
+	    }
+	  if (previous_jets != physjets)
+	    {
+	      printf("%d", physjets);
+	      previous_separation = -1;
+	    }
+	  if (previous_separation != physsep)
+	    printf(".");
+	  previous_strategy = strategy;
+	  previous_jets = physjets;
+	  previous_separation = physsep;
 	}
-      printf("Total cases: %d, failures: %d\n", total_cases, failures);
-      return status;
+      if (!getenv("QUIET") || retval)
+	{
+	  printf("%d %d %d %d %d %d %d %d %d %d ", physjets, physsep,
+		 hpasses, vpasses, subpasses, nrows, first_line,
+		 phys_lines, color_jet_arrangement, strategy);
+	  if (retval)
+	    printf("%d total error%s", retval, retval == 1 ? "" : "s");
+	  putc('\n', stdout);
+	}
+
+      total_cases++;
+      if (retval)
+	failures++;
+      fflush(stdout);
     }
-  if (argc != 10)
+  printf("%sTotal cases: %d, failures: %d\n",
+	 (getenv("QUIET") ? "\n" : ""), total_cases, failures);
+  return (failures ? 1 : 0);
+}
+
+static int
+run_weavetest_from_cmdline(int argc, char **argv)
+{
+  if (argc != 11)
     {
-      fprintf(stderr, "Usage: %s jets separation hpasses vpasses subpasses rows start end arrangement\n",
+      fprintf(stderr, "Usage: %s jets separation hpasses vpasses subpasses rows start end arrangement strategy\n",
 	      argv[0]);
       return 2;
     }
-  physjets = atoi(argv[1]);
-  physsep = atoi(argv[2]);
-  hpasses = atoi(argv[3]);
-  vpasses = atoi(argv[4]);
-  subpasses = atoi(argv[5]);
-  nrows = atoi(argv[6]);
-  first_line = atoi(argv[7]);
-  phys_lines = atoi(argv[8]);
-  color_jet_arrangement = atoi(argv[9]);
-#if 0
-  if (physjets < hpasses * vpasses * subpasses)
+  else
     {
-      fprintf(stderr, "Oversample exceeds jets\n");
-      return 1;
+      int quiet = 0;
+      int physjets = atoi(argv[1]);
+      int physsep = atoi(argv[2]);
+      int hpasses = atoi(argv[3]);
+      int vpasses = atoi(argv[4]);
+      int subpasses = atoi(argv[5]);
+      int nrows = atoi(argv[6]);
+      int first_line = atoi(argv[7]);
+      int phys_lines = atoi(argv[8]);
+      int color_jet_arrangement = atoi(argv[9]);
+      int strategy = atoi(argv[10]);
+      int status;
+      if (getenv("QUIET"))
+	quiet = 2;
+      status = run_one_weavetest(physjets, physsep, hpasses, vpasses,
+				 subpasses, nrows, first_line, phys_lines,
+				 color_jet_arrangement, strategy, quiet);
+      if (status)
+	return 1;
+      else
+	return 0;
     }
-#endif
-  if (getenv("QUIET"))
-    quiet = 2;
-  return (run_one_weavetest(physjets, physsep, hpasses, vpasses,
-			    subpasses, nrows, first_line, phys_lines,
-			    color_jet_arrangement, strategy, quiet));
+}
+
+int
+main(int argc, char **argv)
+{
+  stp_init();
+
+  if (argc == 1)
+    return run_weavetest_from_stdin();
+  else
+    return run_weavetest_from_cmdline(argc, argv);
 }

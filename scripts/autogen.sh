@@ -45,12 +45,12 @@ test -f $srcdir/ChangeLog || echo > $srcdir/ChangeLog
   }
 }
 
-libtoolv=`libtool --version | sed 's,.*[        ]\([0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)\)[a-z]*[   ].*,\1,'`
+libtoolv=`libtool --version | head -1 | sed 's,.*[        ]\([0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)*\)[a-z]*[   ].*,\1,'`
 libtool_major=`echo $libtoolv | awk -F. '{print $1}'`
 libtool_minor=`echo $libtoolv | awk -F. '{print $2}'`
 libtool_point=`echo $libtoolv | awk -F. '{print $3}'`
 
-gettextizev=`gettextize --version | sed 's,.*[        ]\([0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)\)[a-z]*[   ]*.*,\1,'`
+gettextizev=`gettextize --version | head -1 | sed 's,.*[        ]\([0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)*\)[a-z]*[   ]*.*,\1,'`
 gettextize_major=`echo $gettextizev | awk -F. '{print $1}'`
 gettextize_minor=`echo $gettextizev | awk -F. '{print $2}'`
 gettextize_point=`echo $gettextizev | awk -F. '{print $3}'`

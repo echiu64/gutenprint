@@ -38,7 +38,7 @@
  *   printlangs()             - Show available translations.
  *   printmodels()            - Show available printer models.
  *   checkcat()               - Check message catalogue exists.
- *   xmalloc()                - Die gracefully if malloc fails.
+ *   gp_malloc()                - Die gracefully if malloc fails.
  *   write_ppd()              - Write a PPD file.
  */
 
@@ -161,7 +161,7 @@ char ** getlangs(void);
 int     checkcat (const struct dirent *localedir);
 void    printlangs(char** langs);
 void    printmodels(int verbose);
-void *  xmalloc (size_t size);
+void *  gp_malloc (size_t size);
 int	write_ppd(stp_const_printer_t p, const char *prefix,
 	          int verbose);
 
@@ -302,7 +302,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
   if (optind < argc) {
     int n, numargs;
     numargs = argc-optind;
-    models = xmalloc((numargs+1) * sizeof(char*));
+    models = gp_malloc((numargs+1) * sizeof(char*));
     for (n=0; n<numargs; n++)
       {
 	models[n] = argv[optind+n];
@@ -498,10 +498,10 @@ getlangs(void)
   if (n >= 0)
     {
       int idx;
-      langs = xmalloc((n+1) * sizeof(char*));
+      langs = gp_malloc((n+1) * sizeof(char*));
       for (idx = 0; idx < n; ++idx)
 	{
-	  langs[idx] = (char*) xmalloc((strlen(langdirs[idx]->d_name)+1) * sizeof(char));
+	  langs[idx] = (char*) gp_malloc((strlen(langdirs[idx]->d_name)+1) * sizeof(char));
 	  strcpy(langs[idx], langdirs[idx]->d_name);
 	  free (langdirs[idx]);
 	}
@@ -578,7 +578,7 @@ checkcat (const struct dirent *localedir)
   /* LOCALEDIR / LANG / LC_MESSAGES/CATALOG */
   /* Add 3, for two '/' separators and '\0'   */
   catlen = strlen(baselocaledir) + strlen(localedir->d_name) + strlen(CATALOG) + 3;
-  catpath = (char*) xmalloc(catlen * sizeof(char));
+  catpath = (char*) gp_malloc(catlen * sizeof(char));
 
   strncpy (catpath, baselocaledir, strlen(baselocaledir));
   catlen = strlen(baselocaledir);
@@ -608,11 +608,11 @@ checkcat (const struct dirent *localedir)
 
 
 /*
- * 'xmalloc() - die gracefully if malloc() fails
+ * 'gp_malloc() - die gracefully if malloc() fails
  */
 
 void *
-xmalloc (size_t size)
+gp_malloc (size_t size)
 {
   register void *p = NULL;
 
@@ -819,7 +819,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
   variable_sizes = 0;
   stp_describe_parameter(v, "PageSize", &desc);
   num_opts = stp_string_list_count(desc.bounds.str);
-  the_papers = xmalloc(sizeof(paper_t) * num_opts);
+  the_papers = gp_malloc(sizeof(paper_t) * num_opts);
 
   for (i = 0; i < num_opts; i++)
   {

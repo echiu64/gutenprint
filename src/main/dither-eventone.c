@@ -295,17 +295,17 @@ diffuse_error(stpi_dither_channel_t *dc, eventone_t *et, int diff_factor, int x,
 }
 
 static inline int
-eventone_adjust(stpi_shade_segment_t *sp, eventone_t *et, int ditherpoint, unsigned int desired, unsigned int dotsize)
+eventone_adjust(stpi_shade_segment_t *sp, eventone_t *et, int dither_point, unsigned int desired, unsigned int dotsize)
 {
   if (desired > 0) {
-    ditherpoint += sp->dis.r_sq * et->aspect;
+    dither_point += sp->dis.r_sq * et->aspect;
     if (desired < dotsize) {
-      ditherpoint -= (EVEN_C1 * dotsize) / desired;
+      dither_point -= (EVEN_C1 * dotsize) / desired;
     }
-    if (ditherpoint > 65535) ditherpoint = 65535;
-    else if (ditherpoint < 0) ditherpoint = 0;
+    if (dither_point > 65535) dither_point = 65535;
+    else if (dither_point < 0) dither_point = 0;
   }
-  return ditherpoint;
+  return dither_point;
 }
 
 static inline int
@@ -335,19 +335,19 @@ find_segment(stpi_shade_segment_t *sp, eventone_t *et, int totalink, unsigned in
 
 found_segment:
 
-  { int ditherpoint;
+  { int dither_point;
     if (totalink >= upper->range) {
-      ditherpoint = 65536;
+      dither_point = 65536;
     } else if (totalink <= lower->range) {
-      ditherpoint = 0;
+      dither_point = 0;
     } else {
       if (lower->range == 0) {
-        ditherpoint = eventone_adjust(sp, et, (totalink * 65536) / upper->range, baseink, upper->range);
+        dither_point = eventone_adjust(sp, et, (totalink * 65536) / upper->range, baseink, upper->range);
       } else {
-        ditherpoint = ((totalink - lower->range) * 65536) / (upper->range - lower->range);
+        dither_point = ((totalink - lower->range) * 65536) / (upper->range - lower->range);
       }
     }
-    return ditherpoint;
+    return dither_point;
   }
 }
 

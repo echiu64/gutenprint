@@ -197,7 +197,7 @@ extern stp_sequence_t stp_curve_get_sequence(stp_const_curve_t curve);
  * It is also illegal, and FALSE is returned, to set gamma on a wrap-mode
  * curve.
  */
-extern int stp_curve_set_gamma(stp_curve_t curve, double gamma);
+extern int stp_curve_set_gamma(stp_curve_t curve, double f_gamma);
 
 /*
  * Return the gamma value of the curve.  A returned value of 0 indicates

@@ -127,10 +127,11 @@ stp_sequence_destroy(stp_sequence_t sequence)
 }
 
 void
-stp_sequence_copy(stp_sequence_t dest, const stp_sequence_t source)
+stp_sequence_copy(stp_sequence_t dest, stp_const_sequence_t source)
 {
   stpi_internal_sequence_t *idest = (stpi_internal_sequence_t *) dest;
-  stpi_internal_sequence_t *isource = (stpi_internal_sequence_t *) source;
+  const stpi_internal_sequence_t *isource =
+    (const stpi_internal_sequence_t *) source;
   check_sequence(idest);
   check_sequence(isource);
 
@@ -145,9 +146,10 @@ stp_sequence_copy(stp_sequence_t dest, const stp_sequence_t source)
 }
 
 stp_sequence_t
-stp_sequence_create_copy(const stp_sequence_t sequence)
+stp_sequence_create_copy(stp_const_sequence_t sequence)
 {
-  stpi_internal_sequence_t *iseq = (stpi_internal_sequence_t *) sequence;
+  const stpi_internal_sequence_t *iseq =
+    (const stpi_internal_sequence_t *) sequence;
   stp_sequence_t ret;
   check_sequence(iseq);
   ret = stp_sequence_create();
@@ -169,10 +171,11 @@ stp_sequence_set_bounds(stp_sequence_t sequence, double low, double high)
 }
 
 void
-stp_sequence_get_bounds(const stp_sequence_t sequence,
+stp_sequence_get_bounds(stp_const_sequence_t sequence,
 			double *low, double *high)
 {
-  stpi_internal_sequence_t *iseq = (stpi_internal_sequence_t *) sequence;
+  const stpi_internal_sequence_t *iseq =
+    (const stpi_internal_sequence_t *) sequence;
   check_sequence(iseq);
   *low = iseq->blo;
   *high = iseq->bhi;
@@ -200,14 +203,15 @@ scan_sequence_range(stpi_internal_sequence_t *seq)
 }
 
 void
-stp_sequence_get_range(const stp_sequence_t sequence,
+stp_sequence_get_range(stp_const_sequence_t sequence,
 		       double *low, double *high)
 {
-  stpi_internal_sequence_t *iseq = (stpi_internal_sequence_t *) sequence;
+  const stpi_internal_sequence_t *iseq =
+    (const stpi_internal_sequence_t *) sequence;
   check_sequence(iseq);
   if (iseq->recompute_range) /* Don't recompute the range if we don't
 			       need to. */
-    scan_sequence_range(iseq);
+    scan_sequence_range((stpi_internal_sequence_t *) iseq);
   *low = iseq->rlo;
   *high = iseq->rhi;
 }
@@ -234,9 +238,10 @@ stp_sequence_set_size(stp_sequence_t sequence, size_t size)
 
 
 size_t
-stp_sequence_get_size(const stp_sequence_t sequence)
+stp_sequence_get_size(stp_const_sequence_t sequence)
 {
-  stpi_internal_sequence_t *iseq = (stpi_internal_sequence_t *) sequence;
+  const stpi_internal_sequence_t *iseq =
+    (const stpi_internal_sequence_t *) sequence;
   check_sequence(iseq);
   return iseq->size;
 }
@@ -275,10 +280,11 @@ stp_sequence_set_subrange(stp_sequence_t sequence, size_t where,
 
 
 void
-stp_sequence_get_data(const stp_sequence_t sequence, size_t *size,
+stp_sequence_get_data(stp_const_sequence_t sequence, size_t *size,
 		      const double **data)
 {
-  stpi_internal_sequence_t *iseq = (stpi_internal_sequence_t *) sequence;
+  const stpi_internal_sequence_t *iseq =
+    (const stpi_internal_sequence_t *) sequence;
   check_sequence(iseq);
   *size = iseq->size;
   *data = iseq->data;
@@ -308,10 +314,11 @@ stp_sequence_set_point(stp_sequence_t sequence, size_t where,
 }
 
 int
-stp_sequence_get_point(const stp_sequence_t sequence, size_t where,
+stp_sequence_get_point(stp_const_sequence_t sequence, size_t where,
 		       double *data)
 {
-  stpi_internal_sequence_t *iseq = (stpi_internal_sequence_t *) sequence;
+  const stpi_internal_sequence_t *iseq =
+    (const stpi_internal_sequence_t *) sequence;
   check_sequence(iseq);
 
   if (where >= iseq->size)
@@ -558,7 +565,7 @@ stpi_xmltree_create_from_sequence(stp_sequence_t seq)   /* The sequence */
 #define DEFINE_DATA_SETTER(t, name)					     \
 int									     \
 stp_sequence_set_##name##_data(stp_sequence_t sequence,                      \
-                                   size_t count, const t *data)              \
+                               size_t count, const t *data)                  \
 {									     \
   int i;								     \
   stpi_internal_sequence_t *iseq = (stpi_internal_sequence_t *) sequence;    \
@@ -585,33 +592,34 @@ DEFINE_DATA_SETTER(short, short)
 DEFINE_DATA_SETTER(unsigned short, ushort)
 
 
-#define DEFINE_DATA_ACCESSOR(t, lb, ub, name)				 \
-const t *								 \
-stp_sequence_get_##name##_data(const stp_sequence_t sequence,            \
-                                   size_t *count)	                 \
-{									 \
-  int i;								 \
-  stpi_internal_sequence_t *iseq = (stpi_internal_sequence_t *) sequence;\
-  check_sequence(iseq);						         \
-  if (iseq->blo < (double) lb || iseq->bhi > (double) ub)	         \
-    return NULL;							 \
-  if (!iseq->name##_data)						 \
-    {									 \
-      iseq->name##_data = stpi_zalloc(sizeof(t) * iseq->size);           \
-      for (i = 0; i < iseq->size; i++)				         \
-        {                                                                \
-	  double val;                                                    \
-	  if ((stp_sequence_get_point(sequence, i, &val)) == 0)          \
-	    {                                                            \
-	      stpi_free(iseq->name##_data);                              \
-	      iseq->name##_data = NULL;                                  \
-	      return NULL;                                               \
-	    }                                                            \
-	  iseq->name##_data[i] = (t) val;		                 \
-        }                                                                \
-    }									 \
-  *count = iseq->size;						         \
-  return iseq->name##_data;						 \
+#define DEFINE_DATA_ACCESSOR(t, lb, ub, name)				     \
+const t *								     \
+stp_sequence_get_##name##_data(stp_const_sequence_t sequence, size_t *count) \
+{									     \
+  int i;								     \
+  const stpi_internal_sequence_t *iseq =				     \
+    (const stpi_internal_sequence_t *) sequence;			     \
+  check_sequence(iseq);							     \
+  if (iseq->blo < (double) lb || iseq->bhi > (double) ub)		     \
+    return NULL;							     \
+  if (!iseq->name##_data)						     \
+    {									     \
+      ((stpi_internal_sequence_t *)iseq)->name##_data =			     \
+	stpi_zalloc(sizeof(t) * iseq->size);				     \
+      for (i = 0; i < iseq->size; i++)					     \
+        {								     \
+	  double val;							     \
+	  if ((stp_sequence_get_point(sequence, i, &val)) == 0)		     \
+	    {								     \
+	      stpi_free(((stpi_internal_sequence_t *)iseq)->name##_data);    \
+	      ((stpi_internal_sequence_t *)iseq)->name##_data = NULL;	     \
+	      return NULL;						     \
+	    }								     \
+	  ((stpi_internal_sequence_t *)iseq)->name##_data[i] = (t) val;	     \
+        }								     \
+    }									     \
+  *count = iseq->size;							     \
+  return iseq->name##_data;						     \
 }
 
 #ifndef HUGE_VALF /* ISO constant, from <math.h> */

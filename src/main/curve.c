@@ -363,7 +363,7 @@ stp_curve_copy(stp_curve_t dest, stp_const_curve_t source)
 stp_curve_t
 stp_curve_create_copy(stp_const_curve_t curve)
 {
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
+  const stpi_internal_curve_t *icurve = (const stpi_internal_curve_t *) curve;
   stp_curve_t ret;
   check_curve(icurve);
   ret = stp_curve_create(icurve->wrap_mode);
@@ -382,7 +382,7 @@ stp_curve_set_bounds(stp_curve_t curve, double low, double high)
 void
 stp_curve_get_bounds(stp_const_curve_t curve, double *low, double *high)
 {
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
+  const stpi_internal_curve_t *icurve = (const stpi_internal_curve_t *) curve;
   check_curve(icurve);
   stp_sequence_get_bounds(icurve->seq, low, high);
 }
@@ -396,7 +396,7 @@ stp_curve_get_bounds(stp_const_curve_t curve, double *low, double *high)
 void
 stp_curve_get_range(stp_const_curve_t curve, double *low, double *high)
 {
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
+  const stpi_internal_curve_t *icurve = (const stpi_internal_curve_t *) curve;
   check_curve(icurve);
   stp_sequence_get_range(icurve->seq, low, high);
 }
@@ -404,7 +404,7 @@ stp_curve_get_range(stp_const_curve_t curve, double *low, double *high)
 size_t
 stp_curve_count_points(stp_const_curve_t curve)
 {
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
+  const stpi_internal_curve_t *icurve = (const stpi_internal_curve_t *) curve;
   check_curve(icurve);
   return get_point_count(icurve);
 }
@@ -412,7 +412,7 @@ stp_curve_count_points(stp_const_curve_t curve)
 stp_curve_wrap_mode_t
 stp_curve_get_wrap(stp_const_curve_t curve)
 {
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
+  const stpi_internal_curve_t *icurve = (const stpi_internal_curve_t *) curve;
   check_curve(icurve);
   return icurve->wrap_mode;
 }
@@ -431,20 +431,20 @@ stp_curve_set_interpolation_type(stp_curve_t curve, stp_curve_type_t itype)
 stp_curve_type_t
 stp_curve_get_interpolation_type(stp_const_curve_t curve)
 {
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
+  const stpi_internal_curve_t *icurve = (const stpi_internal_curve_t *) curve;
   check_curve(icurve);
   return icurve->curve_type;
 }
 
 int
-stp_curve_set_gamma(stp_curve_t curve, double gamma)
+stp_curve_set_gamma(stp_curve_t curve, double fgamma)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
-  if (icurve->wrap_mode || ! finite(gamma) || gamma == 0.0)
+  if (icurve->wrap_mode || ! finite(fgamma) || fgamma == 0.0)
     return 0;
   clear_curve_data(icurve);
-  icurve->gamma = gamma;
+  icurve->gamma = fgamma;
   stp_curve_resample(curve, 2);
   return 1;
 }
@@ -452,7 +452,7 @@ stp_curve_set_gamma(stp_curve_t curve, double gamma)
 double
 stp_curve_get_gamma(stp_const_curve_t curve)
 {
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
+  const stpi_internal_curve_t *icurve = (const stpi_internal_curve_t *) curve;
   check_curve(icurve);
   return icurve->gamma;
 }
@@ -503,7 +503,7 @@ stp_curve_set_data(stp_curve_t curve, size_t count, const double *data)
 const double *
 stp_curve_get_data(stp_const_curve_t curve, size_t *count)
 {
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
+  const stpi_internal_curve_t *icurve = (const stpi_internal_curve_t *) curve;
   const double *ret;
   check_curve(icurve);
   stp_sequence_get_data(icurve->seq, count, &ret);
@@ -548,16 +548,12 @@ DEFINE_DATA_SETTER(short, short)
 DEFINE_DATA_SETTER(unsigned short, ushort)
 
 
-#define DEFINE_DATA_ACCESSOR(t, name)				         \
-const t *								 \
-stp_curve_get_##name##_data(stp_const_curve_t curve, size_t *count)      \
-{									 \
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;       \
-  stp_sequence_t seq;                                                    \
-                                                                         \
-  check_curve(icurve);						         \
-  seq = stp_curve_get_sequence(curve);                                   \
-  return stp_sequence_get_##name##_data(seq, count);                     \
+#define DEFINE_DATA_ACCESSOR(t, name)					\
+const t *								\
+stp_curve_get_##name##_data(stp_const_curve_t curve, size_t *count)	\
+{									\
+  stp_const_sequence_t seq = stp_curve_get_sequence(curve);		\
+  return stp_sequence_get_##name##_data(seq, count);			\
 }
 
 DEFINE_DATA_ACCESSOR(float, float)
@@ -637,7 +633,7 @@ stp_curve_set_point(stp_curve_t curve, size_t where, double data)
 int
 stp_curve_get_point(stp_const_curve_t curve, size_t where, double *data)
 {
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
+  const stpi_internal_curve_t *icurve = (const stpi_internal_curve_t *) curve;
   check_curve(icurve);
   if (where >= get_point_count(icurve))
     return 0;
@@ -647,7 +643,7 @@ stp_curve_get_point(stp_const_curve_t curve, size_t where, double *data)
 stp_sequence_t
 stp_curve_get_sequence(stp_const_curve_t curve)
 {
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
+  const stpi_internal_curve_t *icurve = (const stpi_internal_curve_t *) curve;
   check_curve(icurve);
   return icurve->seq;
 }
@@ -773,8 +769,8 @@ stpi_curve_check_parameters(stp_curve_t *curve, size_t points)
 static inline double
 interpolate_gamma_internal(stp_const_curve_t curve, double where)
 {
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
-  double gamma = icurve->gamma;
+  const stpi_internal_curve_t *icurve = (const stpi_internal_curve_t *) curve;
+  double fgamma = icurve->gamma;
   double blo, bhi;
   size_t real_point_count;
 
@@ -782,23 +778,23 @@ interpolate_gamma_internal(stp_const_curve_t curve, double where)
 
   if (real_point_count)
     where /= (real_point_count - 1);
-  if (gamma < 0)
+  if (fgamma < 0)
     {
       where = 1.0 - where;
-      gamma = -gamma;
+      fgamma = -fgamma;
     }
   stp_sequence_get_bounds(icurve->seq, &blo, &bhi);
 #ifdef DEBUG
-  fprintf(stderr, "interpolate_gamma %f %f %f %f %f\n", where, gamma,
-	  blo, bhi, pow(where, gamma));
+  fprintf(stderr, "interpolate_gamma %f %f %f %f %f\n", where, fgamma,
+	  blo, bhi, pow(where, fgamma));
 #endif
-  return blo + (bhi - blo) * pow(where, gamma);
+  return blo + (bhi - blo) * pow(where, fgamma);
 }
 
 static inline double
 interpolate_point_internal(stp_const_curve_t curve, double where)
 {
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
+  const stpi_internal_curve_t *icurve = (const stpi_internal_curve_t *) curve;
   int integer = where;
   double frac = where - (double) integer;
   double bhi, blo;
@@ -811,7 +807,7 @@ interpolate_point_internal(stp_const_curve_t curve, double where)
       return val;
     }
   if (icurve->recompute_interval)
-    compute_intervals(icurve);
+    compute_intervals((stpi_internal_curve_t *) icurve);
   if (icurve->curve_type == STP_CURVE_TYPE_LINEAR)
     {
       double val;
@@ -855,7 +851,7 @@ int
 stp_curve_interpolate_value(stp_const_curve_t curve, double where,
 			    double *result)
 {
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
+  const stpi_internal_curve_t *icurve = (const stpi_internal_curve_t *) curve;
   size_t limit;
   check_curve(icurve);
 
@@ -958,12 +954,12 @@ lcm(unsigned a, unsigned b)
 }
 
 static int
-create_gamma_curve(stp_curve_t *retval, double lo, double hi, double gamma,
+create_gamma_curve(stp_curve_t *retval, double lo, double hi, double fgamma,
 		   int points)
 {
   *retval = stp_curve_create(STP_CURVE_WRAP_NONE);
   if (stp_curve_set_bounds(*retval, lo, hi) &&
-      stp_curve_set_gamma(*retval, gamma) &&
+      stp_curve_set_gamma(*retval, fgamma) &&
       stp_curve_resample(*retval, points))
     return 1;
   stp_curve_free(*retval);
@@ -1092,7 +1088,7 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
   stp_curve_t ret = NULL;                 /* Curve to return */
   stp_curve_type_t curve_type;            /* Type of curve */
   stp_curve_wrap_mode_t wrap_mode;        /* Curve wrap mode */
-  double gamma;                           /* Gamma value */
+  double fgamma;                          /* Gamma value */
   stp_sequence_t seq = NULL;              /* Sequence data */
   double low, high;                       /* Sequence bounds */
 
@@ -1145,7 +1141,7 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
   stmp = xmlGetProp(curve, (const xmlChar *) "gamma");
   if (stmp)
     {
-      gamma = stpi_xmlstrtod(stmp);
+      fgamma = stpi_xmlstrtod(stmp);
       xmlFree(stmp);
     }
   else
@@ -1154,7 +1150,7 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
       goto error;
     }
   /* If gamma is set, wrap_mode must be STP_CURVE_WRAP_NONE */
-  if (gamma && wrap_mode != STP_CURVE_WRAP_NONE)
+  if (fgamma && wrap_mode != STP_CURVE_WRAP_NONE)
     {
       stpi_erprintf("stp_curve_create_from_xmltree: "
 		    "gamma set and \"wrap\" is not STP_CURVE_WRAP_NONE\n");
@@ -1186,8 +1182,8 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
   stp_sequence_get_bounds(seq, &low, &high);
   stp_curve_set_bounds(ret, low, high);
 
-  if (gamma)
-    stp_curve_set_gamma(ret, gamma);
+  if (fgamma)
+    stp_curve_set_gamma(ret, fgamma);
   else /* Not a gamma curve, so set points */
     {
       size_t seq_count;
@@ -1237,7 +1233,7 @@ stp_xmltree_create_from_curve(stp_const_curve_t curve)  /* The curve */
 
   char *wrap;
   char *type;
-  char *gamma;
+  char *cgamma;
 
   xmlNodePtr curvenode = NULL;
   xmlNodePtr child = NULL;
@@ -1259,16 +1255,16 @@ stp_xmltree_create_from_curve(stp_const_curve_t curve)  /* The curve */
   /* Construct the allocated strings required */
   stpi_asprintf(&wrap, "%s", stpi_wrap_mode_names[wrapmode]);
   stpi_asprintf(&type, "%s", stpi_curve_type_names[interptype]);
-  stpi_asprintf(&gamma, "%g", gammaval);
+  stpi_asprintf(&cgamma, "%g", gammaval);
 
   curvenode = xmlNewNode(NULL, (const xmlChar *) "curve");
   (void) xmlSetProp(curvenode, (const xmlChar *) "wrap", (const xmlChar *) wrap);
   (void) xmlSetProp(curvenode, (const xmlChar *) "type", (const xmlChar *) type);
-  (void) xmlSetProp(curvenode, (const xmlChar *) "gamma", (const xmlChar *) gamma);
+  (void) xmlSetProp(curvenode, (const xmlChar *) "gamma", (const xmlChar *) cgamma);
 
   stpi_free(wrap);
   stpi_free(type);
-  stpi_free(gamma);
+  stpi_free(cgamma);
 
   seq = stp_sequence_create();
   stp_curve_get_bounds(curve, &low, &high);

@@ -319,11 +319,11 @@ main(int argc, char **argv)
       the_printer = stp_get_printer_by_long_name(printer);
       if (!the_printer)
 	{
-	  int i;
+	  int j;
 	  fprintf(stderr, "Unknown printer %s\nValid printers are:\n",printer);
-	  for (i = 0; i < stp_printer_model_count(); i++)
+	  for (j = 0; j < stp_printer_model_count(); j++)
 	    {
-	      the_printer = stp_get_printer_by_index(i);
+	      the_printer = stp_get_printer_by_index(j);
 	      fprintf(stderr, "%-16s%s\n", stp_printer_get_driver(the_printer),
 		      stp_printer_get_long_name(the_printer));
 	    }

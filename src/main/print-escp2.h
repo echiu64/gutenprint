@@ -37,22 +37,6 @@ typedef unsigned long model_cap_t;
 typedef unsigned long model_featureset_t;
 
 
-/*
- * Definition of the multi-level inks available to a given printer.
- * Each printer may use a different kind of ink droplet for variable
- * and single drop size for each supported horizontal resolution and
- * type of ink (4 or 6 color).
- *
- * Recall that 6 color ink is treated as simply another kind of
- * multi-level ink, but the driver offers the user a choice of 4 and
- * 6 color ink, so we need to define appropriate inksets for both
- * kinds of ink.
- *
- * Stuff like the MIS 4 and 6 "color" monochrome inks doesn't fit into
- * this model very nicely, so we'll either have to special case it
- * or find some way of handling it in here.
- */
-
 #define RES_LOW		 0
 #define RES_360		 1
 #define RES_720_360	 2
@@ -105,7 +89,7 @@ typedef struct escp2_variable_ink
 {
   const stpi_dither_range_simple_t *range;
   int numranges;
-  double density;
+  double darkness;
   const stpi_shade_t *shades;
   int numshades;
 } escp2_variable_ink_t;
@@ -214,7 +198,7 @@ typedef struct
 typedef struct
 {
   int color;
-  int density;
+  int subchannel;
   int head_offset;
 } physical_subchannel_t;
 
@@ -293,8 +277,6 @@ typedef struct escp2_printer
 /*****************************************************************************/
   /* Print head resolution */
   int		base_separation; /* Basic unit of row separation */
-  int		base_resolution; /* Base hardware line spacing (above this */
-				/* always requires multiple passes) */
   int		resolution_scale;   /* Scaling factor for ESC(D command */
   int		max_black_resolution; /* Above this resolution, we */
 				      /* must use color parameters */
@@ -304,6 +286,21 @@ typedef struct escp2_printer
   int		max_vres;
   int		min_hres;
   int		min_vres;
+  /* Miscellaneous printer-specific data */
+  int		extra_feed;	/* Extra distance the paper can be spaced */
+				/* beyond the bottom margin, in 1/360". */
+				/* (maximum useful value is */
+				/* nozzles * nozzle_separation) */
+  int		separation_rows; /* Some printers require funky spacing */
+				/* arguments in microweave mode. */
+  int		pseudo_separation_rows;/* Some printers require funky */
+				/* spacing arguments in softweave mode */
+
+  int           zero_margin_offset;   /* Offset to use to achieve */
+				      /* zero-margin printing */
+  int		initial_vertical_offset;
+  int		black_initial_vertical_offset;
+  int		extra_720dpi_separation;
 /*****************************************************************************/
   /* Paper size limits */
   int		max_paper_width; /* Maximum paper width, in points */
@@ -334,23 +331,6 @@ typedef struct escp2_printer
   int		m_roll_right_margin;	/* Right margin, points */
   int		m_roll_top_margin;	/* Absolute top margin, points */
   int		m_roll_bottom_margin;	/* Absolute bottom margin, points */
-/*****************************************************************************/
-  /* Miscellaneous printer-specific data */
-  int		extra_feed;	/* Extra distance the paper can be spaced */
-				/* beyond the bottom margin, in 1/360". */
-				/* (maximum useful value is */
-				/* nozzles * nozzle_separation) */
-  int		separation_rows; /* Some printers require funky spacing */
-				/* arguments in microweave mode. */
-  int		pseudo_separation_rows;/* Some printers require funky */
-				/* spacing arguments in softweave mode */
-
-  int           zero_margin_offset;   /* Offset to use to achieve */
-				      /* zero-margin printing */
-  int		initial_vertical_offset;
-  int		black_initial_vertical_offset;
-  int		extra_720dpi_separation;
-
 /*****************************************************************************/
   const int *dot_sizes;		/* Vector of dot sizes for resolutions */
   const double *densities;	/* List of densities for each printer */

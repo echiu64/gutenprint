@@ -1101,7 +1101,7 @@ stpui_get_current_printer(void)
 static volatile int usr1_interrupt;
 
 static void
-usr1_handler (int signal)
+usr1_handler (int sig)
 {
   usr1_interrupt = 1;
 }
@@ -1114,7 +1114,7 @@ writefunc(void *file, const char *buf, size_t bytes)
 }
 
 static void
-errfunc(void *file, const char *buf, size_t bytes)
+stpui_errfunc(void *file, const char *buf, size_t bytes)
 {
   g_message(buf);
 }

@@ -35,8 +35,6 @@ typedef union yylv {
   char *sval;
 } YYSTYPE;
 
-extern YYSTYPE yylval;
-
 #include "printrcy.h"
 
 #endif /* __GIMP_PRINT_PRINTRC_H__ */

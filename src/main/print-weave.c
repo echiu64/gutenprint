@@ -150,25 +150,23 @@ typedef struct raw {
 	int advancebasis;
 	int subblocksperpassblock;
 	int passespersubblock;
-	int strategy;
+	stpi_weave_strategy_t strategy;
 	stp_vars_t v;
 } raw_t;
 
 /*
  * Strategy types currently defined:
  *
- *  0: microweave (intercepted at the escp2 driver level so we never
- *     see it here)
- *  1: zig-zag type pass block filling
- *  2: ascending pass block filling
- *  3: descending pass block filling
- *  4: ascending fill with 2x expansion
- *  5: ascending fill with 3x expansion
- *  6: staggered zig-zag neighbour-avoidance fill
+ *  0: zig-zag type pass block filling
+ *  1: ascending pass block filling
+ *  2: descending pass block filling
+ *  3: ascending fill with 2x expansion
+ *  4: ascending fill with 3x expansion
+ *  5: staggered zig-zag neighbour-avoidance fill
  *
- * In theory, strategy 1 should be optimal; in practice, it can lead
+ * In theory, strategy 0 should be optimal; in practice, it can lead
  * to visible areas of banding.  If it's necessary to avoid filling
- * neighbouring rows in neighbouring passes, strategy 6 should be optimal,
+ * neighbouring rows in neighbouring passes, strategy 5 should be optimal,
  * at least for some weaves.
  */
 
@@ -177,7 +175,7 @@ initialize_raw_weave(raw_t *w,	/* I - weave struct to be filled in */
                      int S,	/* I - jet separation */
                      int J,	/* I - number of jets */
                      int H,	/* I - oversampling factor */
-                     int strat,	/* I - weave pattern variation to use */
+                     stpi_weave_strategy_t strat,	/* I - weave pattern variation to use */
 		     stp_vars_t v)
 {
 	w->separation = S;
@@ -206,20 +204,20 @@ calculate_raw_pass_parameters(raw_t *w,		/* I - weave parameters */
 	                 * w->subblocksperpassblock / w->separation;
 
 	switch (w->strategy) {
-	case 1:
+	case STPI_WEAVE_ZIGZAG:
 		if (subpassblock * 2 < w->subblocksperpassblock)
 			subpassoffset = 2 * subpassblock;
 		else
 			subpassoffset = 2 * (w->subblocksperpassblock
 			                      - subpassblock) - 1;
 		break;
-	case 2:
+	case STPI_WEAVE_ASCENDING:
 		subpassoffset = subpassblock;
 		break;
-	case 3:
+	case STPI_WEAVE_DESCENDING:
 		subpassoffset = w->subblocksperpassblock - 1 - subpassblock;
 		break;
-	case 4:
+	case STPI_WEAVE_ASCENDING_2X:
 		if (subpassblock * 2 < w->subblocksperpassblock)
 			subpassoffset = 2 * subpassblock;
 		else
@@ -227,7 +225,7 @@ calculate_raw_pass_parameters(raw_t *w,		/* I - weave parameters */
 			                          - (w->subblocksperpassblock
 			                              + 1) / 2);
 		break;
-	case 5:
+	case STPI_WEAVE_ASCENDING_3X:
 		if (subpassblock * 3 < w->subblocksperpassblock)
 			subpassoffset = 3 * subpassblock;
 		else if (3 * (subpassblock - (w->subblocksperpassblock + 2) / 3)
@@ -242,7 +240,7 @@ calculate_raw_pass_parameters(raw_t *w,		/* I - weave parameters */
 						  - w->subblocksperpassblock
 						      / 3);
 		break;
-	case 6:
+	case STPI_WEAVE_STAGGERED:
 		if (subpassblock * 2 < w->subblocksperpassblock)
 			subpassoffset = 2 * subpassblock;
 		else if (subpassblock * 2 < w->subblocksperpassblock + 2)
@@ -276,27 +274,27 @@ calculate_raw_row_parameters(raw_t *w,		/* I - weave parameters */
 
 	subblockoffset = row % w->subblocksperpassblock;
 	switch (w->strategy) {
-	case 1:
+	case STPI_WEAVE_ZIGZAG:
 		if (subblockoffset % 2 == 0)
 			subpassblock = subblockoffset / 2;
 		else
 			subpassblock = w->subblocksperpassblock
 			                 - (subblockoffset + 1) / 2;
 		break;
-	case 2:
+	case STPI_WEAVE_ASCENDING:
 		subpassblock = subblockoffset;
 		break;
-	case 3:
+	case STPI_WEAVE_DESCENDING:
 		subpassblock = w->subblocksperpassblock - 1 - subblockoffset;
 		break;
-	case 4:
+	case STPI_WEAVE_ASCENDING_2X:
 		if (subblockoffset % 2 == 0)
 			subpassblock = subblockoffset / 2;
 		else
 			subpassblock = (subblockoffset - 1) / 2
 			               + (w->subblocksperpassblock + 1) / 2;
 		break;
-	case 5:
+	case STPI_WEAVE_ASCENDING_3X:
 		if (subblockoffset % 3 == 0)
 			subpassblock = subblockoffset / 3;
 		else if (subblockoffset % 3 == 1)
@@ -307,7 +305,7 @@ calculate_raw_row_parameters(raw_t *w,		/* I - weave parameters */
 			                 + (w->subblocksperpassblock + 2) / 3
 			                 + (w->subblocksperpassblock + 1) / 3;
 		break;
-	case 6:
+	case STPI_WEAVE_STAGGERED:
 		if (subblockoffset % 2 == 0)
 			subpassblock = subblockoffset / 2;
 		else if (subblockoffset == 1)
@@ -583,7 +581,7 @@ calculate_pass_map(stp_vars_t v,
 		w->stagger_premap = 0;
 	}
 
-	if (w->first_unused_pass > w->first_postmapped_pass) {
+	if (w->first_unused_pass >= w->first_postmapped_pass) {
 		int spread, separations_to_distribute, normal_passes_mapped;
 		separations_to_distribute = (pageheight - lastrow - 1)
 		                                     / w->rw.separation;
@@ -614,7 +612,7 @@ initialize_weave_params(int S,		/* I - jet separation */
                         int pageheight,	/* I - number of rows on the whole
                         		       page, without using any
                         		       expanded margin facilities */
-                        int strategy,	/* I - weave pattern variant to use */
+                        stpi_weave_strategy_t strategy,	/* I - weave pattern variant to use */
 			stp_vars_t v)
 {
 	cooked_t *w = stpi_malloc(sizeof(cooked_t));
@@ -985,7 +983,7 @@ allocate_linebuf(int count, int ncolors)
  *
  * 3) line_height < physlines
  *
- * 4) phys_lines >= 2 * jets * sep
+ * 4) page_height >= 2 * jets * sep
  */
 
 static void
@@ -1033,13 +1031,13 @@ stpi_initialize_weave(stp_vars_t v,
 		      int v_subpasses, /* Vertical passes */
 		      int v_subsample, /* Vertical oversampling */
 		      int ncolors,
-		      int width,	/* bits/pixel */
+		      int bitwidth,	/* bits/pixel */
 		      int linewidth,	/* Width of a line, in pixels */
-		      int lineheight, /* Lines that will be printed */
+		      int line_count, /* Lines that will be printed */
 		      int first_line, /* First line that will be printed */
-		      int phys_lines, /* Total height of the page in rows */
-		      int weave_strategy, /* Which weaving pattern to use */
-		      int *head_offset,
+		      int page_height, /* Total height of the page in rows */
+		      const int *head_offset,
+		      stpi_weave_strategy_t weave_strategy,
 		      stpi_flushfunc flushfunc,
 		      stpi_fillfunc fillfunc,
 		      stpi_packfunc pack,
@@ -1118,11 +1116,11 @@ stpi_initialize_weave(stp_vars_t v,
   sw->virtual_jets = sw->jets;
   if (maxHeadOffset > 0)
     sw->virtual_jets += (maxHeadOffset + sw->separation - 1) / sw->separation;
-  last_line = first_line + lineheight - 1 + maxHeadOffset;
+  last_line = first_line + line_count - 1 + maxHeadOffset;
 
   sw->weaveparm = initialize_weave_params(sw->separation, sw->jets,
                                           sw->oversample, first_line, last_line,
-                                          phys_lines, weave_strategy, v);
+                                          page_height, weave_strategy, v);
   /*
    * The value of vmod limits how many passes may be unfinished at a time.
    * If pass x is not yet printed, pass x+vmod cannot be started.
@@ -1134,13 +1132,13 @@ stpi_initialize_weave(stp_vars_t v,
   if (sw->virtual_jets > sw->jets)
     sw->vmod *= (sw->virtual_jets + sw->jets - 1) / sw->jets;
 
-  sw->bitwidth = width;
+  sw->bitwidth = bitwidth;
   sw->last_pass_offset = 0;
   sw->last_pass = -1;
   sw->current_vertical_subpass = 0;
   sw->ncolors = ncolors;
   sw->linewidth = linewidth;
-  sw->vertical_height = lineheight;
+  sw->vertical_height = line_count;
   sw->lineoffsets = allocate_lineoff(sw->vmod, ncolors);
   sw->lineactive = allocate_lineactive(sw->vmod, ncolors);
   sw->linebases = allocate_linebuf(sw->vmod, ncolors);
@@ -1182,7 +1180,7 @@ weave_parameters_by_row(stp_const_vars_t v, int row,
    * Conceptually, this does not modify the softweave state.  We cache
    * the results, but this cache is considered hidden.
    */
-  stpi_softweave_t *wsw = (stpi_softweave_t *)sw;
+  const stpi_softweave_t *wsw = (const stpi_softweave_t *)sw;
   vertical_subpass /= sw->repeat_count;
 
   if (sw->rcache == row && sw->vcache == vertical_subpass)
@@ -1191,8 +1189,8 @@ weave_parameters_by_row(stp_const_vars_t v, int row,
       w->pass = (w->pass * sw->repeat_count) + sub_repeat_count;
       return;
     }
-  wsw->rcache = row;
-  wsw->vcache = vertical_subpass;
+  ((stpi_softweave_t *) wsw)->rcache = row;
+  ((stpi_softweave_t *) wsw)->vcache = vertical_subpass;
 
   w->row = row;
   stpi_calculate_row_parameters(sw->weaveparm, row, vertical_subpass,
@@ -1202,7 +1200,7 @@ weave_parameters_by_row(stp_const_vars_t v, int row,
   w->physpassstart = w->logicalpassstart + sw->separation * w->missingstartrows;
   w->physpassend = w->physpassstart + sw->separation * (jetsused - 1);
 
-  memcpy(&(wsw->wcache), w, sizeof(stpi_weave_t));
+  memcpy(&(((stpi_softweave_t *) wsw)->wcache), w, sizeof(stpi_weave_t));
   w->pass = (w->pass * sw->repeat_count) + sub_repeat_count;
   stpi_dprintf(STPI_DBG_WEAVE_PARAMS, v, "row %d, jet %d of pass %d "
 	      "(pos %d, start %d, end %d, missing rows %d)\n",
@@ -1248,7 +1246,7 @@ stpi_get_linecount(stp_const_vars_t v, int row, int subpass, int offset)
   return &(sw->linecounts[w.pass % sw->vmod]);
 }
 
-static const stpi_linebufs_t *
+static stpi_linebufs_t *
 stpi_get_linebases(stp_const_vars_t v, int row, int subpass, int offset)
 {
   const stpi_softweave_t *sw =
@@ -1845,7 +1843,7 @@ main(int ac, char *av[])
 	int firstrow  =ac>4 ? atoi(av[4]) : 1;
 	int lastrow   =ac>5 ? atoi(av[5]) : 100;
 	int pageheight=ac>6 ? atoi(av[6]) : 1000;
-	int strategy  =ac>7 ? atoi(av[7]) : 1;
+	stpi_weave_strategy_t strategy  =ac>7 ? atoi(av[7]) : 1;
 	cooked_t *weave;
 	int passes;
 

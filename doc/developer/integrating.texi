@@ -161,9 +161,9 @@ targets in the generated @file{Makefile.in} files such as @command{dist},
 @command{maintainer-clean} and @command{tags}, and there are many more more
 available. @inforef{Top, GNU automake, automake}, for more information.
 
-Because @code{AM_PATH_GIMPPRINT} calls @code{AC_SUBST} to substitute
+@code{AM_PATH_GIMPPRINT} calls @code{AC_SUBST} to substitute
 @env{GIMPPRINT_CFLAGS}, @env{GIMPPRINT_LIBS} and @env{GIMPPRINT_CONFIG},
-@command{automake} will automatically set these variables in the
+so @command{automake} will automatically set these variables in the
 @file{Makefile.in} files it generates, requiring no additional effort on
 your part!
 

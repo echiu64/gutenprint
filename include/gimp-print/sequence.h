@@ -33,37 +33,38 @@ extern "C" {
 #endif
 
 typedef void *stp_sequence_t;
+typedef const void *stp_const_sequence_t;
 
 
 extern stp_sequence_t stp_sequence_create(void);
 extern void stp_sequence_destroy(stp_sequence_t sequence);
 
 extern void stp_sequence_copy(stp_sequence_t dest,
-			      const stp_sequence_t source);
-extern stp_sequence_t stp_sequence_create_copy(const stp_sequence_t sequence);
+			      stp_const_sequence_t source);
+extern stp_sequence_t stp_sequence_create_copy(stp_const_sequence_t sequence);
 
 extern int stp_sequence_set_bounds(stp_sequence_t sequence,
 				   double low, double high);
-extern void stp_sequence_get_bounds(const stp_sequence_t sequence,
+extern void stp_sequence_get_bounds(stp_const_sequence_t sequence,
 				    double *low, double *high);
 
-extern void stp_sequence_get_range(const stp_sequence_t sequence,
+extern void stp_sequence_get_range(stp_const_sequence_t sequence,
 				   double *low, double *high);
 
 extern int stp_sequence_set_size(stp_sequence_t sequence, size_t size);
-extern size_t stp_sequence_get_size(const stp_sequence_t sequence);
+extern size_t stp_sequence_get_size(stp_const_sequence_t sequence);
 
 extern int stp_sequence_set_data(stp_sequence_t sequence,
 				 size_t count, const double *data);
 extern int stp_sequence_set_subrange(stp_sequence_t sequence,
 				     size_t where, size_t size,
 				     const double *data);
-extern void stp_sequence_get_data(const stp_sequence_t sequence,
+extern void stp_sequence_get_data(stp_const_sequence_t sequence,
 				  size_t *size, const double **data);
 
 extern int stp_sequence_set_point(stp_sequence_t sequence,
 				  size_t where, double data);
-extern int stp_sequence_get_point(const stp_sequence_t sequence,
+extern int stp_sequence_get_point(stp_const_sequence_t sequence,
 				  size_t where, double *data);
 
 
@@ -91,19 +92,19 @@ extern int stp_sequence_set_ushort_data(stp_sequence_t sequence,
  * If the bounds of the curve exceed the limits of the data type,
  * NULL is returned.
  */
-extern const float *stp_sequence_get_float_data(const stp_sequence_t sequence,
+extern const float *stp_sequence_get_float_data(stp_const_sequence_t sequence,
 						size_t *count);
-extern const long *stp_sequence_get_long_data(const stp_sequence_t sequence,
+extern const long *stp_sequence_get_long_data(stp_const_sequence_t sequence,
 					      size_t *count);
-extern const unsigned long *stp_sequence_get_ulong_data(const stp_sequence_t sequence,
+extern const unsigned long *stp_sequence_get_ulong_data(stp_const_sequence_t sequence,
 							size_t *count);
-extern const int *stp_sequence_get_int_data(const stp_sequence_t sequence,
+extern const int *stp_sequence_get_int_data(stp_const_sequence_t sequence,
 					    size_t *count);
-extern const unsigned int *stp_sequence_get_uint_data(const stp_sequence_t sequence,
+extern const unsigned int *stp_sequence_get_uint_data(stp_const_sequence_t sequence,
 						      size_t *count);
-extern const short *stp_sequence_get_short_data(const stp_sequence_t sequence,
+extern const short *stp_sequence_get_short_data(stp_const_sequence_t sequence,
 						size_t *count);
-extern const unsigned short *stp_sequence_get_ushort_data(const stp_sequence_t sequence,
+extern const unsigned short *stp_sequence_get_ushort_data(stp_const_sequence_t sequence,
 							  size_t *count);
 
 

@@ -111,8 +111,8 @@ extern void stpi_dprintf(unsigned long level, stp_const_vars_t v,
        __attribute__((format(__printf__, 3, 4)));
 extern void stpi_deprintf(unsigned long level, const char *format, ...)
        __attribute__((format(__printf__, 2, 3)));
-extern void stpi_init_debug_messages(stp_const_vars_t v);
-extern void stpi_flush_debug_messages(stp_const_vars_t v);
+extern void stpi_init_debug_messages(stp_vars_t v);
+extern void stpi_flush_debug_messages(stp_vars_t v);
 
 
 extern void *stpi_malloc (size_t);
@@ -152,40 +152,40 @@ typedef int (*node_sortfunc)(const stpi_list_item_t *, const stpi_list_item_t *)
 
 extern void stpi_list_node_free_data(stpi_list_item_t *item);
 extern stpi_list_t *stpi_list_create(void);
-extern stpi_list_t *stpi_list_copy(stpi_list_t *list);
+extern stpi_list_t *stpi_list_copy(const stpi_list_t *list);
 extern int stpi_list_destroy(stpi_list_t *list);
-extern stpi_list_item_t *stpi_list_get_start(stpi_list_t *list);
-extern stpi_list_item_t *stpi_list_get_end(stpi_list_t *list);
-extern stpi_list_item_t *stpi_list_get_item_by_index(stpi_list_t *list,
-						     int index);
-extern stpi_list_item_t *stpi_list_get_item_by_name(stpi_list_t *list,
+extern stpi_list_item_t *stpi_list_get_start(const stpi_list_t *list);
+extern stpi_list_item_t *stpi_list_get_end(const stpi_list_t *list);
+extern stpi_list_item_t *stpi_list_get_item_by_index(const stpi_list_t *list,
+						     int idx);
+extern stpi_list_item_t *stpi_list_get_item_by_name(const stpi_list_t *list,
 						    const char *name);
-extern stpi_list_item_t *stpi_list_get_item_by_long_name(stpi_list_t *list,
-						       const char *long_name);
-extern int stpi_list_get_length(stpi_list_t *list);
+extern stpi_list_item_t *stpi_list_get_item_by_long_name(const stpi_list_t *list,
+							 const char *long_name);
+extern int stpi_list_get_length(const stpi_list_t *list);
 
 extern void stpi_list_set_freefunc(stpi_list_t *list, node_freefunc);
-extern node_freefunc stpi_list_get_freefunc(stpi_list_t *list);
+extern node_freefunc stpi_list_get_freefunc(const stpi_list_t *list);
 
 extern void stpi_list_set_copyfunc(stpi_list_t *list, node_copyfunc);
-extern node_copyfunc stpi_list_get_copyfunc(stpi_list_t *list);
+extern node_copyfunc stpi_list_get_copyfunc(const stpi_list_t *list);
 
 extern void stpi_list_set_namefunc(stpi_list_t *list, node_namefunc);
-extern node_namefunc stpi_list_get_namefunc(stpi_list_t *list);
+extern node_namefunc stpi_list_get_namefunc(const stpi_list_t *list);
 
 extern void stpi_list_set_long_namefunc(stpi_list_t *list, node_namefunc);
-extern node_namefunc stpi_list_get_long_namefunc(stpi_list_t *list);
+extern node_namefunc stpi_list_get_long_namefunc(const stpi_list_t *list);
 
 extern void stpi_list_set_sortfunc(stpi_list_t *list, node_sortfunc);
-extern node_sortfunc stpi_list_get_sortfunc(stpi_list_t *list);
+extern node_sortfunc stpi_list_get_sortfunc(const stpi_list_t *list);
 
 extern int stpi_list_item_create(stpi_list_t *list,
-				stpi_list_item_t *next,
-				void *data);
+				 const stpi_list_item_t *next,
+				 const void *data);
 extern int stpi_list_item_destroy(stpi_list_t *list,
 				 stpi_list_item_t *item);
-extern stpi_list_item_t *stpi_list_item_prev(stpi_list_item_t *item);
-extern stpi_list_item_t *stpi_list_item_next(stpi_list_item_t *item);
+extern stpi_list_item_t *stpi_list_item_prev(const stpi_list_item_t *item);
+extern stpi_list_item_t *stpi_list_item_next(const stpi_list_item_t *item);
 extern void *stpi_list_item_get_data(const stpi_list_item_t *item);
 extern int stpi_list_item_set_data(stpi_list_item_t *item,
 				  void *data);
@@ -205,8 +205,6 @@ extern void stpi_prune_inactive_options(stp_vars_t v);
 extern void stpi_init_paper(void);
 extern void stpi_init_dither(void);
 extern void stpi_init_printer(void);
-extern char *stpi_xio_fgets(char *s, int size, void *ixio);
-extern void stpi_xio_free(void *ixio);
 
 
 /* Uncomment the next line to get performance statistics:

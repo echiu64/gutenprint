@@ -147,22 +147,10 @@ extern int stpui_show_all_paper_sizes;
 /*
  * Function prototypes
  */
-extern void stpui_plist_set_output_to(stpui_plist_t *p, const char *val);
-extern void stpui_plist_set_output_to_n(stpui_plist_t *p, const char *val, int n);
-extern const char *stpui_plist_get_output_to(const stpui_plist_t *p);
-extern void stpui_plist_set_name(stpui_plist_t *p, const char *val);
-extern void stpui_plist_set_name_n(stpui_plist_t *p, const char *val, int n);
-extern const char *stpui_plist_get_name(const stpui_plist_t *p);
-extern void stpui_plist_copy(stpui_plist_t *vd, const stpui_plist_t *vs);
 
-extern int stpui_plist_add(const stpui_plist_t *key, int add_only);
 extern stpui_plist_t *stpui_plist_create(const char *name, const char *driver);
-extern void stpui_printer_initialize(stpui_plist_t *printer);
 extern const char *stpui_combo_get_name(GtkWidget   *combo,
-				  stp_const_string_list_t options);
-extern void stpui_set_adjustment_tooltip(GtkObject *adjustment,
-					 const gchar *tip);
-extern void stpui_set_help_data(GtkWidget *widget, const gchar *tooltip);
+					stp_const_string_list_t options);
 extern void stpui_table_attach_aligned(GtkTable *table, gint column,
 				       gint row, const gchar *label_text,
 				       gfloat xalign, gfloat yalign,

@@ -95,15 +95,15 @@ is_po2(size_t i)
 }
 
 void
-stpi_dither_matrix_iterated_init(dither_matrix_t *mat, size_t size, size_t exp,
-				const unsigned *array)
+stpi_dither_matrix_iterated_init(dither_matrix_t *mat, size_t size,
+				 size_t expt, const unsigned *array)
 {
   int i;
   int x, y;
   mat->base = size;
-  mat->exp = exp;
+  mat->exp = expt;
   mat->x_size = 1;
-  for (i = 0; i < exp; i++)
+  for (i = 0; i < expt; i++)
     mat->x_size *= mat->base;
   mat->y_size = mat->x_size;
   mat->total_size = mat->x_size * mat->y_size;
@@ -152,9 +152,7 @@ int
 stpi_dither_matrix_validate_array(stp_const_array_t array)
 {
   double low, high;
-  stp_sequence_t seq;
-
-  seq = stp_array_get_sequence(array);
+  stp_const_sequence_t seq = stp_array_get_sequence(array);
   stp_sequence_get_bounds(seq, &low, &high);
   if (low < 0 || high > 65535)
     return 0;
@@ -164,16 +162,14 @@ stpi_dither_matrix_validate_array(stp_const_array_t array)
 
 void
 stpi_dither_matrix_init_from_dither_array(dither_matrix_t *mat,
-				  stp_const_array_t array,
-				  int transpose)
+					  stp_const_array_t array,
+					  int transpose)
 {
   int x, y;
   size_t count;
-  stp_sequence_t seq;
   const unsigned short *vec;
   int x_size, y_size;
-
-  seq = stp_array_get_sequence(array);
+  stp_const_sequence_t seq = stp_array_get_sequence(array);
   stp_array_get_size(array, &x_size, &y_size);
 
   vec = stp_sequence_get_ushort_data(seq, &count);

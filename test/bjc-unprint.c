@@ -31,7 +31,6 @@
 #include <malloc.h>
 
 
-char *outfilename= 0;
 char *efnlc= 0,*efnlm= 0,*efnc= 0,*efnm= 0,*efny= 0,*efnk= 0;
 
 int lc_cnt= 0,lm_cnt= 0,ly_cnt= 0,c_cnt= 0,m_cnt= 0,y_cnt= 0,k_cnt= 0;

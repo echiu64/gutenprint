@@ -3540,8 +3540,8 @@ do_preview_thumbnail (void)
   gint printable_display_left, printable_display_top;
   gint paper_display_width, paper_display_height;
   gint printable_display_width, printable_display_height;
-  int bottom = stp_get_top(pv->v) + stp_get_height(pv->v);
-  int right = stp_get_left(pv->v) + stp_get_width(pv->v);
+  int l_bottom = stp_get_top(pv->v) + stp_get_height(pv->v);
+  int l_right = stp_get_left(pv->v) + stp_get_width(pv->v);
 
   preview_ppi = preview_size_horiz * FINCH / (gdouble) paper_width;
 
@@ -3576,8 +3576,8 @@ do_preview_thumbnail (void)
 
   if (!preview_valid)
     {
-      gint preview_r = 1 + paper_display_left + preview_ppi * right / INCH;
-      gint preview_b = 1 + paper_display_top + preview_ppi * bottom / INCH;
+      gint preview_r = 1 + paper_display_left + preview_ppi * l_right / INCH;
+      gint preview_b = 1 + paper_display_top + preview_ppi * l_bottom / INCH;
       preview_w = preview_r - preview_x;
       preview_h = preview_b - preview_y;
       if (preview_w >= printable_display_width)

@@ -145,14 +145,14 @@ An @code{escp2_printer_t} is a C struct defined as follows:
 typedef struct escp2_printer
 @{
   model_cap_t	flags;		/* Bitmask of flags, see below */
-/*****************************************************************************/
+/*****************************************************************/
   int		nozzles;	/* Number of nozzles per color */
   int		min_nozzles;	/* Minimum number of nozzles per color */
   int		nozzle_separation; /* Separation between rows, in 1/360" */
   int		black_nozzles;	/* Number of black nozzles (may be extra) */
   int		min_black_nozzles;	/* # of black nozzles (may be extra) */
   int		black_nozzle_separation; /* Separation between rows */
-/*****************************************************************************/
+/*****************************************************************/
   int		xres;		/* Normal distance between dots in */
 				/* softweave mode (inverse inches) */
   int		enhanced_xres;	/* Distance between dots in highest */
@@ -171,7 +171,7 @@ typedef struct escp2_printer
   int		max_vres;
   int		min_hres;
   int		min_vres;
-/*****************************************************************************/
+/*****************************************************************/
   int		max_paper_width; /* Maximum paper width, in points */
   int		max_paper_height; /* Maximum paper height, in points */
   int		min_paper_width; /* Maximum paper width, in points */
@@ -186,7 +186,7 @@ typedef struct escp2_printer
   int		m_right_margin;	/* Right margin, points */
   int		m_top_margin;	/* Absolute top margin, points */
   int		m_bottom_margin;	/* Absolute bottom margin, points */
-/*****************************************************************************/
+/*****************************************************************/
   int		extra_feed;	/* Extra distance the paper can be spaced */
 				/* beyond the bottom margin, in 1/360". */
 				/* (maximum useful value is */
@@ -196,20 +196,20 @@ typedef struct escp2_printer
   int		pseudo_separation_rows;/* Some printers require funky */
 				/* spacing arguments in softweave mode */
 
-  int           zero_margin_offset;   /* Offset to use to achieve */
+  int           zero_margin_offset;   /* Offset to use for */
 				      /* zero-margin printing */
-/*****************************************************************************/
+/*****************************************************************/
 		 /* The stylus 480 and 580 have an unusual arrangement of
 				  color jets that need special handling */
   const int *head_offset;
   int		initial_vertical_offset;
   int		black_initial_vertical_offset;
 
-/*****************************************************************************/
+/*****************************************************************/
   const int *dot_sizes;		/* Vector of dot sizes for resolutions */
   const double *densities;	/* List of densities for each printer */
-  const escp2_variable_inklist_t *inks; /* Choices of inks for this printer */
-/*****************************************************************************/
+  const escp2_variable_inklist_t *inks; /* Choices of inks */
+/*****************************************************************/
   const double *lum_adjustment;
   const double *hue_adjustment;
   const double *sat_adjustment;
@@ -639,9 +639,9 @@ typedef struct canon_caps @{
   int inks;           /* installable cartridges (CANON_INK_*) */
   int slots;          /* available paperslots */
   int features;       /* special bjl settings */
-  canon_dot_size_t dot_sizes;	/* Vector of dot sizes for resolutions */
-  canon_densities_t densities;	/* List of densities for each printer */
-  canon_variable_inklist_t *inxs; /* Choices of inks for this printer */
+  canon_dot_size_t dot_sizes;	/* Vector of dot sizes */
+  canon_densities_t densities;	/* List of densities */
+  canon_variable_inklist_t *inxs; /* Choices of inks */
 @} canon_cap_t;
 @end example
 @end deftypevr

@@ -287,11 +287,11 @@ do									\
 #define ADVANCE_BIDIRECTIONAL(d,bit,in,dir,width,xer,xstep,xmod,err,N,S) \
 do									 \
 {									 \
-  int i;								 \
-  int j;								 \
-  for (i = 0; i < N; i++)						 \
-    for (j = 0; j < S; j++)						 \
-      err[i][j] += dir;							 \
+  int ii;								 \
+  int jj;								 \
+  for (ii = 0; ii < N; ii++)						 \
+    for (jj = 0; jj < S; jj++)						 \
+      err[ii][jj] += dir;						 \
   if (dir == 1)								 \
     ADVANCE_UNIDIRECTIONAL(d, bit, in, width, xer, xstep, xmod);	 \
   else									 \

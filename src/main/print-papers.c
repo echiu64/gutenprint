@@ -167,12 +167,12 @@ stp_get_papersize_by_name(const char *name)
 }
 
 const stp_papersize_t *
-stp_get_papersize_by_index(int index)
+stp_get_papersize_by_index(int idx)
 {
   stpi_list_item_t *paper;
 
   check_paperlist();
-  paper = stpi_list_get_item_by_index(paper_list, index);
+  paper = stpi_list_get_item_by_index(paper_list, idx);
   if (!paper)
     return NULL;
   else

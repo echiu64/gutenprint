@@ -117,8 +117,6 @@ typedef union yylv {
   char *sval;
 } YYSTYPE;
 
-extern YYSTYPE yylval;
-
 #include "testpatterny.h"
 
 

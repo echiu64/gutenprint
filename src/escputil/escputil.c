@@ -282,7 +282,7 @@ escp_printer_t printer_list[] =
   { NULL,	NULL,			0,	0,	0,	0,	0 },
 };
 
-char *printer = NULL;
+char *the_printer = NULL;
 char *raw_device = NULL;
 char *printer_model = NULL;
 char printer_cmd[1025];
@@ -363,16 +363,16 @@ main(int argc, char **argv)
 	  operation = c;
 	  break;
 	case 'P':
-	  if (printer || raw_device)
+	  if (the_printer || raw_device)
 	    {
 	      printf(_("You may only specify one printer or raw device."));
 	      do_help(1);
 	    }
-	  printer = xmalloc(strlen(optarg) + 1);
-	  strcpy(printer, optarg);
+	  the_printer = xmalloc(strlen(optarg) + 1);
+	  strcpy(the_printer, optarg);
 	  break;
 	case 'r':
-	  if (printer || raw_device)
+	  if (the_printer || raw_device)
 	    {
 	      printf(_("You may only specify one printer or raw device."));
 	      do_help(1);
@@ -474,20 +474,20 @@ do_print_cmd(void)
           !access("/usr/bin/lpr", X_OK) ||
           !access("/usr/bsd/lpr", X_OK))
         {
-        if (printer == NULL)
+        if (the_printer == NULL)
           strcpy(command, "lpr -l");
 	else
-          snprintf(command, 1023, "lpr -P%s -l", printer);
+          snprintf(command, 1023, "lpr -P%s -l", the_printer);
         }
-      else if (printer == NULL)
+      else if (the_printer == NULL)
 	strcpy(command, "lp -s -oraw");
       else
-	snprintf(command, 1023, "lp -s -oraw -d%s", printer);
+	snprintf(command, 1023, "lp -s -oraw -d%s", the_printer);
 
       if ((pfile = popen(command, "w")) == NULL)
 	{
-	  fprintf(stderr, _("Cannot print to printer %s with %s\n"), printer,
-		  command);
+	  fprintf(stderr, _("Cannot print to printer %s with %s\n"),
+		  the_printer, command);
 	  return 1;
 	}
     }

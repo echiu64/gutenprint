@@ -58,7 +58,7 @@ extern int stp_array_set_point(stp_array_t array, int x, int y,
 extern int stp_array_get_point(stp_const_array_t array, int x, int y,
 			       double *data);
 
-extern const stp_sequence_t stp_array_get_sequence(stp_const_array_t array);
+extern stp_const_sequence_t stp_array_get_sequence(stp_const_array_t array);
 
 
 #ifdef __cplusplus

@@ -161,11 +161,11 @@ extern void merge_line(line_type *p, unsigned char *l, int startl, int stopl,
 extern void expand_line (unsigned char *src, unsigned char *dst, int height,
 			 int skip, int left_ignore);
 extern void write_output (FILE *fp_w, int dontwrite);
-extern void find_white (unsigned char *buf,int npix, int *left, int *right);
-extern int update_page (unsigned char *buf, int bufsize, int m, int n,
+extern void find_white (unsigned char *buff,int npix, int *left, int *right);
+extern int update_page (unsigned char *buff, int buffsize, int m, int n,
 			int color, int density);
 extern void parse_escp2 (FILE *fp_r);
-extern void reverse_bit_order (unsigned char *buf, int n);
+extern void reverse_bit_order (unsigned char *buff, int n);
 extern int rle_decode (unsigned char *inbuf, int n, int max);
 extern void parse_canon (FILE *fp_r);
 
@@ -174,7 +174,7 @@ unsigned get_mask_2[] = { 6, 4, 2, 0 };
 unsigned get_mask_4[] = { 4, 0 };
 
 static inline int
-get_bits(unsigned char *p, int index)
+get_bits(unsigned char *p, int idx)
 {
   /*
    * p is a pointer to a bit stream, ordered MSb first.  Extract the
@@ -186,17 +186,17 @@ get_bits(unsigned char *p, int index)
   switch (pstate.bpp)
     {
     case 1:
-      return (p[index >> 3] >> (7 - (index & 7))) & 1;
+      return (p[idx >> 3] >> (7 - (idx & 7))) & 1;
     case 2:
-      b = get_mask_2[index & 3];
-      return (p[index >> 2] >> b) & 3;
+      b = get_mask_2[idx & 3];
+      return (p[idx >> 2] >> b) & 3;
     case 4:
-      b = get_mask_4[index & 1];
-      return (p[index >> 1] >> b) & 0xf;
+      b = get_mask_4[idx & 1];
+      return (p[idx >> 1] >> b) & 0xf;
     case 8:
-      return p[index];
+      return p[idx];
     default:
-      addr = (index * pstate.bpp);
+      addr = (idx * pstate.bpp);
       value = 0;
       for (b = 0; b < pstate.bpp; b++)
 	{
@@ -213,7 +213,7 @@ static unsigned clr_mask_2[] = { 0xfc, 0, 0xf3, 0, 0xcf, 0, 0x3f, 0 };
 static unsigned clr_mask_4[] = { 0xf0, 0, 0, 0, 0xf, 0, 0, 0 };
 
 static inline void
-set_bits(unsigned char *p,int index,int value)
+set_bits(unsigned char *p,int idx,int value)
 {
 
   /*
@@ -226,32 +226,32 @@ set_bits(unsigned char *p,int index,int value)
   switch (pstate.bpp)
     {
     case 1:
-      b = (7 - (index & 7));
-      p[index >> 3] &= clr_mask_1[b];
-      p[index >> 3] |= value << b;
+      b = (7 - (idx & 7));
+      p[idx >> 3] &= clr_mask_1[b];
+      p[idx >> 3] |= value << b;
       break;
     case 2:
-      b = get_mask_2[index & 3];
-      p[index >> 2] &= clr_mask_2[b];
-      p[index >> 2] |= value << b;
+      b = get_mask_2[idx & 3];
+      p[idx >> 2] &= clr_mask_2[b];
+      p[idx >> 2] |= value << b;
       break;
     case 4:
-      b = get_mask_4[index & 1];
-      p[index >> 1] &= clr_mask_4[b];
-      p[index >> 1] |= value << b;
+      b = get_mask_4[idx & 1];
+      p[idx >> 1] &= clr_mask_4[b];
+      p[idx >> 1] |= value << b;
       break;
     case 8:
-      p[index] = value;
+      p[idx] = value;
       break;
     default:
       for (b = pstate.bpp - 1; b >= 0; b--)
 	{
 	  if (value & 1)
-	    p[(index * pstate.bpp + b) / 8] |=
-	      1 << (7 - ((index * pstate.bpp + b) % 8));
+	    p[(idx * pstate.bpp + b) / 8] |=
+	      1 << (7 - ((idx * pstate.bpp + b) % 8));
 	  else
-	    p[(index * pstate.bpp + b) / 8] &=
-	      ~(1 << (7 - ((index * pstate.bpp + b) % 8)));
+	    p[(idx * pstate.bpp + b) / 8] &=
+	      ~(1 << (7 - ((idx * pstate.bpp + b) % 8)));
 	  value/=2;
 	}
     }
@@ -461,7 +461,7 @@ write_output(FILE *fp_w, int dontwrite)
 }
 
 void
-find_white(unsigned char *buf,int npix, int *left, int *right)
+find_white(unsigned char *buff,int npix, int *left, int *right)
 {
 
   /*
@@ -484,15 +484,15 @@ find_white(unsigned char *buf,int npix, int *left, int *right)
    * the byte.  It does seem like this is unnecessarily complex, perhaps?
    */
   max = words;
-  for (i = 0; (i < max) && (((long *)buf)[i] == 0); i++)
+  for (i = 0; (i < max) && (((long *)buff)[i] == 0); i++)
     ;
   max = (i < words) ? (i + 1) * sizeof(long) : bytes;
 
   i *= sizeof(long);		/* Convert from longs to bytes */
-  for (; (i < max) && (buf[i] == 0); i++)
+  for (; (i < max) && (buff[i] == 0); i++)
     ;
   max = (i < bytes) ? 8 : extra;
-  for (j = 0; (j < max) && !(buf[i] & (1 << (7 - j))); j++)
+  for (j = 0; (j < max) && !(buff[i] & (1 << (7 - j))); j++)
     ;
   *left = (i * 8 + j) / pstate.bpp;
   *right = 0;
@@ -502,7 +502,7 @@ find_white(unsigned char *buf,int npix, int *left, int *right)
     return;
 
   /* right side, this is a little trickier */
-  for (i = 0; (i < extra) && !(buf[bytes] & (1 << (i + 8 - extra))); i++)
+  for (i = 0; (i < extra) && !(buff[bytes] & (1 << (i + 8 - extra))); i++)
     ;
   if (i < extra)
     {
@@ -511,32 +511,32 @@ find_white(unsigned char *buf,int npix, int *left, int *right)
     }
   *right = extra;  /*temporarily store right in bits to avoid rounding error*/
 
-  for (i = 0; (i < bytes % sizeof(long)) && !(buf[bytes - 1 - i]); i++)
+  for (i = 0; (i < bytes % sizeof(long)) && !(buff[bytes - 1 - i]); i++)
     ;
   if (i < bytes % sizeof(long))
     {
-      for (j = 0; (j < 8) && !(buf[bytes - 1 - i] & (1 << j)); j++)
+      for (j = 0; (j < 8) && !(buff[bytes - 1 - i] & (1 << j)); j++)
 	;
       *right = (*right + i * 8 + j) / pstate.bpp;
       return;
     }
   *right += i * 8;
 
-  for (i = 0; (i < words) && !(((int *)buf)[words - 1 - i]); i++)
+  for (i = 0; (i < words) && !(((int *)buff)[words - 1 - i]); i++)
     ;
 
   if (i < words)
     {
       *right += i * sizeof(long) * 8;
       for (j = 0;
-	   (j < sizeof(long)) && !(buf[(words - i) * sizeof(long) - 1 - j]);
+	   (j < sizeof(long)) && !(buff[(words - i) * sizeof(long) - 1 - j]);
 	   j++)
 	;
       if (j < sizeof(long))
 	{
 	  *right += j * 8;
 	  max = (words - i) * sizeof(long) - 1 - j;
-	  for (j = 0; (j < 8) && !(buf[max] & (1 << j)); j++)
+	  for (j = 0; (j < 8) && !(buff[max] & (1 << j)); j++)
 	    ;
 	  if (j < 8)
 	    {
@@ -549,8 +549,8 @@ find_white(unsigned char *buf,int npix, int *left, int *right)
 }
 
 int
-update_page(unsigned char *buf, /* I - pixel data               */
-	    int bufsize,        /* I - size of buf in bytes     */
+update_page(unsigned char *buff, /* I - pixel data               */
+	    int buffsize,        /* I - size of buff in bytes     */
 	    int m,              /* I - height of area in pixels */
 	    int n,              /* I - width of area in pixels  */
 	    int color,          /* I - color of pixel data      */
@@ -601,7 +601,7 @@ update_page(unsigned char *buf, /* I - pixel data               */
 		  pstate.bottom_margin, y);
 	  return(1);
 	}
-      find_white(buf + mi * ((n * pstate.bpp + 7) / 8), n,
+      find_white(buff + mi * ((n * pstate.bpp + 7) / 8), n,
 		 &left_white, &right_white);
       if (left_white == n)
 	continue; /* ignore blank lines */
@@ -638,7 +638,7 @@ update_page(unsigned char *buf, /* I - pixel data               */
       width = page[y]->stopx[color] - page[y]->startx[color];
       page[y]->line[color] =
 	xcalloc(((width * skip + 1) * pstate.bpp + 7) / 8, 1);
-      expand_line(buf + mi * ((n * pstate.bpp + 7) / 8), page[y]->line[color],
+      expand_line(buff + mi * ((n * pstate.bpp + 7) / 8), page[y]->line[color],
 		  width+1, skip, left_white);
       if (oldline)
 	merge_line(page[y], oldline, oldstart, oldstop, color);
@@ -848,7 +848,9 @@ parse_escp2_extended(FILE *fp_r)
 	}
       else
 	{
+/*
 	  fprintf(stderr,"Warning!  Commands in unrecognised remote mode %s ignored.\n", buf);
+*/
 	  do
 	    {
 	      while((!eject) && (ch!=0x1b))
@@ -1179,6 +1181,9 @@ parse_escp2_command(FILE *fp_r)
       pstate.xposition = sh * (pstate.relative_horizontal_units /
 			       pstate.absolute_horizontal_units);
       break;
+    case 0x0:			/* Exit remote mode */
+      get2("Error exiting remote mode.\n");
+      break;
     case 0x6: /* flush buffers */
       /* Woosh.  Consider them flushed. */
       break;
@@ -1237,15 +1242,15 @@ parse_escp2(FILE *fp_r)
  * reverse the bit order in an array of bytes - does not reverse byte order!
  */
 void
-reverse_bit_order(unsigned char *buf, int n)
+reverse_bit_order(unsigned char *buff, int n)
 {
   int i;
   unsigned char a;
   if (!n) return; /* nothing to do */
 
   for (i= 0; i<n; i++) {
-    a= buf[i];
-    buf[i]=
+    a= buff[i];
+    buff[i]=
       (a & 0x01) << 7 |
       (a & 0x02) << 5 |
       (a & 0x04) << 3 |
@@ -1317,7 +1322,7 @@ parse_canon(FILE *fp_r)
 {
 
   int m=0;
-  int currentcolor,currentbpp,density,eject;
+  int currentcolor,currentbpp,density,l_eject;
   int cmdcounter;
   int delay_c=0, delay_m=0, delay_y=0, delay_C=0,
     delay_M=0, delay_Y=0, delay_K=0, currentdelay=0;
@@ -1325,8 +1330,8 @@ parse_canon(FILE *fp_r)
   global_counter=0;
 
   page= 0;
-  eject=pstate.got_graphics=currentbpp=currentcolor=density=0;
-  while ((!eject)&&(fread(&ch,1,1,fp_r))){
+  l_eject=pstate.got_graphics=currentbpp=currentcolor=density=0;
+  while ((!l_eject)&&(fread(&ch,1,1,fp_r))){
     global_counter++;
    if (ch==0xd) { /* carriage return */
      pstate.xposition=0;
@@ -1336,7 +1341,7 @@ parse_canon(FILE *fp_r)
      continue;
    }
    if (ch==0xc) { /* form feed */
-     eject=1;
+     l_eject=1;
      continue;
    }
    if (ch=='B') {
@@ -1371,11 +1376,11 @@ parse_canon(FILE *fp_r)
      if (ch=='K') /* 0x4b */ {
        if (sh!=2 || buf[0]!=0x00 ) {
 	 fprintf(stderr,"Error initializing printer with ESC [ K\n");
-	 eject=1;
+	 l_eject=1;
 	 continue;
        }
        if (page) {
-	 eject=1;
+	 l_eject=1;
 	 continue;
        } else {
 	 pstate.unidirectional=0;
@@ -1406,7 +1411,7 @@ parse_canon(FILE *fp_r)
      break;
 
    case '@': /* 0x40 */
-     eject=1;
+     l_eject=1;
      break;
 
    case '(': /* 0x28 */
