@@ -85,6 +85,7 @@ static int weavespan;		/* How many rows total are bracketed by */
 static int horizontal_weave;	/* Number of horizontal passes required */
 				/* This is > 1 for some of the ultra-high */
 				/* resolution modes */
+static int vertical_subpasses;
 
 /*
  * Mapping between color and linear index.  The colors are
@@ -110,7 +111,8 @@ get_color_by_params(int plane, int density)
  * Initialize the weave parameters
  */
 static void
-initialize_weave(int jets, int sep, int horizontal_passes)
+initialize_weave(int jets, int sep, int horizontal_passes,
+		 int v_subpasses)
 {
   int i;
   int k;
@@ -125,8 +127,10 @@ initialize_weave(int jets, int sep, int horizontal_passes)
   if (horizontal_passes <= 0)
     horizontal_passes = 1;
   horizontal_weave = horizontal_passes;
+  vertical_subpasses = v_subpasses;
+  njets /= vertical_subpasses;
 
-  weavefactor = jets / separation;
+  weavefactor = njets / separation;
   jetsused = ((weavefactor) * separation);
   initialoffset = (jetsused - weavefactor - 1) * separation;
   jetsleftover = njets - jetsused + 1;
@@ -190,48 +194,56 @@ get_pass(int row_or_pass)
  */
 
 static void
-weave_parameters_by_row(int row, weave_t *w)
+weave_parameters_by_row(int row, int vertical_subpass, weave_t *w)
 {
   int passblockstart = (row + initialoffset) / jetsused;
-  int internaljetsused = jetsused;
+  int internaljetsused = jetsused * vertical_subpasses;
   int internallogicalpassstart;
   w->row = row;
   w->pass = (passblockstart - (separation - 1)) +
     (separation + row - passblockstart - 1) % separation;
-  internallogicalpassstart = (w->pass * jetsused) - initialoffset +
+  w->pass += separation * vertical_subpass;
+  w->logicalpassstart = (w->pass * jetsused) - initialoffset +
     (w->pass % separation);
-  if (internallogicalpassstart < 0)
-    {
-      internaljetsused -=
-	(((separation - 1) - internallogicalpassstart) / separation);
-      internallogicalpassstart += separation *
-	(((separation - 1) - internallogicalpassstart) / separation);
-    }
-  w->logicalpassstart =  internallogicalpassstart;
   w->jet = ((row - w->logicalpassstart) / separation);
-  if (internallogicalpassstart >= 0)
-    w->physpassstart = internallogicalpassstart;
+  w->jet += jetsused * (vertical_subpasses - 1);
+  w->logicalpassstart = w->row - (w->jet * separation);
+  if (w->logicalpassstart >= 0)
+    w->physpassstart = w->logicalpassstart;
   else
-    w->physpassstart = internallogicalpassstart +
-      (separation * ((separation - internallogicalpassstart) / separation));
+    w->physpassstart = w->logicalpassstart +
+      (separation * ((separation - 1 - w->logicalpassstart) / separation));
   w->physpassend = (internaljetsused - 1) * separation +
-    internallogicalpassstart;
+    w->logicalpassstart;
   w->missingstartrows = (w->physpassstart - w->logicalpassstart) / separation;
+  if (w->pass < 0)
+    {
+      w->logicalpassstart -= w->pass * separation;
+      w->physpassend -= w->pass * separation;
+      w->jet += w->pass;
+      w->missingstartrows += w->pass;
+    }
+  w->pass++;
 }
 
 int passstarts[1000];
 int passends[1000];
 int passcounts[1000];
 
+int physjets = 32;
+int physsep = 8;
+int physpasses = 2;
+
 int
 main(int argc, char **argv)
 {
   int i;
+  int j;
   weave_t w;
   int lastpass = -1;
   int newestpass = -1;
-  initialize_weave(16, 8, 2);
-  printf("%8s %5s %5s %5s %10s %10s %10s %10s\n", "", "row", "pass", "jet",
+  initialize_weave(physjets, physsep, 1, physpasses);
+  printf("%11s %5s %5s %5s %10s %10s %10s %10s\n", "", "row", "pass", "jet",
 	 "missing", "logical", "physstart", "physend");
   for (i = 0; i < 1000; i++)
     {
@@ -240,33 +252,39 @@ main(int argc, char **argv)
     }
   for (i = 0; i < 1000; i++)
     {
-      int physrow;
-      weave_parameters_by_row(i, &w);
-      physrow = w.logicalpassstart + 8 * w.jet;
-      printf("%c%c%c%c%c%c%c%c%5d %5d %5d %10d %10d %10d %10d\n",
-	     w.pass < 0 ? 'A' : ' ',
-	     w.jet < 0 || w.jet > 31 ? 'B' : ' ',
-	     w.physpassstart > w.row ? 'C' : ' ',
-	     w.physpassend < w.row ? 'D' : ' ',
-	     w.physpassend == w.row && lastpass + 1 != w.pass ? 'E' : ' ',
-	     passstarts[w.pass] != -1 && passstarts[w.pass] !=w.physpassstart ?
-	     'F' : ' ',
-	     passends[w.pass] != -1 && passends[w.pass] !=w.physpassend ?
-	     'G' : ' ',
-	     w.row != physrow ? 'H' : ' ',
-	     w.row, w.pass, w.jet,
-	     w.missingstartrows, w.logicalpassstart, w.physpassstart,
-	     w.physpassend);
-      if (w.physpassend == w.row)
+      for (j = 0; j < physpasses; j++)
 	{
-	  lastpass = w.pass;
-	  passends[w.pass] = -2;
+	  int physrow;
+	  weave_parameters_by_row(i, j, &w);
+	  physrow = w.logicalpassstart + physsep * w.jet;
+	  printf("%c%c%c%c%c%c%c%c%c%c%c%5d %5d %5d %10d %10d %10d %10d\n",
+		 w.pass < 0 ? 'A' : ' ',
+		 w.jet < 0 || w.jet > physjets - 1 ? 'B' : ' ',
+		 w.physpassstart > w.row ? 'C' : ' ',
+		 w.physpassend < w.row ? 'D' : ' ',
+		 w.physpassend == w.row && lastpass + 1 != w.pass ? 'E' : ' ',
+		 passstarts[w.pass] != -1 && passstarts[w.pass] !=w.physpassstart ?
+		 'F' : ' ',
+		 passends[w.pass] != -1 && passends[w.pass] !=w.physpassend ?
+		 'G' : ' ',
+		 w.row != physrow ? 'H' : ' ',
+		 w.missingstartrows < 0 || w.missingstartrows > physjets - 1 ? 'I' : ' ',
+		 w.physpassstart < 0 ? 'J' : ' ',
+		 w.missingstartrows > w.jet ? 'K' : ' ',
+		 w.row, w.pass, w.jet,
+		 w.missingstartrows, w.logicalpassstart, w.physpassstart,
+		 w.physpassend);
+	  if (w.physpassend == w.row)
+	    {
+	      lastpass = w.pass;
+	      passends[w.pass] = -2;
+	    }
+	  else
+	    passends[w.pass] = w.physpassend;
+	  passstarts[w.pass] = w.physpassstart;
+	  if (w.pass > newestpass)
+	    newestpass = w.pass;
 	}
-      else
-	passends[w.pass] = w.physpassend;
-      passstarts[w.pass] = w.physpassstart;
-      if (w.pass > newestpass)
-	newestpass = w.pass;
     }
   printf("Unterminated passes:\n");
   for (i = 0; i <= newestpass; i++)
