@@ -740,8 +740,8 @@ escp2_set_color(const escp2_init_t *init)
     stp_send_command(init->v, "\033(K", "bc", 3);
   else if (escp2_has_cap(init->model, MODEL_GRAYMODE, MODEL_GRAYMODE_YES,
 			 init->v))
-    stp_send_command(init->v, "\033(K", "bc", 3,
-		(init->use_black_parameters ? 1 : 2));
+    stp_send_command(init->v, "\033(K", "bc",
+		     (init->use_black_parameters ? 1 : 2));
 }
 
 static void
@@ -769,7 +769,7 @@ escp2_set_dot_size(const escp2_init_t *init)
   /* Dot size */
   int drop_size = escp2_ink_type(init->model, init->res->resid, init->v);
   if (drop_size >= 0)
-    stp_send_command(init->v, "\033(e", "bh", drop_size);
+    stp_send_command(init->v, "\033(e", "bcc", 0, drop_size);
 }
 
 static void
@@ -1157,7 +1157,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
        */
       for (i = 0; i < ninktypes; i++)
 	if (inks->inknames[i]->inkset == INKSET_EXTENDED &&
-	    inks->inknames[i]->channel_limit * 2 == image->bpp(image))
+	    inks->inknames[i]->channel_limit * 2 == stp_image_bpp(image))
 	  {
 	    stp_dprintf(STP_DBG_INK, nv, "Changing ink type from %s to %s\n",
 			stp_get_string_parameter(nv, "InkType"),
@@ -1169,7 +1169,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
       if (!found)
 	{
 	  stp_eprintf(nv, _("This printer does not support raw printer output at depth %d\n"),
-		      image->bpp(image) / 2);
+		      stp_image_bpp(image) / 2);
 	  return 0;
 	}
     }
@@ -1219,7 +1219,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
  /*
   * Compute the output size...
   */
-  image->init(image);
+  stp_image_init(image);
   out_width = stp_get_width(v);
   out_height = stp_get_height(v);
 
@@ -1443,13 +1443,13 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 				   FILLFUNC, PACKFUNC, COMPUTEFUNC);
 
       stp_set_output_color_model(nv, COLOR_MODEL_CMY);
-      colorfunc = stp_choose_colorfunc(nv, image->bpp(image), &out_channels);
+      colorfunc = stp_choose_colorfunc(nv, stp_image_bpp(image), &out_channels);
 
-      in  = stp_malloc(image->width(image) * image->bpp(image));
-      out = stp_malloc(image->width(image) * out_channels * 2);
+      in  = stp_malloc(stp_image_width(image) * stp_image_bpp(image));
+      out = stp_malloc(stp_image_width(image) * out_channels * 2);
 
-      dither = stp_dither_init(image->width(image), out_width,
-			       image->bpp(image), xdpi, ydpi, nv);
+      dither = stp_dither_init(stp_image_width(image), out_width,
+			       stp_image_bpp(image), xdpi, ydpi, nv);
 
       adjust_print_quality(&init, dither);
 
@@ -1457,10 +1457,10 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
        * Let the user know what we're doing...
        */
 
-      image->progress_init(image);
+      stp_image_progress_init(image);
 
-      errdiv  = image->height(image) / out_height;
-      errmod  = image->height(image) % out_height;
+      errdiv  = stp_image_height(image) / out_height;
+      errmod  = stp_image_height(image) % out_height;
       errval  = 0;
       errlast = -1;
       errline  = 0;
@@ -1471,19 +1471,19 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 	  int duplicate_line = 1;
 	  int zero_mask;
 	  if ((y & 63) == 0)
-	    image->note_progress(image, y, out_height);
+	    stp_image_note_progress(image, y, out_height);
 
 	  if (errline != errlast)
 	    {
 	      errlast = errline;
 	      duplicate_line = 0;
-	      if (image->get_row(image, in, errline) != STP_IMAGE_OK)
+	      if (stp_image_get_row(image, in, errline) != STP_IMAGE_OK)
 		{
 		  status = 2;
 		  break;
 		}
-	      (*colorfunc)(nv, in, out, &zero_mask, image->width(image),
-			   image->bpp(image));
+	      (*colorfunc)(nv, in, out, &zero_mask, stp_image_width(image),
+			   stp_image_bpp(image));
 	    }
 	  QUANT(1);
 
@@ -1502,7 +1502,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 	    }
 	  QUANT(4);
 	}
-      image->progress_conclude(image);
+      stp_image_progress_conclude(image);
       stp_flush_all(weave, model, out_width, left, ydpi, xdpi, physical_xdpi);
       QUANT(5);
 
