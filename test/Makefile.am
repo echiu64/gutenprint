@@ -62,7 +62,7 @@ $(LIBGIMPPRINT_LIBS):
 
 ## Rules
 
-run-weavetest: escp2-weavetest
+#run-weavetest: escp2-weavetest
 
 
 ## Clean
