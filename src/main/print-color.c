@@ -1206,13 +1206,29 @@ lookup_rgb(lut_t *lut, unsigned short *rgbout,
 }
 
 static inline int
-mem_eq(const unsigned short *i1, const unsigned short *i2, int count)
+short_eq(const unsigned short *i1, const unsigned short *i2, size_t count)
 {
+#if 0
   int i;
   for (i = 0; i < count; i++)
     if (i1[i] != i2[i])
       return 0;
   return 1;
+#else
+  return !memcmp(i1, i2, count * sizeof(unsigned short));
+#endif
+}
+
+static inline void
+short_copy(unsigned short *out, const unsigned short *in, size_t count)
+{
+#if 0
+  int i;
+  for (i = 0; i < count; i++)
+    out[i] = in[i];
+#else
+  (void) memcpy(out, in, count * sizeof(unsigned short));
+#endif
 }
 
 static unsigned
@@ -1240,11 +1256,8 @@ generic_cmy_to_kcmy(stp_const_vars_t vars, const unsigned short *in,
 
   for (i = 0; i < width; i++, out += 4, in += 3)
     {
-      if (input_cache && mem_eq(input_cache, in, 3))
-	{
-	  for (j = 0; j < 4; j++)
-	    out[j] = output_cache[j];
-	}
+      if (input_cache && short_eq(input_cache, in, 3))
+	short_copy(out, output_cache, 4);
       else
 	{
 	  int c = in[0];
@@ -1323,11 +1336,8 @@ raw_cmy_to_kcmy(stp_const_vars_t vars, const unsigned short *in,
 
   for (i = 0; i < width; i++, out += 4, in += 3)
     {
-      if (input_cache && mem_eq(input_cache, in, 3))
-	{
-	  for (j = 0; j < 4; j++)
-	    out[j] = output_cache[j];
-	}
+      if (input_cache && short_eq(input_cache, in, 3))
+	short_copy(out, output_cache, 4);
       else
 	{
 	  int c = in[0];
@@ -2599,14 +2609,45 @@ generic_kcmy_to_cmykrb(stp_const_vars_t vars, const unsigned short *in,
 
   for (i = 0; i < width; i++, out += 6, in += 4)
     {
-      for (j = 0; j < 4; j++)
+      if (input_cache && short_eq(input_cache, in, 6))
+	short_copy(out, output_cache, 6);
+      else
 	{
-	  out[j] = in[j];
-	  if (in[j])
-	    nz[j] = 1;
+	  int r = FMIN(in[2], in[3]);
+	  int b = FMIN(in[1], in[2]);
+	  int k = in[0];
+	  int excess_r = r - (b + k);
+	  int excess_b = b - (r + k);
+	  input_cache = in;
+	  for (j = 0; j < 4; j++)
+	    {
+	      out[j] = in[j];
+	      if (in[j])
+		nz[j] = 1;
+	    }
+	  if (excess_r > 0)
+	    {
+	      out[2] -= excess_r;
+	      out[3] -= excess_r;
+	      out[4] = excess_r;
+	      out[5] = 0;
+	      nz[4] = 1;
+	    }
+	  else if (excess_b > 0)
+	    {
+	      out[1] -= excess_b;
+	      out[2] -= excess_b;
+	      out[4] = 0;
+	      out[5] = excess_b;
+	      nz[5] = 1;
+	    }
+	  else
+	    {
+	      out[4] = 0;
+	      out[5] = 0;
+	    }
+	  output_cache = out;
 	}
-      out[4] = 0;
-      out[5] = 0;
     }
   for (j = 0; j < 6; j++)
     if (nz[j] == 0)
@@ -2630,14 +2671,45 @@ raw_kcmy_to_cmykrb(stp_const_vars_t vars, const unsigned short *in,
 
   for (i = 0; i < width; i++, out += 6, in += 4)
     {
-      for (j = 0; j < 4; j++)
+      if (input_cache && short_eq(input_cache, in, 6))
+	short_copy(out, output_cache, 6);
+      else
 	{
-	  out[j] = in[j];
-	  if (in[j])
-	    nz[j] = 1;
+	  int r = FMIN(in[2], in[3]);
+	  int b = FMIN(in[1], in[2]);
+	  int k = in[0];
+	  int excess_r = r - (b + k);
+	  int excess_b = b - (r + k);
+	  input_cache = in;
+	  for (j = 0; j < 4; j++)
+	    {
+	      out[j] = in[j];
+	      if (in[j])
+		nz[j] = 1;
+	    }
+	  if (excess_r > 0)
+	    {
+	      out[2] -= excess_r;
+	      out[3] -= excess_r;
+	      out[4] = excess_r;
+	      out[5] = 0;
+	      nz[4] = 1;
+	    }
+	  else if (excess_b > 0)
+	    {
+	      out[1] -= excess_b;
+	      out[2] -= excess_b;
+	      out[4] = 0;
+	      out[5] = excess_b;
+	      nz[5] = 1;
+	    }
+	  else
+	    {
+	      out[4] = 0;
+	      out[5] = 0;
+	    }
+	  output_cache = out;
 	}
-      out[4] = 0;
-      out[5] = 0;
     }
   for (j = 0; j < 6; j++)
     if (nz[j] == 0)
