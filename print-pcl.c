@@ -1524,10 +1524,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
   * Output the page, rotating as necessary...
   */
 
-  nv.density *= printer->printvars.density;
-  if (nv.density > 1.0)
-    nv.density = 1.0;
-  nv.saturation *= printer->printvars.saturation;
+  compute_lut(256, &nv);
 
   if (xdpi > ydpi)
     dither = init_dither(image_width, out_width, 1, xdpi / ydpi, &nv);
@@ -1695,6 +1692,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
   * Cleanup...
   */
 
+  free_lut(&nv);
   free(in);
   free(out);
 

@@ -964,7 +964,6 @@ escp2_print(const printer_t *printer,		/* I - Model */
   else
     colormode = COLOR_CMYK;
 
-
  /*
   * Setup a read-only pixel region for the entire image...
   */
@@ -1110,18 +1109,20 @@ escp2_print(const printer_t *printer,		/* I - Model */
   else
     escp2_init_microweave();
 
-
- /*
-  * Output the page...
-  */
-
-  nv.density = nv.density * printer->printvars.density /
-    (horizontal_passes * vertical_subsample);
+  /*
+   * Compute the LUT.  For now, it's 8 bit, but that may eventually
+   * sometimes change.
+   */
+  nv.density = nv.density / (horizontal_passes * vertical_subsample);
   if (bits == 2)
     nv.density *= 3.3;
   if (nv.density > 1.0)
     nv.density = 1.0;
-  nv.saturation *= printer->printvars.saturation;
+  compute_lut(256, &nv);
+
+ /*
+  * Output the page...
+  */
 
   if (xdpi > ydpi)
     dither = init_dither(image_width, out_width, 1, xdpi / ydpi, &nv);
@@ -1239,6 +1240,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   * Cleanup...
   */
 
+  free_lut(&nv);
   free(in);
   free(out);
   if (use_softweave)

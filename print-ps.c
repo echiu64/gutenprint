@@ -438,8 +438,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
   in  = malloc(image_width * image_bpp);
   out = malloc((image_width * out_bpp + 3) * 2);
 
-  nv.density *= printer->printvars.density;
-  nv.saturation *= printer->printvars.saturation;
+  compute_lut(256, &nv);
 
   if (model == 0)
   {
@@ -520,6 +519,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
     }
   }
 
+  free_lut(&nv);
   free(in);
   free(out);
 

@@ -129,7 +129,8 @@ vars_t vars =
 	1.0,			/* Output saturation */
 	1.0,			/* Density */
 	IMAGE_CONTINUOUS,	/* Image type */
-	0		/* Unit 0=Inch */
+	0,			/* Unit 0=Inch */
+	1.0			/* Application gamma placeholder */
 };
 
 int		plist_current = 0,	/* Current system printer */
@@ -628,8 +629,9 @@ run (char   *name,		/* I - Name of print program. */
       if (prn != NULL)
 	{
 	  Image image = Image_GDrawable_new(drawable);
+	  vars.app_gamma = gimp_gamma();
+	  merge_printvars(&vars, &(current_printer->printvars));
 
-	  compute_lut (&(current_printer->printvars), gimp_gamma (), &vars);
 	  /*
 	   * Is the image an Indexed type?  If so we need the colormap...
 	   */
@@ -765,6 +767,7 @@ initialize_printer(plist_t *printer)
   printer->v.image_type = vars.image_type;
   printer->v.saturation = vars.saturation;
   printer->v.density = vars.density;
+  printer->v.app_gamma = vars.app_gamma;
 }
 
 #define GET_MANDATORY_STRING_PARAM(param)		\

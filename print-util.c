@@ -488,17 +488,61 @@ gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
     }
 }
 
+void
+merge_printvars(vars_t *user, const vars_t *print)
+{
+  user->red = (user->red * print->red) / 100.0;
+  user->green = (user->green * print->green) / 100.0;
+  user->blue = (user->blue * print->blue) / 100.0;
+  user->contrast = (user->contrast * print->contrast) / 100.0;
+  user->brightness = (user->brightness * print->brightness) / 100.0;
+  user->gamma /= print->gamma;
+  user->saturation *= print->saturation;
+  user->density *= print->density;
+  /* Application gamma comes from the user variables */
+}
+
+static lut_t *
+allocate_lut(size_t steps)
+{
+  lut_t *ret = malloc(sizeof(lut_t));
+  ret->steps = steps;
+  ret->composite = malloc(sizeof(unsigned short) * steps);
+  ret->red = malloc(sizeof(unsigned short) * steps);
+  ret->green = malloc(sizeof(unsigned short) * steps);
+  ret->blue = malloc(sizeof(unsigned short) * steps);
+  return ret;
+}
+
+void
+free_lut(vars_t *v)
+{
+  if (v->lut)
+    {
+      if (v->lut->composite)
+	free(v->lut->composite);
+      if (v->lut->red)
+	free(v->lut->red);
+      if (v->lut->green)
+	free(v->lut->green);
+      if (v->lut->blue)
+	free(v->lut->blue);
+      v->lut->steps = 0;
+      v->lut->composite = NULL;
+      v->lut->red = NULL;
+      v->lut->green = NULL;
+      v->lut->blue = NULL;
+      free(v->lut);
+    }
+  v->lut = NULL;
+}
 
 /* #define PRINT_LUT */
 
 void
-compute_lut(const vars_t *pv,
-	    float app_gamma,
-	    vars_t *uv)
+compute_lut(size_t steps, vars_t *uv)
 {
-  float		brightness,	/* Computed brightness */
-		screen_gamma,	/* Screen gamma correction */
-		pixel,		/* Pixel value */
+  float		pixel,		/* Pixel value */
 		red_pixel,	/* Pixel value */
 		green_pixel,	/* Pixel value */
 		blue_pixel;	/* Pixel value */
@@ -510,11 +554,15 @@ compute_lut(const vars_t *pv,
    * Got an output file/command, now compute a brightness lookup table...
    */
 
-  float red = 10000.0 / (uv->red * pv->red) ;
-  float green = 10000.0 / (uv->green * pv->green);
-  float blue = 10000.0 / (uv->blue * pv->blue);
-  float print_gamma = uv->gamma / pv->gamma;
-  float contrast = (uv->contrast * pv->contrast) / 10000.0;
+  float red = 100.0 / uv->red;
+  float green = 100.0 / uv->green;
+  float blue = 100.0 / uv->blue;
+  float print_gamma = uv->gamma;
+  float contrast = uv->contrast / 100.0;
+  float app_gamma = uv->app_gamma;
+  float brightness = 100.0 / uv->brightness;
+  float screen_gamma = app_gamma * brightness / 1.7;
+
   if (red < 0.01)
     red = 0.01;
   if (green < 0.01)
@@ -522,123 +570,84 @@ compute_lut(const vars_t *pv,
   if (blue < 0.01)
     blue = 0.01;
 
-  if (uv->linear)
+  uv->lut = allocate_lut(steps);
+  for (i = 0; i < steps; i ++)
     {
-      screen_gamma = app_gamma / 1.7;
-      brightness   = (uv->brightness * pv->brightness) / 10000.0;
-    }
-  else
-    {
-      brightness   = 10000.0 / (uv->brightness * pv->brightness);
-      screen_gamma = app_gamma * brightness / 1.7;
-    }
+      float temp_pixel;
+      float fsteps = steps;
+      pixel = (float) i / (float) (steps - 1);
 
-  uv->lut = malloc(sizeof(lut_t));
-  for (i = 0; i < 256; i ++)
-    {
-      if (uv->linear)
-	{
-	  double adjusted_pixel;
-	  pixel = adjusted_pixel = (float) i / 255.0;
+      /*
+       * First, correct contrast
+       */
+      temp_pixel = fabs((pixel - .5) * 2.0);
+      temp_pixel = pow(temp_pixel, 1.0 / contrast);
+      if (pixel < .5)
+	temp_pixel = -temp_pixel;
+      pixel = (temp_pixel / 2.0) + .5;
 
-	  if (brightness < 1.0)
-	    adjusted_pixel = adjusted_pixel * brightness;
-	  else if (brightness > 1.0)
-	    adjusted_pixel = 1.0 - ((1.0 - adjusted_pixel) / brightness);
+      /*
+       * Second, perform screen gamma correction
+       */
+      pixel = 1.0 - pow(pixel, screen_gamma);
 
-	  if (pixel < 0)
-	    adjusted_pixel = 0;
-	  else if (pixel > 1.0)
-	    adjusted_pixel = 1.0;
+      /*
+       * Third, fix up red, green, blue values
+       *
+       * I don't know how to do this correctly.  I think that what I'll do
+       * is if the correction is less than 1 to multiply it by the
+       * correction; if it's greater than 1, hinge it around 64K.
+       * Doubtless we can do better.  Oh well.
+       */
+      if (pixel < 0.0)
+	pixel = 0.0;
+      else if (pixel > 1.0)
+	pixel = 1.0;
 
-	  adjusted_pixel = pow(adjusted_pixel,
-			       print_gamma * screen_gamma * print_gamma);
+      red_pixel = pow(pixel, 1.0 / (red * red));
+      green_pixel = pow(pixel, 1.0 / (green * green));
+      blue_pixel = pow(pixel, 1.0 / (blue * blue));
 
-	  adjusted_pixel *= 65535.0;
+      /*
+       * Finally, fix up print gamma and scale
+       */
 
-	  red_pixel = green_pixel = blue_pixel = adjusted_pixel;
-	  uv->lut->composite[i] = adjusted_pixel;
-	  uv->lut->red[i] = adjusted_pixel;
-	  uv->lut->green[i] = adjusted_pixel;
-	  uv->lut->blue[i] = adjusted_pixel;
-	}
+      pixel = fsteps * (fsteps - fsteps *
+		       pow(pixel, print_gamma));
+      red_pixel = fsteps * (fsteps - fsteps *
+			   pow(red_pixel, print_gamma));
+      green_pixel = fsteps * (fsteps - fsteps *
+			     pow(green_pixel, print_gamma));
+      blue_pixel = fsteps * (fsteps - fsteps *
+			    pow(blue_pixel, print_gamma));
+
+      if (pixel <= 0.0)
+	uv->lut->composite[i] = 0;
+      else if (pixel >= 65535.0)
+	uv->lut->composite[i] = 65535;
       else
-	{
-	  float temp_pixel;
-	  pixel = (float) i / 255.0;
+	uv->lut->composite[i] = (unsigned)(pixel);
 
-	  /*
-	   * First, correct contrast
-	   */
-	  temp_pixel = fabs((pixel - .5) * 2.0);
-	  temp_pixel = pow(temp_pixel, 1.0 / contrast);
-	  if (pixel < .5)
-	    temp_pixel = -temp_pixel;
-	  pixel = (temp_pixel / 2.0) + .5;
+      if (red_pixel <= 0.0)
+	uv->lut->red[i] = 0;
+      else if (red_pixel >= 65535.0)
+	uv->lut->red[i] = 65535;
+      else
+	uv->lut->red[i] = (unsigned)(red_pixel);
 
-	  /*
-	   * Second, perform screen gamma correction
-	   */
-	  pixel = 1.0 - pow(pixel, screen_gamma);
+      if (green_pixel <= 0.0)
+	uv->lut->green[i] = 0;
+      else if (green_pixel >= 65535.0)
+	uv->lut->green[i] = 65535;
+      else
+	uv->lut->green[i] = (unsigned)(green_pixel);
 
-	  /*
-	   * Third, fix up red, green, blue values
-	   *
-	   * I don't know how to do this correctly.  I think that what I'll do
-	   * is if the correction is less than 1 to multiply it by the
-	   * correction; if it's greater than 1, hinge it around 64K.
-	   * Doubtless we can do better.  Oh well.
-	   */
-	  if (pixel < 0.0)
-	    pixel = 0.0;
-	  else if (pixel > 1.0)
-	    pixel = 1.0;
-
-	  red_pixel = pow(pixel, 1.0 / (red * red));
-	  green_pixel = pow(pixel, 1.0 / (green * green));
-	  blue_pixel = pow(pixel, 1.0 / (blue * blue));
-
-	  /*
-	   * Finally, fix up print gamma and scale
-	   */
-
-	  pixel = 256.0 * (256.0 - 256.0 *
-			   pow(pixel, print_gamma));
-	  red_pixel = 256.0 * (256.0 - 256.0 *
-			       pow(red_pixel, print_gamma));
-	  green_pixel = 256.0 * (256.0 - 256.0 *
-				 pow(green_pixel, print_gamma));
-	  blue_pixel = 256.0 * (256.0 - 256.0 *
-				pow(blue_pixel, print_gamma));
-
-	  if (pixel <= 0.0)
-	    uv->lut->composite[i] = 0;
-	  else if (pixel >= 65535.0)
-	    uv->lut->composite[i] = 65535;
-	  else
-	    uv->lut->composite[i] = (unsigned)(pixel);
-
-	  if (red_pixel <= 0.0)
-	    uv->lut->red[i] = 0;
-	  else if (red_pixel >= 65535.0)
-	    uv->lut->red[i] = 65535;
-	  else
-	    uv->lut->red[i] = (unsigned)(red_pixel);
-
-	  if (green_pixel <= 0.0)
-	    uv->lut->green[i] = 0;
-	  else if (green_pixel >= 65535.0)
-	    uv->lut->green[i] = 65535;
-	  else
-	    uv->lut->green[i] = (unsigned)(green_pixel);
-
-	  if (blue_pixel <= 0.0)
-	    uv->lut->blue[i] = 0;
-	  else if (blue_pixel >= 65535.0)
-	    uv->lut->blue[i] = 65535;
-	  else
-	    uv->lut->blue[i] = (unsigned)(blue_pixel);
-	}
+      if (blue_pixel <= 0.0)
+	uv->lut->blue[i] = 0;
+      else if (blue_pixel >= 65535.0)
+	uv->lut->blue[i] = 65535;
+      else
+	uv->lut->blue[i] = (unsigned)(blue_pixel);
 #ifdef PRINT_LUT
       fprintf(ltfile, "%3i  %5d  %5d  %5d  %5d  %f %f %f %f  %f %f %f  %f\n",
 	      i, uv->lut->composite[i], uv->lut->red[i],

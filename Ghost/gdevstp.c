@@ -230,7 +230,7 @@ private int stp_print_page(gx_device_printer * pdev, FILE * file)
   stp_data.v.scaling = -pdev->x_pixels_per_inch; /* resolution of image */
 
   /* compute lookup table: lut_t*,float dest_gamma,float app_gamma,vars_t* */
-  compute_lut(&(printer->printvars), 1, &stp_data.v);
+  stp_data.v.app_gamma = 1.0;
 
   stp_data.topoffset = 0;
   stp_data.v.cmap = NULL;

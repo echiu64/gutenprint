@@ -88,10 +88,11 @@
 
 typedef struct
 {
-  unsigned short composite[256];
-  unsigned short red[256];
-  unsigned short green[256];
-  unsigned short blue[256];
+  unsigned steps;
+  unsigned short *composite;
+  unsigned short *red;
+  unsigned short *green;
+  unsigned short *blue;
 } lut_t;
 
 
@@ -123,6 +124,7 @@ typedef struct					/* Plug-in variables */
   float	density;		/* Maximum output density */
   int	image_type;		/* Image type (line art etc.) */
   int	unit;			/* Units for preview area 0=Inch 1=Metric */
+  float app_gamma;		/* Application gamma */
   lut_t *lut;			/* Look-up table */
   unsigned char *cmap;		/* Color map */
 } vars_t;
@@ -317,8 +319,9 @@ extern void	rgb_to_rgb(unsigned char *, unsigned short *, int, int,
 extern void	gray_to_rgb(unsigned char *, unsigned short *, int, int,
 			    unsigned char *, const vars_t *);
 
-extern void	compute_lut(const vars_t *pv, float app_gamma,
-			    vars_t *uv);
+extern void	merge_printvars(vars_t *user, const vars_t *print);
+extern void	free_lut(vars_t *v);
+extern void	compute_lut(size_t steps, vars_t *v);
 
 
 extern void	default_media_size(int model, char *ppd_file, char *media_size,
@@ -388,8 +391,8 @@ extern int			get_printer_index_by_driver(const char *);
 
 extern int			num_dither_algos;
 extern char			*dither_algo_names[];
-convert_t choose_colorfunc(int, int, const unsigned char *, int *);
-void
+extern convert_t choose_colorfunc(int, int, const unsigned char *, int *);
+extern void
 compute_page_parameters(int page_right, int page_left, int page_top,
 			int page_bottom, int scaling, int image_width,
 			int image_height, Image image, int *orientation,
