@@ -63,7 +63,10 @@ EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
 	Ghost/COPYING Ghost/ChangeLog Ghost/README Ghost/contrib.mak.addon \
 	Ghost/gdevstp-dither.c Ghost/gdevstp-escp2.c Ghost/gdevstp-print.h \
 	Ghost/gdevstp-util.c Ghost/gdevstp.c Ghost/gdevstp.h \
-	Ghost/gdevstp-printers.c Ghost/gs-stp.pdq
+	Ghost/gdevstp-printers.c Ghost/gs-stp.pdq \
+	Ghost/gdevstp-quickmatrix199.h Ghost/gdevstp-quickmatrix199-2.h \
+	Ghost/gdevstp-quickmatrix257.h Ghost/devs.mak.addon-5.10 make-deb.sh \
+	Ghost/debian-patch Ghost/debian-patch-stp
 
 install-libexecPROGRAMS: $(libexec_PROGRAMS)
 	@list='$(libexec_PROGRAMS)'; for p in $$list; do \

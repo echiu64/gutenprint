@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(print.c)
-AM_INIT_AUTOMAKE(print,3.1.2)
+AM_INIT_AUTOMAKE(print,3.1.5)
 
 dnl Checks for programs.
 AC_PROG_AWK
@@ -43,7 +43,7 @@ fi
 AM_PATH_GIMP(1.0.0,
         [SAVE_GTK_LIBS="$GIMP_LIBS"
         SAVE_GTK_CFLAGS="$GIMP_CFLAGS"],
-        AC_MSG_ERROR(Cannot find GIMP libs: Please run ldconfig, and make sure gimptool is on your PATH.))
+        AC_MSG_ERROR(Cannot find GIMP libs: Please run ldconfig as root, and make sure gimptool is on your PATH.))
 
 dnl Checks for libraries.
 dnl Checking for the Gimp does all this
