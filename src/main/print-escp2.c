@@ -86,6 +86,7 @@ typedef int escp2_dot_size_t[11];
 /*
  * Specify the base density for each available resolution.
  * This obviously depends upon the dot size.
+ */
 
 typedef double escp2_densities_t[12];
 

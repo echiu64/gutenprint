@@ -107,7 +107,7 @@ $missing_drivers = 0;
 for (keys(%stpdata)) {
     if (!defined($mapstp{$_})) {
 	$missing_drivers = 1;
-	warn "No foomatic printer IDs for gimp-print printer $_.\n";
+	die "No foomatic printer IDs for gimp-print printer $_.\n";
     }
 }
 
@@ -536,7 +536,7 @@ sub compute_resolutions {
 	$rescache{$stpname}{'defval'} = $defval;
 	$rescache{$stpname}{'takesit'} = \%hash;
 
-	warn "No default gsResolution found for printer $stpname!?\n"
+	die "No default gsResolution found for printer $stpname!?\n"
 	    if ! defined($defval);
     }
 
