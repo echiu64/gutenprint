@@ -437,14 +437,23 @@ saved this setting using this feature of the Gimp-Print software.
 
    <sect3><title>Media Size</title>
    <para>
-     The term
-<emphasis>media</emphasis> refers to paper, card stock, envelopes, or
-whatever you have put into your printer onto which something will be
-printed.  Click the arrow to the right of the <guilabel>Media Size</guilabel> box to see a long
-list of different sizes of media.  Choose the size that matches the
-media which you have loaded into your printer.  Once you have made
-your choice, the drop down menu will disappear, and your choice will
-be shown in the <guilabel>Media Size</guilabel> box.
+     The term <emphasis>media</emphasis> refers to paper, card stock,
+envelopes, or whatever you have put into your printer onto which
+something will be printed.  Click the arrow to the right of the
+<guilabel>Media Size</guilabel> box to see a long list of different
+sizes of media.  Choose the size that matches the media which you have
+loaded into your printer.  Once you have made your choice, the drop
+down menu will disappear, and your choice will be shown in the
+<guilabel>Media Size</guilabel> box.  The available paper sizes will
+vary depending upon the printer model you have selected.
+   </para>
+   <para>
+   Some printers support arbitrary (within limits!) paper sizes.
+   These printers will let you select <emphasis>Custom</emphasis>
+   or <emphasis>Roll</emphasis> paper sizes.  When you select such a
+   printer, one or both of the <guilabel>Dimensions</guilabel> boxes
+   will let you enter your paper size (in inches or centimetres).  The
+   boxes will not let you enter sizes that your printer cannot handle.
    </para>
    </sect3>
 
@@ -452,43 +461,54 @@ be shown in the <guilabel>Media Size</guilabel> box.
    <para>
      The type of media onto which your image will be printed should be
 selected here.  Click on the arrow to the right of the <guilabel>Media
-Type</guilabel> box to see a long list of the different types of media onto which
-you may print your image.  Media types include such things as plain
-paper, postcards, photo quality paper, transparencies, and more!  Once
-you have made your choice, the drop down menu will disappear, and your
-choice will be shown in the <guilabel>Media Type</guilabel> box.
+Type</guilabel> box to see a long list of the different types of media
+onto which you may print your image.  Media types include such things
+as plain paper, postcards, photo quality paper, transparencies, and
+more!  Once you have made your choice, the drop down menu will
+disappear, and your choice will be shown in the <guilabel>Media
+Type</guilabel> box.  The choices available will vary depending upon
+the printer model you have selected.
    </para>
    </sect3>
 
    <sect3><title>Media Source</title>
    <para>
-     The <guilabel>Media Source</guilabel> box allows the user to choose between
-<guimenuitem>Standard</guimenuitem> and <guimenuitem>Roll Feed</guimenuitem>.  If
-you are using a roll type media (perhaps a roll of photo paper), then
-select <guimenuitem>Roll Feed</guimenuitem>.  Otherwise, select
-<guimenuitem>Standard</guimenuitem>.  Once you have made your choice, the
-drop down menu will disappear, and your choice will be shown in the
-<guilabel>Media Source</guilabel> box.
+     The <guilabel>Media Source</guilabel> box allows the user to
+  choose the paper source, sometimes called <emphasis>Input
+  Slot</emphasis>, that the paper will be fed from.  Many printers
+  only have one available input source (such as the standard paper
+  tray), in which case this entry will be grayed out.  If your printer
+  does support multiple input sources, you may specify the source of
+  your choice here.  Some Epson printers offer a roll feed option in
+  addition to the standard paper tray, and many HP LaserJet printers
+  have multiple paper trays.
    </para>
    </sect3>
 
    <sect3><title>Ink Type</title>
    <para>
-     Different printers use different types of ink.  In this box, you
-will select the type of ink used by your printer.  If you do not know
-the type of ink used by your printer, consult the documentation for
-your printer.
+   Some printers offer a choice of different types of ink or ink
+   cartridges.  Many Canon and Lexmark printers support various
+   combinations of cartridges, such as black only, black and color,
+   photo color, and so forth.  Most Epson printers let you choose
+   between three and four color printing (three color uses only color
+   ink, while four color uses black ink as well).  Epson printers that
+   support six color photo printing allow you to choose five and six
+   color printing as well.
    </para>
    </sect3>
 
    <sect3><title>Resolution</title>
    <para>
      Click on the arrow to the right of the
-<guilabel>Resolution</guilabel> box to see a
-long list of resolutions at which you can print your image.  The list
-is written with the lowest resolution at the top, with increasing
-resolution as you approach the bottom of the list.  In this menu are a
-few terms which may be unfamiliar to you, and they will now be explained.
+<guilabel>Resolution</guilabel> box to see a long list of resolutions
+at which you can print your image.  The list is written with the
+lowest resolution at the top, with increasing resolution (and
+generally improved printing quality) as you approach the bottom of the
+list.  Different printers support different resolution options, and
+many printers support different quality choices using the same basic
+resolution.  In this menu are a few terms which may be unfamiliar to
+you, and they will now be explained.
    </para>
      <sect4><title>DPI</title>
        <para>
@@ -503,40 +523,71 @@ selecting 600 - 720 DPI.  Settings higher than this are used for the
 highest possible quality for printing photographs and other high
 quality graphics.  Experiment with your printer and these settings
 with different types of graphics and photographs to see what
-results you can obtain with your printer.
+results you can obtain with your printer.  High resolutions (large
+numbers of dots per inch) require substantial image processing time,
+and the print files can be very large; it's not uncommon for a full
+page, 1440x720 DPI image to require 100 MB of temporary storage!
        </para>
      </sect4>
      <sect4><title>Draft or Fast Economy Draft</title>
      <para>
      When this text appears next to the resolution, it refers to the
 fact that the quality will be relatively low, but suitable for rough
-drafts.  Draft quality is higher than fast economy draft.  The image
-will print very quickly relative to other print modes.
+drafts.  Draft quality is higher than fast economy draft.  These
+options will give you the fastest printing speed.  Economy Draft uses
+less ink, and as a result the image will be pale.  These modes are
+generally not very useful for printing photographs.
      </para>
      </sect4>
 
      <sect4><title>Unidirectional</title>
        <para>
          When printing an image, you have probably noticed the print
-head inside the printer moving back and forth across the print media.  Many
-printers are capable of putting ink on the page regardless of which
-direction the print head is moving.  However, quality can sometimes be
-improved by only putting ink on the page when the printer head is
-moving in one direction.  The <guimenuitem>Unidirectional</guimenuitem> setting instructs the
+head inside the printer moving back and forth across the print media.
+Many printers are capable of putting ink on the page regardless of
+which direction the print head is moving.  However, quality can
+sometimes be improved by only putting ink on the page when the printer
+head is moving in one direction.  The
+<guimenuitem>Unidirectional</guimenuitem> setting instructs the
 software to only place ink on the page when the print head is moving
 one way.  When the print head returns, it will not place ink on the
-page.  As you might guess, this would lengthen the
-printing time in the interest of higher print quality.
+page.  On many printers, the print quality is better, at the expense
+of printing speed.
        </para>
      </sect4>
      <sect4><title>High(est) Quality</title>
        <para>
-         With lower quality print modes, one may see an effect where the
-printed image looks like it has rows of stripes with a small
+         With lower quality print modes, one may see an effect where
+the printed image looks like it has rows of stripes with a small
 separation between the stripes.  This effect is called "banding" and
-is considered undesirable.  In the high and highest quality modes, the
-printer will make more passes over the same part of the page in order
-to improve quality and (reduce or) eliminate banding.
+is undesirable.  In the <emphasis>high</emphasis> and
+<emphasis>highest</emphasis> quality modes, the printer will make more
+passes over the same part of the page in order to improve quality and
+(reduce or) eliminate banding.  This requires more temporary space and
+prints more slowly, but does not require significantly more processing
+time.
+       </para>
+     </sect4>
+     <sect4><title>Microweave</title>
+       <para>
+       Certain (mostly older) Epson printers support a printing mode
+       called <emphasis>Microweave</emphasis>.  This uses special
+       software within the printer to improve the print quality.
+       Microweave print modes will usually produce better quality than
+       non-Microweave modes, with only a small performance penalty.
+       Don't worry if Microweave is not listed at your chosen
+       resolution; in those cases, the non-Microweave print modes do
+       similar printing quality improvements.
+       </para>
+     </sect4>
+     <sect4><title>DMT</title>
+       <para>
+       DMT, or <emphasis>D</emphasis>ot
+       <emphasis>M</emphasis>odulation <emphasis>T</emphasis>echnology
+       is used by certain Canon printers to improve the printing
+       quality.  The available DMT modes do not currently all work
+       correctly, but the cases that work correctly will offer
+       significantly improved printing quality.
        </para>
      </sect4>
    </sect3>
@@ -544,17 +595,52 @@ to improve quality and (reduce or) eliminate banding.
 
   <sect2><title id="sec_preview">Preview</title>
   <para>
-   Notice in the upper left of the window is a preview of your
-image.  This preview is a representation of where your picture will print on the
-selected media.  This preview will be updated as you modify selections
-in the  <guilabel>Position</guilabel>,  <guilabel>Size</guilabel>,
-<guilabel>Media Size</guilabel>, and  <guilabel>Output Type</guilabel>
+   Notice in the upper left of the window is a preview of your image.
+This preview is a representation of where your picture will print on
+the selected media, and approximately what it will look like.  This
+preview will be updated as you modify selections in the
+<guilabel>Position</guilabel>, <guilabel>Size</guilabel>,
+<guilabel>Media Size</guilabel>, and <guilabel>Output Type</guilabel>
 portions of the window. You may also select the image with your mouse
 and move it manually if you wish. In doing so, you will note that the
 <guilabel>Position</guilabel> settings are updated accordingly.  Take
-note of the arrow, which indicates the top of the media, where top is
-the first part of the media to enter the printer.
+note of the arrow, which points toward the top of the media, where top
+is the first part of the media to enter the printer.
   </para>
+  <para>
+  The preview may be moved around the page as follows:
+  </para>
+  <itemizedlist>
+  <listitem><para> Clicking and dragging the <emphasis>left</emphasis>
+  (primary) mouse button moves the image around the page as you would
+  expect; the image moves with the mouse.  </para></listitem>
+  <listitem><para> Clicking and dragging the
+  <emphasis>middle</emphasis> mouse button moves the image around the
+  page in a finer fashion, such that each pixel of mouse movement
+  moves the image by one point (1/72 inch).  This allows very fine
+  placement of the image on the page.  </para></listitem>
+  <listitem><para> Clicking and dragging the
+  <emphasis>right</emphasis> (secondary) mouse button moves the image
+  around the page much the same as with the left button, but the image
+  will only move in units of the image size.  Thus, if the image is
+  one inch wide and two inches tall, the image will not move at all
+  until you have moved the mouse far enough so that the image would be
+  moved one inch vertically and two inches horizontally.  This is
+  handy if you wish to print multiple images of the same size on one
+  piece of paper.</para></listitem>
+  <listitem><para> If you hold down the <emphasis>shift</emphasis> key
+  on the keyboard when you click and drag the mouse, the image will
+  only move in the horizontal or vertical direction (depending upon
+  which way you first move the mouse).  This allows you to constrain
+  motion to the horizontal or vertical. </para></listitem>
+  <listitem><para> If you click another button while dragging the
+  mouse, the image will immediately return to the position it was in
+  before you clicked the mouse the first time.  This allows you to
+  not move the image if you have started moving it and have decided
+  that you don't want to move it.  The preview will not respond to the
+  mouse until you release all of the mouse buttons and click and drag
+  afresh. </para></listitem>
+  </itemizedlist>
   </sect2>
 
   <sect2><title id="sec_position">Position</title>
@@ -592,7 +678,7 @@ middle button is the <guibutton>Both</guibutton> button, and
 the rightmost button is the <guibutton>Horizontally</guibutton>
 button.  Use the <guibutton>Both</guibutton> button to center your
 image both horizontally and vertically.  This will cause the top and
-bottom boarders to be equal, and the left and right boarders to be
+bottom borders to be equal, and the left and right borders to be
 equal.  If you have placed your image manually by using the mouse
 button, then you may center the image in the horizontal direction only
 by clicking on the <guibutton>Horizontally</guibutton> button.
@@ -733,6 +819,14 @@ image will be printed at 100 DPI.
 to the native size of the image as possible.  This effect can
 immediately be seen in the preview image.
      </para>
+     <para>
+     The native image size may be found or set in the GIMP by
+     selecting <guimenuitem>Image/Scale Image</guimenuitem> in the
+     GIMP.  Under the <guilabel>Print Size and Display Unit</guilabel>
+     group in the <guilabel>Scale Image</guilabel> dialog, you can
+     determine (or change) the width and height of the image, or
+     choose the resolution.
+     </para>
    </sect3>
 
    <sect3><title>Width and Height</title>
@@ -806,7 +900,7 @@ high quality photographs or other high quality images.
 grayscale.  Color is selected when the desired output is to be in
 color.  Greyscale will result in the printed image having various
 shades of grey.  Black and white is just that.  The effect of this
-setting can be see in the preview window.
+setting can be seen in the preview window.
     </para>
    </sect3>
 
@@ -901,37 +995,32 @@ shape of the input->output curve.
     <sect4><title>Dither Algorithm</title>
     <para>
 The recommended dither algorithm is <guimenuitem>Adaptive
-Hybrid</guimenuitem> (which is the default) with text or
-other fine black detail, or if this is mixed with continuous tone
-images.  The <guimenuitem>Ordered</guimenuitem> dithering algorithm is
-to be used for pure continuous-tone images and photographs
-(no text).  <guimenuitem>Ordered</guimenuitem> is somewhat faster than
-<guimenuitem>Adaptive Hybrid</guimenuitem>, and
-normally yields almost identical results.  However,
-<guimenuitem>Ordered</guimenuitem> dithering
-may show small breaks in very fine lines.  The <guimenuitem>Adaptive
-Hybrid</guimenuitem> algorithm is more resistant to this effect.
+Hybrid</guimenuitem> (which is the default) for text or other fine
+black detail, or if this is mixed with continuous tone images.  The
+<guimenuitem>Ordered</guimenuitem> dithering algorithm is just as good
+(and somewhat faster) for pure continuous-tone images and photographs,
+but may yield poor results with text or other fine detail,
+particularly at high printing resolutions.
     </para>
-    <para> 
-The <guimenuitem>Fast</guimenuitem> algorithm gives the fastest
-results at the expense of color
-accuracy.  It is a simplified ordered dither.  On simple four color
-printers (or other printers used in four color mode), the quality is
-similar to <guimenuitem>Ordered</guimenuitem>, although dark gray
-rendition is not as good due to a simpler transfer between black and
-colored ink.  With six-color printers, color rendition is somewhat
-worse, but it should be quite usable in cases where optimum quality is
-not critical.  In black and white, it is an efficient way to render
-grayscale, but it may not give best results when used with variable
-dot size printers.  On rare three color printers (CMY only) the
-results should be identical to ordered dither.
+    <para> The <guimenuitem>Fast</guimenuitem> algorithm gives the
+fastest results at the expense of color accuracy.  It is a simplified
+ordered dither.  On simple four color printers (or other printers used
+in four color mode), the quality is similar to
+<guimenuitem>Ordered</guimenuitem>, although dark gray rendition is
+not as good due to a simpler transfer between black and colored ink.
+With six-color printers, color rendition is somewhat worse, but it
+should be quite usable in cases where optimum quality is not critical.
+In black and white, it is an efficient way to render grayscale, but it
+may not give best results when used with variable dot size printers
+(modern Epson printers, or Canon printers using DMT).  On rare three
+color printers (CMY only) the results should be identical to ordered
+dither.
     </para>
-    <para> 
-<guimenuitem>Very Fast</guimenuitem> is even faster than
+    <para> <guimenuitem>Very Fast</guimenuitem> is even faster than
 <guimenuitem>Fast</guimenuitem>, with even more loss of quality.
-It uses a power of two (2)  matrix that can be looked up more quickly and
-performs certain other optimizations.  On laser printers, and possibly
-on certain kinds of text and line art, <guimenuitem>Very
+Color and grayscale output will show strong patterning that resembles
+screening, although it isn't.  On laser printers, and possibly on
+certain kinds of text and line art, <guimenuitem>Very
 Fast</guimenuitem> dithering may actually yield the best quality.
     </para>
     <para> 
@@ -942,7 +1031,7 @@ rendering very fine detail rather well, but they tend to exhibit artifacts in
 the form of "waves" or "worms" of dots which results in noticeable
 texturing in pale areas.  Furthermore, pale areas immediately adjacent
 to white take a while to "build up" sufficient error to print at all.
-This is sometimes called "tearing".
+This is sometimes called "tearing" or "waterfalling".
     </para>
 
     </sect4>
