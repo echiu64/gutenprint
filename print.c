@@ -958,6 +958,8 @@ printrc_save(void)
 		p->v.image_type, p->v.dither_algorithm);
       }
     fclose(fp);
+  } else {
+    fprintf(stderr,"could not open printrc file \"%s\"\n",filename);
   }
   g_free (filename);
 }
