@@ -41,14 +41,21 @@ libtool: $(LIBTOOL_DEPS)
 	cd $(srcdir); \
 	$(SHELL) ./config.status --recheck
 
-ChangeLogStamp:
+# This rather strange-looking code ensures that the change log is only
+# rebuilt if any of the CVS/Entries files have changed since the change log
+# was last built.
+
+ChangeLogPhony:
+	@cd $(top_srcdir) ; \
 	for f in `find . -name Entries -print | grep CVS` ; do \
 	  if /usr/bin/test ! -f ChangeLogStamp -o ChangeLogStamp -ot $$f ; then \
 	    rm -f ChangeLogStamp ; \
-	    ls -l ChangeLogStamp $$f ; \
 	    touch ChangeLogStamp ; \
 	  fi ; \
 	done
+
+ChangeLogStamp: ChangeLogPhony
+	@/bin/true
 
 ChangeLog: ChangeLogStamp
 	@cd $(top_srcdir) ; \
@@ -200,6 +207,6 @@ MAINTAINERCLEANFILES = \
 	$(addprefix m4/, $(CLEANMFOUR)) \
 	$(addprefix po/, $(CLEANPO))
 
-EXTRA_DIST = autogen.sh
+EXTRA_DIST = autogen.sh ChangeLogStamp
 
-.PHONY: deb html install-cups install-gimp install-ghost snapshot
+.PHONY: deb html install-cups install-gimp install-ghost snapshot ChangeLogPhony
