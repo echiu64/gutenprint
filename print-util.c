@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.58  2000/02/01 09:01:40  gandy
+ *   Add print-canon.c: Support for the BJC 6000 and possibly others
+ *
  *   Revision 1.57  2000/01/29 02:34:30  rlk
  *   1) Remove globals from everything except print.c.
  *
@@ -2799,8 +2802,10 @@ const static printer_t	printers[] =	/* List of supported printer types */
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { "EPSON Stylus Photo 1200",	"escp2-1200",	1,	14,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Photo",		"escp2-photo",	1,	8,	0.585,	0.646,
+  { "EPSON Stylus Photo",	"escp2-photo",	1,	8,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
+  { "CANON BJC 6000",           "bjc-6000",     1,      6000,   0.8,    0.8,
+    canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
 };
 
 

@@ -207,6 +207,16 @@ extern void	default_media_size(int model, char *ppd_file, char *media_size,
 		                   int *width, int *length);
 
 
+extern char	**canon_parameters(int model, char *ppd_file, char *name,
+		                   int *count);
+extern void	canon_imageable_area(int model, char *ppd_file,
+				     char *media_size, int *left, int *right,
+				     int *bottom, int *top);
+extern void	canon_print(int model, int copies, FILE *prn,
+			    Image image, unsigned char *cmap,
+			    lut_t *lut, vars_t *v);
+
+
 extern char	**escp2_parameters(int model, char *ppd_file, char *name,
 		                   int *count);
 extern void	escp2_imageable_area(int model, char *ppd_file,
