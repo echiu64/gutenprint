@@ -1,4 +1,4 @@
-Gimp-Print 4.2.4, released November 25, 2002, is a stable release in
+Gimp-Print 4.2.5-pre1, released December 8, 2002, is a prerelease in
 the Gimp-Print 4.2 series.
 
 Gimp-Print is a suite of printer drivers that may be used with most
@@ -40,6 +40,74 @@ http://gimp-print.sourceforge.net/MacOSX.php3.
 
 Please read the README file for full instructions on installing this
 package.
+
+
+Gimp-Print 4.2.5-pre1 contains the following major changes over
+Gimp-Print 4.2.4:
+
+1) The Epson Stylus Photo 950/960/PM-950C and 2100/2200 are now tuned.
+   The 950 and 960 are fully tuned, while the 2100 and 2200 are fully
+   tuned with Photographic Black ink.  Matte Black ink on the
+   2100/2200, and dark yellow ink on the PM-950C, are not tuned at
+   this point.
+
+   As a special note, all of these printers print especially fast at
+   360 DPI in Four Color Standard mode (in color, grayscale, and
+   monochrome).  For this reason, we recommend use of Four Color
+   Standard for printing text and low-resolution graphics on plain
+   paper with these printers.
+
+2) Epson Stylus Photo printers with an automatic paper cutter option
+   (the Stylus Photo 925, 950/960/PM-950C, and 2100/2200) now enable
+   the cutter.  This has received some testing, but has not been
+   tested comprehensively.
+
+3) The Epson Stylus Pro 5000 should now print correctly, although this
+   is not yet tested.
+
+4) The Epson Stylus Color 640 now prints properly in grayscale and
+   monochrome at 720 DPI and above.
+
+5) DESTDIR now works with 'make install' in the Gimp plugin
+   directory (this is generally of interest only to packagers).
+
+6) The user manual should now install correctly on all platforms.
+
+7) The version of libtool used to build this release has been changed
+   to 1.4.3.  This enables the packaged source to compile correctly on
+   a few architectures (this is generally of interest only to
+   packagers).
+
+8) Updates to the Debian packaging (this is of interest only to Debian
+   packagers).
+
+The following bugs have been fixed in Gimp-Print 4.2.5-pre1:
+
+596538 Epson Stylus Photo 925 etc. paper cutter is not functional
+599029 Epson: Maximum speed printing not supported on 950, 960
+625780 Epson Stylus Pro 5000 does not print
+639356 Build system: libtool 1.4.2 does not work on all platforms
+641628 QUALITY: Epson Stylus 2200 print quality is low in 7-color
+645895 Epson stc640 does not print at 720dpi and above
+646158 Build:DESTDIR broken in make install in print plugin
+649253 QUALITY - Epson 950/960 problems in all resolutions
+
+The following bugs are currently open:
+
+409612 Epson: Minor positioning problem on 4x6 glossy
+538097 QUALITY-Canon S400 dark and yellow cast
+549677 Canon BJC-1000 functions incorrectly at 720x360 DPI
+557868 QUALITY-HP DeskJet 560 is washed out
+581168 Canon BJC 250 just spits out pages
+601767 Mac OS X: Canon BJC 2100 does not print multiple pages
+602933 QUALITY-Canon S800 dark and grainy
+613054 Mac OS X: Printing from InDesign 2.0 on OS 10.2.1
+614882 QUALITY - Canon BJC-55 is too pale and desaturated
+621668 Epson Stylus full bleed prints have slight margin
+627266 Mac OS X: Autoselect option incorrectly offered
+627978 QUALITY: Canon BJC-6500 has magenta cast.
+631937 HP DesignJet Sheet Cutter Problem
+641981 QUALITY: HP DesignJet 455 too light
 
 
 Gimp-Print 4.2.4 contains the following major changes over Gimp-Print
@@ -156,28 +224,6 @@ The following bugs have been fixed in Gimp-Print 4.2.4:
 631936 HP DesignJet Margin Problems
 631993 Macintosh OS X: Custom page size problems w/some apps
 633910 Epson 1520 ppd bug gimp-print 4.2.3
-
-The following bugs are currently open:
-
-409612 Minor positioning prob on 4x6 glossy
-538097 QUALITY-Poor quality printing on Canon s400
-549677 Incorrect scaling on Canon BJC-1000
-557868 QUALITY-Washed out color under Gimp on HP560c
-581168 Canon BJC 250 just spits out pages
-601767 Mac OS X: Canon BJC 2100 does not print multiple pages
-602933 QUALITY-Poor quality on Canon S800
-613054 Mac OS X: Printing from InDesign 2.0 on OS 10.2.1
-614882 QUALITY - Problems with CANON BJC-55 - Gimp-Print
-619299 QUALITY - brightness adjustment problem
-621668 Epson Stylus full bleed prints have slight margin
-625780 Epson Stylus Pro 5000 does not print
-627266 Epson Stylus Pro Autoselect paper feed broken
-627978 QUALITY: Canon BJC-6500 has magenta cast.
-631937 HP DesignJet Sheet Cutter Problem
-639356 Build system: The version of libtool is too old
-641992 HP DesignJet 455CA printing rotated 90
-641981 HP DesignJet 455 too light
-641628 QUALITY: Epson Stylus 2200 print quality is low in 7-color
 
 
 
