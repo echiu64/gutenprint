@@ -741,8 +741,6 @@ canon_print(const printer_t *printer,		/* I - Model */
 		out_width,	/* Width of image on page */
 		out_height,	/* Height of image on page */
 		out_bpp,	/* Output bytes per pixel */
-		temp_width,	/* Temporary width of image on page */
-		temp_height,	/* Temporary height of image on page */
 		landscape,	/* True if we rotate the output 90 degrees */
 		length,		/* Length of raster data */
                 buf_length,     /* Length of raster data buffer (dmt) */
@@ -796,28 +794,7 @@ canon_print(const printer_t *printer,		/* I - Model */
    * Choose the correct color conversion function...
    */
 
-  if (output_type == OUTPUT_COLOR) {
-    out_bpp = 3;
-
-    if (image_bpp >= 3)
-      colorfunc = rgb_to_rgb;
-    else
-      colorfunc = indexed_to_rgb;
-  }
-  else if (output_type == OUTPUT_GRAY_COLOR)
-  {
-    out_bpp = 3;
-    colorfunc = gray_to_rgb;
-  } else {
-    out_bpp = 1;
-
-    if (image_bpp >= 3)
-      colorfunc = rgb_to_gray;
-    else if (cmap == NULL)
-      colorfunc = gray_to_gray;
-    else
-      colorfunc = indexed_to_gray;
-  }
+  colorfunc = choose_colorfunc(output_type, image_bpp, cmap, &out_bpp);
 
  /*
   * Figure out the output resolution...
@@ -837,108 +814,18 @@ canon_print(const printer_t *printer,		/* I - Model */
   * Compute the output size...
   */
 
-  landscape   = 0;
   canon_imageable_area(model, ppd_file, media_size, &page_left, &page_right,
                        &page_top, &page_bottom);
+  compute_page_parameters(page_right, page_left, page_top, page_bottom,
+			  scaling, image_width, image_height, &orientation,
+			  &page_width, &page_height, &out_width, &out_height,
+			  &left, &top);
 
-  page_width  = page_right - page_left;
-  page_height = page_top - page_bottom;
-  if (page_width<0) page_width= -page_width;
-  if (page_height<0) page_height= -page_height;
-
+  if (orientation == ORIENT_LANDSCAPE)
+    landscape = 1;
+  else
+    landscape = 0;
   default_media_size(model, ppd_file, media_size, &n, &page_length);
-
-  /*
-  PUT("top        ",top,72);
-  PUT("left       ",left,72);
-  PUT("page_top   ",page_top,72);
-  PUT("page_bottom",page_bottom,72);
-  PUT("page_left  ",page_left,72);
-  PUT("page_right ",page_right,72);
-  PUT("page_width ",page_width,72);
-  PUT("page_height",page_height,72);
-  PUT("page_length",page_length,72);
-  */
-
- /*
-  * Portrait width/height...
-  */
-
-  if (scaling < 0.0) {
-    /* Scale to pixels per inch... */
-    out_width  = image_width * -72.0 / scaling;
-    out_height = image_height * -72.0 / scaling;
-  } else {
-    /* Scale by percent... */
-    out_width  = page_width * scaling / 100.0;
-    out_height = out_width * image_height / image_width;
-    if (out_height > page_height) {
-      out_height = page_height * scaling / 100.0;
-      out_width  = out_height * image_width / image_height;
-    }
-  }
-
-  if (out_width == 0)  out_width = 1;
-  if (out_height == 0) out_height = 1;
-
- /*
-  * Landscape width/height...
-  */
-
-  if (scaling < 0.0) {
-    /* Scale to pixels per inch... */
-    temp_width  = image_height * -72.0 / scaling;
-    temp_height = image_width * -72.0 / scaling;
-  } else {
-    /* Scale by percent... */
-    temp_width  = page_width * scaling / 100.0;
-    temp_height = temp_width * image_width / image_height;
-    if (temp_height > page_height) {
-      temp_height = page_height;
-      temp_width  = temp_height * image_height / image_width;
-    }
-  }
-
- /*
-  * See which orientation has the greatest area (or if we need to rotate the
-  * image to fit it on the page...)
-  */
-
-  if (orientation == ORIENT_AUTO) {
-    if (scaling < 0.0) {
-      if ((out_width > page_width && out_height < page_width) ||
-          (out_height > page_height && out_width < page_height))
-	orientation = ORIENT_LANDSCAPE;
-      else
-	orientation = ORIENT_PORTRAIT;
-    } else {
-      if ((temp_width * temp_height) > (out_width * out_height))
-	orientation = ORIENT_LANDSCAPE;
-      else
-	orientation = ORIENT_PORTRAIT;
-    }
-  }
-
-  if (orientation == ORIENT_LANDSCAPE) {
-    out_width  = temp_width;
-    out_height = temp_height;
-    landscape  = 1;
-
-    /* Swap left/top offsets... */
-    x    = left;
-    left = top;
-    top  = page_height - x - out_height;
-  }
-
-  if (left < 0)
-    left = (page_width - out_width) / 2 + page_left;
-  else
-    left = left /*+ page_left*/;
-
-  if (top < 0)
-    top  = (page_height + out_height) / 2 + page_top;
-  else
-    top = top /*+ page_top*/;
 
   /*
   PUT("top        ",top,72);

@@ -787,3 +787,163 @@ get_printer_index_by_driver(const char *driver)
     }
   return -1;
 }
+
+convert_t
+choose_colorfunc(int output_type,
+		 int image_bpp,
+		 const unsigned char *cmap,
+		 int *out_bpp)
+{
+  if (output_type == OUTPUT_COLOR)
+    {
+      *out_bpp = 3;
+
+      if (image_bpp >= 3)
+	return rgb_to_rgb;
+      else
+	return indexed_to_rgb;
+    }
+  else if (output_type == OUTPUT_GRAY_COLOR)
+    {
+      *out_bpp = 3;
+      return gray_to_rgb;
+    }
+  else
+    {
+      *out_bpp = 1;
+
+      if (image_bpp >= 3)
+	return rgb_to_gray;
+      else if (cmap == NULL)
+	return gray_to_gray;
+      else
+	return indexed_to_gray;
+    }
+}  
+
+void
+compute_page_parameters(int page_right,	/* I */
+			int page_left, /* I */
+			int page_top, /* I */
+			int page_bottom, /* I */
+			int scaling, /* I */
+			int image_width, /* I */
+			int image_height, /* I */
+			int *orientation, /* IO */
+			int *page_width, /* O */
+			int *page_height, /* O */
+			int *out_width,	/* O */
+			int *out_height, /* O */
+			int *left, /* O */
+			int *top) /* O */
+{
+  int temp_height, temp_width;
+  *page_width  = page_right - page_left;
+  *page_height = page_top - page_bottom;
+
+  /*
+   * Portrait width/height...
+   */
+
+  if (scaling < 0.0)
+    {
+      /*
+       * Scale to pixels per inch...
+       */
+
+      *out_width  = image_width * -72.0 / scaling;
+      *out_height = image_height * -72.0 / scaling;
+    }
+  else
+    {
+      /*
+       * Scale by percent...
+       */
+
+      *out_width  = *page_width * scaling / 100.0;
+      *out_height = *out_width * image_height / image_width;
+      if (*out_height > *page_height)
+	{
+	  *out_height = *page_height * scaling / 100.0;
+	  *out_width  = *out_height * image_width / image_height;
+	}
+    }
+
+  if (*out_width == 0)
+    *out_width = 1;
+  if (*out_height == 0)
+    *out_height = 1;
+
+  /*
+   * Landscape width/height...
+   */
+
+  if (scaling < 0.0)
+    {
+      /*
+       * Scale to pixels per inch...
+       */
+
+      temp_width  = image_height * -72.0 / scaling;
+      temp_height = image_width * -72.0 / scaling;
+    }
+  else
+    {
+      /*
+       * Scale by percent...
+       */
+
+      temp_width  = *page_width * scaling / 100.0;
+      temp_height = temp_width * image_width / image_height;
+      if (temp_height > *page_height)
+	{
+	  temp_height = *page_height;
+	  temp_width  = temp_height * image_height / image_width;
+	}
+    }
+
+  /*
+   * See which orientation has the greatest area (or if we need to rotate the
+   * image to fit it on the page...)
+   */
+
+  if (*orientation == ORIENT_AUTO)
+    {
+      if (scaling < 0.0)
+	{
+	  if ((*out_width > *page_width && *out_height < *page_width) ||
+	      (*out_height > *page_height && *out_width < *page_height))
+	    *orientation = ORIENT_LANDSCAPE;
+	  else
+	    *orientation = ORIENT_PORTRAIT;
+	}
+      else
+	{
+	  if ((temp_width * temp_height) > (*out_width * *out_height))
+	    *orientation = ORIENT_LANDSCAPE;
+	  else
+	    *orientation = ORIENT_PORTRAIT;
+	}
+    }
+
+  if (*orientation == ORIENT_LANDSCAPE)
+    {
+      int x;
+      *out_width  = temp_width;
+      *out_height = temp_height;
+
+      /*
+       * Swap left/top offsets...
+       */
+
+      x    = *left;
+      *left = *top;
+      *top  = *page_height - x - *out_height;
+    }
+
+  if (*left < 0)
+    *left = (*page_width - *out_width) / 2;
+
+  if (*top < 0)
+    *top  = (*page_height - *out_height) / 2;
+}
