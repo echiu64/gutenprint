@@ -1880,6 +1880,9 @@ setup_resolution(stp_vars_t v)
 	pd->micro_units = horizontal;
       pd->horizontal_units = vertical;
     }
+  if (escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_1999) &&
+      escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_NO))
+    pd->micro_units = 1440;
   pd->vertical_units = vertical;
   pd->page_management_units = vertical;
   pd->printing_resolution = escp2_base_res(v, resid);

@@ -1072,8 +1072,8 @@ static const shade_set_t ultrachrome_photo_shades =	/* Ultrachrome with photo bl
 static const shade_set_t ultrachrome_matte_shades =	/* Ultrachrome with matte black ink */
 {
   { 2, { 1.0, 0.33 }},
-  { 2, { 1.0, 0.25 }},
-  { 2, { 1.0, 0.25 }},
+  { 2, { 1.0, 0.33 }},
+  { 2, { 1.0, 0.33 }},
   { 1, { 1.0 }},
   { 1, { 1.0 }},
   { 1, { 1.0 }},
