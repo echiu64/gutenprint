@@ -13,8 +13,9 @@ require('standard_html_header.php3');
 # Please remember to use <P> </P> tags !  ?>
 
 <H4>High quality drivers for Canon, Epson, and PCL printers for use
-with Ghostscript, <A HREF="http://www.cups.org">CUPS</A>,
-and <a href="http://www.gimp.org">the Gimp</a>.</H4>
+with <a href="http://www/ghostscript.org">Ghostscript</a>, <A
+HREF="http://www.cups.org">CUPS</A>, and <a
+href="http://www.gimp.org">the Gimp</a>.</H4>
 
 <P>For a quick download, please visit <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
