@@ -3,7 +3,8 @@
  *
  *   Print plug-in header file for the GIMP.
  *
- *   Copyright 1997-1998 Michael Sweet (mike@easysw.com)
+ *   Copyright 1997-1999 Michael Sweet (mike@easysw.com) and
+ *	Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -27,7 +28,9 @@
 /*
  * Include necessary header files...
  */
-#include "config.h"
+#ifndef HAVE_UNISTD_H
+#define HAVE_UNISTD_H
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,16 +40,9 @@
 #include <unistd.h>
 #endif
 
-#include <gtk/gtk.h>
-#include <libgimp/gimp.h>
-
-
 /*
  * Constants...
  */
-
-#define PLUG_IN_VERSION		"2.0.2 - 16 May 1998"
-#define PLUG_IN_NAME		"Print"
 
 #define OUTPUT_GRAY		0	/* Grayscale output */
 #define OUTPUT_COLOR		1	/* Color output */
@@ -67,11 +63,13 @@
 
 typedef struct
 {
-  gushort composite[256];
-  gushort red[256];
-  gushort green[256];
-  gushort blue[256];
+  unsigned short composite[256];
+  unsigned short red[256];
+  unsigned short green[256];
+  unsigned short blue[256];
 } lut_t;
+
+typedef void *Image;
 
 typedef struct
 {
@@ -91,53 +89,53 @@ typedef struct
   void	(*print)(int model, char *ppd_file, char *resolution,
                  char *media_size, char *media_type, char *media_source,
                  int output_type, int orientation, float scaling, int left,
-                 int top, int copies, FILE *prn, GDrawable *drawable,
-                 guchar *cmap, lut_t *lut, float saturation);
+                 int top, int copies, FILE *prn, Image image,
+                 unsigned char *cmap, lut_t *lut, float saturation);
 } printer_t;
 
-typedef void (*convert_t)(guchar *in, gushort *out, int width, int bpp,
-			  lut_t *lut, guchar *cmap, float saturation);
+typedef void (*convert_t)(unsigned char *in, unsigned short *out, int width, int bpp,
+			  lut_t *lut, unsigned char *cmap, float saturation);
 
 
 /*
  * Prototypes...
  */
 
-extern void	dither_black16(gushort *, int, int, int, unsigned char *);
+extern void	dither_black16(unsigned short *, int, int, int, unsigned char *);
 
-extern void	dither_cmyk16(gushort *, int, int, int, unsigned char *,
+extern void	dither_cmyk16(unsigned short *, int, int, int, unsigned char *,
 			      unsigned char *, unsigned char *,
 			      unsigned char *, unsigned char *,
 			      unsigned char *, unsigned char *);
 
-extern void	dither_black4(guchar *, int, int, int, unsigned char *);
-extern void	dither_black4_16(gushort *, int, int, int, unsigned char *);
+extern void	dither_black4(unsigned char *, int, int, int, unsigned char *);
+extern void	dither_black4_16(unsigned short *, int, int, int, unsigned char *);
 
-extern void	dither_cmyk4(guchar *, int, int, int, unsigned char *,
+extern void	dither_cmyk4(unsigned char *, int, int, int, unsigned char *,
 		             unsigned char *, unsigned char *,
 			     unsigned char *);
-extern void	dither_cmyk4_16(gushort *, int, int, int, unsigned char *,
+extern void	dither_cmyk4_16(unsigned short *, int, int, int, unsigned char *,
 				unsigned char *, unsigned char *,
 				unsigned char *);
 
 
 #if 0
-extern void	gray_to_gray(guchar *, guchar *, int, int, lut_t *,
-			     guchar *, float);
-extern void	indexed_to_gray(guchar *, guchar *, int, int, lut_t *,
-				guchar *, float);
+extern void	gray_to_gray(unsigned char *, unsigned char *, int, int,
+			     lut_t *, unsigned char *, float);
+extern void	indexed_to_gray(unsigned char *, unsigned char *, int, int,
+				lut_t *, unsigned char *, float);
 #endif
 
-extern void	gray_to_gray16(guchar *, gushort *, int, int, lut_t *,
-			       guchar *, float);
-extern void	indexed_to_gray16(guchar *, gushort *, int, int, lut_t *,
-				  guchar *, float);
-extern void	indexed_to_rgb16(guchar *, gushort *, int, int, lut_t *,
-				 guchar *, float);
-extern void	rgb_to_gray16(guchar *, gushort *, int, int, lut_t *,
-			      guchar *, float);
-extern void	rgb_to_rgb16(guchar *, gushort *, int, int, lut_t *,
-			     guchar *, float);
+extern void	gray_to_gray16(unsigned char *, unsigned short *, int, int, lut_t *,
+			       unsigned char *, float);
+extern void	indexed_to_gray16(unsigned char *, unsigned short *, int, int,
+				  lut_t *, unsigned char *, float);
+extern void	indexed_to_rgb16(unsigned char *, unsigned short *, int, int, lut_t *,
+				 unsigned char *, float);
+extern void	rgb_to_gray16(unsigned char *, unsigned short *, int, int, lut_t *,
+			      unsigned char *, float);
+extern void	rgb_to_rgb16(unsigned char *, unsigned short *, int, int, lut_t *,
+			     unsigned char *, float);
 
 
 extern void	default_media_size(int model, char *ppd_file, char *media_size,
@@ -154,7 +152,7 @@ extern void	escp2_print(int model, char *ppd_file, char *resolution,
 			    char *media_source, int output_type,
 			    int orientation, float scaling, int left,
 			    int top, int copies, FILE *prn,
-			    GDrawable *drawable, guchar *cmap,
+			    Image image, unsigned char *cmap,
 			    lut_t *lut, float saturation);
 
 extern char	**pcl_parameters(int model, char *ppd_file, char *name,
@@ -167,7 +165,7 @@ extern void	pcl_print(int model, char *ppd_file, char *resolution,
 			  char *media_source, int output_type,
 			  int orientation, float scaling,
 		          int left, int top, int copies, FILE *prn,
-		          GDrawable *drawable, guchar *cmap,
+		          Image image, unsigned char *cmap,
 			  lut_t *lut, float saturation);
 
 extern char	**ps_parameters(int model, char *ppd_file, char *name,
@@ -181,20 +179,30 @@ extern void	ps_print(int model, char *ppd_file, char *resolution,
 		         char *media_size, char *media_type,
 			 char *media_source, int output_type,
 			 int orientation, float scaling, int left, int top,
-			 int copies, FILE *prn, GDrawable *drawable,
-			 guchar *cmap, lut_t *lut, float saturation);
+			 int copies, FILE *prn, Image image,
+			 unsigned char *cmap, lut_t *lut, float saturation);
 
-extern void calc_hsv_to_rgb16(gushort *rgb, double h, double s, double v);
-extern void calc_rgb16_to_hsv(gushort *rgb, double *hue, double *sat,
+extern void calc_hsv_to_rgb16(unsigned short *rgb, double h, double s, double v);
+extern void calc_rgb16_to_hsv(unsigned short *rgb, double *hue, double *sat,
 			      double *val);
-extern void calc_hsv_to_rgb(guchar *rgb, double h, double s, double v);
-extern void calc_rgb_to_hsv(guchar *rgb, double *hue, double *sat,
+extern void calc_hsv_to_rgb(unsigned char *rgb, double h, double s, double v);
+extern void calc_rgb_to_hsv(unsigned char *rgb, double *hue, double *sat,
 			    double *val);
 
 extern void compute_lut(lut_t *lut, int icontrast,
 			float red, float green, float blue, int ibrightness,
 			float print_gamma, float gimp_gamma, float user_gamma,
 			int linear, float printer_density, float user_density);
+
+extern void Image_init(Image image);
+extern int Image_bpp(Image image);
+extern int Image_width(Image image);
+extern int Image_height(Image image);
+extern const char *Image_get_pluginname(Image image);
+extern void Image_get_col(Image image, unsigned char *data, int column);
+extern void Image_get_row(Image image, unsigned char *data, int row);
+extern void Image_progress_init(Image image);
+extern void Image_note_progress(Image image, double current, double total);
 
 /*
  * End of "$Id$".

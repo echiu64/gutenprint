@@ -3,7 +3,8 @@
  *
  *   Print plug-in HP PCL driver for the GIMP.
  *
- *   Copyright 1997-1998 Michael Sweet (mike@easysw.com)
+ *   Copyright 1997-1999 Michael Sweet (mike@easysw.com) and
+ *	Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -31,6 +32,12 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.9  1999/10/26 02:10:30  rlk
+ *   Mostly fix save/load
+ *
+ *   Move all gimp, glib, gtk stuff into print.c (take it out of everything else).
+ *   This should help port it to more general purposes later.
+ *
  *   Revision 1.8  1999/10/25 23:31:59  rlk
  *   16-bit clean
  *
@@ -206,9 +213,6 @@
 
 #include "print.h"
 
-#include "config.h"
-#include "libgimp/stdplugins-intl.h"
-
 /*
  * Local functions...
  */
@@ -233,33 +237,33 @@ pcl_parameters(int  model,	/* I - Printer model */
 		**valptrs;
   static char	*media_sizes[] =
 		{
-		  N_("Letter"),
-		  N_("Legal"),
-		  N_("A4"),
-		  N_("Tabloid"),
-		  N_("A3"),
-		  N_("12x18")
+		  ("Letter"),
+		  ("Legal"),
+		  ("A4"),
+		  ("Tabloid"),
+		  ("A3"),
+		  ("12x18")
 		};
   static char	*media_types[] =
 		{
-		  N_("Plain"),
-		  N_("Premium"),
-		  N_("Glossy"),
-		  N_("Transparency")
+		  ("Plain"),
+		  ("Premium"),
+		  ("Glossy"),
+		  ("Transparency")
 		};
   static char	*media_sources[] =
 		{
-		  N_("Manual"),
-		  N_("Tray 1"),
-		  N_("Tray 2"),
-		  N_("Tray 3"),
-		  N_("Tray 4"),
+		  ("Manual"),
+		  ("Tray 1"),
+		  ("Tray 2"),
+		  ("Tray 3"),
+		  ("Tray 4"),
 		};
   static char	*resolutions[] =
 		{
-		  N_("150 DPI"),
-		  N_("300 DPI"),
-		  N_("600 DPI")
+		  ("150 DPI"),
+		  ("300 DPI"),
+		  ("600 DPI")
 		};
 
 
@@ -318,9 +322,13 @@ pcl_parameters(int  model,	/* I - Printer model */
   else
     return (NULL);
 
-  valptrs = g_new(char *, *count);
+  valptrs = malloc(*count * sizeof(char *));
   for (i = 0; i < *count; i ++)
-    valptrs[i] = g_strdup(p[i]);
+    {
+      /* strdup doesn't appear to be POSIX... */
+      valptrs[i] = malloc(strlen(p[i]) + 1);
+      strcpy(valptrs[i], p[i]);
+    }
 
   return (valptrs);
 }
@@ -404,15 +412,14 @@ pcl_print(int       model,		/* I - Model */
           int       top,		/* I - Top offset of image (points) */
           int       copies,		/* I - Number of copies */
           FILE      *prn,		/* I - File to print to */
-          GDrawable *drawable,		/* I - Image to print */
-	  guchar    *cmap,		/* I - Colormap (for indexed images) */
-	  lut_t   *lut,		/* I - Brightness lookup table (16-bit) */
+          Image     image,		/* I - Image to print */
+	  unsigned char    *cmap,	/* I - Colormap (for indexed images) */
+	  lut_t     *lut,		/* I - Brightness lookup table */
 	  float     saturation		/* I - Saturation */
 	  )
 {
   int		x, y;		/* Looping vars */
   int		xdpi, ydpi;	/* Resolution */
-  GPixelRgn	rgn;		/* Image region */
   unsigned short *out;
   unsigned char	*in,		/* Input pixels */
 		*black,		/* Black bitmap data */
@@ -440,27 +447,32 @@ pcl_print(int       model,		/* I - Model */
   convert_t	colorfunc;	/* Color conversion function... */
   void		(*writefunc)(FILE *, unsigned char *, int, int);
 				/* PCL output function */
+  int           image_height,
+                image_width,
+                image_bpp;
 
 
  /*
   * Setup a read-only pixel region for the entire image...
   */
 
-  gimp_pixel_rgn_init(&rgn, drawable, 0, 0, drawable->width, drawable->height,
-                      FALSE, FALSE);
+  Image_init(image);
+  image_height = Image_height(image);
+  image_width = Image_width(image);
+  image_bpp = Image_bpp(image);
 
  /*
   * Choose the correct color conversion function...
   */
 
-  if ((drawable->bpp < 3 && cmap == NULL) || model <= 500)
+  if ((image_bpp < 3 && cmap == NULL) || model <= 500)
     output_type = OUTPUT_GRAY;		/* Force grayscale output */
 
   if (output_type == OUTPUT_COLOR)
   {
     out_bpp = 3;
 
-    if (drawable->bpp >= 3)
+    if (image_bpp >= 3)
       colorfunc = rgb_to_rgb16;
     else
       colorfunc = indexed_to_rgb16;
@@ -469,7 +481,7 @@ pcl_print(int       model,		/* I - Model */
   {
     out_bpp = 1;
 
-    if (drawable->bpp >= 3)
+    if (image_bpp >= 3)
       colorfunc = rgb_to_gray16;
     else if (cmap == NULL)
       colorfunc = gray_to_gray16;
@@ -513,8 +525,8 @@ pcl_print(int       model,		/* I - Model */
     * Scale to pixels per inch...
     */
 
-    out_width  = drawable->width * -72.0 / scaling;
-    out_height = drawable->height * -72.0 / scaling;
+    out_width  = image_width * -72.0 / scaling;
+    out_height = image_height * -72.0 / scaling;
   }
   else
   {
@@ -523,11 +535,11 @@ pcl_print(int       model,		/* I - Model */
     */
 
     out_width  = page_width * scaling / 100.0;
-    out_height = out_width * drawable->height / drawable->width;
+    out_height = out_width * image_height / image_width;
     if (out_height > page_height)
     {
       out_height = page_height * scaling / 100.0;
-      out_width  = out_height * drawable->width / drawable->height;
+      out_width  = out_height * image_width / image_height;
     }
   }
 
@@ -541,8 +553,8 @@ pcl_print(int       model,		/* I - Model */
     * Scale to pixels per inch...
     */
 
-    temp_width  = drawable->height * -72.0 / scaling;
-    temp_height = drawable->width * -72.0 / scaling;
+    temp_width  = image_height * -72.0 / scaling;
+    temp_height = image_width * -72.0 / scaling;
   }
   else
   {
@@ -551,11 +563,11 @@ pcl_print(int       model,		/* I - Model */
     */
 
     temp_width  = page_width * scaling / 100.0;
-    temp_height = temp_width * drawable->width / drawable->height;
+    temp_height = temp_width * image_width / image_height;
     if (temp_height > page_height)
     {
       temp_height = page_height;
-      temp_width  = temp_height * drawable->height / drawable->width;
+      temp_width  = temp_height * image_height / image_width;
     }
   }
 
@@ -616,7 +628,7 @@ pcl_print(int       model,		/* I - Model */
   * Let the user know what we're doing...
   */
 
-  gimp_progress_init(_("Printing..."));
+  Image_progress_init(image);
 
  /*
   * Send PCL initialization commands...
@@ -803,19 +815,19 @@ pcl_print(int       model,		/* I - Model */
 
   if (output_type == OUTPUT_GRAY)
   {
-    black   = g_malloc(length);
+    black   = malloc(length);
     cyan    = NULL;
     magenta = NULL;
     yellow  = NULL;
   }
   else
   {
-    cyan    = g_malloc(length);
-    magenta = g_malloc(length);
-    yellow  = g_malloc(length);
+    cyan    = malloc(length);
+    magenta = malloc(length);
+    yellow  = malloc(length);
   
     if (model != 501 && model != 1200)
-      black = g_malloc(length);
+      black = malloc(length);
     else
       black = NULL;
   }
@@ -831,14 +843,14 @@ pcl_print(int       model,		/* I - Model */
 
   if (landscape)
   {
-    in  = g_malloc(drawable->height * drawable->bpp);
-    out = g_malloc(drawable->height * out_bpp * 2);
+    in  = malloc(image_height * image_bpp);
+    out = malloc(image_height * out_bpp * 2);
 
-    errdiv  = drawable->width / out_height;
-    errmod  = drawable->width % out_height;
+    errdiv  = image_width / out_height;
+    errmod  = image_width % out_height;
     errval  = 0;
     errlast = -1;
-    errline  = drawable->width - 1;
+    errline  = image_width - 1;
     
     for (x = 0; x < out_height; x ++)
     {
@@ -848,15 +860,15 @@ pcl_print(int       model,		/* I - Model */
 #endif /* DEBUG */
 
       if ((x & 255) == 0)
-        gimp_progress_update((double)x / (double)out_height);
+	Image_note_progress(image, x, out_height);
 
       if (errline != errlast)
       {
         errlast = errline;
-        gimp_pixel_rgn_get_col(&rgn, in, errline, 0, drawable->height);
+	Image_get_col(image, in, errline);
       }
 
-      (*colorfunc)(in, out, drawable->height, drawable->bpp, lut, cmap,
+      (*colorfunc)(in, out, image_height, image_bpp, lut, cmap,
 		   saturation);
 
       if (xdpi == 300 && model == 800)
@@ -867,13 +879,13 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black4_16(out, x, drawable->height, out_width, black);
+          dither_black4_16(out, x, image_height, out_width, black);
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 1);
 	}
 	else 
 	{
-          dither_cmyk4_16(out, x, drawable->height, out_width, cyan, magenta,
+          dither_cmyk4_16(out, x, image_height, out_width, cyan, magenta,
 			  yellow, black);
 
           (*writefunc)(prn, black, length / 2, 0);
@@ -894,12 +906,12 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black16(out, x, drawable->height, out_width, black);
+          dither_black16(out, x, image_height, out_width, black);
           (*writefunc)(prn, black, length, 1);
 	}
 	else
 	{
-          dither_cmyk16(out, x, drawable->height, out_width, cyan, 0, magenta,
+          dither_cmyk16(out, x, image_height, out_width, cyan, 0, magenta,
 			0, yellow, 0, black);
 
           if (black != NULL)
@@ -921,11 +933,11 @@ pcl_print(int       model,		/* I - Model */
   }
   else
   {
-    in  = g_malloc(drawable->width * drawable->bpp);
-    out = g_malloc(drawable->width * out_bpp * 2);
+    in  = malloc(image_width * image_bpp);
+    out = malloc(image_width * out_bpp * 2);
 
-    errdiv  = drawable->height / out_height;
-    errmod  = drawable->height % out_height;
+    errdiv  = image_height / out_height;
+    errmod  = image_height % out_height;
     errval  = 0;
     errlast = -1;
     errline  = 0;
@@ -938,15 +950,15 @@ pcl_print(int       model,		/* I - Model */
 #endif /* DEBUG */
 
       if ((y & 255) == 0)
-        gimp_progress_update((double)y / (double)out_height);
+	Image_note_progress(image, y, out_height);
 
       if (errline != errlast)
       {
         errlast = errline;
-        gimp_pixel_rgn_get_row(&rgn, in, 0, errline, drawable->width);
+	Image_get_row(image, in, errline);
       }
 
-      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut, cmap,
+      (*colorfunc)(in, out, image_width, image_bpp, lut, cmap,
 		   saturation);
 
       if (xdpi == 300 && model == 800)
@@ -957,13 +969,13 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black4_16(out, y, drawable->width, out_width, black);
+          dither_black4_16(out, y, image_width, out_width, black);
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 1);
 	}
 	else 
 	{
-          dither_cmyk4_16(out, y, drawable->width, out_width, cyan, magenta,
+          dither_cmyk4_16(out, y, image_width, out_width, cyan, magenta,
 			  yellow, black);
 
           (*writefunc)(prn, black, length / 2, 0);
@@ -984,12 +996,12 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black16(out, y, drawable->width, out_width, black);
+          dither_black16(out, y, image_width, out_width, black);
           (*writefunc)(prn, black, length, 1);
 	}
 	else
 	{
-          dither_cmyk16(out, y, drawable->width, out_width, cyan, 0, magenta,
+          dither_cmyk16(out, y, image_width, out_width, cyan, 0, magenta,
 			0, yellow, 0, black);
 
           if (black != NULL)
@@ -1014,16 +1026,16 @@ pcl_print(int       model,		/* I - Model */
   * Cleanup...
   */
 
-  g_free(in);
-  g_free(out);
+  free(in);
+  free(out);
 
   if (black != NULL)
-    g_free(black);
+    free(black);
   if (cyan != NULL)
   {
-    g_free(cyan);
-    g_free(magenta);
-    g_free(yellow);
+    free(cyan);
+    free(magenta);
+    free(yellow);
   }
 
   switch (model)			/* End raster graphics */

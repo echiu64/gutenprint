@@ -3,7 +3,8 @@
  *
  *   Print plug-in Adobe PostScript driver for the GIMP.
  *
- *   Copyright 1997-1998 Michael Sweet (mike@easysw.com)
+ *   Copyright 1997-1999 Michael Sweet (mike@easysw.com) and
+ *	Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -32,6 +33,12 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.7  1999/10/26 02:10:30  rlk
+ *   Mostly fix save/load
+ *
+ *   Move all gimp, glib, gtk stuff into print.c (take it out of everything else).
+ *   This should help port it to more general purposes later.
+ *
  *   Revision 1.6  1999/10/25 23:31:59  rlk
  *   16-bit clean
  *
@@ -134,7 +141,7 @@
  *   * applied gimp-lecorfec-99041[02]-0, changes follow
  *
  *   * plug-ins/FractalExplorer/Dialogs.h (make_color_map):
- *   replaced free with g_free to fix segfault.
+ *   replaced free with free to fix segfault.
  *
  *   * plug-ins/Lighting/lighting_preview.c (compute_preview):
  *   allocate xpostab and ypostab only when needed (it could also be
@@ -153,7 +160,7 @@
  *   return if image has only background (thus fixing a segfault).
  *
  *   * plug-ins/emboss/emboss.c (pluginCore, emboss_do_preview):
- *   replaced malloc/free with g_malloc/g_free (unneeded, but
+ *   replaced malloc/free with malloc/free (unneeded, but
  *   shouldn't everyone use glib calls ? :)
  *
  *   * plug-ins/flame/flame.c :
@@ -209,7 +216,7 @@
  *   (render_blast): replaced harmless malloc/free pair.
  *
  *   * plug-ins/bmp/bmpread.c (ReadImage):
- *   yet another free()/g_free() problem fixed.
+ *   yet another free()/free() problem fixed.
  *
  *   * plug-ins/exchange/exchange.c (real_exchange):
  *   ditto.
@@ -224,7 +231,7 @@
  *   tried to set events mask on scale widget (a NO_WINDOW widget).
  *
  *   * plug-ins/png/png.c (save_image):
- *   Replaced 2 free() with g_free() for g_malloc'ed memory.
+ *   Replaced 2 free() with free() for malloc'ed memory.
  *   Mysteriously I corrected the loading bug but not the saving one :)
  *
  *   -Yosh
@@ -317,9 +324,6 @@
 #include "print.h"
 #include <time.h>
 
-#include "config.h"
-#include "libgimp/stdplugins-intl.h"
-
 /*#define DEBUG*/
 
 
@@ -335,8 +339,8 @@ static char	*ps_ppd_file = NULL;
  * Local functions...
  */
 
-static void	ps_hex(FILE *, gushort *, int);
-static void	ps_ascii85(FILE *, gushort *, int, int);
+static void	ps_hex(FILE *, unsigned short *, int);
+static void	ps_ascii85(FILE *, unsigned short *, int, int);
 static char	*ppd_find(char *, char *, char *, int *);
 
 
@@ -357,12 +361,12 @@ ps_parameters(int  model,	/* I - Printer model */
   char		**valptrs;
   static char	*media_sizes[] =
 		{
-		  N_("Letter"),
-		  N_("Legal"),
-		  N_("A4"),
-		  N_("Tabloid"),
-		  N_("A3"),
-		  N_("12x18")
+		  ("Letter"),
+		  ("Legal"),
+		  ("A4"),
+		  ("Tabloid"),
+		  ("A3"),
+		  ("12x18")
 		};
 
 
@@ -393,9 +397,13 @@ ps_parameters(int  model,	/* I - Printer model */
     {
       *count = 6;
 
-      valptrs = g_new(char *, 6);
-      for (i = 0; i < 6; i ++)
-        valptrs[i] = g_strdup(media_sizes[i]);
+      valptrs = malloc(*count * sizeof(char *));
+      for (i = 0; i < *count; i ++)
+	{
+	  /* strdup doesn't appear to be POSIX... */
+	  valptrs[i] = malloc(strlen(media_sizes[i]) + 1);
+	  strcpy(valptrs[i], media_sizes[i]);
+	}
 
       return (valptrs);
     }
@@ -406,7 +414,7 @@ ps_parameters(int  model,	/* I - Printer model */
   rewind(ps_ppd);
   *count = 0;
 
-  valptrs = g_new(char *, 100);
+  valptrs = malloc(100 * sizeof(char *));
 
   while (fgets(line, sizeof(line), ps_ppd) != NULL)
   {
@@ -416,16 +424,17 @@ ps_parameters(int  model,	/* I - Printer model */
     if (sscanf(line, "*%s %[^/:]", lname, loption) != 2)
       continue;
 
-    if (g_strcasecmp(lname, name) == 0)
+    if (strcasecmp(lname, name) == 0)
     {
-      valptrs[*count] = g_strdup(loption);
+      valptrs[(*count)] = malloc(strlen(media_sizes[*count]) + 1);
+      strcpy(valptrs[(*count)], media_sizes[*count]);
       (*count) ++;
     }
   }
 
   if (*count == 0)
   {
-    g_free(valptrs);
+    free(valptrs);
     return (NULL);
   }
   else
@@ -523,17 +532,16 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
          int       top,			/* I - Top offset of image (points) */
          int       copies,		/* I - Number of copies */
          FILE      *prn,		/* I - File to print to */
-         GDrawable *drawable,		/* I - Image to print */
-	 guchar    *cmap,		/* I - Colormap (for indexed images) */
-	 lut_t   *lut,		/* I - Brightness lookup table (16-bit) */
+         Image     image,		/* I - Image to print */
+	 unsigned char    *cmap,	/* I - Colormap (for indexed images) */
+	 lut_t     *lut,		/* I - Brightness lookup table */
 	 float     saturation		/* I - Saturation */
 	 )
 {
   int		i, j;		/* Looping vars */
   int		x, y;		/* Looping vars */
-  GPixelRgn	rgn;		/* Image region */
-  guchar	*in;		/* Input pixels from image */
-  gushort	*out;		/* Output pixels for printer */
+  unsigned char	*in;		/* Input pixels from image */
+  unsigned short	*out;		/* Output pixels for printer */
   int		page_left,	/* Left margin of page */
 		page_right,	/* Right margin of page */
 		page_top,	/* Top of page */
@@ -558,27 +566,32 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     char	*command;
     int		order;
   }		commands[4];
+  int           image_height,
+                image_width,
+                image_bpp;
 
 
  /*
   * Setup a read-only pixel region for the entire image...
   */
 
-  gimp_pixel_rgn_init(&rgn, drawable, 0, 0, drawable->width, drawable->height,
-                      FALSE, FALSE);
+  Image_init(image);
+  image_height = Image_height(image);
+  image_width = Image_width(image);
+  image_bpp = Image_bpp(image);
 
  /*
   * Choose the correct color conversion function...
   */
 
-  if (drawable->bpp < 3 && cmap == NULL)
+  if (image_bpp < 3 && cmap == NULL)
     output_type = OUTPUT_GRAY;		/* Force grayscale output */
 
   if (output_type == OUTPUT_COLOR)
   {
     out_bpp = 3;
 
-    if (drawable->bpp >= 3)
+    if (image_bpp >= 3)
       colorfunc = rgb_to_rgb16;
     else
       colorfunc = indexed_to_rgb16;
@@ -587,7 +600,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
   {
     out_bpp = 1;
 
-    if (drawable->bpp >= 3)
+    if (image_bpp >= 3)
       colorfunc = rgb_to_gray16;
     else if (cmap == NULL)
       colorfunc = gray_to_gray16;
@@ -608,7 +621,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
 
 #ifdef DEBUG
   printf("page_width = %d, page_height = %d\n", page_width, page_height);
-  printf("drawable->width = %d, drawable->height = %d\n", drawable->width, drawable->height);
+  printf("image_width = %d, image_height = %d\n", image_width, image_height);
   printf("scaling = %.1f\n", scaling);
 #endif /* DEBUG */
 
@@ -622,8 +635,8 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     * Scale to pixels per inch...
     */
 
-    out_width  = drawable->width * -72.0 / scaling;
-    out_height = drawable->height * -72.0 / scaling;
+    out_width  = image_width * -72.0 / scaling;
+    out_height = image_height * -72.0 / scaling;
   }
   else
   {
@@ -632,11 +645,11 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     */
 
     out_width  = page_width * scaling / 100.0;
-    out_height = out_width * drawable->height / drawable->width;
+    out_height = out_width * image_height / image_width;
     if (out_height > page_height)
     {
       out_height = page_height * scaling / 100.0;
-      out_width  = out_height * drawable->width / drawable->height;
+      out_width  = out_height * image_width / image_height;
     }
   }
 
@@ -650,8 +663,8 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     * Scale to pixels per inch...
     */
 
-    temp_width  = drawable->height * -72.0 / scaling;
-    temp_height = drawable->width * -72.0 / scaling;
+    temp_width  = image_height * -72.0 / scaling;
+    temp_height = image_width * -72.0 / scaling;
   }
   else
   {
@@ -660,11 +673,11 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     */
 
     temp_width  = page_width * scaling / 100.0;
-    temp_height = temp_width * drawable->width / drawable->height;
+    temp_height = temp_width * image_width / image_height;
     if (temp_height > page_height)
     {
       temp_height = page_height;
-      temp_width  = temp_height * drawable->height / drawable->width;
+      temp_width  = temp_height * image_height / image_width;
     }
   }
 
@@ -711,7 +724,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
   * Let the user know what we're doing...
   */
 
-  gimp_progress_init(_("Printing..."));
+  Image_progress_init(image);
 
  /*
   * Output a standard PostScript header with DSC comments...
@@ -738,9 +751,9 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
   _fsetmode(prn, "t");
 #endif
   fputs("%!PS-Adobe-3.0\n", prn);
-  fputs("%%Creator: " PLUG_IN_NAME " plug-in V" PLUG_IN_VERSION " for GIMP.\n", prn);
+  fprintf(prn, "%%Creator: %s\n", Image_get_pluginname(image));
   fprintf(prn, "%%%%CreationDate: %s", ctime(&curtime));
-  fputs("%%Copyright: 1997-1998 by Michael Sweet (mike@easysw.com)\n", prn);
+  fputs("%%Copyright: 1997-1999 by Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)\n", prn);
   fprintf(prn, "%%%%BoundingBox: %d %d %d %d\n",
           left, top - out_height, left + out_width, top);
   fputs("%%DocumentData: Clean7Bit\n", prn);
@@ -757,28 +770,32 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
 
   if ((command = ppd_find(ppd_file, "PageSize", media_size, &order)) != NULL)
   {
-    commands[num_commands].command = g_strdup(command);
+    commands[num_commands].command = malloc(strlen(command) + 1);
+    strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
     num_commands ++;
   }
 
   if ((command = ppd_find(ppd_file, "InputSlot", media_source, &order)) != NULL)
   {
-    commands[num_commands].command = g_strdup(command);
+    commands[num_commands].command = malloc(strlen(command) + 1);
+    strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
     num_commands ++;
   }
 
   if ((command = ppd_find(ppd_file, "MediaType", media_type, &order)) != NULL)
   {
-    commands[num_commands].command = g_strdup(command);
+    commands[num_commands].command = malloc(strlen(command) + 1);
+    strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
     num_commands ++;
   }
 
   if ((command = ppd_find(ppd_file, "Resolution", resolution, &order)) != NULL)
   {
-    commands[num_commands].command = g_strdup(command);
+    commands[num_commands].command = malloc(strlen(command) + 1);
+    strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
     num_commands ++;
   }
@@ -810,7 +827,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     for (i = 0; i < num_commands; i ++)
     {
       fputs(commands[i].command, prn);
-      g_free(commands[i].command);
+      free(commands[i].command);
     }
 
     fputs("%%EndProlog\n", prn);
@@ -827,25 +844,25 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
   {
     fprintf(prn, "%d %d translate\n", left, top - out_height);
     fprintf(prn, "%.3f %.3f scale\n",
-            (float)out_width / ((float)drawable->height),
-            (float)out_height / ((float)drawable->width));
+            (float)out_width / ((float)image_height),
+            (float)out_height / ((float)image_width));
   }
   else
   {
     fprintf(prn, "%d %d translate\n", left, top);
     fprintf(prn, "%.3f %.3f scale\n",
-            (float)out_width / ((float)drawable->width),
-            (float)out_height / ((float)drawable->height));
+            (float)out_width / ((float)image_width),
+            (float)out_height / ((float)image_height));
   }
 
-  in  = g_malloc(drawable->width * drawable->bpp);
-  out = g_malloc((drawable->width * out_bpp + 3) * 2);
+  in  = malloc(image_width * image_bpp);
+  out = malloc((image_width * out_bpp + 3) * 2);
 
   if (model == 0)
   {
-    fprintf(prn, "/picture %d string def\n", drawable->width * out_bpp);
+    fprintf(prn, "/picture %d string def\n", image_width * out_bpp);
 
-    fprintf(prn, "%d %d 8\n", drawable->width, drawable->height);
+    fprintf(prn, "%d %d 8\n", image_width, image_height);
 
     if (landscape)
       fputs("[ 0 1 1 0 0 0 ]\n", prn);
@@ -857,16 +874,16 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     else
       fputs("{currentfile picture readhexstring pop} false 3 colorimage\n", prn);
 
-    for (y = 0; y < drawable->height; y ++)
+    for (y = 0; y < image_height; y ++)
     {
       if ((y & 15) == 0)
-        gimp_progress_update((double)y / (double)drawable->height);
+	Image_note_progress(image, y, image_height);
 
-      gimp_pixel_rgn_get_row(&rgn, in, 0, y, drawable->width);
-      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut, cmap,
+      Image_get_row(image, in, y);
+      (*colorfunc)(in, out, image_width, image_bpp, lut, cmap,
 		   saturation);
 
-      ps_hex(prn, out, drawable->width * out_bpp);
+      ps_hex(prn, out, image_width * out_bpp);
     }
   }
   else
@@ -879,8 +896,8 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     fputs("<<\n", prn);
     fputs("\t/ImageType 1\n", prn);
 
-    fprintf(prn, "\t/Width %d\n", drawable->width);
-    fprintf(prn, "\t/Height %d\n", drawable->height);
+    fprintf(prn, "\t/Width %d\n", image_width);
+    fprintf(prn, "\t/Height %d\n", image_height);
     fputs("\t/BitsPerComponent 8\n", prn);
 
     if (output_type == OUTPUT_GRAY)
@@ -890,7 +907,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
 
     fputs("\t/DataSource currentfile /ASCII85Decode filter\n", prn);
 
-    if ((drawable->width * 72 / out_width) < 100)
+    if ((image_width * 72 / out_width) < 100)
       fputs("\t/Interpolate true\n", prn);
 
     if (landscape)
@@ -901,18 +918,18 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     fputs(">>\n", prn);
     fputs("image\n", prn);
 
-    for (y = 0, out_offset = 0; y < drawable->height; y ++)
+    for (y = 0, out_offset = 0; y < image_height; y ++)
     {
       if ((y & 15) == 0)
-        gimp_progress_update((double)y / (double)drawable->height);
+	Image_note_progress(image, y, image_height);
 
-      gimp_pixel_rgn_get_row(&rgn, in, 0, y, drawable->width);
-      (*colorfunc)(in, out + out_offset, drawable->width, drawable->bpp, lut,
+      Image_get_row(image, in, y);
+      (*colorfunc)(in, out + out_offset, image_width, image_bpp, lut,
 		   cmap, saturation);
 
-      out_length = out_offset + drawable->width * out_bpp;
+      out_length = out_offset + image_width * out_bpp;
 
-      if (y < (drawable->height - 1))
+      if (y < (image_height - 1))
       {
         ps_ascii85(prn, out, out_length & ~3, 0);
         out_offset = out_length & 3;
@@ -928,8 +945,8 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     }
   }
 
-  g_free(in);
-  g_free(out);
+  free(in);
+  free(out);
 
   fputs("grestore\n", prn);
   fputs("showpage\n", prn);
@@ -944,7 +961,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
 
 static void
 ps_hex(FILE   *prn,	/* I - File to print to */
-       gushort *data,	/* I - Data to print */
+       unsigned short *data,	/* I - Data to print */
        int    length)	/* I - Number of bytes to print */
 {
   int		col;	/* Current column */
@@ -954,7 +971,7 @@ ps_hex(FILE   *prn,	/* I - File to print to */
   col = 0;
   while (length > 0)
   {
-    guchar pixel = (*data & 0xff00) >> 8;
+    unsigned char pixel = (*data & 0xff00) >> 8;
    /*
     * Put the hex chars out to the file; note that we don't use fprintf()
     * for speed reasons...
@@ -982,7 +999,7 @@ ps_hex(FILE   *prn,	/* I - File to print to */
 
 static void
 ps_ascii85(FILE   *prn,		/* I - File to print to */
-	   gushort *data,	/* I - Data to print */
+	   unsigned short *data,	/* I - Data to print */
 	   int    length,	/* I - Number of bytes to print */
 	   int    last_line)	/* I - Last line of raster data? */
 {
@@ -993,10 +1010,10 @@ ps_ascii85(FILE   *prn,		/* I - File to print to */
 
   while (length > 3)
   {
-    guchar d0 = (data[0] & 0xff00) >> 8;
-    guchar d1 = (data[1] & 0xff00) >> 8;
-    guchar d2 = (data[2] & 0xff00) >> 8;
-    guchar d3 = (data[3] & 0xff00) >> 8;
+    unsigned char d0 = (data[0] & 0xff00) >> 8;
+    unsigned char d1 = (data[1] & 0xff00) >> 8;
+    unsigned char d2 = (data[2] & 0xff00) >> 8;
+    unsigned char d3 = (data[3] & 0xff00) >> 8;
     b = (((((d0 << 8) | d1) << 8) | d2) << 8) | d3;
 
     if (b == 0)
@@ -1089,7 +1106,7 @@ ppd_find(char *ppd_file,	/* I - Name of PPD file */
     if (line[0] != '*')
       continue;
 
-    if (g_strncasecmp(line, "*OrderDependency:", 17) == 0 && order != NULL)
+    if (strncasecmp(line, "*OrderDependency:", 17) == 0 && order != NULL)
     {
       sscanf(line, "%*s%d", order);
       continue;
@@ -1097,8 +1114,8 @@ ppd_find(char *ppd_file,	/* I - Name of PPD file */
     else if (sscanf(line, "*%s %[^/:]", lname, loption) != 2)
       continue;
 
-    if (g_strcasecmp(lname, name) == 0 &&
-        g_strcasecmp(loption, option) == 0)
+    if (strcasecmp(lname, name) == 0 &&
+        strcasecmp(loption, option) == 0)
     {
       opt = strchr(line, ':') + 1;
       while (*opt == ' ' || *opt == '\t')

@@ -3,7 +3,8 @@
  *
  *   Print plug-in for the GIMP.
  *
- *   Copyright 1997-1998 Michael Sweet (mike@easysw.com)
+ *   Copyright 1997-1999 Michael Sweet (mike@easysw.com) and
+ *	Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -41,7 +42,14 @@
  *   See ChangeLog
  */
 
+#include "config.h"
 #include "print.h"
+
+#include <gtk/gtk.h>
+#include <libgimp/gimp.h>
+#define PLUG_IN_VERSION		"3.0 - 25 Oct 1999"
+#define PLUG_IN_NAME		"Print"
+
 #include <math.h>
 #include <signal.h>
 #ifdef __EMX__
@@ -93,6 +101,14 @@ typedef struct		/**** Printer List ****/
   float	saturation;
   float	density;
 } plist_t;
+
+/* Concrete type to represent image */
+typedef struct
+{
+  GDrawable *drawable;
+  GPixelRgn rgn;
+} Gimp_Image_t;
+
 
 /*
  * Local functions...
@@ -417,7 +433,7 @@ query(void)
       _("This plug-in prints images from The GIMP."),
       _("Prints images to PostScript, PCL, or ESC/P2 printers."),
       "Michael Sweet <mike@easysw.com> and Robert Krawitz <rlk@alum.mit.edu>",
-      "Copyright 1997-1998 by Michael Sweet, 1999 by Robert Krawitz",
+      "Copyright 1997-1999 by Michael Sweet and Robert Krawitz",
       PLUG_IN_VERSION,
       N_("<Image>/File/Print"),
       "RGB*,GRAY*,INDEXED*",
@@ -692,6 +708,8 @@ run(char   *name,		/* I - Name of print program. */
 
     if (prn != NULL)
       {
+	Gimp_Image_t image;
+	image.drawable = drawable;
 	printer      = printers + current_printer;
 	compute_lut(&lut, vars.contrast, vars.red, vars.green,
 		    vars.blue, vars.brightness, printer->gamma, gimp_gamma(),
@@ -716,7 +734,7 @@ run(char   *name,		/* I - Name of print program. */
 	(*printer->print)(printer->model, vars.ppd_file, vars.resolution,
 			  vars.media_size, vars.media_type, vars.media_source,
 			  vars.output_type, vars.orientation, vars.scaling,
-			  vars.left, vars.top, 1, prn, drawable, cmap,
+			  vars.left, vars.top, 1, prn, &image, cmap,
 			  &lut, vars.saturation);
 
 	if (plist_current > 0)
@@ -2230,8 +2248,8 @@ plist_callback(GtkWidget *widget,	/* I - Driver option menu */
   if (num_media_sizes > 0)
   {
     for (i = 0; i < num_media_sizes; i ++)
-      g_free(media_sizes[i]);
-    g_free(media_sizes);
+      free(media_sizes[i]);
+    free(media_sizes);
   }
 
   media_sizes = (*(printer->parameters))(printer->model,
@@ -2245,8 +2263,8 @@ plist_callback(GtkWidget *widget,	/* I - Driver option menu */
   if (num_media_types > 0)
   {
     for (i = 0; i < num_media_types; i ++)
-      g_free(media_types[i]);
-    g_free(media_types);
+      free(media_types[i]);
+    free(media_types);
   }
 
   media_types = (*(printer->parameters))(printer->model,
@@ -2260,8 +2278,8 @@ plist_callback(GtkWidget *widget,	/* I - Driver option menu */
   if (num_media_sources > 0)
   {
     for (i = 0; i < num_media_sources; i ++)
-      g_free(media_sources[i]);
-    g_free(media_sources);
+      free(media_sources[i]);
+    free(media_sources);
   }
 
   media_sources = (*(printer->parameters))(printer->model,
@@ -2275,8 +2293,8 @@ plist_callback(GtkWidget *widget,	/* I - Driver option menu */
   if (num_resolutions > 0)
   {
     for (i = 0; i < num_resolutions; i ++)
-      g_free(resolutions[i]);
-    g_free(resolutions);
+      free(resolutions[i]);
+    free(resolutions);
   }
 
   resolutions = (*(printer->parameters))(printer->model,
@@ -2748,6 +2766,24 @@ preview_motion_callback(GtkWidget      *w,
   mouse_y = event->y;
 }
 
+static void
+initialize_printer(plist_t *printer)
+{
+  printer->output_type = vars.output_type;
+  printer->scaling = vars.scaling;
+  printer->orientation = vars.orientation;
+  printer->left = 0;
+  printer->top = 0;
+  printer->gamma = vars.gamma;
+  printer->contrast = vars.contrast;
+  printer->brightness = vars.brightness;
+  printer->red = vars.red;
+  printer->green = vars.green;
+  printer->blue = vars.blue;
+  printer->linear = vars.linear;
+  printer->saturation = vars.saturation;
+  printer->density = vars.density;
+}
 
 /*
  * 'printrc_load()' - Load the printer resource configuration file.
@@ -2765,6 +2801,7 @@ printrc_load(void)
   plist_t	*p,		/* Current printer */
 		key;		/* Search key */
 
+  initialize_printer(&key);
 
  /*
   * Get the printer list...
@@ -2873,7 +2910,6 @@ printrc_load(void)
 
       if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
 	{
-	  key.brightness = vars.brightness;
 	  keepgoing = 0;
 	}
       else
@@ -2884,7 +2920,6 @@ printrc_load(void)
 	  
       if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
 	{
-	  key.scaling = vars.scaling;
 	  keepgoing = 0;
 	}
       else
@@ -2895,7 +2930,6 @@ printrc_load(void)
 	  
       if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
 	{
-	  key.orientation = vars.orientation;
 	  keepgoing = 0;
 	}
       else
@@ -2906,7 +2940,6 @@ printrc_load(void)
 	  
       if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
 	{
-	  key.left = vars.left;
 	  keepgoing = 0;
 	}
       else
@@ -2917,7 +2950,6 @@ printrc_load(void)
 	  
       if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
 	{
-	  key.top = vars.top;
 	  keepgoing = 0;
 	}
       else
@@ -2928,7 +2960,6 @@ printrc_load(void)
 	  
       if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
 	{
-	  key.gamma = vars.gamma;
 	  keepgoing = 0;
 	}
       else
@@ -2940,7 +2971,6 @@ printrc_load(void)
       if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
 	{
 	  keepgoing = 0;
-	  key.contrast = vars.contrast;
 	}
       else
 	{
@@ -2950,7 +2980,6 @@ printrc_load(void)
 	  
       if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
 	{
-	  key.red = vars.red;
 	  keepgoing = 0;
 	}
       else
@@ -2961,7 +2990,6 @@ printrc_load(void)
 	  
       if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
 	{
-	  key.green = vars.green;
 	  keepgoing = 0;
 	}
       else
@@ -2972,7 +3000,6 @@ printrc_load(void)
 	  
       if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
 	{
-	  key.blue = vars.blue;
 	  keepgoing = 0;
 	}
       else
@@ -2983,7 +3010,6 @@ printrc_load(void)
 	  
       if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
 	{
-	  key.linear = vars.linear;
 	  keepgoing = 0;
 	}
       else
@@ -2994,7 +3020,6 @@ printrc_load(void)
 
       if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
 	{
-	  key.saturation = vars.saturation;
 	  keepgoing = 0;
 	}
       else
@@ -3005,7 +3030,6 @@ printrc_load(void)
 	  
       if ((keepgoing == 0))
 	{
-	  key.density = vars.density;
 	  keepgoing = 0;
 	}
       else
@@ -3148,7 +3172,7 @@ get_printers(void)
         strcpy(plist[plist_count].name, line);
         sprintf(plist[plist_count].command, LPR_COMMAND " -P%s -l", line);
         strcpy(plist[plist_count].driver, "ps2");
-        plist[plist_count].output_type = OUTPUT_COLOR;
+	initialize_printer(&plist[plist_count]);
         plist_count ++;
       }
 
@@ -3167,7 +3191,7 @@ get_printers(void)
 	strcpy(plist[plist_count].name, name);
 	sprintf(plist[plist_count].command, LP_COMMAND " -s -d%s", name);
         strcpy(plist[plist_count].driver, "ps2");
-        plist[plist_count].output_type = OUTPUT_COLOR;
+	initialize_printer(&plist[plist_count]);
         plist_count ++;
       }
       else
@@ -3186,7 +3210,7 @@ get_printers(void)
 	  sprintf(plist[plist_count].name, "LPT%d:", i);
 	  sprintf(plist[plist_count].command, "PRINT /D:LPT%d /B ", i);
           strcpy(plist[plist_count].driver, "ps2");
-          plist[plist_count].output_type = OUTPUT_COLOR;
+	  initialize_printer(&plist[plist_count]);
           plist_count ++;
 	}
     }
@@ -3207,6 +3231,74 @@ get_printers(void)
   }
 }
 
+void
+Image_init(Image image)
+{
+  Gimp_Image_t *gimage = (Gimp_Image_t *) image;
+  gimp_pixel_rgn_init(&(gimage->rgn), gimage->drawable, 0, 0,
+		      gimage->drawable->width, gimage->drawable->height,
+		      FALSE, FALSE);
+}
+
+int
+Image_bpp(Image image)
+{
+  Gimp_Image_t *gimage = (Gimp_Image_t *) image;
+  return gimage->drawable->bpp;
+}
+
+int
+Image_width(Image image)
+{
+  Gimp_Image_t *gimage = (Gimp_Image_t *) image;
+  return gimage->drawable->width;
+}
+
+int
+Image_height(Image image)
+{
+  Gimp_Image_t *gimage = (Gimp_Image_t *) image;
+  return gimage->drawable->height;
+}
+
+void
+Image_get_col(Image image, unsigned char *data, int column)
+{
+  Gimp_Image_t *gimage = (Gimp_Image_t *) image;
+  gimp_pixel_rgn_get_col(&(gimage->rgn), data, column, 0,
+			 gimage->drawable->height);
+}
+
+void
+Image_get_row(Image image, unsigned char *data, int row)
+{
+  Gimp_Image_t *gimage = (Gimp_Image_t *) image;
+  gimp_pixel_rgn_get_row(&(gimage->rgn), data, 0, row,
+			 gimage->drawable->width);
+}
+
+void
+Image_progress_init(Image image)
+{
+  image = image;
+  gimp_progress_init(_("Printing..."));
+}
+
+void
+Image_note_progress(Image image, double current, double total)
+{
+  image = image;
+  gimp_progress_update(current / total);
+}
+
+const char *
+Image_get_pluginname(Image image)
+{
+  static char pluginname[] = PLUG_IN_NAME " plug-in V" PLUG_IN_VERSION
+    "for GIMP";
+  image = image;
+  return pluginname;
+}
 
 /*
  * End of "$Id$".

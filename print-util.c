@@ -3,7 +3,8 @@
  *
  *   Print plug-in driver utility functions for the GIMP.
  *
- *   Copyright 1997-1998 Michael Sweet (mike@easysw.com)
+ *   Copyright 1997-1999 Michael Sweet (mike@easysw.com) and
+ *	Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -37,6 +38,12 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.15  1999/10/26 02:10:30  rlk
+ *   Mostly fix save/load
+ *
+ *   Move all gimp, glib, gtk stuff into print.c (take it out of everything else).
+ *   This should help port it to more general purposes later.
+ *
  *   Revision 1.14  1999/10/25 23:31:59  rlk
  *   16-bit clean
  *
@@ -150,7 +157,7 @@
 
 
 #include "print.h"
-
+#include <math.h>
 
 /*
  * RGB to grayscale luminance constants...
@@ -173,7 +180,7 @@ int	error[2][4][14*720+1];
  */
 
 void
-dither_black16(gushort       *gray,	/* I - Grayscale pixels */
+dither_black16(unsigned short       *gray,	/* I - Grayscale pixels */
 	       int           row,	/* I - Current Y coordinate */
 	       int           src_width,	/* I - Width of input row */
 	       int           dst_width,	/* I - Width of output row */
@@ -302,7 +309,7 @@ dither_black16(gushort       *gray,	/* I - Grayscale pixels */
 #define K_RANDOMIZER 4
 
 void
-dither_cmyk16(gushort       *rgb,	/* I - RGB pixels */
+dither_cmyk16(unsigned short       *rgb,	/* I - RGB pixels */
 	      int           row,	/* I - Current Y coordinate */
 	      int           src_width,	/* I - Width of input row */
 	      int           dst_width,	/* I - Width of output rows */
@@ -920,7 +927,7 @@ dither_cmyk16(gushort       *rgb,	/* I - RGB pixels */
  */
 
 void
-dither_black4(guchar        *gray,	/* I - Grayscale pixels */
+dither_black4(unsigned char        *gray,	/* I - Grayscale pixels */
               int           row,	/* I - Current Y coordinate */
               int           src_width,	/* I - Width of input row */
               int           dst_width,	/* I - Width of output rows */
@@ -1005,7 +1012,7 @@ dither_black4(guchar        *gray,	/* I - Grayscale pixels */
 }
 
 void
-dither_black4_16(gushort       *gray,	/* I - Grayscale pixels */
+dither_black4_16(unsigned short       *gray,	/* I - Grayscale pixels */
 		 int           row,	/* I - Current Y coordinate */
 		 int           src_width,	/* I - Width of input row */
 		 int           dst_width,	/* I - Width of output rows */
@@ -1096,7 +1103,7 @@ dither_black4_16(gushort       *gray,	/* I - Grayscale pixels */
  */
 
 void
-dither_cmyk4(guchar        *rgb,	/* I - RGB pixels */
+dither_cmyk4(unsigned char        *rgb,	/* I - RGB pixels */
              int           row,		/* I - Current Y coordinate */
              int           src_width,	/* I - Width of input row */
              int           dst_width,	/* I - Width of output rows */
@@ -1334,7 +1341,7 @@ dither_cmyk4(guchar        *rgb,	/* I - RGB pixels */
 }
 
 void
-dither_cmyk4_16(gushort       *rgb,		/* I - RGB pixels */
+dither_cmyk4_16(unsigned short       *rgb,		/* I - RGB pixels */
 		int           row,		/* I - Current Y coordinate */
 		int           src_width,	/* I - Width of input row */
 		int           dst_width,	/* I - Width of output rows */
@@ -1580,11 +1587,11 @@ dither_cmyk4_16(gushort       *rgb,		/* I - RGB pixels */
 
 #if 0
 void
-gray_to_gray(guchar *grayin,	/* I - RGB pixels */
-             guchar *grayout,	/* O - RGB pixels */
+gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
+             unsigned char *grayout,	/* O - RGB pixels */
              int    width,	/* I - Width of row */
              int    bpp,	/* I - Bytes-per-pixel in grayin */
-             guchar *cmap,	/* I - Colormap (unused) */
+             unsigned char *cmap,	/* I - Colormap (unused) */
 	     float  saturation	/* I - Saturation */
 	     )
 {
@@ -1622,12 +1629,12 @@ gray_to_gray(guchar *grayin,	/* I - RGB pixels */
 #endif
 
 void
-gray_to_gray16(guchar *grayin,		/* I - RGB pixels */
-	       gushort *grayout,	/* O - RGB pixels */
+gray_to_gray16(unsigned char *grayin,		/* I - RGB pixels */
+	       unsigned short *grayout,	/* O - RGB pixels */
 	       int    width,		/* I - Width of row */
 	       int    bpp,		/* I - Bytes-per-pixel in grayin */
 	       lut_t  *lut,		/* I - Brightness lookup table */
-	       guchar *cmap,		/* I - Colormap (unused) */
+	       unsigned char *cmap,		/* I - Colormap (unused) */
 	       float  saturation	/* I - Saturation */
 	       )
 {
@@ -1670,11 +1677,11 @@ gray_to_gray16(guchar *grayin,		/* I - RGB pixels */
 
 #if 0
 void
-indexed_to_gray(guchar *indexed,	/* I - Indexed pixels */
-                guchar *gray,		/* O - Grayscale pixels */
+indexed_to_gray(unsigned char *indexed,	/* I - Indexed pixels */
+                unsigned char *gray,		/* O - Grayscale pixels */
         	int    width,		/* I - Width of row */
         	int    bpp,		/* I - Bytes-per-pixel in indexed */
-                guchar *cmap,		/* I - Colormap */
+                unsigned char *cmap,		/* I - Colormap */
 		float  saturation	/* I - Saturation */
 		)
 {
@@ -1717,13 +1724,13 @@ indexed_to_gray(guchar *indexed,	/* I - Indexed pixels */
 #endif
 
 void
-indexed_to_gray16(guchar *indexed,	/* I - Indexed pixels */
-		  gushort *gray,	/* O - Grayscale pixels */
-		  int    width,		/* I - Width of row */
-		  int    bpp,		/* I - Bytes-per-pixel in indexed */
-		  lut_t  *lut,	/* I - Brightness lookup table */
-		  guchar *cmap,		/* I - Colormap */
-		  float  saturation	/* I - Saturation */
+indexed_to_gray16(unsigned char *indexed,	/* I - Indexed pixels */
+		  unsigned short *gray,		/* O - Grayscale pixels */
+		  int    width,			/* I - Width of row */
+		  int    bpp,			/* I - bpp in indexed */
+		  lut_t  *lut,			/* I - Brightness LUT */
+		  unsigned char *cmap,		/* I - Colormap */
+		  float  saturation		/* I - Saturation */
 		  )
 {
   int		i;			/* Looping var */
@@ -1765,12 +1772,12 @@ indexed_to_gray16(guchar *indexed,	/* I - Indexed pixels */
 
 
 void
-indexed_to_rgb16(guchar *indexed,	/* I - Indexed pixels */
-		 gushort *rgb,		/* O - RGB pixels */
+indexed_to_rgb16(unsigned char *indexed,	/* I - Indexed pixels */
+		 unsigned short *rgb,		/* O - RGB pixels */
 		 int    width,		/* I - Width of row */
 		 int    bpp,		/* I - Bytes-per-pixel in indexed */
 		 lut_t  *lut,		/* I - Brightness lookup table */
-		 guchar *cmap,		/* I - Colormap */
+		 unsigned char *cmap,		/* I - Colormap */
 		 float  saturation	/* I - Saturation */
 		 )
 {
@@ -1829,12 +1836,12 @@ indexed_to_rgb16(guchar *indexed,	/* I - Indexed pixels */
  */
 
 void
-rgb_to_gray16(guchar *rgb,		/* I - RGB pixels */
-	      gushort *gray,		/* O - Grayscale pixels */
+rgb_to_gray16(unsigned char *rgb,		/* I - RGB pixels */
+	      unsigned short *gray,		/* O - Grayscale pixels */
 	      int    width,		/* I - Width of row */
 	      int    bpp,		/* I - Bytes-per-pixel in RGB */
 	      lut_t  *lut,		/* I - Brightness lookup table */
-	      guchar *cmap,		/* I - Colormap (unused) */
+	      unsigned char *cmap,		/* I - Colormap (unused) */
 	      float  saturation		/* I - Saturation */
 	      )
 {
@@ -1878,12 +1885,12 @@ rgb_to_gray16(guchar *rgb,		/* I - RGB pixels */
  */
 
 void
-rgb_to_rgb16(guchar *rgbin,		/* I - RGB pixels */
-	     gushort *rgbout,		/* O - RGB pixels */
+rgb_to_rgb16(unsigned char *rgbin,	/* I - RGB pixels */
+	     unsigned short *rgbout,		/* O - RGB pixels */
 	     int    width,		/* I - Width of row */
 	     int    bpp,		/* I - Bytes-per-pixel in indexed */
 	     lut_t *lut,		/* I - Brightness lookup table */
-	     guchar *cmap,		/* I - Colormap */
+	     unsigned char *cmap,	/* I - Colormap */
 	     float  saturation		/* I - Saturation */
 	     )
 {
@@ -1988,7 +1995,7 @@ default_media_size(int  model,		/* I - Printer model */
 
 
 void
-calc_rgb16_to_hsv(gushort *rgb, double *hue, double *sat, double *val)
+calc_rgb16_to_hsv(unsigned short *rgb, double *hue, double *sat, double *val)
 {
   double red, green, blue;
   double h, s, v;
@@ -2060,7 +2067,7 @@ calc_rgb16_to_hsv(gushort *rgb, double *hue, double *sat, double *val)
 }
 
 void
-calc_hsv_to_rgb16(gushort *rgb, double h, double s, double v)
+calc_hsv_to_rgb16(unsigned short *rgb, double h, double s, double v)
 {
   double hue, saturation, value;
   double f, p, q, t;
