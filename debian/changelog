@@ -1,3 +1,9 @@
+gimp-print (4.2.1-2) unstable; urgency=low
+
+  * Move escputil to section utils
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Thu,  2 May 2002 18:34:27 +0100
+
 gimp-print (4.2.1-1) unstable; urgency=low
 
   * New upstream release
