@@ -1587,8 +1587,8 @@ gimp_media_size_callback (GtkWidget *widget,
 	      g_snprintf(s, sizeof(s), "%.2f", size);
 	      gtk_entry_set_text(GTK_ENTRY(custom_size_width), s);
 	      gtk_entry_set_editable(GTK_ENTRY(custom_size_width), FALSE);
-	      plist[plist_current].v.page_width = 0;
-	      vars.page_width = 0;
+	      plist[plist_current].v.page_width = pap->width;
+	      vars.page_width = pap->width;
 	    }
 	  if (pap->height == 0)
 	    {
@@ -1611,8 +1611,8 @@ gimp_media_size_callback (GtkWidget *widget,
 	      g_snprintf(s, sizeof(s), "%.2f", size);
 	      gtk_entry_set_text(GTK_ENTRY(custom_size_height), s);
 	      gtk_entry_set_editable(GTK_ENTRY(custom_size_height), FALSE);
-	      plist[plist_current].v.page_height = 0;
-	      vars.page_height = 0;
+	      plist[plist_current].v.page_height = pap->height;
+	      vars.page_height = pap->height;
 	    }
 	}
       if (strcmp (vars.media_size, new_media_size) != 0)
@@ -2230,6 +2230,16 @@ gimp_preview_update (void)
   g_snprintf(s, sizeof (s), "%.2f", print_height / unit_scaler);
   gtk_entry_set_text (GTK_ENTRY (height_entry), s);
   gtk_signal_handler_unblock_by_data (GTK_OBJECT (height_entry), NULL);
+
+  gtk_signal_handler_block_by_data (GTK_OBJECT (custom_size_width), NULL);
+  g_snprintf (s, sizeof (s), "%.2f", vars.page_width / unit_scaler);
+  gtk_entry_set_text (GTK_ENTRY (custom_size_width), s);
+  gtk_signal_handler_unblock_by_data (GTK_OBJECT (custom_size_width), NULL);
+
+  gtk_signal_handler_block_by_data (GTK_OBJECT (custom_size_height), NULL);
+  g_snprintf(s, sizeof (s), "%.2f", vars.page_height / unit_scaler);
+  gtk_entry_set_text (GTK_ENTRY (custom_size_height), s);
+  gtk_signal_handler_unblock_by_data (GTK_OBJECT (custom_size_height), NULL);
 
   /* draw image */
   {
