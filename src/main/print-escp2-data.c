@@ -3014,6 +3014,9 @@ static const escp2_dot_size_t c3pl_pigment_dotsizes =
 
 static const escp2_dot_size_t c2pl_dotsizes =
 {   -1, 0x12,   -1, 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x13,   -1, 0x13,  0x10 };
+  
+static const escp2_dot_size_t c1_8pl_dotsizes =
+{   -1, 0x10,   -1, 0x10,   -1, 0x10,   -1, 0x10,   -1, 0x11,   -1,   -1,  0x12 };
 
 static const escp2_dot_size_t c4pl_pigment_dotsizes =
 { -1,   0x12,   -1, 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x11,   -1, 0x10, 0x10 };
@@ -3053,6 +3056,10 @@ static const escp2_bits_t ultrachrome_bits =
 static const escp2_bits_t standard_bits =
 {    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 };
 
+static const escp2_bits_t c1_8_bits =
+{    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    1,    1,    1 };
+
+
 /*
  * Base resolutions are for:
  *
@@ -3087,6 +3094,9 @@ static const escp2_base_resolutions_t stp950_base_res =
 
 static const escp2_base_resolutions_t ultrachrome_base_res =
 {  360,  360,  360,  360,  360,  360,  360,  360,  360,  360,  720,  720,  720 };
+
+static const escp2_base_resolutions_t c1_8_base_res =
+{  360,  360,  360,  360,  720,  720,  720,  720,  720,  720, 1440, 1440, 1440 };
 
 static const escp2_base_resolutions_t stc900_base_res =
 {  360,  360,  360,  360,  360,  360,  360,  360,  180,  180,  180,  180,  180 };
@@ -3342,6 +3352,37 @@ static const res_t escp950_reslist[] =
     2880, 1440, 1440, 1440, 1,  0, 1, 1, 1, 1, 1, RES_2880_1440},
   { "1440x1440hq2",     N_("1440 x 1440 DPI Highest Quality"),
     2880, 1440, 1440, 1440, 1,  0, 1, 1, 1, 1, 1, RES_2880_1440},
+
+  { "2880x1440sw",      N_("2880 x 1440 DPI"),
+    2880, 1440, 2880, 1440, 1,  0, 1, 1, 1, 1, 1, RES_2880_1440},
+
+  { "", "", 0, 0, 0, 0, 0, 0, 0, 0, 1, -1 }
+};
+
+static const res_t c1_8pl_reslist[] =
+{
+  { "720x360sw",        N_("720 x 360 DPI"),
+    720,  360,  720,  360,  1,  0, 1, 1, 0, 2, 1, RES_720_360 },
+  { "720x360swuni",     N_("720 x 360 DPI Unidirectional"),
+    720,  360,  720,  360,  1,  0, 1, 1, 1, 2, 1, RES_720_360 },
+
+  { "720sw",            N_("720 DPI"),
+    720,  720,  720,  720,  1,  0, 1, 1, 0, 1, 1, RES_720 },
+  { "720swuni",         N_("720 DPI Unidirectional"),
+    720,  720,  720,  720,  1,  0, 1, 1, 1, 1, 1, RES_720 },
+  { "720hq",            N_("720 DPI High Quality"),
+    720,  720,  720,  720,  1,  0, 2, 1, 0, 1, 1, RES_720 },
+  { "720hquni",         N_("720 DPI High Quality Unidirectional"),
+    720,  720,  720,  720,  1,  0, 2, 1, 1, 1, 1, RES_720 },
+  { "720hq2",           N_("720 DPI Highest Quality"),
+    720,  720,  720,  720,  1,  0, 4, 1, 1, 1, 1, RES_720 },
+
+  { "1440x720sw",       N_("1440 x 720 DPI"),
+    1440, 720,  1440, 720,  1,  0, 1, 1, 0, 1, 1, RES_1440_720 },
+  { "1440x720swuni",    N_("1440 x 720 DPI Unidirectional"),
+    1440, 720,  1440, 720,  1,  0, 1, 1, 1, 1, 1, RES_1440_720 },
+  { "1440x720hq2",      N_("1440 x 720 DPI Highest Quality"),
+    1440, 720,  1440, 720,  1,  0, 2, 1, 1, 1, 1, RES_1440_720 },
 
   { "2880x1440sw",      N_("2880 x 1440 DPI"),
     2880, 1440, 2880, 1440, 1,  0, 1, 1, 1, 1, 1, RES_2880_1440},
@@ -4616,13 +4657,13 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
      MODEL_FAST_360_YES),
     180, 180, 2, 360, 360, 1, 360, 360, 1,
-    360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
+    360, 720, 720, 14400, -1, 2880, 1440, 720, 360,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 190, 0, 0, 0,
-    c2pl_dotsizes, c2pl_densities, &variable_2pl_inks,
-    &sp950_paper_list, escp950_reslist, &photo7_japan_inklist,
-    stp950_bits, stp950_base_res, &standard_roll_feed_input_slot_list,
+    c1_8pl_dotsizes, c2pl_densities, &variable_2pl_inks,
+    &sp950_paper_list, c1_8pl_reslist, &photo7_japan_inklist,
+    c1_8_bits, c1_8_base_res, &standard_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
 };
