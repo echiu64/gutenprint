@@ -126,7 +126,7 @@ stpi_dither_describe_parameter(const stp_vars_t v, const char *name,
   else if (strcmp(name, "Density") == 0)
     {
       stpi_fill_parameter_settings(description, &(dither_parameters[0]));
-      description->bounds.dbl.upper = 2.0;
+      description->bounds.dbl.upper = 8.0;
       description->bounds.dbl.lower = 0.1;
       description->deflt.dbl = 1.0;
     }
