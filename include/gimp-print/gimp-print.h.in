@@ -470,9 +470,9 @@ extern void stp_set_string_parameter_n(stp_vars_t v, const char *parameter,
 extern void stp_set_float_parameter(stp_vars_t v, const char *parameter,
 				    double value);
 extern void stp_set_curve_parameter(stp_vars_t v, const char *parameter,
-				     const stp_curve_t value);
+				    const stp_curve_t value);
 extern void stp_set_raw_parameter(stp_vars_t v, const char *parameter,
-				     const stp_raw_t *value);
+				  const stp_raw_t *value);
 
 extern const char *stp_get_string_parameter(const stp_vars_t v,
 					    const char *param);
@@ -557,11 +557,15 @@ extern stp_curve_type_t stp_curve_get_interpolation_type(const stp_curve_t curve
 extern int stp_curve_set_data(stp_curve_t curve, size_t count, double *data);
 
 /*
+ * Return a pointer to the curve's raw data.
+ *
+ * This data is not guaranteed to be valid beyond the next non-const
+ * curve call.
+ *
  * If the curve is a pure gamma curve (no associated points),
  * a null pointer is returned and the count is 0.
  */
-extern const double *stp_curve_get_data(const stp_curve_t curve,
-					size_t *count);
+extern const double *stp_curve_get_data(const stp_curve_t curve, size_t *count);
 
 /*
  * Set the gamma of a curve.  This replaces all existing points along
