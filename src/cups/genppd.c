@@ -516,10 +516,18 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzputs(fp, "*PSVersion:	\"(3010.000) 705\"\n");
 #endif /* CUPS_PPD_PS_LEVEL == 2 */
   gzprintf(fp, "*LanguageLevel:	\"%d\"\n", CUPS_PPD_PS_LEVEL);
-  gzprintf(fp, "*ColorDevice:	%s\n",
-           stp_get_output_type(printvars) == OUTPUT_COLOR ? "True" : "False");
-  gzprintf(fp, "*DefaultColorSpace: %s\n",
-           stp_get_output_type(printvars) == OUTPUT_COLOR ? "RGB" : "Gray");
+
+  /* Assume that color printers are inkjets and should have pages reversed */
+  if (stp_get_output_type(printvars) == OUTPUT_COLOR)
+    {
+      gzputs(fp, "*ColorDevice:	True\n");
+      gzputs(fp, "*DefaultColorSpace:	RGB\n");
+    }
+  else
+    {
+      gzputs(fp, "*ColorDevice:	False\n");
+      gzputs(fp, "*DefaultColorSpace:	Gray\n");
+    }
   gzputs(fp, "*FileSystem:	False\n");
   gzputs(fp, "*LandscapeOrientation: Plus90\n");
   gzputs(fp, "*TTRasterizer:	Type42\n");
@@ -705,17 +713,6 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   }
 
   gzputs(fp, "*CloseUI: *ColorModel\n\n");
-
-  gzputs(fp, "*OpenUI *OutputOrder: PickOne\n");
-  gzputs(fp, "*OrderDependency: 10 AnySetup *OutputOrder\n");
-  /* Assume that color printers are inkjets and should have pages reversed */
-  if (stp_get_output_type(printvars) == OUTPUT_COLOR)
-    gzputs(fp, "*DefaultOutputOrder: Reverse\n");
-  else
-    gzputs(fp, "*DefaultOutputOrder: Normal\n");
-  gzputs(fp, "*OutputOrder Normal/Normal: Normal\n");
-  gzputs(fp, "*OutputOrder Reverse/Reverse: Reverse\n");
-  gzputs(fp, "*CloseUI: *OutputOrder\n\n");
 
  /*
   * Media types...
