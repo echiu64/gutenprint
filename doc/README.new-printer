@@ -459,13 +459,26 @@ like for an epson printer, the same holds true for canon_variable_inklist_t.
 See the descriptions above to learn about how to adjust your model's output
 to yield nice results.
 
-If you plan to add or adjust a model for 7color printing, please note that 
-7color printing is not yet supported in the canon_variable_inklist_t struct.
-Extending this struct means to also extend all ink definitions, accordingly.
-The same should be true for 3color models (i.e. those that can only print 
-with CMY and not K)
+There's a slight difference though in the way the canon driver and the escp2 
+driver define their variable inklists: In the canon driver, you need to define
+an inklist like this:
 
+static const canon_variable_inklist_t canon_ink_myinks[] =
+{
+  {
+    1,4, /* 1bit/pixel, 4 colors */
+    &ci_CMYK_1, &ci_CMYK_1, &ci_CMYK_1,
+    &ci_CMYK_1, &ci_CMYK_1, &ci_CMYK_1,
+  },
+  {
+    3,4, /* 3bit/pixel, 4 colors */
+    &ci_CMYK_3, &ci_CMYK_3, &ci_CMYK_3,
+    &ci_CMYK_3, &ci_CMYK_3, &ci_CMYK_3,
+  },
+};
 
+where the &ci_CMYK_1 and &ci_CMYK_3 entries are references to a previously 
+defined const of type canon_variable_inkset_t.
 
 
 
