@@ -2353,8 +2353,11 @@ lexmark_init_line(int mode, unsigned char *prnBuf,
 		hend = (width-1)*(2400/2400);
 		break;
 	}
+	hend += offset;
 	prnBuf[17] = (unsigned char)(hend >> 8);
         prnBuf[18] = (unsigned char)(hend & 0xFF);
+
+ 	prnBuf[10] = (pass_length==208 ? 0x1A : 0x18);
     }
 
     return prnBuf + header_size;  /* return the position where the pixels have to be written */
