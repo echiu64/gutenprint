@@ -1196,7 +1196,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     96, 96, 2, 96, 96, 2, 192, 192, 1, 7,
     360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 190, 0, 0, 0,
     INCH(13), INCH(1200), INCH(2), INCH(4),
-    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
+    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     4, 15, 0, 0,
     c4pl_pigment_dotsizes, c4pl_pigment_densities, &stpi_escp2_variable_ultrachrome_drops,
     stpi_escp2_superfine_reslist, &stpi_escp2_f360_ultrachrome_inkgroup,
