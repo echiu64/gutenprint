@@ -73,6 +73,14 @@
 <language value=pcl>
 </printer>
 
+<printer name="HP DeskJet 690 series" driver="pcl-690">
+<color>
+<model value=690>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
 <printer name="HP DeskJet 800 series" driver="pcl-800">
 <color>
 <model value=800>
