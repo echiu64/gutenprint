@@ -602,7 +602,10 @@ main(int  argc,				/* I - Number of command-line arguments */
       print_debug_block(&cups);
       if (!stp_verify(v))
 	{
-	  fprintf(stderr, "ERROR: Gimp-Print options failed to verify, set LogLevel to debug2 to identify why\n");
+	  fprintf(stderr, "ERROR: Gimp-Print: options failed to verify.\n");
+	  fprintf(stderr, "ERROR: Gimp-Print: Make sure that you are using ESP Ghostscript rather\n");
+	  fprintf(stderr, "ERROR: Gimp-Print: than GNU or AFPL Ghostscript with CUPS.\n");
+	  fprintf(stderr, "ERROR: Gimp-Print: If this is not the cause, set LogLevel to debug2 to identify the problem.\n");
 	  goto cups_abort;
 	}
 
