@@ -13,44 +13,57 @@ require('standard_html_header.php3');
 # Please remember to use <P> </P> tags !  ?>
 
 <H4>High quality drivers for Canon, Epson, and PCL printers for use
-with Ghostscript and the Gimp.</H4>
+with Ghostscript and <a href="http://www.gimp.org">the Gimp</a>.</H4>
 
 <P>For a quick download, please visit <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 
 </p>
 
-<P><strong><em><font color="#ff0000">New as of August 15,
-2000!</font></em></strong> Version 4.0a2 is now released.  This is the
-second alpha release of 4.0 (formerly called 3.2), following the 3.1
-development cycle.  This version contains a GhostScript driver equal
-to the Print plugin in all respects, including supported printers.
-<strong>Please read the Ghost/README file very carefully if you use
-the Ghostscript driver, as the usage is completely different from
-3.1.9 and earlier.</strong></p>
+<P><strong><em><font color="#ff0000">New as of September 5,
+2000!</font></em></strong> Version 4.0a3 is now released.  This is the
+third alpha release of 4.0, following the 3.1 development cycle.  The
+next release should be the first beta.  This version contains a
+GhostScript driver equal to the Print plugin in all respects,
+including supported printers.  <strong>Please read the Ghost/README
+file very carefully if you use the Ghostscript driver, as the usage is
+completely different from 3.1.9 and earlier.</strong></p>
 
 <P>Please check out <a
 href="https://sourceforge.net/project/?group_id=1537">our
 project page</a>, which contains a lot more information about us!</p>
 
-<p><a href="http://www.gimp.org">The Gimp</a> is an image editor and
-manipulator comparable in many ways to <a
-href="http://www.adobe.com">Adobe</a> Photoshop.  Michael Sweet of <a
-href="http://www.easysw.com">Easy Software</a> wrote a very nice print
-plugin for The Gimp. In the summer of 1999, Robert Krawitz purchased
-an <a href="http://www.epson.com">Epson Stylus Photo EX</a> printer,
-and finding that the driver didn't fully support this excellent
-printer, had a go at hacking it.</p>
+<p>This package was first written by Mike Sweet of <a
+href="http://www.easysw.com">Easy Software</a>.  In the summer of
+1999, I (Robert Krawitz) purchased an <a
+href="http://www.epson.com">Epson Stylus Photo EX</a> printer to feed
+his photography hobby.  Finding no existing drivers, I adapted Mike's
+Print plugin to the six-color printer, and by the end of the year
+released 3.0, which went into the Gimp 1.1.  The intention was for
+this to be the stable plugin in the Gimp 1.2, while development of the
+Print plugin continued for later release.</p>
 
-<p>After enhancing the dithering algorithm to support the 6-color inks
-used by the Stylus Photo EX and to improve output quality in general,
-Robert began to add additional features to the plugin to allow the
-user more control over the output.</p>
+<p>I put the 3.1 development tree on <a
+href="http://sourceforge.net">SourceForge</a>, and quickly found a
+group of like-minded people who wanted to print high quality output on
+inexpensive inkjet printers.  One of the main goals, which wasn't
+expected to be met until late in the 3.1 cycle, was to write a
+Ghostscript driver so that printing wouldn't be restricted to the
+Gimp.  Imagine my surprise when Henryk "Buggs" Richter wrote one
+within days!</p>
 
-<p>After stabilizing version 3.0 in preparation for releasing The Gimp
-version 1.2, we started work on version 3.1.  This developers' version
-will form the basis for version 4.0, which will be the next stable
-release.<p>
+<p>In July 2000, not more than a year after I bought the EX, I was
+honored to be invited to the Linux Printing Summit hosted by VA Linux
+Systems.  In preparation for that, I spent long hours printing out
+test images.  I went back to the last 3.0.9 release, which seemed like
+such an advance at the time.  I was floored at how far we'd come in
+four months!  Output that I had been impressed with using six colors
+was put to shame by four color output, so that should give you an idea
+what six color and variable dot size printers can do.  Just goes to
+show what a group of committed people can do.</p>
+
+<p>I came away from the Summit with lots of new ideas, and in the
+month or so since the Summit, we've put in place another round of
+improvements.  I think you'll really enjoy using gimp-print!</p>
 
 <?require('standard_html_footer.php3');?>
-https://sourceforge.net/project/showfiles.php?group_id=1537&release_id=9909
