@@ -69,7 +69,7 @@ static const escp2_dot_size_t c3pl_pigment_dotsizes =
 { 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x12, 0x12 };
 
 static const escp2_dot_size_t p3pl_dotsizes =
-{ 0x13, 0x10, 0x11, 0x11, 0x12, 0x12, 0x12, 0x12 };
+{ 0x10, 0x10, 0x10, 0x11, 0x12,   -1, 0x12, 0x12 };
 
 static const escp2_dot_size_t p1_5pl_dotsizes =
 { 0x10, 0x10, 0x11, 0x11, 0x12, 0x13, 0x13, 0x13 };
@@ -231,7 +231,7 @@ static const escp2_densities_t c3pl_densities =
 { 2.6, 1.3,  0.65, 0.730, 0.7,   0.91,  0.455, 0.0   };
 
 static const escp2_densities_t p3pl_densities =
-{ 2.0, 1.0,  0.5,  0.627, 0.483, 0.523, 0.523, 0.262 };
+{ 2.0, 1.5,  0.75, 0.627, 0.483, 0.0,   0.523, 0.262 };
 
 static const escp2_densities_t p1_5pl_densities =
 { 2.0, 1.0,  0.5,  0.627, 0.483, 0.523, 0.262, 0.131 };
@@ -1626,7 +1626,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191,
     4, 15, 0, 0,
     p3pl_dotsizes, p3pl_densities, &stpi_escp2_variable_3pl_pmg_drops,
-    stpi_escp2_superfine_reslist, &stpi_escp2_photo_gen2_inkgroup,
+    stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &cd_cutter_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL
