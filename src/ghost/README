@@ -47,7 +47,7 @@ LICENSE:
 BUILD AND INSTALLATION:
 ----- --- -------------
 
-1) Get a recent Ghostscript (5.10, 5.50, or 5.61) and prepare the
+1) Get a recent Ghostscript (5.10, 5.50, or 6.51) and prepare the
    sources as described in the documentation (don`t forget zlib,
    libpng and libjpeg when downloading the source) for compiling
 
@@ -96,9 +96,8 @@ BUILD AND INSTALLATION:
 
    If you reinstall Gimp-Print in a new location (by using configure
    --prefix, configure --exec-prefix, or configure --includedir), you
-   must edit the contrib.mak file appropriate.  The contrib.mak.addon
-   file in this directory is automatically updated by running
-   configure.
+   must edit the contrib.mak file appropriately.  The contrib.mak.addon
+   file in this directory is automatically updated by running configure.
 
 6) Skip to step 11.
 
