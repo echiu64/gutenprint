@@ -90,7 +90,9 @@ struct option optlist[] =
   { "nozzle-check",	0,	NULL,	(int) 'n' },
   { "align-head",	0,	NULL,	(int) 'a' },
   { "align-color",	0,	NULL,	(int) 'o' },
+#if 0
   { "change-ink",       0,      NULL,   (int) 'x' },
+#endif
   { "status",           0,      NULL,   (int) 's' },
   { "usb",		0,	NULL,	(int) 'u' },
   { "help",		0,	NULL,	(int) 'h' },
@@ -101,7 +103,7 @@ struct option optlist[] =
 };
 
 const char *help_msg = "\
-Usage: escputil [-c | -n | -a | -i | -o | -x | -s | -d]\n\
+Usage: escputil [-c | -n | -a | -i | -o | -s | -d]\n\
                 [-P printer | -r device] [-u] [-q] [-m model]\n\
     -P|--printer-name  Specify the name of the printer to operate on.\n\
                        Default is the default system printer.\n\
@@ -117,8 +119,12 @@ Usage: escputil [-c | -n | -a | -i | -o | -x | -s | -d]\n\
                        damage to the printer.\n\
     -o|--align-color   Align the color print head (Stylus Color 480 and 580\n\
                        only).  CAUTION: Misuse of this utility may result in\n\
-                       poor print quality and/or damage to the printer.\n\
-    -x|--change-ink    Change the ink cartridge on the Stylus Color 480/580.\n\
+                       poor print quality and/or damage to the printer.\n"
+#if 0
+"\
+    -x|--change-ink    Change the ink cartridge on the Stylus Color 480/580.\n"
+#endif
+"\
     -s|--status        Retrieve printer status.\n\
     -i|--ink-level     Obtain the ink level from the printer.  This requires\n\
                        read/write access to the raw printer device.\n\
@@ -131,7 +137,7 @@ Usage: escputil [-c | -n | -a | -i | -o | -x | -s | -d]\n\
     -m|--model         Specify the precise printer model for head alignment.\n";
 #else
 const char *help_msg = "\
-Usage: escputil [-c | -n | -a | -i | -o | -x | -s | -d]\n\
+Usage: escputil [-c | -n | -a | -i | -o | -s | -d]\n\
                 [-P printer | -r device] [-u] [-q] [-m model]\n\
     -P Specify the name of the printer to operate on.\n\
           Default is the default system printer.\n\
@@ -147,8 +153,11 @@ Usage: escputil [-c | -n | -a | -i | -o | -x | -s | -d]\n\
           damage to the printer.\n\
     -o Align the color print head (Stylus Color 480 and 580\n\
           only).  CAUTION: Misuse of this utility may result in\n\
-          poor print quality and/or damage to the printer.\n\
-    -x Change the ink cartridge on the Stylus Color 480/580.\n\
+          poor print quality and/or damage to the printer.\n"
+#if 0
+    -x Change the ink cartridge on the Stylus Color 480/580.\n
+#endif
+"\
     -s Retrieve printer status.\n\
     -i Obtain the ink level from the printer.  This requires\n\
           read/write access to the raw printer device.\n\

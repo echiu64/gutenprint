@@ -80,25 +80,16 @@ Gimp-Print 4.1.99a2 contains the following changes over 4.1.99a1:
    window constrains the image to moving horizontally or vertically
    only on the page.
 
-18) Preliminary support for the Epson Stylus C20 and C40 printers.
+18) Preliminary support for the Epson Stylus C20 and C40 printers,
+   including color head alignment (in escputil).  The color head
+   alignment is experimental, has not been tested; it may not work,
+   and it may potentially damage your printer.  If you wish to
+   experiment with this, be careful!
 
-19) Preliminary support has been added for ink cartridge changing on
-   the Epson Stylus Color 480 and 580 printers, and preliminary
-   support for color head alignment has been added for the 480 and
-   580, as well as the Stylus C20 and C40 printers.  These functions
-   are experimental, and they may not work; they may also potentially
-   damage your printer!  If you wish to experiment with these, be
-   careful!  These will be fixed before final release.
-
-   In particular, the ink cartridge change for the Stylus Color 480
-   and 580 will probably not work once the cartridge has actually run
-   out of ink.  It may or may not work when the cartridge is low on
-   ink.
-
-20) A new 'status' sub-command has been added to the escputil
+19) A new 'status' sub-command has been added to the escputil
    utility.  This enables you to retrieve status from the printer.
 
-21) A new directory, samples, has been added.  This contains various
+20) A new directory, samples, has been added.  This contains various
    sample images that will be installed in
    /usr/local/share/gimp-print/samples (or as appropriate for your
    system).  You can run "configure --without-samples" if you would
