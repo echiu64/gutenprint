@@ -119,9 +119,9 @@ configure: configure.in
 	fi
 
 configure.in: configure.in.in
-	if test -f configure.in.in ; then \
-	  if test -x scripts/autogen.sh ; then \
-	    scripts/autogen.sh --version ; \
+	if test -f configure.in ; then \
+	  if test -f scripts/autogen.sh ; then \
+	    /bin/sh scripts/autogen.sh --version ; \
 	  fi \
 	fi
 
