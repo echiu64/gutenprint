@@ -383,6 +383,10 @@ typedef struct
 #define MODEL_PACKET_MODE_NO	0x0000ul
 #define MODEL_PACKET_MODE_YES	0x1000ul
 
+#define MODEL_PRINT_TO_CD_MASK	0x2000ul
+#define MODEL_PRINT_TO_CD_NO	0x0000ul
+#define MODEL_PRINT_TO_CD_YES	0x2000ul
+
 typedef enum
 {
   MODEL_COMMAND,
@@ -395,6 +399,7 @@ typedef enum
   MODEL_SEND_ZERO_ADVANCE,
   MODEL_SUPPORTS_INK_CHANGE,
   MODEL_PACKET_MODE,
+  MODEL_PRINT_TO_CD,
   MODEL_LIMIT
 } escp2_model_option_t;
 

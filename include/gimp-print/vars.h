@@ -71,6 +71,7 @@ typedef enum
   STP_PARAMETER_TYPE_FILE,	/*!< Filename (NYI, need to consider security). */
   STP_PARAMETER_TYPE_RAW,	/*!< Raw, opaque data. */
   STP_PARAMETER_TYPE_ARRAY,     /*!< Array. */
+  STP_PARAMETER_TYPE_DIMENSION, /*!< Linear dimension. */
   STP_PARAMETER_TYPE_INVALID    /*!< Invalid type (should never be used). */
 } stp_parameter_type_t;
 
@@ -162,6 +163,7 @@ typedef struct
     stp_curve_t *curve;       /*!< curve parameter value. */
     stp_double_bound_t dbl;  /*!< double_bound parameter value. */
     stp_int_bound_t integer; /*!< int_bound parameter value. */
+    stp_int_bound_t dimension; /*!< int_bound parameter value. */
     stp_string_list_t *str;   /*!< string_list parameter value. */
     stp_array_t *array;      /*!< array parameter value. */
   } bounds; /*!< Limits on the values the parameter may take. */
@@ -169,6 +171,7 @@ typedef struct
   {
     stp_curve_t *curve; /*!< Default curve parameter value. */
     double dbl;         /*!< Default double_bound parameter value. */
+    int dimension;        /*!< Default int_bound parameter value. */
     int integer;        /*!< Default int_bound parameter value. */
     int boolean;        /*!< Default string_list parameter value. */
     const char *str;    /*!< Default string_list parameter value. */
@@ -606,6 +609,15 @@ extern void stp_set_int_parameter(stp_vars_t *v, const char *parameter,
 				  int value);
 
 /**
+ * Set a dimension parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
+ */
+extern void stp_set_dimension_parameter(stp_vars_t *v, const char *parameter,
+					int value);
+
+/**
  * Set a boolean parameter.
  * @param v the vars to use.
  * @param parameter the name of the parameter.
@@ -732,6 +744,19 @@ extern void stp_set_default_int_parameter(stp_vars_t *v,
 					  int value);
 
 /**
+ * Set a default dimension parameter.
+ * The value is set if the parameter is not already set.  This avoids
+ * having to check if the parameter is set prior to setting it, if you
+ * do not want to override the existing value.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param value the value to set.
+ */
+extern void stp_set_default_dimension_parameter(stp_vars_t *v,
+						const char *parameter,
+						int value);
+
+/**
  * Set a default boolean parameter.
  * The value is set if the parameter is not already set.  This avoids
  * having to check if the parameter is set prior to setting it, if you
@@ -821,6 +846,15 @@ extern int stp_get_int_parameter(const stp_vars_t *v,
 				 const char *parameter);
 
 /**
+ * Get a dimension parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the dimension (integer) value.
+ */
+extern int stp_get_dimension_parameter(const stp_vars_t *v,
+				       const char *parameter);
+
+/**
  * Get a boolean parameter.
  * @param v the vars to use.
  * @param parameter the name of the parameter.
@@ -885,6 +919,13 @@ extern void stp_clear_float_parameter(stp_vars_t *v, const char *parameter);
  * @param parameter the name of the parameter.
  */
 extern void stp_clear_int_parameter(stp_vars_t *v, const char *parameter);
+
+/**
+ * Clear (remove) a dimension parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ */
+extern void stp_clear_dimension_parameter(stp_vars_t *v, const char *parameter);
 
 /**
  * Clear (remove) a boolean parameter.
@@ -960,6 +1001,17 @@ extern void stp_set_float_parameter_active(const stp_vars_t *v,
 extern void stp_set_int_parameter_active(const stp_vars_t *v,
 					 const char *parameter,
 					 stp_parameter_activity_t active);
+
+/**
+ * Set the activity of a dimension parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the activity status to set (should be set to
+ * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
+ */
+extern void stp_set_dimension_parameter_active(const stp_vars_t *v,
+					       const char *parameter,
+					       stp_parameter_activity_t active);
 
 /**
  * Set the activity of a boolean parameter.
@@ -1042,6 +1094,15 @@ extern int stp_check_int_parameter(const stp_vars_t *v, const char *parameter,
 				   stp_parameter_activity_t active);
 
 /**
+ * Check if a dimension parameter is set.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the minimum activity status.
+ */
+extern int stp_check_dimension_parameter(const stp_vars_t *v, const char *parameter,
+					 stp_parameter_activity_t active);
+
+/**
  * Check if a boolean parameter is set.
  * @param v the vars to use.
  * @param parameter the name of the parameter.
@@ -1112,6 +1173,15 @@ stp_get_float_parameter_active(const stp_vars_t *v, const char *parameter);
  */
 extern stp_parameter_activity_t
 stp_get_int_parameter_active(const stp_vars_t *v, const char *parameter);
+
+/**
+ * Get the activity status of a dimension parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @returns the activity status.
+ */
+extern stp_parameter_activity_t
+stp_get_dimension_parameter_active(const stp_vars_t *v, const char *parameter);
 
 /**
  * Get the activity status of a boolean parameter.

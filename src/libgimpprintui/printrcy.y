@@ -55,6 +55,7 @@ static stpui_plist_t *current_printer = NULL;
 
 %token <ival> tINT
 %token <dval> tDOUBLE
+%token <ival> tDIMENSION
 %token <sval> tBOOLEAN
 %token <sval> tSTRING
 %token <sval> tWORD
@@ -88,6 +89,7 @@ static stpui_plist_t *current_printer = NULL;
 %token pSTRING_LIST
 %token pFILE
 %token pDOUBLE
+%token pDIMENSION
 %token pBOOLEAN
 %token pCURVE
 
@@ -270,6 +272,20 @@ Double_Param: tWORD pDOUBLE tBOOLEAN tDOUBLE
 	}
 ;
 
+Dimension_Param: tWORD pDIMENSION tBOOLEAN tINT
+	{
+	  stp_set_dimension_parameter(current_printer->v, $1, $4);
+	  if (strcmp($3, "False") == 0)
+	    stp_set_dimension_parameter_active(current_printer->v, $1,
+					       STP_PARAMETER_INACTIVE);
+	  else
+	    stp_set_dimension_parameter_active(current_printer->v, $1,
+					       STP_PARAMETER_ACTIVE);
+	  g_free($1);
+	  g_free($3);
+	}
+;
+
 Boolean_Param: tWORD pBOOLEAN tBOOLEAN tBOOLEAN
 	{
 	  if (strcmp($4, "False") == 0)
@@ -309,7 +325,7 @@ Curve_Param: tWORD pCURVE tBOOLEAN tSTRING
 ;
 
 Typed_Param: Int_Param | String_List_Param | File_Param | Double_Param
-	| Boolean_Param | Curve_Param
+	| Boolean_Param | Curve_Param | Dimension_Param
 ;
 
 Parameter: PARAMETER Typed_Param

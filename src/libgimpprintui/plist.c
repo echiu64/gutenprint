@@ -949,6 +949,7 @@ stpui_printrc_load(void)
 	  break;
 	case 2:
 	case 3:
+	case 4:
 	  stpui_printrc_load_v2(fp);
 	  break;
 	}
@@ -983,7 +984,7 @@ stpui_printrc_save(void)
       fprintf(stderr, "Number of printers: %d\n", stpui_plist_count);
 #endif
 
-      fputs("#PRINTRCv3 written by Gimp-Print " PLUG_IN_VERSION "\n\n", fp);
+      fputs("#PRINTRCv4 written by Gimp-Print " PLUG_IN_VERSION "\n\n", fp);
 
       fprintf(fp, "Global-Settings:\n");
       fprintf(fp, "  Current-Printer: \"%s\"\n",
@@ -1054,6 +1055,15 @@ stpui_printrc_save(void)
 			      (p->v, param->name) == STP_PARAMETER_ACTIVE) ?
 			     "True" : "False"),
 			    stp_get_float_parameter(p->v, param->name));
+		  break;
+		case STP_PARAMETER_TYPE_DIMENSION:
+		  if (stp_check_dimension_parameter(p->v, param->name,
+						    STP_PARAMETER_INACTIVE))
+		    fprintf(fp, "  Parameter %s Dimension %s %d\n", param->name,
+			    ((stp_get_dimension_parameter_active
+			      (p->v, param->name) == STP_PARAMETER_ACTIVE) ?
+			     "True" : "False"),
+			    stp_get_dimension_parameter(p->v, param->name));
 		  break;
 		case STP_PARAMETER_TYPE_INT:
 		  if (stp_check_int_parameter(p->v, param->name,

@@ -202,8 +202,32 @@ for $a (keys(%stp_int_values)) {
     }
 }
 
+for $a (keys(%stp_dimension_values)) {
+    for $vtmp (keys %{$stp_dimension_values{$a}}) {
+	for $otmp (keys %{$stp_dimension_values{$a}{$vtmp}}) {
+	    my $min = $stp_dimension_values{$a}{'MINVAL'}{$otmp};
+	    my $max = $stp_dimension_values{$a}{'MAXVAL'}{$otmp};
+	    my $def = $stp_dimension_values{$a}{'DEFVAL'}{$otmp};
+	    # Skip options with invalid values, the library contains such
+	    # options in the case when only one constant value is allowed
+	    next if (($min >= $max) || ($def < $min) || ($def > $max));
+	    my $minmax = "${min}_${max}";
+	    if (!$seen_inumopt{$otmp}{$minmax}++) {
+		if (!defined($inums{$otmp})) {
+		    $inums{$otmp} = 0;
+		}
+		$inums{$otmp} ++;
+		push (@dimensionnumopts_list, "${otmp}-$inums{$otmp}");
+		$numopt_ranges{"${otmp}-$inums{$otmp}"}{'MINVAL'} = $min;
+		$numopt_ranges{"${otmp}-$inums{$otmp}"}{'MAXVAL'} = $max;
+	    }
+	}
+    }
+}
+
 #print join("\n", @floatnumopts_list);
 #print join("\n", @intnumopts_list);
+#print join("\n", @dimensionnumopts_list);
 
 # Step 1: construct a map from Model= values to Foomatic model id's
 # this map is %mapstp.  The inverse from model to Model is %mapdb
@@ -367,6 +391,7 @@ for $drivertype (@drivertypes) {
 #	die "Cannot open templates directory: $!\n";
 
     for $fooopt (sort (keys(%ev_choices), @floatnumopts_list,
+		 @dimensionnumopts_list,
 		 @intnumopts_list), "PrintoutMode", "Model",
 		 "RenderResolution", "gimp-print") {
 
@@ -388,6 +413,10 @@ for $drivertype (@drivertypes) {
 	} elsif (member($fooopt, @intnumopts_list)) {
 	    $num_opt = 1;
 	    $type = "int";
+	    $tmpl = "NumericalOptions.xml";
+	} elsif (member($fooopt, @dimensionnumopts_list)) {
+	    $num_opt = 1;
+	    $type = "dimension";
 	    $tmpl = "NumericalOptions.xml";
 	} else {
 	    $num_opt = 0;
@@ -701,7 +730,14 @@ sub build_num_cons {
     my @PNCONS = ();
 
     # Do we have a float or an int option?
-    my $type = (member($foooptfile, @floatnumopts_list) ? "float" : "int");
+    my $type;
+    if (member($foooptfile, @floatnumoptslist)) {
+       $type = "float";
+    } elsif (member($foooptfile, @dimensionnumoptslist)) {
+       $type = "dimension";
+    } else {
+       $type = "int";
+    }
 
     # Name of the actual option
     my $stpopt = $foooptfile;
@@ -724,12 +760,17 @@ sub build_num_cons {
 	if ((defined($stpdef = 
 		     $stp_float_values{$stpname}{"DEFVAL"}{$stpopt})) ||
 	    (defined($stpdef =
-		     $stp_int_values{$stpname}{"DEFVAL"}{$stpopt}))) {
+		     $stp_int_values{$stpname}{"DEFVAL"}{$stpopt})) ||
+	    (defined($stpdef =
+		     $stp_dimension_values{$stpname}{"DEFVAL"}{$stpopt}))) {
 	    # Find minimum and maximum
 	    my ($min, $max);
 	    if ($type eq "float") {
 		$min = $stp_float_values{$stpname}{"MINVAL"}{$stpopt};
 		$max = $stp_float_values{$stpname}{"MAXVAL"}{$stpopt};
+	    } elsif ($type eq "dimension") {
+		$min = $stp_dimension_values{$stpname}{"MINVAL"}{$stpopt};
+		$max = $stp_dimension_values{$stpname}{"MAXVAL"}{$stpopt};
 	    } else {
 		$min = $stp_int_values{$stpname}{"MINVAL"}{$stpopt};
 		$max = $stp_int_values{$stpname}{"MAXVAL"}{$stpopt};

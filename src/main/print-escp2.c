@@ -66,6 +66,7 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
   { "send_zero_advance",       10, 1 },
   { "supports_ink_change",     11, 1 },
   { "packet_mode",             12, 1 },
+  { "print_to_cd",             13, 1 },
 };
 
 typedef struct
@@ -196,6 +197,18 @@ static const stp_parameter_t the_parameters[] =
     N_("Print only outside of the hub of the CD, or all the way to the hole"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+  },
+  {
+    "CDXAdjustment", N_("CD Horizontal Fine Adjustment"), N_("Advanced Printer Setup"),
+    N_("Fine adjustment to horizontal position for CD printing"),
+    STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1, 1, 0
+  },
+  {
+    "CDYAdjustment", N_("CD Vertical Fine Adjustment"), N_("Advanced Printer Setup"),
+    N_("Fine adjustment to horizontal position for CD printing"),
+    STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1, 1, 0
   },
   {
     "Resolution", N_("Resolution"), N_("Basic Printer Setup"),
@@ -1289,7 +1302,8 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     {
       const input_slot_t *slot = get_input_slot(v);
       description->bounds.str = stp_string_list_create();
-      if (slot && slot->is_cd)
+      if (escp2_has_cap(v, MODEL_PRINT_TO_CD, MODEL_PRINT_TO_CD_YES) &&
+	  (!slot || (slot && slot->is_cd)))
 	{
 	  stp_string_list_add_string
 	    (description->bounds.str, "None", _("Normal"));
@@ -1297,6 +1311,21 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	    (description->bounds.str, "Small", _("Print To Hub"));
 	  description->deflt.str =
 	    stp_string_list_param(description->bounds.str, 0)->name;
+	}	  
+      else
+	description->is_active = 0;
+    }
+  else if (strcmp(name, "CDXAdjustment") == 0 ||
+	   strcmp(name, "CDYAdjustment") == 0)
+    {
+      const input_slot_t *slot = get_input_slot(v);
+      description->bounds.str = stp_string_list_create();
+      if (escp2_has_cap(v, MODEL_PRINT_TO_CD, MODEL_PRINT_TO_CD_YES) &&
+	  (!slot || (slot && slot->is_cd)))
+	{
+	  description->bounds.dimension.lower = -15;
+	  description->bounds.dimension.upper = 15;
+	  description->deflt.dimension = 0;
 	}	  
       else
 	description->is_active = 0;
@@ -2385,8 +2414,10 @@ setup_page(stp_vars_t *v)
 
   if (input_slot && input_slot->is_cd && escp2_cd_x_offset(v) > 0)
     {
-      int left_center = escp2_cd_x_offset(v);
-      int top_center = escp2_cd_y_offset(v);
+      int left_center = escp2_cd_x_offset(v) +
+	stp_get_dimension_parameter(v, "CDXAdjustment");
+      int top_center = escp2_cd_y_offset(v) +
+	stp_get_dimension_parameter(v, "CDYAdjustment");
       extra_top = top_center - (pd->page_bottom / 2);
       extra_left = left_center - (pd->page_right / 2);
       pd->cd_inner_radius = hub_size * pd->micro_units * 10 / 254 / 2;

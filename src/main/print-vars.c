@@ -173,6 +173,7 @@ value_copy(const void *item)
       copy_to_raw(&(ret->value.rval), v->value.rval.data, v->value.rval.bytes);
       break;
     case STP_PARAMETER_TYPE_INT:
+    case STP_PARAMETER_TYPE_DIMENSION:
     case STP_PARAMETER_TYPE_BOOLEAN:
       ret->value.ival = v->value.ival;
       break;
@@ -974,6 +975,89 @@ stp_get_boolean_parameter(const stp_vars_t *v, const char *parameter)
 }
 
 void
+stp_set_dimension_parameter(stp_vars_t *v, const char *parameter, int ival)
+{
+  stp_list_t *list = v->params[STP_PARAMETER_TYPE_DIMENSION];
+  value_t *val;
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  if (item)
+    {
+      val = (value_t *) stp_list_item_get_data(item);
+      if (val->active == STP_PARAMETER_DEFAULTED)
+	val->active = STP_PARAMETER_ACTIVE;
+    }
+  else
+    {
+      val = stp_malloc(sizeof(value_t));
+      val->name = stp_strdup(parameter);
+      val->typ = STP_PARAMETER_TYPE_DIMENSION;
+      val->active = STP_PARAMETER_ACTIVE;
+      stp_list_item_create(list, NULL, val);
+    }
+  val->value.ival = ival;
+  stp_set_verified(v, 0);
+}
+
+void
+stp_set_default_dimension_parameter(stp_vars_t *v, const char *parameter, int ival)
+{
+  stp_list_t *list = v->params[STP_PARAMETER_TYPE_DIMENSION];
+  value_t *val;
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  if (!item)
+    {
+      val = stp_malloc(sizeof(value_t));
+      val->name = stp_strdup(parameter);
+      val->typ = STP_PARAMETER_TYPE_DIMENSION;
+      val->active = STP_PARAMETER_DEFAULTED;
+      stp_list_item_create(list, NULL, val);
+      val->value.ival = ival;
+    }
+  stp_set_verified(v, 0);
+}
+
+void
+stp_clear_dimension_parameter(stp_vars_t *v, const char *parameter)
+{
+  stp_list_t *list = v->params[STP_PARAMETER_TYPE_DIMENSION];
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  if (item)
+    stp_list_item_destroy(list, item);
+  stp_set_verified(v, 0);
+}
+
+int
+stp_get_dimension_parameter(const stp_vars_t *v, const char *parameter)
+{
+  const stp_list_t *list = v->params[STP_PARAMETER_TYPE_DIMENSION];
+  const stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  if (item)
+    {
+      const value_t *val = (const value_t *) stp_list_item_get_data(item);
+      return val->value.ival;
+    }
+  else
+    {
+      stp_parameter_t desc;
+      stp_describe_parameter(v, parameter, &desc);
+      if (desc.p_type == STP_PARAMETER_TYPE_DIMENSION)
+	{
+	  int intval = desc.deflt.integer;
+	  stp_parameter_description_destroy(&desc);
+	  return intval;
+	}
+      else
+	{
+	  stp_parameter_description_destroy(&desc);
+	  stp_erprintf
+	    ("GIMP-PRINT: Attempt to retrieve unset dimension parameter %s\n",
+	     parameter);
+	  return 0;
+	}
+    }
+}
+
+void
 stp_set_float_parameter(stp_vars_t *v, const char *parameter, double dval)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_DOUBLE];
@@ -1104,6 +1188,7 @@ CHECK_FUNCTION(string, STP_PARAMETER_TYPE_STRING_LIST)
 CHECK_FUNCTION(file, STP_PARAMETER_TYPE_FILE)
 CHECK_FUNCTION(float, STP_PARAMETER_TYPE_DOUBLE)
 CHECK_FUNCTION(int, STP_PARAMETER_TYPE_INT)
+CHECK_FUNCTION(dimension, STP_PARAMETER_TYPE_DIMENSION)
 CHECK_FUNCTION(boolean, STP_PARAMETER_TYPE_BOOLEAN)
 CHECK_FUNCTION(curve, STP_PARAMETER_TYPE_CURVE)
 CHECK_FUNCTION(array, STP_PARAMETER_TYPE_ARRAY)
@@ -1132,6 +1217,7 @@ GET_PARAMETER_ACTIVE_FUNCTION(string, STP_PARAMETER_TYPE_STRING_LIST)
 GET_PARAMETER_ACTIVE_FUNCTION(file, STP_PARAMETER_TYPE_FILE)
 GET_PARAMETER_ACTIVE_FUNCTION(float, STP_PARAMETER_TYPE_DOUBLE)
 GET_PARAMETER_ACTIVE_FUNCTION(int, STP_PARAMETER_TYPE_INT)
+GET_PARAMETER_ACTIVE_FUNCTION(dimension, STP_PARAMETER_TYPE_DIMENSION)
 GET_PARAMETER_ACTIVE_FUNCTION(boolean, STP_PARAMETER_TYPE_BOOLEAN)
 GET_PARAMETER_ACTIVE_FUNCTION(curve, STP_PARAMETER_TYPE_CURVE)
 GET_PARAMETER_ACTIVE_FUNCTION(array, STP_PARAMETER_TYPE_ARRAY)
@@ -1161,6 +1247,7 @@ SET_PARAMETER_ACTIVE_FUNCTION(string, STP_PARAMETER_TYPE_STRING_LIST)
 SET_PARAMETER_ACTIVE_FUNCTION(file, STP_PARAMETER_TYPE_FILE)
 SET_PARAMETER_ACTIVE_FUNCTION(float, STP_PARAMETER_TYPE_DOUBLE)
 SET_PARAMETER_ACTIVE_FUNCTION(int, STP_PARAMETER_TYPE_INT)
+SET_PARAMETER_ACTIVE_FUNCTION(dimension, STP_PARAMETER_TYPE_DIMENSION)
 SET_PARAMETER_ACTIVE_FUNCTION(boolean, STP_PARAMETER_TYPE_BOOLEAN)
 SET_PARAMETER_ACTIVE_FUNCTION(curve, STP_PARAMETER_TYPE_CURVE)
 SET_PARAMETER_ACTIVE_FUNCTION(array, STP_PARAMETER_TYPE_ARRAY)

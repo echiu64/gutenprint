@@ -84,6 +84,7 @@ main(int argc, char **argv)
 	  if (desc.is_active)
 	    {
 	      if ((desc.p_type == STP_PARAMETER_TYPE_DOUBLE ||
+		   desc.p_type == STP_PARAMETER_TYPE_DIMENSION ||
 		   desc.p_type == STP_PARAMETER_TYPE_INT) &&
 		  !desc.is_mandatory)
 		{
@@ -213,6 +214,29 @@ main(int argc, char **argv)
 			     driver, desc.name, desc.is_mandatory);
 		    }
 		}
+#ifdef FOOMATIC_ENABLE_DIMENSION_PARAMS
+	      else if (desc.p_type == STP_PARAMETER_TYPE_DIMENSION)
+		{
+		  if (desc.bounds.dimension.lower <= desc.deflt.dimension &&
+		      desc.bounds.dimension.upper >= desc.deflt.dimension)
+		    {
+		      printf("$stp_dimension_values{'%s'}{'MINVAL'}{'%s'} = %d;\n",
+			     driver, desc.name, desc.bounds.dimension.lower);
+		      printf("$stp_dimension_values{'%s'}{'MAXVAL'}{'%s'} = %d;\n",
+			     driver, desc.name, desc.bounds.dimension.upper);
+		      printf("$stp_dimension_values{'%s'}{'DEFVAL'}{'%s'} = %d;\n",
+			     driver, desc.name, desc.deflt.dimension);
+		      /* printf("$stp_dimension_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
+			 driver, desc.name, _(desc.text)); */
+		      printf("$stp_dimension_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
+			     driver, desc.name, _(desc.category));
+		      printf("$stp_dimension_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
+			     driver, desc.name, (desc.help ? _(desc.help) : "''"));
+		      printf("$stp_dimension_values{'%s'}{'MANDATORY'}{'%s'} = q(%d);\n",
+			     driver, desc.name, desc.is_mandatory);
+		    }
+		}
+#endif /* FOOMATIC_ENABLE_DIMENSION_PARAMS */
 	      tcount += count;
 	    }
 	  stp_parameter_description_destroy(&desc);

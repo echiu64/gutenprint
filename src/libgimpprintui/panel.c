@@ -247,6 +247,7 @@ static void initialize_thumbnail(void);
 static void set_color_defaults (void);
 static void redraw_color_swatch (void);
 static void color_update (GtkAdjustment *adjustment);
+static void dimension_update (GtkAdjustment *adjustment);
 static void set_controls_active (GtkObject *checkbutton, gpointer optno);
 static void update_adjusted_thumbnail (void);
 
@@ -765,6 +766,7 @@ populate_options(const stp_vars_t *v)
 		}
 	      break;
 	    case STP_PARAMETER_TYPE_DOUBLE:
+	    case STP_PARAMETER_TYPE_DIMENSION:
 	      if (opt->info.flt.adjustment)
 		{
 		  gtk_widget_destroy
@@ -837,6 +839,14 @@ populate_options(const stp_vars_t *v)
 	      opt->info.flt.scale = 1.0;
 	      opt->is_active = desc.is_active;
 	      break;
+	    case STP_PARAMETER_TYPE_DIMENSION:
+	      opt->info.flt.adjustment = NULL;
+	      opt->info.flt.upper = desc.bounds.dimension.upper;
+	      opt->info.flt.lower = desc.bounds.dimension.lower;
+	      opt->info.flt.deflt = desc.deflt.dimension;
+	      opt->info.flt.scale = 1.0;
+	      opt->is_active = desc.is_active;
+	      break;
 	    case STP_PARAMETER_TYPE_CURVE:
 	      opt->info.curve.label = NULL;
 	      opt->info.curve.button = NULL;
@@ -893,6 +903,7 @@ populate_option_table(GtkWidget *table, int p_class)
 	  switch (desc->p_type)
 	    {
 	    case STP_PARAMETER_TYPE_STRING_LIST:
+	    case STP_PARAMETER_TYPE_DIMENSION:
 	    case STP_PARAMETER_TYPE_DOUBLE:
 	    case STP_PARAMETER_TYPE_CURVE:
 	    case STP_PARAMETER_TYPE_BOOLEAN:
@@ -935,6 +946,9 @@ populate_option_table(GtkWidget *table, int p_class)
 	  (desc->p_class != STP_PARAMETER_CLASS_CORE ||
 	   strcmp(desc->name, "PageSize") == 0))
 	{
+	  gdouble unit_scaler;
+	  gdouble minor_increment;
+	  gint digits;
 	  switch (desc->p_type)
 	    {
 	    case STP_PARAMETER_TYPE_STRING_LIST:
@@ -962,6 +976,46 @@ populate_option_table(GtkWidget *table, int p_class)
 	      if (desc->p_level > MAXIMUM_PARAMETER_LEVEL)
 		stp_set_float_parameter_active(pv->v, desc->name,
 					       STP_PARAMETER_INACTIVE);
+	      break;
+	    case STP_PARAMETER_TYPE_DIMENSION:
+	      unit_scaler = units[pv->unit].scale;
+	      if (unit_scaler > 100)
+		{
+		  digits = 3;
+		  minor_increment = .001;
+		}
+	      else if (unit_scaler > 10)
+		{
+		  digits = 2;
+		  minor_increment = .01;
+		}
+	      else if (unit_scaler > 1)
+		{
+		  digits = 1;
+		  minor_increment = .1;
+		}
+	      else
+		{
+		  digits = 0;
+		  minor_increment = 1;
+		}
+	      stpui_create_scale_entry(opt, GTK_TABLE(table), 0,
+				       vpos[desc->p_level][desc->p_type]++,
+				       _(desc->text), 200, 0,
+				       opt->info.flt.deflt / unit_scaler,
+				       opt->info.flt.lower / unit_scaler,
+				       opt->info.flt.upper / unit_scaler,
+				       minor_increment, minor_increment * 10,
+				       digits, TRUE, 0, 0, NULL,
+				       !(desc->is_mandatory));
+	      stpui_set_adjustment_tooltip(opt->info.flt.adjustment,
+					   _(desc->help));
+	      gtk_signal_connect(GTK_OBJECT(opt->info.flt.adjustment),
+				 "value_changed",
+				 GTK_SIGNAL_FUNC(dimension_update), opt);
+	      if (desc->p_level > MAXIMUM_PARAMETER_LEVEL)
+		stp_set_dimension_parameter_active(pv->v, desc->name,
+						   STP_PARAMETER_INACTIVE);
 	      break;
 	    case STP_PARAMETER_TYPE_CURVE:
 	      xcurve = stp_get_curve_parameter(pv->v, opt->fast_desc->name);
@@ -1029,6 +1083,7 @@ set_options_active(const char *omit)
 	  build_a_combo(opt);
 	  break;
 	case STP_PARAMETER_TYPE_DOUBLE:
+	case STP_PARAMETER_TYPE_DIMENSION:
 	  adj = opt->info.flt.adjustment;
 	  if (adj)
 	    {
@@ -2656,6 +2711,23 @@ do_color_updates (void)
 	      else
 		set_adjustment_active(opt, FALSE, TRUE);
 	      break;
+	    case STP_PARAMETER_TYPE_DIMENSION:
+	      if (stp_check_dimension_parameter(pv->v, opt->fast_desc->name,
+						STP_PARAMETER_INACTIVE))
+		{
+		  gdouble unit_scaler = units[pv->unit].scale;
+		  gtk_adjustment_set_value
+		  (GTK_ADJUSTMENT(opt->info.flt.adjustment),
+		   (stp_get_dimension_parameter(pv->v, opt->fast_desc->name) /
+		    unit_scaler));
+		}
+	      if (stp_check_dimension_parameter(pv->v, opt->fast_desc->name,
+						STP_PARAMETER_ACTIVE) ||
+		  opt->fast_desc->is_mandatory)
+		set_adjustment_active(opt, TRUE, TRUE);
+	      else
+		set_adjustment_active(opt, FALSE, TRUE);
+	      break;
 	    case STP_PARAMETER_TYPE_CURVE:
 	      if (stp_check_curve_parameter(pv->v, opt->fast_desc->name,
 					    STP_PARAMETER_ACTIVE) ||
@@ -3257,6 +3329,8 @@ unit_callback (GtkWidget *widget,
       pv->unit = (gint) data;
       gtk_label_set_text(GTK_LABEL(units_label), units[pv->unit].name);
       set_all_entry_values();
+      update_options();
+      do_color_updates();
     }
 }
 
@@ -4537,6 +4611,31 @@ color_update (GtkAdjustment *adjustment)
 }
 
 static void
+dimension_update (GtkAdjustment *adjustment)
+{
+  int i;
+  gdouble unit_scaler = units[pv->unit].scale;
+  for (i = 0; i < current_option_count; i++)
+    {
+      option_t *opt = &(current_options[i]);
+      if (opt->fast_desc->p_type == STP_PARAMETER_TYPE_DIMENSION &&
+	  opt->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL &&
+	  opt->info.flt.adjustment &&
+	  adjustment == GTK_ADJUSTMENT(opt->info.flt.adjustment))
+	{
+	  invalidate_preview_thumbnail ();
+	  if (stp_get_dimension_parameter(pv->v, opt->fast_desc->name) !=
+	      adjustment->value * unit_scaler)
+	    {
+	      stp_set_dimension_parameter(pv->v, opt->fast_desc->name,
+					  adjustment->value * unit_scaler);
+	      update_adjusted_thumbnail();
+	    }
+	}
+    }
+}
+
+static void
 set_controls_active (GtkObject *checkbutton, gpointer xopt)
 {
   option_t *opt = (option_t *) xopt;
@@ -4559,6 +4658,19 @@ set_controls_active (GtkObject *checkbutton, gpointer xopt)
 	    }
 	  stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
 					 STP_PARAMETER_ACTIVE);
+	  break;
+	case STP_PARAMETER_TYPE_DIMENSION:
+	  set_adjustment_active(opt, TRUE, FALSE);
+	  if (! stp_check_dimension_parameter(pv->v, opt->fast_desc->name,
+					  STP_PARAMETER_INACTIVE))
+	    {
+	      stp_describe_parameter(pv->v, opt->fast_desc->name, &desc);
+	      stp_set_dimension_parameter(pv->v, opt->fast_desc->name,
+					  desc.deflt.dimension);
+	      stp_parameter_description_destroy(&desc);
+	    }
+	  stp_set_dimension_parameter_active(pv->v, opt->fast_desc->name,
+					     STP_PARAMETER_ACTIVE);
 	  break;
 	case STP_PARAMETER_TYPE_CURVE:
 	  set_curve_active(opt, TRUE, FALSE);
@@ -4612,6 +4724,11 @@ set_controls_active (GtkObject *checkbutton, gpointer xopt)
 	  stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
 					 STP_PARAMETER_INACTIVE);
 	  break;
+	case STP_PARAMETER_TYPE_DIMENSION:
+	  set_adjustment_active(opt, FALSE, FALSE);
+	  stp_set_dimension_parameter_active(pv->v, opt->fast_desc->name,
+					     STP_PARAMETER_INACTIVE);
+	  break;
 	case STP_PARAMETER_TYPE_CURVE:
 	  set_curve_active(opt, FALSE, FALSE);
 	  stp_set_curve_parameter_active(pv->v, opt->fast_desc->name,
@@ -4647,6 +4764,7 @@ set_color_defaults (void)
 	  opt->is_active && !opt->fast_desc->read_only)
 	{
 	  stp_parameter_activity_t active;
+	  gdouble unit_scaler;
 	  switch (opt->fast_desc->p_type)
 	    {
 	    case STP_PARAMETER_TYPE_DOUBLE:
@@ -4656,6 +4774,16 @@ set_color_defaults (void)
 				      opt->info.flt.deflt);
 	      stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
 					     active);
+	      break;
+	    case STP_PARAMETER_TYPE_DIMENSION:
+	      unit_scaler = units[pv->unit].scale;
+	      active =
+		stp_get_dimension_parameter_active(pv->v,
+						   opt->fast_desc->name);
+	      stp_set_dimension_parameter(pv->v, opt->fast_desc->name,
+					  opt->info.flt.deflt * unit_scaler);
+	      stp_set_dimension_parameter_active(pv->v, opt->fast_desc->name,
+						 active);
 	      break;
 	    case STP_PARAMETER_TYPE_BOOLEAN:
 	      active =

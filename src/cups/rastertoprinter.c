@@ -221,6 +221,11 @@ print_debug_block(const stp_vars_t *v, const cups_image_t *cups)
 		  p->name, stp_get_float_parameter(v, p->name),
 		  stp_get_float_parameter_active(v, p->name));
 	  break;
+	case STP_PARAMETER_TYPE_DIMENSION:
+	  fprintf(stderr, "DEBUG: Gimp-Print stp_get_dimension %s(v) |%d| %d\n",
+		  p->name, stp_get_dimension_parameter(v, p->name),
+		  stp_get_dimension_parameter_active(v, p->name));
+	  break;
 	case STP_PARAMETER_TYPE_INT:
 	  fprintf(stderr, "DEBUG: Gimp-Print stp_get_int %s(v) |%d| %d\n",
 		  p->name, stp_get_int_parameter(v, p->name),
@@ -459,6 +464,11 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 		  fprintf(stderr, "DEBUG: Gimp-Print set int %s to %s\n",
 			  desc.name, val);
 		  stp_set_int_parameter(v, desc.name, atoi(val));
+		  break;
+		case STP_PARAMETER_TYPE_DIMENSION:
+		  fprintf(stderr, "DEBUG: Gimp-Print set dimension %s to %s\n",
+			  desc.name, val);
+		  stp_set_dimension_parameter(v, desc.name, atoi(val));
 		  break;
 		case STP_PARAMETER_TYPE_BOOLEAN:
 		  fprintf(stderr, "DEBUG: Gimp-Print set bool %s to %s\n",

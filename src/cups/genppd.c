@@ -585,7 +585,7 @@ void printmodels(int verbose)
 }
 
 /* Adapted from GNU libc <dirent.h>
-/* These macros extract size information from a `struct dirent *'.
+   These macros extract size information from a `struct dirent *'.
    They may evaluate their argument multiple times, so it must not
    have side effects.  Each of these may involve a relatively costly
    call to `strlen' on some systems, so these values should be cached.
@@ -923,10 +923,11 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   gzprintf(fp, "*LanguageLevel:	\"%d\"\n", cups_ppd_ps_level);
 
   /* Set Job Mode to "Job" as this enables the Duplex option */
-  stp_set_string_parameter(printvars, "JobMode", "Job");
+  v = stp_vars_create_copy(printvars);
+  stp_set_string_parameter(v, "JobMode", "Job");
 
   /* Assume that color printers are inkjets and should have pages reversed */
-  stp_describe_parameter(printvars, "PrintingMode", &desc);
+  stp_describe_parameter(v, "PrintingMode", &desc);
   if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
     {
       if (stp_string_list_is_present(desc.bounds.str, "Color"))
@@ -971,7 +972,6 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   * Get the page sizes from the driver...
   */
 
-  v = stp_vars_create_copy(printvars);
   if (printer_is_color)
     stp_set_string_parameter(v, "PrintingMode", "Color");
   else
@@ -1347,6 +1347,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 		  is_special_option(lparam->name) || lparam->read_only ||
 		  (lparam->p_type != STP_PARAMETER_TYPE_STRING_LIST &&
 		   lparam->p_type != STP_PARAMETER_TYPE_BOOLEAN &&
+		   lparam->p_type != STP_PARAMETER_TYPE_DIMENSION &&
 		   lparam->p_type != STP_PARAMETER_TYPE_DOUBLE))
 		  continue;
 	      stp_describe_parameter(v, lparam->name, &desc);
@@ -1433,6 +1434,28 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 		      print_close_ui = 0;
 		      
 		      break;
+		    case STP_PARAMETER_TYPE_DIMENSION:
+		      if (desc.is_mandatory)
+			gzprintf(fp, "*DefaultStp%s: %d\n",
+				 desc.name, desc.deflt.dimension);
+		      else
+			gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
+				 "None", _("None"));
+		      for (i = desc.bounds.dimension.lower;
+			   i <= desc.bounds.dimension.upper; i++)
+			{
+			  /* FIXME
+			   * For now, just use mm; we'll fix it later
+			   * for the locale-appropriate setting.
+			   * --rlk 20040818
+			   */
+			  gzprintf(fp, "*Stp%s %d/%.1f mm: \"\"\n",
+				   desc.name, i, ((double) i) * 25.4 / 72);
+			}
+		      gzprintf(fp, "*CloseUI: *Stp%s\n\n", desc.name);
+		      print_close_ui = 0;
+		      
+		      break;
 		    default:
 		      break;
 		    }
@@ -1472,6 +1495,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 	      strcmp(lparam->name, "Quality") == 0 ||
 	      (lparam->p_type != STP_PARAMETER_TYPE_STRING_LIST &&
 	       lparam->p_type != STP_PARAMETER_TYPE_BOOLEAN &&
+	       lparam->p_type != STP_PARAMETER_TYPE_DIMENSION &&
 	       lparam->p_type != STP_PARAMETER_TYPE_DOUBLE))
 	    continue;
 	  stp_clear_string_parameter(v, "Quality");
@@ -1528,6 +1552,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 	      strcmp(lparam->name, "ImageType") == 0 ||
 	      (lparam->p_type != STP_PARAMETER_TYPE_STRING_LIST &&
 	       lparam->p_type != STP_PARAMETER_TYPE_BOOLEAN &&
+	       lparam->p_type != STP_PARAMETER_TYPE_DIMENSION &&
 	       lparam->p_type != STP_PARAMETER_TYPE_DOUBLE))
 	    continue;
 	  stp_clear_string_parameter(v, "ImageType");
@@ -1569,6 +1594,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 	      is_special_option(lparam->name) ||
 	      (lparam->p_type != STP_PARAMETER_TYPE_STRING_LIST &&
 	       lparam->p_type != STP_PARAMETER_TYPE_BOOLEAN &&
+	       lparam->p_type != STP_PARAMETER_TYPE_DIMENSION &&
 	       lparam->p_type != STP_PARAMETER_TYPE_DOUBLE))
 	    continue;
 	  stp_set_string_parameter(v, "PrintingMode", "Color");

@@ -340,7 +340,8 @@ list_all_parameters(void)
 		  (strcmp(param->name, "PageSize") != 0) &&
 		  (!stp_string_list_is_present(sl, param->name)))
 		stp_string_list_add_string(sl, param->name, NULL);
-	      if (param->p_type == STP_PARAMETER_TYPE_DOUBLE &&
+	      if ((param->p_type == STP_PARAMETER_TYPE_DOUBLE ||
+		   param->p_type == STP_PARAMETER_TYPE_DIMENSION) &&
 		  !param->read_only && param->is_active &&
 		  !param->is_mandatory)
 		{
@@ -662,6 +663,11 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  if (code == 0)
 	    stp_set_int_parameter(img->v, key, i);
 	  break;
+	case STP_PARAMETER_TYPE_DIMENSION:
+	  code = get_int(vbuf, key, &i);
+	  if (code == 0)
+	    stp_set_dimension_parameter(img->v, key, i);
+	  break;
 	case STP_PARAMETER_TYPE_BOOLEAN:
 	  code = get_int(vbuf, key, &i);
 	  if (code == 0)
@@ -898,6 +904,26 @@ purge_unused_float_parameters(stp_vars_t *v)
 		{
 		  STP_DEBUG(fprintf(stderr, "    Clearing %s\n", param->name));
 		  stp_clear_float_parameter(v, param->name);
+		}
+	    }
+	  stp_free(tmp);
+	}
+      if (param->p_type == STP_PARAMETER_TYPE_DIMENSION &&
+	  !param->read_only && param->is_active && !param->is_mandatory)
+	{
+	  size_t bytes = strlen(param->name) + strlen("Enable") + 1;
+	  char *tmp = stp_malloc(bytes);
+	  const char *value;
+	  sprintf(tmp, "Enable%s", param->name);
+	  STP_DEBUG(fprintf(stderr, "  Looking for parameter %s\n", tmp));
+	  value = stp_get_string_parameter(v, tmp);
+	  if (value)
+	    {
+	      STP_DEBUG(fprintf(stderr, "    Found %s: %s\n", tmp, value));
+	      if (strcmp(value, "Disabled") == 0)
+		{
+		  STP_DEBUG(fprintf(stderr, "    Clearing %s\n", param->name));
+		  stp_clear_dimension_parameter(v, param->name);
 		}
 	    }
 	  stp_free(tmp);

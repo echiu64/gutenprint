@@ -287,6 +287,10 @@ set_printer_defaults(stp_vars_t *v, int core_only)
 	      stp_set_int_parameter(v, p->name, desc.deflt.integer);
 	      stp_set_int_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
 	      break;
+	    case STP_PARAMETER_TYPE_DIMENSION:
+	      stp_set_dimension_parameter(v, p->name, desc.deflt.dimension);
+	      stp_set_dimension_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+	      break;
 	    case STP_PARAMETER_TYPE_BOOLEAN:
 	      stp_set_boolean_parameter(v, p->name, desc.deflt.boolean);
 	      stp_set_boolean_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
@@ -523,6 +527,30 @@ verify_int_param(const stp_vars_t *v, const char *parameter,
 }
 
 static int
+verify_dimension_param(const stp_vars_t *v, const char *parameter,
+		 stp_parameter_t *desc, int quiet)
+{
+  stp_dprintf(STP_DBG_VARS, v, "    Verifying dimension %s\n", parameter);
+  if (desc->is_mandatory ||
+      stp_check_dimension_parameter(v, parameter, STP_PARAMETER_ACTIVE))
+    {
+      int checkval = stp_get_dimension_parameter(v, parameter);
+      if (checkval < desc->bounds.dimension.lower ||
+	  checkval > desc->bounds.dimension.upper)
+	{
+	  if (!quiet)
+	    stp_eprintf(v, _("%s must be between %d and %d (is %d)\n"),
+			parameter, desc->bounds.dimension.lower,
+			desc->bounds.dimension.upper, checkval);
+	  stp_parameter_description_destroy(desc);
+	  return PARAMETER_BAD;
+	}
+    }
+  stp_parameter_description_destroy(desc);
+  return PARAMETER_OK;
+}
+
+static int
 verify_curve_param(const stp_vars_t *v, const char *parameter,
 		   stp_parameter_t *desc, int quiet)
 {
@@ -585,6 +613,8 @@ stp_verify_parameter(const stp_vars_t *v, const char *parameter,
       return verify_double_param(v, parameter, &desc, quiet);
     case STP_PARAMETER_TYPE_INT:
       return verify_int_param(v, parameter, &desc, quiet);
+    case STP_PARAMETER_TYPE_DIMENSION:
+      return verify_dimension_param(v, parameter, &desc, quiet);
     case STP_PARAMETER_TYPE_CURVE:
       return verify_curve_param(v, parameter, &desc, quiet);
     case STP_PARAMETER_TYPE_RAW:
