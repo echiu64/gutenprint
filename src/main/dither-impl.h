@@ -77,7 +77,6 @@ typedef struct ink_defn
   unsigned range;
   unsigned value;
   unsigned bits;
-  unsigned dot_size;
 } stpi_ink_defn_t;
 
 /*
@@ -106,9 +105,6 @@ typedef struct shade_segment
   stpi_dis_t dis;
   stpi_dis_t *et_dis;
 
-  int numdotsizes;
-  stpi_ink_defn_t *dotsizes;
-
 } stpi_shade_segment_t;
 
 typedef struct dither_channel
@@ -134,7 +130,6 @@ typedef struct dither_channel
 
   int error_rows;
   int **errs;
-  unsigned short *vals;
 
   dither_matrix_t pick;
   dither_matrix_t dithermat;

@@ -214,7 +214,7 @@ eventone_adjust(stpi_shade_segment_t *sp, eventone_t *et, int dither_point, unsi
 }
 
 static inline int
-find_segment(stpi_shade_segment_t *sp, eventone_t *et, int totalink,
+find_segment(stpi_dither_channel_t *dc, eventone_t *et, int totalink,
 	     unsigned int baseink, stpi_ink_defn_t *lower,
 	     stpi_ink_defn_t *upper)
 {
@@ -226,19 +226,19 @@ find_segment(stpi_shade_segment_t *sp, eventone_t *et, int totalink,
   { int i;
     stpi_ink_defn_t *ip;
 
-    for (i=0, ip = &sp->dotsizes[0]; i < sp->numdotsizes - 1; i++, ip++) {
-      if (ip->dot_size <= totalink) {
+    for (i=0, ip = dc->ink_list; i < dc->nlevels - 1; i++, ip++) {
+      if (ip->value <= totalink) {
         lower->bits = ip->bits;
-        lower->range = ip->dot_size;
+        lower->range = ip->value;
       } else {
         upper->bits = ip->bits;
-        upper->range = ip->dot_size;
+        upper->range = ip->value;
         goto found_segment;
       }
     }
 
     upper->bits = ip->bits;
-    upper->range = ip->dot_size;
+    upper->range = ip->value;
   }
 
 found_segment:
@@ -250,7 +250,7 @@ found_segment:
       dither_point = 0;
     } else {
       if (lower->range == 0) {
-        dither_point = eventone_adjust(sp, et, (totalink * 65536) / upper->range, baseink, upper->range);
+        dither_point = eventone_adjust(&dc->shade, et, (totalink * 65536) / upper->range, baseink, upper->range);
       } else {
         dither_point = ((totalink - lower->range) * 65536) / (upper->range - lower->range);
       }
@@ -332,7 +332,7 @@ stpi_dither_et(stp_vars_t v,
 	  inkspot = dc->v - base;
 
 	  /* Find which are the two candidate dot sizes */
-	  range += find_segment(sp, et, inkspot, base, &lower, &upper);
+	  range += find_segment(dc, et, inkspot, base, &lower, &upper);
 
 	  /* Determine whether to print the larger or smaller dot */
 

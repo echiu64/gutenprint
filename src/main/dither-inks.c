@@ -91,7 +91,6 @@ void
 stpi_dither_channel_destroy(stpi_dither_channel_t *channel)
 {
   int i;
-  SAFE_FREE(channel->vals);
   SAFE_FREE(channel->ink_list);
   if (channel->errs)
     {
@@ -100,7 +99,6 @@ stpi_dither_channel_destroy(stpi_dither_channel_t *channel)
       SAFE_FREE(channel->errs);
     }
   SAFE_FREE(channel->ranges);
-  SAFE_FREE(channel->shade.dotsizes);
   SAFE_FREE(channel->shade.et_dis);
   stpi_dither_matrix_destroy(&(channel->pick));
   stpi_dither_matrix_destroy(&(channel->dithermat));
@@ -231,10 +229,8 @@ stpi_dither_finalize_ranges(stp_vars_t v, stpi_dither_channel_t *dc)
 		   i, dc->ranges[i].lower->value, dc->ranges[i].upper->value,
 		   dc->ranges[i].lower->range, dc->ranges[i].upper->range);
       stpi_dprintf(STPI_DBG_INK, v,
-		   "       bits[0] %d bits[1] %d dot_size[0] %d dot_size[1] %d\n",
-		   dc->ranges[i].lower->bits, dc->ranges[i].upper->bits,
-		   dc->ranges[i].lower->dot_size,
-		   dc->ranges[i].upper->dot_size);
+		   "       bits[0] %d bits[1] %d\n",
+		   dc->ranges[i].lower->bits, dc->ranges[i].upper->bits);
       stpi_dprintf(STPI_DBG_INK, v,
 		   "       rangespan %d valuespan %d same_ink %d equal %d\n",
 		   dc->ranges[i].range_span, dc->ranges[i].value_span,
@@ -364,12 +360,9 @@ void
 stpi_dither_set_inks_full(stp_vars_t v, int color, int nshades,
 			  const stpi_shade_t *shades, double density)
 {
-  int i, j;
+  int i;
   int idx;
   stpi_dither_channel_t *dc;
-  stpi_shade_segment_t *sp;
-  stpi_ink_defn_t *ip;
-  const stpi_dotsize_t *dp;
 
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
 
@@ -381,30 +374,13 @@ stpi_dither_set_inks_full(stp_vars_t v, int color, int nshades,
       idx = stpi_dither_translate_channel(v, color, subchannel);
       assert(idx >= 0);
       dc = &(CHANNEL(d, idx));
-      SAFE_FREE(dc->shade.dotsizes);
 
-      sp = &dc->shade;
       stpi_channel_add(v, color, subchannel, shades[i].value);
-      sp->numdotsizes = shades[subchannel].numsizes;
-      sp->dotsizes = stpi_zalloc(sp->numdotsizes * sizeof(stpi_ink_defn_t));
       if (idx >= 0)
 	stpi_dither_set_ranges(v, idx, &shades[i], density);
       stpi_dprintf(STPI_DBG_INK, v,
 		   "  shade %d value %f\n",
 		   i, shades[i].value);
-      for (j=0; j < sp->numdotsizes; j++)
-	{
-	  ip = &sp->dotsizes[j];
-	  dp = &shades[i].dot_sizes[j];
-	  ip->value = dp->value * 65536.0 + 0.5;
-	  ip->range = density * ip->value;
-	  ip->bits = dp->bit_pattern;
-	  ip->dot_size = dp->value * 65536.0 + 0.5;
-	  stpi_dprintf(STPI_DBG_INK, v,
-		       "    dotsize %d value %d range %d bits %d size %d\n",
-		       j, ip->value, ip->range, ip->bits, ip->dot_size);
-
-	}
     }
 }
 
