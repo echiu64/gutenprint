@@ -73,6 +73,7 @@ EXTENSIVE_TESTS = @EXTENSIVE_TESTS@
 GENCAT = @GENCAT@
 GIMP = @GIMP@
 GIMPDOCS = @GIMPDOCS@
+GIMPINSTALL = @GIMPINSTALL@
 GIMPTOOL = @GIMPTOOL@
 GIMP_CFLAGS = @GIMP_CFLAGS@
 GIMP_CFLAGS_NOUI = @GIMP_CFLAGS_NOUI@
@@ -116,6 +117,7 @@ LIBTOOL = @LIBTOOL@
 LIBUCB = @LIBUCB@
 LIBXMU = @LIBXMU@
 LIBXPM = @LIBXPM@
+LIBZ = @LIBZ@
 LN_S = @LN_S@
 LPC_COMMAND = @LPC_COMMAND@
 LPC_DEF = @LPC_DEF@
@@ -142,8 +144,16 @@ PERL = @PERL@
 PNG = @PNG@
 POFILES = @POFILES@
 POSUB = @POSUB@
+PSP = @PSP@
+PYGIMP_CFLAGS_NOUI = @PYGIMP_CFLAGS_NOUI@
+PYGIMP_LIBS_NOUI = @PYGIMP_LIBS_NOUI@
+PYTHON = @PYTHON@
+PYTHON_CFLAGS = @PYTHON_CFLAGS@
+PYTHON_INCLUDES = @PYTHON_INCLUDES@
+PYTHON_LINK = @PYTHON_LINK@
 RANLIB = @RANLIB@
 SENDMAIL = @SENDMAIL@
+SO = @SO@
 TIFF = @TIFF@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
@@ -161,6 +171,8 @@ localedir = @localedir@
 palettedata = @palettedata@
 patterndata = @patterndata@
 prefix = @prefix@
+pyexecdir = @pyexecdir@
+pythondir = @pythondir@
 
 libexecdir = $(gimpplugindir)/plug-ins
 
@@ -328,33 +340,33 @@ distdir: $(DISTFILES)
 	done
 print-escp2.o: print-escp2.c print.h ../../config.h ../../libgimp/gimp.h \
 	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
-	../../libgimp/gimpenv.h ../../libgimp/parasite.h \
-	../../libgimp/parasiteF.h ../../libgimp/parasiteP.h \
-	../../libgimp/gimpunit.h ../../libgimp/stdplugins-intl.h \
-	../../libgimp/gimpintl.h
+	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
+	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
+	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
+	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
 print-pcl.o: print-pcl.c print.h ../../config.h ../../libgimp/gimp.h \
 	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
-	../../libgimp/gimpenv.h ../../libgimp/parasite.h \
-	../../libgimp/parasiteF.h ../../libgimp/parasiteP.h \
-	../../libgimp/gimpunit.h ../../libgimp/stdplugins-intl.h \
-	../../libgimp/gimpintl.h
+	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
+	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
+	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
+	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
 print-ps.o: print-ps.c print.h ../../config.h ../../libgimp/gimp.h \
 	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
-	../../libgimp/gimpenv.h ../../libgimp/parasite.h \
-	../../libgimp/parasiteF.h ../../libgimp/parasiteP.h \
-	../../libgimp/gimpunit.h ../../libgimp/stdplugins-intl.h \
-	../../libgimp/gimpintl.h
+	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
+	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
+	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
+	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
 print-util.o: print-util.c print.h ../../config.h ../../libgimp/gimp.h \
 	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
-	../../libgimp/gimpenv.h ../../libgimp/parasite.h \
-	../../libgimp/parasiteF.h ../../libgimp/parasiteP.h \
-	../../libgimp/gimpunit.h
+	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
+	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
+	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h
 print.o: print.c print.h ../../config.h ../../libgimp/gimp.h \
 	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
-	../../libgimp/gimpenv.h ../../libgimp/parasite.h \
-	../../libgimp/parasiteF.h ../../libgimp/parasiteP.h \
-	../../libgimp/gimpunit.h ../../libgimp/stdplugins-intl.h \
-	../../libgimp/gimpintl.h
+	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
+	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
+	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
+	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
 
 info-am:
 info: info-am
