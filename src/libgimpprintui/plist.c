@@ -954,7 +954,7 @@ stpui_printrc_load(void)
 	}
       (void) fclose(fp);
     }
-  else
+  if (stpui_plist_count == 0)
     stpui_plist_create(_("Printer"), "ps2");
 }
 
