@@ -184,7 +184,7 @@ static const physical_subchannel_t standard_blue_subchannels[] =
   { 8, -1, 0, "BlueDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(standard_blue, 1.5);
+DECLARE_INK_CHANNEL(standard_blue, 1.2);
 
 static const physical_subchannel_t standard_gloss_subchannels[] =
 {
@@ -1606,8 +1606,7 @@ static const escp2_inkname_t *const cmykrb_matte_ink_types[] =
 };
 
 DECLARE_INKLIST("cmykrbmatte", cmykrb_matte, cmykrb_matte,
-		N_("Matte Black"),
-		ultrachrome, ultrachrome_matte, ultrachrome_matte);
+		N_("Matte Black"), r800, r800_matte, standard);
 
 static const escp2_inkname_t *const cmykrb_photo_ink_types[] =
 {
@@ -1628,8 +1627,7 @@ static const escp2_inkname_t *const cmykrb_photo_ink_types[] =
 };
 
 DECLARE_INKLIST("cmykrbphoto", cmykrb_photo, cmykrb_photo,
-		N_("Photo Black"),
-		ultrachrome, ultrachrome_photo, ultrachrome_photo);
+		N_("Photo Black"), r800, r800_photo, standard);
 
 
 #define DECLARE_INKGROUP(name)			\

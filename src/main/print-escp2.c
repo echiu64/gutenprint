@@ -484,7 +484,7 @@ static const float_param_t float_parameters[] =
       N_("Amount of red and blue ink to use"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
-    }, 0.0, 1.0, 0.98, 1
+    }, 0.0, 1.0, 1.0, 1
   },
 };
 
@@ -2077,7 +2077,7 @@ setup_inks(stp_vars_t *v)
   const escp2_dropsize_t *drops;
   const escp2_inkname_t *ink_type = pd->inkname;
   const paper_adjustment_t *paper = pd->paper_adjustment;
-  double multi_channel_limit = 0.98;
+  double multi_channel_limit = 1.0;
 
   drops = escp2_dropsizes(v, pd->ink_resid);
   stp_init_debug_messages(v);
