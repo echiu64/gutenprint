@@ -255,7 +255,7 @@ pcl_cap_t pcl_model_capabilities[] =
     12, 12, 18, 18,			/* Margins */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A4,
@@ -273,13 +273,13 @@ pcl_cap_t pcl_model_capabilities[] =
     7, 41, 18, 18,
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A4,
       -1,
     },
-    { 
+    {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
       PCL_PAPERTYPE_PREMIUM,
@@ -287,7 +287,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERTYPE_TRANS,
       -1,
     },
-    { 
+    {
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_340_PCSF,
       PCL_PAPERSOURCE_340_DCSF,
@@ -301,14 +301,14 @@ pcl_cap_t pcl_model_capabilities[] =
     7, 41, 18, 18,
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A4,
       PCL_PAPERSIZE_JIS_B5,
       -1,
     },
-    { 
+    {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
       PCL_PAPERTYPE_PREMIUM,
@@ -326,13 +326,13 @@ pcl_cap_t pcl_model_capabilities[] =
     7, 41, 18, 18,
     PCL_COLOR_NONE,
     PCL_PRINTER_DJ,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A4,
       -1,
     },
-    { 
+    {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
       PCL_PAPERTYPE_PREMIUM,
@@ -340,7 +340,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERTYPE_TRANS,
       -1,
     },
-    { 
+    {
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_DJ_TRAY,
       -1,
@@ -353,13 +353,13 @@ pcl_cap_t pcl_model_capabilities[] =
     7, 33, 18, 18,
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A4,
       -1,
     },
-    { 
+    {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
       PCL_PAPERTYPE_PREMIUM,
@@ -367,7 +367,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERTYPE_TRANS,
       -1,
     },
-    { 
+    {
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_DJ_TRAY,
       -1,
@@ -380,13 +380,13 @@ pcl_cap_t pcl_model_capabilities[] =
     3, 33, 18, 18,
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A4,
       -1,
     },
-    { 
+    {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
       PCL_PAPERTYPE_PREMIUM,
@@ -394,7 +394,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERTYPE_TRANS,
       -1,
     },
-    { 
+    {
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_DJ_TRAY,
       -1,
@@ -408,7 +408,7 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A5,
@@ -417,7 +417,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERSIZE_5x8,
       -1,
     },
-    { 
+    {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
       PCL_PAPERTYPE_PREMIUM,
@@ -436,7 +436,7 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A5,
@@ -446,7 +446,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERSIZE_5x8,
       -1,
     },
-    { 
+    {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
       PCL_PAPERTYPE_PREMIUM,
@@ -454,7 +454,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERTYPE_TRANS,
       -1,
     },
-    { 
+    {
       -1,
     },
   },
@@ -466,7 +466,7 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK | PCL_COLOR_CMYKcm,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A5,
@@ -476,7 +476,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERSIZE_5x8,
       -1,
     },
-    { 
+    {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
       PCL_PAPERTYPE_PREMIUM,
@@ -484,7 +484,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERTYPE_TRANS,
       -1,
     },
-    { 
+    {
       -1,
     },
   },
@@ -496,7 +496,7 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK | PCL_COLOR_CMYK4,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A5,
@@ -506,7 +506,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERSIZE_5x8,
       -1,
     },
-    { 
+    {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
       PCL_PAPERTYPE_PREMIUM,
@@ -514,7 +514,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERTYPE_TRANS,
       -1,
     },
-    { 
+    {
       -1,
     },
   },
@@ -526,7 +526,7 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK | PCL_COLOR_CMYK4,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A5,
@@ -536,7 +536,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERSIZE_5x8,
       -1,
     },
-    { 
+    {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
       PCL_PAPERTYPE_PREMIUM,
@@ -555,7 +555,7 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK | PCL_COLOR_CMYK4,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_TABLOID,
@@ -568,7 +568,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERSIZE_5x8,
       -1,
     },
-    { 
+    {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
       PCL_PAPERTYPE_PREMIUM,
@@ -576,7 +576,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERTYPE_TRANS,
       -1,
     },
-    { 
+    {
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_DJ_TRAY,
       -1,
@@ -590,7 +590,7 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A5,
@@ -600,7 +600,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERSIZE_5x8,
       -1,
     },
-    { 
+    {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
       PCL_PAPERTYPE_PREMIUM,
@@ -608,7 +608,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERTYPE_TRANS,
       -1,
     },
-    { 
+    {
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_DJ_TRAY,
       -1,
@@ -622,7 +622,7 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A5,
@@ -631,7 +631,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERSIZE_5x8,
       -1,
     },
-    { 
+    {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
       PCL_PAPERTYPE_PREMIUM,
@@ -641,7 +641,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERTYPE_QTRANS,
       -1,
     },
-    { 
+    {
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_DJ_TRAY,
       -1,
@@ -655,7 +655,7 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A5,
@@ -667,7 +667,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERSIZE_5x8,
       -1,
     },
-    { 
+    {
       PCL_PAPERTYPE_PLAIN,
       PCL_PAPERTYPE_BOND,
       PCL_PAPERTYPE_PREMIUM,
@@ -677,7 +677,7 @@ pcl_cap_t pcl_model_capabilities[] =
       PCL_PAPERTYPE_QTRANS,
       -1,
     },
-    { 
+    {
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_DJ_AUTO,
       PCL_PAPERSOURCE_DJ_TRAY,
@@ -693,7 +693,7 @@ pcl_cap_t pcl_model_capabilities[] =
     12, 12, 18, 18,
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A4,
@@ -701,7 +701,7 @@ pcl_cap_t pcl_model_capabilities[] =
     },
     { -1,			/* No selectable paper types */
     },
-    { 
+    {
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_LJ_TRAY1,
       PCL_PAPERSOURCE_LJ_TRAY2,
@@ -717,7 +717,7 @@ pcl_cap_t pcl_model_capabilities[] =
     12, 12, 18, 18,
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_TIFF,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A4,
@@ -725,7 +725,7 @@ pcl_cap_t pcl_model_capabilities[] =
     },
     { -1,			/* No selectable paper types */
     },
-    { 
+    {
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_LJ_TRAY1,
       PCL_PAPERSOURCE_LJ_TRAY2,
@@ -741,7 +741,7 @@ pcl_cap_t pcl_model_capabilities[] =
     12, 12, 18, 18,
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_A4,
@@ -749,7 +749,7 @@ pcl_cap_t pcl_model_capabilities[] =
     },
     { -1,			/* No selectable paper types */
     },
-    { 
+    {
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_LJ_TRAY1,
       PCL_PAPERSOURCE_LJ_TRAY2,
@@ -765,7 +765,7 @@ pcl_cap_t pcl_model_capabilities[] =
     12, 12, 18, 18,
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF,
-    { 
+    {
       PCL_PAPERSIZE_LETTER,
       PCL_PAPERSIZE_LEGAL,
       PCL_PAPERSIZE_TABLOID,
@@ -780,7 +780,7 @@ pcl_cap_t pcl_model_capabilities[] =
     },
     { -1,			/* No selectable paper types */
     },
-    { 
+    {
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_LJ_TRAY1,
       PCL_PAPERSOURCE_LJ_TRAY2,
@@ -988,7 +988,7 @@ pcl_parameters(int  model,	/* I - Printer model */
 	  if (strlen(papersizes[i].name) > 0 &&
 	      papersizes[i].width <= caps.max_width &&
 	      papersizes[i].length <= caps.max_height &&
-              ((use_custom == 1) || ((use_custom == 0) && 
+              ((use_custom == 1) || ((use_custom == 0) &&
               (pcl_convert_media_size(papersizes[i].name, model) != -1)))
              )
 	    {
@@ -1063,7 +1063,7 @@ pcl_parameters(int  model,	/* I - Printer model */
       return(valptrs);
     }
     else
-      return(NULL);      
+      return(NULL);
   }
   else
     return (NULL);
@@ -1201,11 +1201,11 @@ pcl_print(const printer_t *printer,		/* I - Model */
   */
 
   sscanf(resolution,"%dx%d",&xdpi,&ydpi);
-  
+
 #ifdef DEBUG
   fprintf(stderr,"pcl: resolution=%dx%d\n",xdpi,ydpi);
 #endif
-  
+
   if (((caps.resolutions & PCL_RES_600_600_MONO) == PCL_RES_600_600_MONO) &&
       output_type != OUTPUT_GRAY && xdpi == 600 && ydpi == 600) {
       fprintf(stderr, "600x600 resolution only available in MONO, changed to 300x300\n");
@@ -1219,7 +1219,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
 #ifdef DEBUG
   fprintf(stderr, "do_cret = %d\n", do_cret);
 #endif
-  
+
   do_6color = (strcmp(ink_type, "Color + Photo Cartridges") == 0);
 #ifdef DEBUG
   fprintf(stderr, "do_6color = %d\n", do_6color);
@@ -1503,7 +1503,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
     cyan    = malloc(length);
     magenta = malloc(length);
     yellow  = malloc(length);
-  
+
     if ((caps.color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
       black = NULL;
     else
@@ -1519,7 +1519,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
       lmagenta = NULL;
     }
   }
-    
+
  /*
   * Output the page, rotating as necessary...
   */
@@ -1553,12 +1553,12 @@ pcl_print(const printer_t *printer,		/* I - Model */
 	  dither_set_m_ranges(dither, 6, variable_dither_ranges, nv.density);
 	}
       else
-	{	
+	{
 	  dither_set_c_ranges_simple(dither, 3, dot_sizes, nv.density);
 	  dither_set_m_ranges_simple(dither, 3, dot_sizes, nv.density);
 	}
     }
-  else 
+  else
 
 /* Set light inks for 6 colour printers. Numbers copied from print-escp2.c */
 
@@ -1569,7 +1569,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
     dither_set_aspect_ratio(dither, 1, xdpi / ydpi);
   else if (ydpi > xdpi)
     dither_set_aspect_ratio(dither, ydpi / xdpi, 1);
-			  
+
   switch (nv.image_type)
     {
     case IMAGE_LINE_ART:
@@ -1581,7 +1581,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
     case IMAGE_CONTINUOUS:
       dither_set_ink_spread(dither, 14);
       break;
-    }	    
+    }
   dither_set_density(dither, nv.density);
 
   in  = malloc(image_width * image_bpp);
@@ -1623,7 +1623,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
         (*writefunc)(prn, black + length / 2, length / 2, 0);
         (*writefunc)(prn, black, length / 2, 1);
       }
-      else 
+      else
       {
         dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
 		    yellow, NULL, black);

@@ -22,7 +22,7 @@
  *
  * Contents:
  *
- * createcolor_window()                   - Create color adjust window  
+ * createcolor_window()                   - Create color adjust window
  *
  * Revision History:
  *
@@ -108,7 +108,7 @@ void gtk_create_color_adjust_window(void)
     GtkWidget*  box;            /* Box container */
     GtkWidget*  scale;  /* Scale widget */
     GtkWidget*  entry;  /* Text entry widget */
- 
+
     GtkObject*  scale_data;  /* Scale data (limits) */
     char s[100]; /* Text string */
 
@@ -433,7 +433,7 @@ void gtk_create_color_adjust_window(void)
 		     5,
 		     6,
 		     GTK_FILL,
-		     GTK_FILL, 
+		     GTK_FILL,
 		     0,
 		     0);
     gtk_widget_show(box);
@@ -618,7 +618,7 @@ void gtk_create_color_adjust_window(void)
 		      hbbox,
 		      TRUE, TRUE, 0);
     gtk_widget_show (hbbox);
- 
+
     dismiss_button = gtk_button_new_with_label (_("Dismiss"));
     GTK_WIDGET_SET_FLAGS (dismiss_button, GTK_CAN_DEFAULT);
     gtk_signal_connect (GTK_OBJECT (dismiss_button),
@@ -645,7 +645,7 @@ static void gtk_brightness_callback(GtkWidget *widget) /* I - Entry widget */
     gint new_value;  /* New scaling value */
 
     new_value = atoi(gtk_entry_get_text(GTK_ENTRY(widget)));
-    
+
     if (vars.brightness != new_value)
     {
 	if ((new_value >= GTK_ADJUSTMENT(brightness_adjustment)->lower) &&
@@ -1065,7 +1065,7 @@ static void gtk_build_dither_menu()
 
     gtk_option_menu_set_menu(GTK_OPTION_MENU(dither_algo_button ),
 			     dither_algo_menu);
-    
+
 #ifdef DEBUG
     printf("cur_item = \'%s\'\n", cur_item);
 #endif /* DEBUG */

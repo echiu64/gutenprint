@@ -93,7 +93,7 @@ line_type **page=NULL;
 #define ep1color(c)  ({0,1,2,4,17,18}[c])
 /* sequential to Epson2 */
 #define ep2color(c)  ({0,1,2,4,257,258}[c])
-  
+
 
 void *mycalloc(size_t count,size_t size){
   void *p;
@@ -117,7 +117,7 @@ void *mymalloc(size_t size){
 
 void *myrealloc(void *ptr, size_t size){
   void *p;
-  
+
   if ((p=realloc(ptr,size))||(size==0)) {
     return(p);
   }
@@ -134,7 +134,7 @@ int get_bits(unsigned char *p,int index,int bpp) {
    */
 
   int value,b;
-  
+
   value=0;
   for (b=0;b<bpp;b++) {
     value*=2;
@@ -151,7 +151,7 @@ void set_bits(unsigned char *p,int index,int bpp,int value) {
    */
 
   int b;
-  
+
   for (b=bpp-1;b>=0;b--) {
     if (value&1) {
       p[(index*bpp+b)/8]|=1<<(7-((index*bpp+b)%8));
@@ -210,7 +210,7 @@ void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color
   }
   shift=startl-p->startx[color];
   length=stopl-startl+1;
-  
+
   oldstop=p->stopx[color];
   p->stopx[color]=(stopl>p->stopx[color])?stopl:p->stopx[color];
   p->line[color]=myrealloc(p->line[color],((p->stopx[color]-p->startx[color]+1)*bpp+7)/8);
@@ -323,7 +323,7 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
     fprintf(stderr,"Warning!  Attempting to print at %d DPI but units are set to %d DPI.\n",density,pstate.relative_horizontal_units);
     return;
   }
- 
+
   if (!page) {
     fprintf(stderr,"Warning!  Attempting to print before setting up page!\n");
     /* Let's hope that we've at least initialized the printer with
@@ -520,7 +520,7 @@ counter=0;
                         (m*((n*currentbpp+7)/8)));
                   eject=1;
                   continue;
-                } 
+                }
                 update_page(buf,i,m,n,currentcolor,currentbpp,density);
                 break;
               case 2: /* TIFF compression */

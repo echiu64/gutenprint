@@ -165,7 +165,7 @@ main(int argc, char **argv)
   for (i = 0; i < nrows; i++)
     {
       if (i == footer(sw))
-	{	
+	{
 	  for (j = 0; j < vmod; j++)
 	    current_slot[j] = -1;
 	  set_last_pass(sw, newestpass);

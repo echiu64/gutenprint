@@ -30,7 +30,7 @@
 
 static char *id="@(#) $Id$";
 
-/* 
+/*
  * Largest data attached to a command. 1024 means that we can have up to 8192
  * pixels in a row
  */
@@ -245,7 +245,7 @@ void pcl_read_command(void)
     int minus;
     int skipped_chars;
 
-/* 
+/*
    Precis from the PCL Developer's Guide 6.0:-
 
    There are two formats for PCL commands; "Two Character" and
@@ -652,7 +652,7 @@ int decode_tiff(char *in_buffer,		/* I: Data buffer */
 		int data_length,		/* I: Length of data */
 		char *decode_buf,		/* O: decoded data */
 		int maxlen)			/* I: Max length of decode_buf */
-{	
+{
 /* The TIFF coding consists of either:-
  *
  * (0 <= count <= 127) (count+1 bytes of data) for non repeating data
@@ -720,7 +720,7 @@ int decode_tiff(char *in_buffer,		/* I: Data buffer */
  * pcl_reset() - Rest image parameters to default
  */
 
-void pcl_reset(image_t *i) 
+void pcl_reset(image_t *i)
 {
     i->colour_type = PCL_MONO;
     i->black_depth = 2;		/* Assume mono */
@@ -760,7 +760,7 @@ int depth_to_rows(int depth)
  * Main
  */
 
-int main(int argc, char *argv[]) 
+int main(int argc, char *argv[])
 {
 
     int command_index;
@@ -971,7 +971,7 @@ int main(int argc, char *argv[])
 
 		fprintf(write_fd, "%10d %10d\n", image_data.image_width,
 		    image_data.image_height);
-		
+
 /*
  * Write the depth of the image
  */
@@ -1038,8 +1038,8 @@ int main(int argc, char *argv[])
  * decoding phase
  */
 
-		expected_data_rows_per_row = output_data.black_data_rows_per_row + 
-		    output_data.cyan_data_rows_per_row + output_data.magenta_data_rows_per_row + 
+		expected_data_rows_per_row = output_data.black_data_rows_per_row +
+		    output_data.cyan_data_rows_per_row + output_data.magenta_data_rows_per_row +
 		    output_data.yellow_data_rows_per_row + output_data.lcyan_data_rows_per_row +
 		    output_data.lmagenta_data_rows_per_row;
 
@@ -1498,7 +1498,7 @@ int main(int argc, char *argv[])
 		if (expected_data_rows_per_row == -1)
 		    fprintf(stderr, "ERROR: raster data without start raster!\n");
 
-/* 
+/*
  * The last flag indicates that this is the end of the planes for a row
  * so we check it against the number of planes we have seen and are
  * expecting.

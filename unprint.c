@@ -99,7 +99,7 @@ line_type **page=NULL;
 #define ep1color(c)  ({0,1,2,4,17,18}[c])
 /* sequential to Epson2 */
 #define ep2color(c)  ({0,1,2,4,257,258}[c])
-  
+
 
 void *mycalloc(size_t count,size_t size){
   void *p;
@@ -123,7 +123,7 @@ void *mymalloc(size_t size){
 
 void *myrealloc(void *ptr, size_t size){
   void *p;
-  
+
   if ((p=realloc(ptr,size))||(size==0)) {
     return(p);
   }
@@ -140,7 +140,7 @@ int get_bits(unsigned char *p,int index) {
    */
 
   int value,b;
-  
+
   value=0;
   for (b=0;b<pstate.bpp;b++) {
     value*=2;
@@ -157,7 +157,7 @@ void set_bits(unsigned char *p,int index,int value) {
    */
 
   int b;
-  
+
   for (b=pstate.bpp-1;b>=0;b--) {
     if (value&1) {
       p[(index*pstate.bpp+b)/8]|=1<<(7-((index*pstate.bpp+b)%8));
@@ -215,7 +215,7 @@ void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color
   }
   shift=startl-p->startx[color];
   length=stopl-startl+1;
-  
+
   oldstop=p->stopx[color];
   p->stopx[color]=(stopl>p->stopx[color])?stopl:p->stopx[color];
   p->line[color]=myrealloc(p->line[color],((p->stopx[color]-p->startx[color]+1)*pstate.bpp+7)/8);
@@ -339,7 +339,7 @@ int num_bits_zero_msb(int i, int max) {
 
   for (n=0;(n<max)&&i;n++,i>>1);
   return(max-n);
-  
+
 }
 #endif
 
@@ -372,7 +372,7 @@ void find_white(unsigned char *buf,int npix, int *left, int *right) {
     return;
   }
 
-  /* right side, this is a little trickier */ 
+  /* right side, this is a little trickier */
   for (i=0;(i<bits%8)&&!(buf[bytes]&(1<<(i+8-bits%8)));i++);
   if (i<bits%8) {
     *right=i/pstate.bpp;
@@ -408,9 +408,9 @@ void find_white(unsigned char *buf,int npix, int *left, int *right) {
 
 }
 
-/* 'update_page' 
+/* 'update_page'
  *
- * 
+ *
  *
  *
  */
@@ -438,7 +438,7 @@ int update_page(unsigned char *buf, /* I - pixel data               */
 	    "to %d DPI.\n",density,pstate.relative_horizontal_units);
     return(0);
   }
- 
+
   if (!page) {
     fprintf(stderr,"Warning!  Attempting to print before setting up page!\n");
     /* Let's hope that we've at least initialized the printer with
@@ -620,7 +620,7 @@ void parse_escp2(FILE *fp_r){
                         (m*((n*pstate.bpp+7)/8)));
                   eject=1;
                   continue;
-                } 
+                }
                 update_page(buf,i,m,n,currentcolor,density);
                 break;
               case 2: /* TIFF compression */
@@ -857,16 +857,16 @@ void parse_escp2(FILE *fp_r){
 }
 
 
-/* 'reverse_bit_order' 
+/* 'reverse_bit_order'
  *
- * reverse the bit order in an array of bytes - does not reverse byte order! 
+ * reverse the bit order in an array of bytes - does not reverse byte order!
  */
 void reverse_bit_order(unsigned char *buf, int n)
 {
   int i;
   unsigned char a;
   if (!n) return; /* nothing to do */
-  
+
   for (i= 0; i<n; i++) {
     a= buf[i];
     buf[i]=
@@ -883,8 +883,8 @@ void reverse_bit_order(unsigned char *buf, int n)
 
 /* 'rle_decode'
  *
- * run-length-decodes a given buffer of length "n" 
- * and stores the result in the same buffer 
+ * run-length-decodes a given buffer of length "n"
+ * and stores the result in the same buffer
  * not exceeding a size of "max" bytes.
  */
 int rle_decode(unsigned char *inbuf, int n, int max)
@@ -904,7 +904,7 @@ int rle_decode(unsigned char *inbuf, int n, int max)
 
   while (i<n && o<max) {
     cnt= ib[i];
-    if (cnt<0) { 
+    if (cnt<0) {
       /* cnt identical bytes */
       /* fprintf(stderr,"rle 0x%02x = %4d = %4d\n",cnt&0xff,cnt,1-cnt); */
       num= 1-cnt;
@@ -912,7 +912,7 @@ int rle_decode(unsigned char *inbuf, int n, int max)
       for (j=0; j<num && o+j<max; j++) outbuf[o+j]= inbuf[i+1];
       o+= num;
       i+= 2;
-    } else { 
+    } else {
       /* cnt individual bytes */
       /* fprintf(stderr,"raw 0x%02x = %4d = %4d\n",cnt&0xff,cnt,cnt + 1); */
       num= cnt+1;
@@ -930,7 +930,7 @@ int rle_decode(unsigned char *inbuf, int n, int max)
   memset(inbuf,0,max-1);
   memcpy(inbuf,outbuf,o);
 #ifdef DEBUG_RLE
-   fprintf(stderr,"output: %d\n",o); 
+   fprintf(stderr,"output: %d\n",o);
 #endif
   return o;
 }
@@ -940,11 +940,11 @@ void parse_canon(FILE *fp_r){
   int m=0;
   int currentcolor,currentbpp,density,eject,got_graphics;
   int count,counter,cmdcounter;
-  int delay_c=0, delay_m=0, delay_y=0, delay_C=0, 
+  int delay_c=0, delay_m=0, delay_y=0, delay_C=0,
     delay_M=0, delay_Y=0, delay_K=0, currentdelay=0;
 
   counter=0;
-  
+
   page= 0;
   eject=got_graphics=currentbpp=currentcolor=density=0;
   while ((!eject)&&(fread(&ch,1,1,fp_r))){
@@ -988,7 +988,7 @@ void parse_canon(FILE *fp_r){
      cmdcounter= counter;
      get2("Error reading CEM-data size.\n");
      getn(sh,"Error reading CEM-data.\n");
-     
+
      if (ch=='K') /* 0x4b */ {
        if (sh!=2 || buf[0]!=0x00 ) {
 	 fprintf(stderr,"Error initializing printer with ESC [ K\n");
@@ -1021,21 +1021,21 @@ void parse_canon(FILE *fp_r){
 	       0x5b,ch,cmdcounter);
      }
      break;
-     
+
    case '@': /* 0x40 */
-     eject=1; 
+     eject=1;
      break;
-     
+
    case '(': /* 0x28 */
      get1("Corrupt file.  Incomplete extended command.\n");
      cmdcounter= counter;
      get2("Corrupt file.  Error reading buffer size.\n");
      bufsize=sh;
      getn(bufsize,"Corrupt file.  Error reading data buffer.\n");
-     
+
      switch(ch) {
      case 'A': /* 0x41 - transfer graphics data */
-       switch (*buf) { 
+       switch (*buf) {
        case 'C': currentcolor= 2; currentdelay= delay_C;
 	 break;
        case 'M': currentcolor= 1; currentdelay= delay_M;
@@ -1062,7 +1062,7 @@ void parse_canon(FILE *fp_r){
 			  pstate.absolute_horizontal_units);
        pstate.yposition-= currentdelay;
 #ifdef DEBUG_CANON
-       fprintf(stderr,"%c:%d>%d  ",*buf,sh-1,m); 
+       fprintf(stderr,"%c:%d>%d  ",*buf,sh-1,m);
 #endif
        break;
      case 'a': /* 0x61 - turn something on/off */
@@ -1077,13 +1077,13 @@ void parse_canon(FILE *fp_r){
 		 "a page is not supported.\n");
 	 exit(-1);
        }
-       pstate.relative_vertical_units=   
-	 pstate.absolute_vertical_units=   
+       pstate.relative_vertical_units=
+	 pstate.absolute_vertical_units=
 	 buf[1]+256*buf[0];
-       pstate.relative_horizontal_units= 
-	 pstate.absolute_horizontal_units= 
+       pstate.relative_horizontal_units=
+	 pstate.absolute_horizontal_units=
 	 buf[3]+256*buf[2];
-       pstate.bottom_margin= pstate.relative_vertical_units* 22; 
+       pstate.bottom_margin= pstate.relative_vertical_units* 22;
        /* FIXME: replace with real page length */
        fprintf(stderr,"canon: res is %d x %d dpi\n",
 	       pstate.relative_horizontal_units,
@@ -1094,7 +1094,7 @@ void parse_canon(FILE *fp_r){
      case 'e': /* 0x65 - vertical head movement */
        pstate.yposition+= (buf[1]+256*buf[0]);
 #ifdef DEBUG_CANON
-       fprintf(stderr,"\n"); 
+       fprintf(stderr,"\n");
 #endif
        break;
      case 'l': /* 0x6c - some more information about the print job*/
@@ -1109,23 +1109,23 @@ void parse_canon(FILE *fp_r){
        pstate.bpp= buf[0];
        fprintf(stderr,"canon: using %d bpp\n",pstate.bpp);
        if (buf[1]&0x04) {
-	 delay_y= 0; 
-	 delay_m= 0; 
-	 delay_c= 0; 
-	 delay_Y= 0; 
-	 delay_M= delay_Y+112; 
-	 delay_C= delay_M+112; 
-	 delay_K= delay_C+112; 
+	 delay_y= 0;
+	 delay_m= 0;
+	 delay_c= 0;
+	 delay_Y= 0;
+	 delay_M= delay_Y+112;
+	 delay_C= delay_M+112;
+	 delay_K= delay_C+112;
 	 fprintf(stderr,"canon: using line delay code\n");
        }
        break;
-              
+
      default:
        fprintf(stderr,"Warning: Unknown command ESC ( 0x%X at 0x%08X.\n",
 	       ch,cmdcounter);
      }
      break;
-     
+
    default:
      fprintf(stderr,"Warning: Unknown command ESC 0x%X at 0x%08X.\n",
 	     ch,counter-2);

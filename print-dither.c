@@ -95,7 +95,8 @@ typedef struct dither_matrix
 {
   int base;
   int exp;
-  int size;
+  int x_size;
+  int y_size;
   int last_x;
   int last_x_mod;
   int last_y;
@@ -220,10 +221,10 @@ static int msq0[] =
   22, 18,  5,  4, 11,
   9,   1, 12, 23, 15,
   13, 20, 19,  6,  2,
-  16,  7,  3, 10, 24 
+  16,  7,  3, 10, 24
 };
 
-static int msq1[] = 
+static int msq1[] =
 {
   03, 11, 20, 17,  9,
   22, 19,  8,  1, 10,
@@ -269,47 +270,76 @@ calc_ordered_point(unsigned x, unsigned y, int steps, int multiplier,
 }
 
 void
-init_matrix(dither_matrix_t *mat, int size, int exp, unsigned *array)
+init_iterated_matrix(dither_matrix_t *mat, int size, int exp,
+		     unsigned *array)
 {
   int i;
   int x, y;
   mat->base = size;
   mat->exp = exp;
-  mat->size = 1;
+  mat->x_size = 1;
   for (i = 0; i < exp; i++)
-    mat->size *= mat->base;
-  mat->matrix = malloc(sizeof(unsigned) * mat->size * mat->size);
-  for (x = 0; x < mat->size; x++)
-    for (y = 0; y < mat->size; y++)
+    mat->x_size *= mat->base;
+  mat->y_size = mat->x_size;
+  mat->matrix = malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
+  for (x = 0; x < mat->x_size; x++)
+    for (y = 0; y < mat->y_size; y++)
       {
-	mat->matrix[x + y * mat->size] =
+	mat->matrix[x + y * mat->x_size] =
 	  calc_ordered_point(x, y, mat->exp, 1, mat->base, array);
-	mat->matrix[x + y * mat->size] =
-	  (long long) mat->matrix[x + y * mat->size] * 65536ll /
-	  (long long) (mat->size * mat->size);
+	mat->matrix[x + y * mat->x_size] =
+	  (long long) mat->matrix[x + y * mat->x_size] * 65536ll /
+	  (long long) (mat->x_size * mat->y_size);
       }
   mat->last_x = mat->last_x_mod = 0;
   mat->last_y = mat->last_y_mod = 0;
   mat->index = 0;
   mat->i_own = 1;
 }
-	
+
 void
-init_matrix_short(dither_matrix_t *mat, int size, unsigned short *array)
+init_matrix(dither_matrix_t *mat, int x_size, int y_size,
+	    unsigned int *array)
 {
   int x, y;
-  mat->base = size;
+  mat->base = x_size;
   mat->exp = 1;
-  mat->size = size;
-  mat->matrix = malloc(sizeof(unsigned) * mat->size * mat->size);
-  for (x = 0; x < mat->size; x++)
-    for (y = 0; y < mat->size; y++)
+  mat->x_size = x_size;
+  mat->y_size = y_size;
+  mat->matrix = malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
+  for (x = 0; x < mat->x_size; x++)
+    for (y = 0; y < mat->y_size; y++)
       {
-	mat->matrix[x + y * mat->size] =
-	  array[x + y * mat->size];
-	mat->matrix[x + y * mat->size] =
-	  (long long) mat->matrix[x + y * mat->size] * 65536ll /
-	  (long long) (mat->size * mat->size);
+	mat->matrix[x + y * mat->x_size] =
+	  array[x + y * mat->x_size];
+	mat->matrix[x + y * mat->x_size] =
+	  (long long) mat->matrix[x + y * mat->x_size] * 65536ll /
+	  (long long) (mat->x_size * mat->x_size);
+      }
+  mat->last_x = mat->last_x_mod = 0;
+  mat->last_y = mat->last_y_mod = 0;
+  mat->index = 0;
+  mat->i_own = 1;
+}
+
+void
+init_matrix_short(dither_matrix_t *mat, int x_size, int y_size,
+		  unsigned short *array)
+{
+  int x, y;
+  mat->base = x_size;
+  mat->exp = 1;
+  mat->x_size = x_size;
+  mat->y_size = y_size;
+  mat->matrix = malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
+  for (x = 0; x < mat->x_size; x++)
+    for (y = 0; y < mat->y_size; y++)
+      {
+	mat->matrix[x + y * mat->x_size] =
+	  array[x + y * mat->x_size];
+	mat->matrix[x + y * mat->x_size] =
+	  (long long) mat->matrix[x + y * mat->x_size] * 65536ll /
+	  (long long) (mat->x_size * mat->x_size);
       }
   mat->last_x = mat->last_x_mod = 0;
   mat->last_y = mat->last_y_mod = 0;
@@ -325,7 +355,8 @@ destroy_matrix(dither_matrix_t *mat)
   mat->matrix = NULL;
   mat->base = 0;
   mat->exp = 0;
-  mat->size = 0;
+  mat->x_size = 0;
+  mat->y_size = 0;
   mat->i_own = 0;
 }
 
@@ -335,15 +366,16 @@ clone_matrix(const dither_matrix_t *src, dither_matrix_t *dest,
 {
   dest->base = src->base;
   dest->exp = src->exp;
-  dest->size = src->size;
+  dest->x_size = src->x_size;
+  dest->y_size = src->y_size;
   dest->matrix = src->matrix;
   dest->x_offset = x_offset;
   dest->y_offset = y_offset;
   dest->last_x = 0;
-  dest->last_x_mod = dest->x_offset % dest->size;
+  dest->last_x_mod = dest->x_offset % dest->x_size;
   dest->last_y = 0;
-  dest->last_y_mod = dest->y_offset % dest->size;
-  dest->index = dest->last_x_mod + dest->size * dest->last_y_mod;
+  dest->last_y_mod = dest->y_offset % dest->y_size;
+  dest->index = dest->last_x_mod + dest->x_size * dest->last_y_mod;
   dest->i_own = 0;
 }
 
@@ -365,10 +397,10 @@ ditherpoint(const dither_t *d, dither_matrix_t *mat, int x, int y)
       mat->last_x = x;
       mat->last_x_mod++;
       mat->index++;
-      if (mat->last_x_mod >= mat->size)
+      if (mat->last_x_mod >= mat->x_size)
 	{
-	  mat->last_x_mod -= mat->size;
-	  mat->index -= mat->size;
+	  mat->last_x_mod -= mat->x_size;
+	  mat->index -= mat->x_size;
 	}
     }
   else if (x == mat->last_x - 1)
@@ -378,14 +410,14 @@ ditherpoint(const dither_t *d, dither_matrix_t *mat, int x, int y)
       mat->index--;
       if (mat->last_x_mod < 0)
 	{
-	  mat->last_x_mod += mat->size;
-	  mat->index += mat->size;
+	  mat->last_x_mod += mat->x_size;
+	  mat->index += mat->x_size;
 	}
     }
   else
     {
       mat->last_x = x;
-      mat->last_x_mod = (x + mat->x_offset) % mat->size;
+      mat->last_x_mod = (x + mat->x_offset) % mat->x_size;
       recompute = 1;
     }
   if (y == mat->last_y)
@@ -395,32 +427,32 @@ ditherpoint(const dither_t *d, dither_matrix_t *mat, int x, int y)
     {
       mat->last_y = y;
       mat->last_y_mod++;
-      mat->index += mat->size;
-      if (mat->last_y_mod >= mat->size)
+      mat->index += mat->x_size;
+      if (mat->last_y_mod >= mat->y_size)
 	{
-	  mat->last_y_mod -= mat->size;
-	  mat->index -= (mat->size * mat->size);
+	  mat->last_y_mod -= mat->y_size;
+	  mat->index -= (mat->x_size * mat->y_size);
 	}
     }
   else if (y == mat->last_y - 1)
     {
       mat->last_y = y;
       mat->last_y_mod--;
-      mat->index -= mat->size;;
+      mat->index -= mat->x_size;
       if (mat->last_y_mod < 0)
 	{
-	  mat->last_y_mod += mat->size;
-	  mat->index += (mat->size * mat->size);
+	  mat->last_y_mod += mat->y_size;
+	  mat->index += (mat->x_size * mat->y_size);
 	}
     }
   else
     {
       mat->last_y = y;
-      mat->last_y_mod = (y + mat->y_offset) % mat->size;
+      mat->last_y_mod = (y + mat->y_offset) % mat->y_size;
       recompute = 1;
     }
   if (recompute)
-    mat->index = mat->last_x_mod + mat->size * mat->last_y_mod;
+    mat->index = mat->last_x_mod + mat->x_size * mat->last_y_mod;
   return mat->matrix[mat->index];
 }
 
@@ -444,19 +476,19 @@ init_dither(int in_width, int out_width, vars_t *v)
   d->offset1_table = NULL;
 
 #if 0
-  init_matrix(&(d->mat0), 2, 5, sq2);
-  init_matrix(&(d->mat1), 3, 4, sq3);
-  init_matrix(&(d->mat2), 5, 3, msq0);
-  init_matrix(&(d->mat3), 5, 3, msq1);
-  init_matrix_short(&(d->mat4), 199, quic0);
-  init_matrix_short(&(d->mat5), 199, quic1);
+  init_iterated_matrix(&(d->mat0), 2, 5, sq2);
+  init_iterated_matrix(&(d->mat1), 3, 4, sq3);
+  init_iterated_matrix(&(d->mat2), 5, 3, msq0);
+  init_iterated_matrix(&(d->mat3), 5, 3, msq1);
+  init_matrix_short(&(d->mat4), 199, 199, quic0);
+  init_matrix_short(&(d->mat5), 199, 199, quic1);
 #endif
-  init_matrix(&(d->mat6), 257, 1, quic2);
-  init_matrix(&(d->mat7), 257, 1, quic2);
+  init_matrix(&(d->mat6), 257, 257, quic2);
+  init_matrix(&(d->mat7), 257, 257, quic2);
   for (i = 0; i < 257 * 257; i++)
     {
       double dd = d->mat7.matrix[i] / 65535.0;
-      dd = sqrt(dd);
+      dd = pow(dd, 0.6);
       d->mat7.matrix[i] = 65535 * dd;
     }
 
@@ -497,7 +529,7 @@ init_dither(int in_width, int out_width, vars_t *v)
   dither_set_ink_darkness(d, .4, .3, .2);
   dither_set_density(d, 1.0);
   return d;
-}  
+}
 
 void
 dither_set_aspect_ratio(void *vd, int horizontal, int vertical)
@@ -1075,7 +1107,7 @@ update_color(int color, int dither)
   if (dither >= 0)
     return color + (dither >> 3);
   else
-    return color + (dither / 8);
+    return color - ((-dither) >> 3);
 }
 
 static inline unsigned
@@ -1345,7 +1377,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	  unsigned bits;
 	  unsigned v;
 	  unsigned dot_size;
-	      
+
 	  if (dd->isdark_h == dd->isdark_l && dd->bits_h == dd->bits_l)
 	    {
 	      isdark = dd->isdark_h;
@@ -1658,7 +1690,7 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
 
   ub = d->k_upper;    /* Upper bound */
   lb = d->k_lower;    /* Lower bound */
-	  
+
   /*
    * Calculate total ink amount.
    * If there is a lot of ink, black gets added sooner. Saves ink
@@ -1669,7 +1701,7 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
    * suggests, and we look up where is value is between
    * lowerbound and density:
    */
-	  
+
   kdarkness = ((c*2 + m*2 +y ) - 2 * d->density )/3;
   if (kdarkness > k)
     ok = kdarkness;
@@ -1682,7 +1714,7 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
     kl = 0;
   if (kl > 65535)
     kl = 65535;
-	    
+
   /*
    * We have a second value, ks, that will be the scaler.
    * ks is initially showing where the original black
@@ -1698,12 +1730,12 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
       ( ub - lb );
   if (ks > 65535)
     ks = 65535;
-	    
+
   /*
    * ks is then processed by a second order function that produces
    * an S curve: 2ks - ks^2. This is then multiplied by the
    * darkness value in kl. If we think this is too complex the
-   * following line can be tried instead:    
+   * following line can be tried instead:
    * ak = ks;
    */
   ak = 2*ks-ks*ks/d->density;
@@ -1722,7 +1754,7 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
        * too much. This prevents dark areas from becoming very
        * dull.
        */
-	     
+
       c -= (unsigned) k * (unsigned) ak / d->density;
       m -= (unsigned) k * (unsigned) ak / d->density;
       y -= (unsigned) k * (unsigned) ak / d->density;

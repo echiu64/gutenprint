@@ -1075,7 +1075,7 @@ gimp_position_callback (GtkWidget *widget)
   else if (widget == bottom_entry)
     {
       gfloat new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
-      vars.top = ((new_value + 1.0 / 144) * 72) - (top + print_height); 
+      vars.top = ((new_value + 1.0 / 144) * 72) - (top + print_height);
     }
   else if (widget == right_entry)
     {
@@ -1404,7 +1404,7 @@ gimp_print_callback (void)
 }
 
 /*
- *  gimp_printandsave_callback() - 
+ *  gimp_printandsave_callback() -
  */
 static void
 gimp_printandsave_callback (void)
@@ -1434,7 +1434,7 @@ gimp_save_callback (void)
 }
 
 /*
- *  gimp_setup_open__callback() - 
+ *  gimp_setup_open__callback() -
  */
 static void
 gimp_setup_open_callback (void)
@@ -1470,7 +1470,7 @@ gimp_setup_open_callback (void)
 }
 
 /*
- *  gimp_setup_ok_callback() - 
+ *  gimp_setup_ok_callback() -
  */
 static void
 gimp_setup_ok_callback (void)
@@ -1511,7 +1511,7 @@ gimp_print_driver_callback (GtkWidget *widget,
 }
 
 /*
- *  gimp_ppd_browse_callback() - 
+ *  gimp_ppd_browse_callback() -
  */
 static void
 gimp_ppd_browse_callback (void)
@@ -1522,7 +1522,7 @@ gimp_ppd_browse_callback (void)
 }
 
 /*
- *  gimp_ppd_ok_callback() - 
+ *  gimp_ppd_ok_callback() -
  */
 static void
 gimp_ppd_ok_callback (void)
@@ -1549,7 +1549,7 @@ gimp_file_ok_callback (void)
 }
 
 /*
- *  gimp_file_cancel_callback() - 
+ *  gimp_file_cancel_callback() -
  */
 static void
 gimp_file_cancel_callback (void)
@@ -1560,7 +1560,7 @@ gimp_file_cancel_callback (void)
 }
 
 /*
- *  gimp_preview_update_callback() - 
+ *  gimp_preview_update_callback() -
  */
 static void
 gimp_preview_update (void)
@@ -1670,8 +1670,8 @@ gimp_preview_update (void)
   printable_left = paper_left +  PREVIEW_PPI * left / 72;
   printable_top  = paper_top + PREVIEW_PPI * top / 72 ;
 
-  /* draw paper frame */ 
-  gdk_draw_rectangle(preview->widget.window, gc, 0, 
+  /* draw paper frame */
+  gdk_draw_rectangle(preview->widget.window, gc, 0,
  		     paper_left, paper_top,
 		     PREVIEW_PPI * paper_width / 72,
 		     PREVIEW_PPI * paper_height / 72);
@@ -1693,10 +1693,10 @@ gimp_preview_update (void)
   if (vars.top < 0)
     vars.top  = ((paper_height - print_height) / 2) - top;
 
- 
+
   if (vars.top > (printable_height - print_height))
-    vars.top = printable_height - print_height; 
-  
+    vars.top = printable_height - print_height;
+
   plist[plist_current].v.left = vars.left;
   plist[plist_current].v.top = vars.top;
 
@@ -1711,13 +1711,13 @@ gimp_preview_update (void)
   gtk_signal_handler_unblock_by_data (GTK_OBJECT (left_entry), NULL);
 
   gtk_signal_handler_block_by_data (GTK_OBJECT (bottom_entry), NULL);
-  g_snprintf(s, sizeof (s), "%.2f", 
+  g_snprintf(s, sizeof (s), "%.2f",
 	     (top + vars.top + print_height) / 72.0);
   gtk_entry_set_text (GTK_ENTRY (bottom_entry), s);
   gtk_signal_handler_unblock_by_data (GTK_OBJECT (bottom_entry), NULL);
 
   gtk_signal_handler_block_by_data (GTK_OBJECT (right_entry), NULL);
-  g_snprintf (s, sizeof (s), "%.2f", 
+  g_snprintf (s, sizeof (s), "%.2f",
 	      (left + vars.left + print_width) / 72.0);
 
   gtk_entry_set_text (GTK_ENTRY (right_entry), s);
@@ -1735,7 +1735,7 @@ gimp_preview_update (void)
 
   /* draw image */
   gdk_draw_rectangle(preview->widget.window, gc, 1,
-		     1 + printable_left + PREVIEW_PPI * vars.left / 72, 
+		     1 + printable_left + PREVIEW_PPI * vars.left / 72,
 		     1 + printable_top + PREVIEW_PPI * vars.top / 72,
                      PREVIEW_PPI * print_width / 72,
                      PREVIEW_PPI * print_height / 72);
@@ -1768,7 +1768,7 @@ gimp_preview_update (void)
 }
 
 /*
- *  gimp_preview_button_callback() - 
+ *  gimp_preview_button_callback() -
  */
 static void
 gimp_preview_button_callback (GtkWidget      *widget,
@@ -1780,7 +1780,7 @@ gimp_preview_button_callback (GtkWidget      *widget,
 }
 
 /*
- *  gimp_preview_motion_callback() - 
+ *  gimp_preview_motion_callback() -
  */
 static void
 gimp_preview_motion_callback (GtkWidget      *widget,

@@ -1,5 +1,5 @@
-/* 
- 
+/*
+
   Stylus Photo Printer driver for ghostscript
 
   -uses escp2-driver from gimp print plugin V3.0.3
@@ -7,7 +7,7 @@
   -gs frontend derived from gdevbmp and gdevcdj
 
 
-  written in January 2000 by 
+  written in January 2000 by
   Henryk Richter <buggs@comlab.uni-rostock.de>
   for ghostscript 5.x/6.x
 
@@ -180,7 +180,7 @@ stp_print_debug(const char *msg, gx_device *pdev,
 	  stp_data->v.gamma, stp_data->v.saturation, stp_data->v.density);
 #endif
 }
-  
+
 
 /*----------- Write out a in escp2 format. ---------------*/
 private int stp_print_page(gx_device_printer * pdev, FILE * file)
@@ -220,7 +220,7 @@ private int stp_print_page(gx_device_printer * pdev, FILE * file)
       code = 1;
       return code;
     }
-		
+
   strcpy(stp_data.v.resolution, escp2_resname(stp_data.resnr));
   strcpy(stp_data.v.dither_algorithm, dither_algo_names[stp_data.algnr]);
 
@@ -268,7 +268,7 @@ stp_map_16m_color_rgb(gx_device * dev, gx_color_index color,
 
 
 /*
- * Get parameters.  In addition to the standard and printer 
+ * Get parameters.  In addition to the standard and printer
  * parameters, we supply a lot of options to play around with
  * for maximum quality out of the photo printer
 */
@@ -370,7 +370,7 @@ private int stp_put_params(gx_device *pdev, gs_param_list *plist)
 
   {
     byte a;
-	 
+
     a = *stp_data.v.media_size;
     a &= 255-32;      /* quick`n`dirty lcase->ucase for first letter ;-) */
     *stp_data.v.media_size = a;
@@ -384,10 +384,10 @@ private int stp_put_params(gx_device *pdev, gs_param_list *plist)
 }
 
 private int stp_put_param_int(gs_param_list *plist,
-                                 gs_param_name pname, 
-                                 int *pvalue,  
-                                 int minval, 
-                                 int maxval, 
+                                 gs_param_name pname,
+                                 int *pvalue,
+                                 int minval,
+                                 int maxval,
                                  int ecode)
 {
   int code, value;
@@ -410,18 +410,18 @@ private int stp_put_param_int(gs_param_list *plist,
 
       return (ecode < 0 ? ecode : 1);
     }
-}	
+}
 
-private int stp_put_param_float(gs_param_list *plist, 
-                                   gs_param_name pname, 
+private int stp_put_param_float(gs_param_list *plist,
+                                   gs_param_name pname,
                                    float *pvalue,
-                                   float minval, 
-                                   float maxval, 
+                                   float minval,
+                                   float maxval,
                                    int ecode)
-{	
+{
   int code;
   float value;
-    
+
   stp_print_debug("stp_put_param_float", NULL, &stp_data);
   switch ( code = param_read_float(plist, pname, &value) )
     {
@@ -440,7 +440,7 @@ private int stp_put_param_float(gs_param_list *plist,
 
       return (ecode < 0 ? ecode : 1);
     }
-}	
+}
 
 private int
 stp_open(gx_device *pdev)
@@ -449,7 +449,7 @@ stp_open(gx_device *pdev)
   float st[4];
   int left,right,bottom,top,width,length;
   char none[5];
-  
+
   stp_print_debug("stp_open", pdev, &stp_data);
   strcpy(none,"");
 
@@ -515,20 +515,20 @@ int Image_width(Image image)
 int Image_height(Image image)
 {
   float tmp,tmp2;
-                      
+
   tmp =   stp_data.v.top + stp_data.bottom; /* top margin + bottom margin */
 
   /* calculate height in 1/72 inches */
   tmp2 = (float)stp_pdev->height / (float)stp_pdev->x_pixels_per_inch * 72.;
 
   tmp2 -= tmp;			/* subtract margins from sizes */
-                                               
+
   /* calculate new image height */
   tmp2 *= (float)stp_pdev->x_pixels_per_inch / 72.;
 
 #ifdef DRV_DEBUG
   fprintf(stderr,"corrected page length %f\n",tmp2);
-#endif  
+#endif
 
   return (int)tmp2;
 }

@@ -71,7 +71,7 @@ static const int densities[6] = { 0, 0, 0, 0, 1, 1 };
  * Local functions...
  */
 
-static void 
+static void
 escp2_write_microweave(FILE *, const unsigned char *,
 		       const unsigned char *, const unsigned char *,
 		       const unsigned char *, const unsigned char *,
@@ -780,7 +780,7 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi, int xdpi,
     fprintf(prn, "\033(U\005%c%c%c%c\240\005", 0, 1440 / ydpi, 1440 / ydpi,
 	    1440 / (ydpi * (horizontal_passes > 2 ? 2 : 1)));
   else
-    fprintf(prn, "\033(U\001%c%c", 0, 3600 / ydpi);	    
+    fprintf(prn, "\033(U\001%c%c", 0, 3600 / ydpi);
 
   /* Gray/color */
   if (escp2_has_cap(model, MODEL_GRAYMODE_MASK, MODEL_GRAYMODE_YES))
@@ -1026,7 +1026,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	}
       else if (!strcmp(resolution, ""))
 	{
-	  return;	  
+	  return;
 	}
     }
   if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
@@ -1087,7 +1087,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
     cyan    = malloc(length * bits);
     magenta = malloc(length * bits);
     yellow  = malloc(length * bits);
-  
+
     if (escp2_has_cap(model, MODEL_HASBLACK_MASK, MODEL_HASBLACK_YES))
       black = malloc(length * bits);
     else
@@ -1109,7 +1109,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 			     top * 720 / 72, page_height * 720 / 72);
   else
     escp2_init_microweave();
-      
+
 
  /*
   * Output the page...
@@ -1152,7 +1152,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 			      nv.density);
 	}
       else
-	{	
+	{
 	  dither_set_c_ranges_simple(dither, 3, dot_sizes, nv.density);
 	  dither_set_m_ranges_simple(dither, 3, dot_sizes, nv.density);
 	}
@@ -1163,7 +1163,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
     dither_set_aspect_ratio(dither, 1, xdpi / ydpi);
   else if (ydpi > xdpi)
     dither_set_aspect_ratio(dither, ydpi / xdpi, 1);
-			  
+
 
   switch (nv.image_type)
     {
@@ -1181,7 +1181,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	ink_spread++;
       dither_set_ink_spread(dither, ink_spread);
       break;
-    }	    
+    }
   dither_set_density(dither, nv.density);
 
   in  = malloc(image_width * image_bpp);
@@ -1192,7 +1192,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   errval  = 0;
   errlast = -1;
   errline  = 0;
-  
+
   for (y = 0; y < out_height; y ++)
   {
     if ((y & 255) == 0)
@@ -2565,7 +2565,7 @@ initialize_weave(int jets,	/* Width of print head */
       sw->ncolors = 6;
       break;
     }
-  
+
   /*
    * It's possible for the "compression" to actually expand the line by
    * one part in 128.
@@ -2638,7 +2638,7 @@ set_last_pass(void *vsw, int pass)
  */
 
 #ifdef DEBUG_SIGNAL
-static int 
+static int
 divv(int x, int y)
 {
   if (x < 0 || y < 0)
@@ -2650,7 +2650,7 @@ divv(int x, int y)
     return x / y;
 }
 
-static int 
+static int
 modd(int x, int y)
 {
   if (x < 0 || y < 0)
@@ -2901,7 +2901,7 @@ fillin_start_rows(const escp2_softweave_t *sw, int row, int subpass,
       int full_blocks = bytes_to_fill / (128 * 8);
       int leftover = (7 + (bytes_to_fill % (128 * 8))) / 8;
       int l = 0;
-  
+
       while (l < full_blocks)
 	{
 	  for (j = 0; j < sw->ncolors; j++)
@@ -3086,7 +3086,7 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	  putc(lwidth & 255, prn);	/* Width of raster line in pixels */
 	  putc(lwidth >> 8, prn);
 	}
-	  
+
       fwrite(bufs[0].v[j], lineoffs[0].v[j], 1, prn);
       putc('\r', prn);
     }
@@ -3184,7 +3184,7 @@ escp2_write_weave(void *        vsw,
     comp_buf = malloc(COMPBUFWIDTH);
   if (sw->current_vertical_subpass == 0)
     initialize_row(sw, sw->lineno, xlength);
-  
+
   for (i = 0; i < h_passes; i++)
     {
       int cpass = sw->current_vertical_subpass * h_passes;
@@ -3193,8 +3193,8 @@ escp2_write_weave(void *        vsw,
       lineoffs[i] = get_lineoffsets(sw, sw->lineno, cpass + i);
       lineactives[i] = get_lineactive(sw, sw->lineno, cpass + i);
       bufs[i] = get_linebases(sw, sw->lineno, cpass + i);
-    }    
-  
+    }
+
   for (j = 0; j < sw->ncolors; j++)
     {
       if (cols[j])
