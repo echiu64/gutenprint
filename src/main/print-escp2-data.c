@@ -1993,6 +1993,59 @@ static const res_t pro_reslist[] =
 
 #define INCH(x)		(72 * x)
 
+static const escp2_inkname_t cmy_ink_types[] =
+{
+  { "RGB",          N_ ("Three Color Composite"),	 0, 4 }
+};
+
+static const inklist_t cmy_inklist =
+{
+  sizeof(cmy_ink_types) / sizeof(escp2_inkname_t),
+  cmy_ink_types
+};
+
+static const escp2_inkname_t standard_ink_types[] =
+{
+  { "CMYK",         N_ ("Four Color Standard"),		 1, 4 },
+  { "RGB",          N_ ("Three Color Composite"),	 0, 4 }
+};
+
+static const inklist_t standard_inklist =
+{
+  sizeof(standard_ink_types) / sizeof(escp2_inkname_t),
+  standard_ink_types
+};
+
+static const escp2_inkname_t photo_ink_types[] =
+{
+  { "PhotoCMYK",    N_ ("Six Color Photo"),		 1, 6 },
+  { "PhotoCMY",     N_ ("Five Color Photo Composite"),   0, 6 },
+  { "CMYK",         N_ ("Four Color Standard"),		 1, 4 },
+  { "RGB",          N_ ("Three Color Composite"),	 0, 4 }
+};
+
+static const inklist_t photo_inklist =
+{
+  sizeof(photo_ink_types) / sizeof(escp2_inkname_t),
+  photo_ink_types
+};
+
+static const escp2_inkname_t photo7_ink_types[] =
+{
+  { "Photo7",       N_ ("Seven Color Enhanced"),	 1, 7 },
+  { "PhotoEnhance", N_ ("Six Color Enhanced Composite"), 0, 7 },
+  { "PhotoCMYK",    N_ ("Six Color Photo"),		 1, 6 },
+  { "PhotoCMY",     N_ ("Five Color Photo Composite"),   0, 6 },
+  { "CMYK",         N_ ("Four Color Standard"),		 1, 4 },
+  { "RGB",          N_ ("Three Color Composite"),	 0, 4 }
+};
+
+static const inklist_t photo7_inklist =
+{
+  sizeof(photo7_ink_types) / sizeof(escp2_inkname_t),
+  photo7_ink_types
+};
+
 const escp2_stp_printer_t stp_escp2_model_capabilities[] =
 {
   /* FIRST GENERATION PRINTERS */
@@ -2011,7 +2064,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     g1_dotsizes, g1_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 1: Stylus Color 400/500 */
   {
@@ -2028,7 +2081,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     g2_dotsizes, g1_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 2: Stylus Color 1500 */
   {
@@ -2045,7 +2098,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     g1_dotsizes, sc1500_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &cmy_inklist
   },
   /* 3: Stylus Color 600 */
   {
@@ -2062,7 +2115,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     sc600_dotsizes, g3_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 4: Stylus Color 800 */
   {
@@ -2079,7 +2132,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 4, 0, default_head_offset, 0, 0,
     g3_dotsizes, g3_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 5: Stylus Color 850 */
   {
@@ -2096,7 +2149,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 4, 0, default_head_offset, 0, 0,
     g3_dotsizes, g3_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 6: Stylus Color 1520 */
   {
@@ -2113,7 +2166,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 4, 0, default_head_offset, 0, 0,
     g3_dotsizes, g3_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
 
   /* SECOND GENERATION PRINTERS */
@@ -2132,7 +2185,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     photo_dotsizes, g3_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &photo_inklist
   },
   /* 8: Stylus Photo EX */
   {
@@ -2149,7 +2202,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     photo_dotsizes, g3_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &photo_inklist
   },
   /* 9: Stylus Photo */
   {
@@ -2166,7 +2219,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     photo_dotsizes, g3_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &photo_inklist
   },
 
   /* THIRD GENERATION PRINTERS */
@@ -2185,7 +2238,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     sc440_dotsizes, sc440_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 11: Stylus Color 640 */
   {
@@ -2202,7 +2255,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     sc640_dotsizes, sc440_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 12: Stylus Color 740 */
   {
@@ -2219,7 +2272,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     c6pl_dotsizes, c6pl_densities, &variable_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 13: Stylus Color 900 */
   {
@@ -2236,7 +2289,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     c3pl_dotsizes, c3pl_densities, &variable_3pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 14: Stylus Photo 750 */
   {
@@ -2253,7 +2306,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     c6pl_dotsizes, c6pl_densities, &variable_6pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &photo_inklist
   },
   /* 15: Stylus Photo 1200 */
   {
@@ -2270,7 +2323,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     c6pl_dotsizes, c6pl_densities, &variable_6pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &photo_inklist
   },
   /* 16: Stylus Color 860 */
   {
@@ -2287,7 +2340,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 17: Stylus Color 1160 */
   {
@@ -2304,7 +2357,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 18: Stylus Color 660 */
   {
@@ -2321,7 +2374,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 8, 0, default_head_offset, 0, 0,
     sc660_dotsizes,sc660_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 19: Stylus Color 760 */
   {
@@ -2338,7 +2391,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 20: Stylus Photo 720 (Australia) */
   {
@@ -2355,7 +2408,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     sc720_dotsizes, c6pl_densities, &variable_6pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &photo_inklist
   },
   /* 21: Stylus Color 480 */
   {
@@ -2372,7 +2425,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, x80_head_offset, -99, 0,
     sc480_dotsizes, sc480_densities, &variable_x80_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 22: Stylus Photo 870 */
   {
@@ -2389,7 +2442,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 97, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &photo_inklist
   },
   /* 23: Stylus Photo 1270 */
   {
@@ -2406,7 +2459,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 97, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &photo_inklist
   },
   /* 24: Stylus Color 3000 */
   {
@@ -2423,7 +2476,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 4, 0, default_head_offset, 0, 0,
     g3_dotsizes, g3_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 25: Stylus Color 670 */
   {
@@ -2440,7 +2493,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     sc670_dotsizes, c6pl_densities, &variable_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 26: Stylus Photo 2000P */
   {
@@ -2457,7 +2510,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     sp2000_dotsizes, sp2000_densities, &variable_pigment_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &photo_inklist
   },
   /* 27: Stylus Pro 5000 */
   {
@@ -2474,7 +2527,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, pro_reslist
+    &standard_paper_list, pro_reslist, &photo_inklist
   },
   /* 28: Stylus Pro 7000 */
   {
@@ -2491,7 +2544,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, pro_reslist
+    &standard_paper_list, pro_reslist, &photo_inklist
   },
   /* 29: Stylus Pro 7500 */
   {
@@ -2508,7 +2561,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, pro_reslist
+    &standard_paper_list, pro_reslist, &photo_inklist
   },
   /* 30: Stylus Pro 9000 */
   {
@@ -2525,7 +2578,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, pro_reslist
+    &standard_paper_list, pro_reslist, &photo_inklist
   },
   /* 31: Stylus Pro 9500 */
   {
@@ -2542,7 +2595,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, pro_reslist
+    &standard_paper_list, pro_reslist, &photo_inklist
   },
   /* 32: Stylus Color 777/680 */
   {
@@ -2559,7 +2612,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_dotsizes, sc680_densities, &variable_680_4pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 33: Stylus Color 880/83/C60 */
   {
@@ -2576,7 +2629,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 34: Stylus Color 980 */
   {
@@ -2593,7 +2646,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     192, 1, 0, 0, default_head_offset, 0, 0,
     c3pl_dotsizes, sc980_densities, &variable_3pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 35: Stylus Photo 780/790/785/810/820 */
   {
@@ -2610,7 +2663,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 55, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &sp780_paper_list, standard_reslist
+    &sp780_paper_list, standard_reslist, &photo_inklist
   },
   /* 36: Stylus Photo 890/895 */
   {
@@ -2627,7 +2680,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 55, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &photo_inklist
   },
   /* 37: Stylus Photo 1280/1290 */
   {
@@ -2644,7 +2697,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 55, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &photo_inklist
   },
   /* 38: Stylus Color 580 */
   {
@@ -2661,7 +2714,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, x80_head_offset, -99, 0,
     sc480_dotsizes, sc480_densities, &variable_x80_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 39: Stylus Color Pro XL */
   {
@@ -2678,7 +2731,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     g1_dotsizes, g1_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 40: Stylus Pro 5500 */
   {
@@ -2695,7 +2748,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, pro_reslist
+    &standard_paper_list, pro_reslist, &photo_inklist
   },
   /* 41: Stylus Pro 10000 */
   {
@@ -2712,7 +2765,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro10000_dotsizes, spro10000_densities, &spro10000_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, pro_reslist
+    &standard_paper_list, pro_reslist, &photo_inklist
   },
   /* 42: Stylus C20SX/C20UX */
   {
@@ -2729,7 +2782,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, x80_head_offset, -99, 0,
     sc480_dotsizes, sc480_densities, &variable_x80_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 43: Stylus C40SX/C40UX */
   {
@@ -2746,7 +2799,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, x80_head_offset, -99, 0,
     sc480_dotsizes, sc480_densities, &variable_x80_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
   /* 44: Stylus C80 */
   {
@@ -2763,7 +2816,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, c80_head_offset, -240, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, &variable_3pl_pigment_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &c80_paper_list, standard_reslist
+    &c80_paper_list, standard_reslist, &standard_inklist
   },
   /* 45: Stylus Color Pro */
   {
@@ -2780,6 +2833,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, default_head_offset, 0, 0,
     g1_dotsizes, g1_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist
+    &standard_paper_list, standard_reslist, &standard_inklist
   },
 };

@@ -252,6 +252,20 @@ typedef struct
   int resid;
 } res_t;
 
+typedef struct
+{
+  const char *name;
+  const char *text;
+  int hasblack;
+  int ncolors;
+} escp2_inkname_t;
+
+typedef struct
+{
+  int n_inks;
+  const escp2_inkname_t *inknames;
+} inklist_t;
+
 typedef struct escp2_printer
 {
   model_cap_t	flags;		/* Bitmask of flags, see below */
@@ -335,8 +349,10 @@ typedef struct escp2_printer
   const double *lum_adjustment;
   const double *hue_adjustment;
   const double *sat_adjustment;
+/*****************************************************************************/
   const paperlist_t *paperlist;
   const res_t *reslist;
+  const inklist_t *inklist;
 } escp2_stp_printer_t;
 
 extern const escp2_stp_printer_t stp_escp2_model_capabilities[];

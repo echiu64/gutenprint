@@ -158,26 +158,6 @@ typedef struct
   int printed_something;
 } escp2_privdata_t;
 
-typedef struct
-{
-  const char *name;
-  const char *text;
-  int hasblack;
-  int ncolors;
-} escp2_inkname_t;
-
-static const escp2_inkname_t ink_types[] =
-{
-  { "Photo7",       N_ ("Seven Color Enhanced"),	 1, 7 },
-  { "PhotoEnhance", N_ ("Six Color Enhanced Composite"), 0, 7 },
-  { "PhotoCMYK",    N_ ("Six Color Photo"),		 1, 6 },
-  { "PhotoCMY",     N_ ("Five Color Photo Composite"),   0, 6 },
-  { "CMYK",         N_ ("Four Color Standard"),		 1, 4 },
-  { "RGB",          N_ ("Three Color Composite"),	 0, 4 }
-};
-
-static const int escp2_ninktypes = sizeof(ink_types) / sizeof(escp2_inkname_t);
-
 typedef struct escp2_init
 {
   int model;
@@ -271,6 +251,7 @@ DEF_SIMPLE_ACCESSOR(max_black_resolution, int)
 DEF_SIMPLE_ACCESSOR(zero_margin_offset, int)
 DEF_SIMPLE_ACCESSOR(paperlist, const paperlist_t *)
 DEF_SIMPLE_ACCESSOR(reslist, const res_t *)
+DEF_SIMPLE_ACCESSOR(inklist, const inklist_t *)
 
 DEF_MICROWEAVE_ACCESSOR(left_margin, unsigned)
 DEF_MICROWEAVE_ACCESSOR(right_margin, unsigned)
@@ -464,21 +445,13 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
   }
   else if (strcmp(name, "InkType") == 0)
   {
-    valptrs = stp_malloc(sizeof(stp_param_t) * escp2_ninktypes);
+    const inklist_t *inks = escp2_inklist(model, v);
+    valptrs = stp_malloc(sizeof(stp_param_t) * inks->n_inks);
     *count = 0;
-    for (i = 0; i < escp2_ninktypes; i++)
+    for (i = 0; i < inks->n_inks; i++)
     {
-      if (ink_types[i].hasblack &&
-	  (escp2_has_cap(model, MODEL_HASBLACK, MODEL_HASBLACK_NO, v)))
-	continue;
-      if ((ink_types[i].ncolors > 4) &&
-	  (escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_4, v)))
-	continue;
-      if (ink_types[i].ncolors == 7 &&
-	  !(escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_7, v)))
-	continue;
-      valptrs[*count].name = c_strdup(ink_types[i].name);
-      valptrs[*count].text = c_strdup(_(ink_types[i].text));
+      valptrs[*count].name = c_strdup(inks->inknames[i].name);
+      valptrs[*count].text = c_strdup(_(inks->inknames[i].text));
       (*count)++;
     }
     return valptrs;
@@ -630,20 +603,8 @@ escp2_default_parameters(const stp_printer_t printer,
     }
   else if (strcmp(name, "InkType") == 0)
     {
-      for (i = 0; i < escp2_ninktypes; i++)
-	{
-	  if (ink_types[i].hasblack &&
-	      (escp2_has_cap(model, MODEL_HASBLACK, MODEL_HASBLACK_NO, v)))
-	    continue;
-	  if ((ink_types[i].ncolors > 4) &&
-	      (escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_4, v)))
-	    continue;
-	  if (ink_types[i].ncolors == 7 &&
-	      !(escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_7, v)))
-	    continue;
-	  return ink_types[i].name;
-	}
-      return NULL;
+      const inklist_t *inks = escp2_inklist(model, v);
+      return inks->inknames[0].name;
     }
   else if (strcmp(name, "MediaType") == 0)
     {
@@ -1092,6 +1053,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   int drop_size;
   int min_nozzles;
   stp_dither_data_t *dt;
+  const inklist_t *ink_names;
 
   if (!stp_get_verified(nv))
     {
@@ -1107,27 +1069,29 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   separation_rows = escp2_separation_rows(model, nv);
   max_vres = escp2_max_vres(model, nv);
 
+  ink_names = escp2_inklist(model, nv);
+
   if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
     ncolors = 1;
   else
-    for (i = 0; i < escp2_ninktypes; i++)
+    for (i = 0; i < ink_names->n_inks; i++)
       {
-	if (strcmp(ink_type, ink_types[i].name) == 0)
+	if (strcmp(ink_type, ink_names->inknames[i].name) == 0)
 	  {
-	    hasblack = ink_types[i].hasblack;
-	    ncolors = ink_types[i].ncolors;
+	    hasblack = ink_names->inknames[i].hasblack;
+	    ncolors = ink_names->inknames[i].ncolors;
 	    break;
 	  }
       }
   if (ncolors == 0)
     {
       ink_type = escp2_default_parameters(printer, NULL, "InkType");
-      for (i = 0; i < escp2_ninktypes; i++)
+      for (i = 0; i < ink_names->n_inks; i++)
 	{
-	  if (strcmp(ink_type, ink_types[i].name) == 0)
+	  if (strcmp(ink_type, ink_names->inknames[i].name) == 0)
 	    {
-	      hasblack = ink_types[i].hasblack;
-	      ncolors = ink_types[i].ncolors;
+	      hasblack = ink_names->inknames[i].hasblack;
+	      ncolors = ink_names->inknames[i].ncolors;
 	      break;
 	    }
 	}
