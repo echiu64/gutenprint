@@ -270,15 +270,15 @@ static unsigned short quic1[] = {
 };
 #endif
 
-static unsigned int quic2[] = {
+static unsigned short quic2[] = {
 #include "quickmatrix257.h"
 };
 
-static unsigned int rect2x1[] = {
+static unsigned short rect2x1[] = {
 #include "ran.367.179.h"
 };
 
-static unsigned int rect4x1[] = {
+static unsigned short rect4x1[] = {
 #include "ran.509.131.h"
 };
 
@@ -362,7 +362,6 @@ init_matrix(dither_matrix_t *mat, int x_size, int y_size,
   mat->i_own = 1;
 }
 
-#if 0
 static void
 init_matrix_short(dither_matrix_t *mat, int x_size, int y_size,
 		  unsigned short *array, int transpose)
@@ -390,7 +389,6 @@ init_matrix_short(dither_matrix_t *mat, int x_size, int y_size,
   mat->index = 0;
   mat->i_own = 1;
 }
-#endif
 
 static void
 destroy_matrix(dither_matrix_t *mat)
@@ -563,15 +561,15 @@ init_dither(int in_width, int out_width, int horizontal_aspect,
   else
     {
       if (d->y_aspect / d->x_aspect == 2)
-	init_matrix(&(d->mat6), 367, 179, rect2x1, 0);
+	init_matrix_short(&(d->mat6), 367, 179, rect2x1, 0);
       else if (d->y_aspect / d->x_aspect == 2)
-	init_matrix(&(d->mat6), 509, 131, rect4x1, 0);
+	init_matrix_short(&(d->mat6), 509, 131, rect4x1, 0);
       else if (d->x_aspect / d->y_aspect == 2)
-	init_matrix(&(d->mat6), 179, 367, rect2x1, 1);
+	init_matrix_short(&(d->mat6), 179, 367, rect2x1, 1);
       else if (d->x_aspect / d->y_aspect == 4)
-	init_matrix(&(d->mat6), 131, 509, rect4x1, 1);
+	init_matrix_short(&(d->mat6), 131, 509, rect4x1, 1);
       else
-	init_matrix(&(d->mat6), 257, 257, quic2, 0);
+	init_matrix_short(&(d->mat6), 257, 257, quic2, 0);
     }
 
   x_3 = d->mat6.x_size / 3;
