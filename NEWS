@@ -37,25 +37,29 @@ Gimp-Print 4.1.99a2 contains the following changes over 4.1.99a1:
    procedure, and results in a smaller GhostScript binary when lined
    dynamically.
 
-7) Some improvements for the Canon BJC-7000.
+7) The Foomatic data has been updated for the current state of the
+   driver.  In addition, there are some improvements in the data
+   generation process to make it more general.
 
-8) Preliminary support for the Epson Stylus Pro 10000.  This printer
+8) Some improvements for the Canon BJC-7000.
+
+9) Preliminary support for the Epson Stylus Pro 10000.  This printer
    is definitely *not* tuned!
 
-9) Explicit support for the Epson Stylus Photo 875, 785, and 895
+10) Explicit support for the Epson Stylus Photo 875, 785, and 895
    (which are variants on the 870, 890, and 890 respectively).  No
    driver-level changes are required for these printers, but there has
    been some confusion due to the fact that these printers were not
    listed explicitly.
 
-10) The GIMP plugin has buttons to permit centering horizontally or
+11) The GIMP plugin has buttons to permit centering horizontally or
    vertically on the page, in addition to the existing button to
    center the image both horizontally and vertically.
 
-11) A number of the controls in the GIMP plugin have been
+12) A number of the controls in the GIMP plugin have been
    reorganized.
 
-12) Holding down the shift key while dragging the mouse in the preview
+13) Holding down the shift key while dragging the mouse in the preview
    window constrains the image to moving horizontally or vertically
    only on the page.
 
