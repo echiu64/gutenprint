@@ -106,11 +106,8 @@ stp_string_list_duplicate_params(const stp_param_string_t *list, size_t count)
 {
   size_t i = 0;
   stp_string_list_t retval = stp_string_list_allocate();
-  while (i < count)
-    {
-      stp_string_list_add_param(retval, list[i].name, list[i].text);
-      i++;
-    }
+  for (i = 0; i < count; i++)
+    stp_string_list_add_param(retval, list[i].name, list[i].text);
   return retval;
 }
 
