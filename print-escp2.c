@@ -1130,7 +1130,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   if (!strcmp(media_type, "Glossy Film"))
     use_glossy_film = 1;
   if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES) &&
-      strcmp(ink_type, "Six Color Photo") != 0 &&
+      strcmp(ink_type, "Four Color Standard") != 0 &&
       nv.image_type != IMAGE_MONOCHROME)
     use_6color = 1;
 
