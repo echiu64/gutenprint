@@ -1885,6 +1885,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
 	    stp_image_t *image,		/* I - Image to print */
 	    const stp_vars_t v)
 {
+  int i;
   const unsigned char *cmap = stp_get_cmap(v);
   int		model = stp_printer_get_model(printer);
   const char	*resolution = stp_get_resolution(v);
@@ -2201,7 +2202,8 @@ canon_print(const stp_printer_t printer,		/* I - Model */
   else
     dither = stp_init_dither(image_width, out_width, ydpi / xdpi, 1, nv);
 
-  stp_dither_set_black_levels(dither, 1.0, 1.0, 1.0);
+  for (i = 0; i <= NCOLORS; i++)
+    stp_dither_set_black_level(dither, i, 1.0);
 
   if (use_6color)
     k_lower = .4 / bits + .1;

@@ -148,6 +148,24 @@ typedef struct dither_matrix
   unsigned *matrix;
 } dither_matrix_t;
 
+typedef struct dither_channel
+{
+  unsigned randomizer;		/* With Floyd-Steinberg dithering, control */
+				/* how much randomness is applied to the */
+				/* threshold values (0-65535).  With ordered */
+				/* dithering, how much randomness is added */
+				/* to the matrix value. */
+  int k_level;			/* Amount of each ink (in 64ths) required */
+				/* to create equivalent black */
+  int darkness;			/* Perceived "darkness" of each ink, */
+				/* in 64ths, to calculate CMY-K transitions */
+  dither_color_t dither;
+  int *errs[ERROR_ROWS];
+  unsigned short *vals;
+  dither_matrix_t pick;
+  dither_matrix_t dithermat;
+} dither_channel_t;
+
 typedef struct dither
 {
   int src_width;		/* Input width */
@@ -167,20 +185,6 @@ typedef struct dither
 				/* between 12 (very broad distribution) and */
 				/* 19 (very narrow) */
 
-  unsigned randomizer[NCOLORS]; /* With Floyd-Steinberg dithering, control */
-				/* how much randomness is applied to the */
-				/* threshold values (0-65535).  With ordered */
-				/* dithering, how much randomness is added */
-				/* to the matrix value. */
-
-  int k_clevel;			/* Amount of each ink (in 64ths) required */
-  int k_mlevel;			/* to create equivalent black */
-  int k_ylevel;
-
-  int c_darkness;		/* Perceived "darkness" of each ink, */
-  int m_darkness;		/* in 64ths, to calculate CMY-K transitions */
-  int y_darkness;
-
   int dither_type;
 
   int d_cutoff;			/* When ordered dither is used, threshold */
@@ -194,10 +198,6 @@ typedef struct dither
 
   double transition;		/* Exponential scaling for transition region */
 
-  dither_color_t dither[NCOLORS];
-
-  int *errs[ERROR_ROWS][NCOLORS];
-  unsigned short *vals[NCOLORS];
   int *offset0_table;
   int *offset1_table;
 
@@ -212,9 +212,8 @@ typedef struct dither
   /* eventually needs to be cleaned up. */
   dither_matrix_t mat6;
   dither_matrix_t mat7;
+  dither_channel_t channel[NCOLORS];
 
-  dither_matrix_t pick[NCOLORS];
-  dither_matrix_t dithermat[NCOLORS];
   unsigned short virtual_dot_scale[65536];
 } dither_t;
 
@@ -644,9 +643,14 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
   stp_dither_set_ink_spread(d, 13);
   stp_dither_set_black_lower(d, .4);
   stp_dither_set_black_upper(d, .7);
-  stp_dither_set_black_levels(d, 1.0, 1.0, 1.0);
-  stp_dither_set_randomizers(d, 1.0, 1.0, 1.0, 1.0);
-  stp_dither_set_ink_darkness(d, .4, .3, .2);
+  for (i = 0; i <= NCOLORS; i++)
+    {
+      stp_dither_set_black_level(d, i, 1.0);
+      stp_dither_set_randomizer(d, i, 1.0);
+    }
+  stp_dither_set_ink_darkness(d, ECOLOR_C, .4);
+  stp_dither_set_ink_darkness(d, ECOLOR_M, .3);
+  stp_dither_set_ink_darkness(d, ECOLOR_Y, .2);
   stp_dither_set_density(d, 1.0);
   if (stp_get_image_type(v) == IMAGE_MONOCHROME)
     d->dither_class = DITHER_MONOCHROME;
@@ -658,10 +662,10 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
     d->dither_class = DITHER_CMYK;
   for (i = 0; i < NCOLORS; i++)
     {
-      d->dither[i].first_bit_light = -1;
-      d->dither[i].first_bit_dark = -1;
-      d->dither[i].last_bit_light = -1;
-      d->dither[i].last_bit_dark = -1;
+      d->channel[i].dither.first_bit_light = -1;
+      d->channel[i].dither.first_bit_dark = -1;
+      d->channel[i].dither.last_bit_light = -1;
+      d->channel[i].dither.last_bit_dark = -1;
     }
   return d;
 }
@@ -671,7 +675,7 @@ preinit_matrix(dither_t *d)
 {
   int i;
   for (i = 0; i < NCOLORS; i++)
-    destroy_matrix(&(d->dithermat[i]));
+    destroy_matrix(&(d->channel[i].dithermat));
   destroy_matrix(&(d->mat6));
 }
 
@@ -683,10 +687,10 @@ postinit_matrix(dither_t *d, int x_shear, int y_shear)
     shear_matrix(&(d->mat6), x_shear, y_shear);
   x_3 = d->mat6.x_size / 3;
   y_3 = d->mat6.y_size / 3;
-  clone_matrix(&(d->mat6), &(d->dithermat[ECOLOR_C]), 2 * x_3, y_3);
-  clone_matrix(&(d->mat6), &(d->dithermat[ECOLOR_M]), x_3, 2 * y_3);
-  clone_matrix(&(d->mat6), &(d->dithermat[ECOLOR_Y]), 0, y_3);
-  clone_matrix(&(d->mat6), &(d->dithermat[ECOLOR_K]), 0, 0);
+  clone_matrix(&(d->mat6), &(d->channel[ECOLOR_C].dithermat), 2 * x_3, y_3);
+  clone_matrix(&(d->mat6), &(d->channel[ECOLOR_M].dithermat), x_3, 2 * y_3);
+  clone_matrix(&(d->mat6), &(d->channel[ECOLOR_Y].dithermat), 0, y_3);
+  clone_matrix(&(d->mat6), &(d->channel[ECOLOR_K].dithermat), 0, 0);
   stp_dither_set_transition(d, d->transition);
 }
 
@@ -731,7 +735,7 @@ stp_dither_set_transition(void *vd, double exponent)
   int x_3 = d->mat6.x_size / 3;
   int y_3 = d->mat6.y_size / 3;
   for (i = 0; i < NCOLORS; i++)
-    destroy_matrix(&(d->pick[i]));
+    destroy_matrix(&(d->channel[i].pick));
   destroy_matrix(&(d->mat7));
   copy_matrix(&(d->mat6), &(d->mat7));
   d->transition = exponent;
@@ -739,17 +743,17 @@ stp_dither_set_transition(void *vd, double exponent)
     exponential_scale_matrix(&(d->mat7), exponent);
   if (d->dither_type & D_ORDERED_BASE)
     {
-      clone_matrix(&(d->mat7), &(d->pick[ECOLOR_C]), 2 * x_3, y_3);
-      clone_matrix(&(d->mat7), &(d->pick[ECOLOR_M]), x_3, 2 * y_3);
-      clone_matrix(&(d->mat7), &(d->pick[ECOLOR_Y]), 0, y_3);
-      clone_matrix(&(d->mat7), &(d->pick[ECOLOR_K]), 0, 0);
+      clone_matrix(&(d->mat7), &(d->channel[ECOLOR_C].pick), 2 * x_3, y_3);
+      clone_matrix(&(d->mat7), &(d->channel[ECOLOR_M].pick), x_3, 2 * y_3);
+      clone_matrix(&(d->mat7), &(d->channel[ECOLOR_Y].pick), 0, y_3);
+      clone_matrix(&(d->mat7), &(d->channel[ECOLOR_K].pick), 0, 0);
     }
   else
     {
-      clone_matrix(&(d->mat7), &(d->pick[ECOLOR_C]), x_3, 0);
-      clone_matrix(&(d->mat7), &(d->pick[ECOLOR_M]), 0, 2 * y_3);
-      clone_matrix(&(d->mat7), &(d->pick[ECOLOR_Y]), 2 * x_3, 0);
-      clone_matrix(&(d->mat7), &(d->pick[ECOLOR_K]), x_3, 2 * y_3);
+      clone_matrix(&(d->mat7), &(d->channel[ECOLOR_C].pick), x_3, 0);
+      clone_matrix(&(d->mat7), &(d->channel[ECOLOR_M].pick), 0, 2 * y_3);
+      clone_matrix(&(d->mat7), &(d->channel[ECOLOR_Y].pick), 2 * x_3, 0);
+      clone_matrix(&(d->mat7), &(d->channel[ECOLOR_K].pick), x_3, 2 * y_3);
     }
   if (exponent < .999 || exponent > 1.001)
     for (i = 0; i < 65536; i++)
@@ -873,66 +877,53 @@ stp_dither_set_ink_spread(void *vd, int spread)
 }
 
 void
-stp_dither_set_black_levels(void *vd, double c, double m, double y)
+stp_dither_set_black_level(void *vd, int i, double v)
 {
   dither_t *d = (dither_t *) vd;
-  d->k_clevel = (int) (c * 64);
-  d->k_mlevel = (int) (m * 64);
-  d->k_ylevel = (int) (y * 64);
+  if (i < 0 || i >= NCOLORS)
+    return;
+  d->channel[i].k_level = (int) v * 64;
 }
 
 void
-stp_dither_set_randomizers(void *vd, double c, double m, double y, double k)
+stp_dither_set_randomizer(void *vd, int i, double v)
 {
   dither_t *d = (dither_t *) vd;
-  d->randomizer[ECOLOR_C] = c * 65535;
-  d->randomizer[ECOLOR_M] = m * 65535;
-  d->randomizer[ECOLOR_Y] = y * 65535;
-  d->randomizer[ECOLOR_K] = k * 65535;
+  if (i < 0 || i >= NCOLORS)
+    return;
+  d->channel[i].randomizer = v * 65535;
 }
 
 void
-stp_dither_set_ink_darkness(void *vd, double c, double m, double y)
+stp_dither_set_ink_darkness(void *vd, int i, double v)
 {
   dither_t *d = (dither_t *) vd;
-  d->c_darkness = (int) (c * 64);
-  d->m_darkness = (int) (m * 64);
-  d->y_darkness = (int) (y * 64);
+  if (i < 0 || i >= NCOLORS)
+    return;
+  d->channel[i].darkness = (int) (v * 64);
 }
 
 void
-stp_dither_set_light_inks(void *vd, double c, double m, double y, double density)
+stp_dither_set_light_ink(void *vd, int i, double v, double density)
 {
   stp_simple_dither_range_t range[2];
+  if (i < 0 || i >= NCOLORS || v <= 0 || v > 1)
+    return;
   range[0].bit_pattern = 1;
   range[0].is_dark = 0;
   range[1].value = 1;
   range[1].bit_pattern = 1;
   range[1].is_dark = 1;
   range[1].dot_size = 1;
-  if (c > 0)
-    {
-      range[0].value = c;
-      range[0].dot_size = 1;
-      stp_dither_set_ranges(vd, ECOLOR_C, 2, range, density);
-    }
-  if (m > 0)
-    {
-      range[0].value = m;
-      range[0].dot_size = 1;
-      stp_dither_set_ranges(vd, ECOLOR_M, 2, range, density);
-    }
-  if (y > 0)
-    {
-      range[0].value = y;
-      range[0].dot_size = 1;
-      stp_dither_set_ranges(vd, ECOLOR_Y, 2, range, density);
-    }
+  range[0].value = v;
+  range[0].dot_size = 1;
+  stp_dither_set_ranges(vd, i, 2, range, density);
 }
 
 static void
 stp_dither_set_generic_ranges(dither_color_t *s, int nlevels,
-			  const stp_simple_dither_range_t *ranges, double density)
+			      const stp_simple_dither_range_t *ranges,
+			      double density)
 {
   int i;
   unsigned lbit;
@@ -1120,7 +1111,7 @@ stp_dither_set_ranges(void *vd, int color, int nlevels,
   dither_t *d = (dither_t *) vd;
   if (color < 0 || color >= NCOLORS)
     return;
-  stp_dither_set_generic_ranges(&(d->dither[color]), nlevels, ranges, density);
+  stp_dither_set_generic_ranges(&(d->channel[color].dither), nlevels, ranges, density);
 }
 
 void
@@ -1145,7 +1136,7 @@ stp_dither_set_ranges_full(void *vd, int color, int nlevels,
 		       const stp_full_dither_range_t *ranges, double density)
 {
   dither_t *d = (dither_t *) vd;
-  stp_dither_set_generic_ranges_full(&(d->dither[color]), nlevels, ranges, density,
+  stp_dither_set_generic_ranges_full(&(d->channel[color].dither), nlevels, ranges, density,
 				 d->ink_limit);
 }
 
@@ -1157,23 +1148,23 @@ stp_free_dither(void *vd)
   int j;
   for (j = 0; j < NCOLORS; j++)
     {
-      if (d->vals[j])
+      if (d->channel[j].vals)
 	{
-	  free(d->vals[j]);
-	  d->vals[j] = NULL;
+	  free(d->channel[j].vals);
+	  d->channel[j].vals = NULL;
 	}
       for (i = 0; i < ERROR_ROWS; i++)
 	{
-	  if (d->errs[i][j])
+	  if (d->channel[j].errs[i])
 	    {
-	      free(d->errs[i][j]);
-	      d->errs[i][j] = NULL;
+	      free(d->channel[j].errs[i]);
+	      d->channel[j].errs[i] = NULL;
 	    }
 	}
-      free(d->dither[i].ranges);
-      d->dither[i].ranges = NULL;
-      destroy_matrix(&(d->pick[i]));
-      destroy_matrix(&(d->dithermat[i]));
+      free(d->channel[i].dither.ranges);
+      d->channel[i].dither.ranges = NULL;
+      destroy_matrix(&(d->channel[i].pick));
+      destroy_matrix(&(d->channel[i].dithermat));
     }
   if (d->offset0_table)
     {
@@ -1197,9 +1188,9 @@ stp_dither_get_first_bit(void *vd, int color, int is_dark)
   if (color < 0 || color >= NCOLORS)
     return -1;
   if (is_dark)
-    return d->dither[color].first_bit_dark;
+    return d->channel[color].dither.first_bit_dark;
   else
-    return d->dither[color].first_bit_light;
+    return d->channel[color].dither.first_bit_light;
 }
 
 int
@@ -1209,9 +1200,9 @@ stp_dither_get_last_bit(void *vd, int color, int is_dark)
   if (color < 0 || color >= NCOLORS)
     return -1;
   if (is_dark)
-    return d->dither[color].last_bit_dark;
+    return d->channel[color].dither.last_bit_dark;
   else
-    return d->dither[color].last_bit_light;
+    return d->channel[color].dither.last_bit_light;
 }
 
 static int *
@@ -1219,14 +1210,14 @@ get_errline(dither_t *d, int row, int color)
 {
   if (row < 0 || color < 0 || color >= NCOLORS)
     return NULL;
-  if (d->errs[row & 1][color])
-    return d->errs[row & 1][color] + MAX_SPREAD;
+  if (d->channel[color].errs[row & 1])
+    return d->channel[color].errs[row & 1] + MAX_SPREAD;
   else
     {
       int size = 2 * MAX_SPREAD + (16 * ((d->dst_width + 7) / 8));
-      d->errs[row & 1][color] = stp_malloc(size * sizeof(int));
-      memset(d->errs[row & 1][color], 0, size * sizeof(int));
-      return d->errs[row & 1][color] + MAX_SPREAD;
+      d->channel[color].errs[row & 1] = stp_malloc(size * sizeof(int));
+      memset(d->channel[color].errs[row & 1], 0, size * sizeof(int));
+      return d->channel[color].errs[row & 1] + MAX_SPREAD;
     }
 }
 
@@ -1235,13 +1226,13 @@ get_valueline(dither_t *d, int color)
 {
   if (color < 0 || color >= NCOLORS)
     return NULL;
-  if (d->vals[color])
-    return d->vals[color];
+  if (d->channel[color].vals)
+    return d->channel[color].vals;
   else
     {
       int size = (8 * ((d->dst_width + 7) / 8));
-      d->vals[color] = stp_malloc(size * sizeof(unsigned short));
-      return d->vals[color];
+      d->channel[color].vals = stp_malloc(size * sizeof(unsigned short));
+      return d->channel[color].vals;
     }
 }
 
@@ -1330,12 +1321,15 @@ update_dither(int r, int o, int width, int odb, int odb_mask,
  */
 
 static inline int
-print_color(const dither_t *d, dither_color_t *rv, int base, int density,
+print_color(const dither_t *d, dither_channel_t *dc, int base, int density,
 	    int adjusted, int x, int y, unsigned char *c, unsigned char *lc,
-	    unsigned char bit, int height, unsigned randomizer, int dontprint,
-	    int *ink_budget, dither_matrix_t *pick_matrix,
-	    dither_matrix_t *dither_matrix, int dither_type)
+	    unsigned char bit, int height, int dontprint,
+	    int *ink_budget, int dither_type)
 {
+  dither_color_t *rv = &(dc->dither);
+  unsigned randomizer = dc->randomizer;
+  dither_matrix_t *pick_matrix = &(dc->pick);
+  dither_matrix_t *dither_matrix = &(dc->dithermat);
   unsigned rangepoint;
   unsigned virtual_value;
   unsigned vmatrix;
@@ -1564,11 +1558,13 @@ print_color(const dither_t *d, dither_color_t *rv, int base, int density,
 }
 
 static inline void
-print_color_fast(const dither_t *d, dither_color_t *rv, int base,
+print_color_fast(const dither_t *d, dither_channel_t *dc, int base,
 		 int adjusted, int x, int y, unsigned char *c,
 		 unsigned char *lc, unsigned char bit, int height,
-		 dither_matrix_t *dither_matrix, int very_fast)
+		 int very_fast)
 {
+  dither_color_t *rv = &(dc->dither);
+  dither_matrix_t *dither_matrix = &(dc->dithermat);
   int i;
   int levels = rv->nlevels - 1;
   int j;
@@ -1675,9 +1671,9 @@ stp_dither_monochrome(const unsigned short  *gray,
   unsigned char	bit,		/* Current bit */
 		*kptr;		/* Current black pixel */
   dither_t *d = (dither_t *) vd;
-  dither_matrix_t *kdither = &(d->dithermat[ECOLOR_K]);
-  unsigned bits = d->dither[ECOLOR_K].signif_bits;
-  dither_color_t *rv = &(d->dither[ECOLOR_K]);
+  dither_matrix_t *kdither = &(d->channel[ECOLOR_K].dithermat);
+  unsigned bits = d->channel[ECOLOR_K].dither.signif_bits;
+  dither_color_t *rv = &(d->channel[ECOLOR_K].dither);
   int j;
   unsigned char *tptr;
   int dst_width = d->dst_width;
@@ -1746,15 +1742,15 @@ stp_dither_black_fast(const unsigned short   *gray,
 		*kptr;		/* Current black pixel */
   int		k;
   dither_t *d = (dither_t *) vd;
-  dither_color_t *kd = &(d->dither[ECOLOR_K]);
-  dither_matrix_t *kdither = &(d->dithermat[ECOLOR_K]);
+  dither_channel_t *kc = &(d->channel[ECOLOR_K]);
+  dither_color_t *kd = &(kc->dither);
   int dst_width = d->dst_width;
   int dither_very_fast = 0;
   int xerror, xstep, xmod;
 
   height = (d->dst_width + 7) / 8;
 
-  memset(black, 0, height * d->dither[ECOLOR_K].signif_bits);
+  memset(black, 0, height * d->channel[ECOLOR_K].dither.signif_bits);
   if (zero_mask)
     return;
 
@@ -1766,13 +1762,12 @@ stp_dither_black_fast(const unsigned short   *gray,
   xmod   = d->src_width % d->dst_width;
   xerror = 0;
   kptr = black;
-  matrix_set_row(d, &(d->dithermat[ECOLOR_K]), row);
+  matrix_set_row(d, &(d->channel[ECOLOR_K].dithermat), row);
 
   for (x = 0; x < dst_width; x++)
     {
       k = gray[0];
-      print_color_fast(d, kd, k, k, x, row, kptr, NULL, bit, height, kdither,
-		       dither_very_fast);
+      print_color_fast(d, kc, k, k, x, row, kptr, NULL, bit, height, dither_very_fast);
 
       bit >>= 1;
       if (bit == 0)
@@ -1816,7 +1811,7 @@ stp_dither_black_ordered(const unsigned short   *gray,
 
   height = (d->dst_width + 7) / 8;
 
-  memset(black, 0, height * d->dither[ECOLOR_K].signif_bits);
+  memset(black, 0, height * d->channel[ECOLOR_K].dither.signif_bits);
   if (zero_mask)
     return;
 
@@ -1828,18 +1823,16 @@ stp_dither_black_ordered(const unsigned short   *gray,
   xerror = 0;
 
   kptr = black;
-  matrix_set_row(d, &(d->dithermat[ECOLOR_K]), row);
-  matrix_set_row(d, &(d->pick[ECOLOR_K]), row);
+  matrix_set_row(d, &(d->channel[ECOLOR_K].dithermat), row);
+  matrix_set_row(d, &(d->channel[ECOLOR_K].pick), row);
 
   for (x = 0; x < terminate; x ++)
     {
       ink_budget = d->ink_limit;
 
       k = gray[0];
-      print_color(d, &(d->dither[ECOLOR_K]), k, k, k, x, row, kptr, NULL, bit,
-		  height, d->randomizer[ECOLOR_K], 0, &ink_budget,
-		  &(d->pick[ECOLOR_K]), &(d->dithermat[ECOLOR_K]),
-		  d->dither_type);
+      print_color(d, &(d->channel[ECOLOR_K]), k, k, k, x, row, kptr, NULL, bit,
+		  height, 0, &ink_budget, d->dither_type);
       bit >>= 1;
       if (bit == 0)
 	{
@@ -1900,7 +1893,7 @@ stp_dither_black_ed(const unsigned short   *gray,
   kerror0 = get_errline(d, row, ECOLOR_K);
   kerror1 = get_errline(d, row + 1, ECOLOR_K);
 
-  memset(black, 0, height * d->dither[ECOLOR_K].signif_bits);
+  memset(black, 0, height * d->channel[ECOLOR_K].dither.signif_bits);
   if (!duplicate_line)
     {
       if (!zero_mask)
@@ -1929,8 +1922,8 @@ stp_dither_black_ed(const unsigned short   *gray,
       kerror1 += d->dst_width - 1;
       kptr = black + height - 1;
     }
-  matrix_set_row(d, &(d->dithermat[ECOLOR_K]), row);
-  matrix_set_row(d, &(d->pick[ECOLOR_K]), row);
+  matrix_set_row(d, &(d->channel[ECOLOR_K].dithermat), row);
+  matrix_set_row(d, &(d->channel[ECOLOR_K].pick), row);
 
   for (ditherk = kerror0[0];
        x != terminate;
@@ -1943,10 +1936,8 @@ stp_dither_black_ed(const unsigned short   *gray,
       k = gray[0];
       ok = k;
       k = UPDATE_COLOR(k, ditherk);
-      k = print_color(d, &(d->dither[ECOLOR_K]), ok, ok, k, x, row, kptr, NULL,
-		      bit, height, d->randomizer[ECOLOR_K], 0, &ink_budget,
-		      &(d->pick[ECOLOR_K]), &(d->dithermat[ECOLOR_K]),
-		      d->dither_type);
+      k = print_color(d, &(d->channel[ECOLOR_K]), ok, ok, k, x, row, kptr,
+		      NULL, bit, height, 0, &ink_budget, d->dither_type);
       ditherk = update_dither(k, ok, d->src_width, odb, odb_mask,
 			      direction, kerror0, kerror1, d);
 
@@ -1997,9 +1988,9 @@ stp_dither_black_ed(const unsigned short   *gray,
   if (direction == -1)
     {
       int tmp;
-      tmp = d->dither[ECOLOR_K].first_bit_dark;
-      d->dither[ECOLOR_K].first_bit_dark = d->dither[ECOLOR_K].last_bit_dark;
-      d->dither[ECOLOR_K].last_bit_dark = tmp;
+      tmp = d->channel[ECOLOR_K].dither.first_bit_dark;
+      d->channel[ECOLOR_K].dither.first_bit_dark = d->channel[ECOLOR_K].dither.last_bit_dark;
+      d->channel[ECOLOR_K].dither.last_bit_dark = tmp;
     }
 }
 
@@ -2115,24 +2106,24 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
       else
 	ok = (unsigned) k * (unsigned) ak / density;
 
-      if (d->k_clevel == 64)
+      if (d->channel[ECOLOR_C].k_level == 64)
 	c -= ok;
       else
-	c -= (ok * d->k_clevel) >> 6;
+	c -= (ok * d->channel[ECOLOR_C].k_level) >> 6;
       if (c < 0)
 	c = 0;
 
-      if (d->k_mlevel == 64)
+      if (d->channel[ECOLOR_M].k_level == 64)
 	m -= ok;
       else
-	m -= (ok * d->k_mlevel) >> 6;
+	m -= (ok * d->channel[ECOLOR_M].k_level) >> 6;
       if (m < 0)
 	m = 0;
 
-      if (d->k_ylevel == 64)
+      if (d->channel[ECOLOR_Y].k_level == 64)
 	y -= ok;
       else
-	y -= (ok * d->k_ylevel) >> 6;
+	y -= (ok * d->channel[ECOLOR_Y].k_level) >> 6;
       if (y < 0)
 	y = 0;
     }
@@ -2172,14 +2163,14 @@ stp_dither_cmyk_fast(const unsigned short  *cmy,
   dither_t	*d = (dither_t *) vd;
   int i;
 
-  dither_color_t *cd = &(d->dither[ECOLOR_C]);
-  dither_matrix_t *cdither = &(d->dithermat[ECOLOR_C]);
-  dither_color_t *md = &(d->dither[ECOLOR_M]);
-  dither_matrix_t *mdither = &(d->dithermat[ECOLOR_M]);
-  dither_color_t *yd = &(d->dither[ECOLOR_Y]);
-  dither_matrix_t *ydither = &(d->dithermat[ECOLOR_Y]);
-  dither_color_t *kd = &(d->dither[ECOLOR_K]);
-  dither_matrix_t *kdither = &(d->dithermat[ECOLOR_K]);
+  dither_channel_t *cc = &(d->channel[ECOLOR_C]);
+  dither_color_t *cd = &(cc->dither);
+  dither_channel_t *mc = &(d->channel[ECOLOR_M]);
+  dither_color_t *md = &(mc->dither);
+  dither_channel_t *yc = &(d->channel[ECOLOR_Y]);
+  dither_color_t *yd = &(yc->dither);
+  dither_channel_t *kc = &(d->channel[ECOLOR_K]);
+  dither_color_t *kd = &(kc->dither);
   int dst_width = d->dst_width;
   int cdither_very_fast = 0;
   int mdither_very_fast = 0;
@@ -2190,19 +2181,19 @@ stp_dither_cmyk_fast(const unsigned short  *cmy,
   height = (d->dst_width + 7) / 8;
 
   if (cyan)
-    memset(cyan, 0, height * d->dither[ECOLOR_C].signif_bits);
+    memset(cyan, 0, height * d->channel[ECOLOR_C].dither.signif_bits);
   if (lcyan)
-    memset(lcyan, 0, height * d->dither[ECOLOR_C].signif_bits);
+    memset(lcyan, 0, height * d->channel[ECOLOR_C].dither.signif_bits);
   if (magenta)
-    memset(magenta, 0, height * d->dither[ECOLOR_M].signif_bits);
+    memset(magenta, 0, height * d->channel[ECOLOR_M].dither.signif_bits);
   if (lmagenta)
-    memset(lmagenta, 0, height * d->dither[ECOLOR_M].signif_bits);
+    memset(lmagenta, 0, height * d->channel[ECOLOR_M].dither.signif_bits);
   if (yellow)
-    memset(yellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
+    memset(yellow, 0, height * d->channel[ECOLOR_Y].dither.signif_bits);
   if (lyellow)
-    memset(lyellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
+    memset(lyellow, 0, height * d->channel[ECOLOR_Y].dither.signif_bits);
   if (black)
-    memset(black, 0, height * d->dither[ECOLOR_K].signif_bits);
+    memset(black, 0, height * d->channel[ECOLOR_K].dither.signif_bits);
 
   if ((zero_mask & 7) == 7)
     return;
@@ -2236,7 +2227,7 @@ stp_dither_cmyk_fast(const unsigned short  *cmy,
   k = 0;			/* Shut up the compiler */
   ok = 0;
   for (i = 0; i < NCOLORS; i++)
-    matrix_set_row(d, &(d->dithermat[i]), row);
+    matrix_set_row(d, &(d->channel[i].dithermat), row);
 
   /*
    * Main loop starts here!
@@ -2282,14 +2273,14 @@ stp_dither_cmyk_fast(const unsigned short  *cmy,
 	  QUANT(15);
 
 	  if (black)
-	    print_color_fast(d, kd, ok, k, x, row, kptr, NULL, bit, height,
-			     kdither, kdither_very_fast);
-	  print_color_fast(d, cd, oc, c, x, row, cptr, lcptr, bit, height,
-			   cdither, cdither_very_fast);
-	  print_color_fast(d, md, om, m, x, row, mptr, lmptr, bit, height,
-			   mdither, mdither_very_fast);
-	  print_color_fast(d, yd, oy, y, x, row, yptr, lyptr, bit, height,
-			   ydither, ydither_very_fast);
+	    print_color_fast(d, kc, ok, k, x, row, kptr, NULL, bit, height,
+			     kdither_very_fast);
+	  print_color_fast(d, cc, oc, c, x, row, cptr, lcptr, bit, height,
+			   cdither_very_fast);
+	  print_color_fast(d, mc, om, m, x, row, mptr, lmptr, bit, height,
+			   mdither_very_fast);
+	  print_color_fast(d, yc, oy, y, x, row, yptr, lyptr, bit, height,
+			   ydither_very_fast);
 	  QUANT(16);
 	}
 
@@ -2367,19 +2358,19 @@ stp_dither_cmyk_ordered(const unsigned short  *cmy,
   height = (d->dst_width + 7) / 8;
 
   if (cyan)
-    memset(cyan, 0, height * d->dither[ECOLOR_C].signif_bits);
+    memset(cyan, 0, height * d->channel[ECOLOR_C].dither.signif_bits);
   if (lcyan)
-    memset(lcyan, 0, height * d->dither[ECOLOR_C].signif_bits);
+    memset(lcyan, 0, height * d->channel[ECOLOR_C].dither.signif_bits);
   if (magenta)
-    memset(magenta, 0, height * d->dither[ECOLOR_M].signif_bits);
+    memset(magenta, 0, height * d->channel[ECOLOR_M].dither.signif_bits);
   if (lmagenta)
-    memset(lmagenta, 0, height * d->dither[ECOLOR_M].signif_bits);
+    memset(lmagenta, 0, height * d->channel[ECOLOR_M].dither.signif_bits);
   if (yellow)
-    memset(yellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
+    memset(yellow, 0, height * d->channel[ECOLOR_Y].dither.signif_bits);
   if (lyellow)
-    memset(lyellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
+    memset(lyellow, 0, height * d->channel[ECOLOR_Y].dither.signif_bits);
   if (black)
-    memset(black, 0, height * d->dither[ECOLOR_K].signif_bits);
+    memset(black, 0, height * d->channel[ECOLOR_K].dither.signif_bits);
   /*
    * First, generate the CMYK separation.  If there's nothing in
    * this row, and we're using an ordered dither, there's no reason
@@ -2408,8 +2399,8 @@ stp_dither_cmyk_ordered(const unsigned short  *cmy,
 
   for (i = 0; i < NCOLORS; i++)
     {
-      matrix_set_row(d, &(d->dithermat[i]), row);
-      matrix_set_row(d, &(d->pick[i]), row);
+      matrix_set_row(d, &(d->channel[i].dithermat), row);
+      matrix_set_row(d, &(d->channel[i].pick), row);
     }
    QUANT(6);
   /*
@@ -2485,10 +2476,9 @@ stp_dither_cmyk_ordered(const unsigned short  *cmy,
 	  int tk;
 	  if (d->density != d->black_density)
 	    k = k * d->black_density / d->density;
-	  tk = print_color(d, &(d->dither[ECOLOR_K]), bk, bk, k, x, row,
-			       kptr, NULL, bit, height, 0, 0, &ink_budget,
-			       &(d->pick[ECOLOR_K]), &(d->dithermat[ECOLOR_K]),
-			       d->dither_type);
+	  tk = print_color(d, &(d->channel[ECOLOR_K]), bk, bk, k, x, row,
+			   kptr, NULL, bit, height, 0, &ink_budget,
+			   d->dither_type);
 	  printed_black = k - tk;
 	  k = tk;
 	}
@@ -2519,24 +2509,18 @@ stp_dither_cmyk_ordered(const unsigned short  *cmy,
       else if (first_color == ECOLOR_Y)
 	goto ecy;
     ecc:
-      print_color(d, &(d->dither[ECOLOR_C]), oc, oc, c, x, row, cptr, lcptr,
-		  bit, height, d->randomizer[ECOLOR_C], printed_black,
-		  &ink_budget, &(d->pick[ECOLOR_C]), &(d->dithermat[ECOLOR_C]),
-		  d->dither_type);
+      print_color(d, &(d->channel[ECOLOR_C]), oc, oc, c, x, row, cptr, lcptr,
+		  bit, height, printed_black, &ink_budget, d->dither_type);
       if (first_color == ECOLOR_M)
 	goto out;
     ecm:
-      print_color(d, &(d->dither[ECOLOR_M]), om, om, m, x, row, mptr, lmptr,
-		  bit, height, d->randomizer[ECOLOR_M], printed_black,
-		  &ink_budget, &(d->pick[ECOLOR_M]), &(d->dithermat[ECOLOR_M]),
-		  d->dither_type);
+      print_color(d, &(d->channel[ECOLOR_M]), om, om, m, x, row, mptr, lmptr,
+		  bit, height, printed_black, &ink_budget, d->dither_type);
       if (first_color == ECOLOR_Y)
 	goto out;
     ecy:
-      print_color(d, &(d->dither[ECOLOR_Y]), oy, oy, y, x, row, yptr, lyptr,
-		  bit, height, d->randomizer[ECOLOR_Y], printed_black,
-		  &ink_budget, &(d->pick[ECOLOR_Y]), &(d->dithermat[ECOLOR_Y]),
-		  d->dither_type);
+      print_color(d, &(d->channel[ECOLOR_Y]), oy, oy, y, x, row, yptr, lyptr,
+		  bit, height, printed_black, &ink_budget, d->dither_type);
       if (first_color != ECOLOR_C)
 	goto ecc;
     out:
@@ -2627,19 +2611,19 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
   height = (d->dst_width + 7) / 8;
 
   if (cyan)
-    memset(cyan, 0, height * d->dither[ECOLOR_C].signif_bits);
+    memset(cyan, 0, height * d->channel[ECOLOR_C].dither.signif_bits);
   if (lcyan)
-    memset(lcyan, 0, height * d->dither[ECOLOR_C].signif_bits);
+    memset(lcyan, 0, height * d->channel[ECOLOR_C].dither.signif_bits);
   if (magenta)
-    memset(magenta, 0, height * d->dither[ECOLOR_M].signif_bits);
+    memset(magenta, 0, height * d->channel[ECOLOR_M].dither.signif_bits);
   if (lmagenta)
-    memset(lmagenta, 0, height * d->dither[ECOLOR_M].signif_bits);
+    memset(lmagenta, 0, height * d->channel[ECOLOR_M].dither.signif_bits);
   if (yellow)
-    memset(yellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
+    memset(yellow, 0, height * d->channel[ECOLOR_Y].dither.signif_bits);
   if (lyellow)
-    memset(lyellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
+    memset(lyellow, 0, height * d->channel[ECOLOR_Y].dither.signif_bits);
   if (black)
-    memset(black, 0, height * d->dither[ECOLOR_K].signif_bits);
+    memset(black, 0, height * d->channel[ECOLOR_K].dither.signif_bits);
   /*
    * First, generate the CMYK separation.  If there's nothing in
    * this row, and we're using an ordered dither, there's no reason
@@ -2714,8 +2698,8 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
   for (i = 0; i < NCOLORS; i++)
     {
       ndither[i] = error[i][0][0];
-      matrix_set_row(d, &(d->dithermat[i]), row);
-      matrix_set_row(d, &(d->pick[i]), row);
+      matrix_set_row(d, &(d->channel[i].dithermat), row);
+      matrix_set_row(d, &(d->channel[i].pick), row);
     }
   QUANT(6);
   /*
@@ -2803,9 +2787,8 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
 
       if (black)
 	{
-	  int tk = print_color(d, &(d->dither[ECOLOR_K]), bk, bk, k, x, row,
-			       kptr, NULL, bit, height, 0, 0, &ink_budget,
-			       &(d->pick[ECOLOR_K]), &(d->dithermat[ECOLOR_K]),
+	  int tk = print_color(d, &(d->channel[ECOLOR_K]), bk, bk, k, x, row,
+			       kptr, NULL, bit, height, 0, &ink_budget,
 			       d->dither_type);
 	  printed_black = k - tk;
 	  k = tk;
@@ -2837,26 +2820,20 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
       else if (first_color == ECOLOR_Y)
 	goto ecy;
     ecc:
-      c = print_color(d, &(d->dither[ECOLOR_C]), oc, oc,
-		      c, x, row, cptr, lcptr, bit, height,
-		      d->randomizer[ECOLOR_C], printed_black, &ink_budget,
-		      &(d->pick[ECOLOR_C]), &(d->dithermat[ECOLOR_C]),
+      c = print_color(d, &(d->channel[ECOLOR_C]), oc, oc, c, x, row, cptr,
+		      lcptr, bit, height, printed_black, &ink_budget,
 		      d->dither_type);
       if (first_color == ECOLOR_M)
 	goto out;
     ecm:
-      m = print_color(d, &(d->dither[ECOLOR_M]), om, om,
-		      m, x, row, mptr, lmptr, bit, height,
-		      d->randomizer[ECOLOR_M], printed_black, &ink_budget,
-		      &(d->pick[ECOLOR_M]), &(d->dithermat[ECOLOR_M]),
+      m = print_color(d, &(d->channel[ECOLOR_M]), om, om, m, x, row, mptr,
+		      lmptr, bit, height, printed_black, &ink_budget,
 		      d->dither_type);
       if (first_color == ECOLOR_Y)
 	goto out;
     ecy:
-      y = print_color(d, &(d->dither[ECOLOR_Y]), oy, oy,
-		      y, x, row, yptr, lyptr, bit, height,
-		      d->randomizer[ECOLOR_Y], printed_black, &ink_budget,
-		      &(d->pick[ECOLOR_Y]), &(d->dithermat[ECOLOR_Y]),
+      y = print_color(d, &(d->channel[ECOLOR_Y]), oy, oy, y, x, row, yptr,
+		      lyptr, bit, height, printed_black, &ink_budget,
 		      d->dither_type);
       if (first_color != ECOLOR_C)
 	goto ecc;
@@ -2956,12 +2933,14 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
       for (i = 0; i < NCOLORS; i++)
 	{
 	  int tmp;
-	  tmp = d->dither[i].first_bit_dark;
-	  d->dither[i].first_bit_dark = d->dither[i].last_bit_dark;
-	  d->dither[i].last_bit_dark = tmp;
-	  tmp = d->dither[i].first_bit_light;
-	  d->dither[i].first_bit_light = d->dither[i].last_bit_light;
-	  d->dither[i].last_bit_light = tmp;
+	  tmp = d->channel[i].dither.first_bit_dark;
+	  d->channel[i].dither.first_bit_dark =
+	    d->channel[i].dither.last_bit_dark;
+	  d->channel[i].dither.last_bit_dark = tmp;
+	  tmp = d->channel[i].dither.first_bit_light;
+	  d->channel[i].dither.first_bit_light =
+	    d->channel[i].dither.last_bit_light;
+	  d->channel[i].dither.last_bit_light = tmp;
 	}
     }
 }
@@ -2993,14 +2972,14 @@ stp_dither_raw_cmyk_fast(const unsigned short  *cmyk,
   dither_t	*d = (dither_t *) vd;
   int i;
 
-  dither_color_t *cd = &(d->dither[ECOLOR_C]);
-  dither_matrix_t *cdither = &(d->dithermat[ECOLOR_C]);
-  dither_color_t *md = &(d->dither[ECOLOR_M]);
-  dither_matrix_t *mdither = &(d->dithermat[ECOLOR_M]);
-  dither_color_t *yd = &(d->dither[ECOLOR_Y]);
-  dither_matrix_t *ydither = &(d->dithermat[ECOLOR_Y]);
-  dither_color_t *kd = &(d->dither[ECOLOR_K]);
-  dither_matrix_t *kdither = &(d->dithermat[ECOLOR_K]);
+  dither_channel_t *cc = &(d->channel[ECOLOR_C]);
+  dither_color_t *cd = &(cc->dither);
+  dither_channel_t *mc = &(d->channel[ECOLOR_M]);
+  dither_color_t *md = &(mc->dither);
+  dither_channel_t *yc = &(d->channel[ECOLOR_Y]);
+  dither_color_t *yd = &(yc->dither);
+  dither_channel_t *kc = &(d->channel[ECOLOR_K]);
+  dither_color_t *kd = &(kc->dither);
   int dst_width = d->dst_width;
   int cdither_very_fast = 0;
   int mdither_very_fast = 0;
@@ -3011,19 +2990,19 @@ stp_dither_raw_cmyk_fast(const unsigned short  *cmyk,
   height = (d->dst_width + 7) / 8;
 
   if (cyan)
-    memset(cyan, 0, height * d->dither[ECOLOR_C].signif_bits);
+    memset(cyan, 0, height * d->channel[ECOLOR_C].dither.signif_bits);
   if (lcyan)
-    memset(lcyan, 0, height * d->dither[ECOLOR_C].signif_bits);
+    memset(lcyan, 0, height * d->channel[ECOLOR_C].dither.signif_bits);
   if (magenta)
-    memset(magenta, 0, height * d->dither[ECOLOR_M].signif_bits);
+    memset(magenta, 0, height * d->channel[ECOLOR_M].dither.signif_bits);
   if (lmagenta)
-    memset(lmagenta, 0, height * d->dither[ECOLOR_M].signif_bits);
+    memset(lmagenta, 0, height * d->channel[ECOLOR_M].dither.signif_bits);
   if (yellow)
-    memset(yellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
+    memset(yellow, 0, height * d->channel[ECOLOR_Y].dither.signif_bits);
   if (lyellow)
-    memset(lyellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
+    memset(lyellow, 0, height * d->channel[ECOLOR_Y].dither.signif_bits);
   if (black)
-    memset(black, 0, height * d->dither[ECOLOR_K].signif_bits);
+    memset(black, 0, height * d->channel[ECOLOR_K].dither.signif_bits);
 
   if ((zero_mask & 7) == 7)
     return;
@@ -3055,7 +3034,7 @@ stp_dither_raw_cmyk_fast(const unsigned short  *cmyk,
   kptr = black;
 
   for (i = 0; i < NCOLORS; i++)
-    matrix_set_row(d, &(d->dithermat[i]), row);
+    matrix_set_row(d, &(d->channel[i].dithermat), row);
 
   /*
    * Main loop starts here!
@@ -3083,14 +3062,14 @@ stp_dither_raw_cmyk_fast(const unsigned short  *cmyk,
       if (c > 0 || m > 0 || y > 0 || k > 0)
 	{
 	  if (black)
-	    print_color_fast(d, kd, ok, k, x, row, kptr, NULL, bit, height,
-			     kdither, kdither_very_fast);
-	  print_color_fast(d, cd, oc, c, x, row, cptr, lcptr, bit, height,
-			   cdither, cdither_very_fast);
-	  print_color_fast(d, md, om, m, x, row, mptr, lmptr, bit, height,
-			   mdither, mdither_very_fast);
-	  print_color_fast(d, yd, oy, y, x, row, yptr, lyptr, bit, height,
-			   ydither, ydither_very_fast);
+	    print_color_fast(d, kc, ok, k, x, row, kptr, NULL, bit, height,
+			     kdither_very_fast);
+	  print_color_fast(d, cc, oc, c, x, row, cptr, lcptr, bit, height,
+			   cdither_very_fast);
+	  print_color_fast(d, mc, om, m, x, row, mptr, lmptr, bit, height,
+			   mdither_very_fast);
+	  print_color_fast(d, yc, oy, y, x, row, yptr, lyptr, bit, height,
+			   ydither_very_fast);
 	  QUANT(16);
 	}
 
@@ -3164,19 +3143,19 @@ stp_dither_raw_cmyk_ordered(const unsigned short  *cmyk,
   height = (d->dst_width + 7) / 8;
 
   if (cyan)
-    memset(cyan, 0, height * d->dither[ECOLOR_C].signif_bits);
+    memset(cyan, 0, height * d->channel[ECOLOR_C].dither.signif_bits);
   if (lcyan)
-    memset(lcyan, 0, height * d->dither[ECOLOR_C].signif_bits);
+    memset(lcyan, 0, height * d->channel[ECOLOR_C].dither.signif_bits);
   if (magenta)
-    memset(magenta, 0, height * d->dither[ECOLOR_M].signif_bits);
+    memset(magenta, 0, height * d->channel[ECOLOR_M].dither.signif_bits);
   if (lmagenta)
-    memset(lmagenta, 0, height * d->dither[ECOLOR_M].signif_bits);
+    memset(lmagenta, 0, height * d->channel[ECOLOR_M].dither.signif_bits);
   if (yellow)
-    memset(yellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
+    memset(yellow, 0, height * d->channel[ECOLOR_Y].dither.signif_bits);
   if (lyellow)
-    memset(lyellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
+    memset(lyellow, 0, height * d->channel[ECOLOR_Y].dither.signif_bits);
   if (black)
-    memset(black, 0, height * d->dither[ECOLOR_K].signif_bits);
+    memset(black, 0, height * d->channel[ECOLOR_K].dither.signif_bits);
   if ((zero_mask & 7) == 7)
     return;
 
@@ -3200,8 +3179,8 @@ stp_dither_raw_cmyk_ordered(const unsigned short  *cmyk,
 
   for (i = 0; i < NCOLORS; i++)
     {
-      matrix_set_row(d, &(d->dithermat[i]), row);
-      matrix_set_row(d, &(d->pick[i]), row);
+      matrix_set_row(d, &(d->channel[i].dithermat), row);
+      matrix_set_row(d, &(d->channel[i].pick), row);
     }
    QUANT(6);
   /*
@@ -3248,31 +3227,23 @@ stp_dither_raw_cmyk_ordered(const unsigned short  *cmyk,
       else if (first_color == ECOLOR_K)
 	goto eck;
     ecc:
-      print_color(d, &(d->dither[ECOLOR_C]), oc, oc, c, x, row, cptr, lcptr,
-		  bit, height, d->randomizer[ECOLOR_C], 0,
-		  &ink_budget, &(d->pick[ECOLOR_C]), &(d->dithermat[ECOLOR_C]),
-		  d->dither_type);
+      print_color(d, &(d->channel[ECOLOR_C]), oc, oc, c, x, row, cptr, lcptr,
+		  bit, height, 0, &ink_budget, d->dither_type);
       if (first_color == ECOLOR_M)
 	goto out;
     ecm:
-      print_color(d, &(d->dither[ECOLOR_M]), om, om, m, x, row, mptr, lmptr,
-		  bit, height, d->randomizer[ECOLOR_M], 0,
-		  &ink_budget, &(d->pick[ECOLOR_M]), &(d->dithermat[ECOLOR_M]),
-		  d->dither_type);
+      print_color(d, &(d->channel[ECOLOR_M]), om, om, m, x, row, mptr, lmptr,
+		  bit, height, 0, &ink_budget, d->dither_type);
       if (first_color == ECOLOR_Y)
 	goto out;
     ecy:
-      print_color(d, &(d->dither[ECOLOR_Y]), oy, oy, y, x, row, yptr, lyptr,
-		  bit, height, d->randomizer[ECOLOR_Y], 0,
-		  &ink_budget, &(d->pick[ECOLOR_Y]), &(d->dithermat[ECOLOR_Y]),
-		  d->dither_type);
+      print_color(d, &(d->channel[ECOLOR_Y]), oy, oy, y, x, row, yptr, lyptr,
+		  bit, height, 0, &ink_budget, d->dither_type);
       if (first_color == ECOLOR_K)
 	goto out;
     eck:
-      print_color(d, &(d->dither[ECOLOR_K]), ok, ok, k, x, row, kptr, NULL,
-		  bit, height, d->randomizer[ECOLOR_K], 0,
-		  &ink_budget, &(d->pick[ECOLOR_K]), &(d->dithermat[ECOLOR_K]),
-		  d->dither_type);
+      print_color(d, &(d->channel[ECOLOR_K]), ok, ok, k, x, row, kptr, NULL,
+		  bit, height, 0, &ink_budget, d->dither_type);
       if (first_color != ECOLOR_C)
 	goto ecc;
     out:
@@ -3360,19 +3331,19 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
   height = (d->dst_width + 7) / 8;
 
   if (cyan)
-    memset(cyan, 0, height * d->dither[ECOLOR_C].signif_bits);
+    memset(cyan, 0, height * d->channel[ECOLOR_C].dither.signif_bits);
   if (lcyan)
-    memset(lcyan, 0, height * d->dither[ECOLOR_C].signif_bits);
+    memset(lcyan, 0, height * d->channel[ECOLOR_C].dither.signif_bits);
   if (magenta)
-    memset(magenta, 0, height * d->dither[ECOLOR_M].signif_bits);
+    memset(magenta, 0, height * d->channel[ECOLOR_M].dither.signif_bits);
   if (lmagenta)
-    memset(lmagenta, 0, height * d->dither[ECOLOR_M].signif_bits);
+    memset(lmagenta, 0, height * d->channel[ECOLOR_M].dither.signif_bits);
   if (yellow)
-    memset(yellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
+    memset(yellow, 0, height * d->channel[ECOLOR_Y].dither.signif_bits);
   if (lyellow)
-    memset(lyellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
+    memset(lyellow, 0, height * d->channel[ECOLOR_Y].dither.signif_bits);
   if (black)
-    memset(black, 0, height * d->dither[ECOLOR_K].signif_bits);
+    memset(black, 0, height * d->channel[ECOLOR_K].dither.signif_bits);
   if (!duplicate_line)
     {
       if ((zero_mask & 7) != 7)
@@ -3442,8 +3413,8 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
   for (i = 0; i < NCOLORS; i++)
     {
       ndither[i] = error[i][0][0];
-      matrix_set_row(d, &(d->dithermat[i]), row);
-      matrix_set_row(d, &(d->pick[i]), row);
+      matrix_set_row(d, &(d->channel[i].dithermat), row);
+      matrix_set_row(d, &(d->channel[i].pick), row);
     }
   QUANT(6);
   /*
@@ -3501,35 +3472,23 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
       else if (first_color == ECOLOR_K)
 	goto eck;
     ecc:
-      c = print_color(d, &(d->dither[ECOLOR_C]), oc, oc,
-		      c, x, row, cptr, lcptr, bit, height,
-		      d->randomizer[ECOLOR_C], 0, &ink_budget,
-		      &(d->pick[ECOLOR_C]), &(d->dithermat[ECOLOR_C]),
-		      d->dither_type);
+      c = print_color(d, &(d->channel[ECOLOR_C]), oc, oc, c, x, row, cptr,
+		      lcptr, bit, height, 0, &ink_budget, d->dither_type);
       if (first_color == ECOLOR_M)
 	goto out;
     ecm:
-      m = print_color(d, &(d->dither[ECOLOR_M]), om, om,
-		      m, x, row, mptr, lmptr, bit, height,
-		      d->randomizer[ECOLOR_M], 0, &ink_budget,
-		      &(d->pick[ECOLOR_M]), &(d->dithermat[ECOLOR_M]),
-		      d->dither_type);
+      m = print_color(d, &(d->channel[ECOLOR_M]), om, om, m, x, row, mptr,
+		      lmptr, bit, height, 0, &ink_budget, d->dither_type);
       if (first_color == ECOLOR_Y)
 	goto out;
     ecy:
-      y = print_color(d, &(d->dither[ECOLOR_Y]), oy, oy,
-		      y, x, row, yptr, lyptr, bit, height,
-		      d->randomizer[ECOLOR_Y], 0, &ink_budget,
-		      &(d->pick[ECOLOR_Y]), &(d->dithermat[ECOLOR_Y]),
-		      d->dither_type);
+      y = print_color(d, &(d->channel[ECOLOR_Y]), oy, oy, y, x, row, yptr,
+		      lyptr, bit, height, 0, &ink_budget, d->dither_type);
       if (first_color == ECOLOR_K)
 	goto out;
     eck:
-      k = print_color(d, &(d->dither[ECOLOR_K]), ok, ok,
-		      k, x, row, kptr, NULL, bit, height,
-		      d->randomizer[ECOLOR_K], 0, &ink_budget,
-		      &(d->pick[ECOLOR_K]), &(d->dithermat[ECOLOR_K]),
-		      d->dither_type);
+      k = print_color(d, &(d->channel[ECOLOR_K]), ok, ok, k, x, row, kptr,
+		      NULL, bit, height, 0, &ink_budget, d->dither_type);
       if (first_color != ECOLOR_C)
 	goto ecc;
     out:
@@ -3628,12 +3587,14 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
       for (i = 0; i < NCOLORS; i++)
 	{
 	  int tmp;
-	  tmp = d->dither[i].first_bit_dark;
-	  d->dither[i].first_bit_dark = d->dither[i].last_bit_dark;
-	  d->dither[i].last_bit_dark = tmp;
-	  tmp = d->dither[i].first_bit_light;
-	  d->dither[i].first_bit_light = d->dither[i].last_bit_light;
-	  d->dither[i].last_bit_light = tmp;
+	  tmp = d->channel[i].dither.first_bit_dark;
+	  d->channel[i].dither.first_bit_dark =
+	    d->channel[i].dither.last_bit_dark;
+	  d->channel[i].dither.last_bit_dark = tmp;
+	  tmp = d->channel[i].dither.first_bit_light;
+	  d->channel[i].dither.first_bit_light =
+	    d->channel[i].dither.last_bit_light;
+	  d->channel[i].dither.last_bit_light = tmp;
 	}
     }
 }
@@ -3656,10 +3617,10 @@ stp_dither(const unsigned short  *input,
   dither_t *d = (dither_t *) vd;
   for (i = 0; i < NCOLORS; i++)
     {
-      d->dither[i].first_bit_light = -1;
-      d->dither[i].first_bit_dark = -1;
-      d->dither[i].last_bit_light = -1;
-      d->dither[i].last_bit_dark = -1;
+      d->channel[i].dither.first_bit_light = -1;
+      d->channel[i].dither.first_bit_dark = -1;
+      d->channel[i].dither.last_bit_light = -1;
+      d->channel[i].dither.last_bit_dark = -1;
     }
   switch (d->dither_class)
     {

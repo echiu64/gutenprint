@@ -1187,6 +1187,7 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
 	      const stp_vars_t    v)
 {
   /*const int VERTSIZE=192;*/
+  int i;
   const unsigned char *cmap = stp_get_cmap(v);
   int		model = stp_printer_get_model(printer);
   const char	*resolution = stp_get_resolution(v);
@@ -1575,9 +1576,8 @@ lexmark_describe_resolution(printer,
   else
     dither = stp_init_dither(image_width, out_width, ydpi / xdpi, 1, nv);
 
-  stp_dither_set_black_levels(dither, 1.0, 1.0, 1.0);
-
-
+  for (i = 0; i <= NCOLORS; i++)
+    stp_dither_set_black_level(dither, i, 1.0);
 
   /*
   if(printMode & (COLOR_MODE_LM | COLOR_MODE_LC | COLOR_MODE_LY))
@@ -1614,18 +1614,18 @@ lexmark_describe_resolution(printer,
 
 	/*
 	  stp_dither_set_black_lower(dither, .8 / ((1 << (use_dmt+1)) - 1));*/
-  /*stp_dither_set_black_levels(dither, 0.5, 0.5, 0.5);
-    stp_dither_set_black_lower(dither, 0.4);*/
   /*
     if (use_glossy_film)
   */
   stp_dither_set_black_upper(dither, .8);
 
   if (!use_dmt) {
-    stp_dither_set_light_inks(dither,
-			  (cols.p.C) ? (0.3333) : (0.0),
-			  (cols.p.M) ? (0.3333) : (0.0),
-			  (cols.p.Y) ? (0.3333) : (0.0), stp_get_density(nv));
+    if (cols.p.C)
+      stp_dither_set_light_ink(dither, ECOLOR_C, .3333, stp_get_density(nv));
+    if (cols.p.M)
+      stp_dither_set_light_ink(dither, ECOLOR_M, .3333, stp_get_density(nv));
+    if (cols.p.Y)
+      stp_dither_set_light_ink(dither, ECOLOR_Y, .3333, stp_get_density(nv));
   }
   stp_dither_set_transition(dither, .6);
 

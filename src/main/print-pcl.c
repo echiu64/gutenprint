@@ -1580,6 +1580,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
           stp_image_t *image,		/* I - Image to print */
 	  const stp_vars_t v)
 {
+  int i;
   unsigned char *cmap = stp_get_cmap(v);
   int		model = stp_printer_get_model(printer);
   const char	*resolution = stp_get_resolution(v);
@@ -2054,7 +2055,8 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
 /* Set up dithering for special printers. */
 
 #if 1		/* Leave alone for now */
-  stp_dither_set_black_levels(dither, 1.2, 1.2, 1.2);
+  for (i = 0; i <= NCOLORS; i++)
+    stp_dither_set_black_level(dither, i, 1.2);
   stp_dither_set_black_lower(dither, .3);
   stp_dither_set_black_upper(dither, .999);
 #endif
@@ -2081,12 +2083,12 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
 	  stp_dither_set_ranges_simple(dither, ECOLOR_M, 3, dot_sizes_use, stp_get_density(nv));
 	}
     }
-  else
-
+  else if (do_6color)
+    {
 /* Set light inks for 6 colour printers. Numbers copied from print-escp2.c */
-
-    if (do_6color)
-      stp_dither_set_light_inks(dither, .25, .25, 0.0, stp_get_density(nv));
+      stp_dither_set_light_ink(dither, ECOLOR_C, .25, stp_get_density(nv));
+      stp_dither_set_light_ink(dither, ECOLOR_M, .25, stp_get_density(nv));
+    }
   stp_dither_set_transition(dither, .6);
 
   switch (stp_get_image_type(nv))

@@ -260,12 +260,10 @@ extern void	stp_dither_set_density(void *vd, double);
 extern void	stp_dither_set_black_density(void *vd, double);
 extern void 	stp_dither_set_black_lower(void *vd, double);
 extern void 	stp_dither_set_black_upper(void *vd, double);
-extern void	stp_dither_set_black_levels(void *vd, double, double, double);
-extern void 	stp_dither_set_randomizers(void *vd, double, double, double,
-					   double);
-extern void 	stp_dither_set_ink_darkness(void *vd, double, double, double);
-extern void 	stp_dither_set_light_inks(void *vd, double, double, double,
-					  double);
+extern void	stp_dither_set_black_level(void *vd, int color, double);
+extern void 	stp_dither_set_randomizer(void *vd, int color, double);
+extern void 	stp_dither_set_ink_darkness(void *vd, int color, double);
+extern void 	stp_dither_set_light_ink(void *vd, int color, double, double);
 extern void	stp_dither_set_ranges(void *vd, int color, int nlevels,
 				      const stp_simple_dither_range_t *ranges,
 				      double density);
