@@ -29,76 +29,76 @@
 #include <gimp-print/gimp-print-intl-internal.h>
 
 static void
-free_list_element(stp_list_item_t *item)
+free_list_element(stpi_list_item_t *item)
 {
   stp_param_string_t *string =
-    (stp_param_string_t *) stp_list_item_get_data(item);
-  stp_free((char *) string->name);
-  stp_free((char *) string->text);
-  stp_free(string);
+    (stp_param_string_t *) stpi_list_item_get_data(item);
+  stpi_free((char *) string->name);
+  stpi_free((char *) string->text);
+  stpi_free(string);
 }
 
 static const char *
-namefunc(const stp_list_item_t *item)
+namefunc(const stpi_list_item_t *item)
 {
   stp_param_string_t *string =
-    (stp_param_string_t *) stp_list_item_get_data(item);
+    (stp_param_string_t *) stpi_list_item_get_data(item);
   return string->name;
 }
 
 static void *
-copyfunc(const stp_list_item_t *item)
+copyfunc(const stpi_list_item_t *item)
 {
   stp_param_string_t *string =
-    (stp_param_string_t *) stp_list_item_get_data(item);
-  stp_param_string_t *new_string = stp_malloc(sizeof(stp_param_string_t));
-  new_string->name = stp_strdup(string->name);
-  new_string->text = stp_strdup(string->text);
+    (stp_param_string_t *) stpi_list_item_get_data(item);
+  stp_param_string_t *new_string = stpi_malloc(sizeof(stp_param_string_t));
+  new_string->name = stpi_strdup(string->name);
+  new_string->text = stpi_strdup(string->text);
   return new_string;
 }
 
 static const char *
-long_namefunc(const stp_list_item_t *item)
+long_namefunc(const stpi_list_item_t *item)
 {
   stp_param_string_t *string =
-    (stp_param_string_t *) stp_list_item_get_data(item);
+    (stp_param_string_t *) stpi_list_item_get_data(item);
   return string->text;
 }
 
 stp_string_list_t
 stp_string_list_create(void)
 {
-  stp_list_t *ret = stp_list_create();
-  stp_list_set_freefunc(ret, free_list_element);
-  stp_list_set_namefunc(ret, namefunc);
-  stp_list_set_copyfunc(ret, copyfunc);
-  stp_list_set_long_namefunc(ret, long_namefunc);
+  stpi_list_t *ret = stpi_list_create();
+  stpi_list_set_freefunc(ret, free_list_element);
+  stpi_list_set_namefunc(ret, namefunc);
+  stpi_list_set_copyfunc(ret, copyfunc);
+  stpi_list_set_long_namefunc(ret, long_namefunc);
   return (stp_string_list_t) ret;
 }
 
 void
 stp_string_list_free(stp_string_list_t list)
 {
-  stp_list_destroy((stp_list_t *) list);
+  stpi_list_destroy((stpi_list_t *) list);
 }
 
 stp_param_string_t *
 stp_string_list_param(const stp_string_list_t list, size_t element)
 {
-  return (stp_param_string_t *) stp_list_item_get_data
-    (stp_list_get_item_by_index((stp_list_t *)list, element));
+  return (stp_param_string_t *) stpi_list_item_get_data
+    (stpi_list_get_item_by_index((stpi_list_t *)list, element));
 }
 
 size_t
 stp_string_list_count(const stp_string_list_t list)
 {
-  return stp_list_get_length((stp_list_t *)list);
+  return stpi_list_get_length((stpi_list_t *)list);
 }
 
 stp_string_list_t
 stp_string_list_create_copy(const stp_string_list_t list)
 {
-  return (stp_string_list_t) stp_list_copy((stp_list_t *)list);
+  return (stp_string_list_t) stpi_list_copy((stpi_list_t *)list);
 }
 
 stp_string_list_t
@@ -115,8 +115,8 @@ void
 stp_string_list_add_string(stp_string_list_t list,
 			  const char *name, const char *text)
 {
-  stp_param_string_t *new_string = stp_malloc(sizeof(stp_param_string_t));
-  new_string->name = stp_strdup(name);
-  new_string->text = stp_strdup(text);
-  stp_list_item_create((stp_list_t *) list, NULL, new_string);
+  stp_param_string_t *new_string = stpi_malloc(sizeof(stp_param_string_t));
+  new_string->name = stpi_strdup(name);
+  new_string->text = stpi_strdup(text);
+  stpi_list_item_create((stpi_list_t *) list, NULL, new_string);
 }

@@ -36,60 +36,60 @@
 #include "path.h"
 
 
-typedef struct stp_internal_module_class
+typedef struct stpi_internal_module_class
 {
-  stp_module_class_t class;
+  stpi_module_class_t class;
   const char *description;
-} stp_internal_module_class_t;
+} stpi_internal_module_class_t;
 
 
-static void module_list_freefunc(stp_list_item_t *item);
-static int stp_module_register(stp_module_t *module);
+static void module_list_freefunc(stpi_list_item_t *item);
+static int stpi_module_register(stpi_module_t *module);
 #ifdef USE_DLOPEN
-static void *stp_dlsym(void *handle, const char *symbol, const char *modulename);
+static void *stpi_dlsym(void *handle, const char *symbol, const char *modulename);
 #endif
 
-static stp_internal_module_class_t module_classes[] =
+static stpi_internal_module_class_t module_classes[] =
   {
-    {STP_MODULE_CLASS_MISC, N_("Miscellaneous (unclassified)")},
-    {STP_MODULE_CLASS_FAMILY, N_("Family driver")},
-    {STP_MODULE_CLASS_DITHER, N_("Dither algorithm")},
-    {STP_MODULE_CLASS_INVALID, NULL} /* Must be last */
+    {STPI_MODULE_CLASS_MISC, N_("Miscellaneous (unclassified)")},
+    {STPI_MODULE_CLASS_FAMILY, N_("Family driver")},
+    {STPI_MODULE_CLASS_DITHER, N_("Dither algorithm")},
+    {STPI_MODULE_CLASS_INVALID, NULL} /* Must be last */
   };
 
 #if !defined(USE_LTDL) && !defined(USE_DLOPEN)
-extern stp_module_t canon_LTX_stp_module_data;
-extern stp_module_t escp2_LTX_stp_module_data;
-extern stp_module_t lexmark_LTX_stp_module_data;
-extern stp_module_t pcl_LTX_stp_module_data;
-extern stp_module_t ps_LTX_stp_module_data;
-extern stp_module_t raw_LTX_stp_module_data;
+extern stpi_module_t canon_LTX_stpi_module_data;
+extern stpi_module_t escp2_LTX_stpi_module_data;
+extern stpi_module_t lexmark_LTX_stpi_module_data;
+extern stpi_module_t pcl_LTX_stpi_module_data;
+extern stpi_module_t ps_LTX_stpi_module_data;
+extern stpi_module_t raw_LTX_stpi_module_data;
 
 /*
  * A list of modules, for use when the modules are linked statically.
  */
-static stp_module_t *static_modules[] =
+static stpi_module_t *static_modules[] =
   {
-    &ps_LTX_stp_module_data,
-    &canon_LTX_stp_module_data,
-    &escp2_LTX_stp_module_data,
-    &pcl_LTX_stp_module_data,
-    &lexmark_LTX_stp_module_data,
-    &raw_LTX_stp_module_data,
+    &ps_LTX_stpi_module_data,
+    &canon_LTX_stpi_module_data,
+    &escp2_LTX_stpi_module_data,
+    &pcl_LTX_stpi_module_data,
+    &lexmark_LTX_stpi_module_data,
+    &raw_LTX_stpi_module_data,
     NULL
   };
 #endif
 
-static stp_list_t *module_list = NULL;
+static stpi_list_t *module_list = NULL;
 
 
 /*
- * Callback for removing a module from stp_module_list.
+ * Callback for removing a module from stpi_module_list.
  */
 static void
-module_list_freefunc(stp_list_item_t *item /* module to remove */)
+module_list_freefunc(stpi_list_item_t *item /* module to remove */)
 {
-  stp_module_t *module = (stp_module_t *) stp_list_item_get_data(item);
+  stpi_module_t *module = (stpi_module_t *) stpi_list_item_get_data(item);
   if (module && module->exit) /* Call the module exit function */
     module->exit();
 #if defined(USE_LTDL) || defined(USE_DLOPEN)
@@ -101,7 +101,7 @@ module_list_freefunc(stp_list_item_t *item /* module to remove */)
 /*
  * Load all available modules.  Return nonzero on failure.
  */
-int stp_module_load(void)
+int stpi_module_load(void)
 {
   /* initialise libltdl */
 #ifdef USE_LTDL
@@ -109,9 +109,9 @@ int stp_module_load(void)
 #endif
   static int module_list_is_initialised = 0; /* Is the module list initialised? */
 #if defined(USE_LTDL) || defined(USE_DLOPEN)
-  stp_list_t *dir_list;                      /* List of directories to scan */
-  stp_list_t *file_list;                     /* List of modules to open */
-  stp_list_item_t *file;                     /* Pointer to current module */
+  stpi_list_t *dir_list;                      /* List of directories to scan */
+  stpi_list_t *file_list;                     /* List of modules to open */
+  stpi_list_item_t *file;                     /* Pointer to current module */
 #endif
 
 #ifdef USE_LTDL
@@ -131,43 +131,43 @@ int stp_module_load(void)
   /* initialise module_list */
   if (!module_list_is_initialised)
     {
-      if (!(module_list = stp_list_create()))
+      if (!(module_list = stpi_list_create()))
 	return 1;
-      stp_list_set_freefunc(module_list, module_list_freefunc);
+      stpi_list_set_freefunc(module_list, module_list_freefunc);
       module_list_is_initialised = 1;
     }
 
   /* search for available modules */
 #if defined (USE_LTDL) || defined (USE_DLOPEN)
-  if (!(dir_list = stp_list_create()))
+  if (!(dir_list = stpi_list_create()))
     return 1;
-  stp_list_set_freefunc(dir_list, stp_list_node_free_data);
-  stp_path_split(dir_list, getenv("STP_MODULE_PATH"));
+  stpi_list_set_freefunc(dir_list, stpi_list_node_free_data);
+  stpi_path_split(dir_list, getenv("STP_MODULE_PATH"));
 #ifdef USE_LTDL
-  stp_path_split(dir_list, getenv("LTDL_LIBRARY_PATH"));
-  stp_path_split(dir_list, lt_dlgetsearchpath());
-  file_list = stp_path_search(dir_list, ".la");
+  stpi_path_split(dir_list, getenv("LTDL_LIBRARY_PATH"));
+  stpi_path_split(dir_list, lt_dlgetsearchpath());
+  file_list = stpi_path_search(dir_list, ".la");
 #else
-  stp_path_split(dir_list, PKGMODULEDIR);
-  file_list = stp_path_search(dir_list, ".so");
+  stpi_path_split(dir_list, PKGMODULEDIR);
+  file_list = stpi_path_search(dir_list, ".so");
 #endif
-  stp_list_destroy(dir_list);
+  stpi_list_destroy(dir_list);
 
   /* load modules */
-  file = stp_list_get_start(file_list);
+  file = stpi_list_get_start(file_list);
   while (file)
     {
-      stp_module_open((const char *) stp_list_item_get_data(file));
-      file = stp_list_item_next(file);
+      stpi_module_open((const char *) stpi_list_item_get_data(file));
+      file = stpi_list_item_next(file);
     }
 
-  stp_list_destroy(file_list);
+  stpi_list_destroy(file_list);
 #else /* use a static module list */
   {
     int i=0;
     while (static_modules[i])
       {
-	stp_module_register(static_modules[i]);
+	stpi_module_register(static_modules[i]);
 	i++;
       }
   }
@@ -180,11 +180,11 @@ int stp_module_load(void)
  * Unload all modules and clean up.
  */
 int
-stp_module_exit(void)
+stpi_module_exit(void)
 {
   /* destroy the module list (modules unloaded by callback) */
   if (module_list)
-    stp_list_destroy(module_list);
+    stpi_list_destroy(module_list);
   /* shut down libltdl (forces close of any unclosed modules) */
 #ifdef USE_LTDL
   return lt_dlexit();
@@ -197,24 +197,24 @@ stp_module_exit(void)
 /*
  * Find all modules in a given class.
  */
-stp_list_t *
-stp_module_get_class(stp_module_class_t class /* Module class */)
+stpi_list_t *
+stpi_module_get_class(stpi_module_class_t class /* Module class */)
 {
-  stp_list_t *list;                           /* List to return */
-  stp_list_item_t *ln;                        /* Module to check*/
+  stpi_list_t *list;                           /* List to return */
+  stpi_list_item_t *ln;                        /* Module to check*/
 
-  list = stp_list_create(); /* No freefunc, so it can be destroyed
+  list = stpi_list_create(); /* No freefunc, so it can be destroyed
 			       without unloading any modules! */
   if (!list)
     return NULL;
 
-  ln = stp_list_get_start(module_list);
+  ln = stpi_list_get_start(module_list);
   while (ln)
     {
       /* Add modules of the same class to our list */
-      if (((stp_module_t *) stp_list_item_get_data(ln))->class == class)
-	stp_list_item_create(list, NULL, stp_list_item_get_data(ln));
-      ln = stp_list_item_next(ln);
+      if (((stpi_module_t *) stpi_list_item_get_data(ln))->class == class)
+	stpi_list_item_create(list, NULL, stpi_list_item_get_data(ln));
+      ln = stpi_list_item_next(ln);
     }
   return list;
 }
@@ -224,7 +224,7 @@ stp_module_get_class(stp_module_class_t class /* Module class */)
  * Open a module.
  */
 int
-stp_module_open(const char *modulename /* Module filename */)
+stpi_module_open(const char *modulename /* Module filename */)
 {
 #if defined(USE_LTDL) || defined(USE_DLOPEN)
 #ifdef USE_LTDL
@@ -232,9 +232,9 @@ stp_module_open(const char *modulename /* Module filename */)
 #else
   void *module;                        /* Handle for module */
 #endif
-  stp_module_version_t *version;       /* Module version */
-  stp_module_t *data;                  /* Module data */
-  stp_list_item_t *reg_module;         /* Pointer to module list nodes */
+  stpi_module_version_t *version;       /* Module version */
+  stpi_module_t *data;                  /* Module data */
+  stpi_list_item_t *reg_module;         /* Pointer to module list nodes */
   int error = 0;                       /* Error status */
 
 #ifdef DEBUG
@@ -247,25 +247,25 @@ stp_module_open(const char *modulename /* Module filename */)
 	break;
 
       /* check version is valid */
-      version = (stp_module_version_t *) DLSYM(module, "stp_module_version");
+      version = (stpi_module_version_t *) DLSYM(module, "stpi_module_version");
       if (!version)
 	break;
       if (version->major != 1 && version->minor < 0)
 	break;
 
-      data = (void *) DLSYM(module, "stp_module_data");
+      data = (void *) DLSYM(module, "stpi_module_data");
       if (!data)
 	break;
       data->handle = module; /* store module handle */
 
       /* check same module isn't already loaded */
-      reg_module = stp_list_get_start(module_list);
+      reg_module = stpi_list_get_start(module_list);
       while (reg_module)
 	{
-	  if (!strcmp(data->name, ((stp_module_t *)
-				   stp_list_item_get_data(reg_module))->name) &&
-	      data->class == ((stp_module_t *)
-			      stp_list_item_get_data(reg_module))->class)
+	  if (!strcmp(data->name, ((stpi_module_t *)
+				   stpi_list_item_get_data(reg_module))->name) &&
+	      data->class == ((stpi_module_t *)
+			      stpi_list_item_get_data(reg_module))->class)
 	    {
 #ifdef DEBUG
 	      fprintf(stderr, "stp-module: reject duplicate: %s\n",
@@ -274,13 +274,13 @@ stp_module_open(const char *modulename /* Module filename */)
 	      error = 1;
 	      break;
 	    }
-	  reg_module = stp_list_item_next(reg_module);
+	  reg_module = stpi_list_item_next(reg_module);
 	}
       if (error)
 	break;
 
       /* Register the module */
-      if (stp_module_register(data))
+      if (stpi_module_register(data))
 	break;
 
       return 0;
@@ -295,10 +295,10 @@ stp_module_open(const char *modulename /* Module filename */)
 /*
  * Register a loaded module.
  */
-static int stp_module_register(stp_module_t *module /* Module to register */)
+static int stpi_module_register(stpi_module_t *module /* Module to register */)
 {
   /* Add to the module list */
-  if (stp_list_item_create(module_list, NULL, module))
+  if (stpi_list_item_create(module_list, NULL, module))
     return 1;
 
 #ifdef DEBUG
@@ -311,15 +311,15 @@ static int stp_module_register(stp_module_t *module /* Module to register */)
 /*
  * Initialise all loaded modules
  */
-int stp_module_init(void)
+int stpi_module_init(void)
 {
-  stp_list_item_t *module_item; /* Module list pointer */
-  stp_module_t *module;         /* Module to initialise */
+  stpi_list_item_t *module_item; /* Module list pointer */
+  stpi_module_t *module;         /* Module to initialise */
 
-  module_item = stp_list_get_start(module_list);
+  module_item = stpi_list_get_start(module_list);
   while (module_item)
     {
-      module = (stp_module_t *) stp_list_item_get_data(module_item);
+      module = (stpi_module_t *) stpi_list_item_get_data(module_item);
       if (module)
 	{
 #ifdef DEBUG
@@ -335,7 +335,7 @@ int stp_module_init(void)
 #endif
 	    }
 	}
-      module_item = stp_list_item_next(module_item);
+      module_item = stpi_list_item_next(module_item);
     }
   return 0;
 }
@@ -346,9 +346,9 @@ int stp_module_init(void)
  * Close a module.
  */
 int
-stp_module_close(stp_list_item_t *module /* Module to close */)
+stpi_module_close(stpi_list_item_t *module /* Module to close */)
 {
-  return stp_list_item_destroy(module_list, module);
+  return stpi_list_item_destroy(module_list, module);
 }
 
 
@@ -356,28 +356,28 @@ stp_module_close(stp_list_item_t *module /* Module to close */)
  * If using dlopen, add modulename_LTX_ to symbol name
  */
 #ifdef USE_DLOPEN
-static void *stp_dlsym(void *handle,           /* Module */
+static void *stpi_dlsym(void *handle,           /* Module */
 		       const char *symbol,     /* Symbol name */
 		       const char *modulename) /* Module name */
 {
   int len;                                     /* Length of string */
   static char *full_symbol = NULL;             /* Symbol to return */
   char *module;                                /* Real module name */
-  char *tmp = stp_strdup(modulename);          /* Temporary string */
+  char *tmp = stpi_strdup(modulename);          /* Temporary string */
 
   module = basename(tmp);
 
   if (full_symbol)
     {
-      stp_free (full_symbol);
+      stpi_free (full_symbol);
       full_symbol = NULL;
     }
 
-  full_symbol = (char *) stp_malloc(sizeof(char) * (strlen(module) - 2));
+  full_symbol = (char *) stpi_malloc(sizeof(char) * (strlen(module) - 2));
 
   /* "_LTX_" + '\0' - ".so" */
   len = strlen(symbol) + strlen(module) + 3;
-  full_symbol = (char *) stp_malloc(sizeof(char) * len);
+  full_symbol = (char *) stpi_malloc(sizeof(char) * len);
 
   len = 0;
   strncpy (full_symbol, module, strlen(module) - 3);
@@ -391,10 +391,10 @@ static void *stp_dlsym(void *handle,           /* Module */
 #if defined(__APPLE__) || defined(__OpenBSD__)
 /* Darwin and OpenBSD prepend underscores to symbols */
  {
-   char *prefix_symbol = stp_malloc(sizeof(char) * (strlen(full_symbol) + 2));
+   char *prefix_symbol = stpi_malloc(sizeof(char) * (strlen(full_symbol) + 2));
    prefix_symbol[0] = '_';
    strcpy(prefix_symbol+1, full_symbol);
-   stp_free(full_symbol);
+   stpi_free(full_symbol);
    full_symbol = prefix_symbol;
  }
 #endif

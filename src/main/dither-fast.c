@@ -35,7 +35,7 @@
 #include "dither-inlined-functions.h"
 
 static inline void
-print_color_fast(const dither_t *d, dither_channel_t *dc, int x, int y,
+print_color_fast(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
 		 unsigned char bit, int length)
 {
   int density = dc->o;
@@ -54,12 +54,12 @@ print_color_fast(const dither_t *d, dither_channel_t *dc, int x, int y,
   xdensity *= dc->density_adjustment;
   for (i = levels; i >= 0; i--)
     {
-      dither_segment_t *dd = &(dc->ranges[i]);
+      stpi_dither_segment_t *dd = &(dc->ranges[i]);
       unsigned vmatrix;
       unsigned rangepoint;
       unsigned dpoint;
       unsigned range0;
-      ink_defn_t *subc;
+      stpi_ink_defn_t *subc;
 
       range0 = dd->lower->range;
       if (xdensity <= range0)
@@ -104,13 +104,13 @@ print_color_fast(const dither_t *d, dither_channel_t *dc, int x, int y,
 }
 
 static void
-stp_dither_raw_fast(stp_vars_t v,
+stpi_dither_raw_fast(stp_vars_t v,
 		    int row,
 		    const unsigned short *raw,
 		    int duplicate_line,
 		    int zero_mask)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   int		x,
 		length;
   unsigned char	bit;
@@ -146,13 +146,13 @@ stp_dither_raw_fast(stp_vars_t v,
 }
 
 static void
-stp_dither_raw_cmyk_fast(stp_vars_t v,
+stpi_dither_raw_cmyk_fast(stp_vars_t v,
 			 int row,
 			 const unsigned short *cmyk,
 			 int duplicate_line,
 			 int zero_mask)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   int		x,
 		length;
   unsigned char	bit;
@@ -197,16 +197,16 @@ stp_dither_raw_cmyk_fast(stp_vars_t v,
 }
 
 void
-stp_dither_fast(stp_vars_t v,
+stpi_dither_fast(stp_vars_t v,
 		int row,
 		const unsigned short *input,
 		int duplicate_line,
 		int zero_mask)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   if (d->dither_class != OUTPUT_RAW_CMYK ||
       d->n_ghost_channels > 0)
-    stp_dither_raw_fast(v, row, input, duplicate_line, zero_mask);
+    stpi_dither_raw_fast(v, row, input, duplicate_line, zero_mask);
   else
-    stp_dither_raw_cmyk_fast(v, row, input, duplicate_line, zero_mask);
+    stpi_dither_raw_cmyk_fast(v, row, input, duplicate_line, zero_mask);
 }

@@ -96,7 +96,7 @@ static const char pgpp_hue_adjustment[] =
 static const escp2_variable_ink_t name##_ink =				\
 {									\
   name##_dither_ranges,							\
-  sizeof(name##_dither_ranges) / sizeof(stp_dither_range_simple_t),	\
+  sizeof(name##_dither_ranges) / sizeof(stpi_dither_range_simple_t),	\
   density,								\
   NULL,									\
   0									\
@@ -106,15 +106,15 @@ static const escp2_variable_ink_t name##_ink =				\
 static const escp2_variable_ink_t name##_ink =				\
 {									\
   name##_dither_ranges,							\
-  sizeof(name##_dither_ranges) / sizeof(stp_dither_range_simple_t),	\
+  sizeof(name##_dither_ranges) / sizeof(stpi_dither_range_simple_t),	\
   density,								\
   name##_shades,							\
-  sizeof(name##_shades) / sizeof(stp_shade_t)				\
+  sizeof(name##_shades) / sizeof(stpi_shade_t)				\
 }
 
 #define SHADE(density, subchannel, name)				\
 {  density, subchannel,							\
-   name, sizeof(name)/sizeof(stp_dotsize_t) }
+   name, sizeof(name)/sizeof(stpi_dotsize_t) }
 
 
 #define PIEZO_0  .25
@@ -130,30 +130,30 @@ static const escp2_variable_ink_t name##_ink =				\
 *                                                               *
 \***************************************************************/
 
-static const stp_dotsize_t single_dotsize[] =
+static const stpi_dotsize_t single_dotsize[] =
 {
   { 0x1, 1.0 }
 };
 
-static const stp_dither_range_simple_t standard_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_dither_ranges[] =
 {
   { 1.0,  0x1, 0, 1 }
 };
 
-static const stp_shade_t standard_shades[] =
+static const stpi_shade_t standard_shades[] =
 {
   SHADE(1.0,  0, single_dotsize)
 };
 
 DECLARE_INK2(standard, 1.0);
 
-static const stp_dither_range_simple_t photo_cyan_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_cyan_dither_ranges[] =
 {
   { 0.27, 0x1, 1, 1 },
   { 1.0,  0x1, 0, 1 }
 };
 
-static const stp_shade_t photo_cyan_shades[] =
+static const stpi_shade_t photo_cyan_shades[] =
 {
   SHADE(0.27, 1, single_dotsize),
   SHADE(1.0,  0, single_dotsize)
@@ -161,13 +161,13 @@ static const stp_shade_t photo_cyan_shades[] =
 
 DECLARE_INK2(photo_cyan, 1.0);
 
-static const stp_dither_range_simple_t photo_magenta_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_magenta_dither_ranges[] =
 {
   { 0.35, 0x1, 1, 1 },
   { 1.0,  0x1, 0, 1 }
 };
 
-static const stp_shade_t photo_magenta_shades[] =
+static const stpi_shade_t photo_magenta_shades[] =
 {
   SHADE(0.35, 1, single_dotsize),
   SHADE(1.0,  0, single_dotsize)
@@ -175,13 +175,13 @@ static const stp_shade_t photo_magenta_shades[] =
 
 DECLARE_INK2(photo_magenta, 1.0);
 
-static const stp_dither_range_simple_t photo2_yellow_dither_ranges[] =
+static const stpi_dither_range_simple_t photo2_yellow_dither_ranges[] =
 {
   { 0.35, 0x1, 1, 1 },
   { 1.0,  0x1, 0, 1 }
 };
 
-static const stp_shade_t photo2_yellow_shades[] =
+static const stpi_shade_t photo2_yellow_shades[] =
 {
   SHADE(0.35, 1, single_dotsize),
   SHADE(1.0,  0, single_dotsize)
@@ -189,13 +189,13 @@ static const stp_shade_t photo2_yellow_shades[] =
 
 DECLARE_INK2(photo2_yellow, 1.0);
 
-static const stp_dither_range_simple_t photo2_black_dither_ranges[] =
+static const stpi_dither_range_simple_t photo2_black_dither_ranges[] =
 {
   { 0.27, 0x1, 1, 1 },
   { 1.0,  0x1, 0, 1 }
 };
 
-static const stp_shade_t photo2_black_shades[] =
+static const stpi_shade_t photo2_black_shades[] =
 {
   SHADE(0.27, 1, single_dotsize),
   SHADE(1.0,  0, single_dotsize)
@@ -203,7 +203,7 @@ static const stp_shade_t photo2_black_shades[] =
 
 DECLARE_INK2(photo2_black, 1.0);
 
-static const stp_dither_range_simple_t piezo_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_quadtone_dither_ranges[] =
 {
   { PIEZO_0, 0x1, 0, 1 },
   { PIEZO_1, 0x1, 1, 1 },
@@ -211,7 +211,7 @@ static const stp_dither_range_simple_t piezo_quadtone_dither_ranges[] =
   { PIEZO_3, 0x1, 3, 1 },
 };
 
-static const stp_shade_t piezo_quadtone_shades[] =
+static const stpi_shade_t piezo_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, single_dotsize),
   SHADE(PIEZO_1, 1, single_dotsize),
@@ -228,28 +228,28 @@ DECLARE_INK2(piezo_quadtone, PIEZO_DENSITY);
 *                                                               *
 \***************************************************************/
 
-static const stp_dotsize_t standard_multishot_dotsizes[] =
+static const stpi_dotsize_t standard_multishot_dotsizes[] =
 {
   { 0x1, 0.28 },
   { 0x2, 0.58 },
   { 0x3, 1.0  }
 };
 
-static const stp_dither_range_simple_t standard_multishot_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_multishot_dither_ranges[] =
 {
   { 0.28,  0x1, 0, 2 },
   { 0.58,  0x2, 0, 4 },
   { 1.0,   0x3, 0, 7 }
 };
 
-static const stp_shade_t standard_multishot_shades[] =
+static const stpi_shade_t standard_multishot_shades[] =
 {
   SHADE(1.0, 0, standard_multishot_dotsizes)
 };
 
 DECLARE_INK2(standard_multishot, 1.0);
 
-static const stp_dither_range_simple_t photo_multishot_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_multishot_dither_ranges[] =
 {
   { 0.0728, 0x1, 1, 1 },
   { 0.151,  0x2, 1, 2 },
@@ -257,7 +257,7 @@ static const stp_dither_range_simple_t photo_multishot_dither_ranges[] =
   { 1.0,    0x3, 0, 3 }
 };
 
-static const stp_shade_t photo_multishot_shades[] =
+static const stpi_shade_t photo_multishot_shades[] =
 {
   SHADE(0.26, 1, standard_multishot_dotsizes),
   SHADE(1.0,  0, standard_multishot_dotsizes)
@@ -265,7 +265,7 @@ static const stp_shade_t photo_multishot_shades[] =
 
 DECLARE_INK2(photo_multishot, 1.0);
 
-static const stp_dither_range_simple_t photo_multishot_y_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_multishot_y_dither_ranges[] =
 {
   { 0.140, 0x1, 0, 1 },
   { 0.290, 0x2, 0, 2 },
@@ -273,7 +273,7 @@ static const stp_dither_range_simple_t photo_multishot_y_dither_ranges[] =
   { 1.0,   0x3, 1, 3 }
 };
 
-static const stp_shade_t photo_multishot_y_shades[] =
+static const stpi_shade_t photo_multishot_y_shades[] =
 {
   SHADE(0.5, 0, standard_multishot_dotsizes),
   SHADE(1.0, 1, standard_multishot_dotsizes)
@@ -281,7 +281,7 @@ static const stp_shade_t photo_multishot_y_shades[] =
 
 DECLARE_INK2(photo_multishot_y, 1.0);
 
-static const stp_dither_range_simple_t piezo_multishot_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_multishot_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * .28, 0x1, 0, 2 },
   { PIEZO_0 * .58, 0x2, 0, 4 },
@@ -291,7 +291,7 @@ static const stp_dither_range_simple_t piezo_multishot_quadtone_dither_ranges[] 
   { PIEZO_3 * 1.0, 0x3, 3, 7 },
 };
 
-static const stp_shade_t piezo_multishot_quadtone_shades[] =
+static const stpi_shade_t piezo_multishot_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_multishot_dotsizes),
   SHADE(PIEZO_1, 1, standard_multishot_dotsizes),
@@ -307,64 +307,64 @@ DECLARE_INK2(piezo_multishot_quadtone, PIEZO_DENSITY);
 *                                                               *
 \***************************************************************/
 
-static const stp_dotsize_t standard_6pl_dotsizes[] =
+static const stpi_dotsize_t standard_6pl_dotsizes[] =
 {
   { 0x1, 0.25},
   { 0x2, 0.5 },
   { 0x3, 1.0 }
 };
 
-static const stp_dotsize_t standard_6pl_1440_dotsizes[] =
+static const stpi_dotsize_t standard_6pl_1440_dotsizes[] =
 {
   { 0x1, 0.5},
   { 0x2, 1.0}
 };
 
-static const stp_dotsize_t standard_6pl_2880_dotsizes[] =
+static const stpi_dotsize_t standard_6pl_2880_dotsizes[] =
 {
   { 0x1, 1.0}
 };
 
-static const stp_dither_range_simple_t standard_6pl_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_6pl_dither_ranges[] =
 {
   { 0.25,  0x1, 0, 1 },
   { 0.5,   0x2, 0, 2 },
   { 1.0,   0x3, 0, 4 }
 };
 
-static const stp_shade_t standard_6pl_shades[] =
+static const stpi_shade_t standard_6pl_shades[] =
 {
   SHADE(1.0, 0, standard_6pl_dotsizes)
 };
 
 DECLARE_INK2(standard_6pl, 1.0);
 
-static const stp_dither_range_simple_t standard_6pl_1440_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_6pl_1440_dither_ranges[] =
 {
   { 0.5,   0x1, 0, 1 },
   { 1.0,   0x2, 0, 2 },
 };
 
-static const stp_shade_t standard_6pl_1440_shades[] =
+static const stpi_shade_t standard_6pl_1440_shades[] =
 {
   SHADE(1.0, 0, standard_6pl_1440_dotsizes)
 };
 
 DECLARE_INK2(standard_6pl_1440, 1.0);
 
-static const stp_dither_range_simple_t standard_6pl_2880_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_6pl_2880_dither_ranges[] =
 {
   { 1.0,   0x1, 0, 1 },
 };
 
-static const stp_shade_t standard_6pl_2880_shades[] =
+static const stpi_shade_t standard_6pl_2880_shades[] =
 {
   SHADE(1.0, 0, standard_6pl_2880_dotsizes)
 };
 
 DECLARE_INK2(standard_6pl_2880, 1.0);
 
-static const stp_dither_range_simple_t photo_6pl_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_6pl_dither_ranges[] =
 {
   { 0.065, 0x1, 1, 1 },
   { 0.13,  0x2, 1, 2 },
@@ -374,7 +374,7 @@ static const stp_dither_range_simple_t photo_6pl_dither_ranges[] =
   { 1.0,   0x3, 0, 4 }
 };
 
-static const stp_shade_t photo_6pl_shades[] =
+static const stpi_shade_t photo_6pl_shades[] =
 {
   SHADE(0.26, 1, standard_6pl_dotsizes),
   SHADE(1.0,  0, standard_6pl_dotsizes)
@@ -382,7 +382,7 @@ static const stp_shade_t photo_6pl_shades[] =
 
 DECLARE_INK2(photo_6pl, 1.0);
 
-static const stp_dither_range_simple_t photo_6pl_y_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_6pl_y_dither_ranges[] =
 {
   { 0.125, 0x1, 0, 1 },
   { 0.25,  0x2, 0, 2 },
@@ -390,7 +390,7 @@ static const stp_dither_range_simple_t photo_6pl_y_dither_ranges[] =
   { 1.0,   0x3, 1, 4 }
 };
 
-static const stp_shade_t photo_6pl_y_shades[] =
+static const stpi_shade_t photo_6pl_y_shades[] =
 {
   SHADE(0.25, 0, standard_6pl_dotsizes),
   SHADE(1.0,  1, standard_6pl_dotsizes)
@@ -398,7 +398,7 @@ static const stp_shade_t photo_6pl_y_shades[] =
 
 DECLARE_INK2(photo_6pl_y, 1.0);
 
-static const stp_dither_range_simple_t photo_6pl_1440_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_6pl_1440_dither_ranges[] =
 {
   { 0.13,  0x1, 1, 1 },
   { 0.26,  0x2, 1, 2 },
@@ -407,7 +407,7 @@ static const stp_dither_range_simple_t photo_6pl_1440_dither_ranges[] =
   { 1.0,   0x2, 0, 2 },
 };
 
-static const stp_shade_t photo_6pl_1440_shades[] =
+static const stpi_shade_t photo_6pl_1440_shades[] =
 {
   SHADE(0.26, 1, standard_6pl_1440_dotsizes),
   SHADE(1.0,  0, standard_6pl_1440_dotsizes)
@@ -415,13 +415,13 @@ static const stp_shade_t photo_6pl_1440_shades[] =
 
 DECLARE_INK2(photo_6pl_1440, 1.0);
 
-static const stp_dither_range_simple_t photo_6pl_2880_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_6pl_2880_dither_ranges[] =
 {
   { 0.26,  0x1, 1, 1 },
   { 1.0,   0x1, 0, 1 },
 };
 
-static const stp_shade_t photo_6pl_2880_shades[] =
+static const stpi_shade_t photo_6pl_2880_shades[] =
 {
   SHADE(0.26, 1, standard_6pl_2880_dotsizes),
   SHADE(1.0,  0, standard_6pl_2880_dotsizes)
@@ -429,7 +429,7 @@ static const stp_shade_t photo_6pl_2880_shades[] =
 
 DECLARE_INK2(photo_6pl_2880, 1.0);
 
-static const stp_dither_range_simple_t piezo_6pl_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_6pl_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * .25, 0x1, 0, 1 },
   { PIEZO_0 * .50, 0x2, 0, 2 },
@@ -439,7 +439,7 @@ static const stp_dither_range_simple_t piezo_6pl_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.0, 0x3, 3, 4 },
 };
 
-static const stp_shade_t piezo_6pl_quadtone_shades[] =
+static const stpi_shade_t piezo_6pl_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_6pl_dotsizes),
   SHADE(PIEZO_1, 1, standard_6pl_dotsizes),
@@ -449,7 +449,7 @@ static const stp_shade_t piezo_6pl_quadtone_shades[] =
 
 DECLARE_INK2(piezo_6pl_quadtone, PIEZO_DENSITY);
 
-static const stp_dither_range_simple_t piezo_6pl_1440_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_6pl_1440_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * .50, 0x1, 0, 1 },
   { PIEZO_1 * .50, 0x1, 1, 1 },
@@ -458,7 +458,7 @@ static const stp_dither_range_simple_t piezo_6pl_1440_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.0, 0x2, 3, 2 }
 };
 
-static const stp_shade_t piezo_6pl_1440_quadtone_shades[] =
+static const stpi_shade_t piezo_6pl_1440_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_6pl_1440_dotsizes),
   SHADE(PIEZO_1, 1, standard_6pl_1440_dotsizes),
@@ -468,7 +468,7 @@ static const stp_shade_t piezo_6pl_1440_quadtone_shades[] =
 
 DECLARE_INK2(piezo_6pl_1440_quadtone, PIEZO_DENSITY);
 
-static const stp_dither_range_simple_t piezo_6pl_2880_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_6pl_2880_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * 1.0, 0x1, 0, 1 },
   { PIEZO_1 * 1.0, 0x1, 1, 1 },
@@ -476,7 +476,7 @@ static const stp_dither_range_simple_t piezo_6pl_2880_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.0, 0x1, 3, 1 },
 };
 
-static const stp_shade_t piezo_6pl_2880_quadtone_shades[] =
+static const stpi_shade_t piezo_6pl_2880_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_6pl_2880_dotsizes),
   SHADE(PIEZO_1, 1, standard_6pl_2880_dotsizes),
@@ -493,85 +493,85 @@ DECLARE_INK2(piezo_6pl_2880_quadtone, PIEZO_DENSITY);
 *                                                               *
 \***************************************************************/
 
-static const stp_dotsize_t standard_x80_multishot_dotsizes[] =
+static const stpi_dotsize_t standard_x80_multishot_dotsizes[] =
 {
   { 0x1, 0.163},
   { 0x2, 0.5  },
   { 0x3, 1.0  }
 };
 
-static const stp_dotsize_t standard_x80_6pl_dotsizes[] =
+static const stpi_dotsize_t standard_x80_6pl_dotsizes[] =
 {
   { 0x1, 0.325},
   { 0x2, 0.5  },
   { 0x3, 1.0  }
 };
 
-static const stp_dotsize_t standard_x80_1440_6pl_dotsizes[] =
+static const stpi_dotsize_t standard_x80_1440_6pl_dotsizes[] =
 {
   { 0x1, 0.65 },
   { 0x2, 1.0  }
 };
 
-static const stp_dotsize_t standard_x80_2880_6pl_dotsizes[] =
+static const stpi_dotsize_t standard_x80_2880_6pl_dotsizes[] =
 {
   { 0x1, 1.0 }
 };
 
-static const stp_dither_range_simple_t standard_x80_multishot_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_x80_multishot_dither_ranges[] =
 {
   { 0.163, 0x1, 0, 1 },
   { 0.5,   0x2, 0, 3 },
   { 1.0,   0x3, 0, 6 }
 };
 
-static const stp_shade_t standard_x80_multishot_shades[] =
+static const stpi_shade_t standard_x80_multishot_shades[] =
 {
   SHADE(1.0, 0, standard_x80_multishot_dotsizes)
 };
 
 DECLARE_INK2(standard_x80_multishot, 1.0);
 
-static const stp_dither_range_simple_t standard_x80_6pl_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_x80_6pl_dither_ranges[] =
 {
   { 0.325, 0x1, 0, 2 },
   { 0.5,   0x2, 0, 3 },
   { 1.0,   0x3, 0, 6 }
 };
 
-static const stp_shade_t standard_x80_6pl_shades[] =
+static const stpi_shade_t standard_x80_6pl_shades[] =
 {
   SHADE(1.0, 0, standard_x80_6pl_dotsizes)
 };
 
 DECLARE_INK2(standard_x80_6pl, 1.0);
 
-static const stp_dither_range_simple_t standard_x80_1440_6pl_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_x80_1440_6pl_dither_ranges[] =
 {
   { 0.65,  0x1, 0, 2 },
   { 1.0,   0x2, 0, 3 },
 };
 
-static const stp_shade_t standard_x80_1440_6pl_shades[] =
+static const stpi_shade_t standard_x80_1440_6pl_shades[] =
 {
   SHADE(1.0, 0, standard_x80_1440_6pl_dotsizes)
 };
 
 DECLARE_INK2(standard_x80_1440_6pl, 1.0);
 
-static const stp_dither_range_simple_t standard_x80_2880_6pl_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_x80_2880_6pl_dither_ranges[] =
 {
   { 1.00,  0x1, 0, 1 },
 };
 
-static const stp_shade_t standard_x80_2880_6pl_shades[] =
+static const stpi_shade_t standard_x80_2880_6pl_shades[] =
 {
   SHADE(1.0, 0, standard_x80_2880_6pl_dotsizes)
 };
 
 DECLARE_INK2(standard_x80_2880_6pl, 1.0);
 
-static const stp_dither_range_simple_t piezo_x80_multishot_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_x80_multishot_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * .163, 0x1, 0, 1 },
   { PIEZO_0 * .500, 0x2, 0, 3 },
@@ -581,7 +581,7 @@ static const stp_dither_range_simple_t piezo_x80_multishot_quadtone_dither_range
   { PIEZO_3 * 1.00, 0x3, 3, 6 },
 };
 
-static const stp_shade_t piezo_x80_multishot_quadtone_shades[] =
+static const stpi_shade_t piezo_x80_multishot_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_x80_multishot_dotsizes),
   SHADE(PIEZO_1, 1, standard_x80_multishot_dotsizes),
@@ -591,7 +591,7 @@ static const stp_shade_t piezo_x80_multishot_quadtone_shades[] =
 
 DECLARE_INK2(piezo_x80_multishot_quadtone, PIEZO_DENSITY);
 
-static const stp_dither_range_simple_t piezo_x80_6pl_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_x80_6pl_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * .325, 0x1, 0, 2 },
   { PIEZO_0 * .500, 0x2, 0, 3 },
@@ -601,7 +601,7 @@ static const stp_dither_range_simple_t piezo_x80_6pl_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.00, 0x3, 3, 6 },
 };
 
-static const stp_shade_t piezo_x80_6pl_quadtone_shades[] =
+static const stpi_shade_t piezo_x80_6pl_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_x80_6pl_dotsizes),
   SHADE(PIEZO_1, 1, standard_x80_6pl_dotsizes),
@@ -611,7 +611,7 @@ static const stp_shade_t piezo_x80_6pl_quadtone_shades[] =
 
 DECLARE_INK2(piezo_x80_6pl_quadtone, PIEZO_DENSITY);
 
-static const stp_dither_range_simple_t piezo_x80_1440_6pl_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_x80_1440_6pl_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * .650, 0x1, 0, 2 },
   { PIEZO_1 * .650, 0x1, 1, 2 },
@@ -620,7 +620,7 @@ static const stp_dither_range_simple_t piezo_x80_1440_6pl_quadtone_dither_ranges
   { PIEZO_3 * 1.00, 0x2, 3, 3 },
 };
 
-static const stp_shade_t piezo_x80_1440_6pl_quadtone_shades[] =
+static const stpi_shade_t piezo_x80_1440_6pl_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_x80_1440_6pl_dotsizes),
   SHADE(PIEZO_1, 1, standard_x80_1440_6pl_dotsizes),
@@ -630,7 +630,7 @@ static const stp_shade_t piezo_x80_1440_6pl_quadtone_shades[] =
 
 DECLARE_INK2(piezo_x80_1440_6pl_quadtone, PIEZO_DENSITY);
 
-static const stp_dither_range_simple_t piezo_x80_2880_6pl_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_x80_2880_6pl_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * 1.00, 0x1, 0, 1 },
   { PIEZO_1 * 1.00, 0x1, 1, 1 },
@@ -638,7 +638,7 @@ static const stp_dither_range_simple_t piezo_x80_2880_6pl_quadtone_dither_ranges
   { PIEZO_3 * 1.00, 0x1, 3, 1 },
 };
 
-static const stp_shade_t piezo_x80_2880_6pl_quadtone_shades[] =
+static const stpi_shade_t piezo_x80_2880_6pl_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_x80_2880_6pl_dotsizes),
   SHADE(PIEZO_1, 1, standard_x80_2880_6pl_dotsizes),
@@ -655,49 +655,49 @@ DECLARE_INK2(piezo_x80_2880_6pl_quadtone, PIEZO_DENSITY);
 *                                                               *
 \***************************************************************/
 
-static const stp_dotsize_t standard_680_multishot_dotsizes[] =
+static const stpi_dotsize_t standard_680_multishot_dotsizes[] =
 {
   { 0x1, 0.375 },
   { 0x2, 0.75  },
   { 0x3, 1.0   }
 };
 
-static const stp_dotsize_t standard_680_6pl_dotsizes[] =
+static const stpi_dotsize_t standard_680_6pl_dotsizes[] =
 {
   { 0x1, 0.50  },
   { 0x2, 0.66  },
   { 0x3, 1.0   }
 };
 
-static const stp_dither_range_simple_t standard_680_multishot_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_680_multishot_dither_ranges[] =
 {
   { 0.375, 0x1, 0, 3 },
   { 0.75,  0x2, 0, 6 },
   { 1.0,   0x3, 0, 8 }
 };
 
-static const stp_shade_t standard_680_multishot_shades[] =
+static const stpi_shade_t standard_680_multishot_shades[] =
 {
   SHADE(1.0, 0, standard_680_multishot_dotsizes)
 };
 
 DECLARE_INK2(standard_680_multishot, 1.0);
 
-static const stp_dither_range_simple_t standard_680_6pl_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_680_6pl_dither_ranges[] =
 {
   { 0.50,  0x1, 0, 3 },
   { 0.66,  0x2, 0, 4 },
   { 1.0,   0x3, 0, 6 }
 };
 
-static const stp_shade_t standard_680_6pl_shades[] =
+static const stpi_shade_t standard_680_6pl_shades[] =
 {
   SHADE(1.0, 0, standard_680_6pl_dotsizes)
 };
 
 DECLARE_INK2(standard_680_6pl, 1.0);
 
-static const stp_dither_range_simple_t piezo_680_multishot_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_680_multishot_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * .375, 0x1, 0, 3 },
   { PIEZO_0 * .750, 0x2, 0, 6 },
@@ -707,7 +707,7 @@ static const stp_dither_range_simple_t piezo_680_multishot_quadtone_dither_range
   { PIEZO_3 * 1.00, 0x3, 3, 8 },
 };
 
-static const stp_shade_t piezo_680_multishot_quadtone_shades[] =
+static const stpi_shade_t piezo_680_multishot_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_680_multishot_dotsizes),
   SHADE(PIEZO_1, 1, standard_680_multishot_dotsizes),
@@ -717,7 +717,7 @@ static const stp_shade_t piezo_680_multishot_quadtone_shades[] =
 
 DECLARE_INK2(piezo_680_multishot_quadtone, PIEZO_DENSITY);
 
-static const stp_dither_range_simple_t piezo_680_6pl_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_680_6pl_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * .500, 0x1, 0, 3 },
   { PIEZO_1 * .660, 0x2, 1, 4 },
@@ -726,7 +726,7 @@ static const stp_dither_range_simple_t piezo_680_6pl_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.00, 0x3, 3, 6 },
 };
 
-static const stp_shade_t piezo_680_6pl_quadtone_shades[] =
+static const stpi_shade_t piezo_680_6pl_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_680_6pl_dotsizes),
   SHADE(PIEZO_1, 1, standard_680_6pl_dotsizes),
@@ -743,43 +743,43 @@ DECLARE_INK2(piezo_680_6pl_quadtone, PIEZO_DENSITY);
 *                                                               *
 \***************************************************************/
 
-static const stp_dotsize_t standard_4pl_dotsizes[] =
+static const stpi_dotsize_t standard_4pl_dotsizes[] =
 {
   { 0x1, 0.661},
   { 0x2, 1.0  }
 };
 
-static const stp_dotsize_t standard_4pl_2880_dotsizes[] =
+static const stpi_dotsize_t standard_4pl_2880_dotsizes[] =
 {
   { 0x1, 1.0 }
 };
 
-static const stp_dither_range_simple_t standard_4pl_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_4pl_dither_ranges[] =
 {
   { 0.661, 0x1, 0, 2 },
   { 1.00,  0x2, 0, 3 }
 };
 
-static const stp_shade_t standard_4pl_shades[] =
+static const stpi_shade_t standard_4pl_shades[] =
 {
   SHADE(1.0, 0, standard_4pl_dotsizes)
 };
 
 DECLARE_INK2(standard_4pl, 1.0);
 
-static const stp_dither_range_simple_t standard_4pl_2880_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_4pl_2880_dither_ranges[] =
 {
   { 1.00,  0x1, 0, 1 },
 };
 
-static const stp_shade_t standard_4pl_2880_shades[] =
+static const stpi_shade_t standard_4pl_2880_shades[] =
 {
   SHADE(1.0, 0, standard_4pl_2880_dotsizes)
 };
 
 DECLARE_INK2(standard_4pl_2880, 1.0);
 
-static const stp_dither_range_simple_t photo_4pl_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_dither_ranges[] =
 {
   { 0.17,  0x1, 1, 2 },
   { 0.26,  0x2, 1, 3 },
@@ -787,7 +787,7 @@ static const stp_dither_range_simple_t photo_4pl_dither_ranges[] =
   { 1.00,  0x2, 0, 3 }
 };
 
-static const stp_shade_t photo_4pl_shades[] =
+static const stpi_shade_t photo_4pl_shades[] =
 {
   SHADE(0.26, 1, standard_4pl_dotsizes),
   SHADE(1.0,  0, standard_4pl_dotsizes)
@@ -795,7 +795,7 @@ static const stp_shade_t photo_4pl_shades[] =
 
 DECLARE_INK2(photo_4pl, 1.0);
 
-static const stp_dither_range_simple_t photo_4pl_y_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_y_dither_ranges[] =
 {
   { 0.330, 0x1, 0, 2 },
   { 0.50,  0x2, 0, 3 },
@@ -803,7 +803,7 @@ static const stp_dither_range_simple_t photo_4pl_y_dither_ranges[] =
   { 1.00,  0x2, 1, 3 }
 };
 
-static const stp_shade_t photo_4pl_y_shades[] =
+static const stpi_shade_t photo_4pl_y_shades[] =
 {
   SHADE(0.50, 0, standard_4pl_dotsizes),
   SHADE(1.00, 1, standard_4pl_dotsizes)
@@ -811,13 +811,13 @@ static const stp_shade_t photo_4pl_y_shades[] =
 
 DECLARE_INK2(photo_4pl_y, 1.0);
 
-static const stp_dither_range_simple_t photo_4pl_2880_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_2880_dither_ranges[] =
 {
   { 0.26,  0x1, 1, 1 },
   { 1.00,  0x1, 0, 1 },
 };
 
-static const stp_shade_t photo_4pl_2880_shades[] =
+static const stpi_shade_t photo_4pl_2880_shades[] =
 {
   SHADE(0.26, 1, standard_4pl_2880_dotsizes),
   SHADE(1.00, 0, standard_4pl_2880_dotsizes)
@@ -825,13 +825,13 @@ static const stp_shade_t photo_4pl_2880_shades[] =
 
 DECLARE_INK2(photo_4pl_2880, 1.0);
 
-static const stp_dither_range_simple_t photo_4pl_y_2880_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_y_2880_dither_ranges[] =
 {
   { 0.5,   0x1, 1, 1 },
   { 1.00,  0x1, 0, 1 },
 };
 
-static const stp_shade_t photo_4pl_y_2880_shades[] =
+static const stpi_shade_t photo_4pl_y_2880_shades[] =
 {
   SHADE(0.5, 1, standard_4pl_2880_dotsizes),
   SHADE(1.0, 0, standard_4pl_2880_dotsizes)
@@ -839,7 +839,7 @@ static const stp_shade_t photo_4pl_y_2880_shades[] =
 
 DECLARE_INK2(photo_4pl_y_2880, 1.0);
 
-static const stp_dither_range_simple_t piezo_4pl_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_4pl_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * .661, 0x1, 0, 2 },
   { PIEZO_1 * .661, 0x1, 1, 2 },
@@ -848,7 +848,7 @@ static const stp_dither_range_simple_t piezo_4pl_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.00, 0x2, 3, 3 },
 };
 
-static const stp_shade_t piezo_4pl_quadtone_shades[] =
+static const stpi_shade_t piezo_4pl_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_4pl_dotsizes),
   SHADE(PIEZO_1, 1, standard_4pl_dotsizes),
@@ -858,7 +858,7 @@ static const stp_shade_t piezo_4pl_quadtone_shades[] =
 
 DECLARE_INK2(piezo_4pl_quadtone, PIEZO_DENSITY);
 
-static const stp_dither_range_simple_t piezo_4pl_2880_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_4pl_2880_quadtone_dither_ranges[] =
 {
   { PIEZO_0, 0x1, 0, 1 },
   { PIEZO_1, 0x1, 1, 1 },
@@ -866,7 +866,7 @@ static const stp_dither_range_simple_t piezo_4pl_2880_quadtone_dither_ranges[] =
   { PIEZO_3, 0x1, 3, 1 },
 };
 
-static const stp_shade_t piezo_4pl_2880_quadtone_shades[] =
+static const stpi_shade_t piezo_4pl_2880_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_4pl_2880_dotsizes),
   SHADE(PIEZO_1, 1, standard_4pl_2880_dotsizes),
@@ -883,39 +883,39 @@ DECLARE_INK2(piezo_4pl_2880_quadtone, PIEZO_DENSITY);
 *                                                               *
 \***************************************************************/
 
-static const stp_dotsize_t standard_3pl_dotsizes[] =
+static const stpi_dotsize_t standard_3pl_dotsizes[] =
 {
   { 0x1, 0.25 },
   { 0x2, 0.61 },
   { 0x3, 1.0  }
 };
 
-static const stp_dotsize_t standard_3pl_1440_dotsizes[] =
+static const stpi_dotsize_t standard_3pl_1440_dotsizes[] =
 {
   { 0x1, 0.39 },
   { 0x2, 1.0  }
 };
 
-static const stp_dotsize_t standard_3pl_2880_dotsizes[] =
+static const stpi_dotsize_t standard_3pl_2880_dotsizes[] =
 {
   { 0x1, 1.0 }
 };
 
-static const stp_dotsize_t standard_980_6pl_dotsizes[] =
+static const stpi_dotsize_t standard_980_6pl_dotsizes[] =
 {
   { 0x1, 0.40  },
   { 0x2, 0.675 },
   { 0x3, 1.0   }
 };
 
-static const stp_dither_range_simple_t standard_3pl_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_3pl_dither_ranges[] =
 {
   { 0.25,  0x1, 0, 2 },
   { 0.61,  0x2, 0, 5 },
   { 1.0,   0x3, 0, 8 }
 };
 
-static const stp_shade_t standard_3pl_shades[] =
+static const stpi_shade_t standard_3pl_shades[] =
 {
   SHADE(1.0, 0, standard_3pl_dotsizes)
 };
@@ -923,13 +923,13 @@ static const stp_shade_t standard_3pl_shades[] =
 DECLARE_INK2(standard_3pl, 1.0);
 
 
-static const stp_dither_range_simple_t standard_3pl_1440_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_3pl_1440_dither_ranges[] =
 {
   { 0.39, 0x1, 0, 2 },
   { 1.0,  0x2, 0, 5 }
 };
 
-static const stp_shade_t standard_3pl_1440_shades[] =
+static const stpi_shade_t standard_3pl_1440_shades[] =
 {
   SHADE(1.0, 0, standard_3pl_1440_dotsizes)
 };
@@ -937,33 +937,33 @@ static const stp_shade_t standard_3pl_1440_shades[] =
 DECLARE_INK2(standard_3pl_1440, 1.0);
 
 
-static const stp_dither_range_simple_t standard_3pl_2880_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_3pl_2880_dither_ranges[] =
 {
   { 1.0,   0x1, 0, 1 }
 };
 
-static const stp_shade_t standard_3pl_2880_shades[] =
+static const stpi_shade_t standard_3pl_2880_shades[] =
 {
   SHADE(1.0, 0, standard_3pl_2880_dotsizes)
 };
 
 DECLARE_INK2(standard_3pl_2880, 1.0);
 
-static const stp_dither_range_simple_t standard_980_6pl_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_980_6pl_dither_ranges[] =
 {
   { 0.40,  0x1, 0, 4 },
   { 0.675, 0x2, 0, 7 },
   { 1.0,   0x3, 0, 10 }
 };
 
-static const stp_shade_t standard_980_6pl_shades[] =
+static const stpi_shade_t standard_980_6pl_shades[] =
 {
   SHADE(1.0, 0, standard_980_6pl_dotsizes)
 };
 
 DECLARE_INK2(standard_980_6pl, 1.0);
 
-static const stp_dither_range_simple_t piezo_3pl_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_3pl_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * .25, 0x1, 0, 2 },
   { PIEZO_0 * .61, 0x2, 0, 5 },
@@ -973,7 +973,7 @@ static const stp_dither_range_simple_t piezo_3pl_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.0, 0x3, 3, 8 },
 };
 
-static const stp_shade_t piezo_3pl_quadtone_shades[] =
+static const stpi_shade_t piezo_3pl_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_3pl_dotsizes),
   SHADE(PIEZO_1, 1, standard_3pl_dotsizes),
@@ -983,7 +983,7 @@ static const stp_shade_t piezo_3pl_quadtone_shades[] =
 
 DECLARE_INK2(piezo_3pl_quadtone, PIEZO_DENSITY);
 
-static const stp_dither_range_simple_t piezo_3pl_1440_quadtone_dither_ranges[]=
+static const stpi_dither_range_simple_t piezo_3pl_1440_quadtone_dither_ranges[]=
 {
   { PIEZO_0 * .390, 0x1, 0, 2 },
   { PIEZO_1 * .390, 0x1, 1, 2 },
@@ -992,7 +992,7 @@ static const stp_dither_range_simple_t piezo_3pl_1440_quadtone_dither_ranges[]=
   { PIEZO_3 * 1.00, 0x2, 3, 5 },
 };
 
-static const stp_shade_t piezo_3pl_1440_quadtone_shades[] =
+static const stpi_shade_t piezo_3pl_1440_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_3pl_1440_dotsizes),
   SHADE(PIEZO_1, 1, standard_3pl_1440_dotsizes),
@@ -1002,7 +1002,7 @@ static const stp_shade_t piezo_3pl_1440_quadtone_shades[] =
 
 DECLARE_INK2(piezo_3pl_1440_quadtone, PIEZO_DENSITY);
 
-static const stp_dither_range_simple_t piezo_3pl_2880_quadtone_dither_ranges[]=
+static const stpi_dither_range_simple_t piezo_3pl_2880_quadtone_dither_ranges[]=
 {
   { PIEZO_0, 0x1, 0, 1 },
   { PIEZO_1, 0x1, 1, 1 },
@@ -1010,7 +1010,7 @@ static const stp_dither_range_simple_t piezo_3pl_2880_quadtone_dither_ranges[]=
   { PIEZO_3, 0x1, 3, 1 },
 };
 
-static const stp_shade_t piezo_3pl_2880_quadtone_shades[] =
+static const stpi_shade_t piezo_3pl_2880_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_3pl_2880_dotsizes),
   SHADE(PIEZO_1, 1, standard_3pl_2880_dotsizes),
@@ -1020,7 +1020,7 @@ static const stp_shade_t piezo_3pl_2880_quadtone_shades[] =
 
 DECLARE_INK2(piezo_3pl_2880_quadtone, PIEZO_DENSITY);
 
-static const stp_dither_range_simple_t piezo_980_6pl_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_980_6pl_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * .400, 0x1, 0, 4 },
   { PIEZO_0 * .675, 0x2, 0, 7 },
@@ -1029,7 +1029,7 @@ static const stp_dither_range_simple_t piezo_980_6pl_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.00, 0x3, 3, 10 },
 };
 
-static const stp_shade_t piezo_980_6pl_quadtone_shades[] =
+static const stpi_shade_t piezo_980_6pl_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_980_6pl_dotsizes),
   SHADE(PIEZO_1, 1, standard_980_6pl_dotsizes),
@@ -1046,50 +1046,50 @@ DECLARE_INK2(piezo_980_6pl_quadtone, PIEZO_DENSITY);
 *                                                               *
 \***************************************************************/
 
-static const stp_dotsize_t standard_2pl_2880_dotsizes[] =
+static const stpi_dotsize_t standard_2pl_2880_dotsizes[] =
 {
   { 0x1, 1.00 }
 };
 
-static const stp_dotsize_t standard_2pl_1440_dotsizes[] =
+static const stpi_dotsize_t standard_2pl_1440_dotsizes[] =
 {
   { 0x1, 0.50 },
   { 0x2, 1.00 }
 };
 
-static const stp_dotsize_t standard_2pl_720_dotsizes[] =
+static const stpi_dotsize_t standard_2pl_720_dotsizes[] =
 {
   { 0x1, 0.25 },
   { 0x2, 0.50 },
   { 0x3, 1.00 }
 };
 
-static const stp_dotsize_t standard_2pl_360_dotsizes[] =
+static const stpi_dotsize_t standard_2pl_360_dotsizes[] =
 {
   { 0x1, 0.25 },
   { 0x2, 0.50 },
   { 0x3, 1.00 }
 };
 
-static const stp_dither_range_simple_t standard_2pl_2880_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_2pl_2880_dither_ranges[] =
 {
   { 1.00, 0x1, 0, 1 },
 };
 
-static const stp_shade_t standard_2pl_2880_shades[] =
+static const stpi_shade_t standard_2pl_2880_shades[] =
 {
   SHADE(1.0, 0, standard_2pl_2880_dotsizes)
 };
 
 DECLARE_INK2(standard_2pl_2880, 1.0);
 
-static const stp_dither_range_simple_t photo_2pl_2880_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_2pl_2880_dither_ranges[] =
 {
   { 0.26, 0x1, 1, 1 },
   { 1.00, 0x1, 0, 1 },
 };
 
-static const stp_shade_t photo_2pl_2880_shades[] =
+static const stpi_shade_t photo_2pl_2880_shades[] =
 {
   SHADE(0.26, 0, standard_2pl_2880_dotsizes),
   SHADE(1.0,  0, standard_2pl_2880_dotsizes)
@@ -1097,13 +1097,13 @@ static const stp_shade_t photo_2pl_2880_shades[] =
 
 DECLARE_INK2(photo_2pl_2880, 0.5);
 
-static const stp_dither_range_simple_t photo_2pl_2880_c_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_2pl_2880_c_dither_ranges[] =
 {
   { 0.26, 0x1, 1, 1 },
   { 1.00, 0x1, 0, 1 },
 };
 
-static const stp_shade_t photo_2pl_2880_c_shades[] =
+static const stpi_shade_t photo_2pl_2880_c_shades[] =
 {
   SHADE(0.26, 1, standard_2pl_2880_dotsizes),
   SHADE(1.0,  0, standard_2pl_2880_dotsizes)
@@ -1111,13 +1111,13 @@ static const stp_shade_t photo_2pl_2880_c_shades[] =
 
 DECLARE_INK2(photo_2pl_2880_c, 0.5);
 
-static const stp_dither_range_simple_t photo_2pl_2880_m_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_2pl_2880_m_dither_ranges[] =
 {
   { 0.31, 0x1, 1, 1 },
   { 1.00, 0x1, 0, 1 },
 };
 
-static const stp_shade_t photo_2pl_2880_m_shades[] =
+static const stpi_shade_t photo_2pl_2880_m_shades[] =
 {
   SHADE(0.31, 1, standard_2pl_2880_dotsizes),
   SHADE(1.0,  0, standard_2pl_2880_dotsizes)
@@ -1125,13 +1125,13 @@ static const stp_shade_t photo_2pl_2880_m_shades[] =
 
 DECLARE_INK2(photo_2pl_2880_m, 0.5);
 
-static const stp_dither_range_simple_t photo_2pl_2880_y_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_2pl_2880_y_dither_ranges[] =
 {
   { 0.5,  0x1, 0, 1 },
   { 1.00, 0x1, 1, 1 },
 };
 
-static const stp_shade_t photo_2pl_2880_y_shades[] =
+static const stpi_shade_t photo_2pl_2880_y_shades[] =
 {
   SHADE(0.5, 0, standard_2pl_2880_dotsizes),
   SHADE(1.0, 1, standard_2pl_2880_dotsizes)
@@ -1139,7 +1139,7 @@ static const stp_shade_t photo_2pl_2880_y_shades[] =
 
 DECLARE_INK2(photo_2pl_2880_y, 1.00);
 
-static const stp_dither_range_simple_t piezo_2pl_2880_quadtone_dither_ranges[]=
+static const stpi_dither_range_simple_t piezo_2pl_2880_quadtone_dither_ranges[]=
 {
   { PIEZO_0, 0x1, 0, 1 },
   { PIEZO_1, 0x1, 1, 1 },
@@ -1147,7 +1147,7 @@ static const stp_dither_range_simple_t piezo_2pl_2880_quadtone_dither_ranges[]=
   { PIEZO_3, 0x1, 3, 1 },
 };
 
-static const stp_shade_t piezo_2pl_2880_quadtone_shades[] =
+static const stpi_shade_t piezo_2pl_2880_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_2pl_2880_dotsizes),
   SHADE(PIEZO_1, 1, standard_2pl_2880_dotsizes),
@@ -1157,20 +1157,20 @@ static const stp_shade_t piezo_2pl_2880_quadtone_shades[] =
 
 DECLARE_INK2(piezo_2pl_2880_quadtone, PIEZO_DENSITY);
 
-static const stp_dither_range_simple_t standard_2pl_1440_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_2pl_1440_dither_ranges[] =
 {
   { 0.5,   0x1, 0, 1 },
   { 1.00,  0x2, 0, 2 }
 };
 
-static const stp_shade_t standard_2pl_1440_shades[] =
+static const stpi_shade_t standard_2pl_1440_shades[] =
 {
   SHADE(1.0, 0, standard_2pl_1440_dotsizes)
 };
 
 DECLARE_INK2(standard_2pl_1440, 1.0);
 
-static const stp_dither_range_simple_t piezo_2pl_1440_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_2pl_1440_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * .5,   0x1, 0, 1 },
   { PIEZO_1 * .5,   0x1, 1, 1 },
@@ -1179,7 +1179,7 @@ static const stp_dither_range_simple_t piezo_2pl_1440_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.00, 0x2, 3, 2 },
 };
 
-static const stp_shade_t piezo_2pl_1440_quadtone_shades[] =
+static const stpi_shade_t piezo_2pl_1440_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_2pl_1440_dotsizes),
   SHADE(PIEZO_1, 1, standard_2pl_1440_dotsizes),
@@ -1189,7 +1189,7 @@ static const stp_shade_t piezo_2pl_1440_quadtone_shades[] =
 
 DECLARE_INK2(piezo_2pl_1440_quadtone, PIEZO_DENSITY);
 
-static const stp_dither_range_simple_t photo_2pl_1440_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_2pl_1440_dither_ranges[] =
 {
   { 0.13,  0x1, 1, 1 },
   { 0.26,  0x2, 1, 2 },
@@ -1197,7 +1197,7 @@ static const stp_dither_range_simple_t photo_2pl_1440_dither_ranges[] =
   { 1.00,  0x2, 0, 2 }
 };
 
-static const stp_shade_t photo_2pl_1440_shades[] =
+static const stpi_shade_t photo_2pl_1440_shades[] =
 {
   SHADE(0.26, 1, standard_2pl_1440_dotsizes),
   SHADE(1.00, 0, standard_2pl_1440_dotsizes)
@@ -1205,14 +1205,14 @@ static const stp_shade_t photo_2pl_1440_shades[] =
 
 DECLARE_INK2(photo_2pl_1440, 1.0);
 
-static const stp_dither_range_simple_t photo_2pl_1440_y_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_2pl_1440_y_dither_ranges[] =
 {
   { 0.25,  0x1, 0, 1 },
   { 0.50,  0x2, 0, 2 },
   { 1.00,  0x2, 1, 2 }
 };
 
-static const stp_shade_t photo_2pl_1440_y_shades[] =
+static const stpi_shade_t photo_2pl_1440_y_shades[] =
 {
   SHADE(0.50, 0, standard_2pl_1440_dotsizes),
   SHADE(1.00, 1, standard_2pl_1440_dotsizes)
@@ -1220,21 +1220,21 @@ static const stp_shade_t photo_2pl_1440_y_shades[] =
 
 DECLARE_INK2(photo_2pl_1440_y, 1.0);
 
-static const stp_dither_range_simple_t standard_2pl_720_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_2pl_720_dither_ranges[] =
 {
   { 0.25,  0x1, 0, 1 },
   { 0.5,   0x2, 0, 2 },
   { 1.0,   0x3, 0, 4 }
 };
 
-static const stp_shade_t standard_2pl_720_shades[] =
+static const stpi_shade_t standard_2pl_720_shades[] =
 {
   SHADE(1.0, 0, standard_2pl_720_dotsizes)
 };
 
 DECLARE_INK2(standard_2pl_720, 1.0);
 
-static const stp_dither_range_simple_t photo_2pl_720_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_2pl_720_dither_ranges[] =
 {
   { 0.065, 0x1, 1, 1 },
   { 0.13,  0x2, 1, 2 },
@@ -1244,7 +1244,7 @@ static const stp_dither_range_simple_t photo_2pl_720_dither_ranges[] =
   { 1.0,   0x3, 0, 4 }
 };
 
-static const stp_shade_t photo_2pl_720_shades[] =
+static const stpi_shade_t photo_2pl_720_shades[] =
 {
   SHADE(0.26, 1, standard_2pl_720_dotsizes),
   SHADE(1.00, 0, standard_2pl_720_dotsizes)
@@ -1252,7 +1252,7 @@ static const stp_shade_t photo_2pl_720_shades[] =
 
 DECLARE_INK2(photo_2pl_720, 1.0);
 
-static const stp_dither_range_simple_t photo_2pl_720_y_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_2pl_720_y_dither_ranges[] =
 {
   { 0.125, 0x1, 0, 1 },
   { 0.25,  0x2, 0, 2 },
@@ -1260,7 +1260,7 @@ static const stp_dither_range_simple_t photo_2pl_720_y_dither_ranges[] =
   { 1.0,   0x3, 1, 4 }
 };
 
-static const stp_shade_t photo_2pl_720_y_shades[] =
+static const stpi_shade_t photo_2pl_720_y_shades[] =
 {
   SHADE(0.5, 0, standard_2pl_720_dotsizes),
   SHADE(1.0, 1, standard_2pl_720_dotsizes)
@@ -1268,7 +1268,7 @@ static const stp_shade_t photo_2pl_720_y_shades[] =
 
 DECLARE_INK2(photo_2pl_720_y, 1.0);
 
-static const stp_dither_range_simple_t piezo_2pl_720_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_2pl_720_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * .25, 0x1, 0, 1 },
   { PIEZO_0 * .50, 0x2, 0, 2 },
@@ -1278,7 +1278,7 @@ static const stp_dither_range_simple_t piezo_2pl_720_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.0, 0x3, 3, 4 },
 };
 
-static const stp_shade_t piezo_2pl_720_quadtone_shades[] =
+static const stpi_shade_t piezo_2pl_720_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_2pl_720_dotsizes),
   SHADE(PIEZO_1, 1, standard_2pl_720_dotsizes),
@@ -1288,21 +1288,21 @@ static const stp_shade_t piezo_2pl_720_quadtone_shades[] =
 
 DECLARE_INK2(piezo_2pl_720_quadtone, PIEZO_DENSITY);
 
-static const stp_dither_range_simple_t standard_2pl_360_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_2pl_360_dither_ranges[] =
 {
   { 0.25,  0x1, 0, 2 },
   { 0.5,   0x2, 0, 4 },
   { 1.0,   0x3, 0, 7 }
 };
 
-static const stp_shade_t standard_2pl_360_shades[] =
+static const stpi_shade_t standard_2pl_360_shades[] =
 {
   SHADE(1.0, 0, standard_2pl_360_dotsizes)
 };
 
 DECLARE_INK2(standard_2pl_360, 1.0);
 
-static const stp_dither_range_simple_t photo_2pl_360_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_2pl_360_dither_ranges[] =
 {
   { 0.065,  0x1, 1, 1 },
   { 0.13,   0x2, 1, 2 },
@@ -1310,7 +1310,7 @@ static const stp_dither_range_simple_t photo_2pl_360_dither_ranges[] =
   { 1.0,    0x3, 0, 3 }
 };
 
-static const stp_shade_t photo_2pl_360_shades[] =
+static const stpi_shade_t photo_2pl_360_shades[] =
 {
   SHADE(0.26, 1, standard_2pl_360_dotsizes),
   SHADE(1.0,  0, standard_2pl_360_dotsizes)
@@ -1318,7 +1318,7 @@ static const stp_shade_t photo_2pl_360_shades[] =
 
 DECLARE_INK2(photo_2pl_360, 1.0);
 
-static const stp_dither_range_simple_t photo_2pl_360_y_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_2pl_360_y_dither_ranges[] =
 {
   { 0.145, 0x1, 0, 1 },
   { 0.290, 0x2, 0, 2 },
@@ -1326,7 +1326,7 @@ static const stp_dither_range_simple_t photo_2pl_360_y_dither_ranges[] =
   { 1.0,   0x3, 1, 3 }
 };
 
-static const stp_shade_t photo_2pl_360_y_shades[] =
+static const stpi_shade_t photo_2pl_360_y_shades[] =
 {
   SHADE(0.5, 0, standard_2pl_360_dotsizes),
   SHADE(1.0, 1, standard_2pl_360_dotsizes)
@@ -1334,7 +1334,7 @@ static const stp_shade_t photo_2pl_360_y_shades[] =
 
 DECLARE_INK2(photo_2pl_360_y, 1.0);
 
-static const stp_dither_range_simple_t piezo_2pl_360_quadtone_dither_ranges[] =
+static const stpi_dither_range_simple_t piezo_2pl_360_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * .25, 0x1, 0, 2 },
   { PIEZO_0 * .50, 0x2, 0, 4 },
@@ -1344,7 +1344,7 @@ static const stp_dither_range_simple_t piezo_2pl_360_quadtone_dither_ranges[] =
   { PIEZO_3 * 1.0, 0x3, 3, 7 },
 };
 
-static const stp_shade_t piezo_2pl_360_quadtone_shades[] =
+static const stpi_shade_t piezo_2pl_360_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_2pl_360_dotsizes),
   SHADE(PIEZO_1, 1, standard_2pl_360_dotsizes),
@@ -1361,98 +1361,98 @@ DECLARE_INK2(piezo_2pl_360_quadtone, PIEZO_DENSITY);
 *                                                               *
 \***************************************************************/
 
-static const stp_dotsize_t standard_economy_pigment_dotsizes[] =
+static const stpi_dotsize_t standard_economy_pigment_dotsizes[] =
 {
   { 0x3, 1.0 }
 };
 
-static const stp_dotsize_t standard_multishot_pigment_dotsizes[] =
+static const stpi_dotsize_t standard_multishot_pigment_dotsizes[] =
 {
   { 0x1, 0.41 },
   { 0x3, 1.00 }
 };
 
-static const stp_dotsize_t standard_6pl_pigment_dotsizes[] =
+static const stpi_dotsize_t standard_6pl_pigment_dotsizes[] =
 {
   { 0x1, 0.30 },
   { 0x3, 1.00 }
 };
 
-static const stp_dotsize_t standard_3pl_pigment_dotsizes[] =
+static const stpi_dotsize_t standard_3pl_pigment_dotsizes[] =
 {
   { 0x1, 0.65 },
   { 0x2, 1.00 }
 };
 
-static const stp_dotsize_t standard_3pl_pigment_2880_dotsizes[] =
+static const stpi_dotsize_t standard_3pl_pigment_2880_dotsizes[] =
 {
   { 0x1, 1.00 }
 };
 
-static const stp_dither_range_simple_t standard_economy_pigment_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_economy_pigment_dither_ranges[] =
 {
   { 1.0,   0x3, 0, 3 }
 };
 
-static const stp_shade_t standard_economy_pigment_shades[] =
+static const stpi_shade_t standard_economy_pigment_shades[] =
 {
   SHADE(1.0, 0, standard_economy_pigment_dotsizes)
 };
 
 DECLARE_INK2(standard_economy_pigment, 1.0);
 
-static const stp_dither_range_simple_t standard_multishot_pigment_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_multishot_pigment_dither_ranges[] =
 {
   { 0.410, 0x1, 0, 2 },
   { 1.0,   0x3, 0, 5 }
 };
 
-static const stp_shade_t standard_multishot_pigment_shades[] =
+static const stpi_shade_t standard_multishot_pigment_shades[] =
 {
   SHADE(1.0, 0, standard_multishot_pigment_dotsizes)
 };
 
 DECLARE_INK2(standard_multishot_pigment, 1.0);
 
-static const stp_dither_range_simple_t standard_6pl_pigment_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_6pl_pigment_dither_ranges[] =
 {
   { 0.300, 0x1, 0, 3 },
   { 1.0,   0x3, 0, 10 }
 };
 
-static const stp_shade_t standard_6pl_pigment_shades[] =
+static const stpi_shade_t standard_6pl_pigment_shades[] =
 {
   SHADE(1.0, 0, standard_6pl_pigment_dotsizes)
 };
 
 DECLARE_INK2(standard_6pl_pigment, 1.0);
 
-static const stp_dither_range_simple_t standard_3pl_pigment_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_3pl_pigment_dither_ranges[] =
 {
   { 0.650, 0x1, 0, 2 },
   { 1.000, 0x2, 0, 3 },
 };
 
-static const stp_shade_t standard_3pl_pigment_shades[] =
+static const stpi_shade_t standard_3pl_pigment_shades[] =
 {
   SHADE(1.0, 0, standard_3pl_pigment_dotsizes)
 };
 
 DECLARE_INK2(standard_3pl_pigment, 1.0);
 
-static const stp_dither_range_simple_t standard_3pl_pigment_2880_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_3pl_pigment_2880_dither_ranges[] =
 {
   { 1.0,   0x1, 0, 1 }
 };
 
-static const stp_shade_t standard_3pl_pigment_2880_shades[] =
+static const stpi_shade_t standard_3pl_pigment_2880_shades[] =
 {
   SHADE(1.0, 0, standard_3pl_pigment_2880_dotsizes)
 };
 
 DECLARE_INK2(standard_3pl_pigment_2880, 1.0);
 
-static const stp_dither_range_simple_t piezo_economy_pigment_quadtone_dither_ranges[]=
+static const stpi_dither_range_simple_t piezo_economy_pigment_quadtone_dither_ranges[]=
 {
   { PIEZO_0, 0x3, 0, 1 },
   { PIEZO_1, 0x3, 1, 1 },
@@ -1460,7 +1460,7 @@ static const stp_dither_range_simple_t piezo_economy_pigment_quadtone_dither_ran
   { PIEZO_3, 0x3, 3, 1 },
 };
 
-static const stp_shade_t piezo_economy_pigment_quadtone_shades[] =
+static const stpi_shade_t piezo_economy_pigment_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_economy_pigment_dotsizes),
   SHADE(PIEZO_1, 1, standard_economy_pigment_dotsizes),
@@ -1470,7 +1470,7 @@ static const stp_shade_t piezo_economy_pigment_quadtone_shades[] =
 
 DECLARE_INK2(piezo_economy_pigment_quadtone, PIEZO_DENSITY);
 
-static const stp_dither_range_simple_t piezo_multishot_pigment_quadtone_dither_ranges[]=
+static const stpi_dither_range_simple_t piezo_multishot_pigment_quadtone_dither_ranges[]=
 {
   { PIEZO_0 * .410, 0x1, 0, 2 },
   { PIEZO_1 * .410, 0x1, 1, 2 },
@@ -1478,7 +1478,7 @@ static const stp_dither_range_simple_t piezo_multishot_pigment_quadtone_dither_r
   { PIEZO_3 * 1.00, 0x3, 3, 5 },
 };
 
-static const stp_shade_t piezo_multishot_pigment_quadtone_shades[] =
+static const stpi_shade_t piezo_multishot_pigment_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_multishot_pigment_dotsizes),
   SHADE(PIEZO_1, 1, standard_multishot_pigment_dotsizes),
@@ -1488,7 +1488,7 @@ static const stp_shade_t piezo_multishot_pigment_quadtone_shades[] =
 
 DECLARE_INK2(piezo_multishot_pigment_quadtone, PIEZO_DENSITY);
 
-static const stp_dither_range_simple_t piezo_6pl_pigment_quadtone_dither_ranges[]=
+static const stpi_dither_range_simple_t piezo_6pl_pigment_quadtone_dither_ranges[]=
 {
   { PIEZO_0 * .300, 0x1, 0, 3 },
   { PIEZO_0 * .600, 0x2, 0, 6 },
@@ -1497,7 +1497,7 @@ static const stp_dither_range_simple_t piezo_6pl_pigment_quadtone_dither_ranges[
   { PIEZO_3 * 1.00, 0x3, 3, 10 },
 };
 
-static const stp_shade_t piezo_6pl_pigment_quadtone_shades[] =
+static const stpi_shade_t piezo_6pl_pigment_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_6pl_pigment_dotsizes),
   SHADE(PIEZO_1, 1, standard_6pl_pigment_dotsizes),
@@ -1507,7 +1507,7 @@ static const stp_shade_t piezo_6pl_pigment_quadtone_shades[] =
 
 DECLARE_INK2(piezo_6pl_pigment_quadtone, PIEZO_DENSITY);
 
-static const stp_dither_range_simple_t piezo_3pl_pigment_quadtone_dither_ranges[]=
+static const stpi_dither_range_simple_t piezo_3pl_pigment_quadtone_dither_ranges[]=
 {
   { PIEZO_0 * .650, 0x1, 0, 2 },
   { PIEZO_1 * .650, 0x1, 1, 2 },
@@ -1515,7 +1515,7 @@ static const stp_dither_range_simple_t piezo_3pl_pigment_quadtone_dither_ranges[
   { PIEZO_3 * 1.00, 0x2, 3, 3 },
 };
 
-static const stp_shade_t piezo_3pl_pigment_quadtone_shades[] =
+static const stpi_shade_t piezo_3pl_pigment_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_3pl_pigment_dotsizes),
   SHADE(PIEZO_1, 1, standard_3pl_pigment_dotsizes),
@@ -1525,7 +1525,7 @@ static const stp_shade_t piezo_3pl_pigment_quadtone_shades[] =
 
 DECLARE_INK2(piezo_3pl_pigment_quadtone, PIEZO_DENSITY);
 
-static const stp_dither_range_simple_t piezo_3pl_pigment_2880_quadtone_dither_ranges[]=
+static const stpi_dither_range_simple_t piezo_3pl_pigment_2880_quadtone_dither_ranges[]=
 {
   { PIEZO_0, 0x1, 0, 1 },
   { PIEZO_1, 0x1, 1, 1 },
@@ -1533,7 +1533,7 @@ static const stp_dither_range_simple_t piezo_3pl_pigment_2880_quadtone_dither_ra
   { PIEZO_3, 0x1, 3, 1 },
 };
 
-static const stp_shade_t piezo_3pl_pigment_2880_quadtone_shades[] =
+static const stpi_shade_t piezo_3pl_pigment_2880_quadtone_shades[] =
 {
   SHADE(PIEZO_0, 0, standard_3pl_pigment_2880_dotsizes),
   SHADE(PIEZO_1, 1, standard_3pl_pigment_2880_dotsizes),
@@ -1550,7 +1550,7 @@ DECLARE_INK2(piezo_3pl_pigment_2880_quadtone, PIEZO_DENSITY);
 *                                                               *
 \***************************************************************/
 
-static const stp_dither_range_simple_t standard_pigment_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_pigment_dither_ranges[] =
 { /* MRS: Not calibrated! */
   { 0.55,  0x1, 0, 1 },
   { 1.0,   0x2, 0, 2 }
@@ -1558,7 +1558,7 @@ static const stp_dither_range_simple_t standard_pigment_dither_ranges[] =
 
 DECLARE_INK(standard_pigment, 1.0);
 
-static const stp_dither_range_simple_t photo_pigment_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_pigment_dither_ranges[] =
 { /* MRS: Not calibrated! */
   { 0.15,  0x1, 1, 1 },
   { 0.227, 0x2, 1, 2 },
@@ -1568,7 +1568,7 @@ static const stp_dither_range_simple_t photo_pigment_dither_ranges[] =
 
 DECLARE_INK(photo_pigment, 1.0);
 
-static const stp_dither_range_simple_t piezo_pigment_quadtone_dither_ranges[]=
+static const stpi_dither_range_simple_t piezo_pigment_quadtone_dither_ranges[]=
 {
   { PIEZO_0 * .550, 0x1, 0, 1 },
   { PIEZO_1 * .550, 0x1, 1, 1 },
@@ -1586,7 +1586,7 @@ DECLARE_INK(piezo_pigment_quadtone, PIEZO_DENSITY);
 *                                                               *
 \***************************************************************/
 
-static const stp_dither_range_simple_t standard_4pl_pigment_low_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_4pl_pigment_low_dither_ranges[] =
 {
   { 0.40,  0x1, 0, 40 },
   { 0.70,  0x2, 0, 70 },
@@ -1595,7 +1595,7 @@ static const stp_dither_range_simple_t standard_4pl_pigment_low_dither_ranges[] 
 
 DECLARE_INK(standard_4pl_pigment_low, 0.5);
 
-static const stp_dither_range_simple_t photo_4pl_pigment_low_m_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_pigment_low_m_dither_ranges[] =
 {
   { 0.104,  0x1, 1, 40 },
   { 0.182,  0x2, 1, 70 },
@@ -1606,7 +1606,7 @@ static const stp_dither_range_simple_t photo_4pl_pigment_low_m_dither_ranges[] =
 
 DECLARE_INK(photo_4pl_pigment_low_m, 0.5);
 
-static const stp_dither_range_simple_t photo_4pl_pigment_low_c_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_pigment_low_c_dither_ranges[] =
 {
   { 0.16,   0x1, 1, 40 },
   { 0.28,   0x2, 1, 70 },
@@ -1617,7 +1617,7 @@ static const stp_dither_range_simple_t photo_4pl_pigment_low_c_dither_ranges[] =
 
 DECLARE_INK(photo_4pl_pigment_low_c, 0.5);
 
-static const stp_dither_range_simple_t photo_4pl_pigment_low_y_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_pigment_low_y_dither_ranges[] =
 {
   { 0.20,   0x1, 1, 40 },
   { 0.35,   0x2, 1, 70 },
@@ -1627,7 +1627,7 @@ static const stp_dither_range_simple_t photo_4pl_pigment_low_y_dither_ranges[] =
 
 DECLARE_INK(photo_4pl_pigment_low_y, 1.5);
 
-static const stp_dither_range_simple_t photo_4pl_pigment_low_k_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_pigment_low_k_dither_ranges[] =
 {
   { 0.196,  0x1, 1, 40 },
   { 0.40,   0x1, 0, 40 },
@@ -1637,7 +1637,7 @@ static const stp_dither_range_simple_t photo_4pl_pigment_low_k_dither_ranges[] =
 
 DECLARE_INK(photo_4pl_pigment_low_k, 0.5);
 
-static const stp_dither_range_simple_t standard_4pl_pigment_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_4pl_pigment_dither_ranges[] =
 {
   { 0.28,  0x1, 0, 28 },
   { 0.50,  0x2, 0, 50 },
@@ -1646,7 +1646,7 @@ static const stp_dither_range_simple_t standard_4pl_pigment_dither_ranges[] =
 
 DECLARE_INK(standard_4pl_pigment, 1.0);
 
-static const stp_dither_range_simple_t photo_4pl_pigment_m_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_pigment_m_dither_ranges[] =
 {
   { 0.0728, 0x1, 1, 28 },
   { 0.13,   0x2, 1, 50 },
@@ -1657,7 +1657,7 @@ static const stp_dither_range_simple_t photo_4pl_pigment_m_dither_ranges[] =
 
 DECLARE_INK(photo_4pl_pigment_m, 1.0);
 
-static const stp_dither_range_simple_t photo_4pl_pigment_c_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_pigment_c_dither_ranges[] =
 {
   { 0.112,  0x1, 1, 28 },
   { 0.20,  0x2, 1, 50 },
@@ -1668,7 +1668,7 @@ static const stp_dither_range_simple_t photo_4pl_pigment_c_dither_ranges[] =
 
 DECLARE_INK(photo_4pl_pigment_c, 1.0);
 
-static const stp_dither_range_simple_t photo_4pl_pigment_y_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_pigment_y_dither_ranges[] =
 {
   { 0.14,   0x1, 1, 28 },
   { 0.25,   0x2, 1, 50 },
@@ -1678,7 +1678,7 @@ static const stp_dither_range_simple_t photo_4pl_pigment_y_dither_ranges[] =
 
 DECLARE_INK(photo_4pl_pigment_y, 1.5);
 
-static const stp_dither_range_simple_t photo_4pl_pigment_k_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_pigment_k_dither_ranges[] =
 {
   { 0.1344, 0x1, 1, 28 },
   { 0.24,   0x2, 1, 50 },
@@ -1688,7 +1688,7 @@ static const stp_dither_range_simple_t photo_4pl_pigment_k_dither_ranges[] =
 
 DECLARE_INK(photo_4pl_pigment_k, 0.75);
 
-static const stp_dither_range_simple_t standard_4pl_pigment_1440_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_4pl_pigment_1440_dither_ranges[] =
 {
   { 0.56,  0x1, 0, 56 },
   { 1.00,  0x2, 0, 100 },
@@ -1696,7 +1696,7 @@ static const stp_dither_range_simple_t standard_4pl_pigment_1440_dither_ranges[]
 
 DECLARE_INK(standard_4pl_pigment_1440, 1.0);
 
-static const stp_dither_range_simple_t photo_4pl_pigment_1440_m_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_pigment_1440_m_dither_ranges[] =
 {
   { 0.1456, 0x1, 1, 56 },
   { 0.26,   0x2, 1, 100 },
@@ -1706,7 +1706,7 @@ static const stp_dither_range_simple_t photo_4pl_pigment_1440_m_dither_ranges[] 
 
 DECLARE_INK(photo_4pl_pigment_1440_m, 1.0);
 
-static const stp_dither_range_simple_t photo_4pl_pigment_1440_c_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_pigment_1440_c_dither_ranges[] =
 {
   { 0.224,  0x1, 1, 56 },
   { 0.40,   0x2, 1, 100 },
@@ -1716,7 +1716,7 @@ static const stp_dither_range_simple_t photo_4pl_pigment_1440_c_dither_ranges[] 
 
 DECLARE_INK(photo_4pl_pigment_1440_c, 1.0);
 
-static const stp_dither_range_simple_t photo_4pl_pigment_1440_y_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_pigment_1440_y_dither_ranges[] =
 {
   { 0.28,   0x1, 1, 56 },
   { 0.50,   0x2, 1, 100 },
@@ -1725,7 +1725,7 @@ static const stp_dither_range_simple_t photo_4pl_pigment_1440_y_dither_ranges[] 
 
 DECLARE_INK(photo_4pl_pigment_1440_y, 1.5);
 
-static const stp_dither_range_simple_t photo_4pl_pigment_1440_k_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_pigment_1440_k_dither_ranges[] =
 {
   { 0.2688, 0x1, 1, 56 },
   { 0.56,   0x1, 0, 56 },
@@ -1734,14 +1734,14 @@ static const stp_dither_range_simple_t photo_4pl_pigment_1440_k_dither_ranges[] 
 
 DECLARE_INK(photo_4pl_pigment_1440_k, 0.75);
 
-static const stp_dither_range_simple_t standard_4pl_pigment_2880_dither_ranges[] =
+static const stpi_dither_range_simple_t standard_4pl_pigment_2880_dither_ranges[] =
 {
   { 1.00,  0x1, 0, 1 },
 };
 
 DECLARE_INK(standard_4pl_pigment_2880, 1.0);
 
-static const stp_dither_range_simple_t photo_4pl_pigment_2880_m_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_pigment_2880_m_dither_ranges[] =
 {
   { 0.26,  0x1, 1, 1 },
   { 1.00,  0x1, 0, 1 },
@@ -1749,7 +1749,7 @@ static const stp_dither_range_simple_t photo_4pl_pigment_2880_m_dither_ranges[] 
 
 DECLARE_INK(photo_4pl_pigment_2880_m, 0.75);
 
-static const stp_dither_range_simple_t photo_4pl_pigment_2880_c_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_pigment_2880_c_dither_ranges[] =
 {
   { 0.40,  0x1, 1, 1 },
   { 1.00,  0x1, 0, 1 },
@@ -1757,7 +1757,7 @@ static const stp_dither_range_simple_t photo_4pl_pigment_2880_c_dither_ranges[] 
 
 DECLARE_INK(photo_4pl_pigment_2880_c, 0.75);
 
-static const stp_dither_range_simple_t photo_4pl_pigment_2880_y_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_pigment_2880_y_dither_ranges[] =
 {
   { 0.50,  0x1, 1, 1 },
   { 1.00,  0x1, 0, 1 },
@@ -1765,7 +1765,7 @@ static const stp_dither_range_simple_t photo_4pl_pigment_2880_y_dither_ranges[] 
 
 DECLARE_INK(photo_4pl_pigment_2880_y, 1.5);
 
-static const stp_dither_range_simple_t photo_4pl_pigment_2880_k_dither_ranges[] =
+static const stpi_dither_range_simple_t photo_4pl_pigment_2880_k_dither_ranges[] =
 {
   { 0.48,  0x1, 1, 1 },
   { 1.00,  0x1, 0, 1 },
@@ -1780,7 +1780,7 @@ DECLARE_INK(photo_4pl_pigment_2880_k, 0.75);
 *                                                               *
 \***************************************************************/
 
-static const stp_dither_range_simple_t spro10000_standard_dither_ranges[] =
+static const stpi_dither_range_simple_t spro10000_standard_dither_ranges[] =
 {
   { 0.661, 0x1, 0, 2 },
   { 1.00,  0x2, 0, 3 }
@@ -1788,7 +1788,7 @@ static const stp_dither_range_simple_t spro10000_standard_dither_ranges[] =
 
 DECLARE_INK(spro10000_standard, 1.0);
 
-static const stp_dither_range_simple_t spro10000_photo_dither_ranges[] =
+static const stpi_dither_range_simple_t spro10000_photo_dither_ranges[] =
 {
   { 0.17,  0x1, 1, 2 },
   { 0.26,  0x2, 1, 3 },
@@ -4816,7 +4816,7 @@ static const stp_raw_t je_deinit_sequence =
 
 #define INCH(x)		(72 * x)
 
-const escp2_stp_printer_t stp_escp2_model_capabilities[] =
+const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
 {
   /* FIRST GENERATION PRINTERS */
   /* 0: Stylus Color */
@@ -5665,5 +5665,5 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
   },
 };
 
-const int stp_escp2_model_limit =
-sizeof(stp_escp2_model_capabilities) / sizeof(escp2_stp_printer_t);
+const int stpi_escp2_model_limit =
+sizeof(stpi_escp2_model_capabilities) / sizeof(stpi_escp2_printer_t);

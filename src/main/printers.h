@@ -61,45 +61,39 @@ typedef struct
   int   (*verify)(const stp_vars_t v);
   int   (*start_job)(const stp_vars_t v, stp_image_t *image);
   int   (*end_job)(const stp_vars_t v, stp_image_t *image);
-} stp_printfuncs_t;
+} stpi_printfuncs_t;
 
 
-typedef struct stp_internal_printer
+typedef struct stpi_internal_printer
 {
   int        cookie;            /* Magic number */
   char       *long_name;        /* Long name for UI */
   char       *family;           /* Printer family */
   int        model;             /* Model number */
-  const stp_printfuncs_t *printfuncs;
+  const stpi_printfuncs_t *printfuncs;
   stp_vars_t printvars;
-} stp_internal_printer_t;
+} stpi_internal_printer_t;
 
 
-typedef struct stp_internal_family
+typedef struct stpi_internal_family
 {
-  const stp_printfuncs_t *printfuncs;   /* printfuncs for the printer */
-  stp_list_t             *printer_list; /* list of printers */
-} stp_internal_family_t;
+  const stpi_printfuncs_t *printfuncs;   /* printfuncs for the printer */
+  stpi_list_t             *printer_list; /* list of printers */
+} stpi_internal_family_t;
 
+extern int stpi_get_model_id(const stp_vars_t v);
 
-extern stp_list_t *stp_printer_list;
+extern int stpi_verify_printer_params(const stp_vars_t);
+extern int stpi_init_printer_list(void);
 
+extern int stpi_family_register(stpi_list_t *family);
+extern int stpi_family_unregister(stpi_list_t *family);
 
-extern int stp_get_model(const stp_vars_t v);
-
-extern const stp_printfuncs_t *stp_printer_get_printfuncs(const stp_printer_t p);
-
-extern int stp_verify_printer_params(const stp_vars_t);
-extern int stp_init_printer_list(void);
-
-extern int stp_family_register(stp_list_t *family);
-extern int stp_family_unregister(stp_list_t *family);
-
-extern stp_parameter_list_t stp_printer_list_parameters(const stp_vars_t v);
+extern stp_parameter_list_t stpi_printer_list_parameters(const stp_vars_t v);
 
 extern void
-stp_printer_describe_parameter(const stp_vars_t v, const char *name,
-			       stp_parameter_t *description);
+stpi_printer_describe_parameter(const stp_vars_t v, const char *name,
+				stp_parameter_t *description);
 
 
 #ifdef __cplusplus

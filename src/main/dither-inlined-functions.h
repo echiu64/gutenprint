@@ -38,7 +38,7 @@
  */
 
 static inline unsigned
-ditherpoint(const dither_t *d, dither_matrix_t *mat, int x)
+ditherpoint(const stpi_dither_t *d, dither_matrix_t *mat, int x)
 {
   if (mat->fast_mask)
     return mat->matrix[(mat->last_y_mod +
@@ -78,7 +78,7 @@ ditherpoint(const dither_t *d, dither_matrix_t *mat, int x)
 }
 
 static inline int
-compute_black(const dither_t *d)
+compute_black(const stpi_dither_t *d)
 {
   int answer = INT_MAX;
   int i;
@@ -88,7 +88,7 @@ compute_black(const dither_t *d)
 }
 
 static inline void
-set_row_ends(dither_channel_t *dc, int x, int subchannel)
+set_row_ends(stpi_dither_channel_t *dc, int x, int subchannel)
 {
   if (dc->row_ends[0][subchannel] == -1)
     dc->row_ends[0][subchannel] = x;

@@ -165,7 +165,7 @@ ps_parameters(const stp_vars_t v, const char *name,
   for (i = 0; i < the_parameter_count; i++)
     if (strcmp(name, the_parameters[i].name) == 0)
       {
-	stp_fill_parameter_settings(description, &(the_parameters[i]));
+	stpi_fill_parameter_settings(description, &(the_parameters[i]));
 	break;
       }
 
@@ -247,15 +247,16 @@ ps_media_size(const stp_vars_t v,		/* I */
   if (!pagesize)
     pagesize = "";
 
-  stp_dprintf(STP_DBG_PS, v,
-	      "ps_media_size(%d, \'%s\', \'%s\', %08x, %08x)\n",
-	      stp_get_model(v), ppd_file_name, pagesize, width, height);
+  stpi_dprintf(STPI_DBG_PS, v,
+	      "ps_media_size(%d, \'%s\', \'%s\', %p, %p)\n",
+	      stpi_get_model_id(v), ppd_file_name, pagesize,
+	       (void *) width, (void *) height);
 
   if ((dimensions = ppd_find(ppd_file_name, "PaperDimension", pagesize, NULL))
       != NULL)
     sscanf(dimensions, "%d%d", width, height);
   else
-    stp_default_media_size(v, width, height);
+    stpi_default_media_size(v, width, height);
 }
 
 
@@ -285,7 +286,7 @@ ps_imageable_area(const stp_vars_t v,      /* I */
 		       "ImageableArea", pagesize, NULL))
       != NULL)
     {
-      stp_dprintf(STP_DBG_PS, v, "area = \'%s\'\n", area);
+      stpi_dprintf(STPI_DBG_PS, v, "area = \'%s\'\n", area);
       if (sscanf(area, "%f%f%f%f", &fleft, &fbottom, &fright, &ftop) == 4)
 	{
 	  *left   = (int)fleft;
@@ -340,7 +341,7 @@ static int
 ps_print(const stp_vars_t v, stp_image_t *image)
 {
   int		status = 1;
-  int		model = stp_get_model(v);
+  int		model = stpi_get_model_id(v);
   const char	*ppd_file = stp_get_file_parameter(v, "PPDFile");
   const char	*resolution = stp_get_string_parameter(v, "Resolution");
   const char	*media_size = stp_get_string_parameter(v, "PageSize");
@@ -390,7 +391,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
 
   if (!stp_verify(nv))
     {
-      stp_eprintf(nv, "Print options not verified; cannot print.\n");
+      stpi_eprintf(nv, "Print options not verified; cannot print.\n");
       return 0;
     }
 
@@ -398,8 +399,8 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   * Setup a read-only pixel region for the entire image...
   */
 
-  stp_image_init(image);
-  image_bpp = stp_image_bpp(image);
+  stpi_image_init(image);
+  image_bpp = stpi_image_bpp(image);
 
  /*
   * Compute the output size...
@@ -414,14 +415,14 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   page_width = page_right - page_left;
   page_height = page_bottom - page_top;
 
-  image_height = stp_image_height(image);
-  image_width = stp_image_width(image);
+  image_height = stpi_image_height(image);
+  image_width = stpi_image_width(image);
 
  /*
   * Let the user know what we're doing...
   */
 
-  stp_image_progress_init(image);
+  stpi_image_progress_init(image);
 
  /*
   * Output a standard PostScript header with DSC comments...
@@ -433,29 +434,29 @@ ps_print(const stp_vars_t v, stp_image_t *image)
 
   top = page_height - top + page_bottom;
 
-  stp_dprintf(STP_DBG_PS, v,
+  stpi_dprintf(STPI_DBG_PS, v,
 	      "out_width = %d, out_height = %d\n", out_width, out_height);
-  stp_dprintf(STP_DBG_PS, v,
+  stpi_dprintf(STPI_DBG_PS, v,
 	      "page_left = %d, page_right = %d, page_bottom = %d, page_top = %d\n",
 	      page_left, page_right, page_bottom, page_top);
-  stp_dprintf(STP_DBG_PS, v, "left = %d, top = %d\n", left, top);
+  stpi_dprintf(STPI_DBG_PS, v, "left = %d, top = %d\n", left, top);
 
-  stp_puts("%!PS-Adobe-3.0\n", v);
+  stpi_puts("%!PS-Adobe-3.0\n", v);
 #ifdef HAVE_CONFIG_H
-  stp_zprintf(v, "%%%%Creator: %s/Gimp-Print %s (%s)\n",
-	      stp_image_get_appname(image), VERSION, RELEASE_DATE);
+  stpi_zprintf(v, "%%%%Creator: %s/Gimp-Print %s (%s)\n",
+	      stpi_image_get_appname(image), VERSION, RELEASE_DATE);
 #else
-  stp_zprintf(v, "%%%%Creator: %s/Gimp-Print\n", stp_image_get_appname(image));
+  stpi_zprintf(v, "%%%%Creator: %s/Gimp-Print\n", stpi_image_get_appname(image));
 #endif
-  stp_zprintf(v, "%%%%CreationDate: %s", ctime(&curtime));
-  stp_puts("%Copyright: 1997-2002 by Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)\n", v);
-  stp_zprintf(v, "%%%%BoundingBox: %d %d %d %d\n",
+  stpi_zprintf(v, "%%%%CreationDate: %s", ctime(&curtime));
+  stpi_puts("%Copyright: 1997-2002 by Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)\n", v);
+  stpi_zprintf(v, "%%%%BoundingBox: %d %d %d %d\n",
           left, top - out_height, left + out_width, top);
-  stp_puts("%%DocumentData: Clean7Bit\n", v);
-  stp_zprintf(v, "%%%%LanguageLevel: %d\n", model + 1);
-  stp_puts("%%Pages: 1\n", v);
-  stp_puts("%%Orientation: Portrait\n", v);
-  stp_puts("%%EndComments\n", v);
+  stpi_puts("%%DocumentData: Clean7Bit\n", v);
+  stpi_zprintf(v, "%%%%LanguageLevel: %d\n", model + 1);
+  stpi_puts("%%Pages: 1\n", v);
+  stpi_puts("%%Orientation: Portrait\n", v);
+  stpi_puts("%%EndComments\n", v);
 
  /*
   * Find any printer-specific commands...
@@ -467,7 +468,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   {
     commands[num_commands].keyword = "PageSize";
     commands[num_commands].choice  = media_size;
-    commands[num_commands].command = stp_malloc(strlen(command) + 1);
+    commands[num_commands].command = stpi_malloc(strlen(command) + 1);
     strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
     num_commands ++;
@@ -477,7 +478,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   {
     commands[num_commands].keyword = "InputSlot";
     commands[num_commands].choice  = media_source;
-    commands[num_commands].command = stp_malloc(strlen(command) + 1);
+    commands[num_commands].command = stpi_malloc(strlen(command) + 1);
     strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
     num_commands ++;
@@ -487,7 +488,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   {
     commands[num_commands].keyword = "MediaType";
     commands[num_commands].choice  = media_type;
-    commands[num_commands].command = stp_malloc(strlen(command) + 1);
+    commands[num_commands].command = stpi_malloc(strlen(command) + 1);
     strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
     num_commands ++;
@@ -497,7 +498,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   {
     commands[num_commands].keyword = "Resolution";
     commands[num_commands].choice  = resolution;
-    commands[num_commands].command = stp_malloc(strlen(command) + 1);
+    commands[num_commands].command = stpi_malloc(strlen(command) + 1);
     strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
     num_commands ++;
@@ -534,63 +535,63 @@ ps_print(const stp_vars_t v, stp_image_t *image)
 
   if (num_commands > 0)
   {
-    stp_puts("%%BeginSetup\n", v);
+    stpi_puts("%%BeginSetup\n", v);
 
     for (i = 0; i < num_commands; i ++)
     {
-      stp_puts("[{\n", v);
-      stp_zprintf(v, "%%%%BeginFeature: *%s %s\n", commands[i].keyword,
+      stpi_puts("[{\n", v);
+      stpi_zprintf(v, "%%%%BeginFeature: *%s %s\n", commands[i].keyword,
                   commands[i].choice);
       if (commands[i].command[0])
       {
-	stp_puts(commands[i].command, v);
+	stpi_puts(commands[i].command, v);
 	if (commands[i].command[strlen(commands[i].command) - 1] != '\n')
-          stp_puts("\n", v);
+          stpi_puts("\n", v);
       }
 
-      stp_puts("%%EndFeature\n", v);
-      stp_puts("} stopped cleartomark\n", v);
-      stp_free(commands[i].command);
+      stpi_puts("%%EndFeature\n", v);
+      stpi_puts("} stopped cleartomark\n", v);
+      stpi_free(commands[i].command);
     }
 
-    stp_puts("%%EndSetup\n", v);
+    stpi_puts("%%EndSetup\n", v);
   }
 
  /*
   * Output the page...
   */
 
-  stp_puts("%%Page: 1 1\n", v);
-  stp_puts("gsave\n", v);
+  stpi_puts("%%Page: 1 1\n", v);
+  stpi_puts("gsave\n", v);
 
-  stp_zprintf(v, "%d %d translate\n", left, top);
-  stp_zprintf(v, "%.3f %.3f scale\n",
+  stpi_zprintf(v, "%d %d translate\n", left, top);
+  stpi_zprintf(v, "%.3f %.3f scale\n",
           (double)out_width / ((double)image_width),
           (double)out_height / ((double)image_height));
 
-  out_channels = stp_color_init(nv, image, 256);
+  out_channels = stpi_color_init(nv, image, 256);
 
-  out = stp_zalloc((image_width * out_channels + 3) * 2);
+  out = stpi_zalloc((image_width * out_channels + 3) * 2);
 
   if (model == 0)
   {
-    stp_zprintf(v, "/picture %d string def\n", image_width * out_channels);
+    stpi_zprintf(v, "/picture %d string def\n", image_width * out_channels);
 
-    stp_zprintf(v, "%d %d 8\n", image_width, image_height);
+    stpi_zprintf(v, "%d %d 8\n", image_width, image_height);
 
-    stp_puts("[ 1 0 0 -1 0 1 ]\n", v);
+    stpi_puts("[ 1 0 0 -1 0 1 ]\n", v);
 
     if (output_type == OUTPUT_GRAY)
-      stp_puts("{currentfile picture readhexstring pop} image\n", v);
+      stpi_puts("{currentfile picture readhexstring pop} image\n", v);
     else
-      stp_puts("{currentfile picture readhexstring pop} false 3 colorimage\n", v);
+      stpi_puts("{currentfile picture readhexstring pop} false 3 colorimage\n", v);
 
     for (y = 0; y < image_height; y ++)
     {
       if ((y & 15) == 0)
-	stp_image_note_progress(image, y, image_height);
+	stpi_image_note_progress(image, y, image_height);
 
-      if (stp_color_get_row(nv, image, y, out, &zero_mask))
+      if (stpi_color_get_row(nv, image, y, out, &zero_mask))
 	{
 	  status = 2;
 	  break;
@@ -602,38 +603,38 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   else
   {
     if (output_type == OUTPUT_GRAY)
-      stp_puts("/DeviceGray setcolorspace\n", v);
+      stpi_puts("/DeviceGray setcolorspace\n", v);
     else
-      stp_puts("/DeviceRGB setcolorspace\n", v);
+      stpi_puts("/DeviceRGB setcolorspace\n", v);
 
-    stp_puts("<<\n", v);
-    stp_puts("\t/ImageType 1\n", v);
+    stpi_puts("<<\n", v);
+    stpi_puts("\t/ImageType 1\n", v);
 
-    stp_zprintf(v, "\t/Width %d\n", image_width);
-    stp_zprintf(v, "\t/Height %d\n", image_height);
-    stp_puts("\t/BitsPerComponent 8\n", v);
+    stpi_zprintf(v, "\t/Width %d\n", image_width);
+    stpi_zprintf(v, "\t/Height %d\n", image_height);
+    stpi_puts("\t/BitsPerComponent 8\n", v);
 
     if (output_type == OUTPUT_GRAY)
-      stp_puts("\t/Decode [ 0 1 ]\n", v);
+      stpi_puts("\t/Decode [ 0 1 ]\n", v);
     else
-      stp_puts("\t/Decode [ 0 1 0 1 0 1 ]\n", v);
+      stpi_puts("\t/Decode [ 0 1 0 1 0 1 ]\n", v);
 
-    stp_puts("\t/DataSource currentfile /ASCII85Decode filter\n", v);
+    stpi_puts("\t/DataSource currentfile /ASCII85Decode filter\n", v);
 
     if ((image_width * 72 / out_width) < 100)
-      stp_puts("\t/Interpolate true\n", v);
+      stpi_puts("\t/Interpolate true\n", v);
 
-    stp_puts("\t/ImageMatrix [ 1 0 0 -1 0 1 ]\n", v);
+    stpi_puts("\t/ImageMatrix [ 1 0 0 -1 0 1 ]\n", v);
 
-    stp_puts(">>\n", v);
-    stp_puts("image\n", v);
+    stpi_puts(">>\n", v);
+    stpi_puts("image\n", v);
 
     for (y = 0, out_offset = 0; y < image_height; y ++)
     {
       if ((y & 15) == 0)
-	stp_image_note_progress(image, y, image_height);
+	stpi_image_note_progress(image, y, image_height);
 
-      if (stp_color_get_row(nv, image, y, out + out_offset, &zero_mask))
+      if (stpi_color_get_row(nv, image, y, out + out_offset, &zero_mask))
 	{
 	  status = 2;
 	  break;
@@ -656,14 +657,14 @@ ps_print(const stp_vars_t v, stp_image_t *image)
         memcpy(out, out + out_ps_height - out_offset, out_offset);
     }
   }
-  stp_image_progress_conclude(image);
+  stpi_image_progress_conclude(image);
 
-  stp_free(out);
+  stpi_free(out);
 
-  stp_puts("grestore\n", v);
-  stp_puts("showpage\n", v);
-  stp_puts("%%Trailer\n", v);
-  stp_puts("%%EOF\n", v);
+  stpi_puts("grestore\n", v);
+  stpi_puts("showpage\n", v);
+  stpi_puts("%%Trailer\n", v);
+  stpi_puts("%%EOF\n", v);
   stp_vars_free(nv);
   return status;
 }
@@ -687,12 +688,12 @@ ps_hex(const stp_vars_t v,	/* I - File to print to */
   {
     unsigned char pixel = (*data & 0xff00) >> 8;
    /*
-    * Put the hex chars out to the file; note that we don't use stp_zprintf()
+    * Put the hex chars out to the file; note that we don't use stpi_zprintf()
     * for speed reasons...
     */
 
-    stp_putc(hex[pixel >> 4], v);
-    stp_putc(hex[pixel & 15], v);
+    stpi_putc(hex[pixel >> 4], v);
+    stpi_putc(hex[pixel & 15], v);
 
     data ++;
     length --;
@@ -701,12 +702,12 @@ ps_hex(const stp_vars_t v,	/* I - File to print to */
     if (col >= 72)
     {
       col = 0;
-      stp_putc('\n', v);
+      stpi_putc('\n', v);
     }
   }
 
   if (col > 0)
-    stp_putc('\n', v);
+    stpi_putc('\n', v);
 }
 
 
@@ -736,7 +737,7 @@ ps_ascii85(const          stp_vars_t v,	/* I - File to print to */
 
     if (b == 0)
     {
-      stp_putc('z', v);
+      stpi_putc('z', v);
       column ++;
     }
     else
@@ -751,13 +752,13 @@ ps_ascii85(const          stp_vars_t v,	/* I - File to print to */
       b /= 85;
       c[0] = b + '!';
 
-      stp_zfwrite((const char *)c, 5, 1, v);
+      stpi_zfwrite((const char *)c, 5, 1, v);
       column += 5;
     }
 
     if (column > 72)
     {
-      stp_putc('\n', v);
+      stpi_putc('\n', v);
       column = 0;
     }
 
@@ -781,10 +782,10 @@ ps_ascii85(const          stp_vars_t v,	/* I - File to print to */
       b /= 85;
       c[0] = b + '!';
 
-      stp_zfwrite((const char *)c, length + 1, 1, v);
+      stpi_zfwrite((const char *)c, length + 1, 1, v);
     }
 
-    stp_puts("~>\n", v);
+    stpi_puts("~>\n", v);
     column = 0;
   }
 }
@@ -810,7 +811,7 @@ ppd_find(const char *ppd_file,	/* I - Name of PPD file */
   if (ppd_file == NULL || name == NULL || option == NULL)
     return (NULL);
   if (!value)
-    value = stp_zalloc(32768);
+    value = stpi_zalloc(32768);
 
   if (ps_ppd_file == NULL || strcmp(ps_ppd_file, ppd_file) != 0)
   {
@@ -877,7 +878,7 @@ ppd_find(const char *ppd_file,	/* I - Name of PPD file */
   return (NULL);
 }
 
-static const stp_printfuncs_t stp_ps_printfuncs =
+static const stpi_printfuncs_t stpi_ps_printfuncs =
 {
   ps_list_parameters,
   ps_parameters,
@@ -886,15 +887,15 @@ static const stp_printfuncs_t stp_ps_printfuncs =
   ps_limit,
   ps_print,
   ps_describe_resolution,
-  stp_verify_printer_params,
+  stpi_verify_printer_params,
   NULL,
   NULL
 };
 
 
-static stp_internal_family_t stp_ps_module_data =
+static stpi_internal_family_t stpi_ps_module_data =
   {
-    &stp_ps_printfuncs,
+    &stpi_ps_printfuncs,
     NULL
   };
 
@@ -902,32 +903,32 @@ static stp_internal_family_t stp_ps_module_data =
 static int
 ps_module_init(void)
 {
-  return stp_family_register(stp_ps_module_data.printer_list);
+  return stpi_family_register(stpi_ps_module_data.printer_list);
 }
 
 
 static int
 ps_module_exit(void)
 {
-  return stp_family_unregister(stp_ps_module_data.printer_list);
+  return stpi_family_unregister(stpi_ps_module_data.printer_list);
 }
 
 
 /* Module header */
-#define stp_module_version ps_LTX_stp_module_version
-#define stp_module_data ps_LTX_stp_module_data
+#define stpi_module_version ps_LTX_stpi_module_version
+#define stpi_module_data ps_LTX_stpi_module_data
 
-stp_module_version_t stp_module_version = {0, 0};
+stpi_module_version_t stpi_module_version = {0, 0};
 
-stp_module_t stp_module_data =
+stpi_module_t stpi_module_data =
   {
     "ps",
     VERSION,
     "Postscript family driver",
-    STP_MODULE_CLASS_FAMILY,
+    STPI_MODULE_CLASS_FAMILY,
     NULL,
     ps_module_init,
     ps_module_exit,
-    (void *) &stp_ps_module_data
+    (void *) &stpi_ps_module_data
   };
 

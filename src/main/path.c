@@ -33,8 +33,8 @@
 #include <unistd.h>
 #include "path.h"
 
-static int stp_path_check(const struct dirent *module);
-static char *stp_path_merge(const char *path, const char *file);
+static int stpi_path_check(const struct dirent *module);
+static char *stpi_path_merge(const char *path, const char *file);
 
 static const char *path_check_path;   /* Path for scandir() callback */
 static const char *path_check_suffix; /* Suffix for scandir() callback */
@@ -43,12 +43,12 @@ static const char *path_check_suffix; /* Suffix for scandir() callback */
 /*
  * Make a list of all modules in the search path.
  */
-stp_list_t *
-stp_path_search(stp_list_t *dirlist, /* List of directories to search */
+stpi_list_t *
+stpi_path_search(stpi_list_t *dirlist, /* List of directories to search */
 		const char *suffix)  /* Required filename suffix */
 {
-  stp_list_t *findlist;              /* List of files to return */
-  stp_list_item_t *diritem;          /* Current directory */
+  stpi_list_t *findlist;              /* List of files to return */
+  stpi_list_item_t *diritem;          /* Current directory */
   struct dirent** module_dir;        /* Current directory contents */
   char *module_name;                 /* File name to check */
   int n;                             /* Number of directory entries */
@@ -58,33 +58,33 @@ stp_path_search(stp_list_t *dirlist, /* List of directories to search */
 
   path_check_suffix = suffix;
 
-  findlist = stp_list_create();
+  findlist = stpi_list_create();
   if (!findlist)
     return NULL;
-  stp_list_set_freefunc(findlist, stp_list_node_free_data);
+  stpi_list_set_freefunc(findlist, stpi_list_node_free_data);
 
-  diritem = stp_list_get_start(dirlist);
+  diritem = stpi_list_get_start(dirlist);
   while (diritem)
     {
-      path_check_path = (const char *) stp_list_item_get_data(diritem);
+      path_check_path = (const char *) stpi_list_item_get_data(diritem);
 #ifdef DEBUG
-      fprintf(stderr, "stp-path: directory: %s\n", (const char *) stp_list_item_get_data(diritem));
+      fprintf(stderr, "stp-path: directory: %s\n", (const char *) stpi_list_item_get_data(diritem));
 #endif
-      n = scandir ((const char *) stp_list_item_get_data(diritem),
-		   &module_dir, stp_path_check, alphasort);
+      n = scandir ((const char *) stpi_list_item_get_data(diritem),
+		   &module_dir, stpi_path_check, alphasort);
       if (n >= 0)
 	{
 	  int idx;
 	  for (idx = 0; idx < n; ++idx)
 	    {
-	      module_name = stp_path_merge((const char *) stp_list_item_get_data(diritem),
+	      module_name = stpi_path_merge((const char *) stpi_list_item_get_data(diritem),
 					   module_dir[idx]->d_name);
-	      stp_list_item_create(findlist, NULL, module_name);
-	      stp_free (module_dir[idx]);
+	      stpi_list_item_create(findlist, NULL, module_name);
+	      stpi_free (module_dir[idx]);
 	    }
 	  free (module_dir);
 	}
-      diritem = stp_list_item_next(diritem);
+      diritem = stpi_list_item_next(diritem);
     }
   return findlist;
 }
@@ -95,7 +95,7 @@ stp_path_search(stp_list_t *dirlist, /* List of directories to search */
  * mode bits and suffix.
  */
 static int
-stp_path_check(const struct dirent *module) /* File to check */
+stpi_path_check(const struct dirent *module) /* File to check */
 {
   int namelen;                              /* Filename length */
   int status = 0;                           /* Error status */
@@ -105,7 +105,7 @@ stp_path_check(const struct dirent *module) /* File to check */
 
   savederr = errno; /* since we are a callback, preserve scandir() state */
 
-  filename = stp_path_merge(path_check_path, module->d_name);
+  filename = stpi_path_merge(path_check_path, module->d_name);
 
   namelen = strlen(filename);
   /* make sure we can take off suffix (e.g. .la)
@@ -131,7 +131,7 @@ stp_path_check(const struct dirent *module) /* File to check */
   fprintf(stderr, "stp-path: file: `%s'\n", filename);
 #endif
 
-  stp_free(filename);
+  stpi_free(filename);
   filename = NULL;
 
   errno = savederr;
@@ -143,12 +143,12 @@ stp_path_check(const struct dirent *module) /* File to check */
  * Join a path and filename together.
  */
 static char *
-stp_path_merge(const char *path, /* Path */
+stpi_path_merge(const char *path, /* Path */
 	       const char *file) /* Filename */
 {
   char *filename;                /* Filename to return */
   int namelen = strlen(path) + strlen(file) + 2;
-  filename = (char *) stp_malloc(namelen * sizeof(char));
+  filename = (char *) stpi_malloc(namelen * sizeof(char));
   strcpy (filename, path);
   strcat (filename, "/");
   strcat (filename, file);
@@ -162,7 +162,7 @@ stp_path_merge(const char *path, /* Path */
  * directories.
  */
 void
-stp_path_split(stp_list_t *list, /* List to add directories to */
+stpi_path_split(stpi_list_t *list, /* List to add directories to */
 	       const char *path) /* Path to split */
 {
   const char *start = path;      /* Start of path name */
@@ -180,10 +180,10 @@ stp_path_split(stp_list_t *list, /* List to add directories to */
 
       if (len && !(len == 1 && !end))
 	{
-	  dir = (char *) stp_malloc(len + 1);
+	  dir = (char *) stpi_malloc(len + 1);
 	  strncpy(dir, start, len);
 	  dir[len] = '\0';
-	  stp_list_item_create(list, NULL, dir);
+	  stpi_list_item_create(list, NULL, dir);
 	}
       if (!end)
 	{

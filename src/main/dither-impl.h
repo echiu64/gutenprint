@@ -60,13 +60,13 @@ typedef struct
   const char *name;
   const char *text;
   int id;
-} dither_algo_t;
+} stpi_dither_algorithm_t;
 
 #define ERROR_ROWS 2
 
 #define MAX_SPREAD 32
 
-typedef void ditherfunc_t(stp_vars_t, int, const unsigned short *, int, int);
+typedef void stpi_ditherfunc_t(stp_vars_t, int, const unsigned short *, int, int);
 
 /*
  * An end of a dither segment, describing one ink
@@ -80,7 +80,7 @@ typedef struct ink_defn
   unsigned bits;
   unsigned dot_size;
   int subchannel;
-} ink_defn_t;
+} stpi_ink_defn_t;
 
 /*
  * A segment of the entire 0-65535 intensity range.
@@ -88,32 +88,32 @@ typedef struct ink_defn
 
 typedef struct dither_segment
 {
-  ink_defn_t *lower;
-  ink_defn_t *upper;
+  stpi_ink_defn_t *lower;
+  stpi_ink_defn_t *upper;
   unsigned range_span;
   unsigned value_span;
   int is_same_ink;
   int is_equal;
-} dither_segment_t;
+} stpi_dither_segment_t;
 
 typedef struct
 {
   unsigned subchannel_count;
   unsigned char **c;
-} stp_dither_channel_t;
+} stpi_dither_channel_data_t;
 
 typedef struct
 {
   unsigned channel_count;
-  stp_dither_channel_t *c;
-} stp_dither_data_t;
+  stpi_dither_channel_data_t *c;
+} stpi_dither_data_t;
 
 typedef struct
 {
   int dx;
   int dy;
   int r_sq;
-} dis_t;
+} stpi_dis_t;
 
 typedef struct shade_segment
 {
@@ -123,16 +123,16 @@ typedef struct shade_segment
   unsigned density;
   unsigned div1, div2;
 
-  dis_t dis;
-  dis_t *et_dis;
+  stpi_dis_t dis;
+  stpi_dis_t *et_dis;
 
   int numdotsizes;
-  ink_defn_t *dotsizes;
+  stpi_ink_defn_t *dotsizes;
 
   int *errs;
   int value;
   int base;
-} shade_segment_t;
+} stpi_shade_segment_t;
 
 typedef struct dither_channel
 {
@@ -158,12 +158,12 @@ typedef struct dither_channel
 
   int maxdot;			/* Maximum dot size */
 
-  ink_defn_t *ink_list;
+  stpi_ink_defn_t *ink_list;
 
-  shade_segment_t *shades;
+  stpi_shade_segment_t *shades;
   int numshades;
 
-  dither_segment_t *ranges;
+  stpi_dither_segment_t *ranges;
   int **errs;
   unsigned short *vals;
 
@@ -171,7 +171,7 @@ typedef struct dither_channel
   dither_matrix_t dithermat;
   int *row_ends[2];
   unsigned char **ptrs;
-} dither_channel_t;
+} stpi_dither_channel_t;
 
 typedef struct dither
 {
@@ -185,7 +185,7 @@ typedef struct dither
 				/* between 12 (very broad distribution) and */
 				/* 19 (very narrow) */
 
-  int dither_type;
+  int stpi_dither_type;
 
   int adaptive_limit;
 
@@ -215,14 +215,14 @@ typedef struct dither
 
   dither_matrix_t dither_matrix;
   dither_matrix_t transition_matrix;
-  dither_channel_t *channel;
-  stp_dither_data_t dt;
+  stpi_dither_channel_t *channel;
+  stpi_dither_data_t dt;
 
   unsigned short virtual_dot_scale[65536];
-  ditherfunc_t *ditherfunc;
+  stpi_ditherfunc_t *ditherfunc;
   void *aux_data;
   void (*aux_freefunc)(struct dither *);
-} dither_t;
+} stpi_dither_t;
 
 #define CHANNEL(d, c) ((d)->channel[(c) + (d)->n_ghost_channels])
 #define PHYSICAL_CHANNEL(d, c) ((d)->channel[(c)])
@@ -233,20 +233,20 @@ typedef struct dither
 do						\
 {						\
   if ((x))					\
-    stp_free((char *)(x));			\
+    stpi_free((char *)(x));			\
   ((x)) = NULL;					\
 } while (0)
 
 #define USMIN(a, b) ((a) < (b) ? (a) : (b))
 
 
-extern ditherfunc_t stp_dither_fast;
-extern ditherfunc_t stp_dither_very_fast;
-extern ditherfunc_t stp_dither_ordered;
-extern ditherfunc_t stp_dither_ed;
-extern ditherfunc_t stp_dither_et;
+extern stpi_ditherfunc_t stpi_dither_fast;
+extern stpi_ditherfunc_t stpi_dither_very_fast;
+extern stpi_ditherfunc_t stpi_dither_ordered;
+extern stpi_ditherfunc_t stpi_dither_ed;
+extern stpi_ditherfunc_t stpi_dither_et;
 
-extern void stp_dither_reverse_row_ends(dither_t *d);
+extern void stpi_dither_reverse_row_ends(stpi_dither_t *d);
 
 
 #define ADVANCE_UNIDIRECTIONAL(d, bit, input, width, xerror, xstep, xmod) \

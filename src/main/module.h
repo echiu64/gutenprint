@@ -50,33 +50,33 @@ extern "C" {
 #define DLERROR()              lt_dlerror()
 #elif defined(USE_DLOPEN)
 #define DLOPEN(Filename)       dlopen(Filename, RTLD_LAZY)
-#define DLSYM(Handle, Symbol)  stp_dlsym(Handle, Symbol, modulename)
+#define DLSYM(Handle, Symbol)  stpi_dlsym(Handle, Symbol, modulename)
 #define DLCLOSE(Handle)        dlclose(Handle)
 #define DLERROR()              dlerror()
 #endif
 
-typedef struct stp_module_version
+typedef struct stpi_module_version
 {
   int major;
   int minor;
-} stp_module_version_t;
+} stpi_module_version_t;
 
 
 typedef enum
-  {
-    STP_MODULE_CLASS_INVALID,
-    STP_MODULE_CLASS_MISC,
-    STP_MODULE_CLASS_FAMILY,
-    STP_MODULE_CLASS_DITHER
-  } stp_module_class_t;
+{
+  STPI_MODULE_CLASS_INVALID,
+  STPI_MODULE_CLASS_MISC,
+  STPI_MODULE_CLASS_FAMILY,
+  STPI_MODULE_CLASS_DITHER
+} stpi_module_class_t;
 
 
-typedef struct stp_module
+typedef struct stpi_module
 {
   const char *name;         /* module name */
   const char *version;      /* module version number */
   const char *comment;      /* description of module function */
-  stp_module_class_t class; /* type of module */
+  stpi_module_class_t class; /* type of module */
 #ifdef USE_LTDL
   lt_dlhandle handle;       /* ltdl module pointer (set by libgimpprint) */
 #else
@@ -87,15 +87,15 @@ typedef struct stp_module
   void *syms;               /* pointer to e.g. a struct containing
                                internal module symbols (class-specific
                                functions and data) */
-} stp_module_t;
+} stpi_module_t;
 
 
-int stp_module_load(void);
-int stp_module_exit(void);
-int stp_module_open(const char *modulename);
-int stp_module_init(void);
-int stp_module_close(stp_list_item_t *module);
-stp_list_t *stp_module_get_class(stp_module_class_t class);
+int stpi_module_load(void);
+int stpi_module_exit(void);
+int stpi_module_open(const char *modulename);
+int stpi_module_init(void);
+int stpi_module_close(stpi_list_item_t *module);
+stpi_list_t *stpi_module_get_class(stpi_module_class_t class);
 
 
 #ifdef __cplusplus

@@ -35,8 +35,8 @@ extern "C" {
 #endif
 
 
-extern stp_list_t *stp_path_search(stp_list_t *dirlist, const char *suffix);
-extern void stp_path_split(stp_list_t *list, const char *path);
+extern stpi_list_t *stpi_path_search(stpi_list_t *dirlist, const char *suffix);
+extern void stpi_path_split(stpi_list_t *list, const char *path);
 
 
 #ifdef __cplusplus

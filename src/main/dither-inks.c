@@ -39,9 +39,9 @@
 #include "dither-impl.h"
 
 static void
-stp_dither_finalize_ranges(stp_vars_t v, dither_channel_t *s)
+stpi_dither_finalize_ranges(stp_vars_t v, stpi_dither_channel_t *s)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   int max_subchannel = 0;
   int i;
   unsigned lbit = s->bit_max;
@@ -77,18 +77,18 @@ stp_dither_finalize_ranges(stp_vars_t v, dither_channel_t *s)
       if (s->ranges[i].upper->dot_size > s->maxdot)
 	s->maxdot = s->ranges[i].upper->dot_size;
 
-      stp_dprintf(STP_DBG_INK, v,
+      stpi_dprintf(STPI_DBG_INK, v,
 		  "    level %d value[0] %d value[1] %d range[0] %d range[1] %d\n",
 		  i, s->ranges[i].lower->value, s->ranges[i].upper->value,
 		  s->ranges[i].lower->range, s->ranges[i].upper->range);
-      stp_dprintf(STP_DBG_INK, v,
+      stpi_dprintf(STPI_DBG_INK, v,
 		  "    xvalue[0] %d xvalue[1] %d\n",
 		  s->ranges[i].lower->xvalue, s->ranges[i].upper->xvalue);
-      stp_dprintf(STP_DBG_INK, v,
+      stpi_dprintf(STPI_DBG_INK, v,
 		  "       bits[0] %d bits[1] %d subchannel[0] %d subchannel[1] %d\n",
 		  s->ranges[i].lower->bits, s->ranges[i].upper->bits,
 		  s->ranges[i].lower->subchannel, s->ranges[i].upper->subchannel);
-      stp_dprintf(STP_DBG_INK, v,
+      stpi_dprintf(STPI_DBG_INK, v,
 		  "       rangespan %d valuespan %d same_ink %d equal %d\n",
 		  s->ranges[i].range_span, s->ranges[i].value_span,
 		  s->ranges[i].is_same_ink, s->ranges[i].is_equal);
@@ -97,7 +97,7 @@ stp_dither_finalize_ranges(stp_vars_t v, dither_channel_t *s)
 	  d->adaptive_limit = s->ranges[i].lower->range + 1;
 	  if (d->adaptive_limit > 65535)
 	    d->adaptive_limit = 65535;
-	  stp_dprintf(STP_DBG_INK, v, "Setting adaptive limit to %d\n",
+	  stpi_dprintf(STPI_DBG_INK, v, "Setting adaptive limit to %d\n",
 		      d->adaptive_limit);
 	}
     }
@@ -108,16 +108,16 @@ stp_dither_finalize_ranges(stp_vars_t v, dither_channel_t *s)
     s->very_fast = 0;
 
   s->subchannels = max_subchannel + 1;
-  s->row_ends[0] = stp_zalloc(s->subchannels * sizeof(int));
-  s->row_ends[1] = stp_zalloc(s->subchannels * sizeof(int));
-  s->ptrs = stp_zalloc(s->subchannels * sizeof(char *));
-  stp_dprintf(STP_DBG_INK, v,
+  s->row_ends[0] = stpi_zalloc(s->subchannels * sizeof(int));
+  s->row_ends[1] = stpi_zalloc(s->subchannels * sizeof(int));
+  s->ptrs = stpi_zalloc(s->subchannels * sizeof(char *));
+  stpi_dprintf(STPI_DBG_INK, v,
 	      "  bit_max %d signif_bits %d\n", s->bit_max, s->signif_bits);
 }
 
 static void
-stp_dither_set_generic_ranges(stp_vars_t v, dither_channel_t *s, int nlevels,
-			      const stp_dither_range_simple_t *ranges,
+stpi_dither_set_generic_ranges(stp_vars_t v, stpi_dither_channel_t *s, int nlevels,
+			      const stpi_dither_range_simple_t *ranges,
 			      double density)
 {
   double sdensity = s->density_adjustment;
@@ -129,19 +129,19 @@ stp_dither_set_generic_ranges(stp_vars_t v, dither_channel_t *s, int nlevels,
   SAFE_FREE(s->ink_list);
 
   s->nlevels = nlevels > 1 ? nlevels + 1 : nlevels;
-  s->ranges = (dither_segment_t *)
-    stp_zalloc(s->nlevels * sizeof(dither_segment_t));
-  s->ink_list = (ink_defn_t *)
-    stp_zalloc((s->nlevels + 1) * sizeof(ink_defn_t));
+  s->ranges = (stpi_dither_segment_t *)
+    stpi_zalloc(s->nlevels * sizeof(stpi_dither_segment_t));
+  s->ink_list = (stpi_ink_defn_t *)
+    stpi_zalloc((s->nlevels + 1) * sizeof(stpi_ink_defn_t));
   s->bit_max = 0;
   density *= sdensity;
   s->density = density * 65535;
-  stp_init_debug_messages(v);
-  stp_dprintf(STP_DBG_INK, v,
-	      "stp_dither_set_generic_ranges nlevels %d density %f\n",
+  stpi_init_debug_messages(v);
+  stpi_dprintf(STPI_DBG_INK, v,
+	      "stpi_dither_set_generic_ranges nlevels %d density %f\n",
 	      nlevels, density);
   for (i = 0; i < nlevels; i++)
-    stp_dprintf(STP_DBG_INK, v,
+    stpi_dprintf(STPI_DBG_INK, v,
 		"  level %d value %f pattern %x subchannel %d\n", i,
 		ranges[i].value, ranges[i].bit_pattern, ranges[i].subchannel);
   s->ranges[0].lower = &s->ink_list[0];
@@ -202,14 +202,14 @@ stp_dither_set_generic_ranges(stp_vars_t v, dither_channel_t *s, int nlevels,
       s->ranges[i].range_span = s->ink_list[i+1].range - s->ink_list[i].range;
       s->ranges[i].value_span = s->ink_list[i+1].value - s->ink_list[i].value;
     }
-  stp_dither_finalize_ranges(v, s);
-  stp_flush_debug_messages(v);
+  stpi_dither_finalize_ranges(v, s);
+  stpi_flush_debug_messages(v);
 }
 
 static void
-stp_dither_set_generic_ranges_full(stp_vars_t v, dither_channel_t *s,
+stpi_dither_set_generic_ranges_full(stp_vars_t v, stpi_dither_channel_t *s,
 				   int nlevels,
-				   const stp_dither_range_full_t *ranges,
+				   const stpi_dither_range_full_t *ranges,
 				   double density)
 {
   double sdensity = s->density_adjustment;
@@ -221,19 +221,19 @@ stp_dither_set_generic_ranges_full(stp_vars_t v, dither_channel_t *s,
   SAFE_FREE(s->ink_list);
 
   s->nlevels = nlevels+1;
-  s->ranges = (dither_segment_t *)
-    stp_zalloc(s->nlevels * sizeof(dither_segment_t));
-  s->ink_list = (ink_defn_t *)
-    stp_zalloc((s->nlevels * 2) * sizeof(ink_defn_t));
+  s->ranges = (stpi_dither_segment_t *)
+    stpi_zalloc(s->nlevels * sizeof(stpi_dither_segment_t));
+  s->ink_list = (stpi_ink_defn_t *)
+    stpi_zalloc((s->nlevels * 2) * sizeof(stpi_ink_defn_t));
   s->bit_max = 0;
   density *= sdensity;
   s->density = density * 65535;
-  stp_init_debug_messages(v);
-  stp_dprintf(STP_DBG_INK, v,
-	      "stp_dither_set_ranges nlevels %d density %f\n",
+  stpi_init_debug_messages(v);
+  stpi_dprintf(STPI_DBG_INK, v,
+	      "stpi_dither_set_ranges nlevels %d density %f\n",
 	      nlevels, density);
   for (i = 0; i < nlevels; i++)
-    stp_dprintf(STP_DBG_INK, v,
+    stpi_dprintf(STPI_DBG_INK, v,
 		"  level %d value: low %f high %f pattern low %x "
 		"high %x subchannel low %d high %d\n", i,
 		ranges[i].value[0], ranges[i].value[1],
@@ -271,27 +271,27 @@ stp_dither_set_generic_ranges_full(stp_vars_t v, dither_channel_t *s,
     s->ranges[j].upper->range - s->ranges[j].lower->range;
   s->ranges[j].value_span = 0;
   s->nlevels = j+1;
-  stp_dither_finalize_ranges(v, s);
-  stp_flush_debug_messages(v);
+  stpi_dither_finalize_ranges(v, s);
+  stpi_flush_debug_messages(v);
 }
 
 void
-stp_dither_set_ranges(stp_vars_t v, int color, int nlevels,
-		      const stp_dither_range_simple_t *ranges, double density)
+stpi_dither_set_ranges(stp_vars_t v, int color, int nlevels,
+		      const stpi_dither_range_simple_t *ranges, double density)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   if (color < 0 || color >= PHYSICAL_CHANNEL_COUNT(d))
     return;
-  stp_dither_set_generic_ranges(v, &(PHYSICAL_CHANNEL(d, color)), nlevels,
+  stpi_dither_set_generic_ranges(v, &(PHYSICAL_CHANNEL(d, color)), nlevels,
 				ranges, density);
 }
 
 void
-stp_dither_set_ranges_simple(stp_vars_t v, int color, int nlevels,
+stpi_dither_set_ranges_simple(stp_vars_t v, int color, int nlevels,
 			     const double *levels, double density)
 {
-  stp_dither_range_simple_t *r =
-    stp_malloc(nlevels * sizeof(stp_dither_range_simple_t));
+  stpi_dither_range_simple_t *r =
+    stpi_malloc(nlevels * sizeof(stpi_dither_range_simple_t));
   int i;
   for (i = 0; i < nlevels; i++)
     {
@@ -300,23 +300,23 @@ stp_dither_set_ranges_simple(stp_vars_t v, int color, int nlevels,
       r[i].value = levels[i];
       r[i].subchannel = 0;
     }
-  stp_dither_set_ranges(v, color, nlevels, r, density);
-  stp_free(r);
+  stpi_dither_set_ranges(v, color, nlevels, r, density);
+  stpi_free(r);
 }
 
 void
-stp_dither_set_ranges_full(stp_vars_t v, int color, int nlevels,
-			   const stp_dither_range_full_t *ranges,
+stpi_dither_set_ranges_full(stp_vars_t v, int color, int nlevels,
+			   const stpi_dither_range_full_t *ranges,
 			   double density)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
-  stp_dither_set_generic_ranges_full(v, &(PHYSICAL_CHANNEL(d, color)), nlevels,
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
+  stpi_dither_set_generic_ranges_full(v, &(PHYSICAL_CHANNEL(d, color)), nlevels,
 				     ranges, density);
 }
 
 void
-stp_dither_set_shades(stp_vars_t v, int color, int nshades,
-		      const stp_shade_t *shades, double density)
+stpi_dither_set_shades(stp_vars_t v, int color, int nshades,
+		      const stpi_shade_t *shades, double density)
 {
   int i, j;
 
@@ -329,8 +329,8 @@ stp_dither_set_shades(stp_vars_t v, int color, int nshades,
 
   const double ink_gamma = 0.5;
 
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
-  dither_channel_t *dc = &(PHYSICAL_CHANNEL(d, color));
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
+  stpi_dither_channel_t *dc = &(PHYSICAL_CHANNEL(d, color));
 
   if (dc->shades) {
     for (i = 0; i < dc->numshades; i++) {
@@ -341,10 +341,10 @@ stp_dither_set_shades(stp_vars_t v, int color, int nshades,
   }
 
   dc->numshades = nshades;
-  dc->shades = stp_zalloc(nshades * sizeof(shade_segment_t));
+  dc->shades = stpi_zalloc(nshades * sizeof(stpi_shade_segment_t));
 
   for (i=0;i<dc->numshades;i++) {
-    shade_segment_t *sp = &dc->shades[i];
+    stpi_shade_segment_t *sp = &dc->shades[i];
     sp->subchannel = shades[i].subchannel;
     sp->value = 0;
     sp->density = 65536.0 * shades[i].value + 0.5;
@@ -363,11 +363,11 @@ stp_dither_set_shades(stp_vars_t v, int color, int nshades,
     }
 
     sp->numdotsizes = shades[i].numsizes;
-    sp->dotsizes = stp_zalloc(sp->numdotsizes * sizeof(ink_defn_t));
+    sp->dotsizes = stpi_zalloc(sp->numdotsizes * sizeof(stpi_ink_defn_t));
 
     for (j=0; j < sp->numdotsizes; j++) {
-      ink_defn_t *ip = &sp->dotsizes[j];
-      const stp_dotsize_t *dp = &shades[i].dot_sizes[j];
+      stpi_ink_defn_t *ip = &sp->dotsizes[j];
+      const stpi_dotsize_t *dp = &shades[i].dot_sizes[j];
       ip->value = dp->value * sp->density + 0.5;
       ip->range = density * ip->value;
       ip->bits = dp->bit_pattern;

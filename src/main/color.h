@@ -45,19 +45,19 @@ extern "C" {
  * Initialize the color machinery.  Return value is the number
  * of columns of output
  */
-extern int stp_color_init(stp_vars_t v, stp_image_t *image, size_t steps);
+extern int stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps);
 
 /*
  * Acquire input and perform color conversion.  Return value
  * is status; zero is success.
  */
-extern int stp_color_get_row(const stp_vars_t v, stp_image_t *image,
+extern int stpi_color_get_row(const stp_vars_t v, stp_image_t *image,
 			     int row, unsigned short *out, int *zero_mask);
 
-extern stp_parameter_list_t stp_color_list_parameters(const stp_vars_t v);
+extern stp_parameter_list_t stpi_color_list_parameters(const stp_vars_t v);
 
 extern void
-stp_color_describe_parameter(const stp_vars_t v, const char *name,
+stpi_color_describe_parameter(const stp_vars_t v, const char *name,
 			     stp_parameter_t *description);
 
 #ifdef __cplusplus

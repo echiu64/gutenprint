@@ -40,14 +40,14 @@ typedef struct
 {
   int	d2x;
   int   d2y;
-  dis_t	d_sq;
+  stpi_dis_t	d_sq;
   int	aspect;
   int	*recip;
 } eventone_t;
 
 
 static inline void
-print_subc(dither_t *d, dither_channel_t *dc, ink_defn_t *ink, int subchannel, unsigned char bit, int length)
+print_subc(stpi_dither_t *d, stpi_dither_channel_t *dc, stpi_ink_defn_t *ink, int subchannel, unsigned char bit, int length)
 {
   int bits;
   int j;
@@ -77,19 +77,19 @@ print_subc(dither_t *d, dither_channel_t *dc, ink_defn_t *ink, int subchannel, u
 #define EVEN_C2 222		/* = sqrt(3)/2 * EVEN_C1 */
 
 static void
-free_eventone_data(dither_t *d)
+free_eventone_data(stpi_dither_t *d)
 {
   eventone_t *et = (eventone_t *) d->aux_data;
   if (et)
     {
-      stp_free(et->recip);
-      stp_free(et);
+      stpi_free(et->recip);
+      stpi_free(et);
       d->aux_data = NULL;
     }
 }
 
 static int
-et_initializer(dither_t *d, int duplicate_line, int zero_mask)
+et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
 {
   eventone_t *et = (eventone_t *) d->aux_data;
 
@@ -98,13 +98,13 @@ et_initializer(dither_t *d, int duplicate_line, int zero_mask)
     for (i = 0; i < CHANNEL_COUNT(d); i++) {
       int size = 2 * MAX_SPREAD + ((d->dst_width + 7) & ~7);
       for (j = 0; j < CHANNEL(d, i).numshades; j++) {
-        CHANNEL(d, i).shades[j].errs = stp_zalloc(size * sizeof(int));
+        CHANNEL(d, i).shades[j].errs = stpi_zalloc(size * sizeof(int));
       }
       /* Use ".b" for the density scaler. */
       CHANNEL(d, i).b = 65536 * CHANNEL(d, i).density_adjustment;
     }
 
-    et = stp_zalloc(sizeof(eventone_t));
+    et = stpi_zalloc(sizeof(eventone_t));
 
     { int xa, ya;
       xa = d->x_aspect / d->y_aspect;
@@ -121,7 +121,7 @@ et_initializer(dither_t *d, int duplicate_line, int zero_mask)
       et->d_sq.r_sq = 0;
     }
 
-    et->recip = stp_malloc(65536 * sizeof(int));
+    et->recip = stpi_malloc(65536 * sizeof(int));
     et->recip[0] = EVEN_C1 * 65536;
     for (i=1; i < 65536; i++) {
         et->recip[i] = EVEN_C1 * 65536 / i;
@@ -131,7 +131,7 @@ et_initializer(dither_t *d, int duplicate_line, int zero_mask)
       for (j = 0; j < CHANNEL(d, i).numshades; j++) {
         int x;
 	CHANNEL(d, i).shades[j].dis = et->d_sq;
-	CHANNEL(d, i).shades[j].et_dis = stp_malloc(sizeof(dis_t) * d->dst_width);
+	CHANNEL(d, i).shades[j].et_dis = stpi_malloc(sizeof(stpi_dis_t) * d->dst_width);
 	for (x = 0; x < d->dst_width; x++) {
 	  CHANNEL(d, i).shades[j].et_dis[x] = et->d_sq;
 	}
@@ -164,11 +164,11 @@ et_initializer(dither_t *d, int duplicate_line, int zero_mask)
   return 1;
 }
 
-static inline shade_segment_t *
-split_shades(dither_channel_t *dc, int x, int *inkp)
+static inline stpi_shade_segment_t *
+split_shades(stpi_dither_channel_t *dc, int x, int *inkp)
 {
   int i;
-  shade_segment_t *sp, *sp2;
+  stpi_shade_segment_t *sp, *sp2;
   int totalink;
   int maxv;
   int orig, nextv;
@@ -248,13 +248,13 @@ split_shades(dither_channel_t *dc, int x, int *inkp)
 }
 
 static inline void
-advance_eventone_pre(dither_channel_t *dc, eventone_t *et, int x)
+advance_eventone_pre(stpi_dither_channel_t *dc, eventone_t *et, int x)
 {
   int i;
 
   for (i = 0; i < dc->numshades; i++) {
-    shade_segment_t *sp = &dc->shades[i];
-    dis_t *etd = &sp->et_dis[x];
+    stpi_shade_segment_t *sp = &dc->shades[i];
+    stpi_dis_t *etd = &sp->et_dis[x];
     int t = sp->dis.r_sq + sp->dis.dx;
     if (t <= etd->r_sq) { 				/* Do eventone calculations */
       sp->dis.r_sq = t;					/* Nearest pixel same as last one */
@@ -266,16 +266,16 @@ advance_eventone_pre(dither_channel_t *dc, eventone_t *et, int x)
 }
 
 static inline void
-diffuse_error(dither_channel_t *dc, eventone_t *et, int diff_factor, int x, int direction)
+diffuse_error(stpi_dither_channel_t *dc, eventone_t *et, int diff_factor, int x, int direction)
 {
   int i;
 
   for (i = 0; i < dc->numshades; i++) {
-    shade_segment_t *sp = &dc->shades[i];
+    stpi_shade_segment_t *sp = &dc->shades[i];
 
     /* Eventone updates */
 
-    { dis_t *etd = &sp->et_dis[x];
+    { stpi_dis_t *etd = &sp->et_dis[x];
       int t = etd->r_sq + etd->dy;		/* r^2 from dot above */
       int u = sp->dis.r_sq + sp->dis.dy;	/* r^2 from dot on this line */
       if (u < t) {				/* If dot from this line is close */
@@ -304,7 +304,7 @@ diffuse_error(dither_channel_t *dc, eventone_t *et, int diff_factor, int x, int 
 }
 
 static inline int
-eventone_adjust(shade_segment_t *sp, eventone_t *et, int ditherpoint, int desired, int dotsize)
+eventone_adjust(stpi_shade_segment_t *sp, eventone_t *et, int ditherpoint, int desired, int dotsize)
 {
   ditherpoint += sp->dis.r_sq * et->aspect;
   if (desired < dotsize) {
@@ -316,14 +316,14 @@ eventone_adjust(shade_segment_t *sp, eventone_t *et, int ditherpoint, int desire
 }
 
 static inline int
-find_segment(shade_segment_t *sp, eventone_t *et, int totalink, int baseink, ink_defn_t *lower, ink_defn_t *upper)
+find_segment(stpi_shade_segment_t *sp, eventone_t *et, int totalink, int baseink, stpi_ink_defn_t *lower, stpi_ink_defn_t *upper)
 {
   lower->range = 0;
   lower->bits = 0;
   if (totalink < 0) totalink = 0;
 
   { int i;
-    ink_defn_t *ip;
+    stpi_ink_defn_t *ip;
 
     for (i=0, ip = &sp->dotsizes[0]; i < sp->numdotsizes - 1; i++, ip++) {
       if (ip->dot_size <= totalink) {
@@ -357,7 +357,7 @@ found_segment:
 }
 
 static void
-stp_dither_raw_et(dither_t *d,
+stpi_dither_raw_et(stpi_dither_t *d,
 		  int row,
 		  const unsigned short *raw,
 		  int duplicate_line,
@@ -412,10 +412,10 @@ stp_dither_raw_et(dither_t *d,
 
     for (i=0; i < CHANNEL_COUNT(d); i++) {
       int inkspot;
-      shade_segment_t *sp;
-      dither_channel_t *dc = &CHANNEL(d, i);
-      ink_defn_t *inkp;
-      ink_defn_t lower, upper;
+      stpi_shade_segment_t *sp;
+      stpi_dither_channel_t *dc = &CHANNEL(d, i);
+      stpi_ink_defn_t *inkp;
+      stpi_ink_defn_t lower, upper;
 
       CHANNEL(d, i).o =
       CHANNEL(d, i).v = raw[i];
@@ -456,11 +456,11 @@ stp_dither_raw_et(dither_t *d,
       ADVANCE_REVERSE(d, bit, raw, CHANNEL_COUNT(d), xerror, xstep, xmod);
   }
   if (direction == -1)
-    stp_dither_reverse_row_ends(d);
+    stpi_dither_reverse_row_ends(d);
 }
 
 static void
-stp_dither_raw_cmyk_et(dither_t *d,
+stpi_dither_raw_cmyk_et(stpi_dither_t *d,
 		       int row,
 		       const unsigned short *cmyk,
 		       int duplicate_line,
@@ -526,10 +526,10 @@ stp_dither_raw_cmyk_et(dither_t *d,
 
     for (i = 0; i < CHANNEL_COUNT(d); i++) {
       int inkspot;
-      shade_segment_t *sp;
-      dither_channel_t *dc = &CHANNEL(d, i);
-      ink_defn_t *inkp;
-      ink_defn_t lower, upper;
+      stpi_shade_segment_t *sp;
+      stpi_dither_channel_t *dc = &CHANNEL(d, i);
+      stpi_ink_defn_t *inkp;
+      stpi_ink_defn_t lower, upper;
 
       advance_eventone_pre(dc, et, x);
 
@@ -567,22 +567,22 @@ stp_dither_raw_cmyk_et(dither_t *d,
       ADVANCE_REVERSE(d, bit, cmyk, 4, xerror, xstep, xmod);
   }
   if (direction == -1)
-    stp_dither_reverse_row_ends(d);
+    stpi_dither_reverse_row_ends(d);
 }
 
 void
-stp_dither_et(stp_vars_t v,
+stpi_dither_et(stp_vars_t v,
 	      int row,
 	      const unsigned short *input,
 	      int duplicate_line,
 	      int zero_mask)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   if (CHANNEL(d, 0).shades == 0)
-    stp_dither_ed(v, row, input, duplicate_line, zero_mask);
+    stpi_dither_ed(v, row, input, duplicate_line, zero_mask);
   else if (d->dither_class != OUTPUT_RAW_CMYK ||
 	   d->n_ghost_channels > 0)
-    stp_dither_raw_et(d, row, input, duplicate_line, zero_mask);
+    stpi_dither_raw_et(d, row, input, duplicate_line, zero_mask);
   else
-    stp_dither_raw_cmyk_et(d, row, input, duplicate_line, zero_mask);
+    stpi_dither_raw_cmyk_et(d, row, input, duplicate_line, zero_mask);
 }

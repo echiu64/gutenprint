@@ -36,19 +36,19 @@
 
 
 static inline unsigned
-ditherpoint_fast(const dither_t *d, dither_matrix_t *mat, int x)
+ditherpoint_fast(const stpi_dither_t *d, dither_matrix_t *mat, int x)
 {
   return mat->matrix[(mat->last_y_mod+((x + mat->x_offset) & mat->fast_mask))];
 }
 
 static void
-stp_dither_raw_very_fast(stp_vars_t v,
+stpi_dither_raw_very_fast(stp_vars_t v,
 			 int row,
 			 const unsigned short *raw,
 			 int duplicate_line,
 			 int zero_mask)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   int		x,
 		length;
   unsigned char	bit;
@@ -73,7 +73,7 @@ stp_dither_raw_very_fast(stp_vars_t v,
     {
       for (i = 0; i < CHANNEL_COUNT(d); i++)
 	{
-	  dither_channel_t *dc = &(CHANNEL(d, i));
+	  stpi_dither_channel_t *dc = &(CHANNEL(d, i));
 	  if (dc->ptrs[0] && raw[i] > ditherpoint_fast(d, &(dc->dithermat), x))
 	    {
 	      set_row_ends(dc, x, 0);
@@ -87,13 +87,13 @@ stp_dither_raw_very_fast(stp_vars_t v,
 }
 
 static void
-stp_dither_raw_cmyk_very_fast(stp_vars_t v,
+stpi_dither_raw_cmyk_very_fast(stp_vars_t v,
 			      int row,
 			      const unsigned short *cmyk,
 			      int duplicate_line,
 			      int zero_mask)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   int		x,
 		length;
   unsigned char	bit;
@@ -125,7 +125,7 @@ stp_dither_raw_cmyk_very_fast(stp_vars_t v,
       extra_k = compute_black(d) + CHANNEL(d, ECOLOR_K).v;
       for (i = 0; i < CHANNEL_COUNT(d); i++)
 	{
-	  dither_channel_t *dc = &(CHANNEL(d, i));
+	  stpi_dither_channel_t *dc = &(CHANNEL(d, i));
 	  if (dc->ptrs[0] && (dc->v * CHANNEL(d, i).density_adjustment >
 	       ditherpoint_fast(d, &(dc->dithermat), x)))
 	    {
@@ -140,23 +140,23 @@ stp_dither_raw_cmyk_very_fast(stp_vars_t v,
 }
 
 void
-stp_dither_very_fast(stp_vars_t v,
+stpi_dither_very_fast(stp_vars_t v,
 		     int row,
 		     const unsigned short *input,
 		     int duplicate_line,
 		     int zero_mask)
 {
   int i;
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     if (!(CHANNEL(d, i).very_fast))
       {
-	stp_dither_fast(v, row, input, duplicate_line, zero_mask);
+	stpi_dither_fast(v, row, input, duplicate_line, zero_mask);
 	return;
       }
   if (d->dither_class != OUTPUT_RAW_CMYK ||
       d->n_ghost_channels > 0)
-    stp_dither_raw_very_fast(v, row, input, duplicate_line, zero_mask);
+    stpi_dither_raw_very_fast(v, row, input, duplicate_line, zero_mask);
   else
-    stp_dither_raw_cmyk_very_fast(v, row, input, duplicate_line, zero_mask);
+    stpi_dither_raw_cmyk_very_fast(v, row, input, duplicate_line, zero_mask);
 }

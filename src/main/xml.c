@@ -51,22 +51,22 @@
 static int xmlstrtol(xmlChar *textval);
 static unsigned xmlstrtoul(xmlChar *textval);
 static float xmlstrtof(xmlChar *textval);
-static void stp_xml_process_gimpprint(xmlNodePtr gimpprint);
-static void stp_xml_process_printdef(xmlNodePtr printdef);
-static void stp_xml_process_family(xmlNodePtr family);
-static stp_internal_printer_t *stp_xml_process_printer(xmlNodePtr printer, xmlChar *family, const stp_printfuncs_t *printfuncs);
-static void stp_xml_process_paperdef(xmlNodePtr paperdef);
-static stp_internal_papersize_t *stp_xml_process_paper(xmlNodePtr paper);
+static void stpi_xml_process_gimpprint(xmlNodePtr gimpprint);
+static void stpi_xml_process_printdef(xmlNodePtr printdef);
+static void stpi_xml_process_family(xmlNodePtr family);
+static stpi_internal_printer_t *stpi_xml_process_printer(xmlNodePtr printer, xmlChar *family, const stpi_printfuncs_t *printfuncs);
+static void stpi_xml_process_paperdef(xmlNodePtr paperdef);
+static stpi_internal_papersize_t *stpi_xml_process_paper(xmlNodePtr paper);
 
 
 /*
  * Read all available XML files.
  */
-int stp_xml_init(void)
+int stpi_xml_init(void)
 {
-  stp_list_t *dir_list;                   /* List of directories to scan */
-  stp_list_t *file_list;                  /* List of files to load */
-  stp_list_item_t *item;                  /* Pointer to current list item */
+  stpi_list_t *dir_list;                   /* List of directories to scan */
+  stpi_list_t *file_list;                  /* List of files to load */
+  stpi_list_item_t *item;                  /* Pointer to current list item */
   xmlFreeFunc xml_free_func = NULL;       /* libXML free function */
   xmlMallocFunc xml_malloc_func = NULL;   /* libXML malloc function */
   xmlReallocFunc xml_realloc_func = NULL; /* libXML realloc function */
@@ -77,34 +77,34 @@ int stp_xml_init(void)
 	     &xml_malloc_func,
 	     &xml_realloc_func,
 	     &xml_strdup_func);
-  xmlMemSetup (stp_free,
-	       stp_malloc,
-	       stp_realloc,
-	       stp_strdup);
+  xmlMemSetup (stpi_free,
+	       stpi_malloc,
+	       stpi_realloc,
+	       stpi_strdup);
 
   /* Make a list of all the available XML files */
-  if (!(dir_list = stp_list_create()))
+  if (!(dir_list = stpi_list_create()))
     return 1;
-  stp_list_set_freefunc(dir_list, stp_list_node_free_data);
-  stp_path_split(dir_list, getenv("STP_DATA_PATH"));
-  stp_path_split(dir_list, PKGXMLDATADIR);
-  file_list = stp_path_search(dir_list, ".xml");
-  stp_list_destroy(dir_list);
+  stpi_list_set_freefunc(dir_list, stpi_list_node_free_data);
+  stpi_path_split(dir_list, getenv("STP_DATA_PATH"));
+  stpi_path_split(dir_list, PKGXMLDATADIR);
+  file_list = stpi_path_search(dir_list, ".xml");
+  stpi_list_destroy(dir_list);
 
   /* Parse each XML file */
-  item = stp_list_get_start(file_list);
+  item = stpi_list_get_start(file_list);
   while (item)
     {
 #ifdef DEBUG
       fprintf(stderr, "stp-xml: source file: %s\n",
-	      (const char *) stp_list_item_get_data(item));
+	      (const char *) stpi_list_item_get_data(item));
 #endif
   xmlInitParser();
-      stp_xml_parse_file((const char *) stp_list_item_get_data(item));
+      stpi_xml_parse_file((const char *) stpi_list_item_get_data(item));
   xmlCleanupParser();
-      item = stp_list_item_next(item);
+      item = stpi_list_item_next(item);
     }
-  stp_list_destroy(file_list);
+  stpi_list_destroy(file_list);
 
   /* Restore libXML memory functions to their previous state */
   xmlMemSetup (xml_free_func,
@@ -120,7 +120,7 @@ int stp_xml_init(void)
  * Parse a single XML file.
  */
 int
-stp_xml_parse_file(const char *file) /* File to parse */
+stpi_xml_parse_file(const char *file) /* File to parse */
 {
   xmlDocPtr doc;   /* libXML document pointer */
   xmlNodePtr cur;  /* libXML node pointer */
@@ -156,7 +156,7 @@ stp_xml_parse_file(const char *file) /* File to parse */
 
   /* The XML file was read and is the right format */
 
-  stp_xml_process_gimpprint(cur);
+  stpi_xml_process_gimpprint(cur);
   xmlFreeDoc(doc);
 
   return 0;
@@ -223,7 +223,7 @@ xmlstrtof(xmlChar *textval)
  * Parse the <gimp-print> root node.
  */
 static void
-stp_xml_process_gimpprint(xmlNodePtr cur) /* The node to parse */
+stpi_xml_process_gimpprint(xmlNodePtr cur) /* The node to parse */
 {
   xmlNodePtr child;                       /* Child node pointer */
 
@@ -232,9 +232,9 @@ stp_xml_process_gimpprint(xmlNodePtr cur) /* The node to parse */
     {
       /* process nodes with corresponding parser */
       if (!xmlStrcmp(child->name, (const xmlChar *) "printdef"))
-	stp_xml_process_printdef(child);
+	stpi_xml_process_printdef(child);
       else if (!xmlStrcmp(child->name, (const xmlChar *) "paperdef"))
-	stp_xml_process_paperdef(child);
+	stpi_xml_process_paperdef(child);
       child = child->next;
     }
 }
@@ -244,7 +244,7 @@ stp_xml_process_gimpprint(xmlNodePtr cur) /* The node to parse */
  * Parse the <printdef> node.
  */
 static void
-stp_xml_process_printdef(xmlNodePtr printdef) /* The printdef node */
+stpi_xml_process_printdef(xmlNodePtr printdef) /* The printdef node */
 {
   xmlNodePtr family;                          /* Family child node */
 
@@ -253,7 +253,7 @@ stp_xml_process_printdef(xmlNodePtr printdef) /* The printdef node */
     {
       if (!xmlStrcmp(family->name, (const xmlChar *) "family"))
 	{
-	  stp_xml_process_family(family);
+	  stpi_xml_process_family(family);
 	}
       family = family->next;
     }
@@ -264,28 +264,28 @@ stp_xml_process_printdef(xmlNodePtr printdef) /* The printdef node */
  * Parse the <family> node.
  */
 static void
-stp_xml_process_family(xmlNodePtr family)     /* The family node */
+stpi_xml_process_family(xmlNodePtr family)     /* The family node */
 {
-  stp_list_t *family_module_list = NULL;      /* List of valid families */
-  stp_list_item_t *family_module_item;        /* Current family */
+  stpi_list_t *family_module_list = NULL;      /* List of valid families */
+  stpi_list_item_t *family_module_item;        /* Current family */
   xmlChar *family_name;                       /* Name of family */
   xmlNodePtr printer;                         /* printer child node */
-  stp_module_t *family_module_data;           /* Family module data */
-  stp_internal_family_t *family_data = NULL;  /* Family data */
+  stpi_module_t *family_module_data;           /* Family module data */
+  stpi_internal_family_t *family_data = NULL;  /* Family data */
   int family_valid = 0;                       /* Is family valid? */
-  stp_internal_printer_t *outprinter;         /* Generated printer */
+  stpi_internal_printer_t *outprinter;         /* Generated printer */
 
-  family_module_list = stp_module_get_class(STP_MODULE_CLASS_FAMILY);
+  family_module_list = stpi_module_get_class(STPI_MODULE_CLASS_FAMILY);
   if (!family_module_list)
     return;
 
 
   family_name = xmlGetProp(family, (const xmlChar *) "name");
-  family_module_item = stp_list_get_start(family_module_list);
+  family_module_item = stpi_list_get_start(family_module_list);
   while (family_module_item)
     {
-      family_module_data = (stp_module_t *)
-	stp_list_item_get_data(family_module_item);
+      family_module_data = (stpi_module_t *)
+	stpi_list_item_get_data(family_module_item);
       if (!xmlStrcmp(family_name, (const xmlChar *)
 		     family_module_data->name))
 	{
@@ -295,10 +295,10 @@ stp_xml_process_family(xmlNodePtr family)     /* The family node */
 #endif
 	  family_data = family_module_data->syms;
 	  if (family_data->printer_list == NULL)
-	    family_data->printer_list = stp_list_create();
+	    family_data->printer_list = stpi_list_create();
 	  family_valid = 1;
 	}
-	  family_module_item = stp_list_item_next(family_module_item);
+	  family_module_item = stpi_list_item_next(family_module_item);
     }
 
   printer = family->children;
@@ -306,15 +306,15 @@ stp_xml_process_family(xmlNodePtr family)     /* The family node */
     {
       if (!xmlStrcmp(printer->name, (const xmlChar *) "printer"))
 	{
-	  outprinter = stp_xml_process_printer(printer, family_name,
+	  outprinter = stpi_xml_process_printer(printer, family_name,
 					       family_data->printfuncs);
 	  if (outprinter)
-	    stp_list_item_create(family_data->printer_list, NULL, outprinter);
+	    stpi_list_item_create(family_data->printer_list, NULL, outprinter);
 	}
       printer = printer->next;
     }
 
-  stp_list_destroy(family_module_list);
+  stpi_list_destroy(family_module_list);
   xmlFree (family_name);
   return;
 }
@@ -323,9 +323,9 @@ typedef struct
 {
   const char *property;
   const char *parameter;
-} stp_xml_prop_t;
+} stpi_xml_prop_t;
 
-static const stp_xml_prop_t stp_xml_props[] =
+static const stpi_xml_prop_t stpi_xml_props[] =
 {
   { "black", "Black" },
   { "cyan", "Cyan" },
@@ -349,10 +349,10 @@ static const stp_xml_prop_t stp_xml_props[] =
  * Parse the printer node, and return the generated printer.  Returns
  * NULL on failure.
  */
-static stp_internal_printer_t*
-stp_xml_process_printer(xmlNodePtr printer,           /* The printer node */
+static stpi_internal_printer_t*
+stpi_xml_process_printer(xmlNodePtr printer,           /* The printer node */
 			xmlChar *family,              /* Family name */
-			const stp_printfuncs_t *printfuncs)
+			const stpi_printfuncs_t *printfuncs)
                                                       /* Family printfuncs */
 {
   xmlNodePtr prop;                                    /* Temporary node pointer */
@@ -378,20 +378,20 @@ stp_xml_process_printer(xmlNodePtr printer,           /* The printer node */
       "gcrupper",
       NULL
       };*/
-  stp_internal_printer_t *outprinter;                 /* Generated printer */
+  stpi_internal_printer_t *outprinter;                 /* Generated printer */
   int
     driver = 0,                                       /* Check driver */
     long_name = 0,                                    /* Check long_name */
     color = 0,                                        /* Check color */
     model = 0;                                        /* Check model */
 
-  outprinter = stp_malloc(sizeof(stp_internal_printer_t));
+  outprinter = stpi_malloc(sizeof(stpi_internal_printer_t));
   if (!outprinter)
     return NULL;
   outprinter->printvars = stp_vars_create();
   if (outprinter->printvars == NULL)
     {
-      stp_free(outprinter);
+      stpi_free(outprinter);
       return NULL;
     }
 
@@ -403,7 +403,7 @@ stp_xml_process_printer(xmlNodePtr printer,           /* The printer node */
     
   outprinter->long_name =
     (char *) xmlGetProp(printer, (const xmlChar *) "name");
-  outprinter->family = stp_strdup((const char *) family);
+  outprinter->family = stpi_strdup((const char *) family);
 
   if (stp_get_driver(outprinter->printvars))
     driver = 1;
@@ -434,7 +434,7 @@ stp_xml_process_printer(xmlNodePtr printer,           /* The printer node */
 	}
       else
 	{
-	  const stp_xml_prop_t *stp_prop = stp_xml_props;
+	  const stpi_xml_prop_t *stp_prop = stpi_xml_props;
 	  while (stp_prop->property)
 	    {
 	      if (!xmlStrcmp(prop->name, (const xmlChar *) stp_prop->property))
@@ -460,7 +460,7 @@ stp_xml_process_printer(xmlNodePtr printer,           /* The printer node */
 #endif
       return outprinter;
     }
-  stp_free(outprinter);
+  stpi_free(outprinter);
   return NULL;
 }
 
@@ -469,19 +469,19 @@ stp_xml_process_printer(xmlNodePtr printer,           /* The printer node */
  * Parse the <paperdef> node.
  */
 static void
-stp_xml_process_paperdef(xmlNodePtr paperdef) /* The paperdef node */
+stpi_xml_process_paperdef(xmlNodePtr paperdef) /* The paperdef node */
 {
   xmlNodePtr paper;                           /* paper node pointer */
-  stp_internal_papersize_t *outpaper;         /* Generated paper */
+  stpi_internal_papersize_t *outpaper;         /* Generated paper */
 
   paper = paperdef->children;
   while (paper)
     {
       if (!xmlStrcmp(paper->name, (const xmlChar *) "paper"))
 	{
-	  outpaper = stp_xml_process_paper(paper);
+	  outpaper = stpi_xml_process_paper(paper);
 	  if (outpaper)
-	    stp_paper_create((stp_papersize_t) outpaper);
+	    stpi_paper_create((stp_papersize_t) outpaper);
 	}
       paper = paper->next;
     }
@@ -491,8 +491,8 @@ stp_xml_process_paperdef(xmlNodePtr paperdef) /* The paperdef node */
 /*
  * Process the <paper> node.
  */
-static stp_internal_papersize_t *
-stp_xml_process_paper(xmlNodePtr paper) /* The paper node */
+static stpi_internal_papersize_t *
+stpi_xml_process_paper(xmlNodePtr paper) /* The paper node */
 {
   xmlNodePtr prop;                      /* Temporary node pointer */
   xmlChar *stmp;                        /* Temporary string */
@@ -506,7 +506,7 @@ stp_xml_process_paper(xmlNodePtr paper) /* The paper node */
       "unit",
       NULL
       };*/
-  stp_internal_papersize_t *outpaper;   /* Generated paper */
+  stpi_internal_papersize_t *outpaper;   /* Generated paper */
   int
     id = 0,                             /* Check id is present */
     name = 0,                           /* Check name is present */
@@ -520,7 +520,7 @@ stp_xml_process_paper(xmlNodePtr paper) /* The paper node */
   xmlFree(stmp);
 #endif
 
-  outpaper = stp_malloc(sizeof(stp_internal_papersize_t));
+  outpaper = stpi_malloc(sizeof(stpi_internal_papersize_t));
   if (!outpaper)
     return NULL;
 
@@ -582,7 +582,7 @@ stp_xml_process_paper(xmlNodePtr paper) /* The paper node */
     }
   if (id && name && width && height && unit)
     return outpaper;
-  stp_free(outpaper);
+  stpi_free(outpaper);
   outpaper = NULL;
   return NULL;
 }

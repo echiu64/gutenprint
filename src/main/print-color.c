@@ -500,7 +500,7 @@ gray_to_gray(const stp_vars_t vars,
   int i0 = -1;
   int o0 = 0;
   int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
+  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));
   size_t count;
   const unsigned short *composite;
   stp_curve_resample(lut->composite, 256);
@@ -540,7 +540,7 @@ rgb_to_gray(const stp_vars_t vars,
   int i2 = -1;
   int o0 = 0;
   int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
+  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));
   size_t count;
   const unsigned short *composite;
   stp_curve_resample(lut->composite, 256);
@@ -592,7 +592,7 @@ rgb_to_rgb(const stp_vars_t vars,
   int nz0 = 0;
   int nz1 = 0;
   int nz2 = 0;
-  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
+  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));
   int compute_saturation = ssat <= .99999 || ssat >= 1.00001;
   int split_saturation = ssat > 1.4;
   const unsigned short *red = stp_curve_get_ushort_data(lut->cyan, &count);
@@ -757,7 +757,7 @@ solid_rgb_to_rgb(const stp_vars_t vars,
   int nz0 = 0;
   int nz1 = 0;
   int nz2 = 0;
-  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
+  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));
   size_t count;
   const unsigned short *red = stp_curve_get_ushort_data(lut->cyan, &count);
   const unsigned short *green = stp_curve_get_ushort_data(lut->magenta, &count);
@@ -904,7 +904,7 @@ gray_to_rgb(const stp_vars_t vars,
   int nz0 = 0;
   int nz1 = 0;
   int nz2 = 0;
-  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
+  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));
   size_t count;
   const unsigned short *red;
   const unsigned short *green;
@@ -982,7 +982,7 @@ fast_rgb_to_rgb(const stp_vars_t vars,
   int nz0 = 0;
   int nz1 = 0;
   int nz2 = 0;
-  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
+  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));
   size_t count;
   const unsigned short *red;
   const unsigned short *green;
@@ -1069,7 +1069,7 @@ fast_gray_to_rgb(const stp_vars_t vars,
   int nz0 = 0;
   int nz1 = 0;
   int nz2 = 0;
-  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
+  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));
   size_t count;
   const unsigned short *red;
   const unsigned short *green;
@@ -1119,11 +1119,11 @@ static stp_curve_t
 compute_gcr_curve(const stp_vars_t vars)
 {
   stp_curve_t curve;
-  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
+  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));
   double k_lower = 0.0;
   double k_upper = 1.0;
   double k_gamma = 1.0;
-  double *tmp_data = stp_malloc(sizeof(double) * lut->steps);
+  double *tmp_data = stpi_malloc(sizeof(double) * lut->steps);
   int step = 65535 / (lut->steps - 1); /* 1 or 257 */
   int i;
 
@@ -1162,10 +1162,10 @@ compute_gcr_curve(const stp_vars_t vars)
   curve = stp_curve_create(STP_CURVE_WRAP_NONE);
   if (! stp_curve_set_data(curve, lut->steps, tmp_data))
     {
-      stp_eprintf(vars, "set curve data failed!\n");
-      stp_abort();
+      stpi_eprintf(vars, "set curve data failed!\n");
+      stpi_abort();
     }
-  stp_free(tmp_data);
+  stpi_free(tmp_data);
   return curve;
 }
 
@@ -1177,7 +1177,7 @@ generic_rgb_to_cmyk(const stp_vars_t vars,
 		    int width,
 		    int bpp)
 {
-  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
+  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));
   int step = 65535 / (lut->steps - 1); /* 1 or 257 */
 
   const unsigned short *gcr_lookup;
@@ -1243,9 +1243,9 @@ name##_to_cmyk(const stp_vars_t vars,					\
 	       int width,						\
 	       int bpp)							\
 {									\
-  lut_t *lut = (lut_t *)(stp_get_color_data(vars));			\
+  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));			\
   if (!lut->cmy_tmp)							\
-    lut->cmy_tmp = stp_malloc(4 * 2 * width);				\
+    lut->cmy_tmp = stpi_malloc(4 * 2 * width);				\
   name##_to_rgb(vars, in, lut->cmy_tmp, zero_mask, width, bpp);		\
   generic_rgb_to_cmyk(vars, lut->cmy_tmp, out, zero_mask, width, bpp);	\
 }
@@ -1436,12 +1436,12 @@ cmyk_to_gray(const stp_vars_t vars,
 }
 
 int
-stp_color_get_row(const stp_vars_t v, stp_image_t *image, int row,
+stpi_color_get_row(const stp_vars_t v, stp_image_t *image, int row,
 		  unsigned short *out, int *zero_mask)
 {
-  const lut_t *lut = (const lut_t *)(stp_get_color_data(v));
+  const lut_t *lut = (const lut_t *)(stpi_get_color_data(v));
   unsigned char *in = lut->in_data;
-  if (stp_image_get_row(image, in, lut->image_width * lut->image_bpp, row) !=
+  if (stpi_image_get_row(image, in, lut->image_width * lut->image_bpp, row) !=
       STP_IMAGE_OK)
     return 2;
   (lut->colorfunc)(v, in, out, zero_mask, lut->image_width, lut->image_bpp);
@@ -1451,7 +1451,7 @@ stp_color_get_row(const stp_vars_t v, stp_image_t *image, int row,
 static lut_t *
 allocate_lut(void)
 {
-  lut_t *ret = stp_malloc(sizeof(lut_t));
+  lut_t *ret = stpi_malloc(sizeof(lut_t));
   ret->composite = stp_curve_create(STP_CURVE_WRAP_NONE);
   ret->cyan = stp_curve_create(STP_CURVE_WRAP_NONE);
   ret->magenta = stp_curve_create(STP_CURVE_WRAP_NONE);
@@ -1476,7 +1476,7 @@ allocate_lut(void)
 static void *
 copy_lut(const stp_vars_t v)
 {
-  const lut_t *src = (const lut_t *)(stp_get_color_data(v));
+  const lut_t *src = (const lut_t *)(stpi_get_color_data(v));
   lut_t *dest;
   if (!src)
     return NULL;
@@ -1499,18 +1499,18 @@ copy_lut(const stp_vars_t v)
   dest->image_width = src->image_width;
   dest->cmy_tmp = NULL;		/* Don't copy working storage */
   if (src->in_data)
-    dest->in_data = stp_malloc(src->image_width * src->image_bpp);
+    dest->in_data = stpi_malloc(src->image_width * src->image_bpp);
   else
     dest->in_data = NULL;
   return dest;
 }
 
 static void
-stp_free_lut(stp_vars_t v)
+stpi_free_lut(stp_vars_t v)
 {
-  if (stp_get_color_data(v))
+  if (stpi_get_color_data(v))
     {
-      lut_t *lut = (lut_t *)(stp_get_color_data(v));
+      lut_t *lut = (lut_t *)(stpi_get_color_data(v));
       if (lut->composite)
 	stp_curve_free(lut->composite);
       if (lut->cyan)
@@ -1528,12 +1528,12 @@ stp_free_lut(stp_vars_t v)
       if (lut->gcr_curve)
 	stp_curve_free(lut->gcr_curve);
       if (lut->in_data)
-	stp_free(lut->in_data);
+	stpi_free(lut->in_data);
       if (lut->cmy_tmp)
-	stp_free(lut->cmy_tmp);
+	stpi_free(lut->cmy_tmp);
       memset(lut, 0, sizeof(lut_t));
-      stp_free(lut);
-      stp_set_color_data(v, NULL);
+      stpi_free(lut);
+      stpi_set_color_data(v, NULL);
     }
 }
 
@@ -1543,7 +1543,7 @@ compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
 		double brightness, double screen_gamma, int input_color_model,
 		int output_color_model)
 {
-  double *tmp = stp_malloc(sizeof(double) * steps);
+  double *tmp = stpi_malloc(sizeof(double) * steps);
   double pivot = .25;
   double ipivot = 1.0 - pivot;
   double xcontrast = pow(contrast, contrast);
@@ -1637,12 +1637,12 @@ compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
   stp_curve_set_data(curve, isteps, tmp);
   if (isteps != steps)
     stp_curve_resample(curve, steps);
-  stp_free(tmp);
+  stpi_free(tmp);
   return curve;
 }
 
 static void
-stp_compute_lut(stp_vars_t v, size_t steps)
+stpi_compute_lut(stp_vars_t v, size_t steps)
 {
   stp_curve_t hue = stp_get_curve_parameter(v, "HueMap");
   stp_curve_t lum = stp_get_curve_parameter(v, "LumMap");
@@ -1679,17 +1679,17 @@ stp_compute_lut(stp_vars_t v, size_t steps)
 
   lut->steps = steps;
 
-  stp_set_color_data(v, lut);
-  stp_set_copy_color_data_func(v, copy_lut);
-  stp_set_destroy_color_data_func(v, stp_free_lut);
-  stp_dprintf(STP_DBG_LUT, v, "stp_compute_lut\n");
-  stp_dprintf(STP_DBG_LUT, v, " cyan %.3f\n", cyan);
-  stp_dprintf(STP_DBG_LUT, v, " magenta %.3f\n", magenta);
-  stp_dprintf(STP_DBG_LUT, v, " yellow %.3f\n", yellow);
-  stp_dprintf(STP_DBG_LUT, v, " print_gamma %.3f\n", print_gamma);
-  stp_dprintf(STP_DBG_LUT, v, " contrast %.3f\n", contrast);
-  stp_dprintf(STP_DBG_LUT, v, " brightness %.3f\n", brightness);
-  stp_dprintf(STP_DBG_LUT, v, " screen_gamma %.3f\n", screen_gamma);
+  stpi_set_color_data(v, lut);
+  stpi_set_copy_color_data_func(v, copy_lut);
+  stpi_set_destroy_color_data_func(v, stpi_free_lut);
+  stpi_dprintf(STPI_DBG_LUT, v, "stpi_compute_lut\n");
+  stpi_dprintf(STPI_DBG_LUT, v, " cyan %.3f\n", cyan);
+  stpi_dprintf(STPI_DBG_LUT, v, " magenta %.3f\n", magenta);
+  stpi_dprintf(STPI_DBG_LUT, v, " yellow %.3f\n", yellow);
+  stpi_dprintf(STPI_DBG_LUT, v, " print_gamma %.3f\n", print_gamma);
+  stpi_dprintf(STPI_DBG_LUT, v, " contrast %.3f\n", contrast);
+  stpi_dprintf(STPI_DBG_LUT, v, " brightness %.3f\n", brightness);
+  stpi_dprintf(STPI_DBG_LUT, v, " screen_gamma %.3f\n", screen_gamma);
   if (composite_curve)
     {
       stp_curve_copy(lut->composite, composite_curve);
@@ -1701,7 +1701,7 @@ stp_compute_lut(stp_vars_t v, size_t steps)
     compute_a_curve(lut->composite, steps, 1.0, print_gamma, contrast,
 		    app_gamma, brightness, screen_gamma,
 		    stp_get_input_color_model(v),
-		    stp_get_output_color_model(v));
+		    stpi_get_output_color_model(v));
   if (cyan_curve)
     {
       stp_curve_copy(lut->cyan, cyan_curve);
@@ -1713,7 +1713,7 @@ stp_compute_lut(stp_vars_t v, size_t steps)
     compute_a_curve(lut->cyan, steps, cyan, print_gamma, contrast,
 		    app_gamma, brightness, screen_gamma,
 		    stp_get_input_color_model(v),
-		    stp_get_output_color_model(v));
+		    stpi_get_output_color_model(v));
   if (magenta_curve)
     {
       stp_curve_copy(lut->magenta, magenta_curve);
@@ -1725,7 +1725,7 @@ stp_compute_lut(stp_vars_t v, size_t steps)
     compute_a_curve(lut->magenta, steps, magenta, print_gamma, contrast,
 		    app_gamma, brightness, screen_gamma,
 		    stp_get_input_color_model(v),
-		    stp_get_output_color_model(v));
+		    stpi_get_output_color_model(v));
   if (yellow_curve)
     {
       stp_curve_copy(lut->yellow, yellow_curve);
@@ -1737,37 +1737,37 @@ stp_compute_lut(stp_vars_t v, size_t steps)
     compute_a_curve(lut->yellow, steps, yellow, print_gamma, contrast,
 		    app_gamma, brightness, screen_gamma,
 		    stp_get_input_color_model(v),
-		    stp_get_output_color_model(v));
+		    stpi_get_output_color_model(v));
 }
 
 static void
 set_null_colorfunc(void)
 {
-  stp_erprintf("No colorfunc chosen!\n");
+  stpi_erprintf("No colorfunc chosen!\n");
 }
 
 #define SET_COLORFUNC(x)						    \
-stp_dprintf(STP_DBG_COLORFUNC, v,					    \
+stpi_dprintf(STPI_DBG_COLORFUNC, v,					    \
 	    "at line %d stp_choose_colorfunc(type %d bpp %d) ==> %s, %d\n", \
 	    __LINE__, stp_get_output_type(v), image_bpp, #x, out_channels); \
 lut->colorfunc = x;							    \
 break
 
 int
-stp_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
+stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
 {
   const char *image_type = stp_get_string_parameter(v, "ImageOptimization");
   int itype = 0;
   int out_channels = 0;
-  int image_bpp = stp_image_bpp(image);
+  int image_bpp = stpi_image_bpp(image);
   lut_t *lut;
   if (steps != 256 && steps != 65536)
     return -1;
 
-  stp_compute_lut(v, steps);
-  lut = (lut_t *)(stp_get_color_data(v));
+  stpi_compute_lut(v, steps);
+  lut = (lut_t *)(stpi_get_color_data(v));
   lut->image_bpp = image_bpp;
-  lut->image_width = stp_image_width(image);
+  lut->image_width = stpi_image_width(image);
   if (image_type)
     {
       if (strcmp(image_type, "LineArt") == 0)
@@ -1886,14 +1886,14 @@ stp_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
       set_null_colorfunc();
       SET_COLORFUNC(NULL);
     }
-  lut->in_data = stp_malloc(stp_image_width(image) * image_bpp);
+  lut->in_data = stpi_malloc(stpi_image_width(image) * image_bpp);
   return out_channels;
 }
 
 stp_parameter_list_t
-stp_color_list_parameters(const stp_vars_t v)
+stpi_color_list_parameters(const stp_vars_t v)
 {
-  stp_list_t *ret = stp_parameter_list_create();
+  stpi_list_t *ret = stp_parameter_list_create();
   int i;
   for (i = 0; i < float_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(float_parameters[i].param));
@@ -1903,7 +1903,7 @@ stp_color_list_parameters(const stp_vars_t v)
 }
 
 void
-stp_color_describe_parameter(const stp_vars_t v, const char *name,
+stpi_color_describe_parameter(const stp_vars_t v, const char *name,
 			      stp_parameter_t *description)
 {
   int i;
@@ -1929,7 +1929,7 @@ stp_color_describe_parameter(const stp_vars_t v, const char *name,
       float_param_t *param = &(float_parameters[i]);
       if (strcmp(name, param->param.name) == 0)
 	{
-	  stp_fill_parameter_settings(description, &(param->param));
+	  stpi_fill_parameter_settings(description, &(param->param));
 	  if (param->color_only && stp_get_output_type(v) == OUTPUT_GRAY)
 	    description->is_active = 0;
 	  else
@@ -1965,7 +1965,7 @@ stp_color_describe_parameter(const stp_vars_t v, const char *name,
       curve_param_t *param = &(curve_parameters[i]);
       if (strcmp(name, param->param.name) == 0)
 	{
-	  stp_fill_parameter_settings(description, &(param->param));
+	  stpi_fill_parameter_settings(description, &(param->param));
 	  if (param->color_only && stp_get_output_type(v) == OUTPUT_GRAY)
 	    description->is_active = 0;
 	  else

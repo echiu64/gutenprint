@@ -113,10 +113,10 @@ typedef double escp2_densities_t[13];
 
 typedef struct escp2_variable_ink
 {
-  const stp_dither_range_simple_t *range;
+  const stpi_dither_range_simple_t *range;
   int numranges;
   double density;
-  const stp_shade_t *shades;
+  const stpi_shade_t *shades;
   int numshades;
 } escp2_variable_ink_t;
 
@@ -379,10 +379,10 @@ typedef struct escp2_printer
 /*****************************************************************************/
   const stp_raw_t *preinit_sequence;
   const stp_raw_t *postinit_remote_sequence;
-} escp2_stp_printer_t;
+} stpi_escp2_printer_t;
 
-extern const escp2_stp_printer_t stp_escp2_model_capabilities[];
-extern const int stp_escp2_model_limit;
+extern const stpi_escp2_printer_t stpi_escp2_model_capabilities[];
+extern const int stpi_escp2_model_limit;
 
 
 #endif /* GIMP_PRINT_INTERNAL_ESCP2_H */

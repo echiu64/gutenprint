@@ -47,7 +47,7 @@
                 (color) - ((-(dither)) >> 3))
 
 static int *
-get_errline(dither_t *d, int row, int color)
+get_errline(stpi_dither_t *d, int row, int color)
 {
   if (row < 0 || color < 0 || color >= CHANNEL_COUNT(d))
     return NULL;
@@ -56,7 +56,7 @@ get_errline(dither_t *d, int row, int color)
   else
     {
       int size = 2 * MAX_SPREAD + (16 * ((d->dst_width + 7) / 8));
-      CHANNEL(d, color).errs[row & 1] = stp_zalloc(size * sizeof(int));
+      CHANNEL(d, color).errs[row & 1] = stpi_zalloc(size * sizeof(int));
       return CHANNEL(d, color).errs[row & 1] + MAX_SPREAD;
     }
 }
@@ -69,7 +69,7 @@ get_errline(dither_t *d, int row, int color)
  */
 
 static inline int
-update_dither(dither_t *d, int channel, int width,
+update_dither(stpi_dither_t *d, int channel, int width,
 	      int direction, int *error0, int *error1)
 {
   int r = CHANNEL(d, channel).v;
@@ -138,8 +138,8 @@ update_dither(dither_t *d, int channel, int width,
  */
 
 static inline int
-print_color(const dither_t *d, dither_channel_t *dc, int x, int y,
-	    unsigned char bit, int length, int dontprint, int dither_type)
+print_color(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
+	    unsigned char bit, int length, int dontprint, int stpi_dither_type)
 {
   int base = dc->b;
   int density = dc->o;
@@ -160,12 +160,12 @@ print_color(const dither_t *d, dither_channel_t *dc, int x, int y,
   unsigned dot_size;
   int levels = dc->nlevels - 1;
   int dither_value = adjusted;
-  dither_segment_t *dd;
-  ink_defn_t *lower;
-  ink_defn_t *upper;
+  stpi_dither_segment_t *dd;
+  stpi_ink_defn_t *lower;
+  stpi_ink_defn_t *upper;
 
   if (base <= 0 || density <= 0 ||
-      (adjusted <= 0 && !(dither_type & D_ADAPTIVE_BASE)))
+      (adjusted <= 0 && !(stpi_dither_type & D_ADAPTIVE_BASE)))
     return adjusted;
   if (density > 65535)
     density = 65535;
@@ -191,13 +191,13 @@ print_color(const dither_t *d, dither_channel_t *dc, int x, int y,
        * to use the Floyd-Steinberg or the ordered method based on the
        * input value.
        */
-      if (dither_type & D_ADAPTIVE_BASE)
+      if (stpi_dither_type & D_ADAPTIVE_BASE)
 	{
-	  dither_type -= D_ADAPTIVE_BASE;
+	  stpi_dither_type -= D_ADAPTIVE_BASE;
 
 	  if (i < levels || base <= d->adaptive_limit)
 	    {
-	      dither_type = D_ORDERED;
+	      stpi_dither_type = D_ORDERED;
 	      dither_value = base;
 	    }
 	  else if (adjusted <= 0)
@@ -241,7 +241,7 @@ print_color(const dither_t *d, dither_channel_t *dc, int x, int y,
        * smoother output in the midtones.  Idea suggested by
        * Thomas Tonino.
        */
-      if (dither_type & D_ORDERED_BASE)
+      if (stpi_dither_type & D_ORDERED_BASE)
 	randomizer = 65535;	/* With ordered dither, we need this */
       else if (randomizer > 0)
 	{
@@ -297,7 +297,7 @@ print_color(const dither_t *d, dither_channel_t *dc, int x, int y,
        */
       if (dither_value >= vmatrix)
 	{
-	  ink_defn_t *subc;
+	  stpi_ink_defn_t *subc;
 
 	  if (dd->is_same_ink)
 	    subc = upper;
@@ -330,7 +330,7 @@ print_color(const dither_t *d, dither_channel_t *dc, int x, int y,
 		    }
 		}
 	    }
-	  if (dither_type & D_ORDERED_BASE)
+	  if (stpi_dither_type & D_ORDERED_BASE)
 	    {
 	      double adj = -(int) v;
 	      adj /= 2.0;
@@ -350,7 +350,7 @@ print_color(const dither_t *d, dither_channel_t *dc, int x, int y,
 }
 
 static int
-shared_ed_initializer(dither_t *d,
+shared_ed_initializer(stpi_dither_t *d,
 		      int row,
 		      int duplicate_line,
 		      int zero_mask,
@@ -381,11 +381,11 @@ shared_ed_initializer(dither_t *d,
     }
   d->ptr_offset = (direction == 1) ? 0 : length - 1;
 
-  *error = stp_malloc(CHANNEL_COUNT(d) * sizeof(int **));
-  *ndither = stp_malloc(CHANNEL_COUNT(d) * sizeof(int));
+  *error = stpi_malloc(CHANNEL_COUNT(d) * sizeof(int **));
+  *ndither = stpi_malloc(CHANNEL_COUNT(d) * sizeof(int));
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     {
-      (*error)[i] = stp_malloc(d->error_rows * sizeof(int *));
+      (*error)[i] = stpi_malloc(d->error_rows * sizeof(int *));
       for (j = 0; j < d->error_rows; j++)
 	{
 	  (*error)[i][j] = get_errline(d, row + j, i);
@@ -400,7 +400,7 @@ shared_ed_initializer(dither_t *d,
 }
 
 static void
-shared_ed_deinitializer(dither_t *d,
+shared_ed_deinitializer(stpi_dither_t *d,
 			int ***error,
 			int *ndither)
 {
@@ -414,13 +414,13 @@ shared_ed_deinitializer(dither_t *d,
 }
 
 static void
-stp_dither_raw_ed(stp_vars_t v,
+stpi_dither_raw_ed(stp_vars_t v,
 		  int row,
 		  const unsigned short *raw,
 		  int duplicate_line,
 		  int zero_mask)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   int		x,
     		length;
   unsigned char	bit;
@@ -457,7 +457,7 @@ stp_dither_raw_ed(stp_vars_t v,
 	  CHANNEL(d, i).b = CHANNEL(d, i).v;
 	  CHANNEL(d, i).v = UPDATE_COLOR(CHANNEL(d, i).v, ndither[i]);
 	  CHANNEL(d, i).v = print_color(d, &(CHANNEL(d, i)), x, row, bit,
-					length, 0, d->dither_type);
+					length, 0, d->stpi_dither_type);
 	  ndither[i] = update_dither(d, i, d->src_width,
 				     direction, error[i][0], error[i][1]);
 	}
@@ -468,17 +468,17 @@ stp_dither_raw_ed(stp_vars_t v,
     }
   shared_ed_deinitializer(d, error, ndither);
   if (direction == -1)
-    stp_dither_reverse_row_ends(d);
+    stpi_dither_reverse_row_ends(d);
 }
 
 static void
-stp_dither_raw_cmyk_ed(stp_vars_t v,
+stpi_dither_raw_cmyk_ed(stp_vars_t v,
 		       int row,
 		       const unsigned short *cmyk,
 		       int duplicate_line,
 		       int zero_mask)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   int		x,
     		length;
   unsigned char	bit;
@@ -522,7 +522,7 @@ stp_dither_raw_cmyk_ed(stp_vars_t v,
 	  CHANNEL(d, i).b = CHANNEL(d, i).v;
 	  CHANNEL(d, i).v = UPDATE_COLOR(CHANNEL(d, i).v, ndither[i]);
 	  CHANNEL(d, i).v = print_color(d, &(CHANNEL(d, i)), x, row, bit,
-					length, 0, d->dither_type);
+					length, 0, d->stpi_dither_type);
 	  ndither[i] = update_dither(d, i, d->src_width,
 				     direction, error[i][0], error[i][1]);
 	}
@@ -533,20 +533,20 @@ stp_dither_raw_cmyk_ed(stp_vars_t v,
     }
   shared_ed_deinitializer(d, error, ndither);
   if (direction == -1)
-    stp_dither_reverse_row_ends(d);
+    stpi_dither_reverse_row_ends(d);
 }
 
 void
-stp_dither_ed(stp_vars_t v,
+stpi_dither_ed(stp_vars_t v,
 	      int row,
 	      const unsigned short *input,
 	      int duplicate_line,
 	      int zero_mask)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   if (d->dither_class != OUTPUT_RAW_CMYK ||
       d->n_ghost_channels > 0)
-    stp_dither_raw_ed(v, row, input, duplicate_line, zero_mask);
+    stpi_dither_raw_ed(v, row, input, duplicate_line, zero_mask);
   else
-    stp_dither_raw_cmyk_ed(v, row, input, duplicate_line, zero_mask);
+    stpi_dither_raw_cmyk_ed(v, row, input, duplicate_line, zero_mask);
 }

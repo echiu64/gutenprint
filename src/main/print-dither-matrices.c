@@ -51,7 +51,7 @@ read_matrix_from_file(const char *pathname)
   (void) fclose(fp);
   if (!the_curve)
     return NULL;
-  if (stp_dither_matrix_validate_curve(the_curve))
+  if (stpi_dither_matrix_validate_curve(the_curve))
     return the_curve;
   else
     {
@@ -61,12 +61,12 @@ read_matrix_from_file(const char *pathname)
 }
 
 static stp_curve_t
-try_file(const char *name, stp_list_t *file_list)
+try_file(const char *name, stpi_list_t *file_list)
 {
-  stp_list_item_t *item = stp_list_get_start(file_list);
+  stpi_list_item_t *item = stpi_list_get_start(file_list);
   while (item)
     {
-      const char *pathname = stp_list_item_get_data(item);
+      const char *pathname = stpi_list_item_get_data(item);
       if (pathname)
 	{
 	  const char *filename = rindex(pathname, '/');
@@ -79,12 +79,12 @@ try_file(const char *name, stp_list_t *file_list)
 	      stp_curve_t answer = read_matrix_from_file(pathname);
 	      if (answer)
 		{
-		  stp_list_destroy(file_list); /* WATCH OUT! */
+		  stpi_list_destroy(file_list); /* WATCH OUT! */
 		  return answer;
 		}
 	    }
 	}
-      item = stp_list_item_next(item);
+      item = stpi_list_item_next(item);
     }
   return NULL;
 }
@@ -110,23 +110,23 @@ gcd(unsigned a, unsigned b)
 }
 
 stp_curve_t
-stp_find_standard_dither_matrix(int x_aspect, int y_aspect)
+stpi_find_standard_dither_matrix(int x_aspect, int y_aspect)
 {
-  stp_list_t *dir_list;                   /* List of directories to scan */
-  stp_list_t *file_list;                  /* List of files to load */
+  stpi_list_t *dir_list;                   /* List of directories to scan */
+  stpi_list_t *file_list;                  /* List of files to load */
   stp_curve_t answer;
   int divisor = gcd(x_aspect, y_aspect);
   char filename[64];
 
-  if (!(dir_list = stp_list_create()))
+  if (!(dir_list = stpi_list_create()))
     return NULL;
   x_aspect /= divisor;
   y_aspect /= divisor;
-  stp_list_set_freefunc(dir_list, stp_list_node_free_data);
-  stp_path_split(dir_list, getenv("STP_DATA_PATH"));
-  stp_path_split(dir_list, PKGMISCDATADIR);
-  file_list = stp_path_search(dir_list, ".mat");
-  stp_list_destroy(dir_list);
+  stpi_list_set_freefunc(dir_list, stpi_list_node_free_data);
+  stpi_path_split(dir_list, getenv("STP_DATA_PATH"));
+  stpi_path_split(dir_list, PKGMISCDATADIR);
+  file_list = stpi_path_search(dir_list, ".mat");
+  stpi_list_destroy(dir_list);
   (void) snprintf(filename, 64, "%dx%d.mat", x_aspect, y_aspect);
   answer = try_file(filename, file_list);
   if (answer)
@@ -195,7 +195,7 @@ is_po2(size_t i)
 }
 
 void
-stp_dither_matrix_iterated_init(dither_matrix_t *mat, size_t size, size_t exp,
+stpi_dither_matrix_iterated_init(dither_matrix_t *mat, size_t size, size_t exp,
 				const unsigned *array)
 {
   int i;
@@ -207,7 +207,7 @@ stp_dither_matrix_iterated_init(dither_matrix_t *mat, size_t size, size_t exp,
     mat->x_size *= mat->base;
   mat->y_size = mat->x_size;
   mat->total_size = mat->x_size * mat->y_size;
-  mat->matrix = stp_malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
+  mat->matrix = stpi_malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
   for (x = 0; x < mat->x_size; x++)
     for (y = 0; y < mat->y_size; y++)
       {
@@ -231,11 +231,11 @@ stp_dither_matrix_iterated_init(dither_matrix_t *mat, size_t size, size_t exp,
   ((m)[(((x) + (x_size)) % (x_size)) + ((x_size) * (((y) + (y_size)) % (y_size)))])
 
 void
-stp_dither_matrix_shear(dither_matrix_t *mat, int x_shear, int y_shear)
+stpi_dither_matrix_shear(dither_matrix_t *mat, int x_shear, int y_shear)
 {
   int i;
   int j;
-  int *tmp = stp_malloc(mat->x_size * mat->y_size * sizeof(int));
+  int *tmp = stpi_malloc(mat->x_size * mat->y_size * sizeof(int));
   for (i = 0; i < mat->x_size; i++)
     for (j = 0; j < mat->y_size; j++)
       MATRIX_POINT(tmp, i, j, mat->x_size, mat->y_size) =
@@ -245,11 +245,11 @@ stp_dither_matrix_shear(dither_matrix_t *mat, int x_shear, int y_shear)
     for (j = 0; j < mat->y_size; j++)
       MATRIX_POINT(mat->matrix, i, j, mat->x_size, mat->y_size) =
 	MATRIX_POINT(tmp, i * (y_shear + 1), j, mat->x_size, mat->y_size);
-  stp_free(tmp);
+  stpi_free(tmp);
 }
 
 int
-stp_dither_matrix_validate_curve(const stp_curve_t curve)
+stpi_dither_matrix_validate_curve(const stp_curve_t curve)
 {
   double low, high;
   stp_curve_get_bounds(curve, &low, &high);
@@ -265,7 +265,7 @@ stp_dither_matrix_validate_curve(const stp_curve_t curve)
 }
 
 void
-stp_dither_matrix_init_from_curve(dither_matrix_t *mat,
+stpi_dither_matrix_init_from_curve(dither_matrix_t *mat,
 				  const stp_curve_t curve,
 				  int transpose)
 				  
@@ -278,7 +278,7 @@ stp_dither_matrix_init_from_curve(dither_matrix_t *mat,
   mat->x_size = vec[0];
   mat->y_size = vec[1];
   mat->total_size = mat->x_size * mat->y_size;
-  mat->matrix = stp_malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
+  mat->matrix = stpi_malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
   for (x = 0; x < mat->x_size; x++)
     for (y = 0; y < mat->y_size; y++)
       {
@@ -298,7 +298,7 @@ stp_dither_matrix_init_from_curve(dither_matrix_t *mat,
 }
 
 void
-stp_dither_matrix_init(dither_matrix_t *mat, int x_size, int y_size,
+stpi_dither_matrix_init(dither_matrix_t *mat, int x_size, int y_size,
 		       const unsigned int *array, int transpose, int prescaled)
 {
   int x, y;
@@ -307,7 +307,7 @@ stp_dither_matrix_init(dither_matrix_t *mat, int x_size, int y_size,
   mat->x_size = x_size;
   mat->y_size = y_size;
   mat->total_size = mat->x_size * mat->y_size;
-  mat->matrix = stp_malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
+  mat->matrix = stpi_malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
   for (x = 0; x < mat->x_size; x++)
     for (y = 0; y < mat->y_size; y++)
       {
@@ -331,7 +331,7 @@ stp_dither_matrix_init(dither_matrix_t *mat, int x_size, int y_size,
 }
 
 void
-stp_dither_matrix_init_short(dither_matrix_t *mat, int x_size, int y_size,
+stpi_dither_matrix_init_short(dither_matrix_t *mat, int x_size, int y_size,
 			     const unsigned short *array, int transpose,
 			     int prescaled)
 {
@@ -341,7 +341,7 @@ stp_dither_matrix_init_short(dither_matrix_t *mat, int x_size, int y_size,
   mat->x_size = x_size;
   mat->y_size = y_size;
   mat->total_size = mat->x_size * mat->y_size;
-  mat->matrix = stp_malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
+  mat->matrix = stpi_malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
   for (x = 0; x < mat->x_size; x++)
     for (y = 0; y < mat->y_size; y++)
       {
@@ -365,10 +365,10 @@ stp_dither_matrix_init_short(dither_matrix_t *mat, int x_size, int y_size,
 }
 
 void
-stp_dither_matrix_destroy(dither_matrix_t *mat)
+stpi_dither_matrix_destroy(dither_matrix_t *mat)
 {
   if (mat->i_own && mat->matrix)
-    stp_free(mat->matrix);
+    stpi_free(mat->matrix);
   mat->matrix = NULL;
   mat->base = 0;
   mat->exp = 0;
@@ -379,7 +379,7 @@ stp_dither_matrix_destroy(dither_matrix_t *mat)
 }
 
 void
-stp_dither_matrix_clone(const dither_matrix_t *src, dither_matrix_t *dest,
+stpi_dither_matrix_clone(const dither_matrix_t *src, dither_matrix_t *dest,
 			int x_offset, int y_offset)
 {
   dest->base = src->base;
@@ -400,7 +400,7 @@ stp_dither_matrix_clone(const dither_matrix_t *src, dither_matrix_t *dest,
 }
 
 void
-stp_dither_matrix_copy(const dither_matrix_t *src, dither_matrix_t *dest)
+stpi_dither_matrix_copy(const dither_matrix_t *src, dither_matrix_t *dest)
 {
   int x;
   dest->base = src->base;
@@ -408,7 +408,7 @@ stp_dither_matrix_copy(const dither_matrix_t *src, dither_matrix_t *dest)
   dest->x_size = src->x_size;
   dest->y_size = src->y_size;
   dest->total_size = src->total_size;
-  dest->matrix = stp_malloc(sizeof(unsigned) * dest->x_size * dest->y_size);
+  dest->matrix = stpi_malloc(sizeof(unsigned) * dest->x_size * dest->y_size);
   for (x = 0; x < dest->x_size * dest->y_size; x++)
     dest->matrix[x] = src->matrix[x];
   dest->x_offset = 0;
@@ -423,7 +423,7 @@ stp_dither_matrix_copy(const dither_matrix_t *src, dither_matrix_t *dest)
 }
 
 void
-stp_dither_matrix_scale_exponentially(dither_matrix_t *mat, double exponent)
+stpi_dither_matrix_scale_exponentially(dither_matrix_t *mat, double exponent)
 {
   int i;
   int mat_size = mat->x_size * mat->y_size;
@@ -436,7 +436,7 @@ stp_dither_matrix_scale_exponentially(dither_matrix_t *mat, double exponent)
 }
 
 void
-stp_dither_matrix_set_row(dither_matrix_t *mat, int y)
+stpi_dither_matrix_set_row(dither_matrix_t *mat, int y)
 {
   mat->last_y = y;
   mat->last_y_mod = mat->x_size * ((y + mat->y_offset) % mat->y_size);
@@ -446,97 +446,97 @@ stp_dither_matrix_set_row(dither_matrix_t *mat, int y)
 static void
 preinit_matrix(stp_vars_t v)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   int i;
   for (i = 0; i < PHYSICAL_CHANNEL_COUNT(d); i++)
-    stp_dither_matrix_destroy(&(PHYSICAL_CHANNEL(d, i).dithermat));
-  stp_dither_matrix_destroy(&(d->dither_matrix));
+    stpi_dither_matrix_destroy(&(PHYSICAL_CHANNEL(d, i).dithermat));
+  stpi_dither_matrix_destroy(&(d->dither_matrix));
 }
 
 static void
 postinit_matrix(stp_vars_t v, int x_shear, int y_shear)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   unsigned rc = 1 + (unsigned) ceil(sqrt(PHYSICAL_CHANNEL_COUNT(d)));
   int i, j;
   int color = 0;
   unsigned x_n = d->dither_matrix.x_size / rc;
   unsigned y_n = d->dither_matrix.y_size / rc;
   if (x_shear || y_shear)
-    stp_dither_matrix_shear(&(d->dither_matrix), x_shear, y_shear);
+    stpi_dither_matrix_shear(&(d->dither_matrix), x_shear, y_shear);
   for (i = 0; i < rc; i++)
     for (j = 0; j < rc; j++)
       if (color < PHYSICAL_CHANNEL_COUNT(d))
 	{
-	  stp_dither_matrix_clone(&(d->dither_matrix),
+	  stpi_dither_matrix_clone(&(d->dither_matrix),
 				  &(PHYSICAL_CHANNEL(d, color).dithermat),
 				  x_n * i, y_n * j);
 	  color++;
 	}
-  stp_dither_set_transition(v, d->transition);
+  stpi_dither_set_transition(v, d->transition);
 }
 
 void
-stp_dither_set_iterated_matrix(stp_vars_t v, size_t edge, size_t iterations,
+stpi_dither_set_iterated_matrix(stp_vars_t v, size_t edge, size_t iterations,
 			       const unsigned *data, int prescaled,
 			       int x_shear, int y_shear)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   preinit_matrix(v);
-  stp_dither_matrix_iterated_init(&(d->dither_matrix), edge, iterations, data);
+  stpi_dither_matrix_iterated_init(&(d->dither_matrix), edge, iterations, data);
   postinit_matrix(v, x_shear, y_shear);
 }
 
 void
-stp_dither_set_matrix(stp_vars_t v, const stp_dither_matrix_t *matrix,
+stpi_dither_set_matrix(stp_vars_t v, const stpi_dither_matrix_t *matrix,
 		      int transposed, int x_shear, int y_shear)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   int x = transposed ? matrix->y : matrix->x;
   int y = transposed ? matrix->x : matrix->y;
   preinit_matrix(v);
   if (matrix->bytes == 2)
-    stp_dither_matrix_init_short(&(d->dither_matrix), x, y,
+    stpi_dither_matrix_init_short(&(d->dither_matrix), x, y,
 				 (const unsigned short *) matrix->data,
 				 transposed, matrix->prescaled);
   else if (matrix->bytes == 4)
-    stp_dither_matrix_init(&(d->dither_matrix), x, y,
+    stpi_dither_matrix_init(&(d->dither_matrix), x, y,
 			   (const unsigned *)matrix->data,
 			   transposed, matrix->prescaled);
   postinit_matrix(v, x_shear, y_shear);
 }
 
 void
-stp_dither_set_matrix_from_curve(stp_vars_t v, const stp_curve_t curve,
+stpi_dither_set_matrix_from_curve(stp_vars_t v, const stp_curve_t curve,
 				 int transpose)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   preinit_matrix(v);
-  stp_dither_matrix_init_from_curve(&(d->dither_matrix), curve, transpose);
+  stpi_dither_matrix_init_from_curve(&(d->dither_matrix), curve, transpose);
   postinit_matrix(v, 0, 0);
 }
 
 void
-stp_dither_set_transition(stp_vars_t v, double exponent)
+stpi_dither_set_transition(stp_vars_t v, double exponent)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   unsigned rc = 1 + (unsigned) ceil(sqrt(PHYSICAL_CHANNEL_COUNT(d)));
   int i, j;
   int color = 0;
   unsigned x_n = d->dither_matrix.x_size / rc;
   unsigned y_n = d->dither_matrix.y_size / rc;
   for (i = 0; i < PHYSICAL_CHANNEL_COUNT(d); i++)
-    stp_dither_matrix_destroy(&(PHYSICAL_CHANNEL(d, i).pick));
-  stp_dither_matrix_destroy(&(d->transition_matrix));
-  stp_dither_matrix_copy(&(d->dither_matrix), &(d->transition_matrix));
+    stpi_dither_matrix_destroy(&(PHYSICAL_CHANNEL(d, i).pick));
+  stpi_dither_matrix_destroy(&(d->transition_matrix));
+  stpi_dither_matrix_copy(&(d->dither_matrix), &(d->transition_matrix));
   d->transition = exponent;
   if (exponent < .999 || exponent > 1.001)
-    stp_dither_matrix_scale_exponentially(&(d->transition_matrix), exponent);
+    stpi_dither_matrix_scale_exponentially(&(d->transition_matrix), exponent);
   for (i = 0; i < rc; i++)
     for (j = 0; j < rc; j++)
       if (color < PHYSICAL_CHANNEL_COUNT(d))
 	{
-	  stp_dither_matrix_clone(&(d->dither_matrix),
+	  stpi_dither_matrix_clone(&(d->dither_matrix),
 				  &(PHYSICAL_CHANNEL(d, color).pick),
 				  x_n * i, y_n * j);
 	  color++;

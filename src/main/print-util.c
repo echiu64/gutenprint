@@ -63,7 +63,7 @@ typedef struct
 #define STP_VASPRINTF(result, bytes, format)				\
 {									\
   int current_allocation = 64;						\
-  result = stp_malloc(current_allocation);				\
+  result = stpi_malloc(current_allocation);				\
   while (1)								\
     {									\
       va_list args;							\
@@ -79,13 +79,13 @@ typedef struct
 	    current_allocation *= 2;					\
 	  else								\
 	    current_allocation = bytes + 1;				\
-	  result = stp_malloc(current_allocation);			\
+	  result = stpi_malloc(current_allocation);			\
 	}								\
     }									\
 }
 
 void
-stp_zprintf(const stp_vars_t v, const char *format, ...)
+stpi_zprintf(const stp_vars_t v, const char *format, ...)
 {
   char *result;
   int bytes;
@@ -95,13 +95,13 @@ stp_zprintf(const stp_vars_t v, const char *format, ...)
 }
 
 void
-stp_zfwrite(const char *buf, size_t bytes, size_t nitems, const stp_vars_t v)
+stpi_zfwrite(const char *buf, size_t bytes, size_t nitems, const stp_vars_t v)
 {
   (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), buf, bytes * nitems);
 }
 
 void
-stp_putc(int ch, const stp_vars_t v)
+stpi_putc(int ch, const stp_vars_t v)
 {
   char a = (char) ch;
   (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), &a, 1);
@@ -110,45 +110,45 @@ stp_putc(int ch, const stp_vars_t v)
 #define BYTE(expr, byteno) (((expr) >> (8 * byteno)) & 0xff)
 
 void
-stp_put16_le(unsigned short sh, const stp_vars_t v)
+stpi_put16_le(unsigned short sh, const stp_vars_t v)
 {
-  stp_putc(BYTE(sh, 0), v);
-  stp_putc(BYTE(sh, 1), v);
+  stpi_putc(BYTE(sh, 0), v);
+  stpi_putc(BYTE(sh, 1), v);
 }
 
 void
-stp_put16_be(unsigned short sh, const stp_vars_t v)
+stpi_put16_be(unsigned short sh, const stp_vars_t v)
 {
-  stp_putc(BYTE(sh, 1), v);
-  stp_putc(BYTE(sh, 0), v);
+  stpi_putc(BYTE(sh, 1), v);
+  stpi_putc(BYTE(sh, 0), v);
 }
 
 void
-stp_put32_le(unsigned int sh, const stp_vars_t v)
+stpi_put32_le(unsigned int sh, const stp_vars_t v)
 {
-  stp_putc(BYTE(sh, 0), v);
-  stp_putc(BYTE(sh, 1), v);
-  stp_putc(BYTE(sh, 2), v);
-  stp_putc(BYTE(sh, 3), v);
+  stpi_putc(BYTE(sh, 0), v);
+  stpi_putc(BYTE(sh, 1), v);
+  stpi_putc(BYTE(sh, 2), v);
+  stpi_putc(BYTE(sh, 3), v);
 }
 
 void
-stp_put32_be(unsigned int sh, const stp_vars_t v)
+stpi_put32_be(unsigned int sh, const stp_vars_t v)
 {
-  stp_putc(BYTE(sh, 3), v);
-  stp_putc(BYTE(sh, 2), v);
-  stp_putc(BYTE(sh, 1), v);
-  stp_putc(BYTE(sh, 0), v);
+  stpi_putc(BYTE(sh, 3), v);
+  stpi_putc(BYTE(sh, 2), v);
+  stpi_putc(BYTE(sh, 1), v);
+  stpi_putc(BYTE(sh, 0), v);
 }
 
 void
-stp_puts(const char *s, const stp_vars_t v)
+stpi_puts(const char *s, const stp_vars_t v)
 {
   (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), s, strlen(s));
 }
 
 void
-stp_send_command(const stp_vars_t v, const char *command,
+stpi_send_command(const stp_vars_t v, const char *command,
 		 const char *format, ...)
 {
   int i = 0;
@@ -191,7 +191,7 @@ stp_send_command(const stp_vars_t v, const char *command,
       va_end(args);
     }
 
-  stp_puts(command, v);
+  stpi_puts(command, v);
 
   va_start(args, format);
   while ((fchar = format[0]) != '\0')
@@ -199,31 +199,31 @@ stp_send_command(const stp_vars_t v, const char *command,
       switch (fchar)
 	{
 	case 'a':
-	  stp_put16_le(byte_count, v);
+	  stpi_put16_le(byte_count, v);
 	  break;
 	case 'b':
-	  stp_put16_le(byte_count, v);
+	  stpi_put16_le(byte_count, v);
 	  break;
 	case 'B':
-	  stp_put16_be(byte_count, v);
+	  stpi_put16_be(byte_count, v);
 	  break;
 	case 'c':
-	  stp_putc(va_arg(args, unsigned int), v);
+	  stpi_putc(va_arg(args, unsigned int), v);
 	  break;
 	case 'h':
-	  stp_put16_le(va_arg(args, unsigned int), v);
+	  stpi_put16_le(va_arg(args, unsigned int), v);
 	  break;
 	case 'H':
-	  stp_put16_be(va_arg(args, unsigned int), v);
+	  stpi_put16_be(va_arg(args, unsigned int), v);
 	  break;
 	case 'l':
-	  stp_put32_le(va_arg(args, unsigned int), v);
+	  stpi_put32_le(va_arg(args, unsigned int), v);
 	  break;
 	case 'L':
-	  stp_put32_be(va_arg(args, unsigned int), v);
+	  stpi_put32_be(va_arg(args, unsigned int), v);
 	  break;
 	case 's':
-	  stp_puts(va_arg(args, const char *), v);
+	  stpi_puts(va_arg(args, const char *), v);
 	  break;
 	}
       format++;
@@ -232,7 +232,7 @@ stp_send_command(const stp_vars_t v, const char *command,
 }
 
 void
-stp_eprintf(const stp_vars_t v, const char *format, ...)
+stpi_eprintf(const stp_vars_t v, const char *format, ...)
 {
   int bytes;
   if (stp_get_errfunc(v))
@@ -252,13 +252,13 @@ stp_eprintf(const stp_vars_t v, const char *format, ...)
 }
 
 void
-stp_erputc(int ch)
+stpi_erputc(int ch)
 {
   putc(ch, stderr);
 }
 
 void
-stp_erprintf(const char *format, ...)
+stpi_erprintf(const char *format, ...)
 {
   va_list args;
   va_start(args, format);
@@ -266,10 +266,10 @@ stp_erprintf(const char *format, ...)
   va_end(args);
 }
 
-unsigned long stp_debug_level = 0;
+unsigned long stpi_debug_level = 0;
 
 static void
-stp_init_debug(void)
+stpi_init_debug(void)
 {
   static int debug_initialized = 0;
   if (!debug_initialized)
@@ -278,18 +278,18 @@ stp_init_debug(void)
       debug_initialized = 1;
       if (dval)
 	{
-	  stp_debug_level = strtoul(dval, 0, 0);
-	  stp_erprintf("Gimp-Print %s %s\n", VERSION, RELEASE_DATE);
+	  stpi_debug_level = strtoul(dval, 0, 0);
+	  stpi_erprintf("Gimp-Print %s %s\n", VERSION, RELEASE_DATE);
 	}
     }
 }
 
 void
-stp_dprintf(unsigned long level, const stp_vars_t v, const char *format, ...)
+stpi_dprintf(unsigned long level, const stp_vars_t v, const char *format, ...)
 {
   int bytes;
-  stp_init_debug();
-  if ((level & stp_debug_level) && stp_get_errfunc(v))
+  stpi_init_debug();
+  if ((level & stpi_debug_level) && stp_get_errfunc(v))
     {
       char *result;
       STP_VASPRINTF(result, bytes, format);
@@ -299,12 +299,12 @@ stp_dprintf(unsigned long level, const stp_vars_t v, const char *format, ...)
 }
 
 void
-stp_deprintf(unsigned long level, const char *format, ...)
+stpi_deprintf(unsigned long level, const char *format, ...)
 {
   va_list args;
   va_start(args, format);
-  stp_init_debug();
-  if (level & stp_debug_level)
+  stpi_init_debug();
+  if (level & stpi_debug_level)
     vfprintf(stderr, format, args);
   va_end(args);
 }
@@ -314,95 +314,95 @@ fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
 {
   debug_msgbuf_t *msgbuf = (debug_msgbuf_t *) priv;
   if (msgbuf->bytes == 0)
-    msgbuf->data = stp_malloc(bytes + 1);
+    msgbuf->data = stpi_malloc(bytes + 1);
   else
-    msgbuf->data = stp_realloc(msgbuf->data, msgbuf->bytes + bytes + 1);
+    msgbuf->data = stpi_realloc(msgbuf->data, msgbuf->bytes + bytes + 1);
   memcpy(msgbuf->data + msgbuf->bytes, buffer, bytes);
   msgbuf->bytes += bytes;
   msgbuf->data[msgbuf->bytes] = '\0';
 }
 
 void
-stp_init_debug_messages(const stp_vars_t v)
+stpi_init_debug_messages(const stp_vars_t v)
 {
-  int verified_flag = stp_get_verified(v);
-  debug_msgbuf_t *msgbuf = stp_malloc(sizeof(debug_msgbuf_t));
+  int verified_flag = stpi_get_verified(v);
+  debug_msgbuf_t *msgbuf = stpi_malloc(sizeof(debug_msgbuf_t));
   msgbuf->ofunc = stp_get_errfunc(v);
   msgbuf->odata = stp_get_errdata(v);
   msgbuf->data = NULL;
   msgbuf->bytes = 0;
   stp_set_errfunc((stp_vars_t) v, fill_buffer_writefunc);
   stp_set_errdata((stp_vars_t) v, msgbuf);
-  stp_set_verified(v, verified_flag);
+  stpi_set_verified(v, verified_flag);
 }
 
 void
-stp_flush_debug_messages(const stp_vars_t v)
+stpi_flush_debug_messages(const stp_vars_t v)
 {
-  int verified_flag = stp_get_verified(v);
+  int verified_flag = stpi_get_verified(v);
   debug_msgbuf_t *msgbuf = (debug_msgbuf_t *)stp_get_errdata(v);
   stp_set_errfunc((stp_vars_t) v, msgbuf->ofunc);
   stp_set_errdata((stp_vars_t) v, msgbuf->odata);
-  stp_set_verified(v, verified_flag);
+  stpi_set_verified(v, verified_flag);
   if (msgbuf->bytes > 0)
     {
-      stp_eprintf(v, "%s", msgbuf->data);
-      stp_free(msgbuf->data);
+      stpi_eprintf(v, "%s", msgbuf->data);
+      stpi_free(msgbuf->data);
     }
-  stp_free(msgbuf);
+  stpi_free(msgbuf);
 }
 
 /* pointers to the allocation functions to use, which may be set by
    client applications */
-void *(*stp_malloc_func)(size_t size) = malloc;
-void *(*stp_realloc_func)(void *ptr, size_t size) = realloc;
-void (*stp_free_func)(void *ptr) = free;
+void *(*stpi_malloc_func)(size_t size) = malloc;
+void *(*stpi_realloc_func)(void *ptr, size_t size) = realloc;
+void (*stpi_free_func)(void *ptr) = free;
 
 void *
-stp_malloc (size_t size)
+stpi_malloc (size_t size)
 {
   register void *memptr = NULL;
 
-  if ((memptr = stp_malloc_func (size)) == NULL)
+  if ((memptr = stpi_malloc_func (size)) == NULL)
     {
       fputs("Virtual memory exhausted.\n", stderr);
-      stp_abort();
+      stpi_abort();
     }
   return (memptr);
 }
 
 void *
-stp_zalloc (size_t size)
+stpi_zalloc (size_t size)
 {
-  register void *memptr = stp_malloc(size);
+  register void *memptr = stpi_malloc(size);
   (void) memset(memptr, 0, size);
   return (memptr);
 }
 
 void *
-stp_realloc (void *ptr, size_t size)
+stpi_realloc (void *ptr, size_t size)
 {
   register void *memptr = NULL;
 
-  if (size > 0 && ((memptr = stp_realloc_func (ptr, size)) == NULL))
+  if (size > 0 && ((memptr = stpi_realloc_func (ptr, size)) == NULL))
     {
       fputs("Virtual memory exhausted.\n", stderr);
-      stp_abort();
+      stpi_abort();
     }
   return (memptr);
 }
 
 void
-stp_free(void *ptr)
+stpi_free(void *ptr)
 {
-  stp_free_func(ptr);
+  stpi_free_func(ptr);
 }
 
 int
 stp_init(void)
 {
-  static int stp_is_initialised = 0;
-  if (!stp_is_initialised)
+  static int stpi_is_initialised = 0;
+  if (!stpi_is_initialised)
     {
       /* Things that are only initialised once */
       /* Set up gettext */
@@ -410,41 +410,41 @@ stp_init(void)
       setlocale (LC_ALL, "");
       bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 #endif
-      stp_init_debug();
+      stpi_init_debug();
       /* Load modules */
-      if (stp_module_load())
+      if (stpi_module_load())
 	return 1;
       /* Load XML data */
-      if (stp_xml_init())
+      if (stpi_xml_init())
 	return 1;
       /* Initialise modules */
-      if (stp_module_init())
+      if (stpi_module_init())
 	return 1;
     }
 
-  stp_is_initialised = 1;
+  stpi_is_initialised = 1;
   return 0;
 }
 
 size_t
-stp_strlen(const char *s)
+stpi_strlen(const char *s)
 {
   return strlen(s);
 }
 
 char *
-stp_strndup(const char *s, int n)
+stpi_strndup(const char *s, int n)
 {
   char *ret;
   if (!s || n < 0)
     {
-      ret = stp_malloc(1);
+      ret = stpi_malloc(1);
       ret[0] = 0;
       return ret;
     }
   else
     {
-      ret = stp_malloc(n + 1);
+      ret = stpi_malloc(n + 1);
       memcpy(ret, s, n);
       ret[n] = 0;
       return ret;
@@ -452,17 +452,17 @@ stp_strndup(const char *s, int n)
 }
 
 char *
-stp_strdup(const char *s)
+stpi_strdup(const char *s)
 {
   char *ret;
   if (!s)
     {
-      ret = stp_malloc(1);
+      ret = stpi_malloc(1);
       ret[0] = 0;
       return ret;
     }
   else
-    return stp_strndup(s, stp_strlen(s));
+    return stpi_strndup(s, stpi_strlen(s));
 }
 
 const char *
@@ -476,7 +476,7 @@ stp_set_output_codeset(const char *codeset)
 }
 
 stp_curve_t
-stp_read_and_compose_curves(const char *s1, const char *s2,
+stpi_read_and_compose_curves(const char *s1, const char *s2,
 			    stp_curve_compose_t comp)
 {
   stp_curve_t ret = NULL;
@@ -504,7 +504,7 @@ stp_read_and_compose_curves(const char *s1, const char *s2,
 }
 
 void
-stp_abort(void)
+stpi_abort(void)
 {
   abort();
 }
@@ -521,12 +521,12 @@ void print_timers(const stp_vars_t v)
 {
   int i;
 
-  stp_eprintf(v, "%s", "Quantify timers:\n");
+  stpi_eprintf(v, "%s", "Quantify timers:\n");
   for (i = 0; i <= quantify_high_index; i++)
     {
       if (quantify_counts[i] > 0)
 	{
-	  stp_eprintf(v,
+	  stpi_eprintf(v,
 		      "Bucket %d:\t%ld.%ld s\thit %u times\n", i,
 		      quantify_buckets[i].tv_sec, quantify_buckets[i].tv_usec,
 		      quantify_counts[i]);

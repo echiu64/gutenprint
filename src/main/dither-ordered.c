@@ -35,7 +35,7 @@
 #include "dither-inlined-functions.h"
 
 static inline int
-print_color_ordered(const dither_t *d, dither_channel_t *dc, int x, int y,
+print_color_ordered(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
 		    unsigned char bit, int length, int dontprint)
 {
   int density = dc->o;
@@ -55,9 +55,9 @@ print_color_ordered(const dither_t *d, dither_channel_t *dc, int x, int y,
   unsigned dot_size;
   int levels = dc->nlevels - 1;
   int dither_value = adjusted;
-  dither_segment_t *dd;
-  ink_defn_t *lower;
-  ink_defn_t *upper;
+  stpi_dither_segment_t *dd;
+  stpi_ink_defn_t *lower;
+  stpi_ink_defn_t *upper;
 
   if (adjusted <= 0 || density <= 0)
     return 0;
@@ -140,7 +140,7 @@ print_color_ordered(const dither_t *d, dither_channel_t *dc, int x, int y,
        */
       if (dither_value >= vmatrix)
 	{
-	  ink_defn_t *subc;
+	  stpi_ink_defn_t *subc;
 
 	  if (dd->is_same_ink)
 	    subc = upper;
@@ -180,13 +180,13 @@ print_color_ordered(const dither_t *d, dither_channel_t *dc, int x, int y,
 }
 
 static void
-stp_dither_raw_ordered(stp_vars_t v,
+stpi_dither_raw_ordered(stp_vars_t v,
 		       int row,
 		       const unsigned short *raw,
 		       int duplicate_line,
 		       int zero_mask)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   int		x,
 		length;
   unsigned char	bit;
@@ -224,13 +224,13 @@ stp_dither_raw_ordered(stp_vars_t v,
 }
 
 static void
-stp_dither_raw_cmyk_ordered(stp_vars_t v,
+stpi_dither_raw_cmyk_ordered(stp_vars_t v,
 			    int row,
 			    const unsigned short *cmyk,
 			    int duplicate_line,
 			    int zero_mask)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   int		x,
 		length;
   unsigned char	bit;
@@ -276,16 +276,16 @@ stp_dither_raw_cmyk_ordered(stp_vars_t v,
 }
 
 void
-stp_dither_ordered(stp_vars_t v,
+stpi_dither_ordered(stp_vars_t v,
 		   int row,
 		   const unsigned short *input,
 		   int duplicate_line,
 		   int zero_mask)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
   if (d->dither_class != OUTPUT_RAW_CMYK ||
       d->n_ghost_channels > 0)
-    stp_dither_raw_ordered(v, row, input, duplicate_line, zero_mask);
+    stpi_dither_raw_ordered(v, row, input, duplicate_line, zero_mask);
   else
-    stp_dither_raw_cmyk_ordered(v, row, input, duplicate_line, zero_mask);
+    stpi_dither_raw_cmyk_ordered(v, row, input, duplicate_line, zero_mask);
 }

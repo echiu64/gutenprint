@@ -62,7 +62,7 @@ typedef struct
   short *short_data;
   unsigned short *ushort_data;
 
-} stp_internal_curve_t;
+} stpi_internal_curve_t;
 
 static const char *curve_type_names[] =
   {
@@ -86,12 +86,12 @@ static const int wrap_mode_count =
  * We could do more sanity checks here if we want.
  */
 static void
-check_curve(const stp_internal_curve_t *v)
+check_curve(const stpi_internal_curve_t *v)
 {
   if (v->cookie != COOKIE_CURVE)
     {
-      stp_erprintf("Bad curve!\n");
-      stp_abort();
+      stpi_erprintf("Bad curve!\n");
+      stpi_abort();
     }
 }
 
@@ -102,7 +102,7 @@ check_curve(const stp_internal_curve_t *v)
  * code will clip them to the bounds.
  */
 static void
-scan_curve_range(stp_internal_curve_t *curve)
+scan_curve_range(stpi_internal_curve_t *curve)
 {
   int i;
   curve->rlo = curve->bhi;
@@ -121,12 +121,12 @@ scan_curve_range(stp_internal_curve_t *curve)
 do						\
 {						\
   if ((x))					\
-    stp_free((char *)(x));			\
+    stpi_free((char *)(x));			\
   ((x)) = NULL;					\
 } while (0)
 
 static void
-invalidate_auxiliary_data(stp_internal_curve_t *curve)
+invalidate_auxiliary_data(stpi_internal_curve_t *curve)
 {
   SAFE_FREE(curve->interval);
   SAFE_FREE(curve->long_data);
@@ -138,7 +138,7 @@ invalidate_auxiliary_data(stp_internal_curve_t *curve)
 }
 
 static void
-clear_curve_data(stp_internal_curve_t *curve)
+clear_curve_data(stpi_internal_curve_t *curve)
 {
   SAFE_FREE(curve->data);
   curve->point_count = 0;
@@ -149,21 +149,21 @@ clear_curve_data(stp_internal_curve_t *curve)
 }
 
 static void
-compute_linear_deltas(stp_internal_curve_t *curve)
+compute_linear_deltas(stpi_internal_curve_t *curve)
 {
   int i;
-  curve->interval = stp_malloc(sizeof(double) * (curve->real_point_count - 1));
+  curve->interval = stpi_malloc(sizeof(double) * (curve->real_point_count - 1));
   for (i = 0; i < curve->real_point_count - 1; i++)
     curve->interval[i] = curve->data[i + 1] - curve->data[i];
 }
 
 static void
-compute_spline_deltas(stp_internal_curve_t *curve)
+compute_spline_deltas(stpi_internal_curve_t *curve)
 {
   int i;
   int k;
-  double *u = stp_malloc(sizeof(double) * (curve->real_point_count));
-  double *y2 = stp_malloc(sizeof(double) * (curve->real_point_count));
+  double *u = stpi_malloc(sizeof(double) * (curve->real_point_count));
+  double *y2 = stpi_malloc(sizeof(double) * (curve->real_point_count));
   double *y = curve->data;
   double sig;
   double p;
@@ -172,8 +172,8 @@ compute_spline_deltas(stp_internal_curve_t *curve)
     {
       int reps = 3;
       int count = reps * curve->real_point_count;
-      double *y2a = stp_malloc(sizeof(double) * count);
-      double *ua = stp_malloc(sizeof(double) * count);
+      double *y2a = stpi_malloc(sizeof(double) * count);
+      double *ua = stpi_malloc(sizeof(double) * count);
       y2a[0] = 0.0;
       ua[0] = 0.0;
       for (i = 1; i < count - 1; i++)
@@ -198,8 +198,8 @@ compute_spline_deltas(stp_internal_curve_t *curve)
 	     sizeof(double) * curve->real_point_count);
       memcpy(y2, y2a + ((reps / 2) * curve->point_count),
 	     sizeof(double) * curve->real_point_count);
-      stp_free(y2a);
-      stp_free(ua);
+      stpi_free(y2a);
+      stpi_free(ua);
     }
   else
     {
@@ -229,7 +229,7 @@ compute_spline_deltas(stp_internal_curve_t *curve)
     }
 
   curve->interval = y2;
-  stp_free(u);
+  stpi_free(u);
 }
 
 /*
@@ -238,7 +238,7 @@ compute_spline_deltas(stp_internal_curve_t *curve)
  * compute the second derivatives for that purpose, too.
  */
 static void
-compute_intervals(stp_internal_curve_t *curve)
+compute_intervals(stpi_internal_curve_t *curve)
 {
   if (curve->interval)
     SAFE_FREE(curve->interval);
@@ -258,7 +258,7 @@ compute_intervals(stp_internal_curve_t *curve)
 }
 
 static int
-set_curve_points(stp_internal_curve_t *curve, size_t points)
+set_curve_points(stpi_internal_curve_t *curve, size_t points)
 {
   if (points < 2)
     return 0;
@@ -278,7 +278,7 @@ set_curve_points(stp_internal_curve_t *curve, size_t points)
  * Create a default curve
  */
 static void
-stp_curve_ctor(stp_internal_curve_t *curve, stp_curve_wrap_mode_t wrap_mode)
+stpi_curve_ctor(stpi_internal_curve_t *curve, stp_curve_wrap_mode_t wrap_mode)
 {
   curve->cookie = COOKIE_CURVE;
   curve->rlo = curve->blo = 0.0;
@@ -286,7 +286,7 @@ stp_curve_ctor(stp_internal_curve_t *curve, stp_curve_wrap_mode_t wrap_mode)
   curve->curve_type = STP_CURVE_TYPE_LINEAR;
   curve->wrap_mode = wrap_mode;
   set_curve_points(curve, 2);
-  curve->data = stp_zalloc(curve->real_point_count * sizeof(double));
+  curve->data = stpi_zalloc(curve->real_point_count * sizeof(double));
   curve->recompute_interval = 1;
   if (wrap_mode == STP_CURVE_WRAP_NONE)
     curve->gamma = 1.0;
@@ -297,21 +297,21 @@ stp_curve_ctor(stp_internal_curve_t *curve, stp_curve_wrap_mode_t wrap_mode)
 stp_curve_t
 stp_curve_create(stp_curve_wrap_mode_t wrap_mode)
 {
-  stp_internal_curve_t *ret;
+  stpi_internal_curve_t *ret;
   if (wrap_mode != STP_CURVE_WRAP_NONE && wrap_mode != STP_CURVE_WRAP_AROUND)
     return NULL;
-  ret = stp_zalloc(sizeof(stp_internal_curve_t));
-  stp_curve_ctor(ret, wrap_mode);
+  ret = stpi_zalloc(sizeof(stpi_internal_curve_t));
+  stpi_curve_ctor(ret, wrap_mode);
   return (stp_curve_t) ret;
 }
 
 static void
 curve_dtor(stp_curve_t curve)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
   clear_curve_data(icurve);
-  memset(icurve, 0, sizeof(stp_internal_curve_t));
+  memset(icurve, 0, sizeof(stpi_internal_curve_t));
   icurve->curve_type = -1;
 }
 
@@ -321,15 +321,15 @@ stp_curve_free(stp_curve_t curve)
   if (curve)
     {
       curve_dtor(curve);
-      stp_free(curve);
+      stpi_free(curve);
     }
 }
 
 void
 stp_curve_copy(stp_curve_t dest, const stp_curve_t source)
 {
-  stp_internal_curve_t *idest = (stp_internal_curve_t *) dest;
-  const stp_internal_curve_t *isource = (const stp_internal_curve_t *) source;
+  stpi_internal_curve_t *idest = (stpi_internal_curve_t *) dest;
+  const stpi_internal_curve_t *isource = (const stpi_internal_curve_t *) source;
   check_curve(idest);
   check_curve(isource);
   curve_dtor(dest);
@@ -341,7 +341,7 @@ stp_curve_copy(stp_curve_t dest, const stp_curve_t source)
   idest->gamma = isource->gamma;
   if (isource->data)
     {
-      idest->data = stp_malloc(sizeof(double) * (isource->real_point_count));
+      idest->data = stpi_malloc(sizeof(double) * (isource->real_point_count));
       (void) memcpy(idest->data, isource->data,
 		    (sizeof(double) * (isource->real_point_count)));
     }
@@ -352,7 +352,7 @@ stp_curve_copy(stp_curve_t dest, const stp_curve_t source)
 stp_curve_t
 stp_curve_create_copy(const stp_curve_t curve)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   stp_curve_t ret;
   check_curve(icurve);
   ret = stp_curve_create(icurve->wrap_mode);
@@ -363,7 +363,7 @@ stp_curve_create_copy(const stp_curve_t curve)
 int
 stp_curve_set_bounds(stp_curve_t curve, double low, double high)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
   if (low > high)
     return 0;
@@ -377,7 +377,7 @@ stp_curve_set_bounds(stp_curve_t curve, double low, double high)
 void
 stp_curve_get_bounds(const stp_curve_t curve, double *low, double *high)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
   *low = icurve->blo;
   *high = icurve->bhi;
@@ -386,7 +386,7 @@ stp_curve_get_bounds(const stp_curve_t curve, double *low, double *high)
 void
 stp_curve_get_range(const stp_curve_t curve, double *low, double *high)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
   if (icurve->recompute_range)	/* Don't recompute the range if we don't */
     scan_curve_range(icurve);	/* need to. */
@@ -397,7 +397,7 @@ stp_curve_get_range(const stp_curve_t curve, double *low, double *high)
 size_t
 stp_curve_count_points(const stp_curve_t curve)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
   return icurve->point_count;
 }
@@ -405,7 +405,7 @@ stp_curve_count_points(const stp_curve_t curve)
 stp_curve_wrap_mode_t
 stp_curve_get_wrap(const stp_curve_t curve)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
   return icurve->wrap_mode;
 }
@@ -413,7 +413,7 @@ stp_curve_get_wrap(const stp_curve_t curve)
 int
 stp_curve_set_interpolation_type(stp_curve_t curve, stp_curve_type_t itype)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
   if (itype < 0 || itype >= curve_type_count)
     return 0;
@@ -424,7 +424,7 @@ stp_curve_set_interpolation_type(stp_curve_t curve, stp_curve_type_t itype)
 stp_curve_type_t
 stp_curve_get_interpolation_type(const stp_curve_t curve)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
   return icurve->curve_type;
 }
@@ -432,7 +432,7 @@ stp_curve_get_interpolation_type(const stp_curve_t curve)
 int
 stp_curve_set_gamma(stp_curve_t curve, double gamma)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
   if (icurve->wrap_mode || ! finite(gamma) || gamma == 0.0)
     return 0;
@@ -446,7 +446,7 @@ stp_curve_set_gamma(stp_curve_t curve, double gamma)
 double
 stp_curve_get_gamma(const stp_curve_t curve)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
   return icurve->gamma;
 }
@@ -456,7 +456,7 @@ stp_curve_set_data(stp_curve_t curve, size_t count, const double *data)
 {
   int i;
   int real_count = count;
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
   if (count < 2)
     return 0;
@@ -470,7 +470,7 @@ stp_curve_set_data(stp_curve_t curve, size_t count, const double *data)
     if (! finite(data[i]) || data[i] < icurve->blo || data[i] > icurve->bhi)
       return 0;
   set_curve_points(icurve, count);
-  icurve->data = stp_zalloc(icurve->real_point_count * sizeof(double));
+  icurve->data = stpi_zalloc(icurve->real_point_count * sizeof(double));
   icurve->gamma = 0.0;
   memcpy(icurve->data, data, (sizeof(double) * count));
   if (icurve->wrap_mode == STP_CURVE_WRAP_AROUND)
@@ -488,7 +488,7 @@ stp_curve_set_data(stp_curve_t curve, size_t count, const double *data)
 const double *
 stp_curve_get_data(const stp_curve_t curve, size_t *count)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
   *count = icurve->point_count;
   return icurve->data;
@@ -499,13 +499,13 @@ const t *								 \
 stp_curve_get_##name##_data(const stp_curve_t curve, size_t *count)	 \
 {									 \
   int i;								 \
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;	 \
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;	 \
   check_curve(icurve);							 \
   if (icurve->blo < (double) lb || icurve->bhi > (double) ub)		 \
     return NULL;							 \
   if (!icurve->name##_data)						 \
     {									 \
-      icurve->name##_data = stp_malloc(sizeof(t) * icurve->point_count); \
+      icurve->name##_data = stpi_malloc(sizeof(t) * icurve->point_count); \
       for (i = 0; i < icurve->point_count; i++)				 \
 	icurve->name##_data[i] = (t) rint(icurve->data[i]);		 \
     }									 \
@@ -545,7 +545,7 @@ int
 stp_curve_set_subrange(stp_curve_t curve, const stp_curve_t range,
 		       size_t start)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   double blo, bhi;
   double rlo, rhi;
   const double *data;
@@ -573,7 +573,7 @@ stp_curve_set_subrange(stp_curve_t curve, const stp_curve_t range,
 int
 stp_curve_set_point(stp_curve_t curve, size_t where, double data)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
   if (where >= icurve->point_count || ! finite(data) ||
       data < icurve->blo || data > icurve->bhi)
@@ -594,7 +594,7 @@ stp_curve_set_point(stp_curve_t curve, size_t where, double data)
 int
 stp_curve_get_point(const stp_curve_t curve, size_t where, double *data)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
   if (where >= icurve->point_count)
     return 0;
@@ -606,7 +606,7 @@ int
 stp_curve_rescale(stp_curve_t curve, double scale,
 		  stp_curve_compose_t mode, stp_curve_bounds_t bounds_mode)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   int i;
   double nblo;
   double nbhi;
@@ -653,7 +653,7 @@ stp_curve_rescale(stp_curve_t curve, double scale,
 
   if (icurve->point_count)
     {
-      double *tmp = stp_malloc(sizeof(double) * icurve->real_point_count);
+      double *tmp = stpi_malloc(sizeof(double) * icurve->real_point_count);
       for (i = 0; i < icurve->real_point_count; i++)
 	{
 	  switch (mode)
@@ -672,7 +672,7 @@ stp_curve_rescale(stp_curve_t curve, double scale,
 	    {
 	      if (bounds_mode == STP_CURVE_BOUNDS_ERROR)
 		{
-		  stp_free(tmp);
+		  stpi_free(tmp);
 		  return(0);
 		}
 	      else if (tmp[i] > nbhi)
@@ -685,7 +685,7 @@ stp_curve_rescale(stp_curve_t curve, double scale,
       icurve->blo = nblo;
       icurve->gamma = 0.0;
       memcpy(icurve->data, tmp, sizeof(double) * icurve->real_point_count);
-      stp_free(tmp);
+      stpi_free(tmp);
       icurve->recompute_range = 1;
       icurve->recompute_interval = 1;
       invalidate_auxiliary_data(icurve);
@@ -696,7 +696,7 @@ stp_curve_rescale(stp_curve_t curve, double scale,
 void
 stp_curve_print(FILE *f, const stp_curve_t curve)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   int i;
   check_curve(icurve);
   setlocale(LC_ALL, "C");
@@ -717,13 +717,13 @@ stp_curve_print(FILE *f, const stp_curve_t curve)
 char *
 stp_curve_print_string(const stp_curve_t curve)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   int i;
   char *retval;
   int ret_size = 128;
   int cur_size = 0;
   check_curve(icurve);
-  retval = stp_zalloc(ret_size);
+  retval = stpi_zalloc(ret_size);
   setlocale(LC_ALL, "C");
   while (1)
     {
@@ -738,7 +738,7 @@ stp_curve_print_string(const stp_curve_t curve)
       if (cur_size < 0 || cur_size >= ret_size - 1)
 	{
 	  ret_size *= 2;
-	  retval = stp_realloc(retval, ret_size);
+	  retval = stpi_realloc(retval, ret_size);
 	}
       else
 	break;
@@ -754,7 +754,7 @@ stp_curve_print_string(const stp_curve_t curve)
 	  if (new_size < 0 || new_size + cur_size >= ret_size - 1)
 	    {
 	      ret_size *= 2;
-	      retval = stp_realloc(retval, ret_size);
+	      retval = stpi_realloc(retval, ret_size);
 	    }
 	  else
 	    {
@@ -791,7 +791,7 @@ get_wrap_mode(const char *name)
 }
 
 static int
-check_curve_parameters(stp_internal_curve_t *curve, int points)
+check_curve_parameters(stpi_internal_curve_t *curve, int points)
 {
   if (curve->gamma && curve->wrap_mode)
     return 0;
@@ -805,9 +805,9 @@ check_curve_parameters(stp_internal_curve_t *curve, int points)
 int
 stp_curve_read(FILE *f, stp_curve_t curve)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   stp_curve_t ret;
-  stp_internal_curve_t *iret;
+  stpi_internal_curve_t *iret;
   char curve_type_name[32];
   char wrap_mode_name[32];
   stp_curve_wrap_mode_t wrap_mode = (stp_curve_wrap_mode_t) -1;
@@ -834,7 +834,7 @@ stp_curve_read(FILE *f, stp_curve_t curve)
 
   setlocale(LC_ALL, "C");
   ret = stp_curve_create(wrap_mode);
-  iret = (stp_internal_curve_t *) ret;
+  iret = (stpi_internal_curve_t *) ret;
   iret->curve_type = curve_type;
 
   fscanf(f, " %d ; %lg ; %lg ; %lg : %n",
@@ -854,7 +854,7 @@ stp_curve_read(FILE *f, stp_curve_t curve)
     }
   else
     {
-      iret->data = stp_malloc(sizeof(double) * (iret->real_point_count));
+      iret->data = stpi_malloc(sizeof(double) * (iret->real_point_count));
       for (i = 0; i < iret->point_count; i++)
 	{
 	  noffset = 0;
@@ -896,9 +896,9 @@ stp_curve_create_read(FILE *f)
 int
 stp_curve_read_string(const char *text, stp_curve_t curve)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   stp_curve_t ret;
-  stp_internal_curve_t *iret;
+  stpi_internal_curve_t *iret;
   char curve_type_name[32];
   char wrap_mode_name[32];
   stp_curve_wrap_mode_t wrap_mode = (stp_curve_wrap_mode_t) -1;
@@ -927,7 +927,7 @@ stp_curve_read_string(const char *text, stp_curve_t curve)
 
   setlocale(LC_ALL, "C");
   ret = stp_curve_create(wrap_mode);
-  iret = (stp_internal_curve_t *) ret;
+  iret = (stpi_internal_curve_t *) ret;
   iret->curve_type = curve_type;
 
   sscanf(text + offset, " %d ; %lg ; %lg ; %lg : %n",
@@ -949,7 +949,7 @@ stp_curve_read_string(const char *text, stp_curve_t curve)
     }
   else
     {
-      iret->data = stp_malloc(sizeof(double) * (iret->real_point_count));
+      iret->data = stpi_malloc(sizeof(double) * (iret->real_point_count));
       for (i = 0; i < iret->point_count; i++)
 	{
 	  noffset = 0;
@@ -990,7 +990,7 @@ stp_curve_create_read_string(const char *text)
 static inline double
 interpolate_gamma_internal(const stp_curve_t curve, double where)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   double gamma = icurve->gamma;
   if (icurve->real_point_count)
     where /= (icurve->real_point_count - 1);
@@ -1005,7 +1005,7 @@ interpolate_gamma_internal(const stp_curve_t curve, double where)
 static inline double
 interpolate_point_internal(const stp_curve_t curve, double where)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   int integer = where;
   double frac = where - (double) integer;
 
@@ -1042,7 +1042,7 @@ int
 stp_curve_interpolate_value(const stp_curve_t curve, double where,
 			    double *result)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   int limit;
   check_curve(icurve);
   limit = icurve->point_count;
@@ -1061,7 +1061,7 @@ stp_curve_interpolate_value(const stp_curve_t curve, double where,
 int
 stp_curve_resample(stp_curve_t curve, size_t points)
 {
-  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   int limit = points;
   int old;
   int i;
@@ -1086,7 +1086,7 @@ stp_curve_resample(stp_curve_t curve, size_t points)
   if (old < 0)
     old = 1;
 
-  new_vec = stp_malloc(sizeof(double) * limit);
+  new_vec = stpi_malloc(sizeof(double) * limit);
 
   /*
    * Be very careful how we calculate the location along the scale!
@@ -1230,10 +1230,10 @@ stp_curve_compose(stp_curve_t *retval,
       mode == STP_CURVE_COMPOSE_MULTIPLY)
     return create_gamma_curve(retval, alo * blo, ahi * bhi, gamma_a + gamma_b,
 			      points);
-  tmp_data = stp_malloc(sizeof(double) * points);
+  tmp_data = stpi_malloc(sizeof(double) * points);
   if (!interpolate_points(a, b, mode, points, tmp_data))
     {
-      stp_free(tmp_data);
+      stpi_free(tmp_data);
       return 0;
     }
   ret = stp_curve_create(stp_curve_get_wrap(a));
@@ -1254,10 +1254,10 @@ stp_curve_compose(stp_curve_t *retval,
   if (! stp_curve_set_data(ret, points, tmp_data))
     goto bad1;
   *retval = ret;
-  stp_free(tmp_data);
+  stpi_free(tmp_data);
   return 1;
  bad1:
   stp_curve_free(ret);
-  stp_free(tmp_data);
+  stpi_free(tmp_data);
   return 0;
 }

@@ -37,7 +37,7 @@
 #endif
 
 void
-stp_fold(const unsigned char *line,
+stpi_fold(const unsigned char *line,
 	   int single_length,
 	   unsigned char *outbuf)
 {
@@ -74,7 +74,7 @@ stp_fold(const unsigned char *line,
 }
 
 static void
-stp_split_2_1(int length,
+stpi_split_2_1(int length,
 		const unsigned char *in,
 		unsigned char *outhi,
 		unsigned char *outlo)
@@ -137,7 +137,7 @@ stp_split_2_1(int length,
 }
 
 static void
-stp_split_2_2(int length,
+stpi_split_2_2(int length,
 		const unsigned char *in,
 		unsigned char *outhi,
 		unsigned char *outlo)
@@ -180,20 +180,20 @@ stp_split_2_2(int length,
 }
 
 void
-stp_split_2(int length,
+stpi_split_2(int length,
 	      int bits,
 	      const unsigned char *in,
 	      unsigned char *outhi,
 	      unsigned char *outlo)
 {
   if (bits == 2)
-    stp_split_2_2(length, in, outhi, outlo);
+    stpi_split_2_2(length, in, outhi, outlo);
   else
-    stp_split_2_1(length, in, outhi, outlo);
+    stpi_split_2_1(length, in, outhi, outlo);
 }
 
 static void
-stp_split_4_1(int length,
+stpi_split_4_1(int length,
 		const unsigned char *in,
 		unsigned char *out0,
 		unsigned char *out1,
@@ -262,7 +262,7 @@ stp_split_4_1(int length,
 }
 
 static void
-stp_split_4_2(int length,
+stpi_split_4_2(int length,
 		const unsigned char *in,
 		unsigned char *out0,
 		unsigned char *out1,
@@ -311,7 +311,7 @@ stp_split_4_2(int length,
 }
 
 void
-stp_split_4(int length,
+stpi_split_4(int length,
 	      int bits,
 	      const unsigned char *in,
 	      unsigned char *out0,
@@ -320,9 +320,9 @@ stp_split_4(int length,
 	      unsigned char *out3)
 {
   if (bits == 2)
-    stp_split_4_2(length, in, out0, out1, out2, out3);
+    stpi_split_4_2(length, in, out0, out1, out2, out3);
   else
-    stp_split_4_1(length, in, out0, out1, out2, out3);
+    stpi_split_4_1(length, in, out0, out1, out2, out3);
 }
 
 
@@ -335,7 +335,7 @@ stp_split_4(int length,
 #endif
 
 static void
-stp_unpack_2_1(int length,
+stpi_unpack_2_1(int length,
 		 const unsigned char *in,
 		 unsigned char *out0,
 		 unsigned char *out1)
@@ -391,7 +391,7 @@ stp_unpack_2_1(int length,
 }
 
 static void
-stp_unpack_2_2(int length,
+stpi_unpack_2_2(int length,
 	       const unsigned char *in,
 	       unsigned char *out0,
 	       unsigned char *out1)
@@ -418,16 +418,16 @@ stp_unpack_2_2(int length,
 }
 
 void
-stp_unpack_2(int length,
+stpi_unpack_2(int length,
 	       int bits,
 	       const unsigned char *in,
 	       unsigned char *outlo,
 	       unsigned char *outhi)
 {
   if (bits == 1)
-    stp_unpack_2_1(length, in, outlo, outhi);
+    stpi_unpack_2_1(length, in, outlo, outhi);
   else
-    stp_unpack_2_2(length, in, outlo, outhi);
+    stpi_unpack_2_2(length, in, outlo, outhi);
 }
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
@@ -443,7 +443,7 @@ stp_unpack_2(int length,
 #endif
 
 static void
-stp_unpack_4_1(int length,
+stpi_unpack_4_1(int length,
 		 const unsigned char *in,
 		 unsigned char *out0,
 		 unsigned char *out1,
@@ -505,7 +505,7 @@ stp_unpack_4_1(int length,
 }
 
 static void
-stp_unpack_4_2(int length,
+stpi_unpack_4_2(int length,
 		 const unsigned char *in,
 		 unsigned char *out0,
 		 unsigned char *out1,
@@ -568,7 +568,7 @@ stp_unpack_4_2(int length,
 }
 
 void
-stp_unpack_4(int length,
+stpi_unpack_4(int length,
 	       int bits,
 	       const unsigned char *in,
 	       unsigned char *out0,
@@ -577,13 +577,13 @@ stp_unpack_4(int length,
 	       unsigned char *out3)
 {
   if (bits == 1)
-    stp_unpack_4_1(length, in, out0, out1, out2, out3);
+    stpi_unpack_4_1(length, in, out0, out1, out2, out3);
   else
-    stp_unpack_4_2(length, in, out0, out1, out2, out3);
+    stpi_unpack_4_2(length, in, out0, out1, out2, out3);
 }
 
 static void
-stp_unpack_8_1(int length,
+stpi_unpack_8_1(int length,
 		 const unsigned char *in,
 		 unsigned char *out0,
 		 unsigned char *out1,
@@ -663,7 +663,7 @@ stp_unpack_8_1(int length,
 }
 
 static void
-stp_unpack_8_2(int length,
+stpi_unpack_8_2(int length,
 		 const unsigned char *in,
 		 unsigned char *out0,
 		 unsigned char *out1,
@@ -757,7 +757,7 @@ stp_unpack_8_2(int length,
 }
 
 void
-stp_unpack_8(int length,
+stpi_unpack_8(int length,
 	       int bits,
 	       const unsigned char *in,
 	       unsigned char *out0,
@@ -770,10 +770,10 @@ stp_unpack_8(int length,
 	       unsigned char *out7)
 {
   if (bits == 1)
-    stp_unpack_8_1(length, in, out0, out1, out2, out3,
+    stpi_unpack_8_1(length, in, out0, out1, out2, out3,
 		     out4, out5, out6, out7);
   else
-    stp_unpack_8_2(length, in, out0, out1, out2, out3,
+    stpi_unpack_8_2(length, in, out0, out1, out2, out3,
 		     out4, out5, out6, out7);
 }
 
@@ -803,7 +803,7 @@ find_first_and_last(const unsigned char *line, int length,
 }
 
 int
-stp_pack_uncompressed(const unsigned char *line,
+stpi_pack_uncompressed(const unsigned char *line,
 		      int length,
 		      unsigned char *comp_buf,
 		      unsigned char **comp_ptr,
@@ -820,7 +820,7 @@ stp_pack_uncompressed(const unsigned char *line,
 }
 
 int
-stp_pack_tiff(const unsigned char *line,
+stpi_pack_tiff(const unsigned char *line,
 	      int length,
 	      unsigned char *comp_buf,
 	      unsigned char **comp_ptr,

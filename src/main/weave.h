@@ -75,7 +75,7 @@ typedef struct			/* Weave parameters for a specific row */
 				/* the last row that will be printed this */
 				/* pass (assuming that we're printing a full */
 				/* pass). */
-} stp_weave_t;
+} stpi_weave_t;
 
 typedef struct			/* Weave parameters for a specific pass */
 {
@@ -85,42 +85,42 @@ typedef struct			/* Weave parameters for a specific pass */
   int physpassstart;
   int physpassend;
   int subpass;
-} stp_pass_t;
+} stpi_pass_t;
 
 typedef struct {		/* Offsets from the start of each line */
   int ncolors;
   unsigned long *v;		/* (really pass) */
-} stp_lineoff_t;
+} stpi_lineoff_t;
 
 typedef struct {		/* Is this line (really pass) active? */
   int ncolors;
   char *v;
-} stp_lineactive_t;
+} stpi_lineactive_t;
 
 typedef struct {		/* number of rows for a pass */
   int ncolors;
   int *v;
-} stp_linecount_t;
+} stpi_linecount_t;
 
 typedef struct {		/* Base pointers for each pass */
   int ncolors;
   unsigned char **v;
-} stp_linebufs_t;
+} stpi_linebufs_t;
 
 typedef struct {		/* Width of data actually printed */
   int ncolors;
   int *start_pos;
   int *end_pos;
-} stp_linebounds_t;
+} stpi_linebounds_t;
 
-typedef struct stp_softweave
+typedef struct stpi_softweave
 {
-  stp_linebufs_t *linebases;	/* Base address of each row buffer */
-  stp_lineoff_t *lineoffsets;	/* Offsets within each row buffer */
-  stp_lineactive_t *lineactive;	/* Does this line have anything printed? */
-  stp_linecount_t *linecounts;	/* How many rows we've printed this pass */
-  stp_linebounds_t *linebounds;	/* Starting and ending print column */
-  stp_pass_t *passes;		/* Circular list of pass numbers */
+  stpi_linebufs_t *linebases;	/* Base address of each row buffer */
+  stpi_lineoff_t *lineoffsets;	/* Offsets within each row buffer */
+  stpi_lineactive_t *lineactive;	/* Does this line have anything printed? */
+  stpi_linecount_t *linecounts;	/* How many rows we've printed this pass */
+  stpi_linebounds_t *linebounds;	/* Starting and ending print column */
+  stpi_pass_t *passes;		/* Circular list of pass numbers */
   int last_pass_offset;		/* Starting row (offset from the start of */
 				/* the page) of the most recently printed */
 				/* pass (so we can determine how far to */
@@ -155,114 +155,110 @@ typedef struct stp_softweave
   unsigned char *s[MAX_WEAVE];
   unsigned char *fold_buf;
   unsigned char *comp_buf;
-  stp_weave_t wcache;
+  stpi_weave_t wcache;
   int rcache;
   int vcache;
   stp_vars_t v;
-  void (*flushfunc)(struct stp_softweave *sw, int passno,
+  void (*flushfunc)(struct stpi_softweave *sw, int passno,
 		    int vertical_subpass);
-  void (*fill_start)(struct stp_softweave *sw, int row, int subpass,
+  void (*fill_start)(struct stpi_softweave *sw, int row, int subpass,
 		     int width, int missingstartrows, int color);
   int (*pack)(const unsigned char *in, int bytes,
 	      unsigned char *out, unsigned char **optr,
 	      int *first, int *last);
-  int (*compute_linewidth)(const struct stp_softweave *sw, int n);
-} stp_softweave_t;
+  int (*compute_linewidth)(const struct stpi_softweave *sw, int n);
+} stpi_softweave_t;
 
 
-extern void	stp_fold(const unsigned char *line, int single_height,
-			 unsigned char *outbuf);
+extern void	stpi_fold(const unsigned char *line, int single_height,
+			  unsigned char *outbuf);
 
-extern void	stp_split_2(int height, int bits, const unsigned char *in,
-			    unsigned char *outhi, unsigned char *outlo);
+extern void	stpi_split_2(int height, int bits, const unsigned char *in,
+			     unsigned char *outhi, unsigned char *outlo);
 
-extern void	stp_split_4(int height, int bits, const unsigned char *in,
-			    unsigned char *out0, unsigned char *out1,
-			    unsigned char *out2, unsigned char *out3);
-
-extern void	stp_unpack_2(int height, int bits, const unsigned char *in,
-			     unsigned char *outlo, unsigned char *outhi);
-
-extern void	stp_unpack_4(int height, int bits, const unsigned char *in,
+extern void	stpi_split_4(int height, int bits, const unsigned char *in,
 			     unsigned char *out0, unsigned char *out1,
 			     unsigned char *out2, unsigned char *out3);
 
-extern void	stp_unpack_8(int height, int bits, const unsigned char *in,
-			     unsigned char *out0, unsigned char *out1,
-			     unsigned char *out2, unsigned char *out3,
-			     unsigned char *out4, unsigned char *out5,
-			     unsigned char *out6, unsigned char *out7);
+extern void	stpi_unpack_2(int height, int bits, const unsigned char *in,
+			      unsigned char *outlo, unsigned char *outhi);
 
-extern int	stp_pack_tiff(const unsigned char *line, int height,
-			      unsigned char *comp_buf,
-			      unsigned char **comp_ptr,
-			      int *first, int *last);
+extern void	stpi_unpack_4(int height, int bits, const unsigned char *in,
+			      unsigned char *out0, unsigned char *out1,
+			      unsigned char *out2, unsigned char *out3);
 
-extern int	stp_pack_uncompressed(const unsigned char *line, int height,
-				      unsigned char *comp_buf,
-				      unsigned char **comp_ptr,
-				      int *first, int *last);
+extern void	stpi_unpack_8(int height, int bits, const unsigned char *in,
+			      unsigned char *out0, unsigned char *out1,
+			      unsigned char *out2, unsigned char *out3,
+			      unsigned char *out4, unsigned char *out5,
+			      unsigned char *out6, unsigned char *out7);
 
-extern void *stp_initialize_weave(int jets, int separation, int oversample,
-				  int horizontal, int vertical,
-				  int ncolors, int width, int linewidth,
-				  int lineheight,
-				  int first_line, int phys_lines, int strategy,
-                                  int *head_offset,  /* Get from model - used for 480/580 printers */
-				  stp_vars_t v,
-				  void (*flushfunc)(stp_softweave_t *sw,
-						    int passno,
-						    int vertical_subpass),
-				  void (*fill_start)(stp_softweave_t *sw,
-						     int row,
-						     int subpass, int width,
-						     int missingstartrows,
+extern int	stpi_pack_tiff(const unsigned char *line, int height,
+			       unsigned char *comp_buf,
+			       unsigned char **comp_ptr,
+			       int *first, int *last);
+
+extern int	stpi_pack_uncompressed(const unsigned char *line, int height,
+				       unsigned char *comp_buf,
+				       unsigned char **comp_ptr,
+				       int *first, int *last);
+
+extern void *stpi_initialize_weave(int jets, int separation, int oversample,
+				   int horizontal, int vertical,
+				   int ncolors, int width, int linewidth,
+				   int lineheight, int first_line,
+				   int phys_lines, int strategy,
+				   int *head_offset, stp_vars_t v,
+				   void (*flushfunc)(stpi_softweave_t *sw,
+						     int passno,
 						     int vertical_subpass),
-				  int (*pack)(const unsigned char *in,
-					      int bytes, unsigned char *out,
-					      unsigned char **optr,
-					      int *first, int *last),
-				  int (*compute_linewidth)(const stp_softweave_t *sw,
-							   int n));
+				   void (*fill_start)(stpi_softweave_t *sw,
+						      int row,
+						      int subpass, int width,
+						      int missingstartrows,
+						      int vertical_subpass),
+				   int (*pack)(const unsigned char *in,
+					       int bytes, unsigned char *out,
+					       unsigned char **optr,
+					       int *first, int *last),
+				   int (*compute_linewidth)(const stpi_softweave_t *sw,
+							    int n));
 
-extern void stp_fill_tiff(stp_softweave_t *sw, int row, int subpass,
+extern void stpi_fill_tiff(stpi_softweave_t *sw, int row, int subpass,
 			  int width, int missingstartrows, int color);
-extern void stp_fill_uncompressed(stp_softweave_t *sw, int row, int subpass,
+extern void stpi_fill_uncompressed(stpi_softweave_t *sw, int row, int subpass,
 				  int width, int missingstartrows, int color);
 
-extern int stp_compute_tiff_linewidth(const stp_softweave_t *sw, int n);
-extern int stp_compute_uncompressed_linewidth(const stp_softweave_t *sw, int n);
+extern int stpi_compute_tiff_linewidth(const stpi_softweave_t *sw, int n);
+extern int stpi_compute_uncompressed_linewidth(const stpi_softweave_t *sw, int n);
 
-extern void stp_flush_all(void *);
+extern void stpi_flush_all(void *);
 
 extern void
-stp_write_weave(void *        vsw,
+stpi_write_weave(void *        vsw,
 		int           length,	/* I - Length of bitmap data */
 		unsigned char *const cols[]);
 
-extern stp_lineoff_t *
-stp_get_lineoffsets_by_pass(const stp_softweave_t *sw, int pass);
+extern stpi_lineoff_t *
+stpi_get_lineoffsets_by_pass(const stpi_softweave_t *sw, int pass);
 
-extern stp_lineactive_t *
-stp_get_lineactive_by_pass(const stp_softweave_t *sw, int pass);
+extern stpi_lineactive_t *
+stpi_get_lineactive_by_pass(const stpi_softweave_t *sw, int pass);
 
-extern stp_linecount_t *
-stp_get_linecount_by_pass(const stp_softweave_t *sw, int pass);
+extern stpi_linecount_t *
+stpi_get_linecount_by_pass(const stpi_softweave_t *sw, int pass);
 
-extern const stp_linebufs_t *
-stp_get_linebases_by_pass(const stp_softweave_t *sw, int pass);
+extern const stpi_linebufs_t *
+stpi_get_linebases_by_pass(const stpi_softweave_t *sw, int pass);
 
-extern stp_pass_t *
-stp_get_pass_by_pass(const stp_softweave_t *sw, int pass);
+extern stpi_pass_t *
+stpi_get_pass_by_pass(const stpi_softweave_t *sw, int pass);
 
 extern void
-stp_weave_parameters_by_row(const stp_softweave_t *sw, int row,
-			    int vertical_subpass, stp_weave_t *w);
+stpi_weave_parameters_by_row(const stpi_softweave_t *sw, int row,
+			    int vertical_subpass, stpi_weave_t *w);
 
-extern void stp_destroy_weave(void *);
-
-extern void stp_destroy_weave_params(void *vw);
-
+extern void stpi_destroy_weave(void *);
 
 #ifdef __cplusplus
   }

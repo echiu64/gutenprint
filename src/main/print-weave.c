@@ -59,9 +59,9 @@ do									\
 {									\
   if (!(x))								\
     {									\
-      stp_eprintf(v, "Assertion %s failed! file %s, line %d.\n",	\
+      stpi_eprintf(v, "Assertion %s failed! file %s, line %d.\n",	\
 		  #x, __FILE__, __LINE__);				\
-      stp_abort();							\
+      stpi_abort();							\
     }									\
 } while (0)
 #else
@@ -382,8 +382,8 @@ invert_map(int *map, int *stagger, int count, int oldfirstpass,
 {
 	int i;
 	int *newmap, *newstagger;
-	newmap = stp_malloc(count * sizeof(int));
-	newstagger = stp_malloc(count * sizeof(int));
+	newmap = stpi_malloc(count * sizeof(int));
+	newstagger = stpi_malloc(count * sizeof(int));
 
 	for (i = 0; i < count; i++) {
 		newmap[map[i] - oldfirstpass] = i + newfirstpass;
@@ -392,8 +392,8 @@ invert_map(int *map, int *stagger, int count, int oldfirstpass,
 
 	memcpy(map, newmap, count * sizeof(int));
 	memcpy(stagger, newstagger, count * sizeof(int));
-	stp_free(newstagger);
-	stp_free(newmap);
+	stpi_free(newstagger);
+	stpi_free(newmap);
 }
 
 static void
@@ -409,8 +409,8 @@ make_passmap(raw_t *w, int **map, int **starts, int first_pass_number,
 	assert(first_pass_to_map <= first_pass_after_map, w->v);
 	assert(first_pass_to_stagger <= first_pass_after_stagger, w->v);
 
-	*map = passmap = stp_malloc(passes_to_map * sizeof(int));
-	*starts = startrows = stp_malloc(passes_to_map * sizeof(int));
+	*map = passmap = stpi_malloc(passes_to_map * sizeof(int));
+	*starts = startrows = stpi_malloc(passes_to_map * sizeof(int));
 
 	for (i = 0; i < passes_to_map; i++) {
 		int startrow, subpass;
@@ -501,7 +501,7 @@ calculate_pass_map(stp_vars_t v,
 	}
 	w->first_unused_pass = pass;
 
-	stp_dprintf(STP_DBG_WEAVE_PARAMS, v,
+	stpi_dprintf(STPI_DBG_WEAVE_PARAMS, v,
 		    "first premapped %d first normal %d first postmapped %d "
 		    "first unused %d\n",
 		    w->first_premapped_pass, w->first_normal_pass,
@@ -564,7 +564,7 @@ initialize_weave_params(int S,		/* I - jet separation */
                         int strategy,	/* I - weave pattern variant to use */
 			stp_vars_t v)
 {
-	cooked_t *w = stp_malloc(sizeof(cooked_t));
+	cooked_t *w = stpi_malloc(sizeof(cooked_t));
 	if (w) {
 		initialize_raw_weave(&w->rw, S, J, H, strategy, v);
 		calculate_pass_map(v, w, pageheight, firstrow, lastrow);
@@ -572,27 +572,27 @@ initialize_weave_params(int S,		/* I - jet separation */
 	return w;
 }
 
-void
-stp_destroy_weave_params(void *vw)
+static void
+stpi_destroy_weave_params(void *vw)
 {
 	cooked_t *w = (cooked_t *) vw;
 
-	if (w->pass_premap) stp_free(w->pass_premap);
-	if (w->stagger_premap) stp_free(w->stagger_premap);
-	if (w->pass_postmap) stp_free(w->pass_postmap);
-	if (w->stagger_postmap) stp_free(w->stagger_postmap);
-	stp_free(w);
+	if (w->pass_premap) stpi_free(w->pass_premap);
+	if (w->stagger_premap) stpi_free(w->stagger_premap);
+	if (w->pass_postmap) stpi_free(w->pass_postmap);
+	if (w->stagger_postmap) stpi_free(w->stagger_postmap);
+	stpi_free(w);
 }
 
 static void
-stp_calculate_row_parameters(void *vw,		/* I - weave parameters */
-			     int row,		/* I - row number */
-			     int subpass,	/* I - subpass */
-			     int *pass,		/* O - pass containing row */
-			     int *jetnum,	/* O - jet number of row */
-			     int *startingrow,	/* O - phys start of pass */
-			     int *ophantomrows,	/* O - missing rows at start */
-			     int *ojetsused)	/* O - jets used by pass */
+stpi_calculate_row_parameters(void *vw,		/* I - weave parameters */
+			      int row,		/* I - row number */
+			      int subpass,	/* I - subpass */
+			      int *pass,	/* O - pass containing row */
+			      int *jetnum,	/* O - jet number of row */
+			      int *startingrow,	/* O - phys start of pass */
+			      int *ophantomrows, /* O - missing rows @ start */
+			      int *ojetsused)	/* O - jets used by pass */
 {
 	cooked_t *w = (cooked_t *) vw;
 	int raw_pass, jet, startrow, phantomrows, jetsused;
@@ -854,68 +854,68 @@ stp_calculate_row_parameters(void *vw,		/* I - weave parameters */
  * -- Robert Krawitz <rlk@alum.mit.edu) November 3, 1999
  */
 
-static stp_lineoff_t *
+static stpi_lineoff_t *
 allocate_lineoff(int count, int ncolors)
 {
   int i;
-  stp_lineoff_t *retval = stp_malloc(count * sizeof(stp_lineoff_t));
+  stpi_lineoff_t *retval = stpi_malloc(count * sizeof(stpi_lineoff_t));
   for (i = 0; i < count; i++)
     {
       retval[i].ncolors = ncolors;
-      retval[i].v = stp_zalloc(ncolors * sizeof(unsigned long));
+      retval[i].v = stpi_zalloc(ncolors * sizeof(unsigned long));
     }
   return (retval);
 }
 
-static stp_lineactive_t *
+static stpi_lineactive_t *
 allocate_lineactive(int count, int ncolors)
 {
   int i;
-  stp_lineactive_t *retval = stp_malloc(count * sizeof(stp_lineactive_t));
+  stpi_lineactive_t *retval = stpi_malloc(count * sizeof(stpi_lineactive_t));
   for (i = 0; i < count; i++)
     {
       retval[i].ncolors = ncolors;
-      retval[i].v = stp_zalloc(ncolors * sizeof(char));
+      retval[i].v = stpi_zalloc(ncolors * sizeof(char));
     }
   return (retval);
 }
 
-static stp_linecount_t *
+static stpi_linecount_t *
 allocate_linecount(int count, int ncolors)
 {
   int i;
-  stp_linecount_t *retval = stp_malloc(count * sizeof(stp_linecount_t));
+  stpi_linecount_t *retval = stpi_malloc(count * sizeof(stpi_linecount_t));
   for (i = 0; i < count; i++)
     {
       retval[i].ncolors = ncolors;
-      retval[i].v = stp_zalloc(ncolors * sizeof(int));
+      retval[i].v = stpi_zalloc(ncolors * sizeof(int));
     }
   return (retval);
 }
 
-static stp_linebounds_t *
+static stpi_linebounds_t *
 allocate_linebounds(int count, int ncolors)
 {
   int i;
-  stp_linebounds_t *retval = stp_malloc(count * sizeof(stp_linebounds_t));
+  stpi_linebounds_t *retval = stpi_malloc(count * sizeof(stpi_linebounds_t));
   for (i = 0; i < count; i++)
     {
       retval[i].ncolors = ncolors;
-      retval[i].start_pos = stp_zalloc(ncolors * sizeof(int));
-      retval[i].end_pos = stp_zalloc(ncolors * sizeof(int));
+      retval[i].start_pos = stpi_zalloc(ncolors * sizeof(int));
+      retval[i].end_pos = stpi_zalloc(ncolors * sizeof(int));
     }
   return (retval);
 }
 
-static stp_linebufs_t *
+static stpi_linebufs_t *
 allocate_linebuf(int count, int ncolors)
 {
   int i;
-  stp_linebufs_t *retval = stp_malloc(count * sizeof(stp_linebufs_t));
+  stpi_linebufs_t *retval = stpi_malloc(count * sizeof(stpi_linebufs_t));
   for (i = 0; i < count; i++)
     {
       retval[i].ncolors = ncolors;
-      retval[i].v = stp_zalloc(ncolors * sizeof(unsigned char *));
+      retval[i].v = stpi_zalloc(ncolors * sizeof(unsigned char *));
     }
   return (retval);
 }
@@ -935,7 +935,7 @@ allocate_linebuf(int count, int ncolors)
  * 4) phys_lines >= 2 * jets * sep
  */
 void *
-stp_initialize_weave(int jets,	/* Width of print head */
+stpi_initialize_weave(int jets,	/* Width of print head */
 		     int sep,	/* Separation in rows between jets */
 		     int osample,	/* Horizontal oversample */
 		     int v_subpasses, /* Vertical passes */
@@ -949,21 +949,21 @@ stp_initialize_weave(int jets,	/* Width of print head */
 		     int weave_strategy, /* Which weaving pattern to use */
 		     int *head_offset,
 		     stp_vars_t v,
-		     void (*flushfunc)(stp_softweave_t *sw, int passno,
+		     void (*flushfunc)(stpi_softweave_t *sw, int passno,
 				       int vertical_subpass),
-		     void (*fill_start)(stp_softweave_t *sw, int row,
+		     void (*fill_start)(stpi_softweave_t *sw, int row,
 					int subpass, int width,
 					int missingstartrows,
 					int vertical_subpass),
 		     int (*pack)(const unsigned char *in, int bytes,
 				 unsigned char *out, unsigned char **optr,
 				 int *first, int *last),
-		     int (*compute_linewidth)(const stp_softweave_t *sw,
+		     int (*compute_linewidth)(const stpi_softweave_t *sw,
 					      int n))
 {
   int i;
   int last_line, maxHeadOffset;
-  stp_softweave_t *sw = stp_zalloc(sizeof (stp_softweave_t));
+  stpi_softweave_t *sw = stpi_zalloc(sizeof (stpi_softweave_t));
 
   if (jets < 1)
     jets = 1;
@@ -994,9 +994,9 @@ stp_initialize_weave(int jets,	/* Width of print head */
 	}
       if (!found)
 	{
-	  stp_eprintf(v, "Weave error: oversample (%d) > jets (%d)\n",
+	  stpi_eprintf(v, "Weave error: oversample (%d) > jets (%d)\n",
 		      sw->oversample, jets);
-	  stp_free(sw);
+	  stpi_free(sw);
 	  return 0;
 	}
     }
@@ -1012,9 +1012,9 @@ stp_initialize_weave(int jets,	/* Width of print head */
 
   if (sw->oversample > jets)
     {
-      stp_eprintf(v, "Weave error: oversample (%d) > jets (%d)\n",
+      stpi_eprintf(v, "Weave error: oversample (%d) > jets (%d)\n",
 		  sw->oversample, jets);
-      stp_free(sw);
+      stpi_free(sw);
       return 0;
     }
 
@@ -1022,7 +1022,7 @@ stp_initialize_weave(int jets,	/* Width of print head */
    * setup printhead offsets.
    * for monochrome (bw) printing, the offsets are 0.
    */
-  sw->head_offset = stp_zalloc(ncolors * sizeof(int));
+  sw->head_offset = stpi_zalloc(ncolors * sizeof(int));
   if (ncolors > 1)
     for(i = 0; i < ncolors; i++)
       sw->head_offset[i] = head_offset[i];
@@ -1062,7 +1062,7 @@ stp_initialize_weave(int jets,	/* Width of print head */
   sw->lineactive = allocate_lineactive(sw->vmod, ncolors);
   sw->linebases = allocate_linebuf(sw->vmod, ncolors);
   sw->linebounds = allocate_linebounds(sw->vmod, ncolors);
-  sw->passes = stp_zalloc(sw->vmod * sizeof(stp_pass_t));
+  sw->passes = stpi_zalloc(sw->vmod * sizeof(stpi_pass_t));
   sw->linecounts = allocate_linecount(sw->vmod, ncolors);
   sw->rcache = -2;
   sw->vcache = -2;
@@ -1087,45 +1087,45 @@ stp_initialize_weave(int jets,	/* Width of print head */
 }
 
 void
-stp_destroy_weave(void *vsw)
+stpi_destroy_weave(void *vsw)
 {
   int i, j;
-  stp_softweave_t *sw = (stp_softweave_t *) vsw;
-  stp_free(sw->passes);
+  stpi_softweave_t *sw = (stpi_softweave_t *) vsw;
+  stpi_free(sw->passes);
   if (sw->fold_buf)
-    stp_free(sw->fold_buf);
+    stpi_free(sw->fold_buf);
   if (sw->comp_buf)
-    stp_free(sw->comp_buf);
+    stpi_free(sw->comp_buf);
   for (i = 0; i < MAX_WEAVE; i++)
     if (sw->s[i])
-      stp_free(sw->s[i]);
+      stpi_free(sw->s[i]);
   for (i = 0; i < sw->vmod; i++)
     {
       for (j = 0; j < sw->ncolors; j++)
 	{
 	  if (sw->linebases[i].v[j])
-	    stp_free(sw->linebases[i].v[j]);
+	    stpi_free(sw->linebases[i].v[j]);
 	}
-      stp_free(sw->linecounts[i].v);
-      stp_free(sw->linebases[i].v);
-      stp_free(sw->lineactive[i].v);
-      stp_free(sw->lineoffsets[i].v);
-      stp_free(sw->linebounds[i].start_pos);
-      stp_free(sw->linebounds[i].end_pos);
+      stpi_free(sw->linecounts[i].v);
+      stpi_free(sw->linebases[i].v);
+      stpi_free(sw->lineactive[i].v);
+      stpi_free(sw->lineoffsets[i].v);
+      stpi_free(sw->linebounds[i].start_pos);
+      stpi_free(sw->linebounds[i].end_pos);
     }
-  stp_free(sw->linecounts);
-  stp_free(sw->lineactive);
-  stp_free(sw->lineoffsets);
-  stp_free(sw->linebases);
-  stp_free(sw->linebounds);
-  stp_free(sw->head_offset);
-  stp_destroy_weave_params(sw->weaveparm);
-  stp_free(vsw);
+  stpi_free(sw->linecounts);
+  stpi_free(sw->lineactive);
+  stpi_free(sw->lineoffsets);
+  stpi_free(sw->linebases);
+  stpi_free(sw->linebounds);
+  stpi_free(sw->head_offset);
+  stpi_destroy_weave_params(sw->weaveparm);
+  stpi_free(vsw);
 }
 
 static void
-weave_parameters_by_row(const stp_softweave_t *sw, int row,
-			int vertical_subpass, stp_weave_t *w)
+weave_parameters_by_row(const stpi_softweave_t *sw, int row,
+			int vertical_subpass, stpi_weave_t *w)
 {
   int jetsused;
   int sub_repeat_count = vertical_subpass % sw->repeat_count;
@@ -1133,12 +1133,12 @@ weave_parameters_by_row(const stp_softweave_t *sw, int row,
    * Conceptually, this does not modify the softweave state.  We cache
    * the results, but this cache is considered hidden.
    */
-  stp_softweave_t *wsw = (stp_softweave_t *)sw;
+  stpi_softweave_t *wsw = (stpi_softweave_t *)sw;
   vertical_subpass /= sw->repeat_count;
 
   if (sw->rcache == row && sw->vcache == vertical_subpass)
     {
-      memcpy(w, &sw->wcache, sizeof(stp_weave_t));
+      memcpy(w, &sw->wcache, sizeof(stpi_weave_t));
       w->pass = (w->pass * sw->repeat_count) + sub_repeat_count;
       return;
     }
@@ -1146,116 +1146,116 @@ weave_parameters_by_row(const stp_softweave_t *sw, int row,
   wsw->vcache = vertical_subpass;
 
   w->row = row;
-  stp_calculate_row_parameters(sw->weaveparm, row, vertical_subpass,
+  stpi_calculate_row_parameters(sw->weaveparm, row, vertical_subpass,
 			       &w->pass, &w->jet, &w->logicalpassstart,
 			       &w->missingstartrows, &jetsused);
 
   w->physpassstart = w->logicalpassstart + sw->separation * w->missingstartrows;
   w->physpassend = w->physpassstart + sw->separation * (jetsused - 1);
 
-  memcpy(&(wsw->wcache), w, sizeof(stp_weave_t));
+  memcpy(&(wsw->wcache), w, sizeof(stpi_weave_t));
   w->pass = (w->pass * sw->repeat_count) + sub_repeat_count;
-  stp_dprintf(STP_DBG_WEAVE_PARAMS, sw->v, "row %d, jet %d of pass %d "
+  stpi_dprintf(STPI_DBG_WEAVE_PARAMS, sw->v, "row %d, jet %d of pass %d "
 	      "(pos %d, start %d, end %d, missing rows %d)\n",
 	      w->row, w->jet, w->pass, w->logicalpassstart, w->physpassstart,
 	      w->physpassend, w->missingstartrows);
 }
 
 void
-stp_weave_parameters_by_row(const stp_softweave_t *sw, int row,
-			int vertical_subpass, stp_weave_t *w)
+stpi_weave_parameters_by_row(const stpi_softweave_t *sw, int row,
+			int vertical_subpass, stpi_weave_t *w)
 {
   weave_parameters_by_row(sw, row, vertical_subpass, w);
 }
 
 
-static stp_lineoff_t *
-stp_get_lineoffsets(const stp_softweave_t *sw, int row, int subpass, int offset)
+static stpi_lineoff_t *
+stpi_get_lineoffsets(const stpi_softweave_t *sw, int row, int subpass, int offset)
 {
-  stp_weave_t w;
+  stpi_weave_t w;
   weave_parameters_by_row(sw, row + offset, subpass, &w);
   return &(sw->lineoffsets[w.pass % sw->vmod]);
 }
 
-static stp_lineactive_t *
-stp_get_lineactive(const stp_softweave_t *sw, int row, int subpass, int offset)
+static stpi_lineactive_t *
+stpi_get_lineactive(const stpi_softweave_t *sw, int row, int subpass, int offset)
 {
-  stp_weave_t w;
+  stpi_weave_t w;
   weave_parameters_by_row(sw, row + offset, subpass, &w);
   return &(sw->lineactive[w.pass % sw->vmod]);
 }
 
-static stp_linecount_t *
-stp_get_linecount(const stp_softweave_t *sw, int row, int subpass, int offset)
+static stpi_linecount_t *
+stpi_get_linecount(const stpi_softweave_t *sw, int row, int subpass, int offset)
 {
-  stp_weave_t w;
+  stpi_weave_t w;
   weave_parameters_by_row(sw, row + offset, subpass, &w);
   return &(sw->linecounts[w.pass % sw->vmod]);
 }
 
-static const stp_linebufs_t *
-stp_get_linebases(const stp_softweave_t *sw, int row, int subpass, int offset)
+static const stpi_linebufs_t *
+stpi_get_linebases(const stpi_softweave_t *sw, int row, int subpass, int offset)
 {
-  stp_weave_t w;
+  stpi_weave_t w;
   weave_parameters_by_row(sw, row + offset, subpass, &w);
   return &(sw->linebases[w.pass % sw->vmod]);
 }
 
-static stp_linebounds_t *
-stp_get_linebounds(const stp_softweave_t *sw, int row, int subpass, int offset)
+static stpi_linebounds_t *
+stpi_get_linebounds(const stpi_softweave_t *sw, int row, int subpass, int offset)
 {
-  stp_weave_t w;
+  stpi_weave_t w;
   weave_parameters_by_row(sw, row + offset, subpass, &w);
   return &(sw->linebounds[w.pass % sw->vmod]);
 }
 
-static stp_pass_t *
-stp_get_pass_by_row(const stp_softweave_t *sw, int row, int subpass,int offset)
+static stpi_pass_t *
+stpi_get_pass_by_row(const stpi_softweave_t *sw, int row, int subpass,int offset)
 {
-  stp_weave_t w;
+  stpi_weave_t w;
   weave_parameters_by_row(sw, row + offset, subpass, &w);
   return &(sw->passes[w.pass % sw->vmod]);
 }
 
-stp_lineoff_t *
-stp_get_lineoffsets_by_pass(const stp_softweave_t *sw, int pass)
+stpi_lineoff_t *
+stpi_get_lineoffsets_by_pass(const stpi_softweave_t *sw, int pass)
 {
   return &(sw->lineoffsets[pass % sw->vmod]);
 }
 
-stp_lineactive_t *
-stp_get_lineactive_by_pass(const stp_softweave_t *sw, int pass)
+stpi_lineactive_t *
+stpi_get_lineactive_by_pass(const stpi_softweave_t *sw, int pass)
 {
   return &(sw->lineactive[pass % sw->vmod]);
 }
 
-stp_linecount_t *
-stp_get_linecount_by_pass(const stp_softweave_t *sw, int pass)
+stpi_linecount_t *
+stpi_get_linecount_by_pass(const stpi_softweave_t *sw, int pass)
 {
   return &(sw->linecounts[pass % sw->vmod]);
 }
 
-const stp_linebufs_t *
-stp_get_linebases_by_pass(const stp_softweave_t *sw, int pass)
+const stpi_linebufs_t *
+stpi_get_linebases_by_pass(const stpi_softweave_t *sw, int pass)
 {
   return &(sw->linebases[pass % sw->vmod]);
 }
 
-stp_pass_t *
-stp_get_pass_by_pass(const stp_softweave_t *sw, int pass)
+stpi_pass_t *
+stpi_get_pass_by_pass(const stpi_softweave_t *sw, int pass)
 {
   return &(sw->passes[pass % sw->vmod]);
 }
 
 static void
-check_linebases(stp_softweave_t *sw, int row, int cpass, int head_offset,
+check_linebases(stpi_softweave_t *sw, int row, int cpass, int head_offset,
 		int color)
 {
-  stp_linebufs_t *bufs =
-    (stp_linebufs_t *) stp_get_linebases(sw, row, cpass, head_offset);
+  stpi_linebufs_t *bufs =
+    (stpi_linebufs_t *) stpi_get_linebases(sw, row, cpass, head_offset);
   if (!(bufs[0].v[color]))
     bufs[0].v[color] =
-      stp_zalloc (sw->virtual_jets * sw->bitwidth * sw->horizontal_width);
+      stpi_zalloc (sw->virtual_jets * sw->bitwidth * sw->horizontal_width);
 }
 
 /*
@@ -1269,12 +1269,12 @@ check_linebases(stp_softweave_t *sw, int row, int cpass, int head_offset,
  */
 
 void
-stp_fill_tiff(stp_softweave_t *sw, int row, int subpass,
+stpi_fill_tiff(stpi_softweave_t *sw, int row, int subpass,
 	      int width, int missingstartrows, int color)
 {
-  stp_lineoff_t *lineoffs;
-  stp_linecount_t *linecount;
-  const stp_linebufs_t *bufs;
+  stpi_lineoff_t *lineoffs;
+  stpi_linecount_t *linecount;
+  const stpi_linebufs_t *bufs;
   int i = 0;
   int k = 0;
 
@@ -1285,7 +1285,7 @@ stp_fill_tiff(stp_softweave_t *sw, int row, int subpass,
       int full_blocks = bytes_to_fill / (128 * 8);
       int leftover = (7 + (bytes_to_fill % (128 * 8))) / 8;
       int l = 0;
-      bufs = stp_get_linebases(sw, row, subpass, sw->head_offset[color]);
+      bufs = stpi_get_linebases(sw, row, subpass, sw->head_offset[color]);
 
       while (l < full_blocks)
 	{
@@ -1308,23 +1308,23 @@ stp_fill_tiff(stp_softweave_t *sw, int row, int subpass,
 	}
     }
 
-  lineoffs = stp_get_lineoffsets(sw, row, subpass, sw->head_offset[color]);
-  linecount = stp_get_linecount(sw, row, subpass, sw->head_offset[color]);
+  lineoffs = stpi_get_lineoffsets(sw, row, subpass, sw->head_offset[color]);
+  linecount = stpi_get_linecount(sw, row, subpass, sw->head_offset[color]);
   lineoffs[0].v[color] = 2 * i;
   linecount[0].v[color] = missingstartrows;
 }
 
 void
-stp_fill_uncompressed(stp_softweave_t *sw, int row, int subpass,
+stpi_fill_uncompressed(stpi_softweave_t *sw, int row, int subpass,
 		      int width, int missingstartrows, int color)
 {
-  stp_lineoff_t *lineoffs;
-  stp_linecount_t *linecount;
-  const stp_linebufs_t *bufs;
+  stpi_lineoff_t *lineoffs;
+  stpi_linecount_t *linecount;
+  const stpi_linebufs_t *bufs;
 
-  bufs = stp_get_linebases(sw, row, subpass, sw->head_offset[color]);
-  lineoffs = stp_get_lineoffsets(sw, row, subpass, sw->head_offset[color]);
-  linecount = stp_get_linecount(sw, row, subpass, sw->head_offset[color]);
+  bufs = stpi_get_linebases(sw, row, subpass, sw->head_offset[color]);
+  lineoffs = stpi_get_lineoffsets(sw, row, subpass, sw->head_offset[color]);
+  linecount = stpi_get_linecount(sw, row, subpass, sw->head_offset[color]);
   width *= sw->bitwidth * missingstartrows;
   memset(bufs[0].v[color], 0, width);
   lineoffs[0].v[color] = width;
@@ -1332,7 +1332,7 @@ stp_fill_uncompressed(stp_softweave_t *sw, int row, int subpass,
 }
 
 int
-stp_compute_tiff_linewidth(const stp_softweave_t *sw, int n)
+stpi_compute_tiff_linewidth(const stpi_softweave_t *sw, int n)
 {
   /*
    * It's possible for the "compression" to actually expand the line by
@@ -1342,18 +1342,18 @@ stp_compute_tiff_linewidth(const stp_softweave_t *sw, int n)
 }
 
 int
-stp_compute_uncompressed_linewidth(const stp_softweave_t *sw, int n)
+stpi_compute_uncompressed_linewidth(const stpi_softweave_t *sw, int n)
 {
   return (8 * ((n + 7) / 8));
 }
 
 static void
-initialize_row(stp_softweave_t *sw, int row, int width,
+initialize_row(stpi_softweave_t *sw, int row, int width,
 	       unsigned char *const cols[])
 {
-  stp_weave_t w;
+  stpi_weave_t w;
   int i, j, jj;
-  stp_pass_t *pass;
+  stpi_pass_t *pass;
 
   for (i = 0; i < sw->oversample; i++)
     {
@@ -1361,17 +1361,17 @@ initialize_row(stp_softweave_t *sw, int row, int width,
 	{
 	  if (cols[j])
 	    {
-	      stp_lineoff_t *lineoffs =
-		stp_get_lineoffsets(sw, row, i, sw->head_offset[j]);
-	      stp_lineactive_t *lineactive =
-		stp_get_lineactive(sw, row, i, sw->head_offset[j]);
-	      stp_linecount_t *linecount =
-		stp_get_linecount(sw, row, i, sw->head_offset[j]);
-	      stp_linebounds_t *linebounds =
-		stp_get_linebounds(sw, row, i, sw->head_offset[j]);
+	      stpi_lineoff_t *lineoffs =
+		stpi_get_lineoffsets(sw, row, i, sw->head_offset[j]);
+	      stpi_lineactive_t *lineactive =
+		stpi_get_lineactive(sw, row, i, sw->head_offset[j]);
+	      stpi_linecount_t *linecount =
+		stpi_get_linecount(sw, row, i, sw->head_offset[j]);
+	      stpi_linebounds_t *linebounds =
+		stpi_get_linebounds(sw, row, i, sw->head_offset[j]);
 	      check_linebases(sw, row, i, sw->head_offset[j], j);
 	      weave_parameters_by_row(sw, row+sw->head_offset[j], i, &w);
-	      pass = stp_get_pass_by_row(sw, row, i, sw->head_offset[j]);
+	      pass = stpi_get_pass_by_row(sw, row, i, sw->head_offset[j]);
 
 	      /* initialize pass if not initialized yet */
 	      if (pass->pass < 0)
@@ -1386,14 +1386,14 @@ initialize_row(stp_softweave_t *sw, int row, int width,
 		  for(jj=0; jj<sw->ncolors; jj++)
 		    {
 		      if (lineoffs[0].v[jj] != 0)
-			stp_eprintf(sw->v,
+			stpi_eprintf(sw->v,
 				    "WARNING: pass %d subpass %d row %d: "
 				    "lineoffs %ld should be zero!\n",
 				    w.pass, i, row, lineoffs[0].v[jj]);
 		      lineoffs[0].v[jj] = 0;
 		      lineactive[0].v[jj] = 0;
 		      if (linecount[0].v[jj] != 0)
-			stp_eprintf(sw->v,
+			stpi_eprintf(sw->v,
 				    "WARNING: pass %d subpass %d row %d: "
 				    "linecount %d should be zero!\n",
 				    w.pass, i, row, linecount[0].v[jj]);
@@ -1413,25 +1413,25 @@ initialize_row(stp_softweave_t *sw, int row, int width,
 }
 
 static void
-add_to_row(stp_softweave_t *sw, int row, unsigned char *buf, size_t nbytes,
+add_to_row(stpi_softweave_t *sw, int row, unsigned char *buf, size_t nbytes,
 	   int color, int setactive, int h_pass)
 {
-  const stp_linebufs_t *bufs = stp_get_linebases(sw, sw->lineno, h_pass,
+  const stpi_linebufs_t *bufs = stpi_get_linebases(sw, sw->lineno, h_pass,
 						 sw->head_offset[color]);
-  stp_lineoff_t *lineoffs = stp_get_lineoffsets(sw, sw->lineno, h_pass,
+  stpi_lineoff_t *lineoffs = stpi_get_lineoffsets(sw, sw->lineno, h_pass,
 						sw->head_offset[color]);
-  stp_lineactive_t *lineactive = stp_get_lineactive(sw, sw->lineno, h_pass,
+  stpi_lineactive_t *lineactive = stpi_get_lineactive(sw, sw->lineno, h_pass,
 						    sw->head_offset[color]);
-  stp_linecount_t *linecount = stp_get_linecount(sw, sw->lineno, h_pass,
+  stpi_linecount_t *linecount = stpi_get_linecount(sw, sw->lineno, h_pass,
 						 sw->head_offset[color]);
   size_t place = lineoffs[0].v[color];
   size_t count = linecount[0].v[color];
   if (place + nbytes > sw->virtual_jets * sw->bitwidth * sw->horizontal_width)
     {
-      stp_eprintf(sw->v, "Buffer overflow: limit %d, actual %d, count %d\n",
+      stpi_eprintf(sw->v, "Buffer overflow: limit %d, actual %d, count %d\n",
 		  sw->virtual_jets * sw->bitwidth * sw->horizontal_width,
 		  place + nbytes, count);
-      stp_abort();
+      stpi_abort();
     }
   memcpy(bufs[0].v[color] + lineoffs[0].v[color], buf, nbytes);
   lineoffs[0].v[color] += nbytes;
@@ -1440,12 +1440,12 @@ add_to_row(stp_softweave_t *sw, int row, unsigned char *buf, size_t nbytes,
 }
 
 static void
-stp_flush(void *vsw)
+stpi_flush(void *vsw)
 {
-  stp_softweave_t *sw = (stp_softweave_t *) vsw;
+  stpi_softweave_t *sw = (stpi_softweave_t *) vsw;
   while (1)
     {
-      stp_pass_t *pass = stp_get_pass_by_pass(sw, sw->last_pass + 1);
+      stpi_pass_t *pass = stpi_get_pass_by_pass(sw, sw->last_pass + 1);
       /*
        * This ought to be   pass->physpassend >  sw->lineno
        * but that causes rubbish to be output for some reason.
@@ -1457,12 +1457,12 @@ stp_flush(void *vsw)
 }
 
 void
-stp_flush_all(void *vsw)
+stpi_flush_all(void *vsw)
 {
-  stp_softweave_t *sw = (stp_softweave_t *) vsw;
+  stpi_softweave_t *sw = (stpi_softweave_t *) vsw;
   while (1)
     {
-      stp_pass_t *pass = stp_get_pass_by_pass(sw, sw->last_pass + 1);
+      stpi_pass_t *pass = stpi_get_pass_by_pass(sw, sw->last_pass + 1);
       /*
        * This ought to be   pass->physpassend >  sw->lineno
        * but that causes rubbish to be output for some reason.
@@ -1474,43 +1474,43 @@ stp_flush_all(void *vsw)
 }
 
 static void
-finalize_row(stp_softweave_t *sw, int row)
+finalize_row(stpi_softweave_t *sw, int row)
 {
   int i,j;
-  stp_dprintf(STP_DBG_ROWS, sw->v, "Finalizing row %d...\n", row);
+  stpi_dprintf(STPI_DBG_ROWS, sw->v, "Finalizing row %d...\n", row);
   for (i = 0; i < sw->oversample; i++)
     {
-      stp_weave_t w;
-      stp_linecount_t *lines;
+      stpi_weave_t w;
+      stpi_linecount_t *lines;
 
       for(j=0; j<sw->ncolors; j++)
         {
-        lines = stp_get_linecount(sw, row, i, sw->head_offset[j]);
+        lines = stpi_get_linecount(sw, row, i, sw->head_offset[j]);
         lines[0].v[j]++;
         }
 
       weave_parameters_by_row(sw, row, i, &w);
       if (w.physpassend == row)
 	{
-	  stp_dprintf(STP_DBG_ROWS, sw->v,
+	  stpi_dprintf(STPI_DBG_ROWS, sw->v,
 		      "Pass=%d, physpassend=%d, row=%d, lineno=%d, flush...\n",
 		      w.pass, w.physpassend, row, sw->lineno);
-	  stp_flush(sw);
+	  stpi_flush(sw);
        }
     }
 }
 
 void
-stp_write_weave(void *        vsw,
+stpi_write_weave(void *        vsw,
 		int           length,	/* I - Length of bitmap data */
 		unsigned char *const cols[])
 {
-  stp_softweave_t *sw = (stp_softweave_t *) vsw;
-  stp_lineoff_t *lineoffs[8];
-  stp_lineactive_t *lineactives[8];
-  stp_linecount_t *linecounts[8];
-  stp_linebounds_t *linebounds[8];
-  const stp_linebufs_t *bufs[8];
+  stpi_softweave_t *sw = (stpi_softweave_t *) vsw;
+  stpi_lineoff_t *lineoffs[8];
+  stpi_lineactive_t *lineactives[8];
+  stpi_linecount_t *linecounts[8];
+  stpi_linebounds_t *linebounds[8];
+  const stpi_linebufs_t *bufs[8];
   int xlength = (length + sw->horizontal_weave - 1) / sw->horizontal_weave;
   int ylength = xlength * sw->horizontal_weave;
   unsigned char *comp_ptr;
@@ -1520,9 +1520,9 @@ stp_write_weave(void *        vsw,
   int cpass = sw->current_vertical_subpass * h_passes;
 
   if (!sw->fold_buf)
-    sw->fold_buf = stp_zalloc(sw->bitwidth * ylength);
+    sw->fold_buf = stpi_zalloc(sw->bitwidth * ylength);
   if (!sw->comp_buf)
-    sw->comp_buf = stp_zalloc(sw->bitwidth *(sw->compute_linewidth)(sw,ylength));
+    sw->comp_buf = stpi_zalloc(sw->bitwidth *(sw->compute_linewidth)(sw,ylength));
   if (sw->current_vertical_subpass == 0)
     initialize_row(sw, sw->lineno, xlength, cols);
 
@@ -1536,23 +1536,23 @@ stp_write_weave(void *        vsw,
 	  for (i = 0; i < h_passes; i++)
 	    {
 	      if (!sw->s[i])
-		sw->s[i] = stp_zalloc(sw->bitwidth *
+		sw->s[i] = stpi_zalloc(sw->bitwidth *
 				      (sw->compute_linewidth)(sw, ylength));
-	      lineoffs[i] = stp_get_lineoffsets(sw, sw->lineno, cpass + i,
+	      lineoffs[i] = stpi_get_lineoffsets(sw, sw->lineno, cpass + i,
 						sw->head_offset[j]);
-	      linecounts[i] = stp_get_linecount(sw, sw->lineno, cpass + i,
+	      linecounts[i] = stpi_get_linecount(sw, sw->lineno, cpass + i,
 						sw->head_offset[j]);
-	      lineactives[i] = stp_get_lineactive(sw, sw->lineno, cpass + i,
+	      lineactives[i] = stpi_get_lineactive(sw, sw->lineno, cpass + i,
 						  sw->head_offset[j]);
-	      linebounds[i] = stp_get_linebounds(sw, sw->lineno, cpass + i,
+	      linebounds[i] = stpi_get_linebounds(sw, sw->lineno, cpass + i,
 						 sw->head_offset[j]);
-	      bufs[i] = stp_get_linebases(sw, sw->lineno, cpass + i,
+	      bufs[i] = stpi_get_linebases(sw, sw->lineno, cpass + i,
 					  sw->head_offset[j]);
 	    }
 
 	  if (sw->bitwidth == 2)
 	    {
-	      stp_fold(cols[j], length, sw->fold_buf);
+	      stpi_fold(cols[j], length, sw->fold_buf);
 	      in = sw->fold_buf;
 	    }
 	  else
@@ -1563,14 +1563,14 @@ stp_write_weave(void *        vsw,
 	      memcpy(sw->s[0], in, length * sw->bitwidth);
 	      break;
 	    case 2:
-	      stp_unpack_2(length, sw->bitwidth, in, sw->s[0], sw->s[1]);
+	      stpi_unpack_2(length, sw->bitwidth, in, sw->s[0], sw->s[1]);
 	      break;
 	    case 4:
-	      stp_unpack_4(length, sw->bitwidth, in,
+	      stpi_unpack_4(length, sw->bitwidth, in,
 			   sw->s[0], sw->s[1], sw->s[2], sw->s[3]);
 	      break;
 	    case 8:
-	      stp_unpack_8(length, sw->bitwidth, in,
+	      stpi_unpack_8(length, sw->bitwidth, in,
 			   sw->s[0], sw->s[1], sw->s[2], sw->s[3],
 			   sw->s[4], sw->s[5], sw->s[6], sw->s[7]);
 	      break;
@@ -1579,14 +1579,14 @@ stp_write_weave(void *        vsw,
 	    {
 	    case 4:
 	      for (idx = 0; idx < sw->horizontal_weave; idx++)
-		stp_split_4(length, sw->bitwidth, sw->s[idx], sw->s[idx],
+		stpi_split_4(length, sw->bitwidth, sw->s[idx], sw->s[idx],
 			    sw->s[idx + sw->horizontal_weave],
 			    sw->s[idx + sw->horizontal_weave * 2],
 			    sw->s[idx + sw->horizontal_weave * 3]);
 	      break;
 	    case 2:
 	      for (idx = 0; idx < sw->horizontal_weave; idx++)
-		stp_split_2(length, sw->bitwidth, sw->s[idx], sw->s[idx],
+		stpi_split_2(length, sw->bitwidth, sw->s[idx], sw->s[idx],
 			    sw->s[idx + sw->horizontal_weave]);
 	      break;
 	      /* case 1 is taken care of because the various unpack */

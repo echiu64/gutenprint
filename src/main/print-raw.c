@@ -114,7 +114,7 @@ raw_parameters(const stp_vars_t v, const char *name,
   for (i = 0; i < the_parameter_count; i++)
     if (strcmp(name, the_parameters[i].name) == 0)
       {
-	stp_fill_parameter_settings(description, &(the_parameters[i]));
+	stpi_fill_parameter_settings(description, &(the_parameters[i]));
 	break;
       }
   if (strcmp(name, "PageSize") == 0)
@@ -190,7 +190,7 @@ raw_describe_resolution(const stp_vars_t v, int *x, int *y)
 static int
 raw_print(const stp_vars_t v, stp_image_t *image)
 {
-  int		model = stp_get_model(v);
+  int		model = stpi_get_model_id(v);
   int width = stp_get_page_width(v);
   int height = stp_get_page_height(v);
   int		i, j;
@@ -206,55 +206,55 @@ raw_print(const stp_vars_t v, stp_image_t *image)
 
   if (!stp_verify(nv))
     {
-      stp_eprintf(nv, _("Print options not verified; cannot print.\n"));
+      stpi_eprintf(nv, _("Print options not verified; cannot print.\n"));
       stp_vars_free(nv);
       return 0;
     }
-  if (width != stp_image_width(image) || height != stp_image_height(image))
+  if (width != stpi_image_width(image) || height != stpi_image_height(image))
     {
-      stp_eprintf(nv, _("Image dimensions must match paper dimensions"));
+      stpi_eprintf(nv, _("Image dimensions must match paper dimensions"));
       stp_vars_free(nv);
       return 0;
     }
-  stp_set_output_color_model(nv, COLOR_MODEL_CMY);
+  stpi_set_output_color_model(nv, COLOR_MODEL_CMY);
   if (ink_type)
     {
       for (i = 0; i < ink_count; i++)
 	if (strcmp(ink_type, inks[i].name) == 0)
 	  {
-	    stp_set_output_color_model(nv, inks[i].color_model);
+	    stpi_set_output_color_model(nv, inks[i].color_model);
 	    ink_channels = inks[i].output_channels;
 	    break;
 	  }
     }
 
   if (bytes_per_channel == 1)
-    out_channels = stp_color_init(nv, image, 256);
+    out_channels = stpi_color_init(nv, image, 256);
   else
-    out_channels = stp_color_init(nv, image, 65536);
+    out_channels = stpi_color_init(nv, image, 65536);
 
   if (out_channels != ink_channels && out_channels != 1 && ink_channels != 1)
     {
-      stp_eprintf(nv, _("Internal error!  Output channels or input channels must be 1\n"));
+      stpi_eprintf(nv, _("Internal error!  Output channels or input channels must be 1\n"));
       stp_vars_free(nv);
       return 0;
     }
 
-  out = stp_malloc(width * out_channels * 2);
+  out = stpi_malloc(width * out_channels * 2);
   if (out_channels != ink_channels)
-    final_out = stp_malloc(width * ink_channels * 2);
+    final_out = stpi_malloc(width * ink_channels * 2);
 
   stp_set_float_parameter(nv, "Density", 1.0);
 
-  stp_image_progress_init(image);
+  stpi_image_progress_init(image);
 
   for (y = 0; y < height; y++)
     {
       unsigned short *real_out = out;
       int zero_mask;
       if ((y & 63) == 0)
-	stp_image_note_progress(image, y, height);
-      if (stp_color_get_row(nv, image, y, out, &zero_mask))
+	stpi_image_note_progress(image, y, height);
+      if (stpi_color_get_row(nv, image, y, out, &zero_mask))
 	{
 	  status = 2;
 	  break;
@@ -287,27 +287,27 @@ raw_print(const stp_vars_t v, stp_image_t *image)
 	  for (i = 0; i < width * ink_channels; i++)
 	    char_out[i] = real_out[i] / 257;
 	}
-      stp_zfwrite((char *) real_out,
+      stpi_zfwrite((char *) real_out,
 		  width * ink_channels * bytes_per_channel, 1, nv);
     }
-  stp_image_progress_conclude(image);
+  stpi_image_progress_conclude(image);
   if (final_out)
-    stp_free(final_out);
-  stp_free(out);
+    stpi_free(final_out);
+  stpi_free(out);
   stp_vars_free(nv);
   return status;
 }
 
-static const stp_printfuncs_t stp_raw_printfuncs =
+static const stpi_printfuncs_t stpi_raw_printfuncs =
 {
   raw_list_parameters,
   raw_parameters,
-  stp_default_media_size,
+  stpi_default_media_size,
   raw_imageable_area,
   raw_limit,
   raw_print,
   raw_describe_resolution,
-  stp_verify_printer_params,
+  stpi_verify_printer_params,
   NULL,
   NULL
 };
@@ -315,9 +315,9 @@ static const stp_printfuncs_t stp_raw_printfuncs =
 
 
 
-static stp_internal_family_t stp_raw_module_data =
+static stpi_internal_family_t stpi_raw_module_data =
   {
-    &stp_raw_printfuncs,
+    &stpi_raw_printfuncs,
     NULL
   };
 
@@ -325,31 +325,31 @@ static stp_internal_family_t stp_raw_module_data =
 static int
 raw_module_init(void)
 {
-  return stp_family_register(stp_raw_module_data.printer_list);
+  return stpi_family_register(stpi_raw_module_data.printer_list);
 }
 
 
 static int
 raw_module_exit(void)
 {
-  return stp_family_unregister(stp_raw_module_data.printer_list);
+  return stpi_family_unregister(stpi_raw_module_data.printer_list);
 }
 
 
 /* Module header */
-#define stp_module_version raw_LTX_stp_module_version
-#define stp_module_data raw_LTX_stp_module_data
+#define stpi_module_version raw_LTX_stpi_module_version
+#define stpi_module_data raw_LTX_stpi_module_data
 
-stp_module_version_t stp_module_version = {0, 0};
+stpi_module_version_t stpi_module_version = {0, 0};
 
-stp_module_t stp_module_data =
+stpi_module_t stpi_module_data =
   {
     "raw",
     VERSION,
     "RAW family driver",
-    STP_MODULE_CLASS_FAMILY,
+    STPI_MODULE_CLASS_FAMILY,
     NULL,
     raw_module_init,
     raw_module_exit,
-    (void *) &stp_raw_module_data
+    (void *) &stpi_raw_module_data
   };

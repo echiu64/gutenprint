@@ -41,32 +41,32 @@ extern "C" {
 #include <config.h>
 #endif
 
-typedef struct stp_dither_matrix_short
+typedef struct stpi_dither_matrix_short
 {
   int x;
   int y;
   int bytes;
   int prescaled;
   const unsigned short *data;
-} stp_dither_matrix_short_t;
+} stpi_dither_matrix_short_t;
 
-typedef struct stp_dither_matrix_normal
+typedef struct stpi_dither_matrix_normal
 {
   int x;
   int y;
   int bytes;
   int prescaled;
   const unsigned *data;
-} stp_dither_matrix_normal_t;
+} stpi_dither_matrix_normal_t;
 
-typedef struct stp_dither_matrix
+typedef struct stpi_dither_matrix
 {
   int x;
   int y;
   int bytes;
   int prescaled;
   const void *data;
-} stp_dither_matrix_t;
+} stpi_dither_matrix_t;
 
 typedef struct dither_matrix
 {
@@ -87,31 +87,31 @@ typedef struct dither_matrix
   unsigned *matrix;
 } dither_matrix_t;
 
-extern void stp_dither_matrix_iterated_init(dither_matrix_t *mat, size_t size,
+extern void stpi_dither_matrix_iterated_init(dither_matrix_t *mat, size_t size,
 					    size_t exp, const unsigned *array);
-extern void stp_dither_matrix_shear(dither_matrix_t *mat,
+extern void stpi_dither_matrix_shear(dither_matrix_t *mat,
 				    int x_shear, int y_shear);
-extern void stp_dither_matrix_init(dither_matrix_t *mat, int x_size,
+extern void stpi_dither_matrix_init(dither_matrix_t *mat, int x_size,
 				   int y_size, const unsigned int *array,
 				   int transpose, int prescaled);
-extern void stp_dither_matrix_init_short(dither_matrix_t *mat, int x_size,
+extern void stpi_dither_matrix_init_short(dither_matrix_t *mat, int x_size,
 					 int y_size,
 					 const unsigned short *array,
 					 int transpose, int prescaled);
-extern int stp_dither_matrix_validate_curve(const stp_curve_t curve);
-extern void stp_dither_matrix_init_from_curve(dither_matrix_t *mat,
+extern int stpi_dither_matrix_validate_curve(const stp_curve_t curve);
+extern void stpi_dither_matrix_init_from_curve(dither_matrix_t *mat,
 					      const stp_curve_t curve,
 					      int transpose);
-extern void stp_dither_matrix_destroy(dither_matrix_t *mat);
-extern void stp_dither_matrix_clone(const dither_matrix_t *src,
+extern void stpi_dither_matrix_destroy(dither_matrix_t *mat);
+extern void stpi_dither_matrix_clone(const dither_matrix_t *src,
 				    dither_matrix_t *dest,
 				    int x_offset, int y_offset);
-extern void stp_dither_matrix_copy(const dither_matrix_t *src,
+extern void stpi_dither_matrix_copy(const dither_matrix_t *src,
 				   dither_matrix_t *dest);
-extern void stp_dither_matrix_scale_exponentially(dither_matrix_t *mat,
+extern void stpi_dither_matrix_scale_exponentially(dither_matrix_t *mat,
 						  double exponent);
-extern void stp_dither_matrix_set_row(dither_matrix_t *mat, int y);
-extern stp_curve_t stp_find_standard_dither_matrix(int x_aspect, int y_aspect);
+extern void stpi_dither_matrix_set_row(dither_matrix_t *mat, int y);
+extern stp_curve_t stpi_find_standard_dither_matrix(int x_aspect, int y_aspect);
 
 
 
@@ -121,7 +121,7 @@ typedef struct
   unsigned bit_pattern;
   int subchannel;
   unsigned dot_size;
-} stp_dither_range_simple_t;
+} stpi_dither_range_simple_t;
 
 typedef struct
 {
@@ -131,71 +131,71 @@ typedef struct
   unsigned bit_pattern;
   int subchannel;
   unsigned dot_size;
-} stp_dither_range_t;
+} stpi_dither_range_t;
 
 typedef struct
 {
    double value[2];
    unsigned bits[2];
    int subchannel[2];
-} stp_dither_range_full_t;
+} stpi_dither_range_full_t;
 
-typedef struct stp_dotsize
+typedef struct stpi_dotsize
 {
   unsigned bit_pattern;
   double value;
-} stp_dotsize_t;
+} stpi_dotsize_t;
 
-typedef struct stp_shade
+typedef struct stpi_shade
 {
   double value;
   int subchannel;
-  const stp_dotsize_t *dot_sizes;
+  const stpi_dotsize_t *dot_sizes;
   int numsizes;
-} stp_shade_t;
+} stpi_shade_t;
 
-extern stp_parameter_list_t stp_dither_list_parameters(const stp_vars_t v);
+extern stp_parameter_list_t stpi_dither_list_parameters(const stp_vars_t v);
 
 extern void
-stp_dither_describe_parameter(const stp_vars_t v, const char *name,
+stpi_dither_describe_parameter(const stp_vars_t v, const char *name,
 			      stp_parameter_t *description);
 
-extern void stp_dither_init(stp_vars_t v, stp_image_t *image,
+extern void stpi_dither_init(stp_vars_t v, stp_image_t *image,
 			    int out_width, int xdpi, int ydpi);
-extern void stp_dither_set_iterated_matrix(stp_vars_t v, size_t edge,
+extern void stpi_dither_set_iterated_matrix(stp_vars_t v, size_t edge,
 					   size_t iterations,
 					   const unsigned *data,
 					   int prescaled,
 					   int x_shear, int y_shear);
-extern void stp_dither_set_matrix(stp_vars_t v, const stp_dither_matrix_t *mat,
+extern void stpi_dither_set_matrix(stp_vars_t v, const stpi_dither_matrix_t *mat,
 				  int transpose, int x_shear, int y_shear);
-extern void stp_dither_set_matrix_from_curve(stp_vars_t v,
+extern void stpi_dither_set_matrix_from_curve(stp_vars_t v,
 					     const stp_curve_t curve,
 					     int transpose);
-extern void stp_dither_set_transition(stp_vars_t v, double);
-extern void stp_dither_set_randomizer(stp_vars_t v, int color, double);
-extern void stp_dither_set_ranges(stp_vars_t v, int color, int nlevels,
-				  const stp_dither_range_simple_t *ranges,
+extern void stpi_dither_set_transition(stp_vars_t v, double);
+extern void stpi_dither_set_randomizer(stp_vars_t v, int color, double);
+extern void stpi_dither_set_ranges(stp_vars_t v, int color, int nlevels,
+				  const stpi_dither_range_simple_t *ranges,
 				  double density);
-extern void stp_dither_set_ranges_full(stp_vars_t v, int color, int nlevels,
-				       const stp_dither_range_full_t *ranges,
+extern void stpi_dither_set_ranges_full(stp_vars_t v, int color, int nlevels,
+				       const stpi_dither_range_full_t *ranges,
 				       double density);
-extern void stp_dither_set_ranges_simple(stp_vars_t v, int color, int nlevels,
+extern void stpi_dither_set_ranges_simple(stp_vars_t v, int color, int nlevels,
 					 const double *levels,
 					 double density);
-extern void stp_dither_set_ink_spread(stp_vars_t v, int spread);
-extern void stp_dither_set_adaptive_limit(stp_vars_t v, double limit);
-extern int stp_dither_get_first_position(stp_vars_t v, int color, int subchan);
-extern int stp_dither_get_last_position(stp_vars_t v, int color, int subchan);
-extern void stp_dither_set_shades(stp_vars_t v, int color, int nshades,
-				  const stp_shade_t *shades, double density);
+extern void stpi_dither_set_ink_spread(stp_vars_t v, int spread);
+extern void stpi_dither_set_adaptive_limit(stp_vars_t v, double limit);
+extern int stpi_dither_get_first_position(stp_vars_t v, int color, int subchan);
+extern int stpi_dither_get_last_position(stp_vars_t v, int color, int subchan);
+extern void stpi_dither_set_shades(stp_vars_t v, int color, int nshades,
+				  const stpi_shade_t *shades, double density);
 
-extern void stp_dither_free(stp_vars_t v);
+extern void stpi_dither_free(stp_vars_t v);
 
-extern void stp_dither_add_channel(stp_vars_t v, unsigned char *data,
+extern void stpi_dither_add_channel(stp_vars_t v, unsigned char *data,
 				   unsigned channel, unsigned subchannel);
 
-extern void stp_dither(stp_vars_t v, int row, const unsigned short *input,
+extern void stpi_dither(stp_vars_t v, int row, const unsigned short *input,
 		       int duplicate_line, int zero_mask);
 
 

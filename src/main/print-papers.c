@@ -39,105 +39,99 @@
 #include <string.h>
 #include <stdlib.h>
 
+static stpi_list_t *paper_list = NULL;
 
-static void stp_paper_freefunc(stp_list_item_t *item);
-static const char *stp_paper_namefunc(const stp_list_item_t *item);
-static const char *stp_paper_long_namefunc(const stp_list_item_t *item);
-
-static stp_list_t *paper_list = NULL;
-
-
-int
-stp_init_paper_list(void)
+static void
+stpi_paper_freefunc(stpi_list_item_t *item)
 {
-  if(paper_list)
-    stp_list_destroy(paper_list);
-  paper_list = stp_list_create();
-  stp_list_set_freefunc(paper_list, stp_paper_freefunc);
-  stp_list_set_namefunc(paper_list, stp_paper_namefunc);
-  stp_list_set_long_namefunc(paper_list, stp_paper_long_namefunc);
-  /* stp_list_set_sortfunc(stp_paper_sortfunc); */
-
-  return 0;
-}
-
-void
-stp_paper_freefunc(stp_list_item_t *item)
-{
-  stp_internal_papersize_t *paper =
-    (stp_internal_papersize_t *) stp_list_item_get_data(item);
-  stp_free(paper->name);
-  stp_free(paper->text);
-  stp_free(paper->comment);
-  stp_free(paper);
+  stpi_internal_papersize_t *paper =
+    (stpi_internal_papersize_t *) stpi_list_item_get_data(item);
+  stpi_free(paper->name);
+  stpi_free(paper->text);
+  stpi_free(paper->comment);
+  stpi_free(paper);
 }
 
 static const char *
-stp_paper_namefunc(const stp_list_item_t *item)
+stpi_paper_namefunc(const stpi_list_item_t *item)
 {
-  stp_internal_papersize_t *paper =
-    (stp_internal_papersize_t *) stp_list_item_get_data(item);
+  stpi_internal_papersize_t *paper =
+    (stpi_internal_papersize_t *) stpi_list_item_get_data(item);
   return stp_papersize_get_name(paper);
 }
 
 static const char *
-stp_paper_long_namefunc(const stp_list_item_t *item)
+stpi_paper_long_namefunc(const stpi_list_item_t *item)
 {
-  stp_internal_papersize_t *paper =
-    (stp_internal_papersize_t *) stp_list_item_get_data(item);
+  stpi_internal_papersize_t *paper =
+    (stpi_internal_papersize_t *) stpi_list_item_get_data(item);
   return stp_papersize_get_text(paper);
 }
 
-
-int stp_paper_create(stp_papersize_t pt)
+int
+stpi_paper_list_init(void)
 {
-  const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
-  stp_list_item_t *paper_item;
-
-  if (paper_list == NULL)
-      stp_init_paper_list();
-
-  /* Check the paper does not already exist */
-  paper_item = stp_list_get_start(paper_list);
-  while (paper_item)
-    {
-      const stp_internal_papersize_t *ep = (const stp_internal_papersize_t *)
-	stp_list_item_get_data(paper_item);
-      if (ep && !strcmp(p->name, ep->name))
-	return 1;
-      paper_item = stp_list_item_next(paper_item);
-    }
-
-  /* Add paper to list */
-  stp_list_item_create(paper_list, NULL, (void *) p);
+  if(paper_list)
+    stpi_list_destroy(paper_list);
+  paper_list = stpi_list_create();
+  stpi_list_set_freefunc(paper_list, stpi_paper_freefunc);
+  stpi_list_set_namefunc(paper_list, stpi_paper_namefunc);
+  stpi_list_set_long_namefunc(paper_list, stpi_paper_long_namefunc);
+  /* stpi_list_set_sortfunc(stpi_paper_sortfunc); */
 
   return 0;
 }
 
-int stp_paper_destroy(stp_papersize_t pt)
+
+int stpi_paper_create(stp_papersize_t pt)
 {
-  const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
-  stp_list_item_t *paper_item;
+  const stpi_internal_papersize_t *p = (const stpi_internal_papersize_t *) pt;
+  stpi_list_item_t *paper_item;
+
+  if (paper_list == NULL)
+      stpi_paper_list_init();
+
+  /* Check the paper does not already exist */
+  paper_item = stpi_list_get_start(paper_list);
+  while (paper_item)
+    {
+      const stpi_internal_papersize_t *ep = (const stpi_internal_papersize_t *)
+	stpi_list_item_get_data(paper_item);
+      if (ep && !strcmp(p->name, ep->name))
+	return 1;
+      paper_item = stpi_list_item_next(paper_item);
+    }
+
+  /* Add paper to list */
+  stpi_list_item_create(paper_list, NULL, (void *) p);
+
+  return 0;
+}
+
+int stpi_paper_destroy(stp_papersize_t pt)
+{
+  const stpi_internal_papersize_t *p = (const stpi_internal_papersize_t *) pt;
+  stpi_list_item_t *paper_item;
 
   if (paper_list == NULL)
     {
-      stp_erprintf("No papers found: "
-		   "is STP_MODULE_PATH correct?\n");
-      stp_init_paper_list();
+      stpi_erprintf("No papers found: "
+		   "is STPI_MODULE_PATH correct?\n");
+      stpi_paper_list_init();
     }
 
   /* Check if paper exists */
-  paper_item = stp_list_get_start(paper_list);
+  paper_item = stpi_list_get_start(paper_list);
   while (paper_item)
     {
-      const stp_internal_papersize_t *ep = (const stp_internal_papersize_t *)
-	stp_list_item_get_data(paper_item);
+      const stpi_internal_papersize_t *ep = (const stpi_internal_papersize_t *)
+	stpi_list_item_get_data(paper_item);
       if (ep && !strcmp(p->name, ep->name))
 	{
-	  stp_list_item_destroy (paper_list, paper_item);
+	  stpi_list_item_destroy (paper_list, paper_item);
 	  return 0;
 	}
-      paper_item = stp_list_item_next(paper_item);
+      paper_item = stpi_list_item_next(paper_item);
     }
   /* Paper did not exist */
   return 1;
@@ -149,115 +143,115 @@ stp_known_papersizes(void)
 {
   if (paper_list == NULL)
     {
-      stp_erprintf("No papers found: "
-		   "is STP_MODULE_PATH correct?\n");
-      stp_init_paper_list();
+      stpi_erprintf("No papers found: "
+		   "is STPI_MODULE_PATH correct?\n");
+      stpi_paper_list_init();
     }
 
-  return stp_list_get_length(paper_list);
+  return stpi_list_get_length(paper_list);
 }
 
 const char *
 stp_papersize_get_name(const stp_papersize_t pt)
 {
-  const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
+  const stpi_internal_papersize_t *p = (const stpi_internal_papersize_t *) pt;
   return p->name;
 }
 
 const char *
 stp_papersize_get_text(const stp_papersize_t pt)
 {
-  const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
+  const stpi_internal_papersize_t *p = (const stpi_internal_papersize_t *) pt;
   return _(p->text);
 }
 
 unsigned
 stp_papersize_get_width(const stp_papersize_t pt)
 {
-  const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
+  const stpi_internal_papersize_t *p = (const stpi_internal_papersize_t *) pt;
   return p->width;
 }
 
 unsigned
 stp_papersize_get_height(const stp_papersize_t pt)
 {
-  const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
+  const stpi_internal_papersize_t *p = (const stpi_internal_papersize_t *) pt;
   return p->height;
 }
 
 unsigned
 stp_papersize_get_top(const stp_papersize_t pt)
 {
-  const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
+  const stpi_internal_papersize_t *p = (const stpi_internal_papersize_t *) pt;
   return p->top;
 }
 
 unsigned
 stp_papersize_get_left(const stp_papersize_t pt)
 {
-  const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
+  const stpi_internal_papersize_t *p = (const stpi_internal_papersize_t *) pt;
   return p->left;
 }
 
 unsigned
 stp_papersize_get_bottom(const stp_papersize_t pt)
 {
-  const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
+  const stpi_internal_papersize_t *p = (const stpi_internal_papersize_t *) pt;
   return p->bottom;
 }
 
 unsigned
 stp_papersize_get_right(const stp_papersize_t pt)
 {
-  const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
+  const stpi_internal_papersize_t *p = (const stpi_internal_papersize_t *) pt;
   return p->right;
 }
 
 stp_papersize_unit_t
 stp_papersize_get_unit(const stp_papersize_t pt)
 {
-  const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
+  const stpi_internal_papersize_t *p = (const stpi_internal_papersize_t *) pt;
   return p->paper_unit;
 }
 
 const stp_papersize_t
 stp_get_papersize_by_name(const char *name)
 {
-  stp_list_item_t *paper;
+  stpi_list_item_t *paper;
 
   if (paper_list == NULL)
     {
-      stp_erprintf("No papers found: "
-		   "is STP_MODULE_PATH correct?\n");
-      stp_init_paper_list();
+      stpi_erprintf("No papers found: "
+		   "is STPI_MODULE_PATH correct?\n");
+      stpi_paper_list_init();
     }
 
-  paper = stp_list_get_item_by_name(paper_list, name);
+  paper = stpi_list_get_item_by_name(paper_list, name);
   if (!paper)
     return NULL;
-  else return (const stp_papersize_t) stp_list_item_get_data(paper);
+  else return (const stp_papersize_t) stpi_list_item_get_data(paper);
 }
 
 const stp_papersize_t
 stp_get_papersize_by_index(int index)
 {
-  stp_list_item_t *paper;
+  stpi_list_item_t *paper;
 
   if (paper_list == NULL)
     {
-      stp_erprintf("No papers found: "
-		   "is STP_MODULE_PATH correct?\n");
-      stp_init_paper_list();
+      stpi_erprintf("No papers found: "
+		   "is STPI_MODULE_PATH correct?\n");
+      stpi_paper_list_init();
     }
 
-  paper = stp_list_get_item_by_index(paper_list, index);
+  paper = stpi_list_get_item_by_index(paper_list, index);
   if (!paper)
     return NULL;
-  else return (const stp_papersize_t) stp_list_item_get_data(paper);
+  else return (const stp_papersize_t) stpi_list_item_get_data(paper);
 }
 
 static int
-paper_size_mismatch(int l, int w, const stp_internal_papersize_t *val)
+paper_size_mismatch(int l, int w, const stpi_internal_papersize_t *val)
 {
   int hdiff = abs(l - (int) val->height);
   int vdiff = abs(w - (int) val->width);
@@ -268,8 +262,8 @@ const stp_papersize_t
 stp_get_papersize_by_size(int l, int w)
 {
   int score = INT_MAX;
-  const stp_internal_papersize_t *ref = NULL;
-  const stp_internal_papersize_t *val = NULL;
+  const stpi_internal_papersize_t *ref = NULL;
+  const stpi_internal_papersize_t *val = NULL;
   int i;
   int sizes = stp_known_papersizes();
   for (i = 0; i < sizes; i++)
@@ -292,7 +286,7 @@ stp_get_papersize_by_size(int l, int w)
 }
 
 void
-stp_default_media_size(const stp_vars_t v,	/* I */
+stpi_default_media_size(const stp_vars_t v,	/* I */
 		       int  *width,		/* O - Width in points */
 		       int  *height)	/* O - Height in points */
 {

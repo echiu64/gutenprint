@@ -54,19 +54,16 @@ typedef struct
   unsigned bottom;
   unsigned right;
   stp_papersize_unit_t paper_unit;
-} stp_internal_papersize_t;
+} stpi_internal_papersize_t;
 
 
-extern stp_list_t *stp_paper_list;
+extern int stpi_paper_list_init(void);
 
+extern int stpi_paper_create(stp_papersize_t pt);
+extern int stpi_paper_destroy(stp_papersize_t pt);
 
-extern int stp_init_paper_list(void);
-
-extern int stp_paper_create(stp_papersize_t pt);
-extern int stp_paper_destroy(stp_papersize_t pt);
-
-extern void stp_default_media_size(const stp_vars_t v,
-				   int *width, int *height);
+extern void stpi_default_media_size(const stp_vars_t v,
+				    int *width, int *height);
 
 
 #ifdef __cplusplus

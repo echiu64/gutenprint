@@ -31,8 +31,8 @@ extern "C" {
 #endif
 
 
-int stp_xml_init(void);
-int stp_xml_parse_file(const char *file);
+int stpi_xml_init(void);
+int stpi_xml_parse_file(const char *file);
 
 
 #endif /* GIMP_PRINT_INTERNAL_XML_H */

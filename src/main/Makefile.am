@@ -100,7 +100,6 @@ libgimpprint_la_SOURCES = \
 	print-weave.c \
 	print-version.c \
 	printers.c \
-	printlist.h \
 	image.c \
 	image.h \
 	printers.h \

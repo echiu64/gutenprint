@@ -28,46 +28,46 @@
 #include "gimp-print-internal.h"
 
 void
-stp_image_init(stp_image_t *image)
+stpi_image_init(stp_image_t *image)
 {
   if (image->init)
     image->init(image);
 }
 
 void
-stp_image_reset(stp_image_t *image)
+stpi_image_reset(stp_image_t *image)
 {
   if (image->reset)
     image->reset(image);
 }
 
 int
-stp_image_bpp(stp_image_t *image)
+stpi_image_bpp(stp_image_t *image)
 {
   return image->bpp(image);
 }
 
 int
-stp_image_width(stp_image_t *image)
+stpi_image_width(stp_image_t *image)
 {
   return image->width(image);
 }
 
 int
-stp_image_height(stp_image_t *image)
+stpi_image_height(stp_image_t *image)
 {
   return image->height(image);
 }
 
 stp_image_status_t
-stp_image_get_row(stp_image_t *image, unsigned char *data,
+stpi_image_get_row(stp_image_t *image, unsigned char *data,
 		  size_t byte_limit, int row)
 {
   return image->get_row(image, data, byte_limit, row);
 }
 
 const char *
-stp_image_get_appname(stp_image_t *image)
+stpi_image_get_appname(stp_image_t *image)
 {
   if (image->get_appname)
     return image->get_appname(image);
@@ -76,70 +76,70 @@ stp_image_get_appname(stp_image_t *image)
 }
 
 void
-stp_image_progress_init(stp_image_t *image)
+stpi_image_progress_init(stp_image_t *image)
 {
   if (image->progress_init)
     image->progress_init(image);
 }
 
 void
-stp_image_note_progress(stp_image_t *image, double current, double total)
+stpi_image_note_progress(stp_image_t *image, double current, double total)
 {
   if (image->note_progress)
     image->note_progress(image, current, total);
 }
 
 void
-stp_image_progress_conclude(stp_image_t *image)
+stpi_image_progress_conclude(stp_image_t *image)
 {
   if (image->progress_conclude)
     image->progress_conclude(image);
 }
 
 void
-stp_image_transpose(stp_image_t *image)
+stpi_image_transpose(stp_image_t *image)
 {
   if (image->transpose)
     image->transpose(image);
 }
 
 void
-stp_image_hflip(stp_image_t *image)
+stpi_image_hflip(stp_image_t *image)
 {
   if (image->hflip)
     image->hflip(image);
 }
 
 void
-stp_image_vflip(stp_image_t *image)
+stpi_image_vflip(stp_image_t *image)
 {
   if (image->vflip)
     image->vflip(image);
 }
 
 void
-stp_image_rotate_ccw(stp_image_t *image)
+stpi_image_rotate_ccw(stp_image_t *image)
 {
   if (image->rotate_ccw)
     image->rotate_ccw(image);
 }
 
 void
-stp_image_rotate_cw(stp_image_t *image)
+stpi_image_rotate_cw(stp_image_t *image)
 {
   if (image->rotate_cw)
     image->rotate_cw(image);
 }
 
 void
-stp_image_rotate_180(stp_image_t *image)
+stpi_image_rotate_180(stp_image_t *image)
 {
   if (image->rotate_180)
     image->rotate_180(image);
 }
 
 void
-stp_image_crop(stp_image_t *image, int left, int top, int right, int bottom)
+stpi_image_crop(stp_image_t *image, int left, int top, int right, int bottom)
 {
   if (image->crop)
     image->crop(image, left, top, right, bottom);

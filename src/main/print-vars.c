@@ -57,7 +57,7 @@ typedef struct					/* Plug-in variables */
   int	page_width;		/* Width of page in points */
   int	page_height;		/* Height of page in points */
   int	page_number;
-  stp_list_t *params[STP_PARAMETER_TYPE_INVALID];
+  stpi_list_t *params[STP_PARAMETER_TYPE_INVALID];
   void  *color_data;		/* Private data of the color module */
   void	*(*copy_color_data_func)(const stp_vars_t);
   void	(*destroy_color_data_func)(stp_vars_t);
@@ -72,7 +72,7 @@ typedef struct					/* Plug-in variables */
   void (*errfunc)(void *data, const char *buffer, size_t bytes);
   void *errdata;
   int verified;			/* Ensure that params are OK! */
-} stp_internal_vars_t;
+} stpi_internal_vars_t;
 
 typedef struct
 {
@@ -90,7 +90,7 @@ typedef struct
 
 static int standard_vars_initialized = 0;
 
-static stp_internal_vars_t default_vars =
+static stpi_internal_vars_t default_vars =
 {
 	COOKIE_VARS,
 	N_ ("ps2"),	       	/* Name of printer "driver" */
@@ -102,22 +102,22 @@ static stp_internal_vars_t default_vars =
 };
 
 static const char *
-value_namefunc(const stp_list_item_t *item)
+value_namefunc(const stpi_list_item_t *item)
 {
-  const value_t *v = (value_t *)stp_list_item_get_data(item);
+  const value_t *v = (value_t *)stpi_list_item_get_data(item);
   return v->name;
 }
 
 static void
-value_freefunc(stp_list_item_t *item)
+value_freefunc(stpi_list_item_t *item)
 {
-  value_t *v = (value_t *)stp_list_item_get_data(item);
+  value_t *v = (value_t *)stpi_list_item_get_data(item);
   switch (v->typ)
     {
     case STP_PARAMETER_TYPE_STRING_LIST:
     case STP_PARAMETER_TYPE_FILE:
     case STP_PARAMETER_TYPE_RAW:
-      stp_free(v->value.rval.data);
+      stpi_free(v->value.rval.data);
       break;
     case STP_PARAMETER_TYPE_CURVE:
       stp_curve_free(v->value.cval);
@@ -125,26 +125,26 @@ value_freefunc(stp_list_item_t *item)
     default:
       break;
     }
-  stp_free(v->name);
-  stp_free(v);
+  stpi_free(v->name);
+  stpi_free(v);
 }
 
-static stp_list_t *
+static stpi_list_t *
 create_vars_list(void)
 
 {
-  stp_list_t *ret = stp_list_create();
-  stp_list_set_freefunc(ret, value_freefunc);
-  stp_list_set_namefunc(ret, value_namefunc);
+  stpi_list_t *ret = stpi_list_create();
+  stpi_list_set_freefunc(ret, value_freefunc);
+  stpi_list_set_namefunc(ret, value_namefunc);
   return ret;
 }
 
 static value_t *
-value_copy(const stp_list_item_t *item)
+value_copy(const stpi_list_item_t *item)
 {
-  value_t *ret = stp_malloc(sizeof(value_t));
-  const value_t *v = (value_t *)stp_list_item_get_data(item);
-  ret->name = stp_strdup(v->name);
+  value_t *ret = stpi_malloc(sizeof(value_t));
+  const value_t *v = (value_t *)stpi_list_item_get_data(item);
+  ret->name = stpi_strdup(v->name);
   ret->typ = v->typ;
   switch (v->typ)
     {
@@ -155,7 +155,7 @@ value_copy(const stp_list_item_t *item)
     case STP_PARAMETER_TYPE_FILE:
     case STP_PARAMETER_TYPE_RAW:
       ret->value.rval.bytes = v->value.rval.bytes;
-      ret->value.rval.data = stp_malloc(ret->value.rval.bytes + 1);
+      ret->value.rval.data = stpi_malloc(ret->value.rval.bytes + 1);
       memcpy(ret->value.rval.data, v->value.rval.data, v->value.rval.bytes);
       ((char *) (ret->value.rval.data))[v->value.rval.bytes] = '\0';
       break;
@@ -172,15 +172,15 @@ value_copy(const stp_list_item_t *item)
   return ret;
 }
 
-static stp_list_t *
-copy_value_list(const stp_list_t *src)
+static stpi_list_t *
+copy_value_list(const stpi_list_t *src)
 {
-  stp_list_t *ret = create_vars_list();
-  stp_list_item_t *item = stp_list_get_start((stp_list_t *)src);
+  stpi_list_t *ret = create_vars_list();
+  stpi_list_item_t *item = stpi_list_get_start((stpi_list_t *)src);
   while (item)
     {
-      stp_list_item_create(ret, NULL, value_copy(item));
-      item = stp_list_item_next(item);
+      stpi_list_item_create(ret, NULL, value_copy(item));
+      item = stpi_list_item_next(item);
     }
   return ret;
 }
@@ -208,7 +208,7 @@ stp_vars_t
 stp_vars_create(void)
 {
   int i;
-  stp_internal_vars_t *retval = stp_zalloc(sizeof(stp_internal_vars_t));
+  stpi_internal_vars_t *retval = stpi_zalloc(sizeof(stpi_internal_vars_t));
   initialize_standard_vars();
   retval->cookie = COOKIE_VARS;
   for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
@@ -221,17 +221,17 @@ stp_vars_create(void)
 do						\
 {						\
   if ((x))					\
-    stp_free((char *)(x));			\
+    stpi_free((char *)(x));			\
   ((x)) = NULL;					\
 } while (0)
 
 static void
-check_vars(const stp_internal_vars_t *v)
+check_vars(const stpi_internal_vars_t *v)
 {
   if (v->cookie != COOKIE_VARS)
     {
-      stp_erprintf("Bad stp_vars_t!\n");
-      stp_abort();
+      stpi_erprintf("Bad stp_vars_t!\n");
+      stpi_abort();
     }
 }
 
@@ -239,152 +239,158 @@ void
 stp_vars_free(stp_vars_t vv)
 {
   int i;
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
+  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;
   check_vars(v);
-  if (stp_get_destroy_color_data_func(vv))
-    (*stp_get_destroy_color_data_func(vv))(vv);
-  if (stp_get_destroy_driver_data_func(vv))
-    (*stp_get_destroy_driver_data_func(vv))(vv);
-  if (stp_get_destroy_dither_data_func(vv))
-    (*stp_get_destroy_dither_data_func(vv))(vv);
+  if (stpi_get_destroy_color_data_func(vv))
+    (*stpi_get_destroy_color_data_func(vv))(vv);
+  if (stpi_get_destroy_driver_data_func(vv))
+    (*stpi_get_destroy_driver_data_func(vv))(vv);
+  if (stpi_get_destroy_dither_data_func(vv))
+    (*stpi_get_destroy_dither_data_func(vv))(vv);
   for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
-    stp_list_destroy(v->params[i]);
+    stpi_list_destroy(v->params[i]);
   SAFE_FREE(v->driver);
-  stp_free(v);
+  stpi_free(v);
 }
 
-#define DEF_STRING_FUNCS(s)				\
-void							\
-stp_set_##s(stp_vars_t vv, const char *val)		\
-{							\
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
-  check_vars(v);					\
-  if (v->s == val)					\
-    return;						\
-  SAFE_FREE(v->s);					\
-  v->s = stp_strdup(val);				\
-  v->verified = 0;					\
-}							\
-							\
-void							\
-stp_set_##s##_n(stp_vars_t vv, const char *val, int n)	\
-{							\
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
-  check_vars(v);					\
-  if (v->s == val)					\
-    return;						\
-  SAFE_FREE(v->s);					\
-  v->s = stp_strndup(val, n);				\
-  v->verified = 0;					\
-}							\
-							\
-const char *						\
-stp_get_##s(const stp_vars_t vv)			\
-{							\
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
-  check_vars(v);					\
-  return v->s;						\
+#define DEF_STRING_FUNCS(s, i)					\
+void								\
+stp##i##_set_##s(stp_vars_t vv, const char *val)		\
+{								\
+  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;	\
+  check_vars(v);						\
+  if (v->s == val)						\
+    return;							\
+  SAFE_FREE(v->s);						\
+  v->s = stpi_strdup(val);					\
+  v->verified = 0;						\
+}								\
+								\
+void								\
+stp##i##_set_##s##_n(stp_vars_t vv, const char *val, int n)	\
+{								\
+  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;	\
+  check_vars(v);						\
+  if (v->s == val)						\
+    return;							\
+  SAFE_FREE(v->s);						\
+  v->s = stpi_strndup(val, n);					\
+  v->verified = 0;						\
+}								\
+								\
+const char *							\
+stp##i##_get_##s(const stp_vars_t vv)				\
+{								\
+  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;	\
+  check_vars(v);						\
+  return v->s;							\
 }
 
-#define DEF_FUNCS(s, t, u)				\
-u void							\
-stp_set_##s(stp_vars_t vv, t val)			\
-{							\
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
-  check_vars(v);					\
-  v->verified = 0;					\
-  v->s = val;						\
-}							\
-							\
-u t							\
-stp_get_##s(const stp_vars_t vv)			\
-{							\
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
-  check_vars(v);					\
-  return v->s;						\
+#define DEF_FUNCS(s, t, u, i)					\
+u void								\
+stp##i##_set_##s(stp_vars_t vv, t val)				\
+{								\
+  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;	\
+  check_vars(v);						\
+  v->verified = 0;						\
+  v->s = val;							\
+}								\
+								\
+u t								\
+stp##i##_get_##s(const stp_vars_t vv)				\
+{								\
+  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;	\
+  check_vars(v);						\
+  return v->s;							\
 }
 
-DEF_STRING_FUNCS(driver)
-DEF_FUNCS(output_type, int, )
-DEF_FUNCS(left, int, )
-DEF_FUNCS(top, int, )
-DEF_FUNCS(width, int, )
-DEF_FUNCS(height, int, )
-DEF_FUNCS(page_width, int, )
-DEF_FUNCS(page_height, int, )
-DEF_FUNCS(input_color_model, int, )
-DEF_FUNCS(output_color_model, int, )
-DEF_FUNCS(page_number, int, )
-DEF_FUNCS(job_mode, stp_job_mode_t, )
-DEF_FUNCS(outdata, void *, )
-DEF_FUNCS(errdata, void *, )
-DEF_FUNCS(color_data, void *, )
-DEF_FUNCS(copy_color_data_func, copy_data_func_t, )
-DEF_FUNCS(destroy_color_data_func, destroy_data_func_t, )
-DEF_FUNCS(driver_data, void *, )
-DEF_FUNCS(copy_driver_data_func, copy_data_func_t, )
-DEF_FUNCS(destroy_driver_data_func, destroy_data_func_t, )
-DEF_FUNCS(dither_data, void *, )
-DEF_FUNCS(copy_dither_data_func, copy_data_func_t, )
-DEF_FUNCS(destroy_dither_data_func, destroy_data_func_t, )
-DEF_FUNCS(outfunc, stp_outfunc_t, )
-DEF_FUNCS(errfunc, stp_outfunc_t, )
+#define DEF_INTERNAL_STRING_FUNCS(s) DEF_STRING_FUNCS(s, i)
+#define DEF_EXTERNAL_STRING_FUNCS(s) DEF_STRING_FUNCS(s,)
+#define DEF_INTERNAL_FUNCS(s, t, u) DEF_FUNCS(s, t, u, i)
+#define DEF_EXTERNAL_FUNCS(s, t, u) DEF_FUNCS(s, t, u,)
+
+DEF_EXTERNAL_STRING_FUNCS(driver)
+DEF_EXTERNAL_FUNCS(output_type, int, )
+DEF_EXTERNAL_FUNCS(left, int, )
+DEF_EXTERNAL_FUNCS(top, int, )
+DEF_EXTERNAL_FUNCS(width, int, )
+DEF_EXTERNAL_FUNCS(height, int, )
+DEF_EXTERNAL_FUNCS(page_width, int, )
+DEF_EXTERNAL_FUNCS(page_height, int, )
+DEF_EXTERNAL_FUNCS(input_color_model, int, )
+DEF_EXTERNAL_FUNCS(page_number, int, )
+DEF_EXTERNAL_FUNCS(job_mode, stp_job_mode_t, )
+DEF_EXTERNAL_FUNCS(outdata, void *, )
+DEF_EXTERNAL_FUNCS(errdata, void *, )
+DEF_EXTERNAL_FUNCS(outfunc, stp_outfunc_t, )
+DEF_EXTERNAL_FUNCS(errfunc, stp_outfunc_t, )
+
+DEF_INTERNAL_FUNCS(output_color_model, int, )
+DEF_INTERNAL_FUNCS(color_data, void *, )
+DEF_INTERNAL_FUNCS(copy_color_data_func, stpi_copy_data_func_t, )
+DEF_INTERNAL_FUNCS(destroy_color_data_func, stpi_destroy_data_func_t, )
+DEF_INTERNAL_FUNCS(driver_data, void *, )
+DEF_INTERNAL_FUNCS(copy_driver_data_func, stpi_copy_data_func_t, )
+DEF_INTERNAL_FUNCS(destroy_driver_data_func, stpi_destroy_data_func_t, )
+DEF_INTERNAL_FUNCS(dither_data, void *, )
+DEF_INTERNAL_FUNCS(copy_dither_data_func, stpi_copy_data_func_t, )
+DEF_INTERNAL_FUNCS(destroy_dither_data_func, stpi_destroy_data_func_t, )
 
 
 void
-stp_set_verified(stp_vars_t vv, int val)
+stpi_set_verified(stp_vars_t vv, int val)
 {
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
+  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;
   check_vars(v);
   v->verified = val;
 }
 
 int
-stp_get_verified(const stp_vars_t vv)
+stpi_get_verified(const stp_vars_t vv)
 {
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
+  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;
   check_vars(v);
   return v->verified;
 }
 
 static void
-set_raw_parameter(stp_list_t *list, const char *parameter, const char *value,
+set_raw_parameter(stpi_list_t *list, const char *parameter, const char *value,
 		  int bytes, int typ)
 {
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (value)
     {
       value_t *v;
       if (item)
 	{
-	  v = (value_t *) stp_list_item_get_data(item);
-	  stp_free(v->value.rval.data);
+	  v = (value_t *) stpi_list_item_get_data(item);
+	  stpi_free(v->value.rval.data);
 	}
       else
 	{
-	  v = stp_malloc(sizeof(value_t));
-	  v->name = stp_strdup(parameter);
+	  v = stpi_malloc(sizeof(value_t));
+	  v->name = stpi_strdup(parameter);
 	  v->typ = typ;
-	  stp_list_item_create(list, NULL, v);
+	  stpi_list_item_create(list, NULL, v);
 	}
-      v->value.rval.data = stp_malloc(bytes + 1);
+      v->value.rval.data = stpi_malloc(bytes + 1);
       memcpy(v->value.rval.data, value, bytes);
       ((char *) v->value.rval.data)[bytes] = '\0';
       v->value.rval.bytes = bytes;
     }
   else if (item)
-    stp_list_item_destroy(list, item);
+    stpi_list_item_destroy(list, item);
 }
 
 void
 stp_set_string_parameter_n(stp_vars_t v, const char *parameter,
 			   const char *value, int bytes)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_STRING_LIST];
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_STRING_LIST];
   set_raw_parameter(list, parameter, value, bytes,
 		    STP_PARAMETER_TYPE_STRING_LIST);
-  stp_set_verified(v, 0);
+  stpi_set_verified(v, 0);
 }
 
 void
@@ -395,20 +401,20 @@ stp_set_string_parameter(stp_vars_t v, const char *parameter,
   if (value)
     byte_count = strlen(value);
   stp_set_string_parameter_n(v, parameter, value, byte_count);
-  stp_set_verified(v, 0);
+  stpi_set_verified(v, 0);
 }
 
 void
 stp_set_default_string_parameter_n(stp_vars_t v, const char *parameter,
 				   const char *value, int bytes)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_STRING_LIST];
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_STRING_LIST];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (!item)
     set_raw_parameter(list, parameter, value, bytes,
 		      STP_PARAMETER_TYPE_STRING_LIST);
-  stp_set_verified(v, 0);
+  stpi_set_verified(v, 0);
 }
 
 void
@@ -419,7 +425,7 @@ stp_set_default_string_parameter(stp_vars_t v, const char *parameter,
   if (value)
     byte_count = strlen(value);
   stp_set_default_string_parameter_n(v, parameter, value, byte_count);
-  stp_set_verified(v, 0);
+  stpi_set_verified(v, 0);
 }
 
 void
@@ -431,13 +437,13 @@ stp_clear_string_parameter(stp_vars_t v, const char *parameter)
 const char *
 stp_get_string_parameter(const stp_vars_t v, const char *parameter)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_STRING_LIST];
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_STRING_LIST];
   value_t *val;
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (item)
     {
-      val = (value_t *) stp_list_item_get_data(item);
+      val = (value_t *) stpi_list_item_get_data(item);
       return val->value.rval.data;
     }
   else
@@ -448,22 +454,22 @@ void
 stp_set_raw_parameter(stp_vars_t v, const char *parameter,
 		      const void *value, int bytes)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_RAW];
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_RAW];
   set_raw_parameter(list, parameter, value, bytes, STP_PARAMETER_TYPE_RAW);
-  stp_set_verified(v, 0);
+  stpi_set_verified(v, 0);
 }
 
 void
 stp_set_default_raw_parameter(stp_vars_t v, const char *parameter,
 			      const void *value, int bytes)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_RAW];
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_RAW];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (!item)
     set_raw_parameter(list, parameter, value, bytes, STP_PARAMETER_TYPE_RAW);
-  stp_set_verified(v, 0);
+  stpi_set_verified(v, 0);
 }
 
 void
@@ -475,13 +481,13 @@ stp_clear_raw_parameter(stp_vars_t v, const char *parameter)
 const stp_raw_t *
 stp_get_raw_parameter(const stp_vars_t v, const char *parameter)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_RAW];
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_RAW];
   value_t *val;
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (item)
     {
-      val = (value_t *) stp_list_item_get_data(item);
+      val = (value_t *) stpi_list_item_get_data(item);
       return &(val->value.rval);
     }
   else
@@ -492,25 +498,25 @@ void
 stp_set_file_parameter(stp_vars_t v, const char *parameter,
 		       const char *value)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
   int byte_count = 0;
   if (value)
     byte_count = strlen(value);
   set_raw_parameter(list, parameter, value, byte_count,
 		    STP_PARAMETER_TYPE_FILE);
-  stp_set_verified(v, 0);
+  stpi_set_verified(v, 0);
 }
 
 void
 stp_set_file_parameter_n(stp_vars_t v, const char *parameter,
 			 const char *value, int byte_count)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
   set_raw_parameter(list, parameter, value, byte_count,
 		    STP_PARAMETER_TYPE_FILE);
-  stp_set_verified(v, 0);
+  stpi_set_verified(v, 0);
 }
 
 
@@ -518,29 +524,29 @@ void
 stp_set_default_file_parameter(stp_vars_t v, const char *parameter,
 			       const char *value)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   int byte_count = 0;
   if (value)
     byte_count = strlen(value);
   if (!item)
     set_raw_parameter(list, parameter, value, byte_count,
 		      STP_PARAMETER_TYPE_FILE);
-  stp_set_verified(v, 0);
+  stpi_set_verified(v, 0);
 }
 
 void
 stp_set_default_file_parameter_n(stp_vars_t v, const char *parameter,
 				 const char *value, int byte_count)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (!item)
     set_raw_parameter(list, parameter, value, byte_count,
 		      STP_PARAMETER_TYPE_FILE);
-  stp_set_verified(v, 0);
+  stpi_set_verified(v, 0);
 }
 
 void
@@ -552,13 +558,13 @@ stp_clear_file_parameter(stp_vars_t v, const char *parameter)
 const char *
 stp_get_file_parameter(const stp_vars_t v, const char *parameter)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
   value_t *val;
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (item)
     {
-      val = (value_t *) stp_list_item_get_data(item);
+      val = (value_t *) stpi_list_item_get_data(item);
       return val->value.rval.data;
     }
   else
@@ -569,38 +575,38 @@ void
 stp_set_curve_parameter(stp_vars_t v, const char *parameter,
 			const stp_curve_t curve)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_CURVE];
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_CURVE];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (curve)
     {
       value_t *val;
       if (item)
 	{
-	  val = (value_t *) stp_list_item_get_data(item);
+	  val = (value_t *) stpi_list_item_get_data(item);
 	  stp_curve_free(val->value.cval);
 	}
       else
 	{
-	  val = stp_malloc(sizeof(value_t));
-	  val->name = stp_strdup(parameter);
+	  val = stpi_malloc(sizeof(value_t));
+	  val->name = stpi_strdup(parameter);
 	  val->typ = STP_PARAMETER_TYPE_CURVE;
-	  stp_list_item_create(list, NULL, val);
+	  stpi_list_item_create(list, NULL, val);
 	}
       val->value.cval = stp_curve_create_copy(curve);
     }
   else if (item)
-    stp_list_item_destroy(list, item);
-  stp_set_verified(v, 0);
+    stpi_list_item_destroy(list, item);
+  stpi_set_verified(v, 0);
 }
 
 void
 stp_set_default_curve_parameter(stp_vars_t v, const char *parameter,
 				const stp_curve_t curve)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_CURVE];
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_CURVE];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (!item)
     {
       if (curve)
@@ -608,20 +614,20 @@ stp_set_default_curve_parameter(stp_vars_t v, const char *parameter,
 	  value_t *val;
 	  if (item)
 	    {
-	      val = (value_t *) stp_list_item_get_data(item);
+	      val = (value_t *) stpi_list_item_get_data(item);
 	      stp_curve_free(val->value.cval);
 	    }
 	  else
 	    {
-	      val = stp_malloc(sizeof(value_t));
-	      val->name = stp_strdup(parameter);
+	      val = stpi_malloc(sizeof(value_t));
+	      val->name = stpi_strdup(parameter);
 	      val->typ = STP_PARAMETER_TYPE_CURVE;
-	      stp_list_item_create(list, NULL, val);
+	      stpi_list_item_create(list, NULL, val);
 	    }
 	  val->value.cval = stp_curve_create_copy(curve);
 	}
     }
-  stp_set_verified(v, 0);
+  stpi_set_verified(v, 0);
 }
 
 void
@@ -633,13 +639,13 @@ stp_clear_curve_parameter(stp_vars_t v, const char *parameter)
 const stp_curve_t
 stp_get_curve_parameter(const stp_vars_t v, const char *parameter)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_CURVE];
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_CURVE];
   value_t *val;
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (item)
     {
-      val = (value_t *) stp_list_item_get_data(item);
+      val = (value_t *) stpi_list_item_get_data(item);
       return val->value.cval;
     }
   else
@@ -649,64 +655,64 @@ stp_get_curve_parameter(const stp_vars_t v, const char *parameter)
 void
 stp_set_int_parameter(stp_vars_t v, const char *parameter, int ival)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_INT];
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_INT];
   value_t *val;
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (item)
     {
-      val = (value_t *) stp_list_item_get_data(item);
+      val = (value_t *) stpi_list_item_get_data(item);
     }
   else
     {
-      val = stp_malloc(sizeof(value_t));
-      val->name = stp_strdup(parameter);
+      val = stpi_malloc(sizeof(value_t));
+      val->name = stpi_strdup(parameter);
       val->typ = STP_PARAMETER_TYPE_INT;
-      stp_list_item_create(list, NULL, val);
+      stpi_list_item_create(list, NULL, val);
     }
   val->value.ival = ival;
-  stp_set_verified(v, 0);
+  stpi_set_verified(v, 0);
 }
 
 void
 stp_set_default_int_parameter(stp_vars_t v, const char *parameter, int ival)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_INT];
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_INT];
   value_t *val;
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (!item)
     {
-      val = stp_malloc(sizeof(value_t));
-      val->name = stp_strdup(parameter);
+      val = stpi_malloc(sizeof(value_t));
+      val->name = stpi_strdup(parameter);
       val->typ = STP_PARAMETER_TYPE_INT;
-      stp_list_item_create(list, NULL, val);
+      stpi_list_item_create(list, NULL, val);
       val->value.ival = ival;
     }
-  stp_set_verified(v, 0);
+  stpi_set_verified(v, 0);
 }
 
 void
 stp_clear_int_parameter(stp_vars_t v, const char *parameter)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_INT];
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_INT];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (item)
-    stp_list_item_destroy(list, item);
-  stp_set_verified(v, 0);
+    stpi_list_item_destroy(list, item);
+  stpi_set_verified(v, 0);
 }
 
 int
 stp_get_int_parameter(const stp_vars_t v, const char *parameter)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_INT];
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_INT];
   value_t *val;
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (item)
     {
-      val = (value_t *) stp_list_item_get_data(item);
+      val = (value_t *) stpi_list_item_get_data(item);
       return val->value.ival;
     }
   else
@@ -716,71 +722,71 @@ stp_get_int_parameter(const stp_vars_t v, const char *parameter)
 void
 stp_set_boolean_parameter(stp_vars_t v, const char *parameter, int ival)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_BOOLEAN];
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_BOOLEAN];
   value_t *val;
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (item)
     {
-      val = (value_t *) stp_list_item_get_data(item);
+      val = (value_t *) stpi_list_item_get_data(item);
     }
   else
     {
-      val = stp_malloc(sizeof(value_t));
-      val->name = stp_strdup(parameter);
+      val = stpi_malloc(sizeof(value_t));
+      val->name = stpi_strdup(parameter);
       val->typ = STP_PARAMETER_TYPE_BOOLEAN;
-      stp_list_item_create(list, NULL, val);
+      stpi_list_item_create(list, NULL, val);
     }
   if (ival)
     val->value.ival = 1;
   else
     val->value.ival = 0;
-  stp_set_verified(v, 0);
+  stpi_set_verified(v, 0);
 }
 
 void
 stp_set_default_boolean_parameter(stp_vars_t v, const char *parameter,
 				  int ival)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_BOOLEAN];
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_BOOLEAN];
   value_t *val;
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (!item)
     {
-      val = stp_malloc(sizeof(value_t));
-      val->name = stp_strdup(parameter);
+      val = stpi_malloc(sizeof(value_t));
+      val->name = stpi_strdup(parameter);
       val->typ = STP_PARAMETER_TYPE_BOOLEAN;
-      stp_list_item_create(list, NULL, val);
+      stpi_list_item_create(list, NULL, val);
       if (ival)
 	val->value.ival = 1;
       else
 	val->value.ival = 0;
     }
-  stp_set_verified(v, 0);
+  stpi_set_verified(v, 0);
 }
 
 void
 stp_clear_boolean_parameter(stp_vars_t v, const char *parameter)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_BOOLEAN];
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_BOOLEAN];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (item)
-    stp_list_item_destroy(list, item);
-  stp_set_verified(v, 0);
+    stpi_list_item_destroy(list, item);
+  stpi_set_verified(v, 0);
 }
 
 int
 stp_get_boolean_parameter(const stp_vars_t v, const char *parameter)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_BOOLEAN];
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_BOOLEAN];
   value_t *val;
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (item)
     {
-      val = (value_t *) stp_list_item_get_data(item);
+      val = (value_t *) stpi_list_item_get_data(item);
       return val->value.ival;
     }
   else
@@ -790,65 +796,65 @@ stp_get_boolean_parameter(const stp_vars_t v, const char *parameter)
 void
 stp_set_float_parameter(stp_vars_t v, const char *parameter, double dval)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_DOUBLE];
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_DOUBLE];
   value_t *val;
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (item)
     {
-      val = (value_t *) stp_list_item_get_data(item);
+      val = (value_t *) stpi_list_item_get_data(item);
     }
   else
     {
-      val = stp_malloc(sizeof(value_t));
-      val->name = stp_strdup(parameter);
+      val = stpi_malloc(sizeof(value_t));
+      val->name = stpi_strdup(parameter);
       val->typ = STP_PARAMETER_TYPE_DOUBLE;
-      stp_list_item_create(list, NULL, val);
+      stpi_list_item_create(list, NULL, val);
     }
   val->value.dval = dval;
-  stp_set_verified(v, 0);
+  stpi_set_verified(v, 0);
 }
 
 void
 stp_set_default_float_parameter(stp_vars_t v, const char *parameter,
 				double dval)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_DOUBLE];
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_DOUBLE];
   value_t *val;
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (!item)
     {
-      val = stp_malloc(sizeof(value_t));
-      val->name = stp_strdup(parameter);
+      val = stpi_malloc(sizeof(value_t));
+      val->name = stpi_strdup(parameter);
       val->typ = STP_PARAMETER_TYPE_DOUBLE;
-      stp_list_item_create(list, NULL, val);
+      stpi_list_item_create(list, NULL, val);
       val->value.dval = dval;
     }
-  stp_set_verified(v, 0);
+  stpi_set_verified(v, 0);
 }
 
 void
 stp_clear_float_parameter(stp_vars_t v, const char *parameter)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_DOUBLE];
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_DOUBLE];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (item)
-    stp_list_item_destroy(list, item);
-  stp_set_verified(v, 0);
+    stpi_list_item_destroy(list, item);
+  stpi_set_verified(v, 0);
 }
 
 double
 stp_get_float_parameter(const stp_vars_t v, const char *parameter)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_DOUBLE];
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_DOUBLE];
   value_t *val;
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   if (item)
     {
-      val = (value_t *) stp_list_item_get_data(item);
+      val = (value_t *) stpi_list_item_get_data(item);
       return val->value.dval;
     }
   else
@@ -867,68 +873,68 @@ stp_scale_float_parameter(const stp_vars_t v, const char *parameter,
 int
 stp_check_string_parameter(const stp_vars_t v, const char *parameter)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_STRING_LIST];
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_STRING_LIST];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   return item ? 1 : 0;
 }
 
 int
 stp_check_file_parameter(const stp_vars_t v, const char *parameter)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   return item ? 1 : 0;
 }
 
 int
 stp_check_float_parameter(const stp_vars_t v, const char *parameter)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_DOUBLE];
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_DOUBLE];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   return item ? 1 : 0;
 }
 
 int
 stp_check_int_parameter(const stp_vars_t v, const char *parameter)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_INT];
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_INT];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   return item ? 1 : 0;
 }
 
 int
 stp_check_boolean_parameter(const stp_vars_t v, const char *parameter)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_BOOLEAN];
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_BOOLEAN];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   return item ? 1 : 0;
 }
 
 int
 stp_check_curve_parameter(const stp_vars_t v, const char *parameter)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_CURVE];
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_CURVE];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   return item ? 1 : 0;
 }
 
 int
 stp_check_raw_parameter(const stp_vars_t v, const char *parameter)
 {
-  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
-  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_RAW];
-  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_RAW];
+  stpi_list_item_t *item = stpi_list_get_item_by_name(list, parameter);
   return item ? 1 : 0;
 }
 
 void
-stp_fill_parameter_settings(stp_parameter_t *desc,
+stpi_fill_parameter_settings(stp_parameter_t *desc,
 			    const stp_parameter_t *param)
 {
   if (param)
@@ -949,33 +955,33 @@ void
 stp_vars_copy(stp_vars_t vd, const stp_vars_t vs)
 {
   int i;
-  stp_internal_vars_t *vvd = (stp_internal_vars_t *)vd;
-  const stp_internal_vars_t *vvs = (const stp_internal_vars_t *)vs;
+  stpi_internal_vars_t *vvd = (stpi_internal_vars_t *)vd;
+  const stpi_internal_vars_t *vvs = (const stpi_internal_vars_t *)vs;
 
   if (vs == vd)
     return;
   stp_set_driver(vd, stp_get_driver(vs));
-  if (stp_get_copy_driver_data_func(vs))
-    stp_set_driver_data(vd, (stp_get_copy_driver_data_func(vs))(vs));
+  if (stpi_get_copy_driver_data_func(vs))
+    stpi_set_driver_data(vd, (stpi_get_copy_driver_data_func(vs))(vs));
   else
-    stp_set_driver_data(vd, stp_get_driver_data(vs));
-  if (stp_get_copy_dither_data_func(vs))
-    stp_set_dither_data(vd, (stp_get_copy_dither_data_func(vs))(vs));
+    stpi_set_driver_data(vd, stpi_get_driver_data(vs));
+  if (stpi_get_copy_dither_data_func(vs))
+    stpi_set_dither_data(vd, (stpi_get_copy_dither_data_func(vs))(vs));
   else
-    stp_set_dither_data(vd, stp_get_dither_data(vs));
-  if (stp_get_copy_color_data_func(vs))
-    stp_set_color_data(vd, (stp_get_copy_color_data_func(vs))(vs));
+    stpi_set_dither_data(vd, stpi_get_dither_data(vs));
+  if (stpi_get_copy_color_data_func(vs))
+    stpi_set_color_data(vd, (stpi_get_copy_color_data_func(vs))(vs));
   else
-    stp_set_color_data(vd, stp_get_color_data(vs));
+    stpi_set_color_data(vd, stpi_get_color_data(vs));
   for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
     {
-      stp_list_destroy(vvd->params[i]);
+      stpi_list_destroy(vvd->params[i]);
       vvd->params[i] = copy_value_list(vvs->params[i]);
     }
 
-  stp_set_copy_driver_data_func(vd, stp_get_copy_driver_data_func(vs));
-  stp_set_copy_dither_data_func(vd, stp_get_copy_dither_data_func(vs));
-  stp_set_copy_color_data_func(vd, stp_get_copy_color_data_func(vs));
+  stpi_set_copy_driver_data_func(vd, stpi_get_copy_driver_data_func(vs));
+  stpi_set_copy_dither_data_func(vd, stpi_get_copy_dither_data_func(vs));
+  stpi_set_copy_color_data_func(vd, stpi_get_copy_color_data_func(vs));
   stp_set_output_type(vd, stp_get_output_type(vs));
   stp_set_left(vd, stp_get_left(vs));
   stp_set_top(vd, stp_get_top(vs));
@@ -984,12 +990,12 @@ stp_vars_copy(stp_vars_t vd, const stp_vars_t vs)
   stp_set_page_width(vd, stp_get_page_width(vs));
   stp_set_page_height(vd, stp_get_page_height(vs));
   stp_set_input_color_model(vd, stp_get_input_color_model(vd));
-  stp_set_output_color_model(vd, stp_get_output_color_model(vd));
+  stpi_set_output_color_model(vd, stpi_get_output_color_model(vd));
   stp_set_outdata(vd, stp_get_outdata(vs));
   stp_set_errdata(vd, stp_get_errdata(vs));
   stp_set_outfunc(vd, stp_get_outfunc(vs));
   stp_set_errfunc(vd, stp_get_errfunc(vs));
-  stp_set_verified(vd, stp_get_verified(vs));
+  stpi_set_verified(vd, stpi_get_verified(vs));
 }
 
 stp_vars_t
@@ -1063,27 +1069,27 @@ stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p)
 }
 
 static const char *
-param_namefunc(const stp_list_item_t *item)
+param_namefunc(const stpi_list_item_t *item)
 {
   const stp_parameter_t *param =
-    (const stp_parameter_t *) stp_list_item_get_data(item);
+    (const stp_parameter_t *) stpi_list_item_get_data(item);
   return param->name;
 }
 
 static const char *
-param_longnamefunc(const stp_list_item_t *item)
+param_longnamefunc(const stpi_list_item_t *item)
 {
   const stp_parameter_t *param =
-    (const stp_parameter_t *) stp_list_item_get_data(item);
+    (const stp_parameter_t *) stpi_list_item_get_data(item);
   return param->text;
 }
 
 stp_parameter_list_t
 stp_parameter_list_create(void)
 {
-  stp_list_t *ret = stp_list_create();
-  stp_list_set_namefunc(ret, param_namefunc);
-  stp_list_set_long_namefunc(ret, param_longnamefunc);
+  stpi_list_t *ret = stpi_list_create();
+  stpi_list_set_namefunc(ret, param_namefunc);
+  stpi_list_set_long_namefunc(ret, param_longnamefunc);
   return (stp_parameter_list_t) ret;
 }
 
@@ -1091,8 +1097,8 @@ void
 stp_parameter_list_add_param(stp_parameter_list_t list,
 			     const stp_parameter_t *item)
 {
-  stp_list_t *ilist = (stp_list_t *) list;
-  stp_list_item_create(ilist, NULL, (void *) item);
+  stpi_list_t *ilist = (stpi_list_t *) list;
+  stpi_list_item_create(ilist, NULL, (void *) item);
 }
 
 stp_parameter_list_t
@@ -1101,15 +1107,15 @@ stp_get_parameter_list(const stp_vars_t v)
   stp_parameter_list_t ret = stp_parameter_list_create();
   stp_parameter_list_t tmp_list;
 
-  tmp_list = stp_printer_list_parameters(v);
+  tmp_list = stpi_printer_list_parameters(v);
   stp_parameter_list_append(ret, tmp_list);
   stp_parameter_list_free(tmp_list);
 
-  tmp_list = stp_color_list_parameters(v);
+  tmp_list = stpi_color_list_parameters(v);
   stp_parameter_list_append(ret, tmp_list);
   stp_parameter_list_free(tmp_list);
 
-  tmp_list = stp_dither_list_parameters(v);
+  tmp_list = stpi_dither_list_parameters(v);
   stp_parameter_list_append(ret, tmp_list);
   stp_parameter_list_free(tmp_list);
 
@@ -1121,13 +1127,13 @@ stp_describe_parameter(const stp_vars_t v, const char *name,
 		       stp_parameter_t *description)
 {
   description->p_type = STP_PARAMETER_TYPE_INVALID;
-  stp_printer_describe_parameter(v, name, description);
+  stpi_printer_describe_parameter(v, name, description);
   if (description->p_type != STP_PARAMETER_TYPE_INVALID)
     return;
-  stp_color_describe_parameter(v, name, description);
+  stpi_color_describe_parameter(v, name, description);
   if (description->p_type != STP_PARAMETER_TYPE_INVALID)
     return;
-  stp_dither_describe_parameter(v, name, description);
+  stpi_dither_describe_parameter(v, name, description);
 }
 
 void
@@ -1162,17 +1168,17 @@ stp_parameter_find_in_settings(const stp_vars_t v, const char *name)
 size_t
 stp_parameter_list_count(const stp_parameter_list_t list)
 {
-  stp_list_t *ilist = (stp_list_t *)list;
-  return stp_list_get_length(ilist);
+  stpi_list_t *ilist = (stpi_list_t *)list;
+  return stpi_list_get_length(ilist);
 }
 
 const stp_parameter_t *
 stp_parameter_find(const stp_parameter_list_t list, const char *name)
 {
-  stp_list_t *ilist = (stp_list_t *)list;
-  stp_list_item_t *item = stp_list_get_item_by_name(ilist, name);
+  stpi_list_t *ilist = (stpi_list_t *)list;
+  stpi_list_item_t *item = stpi_list_get_item_by_name(ilist, name);
   if (item)
-    return (stp_parameter_t *) stp_list_item_get_data(item);
+    return (stp_parameter_t *) stpi_list_item_get_data(item);
   else
     return NULL;
 }
@@ -1180,28 +1186,28 @@ stp_parameter_find(const stp_parameter_list_t list, const char *name)
 const stp_parameter_t *
 stp_parameter_list_param(const stp_parameter_list_t list, size_t item)
 {
-  stp_list_t *ilist = (stp_list_t *)list;
-  if (item >= stp_list_get_length(ilist))
+  stpi_list_t *ilist = (stpi_list_t *)list;
+  if (item >= stpi_list_get_length(ilist))
     return NULL;
   else
     return (stp_parameter_t *)
-      stp_list_item_get_data(stp_list_get_item_by_index(ilist, item));
+      stpi_list_item_get_data(stpi_list_get_item_by_index(ilist, item));
 }
 
 void
 stp_parameter_list_free(stp_parameter_list_t list)
 {
-  stp_list_destroy((stp_list_t *)list);
+  stpi_list_destroy((stpi_list_t *)list);
 }
 
 stp_parameter_list_t
 stp_parameter_list_copy(const stp_parameter_list_t list)
 {
-  stp_list_t *ret = stp_parameter_list_create();
+  stpi_list_t *ret = stp_parameter_list_create();
   int i;
   size_t count = stp_parameter_list_count(list);
   for (i = 0; i < count; i++)
-    stp_list_item_create(ret, NULL, (void *)stp_parameter_list_param(list, i));
+    stpi_list_item_create(ret, NULL, (void *)stp_parameter_list_param(list, i));
   return ret;
 }
 
@@ -1210,9 +1216,9 @@ stp_parameter_list_append(stp_parameter_list_t list,
 			  const stp_parameter_list_t append)
 {
   int i;
-  stp_list_t *ilist = (stp_list_t *)list;
+  stpi_list_t *ilist = (stpi_list_t *)list;
   size_t count = stp_parameter_list_count(append);
   for (i = 0; i < count; i++)
-    stp_list_item_create(ilist, NULL,
+    stpi_list_item_create(ilist, NULL,
 			 (void *) stp_parameter_list_param(append, i));
 }
