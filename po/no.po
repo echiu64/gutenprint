@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 0.3\n"
-"POT-Creation-Date: 2002-08-13 21:34-0400\n"
+"POT-Creation-Date: 2002-08-22 19:51-0400\n"
 "PO-Revision-Date: 2002-07-01 19:36+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian/Bokmaal <no@li.org>\n"
@@ -72,15 +72,15 @@ msgstr "%s: flagget `-W %s' er flertydig\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: flagget `-W %s' tillater ikke argumenter\n"
 
-#: src/main/print-canon.c:1310 src/main/print-escp2-data.c:2096
-#: src/main/print-escp2-data.c:2155 src/main/print-escp2-data.c:2214
-#: src/main/print-escp2-data.c:2273 src/main/print-lexmark.c:909
+#: src/main/print-canon.c:1310 src/main/print-escp2-data.c:2179
+#: src/main/print-escp2-data.c:2238 src/main/print-escp2-data.c:2297
+#: src/main/print-escp2-data.c:2356 src/main/print-lexmark.c:909
 msgid "Plain Paper"
 msgstr "Vanlig papir"
 
-#: src/main/print-canon.c:1311 src/main/print-escp2-data.c:2108
-#: src/main/print-escp2-data.c:2167 src/main/print-escp2-data.c:2226
-#: src/main/print-escp2-data.c:2285 src/main/print-lexmark.c:915
+#: src/main/print-canon.c:1311 src/main/print-escp2-data.c:2191
+#: src/main/print-escp2-data.c:2250 src/main/print-escp2-data.c:2309
+#: src/main/print-escp2-data.c:2368 src/main/print-lexmark.c:915
 msgid "Transparencies"
 msgstr "Gjennomsiktighet"
 
@@ -120,9 +120,9 @@ msgstr "Glansete fotokort"
 msgid "Photo Paper Pro"
 msgstr "Profesjonelt fotopapir"
 
-#: src/main/print-canon.c:1321 src/main/print-escp2-data.c:2142
-#: src/main/print-escp2-data.c:2201 src/main/print-escp2-data.c:2260
-#: src/main/print-escp2-data.c:2319 src/main/print-lexmark.c:945
+#: src/main/print-canon.c:1321 src/main/print-escp2-data.c:2225
+#: src/main/print-escp2-data.c:2284 src/main/print-escp2-data.c:2343
+#: src/main/print-escp2-data.c:2402 src/main/print-lexmark.c:945
 msgid "Other"
 msgstr "Annet"
 
@@ -138,7 +138,7 @@ msgstr "Manuell med pause"
 msgid "Manual without Pause"
 msgstr "Manuell uten pause"
 
-#: src/escputil/escputil.c:584 src/main/print-canon.c:1688
+#: src/escputil/escputil.c:600 src/main/print-canon.c:1688
 #: src/main/print-lexmark.c:666
 msgid "Black"
 msgstr "Sort"
@@ -185,8 +185,8 @@ msgstr ""
 msgid "EvenTone"
 msgstr ""
 
-#: src/main/print-escp2-data.c:1882 src/main/print-escp2-data.c:1892
-#: src/main/print-escp2-data.c:1902 src/main/print-lexmark.c:651
+#: src/main/print-escp2-data.c:1965 src/main/print-escp2-data.c:1975
+#: src/main/print-escp2-data.c:1985 src/main/print-lexmark.c:651
 #: src/main/print-lexmark.c:731
 msgid "Three Color Composite"
 msgstr ""
@@ -195,429 +195,429 @@ msgstr ""
 #. *                                                        h_catridge_offset
 #. *                                                           h_direction_offset
 #. *                                                               head_offset
-#: src/main/print-escp2-data.c:1912 src/main/print-escp2-data.c:1922
-#: src/main/print-escp2-data.c:1932 src/main/print-lexmark.c:646
+#: src/main/print-escp2-data.c:1995 src/main/print-escp2-data.c:2005
+#: src/main/print-escp2-data.c:2015 src/main/print-lexmark.c:646
 #: src/main/print-lexmark.c:726
 msgid "Four Color Standard"
 msgstr ""
 
-#: src/main/print-escp2-data.c:1942 src/main/print-lexmark.c:656
+#: src/main/print-escp2-data.c:2025 src/main/print-lexmark.c:656
 #: src/main/print-lexmark.c:736
 msgid "Six Color Photo"
 msgstr ""
 
-#: src/main/print-escp2-data.c:1952 src/main/print-lexmark.c:661
+#: src/main/print-escp2-data.c:2035 src/main/print-lexmark.c:661
 #: src/main/print-lexmark.c:741
 msgid "Five Color Photo Composite"
 msgstr ""
 
-#: src/main/print-escp2-data.c:1962
+#: src/main/print-escp2-data.c:2045
 msgid "Seven Color Enhanced"
 msgstr ""
 
-#: src/main/print-escp2-data.c:1972
+#: src/main/print-escp2-data.c:2055
 msgid "Six Color Enhanced Composite"
 msgstr ""
 
-#: src/main/print-escp2-data.c:1982
+#: src/main/print-escp2-data.c:2065
 #, fuzzy
 msgid "Seven Color Photo"
 msgstr "Stylus Color Pro"
 
-#: src/main/print-escp2-data.c:1992
+#: src/main/print-escp2-data.c:2075
 #, fuzzy
 msgid "Two Level Grayscale"
 msgstr "Gråtoner"
 
-#: src/main/print-escp2-data.c:2001 src/main/print-escp2-data.c:2010
+#: src/main/print-escp2-data.c:2084 src/main/print-escp2-data.c:2093
 msgid "Quadtone"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2099 src/main/print-escp2-data.c:2158
-#: src/main/print-escp2-data.c:2217 src/main/print-escp2-data.c:2276
+#: src/main/print-escp2-data.c:2182 src/main/print-escp2-data.c:2241
+#: src/main/print-escp2-data.c:2300 src/main/print-escp2-data.c:2359
 #, fuzzy
 msgid "Plain Paper Fast Load"
 msgstr "Vanlig papir"
 
 #. 7.25 * 10.5in
-#: src/main/print-escp2-data.c:2102 src/main/print-escp2-data.c:2161
-#: src/main/print-escp2-data.c:2220 src/main/print-escp2-data.c:2279
+#: src/main/print-escp2-data.c:2185 src/main/print-escp2-data.c:2244
+#: src/main/print-escp2-data.c:2303 src/main/print-escp2-data.c:2362
 #: src/main/print-util.c:531
 msgid "Postcard"
 msgstr "Postkort"
 
-#: src/main/print-escp2-data.c:2105 src/main/print-escp2-data.c:2164
-#: src/main/print-escp2-data.c:2223 src/main/print-escp2-data.c:2282
+#: src/main/print-escp2-data.c:2188 src/main/print-escp2-data.c:2247
+#: src/main/print-escp2-data.c:2306 src/main/print-escp2-data.c:2365
 #: src/main/print-lexmark.c:912
 msgid "Glossy Film"
 msgstr "Glanset film"
 
-#: src/main/print-escp2-data.c:2111 src/main/print-escp2-data.c:2170
-#: src/main/print-escp2-data.c:2229 src/main/print-escp2-data.c:2288
+#: src/main/print-escp2-data.c:2194 src/main/print-escp2-data.c:2253
+#: src/main/print-escp2-data.c:2312 src/main/print-escp2-data.c:2371
 #: src/main/print-lexmark.c:918
 msgid "Envelopes"
 msgstr "Konvolutter"
 
-#: src/main/print-escp2-data.c:2114 src/main/print-escp2-data.c:2173
-#: src/main/print-escp2-data.c:2232 src/main/print-escp2-data.c:2291
+#: src/main/print-escp2-data.c:2197 src/main/print-escp2-data.c:2256
+#: src/main/print-escp2-data.c:2315 src/main/print-escp2-data.c:2374
 msgid "Back Light Film"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2117 src/main/print-escp2-data.c:2176
-#: src/main/print-escp2-data.c:2235 src/main/print-escp2-data.c:2294
+#: src/main/print-escp2-data.c:2200 src/main/print-escp2-data.c:2259
+#: src/main/print-escp2-data.c:2318 src/main/print-escp2-data.c:2377
 #: src/main/print-lexmark.c:921
 msgid "Matte Paper"
 msgstr "Matt papir"
 
-#: src/main/print-escp2-data.c:2120 src/main/print-escp2-data.c:2179
-#: src/main/print-escp2-data.c:2238 src/main/print-escp2-data.c:2297
+#: src/main/print-escp2-data.c:2203 src/main/print-escp2-data.c:2262
+#: src/main/print-escp2-data.c:2321 src/main/print-escp2-data.c:2380
 #: src/main/print-lexmark.c:924
 msgid "Inkjet Paper"
 msgstr "Papir for blekkskriver"
 
-#: src/main/print-escp2-data.c:2123 src/main/print-escp2-data.c:2182
-#: src/main/print-escp2-data.c:2241 src/main/print-escp2-data.c:2300
+#: src/main/print-escp2-data.c:2206 src/main/print-escp2-data.c:2265
+#: src/main/print-escp2-data.c:2324 src/main/print-escp2-data.c:2383
 #: src/main/print-lexmark.c:927
 msgid "Photo Quality Inkjet Paper"
 msgstr "Papir med fotokvalitet for blekkskriver"
 
-#: src/main/print-escp2-data.c:2126 src/main/print-escp2-data.c:2185
-#: src/main/print-escp2-data.c:2244 src/main/print-escp2-data.c:2303
+#: src/main/print-escp2-data.c:2209 src/main/print-escp2-data.c:2268
+#: src/main/print-escp2-data.c:2327 src/main/print-escp2-data.c:2386
 #: src/main/print-lexmark.c:930
 msgid "Photo Paper"
 msgstr "Fotopapir"
 
-#: src/main/print-escp2-data.c:2129 src/main/print-escp2-data.c:2188
-#: src/main/print-escp2-data.c:2247 src/main/print-escp2-data.c:2306
+#: src/main/print-escp2-data.c:2212 src/main/print-escp2-data.c:2271
+#: src/main/print-escp2-data.c:2330 src/main/print-escp2-data.c:2389
 #: src/main/print-lexmark.c:933
 msgid "Premium Glossy Photo Paper"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2133 src/main/print-escp2-data.c:2192
-#: src/main/print-escp2-data.c:2251 src/main/print-escp2-data.c:2310
+#: src/main/print-escp2-data.c:2216 src/main/print-escp2-data.c:2275
+#: src/main/print-escp2-data.c:2334 src/main/print-escp2-data.c:2393
 #: src/main/print-lexmark.c:936
 msgid "Premium Luster Photo Paper"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2136 src/main/print-escp2-data.c:2195
-#: src/main/print-escp2-data.c:2254 src/main/print-escp2-data.c:2313
+#: src/main/print-escp2-data.c:2219 src/main/print-escp2-data.c:2278
+#: src/main/print-escp2-data.c:2337 src/main/print-escp2-data.c:2396
 #: src/main/print-lexmark.c:939
 msgid "Photo Quality Glossy Paper"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2139 src/main/print-escp2-data.c:2198
-#: src/main/print-escp2-data.c:2257 src/main/print-escp2-data.c:2316
+#: src/main/print-escp2-data.c:2222 src/main/print-escp2-data.c:2281
+#: src/main/print-escp2-data.c:2340 src/main/print-escp2-data.c:2399
 #: src/main/print-lexmark.c:942
 msgid "Ilford Heavy Paper"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2557 src/main/print-escp2-data.c:2559
-#: src/main/print-escp2-data.c:2644 src/main/print-escp2-data.c:2646
-#: src/main/print-escp2-data.c:2719
+#: src/main/print-escp2-data.c:2646 src/main/print-escp2-data.c:2648
+#: src/main/print-escp2-data.c:2733 src/main/print-escp2-data.c:2735
+#: src/main/print-escp2-data.c:2808
 msgid "360 x 90 DPI Fast Economy Draft"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2562 src/main/print-escp2-data.c:2564
-#: src/main/print-escp2-data.c:2649 src/main/print-escp2-data.c:2651
-#: src/main/print-escp2-data.c:2722
+#: src/main/print-escp2-data.c:2651 src/main/print-escp2-data.c:2653
+#: src/main/print-escp2-data.c:2738 src/main/print-escp2-data.c:2740
+#: src/main/print-escp2-data.c:2811
 msgid "360 x 120 DPI Economy Draft"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2567 src/main/print-escp2-data.c:2569
-#: src/main/print-escp2-data.c:2654 src/main/print-escp2-data.c:2656
-#: src/main/print-escp2-data.c:2725
+#: src/main/print-escp2-data.c:2656 src/main/print-escp2-data.c:2658
+#: src/main/print-escp2-data.c:2743 src/main/print-escp2-data.c:2745
+#: src/main/print-escp2-data.c:2814
 msgid "180 DPI Economy Draft"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2572 src/main/print-escp2-data.c:2574
-#: src/main/print-escp2-data.c:2659 src/main/print-escp2-data.c:2661
-#: src/main/print-escp2-data.c:2728
+#: src/main/print-escp2-data.c:2661 src/main/print-escp2-data.c:2663
+#: src/main/print-escp2-data.c:2748 src/main/print-escp2-data.c:2750
+#: src/main/print-escp2-data.c:2817
 msgid "360 x 240 DPI Draft"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2577 src/main/print-escp2-data.c:2579
-#: src/main/print-escp2-data.c:2664 src/main/print-escp2-data.c:2666
-#: src/main/print-escp2-data.c:2731
+#: src/main/print-escp2-data.c:2666 src/main/print-escp2-data.c:2668
+#: src/main/print-escp2-data.c:2753 src/main/print-escp2-data.c:2755
+#: src/main/print-escp2-data.c:2820
 msgid "360 x 180 DPI Draft"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2582 src/main/print-escp2-data.c:2590
-#: src/main/print-escp2-data.c:2669 src/main/print-escp2-data.c:2673
-#: src/main/print-escp2-data.c:2738
+#: src/main/print-escp2-data.c:2671 src/main/print-escp2-data.c:2679
+#: src/main/print-escp2-data.c:2758 src/main/print-escp2-data.c:2762
+#: src/main/print-escp2-data.c:2827
 #, fuzzy
 msgid "360 DPI"
 msgstr "600 DPI"
 
-#: src/main/print-escp2-data.c:2584 src/main/print-escp2-data.c:2592
-#: src/main/print-escp2-data.c:2671 src/main/print-escp2-data.c:2675
-#: src/main/print-escp2-data.c:2740
+#: src/main/print-escp2-data.c:2673 src/main/print-escp2-data.c:2681
+#: src/main/print-escp2-data.c:2760 src/main/print-escp2-data.c:2764
+#: src/main/print-escp2-data.c:2829
 msgid "360 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2586 src/main/print-escp2-data.c:2734
+#: src/main/print-escp2-data.c:2675 src/main/print-escp2-data.c:2823
 msgid "360 DPI Microweave"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2588 src/main/print-escp2-data.c:2736
+#: src/main/print-escp2-data.c:2677 src/main/print-escp2-data.c:2825
 msgid "360 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2595 src/main/print-escp2-data.c:2678
-#: src/main/print-escp2-data.c:2755
+#: src/main/print-escp2-data.c:2684 src/main/print-escp2-data.c:2767
+#: src/main/print-escp2-data.c:2844
 #, fuzzy
 msgid "720 x 360 DPI"
 msgstr "2400x600 DPI"
 
-#: src/main/print-escp2-data.c:2597 src/main/print-escp2-data.c:2680
-#: src/main/print-escp2-data.c:2757
+#: src/main/print-escp2-data.c:2686 src/main/print-escp2-data.c:2769
+#: src/main/print-escp2-data.c:2846
 msgid "720 x 360 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2600 src/main/print-escp2-data.c:2776
+#: src/main/print-escp2-data.c:2689 src/main/print-escp2-data.c:2865
 msgid "720 DPI Microweave"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2602 src/main/print-escp2-data.c:2778
+#: src/main/print-escp2-data.c:2691 src/main/print-escp2-data.c:2867
 msgid "720 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2604 src/main/print-escp2-data.c:2683
+#: src/main/print-escp2-data.c:2693 src/main/print-escp2-data.c:2772
 #, fuzzy
 msgid "720 DPI"
 msgstr "1200 DPI"
 
-#: src/main/print-escp2-data.c:2606 src/main/print-escp2-data.c:2685
+#: src/main/print-escp2-data.c:2695 src/main/print-escp2-data.c:2774
 msgid "720 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2608 src/main/print-escp2-data.c:2687
+#: src/main/print-escp2-data.c:2697 src/main/print-escp2-data.c:2776
 msgid "720 DPI High Quality"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2610 src/main/print-escp2-data.c:2689
+#: src/main/print-escp2-data.c:2699 src/main/print-escp2-data.c:2778
 msgid "720 DPI High Quality Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2612 src/main/print-escp2-data.c:2691
+#: src/main/print-escp2-data.c:2701 src/main/print-escp2-data.c:2780
 msgid "720 DPI Highest Quality"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2615 src/main/print-escp2-data.c:2789
+#: src/main/print-escp2-data.c:2704 src/main/print-escp2-data.c:2878
 msgid "1440 x 720 DPI Microweave"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2617 src/main/print-escp2-data.c:2791
+#: src/main/print-escp2-data.c:2706 src/main/print-escp2-data.c:2880
 msgid "1440 x 720 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2619 src/main/print-escp2-data.c:2694
+#: src/main/print-escp2-data.c:2708 src/main/print-escp2-data.c:2783
 #, fuzzy
 msgid "1440 x 720 DPI"
 msgstr "150x150 DPI"
 
-#: src/main/print-escp2-data.c:2621 src/main/print-escp2-data.c:2696
+#: src/main/print-escp2-data.c:2710 src/main/print-escp2-data.c:2785
 msgid "1440 x 720 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2623 src/main/print-escp2-data.c:2698
+#: src/main/print-escp2-data.c:2712 src/main/print-escp2-data.c:2787
 msgid "1440 x 720 DPI Highest Quality"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2626 src/main/print-escp2-data.c:2701
+#: src/main/print-escp2-data.c:2715 src/main/print-escp2-data.c:2790
 #, fuzzy
 msgid "2880 x 720 DPI"
 msgstr "1200 DPI"
 
-#: src/main/print-escp2-data.c:2628 src/main/print-escp2-data.c:2703
+#: src/main/print-escp2-data.c:2717 src/main/print-escp2-data.c:2792
 msgid "2880 x 720 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2631 src/main/print-escp2-data.c:2706
+#: src/main/print-escp2-data.c:2720 src/main/print-escp2-data.c:2795
 #, fuzzy
 msgid "1440 x 1440 DPI"
 msgstr "150x150 DPI"
 
-#: src/main/print-escp2-data.c:2633 src/main/print-escp2-data.c:2708
+#: src/main/print-escp2-data.c:2722 src/main/print-escp2-data.c:2797
 msgid "1440 x 1440 DPI Highest Quality"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2636 src/main/print-escp2-data.c:2711
+#: src/main/print-escp2-data.c:2725 src/main/print-escp2-data.c:2800
 #, fuzzy
 msgid "2880 x 1440 DPI"
 msgstr "150x150 DPI"
 
-#: src/main/print-escp2-data.c:2742
+#: src/main/print-escp2-data.c:2831
 msgid "360 DPI Full Overlap"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2744
+#: src/main/print-escp2-data.c:2833
 msgid "360 DPI Full Overlap Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2746
+#: src/main/print-escp2-data.c:2835
 #, fuzzy
 msgid "360 DPI FOL2"
 msgstr "600 DPI"
 
-#: src/main/print-escp2-data.c:2748
+#: src/main/print-escp2-data.c:2837
 msgid "360 DPI FOL2 Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2750
+#: src/main/print-escp2-data.c:2839
 #, fuzzy
 msgid "360 DPI MW2"
 msgstr "600 DPI"
 
-#: src/main/print-escp2-data.c:2752
+#: src/main/print-escp2-data.c:2841
 msgid "360 DPI MW2 Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2759
+#: src/main/print-escp2-data.c:2848
 msgid "720 x 360 DPI Microweave"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2761
+#: src/main/print-escp2-data.c:2850
 msgid "720 x 360 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2763
+#: src/main/print-escp2-data.c:2852
 #, fuzzy
 msgid "720 x 360 DPI FOL"
 msgstr "1200x600 DPI"
 
-#: src/main/print-escp2-data.c:2765
+#: src/main/print-escp2-data.c:2854
 msgid "720 x 360 DPI FOL Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2767
+#: src/main/print-escp2-data.c:2856
 #, fuzzy
 msgid "720 x 360 DPI FOL2"
 msgstr "2400x600 DPI"
 
-#: src/main/print-escp2-data.c:2769
+#: src/main/print-escp2-data.c:2858
 msgid "720 x 360 DPI FOL2 Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2771
+#: src/main/print-escp2-data.c:2860
 #, fuzzy
 msgid "720 x 360 DPI MW2"
 msgstr "1200x600 DPI"
 
-#: src/main/print-escp2-data.c:2773
+#: src/main/print-escp2-data.c:2862
 msgid "720 x 360 DPI MW2 Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2780
+#: src/main/print-escp2-data.c:2869
 msgid "720 DPI Full Overlap"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2782
+#: src/main/print-escp2-data.c:2871
 msgid "720 DPI Full Overlap Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2784
+#: src/main/print-escp2-data.c:2873
 msgid "720 DPI Four Pass"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2786
+#: src/main/print-escp2-data.c:2875
 msgid "720 DPI Four Pass Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2793
+#: src/main/print-escp2-data.c:2882
 msgid "1440 x 720 DPI FOL"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2795
+#: src/main/print-escp2-data.c:2884
 msgid "1440 x 720 DPI FOL Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2797
+#: src/main/print-escp2-data.c:2886
 msgid "1440 x 720 DPI Four Pass"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2799
+#: src/main/print-escp2-data.c:2888
 msgid "1440 x 720 DPI Four Pass Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2802
+#: src/main/print-escp2-data.c:2891
 msgid "2880 x 720 DPI Microweave"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2804
+#: src/main/print-escp2-data.c:2893
 msgid "2880 x 720 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2806
+#: src/main/print-escp2-data.c:2895
 msgid "2880 x 720 DPI FOL"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2808
+#: src/main/print-escp2-data.c:2897
 msgid "2880 x 720 DPI FOL Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2810
+#: src/main/print-escp2-data.c:2899
 msgid "2880 x 720 DPI Four Pass"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2812
+#: src/main/print-escp2-data.c:2901
 msgid "2880 x 720 DPI Four Pass Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2815
+#: src/main/print-escp2-data.c:2904
 msgid "1440 x 1440 DPI Microweave"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2817
+#: src/main/print-escp2-data.c:2906
 msgid "1440 x 1440 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2819
+#: src/main/print-escp2-data.c:2908
 #, fuzzy
 msgid "1440 x 1440 DPI FOL"
 msgstr "150x150 DPI"
 
-#: src/main/print-escp2-data.c:2821
+#: src/main/print-escp2-data.c:2910
 msgid "1440 x 1440 DPI FOL Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2823
+#: src/main/print-escp2-data.c:2912
 msgid "1440 x 1440 DPI Four Pass"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2825
+#: src/main/print-escp2-data.c:2914
 msgid "1440 x 1440 DPI Four Pass Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2828
+#: src/main/print-escp2-data.c:2917
 msgid "2880 x 1440 DPI Microweave"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2830
+#: src/main/print-escp2-data.c:2919
 msgid "2880 x 1440 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2832
+#: src/main/print-escp2-data.c:2921
 msgid "2880 x 1440 DPI FOL"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2834
+#: src/main/print-escp2-data.c:2923
 msgid "2880 x 1440 DPI FOL Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2836
+#: src/main/print-escp2-data.c:2925
 msgid "2880 x 1440 DPI Four Pass"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2838
+#: src/main/print-escp2-data.c:2927
 msgid "2880 x 1440 DPI Four Pass Unidirectional"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2-data.c:2848
+#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2-data.c:2937
 #: src/main/print-pcl.c:202
 msgid "Standard"
 msgstr "Standard"
 
-#: src/main/print-escp2-data.c:2852
+#: src/main/print-escp2-data.c:2941
 msgid "Roll Feed"
 msgstr ""
 
@@ -1600,339 +1600,419 @@ msgid "Stylus C40ux"
 msgstr "Stylus C40ux"
 
 #: src/escputil/escputil.c:203
+#, fuzzy
+msgid "Stylus C41sx"
+msgstr "Stylus C40sx"
+
+#: src/escputil/escputil.c:204
+#, fuzzy
+msgid "Stylus C41ux"
+msgstr "Stylus C40ux"
+
+#: src/escputil/escputil.c:205
+#, fuzzy
+msgid "Stylus C42sx"
+msgstr "Stylus C40sx"
+
+#: src/escputil/escputil.c:206
+#, fuzzy
+msgid "Stylus C42ux"
+msgstr "Stylus C40ux"
+
+#: src/escputil/escputil.c:207
 msgid "Stylus C60"
 msgstr "Stylus C60"
 
-#: src/escputil/escputil.c:204
+#: src/escputil/escputil.c:208
+#, fuzzy
+msgid "Stylus C61"
+msgstr "Stylus C60"
+
+#: src/escputil/escputil.c:209
+#, fuzzy
+msgid "Stylus C62"
+msgstr "Stylus C60"
+
+#: src/escputil/escputil.c:210
 msgid "Stylus C70"
 msgstr "Stylus C70"
 
-#: src/escputil/escputil.c:205
+#: src/escputil/escputil.c:211
 msgid "Stylus C80"
 msgstr "Stylus C80"
 
-#: src/escputil/escputil.c:206
+#: src/escputil/escputil.c:212
+#, fuzzy
+msgid "Stylus C82"
+msgstr "Stylus C80"
+
+#: src/escputil/escputil.c:213
 msgid "Stylus Color"
 msgstr "Stylus Color"
 
-#: src/escputil/escputil.c:207
+#: src/escputil/escputil.c:214
 msgid "Stylus Color Pro"
 msgstr "Stylus Color Pro"
 
-#: src/escputil/escputil.c:208
+#: src/escputil/escputil.c:215
 msgid "Stylus Color Pro XL"
 msgstr "Stylus Color Pro XL"
 
-#: src/escputil/escputil.c:209
+#: src/escputil/escputil.c:216
 msgid "Stylus Color 400"
 msgstr "Stylus Color 400"
 
-#: src/escputil/escputil.c:210
+#: src/escputil/escputil.c:217
 msgid "Stylus Color 440"
 msgstr "Stylus Color 440"
 
-#: src/escputil/escputil.c:211
+#: src/escputil/escputil.c:218
 msgid "Stylus Color 460"
 msgstr "Stylus Color 460"
 
-#: src/escputil/escputil.c:212
+#: src/escputil/escputil.c:219
 msgid "Stylus Color 480"
 msgstr "Stylus Color 480"
 
-#: src/escputil/escputil.c:213
+#: src/escputil/escputil.c:220
 msgid "Stylus Color 500"
 msgstr "Stylus Color 500"
 
-#: src/escputil/escputil.c:214
+#: src/escputil/escputil.c:221
 msgid "Stylus Color 580"
 msgstr "Stylus Color 580"
 
-#: src/escputil/escputil.c:215
+#: src/escputil/escputil.c:222
 msgid "Stylus Color 600"
 msgstr "Stylus Color 600"
 
-#: src/escputil/escputil.c:216
+#: src/escputil/escputil.c:223
 msgid "Stylus Color 640"
 msgstr "Stylus Color 640"
 
-#: src/escputil/escputil.c:217
+#: src/escputil/escputil.c:224
 msgid "Stylus Color 660"
 msgstr "Stylus Color 660"
 
-#: src/escputil/escputil.c:218
+#: src/escputil/escputil.c:225
 msgid "Stylus Color 670"
 msgstr "Stylus Color 670"
 
-#: src/escputil/escputil.c:219
+#: src/escputil/escputil.c:226
 msgid "Stylus Color 680"
 msgstr "Stylus Color 680"
 
-#: src/escputil/escputil.c:220
+#: src/escputil/escputil.c:227
 msgid "Stylus Color 740"
 msgstr "Stylus Color 740"
 
-#: src/escputil/escputil.c:221
+#: src/escputil/escputil.c:228
 msgid "Stylus Color 760"
 msgstr "Stylus Color 760"
 
-#: src/escputil/escputil.c:222
+#: src/escputil/escputil.c:229
 msgid "Stylus Color 777"
 msgstr "Stylus Color 770"
 
-#: src/escputil/escputil.c:223
+#: src/escputil/escputil.c:230
 msgid "Stylus Color 800"
 msgstr "Stylus Color 800"
 
-#: src/escputil/escputil.c:224
+#: src/escputil/escputil.c:231
 msgid "Stylus Color 850"
 msgstr "Stylus Color 850"
 
-#: src/escputil/escputil.c:225
+#: src/escputil/escputil.c:232
 msgid "Stylus Color 860"
 msgstr "Stylus Color 860"
 
-#: src/escputil/escputil.c:226
+#: src/escputil/escputil.c:233
 msgid "Stylus Color 880"
 msgstr "Stylus Color 880"
 
-#: src/escputil/escputil.c:227
+#: src/escputil/escputil.c:234
 msgid "Stylus Color 83"
 msgstr "Stylus Color 83"
 
-#: src/escputil/escputil.c:228
+#: src/escputil/escputil.c:235
 msgid "Stylus Color 900"
 msgstr "Stylus Color 900"
 
-#: src/escputil/escputil.c:229
+#: src/escputil/escputil.c:236
 msgid "Stylus Color 980"
 msgstr "Stylus Color 980"
 
-#: src/escputil/escputil.c:230
+#: src/escputil/escputil.c:237
 msgid "Stylus Color 1160"
 msgstr "Stylus Color 1160"
 
-#: src/escputil/escputil.c:231
+#: src/escputil/escputil.c:238
 msgid "Stylus Color 1500"
 msgstr "Stylus Color 1500"
 
-#: src/escputil/escputil.c:232
+#: src/escputil/escputil.c:239
 msgid "Stylus Color 1520"
 msgstr "Stylus Color 1520"
 
-#: src/escputil/escputil.c:233
+#: src/escputil/escputil.c:240
 msgid "Stylus Color 3000"
 msgstr "Stylus Color 3000"
 
-#: src/escputil/escputil.c:234
+#: src/escputil/escputil.c:241
 msgid "Stylus Photo"
 msgstr "Stylus Photo"
 
-#: src/escputil/escputil.c:235
+#: src/escputil/escputil.c:242
 msgid "Stylus Photo 700"
 msgstr "Stylus Photo 700"
 
-#: src/escputil/escputil.c:236
+#: src/escputil/escputil.c:243
 msgid "Stylus Photo EX"
 msgstr "Stylus Photo EX"
 
-#: src/escputil/escputil.c:237
+#: src/escputil/escputil.c:244
 msgid "Stylus Photo 720"
 msgstr "Stylus Photo 720"
 
-#: src/escputil/escputil.c:238
+#: src/escputil/escputil.c:245
 msgid "Stylus Photo 750"
 msgstr "Stylus Photo 750"
 
-#: src/escputil/escputil.c:239
+#: src/escputil/escputil.c:246
 msgid "Stylus Photo 780"
 msgstr "Stylus Photo 780"
 
-#: src/escputil/escputil.c:240
+#: src/escputil/escputil.c:247
 msgid "Stylus Photo 785"
 msgstr "Stylus Photo 785"
 
-#: src/escputil/escputil.c:241
+#: src/escputil/escputil.c:248
 msgid "Stylus Photo 790"
 msgstr "Stylus Photo 790"
 
-#: src/escputil/escputil.c:242
+#: src/escputil/escputil.c:249
 msgid "Stylus Photo 810"
 msgstr "Stylus Photo 810"
 
-#: src/escputil/escputil.c:243
+#: src/escputil/escputil.c:250
 msgid "Stylus Photo 820"
 msgstr "Stylus Photo 820"
 
-#: src/escputil/escputil.c:244
+#: src/escputil/escputil.c:251
+#, fuzzy
+msgid "Stylus Photo 830"
+msgstr "Stylus Photo 780"
+
+#: src/escputil/escputil.c:252
 msgid "Stylus Photo 870"
 msgstr "Stylus Photo 870"
 
-#: src/escputil/escputil.c:245
+#: src/escputil/escputil.c:253
 msgid "Stylus Photo 875"
 msgstr "Stylus Photo 875"
 
-#: src/escputil/escputil.c:246
+#: src/escputil/escputil.c:254
 msgid "Stylus Photo 890"
 msgstr "Stylus Photo 890"
 
-#: src/escputil/escputil.c:247
+#: src/escputil/escputil.c:255
 msgid "Stylus Photo 895"
 msgstr "Stylus Photo 895"
 
-#: src/escputil/escputil.c:248
+#: src/escputil/escputil.c:256
+#, fuzzy
+msgid "Stylus Photo 915"
+msgstr "Stylus Photo 895"
+
+#: src/escputil/escputil.c:257
+#, fuzzy
+msgid "Stylus Photo 925"
+msgstr "Stylus Photo 895"
+
+#: src/escputil/escputil.c:258
+#, fuzzy
+msgid "Stylus Photo 950"
+msgstr "Stylus Photo 750"
+
+#: src/escputil/escputil.c:259
+#, fuzzy
+msgid "Stylus Photo 960"
+msgstr "Stylus Photo 790"
+
+#: src/escputil/escputil.c:260
 msgid "Stylus Photo 1200"
 msgstr "Stylus Photo 1200"
 
-#: src/escputil/escputil.c:249
+#: src/escputil/escputil.c:261
 msgid "Stylus Photo 1270"
 msgstr "Stylus Photo 1270"
 
-#: src/escputil/escputil.c:250
+#: src/escputil/escputil.c:262
 msgid "Stylus Photo 1280"
 msgstr "Stylus Photo 1280"
 
-#: src/escputil/escputil.c:251
+#: src/escputil/escputil.c:263
 msgid "Stylus Photo 1290"
 msgstr "Stylus Photo 1290"
 
-#: src/escputil/escputil.c:252
+#: src/escputil/escputil.c:264
 msgid "Stylus Photo 2000P"
 msgstr "Stylus Photo 2000P"
 
-#: src/escputil/escputil.c:253
+#: src/escputil/escputil.c:265
+#, fuzzy
+msgid "Stylus Photo 2100"
+msgstr "Stylus Photo 1200"
+
+#: src/escputil/escputil.c:266
+#, fuzzy
+msgid "Stylus Photo 2200"
+msgstr "Stylus Photo 1200"
+
+#: src/escputil/escputil.c:267
 msgid "Stylus Pro 5000"
 msgstr "Stylus Pro 5000"
 
-#: src/escputil/escputil.c:254
+#: src/escputil/escputil.c:268
 msgid "Stylus Pro 5500"
 msgstr "Stylus Pro 5500"
 
-#: src/escputil/escputil.c:255
+#: src/escputil/escputil.c:269
 msgid "Stylus Pro 7000"
 msgstr "Stylus Pro 7000"
 
-#: src/escputil/escputil.c:256
+#: src/escputil/escputil.c:270
 msgid "Stylus Pro 7500"
 msgstr "Stylus Pro 7500"
 
-#: src/escputil/escputil.c:257
+#: src/escputil/escputil.c:271
+#, fuzzy
+msgid "Stylus Pro 7600"
+msgstr "Stylus Pro 7000"
+
+#: src/escputil/escputil.c:272
 msgid "Stylus Pro 9000"
 msgstr "Stylus Pro 9000"
 
-#: src/escputil/escputil.c:258
+#: src/escputil/escputil.c:273
 msgid "Stylus Pro 9500"
 msgstr "Stylus Pro 9500"
 
-#: src/escputil/escputil.c:259
+#: src/escputil/escputil.c:274
+#, fuzzy
+msgid "Stylus Pro 9600"
+msgstr "Stylus Pro 9000"
+
+#: src/escputil/escputil.c:275
 msgid "Stylus Pro 10000"
 msgstr "Stylus Pro 10000"
 
-#: src/escputil/escputil.c:260
+#: src/escputil/escputil.c:276
 msgid "Stylus Scan 2000"
 msgstr "Stylus Scan 2000"
 
-#: src/escputil/escputil.c:261
+#: src/escputil/escputil.c:277
 msgid "Stylus Scan 2500"
 msgstr "Stylus Scan 2500"
 
-#: src/escputil/escputil.c:348 src/escputil/escputil.c:357
+#: src/escputil/escputil.c:364 src/escputil/escputil.c:373
 msgid "You may only specify one printer or raw device."
 msgstr "Du kan kun spesifisere én skriver eller rå enhet."
 
-#: src/escputil/escputil.c:366
+#: src/escputil/escputil.c:382
 msgid "You may only specify one printer model."
 msgstr "Du kan kun oppgi én skrivermodell."
 
-#: src/escputil/escputil.c:386
+#: src/escputil/escputil.c:402
 #, c-format
 msgid "Unknown option %c\n"
 msgstr "Ukjent flagg %c\n"
 
-#: src/escputil/escputil.c:446
+#: src/escputil/escputil.c:462
 #, c-format
 msgid "Cannot open device %s: %s\n"
 msgstr "Kan ikke åpne enhet %s: %s\n"
 
-#: src/escputil/escputil.c:469
+#: src/escputil/escputil.c:485
 #, c-format
 msgid "Cannot print to printer %s with %s\n"
 msgstr "Kan ikke skrive til skriver %s med %s\n"
 
-#: src/escputil/escputil.c:482 src/escputil/escputil.c:492
+#: src/escputil/escputil.c:498 src/escputil/escputil.c:508
 msgid "Unable to send command to printer\n"
 msgstr "Kan ikke sende kommando til skriver\n"
 
-#: src/escputil/escputil.c:585
+#: src/escputil/escputil.c:601
 msgid "Cyan"
 msgstr "Cyan"
 
-#: src/escputil/escputil.c:586
+#: src/escputil/escputil.c:602
 msgid "Magenta"
 msgstr "Magenta"
 
-#: src/escputil/escputil.c:587
+#: src/escputil/escputil.c:603
 msgid "Yellow"
 msgstr "Gul"
 
-#: src/escputil/escputil.c:588
+#: src/escputil/escputil.c:604
 msgid "Light Cyan"
 msgstr "Lys cyan"
 
-#: src/escputil/escputil.c:589
+#: src/escputil/escputil.c:605
 msgid "Light Magenta"
 msgstr "Lys magenta"
 
-#: src/escputil/escputil.c:603
+#: src/escputil/escputil.c:619
 msgid "Obtaining ink levels requires using a raw device.\n"
 msgstr "Du må bruke en rå enhet for å hente blekknivå.\n"
 
-#: src/escputil/escputil.c:609 src/escputil/escputil.c:684
-#: src/escputil/escputil.c:727
+#: src/escputil/escputil.c:625 src/escputil/escputil.c:700
+#: src/escputil/escputil.c:743
 #, c-format
 msgid "Cannot open %s read/write: %s\n"
 msgstr "Kan ikke åpne %s med lese-/skriverettigheter: %s\n"
 
-#: src/escputil/escputil.c:618 src/escputil/escputil.c:695
-#: src/escputil/escputil.c:736
+#: src/escputil/escputil.c:634 src/escputil/escputil.c:711
+#: src/escputil/escputil.c:752
 #, c-format
 msgid "Cannot write to %s: %s\n"
 msgstr "Kan ikke skrive til %s: %s\n"
 
-#: src/escputil/escputil.c:625 src/escputil/escputil.c:702
-#: src/escputil/escputil.c:743
+#: src/escputil/escputil.c:641 src/escputil/escputil.c:718
+#: src/escputil/escputil.c:759
 #, c-format
 msgid "Cannot read from %s: %s\n"
 msgstr "Kan ikke lese fra %s: %s\n"
 
-#: src/escputil/escputil.c:635
+#: src/escputil/escputil.c:651
 msgid "Cannot parse output from printer\n"
 msgstr "Kan ikke tolke utskrift fra skriver\n"
 
-#: src/escputil/escputil.c:639
+#: src/escputil/escputil.c:655
 msgid "Ink color"
 msgstr "Blekkfarge"
 
-#: src/escputil/escputil.c:639
+#: src/escputil/escputil.c:655
 msgid "Percent remaining"
 msgstr "Prosent gjenstående"
 
-#: src/escputil/escputil.c:678
+#: src/escputil/escputil.c:694
 msgid "Printer identification requires using a raw device.\n"
 msgstr "Du må bruke en rå enhet for å identifisere skriveren.\n"
 
-#: src/escputil/escputil.c:721
+#: src/escputil/escputil.c:737
 msgid "Printer status requires using a raw device.\n"
 msgstr "Skriverstatus krever bruk av en rå enhet.\n"
 
-#: src/escputil/escputil.c:764
+#: src/escputil/escputil.c:780
 msgid "Cleaning heads...\n"
 msgstr "Renser hoder...\n"
 
-#: src/escputil/escputil.c:773
+#: src/escputil/escputil.c:789
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
 msgstr "Kjører «nozzle»-sjekk, sjekk at det er papir i skriveren.\n"
 
-#: src/escputil/escputil.c:777
+#: src/escputil/escputil.c:793
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -1971,7 +2051,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/escputil/escputil.c:812
+#: src/escputil/escputil.c:828
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -2007,21 +2087,21 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/escputil/escputil.c:856
+#: src/escputil/escputil.c:872
 msgid "Unable to send command to the printer, exiting.\n"
 msgstr "Kan ikke sende kommando til skriveren, avslutter.\n"
 
-#: src/escputil/escputil.c:874
+#: src/escputil/escputil.c:890
 msgid ""
 "Printer alignment must be done with a raw device or else\n"
 "the -m option must be used to specify a printer.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:878
+#: src/escputil/escputil.c:894
 msgid "Attempting to detect printer model..."
 msgstr "Prøver å finne identifisere skrivermodell..."
 
-#: src/escputil/escputil.c:883
+#: src/escputil/escputil.c:899
 #, c-format
 msgid ""
 "\n"
@@ -2030,7 +2110,7 @@ msgstr ""
 "\n"
 "Kan ikke åpne %s med lese-/skriverettigheter: %s\n"
 
-#: src/escputil/escputil.c:891
+#: src/escputil/escputil.c:907
 #, c-format
 msgid ""
 "\n"
@@ -2039,7 +2119,7 @@ msgstr ""
 "\n"
 "Kan ikke skrive til %s: %s\n"
 
-#: src/escputil/escputil.c:897
+#: src/escputil/escputil.c:913
 #, c-format
 msgid ""
 "\n"
@@ -2048,7 +2128,7 @@ msgstr ""
 "\n"
 "Kan ikke lese fra %s: %s\n"
 
-#: src/escputil/escputil.c:910
+#: src/escputil/escputil.c:926
 msgid ""
 "\n"
 "Cannot detect printer type.\n"
@@ -2058,12 +2138,12 @@ msgstr ""
 "Kan ikke finne skrivertype.\n"
 "Vennligst bruk -m for å spesifisere din skrivermodell.\n"
 
-#: src/escputil/escputil.c:927
+#: src/escputil/escputil.c:943
 #, c-format
 msgid "Printer model %s is not known.\n"
 msgstr "Skrivermodell %s er ukjent.\n"
 
-#: src/escputil/escputil.c:938
+#: src/escputil/escputil.c:954
 msgid ""
 "Please inspect the final output very carefully to ensure that your\n"
 "printer is in proper alignment. You may now:\n"
@@ -2074,19 +2154,19 @@ msgid ""
 "What do you want to do (s, q, r)?\n"
 msgstr ""
 
-#: src/escputil/escputil.c:946 src/escputil/escputil.c:953
-#: src/escputil/escputil.c:966 src/escputil/escputil.c:982
-#: src/escputil/escputil.c:1049 src/escputil/escputil.c:1190
+#: src/escputil/escputil.c:962 src/escputil/escputil.c:969
+#: src/escputil/escputil.c:982 src/escputil/escputil.c:998
+#: src/escputil/escputil.c:1065 src/escputil/escputil.c:1206
 msgid "> "
 msgstr ">"
 
-#: src/escputil/escputil.c:951
+#: src/escputil/escputil.c:967
 msgid ""
 "Please confirm by typing 'q' again that you wish to quit without saving:\n"
 msgstr ""
 "Vennligst bekreft at du vil avslutte uten å lagre ved å skrive «q» igjen:\n"
 
-#: src/escputil/escputil.c:956
+#: src/escputil/escputil.c:972
 msgid ""
 "OK, your printer is aligned, but the alignment has not been saved.\n"
 "If you wish to save the alignment, you must repeat this process.\n"
@@ -2094,7 +2174,7 @@ msgstr ""
 "OK, skriveren er justert, men justeringen er ikke lagret.\n"
 "Hvis du ønsker å lagre justeringen må d\n"
 
-#: src/escputil/escputil.c:963
+#: src/escputil/escputil.c:979
 msgid ""
 "Please confirm by typing 'r' again that you wish to repeat the\n"
 "alignment process:\n"
@@ -2102,11 +2182,11 @@ msgstr ""
 "Vennligst bekreft at du vil gjenta justeringsprosessen ved å\n"
 "skrive «r»:\n"
 
-#: src/escputil/escputil.c:969
+#: src/escputil/escputil.c:985
 msgid "Repeating the alignment process.\n"
 msgstr "Gjentar justeringsprosessen.\n"
 
-#: src/escputil/escputil.c:975
+#: src/escputil/escputil.c:991
 msgid ""
 "This will permanently alter the configuration of your printer.\n"
 "WARNING: this procedure has not been approved by Seiko Epson, and\n"
@@ -2115,37 +2195,37 @@ msgid ""
 "to your printer:\n"
 msgstr ""
 
-#: src/escputil/escputil.c:985
+#: src/escputil/escputil.c:1001
 msgid "About to save settings..."
 msgstr "I ferd med å lagre innstillinger..."
 
-#: src/escputil/escputil.c:991
+#: src/escputil/escputil.c:1007
 msgid "failed!\n"
 msgstr "feilet!\n"
 
-#: src/escputil/escputil.c:992
+#: src/escputil/escputil.c:1008
 msgid ""
 "Your settings were not saved successfully.  You must repeat the\n"
 "alignment procedure.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:996
+#: src/escputil/escputil.c:1012
 msgid "succeeded!\n"
 msgstr "fullført!\n"
 
-#: src/escputil/escputil.c:997
+#: src/escputil/escputil.c:1013
 msgid "Your alignment settings have been saved to the printer.\n"
 msgstr "Innstillingene for justering er lagret til skriveren.\n"
 
-#: src/escputil/escputil.c:1002
+#: src/escputil/escputil.c:1018
 msgid "Unrecognized command.\n"
 msgstr "Kommandoen ble ikke gjenkjent.\n"
 
-#: src/escputil/escputil.c:1005
+#: src/escputil/escputil.c:1021
 msgid "Final command was not confirmed.\n"
 msgstr "Siste kommando ble ikke bekreftet.\n"
 
-#: src/escputil/escputil.c:1010
+#: src/escputil/escputil.c:1026
 #, c-format
 msgid ""
 "This procedure assumes that your printer is an Epson %s.\n"
@@ -2156,50 +2236,50 @@ msgid ""
 "alignment procedure.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1035 src/escputil/escputil.c:1057
-#: src/escputil/escputil.c:1100 src/escputil/escputil.c:1169
-#: src/escputil/escputil.c:1180
+#: src/escputil/escputil.c:1051 src/escputil/escputil.c:1073
+#: src/escputil/escputil.c:1116 src/escputil/escputil.c:1185
+#: src/escputil/escputil.c:1196
 msgid "Press enter to continue > "
 msgstr "Trykk linjeskift for å fortsette > "
 
-#: src/escputil/escputil.c:1042
+#: src/escputil/escputil.c:1058
 msgid ""
 "Please inspect the print, and choose the best pair of lines in each "
 "pattern.\n"
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1048
+#: src/escputil/escputil.c:1064
 #, c-format
 msgid "Pass #%d"
 msgstr "Gjennomgang #%d"
 
-#: src/escputil/escputil.c:1054 src/escputil/escputil.c:1099
+#: src/escputil/escputil.c:1070 src/escputil/escputil.c:1115
 msgid "Please insert a fresh sheet of paper.\n"
 msgstr "Vennligst sett inn et nytt ark.\n"
 
-#: src/escputil/escputil.c:1073 src/escputil/escputil.c:1209
+#: src/escputil/escputil.c:1089 src/escputil/escputil.c:1225
 msgid "Number out of range!\n"
 msgstr "Tallet er utenfor gyldig område!\n"
 
-#: src/escputil/escputil.c:1078 src/escputil/escputil.c:1214
+#: src/escputil/escputil.c:1094 src/escputil/escputil.c:1230
 msgid "I cannot understand what you typed!\n"
 msgstr "Kan ikke forstå det du skrev inn!\n"
 
-#: src/escputil/escputil.c:1084
+#: src/escputil/escputil.c:1100
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1091
+#: src/escputil/escputil.c:1107
 msgid "Attempting to set alignment..."
 msgstr "Prøver å sette justering..."
 
-#: src/escputil/escputil.c:1094
+#: src/escputil/escputil.c:1110
 msgid "succeeded.\n"
 msgstr "fullført.\n"
 
-#: src/escputil/escputil.c:1095
+#: src/escputil/escputil.c:1111
 #, c-format
 msgid ""
 "Please verify that the alignment is correct.  After the alignment pattern\n"
@@ -2208,7 +2288,7 @@ msgid ""
 "quality printing.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1110
+#: src/escputil/escputil.c:1126
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -2242,18 +2322,18 @@ msgid ""
 "damage your printer!\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1160
+#: src/escputil/escputil.c:1176
 #, c-format
 msgid "Printer %s does not require color head alignment.\n"
 msgstr "Skriver %s krever ikke justering av fargehode.\n"
 
-#: src/escputil/escputil.c:1178
+#: src/escputil/escputil.c:1194
 msgid ""
 "Please re-insert the same alignment sheet in the printer when it is\n"
 "finished printing.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1184
+#: src/escputil/escputil.c:1200
 msgid ""
 "Inspect the alignment sheet, and determine which pattern is the smoothest.\n"
 "This pattern will appear to have the least ``grain''.\n"
@@ -2262,12 +2342,12 @@ msgid ""
 "Type a pattern number, or '?' for help.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1220
+#: src/escputil/escputil.c:1236
 #, c-format
 msgid "The best pattern should be numbered between 1 and %d.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1264
+#: src/escputil/escputil.c:1280
 msgid "Error in input\n"
 msgstr "Feil i inndata\n"
 
