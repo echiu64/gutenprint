@@ -217,11 +217,17 @@ static const stp_internal_vars_t max_vars =
 int
 stp_init(void)
 {
-  /* set up gettext */
+  static int stp_is_initialised = 0;
+  if (!stp_is_initialised)
+    {
+      /* Things that are only initialised once */
+      /* Set up gettext */
 #ifdef ENABLE_NLS
-  setlocale (LC_ALL, "");
-  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+      setlocale (LC_ALL, "");
+      bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 #endif
+    }
+  stp_is_initialised = 1;
   return (0);
 }
 
