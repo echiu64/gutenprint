@@ -83,17 +83,21 @@ Quality Improvements:
    printers should be invisible to the unaided eye at all but the
    lowest resolutions.
 
-3) Fine black detail prints much more accurately in color mode than
-   previously.
+3) In color mode, fine black detail prints much more accurately than
+   previously.  Previously, fine black detail typically did not print
+   solidly; this was particularly noticeable when printing groups of
+   lines at high resolution.
 
 4) Epson printers support a greater range of resolutions and quality
    settings, from very low resolution draft mode up to 2880x720 for
    the newest Epson printers.  This offers a full range of
    speed/quality tradeoffs for any printing application.  The emulated
-   resolutions in 4.0 have been dropped, as they have not yielded any
-   improvement in quality.
+   resolutions in 4.0 have been dropped, as they do not yield any
+   improvement in quality under any circumstances that we have
+   identified.
 
-5) Epson printers print with much better quality to plain paper.
+5) Epson printers produce much better quality on plain paper than
+   previously.
 
 6) All of the dithering algorithms, except for Hybrid Floyd-Steinberg
    (which is not recommended for most purposes) have been improved.
@@ -133,8 +137,8 @@ Changes to the Gimp Print plugin:
    preview both moves more quickly and does not flash to as great a
    degree as before.
 
-7) The plugin will no longer allow adjusting settings that are
-   inappropriate for the current printer or output mode.
+7) The plugin will no longer allow settings that are inappropriate for
+   the current printer or output mode.
 
 
 Changes to the CUPS Driver:
@@ -145,7 +149,14 @@ Changes to the CUPS Driver:
 2) The CUPS driver now supports printing CMYK output, as well as RGB,
    grayscale, and black and white.
 
-3) The CUPS PPD files are now translated into several languages.
+3) The CUPS PPD files are now translated into several languages
+   (currently British English, Swedish, French, Norwegian, and Danish).
+
+4) The CUPS driver will now terminate a job cleanly if the job is
+   removed from the queue while it was printing.  The existing data
+   will be flushed to the printer, following which the driver will
+   cleanly terminate the print job.  Previously, the printer was left
+   in an indeterminate state.
 
 
 Changes to the Ghostscript Driver:
@@ -184,6 +195,70 @@ Miscellaneous changes:
    to greater compiler checking of the code.
 
 
+Incompatibilities between 4.0 and 4.2:
+
+1) The options for the Ghostscript driver have changed incompatibly
+   between 4.0 and 4.2.  Please read src/ghost/README for more
+   information.
+
+2) The PPD files for the 4.2 CUPS driver are incompatible with the 4.0
+   driver, and vice versa.  You must reinstall all of your print
+   queues to use the new driver.
+
+3) The Foomatic data in the 4.2 distribution is generated during the
+   build of the package, rather than being distributed statically.  It
+   requires the latest version of the Foomatic driver, and is
+   incompatible with the Foomatic data in 4.0.  The 4.2 driver is
+   named "Gimp-print" in Foomatic, as opposed to "stp" in 4.0.
+
+4) Printing pure black and white (not grayscale) images is different.
+   The exact procedure is described in the release notes for each
+   front end.
+
+
+Known Limitations:
+
+1) The Epson Stylus C40UX (and very likely other printers in the C20
+   and C40 lines) do not identify themselves.  Therefore,
+
+   escputil -u -d
+
+   will not return anything useful, and when performing print head
+   alignment, the printer model must be specified, as autodetection
+   will not work.
+
+2) The "align color" (-o) command to escputil does not currently work
+   on the printers that should support it (Epson Stylus Color 480 and
+   580, and C20SX, C20UX, C40SX, and C40UX).
+
+3) Changing ink cartridges on the Epson Stylus Color 480/580 is not
+   supported.  This will not be fixed for 4.2.
+
+4) The drivers for the Epson Stylus Pro printers (5000, 5500, 7000,
+   7500, 9000, 9500, and 10000) are only partially tested and tuned.
+   They are known not to work correctly in many modes.
+
+5) The Epson Stylus Photo 2000P is not properly tuned and likely
+   produces lower output quality than other Epson printers.
+
+6) The Canon BJC-8200 and S800 do not produce optimum quality.
+
+7) Many Epson printers (including the Stylus Photo 870/875, 1270,
+   780/785/895, 890, 1280/1290, and 810/820) do not produce optimum
+   quality on Premium Glossy Photo Paper.  In particular, color
+   quality may not be at quite as high a standard as it is on the
+   older Photo Paper.  The difference is subtle.  Tuning the color
+   output may or may not improve the quality. 
+
+
+Printer-Specific Notes:
+
+1) The Epson Stylus C80 may give better results using Three Color
+   Composite printing on Premium Glossy Photo Paper and Premium
+   Semigloss.  Epson's proprietary drivers are thought to do this on
+   these papers.
+
+
 Internal changes:
 
 1) The interface between the core drivers and the front ends has been
@@ -215,52 +290,6 @@ Internal changes:
 
 4) The "unprint" program supplied in the test directory is much more
    functional and accurate than previously.
-
-
-Incompatibilities between 4.0 and 4.2:
-
-1) The options for the Ghostscript driver have changed incompatibly
-   between 4.0 and 4.2.  Please read src/ghost/README for more
-   information.
-
-2) The PPD files for the 4.2 CUPS driver are incompatible with the 4.0
-   driver, and vice versa.  You must reinstall all of your print
-   queues to use the new driver.
-
-3) The Foomatic data in the 4.2 distribution is generated during the
-   build of the package, rather than being distributed statically.  It
-   requires the latest version of the Foomatic driver, and is
-   incompatible with the Foomatic data in 4.0.  The 4.2 driver is
-   named "Gimp-print" in Foomatic, as opposed to "stp" in 4.0.
-
-4) Printing pure black and white (not grayscale) images is different.
-   The changes will be explained in the sections for each front end.
-
-
-Known Limitations:
-
-1) The Epson Stylus C40UX (and very likely other printers in the C20
-   and C40 lines) do not identify themselves.  Therefore,
-
-   escputil -u -d
-
-   will not return anything useful.  This will not be fixed for 4.2,
-   as these printers do not have a known way of identifying
-   themselves.
-
-2) The "align color" (-o) command to escputil does not currently work
-   on the printers that should support it (Epson Stylus Color 480 and
-   580, and C20SX, C20UX, C40SX, and C40UX).  It is not presently
-   expected that this will be fixed for 4.2.
-
-3) Changing ink cartridges on the Epson Stylus Color 480/580 is not
-   supported.  This will not be fixed for 4.2.
-
-4) The drivers for the Epson Stylus Pro printers (5000, 5500, 7000,
-   7500, 9000, 9500, and 10000) are not tested or tuned.  They are
-   known not to work correctly in many modes.
-
-5) The Canon BJC-8200 and S800 do not produce optimum quality.
 
 
 Supported Printers:
