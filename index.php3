@@ -24,8 +24,15 @@ href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 
 </p>
 
-<H2><font color="#ff0000"><blink>Gimp-Print 4.1.7 is
+<H2><font color="#ff0000"><blink>Gimp-Print 4.0.5 is
 released!</blink></font></h2>
+<P><strong><em><font color="#ff0000">New as of May 26,
+2001!</strong></em></font> Gimp-Print 4.0.5, expected to be the final
+stable release of 4.0, has been released.  This features support for
+the Epson Stylus Color 680/777 and Stylus Pro 7500, and a few bug fixes</p>
+
+<H2><font color="#ff0000">Gimp-Print 4.1.7 is
+released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of May 9,
 2001!</strong></em></font> Gimp-Print 4.1.7, a development release in
