@@ -1570,8 +1570,8 @@ static const stpi_dither_range_simple_t photo_4pl_pigment_low_m_dither_ranges[] 
 
 static const stpi_shade_t photo_4pl_pigment_low_m_shades[] =
 {
-  SHADE(0.26, 0, standard_4pl_pigment_low_dotsizes),
-  SHADE(1.0,  1, standard_4pl_pigment_low_dotsizes)
+  SHADE(0.26, 1, standard_4pl_pigment_low_dotsizes),
+  SHADE(1.0,  0, standard_4pl_pigment_low_dotsizes)
 };
 
 DECLARE_INK2(photo_4pl_pigment_low_m, 0.5);
@@ -1587,8 +1587,8 @@ static const stpi_dither_range_simple_t photo_4pl_pigment_low_c_dither_ranges[] 
 
 static const stpi_shade_t photo_4pl_pigment_low_c_shades[] =
 {
-  SHADE(0.40, 0, standard_4pl_pigment_low_dotsizes),
-  SHADE(1.0,  1, standard_4pl_pigment_low_dotsizes)
+  SHADE(0.40, 1, standard_4pl_pigment_low_dotsizes),
+  SHADE(1.0,  0, standard_4pl_pigment_low_dotsizes)
 };
 
 DECLARE_INK2(photo_4pl_pigment_low_c, 0.5);
@@ -1603,8 +1603,8 @@ static const stpi_dither_range_simple_t photo_4pl_pigment_low_y_dither_ranges[] 
 
 static const stpi_shade_t photo_4pl_pigment_low_y_shades[] =
 {
-  SHADE(0.50, 0, standard_4pl_pigment_low_dotsizes),
-  SHADE(1.0,  1, standard_4pl_pigment_low_dotsizes)
+  SHADE(0.50, 1, standard_4pl_pigment_low_dotsizes),
+  SHADE(1.0,  0, standard_4pl_pigment_low_dotsizes)
 };
 
 DECLARE_INK2(photo_4pl_pigment_low_y, 1.5);
@@ -1619,8 +1619,8 @@ static const stpi_dither_range_simple_t photo_4pl_pigment_low_k_dither_ranges[] 
 
 static const stpi_shade_t photo_4pl_pigment_low_k_shades[] =
 {
-  SHADE(0.49, 0, standard_4pl_pigment_low_dotsizes),
-  SHADE(1.0,  1, standard_4pl_pigment_low_dotsizes)
+  SHADE(0.49, 1, standard_4pl_pigment_low_dotsizes),
+  SHADE(1.0,  0, standard_4pl_pigment_low_dotsizes)
 };
 
 DECLARE_INK2(photo_4pl_pigment_low_k, 0.5);
@@ -1657,8 +1657,8 @@ static const stpi_dither_range_simple_t photo_4pl_pigment_m_dither_ranges[] =
 
 static const stpi_shade_t photo_4pl_pigment_m_shades[] =
 {
-  SHADE(0.26, 0, standard_4pl_pigment_dotsizes),
-  SHADE(1.0,  1, standard_4pl_pigment_dotsizes)
+  SHADE(0.26, 1, standard_4pl_pigment_dotsizes),
+  SHADE(1.0,  0, standard_4pl_pigment_dotsizes)
 };
 
 DECLARE_INK2(photo_4pl_pigment_m, 1.0);
@@ -1666,7 +1666,7 @@ DECLARE_INK2(photo_4pl_pigment_m, 1.0);
 static const stpi_dither_range_simple_t photo_4pl_pigment_c_dither_ranges[] =
 {
   { 0.112,  0x1, 1, 28 },
-  { 0.20,  0x2, 1, 50 },
+  { 0.20,   0x2, 1, 50 },
   { 0.40,   0x3, 1, 100 },
   { 0.50,   0x2, 0, 50 },
   { 1.00,   0x3, 0, 100 }
@@ -1674,8 +1674,8 @@ static const stpi_dither_range_simple_t photo_4pl_pigment_c_dither_ranges[] =
 
 static const stpi_shade_t photo_4pl_pigment_c_shades[] =
 {
-  SHADE(0.40, 0, standard_4pl_pigment_dotsizes),
-  SHADE(1.0,  1, standard_4pl_pigment_dotsizes)
+  SHADE(0.40, 1, standard_4pl_pigment_dotsizes),
+  SHADE(1.0,  0, standard_4pl_pigment_dotsizes)
 };
 
 DECLARE_INK2(photo_4pl_pigment_c, 1.0);
@@ -1690,8 +1690,8 @@ static const stpi_dither_range_simple_t photo_4pl_pigment_y_dither_ranges[] =
 
 static const stpi_shade_t photo_4pl_pigment_y_shades[] =
 {
-  SHADE(0.50, 0, standard_4pl_pigment_dotsizes),
-  SHADE(1.0,  1, standard_4pl_pigment_dotsizes)
+  SHADE(0.50, 1, standard_4pl_pigment_dotsizes),
+  SHADE(1.0,  0, standard_4pl_pigment_dotsizes)
 };
 
 DECLARE_INK2(photo_4pl_pigment_y, 1.5);
@@ -1706,8 +1706,8 @@ static const stpi_dither_range_simple_t photo_4pl_pigment_k_dither_ranges[] =
 
 static const stpi_shade_t photo_4pl_pigment_k_shades[] =
 {
-  SHADE(0.48, 0, standard_4pl_pigment_dotsizes),
-  SHADE(1.0,  1, standard_4pl_pigment_dotsizes)
+  SHADE(0.48, 1, standard_4pl_pigment_dotsizes),
+  SHADE(1.0,  0, standard_4pl_pigment_dotsizes)
 };
 
 DECLARE_INK2(photo_4pl_pigment_k, 0.75);
@@ -1741,8 +1741,8 @@ static const stpi_dither_range_simple_t photo_4pl_pigment_1440_m_dither_ranges[]
 
 static const stpi_shade_t photo_4pl_pigment_1440_m_shades[] =
 {
-  SHADE(0.26, 0, standard_4pl_pigment_1440_dotsizes),
-  SHADE(1.0, 1, standard_4pl_pigment_1440_dotsizes)
+  SHADE(0.26, 1, standard_4pl_pigment_1440_dotsizes),
+  SHADE(1.0, 0, standard_4pl_pigment_1440_dotsizes)
 };
 
 DECLARE_INK2(photo_4pl_pigment_1440_m, 1.0);
@@ -1757,8 +1757,8 @@ static const stpi_dither_range_simple_t photo_4pl_pigment_1440_c_dither_ranges[]
 
 static const stpi_shade_t photo_4pl_pigment_1440_c_shades[] =
 {
-  SHADE(0.40, 0, standard_4pl_pigment_1440_dotsizes),
-  SHADE(1.0, 1, standard_4pl_pigment_1440_dotsizes)
+  SHADE(0.40, 1, standard_4pl_pigment_1440_dotsizes),
+  SHADE(1.0, 0, standard_4pl_pigment_1440_dotsizes)
 };
 
 DECLARE_INK2(photo_4pl_pigment_1440_c, 1.0);
@@ -1772,8 +1772,8 @@ static const stpi_dither_range_simple_t photo_4pl_pigment_1440_y_dither_ranges[]
 
 static const stpi_shade_t photo_4pl_pigment_1440_y_shades[] =
 {
-  SHADE(0.50, 0, standard_4pl_pigment_1440_dotsizes),
-  SHADE(1.0, 1, standard_4pl_pigment_1440_dotsizes)
+  SHADE(0.50, 1, standard_4pl_pigment_1440_dotsizes),
+  SHADE(1.0, 0, standard_4pl_pigment_1440_dotsizes)
 };
 
 DECLARE_INK2(photo_4pl_pigment_1440_y, 1.5);
@@ -1787,8 +1787,8 @@ static const stpi_dither_range_simple_t photo_4pl_pigment_1440_k_dither_ranges[]
 
 static const stpi_shade_t photo_4pl_pigment_1440_k_shades[] =
 {
-  SHADE(0.56, 0, standard_4pl_pigment_1440_dotsizes),
-  SHADE(1.0, 1, standard_4pl_pigment_1440_dotsizes)
+  SHADE(0.56, 1, standard_4pl_pigment_1440_dotsizes),
+  SHADE(1.0, 0, standard_4pl_pigment_1440_dotsizes)
 };
 
 DECLARE_INK2(photo_4pl_pigment_1440_k, 0.75);
@@ -1818,8 +1818,8 @@ static const stpi_dither_range_simple_t photo_4pl_pigment_2880_m_dither_ranges[]
 
 static const stpi_shade_t photo_4pl_pigment_2880_m_shades[] =
 {
-  SHADE(0.26, 0, standard_4pl_pigment_2880_dotsizes),
-  SHADE(1.0, 1, standard_4pl_pigment_2880_dotsizes)
+  SHADE(0.26, 1, standard_4pl_pigment_2880_dotsizes),
+  SHADE(1.0, 0, standard_4pl_pigment_2880_dotsizes)
 };
 
 DECLARE_INK2(photo_4pl_pigment_2880_m, 0.75);
@@ -1832,8 +1832,8 @@ static const stpi_dither_range_simple_t photo_4pl_pigment_2880_c_dither_ranges[]
 
 static const stpi_shade_t photo_4pl_pigment_2880_c_shades[] =
 {
-  SHADE(0.40, 0, standard_4pl_pigment_2880_dotsizes),
-  SHADE(1.0, 1, standard_4pl_pigment_2880_dotsizes)
+  SHADE(0.40, 1, standard_4pl_pigment_2880_dotsizes),
+  SHADE(1.0, 0, standard_4pl_pigment_2880_dotsizes)
 };
 
 DECLARE_INK2(photo_4pl_pigment_2880_c, 0.75);
@@ -1846,8 +1846,8 @@ static const stpi_dither_range_simple_t photo_4pl_pigment_2880_y_dither_ranges[]
 
 static const stpi_shade_t photo_4pl_pigment_2880_y_shades[] =
 {
-  SHADE(0.50, 0, standard_4pl_pigment_2880_dotsizes),
-  SHADE(1.0, 1, standard_4pl_pigment_2880_dotsizes)
+  SHADE(0.50, 1, standard_4pl_pigment_2880_dotsizes),
+  SHADE(1.0, 0, standard_4pl_pigment_2880_dotsizes)
 };
 
 DECLARE_INK2(photo_4pl_pigment_2880_y, 1.5);
@@ -1860,8 +1860,8 @@ static const stpi_dither_range_simple_t photo_4pl_pigment_2880_k_dither_ranges[]
 
 static const stpi_shade_t photo_4pl_pigment_2880_k_shades[] =
 {
-  SHADE(0.48, 0, standard_4pl_pigment_2880_dotsizes),
-  SHADE(1.0, 1, standard_4pl_pigment_2880_dotsizes)
+  SHADE(0.48, 1, standard_4pl_pigment_2880_dotsizes),
+  SHADE(1.0, 0, standard_4pl_pigment_2880_dotsizes)
 };
 
 DECLARE_INK2(photo_4pl_pigment_2880_k, 0.75);
@@ -1902,8 +1902,8 @@ static const stpi_dither_range_simple_t spro10000_photo_dither_ranges[] =
 
 static const stpi_shade_t spro10000_photo_shades[] =
 {
-  SHADE(0.26, 0, spro10000_standard_dotsizes),
-  SHADE(1.0, 1, spro10000_standard_dotsizes),
+  SHADE(0.26, 1, spro10000_standard_dotsizes),
+  SHADE(1.0, 0, spro10000_standard_dotsizes),
 };
 
 DECLARE_INK2(spro10000_photo, 1.0);
