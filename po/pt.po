@@ -4,9 +4,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-10-13 20:59-0400\n"
-"PO-Revision-Date: 2002-05-04 12:16+0000\n"
+"Project-Id-Version: gimpprint 4.3.4\n"
+"POT-Creation-Date: 2002-10-01 21:19-0400\n"
+"PO-Revision-Date: 2002-10-16 19:24+0100\n"
 "Last-Translator: Filipe Maia <fmaia@gmx.net>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -37,7 +37,7 @@ msgstr "%s: a opção `%s' requere um argumento\n"
 #: lib/getopt.c:758
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
-msgstr "%s: opção não reconhecida `%c%s'\n"
+msgstr "%s: opção não reconhecida `--%s'\n"
 
 #. +option or -option
 #: lib/getopt.c:762
@@ -65,7 +65,7 @@ msgstr "%s: opção requere um argumento -- %c\n"
 #: lib/getopt.c:868
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
-msgstr "opção `-W %s' é ambígua\n"
+msgstr "%s: opção `-W %s' é ambígua\n"
 
 #: lib/getopt.c:886
 #, c-format
@@ -182,9 +182,8 @@ msgstr "Híbrido Floyd-Steinberg"
 #. Note to translators: "EvenTone" is the proper name, rather than a
 #. descriptive name, of this algorithm.
 #: src/main/print-dither.c:71
-#, fuzzy
 msgid "EvenTone"
-msgstr "Envelope"
+msgstr "EvenTone"
 
 #: src/main/print-escp2-data.c:2021 src/main/print-escp2-data.c:2031
 #: src/main/print-escp2-data.c:2041 src/main/print-lexmark.c:651
@@ -221,18 +220,16 @@ msgid "Six Color Enhanced Composite"
 msgstr "Seis Cores Compósito Realçado"
 
 #: src/main/print-escp2-data.c:2121
-#, fuzzy
 msgid "Seven Color Photo"
-msgstr "Seis Cores Foto"
+msgstr "Foto de Sete Cores"
 
 #: src/main/print-escp2-data.c:2131
-#, fuzzy
 msgid "Two Level Grayscale"
-msgstr "Escala de Cinzento"
+msgstr "Escala de Cinzento de 2 Níveis"
 
 #: src/main/print-escp2-data.c:2140 src/main/print-escp2-data.c:2149
 msgid "Quadtone"
-msgstr ""
+msgstr "Quato Tons"
 
 #: src/main/print-escp2-data.c:2240 src/main/print-escp2-data.c:2302
 #: src/main/print-escp2-data.c:2364 src/main/print-escp2-data.c:2426
@@ -313,9 +310,8 @@ msgstr "Papel Pesado Ilford"
 
 #: src/main/print-escp2-data.c:2283 src/main/print-escp2-data.c:2345
 #: src/main/print-escp2-data.c:2407 src/main/print-escp2-data.c:2469
-#, fuzzy
 msgid "ColorLife Paper"
-msgstr "Papel Normal"
+msgstr "Papel ColorLife"
 
 #: src/main/print-escp2-data.c:2722 src/main/print-escp2-data.c:2724
 #: src/main/print-escp2-data.c:2809 src/main/print-escp2-data.c:2811
@@ -534,94 +530,76 @@ msgid "1440 x 720 DPI Four Pass Unidirectional"
 msgstr "1440 x 720 DPI Quatro Passagens Unidireccional"
 
 #: src/main/print-escp2-data.c:2967
-#, fuzzy
 msgid "2880 x 720 DPI Microweave"
-msgstr "1440 x 720 DPI Microtecelagem"
+msgstr "2880 x 720 DPI Microtecelagem"
 
 #: src/main/print-escp2-data.c:2969
-#, fuzzy
 msgid "2880 x 720 DPI Microweave Unidirectional"
-msgstr "1440 x 720 DPI Microtecelagem Unidireccional"
+msgstr "2880 x 720 DPI Microtecelagem Unidireccional"
 
 #: src/main/print-escp2-data.c:2971
-#, fuzzy
 msgid "2880 x 720 DPI FOL"
-msgstr "2880 x 720 DPI"
+msgstr "2880 x 720 DPI FOL"
 
 #: src/main/print-escp2-data.c:2973
-#, fuzzy
 msgid "2880 x 720 DPI FOL Unidirectional"
-msgstr "2880 x 720 DPI Unidireccional"
+msgstr "2880 x 720 DPI FOL Unidireccional"
 
 #: src/main/print-escp2-data.c:2975
-#, fuzzy
 msgid "2880 x 720 DPI Four Pass"
-msgstr "1440 x 720 DPI Quatro Passagens"
+msgstr "2880 x 720 DPI Quatro Passagens"
 
 #: src/main/print-escp2-data.c:2977
-#, fuzzy
 msgid "2880 x 720 DPI Four Pass Unidirectional"
-msgstr "1440 x 720 DPI Quatro Passagens Unidireccional"
+msgstr "2880 x 720 DPI Quatro Passagens Unidireccional"
 
 #: src/main/print-escp2-data.c:2980
-#, fuzzy
 msgid "1440 x 1440 DPI Microweave"
-msgstr "1440 x 720 DPI Microtecelagem"
+msgstr "1440 x 1440 DPI Microtecelagem"
 
 #: src/main/print-escp2-data.c:2982
-#, fuzzy
 msgid "1440 x 1440 DPI Microweave Unidirectional"
-msgstr "1440 x 720 DPI Microtecelagem Unidireccional"
+msgstr "1440 x 1440 DPI Microtecelagem Unidireccional"
 
 #: src/main/print-escp2-data.c:2984
-#, fuzzy
 msgid "1440 x 1440 DPI FOL"
-msgstr "1440 x 1440 DPI"
+msgstr "1440 x 1440 DPI FOL"
 
 #: src/main/print-escp2-data.c:2986
-#, fuzzy
 msgid "1440 x 1440 DPI FOL Unidirectional"
-msgstr "1440 x 720 DPI FOL Unidireccional"
+msgstr "1440 x 1440 DPI FOL Unidireccional"
 
 #: src/main/print-escp2-data.c:2988
-#, fuzzy
 msgid "1440 x 1440 DPI Four Pass"
-msgstr "1440 x 720 DPI Quatro Passagens"
+msgstr "1440 x 1440 DPI Quatro Passagens"
 
 #: src/main/print-escp2-data.c:2990
-#, fuzzy
 msgid "1440 x 1440 DPI Four Pass Unidirectional"
-msgstr "1440 x 720 DPI Quatro Passagens Unidireccional"
+msgstr "1440 x 1440 DPI Quatro Passagens Unidireccional"
 
 #: src/main/print-escp2-data.c:2993
-#, fuzzy
 msgid "2880 x 1440 DPI Microweave"
-msgstr "720 x 360 DPI Microtecelagem"
+msgstr "2880 x 1440 DPI Microtecelagem"
 
 #: src/main/print-escp2-data.c:2995
-#, fuzzy
 msgid "2880 x 1440 DPI Microweave Unidirectional"
-msgstr "720 x 360 Microtecelagem Unidireccional"
+msgstr "2880 x 1440 Microtecelagem Unidireccional"
 
 #: src/main/print-escp2-data.c:2997
-#, fuzzy
 msgid "2880 x 1440 DPI FOL"
-msgstr "2880 x 1440 DPI"
+msgstr "2880 x 1440 DPI FOL"
 
 #: src/main/print-escp2-data.c:2999
-#, fuzzy
 msgid "2880 x 1440 DPI FOL Unidirectional"
-msgstr "720 x 360 DPI FOL Unidireccional"
+msgstr "2880 x 1440 DPI FOL Unidireccional"
 
 #: src/main/print-escp2-data.c:3001
-#, fuzzy
 msgid "2880 x 1440 DPI Four Pass"
-msgstr "1440 x 720 DPI Quatro Passagens"
+msgstr "2880 x 1440 DPI Quatro Passagens"
 
 #: src/main/print-escp2-data.c:3003
-#, fuzzy
 msgid "2880 x 1440 DPI Four Pass Unidirectional"
-msgstr "720 DPI Quantro Passagens Unidireccional"
+msgstr "2880 x 1440 DPI Quantro Passagens Unidireccional"
 
 #: src/gimp/gimp_main_window.c:1616 src/main/print-escp2-data.c:3013
 #: src/main/print-pcl.c:202
@@ -879,21 +857,15 @@ msgstr "20x30"
 
 #. 24x30 for 35 mm
 #: src/main/print-util.c:567
-#, fuzzy
-msgid "22x30"
-msgstr "20x30"
-
-#. Common watercolor paper
-#: src/main/print-util.c:569
 msgid "24x30"
 msgstr "24x30"
 
-#: src/main/print-util.c:571
+#: src/main/print-util.c:569
 msgid "24x36"
 msgstr "24x36"
 
 #. Sometimes used for 35 mm
-#: src/main/print-util.c:573
+#: src/main/print-util.c:571
 msgid "30x40"
 msgstr "30x40"
 
@@ -906,67 +878,67 @@ msgstr "30x40"
 #. * millimetre.  Thus, A0 is 841mm x 1189mm.  Every other A
 #. * size is obtained by doubling or halving another A size.
 #.
-#: src/main/print-util.c:586
+#: src/main/print-util.c:584
 msgid "4A"
 msgstr "4A"
 
 #. 1682mm x 2378mm
-#: src/main/print-util.c:588
+#: src/main/print-util.c:586
 msgid "2A"
 msgstr "2A"
 
 #. 1189mm x 1682mm
-#: src/main/print-util.c:590
+#: src/main/print-util.c:588
 msgid "A0"
 msgstr "A0"
 
 #. 841mm x 1189mm
-#: src/main/print-util.c:592
+#: src/main/print-util.c:590
 msgid "A1"
 msgstr "A1"
 
 #. 594mm x  841mm
-#: src/main/print-util.c:594
+#: src/main/print-util.c:592
 msgid "A2"
 msgstr "A2"
 
 #. 420mm x  594mm
-#: src/main/print-util.c:596
+#: src/main/print-util.c:594
 msgid "A3"
 msgstr "A3"
 
 #. 297mm x  420mm
-#: src/main/print-util.c:598
+#: src/main/print-util.c:596
 msgid "A4"
 msgstr "A4"
 
 #. 210mm x  297mm
-#: src/main/print-util.c:600
+#: src/main/print-util.c:598
 msgid "A5"
 msgstr "A5"
 
 #. 148mm x  210mm
-#: src/main/print-util.c:602
+#: src/main/print-util.c:600
 msgid "A6"
 msgstr "A6"
 
 #. 105mm x  148mm
-#: src/main/print-util.c:604
+#: src/main/print-util.c:602
 msgid "A7"
 msgstr "A7"
 
 #. 74mm x  105mm
-#: src/main/print-util.c:606
+#: src/main/print-util.c:604
 msgid "A8"
 msgstr "A8"
 
 #. 52mm x   74mm
-#: src/main/print-util.c:608
+#: src/main/print-util.c:606
 msgid "A9"
 msgstr "A9"
 
 #. 37mm x   52mm
-#: src/main/print-util.c:610
+#: src/main/print-util.c:608
 msgid "A10"
 msgstr "A10"
 
@@ -975,27 +947,27 @@ msgstr "A10"
 #. * Stock sizes for normal trims.
 #. * Allowance for trim is 3 millimetres.
 #.
-#: src/main/print-util.c:617
+#: src/main/print-util.c:615
 msgid "RA0"
 msgstr "RA0"
 
 #. 860mm x 1220mm
-#: src/main/print-util.c:619
+#: src/main/print-util.c:617
 msgid "RA1"
 msgstr "RA1"
 
 #. 610mm x  860mm
-#: src/main/print-util.c:621
+#: src/main/print-util.c:619
 msgid "RA2"
 msgstr "RA2"
 
 #. 430mm x  610mm
-#: src/main/print-util.c:623
+#: src/main/print-util.c:621
 msgid "RA3"
 msgstr "RA3"
 
 #. 305mm x  430mm
-#: src/main/print-util.c:625
+#: src/main/print-util.c:623
 msgid "RA4"
 msgstr "RA4"
 
@@ -1003,27 +975,27 @@ msgstr "RA4"
 #.
 #. * Stock sizes for bled work or extra trims.
 #.
-#: src/main/print-util.c:631
+#: src/main/print-util.c:629
 msgid "SRA0"
 msgstr "SRA0"
 
 #. 900mm x 1280mm
-#: src/main/print-util.c:633
+#: src/main/print-util.c:631
 msgid "SRA1"
 msgstr "SRA1"
 
 #. 640mm x  900mm
-#: src/main/print-util.c:635
+#: src/main/print-util.c:633
 msgid "SRA2"
 msgstr "SRA2"
 
 #. 450mm x  640mm
-#: src/main/print-util.c:637
+#: src/main/print-util.c:635
 msgid "SRA3"
 msgstr "SRA3"
 
 #. 320mm x  450mm
-#: src/main/print-util.c:639
+#: src/main/print-util.c:637
 msgid "SRA4"
 msgstr "SRA4"
 
@@ -1031,184 +1003,184 @@ msgstr "SRA4"
 #.
 #. * "B" series: Posters, wall charts and similar items.
 #.
-#: src/main/print-util.c:645
+#: src/main/print-util.c:643
 msgid "4B ISO"
 msgstr "4B ISO"
 
 #. 2000mm x 2828mm
-#: src/main/print-util.c:647
+#: src/main/print-util.c:645
 msgid "2B ISO"
 msgstr "2B ISO"
 
 #. 1414mm x 2000mm
-#: src/main/print-util.c:649
+#: src/main/print-util.c:647
 msgid "B0 ISO"
 msgstr "B0 ISO"
 
 #. 1000mm x 1414mm
-#: src/main/print-util.c:651
+#: src/main/print-util.c:649
 msgid "B1 ISO"
 msgstr "B1 ISO"
 
 #. 707mm x 1000mm
-#: src/main/print-util.c:653
+#: src/main/print-util.c:651
 msgid "B2 ISO"
 msgstr "B2 ISO"
 
 #. 500mm x  707mm
-#: src/main/print-util.c:655
+#: src/main/print-util.c:653
 msgid "B3 ISO"
 msgstr "B3 ISO"
 
 #. 353mm x  500mm
-#: src/main/print-util.c:657
+#: src/main/print-util.c:655
 msgid "B4 ISO"
 msgstr "B4 ISO"
 
 #. 250mm x  353mm
-#: src/main/print-util.c:659
+#: src/main/print-util.c:657
 msgid "B5 ISO"
 msgstr "B5 ISO"
 
 #. 176mm x  250mm
-#: src/main/print-util.c:661
+#: src/main/print-util.c:659
 msgid "B6 ISO"
 msgstr "B6 ISO"
 
 #. 125mm x  176mm
-#: src/main/print-util.c:663
+#: src/main/print-util.c:661
 msgid "B7 ISO"
 msgstr "B7 ISO"
 
 #. 88mm x  125mm
-#: src/main/print-util.c:665
+#: src/main/print-util.c:663
 msgid "B8 ISO"
 msgstr "B8 ISO"
 
 #. 62mm x   88mm
-#: src/main/print-util.c:667
+#: src/main/print-util.c:665
 msgid "B9 ISO"
 msgstr "B9 ISO"
 
 #. 44mm x   62mm
-#: src/main/print-util.c:669
+#: src/main/print-util.c:667
 msgid "B10 ISO"
 msgstr "B10 ISO"
 
 #. 31mm x   44mm
-#: src/main/print-util.c:672
+#: src/main/print-util.c:670
 msgid "B0 JIS"
 msgstr "B0 JIS"
 
-#: src/main/print-util.c:674
+#: src/main/print-util.c:672
 msgid "B1 JIS"
 msgstr "B1 JIS"
 
-#: src/main/print-util.c:676
+#: src/main/print-util.c:674
 msgid "B2 JIS"
 msgstr "B2 JIS"
 
-#: src/main/print-util.c:678
+#: src/main/print-util.c:676
 msgid "B3 JIS"
 msgstr "B3 JIS"
 
-#: src/main/print-util.c:680
+#: src/main/print-util.c:678
 msgid "B4 JIS"
 msgstr "B4 JIS"
 
-#: src/main/print-util.c:682
+#: src/main/print-util.c:680
 msgid "B5 JIS"
 msgstr "B5 JIS"
 
-#: src/main/print-util.c:684
+#: src/main/print-util.c:682
 msgid "B6 JIS"
 msgstr "B6 JIs"
 
-#: src/main/print-util.c:686
+#: src/main/print-util.c:684
 msgid "B7 JIS"
 msgstr "B7 JIS"
 
-#: src/main/print-util.c:688
+#: src/main/print-util.c:686
 msgid "B8 JIS"
 msgstr "B8 JIS"
 
-#: src/main/print-util.c:690
+#: src/main/print-util.c:688
 msgid "B9 JIS"
 msgstr "B9 JIS"
 
-#: src/main/print-util.c:692
+#: src/main/print-util.c:690
 msgid "B10 JIS"
 msgstr "B10 JIS"
 
 #.
 #. * "C" series: Envelopes or folders suitable for A size stationery.
 #.
-#: src/main/print-util.c:698
+#: src/main/print-util.c:696
 msgid "C0"
 msgstr "C0"
 
 #. 917mm x 1297mm
-#: src/main/print-util.c:700
+#: src/main/print-util.c:698
 msgid "C1"
 msgstr "C1"
 
 #. 648mm x  917mm
-#: src/main/print-util.c:702
+#: src/main/print-util.c:700
 msgid "C2"
 msgstr "C2"
 
 #. 458mm x  648mm
-#: src/main/print-util.c:704
+#: src/main/print-util.c:702
 msgid "C3"
 msgstr "C3"
 
 #. 324mm x  458mm
-#: src/main/print-util.c:706
+#: src/main/print-util.c:704
 msgid "C4"
 msgstr "C4"
 
 #. 229mm x  324mm
-#: src/main/print-util.c:708
+#: src/main/print-util.c:706
 msgid "C5"
 msgstr "C5"
 
 #. 162mm x  229mm
-#: src/main/print-util.c:710
+#: src/main/print-util.c:708
 msgid "B6-C4"
 msgstr "B6-C4"
 
 #. 125mm x  324mm
-#: src/main/print-util.c:712
+#: src/main/print-util.c:710
 msgid "C6"
 msgstr "C6"
 
 #. 114mm x  162mm
-#: src/main/print-util.c:714
+#: src/main/print-util.c:712
 msgid "DL"
 msgstr "DL"
 
 #. 110mm x  220mm
-#: src/main/print-util.c:716
+#: src/main/print-util.c:714
 msgid "C7-6"
 msgstr "C7-6"
 
 #. 81mm x  162mm
-#: src/main/print-util.c:718
+#: src/main/print-util.c:716
 msgid "C7"
 msgstr "C7"
 
 #. 81mm x  114mm
-#: src/main/print-util.c:720
+#: src/main/print-util.c:718
 msgid "C8"
 msgstr "C8"
 
 #. 57mm x   81mm
-#: src/main/print-util.c:722
+#: src/main/print-util.c:720
 msgid "C9"
 msgstr "C9"
 
 #. 40mm x   57mm
-#: src/main/print-util.c:724
+#: src/main/print-util.c:722
 msgid "C10"
 msgstr "C10"
 
@@ -1216,35 +1188,35 @@ msgstr "C10"
 #.
 #. * US CAD standard paper sizes
 #.
-#: src/main/print-util.c:730
+#: src/main/print-util.c:728
 msgid "ArchA"
 msgstr "ArchA"
 
-#: src/main/print-util.c:732
+#: src/main/print-util.c:730
 msgid "ArchB"
 msgstr "ArchB"
 
-#: src/main/print-util.c:734
+#: src/main/print-util.c:732
 msgid "ArchC"
 msgstr "ArchC"
 
-#: src/main/print-util.c:736
+#: src/main/print-util.c:734
 msgid "ArchD"
 msgstr "ArchD"
 
-#: src/main/print-util.c:738
+#: src/main/print-util.c:736
 msgid "ArchE"
 msgstr "ArchE"
 
 #.
 #. * Foolscap
 #.
-#: src/main/print-util.c:744
+#: src/main/print-util.c:742
 msgid "American foolscap"
 msgstr "Papel Ministro Americano"
 
 #. American foolscap
-#: src/main/print-util.c:746
+#: src/main/print-util.c:744
 msgid "European foolscap"
 msgstr "Papel Ministro Europeu"
 
@@ -1254,44 +1226,44 @@ msgstr "Papel Ministro Europeu"
 #. * The BPIF and the Publishers Association jointly recommend ten
 #. * standard metric sizes for case-bound titles as follows:
 #.
-#: src/main/print-util.c:754
+#: src/main/print-util.c:752
 msgid "Crown Quarto"
 msgstr "Crown Quarto"
 
 #. 189mm x 246mm
-#: src/main/print-util.c:756
+#: src/main/print-util.c:754
 msgid "Large Crown Quarto"
 msgstr "Crown Quarto Grande"
 
 #. 201mm x 258mm
-#: src/main/print-util.c:758
+#: src/main/print-util.c:756
 msgid "Demy Quarto"
 msgstr "Demy Quarto"
 
 #. 219mm x 276mm
-#: src/main/print-util.c:760
+#: src/main/print-util.c:758
 msgid "Royal Quarto"
 msgstr "Royal Quarto"
 
 #. 237mm x 312mm
 #. { "ISO A4",             595,
 #. 841, PAPERSIZE_METRIC, 0, 0, 0, 0 },    210mm x 297mm
-#: src/main/print-util.c:764
+#: src/main/print-util.c:762
 msgid "Crown Octavo"
 msgstr "Crown Octavo"
 
 #. 123mm x 186mm
-#: src/main/print-util.c:766
+#: src/main/print-util.c:764
 msgid "Large Crown Octavo"
 msgstr "Crown Octavo Grande"
 
 #. 129mm x 198mm
-#: src/main/print-util.c:768
+#: src/main/print-util.c:766
 msgid "Demy Octavo"
 msgstr "Demy Octavo"
 
 #. 138mm x 216mm
-#: src/main/print-util.c:770
+#: src/main/print-util.c:768
 msgid "Royal Octavo"
 msgstr "Royal Octavo"
 
@@ -1299,135 +1271,134 @@ msgstr "Royal Octavo"
 #. { N_ ("ISO A5"),             419,
 #. 595, 0, 0, 0, 0, PAPERSIZE_METRIC },    148mm x 210mm
 #. Paperback sizes in common usage
-#: src/main/print-util.c:776
+#: src/main/print-util.c:774
 msgid "Small paperback"
 msgstr "Pequena Brochura"
 
 #. 111mm x 178mm
-#: src/main/print-util.c:778
+#: src/main/print-util.c:776
 msgid "Penguin small paperback"
 msgstr "Pequena Brochura Pinguim"
 
 #. 111mm x 181mm
-#: src/main/print-util.c:780
+#: src/main/print-util.c:778
 msgid "Penguin large paperback"
 msgstr "Grande Brochura Pinguim"
 
 #. 129mm x 198mm
 #. Miscellaneous sizes
-#: src/main/print-util.c:784
+#: src/main/print-util.c:782
 msgid "Hagaki Card"
 msgstr "Cartão Hagaki"
 
 #. 100 x 148 mm
-#: src/main/print-util.c:786
+#: src/main/print-util.c:784
 msgid "Oufuku Card"
 msgstr "Cartão Oufuku"
 
 #. 148 x 200 mm
-#: src/main/print-util.c:788
+#: src/main/print-util.c:786
 msgid "Japanese long envelope #3"
 msgstr "Envelope longo Japonês #3"
 
 #. Japanese long envelope #3
-#: src/main/print-util.c:790
+#: src/main/print-util.c:788
 msgid "Japanese long envelope #4"
 msgstr "Envelope longo Japonês #4"
 
 #. Japanese long envelope #4
-#: src/main/print-util.c:792
+#: src/main/print-util.c:790
 msgid "Japanese Kaku envelope #4"
 msgstr "Evelope Kaku Japonês #4"
 
 #. Japanese Kaku envelope #4
-#: src/main/print-util.c:794
+#: src/main/print-util.c:792
 msgid "Commercial 10"
 msgstr "Comercial 10"
 
 #. US Commercial 10 env
-#: src/main/print-util.c:796
+#: src/main/print-util.c:794
 msgid "A2 Invitation"
 msgstr "Convite A2"
 
 #. US A2 invitation
-#: src/main/print-util.c:798
-#, fuzzy
+#: src/main/print-util.c:796
 msgid "Monarch Envelope"
-msgstr "Envelope"
+msgstr "Envelope Monarca"
 
 #. Monarch envelope (3.875 * 7.5)
-#: src/main/print-util.c:800
+#: src/main/print-util.c:798
 msgid "Custom"
 msgstr "Personalizado"
 
-#: src/main/print-util.c:803
+#: src/main/print-util.c:801
 msgid "89 mm Roll Paper"
 msgstr "Papel Contínuo 89 mm"
 
-#: src/main/print-util.c:805
+#: src/main/print-util.c:803
 msgid "4 Inch Roll Paper"
 msgstr "Papel Contínuo 4 Polegadas"
 
-#: src/main/print-util.c:807
+#: src/main/print-util.c:805
 msgid "5 Inch Roll Paper"
 msgstr "Papel Contínuo 5 Polegadas"
 
-#: src/main/print-util.c:809
+#: src/main/print-util.c:807
 msgid "210 mm Roll Paper"
 msgstr "Papel Contínuo 210 mm"
 
-#: src/main/print-util.c:811
+#: src/main/print-util.c:809
 msgid "13 Inch Roll Paper"
 msgstr "Papel Contínuo 13 Polegadas"
 
-#: src/main/print-util.c:813
+#: src/main/print-util.c:811
 msgid "22 Inch Roll Paper"
 msgstr "Papel Contínuo 22 Polegadas"
 
-#: src/main/print-util.c:815
+#: src/main/print-util.c:813
 msgid "24 Inch Roll Paper"
 msgstr "Papel Contínuo 24 Polegadas"
 
-#: src/main/print-util.c:817
+#: src/main/print-util.c:815
 msgid "36 Inch Roll Paper"
 msgstr "Papel Contínuo 36 Polegadas"
 
-#: src/main/print-util.c:819
+#: src/main/print-util.c:817
 msgid "44 Inch Roll Paper"
 msgstr "Papel Contínuo 44 Polegadas"
 
-#: src/main/print-util.c:1276 src/main/print-util.c:1285
+#: src/main/print-util.c:1274 src/main/print-util.c:1283
 #, c-format
 msgid "%s is not a valid parameter of type %s\n"
 msgstr "%s não é um paràmetro válido do tipo %s\n"
 
-#: src/main/print-util.c:1301
+#: src/main/print-util.c:1299
 #, c-format
 msgid "%s out of range (value %f, min %f, max %f)\n"
-msgstr "%s fora do intervalo (valor %d, min %d, max %d)\n"
+msgstr "%s fora do intervalo (valor %f, min %f, max %f)\n"
 
-#: src/main/print-util.c:1316
+#: src/main/print-util.c:1314
 #, c-format
 msgid "%s out of range (value %d, min %d, max %d)\n"
 msgstr "%s fora do intervalo (valor %d, min %d, max %d)\n"
 
-#: src/main/print-util.c:1342
+#: src/main/print-util.c:1340
 msgid "Printer does not support color output\n"
 msgstr "A impressora não suporta a cor de impressão\n"
 
-#: src/main/print-util.c:1360
+#: src/main/print-util.c:1358
 msgid "Image size is not valid\n"
 msgstr "Tamanho da imagem não é válido\n"
 
-#: src/main/print-util.c:1367
+#: src/main/print-util.c:1365
 msgid "Top margin must not be less than zero\n"
 msgstr "Margem de topo não pode ser menor que zero\n"
 
-#: src/main/print-util.c:1373
+#: src/main/print-util.c:1371
 msgid "Left margin must not be less than zero\n"
 msgstr "Mergem esquerda não pode ser menor que zero\n"
 
-#: src/main/print-util.c:1430
+#: src/main/print-util.c:1428
 #, c-format
 msgid "%s is not a valid dither algorithm\n"
 msgstr "%s não é um algoritmo de \"dither\" válido\n"
@@ -1437,54 +1408,54 @@ msgstr "%s não é um algoritmo de \"dither\" válido\n"
 #. * Use the English name of your language here, e.g. "Swedish" instead of
 #. * "Svenska".
 #.
-#: src/cups/genppd.c:443
+#: src/cups/genppd.c:438
 msgid "English"
 msgstr "Portuguese"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
-#: src/cups/genppd.c:445
+#: src/cups/genppd.c:440
 msgid "ISOLatin1"
 msgstr "ISOLatin1"
 
-#: src/cups/genppd.c:651
+#: src/cups/genppd.c:616
 msgid "Media Type"
 msgstr "Tipo de Média"
 
-#: src/cups/genppd.c:677
+#: src/cups/genppd.c:642
 msgid "Media Source"
 msgstr "Fonte de Média"
 
-#: src/cups/genppd.c:701
+#: src/cups/genppd.c:666
 msgid "Resolution"
 msgstr "Resolução"
 
 #.
 #. * Image types...
 #.
-#: src/cups/genppd.c:741
+#: src/cups/genppd.c:706
 msgid "Image Type"
 msgstr "Tipo de Imagem"
 
-#: src/cups/genppd.c:746 src/gimp/gimp_main_window.c:1314
+#: src/cups/genppd.c:711 src/gimp/gimp_main_window.c:1314
 msgid "Line Art"
 msgstr "\"Line Art\""
 
-#: src/cups/genppd.c:748 src/gimp/gimp_main_window.c:1328
+#: src/cups/genppd.c:713 src/gimp/gimp_main_window.c:1328
 msgid "Solid Colors"
 msgstr "Cores Sólidas"
 
-#: src/cups/genppd.c:750 src/gimp/gimp_main_window.c:1343
+#: src/cups/genppd.c:715 src/gimp/gimp_main_window.c:1343
 msgid "Photograph"
 msgstr "Fotografia"
 
 #.
 #. * Dithering algorithms...
 #.
-#: src/cups/genppd.c:758
+#: src/cups/genppd.c:723
 msgid "Dither Algorithm"
 msgstr "Algoritmos de \"Dither\"\""
 
-#: src/cups/genppd.c:777
+#: src/cups/genppd.c:742
 msgid "Ink Type"
 msgstr "Tipo de tinta"
 
@@ -1710,38 +1681,32 @@ msgid "Stylus C40ux"
 msgstr "Stylus C40ux"
 
 #: src/escputil/escputil.c:203
-#, fuzzy
 msgid "Stylus C41sx"
-msgstr "Stylus C40sx"
+msgstr "Stylus C41sx"
 
 #: src/escputil/escputil.c:204
-#, fuzzy
 msgid "Stylus C41ux"
-msgstr "Stylus C40ux"
+msgstr "Stylus C41ux"
 
 #: src/escputil/escputil.c:205
-#, fuzzy
 msgid "Stylus C42sx"
-msgstr "Stylus C40sx"
+msgstr "Stylus C42sx"
 
 #: src/escputil/escputil.c:206
-#, fuzzy
 msgid "Stylus C42ux"
-msgstr "Stylus C40ux"
+msgstr "Stylus C42ux"
 
 #: src/escputil/escputil.c:207
 msgid "Stylus C60"
 msgstr "Stylus C60"
 
 #: src/escputil/escputil.c:208
-#, fuzzy
 msgid "Stylus C61"
-msgstr "Stylus C60"
+msgstr "Stylus C61"
 
 #: src/escputil/escputil.c:209
-#, fuzzy
 msgid "Stylus C62"
-msgstr "Stylus C60"
+msgstr "Stylus C62"
 
 #: src/escputil/escputil.c:210
 msgid "Stylus C70"
@@ -1752,9 +1717,8 @@ msgid "Stylus C80"
 msgstr "Stylus C80"
 
 #: src/escputil/escputil.c:212
-#, fuzzy
 msgid "Stylus C82"
-msgstr "Stylus C80"
+msgstr "Stylus C82"
 
 #: src/escputil/escputil.c:213
 msgid "Stylus Color"
@@ -1909,9 +1873,8 @@ msgid "Stylus Photo 820"
 msgstr "Stylus Photo 820"
 
 #: src/escputil/escputil.c:251
-#, fuzzy
 msgid "Stylus Photo 830"
-msgstr "Stylus Photo 780"
+msgstr "Stylus Photo 830"
 
 #: src/escputil/escputil.c:252
 msgid "Stylus Photo 870"
@@ -1930,24 +1893,20 @@ msgid "Stylus Photo 895"
 msgstr "Stylus Photo 895"
 
 #: src/escputil/escputil.c:256
-#, fuzzy
 msgid "Stylus Photo 915"
-msgstr "Stylus Photo 895"
+msgstr "Stylus Photo 915"
 
 #: src/escputil/escputil.c:257
-#, fuzzy
 msgid "Stylus Photo 925"
-msgstr "Stylus Photo 895"
+msgstr "Stylus Photo 925"
 
 #: src/escputil/escputil.c:258
-#, fuzzy
 msgid "Stylus Photo 950"
-msgstr "Stylus Photo 750"
+msgstr "Stylus Photo 950"
 
 #: src/escputil/escputil.c:259
-#, fuzzy
 msgid "Stylus Photo 960"
-msgstr "Stylus Photo 790"
+msgstr "Stylus Photo 960"
 
 #: src/escputil/escputil.c:260
 msgid "Stylus Photo 1200"
@@ -1970,14 +1929,12 @@ msgid "Stylus Photo 2000P"
 msgstr "Stylus Photo 2000P"
 
 #: src/escputil/escputil.c:265
-#, fuzzy
 msgid "Stylus Photo 2100"
-msgstr "Stylus Photo 1200"
+msgstr "Stylus Photo 2100"
 
 #: src/escputil/escputil.c:266
-#, fuzzy
 msgid "Stylus Photo 2200"
-msgstr "Stylus Photo 1200"
+msgstr "Stylus Photo 2200"
 
 #: src/escputil/escputil.c:267
 msgid "Stylus Pro 5000"
@@ -1996,9 +1953,8 @@ msgid "Stylus Pro 7500"
 msgstr "Stylus Pro 7500"
 
 #: src/escputil/escputil.c:271
-#, fuzzy
 msgid "Stylus Pro 7600"
-msgstr "Stylus Pro 7000"
+msgstr "Stylus Pro 7600"
 
 #: src/escputil/escputil.c:272
 msgid "Stylus Pro 9000"
@@ -2009,9 +1965,8 @@ msgid "Stylus Pro 9500"
 msgstr "Stylus Pro 9500"
 
 #: src/escputil/escputil.c:274
-#, fuzzy
 msgid "Stylus Pro 9600"
-msgstr "Stylus Pro 9000"
+msgstr "Stylus Pro 9600"
 
 #: src/escputil/escputil.c:275
 msgid "Stylus Pro 10000"
@@ -2245,19 +2200,13 @@ msgid ""
 msgstr ""
 "Por favor leia estas intrucções muito cuidadosamente antes de prosseguir.\n"
 "\n"
-"Este programa permite alinhas a cabeça de impressão da sua impressora a "
-"jacto\n"
-"de tinta Epson Stylus. A má utilização do programa pode provocar degradação "
-"da\n"
-"qualidade de impressão, ou mesmo danificar a sua impressora. Este programa "
-"não foi revisto\n"
-"pela Seiko Epson para verificação, e não oferece qualquer tipo de garantia. "
-"O risco\n"
+"Este programa permite alinhas a cabeça de impressão da sua impressora a jacto\n"
+"de tinta Epson Stylus. A má utilização do programa pode provocar degradação da\n"
+"qualidade de impressão, ou mesmo danificar a sua impressora. Este programa não foi revisto\n"
+"pela Seiko Epson para verificação, e não oferece qualquer tipo de garantia. O risco\n"
 "involvido na sua utilização recai totalmente sobre si.\n"
 "\n"
-"Este programa imprime %d padrões de teste. Cada parão parece muito "
-"semelhante.\n"
-"O padrão consiste num série de pares de linhas verticais que sobrepõem.\n"
+"Este programa imprime um padrao que consiste num série de pares de linhas verticais que sobrepõem.\n"
 "Debaixo de cada par de linhas está um número entre %d e %d.\n"
 "\n"
 "Quando você inpeccionar o par de linhas, deve procurar o par de linhas\n"
@@ -2266,23 +2215,17 @@ msgstr ""
 "de uma lupa é recomendado para as inspecções mais críticas.\n"
 "Tamebém é recomendado que utilize papel de boa qualidade para o teste, para\n"
 "que as linhas fiquem bem formadas e não se espalhem pelo papel.\n"
-"Após descobrir o número que corresponde ao melhor par, coloque o papel de "
-"volta\n"
+"Após descobrir o número que corresponde ao melhor par, coloque o papel de volta\n"
 "no alimentador de papel antes de o teclar.\n"
 "\n"
 "Após correr todas as passagens de alinhamento, os padrões de alinhamento\n"
-"serão imprimidos mais uma vez. Você deve verificar que o par do meio (#%d em "
-"%d) é\n"
+"serão imprimidos mais uma vez. Você deve verificar que o par do meio (#%d em %d) é\n"
 "o melhor de todos os padrões.\n"
 "\n"
-"Agora ser-lhe-á dada a opção de gravar as escolhas na impressora, repetir o "
-"processo,\n"
-"ou sair sem gravar. Sair não vai restaurar as definições anteriores, mas "
-"desligar a\n"
-"impressora e voltar a ligar vai. Se sair deve repetir o processo inteiro se "
-"desejar gravar\n"
-"os resultados. É essencial que você não desligue a impressora durante este "
-"procedimento.\n"
+"Agora ser-lhe-á dada a opção de gravar as escolhas na impressora, repetir o processo,\n"
+"ou sair sem gravar. Sair não vai restaurar as definições anteriores, mas desligar a\n"
+"impressora e voltar a ligar vai. Se sair deve repetir o processo inteiro se desejar gravar\n"
+"os resultados. É essencial que você não desligue a impressora durante este procedimento.\n"
 
 #: src/escputil/escputil.c:872
 msgid "Unable to send command to the printer, exiting.\n"
@@ -3352,7 +3295,7 @@ msgstr "Sem buffer de linha\n"
 #: src/ghost/ijsgimpprint.c:181
 #, c-format
 msgid "Parameter %s out of range (value %f, min %f, max %f)\n"
-msgstr "Parâmetro %s fora do intervalo (valor %f, min %d, max %f)\n"
+msgstr "Parâmetro %s fora do intervalo (valor %f, min %f, max %f)\n"
 
 #: src/ghost/ijsgimpprint.c:187 src/ghost/ijsgimpprint.c:216
 #, c-format
@@ -3378,44 +3321,44 @@ msgstr "Impressora %s não é um modelo conhecido\n"
 msgid "Unknown option %s\n"
 msgstr "Opção desconhecida %s\n"
 
-#: src/ghost/ijsgimpprint.c:809
+#: src/ghost/ijsgimpprint.c:778
 #, c-format
 msgid "%.0f of %.0f\n"
 msgstr "%.0f de %.0f\n"
 
-#: src/ghost/ijsgimpprint.c:915
+#: src/ghost/ijsgimpprint.c:884
 #, c-format
 msgid "ijs_server_get_page_header failed %d\n"
-msgstr ""
+msgstr "ijs_server_get_page_header falhou %d\n"
 
-#: src/ghost/ijsgimpprint.c:926
+#: src/ghost/ijsgimpprint.c:895
 #, c-format
 msgid "image_init failed %d\n"
 msgstr "image_init falhou %d\n"
 
-#: src/ghost/ijsgimpprint.c:937
+#: src/ghost/ijsgimpprint.c:906
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
 msgstr "Não foi possível abrir \"file descriptor\": %s\n"
 
-#: src/ghost/ijsgimpprint.c:949
+#: src/ghost/ijsgimpprint.c:918
 #, c-format
 msgid "Unable to open %s: %s\n"
 msgstr "Não foi possível abrir %s: %s\n"
 
-#: src/ghost/ijsgimpprint.c:961
+#: src/ghost/ijsgimpprint.c:930
 #, c-format
 msgid "Unknown printer %s\n"
 msgstr "Impressora desconhecida %s\n"
 
-#: src/ghost/ijsgimpprint.c:992
+#: src/ghost/ijsgimpprint.c:961
 msgid "Bad parameters; cannot continue!\n"
 msgstr "Parâmetros inválidos; não é possível continuar|\n"
 
-#: src/ghost/ijsgimpprint.c:1002
-#, fuzzy, c-format
+#: src/ghost/ijsgimpprint.c:971
+#, c-format
 msgid "Get next row failed at %.0f\n"
-msgstr "Obtenção da próxima linha falhou em %d\n"
+msgstr "Obtenção da próxima linha falhou em %.0f\n"
 
 #~ msgid "1440 x 360 DPI"
 #~ msgstr "1440 x 360 DPI"
