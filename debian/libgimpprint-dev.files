@@ -1,0 +1,7 @@
+usr/bin/gimpprint-config
+usr/lib/libgimpprint.so
+usr/lib/libgimpprint.la
+usr/lib/libgimpprint.a
+usr/include/gimp-print
+usr/share/aclocal/gimpprint.m4
+usr/share/man/man1/gimpprint-config.1
