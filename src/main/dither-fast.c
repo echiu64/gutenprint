@@ -103,13 +103,14 @@ print_color_fast(const dither_t *d, dither_channel_t *dc, int x, int y,
     }
 }
 
-extern void
-stp_dither_raw_cmyk_fast(const unsigned short  *cmyk,
-			 int           row,
-			 dither_t 	    *d,
-			 int	       duplicate_line,
-			 int		  zero_mask)
+static void
+stp_dither_raw_fast(stp_vars_t v,
+		    int row,
+		    const unsigned short *raw,
+		    int duplicate_line,
+		    int zero_mask)
 {
+  dither_t *d = (dither_t *) stp_get_dither_data(v);
   int		x,
 		length;
   unsigned char	bit;
@@ -117,12 +118,48 @@ stp_dither_raw_cmyk_fast(const unsigned short  *cmyk,
 
   int dst_width = d->dst_width;
   int xerror, xstep, xmod;
+  if ((zero_mask & ((1 << d->n_input_channels) - 1)) ==
+      ((1 << d->n_input_channels) - 1))
+    return;
 
-  if (d->n_ghost_channels)
+  length = (d->dst_width + 7) / 8;
+
+  bit = 128;
+  xstep  = CHANNEL_COUNT(d) * (d->src_width / d->dst_width);
+  xmod   = d->src_width % d->dst_width;
+  xerror = 0;
+
+  QUANT(14);
+  for (x = 0; x != dst_width; x++)
     {
-      stp_dither_raw_fast(cmyk, row, d, duplicate_line, zero_mask);
-      return;
+      for (i = 0; i < CHANNEL_COUNT(d); i++)
+	{
+	  CHANNEL(d, i).v = raw[i];
+	  CHANNEL(d, i).o = CHANNEL(d, i).v;
+	  if (CHANNEL(d, i).ptrs[0])
+	    print_color_fast(d, &(CHANNEL(d, i)), x, row, bit, length);
+	}
+      QUANT(16);
+      ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d), xerror, xstep, xmod);
+      QUANT(17);
     }
+}
+
+static void
+stp_dither_raw_cmyk_fast(stp_vars_t v,
+			 int row,
+			 const unsigned short *cmyk,
+			 int duplicate_line,
+			 int zero_mask)
+{
+  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  int		x,
+		length;
+  unsigned char	bit;
+  int i;
+
+  int dst_width = d->dst_width;
+  int xerror, xstep, xmod;
 
   if ((zero_mask & ((1 << d->n_input_channels) - 1)) ==
       ((1 << d->n_input_channels) - 1))
@@ -160,42 +197,16 @@ stp_dither_raw_cmyk_fast(const unsigned short  *cmyk,
 }
 
 void
-stp_dither_raw_fast(const unsigned short  *raw,
-		    int           row,
-		    dither_t 	    *d,
-		    int	       duplicate_line,
-		    int		  zero_mask)
+stp_dither_fast(stp_vars_t v,
+		int row,
+		const unsigned short *input,
+		int duplicate_line,
+		int zero_mask)
 {
-  int		x,
-		length;
-  unsigned char	bit;
-  int i;
-
-  int dst_width = d->dst_width;
-  int xerror, xstep, xmod;
-  if ((zero_mask & ((1 << d->n_input_channels) - 1)) ==
-      ((1 << d->n_input_channels) - 1))
-    return;
-
-  length = (d->dst_width + 7) / 8;
-
-  bit = 128;
-  xstep  = CHANNEL_COUNT(d) * (d->src_width / d->dst_width);
-  xmod   = d->src_width % d->dst_width;
-  xerror = 0;
-
-  QUANT(14);
-  for (x = 0; x != dst_width; x++)
-    {
-      for (i = 0; i < CHANNEL_COUNT(d); i++)
-	{
-	  CHANNEL(d, i).v = raw[i];
-	  CHANNEL(d, i).o = CHANNEL(d, i).v;
-	  if (CHANNEL(d, i).ptrs[0])
-	    print_color_fast(d, &(CHANNEL(d, i)), x, row, bit, length);
-	}
-      QUANT(16);
-      ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d), xerror, xstep, xmod);
-      QUANT(17);
-    }
+  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  if (d->dither_class != OUTPUT_RAW_CMYK ||
+      d->n_ghost_channels > 0)
+    stp_dither_raw_fast(v, row, input, duplicate_line, zero_mask);
+  else
+    stp_dither_raw_cmyk_fast(v, row, input, duplicate_line, zero_mask);
 }

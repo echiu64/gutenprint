@@ -179,13 +179,14 @@ print_color_ordered(const dither_t *d, dither_channel_t *dc, int x, int y,
   return 0;
 }
 
-void
-stp_dither_raw_cmyk_ordered(const unsigned short  *cmyk,
-			    int           row,
-			    dither_t 	    *d,
-			    int		  duplicate_line,
-			    int		  zero_mask)
+static void
+stp_dither_raw_ordered(stp_vars_t v,
+		       int row,
+		       const unsigned short *raw,
+		       int duplicate_line,
+		       int zero_mask)
 {
+  dither_t *d = (dither_t *) stp_get_dither_data(v);
   int		x,
 		length;
   unsigned char	bit;
@@ -194,11 +195,49 @@ stp_dither_raw_cmyk_ordered(const unsigned short  *cmyk,
   int		terminate;
   int xerror, xstep, xmod;
 
-  if (d->n_ghost_channels)
+  if ((zero_mask & ((1 << d->n_input_channels) - 1)) ==
+      ((1 << d->n_input_channels) - 1))
+    return;
+
+  length = (d->dst_width + 7) / 8;
+
+  bit = 128;
+  xstep  = CHANNEL_COUNT(d) * (d->src_width / d->dst_width);
+  xmod   = d->src_width % d->dst_width;
+  xerror = 0;
+  terminate = d->dst_width;
+
+  QUANT(6);
+  for (x = 0; x != terminate; x ++)
     {
-      stp_dither_raw_ordered(cmyk, row, d, duplicate_line, zero_mask);
-      return;
-    }
+      for (i = 0; i < CHANNEL_COUNT(d); i++)
+	{
+	  CHANNEL(d, i).v = raw[i];
+	  CHANNEL(d, i).o = CHANNEL(d, i).v;
+	  print_color_ordered(d, &(CHANNEL(d, i)), x, row, bit, length, 0);
+	}
+
+      QUANT(11);
+      ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d), xerror, xstep, xmod);
+      QUANT(13);
+  }
+}
+
+static void
+stp_dither_raw_cmyk_ordered(stp_vars_t v,
+			    int row,
+			    const unsigned short *cmyk,
+			    int duplicate_line,
+			    int zero_mask)
+{
+  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  int		x,
+		length;
+  unsigned char	bit;
+  int i;
+
+  int		terminate;
+  int xerror, xstep, xmod;
 
   if ((zero_mask & ((1 << d->n_input_channels) - 1)) ==
       ((1 << d->n_input_channels) - 1))
@@ -237,44 +276,16 @@ stp_dither_raw_cmyk_ordered(const unsigned short  *cmyk,
 }
 
 void
-stp_dither_raw_ordered(const unsigned short  *raw,
-		       int           row,
-		       dither_t 	    *d,
-		       int		  duplicate_line,
-		       int		  zero_mask)
+stp_dither_ordered(stp_vars_t v,
+		   int row,
+		   const unsigned short *input,
+		   int duplicate_line,
+		   int zero_mask)
 {
-  int		x,
-		length;
-  unsigned char	bit;
-  int i;
-
-  int		terminate;
-  int xerror, xstep, xmod;
-
-  if ((zero_mask & ((1 << d->n_input_channels) - 1)) ==
-      ((1 << d->n_input_channels) - 1))
-    return;
-
-  length = (d->dst_width + 7) / 8;
-
-  bit = 128;
-  xstep  = CHANNEL_COUNT(d) * (d->src_width / d->dst_width);
-  xmod   = d->src_width % d->dst_width;
-  xerror = 0;
-  terminate = d->dst_width;
-
-  QUANT(6);
-  for (x = 0; x != terminate; x ++)
-    {
-      for (i = 0; i < CHANNEL_COUNT(d); i++)
-	{
-	  CHANNEL(d, i).v = raw[i];
-	  CHANNEL(d, i).o = CHANNEL(d, i).v;
-	  print_color_ordered(d, &(CHANNEL(d, i)), x, row, bit, length, 0);
-	}
-
-      QUANT(11);
-      ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d), xerror, xstep, xmod);
-      QUANT(13);
-  }
+  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  if (d->dither_class != OUTPUT_RAW_CMYK ||
+      d->n_ghost_channels > 0)
+    stp_dither_raw_ordered(v, row, input, duplicate_line, zero_mask);
+  else
+    stp_dither_raw_cmyk_ordered(v, row, input, duplicate_line, zero_mask);
 }

@@ -185,59 +185,19 @@ stp_set_dither_function(stp_vars_t v, int image_bpp)
 	    }
 	}
     }
-  switch (d->dither_class)
+  switch (d->dither_type)
     {
-    case OUTPUT_GRAY:
-    case OUTPUT_COLOR:
-    case OUTPUT_RAW_PRINTER:
-      switch (d->dither_class)
-	{
-	case OUTPUT_GRAY:
-	  d->n_channels = 1;
-	  d->n_input_channels = 1;
-	  break;
-	case OUTPUT_COLOR:
-	  d->n_channels = 4;
-	  d->n_input_channels = 3;
-	  break;
-	case OUTPUT_RAW_PRINTER:
-	  d->n_channels = image_bpp / 2;
-	  d->n_input_channels = image_bpp / 2;
-	  break;
-	}
-      switch (d->dither_type)
-	{
-	case D_FAST:
-	  RETURN_DITHERFUNC(stp_dither_raw_fast, v);
-	case D_VERY_FAST:
-	  RETURN_DITHERFUNC(stp_dither_raw_very_fast, v);
-	case D_ORDERED:
-	  RETURN_DITHERFUNC(stp_dither_raw_ordered, v);
-	case D_EVENTONE:
-	  RETURN_DITHERFUNC(stp_dither_raw_et, v);
-	default:
-	  RETURN_DITHERFUNC(stp_dither_raw_ed, v);
-	}
-      break;
-    case OUTPUT_RAW_CMYK:
-      d->n_channels = 4;
-      d->n_input_channels = 4;
-      switch (d->dither_type)
-	{
-	case D_FAST:
-	  RETURN_DITHERFUNC(stp_dither_raw_cmyk_fast, v);
-	case D_VERY_FAST:
-	  RETURN_DITHERFUNC(stp_dither_raw_cmyk_very_fast, v);
-	case D_ORDERED:
-	  RETURN_DITHERFUNC(stp_dither_raw_cmyk_ordered, v);
-	case D_EVENTONE:
-	  RETURN_DITHERFUNC(stp_dither_raw_cmyk_et, v);
-	default:
-	  RETURN_DITHERFUNC(stp_dither_raw_cmyk_ed, v);
-	}
-      break;
+    case D_FAST:
+      RETURN_DITHERFUNC(stp_dither_fast, v);
+    case D_VERY_FAST:
+      RETURN_DITHERFUNC(stp_dither_very_fast, v);
+    case D_ORDERED:
+      RETURN_DITHERFUNC(stp_dither_ordered, v);
+    case D_EVENTONE:
+      RETURN_DITHERFUNC(stp_dither_et, v);
+    default:
+      RETURN_DITHERFUNC(stp_dither_ed, v);
     }
-  RETURN_DITHERFUNC(NULL, v);
 }
 
 void
@@ -257,6 +217,25 @@ stp_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
   d->dither_class = stp_get_output_type(v);
   d->error_rows = ERROR_ROWS;
   d->n_ghost_channels = 0;
+  switch (d->dither_class)
+    {
+    case OUTPUT_GRAY:
+      d->n_channels = 1;
+      d->n_input_channels = 1;
+      break;
+    case OUTPUT_COLOR:
+      d->n_channels = 4;
+      d->n_input_channels = 3;
+      break;
+    case OUTPUT_RAW_PRINTER:
+      d->n_channels = image_bpp / 2;
+      d->n_input_channels = image_bpp / 2;
+      break;
+    case OUTPUT_RAW_CMYK:
+      d->n_channels = 4;
+      d->n_input_channels = 4;
+      break;
+    }
   d->ditherfunc = stp_set_dither_function(v, image_bpp);
 
   d->channel = stp_zalloc(d->n_channels * sizeof(dither_channel_t));
@@ -525,5 +504,5 @@ stp_dither(stp_vars_t v, int row, const unsigned short *input,
     }
   d->n_ghost_channels = ghost_channels;
   d->ptr_offset = 0;
-  (d->ditherfunc)(input, row, d, duplicate_line, zero_mask);
+  (d->ditherfunc)(v, row, input, duplicate_line, zero_mask);
 }
