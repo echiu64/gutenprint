@@ -203,7 +203,7 @@
       <unit value="english-extended"/>
     </paper>
     <paper name="w1728h2592">
-      <description value="24x36"/>
+      <description value="Super A1 24x36"/>
       <comment value="Sometimes used for 35mm"/>
       <width value="1728"/>
       <height value="2592"/>
@@ -239,6 +239,13 @@
       <width value="3370"/>
       <height value="4768"/>
       <unit value="metric-extended"/>
+    </paper>
+    <paper name="SuperA0">
+      <description value="Super A0"/>
+      <comment value="914mm x 1292mm"/>
+      <width value="2590"/>
+      <height value="3662"/>
+      <unit value="metric"/>
     </paper>
     <paper name="A0">
       <description value="A0"/>
@@ -492,6 +499,12 @@
 <!--
     JIS
 -->
+    <paper name="SuperB0">
+      <description value="Super B0 JIS"/>
+      <width value="3167"/> <!-- Should be 3169, but Epson driver doesn't like that -->
+      <height value="4478"/>
+      <unit value="metric-extended"/>
+    </paper>
     <paper name="B0">
       <description value="B0 JIS"/>
       <width value="2919"/>
