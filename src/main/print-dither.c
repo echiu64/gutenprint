@@ -2703,6 +2703,7 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
   for (i = 1; i < NCOLORS; i++)
     {
       threshold[i] = CHANNEL(d, i).ranges[0].value[1] / 4 - 1;
+      ndither[i] = 0;
     }
 
   x = (direction == 1) ? 0 : d->dst_width - 1;
@@ -2726,6 +2727,7 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	value = cmy[i-1];
 	CHANNEL(d, i).o = value;				/* Remember value we want printed here */
 
+        ndither[i] += error[i][0][0];
 	value = threshold[i] + ndither[i] + CHANNEL(d, i).o / 2;
 								/* Compute colour for this pixel */
 								/* Only use half of cmy[] to avoid dark->light problems */
@@ -2852,16 +2854,30 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
       }
 
       QUANT(11);
-      
+  
+
       /* Diffuse the error round a bit */
       /* At the moment do a simple diffusion directly down and across */
-      
+     
+      /*
       for (i=1; i < NCOLORS; i++) {
         int fraction = ndither[i] / 2;
         error[i][1][0] += fraction;
-	ndither[i] += error[i][0][direction] - fraction;
+        ndither[i] -= fraction;
       }
+      */
 
+      /* Other spreading around try - Thomas Tonino */
+     
+      for (i=1; i < NCOLORS; i++) {
+        int fraction = ndither[i] / 8;
+        error[i][1][0] += fraction;
+        error[i][1][-2*direction] += fraction;
+        error[i][1][direction] += 2*fraction;
+	ndither[i] -= 4*fraction;
+      }
+      /* End of new try */    
+      
       QUANT(12);
       ADVANCE_BIDIRECTIONAL(d, bit, cmy, direction, 3, xerror, xmod, error,
 			    NCOLORS, ERROR_ROWS);
