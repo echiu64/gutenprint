@@ -3,7 +3,7 @@
  *
  *   EvenTone dither implementation for Gimp-Print
  *
- *   Copyright 2002-2003 Mark Tomlinson (mark@southern.co.uk)
+ *   Copyright 2002-2003 Mark Tomlinson (mark@southern.co.nz)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -100,6 +100,8 @@ et_initializer(dither_t *d, int duplicate_line, int zero_mask)
       for (j = 0; j < CHANNEL(d, i).numshades; j++) {
         CHANNEL(d, i).shades[j].errs = stp_zalloc(size * sizeof(int));
       }
+      /* Use ".b" for the density scaler. */
+      CHANNEL(d, i).b = 65536 * CHANNEL(d, i).density_adjustment;
     }
 
     et = stp_zalloc(sizeof(eventone_t));
@@ -178,7 +180,7 @@ split_shades(dither_channel_t *dc, int x, int *inkp)
       *inkp = sp->value += sp->errs[x + MAX_SPREAD];
       return sp;
     }
-    sp->base = (dc->v * 65536) / sp->density;
+    sp->base = (dc->v * dc->b) / sp->density;
     sp->value += 2 * sp->base + sp->errs[x + MAX_SPREAD];
     *inkp = sp->value - sp->base;
     return sp;
@@ -220,10 +222,10 @@ split_shades(dither_channel_t *dc, int x, int *inkp)
     nextv = 0;
     if (orig > sp->lower) {
       if (sp->trans == 0 || orig >= sp->trans) {
-        sp->base = (dc->v * 65536) / sp->density;
+        sp->base = (dc->v * dc->b) / sp->density;
       } else {
-        sp->base = ((orig - sp->lower) * 65536) / sp->div1;
-	nextv = ((sp->trans - orig) * 65536) / sp->div2;
+        sp->base = ((orig - sp->lower) * dc->b) / sp->div1;
+	nextv = ((sp->trans - orig) * dc->b) / sp->div2;
 	if (orig != dc->v) {
 	  sp->base = (sp->base * dc->v) / orig;
 	  nextv = (nextv * dc->v) / orig;
@@ -275,7 +277,7 @@ diffuse_error(dither_channel_t *dc, eventone_t *et, int diff_factor, int x, int 
 
     { dis_t *etd = &sp->et_dis[x];
       int t = etd->r_sq + etd->dy;		/* r^2 from dot above */
-      int u = sp->dis.r_sq + sp->dis.dy;		/* r^2 from dot on this line */
+      int u = sp->dis.r_sq + sp->dis.dy;	/* r^2 from dot on this line */
       if (u < t) {				/* If dot from this line is close */
         t = u;					/* Use it instead */
         etd->dx = sp->dis.dx;
@@ -355,13 +357,12 @@ found_segment:
 }
 
 static void
-stp_dither_raw_et(stp_vars_t v,
+stp_dither_raw_et(dither_t *d,
 		  int row,
 		  const unsigned short *raw,
 		  int duplicate_line,
 		  int zero_mask)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
   eventone_t *et;
   static const int diff_factors[] = {1, 10, 16, 23, 32};
 
@@ -459,13 +460,12 @@ stp_dither_raw_et(stp_vars_t v,
 }
 
 static void
-stp_dither_raw_cmyk_et(stp_vars_t v,
+stp_dither_raw_cmyk_et(dither_t *d,
 		       int row,
 		       const unsigned short *cmyk,
 		       int duplicate_line,
 		       int zero_mask)
 {
-  dither_t *d = (dither_t *) stp_get_dither_data(v);
   eventone_t *et;
   static const int diff_factors[] = {1, 10, 16, 23, 32};
 
@@ -582,7 +582,7 @@ stp_dither_et(stp_vars_t v,
     stp_dither_ed(v, row, input, duplicate_line, zero_mask);
   else if (d->dither_class != OUTPUT_RAW_CMYK ||
 	   d->n_ghost_channels > 0)
-    stp_dither_raw_et(v, row, input, duplicate_line, zero_mask);
+    stp_dither_raw_et(d, row, input, duplicate_line, zero_mask);
   else
-    stp_dither_raw_cmyk_et(v, row, input, duplicate_line, zero_mask);
+    stp_dither_raw_cmyk_et(d, row, input, duplicate_line, zero_mask);
 }
