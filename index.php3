@@ -13,7 +13,8 @@ require('standard_html_header.php3');
 # Please remember to use <P> </P> tags !  ?>
 
 <H4>High quality drivers for Canon, Epson, and PCL printers for use
-with Ghostscript and <a href="http://www.gimp.org">the Gimp</a>.</H4>
+with Ghostscript, <A HREF="http://www.cups.org">CUPS</A>,
+and <a href="http://www.gimp.org">the Gimp</a>.</H4>
 
 <P>For a quick download, please visit <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
@@ -33,7 +34,7 @@ completely different from 3.1.9 and earlier.</strong></p>
 href="https://sourceforge.net/project/?group_id=1537">our
 project page</a>, which contains a lot more information about us!</p>
 
-<p>This package was first written by Mike Sweet of <a
+<p>This package was first written by Michael Sweet of <a
 href="http://www.easysw.com">Easy Software</a>.  In the summer of
 1999, I (Robert Krawitz) purchased an <a
 href="http://www.epson.com">Epson Stylus Photo EX</a> printer to feed

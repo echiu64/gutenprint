@@ -13,8 +13,9 @@ $dev_team = array(
 'Michael Natterer' => 'https://sourceforge.net/sendmessage.php?touser=34554',
 'Steve Miller' => 'https://sourceforge.net/sendmessage.php?touser=9570',
 'Thomas Tonino' => 'https://sourceforge.net/sendmessage.php?touser=20090',
-'Jean Marc Verbavatz' => 'https://sourceforge.net/sendmessage.php?touser=29508'
-'Charles Briscoe-Smith' => 'https://sourceforge.net/sendmessage.php?touser=32646'
+'Jean Marc Verbavatz' => 'https://sourceforge.net/sendmessage.php?touser=29508',
+'Charles Briscoe-Smith' => 'https://sourceforge.net/sendmessage.php?touser=32646',
+'Michael Sweet' => 'https://sourceforge.net/sendmessage.php?touser=9233'
 );
 
 $navbar_text = 'Welcome to Gimp-Print.';
@@ -29,7 +30,7 @@ $supported_printers = array(
 		'EPSON Stylus Photo 1200' => 'Fully Operational',
 		'EPSON Stylus Photo 870' => 'Fully Operational',
 		'EPSON Stylus Photo 1270' => 'Fully Operational',
-		'EPSON Stylus Photo 2000P' => 'Untested'
+		'EPSON Stylus Photo 2000P' => 'Testing in Progress'
 		),
 	'Stylus Color Range' => array(
 		'EPSON Stylus Color' => 'Fully Operational',
