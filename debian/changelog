@@ -1,13 +1,16 @@
 gimp-print (4.1.4-1) unstable; urgency=low
 
   * New upstream release
+  * Debian package rewritten from scratch.
   * Added diversion of the print plugin that is part of the GIMP
     package.
   * Fixed shared library dependencies for programs linked with
     libgimpprint.
-  * Debian package rewritten from scratch.
+  * Added /etc/cups/command.types as a conffile for package cupsys-
+    driver-gimpprint
+  * Adsed gimp1.2-print html and sgml docs to doc-base
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>  Sat, 10 Feb 2001 00:59:52 +0000
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Sun, 11 Feb 2001 15:54:33 +0000
 
 gimp-print (4.0.2-1) unstable; urgency=low
 
