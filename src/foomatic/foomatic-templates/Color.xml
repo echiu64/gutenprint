@@ -1,4 +1,4 @@
-<option type="enum" id="opt/@@DRVNAME@@-outputtype">
+<option type="enum" id="opt/@@DRVNAME@@-color">
   <!-- A multilingual <comments> block can appear here, too;
        it should be treated as documentation for the user. -->
   <arg_longname>
@@ -12,7 +12,7 @@
    <arg_spot>A</arg_spot>
    <arg_required />
    <arg_postscript />
-   <arg_proto>&lt;&lt;/OutputType(%s)&gt;&gt;setpagedevice</arg_proto>
+   <arg_proto>&lt;&lt;/Color(%s)&gt;&gt;setpagedevice</arg_proto>
   </arg_execution>
 
   @@OPTCONSTRAINTS@@
