@@ -563,7 +563,7 @@ do_align(void)
     {
       printf("This procedure requires that your printer be older than the\n");
       printf("Epson Stylus Color 440.  If you have a newer printer, please\n");
-      printf("type control-C now and run 'escputil -a -o'\n");
+      printf("type control-C now and run 'escputil -a -l'\n");
     }
   printf("Please place a sheet of paper in your printer to begin the head\n");
   printf("alignment procedure.\n");

@@ -1012,7 +1012,7 @@ gimp_plist_build_combo(GtkWidget*  combo,     /* I - Combo widget */
 		       int         num_items, /* I - Number of items */
 		       char**      items,     /* I - Menu items */
 		       char*       cur_item,  /* I - Current item */
-		       void (*callback)(GtkWidget *, gint)) /* I - Callback */
+		       GtkSignalFunc callback) /* I - Callback */
 {
   int		i;	/* Looping var */
   GList		*list = 0;
@@ -1377,13 +1377,15 @@ gimp_media_size_callback(GtkWidget *widget,
   const char *new_media_size;
   new_media_size
     = gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(media_size_combo)->entry));
-  strcpy(vars.media_size, new_media_size);
-  strcpy(plist[plist_current].v.media_size, new_media_size);
-  vars.left = -1;
-  vars.top  = -1;
-  plist[plist_current].v.left = vars.left;
-  plist[plist_current].v.top = vars.top;
-
+  if (strcmp(vars.media_size, new_media_size) != 0)
+    {
+      strcpy(vars.media_size, new_media_size);
+      strcpy(plist[plist_current].v.media_size, new_media_size);
+      vars.left = -1;
+      vars.top  = -1;
+      plist[plist_current].v.left = vars.left;
+      plist[plist_current].v.top = vars.top;
+    }
   gimp_preview_update ();
 }
 
@@ -1438,13 +1440,15 @@ static void
 gimp_orientation_callback (GtkWidget *widget,
 			   gpointer   data)
 {
-  vars.orientation = (gint) data;
-  vars.left        = -1;
-  vars.top         = -1;
-  plist[plist_current].v.orientation = vars.orientation;
-  plist[plist_current].v.left = vars.left;
-  plist[plist_current].v.top = vars.top;
-
+  if (vars.orientation != (gint) data)
+    {
+      vars.orientation = (gint) data;
+      vars.left        = -1;
+      vars.top         = -1;
+      plist[plist_current].v.orientation = vars.orientation;
+      plist[plist_current].v.left = vars.left;
+      plist[plist_current].v.top = vars.top;
+    }
   gimp_preview_update ();
 }
 
