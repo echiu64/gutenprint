@@ -187,6 +187,7 @@ private int
 stp_print_page(gx_device_printer * pdev, FILE * file)
 {
   stp_image_t theImage;
+  private int printvars_merged = 0;
   int code;			/* return code */
   const printer_t *printer = NULL;
   uint stp_raster;
@@ -204,6 +205,11 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
       return_error(gs_error_rangecheck);
     }
 
+  if (!printvars_merged)
+    {
+      merge_printvars(&(stp_data.v), &(printer->printvars));
+      printvars_merged = 1;
+    }
   stp_row = gs_alloc_bytes(pdev->memory, stp_raster, "stp file buffer");
 
   if (stp_row == 0)		/* can't allocate row buffer */
@@ -520,7 +526,6 @@ stp_open(gx_device *pdev)
   stp_data.v.top    = 0;
   stp_data.bottom = bottom + length-top;
 
-  merge_printvars(&(stp_data.v), &(printer->printvars));
   stp_print_debug("stp_open", pdev, &stp_data);
   STP_DEBUG(fprintf(gs_stderr, "margins:  l %f  b %f  r %f  t %f\n",
 		    st[0], st[1], st[2], st[3]));
