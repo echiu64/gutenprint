@@ -132,7 +132,8 @@ extern void plist_build_combo         (GtkWidget     *combo,
 				       const gchar   *cur_item,
 				       const gchar	  *def_value,
 				       GtkSignalFunc callback,
-				       gint          *callback_id);
+				       gint          *callback_id,
+				       gpointer	     data);
 
 extern void invalidate_frame(void);
 extern void invalidate_preview_thumbnail(void);

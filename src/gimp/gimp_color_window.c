@@ -114,7 +114,8 @@ build_dither_combo (void)
 		     stp_get_dither_algorithm (pv->v),
 		     stp_default_dither_algorithm (),
 		     &dither_algo_callback,
-		     &dither_algo_callback_id);
+		     &dither_algo_callback_id,
+		     NULL);
 
   for (i = 0; i < stp_dither_algorithm_count (); i++)
     {

@@ -82,18 +82,8 @@ static GtkWidget *unit_inch;
 static GtkWidget *unit_cm;
 static GtkWidget *unit_point;
 static GtkWidget *unit_mm;
-static GtkWidget *media_size_combo         = NULL;  /* Media size combo box */
 static GtkWidget *custom_size_width        = NULL;
 static GtkWidget *custom_size_height       = NULL;
-static gint       media_size_callback_id   = -1;
-static GtkWidget *media_type_combo         = NULL;  /* Media type combo box */
-static gint       media_type_callback_id   = -1;    /* Media type calback ID */
-static GtkWidget *media_source_combo       = NULL;  /* Media source combo box */
-static gint       media_source_callback_id = -1;    /* Media source calback ID */
-static GtkWidget *ink_type_combo           = NULL;  /* Ink type combo box */
-static gint       ink_type_callback_id     = -1;    /* Ink type calback ID */
-static GtkWidget *resolution_combo         = NULL;  /* Resolution combo box */
-static gint       resolution_callback_id   = -1;    /* Resolution calback ID */
 static GtkWidget *orientation_menu         = NULL;  /* Orientation menu */
 static GtkWidget *scaling_percent;        /* Scale by percent */
 static GtkWidget *scaling_ppi;            /* Scale by pixels-per-inch */
@@ -161,25 +151,11 @@ static gint image_height;
 gint image_true_width;
 gint image_true_height;
 
-static gint		num_media_sizes = 0;
-static stp_param_t	*media_sizes;
-static gint		num_media_types = 0;	/* Number of media types */
-static stp_param_t	*media_types;		/* Media type strings */
-static gint		num_media_sources = 0;	/* Number of media sources */
-static stp_param_t	*media_sources;         /* Media source strings */
-static gint		num_ink_types = 0;	/* Number of ink types */
-static stp_param_t	*ink_types;		/* Ink type strings */
-static gint		num_resolutions = 0;	/* Number of resolutions */
-static stp_param_t	*resolutions;		/* Resolution strings */
-
 static void scaling_update        (GtkAdjustment *adjustment);
 static void scaling_callback      (GtkWidget *widget);
 static void plist_callback        (GtkWidget *widget, gpointer data);
-static void media_size_callback   (GtkWidget *widget, gpointer data);
-static void media_type_callback   (GtkWidget *widget, gpointer data);
-static void media_source_callback (GtkWidget *widget, gpointer data);
-static void ink_type_callback     (GtkWidget *widget, gpointer data);
-static void resolution_callback   (GtkWidget *widget, gpointer data);
+static void custom_media_size_callback(GtkWidget *widget, gpointer data);
+static void combo_callback        (GtkWidget *widget, gpointer data);
 static void output_type_callback  (GtkWidget *widget, gpointer data);
 static void unit_callback         (GtkWidget *widget, gpointer data);
 static void orientation_callback  (GtkWidget *widget, gpointer data);
@@ -215,12 +191,72 @@ static void preview_motion_callback     (GtkWidget      *widget,
 static void position_callback           (GtkWidget      *widget);
 static void image_type_callback         (GtkWidget      *widget,
 					 gpointer        data);
+static void set_media_size(const gchar *new_media_size);
 
 static gdouble preview_ppi = 10;
 gp_plist_t *pv;
 
 #define Combo_get_text(combo) \
 	(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo)->entry)))
+
+typedef struct
+{
+  const char *name;
+  const char *text;
+  const char *help;
+  gint count;
+  stp_param_t *params;
+  const char *(*accessor)(const stp_vars_t);
+  void (*mutator)(stp_vars_t, const gchar *);
+  void (*extra)(const gchar *);
+  gint callback_id;
+  GtkWidget *combo;
+} list_option_t;
+
+static list_option_t the_list_options[] =
+  {
+    { "MediaType", N_("Media Type:"),
+      N_("Type of media you're printing to"),
+      0, NULL, stp_get_media_type, stp_set_media_type, NULL, -1 },
+    { "PageSize", N_("Media Size:"),
+      N_("Size of paper that you wish to print to"),
+      0, NULL, stp_get_media_size, stp_set_media_size, set_media_size, -1 },
+    { "InputSlot", N_("Media Source:"),
+      N_("Source (input slot) of media you're printing to"),
+      0, NULL, stp_get_media_source, stp_set_media_source, NULL, -1 },
+    { "InkType", N_("Ink Type:"),
+      N_("Type of ink in the printer"),
+      0, NULL, stp_get_ink_type, stp_set_ink_type, NULL, -1 },
+    { "Resolution", N_("Resolution:"),
+      N_("Resolution and quality of the print"),
+      0, NULL, stp_get_resolution, stp_set_resolution, NULL, -1 },
+  };
+
+static const gint list_option_count = sizeof(the_list_options) / sizeof(list_option_t);
+
+static list_option_t *
+get_list_option_by_name(const char *name)
+{
+  int i;
+  for (i = 0; i < list_option_count; i++)
+    if (strcmp(name, the_list_options[i].name) == 0)
+      return &(the_list_options[i]);
+  return NULL;
+}
+
+static void
+create_new_combo(list_option_t *list_option, GtkWidget *table,
+		 int hpos, int vpos)
+{
+  GtkWidget *event_box = gtk_event_box_new();
+  list_option->combo = gtk_combo_new();
+  gtk_container_add(GTK_CONTAINER(event_box), list_option->combo);
+  gtk_widget_show(list_option->combo);
+  gimp_help_set_help_data(event_box, _(list_option->help), NULL);
+  gimp_table_attach_aligned(GTK_TABLE(table), hpos, vpos, _(list_option->text),
+			    1.0, 0.5, event_box, 1, TRUE);
+}
+
 
 void
 set_adjustment_tooltip (GtkObject   *adj,
@@ -370,7 +406,8 @@ build_printer_combo(void)
 		    printer_list[plist_current].text,
 		    NULL,
 		    plist_callback,
-		    &plist_callback_id);
+		    &plist_callback_id,
+		    NULL);
 }
 
 static void
@@ -927,6 +964,8 @@ create_printer_settings_frame (void)
   GtkWidget *button;
   GtkWidget *label;
   GtkWidget *event_box;
+  gint vpos = 0;
+  gint i;
 
   create_printer_dialog ();
   create_about_dialog ();
@@ -954,17 +993,19 @@ create_printer_settings_frame (void)
                            _("Select the name of the printer (not the type, "
                              "or model, of printer) that you wish to print to"),
                            NULL);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 0,
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, vpos++,
                              _("Printer Name:"), 1.0, 0.5,
                              event_box, 2, TRUE);
 
   printer_model_label = gtk_label_new ("");
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 1,
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, vpos++,
                              _("Printer Model:"), 1.0, 0.5,
                              printer_model_label, 2, TRUE);
 
   printer_hbox = gtk_hbox_new (TRUE, 4);
-  gtk_table_attach_defaults (GTK_TABLE (table), printer_hbox, 1, 2, 2, 3);
+  gtk_table_attach_defaults (GTK_TABLE (table), printer_hbox,
+			     1, 2, vpos, vpos + 1);
+  vpos += 2;
   gtk_widget_show (printer_hbox);
 
   /*
@@ -1005,24 +1046,14 @@ create_printer_settings_frame (void)
    * Media size combo box.
    */
 
-  media_size_combo = gtk_combo_new ();
-  event_box = gtk_event_box_new ();
-  gtk_container_add (GTK_CONTAINER (event_box), media_size_combo);
-  gtk_widget_show (media_size_combo);
-
-  gimp_help_set_help_data (event_box,
-                           _("Size of paper that you wish to print to"),
-                           NULL);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 3,
-                             _("Media Size:"), 1.0, 0.5,
-                             event_box, 1, TRUE);
+  create_new_combo(get_list_option_by_name("PageSize"), table, 0, vpos++);
 
   /*
    * Custom media size entries
    */
 
   media_size_hbox = gtk_hbox_new (FALSE, 4);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 4,
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, vpos++,
                              _("Dimensions:"), 1.0, 0.5,
                              media_size_hbox, 2, TRUE);
 
@@ -1040,8 +1071,7 @@ create_printer_settings_frame (void)
                            _("Width of the paper that you wish to print to"),
                            NULL);
   gtk_signal_connect (GTK_OBJECT (custom_size_width), "activate",
-                      GTK_SIGNAL_FUNC (media_size_callback),
-                      NULL);
+                      GTK_SIGNAL_FUNC (custom_media_size_callback), NULL);
 
   label = gtk_label_new (_("Height:"));
   gtk_box_pack_start (GTK_BOX (media_size_hbox), label, FALSE, FALSE, 0);
@@ -1057,72 +1087,13 @@ create_printer_settings_frame (void)
                            _("Height of the paper that you wish to print to"),
                            NULL);
   gtk_signal_connect (GTK_OBJECT (custom_size_height), "activate",
-                      GTK_SIGNAL_FUNC (media_size_callback),
-                      NULL);
+                      GTK_SIGNAL_FUNC (custom_media_size_callback), NULL);
 
-  /*
-   * Media type combo box.
-   */
-
-  media_type_combo = gtk_combo_new ();
-  event_box = gtk_event_box_new ();
-  gtk_container_add (GTK_CONTAINER (event_box), media_type_combo);
-  gtk_widget_show (media_type_combo);
-
-  gimp_help_set_help_data (event_box,
-                           _("Type of media you're printing to"),
-                           NULL);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 5,
-                             _("Media Type:"), 1.0, 0.5,
-                             event_box, 2, TRUE);
-
-  /*
-   * Media source combo box.
-   */
-
-  media_source_combo = gtk_combo_new ();
-  event_box = gtk_event_box_new ();
-  gtk_container_add (GTK_CONTAINER (event_box), media_source_combo);
-  gtk_widget_show (media_source_combo);
-
-  gimp_help_set_help_data (event_box,
-                           _("Source (input slot) of media you're printing to"),
-                           NULL);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 6,
-                             _("Media Source:"), 1.0, 0.5,
-                             event_box, 2, TRUE);
-
-  /*
-   * Ink type combo box.
-   */
-
-  ink_type_combo = gtk_combo_new ();
-  event_box = gtk_event_box_new ();
-  gtk_container_add (GTK_CONTAINER (event_box), ink_type_combo);
-  gtk_widget_show (ink_type_combo);
-
-  gimp_help_set_help_data (event_box,
-                           _("Type of ink in the printer"),
-                           NULL);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 7,
-                             _("Ink Type:"), 1.0, 0.5,
-                             event_box, 2, TRUE);
-
-  /*
-   * Resolution combo box.
-   */
-
-  resolution_combo = gtk_combo_new ();
-  event_box = gtk_event_box_new ();
-  gtk_container_add (GTK_CONTAINER (event_box), resolution_combo);
-  gtk_widget_show (resolution_combo);
-
-  gimp_help_set_help_data (event_box,
-                           _("Resolution and quality of the print"),
-                           NULL);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 8,
-                             _("Resolution:"), 1.0, 0.5,
-                             event_box, 2, TRUE);
+  for (i = 0; i < list_option_count; i++)
+    {
+      if (strcmp(the_list_options[i].name, "PageSize"))
+	create_new_combo(&(the_list_options[i]), table, 0, vpos++);
+    }
 }
 
 static void
@@ -1675,7 +1646,8 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 		   const gchar    *cur_item,    /* I - Current item */
 		   const gchar    *def_value,   /* I - default item */
 		   GtkSignalFunc   callback,    /* I - Callback */
-		   gint           *callback_id) /* IO - Callback ID (init to -1) */
+		   gint           *callback_id, /* IO - Callback ID (init to -1) */
+		   gpointer        data)
 {
   gint      i; /* Looping var */
   GList    *list = 0;
@@ -1704,7 +1676,7 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
   gtk_combo_set_popdown_strings (GTK_COMBO (combo), list);
 
   *callback_id = gtk_signal_connect (GTK_OBJECT (entry), "changed", callback,
-				     NULL);
+				     data);
 
   for (i = 0; i < num_items; i ++)
     if (strcmp(items[i].name, cur_item) == 0)
@@ -1953,148 +1925,30 @@ plist_callback (GtkWidget *widget,
    * Now get option parameters.
    */
 
-  if (num_media_sizes > 0)
+  for (i = 0; i < list_option_count; i++)
     {
-      for (i = 0; i < num_media_sizes; i ++)
-        {
-          free ((void *) media_sizes[i].name);
-          free ((void *) media_sizes[i].text);
-        }
-      free (media_sizes);
-      num_media_sizes = 0;
-    }
-
-  media_sizes = stp_printer_get_parameters(current_printer, pv->v,
-					   "PageSize", &num_media_sizes);
-  default_parameter =
-    stp_printer_get_default_parameter(current_printer, pv->v, "PageSize");
-
-  if (stp_get_media_size(pv->v)[0] == '\0')
-    stp_set_media_size (pv->v, default_parameter);
-
-  plist_build_combo (media_size_combo,
-		     num_media_sizes,
-		     media_sizes,
-		     stp_get_media_size (pv->v),
-		     default_parameter,
-		     media_size_callback,
-		     &media_size_callback_id);
-
-  if (num_media_types > 0)
-    {
-      for (i = 0; i < num_media_types; i ++)
-        {
-          free ((void *) media_types[i].name);
-          free ((void *) media_types[i].text);
-        }
-      free (media_types);
-      num_media_types = 0;
-    }
-
-  media_types = stp_printer_get_parameters(current_printer, pv->v,
-					   "MediaType", &num_media_types);
-  default_parameter =
-    stp_printer_get_default_parameter(current_printer, pv->v, "MediaType");
-
-  if (stp_get_media_type (pv->v)[0] == '\0' && media_types != NULL)
-    stp_set_media_type (pv->v, default_parameter);
-  else if (media_types == NULL)
-    stp_set_media_type (pv->v, NULL);
-
-  plist_build_combo (media_type_combo,
-		     num_media_types,
-		     media_types,
-		     stp_get_media_type (pv->v),
-		     default_parameter,
-		     media_type_callback,
-		     &media_type_callback_id);
-
-  if (num_media_sources > 0)
-    {
-      for (i = 0; i < num_media_sources; i ++)
-        {
-          free ((void *) media_sources[i].name);
-          free ((void *) media_sources[i].text);
-        }
-      free (media_sources);
-      num_media_sources = 0;
-    }
-
-  media_sources = stp_printer_get_parameters(current_printer, pv->v,
-					     "InputSlot", &num_media_sources);
-  default_parameter =
-    stp_printer_get_default_parameter(current_printer, pv->v, "InputSlot");
-
-  if (stp_get_media_source (pv->v)[0] == '\0' && media_sources != NULL)
-    stp_set_media_source (pv->v, default_parameter);
-  else if (media_sources == NULL)
-    stp_set_media_source (pv->v, NULL);
-
-  plist_build_combo (media_source_combo,
-		     num_media_sources,
-		     media_sources,
-		     stp_get_media_source (pv->v),
-		     default_parameter,
-		     media_source_callback,
-		     &media_source_callback_id);
-
-  if (num_ink_types > 0)
-    {
-      for (i = 0; i < num_ink_types; i ++)
-        {
-          free ((void *) ink_types[i].name);
-          free ((void *) ink_types[i].text);
-        }
-      free (ink_types);
-      num_ink_types = 0;
-    }
-
-  ink_types = stp_printer_get_parameters(current_printer, pv->v,
-					 "InkType", &num_ink_types);
-  default_parameter =
-    stp_printer_get_default_parameter(current_printer, pv->v, "InkType");
-
-  if (stp_get_ink_type (pv->v)[0] == '\0' && ink_types != NULL)
-    stp_set_ink_type (pv->v, default_parameter);
-  else if (ink_types == NULL)
-    stp_set_ink_type (pv->v, NULL);
-
-  plist_build_combo (ink_type_combo,
-		     num_ink_types,
-		     ink_types,
-		     stp_get_ink_type (pv->v),
-		     default_parameter,
-		     ink_type_callback,
-		     &ink_type_callback_id);
-
-  if (num_resolutions > 0)
-    {
-      for (i = 0; i < num_resolutions; i ++)
+      list_option_t *option = &(the_list_options[i]);
+      if (option->count > 0)
 	{
-	  free ((void *)resolutions[i].name);
-	  free ((void *)resolutions[i].text);
+	  int j;
+	  for (j = 0; j < option->count; j++)
+	    {
+	      free ((void *)(option->params[j].name));
+	      free ((void *)(option->params[j].text));
+	    }
+	  free(option->params);
+	  option->count = 0;
 	}
-      free (resolutions);
-      num_resolutions = 0;
+      option->params = stp_printer_get_parameters
+	(current_printer, pv->v, option->name, &(option->count));
+      default_parameter =
+	stp_printer_get_default_parameter(current_printer, pv->v,option->name);
+      if ((option->accessor)(pv->v)[0] == '\0')
+	(option->mutator)(pv->v, default_parameter);
+      plist_build_combo(option->combo, option->count, option->params,
+			(option->accessor)(pv->v), default_parameter,
+			combo_callback, &(option->callback_id), option);
     }
-
-  resolutions = stp_printer_get_parameters(current_printer, pv->v,
-					   "Resolution", &num_resolutions);
-  default_parameter =
-    stp_printer_get_default_parameter(current_printer, pv->v, "Resolution");
-
-  if (stp_get_resolution (pv->v)[0] == '\0' && resolutions != NULL)
-    stp_set_resolution (pv->v, default_parameter);
-  else if (resolutions == NULL)
-    stp_set_resolution (pv->v, NULL);
-
-  plist_build_combo (resolution_combo,
-		     num_resolutions,
-		     resolutions,
-		     stp_get_resolution (pv->v),
-		     default_parameter,
-		     resolution_callback,
-		     &resolution_callback_id);
 
   if (dither_algo_combo)
     build_dither_combo ();
@@ -2103,170 +1957,110 @@ plist_callback (GtkWidget *widget,
   preview_update ();
 }
 
+static void
+custom_media_size_callback(GtkWidget *widget,
+			   gpointer data)
+{
+  gint width_limit, height_limit;
+  gint min_width_limit, min_height_limit;
+  gdouble new_printed_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
+  gdouble unit_scaler = unit_scale[pv->unit];
+  gint new_value = SCALE(new_printed_value, unit_scaler);
+  invalidate_frame ();
+  invalidate_preview_thumbnail ();
+  reset_preview ();
+
+  stp_printer_get_size_limit(current_printer, pv->v,
+			     &width_limit, &height_limit,
+			     &min_width_limit, &min_height_limit);
+  if (widget == custom_size_width)
+    {
+      if (new_value < min_width_limit)
+	new_value = min_width_limit;
+      else if (new_value > width_limit)
+	new_value = width_limit;
+      stp_set_page_width (pv->v, new_value);
+    }
+  else
+    {
+      if (new_value < min_height_limit)
+	new_value = min_height_limit;
+      else if (new_value > height_limit)
+	new_value = height_limit;
+      stp_set_page_height (pv->v, new_value);
+    }
+  set_entry_value (widget, new_value / unit_scaler, 0);
+  preview_update ();
+}
+
+
 /*
  *  media_size_callback() - Update the current media size.
  */
 static void
-media_size_callback (GtkWidget *widget,
-		     gpointer   data)
+set_media_size(const gchar *new_media_size)
 {
-  invalidate_frame ();
-  invalidate_preview_thumbnail ();
-  reset_preview ();
+  const stp_papersize_t pap = stp_get_papersize_by_name (new_media_size);
 
-  if (widget == custom_size_width || widget == custom_size_height)
+  if (pap)
     {
-      gint width_limit, height_limit;
-      gint min_width_limit, min_height_limit;
-      gdouble new_printed_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
-      gdouble unit_scaler = unit_scale[pv->unit];
-      gint new_value = SCALE(new_printed_value, unit_scaler);
+      gint default_width, default_height;
+      gint size;
 
-      stp_printer_get_size_limit(current_printer, pv->v,
-				 &width_limit, &height_limit,
-				 &min_width_limit, &min_height_limit);
-      if (widget == custom_size_width)
+      if (stp_papersize_get_width (pap) == 0)
 	{
-	  if (new_value < min_width_limit)
-	    new_value = min_width_limit;
-	  else if (new_value > width_limit)
-	    new_value = width_limit;
-	  stp_set_page_width (pv->v, new_value);
+	  stp_printer_get_media_size
+	    (current_printer, pv->v, &default_width, &default_height);
+	  gtk_widget_set_sensitive (GTK_WIDGET (custom_size_width), TRUE);
+	  gtk_entry_set_editable (GTK_ENTRY (custom_size_width), TRUE);
+	  size = default_width;
 	}
       else
 	{
-	  if (new_value < min_height_limit)
-	    new_value = min_height_limit;
-	  else if (new_value > height_limit)
-	    new_value = height_limit;
-	  stp_set_page_height (pv->v, new_value);
+	  size = stp_papersize_get_width (pap);
+	  gtk_widget_set_sensitive (GTK_WIDGET (custom_size_width), FALSE);
+	  gtk_entry_set_editable (GTK_ENTRY (custom_size_width), FALSE);
 	}
-      set_entry_value (widget, new_value / unit_scaler, 0);
-      preview_update ();
-    }
-  else
-    {
-      const gchar *new_media_size = Combo_get_name (media_size_combo,
-                                                    num_media_sizes,
-                                                    media_sizes);
-      const stp_papersize_t pap = stp_get_papersize_by_name (new_media_size);
+      set_entry_value (custom_size_width,
+		       size / unit_scale[pv->unit], 0);
+      stp_set_page_width (pv->v, size);
 
-      if (pap)
+      if (stp_papersize_get_height (pap) == 0)
 	{
-	  gint default_width, default_height;
-	  gint size;
-
-	  if (stp_papersize_get_width (pap) == 0)
-	    {
-	      stp_printer_get_media_size
-		(current_printer, pv->v, &default_width, &default_height);
-	      gtk_widget_set_sensitive (GTK_WIDGET (custom_size_width), TRUE);
-	      gtk_entry_set_editable (GTK_ENTRY (custom_size_width), TRUE);
-	      size = default_width;
-	    }
-	  else
-	    {
-	      size = stp_papersize_get_width (pap);
-	      gtk_widget_set_sensitive (GTK_WIDGET (custom_size_width), FALSE);
-	      gtk_entry_set_editable (GTK_ENTRY (custom_size_width), FALSE);
-	    }
-	  set_entry_value (custom_size_width,
-			   size / unit_scale[pv->unit], 0);
-	  stp_set_page_width (pv->v, size);
-
-	  if (stp_papersize_get_height (pap) == 0)
-	    {
-	      stp_printer_get_media_size
-		(current_printer, pv->v, &default_height, &default_height);
-	      gtk_widget_set_sensitive (GTK_WIDGET (custom_size_height), TRUE);
-	      gtk_entry_set_editable (GTK_ENTRY (custom_size_height), TRUE);
-	      size = default_height;
-	    }
-	  else
-	    {
-	      size = stp_papersize_get_height (pap);
-	      gtk_widget_set_sensitive(GTK_WIDGET (custom_size_height), FALSE);
-	      gtk_entry_set_editable (GTK_ENTRY (custom_size_height), FALSE);
-	    }
-	  set_entry_value (custom_size_height,
-			   size / unit_scale[pv->unit], 0);
-	  stp_set_page_height (pv->v, size);
+	  stp_printer_get_media_size
+	    (current_printer, pv->v, &default_height, &default_height);
+	  gtk_widget_set_sensitive (GTK_WIDGET (custom_size_height), TRUE);
+	  gtk_entry_set_editable (GTK_ENTRY (custom_size_height), TRUE);
+	  size = default_height;
 	}
-
-      if (strcmp (stp_get_media_size (pv->v), new_media_size) != 0)
+      else
 	{
-	  stp_set_media_size (pv->v, new_media_size);
-	  preview_update ();
+	  size = stp_papersize_get_height (pap);
+	  gtk_widget_set_sensitive(GTK_WIDGET (custom_size_height), FALSE);
+	  gtk_entry_set_editable (GTK_ENTRY (custom_size_height), FALSE);
 	}
+      set_entry_value (custom_size_height,
+		       size / unit_scale[pv->unit], 0);
+      stp_set_page_height (pv->v, size);
     }
 }
 
-/*
- *  media_type_callback() - Update the current media type.
- */
 static void
-media_type_callback (GtkWidget *widget,
-		     gpointer   data)
+combo_callback(GtkWidget *widget, gpointer data)
 {
-  const gchar *new_media_type =
-    Combo_get_name (media_type_combo, num_media_types, media_types);
-
-  invalidate_frame ();
-  invalidate_preview_thumbnail ();
-  reset_preview ();
-  stp_set_media_type (pv->v, new_media_type);
-  preview_update ();
-}
-
-/*
- *  media_source_callback() - Update the current media source.
- */
-static void
-media_source_callback (GtkWidget *widget,
-		       gpointer   data)
-{
-  const gchar *new_media_source =
-    Combo_get_name (media_source_combo, num_media_sources, media_sources);
-
-  invalidate_frame ();
-  invalidate_preview_thumbnail ();
-  reset_preview ();
-  stp_set_media_source (pv->v, new_media_source);
-  preview_update ();
-}
-
-/*
- *  ink_type_callback() - Update the current ink type.
- */
-static void
-ink_type_callback (GtkWidget *widget,
-		   gpointer   data)
-{
-  const gchar *new_ink_type =
-    Combo_get_name (ink_type_combo, num_ink_types, ink_types);
-
-  invalidate_frame ();
-  invalidate_preview_thumbnail ();
-  reset_preview ();
-  stp_set_ink_type (pv->v, new_ink_type);
-  preview_update ();
-}
-
-/*
- *  resolution_callback() - Update the current resolution.
- */
-static void
-resolution_callback (GtkWidget *widget,
-		     gpointer   data)
-{
-  const gchar *new_resolution =
-    Combo_get_name (resolution_combo, num_resolutions, resolutions);
-
+  list_option_t *option = (list_option_t *)data;
+  const gchar *new_value = Combo_get_name(option->combo, option->count,
+					  option->params);
   invalidate_frame();
   invalidate_preview_thumbnail();
   reset_preview();
-  stp_set_resolution(pv->v, new_resolution);
-  preview_update ();
+  if (option->extra)
+    (option->extra)(new_value);
+  if (strcmp((option->accessor)(pv->v), new_value) != 0)
+    {
+      (option->mutator)(pv->v, new_value);
+      preview_update();
+    }
 }
 
 /*
