@@ -9,6 +9,10 @@ many of the most demanding printing tasks.
 Please read this README, and the NEWS file carefully!  Many things
 have changed from previous releases.
 
+A user's manual exists in doc/users_guide; it is normally installed in
+PDF and HTML form in /usr/local/share/gimp-print/doc.  This manual
+covers setup and use of the GIMP Print plug-in and the CUPS driver.
+
 
 BASIC INSTALLATION
 
@@ -51,24 +55,6 @@ this plugin.
 Gimp-print 4.2 alpha requires the Gimp 1.2.
 
 
-GHOSTSCRIPT
-
-This package includes a Ghostscript driver that may be built, allowing
-use of this software for general printing purposes.  Please read
-src/ghost/README for more information, including how to build and
-install it, and available options; the build procedure here merely
-creates the necessary source files that you must add to your
-Ghostscript source.  The directions vary for different versions of
-Ghostscript.  Only Ghostscript 5.10, 5.50, and 6.51 are currently
-supported.  In particular, versions of Ghostscript that are not
-licensed under the GNU General Public License (GPL) are not supported,
-and this driver may not be distributed with such a version.
-
-Note that as of 4.1.99-a3, many of the options to the Ghostscript
-driver have changed incompatibly.  Please read the README for more
-information!
-
-
 CUPS
 
 This package includes a CUPS driver that may be built, allowing use of
@@ -104,7 +90,12 @@ If you do not wish to build the Gimp Print plugin, you must run
 
 ./configure --with-cups --without-gimp
 
-You may also use CUPS with Foomatic.
+We recommend that all users who wish to use this package for general
+purpose printing install CUPS and use that as their printing system,
+rather than the traditional lpd or lp systems.  It is much simpler to
+manage than lpd, and provides an excellent web-based interface for
+both administration and use.  Please visit http://www.cups.org for
+information on downloading and installing CUPS.
 
 
 FOOMATIC
@@ -149,6 +140,37 @@ Please visit http://www.linuxprinting.org/foomatic.html for more
 information on Foomatic.  The current Foomatic data was generated for
 "Phase 2".
 
+Foomatic provides an alternate interface to CUPS, in addition to an
+interface to lpd and LPRng.
+
+
+GHOSTSCRIPT
+
+This package includes a Ghostscript driver that may be built, allowing
+use of this software for general printing purposes.
+
+We *strongly* recommend that end users not attempt to use this driver
+directly.  The available options are very complex, and the standard
+printer configuration tools (such as apsfilter and magicfilter) are
+not well designed for drivers such as Gimp-print, and do not provide a
+convenient interface to the driver's capabilities.  We recommend that
+end users either install CUPS, as described above, or use Foomatic to
+configure printer queues.  CUPS is very easy to install, configure,
+and use, and is the recommended solution.
+
+Please read src/ghost/README for more information, including how to
+build and install it, and available options; the build procedure here
+merely creates the necessary source files that you must add to your
+Ghostscript source.  The directions vary for different versions of
+Ghostscript.  Only Ghostscript 5.10, 5.50, and 6.51 are currently
+supported.  In particular, versions of Ghostscript that are not
+licensed under the GNU General Public License (GPL) are not supported,
+and this driver may not be distributed with such a version.
+
+Note that as of 4.1.99-a3, many of the options to the Ghostscript
+driver have changed incompatibly.  Please read the README for more
+information!
+
 
 RECOMMENDED SETTINGS
 
@@ -160,8 +182,8 @@ subject material.
 We recommend use of the Adaptive Hybrid dithering algorithm in most
 cases.  Ordered dithering also works very well in many cases, and is
 somewhat faster, but it does not work very well with text and very
-fine details (certain kinds of line art).  Fast dithering is also
-quite usable in many cases.
+fine details (certain kinds of line art), particularly at high
+resolutions.  Fast dithering is also quite usable in many cases.
 
 On most inkjet printers, 600 or 720 dpi will produce very high
 quality; 1200x1200 or 1440x720 dpi will produce extremely high
@@ -170,23 +192,23 @@ quality.
 
 SUPPORT
 
-There are four principal ways of requesting support for this package:
-
 1) Read the FAQ, in doc/FAQ.html.  Your question may be answered
    there.
 
-2) There are public forums on Sourceforge dedicated to this package.
+2) Read the user's manual, in doc/users_guide.
+
+3) There are public forums on Sourceforge dedicated to this package.
    Please see http://sourceforge.net/forum/?group_id=1537 for more
    information.  The Help forum is a good source of information.
 
-3) If you have a technical support issue that does not appear to be a
+4) If you have a technical support issue that does not appear to be a
    bug in the software, you can use the Tech Support Manager.  Please
    see http://sourceforge.net/support/?group_id=1537.
 
-4) If you have found a clear bug in the package, you may file a bug
+5) If you have found a clear bug in the package, you may file a bug
    report at http://sourceforge.net/bugs/?group_id=1537.
 
-5) You may send mail to the gimp-print-devel@sourceforge.net mailing
+6) You may send mail to the gimp-print-devel@sourceforge.net mailing
    list.  This is recommended as a last resort only.
 
 
@@ -212,18 +234,6 @@ to the debian packaging whatever library versioning scheme is
 used.  Most packages depend on libgimpprint as this will provide
 translations for i18n in the future that they will use, or they
 require libgimpprint anyway.
-
-
-INTERNATIONALIZATION
-
-All translatable strings are marked in the source for libgimpprint.
-The following translations are available: en_GB.
-
-TODO: make sure that the tagged strings are actually translated. This
-will involve some modifications to the source such as dynamically
-allocating memory to hold translated structures, instead of passing
-back pointers to static data. Most things are now actually translated,
-but there are a few bits left to do (some of which might be obscure).
 
 
 USE OF THE CVS REPOSITORY
