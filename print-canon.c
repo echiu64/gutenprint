@@ -3,8 +3,9 @@
  *
  *   Print plug-in CANON BJL driver for the GIMP.
  *
- *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
- *	Robert Krawitz (rlk@alum.mit.edu)
+ *   Copyright 1997-2000 Michael Sweet (mike@easysw.com),
+ *	Robert Krawitz (rlk@alum.mit.edu) and
+ *      Andy Thaller (thaller@ph.tum.de)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -26,10 +27,16 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
+/*
+ * Large parts of this file (mainly the ink handling) is based on 
+ * print-escp2.c -- refer to README.new-printer on how to adjust the colors
+ * for a certain model.
+ */
 
 /* TODO-LIST
  *
  *   * implement the left border
+ *   * adjust the colors of all supported models
  *
  */
 
@@ -37,13 +44,742 @@
 #include "print.h"
 
 /*
- * Local functions...
+ * For each printer, we can select from a variety of dot sizes.
+ * For single dot size printers, the available sizes are usually 0,
+ * which is the "default", and some subset of 1-4.  For simple variable
+ * dot size printers (with only one kind of variable dot size), the
+ * variable dot size is specified as 0x10.  For newer printers, there
+ * is a choice of variable dot sizes available, 0x10, 0x11, and 0x12 in
+ * order of increasing size.
+ *
+ * Normally, we want to specify the smallest dot size that lets us achieve
+ * a density of less than .8 or thereabouts (above that we start to get
+ * some dither artifacts).  This needs to be tested for each printer and
+ * resolution.
+ *
+ * An entry of -1 in a slot means that this resolution is not available.
+ *              0                      standard dot sizes are used.
+ *              1                      drop modulation is used.
  */
 
-typedef struct {
+/* We know a per-model base resolution (like 180dpi or 150dpi)
+ * and multipliers for the base resolution in the dotsize-, densities- 
+ * and inklist:
+ * for 180dpi base resolution we would have 
+ *   s_r11_4 for 4color ink @180dpi
+ *   s_r22_4 for 4color ink @360dpi
+ *   s_r33_4 for 4color ink @720dpi
+ *   s_r43_4 for 4color ink @1440x720dpi
+ */
+
+typedef struct canon_dot_sizes
+{
+  int dot_r11;    /*  180x180  or   150x150  */
+  int dot_r22;    /*  360x360  or   300x300  */
+  int dot_r33;    /*  720x720  or   600x600  */
+  int dot_r43;    /* 1440x720  or  1200x600  */
+  int dot_r44;    /* 1440x1440 or  1200x1200 */
+  int dot_r55;    /* 2880x2880 or  2400x2400 */
+} canon_dot_size_t;
+
+/*
+ * Specify the base density for each available resolution.
+ *
+ */
+
+typedef struct canon_densities
+{
+  double d_r11;  /*  180x180  or   150x150  */
+  double d_r22;  /*  360x360  or   300x300  */
+  double d_r33;  /*  720x720  or   600x600  */
+  double d_r43;  /* 1440x720  or  1200x600  */
+  double d_r44;  /* 1440x1440 or  1200x1200 */
+  double d_r55;  /* 2880x2880 or  2400x2400 */
+} canon_densities_t;
+
+
+
+/*
+ * Definition of the multi-level inks available to a given printer.
+ * Each printer may use a different kind of ink droplet for variable
+ * and single drop size for each supported horizontal resolution and
+ * type of ink (4 or 6 color).
+ *
+ * Recall that 6 color ink is treated as simply another kind of
+ * multi-level ink, but the driver offers the user a choice of 4 and
+ * 6 color ink, so we need to define appropriate inksets for both
+ * kinds of ink.
+ *
+ * Stuff like the MIS 4 and 6 "color" monochrome inks doesn't fit into
+ * this model very nicely, so we'll either have to special case it
+ * or find some way of handling it in here.
+ */
+
+typedef struct canon_variable_ink
+{
+  simple_dither_range_t *range;
+  int count;
+  double density;
+} canon_variable_ink_t;
+
+typedef struct canon_variable_inkset
+{
+  canon_variable_ink_t *c;
+  canon_variable_ink_t *m;
+  canon_variable_ink_t *y;
+  canon_variable_ink_t *k;
+} canon_variable_inkset_t;
+
+/*
+ * currenty unaccounted for are the 7color printers and the 3color ones
+ * (which use CMY only printheads)
+ *
+ */
+
+typedef struct canon_variable_inklist
+{
+  canon_variable_inkset_t *s_r11_4;    /*  180x180  or   150x150  */
+  canon_variable_inkset_t *s_r22_4;    /*  360x360  or   300x300  */
+  canon_variable_inkset_t *s_r33_4;    /*  720x720  or   600x600  */
+  canon_variable_inkset_t *s_r43_4;    /* 1440x720  or  1200x600  */
+  canon_variable_inkset_t *s_r44_4;    /* 1440x1440 or  1200x1200 */
+  canon_variable_inkset_t *s_r55_4;    /* 2880x2880 or  2400x2400 */
+
+  canon_variable_inkset_t *s_r11_6;    /*  180x180  or   150x150  */
+  canon_variable_inkset_t *s_r22_6;    /*  360x360  or   300x300  */
+  canon_variable_inkset_t *s_r33_6;    /*  720x720  or   600x600  */
+  canon_variable_inkset_t *s_r43_6;    /* 1440x720  or  1200x600  */
+  canon_variable_inkset_t *s_r44_6;    /* 1440x1440 or  1200x1200 */
+  canon_variable_inkset_t *s_r55_6;    /* 2880x2880 or  2400x2400 */
+
+  canon_variable_inkset_t *v_r11_4;    /*  180x180  or   150x150  */
+  canon_variable_inkset_t *v_r22_4;    /*  360x360  or   300x300  */
+  canon_variable_inkset_t *v_r33_4;    /*  720x720  or   600x600  */
+  canon_variable_inkset_t *v_r43_4;    /* 1440x720  or  1200x600  */
+  canon_variable_inkset_t *v_r44_4;    /* 1440x1440 or  1200x1200 */
+  canon_variable_inkset_t *v_r55_4;    /* 2880x2880 or  2400x2400 */
+
+  canon_variable_inkset_t *v_r11_6;    /*  180x180  or   150x150  */
+  canon_variable_inkset_t *v_r22_6;    /*  360x360  or   300x300  */
+  canon_variable_inkset_t *v_r33_6;    /*  720x720  or   600x600  */
+  canon_variable_inkset_t *v_r43_6;    /* 1440x720  or  1200x600  */
+  canon_variable_inkset_t *v_r44_6;    /* 1440x1440 or  1200x1200 */
+  canon_variable_inkset_t *v_r55_6;    /* 2880x2880 or  2400x2400 */
+} canon_variable_inklist_t;
+
+
+
+
+
+static simple_dither_range_t photo_cyan_dither_ranges[] =
+{
+  { 0.25, 0x1, 0, 1 },
+  { 1.0,  0x1, 1, 1 }
+};
+
+static canon_variable_ink_t photo_cyan_ink =
+{
+  photo_cyan_dither_ranges,
+  sizeof(photo_cyan_dither_ranges) / sizeof(simple_dither_range_t),
+  .75
+};
+
+static simple_dither_range_t photo_magenta_dither_ranges[] =
+{
+  { 0.26, 0x1, 0, 1 },
+  { 1.0,  0x1, 1, 1 }
+};
+
+static canon_variable_ink_t photo_magenta_ink =
+{
+  photo_magenta_dither_ranges,
+  sizeof(photo_magenta_dither_ranges) / sizeof(simple_dither_range_t),
+  .75
+};
+
+
+static simple_dither_range_t photo_6pl_dither_ranges[] =
+{
+  { 0.15,  0x1, 0, 1 },
+  { 0.227, 0x2, 0, 2 },
+/*  { 0.333, 0x3, 0, 3 }, */
+  { 0.45,  0x1, 1, 1 },
+  { 0.68,  0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static canon_variable_ink_t photo_6pl_ink =
+{
+  photo_6pl_dither_ranges,
+  sizeof(photo_6pl_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static simple_dither_range_t photo_6pl_1440_dither_ranges[] =
+{
+  { 0.30,  0x1, 0, 1 },
+  { 0.90,  0x1, 1, 1 },
+  { 1.36,  0x2, 1, 2 }
+};
+
+static canon_variable_ink_t photo_6pl_1440_ink =
+{
+  photo_6pl_1440_dither_ranges,
+  sizeof(photo_6pl_1440_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static simple_dither_range_t photo_pigment_dither_ranges[] =
+{ /* MRS: Not calibrated! */
+  { 0.15,  0x1, 0, 1 },
+  { 0.227, 0x2, 0, 2 },
+  { 0.5,   0x1, 1, 1 },
+  { 1.0,   0x2, 1, 2 }
+};
+
+static canon_variable_ink_t photo_pigment_ink =
+{
+  photo_pigment_dither_ranges,
+  sizeof(photo_pigment_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static simple_dither_range_t photo_4pl_dither_ranges[] =
+{
+  { 0.15,  0x1, 0, 1 },
+  { 0.227, 0x2, 0, 2 },
+/*  { 0.333, 0x3, 0, 3 }, */
+  { 0.45,  0x1, 1, 1 },
+  { 0.68,  0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static canon_variable_ink_t photo_4pl_ink =
+{
+  photo_4pl_dither_ranges,
+  sizeof(photo_4pl_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+static simple_dither_range_t photo_4pl_1440_dither_ranges[] =
+{
+  { 0.30,  0x1, 0, 1 },
+  { 0.90,  0x1, 1, 1 },
+  { 1.36,  0x2, 1, 2 }
+};
+
+static canon_variable_ink_t photo_4pl_1440_ink =
+{
+  photo_4pl_1440_dither_ranges,
+  sizeof(photo_4pl_1440_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static simple_dither_range_t standard_6pl_dither_ranges[] =
+{
+  { 0.45,  0x1, 1, 1 },
+  { 0.68,  0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static canon_variable_ink_t standard_6pl_ink =
+{
+  standard_6pl_dither_ranges,
+  sizeof(standard_6pl_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static simple_dither_range_t standard_6pl_1440_dither_ranges[] =
+{
+  { 0.90,  0x1, 1, 1 },
+  { 1.36,  0x2, 1, 2 }
+};
+
+static canon_variable_ink_t standard_6pl_1440_ink =
+{
+  standard_6pl_1440_dither_ranges,
+  sizeof(standard_6pl_1440_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static simple_dither_range_t standard_pigment_dither_ranges[] =
+{ /* MRS: Not calibrated! */
+  { 0.55,  0x1, 1, 1 },
+  { 1.0,   0x2, 1, 2 }
+};
+
+static canon_variable_ink_t standard_pigment_ink =
+{
+  standard_pigment_dither_ranges,
+  sizeof(standard_pigment_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static simple_dither_range_t standard_4pl_dither_ranges[] =
+{
+  { 0.45,  0x1, 1, 1 },
+  { 0.68,  0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static canon_variable_ink_t standard_4pl_ink =
+{
+  standard_4pl_dither_ranges,
+  sizeof(standard_4pl_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+static simple_dither_range_t standard_4pl_1440_dither_ranges[] =
+{
+  { 0.90,  0x1, 1, 1 },
+  { 1.36,  0x2, 1, 2 },
+};
+
+static canon_variable_ink_t standard_4pl_1440_ink =
+{
+  standard_4pl_1440_dither_ranges,
+  sizeof(standard_4pl_1440_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static simple_dither_range_t standard_3pl_dither_ranges[] =
+{
+  { 0.225, 0x1, 1, 1 },
+  { 0.68,  0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static canon_variable_ink_t standard_3pl_ink =
+{
+  standard_3pl_dither_ranges,
+  sizeof(standard_3pl_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static simple_dither_range_t standard_3pl_1440_dither_ranges[] =
+{
+  { 0.45, 0x1, 1, 1 },
+  { 1.36,  0x2, 1, 2 },
+};
+
+static canon_variable_ink_t standard_3pl_1440_ink =
+{
+  standard_3pl_1440_dither_ranges,
+  sizeof(standard_3pl_1440_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static simple_dither_range_t photo_multishot_dither_ranges[] =
+{
+  { 0.1097, 0x1, 0, 1 },
+  { 0.227,  0x2, 0, 2 },
+/*  { 0.333, 0x3, 0, 3 }, */
+  { 0.28,   0x1, 1, 1 },
+  { 0.58,   0x2, 1, 2 },
+  { 0.85,   0x3, 1, 3 },
+  { 1.0,    0x3, 1, 3 }
+};
+
+static canon_variable_ink_t photo_multishot_ink =
+{
+  photo_multishot_dither_ranges,
+  sizeof(photo_multishot_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static simple_dither_range_t standard_multishot_dither_ranges[] =
+{
+  { 0.28,  0x1, 1, 1 },
+  { 0.58,  0x2, 1, 2 },
+  { 0.85,  0x3, 1, 3 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static canon_variable_ink_t standard_multishot_ink =
+{
+  standard_multishot_dither_ranges,
+  sizeof(standard_multishot_dither_ranges) / sizeof(simple_dither_range_t),
+  1.0
+};
+
+
+static canon_variable_inkset_t standard_inks =
+{
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};
+
+static canon_variable_inkset_t photo_inks =
+{
+  &photo_cyan_ink,
+  &photo_magenta_ink,
+  NULL,
+  NULL
+};
+
+static canon_variable_inkset_t canon_6pl_standard_inks =
+{
+  &standard_6pl_ink,
+  &standard_6pl_ink,
+  &standard_6pl_ink,
+  &standard_6pl_ink
+};
+
+static canon_variable_inkset_t canon_6pl_photo_inks =
+{
+  &photo_6pl_ink,
+  &photo_6pl_ink,
+  &standard_6pl_ink,
+  &standard_6pl_ink
+};
+
+static canon_variable_inkset_t canon_6pl_1440_standard_inks =
+{
+  &standard_6pl_1440_ink,
+  &standard_6pl_1440_ink,
+  &standard_6pl_1440_ink,
+  &standard_6pl_1440_ink
+};
+
+static canon_variable_inkset_t canon_6pl_1440_photo_inks =
+{
+  &photo_6pl_1440_ink,
+  &photo_6pl_1440_ink,
+  &standard_6pl_1440_ink,
+  &standard_6pl_1440_ink
+};
+
+static canon_variable_inkset_t canon_pigment_standard_inks =
+{
+  &standard_pigment_ink,
+  &standard_pigment_ink,
+  &standard_pigment_ink,
+  &standard_pigment_ink
+};
+
+static canon_variable_inkset_t canon_pigment_photo_inks =
+{
+  &photo_pigment_ink,
+  &photo_pigment_ink,
+  &standard_pigment_ink,
+  &standard_pigment_ink
+};
+
+static canon_variable_inkset_t canon_4pl_standard_inks =
+{
+  &standard_4pl_ink,
+  &standard_4pl_ink,
+  &standard_4pl_ink,
+  &standard_4pl_ink
+};
+
+static canon_variable_inkset_t canon_4pl_photo_inks =
+{
+  &photo_4pl_ink,
+  &photo_4pl_ink,
+  &standard_4pl_ink,
+  &standard_4pl_ink
+};
+
+static canon_variable_inkset_t canon_4pl_1440_standard_inks =
+{
+  &standard_4pl_1440_ink,
+  &standard_4pl_1440_ink,
+  &standard_4pl_1440_ink,
+  &standard_4pl_1440_ink
+};
+
+static canon_variable_inkset_t canon_4pl_1440_photo_inks =
+{
+  &photo_4pl_1440_ink,
+  &photo_4pl_1440_ink,
+  &standard_4pl_1440_ink,
+  &standard_4pl_1440_ink
+};
+
+static canon_variable_inkset_t canon_3pl_standard_inks =
+{
+  &standard_3pl_ink,
+  &standard_3pl_ink,
+  &standard_3pl_ink,
+  &standard_3pl_ink
+};
+
+static canon_variable_inkset_t canon_3pl_1440_standard_inks =
+{
+  &standard_3pl_1440_ink,
+  &standard_3pl_1440_ink,
+  &standard_3pl_1440_ink,
+  &standard_3pl_1440_ink
+};
+
+static canon_variable_inkset_t canon_multishot_standard_inks =
+{
+  &standard_multishot_ink,
+  &standard_multishot_ink,
+  &standard_multishot_ink,
+  &standard_multishot_ink
+};
+
+static canon_variable_inkset_t canon_multishot_photo_inks =
+{
+  &photo_multishot_ink,
+  &photo_multishot_ink,
+  &standard_multishot_ink,
+  &standard_multishot_ink
+};
+
+static canon_variable_inklist_t simple_4color_inks =
+{
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};
+
+static canon_variable_inklist_t simple_6color_inks =
+{
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};
+
+static canon_variable_inklist_t variable_6pl_4color_inks =
+{
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  &canon_6pl_standard_inks,
+  &canon_6pl_standard_inks,
+  &canon_6pl_standard_inks,
+  &canon_6pl_standard_inks,
+  &canon_6pl_1440_standard_inks,
+  &canon_6pl_standard_inks,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};
+
+static canon_variable_inklist_t variable_6pl_6color_inks =
+{
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  &canon_6pl_standard_inks,
+  &canon_6pl_standard_inks,
+  &canon_6pl_standard_inks,
+  &canon_6pl_standard_inks,
+  &canon_6pl_1440_standard_inks,
+  &canon_6pl_standard_inks,
+  &canon_6pl_photo_inks,
+  &canon_6pl_photo_inks,
+  &canon_6pl_photo_inks,
+  &canon_6pl_photo_inks,
+  &canon_6pl_1440_photo_inks,
+  &canon_6pl_photo_inks
+};
+
+static canon_variable_inklist_t variable_pigment_inks =
+{
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  &canon_pigment_standard_inks,
+  &canon_pigment_standard_inks,
+  &canon_pigment_standard_inks,
+  &canon_pigment_standard_inks,
+  &canon_pigment_standard_inks,
+  &canon_pigment_standard_inks,
+  &canon_pigment_photo_inks,
+  &canon_pigment_photo_inks,
+  &canon_pigment_photo_inks,
+  &canon_pigment_photo_inks,
+  &canon_pigment_photo_inks,
+  &canon_pigment_photo_inks
+};
+
+static canon_variable_inklist_t variable_3pl_inks =
+{
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  &canon_multishot_standard_inks,
+  &canon_multishot_standard_inks,
+  &canon_6pl_standard_inks,
+  &canon_3pl_standard_inks,
+  &canon_3pl_1440_standard_inks,
+  &canon_3pl_standard_inks,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};
+
+static canon_variable_inklist_t variable_4pl_4color_inks =
+{
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  &canon_multishot_standard_inks,
+  &canon_multishot_standard_inks,
+  &canon_6pl_standard_inks,
+  &canon_4pl_standard_inks,
+  &canon_4pl_1440_standard_inks,
+  &canon_4pl_standard_inks,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};
+
+static canon_variable_inklist_t variable_4pl_6color_inks =
+{
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &standard_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  &photo_inks,
+  &canon_multishot_standard_inks,
+  &canon_multishot_standard_inks,
+  &canon_6pl_standard_inks,
+  &canon_4pl_standard_inks,
+  &canon_4pl_1440_standard_inks,
+  &canon_4pl_standard_inks,
+  &canon_multishot_photo_inks,
+  &canon_multishot_photo_inks,
+  &canon_6pl_photo_inks,
+  &canon_4pl_photo_inks,
+  &canon_4pl_1440_photo_inks,
+  &canon_4pl_photo_inks
+};
+
+
+typedef enum {
+  COLOR_MONOCHROME = 1,
+  COLOR_CMY = 3,
+  COLOR_CMYK = 4,
+  COLOR_CCMMYK= 6,
+  COLOR_CCMMYYK= 7
+} colormode_t;
+
+typedef struct canon_caps {
   int model;
   int max_width;      /* maximum printable paper size */
   int max_height;
+  int base_res;
   int max_xdpi;
   int max_ydpi;
   int max_quality;
@@ -54,6 +790,9 @@ typedef struct {
   int inks;           /* installable cartridges (CANON_INK_*) */
   int slots;          /* available paperslots */
   int features;       /* special bjl settings */
+  canon_dot_size_t dot_sizes;	/* Vector of dot sizes for resolutions */
+  canon_densities_t densities;	/* List of densities for each printer */
+  canon_variable_inklist_t *inxs; /* Choices of inks for this printer */
 } canon_cap_t;
 
 static void canon_write_line(FILE *, canon_cap_t, int,
@@ -84,14 +823,11 @@ static void canon_write_line(FILE *, canon_cap_t, int,
 #define CANON_INK_CMY         2
 #define CANON_INK_CMYK        4
 #define CANON_INK_CcMmYK      8
-#define CANON_INK_CcMmYy     16
-#define CANON_INK_CcMmYyK    32
+#define CANON_INK_CcMmYyK    16
 
-#define CANON_INK_BLACK_MASK (CANON_INK_K|CANON_INK_CMYK|\
-                              CANON_INK_CcMmYK|CANON_INK_CcMmYyK)
+#define CANON_INK_BLACK_MASK (CANON_INK_K|CANON_INK_CMYK|CANON_INK_CcMmYK)
 
-#define CANON_INK_PHOTO_MASK (CANON_INK_CcMmYy|CANON_INK_CcMmYK|\
-                              CANON_INK_CcMmYyK)
+#define CANON_INK_PHOTO_MASK (CANON_INK_CcMmYK|CANON_INK_CcMmYyK)
 
 /* document feeding */
 #define CANON_SLOT_ASF1    1
@@ -108,173 +844,288 @@ static void canon_write_line(FILE *, canon_cap_t, int,
 #define CANON_CAP_CMD72     1<<5    /* uses command #0x72         */
 
 
+
+
 static canon_cap_t canon_model_capabilities[] =
 {
   /* default settings for unkown models */
 
   {   -1, 8*72,11*72,180,180,20,20,20,20, CANON_INK_K, CANON_SLOT_ASF1, 0 },
 
-  /* tested models */
+  /* ******************************** */
+  /*                                  */
+  /* tested and color-adjusted models */
+  /*                                  */
+  /* ******************************** */
+
+
+
+
+  /* ************************************ */
+  /*                                      */
+  /* tested models w/out color-adjustment */
+  /*                                      */
+  /* ************************************ */
 
 
   { /* Canon BJ 30 */
     30,
     9.5*72, 14*72,
-    360, 360, 2,
+    180, 360, 360, 2,
     11, 9, 10, 18,
     CANON_INK_K,
     CANON_SLOT_ASF1,
-    CANON_CAP_CMD61
+    CANON_CAP_CMD61,
+    {0,0,-1,-1,-1,-1}, /* ??? */
+    { 1,1,1,1,1,1 },
+    &simple_4color_inks
   },
 
   { /* Canon BJC 4300 */
     4300,
     618, 936,      /* 8.58" x 13 " */
-    1440, 720, 2,
+    180, 1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
-    CANON_CAP_DMT
+    CANON_CAP_DMT,
+    {0,0,-1,-1,-1,-1}, /* ??? */
+    { 1,1,1,1,1,1 },
+    &simple_4color_inks
   },
 
   { /* Canon BJC 4400 */
     4400,
     9.5*72, 14*72,
-    720, 360, 2,
+    180, 720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
-    CANON_CAP_CMD61 | CANON_CAP_DMT
+    CANON_CAP_CMD61 | CANON_CAP_DMT,
+    {-1,0,-1,-1,-1,-1},
+    { 1,1,1,1,1,1 },
+    &simple_4color_inks
   },
 
   { /* Canon BJC 6000 */
     6000,
     618, 936,      /* 8.58" x 13 " */
-    1440, 720, 2,
+    180, 1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
-    CANON_CAP_DMT
+    CANON_CAP_DMT,
+    {-1,0,0,0,-1,-1},
+    { 1,1,1,1,1,1 },
+    &simple_4color_inks
   },
 
   { /* Canon BJC 6200 */
     6200,
     618, 936,      /* 8.58" x 13 " */
-    1440, 720, 2,
+    180, 1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
-    CANON_CAP_DMT
+    CANON_CAP_DMT | CANON_CAP_CMD6d | CANON_CAP_CMD70,
+    {-1,1,0,0,-1,-1},
+    { 1,1,1,1,1,1 },
+    &variable_6pl_6color_inks
   },
 
   { /* Canon BJC 8200 */
     8200,
     11*72, 17*72,
-    1200,1200, 4,
+    150, 1200,1200, 4,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
-    CANON_CAP_DMT | CANON_CAP_CMD72
+    CANON_CAP_DMT | CANON_CAP_CMD72,
+    {-1,0,0,-1,0,-1},
+    { 1,1,1,1,1,1 },
+    &simple_4color_inks
   },
 
+
+  /* *************** */
+  /*                 */
   /* untested models */
+  /*                 */
+  /* *************** */
+
 
   { /* Canon BJC 1000 */
     1000,
     11*72, 17*72,
-    360, 360, 2,
+    180, 360, 360, 2,
     11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMY,
     CANON_SLOT_ASF1,
-    CANON_CAP_CMD61
+    CANON_CAP_CMD61,
+    { 0,0,-1,-1,-1,-1},
+    { 1,1,1,1,1,1 },
+    &simple_4color_inks
   },
   { /* Canon BJC 2000 */
     2000,
     11*72, 17*72,
-    720, 360, 2,
+    180, 720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK,
     CANON_SLOT_ASF1,
-    CANON_CAP_CMD61
+    CANON_CAP_CMD61,
+    { 0,0,-1,-1,-1,-1},
+    { 1,1,1,1,1,1 },
+    &simple_4color_inks
   },
   { /* Canon BJC 3000 */
     3000,
     11*72, 17*72,
-    1440, 720, 2,
+    180, 1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
-    CANON_CAP_CMD61 | CANON_CAP_DMT
+    CANON_CAP_CMD61 | CANON_CAP_DMT,
+    { -1,0,0,0,-1,-1},
+    { 1,1,1,1,1,1 },
+    &simple_4color_inks
   },
   { /* Canon BJC 6100 */
     6100,
     11*72, 17*72,
-    1440, 720, 2,
+    180, 1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
-    CANON_CAP_CMD61
+    CANON_CAP_CMD61,
+    { -1,0,0,0,-1,-1},
+    { 1,1,1,1,1,1 },
+    &simple_4color_inks
   },
   { /* Canon BJC 7000 */
     7000,
     11*72, 17*72,
-    1200, 600, 2,
+    150, 1200, 600, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYyK,
     CANON_SLOT_ASF1,
-    CANON_CAP_CMD6d | CANON_CAP_CMD70
+    CANON_CAP_CMD6d | CANON_CAP_CMD70,
+    { -1,0,0,0,-1,-1},
+    { 1,1,1,1,1,1 },
+    &simple_4color_inks
   },
   { /* Canon BJC 7100 */
     7100,
     11*72, 17*72,
-    1200, 600, 2,
+    150, 1200, 600, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYyK,
     CANON_SLOT_ASF1,
-    0
+    0,
+    { -1,0,0,0,-1,-1},
+    { 1,1,1,1,1,1 },
+    &simple_4color_inks
   },
 
-  /* extremely fuzzy models */
+  /*****************************/
+  /*                           */
+  /*  extremely fuzzy models   */
+  /* (might never work at all) */
+  /*                           */
+  /*****************************/
 
   { /* Canon BJC 5100 */
     5100,
     17*72, 22*72,
-    1440, 720, 2,
+    180, 1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
-    CANON_CAP_DMT
+    CANON_CAP_DMT,
+    { -1,0,0,0,-1,-1},
+    { 1,1,1,1,1,1 },
+    &simple_4color_inks
   },
   { /* Canon BJC 5500 */
     5500,
     22*72, 34*72,
-    720, 360, 2,
+    180, 720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
-    CANON_CAP_CMD61
+    CANON_CAP_CMD61,
+    { 0,0,-1,-1,-1,-1},
+    { 1,1,1,1,1,1 },
+    &simple_4color_inks
   },
   { /* Canon BJC 6500 */
     6500,
     17*72, 22*72,
-    1440, 720, 2,
+    180, 1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
-    CANON_CAP_CMD61 | CANON_CAP_DMT
+    CANON_CAP_CMD61 | CANON_CAP_DMT,
+    { -1,0,0,0,-1,-1},
+    { 1,1,1,1,1,1 },
+    &simple_4color_inks
   },
   { /* Canon BJC 8500 */
     8500,
     17*72, 22*72,
-    1200,1200, 2,
+    150, 1200,1200, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
-    0
+    0,
+    { -1,0,0,-1,0,-1},
+    { 1,1,1,1,1,1 },
+    &simple_4color_inks
   },
 };
 
 
+
+typedef struct {
+  const char name[65];
+  int paper_feed_sequence;
+  int platen_gap;
+  double base_density;
+  double k_lower_scale;
+  double k_upper;
+} paper_t;
+
+static const paper_t canon_paper_list[] = {
+  { "Plain Paper", 1, 0, .5, .25, .5 },
+  { "Plain Paper Fast Load", 5, 0, .5, .25, .5 },
+  { "Postcard", 2, 0, .6, .25, .6 },
+  { "Glossy Film", 3, 0, 1.0, 1.0, .9 },
+  { "Transparencies", 3, 0, 1.0, 1.0, .9 },
+  { "Envelopes", 4, 0, .5, .25, .5 },
+  { "Back Light Film", 6, 0, 1.0, 1.0, .9 },
+  { "Matte Paper", 7, 0, 1.0, 1.0, .9 },
+  { "Inkjet Paper", 7, 0, .78, .25, .6 },
+  { "Photo Quality Inkjet Paper", 7, 0, 1, 1.0, .9 },
+  { "Photo Paper", 8, 0, 1, 1.0, .9 },
+  { "Premium Glossy Photo Paper", 8, 0, .9, 1.0, .9 },
+  { "Photo Quality Glossy Paper", 6, 0, 1.0, 1.0, .9 },
+  { "Other", 0, 0, .5, .25, .5 },
+};
+
+static const int paper_type_count = sizeof(canon_paper_list) / sizeof(paper_t);
+
+
+static const paper_t *
+get_media_type(const char *name)
+{
+  int i;
+  for (i = 0; i < paper_type_count; i++)
+    {
+      if (!strcmp(name, canon_paper_list[i].name))
+	return &(canon_paper_list[i]);
+    }
+  return NULL;
+}
 
 
 static canon_cap_t canon_get_model_capabilities(int model)
@@ -348,6 +1199,27 @@ canon_printhead_type(const char *name, canon_cap_t caps)
   return 0;
 }
 
+static colormode_t 
+canon_printhead_colors(const char *name, canon_cap_t caps)
+{
+  if (!strcmp(name,"Black"))             return COLOR_MONOCHROME;
+  if (!strcmp(name,"Color"))             return COLOR_CMY;
+  if (!strcmp(name,"Black/Color"))       return COLOR_CMYK;
+  if (!strcmp(name,"Photo/Color"))       return COLOR_CCMMYK;
+  if (!strcmp(name,"Black/Photo Color")) return COLOR_CCMMYYK;
+
+  if (*name == 0) {
+    if (caps.inks & CANON_INK_CMYK) return COLOR_CMYK;
+    if (caps.inks & CANON_INK_CMY)  return COLOR_CMY;
+    if (caps.inks & CANON_INK_K)    return COLOR_MONOCHROME;
+  }
+
+#ifdef DEBUG
+  fprintf(stderr,"canon: Unknown head combo '%s' - reverting to black",name);
+#endif
+  return COLOR_MONOCHROME;
+}
+
 static unsigned char
 canon_size_type(const vars_t *v, canon_cap_t caps)
 {
@@ -386,12 +1258,108 @@ c_strdup(const char *s)
   return ret;
 }
 
+int canon_res_code(canon_cap_t caps, int xdpi, int ydpi)
+{
+  int x, y, res= 0;
+
+  for (x=1; x<6; x++) if ((xdpi/caps.base_res) == (1<<(x-1))) res= (x<<4);
+  for (y=1; y<6; y++) if ((ydpi/caps.base_res) == (1<<(y-1))) res|= y;
+
+  return res;
+}
+
+static int
+canon_ink_type(canon_cap_t caps, int res_code)
+{
+  switch (res_code)
+    {
+    case 0x11: return caps.dot_sizes.dot_r11;
+    case 0x22: return caps.dot_sizes.dot_r22;
+    case 0x33: return caps.dot_sizes.dot_r33;
+    case 0x43: return caps.dot_sizes.dot_r43;
+    case 0x44: return caps.dot_sizes.dot_r44;
+    case 0x55: return caps.dot_sizes.dot_r55;
+    }
+  return -1;
+}
+
+static double
+canon_density(canon_cap_t caps, int res_code)
+{
+  switch (res_code)
+    {
+    case 0x11: return caps.densities.d_r11;
+    case 0x22: return caps.densities.d_r22;
+    case 0x33: return caps.densities.d_r33;
+    case 0x43: return caps.densities.d_r43;
+    case 0x44: return caps.densities.d_r44;
+    case 0x55: return caps.densities.d_r55;
+    default:   
+#ifdef DEBUG
+      fprintf(stderr,"no such res_code 0x%x in density of model %d\n",
+	      res_code,caps.model);
+#endif
+      return 0.2;
+    }
+}
+
+static canon_variable_inkset_t *
+canon_inks(canon_cap_t caps, int res_code, int colors, int bits)
+{
+  canon_variable_inklist_t *inks = caps.inxs;
+
+  switch ((bits<<12)+(colors<<8)+res_code)
+    {
+    case 0x1111:
+    case 0x1411: return inks->s_r11_4;
+    case 0x1122:
+    case 0x1422: return inks->s_r22_4;
+    case 0x1133:
+    case 0x1433: return inks->s_r33_4;
+    case 0x1143:
+    case 0x1443: return inks->s_r43_4;
+    case 0x1144:
+    case 0x1444: return inks->s_r44_4;
+    case 0x1155:
+
+    case 0x1455: return inks->s_r55_4;
+    case 0x1611: return inks->s_r11_6;
+    case 0x1622: return inks->s_r22_6;
+    case 0x1633: return inks->s_r33_6;
+    case 0x1643: return inks->s_r43_6;
+    case 0x1644: return inks->s_r44_6;
+    case 0x1655: return inks->s_r55_6;
+
+    case 0x2111:
+    case 0x2411: return inks->v_r11_4;
+    case 0x2122:
+    case 0x2422: return inks->v_r22_4;
+    case 0x2133:
+    case 0x2433: return inks->v_r33_4;
+    case 0x2143:
+    case 0x2443: return inks->v_r43_4;
+    case 0x2144:
+    case 0x2444: return inks->v_r44_4;
+    case 0x2155:
+
+    case 0x2455: return inks->v_r55_4;
+    case 0x2611: return inks->v_r11_6;
+    case 0x2622: return inks->v_r22_6;
+    case 0x2633: return inks->v_r33_6;
+    case 0x2643: return inks->v_r43_6;
+    case 0x2644: return inks->v_r44_6;
+    case 0x2655: return inks->v_r55_6;
+    }
+  return NULL;
+}
+
+
 const char *
 canon_default_resolution(const printer_t *printer)
 {
   canon_cap_t caps= canon_get_model_capabilities(printer->model);
-  if (!(caps.max_xdpi%300))
-    return "300x300 DPI";
+  if (!(caps.max_xdpi%150))
+    return "150x150 DPI";
   else
     return "180x180 DPI";
 }
@@ -463,50 +1431,35 @@ canon_parameters(const printer_t *printer,	/* I - Printer model */
   }
   else if (strcmp(name, "Resolution") == 0)
   {
-    int x= caps.max_xdpi, y= caps.max_ydpi;
+    char tmp[100];
+    int x,y;
     int c= 0;
+    int t;
     valptrs = malloc(sizeof(char *) * 10);
-    if (!(caps.max_xdpi%300)) {
 
-      if ( 300<=x && 300<=y)
-	valptrs[c++]= c_strdup("300x300 DPI");
-      if ( 300<=x && 300<=y && (caps.features&CANON_CAP_DMT))
-	valptrs[c++]= c_strdup("300x300 DPI DMT");
-      if ( 600<=x && 600<=y)
-	valptrs[c++]= c_strdup("600x600 DPI");
-      if ( 600<=x && 600<=y && (caps.features&CANON_CAP_DMT))
-	valptrs[c++]= c_strdup("600x600 DPI DMT");
-      if (1200==x && 600==y)
-	valptrs[c++]= c_strdup("1200x600 DPI");
-      if (1200<=x && 1200<=y)
-	valptrs[c++]= c_strdup("1200x1200 DPI");
-
-    } else if (!(caps.max_xdpi%180)) {
-
-      if ( 180<=x && 180<=y)
-	valptrs[c++]= c_strdup("180x180 DPI");
-      if ( 360<=x && 360<=y)
-	valptrs[c++]= c_strdup("360x360 DPI");
-      if ( 360<=x && 360<=y && (caps.features&CANON_CAP_DMT))
-	valptrs[c++]= c_strdup("360x360 DPI DMT");
-      if ( 720==x && 360==y)
-	valptrs[c++]= c_strdup("720x360 DPI");
-      if ( 720<=x && 720<=y)
-	valptrs[c++]= c_strdup("720x720 DPI");
-      if (1440==x && 720==y)
-	valptrs[c++]= c_strdup("1440x720 DPI");
-      if (1440<=x &&1440<=y)
-	valptrs[c++]= c_strdup("1440x1440 DPI");
-
-    } else {
+    for (x=1; x<6; x++) {
+      for (y=x-1; y<x+1; y++) {
+	if ((t= canon_ink_type(caps,(x<<4)|y)) > -1) {
+	  snprintf(tmp,99,"%dx%d DPI",
+		   (1<<x)/2*caps.base_res,(1<<y)/2*caps.base_res);
 #ifdef DEBUG
-      fprintf(stderr,"canon: unknown resolution multiplier for model %d\n",
-	      caps.model);
+	  fprintf(stderr,"supports mode '%s'\n",tmp);
 #endif
-      return 0;
+	  valptrs[c++]= c_strdup(tmp);
+
+	  if (t==1) {
+	    snprintf(tmp,99,"%dx%d DPI DMT",
+		     (1<<x)/2*caps.base_res,(1<<y)/2*caps.base_res);
+#ifdef DEBUG
+	    fprintf(stderr,"supports mode '%s'\n",tmp);
+#endif
+	  valptrs[c++]= c_strdup(tmp);
+	  }
+	}
+      }
     }
     *count= c;
-    p= valptrs;
+    p = valptrs;
   }
   else if (strcmp(name, "InkType") == 0)
   {
@@ -520,8 +1473,6 @@ canon_parameters(const printer_t *printer,	/* I - Printer model */
       valptrs[c++]= c_strdup("Black/Color");
     if ((caps.inks & CANON_INK_CcMmYK))
       valptrs[c++]= c_strdup("Photo/Color");
-    if ((caps.inks & CANON_INK_CcMmYy))
-      valptrs[c++]= c_strdup("Photo");
     if ((caps.inks & CANON_INK_CcMmYyK))
       valptrs[c++]= c_strdup("Black/Photo Color");
     *count = c;
@@ -870,16 +1821,23 @@ canon_print(const printer_t *printer,		/* I - Model */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
   convert_t	colorfunc = 0;	/* Color conversion function... */
+  int           bits= 1;
   int           image_height,
                 image_width,
                 image_bpp;
-  int           use_dmt = 0;
+  int		ink_spread;
   void *	dither;
-  double        the_levels[] = { 0.5, 0.75, 1.0 };
   vars_t	nv;
+  int           res_code;
+  int           use_6color= 0;
+  double k_upper, k_lower;
 
   canon_cap_t caps= canon_get_model_capabilities(model);
   int printhead= canon_printhead_type(ink_type,caps);
+  colormode_t colormode = canon_printhead_colors(ink_type,caps);
+  const paper_t *pt;
+  canon_variable_inkset_t *inks;
+
 
   memcpy(&nv, v, sizeof(vars_t));
   /*
@@ -908,6 +1866,9 @@ canon_print(const printer_t *printer,		/* I - Model */
   if (printhead == 0 || caps.inks == CANON_INK_K)
     output_type = OUTPUT_GRAY;
 
+  if (output_type == OUTPUT_GRAY)
+    colormode = COLOR_MONOCHROME;
+
   /*
    * Choose the correct color conversion function...
    */
@@ -921,12 +1882,14 @@ canon_print(const printer_t *printer,		/* I - Model */
   sscanf(resolution,"%dx%d",&xdpi,&ydpi);
 #ifdef DEBUG
   fprintf(stderr,"canon: resolution=%dx%d\n",xdpi,ydpi);
+  fprintf(stderr,"       rescode   =0x%x\n",canon_res_code(caps,xdpi,ydpi));
 #endif
+  res_code= canon_res_code(caps,xdpi,ydpi);
 
   if (!strcmp(resolution+(strlen(resolution)-3),"DMT") &&
       (caps.features & CANON_CAP_DMT) &&
       nv.image_type != IMAGE_MONOCHROME) {
-    use_dmt= 1;
+    bits= 2;
 #ifdef DEBUG
     fprintf(stderr,"canon: using drop modulation technology\n");
 #endif
@@ -975,7 +1938,7 @@ canon_print(const printer_t *printer,		/* I - Model */
   canon_init_printer(prn, caps, output_type, media_type,
 		     &nv, printhead, media_source,
 		     xdpi, ydpi, page_width, page_height,
-		     top,left,use_dmt);
+		     top,left,(bits==2));
 
  /*
   * Convert image size to printer resolution...
@@ -1000,7 +1963,7 @@ canon_print(const printer_t *printer,		/* I - Model */
     delay_y= 336;
     delay_lc= 112;
     delay_lm= 224;
-    delay_ly= 0;
+    delay_ly= 336;
     delay_max= 336;
 #ifdef DEBUG
     fprintf(stderr,"canon: delay on!\n");
@@ -1019,17 +1982,13 @@ canon_print(const printer_t *printer,		/* I - Model */
 
   length = (out_width + 7) / 8;
 
-  if (use_dmt) {
-    buf_length= length*2;
-  } else {
-    buf_length= length;
-  }
+  buf_length= length*bits;
 
 #ifdef DEBUG
   fprintf(stderr,"canon: buflength is %d!\n",buf_length);
 #endif
 
-  if (output_type == OUTPUT_GRAY) {
+  if (colormode==COLOR_MONOCHROME) {
     black   = canon_alloc_buffer(buf_length*(delay_k+1));
     cyan    = NULL;
     magenta = NULL;
@@ -1042,16 +2001,16 @@ canon_print(const printer_t *printer,		/* I - Model */
     magenta = canon_alloc_buffer(buf_length*(delay_m+1));
     yellow  = canon_alloc_buffer(buf_length*(delay_y+1));
 
-    if ((caps.inks & CANON_INK_BLACK_MASK))
+    if (colormode!=COLOR_CMY)
       black = canon_alloc_buffer(buf_length*(delay_k+1));
     else
       black = NULL;
 
-    if (printhead==3 && (caps.inks & (CANON_INK_PHOTO_MASK))) {
+    if (colormode==COLOR_CCMMYK || colormode==COLOR_CCMMYYK) {
+      use_6color= 1;
       lcyan = canon_alloc_buffer(buf_length*(delay_lc+1));
       lmagenta = canon_alloc_buffer(buf_length*(delay_lm+1));
-      if ((caps.inks & CANON_INK_CcMmYy) || 
-	  (caps.inks & CANON_INK_CcMmYyK))
+      if (colormode==CANON_INK_CcMmYyK)
 	lyellow = canon_alloc_buffer(buf_length*(delay_lc+1));
       else
 	lyellow = NULL;
@@ -1078,14 +2037,29 @@ canon_print(const printer_t *printer,		/* I - Model */
   fprintf(stderr,"density is %f\n",nv.density);
 #endif
 
-  nv.density = (nv.density * ydpi) / (xdpi * 1.0);
+  /*
+   * Compute the LUT.  For now, it's 8 bit, but that may eventually
+   * sometimes change.
+   */
+  pt = get_media_type(nv.media_type);
+  if (pt)
+    nv.density *= pt->base_density;
+  else
+    nv.density *= .5;		/* Can't find paper type? Assume plain */
+  nv.density *= canon_density(caps, res_code);
   if (nv.density > 1.0)
     nv.density = 1.0;
+  if (colormode == COLOR_MONOCHROME)
+    nv.gamma /= .8;
   compute_lut(256, &nv);
 
 #ifdef DEBUG
   fprintf(stderr,"density is %f\n",nv.density);
 #endif
+
+ /*
+  * Output the page...
+  */
 
   if (xdpi > ydpi)
     dither = init_dither(image_width, out_width, 1, xdpi / ydpi, &nv);
@@ -1093,22 +2067,57 @@ canon_print(const printer_t *printer,		/* I - Model */
     dither = init_dither(image_width, out_width, ydpi / xdpi, 1, &nv);
 
   dither_set_black_levels(dither, 1.0, 1.0, 1.0);
-  dither_set_black_lower(dither, .8 / ((1 << (use_dmt+1)) - 1));
-  /*
-  if (use_glossy_film)
-  */
-  dither_set_black_upper(dither, .999);
-  /*
-  else
-    dither_set_black_upper(dither, .999);
-  */
 
-  if (!use_dmt) {
-    dither_set_light_inks(dither,
-			  (lcyan)   ? (0.3333) : (0.0),
-			  (lmagenta)? (0.3333) : (0.0),
-			  (lyellow) ? (0.3333) : (0.0), nv.density);
+  if (use_6color)
+    k_lower = .4 / bits + .1;
+  else
+    k_lower = .25 / bits;
+  if (pt)
+    {
+      k_lower *= pt->k_lower_scale;
+      k_upper = pt->k_upper;
+    }
+  else
+    {
+      k_lower *= .5;
+      k_upper = .5;
+    }
+  dither_set_black_lower(dither, k_lower);
+  dither_set_black_upper(dither, k_upper);
+  if (bits == 2)
+    {
+      if (use_6color)
+	dither_set_adaptive_divisor(dither, 8);
+      else
+	dither_set_adaptive_divisor(dither, 16);
+    }  
+  else
+    dither_set_adaptive_divisor(dither, 4);
+
+  if ((inks = canon_inks(caps, res_code, colormode, bits))!=0) {
+    if (inks->c)
+      dither_set_c_ranges(dither, inks->c->count, inks->c->range,
+			  inks->c->density * nv.density);
+    if (inks->m)
+      dither_set_m_ranges(dither, inks->m->count, inks->m->range,
+			  inks->m->density * nv.density);
+    if (inks->y)
+      dither_set_y_ranges(dither, inks->y->count, inks->y->range,
+			  inks->y->density * nv.density);
+    if (inks->k)
+      dither_set_k_ranges(dither, inks->k->count, inks->k->range,
+			  inks->k->density * nv.density);
   }
+
+  if (bits == 2)
+    {
+      if (use_6color)
+	dither_set_transition(dither, .7);
+      else
+	dither_set_transition(dither, .5);
+    }
+  if (!strcmp(nv.dither_algorithm, "Ordered"))
+    dither_set_transition(dither, 1);
 
   switch (nv.image_type)
     {
@@ -1119,21 +2128,17 @@ canon_print(const printer_t *printer,		/* I - Model */
       dither_set_ink_spread(dither, 15);
       break;
     case IMAGE_CONTINUOUS:
-      dither_set_ink_spread(dither, 14);
+      ink_spread = 13;
+      /*
+      if (ydpi > canon_max_vres(model))
+	ink_spread++;
+      */
+      if (bits > 1)
+	ink_spread++;
+      dither_set_ink_spread(dither, ink_spread);
       break;
     }
   dither_set_density(dither, nv.density);
-
-  if (use_dmt)
-    {
-      dither_set_c_ranges_simple(dither, 3, the_levels, nv.density);
-      dither_set_m_ranges_simple(dither, 3, the_levels, nv.density);
-      dither_set_y_ranges_simple(dither, 3, the_levels, nv.density);
-      dither_set_k_ranges_simple(dither, 3, the_levels, nv.density);
-    }
- /*
-  * Output the page...
-  */
 
   in  = malloc(image_width * image_bpp);
   out = malloc(image_width * out_bpp * 2);
@@ -1178,7 +2183,7 @@ canon_print(const printer_t *printer,		/* I - Model */
 		     lcyan,    delay_lc,
 		     lmagenta, delay_lm,
 		     lyellow,  delay_ly,
-		     length, out_width, left, use_dmt);
+		     length, out_width, left, (bits==2));
 
 #ifdef DEBUG
     /* fprintf(stderr,"!"); */
@@ -1223,7 +2228,7 @@ canon_print(const printer_t *printer,		/* I - Model */
 		       lcyan,    delay_lc,
 		       lmagenta, delay_lm,
 		       lyellow,  delay_ly,
-		       length, out_width, left, use_dmt);
+		       length, out_width, left, (bits==2));
 
 #ifdef DEBUG
       /* fprintf(stderr,"-"); */
