@@ -1,6 +1,63 @@
+ * "$Id$"
+ *
+ *   Print plug-in EPSON ESC/P2 driver for the GIMP.
+ *
+ *   Copyright 1999 Robert Krawitz (rlk@alum.mit.edu)
+ *
+ *   This program is free software; you can redistribute it and/or modify it
+ *   under the terms of the GNU General Public License as published by the Free
+ *   Software Foundation; either version 2 of the License, or (at your option)
+ *   any later version.
+ *
+ *   This program is distributed in the hope that it will be useful, but
+ *   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ *   for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * Test for the soft weave algorithm.  This program calculates the weave
+ * parameters for each input line and verifies that a number of conditions
+ * are met.  Currently, the conditions checked are:
+ *
+ * 1) Pass # is >= 0
+ * 2) The nozzle is within the physical bounds of the printer
+ * 3) The computed starting row of the pass is not greater than the row
+ *    index itself.
+ * 4) The computed end of the pass is not less than the row index itself.
+ * 5) If this row is the last row of a pass, that the last pass completed
+ *    was one less than the current pass that we're just completing.
+ * 6) For a given pass, the computed starting row of the pass is the same
+ *    for all rows comprising the pass.
+ * 7) For a given pass, the computed last row of the pass is the same
+ *    for all rows comprising the pass.
+ * 8) The input row is the same as the row computed by the algorithm.
+ * 9) If there are phantom rows within the pass (unused jets before the
+ *    first jet that is actually printing anything), then the number of
+ *    phantom rows is not less than zero nor greater than or equal to the
+ *    number of physical jets in the printer.
+ * 10) The physical starting row of the pass (disregarding any phantom
+ *    rows) is at least zero.
+ * 11) If there are phantom rows, the number of phantom rows is less than
+ *    the current nozzle number.
+ * 12) If we are using multiple subpasses for each row, that each row within
+ *    this pass is part of the same logical subpass.  Thus, if the pass in
+ *    question is the first subpass for a given row, that it is the first
+ *    subpass for ALL rows comprising the pass.  This doesn't matter if we're
+ *    simply overlaying data; it's important if we have to shift the print head
+ *    slightly between each pass to accomplish high-resolution printing.
+ * 13) We are not overprinting a specified (row, subpass) pair.
+ *
+ * In addition to these per-row checks, we calculate the following global
+ * correctness checks:
+ *
+ * 1) No pass starts (logically) at a later row than an earlier pass.
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
-
 
 typedef struct			/* Weave parameters for a specific row */
 {
