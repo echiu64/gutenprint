@@ -13,15 +13,16 @@ ps.la
 raw.la
 array.lo
 bit-ops.lo
+channel.lo
 curve.lo
 dither-ed.lo
 dither-eventone.lo
-dither-fast.lo
 dither-inks.lo
 dither-main.lo
 dither-ordered.lo
 dither-very-fast.lo
 escp2-channels.lo
+escp2-driver.lo
 escp2-inks.lo
 escp2-papers.lo
 escp2-resolutions.lo
@@ -35,6 +36,7 @@ print-dither.lo
 print-escp2-data.lo
 print-escp2.lo
 print-lexmark.lo
+print-olympus.lo
 print-list.lo
 print-papers.lo
 print-pcl.lo
