@@ -340,11 +340,8 @@ curve_dtor(stp_curve_t curve)
 void
 stp_curve_free(stp_curve_t curve)
 {
-  if (curve)
-    {
-      curve_dtor(curve);
-      stpi_free(curve);
-    }
+  curve_dtor(curve);
+  stpi_free(curve);
 }
 
 void
