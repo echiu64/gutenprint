@@ -93,7 +93,6 @@ unsigned char RASTERP[16], *rasterp;
 #define D_ADAPTIVE_RANDOM (D_ADAPTIVE_BASE | D_FLOYD)
 #define D_ORDERED_BASE 4
 #define D_ORDERED (D_ORDERED_BASE)
-#define D_ORDERED_PERTURBED (D_ORDERED_BASE + 1)
 
 char *dither_algo_names[] =
 {
@@ -102,7 +101,6 @@ char *dither_algo_names[] =
   "Random Floyd-Steinberg",
   "Adaptive Hybrid",
   "Adaptive Random",
-  "Perturbed Ordered",
 };
 
 int num_dither_algos = sizeof(dither_algo_names) / sizeof(char *);
@@ -340,8 +338,6 @@ init_dither(int in_width, int out_width, vars_t *v)
     d->dither_type = D_FLOYD;
   else if (!strcmp(v->dither_algorithm, "Ordered"))
     d->dither_type = D_ORDERED;
-  else if (!strcmp(v->dither_algorithm, "Perturbed Ordered"))
-    d->dither_type = D_ORDERED_PERTURBED;
   else if (!strcmp(v->dither_algorithm, "Adaptive Hybrid"))
     d->dither_type = D_ADAPTIVE_HYBRID;
   else if (!strcmp(v->dither_algorithm, "Adaptive Random"))
@@ -359,7 +355,7 @@ init_dither(int in_width, int out_width, vars_t *v)
   dither_set_black_upper(d, .7);
   dither_set_black_levels(d, 1.0, 1.0, 1.0);
   dither_set_randomizers(d, 1.0, 1.0, 1.0, 1.0);
-  dither_set_ink_darkness(d, .5, .25, .15);
+  dither_set_ink_darkness(d, .6, .3, .2);
   dither_set_density(d, 1, 1.0);
   return d;
 }  
@@ -401,13 +397,6 @@ dither_set_adaptive_divisor(void *vd, unsigned divisor)
   d->adaptive_divisor = divisor;
   d->adaptive_limit = d->density / d->adaptive_divisor;
   d->adaptive_lower_limit = d->adaptive_limit / 4;
-}
-
-void
-dither_set_ink_budget(void *vd, unsigned budget)
-{
-  dither_t *d = (dither_t *) vd;
-  d->ink_limit = budget;
 }
 
 void
@@ -727,10 +716,12 @@ dither_set_c_ranges_simple(void *vd, int nlevels, const double *levels,
 }
 
 void
-dither_set_c_ranges_full(void *vd, int nlevels, const full_dither_range_t *ranges, double density)
+dither_set_c_ranges_full(void *vd, int nlevels,
+				const full_dither_range_t *ranges, double density)
 {
   dither_t *d = (dither_t *) vd;
-  dither_set_ranges_full(&(d->c_dither), nlevels, ranges, density, d->ink_limit);
+  dither_set_ranges_full(&(d->c_dither), nlevels, ranges, density,
+				  d->ink_limit);
 }
 
 void
@@ -759,10 +750,12 @@ dither_set_m_ranges_simple(void *vd, int nlevels, const double *levels,
 }
   
 void
-dither_set_m_ranges_full(void *vd, int nlevels, const full_dither_range_t *ranges, double density)
+dither_set_m_ranges_full(void *vd, int nlevels,
+				const full_dither_range_t *ranges, double density)
 {
   dither_t *d = (dither_t *) vd;
-  dither_set_ranges_full(&(d->m_dither), nlevels, ranges, density, d->ink_limit);
+  dither_set_ranges_full(&(d->m_dither), nlevels, ranges, density,
+				  d->ink_limit);
 }
 
 void
@@ -791,10 +784,12 @@ dither_set_y_ranges_simple(void *vd, int nlevels, const double *levels,
 }
   
 void
-dither_set_y_ranges_full(void *vd, int nlevels, const full_dither_range_t *ranges, double density)
+dither_set_y_ranges_full(void *vd, int nlevels,
+				const full_dither_range_t *ranges, double density)
 {
   dither_t *d = (dither_t *) vd;
-  dither_set_ranges_full(&(d->y_dither), nlevels, ranges, density, d->ink_limit);
+  dither_set_ranges_full(&(d->y_dither), nlevels, ranges, density,
+				  d->ink_limit);
 }
 
 void
@@ -823,10 +818,12 @@ dither_set_k_ranges_simple(void *vd, int nlevels, const double *levels,
 }
   
 void
-dither_set_k_ranges_full(void *vd, int nlevels, const full_dither_range_t *ranges, double density)
+dither_set_k_ranges_full(void *vd, int nlevels,
+				const full_dither_range_t *ranges, double density)
 {
   dither_t *d = (dither_t *) vd;
-  dither_set_ranges_full(&(d->k_dither), nlevels, ranges, density, d->ink_limit);
+  dither_set_ranges_full(&(d->k_dither), nlevels, ranges, density,
+				  d->ink_limit);
 }
 
 
@@ -1229,40 +1226,9 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	       * Hybrid Floyd-Steinberg: use a matrix (or a really ugly
 	       * combination of matrices) to generate the offset.
 	       */
-	      vmatrix = DITHERPOINT(d, x, y, 1) ^ DITHERPOINT(d, x, y, 2);
-	      break;
 	    case D_ORDERED:
-	    case D_ORDERED_PERTURBED:
 	    default:
-	      /*
-	       * Ordered: again, we use a matrix to generate the offset.
-	       * This time, however, we use a different matrix.
-	       * We also generate some random low-order bits to ensure that
-	       * even very small values have a chance to print.
-	       */
-	      {
-		int ix, iy;
-		if (dither_type == D_ORDERED_PERTURBED)
-		  {
-		    /*
-		     * "Twist" the matrix to break up lines.  This is
-		     * somewhat peculiar to the iterated-2 matrix we've
-		     * chosen.  A better matrix may not need this.
-		     */
-		    ix = x + y / (((x / 11) % 7) + 3);
-		    iy = y + x / (((y / 11) % 7) + 3);
-		  }
-		else
-		  {
-		    /*
-		     * Improve the iterated-2 matrix.  A better matrix
-		     * may not need this treatment.
-		     */
-		    ix = x;
-		    iy = y;
-		  }
-		vmatrix = DITHERPOINT(d, ix, iy, 6);
-	      }
+		  vmatrix = DITHERPOINT(d, x, y, 6);
 	    }
 
 	  if (vmatrix == 65536 && virtual_value == 65536)
@@ -1542,7 +1508,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		length;		/* Length of output bitmap in bytes */
   int		c, m, y, k,	/* CMYK values */
 		oc, om, ok, oy;
-  int   	diff;		/* Average color difference */
   unsigned char	bit,		/* Current bit */
 		*cptr,		/* Current cyan pixel */
 		*mptr,		/* Current magenta pixel */
@@ -1563,7 +1528,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   int		ditherk,	/* Next error value in buffer */
 		*kerror0,	/* Pointer to current error row */
 		*kerror1;	/* Pointer to next error row */
-  int		ditherbit;	/* Random dither bitmask */
   unsigned	ks, kl;
   int		bk = 0;
   int		ub, lb;
@@ -1668,7 +1632,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       int tk;
       int printed_black = 0;
       int omd, oyd, ocd;
-	  int PRINTED=0;
+	  int PRINTED;
 
 	  if(ink_budget) ink_budget=1;
 	  ink_budget += d->ink_limit;
@@ -1859,6 +1823,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		first_color = ECOLOR_C;
 	  else
 		if(m>y) first_color = ECOLOR_M;
+	  PRINTED=0;
 
 	  switch(first_color) {
 		case ECOLOR_C:
