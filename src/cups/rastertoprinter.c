@@ -210,7 +210,7 @@ initialize_page(cups_image_t *cups, const stp_printer_t printer,
       const char *name;
       stp_parameter_t desc;
       if (!opt || !(opt->name) || strlen(opt->name) < 4 ||
-	  strncmp(opt->name, "stp", 3) != 0 ||
+	  strncmp(opt->name, "Stp", 3) != 0 ||
 	  strcmp(opt->value, "DEFAULT") == 0)
 	continue;
       name = opt->name + 3;	/* Skip leading "stp" prefix */
@@ -218,16 +218,24 @@ initialize_page(cups_image_t *cups, const stp_printer_t printer,
       switch (desc.p_type)
 	{
 	case STP_PARAMETER_TYPE_STRING_LIST:
+	  fprintf(stderr, "DEBUG: Gimp-Print set string %s to %s\n",
+		  name, opt->value);
 	  stp_set_string_parameter(v, name, opt->value);
 	  break;
 	case STP_PARAMETER_TYPE_INT:
+	  fprintf(stderr, "DEBUG: Gimp-Print set int %s to %s\n",
+		  name, opt->value);
 	  stp_set_int_parameter(v, name, atoi(opt->value));
 	  break;
 	case STP_PARAMETER_TYPE_BOOLEAN:
+	  fprintf(stderr, "DEBUG: Gimp-Print set bool %s to %s\n",
+		  name, opt->value);
 	  stp_set_boolean_parameter(v, name,
 				    strcmp(opt->value, "True") == 0 ? 1 : 0);
 	  break;
 	case STP_PARAMETER_TYPE_DOUBLE:
+	  fprintf(stderr, "DEBUG: Gimp-Print set float %s to %s\n",
+		  name, opt->value);
 	  stp_set_float_parameter(v, name, atof(opt->value) * 0.001);
 	  break;
 	case STP_PARAMETER_TYPE_CURVE: /* figure this out later... */
@@ -266,15 +274,10 @@ initialize_page(cups_image_t *cups, const stp_printer_t printer,
       break;
     }
 
-  set_special_parameter(v, "DitherAlgorithm", cups->header.cupsRowStep);
   set_special_parameter(v, "Resolution", cups->header.cupsCompression);
-  set_special_parameter(v, "ImageOptimization", cups->header.cupsRowCount);
 
   stp_set_string_parameter(v, "InputSlot", cups->header.MediaClass);
   stp_set_string_parameter(v, "MediaType", cups->header.MediaType);
-  stp_set_string_parameter(v, "InkType", cups->header.OutputType);
-
-  stp_set_string_parameter(v, "PrintingDirection", "Auto");
 
   fprintf(stderr, "DEBUG: PageSize = %dx%d\n", cups->header.PageSize[0],
 	  cups->header.PageSize[1]);
@@ -435,6 +438,8 @@ main(int  argc,				/* I - Number of command-line arguments */
  /*
   * Get the STP options, if any...
   */
+
+  fprintf(stderr, "DEBUG: Gimp-Print options are %s\n", argv[5]);
 
   num_options = cupsParseOptions(argv[5], 0, &options);
 

@@ -136,18 +136,18 @@ const char *special_options[] =
 
 const char *parameter_class_names[] =
 {
-  N_("Printer Features"),
-  N_("Output Control")
+  N_("Printer_Features"),
+  N_("Output_Control")
 };
 
 const char *parameter_level_names[] =
 {
-  N_("Standard"),
-  N_("Advanced"),
-  N_("Extra 1"),
-  N_("Extra 2"),
-  N_("Extra 3"),
-  N_("Extra 4")
+  N_("Common"),
+  N_("Extra_1"),
+  N_("Extra_2"),
+  N_("Extra_3"),
+  N_("Extra_4"),
+  N_("Extra_5")
 };
 
 
@@ -188,17 +188,18 @@ static void
 print_group_open(FILE *fp, stp_parameter_class_t p_class,
 		 stp_parameter_level_t p_level)
 {
-  gzprintf(fp, "*OpenGroup: STP_%d_%d/%s %s %s\n\n",
-	   p_class, p_level, _("Gimp-Print"),
-	   _(parameter_class_names[p_class]),
-	   _(parameter_level_names[p_level]));
+  gzprintf(fp, "*OpenGroup: %s_%s_%s\n\n", _("Gimp-Print"),
+	   _(parameter_level_names[p_level]),
+	   _(parameter_class_names[p_class]));
 }
 
 static void
 print_group_close(FILE *fp, stp_parameter_class_t p_class,
 		 stp_parameter_level_t p_level)
 {
-  gzprintf(fp, "*CloseGroup: STP_%d_%d\n\n", p_class, p_level);
+  gzprintf(fp, "*CloseGroup: %s_%s_%s\n\n", _("Gimp-Print"),
+	   _(parameter_level_names[p_level]),
+	   _(parameter_class_names[p_class]));
 }
 
 /*
@@ -1083,52 +1084,56 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 		  printed_open_group = 1;
 		}
 	      stp_describe_parameter(v, lparam->name, &desc);
-	      gzprintf(fp, "*OpenUI *stp%s/%s: PickOne\n",
+	      gzprintf(fp, "*OpenUI *Stp%s/%s: PickOne\n",
 		       desc.name, _(desc.text));
-	      gzprintf(fp, "*OrderDependency: %d AnySetup *stp%s\n",
-		       100 + l, desc.name);
+#if 0
+	      gzprintf(fp, "*OrderDependency: %d AnySetup *Stp%s\n",
+		       (100 + l + (j * param_count) +
+			(k * STP_PARAMETER_LEVEL_ADVANCED5 * param_count)),
+		       desc.name);
+#endif
 	      if (!desc.is_mandatory)
 		{
-		  gzprintf(fp, "*Defaultstp%s: DEFAULT\n", desc.name);
-		  gzprintf(fp, "*stp%s %s/%s: \"\"\n", desc.name, "DEFAULT",
+		  gzprintf(fp, "*DefaultStp%s: DEFAULT\n", desc.name);
+		  gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name, "DEFAULT",
 			   _("Default"));
 		}
 	      switch (desc.p_type)
 		{
 		case STP_PARAMETER_TYPE_STRING_LIST:
 		  if (desc.is_mandatory)
-		    gzprintf(fp, "Defaultstp%s: %s\n",
+		    gzprintf(fp, "*DefaultStp%s: %s\n",
 			     desc.name, desc.deflt.str);
 		  num_opts = stp_string_list_count(desc.bounds.str);
 		  for (i = 0; i < num_opts; i++)
 		    {
 		      opt = stp_string_list_param(desc.bounds.str, i);
-		      gzprintf(fp, "*stp%s %s/%s: \"\"\n",
+		      gzprintf(fp, "*Stp%s %s/%s: \"\"\n",
 			       desc.name, opt->name, _(opt->text));
 		    }
 		  break;
 		case STP_PARAMETER_TYPE_BOOLEAN:
 		  if (desc.is_mandatory)
-		    gzprintf(fp, "Defaultstp%s: %s\n",
+		    gzprintf(fp, "*DefaultStp%s: %s\n",
 			     desc.name, desc.deflt.boolean ? "True" : "False");
-		  gzprintf(fp, "*stp%s %s/%s: \"\"\n",
+		  gzprintf(fp, "*Stp%s %s/%s: \"\"\n",
 			   desc.name, "False", _("No"));
-		  gzprintf(fp, "*stp%s %s/%s: \"\"\n",
+		  gzprintf(fp, "*Stp%s %s/%s: \"\"\n",
 			   desc.name, "True", _("Yes"));
 		  break;
 		case STP_PARAMETER_TYPE_DOUBLE:
 		  if (desc.is_mandatory)
-		    gzprintf(fp, "Defaultstp%s: %d\n", desc.name,
+		    gzprintf(fp, "*DefaultStp%s: %d\n", desc.name,
 			     (int) (desc.deflt.dbl * 1000));
 		  for (i = desc.bounds.dbl.lower * 1000;
 		       i <= desc.bounds.dbl.upper * 1000 ; i += 50)
-		    gzprintf(fp, "*stp%s %d/%.3f: \"\"\n",
+		    gzprintf(fp, "*Stp%s %d/%.3f: \"\"\n",
 			     desc.name, i, ((double) i) * .001);
 		  break;
 		default:
 		  break;
 		}
-	      gzprintf(fp, "*CloseUI: *stp%s\n\n", desc.name);
+	      gzprintf(fp, "*CloseUI: *Stp%s\n\n", desc.name);
 	      stp_parameter_description_free(&desc);
 	    }
 	  if (printed_open_group)
