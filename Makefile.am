@@ -48,18 +48,18 @@ CLEANFILES = printdefl.c printdefy.c printdefy.h print-printers.c \
 MAINTAINERCLEANFILES = configure Makefile.in aclocal.m4
 
 INCLUDES = \
-	-I$(top_srcdir)			\
-	$(GIMP_CFLAGS)			\
-	-I$(includedir)
+ -I$(top_srcdir)\
+ $(GIMP_CFLAGS)\
+ -I$(includedir)
 
-AM_CPPFLAGS =					\
-        -DLOCALEDIR=\""$(localedir)"\"		\
-	-Wall -Wcast-align -Wstrict-prototypes	\
-	@LP_DEF@				\
-	@LPSTAT_DEF@				\
-	@LPR_DEF@				\
-	@LPC_DEF@				\
-	@RELDATE_DEF@
+AM_CPPFLAGS =\
+ -DLOCALEDIR=\""$(localedir)"\"\
+ -Wall -Wcast-align -Wstrict-prototypes\
+ @LP_DEF@\
+ @LPSTAT_DEF@\
+ @LPR_DEF@\
+ @LPC_DEF@\
+ @RELDATE_DEF@
 
 print_LDADD = $(GIMP_LIBS)
 
