@@ -416,7 +416,6 @@ main(int  argc,				/* I - Number of command-line arguments */
     {
       if ((fp = fopen(filename, "wb")) != NULL)
 	{
-	  puts(filename);
 	  if (stpi_dither_type == DITHER_GRAY)
 	    fputs("P5\n", fp);
 	  else
@@ -473,7 +472,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   if (quiet)
     fputc('.', stdout);
   else
-    printf("\r%-40s Total dither time for %d pixels is %.3f seconds, or %.2f pixels/sec.\n",
+    printf("\r%-30s %d pix %.3f sec %.2f pix/sec\n",
 	   filename, IMAGE_WIDTH * IMAGE_HEIGHT, compute_interval(&tv1, &tv2),
 	   (float)(IMAGE_WIDTH * IMAGE_HEIGHT) / compute_interval(&tv1, &tv2));
   return 0;
