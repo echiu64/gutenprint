@@ -1414,21 +1414,6 @@ escp2_fold(const unsigned char *line,
 }
 
 static void
-escp2_split_2(int length,
-	      const unsigned char *in,
-	      unsigned char *outhi,
-	      unsigned char *outlo)
-{
-  int i;
-  for (i = 0; i < length; i++)
-    {
-      unsigned char inbyte = in[i];
-      outlo[i] = inbyte & 0x55;
-      outhi[i] = inbyte & 0xaa;
-    }
-}
-
-static void
 escp2_split_2_2(int length,
 		const unsigned char *in,
 		unsigned char *outhi,
@@ -1440,44 +1425,6 @@ escp2_split_2_2(int length,
       unsigned char inbyte = in[i];
       outlo[i] = inbyte & 0x33;
       outhi[i] = inbyte & 0xcc;
-    }
-}
-
-static void
-escp2_split_2_4(int length,
-		const unsigned char *in,
-		unsigned char *outhi,
-		unsigned char *outlo)
-{
-  int i;
-  for (i = 0; i < length * 2; i++)
-    {
-      unsigned char inbyte = in[i];
-      outlo[i] = inbyte & 0x0f;
-      outhi[i] = inbyte & 0xf0;
-    }
-}
-
-static void
-escp2_split_2_8(int length,
-		const unsigned char *in,
-		unsigned char *outhi,
-		unsigned char *outlo)
-{
-  int i;
-  for (i = 0; i < length * 2; i++)
-    {
-      unsigned char inbyte = in[i];
-      if (i & 1)
-	{
-	  outlo[i] = inbyte;
-	  outhi[i] = 0;
-	}
-      else
-	{
-	  outlo[i] = 0;
-	  outhi[i] = inbyte;
-	}
     }
 }
 
@@ -1514,25 +1461,6 @@ escp2_split_2_even(int length,
 }
 
 static void
-escp2_split_4(int length,
-	      const unsigned char *in,
-	      unsigned char *out0,
-	      unsigned char *out1,
-	      unsigned char *out2,
-	      unsigned char *out3)
-{
-  int i;
-  for (i = 0; i < length; i++)
-    {
-      unsigned char inbyte = in[i];
-      out0[i] = inbyte & 0x88;
-      out1[i] = inbyte & 0x44;
-      out2[i] = inbyte & 0x22;
-      out3[i] = inbyte & 0x11;
-    }
-}
-
-static void
 escp2_split_4_2(int length,
 		const unsigned char *in,
 		unsigned char *out0,
@@ -1548,78 +1476,6 @@ escp2_split_4_2(int length,
       out1[i] = inbyte & 0x30;
       out2[i] = inbyte & 0x0c;
       out3[i] = inbyte & 0x03;
-    }
-}
-
-static void
-escp2_split_4_4(int length,
-		const unsigned char *in,
-		unsigned char *out0,
-		unsigned char *out1,
-		unsigned char *out2,
-		unsigned char *out3)
-{
-  int i;
-  for (i = 0; i < length; i++)
-    {
-      unsigned char inbyte = in[i];
-      switch (i & 1)
-	{
-	case 0:
-	  out0[i] = inbyte & 0xf0;
-	  out1[i] = inbyte & 0x0f;
-	  out2[i] = 0;
-	  out3[i] = 0;
-	  break;
-	case 1:
-	  out0[i] = 0;
-	  out1[i] = 0;
-	  out2[i] = inbyte & 0xf0;
-	  out3[i] = inbyte & 0x0f;
-	  break;
-	}
-    }
-}
-
-static void
-escp2_split_4_8(int length,
-		const unsigned char *in,
-		unsigned char *out0,
-		unsigned char *out1,
-		unsigned char *out2,
-		unsigned char *out3)
-{
-  int i;
-  for (i = 0; i < length; i++)
-    {
-      unsigned char inbyte = in[i];
-      switch (i & 3)
-	{
-	case 0:
-	  out0[i] = inbyte;
-	  out1[i] = 0;
-	  out2[i] = 0;
-	  out3[i] = 0;
-	  break;
-	case 1:
-	  out0[i] = 0;
-	  out1[i] = inbyte;
-	  out2[i] = 0;
-	  out3[i] = 0;
-	  break;
-	case 2:
-	  out0[i] = 0;
-	  out1[i] = 0;
-	  out2[i] = inbyte;
-	  out3[i] = 0;
-	  break;
-	case 3:
-	  out0[i] = 0;
-	  out1[i] = 0;
-	  out2[i] = 0;
-	  out3[i] = inbyte;
-	  break;
-	}
     }
 }
 
@@ -3075,6 +2931,9 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.137  2000/05/05 02:41:41  rlk
+ *   Minor cleanup
+ *
  *   Revision 1.136  2000/05/05 00:46:22  rlk
  *   Optimize out head motion and color commands where possible.
  *   We can still optimize out some horizontal movements.

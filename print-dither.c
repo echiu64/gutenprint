@@ -840,7 +840,9 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
   int i;
   int levels = rv->nlevels - 1;
   if (adjusted <= 0 || base == 0 || density == 0)
-    return adjusted;    
+    return adjusted;
+  if (density > 65536)
+    density = 65536;
 
   /*
    * Look for the appropriate range into which the input value falls.
@@ -918,13 +920,15 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
        * smoother output in the midtones.  Idea suggested by
        * Thomas Tonino.
        */
-      if (!(d->dither_type & D_ORDERED_BASE))
+      if (!(dither_type & D_ORDERED_BASE))
 	{
 	  if (base > d->d_cutoff)
 	    randomizer = 0;
 	  else if (base > d->d_cutoff / 2)
 	    randomizer = randomizer * 2 * (d->d_cutoff - base) / d->d_cutoff;
 	}
+      else
+	randomizer = 65536;	/* With ordered dither, we need this */
 
       /*
        * A hack to get a bit more choice out of a single matrix.
@@ -1281,8 +1285,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		xmod,		/* X error modulus */
 		length;		/* Length of output bitmap in bytes */
   int		c, m, y, k,	/* CMYK values */
-		oc, om, ok, oy,
-		divk;		/* Inverse of K */
+		oc, om, ok, oy;
   int   	diff;		/* Average color difference */
   unsigned char	bit,		/* Current bit */
 		*cptr,		/* Current cyan pixel */
@@ -1308,7 +1311,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   int		ck;
   int		bk = 0;
   int		ub, lb;
-  int		density;
   dither_t	*d = (dither_t *) vd;
 
   int		terminate;
@@ -1437,30 +1439,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	  if (diff < 0)
 	    diff = 0;
 	  k = (int) (((unsigned) diff * (unsigned) k) >> 16);
-#if 0
-	  ak = k;
-	  divk = 65535 - k;
-	  if (divk == 0)
-	    c = m = y = 0;	/* Grayscale */
-	  else
-	    {
-	      /*
-	       * Full color; update the CMY values for the black value and
-	       * reduce CMY as necessary to give better blues, greens,
-	       * and reds... :)
-	       */
-	      unsigned ck = c - k;
-	      unsigned mk = m - k;
-	      unsigned yk = y - k;
-
-	      c  = ((unsigned) (65535 - ((rgb[2] + rgb[1]) >> 3))) * ck /
-		(unsigned) divk;
-	      m  = ((unsigned) (65535 - ((rgb[1] + rgb[0]) >> 3))) * mk /
-		(unsigned) divk;
-	      y  = ((unsigned) (65535 - ((rgb[0] + rgb[2]) >> 3))) * yk /
-		(unsigned) divk;
-	    }
-#endif
 	  ok = k;
 	  ak = k;
 
@@ -1564,18 +1542,10 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	  y  = ((unsigned) (65535 - rgb[0] / 4)) * yk / 65535 + k;
 	}
 
-
-#if 0
       /*
        * Done handling the black.  Now print the color.
        * Isn't this easy by comparison?
        */
-      oc = c;
-      om = m;
-      oy = y;
-#endif
-
-      density = oc + om + oy;
       UPDATE_COLOR(c);
       UPDATE_COLOR(m);
       UPDATE_COLOR(y);
@@ -1610,6 +1580,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.37  2000/05/05 02:41:41  rlk
+ *   Minor cleanup
+ *
  *   Revision 1.36  2000/05/03 23:17:14  rlk
  *   Avoid out of range problems
  *
