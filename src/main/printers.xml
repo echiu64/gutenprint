@@ -771,6 +771,12 @@
         <gamma value="0.585"/>
         <density value="1.0"/>
       </printer>
+      <printer name="EPSON MJ-930C" driver="escp2-mj930c">
+        <color value="true"/>
+        <model value="4"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
+      </printer>
       <printer name="EPSON MJ-5100C" driver="escp2-mj5100c">
         <color value="true"/>
         <model value="39"/>
