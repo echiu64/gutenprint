@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 4.1.99-b2\n"
-"POT-Creation-Date: 2002-02-26 20:42-0500\n"
+"POT-Creation-Date: 2002-03-02 12:39-0500\n"
 "PO-Revision-Date: 2001-11-09 13:17+0100\n"
 "Last-Translator: Christophe Fergeau <teuf@users.sourceforge.net>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
