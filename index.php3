@@ -29,16 +29,16 @@ site</a> for quick and easy setup.</p>
 UNIX Printing System) for the easiest setup.</p>
 
 </p>
-<H2><font color="#ff0000">Gimp-Print 4.1.99-b4 is
+<H2><font color="#ff0000">Gimp-Print 4.1.99-rc1 is
 released!</font></h2>
 
-<P><strong><em><font color="#ff0000">New as of October 25,
-2001!</strong></em></font> Gimp-Print 4.1.99-b4, a beta release in
-the 4.2 line, is out.  This offers mostly minor improvements and bug
-fixes, and this release should be very close to the final 4.2</p>
+<P><strong><em><font color="#ff0000">New as of November 11,
+2001!</strong></em></font> Gimp-Print 4.1.99-rc1, a release candidate
+in the 4.2 line, is out.  This offers mostly minor improvements and
+bug fixes, and this release should be very close to the final 4.2.</p>
 
 <P><strong><em><font color="#ff0000">New as of October 15,
-2000!</strong></em></font> Daniele Berti has updated his rpm's of
+2001!</strong></em></font> Daniele Berti has updated his rpm's of
 GhostScript 5.50 with the Gimp-Print stp driver (4.0.5).  It's
 available at <a
 href="http://space.tin.it/computer/wvtberti/linux/stp_driver/gs_stp.htm">http://space.tin.it/computer/wvtberti/linux/stp_driver/gs_stp.htm</a>.</p>
