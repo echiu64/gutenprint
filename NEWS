@@ -1,7 +1,5 @@
-Gimp-Print 4.2.2, released September 12, 2002, is a stable release in
-the Gimp-Print 4.2 series.  This release primarily offers bug fixes
-and support for all Epson Stylus printers announced since Gimp-Print
-4.2.1.
+Gimp-Print 4.2.3-pre1, released September 12, 2002, is a prerelease in
+the Gimp-Print 4.2 series.
 
 Gimp-Print is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -40,6 +38,37 @@ http://gimp-print.sourceforge.net.
 Please read the README file for full instructions on installing this
 package.
 
+Gimp-Print 4.2.3-pre1 contains the following changes and fixes over
+Gimp-Print 4.2.2:
+
+1) The Epson stylus 600, 800, 850, 1520, and 3000 now print correctly
+   at 1440x720 DPI.
+
+2) The package will now compile correctly on Solaris and BSD-based
+   systems.
+
+3) Support for the Epson Stylus Photo EX3 and Stylus Photo 825, in
+   addition to support for the Japanese equivalents of all supported
+   Epson printers.
+
+4) The Epson Stylus 660 margins have been corrected.
+
+5) The Epson Stylus C20/C40/C41/C42 and Stylus Color 480 and 580 now
+   print correctly in grayscale and black and white.
+
+6) The Epson driver positions correctly at 360x240 DPI.
+
+7) The Epson Stylus 7600 may now print correctly (although probably
+   not optimally).  This printer still requires further testing.
+
+Bugs fixed in this release:
+
+597964 Epson 660 wrong margins
+604854 QUALITY-Epson 1520 and 3000 print too dark at 1440x720 DPI
+611804 rastertoprinter.c fails to compile on Solaris
+613384 Epson 7600 no printing
+615561 Epson C40UX cannot print in B&W and Gray
+615759 360x240 bad horizontal position
 
 
 Gimp-Print 4.2.2 contains the following major changes over Gimp-Print
