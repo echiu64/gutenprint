@@ -1,22 +1,24 @@
 PROGRAM:
 --------
 
- Driver for Epson, Canon, and PCL printers based on the gimp-print
- plugin.  This driver is capable of producing very high quality 4 and
- 6 color prints.
+ Gimp-Print 4.0 includes an associated Ghostscript driver, which is
+ named `stp'.  That name originally referred to Epson Stylus Photo
+ printers; this is the first Ghostscript driver which supported those
+ printers with high quality.  As of 4.0 alpha, the stp driver also
+ supports the same HP and Canon printers supported by the rest of the
+ gimp-print suite.
 
 
 AUTHOR:
 -------
 
- This Ghostscript frontend is written by
- Henryk Richter (buggs@comlab.uni-rostock.de).
-
- Uses the gimp-print core by Michael Sweet (mike@easysw.com) and
- Robert Krawitz (rlk@alum.mit.edu).
-
- Currently maintained by the Gimp-Print development team
- (http://gimp-print.sourceforge.net).
+ This Ghostscript frontend was originally written by Henryk Richter
+ (buggs@comlab.uni-rostock.de); it has been fully integrated into
+ gimp-print.  Gimp-Print itself was originally written by Michael
+ Sweet <mike@easysw.com>, who released up to version 2.0; Robert
+ Krawitz released version 3.0.  The gimp-print development team
+ (http://gimp-print.sourceforge.net) now maintains the entire
+ package.
 
 
 LICENSE:
@@ -44,17 +46,26 @@ INSTALLATION AND COMPILATION:
    described in the documentation (don`t forget zlib, libpng and libjpeg
    when downloading the source) for compiling
 
- - Copy all "*.c" and "*.h" files to the "src/" subdirectory of ghostscript's
-   distribution.
+ - Copy all "*.c" and "*.h" files to the Ghostscript source
+   directory.  Depending upon the version of Ghostscript you use, this
+   may be either the top level of your Ghostscript source
+   distribution, or the "src/" subdirectory.
 
  - If you are using Ghostscript 5.50 or newer: edit the file
-   "contrib.mak" in the "src/" subdirectory by adding the contents of
-   "contrib.mak.addon"
+   "contrib.mak" (in either the top level or src/ subdirectoy,
+   depending upon your version of Ghostscript) by adding the contents
+   of "contrib.mak.addon".
 
- - If you are using Ghostscript 5.10: edit the file "devs.mak" in the
-   "src/" subdirectory by adding the contents of "devs.mak.addon-5.10".
+ - If you are using Ghostscript 5.10: edit the file "devs.mak"(in
+   either the top level or src/ subdirectoy, depending upon your
+   version of Ghostscript) by adding the contents of
+   "devs.mak.addon-5.10".
 
- - Add "$(DD)stp.dev" to the line "DEVICE_DEVS6=..." in "unix-gcc.mak"
+ - Add "$(DD)stp.dev" to the line "DEVICE_DEVS6=..." in
+   "unix-gcc.mak".  If there are multiple lines that start with
+   DEVICE_DEVS6=, you may add this to any such line.  If there is no
+   DEVICE_DEVS6= line, you may add it to any other DEVICE_DEVSx line
+   that is present.
 
  - The distribution includes a utility named "escputil" that performs
    many utility functions, such as head cleaning, nozzle alignment,
@@ -81,7 +92,7 @@ INSTALLATION AND COMPILATION:
 
  Compile and install gs as described in the documentation, after a
  successful compiler run you got a new driver named "stp". Check 
- this by calling "gs -h" with the newly compiled ghostscript.
+ this by calling "gs -h" with the newly compiled Ghostscript.
 
 
 
@@ -146,8 +157,7 @@ To install it:
 
 If you have gs or gs-aladdin installed, it will be removed. 
 
-NB. 
-#include <standard disclaimers> 
+DISCLAIMER:
 
 This is not an official Debian package. This method works for at 
 least one person. To be really neat and tidy other files need 
@@ -160,8 +170,8 @@ If you know how to fix this, please update this README.
 OPTIONS:
 --------
 
- Options for the stp driver are given in normal ghostscript
- manner. The resolution of the image calculated by ghostscript is not
+ Options for the stp driver are given in normal Ghostscript
+ manner. The resolution of the image calculated by Ghostscript is not
  bound to the resolution of the printer output. It is for example
  possible to specify "-r360" to gs and print the output in 1440x720
  dpi (see below for driver parameter). The result is a somewhat faster
@@ -203,7 +213,6 @@ escp2-pro-xl		EPSON Stylus Color Pro XL
 escp2-400		EPSON Stylus Color 400
 escp2-440		EPSON Stylus Color 440
 escp2-460		EPSON Stylus Color 460
-escp2-480		EPSON Stylus Color 480
 escp2-500		EPSON Stylus Color 500
 escp2-600		EPSON Stylus Color 600
 escp2-640		EPSON Stylus Color 640
