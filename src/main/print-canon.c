@@ -2616,8 +2616,12 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   for (i = 0; i < 7; i++)
     {
       if (privdata.cols[i])
-	stp_dither_add_channel(v, privdata.cols[i], channel_color_map[i],
-			       subchannel_color_map[i]);
+	{
+	  stp_dither_add_channel(v, privdata.cols[i], channel_color_map[i],
+				 subchannel_color_map[i]);
+	  if (channel_color_map[i] == STP_ECOLOR_K)
+	    stp_channel_set_black_channel(v, STP_ECOLOR_K);
+	}
     }
 
   if ((inks = canon_inks(caps, res_code, colormode, bits))!=0)

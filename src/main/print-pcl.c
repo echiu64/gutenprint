@@ -2504,7 +2504,10 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   stp_dither_init(v, image, out_width, xdpi, ydpi);
 
   if (black)
-    stp_dither_add_channel(v, black, STP_ECOLOR_K, 0);
+    {
+      stp_dither_add_channel(v, black, STP_ECOLOR_K, 0);
+      stp_channel_set_black_channel(v, STP_ECOLOR_K);
+    }
   if (cyan)
     stp_dither_add_channel(v, cyan, STP_ECOLOR_C, 0);
   if (lcyan)

@@ -2104,7 +2104,10 @@ densityDivisor /= 1.2;
   errline  = 0;
 
   if (cols.p.k)
-    stp_dither_add_channel(v, cols.p.k, STP_ECOLOR_K, 0);
+    {
+      stp_dither_add_channel(v, cols.p.k, STP_ECOLOR_K, 0);
+      stp_channel_set_black_channel(v, STP_ECOLOR_K);
+    }
   if (cols.p.c)
     stp_dither_add_channel(v, cols.p.c, STP_ECOLOR_C, 0);
   if (cols.p.C)
