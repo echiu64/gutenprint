@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 4.1.99-b2\n"
-"POT-Creation-Date: 2001-10-17 19:50-0400\n"
+"POT-Creation-Date: 2001-10-18 19:08-0400\n"
 "PO-Revision-Date: 2001-10-11 09:19+0200\n"
 "Last-Translator: Christophe Merlet (RedFox) <redfox@eikonex.org>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -1999,11 +1999,9 @@ msgid ""
 msgstr ""
 
 #: src/escputil/escputil.c:956
-msgid "Please confirm by typing 'r' again that you wish to repeat the\n"
-msgstr ""
-
-#: src/escputil/escputil.c:957
-msgid "alignment process:\n"
+msgid ""
+"Please confirm by typing 'r' again that you wish to repeat the\n"
+"alignment process:\n"
 msgstr ""
 
 #: src/escputil/escputil.c:962
