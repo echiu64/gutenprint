@@ -218,6 +218,9 @@ static const escp2_densities_t g3_densities =
 static const escp2_densities_t c6pl_densities =
 { 4.0, 2.0,  1.0,  0.568, 0.568, 0.568, 0.0,   0.0   };
 
+static const escp2_densities_t c4pl_2880_densities =
+{ 2.6, 1.3,  0.65, 0.650, 0.650, 0.650, 0.32,  0.0   };
+
 static const escp2_densities_t c4pl_densities =
 { 2.6, 1.3,  0.65, 0.568, 0.523, 0.792, 0.396, 0.0   };
 
@@ -253,9 +256,6 @@ static const escp2_densities_t sc480_densities =
 
 static const escp2_densities_t sc660_densities =
 { 4.0, 2.0,  1.0,  0.646, 0.323, 0.0,   0.0,   0.0   };
-
-static const escp2_densities_t sc680_densities =
-{ 3.0, 1.5,  0.75, 0.750, 0.750, 0.750, 0.0,   0.0,  };
 
 static const escp2_densities_t sc980_densities =
 { 2.6, 1.3,  0.65, 0.511, 0.49,  0.637, 0.455, 0.0   };
@@ -1149,7 +1149,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0,
     3, 15, 0, 0,
-    c4pl_dotsizes, sc680_densities, &stpi_escp2_variable_2880_4pl_drops,
+    c4pl_dotsizes, c4pl_2880_densities, &stpi_escp2_variable_2880_4pl_drops,
     stpi_escp2_2880dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
@@ -1167,7 +1167,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0,
     3, 15, 0, 0,
-    c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_2880_4pl_drops,
+    c4pl_dotsizes, c4pl_2880_densities, &stpi_escp2_variable_2880_4pl_drops,
     stpi_escp2_2880dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
@@ -1203,7 +1203,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0,
     3, 15, 0, 0,
-    c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_2880_4pl_drops,
+    c4pl_dotsizes, c4pl_2880_densities, &stpi_escp2_variable_2880_4pl_drops,
     stpi_escp2_2880dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
@@ -1221,7 +1221,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0,
     3, 15, 0, 0,
-    c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_2880_4pl_drops,
+    c4pl_dotsizes, c4pl_2880_densities, &stpi_escp2_variable_2880_4pl_drops,
     stpi_escp2_2880dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &standard_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
@@ -1239,7 +1239,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     INCH(13), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0,
     3, 15, 0, 0,
-    c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_2880_4pl_drops,
+    c4pl_dotsizes, c4pl_2880_densities, &stpi_escp2_variable_2880_4pl_drops,
     stpi_escp2_2880dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &standard_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
@@ -1473,7 +1473,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0,
     3, 15, 0, 0,
-    c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_2880_4pl_drops,
+    c4pl_dotsizes, c4pl_2880_densities, &stpi_escp2_variable_2880_4pl_drops,
     stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
@@ -1491,7 +1491,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0,
     3, 15, 0, 0,
-    c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_2880_4pl_drops,
+    c4pl_dotsizes, c4pl_2880_densities, &stpi_escp2_variable_2880_4pl_drops,
     stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &cutter_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
@@ -1509,7 +1509,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0,
     3, 15, 0, 0,
-    c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_2880_4pl_drops,
+    c4pl_dotsizes, c4pl_2880_densities, &stpi_escp2_variable_2880_4pl_drops,
     stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
@@ -1689,7 +1689,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 399, 394, 595, 842,
     3, 15, 0, 0,
-    c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_2880_4pl_drops,
+    c4pl_dotsizes, c4pl_2880_densities, &stpi_escp2_variable_2880_4pl_drops,
     stpi_escp2_2880dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &cd_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
