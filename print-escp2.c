@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.79  2000/02/16 00:00:43  rlk
+ *   Put pclunprint in build, and use actual weave code in weavetest
+ *
  *   Revision 1.78  2000/02/15 12:49:10  rlk
  *   Back out clearly nonfunctional change for 740 family
  *
@@ -382,20 +385,25 @@
  * Stylus Photo EX added by Robert Krawitz <rlk@alum.mit.edu> August 30, 1999
  */
 
+#ifndef WEAVETEST
 #include "print.h"
+#endif
+
 #ifdef DEBUG_SIGNAL
 #include <signal.h>
 #endif
-
-/*
- * Local functions...
- */
 
 typedef enum {
   COLOR_MONOCHROME,
   COLOR_CMYK,
   COLOR_CCMMYK
 } colormode_t;
+
+#ifndef WEAVETEST
+
+/*
+ * Local functions...
+ */
 
 static void escp2_write(FILE *, const unsigned char *, int, int, int, int, int,
 			int, int, int);
@@ -1883,6 +1891,7 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
  * -- Robert Krawitz <rlk@alum.mit.edu) November 3, 1999
  */
 
+#endif /* !WEAVETEST */
 
 typedef struct			/* Weave parameters for a specific row */
 {
@@ -2111,7 +2120,10 @@ static int
 divv(int x, int y)
 {
   if (x < 0 || y < 0)
-    kill(getpid(), SIGFPE);
+    {
+      kill(getpid(), SIGFPE);
+      return 0;
+    }
   else
     return x / y;
 }
@@ -2120,7 +2132,10 @@ static int
 modd(int x, int y)
 {
   if (x < 0 || y < 0)
-    kill(getpid(), SIGFPE);
+    {
+      kill(getpid(), SIGFPE);
+      return 0;
+    }
   else
     return x % y;
 }
@@ -2177,6 +2192,8 @@ weave_parameters_by_row(const escp2_softweave_t *sw, int row,
   w->missingstartrows = divv((w->physpassstart - w->logicalpassstart),
 			    sw->separation);
 }
+
+#ifndef WEAVETEST
 
 static lineoff_t *
 get_lineoffsets(const escp2_softweave_t *sw, int row, int subpass)
@@ -2855,6 +2872,8 @@ escp2_write_weave(void *        vsw,
   finalize_row(sw, sw->lineno, model, width, offset, ydpi, xdpi, prn);
   sw->lineno++;
 }
+
+#endif
 
 /*
  * End of "$Id$".
