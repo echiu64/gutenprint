@@ -1243,4 +1243,4 @@ gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-870 -dDensity=0.8 \
 
 Example 3 (print pure black text to stdout)
 gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-660 -dDensity=0.8 -r720 \
-   -sQuality=720sw -dOutputType=2 -sOutputFile=- foo.ps
+   -sQuality=720sw -dColor=2 -sOutputFile=- foo.ps
