@@ -24,7 +24,7 @@ require('standard_html_header.php3');
  contact the developers?
  </a>
  <li><a href="p_FAQ_OS_X.php3#pantherInstallerBug">
- I am trying to install GImp-Print on Mac OS X Panther (10.3.x) but when I get
+ I am trying to install Gimp-Print on Mac OS X Panther (10.3.x) but when I get
  to the installer screen where I select the destination volume, there is a large 
  red exclamation mark and I can't install it.
  </a>
@@ -211,18 +211,18 @@ require('standard_html_header.php3');
  </p>
  <a name="pantherInstallerBug"></a>
  <li><h3>
- I am trying to install GImp-Print on Mac OS X Panther (10.3.x) but when I get
+ I am trying to install Gimp-Print on Mac OS X Panther (10.3.x) but when I get
  to the installer screen where I select the destination volume, there is a large 
  red exclamation mark and I can't install it.
  </h3>
  <p>
  There is an apparent bug in the Panther Installer that prevents the installer
- from running over "newer" releases. So if you have ever installed 4.3.x or
- 5.0alpha or something it will get you. This bug is not present in Jaguar. The
- workaround in Panther is to run the Gimp-Print uninstaller and remove any other
- versions of Gimp-Print.
-
- Please note that when you run the uninstaller you will most likely want to click "Customize" and skip the "Gimp-Print printer remover" option, which you accomplish by removing the check from the box. If you skip this option your current Gimp-Print printers will be preserved, which is likely what you want. Otherwise, your printers will be removed and you may need to go through the <a href="p_FAQ_OS_X.php3#usbSetup">secret command-shift-elbow process</a> again to recreate them.
+ from running over "newer" releases. So if you are trying to install 4.2.6 and
+ you have ever installed 4.3.x or 5.0alpha then this bug may bite you. This bug
+ is not present in Jaguar; the workaround in Panther is to run the Gimp-Print
+ uninstaller and remove any other versions of Gimp-Print.
+<br><br>
+ Please note that when you run the uninstaller you will most likely want to click <b>Customize</b> and skip the <b>Gimp-Print printer remover</b> option, which you accomplish by removing the check from the box. If you skip this option your current Gimp-Print printers will be preserved, which is likely what you want. Otherwise, your printers will be removed and you may need to go through the <a href="p_FAQ_OS_X.php3#usbSetup">secret option-click-elbow process</a> again to recreate them.
 
  </p>
  <a name="didntReadTheInstructions"></a>
@@ -553,6 +553,7 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  see question on supported printers.
  </p>
  <a name="usbSetup"></a>
+ <a name="optionClickElbow"></a>
  <h4>
  <li>USB connection
  </h4>
