@@ -1363,8 +1363,9 @@ create_image_settings_frame (void)
    * Output type toggles.
    */
 
-  table = gtk_table_new (3, 2, FALSE);
+  table = gtk_table_new (4, 2, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
+  gtk_table_set_row_spacing (GTK_TABLE (table), 2, 4);
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
 
@@ -1425,9 +1426,10 @@ create_image_settings_frame (void)
    */
 
   adjust_color_button = gtk_button_new_with_label (_("Adjust Output..."));
-  gtk_misc_set_padding (GTK_MISC (GTK_BIN (adjust_color_button)->child), 2, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), adjust_color_button, FALSE, FALSE, 0);
-  gtk_widget_show (adjust_color_button);
+  gtk_misc_set_padding (GTK_MISC (GTK_BIN (adjust_color_button)->child), 4, 0);
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 3,
+                             NULL, 0.5, 0.5,
+                             adjust_color_button, 1, TRUE);
 
   gimp_help_set_help_data (adjust_color_button,
                            _("Adjust color balance, brightness, contrast, "
