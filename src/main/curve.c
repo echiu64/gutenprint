@@ -754,7 +754,7 @@ stpi_curve_check_parameters(stp_curve_t *curve, size_t points)
   if (icurve->gamma && icurve->wrap_mode)
     {
 #ifdef DEBUG
-      fprintf(stderr, "curve sets both gamma and wrap_mode\n");
+      stpi_erprintf("curve sets both gamma and wrap_mode\n");
 #endif
       return 0;
     }
@@ -762,7 +762,7 @@ stpi_curve_check_parameters(stp_curve_t *curve, size_t points)
   if (blo > bhi)
     {
 #ifdef DEBUG
-      fprintf(stderr, "curve low bound is greater than high bound\n");
+      stpi_erprintf("curve low bound is greater than high bound\n");
 #endif
       return 0;
     }
@@ -788,8 +788,8 @@ interpolate_gamma_internal(stp_const_curve_t curve, double where)
     }
   stp_sequence_get_bounds(icurve->seq, &blo, &bhi);
 #ifdef DEBUG
-  fprintf(stderr, "interpolate_gamma %f %f %f %f %f\n", where, fgamma,
-	  blo, bhi, pow(where, fgamma));
+  stpi_erprintf("interpolate_gamma %f %f %f %f %f\n", where, fgamma,
+		blo, bhi, pow(where, fgamma));
 #endif
   return blo + (bhi - blo) * pow(where, fgamma);
 }
@@ -1478,7 +1478,7 @@ xml_doc_get_curve(mxml_node_t *doc)
 
   if (doc == NULL )
     {
-      fprintf(stderr,"xml_doc_get_curve: XML file not parsed successfully.\n");
+      stpi_erprintf("xml_doc_get_curve: XML file not parsed successfully.\n");
       return NULL;
     }
 
@@ -1486,7 +1486,7 @@ xml_doc_get_curve(mxml_node_t *doc)
 
   if (cur == NULL)
     {
-      fprintf(stderr,"xml_doc_get_curve: empty document\n");
+      stpi_erprintf("xml_doc_get_curve: empty document\n");
       stpi_mxmlDelete(doc);
       return NULL;
     }
