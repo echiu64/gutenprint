@@ -109,6 +109,8 @@
 #gptofoo escp2-c70 printer/Epson-Stylus_C70
 #gptofoo escp2-c80 printer/Epson-Stylus_C80
 #gptofoo escp2-c82 printer/Epson-Stylus_C82
+#gptofoo escp2-c83 printer/Epson-Stylus_C83
+#gptofoo escp2-c84 printer/Epson-Stylus_C84
 #gptofoo escp2 printer/Epson-Stylus_Color
 #gptofoo escp2 printer/Epson-Stylus_Color_I
 #gptofoo escp2 printer/Epson-Stylus_Color_II

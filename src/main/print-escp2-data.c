@@ -2468,6 +2468,68 @@ static const physical_subchannel_t c80_quadtone_subchannels[] =
 
 DECLARE_INK_CHANNEL(c80_quadtone);
 
+static const physical_subchannel_t f360_standard_cyan_subchannels[] =
+{
+  { 2, -1, 1, "CyanDensity", NULL }
+};
+
+DECLARE_INK_CHANNEL(f360_standard_cyan);
+
+static const physical_subchannel_t f360_standard_magenta_subchannels[] =
+{
+  { 1, -1, 1, "MagentaDensity", NULL }
+};
+
+DECLARE_INK_CHANNEL(f360_standard_magenta);
+
+static const physical_subchannel_t f360_photo_black_subchannels[] =
+{
+  { 0, 0, 1, "BlackDensity", NULL }
+};
+
+DECLARE_INK_CHANNEL(f360_photo_black);
+
+static const physical_subchannel_t f360_photo_yellow_subchannels[] =
+{
+  { 4, 0, 1, "YellowDensity", NULL }
+};
+
+DECLARE_INK_CHANNEL(f360_photo_yellow);
+
+static const physical_subchannel_t f360_photo2_yellow_subchannels[] =
+{
+  { 4, 2, 0, "YellowDensity", NULL },
+  { 4, 0, 1, "YellowDensity", "DarkYellowTransition" }
+};
+
+DECLARE_INK_CHANNEL(f360_photo2_yellow);
+
+static const physical_subchannel_t f360_photo2_black_subchannels[] =
+{
+  { 0, 0, 1, "BlackDensity", NULL },
+  { 0, 1, 0, "BlackDensity", "GrayTransition" }
+};
+
+DECLARE_INK_CHANNEL(f360_photo2_black);
+
+static const physical_subchannel_t f360_photo_cyan_subchannels[] =
+{
+  { 2, 0, 1, "CyanDensity", NULL },
+  { 2, 1, 0, "CyanDensity", "LightCyanTransition" }
+};
+
+DECLARE_INK_CHANNEL(f360_photo_cyan);
+
+static const physical_subchannel_t f360_photo_magenta_subchannels[] =
+{
+  { 1, 0, 1, "MagentaDensity", NULL },
+  { 1, 1, 0, "MagentaDensity", "LightMagentaTransition" }
+};
+
+DECLARE_INK_CHANNEL(f360_photo_magenta);
+
+
+
 static const escp2_inkname_t three_color_composite_inkset =
 {
   "RGB", N_ ("Three Color Composite"), 1, INKSET_CMYK, 0, 0,
@@ -2605,6 +2667,66 @@ static const escp2_inkname_t c80_piezo_quadtone_inkset =
   }
 };
 
+static const escp2_inkname_t f360_six_color_photo_inkset =
+{
+  "PhotoCMYK", N_("Six Color Photo"), 1, 4, INKSET_CcMmYK, .5, 1.0,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    &f360_photo_black_channels, &f360_photo_cyan_channels,
+    &f360_photo_magenta_channels, &f360_photo_yellow_channels
+  }
+};
+
+static const escp2_inkname_t f360_five_color_photo_composite_inkset =
+{
+  "PhotoCMY", N_("Five Color Photo Composite"), 1, 4, INKSET_CcMmYK, 0, 0,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    NULL, &f360_photo_cyan_channels,
+    &f360_photo_magenta_channels, &f360_photo_yellow_channels
+  }
+};
+
+static const escp2_inkname_t f360_j_seven_color_enhanced_inkset =
+{
+  "Photo7J", N_("Seven Color Enhanced"), 1, 4, INKSET_CcMmYyK, .5, 1.0,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    &f360_photo_black_channels, &f360_photo_cyan_channels,
+    &f360_photo_magenta_channels, &f360_photo2_yellow_channels
+  }
+};
+
+static const escp2_inkname_t f360_j_six_color_enhanced_composite_inkset =
+{
+  "PhotoEnhanceJ", N_("Six Color Enhanced Composite"), 1, 4, INKSET_CcMmYyK, .5, 1.0,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    NULL, &f360_photo_cyan_channels,
+    &f360_photo_magenta_channels, &f360_photo2_yellow_channels
+  }
+};
+
+static const escp2_inkname_t f360_seven_color_photo_inkset =
+{
+  "PhotoCMYK7", N_("Seven Color Photo"), 1, 4, INKSET_CcMmYKk, .05 , 1.0,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    &f360_photo2_black_channels, &f360_photo_cyan_channels,
+    &f360_photo_magenta_channels, &f360_photo_yellow_channels
+  }
+};
+
+static const escp2_inkname_t f360_two_color_grayscale_inkset =
+{
+  "Gray2", N_("Two Level Grayscale"), 0, 1, INKSET_CcMmYKk, 0, 0,
+  NULL, NULL, NULL,
+  {
+    &f360_photo2_black_channels
+  }
+};
+
+
 #define DECLARE_INKLIST(name)				\
 static const inklist_t name##_inklist =			\
 {							\
@@ -2657,6 +2779,17 @@ static const escp2_inkname_t *const photo_ink_types[] =
 
 DECLARE_INKLIST(photo);
 
+static const escp2_inkname_t *const f360_photo_ink_types[] =
+{
+  &f360_six_color_photo_inkset,
+  &f360_five_color_photo_composite_inkset,
+  &four_color_standard_inkset,
+  &three_color_composite_inkset,
+  &piezo_quadtone_inkset
+};
+
+DECLARE_INKLIST(f360_photo);
+
 static const escp2_inkname_t *const photo7_japan_ink_types[] =
 {
   &j_seven_color_enhanced_inkset,
@@ -2670,11 +2803,36 @@ static const escp2_inkname_t *const photo7_japan_ink_types[] =
 
 DECLARE_INKLIST(photo7_japan);
 
+static const escp2_inkname_t *const f360_photo7_japan_ink_types[] =
+{
+  &f360_j_seven_color_enhanced_inkset,
+  &f360_j_six_color_enhanced_composite_inkset,
+  &f360_six_color_photo_inkset,
+  &f360_five_color_photo_composite_inkset,
+  &four_color_standard_inkset,
+  &three_color_composite_inkset,
+  &piezo_quadtone_inkset
+};
+
+DECLARE_INKLIST(f360_photo7_japan);
+
 static const escp2_inkname_t *const photo7_ink_types[] =
 {
   &seven_color_photo_inkset,
   &six_color_photo_inkset,
   &five_color_photo_composite_inkset,
+  &four_color_standard_inkset,
+  &three_color_composite_inkset,
+  &two_color_grayscale_inkset
+};
+
+DECLARE_INKLIST(photo7);
+
+static const escp2_inkname_t *const f360_photo7_ink_types[] =
+{
+  &f360_seven_color_photo_inkset,
+  &f360_six_color_photo_inkset,
+  &f360_five_color_photo_composite_inkset,
   &four_color_standard_inkset,
   &three_color_composite_inkset,
   &two_color_grayscale_inkset
@@ -4497,7 +4655,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 190, 0, 0, 0,
     c2pl_dotsizes, c2pl_densities, &variable_2pl_inks,
-    &sp950_paper_list, escp950_reslist, &photo_inklist,
+    &sp950_paper_list, escp950_reslist, &f360_photo_inklist,
     stp950_bits, stp950_base_res, &cutter_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
@@ -4512,7 +4670,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 190, 0, 0, 0,
     c4pl_pigment_dotsizes, c4pl_pigment_densities, &variable_4pl_pigment_inks,
-    &standard_paper_list, escp2200_reslist, &photo7_inklist,
+    &standard_paper_list, escp2200_reslist, &f360_photo7_inklist,
     ultrachrome_bits, ultrachrome_base_res, &cutter_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
@@ -4602,7 +4760,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 190, 0, 0, 0,
     c2pl_dotsizes, c2pl_densities, &variable_2pl_inks,
-    &sp950_paper_list, escp950_reslist, &photo7_japan_inklist,
+    &sp950_paper_list, escp950_reslist, &f360_photo7_japan_inklist,
     stp950_bits, stp950_base_res, &standard_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
@@ -4662,11 +4820,11 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 190, 0, 0, 0,
     c1_8pl_dotsizes, c2pl_densities, &variable_2pl_inks,
-    &sp950_paper_list, c1_8pl_reslist, &photo7_japan_inklist,
+    &sp950_paper_list, c1_8pl_reslist, &f360_photo7_japan_inklist,
     c1_8_bits, c1_8_base_res, &standard_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
-  /* 57: Japanese PM-930C */
+  /* 58: Japanese PM-930C */
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
@@ -4679,6 +4837,36 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     c1_8pl_dotsizes, c2pl_densities, &variable_2pl_inks,
     &sp950_paper_list, c1_8pl_reslist, &photo_inklist,
     c1_8_bits, c1_8_base_res, &standard_roll_feed_input_slot_list,
+    &new_init_sequence, &je_deinit_sequence
+  },
+  /* 59: Stylus C43SX/C43UX/C44SX/C44UX */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
+     MODEL_FAST_360_NO),
+    15, 15, 3, 48, 48, 3, 48, 48, 3,
+    360, 720, 720, 14400, -1, 2880, 720, 90, 90,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
+    9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
+    0, 1, 0, 0, -99, 0, 0,
+    sc480_dotsizes, sc480_densities, &variable_x80_6pl_inks,
+    &standard_paper_list, standard_reslist, &x80_inklist,
+    variable_bits, variable_base_res, &default_input_slot_list,
+    &new_init_sequence, &je_deinit_sequence
+  },
+  /* 60: Stylus C82/CX-5200 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
+     MODEL_FAST_360_NO),
+    59, 60, 2, 180, 180, 2, 180, 180, 2,
+    360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
+    9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
+    0, 1, 0, 0, -240, 0, 0,
+    c3pl_pigment_dotsizes, c3pl_pigment_densities, &variable_3pl_pigment_inks,
+    &c80_paper_list, standard_reslist, &c80_inklist,
+    variable_bits, variable_base_res, &default_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
 };

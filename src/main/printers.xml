@@ -358,6 +358,28 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus C83" driver="escp2-c83">
+<color>
+<model value=60>
+<gamma value=0.688>
+<density value=1.0>
+<cyan value=0.96>
+<magenta value=1.02>
+<yellow value=1.02>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus C84" driver="escp2-c84">
+<color>
+<model value=60>
+<gamma value=0.688>
+<density value=1.0>
+<cyan value=0.96>
+<magenta value=1.02>
+<yellow value=1.02>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Color" driver="escp2">
 <color>
 <model value=0>
