@@ -116,7 +116,7 @@ Gimp-Print 4.2.3 contains the following major changes over Gimp-Print
   4) This release contains an ijsgimpprint package for Debian.
 
 
-The following bugs have been fixed in 4.2.3:
+The following bugs have been fixed in Gimp-Print 4.2.3:
 
 604854 QUALITY-Epson 1520 and 3000 print too dark at 1440x720 DPI
 611804 rastertoprinter.c fails to compile on Solaris
@@ -128,6 +128,22 @@ The following bugs have been fixed in 4.2.3:
 621667 Very large prints on Epson 9500 fail
 622612 CUPS driver forbids custom page sizes
 
+
+The following bugs are open against Gimp-Print 4.2.3:
+
+409612 Minor positioning prob on 4x6 glossy
+538097 QUALITY-Poor quality printing on Canon s400
+549677 Incorrect scaling on Canon BJC-1000
+557868 QUALITY-Washed out color under Gimp on HP560c
+581168 BJC 250 just spits out pages
+601767 Mac OS X: Canon BJC 2100 does not print multiple pages
+602933 QUALITY-Poor quality on Canon S800
+603702 QUALITY-HP LaserJet 5L print is too light
+613054 Printing from InDesign 2.0 on OS 10.2.1
+614882 QUALITY - Problems with CANON BJC-55 - Gimp-Print
+619299 QUALITY - brightness adjustment problem
+619537 QUALITY - Poor quality w/ Lexmark OprtaE+ & pcl-4
+621668 Full bleed prints have slight margin
 
 
 Gimp-Print 4.2.2 contains the following major changes over Gimp-Print
