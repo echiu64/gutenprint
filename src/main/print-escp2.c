@@ -1164,7 +1164,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   escp2_init_t	init;
   int max_vres;
   unsigned char **cols;
-  int head_offset[8];
+  int *head_offset;
   int max_head_offset;
   double lum_adjustment[49], sat_adjustment[49], hue_adjustment[49];
   int ncolors = 0;
@@ -1326,6 +1326,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   privdata.channels =
     stp_zalloc(sizeof(physical_subchannel_t *) * channel_count);
   current_channel = 0;
+  head_offset = stp_zalloc(sizeof(int) * channel_count);
 
   memset(head_offset, 0, sizeof(head_offset));
   channel_limit = NCOLORS;
@@ -1501,6 +1502,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   for (i = 0; i < channel_count; i++)
     stp_free((unsigned char *) cols[i]);
   stp_free(cols);
+  stp_free(head_offset);
   stp_free(privdata.channels);
 
 #ifdef QUANTIFY
