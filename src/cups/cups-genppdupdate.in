@@ -113,7 +113,7 @@ foreach (@ppd_files) {
 }
 
 if (!$quiet || $verbose) {
-    print STDOUT "Reload cupsd for the changes to take effect.\n";
+    print STDOUT "Restart cupsd for the changes to take effect.\n";
 }
 
 
