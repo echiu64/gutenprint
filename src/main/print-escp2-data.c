@@ -3544,9 +3544,9 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
   },
   /* 47: Stylus Photo 2100/2200 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_PRO | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO),
-    96, 1, 2, 192, 1, 1,
+    96, 1, 2, 96, 1, 2,
     360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -3558,7 +3558,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
   },
   /* 48: Stylus Pro 7600 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_PRO | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_YES),
     1, 1, 1, 1, 1, 1,
     360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
@@ -3572,7 +3572,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
   },
   /* 49: Stylus Pro 9600 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_PRO | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_YES),
     1, 1, 1, 1, 1, 1,
     360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
