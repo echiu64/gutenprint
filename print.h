@@ -161,7 +161,7 @@ extern int  Image_height(Image image);
 extern void Image_get_col(Image image, unsigned char *data, int column);
 extern void Image_get_row(Image image, unsigned char *data, int row);
 
-extern const char *Image_get_pluginname(Image image);
+extern const char *Image_get_appname(Image image);
 extern void Image_progress_init(Image image);
 extern void Image_note_progress(Image image, double current, double total);
 

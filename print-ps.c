@@ -340,7 +340,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
   _fsetmode(prn, "t");
 #endif
   fputs("%!PS-Adobe-3.0\n", prn);
-  fprintf(prn, "%%%%Creator: %s\n", Image_get_pluginname(image));
+  fprintf(prn, "%%%%Creator: %s\n", Image_get_appname(image));
   fprintf(prn, "%%%%CreationDate: %s", ctime(&curtime));
   fputs("%%Copyright: 1997-2000 by Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)\n", prn);
   fprintf(prn, "%%%%BoundingBox: %d %d %d %d\n",

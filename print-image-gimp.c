@@ -306,7 +306,7 @@ Image_note_progress(Image image, double current, double total)
 }
 
 const char *
-Image_get_pluginname(Image image)
+Image_get_appname(Image image)
 {
   static char pluginname[] = PLUG_IN_NAME " plug-in V" PLUG_IN_VERSION
     " for GIMP";
