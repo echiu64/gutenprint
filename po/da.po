@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 0.3\n"
-"POT-Creation-Date: 2003-11-15 08:57-0500\n"
+"POT-Creation-Date: 2003-12-05 22:53-0500\n"
 "PO-Revision-Date: 2003-01-06 21:22+0100\n"
 "Last-Translator: Mogens Jæger <mogensjaeger@get2net.dk>\n"
 "Language-Team: Dansk <da@li.org>\n"
@@ -1378,117 +1378,122 @@ msgstr "Penguin stor paperback"
 #. 129mm x 198mm
 #. Miscellaneous sizes
 #: src/main/print-util.c:806
+msgid "10cm x 15cm"
+msgstr ""
+
+#. 100 x 150 mm
+#: src/main/print-util.c:808
 msgid "Hagaki Card"
 msgstr "Hagaki kort"
 
 #. 100 x 148 mm
-#: src/main/print-util.c:808
+#: src/main/print-util.c:810
 msgid "Oufuku Card"
 msgstr "Oufuku kort"
 
 #. 148 x 200 mm
-#: src/main/print-util.c:810
+#: src/main/print-util.c:812
 msgid "Japanese long envelope #3"
 msgstr "Japansk lang kuvert #3"
 
 #. Japanese long envelope #3
-#: src/main/print-util.c:812
+#: src/main/print-util.c:814
 msgid "Japanese long envelope #4"
 msgstr "Japansk lang kuvert #4"
 
 #. Japanese long envelope #4
-#: src/main/print-util.c:814
+#: src/main/print-util.c:816
 msgid "Japanese Kaku envelope #4"
 msgstr "Japansk Kaku kuvert #4"
 
 #. Japanese Kaku envelope #4
-#: src/main/print-util.c:816
+#: src/main/print-util.c:818
 msgid "Commercial 10"
 msgstr "Commercial 10"
 
 #. US Commercial 10 env
-#: src/main/print-util.c:818
+#: src/main/print-util.c:820
 msgid "A2 Invitation"
 msgstr "A2 Invitation"
 
 #. US A2 invitation
-#: src/main/print-util.c:820
+#: src/main/print-util.c:822
 msgid "Monarch Envelope"
 msgstr "Monarch kuvert"
 
 #. Monarch envelope (3.875 * 7.5)
-#: src/main/print-util.c:822
+#: src/main/print-util.c:824
 msgid "Custom"
 msgstr "Egendefineret"
 
-#: src/main/print-util.c:825
+#: src/main/print-util.c:827
 msgid "89 mm Roll Paper"
 msgstr "89 mm papirrulle"
 
-#: src/main/print-util.c:827
+#: src/main/print-util.c:829
 msgid "4 Inch Roll Paper"
 msgstr "4 tommer papirrulle"
 
-#: src/main/print-util.c:829
+#: src/main/print-util.c:831
 msgid "5 Inch Roll Paper"
 msgstr "5 tommer papirrulle"
 
-#: src/main/print-util.c:831
+#: src/main/print-util.c:833
 msgid "210 mm Roll Paper"
 msgstr "210 mm papirrulle"
 
-#: src/main/print-util.c:833
+#: src/main/print-util.c:835
 msgid "13 Inch Roll Paper"
 msgstr "13 tommer papirrulle"
 
-#: src/main/print-util.c:835
+#: src/main/print-util.c:837
 msgid "22 Inch Roll Paper"
 msgstr "22 tommer papirrulle"
 
-#: src/main/print-util.c:837
+#: src/main/print-util.c:839
 msgid "24 Inch Roll Paper"
 msgstr "24 tommer papirrulle"
 
-#: src/main/print-util.c:839
+#: src/main/print-util.c:841
 msgid "36 Inch Roll Paper"
 msgstr "36 tommer papirrulle"
 
-#: src/main/print-util.c:841
+#: src/main/print-util.c:843
 msgid "44 Inch Roll Paper"
 msgstr "44 tommer papirrulle"
 
-#: src/main/print-util.c:1322 src/main/print-util.c:1331
+#: src/main/print-util.c:1324 src/main/print-util.c:1333
 #, c-format
 msgid "%s is not a valid parameter of type %s\n"
 msgstr "%s er ikke en gyldig parameter af typen %s\n"
 
-#: src/main/print-util.c:1347
+#: src/main/print-util.c:1349
 #, c-format
 msgid "%s out of range (value %f, min %f, max %f)\n"
 msgstr "%s uden for område (værdi %f, min %f, max %f)\n"
 
-#: src/main/print-util.c:1362
+#: src/main/print-util.c:1364
 #, c-format
 msgid "%s out of range (value %d, min %d, max %d)\n"
 msgstr "%s uden for område (værdi %d, min %d, max %d)\n"
 
-#: src/main/print-util.c:1388
+#: src/main/print-util.c:1390
 msgid "Printer does not support color output\n"
 msgstr "Printer understøtter ikke farveudskrift\n"
 
-#: src/main/print-util.c:1406
+#: src/main/print-util.c:1408
 msgid "Image size is not valid\n"
 msgstr "Billedstørrelse er ikke gyldig\n"
 
-#: src/main/print-util.c:1413
+#: src/main/print-util.c:1415
 msgid "Top margin must not be less than zero\n"
 msgstr "Top margin må ikke være mindre end nul\n"
 
-#: src/main/print-util.c:1419
+#: src/main/print-util.c:1421
 msgid "Left margin must not be less than zero\n"
 msgstr "Venstre margin må ikke være mindre end nul\n"
 
-#: src/main/print-util.c:1476
+#: src/main/print-util.c:1478
 #, c-format
 msgid "%s is not a valid dither algorithm\n"
 msgstr "%s er ikke en gyldig dither algoritm\n"

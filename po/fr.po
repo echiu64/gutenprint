@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 4.2.1-pre4\n"
-"POT-Creation-Date: 2003-11-15 08:57-0500\n"
+"POT-Creation-Date: 2003-12-05 22:53-0500\n"
 "PO-Revision-Date: 2002-09-15 16:07+0200\n"
 "Last-Translator: Raymond Ostertag <r.ostertag@caramail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -1383,117 +1383,122 @@ msgstr "Grande reliure Penguin"
 #. 129mm x 198mm
 #. Miscellaneous sizes
 #: src/main/print-util.c:806
+msgid "10cm x 15cm"
+msgstr ""
+
+#. 100 x 150 mm
+#: src/main/print-util.c:808
 msgid "Hagaki Card"
 msgstr "Carte Hagaki"
 
 #. 100 x 148 mm
-#: src/main/print-util.c:808
+#: src/main/print-util.c:810
 msgid "Oufuku Card"
 msgstr "Carte Oufuku"
 
 #. 148 x 200 mm
-#: src/main/print-util.c:810
+#: src/main/print-util.c:812
 msgid "Japanese long envelope #3"
 msgstr "Enveloppe longue japonaise n°3"
 
 #. Japanese long envelope #3
-#: src/main/print-util.c:812
+#: src/main/print-util.c:814
 msgid "Japanese long envelope #4"
 msgstr "Enveloppe longue japonaise n°4"
 
 #. Japanese long envelope #4
-#: src/main/print-util.c:814
+#: src/main/print-util.c:816
 msgid "Japanese Kaku envelope #4"
 msgstr "Enveloppe Kaku japonaise n°4"
 
 #. Japanese Kaku envelope #4
-#: src/main/print-util.c:816
+#: src/main/print-util.c:818
 msgid "Commercial 10"
 msgstr "Commercial 10"
 
 #. US Commercial 10 env
-#: src/main/print-util.c:818
+#: src/main/print-util.c:820
 msgid "A2 Invitation"
 msgstr "A2 Invitation"
 
 #. US A2 invitation
-#: src/main/print-util.c:820
+#: src/main/print-util.c:822
 msgid "Monarch Envelope"
 msgstr "Enveloppe Monarch"
 
 #. Monarch envelope (3.875 * 7.5)
-#: src/main/print-util.c:822
+#: src/main/print-util.c:824
 msgid "Custom"
 msgstr "Personnalisé"
 
-#: src/main/print-util.c:825
+#: src/main/print-util.c:827
 msgid "89 mm Roll Paper"
 msgstr "Rouleau 89mm"
 
-#: src/main/print-util.c:827
+#: src/main/print-util.c:829
 msgid "4 Inch Roll Paper"
 msgstr "Rouleau 4 pouces"
 
-#: src/main/print-util.c:829
+#: src/main/print-util.c:831
 msgid "5 Inch Roll Paper"
 msgstr "Rouleau 5 pouces"
 
-#: src/main/print-util.c:831
+#: src/main/print-util.c:833
 msgid "210 mm Roll Paper"
 msgstr "Rouleau 210mm"
 
-#: src/main/print-util.c:833
+#: src/main/print-util.c:835
 msgid "13 Inch Roll Paper"
 msgstr "Rouleau 13 pouces"
 
-#: src/main/print-util.c:835
+#: src/main/print-util.c:837
 msgid "22 Inch Roll Paper"
 msgstr "Rouleau 22 pouces"
 
-#: src/main/print-util.c:837
+#: src/main/print-util.c:839
 msgid "24 Inch Roll Paper"
 msgstr "Rouleau 24 pouces"
 
-#: src/main/print-util.c:839
+#: src/main/print-util.c:841
 msgid "36 Inch Roll Paper"
 msgstr "Rouleau 36 pouces"
 
-#: src/main/print-util.c:841
+#: src/main/print-util.c:843
 msgid "44 Inch Roll Paper"
 msgstr "Rouleau 44 pouces"
 
-#: src/main/print-util.c:1322 src/main/print-util.c:1331
+#: src/main/print-util.c:1324 src/main/print-util.c:1333
 #, c-format
 msgid "%s is not a valid parameter of type %s\n"
 msgstr "%s n'est pas un paramètre valide de type %s\n"
 
-#: src/main/print-util.c:1347
+#: src/main/print-util.c:1349
 #, c-format
 msgid "%s out of range (value %f, min %f, max %f)\n"
 msgstr "%s hors-intervalle (valeur %f, mini %f, maxi %f)\n"
 
-#: src/main/print-util.c:1362
+#: src/main/print-util.c:1364
 #, c-format
 msgid "%s out of range (value %d, min %d, max %d)\n"
 msgstr "%s hors-intervalle (valeur %d, mini %d, maxi %d)\n"
 
-#: src/main/print-util.c:1388
+#: src/main/print-util.c:1390
 msgid "Printer does not support color output\n"
 msgstr "L'imprimante ne supporte pas les sorties en couleur\n"
 
-#: src/main/print-util.c:1406
+#: src/main/print-util.c:1408
 msgid "Image size is not valid\n"
 msgstr "La taille d'image n'est pas valide\n"
 
-#: src/main/print-util.c:1413
+#: src/main/print-util.c:1415
 msgid "Top margin must not be less than zero\n"
 msgstr "La marge haute ne doit pas être moins que zéro\n"
 
-#: src/main/print-util.c:1419
+#: src/main/print-util.c:1421
 msgid "Left margin must not be less than zero\n"
 msgstr "La marge gauche ne doit pas être moins que zéro\n"
 
-#: src/main/print-util.c:1476
+#: src/main/print-util.c:1478
 #, c-format
 msgid "%s is not a valid dither algorithm\n"
 msgstr "%s n'est pas un algorithme de tramage valide\n"
