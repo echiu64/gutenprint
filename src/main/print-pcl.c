@@ -2058,8 +2058,8 @@ pcl_print(const stp_printer_t printer,
   * Set media size
   */
 
-  if (strlen(stp_get_parameter(v, "MediaSize")) > 0)
-    media_size = stp_get_parameter(v, "MediaSize");
+  if (strlen(stp_get_parameter(v, "PageSize")) > 0)
+    media_size = stp_get_parameter(v, "PageSize");
   else if ((pp = stp_get_papersize_by_size(stp_get_page_height(v),
 					   stp_get_page_width(v))) != NULL)
     media_size = stp_papersize_get_name(pp);
