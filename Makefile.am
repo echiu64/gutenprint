@@ -74,6 +74,17 @@ ChangeLog:
 
 ## @-@-@-@-@ YES-GIMP @-@-@-@-@
 
+# Rebuild configure.in from configure.in.in if configure.in.in is available.
+# If not, don't do anything.
+
+configure.in: configure.in.in
+	if test -f configure.in.in ; then \
+	  sed "s/XXXRELEASE_DATE=XXX/RELEASE_DATE=\"`date '+%d %b %Y'`\"/" configure.in.in > configure.in ; \
+	fi
+
+configure.in.in:
+	true
+
 dist-hook:
 	for dir in $(DISTDIRS) ; do \
 	  if test -d $(srcdir)/$$dir ; then \
