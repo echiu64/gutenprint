@@ -2073,9 +2073,9 @@ eventone_adjust(dither_segment_t *range, eventone_t *et, int r_sq, int base, int
     }
     /* Adjust for Eventone here */
     if (lower == 0) {
-      ditherpoint += r_sq * et->aspect;
+      ditherpoint += r_sq * ((et->aspect << 16) / value_span);
       if (base < upper) {
-	ditherpoint -= et->recip[(base << 16) / value_span];
+	ditherpoint -= et->recip[base];
       }
       if (ditherpoint > 65535) ditherpoint = 65535;
       else if (ditherpoint < 0) ditherpoint = 0;
