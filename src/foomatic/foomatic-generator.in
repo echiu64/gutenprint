@@ -652,6 +652,8 @@ sub build_model_ev {
 	    $make = "EPSON";
 	} elsif ($ev =~ /^bjc/) {
 	    $make = "CANON";
+	} elsif ($ev =~ /^canon/) {
+	    $make = "CANON";
 	} elsif ($ev =~ /^pcl/) {
 	    $make = "HEWLETT-PACKARD";
 	} elsif ($ev =~ /^lexmark/) {
