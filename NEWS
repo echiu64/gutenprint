@@ -61,9 +61,7 @@ Gimp-Print 4.2.3 contains the following major changes over Gimp-Print
 
   4) (bug 621667) Very large prints (longer than about 40" long) on
      Epson Stylus Pro printers were not printed correctly; the print
-     is typically chopped into many small pieces.  This bug is not
-     verified; there have been other unconfirmed reports of problems
-     with very large prints.
+     is typically chopped into many small pieces.
 
   5) (bug 615561) The Epson Stylus Color 480 and 580, and C20, C40,
      C41, and C42 (all variants) did not print in black and white or
@@ -85,12 +83,37 @@ Gimp-Print 4.2.3 contains the following major changes over Gimp-Print
      where 300 and 400 should be replaced by the width and height of
      the page in 1/72" units.
 
+     The width and height can also be specified in inches ("in"), cm,
+     or mm.  For example, for 4.5x7.5-inch paper you can specify:
+
+     -o PageSize=Custom.4.5x7.5in
+
      On Macintosh OS X, custom page sizes may be defined and selected
      through the Print Manager.
 
-  2) A Japanese translation has been added.
+  2) The Foomatic interface now accepts custom paper sizes with
+     Foomatic 2.0.1.
 
-  3) This release contains an ijsgimpprint package for Debian.
+     This works with all spoolers.  Here are sample command lines for
+     all spoolers, for CUPS the syntax is the same as with the native
+     CUPS drivers of GIMP-Print and units are again points ("pt" or
+     nothing, inches ("in"), cm, and mm):
+
+	CUPS: lpr -o PageSize=Custom.500x750cm bigposter.ps
+	LPRng: lpr -Z PageSize=Custom.500x750cm bigposter.ps
+	GNUlpr: lpr -o PageSize=Custom.500x750cm bigposter.ps
+	LPD: lpr -JPageSize=Custom.500x750cm bigposter.ps
+	PPR: ppr -F "*PageSize Custom" -i 500x750cm bigposter.ps
+	PDQ: pdq -oPageSize_Custom -aPageWidth=500
+		 -aPageHeight=750 -oPageSizeUnit_cm bigposter.ps
+	No spooler: directomatic -o PageSize=Custom.500x750cm bigposter.ps
+
+     This works with both the GhostScript "stp" and the IJS interface
+     of GIMP-Print.
+
+  3) A Japanese translation has been added.
+
+  4) This release contains an ijsgimpprint package for Debian.
 
 
 The following bugs have been fixed in 4.2.3:
