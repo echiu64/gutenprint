@@ -42,9 +42,9 @@ OS X</a> explains how to use Gimp-Print 4.2.1 with OS X 10.2 "Jaguar".</p>
 <P><strong><em><font color="#ff0000">New as of September 6,
 2002!</strong></em></font> Gimp-Print 4.2.2-rc3 is released.  This is
 a prerelease for Gimp-Print 4.2.2.  In addition to the source, an
-installation kit for Macintosh OS X 10.2 is available!  Please read
-the release notes <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
+installation kit for Macintosh OS X 10.2 is available! <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=108818">You
+can read the release notes and download it here</a>.
 </p>
 
 <H2><font color="#ff0000">Gimp-Print 4.3.3 is released!</font></h2>
@@ -53,7 +53,9 @@ href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 2002!</strong></em></font> Gimp-Print 4.3.3 is released.  This is a
 development release on the Gimp-Print 4.3 development line.  This
 contains a new dithering algorithm, and many mostly internal changes
-to the Epson family driver.
+to the Epson family driver. <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=106365">You
+can read the release notes and download it here</a>.
 </p>
 
 <H2><font color="#ff0000">Gimp-Print 4.2.1 is released!</font></h2>
