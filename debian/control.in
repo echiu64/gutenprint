@@ -45,7 +45,7 @@ Description: gimp-print printer driver for CUPS
 Package: libgimpprint-dev
 Architecture: any
 Section: devel
-Depends: libgimpprint1 (= ${Source-Version})
+Depends: libgimpprint#UPSTREAM_VERSION# (= ${Source-Version})
 Description: header files for compiling programs with libgimpprint
  This package contains the header files for the gimp-print package, along with
  a static version of libgimpprint.
@@ -57,7 +57,7 @@ Description: header files for compiling programs with libgimpprint
 Package: libgimpprint-doc
 Architecture: all
 Section: doc
-Suggests: libgimpprint1 (= ${Source-Version})
+Suggests: libgimpprint#UPSTREAM_VERSION# (= ${Source-Version})
 Description: Documentation and example code for the gimpprint library
  This package contains lots of info-files, DVI docs and other
  documentation about the gimpprint library for photo-quality
@@ -66,7 +66,7 @@ Description: Documentation and example code for the gimpprint library
  Install this package if you want to have lots of info about the
  gimpprint library when you're programming.
 
-Package: libgimpprint1
+Package: libgimpprint#UPSTREAM_VERSION#
 Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}
@@ -80,7 +80,7 @@ Description: library necessary to use gimp-print programs
 Package: gimpprint-doc
 Architecture: all
 Section: doc
-Suggests: libgimpprint1 (= ${Source-Version})
+Suggests: libgimpprint#UPSTREAM_VERSION# (= ${Source-Version})
 Description: User Guide for GIMP-Print and CUPS
  This package contains a user guide for programs using the
  libgimpprint library for photographic quality printing.  Currently
@@ -93,7 +93,7 @@ Description: User Guide for GIMP-Print and CUPS
 Package: escputil
 Architecture: any
 Section: misc
-Depends: ${shlibs:Depends}, libgimpprint1
+Depends: ${shlibs:Depends}, libgimpprint#UPSTREAM_VERSION#
 Description: a utility for Epson Stylus printers
  escputil is a utility to clean and align the heads of Epson Stylus printers.
  It can also check the current ink levels in the printer.
