@@ -49,14 +49,6 @@
 #define MOVE_VERTICAL      2
 #define MOVE_ANY           (MOVE_HORIZONTAL | MOVE_VERTICAL)
 
-static const double unit_scale[] =
-  {
-    72.0,
-    72.0 / 2.54,
-    1.0,
-    72.0 / 25.4,
-  };
-
 /*
  *  Main window widgets
  */
@@ -78,10 +70,6 @@ static GtkWidget *top_entry;
 static GtkWidget *bottom_entry;
 static GtkWidget *bottom_border_entry;
 static GtkWidget *height_entry;
-static GtkWidget *unit_inch;
-static GtkWidget *unit_cm;
-static GtkWidget *unit_point;
-static GtkWidget *unit_mm;
 static GtkWidget *custom_size_width        = NULL;
 static GtkWidget *custom_size_height       = NULL;
 static GtkWidget *orientation_menu         = NULL;  /* Orientation menu */
@@ -234,6 +222,31 @@ static list_option_t the_list_options[] =
 
 static const gint list_option_count = sizeof(the_list_options) / sizeof(list_option_t);
 
+typedef struct
+{
+  const char *name;
+  const char *help;
+  gdouble scale;
+  GtkWidget *checkbox;
+  const char *format;
+} unit_t;
+
+static unit_t units[] =
+  {
+    { N_("Inch"), N_("Set the base unit of measurement to inches"),
+      72.0, NULL, "%.2f" },
+    { N_("cm"), N_("Set the base unit of measurement to centimetres"),
+      72.0 / 2.54, NULL, "%.2f" },
+    { N_("Points"), N_("Set the base unit of measurement to points"),
+      1.0, NULL, "%.0f" },
+    { N_("mm"), N_("Set the base unit of measurement to millimetres"),
+      72.0 / 25.4, NULL, "%.1f" },
+    { N_("Pica"), N_("Set the base unit of measurement to picas"),
+      72.0 / 12.0, NULL, "%.1f" },
+  };
+
+static const gint unit_count = sizeof(units) / sizeof(unit_t);    
+
 static list_option_t *
 get_list_option_by_name(const char *name)
 {
@@ -360,7 +373,10 @@ static void
 set_entry_value(GtkWidget *entry, double value, int block)
 {
   gchar s[255];
-  g_snprintf(s, sizeof(s), "%.2f", value);
+  gdouble unit_scaler = units[pv->unit].scale;
+  const gchar *format = units[pv->unit].format;
+
+  g_snprintf(s, sizeof(s), format, value / unit_scaler);
   if (block)
     gtk_signal_handler_block_by_data (GTK_OBJECT (entry), NULL);
   gtk_entry_set_text (GTK_ENTRY (entry), s);
@@ -971,7 +987,7 @@ create_printer_settings_frame (void)
   create_about_dialog ();
   create_new_printer_dialog ();
 
-  table = gtk_table_new (9, 2, FALSE);
+  table = gtk_table_new (list_option_count + 4, 2, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 2);
   gtk_table_set_row_spacings (GTK_TABLE (table), 2);
   gtk_container_set_border_width (GTK_CONTAINER (table), 4);
@@ -1107,6 +1123,7 @@ create_scaling_frame (void)
   GtkWidget *event_box;
   GtkWidget *sep;
   GSList    *group;
+  gint i;
 
   frame = gtk_frame_new (_("Size"));
   gtk_box_pack_start (GTK_BOX (main_vbox), frame, FALSE, FALSE, 0);
@@ -1240,7 +1257,7 @@ create_scaling_frame (void)
    * The inch/cm toggles
    */
 
-  table = gtk_table_new (2, 2, FALSE);
+  table = gtk_table_new (2, (unit_count + 1) / 2, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_box_pack_start (GTK_BOX (box), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
@@ -1258,53 +1275,18 @@ create_scaling_frame (void)
                            _("Select the base unit of measurement for printing"),
                            NULL);
 
-  unit_inch = gtk_radio_button_new_with_label (NULL, _("Inch"));
-  group = gtk_radio_button_group (GTK_RADIO_BUTTON (unit_inch));
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 0,
-                             NULL, 0.5, 0.5,
-                             unit_inch, 1, TRUE);
-  gimp_help_set_help_data (unit_inch,
-                           _("Set the base unit of measurement to inches"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (unit_inch), "toggled",
-                      GTK_SIGNAL_FUNC (unit_callback),
-                      (gpointer) UNIT_INCH);
-
-  unit_cm = gtk_radio_button_new_with_label (group, _("cm"));
-  group = gtk_radio_button_group (GTK_RADIO_BUTTON (unit_cm));
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 1,
-                             NULL, 0.5, 0.5,
-                             unit_cm, 1, TRUE);
-  gimp_help_set_help_data (unit_cm,
-                           _("Set the base unit of measurement to centimetres"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (unit_cm), "toggled",
-                      GTK_SIGNAL_FUNC (unit_callback),
-                      (gpointer) UNIT_CM);
-
-  unit_point = gtk_radio_button_new_with_label (group, _("Point"));
-  group = gtk_radio_button_group (GTK_RADIO_BUTTON (unit_point));
-  gimp_table_attach_aligned (GTK_TABLE (table), 1, 0,
-                             NULL, 0.5, 0.5,
-                             unit_point, 1, TRUE);
-  gimp_help_set_help_data (unit_point,
-                           _("Set the base unit of measurement to points"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (unit_point), "toggled",
-                      GTK_SIGNAL_FUNC (unit_callback),
-                      (gpointer) UNIT_POINT);
-
-  unit_mm = gtk_radio_button_new_with_label (group, _("mm"));
-  group = gtk_radio_button_group (GTK_RADIO_BUTTON (unit_mm));
-  gimp_table_attach_aligned (GTK_TABLE (table), 1, 1,
-                             NULL, 0.5, 0.5,
-                             unit_mm, 1, TRUE);
-  gimp_help_set_help_data (unit_mm,
-                           _("Set the base unit of measurement to millimetres"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (unit_mm), "toggled",
-                      GTK_SIGNAL_FUNC (unit_callback),
-                      (gpointer) UNIT_MM);
+  group = NULL;
+  for (i = 0; i < unit_count; i++)
+    {
+      unit_t *unit = &(units[i]);
+      unit->checkbox = gtk_radio_button_new_with_label(group, _(unit->name));
+      group = gtk_radio_button_group(GTK_RADIO_BUTTON(unit->checkbox));
+      gimp_table_attach_aligned(GTK_TABLE(table), i / 2, i % 2, NULL, 0.5,
+				0.5, unit->checkbox, 1, TRUE);
+      gimp_help_set_help_data(unit->checkbox, _(unit->help), NULL);
+      gtk_signal_connect(GTK_OBJECT(unit->checkbox), "toggled",
+			 GTK_SIGNAL_FUNC(unit_callback), (gpointer) i);
+    }
 
   /*
    * The "image size" button
@@ -1765,21 +1747,8 @@ do_misc_updates (void)
   gtk_option_menu_set_history (GTK_OPTION_MENU (orientation_menu),
 			       pv->orientation + 1);
 
-  switch (pv->unit)
-    {
-    case 0:
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (unit_inch), TRUE);
-      break;
-    case 1:
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (unit_cm), TRUE);
-      break;
-    case 2:
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (unit_point), TRUE);
-      break;
-    case 3:
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (unit_mm), TRUE);
-      break;
-    }
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(units[pv->unit].checkbox),
+			       TRUE);
 
   switch (stp_get_image_type (pv->v))
     {
@@ -1830,7 +1799,7 @@ position_callback (GtkWidget *widget)
     {
       gdouble new_printed_value =
 	atof (gtk_entry_get_text (GTK_ENTRY (widget)));
-      gdouble unit_scaler = unit_scale[pv->unit];
+      gdouble unit_scaler = units[pv->unit].scale;
       gint new_value = SCALE(new_printed_value, unit_scaler);
       gboolean was_percent = 0;
 
@@ -1964,7 +1933,7 @@ custom_media_size_callback(GtkWidget *widget,
   gint width_limit, height_limit;
   gint min_width_limit, min_height_limit;
   gdouble new_printed_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
-  gdouble unit_scaler = unit_scale[pv->unit];
+  gdouble unit_scaler = units[pv->unit].scale;
   gint new_value = SCALE(new_printed_value, unit_scaler);
   invalidate_frame ();
   invalidate_preview_thumbnail ();
@@ -1989,7 +1958,7 @@ custom_media_size_callback(GtkWidget *widget,
 	new_value = height_limit;
       stp_set_page_height (pv->v, new_value);
     }
-  set_entry_value (widget, new_value / unit_scaler, 0);
+  set_entry_value (widget, new_value, 0);
   preview_update ();
 }
 
@@ -2021,8 +1990,7 @@ set_media_size(const gchar *new_media_size)
 	  gtk_widget_set_sensitive (GTK_WIDGET (custom_size_width), FALSE);
 	  gtk_entry_set_editable (GTK_ENTRY (custom_size_width), FALSE);
 	}
-      set_entry_value (custom_size_width,
-		       size / unit_scale[pv->unit], 0);
+      set_entry_value (custom_size_width, size, 0);
       stp_set_page_width (pv->v, size);
 
       if (stp_papersize_get_height (pap) == 0)
@@ -2039,8 +2007,7 @@ set_media_size(const gchar *new_media_size)
 	  gtk_widget_set_sensitive(GTK_WIDGET (custom_size_height), FALSE);
 	  gtk_entry_set_editable (GTK_ENTRY (custom_size_height), FALSE);
 	}
-      set_entry_value (custom_size_height,
-		       size / unit_scale[pv->unit], 0);
+      set_entry_value (custom_size_height, size, 0);
       stp_set_page_height (pv->v, size);
     }
 }
@@ -2800,7 +2767,6 @@ preview_update (void)
   gdouble min_ppi_scaling;   /* Minimum PPI for current page size */
   gdouble min_ppi_scaling1;  /* Minimum PPI for current page size */
   gdouble min_ppi_scaling2;  /* Minimum PPI for current page size */
-  gdouble unit_scaler = unit_scale[pv->unit];
 
   stp_printer_get_media_size(current_printer, pv->v,
 			     &paper_width, &paper_height);
@@ -2906,24 +2872,18 @@ preview_update (void)
       bottom_is_anchored = 1;
     }
 
-  set_entry_value (top_entry, (stp_get_top (pv->v)) / unit_scaler, 1);
-  set_entry_value (left_entry, (stp_get_left (pv->v)) / unit_scaler, 1);
-  set_entry_value (bottom_entry,
-                   (top + stp_get_top(pv->v) + print_height) / unit_scaler, 1);
+  set_entry_value (top_entry, (stp_get_top (pv->v)), 1);
+  set_entry_value (left_entry, (stp_get_left (pv->v)), 1);
+  set_entry_value (bottom_entry, (top + stp_get_top(pv->v) + print_height), 1);
   set_entry_value (bottom_border_entry,
-                   (paper_height - (stp_get_top (pv->v) + print_height)) /
-                   unit_scaler, 1);
-  set_entry_value (right_entry,
-                   (stp_get_left(pv->v) + print_width) / unit_scaler, 1);
+                   (paper_height - (stp_get_top (pv->v) + print_height)), 1);
+  set_entry_value (right_entry, (stp_get_left(pv->v) + print_width), 1);
   set_entry_value (right_border_entry,
-                   (paper_width - (stp_get_left (pv->v) + print_width)) /
-                   unit_scaler, 1);
-  set_entry_value (width_entry, print_width / unit_scaler, 1);
-  set_entry_value (height_entry, print_height / unit_scaler, 1);
-  set_entry_value (custom_size_width,
-		   stp_get_page_width (pv->v)/unit_scaler, 1);
-  set_entry_value (custom_size_height,
-		   stp_get_page_height (pv->v)/unit_scaler, 1);
+                   (paper_width - (stp_get_left (pv->v) + print_width)), 1);
+  set_entry_value (width_entry, print_width, 1);
+  set_entry_value (height_entry, print_height, 1);
+  set_entry_value (custom_size_width, stp_get_page_width (pv->v), 1);
+  set_entry_value (custom_size_height, stp_get_page_height (pv->v), 1);
 
   /* draw image */
   if (! suppress_preview_update)
