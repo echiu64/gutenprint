@@ -383,15 +383,26 @@ verify_double_param(const stp_vars_t v, const char *parameter,
 }
 
 static int
+verify_int_param(const stp_vars_t v, const char *parameter,
+		    stp_parameter_t *desc)
+{
+  int checkval = stp_get_int_parameter(v, parameter);
+  if (checkval < desc->bounds.integer.lower ||
+      checkval > desc->bounds.integer.upper)
+    {
+      stp_eprintf(v, _("%s must be between %d and %d\n"),
+		  parameter, desc->bounds.integer.lower,
+		  desc->bounds.integer.upper);
+      return 0;
+    }
+  return 1;
+}
+
+static int
 verify_curve_param(const stp_vars_t v, const char *parameter,
 		    stp_parameter_t *desc)
 {
-  const stp_curve_t curve = stp_get_curve_parameter(v, parameter);
-  if (curve == 0)
-    {
-      stp_eprintf(v, _("No points present for curve %s\n"), parameter);
-      return 0;
-    }
+  /* Curves are automatically within range...or are they? */
   return 1;
 }
 
@@ -406,6 +417,8 @@ verify_param(const stp_vars_t v, const char *parameter)
       return verify_string_param(v, parameter, &desc);
     case STP_PARAMETER_TYPE_DOUBLE:
       return verify_double_param(v, parameter, &desc);
+    case STP_PARAMETER_TYPE_INT:
+      return verify_int_param(v, parameter, &desc);
     case STP_PARAMETER_TYPE_CURVE:
       return verify_curve_param(v, parameter, &desc);
     case STP_PARAMETER_TYPE_RAW:

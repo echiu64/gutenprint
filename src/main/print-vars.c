@@ -579,7 +579,14 @@ void
 stp_set_curve_parameter(stp_vars_t v, const char *parameter,
 			const stp_curve_t curve)
 {
-  stp_eprintf(v, "WARNING: Attempt to retrieve unknown parameter %s\n",
+  stp_eprintf(v, "WARNING: Attempt to set unknown parameter %s\n",
+	      parameter);
+}
+
+void
+stp_set_int_parameter(stp_vars_t v, const char *parameter, int integer)
+{
+  stp_eprintf(v, "WARNING: Attempt to set unknown parameter %s\n",
 	      parameter);
 }
 
@@ -641,6 +648,14 @@ stp_get_curve_parameter(stp_vars_t v, const char *parameter)
   stp_eprintf(v, "WARNING: Attempt to retrieve unknown parameter %s\n",
 	      parameter);
   return NULL;
+}
+
+const int
+stp_get_int_parameter(stp_vars_t v, const char *parameter)
+{
+  stp_eprintf(v, "WARNING: Attempt to retrieve unknown parameter %s\n",
+	      parameter);
+  return 0;
 }
 
 const char *
@@ -732,6 +747,10 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
       case STP_PARAMETER_TYPE_DOUBLE:
 	stp_set_float_parameter(vd, params[i].name,
 				stp_get_float_parameter(vs, params[i].name));
+	break;
+      case STP_PARAMETER_TYPE_INT:
+	stp_set_int_parameter(vd, params[i].name,
+			      stp_get_int_parameter(vs, params[i].name));
 	break;
       case STP_PARAMETER_TYPE_CURVE:
 	stp_set_curve_parameter(vd, params[i].name,

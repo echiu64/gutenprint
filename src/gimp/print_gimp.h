@@ -91,6 +91,9 @@ extern gint             saveme;
 extern GtkWidget *color_adjust_dialog;
 extern GtkWidget *dither_algo_combo;
 extern gp_plist_t *pv;
+extern gp_plist_t gimp_vars;
+
+extern void call_printrc_save(void);
 
 /*
  * Function prototypes
@@ -103,7 +106,9 @@ extern void plist_set_name_n(gp_plist_t *p, const char *val, int n);
 extern const char *plist_get_name(const gp_plist_t *p);
 extern void copy_printer(gp_plist_t *vd, const gp_plist_t *vs);
 
-extern void  printrc_save (void);
+extern void printrc_load (const char *filename);
+extern void get_system_printers (void);
+extern void printrc_save (const char *filename);
 
 extern int add_printer(const gp_plist_t *key, int add_only);
 extern void initialize_printer(gp_plist_t *printer);
@@ -128,7 +133,7 @@ extern void create_color_adjust_window  (void);
 extern void update_adjusted_thumbnail   (void);
 extern void create_main_window (void);
 extern void set_color_sliders_active(int active);
-extern void writefunc (void *file, const char *buf, size_t bytes);
+extern void gimp_writefunc (void *file, const char *buf, size_t bytes);
 extern void set_adjustment_tooltip(GtkObject *adjustment, const gchar *tip);
 extern void set_help_data(GtkWidget *widget, const gchar *tooltip);
 extern GtkWidget *table_attach_aligned(GtkTable *table, gint column, gint row,

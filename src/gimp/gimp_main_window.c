@@ -2016,7 +2016,7 @@ static void
 save_callback (void)
 {
   reset_preview ();
-  printrc_save ();
+  call_printrc_save ();
 }
 
 /*

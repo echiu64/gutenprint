@@ -54,6 +54,17 @@ main(int argc, char **argv)
 	  printf("$stp_values{'DEFVAL'}{'%s'} = %.3f\n",
 		 params[i].name, desc.deflt.dbl);
 	}
+      else if (params[i].type == STP_PARAMETER_TYPE_INT)
+	{
+	  stp_describe_parameter(stp_default_settings(),
+				 params[i].name, &desc);
+	  printf("$stp_values{'MINVAL'}{'%s'} = %d\n",
+		 params[i].name, desc.bounds.integer.lower);
+	  printf("$stp_values{'MAXVAL'}{'%s'} = %d\n",
+		 params[i].name, desc.bounds.integer.upper);
+	  printf("$stp_values{'DEFVAL'}{'%s'} = %d\n",
+		 params[i].name, desc.deflt.integer);
+	}
     }
   return 0;
 }

@@ -531,6 +531,7 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
     }
   else
     {
+      stp_curve_t curve;
       stp_parameter_t desc;
       stp_describe_parameter(img->v, key, &desc);
       switch (desc.type)
@@ -539,10 +540,20 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  stp_set_string_parameter(img->v, key, vbuf);
 	  stp_string_list_free(desc.bounds.str);
 	  break;
+	case STP_PARAMETER_TYPE_CURVE:
+	  curve = stp_curve_allocate_read_string(vbuf);
+	  if (curve)
+	    stp_set_curve_parameter(img->v, key, curve);
+	  stp_curve_destroy(curve);
+	  break;
 	case STP_PARAMETER_TYPE_DOUBLE:
 	  code = get_float(vbuf, key, &z);
 	  if (code == 0)
 	    stp_set_float_parameter(img->v, key, z);
+	case STP_PARAMETER_TYPE_INT:
+	  code = get_int(vbuf, key, &z);
+	  if (code == 0)
+	    stp_set_int_parameter(img->v, key, z);
 	default:
 	  STP_DEBUG(fprintf(stderr, "Bad parameter %s %d\n", key, desc.type));
 	}

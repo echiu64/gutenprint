@@ -397,6 +397,10 @@ main(int  argc,				/* I - Number of command-line arguments */
 		fprintf(stderr, "DEBUG: stp_get_%s(v) |%.3f|\n",
 			params[i].name,stp_get_float_parameter(v,params[i].name));
 		break;
+	      case STP_PARAMETER_TYPE_INT:
+		fprintf(stderr, "DEBUG: stp_get_%s(v) |%.d|\n",
+			params[i].name,stp_get_int_parameter(v,params[i].name));
+		break;
 	      default:
 		break;
 	      }
