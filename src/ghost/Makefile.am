@@ -50,7 +50,9 @@ $(srcdir)/gdevstp-print.h: $(top_srcdir)/include/gimp-print/gimp-print.h
 	sed $(GHCODE) $< > $(srcdir)/$@
 
 $(srcdir)/gdevstp-print-internal.h: $(top_srcdir)/src/main/gimp-print-internal.h
-	sed $(GHCODE) $< > $(srcdir)/$@
+	echo '#define VERSION "@VERSION@"' > $(srcdir)/$@
+	echo '#define RELEASE_DATE "@RELEASE_DATE@"' >> $(srcdir)/$@
+	sed $(GHCODE) $< >> $(srcdir)/$@
 
 $(srcdir)/gdevstp-print-intl-internal.h: $(top_srcdir)/include/gimp-print/gimp-print-intl-internal.h
 	sed $(GHCODE) $< > $(srcdir)/$@
