@@ -437,6 +437,8 @@ extern void stp_erprintf(const char *format, ...);
 #define STP_DBG_ESCP2		0x20
 #define STP_DBG_CANON		0x40
 #define STP_DBG_LEXMARK		0x80
+#define STP_DBG_WEAVE_PARAMS	0x100
+#define STP_DBG_ROWS		0x200
 extern void stp_dprintf(unsigned long level, const stp_vars_t v,
 			const char *format, ...);
 
