@@ -36,6 +36,10 @@
  * rlk 20000112
  */
 
+
+#ifndef PRINT_HEADER
+#define PRINT_HEADER
+
 /*
  * Include necessary header files...
  */
@@ -296,6 +300,7 @@ const printer_t      *get_printer_by_long_name(const char *);
 const printer_t      *get_printer_by_driver(const char *);
 int	              get_printer_index_by_driver(const char *);
 
+#endif /* PRINT_HEADER */
 /*
  * End of "$Id$".
  */

@@ -42,7 +42,7 @@
  *   See ChangeLog
  */
 
-#include "print.h"
+#include "print_gimp.h"
 
 /*
  * All Gimp-specific code is in this file.
@@ -114,8 +114,6 @@
 #define SCALE_WIDTH		64
 #define ENTRY_WIDTH		64
 #define PREVIEW_SIZE		240	/* Assuming max media size of 24" A2 */
-#define MAX_PLIST		100
-
 
 /*
  * Types...
@@ -142,22 +140,6 @@ static void	query(void);
 static void	run(char *, int, GParam *, int *, GParam **);
 static void     init_gtk (void);
 static int	do_print_dialog(void);
-static void	brightness_update(GtkAdjustment *);
-static void	brightness_callback(GtkWidget *);
-static void	saturation_update(GtkAdjustment *);
-static void	saturation_callback(GtkWidget *);
-static void	density_update(GtkAdjustment *);
-static void	density_callback(GtkWidget *);
-static void	contrast_update(GtkAdjustment *);
-static void	contrast_callback(GtkWidget *);
-static void	red_update(GtkAdjustment *);
-static void	red_callback(GtkWidget *);
-static void	green_update(GtkAdjustment *);
-static void	green_callback(GtkWidget *);
-static void	blue_update(GtkAdjustment *);
-static void	blue_callback(GtkWidget *);
-static void	gamma_update(GtkAdjustment *);
-static void	gamma_callback(GtkWidget *);
 static void	scaling_update(GtkAdjustment *);
 static void	scaling_callback(GtkWidget *);
 static void	plist_callback(GtkWidget *, gint);
@@ -191,9 +173,29 @@ static void	preview_update(void);
 static void	preview_button_callback(GtkWidget *, GdkEventButton *);
 static void	preview_motion_callback(GtkWidget *, GdkEventMotion *);
 static void	position_callback(GtkWidget *);
+
+static void gtk_show_adjust_button_callback(GtkWidget *);
+
+extern void  gtk_create_color_adjust_window();
+
+
 #if 0
 static void	cleanupfunc(void);
 #endif
+
+/***
+ * Externals
+ ***/
+extern GtkWidget* gtk_color_adjust_dialog; /* color adjust popup */
+
+extern GtkObject* brightness_adjustment; /* Adjustment object for brightness */
+extern GtkObject* saturation_adjustment; /* Adjustment object for saturation */
+extern GtkObject* density_adjustment;	 /* Adjustment object for density */
+extern GtkObject* contrast_adjustment;	 /* Adjustment object for contrast */
+extern GtkObject* red_adjustment;	 /* Adjustment object for red */
+extern GtkObject* green_adjustment;	 /* Adjustment object for green */
+extern GtkObject* blue_adjustment;	 /* Adjustment object for blue */
+extern GtkObject* gamma_adjustment;	 /* Adjustment object for gamma */
 
 /*
  * Globals...
@@ -253,22 +255,6 @@ GtkWidget	*print_dialog,		/* Print dialog window */
 #ifndef GIMP_1_0
 		*scaling_image,		/* Scale to the image */
 #endif
-		*brightness_scale,	/* Scale for brightness */
-		*brightness_entry,	/* Text entry widget for brightness */
-		*saturation_scale,	/* Scale for saturation */
-		*saturation_entry,	/* Text entry widget for saturation */
-		*density_scale,		/* Scale for density */
-		*density_entry,		/* Text entry widget for density */
-		*contrast_scale,	/* Scale for contrast */
-		*contrast_entry,	/* Text entry widget for contrast */
-		*red_scale,		/* Scale for red */
-		*red_entry,		/* Text entry widget for red */
-		*green_scale,		/* Scale for green */
-		*green_entry,		/* Text entry widget for green */
-		*blue_scale,		/* Scale for blue */
-		*blue_entry,		/* Text entry widget for blue */
-		*gamma_scale,		/* Scale for gamma */
-		*gamma_entry,		/* Text entry widget for gamma */
 		*output_gray,		/* Output type toggle, black */
 		*output_color,		/* Output type toggle, color */
 		*image_line_art,
@@ -292,16 +278,9 @@ GtkWidget	*print_dialog,		/* Print dialog window */
 		*top_entry,
 		*bottom_entry,
 		*printandsave_button;
+GtkWidget*      adjust_color_button;    /* Button for color adjust popup */
 
-GtkObject	*scaling_adjustment,	/* Adjustment object for scaling */
-		*brightness_adjustment,	/* Adjustment object for brightness */
-		*saturation_adjustment,	/* Adjustment object for saturation */
-		*density_adjustment,	/* Adjustment object for density */
-		*contrast_adjustment,	/* Adjustment object for contrast */
-		*red_adjustment,	/* Adjustment object for red */
-		*green_adjustment,	/* Adjustment object for green */
-		*blue_adjustment,	/* Adjustment object for blue */
-		*gamma_adjustment;	/* Adjustment object for gamma */
+GtkObject	*scaling_adjustment;	/* Adjustment object for scaling */
 
 int		num_media_sizes=0;	/* Number of media sizes */
 char		**media_sizes;		/* Media size strings */
@@ -1235,293 +1214,25 @@ do_print_dialog(void)
   gtk_widget_show(button);
 #endif
 
+    /***
+     *  Color adjust button
+     ***/
+    box = gtk_hbox_new(FALSE, 8);
+    gtk_table_attach(GTK_TABLE(table),
+		     box,
+		     3, 4, 12, 13,
+		     GTK_FILL, GTK_FILL,
+		     0, 0);
+    gtk_widget_show(box);
+    adjust_color_button = gtk_button_new_with_label(_("Adjust Color"));
+    gtk_signal_connect (GTK_OBJECT (adjust_color_button),
+			"clicked",
+			(GtkSignalFunc)gtk_show_adjust_button_callback,
+			NULL);
+    gtk_box_pack_start (GTK_BOX (box), adjust_color_button, FALSE, FALSE, 0);
+    gtk_widget_show (adjust_color_button);
 
- /*
-  * Brightness slider...
-  */
-
-  label = gtk_label_new(_("Brightness:"));
-  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 12, 13, GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show(label);
-
-  box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 12, 13, GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show(box);
-
-  brightness_adjustment = scale_data =
-      gtk_adjustment_new((float)vars.brightness, 0.0, 401.0, 1.0, 1.0, 1.0);
-
-  gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
-		     (GtkSignalFunc)brightness_update, NULL);
-
-  brightness_scale = scale = gtk_hscale_new(GTK_ADJUSTMENT(scale_data));
-  gtk_box_pack_start(GTK_BOX(box), scale, FALSE, FALSE, 0);
-  gtk_widget_set_usize(scale, 200, 0);
-  gtk_scale_set_draw_value(GTK_SCALE(scale), FALSE);
-  gtk_range_set_update_policy(GTK_RANGE(scale), GTK_UPDATE_CONTINUOUS);
-  gtk_widget_show(scale);
-
-  brightness_entry = entry = gtk_entry_new();
-  sprintf(s, "%d", vars.brightness);
-  gtk_entry_set_text(GTK_ENTRY(entry), s);
-  gtk_signal_connect(GTK_OBJECT(entry), "changed",
-		     (GtkSignalFunc)brightness_callback, NULL);
-  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
-  gtk_widget_set_usize(entry, 40, 0);
-  gtk_widget_show(entry);
-
- /*
-  * Gamma slider...
-  */
-
-  label = gtk_label_new(_("Gamma:"));
-  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 13, 14, GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show(label);
-
-  box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 13, 14, GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show(box);
-
-  gamma_adjustment = scale_data =
-      gtk_adjustment_new((float)vars.gamma, 0.1, 4.0, 0.001, 0.01, 1.0);
-
-  gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
-		     (GtkSignalFunc)gamma_update, NULL);
-
-  gamma_scale = scale = gtk_hscale_new(GTK_ADJUSTMENT(scale_data));
-  gtk_box_pack_start(GTK_BOX(box), scale, FALSE, FALSE, 0);
-  gtk_widget_set_usize(scale, 200, 0);
-  gtk_scale_set_draw_value(GTK_SCALE(scale), FALSE);
-  gtk_range_set_update_policy(GTK_RANGE(scale), GTK_UPDATE_CONTINUOUS);
-  gtk_widget_show(scale);
-
-  gamma_entry = entry = gtk_entry_new();
-  sprintf(s, "%5.3f", vars.gamma);
-  gtk_entry_set_text(GTK_ENTRY(entry), s);
-  gtk_signal_connect(GTK_OBJECT(entry), "changed",
-		     (GtkSignalFunc)gamma_callback, NULL);
-  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
-  gtk_widget_set_usize(entry, 40, 0);
-  gtk_widget_show(entry);
-
-
- /*
-  * Contrast slider...
-  */
-
-  gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)->action_area), 2);
-  gtk_box_set_homogeneous (GTK_BOX (GTK_DIALOG (dialog)->action_area), FALSE);
-  hbbox = gtk_hbutton_box_new ();
-  gtk_button_box_set_spacing (GTK_BUTTON_BOX (hbbox), 4);
-  gtk_box_pack_end (GTK_BOX (GTK_DIALOG (dialog)->action_area), hbbox, FALSE, FALSE, 0);
-  gtk_widget_show (hbbox);
-
-  label = gtk_label_new(_("Contrast:"));
-  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 14, 15, GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show(label);
-  box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 14, 15, GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show(box);
-
-  contrast_adjustment = scale_data =
-      gtk_adjustment_new((float)vars.contrast, 25.0, 401.0, 1.0, 1.0, 1.0);
-
-  gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
-		     (GtkSignalFunc)contrast_update, NULL);
-
-  contrast_scale = scale = gtk_hscale_new(GTK_ADJUSTMENT(scale_data));
-  gtk_box_pack_start(GTK_BOX(box), scale, FALSE, FALSE, 0);
-  gtk_widget_set_usize(scale, 200, 0);
-  gtk_scale_set_draw_value(GTK_SCALE(scale), FALSE);
-  gtk_range_set_update_policy(GTK_RANGE(scale), GTK_UPDATE_CONTINUOUS);
-  gtk_widget_show(scale);
-
-  contrast_entry = entry = gtk_entry_new();
-  sprintf(s, "%d", vars.contrast);
-  gtk_entry_set_text(GTK_ENTRY(entry), s);
-  gtk_signal_connect(GTK_OBJECT(entry), "changed",
-		     (GtkSignalFunc)contrast_callback, NULL);
-  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
-  gtk_widget_set_usize(entry, 40, 0);
-  gtk_widget_show(entry);
-
- /*
-  * Red slider...
-  */
-
-  label = gtk_label_new(_("Red:"));
-  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 15, 16, GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show(label);
-
-  box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 15, 16, GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show(box);
-
-  red_adjustment = scale_data =
-      gtk_adjustment_new((float)vars.red, 0.0, 201.0, 1.0, 1.0, 1.0);
-
-  gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
-		     (GtkSignalFunc)red_update, NULL);
-
-  red_scale = scale = gtk_hscale_new(GTK_ADJUSTMENT(scale_data));
-  gtk_box_pack_start(GTK_BOX(box), scale, FALSE, FALSE, 0);
-  gtk_widget_set_usize(scale, 200, 0);
-  gtk_scale_set_draw_value(GTK_SCALE(scale), FALSE);
-  gtk_range_set_update_policy(GTK_RANGE(scale), GTK_UPDATE_CONTINUOUS);
-  gtk_widget_show(scale);
-
-  red_entry = entry = gtk_entry_new();
-  sprintf(s, "%d", vars.red);
-  gtk_entry_set_text(GTK_ENTRY(entry), s);
-  gtk_signal_connect(GTK_OBJECT(entry), "changed",
-		     (GtkSignalFunc)red_callback, NULL);
-  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
-  gtk_widget_set_usize(entry, 40, 0);
-  gtk_widget_show(entry);
-
- /*
-  * Green slider...
-  */
-
-  label = gtk_label_new(_("Green:"));
-  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 16, 17, GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show(label);
-
-  box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 16, 17, GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show(box);
-
-  green_adjustment = scale_data =
-      gtk_adjustment_new((float)vars.green, 0.0, 201.0, 1.0, 1.0, 1.0);
-
-  gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
-		     (GtkSignalFunc)green_update, NULL);
-
-  green_scale = scale = gtk_hscale_new(GTK_ADJUSTMENT(scale_data));
-  gtk_box_pack_start(GTK_BOX(box), scale, FALSE, FALSE, 0);
-  gtk_widget_set_usize(scale, 200, 0);
-  gtk_scale_set_draw_value(GTK_SCALE(scale), FALSE);
-  gtk_range_set_update_policy(GTK_RANGE(scale), GTK_UPDATE_CONTINUOUS);
-  gtk_widget_show(scale);
-
-  green_entry = entry = gtk_entry_new();
-  sprintf(s, "%d", vars.green);
-  gtk_entry_set_text(GTK_ENTRY(entry), s);
-  gtk_signal_connect(GTK_OBJECT(entry), "changed",
-		     (GtkSignalFunc)green_callback, NULL);
-  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
-  gtk_widget_set_usize(entry, 40, 0);
-  gtk_widget_show(entry);
-
- /*
-  * Blue slider...
-  */
-
-  label = gtk_label_new(_("Blue:"));
-  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 17, 18, GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show(label);
-
-  box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 17, 18, GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show(box);
-
-  blue_adjustment = scale_data =
-      gtk_adjustment_new((float)vars.blue, 0.0, 201.0, 1.0, 1.0, 1.0);
-
-  gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
-		     (GtkSignalFunc)blue_update, NULL);
-
-  blue_scale = scale = gtk_hscale_new(GTK_ADJUSTMENT(scale_data));
-  gtk_box_pack_start(GTK_BOX(box), scale, FALSE, FALSE, 0);
-  gtk_widget_set_usize(scale, 200, 0);
-  gtk_scale_set_draw_value(GTK_SCALE(scale), FALSE);
-  gtk_range_set_update_policy(GTK_RANGE(scale), GTK_UPDATE_CONTINUOUS);
-  gtk_widget_show(scale);
-
-  blue_entry = entry = gtk_entry_new();
-  sprintf(s, "%d", vars.blue);
-  gtk_entry_set_text(GTK_ENTRY(entry), s);
-  gtk_signal_connect(GTK_OBJECT(entry), "changed",
-		     (GtkSignalFunc)blue_callback, NULL);
-  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
-  gtk_widget_set_usize(entry, 40, 0);
-  gtk_widget_show(entry);
-
- /*
-  * Saturation slider...
-  */
-
-  label = gtk_label_new(_("Saturation:"));
-  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 18, 19, GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show(label);
-
-  box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 18, 19, GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show(box);
-
-  saturation_adjustment = scale_data =
-      gtk_adjustment_new((float)vars.saturation, 0.001, 10.0, 0.001, 0.01, 1.0);
-
-  gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
-		     (GtkSignalFunc)saturation_update, NULL);
-
-  saturation_scale = scale = gtk_hscale_new(GTK_ADJUSTMENT(scale_data));
-  gtk_box_pack_start(GTK_BOX(box), scale, FALSE, FALSE, 0);
-  gtk_widget_set_usize(scale, 200, 0);
-  gtk_scale_set_draw_value(GTK_SCALE(scale), FALSE);
-  gtk_range_set_update_policy(GTK_RANGE(scale), GTK_UPDATE_CONTINUOUS);
-  gtk_widget_show(scale);
-
-  saturation_entry = entry = gtk_entry_new();
-  sprintf(s, "%5.3f", vars.saturation);
-  gtk_entry_set_text(GTK_ENTRY(entry), s);
-  gtk_signal_connect(GTK_OBJECT(entry), "changed",
-		     (GtkSignalFunc)saturation_callback, NULL);
-  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
-  gtk_widget_set_usize(entry, 40, 0);
-  gtk_widget_show(entry);
-
- /*
-  * Density slider...
-  */
-
-  label = gtk_label_new(_("Density:"));
-  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 19, 20, GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show(label);
-
-  box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 19, 20, GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show(box);
-
-  density_adjustment = scale_data =
-      gtk_adjustment_new((float)vars.density, 0.1, 3.0, 0.001, 0.01, 1.0);
-
-  gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
-		     (GtkSignalFunc)density_update, NULL);
-
-  density_scale = scale = gtk_hscale_new(GTK_ADJUSTMENT(scale_data));
-  gtk_box_pack_start(GTK_BOX(box), scale, FALSE, FALSE, 0);
-  gtk_widget_set_usize(scale, 200, 0);
-  gtk_scale_set_draw_value(GTK_SCALE(scale), FALSE);
-  gtk_range_set_update_policy(GTK_RANGE(scale), GTK_UPDATE_CONTINUOUS);
-  gtk_widget_show(scale);
-
-  density_entry = entry = gtk_entry_new();
-  sprintf(s, "%5.3f", vars.density);
-  gtk_entry_set_text(GTK_ENTRY(entry), s);
-  gtk_signal_connect(GTK_OBJECT(entry), "changed",
-		     (GtkSignalFunc)density_callback, NULL);
-  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
-  gtk_widget_set_usize(entry, 40, 0);
-  gtk_widget_show(entry);
+    gtk_create_color_adjust_window();
 
 
  /*
@@ -1571,42 +1282,57 @@ do_print_dialog(void)
  /*
   * Print, cancel buttons...
   */
+    gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)->
+						   action_area), 2);
+    gtk_box_set_homogeneous (GTK_BOX (GTK_DIALOG (dialog)->action_area),
+			     FALSE);
+    hbbox = gtk_hbutton_box_new ();
+    gtk_button_box_set_spacing (GTK_BUTTON_BOX (hbbox), 4);
+    gtk_box_pack_end (GTK_BOX (GTK_DIALOG (dialog)->action_area),
+		      hbbox,
+		      FALSE,
+		      FALSE,
+		      0);
+    gtk_widget_show(hbbox);
+    gtk_box_set_homogeneous(GTK_BOX(GTK_DIALOG(dialog)->action_area), FALSE);
+    gtk_box_set_spacing(GTK_BOX(GTK_DIALOG(dialog)->action_area), 0);
 
-  gtk_box_set_homogeneous(GTK_BOX(GTK_DIALOG(dialog)->action_area), FALSE);
-  gtk_box_set_spacing(GTK_BOX(GTK_DIALOG(dialog)->action_area), 0);
+    button = printandsave_button =
+	gtk_button_new_with_label (_("Print And Save Settings"));
+    GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+    gtk_signal_connect (GTK_OBJECT (button),
+			"clicked",
+			(GtkSignalFunc) printandsave_callback,
+			NULL);
+    gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
+    gtk_widget_grab_default (button);
+    gtk_widget_show (button);
 
-  button = printandsave_button =
-    gtk_button_new_with_label (_("Print And Save Settings"));
-  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
-  gtk_signal_connect (GTK_OBJECT (button), "clicked",
-		      (GtkSignalFunc) printandsave_callback,
-		      NULL);
-  gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
-  gtk_widget_grab_default (button);
-  gtk_widget_show (button);
+    button = gtk_button_new_with_label (_("Print"));
+    GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+    gtk_signal_connect (GTK_OBJECT (button),
+			"clicked",
+			(GtkSignalFunc) print_callback,
+			NULL);
+    gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
+    gtk_widget_show (button);
 
-  button = gtk_button_new_with_label (_("Print"));
-  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
-  gtk_signal_connect (GTK_OBJECT (button), "clicked",
-		      (GtkSignalFunc) print_callback,
-		      NULL);
-  gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
-  gtk_widget_show (button);
+    button = gtk_button_new_with_label (_("Save Current Settings"));
+    GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+    gtk_signal_connect (GTK_OBJECT (button),
+			"clicked",
+			(GtkSignalFunc) save_callback,
+			NULL);
+    gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
+    gtk_widget_show (button);
 
-  button = gtk_button_new_with_label (_("Save Current Settings"));
-  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
-  gtk_signal_connect (GTK_OBJECT (button), "clicked",
-		      (GtkSignalFunc) save_callback,
-		      NULL);
-  gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
-  gtk_widget_show (button);
-
-  button = gtk_button_new_with_label (_("Cancel"));
-  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
-  gtk_signal_connect (GTK_OBJECT(button), "clicked",
-		     (GtkSignalFunc) cancel_callback, NULL);
-  gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
-  gtk_widget_show (button);
+    button = gtk_button_new_with_label (_("Cancel"));
+    GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+    gtk_signal_connect (GTK_OBJECT(button),
+			"clicked",
+			(GtkSignalFunc) cancel_callback, NULL);
+    gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
+    gtk_widget_show (button);
 
  /*
   * Setup dialog window...
@@ -1766,399 +1492,6 @@ do_print_dialog(void)
   */
 
   return (runme);
-}
-
-
-/*
- * 'brightness_update()' - Update the brightness field using the scale.
- */
-
-static void
-brightness_update(GtkAdjustment *adjustment)	/* I - New value */
-{
-  char	s[255];					/* Text buffer */
-
-
-  if (vars.brightness != adjustment->value)
-  {
-    vars.brightness = adjustment->value;
-    plist[plist_current].v.brightness = adjustment->value;
-
-    sprintf(s, "%d", vars.brightness);
-
-    gtk_signal_handler_block_by_data(GTK_OBJECT(brightness_entry), NULL);
-    gtk_entry_set_text(GTK_ENTRY(brightness_entry), s);
-    gtk_signal_handler_unblock_by_data(GTK_OBJECT(brightness_entry), NULL);
-  }
-}
-
-
-/*
- * 'brightness_callback()' - Update the brightness scale using the text entry.
- */
-
-static void
-brightness_callback(GtkWidget *widget)	/* I - Entry widget */
-{
-  gint		new_value;		/* New scaling value */
-
-
-  new_value = atoi(gtk_entry_get_text(GTK_ENTRY(widget)));
-
-  if (vars.brightness != new_value)
-  {
-    if ((new_value >= GTK_ADJUSTMENT(brightness_adjustment)->lower) &&
-	(new_value < GTK_ADJUSTMENT(brightness_adjustment)->upper))
-    {
-      GTK_ADJUSTMENT(brightness_adjustment)->value = new_value;
-
-      gtk_signal_emit_by_name(brightness_adjustment, "value_changed");
-    }
-  }
-}
-
-
-/*
- * 'contrast_update()' - Update the contrast field using the scale.
- */
-
-static void
-contrast_update(GtkAdjustment *adjustment)	/* I - New value */
-{
-  char	s[255];					/* Text buffer */
-
-
-  if (vars.contrast != adjustment->value)
-  {
-    vars.contrast = adjustment->value;
-    plist[plist_current].v.contrast = adjustment->value;
-
-    sprintf(s, "%d", vars.contrast);
-
-    gtk_signal_handler_block_by_data(GTK_OBJECT(contrast_entry), NULL);
-    gtk_entry_set_text(GTK_ENTRY(contrast_entry), s);
-    gtk_signal_handler_unblock_by_data(GTK_OBJECT(contrast_entry), NULL);
-  }
-}
-
-
-/*
- * 'contrast_callback()' - Update the contrast scale using the text entry.
- */
-
-static void
-contrast_callback(GtkWidget *widget)	/* I - Entry widget */
-{
-  gint		new_value;		/* New scaling value */
-
-
-  new_value = atoi(gtk_entry_get_text(GTK_ENTRY(widget)));
-
-  if (vars.contrast != new_value)
-  {
-    if ((new_value >= GTK_ADJUSTMENT(contrast_adjustment)->lower) &&
-	(new_value < GTK_ADJUSTMENT(contrast_adjustment)->upper))
-    {
-      GTK_ADJUSTMENT(contrast_adjustment)->value = new_value;
-
-      gtk_signal_emit_by_name(contrast_adjustment, "value_changed");
-    }
-  }
-}
-
-
-/*
- * 'red_update()' - Update the red field using the scale.
- */
-
-static void
-red_update(GtkAdjustment *adjustment)	/* I - New value */
-{
-  char	s[255];					/* Text buffer */
-
-
-  if (vars.red != adjustment->value)
-  {
-    vars.red = adjustment->value;
-    plist[plist_current].v.red = adjustment->value;
-
-    sprintf(s, "%d", vars.red);
-
-    gtk_signal_handler_block_by_data(GTK_OBJECT(red_entry), NULL);
-    gtk_entry_set_text(GTK_ENTRY(red_entry), s);
-    gtk_signal_handler_unblock_by_data(GTK_OBJECT(red_entry), NULL);
-  }
-}
-
-
-/*
- * 'red_callback()' - Update the red scale using the text entry.
- */
-
-static void
-red_callback(GtkWidget *widget)	/* I - Entry widget */
-{
-  gint		new_value;		/* New scaling value */
-
-
-  new_value = atoi(gtk_entry_get_text(GTK_ENTRY(widget)));
-
-  if (vars.red != new_value)
-  {
-    if ((new_value >= GTK_ADJUSTMENT(red_adjustment)->lower) &&
-	(new_value < GTK_ADJUSTMENT(red_adjustment)->upper))
-    {
-      GTK_ADJUSTMENT(red_adjustment)->value = new_value;
-
-      gtk_signal_emit_by_name(red_adjustment, "value_changed");
-    }
-  }
-}
-
-
-/*
- * 'green_update()' - Update the green field using the scale.
- */
-
-static void
-green_update(GtkAdjustment *adjustment)	/* I - New value */
-{
-  char	s[255];					/* Text buffer */
-
-
-  if (vars.green != adjustment->value)
-  {
-    vars.green = adjustment->value;
-    plist[plist_current].v.green = adjustment->value;
-
-    sprintf(s, "%d", vars.green);
-
-    gtk_signal_handler_block_by_data(GTK_OBJECT(green_entry), NULL);
-    gtk_entry_set_text(GTK_ENTRY(green_entry), s);
-    gtk_signal_handler_unblock_by_data(GTK_OBJECT(green_entry), NULL);
-  }
-}
-
-
-/*
- * 'green_callback()' - Update the green scale using the text entry.
- */
-
-static void
-green_callback(GtkWidget *widget)	/* I - Entry widget */
-{
-  gint		new_value;		/* New scaling value */
-
-
-  new_value = atoi(gtk_entry_get_text(GTK_ENTRY(widget)));
-
-  if (vars.green != new_value)
-  {
-    if ((new_value >= GTK_ADJUSTMENT(green_adjustment)->lower) &&
-	(new_value < GTK_ADJUSTMENT(green_adjustment)->upper))
-    {
-      GTK_ADJUSTMENT(green_adjustment)->value = new_value;
-
-      gtk_signal_emit_by_name(green_adjustment, "value_changed");
-    }
-  }
-}
-
-
-/*
- * 'blue_update()' - Update the blue field using the scale.
- */
-
-static void
-blue_update(GtkAdjustment *adjustment)	/* I - New value */
-{
-  char	s[255];					/* Text buffer */
-
-
-  if (vars.blue != adjustment->value)
-  {
-    vars.blue = adjustment->value;
-    plist[plist_current].v.blue = adjustment->value;
-
-    sprintf(s, "%d", vars.blue);
-
-    gtk_signal_handler_block_by_data(GTK_OBJECT(blue_entry), NULL);
-    gtk_entry_set_text(GTK_ENTRY(blue_entry), s);
-    gtk_signal_handler_unblock_by_data(GTK_OBJECT(blue_entry), NULL);
-  }
-}
-
-
-/*
- * 'blue_callback()' - Update the blue scale using the text entry.
- */
-
-static void
-blue_callback(GtkWidget *widget)	/* I - Entry widget */
-{
-  gint		new_value;		/* New scaling value */
-
-
-  new_value = atoi(gtk_entry_get_text(GTK_ENTRY(widget)));
-
-  if (vars.blue != new_value)
-  {
-    if ((new_value >= GTK_ADJUSTMENT(blue_adjustment)->lower) &&
-	(new_value < GTK_ADJUSTMENT(blue_adjustment)->upper))
-    {
-      GTK_ADJUSTMENT(blue_adjustment)->value = new_value;
-
-      gtk_signal_emit_by_name(blue_adjustment, "value_changed");
-    }
-  }
-}
-
-
-/*
- * 'gamma_update()' - Update the gamma field using the scale.
- */
-
-static void
-gamma_update(GtkAdjustment *adjustment)	/* I - New value */
-{
-  char	s[255];					/* Text buffer */
-
-
-  if (vars.gamma != adjustment->value)
-  {
-    vars.gamma = adjustment->value;
-    plist[plist_current].v.gamma = adjustment->value;
-
-    sprintf(s, "%5.3f", vars.gamma);
-
-    gtk_signal_handler_block_by_data(GTK_OBJECT(gamma_entry), NULL);
-    gtk_entry_set_text(GTK_ENTRY(gamma_entry), s);
-    gtk_signal_handler_unblock_by_data(GTK_OBJECT(gamma_entry), NULL);
-
-  }
-}
-
-
-/*
- * 'gamma_callback()' - Update the gamma scale using the text entry.
- */
-
-static void
-gamma_callback(GtkWidget *widget)	/* I - Entry widget */
-{
-  gint		new_value;		/* New scaling value */
-
-
-  new_value = atoi(gtk_entry_get_text(GTK_ENTRY(widget)));
-
-  if (vars.gamma != new_value)
-  {
-    if ((new_value >= GTK_ADJUSTMENT(gamma_adjustment)->lower) &&
-	(new_value < GTK_ADJUSTMENT(gamma_adjustment)->upper))
-    {
-      GTK_ADJUSTMENT(gamma_adjustment)->value = new_value;
-
-      gtk_signal_emit_by_name(gamma_adjustment, "value_changed");
-    }
-  }
-}
-
-
-
-/*
- * 'saturation_update()' - Update the saturation field using the scale.
- */
-
-static void
-saturation_update(GtkAdjustment *adjustment)	/* I - New value */
-{
-  char	s[255];					/* Text buffer */
-
-
-  if (vars.saturation != adjustment->value)
-  {
-    vars.saturation = adjustment->value;
-    plist[plist_current].v.saturation = adjustment->value;
-
-    sprintf(s, "%5.3f", vars.saturation);
-
-    gtk_signal_handler_block_by_data(GTK_OBJECT(saturation_entry), NULL);
-    gtk_entry_set_text(GTK_ENTRY(saturation_entry), s);
-    gtk_signal_handler_unblock_by_data(GTK_OBJECT(saturation_entry), NULL);
-  }
-}
-
-
-/*
- * 'saturation_callback()' - Update the saturation scale using the text entry.
- */
-
-static void
-saturation_callback(GtkWidget *widget)	/* I - Entry widget */
-{
-  gint		new_value;		/* New scaling value */
-
-
-  new_value = atoi(gtk_entry_get_text(GTK_ENTRY(widget)));
-
-  if (vars.saturation != new_value)
-  {
-    if ((new_value >= GTK_ADJUSTMENT(saturation_adjustment)->lower) &&
-	(new_value < GTK_ADJUSTMENT(saturation_adjustment)->upper))
-    {
-      GTK_ADJUSTMENT(saturation_adjustment)->value = new_value;
-
-      gtk_signal_emit_by_name(saturation_adjustment, "value_changed");
-    }
-  }
-}
-
-/*
- * 'density_update()' - Update the density field using the scale.
- */
-
-static void
-density_update(GtkAdjustment *adjustment)	/* I - New value */
-{
-  char	s[255];					/* Text buffer */
-
-
-  if (vars.density != adjustment->value)
-  {
-    vars.density = adjustment->value;
-    plist[plist_current].v.density = adjustment->value;
-
-    sprintf(s, "%4.3f", vars.density);
-
-    gtk_signal_handler_block_by_data(GTK_OBJECT(density_entry), NULL);
-    gtk_entry_set_text(GTK_ENTRY(density_entry), s);
-    gtk_signal_handler_unblock_by_data(GTK_OBJECT(density_entry), NULL);
-  }
-}
-
-
-/*
- * 'density_callback()' - Update the density scale using the text entry.
- */
-
-static void
-density_callback(GtkWidget *widget)	/* I - Entry widget */
-{
-  gint		new_value;		/* New scaling value */
-
-
-  new_value = atoi(gtk_entry_get_text(GTK_ENTRY(widget)));
-
-  if (vars.density != new_value)
-  {
-    if ((new_value >= GTK_ADJUSTMENT(density_adjustment)->lower) &&
-	(new_value < GTK_ADJUSTMENT(density_adjustment)->upper))
-    {
-      GTK_ADJUSTMENT(density_adjustment)->value = new_value;
-
-      gtk_signal_emit_by_name(density_adjustment, "value_changed");
-    }
-  }
 }
 
 
@@ -2906,6 +2239,17 @@ file_cancel_callback(void)
 
   gtk_widget_destroy(print_dialog);
 }
+
+/****************************************************************************
+ *
+ * gtk__show_adjust_button_callback() - 
+ *
+ ****************************************************************************/
+static void gtk_show_adjust_button_callback(GtkWidget * w)
+{
+    gtk_widget_show(gtk_color_adjust_dialog);
+}
+
 
 static void
 preview_update(void)
