@@ -1,3 +1,52 @@
+2000-06-17	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.16) (+71 -0)
+		run-weavetest (1.14) (+1 -1)
+		print_gimp.h (1.18) (+2 -2)
+		configure.in (1.18) (+1 -1)
+		RELNOTES (1.12) (+35 -1)
+		README (1.17) (+1 -1)
+	
+	3.1.6 release prep
+	
+2000-06-17	<rlk@sourceforge.net>
+
+	Files:	Ghost/com-stp.ppd (1.1) ( )
+		Ghost/gs-stp.pdq (1.5) (+421 -291)
+	
+	PPD file, from Grant Taylor's CUPS-O-MATIC program
+	
+2000-06-17	<rlk@sourceforge.net>
+
+	Files:	Ghost/README (1.18) (+4 -2)
+	
+	Note the existence of the CUPS .ppd file.
+	
+2000-06-17	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.39) (+11 -10)
+	
+	Do not distribute the 199-axis matrices, since we're not currently
+	using them.
+	
+2000-06-17	<rlk@sourceforge.net>
+
+	Files:	escputil.c (1.1) ( )
+	
+	ESCP/2 print head clean, nozzle check, alignment utility.
+	
+2000-06-17	<rlk@sourceforge.net>
+
+	Files:	README.escp2 (1.4) (+9 -4)
+	
+	Better explanation of alignment check/set commands.
+	
+2000-06-17	<rlk@sourceforge.net>
+
+	Files:	Ghost/gdevstp.c (1.16) (+22 -2)
+	
+	Handle -r1440x720 correctly.
+	
 2000-06-17	<iay@sourceforge.net>
 
 	Files:	README.escp2 (1.3) (+92 -8)
