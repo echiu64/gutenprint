@@ -1794,14 +1794,14 @@ stp_initialize_weave(int jets,	/* Width of print head */
    * for monochrome (bw) printing, the offsets are 0.
    */
   if(ncolors > 1)
-    for(i=0; i<8; i++)
+    for(i=0; i<NCHANNELS; i++)
       sw->head_offset[i] = head_offset[i];
   else
-    for(i=0; i<8; i++)
+    for(i=0; i<NCHANNELS; i++)
       sw->head_offset[i] = 0;
 
   maxHeadOffset = 0;
-  for(i=0; i<8; i++)
+  for(i=0; i<NCHANNELS; i++)
     if(sw->head_offset[i] > maxHeadOffset)
       maxHeadOffset = sw->head_offset[i];
 

@@ -475,11 +475,11 @@ static int get_lr_shift(int mode)
 
 
 static const int xxdefault_head_offset[] =
-{40, 92, 184, 0, 0, 0, 0, 0};  /* k, c, m, y */ /* for 600 DPI & 2400x1200 */
+{40, 92, 184, 0, 0, 0, 0};  /* k, c, m, y */ /* for 600 DPI & 2400x1200 */
 static const int last_default_head_offset[] =
-{70, 184, 368, 0, 0, 0, 0, 0};  /* k, c, m, y */  /* for 1200 DPI */
+{70, 184, 368, 0, 0, 0, 0};  /* k, c, m, y */  /* for 1200 DPI */
 static const int default_head_offset[] =
-{70, 184, 368, 0, 184, 368, 0, 0};  /* k, c, m, y, C, M, Y */  /* for 1200 DPI */
+{70, 184, 368, 0, 184, 368, 0};  /* k, c, m, y, C, M, Y */  /* for 1200 DPI */
 
 
 static const lexmark_cap_t lexmark_model_capabilities[] =
