@@ -2,10 +2,10 @@
   <!-- A multilingual <comments> block can appear here, too;
        it should be treated as documentation for the user. -->
   <arg_longname>
-   <en>StpGamma</en>
+   <en>stpGamma</en>
   </arg_longname>
   <arg_shortname>
-   <en>StpGamma</en><!-- backends only know <en> shortnames! -->
+   <en>stpGamma</en><!-- backends only know <en> shortnames! -->
   </arg_shortname>
   <arg_execution>
    <arg_order>100</arg_order>

@@ -2,10 +2,10 @@
   <!-- A multilingual <comments> block can appear here, too;
        it should be treated as documentation for the user. -->
   <arg_longname>
-   <en>StpSaturation</en>
+   <en>stpSaturation</en>
   </arg_longname>
   <arg_shortname>
-   <en>StpSaturation</en><!-- backends only know <en> shortnames! -->
+   <en>stpSaturation</en><!-- backends only know <en> shortnames! -->
   </arg_shortname>
   <arg_execution>
    <arg_order>100</arg_order>
