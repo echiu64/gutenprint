@@ -36,6 +36,8 @@ NONGIMP_DISTDIRS = debian
 SUBDIRS = include intl lib man src samples $(NONGIMP_SUBDIRS) po doc
 DISTDIRS = scripts $(NONGIMP_DISTDIRS)
 
+EXTRA_DIST = configure.in.in autogen.sh
+
 if MAINTAINER_MODE
 MAINT_MODE = true
 endif
