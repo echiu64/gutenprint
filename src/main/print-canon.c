@@ -936,7 +936,7 @@ static const canon_cap_t canon_model_capabilities[] =
 
   { /* Canon BJC 6500 *//* heads: BC-30/BC-31 BC-32/BC-31 */
     6500, 3,
-    11*72, 17*72,
+    842, 17*72,
     180, 1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
@@ -955,7 +955,7 @@ static const canon_cap_t canon_model_capabilities[] =
 
   { /* Canon BJC 8200 *//* heads: BC-50 */
     8200, 3,
-    11*72, 17*72,
+    842, 17*72,
     150, 1200,1200, 4,
     11, 9, 10, 18,
     CANON_INK_CMYK, /*  | CANON_INK_CcMmYK */
@@ -982,7 +982,7 @@ static const canon_cap_t canon_model_capabilities[] =
 
   { /* Canon BJC 210 *//* heads: BC-02 BC-05 BC-06 */
     210, 1,
-    11*72, 17*72,
+    618, 936,      /* 8.58" x 13 " */
     90, 720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMY,
@@ -1000,7 +1000,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 240 *//* heads: BC-02 BC-05 BC-06 */
     240, 1,
-    11*72, 17*72,
+    618, 936,      /* 8.58" x 13 " */
     90, 720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMY,
@@ -1018,7 +1018,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 250 *//* heads: BC-02 BC-05 BC-06 */
     250, 1,
-    11*72, 17*72,
+    618, 936,      /* 8.58" x 13 " */
     90, 720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMY,
@@ -1036,7 +1036,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 1000 *//* heads: BC-02 BC-05 BC-06 */
     1000, 1,
-    11*72, 17*72,
+    842, 17*72,
     90, 720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMY,
@@ -1054,7 +1054,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 2000 *//* heads: BC-20 BC-21 BC-22 BC-29 */
     2000, 1,
-    11*72, 17*72,
+    842, 17*72,
     180, 720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK,
@@ -1072,7 +1072,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 3000 *//* heads: BC-30 BC-33 BC-34 */
     3000, 3,
-    11*72, 17*72,
+    842, 17*72,
     180, 1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
@@ -1090,7 +1090,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 6100 *//* heads: BC-30/BC-31 BC-32/BC-31 */
     6100, 3,
-    11*72, 17*72,
+    842, 17*72,
     180, 1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
@@ -1108,7 +1108,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 7000 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
     7000, 3,
-    11*72, 17*72,
+    842, 17*72,
     150, 1200, 600, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYyK,
@@ -1126,7 +1126,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 7100 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
     7100, 3,
-    11*72, 17*72,
+    842, 17*72,
     150, 1200, 600, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYyK,
