@@ -240,7 +240,7 @@ static const escp2_densities_t sc660_densities =
 { 4.0, 2.0,  1.0,  0.646, 0.323, 0.162, 0.081, 0.041 };
 
 static const escp2_densities_t sc680_densities =
-{ 2.4, 1.2,  0.60, 0.792, 0.792, 0.792, 0.396, 0.198 };
+{ 3.0, 1.5,  0.75, 0.75, 0.75, 0.75, 0.375, 0.188 };
 
 static const escp2_densities_t sc980_densities =
 { 2.6, 1.3,  0.65, 0.511, 0.49,  0.637, 0.455, 0.228 };

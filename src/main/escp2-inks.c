@@ -57,7 +57,7 @@ static const escp2_dropsize_t escp2_x80_2880_6pl_dropsizes =
 static const escp2_dropsize_t escp2_680_low_dropsizes =
   { "680_low", 3, { 0.375, 0.75, 1.0 } };
 static const escp2_dropsize_t escp2_680_6pl_dropsizes =
-  { "680_6pl", 3, { 0.50, 0.66, 1.0 } };
+  { "680_6pl", 3, { 0.375, 0.50, 1.0 } };
 
 /* All other 4 picolitre printers */
 static const escp2_dropsize_t escp2_4pl_dropsizes =
