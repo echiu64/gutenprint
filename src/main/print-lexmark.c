@@ -92,7 +92,7 @@ typedef struct { /* resolution specific parameters */
 
 typedef struct {
   Lex_model model;    /* printer model */
-  int max_width;      /* maximum printable paper size */
+  int max_width;      /* maximum printable paper size in 1/72 inch */
   int max_length;
   unsigned int supp_res; /* list of allowed resolution right bit represents index 0 */
   int max_xdpi;
@@ -109,6 +109,10 @@ typedef struct {
   /*** printer internal parameters ***/
   int offset_left_border;    /* Offset to the left paper border (== border_left=0) */
   int offset_top_border;     /* Offset to the top paper border (== border_top=0) */
+  int h_offset_black_color;    /* Offset beetween first black and first color jet vertically */
+  int v_offset_balck_color;    /* Offset beetween first black and first color jet horizontally */
+  int direction_offset_black;      /* Offset when printing in the other direction for black */
+  int direction_offset_color;      /* Offset when printing in the other direction for color */
   double x_multiplicator; /* multiplicator we have to use to get unit used by the printer */
   double y_multiplicator; /* multiplicator we have to use to get unit used by the printer */
 } lexmark_cap_t;
@@ -316,7 +320,38 @@ static double hue_adjustment[49] =
   6.0				/* C */
 };
 
-static int lr_shift[10] = { 9, 18, 2*18 }; /* vertical distance between ever 2nd  inkjet (related to resolution) */
+
+static int lr_shift_color[10] = { 9, 18, 2*18 }; /* vertical distance between ever 2nd  inkjet (related to resolution) */
+static int lr_shift_black[10] = { 9, 18, 2*18 }; /* vertical distance between ever 2nd  inkjet (related to resolution) */
+
+/* returns the offset of the first jet when printing in the other direction */
+static int get_lr_shift(int mode) {
+
+  int *ptr_lr_shift;
+
+      /* K could only be present if black is printed only. */
+  if((mode & COLOR_MODE_K) == (mode & COLOR_MODE_MASK)) {
+    ptr_lr_shift = lr_shift_black;
+  } else {
+    ptr_lr_shift = lr_shift_color;
+  }
+
+      switch(mode & PRINT_MODE_MASK) 	{
+	case PRINT_MODE_300:
+	  return ptr_lr_shift[0];
+	  break;
+	case PRINT_MODE_600:
+	  return ptr_lr_shift[1];
+	  break;
+	case PRINT_MODE_1200:
+	  return ptr_lr_shift[2];
+	  break;
+	case PRINT_MODE_2400:
+	  return ptr_lr_shift[2];
+	  break;
+      }
+      return 0;
+}
 
 
 
@@ -392,15 +427,19 @@ static lexmark_cap_t lexmark_model_capabilities[] =
     618, 936,      /* max paper size *//* 8.58" x 13 " */
     0xffff,        /* supp_res */
     2400, 1200, 2, /* max resolution */
-    11, 9, 10, 10, /* border */
+    0, 0, 0, 10, /* border l,r,t,b*/
     LEXMARK_INK_CMY | LEXMARK_INK_CMYK | LEXMARK_INK_CcMmYK,
     LEXMARK_SLOT_ASF1 | LEXMARK_SLOT_MAN1,
     LEXMARK_CAP_DMT,
     /* resolution specific */
     {{true}, {true}, {true}, {true}},
     /*** printer internal parameters ***/
-    0,         /* real left paper border */
-    300,       /* real top paper border */
+    20,         /* real left paper border */
+    123,       /* real top paper border */
+    124,       /* black/color offset h */
+    0,         /* black/color offset vertically */
+    30,        /* direction offset black */
+    10,         /* direction offset color */
     1,
     1200/72    /* use a vertical resolution of 1200 dpi */
   },
@@ -418,6 +457,10 @@ static lexmark_cap_t lexmark_model_capabilities[] =
     /*** printer internal parameters ***/
     0,         /* real left paper border */
     300,       /* real top paper border */
+    20,       /* black/color offset */
+    0,         /* black/color offset vertically */
+    40,        /* direction offset black */
+    12,         /* direction offset color */
     1,
     1200/72    /*  use a vertical resolution of 1200 dpi */
   },
@@ -435,6 +478,10 @@ static lexmark_cap_t lexmark_model_capabilities[] =
     /*** printer internal parameters ***/
     0,         /* real left paper border */
     300,       /* real top paper border */
+    20,       /* black/color offset */
+    0,         /* black/color offset vertically */
+    25,        /* direction offset black */
+    6,         /* direction offset color */
     1,
     1200/72    /*  */
   },
@@ -513,6 +560,8 @@ lexmark_source_type(const char *name, lexmark_cap_t caps)
 static int
 lexmark_printhead_type(const char *name, lexmark_cap_t caps)
 {
+
+
   if (!strcmp(name,_("Black")))       return 0;
   if (!strcmp(name,_("Color")))       return 1;
   if (!strcmp(name,_("Black/Color"))) return 2;
@@ -574,11 +623,12 @@ static int lexmark_get_black_nozzles(const stp_printer_t *printer)
   return 208;
 }
 
+/*
 static int lexmark_get_nozzle_resolution(const stp_printer_t *printer) 
 {
   return 1200;
 }
-
+*/
 
 static char *
 c_strdup(const char *s)
@@ -1166,6 +1216,8 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
   int  physical_xdpi = 0;
   int  physical_ydpi = 0;
 
+
+
   memcpy(&nv, v, sizeof(stp_vars_t));
 
   /*
@@ -1204,8 +1256,11 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
   if (output_type == OUTPUT_GRAY) {
     printMode |= COLOR_MODE_K;
     pass_length=208;
+    elinescount =  caps.h_offset_black_color; /* add offset to the first black jet from color jet */
     lxm_nozzles_used = lexmark_get_black_nozzles(printer);
   } else {
+    elinescount = 0; /* we have color where first jet is on position 0 */
+
     lxm_nozzles_used = lexmark_get_color_nozzles(printer);
 
     /* color mode */
@@ -1358,7 +1413,8 @@ lexmark_describe_resolution(printer,
 #endif
 
 
-  left = (300 * left / 72) + 60;
+  left = ((300 * left) / 72) + caps.offset_left_border;
+
   
   delay_max = (92*d_interlace);
   delay_k=(delay_max-((23+19)*d_interlace)); ;/*22; */
@@ -1540,7 +1596,8 @@ lexmark_describe_resolution(printer,
    * Output the page...
   */
 
-  elinescount = (top*caps.y_multiplicator)+caps.offset_top_border;
+
+  elinescount += (top*caps.y_multiplicator)+caps.offset_top_border;
   paper_shift(v, elinescount, caps);
   elinescount=0;
 
@@ -1982,17 +2039,32 @@ lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int di
   case m_z52:
     memcpy(prnBuf, outbufHeader_z52, LXM_Z52_HEADERSIZE);
 
+    left_margin_multipl = 8; /* we need to multiply ! */
+    offset *= left_margin_multipl;
+
     /* K could only be present if black is printed only. */
     if ((mode & COLOR_MODE_K) || (mode & (COLOR_MODE_K | COLOR_MODE_LC | COLOR_MODE_LM))) {
 #ifdef DEBUG
       fprintf(stderr,"set  photo/black catridge \n"); 
 #endif
       prnBuf[LX_Z52_COLOR_MODE_POS] = LX_Z52_BLACK_PRINT;
+
+      if (direction) {
+      } else {
+	offset += caps.direction_offset_color;
+      }
     } else {
 #ifdef DEBUG
       fprintf(stderr,"set color catridge \n"); 
 #endif
       prnBuf[LX_Z52_COLOR_MODE_POS] = LX_Z52_COLOR_PRINT;
+      
+      if (direction) {
+	offset += caps.v_offset_balck_color;
+      } else {
+	offset += caps.v_offset_balck_color;
+	offset += caps.direction_offset_color;
+      }
     }
     
     switch (mode & PRINT_MODE_MASK) {
@@ -2011,10 +2083,6 @@ lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int di
     }
     
 
-    left_margin_multipl = 8; /* we need to multiply ! */
-
-
-    offset *= left_margin_multipl;
     if (direction) {
       prnBuf[LX_Z52_PRINT_DIRECTION_POS] = 1;
     } else {
@@ -2192,14 +2260,14 @@ lexmark_write(const stp_vars_t *v,		/* I - Print file or command */
 
   if (direction) {
     /* left to right */
-    xStart = -lr_shift[xresolution];
+    xStart = -get_lr_shift(mode);
     xEnd = width-1;
     xIter = 1;
     rwidth = xEnd - xStart;
   } else {
     /* right to left ! */
     xStart = width-1;
-    xEnd = -lr_shift[xresolution];
+    xEnd = -get_lr_shift(mode);
     rwidth = xStart - xEnd;
     xIter = -1;
   }
@@ -2249,7 +2317,7 @@ lexmark_write(const stp_vars_t *v,		/* I - Print file or command */
     valid_bytes = 0;  /* for every valid word (16 bits) a corresponding bit will be set to 1. */
 
     anyDots =0;
-    x1 = x+lr_shift[xresolution];
+    x1 = x+get_lr_shift(mode);
 
     for (colIndex=0; colIndex < 3; colIndex++) {
       for (dy=head_colors[colIndex].head_nozzle_start,y=head_colors[colIndex].v_start*yCount; 
@@ -2418,7 +2486,9 @@ lexmark_getNextMode(int *mode, int *direction, int pass_length, int *lineStep, i
   case PRINT_MODE_300:
     if (*pass_shift ==0) {
       if (*mode & NOZZLE_MASK) {
-	/* we are through. Stop now */
+	/*** we are through. Stop now ***/
+	/* make the last paper shift */
+	*lineStep += full_pass_step;
 	/* that's it, reset and the exit */
 	*mode = (*mode & (~NOZZLE_MASK));
 	/*	*mode = (*mode & (~COLOR_MODE_MASK));*/
@@ -2426,7 +2496,6 @@ lexmark_getNextMode(int *mode, int *direction, int pass_length, int *lineStep, i
       }
       /* this is the start */
       *mode = (*mode & (~NOZZLE_MASK)) | (EVEN_NOZZLES_V | ODD_NOZZLES_V | EVEN_NOZZLES_H | ODD_NOZZLES_H);
-      *lineStep += full_pass_step;
       *pass_shift = pass_length / 2;
       *interlace = 1;
       return true;
@@ -2440,10 +2509,12 @@ lexmark_getNextMode(int *mode, int *direction, int pass_length, int *lineStep, i
     }
     break;
   case PRINT_MODE_600:
-    if (*mode & NOZZLE_MASK)
+    if (*mode & NOZZLE_MASK) {
+      /*** that's it !! */
+      *lineStep += full_pass_step;
       return false;
+    }
     *mode = (*mode & (~NOZZLE_MASK)) | (EVEN_NOZZLES_V | ODD_NOZZLES_V | EVEN_NOZZLES_H | ODD_NOZZLES_H);
-    *lineStep += full_pass_step;
     *pass_shift = 0;
     *interlace = 2;
     return true;
@@ -2489,14 +2560,15 @@ lexmark_getNextMode(int *mode, int *direction, int pass_length, int *lineStep, i
     *interlace = 4;
     if (0 == *pass_shift) { /* odd lines */
       if (*mode & NOZZLE_MASK) {
-	/* we are through. Stop now */
+	/*** we are through. Stop now ***/
+	/* make last line step */
+	*lineStep += overprint_step2;
 	/* that's it, reset and the exit */
 	*mode = (*mode & (~NOZZLE_MASK));
 	/*	*mode = (*mode & (~COLOR_MODE_MASK));*/
 	return false;
       }
       /* this is the start */
-      *lineStep += overprint_step2;
       *pass_shift = full_pass_step - overprint_step2;
       *mode = (*mode & (~NOZZLE_MASK)) | (ODD_NOZZLES_V | ODD_NOZZLES_H);
       return true;
