@@ -443,6 +443,21 @@ static const escp2_variable_ink_t standard_multishot_ink =
 };
 
 
+static const stp_simple_dither_range_t standard_680_multishot_dither_ranges[] =
+{
+  { 0.375, 0x1, 0, 3 },
+  { 0.75,  0x2, 0, 6 },
+  { 1.0,   0x3, 0, 8 }
+};
+
+static const escp2_variable_ink_t standard_680_multishot_ink =
+{
+  standard_680_multishot_dither_ranges,
+  sizeof(standard_680_multishot_dither_ranges) / sizeof(stp_simple_dither_range_t),
+  1.0
+};
+
+
 static const escp2_variable_inkset_t standard_inks =
 {
   NULL,
@@ -625,6 +640,14 @@ static const escp2_variable_inkset_t escp2_multishot_standard_inks =
   &standard_multishot_ink,
   &standard_multishot_ink,
   &standard_multishot_ink
+};
+
+static const escp2_variable_inkset_t escp2_680_multishot_standard_inks =
+{
+  &standard_680_multishot_ink,
+  &standard_680_multishot_ink,
+  &standard_680_multishot_ink,
+  &standard_680_multishot_ink
 };
 
 static const escp2_variable_inkset_t escp2_multishot_photo_inks =
@@ -1014,10 +1037,10 @@ static const escp2_variable_inklist_t variable_680_4pl_4color_inks =
   },
   {
     {
-      &escp2_multishot_standard_inks,
-      &escp2_multishot_standard_inks,
-      &escp2_multishot_standard_inks,
-      &escp2_multishot_standard_inks,
+      &escp2_680_multishot_standard_inks,
+      &escp2_680_multishot_standard_inks,
+      &escp2_680_multishot_standard_inks,
+      &escp2_680_multishot_standard_inks,
       &escp2_680_6pl_standard_inks,
       &escp2_4pl_standard_inks,
       &escp2_4pl_2880_standard_inks,
