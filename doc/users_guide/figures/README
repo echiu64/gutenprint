@@ -12,15 +12,13 @@ Here's how I created the screen dumps shown in the documentation
 
 4) Select File...SaveAs, PNG, and the file name
 
-5) Select File...SaveAs, Postscript, and select
-   encapsulated postscript.
-
-The postscript file is needed for generating the final .ps file.
-The PNG file is needed for the HTML output.
+The encapsulated postscript files are needed for generating the 
+final .ps file.  These are created from the PNG files using the
+convert utility.  The PNG file is needed for the HTML output.
 
 The image scaling is done in the DocBook source code contained in
-gimp-print-users-guide-<rev>.sgml
+users-guide.sgml
 
-AMS 30-sept-2001
+AMS 3-oct-2001
 
 

@@ -1,10 +1,16 @@
 
 The files contained in this directory are all of the source files necessary 
-to build "The User's Guide to the Gimp-Print Top Quality Printer Drivers".  
-I have created postscript, PDF, and HTML files for your use.
+to build "The User's Guide to the Gimp-Print Top Quality Printer Drivers".
 
-	gimp-print-<rev>.ps
-	gimp-print-<rev>.pdf
+Type:  make pdf   - to build the PDF documentation file
+       make ps    - to build the Postscript documentation file
+       make html  - to build the HTML documentation files
+
+
+This is what will be generated:
+
+	users_guide.ps
+	users_guide.pdf
 	html/book1.html
 
 The documentation contains many color screenshots.  My goal was to have the 
@@ -18,20 +24,12 @@ All of the figures are contained in the "figures" subdirectory.  Read the
 figures/README file if you are interested in how I created the 
 screenshots used throughout the documentation.
 
-All of the HTML files are contained in the "html" subdirectory, which is a
-symlink to the gimp-print-<rev> directory.  This was created automatically.
-
-There is no autoconfigure script to insure that the user can properly build
-the documentation.  I have documented the revisions of software which
-were used in the header of the Makefile.  Although it should not be 
-necessary to build the documentation, it should still be cleaner than
-it is for those users wishing to build the documentation, for whatever
-reason.
+All of the HTML files are contained in the "html" subdirectory.
 
 Your constructive feedback is most welcome.
 
 Andy Stewart
-30-sept-2001
+3-oct-2001
 
 
 

@@ -26,9 +26,7 @@ MAINT_CHARSET = latin1
 
 ## Variables
 
-RELEASE_DIR = users_guide
-VERSION = 4.1.99-b3
-MANUAL = gimp-print-users-guide-$(VERSION)
+MANUAL = users_guide
 HTML_DIR = $(MANUAL)
 
 OUTPUTS = \
@@ -46,10 +44,6 @@ EPS_IMAGES = $(addsuffix .eps,$(basename $(PNG_IMAGES)))
 PDF_IMAGES = $(addsuffix .pdf,$(basename $(PNG_IMAGES)))
 
 ## Rules
-
-old-all:  $(MANUAL).sgml $(OUTPUTS)
-
-release: $(RELEASE_DIR).tar.gz
 
 dist-hook:
 	for dir in $(DISTDIRS) ; do \
@@ -85,6 +79,8 @@ $(MANUAL).pdf: $(MANUAL).ps
 
 ps: $(MANUAL).ps
 
+ps.gz: $(MANUAL).ps.gz
+
 $(MANUAL).ps:  $(MANUAL).sgml $(EPS_IMAGES)
 	export SGML_CATALOG_FILES=$(CATALOG_FILES); \
 	$(DB2PS) $(MANUAL).sgml
@@ -100,18 +96,15 @@ $(MANUAL).ps.gz: $(MANUAL).ps
 	$(GZIP) -9 $(MANUAL).ps
 
 html: html-stamp
-html-stamp: $(MANUAL).sgml
-	if test x$(DB2HTML) = x ; then \
-	  echo "html-stamp: db2html not found: not regenerating HTML manual" ; \
-	else \
-	  export SGML_CATALOG_FILES=$(CATALOG_FILES) ; \
-	  $(DB2HTML) $(MANUAL).sgml ; \
-	  if [ ! -L $(MANUAL)/figures ] ; then \
-	    cd $(HTML_DIR) ; \
-	    $(LN_S) ../figures figures ; \
-	  fi ; \
-	  $(LN_S) $(MANUAL) html ; \
+html-stamp: $(MANUAL).sgml $(PNG_IMAGES)
+	export SGML_CATALOG_FILES=$(CATALOG_FILES) ; \
+	$(DB2HTML) $(MANUAL).sgml ; \
+	if [ ! -L $(MANUAL)/figures ] ; then \
+	  cd $(HTML_DIR) ; \
+	  $(LN_S) ../figures figures ; \
 	fi ; \
+	cd ..; \
+	$(LN_S) $(MANUAL) html ; \
 	touch html-stamp
 
 tmp-all-local: html
@@ -126,13 +119,6 @@ tmp-all-local: html
 	    echo "all-local: $(srcdir)/$(HTML_DIR) not found" ; \
 	fi
 
-
-$(RELEASE_DIR).tar.gz: $(OUTPUTS)
-	rm -fr $(RELEASE_DIR)
-	mkdir $(RELEASE_DIR)
-	cp -r $(DIST_FILES) $(RELEASE_DIR)
-	tar cvf - $(RELEASE_DIR) | $(GZIP) -9 > $(RELEASE_DIR).tgz
-		
 clean-local:
 	rm -f $(OUTPUTS)
 	rm -f *.tex *.log *.aux *.dvi *.tgz
@@ -140,8 +126,8 @@ clean-local:
 	rm -fr $(MANUAL).junk
 	rm -f $(MANUAL).out
 	rm -fr db2html.*
-	rm -fr $(RELEASE_DIR)
 	rm -rf figures/*.eps figures/*.pdf
+	rm -fr Makefile Makefile.in
 
 #
 # This is my (so far failed) attempt to create an index for this documentation.
@@ -172,7 +158,6 @@ help:
 	@echo "    all     - creates PS, PDF, and HTML documentation files"
 	@echo "    clean   - deletes machine generated files"
 	@echo "    help    - prints this help text"
-	@echo "    release - creates a release directory and tar/gzips it"
 	@echo "  "
 
 
