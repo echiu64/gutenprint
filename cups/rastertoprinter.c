@@ -244,6 +244,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     v.contrast    = 1.0;
     v.cyan        = 1.0;
     v.magenta     = 1.0;
+    v.yellow      = 1.0;
     v.saturation  = 1.0;
     v.density     = 1.0;
     v.scaling     = 0; /* No scaling */
