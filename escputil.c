@@ -28,14 +28,6 @@
 #include <errno.h>
 #include <fcntl.h>
 
-
-char *printer = NULL;
-char *raw_device = NULL;
-char printer_cmd[1025];
-int bufpos = 0;
-int isUSB = 0;
-int isNew = 0;
-
 char *banner = "\
 Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)\n\
 \n\
@@ -66,14 +58,14 @@ struct option optlist[] =
   { "align-head",	0,	NULL,	(int) 'a' },
   { "usb",		0,	NULL,	(int) 'u' },
   { "help",		0,	NULL,	(int) 'h' },
-  { "new-series",	0,	NULL,	(int) 'l' },
-  { "old-series",	0,	NULL,	(int) 'o' },
   { "identify",		0,	NULL,	(int) 'd' },
+  { "model",		1,	NULL,	(int) 'm' },
   { NULL,		0,	NULL,	0 	  }
 };
 
 char *help_msg = "\
-Usage: escputil [-P printer | -r device] [-u] [-c | -n | -a | -i] [-q]\n\
+Usage: escputil [-P printer | -r device] [-m model] [-u]\n\
+                [-c | -n | -a | -i] [-q]\n\
     -P|--printer-name  Specify the name of the printer to operate on.\n\
                        Default is the default system printer.\n\
     -r|--raw-device    Specify the name of the device to write to directly\n\
@@ -88,12 +80,11 @@ Usage: escputil [-P printer | -r device] [-u] [-c | -n | -a | -i] [-q]\n\
                        damage to the printer.\n\
     -i|--ink-level     Obtain the ink level from the printer.  This requires\n\
                        read/write access to the raw printer device.\n\
-    -l|--new-series    For newer ESCP/2 printers (Epson Stylus Color 440\n\
-                       and newer; Epson Stylus Photo 750 and newer).\n\
-    -o|--old-series    For older ESCP/2 printers.\n\
     -u|--usb           The printer is connected via USB.\n\
     -h|--help          Print this help message.\n\
-    -q|--quiet         Suppress the banner.\n";
+    -q|--quiet         Suppress the banner.\n\
+    -m|--model         Specify a printer model for alignment.\n\
+                       This is currently required for head alignment.\n";
 #else
 char *help_msg = "\
 Usage: escputil [-P printer | -r device] [-u] [-c | -n | -a | -i] [-q]\n\
@@ -111,13 +102,57 @@ Usage: escputil [-P printer | -r device] [-u] [-c | -n | -a | -i] [-q]\n\
           damage to the printer.\n\
     -i Obtain the ink level from the printer.  This requires\n\
           read/write access to the raw printer device.\n\
-    -l For newer ESCP/2 printers (Epson Stylus Color 440\n\
-          and newer; Epson Stylus Photo 750 and newer).\n\
-    -o For older ESCP/2 printers.\n\
     -u The printer is connected via USB.\n\
     -h Print this help message.\n\
-    -q Suppress the banner.\n";
+    -q Suppress the banner.\n\
+    -m Specify the precise printer model for head alignment.\n"
 #endif
+
+typedef struct
+{
+  char *short_name;
+  char *long_name;
+  int passes;
+  int choices;
+} printer_t;
+
+printer_t printer_list[] =
+{
+  { "color",	"Stylus Color",		1,	7 },
+  { "pro",	"Stylus Color Pro",	1,	7 },
+  { "pro-xl",	"Stylus Color Pro XL",	1,	7 },
+  { "400",	"Stylus Color 400",	1,	7 },
+  { "440",	"Stylus Color 440",	1,	15 },
+  { "460",	"Stylus Color 460",	1,	15 },
+  { "480",	"Stylus Color 480",	1,	15 },
+  { "500",	"Stylus Color 500",	1,	7 },
+  { "600",	"Stylus Color 600",	1,	7 },
+  { "640",	"Stylus Color 640",	1,	15 },
+  { "660",	"Stylus Color 660",	1,	15 },
+  { "670",	"Stylus Color 670",	3,	15 },
+  { "740",	"Stylus Color 740",	3,	15 },
+  { "760",	"Stylus Color 760",	3,	15 },
+  { "800",	"Stylus Color 800",	1,	7 },
+  { "850",	"Stylus Color 850",	1,	7 },
+  { "860",	"Stylus Color 860",	3,	15 },
+  { "880",	"Stylus Color 880",	3,	15 },
+  { "900",	"Stylus Color 900",	3,	15 },
+  { "980",	"Stylus Color 980",	3,	15 },
+  { "1160",	"Stylus Color 1160",	3,	15 },
+  { "1500",	"Stylus Color 1500",	1,	7 },
+  { "1520",	"Stylus Color 1520",	1,	7 },
+  { "3000",	"Stylus Color 3000",	1,	7 },
+  { "photo",	"Stylus Photo",		1,	7 },
+  { "700",	"Stylus Photo 700",	1,	7 },
+  { "ex",	"Stylus Photo EX",	1,	7 },
+  { "720",	"Stylus Photo 720",	3,	15 },
+  { "750",	"Stylus Photo 750",	3,	15 },
+  { "870",	"Stylus Photo 870",	3,	15 },
+  { "1200",	"Stylus Photo 1200",	3,	15 },
+  { "1270",	"Stylus Photo 1270",	3,	15 },
+  { "2000",	"Stylus Photo 2000P",	2,	15 },
+  { NULL,	NULL,			0,	0 }
+};
 
 void initialize_print_cmd(void);
 void do_head_clean(void);
@@ -126,10 +161,24 @@ void do_align(void);
 void do_ink_level(void);
 void do_identify(void);
 
+char *printer = NULL;
+char *raw_device = NULL;
+char *printer_model = NULL;
+char printer_cmd[1025];
+int bufpos = 0;
+int isUSB = 0;
+
 void
 do_help(int code)
 {
+  printer_t *printer = &printer_list[0];
   printf("%s", help_msg);
+  printf("Available models are:\n");
+  while (printer->short_name)
+    {
+      printf("%10s      %s\n", printer->short_name, printer->long_name);
+      printer++;
+    }
   exit(code);
 }
 
@@ -143,20 +192,14 @@ main(int argc, char **argv)
     {
 #ifdef __GNU_LIBRARY__
       int option_index = 0;
-      c = getopt_long(argc, argv, "P:r:icnaduolq", optlist, &option_index);
+      c = getopt_long(argc, argv, "P:r:icnaduqm:", optlist, &option_index);
 #else
-      c = getopt(argc, argv, "P:r:icnaduolq");
+      c = getopt(argc, argv, "P:r:icnaduqm:");
 #endif
       if (c == -1)
 	break;
       switch (c)
 	{
-	case 'l':
-	  isNew = 1;
-	  break;
-	case 'o':
-	  isNew = 0;
-	  break;
 	case 'q':
 	  quiet = 1;
 	  break;
@@ -187,6 +230,14 @@ main(int argc, char **argv)
 	  raw_device = malloc(strlen(optarg) + 1);
 	  strcpy(raw_device, optarg);
 	  break;
+	case 'm':
+	  if (printer_model)
+	    {
+	      printf("You may only specify one printer model.\n");
+	      do_help(1);
+	    }
+	  printer_model = malloc(strlen(optarg) + 1);
+	  strcpy(printer_model, optarg);
 	case 'u':
 	  isUSB = 1;
 	  break;
@@ -501,9 +552,9 @@ and possibly damage your printer.  This utility has not been reviewed by\n\
 Seiko Epson for correctness, and is offered with no warranty at all.  The\n\
 entire risk of using this utility lies with you.\n\
 \n\
-This utility prints three test patterns.  Each pattern looks very similar.\n\
+This utility prints multiple test patterns.  Each pattern looks very similar.\n\
 The patterns consist of a series of pairs of vertical lines that overlap.\n\
-Below each pair of lines is a number between 1 and 15.\n\
+Below each pair of lines is a number between %d and %d.\n\
 \n\
 When you inspect the pairs of lines, you should find the pair of lines that\n\
 is best in alignment, that is, that best forms a single vertical align.\n\
@@ -512,18 +563,18 @@ or magnifying glass is recommended for the most critical inspection.\n\
 After picking the number matching the best pair, place the paper back in\n\
 the paper input tray before typing it in.\n\
 \n\
-The second and third patterns are similar, but use finer dots for more\n\
+The other patterns are similar, but use finer dots for more\n\
 critical alignment.  You must run all three passes to correctly align your\n\
 printer.  After running all three alignment passes, all three alignment\n\
 patterns will be printed once more.  You should find that the middle-most\n\
-pair (#8 out of the 15) is the best for all three patterns.\n\
+pair (#%d out of the %d) is the best for all patterns.\n\
 \n\
-After the three passes are printed once more, you will be offered the\n\
+After the passes are printed once more, you will be offered the\n\
 choices of (s)aving the result in the printer, (r)epeating the process,\n\
 or (q)uitting without saving.  Quitting will not restore the previous\n\
 settings, but powering the printer off and back on will.  If you quit,\n\
 you must repeat the entire process if you wish to later save the results.\n\
-It is essential that you not turn your printer off during this procedure.";
+It is essential that you not turn your printer off during this procedure.\n\n";
 
 char old_align_help[] = "\
 Please read these instructions very carefully before proceeding.\n\
@@ -536,7 +587,7 @@ entire risk of using this utility lies with you.\n\
 \n\
 This utility prints a test pattern that consist of a series of pairs of\n\
 vertical lines that overlap.  Below each pair of lines is a number between\n\
-1 and 7.\n\
+%d and %d.\n\
 \n\
 When you inspect the pairs of lines, you should find the pair of lines that\n\
 is best in alignment, that is, that best forms a single vertical align.\n\
@@ -546,21 +597,21 @@ After picking the number matching the best pair, place the paper back in\n\
 the paper input tray before typing it in.\n\
 \n\
 After running the alignment pattern, it will be printed once more.  You\n\
-should find that the middle-most pair (#4 out of the 7) is the best.\n\
+should find that the middle-most pair (#%d out of the %d) is the best.\n\
 You will then be offered the choices of (s)aving the result in the printer,\n\
 (r)epeating the process, or (q)uitting without saving.  Quitting will not\n\
 restore the previous settings, but powering the printer off and back on will.\n\
 If you quit, you must repeat the entire process if you wish to later save\n\
 the results.  It is essential that you not turn off your printer during\n\
-this procedure.";
+this procedure.\n\n";
 
 void
-do_align_help(void)
+do_align_help(int passes, int choices)
 {
-  if (isNew)
-    printf("%s\n", new_align_help);
+  if (passes > 1)
+    printf(new_align_help, 1, choices, (choices + 1) / 2, choices);
   else
-    printf("%s\n", old_align_help);
+    printf(old_align_help, 1, choices, (choices + 1) / 2, choices);
   fflush(stdout);
 }
 
@@ -580,202 +631,117 @@ do_align(void)
   char inbuf[64];
   long answer;
   char *endptr;
+  int passes = 0;
+  int choices = 0;
+  int curpass;
+  int notfound = 1;
+  printer_t *printer = &printer_list[0];
+  char *printer_name = NULL;
+  if (!printer_model)
+    {
+      printf("Printer model must be specified with -m.\n");
+      do_help(1);
+    }
+  while (printer->short_name && notfound)
+    {
+      if (!strcmp(printer_model, printer->short_name) ||
+	  !strcmp(printer_model, printer->long_name))
+	{
+	  passes = printer->passes;
+	  choices = printer->choices;
+	  printer_name = printer->long_name;
+	  notfound = 0;
+	}
+      else
+	printer++;
+    }
+  if (notfound)
+    {
+      printf("Printer model %s is not known.\n", printer_model);
+      do_help(1);
+    }
+
  start:
-  do_align_help();
-  if (isNew)
-    {
-      printf("This procedure requires that your printer be an Epson Stylus Color 440\n");
-      printf("or newer.  If you have an older printer, please type control-C now\n");
-      printf("and run 'escputil -a -o'\n");
-    }
-  else
-    {
-      printf("This procedure requires that your printer be older than the\n");
-      printf("Epson Stylus Color 440.  If you have a newer printer, please\n");
-      printf("type control-C now and run 'escputil -a -l'\n");
-    }
+  do_align_help(passes, choices);
+  printf("This procedure assumes that your printer is an Epson %s.\n",
+	 printer_name);
+  printf("If this is not your printer model, please type control-C now and\n");
+  printf("choose your actual printer model.\n");
+  printf("\n");
   printf("Please place a sheet of paper in your printer to begin the head\n");
   printf("alignment procedure.\n");
   memset(inbuf, 0, 64);
   fflush(stdin);
   fgets(inbuf, 63, stdin);
   putc('\n', stdout);
- one:
-  {
-    printf("Starting alignment phase 1.  Please insert a fresh sheet of paper.\n");
-    fflush(stdout);
-    initialize_print_cmd();
-    do_remote_cmd("DT", 3, 0, 0, 0, 0);
-    if (do_print_cmd())
-      align_error();
-  reread1:
-    printf("Please inspect the print, and choose the best pair of lines\n");
-    printf("in pattern #1, and then reinsert the page in the input tray.\n");
-    printf("Type a pair number, '?' for help, or 'r' to retry this pattern. ==> ");
-    fflush(stdout);
-    memset(inbuf, 0, 64);
-    fflush(stdin);
-    fgets(inbuf, 63, stdin);
-    putc('\n', stdout);
-    switch (inbuf[0])
-      {
-      case 'r':
-	goto one;
-      case 'h':
-      case '?':
-	do_align_help();
-	fflush(stdout);
-      case '\n':
-      case '\000':
-	goto reread1;
-      default:
-	break;
-      }
-    answer = strtol(inbuf, &endptr, 10);
-    if (endptr == inbuf)
-      {
-	printf("I cannot understand what you typed!\n");
-	fflush(stdout);
-	goto reread1;
-      }
-    if (answer < 1 || answer > 15 || (answer > 7 && isNew == 0))
-      {
-	printf("The best pair of lines should be numbered between 1 and %d.\n",
-	       isNew ? 15 : 7);
-	fflush(stdout);
-	goto reread1;
-      }
-    if (isNew)
-      printf("Aligning phase 1, and starting phase 2.\n");
-    else
-      {
-	printf("Aligning phase 1, and performing final test.\n");
-	printf("Please insert a fresh sheet of paper.\n");
-      }
-    fflush(stdout);
-    initialize_print_cmd();
-    do_remote_cmd("DA", 4, 0, 0, 0, answer);
-    if (!isNew)
-      goto final;
-  }
- two:
-  {
-    add_newlines(7);
-    do_remote_cmd("DT", 3, 0, 1, 0, 0);
-    if (do_print_cmd())
-      align_error();
-  reread2:
-    printf("Please inspect the print, and choose the best pair of lines\n");
-    printf("in pattern #2, and then reinsert the page in the input tray.\n");
-    printf("Type a pair number, '?' for help, or 'r' to retry this pattern. ==> ");
-    fflush(stdout);
-    memset(inbuf, 0, 64);
-    fflush(stdin);
-    fgets(inbuf, 63, stdin);
-    putc('\n', stdout);
-    switch (inbuf[0])
-      {
-      case 'r':
-      case 'R':
-	printf("Please insert a fresh sheet of paper, and then type the enter key.\n");
-	initialize_print_cmd();
-	fflush(stdin);
-	fgets(inbuf, 15, stdin);
-	putc('\n', stdout);
-	goto two;
-      case 'h':
-      case 'H':
-      case '?':
-	do_align_help();
-	fflush(stdout);
-      case '\n':
-      case '\000':
-	goto reread2;
-      default:
-	break;
-      }
-    answer = strtol(inbuf, &endptr, 10);
-    if (endptr == inbuf)
-      {
-	printf("I cannot understand what you typed!\n");
-	fflush(stdout);
-	goto reread2;
-      }
-    if (answer < 1 || answer > 15)
-      {
-	printf("The best pair of lines should be numbered between 1 and 15.\n");
-	fflush(stdout);
-	goto reread2;
-      }
-    printf("Aligning phase 2, and starting phase 3.\n");
-    fflush(stdout);
-    initialize_print_cmd();
-    do_remote_cmd("DA", 4, 0, 1, 0, answer);
-  }
- three:
-  {
-    add_newlines(14);
-    do_remote_cmd("DT", 3, 0, 2, 0, 0);
-    if (do_print_cmd())
-      align_error();
-  reread3:
-    printf("Please inspect the print, and choose the best pair of lines\n");
-    printf("in pattern #3, and then insert a fresh page in the input tray\n");
-    printf("for the final alignment test.\n");
-    printf("Type a pair number, '?' for help, or 'r' to retry this pattern. ==> ");
-    fflush(stdout);
-    memset(inbuf, 0, 64);
-    fflush(stdin);
-    fgets(inbuf, 63, stdin);
-    putc('\n', stdout);
-    switch (inbuf[0])
-      {
-      case 'r':
-      case 'R':
-	printf("Please insert a fresh sheet of paper, and then type the enter key.\n");
-	fflush(stdout);
-	initialize_print_cmd();
-	fflush(stdin);
-	fgets(inbuf, 15, stdin);
-	putc('\n', stdout);
-	goto three;
-      case 'h':
-      case 'H':
-      case '?':
-	do_align_help();
-	fflush(stdout);
-      case '\n':
-      case '\000':
-	goto reread3;
-      default:
-	break;
-      }
-    answer = strtol(inbuf, &endptr, 10);
-    if (endptr == inbuf)
-      {
-	printf("I cannot understand what you typed!\n");
-	fflush(stdout);
-	goto reread3;
-      }
-    if (answer < 1 || answer > 15)
-      {
-	printf("The best pair of lines should be numbered between 1 and 15.\n");
-	fflush(stdout);
-	goto reread3;
-      }
-    printf("Aligning phase 3, and performing final test.\n");
-    printf("Please insert a fresh sheet of paper, and then type the enter key.\n");
-    fflush(stdout);
-    initialize_print_cmd();
-    do_remote_cmd("DA", 4, 0, 1, 0, answer);
-  }
- final:
-  do_remote_cmd("DT", 3, 0, 0, 0, 0);
-  if (isNew)
+  fflush(stdout);
+  initialize_print_cmd();
+  for (curpass = 1; curpass <= passes; curpass ++)
     {
-      do_remote_cmd("DT", 3, 0, 1, 0, 0);
-      do_remote_cmd("DT", 3, 0, 2, 0, 0);
+    top:
+      add_newlines(7 * (curpass - 1));
+      do_remote_cmd("DT", 3, 0, curpass - 1, 0, 0);
+      if (do_print_cmd())
+	align_error();
+    reread:
+      printf("Please inspect the print, and choose the best pair of lines\n");
+      printf("in pattern #%d, and then reinsert the page in the input tray.\n",
+	     curpass);
+      printf("Type a pair number, '?' for help, or 'r' to retry this pattern. ==> ");
+      fflush(stdout);
+      memset(inbuf, 0, 64);
+      fflush(stdin);
+      fgets(inbuf, 63, stdin);
+      putc('\n', stdout);
+      switch (inbuf[0])
+	{
+	case 'r':
+	case 'R':
+	  printf("Please insert a fresh sheet of paper, and then type the enter key.\n");
+	  initialize_print_cmd();
+	  fflush(stdin);
+	  fgets(inbuf, 15, stdin);
+	  putc('\n', stdout);
+	  fflush(stdout);
+	  goto top;
+	case 'h':
+	case '?':
+	  do_align_help(passes, choices);
+	  fflush(stdout);
+	case '\n':
+	case '\000':
+	  goto reread;
+	default:
+	  break;
+	}
+      answer = strtol(inbuf, &endptr, 10);
+      if (endptr == inbuf)
+	{
+	  printf("I cannot understand what you typed!\n");
+	  fflush(stdout);
+	  goto reread;
+	}
+      if (answer < 1 || answer > choices)
+	{
+	  printf("The best pair of lines should be numbered between 1 and %d.\n",
+		 choices);
+	  fflush(stdout);
+	  goto reread;
+	}
+      if (curpass == passes)
+	{
+	  printf("Aligning phase %d, and performing final test.\n", curpass);
+	  printf("Please insert a fresh sheet of paper.\n");
+	}
+      else
+	printf("Aligning phase %d, and starting phase %d.\n", curpass,
+	       curpass + 1);
+      fflush(stdout);
+      initialize_print_cmd();
+      do_remote_cmd("DA", 4, 0, curpass - 1, 0, answer);
     }
+  for (curpass = 0; curpass < passes; curpass++)
+    do_remote_cmd("DT", 3, 0, curpass, 0, 0);
   if (do_print_cmd())
     align_error();
  read_final:
