@@ -373,10 +373,12 @@ fi
 
 dnl ijs checks
 if test x${BUILD_IJS} = xyes ; then
-  AC_CHECK_HEADERS(ijs_server.h, HAVE_IJS_H=true, HAVE_IJS_H=false)
-  if test x${HAVE_IJS_H} = xfalse ; then
-    AC_MSG_WARN(Cannot find ijs_server.h; attempt to build IJS driver will fail)
+  AC_PATH_PROG(IJS_CONFIG, ijs-config)
+  if test -z "$IJS_CONFIG" ; then
+    AC_MSG_ERROR(Cannot find ijs-config; please ensure ijs 0.30 is installed);
   fi
+  IJS_CFLAGS=`$IJS_CONFIG --cflags`
+  IJS_LIBS=`$IJS_CONFIG --libs`
 fi
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
@@ -787,6 +789,8 @@ AC_SUBST(FOOMATIC_NOINST_BIN)
 AC_SUBST(FOOMATIC_INSTALL)
 AC_SUBST(IJS_BIN)
 AC_SUBST(IJS_INSTALL)
+AC_SUBST(IJS_CFLAGS)
+AC_SUBST(IJS_LIBS)
 AC_SUBST(TEST_BIN)
 AC_SUBST(TESTPATTERN_BIN)
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
