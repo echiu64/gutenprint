@@ -30,11 +30,20 @@ site</a> for quick and easy setup.</p>
 <p>We recommend <a href="http://www.cups.org">CUPS</a> (the Common
 UNIX Printing System) for the easiest setup.</p>
 
+<H2><font color="#ff0000">Gimp-Print 4.3.3 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of July 14,
+2002!</strong></em></font> Gimp-Print 4.3.3 is released.  This is a
+development release on the Gimp-Print 4.3 development line.  This
+contains a new dithering algorithm, and many mostly internal changes
+to the Epson family driver.
+</p>
+
 <H2><font color="#ff0000">Gimp-Print 4.2.1 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of April 26,
 2002!</strong></em></font> Gimp-Print 4.2.1 is released.  This is a
-stable release on the Gimp-Print 4.2.1 release line.  This contains
+stable release on the Gimp-Print 4.2 release line.  This contains
 Foomatic data for the Gimp-Print IJS driver and Macintosh OS X port,
 in addition to a number of bug fixes.  Please read the release notes
 <a
