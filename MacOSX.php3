@@ -130,7 +130,7 @@ require('standard_html_header.php3');
  <td bgcolor="#d0ffff" >
  <a href=
  "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.4-rc1.ppc.dmg?download"
- >gimp-print-4.2.4-rc1.ppc.dmg</a>&nbsp;(5.1 MB)
+ >gimp-print-4.2.4-rc1.ppc.dmg</a>&nbsp;(5.3 MB)
  </td>
  <td align="right" >
  (<a href=
@@ -228,7 +228,7 @@ require('standard_html_header.php3');
  <B>Gimp-Print 4.2.4-rc1</B>
  </TD>
  <TD align="right" >
- <B>2002-11-07</B>
+ <B>2002-11-20</B>
  </TD>
  </TR>
  <TR>
