@@ -2285,8 +2285,7 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
     }
   else if (strcmp(name, "InputSlot") == 0)
     {
-      if (escp2_has_cap(model, MODEL_ROLLFEED, MODEL_ROLLFEED_NO,
-			v))
+      if (escp2_has_cap(model, MODEL_ROLLFEED, MODEL_ROLLFEED_NO, v))
 	return NULL;
       else
 	{      /* Roll Feed capable printers */
@@ -2355,26 +2354,73 @@ escp2_limit(const stp_printer_t printer,	/* I - Printer model */
 }
 
 static const char *
-escp2_default_resolution(const stp_printer_t printer)
+escp2_default_parameters(const stp_printer_t printer,
+			 const char *ppd_file,
+			 const char *name)
 {
+  int i;
   int model = stp_printer_get_model(printer);
-  stp_vars_t v = stp_printer_get_printvars(printer);
-  const res_t *res = &(escp2_reslist[0]);
-  int nozzle_width = (escp2_base_separation /
-		      escp2_nozzle_separation(model, v));
-  while (res->hres)
+  const stp_vars_t v = stp_printer_get_printvars(printer);
+  if (name == NULL)
+    return NULL;
+  if (strcmp(name, "PageSize") == 0)
     {
-      if (escp2_ink_type(model, res->resid, v) != -1 &&
-	  res->vres <= escp2_max_vres(model, v) &&
-	  res->hres <= escp2_max_hres(model, v) &&
-	  ((res->vres / nozzle_width) * nozzle_width) == res->vres)
+      unsigned int height_limit, width_limit;
+      int papersizes = stp_known_papersizes();
+      width_limit = escp2_max_paper_width(model, v);
+      height_limit = escp2_max_paper_height(model, v);
+      for (i = 0; i < papersizes; i++)
 	{
-	  if (res->vres == 360 && res->hres == 360)
-	    return _(res->name);
+	  const stp_papersize_t pt = stp_get_papersize_by_index(i);
+	  if (strlen(stp_papersize_get_name(pt)) > 0 &&
+	      stp_papersize_get_width(pt) <= width_limit &&
+	      stp_papersize_get_height(pt) <= height_limit)
+	    return _(stp_papersize_get_name(pt));
 	}
-      res++;
+      return NULL;
+    }    
+  else if (strcmp(name, "Resolution") == 0)
+    {
+      int model = stp_printer_get_model(printer);
+      stp_vars_t v = stp_printer_get_printvars(printer);
+      const res_t *res = &(escp2_reslist[0]);
+      int nozzle_width = (escp2_base_separation /
+			  escp2_nozzle_separation(model, v));
+      while (res->hres)
+	{
+	  if (escp2_ink_type(model, res->resid, v) != -1 &&
+	      res->vres <= escp2_max_vres(model, v) &&
+	      res->hres <= escp2_max_hres(model, v) &&
+	      ((res->vres / nozzle_width) * nozzle_width) == res->vres)
+	    {
+	      if (res->vres == 360 && res->hres == 360)
+		return _(res->name);
+	    }
+	  res++;
+	}
+      return NULL;
     }
-  return NULL;
+  else if (strcmp(name, "InkType") == 0)
+    {
+      if (escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_4, v))
+	return NULL;
+      else
+	return _(ink_types[0]);
+    }
+  else if (strcmp(name, "MediaType") == 0)
+    {
+      return _(escp2_paper_list[0].name);
+    }
+  else if (strcmp(name, "InputSlot") == 0)
+    {
+      if (escp2_has_cap(model, MODEL_ROLLFEED, MODEL_ROLLFEED_NO, v))
+	return NULL;
+      else
+	return _("Standard");
+    }
+  else
+    return (NULL);
+
 }
 
 static void
@@ -3271,7 +3317,7 @@ const stp_printfuncs_t stp_escp2_printfuncs =
   escp2_imageable_area,
   escp2_limit,
   escp2_print,
-  escp2_default_resolution,
+  escp2_default_parameters,
   escp2_describe_resolution,
   stp_verify_printer_params
 };

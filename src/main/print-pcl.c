@@ -225,12 +225,6 @@ static const pcl_t pcl_resolutions[] =
 };
 #define NUM_RESOLUTIONS		(sizeof(pcl_resolutions) / sizeof (pcl_t))
 
-static const char *
-pcl_default_resolution(const stp_printer_t printer)
-{
-  return _(pcl_resolutions[0].pcl_name);
-}
-
 static void
 pcl_describe_resolution(const stp_printer_t printer,
 			const char *resolution, int *x, int *y)
@@ -1530,6 +1524,111 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
     return (NULL);
 }
 
+static const char *
+pcl_default_parameters(const stp_printer_t printer,
+		       const char *ppd_file,
+		       const char *name)
+{
+  int		model = stp_printer_get_model(printer);
+  int		i;
+  const pcl_cap_t *caps;
+
+  static const char *ink_types[] =
+  {
+    N_ ("Color + Black Cartridges"),
+    N_ ("Color + Photo Cartridges")
+  };
+
+  if (name == NULL)
+    return (NULL);
+
+  caps = pcl_get_model_capabilities(model);
+
+#ifdef DEBUG
+  fprintf(stderr, "Printer model = %d\n", model);
+  fprintf(stderr, "PageWidth = %d, PageHeight = %d\n", caps->max_width, caps->max_height);
+  fprintf(stderr, "Margins: top = %d, bottom = %d, left = %d, right = %d\n",
+	  caps->top_margin, caps->bottom_margin, caps->left_margin, caps->right_margin);
+  fprintf(stderr, "Resolutions: %d\n", caps->resolutions);
+  fprintf(stderr, "ColorType = %d, PrinterType = %d\n", caps->color_type, caps->stp_printer_type);
+#endif
+
+  if (strcmp(name, "PageSize") == 0)
+    {
+      unsigned height_limit = caps->max_height;
+      unsigned width_limit = caps->max_width;
+      int papersizes = stp_known_papersizes();
+#ifdef PCL_NO_CUSTOM_PAPERSIZES
+      int use_custom = 0;
+#else
+      int use_custom = ((caps->stp_printer_type & PCL_PRINTER_CUSTOM_SIZE)
+			== PCL_PRINTER_CUSTOM_SIZE);
+#endif
+      for (i = 0; i < papersizes; i++)
+	{
+	  const stp_papersize_t pt = stp_get_papersize_by_index(i);
+	  if (strlen(stp_papersize_get_name(pt)) > 0 &&
+	      stp_papersize_get_width(pt) <= width_limit &&
+	      stp_papersize_get_height(pt) <= height_limit &&
+              ((use_custom == 1) ||
+	       ((use_custom == 0) &&
+		(pcl_convert_media_size(stp_papersize_get_name(pt), model)
+		 != -1))))
+	    {
+	      return _(stp_papersize_get_name(pt));
+	    }
+	}
+      return NULL;
+    }
+  else if (strcmp(name, "MediaType") == 0)
+    {
+      if (caps->paper_types[0] == -1)
+	{
+	  return (NULL);
+	}
+      else
+	{
+	  return _(pcl_val_to_string(caps->paper_types[0], pcl_media_types,
+				     NUM_PRINTER_PAPER_TYPES));
+	}
+    }
+  else if (strcmp(name, "InputSlot") == 0)
+    {
+      if (caps->paper_sources[0] == -1)
+	{
+	  return (NULL);
+	}
+      else
+	{
+	  return _(pcl_val_to_string(caps->paper_sources[0], pcl_media_types,
+				     NUM_PRINTER_PAPER_SOURCES));
+	}
+    }
+  else if (strcmp(name, "Resolution") == 0)
+    {
+      for (i = 0; i < NUM_RESOLUTIONS; i++)
+	{
+	  if (caps->resolutions & pcl_resolutions[i].pcl_code)
+	    {
+	      return _(pcl_val_to_string(pcl_resolutions[i].pcl_code,
+					 pcl_resolutions, NUM_RESOLUTIONS));
+	    }
+	}
+      return NULL;
+    }
+  else if (strcmp(name, "InkType") == 0)
+    {
+      if (caps->color_type & PCL_COLOR_CMYKcm)
+	{
+	  return _(ink_types[0]);
+	}
+      else
+	return(NULL);
+    }
+  else
+    return (NULL);
+}
+
 
 /*
  * 'pcl_imageable_area()' - Return the imageable area of the page.
@@ -2310,7 +2409,7 @@ const stp_printfuncs_t stp_pcl_printfuncs =
   pcl_imageable_area,
   pcl_limit,
   pcl_print,
-  pcl_default_resolution,
+  pcl_default_parameters,
   pcl_describe_resolution,
   stp_verify_printer_params
 };

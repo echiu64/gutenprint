@@ -266,7 +266,106 @@ typedef struct stp_image
 
 typedef void *stp_printer_t;
 typedef void *stp_vars_t;
+typedef void *stp_option_t;
 typedef void *stp_papersize_t;
+
+typedef void (*stp_outfunc_t) (void *data, const char *buffer, size_t bytes);
+
+#if 0
+typedef enum {
+  STP_OPTION_NULL,
+  STP_OPTION_BOOL,
+  STP_OPTION_INT,
+  STP_OPTION_DOUBLE,
+  STP_OPTION_BOUNDED_INT,
+  STP_OPTION_BOUNDED_DOUBLE,
+  STP_OPTION_STRING,
+  STP_OPTION_OPAQUE,
+  STP_OPTION_CHOICE,
+  STP_OPTION_INT_ARRAY,
+  STP_OPTION_DOUBLE_ARRAY,
+  STP_OPTION_STRING_ARRAY,
+  STP_OPTION_MULTIPLE_CHOICE
+} stp_option_type_t;
+
+typedef enum {
+  STP_OPTION_BASIC,
+  STP_OPTION_ADVANCED
+} stp_option_level_t;
+
+typedef struct
+{
+  int value;
+} stp_option_bool_t;
+
+typedef struct
+{
+  int value;
+} stp_option_int_t;
+
+typedef struct
+{
+  double value;
+} stp_option_double_t;
+
+typedef struct
+{
+  int minval;
+  int maxval;
+  int value;
+} stp_option_bounded_int_t;
+
+typedef struct
+{
+  double minval;
+  double maxval;
+  double value;
+} stp_option_bounded_double_t;
+
+typedef struct
+{
+  char *value;
+} stp_option_string_t;
+
+typedef struct
+{
+  size_t bytecount;
+  char *value;
+} stp_option_opaque_t;
+
+typedef struct
+{
+  size_t choice_count;
+  char **choices;
+  const char *value;
+} stp_option_choice_t;
+
+typedef struct
+{
+  size_t count;
+  int *values;
+} stp_option_int_array_t;
+
+typedef struct
+{
+  size_t count;
+  double *values;
+} stp_option_double_array_t;
+
+typedef struct
+{
+  size_t count;
+  char **values;
+} stp_option_string_array_t;
+
+typedef struct
+{
+  size_t choice_count;
+  size_t value_count;
+  const char **choices;
+  char **values;
+} stp_option_multiple_choice_t;
+#endif
 
 typedef struct
 {
@@ -282,7 +381,9 @@ typedef struct
 		 int *width, int *height);
   void	(*print)(const stp_printer_t printer,
 		 stp_image_t *image, const stp_vars_t v);
-  const char *(*default_resolution)(const stp_printer_t printer);
+  const char *(*default_parameters)(const stp_printer_t printer,
+				    const char *ppd_file,
+				    const char *name);
   void  (*describe_resolution)(const stp_printer_t printer,
 			       const char *resolution, int *x, int *y);
   int   (*verify)(const stp_printer_t p, const stp_vars_t v);
@@ -293,8 +394,6 @@ extern const char *stp_printer_get_driver(const stp_printer_t);
 extern int stp_printer_get_model(const stp_printer_t);
 extern const stp_printfuncs_t *stp_printer_get_printfuncs(const stp_printer_t);
 extern const stp_vars_t stp_printer_get_printvars(const stp_printer_t);
-
-typedef void (*stp_outfunc_t) (void *data, const char *buffer, size_t bytes);
 
 extern stp_vars_t stp_allocate_vars(void);
 extern void stp_copy_vars(stp_vars_t vd, const stp_vars_t vs);
@@ -391,6 +490,20 @@ extern stp_outfunc_t stp_get_outfunc (const stp_vars_t vv);
 extern void	stp_set_errfunc(const stp_vars_t vv, stp_outfunc_t);
 extern stp_outfunc_t stp_get_errfunc (const stp_vars_t vv);
 
+extern void stp_set_option(stp_vars_t v, const char *name, const char *data,
+			   int bytes);
+extern void stp_clear_option(stp_vars_t v, const char *name);
+extern void stp_clear_all_options(stp_vars_t v);
+extern size_t stp_option_count(const stp_vars_t v);
+extern const stp_option_t stp_get_option_by_index(const stp_vars_t v,
+						  size_t idx);
+extern const stp_option_t stp_get_option_by_name(const stp_vars_t v,
+						 const char *name);
+
+/* NOTE: not null delimited! */
+extern const char * stp_option_data(const stp_option_t option);
+extern const char * stp_option_name(const stp_option_t option);
+extern size_t stp_option_length(const stp_option_t option);
 
 /*
  * hue_map is an array of 49 doubles representing the mapping of hue

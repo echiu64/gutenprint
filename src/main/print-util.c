@@ -40,6 +40,15 @@
 
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
 
+typedef struct stp_internal_option
+{
+  char *name;
+  size_t length;
+  char *data;
+  struct stp_internal_option *next;
+  struct stp_internal_option *prev;
+} stp_internal_option_t;
+
 typedef struct					/* Plug-in variables */
 {
   const char	*output_to,	/* Name of file or command to print to */
@@ -79,6 +88,7 @@ typedef struct					/* Plug-in variables */
   void *outdata;
   void (*errfunc)(void *data, const char *buffer, size_t bytes);
   void *errdata;
+  stp_internal_option_t *options;
 } stp_internal_vars_t;
 
 typedef struct stp_internal_printer
@@ -271,6 +281,7 @@ stp_free_vars(stp_vars_t vv)
   SAFE_FREE(v->media_source);
   SAFE_FREE(v->ink_type);
   SAFE_FREE(v->dither_algorithm);
+  stp_clear_all_options(vv);
 }
 
 #define DEF_STRING_FUNCS(s)				\
@@ -354,6 +365,40 @@ DEF_FUNCS(outfunc, stp_outfunc_t);
 DEF_FUNCS(errfunc, stp_outfunc_t);
 
 void
+stp_copy_options(stp_vars_t vd, const stp_vars_t vs)
+{
+  const stp_internal_vars_t *src = (const stp_internal_vars_t *)vs;
+  stp_internal_vars_t *dest = (stp_internal_vars_t *)dest;
+  stp_internal_option_t *opt = (stp_internal_option_t *) src->options;
+  stp_internal_option_t *popt = NULL;
+  if (opt)
+    {
+      stp_internal_option_t *nopt = xmalloc(sizeof(stp_internal_option_t));
+      dest->options = nopt;
+      memcpy(nopt, opt, sizeof(stp_internal_option_t));
+      nopt->name = xmalloc(strlen(opt->name) + 1);
+      strcpy(nopt->name, opt->name);
+      nopt->data = xmalloc(opt->length);
+      memcpy(nopt->data, opt->data, opt->length);
+      opt = opt->next;
+      popt = nopt;
+      while (opt)
+        {
+          nopt = xmalloc(sizeof(stp_internal_option_t));
+          memcpy(nopt, opt, sizeof(stp_internal_option_t));
+          nopt->prev = popt;
+          popt->next = nopt;
+          nopt->name = xmalloc(strlen(opt->name) + 1);
+          strcpy(nopt->name, opt->name);
+          nopt->data = xmalloc(opt->length);
+          memcpy(nopt->data, opt->data, opt->length);
+          opt = opt->next;
+          popt = nopt;
+        }
+    }
+}
+
+void
 stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
 {
   if (vs == vd)
@@ -394,6 +439,8 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
   stp_set_cmap(vd, stp_get_cmap(vs));
   stp_set_outfunc(vd, stp_get_outfunc(vs));
   stp_set_errfunc(vd, stp_get_errfunc(vs));
+  stp_clear_all_options(vd);
+  stp_copy_options(vd, vs);
 }
 
 stp_vars_t
@@ -434,6 +481,135 @@ stp_merge_printvars(stp_vars_t user, const stp_vars_t print)
   ICLAMP(saturation);
   stp_set_density(user, stp_get_density(user) * stp_get_density(print));
   ICLAMP(density);
+  if (stp_get_output_type(print) == OUTPUT_GRAY)
+    stp_set_output_type(user, OUTPUT_GRAY);
+}
+
+static stp_internal_option_t *
+stp_get_option_by_name_internal(const stp_vars_t vd, const char *name)
+{
+  const stp_internal_vars_t *v = (const stp_internal_vars_t *) vd;
+  stp_internal_option_t *opt = (stp_internal_option_t *)v->options;
+  while (opt)
+    {
+      if (!strcmp(opt->name, name))
+        return opt;
+      opt = opt->next;
+    }
+  return opt;
+}
+
+void
+stp_set_option(stp_vars_t vd, const char *name, const char *data, int bytes)
+{
+  stp_internal_vars_t *v = (stp_internal_vars_t *) vd;
+  stp_internal_option_t *opt = stp_get_option_by_name_internal(v, name);
+  if (opt)
+    {
+      if (opt->length == bytes && !memcmp(opt->data, data, bytes))
+        return;
+      free(opt->data);
+    }
+  else
+    {
+      stp_internal_option_t *popt = (stp_internal_option_t *) (v->options);
+      opt = xmalloc(sizeof(stp_internal_option_t));
+      opt->name = xmalloc(strlen(name) + 1);
+      strcpy(opt->name, name);
+      opt->next = popt;
+      if (popt)
+        popt->prev = opt;
+      v->options = opt;
+    }
+  opt->data = xmalloc(bytes);
+  opt->length = bytes;
+  memcpy(opt->data, data, bytes);
+}
+
+void
+stp_clear_option(stp_vars_t vd, const char *name)
+{
+  stp_internal_vars_t *v = (stp_internal_vars_t *) vd;
+  stp_internal_option_t *opt = (stp_internal_option_t *) v->options;
+  while (opt)
+    {
+      if (!strcmp(opt->name, name))
+        {
+          free(opt->name);
+          free(opt->data);
+          if (opt->prev)
+            opt->prev->next = opt->next;
+          if (opt->next)
+            opt->next->prev = opt->prev;
+          free(opt);
+          return;
+        }
+      opt = opt->next;
+    }
+}
+
+size_t
+stp_option_count(const stp_vars_t vd)
+{
+  const stp_internal_vars_t *v = (const stp_internal_vars_t *) vd;
+  size_t i = 0;
+  stp_internal_option_t *opt = v->options;
+  while (opt)
+    {
+      opt = opt->next;
+      i++;
+    }
+  return i;
+}
+
+const stp_option_t
+stp_get_option_by_name(const stp_vars_t v, const char *name)
+{
+  return stp_get_option_by_name_internal(v, name);
+}
+
+const stp_option_t
+stp_get_option_by_index(const stp_vars_t vd, size_t index)
+{
+  const stp_internal_vars_t *v = (const stp_internal_vars_t *) vd;
+  stp_internal_option_t *opt = v->options;
+  while (index-- && opt)
+    opt = opt->next;
+  return opt;
+}  
+
+const char *
+stp_option_data(const stp_option_t option)
+{
+  return ((const stp_internal_option_t *) option)->data;
+}
+
+const char *
+stp_option_name(const stp_option_t option)
+{
+  return ((const stp_internal_option_t *) option)->name;
+}
+
+size_t
+stp_option_length(const stp_option_t option)
+{
+  return ((const stp_internal_option_t *) option)->length;
+}
+
+void
+stp_clear_all_options(stp_vars_t vd)
+{
+  stp_internal_vars_t *v = (stp_internal_vars_t *)vd;
+  stp_internal_option_t *opt = (stp_internal_option_t *)v->options;
+  while (opt)
+    {
+      stp_internal_option_t *nopt = opt->next;
+      free(opt->name);
+      free(opt->data);
+      free(opt);
+      opt = nopt;
+    }
+  v->options = NULL;
 }
 
 /*
@@ -618,7 +794,7 @@ static const stp_internal_papersize_t paper_sizes[] =
 int
 stp_known_papersizes(void)
 {
-  return sizeof(paper_sizes) / sizeof(stp_internal_papersize_t);
+  return sizeof(paper_sizes) / sizeof(stp_internal_papersize_t) - 1;
 }
 
 const char *
@@ -999,7 +1175,14 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
   int i;
   int answer = 1;
   const stp_printfuncs_t *printfuncs = stp_printer_get_printfuncs(p);
+  const stp_vars_t printvars = stp_printer_get_printvars(p);
 
+  if (stp_get_output_type(printvars) == OUTPUT_GRAY &&
+      stp_get_output_type(v) == OUTPUT_COLOR)
+    {
+      answer = 0;
+      stp_eprintf(v, "Printer does not support color output\n");
+    }
   if (strlen(stp_get_media_size(v)) > 0)
     {
       vptr = (*printfuncs->parameters)(p, NULL, "PageSize", &count);

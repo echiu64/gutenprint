@@ -49,25 +49,50 @@ main(int argc, char **argv)
   for (i = 0; i < stp_known_printers(); i++)
     {
       const stp_printer_t p = stp_get_printer_by_index(i);
+      const stp_vars_t pv = stp_printer_get_printvars(p);
       char **retval;
+      const char *retval1;
       int count;
+      int tcount = 0;
       printf("# Printer model %s, long name `%s'\n",
 	     stp_printer_get_driver(p), stp_printer_get_long_name(p));
       for (k = 0; k < nparams; k++)
 	{
+	  retval1 = (*stp_printer_get_printfuncs(p)->default_parameters)
+	    (p, NULL, params[k]);
+	  if (retval1)
+	    printf("$defaults{'%s'}{'%s'} = '%s';\n",
+		   stp_printer_get_driver(p), params[k], retval1);
 	  retval = (*stp_printer_get_printfuncs(p)->parameters)(p, NULL, params[k], &count);
 	  if (count > 0)
 	    {
 	      for (j = 0; j < count; j++)
 		{
-		  if (j == 0)
-		    printf("$defaults{'%s'}{'%s'} = '%s';\n",
-			   stp_printer_get_driver(p), params[k], retval[j]);
 		  printf("$stpdata{'%s'}{'%s'}{'%s'} = 1;\n",
 			 stp_printer_get_driver(p), params[k], retval[j]);
 		  free(retval[j]);
 		}
 	      free(retval);
+	    }
+	  tcount += count;
+	}
+      if (tcount > 0)
+	{
+	  if (stp_get_output_type(pv) == OUTPUT_COLOR)
+	    {
+	      printf("$defaults{'%s'}{'%s'} = '%s';\n",
+		     stp_printer_get_driver(p), "Greyscale", "Color");
+	      printf("$stpdata{'%s'}{'%s'}{'%s'} = 1;\n",
+		     stp_printer_get_driver(p), "Greyscale", "Color");
+	      printf("$stpdata{'%s'}{'%s'}{'%s'} = 1;\n",
+		     stp_printer_get_driver(p), "Greyscale", "Greyscale");
+	    }
+	  else
+	    {
+	      printf("$defaults{'%s'}{'%s'} = '%s';\n",
+		     stp_printer_get_driver(p), "Greyscale", "Greyscale");
+	      printf("$stpdata{'%s'}{'%s'}{'%s'} = 1;\n",
+		     stp_printer_get_driver(p), "Greyscale", "Greyscale");
 	    }
 	}
     }

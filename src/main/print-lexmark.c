@@ -708,18 +708,6 @@ c_strdup(const char *s)
   return ret;
 }
 
-static const char *
-lexmark_default_resolution(const stp_printer_t printer)
-{
-  const lexmark_cap_t * caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
-  if (!(caps->max_xdpi%300))
-    return _("300x300 DPI");
-  else
-    return _("180x180 DPI");
-}
-
-
-
 typedef struct {
   const char name[65];
   int hres;
@@ -927,6 +915,101 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
     valptrs[i] = c_strdup(_(p[i]));
 
   return ((char **) valptrs);
+}
+
+static const char *
+lexmark_default_parameters(const stp_printer_t printer,
+			   const char *ppd_file,
+			   const char *name)
+{
+  int		i;
+
+  static const char   *media_types[] =
+  {
+    (N_ ("Plain Paper")),
+    (N_ ("Transparencies")),
+    (N_ ("Back Print Film")),
+    (N_ ("Fabric Sheets")),
+    (N_ ("Envelope")),
+    (N_ ("High Resolution Paper")),
+    (N_ ("T-Shirt Transfers")),
+    (N_ ("High Gloss Film")),
+    (N_ ("Glossy Photo Paper")),
+    (N_ ("Glossy Photo Cards")),
+    (N_ ("Photo Paper Pro"))
+  };
+  static const char   *media_sources[] =
+  {
+    (N_ ("Auto Sheet Feeder")),
+    (N_ ("Manual with Pause")),
+    (N_ ("Manual without Pause")),
+  };
+
+  const lexmark_cap_t * caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
+
+  if (name == NULL)
+    return (NULL);
+
+  if (strcmp(name, "PageSize") == 0)
+    {
+      int height_limit, width_limit;
+      int papersizes = stp_known_papersizes();
+
+      width_limit = caps->max_width;
+      height_limit = caps->max_length;
+
+      for (i = 0; i < papersizes; i++)
+	{
+	  const stp_papersize_t pt = stp_get_papersize_by_index(i);
+	  if (strlen(stp_papersize_get_name(pt)) > 0 &&
+	      stp_papersize_get_width(pt) <= width_limit &&
+	      stp_papersize_get_height(pt) <= height_limit)
+	    {
+	      return _(stp_papersize_get_name(pt));
+	    }
+	}
+      return NULL;
+    }
+  else if (strcmp(name, "Resolution") == 0)
+    {
+      unsigned int supported_resolutions = caps->supp_res;
+      const lexmark_res_t *res;
+
+      res = &(lexmark_reslist[0]);
+      /* check for allowed resolutions */
+      while (res->hres)
+	{
+	  if ((supported_resolutions & 1) == 1)
+	    {
+	      return (_(res->name));
+	    }
+	}
+      return NULL;
+    }
+  else if (strcmp(name, "InkType") == 0)
+    {
+      if ((caps->inks & LEXMARK_INK_K))
+	return (_("Black"));
+      if ((caps->inks & LEXMARK_INK_CMY))
+	return (_("Color"));
+      if ((caps->inks & LEXMARK_INK_CMYK))
+	return (_("Black/Color"));
+      if ((caps->inks & LEXMARK_INK_CcMmYK))
+	return (_("Photo/Color"));
+      if ((caps->inks & LEXMARK_INK_CcMmYy))
+	return (_("Photo/Color"));
+      return NULL;
+    }
+  else if (strcmp(name, "MediaType") == 0)
+    {
+      return _(media_types[0]);
+    }
+  else if (strcmp(name, "InputSlot") == 0)
+    {
+      return _(media_sources[0]);
+    }
+  else
+    return (NULL);
 }
 
 
@@ -1792,7 +1875,7 @@ const stp_printfuncs_t stp_lexmark_printfuncs =
   lexmark_imageable_area,
   lexmark_limit,
   lexmark_print,
-  lexmark_default_resolution,
+  lexmark_default_parameters,
   lexmark_describe_resolution,
   stp_verify_printer_params
 };

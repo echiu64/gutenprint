@@ -29,8 +29,6 @@
 
 #include "print_gimp.h"
 
-#ifndef GIMP_1_0
-
 #include "print-intl.h"
 
 extern stp_vars_t   vars;
@@ -175,12 +173,13 @@ gimp_create_color_adjust_window (void)
    */
 
   brightness_adjustment =
-    gimp_scale_entry_new (GTK_TABLE (table), 0, 1,
-                          _("Brightness:"), 200, 0,
-                          stp_get_brightness(vars), stp_get_brightness(lower),
-			  stp_get_brightness(upper), stp_get_brightness(defvars) / 100,
-			  stp_get_brightness(defvars) / 10, 3, TRUE, 0, 0,
-                          NULL, NULL);
+    gimp_scale_entry_new (GTK_TABLE (table), 0, 1, _("Brightness:"), 200, 0,
+                          stp_get_brightness(vars),
+			  stp_get_brightness(lower),
+			  stp_get_brightness(upper),
+			  stp_get_brightness(defvars) / 100,
+			  stp_get_brightness(defvars) / 10,
+			  3, TRUE, 0, 0, NULL, NULL);
   gtk_signal_connect (GTK_OBJECT (brightness_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_brightness_update),
                       NULL);
@@ -190,12 +189,13 @@ gimp_create_color_adjust_window (void)
    */
 
   contrast_adjustment =
-    gimp_scale_entry_new (GTK_TABLE (table), 0, 2,
-                          _("Contrast:"), 200, 0,
-                          stp_get_contrast(vars), stp_get_contrast(lower), stp_get_contrast(upper),
-			  stp_get_contrast(defvars) / 100, stp_get_contrast(defvars) / 10,
-			  3, TRUE, 0, 0,
-			  NULL, NULL);
+    gimp_scale_entry_new (GTK_TABLE (table), 0, 2, _("Contrast:"), 200, 0,
+                          stp_get_contrast(vars),
+			  stp_get_contrast(lower),
+			  stp_get_contrast(upper),
+			  stp_get_contrast(defvars) / 100,
+			  stp_get_contrast(defvars) / 10,
+			  3, TRUE, 0, 0, NULL, NULL);
   gtk_signal_connect (GTK_OBJECT (contrast_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_contrast_update),
                       NULL);
@@ -205,12 +205,13 @@ gimp_create_color_adjust_window (void)
    */
 
   cyan_adjustment =
-    gimp_scale_entry_new (GTK_TABLE (table), 0, 3,
-                          _("Cyan:"), 200, 0,
-                          stp_get_cyan(vars), stp_get_cyan(lower), stp_get_cyan(upper),
-			  stp_get_cyan(defvars) / 100, stp_get_cyan(defvars) / 10, 3,
-                          TRUE, 0, 0,
-                          NULL, NULL);
+    gimp_scale_entry_new (GTK_TABLE (table), 0, 3, _("Cyan:"), 200, 0,
+                          stp_get_cyan(vars),
+			  stp_get_cyan(lower),
+			  stp_get_cyan(upper),
+			  stp_get_cyan(defvars) / 100,
+			  stp_get_cyan(defvars) / 10,
+			  3, TRUE, 0, 0, NULL, NULL);
   gtk_signal_connect (GTK_OBJECT (cyan_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_cyan_update),
                       NULL);
@@ -220,12 +221,13 @@ gimp_create_color_adjust_window (void)
    */
 
   magenta_adjustment =
-    gimp_scale_entry_new (GTK_TABLE (table), 0, 4,
-                          _("Magenta:"), 200, 0,
-                          stp_get_magenta(vars), stp_get_magenta(lower), stp_get_magenta(upper),
-			  stp_get_magenta(defvars) / 100, stp_get_magenta(defvars) / 10, 3,
-                          TRUE, 0, 0,
-                          NULL, NULL);
+    gimp_scale_entry_new (GTK_TABLE (table), 0, 4, _("Magenta:"), 200, 0,
+                          stp_get_magenta(vars),
+			  stp_get_magenta(lower),
+			  stp_get_magenta(upper),
+			  stp_get_magenta(defvars) / 100,
+			  stp_get_magenta(defvars) / 10,
+			  3, TRUE, 0, 0, NULL, NULL);
   gtk_signal_connect (GTK_OBJECT (magenta_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_magenta_update),
                       NULL);
@@ -235,12 +237,13 @@ gimp_create_color_adjust_window (void)
    */
 
   yellow_adjustment =
-    gimp_scale_entry_new (GTK_TABLE (table), 0, 5,
-                          _("Yellow:"), 200, 0,
-                          stp_get_yellow(vars), stp_get_yellow(lower), stp_get_yellow(upper),
-			  stp_get_yellow(defvars) / 100, stp_get_yellow(defvars) / 10, 3,
-                          TRUE, 0, 0,
-                          NULL, NULL);
+    gimp_scale_entry_new (GTK_TABLE (table), 0, 5, _("Yellow:"), 200, 0,
+                          stp_get_yellow(vars),
+			  stp_get_yellow(lower),
+			  stp_get_yellow(upper),
+			  stp_get_yellow(defvars) / 100,
+			  stp_get_yellow(defvars) / 10,
+			  3, TRUE, 0, 0, NULL, NULL);
   gtk_signal_connect (GTK_OBJECT (yellow_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_yellow_update),
                       NULL);
@@ -250,13 +253,13 @@ gimp_create_color_adjust_window (void)
    */
 
   saturation_adjustment =
-    gimp_scale_entry_new (GTK_TABLE (table), 0, 6,
-                          _("Saturation:"), 200, 0,
-                          stp_get_saturation(vars), stp_get_saturation(lower),
-			  stp_get_saturation(upper), stp_get_saturation(defvars) / 1000,
-			  stp_get_saturation(defvars) / 100, 3,
-                          TRUE, 0, 0,
-                          NULL, NULL);
+    gimp_scale_entry_new (GTK_TABLE (table), 0, 6, _("Saturation:"), 200, 0,
+                          stp_get_saturation(vars),
+			  stp_get_saturation(lower),
+			  stp_get_saturation(upper),
+			  stp_get_saturation(defvars) / 1000,
+			  stp_get_saturation(defvars) / 100,
+			  3, TRUE, 0, 0, NULL, NULL);
   gtk_signal_connect (GTK_OBJECT (saturation_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_saturation_update),
                       NULL);
@@ -266,13 +269,13 @@ gimp_create_color_adjust_window (void)
    */
 
   density_adjustment =
-    gimp_scale_entry_new (GTK_TABLE (table), 0, 7,
-                          _("Density:"), 200, 0,
-                          stp_get_density(vars), stp_get_density(lower),
-			  stp_get_density(upper), stp_get_density(defvars) / 1000,
-			  stp_get_density(defvars) / 100, 3,
-                          TRUE, 0, 0,
-                          NULL, NULL);
+    gimp_scale_entry_new (GTK_TABLE (table), 0, 7, _("Density:"), 200, 0,
+                          stp_get_density(vars),
+			  stp_get_density(lower),
+			  stp_get_density(upper),
+			  stp_get_density(defvars) / 1000,
+			  stp_get_density(defvars) / 100,
+			  3, TRUE, 0, 0, NULL, NULL);
   gtk_signal_connect (GTK_OBJECT (density_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_density_update),
                       NULL);
@@ -282,13 +285,13 @@ gimp_create_color_adjust_window (void)
    */
 
   gamma_adjustment =
-    gimp_scale_entry_new (GTK_TABLE (table), 0, 8,
-                          _("Gamma:"), 200, 0,
-                          stp_get_gamma(vars), stp_get_gamma(lower),
-			  stp_get_gamma(upper), stp_get_gamma(defvars) / 1000,
-			  stp_get_gamma(defvars) / 100, 3,
-                          TRUE, 0, 0,
-                          NULL, NULL);
+    gimp_scale_entry_new (GTK_TABLE (table), 0, 8, _("Gamma:"), 200, 0,
+                          stp_get_gamma(vars),
+			  stp_get_gamma(lower),
+			  stp_get_gamma(upper),
+			  stp_get_gamma(defvars) / 1000,
+			  stp_get_gamma(defvars) / 100,
+			  3, TRUE, 0, 0, NULL, NULL);
   gtk_signal_connect (GTK_OBJECT (gamma_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_gamma_update),
                       NULL);
@@ -466,5 +469,3 @@ gimp_dither_algo_callback (GtkWidget *widget,
   stp_set_dither_algorithm(vars, new_algo);
   stp_set_dither_algorithm(plist[plist_current].v, new_algo);
 }
-
-#endif  /* ! GIMP_1_0 */

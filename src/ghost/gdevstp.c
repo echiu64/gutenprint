@@ -241,7 +241,8 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
 
   if (strlen(stp_get_resolution(stp_data.v)) == 0)
     stp_set_resolution(stp_data.v,
-		       (*stp_printer_get_printfuncs(printer)->default_resolution)(printer));
+		       ((*stp_printer_get_printfuncs(printer)->default_parameters)
+			(printer, NULL, "Resolution")));
   if (strlen(stp_get_dither_algorithm(stp_data.v)) == 0)
     stp_set_dither_algorithm(stp_data.v, stp_default_dither_algorithm());
 

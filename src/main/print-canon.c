@@ -1304,18 +1304,6 @@ canon_inks(const canon_cap_t * caps, int res_code, int colors, int bits)
   return NULL;
 }
 
-
-static const char *
-canon_default_resolution(const stp_printer_t printer)
-{
-  const canon_cap_t * caps= 
-    canon_get_model_capabilities(stp_printer_get_model(printer));
-  if (!(caps->max_xdpi%150))
-    return _("150x150 DPI");
-  else
-    return _("180x180 DPI");
-}
-
 static void
 canon_describe_resolution(const stp_printer_t printer,
 			const char *resolution, int *x, int *y)
@@ -1463,6 +1451,107 @@ canon_parameters(const stp_printer_t printer,	/* I - Printer model */
     valptrs[i] = c_strdup(_(p[i]));
 
   return ((char **) valptrs);
+}
+
+static const char *
+canon_default_parameters(const stp_printer_t printer,
+			 const char *ppd_file,
+			 const char *name)
+{
+  int		i;
+
+  static const char   *media_types[] =
+  {
+    (N_ ("Plain Paper")),
+    (N_ ("Transparencies")),
+    (N_ ("Back Print Film")),
+    (N_ ("Fabric Sheets")),
+    (N_ ("Envelope")),
+    (N_ ("High Resolution Paper")),
+    (N_ ("T-Shirt Transfers")),
+    (N_ ("High Gloss Film")),
+    (N_ ("Glossy Photo Paper")),
+    (N_ ("Glossy Photo Cards")),
+    (N_ ("Photo Paper Pro"))
+  };
+  static const char   *media_sources[] =
+  {
+    (N_ ("Auto Sheet Feeder")),
+    (N_ ("Manual with Pause")),
+    (N_ ("Manual without Pause")),
+  };
+
+  const canon_cap_t * caps= 
+    canon_get_model_capabilities(stp_printer_get_model(printer));
+
+  if (name == NULL)
+    return (NULL);
+
+  if (strcmp(name, "PageSize") == 0)
+    {
+      int height_limit, width_limit;
+      int papersizes = stp_known_papersizes();
+
+      width_limit = caps->max_width;
+      height_limit = caps->max_height;
+
+      for (i = 0; i < papersizes; i++) {
+	const stp_papersize_t pt = stp_get_papersize_by_index(i);
+	if (strlen(stp_papersize_get_name(pt)) > 0 &&
+	    stp_papersize_get_width(pt) <= width_limit &&
+	    stp_papersize_get_height(pt) <= height_limit)
+	  return _(stp_papersize_get_name(pt));
+      }
+      return NULL;
+    }
+  else if (strcmp(name, "Resolution") == 0)
+    {
+      char tmp[100];
+      int x,y;
+      int t;
+
+      for (x=1; x<6; x++)
+	{
+	  for (y=x-1; y<x+1; y++)
+	    {
+	      if ((t= canon_ink_type(caps,(x<<4)|y)) > -1)
+		{
+		  snprintf(tmp,99,"%dx%d DPI",
+			   (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
+#ifdef DEBUG
+		  fprintf(stderr,"supports mode '%s'\n",tmp);
+#endif
+		  return _(c_strdup(tmp));
+		}
+	    }
+	}
+      return NULL;
+    }
+  else if (strcmp(name, "InkType") == 0)
+    {
+      /* used internally: do not translate */
+      if ((caps->inks & CANON_INK_K))
+	return (_("Black"));
+      if ((caps->inks & CANON_INK_CMY))
+	return (_("Color"));
+      if ((caps->inks & CANON_INK_CMYK))
+	return (_("Black/Color"));
+      if ((caps->inks & CANON_INK_CcMmYK))
+	return (_("Photo/Color"));
+      if ((caps->inks & CANON_INK_CcMmYyK))
+	return (_("Black/Photo Color"));
+      return NULL;
+    }
+  else if (strcmp(name, "MediaType") == 0)
+    {
+      return _(media_types[0]);
+    }
+  else if (strcmp(name, "InputSlot") == 0)
+    {
+      return _(media_sources[0]);
+    }
+  else
+    return (NULL);
 }
 
 
@@ -2442,7 +2531,7 @@ const stp_printfuncs_t stp_canon_printfuncs =
   canon_imageable_area,
   canon_limit,
   canon_print,
-  canon_default_resolution,
+  canon_default_parameters,
   canon_describe_resolution,
   stp_verify_printer_params
 };
