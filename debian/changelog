@@ -13,9 +13,9 @@ gimp-print (4.3.0-1) unstable; urgency=low
   * Merge fixes from debian-branch:
     - Fix locales package description (Eric Sharkey)
     - Change conflicts to replaces (Eric Sharkey)
-    - Fix build dependencies (Eric Sharkey) 
+    - Fix build dependencies (Eric Sharkey)
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>  Sun, 30 Dec 2001 00:15:52 +0000
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Tue,  1 Jan 2002 18:25:03 +0000
 
 gimp-print (4.2.0-1) unstable; urgency=low
 
