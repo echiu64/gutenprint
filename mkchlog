@@ -1,5 +1,10 @@
 #!/usr/bin/perl
 
+# Generate a ChangeLog file from a CVS log.
+# Written by Robert Krawitz <rlk@alum.mit.edu>
+# This code is in the public domain and may be used
+# for any purpose.
+
 %logmsgs = ();			# Index by date, time, and author
 $skipme = 0;
 
