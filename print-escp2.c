@@ -2647,7 +2647,7 @@ escp2_unpack_4_1(int length,
   memset(out3, 0, limit);
   for (i = 0; i < limit; i++)
     {
-      unsigned inint = ((const int *) in)[0];
+      unsigned inint = ((const unsigned *) in)[0];
       if (inint > 0)
 	{
 	  unsigned char ob0 = 0;
@@ -2731,7 +2731,7 @@ escp2_unpack_4_2(int length,
   memset(out3, 0, limit);
   for (i = 0; i < limit; i++)
     {
-      unsigned inint = ((const int *) in)[0];
+      unsigned inint = ((const unsigned *) in)[0];
       if (inint != 0)
 	{
 	  unsigned char ob0 = 0;
@@ -2826,8 +2826,8 @@ escp2_unpack_8_1(int length,
   memset(out7, 0, limit);
   for (i = 0; i < limit; i++)
     {
-      unsigned long long inll = ((const int *) in)[0];
-      if (inll > 0)
+      unsigned long long inll = ((const unsigned long long *) in)[0];
+      if (inll != 0)
 	{
 	  unsigned char ob0 = 0;
 	  unsigned char ob1 = 0;
@@ -2935,7 +2935,7 @@ escp2_unpack_8_2(int length,
 		 unsigned char *out7)
 {
   int i;
-  int limit = (length + 7) / 8;
+  int limit = (length + 3) / 4;
   memset(out0, 0, limit);
   memset(out1, 0, limit);
   memset(out2, 0, limit);
@@ -2946,8 +2946,8 @@ escp2_unpack_8_2(int length,
   memset(out7, 0, limit);
   for (i = 0; i < limit; i++)
     {
-      unsigned long long inll = ((const int *) in)[0];
-      if (inll > 0)
+      unsigned long long inll = ((const unsigned long long *) in)[0];
+      if (inll != 0)
 	{
 	  unsigned char ob0 = 0;
 	  unsigned char ob1 = 0;
@@ -4268,6 +4268,7 @@ escp2_write_weave(void *        vsw,
 		case 4:
 		  escp2_unpack_4(length, sw->bitwidth, in,
 				 s[0], s[1], s[2], s[3]);
+		  break;
 		case 8:
 		  escp2_unpack_8(length, sw->bitwidth, in,
 				 s[0], s[1], s[2], s[3],
