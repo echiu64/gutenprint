@@ -19,8 +19,17 @@ later GNU Ghostscript release based on 6.51 (e. g. 6.52).
 Please read the README file for full instructions on building and
 installing this package.
 
-Gimp-Print 4.2.1 contains the following major changes and fixes over
-Gimp-Print 4.2.0:
+Gimp-Print 4.2.1-pre2 contains the following major changes and fixes
+over Gimp-Print 4.2.1-pre1:
+
+  1) The CUPS driver will now build properly, as in 4.2.0.
+
+  2) The Lexmark Z53 has been verified to work with the Z52 driver,
+     and is now supported.
+
+
+Gimp-Print 4.2.1-pre1 contains the following major changes and fixes
+over Gimp-Print 4.2.0:
 
   1) The escputil command is now translated properly.
 
@@ -52,6 +61,9 @@ Gimp-Print 4.2.0:
 
   10) Miscellaneous fixes for the Lexmark Z42.
 
+  11) Certain paper types and other issues on late model Stylus Photo
+     printers (780, 810/820, and 1280/1290) have been fixed.
+
 The following bugs are fixed in 4.2.1-pre1:
 
 485156 Debian build broken in 4.2.0
@@ -67,7 +79,6 @@ The following bugs are fixed in 4.2.1-pre1:
 507773 Old-style GS build broken
 516268 Erroneous comparison
 518224 makeinfo fails during build
-
 
 
 Gimp-Print 4.2 contains the following major changes over Gimp-Print
@@ -424,7 +435,7 @@ EPSON Stylus Photo EX
 EPSON Stylus Photo 720
 EPSON Stylus Photo 750
 EPSON Stylus Photo 780/785/790          (NEW)
-EPSON Stylus Photo 810/820              (NEW, not verified, expected to work)
+EPSON Stylus Photo 810/820              (NEW)
 EPSON Stylus Photo 870/875
 EPSON Stylus Photo 890/895              (NEW)
 EPSON Stylus Photo 1200
@@ -483,3 +494,4 @@ Lexmark 4076
 Lexmark Z42                             (NEW)
 Lexmark Z43                             (NEW)
 Lexmark Z52                             (NEW)
+Lexmark Z53                             (NEW)
