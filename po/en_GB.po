@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-06-03 00:12+0100\n"
+"POT-Creation-Date: 2001-06-02 20:24-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -187,7 +187,7 @@ msgstr ""
 msgid "Black"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:823 src/main/print-canon.c:1134
+#: src/gimp/gimp_main_window.c:827 src/main/print-canon.c:1134
 #: src/main/print-canon.c:1157 src/main/print-canon.c:1439
 #: src/main/print-canon.c:1550 src/main/print-lexmark.c:642
 #: src/main/print-lexmark.c:937 src/main/print-lexmark.c:1043
@@ -622,7 +622,7 @@ msgstr "Four Colour Standard"
 msgid "Three Color Composite"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1145 src/main/print-escp2.c:2669
+#: src/gimp/gimp_main_window.c:1149 src/main/print-escp2.c:2669
 #: src/main/print-escp2.c:2812 src/main/print-pcl.c:193
 msgid "Standard"
 msgstr ""
@@ -1453,201 +1453,201 @@ msgstr ""
 #.
 #. * Create the main dialog
 #.
-#: src/gimp/gimp_main_window.c:276
+#: src/gimp/gimp_main_window.c:280
 #, c-format
 msgid "%s -- Print v%s"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:285
+#: src/gimp/gimp_main_window.c:289
 msgid ""
 "Print and\n"
 "Save Settings"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:287
+#: src/gimp/gimp_main_window.c:291
 msgid ""
 "Save\n"
 "Settings"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:289
+#: src/gimp/gimp_main_window.c:293
 msgid "Print"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:291 src/gimp/gimp_main_window.c:865
-#: src/gimp/gimp_main_window.c:988
+#: src/gimp/gimp_main_window.c:295 src/gimp/gimp_main_window.c:869
+#: src/gimp/gimp_main_window.c:992
 msgid "Cancel"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:316
+#: src/gimp/gimp_main_window.c:320
 msgid "Preview"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:357
+#: src/gimp/gimp_main_window.c:361
 msgid "Position"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:368
+#: src/gimp/gimp_main_window.c:372
 msgid "Center Image"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:379
+#: src/gimp/gimp_main_window.c:383
 msgid "Units:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:382
+#: src/gimp/gimp_main_window.c:386
 msgid "Inch"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:391
+#: src/gimp/gimp_main_window.c:395
 msgid "cm"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:408
+#: src/gimp/gimp_main_window.c:412
 msgid "Left:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:419
+#: src/gimp/gimp_main_window.c:423
 msgid "Top:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:430
+#: src/gimp/gimp_main_window.c:434
 msgid "Right:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:442
+#: src/gimp/gimp_main_window.c:446
 msgid "Right Border:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:453
+#: src/gimp/gimp_main_window.c:457
 msgid "Bottom:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:465
+#: src/gimp/gimp_main_window.c:469
 msgid "Bottom Border:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:474
+#: src/gimp/gimp_main_window.c:478
 msgid "Auto"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:477
+#: src/gimp/gimp_main_window.c:481
 msgid "Portrait"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:480
+#: src/gimp/gimp_main_window.c:484
 msgid "Landscape"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:483
+#: src/gimp/gimp_main_window.c:487
 msgid "Upside down"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:486
+#: src/gimp/gimp_main_window.c:490
 msgid "Seascape"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:491
+#: src/gimp/gimp_main_window.c:495
 msgid "Orientation:"
 msgstr ""
 
 #.
 #. *  Printer settings frame...
 #.
-#: src/gimp/gimp_main_window.c:498
+#: src/gimp/gimp_main_window.c:502
 msgid "Printer Settings"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:515
+#: src/gimp/gimp_main_window.c:519
 msgid "Printer:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:529
+#: src/gimp/gimp_main_window.c:533
 msgid "Setup..."
 msgstr ""
 
 #.
 #. * Define new printer dialog
 #.
-#: src/gimp/gimp_main_window.c:540
+#: src/gimp/gimp_main_window.c:544
 msgid "New..."
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:552
+#: src/gimp/gimp_main_window.c:556
 msgid "Media Size:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:559 src/gimp/gimp_main_window.c:714
+#: src/gimp/gimp_main_window.c:563 src/gimp/gimp_main_window.c:718
 msgid "Width:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:572 src/gimp/gimp_main_window.c:727
+#: src/gimp/gimp_main_window.c:576 src/gimp/gimp_main_window.c:731
 msgid "Height:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:592
+#: src/gimp/gimp_main_window.c:596
 msgid "Media Type:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:600
+#: src/gimp/gimp_main_window.c:604
 msgid "Media Source:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:608
+#: src/gimp/gimp_main_window.c:612
 msgid "Ink Type:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:616
+#: src/gimp/gimp_main_window.c:620
 msgid "Resolution:"
 msgstr ""
 
 #.
 #. * Scaling...
 #.
-#: src/gimp/gimp_main_window.c:621
+#: src/gimp/gimp_main_window.c:625
 msgid "Scaling"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:660 src/gimp/gimp_main_window.c:669
+#: src/gimp/gimp_main_window.c:664 src/gimp/gimp_main_window.c:673
 msgid "Scaling:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:683
+#: src/gimp/gimp_main_window.c:687
 msgid "Percent"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:692
+#: src/gimp/gimp_main_window.c:696
 msgid "PPI"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:700
+#: src/gimp/gimp_main_window.c:704
 msgid "Set Image Scale"
 msgstr ""
 
 #.
 #. * Image type
 #.
-#: src/gimp/gimp_main_window.c:743
+#: src/gimp/gimp_main_window.c:747
 msgid "Image Settings"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:752
+#: src/gimp/gimp_main_window.c:756
 msgid "Image Type:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:763
+#: src/gimp/gimp_main_window.c:767
 msgid "Line Art"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:774
+#: src/gimp/gimp_main_window.c:778
 msgid "Solid Colors"
 msgstr "Solid Colours"
 
-#: src/gimp/gimp_main_window.c:785
+#: src/gimp/gimp_main_window.c:789
 msgid "Photograph"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:801
+#: src/gimp/gimp_main_window.c:805
 #, fuzzy
 msgid "Adjust Color..."
 msgstr "Adjust Colour"
@@ -1655,70 +1655,70 @@ msgstr "Adjust Colour"
 #.
 #. * Output type toggles...
 #.
-#: src/gimp/gimp_main_window.c:813
+#: src/gimp/gimp_main_window.c:817
 msgid "Output Type:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:833
+#: src/gimp/gimp_main_window.c:837
 msgid "Grayscale"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:844
+#: src/gimp/gimp_main_window.c:848
 msgid "Black and White"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:859
+#: src/gimp/gimp_main_window.c:863
 msgid "Setup"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:863 src/gimp/gimp_main_window.c:986
+#: src/gimp/gimp_main_window.c:867 src/gimp/gimp_main_window.c:990
 msgid "OK"
 msgstr ""
 
 #.
 #. * Printer driver option menu...
 #.
-#: src/gimp/gimp_main_window.c:885
+#: src/gimp/gimp_main_window.c:889
 msgid "Printer Model:"
 msgstr ""
 
 #.
 #. * PPD file...
 #.
-#: src/gimp/gimp_main_window.c:921
+#: src/gimp/gimp_main_window.c:925
 msgid "PPD File:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:936
+#: src/gimp/gimp_main_window.c:940
 msgid "Browse"
 msgstr ""
 
 #.
 #. * Print command...
 #.
-#: src/gimp/gimp_main_window.c:947
+#: src/gimp/gimp_main_window.c:951
 msgid "Command:"
 msgstr ""
 
 #.
 #. * Output file selection dialog...
 #.
-#: src/gimp/gimp_main_window.c:962
+#: src/gimp/gimp_main_window.c:966
 msgid "Print To File?"
 msgstr ""
 
 #.
 #. * PPD file selection dialog...
 #.
-#: src/gimp/gimp_main_window.c:973
+#: src/gimp/gimp_main_window.c:977
 msgid "PPD File?"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:982
+#: src/gimp/gimp_main_window.c:986
 msgid "Define New Printer"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1004
+#: src/gimp/gimp_main_window.c:1008
 msgid "Printer Name:"
 msgstr ""
 
