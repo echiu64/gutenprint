@@ -22,7 +22,7 @@
  */
 
 /**
- * @file util.h
+ * @file include/gimp-print/util.h
  * @brief Utility functions.
  */
 

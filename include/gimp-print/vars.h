@@ -22,7 +22,7 @@
  */
 
 /**
- * @file vars.h
+ * @file include/gimp-print/vars.h
  * @brief Print job functions.
  */
 
