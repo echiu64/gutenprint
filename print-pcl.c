@@ -32,6 +32,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.28  2000/02/15 22:04:08  davehill
+ *   Added fix when (left < 0)
+ *
  *   Revision 1.27  2000/02/15 03:51:40  rlk
  *
  *   1) It wasn't possible to print to the edge of the page (as defined by
@@ -633,6 +636,8 @@ pcl_print(int       model,		/* I - Model */
 
   if (left < 0)
     left = (page_width - out_width) / 2 + page_left;
+  else
+    left = left + page_left;
 
   if (top < 0)
     top  = (page_height + out_height) / 2 + page_bottom;
