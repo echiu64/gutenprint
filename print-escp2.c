@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.86  2000/02/18 01:58:42  rlk
+ *   Try to fix microweave and 360 dpi
+ *
  *   Revision 1.85  2000/02/18 00:31:28  rlk
  *   Remove debug printf
  *
@@ -942,13 +945,13 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
     case MODEL_INIT_440 : /* ESC 440, 640, 740, 900 */
 	if (output_type == OUTPUT_GRAY)
 	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black printing */
+	if (!use_softweave)
+	  fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
+	else
+	  fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
         if (ydpi > 360)
 	  {
 	    fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
-	    if (!use_softweave)
-	      fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
-	    else
-	      fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
 	    if (bits > 1)
 	      fwrite("\033(e\002\000\000\020", 7, 1, prn);	/* Default dots */
 	    else
@@ -961,13 +964,13 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black printing */
 	else
 	  fwrite("\033(K\002\000\000\002", 7, 1, prn);	/* Color printing */
+	if (!use_softweave)
+	  fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
+	else
+	  fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
         if (ydpi > 360)
 	  {
 	    fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
-	    if (!use_softweave)
-	      fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
-	    else
-	      fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
 	    fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Microdots */
 	  }
 	else
@@ -976,13 +979,13 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
     case MODEL_INIT_PHOTO2:
 	if (output_type == OUTPUT_GRAY)
 	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black printing */
+	if (!use_softweave)
+	  fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
+	else
+	  fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
         if (ydpi > 360)
 	  {
 	    fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
-	    if (!use_softweave)
-	      fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
-	    else
-	      fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
 	    if (bits > 1)
 	      fwrite("\033(e\002\000\000\020", 7, 1, prn);	/* Default dots */
 	    else
@@ -993,7 +996,8 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
         break;
   }
 
-  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
+  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
+      use_softweave)
     {
       fwrite("\033(C\004\000", 5, 1, prn);	/* Page length */
       n = ydpi * page_length / 72;
