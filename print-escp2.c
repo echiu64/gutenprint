@@ -118,20 +118,7 @@ typedef unsigned long long model_featureset_t;
  * An entry of -1 in a slot means that this resolution is not available.
  */
 
-typedef struct escp2_dot_sizes
-{
-  int dot_180;
-  int dot_360_microweave;
-  int dot_360;
-  int dot_720_microweave;
-  int dot_720;
-  int dot_1440_720_microweave;
-  int dot_1440_720;
-  int dot_1440_microweave;
-  int dot_1440;
-  int dot_2880_microweave;
-  int dot_2880;
-} escp2_dot_size_t;
+typedef int escp2_dot_size_t[11];
 
 /*
  * Specify the base density for each available resolution.
@@ -142,22 +129,7 @@ typedef struct escp2_dot_sizes
  * by 2.2.
  */
 
-typedef struct escp2_densities
-{
-  double d_180_180;
-  double d_360_360_micro;
-  double d_360_360;
-  double d_720_720_micro;
-  double d_720_720;
-  double d_1440_720_micro;
-  double d_1440_720;
-  double d_1440_1440_micro;
-  double d_1440_1440;
-  double d_2880_720_micro;
-  double d_2880_720;
-  double d_1440_2880;
-} escp2_densities_t;
-
+typedef double escp2_densities_t[12];
 
 /*
  * Definition of the multi-level inks available to a given printer.
@@ -182,41 +154,84 @@ typedef struct escp2_variable_ink
   double density;
 } escp2_variable_ink_t;
 
-typedef struct escp2_variable_inkset
-{
-  escp2_variable_ink_t *c;
-  escp2_variable_ink_t *m;
-  escp2_variable_ink_t *y;
-  escp2_variable_ink_t *k;
-} escp2_variable_inkset_t;
+typedef escp2_variable_ink_t *escp2_variable_inkset_t[NCOLORS];
 
-typedef struct escp2_variable_inklist
+#define INKTYPE_SINGLE	 0
+#define INKTYPE_VARIABLE 1
+#define INKTYPE_N	 2
+
+#define INKSET_4 	 0
+#define INKSET_6 	 1
+#define INKSET_7 	 2
+#define INKSET_N	 3
+
+#define RES_180_M 	 0
+#define RES_180 	 1
+#define RES_360_M 	 2
+#define RES_360 	 3
+#define RES_720_M 	 4
+#define RES_720 	 5
+#define RES_1440_720_M	 6
+#define RES_1440_720	 7
+#define RES_1440_1440_M	 8
+#define RES_1440_1440	 9
+#define RES_2880_720_M	 10
+#define RES_2880_720	 11
+#define RES_2880_1440_M	 12
+#define RES_2880_1440	 13
+#define RES_N		 14
+
+static int dotidmap[] = { 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 9, 10 };
+
+static int
+resid2dotid(int resid)
 {
-  escp2_variable_inkset_t *s_180_4;
-  escp2_variable_inkset_t *s_360_4;
-  escp2_variable_inkset_t *s_720_4;
-  escp2_variable_inkset_t *s_1440_720_4;
-  escp2_variable_inkset_t *s_1440_4;
-  escp2_variable_inkset_t *s_2880_4;
-  escp2_variable_inkset_t *s_180_6;
-  escp2_variable_inkset_t *s_360_6;
-  escp2_variable_inkset_t *s_720_6;
-  escp2_variable_inkset_t *s_1440_720_6;
-  escp2_variable_inkset_t *s_1440_6;
-  escp2_variable_inkset_t *s_2880_6;
-  escp2_variable_inkset_t *v_180_4;
-  escp2_variable_inkset_t *v_360_4;
-  escp2_variable_inkset_t *v_720_4;
-  escp2_variable_inkset_t *v_1440_720_4;
-  escp2_variable_inkset_t *v_1440_4;
-  escp2_variable_inkset_t *v_2880_4;
-  escp2_variable_inkset_t *v_180_6;
-  escp2_variable_inkset_t *v_360_6;
-  escp2_variable_inkset_t *v_720_6;
-  escp2_variable_inkset_t *v_1440_720_6;
-  escp2_variable_inkset_t *v_1440_6;
-  escp2_variable_inkset_t *v_2880_6;
-} escp2_variable_inklist_t;
+  if (resid < 0 || resid >= RES_N)
+    return -1;
+  return dotidmap[resid];
+}
+
+static int densidmap[] = { 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11 };
+
+static int
+resid2densid(int resid)
+{
+  if (resid < 0 || resid >= RES_N)
+    return -1;
+  return densidmap[resid];
+}
+
+static int
+bits2inktype(int bits)
+{
+  if (bits == 1)
+    return INKTYPE_SINGLE;
+  else
+    return INKTYPE_VARIABLE;
+}
+
+static int
+colors2inkset(int colors)
+{
+  switch (colors)
+    {
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+      return INKSET_4;
+    case 5:
+    case 6:
+      return INKSET_6;
+    case 7:
+      return INKSET_7;
+    default:
+      return -1;
+    }
+}
+
+typedef escp2_variable_inkset_t *escp2_variable_inklist_t[INKTYPE_N][INKSET_N][RES_N / 2];
+
 
 static simple_dither_range_t photo_cyan_dither_ranges[] =
 {
@@ -588,228 +603,252 @@ static escp2_variable_inkset_t escp2_multishot_photo_inks =
 
 static escp2_variable_inklist_t simple_4color_inks =
 {
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  {
+    {
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks
+    },
+  },
 };
 
 static escp2_variable_inklist_t simple_6color_inks =
 {
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &photo_inks,
-  &photo_inks,
-  &photo_inks,
-  &photo_inks,
-  &photo_inks,
-  &photo_inks,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  {
+    {
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+    },
+    {
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+    }
+  }
 };
 
 static escp2_variable_inklist_t variable_6pl_4color_inks =
 {
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  &escp2_6pl_standard_inks,
-  &escp2_6pl_standard_inks,
-  &escp2_6pl_standard_inks,
-  &escp2_6pl_standard_inks,
-  &escp2_6pl_1440_standard_inks,
-  &escp2_6pl_standard_inks,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  {
+    {
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+    }
+  },
+  {
+    {
+      &escp2_6pl_standard_inks,
+      &escp2_6pl_standard_inks,
+      &escp2_6pl_standard_inks,
+      &escp2_6pl_standard_inks,
+      &escp2_6pl_1440_standard_inks,
+      &escp2_6pl_standard_inks,
+      &escp2_6pl_standard_inks,
+    }
+  }
 };
 
 static escp2_variable_inklist_t variable_6pl_6color_inks =
 {
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &photo_inks,
-  &photo_inks,
-  &photo_inks,
-  &photo_inks,
-  &photo_inks,
-  &photo_inks,
-  &escp2_6pl_standard_inks,
-  &escp2_6pl_standard_inks,
-  &escp2_6pl_standard_inks,
-  &escp2_6pl_standard_inks,
-  &escp2_6pl_1440_standard_inks,
-  &escp2_6pl_standard_inks,
-  &escp2_6pl_photo_inks,
-  &escp2_6pl_photo_inks,
-  &escp2_6pl_photo_inks,
-  &escp2_6pl_photo_inks,
-  &escp2_6pl_1440_photo_inks,
-  &escp2_6pl_photo_inks
+  {
+    {
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks
+    },
+    {
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks
+    }
+  },
+  {
+    {
+      &escp2_6pl_standard_inks,
+      &escp2_6pl_standard_inks,
+      &escp2_6pl_standard_inks,
+      &escp2_6pl_standard_inks,
+      &escp2_6pl_1440_standard_inks,
+      &escp2_6pl_standard_inks,
+      &escp2_6pl_standard_inks
+    },
+    {
+      &escp2_6pl_photo_inks,
+      &escp2_6pl_photo_inks,
+      &escp2_6pl_photo_inks,
+      &escp2_6pl_photo_inks,
+      &escp2_6pl_1440_photo_inks,
+      &escp2_6pl_photo_inks,
+      &escp2_6pl_photo_inks
+    }
+  }
 };
 
-static escp2_variable_inklist_t variable_pigment_inks =
+static escp2_variable_inklist_t variable_pigment_6color_inks =
 {
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &photo_inks,
-  &photo_inks,
-  &photo_inks,
-  &photo_inks,
-  &photo_inks,
-  &photo_inks,
-  &escp2_pigment_standard_inks,
-  &escp2_pigment_standard_inks,
-  &escp2_pigment_standard_inks,
-  &escp2_pigment_standard_inks,
-  &escp2_pigment_standard_inks,
-  &escp2_pigment_standard_inks,
-  &escp2_pigment_photo_inks,
-  &escp2_pigment_photo_inks,
-  &escp2_pigment_photo_inks,
-  &escp2_pigment_photo_inks,
-  &escp2_pigment_photo_inks,
-  &escp2_pigment_photo_inks
+  {
+    {
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks
+    },
+    {
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks
+    }
+  },
+  {
+    {
+      &escp2_pigment_standard_inks,
+      &escp2_pigment_standard_inks,
+      &escp2_pigment_standard_inks,
+      &escp2_pigment_standard_inks,
+      &escp2_pigment_standard_inks,
+      &escp2_pigment_standard_inks,
+      &escp2_pigment_standard_inks
+    },
+    {
+      &escp2_pigment_photo_inks,
+      &escp2_pigment_photo_inks,
+      &escp2_pigment_photo_inks,
+      &escp2_pigment_photo_inks,
+      &escp2_pigment_photo_inks,
+      &escp2_pigment_photo_inks,
+      &escp2_pigment_photo_inks
+    }
+  }
 };
 
-static escp2_variable_inklist_t variable_3pl_inks =
+static escp2_variable_inklist_t variable_3pl_4color_inks =
 {
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  &escp2_multishot_standard_inks,
-  &escp2_multishot_standard_inks,
-  &escp2_6pl_standard_inks,
-  &escp2_3pl_standard_inks,
-  &escp2_3pl_1440_standard_inks,
-  &escp2_3pl_standard_inks,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  {
+    {
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+    }
+  },
+  {
+    {
+      &escp2_multishot_standard_inks,
+      &escp2_multishot_standard_inks,
+      &escp2_6pl_standard_inks,
+      &escp2_3pl_standard_inks,
+      &escp2_3pl_1440_standard_inks,
+      &escp2_3pl_standard_inks,
+      &escp2_3pl_standard_inks,
+    }
+  }
 };
 
 static escp2_variable_inklist_t variable_4pl_4color_inks =
 {
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  &escp2_multishot_standard_inks,
-  &escp2_multishot_standard_inks,
-  &escp2_6pl_standard_inks,
-  &escp2_4pl_standard_inks,
-  &escp2_4pl_1440_standard_inks,
-  &escp2_4pl_standard_inks,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  {
+    {
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+    }
+  },
+  {
+    {
+      &escp2_multishot_standard_inks,
+      &escp2_multishot_standard_inks,
+      &escp2_6pl_standard_inks,
+      &escp2_4pl_standard_inks,
+      &escp2_4pl_1440_standard_inks,
+      &escp2_4pl_standard_inks,
+      &escp2_4pl_standard_inks,
+    }
+  }
 };
 
 static escp2_variable_inklist_t variable_4pl_6color_inks =
 {
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &photo_inks,
-  &photo_inks,
-  &photo_inks,
-  &photo_inks,
-  &photo_inks,
-  &photo_inks,
-  &escp2_multishot_standard_inks,
-  &escp2_multishot_standard_inks,
-  &escp2_6pl_standard_inks,
-  &escp2_4pl_standard_inks,
-  &escp2_4pl_1440_standard_inks,
-  &escp2_4pl_standard_inks,
-  &escp2_multishot_photo_inks,
-  &escp2_multishot_photo_inks,
-  &escp2_6pl_photo_inks,
-  &escp2_4pl_photo_inks,
-  &escp2_4pl_1440_photo_inks,
-  &escp2_4pl_photo_inks
+  {
+    {
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks
+    },
+    {
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks
+    }
+  },
+  {
+    {
+      &escp2_multishot_standard_inks,
+      &escp2_multishot_standard_inks,
+      &escp2_6pl_standard_inks,
+      &escp2_4pl_standard_inks,
+      &escp2_4pl_1440_standard_inks,
+      &escp2_4pl_standard_inks,
+      &escp2_4pl_standard_inks,
+    },
+    {
+      &escp2_multishot_photo_inks,
+      &escp2_multishot_photo_inks,
+      &escp2_6pl_photo_inks,
+      &escp2_4pl_photo_inks,
+      &escp2_4pl_1440_photo_inks,
+      &escp2_4pl_photo_inks,
+      &escp2_4pl_photo_inks
+    }
+  }
 };
-
 
 typedef struct escp2_printer
 {
@@ -1060,7 +1099,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 1, 0x11, 1, 0x10, -1, 0x10, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .323, .365, .1825, .1825, .0913 },
-    &variable_3pl_inks
+    &variable_3pl_4color_inks
   },
   /* 14: Stylus Photo 750 */
   {
@@ -1216,7 +1255,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 2, 0x11, 4, 0x10, -1, 0x10, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .775, .852, .388, .438, .388, .438, .219, .219, .110 },
-    &variable_pigment_inks
+    &variable_pigment_6color_inks
   },
   /* 27: Stylus Pro 5000 */
   {
@@ -1312,7 +1351,7 @@ static escp2_printer_t model_capabilities[] =
     2880, 720,
     { -1, 1, 0x11, 1, 0x10, -1, 0x10, -1, -1, -1, 0x10 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .323, .365, .1825, .1825, .0913 },
-    &variable_3pl_inks
+    &variable_3pl_4color_inks
   },
   /* 35: Stylus Photo 790 */
   {
@@ -1347,6 +1386,7 @@ typedef struct escp_init
   int vertical_oversample;
   int bits;
   int unidirectional;
+  int resid;
   const char *paper_type;
 } escp_init_t;
 
@@ -1359,34 +1399,35 @@ typedef struct {
   int vertical_passes;
   int vertical_oversample;
   int unidirectional;
+  int resid;
 } res_t;
 
 static const res_t escp2_reslist[] = {
-  { "180 DPI",                                  180,  180,  0, 0, 1, 1, 0 },
-  { "360 DPI",                                  360,  360,  0, 0, 1, 1, 0 },
-  { "360 DPI Unidirectional",                   360,  360,  0, 0, 1, 1, 1 },
-  { "360 DPI Microweave",                       360,  360,  0, 1, 1, 1, 0 },
-  { "360 DPI Microweave Unidirectional",        360,  360,  0, 1, 1, 1, 1 },
-  { "360 DPI Softweave",                        360,  360,  1, 0, 1, 1, 0 },
-  { "360 DPI High Quality",                     360,  360,  1, 0, 2, 1, 0 },
-  { "360 DPI High Quality Unidirectional",      360,  360,  1, 0, 2, 1, 1 },
-  { "720 DPI Microweave",                       720,  720,  0, 1, 1, 1, 0 },
-  { "720 DPI Softweave",                        720,  720,  1, 0, 1, 1, 0 },
-  { "720 DPI Softweave Unidirectional",         720,  720,  1, 0, 1, 1, 1 },
-  { "720 DPI High Quality",                     720,  720,  1, 0, 2, 1, 0 },
-  { "720 DPI High Quality Unidirectional",      720,  720,  1, 0, 2, 1, 1 },
-  { "720 DPI Highest Quality",                  720,  720,  1, 0, 4, 1, 1 },
-  { "1440 x 720 DPI Microweave",                1440, 720,  0, 1, 1, 1, 0 },
-  { "1440 x 720 DPI Microweave Unidirectional", 1440, 720,  0, 1, 1, 1, 1 },
-  { "1440 x 720 DPI Softweave",                 1440, 720,  1, 0, 1, 1, 0 },
-  { "1440 x 720 DPI Softweave Unidirectional",  1440, 720,  1, 0, 1, 1, 1 },
-  { "1440 x 720 DPI Highest Quality",           1440, 720,  1, 0, 2, 1, 1 },
-  { "1440 x 1440 DPI Softweave",                1440, 1440, 1, 0, 1, 1, 1 },
-  { "1440 x 1440 DPI Highest Quality",          1440, 1440, 1, 0, 2, 1, 1 },
-  { "2880 x 720 DPI Softweave",                 2880, 720,  1, 0, 1, 1, 0 },
-  { "2880 x 720 DPI Softweave Unidirectional",  2880, 720,  1, 0, 1, 1, 1 },
-  { "2880 x 1440 DPI Softweave",                2880, 1440, 1, 0, 1, 1, 1 },
-  { "", 0, 0, 0, 0, 0 }
+  { "180 DPI",                                  180,  180,  0, 0, 1, 1, 0, 0 },
+  { "360 DPI",                                  360,  360,  0, 0, 1, 1, 0, 2 },
+  { "360 DPI Unidirectional",                   360,  360,  0, 0, 1, 1, 1, 2 },
+  { "360 DPI Microweave",                       360,  360,  0, 1, 1, 1, 0, 2 },
+  { "360 DPI Microweave Unidirectional",        360,  360,  0, 1, 1, 1, 1, 2 },
+  { "360 DPI Softweave",                        360,  360,  1, 0, 1, 1, 0, 3 },
+  { "360 DPI High Quality",                     360,  360,  1, 0, 2, 1, 0, 3 },
+  { "360 DPI High Quality Unidirectional",      360,  360,  1, 0, 2, 1, 1, 3 },
+  { "720 DPI Microweave",                       720,  720,  0, 1, 1, 1, 0, 4 },
+  { "720 DPI Softweave",                        720,  720,  1, 0, 1, 1, 0, 5 },
+  { "720 DPI Softweave Unidirectional",         720,  720,  1, 0, 1, 1, 1, 5 },
+  { "720 DPI High Quality",                     720,  720,  1, 0, 2, 1, 0, 5 },
+  { "720 DPI High Quality Unidirectional",      720,  720,  1, 0, 2, 1, 1, 5 },
+  { "720 DPI Highest Quality",                  720,  720,  1, 0, 4, 1, 1, 5 },
+  { "1440 x 720 DPI Microweave",                1440, 720,  0, 1, 1, 1, 0, 6 },
+  { "1440 x 720 DPI Microweave Unidirectional", 1440, 720,  0, 1, 1, 1, 1, 6 },
+  { "1440 x 720 DPI Softweave",                 1440, 720,  1, 0, 1, 1, 0, 7 },
+  { "1440 x 720 DPI Softweave Unidirectional",  1440, 720,  1, 0, 1, 1, 1, 7 },
+  { "1440 x 720 DPI Highest Quality",           1440, 720,  1, 0, 2, 1, 1, 7 },
+  { "1440 x 1440 DPI Softweave",                1440, 1440, 1, 0, 1, 1, 1, 9 },
+  { "1440 x 1440 DPI Highest Quality",          1440, 1440, 1, 0, 2, 1, 1, 9 },
+  { "2880 x 720 DPI Softweave",                 2880, 720,  1, 0, 1, 1, 0, 11},
+  { "2880 x 720 DPI Softweave Unidirectional",  2880, 720,  1, 0, 1, 1, 1, 11},
+  { "2880 x 1440 DPI Softweave",                2880, 1440, 1, 0, 1, 1, 1, 13},
+  { "", 0, 0, 0, 0, 0, -1 }
 };
 
 typedef struct {
@@ -1607,218 +1648,27 @@ escp2_enhanced_xres(int model)
 }
 
 static int
-escp2_ink_type(int model, int xdpi, int ydpi, int microweave)
+escp2_ink_type(int model, int resid)
 {
-  if (microweave)
-    {
-      switch (xdpi)
-	{
-	case 180:
-	  return model_capabilities[model].dot_sizes.dot_180;
-	case 360:
-	  return model_capabilities[model].dot_sizes.dot_360_microweave;
-	case 720:
-	  return model_capabilities[model].dot_sizes.dot_720_microweave;
-	case 1440:
-	  switch (ydpi)
-	    {
-	    case 720:
-	      return model_capabilities[model].dot_sizes.dot_1440_720_microweave;
-	    case 1440:
-	      return model_capabilities[model].dot_sizes.dot_1440_microweave;
-	    default:
-	      return -1;
-	    }
-	case 2880:
-	  return model_capabilities[model].dot_sizes.dot_2880_microweave;
-	default:
-	  return -1;
-	}
-    }
-  else
-    {
-      switch (ydpi)
-	{
-	case 180:
-	  return model_capabilities[model].dot_sizes.dot_180;
-	case 360:
-	  return model_capabilities[model].dot_sizes.dot_360;
-	case 720:
-	  return model_capabilities[model].dot_sizes.dot_720;
-	case 1440:
-	  switch (ydpi)
-	    {
-	    case 720:
-	      return model_capabilities[model].dot_sizes.dot_1440_720;
-	    case 1440:
-	      return model_capabilities[model].dot_sizes.dot_1440;
-	    default:
-	      return -1;
-	    }
-	case 2880:
-	  return model_capabilities[model].dot_sizes.dot_2880;
-	default:
-	  return -1;
-	}
-    }
+  int dotid = resid2dotid(resid);
+  return model_capabilities[model].dot_sizes[dotid];
 }
 
 static double
-escp2_density(int model, int xdpi, int ydpi, int microweave)
+escp2_density(int model, int resid)
 {
-  if (microweave)
-    {
-      switch (xdpi)
-	{	
-	case 180:
-	  return model_capabilities[model].densities.d_180_180;
-	case 360:
-	  return model_capabilities[model].densities.d_360_360_micro;
-	case 720:
-	  return model_capabilities[model].densities.d_720_720_micro;
-	case 1440:
-	  switch (ydpi)
-	    {
-	    case 720:
-	      return model_capabilities[model].densities.d_1440_720_micro;
-	    case 1440:
-	      return model_capabilities[model].densities.d_1440_1440_micro;
-	    default:
-	      return 0;
-	    }
-	case 2880:
-	  return model_capabilities[model].densities.d_2880_720_micro;
-	}
-    }
-  else
-    {
-      switch (xdpi)
-	{
-	case 180:
-	  return model_capabilities[model].densities.d_180_180;
-	case 360:
-	  return model_capabilities[model].densities.d_360_360;
-	case 720:
-	  return model_capabilities[model].densities.d_720_720;
-	case 1440:
-	  switch (ydpi)
-	    {
-	    case 720:
-	      return model_capabilities[model].densities.d_1440_720;
-	    case 1440:
-	      return model_capabilities[model].densities.d_1440_1440;
-	    case 2880:
-	      return model_capabilities[model].densities.d_1440_2880;
-	    }
-	case 2880:
-	  return model_capabilities[model].densities.d_2880_720;
-	}
-    }
-  return 0;
+  int densid = resid2densid(resid);
+  return model_capabilities[model].densities[densid];
 }
 
 static escp2_variable_inkset_t *
-escp2_inks(int model, int xdpi, int ydpi, int colors, int bits)
+escp2_inks(int model, int resid, int colors, int bits)
 {
   escp2_variable_inklist_t *inks = model_capabilities[model].inks;
-  switch (bits)
-    {
-    case 1:
-      switch (colors)
-	{
-	case 1:
-	case 4:
-	  switch (xdpi)
-	    {
-	    case 180:
-	      return inks->s_180_4;
-	    case 360:
-	      return inks->s_360_4;
-	    case 720:
-	      return inks->s_720_4;
-	    case 1440:
-	      switch (ydpi)
-		{
-		case 720:
-		  return inks->s_1440_720_4;
-		case 1440:
-		  return inks->s_1440_4;
-		}
-	      break;
-	    case 2880:
-	      return inks->s_2880_4;
-	    }
-	case 6:
-	  switch (xdpi)
-	    {
-	    case 180:
-	      return inks->s_180_6;
-	    case 360:
-	      return inks->s_360_6;
-	    case 720:
-	      return inks->s_720_6;
-	    case 1440:
-	      switch (ydpi)
-		{
-		case 720:
-		  return inks->s_1440_720_6;
-		case 1440:
-		  return inks->s_1440_6;
-		}
-	      break;
-	    case 2880:
-	      return inks->s_2880_6;
-	    }
-	}
-    case 2:
-      switch (colors)
-	{
-	case 1:
-	case 4:
-	  switch (xdpi)
-	    {
-	    case 180:
-	      return inks->v_180_4;
-	    case 360:
-	      return inks->v_360_4;
-	    case 720:
-	      return inks->v_720_4;
-	    case 1440:
-	      switch (ydpi)
-		{
-		case 720:
-		  return inks->v_1440_720_4;
-		case 1440:
-		  return inks->v_1440_4;
-		}
-	      break;
-	    case 2880:
-	      return inks->v_2880_4;
-	    }
-	case 6:
-	  switch (xdpi)
-	    {
-	    case 180:
-	      return inks->v_180_6;
-	    case 360:
-	      return inks->v_360_6;
-	    case 720:
-	      return inks->v_720_6;
-	    case 1440:
-	      switch (ydpi)
-		{
-		case 720:
-		  return inks->v_1440_720_6;
-		case 1440:
-		  return inks->v_1440_6;
-		}
-	      break;
-	    case 2880:
-	      return inks->v_2880_6;
-	    }
-	}
-    }
-  return NULL;
+  int inktype = bits2inktype(bits);
+  int inkset = colors2inkset(colors);
+  resid /= 2;
+  return (*inks)[inktype][inkset][resid];
 }
 
 static unsigned
@@ -1919,8 +1769,7 @@ escp2_parameters(const printer_t *printer,	/* I - Printer model */
       *count = 0;
       while(res->hres)
 	{
-	  if (escp2_ink_type(model, res->hres, res->vres, !res->softweave)
-	      != -1 &&
+	  if (escp2_ink_type(model, res->resid) != -1 &&
 	      res->vres <= escp2_max_vres(model) &&
 	      res->hres <= escp2_max_hres(model))
 	    {
@@ -2019,8 +1868,7 @@ escp2_default_resolution(const printer_t *printer)
   const res_t *res = &(escp2_reslist[0]);
   while (res->hres)
     {
-      if (escp2_ink_type(printer->model, res->hres, res->vres, !res->softweave)
-	  != -1 &&
+      if (escp2_ink_type(printer->model, res->resid) != -1 &&
 	  res->vres <= escp2_max_vres(printer->model) &&
 	  res->hres <= escp2_max_hres(printer->model))
 	{
@@ -2051,8 +1899,7 @@ escp2_describe_resolution(const printer_t *printer,
   const res_t *res = &(escp2_reslist[0]);
   while (res->hres)
     {
-      if (escp2_ink_type(printer->model, res->hres, res->vres, !res->softweave)
-	  != -1 &&
+      if (escp2_ink_type(printer->model, res->resid) != -1 &&
 	  res->vres <= escp2_max_vres(printer->model) &&
 	  res->hres <= escp2_max_hres(printer->model) &&
 	  !strcmp(resolution, res->name))
@@ -2161,8 +2008,7 @@ static void
 escp2_set_dot_size(FILE *prn, escp_init_t *init)
 {
   /* Dot size */
-  int drop_size = escp2_ink_type(init->model, init->xdpi, init->ydpi,
-				 !init->use_softweave);
+  int drop_size = escp2_ink_type(init->model, init->resid);
   if (drop_size >= 0)
     fprintf(prn, "\033(e\002%c%c%c", 0, 0, drop_size);
 }
@@ -2304,8 +2150,10 @@ escp2_print(const printer_t *printer,		/* I - Model */
   int		left = v->left;
   int		y;		/* Looping vars */
   int		xdpi, ydpi;	/* Resolution */
+  int		resid;
   int		physical_ydpi;
   int		physical_xdpi;
+  int		i;
   int		n;		/* Output number */
   unsigned short *out;	/* Output pixels (16-bit) */
   unsigned char	*in,		/* Input pixels */
@@ -2424,6 +2272,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	    max_vres = escp2_base_resolution;
 	  xdpi = res->hres;
 	  ydpi = res->vres;
+	  resid = res->resid;
 	  vertical_passes = res->vertical_passes;
 	  vertical_oversample = res->vertical_oversample;
 	  unidirectional = res->unidirectional;
@@ -2493,6 +2342,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   init.vertical_passes = vertical_passes;
   init.vertical_oversample = vertical_oversample;
   init.unidirectional = unidirectional;
+  init.resid = resid;
   init.bits = bits;
   init.paper_type = media_type;
 
@@ -2579,7 +2429,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
     nv.density *= pt->base_density;
   else
     nv.density *= .5;		/* Can't find paper type? Assume plain */
-  nv.density *= escp2_density(model, xdpi, ydpi, !use_softweave);
+  nv.density *= escp2_density(model, resid);
   if (nv.density > 1.0)
     nv.density = 1.0;
   if (colormode == COLOR_MONOCHROME)
@@ -2622,19 +2472,12 @@ escp2_print(const printer_t *printer,		/* I - Model */
   else
     dither_set_adaptive_divisor(dither, 4);
 
-  inks = escp2_inks(model, xdpi, ydpi, use_6color ? 6 : 4, bits);
-  if (inks->c)
-    dither_set_ranges(dither, ECOLOR_C, inks->c->count, inks->c->range,
-		      inks->c->density * nv.density);
-  if (inks->m)
-    dither_set_ranges(dither, ECOLOR_M, inks->m->count, inks->m->range,
-		      inks->m->density * nv.density);
-  if (inks->y)
-    dither_set_ranges(dither, ECOLOR_Y, inks->y->count, inks->y->range,
-		      inks->y->density * nv.density);
-  if (inks->k)
-    dither_set_ranges(dither, ECOLOR_K, inks->k->count, inks->k->range,
-		      inks->k->density * nv.density);
+  inks = escp2_inks(model, resid, use_6color ? 6 : 4, bits);
+  if (inks)
+    for (i = 0; i < NCOLORS; i++)
+      if ((*inks)[i])
+	dither_set_ranges(dither, i, (*inks)[i]->count, (*inks)[i]->range,
+			  (*inks)[i]->density * nv.density);
 
   if (bits == 2)
     {

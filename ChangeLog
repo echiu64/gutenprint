@@ -1,5 +1,12 @@
 2000-12-16	<rlk@sourceforge.net>
 
+	Files:	ChangeLog (1.63) (+26 -0)
+		print-dither.c (1.108) (+77 -115)
+	
+	More cleanup of the dither code.
+	
+2000-12-16	<rlk@sourceforge.net>
+
 	Files:	print-canon.c (1.104) (+12 -11)
 		print.h (1.97) (+20 -44)
 		print-util.c (1.154) (+2 -2)

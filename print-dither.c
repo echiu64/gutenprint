@@ -342,7 +342,7 @@ shear_matrix(dither_matrix_t *mat)
 
 static void
 init_matrix(dither_matrix_t *mat, int x_size, int y_size,
-	    unsigned int *array, int transpose)
+	    unsigned int *array, int transpose, int prescaled)
 {
   int x, y;
   mat->base = x_size;
@@ -358,9 +358,10 @@ init_matrix(dither_matrix_t *mat, int x_size, int y_size,
 	  mat->matrix[x + y * mat->x_size] = array[y + x * mat->y_size];
 	else
 	  mat->matrix[x + y * mat->x_size] = array[x + y * mat->x_size];
-	mat->matrix[x + y * mat->x_size] =
-	  (long long) mat->matrix[x + y * mat->x_size] * 65536ll /
-	  (long long) (mat->x_size * mat->y_size);
+	if (!prescaled)
+	  mat->matrix[x + y * mat->x_size] =
+	    (long long) mat->matrix[x + y * mat->x_size] * 65536ll /
+	    (long long) (mat->x_size * mat->y_size);
       }
   mat->last_x = mat->last_x_mod = 0;
   mat->last_y = mat->last_y_mod = 0;
@@ -370,7 +371,7 @@ init_matrix(dither_matrix_t *mat, int x_size, int y_size,
 
 static void
 init_matrix_short(dither_matrix_t *mat, int x_size, int y_size,
-		  unsigned short *array, int transpose)
+		  unsigned short *array, int transpose, int prescaled)
 {
   int x, y;
   mat->base = x_size;
@@ -383,12 +384,13 @@ init_matrix_short(dither_matrix_t *mat, int x_size, int y_size,
     for (y = 0; y < mat->y_size; y++)
       {
 	if (transpose)
-	  mat->matrix[x + y * mat->x_size] = array[y + x * mat->x_size];
+	  mat->matrix[x + y * mat->x_size] = array[y + x * mat->y_size];
 	else
 	  mat->matrix[x + y * mat->x_size] = array[x + y * mat->x_size];
-	mat->matrix[x + y * mat->x_size] =
-	  (long long) mat->matrix[x + y * mat->x_size] * 65536ll /
-	  (long long) (mat->x_size * mat->y_size);
+	if (!prescaled)
+	  mat->matrix[x + y * mat->x_size] =
+	    (long long) mat->matrix[x + y * mat->x_size] * 65536ll /
+	    (long long) (mat->x_size * mat->y_size);
       }
   mat->last_x = mat->last_x_mod = 0;
   mat->last_y = mat->last_y_mod = 0;
@@ -482,7 +484,6 @@ ditherpoint(const dither_t *d, dither_matrix_t *mat, int x)
 
   if (x == mat->last_x + 1)
     {
-      mat->last_x = x;
       mat->last_x_mod++;
       mat->index++;
       if (mat->last_x_mod >= mat->x_size)
@@ -493,7 +494,6 @@ ditherpoint(const dither_t *d, dither_matrix_t *mat, int x)
     }
   else if (x == mat->last_x - 1)
     {
-      mat->last_x = x;
       mat->last_x_mod--;
       mat->index--;
       if (mat->last_x_mod < 0)
@@ -507,10 +507,10 @@ ditherpoint(const dither_t *d, dither_matrix_t *mat, int x)
     }
   else
     {
-      mat->last_x = x;
       mat->last_x_mod = (x + mat->x_offset) % mat->x_size;
       mat->index = mat->last_x_mod + mat->last_y_mod;
     }
+  mat->last_x = x;
   return mat->matrix[mat->index];
 }
 
@@ -569,15 +569,15 @@ init_dither(int in_width, int out_width, int horizontal_aspect,
   else
     {
       if (d->y_aspect / d->x_aspect == 2)
-	init_matrix_short(&(d->mat6), 367, 179, rect2x1, 0);
+	init_matrix_short(&(d->mat6), 367, 179, rect2x1, 0, 1);
       else if (d->y_aspect / d->x_aspect == 4)
-	init_matrix_short(&(d->mat6), 509, 131, rect4x1, 0);
+	init_matrix_short(&(d->mat6), 509, 131, rect4x1, 0, 1);
       else if (d->x_aspect / d->y_aspect == 2)
-	init_matrix_short(&(d->mat6), 179, 367, rect2x1, 1);
+	init_matrix_short(&(d->mat6), 179, 367, rect2x1, 1, 1);
       else if (d->x_aspect / d->y_aspect == 4)
-	init_matrix_short(&(d->mat6), 131, 509, rect4x1, 1);
+	init_matrix_short(&(d->mat6), 131, 509, rect4x1, 1, 1);
       else
-	init_matrix_short(&(d->mat6), 257, 257, quic2, 0);
+	init_matrix_short(&(d->mat6), 257, 257, quic2, 0, 1);
     }
 
   x_3 = d->mat6.x_size / 3;
