@@ -44,6 +44,7 @@ typedef struct {
   int monomode;
   int nozzle_separation;
   int nozzles;
+  int extraskip;
 } pstate_t;
 
 /* We'd need about a gigabyte of ram to hold a ppm file of an 8.5 x 11
@@ -320,6 +321,7 @@ int update_page(unsigned char *buf,int bufsize,int m,int n,int color,int density
   }
 
   skip=pstate.relative_horizontal_units/density;
+  skip*=pstate.extraskip;
 
   if (skip==0) {
     fprintf(stderr,"Warning!  Attempting to print at %d DPI but units are set to %d DPI.\n",density,pstate.relative_horizontal_units);
@@ -733,6 +735,7 @@ int main(int argc,char *argv[]){
 
     unweave=0;
     pstate.nozzle_separation=6;
+    pstate.extraskip=2;
     fp_r = fp_w = NULL;
     for (arg=1;arg<argc;arg++) {
       if (argv[arg][0]=='-') {
