@@ -247,7 +247,7 @@
 
 <printer name="EPSON Stylus C80" driver="escp2-c80">
 <color>
-<model value=43>
+<model value=44>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>
