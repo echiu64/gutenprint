@@ -98,7 +98,7 @@ Richter wrote one within days!
   </para>
   <para>
 In July 2000, not more than a year after Robert bought his Epson
-Stylus Photo EX, he was honored to be invited to the Linux Printing
+Stylus Photo EX, he was invited to the Linux Printing
 Summit hosted by VA Linux Systems. In preparation for that, he spent
 long hours printing out test images.  Robert went back to the
 Gimp-Print version 3.0.9 release, which seemed like such an advance
@@ -109,7 +109,7 @@ an idea what six color and variable dot size printers can do. It also
 illustrates what a group of committed people can do.
   </para>
   <para>
-Robert came away from the Printing Summit with alot of new ideas, and in
+Robert came away from the Printing Summit with a lot of new ideas, and in
 November 2000, Gimp-Print version 4.0 was released, the culmination of 9 months
 of work by the team.  The quality was already tremendously improved
 over what the software could do at the Printing Summit.
@@ -121,33 +121,33 @@ version 4.0, there are vast improvements:
   <itemizedlist>
     <listitem>
       <para>
-      the driver is built as a shared library, making it much easier
+      The driver is built as a shared library, making it much easier
 to use by higher layers of software 
       </para>
     </listitem>
     <listitem>
       <para>
-      the packaging system now follows GNU standards
+      The packaging system now follows GNU standards
       </para>
     </listitem>
     <listitem>
       <para>
-the print quality (in particular, color accuracy, a well-known weakness in 4.0) is even better
+The print quality (in particular, color accuracy, a well-known weakness in 4.0) is even better
       </para>
     </listitem>
     <listitem>
       <para>
-      improved performance
+      Improved performance
       </para>
     </listitem>
     <listitem>
       <para>
-      many more options
+      Many more options
       </para>
     </listitem>
     <listitem>
       <para>
-      more supported printers
+      More supported printers
       </para>
     </listitem>
 
