@@ -1,7 +1,6 @@
-Gimp-Print 4.2.6-rc2, released December 5, 2003, is a release
-candidate in the Gimp-Print 4.2 series.  We expect that 4.2.6, when
-the final version is released, to be the last release in the 4.2
-series.
+Gimp-Print 4.2.6, released December 20, 2003, is a stable release
+in the Gimp-Print 4.2 series.  This is expected to be the last release
+in the 4.2 series.
 
 Gimp-Print is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -44,142 +43,156 @@ http://gimp-print.sourceforge.net/MacOSX.php3.
 Please read the README file for full instructions on installing this
 package from source code.
 
-Gimp-Print 4.2.6-rc2 contains the following major changes over
-Gimp-Print 4.2.6-rc1:
+Gimp-Print 4.2.6 contains the following major changes over Gimp-Print
+4.2.5:
 
-1) The definitions of the Epson Stylus CX-6300 and CX-6400 have been
-   fixed.
+* Major bugs fixed:
 
-2) The European 10x15 cm paper size has been added.
+  1) (bug 627266) The CUPS driver offers an "Autoselect" option for the
+     media source (input slot).  This behavior cannot be disabled.
+     Previous versions of Gimp-Print did not handle this option
+     appropriately.  This option is now handled appropriately, by
+     treating it as the default input slot for the printer.
 
-3) A problem with builds using VPATH introduced in 4.2.6-rc1 has been
-   fixed.
+  2) (bug 729918) The PostScript driver (used only in the Print plugin
+     for the GIMP) did not operate correctly if the locale was set to
+     something other than the US English locale.
 
-4) The CUPS driver does not attempt to set empty values of media
-   source, media type, and ink type.  This resolves bug 627266 by
-   treating the Autoselect option correctly.
+  3) (bug 668342) The Canon S-450, and other Canon printers, only
+     printed the first page of a multi-page job if the printer was
+     hosted on a Windows system.
 
-5) Some Epson printer resolution names have been changed.  This change
-   does not introduce an incompatibility.
+  4) (bug 842715) The Epson Stylus Color 600, 800, 850, 1520, and 3000
+     failed to print in black and white or grayscale at certain
+     resolutions.
 
-The following bug has been fixed in Gimp-Print 4.2.6-rc2:
+
+* New Functionality:
+
+  1) A number of newer Epson Stylus printers and multi-function devices
+     are supported.  Please see the supported printers list at the
+     bottom of this file for full information on supported printers.
+
+  2) The Canon S200 is now supported.
+
+  3) The European 10x15 cm and US Engineering C paper sizes have been
+     added.
+
+  4) The CUPS driver now offers normal and reversed paper order,
+     permitting printing documents in the correct page order on inkjet
+     and some laser printers.
+
+  5) A Czech language translation has been added.
+
+
+* Quality improvements:
+
+  1) Under OS X, the options are grouped more appropriately, making for
+     easier use.
+
+  2) Some Epson printer resolution names have been changed for clarity.
+     This change does not introduce an incompatibility.
+
+  3) The escputil command no longer hangs if the printer does not respond.
+
+  4) Minor speed improvement for the HP LaserJet IIP.
+
+  5) Minor adjustment to the HP DeskJet 340 margins.
+
+  6) The PPD files have been audited for conformance to the PPD
+     specification.
+
+
+* Exceptions and Workarounds:
+
+  1) There are longstanding reports of problems printing with certain
+     USB-parallel adapters on Macintosh OS X.  In particular, many
+     users have reported problems with the Keyspan adapter; we
+     recommend that users having problems try different brands of
+     adapters, and avoid using USB hubs.  Please check our
+     web site (http://gimp-print.sourceforge.net/MacOSX.php3) for a
+     link to a user feedback forum regarding these cables.
+
+  2) Mac OS X users who use the Epson Printer Utility (provided by
+     Epson with their standard driver set) to check ink levels and
+     perform maintenance tasks, such as head cleaning or head
+     alignment, may encounter print job failures when attempting to
+     print with the Gimp-Print driver after using the Epson
+     utility. The cause for this failure is currently unknown, but the
+     workaround is to completely power-cycle the printer, after which
+     the Gimp-Print driver should again print normally.  Another
+     option is to disable the Epson Printer Utility.
+
+  3) The Mac OS X print dialog may offer an "Autoselect" option as the
+     default media source (input slot) on some printers.  This option
+     may not be valid and can result in nothing being printed.  The
+     workaround is to choose a different setting (explicitly select
+     the input slot you wish to use).
+
+  4) The new HP DesignJets have not been fully tuned.  In particular,
+     there are reports that they print too light.  This can be
+     corrected with the Density adjustment (try 1.5~1.7 or
+     thereabouts).
+
+  5) The list of compatible and potentially compatible Hewlett-Packard
+     printers has been updated with the latest available information.
+     If a particular printer does not work with the recommended
+     driver, we recommend that you try other similar drivers, check
+     the Feature Requests at
+     http://sourceforge.net/tracker/?atid=101537&group_id=1537&func=browse,
+     and if the printer is not listed please file a feature request
+     (via the Submit New button).
+
+  6) Borderless (full-bleed) printing is not quite correct on the
+     Epson Stylus Photo printers that support it (see bug 621668).
+     Typically, the left or right margin is off by 1 mm or less,
+     resulting in a very fine white strip on that edge.
+
+  7) Many Canon printers do not print correctly at 720x360 DPI.  The
+     workaround is to use 360 or 720 DPI.
+
+  8) Many new Epson Stylus printers do not return status to the
+     escputil command (for ink level check, etc).  We recommend use of
+     the mtink tool (please see http://xwtools.automatix.de) for this
+     purpose.
+
+
+The following bugs have been fixed in Gimp-Print 4.2.6:
 
 627266 Mac OS X: Autoselect option incorrectly offered
-
-
-Gimp-Print 4.2.6-rc1 contains the following major changes over
-Gimp-Print 4.2.6-pre3:
-
-1) Printing in black and white and grayscale modes on the Epson Stylus
-   Color 600, 800, 850, 1520, and 3000 is fixed.
-
-The following bug has been fixed in Gimp-Print 4.2.6-rc1:
-
-842715 Epson 600/800/850/1520/3000 fail at certain resolutions BW
-
-The following previously reported bugs have been tested and cannot be
-reproduced:
-
-828993 CNR: Epson SC 850 using Microweave prints tall characters
-764041 CNR: Epson 3000 720x360DPI problem
-
-
-Gimp-Print 4.2.6-pre3 contains the following major changes over
-Gimp-Print 4.2.6-pre2:
-
-1) Support for the Epson Stylus C43/C44, C63/C64, and PX-V500
-   printers, and CX-3100, CX-5100, CX-6300, CX-6400, CX-8300, and
-   CX-8400 multi-function devices (printer function only).
-
-2) Under OS X, the PPD files have better option grouping.
-
-3) Canon printers should now print all pages of a job when the printer
-   is hosted on a Windows system (bug 668342).
-
-The following bug has been fixed in Gimp-Print 4.2.6-pre3:
-
 668342 Canon S-450 prints only one page of a job
-
-
-Gimp-Print 4.2.6-pre2 contains the following major changes over
-Gimp-Print 4.2.6-pre1:
-
-1) A bug in the CUPS driver whereby the quality degrades on each
-   successive page of a multi-page job has been fixed.  This bug was
-   introduced in 4.2.6-pre1, and is not present in 4.2.5.
-
-2) The CUPS driver now offers normal and reversed paper order,
-   permitting printing documents in the correct order on inkjet
-   printers.
-
-3) The Postscript driver in the GIMP plug-in now works correctly in
-   non-US locales.
-
-4) Preliminary support for the Epson Stylus C83 and C84.
-
-5) Preliminary support for the Canon S200.
-
-6) A Czech language translation has been added.
-
-7) The printer compatibility list has been updated to reflect the
-   latest information from linuxprinting.org.
-
-8) Engineering C paper size is now added.
-
-9) escputil will no longer hang if the printer does not respond.
-
-10) The Swedish and German translations have been updated.
-
-11) The man pages have been updated.
-
-12) On Mac OS X when using the provided installer package the PPDs are
-    now stored in the standard PPD location 
-
-          /Library/Printers/PPDs/Contents/Resources/en.lproj
-
-    rather than in
-
-          /usr/share/cups/model/C
-
-    which is different from all previous releases. This change was
-    made for performance reasons (memory usage).  As a consequence,
-    the PPDs will no longer be available for printer setup when
-    using the CUPS web admin. The Apple provided Print Center application
-    is not affected by this change.
-
-The following bugs have been fixed in Gimp-Print 4.2.6-pre2:
-
-806902 CUPS quality degrades on multi-page jobs (4.2.6-pre1 only)
 729918 Postscript family driver fails in non-US locale
 735493 CUPS PPD files lacking *OutputOrder
+842715 Epson 600/800/850/1520/3000 fail at certain resolutions BW
 
+The following bugs have been tested and cannot be reproduced:
 
-Gimp-Print 4.2.6-pre1 contains the following major changes over
-Gimp-Print 4.2.5:
+764041 CNR: Epson 3000 720x360DPI problem
+828993 CNR: Epson SC 850 using Microweave prints tall characters
 
-1) Preliminary support for Epson Stylus C50, Stylus Photo 900, CL-740,
-   PM-870C, PM-930C, PM-970C, and PM-3700C.  The PM-930C and PM-970C
-   are limited to 2880x1440 DPI in this release; this restriction will
-   not be lifted in 4.2.
+The following bugs are currently open:
 
-2) Better conformance to the PPD spec on the part of the CUPS PPD
-   files.
+470049 CUPS PPD files not translated on all systems
+538097 QUALITY-Canon S400 dark and yellow cast
+549677 Canon BJC-1000 functions incorrectly at 720x360 DPI
+557868 QUALITY-HP DeskJet 560 is washed out
+581168 Canon BJC 250 just spits out pages
+601767 Mac OS X: Canon BJC 2100 does not print multiple pages
+602933 QUALITY-Canon S800 dark and grainy
+613054 Mac OS X: Printing from InDesign 2.0 on OS 10.2.1
+614882 QUALITY - Canon BJC-55 is too pale and desaturated
+621668 Epson Stylus full bleed prints have slight margin
+627978 QUALITY: Canon BJC-6500 has magenta cast.
+631937 HP DesignJet Sheet Cutter Problem
+641981 QUALITY: HP DesignJets print too light
+645116 QUALITY: HP DeskJet regression from 4.1.7
+647035 QUALITY: Colors don't match OEM drivers
+662988 HP DeskJet 970Cxi page horizontally squeezed
+672692 Epson photo 700 single page of multi page job
+687656 Paper Positioning Problems Epson 7600
+704334 QUALITY: Epson SP 2100: Green Cast/Dark Colours/Poor Greys
+811062 Reverse printing
 
-3) Per-page variables in the CUPS driver are now set at the beginning
-   of each page.  This makes it possible to change the page size (for
-   example) in the middle of a document.
-
-4) The PostScript LanguageLevel attribute in the CUPS PPD files now
-   defaults to 3, as all current Ghostscript releases are fully
-   compatible with Level 3 PostScript.
-
-5) Minor speed improvement for the HP LaserJet IIP.
-
-6) The Foomatic data now uses the clear-text printer ID's from
-   Foomatic 3.0, in addition to legacy support for the older numeric
-   ID's.
-
-7) Minor adjustment to the HP DeskJet 340 margins.
 
 
 Gimp-Print 4.2.5 contains the following major changes over Gimp-Print
@@ -320,29 +333,6 @@ The following bugs have been fixed in Gimp-Print 4.2.5:
 672845 Buffer overflow in escputil
 672846 rastertoprinter does not compile on Solaris with gcc
 672850 Epson back end in CUPS driver can lock up
-
-The following bugs are currently open:
-
-409612 Epson: Minor positioning problem on 4x6 glossy
-470049 CUPS PPD files not translated on all systems
-538097 QUALITY-Canon S400 dark and yellow cast
-549677 Canon BJC-1000 functions incorrectly at 720x360 DPI
-557868 QUALITY-HP DeskJet 560 is washed out
-581168 Canon BJC 250 just spits out pages
-601767 Mac OS X: Canon BJC 2100 does not print multiple pages
-602933 QUALITY-Canon S800 dark and grainy
-613054 Mac OS X: Printing from InDesign 2.0 on OS 10.2.1
-614882 QUALITY - Canon BJC-55 is too pale and desaturated
-621668 Epson Stylus full bleed prints have slight margin
-627266 Mac OS X: Autoselect option incorrectly offered
-627978 QUALITY: Canon BJC-6500 has magenta cast.
-631937 HP DesignJet Sheet Cutter Problem
-641981 QUALITY: HP DesignJet 455 too light
-645116 QUALITY: HP DeskJet regression from 4.1.7
-647035 QUALITY: Colors don't match OEM drivers
-662988 HP DeskJet 970Cxi page horizontally squeezed
-668342 Canon S-450 prints only one page of a job
-672692 Epson photo 700 single page of multi page job
 
 
 Gimp-Print 4.2.4 contains the following major changes over Gimp-Print
