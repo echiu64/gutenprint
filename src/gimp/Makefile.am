@@ -59,11 +59,8 @@ install-gimp_plug_inPROGRAMS: $(gimp_plug_in_PROGRAMS)
 	@DESTDIR='$(DESTDIR)'; export DESTDIR;\
 	list='$(gimp_plug_in_PROGRAMS)'; for p in $$list; do \
 	  if test -f $$p; then \
-	    if test -f .libs/$$p; then \
-	      cd .libs; \
-	    fi; \
-	    echo $(GIMPTOOL) --install-@PLUG_IN_PATH@ $$p; \
-            $(GIMPTOOL) --install-@PLUG_IN_PATH@ $$p; \
+	    echo $(LIBTOOL) --mode=install `$(GIMPTOOL) --just-print --install-@PLUG_IN_PATH@ $$p`; \
+            $(LIBTOOL) --mode=install `$(GIMPTOOL) --just-print --install-@PLUG_IN_PATH@ $$p`; \
 	  else :; fi; \
 	done
 
