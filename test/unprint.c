@@ -1,10 +1,10 @@
 /* $Id$ */
 /*
- * Attempt to simulate a printer to facilitate driver testing.  Is this
- * useful?
+ * Generate PPM files from printer output
  *
- * Copyright 2000 Eric Sharkey <sharkey@superk.physics.sunysb.edu>
- *                Andy Thaller <thaller@ph.tum.de>
+ * Copyright 2000-2001 Eric Sharkey <sharkey@superk.physics.sunysb.edu>
+ *                     Andy Thaller <thaller@ph.tum.de>
+ *                     Robert Krawitz <rlk@alum.mit.edu>
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -34,8 +34,9 @@
 #define inline __inline__
 #endif
 
-#undef DEBUG_CANON
-
+/*
+ * Printer state variable.
+ */
 typedef struct {
   unsigned char unidirectional;
   unsigned char microweave;
@@ -68,8 +69,16 @@ typedef struct {
  * color depth, KCMYcm color basis, and then write out the RGB ppm file
  * as output.  This way we never need to have the full data in RAM at any
  * time.  2 bits per color of KCMYcm is half the size of 8 bits per color
- * of RBG.
+ * of RGB.
+ *
+ * We would like to be able to print in bands, so that we don't have to
+ * read the entire page into memory in order to print it.  Unfortunately,
+ * we may not know what the left and right margins are until we've read the
+ * entire file.  If we can read it in two passes we could do it; use one
+ * pass to scan the file looking at the margins, and another pass to
+ * actually read in the data.  This optimization may be worthwhile.
  */
+
 #define MAX_INKS 7
 typedef struct {
    unsigned char *line[MAX_INKS];
@@ -90,9 +99,7 @@ unsigned short sh;
 pstate_t pstate;
 int unweave;
 
-
 line_type **page=NULL;
-
 
 /* Color Codes:
    color    Epson1  Epson2   Sequential
@@ -107,35 +114,30 @@ line_type **page=NULL;
 
 /* convert either Epson1 or Epson2 color encoding into a sequential encoding */
 #define seqcolor(c) (((c)&3)+(((c)&276)?3:0))  /* Intuitive, huh? */
-/* sequential to Epson1 */
-#define ep1color(c)  ({0,1,2,4,17,18}[c])
-/* sequential to Epson2 */
-#define ep2color(c)  ({0,1,2,4,257,258}[c])
 
-void merge_line (line_type *p, unsigned char *l, int startl, int stopl,
-                 int color);
-void expand_line (unsigned char *src, unsigned char *dst, int height,
-                  int skip, int left_ignore);
-void write_output (FILE *fp_w);
-void find_white (unsigned char *buf,int npix, int *left, int *right);
-int update_page (unsigned char *buf, int bufsize, int m, int n, int color,
-                 int density);
-void parse_escp2 (FILE *fp_r);
-void reverse_bit_order (unsigned char *buf, int n);
-int rle_decode (unsigned char *inbuf, int n, int max);
-void parse_canon (FILE *fp_r);
+extern void merge_line(line_type *p, unsigned char *l, int startl, int stopl,
+		       int color);
+extern void expand_line (unsigned char *src, unsigned char *dst, int height,
+			 int skip, int left_ignore);
+extern void write_output (FILE *fp_w);
+extern void find_white (unsigned char *buf,int npix, int *left, int *right);
+extern int update_page (unsigned char *buf, int bufsize, int m, int n,
+			int color, int density);
+extern void parse_escp2 (FILE *fp_r);
+extern void reverse_bit_order (unsigned char *buf, int n);
+extern int rle_decode (unsigned char *inbuf, int n, int max);
+extern void parse_canon (FILE *fp_r);
 
 
 static inline int
-get_bits(unsigned char *p,int index)
+get_bits(unsigned char *p, int index)
 {
-
-  /* p is a pointer to a bit stream, ordered MSb first.  Extract the
+  /*
+   * p is a pointer to a bit stream, ordered MSb first.  Extract the
    * indexth bpp bit width field and return that value.  Ignore byte
-   * boundries.
+   * boundaries.
    */
-
-  int value,b;
+  int value, b;
   unsigned addr;
   switch (pstate.bpp)
     {
@@ -148,12 +150,13 @@ get_bits(unsigned char *p,int index)
     case 8:
       return p[index];
     default:
-      addr = (index*pstate.bpp);
-      value=0;
-      for (b=0;b<pstate.bpp;b++) {
-	value*=2;
-	value|=(p[(addr + b) >> 3] >> (7-((addr + b) & 7)))&1;
-      }
+      addr = (index * pstate.bpp);
+      value = 0;
+      for (b = 0; b < pstate.bpp; b++)
+	{
+	  value += value;
+	  value |= (p[(addr + b) >> 3] >> (7-((addr + b) & 7))) & 1;
+	}
       return(value);
     }
 }
@@ -162,13 +165,13 @@ static inline void
 set_bits(unsigned char *p,int index,int value)
 {
 
-  /* p is a pointer to a bit stream, ordered MSb first.  Set the
+  /*
+   * p is a pointer to a bit stream, ordered MSb first.  Set the
    * indexth bpp bit width field to value value.  Ignore byte
    * boundries.
    */
 
   int b;
-
   switch (pstate.bpp)
     {
     case 1:
@@ -187,44 +190,78 @@ set_bits(unsigned char *p,int index,int value)
       p[index] = value;
       break;
     default:
-      for (b=pstate.bpp-1;b>=0;b--) {
-	if (value&1) {
-	  p[(index*pstate.bpp+b)/8]|=1<<(7-((index*pstate.bpp+b)%8));
-	} else {
-	  p[(index*pstate.bpp+b)/8]&=~(1<<(7-((index*pstate.bpp+b)%8)));
+      for (b = pstate.bpp - 1; b >= 0; b--)
+	{
+	  if (value & 1)
+	    p[(index * pstate.bpp + b) / 8] |=
+	      1 << (7 - ((index * pstate.bpp + b) % 8));
+	  else
+	    p[(index * pstate.bpp + b) / 8] &=
+	      ~(1 << (7 - ((index * pstate.bpp + b) % 8)));
+	  value/=2;
 	}
-	value/=2;
-      }
     }
 }
 
 static inline void
-mix_ink(ppmpixel p, int c, unsigned int a)
+mix_ink(ppmpixel p, int color, unsigned int amount)
 {
-
   /* this is pretty crude */
 
-  int i;
-  float ink[3];
-  float size;
+  if (amount)
+    {
+      int i;
+      float ink[3];
+      float size;
 
-  size=(float)a/((float)((1<<pstate.bpp)-1));
-  if (a) {
-    switch (c) {
-      case 0: ink[0]=ink[1]=ink[2]=0;break; /* black */
-      case 1: ink[0]=1; ink[1]=0; ink[2]=1;break; /* magenta */
-      case 2: ink[0]=0; ink[1]=ink[2]=1;break; /* cyan */
-      case 3: ink[0]=ink[1]=1; ink[2]=0;break; /* yellow */
-      case 4: ink[0]=1; ink[1]=0.7; ink[2]=1;break; /* lmagenta */
-      case 5: ink[0]=0.7; ink[1]=ink[2]=1;break; /* lcyan */
-      case 6: ink[0]=ink[1]=1; ink[2]=0.7;break; /* lyellow */
-      default:fprintf(stderr,"unknown ink %d\n",c);return;
+      size = (float) amount / ((float) (( 1 << pstate.bpp) - 1));
+      switch (color)
+	{
+	case 0:	/* black */
+	  ink[0] = 0;
+	  ink[1] = 0;
+	  ink[2] = 0;
+	  break;
+	case 1:	/* magenta */
+	  ink[0] = 1;
+	  ink[1] = 0;
+	  ink[2] = 1;
+	  break;
+	case 2:	/* cyan */
+	  ink[0] = 0;
+	  ink[1] = 1;
+	  ink[2] = 1;
+	  break;
+	case 3:	/* yellow */
+	  ink[0] = 1;
+	  ink[1] = 1;
+	  ink[2] = 0;
+	  break;
+	case 4:	/* lmagenta */
+	  ink[0] = 1;
+	  ink[1] = 0.7;
+	  ink[2] = 1;
+	  break;
+	case 5:	/* lcyan */
+	  ink[0] = 0.7;
+	  ink[1] = 1;
+	  ink[2] = 1;
+	  break;
+	case 6: /* lyellow */
+	  ink[0] = 1;
+	  ink[1] = 1;
+	  ink[2] = 0.7;
+	  break;
+	default:
+	  fprintf(stderr, "unknown ink %d\n", color);
+	  return;
+	}
+      for (i = 0; i < 3; i++)
+	{
+	  ink[i] = (1 - size) + size * ink[i];
+	  p[i] *= ink[i];
+	}
     }
-    for (i=0;i<3;i++) {
-      ink[i]=(1-size)+size*ink[i];
-      p[i]*=ink[i];
-    }
-  }
 }
 
 void
@@ -232,50 +269,71 @@ merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color)
 {
 
   int i;
-  int temp,shift,height,lvalue,pvalue,oldstop;
+  int temp, shift, height, lvalue, pvalue, oldstop;
+  int width, owidth;
   unsigned char *tempp;
+  int reversed = 0;
+  int need_realloc = 0;
 
-  if (startl<p->startx[color]) { /* l should be to the right of p */
-    temp=p->startx[color];
-    p->startx[color]=startl;
-    startl=temp;
-    temp=p->stopx[color];
-    p->stopx[color]=stopl;
-    stopl=temp;
-    tempp=p->line[color];
-    p->line[color]=l;
-    l=tempp;
-  }
-  shift=startl-p->startx[color];
-  height=stopl-startl+1;
+  /*
+   * If we have a pixel to the left of anything previously printed,
+   * we need to expand our margins to the left.  This is a bit tricky...
+   */
+  if (startl < p->startx[color])
+    {
+      temp = p->startx[color];
+      p->startx[color] = startl;
+      startl = temp;
 
-  oldstop=p->stopx[color];
-  p->stopx[color]=(stopl>p->stopx[color])?stopl:p->stopx[color];
-  p->line[color]=xrealloc(p->line[color],((p->stopx[color]-p->startx[color]+1)*pstate.bpp+7)/8);
-  memset(p->line[color]+((oldstop-p->startx[color]+1)*pstate.bpp+7)/8,0,
-          ((p->stopx[color]-p->startx[color]+1)*pstate.bpp+7)/8-
-          ((oldstop-p->startx[color]+1)*pstate.bpp+7)/8);
-  for (i=0;i<height;i++) {
-    lvalue=get_bits(l,i);
-    pvalue=get_bits(p->line[color],i+shift);
-    if (0&&pvalue&&lvalue) {
-      fprintf(stderr,"Warning!  Double printing detected at x,y=%d!\n",p->startx[color]+i);
-    } else {
-    pvalue+=lvalue;
-    if (pvalue>(1<<pstate.bpp)-1) {
-/*      fprintf(stderr,"Warning!  Clipping at x=%d!\n",p->startx[color]+i); */
-      pvalue=(1<<pstate.bpp)-1;
+      temp = p->stopx[color];
+      p->stopx[color] = stopl;
+      stopl = temp;
+
+      tempp = p->line[color];
+      p->line[color] = l;
+      l = tempp;
+      reversed = 1;
     }
-    set_bits(p->line[color],i+shift,pvalue);
+  shift = startl - p->startx[color];
+  height = stopl - startl + 1;
+
+  oldstop = p->stopx[color];
+  if (stopl > p->stopx[color])
+    {
+      p->stopx[color] = stopl;
+      need_realloc = 1;
     }
-  }
+  if (need_realloc || reversed)
+    {
+      width = ((p->stopx[color] - p->startx[color] + 1) * pstate.bpp + 7) / 8;
+      owidth = ((oldstop - p->startx[color] + 1) * pstate.bpp + 7) / 8;
+      p->line[color] = xrealloc(p->line[color], width);
+      memset((p->line[color] + owidth), 0, (width - owidth));
+    }
+  /*
+   * Can we do an empty line optimization?
+   */
+  for (i = 0; i < height; i++)
+    {
+      lvalue = get_bits(l, i);
+      if (lvalue)
+	{
+	  pvalue = get_bits(p->line[color], i + shift);
+	  pvalue += lvalue;
+	  if (pvalue > (1 << pstate.bpp) - 1)
+	    pvalue = (1 << pstate.bpp) - 1;
+	  set_bits(p->line[color], i + shift, pvalue);
+	}
+    }
 }
 
-void expand_line (unsigned char *src, unsigned char *dst, int height, int skip,
-                  int left_ignore)
+void
+expand_line (unsigned char *src, unsigned char *dst, int height, int skip,
+	     int left_ignore)
 {
 
-  /* src is a pointer to a bit stream which is composed of fields of height
+  /*
+   * src is a pointer to a bit stream which is composed of fields of height
    * bpp starting with the most significant bit of the first byte and
    * proceding from there with no regard to byte boundaries.  For the
    * existing Epson printers, bpp is 1 or 2, which means fields will never
@@ -291,20 +349,22 @@ void expand_line (unsigned char *src, unsigned char *dst, int height, int skip,
 
   int i;
 
-  if ((skip==1)&&!(left_ignore*pstate.bpp%8)) {
-    /* the trivial case, this should be faster */
-    memcpy(dst,src+left_ignore*pstate.bpp/8,(height*pstate.bpp+7)/8);
-    return;
-  }
+  if ((skip == 1) && !(left_ignore * pstate.bpp % 8))
+    {
+      /* the trivial case, this should be faster */
+      memcpy(dst, src + left_ignore * pstate.bpp / 8,
+	     (height * pstate.bpp + 7) / 8);
+      return;
+    }
 
-  for (i=0;i<height;i++) {
-    set_bits(dst,i*skip,get_bits(src,i+left_ignore));
-  }
+  for (i = 0; i < height; i++)
+    set_bits(dst, i * skip, get_bits(src, i + left_ignore));
 }
 
-void write_output(FILE *fp_w)
+void
+write_output(FILE *fp_w)
 {
-  int c,l,p,left,right,first,last,width,height,i;
+  int c, l, p, left, right, first, last, width, height, i;
   unsigned int amount;
   ppmpixel *out_row;
   int oversample = pstate.absolute_horizontal_units /
@@ -312,290 +372,328 @@ void write_output(FILE *fp_w)
   if (oversample == 0)
     oversample = 1;
 
-  fprintf(stderr,"Margins: top: %d bottom: top+%d\n",pstate.top_margin,
+  fprintf(stderr, "Margins: top: %d bottom: top+%d\n", pstate.top_margin,
           pstate.bottom_margin);
-  for (first=0;(first<pstate.bottom_margin)&&(!page[first]);
-       first++);
-  for (last=pstate.bottom_margin-1;(last>first)&&
-       (!page[last]);last--);
-  if ((first<pstate.bottom_margin)&&(page[first])) {
+  /*
+   * Search for the first printed line
+   */
+  for (first = 0;
+      (first < pstate.bottom_margin) && (!page[first]);
+      first++)
+    ;
+
+  /*
+   * Search for the last printed line
+   */
+  for (last = pstate.bottom_margin-1;
+       (last > first) && (!page[last]);
+       last--)
+    ;
+
+  if ((first < pstate.bottom_margin) && (page[first]))
     height = oversample * (last-first+1);
-  } else {
+  else
     height = 0;
-  }
-  left=INT_MAX;
-  right=0;
-  for (l=first;l<=last;l++) {
-    if (page[l]) {
-      for (c=0;c<MAX_INKS;c++) {
-        if (page[l]->line[c]) {
-          left=(page[l]->startx[c]<left)?page[l]->startx[c]:left;
-          right=(page[l]->stopx[c]>right)?page[l]->stopx[c]:right;
-        }
-      }
-    }
-  }
-  fprintf(stderr,"Image from (%d,%d) to (%d,%d).\n",left,first,right,last);
-  width=right-left+1;
-  if (width<0) {
-    width=0;
-  }
-  out_row = malloc(sizeof(ppmpixel) * width);
-  /* start with white, add inks */
-  fprintf(stderr,"Writing output...\n");
-  /* write out the PPM header */
-  fprintf(fp_w,"P6\n");
-  fprintf(fp_w,"%d %d\n",width,height);
-  fprintf(fp_w,"255\n");
-  for (l=first;l<=last;l++) {
-    memset(out_row, 255, (sizeof(ppmpixel) * width));
-    for (p=left;p<=right;p++) {
-      for (c=0;c<MAX_INKS;c++) {
-	if ((page[l])&&(page[l]->line[c])&&
-	    (page[l]->startx[c]<=p)&&
-	    (page[l]->stopx[c]>=p)) {
-	  amount=get_bits(page[l]->line[c],p-page[l]->startx[c]);
-	  mix_ink(out_row[p - left],c,amount);
+
+  /*
+   * Find the left and right margins
+   */
+  left = INT_MAX;
+  right = 0;
+  for (l = first; l <= last; l++)
+    {
+      line_type *lt = page[l];
+      if (lt)
+	{
+	  for (c=0;c<MAX_INKS;c++)
+	    {
+	      if (lt->line[c])
+		{
+		  if (left > lt->startx[c])
+		    left = lt->startx[c];
+		  if (right < lt->startx[c])
+		    right = lt->startx[c];
+		}
+	    }
 	}
-      }
-    }
-    for (i = 0; i < oversample; i++)
-      fwrite(out_row, sizeof(ppmpixel), width, fp_w);
   }
+
+  fprintf(stderr, "Image from (%d,%d) to (%d,%d).\n",
+	  left, first, right, last);
+  width = right - left + 1;
+  if (width<0)
+    width=0;
+
+  out_row = malloc(sizeof(ppmpixel) * width);
+  fprintf(stderr, "Writing output...\n");
+
+  /* write out the PPM header */
+  fprintf(fp_w, "P6\n");
+  fprintf(fp_w, "%d %d\n", width, height);
+  fprintf(fp_w, "255\n");
+  for (l = first; l <= last; l++)
+    {
+      line_type *lt = page[l];
+      memset(out_row, ~0, (sizeof(ppmpixel) * width));
+      if (lt)
+	{
+	  for (c = 0; c < MAX_INKS; c++)
+	    {
+	      if (lt->line[c])
+		{
+		  for (p = lt->startx[c]; p <= lt->stopx[c]; p++)
+		    {
+		      amount = get_bits(lt->line[c], p - lt->startx[c]);
+		      mix_ink(out_row[p - left], c, amount);
+		    }
+		}
+	    }
+	}
+      for (i = 0; i < oversample; i++)
+	fwrite(out_row, sizeof(ppmpixel), width, fp_w);
+    }
   free(out_row);
 }
 
-#if 0
-int num_bits_zero_lsb(int i,int max)
+void
+find_white(unsigned char *buf,int npix, int *left, int *right)
 {
 
-  int n;
+  /*
+   * If a line has white borders on either side, count the number of
+   * pixels and fill that info into left and right.
+   */
 
-  for (n=0;(n<max)&&!(i&1);n++,i>>1);
-  return n;
+  int i, j, max;
+  int words, bytes, bits, extra;
 
-}
+  *left = *right = 0;
+  bits = npix * pstate.bpp;
+  bytes = bits / 8;
+  extra = bits % 8;
+  words = bytes / sizeof(long);
 
-int num_bits_zero_msb(int i, int max)
-{
+  /*
+   * First, find the leftmost pixel.  We first identify the word
+   * containing the byte, then the byte, and finally the pixel within
+   * the byte.  It does seem like this is unnecessarily complex, perhaps?
+   */
+  max = words;
+  for (i = 0; (i < max) && (((long *)buf)[i] == 0); i++)
+    ;
+  max = (i < words) ? (i + 1) * sizeof(long) : bytes;
 
-  int n;
+  i *= sizeof(long);		/* Convert from longs to bytes */
+  for (; (i < max) && (buf[i] == 0); i++)
+    ;
+  max = (i < bytes) ? 8 : extra;
+  for (j = 0; (j < max) && !(buf[i] & (1 << (7 - j))); j++)
+    ;
+  *left = (i * 8 + j) / pstate.bpp;
+  *right = 0;
 
-  for (n=0;(n<max)&&i;n++,i>>1);
-  return(max-n);
-
-}
-#endif
-
-void find_white(unsigned char *buf,int npix, int *left, int *right)
-{
-
-/* If a line has white borders on either side, count the number of
- * pixels and fill that info into left and right.
- */
-
- int i,j,max;
- int words,bytes,bits;
-
- *left=*right=0;
- bits=npix*pstate.bpp;
- bytes=bits/8;
- words=bytes/sizeof(long);
-
-  /* left side */
-  max=words;
-  for(i=0;(i<max)&&(((long *)buf)[i]==0);i++);
-  max=(i<words)?(i+1)*sizeof(long):bytes;
-  for(i*=sizeof(long);(i<max)&&(buf[i]==0);i++);
-  max=(i<bytes)?8:bits%8;
-  for(j=0;(j<max)&&!(buf[i]&(1<<(7-j)));j++);
-  *left=(i*8+j)/pstate.bpp;
-  *right=0;
-
-  /* if left is everything, then right is nothing */
-  if (*left==npix) {
+  /* if left is everything, then right is nothing */ 
+  if (*left == npix)
     return;
-  }
 
-  /* right side, this is a little trickier */
-  for (i=0;(i<bits%8)&&!(buf[bytes]&(1<<(i+8-bits%8)));i++);
-  if (i<bits%8) {
-    *right=i/pstate.bpp;
-    return;
-  }
-  *right=bits%8; /*temporarily store right in bits to avoid rounding error*/
-
-  for (i=0;(i<bytes%sizeof(long))&&!(buf[bytes-1-i]);i++);
-  if (i<bytes%sizeof(long)) {
-    for (j=0;(j<8)&&!(buf[bytes-1-i]&(1<<j));j++);
-    *right=(*right+i*8+j)/pstate.bpp;
-    return;
-  }
-  *right+=i*8;
-
-  for (i=0;(i<words)&&!(((int *)buf)[words-1-i]);i++);
-
-  if (i<words) {
-    *right+=i*sizeof(long)*8;
-    for(j=0;(j<sizeof(long))&&!(buf[(words-i)*sizeof(long)-1-j]);j++);
-    if (j<sizeof(long)) {
-      *right+=j*8;
-      max=(words-i)*sizeof(long)-1-j;
-      for (j=0;(j<8)&&!(buf[max]&(1<<j));j++);
-      if (j<8) {
-        *right=(*right+j)/pstate.bpp;
-        return;
-      }
+  /* right side, this is a little trickier */ 
+  for (i = 0; (i < extra) && !(buf[bytes] & (1 << (i + 8 - extra))); i++)
+    ;
+  if (i < extra)
+    {
+      *right = i / pstate.bpp;
+      return;
     }
-  }
+  *right = extra;  /*temporarily store right in bits to avoid rounding error*/
 
-  fprintf(stderr,"Warning: Reality failure.  The impossible happened.\n");
+  for (i = 0; (i < bytes % sizeof(long)) && !(buf[bytes - 1 - i]); i++)
+    ;
+  if (i < bytes % sizeof(long))
+    {
+      for (j = 0; (j < 8) && !(buf[bytes - 1 - i] & (1 << j)); j++)
+	;
+      *right = (*right + i * 8 + j) / pstate.bpp;
+      return;
+    }
+  *right += i * 8;
 
+  for (i = 0; (i < words) && !(((int *)buf)[words - 1 - i]); i++)
+    ;
+
+  if (i < words)
+    {
+      *right += i * sizeof(long) * 8;
+      for (j = 0;
+	   (j < sizeof(long)) && !(buf[(words - i) * sizeof(long) - 1 - j]);
+	   j++)
+	;
+      if (j < sizeof(long))
+	{
+	  *right += j * 8;
+	  max = (words - i) * sizeof(long) - 1 - j;
+	  for (j = 0; (j < 8) && !(buf[max] & (1 << j)); j++)
+	    ;
+	  if (j < 8)
+	    {
+	      *right = (*right + j) / pstate.bpp;
+	      return;
+	    }
+	}
+    }
+  fprintf(stderr, "Warning: Reality failure.  The impossible happened.\n");
 }
 
-/* 'update_page'
- *
- *
- *
- *
- */
-int update_page(unsigned char *buf, /* I - pixel data               */
-		int bufsize,        /* I - size of buf in bytes     */
-		int m,              /* I - height of area in pixels */
-		int n,              /* I - width of area in pixels  */
-		int color,          /* I - color of pixel data      */
-		int density         /* I - horizontal density in dpi  */
-		)
+int 
+update_page(unsigned char *buf, /* I - pixel data               */
+	    int bufsize,        /* I - size of buf in bytes     */
+	    int m,              /* I - height of area in pixels */
+	    int n,              /* I - width of area in pixels  */
+	    int color,          /* I - color of pixel data      */
+	    int density         /* I - horizontal density in dpi  */
+	    )
 {
-
-  int y,skip,oldstart,oldstop,mi;
-  int left_white,right_white;
+  int y, skip, oldstart, oldstop, mi = 0;
+  int left_white, right_white, width;
   unsigned char *oldline;
+  int sep;
 
-  if ((n==0)||(m==0)) {
+  if ((n == 0) || (m == 0))
     return(0);  /* shouldn't happen */
-  }
 
-  skip=pstate.relative_horizontal_units/density;
-  skip*=pstate.extraskip;
+  skip = pstate.relative_horizontal_units / density;
+  skip *= pstate.extraskip;
 
-  if (skip==0) {
-    fprintf(stderr,"Warning!  Attempting to print at %d DPI but units are set "
-	    "to %d DPI.\n",density,pstate.relative_horizontal_units);
-    return(0);
-  }
+  if (skip == 0)
+    {
+      fprintf(stderr, "Warning!  Attempting to print at %d DPI but units are "
+	      "set to %d DPI.\n", density, pstate.relative_horizontal_units);
+      return(0);
+    }
 
-  if (!page) {
-    fprintf(stderr,"Warning!  Attempting to print before setting up page!\n");
-    /* Let's hope that we've at least initialized the printer with
-     * with an ESC @ and allocate the default page.  Otherwise, we'll
-     * have unpredictable results.  But, that's a pretty acurate statement
-     * for a real printer, too!  */
-    page=(line_type **)xcalloc(pstate.bottom_margin, sizeof(line_type *));
-  }
-  for (mi=0,y=pstate.yposition;
-       y<pstate.yposition+m*(pstate.microweave?1:pstate.nozzle_separation);
-       y+=(pstate.microweave?1:pstate.nozzle_separation),mi++) {
-    if (y>=pstate.bottom_margin) {
+  if (!page)
+    {
       fprintf(stderr,
-	      "Warning. Unprinter out of unpaper (limit %d, position %d).\n",
-	      pstate.bottom_margin, y);
-      return(1);
+	      "Warning! Attempting to print before setting up page!\n");
+      /*
+       * Let's hope that we've at least initialized the printer with
+       * with an ESC @ and allocate the default page.  Otherwise, we'll
+       * have unpredictable results.  But, that's a pretty acurate statement
+       * for a real printer, too!
+       */
+      page = (line_type **) xcalloc(pstate.bottom_margin, sizeof(line_type *));
     }
-    find_white(buf+mi*((n*pstate.bpp+7)/8),n,&left_white,&right_white);
-    if (left_white==n)
-      continue; /* ignore blank lines */
-    if (!(page[y])) {
-      page[y]=(line_type *) xcalloc(sizeof(line_type),1);
+  if (pstate.microweave)
+    sep = 1;
+  else
+    sep = pstate.nozzle_separation;
+  for (y=pstate.yposition; y < pstate.yposition + m * sep; y += sep, mi++)
+    {
+      if (y >= pstate.bottom_margin)
+	{
+	  fprintf(stderr, 
+		  "Warning: Unprinter out of unpaper (limit %d, pos %d).\n", 
+		  pstate.bottom_margin, y);
+	  return(1);
+	}
+      find_white(buf + mi * ((n * pstate.bpp + 7) / 8), n,
+		 &left_white, &right_white);
+      if (left_white == n)
+	continue; /* ignore blank lines */
+      if (!(page[y]))
+	page[y] = (line_type *) xcalloc(sizeof(line_type), 1);
+      if ((left_white * pstate.bpp < 8) && (skip == 1))
+	{
+	  left_white=0; /* if it's just a few bits, don't bother cropping */
+	}               /* unless we need to expand the line anyway       */
+      if (page[y]->line[color])
+	{
+	  oldline = page[y]->line[color];
+	  oldstart = page[y]->startx[color];
+	  oldstop = page[y]->stopx[color];
+	}
+      else
+	{
+	  oldline = NULL;
+	  oldstart = -1;
+	  oldstop = -1;
+	}
+      page[y]->startx[color] = pstate.xposition + left_white * skip;
+      page[y]->stopx[color] =pstate.xposition + ((n - 1 - right_white) * skip);
+      width = page[y]->stopx[color] - page[y]->startx[color];
+      page[y]->line[color] =
+	xcalloc(((width * skip + 1) * pstate.bpp + 7) / 8, 1);
+      expand_line(buf + mi * ((n * pstate.bpp + 7) / 8), page[y]->line[color], 
+		  width+1, skip, left_white);
+      if (oldline)
+	merge_line(page[y], oldline, oldstart, oldstop, color);
     }
-    if ((left_white*pstate.bpp<8)&&(skip==1)) {
-      left_white=0; /* if it's just a few bits, don't bother cropping */
-    }               /* unless we need to expand the line anyway       */
-    if (page[y]->line[color]) {
-       oldline=page[y]->line[color];
-       oldstart=page[y]->startx[color];
-       oldstop=page[y]->stopx[color];
-    } else {
-      oldline=NULL;
-      oldstart = -1;
-      oldstop = -1;
-    }
-    page[y]->startx[color]=pstate.xposition+left_white*skip;
-    page[y]->stopx[color]=pstate.xposition+((n-1-right_white)*skip);
-    page[y]->line[color]=(unsigned char *) xcalloc(sizeof(unsigned char),
-     (((page[y]->stopx[color]-page[y]->startx[color])*skip+1)*pstate.bpp+7)/8);
-    expand_line(buf+mi*((n*pstate.bpp+7)/8),page[y]->line[color],
-                page[y]->stopx[color]-page[y]->startx[color]+1,skip,left_white);
-    if (oldline) {
-      merge_line(page[y],oldline,oldstart,oldstop,color);
-    }
-  }
-  pstate.xposition+=n?(n-1)*skip+1:0;
+  if (n)
+    pstate.xposition += (n-1)*skip+1;
   return(0);
 }
 
 #define get1(error)				\
 do						\
 {						\
-  if (!(count=fread(&ch,1,1,fp_r)))		\
+  if (!(count = fread(&ch, 1, 1, fp_r)))	\
     {						\
       fprintf(stderr, "%s at %d (%x), read %d",	\
 	      error, counter, counter, count);	\
-      eject=1;					\
+      eject = 1;				\
       continue;					\
     }						\
   else						\
-    counter+=count;				\
+    counter += count;				\
 } while (0)
 
 #define get2(error)				\
 do						\
 {						\
-  if (!(count=fread(minibuf,1,2,fp_r)))		\
+  if (!(count = fread(minibuf, 1, 2, fp_r)))	\
     {						\
       fprintf(stderr, "%s at %d (%x), read %d",	\
 	      error, counter, counter, count);	\
-      eject=1;					\
+      eject = 1;				\
       continue;					\
     }						\
   else						\
     {						\
-      counter+=count;				\
-      sh=minibuf[0]+minibuf[1]*256;		\
+      counter += count;				\
+      sh = minibuf[0] + minibuf[1] * 256;	\
     }						\
 } while (0)
 
 #define getn(n,error) 				\
 do						\
 {						\
-  if (!(count=fread(buf,1,n,fp_r)))		\
+  if (!(count = fread(buf, 1, n, fp_r)))	\
     {						\
       fprintf(stderr, "%s at %d (%x), read %d",	\
 	      error, counter, counter, count);	\
-      eject=1;					\
+      eject = 1;				\
       continue;					\
     }						\
   else						\
-    counter+=count;				\
+    counter += count;				\
 } while (0)
 
-#define getnoff(n,offset,error)			\
-do						\
-{						\
-  if (!(count=fread(buf+offset,1,n,fp_r)))	\
-    {						\
-      fprintf(stderr, "%s at %d (%x), read %d",	\
-	      error, counter, counter, count);	\
-      eject=1;					\
-      continue;					\
-    }						\
-  else						\
-    counter+=count;				\
+#define getnoff(n,offset,error)				\
+do							\
+{							\
+  if (!(count = fread(buf + offset, 1, n, fp_r)))	\
+    {							\
+      fprintf(stderr, "%s at %d (%x), read %d",		\
+	      error, counter, counter, count);		\
+      eject = 1;					\
+      continue;						\
+    }							\
+  else							\
+    counter += count;					\
 } while (0)
 
-void parse_escp2(FILE *fp_r)
+void
+parse_escp2(FILE *fp_r)
 {
-
   int i,m=0,n=0,c=0;
   int currentcolor,currentbpp,density,eject,got_graphics;
   int count,counter;
@@ -614,7 +712,6 @@ void parse_escp2(FILE *fp_r)
         continue;
       }
       if (ch==0x0) { /* NUL */
-	fprintf(stderr, "Ignoring NUL character at 0x%08X\n", counter-1);
 	continue;
       }
       if (ch!=0x1b) {
@@ -1085,7 +1182,8 @@ void parse_escp2(FILE *fp_r)
  *
  * reverse the bit order in an array of bytes - does not reverse byte order!
  */
-void reverse_bit_order(unsigned char *buf, int n)
+void
+reverse_bit_order(unsigned char *buf, int n)
 {
   int i;
   unsigned char a;
@@ -1107,11 +1205,12 @@ void reverse_bit_order(unsigned char *buf, int n)
 
 /* 'rle_decode'
  *
- * run-height-decodes a given buffer of height "n"
+ * run-length-decodes a given buffer of height "n"
  * and stores the result in the same buffer
  * not exceeding a size of "max" bytes.
  */
-int rle_decode(unsigned char *inbuf, int n, int max)
+int
+rle_decode(unsigned char *inbuf, int n, int max)
 {
   unsigned char outbuf[1440*3];
   signed char *ib= (signed char *)inbuf;
@@ -1159,7 +1258,8 @@ int rle_decode(unsigned char *inbuf, int n, int max)
   return o;
 }
 
-void parse_canon(FILE *fp_r)
+void
+parse_canon(FILE *fp_r)
 {
 
   int m=0;
@@ -1361,7 +1461,8 @@ void parse_canon(FILE *fp_r)
  }
 }
 
-int main(int argc,char *argv[])
+int
+main(int argc,char *argv[])
 {
 
   int arg;
