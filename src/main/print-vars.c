@@ -1214,16 +1214,16 @@ stp_vars_create_copy(const stp_vars_t vs)
 void
 stp_merge_printvars(stp_vars_t user, const stp_vars_t print)
 {
-  int count;
   int i;
   stp_parameter_list_t params = stp_get_parameter_list(print);
-  count = stp_parameter_list_count(params);
+  int count = stp_parameter_list_count(params);
   for (i = 0; i < count; i++)
     {
       const stp_parameter_t *p = stp_parameter_list_param(params, i);
       if (p->p_type == STP_PARAMETER_TYPE_DOUBLE &&
 	  p->p_class == STP_PARAMETER_CLASS_OUTPUT &&
-	  p->p_level == STP_PARAMETER_LEVEL_BASIC)
+	  stp_check_float_parameter(user, p->name, STP_PARAMETER_ACTIVE) &&
+	  stp_check_float_parameter(print, p->name, STP_PARAMETER_DEFAULTED))
 	{
 	  stp_parameter_t desc;
 	  double usrval = stp_get_float_parameter(user, p->name);
@@ -1268,21 +1268,27 @@ stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p)
 	    {
 	    case STP_PARAMETER_TYPE_STRING_LIST:
 	      stp_set_string_parameter(v, p->name, desc.deflt.str);
+	      stp_set_string_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
 	      break;
 	    case STP_PARAMETER_TYPE_DOUBLE:
 	      stp_set_float_parameter(v, p->name, desc.deflt.dbl);
+	      stp_set_float_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
 	      break;
 	    case STP_PARAMETER_TYPE_INT:
 	      stp_set_int_parameter(v, p->name, desc.deflt.integer);
+	      stp_set_int_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
 	      break;
 	    case STP_PARAMETER_TYPE_BOOLEAN:
 	      stp_set_boolean_parameter(v, p->name, desc.deflt.boolean);
+	      stp_set_boolean_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
 	      break;
 	    case STP_PARAMETER_TYPE_CURVE:
 	      stp_set_curve_parameter(v, p->name, desc.deflt.curve);
+	      stp_set_curve_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
 	      break;
 	    case STP_PARAMETER_TYPE_ARRAY:
 	      stp_set_array_parameter(v, p->name, desc.deflt.array);
+	      stp_set_array_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
 	      break;
 	    default:
 	      break;
