@@ -90,10 +90,12 @@ static GtkWidget *image_solid_tone;
 static GtkWidget *image_continuous_tone;
 static GtkWidget *setup_dialog;         /* Setup dialog window */
 static GtkWidget *printer_driver;       /* Printer driver widget */
+static GtkWidget *printer_model_label; /* Printer model name */
 static GtkWidget *printer_crawler;      /* Scrolled Window for menu */
 static GtkWidget *printer_combo;	/* Combo for menu */
 static gint plist_callback_id	   = -1;
 static GtkWidget *ppd_file;             /* PPD file entry */
+static GtkWidget *ppd_label;            /* PPD file entry */
 static GtkWidget *ppd_button;           /* PPD file browse button */
 static GtkWidget *output_cmd;           /* Output command text entry */
 static GtkWidget *ppd_browser;          /* File selection dialog for PPD files */
@@ -561,14 +563,14 @@ create_printer_dialog(void)
    * PPD file.
    */
 
-  label = gtk_label_new (_("PPD File:"));
-  gtk_misc_set_alignment (GTK_MISC (label), 1.0, 0.5);
-  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
+  ppd_label = gtk_label_new (_("PPD File:"));
+  gtk_misc_set_alignment (GTK_MISC (ppd_label), 1.0, 0.5);
+  gtk_table_attach (GTK_TABLE (table), ppd_label, 0, 1, 3, 4,
                     GTK_FILL, GTK_FILL, 0, 0);
-  gtk_widget_show (label);
+  gtk_widget_show (ppd_label);
 
   box = gtk_hbox_new (FALSE, 8);
-  gtk_table_attach (GTK_TABLE (table), box, 1, 2, 2, 3,
+  gtk_table_attach (GTK_TABLE (table), box, 1, 2, 3, 4,
                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (box);
 
@@ -589,12 +591,12 @@ create_printer_dialog(void)
 
   label = gtk_label_new (_("Command:"));
   gtk_misc_set_alignment (GTK_MISC (label), 1.0, 0.5);
-  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4,
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
   output_cmd = gtk_entry_new ();
-  gtk_table_attach (GTK_TABLE (table), output_cmd, 1, 2, 3, 4,
+  gtk_table_attach (GTK_TABLE (table), output_cmd, 1, 2, 2, 3,
                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (output_cmd);
 
@@ -682,11 +684,18 @@ create_printer_settings_frame(void)
    */
 
   printer_combo = gtk_combo_new ();
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 0, _("Printer:"), 1.0,
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 0, _("Printer Name:"), 1.0,
 			     0.5, printer_combo, 2, TRUE);
 
+  label = gtk_label_new(_("Printer Model:"));
+  gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 1, 2);
+  gtk_widget_show(label);
+  printer_model_label = gtk_label_new("");
+  gtk_table_attach_defaults(GTK_TABLE(table), printer_model_label, 1, 2, 1, 2);
+  gtk_widget_show(printer_model_label);
+
   printer_hbox = gtk_hbox_new (TRUE, 4);
-  gtk_table_attach_defaults(GTK_TABLE(table), printer_hbox, 1, 2, 1, 2);
+  gtk_table_attach_defaults(GTK_TABLE(table), printer_hbox, 1, 2, 2, 3);
   gtk_widget_show(printer_hbox);
 
   button = gtk_button_new_with_label (_("Setup Printer..."));
@@ -711,7 +720,7 @@ create_printer_settings_frame(void)
    */
 
   media_size_combo = gtk_combo_new();
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 2, _("Media Size:"), 1.0,
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 3, _("Media Size:"), 1.0,
 			     0.5, media_size_combo, 1, TRUE);
 
   /*
@@ -724,7 +733,7 @@ create_printer_settings_frame(void)
 
   label = gtk_label_new (_("Dimensions:"));
   gtk_widget_show (label);
-  gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 3, 4);
+  gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 4, 5);
 
   label = gtk_label_new (_("Width:"));
   gtk_box_pack_start (GTK_BOX (media_size_hbox), label, FALSE, FALSE, 0);
@@ -749,14 +758,14 @@ create_printer_settings_frame(void)
   gtk_box_pack_start(GTK_BOX(media_size_hbox), custom_size_height, FALSE,
 		     FALSE, 0);
   gtk_widget_show(custom_size_height);
-  gtk_table_attach_defaults(GTK_TABLE(table), media_size_hbox, 1, 2, 3, 4);
+  gtk_table_attach_defaults(GTK_TABLE(table), media_size_hbox, 1, 2, 4, 5);
 
   /*
    * Media type combo box.
    */
 
   media_type_combo = gtk_combo_new ();
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 4, _("Media Type:"), 1.0,
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 5, _("Media Type:"), 1.0,
 			     0.5, media_type_combo, 2, TRUE);
 
   /*
@@ -764,7 +773,7 @@ create_printer_settings_frame(void)
    */
 
   media_source_combo = gtk_combo_new ();
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 5, _("Media Source:"), 1.0,
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 6, _("Media Source:"), 1.0,
 			     0.5, media_source_combo, 2, TRUE);
 
   /*
@@ -772,7 +781,7 @@ create_printer_settings_frame(void)
    */
 
   ink_type_combo = gtk_combo_new ();
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 6, _("Ink Type:"), 1.0,
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 7, _("Ink Type:"), 1.0,
 			     0.5, ink_type_combo, 2, TRUE);
 
   /*
@@ -780,7 +789,7 @@ create_printer_settings_frame(void)
    */
 
   resolution_combo = gtk_combo_new ();
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 7, _("Resolution:"), 1.0,
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 8, _("Resolution:"), 1.0,
 			     0.5, resolution_combo, 2, TRUE);
 }
 
@@ -1924,11 +1933,13 @@ gimp_setup_update (void)
 
   if (strncmp (stp_get_driver(*pv),"ps", 2) == 0)
     {
+      gtk_widget_show (ppd_label);
       gtk_widget_show (ppd_file);
       gtk_widget_show (ppd_button);
     }
   else
     {
+      gtk_widget_hide (ppd_label);
       gtk_widget_hide (ppd_file);
       gtk_widget_hide (ppd_button);
     }
@@ -2042,14 +2053,18 @@ gimp_print_driver_callback (GtkWidget      *widget, /* I - Driver list */
   reset_preview();
   data = gtk_clist_get_row_data (GTK_CLIST (widget), row);
   current_printer = stp_get_printer_by_index ((gint) data);
+  gtk_label_set_text(GTK_LABEL(printer_model_label),
+		     _(stp_printer_get_long_name(current_printer)));
 
   if (strncmp (stp_printer_get_driver(current_printer), "ps", 2) == 0)
     {
+      gtk_widget_show (ppd_label);
       gtk_widget_show (ppd_file);
       gtk_widget_show (ppd_button);
     }
   else
     {
+      gtk_widget_hide (ppd_label);
       gtk_widget_hide (ppd_file);
       gtk_widget_hide (ppd_button);
     }
