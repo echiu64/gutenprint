@@ -609,7 +609,7 @@
 
 <printer name="HP DeskJet 1600C" driver="pcl-1600">
 <color>
-<model value=1200>
+<model value=1600>
 <gamma value=0.818>
 <density value=0.786>
 <language value=pcl>
