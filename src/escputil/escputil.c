@@ -527,9 +527,10 @@ const char *colors[] =
   N_("Cyan"),
   N_("Magenta"),
   N_("Yellow"),
-  N_("Light Cyan"),
-  N_("Light Magenta"),
+  N_("Light Cyan/Red"),
+  N_("Light Magenta/Blue"),
   N_("Black/Dark Yellow"),
+  N_("Gloss Optimizer"),
   0
 };
 
@@ -660,7 +661,7 @@ do_ink_level(void)
     }
   ind += 3;
   printf("%20s    %s\n", _("Ink color"), _("Percent remaining"));
-  for (i = 0; i < 7; i++)
+  for (i = 0; i < 8; i++)
     {
       int val, j;
       if (!ind[0] || ind[0] == ';')
