@@ -410,9 +410,7 @@ gimp_set_adjustment_active(GtkObject *adj, int active)
 {
   gtk_widget_set_sensitive(GTK_WIDGET(GIMP_SCALE_ENTRY_LABEL(adj)), active);
   gtk_widget_set_sensitive(GTK_WIDGET(GIMP_SCALE_ENTRY_SCALE(adj)), active);
-  gtk_widget_set_sensitive(GTK_WIDGET(GIMP_SCALE_ENTRY_SCALE_ADJ(adj)), active);
   gtk_widget_set_sensitive(GTK_WIDGET(GIMP_SCALE_ENTRY_SPINBUTTON(adj)), active);
-  gtk_widget_set_sensitive(GTK_WIDGET(GIMP_SCALE_ENTRY_SPINBUTTON_ADJ(adj)), active);
 }
 
 void
