@@ -60,10 +60,6 @@
 
 #include <libgimp/gimpui.h>
 
-#if !defined(GIMP_MINOR_VERSION) || (GIMP_MAJOR_VERSION == 1 && GIMP_MINOR_VERSION == 0)
-#define GIMP_1_0
-#endif
-
 #ifdef GIMP_1_0
 #define N_(x) x
 #define _(x) x

@@ -1148,6 +1148,8 @@ gimp_plist_callback (GtkWidget *widget,
 						 &num_media_types);
   if (vars.media_type[0] == '\0' && media_types != NULL)
     strcpy (vars.media_type, media_types[0]);
+  else if (media_types == NULL)
+    vars.media_type[0] = '\0';
   gimp_plist_build_menu (media_type,
 			 &media_type_menu,
 			 num_media_types,
@@ -1168,6 +1170,8 @@ gimp_plist_callback (GtkWidget *widget,
 						   &num_media_sources);
   if (vars.media_source[0] == '\0' && media_sources != NULL)
     strcpy (vars.media_source, media_sources[0]);
+  else if (media_sources == NULL)
+    vars.media_source[0] = '\0';
   gimp_plist_build_menu (media_source,
 			 &media_source_menu,
 			 num_media_sources,
@@ -1187,6 +1191,8 @@ gimp_plist_callback (GtkWidget *widget,
 					       "InkType", &num_ink_types);
   if (vars.ink_type[0] == '\0' && ink_types != NULL)
     strcpy (vars.ink_type, ink_types[0]);
+  else if (ink_types == NULL)
+    vars.ink_type[0] = '\0';
   gimp_plist_build_menu (ink_type,
 			 &ink_type_menu,
 			 num_ink_types,
@@ -1207,6 +1213,8 @@ gimp_plist_callback (GtkWidget *widget,
 						 &num_resolutions);
   if (vars.resolution[0] == '\0' && resolutions != NULL)
     strcpy (vars.resolution, resolutions[0]);
+  else if (resolutions == NULL)
+    vars.resolution[0] = '\0';
   gimp_plist_build_menu (resolution,
 			 &resolution_menu,
 			 num_resolutions,
@@ -1402,9 +1410,15 @@ gimp_setup_open_callback (void)
   gtk_entry_set_text (GTK_ENTRY (ppd_file), plist[plist_current].v.ppd_file);
 
   if (strncmp (plist[plist_current].v.driver, "ps", 2) == 0)
-    gtk_widget_show (ppd_file);
+    {
+      gtk_widget_show (ppd_file);
+      gtk_widget_show (ppd_button);
+    }
   else
-    gtk_widget_show (ppd_file);
+    {
+      gtk_widget_hide (ppd_file);
+      gtk_widget_hide (ppd_button);
+    }
 
   gtk_entry_set_text (GTK_ENTRY (output_cmd), plist[plist_current].v.output_to);
 

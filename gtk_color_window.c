@@ -32,6 +32,8 @@
 #include "print.h"
 #include "print_gimp.h"
 
+#ifdef GIMP_1_0
+
 #define N_(x) x
 #define _(x) x
 #define gettext(x) x
@@ -61,14 +63,14 @@ static GtkWidget* gamma_scale;		/* Scale for gamma */
 static GtkWidget* gamma_entry;         /* Text entry widget for gamma */
 static GtkWidget* dismiss_button;      /* Action area dismiss button */
 
-static GtkObject* brightness_adjustment;  /* Adjustment object for brightness */
-static GtkObject* saturation_adjustment;  /* Adjustment object for saturation */
-static GtkObject* density_adjustment;	   /* Adjustment object for density */
-static GtkObject* contrast_adjustment;	   /* Adjustment object for contrast */
-static GtkObject* red_adjustment;	   /* Adjustment object for red */
-static GtkObject* green_adjustment;	   /* Adjustment object for green */
-static GtkObject* blue_adjustment;	   /* Adjustment object for blue */
-static GtkObject* gamma_adjustment;	   /* Adjustment object for gamma */
+GtkObject* brightness_adjustment;  /* Adjustment object for brightness */
+GtkObject* saturation_adjustment;  /* Adjustment object for saturation */
+GtkObject* density_adjustment;	   /* Adjustment object for density */
+GtkObject* contrast_adjustment;	   /* Adjustment object for contrast */
+GtkObject* red_adjustment;	   /* Adjustment object for red */
+GtkObject* green_adjustment;	   /* Adjustment object for green */
+GtkObject* blue_adjustment;	   /* Adjustment object for blue */
+GtkObject* gamma_adjustment;	   /* Adjustment object for gamma */
 
 
 static void gtk_brightness_update(GtkAdjustment *);
@@ -116,7 +118,7 @@ void gtk_create_color_adjust_window(void)
      ***/
     gtk_color_adjust_dialog = dialog = gtk_dialog_new();
 
-    gtk_window_set_title(GTK_WINDOW(dialog), _("Print Color Ajust"));
+    gtk_window_set_title(GTK_WINDOW(dialog), _("Print Color Adjust"));
 
     gtk_window_set_wmclass(GTK_WINDOW(dialog), "print", "Gimp");
     gtk_window_position(GTK_WINDOW(dialog), GTK_WIN_POS_MOUSE);
@@ -987,3 +989,5 @@ static void gtk_close_adjust_callback(void)
 {
     gtk_widget_hide(gtk_color_adjust_dialog);
 }
+
+#endif
