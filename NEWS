@@ -47,33 +47,43 @@ Gimp-Print 4.3.14 contains the following major changes over Gimp-Print
 3) A glitch in Even Tone dithering in certain very pale regions has
    been fixed.  This problem was introduced in 4.3.12.
 
-4) A Czech translation has been added.
+4) The PCL, Canon, and Lexmark drivers now print correctly in
+   three-color mode.
 
-5) Engineering C paper size has been added.
+5) The CUPS driver now offers normal and reversed paper order,
+   permitting printing documents in the correct order on inkjet
+   printers.
 
-6) Additional printers have been added to the compatibility list.
+6) The Postscript driver in the GIMP plug-in now works correctly in
+   non-US locales.
 
-7) "Set defaults" in the output adjustment window now sets default
+7) A Czech translation has been added.
+
+8) Engineering C paper size has been added.
+
+9) Additional printers have been added to the compatibility list.
+
+10) "Set defaults" in the output adjustment window now sets default
    values of all options (boolean and choice in addition to floating
    point).
 
-8) A problem with ordered and adaptive hybrid dithering at low
+11) A problem with ordered and adaptive hybrid dithering at low
    densities has been fixed.  The typical symptom is sharp transitions
    at high resolutions.
 
-9) 1440x1440 Highest Quality has been removed from the resolution
+12) 1440x1440 Highest Quality has been removed from the resolution
    choice for Epson printers capable of printing at 2880x1440.
 
-10) The Epson family driver has been significantly restructured.
+13) The Epson family driver has been significantly restructured.
 
-11) Additional "const" corrections have been made in the code.
+14) Additional "const" corrections have been made in the code.
     Additional (probably too many) warnings have been enabled in
     maintainer mode.
 
-12) The printdef program, which has long been obsolete, has been
+15) The printdef program, which has long been obsolete, has been
    removed.  This has caused some spurious build problems.
 
-13) The tests have been improved in coverage and capability.
+16) The tests have been improved in coverage and capability.
 
 
 Gimp-Print 4.3.13 contains the following major changes over Gimp-Print
