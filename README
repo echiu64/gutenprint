@@ -1,4 +1,4 @@
-This is Gimp-Print version 4.1.4, a development release in the 4.1
+This is Gimp-Print version 4.1.5, a development release in the 4.1
 line.  Gimp-print is the print facility for the Gimp, and in addition
 a suite of drivers that may be used with common UNIX spooling systems
 using GhostScript or CUPS.  These drivers provide printing quality for
@@ -111,7 +111,7 @@ There are four principal ways of requesting support for this package:
    list.  This is recommended as a last resort only.
 
 
-DEBIAN:
+DEBIAN
 
 The Debian packaging has been rewritten from scratch as of 4.1.4. It
 is compliant with Standards-Version 3.1.1, and is lintian-clean. It
@@ -149,43 +149,5 @@ but there are a few bits left to do (some of which might be obscure).
 
 USE OF THE CVS REPOSITORY
 
-If you have a copy of the source from the CVS repository, then prior
-to running configure, you must run
-
-./autogen.sh
-
-Any options given to autogen.sh will be passed to configure when it is
-automatically run after all the extra files have been created.  So you
-may run
-
-./autogen.sh --with-ghost --with-cups --without-gimp
-
-if you wish to build the GhostScript sources and the CUPS driver, but
-not the Gimp Print plugin.
-
-If you do run aclocal, beware that versions of the Gimp from 1.1.17
-and earlier have a version of gimp.m4 that will create an incorrect
-configure script.  The patch is as follows:
-
-diff -u /usr/local/share/aclocal/gimp.m4~ /usr/local/share/aclocal/gimp.m4
---- /usr/local/share/aclocal/gimp.m4~   Tue Mar 30 13:49:58 1999
-+++ /usr/local/share/aclocal/gimp.m4    Fri Feb 11 22:34:47 2000
-@@ -134,6 +134,13 @@
-           AC_TRY_LINK([
- #include <stdio.h>
- #include <libgimp/gimp.h>
-+GPlugInInfo    PLUG_IN_INFO =          /* Plug-in information */
-+{
-+  NULL,    /* init_proc */
-+  NULL,    /* quit_proc */
-+  NULL,    /* query_proc */
-+  NULL,    /* run_proc */
-+};
- ],      [ return 0; ],
-         [ echo "*** The test program compiled, but did not run. This usually means"
-           echo "*** that the run-time linker is not finding GIMP or finding the wrong"
-
-If you are building this from a release, you should not have any
-trouble because the configure script will already exist.
-
-Enjoy!
+Please read doc/README.maintaining for instructions on how to build
+from the CVS repository.

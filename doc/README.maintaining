@@ -231,3 +231,13 @@ autoconf: autoconf.info
 automake: automake.info
 libtool:  libtool.info
 gettext:  gettext.info (but it's not very comprehensive)
+
+
+11. Known problems
+------------------
+
+If you have a version of the Gimp older than about 1.1.27, your
+gimp.m4 (in /usr/share/aclocal or equivalent) will be incorrect.  You
+should install the version of gimp.m4 from scripts/ prior to use.
+This should only be a problem when building from CVS; the configure
+script included in released versions will not have this problem.
