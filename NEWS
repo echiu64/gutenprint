@@ -1,4 +1,4 @@
-Gimp-Print 4.3.15, released May 30, 2003, is a development release of
+Gimp-Print 4.3.15, released June 1, 2003, is a development release of
 this package.  Like all development releases, this version is
 considered unstable and should only be used by those individuals
 tolerant of the likelihood of problems.  Individuals desiring a stable
@@ -61,26 +61,30 @@ Gimp-Print 4.3.15 contains the following major changes over Gimp-Print
    Internally, this is implemented by means of a new "channel"
    architecture, which is responsible for conversions of this type.
 
-2) The existing Line Art image optimization has been renamed to
+2) A long-standing build problem whereby the package will not build on
+   systems that already have Gimp-Print 4.2 or earlier versions of
+   Gimp-Print 4.3 installed has been fixed.
+
+3) The existing Line Art image optimization has been renamed to
    Uncorrected, which is a better description of its effect.  There is
    a new Threshold mode, which simply computes a threshold value
    (either on or off for each color).
 
-3) The default image optimization mode is now Photographs (which has
+4) The default image optimization mode is now Photographs (which has
    the best color correction) rather than the old Line Art (which as
    noted above is now called Uncorrected).
 
-4) An experimental driver for the Olympus P-300 has been added.  This
+5) An experimental driver for the Olympus P-300 has been added.  This
    driver has significant limitations; the size of an image much
    closely match the size of a print from this printer.
 
-5) The Fast and Very Fast dither algorithms are significantly
+6) The Fast and Very Fast dither algorithms are significantly
    different from before.  The Fast dither algorithm now uses the same
    dither pattern previously used by the Very Fast algorithm, and the
    Very Fast algorithm only uses the largest drop size.  The Ordered
    algorithm should now run as fast as the Fast algorithm did before.
 
-6) This package now uses gettext 0.11 internally.
+7) This package now uses gettext 0.11 internally.
 
 
 Gimp-Print 4.3.14 contains the following major changes over Gimp-Print
