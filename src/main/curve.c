@@ -721,7 +721,7 @@ stp_curve_rescale(stp_curve_t curve, double scale,
 		tmp[i] = nblo;
 	    }
 	}
-      stp_sequence_set_bounds(icurve->seq, nbhi, nblo);
+      stp_sequence_set_bounds(icurve->seq, nblo, nbhi);
       icurve->gamma = 0.0;
       stpi_curve_set_points(icurve, real_point_count);
       stp_sequence_set_subrange(icurve->seq, 0, real_point_count, tmp);
