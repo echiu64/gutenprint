@@ -1,3 +1,9 @@
+gimp-print (4.2.7-1) unstable; urgency=low
+
+  * New stable release.
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Sun, 13 Jun 2004 22:19:51 +0100
+
 gimp-print (4.2.6-1) unstable; urgency=low
 
   * New stable release.
