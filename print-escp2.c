@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.110  2000/03/06 01:32:05  rlk
+ *   more rearrangement
+ *
  *   Revision 1.109  2000/03/05 19:51:24  rlk
  *   Create list of printers externally
  *
@@ -1196,13 +1199,14 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
  * 'escp2_print()' - Print an image to an EPSON printer.
  */
 void
-escp2_print(int       model,		/* I - Model */
+escp2_print(const printer_t *printer,		/* I - Model */
             int       copies,		/* I - Number of copies */
             FILE      *prn,		/* I - File to print to */
 	    Image     image,		/* I - Image to print */
             unsigned char    *cmap,	/* I - Colormap (for indexed images) */
 	    vars_t    *v)
 {
+  int		model = printer->model;
   char 		*ppd_file = v->ppd_file;
   char 		*resolution = v->resolution;
   char 		*media_size = v->media_size;
@@ -1542,7 +1546,8 @@ escp2_print(int       model,		/* I - Model */
   * Output the page, rotating as necessary...
   */
 
-  v->density /= real_horizontal_passes;
+  v->density = v->density * printer->printvars.density /real_horizontal_passes;
+  v->saturation *= printer->printvars.saturation;
 
   if (landscape)
   {

@@ -6,10 +6,7 @@
 <model value=0>
 <gamma value=1.000>
 <density value=1.000>
-<paramfunc value=ps_parameters>
-<mediasizefunc value=ps_media_size>
-<imageableareafunc value=ps_imageable_area>
-<printfunc value=ps_print>
+<language value=ps>
 </printer>
 
 <printer name="PostScript Level 2" driver="ps2">
@@ -17,10 +14,7 @@
 <model value=1>
 <gamma value=1.000>
 <density value=1.000>
-<paramfunc value=ps_parameters>
-<mediasizefunc value=ps_media_size>
-<imageableareafunc value=ps_imageable_area>
-<printfunc value=ps_print>
+<language value=ps>
 </printer>
 
 <printer name="HP DeskJet 500, 520" driver="pcl-500">
@@ -28,10 +22,7 @@
 <model value=500>
 <gamma value=0.818>
 <density value=0.786>
-<paramfunc value=pcl_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=pcl_imageable_area>
-<printfunc value=pcl_print>
+<language value=pcl>
 </printer>
 
 <printer name="HP DeskJet 500C, 540C" driver="pcl-501">
@@ -39,10 +30,7 @@
 <model value=501>
 <gamma value=0.818>
 <density value=0.786>
-<paramfunc value=pcl_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=pcl_imageable_area>
-<printfunc value=pcl_print>
+<language value=pcl>
 </printer>
 
 <printer name="HP DeskJet 550C, 560C" driver="pcl-550">
@@ -50,10 +38,7 @@
 <model value=550>
 <gamma value=0.818>
 <density value=0.786>
-<paramfunc value=pcl_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=pcl_imageable_area>
-<printfunc value=pcl_print>
+<language value=pcl>
 </printer>
 
 <printer name="HP DeskJet 600/600C" driver="pcl-600">
@@ -61,10 +46,7 @@
 <model value=600>
 <gamma value=0.818>
 <density value=0.786>
-<paramfunc value=pcl_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=pcl_imageable_area>
-<printfunc value=pcl_print>
+<language value=pcl>
 </printer>
 
 <printer name="HP DeskJet 600 series" driver="pcl-601">
@@ -72,10 +54,7 @@
 <model value=601>
 <gamma value=0.818>
 <density value=0.786>
-<paramfunc value=pcl_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=pcl_imageable_area>
-<printfunc value=pcl_print>
+<language value=pcl>
 </printer>
 
 <printer name="HP DeskJet 800 series" driver="pcl-800">
@@ -83,10 +62,7 @@
 <model value=800>
 <gamma value=0.818>
 <density value=0.786>
-<paramfunc value=pcl_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=pcl_imageable_area>
-<printfunc value=pcl_print>
+<language value=pcl>
 </printer>
 
 <printer name="HP DeskJet 1100C, 1120C" driver="pcl-1100">
@@ -94,10 +70,7 @@
 <model value=1100>
 <gamma value=0.818>
 <density value=0.786>
-<paramfunc value=pcl_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=pcl_imageable_area>
-<printfunc value=pcl_print>
+<language value=pcl>
 </printer>
 
 <printer name="HP DeskJet 1200C, 1600C" driver="pcl-1200">
@@ -105,10 +78,7 @@
 <model value=1200>
 <gamma value=0.818>
 <density value=0.786>
-<paramfunc value=pcl_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=pcl_imageable_area>
-<printfunc value=pcl_print>
+<language value=pcl>
 </printer>
 
 <printer name="HP LaserJet II series" driver="pcl-2">
@@ -116,10 +86,7 @@
 <model value=2>
 <gamma value=1.000>
 <density value=0.596>
-<paramfunc value=pcl_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=pcl_imageable_area>
-<printfunc value=pcl_print>
+<language value=pcl>
 </printer>
 
 <printer name="HP LaserJet III series" driver="pcl-3">
@@ -127,10 +94,7 @@
 <model value=3>
 <gamma value=1.000>
 <density value=0.596>
-<paramfunc value=pcl_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=pcl_imageable_area>
-<printfunc value=pcl_print>
+<language value=pcl>
 </printer>
 
 <printer name="HP LaserJet 4 series" driver="pcl-4">
@@ -138,10 +102,7 @@
 <model value=4>
 <gamma value=1.000>
 <density value=0.615>
-<paramfunc value=pcl_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=pcl_imageable_area>
-<printfunc value=pcl_print>
+<language value=pcl>
 </printer>
 
 <printer name="HP LaserJet 4V, 4Si" driver="pcl-4v">
@@ -149,10 +110,7 @@
 <model value=5>
 <gamma value=1.000>
 <density value=0.615>
-<paramfunc value=pcl_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=pcl_imageable_area>
-<printfunc value=pcl_print>
+<language value=pcl>
 </printer>
 
 <printer name="HP LaserJet 5 series" driver="pcl-5">
@@ -160,10 +118,7 @@
 <model value=4>
 <gamma value=1.000>
 <density value=0.615>
-<paramfunc value=pcl_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=pcl_imageable_area>
-<printfunc value=pcl_print>
+<language value=pcl>
 </printer>
 
 <printer name="HP LaserJet 5Si" driver="pcl-5si">
@@ -171,10 +126,7 @@
 <model value=5>
 <gamma value=1.000>
 <density value=0.615>
-<paramfunc value=pcl_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=pcl_imageable_area>
-<printfunc value=pcl_print>
+<language value=pcl>
 </printer>
 
 <printer name="HP LaserJet 6 series" driver="pcl-6">
@@ -182,10 +134,7 @@
 <model value=4>
 <gamma value=1.000>
 <density value=0.615>
-<paramfunc value=pcl_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=pcl_imageable_area>
-<printfunc value=pcl_print>
+<language value=pcl>
 </printer>
 
 <printer name="EPSON Stylus Color" driver="escp2">
@@ -193,10 +142,7 @@
 <model value=0>
 <gamma value=0.597>
 <density value=0.568>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Color Pro" driver="escp2-pro">
@@ -204,10 +150,7 @@
 <model value=1>
 <gamma value=0.597>
 <density value=0.631>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Color Pro XL" driver="escp2-proxl">
@@ -215,10 +158,7 @@
 <model value=1>
 <gamma value=0.597>
 <density value=0.631>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Color 1500" driver="escp2-1500">
@@ -226,10 +166,7 @@
 <model value=2>
 <gamma value=0.597>
 <density value=0.631>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Color 400" driver="escp2-400">
@@ -237,10 +174,7 @@
 <model value=1>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Color 440" driver="escp2-440">
@@ -248,10 +182,7 @@
 <model value=10>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Color 460" driver="escp2-460">
@@ -259,10 +190,7 @@
 <model value=10>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Color 500" driver="escp2-500">
@@ -270,10 +198,7 @@
 <model value=1>
 <gamma value=0.597>
 <density value=0.631>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Color 600" driver="escp2-600">
@@ -281,10 +206,7 @@
 <model value=3>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Color 640" driver="escp2-640">
@@ -292,10 +214,7 @@
 <model value=11>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Color 740" driver="escp2-740">
@@ -303,10 +222,7 @@
 <model value=12>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Color 800" driver="escp2-800">
@@ -314,10 +230,7 @@
 <model value=4>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Color 850" driver="escp2-850">
@@ -325,10 +238,7 @@
 <model value=5>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Color 860" driver="escp2-860">
@@ -336,10 +246,7 @@
 <model value=16>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Color 900" driver="escp2-900">
@@ -347,10 +254,7 @@
 <model value=13>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Color 1160" driver="escp2-1160">
@@ -358,10 +262,7 @@
 <model value=17>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Color 1520" driver="escp2-1520">
@@ -369,10 +270,7 @@
 <model value=6>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Color 3000" driver="escp2-3000">
@@ -380,10 +278,7 @@
 <model value=6>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Photo 700" driver="escp2-700">
@@ -391,10 +286,7 @@
 <model value=7>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Photo EX" driver="escp2-ex">
@@ -402,10 +294,7 @@
 <model value=8>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Photo 750" driver="escp2-750">
@@ -413,10 +302,7 @@
 <model value=14>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Photo 870" driver="escp2-870">
@@ -424,10 +310,7 @@
 <model value=14>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Photo 1200" driver="escp2-1200">
@@ -435,10 +318,7 @@
 <model value=15>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Photo 1270" driver="escp2-1270">
@@ -446,10 +326,7 @@
 <model value=15>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="EPSON Stylus Photo" driver="escp2-photo">
@@ -457,10 +334,7 @@
 <model value=9>
 <gamma value=0.585>
 <density value=0.646>
-<paramfunc value=escp2_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=escp2_imageable_area>
-<printfunc value=escp2_print>
+<language value=escp2>
 </printer>
 
 <printer name="CANON BJC 1000" driver="bjc-1000">
@@ -468,10 +342,7 @@
 <model value=1000>
 <gamma value=1.000>
 <density value=0.800>
-<paramfunc value=canon_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=canon_imageable_area>
-<printfunc value=canon_print>
+<language value=canon>
 </printer>
 
 <printer name="CANON BJC 2000" driver="bjc-2000">
@@ -479,10 +350,7 @@
 <model value=2000>
 <gamma value=1.000>
 <density value=0.800>
-<paramfunc value=canon_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=canon_imageable_area>
-<printfunc value=canon_print>
+<language value=canon>
 </printer>
 
 <printer name="CANON BJC 3000" driver="bjc-3000">
@@ -490,10 +358,7 @@
 <model value=3000>
 <gamma value=1.000>
 <density value=0.800>
-<paramfunc value=canon_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=canon_imageable_area>
-<printfunc value=canon_print>
+<language value=canon>
 </printer>
 
 <printer name="CANON BJC 6000" driver="bjc-6000">
@@ -501,10 +366,7 @@
 <model value=6000>
 <gamma value=1.000>
 <density value=0.800>
-<paramfunc value=canon_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=canon_imageable_area>
-<printfunc value=canon_print>
+<language value=canon>
 </printer>
 
 <printer name="CANON BJC 6100" driver="bjc-6100">
@@ -512,10 +374,7 @@
 <model value=6100>
 <gamma value=1.000>
 <density value=0.800>
-<paramfunc value=canon_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=canon_imageable_area>
-<printfunc value=canon_print>
+<language value=canon>
 </printer>
 
 <printer name="CANON BJC 7000" driver="bjc-7000">
@@ -523,10 +382,7 @@
 <model value=7000>
 <gamma value=1.000>
 <density value=0.800>
-<paramfunc value=canon_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=canon_imageable_area>
-<printfunc value=canon_print>
+<language value=canon>
 </printer>
 
 <printer name="CANON BJC 7100" driver="bjc-7100">
@@ -534,9 +390,6 @@
 <model value=7100>
 <gamma value=1.000>
 <density value=0.800>
-<paramfunc value=canon_parameters>
-<mediasizefunc value=default_media_size>
-<imageableareafunc value=canon_imageable_area>
-<printfunc value=canon_print>
+<language value=canon>
 </printer>
 

@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.32  2000/03/06 01:32:05  rlk
+ *   more rearrangement
+ *
  *   Revision 1.31  2000/02/26 00:14:44  rlk
  *   Rename dither_{black,cmyk}4 to dither_{black,cmyk}_n, and add argument to specify how levels are to be encoded
  *
@@ -781,13 +784,14 @@ canon_advance_buffer(unsigned char *buf, int len, int num)
  * 'canon_print()' - Print an image to an CANON printer.
  */
 void
-canon_print(int       model,		/* I - Model */
+canon_print(const printer_t *printer,		/* I - Model */
             int       copies,		/* I - Number of copies */
             FILE      *prn,		/* I - File to print to */
 	    Image     image,		/* I - Image to print */
             unsigned char    *cmap,	/* I - Colormap (for indexed images) */
 	    vars_t    *v)
 {
+  int		model = printer->model;
   char 		*ppd_file = v->ppd_file;
   char 		*resolution = v->resolution;
   char 		*media_size = v->media_size;
@@ -1148,6 +1152,8 @@ canon_print(int       model,		/* I - Model */
   }
   */    
 
+  v->density *= printer->printvars.density;
+  v->saturation *= printer->printvars.saturation;
  /*
   * Output the page, rotating as necessary...
   */

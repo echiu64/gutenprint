@@ -32,63 +32,92 @@ printer_t thePrinter;
 char *quotestrip(const char *i);
 char *endstrip(const char *i);
 
+#define ENONE 0
+#define ECANON 1
+#define EESCP2 2
+#define EPCL 3
+#define EPS 4
+
 void
 initialize_the_printer(const char *name, const char *driver)
 {
-  strncpy(thePrinter.name, name, 63);
-  strncpy(thePrinter.driver, driver, 63);
+  strncpy(thePrinter.printvars.output_to, name, 63);
+  strncpy(thePrinter.printvars.driver, driver, 63);
+  thePrinter.printvars.linear = ENONE;
   thePrinter.model = -1;
-  thePrinter.paramfunc[0] = 0;
-  strcpy(thePrinter.paramfunc, "NULL");
-  strcpy(thePrinter.mediasizefunc, "default_media_size");
-  strcpy(thePrinter.imageableareafunc, "NULL");
-  strcpy(thePrinter.printfunc, "NULL");
-  thePrinter.imageableareafunc[0] = 0;
-  thePrinter.printfunc[0] = 0;
-  thePrinter.brightness = 100;
-  thePrinter.gamma = 1.0;
-  thePrinter.contrast = 100;
-  thePrinter.red = 100;
-  thePrinter.green = 100;
-  thePrinter.blue = 100;
-  thePrinter.saturation = 1.0;
-  thePrinter.density = 1.0;
+  thePrinter.printvars.brightness = 100;
+  thePrinter.printvars.gamma = 1.0;
+  thePrinter.printvars.contrast = 100;
+  thePrinter.printvars.red = 100;
+  thePrinter.printvars.green = 100;
+  thePrinter.printvars.blue = 100;
+  thePrinter.printvars.saturation = 1.0;
+  thePrinter.printvars.density = 1.0;
 }
 
 void
 output_the_printer()
 {
   printf("  {\n");
-  printf("    %s,\n", thePrinter.name);
-  printf("    %s,\n", thePrinter.driver);
+  printf("    %s,\n", thePrinter.printvars.output_to);
+  printf("    %s,\n", thePrinter.printvars.driver);
   printf("    %d,\n", thePrinter.model);
-  printf("    %s,\n", thePrinter.paramfunc);
-  printf("    %s,\n", thePrinter.mediasizefunc);
-  printf("    %s,\n", thePrinter.imageableareafunc);
-  printf("    %s,\n", thePrinter.printfunc);
+  switch (thePrinter.printvars.linear)
+    {
+    case 1:
+      printf("    %s,\n", "canon_parameters");
+      printf("    %s,\n", "default_media_size");
+      printf("    %s,\n", "canon_imageable_area");
+      printf("    %s,\n", "canon_print");
+      break;
+    case 2:
+      printf("    %s,\n", "escp2_parameters");
+      printf("    %s,\n", "default_media_size");
+      printf("    %s,\n", "escp2_imageable_area");
+      printf("    %s,\n", "escp2_print");
+      break;
+    case 3:
+      printf("    %s,\n", "pcl_parameters");
+      printf("    %s,\n", "default_media_size");
+      printf("    %s,\n", "pcl_imageable_area");
+      printf("    %s,\n", "pcl_print");
+      break;
+    case 4:
+      printf("    %s,\n", "ps_parameters");
+      printf("    %s,\n", "ps_media_size");
+      printf("    %s,\n", "ps_imageable_area");
+      printf("    %s,\n", "ps_print");
+      break;
+    default:
+      printf("    %s,\n", "NULL");
+      printf("    %s,\n", "NULL");
+      printf("    %s,\n", "NULL");
+      printf("    %s,\n", "NULL");
+      break;
+    }
   printf("    {\n");
   printf("      \"\",\n");	/* output_to */
   printf("      \"\",\n");	/* driver */
   printf("      \"\",\n");	/* ppd_file */
-  printf("      %d,\n", thePrinter.isColor);
+  printf("      %d,\n", thePrinter.printvars.output_type);
   printf("      \"\",\n");	/* resolution */
   printf("      \"\",\n");	/* media_size */
   printf("      \"\",\n");	/* media_type */
   printf("      \"\",\n");	/* media_source */
   printf("      \"\",\n");	/* ink_type */
-  printf("      %d,\n", thePrinter.brightness);
+  printf("      %d,\n", thePrinter.printvars.brightness);
   printf("      1.0,\n");	/* scaling */
   printf("      -1,\n");	/* orientation */
   printf("      0,\n");		/* top */
   printf("      0,\n");		/* left */
-  printf("      %.3f,\n", thePrinter.gamma);
-  printf("      %d,\n", thePrinter.contrast);
-  printf("      %d,\n", thePrinter.red);
-  printf("      %d,\n", thePrinter.green);
-  printf("      %d,\n", thePrinter.blue);
+  printf("      %.3f,\n", thePrinter.printvars.gamma);
+  printf("      %d,\n", thePrinter.printvars.contrast);
+  printf("      %d,\n", thePrinter.printvars.red);
+  printf("      %d,\n", thePrinter.printvars.green);
+  printf("      %d,\n", thePrinter.printvars.blue);
   printf("      0,\n");		/* linear */
-  printf("      %.3f,\n", thePrinter.saturation);
-  printf("      %.3f\n", thePrinter.density);
+  printf("      %.3f,\n", thePrinter.printvars.saturation);
+  printf("      %.3f\n", thePrinter.printvars.density);
   printf("    }\n");
   printf("  },\n");
 }
@@ -107,8 +136,8 @@ int yyerror( const char *s )
 %token <ival> tINT
 %token <dval> tDOUBLE
 %token <sval> tSTRING tCLASS
-%token tBEGIN tEND ASSIGN PRINTER NAME DRIVER COLOR NOCOLOR MODEL PARAMFUNC
-%token MEDIASIZEFUNC IMAGEABLEAREAFUNC PRINTFUNC BRIGHTNESS GAMMA CONTRAST
+%token tBEGIN tEND ASSIGN PRINTER NAME DRIVER COLOR NOCOLOR MODEL
+%token LANGUAGE BRIGHTNESS GAMMA CONTRAST
 %token RED GREEN BLUE SATURATION DENSITY ENDPRINTER VALUE
 
 %start Printers
@@ -124,48 +153,50 @@ printerstartalt: tBEGIN PRINTER DRIVER ASSIGN tSTRING NAME ASSIGN tSTRING tEND
 printerend: 		tBEGIN ENDPRINTER tEND
 	{ output_the_printer(); }
 ;
-color:			tBEGIN COLOR tEND { thePrinter.isColor = 1; }
+color:			tBEGIN COLOR tEND 
+	{ thePrinter.printvars.output_type = OUTPUT_COLOR; }
 ;
-nocolor:		tBEGIN NOCOLOR tEND { thePrinter.isColor = 0; }
+nocolor:		tBEGIN NOCOLOR tEND
+	{ thePrinter.printvars.output_type = OUTPUT_GRAY; }
 ;
 model:			tBEGIN MODEL VALUE ASSIGN tINT tEND
 	{ thePrinter.model = $5; }
 ;
-paramfunc:		tBEGIN PARAMFUNC VALUE ASSIGN tCLASS tEND
-	{ strncpy(thePrinter.paramfunc, $5, 63); }
-;
-mediasizefunc:		tBEGIN MEDIASIZEFUNC VALUE ASSIGN tCLASS tEND
-	{ strncpy(thePrinter.mediasizefunc, $5, 63); }
-;
-imageableareafunc:	tBEGIN IMAGEABLEAREAFUNC VALUE ASSIGN tCLASS tEND
-	{ strncpy(thePrinter.imageableareafunc, $5, 63); }
-;
-printfunc:		tBEGIN PRINTFUNC VALUE ASSIGN tCLASS tEND
-	{ strncpy(thePrinter.printfunc, $5, 63); }
+language:		tBEGIN LANGUAGE VALUE ASSIGN tCLASS tEND
+	{
+	  if (!strcmp($5, "canon"))
+	    thePrinter.printvars.linear = ECANON;
+	  else if (!strcmp($5, "escp2"))
+	    thePrinter.printvars.linear = EESCP2;
+	  else if (!strcmp($5, "pcl"))
+	    thePrinter.printvars.linear = EPCL;
+	  else if (!strcmp($5, "ps"))
+	    thePrinter.printvars.linear = EPS;
+	}
 ;
 brightness:		tBEGIN BRIGHTNESS VALUE ASSIGN tINT tEND
-	{ thePrinter.brightness = $5; }
+	{ thePrinter.printvars.brightness = $5; }
 ;
 gamma:			tBEGIN GAMMA VALUE ASSIGN tDOUBLE tEND
-	{ thePrinter.gamma = $5; }
+	{ thePrinter.printvars.gamma = $5; }
 ;
 contrast:		tBEGIN CONTRAST VALUE ASSIGN tINT tEND
-	{ thePrinter.contrast = $5; }
+	{ thePrinter.printvars.contrast = $5; }
 ;
 red:			tBEGIN RED VALUE ASSIGN tINT tEND
-	{ thePrinter.red = $5; }
+	{ thePrinter.printvars.red = $5; }
 ;
 green:			tBEGIN GREEN VALUE ASSIGN tINT tEND
-	{ thePrinter.green = $5; }
+	{ thePrinter.printvars.green = $5; }
 ;
 blue:			tBEGIN BLUE VALUE ASSIGN tINT tEND
-	{ thePrinter.blue = $5; }
+	{ thePrinter.printvars.blue = $5; }
 ;
 saturation:		tBEGIN SATURATION VALUE ASSIGN tDOUBLE tEND
-	{ thePrinter.saturation = $5; }
+	{ thePrinter.printvars.saturation = $5; }
 ;
 density:		tBEGIN DENSITY VALUE ASSIGN tDOUBLE tEND
-	{ thePrinter.density = $5; }
+	{ thePrinter.printvars.density = $5; }
 ;
 
 Empty:
@@ -173,9 +204,8 @@ Empty:
 pstart: printerstart | printerstartalt
 ;
 
-parg: color | nocolor | model | paramfunc | mediasizefunc | imageableareafunc |
-	printfunc | brightness | gamma | contrast | red | green | blue |
-	saturation | density
+parg: color | nocolor | model | language | brightness | gamma | contrast
+	| red | green | blue | saturation | density
 
 pargs: pargs parg | parg
 

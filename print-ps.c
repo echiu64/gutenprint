@@ -33,6 +33,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.21  2000/03/06 01:32:05  rlk
+ *   more rearrangement
+ *
  *   Revision 1.20  2000/02/27 01:53:04  khk
  *   Fixed problem with missing linefeed character after options from PPD
  *   file. Depending on the format of the option the PostScript file was
@@ -390,13 +393,14 @@ ps_imageable_area(int  model,		/* I - Printer model */
  */
 
 void
-ps_print(int       model,		/* I - Model (Level 1 or 2) */
+ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
          int       copies,		/* I - Number of copies */
          FILE      *prn,		/* I - File to print to */
          Image     image,		/* I - Image to print */
 	 unsigned char    *cmap,	/* I - Colormap (for indexed images) */
 	 vars_t    *v)
 {
+  int		model = printer->model;
   char 		*ppd_file = v->ppd_file;
   char 		*resolution = v->resolution;
   char 		*media_size = v->media_size;
@@ -732,6 +736,9 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
 
   in  = malloc(image_width * image_bpp);
   out = malloc((image_width * out_bpp + 3) * 2);
+
+  v->density *= printer->printvars.density;
+  v->saturation *= printer->printvars.saturation;
 
   if (model == 0)
   {

@@ -670,8 +670,7 @@ run(char   *name,		/* I - Name of print program. */
       {
 	Gimp_Image_t image;
 	image.drawable = drawable;
-	vars.density *= current_printer->printvars.density;
-	compute_lut(current_printer->printvars.gamma, gimp_gamma(), &vars);
+	compute_lut(&(current_printer->printvars), gimp_gamma(), &vars);
 	/*
 	 * Is the image an Indexed type?  If so we need the colormap...
 	 */
@@ -689,7 +688,7 @@ run(char   *name,		/* I - Name of print program. */
 	 * close the output file/command...
 	 */
 
-	(*current_printer->print)(current_printer->model, 1, prn, &image, cmap,
+	(*current_printer->print)(current_printer, 1, prn, &image, cmap,
 				  &vars);
 
 	if (plist_current > 0)

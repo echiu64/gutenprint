@@ -32,6 +32,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.85  2000/03/06 01:32:05  rlk
+ *   more rearrangement
+ *
  *   Revision 1.84  2000/03/05 19:51:24  rlk
  *   Create list of printers externally
  *
@@ -861,9 +864,9 @@ gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 /* #define PRINT_LUT */
 
 void
-compute_lut(float print_gamma,
+compute_lut(const vars_t *pv,
 	    float app_gamma,
-	    vars_t *v)
+	    vars_t *uv)
 {
   float		brightness,	/* Computed brightness */
 		screen_gamma,	/* Screen gamma correction */
@@ -879,11 +882,11 @@ compute_lut(float print_gamma,
    * Got an output file/command, now compute a brightness lookup table...
    */
 
-  float red = 100.0 / v->red ;
-  float green = 100.0 / v->green;
-  float blue = 100.0 / v->blue;
-  float contrast;
-  contrast = v->contrast / 100.0;
+  float red = 10000.0 / (uv->red * pv->red) ;
+  float green = 10000.0 / (uv->green * pv->green);
+  float blue = 10000.0 / (uv->blue * pv->blue);
+  float print_gamma = uv->gamma / pv->gamma;
+  float contrast = (uv->contrast * pv->contrast) / 10000.0;
   if (red < 0.01)
     red = 0.01;
   if (green < 0.01)
@@ -891,22 +894,21 @@ compute_lut(float print_gamma,
   if (blue < 0.01)
     blue = 0.01;
 
-  if (v->linear)
+  if (uv->linear)
     {
       screen_gamma = app_gamma / 1.7;
-      brightness   = v->brightness / 100.0;
+      brightness   = (uv->brightness * pv->brightness) / 10000.0;
     }
   else
     {
-      brightness   = 100.0 / v->brightness;
+      brightness   = 10000.0 / (uv->brightness * pv->brightness);
       screen_gamma = app_gamma * brightness / 1.7;
     }
 
-  print_gamma = v->gamma / print_gamma;
 
   for (i = 0; i < 256; i ++)
     {
-      if (v->linear)
+      if (uv->linear)
 	{
 	  double adjusted_pixel;
 	  pixel = adjusted_pixel = (float) i / 255.0;
@@ -927,10 +929,10 @@ compute_lut(float print_gamma,
 	  adjusted_pixel *= 65535.0;
 
 	  red_pixel = green_pixel = blue_pixel = adjusted_pixel;
-	  v->lut.composite[i] = adjusted_pixel;
-	  v->lut.red[i] = adjusted_pixel;
-	  v->lut.green[i] = adjusted_pixel;
-	  v->lut.blue[i] = adjusted_pixel;
+	  uv->lut.composite[i] = adjusted_pixel;
+	  uv->lut.red[i] = adjusted_pixel;
+	  uv->lut.green[i] = adjusted_pixel;
+	  uv->lut.blue[i] = adjusted_pixel;
 	}
       else
 	{
@@ -982,37 +984,37 @@ compute_lut(float print_gamma,
 				pow(blue_pixel, print_gamma));
 
 	  if (pixel <= 0.0)
-	    v->lut.composite[i] = 0;
+	    uv->lut.composite[i] = 0;
 	  else if (pixel >= 65535.0)
-	    v->lut.composite[i] = 65535;
+	    uv->lut.composite[i] = 65535;
 	  else
-	    v->lut.composite[i] = (unsigned)(pixel);
+	    uv->lut.composite[i] = (unsigned)(pixel);
 
 	  if (red_pixel <= 0.0)
-	    v->lut.red[i] = 0;
+	    uv->lut.red[i] = 0;
 	  else if (red_pixel >= 65535.0)
-	    v->lut.red[i] = 65535;
+	    uv->lut.red[i] = 65535;
 	  else
-	    v->lut.red[i] = (unsigned)(red_pixel);
+	    uv->lut.red[i] = (unsigned)(red_pixel);
 
 	  if (green_pixel <= 0.0)
-	    v->lut.green[i] = 0;
+	    uv->lut.green[i] = 0;
 	  else if (green_pixel >= 65535.0)
-	    v->lut.green[i] = 65535;
+	    uv->lut.green[i] = 65535;
 	  else
-	    v->lut.green[i] = (unsigned)(green_pixel);
+	    uv->lut.green[i] = (unsigned)(green_pixel);
 
 	  if (blue_pixel <= 0.0)
-	    v->lut.blue[i] = 0;
+	    uv->lut.blue[i] = 0;
 	  else if (blue_pixel >= 65535.0)
-	    v->lut.blue[i] = 65535;
+	    uv->lut.blue[i] = 65535;
 	  else
-	    v->lut.blue[i] = (unsigned)(blue_pixel);
+	    uv->lut.blue[i] = (unsigned)(blue_pixel);
 	}
 #ifdef PRINT_LUT
       fprintf(ltfile, "%3i  %5d  %5d  %5d  %5d  %f %f %f %f  %f %f %f  %f\n",
-	      i, v->lut.composite[i], v->lut.red[i],
-	      v->lut.green[i], v->lut.blue[i], pixel, red_pixel,
+	      i, uv->lut.composite[i], uv->lut.red[i],
+	      uv->lut.green[i], uv->lut.blue[i], pixel, red_pixel,
 	      green_pixel, blue_pixel, print_gamma, screen_gamma,
 	      print_gamma, app_gamma);
 #endif
