@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.17  1999/11/02 03:01:29  rlk
+ *   Support both softweave and microweave
+ *
  *   Revision 1.16  1999/11/02 02:04:18  rlk
  *   Much better weaving code!
  *
@@ -349,7 +352,8 @@ escp2_parameters(int  model,		/* I - Printer model */
   static char	*resolutions[] =
 		{
 		  ("360 DPI"),
-		  ("720 DPI")
+		  ("720 DPI Microweave"),
+		  ("720 DPI Softweave")
 		};
 
 
@@ -372,7 +376,7 @@ escp2_parameters(int  model,		/* I - Printer model */
   }
   else if (strcmp(name, "Resolution") == 0)
   {
-    *count = 2;
+    *count = 3;
     p = resolutions;
   }
   else
@@ -492,6 +496,7 @@ escp2_print(int       model,		/* I - Model */
   int           image_height,
                 image_width,
                 image_bpp;
+  int		use_softweave = 0;
 
  /*
   * Setup a read-only pixel region for the entire image...
@@ -535,6 +540,9 @@ escp2_print(int       model,		/* I - Model */
   */
 
   xdpi = ydpi = atoi(resolution);
+  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES) &&
+      !strcmp(resolution, "720 DPI Softweave"))
+    use_softweave = 1;
 
  /*
   * Compute the output size...
@@ -723,13 +731,21 @@ escp2_print(int       model,		/* I - Model */
     case MODEL_INIT_PHOTO:
         if (ydpi > 360)
 	  {
-	    fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
-	    fwrite("\033(i\001\000\000", 6, 1, prn);	/* Microweave off! */
+	    if (use_softweave)
+	      {
+		fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
+		fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off! */
+		initialize_weave(32, 8);
+	      }
+	    else
+	      {
+		fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
+		fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
+	      }
 #if 0
 	    fwrite("\033\0311", 3, 1, prn); /* ??? */
 #endif
-	    fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Microdots */
-	    initialize_weave(32, 8);
+	    fwrite("\033(e\002\000\000\002", 7, 1, prn);	/* Microdots */
 	  }
 	else
 	  fwrite("\033(e\002\000\000\003", 7, 1, prn);	/* Whatever dots */
@@ -848,7 +864,7 @@ escp2_print(int       model,		/* I - Model */
         dither_cmyk(out, x, image_height, out_width, cyan, lcyan,
 		      magenta, lmagenta, yellow, 0, black);
 
-	if (ydpi >= 720)
+	if (ydpi >= 720 && use_softweave)
 	  escp2_write_weave(prn, length, ydpi, model, out_width, left,
 			    cyan, magenta, yellow, black, lcyan, lmagenta);
 	else
@@ -879,7 +895,7 @@ escp2_print(int       model,		/* I - Model */
           escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
       }
 
-      if (ydpi < 720 ||
+      if (ydpi < 720 || !use_softweave ||
 	  !(escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES)))
 	fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
 
@@ -891,7 +907,7 @@ escp2_print(int       model,		/* I - Model */
         errline --;
       }
     }
-    if (ydpi >= 720 &&
+    if (ydpi >= 720 && use_softweave &&
 	(escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES)))
       escp2_flush(model, out_width, left, ydpi, prn);
   }
@@ -935,7 +951,7 @@ escp2_print(int       model,		/* I - Model */
         dither_cmyk(out, y, image_width, out_width, cyan, lcyan,
 		      magenta, lmagenta, yellow, 0, black);
 
-	if (ydpi >= 720)
+	if (ydpi >= 720 && use_softweave)
 	  escp2_write_weave(prn, length, ydpi, model, out_width, left,
 			    cyan, magenta, yellow, black, lcyan, lmagenta);
 	else
@@ -966,7 +982,7 @@ escp2_print(int       model,		/* I - Model */
           escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
       }
 
-      if (ydpi < 720 ||
+      if (ydpi < 720 || !use_softweave ||
 	  !(escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES)))
 	fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
 
@@ -978,7 +994,7 @@ escp2_print(int       model,		/* I - Model */
         errline ++;
       }
     }
-    if (ydpi >= 720 &&
+    if (ydpi >= 720 && use_softweave &&
 	(escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES)))
       escp2_flush(model, out_width, left, ydpi, prn);
   }
@@ -1262,13 +1278,17 @@ flush_pass(int passno, int model, int width, int hoffset, int ydpi, FILE *prn)
   const linebufs_t *bufs = get_linebases(passno);
   pass_t *pass = get_pass(passno);
   int *linecount = get_linecount(passno);
+#if 0
   fprintf(stderr, "Flushing pass %d start %d last %d\n", passno, pass->physpassstart, last_pass_offset);
+#endif
   if (pass->physpassstart > last_pass_offset)
     {
       int advance = pass->logicalpassstart - last_pass_offset;
       int alo = advance % 256;
       int ahi = advance / 256;
+#if 0
       fprintf(stderr, "  advancing %d lines\n", advance);
+#endif
       fprintf(prn, "\033(v\002%c%c%c", 0, alo, ahi);
       last_pass_offset = pass->logicalpassstart;
     }
@@ -1311,9 +1331,11 @@ flush_pass(int passno, int model, int width, int hoffset, int ydpi, FILE *prn)
       putc(width & 255, prn);	/* Width of raster line in pixels */
       putc(width >> 8, prn);
       fwrite(bufs->v[j], lineoffs->v[j], 1, prn);
+#if 0
       fprintf(stderr, "Sending %d bytes, plane %d, density %d, lines %d\n",
 	      lineoffs->v[j], colors[j], densities[j],
 	      *linecount + pass->missingstartrows);
+#endif
       putc('\r', prn);
     }
   last_pass = pass->pass;
