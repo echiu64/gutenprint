@@ -199,6 +199,8 @@
 #gptofoo escp2-cx3200 printer/Epson-Stylus_CX3200
 #gptofoo escp2-cx5100 printer/Epson-Stylus_CX5100
 #gptofoo escp2-cx5200 printer/Epson-Stylus_CX5200
+#gptofoo escp2-cx5300 printer/Epson-Stylus_CX5300
+#gptofoo escp2-cx5400 printer/Epson-Stylus_CX5400
 #gptofoo escp2-cx6300 printer/Epson-Stylus_CX6300
 #gptofoo escp2-cx6400 printer/Epson-Stylus_CX6400
 #gptofoo escp2-cx8300 printer/Epson-Stylus_CX8300
