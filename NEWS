@@ -10,24 +10,33 @@ The Gimp Print plugin requires the Gimp 1.2.
 
 Gimp-Print 4.1.5 contains the following fixes and improvements over 4.1.4:
 
-1) A "bar-code" effect on certain HP printers (all printing looks like
+1) The old (Gimp 1.0 and early 1.1-compatible) print plugin UI is
+   deprecated.  No further improvements will be made nor bugs fixed in
+   this interface.  It will be removed within the next few releases.
+   Please upgrade to Gimp 1.2.
+
+2) A "bar-code" effect on certain HP printers (all printing looks like
    something vaguely resembling a bar code) is now fixed.
 
-2) The maximum paper dimensions for many Epson printers (particularly
+3) A major print quality problem slipped into many new Epson printers
+   in 4.1.4, resulting in pale (and in some cases distorted) output in
+   many printing resolutions.  That is fixed.
+
+4) The maximum paper dimensions for many Epson printers (particularly
    older ones) is fixed.  In particular, all printers can now print
    44" long or better, the Stylus Color Pro, Pro XL, 400, and 500 can
    now print 13" wide, and the Stylus Photo EX can print A3-sized
    paper.
 
-3) Clean up the Debian packaging a bit more.  In particular, the
+5) Clean up the Debian packaging a bit more.  In particular, the
    Debian installation files are included in the release.
 
-4) Bug fixes for the Epson 480/580.
+6) Bug fixes for the Epson 480/580.
 
-5) Fix printing dimensions for Epon 780/790, 890, and 1280/1290 to
+7) Fix printing dimensions for Epon 780/790, 890, and 1280/1290 to
    allow printing to all edges.
 
-6) Significant quality improvements for Epson printers printing to
+8) Significant quality improvements for Epson printers printing to
    plain paper.  The noticeable effects should be more solid blacks
    and colors.  There may be a bit more ink bleed, but it should not
    be wildly excessive.
@@ -37,17 +46,13 @@ Gimp-Print 4.1.5 contains the following fixes and improvements over 4.1.4:
    be less ink bleed and more consistent grays, at the expense of
    smoothness of pale tones.
 
-7) A significant rewrite of some of the internals, while having no
+9) A significant rewrite of some of the internals, while having no
    effect on the behavior of the package, will ultimately permit a
    much more stable binary interface.  Currently, this is in an
    interim state.
 
-8) A major print quality problem slipped into many new Epson printers
-   in 4.1.4, resulting in pale (and in some cases distorted) output in
-   many printing resolutions.  That is fixed.
-
-9) Provisional quality fixes for the Canon BJC-8200.
-
+The following problem with 4.1.5 is known to exist: printing in at
+least some modes on the Canon BJC-8200 is incorrect.
 
 Gimp-Print 4.1.4 contains the following fixes and improvements over 4.1.3:
 
