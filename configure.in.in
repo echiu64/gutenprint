@@ -108,7 +108,7 @@ fi
 
 dnl Compiler options and definitions
 CFLAGS="${CFLAGS:=}"
-INCLUDES="${INCLUDES} -I\$(top_srcdir)/src/include -I\$(top_builddir)/src/include -I\$(top_srcdir)/intl"
+INCLUDES="${INCLUDES} -I\$(top_srcdir)/include -I\$(top_builddir)/include -I\$(top_srcdir)/intl"
 OPTIM=""
 
 dnl Defaults
@@ -457,7 +457,7 @@ if test x${BUILD_LIBGIMPPRINT} = xyes ; then
   MAIN_SCR='$(MAIN_SCR)'
   LIBGIMPPRINT_LIBS="\$(top_builddir)/src/main/libgimpprint.la"
   GIMP_PRINT_H="gimp-print.h"
-  INCLUDE_GIMP_PRINT_H="\"gimp-print.h\""
+  INCLUDE_GIMP_PRINT_H="\"gimp-print/gimp-print.h\""
 else
   AM_PATH_GIMPPRINT(
     $GIMPPRINT_VERSION,
@@ -470,8 +470,8 @@ else
       MAIN_MAN='$(MAIN_MAN)'
       MAIN_SCR='$(MAIN_SCR)'
       LIBGIMPPRINT_LIBS="\$(top_builddir)/src/main/libgimpprint.la"
-      GIMP_PRINT_H="gimp-print.h"
-      INCLUDE_GIMP_PRINT_H="\"gimp-print.h\""]
+      GIMP_PRINT_H="gimp-print/gimp-print.h"
+      INCLUDE_GIMP_PRINT_H="\"gimp-print/gimp-print.h\""]
   )
 fi
 AM_CONDITIONAL(BUILD_LIBGIMPPRINT, test x${BUILD_LIBGIMPPRINT} = xyes)
@@ -598,14 +598,14 @@ dnl of a line.
 
 AC_OUTPUT([
 Makefile doc/Makefile intl/Makefile lib/Makefile man/Makefile man/escputil.1
-man/gimpprint.3
-man/gimpprint-config.1 po/Makefile.in samples/Makefile src/Makefile
+man/gimpprint.3 man/gimpprint-config.1 po/Makefile.in samples/Makefile
+src/Makefile src/gimp/Makefile
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 man/cups-calibrate.8 src/testpattern/Makefile
 src/cups/Makefile src/escputil/Makefile src/foomatic/Makefile test/Makefile
 src/foomatic/foomatic-generator src/ghost/Makefile src/ghost/contrib.mak.addon
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
-src/gimp/Makefile src/include/Makefile src/include/gimp-print.h
+include/gimp-print/Makefile include/gimp-print/gimp-print.h include/Makefile
 src/main/Makefile src/main/gimpprint-config src/printdef/Makefile
 ],[
 chmod +x src/main/gimpprint-config
@@ -614,8 +614,8 @@ chmod +x src/foomatic/foomatic-generator
 if test -f src/ghost/contrib.mak.addon ; then
   sed -e 's;${exec_prefix};'"${exec_prefix};" -e 's;${prefix};'"${prefix};" src/ghost/contrib.mak.addon > src/ghost/contrib.mak.addon.tmp
   mv src/ghost/contrib.mak.addon.tmp src/ghost/contrib.mak.addon
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 fi
+dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 echo "Finished configuring."
 echo "Type 'make' to build the package"
 echo "then 'make install' to install it."

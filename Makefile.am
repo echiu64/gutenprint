@@ -28,7 +28,7 @@ MAINT_CHARSET = latin1
 NONGIMP_SUBDIRS = test
 NONGIMP_DISTDIRS = debian
 ## @-@-@-@-@ YES-GIMP @-@-@-@-@
-SUBDIRS = doc intl lib man src po samples $(NONGIMP_SUBDIRS)
+SUBDIRS = doc intl lib man src po samples include $(NONGIMP_SUBDIRS)
 DISTDIRS = scripts $(NONGIMP_DISTDIRS)
 
 if MAINTAINER_MODE

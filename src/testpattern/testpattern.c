@@ -20,12 +20,24 @@
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+/*
+ * This sample program may be used to generate test patterns.  It also
+ * serves as an example of how to use the gimp-print API.
+ *
+ * As the purpose of this program is to allow fine grained control over
+ * the output, it uses the raw CMYK output type.  This feeds 16 bits each
+ * of CMYK to the driver.  This mode performs no correction on the data;
+ * it passes it directly to the dither engine, performing no color,
+ * density, gamma, etc. correction.  Most programs will use one of the
+ * other modes (RGB, density and gamma corrected 8-bit CMYK, grayscale, or
+ * black and white).
+ */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#include <gimp-print.h>
-#include <varargs.h>
+#include <gimp-print/gimp-print.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -33,24 +45,38 @@
 #include <string.h>
 #include "testpattern.h"
 
-char *
-c_strdup(const char *s)
+static const char *Image_get_appname(stp_image_t *image);
+static void Image_progress_conclude(stp_image_t *image);
+static void Image_note_progress(stp_image_t *image,
+				double current, double total);
+static void Image_progress_init(stp_image_t *image);
+static stp_image_status_t Image_get_row(stp_image_t *image,
+					unsigned char *data, int row);
+static int Image_height(stp_image_t *image);
+static int Image_width(stp_image_t *image);
+static int Image_bpp(stp_image_t *image);
+static void Image_init(stp_image_t *image);
+static stp_image_t theImage =
 {
-  int l = strlen(s);
-  char *ret;
-  if (s[0] == '"' && s[l - 1] == '"')
-    {
-      ret = malloc(l - 1);
-      strncpy(ret, s + 1, l - 2);
-      ret[l - 2] = '\0';
-    }
-  else
-    {
-      ret = malloc(strlen(s) + 1);
-      strcpy(ret, s);
-    }
-  return ret;
-}
+  Image_init,
+  NULL,				/* reset */
+  NULL,				/* transpose */
+  NULL,				/* hflip */
+  NULL,				/* vflip */
+  NULL,				/* crop */
+  NULL,				/* ccw */
+  NULL,				/* cw */
+  NULL,				/* 180 */
+  Image_bpp,
+  Image_width,
+  Image_height,
+  Image_get_row,
+  Image_get_appname,
+  Image_progress_init,
+  Image_note_progress,
+  Image_progress_conclude,
+  NULL
+};
 
 double global_c_level = 1.0;
 double global_c_gamma = 1.0;
@@ -76,43 +102,28 @@ double hsize = 1.0;
 double vsize = 1.0;
 int noblackline = 0;
 int printer_width, printer_height, bandheight;
-
-static const char *Image_get_appname(stp_image_t *image);
-static void Image_progress_conclude(stp_image_t *image);
-static void Image_note_progress(stp_image_t *image,
-				double current, double total);
-static void Image_progress_init(stp_image_t *image);
-static stp_image_status_t Image_get_row(stp_image_t *image,
-					unsigned char *data, int row);
-static int Image_height(stp_image_t *image);
-static int Image_width(stp_image_t *image);
-static int Image_bpp(stp_image_t *image);
-static void Image_init(stp_image_t *image);
 int n_testpatterns = 0;
 
 testpattern_t *the_testpatterns = NULL;
 
-static stp_image_t theImage =
+char *
+c_strdup(const char *s)
 {
-  Image_init,
-  NULL,				/* reset */
-  NULL,				/* transpose */
-  NULL,				/* hflip */
-  NULL,				/* vflip */
-  NULL,				/* crop */
-  NULL,				/* ccw */
-  NULL,				/* cw */
-  NULL,				/* 180 */
-  Image_bpp,
-  Image_width,
-  Image_height,
-  Image_get_row,
-  Image_get_appname,
-  Image_progress_init,
-  Image_note_progress,
-  Image_progress_conclude,
-  NULL
-};
+  int l = strlen(s);
+  char *ret;
+  if (s[0] == '"' && s[l - 1] == '"')
+    {
+      ret = malloc(l - 1);
+      strncpy(ret, s + 1, l - 2);
+      ret[l - 2] = '\0';
+    }
+  else
+    {
+      ret = malloc(strlen(s) + 1);
+      strcpy(ret, s);
+    }
+  return ret;
+}
 
 testpattern_t *
 get_next_testpattern(void)

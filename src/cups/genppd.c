@@ -60,9 +60,9 @@
 #ifdef INCLUDE_GIMP_PRINT_H
 #include INCLUDE_GIMP_PRINT_H
 #else
-#include <gimp-print.h>
+#include <gimp-print/gimp-print.h>
 #endif
-#include <gimp-print-intl.h>
+#include <gimp-print/gimp-print-intl.h>
 #include "../../lib/libprintut.h"
 
 /*
