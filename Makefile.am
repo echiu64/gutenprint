@@ -89,7 +89,7 @@ EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
 	README.dither quickmatrix257.h ran.367.179.h make-deb.sh README.escp2 \
 	$(addprefix Ghost/, $(GHOST_DIST)) \
 	$(addprefix cups/, $(CUPS_DIST)) \
-	$(shell find Ghost/stp-interfaces -type f -print) \
+	$(shell find Ghost/stp-interfaces -type f -print 2>/dev/null) \
 	$(FORCE_ACLOCAL)
 
 install-libexecPROGRAMS: $(libexec_PROGRAMS)
@@ -108,7 +108,7 @@ uninstall-libexecPROGRAMS: $(libexec_PROGRAMS)
 		else :; fi; \
 	done
 
-.PHONY: files ghost ChangeLog force_aclocal
+.PHONY: files ghost ChangeLog force_aclocal doit
 
 ChangeLog:
 	cvs log | perl ./mkchlog > ChangeLog.tmp
@@ -143,10 +143,30 @@ FORCE_ACLOCAL=PLEASE\ RUN\ make\ gdist\ rather\ than\ make\ dist
 
 gdist: force_aclocal
 
-force_aclocal:
+doit:
+	-@exit 0
+
+Ghost/stp-md5sum: doit
+	wget -q -O Ghost/stp-md5sum.new http://www.linuxprinting.org/stp-interfaces.tar.gz.md5sum	
+	if [ -f Ghost/stp-md5sum -a -f Ghost/stp-interfaces.tar.gz ] ; then \
+		(cd Ghost; md5sum stp-interfaces.tar.gz > stp-md5sum.tmp ) ; \
+		cat Ghost/stp-md5sum.new Ghost/stp-md5sum.tmp ; \
+		if ! cmp -s Ghost/stp-md5sum.tmp Ghost/stp-md5sum.new ; then \
+			cp Ghost/stp-md5sum.new Ghost/stp-md5sum ; \
+			echo 'Compare failed:' ; \
+		fi ;\
+		rm -f Ghost/stp-md5sum.tmp Ghost/stp-md5sum.new ; \
+	else \
+		mv Ghost/stp-md5sum.new Ghost/stp-md5sum ; \
+	fi ; \
+	exit 0
+
+Ghost/stp-interfaces.tar.gz: Ghost/stp-md5sum
+	wget -q -O Ghost/stp-interfaces.tar.gz http://www.linuxprinting.org/stp-interfaces.tar.gz
+
+force_aclocal: Ghost/stp-interfaces.tar.gz
 	touch configure.in
 	-rm -rf Ghost/stp-interfaces
-	wget -O Ghost/stp-interfaces.tar.gz http://www.linuxprinting.org/stp-interfaces.tar.gz
 	(cd Ghost;tar xzvf stp-interfaces.tar.gz)
 	-find Ghost/stp-interfaces -name '*~' -exec rm -f '{}' \;
 	$(MAKE) dist FORCE_ACLOCAL=
