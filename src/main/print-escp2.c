@@ -1402,7 +1402,7 @@ static escp2_stp_printer_t model_capabilities[] =
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    32, 4, 32, 4, 360, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
+    32, 4, 32, 4, 360, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     1440, 720,
     { -1, 2, 0x12, 4, 0x11, -1, 0x11, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .323, .365, .1825, .1825, .0913 },
@@ -1415,7 +1415,7 @@ static escp2_stp_printer_t model_capabilities[] =
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO 
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    15, 3, 15, 3, 360, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
+    15, 3, 15, 3, 360, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     720, 720,
     { -1, -2, 0x13, -2, 0x10, -1, -1, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .323, .365, .1825, .1825, .0913 },
@@ -1480,7 +1480,7 @@ static escp2_stp_printer_t model_capabilities[] =
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    48, 3, 144, 1, 360, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
+    48, 3, 144, 1, 360, 360, INCH(13), INCH(44), 9, 9, 0, 9, 1, 0,
     1440, 720,
     { -1, 2, 0x11, 4, 0x10, -1, 0x10, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .775, .852, .388, .438, .388, .438, .219, .219, .110 },
