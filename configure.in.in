@@ -109,6 +109,7 @@ EXTRA_LIBREADLINE_DEPS=''
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 BUILD_CUPS=no
 BUILD_TRANSLATED_PPDS=yes
+USE_LEVEL3_PS=no
 BUILD_GHOST=no
 BUILD_FOOMATIC=no
 BUILD_TEST=no
@@ -180,6 +181,16 @@ AC_ARG_WITH(translated-ppds,
     *) AC_MSG_RESULT([unknown])
        AC_MSG_ERROR([bad value ${withval} for --with-translate_ppds]) ;;
   esac],[AC_MSG_RESULT([${BUILD_TRANSLATED_PPDS}])])
+
+AC_MSG_CHECKING([whether to use level 3 PostScript])
+AC_ARG_ENABLE(cups-level3-ppds,
+[  --enable-cups-level3-ps Generate PostScript level 3 PPD files [default=no]],
+  [case "${enableval}" in
+    yes) USE_LEVEL3_PS=yes ; AC_MSG_RESULT([yes]) ;;
+    no) USE_LEVEL3_PS=no ; AC_MSG_RESULT([no]) ;;
+    *) AC_MSG_RESULT([unknown])
+       AC_MSG_ERROR([bad value ${enableval} for --enable-cups-level3-ps]) ;;
+  esac],[AC_MSG_RESULT([${USE_LEVEL3_PS}])])
 
 AC_MSG_CHECKING([whether to build ghostscript driver])
 AC_ARG_WITH(ghost,
@@ -606,6 +617,14 @@ AM_CONDITIONAL(BUILD_CUPS, test x${BUILD_CUPS} = xyes)
 
 AM_CONDITIONAL(BUILD_TRANSLATED_PPDS, test x${BUILD_TRANSLATED_PPDS} = xyes)
 
+if test x${USE_LEVEL3_PS} = xyes ; then
+  CUPS_PPD_PS_LEVEL=3
+else
+  CUPS_PPD_PS_LEVEL=2
+fi
+
+AM_CONDITIONAL(USE_LEVEL3_PS, test x${USE_LEVEL3_PS} = xyes)
+
 AM_CONDITIONAL(BUILD_GHOST, test x${BUILD_GHOST} = xyes)
 
 if test x${BUILD_ESCPUTIL} = xyes ; then
@@ -719,6 +738,7 @@ LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
 dnl Definitions
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 AC_DEFINE_UNQUOTED(CUPS_DATADIR, "${cups_exec_prefix}/share/cups", [CUPS data directory.])
+AC_DEFINE_UNQUOTED(CUPS_PPD_PS_LEVEL, ${CUPS_PPD_PS_LEVEL}, [CUPS PPD PostScript level])
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 AC_DEFINE_UNQUOTED(INCLUDE_GIMP_PRINT_H, ${INCLUDE_GIMP_PRINT_H}, [GIMP-Print header to include.])
@@ -745,6 +765,7 @@ AC_SUBST(CUPS_INSTALL)
 AC_SUBST(CUPS_CFLAGS)
 AC_SUBST(CUPS_LIBS)
 AC_SUBST(CUPS_MAN)
+AC_SUBST(CUPS_PPD_PS_LEVEL)
 AC_SUBST(CUPS_NOINST_BIN)
 AC_SUBST(FOOMATIC_NOINST_BIN)
 AC_SUBST(FOOMATIC_INSTALL)
