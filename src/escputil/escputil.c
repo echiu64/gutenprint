@@ -57,6 +57,7 @@ void do_head_clean(void);
 void do_help(int code);
 void do_identify(void);
 void do_ink_level(void);
+void do_extended_ink_info(int);
 void do_nozzle_check(void);
 void do_status(void);
 int do_print_cmd(void);
@@ -90,26 +91,27 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n");
 
 struct option optlist[] =
 {
-  { "printer-name",	1,	NULL,	(int) 'P' },
-  { "raw-device",	1,	NULL,	(int) 'r' },
-  { "ink-level",	0,	NULL,	(int) 'i' },
-  { "clean-head",	0,	NULL,	(int) 'c' },
-  { "nozzle-check",	0,	NULL,	(int) 'n' },
-  { "align-head",	0,	NULL,	(int) 'a' },
-  { "status",           0,      NULL,   (int) 's' },
-  { "new",		0,	NULL,	(int) 'u' },
-  { "help",		0,	NULL,	(int) 'h' },
-  { "identify",		0,	NULL,	(int) 'd' },
-  { "model",		1,	NULL,	(int) 'm' },
-  { "quiet",		0,	NULL,	(int) 'q' },
-  { "license",		0,	NULL,	(int) 'l' },
-  { "list-models",	0,	NULL,	(int) 'M' },
-  { "short-name",	0,	NULL,	(int) 'S' },
-  { NULL,		0,	NULL,	0 	  }
+  { "printer-name",		1,	NULL,	(int) 'P' },
+  { "raw-device",		1,	NULL,	(int) 'r' },
+  { "ink-level",		0,	NULL,	(int) 'i' },
+  { "extended-ink-info",	0,	NULL,	(int) 'e' },
+  { "clean-head",		0,	NULL,	(int) 'c' },
+  { "nozzle-check",		0,	NULL,	(int) 'n' },
+  { "align-head",		0,	NULL,	(int) 'a' },
+  { "status",           	0,      NULL,   (int) 's' },
+  { "new",			0,	NULL,	(int) 'u' },
+  { "help",			0,	NULL,	(int) 'h' },
+  { "identify",			0,	NULL,	(int) 'd' },
+  { "model",			1,	NULL,	(int) 'm' },
+  { "quiet",			0,	NULL,	(int) 'q' },
+  { "license",			0,	NULL,	(int) 'l' },
+  { "list-models",		0,	NULL,	(int) 'M' },
+  { "short-name",		0,	NULL,	(int) 'S' },
+  { NULL,			0,	NULL,	0 	  }
 };
 
 const char *help_msg = N_("\
-Usage: escputil [-c | -n | -a | -i | -s | -d | -l | -M]\n\
+Usage: escputil [-c | -n | -a | -i | -e | -s | -d | -l | -M]\n\
                 [-P printer | -r device] [-u] [-q] [-m model] [ -S ]\n\
 Perform maintenance on EPSON Stylus (R) printers.\n\
 Examples: escputil --clean-head --printer stpex-on-third-floor\n\
@@ -127,6 +129,9 @@ Examples: escputil --clean-head --printer stpex-on-third-floor\n\
     -s|--status        Retrieve printer status.\n\
     -i|--ink-level     Obtain the ink level from the printer.  This requires\n\
                        read/write access to the raw printer device.\n\
+    -e|--extended-ink-info     Obtain the extended ink information from the\n\
+                       printer.  This requires read/write access to the raw\n\
+                       printer device.\n\
     -d|--identify      Query the printer for make and model information.\n\
                        This requires read/write access to the raw printer\n\
                        device.\n\
@@ -146,7 +151,7 @@ Examples: escputil --clean-head --printer stpex-on-third-floor\n\
 #else
 const char *help_msg = N_("\
 Usage: escputil [OPTIONS] [COMMAND]\n\
-Usage: escputil [-c | -n | -a | -i | -s | -d | -l | -M]\n\
+Usage: escputil [-c | -n | -a | -i | -e | -s | -d | -l | -M]\n\
                 [-P printer | -r device] [-u] [-q] [-m model] [ -S ]\n\
 Perform maintenance on EPSON Stylus (R) printers.\n\
 Examples: escputil -c -P stpex-on-third-floor\n\
@@ -163,6 +168,9 @@ Examples: escputil -c -P stpex-on-third-floor\n\
           damage to the printer.\n\
     -s Retrieve printer status.\n\
     -i Obtain the ink level from the printer.  This requires\n\
+          read/write access to the raw printer device.\n\
+    -e Obtain the extended ink information from the printer.\n\
+          Only for R800 printer and friends. This requires\n\
           read/write access to the raw printer device.\n\
     -d Query the printer for make and model information.  This\n\
           requires read/write access to the raw printer device.\n\
@@ -245,9 +253,9 @@ main(int argc, char **argv)
     {
 #if defined(HAVE_GETOPT_H) && defined(HAVE_GETOPT_LONG)
       int option_index = 0;
-      c = getopt_long(argc, argv, "P:r:icnasduqm:hlMS", optlist, &option_index);
+      c = getopt_long(argc, argv, "P:r:iecnasduqm:hlMS", optlist, &option_index);
 #else
-      c = getopt(argc, argv, "P:r:icnasduqm:hlMS");
+      c = getopt(argc, argv, "P:r:iecnasduqm:hlMS");
 #endif
       if (c == -1)
 	break;
@@ -258,6 +266,7 @@ main(int argc, char **argv)
 	  break;
 	case 'c':
 	case 'i':
+	case 'e':
 	case 'n':
 	case 'a':
 	case 'd':
@@ -338,6 +347,9 @@ main(int argc, char **argv)
       break;
     case 'i':
       do_ink_level();
+      break;
+    case 'e':
+      do_extended_ink_info(1);
       break;
     case 'a':
       do_align();
@@ -533,6 +545,19 @@ const char *colors[] =
   0
 };
 
+const char *colors_new[] =
+{
+  N_("Yellow"),
+  N_("Magenta"),
+  N_("Cyan"),
+  N_("Matte Black"),
+  N_("Photo Black"),
+  N_("Red"),
+  N_("Blue"),
+  N_("Gloss Optimizer"),
+  0
+};
+
 static const stp_printer_t *
 get_printer(int quiet)
 {
@@ -649,33 +674,34 @@ do_ink_level(void)
        * -- rlk 20040508
        */
       if (isnew && !(retry & 1))
-	do_remote_cmd("IQ", 1, 1);
+				do_remote_cmd("IQ", 1, 1);
       else
-	do_remote_cmd("ST", 2, 0, 1);
+				do_remote_cmd("ST", 2, 0, 1);
       add_resets(2);
       if (write(fd, printer_cmd, bufpos) < bufpos)
-	{
-	  fprintf(stderr, _("Cannot write to %s: %s\n"), raw_device,
-		  strerror(errno));
-	  exit(1);
-	}
+				{
+					fprintf(stderr, _("Cannot write to %s: %s\n"), raw_device,
+									strerror(errno));
+					exit(1);
+				}
       status = read_from_printer(fd, buf, 1024);
       if (status < 0)
-	exit(1);
+				exit(1);
       (void) close(fd);
       ind = buf;
       do
-	ind = strchr(ind, 'I');
+				ind = strchr(ind, 'I');
       while (ind && ind[1] != 'Q' && (ind[1] != '\0' && ind[2] != ':'));
       if (!ind || ind[1] != 'Q' || ind[2] != ':' || ind[3] == ';')
-	{
-	  ind = NULL;
-	}
+				{
+					ind = NULL;
+				}
     } while (--retry != 0 && !ind);
   if (!ind)
     {
-      fprintf(stderr, _("Cannot parse output from printer\n"));
-      exit(1);
+      do_extended_ink_info(0);
+      /* NOTREACHED */
+      _exit(1);
     }
   ind += 3;
   printf("%20s    %s\n", _("Ink color"), _("Percent remaining"));
@@ -698,6 +724,132 @@ do_ink_level(void)
       val = (ind[0] << 4) + ind[1];
       printf("%20s    %3d\n", _(colors[i]), val);
       ind += 2;
+    }
+  exit(0);
+}
+
+void 
+do_extended_ink_info(int extended_output)
+{
+  int fd;
+  int status;
+  int retry = 6;
+  char buf[1024];
+  unsigned val, id, year, month, ik1, ik2;
+  int found_ink = 0;
+
+  /*
+    = { 0x40,0x42,0x44,0x43,0x20,0x53,0x54,0x32,0x0d,0x0a,
+    0x58,0x00,0x01,0x01,0x04,0x06,0x02,0x01,0xff,0x0b,0x11,0x04,0x35,0x31,0x34,0x2f,
+    0x35,0x31,0x32,0x30,0x3b,0x2b,0x35,0x2d,0x34,0x32,0x31,0x30,0x0f,0x19,0x03,0x05,
+    0x03,0x1b,0x04,0x02,0x08,0x03,0x01,0x5f,0x0b,0x00,0x33,0x01,0x00,0x24,0x0c,0x09,
+    //      IQT1           IQT2           IQT3           IQT4           IQT5
+    0x3f,0x0d,0x0a,0x36,0x0e,0x0b,0x20,0x10,0x09,0x01,0x08,0x4e,0x0e,0x4e,0x4e,0x01,
+    // IQT6           IQT7           IQT8
+    0x4e,0x4e,0x13,0x01,0x01,0x15,0x02,0x32,0x00,0x19,0x0c,0x00,0x00,0x00,0x00,0x00,
+    0x75,0x6e,0x6b,0x6e,0x6f,0x77,0x6e,0x1b,0x01,0x00
+    //   u    n    k    n    o    w    n
+    };
+  */
+  char *ind;
+  int i;
+  if (!raw_device) 
+    {
+      fprintf(stderr,_("Obtaining extended ink information requires using a raw device.\n"));
+      exit(1);
+    }
+
+  fd = open(raw_device, O_RDWR, 0666);
+  if (fd == -1){
+    fprintf(stderr, _("Cannot open %s read/write: %s\n"), raw_device,
+            strerror(errno));
+    exit(1);
+  }
+  add_resets(2);
+  initialize_print_cmd();
+  /* needed to get a first response */
+  do_remote_cmd("IR", 1, 1);
+
+  if (write(fd, printer_cmd, bufpos) < bufpos)
+    {
+      fprintf(stderr, _("Cannot write to %s: %s\n"), raw_device,
+              strerror(errno));
+      exit(1);
+    }
+  status = read_from_printer(fd, buf, 1024);
+  if (status < 0)
+    exit(1);
+  (void) close(fd);
+
+  for (i = 0; i < 8; i++) 
+    {
+      retry = 6;
+      do 
+        {
+          fd = open(raw_device, O_RDWR, 0666);
+          if (fd == -1)
+	    {
+	      fprintf(stderr, _("Cannot open %s read/write: %s\n"), raw_device,
+		      strerror(errno));
+	      exit(1);
+	    }
+          add_resets(2);
+          initialize_print_cmd();
+          bufpos=0;
+          if (retry == 6 || retry == 3)
+            do_remote_cmd("ST", 2, 0, 1);
+          else
+            do_remote_cmd("II", 2, 1, i + 1);
+
+          add_resets(2);
+
+          if (write(fd, printer_cmd, bufpos) < bufpos) {
+            fprintf(stderr, _("Cannot write to %s: %s\n"), raw_device,
+                    strerror(errno));
+            exit(1);
+          }
+          status = read_from_printer(fd, buf, 1024);
+
+          if (status < 0)
+            exit(1);
+
+          (void) close(fd);
+
+          ind = strchr(buf, 'I');
+
+          /* II:01;IQT:1B;TSH:NAVL;PDY:03;PDM:08;IC1:0220;IC2:000A;IK1:91;IK2:91;TOV:18;TVU:06;LOG:INKbyEPSON; */
+          if (ind && sscanf(ind, 
+                            "II:01;IQT:%x;TSH:NAVL;PDY:%x;PDM:%x;IC1:%x;IC2:000A;IK1:%x;IK2:%x;TOV:18;TVU:06;LOG:INKbyEPSON;",
+                            &val, &year, &month, &id, &ik1, &ik2 ) != 6) {
+            ind = NULL;
+          }
+          if (retry == 6 || retry == 5) ind = NULL;
+
+        } while (--retry != 0 && !ind);
+      if (!ind) 
+        {
+	  /*
+	   * If we've managed to find at least one cartridge, don't
+	   * complain.
+	   */
+	  if (!found_ink)
+	    fprintf(stderr, _("Cannot parse output from printer\n"));
+          exit(1);
+        }
+
+      found_ink = 1;
+      if (extended_output)
+	{
+	  if (i == 0) 
+	    printf("%15s    %20s   %12s   %7s\n", _("Ink color"), _("Percent remaining"), _("Part number"), _("Date"));
+	  printf("%15s    %20d    T0%03d            20%02d-%02d\n", _(colors_new[i]), val, id, year, month);
+	}
+      else
+	{	
+	  if (i == 0) 
+	    printf("%20s    %s\n", _("Ink color"), _("Percent remaining"));
+	  printf("%20s    %3d\n", _(colors_new[i]), val);
+	}
     }
   exit(0);
 }
