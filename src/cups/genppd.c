@@ -89,7 +89,7 @@
 
 typedef struct
 {
-  char		*name;			/* Name of size */
+  const char	*name;			/* Name of size */
   int		width,			/* Width in points */
 		height;			/* Height in points */
 } msize_t;
