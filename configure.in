@@ -47,6 +47,15 @@ if test "$ENABLE_LPR" = "yes" ; then
   AC_PATH_PROG(LPC_PROG, lpc, , $PATH:/usr/libexec:/usr/sbin:/usr/etc:/etc)
   if test -n "$LPR_PROG" ; then
     LPR_DEF="-DLPR_COMMAND=\\\"$LPR_PROG\\\""
+    dnl Check for LPRng, which has slightly weird syntax
+    AC_MSG_CHECKING([for LPRng spooler emulating lpr])
+    if test -n "`$LPR_PROG --help 2>&1 | grep LPRng`" ; then
+      AC_MSG_RESULT(yes)
+      LPR_LPRNG_FLAG=-DLPR_LPRNG
+    else
+      AC_MSG_RESULT(no)
+      LPR_LPRNG_FLAG=
+    fi
   else
     LPR_DEF=""
   fi
@@ -97,5 +106,7 @@ AC_SUBST(GIMP_LIBS)
 AC_SUBST(RELDATE_DEF)
 AC_SUBST(MAINTAINER_PROGRAMS)
 AC_SUBST(MAINTAINER_CFLAGS)
+AC_SUBST(LP_LPRNG_FLAG)
+AC_SUBST(LPR_LPRNG_FLAG)
 
 AC_OUTPUT(Makefile)

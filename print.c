@@ -1114,8 +1114,17 @@ get_system_printers(void)
   {
     while (fgets(line, sizeof(line), pfile) != NULL)
     {
+#ifdef LP_LPRNG
+      char *s = strchr(line, ' ');
+      if (s && s != line)
+	strncpy(name, line, s - line);
+      else
+	continue;
+      if (name)
+#else
       if ((sscanf(line, "printer %s", name) == 1) ||
 	  (sscanf(line, "Printer: %s", name) == 1))
+#endif
       {
 	check_plist(plist_count + 1);
 	initialize_printer(&plist[plist_count]);
