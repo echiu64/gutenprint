@@ -765,7 +765,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     21, 8, 21, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 3, 3, 1, 1, -1, -1 },
-    { 2.0, 1.3, 1.3, .900, .900, 0, 0, 0, 0 },
+    { 3.0, 2.0, 2.0, .900, .900, 0, 0, 0, 0 },
     &simple_4color_inks
   },
   /* 11: Stylus Color 640 */
@@ -776,7 +776,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 64, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 3, 3, 1, 1, 1, 1 },
-    { 2.0, 1.3, 1.3, .900, .900, .45, .45, .225, .113 },
+    { 3.0, 2.0, 2.0, .900, .900, .45, .45, .225, .113 },
     &simple_4color_inks
   },
   /* 12: Stylus Color 740 */
@@ -854,7 +854,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 64, 720, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 8,
     { -1, 3, 3, 3, 0, 3, 0 },
-    { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
+    { 3.0, 2.0, 2.0, .646, .646, .323, .323, .1615, .0808 },
     &simple_4color_inks
   },
   /* 19: Stylus Color 760 */
@@ -1052,21 +1052,23 @@ typedef struct {
   int paper_feed_sequence;
   int platen_gap;
   double base_density;
+  double k_lower_scale;
+  double k_upper;
 } paper_t;
 
 static const paper_t escp2_paper_list[] = {
-  { "Plain Paper", 1, 0, .5 },
-  { "Plain Paper Fast Load", 5, 0, .5 },
-  { "Postcard", 2, 0, .6 },
-  { "Glossy Film", 3, 0, 1.0 },
-  { "Transparencies", 3, 0, 1.0 },
-  { "Envelopes", 4, 0, .5 },
-  { "Back Light Film", 6, 0, 1.0 },
-  { "Matte Paper", 7, 0, .5 },
-  { "Inkjet Paper", 7, 0, .78 },
-  { "Photo Quality Inkjet Paper", 7, 0, 1 },
-  { "Photo Paper", 8, 0, 1 },
-  { "Other", 0, 0, .5 },
+  { "Plain Paper", 1, 0, .5, .25, .5 },
+  { "Plain Paper Fast Load", 5, 0, .5, .25, .5 },
+  { "Postcard", 2, 0, .6, .25, .6 },
+  { "Glossy Film", 3, 0, 1.0, 1.0, .999 },
+  { "Transparencies", 3, 0, 1.0, 1.0, .999 },
+  { "Envelopes", 4, 0, .5, .25, .5 },
+  { "Back Light Film", 6, 0, 1.0, 1.0, .999 },
+  { "Matte Paper", 7, 0, .5, .25, .5 },
+  { "Inkjet Paper", 7, 0, .78, .25, .6 },
+  { "Photo Quality Inkjet Paper", 7, 0, 1, 1.0, .999 },
+  { "Photo Paper", 8, 0, 1, 1.0, .999 },
+  { "Other", 0, 0, .5, .25, .5 },
 };
 
 static const int paper_type_count = sizeof(escp2_paper_list) / sizeof(paper_t);
@@ -1782,6 +1784,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   escp_init_t	init;
   escp2_variable_inkset_t *inks;
   const paper_t *pt;
+  double k_upper, k_lower;
 
   memcpy(&nv, v, sizeof(vars_t));
 
@@ -2020,10 +2023,21 @@ escp2_print(const printer_t *printer,		/* I - Model */
 
   dither_set_black_levels(dither, 1.0, 1.0, 1.0);
   if (use_6color)
-    dither_set_black_lower(dither, .4 / bits + .1);
+    k_lower = .4 / bits + .1;
   else
-    dither_set_black_lower(dither, .25 / bits);
-  dither_set_black_upper(dither, .999);
+    k_lower = .25 / bits;
+  if (pt)
+    {
+      k_lower *= pt->k_lower_scale;
+      k_upper = pt->k_upper;
+    }
+  else
+    {
+      k_lower *= .5;
+      k_upper = .5;
+    }
+  dither_set_black_lower(dither, k_lower);
+  dither_set_black_upper(dither, k_upper);
   if (bits == 2)
     {
       if (use_6color)
@@ -3685,6 +3699,7 @@ initialize_row(const escp2_softweave_t *sw, int row, int width)
  * these days I'll unify it.
  */
 static void
+
 flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	   int hoffset, int ydpi, int xdpi, FILE *prn, int vertical_subpass)
 {
