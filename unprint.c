@@ -256,7 +256,7 @@ void write_output(FILE *fp_w,int bpp) {
        first++);
   for (last=pstate.bottom_margin-1;(last>first)&&
        (!page[last]);last--);
-  if (page[first]) {
+  if ((first<pstate.bottom_margin)&&(page[first])) {
     height = last-first+1;
   } else {
     height = 0;
@@ -300,6 +300,10 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
   int y,skip,oldstart,oldstop,mi;
   unsigned char *oldline;
 
+  if ((n==0)||(m==0)) {
+    return;  /* shouldn't happen */
+  }
+
   skip=pstate.relative_horizontal_units/density;
 
   if (skip==0) {
@@ -330,10 +334,10 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
       oldstop = -1;
     }
     page[y]->line[color]=(unsigned char *) mycalloc(sizeof(unsigned char),
-                                                    (n*skip*bpp+7)/8);
+                                                    (((n-1)*skip+1)*bpp+7)/8);
     page[y]->startx[color]=pstate.xposition;
-    page[y]->stopx[color]=pstate.xposition+(n?((n-1)*skip+1):0);
-    expand_line(buf+mi*((n*skip*bpp+7)/8),
+    page[y]->stopx[color]=pstate.xposition+((n-1)*skip);
+    expand_line(buf+mi*((n*bpp+7)/8),
                    page[y]->line[color],n,bpp,skip);
     if (oldline) {
       merge_line(page[y],oldline,oldstart,oldstop,color,bpp);
@@ -345,7 +349,7 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
 int main(int argc,char *argv[]){
 
   int currentcolor,currentbpp,density,eject,got_graphics;
-  int arg,unweave;
+  int arg,unweave,count,counter;
 
     unweave=0;
     fp_r = fp_w = NULL;
@@ -386,15 +390,17 @@ int main(int argc,char *argv[]){
     }
     pstate.nozzles=48;
 
-#define get1(error) if (!fread(&ch,1,1,fp_r)) {fprintf(stderr,error);eject=1;continue;}
-#define get2(error) {if(!fread(minibuf,1,2,fp_r)){\
-                       fprintf(stderr,error);eject=1;continue;}\
+counter=0;
+#define get1(error) if (!(count=fread(&ch,1,1,fp_r))) {fprintf(stderr,error);eject=1;continue;} else counter+=count;
+#define get2(error) {if(!(count=fread(minibuf,1,2,fp_r))){\
+                       fprintf(stderr,error);eject=1;continue;} else counter+=count;\
                        sh=minibuf[0]+minibuf[1]*256;}
-#define getn(n,error) if (!fread(buf,1,n,fp_r)){fprintf(stderr,error);eject=1;continue;}
-#define getnoff(n,offset,error) if (!fread(buf+offset,1,n,fp_r)){fprintf(stderr,error);eject=1;continue;}
+#define getn(n,error) if (!(count=fread(buf,1,n,fp_r))){fprintf(stderr,error);eject=1;continue;} else counter+=count;
+#define getnoff(n,offset,error) if (!(count=fread(buf+offset,1,n,fp_r))){fprintf(stderr,error);eject=1;continue;} else counter+=count;
 
     eject=got_graphics=currentbpp=currentcolor=density=0;
     while ((!eject)&&(fread(&ch,1,1,fp_r))){
+      counter++;
       if (ch==0xd) { /* carriage return */
         pstate.xposition=0;
         continue;
@@ -404,7 +410,7 @@ int main(int argc,char *argv[]){
         continue;
       }
       if (ch!=0x1b) {
-        fprintf(stderr,"Corrupt file?  No ESC found.  Found: %X\n",ch);
+        fprintf(stderr,"Corrupt file?  No ESC found.  Found: %02X at 0x%08X\n",ch,counter-1);
         continue;
       }
       get1("Corrupt file.  No command found.\n");
@@ -501,7 +507,7 @@ int main(int argc,char *argv[]){
                         (m*((n*currentbpp+7)/8)));
                   eject=1;
                   continue;
-                }
+                } 
                 update_page(buf,i,m,n,currentcolor,currentbpp,density);
                 break;
               case 2: /* TIFF compression */
@@ -540,6 +546,7 @@ int main(int argc,char *argv[]){
             } else {
               fprintf(stderr,"Invalid color %d.\n",ch);
             }
+            break;
         case '(': /* commands with a payload */
             get1("Corrupt file.  Incomplete extended command.\n");
             if (ch=='R') { /* "remote mode" */
@@ -567,6 +574,7 @@ int main(int argc,char *argv[]){
                   case 1:
                     pstate.page_management_units=
                     pstate.absolute_horizontal_units=
+                    pstate.relative_horizontal_units=
                     pstate.relative_vertical_units=
                     pstate.absolute_vertical_units=3600/buf[0];
                     break;
@@ -720,11 +728,11 @@ int main(int argc,char *argv[]){
               case 'C': /* set page length */
                 break;
               default:
-                fprintf(stderr,"Warning: Unknown command ESC ( 0x%X.\n",ch);
+                fprintf(stderr,"Warning: Unknown command ESC ( 0x%X at 0x%08X.\n",ch,counter-5-bufsize);
             }
             break;
           default:
-            fprintf(stderr,"Warning: Unknown command ESC 0x%X.\n",ch);
+            fprintf(stderr,"Warning: Unknown command ESC 0x%X at 0x%08X.\n",ch,counter-2);
       }
     }
   fprintf(stderr,"Done reading.\n");
