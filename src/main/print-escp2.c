@@ -638,7 +638,8 @@ escp2_set_remote_sequence(const escp2_init_t *init)
       print_remote_int_param(init->v, "  inkset", init->inkname->inkset);
       stp_puts("\033@", init->v);
     }
-  if (escp2_has_advanced_command_set(init->model, init->v))
+  if (escp2_has_advanced_command_set(init->model, init->v) ||
+      strlen(stp_get_string_parameter(init->v, "InputSlot")) > 0)
     {
       int feed_sequence = 0;
       const paper_t *p =
@@ -677,6 +678,12 @@ escp2_set_remote_sequence(const escp2_init_t *init)
 	  if (escp2_has_cap(init->model, MODEL_XZEROMARGIN,
 			    MODEL_XZEROMARGIN_YES, init->v))
 	    stp_zprintf(init->v, "FP%c%c%c%c%c", 3, 0, 0, 0260, 0xff);
+	  if (strcmp(stp_get_string_parameter(init->v, "InputSlot"), "CutSheet1"))
+	    stp_zprintf(init->v, "PP%c%c%c%c%c", 3, 0, 0, 1, 1);
+	  else if (strcmp(stp_get_string_parameter(init->v, "InputSlot"), "CutSheet2"))
+	    stp_zprintf(init->v, "PP%c%c%c%c%c", 3, 0, 0, 1, 2);
+	  else if (strcmp(stp_get_string_parameter(init->v, "InputSlot"), "CutSheetAuto"))
+	    stp_zprintf(init->v, "PP%c%c%c%c%c", 3, 0, 0, 1, 0xff);
 
 	  /* set up Roll-Feed options on appropriate printers
 	     (tested for STP 870, which has no cutter) */
