@@ -25,9 +25,9 @@ $supported_printers = array(
 		'EPSON Stylus Photo 1270' => 'Fully Operational',
 		'EPSON Stylus Photo 1280' => 'Fully Operational',
 		'EPSON Stylus Photo 1290' => 'Fully Operational',
-		'EPSON Stylus Photo 200P' => 'Testing in Progress, untuned',
+		'EPSON Stylus Photo 2000P' => 'Testing in Progress, untuned',
 		'EPSON Stylus Photo 2100' => 'Untested',
-		'EPSON Stylus Photo 2100' => 'Untested'
+		'EPSON Stylus Photo 2200' => 'Untested'
 		),
 	'Stylus Color Range' => array(
 		'EPSON Stylus C20SX' => 'Fully Operational',
