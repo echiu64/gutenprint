@@ -31,6 +31,35 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.24  2000/02/15 03:51:40  rlk
+ *
+ *   1) It wasn't possible to print to the edge of the page (as defined by
+ *      the printer).
+ *
+ *   2) The page top/bottom/left/right (particularly bottom and right) in
+ *      the size boxes wasn't displayed accurately (it *had* been coded in
+ *      1/10", because that's the units used to print out the pager --
+ *      really sillyl, that -- now it's all in points, which is more
+ *      reasonable if still not all that precise).
+ *
+ *   3) The behavior of landscape mode was weird, to say the least.
+ *
+ *   4) Calculating the size based on scaling was also weird -- in portrait
+ *      mode it just looked at the height of the page vs. the height of the
+ *      image, and in landscape it just looked at width of the page and
+ *      height of the image.  Now it looks at both axes and scales so that
+ *      the larger of the two ratios (widths and heights) is set equal to
+ *      the scale factor.  That seems more intuitive to me, at any rate.
+ *      It avoids flipping between landscape and portrait mode as you
+ *      rescale the image in auto mode (which seems just plain bizarre to
+ *      me).
+ *
+ *   5) I changed the escp2 stuff so that the distance from the paper edge
+ *      will be identical in softweave and in microweave mode.  Henryk,
+ *      that might not quite be what you intended (it's the opposite of
+ *      what you actually did), but at least microweave and softweave
+ *      should generate stuff that looks consistent.
+ *
  *   Revision 1.23  2000/02/13 08:47:52  gandy
  *   Fixed maximum paper size for BJC-6000
  *
@@ -957,7 +986,7 @@ canon_print(int       model,		/* I - Model */
     /* Swap left/top offsets... */
     x    = top;
     top  = left;
-    left = x;
+    left = page_width - x - out_width;
   }
 
   if (left < 0)

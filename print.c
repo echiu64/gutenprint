@@ -2758,38 +2758,37 @@ preview_update(void)
 				     vars.media_size, &left, &right,
 				     &bottom, &top);
 
-  page_width  = 10 * (right - left) / 72;
-  page_height = 10 * (top - bottom) / 72;
+  page_width  = right - left;
+  page_height = top - bottom;
 
   (*current_printer->media_size)(current_printer->model, vars.ppd_file,
 				 vars.media_size, &width, &length);
 
-  width  = 10 * width / 72;
-  length = 10 * length / 72;
-
   if (vars.scaling < 0)
   {
-    tw0 = -image_width * 10 / vars.scaling;
+    tw0 = 72 * -image_width / vars.scaling;
     th0 = tw0 * image_height / image_width;
     tw1 = tw0;
     th1 = th0;
   }
   else
   {
+    /* Portrait */
     tw0 = page_width * vars.scaling / 100;
     th0 = tw0 * image_height / image_width;
-    if (th0 > page_height)
+    if (th0 > page_height * vars.scaling / 100)
     {
-      th0 = page_height;
+      th0 = page_height * vars.scaling / 100;
       tw0 = th0 * image_width / image_height;
     }
     ta0 = tw0 * th0;
 
+    /* Landscape */
     tw1 = page_height * vars.scaling / 100;
     th1 = tw1 * image_height / image_width;
-    if (th1 > page_width)
+    if (th1 > page_width * vars.scaling / 100)
     {
-      th1 = page_width;
+      th1 = page_width * vars.scaling / 100;
       tw1 = th1 * image_width / image_height;
     }
     ta1 = tw1 * th1;
@@ -2799,11 +2798,35 @@ preview_update(void)
   {
     if (vars.scaling < 0)
     {
-      if ((th0 > page_height && tw0 <= page_height) ||
-          (tw0 > page_width && th0 <= page_width))
-        orient = ORIENT_LANDSCAPE;
+      if ((page_width > page_height && tw0 > th0) ||
+	  (page_height > page_width && th0 > tw0))
+	{
+	  orient = ORIENT_PORTRAIT;
+	  if (tw0 > page_width)
+	    {
+	      vars.scaling *= (double) page_width / (double) tw0;
+	      th0 = th0 * page_width / tw0;
+	    }
+	  if (th0 > page_height)
+	    {
+	      vars.scaling *= (double) page_height / (double) th0;
+	      tw0 = tw0 * page_height / th0;
+	    }
+	}
       else
-        orient = ORIENT_PORTRAIT;
+	{
+	  orient = ORIENT_LANDSCAPE;
+	  if (tw1 > page_height)
+	    {
+	      vars.scaling *= (double) page_height / (double) tw1;
+	      th1 = th1 * page_height / tw1;
+	    }
+	  if (th1 > page_width)
+	    {
+	      vars.scaling *= (double) page_width / (double) th1;
+	      tw1 = tw1 * page_width / th1;
+	    }
+	}
     }
     else
     {
@@ -2833,35 +2856,35 @@ preview_update(void)
     print_height = th0;
   }
 
-  page_left = (PREVIEW_SIZE - page_width) / 2;
-  page_top  = (PREVIEW_SIZE - page_height) / 2;
+  page_left = (PREVIEW_SIZE - 10 * page_width / 72) / 2;
+  page_top  = (PREVIEW_SIZE - 10 * page_height / 72) / 2;
 
   gdk_draw_rectangle(preview->widget.window, gc, 0,
-                     (PREVIEW_SIZE - width) / 2,
-                     (PREVIEW_SIZE - length) / 2,
-                     width, length);
+                     (PREVIEW_SIZE - (10 * width / 72)) / 2,
+                     (PREVIEW_SIZE - (10 * length / 72)) / 2,
+                     10 * width / 72, 10 * length / 72);
 
 
   if (vars.left < 0)
-    vars.left = 72 * (page_width - print_width) / 20;
+    vars.left = (page_width - print_width) / 2;
 
-  left = 10 * vars.left / 72;
+  left = vars.left;
 
   if (left > (page_width - print_width))
     {
       left      = page_width - print_width;
-      vars.left = 72 * left / 10;
+      vars.left = left;
       plist[plist_current].v.left = vars.left;
     }
 
   if (vars.top < 0)
-    vars.top  = 72 * (page_height - print_height) / 20;
-  top  = 10 * vars.top / 72;
+    vars.top  = (page_height - print_height) / 2;
+  top  = vars.top;
 
-    if (top > (page_height - print_height))
+  if (top > (page_height - print_height))
     {
       top      = page_height - print_height;
-      vars.top = 72 * top / 10;
+      vars.top = top;
       plist[plist_current].v.top = vars.top;
     }
   
@@ -2879,22 +2902,19 @@ preview_update(void)
     sprintf(s, "%.3f",
 	    (vars.top + (image_height * -72.0 / vars.scaling)) / 72.0);
   else
-    sprintf(s, "%.3f", (vars.top +
-			(((right - left + 1) * vars.scaling / 100.0) *
-			 image_height / image_width)) / 72.0);
+    sprintf(s, "%.3f", (vars.top + print_height) / 72.0);
   gtk_entry_set_text(GTK_ENTRY(bottom_entry), s);
 
   if (vars.scaling < 0)
     sprintf(s, "%.3f",
 	    (vars.left + (image_width * -72.0 / vars.scaling)) / 72.0);
   else
-    sprintf(s, "%.3f",
-	    (vars.left + ((right - left + 1) * vars.scaling / 100.0)) / 72.0);
+    sprintf(s, "%.3f", (vars.left + print_width) / 72.0);
   gtk_entry_set_text(GTK_ENTRY(right_entry), s);
 
   gdk_draw_rectangle(preview->widget.window, gc, 1,
-                     page_left + left, page_top + top,
-                     print_width, print_height);
+		     page_left + 10 * left / 72, page_top + 10 * top / 72,
+                     10 * print_width / 72, 10 * print_height / 72);
 
   gdk_flush();
 }

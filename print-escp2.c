@@ -31,6 +31,35 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.77  2000/02/15 03:51:40  rlk
+ *
+ *   1) It wasn't possible to print to the edge of the page (as defined by
+ *      the printer).
+ *
+ *   2) The page top/bottom/left/right (particularly bottom and right) in
+ *      the size boxes wasn't displayed accurately (it *had* been coded in
+ *      1/10", because that's the units used to print out the pager --
+ *      really sillyl, that -- now it's all in points, which is more
+ *      reasonable if still not all that precise).
+ *
+ *   3) The behavior of landscape mode was weird, to say the least.
+ *
+ *   4) Calculating the size based on scaling was also weird -- in portrait
+ *      mode it just looked at the height of the page vs. the height of the
+ *      image, and in landscape it just looked at width of the page and
+ *      height of the image.  Now it looks at both axes and scales so that
+ *      the larger of the two ratios (widths and heights) is set equal to
+ *      the scale factor.  That seems more intuitive to me, at any rate.
+ *      It avoids flipping between landscape and portrait mode as you
+ *      rescale the image in auto mode (which seems just plain bizarre to
+ *      me).
+ *
+ *   5) I changed the escp2 stuff so that the distance from the paper edge
+ *      will be identical in softweave and in microweave mode.  Henryk,
+ *      that might not quite be what you intended (it's the opposite of
+ *      what you actually did), but at least microweave and softweave
+ *      should generate stuff that looks consistent.
+ *
  *   Revision 1.76  2000/02/15 00:45:15  rlk
  *   Use older-style print command for single bit depth printing
  *
@@ -359,6 +388,12 @@
  * Local functions...
  */
 
+typedef enum {
+  COLOR_MONOCHROME,
+  COLOR_CMYK,
+  COLOR_CCMMYK
+} colormode_t;
+
 static void escp2_write(FILE *, const unsigned char *, int, int, int, int, int,
 			int, int, int);
 static void escp2_write_all(FILE *, const unsigned char *,
@@ -367,7 +402,8 @@ static void escp2_write_all(FILE *, const unsigned char *,
 			    const unsigned char *, int, int, int, int, int,
 			    int);
 static void *initialize_weave(int jets, int separation, int oversample,
-			     int horizontal, int monochrome, int width);
+			      int horizontal, colormode_t colormode, int width,
+			      int linewidth);
 static void escp2_flush(void *, int model, int width, int hoffset, int ydpi,
 			int xdpi, FILE *prn);
 static void
@@ -784,7 +820,7 @@ escp2_imageable_area(int  model,	/* I - Printer model */
 }
 
 
-static void *
+static void
 escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 		   int use_softweave, int page_length, int page_width,
 		   int page_top, int page_bottom, int top, int nozzles,
@@ -792,7 +828,6 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 		   int vertical_passes, int bits)
 {
   int n;
-  void *weave = 0;
   /*
    * Hack that seems to be necessary for these silly things to print.
    * No, I don't know what it means. -- rlk
@@ -829,10 +864,6 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
       break;
     }
 
-  if (use_softweave)
-    weave = initialize_weave(nozzles, nozzle_separation, horizontal_passes,
-			     vertical_passes,
-			     output_type == OUTPUT_GRAY, bits);
   switch (escp2_cap(model, MODEL_INIT_MASK)) /* Printer specific initialization */
   {
     case MODEL_INIT_COLOR : /* ESC */
@@ -1002,7 +1033,6 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
       putc(n & 255, prn);
       putc(n >> 8, prn);
     }
-  return weave;
 }
 
 /*
@@ -1068,6 +1098,13 @@ escp2_print(int       model,		/* I - Model */
   int		bits;
   void *	weave;
   void *	dither;
+  colormode_t colormode = COLOR_CCMMYK;
+  if (output_type == OUTPUT_GRAY)
+    colormode = COLOR_MONOCHROME;
+  else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+    colormode = COLOR_CCMMYK;
+  else
+    colormode = COLOR_CMYK;
 
  /*
   * Setup a read-only pixel region for the entire image...
@@ -1143,6 +1180,18 @@ escp2_print(int       model,		/* I - Model */
     bits = 2;
   else
     bits = 1;
+  if (!use_softweave)
+    {
+      /*
+       * In microweave mode, correct for the loss of page height that
+       * would happen in softweave mode.  The divide by 10 is to convert
+       * lines into points (Epson printers all have 720 ydpi);
+       */
+      int extra_points = ((escp2_nozzles(model) - 1) *
+			  escp2_nozzle_separation(model) + 5) / 10;
+      top += extra_points;
+      fprintf(stderr, "Adjusted top is %d\n", top);
+    }
 
  /*
   * Compute the output size...
@@ -1254,7 +1303,7 @@ escp2_print(int       model,		/* I - Model */
 
     x    = top;
     top  = left;
-    left = x;
+    left = page_width - x - out_width;
   }
 
   if (left < 0)
@@ -1277,10 +1326,10 @@ escp2_print(int       model,		/* I - Model */
   * Send ESC/P2 initialization commands...
   */
 
-  weave = escp2_init_printer(prn, model, output_type, ydpi, use_softweave,
-			     page_length, page_width, page_top, page_bottom,
-			     top, nozzles, nozzle_separation,
-			     horizontal_passes, vertical_passes, bits);
+  escp2_init_printer(prn, model, output_type, ydpi, use_softweave,
+		     page_length, page_width, page_top, page_bottom,
+		     top, nozzles, nozzle_separation,
+		     horizontal_passes, vertical_passes, bits);
 
  /*
   * Convert image size to printer resolution...
@@ -1324,7 +1373,12 @@ escp2_print(int       model,		/* I - Model */
       lmagenta = NULL;
     }
   }
-    
+  if (use_softweave)
+    weave = initialize_weave(nozzles, nozzle_separation, horizontal_passes,
+			     vertical_passes, colormode, bits, out_width);
+  else
+    weave = NULL;
+
  /*
   * Output the page, rotating as necessary...
   */
@@ -1917,10 +1971,11 @@ typedef struct {
 				/* quality) */
   int vmod;			/* Number of banks of passes */
   int oversample;		/* Excess precision per row */
-  int realjets;
-  int pass_adjustment;
+  int realjets;			/* Actual number of jets */
+  int pass_adjustment;		/* Magical */
+  int ncolors;			/* How many colors (1, 4, or 6) */
+  int horizontal_width;		/* Line width in output pixels */
 
-  int is_monochrome;	/* Printing monochrome? */
   int bitwidth;		/* Bits per pixel */
   int lineno;
 } escp2_softweave_t;
@@ -1950,7 +2005,7 @@ get_color_by_params(int plane, int density)
  */
 static void *
 initialize_weave(int jets, int sep, int osample, int v_subpasses,
-		 int monochrome, int width)
+		 colormode_t colormode, int width, int linewidth)
 {
   int i;
   int k;
@@ -1981,14 +2036,33 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses,
   sw->jetsleftover = sw->njets - sw->jetsused;
   sw->weavespan = (sw->jetsused - 1) * sw->separation;
 
-  sw->is_monochrome = monochrome;
   sw->bitwidth = width;
 
   sw->last_pass_offset = 0;
   sw->last_pass = -1;
 
-  sw->linebufs = malloc(6 * 3072 * sw->vmod * jets * sw->oversample *
-			sw->bitwidth);
+  switch (colormode)
+    {
+    case COLOR_MONOCHROME:
+      sw->ncolors = 1;
+      break;
+    case COLOR_CMYK:
+      sw->ncolors = 4;
+      break;
+    case COLOR_CCMMYK:
+    default:
+      sw->ncolors = 6;
+      break;
+    }
+  
+  /*
+   * It's possible for the "compression" to actually expand the line by
+   * one part in 128.
+   */
+
+  sw->horizontal_width = (linewidth + 128 + 7) * 129 / 128;
+  sw->linebufs = malloc(sw->ncolors * (sw->horizontal_width / 8) * sw->vmod *
+			jets * sw->oversample * sw->bitwidth);
   sw->lineoffsets = malloc(sw->vmod * sizeof(lineoff_t) * sw->oversample);
   sw->linebases = malloc(sw->vmod * sizeof(linebufs_t) * sw->oversample);
   sw->passes = malloc(sw->vmod * sizeof(pass_t));
@@ -1996,17 +2070,16 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses,
   sw->lineno = 0;
 
   bufbase = sw->linebufs;
-  
   for (i = 0; i < sw->vmod; i++)
     {
       int j;
       sw->passes[i].pass = -1;
       for (k = 0; k < sw->oversample; k++)
 	{
-	  for (j = 0; j < 6; j++)
+	  for (j = 0; j < sw->ncolors; j++)
 	    {
 	      sw->linebases[k * sw->vmod + i].v[j] = bufbase;
-	      bufbase += 3072 * jets * sw->bitwidth;
+	      bufbase += (sw->horizontal_width / 8) * jets * sw->bitwidth;
 	    }
 	}
     }
@@ -2188,7 +2261,7 @@ fillin_start_rows(const escp2_softweave_t *sw, int row, int subpass,
   
       while (l < full_blocks)
 	{
-	  for (j = 0; j < 6; j++)
+	  for (j = 0; j < sw->ncolors; j++)
 	    {
 	      (bufs[0].v[j][2 * i]) = 129;
 	      (bufs[0].v[j][2 * i + 1]) = 0;
@@ -2198,7 +2271,7 @@ fillin_start_rows(const escp2_softweave_t *sw, int row, int subpass,
 	}
       if (leftover == 1)
 	{
-	  for (j = 0; j < 6; j++)
+	  for (j = 0; j < sw->ncolors; j++)
 	    {
 	      (bufs[0].v[j][2 * i]) = 1;
 	      (bufs[0].v[j][2 * i + 1]) = 0;
@@ -2207,7 +2280,7 @@ fillin_start_rows(const escp2_softweave_t *sw, int row, int subpass,
 	}
       else if (leftover > 0)
 	{
-	  for (j = 0; j < 6; j++)
+	  for (j = 0; j < sw->ncolors; j++)
 	    {
 	      (bufs[0].v[j][2 * i]) = 257 - leftover;
 	      (bufs[0].v[j][2 * i + 1]) = 0;
@@ -2215,7 +2288,7 @@ fillin_start_rows(const escp2_softweave_t *sw, int row, int subpass,
 	  i++;
 	}
     }
-  for (j = 0; j < 6; j++)
+  for (j = 0; j < sw->ncolors; j++)
     offsets[0].v[j] = 2 * i;
 }
 
@@ -2239,7 +2312,7 @@ initialize_row(const escp2_softweave_t *sw, int row, int width)
 	  pass->physpassstart = w.physpassstart;
 	  pass->physpassend = w.physpassend;
 	  pass->subpass = i;
-	  for (j = 0; j < 6; j++)
+	  for (j = 0; j < sw->ncolors; j++)
 	    lineoffs[0].v[j] = 0;
 	  *linecount = 0;
 	  if (w.missingstartrows > 0)
@@ -2277,14 +2350,9 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	fprintf(prn, "\033(v\002%c%c%c", 0, alo, ahi);
       sw->last_pass_offset = pass->logicalpassstart;
     }
-  for (j = 0; j < 6; j++)
+  for (j = 0; j < sw->ncolors; j++)
     {
-      if (sw->is_monochrome && j > 0)
-	continue;
       if (lineoffs[0].v[j] == 0)
-	continue;
-      if (!escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES) &&
-	  (densities[j] > 0))
 	continue;
       if (ydpi >= 720 && sw->bitwidth > 1 &&
 	  escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
@@ -2702,7 +2770,7 @@ escp2_write_weave(void *        vsw,
 
   initialize_row(sw, sw->lineno, xwidth);
   
-  for (j = 0; j < 6; j++)
+  for (j = 0; j < sw->ncolors; j++)
     {
       if (cols[j])
 	{
