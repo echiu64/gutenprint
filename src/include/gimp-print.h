@@ -30,8 +30,8 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
-#ifndef _GIMP_PRINT_H
-#define _GIMP_PRINT_H
+#ifndef _GIMP_PRINT_H_
+#define _GIMP_PRINT_H_
 
 /*
  * Include necessary header files...
@@ -357,7 +357,7 @@ extern const stp_vars_t *stp_minimum_settings(void);
   }
 #endif
 
-#endif /* _GIMP_PRINT_H */
+#endif /* _GIMP_PRINT_H_ */
 /*
  * End of "$Id$".
  */

@@ -24,6 +24,7 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 MAINT_CHARSET = latin1
 
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS)
+LIBS = ../../lib/libprintut.a @INTLLIBS@ ../../lib/libprintut.a @LIBS@
 
 AM_CPPFLAGS =\
  -DLOCALEDIR=\""$(localedir)"\"\

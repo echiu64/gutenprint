@@ -316,7 +316,7 @@ if test x${BUILD_ESCPUTIL} = xyes ; then
 fi
 if test x${BUILD_LIBGIMPPRINT} = xyes ; then
   MAIN_BIN="libgimpprint.la"
-  GIMPPRINT_LIBS="\$(top_srcdir)/src/main/libgimpprint.la"
+  GIMPPRINT_LIBS="\$(top_builddir)/src/main/libgimpprint.la"
 fi
 if test x${BUILD_TEST} = xyes ; then
   TEST_BIN="escp2-weavetest printer_options unprint escp2-unprint pcl-unprint"

@@ -39,6 +39,7 @@ Build: sh
  make
 Clean: sh
  make distclean || true
+Build-Depends: libreadline4-dev
 
 # If you build this against gimp 1.0, change the following paragraph to
 # refer to gimp 1.0 instead.
