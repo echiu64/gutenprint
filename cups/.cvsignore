@@ -1,7 +1,5 @@
 .deps
 Makefile
-Makefile.in
-aclocal.m4
 calibrate
 commandtoepson
 config.cache
@@ -9,7 +7,6 @@ config.log
 config.status
 configure
 epson
-epson.dep
 genppd
 ppd
 rastertoepson
@@ -25,4 +22,3 @@ cups-quickmatrix257.h
 cups-ran.367.179.h
 cups-printers.c
 rastertoprinter
-done_genppd
