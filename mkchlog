@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 %logmsgs = ();			# Index by date, time, and author
+$skipme = 0;
 
 while (<>) {
     if (/^Working file: /) {
@@ -16,8 +17,15 @@ while (<>) {
 	next;
     } elsif (/^revision /) {
 	($ignore, $revision) = split;
+	@junk = split(/\./, $revision);
+	if ($#junk > 2) {
+	    $skipme = 1;
+	} else {
+	    $skipme = 0;
+	}
     } elsif (/^date: /) {
-	($ignore, $date, $time, $ignore, $author, $ignore) = split;
+	($ignore, $date, $time, $ignore, $author, $ignore, $ignore,
+	 $ignore, $plus, $minus, $ignore) = split;
 	$time =~ s/:[0-9][0-9];$//;
 	$author =~ s/;$//;
 	$datetimeauthor = "$date $time $author";
@@ -35,12 +43,14 @@ while (<>) {
 		$firstline = 0;
 	    }
 	}
-	if ($logmsgs{$datetimeauthor}) {
-	    $stuff = $logmsgs{$datetimeauthor};
-	    $stuff =~ s/\n/\n\t$currentfile ($revision)\n/;
-	    $logmsgs{$datetimeauthor} = $stuff;
-	} else {
-	    $logmsgs{$datetimeauthor} = "Files:\t$currentfile ($revision)\n\n$body"
+	if ($skipme == 0) {
+	    if ($logmsgs{$datetimeauthor}) {
+		$stuff = $logmsgs{$datetimeauthor};
+		$stuff =~ s/\n/\n\t$currentfile ($revision) ($plus $minus)\n/;
+		$logmsgs{$datetimeauthor} = $stuff;
+	    } else {
+		$logmsgs{$datetimeauthor} = "Files:\t$currentfile ($revision) ($plus $minus)\n\n$body"
+		}
 	}
     }				# Other junk we ignore
 }
