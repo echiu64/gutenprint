@@ -27,14 +27,64 @@ while (<>) {
 	      "(C", "VARIABLE",
 	      "r", 1,
 	      ".", "SPECIAL",
-	      "i", "SPECIAL1"
+	      "i", "SPECIAL1",
+	      "(R", "REMOTE",
+	      "\000", 2,
+	      "\001", 22
 	  );
 
 $esc = "\033";
 
 $skipcount = 0;
 $curpos = 0;
-$verbose = 1;
+$verbose = 0;
+
+sub do_remote_command {
+    print "\n";
+    printf "%08x  ", $curpos;
+    print "1b  (  R ";
+    substr($stuff, 0, 3) = "";
+    $curpos += 3;
+    $lchar = substr($stuff, 0, 1);
+    $nlchar = unpack("C", $lchar);
+    $hchar = substr($stuff, 1, 1);
+    $nhchar = unpack("C", $hchar);
+    printf "%02x %02x ", $nlchar, $nhchar;
+    $skipchars = ($nhchar * 256) + $nlchar;
+    substr($stuff, 0, 2) = "";
+    $curpos += 2;
+    for ($i = 0; $i < $skipchars; $i++) {
+	$char = substr($stuff, $i, 1);
+	$nchar = unpack("C", $char);
+	if ($nchar >= 32 && $nchar < 127) {
+	    print $char;
+	} else {
+	    printf "%02x ", $nchar;
+	}
+    }
+    substr($stuff, 0, $skipchars) = "";
+    $curpos += skipchars;
+    while (substr($stuff, 0, 2) =~ /[A-Z0-9][A-Z0-9]/) {
+	print "\n";
+	printf "%08x    ", $curpos;
+	print substr($stuff, 0, 2);
+	substr($stuff, 0, 2) = "";
+	$curpos += 2;
+	$lchar = substr($stuff, 0, 1);
+	$nlchar = unpack("C", $lchar);
+	$hchar = substr($stuff, 1, 1);
+	$nhchar = unpack("C", $hchar);
+	$skipchars = ($nhchar * 256) + $nlchar;
+	printf "%02x %02x ", $nlchar, $nhchar;
+	substr($stuff, 0, 2) = "";
+	$curpos += 2;
+	for ($i = 0; $i < $skipchars; $i++) {
+	    printf "%02x ", unpack("C", substr($stuff, $i, 1));
+	}
+	substr($stuff, 0, $skipchars) = "";
+	$curpos += $skipchars;
+    }
+}    
 
 sub do_special_command {
     print "\n";
@@ -172,6 +222,9 @@ sub do_special1_command {
 		}
 	    }
 	    $something--;
+	    if ($something > 0 && $verbose) {
+		print "\n        ";
+	    }
 	}
     } else {
 	print "\nUnknown compression type $comptype!\n";
@@ -189,6 +242,9 @@ while ($stuff ne "") {
 		    $found = 2;
 		} elsif ($skipchars eq "SPECIAL1") {
 		    do_special1_command;
+		    $found = 2;
+		} elsif ($skipchars eq "REMOTE") {
+		    do_remote_command;
 		    $found = 2;
 		} else {
 		    print "\n";
