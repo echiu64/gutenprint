@@ -1759,7 +1759,10 @@ copy_lut(void *vlut)
   dest->image_width = src->image_width;
   dest->cmy_tmp = NULL;		/* Don't copy working storage */
   if (src->in_data)
-    dest->in_data = stpi_malloc(src->image_width * src->image_bpp);
+    {
+      dest->in_data = stpi_malloc(src->image_width * src->image_bpp);
+      memset(dest->in_data, 0, src->image_width * src->image_bpp);
+    }
   else
     dest->in_data = NULL;
   return dest;
@@ -2309,6 +2312,7 @@ stpi_color_traditional_init(stp_vars_t v,
       SET_COLORFUNC(NULL);
     }
   lut->in_data = stpi_malloc(stpi_image_width(image) * image_bpp);
+  memset(lut->in_data, 0, stpi_image_width(image) * image_bpp);
   return lut->out_channels;
 }
 
