@@ -869,51 +869,41 @@ do {									\
     }									\
 } while (0)
 
-#define UPDATE_DITHER(r, d2, x, width)				\
-do {								\
-  int tmp##r = r;						\
-  int i, dist;							\
-  int offset;							\
-  int delta;							\
-  if (tmp##r != 0)						\
-    {								\
-      offset = (65535 - (o##r & 0xffff)) >> odb;		\
-      if (offset > x)						\
-	offset = x;						\
-      else if (offset > xdw1)					\
-	offset = xdw1;						\
-      if (tmp##r > 65535)					\
-	tmp##r = 65535;						\
-      if (ditherbit##d2 & bit)					\
-	{							\
-	  if (offset == 0)					\
-	    dist = 5 * tmp##r;					\
-	  else							\
-	    dist = 5 * tmp##r / ((offset + 1) * (offset + 1));	\
-	  if (x > 0 && 0 < xdw1)				\
-	    dither##r    = r##error0[direction] + 3 * tmp##r;	\
-	}							\
-      else							\
-	{							\
-	  if (offset == 0)					\
-	    dist = 3 * tmp##r;					\
-	  else							\
-	    dist = 3 * tmp##r / ((offset + 1) * (offset + 1));	\
-	  if (x > 0 && 0 < xdw1)				\
-	    dither##r    = r##error0[direction] + 5 * tmp##r;	\
-	}							\
-      delta = dist;						\
-      for (i = -offset; i <= offset; i++)			\
-	{							\
-	  r##error1[i] += delta;				\
-	  if (i < 0)						\
-	    delta += dist;					\
-	  else							\
-	    delta -= dist;					\
-	}							\
-    }								\
-  else								\
-    dither##r = r##error0[direction];				\
+#define UPDATE_DITHER(r, d2, x, width)					\
+do {									\
+  int tmp##r = r;							\
+  int i, dist;								\
+  int offset;								\
+  int delta;								\
+  if (tmp##r != 0)							\
+    {									\
+      int myspread;							\
+      offset = (65535 - (o##r & 0xffff)) >> odb;			\
+      if (offset > x)							\
+	offset = x;							\
+      else if (offset > xdw1)						\
+	offset = xdw1;							\
+      if (tmp##r > 65535)						\
+	tmp##r = 65535;							\
+	myspread = 3;							\
+      if (offset == 0)							\
+	dist = 5 * tmp##r;						\
+      else								\
+	dist = myspread * tmp##r / ((offset + 1) * (offset + 1));	\
+      if (x > 0 && 0 < xdw1)						\
+	dither##r    = r##error0[direction] + (8 - myspread) * tmp##r;	\
+      delta = dist;							\
+      for (i = -offset; i <= offset; i++)				\
+	{								\
+	  r##error1[i] += delta;					\
+	  if (i < 0)							\
+	    delta += dist;						\
+	  else								\
+	    delta -= dist;						\
+	}								\
+    }									\
+  else									\
+    dither##r = r##error0[direction];					\
 } while (0)
 
 /*
@@ -1886,6 +1876,9 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.16  2000/03/17 13:06:38  rlk
+ *   Weaken the horizontal lines
+ *
  *   Revision 1.15  2000/03/17 01:04:52  rlk
  *   Clean things up a bit to prep for possible dither modifications
  *
