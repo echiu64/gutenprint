@@ -636,7 +636,7 @@ do_print_dialog (gchar *proc_name)
   return (runme);
 }
 
-static void
+void
 initialize_printer(gp_plist_t *printer)
 {
   printer->name[0] = '\0';
@@ -743,6 +743,65 @@ psearch(const void *key, const void *base, size_t nmemb, size_t size,
   return NULL;
 }
 
+int
+add_printer(const gp_plist_t *key, int add_only)
+{
+  /*
+   * The format of the list is the File printer followed by a qsort'ed list
+   * of system printers. So, if we want to update the file printer, it is
+   * always first in the list, else call psearch.
+   */
+  gp_plist_t *p;
+  if (strcmp(_("File"), key->name) == 0
+      && strcmp(plist[0].name, _("File")) == 0)
+    {
+      if (add_only)
+	return 0;
+      if (stp_get_printer_by_driver(stp_get_driver(key->v)))
+	{
+#ifdef DEBUG
+	  printf("Updated File printer directly\n");
+#endif
+	  p = &plist[0];
+	  memcpy(p, key, sizeof(gp_plist_t));
+	  p->v = stp_allocate_copy(key->v);
+	  p->active = 1;
+	}
+      return 1;
+    }
+  else if (stp_get_printer_by_driver(stp_get_driver(key->v)))
+    {
+      p = psearch(key, plist + 1, plist_count - 1,
+		  sizeof(gp_plist_t),
+		  (int (*)(const void *, const void *)) compare_printers);
+      if (p == NULL)
+	{
+#ifdef DEBUG
+	  fprintf(stderr, "Adding new printer from printrc file: %s\n",
+		  key->name);
+#endif
+	  check_plist(plist_count + 1);
+	  p = plist + plist_count;
+	  plist_count++;
+	  memcpy(p, key, sizeof(gp_plist_t));
+	  p->v = stp_allocate_copy(key->v);
+	  p->active = 0;
+	}
+      else
+	{
+	  if (add_only)
+	    return 0;
+#ifdef DEBUG
+	  printf("Updating printer %s.\n", key->name);
+#endif
+	  memcpy(p, key, sizeof(gp_plist_t));
+	  stp_copy_vars(p->v, key->v);
+	  p->active = 1;
+	}
+    }
+  return 1;
+}  
+
 /*
  * 'printrc_load()' - Load the printer resource configuration file.
  */
@@ -755,8 +814,7 @@ printrc_load(void)
   char		line[1024],	/* Line in printrc file */
 		*lineptr,	/* Pointer in line */
 		*commaptr;	/* Pointer to next comma */
-  gp_plist_t	*p = 0,		/* Current printer */
-		key;		/* Search key */
+  gp_plist_t	key;		/* Search key */
 #if (GIMP_MINOR_VERSION == 0)
   char		*home;		/* Home dir */
 #endif
@@ -867,50 +925,7 @@ printrc_load(void)
         GET_OPTIONAL_STRING_PARAM(ink_type);
         GET_OPTIONAL_STRING_PARAM(dither_algorithm);
         GET_OPTIONAL_INT_PARAM(unit);
-
-/*
- * The format of the list is the File printer followed by a qsort'ed list
- * of system printers. So, if we want to update the file printer, it is
- * always first in the list, else call psearch.
- */
-        if ((strcmp(key.name, _("File")) == 0) && (strcmp(plist[0].name,
-	     _("File")) == 0))
-	  {
-#ifdef DEBUG
-	    printf("Updated File printer directly\n");
-#endif
-	    p = &plist[0];
-	    memcpy(p, &key, sizeof(gp_plist_t));
-	    p->v = stp_allocate_copy(key.v);
-	    p->active = 1;
-	  }
-	 else
-	   {
-	     if ((p = psearch(&key, plist + 1, plist_count - 1, sizeof(gp_plist_t),
-			  (int (*)(const void *, const void *))compare_printers))
-		 != NULL)
-	       {
-#ifdef DEBUG
-		 printf("Updating printer %s.\n", key.name);
-#endif
-		 memcpy(p, &key, sizeof(gp_plist_t));
-		 stp_copy_vars(p->v, key.v);
-		 p->active = 1;
-	       }
-            else
-    	      {
-#ifdef DEBUG
-                fprintf(stderr, "Adding new printer from printrc file: %s\n",
-                  key.name);
-#endif
-	        check_plist(plist_count + 1);
-	        p = plist + plist_count;
-	        memcpy(p, &key, sizeof(gp_plist_t));
-		p->v = stp_allocate_copy(key.v);
-	        p->active = 0;
-	        plist_count++;
-	      }
-	  }
+	add_printer(&key, 0);
       }
       else if (format == 1)
       {
@@ -958,51 +973,7 @@ printrc_load(void)
 	  current_printer = strdup(value);
 	} else if (strcasecmp("printer", keyword) == 0) {
 	  /* Switch to printer named VALUE */
-	  if (strcmp(_("File"), key.name) == 0
-	      && strcmp(plist[0].name, _("File")) == 0)
-	  {
-	    if (stp_get_printer_by_driver(stp_get_driver(key.v)))
-	      {
-#ifdef DEBUG
-		printf("Updated File printer directly\n");
-#endif
-		p = &plist[0];
-		memcpy(p, &key, sizeof(gp_plist_t));
-		p->v = stp_allocate_copy(key.v);
-		p->active = 1;
-	      }
-	  }
-	  else
-	  {
-	    if (stp_get_printer_by_driver(stp_get_driver(key.v)))
-	      {
-		p = psearch(&key, plist + 1, plist_count - 1,
-			    sizeof(gp_plist_t),
-			    (int (*)(const void *, const void *)) compare_printers);
-		if (p == NULL)
-		  {
-#ifdef DEBUG
-                fprintf(stderr, "Adding new printer from printrc file: %s\n",
-                  key.name);
-#endif
-		    check_plist(plist_count + 1);
-		    p = plist + plist_count;
-		    plist_count++;
-		    memcpy(p, &key, sizeof(gp_plist_t));
-		    p->v = stp_allocate_copy(key.v);
-		    p->active = 0;
-		  }
-		else
-		  {
-#ifdef DEBUG
-		    printf("Updating printer %s.\n", key.name);
-#endif
-		    memcpy(p, &key, sizeof(gp_plist_t));
-		    stp_copy_vars(p->v, key.v);
-		    p->active = 1;
-		  }
-	      }
-	  }
+	  add_printer(&key, 0);
 #ifdef DEBUG
 	  printf("output_to is now %s\n", stp_get_output_to(p->v));
 #endif
@@ -1078,43 +1049,7 @@ printrc_load(void)
       }
     }
     if (format > 0)
-      {
-	if (strcmp(_("File"), key.name) == 0
-	    && strcmp(plist[0].name, _("File")) == 0)
-	  {
-	    if (stp_get_printer_by_driver(stp_get_driver(key.v)))
-	      {
-		p = &plist[0];
-		memcpy(p, &key, sizeof(gp_plist_t));
-		p->v = stp_allocate_copy(key.v);
-		p->active = 1;
-	      }
-	  }
-	else
-	  {
-	    if (stp_get_printer_by_driver(stp_get_driver(key.v)))
-	      {
-		p = psearch(&key, plist + 1, plist_count - 1,
-			    sizeof(gp_plist_t),
-			    (int (*)(const void *, const void *)) compare_printers);
-		if (p == NULL)
-		  {
-		    check_plist(plist_count + 1);
-		    p = plist + plist_count;
-		    plist_count++;
-		    memcpy(p, &key, sizeof(gp_plist_t));
-		    p->v = stp_allocate_copy(key.v);
-		    p->active = 0;
-		  }
-		else
-		  {
-		    memcpy(p, &key, sizeof(gp_plist_t));
-		    stp_copy_vars(p->v, key.v);
-		    p->active = 1;
-		  }
-	      }
-	  }
-      }
+      add_printer(&key, 0);
     fclose(fp);
   }
 

@@ -101,10 +101,15 @@ static GtkWidget *image_monochrome;
 static GtkWidget *setup_dialog;         /* Setup dialog window */
 static GtkWidget *printer_driver;       /* Printer driver widget */
 static GtkWidget *printer_crawler;      /* Scrolled Window for menu */
+static GtkWidget *printer_menu;		/* Scrolled Window for menu */
+static GtkWidget *printer_option;	/* Scrolled Window for menu */
 static GtkWidget *ppd_file;             /* PPD file entry */
 static GtkWidget *ppd_button;           /* PPD file browse button */
 static GtkWidget *output_cmd;           /* Output command text entry */
 static GtkWidget *ppd_browser;          /* File selection dialog for PPD files */
+static GtkWidget *new_printer_dialog; /* New printer dialog window */
+static GtkWidget *new_printer_entry;  /* New printer text entry */
+
 static GtkWidget *file_browser;         /* FSD for print files */
 static GtkWidget *adjust_color_button;
 
@@ -156,6 +161,8 @@ static void gimp_save_callback         (void);
 static void gimp_setup_update          (void);
 static void gimp_setup_open_callback   (void);
 static void gimp_setup_ok_callback     (void);
+static void gimp_new_printer_open_callback   (void);
+static void gimp_new_printer_ok_callback     (void);
 static void gimp_ppd_browse_callback   (void);
 static void gimp_ppd_ok_callback       (void);
 static void gimp_print_driver_callback (GtkWidget      *widget,
@@ -493,6 +500,58 @@ gimp_create_main_window (void)
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
 
+  box = gtk_hbox_new (FALSE, 4);
+  label = gtk_label_new (_("Printer:"));
+  gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
+  gtk_widget_show (label);
+  gtk_table_attach_defaults(GTK_TABLE(stp_printer_table), box, 0, 2, 0, 1);
+  gtk_widget_show(box);
+
+  /*
+   * Printer option menu...
+   */
+
+  menu = printer_menu = gtk_menu_new ();
+  for (i = 0; i < plist_count; i ++)
+  {
+    if (plist[i].active)
+      item = gtk_menu_item_new_with_label (gettext (plist[i].name));
+    else
+      {
+        gchar buf[257];
+        buf[0] = '*';
+	strncpy(buf + 1, plist[i].name, 256);
+        item = gtk_menu_item_new_with_label (gettext (buf));
+      }
+    gtk_menu_append (GTK_MENU (menu), item);
+    gtk_signal_connect (GTK_OBJECT (item), "activate",
+                        GTK_SIGNAL_FUNC (gimp_plist_callback), (gpointer) i);
+    gtk_widget_show (item);
+  }
+
+  option = printer_option = gtk_option_menu_new ();
+  gtk_box_pack_start (GTK_BOX (box), option, FALSE, FALSE, 0);
+  gtk_option_menu_set_menu (GTK_OPTION_MENU (option), menu);
+  gtk_option_menu_set_history (GTK_OPTION_MENU (option), plist_current);
+  gtk_widget_show (option);
+
+  button = gtk_button_new_with_label (_("Setup..."));
+  gtk_misc_set_padding (GTK_MISC (GTK_BIN (button)->child), 2, 0);
+  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
+  gtk_signal_connect (GTK_OBJECT (button), "clicked",
+                      GTK_SIGNAL_FUNC (gimp_setup_open_callback), NULL);
+  gtk_widget_show (button);
+
+  /*
+   * Define new printer dialog
+   */
+
+  button = gtk_button_new_with_label (_("New..."));
+  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
+  gtk_signal_connect (GTK_OBJECT (button), "clicked",
+                      GTK_SIGNAL_FUNC (gimp_new_printer_open_callback), NULL);
+  gtk_widget_show (button);
+
   /*
    * Media size combo box...
    */
@@ -758,7 +817,8 @@ gimp_create_main_window (void)
    */
   gimp_create_color_adjust_window ();
 
-  adjust_color_button = button = gtk_button_new_with_label (_("Adjust Color"));
+  adjust_color_button = button =
+    gtk_button_new_with_label (_("Adjust Color..."));
   gtk_misc_set_padding (GTK_MISC (GTK_BIN (button)->child), 2, 0);
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
 			     GTK_SIGNAL_FUNC (gtk_widget_show),
@@ -799,45 +859,6 @@ gimp_create_main_window (void)
   gtk_widget_show (button);
 
   /*
-   * Printer option menu...
-   */
-
-  menu = gtk_menu_new ();
-  for (i = 0; i < plist_count; i ++)
-  {
-    if (plist[i].active)
-      item = gtk_menu_item_new_with_label (gettext (plist[i].name));
-    else
-      {
-        gchar buf[257];
-        buf[0] = '*';
-	strncpy(buf + 1, plist[i].name, 256);
-        item = gtk_menu_item_new_with_label (gettext (buf));
-      }
-    gtk_menu_append (GTK_MENU (menu), item);
-    gtk_signal_connect (GTK_OBJECT (item), "activate",
-                        GTK_SIGNAL_FUNC (gimp_plist_callback), (gpointer) i);
-    gtk_widget_show (item);
-  }
-
-  box = gtk_hbox_new (FALSE, 6);
-  gimp_table_attach_aligned (GTK_TABLE (stp_printer_table), 0, 0,
-                             _("Printer:"), 1.0, 0.5, box, 1, TRUE);
-
-  option = gtk_option_menu_new ();
-  gtk_box_pack_start (GTK_BOX (box), option, FALSE, FALSE, 0);
-  gtk_option_menu_set_menu (GTK_OPTION_MENU (option), menu);
-  gtk_option_menu_set_history (GTK_OPTION_MENU (option), plist_current);
-  gtk_widget_show (option);
-
-  button = gtk_button_new_with_label (_("Setup"));
-  gtk_misc_set_padding (GTK_MISC (GTK_BIN (button)->child), 2, 0);
-  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
-  gtk_signal_connect (GTK_OBJECT (button), "clicked",
-                      GTK_SIGNAL_FUNC (gimp_setup_open_callback), NULL);
-  gtk_widget_show (button);
-
-  /*
    * Setup dialog window...
    */
 
@@ -860,11 +881,11 @@ gimp_create_main_window (void)
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 8);
   gtk_table_set_row_spacing (GTK_TABLE (table), 0, 100);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), table,
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (setup_dialog)->vbox), table,
                       FALSE, FALSE, 0);
   gtk_widget_show (table);
 
-  /*
+   /*
    * Printer driver option menu...
    */
 
@@ -963,6 +984,31 @@ gimp_create_main_window (void)
   gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION (ppd_browser)->cancel_button),
                              "clicked", GTK_SIGNAL_FUNC (gtk_widget_hide),
                              GTK_OBJECT (ppd_browser));
+
+  new_printer_dialog = dialog =
+    gimp_dialog_new (_("Define New Printer"), "print",
+                     gimp_standard_help_func, "filters/print.html",
+                     GTK_WIN_POS_MOUSE, FALSE, TRUE, FALSE,
+
+                     _("OK"), gimp_new_printer_ok_callback,
+		     NULL, NULL, NULL, TRUE, FALSE,
+                     _("Cancel"), gtk_widget_hide,
+                     NULL, 1, NULL, FALSE, TRUE, NULL);
+
+  table = gtk_table_new (1, 2, FALSE);
+  gtk_container_set_border_width (GTK_CONTAINER (table), 6);
+  gtk_table_set_col_spacings (GTK_TABLE (table), 4);
+  gtk_table_set_row_spacings (GTK_TABLE (table), 8);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), table,
+                      FALSE, FALSE, 0);
+  gtk_widget_show (table);
+
+  new_printer_entry = entry = gtk_entry_new();
+  gtk_entry_set_max_length(GTK_ENTRY(entry), 127);
+  gtk_signal_connect (GTK_OBJECT (entry), "activate",
+                      GTK_SIGNAL_FUNC (gimp_new_printer_ok_callback), NULL);
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 0,
+			     _("Printer Name:"), 1.0, 0.5, entry, 1, TRUE);
 
   /*
    * Show the main dialog and wait for the user to do something...
@@ -1838,6 +1884,16 @@ gimp_setup_open_callback (void)
 }
 
 /*
+ *  gimp_new_printer_open_callback() -
+ */
+static void
+gimp_new_printer_open_callback (void)
+{
+  gtk_entry_set_text(GTK_ENTRY(new_printer_entry), "");
+  gtk_widget_show (new_printer_dialog);
+}
+
+/*
  *  gimp_setup_ok_callback() -
  */
 static void
@@ -1856,6 +1912,59 @@ gimp_setup_ok_callback (void)
   gimp_plist_callback (NULL, (gpointer) plist_current);
 
   gtk_widget_hide (setup_dialog);
+}
+
+/*
+ *  gimp_setup_ok_callback() -
+ */
+static void
+gimp_new_printer_ok_callback (void)
+{
+  GtkWidget *item;
+  const char *data = gtk_entry_get_text(GTK_ENTRY(new_printer_entry));
+  gp_plist_t key;
+  initialize_printer(&key);
+  (void) strncpy(key.name, data, sizeof(key.name) - 1);
+  if (strlen(key.name))
+    {
+      key.active = 0;
+      key.v = stp_allocate_copy(plist[plist_current].v);
+      if (add_printer(&key, 1))
+	{
+	  plist_current = plist_count - 1;
+	  if (plist[plist_current].active)
+	    item =
+	      gtk_menu_item_new_with_label(gettext(plist[plist_current].name));
+	  else
+	    {
+	      gchar buf[257];
+	      buf[0] = '*';
+	      strncpy(buf + 1, plist[plist_current].name, 256);
+	      item = gtk_menu_item_new_with_label (gettext (buf));
+	    }
+	  gtk_menu_append (GTK_MENU (printer_menu), item);
+	  gtk_signal_connect (GTK_OBJECT (item), "activate",
+			      GTK_SIGNAL_FUNC (gimp_plist_callback),
+			      (gpointer) plist_current);
+	  gtk_widget_show (item);
+	  gtk_option_menu_set_history (GTK_OPTION_MENU (printer_option),
+				       plist_current);
+
+	  stp_set_driver(vars, stp_printer_get_driver(current_printer));
+	  stp_set_driver(plist[plist_current].v,
+			 stp_printer_get_driver(current_printer));
+
+	  stp_set_output_to(vars, gtk_entry_get_text (GTK_ENTRY (output_cmd)));
+	  stp_set_output_to(plist[plist_current].v, stp_get_output_to(vars));
+
+	  stp_set_ppd_file(vars, gtk_entry_get_text (GTK_ENTRY (ppd_file)));
+	  stp_set_ppd_file(plist[plist_current].v, stp_get_ppd_file(vars));
+
+	  gimp_plist_callback (NULL, (gpointer) plist_current);
+	}
+    }
+
+  gtk_widget_hide (new_printer_dialog);
 }
 
 /*

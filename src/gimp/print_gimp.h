@@ -69,5 +69,8 @@ typedef struct		/**** Printer List ****/
 
 /* How to create an Image wrapping a Gimp drawable */
 extern stp_image_t *Image_GDrawable_new(GDrawable *drawable);
+extern int add_printer(const gp_plist_t *key, int add_only);
+extern void initialize_printer(gp_plist_t *printer);
+
 
 #endif  /* __PRINT_GIMP_H__ */
