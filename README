@@ -6,7 +6,7 @@ proprietary vendor-supplied drivers in many cases, and can be used for
 many of the most demanding printing tasks.
 
 Please read the release notes carefully, as this release is not
-entirely compatible with 4.0a3!
+entirely compatible with 4.0a3 and earlier releases!
 
 
 BASIC INSTALLATION
@@ -49,6 +49,10 @@ use of this software for general printing purposes.  Please read
 Ghost/README for more information, including how to build and install
 it.
 
+The Ghostscript driver also includes everything necessary to configure
+use with Grant Taylor's Foomatic printing package (see
+http://www.linuxprinting.org for a description of this package).
+
 
 CUPS
 
@@ -72,14 +76,7 @@ dithering algorithm is faster and produces nearly as good output.  Use
 of this method is strongly discouraged on six color (photo) printers.
 
 On most inkjet printers, 720 dpi will produce very high quality;
-1440x720 dpi will produce extremely high quality.  With Epson Stylus
-printers, we recommend use of 720 DPI Softweave or 720 DPI High
-Quality for initial proofing; 720 DPI Highest Quality or 1440x720
-Softweave for general purpose work, and 1440x720 Highest Quality for
-final output onto high quality stock.  1440x720 Enhanced and 1440x2880
-Emulated may give improved output under some circumstances, but their
-use should be less critical than in 3.1.7 or 3.1.8.  They are much
-slower than 1440x720 DPI.
+1440x720 dpi will produce extremely high quality.
 
 
 USE OF THE CVS REPOSITORY

@@ -1,3 +1,134 @@
+2000-09-20	<rlk@sourceforge.net>
+
+	Files:	cups/Makefile.in (1.14) (+3 -3)
+	
+	Fix make clean
+	
+2000-09-20	<rlk@sourceforge.net>
+
+	Files:	Ghost/README (1.50) (+1 -1)
+	
+	Sort the results
+	
+2000-09-20	<rlk@sourceforge.net>
+
+	Files:	cups/calibrate.c (1.5) (+2 -2)
+	
+	cupsProfile -> cupsColorProfile
+	
+2000-09-20	<davehill@sourceforge.net>
+
+	Files:	RELNOTES (1.24) (+28 -1)
+		Ghost/README (1.49) (+26 -13)
+	
+	Updated for the PCL printer changes.
+	
+2000-09-18	<easysw@sourceforge.net>
+
+	Files:	cups/Makefile.in (1.13) (+4 -2)
+		cups/genppd.c (1.10) (+6 -7)
+	
+	Added LDFLAGS and LIBS to initial output from makefile.
+	
+	Changed to use GIMP-print version number and name in PPD files; the
+	NickName field shows "CUPS+GIMP-print v4.0" to differentiate the
+	driver from the Ghostscript STP driver PPD file.
+	
+2000-09-18	<easysw@sourceforge.net>
+
+	Files:	print-escp2.c (1.259) (+2 -2)
+		cups/epson.c (1.6) (+3 -6)
+		cups/configure.in (1.6) (+58 -1)
+		cups/configure (1.5) (+118 -56)
+		cups/commandtoepson.c (1.7) (+3 -4)
+		cups/calibrate.c (1.4) (+5 -3)
+		cups/README.txt (1.6) (+7 -5)
+		cups/Makefile.in (1.12) (+56 -29)
+	
+	Updated print densities for 2000P; the previous ones were just a little
+	low, so I bumped them by 20%.
+	
+	Updated configure script and makefile to correctly figure out the right
+	configuration directory for CUPS.
+	
+	Updated the makefile again to use .SILENT and the echos, but added a
+	set of echos at the beginning to show the compiler and options that are
+	being used.  This is much cleaner than a 3+ line listing for each source
+	file in a make log for those extra-long autoconf CFLAGS lines.
+	
+	Fixed include file nonsense; all needed include files should be there now,
+	and all duplicates removed.
+	
+2000-09-17	<davehill@sourceforge.net>
+
+	Files:	print-pcl.c (1.82) (+59 -2)
+		printers.xml (1.24) (+3 -3)
+	
+	Split LaserJet 5 and 6 from LaserJet 4 (they support 600x600dpi).
+	Split LaserJet 5Si from 4V, 4Si (same).
+	These are internal model number changes only - no external effect.
+	
+2000-09-17	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.258) (+2 -2)
+	
+	ESC 740 is a narrow printer
+	
+2000-09-17	<davehill@sourceforge.net>
+
+	Files:	print-pcl.c (1.81) (+20 -23)
+		printers.xml (1.23) (+90 -10)
+	
+	The "Deskjet 800 saga...
+	
+	Removed the "Deskjet 800 series" entry in printers.xml. Replaced
+	it with separate entries for all the 8xx printers, pointing
+	at the 800 driver or the 601 driver. THIS REMOVES THE "pcl-800"
+	DRIVER!
+	
+	Moved the 1220C from the 1100/1120 driver to the 900 driver.
+	
+	Renamed the extra resolutions in the 900 driver to correspond to
+	Mike's Docs, then disabled them (cos they don't work).
+	
+	Changed PCL_RES_600_600_MONO to PCL_RES_600_600 for the 2000/2500.
+	
+	Added the PhotoSmart P1000/P1100 (pcl-P1000, pcl-P1100) to point at
+	the 900 driver. DO not get confused between "pcl-1100" (DJ 1100C) and
+	"pcl-P1100" (PhotoSmart 1100)!
+	
+	Removed PCL_COLOR_CMYK4 (C-RET) from 900 driver (it was a guess!).
+	
+	Bug Fixes:
+	
+	Added PCL_PAPERSOURCE_STANDARD to DJ340.
+	
+	Removed duplicate PCL_RES_600_600_MONO from 800 driver.
+	
+	Shuffled Deskjet 520 entry in printers.xml to put it in order.
+	
+2000-09-17	<davehill@sourceforge.net>
+
+	Files:	pcl-unprint.c (1.16) (+5 -4)
+	
+	Remove compiler warning about "id".
+	
+2000-09-17	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.43) (+78 -0)
+		Ghost/README (1.48) (+22 -17)
+		Ghost/Makefile (1.1) ( )
+		print-util.c (1.142) (+234 -10)
+		print-dither.c (1.94) (+2 -2)
+		README (1.29) (+6 -0)
+		Makefile.am (1.65) (+7 -5)
+	
+	Display the thumbnail/placement widgets correctly in monochrome mode.
+	A nice side effect is that we get significantly improved performance
+	in monochrome mode at least in some cases.
+	
+	Put escputil in the Ghostscript distribution also.
+	
 2000-09-17	<rlk@sourceforge.net>
 
 	Files:	print.c (1.124) (+14 -8)
