@@ -106,8 +106,8 @@ typedef enum {
   STPI_WEAVE_ASCENDING,
   STPI_WEAVE_DESCENDING,
   STPI_WEAVE_ASCENDING_2X,
-  STPI_WEAVE_ASCENDING_3X,
-  STPI_WEAVE_STAGGERED
+  STPI_WEAVE_STAGGERED,
+  STPI_WEAVE_ASCENDING_3X
 } stpi_weave_strategy_t;
 
 typedef int stpi_packfunc(stp_vars_t v,

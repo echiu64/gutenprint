@@ -256,9 +256,12 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
 	  errcodes[16] = '\0';
 
 	  if (!quiet)
-	    printf("%15s%5d %5d %5d %10d %10d %10d %10d\n",
-		   errcodes, w.row, w.pass, w.jet, w.missingstartrows,
-		   w.logicalpassstart, w.physpassstart, w.physpassend);
+	    {
+	      printf("%15s%5d %5d %5d %10d %10d %10d %10d\n",
+		     errcodes, w.row, w.pass, w.jet, w.missingstartrows,
+		     w.logicalpassstart, w.physpassstart, w.physpassend);
+	      fflush(stdout);
+	    }
 	  if (w.pass >= 0 && w.pass < (nrows + physsep))
 	    {
 	      if (w.physpassend == w.row)

@@ -161,12 +161,12 @@ typedef struct raw {
  *  1: ascending pass block filling
  *  2: descending pass block filling
  *  3: ascending fill with 2x expansion
- *  4: ascending fill with 3x expansion
- *  5: staggered zig-zag neighbour-avoidance fill
+ *  4: staggered zig-zag neighbour-avoidance fill
+ *  5: ascending fill with 3x expansion
  *
  * In theory, strategy 0 should be optimal; in practice, it can lead
  * to visible areas of banding.  If it's necessary to avoid filling
- * neighbouring rows in neighbouring passes, strategy 5 should be optimal,
+ * neighbouring rows in neighbouring passes, strategy 4 should be optimal,
  * at least for some weaves.
  */
 
@@ -309,7 +309,7 @@ calculate_raw_row_parameters(raw_t *w,		/* I - weave parameters */
 		if (subblockoffset % 2 == 0)
 			subpassblock = subblockoffset / 2;
 		else if (subblockoffset == 1)
-			subpassblock = w->subblocksperpassblock / 2;
+			subpassblock = (w->subblocksperpassblock + 1) / 2;
 		else
 			subpassblock = w->subblocksperpassblock
 			                 - (subblockoffset - 1) / 2;

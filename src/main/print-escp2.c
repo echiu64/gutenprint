@@ -176,6 +176,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
+    "Weave", N_("Weave Method"),
+    N_("Weave pattern to use"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, -1, 1
+  },    
+  {
     "AdjustDotsize", N_("Adjust dot size as necessary"),
     N_("Adjust dot size as necessary to achieve desired density"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
@@ -1284,6 +1290,26 @@ escp2_parameters(stp_const_vars_t v, const char *name,
       if (!using_automatic_settings(v, AUTO_MODE_MANUAL))
 	description->is_active = 0;
     }
+  else if (strcmp(name, "Weave") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+      stp_string_list_add_string
+	(description->bounds.str, "None", _("Standard"));
+      stp_string_list_add_string
+	(description->bounds.str, "Alternate", _("Alternate Fill"));
+      stp_string_list_add_string
+	(description->bounds.str, "Ascending", _("Ascending Fill"));
+      stp_string_list_add_string
+	(description->bounds.str, "Descending", _("Descending Fill"));
+      stp_string_list_add_string
+	(description->bounds.str, "Ascending2X", _("Ascending Double"));
+      stp_string_list_add_string
+	(description->bounds.str, "Staggered", _("Nearest Neighbor Avoidance"));
+      description->deflt.str =
+	stp_string_list_param(description->bounds.str, 0)->name;
+      if (!using_automatic_settings(v, AUTO_MODE_MANUAL))
+	description->is_active = 0;
+    }
   else if (strcmp(name, "OutputOrder") == 0)
     {
       description->bounds.str = stp_string_list_create();
@@ -2160,6 +2186,19 @@ escp2_print_page(stp_vars_t v, stp_image_t *image)
   escp2_privdata_t *pd = get_privdata(v);
   int out_channels;		/* Output bytes per pixel */
   int line_width = (pd->image_scaled_width + 7) / 8 * pd->bitwidth;
+  int weave_pattern = STPI_WEAVE_ZIGZAG;
+  if (stp_check_string_parameter(v, "Weave", STP_PARAMETER_ACTIVE))
+    {
+      const char *weave = stp_get_string_parameter(v, "Weave");
+      if (strcmp(weave, "Alternate") == 0)
+	weave_pattern = STPI_WEAVE_ZIGZAG;
+      else if (strcmp(weave, "Ascending") == 0)
+	weave_pattern = STPI_WEAVE_ASCENDING;
+      else if (strcmp(weave, "Descending") == 0)
+	weave_pattern = STPI_WEAVE_DESCENDING;
+      else if (strcmp(weave, "Ascending2X") == 0)
+	weave_pattern = STPI_WEAVE_ASCENDING_2X;
+    }
 
   stpi_initialize_weave
     (v,
@@ -2175,7 +2214,7 @@ escp2_print_page(stp_vars_t v, stp_image_t *image)
      pd->image_top * pd->res->vres / 72,
      (pd->page_height + escp2_extra_feed(v)) * pd->res->vres / 72,
      pd->head_offset,
-     STPI_WEAVE_ZIGZAG,
+     weave_pattern,
      stpi_escp2_flush_pass,
      FILLFUNC,
      PACKFUNC,

@@ -11,9 +11,9 @@ jets='1 2 4 8 15 20 21 24 32 47 48 59 60 64 90 96 128 144 180 192 208 360'
 separations='1 2 3 4 6 8 12 16'
 
 # Weave strategies
-strategies='0 1 2 3'
-# Strategies 4 and 5 are currently broken
-#strategies='4 5'
+strategies='0 1 2 3 4'
+# Strategy 5 is currently broken
+#strategies='5'
 
 # Color head arrangement (for offset-head printers such as the Epson C80)
 arrangements='0 1'
