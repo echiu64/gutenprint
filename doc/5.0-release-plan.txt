@@ -141,11 +141,23 @@ Architectural changes include:
      pure GTK1-based library; the tiny GIMP plugin is a client of this
      library.
 
+  13) Redesign of the color system to use explicit descriptions of the
+     input and output channel layout, color optimization, color
+     vs. monochrome, and raw specifications to simplify and generalize
+     the color architecture.  This architecture is based on the new
+     options system and is extensible.  This permits use of 8 or 16
+     bit inputs for all input types and desired processing methods.
+     It permits later expansion to handle other types of input and bit
+     depths without breaking compatibility.
+
+  14) Creation of new opaque data types with explicit constructors and
+     destructors makes for a more object-oriented programming model.
+
 
 Internal quality improvements include:
 -------- ------- ------------ -------
 
-  1) Improved test suite with improved coverage.
+  1) Improved test suite with better coverage.
 
   2) The library has been audited for const-correctness.
 
@@ -186,10 +198,9 @@ Major user-visible changes include:
 Proposed release criteria:
 -------- ------- --------
 
-    * Changes that would be incompatible with the initial release on the
-      new line (4.4.0 or 5.0.0) that must be done within 12-24 months of
-      release in order to be a viable solution are mandatory for this
-      release.
+    * Changes that would be incompatible with the initial stable 5.0.0
+      release that must be done within 12-24 months of release in
+      order to be a viable solution are mandatory for this release.
 
       "Incompatible" to me means that applications dynamically linked
       against the baseline libgimpprint would not function correctly in
@@ -209,19 +220,23 @@ Proposed release criteria:
       initial release even if ICC profiling isn't.  This is purely an
       example; it's not taking a position on ICC profiling per se.
 
+      The new options and color systems considerably improves our
+      ability to make such changes after release.
+
     * Significant quality or functionality regressions from 4.2.  This
       again is not cut and dried.  We may find, for example, that overall
       quality is greatly improved over 4.2, but there are a few corner
       cases with minor degradations.  This is a judgment call.
 
-    * Major performance/memory consumption regressions from 4.2.  I would
-      take a very hard line against these being mandatory in most cases; a
-      moderate performance loss in the highest quality settings might not
-      be an issue, especially if there are other settings yielding good
-      quality that are close in performance.  The average computer will be
-      considerably faster by the end of this year than it was in late
-      2001.  To my mind, the regression has to be bad enough to really
-      constitute a functional regression.
+    * Major performance/memory consumption regressions from 4.2.  I
+      would take a very hard line against these being mandatory in
+      most cases; a moderate performance loss in the highest quality
+      settings might not be an issue, especially if there are other
+      settings yielding good quality that are close in performance.
+      The average computer will be considerably faster by 5.0 release
+      (mid 2004) than it was in late 2001.  To my mind, the regression
+      has to be bad enough to really constitute a functional
+      regression.
 
     * Changes whose absence would make the release fundamentally not
       useful for important classes of use.  This is a real can of worms,
@@ -260,25 +275,45 @@ IMPORTANT: functionality that is expected by a broad class of users,
 
     * Mandatory:
 
+      + GIMP 2.0 Print plugin.  Due to delays in our release cycle,
+        The GIMP released its 2.0 release prior to our 5.0 release.
+        This Print plugin needs to be easier to use than the current
+        plugin.
+
+	This supersedes an earlier (also mandatory) item to clean up
+	the Print plugin.
+
+	Needed for BETA.
+
 X     + Elimination of libxml2 dependency.  OS X and at least some
         commercial UNIX variants do not bundle this with the OS, so
         this is a stopper.
 
-	Needed for ALPHA.
-
-      + GUI reorganization.  The Print plugin is almost unusable right
-        now due to the bewildering complexity of the interface.
-
-	Needed for BETA, possibly during ALPHA.
+	This is COMPLETE.  We are embedding Mike Sweet's MXML
+	package.
 
 X     * Update of the Foomatic data to the new data scheme.  The
         Foomatic data generation currently uses modified 4.2
         technology.
 
-	Needed during ALPHA.
+	This is COMPLETE, although subject to minor changes and bug
+	fixes.
 
 
     * Critical:
+
+      + Piecewise linear curves.  This is a more economical storage
+        format for typical cases, and is much more useful for cubic
+        spline interpolation than a dense curve is.
+
+	Needed during ALPHA unless these can be added compatibly
+	later.
+
+      + Resolution of all OS X printing issues.  There are a number of
+        OS X problems (mostly related to the USB output driver, but
+        some are also utility-related).  It is not clear whether we
+        would hold the release indefinitely for this.  We will have to
+        respond to individual issues.
 
 X     + Exposure of printer characteristics to the application level.
         This would allow printers to specify read-only parameters,
@@ -286,26 +321,26 @@ X     + Exposure of printer characteristics to the application level.
         PPD files to store the correct page order so that CUPS or
         Foomatic could give Ghostscript the correct options.
 
-	Needed for BETA.
-
-      + Piecewise linear curves.  This is a more economical storage
-        format for typical cases, and is much more useful for cubic
-        spline interpolation than a dense curve is.
-
-	Needed during ALPHA.
+	This is COMPLETE as a framework.  A new read-only flag has
+	been added to the stp_parameter_t data type permitting
+	printers to export information of this kind.  The Epson driver
+	exports information to escputil using this method.
 
 X     + Investigation of printing to non-rectangular pages
         (e. g. direct printing to CD's).  This is seen as an important
         end-user capability.
 
-	Investigation needed during ALPHA.  Changes, if any, may be
-	doable in BETA.
+	This is COMPLETE as an internal framework (via masking), and
+	is used by the Epson driver.  No decision has been made about
+	whether to export this.
 
 X     + Change stp_parameter_class_t to a string instead of an enum,
         and subclass the parameter type (e. g. output->color
         controls).
 
-	Needed by early ALPHA.
+	This has been accomplished by the expedient of adding a
+	category member to the stp_parameter_t and is COMPLETE
+	enough.
 
 X     + A single quality parameter that provides a bundle of settings
         appropriate for what's being printed.
@@ -323,7 +358,7 @@ X     + A single quality parameter that provides a bundle of settings
         and image intent, appropriate choices of resolution, ink type,
         image optimization, dithering, etc. would be made.
 
-	Needed for BETA.
+	This is COMPLETE.
 
 X     + Ink limiting.  The ability to limit the amount of ink
         deposited on the paper is important to ensuring good quality
@@ -338,7 +373,8 @@ X     + Ink limiting.  The ability to limit the amount of ink
 	Changing the ink limiting after initial release could affect
 	profiles generated against the initial release.
 
-	Needed during ALPHA.
+	This is present, although the algorithms can no doubt be
+	improved.  At least as a basic feature it is COMPLETE.
 
 X     + Support for 8 bit linearized, and 16 bit linearized and
 	non-linearized, color inputs, in at least grayscale, RGB, CMY,
@@ -355,19 +391,21 @@ X     + Support for 8 bit linearized, and 16 bit linearized and
 	16-bit non-linearized RGB, and 16-bit linearized
 	printer-specific.
 
-	Needed during ALPHA.
+	This is COMPLETE.
 
 
     * Important:
 
       + XML profiles.
 
-	Needed early in ALPHA if we are to do it at all.
+	Needed during BETA.  This may be doable as an upward
+	compatible addition later.
 
       + Header file reorganization.  The purpose of this project is to
         create a supported internal API for modules.
 
-	Needed by early ALPHA, as change is pervasive.
+	Needed prior to BETA, as change is pervasive and will break
+	programs.
 
       + Color management.  This is of strategic importance, but is not
         a release stopper as it can be added modularly after release.
@@ -384,36 +422,37 @@ X     + Support for 8 bit linearized, and 16 bit linearized and
         tuning.  This tool isn't interesting in and of itself, but
         it's a useful developer tool.
 
-	Needed by early ALPHA.  This change is likely to be risky, as
-	it would require the ability to change the dither object on
-	the fly.	
+	Needed by BETA.  This may be doable by creative use of the raw
+	input method.
 
       + Investigation of OS X requirements for mtink (or similar)
         distribution.
 
-	Needed during ALPHA, to allow preparation time.
+	Needed during BETA.
 
       + Update family drivers other than Epson driver to be
         data-driven.
 
-	If this is to be done, it should be done by BETA.
+	If this is to be done, it should be done by BETA for
+	stability.
 
 
 Proposed release schedule:
 -------- ------- --------
 
-Alpha freeze (slush)		July 15
-Alpha 1				July 25
-Alpha 2				August 8
-Alpha 3				August 22
-Beta freeze			September 5
-Beta 1				September 12
-Beta 2				October 3
-Beta 3				October 24
-Release freeze			November 7
-RC1				Movember 14
-RC2 (if needed)			November 21
-Release				November 28
+MILESTONE			PLAN		CURRENT		COMPLETE
+Alpha freeze (slush)		07/15/2003			N/A
+Alpha 1				07/25/2003			01/11/2004
+Alpha 2				08/08/2003			04/11/2004
+Alpha 3				08/22/2003
+Beta freeze			09/05/2003
+Beta 1				09/12/2003
+Beta 2				10/03/2003
+Beta 3				10/24/2003
+Release freeze			11/07/2003
+RC1				11/14/2003
+RC2 (if needed)			11/21/2003
+Release				11/28/2003
 
 
 Proposed phase criteria:
