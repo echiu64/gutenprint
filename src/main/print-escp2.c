@@ -1633,30 +1633,33 @@ send_print_command(stp_softweave_t *sw, stp_pass_t *pass, int model, int color,
 static void
 send_extra_data(stp_softweave_t *sw, stp_vars_t v, int extralines, int lwidth)
 {
-  int k = 0;
+  int k, l;
+  int bytes_to_fill = sw->bitwidth * ((lwidth + 7) / 8);
+  int full_blocks = bytes_to_fill / 128;
+  int leftover = bytes_to_fill % 128;
+  int total_bytes = extralines * (full_blocks + 1) * 2;
+  char *buf = stp_malloc(total_bytes);
+  total_bytes = 0;
   for (k = 0; k < extralines; k++)
     {
-      int bytes_to_fill = sw->bitwidth * ((lwidth + 7) / 8);
-      int full_blocks = bytes_to_fill / 128;
-      int leftover = bytes_to_fill % 128;
-      int l = 0;
-      while (l < full_blocks)
+      for (l = 0; l < full_blocks; l++)
 	{
-	  stp_putc(129, v);
-	  stp_putc(0, v);
-	  l++;
+	  buf[total_bytes++] = 129;
+	  buf[total_bytes++] = 0;
 	}
       if (leftover == 1)
 	{
-	  stp_putc(1, v);
-	  stp_putc(0, v);
+	  buf[total_bytes++] = 1;
+	  buf[total_bytes++] = 0;
 	}
       else if (leftover > 0)
 	{
-	  stp_putc(257 - leftover, v);
-	  stp_putc(0, v);
+	  buf[total_bytes++] = 257 - leftover;
+	  buf[total_bytes++] = 0;
 	}
     }
+  stp_zfwrite(buf, total_bytes, 1, v);
+  stp_free(buf);
 }
 
 static void
