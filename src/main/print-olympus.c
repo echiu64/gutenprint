@@ -42,6 +42,9 @@
 #define inline __inline__
 #endif
 
+#define MIN(a,b)	(((a) < (b)) ? (a) : (b))
+#define MAX(a,b)	(((a) > (b)) ? (a) : (b))
+
 typedef struct
 {
   int color_model;
@@ -483,18 +486,12 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
     out_px_height = image_px_height;
     }
 
-  out_px_width  = (out_px_width > print_px_width ?
-		  print_px_width : out_px_width);
-  out_px_height = (out_px_height > print_px_height ?
-		  print_px_height : out_px_height);
-  out_px_left   = (out_pt_left - page_pt_left) * xdpi / 72;
-  out_px_left   = (out_px_left + out_px_width > print_px_width ?
-  	print_px_width - out_px_width :
-	out_px_left);				/* correct bad rounding :( */
-  out_px_top    = (out_pt_top  - page_pt_top)  * ydpi / 72;
-  out_px_top    = (out_px_top + out_px_height > print_px_height ?
-  	print_px_height - out_px_height :
-	out_px_top);
+  out_px_width  = MIN(out_px_width, print_px_width);
+  out_px_height = MIN(out_px_height, print_px_height);
+  out_px_left   = MIN(((out_pt_left - page_pt_left) * xdpi / 72),
+		  	print_px_width - out_px_width);
+  out_px_top    = MIN(((out_pt_top  - page_pt_top)  * ydpi / 72),
+		  	print_px_height - out_px_height);
   out_px_right  = out_px_left + out_px_width;
   out_px_bottom = out_px_top  + out_px_height;
   
@@ -606,8 +603,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 	stpi_putc(*l, v);
 	stpi_put16_be(y, v);
 	stpi_put16_be(min_x, v);
-	stpi_put16_be((y + caps->block_size - 1 < print_px_height ?
-				y + caps->block_size - 1 : print_px_height), v);
+	stpi_put16_be(MIN(y + caps->block_size - 1, print_px_height), v);
 	stpi_put16_be(max_x, v);
 	}
       
