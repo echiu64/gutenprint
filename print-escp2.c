@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.76  2000/02/15 00:45:15  rlk
+ *   Use older-style print command for single bit depth printing
+ *
  *   Revision 1.75  2000/02/13 17:24:24  rlk
  *   More modes in run-weavetest, and attempt to handle column spacing in escp2
  *
@@ -2283,7 +2286,7 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
       if (!escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES) &&
 	  (densities[j] > 0))
 	continue;
-      if (ydpi >= 720 &&
+      if (ydpi >= 720 && sw->bitwidth > 1 &&
 	  escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
 	;
       else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
@@ -2310,7 +2313,8 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	{
 	  fprintf(prn, "\033\\%c%c", hoffset & 255, hoffset >> 8);
 	}
-      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
+      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
+	  sw->bitwidth > 1)
 	{
 	  int ncolor = (densities[j] << 4) | colors[j];
 	  int nlines = *linecount + pass->missingstartrows;
