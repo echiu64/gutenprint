@@ -16,6 +16,11 @@ AM_PATH_GTK(1.0.5,
         SAVE_GTK_CFLAGS="$GTK_CFLAGS"],
         AC_MSG_ERROR(Cannot find GTK+: Is gtk-config in executable path?))
 
+AM_PATH_GIMP(1.1.9,
+        [SAVE_GTK_LIBS="$GIMP_LIBS"
+        SAVE_GTK_CFLAGS="$GIMP_CFLAGS"],
+        AC_MSG_ERROR(Cannot find GIMP libs: Is gimptool in executable path?))
+
 dnl Checks for libraries.
 dnl Replace `main' with a function in -lX11:
 AC_CHECK_LIB(X11, main)
@@ -25,9 +30,9 @@ dnl Replace `main' with a function in -lgdk:
 AC_CHECK_LIB(gdk, main)
 dnl I can't get the next two to work right
 dnl Replace `main' with a function in -lgimp:
-dnl AC_CHECK_LIB(gimp,gimpmatrix)
+AC_CHECK_LIB(gimp,gimp_tile_height)
 dnl Replace `main' with a function in -lgimpui:
-dnl AC_CHECK_LIB(gimpui, main)
+AC_CHECK_LIB(gimpui, gimp_context_help)
 GIMP_LIBS="-lgimp -lgimpui"
 dnl Replace `main' with a function in -lglib:
 AC_CHECK_LIB(glib, main)
