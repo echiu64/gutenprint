@@ -88,7 +88,7 @@ static void gtk_gamma_update(GtkAdjustment *);
 static void gtk_gamma_callback(GtkWidget *);
 static void gtk_close_adjust_callback(void);
 static void gtk_dither_algo_callback(GtkWidget *, gint);
-static void gtk_build_dither_menu(void);
+void gtk_build_dither_menu(void);
 
 
 /*****************************************************************************
@@ -1020,7 +1020,7 @@ static void gtk_close_adjust_callback(void)
  * gtk_build_dither_menu() - builds the dither algorithm option menu.
  *
  ***************************************************************************/
-static void gtk_build_dither_menu()
+void gtk_build_dither_menu()
 {
     int		i;	/* Looping var */
     GtkWidget	*item;	/* Menu item */

@@ -58,7 +58,7 @@ static void gimp_gamma_update      (GtkAdjustment *adjustment);
 
 static void gimp_dither_algo_callback (GtkWidget *widget,
 				       gpointer   data);
-static void gimp_build_dither_menu    (void);
+void gimp_build_dither_menu    (void);
 
 
 /*
@@ -299,7 +299,7 @@ gimp_gamma_update (GtkAdjustment *adjustment)
     }
 }
 
-static void
+void
 gimp_build_dither_menu (void)
 {
   GtkWidget *item;

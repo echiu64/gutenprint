@@ -122,6 +122,7 @@ typedef struct					/* Plug-in variables */
   float	saturation;		/* Output saturation */
   float	density;		/* Maximum output density */
   int	image_type;		/* Image type (line art etc.) */
+  int	unit;			/* Units for preview area 0=Inch 1=Metric */
   lut_t *lut;			/* Look-up table */
 } vars_t;
 

@@ -128,7 +128,8 @@ vars_t vars =
 	0,			/* Linear */
 	1.0,			/* Output saturation */
 	1.0,			/* Density */
-	IMAGE_CONTINUOUS	/* Image type */
+	IMAGE_CONTINUOUS,	/* Image type */
+	0		/* Unit 0=Inch */
 };
 
 int		plist_current = 0,	/* Current system printer */
@@ -224,6 +225,7 @@ query (void)
     { PARAM_FLOAT,	"density",	"Density (0-200%)" },
     { PARAM_STRING,	"ink_type",	"Type of ink or cartridge" },
     { PARAM_STRING,	"dither_algorithm", "Dither algorithm" },
+    { PARAM_INT32,	"unit",		"Unit 0=Inches 1=Metric" },
   };
   static gint nargs = sizeof(args) / sizeof(args[0]);
 
@@ -484,24 +486,29 @@ run (char   *name,		/* I - Name of print program. */
             vars.image_type = IMAGE_CONTINUOUS;
 
           if (nparams > 23)
-            vars.saturation = param[22].data.d_float;
+            vars.saturation = param[23].data.d_float;
           else
             vars.saturation = 1.0;
 
           if (nparams > 24)
-            vars.density = param[23].data.d_float;
+            vars.density = param[24].data.d_float;
           else
             vars.density = 1.0;
 
 	  if (nparams > 25)
-	    strcpy (vars.ink_type, param[24].data.d_string);
+	    strcpy (vars.ink_type, param[25].data.d_string);
 	  else
 	    memset (vars.ink_type, 0, 64);
 
 	  if (nparams > 26)
-	    strcpy (vars.dither_algorithm, param[25].data.d_string);
+	    strcpy (vars.dither_algorithm, param[26].data.d_string);
 	  else
 	    memset (vars.dither_algorithm, 0, 64);
+
+          if (nparams > 27)
+            vars.unit = param[27].data.d_int32;
+          else
+            vars.unit = 0;
 	}
 
       current_printer = get_printer_by_driver (vars.driver);
@@ -752,6 +759,7 @@ initialize_printer(plist_t *printer)
   printer->v.orientation = vars.orientation;
   printer->v.left = 0;
   printer->v.top = 0;
+  printer->v.unit = 0;
   printer->v.gamma = vars.gamma;
   printer->v.contrast = vars.contrast;
   printer->v.brightness = vars.brightness;
@@ -916,11 +924,12 @@ printrc_load(void)
       GET_OPTIONAL_INT_PARAM(green);
       GET_OPTIONAL_INT_PARAM(blue);
       GET_OPTIONAL_INT_PARAM(linear);
+      GET_OPTIONAL_INT_PARAM(image_type);
       GET_OPTIONAL_FLOAT_PARAM(saturation);
       GET_OPTIONAL_FLOAT_PARAM(density);
       GET_OPTIONAL_STRING_PARAM(ink_type);
-      GET_OPTIONAL_INT_PARAM(image_type);
       GET_OPTIONAL_STRING_PARAM(dither_algorithm);
+      GET_OPTIONAL_INT_PARAM(unit);
 
 /*
  * The format of the list is the File printer followed by a qsort'ed list
@@ -1036,10 +1045,10 @@ printrc_save(void)
 	fprintf(fp, "%d,%.3f,%d,%d,%d,%.3f,",
 		p->v.brightness, p->v.scaling, p->v.orientation, p->v.left,
 		p->v.top, p->v.gamma);
-	fprintf(fp, "%d,%d,%d,%d,%d,%.3f,%.3f,%s,%d,%s\n",
+	fprintf(fp, "%d,%d,%d,%d,%d,%d,%.3f,%.3f,%s,%s,%d,\n",
 		p->v.contrast, p->v.red, p->v.green, p->v.blue,
-		p->v.linear, p->v.saturation, p->v.density, p->v.ink_type,
-		p->v.image_type, p->v.dither_algorithm);
+		p->v.linear, p->v.image_type, p->v.saturation, p->v.density,
+		p->v.ink_type, p->v.dither_algorithm, p->v.unit);
       }
     fclose(fp);
   } else {

@@ -34,7 +34,6 @@
 #include "print-intl.h"
 #include <math.h>
 
-static int vars_unit=0;	/* Units (cm or Inch) don't know where to store it */
 /*
  * Constants for GUI...
  */
@@ -423,13 +422,13 @@ void gtk_create_main_window(void)
     gtk_widget_show(box);
     unit_inch = button = gtk_radio_button_new_with_label(NULL, _("Inch"));
     group = gtk_radio_button_group(GTK_RADIO_BUTTON(button));
-    if (vars_unit == 0)
+    if (vars.unit == 0)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
     gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
     gtk_widget_show(button);
 
     unit_cm = button = gtk_radio_button_new_with_label(group, _("Cm"));
-    if (vars_unit)
+    if (vars.unit)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
     gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
     gtk_widget_show(button);
@@ -1376,6 +1375,11 @@ static void gtk_do_misc_updates(void)
   else
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_color), TRUE);
 
+  if (plist[plist_current].v.unit == 0)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(unit_inch), TRUE);
+  else
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(unit_cm), TRUE);
+
 #ifdef DO_LINEAR
   if (plist[plist_current].v.linear == 0)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linear_off), TRUE);
@@ -1416,7 +1420,7 @@ static void gtk_position_callback(GtkWidget *widget)
   int dontcheck = 0;
   double unit_scaler = 1.0;
 
-  if(vars_unit) unit_scaler = 1.0 / 2.54;
+  if(vars.unit) unit_scaler = 1.0 / 2.54;
   if (widget == top_entry)
     {
       gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
@@ -1515,6 +1519,7 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
  /*
   * Now get option parameters...
   */
+  gtk_build_dither_menu();
 
   if (num_media_sizes > 0)
   {
@@ -1743,7 +1748,8 @@ static void gtk_unit_callback(GtkWidget *widget,
 {
   if (GTK_TOGGLE_BUTTON(widget)->active)
   {
-    vars_unit = data;
+    vars.unit = data;
+    plist[plist_current].v.unit = data;
 	gtk_preview_update();
   }
 }
@@ -2150,7 +2156,7 @@ static void gtk_preview_update(void)
   plist[plist_current].v.top = vars.top;
 
 
-  if(vars_unit) unit_scaler = 72.0/2.54;
+  if(vars.unit) unit_scaler = 72.0/2.54;
   else unit_scaler = 72.0;
   sprintf(s, "%.2f", (top + vars.top) / unit_scaler);
   gtk_signal_handler_block_by_data(GTK_OBJECT(top_entry), NULL);
