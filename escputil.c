@@ -20,15 +20,15 @@
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifdef __GNU_LIBRARY__
-#include <getopt.h>
-#endif
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <fcntl.h>
+#ifdef __GNU_LIBRARY__
+#include <getopt.h>
+#endif
 
 char *banner = "\
 Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)\n\
