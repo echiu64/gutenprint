@@ -433,6 +433,37 @@ fill_black(unsigned short *data, size_t len, size_t scount)
 }
 
 static void
+fill_grid(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
+{
+  int i;
+  int xlen = (len / scount) * scount;
+  int depth = global_ink_depth;
+  int errdiv = (p->d.g.ticks) / (xlen - 1);
+  int errmod = (p->d.g.ticks) % (xlen - 1);
+  int errval  = 0;
+  int errlast = -1;
+  int errline  = 0;
+  if (depth == 0)
+    depth = 4;
+  for (i = 0; i < xlen; i++)
+    {
+      if (errline != errlast)
+	{
+	  errlast = errline;
+	  data[0] = 65535;
+	}
+      errval += errmod;
+      errline += errdiv;
+      if (errval >= xlen - 1)
+	{
+	  errval -= xlen - 1;
+	  errline++;
+	}
+      data += depth;
+    }
+}
+
+static void
 fill_colors(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
 {
   double c_min = p->d.p.c_min == -2 ? global_c_level : p->d.p.c_min;
@@ -687,12 +718,23 @@ Image_get_row(stp_image_t *image, unsigned char *data,
       if (previous_band == -2)
 	{
 	  memset(data, 0, printer_width * depth * sizeof(unsigned short));
-	  if (the_testpatterns[band].t == E_XPATTERN)
-	    fill_colors_extended((unsigned short *)data, printer_width,
-				 levels, &(the_testpatterns[band]));
-	  else
-	    fill_colors((unsigned short *)data, printer_width, levels,
+	  switch (the_testpatterns[band].t)
+	    {
+	    case E_PATTERN:
+	      fill_colors((unsigned short *)data, printer_width, levels,
+			  &(the_testpatterns[band]));
+	      break;
+	    case E_XPATTERN:
+	      fill_colors_extended((unsigned short *)data, printer_width,
+				   levels, &(the_testpatterns[band]));
+	      break;
+	    case E_GRID:
+	      fill_grid((unsigned short *)data, printer_width, levels,
 			&(the_testpatterns[band]));
+	      break;
+	    default:
+	      break;
+	    }
 	  previous_band = band;
 	}
       else if (row == printer_height - 1)
@@ -705,21 +747,24 @@ Image_get_row(stp_image_t *image, unsigned char *data,
       else if (band != previous_band && band >= 0)
 	{
 	  memset(data, 0, printer_width * depth * sizeof(unsigned short));
-	  if (noblackline)
+	  switch (the_testpatterns[band].t)
 	    {
-	      if (the_testpatterns[band].t == E_XPATTERN)
-		fill_colors_extended((unsigned short *)data, printer_width,
-				     levels, &(the_testpatterns[band]));
-	      else
-		fill_colors((unsigned short *)data, printer_width, levels,
-			    &(the_testpatterns[band]));
-	      previous_band = band;
+	    case E_PATTERN:
+	      fill_colors((unsigned short *)data, printer_width, levels,
+			  &(the_testpatterns[band]));
+	      break;
+	    case E_XPATTERN:
+	      fill_colors_extended((unsigned short *)data, printer_width,
+				   levels, &(the_testpatterns[band]));
+	      break;
+	    case E_GRID:
+	      fill_grid((unsigned short *)data, printer_width, levels,
+			&(the_testpatterns[band]));
+	      break;
+	    default:
+	      break;
 	    }
-	  else
-	    {
-	      fill_black((unsigned short *)data, printer_width, levels);
-	      previous_band = -2;
-	    }
+	  previous_band = band;
 	}
     }
   return STP_IMAGE_STATUS_OK;

@@ -83,6 +83,7 @@ pattern			DBG(PATTERN) return PATTERN;
 xpattern		DBG(XPATTERN) return XPATTERN;
 image			DBG(IMAGE) return IMAGE;
 extended		DBG(EXTENDED) return EXTENDED;
+grid			DBG(GRID) return GRID;
 
 {integer}		yylval.ival = atoi(yytext); DBG(tINT) return tINT;
 {float}			yylval.dval = strtod(yytext, NULL); DBG(tDOUBLE) return tDOUBLE;

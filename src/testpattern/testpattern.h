@@ -33,7 +33,8 @@ typedef struct
   enum {
     E_PATTERN,
     E_XPATTERN,
-    E_IMAGE
+    E_IMAGE,
+    E_GRID
   } t;
   union {
     struct {
@@ -68,6 +69,9 @@ typedef struct
       double lower;
       double upper;
     } p;
+    struct {
+      int ticks;
+    } g;
     struct {
       int x;
       int y;
