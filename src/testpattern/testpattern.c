@@ -369,39 +369,58 @@ main(int argc, char **argv)
 }
 
 static void
-fill_black(unsigned short *data, size_t len, size_t scount)
+fill_black(unsigned char *data, size_t len, size_t scount)
 {
   int i;
+  unsigned short *s_data = (unsigned short *) data;
   if (global_ink_depth)
     {
       for (i = 0; i < (len / scount) * scount; i++)
 	{
-	  data[0] = ink_limit * 65535;
+	  memset(s_data, 0, sizeof(unsigned short) * global_ink_depth);
+	  s_data[0] = ink_limit * 65535;
 	  if (global_ink_depth == 3)
 	    {
-	      data[1] = ink_limit * 65535;
-	      data[2] = ink_limit * 65535;
+	      s_data[1] = ink_limit * 65535;
+	      s_data[2] = ink_limit * 65535;
 	    }
 	  else if (global_ink_depth == 5)
 	    {
-	      data[2] = ink_limit * 65535;
-	      data[4] = ink_limit * 65535;
+	      s_data[2] = ink_limit * 65535;
+	      s_data[4] = ink_limit * 65535;
 	    }
-	  data += global_ink_depth;
+	  s_data += global_ink_depth;
 	}
     }
   else
     {
       for (i = 0; i < (len / scount) * scount; i++)
 	{
-	  data[3] = ink_limit * 65535;
-	  data += 4;
+	  memset(s_data, 0, sizeof(unsigned short) * 4);
+	  s_data[3] = ink_limit * 65535;
+	  s_data += 4;
 	}
     }
 }
 
 static void
-fill_grid(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
+fill_white(unsigned char *data, size_t len, size_t scount)
+{
+  unsigned short *s_data = (unsigned short *) data;
+  if (global_ink_depth)
+    {
+      memset(s_data, 0, sizeof(unsigned short) * global_ink_depth *
+	     ((len / scount) * scount));
+    }
+  else
+    {
+      memset(s_data, 0, sizeof(unsigned short) * 4 *
+	     ((len / scount) * scount));
+    }
+}
+
+static void
+fill_grid(unsigned char *data, size_t len, size_t scount, testpattern_t *p)
 {
   int i;
   int xlen = (len / scount) * scount;
@@ -411,6 +430,8 @@ fill_grid(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
   int errval  = 0;
   int errlast = -1;
   int errline  = 0;
+  unsigned short *s_data = (unsigned short *) data;
+
   if (depth == 0)
     depth = 4;
   for (i = 0; i < xlen; i++)
@@ -418,7 +439,7 @@ fill_grid(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
       if (errline != errlast)
 	{
 	  errlast = errline;
-	  data[0] = 65535;
+	  s_data[0] = 65535;
 	}
       errval += errmod;
       errline += errdiv;
@@ -427,12 +448,12 @@ fill_grid(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
 	  errval -= xlen - 1;
 	  errline++;
 	}
-      data += depth;
+      s_data += depth;
     }
 }
 
 static void
-fill_colors(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
+fill_colors(unsigned char *data, size_t len, size_t scount, testpattern_t *p)
 {
   double mins[4];
   double vals[4];
@@ -443,6 +464,7 @@ fill_colors(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
   int i;
   int j;
   int pixels;
+  unsigned short *s_data = (unsigned short *) data;
 
   vals[0] = p->d.p.vals[0];
   mins[0] = p->d.p.mins[0];
@@ -501,42 +523,42 @@ fill_colors(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
 	    {
 	    case 0:
 	      for (j = 0; j < 4; j++)
-		data[j] = xvals[(j + 1) % 4];
-	      data += 4;
+		s_data[j] = xvals[(j + 1) % 4];
+	      s_data += 4;
 	      break;
 	    case 1:
-	      data[0] = xvals[0];
+	      s_data[0] = xvals[0];
 	      break;
 	    case 2:
-	      data[0] = xvals[0];
-	      data[1] = 0;
+	      s_data[0] = xvals[0];
+	      s_data[1] = 0;
 	      break;
 	    case 4:
 	      for (j = 0; j < 4; j++)
-		data[j] = xvals[j];
+		s_data[j] = xvals[j];
 	      break;
 	    case 6:
-	      data[0] = xvals[0];
-	      data[1] = xvals[1];
-	      data[2] = 0;
-	      data[3] = xvals[2];
-	      data[4] = 0;
-	      data[5] = xvals[3];
+	      s_data[0] = xvals[0];
+	      s_data[1] = xvals[1];
+	      s_data[2] = 0;
+	      s_data[3] = xvals[2];
+	      s_data[4] = 0;
+	      s_data[5] = xvals[3];
 	      break;
 	    case 7:
 	      for (j = 0; j < 4; j++)
-		data[j * 2] = xvals[j];
+		s_data[j * 2] = xvals[j];
 	      for (j = 1; j < 6; j += 2)
-		data[j] = 0;
+		s_data[j] = 0;
 	      break;
 	    }
-	  data += global_ink_depth;
+	  s_data += global_ink_depth;
 	}
     }
 }
 
 static void
-fill_colors_extended(unsigned short *data, size_t len,
+fill_colors_extended(unsigned char *data, size_t len,
 		     size_t scount, testpattern_t *p)
 {
   double mins[STP_CHANNEL_LIMIT];
@@ -547,6 +569,7 @@ fill_colors_extended(unsigned short *data, size_t len,
   int k;
   int pixels;
   int channel_limit = global_ink_depth <= 7 ? 7 : global_ink_depth;
+  unsigned short *s_data = (unsigned short *) data;
 
   for (j = 0; j < channel_limit; j++)
     {
@@ -575,57 +598,79 @@ fill_colors_extended(unsigned short *data, size_t len,
 	  switch (global_ink_depth)
 	    {
 	    case 1:
-	      data[0] = xvals[0];
+	      s_data[0] = xvals[0];
 	      break;
 	    case 2:
-	      data[0] = xvals[0];
-	      data[1] = xvals[4];
+	      s_data[0] = xvals[0];
+	      s_data[1] = xvals[4];
 	      break;
 	    case 3:
-	      data[0] = xvals[1];
-	      data[1] = xvals[2];
-	      data[2] = xvals[3];
+	      s_data[0] = xvals[1];
+	      s_data[1] = xvals[2];
+	      s_data[2] = xvals[3];
 	      break;
 	    case 4:
-	      data[0] = xvals[0];
-	      data[1] = xvals[1];
-	      data[2] = xvals[2];
-	      data[3] = xvals[3];
+	      s_data[0] = xvals[0];
+	      s_data[1] = xvals[1];
+	      s_data[2] = xvals[2];
+	      s_data[3] = xvals[3];
 	      break;
 	    case 5:
-	      data[0] = xvals[1];
-	      data[1] = xvals[5];
-	      data[2] = xvals[2];
-	      data[3] = xvals[6];
-	      data[4] = xvals[3];
+	      s_data[0] = xvals[1];
+	      s_data[1] = xvals[5];
+	      s_data[2] = xvals[2];
+	      s_data[3] = xvals[6];
+	      s_data[4] = xvals[3];
 	      break;
 	    case 6:
-	      data[0] = xvals[0];
-	      data[1] = xvals[1];
-	      data[2] = xvals[5];
-	      data[3] = xvals[2];
-	      data[4] = xvals[6];
-	      data[5] = xvals[3];
+	      s_data[0] = xvals[0];
+	      s_data[1] = xvals[1];
+	      s_data[2] = xvals[5];
+	      s_data[3] = xvals[2];
+	      s_data[4] = xvals[6];
+	      s_data[5] = xvals[3];
 	      break;
 	    case 7:
-	      data[0] = xvals[0];
-	      data[1] = xvals[4];
-	      data[2] = xvals[1];
-	      data[3] = xvals[5];
-	      data[4] = xvals[2];
-	      data[5] = xvals[6];
-	      data[6] = xvals[3];
+	      s_data[0] = xvals[0];
+	      s_data[1] = xvals[4];
+	      s_data[2] = xvals[1];
+	      s_data[3] = xvals[5];
+	      s_data[4] = xvals[2];
+	      s_data[5] = xvals[6];
+	      s_data[6] = xvals[3];
 	      break;
 	    default:
 	      for (j = 0; j < global_ink_depth; j++)
-		data[j] = xvals[j];
+		s_data[j] = xvals[j];
 	    }
-	  data += global_ink_depth;
+	  s_data += global_ink_depth;
 	}
     }
 }
 
 extern FILE *yyin;
+
+static void
+fill_pattern(testpattern_t *p, unsigned char *data, size_t width,
+	     size_t s_count, size_t image_depth, size_t byte_depth)
+{
+  memset(data, 0, printer_width * image_depth * byte_depth);
+  switch (p->t)
+    {
+    case E_PATTERN:
+      fill_colors(data, width, s_count, p);
+      break;
+    case E_XPATTERN:
+      fill_colors_extended(data, width, s_count, p);
+      break;
+    case E_GRID:
+      fill_grid(data, width, s_count, p);
+      break;
+    default:
+      break;
+    }
+}
+
 
 static stp_image_status_t
 Image_get_row(stp_image_t *image, unsigned char *data,
@@ -650,53 +695,18 @@ Image_get_row(stp_image_t *image, unsigned char *data,
       int band = row / bandheight;
       if (previous_band == -2)
 	{
-	  memset(data, 0, printer_width * depth * sizeof(unsigned short));
-	  switch (the_testpatterns[band].t)
-	    {
-	    case E_PATTERN:
-	      fill_colors((unsigned short *)data, printer_width, steps,
-			  &(the_testpatterns[band]));
-	      break;
-	    case E_XPATTERN:
-	      fill_colors_extended((unsigned short *)data, printer_width,
-				   steps, &(the_testpatterns[band]));
-	      break;
-	    case E_GRID:
-	      fill_grid((unsigned short *)data, printer_width, steps,
-			&(the_testpatterns[band]));
-	      break;
-	    default:
-	      break;
-	    }
+	  fill_pattern(&(the_testpatterns[band]), data, printer_width, steps,
+			 depth, sizeof(unsigned short));
 	  previous_band = band;
 	}
       else if (row == printer_height - 1)
-	{
-	  memset(data, 0, printer_width * depth * sizeof(unsigned short));
-	  fill_black((unsigned short *)data, printer_width, steps);
-	}
+	fill_black(data, printer_width, steps);
       else if (band >= n_testpatterns)
-	memset(data, 0, printer_width * depth * sizeof(unsigned short));
+	fill_white(data, printer_width, steps);
       else if (band != previous_band && band >= 0)
 	{
-	  memset(data, 0, printer_width * depth * sizeof(unsigned short));
-	  switch (the_testpatterns[band].t)
-	    {
-	    case E_PATTERN:
-	      fill_colors((unsigned short *)data, printer_width, steps,
-			  &(the_testpatterns[band]));
-	      break;
-	    case E_XPATTERN:
-	      fill_colors_extended((unsigned short *)data, printer_width,
-				   steps, &(the_testpatterns[band]));
-	      break;
-	    case E_GRID:
-	      fill_grid((unsigned short *)data, printer_width, steps,
-			&(the_testpatterns[band]));
-	      break;
-	    default:
-	      break;
-	    }
+	  fill_pattern(&(the_testpatterns[band]), data, printer_width, steps,
+			 depth, sizeof(unsigned short));
 	  previous_band = band;
 	}
     }
