@@ -32,7 +32,7 @@ H1 {
 <? echo($maintainer) ?> 
 <?
 while ( list( $key, $val ) = each( $GLOBALS['dev_team']) ) {
-   echo '<a href="mailto:' . $val . '">' . $key . '</a> ';
+   echo '<a href="' . $val . '">' . $key . '</a> ';
 }
 ?>
 

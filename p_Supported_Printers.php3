@@ -21,7 +21,7 @@ while ( list( $key, $val ) = each( $GLOBALS['supported_printers']) ) {
 		echo '<ul>';
 		while ( list( $k, $v ) = each( $va ) ) {
 			echo  '<li><p>' . $k ;
-			echo '' . $v . '';
+			echo '  ' . $v . '';
 		}
 		echo '</ul>';
 	}

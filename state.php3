@@ -2,13 +2,13 @@
 
 $plugin_version_number = '3.1';
 
-$maintainer = '<a href="mailto:rlk@alum.mit.edu">Robert Krawitz</a>';
+$maintainer = '<a href="https://sourceforge.net/developer/index.php?form_dev=5436">Robert Krawitz</a>';
 
 $dev_team = array(
-'Andy Thaller' => 'Gandy@users.sourceforge.net',
-'Karl Heinz Kremer' => 'khk@users.sourceforge.net',
-'Eric Sharkey' => 'sharkey@users.sourceforge.net',
-'Nicholas Piper' => 'pcomm@inorbit.com'
+'Andy Thaller' => 'https://sourceforge.net/sendmessage.php?touser=2228',
+'Karl Heinz Kremer' => 'https://sourceforge.net/sendmessage.php?touser=2818',
+'Eric Sharkey' => 'https://sourceforge.net/sendmessage.php?touser=8749',
+'Nicholas Piper' => 'https://sourceforge.net/sendmessage.php?touser=8275'
 );
 
 $navbar_text = 'Welcome to Gimp-Print.';
@@ -34,7 +34,7 @@ $supported_printers = array(
 		'EPSON Stylus Color 640' => '',
 		'EPSON Stylus Color 740' => '',
 		'EPSON Stylus Color 800' => '',
-		'EPSON Stylus Color 850' => '',
+		'EPSON Stylus Color 850' => 'Works only at 360dpi currently.',
 		'EPSON Stylus Color 900' => '',
 		'EPSON Stylus Color 1520' => '',
 		'EPSON Stylus Color 3000' => ''
