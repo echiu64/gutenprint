@@ -851,6 +851,164 @@ static escp2_variable_inklist_t variable_4pl_6color_inks =
     }
   }
 };
+static double standard_lum_adjustment[49] =
+{
+  0.50,				/* C */
+  0.55,
+  0.6,
+  0.65,
+  0.65,
+  0.6,
+  0.55,
+  0.53,
+  0.5,				/* B */
+  0.55,
+  0.65,
+  0.7,
+  0.8,
+  0.909,
+  1.0,
+  1.15,
+  1.3,				/* M */
+  1.25,
+  1.25,
+  1.25,
+  1.25,
+  1.25,
+  1.25,
+  1.25,
+  1.25,				/* R */
+  1.2,
+  1.15,
+  1.1,
+  1.05,
+  1.0,
+  1.0,
+  1.0,
+  1.0,				/* Y */
+  0.9,
+  0.8,
+  0.7,
+  0.6,
+  0.55,
+  0.5,
+  0.45,
+  0.36,				/* G */
+  0.4,
+  0.45,
+  0.48,
+  0.48,
+  0.48,
+  0.51,
+  0.51,
+  0.50				/* C */
+};  
+
+static double x70_lum_adjustment[49] =
+{
+  0.50,				/* C */
+  0.55,
+  0.65,
+  0.85,
+  0.95,
+  0.85,
+  0.65,
+  0.6,
+  0.55,				/* B */
+  0.6,
+  0.65,
+  0.7,
+  0.8,
+  0.909,
+  1.0,
+  1.15,
+  1.3,				/* M */
+  1.25,
+  1.25,
+  1.25,
+  1.25,
+  1.25,
+  1.25,
+  1.25,
+  1.25,				/* R */
+  1.2,
+  1.15,
+  1.1,
+  1.05,
+  1.0,
+  1.0,
+  1.0,
+  1.0,				/* Y */
+  0.93,
+  0.8,
+  0.8,
+  0.72,
+  0.65,
+  0.55,
+  0.47,
+  0.38,				/* G */
+  0.42,
+  0.45,
+  0.48,
+  0.48,
+  0.48,
+  0.51,
+  0.51,
+  0.50				/* C */
+};  
+
+static double standard_hue_adjustment[49] =
+{
+  0,				/* C */
+  0.17,
+  0.29,
+  0.38,
+  0.47,
+  0.52,
+  0.57,
+  0.62,
+  0.65,				/* B */
+  0.7,
+  0.85,
+  1.05,
+  1.25,
+  1.45,
+  1.65,
+  1.8,
+  2.00,				/* M */
+  2.18,
+  2.29,
+  2.38,
+  2.47,
+  2.56,
+  2.65,
+  2.74,
+  2.83,				/* R */
+  3.0,
+  3.15,
+  3.3,
+  3.45,
+  3.6,
+  3.75,
+  3.85,
+  4.0,				/* Y */
+  4.2,
+  4.37,
+  4.55,
+  4.65,
+  4.78,
+  4.85,
+  4.9,
+  4.95,				/* G */
+  5.05,
+  5.15,
+  5.25,
+  5.35,
+  5.5,
+  5.65,
+  5.8,
+  6.0				/* C */
+};
 
 typedef struct escp2_printer
 {
@@ -878,6 +1036,8 @@ typedef struct escp2_printer
   escp2_dot_size_t dot_sizes;	/* Vector of dot sizes for resolutions */
   escp2_densities_t densities;	/* List of densities for each printer */
   escp2_variable_inklist_t *inks; /* Choices of inks for this printer */
+  double *lum_adjustment;
+  double *hue_adjustment;
 } escp2_printer_t;
 
 #define MODEL_INIT_MASK		0xfull /* Is a special init sequence */
@@ -939,7 +1099,7 @@ static escp2_printer_t model_capabilities[] =
     720, 720,
     { -2, -2, -1, -2, -1, -1, -1, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .568, 0, 0, 0, 0, 0, 0, 0, 0 },
-    &simple_4color_inks
+    &simple_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 1: Stylus Color Pro/Pro XL/400/500 */
   {
@@ -951,7 +1111,7 @@ static escp2_printer_t model_capabilities[] =
     720, 720,
     { -2, -2, -1, -2, -1, -1, -1, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .631, 0, 0, 0, 0, 0, 0, 0, 0 },
-    &simple_4color_inks
+    &simple_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 2: Stylus Color 1500 */
   {
@@ -963,7 +1123,7 @@ static escp2_printer_t model_capabilities[] =
     720, 720,
     { -2, -2, -1, -2, -1, -1, -1, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .631, 0, 0, 0, 0, 0, 0, 0, 0 },
-    &simple_4color_inks
+    &simple_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 3: Stylus Color 600 */
   {
@@ -975,7 +1135,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { 4, 4, -1, 2, 2, -1, 1, -1, 1, -1, 1 },
     { 2.0, 1.3, 1.3, .775, .775, .55, .55, .275, .275, .275, .275, .138 },
-    &simple_4color_inks
+    &simple_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 4: Stylus Color 800 */
   {
@@ -987,7 +1147,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { 3, 3, -1, 1, 1, -1, 4, -1, 4, -1, -1 },
     { 2.0, 1.3, 1.3, .775, .775, .55, .55, .275, .275, .275, .275, .138 },
-    &simple_4color_inks
+    &simple_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 5: Stylus Color 850 */
   {
@@ -999,7 +1159,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { 3, 3, -1, 1, 1, -1, 4, -1, 4, -1, -1 },
     { 2.0, 1.3, 1.3, .775, .775, .55, .55, .275, .275, .275, .275, .138 },
-    &simple_4color_inks
+    &simple_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 6: Stylus Color 1520 */
   {
@@ -1011,7 +1171,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { 3, 3, -1, 1, 1, -1, 4, -1, 4, -1, -1 },
     { 2.0, 1.3, 1.3, .775, .775, .55, .55, .275, .275, .275, .275, .138 },
-    &simple_4color_inks
+    &simple_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
 
   /* SECOND GENERATION PRINTERS */
@@ -1025,7 +1185,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { 3, 3, -1, -1, 1, -1, 4, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .775, .775, .55, .55, .275, .275, .275, .275, .138 },
-    &simple_6color_inks
+    &simple_6color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 8: Stylus Photo EX */
   {
@@ -1037,7 +1197,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { 3, 3, -1, -1, 1, -1, 4, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .775, .775, .55, .55, .275, .275, .275, .275, .138 },
-    &simple_6color_inks
+    &simple_6color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 9: Stylus Photo */
   {
@@ -1049,7 +1209,7 @@ static escp2_printer_t model_capabilities[] =
     720, 720,
     { 3, 3, -1, -1, 1, -1, -1, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .775, .775, 0, 0, 0, 0, 0, 0, 0 },
-    &simple_6color_inks
+    &simple_6color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
 
   /* THIRD GENERATION PRINTERS */
@@ -1066,7 +1226,7 @@ static escp2_printer_t model_capabilities[] =
     720, 720,
     { -1, 3, -1, 1, 1, -1, -1, -1, -1, -1, -1 },
     { 3.0, 2.0, 2.0, .900, .900, 0, 0, 0, 0, 0, 0, 0 },
-    &simple_4color_inks
+    &simple_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 11: Stylus Color 640 */
   {
@@ -1078,7 +1238,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 3, -1, 1, 1, -1, 1, -1, 1, -1, -1 },
     { 3.0, 2.0, 2.0, .900, .900, .45, .45, .45, .45, .225, .225, .113 },
-    &simple_4color_inks
+    &simple_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 12: Stylus Color 740 */
   {
@@ -1090,7 +1250,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 4, 0x10, 3, 0x10, -1, 0x10, -1, -1, -1, -1 },
     { 2.0, 1.3, 2.0, .646, .710, .323, .365, .323, .365, .1825, .1825, .0913 },
-    &variable_6pl_4color_inks
+    &variable_6pl_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 13: Stylus Color 900 */
   {
@@ -1102,7 +1262,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 1, 0x11, 1, 0x10, -1, 0x10, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .323, .365, .1825, .1825, .0913 },
-    &variable_3pl_4color_inks
+    &variable_3pl_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 14: Stylus Photo 750 */
   {
@@ -1114,7 +1274,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 2, 0x10, 4, 0x10, -1, 0x10, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .323, .365, .1825, .1825, .0913 },
-    &variable_6pl_6color_inks
+    &variable_6pl_6color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 15: Stylus Photo 1200 */
   {
@@ -1126,7 +1286,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 2, 0x10, 4, 0x10, -1, 0x10, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .323, .365, .1825, .1825, .0913 },
-    &variable_6pl_6color_inks
+    &variable_6pl_6color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 16: Stylus Color 860 */
   {
@@ -1138,7 +1298,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 0, 0x12, 0, 0x11, -1, 0x10, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .431, .710, .216, .784, .216, .784, .392, .392, .196 },
-    &variable_4pl_4color_inks
+    &variable_4pl_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 17: Stylus Color 1160 */
   {
@@ -1150,7 +1310,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 0, 0x12, 0, 0x11, -1, 0x10, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .431, .710, .216, .784, .216, .784, .392, .392, .196 },
-    &variable_4pl_4color_inks
+    &variable_4pl_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 18: Stylus Color 660 */
   {
@@ -1162,7 +1322,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 3, -1, 3, 0, -1, 0, -1, -1, -1, -1 },
     { 3.0, 2.0, 2.0, .646, .646, .323, .323, .1615, .1615, .1615, .1615, .0808 },
-    &simple_4color_inks
+    &simple_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 19: Stylus Color 760 */
   {
@@ -1174,7 +1334,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 0, 0x12, 0, 0x11, -1, 0x10, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .431, .710, .216, .784, .216, .784, .392, .392, .196 },
-    &variable_4pl_4color_inks
+    &variable_4pl_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 20: Stylus Photo 720 (Australia) */
   {
@@ -1186,7 +1346,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 2, 0x12, 4, 0x11, -1, 0x11, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .323, .365, .1825, .1825, .0913 },
-    &variable_6pl_6color_inks
+    &variable_6pl_6color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 21: Stylus Color 480 */
   {
@@ -1198,7 +1358,7 @@ static escp2_printer_t model_capabilities[] =
     720, 720,
     { -1, -2, 0x13, -2, 0x10, -1, -1, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .323, .365, .1825, .1825, .0913 },
-    &variable_6pl_4color_inks
+    &variable_6pl_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 22: Stylus Photo 870 */
   {
@@ -1210,7 +1370,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 4, 0x12, 2, 0x11, -1, 0x10, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .431, .710, .216, .784, .216, .784, .392, .392, .196 },
-    &variable_4pl_6color_inks
+    &variable_4pl_6color_inks, x70_lum_adjustment, standard_hue_adjustment
   },
   /* 23: Stylus Photo 1270 */
   {
@@ -1222,7 +1382,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 4, 0x12, 2, 0x11, -1, 0x10, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .431, .710, .216, .784, .216, .784, .392, .392, .196 },
-    &variable_4pl_6color_inks
+    &variable_4pl_6color_inks, x70_lum_adjustment, standard_hue_adjustment
   },
   /* 24: Stylus Color 3000 */
   {
@@ -1234,7 +1394,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { 3, 3, -1, 1, 1, -1, 4, -1, 4, -1, -1 },
     { 2.0, 1.3, 1.3, .775, .775, .55, .55, .275, .275, .275, .275, .138 },
-    &simple_4color_inks
+    &simple_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 25: Stylus Color 670 */
   {
@@ -1246,7 +1406,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 3, 0x12, 3, 0x11, -1, 0x11, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .431, .710, .216, .784, .216, .784, .392, .392, .196 },
-    &variable_6pl_4color_inks
+    &variable_6pl_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 26: Stylus Photo 2000P */
   {
@@ -1258,7 +1418,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 2, 0x11, 4, 0x10, -1, 0x10, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .775, .852, .388, .438, .388, .438, .219, .219, .110 },
-    &variable_pigment_6color_inks
+    &variable_pigment_6color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 27: Stylus Pro 5000 */
   {
@@ -1270,7 +1430,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 2, -1, 4, 0, 4, 0, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .1615, .1615, .1615, .0808 },
-    &simple_6color_inks
+    &simple_6color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 28: Stylus Pro 7000 */
   {
@@ -1282,7 +1442,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 2, -1, 4, 0, 4, 0, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .1615, .1615, .1615, .0808 },
-    &simple_6color_inks
+    &simple_6color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 29: Stylus Pro 7500 */
   {
@@ -1294,7 +1454,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 2, -1, 4, 0, 4, 0, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .1615, .1615, .1615, .0808 },
-    &simple_6color_inks
+    &simple_6color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 30: Stylus Pro 9000 */
   {
@@ -1306,7 +1466,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 2, -1, 4, 0, 4, 0, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .1615, .1615, .1615, .0808 },
-    &simple_6color_inks
+    &simple_6color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 31: Stylus Pro 9500 */
   {
@@ -1318,7 +1478,7 @@ static escp2_printer_t model_capabilities[] =
     1440, 720,
     { -1, 2, -1, 4, 0, 4, 0, -1, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .1615, .1615, .1615, .0808 },
-    &simple_6color_inks
+    &simple_6color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 32: Stylus Color 777/680 */
   {
@@ -1330,7 +1490,7 @@ static escp2_printer_t model_capabilities[] =
     2880, 720,
     { -1, 0, 0x12, 0, 0x11, -1, 0x10, -1, -1, -1, 0x10 },
     { 2.0, 1.3, 1.3, .431, .710, .216, .784, .216, .784, .392, .392, .196 },
-    &variable_4pl_4color_inks
+    &variable_4pl_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 33: Stylus Color 880 */
   {
@@ -1342,7 +1502,7 @@ static escp2_printer_t model_capabilities[] =
     2880, 720,
     { -1, 0, 0x12, 0, 0x11, -1, 0x10, -1, -1, -1, 0x10 },
     { 2.0, 1.3, 1.3, .431, .710, .216, .784, .216, .784, .392, .392, .196 },
-    &variable_4pl_4color_inks
+    &variable_4pl_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 34: Stylus Color 980 */
   {
@@ -1354,7 +1514,7 @@ static escp2_printer_t model_capabilities[] =
     2880, 720,
     { -1, 1, 0x11, 1, 0x10, -1, 0x10, -1, -1, -1, 0x10 },
     { 2.0, 1.3, 1.3, .646, .710, .323, .365, .323, .365, .1825, .1825, .0913 },
-    &variable_3pl_4color_inks
+    &variable_3pl_4color_inks, standard_lum_adjustment, standard_hue_adjustment
   },
   /* 35: Stylus Photo 790 */
   {
@@ -1366,7 +1526,7 @@ static escp2_printer_t model_capabilities[] =
     2880, 720,
     { -1, 4, 0x12, 2, 0x11, -1, 0x10, -1, -1, -1, 0x10 },
     { 2.0, 1.3, 1.3, .431, .710, .216, .784, .216, .784, .392, .392, .196 },
-    &variable_4pl_6color_inks
+    &variable_4pl_6color_inks, x70_lum_adjustment, standard_hue_adjustment
   },
 };
 
@@ -1473,111 +1633,6 @@ static const paper_t escp2_paper_list[] = {
 
 static const int paper_type_count = sizeof(escp2_paper_list) / sizeof(paper_t);
 
-static double lum_adjustment[49] =
-{
-  0.50,				/* C */
-  0.55,
-  0.6,
-  0.65,
-  0.65,
-  0.6,
-  0.55,
-  0.53,
-  0.5,				/* B */
-  0.55,
-  0.6,
-  0.7,
-  0.8,
-  0.909,
-  1.0,
-  1.15,
-  1.3,				/* M */
-  1.25,
-  1.25,
-  1.25,
-  1.25,
-  1.25,
-  1.25,
-  1.25,
-  1.25,				/* R */
-  1.2,
-  1.15,
-  1.1,
-  1.05,
-  1.0,
-  1.0,
-  1.0,
-  1.0,				/* Y */
-  0.9,
-  0.8,
-  0.7,
-  0.6,
-  0.55,
-  0.5,
-  0.45,
-  0.36,				/* G */
-  0.4,
-  0.45,
-  0.48,
-  0.48,
-  0.48,
-  0.51,
-  0.51,
-  0.50				/* C */
-};  
-
-static double hue_adjustment[49] =
-{
-  0,				/* C */
-  0.17,
-  0.29,
-  0.38,
-  0.47,
-  0.52,
-  0.57,
-  0.62,
-  0.65,				/* B */
-  0.7,
-  0.85,
-  1.05,
-  1.25,
-  1.45,
-  1.65,
-  1.8,
-  2.00,				/* M */
-  2.18,
-  2.29,
-  2.38,
-  2.47,
-  2.56,
-  2.65,
-  2.74,
-  2.83,				/* R */
-  3.0,
-  3.15,
-  3.3,
-  3.45,
-  3.6,
-  3.75,
-  3.85,
-  4.0,				/* Y */
-  4.2,
-  4.37,
-  4.55,
-  4.65,
-  4.78,
-  4.85,
-  4.9,
-  4.95,				/* G */
-  5.05,
-  5.15,
-  5.25,
-  5.35,
-  5.5,
-  5.65,
-  5.8,
-  6.0				/* C */
-};
 
 static const paper_t *
 get_media_type(const char *name)
@@ -1716,6 +1771,18 @@ static int
 escp2_pseudo_separation_rows(int model)
 {
   return (model_capabilities[model].pseudo_separation_rows);
+}
+
+static double *
+escp2_lum_adjustment(int model)
+{
+  return (model_capabilities[model].lum_adjustment);
+}
+
+static double *
+escp2_hue_adjustment(int model)
+{
+  return (model_capabilities[model].hue_adjustment);
 }
 
 /*
@@ -2559,7 +2626,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
       duplicate_line = 0;
       Image_get_row(image, in, errline);
       (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv,
-		   hue_adjustment, lum_adjustment);
+		   escp2_hue_adjustment(model), escp2_lum_adjustment(model));
     }
     QUANT(1);
 

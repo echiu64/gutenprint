@@ -363,8 +363,6 @@
 <model value=20>
 <gamma value=0.585>
 <density value=1.0>
-<magenta value=0.95>
-<yellow value=0.9>
 <language value=escp2>
 </printer>
 
@@ -373,8 +371,6 @@
 <model value=14>
 <gamma value=0.585>
 <density value=1.0>
-<magenta value=0.95>
-<yellow value=0.9>
 <language value=escp2>
 </printer>
 
@@ -383,8 +379,6 @@
 <model value=35>
 <magenta value=1.175>
 <gamma value=0.585>
-<magenta value=0.95>
-<yellow value=0.9>
 <density value=1.0>
 <language value=escp2>
 </printer>
@@ -403,8 +397,6 @@
 <model value=15>
 <gamma value=0.585>
 <density value=1.0>
-<magenta value=0.95>
-<yellow value=0.9>
 <language value=escp2>
 </printer>
 
