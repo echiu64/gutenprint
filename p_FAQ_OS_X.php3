@@ -357,10 +357,10 @@ Here it is more generically:
 While the Gimp-Print drivers are not partial about any particular brand or model
 of USB-to-parallel converter cable, when used with Mac OS X certain brands of 
 cable appear to work better than others. Some cables which work fine in Mac OS 9
-(such as the Keyspan USB-to-parallel cable) do not appear to work at all in Mac 
+(such as the Keyspan USB-to-parallel cable) reportedly do not work at all in Mac
 OS X. If you are researching the purchase of a USB-to-parallel converter, or if 
 you are experiencing printing problems while using a USB-to-parallel cable with
-an otherwise supported printer please check with the cable manufacturer to 
+an otherwise-supported printer please check with the cable manufacturer to 
 confirm that the cable is supported on Mac OS X. Additionally, there is a 
 <a href="https://sourceforge.net/tracker/?func=detail&atid=351537&aid=644565&gro
 up_id=1537"
