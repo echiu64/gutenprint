@@ -1614,6 +1614,19 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
+     | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_YES),
+    48, 3, 48, 3, 360, 360, INCH(17 / 2), INCH(44), 0, 0, 0, 9, 1, 0,
+    2880, 720,
+    { -1, 4, 0x12, 2, 0x11, -1, 0x10, -1, -1, -1, 0x10 },
+    { 2.0, 1.3, 1.3, .431, .710, .216, .784, .216, .784, .392, .392, .196 },
+    &variable_4pl_6color_inks, x70_lum_adjustment, standard_hue_adjustment,
+    standard_sat_adjustment
+  },
+  /* 36: Stylus Photo 890 */
+  {
+    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+     | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
+     | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
     48, 3, 48, 3, 360, 360, INCH(17 / 2), INCH(44), 0, 0, 0, 9, 1, 0,
     2880, 720,
@@ -1622,7 +1635,7 @@ static escp2_printer_t model_capabilities[] =
     &variable_4pl_6color_inks, x70_lum_adjustment, standard_hue_adjustment,
     standard_sat_adjustment
   },
-  /* 36: Stylus Photo 1290 */
+  /* 37: Stylus Photo 1290 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI

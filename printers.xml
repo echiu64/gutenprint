@@ -392,6 +392,15 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Photo 890" driver="escp2-890">
+<color>
+<model value=36>
+<magenta value=1.175>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Photo 1200" driver="escp2-1200">
 <color>
 <model value=15>
@@ -411,7 +420,7 @@
 
 <printer name="EPSON Stylus Photo 1290" driver="escp2-1290">
 <color>
-<model value=36>
+<model value=37>
 <magenta value=1.175>
 <gamma value=0.585>
 <density value=1.0>
