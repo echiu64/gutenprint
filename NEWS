@@ -135,6 +135,9 @@ These release notes contain the following sections:
      corruption, a crash at startup, or erroneous display in the
      preview window.
 
+  15) A problem whereby compiling with --enable-static fails in some
+     circumstances has been fixed.
+
   The following bugs have been fixed in this release:
 
 1003003 CUPS executables linked incorrectly
@@ -146,6 +149,7 @@ These release notes contain the following sections:
 981759  5.0.0-beta1 doesn't compile on sparc sunos 5.7
 981304  gimp2 print plugin installed in wrong directory
 980678  Canon DMT not correct
+951558  gimp-print 5.0.0-alpha3, bugs with --enable-static
 
 
 ================================================================
