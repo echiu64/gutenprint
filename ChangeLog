@@ -1,3 +1,38 @@
+2000-11-27	<rlk@sourceforge.net>
+
+	Files:	README (1.35.2.5) (+1 -1)
+		print-util.c (1.150.2.1) (+2 -2)
+		configure.in (1.36.2.6) (+1 -1)
+		RELNOTES (1.33.2.11) (+13 -0)
+	
+	Fix posterization at low saturation.
+	
+	Release 4.0.4 for emergency configure problem (bug 116313 popped up
+	again due to my system upgrade).
+	
+2000-11-27	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.97) (+2 -2)
+	
+	Fix for bjc7000 bottom margin problem provided by Bodo Huckestein
+	
+2000-11-26	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.56.2.9) (+48 -0)
+	
+	4.0.3
+	
+2000-11-26	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.273) (+307 -101)
+		print-pcl.c (1.98) (+2 -2)
+		print-lexmark.c (1.7) (+2 -2)
+	
+	Tweak the hue map a bit more
+	
+	Add support for 1440 dpi vertical resolution to Epson driver (in
+	case anyone wants to experiment with this).
+	
 2000-11-26	<rlk@sourceforge.net>
 
 	Files:	RELNOTES (1.33.2.10) (+3 -0)
