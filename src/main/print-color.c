@@ -345,7 +345,7 @@ initialize_cmyk_lut(stp_const_vars_t vars, size_t count)
     {
       int i;
       double print_gamma = stp_get_float_parameter(vars, "Gamma");
-      lut->cmyk_lut = stpi_malloc(sizeof(unsigned short) * 256);
+      lut->cmyk_lut = stpi_malloc(sizeof(unsigned short) * count);
 
       for (i = 0; i < count; i ++)
 	lut->cmyk_lut[i] =
@@ -513,7 +513,7 @@ update_saturation(double sat, double adjust, double isat)
   else
     {
       double s1 = sat * adjust;
-      double s2 = 1.0 - ((1.0 - adjust) * isat);
+      double s2 = 1.0 - ((1.0 - sat) * isat);
       sat = FMIN(s1, s2);
     }
   if (sat > 1)
@@ -639,7 +639,7 @@ adjust_hsl_bright(unsigned short *rgbout, lut_t *lut, double ssat,
       rgbout[2] ^= 65535;
       calc_rgb_to_hsl(rgbout, &h, &s, &l);
       s = update_saturation(s, ssat, isat);
-      h = adjust_hue(lut->hue_map, h, h_points);
+      h = adjust_hue(lut->hue_cache, h, h_points);
       if (lut->lum_map && l > 0.0001 && l < .9999)
 	{
 	  double nh = h * l_points / 6.0;
@@ -815,18 +815,24 @@ rgb_##bits##_to_rgb(stp_const_vars_t vars, const unsigned char *in,	      \
 	     "Bright") == 0)						      \
     bright_color_adjustment = 1;					      \
 									      \
-  if (lut->hue_map)							      \
+  if (lut->hue_map) {							      \
     h_points = stp_curve_count_points(lut->hue_map);			      \
-  if (lut->lum_map)							      \
-    l_points = stp_curve_count_points(lut->lum_map);			      \
-  if (lut->sat_map)							      \
-    s_points = stp_curve_count_points(lut->sat_map);			      \
-  if (lut->hue_map)							      \
     lut->hue_cache = stp_curve_get_data(lut->hue_map, &(lut->hue_count));     \
-  if (lut->lum_map)							      \
+  } else {								      \
+    lut->hue_cache = 0;							      \
+  }									      \
+  if (lut->lum_map) {							      \
+    l_points = stp_curve_count_points(lut->lum_map);			      \
     lut->lum_cache = stp_curve_get_data(lut->lum_map, &(lut->lum_count));     \
-  if (lut->sat_map)							      \
+  } else {								      \
+    lut->lum_cache = 0;							      \
+  }									      \
+  if (lut->sat_map) {							      \
+    s_points = stp_curve_count_points(lut->sat_map);			      \
     lut->sat_cache = stp_curve_get_data(lut->sat_map, &(lut->sat_count));     \
+  } else {								      \
+    lut->sat_cache = 0;							      \
+  }									      \
 									      \
   if (split_saturation)							      \
     ssat = sqrt(ssat);							      \
@@ -1255,7 +1261,7 @@ cmyk_##size##_to_kcmy(stp_const_vars_t vars,				\
   const T *s_in = (const T *) in;					\
   lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));	\
 									\
-  initialize_cmyk_lut(vars, size);					\
+  initialize_cmyk_lut(vars, (1<<size)-1);				\
   memset(nz, 0, sizeof(nz));						\
 									\
   for (i = 0; i < lut->image_width; i++, out += 4)			\
@@ -1389,7 +1395,7 @@ cmyk_##size##_to_gray(stp_const_vars_t vars,				\
   const T *s_in = (const T *) in;					\
   lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));	\
 									\
-  initialize_cmyk_lut(vars, size);					\
+  initialize_cmyk_lut(vars, (1<<size)-1);				\
 									\
   for (i = 0; i < lut->image_width; i++, s_in += 4, out ++)		\
     {									\
