@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.33  1999/11/25 00:02:03  rlk
+ *   Revamped many controls
+ *
  *   Revision 1.32  1999/11/23 02:11:37  rlk
  *   Rationalize variables, pass 3
  *
@@ -384,7 +387,7 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  * Decreasing the gap too much results in sharp crossover and stairstepping.
  */
 #define KDARKNESS_LOWER (32 * 256)
-#define KDARKNESS_UPPER (224 * 256)
+#define KDARKNESS_UPPER (160 * 256)
 
 /*
  * Randomizing values for deciding when to output a bit.  Normally with the
@@ -589,13 +592,24 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
        */
       ok = k;
       nk = k + (ditherk) / 8;
+/*
       kdarkness = MAX((c + c / 3 + m + 2 * y / 3) / 4, ak);
+*/
+      kdarkness = ak;
       if (kdarkness < KDARKNESS_UPPER)
 	{
 	  int rb;
+/*
 	  ub = KDARKNESS_UPPER - kdarkness;
 	  lb = ub * KDARKNESS_LOWER / KDARKNESS_UPPER;
+*/
+	  ub = KDARKNESS_UPPER;
+	  lb = KDARKNESS_LOWER;
 	  rb = ub - lb;
+#ifdef PRINT_DEBUG
+	  fprintf(dbg, "Black: kd %d ub %d lb %d rb %d test %d range %d\n",
+		  kdarkness, ub, lb, rb, ditherbit % rb, kdarkness - lb);
+#endif
 	  if (kdarkness <= lb)
 	    {
 	      bk = 0;
@@ -617,7 +631,12 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	    }
 	}
       else
-	bk = nk;
+	{
+#ifdef PRINT_DEBUG
+	  fprintf(dbg, "Black real\n");
+#endif
+	  bk = nk;
+	}
       ck = nk - bk;
     
       /*
@@ -1821,11 +1840,36 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
       rgbout[0] = lut->red[rgbin[0]];
       rgbout[1] = lut->green[rgbin[1]];
       rgbout[2] = lut->blue[rgbin[2]];
-      if (vars->saturation != 1.0)
+      if (vars->saturation != 1.0 || vars->contrast != 100)
 	{
 	  calc_rgb_to_hsv(rgbout, &h, &s, &v);
-	  s = pow(s, 1.0 / vars->saturation);
+	  if (vars->saturation != 1.0)
+	    s = pow(s, 1.0 / vars->saturation);
+#if 0
+	  if (vars->contrast != 100)
+	    {
+	      double contrast = vars->contrast / 100.0;
+	      double tv = fabs(v - .5) * 2.0;
+	      tv = pow(tv, 1.0 / (contrast * contrast));
+	      if (v < .5)
+		tv = - tv;
+	      v = (tv / 2.0) + .5;
+	    }
+#endif
 	  calc_hsv_to_rgb(rgbout, h, s, v);
+	}
+      if (vars->density != 1.0)
+	{
+	  float t;
+	  int i;
+	  for (i = 0; i < 3; i++)
+	    {
+	      t = ((float) rgbout[i]) / 65536.0;
+	      t = (1.0 + ((t - 1.0) * vars->density));
+	      if (t < 0.0)
+		t = 0.0;
+	      rgbout[i] = (unsigned short) (t * 65536.0);
+	    }
 	}
       rgbin += 3;
       rgbout += 3;
@@ -1844,11 +1888,37 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
       rgbout[0] = lut->red[rgbin[0] * rgbin[3] / 255 + 255 - rgbin[3]];
       rgbout[1] = lut->green[rgbin[1] * rgbin[3] / 255 + 255 - rgbin[3]];
       rgbout[2] = lut->blue[rgbin[2] * rgbin[3] / 255 + 255 - rgbin[3]];
-      if (vars->saturation != 1.0)
+      if (vars->saturation != 1.0 || vars->contrast != 100 ||
+	  vars->density != 1.0)
 	{
 	  calc_rgb_to_hsv(rgbout, &h, &s, &v);
-	  s = pow(s, 1.0 / vars->saturation);
+	  if (vars->saturation != 1.0)
+	    s = pow(s, 1.0 / vars->saturation);
+#if 0
+	  if (vars->contrast != 100)
+	    {
+	      double contrast = vars->contrast / 100.0;
+	      double tv = fabs(v - .5) * 2.0;
+	      tv = pow(tv, 1.0 / (contrast * contrast));
+	      if (v < .5)
+		tv = - tv;
+	      v = (tv / 2.0) + .5;
+	    }
+#endif
 	  calc_hsv_to_rgb(rgbout, h, s, v);
+	}
+      if (vars->density != 1.0)
+	{
+	  float t;
+	  int i;
+	  for (i = 0; i < 3; i++)
+	    {
+	      t = ((float) rgbout[i]) / 65536.0;
+	      t = (1.0 + ((t - 1.0) * vars->density));
+	      if (t < 0.0)
+		t = 0.0;
+	      rgbout[i] = (unsigned short) (t * 65536.0);
+	    }
 	}
       rgbin += bpp;
       rgbout += 3;
@@ -1857,10 +1927,11 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
   }
 }
 
+#define PRINT_LUT
+
 void
 compute_lut(lut_t *lut,
 	    float print_gamma,
-	    float printer_density,
 	    float app_gamma,
 	    vars_t *v)
 {
@@ -1940,7 +2011,7 @@ compute_lut(lut_t *lut,
 	   * First, correct contrast
 	   */
 	  temp_pixel = fabs((pixel - .5) * 2.0);
-	  temp_pixel = pow(temp_pixel, 1.0 / (contrast * contrast));
+	  temp_pixel = pow(temp_pixel, 1.0 / contrast);
 	  if (pixel < .5)
 	    temp_pixel = -temp_pixel;
 	  pixel = (temp_pixel / 2.0) + .5;
@@ -1971,17 +2042,14 @@ compute_lut(lut_t *lut,
 	   * Finally, fix up print gamma and scale
 	   */
 
-	  pixel = 256.0 * (256.0 - 256.0 * printer_density * v->density *
-			   pow(brightness * pixel, print_gamma));
-	  red_pixel = 256.0 * (256.0 - 256.0 * printer_density * v->density *
-			       pow(brightness * red_pixel, print_gamma));
-	  green_pixel = 256.0 * (256.0 - 256.0 * printer_density *
-				 v->density *
-				 pow(brightness * green_pixel, print_gamma));
-	  blue_pixel = 256.0 * (256.0 - 256.0 * printer_density *
-				v->density *
-				pow(brightness * blue_pixel, print_gamma));
-
+	  pixel = 256.0 * (256.0 - 256.0 *
+			   pow(pixel, print_gamma));
+	  red_pixel = 256.0 * (256.0 - 256.0 *
+			       pow(red_pixel, print_gamma));
+	  green_pixel = 256.0 * (256.0 - 256.0 *
+				 pow(green_pixel, print_gamma));
+	  blue_pixel = 256.0 * (256.0 - 256.0 *
+				pow(blue_pixel, print_gamma));
 #if 0
 	  if (red > 1.0)
 	    red_pixel = 65536.0 + ((pixel - 65536.0) / red);
@@ -2050,10 +2118,10 @@ compute_lut(lut_t *lut,
 	    }
 	}
 #ifdef PRINT_LUT
-      fprintf(ltfile, "%3i  %5d  %5d  %5d  %5d  %f %f %f %f  %f %f %f\n",
+      fprintf(ltfile, "%3i  %5d  %5d  %5d  %5d  %f %f %f %f  %f %f %f  %f\n",
 	      i, lut->composite[i], lut->red[i], lut->green[i],
 	      lut->blue[i], pixel, red_pixel, green_pixel, blue_pixel,
-	      print_gamma, screen_gamma, print_gamma);
+	      print_gamma, screen_gamma, print_gamma, app_gamma);
 #endif
     }
 

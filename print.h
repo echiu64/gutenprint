@@ -173,7 +173,7 @@ extern void	rgb_to_gray(unsigned char *, unsigned short *, int, int,
 extern void	rgb_to_rgb(unsigned char *, unsigned short *, int, int,
 			   lut_t *, unsigned char *, vars_t *);
 
-extern void	compute_lut(lut_t *lut, float print_gamma, float print_density,
+extern void	compute_lut(lut_t *lut, float print_gamma,
 			    float app_gamma, vars_t *v);
 
 

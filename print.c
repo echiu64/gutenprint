@@ -359,7 +359,7 @@ query(void)
     { PARAM_STRING,	"media_size",	"Media size (\"Letter\", \"A4\", etc.)" },
     { PARAM_STRING,	"media_type",	"Media type (\"Plain\", \"Glossy\", etc.)" },
     { PARAM_STRING,	"media_source",	"Media source (\"Tray1\", \"Manual\", etc.)" },
-    { PARAM_INT32,	"brightness",	"Brightness (0-200%)" },
+    { PARAM_INT32,	"brightness",	"Brightness (0-400%)" },
     { PARAM_FLOAT,	"scaling",	"Output scaling (0-100%, -PPI)" },
     { PARAM_INT32,	"orientation",	"Output orientation (-1 = auto, 0 = portrait, 1 = landscape)" },
     { PARAM_INT32,	"left",		"Left offset (points, -1 = centered)" },
@@ -660,8 +660,8 @@ run(char   *name,		/* I - Name of print program. */
 	Gimp_Image_t image;
 	image.drawable = drawable;
 	printer      = printers + current_printer;
-	compute_lut(&lut, printer->gamma, printer->density, gimp_gamma(),
-		    &vars);
+	vars.density *= printer->density;
+	compute_lut(&lut, printer->gamma, gimp_gamma(), &vars);
 	/*
 	 * Is the image an Indexed type?  If so we need the colormap...
 	 */
@@ -1048,7 +1048,7 @@ do_print_dialog(void)
   gtk_widget_show(box);
 
   brightness_adjustment = scale_data =
-      gtk_adjustment_new((float)vars.brightness, 0.0, 201.0, 1.0, 1.0, 1.0);
+      gtk_adjustment_new((float)vars.brightness, 0.0, 401.0, 1.0, 1.0, 1.0);
 
   gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
 		     (GtkSignalFunc)brightness_update, NULL);
