@@ -17,6 +17,38 @@ else
     extracmd=cat
 fi
 
+# For valgrind use, use
+# valgrind --partial-loads-ok=no --num-callers=50 --leak-check=yes
+#
+# and use these suppressions:
+#
+#{
+#   gettext
+#   Addr4
+#   fun:__dcigettext
+#   fun:__dcgettext
+#}
+#
+#{
+#   nl_load_locale
+#   Addr4
+#   fun:_nl_load_locale
+#   fun:_nl_find_locale
+#   fun:setlocale
+#}
+#
+#{
+#   setlocale
+#   Addr4
+#   fun:setlocale
+#}
+#
+#{
+#   c_strlen
+#   Addr4
+#   fun:c_strlen
+#}
+
 (for jet in $jets ; do
     for sep in $separations ; do
 	for pass in $passes ; do
@@ -40,4 +72,4 @@ fi
 	    done
 	done
     done
-done) | sed 's/,/ /g' | ./escp2-weavetest | $extracmd
+done) | sed 's/,/ /g' |  ./escp2-weavetest | $extracmd

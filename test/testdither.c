@@ -434,6 +434,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   stp_free_dither_data(dt);
   stp_free_dither(dither);
+  stp_free_vars(v);
 
   if (fp != NULL)
     fclose(fp);

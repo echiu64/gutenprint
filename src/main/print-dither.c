@@ -380,6 +380,7 @@ stp_free_dither_data(stp_dither_data_t *d)
   for (i = 0; i < d->channel_count; i++)
     stp_free(d->c[i].c);
   stp_free(d->c);
+  stp_free(d);
 }
 
 #define RETURN_DITHERFUNC(func, v)				\
@@ -491,7 +492,7 @@ stp_set_dither_function(dither_t *d, int image_bpp)
 
 void *
 stp_init_dither(int in_width, int out_width, int image_bpp,
-		int horizontal_aspect, int vertical_aspect, stp_vars_t v)
+		int xdpi, int ydpi, stp_vars_t v)
 {
   int i;
   dither_t *d = stp_zalloc(sizeof(dither_t));
@@ -513,8 +514,16 @@ stp_init_dither(int in_width, int out_width, int image_bpp,
     }
   d->offset0_table = NULL;
   d->offset1_table = NULL;
-  d->x_aspect = horizontal_aspect;
-  d->y_aspect = vertical_aspect;
+  if (xdpi > ydpi)
+    {
+      d->x_aspect = 1;
+      d->y_aspect = xdpi / ydpi;
+    }
+  else
+    {
+      d->x_aspect = ydpi / xdpi;
+      d->y_aspect = 1;
+    }
   d->transition = 1.0;
   d->adaptive_input = .75;
   d->adaptive_input_set = 0;
@@ -880,6 +889,7 @@ stp_dither_set_generic_ranges(dither_t *d, dither_channel_t *s, int nlevels,
   SAFE_FREE(s->row_ends[0]);
   SAFE_FREE(s->row_ends[1]);
   SAFE_FREE(s->ptrs);
+  SAFE_FREE(s->ink_list);
 
   s->nlevels = nlevels > 1 ? nlevels + 1 : nlevels;
   s->ranges = (dither_segment_t *)
@@ -964,6 +974,7 @@ stp_dither_set_generic_ranges_full(dither_t *d, dither_channel_t *s,
   SAFE_FREE(s->row_ends[0]);
   SAFE_FREE(s->row_ends[1]);
   SAFE_FREE(s->ptrs);
+  SAFE_FREE(s->ink_list);
 
   s->nlevels = nlevels+1;
   s->ranges = (dither_segment_t *)
@@ -1063,6 +1074,7 @@ stp_free_dither(void *vd)
       SAFE_FREE(CHANNEL(d, j).row_ends[0]);
       SAFE_FREE(CHANNEL(d, j).row_ends[1]);
       SAFE_FREE(CHANNEL(d, j).ptrs);
+      SAFE_FREE(CHANNEL(d, j).ink_list);
       if (CHANNEL(d, j).errs)
 	{
 	  for (i = 0; i < d->error_rows; i++)
@@ -1090,6 +1102,7 @@ stp_free_dither(void *vd)
     stp_free(et->dy);
     stp_free(d->eventone);
   }
+  stp_free(d->channel);
   stp_free(d);
 }
 
@@ -1855,6 +1868,19 @@ shared_ed_initializer(dither_t *d,
   return 1;
 }
 
+static void
+shared_ed_deinitializer(dither_t *d,
+			int ***error,
+			int *ndither)
+{
+  int i;
+  for (i = 0; i < d->n_channels; i++)
+    {
+      SAFE_FREE(error[i]);
+    }
+  SAFE_FREE(error);
+  SAFE_FREE(ndither);
+}
 
 #define V_WHITE		0
 #define V_CYAN		(1<<ECOLOR_C)
@@ -2368,7 +2394,6 @@ stp_dither_black_ed(const unsigned short   *gray,
 		    int		duplicate_line,
 		    int		  zero_mask)
 {
-  int i;
   int		x,
 		length;
   unsigned char	bit;
@@ -2406,10 +2431,7 @@ stp_dither_black_ed(const unsigned short   *gray,
       ADVANCE_BIDIRECTIONAL(d, bit, gray, direction, 1, xerror, xmod, error,
 			    1, d->error_rows);
     }
-  stp_free(ndither);
-  for (i = 1; i < d->n_channels; i++)
-    stp_free(error[i]);
-  stp_free(error);
+  shared_ed_deinitializer(d, error, ndither);
   if (direction == -1)
     reverse_row_ends(d);
 }
@@ -2424,7 +2446,6 @@ stp_dither_black_et(const unsigned short  *gray,
   int		x,
 	        length;
   unsigned char	bit;
-  int		i;
   int		*ndither;
   eventone_t	*et;
   et_chdata_t	*cd;
@@ -2516,10 +2537,7 @@ stp_dither_black_et(const unsigned short  *gray,
     }
 
     stp_free(cd);
-    stp_free(ndither);
-    for (i = 0; i < d->n_channels; i++)
-      stp_free(error[i]);
-    stp_free(error);
+    shared_ed_deinitializer(d, error, ndither);
 }
 
 static void
@@ -2718,10 +2736,7 @@ stp_dither_cmy_ed(const unsigned short  *cmy,
 			    d->n_channels, d->error_rows);
       QUANT(13);
     }
-  stp_free(ndither);
-  for (i = 1; i < d->n_channels; i++)
-    stp_free(error[i]);
-  stp_free(error);
+  shared_ed_deinitializer(d, error, ndither);
   if (direction == -1)
     reverse_row_ends(d);
 }
@@ -2839,10 +2854,7 @@ stp_dither_cmy_et(const unsigned short  *cmy,
     }
 
     stp_free(cd);
-    stp_free(ndither);
-    for (i = 0; i < d->n_channels; i++)
-      stp_free(error[i]);
-    stp_free(error);
+    shared_ed_deinitializer(d, error, ndither);
 }
 
 static void
@@ -3192,10 +3204,7 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
 			    d->n_channels, d->error_rows);
       QUANT(13);
     }
-  stp_free(ndither);
-  for (i = 1; i < d->n_channels; i++)
-    stp_free(error[i]);
-  stp_free(error);
+  shared_ed_deinitializer(d, error, ndither);
   if (direction == -1)
     reverse_row_ends(d);
 }
@@ -3372,10 +3381,7 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
     }
 
     stp_free(cd);
-    stp_free(ndither);
-    for (i = 0; i < d->n_channels; i++)
-      stp_free(error[i]);
-    stp_free(error);
+    shared_ed_deinitializer(d, error, ndither);
 }
 
 static void
@@ -3595,10 +3601,7 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
 			    d->n_channels, d->error_rows);
       QUANT(13);
     }
-  stp_free(ndither);
-  for (i = 1; i < d->n_channels; i++)
-    stp_free(error[i]);
-  stp_free(error);
+  shared_ed_deinitializer(d, error, ndither);
   if (direction == -1)
     reverse_row_ends(d);
 }
@@ -3755,10 +3758,7 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
     }
 
     stp_free(cd);
-    stp_free(ndither);
-    for (i = 0; i < d->n_channels; i++)
-      stp_free(error[i]);
-    stp_free(error);
+    shared_ed_deinitializer(d, error, ndither);
 }
 
 static void
@@ -3951,10 +3951,7 @@ stp_dither_raw_ed(const unsigned short  *raw,
 			    xmod, error, d->n_channels, d->error_rows);
       QUANT(13);
     }
-  stp_free(ndither);
-  for (i = 1; i < d->n_channels; i++)
-    stp_free(error[i]);
-  stp_free(error);
+  shared_ed_deinitializer(d, error, ndither);
   if (direction == -1)
     reverse_row_ends(d);
 }

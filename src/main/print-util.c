@@ -237,22 +237,10 @@ do						\
   ((x)) = NULL;					\
 } while (0)
 
-static char *
-c_strdup(const char *s)
+static size_t
+c_strlen(const char *s)
 {
-  char *ret;
-  if (!s)
-    {
-      ret = stp_malloc(1);
-      ret[0] = 0;
-      return ret;
-    }
-  else
-    {
-      ret = stp_malloc(strlen(s) + 1);
-      strcpy(ret, s);
-      return ret;
-    }
+  return strlen(s);
 }
 
 static char *
@@ -268,10 +256,24 @@ c_strndup(const char *s, int n)
   else
     {
       ret = stp_malloc(n + 1);
-      strncpy(ret, s, n);
+      memcpy(ret, s, n);
       ret[n] = 0;
       return ret;
     }
+}
+
+static char *
+c_strdup(const char *s)
+{
+  char *ret;
+  if (!s)
+    {
+      ret = stp_malloc(1);
+      ret[0] = 0;
+      return ret;
+    }
+  else
+    return c_strndup(s, c_strlen(s));
 }
 
 void
@@ -287,6 +289,7 @@ stp_free_vars(stp_vars_t vv)
   SAFE_FREE(v->media_source);
   SAFE_FREE(v->ink_type);
   SAFE_FREE(v->dither_algorithm);
+  stp_free(v);
 }
 
 #define DEF_STRING_FUNCS(s)				\
@@ -399,7 +402,7 @@ stp_copy_options(stp_vars_t vd, const stp_vars_t vs)
       stp_set_verified(vd, 0);
       dest->options = nopt;
       memcpy(nopt, opt, sizeof(stp_internal_option_t));
-      nopt->name = stp_malloc(strlen(opt->name) + 1);
+      nopt->name = stp_malloc(c_strlen(opt->name) + 1);
       strcpy(nopt->name, opt->name);
       nopt->data = stp_malloc(opt->length);
       memcpy(nopt->data, opt->data, opt->length);
@@ -411,7 +414,7 @@ stp_copy_options(stp_vars_t vd, const stp_vars_t vs)
           memcpy(nopt, opt, sizeof(stp_internal_option_t));
           nopt->prev = popt;
           popt->next = nopt;
-          nopt->name = stp_malloc(strlen(opt->name) + 1);
+          nopt->name = stp_malloc(c_strlen(opt->name) + 1);
           strcpy(nopt->name, opt->name);
           nopt->data = stp_malloc(opt->length);
           memcpy(nopt->data, opt->data, opt->length);
@@ -922,7 +925,7 @@ stp_get_papersize_by_name(const char *name)
   const stp_internal_papersize_t *val = &(paper_sizes[0]);
   if (!name)
     return NULL;
-  while (strlen(val->name) > 0)
+  while (c_strlen(val->name) > 0)
     {
       if (!strcmp(val->name, name))
 	return (stp_papersize_t) val;
@@ -1339,7 +1342,7 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
       answer = 0;
       stp_eprintf(v, _("Printer does not support color output\n"));
     }
-  if (strlen(stp_get_media_size(v)) > 0)
+  if (c_strlen(stp_get_media_size(v)) > 0)
     {
       const char *checkval = stp_get_media_size(v);
       vptr = (*printfuncs->parameters)(p, ppd_file, "PageSize", &count);
@@ -1390,28 +1393,28 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
   CHECK_INT_RANGE(v, input_color_model);
   CHECK_INT_RANGE(v, output_color_model);
 
-  if (strlen(stp_get_media_type(v)) > 0)
+  if (c_strlen(stp_get_media_type(v)) > 0)
     {
       const char *checkval = stp_get_media_type(v);
       vptr = (*printfuncs->parameters)(p, ppd_file, "MediaType", &count);
       answer &= verify_param(checkval, vptr, count, "media type", v);
     }
 
-  if (strlen(stp_get_media_source(v)) > 0)
+  if (c_strlen(stp_get_media_source(v)) > 0)
     {
       const char *checkval = stp_get_media_source(v);
       vptr = (*printfuncs->parameters)(p, ppd_file, "InputSlot", &count);
       answer &= verify_param(checkval, vptr, count, "media source", v);
     }
 
-  if (strlen(stp_get_resolution(v)) > 0)
+  if (c_strlen(stp_get_resolution(v)) > 0)
     {
       const char *checkval = stp_get_resolution(v);
       vptr = (*printfuncs->parameters)(p, ppd_file, "Resolution", &count);
       answer &= verify_param(checkval, vptr, count, "resolution", v);
     }
 
-  if (strlen(stp_get_ink_type(v)) > 0)
+  if (c_strlen(stp_get_ink_type(v)) > 0)
     {
       const char *checkval = stp_get_ink_type(v);
       vptr = (*printfuncs->parameters)(p, ppd_file, "InkType", &count);
@@ -1504,7 +1507,7 @@ stp_putc(int ch, const stp_vars_t v)
 void
 stp_puts(const char *s, const stp_vars_t v)
 {
-  (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), s, strlen(s));
+  (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), s, c_strlen(s));
 }
 
 void

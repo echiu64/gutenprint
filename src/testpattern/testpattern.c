@@ -116,23 +116,43 @@ int global_ink_depth = 0;
 
 testpattern_t *the_testpatterns = NULL;
 
-char *
-c_strdup(const char *s)
+static size_t
+c_strlen(const char *s)
 {
-  int l = strlen(s);
+  return strlen(s);
+}
+
+static char *
+c_strndup(const char *s, int n)
+{
   char *ret;
-  if (s[0] == '"' && s[l - 1] == '"')
+  if (!s || n < 0)
     {
-      ret = malloc(l - 1);
-      strncpy(ret, s + 1, l - 2);
-      ret[l - 2] = '\0';
+      ret = malloc(1);
+      ret[0] = 0;
+      return ret;
     }
   else
     {
-      ret = malloc(strlen(s) + 1);
-      strcpy(ret, s);
+      ret = malloc(n + 1);
+      memcpy(ret, s, n);
+      ret[n] = 0;
+      return ret;
     }
-  return ret;
+}
+
+char *
+c_strdup(const char *s)
+{
+  char *ret;
+  if (!s)
+    {
+      ret = malloc(1);
+      ret[0] = 0;
+      return ret;
+    }
+  else
+    return c_strndup(s, c_strlen(s));
 }
 
 testpattern_t *
@@ -388,6 +408,7 @@ main(int argc, char **argv)
     (stp_printer_get_printfuncs(the_printer)->print)(the_printer, &theImage, v);
   else
     return 1;
+  stp_free_vars(v);
   return 0;
 }
 

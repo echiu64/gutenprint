@@ -2031,12 +2031,7 @@ densityDivisor /= 1.2;
   stp_erprintf("density is %f\n",stp_get_density(nv));
 #endif
 
-  if (xdpi > ydpi)
-    dither = stp_init_dither(image_width, out_width, image_bpp,
-			     1, xdpi / ydpi, nv);
-  else
-    dither = stp_init_dither(image_width, out_width, image_bpp,
-			     ydpi / xdpi, 1, nv);
+  dither = stp_init_dither(image_width, out_width, image_bpp, xdpi, ydpi, nv);
 
   for (i = 0; i <= NCOLORS; i++)
     stp_dither_set_black_level(dither, i, 1.0);
