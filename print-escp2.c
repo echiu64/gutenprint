@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.27  1999/11/16 01:04:06  rlk
+ *   Documentation
+ *
  *   Revision 1.26  1999/11/14 18:59:22  rlk
  *   Final preparations for release to Olof
  *
@@ -344,6 +347,17 @@ typedef model_cap_t model_class_t;
  * Blue 88
  * Saturation 1.1
  * Density 1.5
+ *
+ * With the current code, the following settings seem to work nicely:
+ * Brightness ~110
+ * Gamma 1.3
+ * Contrast 80
+ * Green 94
+ * Blue 89
+ * Saturation 1.15
+ * Density 1.6
+ *
+ * The green and blue will vary somewhat with different inks
  */
 
 model_cap_t model_capabilities[] =
