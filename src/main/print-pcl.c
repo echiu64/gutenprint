@@ -1661,10 +1661,12 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   * Choose the correct color conversion function...
   */
   if (((caps->resolutions & PCL_RES_600_600_MONO) == PCL_RES_600_600_MONO) &&
-      output_type != OUTPUT_GRAY && xdpi == 600 && ydpi == 600) {
-      fprintf(stderr, "600x600 resolution only available in MONO\n");
+      output_type != OUTPUT_GRAY && xdpi == 600 && ydpi == 600)
+    {
+      stp_eprintf(v, "600x600 resolution only available in MONO\n");
       output_type = OUTPUT_GRAY;
-  }
+      stp_set_output_type(nv, OUTPUT_GRAY);
+    }
 
   if (stp_get_image_type(nv) == IMAGE_MONOCHROME)
     {
@@ -1672,7 +1674,10 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
     }
 
   if (caps->color_type == PCL_COLOR_NONE)
-    output_type = OUTPUT_GRAY;
+    {
+      output_type = OUTPUT_GRAY;
+      stp_set_output_type(nv, OUTPUT_GRAY);
+    }
 
   colorfunc = stp_choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, nv);
 
