@@ -196,7 +196,7 @@ print_debug_params(stp_vars_t v)
 	}
     }
   stp_parameter_list_free(params);
-  stpi_send_command(v, "\033", "c", 0);
+  stpi_send_command(v, "\033", "ccc", 0, 0, 0);
 }
 
 static void
