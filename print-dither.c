@@ -23,6 +23,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.4  2000/02/18 02:30:01  rlk
+ *   A few more dithering bugs
+ *
  *   Revision 1.3  2000/02/16 00:59:19  rlk
  *   1) Use correct convert functions (canon, escp2, pcl, ps).
  *
@@ -1493,7 +1496,7 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
   kerror1 = get_errline(d, row + 1, ECOLOR_K);
   memset(kerror1, 0, d->dst_width * sizeof(int));
 
-  memset(black, 0, length);
+  memset(black, 0, length * d->nk_log);
   kptr = black;
   xerror = 0;
   if (direction == -1)
@@ -1618,7 +1621,7 @@ do {								\
 	      for (j = 1; j <= i; j += j, tptr += length)	\
 		{						\
 		  if (j & i)					\
-		    *r##ptr |= bit;				\
+		    *t##ptr |= bit;				\
 		}						\
 	      d->r##bits = 1;					\
 	    }							\
@@ -1787,17 +1790,17 @@ dither_cmyk4(unsigned short  *rgb,	/* I - RGB pixels */
       xmod = -xmod;
     }
 
-  memset(cyan, 0, length);
+  memset(cyan, 0, length * d->nc_log);
   if (lcyan)
-    memset(lcyan, 0, length);
-  memset(magenta, 0, length);
+    memset(lcyan, 0, length * d->nlc_log);
+  memset(magenta, 0, length * d->nm_log);
   if (lmagenta)
-    memset(lmagenta, 0, length);
-  memset(yellow, 0, length);
+    memset(lmagenta, 0, length * d->nlm_log);
+  memset(yellow, 0, length * d->ny_log);
   if (lyellow)
-    memset(lyellow, 0, length);
+    memset(lyellow, 0, length * d->nly_log);
   if (black)
-    memset(black, 0, length);
+    memset(black, 0, length * d->nk_log);
 
   /*
    * Main loop starts here!
@@ -1932,9 +1935,7 @@ dither_cmyk4(unsigned short  *rgb,	/* I - RGB pixels */
       if (y > 65535)
 	y = 65535;
       k = bk;
-      if (k > (32767 + ((ditherbit0 >> d->k_randomizer) -
-			(32768 >> d->k_randomizer))))
-	DO_PRINT_COLOR_4(k, k, 1);
+      DO_PRINT_COLOR_4(k, k, 1);
       UPDATE_DITHER(k, 1, x, d->src_width);
     }
     else
