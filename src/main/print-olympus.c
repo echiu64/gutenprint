@@ -42,6 +42,10 @@
 #define inline __inline__
 #endif
 
+#define OLYMPUS_INTERLACE_NONE	0
+#define OLYMPUS_INTERLACE_LINE	1
+#define OLYMPUS_INTERLACE_PLANE	2
+
 #define MIN(a,b)	(((a) < (b)) ? (a) : (b))
 #define MAX(a,b)	(((a) > (b)) ? (a) : (b))
 
@@ -89,11 +93,13 @@ typedef struct /* printer specific parameters */
   int border_top;
   int border_bottom;
   const olympus_res_t_array *res;	/* list of possible resolutions */
+  int interlacing;	/* color interlacing scheme */
   const char *planes;	/* name and order of ribbons */
   int block_size;
   int need_empty_cols;	/* must we print empty columns? */
   int need_empty_rows;	/* must we print empty rows? */
   void (*printer_init_func)(stp_vars_t);
+  void (*printer_end_func)(stp_vars_t);
   void (*plane_init_func)(stp_vars_t);
   void (*plane_end_func)(stp_vars_t);
   void (*block_init_func)(stp_vars_t);
@@ -312,6 +318,39 @@ static const char cpx00_adj_yellow[] =
 "</gimp-print>\n";
 
 
+static const olympus_res_t_array updp10_resolution =
+{
+	{"306x312", N_ ("300x300 DPI"), 306, 312, 1200, 1800},
+	{"", "", 0, 0, 0, 0}
+};
+
+static void updp10_printer_init_func(stp_vars_t v)
+{
+	stpi_zfwrite("\x98\xff\xff\xff\xff\xff\xff\xff"
+			"\x14\x00\x00\x00\x1b\x15\x00\x00"
+			"\x00\x0d\x00\x00\x00\x00\x00\xc7"
+			"\x00\x00\x00\x00", 1, 28, v);
+	stpi_put16_be(privdata.xsize, v);
+	stpi_put16_be(privdata.ysize, v);
+	stpi_zfwrite("\x8b\xe0\x62\x00\x1b\xea\x00\x00"
+			"\x00\x00\x00\x62\xe0\x80\x00", 1, 15, v);
+}
+
+static void updp10_printer_end_func(stp_vars_t v)
+{
+	stpi_zfwrite("\x12\x00\x00\x00\x1b\xe1\x00\x00"
+			"\x00\xb0\x00\x00\04", 1, 13, v);
+	stpi_putc('\x00', v); /* <- glossy lamination */
+	stpi_zfwrite("\x00\x00\x00\x00\x07\x08\x04\xb0"
+			"\xff\xff\xff\xff\x09\x00\x00\x00"
+			"\x1b\xee\x00\x00\x00\x02\x00\x00"
+			"\x01\x07\x00\x00\x00\x1b\x0a\x00"
+			"\x00\x00\x00\x00\xfd\xff\xff\xff"
+			"\xff\xff\xff\xff\xf8\xff\xff\xff"
+			, 1, 48, v);
+}
+
+
 static const olympus_cap_t olympus_model_capabilities[] =
 {
 	{ 0, 		/* model P300 */
@@ -319,10 +358,10 @@ static const olympus_cap_t olympus_model_capabilities[] =
 		283, 416,	/* Postcard */
 		28, 28, 48, 48,
 		&p300_resolution,
-		"YMC",
+		OLYMPUS_INTERLACE_PLANE, "YMC",
 		16,
 		1, 0,
-		&p300_printer_init_func,
+		&p300_printer_init_func, NULL,
 		NULL, &p300_plane_end_func,
 		&p300_block_init_func, NULL,
 		p300_adj_cyan, p300_adj_magenta, p300_adj_yellow,
@@ -332,10 +371,10 @@ static const olympus_cap_t olympus_model_capabilities[] =
 		283, 416,	/* Postcard */
 		22, 22, 54, 54,
 		&p400_resolution,
-		"123",
+		OLYMPUS_INTERLACE_PLANE, "123",
 		180,
 		1, 1,
-		&p400_printer_init_func,
+		&p400_printer_init_func, NULL,
 		&p400_plane_init_func, &p400_plane_end_func,
 		&p400_block_init_func, NULL,
 		p400_adj_cyan, p400_adj_magenta, p400_adj_yellow,
@@ -345,13 +384,26 @@ static const olympus_cap_t olympus_model_capabilities[] =
 		283, 416,	/* Postcard */
 		0, 0, 0, 0,
 		&cpx00_resolution,
-		"123",
+		OLYMPUS_INTERLACE_PLANE, "123",
 		1808,
 		1, 1,
-		&cpx00_printer_init_func,
+		&cpx00_printer_init_func, NULL,
 		&cpx00_plane_init_func, NULL,
 		NULL, NULL,
 		cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
+	},
+	{ 2000, 	/* sony UP-DP10  */
+		283, 416, 	/* Postcard */
+		283, 416,	/* Postcard */
+		0, 0, 0, 0,
+		&updp10_resolution,
+		OLYMPUS_INTERLACE_NONE, "123",
+		1800,
+		1, 1,
+		&updp10_printer_init_func, &updp10_printer_end_func,
+		NULL, NULL,
+		NULL, NULL,
+		NULL, NULL, NULL,
 	},
 };
 
@@ -647,13 +699,15 @@ static int
 olympus_do_print(stp_vars_t v, stp_image_t *image)
 {
   int i, j;
-  int y, min_y, max_y, max_progress;		/* Looping vars */
+  int y, min_y, max_y;			/* Looping vars */
+  int max_progress, curr_progress = 0;	/* Progress info */
   int min_x, max_x;
-  int out_channels;
+  int out_channels, out_bytes;
   unsigned short *final_out = NULL;
   unsigned char  *char_out;
   unsigned short *real_out;
   unsigned short *err_out;
+  int char_out_width;
   int status = 1;
   int ink_channels = 1;
   stp_curve_t   adjustment = NULL;
@@ -824,8 +878,10 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 
   stpi_image_progress_init(image);
 
-  zeros = stpi_zalloc(print_px_width+1);
+  zeros = stpi_zalloc(ink_channels * print_px_width + 1);
   
+  out_bytes = (caps->interlacing == OLYMPUS_INTERLACE_PLANE ? 1 : ink_channels);
+
   /* printer init */
   if (caps->printer_init_func) {
     stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->printer_init\n");
@@ -840,7 +896,8 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   min_x = (caps->need_empty_cols ? 0 : out_px_left);
   max_x = (caps->need_empty_cols ? print_px_width - 1 : out_px_right);
 
-  max_progress = max_y - min_y;
+  max_progress = (caps->interlacing == OLYMPUS_INTERLACE_PLANE ?
+		  	(max_y - min_y) * ink_channels : max_y - min_y) / 63;
 
   r_errdiv  = image_px_height / out_px_height;
   r_errmod  = image_px_height % out_px_height; 
@@ -855,6 +912,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
     r_errline = 0;
 
     privdata.plane = *l;
+
     /* plane init */
     if (caps->plane_init_func) {
       stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->plane_init\n");
@@ -883,18 +941,18 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 
       if ((y & 63) == 0)
         {
-        stpi_image_note_progress(image, max_progress/3 * (l - caps->planes) + y / 3,
-            max_progress);
+        stpi_image_note_progress(image, curr_progress++, max_progress);
         }
+
       if (y < out_px_top || y >= out_px_bottom)
         {
-	stpi_zfwrite((char *) zeros, 1, print_px_width, v);
+	stpi_zfwrite((char *) zeros, out_bytes, print_px_width, v);
 	}
       else
         {
         if (caps->need_empty_cols && out_px_left > 0)
 	  {
-          stpi_zfwrite((char *) zeros, 1, out_px_left, v);
+          stpi_zfwrite((char *) zeros, out_bytes, out_px_left, v);
 /* stpi_erprintf("left %d ", out_px_left); */
 	  }
 
@@ -956,14 +1014,24 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   	    }
   	}
   	char_out = (unsigned char *) real_out;
-  	for (i = 0; i < out_px_width; i++)
-  	  char_out[i] = real_out[i * ink_channels + (caps->planes - l + 2)] / 257;
-  
-	stpi_zfwrite((char *) real_out, 1, out_px_width, v);
+	char_out_width = (caps->interlacing == OLYMPUS_INTERLACE_PLANE ?
+				out_px_width : out_px_width * out_channels);
+  	for (i = 0; i < char_out_width; i++) {
+          if (caps->interlacing == OLYMPUS_INTERLACE_PLANE) {
+	    j = i * ink_channels + (caps->planes - l + 2);
+	  } else if (caps->interlacing == OLYMPUS_INTERLACE_LINE) {
+	    j = (i % out_px_width) + (i / out_px_width);
+	  } else { /* OLYMPUS_INTERLACE_NONE */
+	    j = i;
+	  }
+  	  
+	  char_out[i] = real_out[j] / 257;
+        }
+	stpi_zfwrite((char *) real_out, 1, char_out_width, v);
 /* stpi_erprintf("data %d ", out_px_width); */
         if (caps->need_empty_cols && out_px_right < print_px_width)
 	  {
-          stpi_zfwrite((char *) zeros, 1, print_px_width - out_px_right, v);
+          stpi_zfwrite((char *) zeros, out_bytes, print_px_width - out_px_right, v);
 /* stpi_erprintf("right %d ", print_px_width - out_px_right); */
 	  }
 /* stpi_erprintf("\n"); */
@@ -992,8 +1060,16 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
         (*(caps->plane_end_func))(v);
       }
 
+      if (caps->interlacing != OLYMPUS_INTERLACE_PLANE) {
+	break;
+      }
       l++;
     }
+  /* printer end */
+  if (caps->printer_end_func) {
+    stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->printer_end\n");
+    (*(caps->printer_end_func))(v);
+  }
   stpi_image_progress_conclude(image);
   if (final_out)
     stpi_free(final_out);

@@ -529,6 +529,7 @@
 #gptofoo pcl-2 printer/Seiko-SpeedJET_200
 #gptofoo pcl-6 printer/Sharp-AR-161
 #gptofoo pcl-601 printer/Sony-IJP-V100
+#gptofoo sony-updp10 printer/Sony-UP-DP10
 #gptofoo pcl-2 printer/Star-LS-04
 #gptofoo pcl-2 printer/Star-LaserPrinter_8
 #gptofoo pcl-3 printer/Tally-MT908

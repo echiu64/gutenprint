@@ -1068,6 +1068,7 @@ Lexmark Z52
 Lexmark Z53
 Olympus P-300 series (Experimental)
 Olympus P-400 series (Experimental)
+Sony UP-DP10	(Experimental)
 
 The following is the complete list of printers believed to be
 compatible with Gimp-print, along with recommended drivers.  Some of
@@ -1610,6 +1611,7 @@ Samsung QL-6050                pcl-4           HP LaserJet 4 series
 Seiko SpeedJET 200             pcl-2           HP LaserJet II series
 Sharp AR-161                   pcl-6           HP LaserJet 6 series
 Sony IJP-V100                  pcl-601         HP DeskJet 600 series
+Sony UP-DP10                   sony-updp10     Sony UP-DP10
 Star LS-04                     pcl-2           HP LaserJet II series
 Star LaserPrinter 8            pcl-2           HP LaserJet II series
 Tally MT908                    pcl-3           HP LaserJet III series
