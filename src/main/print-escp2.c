@@ -1840,7 +1840,7 @@ static const escp2_dot_size_t spro10000_dotsizes =
 {    4,   -1, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t c3pl_pigment_dotsizes =
-{   -1, 0x13,   -1, 0x10,   -1, 0x10,   -1, 0x11,   -1, 0x12,   -1, 0x12,   -1 };
+{   -1, 0x10,   -1, 0x10,   -1, 0x10,   -1, 0x11,   -1, 0x12,   -1, 0x12,   -1 };
 
 /*
  * Densities are for:
