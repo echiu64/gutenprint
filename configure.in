@@ -300,7 +300,7 @@ AC_CHECK_FUNC(getopt_long,
 
 dnl Define what has to be built
 if test x${BUILD_CUPS} = xyes ; then
-  CUPS_BIN="cups_calibrate"
+  CUPS_BIN="cups-calibrate"
   CUPS_NOINST_BIN="canon commandtocanon commandtoepson epson genppd rastertoprinter"
 fi
 AM_CONDITIONAL(CUPS_INSTALL, test x${BUILD_CUPS} = xyes)

@@ -38,7 +38,7 @@ bin_PROGRAMS = @CUPS_BIN@
 
 noinst_PROGRAMS = @CUPS_NOINST_BIN@
 
-EXTRA_PROGRAMS = cups_calibrate commandtoepson epson genppd rastertoprinter commandtocanon canon
+EXTRA_PROGRAMS = cups-calibrate commandtoepson epson genppd rastertoprinter commandtocanon canon
 
 cups_calibrate_LDADD = -lm
 
@@ -113,7 +113,7 @@ EXTRA_DIST = \
 	COPYING \
 	README \
 	ChangeLog \
-	cups_calibrate.c \
+	cups-calibrate.c \
 	calibrate.ppm \
 	canon.c \
 	command.txt \
