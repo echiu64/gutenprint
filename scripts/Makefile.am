@@ -33,7 +33,7 @@ include $(top_srcdir)/scripts/global.mk
 EXTRA_DIST = \
 	autogen.sh \
 	buildgimpprintdebs \
-	global.mk
+	global.mk \
 	mkchlog
 
 
