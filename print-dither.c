@@ -32,54 +32,6 @@
 #include "print.h"
 #include <limits.h>
 
-
-#define MATRIX_NB0 (7)		/* How many iterations to generate matrix */
-#define MATRIX_BASE0 (2)	/* Base size of matrix (before iterations) */
-#define MATRIX_SIZE0 (1 << (MATRIX_NB0)) /* Axis length */
-#define MATRIX_SIZE0_2 ((MATRIX_SIZE0) * (MATRIX_SIZE0)) /* Matrix points */
-#define MODOP0(x, y) ((x) & ((y) - 1)) /* Operation to generate a mod */
-				/* Normally a mod; if it's a power of 2, */
-				/* we can use a bitwise and for efficiency */
-
-#define MATRIX_NB1 (4)
-#define MATRIX_BASE1 (3)
-#define MATRIX_SIZE1 (3 * 3 * 3 * 3)
-#define MATRIX_SIZE1_2 ((MATRIX_SIZE1) * (MATRIX_SIZE1))
-#define MODOP1(x, y) ((x) % (y))
-
-#define MATRIX_NB2 (3)
-#define MATRIX_BASE2 (5)
-#define MATRIX_SIZE2 (5 * 5 * 5)
-#define MATRIX_SIZE2_2 ((MATRIX_SIZE2) * (MATRIX_SIZE2))
-#define MODOP2(x, y) ((x) % (y))
-
-#define MATRIX_NB3 (3)
-#define MATRIX_BASE3 (5)
-#define MATRIX_SIZE3 (5 * 5 * 5)
-#define MATRIX_SIZE3_2 ((MATRIX_SIZE3) * (MATRIX_SIZE3))
-#define MODOP3(x, y) ((x) % (y))
-
-#define MATRIX_NB4 (1)
-#define MATRIX_BASE4 (199)
-#define MATRIX_SIZE4 (199)
-#define MATRIX_SIZE4_2 ((MATRIX_SIZE4) * (MATRIX_SIZE4))
-#define MODOP4(x, y) ((x) % (y))
-
-#define MATRIX_NB5 (1)
-#define MATRIX_BASE5 (199)
-#define MATRIX_SIZE5 (199)
-#define MATRIX_SIZE5_2 ((MATRIX_SIZE5) * (MATRIX_SIZE5))
-#define MODOP5(x, y) ((x) % (y))
-
-#define MATRIX_NB6 (1)
-#define MATRIX_BASE6 (257)
-#define MATRIX_SIZE6 (257)
-#define MATRIX_SIZE6_2 ((MATRIX_SIZE6) * (MATRIX_SIZE6))
-#define MODOP6(x, y) ((x) % (y))
-
-#define DITHERPOINT(d, x, y, m) \
-((d)->ordered_dither_matrix##m[MODOP##m((x), MATRIX_SIZE##m)][MODOP##m((y), MATRIX_SIZE##m)])
-
 #define D_FLOYD_HYBRID 0
 #define D_FLOYD 1
 #define D_ADAPTIVE_BASE 2
@@ -138,6 +90,20 @@ typedef struct dither_color
   dither_segment_t *ranges;
 } dither_color_t;
 
+typedef struct dither_matrix
+{
+  int base;
+  int exp;
+  int size;
+  int last_x;
+  int last_x_mod;
+  int last_y;
+  int last_y_mod;
+  int index;
+  int i_own;
+  unsigned *matrix;
+} dither_matrix_t;
+
 typedef struct dither
 {
   int src_width;		/* Input width */
@@ -190,13 +156,22 @@ typedef struct dither
 
   /* Hardwiring these matrices in here is an abomination.  This */
   /* eventually needs to be cleaned up. */
-  unsigned ordered_dither_matrix0[MATRIX_SIZE0][MATRIX_SIZE0];
-  unsigned ordered_dither_matrix1[MATRIX_SIZE1][MATRIX_SIZE1];
-  unsigned ordered_dither_matrix2[MATRIX_SIZE2][MATRIX_SIZE2];
-  unsigned ordered_dither_matrix3[MATRIX_SIZE3][MATRIX_SIZE3];
-  unsigned ordered_dither_matrix4[MATRIX_SIZE4][MATRIX_SIZE4];
-  unsigned ordered_dither_matrix5[MATRIX_SIZE5][MATRIX_SIZE5];
-  unsigned ordered_dither_matrix6[MATRIX_SIZE6][MATRIX_SIZE6];
+  dither_matrix_t mat0;
+  dither_matrix_t mat1;
+  dither_matrix_t mat2;
+  dither_matrix_t mat3;
+  dither_matrix_t mat4;
+  dither_matrix_t mat5;
+  dither_matrix_t mat6;
+
+  dither_matrix_t c_pick;
+  dither_matrix_t c_dithermat;
+  dither_matrix_t m_pick;
+  dither_matrix_t m_dithermat;
+  dither_matrix_t y_pick;
+  dither_matrix_t y_dithermat;
+  dither_matrix_t k_pick;
+  dither_matrix_t k_dithermat;
 } dither_t;
 
 /*
@@ -258,25 +233,7 @@ static unsigned int quic2[] = {
 #include "quickmatrix257.h"
 };
 
-#define CALC_MATRIX(matid, init)				\
-do {								\
-  for (x = 0; x < MATRIX_SIZE##matid; x++)			\
-    for (y = 0; y < MATRIX_SIZE##matid; y++)			\
-      {								\
-	if (MATRIX_NB##matid > 1)				\
-	  d->ordered_dither_matrix##matid[x][y] =		\
-	    calc_ordered_point(x, y, MATRIX_NB##matid, 1,	\
-			       MATRIX_BASE##matid, init);	\
-	else							\
-	  d->ordered_dither_matrix##matid[x][y] =		\
-	    init[x * MATRIX_SIZE##matid + y];			\
-	d->ordered_dither_matrix##matid[x][y] =			\
-	  (long long) d->ordered_dither_matrix##matid[x][y] *	\
-	  65536ll / (long long) (MATRIX_SIZE##matid##_2);	\
-      }								\
-} while (0)
-
-static int
+static inline int
 calc_ordered_point(unsigned x, unsigned y, int steps, int multiplier,
 		   int size, int *map)
 {
@@ -299,11 +256,156 @@ calc_ordered_point(unsigned x, unsigned y, int steps, int multiplier,
   return retval * multiplier;
 }
 
+void
+init_matrix(dither_matrix_t *mat, int size, int exp, unsigned *array)
+{
+  int i;
+  int x, y;
+  mat->base = size;
+  mat->exp = exp;
+  mat->size = 1;
+  for (i = 0; i < exp; i++)
+    mat->size *= mat->base;
+  mat->matrix = malloc(sizeof(unsigned) * mat->size * mat->size);
+  for (x = 0; x < mat->size; x++)
+    for (y = 0; y < mat->size; y++)
+      {
+	mat->matrix[x + y * mat->size] =
+	  calc_ordered_point(x, y, mat->exp, 1, mat->base, array);
+	mat->matrix[x + y * mat->size] =
+	  (long long) mat->matrix[x + y * mat->size] * 65536ll /
+	  (long long) (mat->size * mat->size);
+      }
+  mat->last_x = mat->last_x_mod = 0;
+  mat->last_y = mat->last_y_mod = 0;
+  mat->index = 0;
+  mat->i_own = 1;
+}
+	
+void
+init_matrix_short(dither_matrix_t *mat, int size, unsigned short *array)
+{
+  int x, y;
+  mat->base = size;
+  mat->exp = 1;
+  mat->size = size;
+  mat->matrix = malloc(sizeof(unsigned) * mat->size * mat->size);
+  for (x = 0; x < mat->size; x++)
+    for (y = 0; y < mat->size; y++)
+      {
+	mat->matrix[x + y * mat->size] =
+	  array[x + y * mat->size];
+	mat->matrix[x + y * mat->size] =
+	  (long long) mat->matrix[x + y * mat->size] * 65536ll /
+	  (long long) (mat->size * mat->size);
+      }
+  mat->last_x = mat->last_x_mod = 0;
+  mat->last_y = mat->last_y_mod = 0;
+  mat->index = 0;
+  mat->i_own = 1;
+}
+
+void
+destroy_matrix(dither_matrix_t *mat)
+{
+  if (mat->i_own && mat->matrix)
+    free(mat->matrix);
+  mat->matrix = NULL;
+  mat->base = 0;
+  mat->exp = 0;
+  mat->size = 0;
+  mat->i_own = 0;
+}
+
+void
+clone_matrix(const dither_matrix_t *src, dither_matrix_t *dest)
+{
+  dest->base = src->base;
+  dest->exp = src->exp;
+  dest->size = src->size;
+  dest->matrix = src->matrix;
+  dest->last_x = dest->last_x_mod = 0;
+  dest->last_y = dest->last_y_mod = 0;
+  dest->index = 0;
+  dest->i_own = 0;
+}
+
+
+static inline unsigned
+ditherpoint(dither_matrix_t *mat, int x, int y)
+{
+  int recompute = 0;
+  if (x == mat->last_x)
+    {
+    }
+  else if (x == mat->last_x + 1)
+    {
+      mat->last_x = x;
+      mat->last_x_mod++;
+      mat->index++;
+      if (mat->last_x_mod >= mat->size)
+	{
+	  mat->last_x_mod = 0;
+	  mat->index -= mat->size;
+	}
+    }
+  else if (x == mat->last_x - 1)
+    {
+      mat->last_x = x;
+      mat->last_x_mod--;
+      mat->index--;
+      if (mat->last_x_mod < 0)
+	{
+	  mat->last_x_mod = mat->size - 1;
+	  mat->index += mat->size;
+	}
+    }
+  else
+    {
+      mat->last_x = x;
+      mat->last_x_mod = x % mat->size;
+      recompute = 1;
+    }
+  if (y == mat->last_y)
+    {
+    }
+  else if (y == mat->last_y + 1)
+    {
+      mat->last_y = y;
+      mat->last_y_mod++;
+      mat->index += mat->size;
+      if (mat->last_y_mod >= mat->size)
+	{
+	  mat->last_y_mod = 0;
+	  mat->index -= (mat->size * mat->size);
+	}
+    }
+  else if (y == mat->last_y - 1)
+    {
+      mat->last_y = y;
+      mat->last_y_mod--;
+      mat->index -= mat->size;
+      if (mat->last_y_mod < 0)
+	{
+	  mat->last_y_mod = mat->size - 1;
+	  mat->index += (mat->size * mat->size);
+	}
+    }
+  else
+    {
+      mat->last_y = y;
+      mat->last_y_mod = y % mat->size;
+      recompute = 1;
+    }
+  if (recompute)
+    mat->index = mat->last_x_mod + mat->size * mat->last_y_mod;
+  return mat->matrix[mat->index];
+}
+
 
 void *
 init_dither(int in_width, int out_width, vars_t *v)
 {
-  int x, y;
   dither_t *d = malloc(sizeof(dither_t));
   simple_dither_range_t r;
   memset(d, 0, sizeof(dither_t));
@@ -318,13 +420,23 @@ init_dither(int in_width, int out_width, vars_t *v)
   d->offset0_table = NULL;
   d->offset1_table = NULL;
 
-  CALC_MATRIX(0, sq2);
-  CALC_MATRIX(1, sq3);
-  CALC_MATRIX(2, msq0);
-  CALC_MATRIX(3, msq1);
-  CALC_MATRIX(4, quic0);
-  CALC_MATRIX(5, quic1);
-  CALC_MATRIX(6, quic2);
+  init_matrix(&(d->mat0), 2, 5, sq2);
+  init_matrix(&(d->mat1), 3, 4, sq3);
+  init_matrix(&(d->mat2), 5, 3, msq0);
+  init_matrix(&(d->mat3), 5, 3, msq1);
+  init_matrix_short(&(d->mat4), 199, quic0);
+  init_matrix_short(&(d->mat5), 199, quic1);
+  init_matrix(&(d->mat6), 257, 1, quic2);
+
+  clone_matrix(&(d->mat6), &(d->c_dithermat));
+  clone_matrix(&(d->mat6), &(d->m_dithermat));
+  clone_matrix(&(d->mat6), &(d->y_dithermat));
+  clone_matrix(&(d->mat6), &(d->k_dithermat));
+
+  clone_matrix(&(d->mat5), &(d->c_pick));
+  clone_matrix(&(d->mat5), &(d->m_pick));
+  clone_matrix(&(d->mat5), &(d->y_pick));
+  clone_matrix(&(d->mat5), &(d->k_pick));
 
   if (!strcmp(v->dither_algorithm, "Hybrid Floyd-Steinberg"))
     d->dither_type = D_FLOYD_HYBRID;
@@ -853,6 +965,21 @@ free_dither(void *vd)
       free(d->offset1_table);
       d->offset1_table = NULL;
     }
+  destroy_matrix(&(d->c_pick));
+  destroy_matrix(&(d->c_dithermat));
+  destroy_matrix(&(d->m_pick));
+  destroy_matrix(&(d->m_dithermat));
+  destroy_matrix(&(d->y_pick));
+  destroy_matrix(&(d->y_dithermat));
+  destroy_matrix(&(d->k_pick));
+  destroy_matrix(&(d->k_dithermat));
+  destroy_matrix(&(d->mat0));
+  destroy_matrix(&(d->mat1));
+  destroy_matrix(&(d->mat2));
+  destroy_matrix(&(d->mat3));
+  destroy_matrix(&(d->mat4));
+  destroy_matrix(&(d->mat5));
+  destroy_matrix(&(d->mat6));
   free(d);
 }
 
@@ -873,121 +1000,16 @@ get_errline(dither_t *d, int row, int color)
 }
 
 /*
- * Dithering macros (shared between routines)
- */
-
-/*
- * Advance to the next point
- */
-
-#define INCREMENT_BLACK()			\
-do {						\
-  if (direction == 1)				\
-    {						\
-      if (bit == 1)				\
-	{					\
-	  kptr ++;				\
-	  bit = 128;				\
-	}					\
-      else					\
-	bit >>= 1;				\
-    }						\
-  else						\
-    {						\
-      if (bit == 128)				\
-	{					\
-	  kptr --;				\
-	  bit = 1;				\
-	}					\
-      else					\
-	bit <<= 1;				\
-    }						\
-						\
-  gray   += xstep;				\
-  xerror += xmod;				\
-  if (xerror >= d->dst_width)			\
-    {						\
-      xerror -= d->dst_width;			\
-      gray   += direction;			\
-    }						\
-  else if (xerror < 0)				\
-    {						\
-      xerror += d->dst_width;			\
-      gray   += direction;			\
-    }						\
-} while (0)
-
-#define INCREMENT_COLOR()						  \
-do {									  \
-  if (direction == 1)							  \
-    {									  \
-      if (bit == 1)							  \
-	{								  \
-	  cptr ++;							  \
-	  if (lcptr)							  \
-	    lcptr ++;							  \
-	  mptr ++;							  \
-	  if (lmptr)							  \
-	    lmptr ++;							  \
-	  yptr ++;							  \
-	  if (lyptr)							  \
-	    lyptr ++;							  \
-	  if (kptr)							  \
-	    kptr ++;							  \
-	  bit       = 128;						  \
-	}								  \
-      else								  \
-	bit >>= 1;							  \
-    }									  \
-  else									  \
-    {									  \
-      if (bit == 128)							  \
-	{								  \
-	  cptr --;							  \
-	  if (lcptr)							  \
-	    lcptr --;							  \
-	  mptr --;							  \
-	  if (lmptr)							  \
-	    lmptr --;							  \
-	  yptr --;							  \
-	  if (lyptr)							  \
-	    lyptr --;							  \
-	  if (kptr)							  \
-	    kptr --;							  \
-	  bit       = 1;						  \
-	}								  \
-      else								  \
-	bit <<= 1;							  \
-    }									  \
-									  \
-  rgb    += xstep;							  \
-  xerror += xmod;							  \
-  if (xerror >= d->dst_width)						  \
-    {									  \
-      xerror -= d->dst_width;						  \
-      rgb    += 3 * direction;						  \
-    }									  \
-  else if (xerror < 0)							  \
-    {									  \
-      xerror += d->dst_width;						  \
-      rgb    += 3 * direction;						  \
-    }      								  \
-} while (0)
-
-/*
  * Add the error to the input value.  Notice that we micro-optimize this
  * to save a division when appropriate.
  */
 
 #define UPDATE_COLOR(r)				\
 do {						\
-  if (!(d->dither_type & D_ORDERED_BASE))	\
-    {						\
-      if (dither##r >= 0)			\
-	r += dither##r >> 3;			\
-      else					\
-	r += dither##r / 8;			\
-    }						\
+  if (dither##r >= 0)				\
+    r += dither##r >> 3;			\
+  else						\
+    r += dither##r / 8;				\
 } while (0)
 
 static inline unsigned
@@ -1069,11 +1091,12 @@ static inline int
 print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	    int adjusted, int x, int y, unsigned char *c, unsigned char *lc,
 	    unsigned char bit, int length, int invert_x, int invert_y,
-	    unsigned randomizer, int dontprint, unsigned *ink_budget)
+	    unsigned randomizer, int dontprint, unsigned *ink_budget,
+	    dither_matrix_t *pick_matrix, dither_matrix_t *dither_matrix,
+	    int dither_type)
 {
   int i;
   int levels = rv->nlevels - 1;
-  int dither_type = d->dither_type;
   int dither_value = adjusted;
   if ((adjusted <= 0 && !(dither_type & D_ADAPTIVE_BASE)) ||
       base <= 0 || density <= 0)
@@ -1217,7 +1240,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	       */
 	    case D_ORDERED:
 	    default:
-	      vmatrix = DITHERPOINT(d, x, y, 6);
+	      vmatrix = ditherpoint(pick_matrix, x, y);
 	    }
 
 	  if (vmatrix == 65536 && virtual_value == 65536)
@@ -1276,7 +1299,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	      v = dd->value_h;
 	      dot_size = dd->dot_size_h;
 	    }
-	  else if (rangepoint >= DITHERPOINT(d, x, y, 5))
+	  else if (rangepoint >= ditherpoint(dither_matrix, x, y))
 	    {
 	      isdark = dd->isdark_h;
 	      bits = dd->bits_h;
@@ -1336,14 +1359,10 @@ dither_fastblack(unsigned short     *gray,	/* I - Grayscale pixels */
 		length;		/* Length of output bitmap in bytes */
   unsigned char	bit,		/* Current bit */
 		*kptr;		/* Current black pixel */
-  int		k;		/* Current black error */
   dither_t *d = (dither_t *) vd;
-  int terminate;
-  int direction = row & 1 ? 1 : -1;
 
-  bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
-  x = (direction == 1) ? 0 : d->dst_width - 1;
-  terminate = (direction == 1) ? d->dst_width : -1;
+  bit = 128;
+  x = 0;
 
   xstep  = d->src_width / d->dst_width;
   xmod   = d->src_width % d->dst_width;
@@ -1352,26 +1371,28 @@ dither_fastblack(unsigned short     *gray,	/* I - Grayscale pixels */
   memset(black, 0, length * d->k_dither.signif_bits);
   kptr = black;
   xerror = 0;
-  if (direction == -1)
+  for (x = 0; x < d->dst_width; x++)
     {
-      kptr = black + length - 1;
-      xstep = -xstep; 
-      gray += d->src_width - 1;
-      xerror = ((d->dst_width - 1) * xmod) % d->dst_width;
-      xmod = -xmod;
-    }
-
-  for (; x != terminate; x += direction)
-    {
-      k = 65535 - gray[0];
-
-      if (k >= 32768)
+      if (gray[0] < 32768)
 	{
-	  if (d->density >= DITHERPOINT(d, x + row / 3, row + x / 3, 0))
+	  if (d->density >= ditherpoint(&(d->k_dithermat), x, row))
 	    kptr[0] |= bit;
 	}
 
-      INCREMENT_BLACK();
+      gray   += xstep;
+      xerror += xmod;
+      if (bit == 1)
+	{
+	  kptr ++;
+	  bit = 128;
+	}
+      else
+	bit >>= 1;
+      if (xerror >= d->dst_width)
+	{
+	  xerror -= d->dst_width;
+	  gray++;
+	}
     }
 }
 
@@ -1434,26 +1455,59 @@ dither_black(unsigned short   *gray,		/* I - Grayscale pixels */
        x += direction,
 	 kerror0 += direction,
 	 kerror1 += direction)
-  {
-    unsigned ink_budget = d->ink_limit;
+    {
+      unsigned ink_budget = d->ink_limit;
 
-    k = 65535 - *gray;
-    ok = k;
-    if (d->dither_type & D_ORDERED_BASE)
-      print_color(d, &(d->k_dither), k, k, k, x, row, kptr, NULL, bit,
-		  length, 0, 0, d->k_randomizer, 0, &ink_budget);
-    else
-      {
-	UPDATE_COLOR(k);
-	k = print_color(d, &(d->k_dither), ok, ok, k, x, row, kptr, NULL, bit,
-			length, 0, 0, d->k_randomizer, 0, &ink_budget);
-	if (!(d->dither_type & D_ORDERED_BASE))
-	  ditherk = update_dither(k, ok, d->src_width, odb, odb_mask,
-				  direction, kerror0, kerror1, d);
-      }
+      k = 65535 - *gray;
+      ok = k;
+      if (d->dither_type & D_ORDERED_BASE)
+	print_color(d, &(d->k_dither), k, k, k, x, row, kptr, NULL, bit,
+		    length, 0, 0, d->k_randomizer, 0, &ink_budget,
+		    &(d->k_pick), &(d->k_dithermat), d->dither_type);
+      else
+	{
+	  UPDATE_COLOR(k);
+	  k = print_color(d, &(d->k_dither), ok, ok, k, x, row, kptr, NULL,
+			  bit, length, 0, 0, d->k_randomizer, 0, &ink_budget,
+			  &(d->k_pick), &(d->k_dithermat), d->dither_type);
+	  if (!(d->dither_type & D_ORDERED_BASE))
+	    ditherk = update_dither(k, ok, d->src_width, odb, odb_mask,
+				    direction, kerror0, kerror1, d);
+	}
 
-    INCREMENT_BLACK();
-  }
+      gray   += xstep;
+      xerror += xmod;
+      if (direction == 1)
+	{
+	  if (bit == 1)
+	    {
+	      kptr ++;
+	      bit = 128;
+	    }
+	  else
+	    bit >>= 1;
+	  if (xerror >= d->dst_width)
+	    {
+	      xerror -= d->dst_width;
+	      gray++;
+	    }
+	}
+      else
+	{
+	  if (bit == 128)
+	    {
+	      kptr --;
+	      bit = 1;
+	    }
+	  else
+	    bit <<= 1;
+	  if (xerror < 0)
+	    {
+	      xerror += d->dst_width;
+	      gray--;
+	    }
+	}
+    }
 }
 
 /*
@@ -1621,121 +1675,125 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       c = 65535 - (unsigned) rgb[0];
       m = 65535 - (unsigned) rgb[1];
       y = 65535 - (unsigned) rgb[2];
+
+      /*
+       * If we're doing ordered dither, and there's no ink, we aren't
+       * going to print anything.
+       */
+      if (c == 0 && m == 0 && y == 0 && (d->dither_type & D_ORDERED_BASE))
+	goto advance;
       oc = c;
       om = m;
       oy = y;
       k = MIN(c, MIN(m, y));
 
-      if (black != NULL)
+      if (k > 0)
 	{
-	  ub = d->k_upper;    /* Upper bound */
-	  lb = d->k_lower;    /* Lower bound */
-	  
-	  /*
-	   * Calculate total ink amount.
-	   * If there is a lot of ink, black gets added sooner. Saves ink
-	   * and with a lot of ink the black doesn't show as speckles.
-	   *
-	   * k already contains the grey contained in CMY.
-	   * First we find out if the color is darker than the K amount
-	   * suggests, and we look up where is value is between
-	   * lowerbound and density:
-	   */
-	  
-	  kdarkness = ((c*2 + m*2 +y ) - 2 * d->density )/3;
-	  if (kdarkness > k)
-	    ok = kdarkness;
-	  else
-	    ok = k;
-	  if ( ok > lb )
-	    kl = (unsigned) ( ok - lb ) * (unsigned) d->density /
-	      ( d->density - lb );
-	  else
-	    kl = 0;
-	  if (kl > 65535)
-	    kl = 65535;
-	    
-	   /*
-	    * We have a second value, ks, that will be the scaler.
-	    * ks is initially showing where the original black
-	    * amount is between upper and lower bounds:
-	    */
-
-	  if ( k > ub )
-	    ks = d->density;
-	  else if ( k < lb )
-	    ks = 0;
-	  else
-	    ks = (unsigned) ( k - lb ) * (unsigned) d->density / ( ub - lb );
-	  if (ks > 65535)
-	    ks = 65535;
-	    
-	/*
-	 * ks is then processed by a second order function that produces
-	 * an S curve: 2ks - ks^2. This is then multiplied by the darkness
-	 * value in kl. If we think this is too complex the following line
-	 * can be tried instead:    
-         * ak = ks;
-	 */
-	  ak = 2*ks-ks*ks/d->density;
-	  k = kl * (unsigned) ak / d->density;
-	  ok = k;
-	  bk = k;
-
-	  if (k > 0)
+	  if (black != NULL)
 	    {
-	    /*
-	     * Because black is always fairly neutral, we do not have to
-	     * calculate the amount to take out of CMY. The result will be
-	     * a bit dark but that is OK. If things are okay CMY cannot go
-	     * negative here - unless extra K is added in the previous block.
-	     * We multiply by ak to prevent taking out too much. This prevents
-	     * dark areas from becoming very dull.
-	     */
+	      ub = d->k_upper;    /* Upper bound */
+	      lb = d->k_lower;    /* Lower bound */
+	  
+	      /*
+	       * Calculate total ink amount.
+	       * If there is a lot of ink, black gets added sooner. Saves ink
+	       * and with a lot of ink the black doesn't show as speckles.
+	       *
+	       * k already contains the grey contained in CMY.
+	       * First we find out if the color is darker than the K amount
+	       * suggests, and we look up where is value is between
+	       * lowerbound and density:
+	       */
+	  
+	      kdarkness = ((c*2 + m*2 +y ) - 2 * d->density )/3;
+	      if (kdarkness > k)
+		ok = kdarkness;
+	      else
+		ok = k;
+	      if ( ok > lb )
+		kl = (unsigned) ( ok - lb ) * (unsigned) d->density /
+		  ( d->density - lb );
+	      else
+		kl = 0;
+	      if (kl > 65535)
+		kl = 65535;
+	    
+	      /*
+	       * We have a second value, ks, that will be the scaler.
+	       * ks is initially showing where the original black
+	       * amount is between upper and lower bounds:
+	       */
+
+	      if ( k > ub )
+		ks = d->density;
+	      else if ( k < lb )
+		ks = 0;
+	      else
+		ks = (unsigned) ( k - lb ) * (unsigned) d->density /
+		  ( ub - lb );
+	      if (ks > 65535)
+		ks = 65535;
+	    
+	      /*
+	       * ks is then processed by a second order function that produces
+	       * an S curve: 2ks - ks^2. This is then multiplied by the
+	       * darkness value in kl. If we think this is too complex the
+	       * following line can be tried instead:    
+	       * ak = ks;
+	       */
+	      ak = 2*ks-ks*ks/d->density;
+	      k = kl * (unsigned) ak / d->density;
+	      ok = k;
+	      bk = k;
+
+	      if (k > 0)
+		{
+		  /*
+		   * Because black is always fairly neutral, we do not have to
+		   * calculate the amount to take out of CMY. The result will
+		   * be a bit dark but that is OK. If things are okay CMY
+		   * cannot go negative here - unless extra K is added in the
+		   * previous block. We multiply by ak to prevent taking out
+		   * too much. This prevents dark areas from becoming very
+		   * dull.
+		   */
 	     
-	      c -= (unsigned) k * (unsigned) ak / d->density;
-	      m -= (unsigned) k * (unsigned) ak / d->density;
-	      y -= (unsigned) k * (unsigned) ak / d->density;
-	      if (c < 0)
-		c = 0;
-	      if (m < 0)
-		m = 0;
-	      if (y < 0)
-		y = 0;
+		  c -= (unsigned) k * (unsigned) ak / d->density;
+		  m -= (unsigned) k * (unsigned) ak / d->density;
+		  y -= (unsigned) k * (unsigned) ak / d->density;
+		  if (c < 0)
+		    c = 0;
+		  if (m < 0)
+		    m = 0;
+		  if (y < 0)
+		    y = 0;
+		}
+
+	      tk = print_color(d, &(d->k_dither), bk, bk, k, x, row, kptr,
+			       NULL, bit, length, 0, 0, 0, 0, &ink_budget,
+			       &(d->k_pick), &(d->k_dithermat), D_ORDERED);
+	      if (tk != k)
+		printed_black = 1;
+	      k = tk;
 	    }
+	  else
+	    {
+	      /*
+	       * We're not printing black, but let's adjust the CMY levels to
+	       * produce better reds, greens, and blues...
+	       *
+	       * This code needs to be tuned
+	       */
 
-	  {
-	    int dd = d->dither_type;
-	    d->dither_type = D_ORDERED;
-	    UPDATE_COLOR(k);
-	    tk = print_color(d, &(d->k_dither), bk, bk, k, x, row, kptr,
-			     NULL, bit, length, 0, 0, 0, 0, &ink_budget);
-	    if (tk != k)
-	      printed_black = 1;
-	    k = tk;
-	    if (!(d->dither_type & D_ORDERED_BASE))
-	      ditherk = update_dither(k, ok, d->src_width, odb, odb_mask,
-				      direction, kerror0, kerror1, d);
-	    d->dither_type = dd;
-	  }
-	}
-      else
-	{
-	  /*
-	   * We're not printing black, but let's adjust the CMY levels to
-	   * produce better reds, greens, and blues...
-	   *
-	   * This code needs to be tuned
-	   */
+	      unsigned ck = c - k;
+	      unsigned mk = m - k;
+	      unsigned yk = y - k;
 
-	  unsigned ck = c - k;
-	  unsigned mk = m - k;
-	  unsigned yk = y - k;
-
-	  ok = 0;
-	  c  = ((unsigned) (65535 - rgb[1] / 4)) * ck / 65535 + k;
-	  m  = ((unsigned) (65535 - rgb[2] / 4)) * mk / 65535 + k;
-	  y  = ((unsigned) (65535 - rgb[0] / 4)) * yk / 65535 + k;
+	      ok = 0;
+	      c  = ((unsigned) (65535 - rgb[1] / 4)) * ck / 65535 + k;
+	      m  = ((unsigned) (65535 - rgb[2] / 4)) * mk / 65535 + k;
+	      y  = ((unsigned) (65535 - rgb[0] / 4)) * yk / 65535 + k;
+	    }
 	}
 
       /*
@@ -1743,9 +1801,12 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
        * Isn't this easy by comparison?
        */
 
-      UPDATE_COLOR(c);
-      UPDATE_COLOR(m);
-      UPDATE_COLOR(y);
+      if (!(d->dither_type & D_ORDERED_BASE))
+	{
+	  UPDATE_COLOR(c);
+	  UPDATE_COLOR(m);
+	  UPDATE_COLOR(y);
+	}
 
       ocd = oc * d->c_darkness;
       omd = om * d->m_darkness;
@@ -1768,19 +1829,22 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
     ecc:
       c = print_color(d, &(d->c_dither), oc, oc /* + ((omd + oyd) >> 7) */,
 		      c, x, row, cptr, lcptr, bit, length, 0, 1,
-		      d->c_randomizer, printed_black, &ink_budget);
+		      d->c_randomizer, printed_black, &ink_budget,
+		      &(d->c_pick), &(d->c_dithermat), d->dither_type);
       if (first_color == ECOLOR_M)
 	goto out;
     ecm:
       m = print_color(d, &(d->m_dither), om, om /* + ((ocd + oyd) >> 7) */,
 		      m, x, row, mptr, lmptr, bit, length, 1, 0,
-		      d->m_randomizer, printed_black, &ink_budget);
+		      d->m_randomizer, printed_black, &ink_budget,
+		      &(d->m_pick), &(d->m_dithermat), d->dither_type);
       if (first_color == ECOLOR_Y)
 	goto out;
     ecy:
       y = print_color(d, &(d->y_dither), oy, oy /* + ((ocd + omd) >> 7) */,
 		      y, x, row, yptr, lyptr, bit, length, 1, 1,
-		      d->y_randomizer, printed_black, &ink_budget);
+		      d->y_randomizer, printed_black, &ink_budget,
+		      &(d->y_pick), &(d->y_dithermat), d->dither_type);
       if (first_color != ECOLOR_C)
 	goto ecc;
     out:
@@ -1799,6 +1863,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
        * Advance the loop
        *****************************************************************/
 
+    advance:
+      rgb    += xstep;
+      xerror += xmod;
       if (direction == 1)
 	{
 	  if (bit == 1)
@@ -1821,6 +1888,11 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	  first_color++;
 	  if (first_color >= 3)
 	    first_color = 0;
+	  if (xerror >= d->dst_width)
+	    {
+	      xerror -= d->dst_width;
+	      rgb    += 3 * direction;
+	    }
 	}
       else
 	{
@@ -1844,19 +1916,11 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	  first_color--;
 	  if (first_color <= 0)
 	    first_color = 2;
-	}
-
-      rgb    += xstep;
-      xerror += xmod;
-      if (xerror >= d->dst_width)
-	{
-	  xerror -= d->dst_width;
-	  rgb    += 3 * direction;
-	}
-      else if (xerror < 0)
-	{
-	  xerror += d->dst_width;
-	  rgb    += 3 * direction;
+	  if (xerror < 0)
+	    {
+	      xerror += d->dst_width;
+	      rgb    += 3 * direction;
+	    }
 	}
     }
   /*

@@ -1466,21 +1466,53 @@ escp2_fold(const unsigned char *line,
 }
 
 static void
-escp2_split_2(int length,
-	      int bits,
-	      const unsigned char *in,
-	      unsigned char *outhi,
-	      unsigned char *outlo)
+escp2_split_2_1(int length,
+		const unsigned char *in,
+		unsigned char *outhi,
+		unsigned char *outlo)
 {
   int i, j;
   int row = 0;
-  int base = (1 << bits) - 1;
-  for (i = 0; i < length * 2; i++)
+  int limit = length * 2;
+  for (i = 0; i < limit; i++)
     {
       unsigned char inbyte = in[i];
       outlo[i] = 0;
       outhi[i] = 0;
-      for (j = base; j < 256; j <<= bits)
+      for (j = 1; j < 256; j += j)
+	{
+	  if (inbyte & j)
+	    {
+	      if (row == 0)
+		{
+		  outlo[i] |= j;
+		  row = 1;
+		}
+	      else
+		{
+		  outhi[i] |= j;
+		  row = 0;
+		}
+	    }
+	}
+    }
+}
+
+static void
+escp2_split_2_2(int length,
+		const unsigned char *in,
+		unsigned char *outhi,
+		unsigned char *outlo)
+{
+  int i, j;
+  int row = 0;
+  int limit = length * 2;
+  for (i = 0; i < limit; i++)
+    {
+      unsigned char inbyte = in[i];
+      outlo[i] = 0;
+      outhi[i] = 0;
+      for (j = 3; j < 256; j *= 4)
 	{
 	  if (inbyte & j)
 	    {
@@ -1497,6 +1529,19 @@ escp2_split_2(int length,
 	    }
 	}
     }
+}
+
+static void
+escp2_split_2(int length,
+	      int bits,
+	      const unsigned char *in,
+	      unsigned char *outhi,
+	      unsigned char *outlo)
+{
+  if (bits == 2)
+    escp2_split_2_2(length, in, outhi, outlo);
+  else
+    escp2_split_2_1(length, in, outhi, outlo);
 }
 
 static void
@@ -2079,25 +2124,45 @@ escp2_write_microweave(FILE          *prn,	/* I - Print file or command */
  * 256 rows, or 1105920 bytes.  Considering that the Photo EX can print
  * 11" wide, we're looking at more like 1.5 MB.  In fact, these printers are
  * capable of 1440 dpi horizontal resolution.  This would require 3 MB.  The
- * printers actually have 64K.
+ * printers actually have 64K-256K.
  *
- * With the newer (750 and 1200) printers it's even worse, since these printers
- * support multiple dot sizes.  But that's neither here nor there.
+ * With the newer (740/750 and later) printers it's even worse, since these
+ * printers support multiple dot sizes.  But that's neither here nor there.
  *
- * The printer is capable of printing an image fed to it as single raster
- * lines.  This is called MicroWeave (tm).  It actually produces extremely
- * high quality output, but it only uses one nozzle per color per pass.
- * This means that it has to make a lot of passes to print a page, so it's
- * extremely slow (a full 8.5x11" page takes over 30 minutes!).  It's also
- * not possible to print very close to the bottom of the page with MicroWeave
- * since only the first nozzle is used, and the head cannot get closer than
- * some distance from the edge of the page.
+ * Older Epson printers had a mode called MicroWeave (tm).  In this mode, the
+ * host fed the printer individual rows of dots, and the printer bundled them
+ * up and sent them to the print head in the correct order to achieve high
+ * quality.  This MicroWeave mode still works in new printers, but the
+ * implementation is very minimal: the printer uses exactly one nozzle of
+ * each color (the first one).  This makes printing extremely slow (more than
+ * 30 minutes for one 8.5x11" page), although the quality is extremely high
+ * with no visible banding whatsoever.  It's not good for the print head,
+ * though, since no ink is flowing through the other nozzles.  This leads to
+ * drying of ink and possible permanent damage to the print head.
  *
- * The solution is to have the host rearrange the output so that a single
- * pass is fed to the print head.  This means that we have to feed the printer
- * every 8th line as a single pass, and we then have to interleave ("weave")
- * the other raster lines as separate passes.  This allows us to use all 32
- * nozzles, and achieve much higher printing speed.
+ * By the way, although the Epson manual says that microweave mode should be
+ * used at 720 dpi, 360 dpi continues to work in much the same way.  At 360
+ * dpi, data is fed to the printer one row at a time on all Epson printers.
+ * The pattern that the printer uses to print is very prone to banding.
+ * However, 360 dpi is inherently a low quality mode; if you're using it,
+ * presumably you don't much care about quality.
+ *
+ * Printers from roughly the Stylus Color 600 and later do not have the
+ * capability to do MicroWeave correctly.  Instead, the host must arrange
+ * the output in the order that it will be sent to the print head.  This
+ * is a very complex process; the jets in the print head are spaced more
+ * than one row (1/720") apart, so we can't simply send consecutive rows
+ * of dots to the printer.  Instead, we have to pass e. g. the first, ninth,
+ * 17th, 25th... rows in order for them to print in the correct position on
+ * the paper.  This interleaving process is called "soft" weaving.
+ *
+ * This decision was probably made to save money on memory in the printer.
+ * It certainly makes the driver code far more complicated than it would
+ * be if the printer could arrange the output.  Is that a bad thing?
+ * Usually this takes far less CPU time than the dithering process, and it
+ * does allow us more control over the printing process, e. g. to reduce
+ * banding.  Conceivably, we could even use this ability to map out bad
+ * jets.
  *
  * What makes this interesting is that there are many different ways of
  * of accomplishing this goal.  The naive way would be to divide the image
@@ -2141,12 +2206,47 @@ escp2_write_microweave(FILE          *prn,	/* I - Print file or command */
  * position.  However, if we want four passes, we have to effectively print
  * each line twice.  Actually doing this would increase the density, so
  * what we do is print half the dots on each pass.  This produces near-perfect
- * output, and it's far faster than using "MicroWeave".
+ * output, and it's far faster than using (pseudo) "MicroWeave".
  *
  * The current algorithm is not completely general.  The number of passes
  * is limited to (nozzles / gap).  On the Photo EX class printers, that limits
  * it to 4 -- 32 nozzles, an inter-nozzle gap of 8 lines.  Furthermore, there
- * are a number of routines that are only coded up to 4 passes.
+ * are a number of routines that are only coded up to 8 passes.  Fortunately,
+ * this is enough passes to get rid of most banding.  What's left is a very
+ * fine pattern that is sometimes described as "corduroy", since the pattern
+ * looks like that kind of fabric.
+ *
+ * Newer printers (those that support variable dot sizes, such as the 740,
+ * 1200, etc.) have an additional complication: when used in softweave mode,
+ * they operate at 360 dpi horizontal resolution.  This requires FOUR passes
+ * to achieve 1440x720 dpi.  Thus, to enable us to break up each row
+ * into separate sub-rows, we have to actually print each row eight times.
+ * Fortunately, all such printers have 48 nozzles and a gap of 6 rows,
+ * except for the high-speed 900, which uses 96 nozzles and a gap of 2 rows.
+ *
+ * I cannot let this entirely pass without commenting on the Stylus Color 440.
+ * This is a very low-end printer with 21 (!) nozzles and a separation of 8.
+ * The weave routine works correctly with single-pass printing, which is enough
+ * to minimally achieve 720 dpi output (it's physically a 720 dpi printer).
+ * However, the routine does not work correctly at more than one pass per row.
+ * Therefore, this printer bands badly.
+ *
+ * Yet another complication is how to get near the top and bottom of the page.
+ * This algorithm lets us print to within one head width of the top of the
+ * page, and a bit more than one head width from the bottom.  That leaves a
+ * lot of blank space.  Doing the weave properly outside of this region is
+ * increasingly difficult as we get closer to the edge of the paper; in the
+ * interior region, any nozzle can print any line, but near the top and
+ * bottom edges, only some nozzles can print.  We've handled this for now by
+ * using the naive way mentioned above near the borders, and switching over
+ * to the high quality method in the interior.  Unfortunately, this means
+ * that the quality is quite visibly degraded near the top and bottom of the
+ * page.  Algorithms that degrade more gracefully are more complicated.
+ * Epson does not advertise that the printers can print at the very top of the
+ * page, although in practice most or all of them can.  I suspect that the
+ * quality that can be achieved very close to the top is poor enough that
+ * Epson does not want to allow printing there.  That is a valid decision,
+ * although we have taken another approach.
  *
  * The routine initialize_weave calculates the basic parameters, given
  * the number of jets and separation between jets, in rows.
@@ -2298,7 +2398,8 @@ get_color_by_params(int plane, int density)
  *
  * Rules:
  *
- * 1) Currently, osample * v_subpasses * v_subsample <= 4
+ * 1) Currently, osample * v_subpasses * v_subsample <= 8, and no one
+ *    of these variables may exceed 4.
  *
  * 2) first_line >= 0
  *
