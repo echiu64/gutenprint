@@ -579,23 +579,22 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat,
 	      double el;
 	      if (stp_curve_interpolate_value(lut->lum_map, nh, &el))
 		{
-		  double sreflection = 0.6;
+		  double sreflection = .8 - ((1.0 - el) / 1.3) ;
 		  double isreflection = 1.0 - sreflection;
 		  double sadj = l - sreflection;
 		  double isadj = 1;
+		  double sisadj = 1;
 		  if (sadj > 0)
 		    {
 		      isadj = (1.0 / isreflection) * (isreflection - sadj);
-		      isadj = 1.0 - isadj;
-		      isadj *= isadj * isadj;
-		      isadj = 1.0 - isadj;
-		      s *= isadj;
+		      sisadj = sqrt(isadj);
+		      s *= isadj * sisadj;
 		    }
 		  if (el < .9999)
 		    {
 		      double es = s;
 		      es = 1 - es;
-		      es *= es;
+		      es *= es * es;
 		      es = 1 - es;
 		      el = 1.0 + (es * (el - 1.0));
 		      l *= el;
@@ -603,7 +602,10 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat,
 		  else if (el > 1.0001)
 		    l = 1.0 - pow(1.0 - l, el);
 		  if (sadj > 0)
-		    l = 1.0 - ((1.0 - l) * isadj);
+		    {
+/*		      s *= sqrt(isadj); */
+		      l = 1.0 - ((1.0 - l) * sqrt(sqrt(sisadj)));
+		    }
 		}
 	    }
 	}
@@ -1934,19 +1936,22 @@ invert_curve(stp_curve_t curve, int in_model, int out_model)
     }
 }
 
-static inline void
+static void
 compute_one_lut(stp_curve_t lut_curve, stp_const_curve_t curve,
 	double density, lut_params_t *l)
 {
-  if (curve) {
-    stp_curve_copy(lut_curve, curve);
-    invert_curve(lut_curve, l->input_color_model, l->output_color_model);
-    stp_curve_rescale(lut_curve, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
+  if (curve)
+    {
+      stp_curve_copy(lut_curve, curve);
+      invert_curve(lut_curve, l->input_color_model, l->output_color_model);
+      stp_curve_rescale(lut_curve, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
 			STP_CURVE_BOUNDS_RESCALE);
-    stp_curve_resample(lut_curve, l->steps);
-  } else {
-    compute_a_curve(lut_curve, density, l);
-  }
+      stp_curve_resample(lut_curve, l->steps);
+    }
+  else
+    {
+      compute_a_curve(lut_curve, density, l);
+    }
 }
 
 static void

@@ -61,7 +61,7 @@ static const escp2_dropsize_t escp2_680_6pl_dropsizes =
 
 /* All other 4 picolitre printers */
 static const escp2_dropsize_t escp2_4pl_dropsizes =
-  { "4pl", 3, { 0.5, 0.75, 1.0 } };
+  { "4pl", 3, { 0.330, 0.5, 1.0 } };
 static const escp2_dropsize_t escp2_4pl_2880_dropsizes =
   { "4pl_2880", 1, { 1.0 } };
 

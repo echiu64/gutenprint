@@ -94,7 +94,7 @@ extern void stpi_channel_set_ink_limit(stp_vars_t v, double limit);
 extern void stpi_channel_set_cutoff_adjustment(stp_vars_t v,
 					       int color, int subchannel,
 					       double adjustment);
-
+extern void stpi_channel_set_black_channel(stp_vars_t v, int channel);
 
 extern void stpi_channel_initialize(stp_vars_t v, stp_image_t *image,
 				    int input_channel_count);

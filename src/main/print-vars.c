@@ -1129,9 +1129,22 @@ void
 stp_scale_float_parameter(stp_vars_t v, const char *parameter,
 			  double scale)
 {
-  if (stp_check_float_parameter(v, parameter, STP_PARAMETER_INACTIVE))
-    stp_set_float_parameter(v, parameter,
-			    stp_get_float_parameter(v, parameter) * scale);
+  double val;
+  if (stp_check_float_parameter(v, parameter, STP_PARAMETER_DEFAULTED))
+    val = stp_get_float_parameter(v, parameter);
+  else
+    {
+      stp_parameter_t desc;
+      stp_describe_parameter(v, parameter, &desc);
+      if (desc.p_type != STP_PARAMETER_TYPE_DOUBLE)
+	{
+	  stp_parameter_description_free(&desc);
+	  return;
+	}
+      val = desc.deflt.dbl;
+      stp_parameter_description_free(&desc);
+    }
+  stp_set_float_parameter(v, parameter, val * scale);
 }
 
 static int

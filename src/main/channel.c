@@ -68,6 +68,7 @@ typedef struct
   stpi_channel_t *c;
   unsigned short *input_data;
   unsigned short *data;
+  int black_channel;
 } stpi_channel_group_t;
 
 
@@ -149,6 +150,7 @@ stpi_channel_add(stp_vars_t v, unsigned channel, unsigned subchannel,
   if (!cg)
     {
       cg = stpi_zalloc(sizeof(stpi_channel_group_t));
+      cg->black_channel = -1;
       stpi_allocate_component_data(v, "Channel", NULL, stpi_channel_free, cg);
     }				   
   if (channel >= cg->channel_count)
@@ -173,7 +175,7 @@ stpi_channel_add(stp_vars_t v, unsigned channel, unsigned subchannel,
     }
   chan->sc[subchannel].value = value;
   chan->sc[subchannel].density = 1.0;
-  chan->sc[subchannel].cutoff = 0.8;
+  chan->sc[subchannel].cutoff = 0.75;
 }
 
 void
@@ -196,6 +198,15 @@ stpi_channel_set_ink_limit(stp_vars_t v, double limit)
   stpi_dprintf(STPI_DBG_INK, v, "ink_limit %f\n", limit);
   if (limit > 0)
     cg->ink_limit = 65535 * limit;
+}
+
+void
+stpi_channel_set_black_channel(stp_vars_t v, int channel)
+{
+  stpi_channel_group_t *cg =
+    ((stpi_channel_group_t *) stpi_get_component_data(v, "Channel"));
+  stpi_dprintf(STPI_DBG_INK, v, "black_channel %d\n", channel);
+  cg->black_channel = channel;
 }
 
 void
@@ -241,12 +252,15 @@ stpi_channel_initialize(stp_vars_t v, stp_image_t *image,
   if (!cg)
     {
       cg = stpi_zalloc(sizeof(stpi_channel_group_t));
+      cg->black_channel = -1;
       stpi_allocate_component_data(v, "Channel", NULL, stpi_channel_free, cg);
     }				   
   if (cg->initialized)
     return;
   cg->initialized = 1;
   cg->max_density = 0;
+  if (cg->black_channel < -1 || cg->black_channel >= cg->channel_count)
+    cg->black_channel = -1;
   for (i = 0; i < cg->channel_count; i++)
     {
       stpi_channel_t *c = &(cg->c[i]);
@@ -256,7 +270,7 @@ stpi_channel_initialize(stp_vars_t v, stp_image_t *image,
 	  int val = 0;
 	  int next_breakpoint;
 	  c->lut = stpi_zalloc(sizeof(unsigned short) * sc * 65536);
-	  next_breakpoint = c->sc[0].value * 65535 * c->sc[0].cutoff / 2;
+	  next_breakpoint = c->sc[0].value * 65535 * c->sc[0].cutoff;
 	  if (next_breakpoint > 65535)
 	    next_breakpoint = 65535;
 	  while (val <= next_breakpoint)
@@ -272,22 +286,21 @@ stpi_channel_initialize(stp_vars_t v, stp_image_t *image,
 	      double next_val = c->sc[k + 1].value;
 	      double this_cutoff = c->sc[k].cutoff;
 	      double next_cutoff = c->sc[k + 1].cutoff;
-	      double upper = 1.0;
-	      double lower = 1.0;
 	      int range;
 	      int base = val;
 	      double cutoff = sqrt(this_cutoff * next_cutoff);
-	      next_breakpoint = (this_val + next_val) * 65535 * cutoff / 2;
+	      next_breakpoint = next_val * 65535 * cutoff;
 	      if (next_breakpoint > 65535)
 		next_breakpoint = 65535;
 	      range = next_breakpoint - val;
-	      upper = 1.0 / next_val;
-	      lower = 1.0 / this_val;
 	      while (val <= next_breakpoint)
 		{
 		  double where = ((double) val - base) / (double) range;
-		  c->lut[val * sc + sc - k - 2] = val * where * upper;
-		  c->lut[val * sc + sc - k - 1] = val * (1.0 - where) * lower;
+		  double lower_val = base * (1.0 - where);
+		  double lower_amount = lower_val / this_val;
+		  double upper_amount = (val - lower_val) / next_val;
+		  c->lut[val * sc + sc - k - 2] = upper_amount;
+		  c->lut[val * sc + sc - k - 1] = lower_amount;
 		  val++;
 		}
 	    }
@@ -404,6 +417,12 @@ stpi_channel_convert(stp_const_vars_t v, unsigned *zero_mask)
   int i, j, k;
   int physical_channel;
   int nz[32];
+  unsigned black_value = 0;
+  unsigned l_val = 0;
+  unsigned i_val = 0;
+  unsigned o_val = 0;
+  unsigned offset = 0;
+  unsigned virtual_black = 0;
   if (input_needs_splitting(v))
     {
       const unsigned short *input = cg->input_data;
@@ -411,21 +430,44 @@ stpi_channel_convert(stp_const_vars_t v, unsigned *zero_mask)
       for (i = 0; i < cg->width; i++)
 	{
 	  int zero_ptr = 0;
+	  black_value = 0;
+	  if (cg->black_channel >= 0)
+	    black_value = input[cg->black_channel];
+	  virtual_black = 65535;
+	  for (j = 0; j < cg->channel_count; j++)
+	    {
+	      if (input[j] < virtual_black && j != cg->black_channel)
+		virtual_black = input[j];
+	    }
+	  black_value += virtual_black / 4;
 	  for (j = 0; j < cg->channel_count; j++)
 	    {
 	      stpi_channel_t *c = &(cg->c[j]);
 	      int s_count = c->subchannel_count;
 	      if (s_count >= 1)
 		{
+		  i_val = *input++;
 		  if (s_count == 1)
-		    nz[zero_ptr++] |= *(output++) = *(input);
+		    nz[zero_ptr++] |= *(output++) = i_val;
 		  else
 		    {
+		      l_val = i_val;
+		      if (i_val > 0 && black_value && j != cg->black_channel)
+			{
+			  l_val += black_value;
+			  if (l_val > 65535)
+			    l_val = 65535;
+			}
+		      offset = l_val * s_count;
 		      for (k = 0; k < s_count; k++)
-			nz[zero_ptr++] |= (*output++) =
-			  c->lut[((*input) * s_count) + k];
+			{
+			  o_val = c->lut[offset + k];
+			  if (i_val != l_val)
+			    o_val = o_val * (double) i_val / (double) l_val;
+			  *output++ = o_val;
+			  nz[zero_ptr++] |= o_val;
+			}
 		    }
-		  input++;
 		}
 	    }
 	}

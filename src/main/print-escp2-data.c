@@ -210,7 +210,8 @@ static const escp2_densities_t c6pl_densities =
 { 4.0, 2.0,  1.0,  0.568, 0.568, 0.568, 0.284, 0.142 };
 
 static const escp2_densities_t c4pl_densities =
-{ 2.6, 1.3,  0.65, 0.568, 0.792, 0.792, 0.396, 0.198 };
+{ 2.6, 1.3,  0.65, 0.568, 0.523, 0.792, 0.396, 0.198 };
+/*{ 2.6, 1.3,  0.65, 0.375, 0.650, 0.650, 0.325, 0.163 }; */
 
 static const escp2_densities_t c4pl_pigment_densities =
 { 2.7, 1.35, 0.68, 0.798, 0.798, 0.798, 0.399, 0.200 };
@@ -225,7 +226,7 @@ static const escp2_densities_t c2pl_densities =
 { 2.0, 1.0,  0.5,  0.650, 0.650, 0.650, 0.650, 0.325 };
 
 static const escp2_densities_t c1_8pl_densities =
-{ 2.3, 1.15, 0.57, 0.650, 0.650,     0, 0.650, 0.360 };
+{ 2.3, 1.15, 0.57, 0.650, 0.650, 0.0,   0.650, 0.360 };
 
 static const escp2_densities_t sc1500_densities =
 { 2.6, 1.3,  1.3,  0.631, 0.0,   0.0,   0.0,   0.0 };
@@ -1391,6 +1392,22 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_4pl_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_x80_inkgroup,
+    variable_bits, variable_base_res, &default_input_slot_list,
+    &standard_quality_list, &new_init_sequence, &je_deinit_sequence
+  },
+  /* 60: Stylus C84 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
+    59, 60, 2, 180, 180, 2, 180, 180, 2, 4,
+    360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 0, -240, 0, 0,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
+    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
+    4, 15, 0, 0,
+    c3pl_pigment_dotsizes, c3pl_pigment_densities, &stpi_escp2_variable_3pl_pigment_drops,
+    stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_c80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence
   },

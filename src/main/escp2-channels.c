@@ -930,8 +930,8 @@ static const shade_set_t photo_gen1_shades =	/* Stylus 750 and older */
 static const shade_set_t photo_gen2_shades =	/* Stylus 870 and newer */
 {
   { 1, { 1.0 }},
-  { 2, { 1.0, 0.26 }},
-  { 2, { 1.0, 0.31 }},
+  { 2, { 1.0, 0.29 }},
+  { 2, { 1.0, 0.29 }},
   { 1, { 1.0 }},
   { 1, { 1.0 }},
   { 1, { 1.0 }},
@@ -1083,7 +1083,7 @@ static const escp2_inkname_t *const photo_ink_types[] =
 DECLARE_INKLIST("None", gen1, photo, N_("EPSON Standard Inks"),
 		standard, photo, photo_gen1);
 DECLARE_INKLIST("None", photo_gen2, photo, N_("EPSON Standard Inks"),
-		standard, photo, photo_gen2);
+		standard, photo2, photo_gen2);
 DECLARE_INKLIST("None", pigment, photo, N_("EPSON Standard Inks"),
 		ultrachrome, ultrachrome_photo, stp2000);
 

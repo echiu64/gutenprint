@@ -847,6 +847,7 @@ get_inktype(stp_const_vars_t v)
   int i;
 
   if (!ink_type || strcmp(ink_type, "None") == 0 ||
+      (ink_list && ink_list->n_inks == 1) ||
       !using_automatic_settings(v, AUTO_MODE_MANUAL))
     ink_type = get_default_inktype(v);
 
@@ -1582,9 +1583,10 @@ adjust_print_quality(stp_vars_t v, stp_image_t *image)
     {
       k_lower = pt->k_lower;
       k_upper = pt->k_upper;
-      stp_scale_float_parameter(v, "Cyan", pt->cyan);
-      stp_scale_float_parameter(v, "Magenta", pt->magenta);
-      stp_scale_float_parameter(v, "Yellow", pt->yellow);
+      stp_scale_float_parameter(v, "CyanDensity", pt->cyan);
+      stp_scale_float_parameter(v, "MagentaDensity", pt->magenta);
+      stp_scale_float_parameter(v, "YellowDensity", pt->yellow);
+      stp_scale_float_parameter(v, "BlackDensity", pt->black);
       stp_scale_float_parameter(v, "Saturation", pt->saturation);
       stp_scale_float_parameter(v, "Gamma", pt->gamma);
     }
@@ -1677,7 +1679,9 @@ setup_inks(stp_vars_t v)
 	    {
 	      stpi_erprintf("Not enough shades!\n");
 	    }
-	  stpi_dither_set_inks(v, i, userval,
+	  if (strcmp(param, "BlackDensity") == 0)
+	    stpi_channel_set_black_channel(v, i);
+	  stpi_dither_set_inks(v, i, 1.0,
 			       channel->n_subchannels, shades->shades,
 			       drops->numdropsizes, drops->dropsizes);
 	  for (j = 0; j < channel->n_subchannels; j++)

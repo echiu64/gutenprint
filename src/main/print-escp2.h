@@ -85,6 +85,7 @@ typedef struct
   float cyan;
   float magenta;
   float yellow;
+  float black;
   float saturation;
   float gamma;
   const char *hue_adjustment;
@@ -484,6 +485,7 @@ extern const paperlist_t stpi_escp2_ultrachrome_paper_list;
 
 extern const paper_adjustment_list_t stpi_escp2_standard_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_photo_paper_adjustment_list;
+extern const paper_adjustment_list_t stpi_escp2_photo2_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_sp960_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_ultrachrome_photo_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_ultrachrome_matte_paper_adjustment_list;
