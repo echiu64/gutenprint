@@ -207,7 +207,7 @@ stp_path_split(stp_list_t *list, /* List to add directories to */
 }
 
 /* Adapted from GNU libc <dirent.h>
-/* These macros extract size information from a `struct dirent *'.
+   These macros extract size information from a `struct dirent *'.
    They may evaluate their argument multiple times, so it must not
    have side effects.  Each of these may involve a relatively costly
    call to `strlen' on some systems, so these values should be cached.
