@@ -212,6 +212,8 @@ static void stp_dither_black_ordered(const unsigned short *, int, dither_t *,
 				     int, int);
 static void stp_dither_black_ed(const unsigned short *, int, dither_t *,
 				int, int);
+static void stp_dither_black_et(const unsigned short *, int, dither_t *,
+				int, int);
 static void stp_dither_cmyk_fast(const unsigned short *, int, dither_t *,
 				 int, int);
 static void stp_dither_cmyk_very_fast(const unsigned short *, int, dither_t *,
@@ -229,6 +231,8 @@ static void stp_dither_raw_cmyk_very_fast(const unsigned short *, int,
 static void stp_dither_raw_cmyk_ordered(const unsigned short *, int,
 					dither_t *, int, int);
 static void stp_dither_raw_cmyk_ed(const unsigned short *, int, dither_t *,
+				   int, int);
+static void stp_dither_raw_cmyk_et(const unsigned short *, int, dither_t *,
 				   int, int);
 
 
@@ -443,6 +447,9 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
 	case D_ORDERED:
 	  SET_DITHERFUNC(d, stp_dither_black_ordered, v);
 	  break;
+	case D_EVENTONE:
+	  SET_DITHERFUNC(d, stp_dither_black_et, v);
+	  break;
 	default:
 	  SET_DITHERFUNC(d, stp_dither_black_ed, v);
 	  break;
@@ -483,6 +490,9 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
 	  break;
 	case D_ORDERED:
 	  SET_DITHERFUNC(d, stp_dither_raw_cmyk_ordered, v);
+	  break;
+	case D_EVENTONE:
+	  SET_DITHERFUNC(d, stp_dither_raw_cmyk_et, v);
 	  break;
 	default:
 	  SET_DITHERFUNC(d, stp_dither_raw_cmyk_ed, v);
@@ -2392,6 +2402,112 @@ stp_dither_black_ed(const unsigned short   *gray,
 }
 
 static void
+stp_dither_black_et(const unsigned short  *gray,
+		   int           row,
+		   dither_t 	 *d,
+		   int		 duplicate_line,
+		   int		 zero_mask)
+{
+  int		x,
+	        length;
+  unsigned char	bit;
+  int		i;
+  int		*ndither;
+  eventone_t	*et;
+  et_chdata_t	*cd;
+
+  int		***error;
+  int		terminate;
+  int		direction = row & 1 ? 1 : -1;
+  int		xerror, xstep, xmod;
+  int		aspect = d->y_aspect / d->x_aspect;
+  int		aspect_m1;
+  
+  if (aspect >= 4) { aspect = 4; }
+  else if (aspect >= 2) { aspect = 2; }
+  else aspect = 1;
+  aspect_m1 = aspect - 1;
+
+  length = (d->dst_width + 7) / 8;
+  if (!shared_ed_initializer(d, row, duplicate_line, zero_mask, length,
+			     direction, &error, &ndither))
+    return;
+
+  eventone_init(d, &cd);
+  et = d->eventone;
+
+  x = (direction == 1) ? 0 : d->dst_width - 1;
+  bit = 1 << (7 - (x & 7));
+  xstep  = d->src_width / d->dst_width;
+  xmod   = d->src_width % d->dst_width;
+  xerror = (xmod * x) % d->dst_width;
+  terminate = (direction == 1) ? d->dst_width : -1;
+  if (direction == -1) {
+    gray += d->src_width - 1;
+    aspect = -aspect;
+  }
+
+  QUANT(6);
+  for (; x != terminate; x += direction)
+    { int pick, print_inks;
+      
+      advance_eventone_pre(d, cd, et, x);
+
+      { int value = *gray;
+        int base = value;
+	CHANNEL(d, ECOLOR_K).b = value;
+        CHANNEL(d, ECOLOR_K).v = value;
+	CHANNEL(d, ECOLOR_K).o = value;
+
+	if ((cd->wetness -= cd->maxdot_dens) < 0) cd->wetness = 0;
+
+	value = *ndither + base;
+	if (value < 0) value = 0;				/* Dither can make this value negative */
+	
+        find_segment(d, &CHANNEL(d, ECOLOR_K), cd->maxdot_wet - cd->wetness, value, &cd->dr);
+	
+	cd->ri = eventone_adjust(&cd->dr, et, cd->r_sq, base, value);
+      }
+	
+      pick = cd[ECOLOR_K].ri > 32768 ? (1<<ECOLOR_K) : 0;
+
+      { if (pick & (1 << ECOLOR_K)) {
+	  cd->point = cd->dr.upper->value;
+	} else {
+	  cd->point = cd->dr.lower->value;
+	}
+	
+	advance_eventone_post(d, cd, et, x);
+
+	print_inks = (1 << ECOLOR_K);
+
+        /* Adjust error values for dither */
+	ndither[ECOLOR_K] += 2 * (CHANNEL(d, ECOLOR_K).b - cd->point);
+      }
+
+      /* Now we can finally print it! */
+      
+      print_all_inks(d, cd, print_inks, pick, bit, length);
+
+      QUANT(11);
+  
+      /* Diffuse the error round a bit */
+      diffuse_error(d, ndither, error, aspect, direction, ((x & aspect_m1)==0));
+
+      QUANT(12);
+      ADVANCE_BIDIRECTIONAL(d, bit, gray, direction, 1, xerror, xmod, error,
+			    d->n_channels, ERROR_ROWS);
+      QUANT(13);
+    }
+
+    stp_free(cd);
+    stp_free(ndither);
+    for (i = 0; i < d->n_channels; i++)
+      stp_free(error[i]);
+    stp_free(error);
+}
+
+static void
 stp_dither_cmy_fast(const unsigned short  *cmy,
 		    int           row,
 		    dither_t 	    *d,
@@ -2593,6 +2709,125 @@ stp_dither_cmy_ed(const unsigned short  *cmy,
   stp_free(error);
   if (direction == -1)
     reverse_row_ends(d);
+}
+
+static void
+stp_dither_cmy_et(const unsigned short  *cmy,
+		   int           row,
+		   dither_t 	 *d,
+		   int		 duplicate_line,
+		   int		 zero_mask)
+{
+  int		x,
+	        length;
+  unsigned char	bit;
+  int		i;
+  int		*ndither;
+  eventone_t	*et;
+  et_chdata_t	*cd;
+
+  int		***error;
+  int		terminate;
+  int		direction = row & 1 ? 1 : -1;
+  int		xerror, xstep, xmod;
+  int		aspect = d->y_aspect / d->x_aspect;
+  int		aspect_m1;
+  
+  if (aspect >= 4) { aspect = 4; }
+  else if (aspect >= 2) { aspect = 2; }
+  else aspect = 1;
+  aspect_m1 = aspect - 1;
+
+  length = (d->dst_width + 7) / 8;
+  if (!shared_ed_initializer(d, row, duplicate_line, zero_mask, length,
+			     direction, &error, &ndither))
+    return;
+
+  eventone_init(d, &cd);
+  et = d->eventone;
+
+  x = (direction == 1) ? 0 : d->dst_width - 1;
+  bit = 1 << (7 - (x & 7));
+  xstep  = 3 * (d->src_width / d->dst_width);
+  xmod   = d->src_width % d->dst_width;
+  xerror = (xmod * x) % d->dst_width;
+  terminate = (direction == 1) ? d->dst_width : -1;
+  if (direction == -1) {
+    cmy += (3 * (d->src_width - 1));
+    aspect = -aspect;
+  }
+
+  QUANT(6);
+  for (; x != terminate; x += direction)
+    { int pick, print_inks;
+      
+      advance_eventone_pre(d, cd, et, x);
+
+      for (i=1; i < d->n_channels; i++) {
+        int value = cmy[i-1];
+
+	CHANNEL(d, i).o = value;				/* Remember value we want printed here */
+	CHANNEL(d, i).v = value;
+	CHANNEL(d, i).b = value;
+      }
+
+      for (i=1; i < d->n_channels; i++) {
+        int value;
+	int base;
+	et_chdata_t *p = &cd[i];
+
+	if ((p->wetness -= p->maxdot_dens) < 0) p->wetness = 0;
+
+	base = CHANNEL(d, i).b;
+	value = ndither[i] + base;
+	if (i != ECOLOR_K) value += CHANNEL(d, ECOLOR_K).v;
+	if (value < 0) value = 0;				/* Dither can make this value negative */
+	
+        find_segment(d, &CHANNEL(d, i), p->maxdot_wet - p->wetness, value, &p->dr);
+	
+	p->ri = eventone_adjust(&p->dr, et, p->r_sq, base, value);
+      }
+	
+      pick = pick_vertex(cd[ECOLOR_C].ri, cd[ECOLOR_M].ri, cd[ECOLOR_Y].ri, 0);
+
+      { for (i=1; i < d->n_channels; i++) {
+	  if (pick & (1 << i)) {
+	    cd[i].point = cd[i].dr.upper->value;
+	  } else {
+	    cd[i].point = cd[i].dr.lower->value;
+	  }
+	}
+
+	advance_eventone_post(d, cd, et, x);
+
+	print_inks = (1 << ECOLOR_C)|(1 << ECOLOR_M)|(1<<ECOLOR_Y);
+
+        /* Adjust error values for dither */
+        for (i=1; i < d->n_channels; i++) {
+	  ndither[i] += 2 * (CHANNEL(d, i).b - cd[i].point);
+        }
+      }
+
+      /* Now we can finally print it! */
+      
+      print_all_inks(d, cd, print_inks, pick, bit, length);
+
+      QUANT(11);
+  
+      /* Diffuse the error round a bit */
+      diffuse_error(d, ndither, error, aspect, direction, ((x & aspect_m1)==0));
+
+      QUANT(12);
+      ADVANCE_BIDIRECTIONAL(d, bit, cmy, direction, 3, xerror, xmod, error,
+			    d->n_channels, ERROR_ROWS);
+      QUANT(13);
+    }
+
+    stp_free(cd);
+    stp_free(ndither);
+    for (i = 0; i < d->n_channels; i++)
+      stp_free(error[i]);
+    stp_free(error);
 }
 
 static void
@@ -2982,7 +3217,7 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
   
   if (!CHANNEL(d, ECOLOR_K).ptrs[0])
     {
-      stp_dither_cmy_ed(cmy, row, d, duplicate_line, zero_mask);
+      stp_dither_cmy_et(cmy, row, d, duplicate_line, zero_mask);
       return;
     }
 
@@ -3053,9 +3288,6 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
       }
 	
       pick = pick_vertex(cd[ECOLOR_C].ri, cd[ECOLOR_M].ri, cd[ECOLOR_Y].ri, cd[ECOLOR_K].ri);
-
-      /* Compute the values we're going to use (ignoring black's influence) */
-      /* And find out whether the bigger black dot would be more suitable than the small one */
 
       { int useblack = 0;		/* Do we print black at all? */
 	int printed_black;
@@ -3354,6 +3586,158 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
   stp_free(error);
   if (direction == -1)
     reverse_row_ends(d);
+}
+
+static void
+stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
+		   int           row,
+		   dither_t 	 *d,
+		   int		 duplicate_line,
+		   int		 zero_mask)
+{
+  int		x,
+	        length;
+  unsigned char	bit;
+  int		i;
+  int		*ndither;
+  eventone_t	*et;
+  et_chdata_t	*cd;
+
+  int		***error;
+  int		terminate;
+  int		direction = row & 1 ? 1 : -1;
+  int		xerror, xstep, xmod;
+  int		aspect = d->y_aspect / d->x_aspect;
+  int		aspect_m1;
+  
+  if (aspect >= 4) { aspect = 4; }
+  else if (aspect >= 2) { aspect = 2; }
+  else aspect = 1;
+  aspect_m1 = aspect - 1;
+
+  length = (d->dst_width + 7) / 8;
+  if (!shared_ed_initializer(d, row, duplicate_line, zero_mask, length,
+			     direction, &error, &ndither))
+    return;
+
+  eventone_init(d, &cd);
+  et = d->eventone;
+
+  x = (direction == 1) ? 0 : d->dst_width - 1;
+  bit = 1 << (7 - (x & 7));
+  xstep  = 4 * (d->src_width / d->dst_width);
+  xmod   = d->src_width % d->dst_width;
+  xerror = (xmod * x) % d->dst_width;
+  terminate = (direction == 1) ? d->dst_width : -1;
+  if (direction == -1) {
+    cmyk += (4 * (d->src_width - 1));
+    aspect = -aspect;
+  }
+
+  QUANT(6);
+  for (; x != terminate; x += direction)
+    { int pick, print_inks;
+      
+      advance_eventone_pre(d, cd, et, x);
+
+      for (i=0; i < d->n_channels; i++) {
+        int value = cmyk[i];
+	CHANNEL(d, i).o = value;				/* Remember value we want printed here */
+	CHANNEL(d, i).v = value;
+	CHANNEL(d, i).b = value;
+      }
+
+      for (i=0; i < d->n_channels; i++) {
+        int value;
+	int base;
+	et_chdata_t *p = &cd[i];
+
+	if ((p->wetness -= p->maxdot_dens) < 0) p->wetness = 0;
+
+	base = CHANNEL(d, i).b;
+	value = ndither[i] + base;
+	if (i != ECOLOR_K) value += CHANNEL(d, ECOLOR_K).v;
+	if (value < 0) value = 0;				/* Dither can make this value negative */
+	
+        find_segment(d, &CHANNEL(d, i), p->maxdot_wet - p->wetness, value, &p->dr);
+	
+	p->ri = eventone_adjust(&p->dr, et, p->r_sq, base, value);
+      }
+	
+      pick = pick_vertex(cd[ECOLOR_C].ri, cd[ECOLOR_M].ri, cd[ECOLOR_Y].ri, cd[ECOLOR_K].ri);
+
+      { int useblack = 0;		/* Do we print black at all? */
+	int printed_black;
+	int adjusted_black;
+
+        for (i=0; i < d->n_channels; i++) {
+	  if (pick & (1 << i)) {
+	    cd[i].point = cd[i].dr.upper->value;
+	  } else {
+	    cd[i].point = cd[i].dr.lower->value;
+	  }
+	}
+
+        printed_black = cd[ECOLOR_K].point;
+	adjusted_black = printed_black;
+	if (printed_black > 0 && d->black_density != d->density) {
+	  adjusted_black = (unsigned)printed_black * (unsigned)d->density / d->black_density;
+	}
+
+	advance_eventone_post(d, cd, et, x);
+
+        /* Only print the black ink if it means we can avoid printing another ink, otherwise we're just wasting ink */
+
+        if (printed_black > 0) {
+	  for (i=1; i < d->n_channels; i++) {
+            if (cd[i].point <= adjusted_black) {
+	      useblack = 1;
+	      break;
+	    }
+          }
+	}
+	
+	/* Find which channels we actually print */
+
+	/* Adjust colours to print based on black ink */
+        if (useblack) {
+	  print_inks = (1 << ECOLOR_K);
+	  for (i=1; i < d->n_channels; i++) {
+	    if (cd[i].point > adjusted_black) {
+	      print_inks |= (1 << i);
+	    }
+	  }
+        } else {
+	  print_inks = (1 << ECOLOR_C)|(1 << ECOLOR_M)|(1<<ECOLOR_Y);
+	}
+
+        /* Adjust error values for dither */
+	ndither[ECOLOR_K] += 2 * (CHANNEL(d, ECOLOR_K).b - printed_black);
+        for (i=1; i < d->n_channels; i++) {
+	  ndither[i] += 2 * (CHANNEL(d, i).b - cd[i].point);
+        }
+      }
+
+      /* Now we can finally print it! */
+      
+      print_all_inks(d, cd, print_inks, pick, bit, length);
+
+      QUANT(11);
+  
+      /* Diffuse the error round a bit */
+      diffuse_error(d, ndither, error, aspect, direction, ((x & aspect_m1)==0));
+
+      QUANT(12);
+      ADVANCE_BIDIRECTIONAL(d, bit, cmyk, direction, 4, xerror, xmod, error,
+			    d->n_channels, ERROR_ROWS);
+      QUANT(13);
+    }
+
+    stp_free(cd);
+    stp_free(ndither);
+    for (i = 0; i < d->n_channels; i++)
+      stp_free(error[i]);
+    stp_free(error);
 }
 
 void
