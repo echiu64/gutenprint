@@ -122,10 +122,10 @@ typedef struct dither_color
   int nlevels;
   unsigned bit_max;
   unsigned signif_bits;
-  int first_bit_light;
-  int first_bit_dark;
-  int last_bit_light;
-  int last_bit_dark;
+  int first_position_light;
+  int first_position_dark;
+  int last_position_light;
+  int last_position_dark;
   dither_segment_t *ranges;
 } dither_color_t;
 
@@ -662,10 +662,10 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
     d->dither_class = DITHER_CMYK;
   for (i = 0; i < NCOLORS; i++)
     {
-      d->channel[i].dither.first_bit_light = -1;
-      d->channel[i].dither.first_bit_dark = -1;
-      d->channel[i].dither.last_bit_light = -1;
-      d->channel[i].dither.last_bit_dark = -1;
+      d->channel[i].dither.first_position_light = -1;
+      d->channel[i].dither.first_position_dark = -1;
+      d->channel[i].dither.last_position_light = -1;
+      d->channel[i].dither.last_position_dark = -1;
     }
   return d;
 }
@@ -1182,27 +1182,27 @@ stp_free_dither(void *vd)
 }
 
 int
-stp_dither_get_first_bit(void *vd, int color, int is_dark)
+stp_dither_get_first_position(void *vd, int color, int is_dark)
 {
   dither_t *d = (dither_t *) vd;
   if (color < 0 || color >= NCOLORS)
     return -1;
   if (is_dark)
-    return d->channel[color].dither.first_bit_dark;
+    return d->channel[color].dither.first_position_dark;
   else
-    return d->channel[color].dither.first_bit_light;
+    return d->channel[color].dither.first_position_light;
 }
 
 int
-stp_dither_get_last_bit(void *vd, int color, int is_dark)
+stp_dither_get_last_position(void *vd, int color, int is_dark)
 {
   dither_t *d = (dither_t *) vd;
   if (color < 0 || color >= NCOLORS)
     return -1;
   if (is_dark)
-    return d->channel[color].dither.last_bit_dark;
+    return d->channel[color].dither.last_position_dark;
   else
-    return d->channel[color].dither.last_bit_light;
+    return d->channel[color].dither.last_position_light;
 }
 
 static int *
@@ -1529,15 +1529,15 @@ print_color(const dither_t *d, dither_channel_t *dc, int base, int density,
 	    {
 	      if (isdark)
 		{
-		  if (rv->first_bit_dark == -1)
-		    rv->first_bit_dark = x;
-		  rv->last_bit_dark = x;
+		  if (rv->first_position_dark == -1)
+		    rv->first_position_dark = x;
+		  rv->last_position_dark = x;
 		}
 	      else
 		{
-		  if (rv->first_bit_light == -1)
-		    rv->first_bit_light = x;
-		  rv->last_bit_light = x;
+		  if (rv->first_position_light == -1)
+		    rv->first_position_light = x;
+		  rv->last_position_light = x;
 		}
 	      for (j = 1; j <= bits; j += j, tptr += height)
 		{
@@ -1577,9 +1577,9 @@ print_color_fast(const dither_t *d, dither_channel_t *dc, int base,
     {
       if (adjusted >= ditherpoint(d, dither_matrix, x))
 	{
-	  if (rv->first_bit_dark == -1)
-	    rv->first_bit_dark = x;
-	  rv->last_bit_dark = x;
+	  if (rv->first_position_dark == -1)
+	    rv->first_position_dark = x;
+	  rv->last_position_dark = x;
 	  c[0] |= bit;
 	}
       return;
@@ -1611,15 +1611,15 @@ print_color_fast(const dither_t *d, dither_channel_t *dc, int base,
 	  tptr = dd->isdark_h ? c : lc;
 	  if (dd->isdark_h)
 	    {
-	      if (rv->first_bit_dark == -1)
-		rv->first_bit_dark = x;
-	      rv->last_bit_dark = x;
+	      if (rv->first_position_dark == -1)
+		rv->first_position_dark = x;
+	      rv->last_position_dark = x;
 	    }
 	  else
 	    {
-	      if (rv->first_bit_light == -1)
-		rv->first_bit_light = x;
-	      rv->last_bit_light = x;
+	      if (rv->first_position_light == -1)
+		rv->first_position_light = x;
+	      rv->last_position_light = x;
 	    }
 
 	  /*
@@ -1696,9 +1696,9 @@ stp_dither_monochrome(const unsigned short  *gray,
       if (gray[0] && (d->density >= ditherpoint(d, kdither, x)))
 	{
 	  tptr = kptr;
-	  if (rv->first_bit_dark == -1)
-	    rv->first_bit_dark = x;
-	  rv->last_bit_dark = x;
+	  if (rv->first_position_dark == -1)
+	    rv->first_position_dark = x;
+	  rv->last_position_dark = x;
 	  for (j = 0; j < bits; j++, tptr += height)
 	    tptr[0] |= bit;
 	}
@@ -1988,9 +1988,9 @@ stp_dither_black_ed(const unsigned short   *gray,
   if (direction == -1)
     {
       int tmp;
-      tmp = d->channel[ECOLOR_K].dither.first_bit_dark;
-      d->channel[ECOLOR_K].dither.first_bit_dark = d->channel[ECOLOR_K].dither.last_bit_dark;
-      d->channel[ECOLOR_K].dither.last_bit_dark = tmp;
+      tmp = d->channel[ECOLOR_K].dither.first_position_dark;
+      d->channel[ECOLOR_K].dither.first_position_dark = d->channel[ECOLOR_K].dither.last_position_dark;
+      d->channel[ECOLOR_K].dither.last_position_dark = tmp;
     }
 }
 
@@ -2933,14 +2933,14 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
       for (i = 0; i < NCOLORS; i++)
 	{
 	  int tmp;
-	  tmp = d->channel[i].dither.first_bit_dark;
-	  d->channel[i].dither.first_bit_dark =
-	    d->channel[i].dither.last_bit_dark;
-	  d->channel[i].dither.last_bit_dark = tmp;
-	  tmp = d->channel[i].dither.first_bit_light;
-	  d->channel[i].dither.first_bit_light =
-	    d->channel[i].dither.last_bit_light;
-	  d->channel[i].dither.last_bit_light = tmp;
+	  tmp = d->channel[i].dither.first_position_dark;
+	  d->channel[i].dither.first_position_dark =
+	    d->channel[i].dither.last_position_dark;
+	  d->channel[i].dither.last_position_dark = tmp;
+	  tmp = d->channel[i].dither.first_position_light;
+	  d->channel[i].dither.first_position_light =
+	    d->channel[i].dither.last_position_light;
+	  d->channel[i].dither.last_position_light = tmp;
 	}
     }
 }
@@ -3587,14 +3587,14 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
       for (i = 0; i < NCOLORS; i++)
 	{
 	  int tmp;
-	  tmp = d->channel[i].dither.first_bit_dark;
-	  d->channel[i].dither.first_bit_dark =
-	    d->channel[i].dither.last_bit_dark;
-	  d->channel[i].dither.last_bit_dark = tmp;
-	  tmp = d->channel[i].dither.first_bit_light;
-	  d->channel[i].dither.first_bit_light =
-	    d->channel[i].dither.last_bit_light;
-	  d->channel[i].dither.last_bit_light = tmp;
+	  tmp = d->channel[i].dither.first_position_dark;
+	  d->channel[i].dither.first_position_dark =
+	    d->channel[i].dither.last_position_dark;
+	  d->channel[i].dither.last_position_dark = tmp;
+	  tmp = d->channel[i].dither.first_position_light;
+	  d->channel[i].dither.first_position_light =
+	    d->channel[i].dither.last_position_light;
+	  d->channel[i].dither.last_position_light = tmp;
 	}
     }
 }
@@ -3617,10 +3617,10 @@ stp_dither(const unsigned short  *input,
   dither_t *d = (dither_t *) vd;
   for (i = 0; i < NCOLORS; i++)
     {
-      d->channel[i].dither.first_bit_light = -1;
-      d->channel[i].dither.first_bit_dark = -1;
-      d->channel[i].dither.last_bit_light = -1;
-      d->channel[i].dither.last_bit_dark = -1;
+      d->channel[i].dither.first_position_light = -1;
+      d->channel[i].dither.first_position_dark = -1;
+      d->channel[i].dither.last_position_light = -1;
+      d->channel[i].dither.last_position_dark = -1;
     }
   switch (d->dither_class)
     {
