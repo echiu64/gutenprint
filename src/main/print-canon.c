@@ -2531,6 +2531,7 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
   stpi_dither_add_channel(v, privdata.cols[6], ECOLOR_Y, 1);
   stpi_allocate_component_data(v, "Driver", NULL, NULL, &privdata);
 
+  privdata.emptylines = 0;
   for (y = 0; y < out_height; y ++)
   {
     int duplicate_line = 1;
