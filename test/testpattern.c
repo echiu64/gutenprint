@@ -1,3 +1,25 @@
+/*
+ * "$Id$"
+ *
+ *   Test pattern generator for Gimp-Print
+ *
+ *   Copyright 2001 Robert Krawitz <rlk@alum.mit.edu>
+ *
+ *   This program is free software; you can redistribute it and/or modify it
+ *   under the terms of the GNU General Public License as published by the Free
+ *   Software Foundation; either version 2 of the License, or (at your option)
+ *   any later version.
+ *
+ *   This program is distributed in the hope that it will be useful, but
+ *   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ *   for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+
 #include <gimp-print.h>
 #include <varargs.h>
 #include <stdlib.h>
@@ -354,17 +376,11 @@ fill_colors(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
       double yy = val * y;
       double kk = ink_limit * k;
       if (where <= lower)
-	{
-	  kv = 0;
-	}
+	kv = 0;
       else if (where > upper)
-	{
-	  kv = where;
-	}
+	kv = where;
       else
-	{
-	  kv = (where - lower) * upper / (upper - lower);
-	}
+	kv = (where - lower) * upper / (upper - lower);
       cmyv = k * (where - kv);
       kk *= kv;
       cc += cmyv * ink_limit * c_level;
