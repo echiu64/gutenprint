@@ -201,8 +201,8 @@ typedef enum
 typedef struct
 {
   const char *attr_name;
-  int shift;
-  int bits;
+  int bit_shift;
+  int bit_width;
 } escp2_printer_attr_t;
 
 typedef struct
