@@ -40,7 +40,7 @@ if test x${BUILD_CUPS} = xyes ; then
     GENPPD_LIBS="-lz"
     AC_DEFINE(HAVE_LIBZ,, [Define if libz is present.])
   fi
-  AC_PATH_PROG(CUPS_CONFIG, cups-config, cups-config)
+  AC_PATH_PROG(CUPS_CONFIG, cups-config)
   if test "x$CUPS_CONFIG" != x; then
     dnl Use values from CUPS config...
     CUPS_LIBS="`$CUPS_CONFIG --ldflags` `$CUPS_CONFIG --image --libs`"
