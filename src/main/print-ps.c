@@ -119,8 +119,8 @@ ps_list_parameters(stp_const_vars_t v)
 }
 
 static void
-ps_parameters(stp_const_vars_t v, const char *name,
-	      stp_parameter_t *description)
+ps_parameters_internal(stp_const_vars_t v, const char *name,
+		       stp_parameter_t *description)
 {
   int		i;
   char		line[1024],
@@ -207,14 +207,23 @@ ps_parameters(stp_const_vars_t v, const char *name,
   return;
 }
 
+static void
+ps_parameters(stp_const_vars_t v, const char *name,
+	      stp_parameter_t *description)
+{
+  setlocale(LC_ALL, "C");
+  ps_parameters_internal(v, name, description);
+  setlocale(LC_ALL, "");
+}
+
 /*
  * 'ps_media_size()' - Return the size of the page.
  */
 
 static void
-ps_media_size(stp_const_vars_t v,		/* I */
-              int  *width,		/* O - Width in points */
-              int  *height)		/* O - Height in points */
+ps_media_size_internal(stp_const_vars_t v,		/* I */
+		       int  *width,		/* O - Width in points */
+		       int  *height)		/* O - Height in points */
 {
   char	*dimensions;			/* Dimensions of media size */
   const char *pagesize = stp_get_string_parameter(v, "PageSize");
@@ -234,17 +243,24 @@ ps_media_size(stp_const_vars_t v,		/* I */
     stpi_default_media_size(v, width, height);
 }
 
+static void
+ps_media_size(stp_const_vars_t v, int *width, int *height)
+{
+  setlocale(LC_ALL, "C");
+  ps_media_size_internal(v, width, height);
+  setlocale(LC_ALL, "");
+}
 
 /*
  * 'ps_imageable_area()' - Return the imageable area of the page.
  */
 
 static void
-ps_imageable_area(stp_const_vars_t v,      /* I */
-                  int  *left,		/* O - Left position in points */
-                  int  *right,		/* O - Right position in points */
-                  int  *bottom,		/* O - Bottom position in points */
-                  int  *top)		/* O - Top position in points */
+ps_imageable_area_internal(stp_const_vars_t v,      /* I */
+			   int  *left,	/* O - Left position in points */
+			   int  *right,	/* O - Right position in points */
+			   int  *bottom, /* O - Bottom position in points */
+			   int  *top)	/* O - Top position in points */
 {
   char	*area;				/* Imageable area of media */
   float	fleft,				/* Floating point versions */
@@ -282,6 +298,18 @@ ps_imageable_area(stp_const_vars_t v,      /* I */
 }
 
 static void
+ps_imageable_area(stp_const_vars_t v,      /* I */
+                  int  *left,		/* O - Left position in points */
+                  int  *right,		/* O - Right position in points */
+                  int  *bottom,		/* O - Bottom position in points */
+                  int  *top)		/* O - Top position in points */
+{
+  setlocale(LC_ALL, "C");
+  ps_imageable_area_internal(v, left, right, bottom, top);
+  setlocale(LC_ALL, "");
+}
+
+static void
 ps_limit(stp_const_vars_t v,  		/* I */
 	 int *width,
 	 int *height,
@@ -298,7 +326,7 @@ ps_limit(stp_const_vars_t v,  		/* I */
  * This is really bogus...
  */
 static void
-ps_describe_resolution(stp_const_vars_t v, int *x, int *y)
+ps_describe_resolution_internal(stp_const_vars_t v, int *x, int *y)
 {
   const char *resolution = stp_get_string_parameter(v, "Resolution");
   *x = -1;
@@ -308,12 +336,20 @@ ps_describe_resolution(stp_const_vars_t v, int *x, int *y)
   return;
 }
 
+static void
+ps_describe_resolution(stp_const_vars_t v, int *x, int *y)
+{
+  setlocale(LC_ALL, "C");
+  ps_describe_resolution_internal(v, x, y);
+  setlocale(LC_ALL, "");
+}
+
 /*
  * 'ps_print()' - Print an image to a PostScript printer.
  */
 
 static int
-ps_print(stp_const_vars_t v, stp_image_t *image)
+ps_print_internal(stp_const_vars_t v, stp_image_t *image)
 {
   int		status = 1;
   int		model = stpi_get_model_id(v);
@@ -659,6 +695,16 @@ ps_print(stp_const_vars_t v, stp_image_t *image)
   stpi_puts("%%Trailer\n", v);
   stpi_puts("%%EOF\n", v);
   stp_vars_free(nv);
+  return status;
+}
+
+static int
+ps_print(stp_const_vars_t v, stp_image_t *image)
+{
+  int status;
+  setlocale(LC_ALL, "C");
+  status = ps_print_internal(v, image);
+  setlocale(LC_ALL, "");
   return status;
 }
 
