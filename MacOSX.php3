@@ -127,8 +127,8 @@ using it and we believe that it will be useful for many purposes.
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 4.2.6 is the newest stable release for Mac OS X; it includes 197
- drivers supporting over 500 printers. The disk-image file includes an OS X
+ Gimp-Print 4.2.6 is the newest stable release for Mac OS X; it includes 225
+ drivers supporting over 600 printers. The disk-image file includes an OS X
  installer package, an uninstaller package, plus illustrated documentation to easily guide you through
  the printer set-up process. For users running Mac OS X Jaguar This package requires (but does not include) ESP
  Ghostscript 7.05.6 for Mac OS X (<b>download below and install, if
