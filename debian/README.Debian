@@ -1,7 +1,7 @@
 gimp-print for Debian
 ---------------------
 
-This is Gimp-Print version 4.2.4-pre1, a prerelease in the 4.2 series.
+This is Gimp-Print version 4.2.4-pre2, a prerelease in the 4.2 series.
 Gimp-Print is a suite of printer drivers that may be used with common
 UNIX spooling systems using Ghostscript or CUPS.  These drivers
 provide printing quality for UNIX/Linux in many cases equal to or

@@ -1,4 +1,4 @@
-Gimp-Print 4.2.4-pre1, released November 6, 2002, is a prerelease in
+Gimp-Print 4.2.4-pre2, released November 15, 2002, is a prerelease in
 the stable Gimp-Print 4.2 series.
 
 Gimp-Print is a suite of printer drivers that may be used with most
@@ -40,6 +40,44 @@ available at http://gimp-print.sourceforge.net.
 Please read the README file for full instructions on installing this
 package.
 
+Gimp-Print 4.2.4-pre2 contains the following fixes and changes over
+Gimp-Print 4.2.4-pre1:
+
+  1) Custom pages sizes should now work with all applications
+     supporting them.
+
+  2) The Foomatic option names now match the names of the options in
+     the native CUPS driver.
+
+  3) Man pages for gimpprint(3) (i. e. libgimpprint) have been added.
+
+The following bug has been fixed in Gimp-Print 4.2.4-pre2:
+
+631993 Macintosh OS X: Custom page size problems w/some apps
+
+The following bugs are currently open:
+
+409612 Minor positioning prob on 4x6 glossy
+538097 QUALITY-Poor quality printing on Canon s400
+549677 Incorrect scaling on Canon BJC-1000
+557868 QUALITY-Washed out color under Gimp on HP560c
+581168 Canon BJC 250 just spits out pages
+601767 Mac OS X: Canon BJC 2100 does not print multiple pages
+602933 QUALITY-Poor quality on Canon S800
+603702 QUALITY-HP LaserJet 5L print is too light
+613054 Mac OS X: Printing from InDesign 2.0 on OS 10.2.1
+614882 QUALITY - Problems with CANON BJC-55 - Gimp-Print
+619299 QUALITY - brightness adjustment problem
+619537 QUALITY - Poor quality w/ Lexmark OprtaE+ and pcl-4
+621668 Epson Stylus full bleed prints have slight margin
+625780 Epson Stylus Pro 5000 does not print
+627266 Epson Stylus Pro Autoselect paper feed broken
+627978 QUALITY: Canon BJC-6500 has magenta cast.
+631936 HP DesignJet Margin Problems
+631937 HP DesignJet Sheet Cutter Problem
+
+
+
 Gimp-Print 4.2.4-pre1 contains the following fixes and changes over
 Gimp-Print 4.2.3:
 
@@ -67,28 +105,6 @@ The following bugs have been fixed in Gimp-Print 4.2.4-pre1:
 630365 Epson Stylus Photo 950: Enlarged image with some 1440/2800
 631498 Canon driver does not support A3 page size for large format
 633910 Epson 1520 ppd bug gimp-print 4.2.3
-
-The following bugs are currently open:
-
-409612 Minor positioning prob on 4x6 glossy
-538097 QUALITY-Poor quality printing on Canon s400
-549677 Incorrect scaling on Canon BJC-1000
-557868 QUALITY-Washed out color under Gimp on HP560c
-581168 Canon BJC 250 just spits out pages
-601767 Mac OS X: Canon BJC 2100 does not print multiple pages
-602933 QUALITY-Poor quality on Canon S800
-603702 QUALITY-HP LaserJet 5L print is too light
-613054 Mac OS X: Printing from InDesign 2.0 on OS 10.2.1
-614882 QUALITY - Problems with CANON BJC-55 - Gimp-Print
-619299 QUALITY - brightness adjustment problem
-619537 QUALITY - Poor quality w/ Lexmark OprtaE+ and pcl-4
-621668 Epson Stylus full bleed prints have slight margin
-625780 Epson Stylus Pro 5000 does not print
-627266 Epson Stylus Pro Autoselect paper feed broken
-627978 QUALITY: Canon BJC-6500 has magenta cast.
-631936 HP DesignJet Margin Problems
-631937 HP DesignJet Sheet Cutter Problem
-631993 Macintosh OS X: Custom page size problems w/some apps
 
 
 
