@@ -1750,7 +1750,7 @@ pcl_describe_output(stp_const_vars_t v)
   int xdpi, ydpi;
 
   pcl_describe_resolution(v, &xdpi, &ydpi);
-  if (strcmp(print_mode, "Color") == 0)
+  if (!print_mode || strcmp(print_mode, "Color") == 0)
     printing_color = 1;
   if (((caps->resolutions & PCL_RES_600_600_MONO) == PCL_RES_600_600_MONO) &&
       printing_color && xdpi == 600 && ydpi == 600)

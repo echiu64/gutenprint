@@ -1621,7 +1621,7 @@ canon_describe_output(stp_const_vars_t v)
   colormode_t colormode = canon_printhead_colors(ink_type,caps);
   int printhead= canon_printhead_type(ink_type,caps);
 
-  if (strcmp(print_mode, "Color") == 0 ||
+  if ((print_mode && strcmp(print_mode, "BW") == 0) ||
       printhead == 0 || caps->inks == CANON_INK_K)
     colormode = COLOR_MONOCHROME;
 
