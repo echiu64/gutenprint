@@ -104,6 +104,7 @@ static GtkWidget *new_printer_entry;  /* New printer text entry */
 
 static GtkWidget *file_browser;         /* FSD for print files */
 static GtkWidget *adjust_color_button;
+static GtkWidget *about_dialog;
 
 static GtkObject *scaling_adjustment;	/* Adjustment object for scaling */
 static gboolean   suppress_scaling_adjustment = FALSE;
@@ -165,6 +166,7 @@ static void gimp_unit_callback         (GtkWidget     *widget,
 static void gimp_orientation_callback  (GtkWidget     *widget,
 					gpointer       data);
 static void gimp_printandsave_callback (void);
+static void gimp_about_callback        (void);
 static void gimp_print_callback        (void);
 static void gimp_save_callback         (void);
 
@@ -323,6 +325,8 @@ create_top_level_structure(void)
                      GTK_WIN_POS_MOUSE,
                      FALSE, TRUE, FALSE,
 
+		     _("About"), gimp_about_callback,
+                     NULL, NULL, NULL, FALSE, FALSE,
                      _("Print and\nSave Settings"), gimp_printandsave_callback,
                      NULL, NULL, NULL, FALSE, FALSE,
                      _("Save\nSettings"), gimp_save_callback,
@@ -747,6 +751,47 @@ create_new_printer_dialog(void)
 }
 
 static void
+create_about_dialog(void)
+{
+  GtkWidget *label;
+  about_dialog =
+    gimp_dialog_new (_("About Gimp-Print " PLUG_IN_VERSION), "print",
+                     gimp_standard_help_func, "filters/print.html",
+                     GTK_WIN_POS_MOUSE, FALSE, TRUE, FALSE,
+
+                     _("OK"), gtk_widget_hide,
+                     NULL, 1, NULL, FALSE, TRUE,
+		     NULL);
+
+  label = gtk_label_new(
+"Gimp-Print Version " PLUG_IN_VERSION "\n\
+\n\
+Copyright (C) 1997-2001 Michael Sweet, Robert Krawitz,\n\
+   and the rest of the Gimp-Print Development Team.\n\
+\n\
+Please visit our web site at http://gimp-print.sourceforge.net.\n\
+\n\
+This program is free software; you can redistribute it and/or modify\n\
+it under the terms of the GNU General Public License as published by\n\
+the Free Software Foundation; either version 2 of the License, or\n\
+(at your option) any later version.\n\
+\n\
+This program is distributed in the hope that it will be useful,\n\
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
+GNU General Public License for more details.\n\
+\n\
+You should have received a copy of the GNU General Public License\n\
+along with this program; if not, write to the Free Software\n\
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n");
+  gtk_misc_set_padding (GTK_MISC (label), 12, 4);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (about_dialog)->vbox), label,
+                      FALSE, FALSE, 0);
+
+  gtk_widget_show (label);
+}
+
+static void
 create_printer_settings_frame(void)
 {
   GtkWidget *frame;
@@ -758,6 +803,7 @@ create_printer_settings_frame(void)
   GtkWidget *event_box;
 
   create_printer_dialog();
+  create_about_dialog();
   create_new_printer_dialog();
 
   frame = gtk_frame_new (_("Printer Settings"));
@@ -2141,6 +2187,12 @@ gimp_printandsave_callback (void)
       gtk_widget_set_sensitive (print_dialog, FALSE);
       gtk_widget_show (file_browser);
     }
+}
+
+static void
+gimp_about_callback(void)
+{
+  gtk_widget_show(about_dialog);
 }
 
 /*
