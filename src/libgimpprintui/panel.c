@@ -110,6 +110,8 @@ static GtkWidget *printer_driver;      /* Printer driver widget */
 static GtkWidget *printer_model_label; /* Printer model name */
 static GtkWidget *printer_crawler;     /* Scrolled Window for menu */
 static GtkWidget *printer_combo;       /* Combo for menu */
+static GtkWidget *manufacturer_clist;  /* Manufacturer widget */
+static GtkWidget *manufacturer_crawler;     /* Scrolled Window for menu */
 static gint plist_callback_id = -1;
 static GtkWidget *ppd_file;            /* PPD file entry */
 static GtkWidget *ppd_box;
@@ -186,11 +188,18 @@ static void save_callback         (void);
 static void setup_update          (void);
 static void setup_open_callback   (void);
 static void setup_ok_callback     (void);
+static void setup_cancel_callback (void);
 static void new_printer_open_callback   (void);
 static void new_printer_ok_callback     (void);
 static void ppd_browse_callback   (void);
 static void ppd_ok_callback       (void);
+static void build_printer_driver_clist(void);
 static void print_driver_callback (GtkWidget      *widget,
+				   gint            row,
+				   gint            column,
+				   GdkEventButton *event,
+				   gpointer        data);
+static void manufacturer_callback (GtkWidget      *widget,
 				   gint            row,
 				   gint            column,
 				   GdkEventButton *event,
@@ -267,6 +276,7 @@ static gdouble preview_ppi = 10;
 
 static stp_string_list_t printer_list = 0;
 static stpui_plist_t *pv;
+static const char *manufacturer = 0;
 
 static gint thumbnail_w, thumbnail_h, thumbnail_bpp;
 static guchar *thumbnail_data;
@@ -1308,12 +1318,13 @@ create_printer_dialog (void)
   GtkWidget *label;
   GtkWidget *event_box;
   gint       i;
+  stp_string_list_t manufacturer_list = stp_string_list_create();
 
   setup_dialog = stpui_dialog_new(_("Setup Printer"), "print",
 				  GTK_WIN_POS_MOUSE, FALSE, TRUE, FALSE,
 				  _("OK"), setup_ok_callback,
 				  NULL, NULL, NULL, TRUE, FALSE,
-				  _("Cancel"), gtk_widget_hide,
+				  _("Cancel"), setup_cancel_callback,
 				  NULL, 1, NULL, FALSE, TRUE,
 
 				  NULL);
@@ -1323,7 +1334,7 @@ create_printer_dialog (void)
    * Top-level table for dialog.
    */
 
-  table = gtk_table_new (4, 2, FALSE);
+  table = gtk_table_new (4, 4, FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacing (GTK_TABLE (table), 0, 150);
@@ -1335,7 +1346,7 @@ create_printer_dialog (void)
    * Printer driver option menu.
    */
 
-  label = gtk_label_new (_("Printer Model:"));
+  label = gtk_label_new (_("Printer Make:"));
   gtk_misc_set_alignment (GTK_MISC (label), 1.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 2,
 		    GTK_FILL, GTK_FILL, 0, 0);
@@ -1343,6 +1354,35 @@ create_printer_dialog (void)
 
   event_box = gtk_event_box_new ();
   gtk_table_attach (GTK_TABLE (table), event_box, 1, 2, 0, 2,
+                    GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+  gtk_widget_show (event_box);
+
+  stpui_set_help_data (event_box, _("Select the make of your printer"));
+
+  manufacturer_crawler = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (manufacturer_crawler),
+                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_container_add (GTK_CONTAINER (event_box), manufacturer_crawler);
+  gtk_widget_show (manufacturer_crawler);
+
+  manufacturer_clist = gtk_clist_new (1);
+  gtk_widget_set_usize (manufacturer_clist, 200, 0);
+  gtk_clist_set_selection_mode(GTK_CLIST(manufacturer_clist),GTK_SELECTION_SINGLE);
+  gtk_container_add (GTK_CONTAINER (manufacturer_crawler), manufacturer_clist);
+  gtk_widget_show (manufacturer_clist);
+
+  gtk_signal_connect (GTK_OBJECT (manufacturer_clist), "select_row",
+                      GTK_SIGNAL_FUNC (manufacturer_callback), NULL);
+
+
+  label = gtk_label_new (_("Printer Model:"));
+  gtk_misc_set_alignment (GTK_MISC (label), 1.0, 0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 2, 3, 0, 2,
+		    GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show (label);
+
+  event_box = gtk_event_box_new ();
+  gtk_table_attach (GTK_TABLE (table), event_box, 3, 4, 0, 2,
                     GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
   gtk_widget_show (event_box);
 
@@ -1363,6 +1403,7 @@ create_printer_dialog (void)
   gtk_signal_connect (GTK_OBJECT (printer_driver), "select_row",
                       GTK_SIGNAL_FUNC (print_driver_callback), NULL);
 
+
   for (i = 0; i < stp_printer_model_count (); i ++)
     {
       stp_const_printer_t the_printer = stp_get_printer_by_index (i);
@@ -1370,21 +1411,24 @@ create_printer_dialog (void)
       if (strcmp(stp_printer_get_long_name (the_printer), "") != 0 &&
 	  strcmp(stp_printer_get_family(the_printer), "raw") != 0)
 	{
-	  gchar *tmp=g_strdup(gettext(stp_printer_get_long_name(the_printer)));
-
-	  /*
-	   * FIXME Somehow if the raw printer comes before any of the
-	   * "real" printers in the list of printers created in module.c,
-	   * this code barfs on any of those printers added later.  For
-	   * example, try listing olympus_LTX_stpi_module_data after
-	   * raw_LTX_stpi_module_data.
-	   */
-	  
-	  gtk_clist_insert (GTK_CLIST (printer_driver), i, &tmp);
-	  gtk_clist_set_row_data (GTK_CLIST (printer_driver), i, (gpointer) i);
-	  g_free(tmp);
+	  const gchar *make = stp_printer_get_manufacturer(the_printer);
+	  if (! stp_string_list_is_present(manufacturer_list, make))
+	    stp_string_list_add_string(manufacturer_list, make, make);
 	}
     }
+
+  for (i = 0; i < stp_string_list_count(manufacturer_list); i++)
+    {
+      const stp_param_string_t *param =
+	stp_string_list_param(manufacturer_list, i);
+      gchar *xname = g_strdup(param->name);
+      gtk_clist_insert(GTK_CLIST(manufacturer_clist), i, &xname);
+      gtk_clist_set_row_data_full(GTK_CLIST(manufacturer_clist), i, xname,
+				  g_free);
+    }
+  stp_string_list_free(manufacturer_list);	  
+  gtk_clist_sort(GTK_CLIST(manufacturer_clist));
+  build_printer_driver_clist();
 
   /*
    * PPD file.
@@ -1397,7 +1441,7 @@ create_printer_dialog (void)
   gtk_widget_show (ppd_label);
 
   ppd_box = gtk_hbox_new (FALSE, 8);
-  gtk_table_attach (GTK_TABLE (table), ppd_box, 1, 2, 3, 4,
+  gtk_table_attach (GTK_TABLE (table), ppd_box, 1, 4, 3, 4,
                     GTK_FILL, GTK_FILL, 0, 0);
 
   ppd_file = gtk_entry_new ();
@@ -1428,7 +1472,7 @@ create_printer_dialog (void)
   gtk_widget_show (label);
 
   output_cmd = gtk_entry_new ();
-  gtk_table_attach (GTK_TABLE (table), output_cmd, 1, 2, 2, 3,
+  gtk_table_attach (GTK_TABLE (table), output_cmd, 1, 4, 2, 3,
                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (output_cmd);
 
@@ -2011,6 +2055,7 @@ create_main_window (void)
 {
 
   pv = &(stpui_plist[stpui_plist_current]);
+  manufacturer = stp_printer_get_manufacturer(stp_get_printer(pv->v));
   /*
    * Create the various dialog components.  Note that we're not
    * actually initializing the values at this point; that will be done after
@@ -2673,6 +2718,8 @@ plist_callback (GtkWidget *widget,
     }
 
   pv = &(stpui_plist[stpui_plist_current]);
+  manufacturer = stp_printer_get_manufacturer(stp_get_printer(pv->v));
+  build_printer_driver_clist();
 
   if (strcmp(stp_get_driver(pv->v), ""))
     tmp_printer = stp_get_printer(pv->v);
@@ -3065,11 +3112,30 @@ static void
 setup_update (void)
 {
   GtkAdjustment *adjustment;
-  gint           idx;
+  gint           idx = 0;
+  gint i;
+  gchar *tmp;
   const char *ppd_file_name = stp_get_file_parameter(pv->v, "PPDFile");
+
+  for (i = 0; i < GTK_CLIST(manufacturer_clist)->rows; i++)
+    {
+      (void) gtk_clist_get_text(GTK_CLIST(manufacturer_clist), i, 0, &tmp);
+      if (tmp && strcmp(manufacturer, tmp) == 0)
+	{
+	  idx = i;
+	  break;
+	}
+    }
+  gtk_clist_select_row(GTK_CLIST(manufacturer_clist), idx, 0);
 
   idx = stp_get_printer_index_by_driver (stp_get_driver (pv->v));
 
+  idx = gtk_clist_find_row_from_data(GTK_CLIST(printer_driver),
+				     (gpointer) idx);
+/*
+  if (idx >= 0)
+    idx = 0;
+*/
   gtk_clist_select_row (GTK_CLIST (printer_driver), idx, 0);
   gtk_label_set_text (GTK_LABEL (printer_model_label),
                       gettext (stp_printer_get_long_name (tmp_printer)));
@@ -3111,6 +3177,8 @@ static void
 setup_open_callback (void)
 {
   static gboolean first_time = TRUE;
+  manufacturer = stp_printer_get_manufacturer(stp_get_printer(pv->v));
+  build_printer_driver_clist();
 
   reset_preview ();
   setup_update ();
@@ -3139,6 +3207,8 @@ new_printer_open_callback (void)
 static void
 set_printer(void)
 {
+  manufacturer = stp_printer_get_manufacturer(tmp_printer);
+  build_printer_driver_clist();
   stp_set_driver (pv->v, stp_printer_get_driver (tmp_printer));
   stpui_plist_set_output_to (pv, gtk_entry_get_text (GTK_ENTRY (output_cmd)));
   stp_set_file_parameter (pv->v, "PPDFile",
@@ -3155,8 +3225,20 @@ set_printer(void)
 static void
 setup_ok_callback (void)
 {
-  set_printer();
   gtk_widget_hide (setup_dialog);
+  set_printer();
+}
+
+/*
+ *  setup_cancel_callback() -
+ */
+static void
+setup_cancel_callback (void)
+{
+  gtk_widget_hide (setup_dialog);
+  manufacturer = stp_printer_get_manufacturer(stp_get_printer(pv->v));
+  build_printer_driver_clist();
+  setup_update();
 }
 
 /*
@@ -3207,6 +3289,55 @@ pop_ppd_box(void)
       gtk_widget_hide (ppd_box);
     }
 }
+
+static void
+build_printer_driver_clist(void)
+{
+  int i;
+  int current_idx = 0;
+  gtk_clist_clear(GTK_CLIST(printer_driver));
+  for (i = 0; i < stp_printer_model_count (); i ++)
+    {
+      stp_const_printer_t the_printer = stp_get_printer_by_index (i);
+
+      if (strcmp(manufacturer, stp_printer_get_manufacturer(the_printer)) == 0)
+	{
+	  gchar *tmp=g_strdup(gettext(stp_printer_get_long_name(the_printer)));
+	  /*
+	   * FIXME Somehow if the raw printer comes before any of the
+	   * "real" printers in the list of printers created in module.c,
+	   * this code barfs on any of those printers added later.  For
+	   * example, try listing olympus_LTX_stpi_module_data after
+	   * raw_LTX_stpi_module_data.
+	   */
+	  
+	  gtk_clist_insert (GTK_CLIST (printer_driver), current_idx, &tmp);
+	  gtk_clist_set_row_data (GTK_CLIST (printer_driver), current_idx,
+				  (gpointer) i);
+	  g_free(tmp);
+	  current_idx++;
+	}
+    }
+}
+  
+static void
+manufacturer_callback(GtkWidget      *widget, /* I - Driver list */
+		      gint            row,
+		      gint            column,
+		      GdkEventButton *event,
+		      gpointer        data)
+{
+  static int calling_manufacturer_callback = 0;
+  gchar *text;
+  if (calling_manufacturer_callback)
+    return;
+  calling_manufacturer_callback++;
+  if (gtk_clist_get_text(GTK_CLIST(widget), row, column, &text))
+    manufacturer = text;
+  build_printer_driver_clist();
+  setup_update();
+  calling_manufacturer_callback--;
+}  
 
 /*
  *  print_driver_callback() - Update the current printer driver.
