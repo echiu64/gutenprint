@@ -34,10 +34,10 @@ OUTPUTS = \
  $(MANUAL).ps \
  html
 
-STANDARD_TARGETS = $(MANUAL).pdf html-stamp
+STANDARD_TARGETS = $(MANUAL).pdf html-stamp $(MANUAL).ps
 
 DISTHOOKDIRS = figures $(HTMLDIR)
-DISTHOOKFILES = $(MANUAL).pdf html-stamp
+DISTHOOKFILES = $(STANDARD_TARGETS)
 
 PNG_IMAGES = figures/cups_admin.png			\
 	figures/cups_admin_device.png			\
