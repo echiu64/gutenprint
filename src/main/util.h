@@ -76,9 +76,12 @@ extern void stp_put16_le(unsigned short sh, const stp_vars_t v);
 extern void stp_put16_be(unsigned short sh, const stp_vars_t v);
 extern void stp_put32_le(unsigned int sh, const stp_vars_t v);
 extern void stp_put32_be(unsigned int sh, const stp_vars_t v);
-extern void stp_erputc(int ch);
-
 extern void stp_puts(const char *s, const stp_vars_t v);
+extern void stp_send_command(const stp_vars_t v, const char *command,
+			     const char *format, ...);
+
+
+extern void stp_erputc(int ch);
 
 extern void stp_eprintf(const stp_vars_t v, const char *format, ...);
 extern void stp_erprintf(const char *format, ...);

@@ -138,6 +138,74 @@ stp_puts(const char *s, const stp_vars_t v)
 }
 
 void
+stp_send_command(const stp_vars_t v, const char *command,
+		 const char *format, ...)
+{
+  int i = 0;
+  char fchar;
+  const char *out_str;
+  unsigned short byte_count = 0;
+  va_list args;
+
+  if (strlen(format) > 0)
+    {
+      va_start(args, format);
+      for (i = 0; i < strlen(format); i++)
+	{
+	  switch (format[i])
+	    {
+	    case 'b':
+	      break;
+	    case 'c':
+	      (void) va_arg(args, unsigned int);
+	      byte_count += 1;
+	      break;
+	    case 'h':
+	      (void) va_arg(args, unsigned int);
+	      byte_count += 2;
+	      break;
+	    case 'l':
+	      (void) va_arg(args, unsigned int);
+	      byte_count += 4;
+	      break;
+	    case 's':
+	      out_str = va_arg(args, const char *);
+	      byte_count += strlen(out_str);
+	      break;
+	    }
+	}
+      va_end(args);
+    }
+
+  stp_puts(command, v);
+
+  va_start(args, format);
+  while ((fchar = format[0]) != '\0')
+    {
+      switch (fchar)
+	{
+	case 'b':
+	  stp_put16_le(byte_count, v);
+	  break;
+	case 'c':
+	  stp_putc(va_arg(args, unsigned int), v);
+	  break;
+	case 'h':
+	  stp_put16_le(va_arg(args, unsigned int), v);
+	  break;
+	case 'l':
+	  stp_put32_le(va_arg(args, unsigned int), v);
+	  break;
+	case 's':
+	  stp_puts(va_arg(args, const char *), v);
+	  break;
+	}
+      format++;
+    }
+  va_end(args);
+}
+
+void
 stp_eprintf(const stp_vars_t v, const char *format, ...)
 {
   int bytes;
