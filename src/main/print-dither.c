@@ -2073,9 +2073,9 @@ eventone_adjust(dither_segment_t *range, eventone_t *et, int r_sq, int base, int
     }
     /* Adjust for Eventone here */
     if (lower == 0) {
-      ditherpoint += r_sq * ((et->aspect << 16) / value_span);
+      ditherpoint += r_sq * et->aspect;
       if (base < upper) {
-	ditherpoint -= et->recip[base];
+	ditherpoint -= et->recip[(base<<16) / value_span];
       }
       if (ditherpoint > 65535) ditherpoint = 65535;
       else if (ditherpoint < 0) ditherpoint = 0;
@@ -3271,15 +3271,14 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 	CHANNEL(d, i).b = CHANNEL(d, i).v;
 	
       for (i=0; i < d->n_channels; i++) {
+        int base;
         int value;
-	int base;
 	et_chdata_t *p = &cd[i];
 
 	if ((p->wetness -= p->maxdot_dens) < 0) p->wetness = 0;
 
 	base = CHANNEL(d, i).b;
 	value = ndither[i] + base;
-	if (i != ECOLOR_K) value += CHANNEL(d, ECOLOR_K).v;
 	if (value < 0) value = 0;				/* Dither can make this value negative */
 	
         find_segment(d, &CHANNEL(d, i), p->maxdot_wet - p->wetness, value, &p->dr);
