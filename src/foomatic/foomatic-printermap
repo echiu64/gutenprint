@@ -89,12 +89,16 @@
 #gptofoo escp2-1280 printer/Epson-Stylus_Photo_1280
 #gptofoo escp2-1290 printer/Epson-Stylus_Photo_1290
 #gptofoo escp2-2000 printer/317609
+#gptofoo escp2-2100 printer/Epson-Stylus_Photo_2100
+#gptofoo escp2-2200 printer/Epson-Stylus_Photo_2200
 #gptofoo escp2-5000 printer/Epson-Stylus_Pro_5000
 #gptofoo escp2-5500 printer/Epson-Stylus_Pro_5500
 #gptofoo escp2-7000 printer/Epson-Stylus_Pro_7000
 #gptofoo escp2-7500 printer/Epson-Stylus_Pro_7500
+#gptofoo escp2-7600 printer/Epson-Stylus_Pro_7600
 #gptofoo escp2-9000 printer/Epson-Stylus_Pro_9000
 #gptofoo escp2-9500 printer/Epson-Stylus_Pro_9500
+#gptofoo escp2-9600 printer/Epson-Stylus_Pro_9600
 #gptofoo escp2-10000 printer/Epson-Stylus_Pro_10000
 #gptofoo escp2-scan2000 printer/Epson-Stylus_Scan_2000
 #gptofoo escp2-scan2500 printer/516274
