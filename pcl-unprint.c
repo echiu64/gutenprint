@@ -24,13 +24,20 @@
  */
 
 #include<stdio.h>
+#include<stdlib.h>
 #include<ctype.h>
 
 static char *id="@(#) $Id$";
 
+/* 
+ * Largest data attached to a command. 1024 means that we can have up to 8192
+ * pixels in a row
+ */
+#define MAX_DATA 1024
+
 FILE *read_fd,*write_fd;
 char read_buffer[1024];
-char data_buffer[1024];
+char data_buffer[MAX_DATA];
 char initial_command[10];
 char final_command;
 int numeric_arg;
@@ -39,9 +46,40 @@ int read_pointer;
 int read_size;
 int eof;
 
+/*
+ * Data about the image
+ */
+
+typedef struct {
+    int colour_type;		/* Mono, 3/4 colour */
+    int black_depth;		/* 2 level, 4 level */
+    int cyan_depth;		/* 2 level, 4 level */
+    int magenta_depth;		/* 2 level, 4 level */
+    int yellow_depth;		/* 2 level, 4 level */
+    int image_width;
+    int image_height;
+    int compression_type;	/* Uncompressed or TIFF */
+} image_t;
+
+/*
+ * collected data read from file
+ */
+
+typedef struct {
+    char **black_bufs;			/* Storage for black rows */
+    int black_data_rows_per_row;	/* Number of black rows */
+    char **cyan_bufs;
+    int cyan_data_rows_per_row;
+    char **magenta_bufs;
+    int magenta_data_rows_per_row;
+    char **yellow_bufs;
+    int yellow_data_rows_per_row;
+    int active_length;			/* Length of output data */
+} output_t;
+
 #define PCL_MONO 1
-#define PCL_CMY 2
-#define PCL_CMYK 3
+#define PCL_CMY 3
+#define PCL_CMYK 4
 
 #define PCL_COMPRESSION_NONE 0
 #define PCL_COMPRESSION_TIFF 2
@@ -59,7 +97,7 @@ int eof;
 #define PCL_DEPLETION 9
 #define PCL_CONFIGURE 10
 #define PCL_RESOLUTION 11
-#define PCL_COLORTYPE 12
+#define PCL_COLOURTYPE 12
 #define PCL_COMPRESSIONTYPE 13
 #define PCL_LEFTRASTER_POS 14
 #define PCL_TOPRASTER_POS 15
@@ -92,7 +130,7 @@ commands_t pcl_commands[] =
 	{ "*o", 'D', 0, PCL_DEPLETION, "Depletion" },
 	{ "*g", 'W', 1, PCL_CONFIGURE, "Extended Configure" },
 	{ "*t", 'R', 0, PCL_RESOLUTION, "Resolution" },
-	{ "*r", 'U', 0, PCL_COLORTYPE, "Color Type" },
+	{ "*r", 'U', 0, PCL_COLOURTYPE, "Colour Type" },
 	{ "*b", 'M', 0, PCL_COMPRESSIONTYPE, "Compression Type" },
 	{ "&a", 'H', 0, PCL_LEFTRASTER_POS, "Left Raster Position" },
 	{ "&a", 'V', 0, PCL_TOPRASTER_POS, "Top Raster Position" },
@@ -104,6 +142,10 @@ commands_t pcl_commands[] =
 	{ "*b", 'V', 1, PCL_DATA, "Data, intermediate" },
 	{ "*b", 'W', 1, PCL_DATA_LAST, "Data, last" },
    };
+
+/*
+ * pcl_find_command(). Search the commands table for the command.
+ */
 
 int pcl_find_command() {
 
@@ -118,6 +160,10 @@ int pcl_find_command() {
 
     return (-1);
 }
+
+/*
+ * fill_buffer() - Read a new chunk from the input file
+ */
 
 void fill_buffer() {
 
@@ -138,6 +184,11 @@ void fill_buffer() {
         read_pointer = 0;
     }
 }
+
+/*
+ * pcl_read_command() - Read the data stream and parse the next PCL
+ * command.
+ */
 
 void pcl_read_command() {
 
@@ -167,16 +218,14 @@ void pcl_read_command() {
 
     c = read_buffer[read_pointer];
     if(c != (char) 0x1b) {
-        fprintf(stderr, "No ESC found (out of sync?)\n");
-        exit(2);
+        fprintf(stderr, "ERROR: No ESC found (out of sync?)\n");
+        exit(EXIT_FAILURE);
     }
     read_pointer++;
     fill_buffer();
     if (eof == 1) {
 
-#ifdef DEBUG
-        fprintf(stderr, "EOF after ESC!\n");
-#endif
+        fprintf(stderr, "ERROR: EOF after ESC!\n");
 
         return;
     }
@@ -240,7 +289,7 @@ void pcl_read_command() {
     while (1) {
         fill_buffer();
         if (eof == 1) {
-            fprintf(stderr, "EOF in middle of command!\n");
+            fprintf(stderr, "ERROR: EOF in middle of command!\n");
             return;
         }
         c = read_buffer[read_pointer];
@@ -261,25 +310,301 @@ void pcl_read_command() {
     }
 }
 
-int main(int argc,char *argv[]){
+/*
+ * write_grey() - write out one line of mono PNM image
+ */
+
+/* FIXME - multiple levels */
+
+void write_grey(output_t *output,	/* I: data */
+		image_t *image)		/* I: Image data */
+{
+    int wholebytes = image->image_width / 8;
+    int crumbs = image->image_width - (wholebytes * 8);
+    char *buf = output->black_bufs[0];
+
+    int i, j;
+    char tb[8];
+
+#ifdef DEBUG
+    fprintf(stderr, "Data Length: %d, wholebytes: %d, crumbs: %d\n",
+	output->active_length, wholebytes, crumbs);
+#endif
+
+    for (i=0; i < wholebytes; i++) {
+	for (j=0; j < 8; j++) {
+	    tb[j] = 255- (((buf[i] >> (7-j)) & 1)*255);
+	}
+	(void) fwrite(&tb[0], sizeof(char), 8, write_fd);
+    }
+    for (j=0; j < crumbs; j++) {
+	tb[j] = 255- (((buf[wholebytes] >> (7-j)) & 1)*255);
+    }
+    (void) fwrite(&tb[0], sizeof(char), (size_t) crumbs, write_fd);
+}
+
+/*
+ * write_colour() - Write out one row of RGB PNM data.
+ */
+
+/* FIXME - multiple levels and CMYK */
+
+void write_colour(output_t *output,		/* I: Data buffers */
+		 image_t *image)		/* I: Image data */
+{
+    int wholebytes = image->image_width / 8;
+    int crumbs = image->image_width - (wholebytes * 8);
+
+    int i, j, jj;
+    char tb[8*3];
+
+    char *cyan_buf;
+    char *magenta_buf;
+    char *yellow_buf;
+    char *black_buf;
+
+    cyan_buf = output->cyan_bufs[0];
+    magenta_buf = output->magenta_bufs[0];
+    yellow_buf = output->yellow_bufs[0];
+    if (image->colour_type == 4)
+	black_buf = output->black_bufs[0];
+    else
+	black_buf = NULL;
+
+#ifdef DEBUG
+    fprintf(stderr, "Data Length: %d, wholebytes: %d, crumbs: %d, planes: %d\n",
+	output->active_length, wholebytes, crumbs, image->colour_type);
+
+    fprintf(stderr, "Cyan: ");
+    for (i=0; i < output->active_length; i++) {
+	fprintf(stderr, "%02x ", (unsigned char) cyan_buf[i]);
+    }
+    fprintf(stderr, "\n");
+    fprintf(stderr, "Magenta: ");
+    for (i=0; i < output->active_length; i++) {
+	fprintf(stderr, "%02x ", (unsigned char) magenta_buf[i]);
+    }
+    fprintf(stderr, "\n");
+    fprintf(stderr, "Yellow: ");
+    for (i=0; i < output->active_length; i++) {
+	fprintf(stderr, "%02x ", (unsigned char) yellow_buf[i]);
+    }
+    fprintf(stderr, "\n");
+    if (image->colour_type == 4) {
+	fprintf(stderr, "Black: ");
+	for (i=0; i < output->active_length; i++) {
+	    fprintf(stderr, "%02x ", (unsigned char) black_buf[i]);
+	}
+	fprintf(stderr, "\n");
+    }
+#endif
+
+    if (image->colour_type != 4) {
+	for (i=0; i < wholebytes; i++) {
+	    for (j=0,jj=0; j < 8; j++,jj+=3) {
+		tb[jj] = 255- (((cyan_buf[i] >> (7-j)) & 1)*255);
+		tb[jj+1] = 255- (((magenta_buf[i] >> (7-j)) & 1)*255);
+		tb[jj+2] = 255- (((yellow_buf[i] >> (7-j)) & 1)*255);
+	    }
+	    (void) fwrite(&tb[0], sizeof(char), (size_t) (8*3), write_fd);
+	}
+	for (j=0,jj=0; j < crumbs; j++,jj+=3) {
+	    tb[jj] = 255- (((cyan_buf[wholebytes] >> (7-j)) & 1)*255);
+	    tb[jj+1] = 255- (((magenta_buf[wholebytes] >> (7-j)) & 1)*255);
+	    tb[jj+2] = 255- (((yellow_buf[wholebytes] >> (7-j)) & 1)*255);
+	}
+	(void) fwrite(&tb[0], sizeof(char), (size_t) crumbs*3, write_fd);
+    }
+    else {
+	for (i=0; i < wholebytes; i++) {
+	    for (j=0,jj=0; j < 8; j++,jj+=3) {
+#if !defined OUTPUT_CMYK_ONLY_K && !defined OUTPUT_CMYK_ONLY_CMY
+		tb[jj] = 255- ((((cyan_buf[i]|black_buf[i]) >> (7-j)) & 1)*255);
+		tb[jj+1] = 255- ((((magenta_buf[i]|black_buf[i]) >> (7-j)) & 1)*255);
+		tb[jj+2] = 255- ((((yellow_buf[i]|black_buf[i]) >> (7-j)) & 1)*255);
+#endif
+#ifdef OUTPUT_CMYK_ONLY_K
+		tb[jj] = 255- (((black_buf[i] >> (7-j)) & 1)*255);
+		tb[jj+1] = 255- (((black_buf[i] >> (7-j)) & 1)*255);
+		tb[jj+2] = 255- (((black_buf[i] >> (7-j)) & 1)*255);
+#endif
+#ifdef OUTPUT_CMYK_ONLY_CMY
+		tb[jj] = 255- (((cyan_buf[i] >> (7-j)) & 1)*255);
+		tb[jj+1] = 255- (((magenta_buf[i] >> (7-j)) & 1)*255);
+		tb[jj+2] = 255- (((yellow_buf[i] >> (7-j)) & 1)*255);
+#endif
+	    }
+	    (void) fwrite(&tb[0], sizeof(char), (size_t) (8*3), write_fd);
+	}
+	for (j=0,jj=0; j < crumbs; j++,jj+=3) {
+#if !defined OUTPUT_CMYK_ONLY_K && !defined OUTPUT_CMYK_ONLY_CMY
+	    tb[jj] = 255- ((((cyan_buf[wholebytes]|black_buf[wholebytes]) >> (7-j)) & 1)*255);
+	    tb[jj+1] = 255- ((((magenta_buf[wholebytes]|black_buf[wholebytes]) >> (7-j)) & 1)*255);
+	    tb[jj+2] = 255- ((((yellow_buf[wholebytes]|black_buf[wholebytes]) >> (7-j)) & 1)*255);
+#endif
+#ifdef OUTPUT_CMYK_ONLY_K
+	    tb[jj] = 255- (((black_buf[wholebytes] >> (7-j)) & 1)*255);
+	    tb[jj+1] = 255- (((black_buf[wholebytes] >> (7-j)) & 1)*255);
+	    tb[jj+2] = 255- (((black_buf[wholebytes] >> (7-j)) & 1)*255);
+#endif
+#ifdef OUTPUT_CMYK_ONLY_CMY
+	    tb[jj] = 255- (((cyan_buf[wholebytes] >> (7-j)) & 1)*255);
+	    tb[jj+1] = 255- (((magenta_buf[wholebytes] >> (7-j)) & 1)*255);
+	    tb[jj+2] = 255- (((yellow_buf[wholebytes] >> (7-j)) & 1)*255);
+#endif
+	}
+	(void) fwrite(&tb[0], sizeof(char), (size_t) crumbs*3, write_fd);
+    }
+}
+
+/*
+ * decode_tiff() - Uncompress a TIFF encoded buffer
+ */
+
+int decode_tiff(char *in_buffer,		/* I: Data buffer */
+		int data_length,		/* I: Length of data */
+		char *decode_buf,		/* O: decoded data */
+		int maxlen)			/* I: Max length of decode_buf */
+{	
+/* The TIFF coding consists of either:-
+ *
+ * (0 <= count <= 127) (count+1 bytes of data) for non repeating data
+ * or
+ * (-127 <= count <= -1) (data) for 1-count bytes of repeating data
+ */
+
+    int count;
+    int pos = 0;
+    int dpos = 0;
+#ifdef DEBUG
+    int i;
+#endif
+
+    while(pos < data_length ) {
+
+	count = in_buffer[pos];
+
+	if ((count >= 0) && (count <= 127)) {
+#ifdef DEBUG
+	    fprintf(stderr, "%d bytes of nonrepeated data\n", count+1);
+	    fprintf(stderr, "DATA: ");
+	    for (i=0; i< (count+1); i++) {
+		fprintf(stderr, "%02x ", (unsigned char) in_buffer[pos + 1 + i]);
+	    }
+	    fprintf(stderr, "\n");
+#endif
+	    if ((dpos + count + 1) > maxlen) {
+		fprintf(stderr, "ERROR: Too much expanded data (%d), increase MAX_DATA!\n", dpos + count + 1);
+		exit(EXIT_FAILURE);
+	    }
+	    memcpy(&decode_buf[dpos], &in_buffer[pos+1], (size_t) (count + 1));
+	    dpos += count + 1;
+	    pos += count + 2;
+	}
+	else if ((count >= -127) && (count < 0)) {
+#ifdef DEBUG
+	    fprintf(stderr, "%02x repeated %d times\n", (unsigned char) in_buffer[pos + 1], 1 - count);
+#endif
+	    if ((dpos + 1 - count) > maxlen) {
+		fprintf(stderr, "ERROR: Too much expanded data (%d), increase MAX_DATA!\n", dpos + 1 - count);
+		exit(EXIT_FAILURE);
+	    }
+	    memset(&decode_buf[dpos], in_buffer[pos + 1], (size_t) (1 - count));
+	    dpos += 1 - count;
+	    pos += 2;
+	}
+	else {
+	    fprintf(stderr, "ERROR: Illegal TIFF count: %d, skipped\n", count);
+	    pos += 2;
+	}
+    }
+
+#ifdef DEBUG
+    fprintf(stderr, "TIFFOUT: ");
+    for (i=0; i< dpos; i++) {
+	fprintf(stderr, "%02x ", (unsigned char) decode_buf[i]);
+    }
+    fprintf(stderr, "\n");
+#endif
+    return(dpos);
+}
+
+/*
+ * pcl_reset() - Rest image parameters to default
+ */
+
+void pcl_reset(image_t *i) {
+    i->colour_type = PCL_MONO;
+    i->black_depth = 2;		/* Assume mono */
+    i->cyan_depth = 0;
+    i->magenta_depth = 0;
+    i->yellow_depth = 0;
+    i->image_width = -1;
+    i->image_height = -1;
+    i->compression_type = -1;	/* should this be NONE? */
+}
+
+/*
+ * depth_to_rows() - convert the depth of the colour into the number
+ * of data rows needed to represent it. Assumes that depth is a power
+ * of 2, FIXME if not!
+ */
+
+int depth_to_rows(int depth){
+    int rows;
+
+    if (depth == 0)
+	return(0);
+
+    for (rows = 1; rows < 8; rows++) {
+    if ((depth >> rows) == 1)
+	return(rows);
+    }
+    fprintf(stderr, "ERROR: depth %d too big to handle in depth_to_rows()!\n",
+	depth);
+    return(0);	/* ?? */
+}
+
+/*
+ * Main
+ */
+
+int main(int argc, char *argv[]) {
 
     int command_index;
     int command;
-    int i,j;
-    char tb[8];
-    int wholebytes, crumbs;
+    int i, j;				/* Loop/general variables */
+    int image_row_counter = -1;		/* Count of current row */
+    int current_data_row = -1;		/* Count of data rows received for this output row */
+    int expected_data_rows_per_row = -1;
+					/* Expected no of data rows per output row */
+    image_t image_data;			/* Data concerning image */
 
-/* Things we need to know before we can output the image */
-/* Some things default if not given */
+/*
+ * Holders for the decoded lines
+ */
 
-    int color_type = PCL_MONO;		/* Mono, 3/4 colour */
-    int black_depth = 2;		/* 2 level, 4 level */
-    int cyan_depth = 2;			/* 2 level, 4 level */
-    int magenta_depth = 2;		/* 2 level, 4 level */
-    int yellow_depth = 2;		/* 2 level, 4 level */
-    int image_width = -1;
-    int image_height = -1;
-    int compression_type = -1;		/* Uncompressed or TIFF */
+    output_t output_data;
+
+/*
+ * The above pointers (when allocated) are then copied into this
+ * variable in the correct order so that the received data can
+ * be stored.
+ */
+
+    char **received_rows;
+
+    output_data.black_bufs = NULL;		/* Storage for black rows */
+    output_data.black_data_rows_per_row = 0;	/* Number of black rows */
+    output_data.cyan_bufs = NULL;
+    output_data.cyan_data_rows_per_row = 0;
+    output_data.magenta_bufs = NULL;
+    output_data.magenta_data_rows_per_row = 0;
+    output_data.yellow_bufs = NULL;
+    output_data.yellow_data_rows_per_row = 0;
+    output_data.active_length = 0;
+
+    received_rows = NULL;
 
     if(argc == 1){
         read_fd = stdin;
@@ -301,17 +626,19 @@ int main(int argc,char *argv[]){
     }
 
     if (read_fd == (FILE *)NULL) {
-        fprintf(stderr, "Error Opening input file.\n");
-        exit (1);
+        fprintf(stderr, "ERROR: Error Opening input file.\n");
+        exit (EXIT_FAILURE);
     }
 
     if (write_fd == (FILE *)NULL) {
-        fprintf(stderr, "Error Opening output file.\n");
-        exit (1);
+        fprintf(stderr, "ERROR: Error Opening output file.\n");
+        exit (EXIT_FAILURE);
     }
 
     read_pointer=-1;
     eof=0;
+
+    pcl_reset(&image_data);
 
     while (1) {
         pcl_read_command();
@@ -321,7 +648,7 @@ int main(int argc,char *argv[]){
 #endif
             (void) fclose(read_fd);
             (void) fclose(write_fd);
-            exit(0);
+            exit(EXIT_SUCCESS);
         }
 
 #ifdef DEBUG
@@ -331,8 +658,9 @@ int main(int argc,char *argv[]){
 
 	command_index = pcl_find_command();
         if (command_index == -1) {
-            fprintf(stderr, "Unknown command: %s%d%c\n", initial_command,
+            fprintf(stderr, "ERROR: Unknown command: %s%d%c\n", initial_command,
                 numeric_arg, final_command);
+/* We may have to skip some data here */
 	}
 	else {
 	    command = pcl_commands[command_index].command;
@@ -344,16 +672,21 @@ int main(int argc,char *argv[]){
 		fprintf(stderr, "Data: ");
 #endif
 
+		if (numeric_arg > MAX_DATA) {
+		    fprintf(stderr, "ERROR: Too much data (%d), increase MAX_DATA!\n", numeric_arg);
+		    exit(EXIT_FAILURE);
+		}
+
 		for (i=0; i < numeric_arg; i++) {
 		    fill_buffer();
 		    if (eof == 1) {
-			fprintf(stderr, "Unexpected EOF whilst reading data\n");
-			exit(3);
+			fprintf(stderr, "ERROR: Unexpected EOF whilst reading data\n");
+			exit(EXIT_FAILURE);
 		    }
 		    data_buffer[i] = read_buffer[read_pointer];
 
 #ifdef DEBUG
-		    fprintf(stderr, "%04x ", data_buffer[i]);
+		    fprintf(stderr, "%02x ", (unsigned char) data_buffer[i]);
 #endif
 
 		    read_pointer++;
@@ -367,14 +700,7 @@ int main(int argc,char *argv[]){
 	    switch(command) {
 	    case PCL_RESET :
 		fprintf(stderr, "%s\n", pcl_commands[command_index].description);
-		color_type = PCL_MONO;
-		black_depth = 2;
-		cyan_depth = 2;
-		magenta_depth = 2;
-		yellow_depth = 2;
-		image_width = -1;
-		image_height = -1;
-		compression_type = -1;
+		pcl_reset(&image_data);
 		break;
 
 	    case PCL_START_RASTER :
@@ -383,37 +709,164 @@ int main(int argc,char *argv[]){
 /* Make sure we have all the stuff needed to work out what we are going
    to write out. */
 
-		if (image_width == -1)
-		    fprintf(stderr, "Error: Image width not set!\n");
-		if (image_height == -1)
-		    fprintf(stderr, "Error: Image height not set!\n");
+		i = 0;		/* use as error indicator */
 
-		if (color_type != PCL_MONO) {
-		    fprintf(stderr, "Sorry, only MONO handled.\n");
-		    exit (4);
+		if (image_data.image_width == -1) {
+		    fprintf(stderr, "ERROR: Image width not set!\n");
+		    i++;
 		}
-		if (black_depth != 2) {
-		    fprintf(stderr, "Sorry, only 2 level dithers handled.\n");
-		    exit (4);
+		if (image_data.image_height == -1) {
+		    fprintf(stderr, "ERROR: Image height not set!\n");
+		    i++;
 		}
-		if (compression_type != PCL_COMPRESSION_NONE) {
-		    fprintf(stderr, "Sorry, only 'no compression' handled.\n");
-		    exit(4);
+
+		if ((image_data.black_depth != 0) &&
+		    (image_data.black_depth != 2)) {
+		    fprintf(stderr, "Sorry, only 2 level black dithers handled.\n");
+		    i++;
 		}
-		if (color_type == PCL_MONO)
+		if ((image_data.cyan_depth != 0) &&
+		    (image_data.cyan_depth != 2)) {
+		    fprintf(stderr, "Sorry, only 2 level cyan dithers handled.\n");
+		    i++;
+		}
+		if ((image_data.magenta_depth != 0) &&
+		    (image_data.magenta_depth != 2)) {
+		    fprintf(stderr, "Sorry, only 2 level magenta dithers handled.\n");
+		    i++;
+		}
+		if ((image_data.yellow_depth != 0) &&
+		    (image_data.yellow_depth != 2)) {
+		    fprintf(stderr, "Sorry, only 2 level yellow dithers handled.\n");
+		    i++;
+		}
+
+		if ((image_data.compression_type != PCL_COMPRESSION_NONE) &&
+			(image_data.compression_type != PCL_COMPRESSION_TIFF)) {
+		    fprintf(stderr,
+			"Sorry, only 'no compression' or 'tiff compression' handled.\n");
+		    i++;
+		}
+
+		if (i != 0) {
+		    fprintf(stderr, "Cannot continue.\n");
+		    exit (EXIT_FAILURE);
+		}
+
+		if (image_data.colour_type == PCL_MONO)
 		    (void) fputs("P5\n", write_fd);	/* Raw, Grey */
 		else
 		    (void) fputs("P6\n", write_fd);	/* Raw, RGB */
 
 		(void) fputs("# Written by pclunprint.\n", write_fd);
 
-		fprintf(write_fd, "%d %d\n255\n", image_width, image_height);
+		fprintf(write_fd, "%d %d\n255\n", image_data.image_width,
+		    image_data.image_height);
 		
+		image_row_counter = 0;
+		current_data_row = 0;
+
+		output_data.black_data_rows_per_row = depth_to_rows(image_data.black_depth);
+		output_data.cyan_data_rows_per_row = depth_to_rows(image_data.cyan_depth);
+		output_data.magenta_data_rows_per_row = depth_to_rows(image_data.magenta_depth);
+		output_data.yellow_data_rows_per_row = depth_to_rows(image_data.yellow_depth);
+
+/*
+ * Allocate some storage for the expected planes
+ */
+
+		if (output_data.black_data_rows_per_row != 0) {
+		    output_data.black_bufs = malloc(output_data.black_data_rows_per_row * sizeof (char *));
+		    for (i=0; i < output_data.black_data_rows_per_row; i++) {
+			output_data.black_bufs[i] = malloc(MAX_DATA * sizeof (char));
+		    }
+		}
+		if (output_data.cyan_data_rows_per_row != 0) {
+		    output_data.cyan_bufs = malloc(output_data.cyan_data_rows_per_row * sizeof (char *));
+		    for (i=0; i < output_data.cyan_data_rows_per_row; i++) {
+			output_data.cyan_bufs[i] = malloc(MAX_DATA * sizeof (char));
+		    }
+		}
+		if (output_data.magenta_data_rows_per_row != 0) {
+		    output_data.magenta_bufs = malloc(output_data.magenta_data_rows_per_row * sizeof (char *));
+		    for (i=0; i < output_data.magenta_data_rows_per_row; i++) {
+			output_data.magenta_bufs[i] = malloc(MAX_DATA * sizeof (char));
+		    }
+		}
+		if (output_data.yellow_data_rows_per_row != 0) {
+		    output_data.yellow_bufs = malloc(output_data.yellow_data_rows_per_row * sizeof (char *));
+		    for (i=0; i < output_data.yellow_data_rows_per_row; i++) {
+			output_data.yellow_bufs[i] = malloc(MAX_DATA * sizeof (char));
+		    }
+		}
+
+/*
+ * Now store the pointers in the right order to make life easier in the
+ * decoding phase
+ */
+
+		expected_data_rows_per_row = output_data.black_data_rows_per_row + 
+		    output_data.cyan_data_rows_per_row + output_data.magenta_data_rows_per_row + 
+		    output_data.yellow_data_rows_per_row;
+
+		received_rows = malloc(expected_data_rows_per_row * sizeof(char *));
+		j = 0;
+		for (i = 0; i < output_data.black_data_rows_per_row; i++)
+		    received_rows[j++] = output_data.black_bufs[i];
+		for (i = 0; i < output_data.cyan_data_rows_per_row; i++)
+		    received_rows[j++] = output_data.cyan_bufs[i];
+		for (i = 0; i < output_data.magenta_data_rows_per_row; i++)
+		    received_rows[j++] = output_data.magenta_bufs[i];
+		for (i = 0; i < output_data.yellow_data_rows_per_row; i++)
+		    received_rows[j++] = output_data.yellow_bufs[i];
+
 		break;
 
 	    case PCL_END_RASTER :
 	    case PCL_END_RASTER_NEW :
 		fprintf(stderr, "%s\n", pcl_commands[command_index].description);
+
+/*
+ * Check that we got the correct number of rows of data.
+ */
+
+		if (image_row_counter != image_data.image_height)
+		    fprintf(stderr, "ERROR: Row count mismatch. Expected %d rows, got %d rows.\n",
+			image_data.image_height, image_row_counter);
+		else
+		    fprintf(stderr, "\t%d rows processed.\n", image_row_counter);
+
+		if (output_data.black_data_rows_per_row != 0) {
+		    for (i=0; i < output_data.black_data_rows_per_row; i++) {
+			free(output_data.black_bufs[i]);
+		    }
+		    free(output_data.black_bufs);
+		    output_data.black_bufs = NULL;
+		}
+		if (output_data.cyan_data_rows_per_row != 0) {
+		    for (i=0; i < output_data.cyan_data_rows_per_row; i++) {
+			free(output_data.cyan_bufs[i]);
+		    }
+		    free(output_data.cyan_bufs);
+		    output_data.cyan_bufs = NULL;
+		}
+		if (output_data.magenta_data_rows_per_row != 0) {
+		    for (i=0; i < output_data.magenta_data_rows_per_row; i++) {
+			free(output_data.magenta_bufs[i]);
+		    }
+		    free(output_data.magenta_bufs);
+		    output_data.magenta_bufs = NULL;
+		}
+		if (output_data.yellow_data_rows_per_row != 0) {
+		    for (i=0; i < output_data.yellow_data_rows_per_row; i++) {
+			free(output_data.yellow_bufs[i]);
+		    }
+		    free(output_data.yellow_bufs);
+		    output_data.yellow_bufs = NULL;
+		}
+		free(received_rows);
+		received_rows = NULL;
+
 		break;
 
 	    case PCL_MEDIA_SIZE :
@@ -496,84 +949,160 @@ int main(int argc,char *argv[]){
 		fprintf(stderr, "%s: %d\n", pcl_commands[command_index].description, numeric_arg);
 		break;
 
-	    case PCL_COLORTYPE :
-		fprintf(stderr, "%s: %d\n", pcl_commands[command_index].description, numeric_arg);
-		color_type = numeric_arg;
+	    case PCL_COLOURTYPE :
+		fprintf(stderr, "%s: ", pcl_commands[command_index].description);
+		image_data.colour_type = -numeric_arg;
+		switch (image_data.colour_type) {
+		    case PCL_MONO :
+			fprintf(stderr, "MONO\n");
+			break;
+		    case PCL_CMY :
+			fprintf(stderr, "CMY (one cart)\n");
+			image_data.black_depth = 0;	/* Black levels */
+			image_data.cyan_depth = 2;	/* Cyan levels */
+			image_data.magenta_depth = 2;	/* Magenta levels */
+			image_data.yellow_depth = 2;	/* Yellow levels */
+			break;
+		    case PCL_CMYK :
+			fprintf(stderr, "CMYK (two cart)\n");
+			image_data.cyan_depth = 2;	/* Cyan levels */
+			image_data.magenta_depth = 2;	/* Magenta levels */
+			image_data.yellow_depth = 2;	/* Yellow levels */
+			break;
+		    default :
+			fprintf(stderr, "Unknown (%d)\n", -numeric_arg);
+			break;
+		}
 		break;
 
 	    case PCL_COMPRESSIONTYPE :
-		fprintf(stderr, "%s: %d\n", pcl_commands[command_index].description, numeric_arg);
-		compression_type = numeric_arg;
+		fprintf(stderr, "%s: ", pcl_commands[command_index].description);
+		image_data.compression_type = numeric_arg;
+		switch (image_data.compression_type) {
+		    case PCL_COMPRESSION_NONE :
+			fprintf(stderr, "NONE\n");
+			break;
+		    case PCL_COMPRESSION_TIFF :
+			fprintf(stderr, "TIFF\n");
+			break;
+		    default :
+			fprintf(stderr, "Unknown (%d)\n", image_data.compression_type);
+			break;
+		}
 		break;
 
 	    case PCL_RASTER_WIDTH :
 		fprintf(stderr, "%s: %d\n", pcl_commands[command_index].description, numeric_arg);
-		image_width = numeric_arg;
+		image_data.image_width = numeric_arg;
 		break;
 
 	    case PCL_RASTER_HEIGHT :
 		fprintf(stderr, "%s: %d\n", pcl_commands[command_index].description, numeric_arg);
-		image_height = numeric_arg;
+		image_data.image_height = numeric_arg;
 		break;
 
 	    case PCL_CONFIGURE :
 		fprintf(stderr, "%s\n", pcl_commands[command_index].description);
-		fprintf(stderr, "Format: %d, Output Planes: %d\n", data_buffer[0], data_buffer[1]);
-		fprintf(stderr, "Black: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[2]<<8)+data_buffer[3],
+		fprintf(stderr, "\tFormat: %d, Output Planes: ", data_buffer[0]);
+		switch (data_buffer[1]) {
+		    case PCL_MONO :
+			fprintf(stderr, "MONO\n");
+			break;
+		    case PCL_CMY :
+			fprintf(stderr, "CMY (one cart)\n");
+			break;
+		    case PCL_CMYK :
+			fprintf(stderr, "CMYK (two cart)\n");
+			break;
+		    default :
+			fprintf(stderr, "Unknown (%d)\n", data_buffer[1]);
+			break;
+		}
+		fprintf(stderr, "\tBlack: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[2]<<8)+data_buffer[3],
 		    (data_buffer[4]<<8)+data_buffer[5], data_buffer[7]);
-		fprintf(stderr, "Cyan: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[8]<<8)+data_buffer[9],
+		fprintf(stderr, "\tCyan: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[8]<<8)+data_buffer[9],
 		    (data_buffer[10]<<8)+data_buffer[11], data_buffer[13]);
-		fprintf(stderr, "Magenta: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[14]<<8)+data_buffer[15],
+		fprintf(stderr, "\tMagenta: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[14]<<8)+data_buffer[15],
 		    (data_buffer[16]<<8)+data_buffer[17], data_buffer[19]);
-		fprintf(stderr, "Cyan: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[20]<<8)+data_buffer[21],
+		fprintf(stderr, "\tCyan: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[20]<<8)+data_buffer[21],
 		    (data_buffer[22]<<8)+data_buffer[23], data_buffer[25]);
 
-		color_type = data_buffer[1]; 	/* # output planes */
-		black_depth = data_buffer[7];	/* Black levels */
-		cyan_depth = data_buffer[13];	/* Cyan levels */
-		magenta_depth = data_buffer[19];/* Magenta levels */
-		yellow_depth = data_buffer[25];	/* Yellow levels */
+		image_data.colour_type = data_buffer[1]; 	/* # output planes */
+		if (image_data.colour_type != PCL_CMY)
+		    image_data.black_depth = data_buffer[7];	/* Black levels */
+		else {
+		    image_data.black_depth = 0;			/* No Black levels */
+		    fprintf(stderr, "\t(ignoring black depth)\n");
+		}
+		if (image_data.colour_type != PCL_MONO) {
+		    image_data.cyan_depth = data_buffer[13];	/* Cyan levels */
+		    image_data.magenta_depth = data_buffer[19];	/* Magenta levels */
+		    image_data.yellow_depth = data_buffer[25];	/* Yellow levels */
+		}
+		else {
+		    image_data.cyan_depth = 0;			/* Cyan levels */
+		    image_data.magenta_depth = 0;		/* Magenta levels */
+		    image_data.yellow_depth = 0;		/* Yellow levels */
+		    fprintf(stderr, "\t(ignoring colour depths)\n");
+		}
 		break;
 
 	    case PCL_DATA :
 	    case PCL_DATA_LAST :
 #ifdef DEBUG
 		fprintf(stderr, "%s\n", pcl_commands[command_index].description);
+		fprintf(stderr, "Data Length: %d\n", numeric_arg);
 #endif
 
-/* The last flag indicates that this is the end of the planes for a row */
-/* for now, just write out the data, since we only handle mono, 2 level */
-/* To convert into PNM format, we have to write out 1 byte per bit of
-   the input data */
-/* The number of bits of data is given by the image width, there may be
-   some crumbs in the last byte of data */
+/*
+ * Make sure that we have enough data to process this command!
+ */
 
-		wholebytes = image_width / 8;
-		crumbs = image_width - (wholebytes * 8);
+		if (expected_data_rows_per_row == -1)
+		    fprintf(stderr, "ERROR: raster data without start raster!\n");
 
-#ifdef DEBUG
-		fprintf(stderr, "Data Length: %d, wholebytes: %d, crumbs: %d\n",
-		    numeric_arg, wholebytes, crumbs);
-#endif
+/* 
+ * The last flag indicates that this is the end of the planes for a row
+ * so we check it against the number of planes we have seen and are
+ * expecting.
+ */
 
-		if (compression_type == PCL_COMPRESSION_NONE) {
-		    for (i=0; i < wholebytes; i++) {
-			for (j=0; j < 8; j++) {
-			    tb[j] = 255- (((data_buffer[i] >> (7-j)) & 1)*255);
-			}
-			(void) fwrite(&tb[0], sizeof(char), 8, write_fd);
-		    }
-		    for (j=0; j < crumbs; j++) {
-			tb[j] = 255- (((data_buffer[wholebytes] >> (7-j)) & 1)*255);
-		    }
-		    (void) fwrite(&tb[0], sizeof(char), (size_t) crumbs, write_fd);
+		if (command == PCL_DATA_LAST) {
+		    if (current_data_row != (expected_data_rows_per_row - 1))
+			fprintf(stderr, "ERROR: 'Last Plane' set on plane %d of %d!\n",
+			    current_data_row, expected_data_rows_per_row);
 		}
-		else if (compression_type == PCL_COMPRESSION_TIFF) {
+		else {
+		    if (current_data_row == (expected_data_rows_per_row - 1))
+			fprintf(stderr, "ERROR: Expected 'last plane', but not set!\n");
 		}
+
+/*
+ * Accumulate the data rows for each output row,then write the image.
+ */
+
+		if (image_data.compression_type == PCL_COMPRESSION_NONE) {
+		    memcpy(received_rows[current_data_row], &data_buffer, (size_t) numeric_arg);
+		    output_data.active_length = numeric_arg;
+		}
+		else
+		    output_data.active_length = decode_tiff(data_buffer, numeric_arg, received_rows[current_data_row], MAX_DATA);
+
+		if (command == PCL_DATA_LAST) {
+		    if (image_data.colour_type == PCL_MONO)
+			write_grey(&output_data, &image_data);
+		    else
+			write_colour(&output_data, &image_data);
+		    current_data_row = 0;
+		    image_row_counter++;
+		}
+		else
+		    current_data_row++;
+
 		break;
 
 	    default :
-		fprintf(stderr, "No handler for %s!\n", pcl_commands[command_index].description);
+		fprintf(stderr, "ERROR: No handler for %s!\n", pcl_commands[command_index].description);
 		break;
 	    }
 	}
@@ -584,6 +1113,10 @@ int main(int argc,char *argv[]){
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.2  2000/02/20 20:52:31  davehill
+ *   Now does TIFF compressed files and 2 level colour in CMY
+ *   or CMYK
+ *
  *   Revision 1.1  2000/02/17 01:02:13  rlk
  *   Rename various programs
  *
