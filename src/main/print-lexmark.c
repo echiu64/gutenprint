@@ -3,7 +3,7 @@
  *
  *   Print plug-in Lexmark driver for the GIMP.
  *
- *   Copyright 2000 Richard wisenoecker (richard.wisenoecker@gmx.at) 
+ *   Copyright 2000 Richard Wisenoecker (richard.wisenoecker@gmx.at) 
  *
  *   The plug-in is based on the code of the CANON BJL plugin for the GIMP
  *   of Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu).
@@ -36,7 +36,7 @@
  *
  */
 
-/*#define DEBUG 1 */
+/* #define DEBUG 1 */
 
 
 
@@ -389,7 +389,7 @@ static lexmark_cap_t lexmark_model_capabilities[] =
     m_z52,
     618, 936,      /* max paper size *//* 8.58" x 13 " */
     2400, 1200, 2, /* max resolution */
-    11, 9, 10, 18, /* border */
+    11, 9, 10, 10, /* border */
     LEXMARK_INK_CMY | LEXMARK_INK_CMYK | LEXMARK_INK_CcMmYK,
     LEXMARK_SLOT_ASF1 | LEXMARK_SLOT_MAN1,
     LEXMARK_CAP_DMT,
@@ -410,7 +410,7 @@ static lexmark_cap_t lexmark_model_capabilities[] =
     LEXMARK_SLOT_ASF1 | LEXMARK_SLOT_MAN1,
     LEXMARK_CAP_DMT,
     /* resolution specific */
-    {{true}, {true}, {false}, {false}},
+    {{false}, {false}, {false}, {false}},
     /*** printer internal parameters ***/
     0,         /* real left paper border */
     300,       /* real top paper border */
@@ -817,13 +817,19 @@ lexmark_init_printer(FILE *prn, lexmark_cap_t caps,
 	};
 
   /* write init sequence */
-  switch (caps.model) {
-  case m_z52:
-    fwrite(startHeader_z52,LXM_Z52_STARTSIZE,1,prn);
-    break;
-  default:
-    fprintf(stderr, "Unknown printer !! %i\n", caps.model);
-    exit(2); 
+  switch(caps.model) 
+	{
+		case m_z52:
+			fwrite(startHeader_z52,LXM_Z52_STARTSIZE,1,prn);
+			break;
+
+		case m_3200:
+			fwrite(startHeader_3200, LXM_3200_STARTSIZE, 1, prn);
+			break;
+
+		default:
+			fprintf(stderr, "Unknown printer !! %i\n", caps.model);
+			exit(2); 
   }
 
   if (output_type==OUTPUT_GRAY) {
@@ -1086,7 +1092,7 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
   int interlace=0; /* is one if not interlace. At 2, first every even line is written second every odd is written */
   int d_interlace=0; /* is one if not interlace. At 2, first every even line is written second every odd is written */
   int printMode = 0;
-  int direction = 0;
+  int direction = 1; /* Daniel Gordini - this was initially set to zero */
   int media, source;
   /* Lexmark do not have differnet pixel sizes. We have to correct the density according the print resolution. */
   int  densityDivisor;  /* This parameter is will adapt the density according the resolution */
@@ -2596,8 +2602,9 @@ lexmark_write_line(FILE *prn,	/* I - Print file or command */
 FILE *lex_show_init(int x, int y) {
   FILE *ofile;
 
-  ofile = fopen("/xx.ppm", "wb");
-  if (ofile == NULL) {
+  ofile = fopen("/tmp/xx.ppm", "wb");
+  if (ofile == NULL) 
+	{
     printf("Can't create file !\n");
     exit(2);
   }
