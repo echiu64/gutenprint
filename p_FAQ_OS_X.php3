@@ -26,7 +26,7 @@ require('standard_html_header.php3');
  <li><a href="p_FAQ_OS_X.php3#pictwpstopdf">
  I am trying to print from (Quark, Phtoshop, etc...) using Gimp-Print on
  Mac OS X Panther (10.3.x) but whenever I include EPS files I get really
- low qualtiy output. This did not happen on Mac OS X Jaguar (10.2.x). Did
+ low quality output. This did not happen on Mac OS X Jaguar (10.2.x). Did
  the the printing behavior change between Mac OS 10.2 and Mac OS 10.3? How
  can I get the high quality output in Panther?
  </a>
@@ -226,7 +226,7 @@ require('standard_html_header.php3');
  <li><h3>
  I am trying to print from (Quark, Phtoshop, etc...) using Gimp-Print on
  Mac OS X Panther (10.3.x) but whenever I include EPS files I get really
- low qualtiy output. This did not happen on Mac OS X Jaguar (10.2.x). Did
+ low quality output. This did not happen on Mac OS X Jaguar (10.2.x). Did
  the the printing behavior change between Mac OS 10.2 and Mac OS 10.3? How
  can I get the high quality output in Panther?
  </h3>
