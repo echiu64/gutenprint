@@ -1,6 +1,6 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.3.4, released July 14, 2002, is a development release of
+Gimp-Print 4.3.4, released August 20, 2002, is a development release of
 this package.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
@@ -33,6 +33,11 @@ Gimp-Print 4.3.4 contains the following major changes over Gimp-Print
    This is currently only accessible via the testpattern generator.
    This could be used in conjunction with external color generation
    as part of a fully color managed workflow.
+
+2) Improvements for various Epson Stylus printers, and support for
+   some new printers, as detailed in src/ghost/README.
+
+3) Assorted bug fixes merged from the 4.2 branch.
 
 
 Gimp-Print 4.3.3 contains the following major changes over Gimp-Print
@@ -163,9 +168,16 @@ EPSON Stylus C20SX
 EPSON Stylus C20UX
 EPSON Stylus C40SX
 EPSON Stylus C40UX
+EPSON Stylus C41SX
+EPSON Stylus C41UX
+EPSON Stylus C42SX
+EPSON Stylus C42UX
 EPSON Stylus C60
+EPSON Stylus C61
+EPSON Stylus C62
 EPSON Stylus C70
 EPSON Stylus C80
+EPSON Stylus C82
 EPSON Stylus Color
 EPSON Stylus Color Pro
 EPSON Stylus Color Pro XL
@@ -200,15 +212,17 @@ EPSON Stylus Photo 720
 EPSON Stylus Photo 750
 EPSON Stylus Photo 780/785/790
 EPSON Stylus Photo 810/820
+EPSON Stylus Photo 830
 EPSON Stylus Photo 870/875
 EPSON Stylus Photo 890/895
-EPSON Stylus Photo 950			(NEW, partially tuned)
+EPSON Stylus Photo 915
+EPSON Stylus Photo 925
+EPSON Stylus Photo 950/960		(NEW, partially tuned)
 EPSON Stylus Photo 1200
 EPSON Stylus Photo 1270
 EPSON Stylus Photo 1280/1290
 EPSON Stylus Photo 2000P
-EPSON Stylus Photo 2100			(NEW, experimental)
-EPSON Stylus Photo 2200			(NEW, experimental)
+EPSON Stylus Photo 2100/2200		(NEW, experimental)
 EPSON Stylus Pro 5000
 EPSON Stylus Pro 5500
 EPSON Stylus Pro 7000
