@@ -421,7 +421,7 @@ static escp2_variable_ink_t standard_4pl_1440_ink =
 
 static stp_simple_dither_range_t standard_3pl_dither_ranges[] =
 {
-  { 0.225, 0x1, 1, 1 },
+  { 0.29,  0x1, 1, 1 },
   { 0.68,  0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
@@ -436,8 +436,8 @@ static escp2_variable_ink_t standard_3pl_ink =
 
 static stp_simple_dither_range_t standard_3pl_1440_dither_ranges[] =
 {
-  { 0.45, 0x1, 1, 1 },
-  { 1.36,  0x2, 1, 2 },
+  { 0.39, 0x1, 1, 1 },
+  { 1.0,  0x2, 1, 2 }
 };
 
 static escp2_variable_ink_t standard_3pl_1440_ink =
@@ -1412,7 +1412,7 @@ static escp2_stp_printer_t model_capabilities[] =
     COLOR_JET_ARRANGEMENT_DEFAULT,
     1440, 720,
     { -1, 1, 0x11, 1, 0x10, -1, 0x10, -1, -1, -1, -1 },
-    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .323, .365, .1825, .1825, .0913 },
+    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .323, .365, .91, .91, .455 },
     &variable_3pl_4color_inks, standard_lum_adjustment, standard_hue_adjustment,
     standard_sat_adjustment
   },
@@ -1706,7 +1706,7 @@ static escp2_stp_printer_t model_capabilities[] =
     COLOR_JET_ARRANGEMENT_DEFAULT,
     2880, 720,
     { -1, 1, 0x11, 1, 0x10, -1, 0x10, -1, -1, -1, 0x10 },
-    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .323, .365, .91, .91, .455 },
+    { 2.0, 1.3, 1.3, .646, .73, .6, .6, 1, 1, .91, .91, .455 },
     &variable_3pl_4color_inks, standard_lum_adjustment, standard_hue_adjustment,
     standard_sat_adjustment
   },
