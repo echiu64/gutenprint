@@ -283,6 +283,8 @@ do_print(void)
       const char *val = stp_get_string_parameter(global_vars, p->name);
       if (p->p_type == STP_PARAMETER_TYPE_STRING_LIST && val && strlen(val) > 0)
 	stp_set_string_parameter(v, p->name, val);
+      stp_set_page_width(v, stp_get_page_width(global_vars));
+      stp_set_page_height(v, stp_get_page_height(global_vars));
     }
   stp_parameter_list_destroy(params);
 
@@ -396,7 +398,7 @@ fill_black_##bits(unsigned char *data, size_t len, size_t scount)	\
     {									\
       for (i = 0; i < (len / scount) * scount; i++)			\
 	{								\
-	  memset(s_data, 0, sizeof(unsigned short) * 4);		\
+	  memset(s_data, 0, sizeof(T) * 4);				\
 	  s_data[3] = black_val;					\
 	  s_data += 4;							\
 	}								\
@@ -405,7 +407,7 @@ fill_black_##bits(unsigned char *data, size_t len, size_t scount)	\
     {									\
       for (i = 0; i < (len / scount) * scount; i++)			\
 	{								\
-	  memset(s_data, 0, sizeof(unsigned short) * 4);		\
+	  memset(s_data, 0, sizeof(T) * 4);				\
 	  s_data[0] = black_val;					\
 	  s_data += 4;							\
 	}								\
@@ -414,7 +416,7 @@ fill_black_##bits(unsigned char *data, size_t len, size_t scount)	\
     {									\
       for (i = 0; i < (len / scount) * scount; i++)			\
 	{								\
-	  memset(s_data, 0, sizeof(unsigned short) * 1);		\
+	  memset(s_data, 0, sizeof(T) * 1);				\
 	  s_data[0] = black_val;					\
 	  s_data += 1;							\
 	}								\
