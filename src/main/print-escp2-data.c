@@ -1140,6 +1140,160 @@ static const stp_simple_dither_range_t spro10000_photo_dither_ranges[] =
 DECLARE_INK(spro10000_photo, 1.0);
 
 
+/***************************************************************\
+*                                                               *
+*                      STYLUS PHOTO R300                        *
+*                                                               *
+\***************************************************************/
+
+static const stp_simple_dither_range_t standard_r300_360_dither_ranges[] =
+{
+  { 0.15, 0x1, 0, 3 },
+  { 0.30, 0x2, 0, 6 },
+  { 1.00, 0x3, 0, 20 },
+};
+
+DECLARE_INK(standard_r300_360, 1.0);
+
+static const stp_simple_dither_range_t photo_r300_360_dither_ranges[] =
+{
+  { 0.053, 0x1, 1, 3 },
+  { 0.105, 0x2, 1, 6 },
+  { 0.30,  0x2, 0, 6 },
+  { 1.00,  0x3, 0, 20 },
+};
+
+DECLARE_INK(photo_r300_360, 0.5);
+
+static const stp_simple_dither_range_t piezo_r300_360_quadtone_dither_ranges[]=
+{
+  { PIEZO_0 * .15, 0x1, 0, 3 },
+  { PIEZO_0 * .30, 0x2, 0, 6 },
+  { PIEZO_1 * .30, 0x2, 1, 6 },
+  { PIEZO_2 * .30, 0x2, 2, 6 },
+  { PIEZO_2 * 1.0, 0x3, 2, 20 },
+  { PIEZO_3 * 1.0, 0x3, 3, 20 },
+};
+
+DECLARE_INK(piezo_r300_360_quadtone, 0.5);
+
+static const stp_simple_dither_range_t standard_r300_720_dither_ranges[] =
+{
+  { 0.15, 0x1, 0, 3 },
+  { 0.50, 0x2, 0, 10 },
+  { 1.00, 0x3, 0, 20 },
+};
+
+DECLARE_INK(standard_r300_720, 1.0);
+
+static const stp_simple_dither_range_t photo_r300_720_dither_ranges[] =
+{
+  { 0.053, 0x1, 1, 3 },
+  { 0.175, 0x2, 1, 10 },
+  { 0.50,  0x2, 0, 10 },
+  { 1.00,  0x3, 0, 20 },
+};
+
+DECLARE_INK(photo_r300_720, 0.5);
+
+static const stp_simple_dither_range_t piezo_r300_720_quadtone_dither_ranges[]=
+{
+  { PIEZO_0 * .15, 0x1, 0, 3 },
+  { PIEZO_0 * .50, 0x2, 0, 10 },
+  { PIEZO_1 * .50, 0x2, 1, 10 },
+  { PIEZO_2 * .50, 0x2, 2, 10 },
+  { PIEZO_2 * 1.0, 0x3, 2, 20 },
+  { PIEZO_3 * 1.0, 0x3, 3, 20 },
+};
+
+DECLARE_INK(piezo_r300_720_quadtone, 0.5);
+
+static const stp_simple_dither_range_t standard_r300_1440_dither_ranges[] =
+{
+  { 0.25, 0x1, 0, 1 },
+  { 0.50, 0x2, 0, 2 },
+  { 1.00, 0x3, 0, 4 },
+};
+
+DECLARE_INK(standard_r300_1440, 1.0);
+
+static const stp_simple_dither_range_t photo_r300_1440_dither_ranges[] =
+{
+  { 0.088, 0x1, 1, 1 },
+  { 0.175, 0x2, 1, 2 },
+  { 0.50,  0x2, 0, 2 },
+  { 1.00,  0x3, 0, 4 },
+};
+
+DECLARE_INK(photo_r300_1440, 0.5);
+
+static const stp_simple_dither_range_t piezo_r300_1440_quadtone_dither_ranges[]=
+{
+  { PIEZO_0 * .25, 0x1, 0, 1 },
+  { PIEZO_0 * .50, 0x2, 0, 2 },
+  { PIEZO_1 * .50, 0x2, 1, 2 },
+  { PIEZO_2 * .50, 0x2, 2, 2 },
+  { PIEZO_2 * 1.0, 0x3, 2, 4 },
+  { PIEZO_3 * 1.0, 0x3, 3, 4 },
+};
+
+DECLARE_INK(piezo_r300_1440_quadtone, 0.5);
+
+static const stp_simple_dither_range_t standard_r300_2880_dither_ranges[] =
+{
+  { 0.50, 0x1, 0, 1 },
+  { 1.00, 0x2, 0, 2 },
+};
+
+DECLARE_INK(standard_r300_2880, 1.0);
+
+static const stp_simple_dither_range_t photo_r300_2880_dither_ranges[] =
+{
+  { 0.175, 0x1, 1, 1 },
+  { 0.50,  0x1, 0, 1 },
+  { 1.00,  0x2, 0, 2 },
+};
+
+DECLARE_INK(photo_r300_2880, 0.5);
+
+static const stp_simple_dither_range_t piezo_r300_2880_quadtone_dither_ranges[]=
+{
+  { PIEZO_0 * .50, 0x1, 0, 1 },
+  { PIEZO_1 * .50, 0x1, 1, 1 },
+  { PIEZO_2 * .50, 0x1, 2, 1 },
+  { PIEZO_2 * 1.0, 0x2, 2, 2 },
+  { PIEZO_3 * 1.0, 0x2, 3, 2 },
+};
+
+DECLARE_INK(piezo_r300_2880_quadtone, 0.5);
+
+static const stp_simple_dither_range_t standard_r300_2880_1440_dither_ranges[] =
+{
+  { 1.00, 0x1, 0, 1 },
+};
+
+DECLARE_INK(standard_r300_2880_1440, 1.0);
+
+static const stp_simple_dither_range_t photo_r300_2880_1440_dither_ranges[] =
+{
+  { 0.35,  0x1, 1, 1 },
+  { 1.00,  0x1, 0, 1 },
+};
+
+DECLARE_INK(photo_r300_2880_1440, 0.5);
+
+static const stp_simple_dither_range_t piezo_r300_2880_1440_quadtone_dither_ranges[]=
+{
+  { PIEZO_0, 0x1, 0, 1 },
+  { PIEZO_1, 0x1, 1, 1 },
+  { PIEZO_2, 0x1, 2, 1 },
+  { PIEZO_3, 0x1, 3, 1 },
+};
+
+DECLARE_INK(piezo_r300_2880_1440_quadtone, 0.5);
+
+
+
 static const escp2_variable_inkset_t standard_inks =
 {
   NULL,
@@ -1923,6 +2077,127 @@ static const escp2_variable_inkset_t spro10000_photo_inks =
 };
 
 
+static const escp2_variable_inkset_t escp2_r300_360_standard_inks =
+{
+  &standard_r300_360_ink,
+  &standard_r300_360_ink,
+  &standard_r300_360_ink,
+  &standard_r300_360_ink
+};
+
+static const escp2_variable_inkset_t escp2_r300_360_photo_inks =
+{
+  &standard_r300_360_ink,
+  &photo_r300_360_ink,
+  &photo_r300_360_ink,
+  &standard_r300_360_ink
+};
+
+static const escp2_variable_inkset_t piezo_r300_360_quadtone_inks =
+{
+  &piezo_r300_360_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
+
+static const escp2_variable_inkset_t escp2_r300_720_standard_inks =
+{
+  &standard_r300_720_ink,
+  &standard_r300_720_ink,
+  &standard_r300_720_ink,
+  &standard_r300_720_ink
+};
+
+static const escp2_variable_inkset_t escp2_r300_720_photo_inks =
+{
+  &standard_r300_720_ink,
+  &photo_r300_720_ink,
+  &photo_r300_720_ink,
+  &standard_r300_720_ink
+};
+
+static const escp2_variable_inkset_t piezo_r300_720_quadtone_inks =
+{
+  &piezo_r300_720_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
+
+static const escp2_variable_inkset_t escp2_r300_1440_standard_inks =
+{
+  &standard_r300_1440_ink,
+  &standard_r300_1440_ink,
+  &standard_r300_1440_ink,
+  &standard_r300_1440_ink
+};
+
+static const escp2_variable_inkset_t escp2_r300_1440_photo_inks =
+{
+  &standard_r300_1440_ink,
+  &photo_r300_1440_ink,
+  &photo_r300_1440_ink,
+  &standard_r300_1440_ink
+};
+
+static const escp2_variable_inkset_t piezo_r300_1440_quadtone_inks =
+{
+  &piezo_r300_1440_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
+
+static const escp2_variable_inkset_t escp2_r300_2880_standard_inks =
+{
+  &standard_r300_2880_ink,
+  &standard_r300_2880_ink,
+  &standard_r300_2880_ink,
+  &standard_r300_2880_ink
+};
+
+static const escp2_variable_inkset_t escp2_r300_2880_photo_inks =
+{
+  &standard_r300_2880_ink,
+  &photo_r300_2880_ink,
+  &photo_r300_2880_ink,
+  &standard_r300_2880_ink
+};
+
+static const escp2_variable_inkset_t piezo_r300_2880_quadtone_inks =
+{
+  &piezo_r300_2880_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
+
+static const escp2_variable_inkset_t escp2_r300_2880_1440_standard_inks =
+{
+  &standard_r300_2880_1440_ink,
+  &standard_r300_2880_1440_ink,
+  &standard_r300_2880_1440_ink,
+  &standard_r300_2880_1440_ink
+};
+
+static const escp2_variable_inkset_t escp2_r300_2880_1440_photo_inks =
+{
+  &standard_r300_2880_1440_ink,
+  &photo_r300_2880_1440_ink,
+  &photo_r300_2880_1440_ink,
+  &standard_r300_2880_1440_ink
+};
+
+static const escp2_variable_inkset_t piezo_r300_2880_1440_quadtone_inks =
+{
+  &piezo_r300_2880_1440_quadtone_ink,
+  NULL,
+  NULL,
+  NULL
+};
+
+
 
 static const escp2_variable_inklist_t simple_inks =
 {
@@ -2067,6 +2342,45 @@ static const escp2_variable_inklist_t variable_4pl_inks =
     &piezo_4pl_2880_quadtone_inks,
     &piezo_4pl_2880_quadtone_inks,
     &piezo_4pl_2880_quadtone_inks,
+  }
+};
+
+static const escp2_variable_inklist_t variable_3pl_pmg_inks =
+{
+  {
+    &escp2_r300_360_standard_inks,
+    &escp2_r300_360_standard_inks,
+    &escp2_r300_360_standard_inks,
+    &escp2_r300_360_standard_inks,
+    &escp2_r300_720_standard_inks,
+    &escp2_r300_1440_standard_inks,
+    &escp2_r300_2880_standard_inks,
+    &escp2_r300_2880_1440_standard_inks,
+    &escp2_r300_2880_1440_standard_inks,
+  },
+  {
+    &escp2_r300_360_photo_inks,
+    &escp2_r300_360_photo_inks,
+    &escp2_r300_360_photo_inks,
+    &escp2_r300_360_photo_inks,
+    &escp2_r300_720_photo_inks,
+    &escp2_r300_1440_photo_inks,
+    &escp2_r300_2880_photo_inks,
+    &escp2_r300_2880_1440_photo_inks,
+    &escp2_r300_2880_1440_photo_inks,
+  },
+  { NULL, },
+  { NULL, },
+  {
+    &piezo_r300_360_quadtone_inks,
+    &piezo_r300_360_quadtone_inks,
+    &piezo_r300_360_quadtone_inks,
+    &piezo_r300_360_quadtone_inks,
+    &piezo_r300_720_quadtone_inks,
+    &piezo_r300_1440_quadtone_inks,
+    &piezo_r300_2880_quadtone_inks,
+    &piezo_r300_2880_1440_quadtone_inks,
+    &piezo_r300_2880_1440_quadtone_inks,
   }
 };
 
@@ -3219,6 +3533,9 @@ static const escp2_dot_size_t c3pl_dotsizes =
 static const escp2_dot_size_t c4pl_dotsizes =
 { -1,   0x12,   -1, 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x10,   -1, 0x10, 0x10 };
 
+static const escp2_dot_size_t p3pl_dotsizes =
+{ -1,   0x10,   -1, 0x10,   -1, 0x10,   -1, 0x11,   -1, 0x12,   -1,   -1, 0x12 };
+
 static const escp2_dot_size_t sc720_dotsizes =
 { -1,   0x12,   -1, 0x12,   -1, 0x11,   -1, 0x11,   -1, 0x11,   -1,   -1,   -1 };
 
@@ -3390,6 +3707,9 @@ static const escp2_densities_t sc680_densities =
 
 static const escp2_densities_t c4pl_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.568, 0.784, 0.784, 0.593, 0.593, 0.297 };
+
+static const escp2_densities_t p3pl_densities =
+{ 2.0, 2.0, 1.5, 1.5, 0.75, 0.75, 0.523, 0.523, 0.523, 0.523, 0.523, 0.523, 0.523 };
 
 static const escp2_densities_t sc660_densities =
 { 3.0, 3.0, 2.0, 2.0, 1.0,  1.0,  0.646, 0.646, 0.323, 0.323, 0.162, 0.162, 0.081 };
@@ -4958,6 +5278,36 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     c3pl_pigment_dotsizes, c3pl_pigment_densities, &variable_3pl_pigment_inks,
     &c80_paper_list, standard_reslist, &c64_inklist,
     variable_bits, variable_base_res, &default_input_slot_list,
+    &new_init_sequence, &je_deinit_sequence
+  },
+  /* 62: Stylus Photo 900 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
+     MODEL_FAST_360_NO),
+    48, 1, 3, 48, 1, 3, 48, 1, 3,
+    360, 720, 720, 14400, -1, 2880, 1440, 90, 90,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 0, 55, 0, 0, 0,
+    c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
+    &standard_paper_list, standard_reslist, &photo_inklist,
+    variable_bits, variable_base_res, &cutter_roll_feed_input_slot_list,
+    &new_init_sequence, &je_deinit_sequence
+  },
+  /* 63: Stylus Photo R300 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
+     MODEL_FAST_360_NO),
+    90, 1, 3, 90, 1, 3, 90, 1, 3,
+    360, 720, 720, 14400, -1, 2880, 1440, 90, 90,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 0, 55, 0, 0, 0,
+    p3pl_dotsizes, p3pl_densities, &variable_3pl_pmg_inks,
+    &standard_paper_list, standard_reslist, &photo_inklist,
+    variable_bits, variable_base_res, &cutter_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
 };

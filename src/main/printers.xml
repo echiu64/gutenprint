@@ -817,7 +817,7 @@
 
 <printer name="EPSON Stylus Photo 900" driver="escp2-ph900">
 <color>
-<model value=36>
+<model value=62>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>
@@ -832,6 +832,14 @@
 </printer>
 
 <printer name="EPSON Stylus Photo 925" driver="escp2-925">
+<color>
+<model value=51>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Photo 935" driver="escp2-935">
 <color>
 <model value=51>
 <gamma value=0.585>
@@ -906,6 +914,38 @@
 <printer name="EPSON Stylus Photo 2200" driver="escp2-2200">
 <color>
 <model value=47>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Photo R200" driver="escp2-r200">
+<color>
+<model value=63>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Photo R300" driver="escp2-r300">
+<color>
+<model value=63>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Photo RX500" driver="escp2-rx500">
+<color>
+<model value=63>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Photo RX600" driver="escp2-rx600">
+<color>
+<model value=63>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>
@@ -1430,6 +1470,22 @@
 <printer name="EPSON PM-10000" driver="escp2-pm10000">
 <color>
 <model value=41>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON PM-D750" driver="escp2-pmd750">
+<color>
+<model value=63>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON PM-G700" driver="escp2-pmg700">
+<color>
+<model value=63>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>
