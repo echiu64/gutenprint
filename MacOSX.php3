@@ -108,7 +108,7 @@ require('standard_html_header.php3');
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.2-0.tar.gz?download"
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.2.tar.gz?download"
  >source</a>)
  </td>
  </tr>
@@ -156,7 +156,7 @@ require('standard_html_header.php3');
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/espgs/espgs-7.05.5-0.tar.gz?download"
+ "http://prdownloads.sourceforge.net/espgs/espgs-7.05.5.tar.gz?download"
  >source</a>)
  </td>
  </tr>
