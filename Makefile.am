@@ -86,10 +86,13 @@ GHOST_DIST= COPYING ChangeLog README contrib.mak.addon \
 CUPS_DIST = CHANGES.txt LICENSE.txt Makefile.in README.txt configure \
 		commandtoepson.c epson.c genppd.c rastertoprinter.c $(CUPSCOPY)
 
+DOC_DIST = color.png docbook.css main.png print.html setup.png
+
 EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
 	README.dither quickmatrix257.h ran.367.179.h make-deb.sh README.escp2 \
 	$(addprefix Ghost/, $(GHOST_DIST)) \
 	$(addprefix cups/, $(CUPS_DIST)) \
+	$(addprefix Documentation/, $(DOC_DIST)) \
 	$(shell if test -d Ghost/stp-interfaces ; then find Ghost/stp-interfaces -type f -print ; fi) \
 	$(FORCE_ACLOCAL)
 

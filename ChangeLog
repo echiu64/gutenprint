@@ -1,3 +1,61 @@
+2000-09-16	<rlk@sourceforge.net>
+
+	Files:	Documentation/color.png (1.1) ( )
+		Documentation/setup.png (1.1) ( )
+		Documentation/print.html (1.1) ( )
+		Documentation/main.png (1.1) ( )
+		Documentation/docbook.css (1.1) ( )
+	
+	Initial revision of documentation
+	
+2000-09-16	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.61) (+2 -2)
+	
+	Enlarge the Center Image button.
+	
+2000-09-16	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.60) (+2 -1)
+	
+	Update the thumbnail when the image type changes
+	
+2000-09-16	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.40) (+80 -0)
+		Ghost/README (1.47) (+3 -0)
+		print-dither.c (1.92) (+165 -132)
+		gimp_main_window.c (1.59) (+2 -5)
+		gimp_color_window.c (1.18) (+24 -74)
+	
+	Add very fast dither mode and slighty speed up fast mode.
+	
+	Change dither algorithm menu into combo.
+	
+2000-09-16	<cpbs@sourceforge.net>
+
+	Files:	gimp_color_window.c (1.17) (+40 -76)
+		gimp_main_window.c (1.58) (+142 -171)
+	
+	Make the thumbnail in the size/position preview track changes in colour
+	controls.
+	
+	Turn a few more option-menus into combo boxes.
+	
+2000-09-15	<rlk@sourceforge.net>
+
+	Files:	mkchlog (1.4) (+5 -0)
+	
+	Put mkchlog in the public domain.
+	
+2000-09-15	<cpbs@sourceforge.net>
+
+	Files:	print.c (1.120) (+6 -3)
+	
+	When reading the printrc and adding printers, do not search through any
+	printers which have been added to the end of the list since the list
+	was qsort()ed.
+	
 2000-09-15	<rlk@sourceforge.net>
 
 	Files:	print.c (1.119) (+3 -2)
