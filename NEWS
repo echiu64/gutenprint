@@ -1,86 +1,98 @@
-Print plugin for the Gimp.  Version 3.1 by the Gimp Print project
-(http://gimp-print.sourceforge.net) based on version 3.0 by Robert
-Krawitz <rlk@alum.mit.edu>, which in turn was based on version 2.0 by
-Michael Sweet <mike@easysw.com>.
+This is gimp-print version 4.1.2, a development release on the 4.1 line.
 
-This version has numerous enhancements:
+This software includes the Print plug-in for the Gimp, and GhostScript
+and CUPS drivers.  The support for printers in GhostScript and CUPS is
+identical to the support for these printers in the Print plugin --
+they use the identical code base.  Please read Ghost/README and
+CUPS/README.txt for more information on this.
 
-1) Full support for the Epson Stylus Photo, Photo 700, and Photo EX
-   printers, including 6-color printing, 1440x720 dpi resolution, and
-   "soft" weave for much faster high quality printing.
+The Gimp Print plugin requires the Gimp 1.2.
 
-2) Many new controls, including:
+Print 4.1.2 contains the following fixes and improvements over 4.1.1:
 
-   * Output gamma adjustment
-   * Contrast
-   * Red/green/blue levels
-   * Saturation
-   * Density
-   * Additional scaling options
+1) We believe this release contains an important bug fix that in some
+   cases caused the Epson driver to seg fault upon completion.  This
+   resulted in the page being slightly incomplete at the bottom, and
+   in addition the page was not ejected.
 
-3) Improved tonal resolution.  Calculations are now done in 16 bit
-   rather than 8 bit resolution, which eliminates stair stepping.
-   Input levels do not map one to one onto output levels, so in 8 bit
-   output resolution multiple input levels will map to a single output
-   level.  Usually the density range is compressed in the light end of
-   the tonal range, so many different input levels will map to one
-   output level.  Use of 16 bit output resolution avoids this
-   undesirable behavior and results in smooth tonal gradations in
-   highlights.
+2) Further improvements in quality (we believe) in Photograph mode.
 
-4) Saving of all settings between print jobs.
+3) Correct sizing for extremely tiny images in the Print plugin.
 
+4) First cut at roll feed printing for the Epson Stylus Photo
+   870/1270.
 
-This plugin has been optimized for the Epson Stylus Photo EX, since
-that's the printer I own.  I am interested in comments on performance
-both with Epson Stylus printers and with others.
+5) Support for custom paper sizes in the Print plugin.
 
-Some tips on tuning the output:
+6) Initial support for the Lexmark 3200, and other improvements in the
+   Lexmark driver.
 
-* Start with the default settings
+7) Preliminary support for the Epson Stylus Photo 790/890/1290
+   (followons to the 870/1270).
 
-* Brightness and density are not the same thing.  Density is a purely
-  linear adjustment; more density means more ink.  Brightness affects
-  perceived brightness.
+8) Fixes to the Debian installation.
 
-* Higher gamma values result in brighter images with compressed
-  highlights.  Lower gamma values are darker, but with better tonal
-  range in the highlights.
+9) Preliminary support for the Canon BJC-55 and BJC-85.
 
-* Different brands of ink yield different results.  I've found that
-  third party inks on Epson printers are generally too cyan.  The
-  correction for excessive cyan is to add red (or reduce blue and
-  green).
+10) The Ghostscript Makefile snippets now contain a proper dependency
+   on gdevstp-print.h.
 
-* I've found that what creates good test patterns does not necessarily
-  create good photographs.  In particular, test patterns often print
-  well with gamma of .6 or thereabouts, but that gives washed out
-  photographs.  Perhaps when I implement a better contrast control
-  this can be improved.
-
-* The contrast control scales polynomially around the midpoint of the
-  range.  Lower contrast will reduce the contrast in the midtones, but
-  increase the contrast in the highlights and shadows.  Contrariwise,
-  a high contrast value will stretch the scale in midtones,
-  compressing the highlights and shadows.
-
-* There are many combinations of brightness, gamma, and density that
-  will create acceptable images.  You may find that you want different
-  settings for different images.
-
-* One group of settings you might want to start with for the Epson
-  Stylus Photo is:
-
-  Gamma 1.5
-  Brightness 40
-  Saturation 0.8
+11) Many internal changes to prepare for a major code reorganization
+   that is coming up shortly.  These changes should be completely
+   invisible at user level.
 
 
-Makefile.standalone enables you to build this plugin as a standalone
-plugin, without reference to a Gimp source tree.
+Print 4.1.1 contains the following fixes and improvements over 4.1.0:
+
+1) Further improvements in quality (we believe) in Photograph mode.
+
+2) A problem whereby black letters and other black detail had a hollow
+   appearance under some circumstances is fixed.
+
+3) The Canon S450 is now supported.
+
+4) The Epson Stylus Color 640 and 660 should print correctly.
+
+5) escputil now uses readline when available.
 
 
-Enjoy!
+Print 4.1.0 contains all fixes through the 4.0.4 release.  In
+addition, it contains the following user-visible differences over
+Print 4.0.4:
 
--Robert Krawitz, January 19, 2000
+1) Greatly improved color quality in Photograph mode.  In particular,
+   red, green, blue, and violet colors are much more accurate.  This
+   is done by means of hue and luminosity adjustments based on input
+   hue and saturation.  This only works in Photograph mode; Line Art
+   and Solid Colors have not changed.
 
+2) Preliminary support for the Lexmark Z52 inkjet printer.
+
+3) Support for 2880x720 on Epson Stylus printers that support that
+   resolution.  The visible quality difference will probably be little
+   if any.
+
+4) Fine black detail in color mode is greatly improved.
+
+5) Many new resolutions have been added for Epson Stylus printers,
+   mostly supporting better print quality at 180, 360, and 720 DPI.
+
+6) There is preliminary support for 600x600 C-RET mode on the HP 840.
+
+7) The foomatic package is not currently being distributed with
+   gimp-print.  The main issue is synchronizing the foomatic database
+   with the rapidly evolving state of gimp-print.  We have not
+   determined yet whether it will be practical to continue
+   distributing foomatic with gimp-print.
+
+8) The PPD's generated as part of the native CUPS driver are
+   incompatible with the PPD's in the 4.0 version of the native CUPS
+   driver.  This requires reinstalling your printers after running
+   'make install' in the cups subdirectory.
+
+9) The defaults with the native CUPS driver are now identical to the
+   defaults with the Ghostscript stp driver and the Gimp Print
+   plugin.
+
+10) Ordered dithering is now smoother on 6 color printers, at some
+   loss of color fidelity.
