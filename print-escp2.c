@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.101  2000/02/29 02:33:45  rlk
+ *   Rationalize the printer options a bit
+ *
  *   Revision 1.100  2000/02/29 00:39:25  rlk
  *   Improve printing to the bottom, and do memory allocation the way intended
  *
@@ -531,8 +534,9 @@ typedef model_cap_t model_class_t;
 #define MODEL_INIT_600		0x30
 #define MODEL_INIT_PHOTO	0x40
 #define MODEL_INIT_440		0x50
-#define MODEL_INIT_PHOTO2	0x60
-#define MODEL_INIT_900		0x70
+#define MODEL_INIT_X40		0x60
+#define MODEL_INIT_PHOTO2	0x70
+#define MODEL_INIT_900		0x80
 
 #define MODEL_HASBLACK_MASK	0x100
 #define MODEL_HASBLACK_YES	0x000
@@ -559,6 +563,10 @@ typedef model_cap_t model_class_t;
 #define MODEL_COMMAND_GENERIC	0x00000
 #define MODEL_COMMAND_1999	0x10000	/* The 1999 series printers */
 
+#define MODEL_GRAYMODE_MASK	0x100000
+#define MODEL_GRAYMODE_NO	0x000000
+#define MODEL_GRAYMODE_YES	0x100000
+
 #define MODEL_NOZZLES_MASK	0xff000000
 #define MODEL_MAKE_NOZZLES(x) 	((long long) ((x)) << 24)
 #define MODEL_GET_NOZZLES(x) 	(((x) & MODEL_NOZZLES_MASK) >> 24)
@@ -569,6 +577,14 @@ typedef model_cap_t model_class_t;
 #define MODEL_XRES_MASK		0xfff000000000ll
 #define MODEL_MAKE_XRES(x) 	(((long long) (x)) << 36)
 #define MODEL_GET_XRES(x)	((((long long) x) & MODEL_XRES_MASK) >> 36)
+
+#define MODEL_SOFT_INK_MASK	0xf000000000000ll
+#define MODEL_MAKE_SOFT_INK(x)	(((long long) (x)) << 40)
+#define MODEL_GET_SOFT_INK(x)	((((long long) x) & MODEL_SOFT_INK_MASK) >> 40)
+
+#define MODEL_MICRO_INK_MASK	0xf0000000000000ll
+#define MODEL_MAKE_MICRO_INK(x)	(((long long) (x)) << 44)
+#define MODEL_GET_MICRO_INK(x)	((((long long) x) & MODEL_MICRO_INK_MASK) >>44)
 
 #define PHYSICAL_BPI 720
 #define MAX_OVERSAMPLED 4
@@ -615,36 +631,43 @@ static model_cap_t model_capabilities[] =
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_DEFAULT | MODEL_INIT_COLOR
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720) | MODEL_COMMAND_GENERIC
+   | MODEL_MAKE_MICRO_INK(0xf) | MODEL_MAKE_SOFT_INK(0xf) | MODEL_GRAYMODE_YES
    | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(1) | MODEL_MAKE_SEPARATION(1)),
   /* 1: Stylus Color Pro/Pro XL/400/500 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_DEFAULT | MODEL_INIT_PRO
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720) | MODEL_COMMAND_GENERIC
+   | MODEL_MAKE_MICRO_INK(1) | MODEL_MAKE_SOFT_INK(0xf) | MODEL_GRAYMODE_NO
    | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(8)),
   /* 2: Stylus Color 1500 */
   (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_DEFAULT | MODEL_INIT_1500
    | MODEL_HASBLACK_NO | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720) | MODEL_COMMAND_GENERIC
+   | MODEL_MAKE_MICRO_INK(1) | MODEL_MAKE_SOFT_INK(0xf) | MODEL_GRAYMODE_NO
    | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(1) | MODEL_MAKE_SEPARATION(1)),
   /* 3: Stylus Color 600 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_600
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_600
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720) | MODEL_COMMAND_GENERIC
+   | MODEL_MAKE_MICRO_INK(2) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
   /* 4: Stylus Color 800 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_600
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720) | MODEL_COMMAND_GENERIC
+   | MODEL_MAKE_MICRO_INK(2) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(64) | MODEL_MAKE_SEPARATION(8)),
   /* 5: Stylus Color 850 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_COLOR
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720) | MODEL_COMMAND_GENERIC
+   | MODEL_MAKE_MICRO_INK(2) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(64) | MODEL_MAKE_SEPARATION(8)),
   /* 6: Stylus Color 1520/3000 */
   (MODEL_PAPER_A2 | MODEL_IMAGEABLE_600 | MODEL_INIT_600
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720) | MODEL_COMMAND_GENERIC
+   | MODEL_MAKE_MICRO_INK(2) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(64) | MODEL_MAKE_SEPARATION(8)),
 
   /* SECOND GENERATION PRINTERS */
@@ -652,16 +675,19 @@ static model_cap_t model_capabilities[] =
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720) | MODEL_COMMAND_GENERIC
+   | MODEL_MAKE_MICRO_INK(3) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_NO
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
   /* 8: Stylus Photo EX */
   (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720) | MODEL_COMMAND_GENERIC
+   | MODEL_MAKE_MICRO_INK(3) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_NO
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
   /* 9: Stylus Photo */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720) | MODEL_COMMAND_GENERIC
+   | MODEL_MAKE_MICRO_INK(3) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_NO
    | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
 
   /* THIRD GENERATION PRINTERS */
@@ -669,38 +695,45 @@ static model_cap_t model_capabilities[] =
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_NEW | MODEL_INIT_440
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720) | MODEL_COMMAND_1999
+   | MODEL_MAKE_MICRO_INK(3) | MODEL_MAKE_SOFT_INK(2) | MODEL_GRAYMODE_YES
    | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(21) | MODEL_MAKE_SEPARATION(7)),
   /* 11: Stylus Color 640 */
-  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_NEW | MODEL_INIT_440
+  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_NEW | MODEL_INIT_X40
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720) | MODEL_COMMAND_1999
+   | MODEL_MAKE_MICRO_INK(3) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
    | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
   /* 12: Stylus Color 740 */
-  (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_NEW | MODEL_INIT_440
+  (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_NEW | MODEL_INIT_X40
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360) | MODEL_COMMAND_1999
+   | MODEL_MAKE_MICRO_INK(3) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
   /* 13: Stylus Color 900 */
   /* Dale Pontius thinks the spacing is 3 jets??? */
   /* No, Eric Sharkey verified that it's 2! */
-  (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_NEW | MODEL_INIT_440
+  (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_NEW | MODEL_INIT_900
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360) | MODEL_COMMAND_1999
+   | MODEL_MAKE_MICRO_INK(1) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(96) | MODEL_MAKE_SEPARATION(2)),
   /* 14: Stylus Photo 750, 870 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_NEW | MODEL_INIT_PHOTO2
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360) | MODEL_COMMAND_1999
+   | MODEL_MAKE_MICRO_INK(4) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
   /* 15: Stylus Photo 1200, 1270 */
   (MODEL_PAPER_1319 | MODEL_IMAGEABLE_NEW | MODEL_INIT_PHOTO2
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
    | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360) | MODEL_COMMAND_1999
+   | MODEL_MAKE_MICRO_INK(4) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
   /* 16: Stylus Color 860 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_NEW | MODEL_INIT_COLOR
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(360) | MODEL_COMMAND_1999
+   | MODEL_MAKE_MICRO_INK(2) | MODEL_MAKE_SOFT_INK(0) | MODEL_GRAYMODE_YES
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
 };
 
@@ -759,6 +792,18 @@ static int
 escp2_xres(int model)
 {
   return MODEL_GET_XRES(model_capabilities[model]);
+}
+
+static int
+escp2_soft_ink(int model)
+{
+  return MODEL_GET_SOFT_INK(model_capabilities[model]);
+}
+
+static int
+escp2_micro_ink(int model)
+{
+  return MODEL_GET_MICRO_INK(model_capabilities[model]);
 }
 
 /*
@@ -891,7 +936,7 @@ escp2_imageable_area(int  model,	/* I - Printer model */
 {
   int	width, length;			/* Size of page */
   /* Assuming 720 dpi ydpi hardware! */
-  /* int softweave_margin = (9 + (escp2_nozzles(model) - 1) *
+  /* int softweave_margin = (9 + (escp2_nozzles(model)) *
 			  escp2_nozzle_separation(model)) / 10; */
 
   default_media_size(model, ppd_file, media_size, &width, &length);
@@ -951,14 +996,17 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 
   fputs("\033@", prn); 				/* ESC/P2 reset */
 
-  if (escp2_has_cap(model, MODEL_INIT_MASK, MODEL_INIT_900))
+  if (escp2_has_cap(model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999))
     fprintf(prn,
-	    "\033(R\010%c%cREMOTE1PM\002%c%c%cSN\003%c%c%c\005\033%c%c%c",
+	    "\033(R\010%c%cREMOTE1PM\002%c%c%cSN\003%c%c%c\001\033%c%c%c",
 	    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
   fwrite("\033(G\001\000\001", 6, 1, prn);	/* Enter graphics mode */
+
+  /* Set up print resolution */
   switch (ydpi)					/* Set line feed increment */
     {
+
     case 180 :
       if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
 	  use_softweave)
@@ -989,99 +1037,36 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
       break;
     }
 
-  switch (escp2_cap(model, MODEL_INIT_MASK)) /* Printer specific initialization */
-  {
-    case MODEL_INIT_COLOR : /* ESC */
-        if (output_type != OUTPUT_GRAY && ydpi > 360 && !use_softweave)
-      	  fwrite("\033(i\001\000\001", 6, 1, prn);     /* Microweave mode on */
-        break;
+  /* Printer capabilities */
+  if (escp2_has_cap(model, MODEL_GRAYMODE_MASK, MODEL_GRAYMODE_YES))
+    {
+      if (output_type == OUTPUT_GRAY)
+	fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black */
+      else
+	fwrite("\033(K\002\000\000\002", 7, 1, prn);	/* Color */
+    }
 
-    case MODEL_INIT_PRO : /* ESC Pro, Pro XL, 400, 500 */
-        fwrite("\033(e\002\000\000\001", 7, 1, prn);	/* Small dots */
+  if (use_softweave)
+    fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
+  else
+    fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
 
-        if (ydpi > 360 && !use_softweave)
-      	  fwrite("\033(i\001\000\001", 6, 1, prn);     /* Microweave mode on */
-        break;
+  if (horizontal_passes * vertical_passes > 2)
+    fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
+  else
+    fwrite("\033U\000", 3, 1, prn); /* Bidirectional */
 
-    case MODEL_INIT_1500 : /* ESC 1500 */
-        fwrite("\033(e\002\000\000\001", 7, 1, prn);	/* Small dots */
+  if (!use_softweave)
+    {
+      if (escp2_micro_ink(model) != 0xf)
+	fprintf(prn, "\033(e\002%c%c%c", 0, 0, escp2_micro_ink(model));
+    }
+  else if (bits > 1)
+    fwrite("\033(e\002\000\000\020", 7, 1, prn); /* Variable dots */
+  else if (escp2_soft_ink(model) != 0xf)
+    fprintf(prn, "\033(e\002%c%c%c", 0, 0, escp2_soft_ink(model));
 
-        if (ydpi > 360 && !use_softweave)
-      	  fwrite("\033(i\001\000\001", 6, 1, prn);     /* Microweave mode on */
-        break;
-
-    case MODEL_INIT_600 : /* ESC 600, 800, 1520, 3000 */
-	if (output_type == OUTPUT_GRAY)
-	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black */
-	else
-	  fwrite("\033(K\002\000\000\002", 7, 1, prn);	/* Color printing */
-
-        fwrite("\033(e\002\000\000\002", 7, 1, prn);	/* Small dots */
-
-        if (ydpi > 360 && !use_softweave)
-      	  fwrite("\033(i\001\000\001", 6, 1, prn);     /* Microweave mode on */
-        break;
-
-    case MODEL_INIT_440 : /* ESC 440, 640, 740, 900 */
-    case MODEL_INIT_900:
-	if (output_type == OUTPUT_GRAY)
-	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black */
-	if (!use_softweave)
-	  fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
-	else
-	  fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
-        if (ydpi > 360)
-	  {
-	    fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
-	    if (bits > 1)
-	      fwrite("\033(e\002\000\000\020", 7, 1, prn); /* Default dots */
-	    else
-	      fwrite("\033(e\002\000\000\000", 7, 1, prn); /* Default dots */
-	  }
-	else
-	  fwrite("\033(e\002\000\000\000", 7, 1, prn);	/* Default dots */
-        break;
-
-    case MODEL_INIT_PHOTO:
-	if (output_type == OUTPUT_GRAY)
-	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black */
-	else
-	  fwrite("\033(K\002\000\000\002", 7, 1, prn);	/* Color printing */
-	if (!use_softweave)
-	  fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
-	else
-	  fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
-        if (ydpi > 360)
-	  {
-	    fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
-	    fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Microdots */
-	  }
-	else
-	  {
-	    fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
-	    fwrite("\033(e\002\000\000\003", 7, 1, prn);	/* Whatever dots */
-	  }
-        break;
-    case MODEL_INIT_PHOTO2:
-	if (output_type == OUTPUT_GRAY)
-	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black */
-	if (!use_softweave)
-	  fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
-	else
-	  fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
-        if (ydpi > 360)
-	  {
-	    fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
-	    if (bits > 1)
-	      fwrite("\033(e\002\000\000\020", 7, 1, prn);   /* Default dots */
-	    else
-	      fwrite("\033(e\002\000\000\000", 7, 1, prn);   /* Default dots */
-	  }
-	else
-	  fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Whatever dots */
-        break;
-  }
-
+  /* Set up page */
   if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
       use_softweave)
     {
@@ -1152,6 +1137,20 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
       n = ydpi * (page_length) / 72;
       putc(n & 255, prn);
       putc(n >> 8, prn);
+
+      if (escp2_has_cap(model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999))
+	{
+	  fwrite("\033(S\010\000", 5, 1, prn);
+	  fprintf(prn, "%c%c%c%c%c%c%c%c",
+		  (((page_width * 720 / 72) >> 0) & 0xff),
+		  (((page_width * 720 / 72) >> 8) & 0xff),
+		  (((page_width * 720 / 72) >> 16) & 0xff),
+		  (((page_width * 720 / 72) >> 24) & 0xff),
+		  (((page_length * 720 / 72) >> 0) & 0xff),
+		  (((page_length * 720 / 72) >> 8) & 0xff),
+		  (((page_length * 720 / 72) >> 16) & 0xff),
+		  (((page_length * 720 / 72) >> 24) & 0xff));
+	}
 
       fwrite("\033(V\002\000", 5, 1, prn);    /* Absolute vertical position */
       n = ydpi * top / 72;
@@ -1310,7 +1309,7 @@ escp2_print(int       model,		/* I - Model */
        * would happen in softweave mode.  The divide by 10 is to convert
        * lines into points (Epson printers all have 720 ydpi);
        */
-      int extra_points = ((escp2_nozzles(model) - 1) *
+      int extra_points = (escp2_nozzles(model) *
 			  escp2_nozzle_separation(model) + 5) / 10;
       top += extra_points;
     }
@@ -1443,7 +1442,7 @@ escp2_print(int       model,		/* I - Model */
  /*
   * Send ESC/P2 initialization commands...
   */
-  page_length += (9 + (escp2_nozzles(model) * 2) *
+  page_length += (39 + (escp2_nozzles(model) * 2) *
 		  escp2_nozzle_separation(model)) / 10; /* Top and bottom */
   page_top = 0;
 
