@@ -339,18 +339,16 @@ static const escp2_variable_ink_t spro10000_standard_ink =
   1.0
 };
 
-static const stp_simple_dither_range_t photo_4pl_1440_dither_ranges[] =
+static const stp_simple_dither_range_t photo_4pl_2880_dither_ranges[] =
 {
-  { 0.26,  0x1, 0, 1 },
-  { 0.393, 0x2, 0, 2 },
-  { 0.90,  0x1, 1, 1 },
-  { 1.36,  0x2, 1, 2 }
+  { 0.35,  0x1, 0, 1 },
+  { 1.00,  0x1, 1, 1 },
 };
 
-static const escp2_variable_ink_t photo_4pl_1440_ink =
+static const escp2_variable_ink_t photo_4pl_2880_ink =
 {
-  photo_4pl_1440_dither_ranges,
-  sizeof(photo_4pl_1440_dither_ranges) / sizeof(stp_simple_dither_range_t),
+  photo_4pl_2880_dither_ranges,
+  sizeof(photo_4pl_2880_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
@@ -468,16 +466,15 @@ static const escp2_variable_ink_t standard_4pl_ink =
   1.0
 };
 
-static const stp_simple_dither_range_t standard_4pl_1440_dither_ranges[] =
+static const stp_simple_dither_range_t standard_4pl_2880_dither_ranges[] =
 {
-  { 0.90,  0x1, 1, 1 },
-  { 1.36,  0x2, 1, 2 },
+  { 1.00,  0x1, 1, 1 },
 };
 
-static const escp2_variable_ink_t standard_4pl_1440_ink =
+static const escp2_variable_ink_t standard_4pl_2880_ink =
 {
-  standard_4pl_1440_dither_ranges,
-  sizeof(standard_4pl_1440_dither_ranges) / sizeof(stp_simple_dither_range_t),
+  standard_4pl_2880_dither_ranges,
+  sizeof(standard_4pl_2880_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
@@ -748,20 +745,20 @@ static const escp2_variable_inkset_t spro10000_photo_inks =
   &spro10000_standard_ink
 };
 
-static const escp2_variable_inkset_t escp2_4pl_1440_standard_inks =
+static const escp2_variable_inkset_t escp2_4pl_2880_standard_inks =
 {
-  &standard_4pl_1440_ink,
-  &standard_4pl_1440_ink,
-  &standard_4pl_1440_ink,
-  &standard_4pl_1440_ink
+  &standard_4pl_2880_ink,
+  &standard_4pl_2880_ink,
+  &standard_4pl_2880_ink,
+  &standard_4pl_2880_ink
 };
 
-static const escp2_variable_inkset_t escp2_4pl_1440_photo_inks =
+static const escp2_variable_inkset_t escp2_4pl_2880_photo_inks =
 {
-  &standard_4pl_1440_ink,
-  &photo_4pl_1440_ink,
-  &photo_4pl_1440_ink,
-  &standard_4pl_1440_ink
+  &standard_4pl_2880_ink,
+  &photo_4pl_2880_ink,
+  &photo_4pl_2880_ink,
+  &standard_4pl_2880_ink
 };
 
 static const escp2_variable_inkset_t escp2_3pl_standard_inks =
@@ -1189,9 +1186,9 @@ static const escp2_variable_inklist_t variable_4pl_4color_inks =
       &escp2_multishot_standard_inks,
       &escp2_6pl_standard_inks,
       &escp2_4pl_standard_inks,
-      &escp2_4pl_1440_standard_inks,
-      &escp2_4pl_standard_inks,
-      &escp2_4pl_standard_inks,
+      &escp2_4pl_2880_standard_inks,
+      &escp2_4pl_2880_standard_inks,
+      &escp2_4pl_2880_standard_inks,
     }
   }
 };
@@ -1230,9 +1227,9 @@ static const escp2_variable_inklist_t variable_4pl_6color_inks =
       &escp2_multishot_standard_inks,
       &escp2_6pl_standard_inks,
       &escp2_4pl_standard_inks,
-      &escp2_4pl_1440_standard_inks,
-      &escp2_4pl_standard_inks,
-      &escp2_4pl_standard_inks,
+      &escp2_4pl_2880_standard_inks,
+      &escp2_4pl_2880_standard_inks,
+      &escp2_4pl_2880_standard_inks,
     },
     {
       &escp2_multishot_photo_inks,
@@ -1241,9 +1238,9 @@ static const escp2_variable_inklist_t variable_4pl_6color_inks =
       &escp2_multishot_photo_inks,
       &escp2_6pl_photo_inks,
       &escp2_4pl_photo_inks,
-      &escp2_4pl_1440_photo_inks,
-      &escp2_4pl_photo_inks,
-      &escp2_4pl_photo_inks
+      &escp2_4pl_2880_photo_inks,
+      &escp2_4pl_2880_photo_inks,
+      &escp2_4pl_2880_photo_inks
     }
   }
 };
@@ -1887,7 +1884,7 @@ static const escp2_densities_t c3pl_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.646, 0.73,  0.7,   0.7,   0.91,  0.91,  0.455 };
 
 static const escp2_densities_t c4pl_densities =
-{ 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.568, 0.216, 0.784, 0.392, 0.392, 0.196 };
+{ 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.568, 0.784, 0.784, 0.450, 0.450, 0.225 };
 
 static const escp2_densities_t sc660_densities =
 { 3.0, 3.0, 2.0, 2.0, 1.0,  1.0,  0.646, 0.646, 0.323, 0.323, 0.162, 0.162, 0.081 };
