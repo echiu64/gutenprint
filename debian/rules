@@ -67,14 +67,14 @@ binary-indep: build install ChangeLog
 	dh_testroot -i
 #	dh_installdebconf -i
 	dh_installdocs -i
-	  cp debian/gimp-print-build/doc/gimpprint.ps debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc
-	  cp -r debian/gimp-print-build/doc/manual-html debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html
+	  cp debian/gimp-print-install/usr/share/gimp-print/doc/gimpprint.ps debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc
+	  cp -r debian/gimp-print-install/usr/share/gimp-print/doc/manual-html debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html
 	  cd debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html ; \
 	  if test ! -f gimpprint.html ; then \
 	    ln -s gimpprint_toc.html gimpprint.html ; \
 	  fi
-	cp debian/gimp-print-build/doc/users_guide/*.pdf debian/gimpprint-doc/usr/share/doc/gimpprint-doc
-	cp -r debian/gimp-print-build/doc/users_guide/html debian/gimpprint-doc/usr/share/doc/gimpprint-doc/html
+	cp debian/gimp-print-install/usr/share/gimp-print/doc/*.pdf debian/gimpprint-doc/usr/share/doc/gimpprint-doc
+	cp -r debian/gimp-print-install/usr/share/gimp-print/doc/html debian/gimpprint-doc/usr/share/doc/gimpprint-doc/html
 	dh_installexamples -i
 #	dh_installmenu -i
 #	dh_installlogrotate -i

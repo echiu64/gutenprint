@@ -14,7 +14,6 @@ gimp-print-build
 gimp1.2-print
 cupsys-driver-gimpprint
 libgimpprint-dev
-libgimpprint-doc.doc-base
 libgimpprint[0-9].[0-9].[0-9]
 escputil
 gimp-print-install
