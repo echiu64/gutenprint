@@ -5,9 +5,6 @@
 # Uncomment this to turn on verbose mode. 
 #export DH_VERBOSE=1
 
-# This is the debhelper compatability version to use.
-export DH_COMPAT=3
-
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
@@ -111,7 +108,7 @@ binary-indep: build install ChangeLog
 #	dh_installinit -i
 #	dh_installcron -i
 #	dh_installmanpages -i
-	dh_installinfo -i -plibgimpprint-doc debian/gimp-print-install/usr/share/info/*
+	dh_installinfo -i -plibgimpprint$(LIBRARY_VERSION)-doc debian/gimp-print-install/usr/share/info/*
 	dh_undocumented -i
 	dh_installchangelogs -i NEWS
 	dh_link -i
@@ -178,7 +175,7 @@ configure: configure.ac scripts/install-sh
 	    NOCONFIGURE=TRUE /bin/sh autogen.sh ; \
 	  fi \
 	fi
-	
+
 scripts/install-sh:
 	if test -f autogen.sh ; then \
 	  NOCONFIGURE=TRUE /bin/sh autogen.sh ; \
