@@ -3,6 +3,7 @@
 stp_=$(GLOBJ)gdevstp.$(OBJ) \
 	$(GLOBJ)gdevstp-dither.$(OBJ) \
 	$(GLOBJ)gdevstp-util.$(OBJ) \
+	$(GLOBJ)gdevstp-weave.$(OBJ) \
 	$(GLOBJ)gdevstp-escp2.$(OBJ)
 
 $(DD)stp.dev:	$(stp_) $(DD)page.dev
@@ -13,6 +14,9 @@ $(GLOBJ)gdevstp.$(OBJ) : $(GLSRC)gdevstp.c $(PDEVH)
 
 $(GLOBJ)gdevstp-util.$(OBJ) : $(GLSRC)gdevstp-util.c $(PDEVH)
 	$(GLCC) -DESCP2_GHOST $(GLO_)gdevstp-util.$(OBJ) $(C_) $(GLSRC)gdevstp-util.c
+
+$(GLOBJ)gdevstp-weave.$(OBJ) : $(GLSRC)gdevstp-weave.c $(PDEVH)
+	$(GLCC) -DESCP2_GHOST $(GLO_)gdevstp-weave.$(OBJ) $(C_) $(GLSRC)gdevstp-weave.c
 
 $(GLOBJ)gdevstp-dither.$(OBJ) : $(GLSRC)gdevstp-dither.c $(PDEVH)
 	$(GLCC) -DESCP2_GHOST $(GLO_)gdevstp-dither.$(OBJ) $(C_) $(GLSRC)gdevstp-dither.c
