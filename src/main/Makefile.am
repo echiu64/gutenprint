@@ -95,6 +95,8 @@ pkgxmldata_DATA = printers.xml
 $(srcdir)/printers-oldlist.h: ../printdef/printdef $(srcdir)/printers.xml
 	../printdef/printdef $(srcdir)/printers.xml > $(srcdir)/printers-oldlist.h
 
+printers.c: $(srcdir)/printers-oldlist.h
+
 ../printdef/printdef: $(addprefix ../printdef/, printdef.c printdef.h)
 	cd ../printdef ; \
 	$(MAKE) printdef
@@ -106,4 +108,4 @@ CLEANFILES = printers-oldlist.h
 DISTCLEANFILES = gimpprint-config gimpprint-config.in gimpprint.pc gimpprint.pc.in gimpprint.m4
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = gimpprint.m4.top $(pkgxmldata)
+EXTRA_DIST = gimpprint.m4.top $(pkgxmldata_DATA)
