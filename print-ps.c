@@ -33,6 +33,11 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.13  2000/01/25 19:51:27  rlk
+ *   1) Better attempt at supporting newer Epson printers.
+ *
+ *   2) Generalized paper size support.
+ *
  *   Revision 1.12  2000/01/08 23:30:56  rlk
  *   Y2K copyright
  *
@@ -407,24 +412,26 @@ ps_parameters(int  model,	/* I - Printer model */
   }
 
   if (ps_ppd == NULL)
-  {
-    if (strcmp(name, "PageSize") == 0)
     {
-      *count = 6;
-
-      valptrs = malloc(*count * sizeof(char *));
-      for (i = 0; i < *count; i ++)
+      if (strcmp(name, "PageSize") == 0)
 	{
-	  /* strdup doesn't appear to be POSIX... */
-	  valptrs[i] = malloc(strlen(media_sizes[i]) + 1);
-	  strcpy(valptrs[i], media_sizes[i]);
+	  const papersize_t *papersizes = get_papersizes();
+	  valptrs = malloc(sizeof(char *) * known_papersizes());
+	  *count = 0;
+	  for (i = 0; i < known_papersizes(); i++)
+	    {
+	      if (strlen(papersizes[i].name) > 0)
+		{
+		  valptrs[*count] = malloc(strlen(papersizes[i].name) + 1);
+		  strcpy(valptrs[*count], papersizes[i].name);
+		  (*count)++;
+		}
+	    }
+	  return (valptrs);
 	}
-
-      return (valptrs);
+      else
+	return (NULL);
     }
-    else
-      return (NULL);
-  }
 
   rewind(ps_ppd);
   *count = 0;

@@ -31,6 +31,11 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.46  2000/01/25 19:51:27  rlk
+ *   1) Better attempt at supporting newer Epson printers.
+ *
+ *   2) Generalized paper size support.
+ *
  *   Revision 1.45  2000/01/25 18:59:24  rlk
  *   Try to make 440/640/740/900/750/1200 work
  *
@@ -380,7 +385,7 @@ typedef model_cap_t model_class_t;
 #define MODEL_PAPER_SIZE_MASK	0x3
 #define MODEL_PAPER_SMALL 	0x0
 #define MODEL_PAPER_LARGE 	0x1
-#define MODEL_PAPER_TABLOID	0x2
+#define MODEL_PAPER_1319	0x2
 
 #define MODEL_IMAGEABLE_MASK	0xc
 #define MODEL_IMAGEABLE_DEFAULT	0x0
@@ -536,7 +541,7 @@ model_cap_t model_capabilities[] =
    | MODEL_VARIABLE_4
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(8)),
   /* Stylus Photo 1200 */
-  (MODEL_PAPER_TABLOID | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO2
+  (MODEL_PAPER_1319 | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO2
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
    | MODEL_VARIABLE_4
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(8)),
@@ -606,15 +611,6 @@ escp2_parameters(int  model,		/* I - Printer model */
 {
   int		i;
   char		**valptrs;
-  static char	*media_sizes[] =
-		{
-		  ("Letter"),
-		  ("Legal"),
-		  ("A4"),
-		  ("Tabloid"),
-		  ("A3"),
-		  ("12x18")
-		};
 
   if (count == NULL)
     return (NULL);
@@ -625,46 +621,65 @@ escp2_parameters(int  model,		/* I - Printer model */
     return (NULL);
 
   if (strcmp(name, "PageSize") == 0)
-  {
-    if (escp2_has_cap(model, MODEL_PAPER_SIZE_MASK, MODEL_PAPER_LARGE))
-      *count = 6;
-    else
-      *count = 3;
-
-    valptrs = malloc(*count * sizeof(char *));
-    for (i = 0; i < *count; i ++)
-      {
-	/* strdup doesn't appear to be POSIX... */
-	valptrs[i] = malloc(strlen(media_sizes[i]) + 1);
-	strcpy(valptrs[i], media_sizes[i]);
-      }
-    return (valptrs);
-  }
+    {
+      int length_limit, width_limit;
+      const papersize_t *papersizes = get_papersizes();
+      valptrs = malloc(sizeof(char *) * known_papersizes());
+      *count = 0;
+      if (escp2_has_cap(model, MODEL_PAPER_SIZE_MASK, MODEL_PAPER_LARGE))
+	{
+	  width_limit = 11 * 72;
+	  length_limit = 17 * 72;
+	}
+      else if (escp2_has_cap(model, MODEL_PAPER_SIZE_MASK,
+			     MODEL_PAPER_1319))
+	{
+	  width_limit = 13 * 72;
+	  length_limit = 19 * 72;
+	}
+      else
+	{
+	  width_limit = 17 * 72 / 2; /* 8.5" */
+	  length_limit = 11 * 72;
+	}
+      for (i = 0; i < known_papersizes(); i++)
+	{
+	  if (strlen(papersizes[i].name) > 0 &&
+	      papersizes[i].width <= width_limit &&
+	      papersizes[i].length <= length_limit)
+	    {
+	      valptrs[*count] = malloc(strlen(papersizes[i].name) + 1);
+	      strcpy(valptrs[*count], papersizes[i].name);
+	      (*count)++;
+	    }
+	}
+      return (valptrs);
+    }
   else if (strcmp(name, "Resolution") == 0)
-  {
-    res_t *res = &(reslist[0]);
-    valptrs = malloc(sizeof(char *) * sizeof(reslist) / sizeof(res_t));
-    *count = 0;
-    while(res->hres)
-      {
-	if (escp2_has_cap(model, MODEL_1440DPI_MASK, MODEL_1440DPI_YES) ||
-	    (res->hres <= 720 && res->vres <= 720))
-	  {
-	    int nozzles = escp2_nozzles(model);
-	    int separation = escp2_nozzle_separation(model);
-	    int max_weave = nozzles / separation;
-	    if (! res->softweave ||
-		(nozzles > 1 && res->vertical_passes <= max_weave))
-	      {
-		valptrs[*count] = malloc(strlen(res->name) + 1);
-		strcpy(valptrs[*count], res->name);
-		(*count)++;
-	      }
-	  }
-	res++;
-      }
-    return (valptrs);
-  }
+    {
+      res_t *res = &(reslist[0]);
+      valptrs = malloc(sizeof(char *) * sizeof(reslist) / sizeof(res_t));
+      *count = 0;
+      while(res->hres)
+	{
+	  if (escp2_has_cap(model, MODEL_1440DPI_MASK, MODEL_1440DPI_YES) ||
+	      (res->hres <= 720 && res->vres <= 720))
+	    {
+	      int nozzles = escp2_nozzles(model);
+	      int separation = escp2_nozzle_separation(model);
+	      int max_weave = nozzles / separation;
+	      if (! res->softweave ||
+		  (nozzles > 1 && res->vertical_passes <= max_weave))
+		{
+		  valptrs[*count] = malloc(strlen(res->name) + 1);
+		  strcpy(valptrs[*count], res->name);
+		  (*count)++;
+		}
+	    }
+	  res++;
+	}
+      return (valptrs);
+    }
   else
     return (NULL);
 

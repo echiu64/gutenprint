@@ -38,6 +38,11 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.55  2000/01/25 19:51:27  rlk
+ *   1) Better attempt at supporting newer Epson printers.
+ *
+ *   2) Generalized paper size support.
+ *
  *   Revision 1.54  2000/01/21 00:53:39  rlk
  *   1) Add a few more paper sizes.
  *
@@ -2628,6 +2633,52 @@ compute_lut(lut_t *lut,
  * 'default_media_size()' - Return the size of a default page size.
  */
 
+const static papersize_t paper_sizes[] =
+{
+  { "Postcard", 283,  416 },
+  { "4x6",	288,  432 },
+  { "A6", 	295,  417 },
+  { "5x8", 	360,  576 },
+  { "A5", 	424,  597 },
+  { "B5", 	518,  727 },
+  { "8x10", 	576,  720 },
+  { "A4", 	595,  842 },
+  { "Letter", 	612,  792 },
+  { "Legal", 	612,  1008 },
+  { "B4", 	727,  1029 },
+  { "Tabloid",  792,  1214 },
+  { "A3", 	842,  1191 },
+  { "12x18", 	864,  1296 },
+  { "13x19", 	936,  1368 },
+  { "A2", 	1188, 1684 },
+  { "", 	0,    0 }
+};
+
+int
+known_papersizes(void)
+{
+  return sizeof(paper_sizes) / sizeof(papersize_t);
+}
+
+const papersize_t *
+get_papersizes(void)
+{
+  return paper_sizes;
+}
+
+const papersize_t *
+get_papersize_by_name(const char *name)
+{
+  const papersize_t *val = &(paper_sizes[0]);
+  while (strlen(val->name) > 0)
+    {
+      if (!strcmp(val->name, name))
+	return val;
+      val++;
+    }
+  return NULL;
+}
+
 void
 default_media_size(int  model,		/* I - Printer model */
         	   char *ppd_file,	/* I - PPD file (not used) */
@@ -2635,90 +2686,16 @@ default_media_size(int  model,		/* I - Printer model */
         	   int  *width,		/* O - Width in points */
         	   int  *length)	/* O - Length in points */
 {
-  if (strcmp(media_size, "Postcard") == 0)
+  const papersize_t *papersize = get_papersize_by_name(media_size);
+  if (!papersize)
     {
-      *width = 283;
-      *length = 416;
-    }
-  else if (strcmp(media_size, "4x6") == 0)
-    {
-      *width = 288;
-      *length = 432;
-    }
-  else if (strcmp(media_size, "A6") == 0)
-    {
-      *width = 295;
-      *length = 417;
-    }
-  else if (strcmp(media_size, "5x8") == 0)
-    {
-      *width = 360;
-      *length = 576;
-    }
-  else if (strcmp(media_size, "A5") == 0)
-    {
-      *width = 424;
-      *length = 597;
-    }
-  else if (strcmp(media_size, "B5") == 0)
-    {
-      *width = 518;
-      *length = 727;
-    }
-  else if (strcmp(media_size, "8x10") == 0)
-    {
-      *width = 576;
-      *length = 720;
-    }
-  else if (strcmp(media_size, "A4") == 0)
-    {
-      *width  = 595;
-      *length = 842;
-    }
-  else if (strcmp(media_size, "Letter") == 0)
-    {
-      *width  = 612;
-      *length = 792;
-    }
-  else if (strcmp(media_size, "Legal") == 0)
-    {
-      *width  = 612;
-      *length = 1008;
-    }
-  else if (strcmp(media_size, "B4") == 0)
-    {
-      *width = 727;
-      *length = 1029;
-    }
-  else if (strcmp(media_size, "Tabloid") == 0)
-    {
-      *width  = 792;
-      *length = 1214;
-    }
-  else if (strcmp(media_size, "A3") == 0)
-    {
-      *width  = 842;
-      *length = 1191;
-    }
-  else if (strcmp(media_size, "12x18") == 0)
-    {
-      *width  = 864;
-      *length = 1296;
-    }
-  else if (strcmp(media_size, "13x19") == 0)
-    {
-      *width = 936;
-      *length = 1368;
-    }
-  else if (strcmp(media_size, "A2") == 0)
-    {
-      *width = 1188;
-      *length = 1684;
+      *width = 0;
+      *length = 0;
     }
   else
     {
-      *width  = 0;
-      *length = 0;
+      *width = papersize->width;
+      *length = papersize->length;
     }
 }
 

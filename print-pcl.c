@@ -32,6 +32,11 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.17  2000/01/25 19:51:27  rlk
+ *   1) Better attempt at supporting newer Epson printers.
+ *
+ *   2) Generalized paper size support.
+ *
  *   Revision 1.16  2000/01/17 22:23:31  rlk
  *   Print 3.1.0
  *
@@ -266,15 +271,6 @@ pcl_parameters(int  model,	/* I - Printer model */
   int		i;
   char		**p,
 		**valptrs;
-  static char	*media_sizes[] =
-		{
-		  ("Letter"),
-		  ("Legal"),
-		  ("A4"),
-		  ("Tabloid"),
-		  ("A3"),
-		  ("12x18")
-		};
   static char	*media_types[] =
 		{
 		  ("Plain"),
@@ -307,14 +303,34 @@ pcl_parameters(int  model,	/* I - Printer model */
     return (NULL);
 
   if (strcmp(name, "PageSize") == 0)
-  {
-    if (model == 5 || model == 1100)
-      *count = 6;
-    else
-      *count = 3;
-
-    p = media_sizes;
-  }
+    {
+      int length_limit, width_limit;
+      const papersize_t *papersizes = get_papersizes();
+      valptrs = malloc(sizeof(char *) * known_papersizes());
+      *count = 0;
+      if (model == 5 || model == 1100)
+	{
+	  width_limit = 11 * 72;
+	  length_limit = 17 * 72;
+	}
+      else
+	{
+	  width_limit = 17 * 72 / 2; /* 8.5" */
+	  length_limit = 11 * 72;
+	}
+      for (i = 0; i < known_papersizes(); i++)
+	{
+	  if (strlen(papersizes[i].name) > 0 &&
+	      papersizes[i].width <= width_limit &&
+	      papersizes[i].length <= length_limit)
+	    {
+	      valptrs[*count] = malloc(strlen(papersizes[i].name) + 1);
+	      strcpy(valptrs[*count], papersizes[i].name);
+	      (*count)++;
+	    }
+	}
+      return (valptrs);
+    }
   else if (strcmp(name, "MediaType") == 0)
   {
     if (model < 500)

@@ -119,6 +119,13 @@ typedef struct		/**** Printer List ****/
   vars_t v;
 } plist_t;
 
+typedef struct
+{
+  char name[32];
+  unsigned width;
+  unsigned length;
+} papersize_t;
+
 /*
  * Abstract data type for interfacing with the image creation program
  * (in this case, the Gimp).
@@ -228,6 +235,10 @@ extern void	ps_imageable_area(int model, char *ppd_file, char *media_size,
 extern void	ps_print(int model, int copies, FILE *prn,
 			 Image image, unsigned char *cmap,
 			 lut_t *lut, vars_t *v);
+
+int		      known_papersizes(void);
+const papersize_t    *get_papersizes(void);
+const papersize_t    *get_papersize_by_name(const char *);
 
 #ifdef LEFTOVER_8_BIT
 extern void	dither_cmyk4(unsigned char *, int, int, int, unsigned char *,
