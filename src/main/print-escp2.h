@@ -354,47 +354,38 @@ typedef struct
 #define MODEL_XZEROMARGIN_NO	0x00ul /* zero margin mode? */
 #define MODEL_XZEROMARGIN_YES	0x10ul /* (print to edge of the paper) */
 
-#define MODEL_ROLLFEED_MASK	0x20ul /* Does this printer support */
-#define MODEL_ROLLFEED_NO	0x00ul /* a roll feed? */
-#define MODEL_ROLLFEED_YES	0x20ul
-
-#define MODEL_VARIABLE_DOT_MASK	0x40ul /* Does this printer support var */
+#define MODEL_VARIABLE_DOT_MASK	0x20ul /* Does this printer support var */
 #define MODEL_VARIABLE_NO	0x00ul /* dot size printing? The newest */
-#define MODEL_VARIABLE_YES	0x40ul /* printers support multiple modes */
+#define MODEL_VARIABLE_YES	0x20ul /* printers support multiple modes */
 
-#define MODEL_GRAYMODE_MASK	0x80ul /* Does this printer support special */
+#define MODEL_GRAYMODE_MASK	0x40ul /* Does this printer support special */
 #define MODEL_GRAYMODE_NO	0x00ul /* fast black printing? */
-#define MODEL_GRAYMODE_YES	0x80ul
+#define MODEL_GRAYMODE_YES	0x40ul
 
-#define MODEL_VACUUM_MASK	0x100ul
-#define MODEL_VACUUM_NO		0x000ul
-#define MODEL_VACUUM_YES	0x100ul
+#define MODEL_VACUUM_MASK	0x80ul
+#define MODEL_VACUUM_NO		0x00ul
+#define MODEL_VACUUM_YES	0x80ul
 
-#define MODEL_FAST_360_MASK	0x200ul
+#define MODEL_FAST_360_MASK	0x100ul
 #define MODEL_FAST_360_NO	0x000ul
-#define MODEL_FAST_360_YES	0x200ul
+#define MODEL_FAST_360_YES	0x100ul
 
-#define MODEL_SEND_ZERO_ADVANCE_MASK	0x400ul
+#define MODEL_SEND_ZERO_ADVANCE_MASK	0x200ul
 #define MODEL_SEND_ZERO_ADVANCE_NO	0x000ul
-#define MODEL_SEND_ZERO_ADVANCE_YES	0x400ul
+#define MODEL_SEND_ZERO_ADVANCE_YES	0x200ul
 
-#define MODEL_SUPPORTS_INK_CHANGE_MASK	0x800ul
+#define MODEL_SUPPORTS_INK_CHANGE_MASK	0x400ul
 #define MODEL_SUPPORTS_INK_CHANGE_NO	0x000ul
-#define MODEL_SUPPORTS_INK_CHANGE_YES	0x800ul
+#define MODEL_SUPPORTS_INK_CHANGE_YES	0x400ul
 
-#define MODEL_PACKET_MODE_MASK	0x1000ul
-#define MODEL_PACKET_MODE_NO	0x0000ul
-#define MODEL_PACKET_MODE_YES	0x1000ul
-
-#define MODEL_PRINT_TO_CD_MASK	0x2000ul
-#define MODEL_PRINT_TO_CD_NO	0x0000ul
-#define MODEL_PRINT_TO_CD_YES	0x2000ul
+#define MODEL_PACKET_MODE_MASK	0x800ul
+#define MODEL_PACKET_MODE_NO	0x000ul
+#define MODEL_PACKET_MODE_YES	0x800ul
 
 typedef enum
 {
   MODEL_COMMAND,
   MODEL_XZEROMARGIN,
-  MODEL_ROLLFEED,
   MODEL_VARIABLE_DOT,
   MODEL_GRAYMODE,
   MODEL_VACUUM,
@@ -402,7 +393,6 @@ typedef enum
   MODEL_SEND_ZERO_ADVANCE,
   MODEL_SUPPORTS_INK_CHANGE,
   MODEL_PACKET_MODE,
-  MODEL_PRINT_TO_CD,
   MODEL_LIMIT
 } escp2_model_option_t;
 

@@ -58,15 +58,13 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
 {
   { "command_mode",		0, 4 },
   { "horizontal_zero_margin",	4, 1 },
-  { "rollfeed",			5, 1 },
-  { "variable_mode",		6, 1 },
-  { "graymode",		 	7, 1 },
-  { "vacuum",			8, 1 },
-  { "fast_360",			9, 1 },
-  { "send_zero_advance",       10, 1 },
-  { "supports_ink_change",     11, 1 },
-  { "packet_mode",             12, 1 },
-  { "print_to_cd",             13, 1 },
+  { "variable_mode",		5, 1 },
+  { "graymode",		 	6, 1 },
+  { "vacuum",			7, 1 },
+  { "fast_360",			8, 1 },
+  { "send_zero_advance",        9, 1 },
+  { "supports_ink_change",     10, 1 },
+  { "packet_mode",             11, 1 },
 };
 
 typedef struct
@@ -988,6 +986,32 @@ verify_resolution(const stp_vars_t *v, const res_t *res)
 }
 
 static int
+printer_supports_rollfeed(const stp_vars_t *v)
+{
+  int i;
+  const input_slot_list_t *slots = escp2_input_slots(v);
+  for (i = 0; i < slots->n_input_slots; i++)
+    {
+      if (slots->slots[i].is_roll_feed)
+	return 1;
+    }
+  return 0;
+}
+
+static int
+printer_supports_print_to_cd(const stp_vars_t *v)
+{
+  int i;
+  const input_slot_list_t *slots = escp2_input_slots(v);
+  for (i = 0; i < slots->n_input_slots; i++)
+    {
+      if (slots->slots[i].is_cd)
+	return 1;
+    }
+  return 0;
+}
+
+static int
 verify_papersize(const stp_vars_t *v, const stp_papersize_t *pt)
 {
   unsigned int height_limit, width_limit;
@@ -1000,8 +1024,7 @@ verify_papersize(const stp_vars_t *v, const stp_papersize_t *pt)
       pt->width <= width_limit && pt->height <= height_limit &&
       (pt->height >= min_height_limit || pt->height == 0) &&
       (pt->width >= min_width_limit || pt->width == 0) &&
-      (pt->width == 0 || pt->height > 0 ||
-       escp2_has_cap(v, MODEL_ROLLFEED, MODEL_ROLLFEED_YES)))
+      (pt->width == 0 || pt->height > 0 || printer_supports_rollfeed(v)))
     return 1;
   else
     return 0;
@@ -1316,8 +1339,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     {
       const input_slot_t *slot = get_input_slot(v);
       description->bounds.str = stp_string_list_create();
-      if (escp2_has_cap(v, MODEL_PRINT_TO_CD, MODEL_PRINT_TO_CD_YES) &&
-	  (!slot || (slot && slot->is_cd)))
+      if (printer_supports_print_to_cd(v) && (!slot || (slot && slot->is_cd)))
 	{
 	  stp_string_list_add_string
 	    (description->bounds.str, "None", _("Normal"));
@@ -1333,8 +1355,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	   strcmp(name, "CDYAdjustment") == 0)
     {
       const input_slot_t *slot = get_input_slot(v);
-      if (escp2_has_cap(v, MODEL_PRINT_TO_CD, MODEL_PRINT_TO_CD_YES) &&
-	  (!slot || (slot && slot->is_cd)))
+      if (printer_supports_print_to_cd(v) && (!slot || (slot && slot->is_cd)))
 	{
 	  description->bounds.dimension.lower = -15;
 	  description->bounds.dimension.upper = 15;
