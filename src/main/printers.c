@@ -39,7 +39,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "printers.h"
-#include "list.h"
 
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
 
@@ -587,41 +586,23 @@ int
 stp_family_register(stp_list_t *family)
 {
   stp_list_item_t *printer_item;
-  stp_list_item_t *old_printer_item;
   stp_internal_printer_t *printer;
-  stp_internal_printer_t *old_printer;
 
-  printer_item = stp_list_get_start(family);
-
-  while(printer_item)
+  if (family)
     {
-      int error = 0;
+      printer_item = stp_list_get_start(family);
 
-      printer = (stp_internal_printer_t *)
-	stp_list_item_get_data(printer_item);
-      old_printer_item = stp_list_get_start(printer_list);
-
-      while (old_printer_item)
+      while(printer_item)
 	{
-	  old_printer = (stp_internal_printer_t *)
-	    stp_list_item_get_data(old_printer_item);
-
-	  if (!strcmp(stp_get_driver(printer->printvars),
-		      stp_get_driver(old_printer->printvars)) &&
-	      !strcmp(printer->long_name, old_printer->long_name))
-	    error = 1;
-
-	  old_printer_item = stp_list_item_next(old_printer_item);
+	  printer = (stp_internal_printer_t *)
+	    stp_list_item_get_data(printer_item);
+	  if (!stp_list_get_item_by_name(printer_list,
+					 stp_get_driver(printer->printvars)))
+	    stp_list_item_create(printer_list,
+				 stp_list_get_end(printer_list),
+				 (void *) printer);
+	  printer_item = stp_list_item_next(printer_item);
 	}
-
-      if (error == 0) /* No duplicates exist */
-	{
-	  stp_list_item_create(printer_list,
-			       NULL,
-			       (void *) printer);
-	}
-
-      printer_item = stp_list_item_next(printer_item);
     }
 
   return 0;
@@ -633,37 +614,23 @@ stp_family_unregister(stp_list_t *family)
   stp_list_item_t *printer_item;
   stp_list_item_t *old_printer_item;
   stp_internal_printer_t *printer;
-  stp_internal_printer_t *old_printer;
 
-  printer_item = stp_list_get_start(family);
-
-  while(printer_item)
+  if (family)
     {
-      printer = (stp_internal_printer_t *)
-	stp_list_item_get_data(printer_item);
-      old_printer_item = stp_list_get_start(printer_list);
+      printer_item = stp_list_get_start(family);
 
-      while (old_printer_item)
+      while(printer_item)
 	{
-	  old_printer = (stp_internal_printer_t *)
-	    stp_list_item_get_data(old_printer_item);
+	  printer = (stp_internal_printer_t *)
+	    stp_list_item_get_data(printer_item);
+	  old_printer_item =
+	    stp_list_get_item_by_name(printer_list,
+				      stp_get_driver(printer->printvars));
 
-
-	  if (printer == old_printer)
-	    {
-	      stp_list_item_t *tmp;
-	      tmp = stp_list_item_prev(old_printer_item);
-	      /* Remove the entry */
-	      stp_list_item_destroy(printer_list, old_printer_item);
-	      if (tmp == NULL)
-		tmp = stp_list_get_start(printer_list);
-	      old_printer_item = tmp;
-	    }
-	  else
-	    old_printer_item = stp_list_item_next(old_printer_item);
+	  if (old_printer_item)
+	    stp_list_item_destroy(printer_list, old_printer_item);
+	  printer_item = stp_list_item_next(printer_item);
 	}
-
-      printer_item = stp_list_item_next(printer_item);
     }
   return 0;
 }

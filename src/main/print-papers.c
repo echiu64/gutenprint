@@ -38,7 +38,6 @@
 #endif
 #include <string.h>
 #include <stdlib.h>
-#include "list.h"
 
 
 static void stp_paper_freefunc(stp_list_item_t *item);

@@ -90,11 +90,35 @@ stp_list_create(void)
   lh->namefunc = NULL;
   lh->long_namefunc = NULL;
   lh->sortfunc = NULL;
+  lh->copyfunc = NULL;
 
 #ifdef STP_LIST_DEBUG
   fprintf(stderr, "stp_list_head constructor\n");
 #endif
   return (stp_list_t *) lh;
+}
+
+stp_list_t *
+stp_list_copy(stp_list_t *list)
+{
+  stp_list_t *ret = stp_list_create();
+  node_copyfunc copyfunc = stp_list_get_copyfunc(list);
+  stp_list_item_t *item = stp_list_get_start(list);
+
+  stp_list_set_freefunc(ret, stp_list_get_freefunc(list));
+  stp_list_set_namefunc(ret, stp_list_get_namefunc(list));
+  stp_list_set_long_namefunc(ret, stp_list_get_long_namefunc(list));
+  stp_list_set_sortfunc(ret, stp_list_get_sortfunc(list));
+  stp_list_set_copyfunc(ret, stp_list_get_copyfunc(list));
+  while (item)
+    {
+      if (copyfunc)
+	stp_list_item_create(ret, stp_list_get_end(ret), (*copyfunc)(item));
+      else
+	stp_list_item_create(ret, stp_list_get_end(ret), item);
+      item = stp_list_item_next(item);
+    }
+  return ret;
 }
 
 /* free a list, freeing all child nodes first */
@@ -276,43 +300,87 @@ stp_list_get_item_by_long_name(stp_list_t *list, const char *long_name)
 
 /* callback for freeing data */
 void
-stp_list_set_freefunc(stp_list_t *list,
-		      void (*node_freefunc)(stp_list_item_t *item))
+stp_list_set_freefunc(stp_list_t *list, node_freefunc freefunc)
 {
   stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
   check_list(lh);
-  lh->freefunc = node_freefunc;
+  lh->freefunc = freefunc;
+}
+
+node_freefunc
+stp_list_get_freefunc(stp_list_t *list)
+{
+  stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
+  check_list(lh);
+  return lh->freefunc;
+}
+
+/* callback for copying data */
+void
+stp_list_set_copyfunc(stp_list_t *list, node_copyfunc copyfunc)
+{
+  stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
+  check_list(lh);
+  lh->copyfunc = copyfunc;
+}
+
+node_copyfunc
+stp_list_get_copyfunc(stp_list_t *list)
+{
+  stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
+  check_list(lh);
+  return lh->copyfunc;
 }
 
 /* callback for getting data name */
 void
-stp_list_set_namefunc(stp_list_t *list,
-		      const char *(*namefunc)(const stp_list_item_t *item))
+stp_list_set_namefunc(stp_list_t *list, node_namefunc namefunc)
 {
   stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
   check_list(lh);
   lh->namefunc = namefunc;
 }
 
+node_namefunc
+stp_list_get_namefunc(stp_list_t *list)
+{
+  stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
+  check_list(lh);
+  return lh->namefunc;
+}
+
 /* callback for getting data long_name */
 void
-stp_list_set_long_namefunc(stp_list_t *list,
-			   const char *(*long_namefunc)(const stp_list_item_t *item))
+stp_list_set_long_namefunc(stp_list_t *list, node_namefunc long_namefunc)
 {
   stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
   check_list(lh);
   lh->long_namefunc = long_namefunc;
 }
 
+node_namefunc
+stp_list_get_long_namefunc(stp_list_t *list)
+{
+  stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
+  check_list(lh);
+  return lh->long_namefunc;
+}
+
 /* callback for sorting nodes */
 void
-stp_list_set_sortfunc(stp_list_t *list,
-		      int (*sortfunc)(const stp_list_item_t *item1,
-				      const stp_list_item_t *item2))
+stp_list_set_sortfunc(stp_list_t *list, node_sortfunc sortfunc)
 {
   stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
   check_list(lh);
   lh->sortfunc = sortfunc;
+}
+
+node_sortfunc
+stp_list_get_sortfunc(stp_list_t *list)
+{
+  stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
+  check_list(lh);
+  return lh->sortfunc;
 }
 
 

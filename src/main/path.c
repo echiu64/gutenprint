@@ -31,7 +31,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "list.h"
 #include "path.h"
 
 static int stp_path_check(const struct dirent *module);

@@ -812,9 +812,14 @@ extern int stp_curve_compose(stp_curve_t *retval,
 
 typedef void stp_list_item_t;
 typedef void stp_list_t;
+typedef void (*node_freefunc)(stp_list_item_t *);
+typedef void *(*node_copyfunc)(const stp_list_item_t *);
+typedef const char *(*node_namefunc)(const stp_list_item_t *);
+typedef int (*node_sortfunc)(const stp_list_item_t *, const stp_list_item_t *);
 
 extern void stp_list_node_free_data(stp_list_item_t *item);
 extern stp_list_t *stp_list_create(void);
+extern stp_list_t *stp_list_copy(stp_list_t *list);
 extern int stp_list_destroy(stp_list_t *list);
 extern stp_list_item_t *stp_list_get_start(stp_list_t *list);
 extern stp_list_item_t *stp_list_get_end(stp_list_t *list);
@@ -825,15 +830,22 @@ extern stp_list_item_t *stp_list_get_item_by_name(stp_list_t *list,
 extern stp_list_item_t *stp_list_get_item_by_long_name(stp_list_t *list,
 						       const char *long_name);
 extern int stp_list_get_length(stp_list_t *list);
-extern void stp_list_set_freefunc(stp_list_t *list,
-				  void (*node_freefunc)(stp_list_item_t *item));
-extern void stp_list_set_namefunc(stp_list_t *list,
-				  const char *(*namefunc)(const stp_list_item_t *item));
-extern void stp_list_set_long_namefunc(stp_list_t *list,
-				       const char *(*long_namefunc)(const stp_list_item_t *item));
-extern void stp_list_set_sortfunc(stp_list_t *list, 
-				  int (*sortfunc)(const stp_list_item_t *item1,
-						  const stp_list_item_t *item2));
+
+extern void stp_list_set_freefunc(stp_list_t *list, node_freefunc);
+extern node_freefunc stp_list_get_freefunc(stp_list_t *list);
+
+extern void stp_list_set_copyfunc(stp_list_t *list, node_copyfunc);
+extern node_copyfunc stp_list_get_copyfunc(stp_list_t *list);
+
+extern void stp_list_set_namefunc(stp_list_t *list, node_namefunc);
+extern node_namefunc stp_list_get_namefunc(stp_list_t *list);
+
+extern void stp_list_set_long_namefunc(stp_list_t *list, node_namefunc);
+extern node_namefunc stp_list_get_long_namefunc(stp_list_t *list);
+
+extern void stp_list_set_sortfunc(stp_list_t *list, node_sortfunc);
+extern node_sortfunc stp_list_get_sortfunc(stp_list_t *list);
+
 extern int stp_list_item_create(stp_list_t *list,
 				stp_list_item_t *prev,
 				void *data);
