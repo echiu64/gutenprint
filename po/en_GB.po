@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-04-27 23:10+0100\n"
+"POT-Creation-Date: 2001-05-03 19:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,69 +75,69 @@ msgstr ""
 
 #: src/main/print-canon.c:1041 src/main/print-canon.c:1333
 #: src/main/print-canon.c:1465 src/main/print-escp2.c:1937
-#: src/main/print-lexmark.c:555 src/main/print-lexmark.c:809
-#: src/main/print-lexmark.c:929
+#: src/main/print-lexmark.c:552 src/main/print-lexmark.c:805
+#: src/main/print-lexmark.c:925
 msgid "Plain Paper"
 msgstr ""
 
 #: src/main/print-canon.c:1042 src/main/print-canon.c:1334
 #: src/main/print-canon.c:1466 src/main/print-escp2.c:1942
-#: src/main/print-lexmark.c:556 src/main/print-lexmark.c:810
-#: src/main/print-lexmark.c:930
+#: src/main/print-lexmark.c:553 src/main/print-lexmark.c:806
+#: src/main/print-lexmark.c:926
 msgid "Transparencies"
 msgstr ""
 
 #: src/main/print-canon.c:1043 src/main/print-canon.c:1335
-#: src/main/print-canon.c:1467 src/main/print-lexmark.c:557
-#: src/main/print-lexmark.c:811 src/main/print-lexmark.c:931
+#: src/main/print-canon.c:1467 src/main/print-lexmark.c:554
+#: src/main/print-lexmark.c:807 src/main/print-lexmark.c:927
 msgid "Back Print Film"
 msgstr ""
 
 #: src/main/print-canon.c:1044 src/main/print-canon.c:1336
-#: src/main/print-canon.c:1468 src/main/print-lexmark.c:558
-#: src/main/print-lexmark.c:812 src/main/print-lexmark.c:932
+#: src/main/print-canon.c:1468 src/main/print-lexmark.c:555
+#: src/main/print-lexmark.c:808 src/main/print-lexmark.c:928
 msgid "Fabric Sheets"
 msgstr ""
 
 #: src/main/print-canon.c:1045 src/main/print-canon.c:1337
-#: src/main/print-canon.c:1469 src/main/print-lexmark.c:559
-#: src/main/print-lexmark.c:813 src/main/print-lexmark.c:933
+#: src/main/print-canon.c:1469 src/main/print-lexmark.c:556
+#: src/main/print-lexmark.c:809 src/main/print-lexmark.c:929
 msgid "Envelope"
 msgstr ""
 
 #: src/main/print-canon.c:1046 src/main/print-canon.c:1338
-#: src/main/print-canon.c:1470 src/main/print-lexmark.c:560
-#: src/main/print-lexmark.c:814 src/main/print-lexmark.c:934
+#: src/main/print-canon.c:1470 src/main/print-lexmark.c:557
+#: src/main/print-lexmark.c:810 src/main/print-lexmark.c:930
 msgid "High Resolution Paper"
 msgstr ""
 
 #: src/main/print-canon.c:1047 src/main/print-canon.c:1339
-#: src/main/print-canon.c:1471 src/main/print-lexmark.c:561
-#: src/main/print-lexmark.c:815 src/main/print-lexmark.c:935
+#: src/main/print-canon.c:1471 src/main/print-lexmark.c:558
+#: src/main/print-lexmark.c:811 src/main/print-lexmark.c:931
 msgid "T-Shirt Transfers"
 msgstr ""
 
 #: src/main/print-canon.c:1048 src/main/print-canon.c:1340
-#: src/main/print-canon.c:1472 src/main/print-lexmark.c:562
-#: src/main/print-lexmark.c:816 src/main/print-lexmark.c:936
+#: src/main/print-canon.c:1472 src/main/print-lexmark.c:559
+#: src/main/print-lexmark.c:812 src/main/print-lexmark.c:932
 msgid "High Gloss Film"
 msgstr ""
 
 #: src/main/print-canon.c:1049 src/main/print-canon.c:1341
-#: src/main/print-canon.c:1473 src/main/print-lexmark.c:563
-#: src/main/print-lexmark.c:817 src/main/print-lexmark.c:937
+#: src/main/print-canon.c:1473 src/main/print-lexmark.c:560
+#: src/main/print-lexmark.c:813 src/main/print-lexmark.c:933
 msgid "Glossy Photo Paper"
 msgstr ""
 
 #: src/main/print-canon.c:1050 src/main/print-canon.c:1342
-#: src/main/print-canon.c:1474 src/main/print-lexmark.c:564
-#: src/main/print-lexmark.c:818 src/main/print-lexmark.c:938
+#: src/main/print-canon.c:1474 src/main/print-lexmark.c:561
+#: src/main/print-lexmark.c:814 src/main/print-lexmark.c:934
 msgid "Glossy Photo Cards"
 msgstr ""
 
 #: src/main/print-canon.c:1051 src/main/print-canon.c:1343
-#: src/main/print-canon.c:1475 src/main/print-lexmark.c:565
-#: src/main/print-lexmark.c:819 src/main/print-lexmark.c:939
+#: src/main/print-canon.c:1475 src/main/print-lexmark.c:562
+#: src/main/print-lexmark.c:815 src/main/print-lexmark.c:935
 msgid "Photo Paper Pro"
 msgstr ""
 
@@ -162,54 +162,54 @@ msgstr ""
 
 #. used internally: do not translate
 #: src/main/print-canon.c:1105 src/main/print-canon.c:1347
-#: src/main/print-canon.c:1479 src/main/print-lexmark.c:576
-#: src/main/print-lexmark.c:823 src/main/print-lexmark.c:943
+#: src/main/print-canon.c:1479 src/main/print-lexmark.c:573
+#: src/main/print-lexmark.c:819 src/main/print-lexmark.c:939
 msgid "Auto Sheet Feeder"
 msgstr ""
 
 #: src/main/print-canon.c:1106 src/main/print-canon.c:1348
-#: src/main/print-canon.c:1480 src/main/print-lexmark.c:577
-#: src/main/print-lexmark.c:824 src/main/print-lexmark.c:944
+#: src/main/print-canon.c:1480 src/main/print-lexmark.c:574
+#: src/main/print-lexmark.c:820 src/main/print-lexmark.c:940
 msgid "Manual with Pause"
 msgstr ""
 
 #: src/main/print-canon.c:1107 src/main/print-canon.c:1349
-#: src/main/print-canon.c:1481 src/main/print-lexmark.c:578
-#: src/main/print-lexmark.c:825 src/main/print-lexmark.c:945
+#: src/main/print-canon.c:1481 src/main/print-lexmark.c:575
+#: src/main/print-lexmark.c:821 src/main/print-lexmark.c:941
 msgid "Manual without Pause"
 msgstr ""
 
 #. used internally: do not translate
 #: src/main/print-canon.c:1119 src/main/print-canon.c:1142
 #: src/main/print-canon.c:1423 src/main/print-canon.c:1534
-#: src/main/print-lexmark.c:591 src/main/print-lexmark.c:886
-#: src/main/print-lexmark.c:992
+#: src/main/print-lexmark.c:588 src/main/print-lexmark.c:882
+#: src/main/print-lexmark.c:988
 msgid "Black"
 msgstr ""
 
 #: src/gimp/gimp_main_window.c:783 src/main/print-canon.c:1120
 #: src/main/print-canon.c:1143 src/main/print-canon.c:1425
-#: src/main/print-canon.c:1536 src/main/print-lexmark.c:592
-#: src/main/print-lexmark.c:888 src/main/print-lexmark.c:994
+#: src/main/print-canon.c:1536 src/main/print-lexmark.c:589
+#: src/main/print-lexmark.c:884 src/main/print-lexmark.c:990
 msgid "Color"
 msgstr "Colour"
 
 #: src/main/print-canon.c:1121 src/main/print-canon.c:1144
 #: src/main/print-canon.c:1427 src/main/print-canon.c:1538
-#: src/main/print-lexmark.c:593 src/main/print-lexmark.c:890
-#: src/main/print-lexmark.c:996
+#: src/main/print-lexmark.c:590 src/main/print-lexmark.c:886
+#: src/main/print-lexmark.c:992
 msgid "Black/Color"
 msgstr "Black/Colour"
 
 #: src/main/print-canon.c:1122 src/main/print-canon.c:1145
 #: src/main/print-canon.c:1429 src/main/print-canon.c:1540
-#: src/main/print-lexmark.c:594 src/main/print-lexmark.c:892
-#: src/main/print-lexmark.c:894 src/main/print-lexmark.c:998
-#: src/main/print-lexmark.c:1000
+#: src/main/print-lexmark.c:591 src/main/print-lexmark.c:888
+#: src/main/print-lexmark.c:890 src/main/print-lexmark.c:994
+#: src/main/print-lexmark.c:996
 msgid "Photo/Color"
 msgstr "Photo/Colour"
 
-#: src/main/print-canon.c:1123 src/main/print-lexmark.c:595
+#: src/main/print-canon.c:1123 src/main/print-lexmark.c:592
 msgid "Photo"
 msgstr ""
 
@@ -220,46 +220,46 @@ msgstr "Black/Photo Color"
 
 #. used internally: do not translate
 #. built ins:
-#: src/main/print-canon.c:1170 src/main/print-lexmark.c:657
-#: src/main/print-pcl.c:109 src/main/print-util.c:683
+#: src/main/print-canon.c:1170 src/main/print-lexmark.c:654
+#: src/main/print-pcl.c:109 src/main/print-util.c:689
 msgid "A5"
 msgstr ""
 
 #. ISO/JIS A5 (148 x 210 mm)
-#: src/main/print-canon.c:1171 src/main/print-lexmark.c:658
-#: src/main/print-pcl.c:110 src/main/print-util.c:682
+#: src/main/print-canon.c:1171 src/main/print-lexmark.c:655
+#: src/main/print-pcl.c:110 src/main/print-util.c:688
 msgid "A4"
 msgstr ""
 
-#: src/main/print-canon.c:1172 src/main/print-lexmark.c:659
+#: src/main/print-canon.c:1172 src/main/print-lexmark.c:656
 msgid "B5"
 msgstr ""
 
 #. US Exec (7.25 x 10.5 in)
-#: src/main/print-canon.c:1173 src/main/print-lexmark.c:660
-#: src/main/print-pcl.c:104 src/main/print-util.c:637
+#: src/main/print-canon.c:1173 src/main/print-lexmark.c:657
+#: src/main/print-pcl.c:104 src/main/print-util.c:643
 msgid "Letter"
 msgstr ""
 
 #. US Letter (8.5 x 11 in)
-#: src/main/print-canon.c:1174 src/main/print-lexmark.c:661
-#: src/main/print-pcl.c:105 src/main/print-util.c:638
+#: src/main/print-canon.c:1174 src/main/print-lexmark.c:658
+#: src/main/print-pcl.c:105 src/main/print-util.c:644
 msgid "Legal"
 msgstr ""
 
-#: src/main/print-canon.c:1175 src/main/print-lexmark.c:662
+#: src/main/print-canon.c:1175 src/main/print-lexmark.c:659
 msgid "Envelope 10"
 msgstr ""
 
-#: src/main/print-canon.c:1176 src/main/print-lexmark.c:663
+#: src/main/print-canon.c:1176 src/main/print-lexmark.c:660
 msgid "Envelope DL"
 msgstr ""
 
-#: src/main/print-canon.c:1177 src/main/print-lexmark.c:664
+#: src/main/print-canon.c:1177 src/main/print-lexmark.c:661
 msgid "Letter+"
 msgstr ""
 
-#: src/main/print-canon.c:1178 src/main/print-lexmark.c:665
+#: src/main/print-canon.c:1178 src/main/print-lexmark.c:662
 msgid "A4+"
 msgstr ""
 
@@ -267,34 +267,24 @@ msgstr ""
 msgid "Canon 4x2"
 msgstr ""
 
-#. used internally: do not translate
-#: src/main/print-canon.c:2350 src/main/print-dither.c:87
-#: src/main/print-escp2.c:3130
+#: src/main/print-dither.c:84
+msgid "Adaptive Hybrid"
+msgstr ""
+
+#: src/main/print-dither.c:85
 msgid "Ordered"
 msgstr ""
 
 #: src/main/print-dither.c:86
-msgid "Adaptive Hybrid"
-msgstr ""
-
-#: src/main/print-dither.c:88
 msgid "Fast"
 msgstr ""
 
-#: src/main/print-dither.c:89
+#: src/main/print-dither.c:87
 msgid "Very Fast"
 msgstr ""
 
-#: src/main/print-dither.c:90
-msgid "Adaptive Random"
-msgstr ""
-
-#: src/main/print-dither.c:91
+#: src/main/print-dither.c:88
 msgid "Hybrid Floyd-Steinberg"
-msgstr ""
-
-#: src/main/print-dither.c:92
-msgid "Random Floyd-Steinberg"
 msgstr ""
 
 #: src/main/print-escp2.c:1817
@@ -450,7 +440,7 @@ msgid "Plain Paper Fast Load"
 msgstr ""
 
 #. 7.25 * 10.5in
-#: src/main/print-escp2.c:1940 src/main/print-util.c:641
+#: src/main/print-escp2.c:1940 src/main/print-util.c:647
 msgid "Postcard"
 msgstr ""
 
@@ -532,125 +522,125 @@ msgstr ""
 msgid "Roll Feed"
 msgstr ""
 
-#: src/main/print-lexmark.c:596 src/main/print-lexmark.c:895
+#: src/main/print-lexmark.c:593 src/main/print-lexmark.c:891
 msgid "Check/Clean nozzles"
 msgstr ""
 
-#: src/main/print-lexmark.c:666
+#: src/main/print-lexmark.c:663
 msgid "Lexmark 4x2"
 msgstr ""
 
 #. name                                  hres vres softw v_pass overs unidir resid
-#: src/main/print-lexmark.c:725
+#: src/main/print-lexmark.c:723
 msgid "300 DPI x 600 DPI"
 msgstr ""
 
-#: src/main/print-lexmark.c:726
+#: src/main/print-lexmark.c:724
 msgid "600 DPI"
 msgstr ""
 
-#: src/main/print-lexmark.c:727
+#: src/main/print-lexmark.c:725
 msgid "600 DPI high quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:728
+#: src/main/print-lexmark.c:726
 msgid "600 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-lexmark.c:729
+#: src/main/print-lexmark.c:727
 msgid "1200 DPI"
 msgstr ""
 
-#: src/main/print-lexmark.c:730
+#: src/main/print-lexmark.c:728
 msgid "1200 DPI high quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:731
+#: src/main/print-lexmark.c:729
 msgid "1200 DPI highest quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:732
+#: src/main/print-lexmark.c:730
 msgid "1200 DPI  Unidirectional"
 msgstr ""
 
-#: src/main/print-lexmark.c:733
+#: src/main/print-lexmark.c:731
 msgid "2400 DPI x 1200 DPI"
 msgstr ""
 
-#: src/main/print-lexmark.c:734
+#: src/main/print-lexmark.c:732
 msgid "2400 DPI x 1200 DPI high quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:735
+#: src/main/print-lexmark.c:733
 msgid "2400 DPI x 1200 DPI highest quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:737
+#: src/main/print-lexmark.c:735
 msgid "test print"
 msgstr ""
 
 #. 11in x 17in
-#: src/main/print-pcl.c:103 src/main/print-util.c:640
+#: src/main/print-pcl.c:103 src/main/print-util.c:646
 msgid "Executive"
 msgstr ""
 
 #. US Legal (8.5 x 14 in)
-#: src/main/print-pcl.c:106 src/main/print-util.c:639
+#: src/main/print-pcl.c:106 src/main/print-util.c:645
 msgid "Tabloid"
 msgstr ""
 
 #. US Tabloid (11 x 17 in)
-#: src/main/print-pcl.c:107 src/main/print-pcl.c:193 src/main/print-util.c:650
+#: src/main/print-pcl.c:107 src/main/print-pcl.c:193 src/main/print-util.c:656
 msgid "Manual"
 msgstr ""
 
 #. US Manual/Statement (5.5 x 8.5 in)
-#: src/main/print-pcl.c:108 src/main/print-util.c:652
+#: src/main/print-pcl.c:108 src/main/print-util.c:658
 msgid "13x19"
 msgstr ""
 
 #. ISO/JIS A4 (210 x 297 mm)
-#: src/main/print-pcl.c:111 src/main/print-util.c:681
+#: src/main/print-pcl.c:111 src/main/print-util.c:687
 msgid "A3"
 msgstr ""
 
 #. ISO/JIS A3 (297 x 420 mm)
-#: src/main/print-pcl.c:112 src/main/print-util.c:731
+#: src/main/print-pcl.c:112 src/main/print-util.c:737
 msgid "B5 JIS"
 msgstr ""
 
 #. JIS B5 (182 x 257 mm).
-#: src/main/print-pcl.c:113 src/main/print-util.c:730
+#: src/main/print-pcl.c:113 src/main/print-util.c:736
 msgid "B4 JIS"
 msgstr ""
 
 #. JIS B4 (257 x 364 mm).
-#: src/main/print-pcl.c:114 src/main/print-util.c:793
+#: src/main/print-pcl.c:114 src/main/print-util.c:799
 msgid "Hagaki Card"
 msgstr ""
 
 #. Japanese Hagaki Card (100 x 148 mm)
-#: src/main/print-pcl.c:115 src/main/print-util.c:794
+#: src/main/print-pcl.c:115 src/main/print-util.c:800
 msgid "Oufuku Card"
 msgstr ""
 
 #. Japanese Oufuku Card (148 x 200 mm)
-#: src/main/print-pcl.c:116 src/main/print-util.c:684
+#: src/main/print-pcl.c:116 src/main/print-util.c:690
 msgid "A6"
 msgstr ""
 
 #. ISO/JIS A6 card
-#: src/main/print-pcl.c:117 src/main/print-util.c:643
+#: src/main/print-pcl.c:117 src/main/print-util.c:649
 msgid "4x6"
 msgstr ""
 
 #. US Index card (4 x 6 in)
-#: src/main/print-pcl.c:118 src/main/print-util.c:646
+#: src/main/print-pcl.c:118 src/main/print-util.c:652
 msgid "5x8"
 msgstr ""
 
 #. US Index card (5 x 8 in)
-#: src/main/print-pcl.c:119 src/main/print-util.c:642
+#: src/main/print-pcl.c:119 src/main/print-util.c:648
 msgid "3x5"
 msgstr ""
 
@@ -660,42 +650,42 @@ msgid "Monarch"
 msgstr ""
 
 #. Monarch Envelope (3 7/8 x 7 1/2 in)
-#: src/main/print-pcl.c:121 src/main/print-util.c:798
+#: src/main/print-pcl.c:121 src/main/print-util.c:804
 msgid "Commercial 10"
 msgstr ""
 
 #. US Commercial 10 Envelope (4.125 x 9.5 in) Portrait
-#: src/main/print-pcl.c:122 src/main/print-util.c:749
+#: src/main/print-pcl.c:122 src/main/print-util.c:755
 msgid "DL"
 msgstr ""
 
 #. DL envelope (110 x 220 mm) Portrait
-#: src/main/print-pcl.c:123 src/main/print-util.c:746
+#: src/main/print-pcl.c:123 src/main/print-util.c:752
 msgid "C5"
 msgstr ""
 
 #. C5 envelope (162 x 229 mm)
-#: src/main/print-pcl.c:124 src/main/print-util.c:748
+#: src/main/print-pcl.c:124 src/main/print-util.c:754
 msgid "C6"
 msgstr ""
 
 #. C6 envelope (114 x 162 mm)
-#: src/main/print-pcl.c:125 src/main/print-util.c:799
+#: src/main/print-pcl.c:125 src/main/print-util.c:805
 msgid "A2 Invitation"
 msgstr ""
 
 #. US A2 Invitation envelope (4 3/8 x 5 3/4 in)
-#: src/main/print-pcl.c:126 src/main/print-util.c:795
+#: src/main/print-pcl.c:126 src/main/print-util.c:801
 msgid "Long 3"
 msgstr ""
 
 #. Japanese Long Envelope #3 (120 x 235 mm)
-#: src/main/print-pcl.c:127 src/main/print-util.c:796
+#: src/main/print-pcl.c:127 src/main/print-util.c:802
 msgid "Long 4"
 msgstr ""
 
 #. Japanese Long Envelope #4 (90 x 205 mm)
-#: src/main/print-pcl.c:128 src/main/print-util.c:797
+#: src/main/print-pcl.c:128 src/main/print-util.c:803
 msgid "Kaku"
 msgstr ""
 
@@ -797,12 +787,12 @@ msgstr ""
 msgid "2400x600 DPI"
 msgstr ""
 
-#: src/main/print-pcl.c:1403 src/main/print-pcl.c:1538
+#: src/main/print-pcl.c:1404 src/main/print-pcl.c:1539
 msgid "Color + Black Cartridges"
 msgstr "Colour + Black Cartridges"
 
-#: src/main/print-pcl.c:1404 src/main/print-pcl.c:1539
-#: src/main/print-pcl.c:1810
+#: src/main/print-pcl.c:1405 src/main/print-pcl.c:1540
+#: src/main/print-pcl.c:1813
 msgid "Color + Photo Cartridges"
 msgstr "Colour + Photo Cartridges"
 
@@ -816,74 +806,74 @@ msgstr ""
 msgid "ps2"
 msgstr ""
 
-#: src/main/print-util.c:644
+#: src/main/print-util.c:650
 msgid "Epson 4x6 Photo Paper"
 msgstr ""
 
-#: src/main/print-util.c:645
+#: src/main/print-util.c:651
 msgid "5x7"
 msgstr ""
 
-#: src/main/print-util.c:647
+#: src/main/print-util.c:653
 msgid "HalfLetter"
 msgstr ""
 
-#: src/main/print-util.c:648
+#: src/main/print-util.c:654
 msgid "6x8"
 msgstr ""
 
-#: src/main/print-util.c:649
+#: src/main/print-util.c:655
 msgid "8x10"
 msgstr ""
 
 #. 5.5in x 8.5in
-#: src/main/print-util.c:651
+#: src/main/print-util.c:657
 msgid "12x18"
 msgstr ""
 
-#: src/main/print-util.c:653
+#: src/main/print-util.c:659
 msgid "Super B"
 msgstr ""
 
 #. Apparently 13x19.
 #. Other common photographic paper sizes
-#: src/main/print-util.c:656
+#: src/main/print-util.c:662
 msgid "8x12"
 msgstr ""
 
 #. Sometimes used for 35 mm
-#: src/main/print-util.c:657
+#: src/main/print-util.c:663
 msgid "11x14"
 msgstr ""
 
-#: src/main/print-util.c:658
+#: src/main/print-util.c:664
 msgid "16x20"
 msgstr ""
 
-#: src/main/print-util.c:659
+#: src/main/print-util.c:665
 msgid "16x24"
 msgstr ""
 
 #. 20x24 for 35 mm
-#: src/main/print-util.c:660
+#: src/main/print-util.c:666
 msgid "20x24"
 msgstr ""
 
-#: src/main/print-util.c:661
+#: src/main/print-util.c:667
 msgid "20x30"
 msgstr ""
 
 #. 24x30 for 35 mm
-#: src/main/print-util.c:662
+#: src/main/print-util.c:668
 msgid "24x30"
 msgstr ""
 
-#: src/main/print-util.c:663
+#: src/main/print-util.c:669
 msgid "24x36"
 msgstr ""
 
 #. Sometimes used for 35 mm
-#: src/main/print-util.c:664
+#: src/main/print-util.c:670
 msgid "30x40"
 msgstr ""
 
@@ -896,47 +886,47 @@ msgstr ""
 #. * millimetre.  Thus, A0 is 841mm x 1189mm.  Every other A
 #. * size is obtained by doubling or halving another A size.
 #.
-#: src/main/print-util.c:676
+#: src/main/print-util.c:682
 msgid "4A"
 msgstr ""
 
 #. 1682mm x 2378mm
-#: src/main/print-util.c:677
+#: src/main/print-util.c:683
 msgid "2A"
 msgstr ""
 
 #. 1189mm x 1682mm
-#: src/main/print-util.c:678
+#: src/main/print-util.c:684
 msgid "A0"
 msgstr ""
 
 #. 841mm x 1189mm
-#: src/main/print-util.c:679
+#: src/main/print-util.c:685
 msgid "A1"
 msgstr ""
 
 #. 594mm x  841mm
-#: src/main/print-util.c:680
+#: src/main/print-util.c:686
 msgid "A2"
 msgstr ""
 
 #. 105mm x  148mm
-#: src/main/print-util.c:685
+#: src/main/print-util.c:691
 msgid "A7"
 msgstr ""
 
 #. 74mm x  105mm
-#: src/main/print-util.c:686
+#: src/main/print-util.c:692
 msgid "A8"
 msgstr ""
 
 #. 52mm x   74mm
-#: src/main/print-util.c:687
+#: src/main/print-util.c:693
 msgid "A9"
 msgstr ""
 
 #. 37mm x   52mm
-#: src/main/print-util.c:688
+#: src/main/print-util.c:694
 msgid "A10"
 msgstr ""
 
@@ -945,27 +935,27 @@ msgstr ""
 #. * Stock sizes for normal trims.
 #. * Allowance for trim is 3 millimetres.
 #.
-#: src/main/print-util.c:694
+#: src/main/print-util.c:700
 msgid "RA0"
 msgstr ""
 
 #. 860mm x 1220mm
-#: src/main/print-util.c:695
+#: src/main/print-util.c:701
 msgid "RA1"
 msgstr ""
 
 #. 610mm x  860mm
-#: src/main/print-util.c:696
+#: src/main/print-util.c:702
 msgid "RA2"
 msgstr ""
 
 #. 430mm x  610mm
-#: src/main/print-util.c:697
+#: src/main/print-util.c:703
 msgid "RA3"
 msgstr ""
 
 #. 305mm x  430mm
-#: src/main/print-util.c:698
+#: src/main/print-util.c:704
 msgid "RA4"
 msgstr ""
 
@@ -973,27 +963,27 @@ msgstr ""
 #.
 #. * Stock sizes for bled work or extra trims.
 #.
-#: src/main/print-util.c:703
+#: src/main/print-util.c:709
 msgid "SRA0"
 msgstr ""
 
 #. 900mm x 1280mm
-#: src/main/print-util.c:704
+#: src/main/print-util.c:710
 msgid "SRA1"
 msgstr ""
 
 #. 640mm x  900mm
-#: src/main/print-util.c:705
+#: src/main/print-util.c:711
 msgid "SRA2"
 msgstr ""
 
 #. 450mm x  640mm
-#: src/main/print-util.c:706
+#: src/main/print-util.c:712
 msgid "SRA3"
 msgstr ""
 
 #. 320mm x  450mm
-#: src/main/print-util.c:707
+#: src/main/print-util.c:713
 msgid "SRA4"
 msgstr ""
 
@@ -1001,161 +991,161 @@ msgstr ""
 #.
 #. * "B" series: Posters, wall charts and similar items.
 #.
-#: src/main/print-util.c:712
+#: src/main/print-util.c:718
 msgid "4B ISO"
 msgstr ""
 
 #. 2000mm x 2828mm
-#: src/main/print-util.c:713
+#: src/main/print-util.c:719
 msgid "2B ISO"
 msgstr ""
 
 #. 1414mm x 2000mm
-#: src/main/print-util.c:714
+#: src/main/print-util.c:720
 msgid "B0 ISO"
 msgstr ""
 
 #. 1000mm x 1414mm
-#: src/main/print-util.c:715
+#: src/main/print-util.c:721
 msgid "B1 ISO"
 msgstr ""
 
 #. 707mm x 1000mm
-#: src/main/print-util.c:716
+#: src/main/print-util.c:722
 msgid "B2 ISO"
 msgstr ""
 
 #. 500mm x  707mm
-#: src/main/print-util.c:717
+#: src/main/print-util.c:723
 msgid "B3 ISO"
 msgstr ""
 
 #. 353mm x  500mm
-#: src/main/print-util.c:718
+#: src/main/print-util.c:724
 msgid "B4 ISO"
 msgstr ""
 
 #. 250mm x  353mm
-#: src/main/print-util.c:719
+#: src/main/print-util.c:725
 msgid "B5 ISO"
 msgstr ""
 
 #. 176mm x  250mm
-#: src/main/print-util.c:720
+#: src/main/print-util.c:726
 msgid "B6 ISO"
 msgstr ""
 
 #. 125mm x  176mm
-#: src/main/print-util.c:721
+#: src/main/print-util.c:727
 msgid "B7 ISO"
 msgstr ""
 
 #. 88mm x  125mm
-#: src/main/print-util.c:722
+#: src/main/print-util.c:728
 msgid "B8 ISO"
 msgstr ""
 
 #. 62mm x   88mm
-#: src/main/print-util.c:723
+#: src/main/print-util.c:729
 msgid "B9 ISO"
 msgstr ""
 
 #. 44mm x   62mm
-#: src/main/print-util.c:724
+#: src/main/print-util.c:730
 msgid "B10 ISO"
 msgstr ""
 
 #. 31mm x   44mm
-#: src/main/print-util.c:726
+#: src/main/print-util.c:732
 msgid "B0 JIS"
 msgstr ""
 
-#: src/main/print-util.c:727
+#: src/main/print-util.c:733
 msgid "B1 JIS"
 msgstr ""
 
-#: src/main/print-util.c:728
+#: src/main/print-util.c:734
 msgid "B2 JIS"
 msgstr ""
 
-#: src/main/print-util.c:729
+#: src/main/print-util.c:735
 msgid "B3 JIS"
 msgstr ""
 
-#: src/main/print-util.c:732
+#: src/main/print-util.c:738
 msgid "B6 JIS"
 msgstr ""
 
-#: src/main/print-util.c:733
+#: src/main/print-util.c:739
 msgid "B7 JIS"
 msgstr ""
 
-#: src/main/print-util.c:734
+#: src/main/print-util.c:740
 msgid "B8 JIS"
 msgstr ""
 
-#: src/main/print-util.c:735
+#: src/main/print-util.c:741
 msgid "B9 JIS"
 msgstr ""
 
-#: src/main/print-util.c:736
+#: src/main/print-util.c:742
 msgid "B10 JIS"
 msgstr ""
 
 #.
 #. * "C" series: Envelopes or folders suitable for A size stationery.
 #.
-#: src/main/print-util.c:741
+#: src/main/print-util.c:747
 msgid "C0"
 msgstr ""
 
 #. 917mm x 1297mm
-#: src/main/print-util.c:742
+#: src/main/print-util.c:748
 msgid "C1"
 msgstr ""
 
 #. 648mm x  917mm
-#: src/main/print-util.c:743
+#: src/main/print-util.c:749
 msgid "C2"
 msgstr ""
 
 #. 458mm x  648mm
-#: src/main/print-util.c:744
+#: src/main/print-util.c:750
 msgid "C3"
 msgstr ""
 
 #. 324mm x  458mm
-#: src/main/print-util.c:745
+#: src/main/print-util.c:751
 msgid "C4"
 msgstr ""
 
 #. 162mm x  229mm
-#: src/main/print-util.c:747
+#: src/main/print-util.c:753
 msgid "B6-C4"
 msgstr ""
 
 #. 110mm x  220mm
-#: src/main/print-util.c:750
+#: src/main/print-util.c:756
 msgid "C7-6"
 msgstr ""
 
 #. 81mm x  162mm
-#: src/main/print-util.c:751
+#: src/main/print-util.c:757
 msgid "C7"
 msgstr ""
 
 #. 81mm x  114mm
-#: src/main/print-util.c:752
+#: src/main/print-util.c:758
 msgid "C8"
 msgstr ""
 
 #. 57mm x   81mm
-#: src/main/print-util.c:753
+#: src/main/print-util.c:759
 msgid "C9"
 msgstr ""
 
 #. 40mm x   57mm
-#: src/main/print-util.c:754
+#: src/main/print-util.c:760
 msgid "C10"
 msgstr ""
 
@@ -1163,35 +1153,35 @@ msgstr ""
 #.
 #. * US CAD standard paper sizes
 #.
-#: src/main/print-util.c:759
+#: src/main/print-util.c:765
 msgid "ArchA"
 msgstr ""
 
-#: src/main/print-util.c:760
+#: src/main/print-util.c:766
 msgid "ArchB"
 msgstr ""
 
-#: src/main/print-util.c:761
+#: src/main/print-util.c:767
 msgid "ArchC"
 msgstr ""
 
-#: src/main/print-util.c:762
+#: src/main/print-util.c:768
 msgid "ArchD"
 msgstr ""
 
-#: src/main/print-util.c:763
+#: src/main/print-util.c:769
 msgid "ArchE"
 msgstr ""
 
 #.
 #. * Foolscap
 #.
-#: src/main/print-util.c:768
+#: src/main/print-util.c:774
 msgid "flsa"
 msgstr ""
 
 #. American foolscap
-#: src/main/print-util.c:769
+#: src/main/print-util.c:775
 msgid "flse"
 msgstr ""
 
@@ -1201,65 +1191,65 @@ msgstr ""
 #. * The BPIF and the Publishers Association jointly recommend ten
 #. * standard metric sizes for case-bound titles as follows:
 #.
-#: src/main/print-util.c:776
+#: src/main/print-util.c:782
 msgid "Crown Quarto"
 msgstr ""
 
 #. 189mm x 246mm
-#: src/main/print-util.c:777
+#: src/main/print-util.c:783
 msgid "Large Crown Quarto"
 msgstr ""
 
 #. 201mm x 258mm
-#: src/main/print-util.c:778
+#: src/main/print-util.c:784
 msgid "Demy Quarto"
 msgstr ""
 
 #. 219mm x 276mm
-#: src/main/print-util.c:779
+#: src/main/print-util.c:785
 msgid "Royal Quarto"
 msgstr ""
 
 #. 237mm x 312mm
 #. { "ISO A4",             595,  841, PAPERSIZE_METRIC, 0, 0, 0, 0 },    210mm x 297mm
-#: src/main/print-util.c:781
+#: src/main/print-util.c:787
 msgid "Crown Octavo"
 msgstr ""
 
 #. 123mm x 186mm
-#: src/main/print-util.c:782
+#: src/main/print-util.c:788
 msgid "Large Crown Octavo"
 msgstr ""
 
 #. 129mm x 198mm
-#: src/main/print-util.c:783
+#: src/main/print-util.c:789
 msgid "Demy Octavo"
 msgstr ""
 
 #. 138mm x 216mm
-#: src/main/print-util.c:784
+#: src/main/print-util.c:790
 msgid "Royal Octavo"
 msgstr ""
 
 #. 156mm x 234mm
 #. { N_ ("ISO A5"),             419,  595, 0, 0, 0, 0, PAPERSIZE_METRIC },    148mm x 210mm
 #. Paperback sizes in common usage
-#: src/main/print-util.c:788
+#: src/main/print-util.c:794
 msgid "Small paperback"
 msgstr ""
 
 #. 111mm x 178mm
-#: src/main/print-util.c:789
+#: src/main/print-util.c:795
 msgid "Penguin small paperback"
 msgstr ""
 
 #. 111mm x 181mm
-#: src/main/print-util.c:790
+#: src/main/print-util.c:796
 msgid "Penguin large paperback"
 msgstr ""
 
 #. US A2 invitation
-#: src/main/print-util.c:800
+#: src/main/print-util.c:806
 msgid "Custom"
 msgstr ""
 
@@ -1563,7 +1553,7 @@ msgid "Printing..."
 msgstr ""
 
 #: src/gimp/print.c:183
-msgid "<Image>/File/Print (Gimp)..."
+msgid "<Image>/File/Print..."
 msgstr ""
 
 #.

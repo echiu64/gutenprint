@@ -52,6 +52,17 @@ Description: header files for compiling programs with libgimpprint
  This is the unstable 4.1 branch of gimp-print. It is not intended for use with
  stable projects!
 
+Package: libgimpprint-doc
+Architecture: all
+Depends: libgimpprint#UPSTREAM_VERSION# (= ${Source-Version})
+Description: Documentation and example code for the gimpprint library
+ This package contains lots of info-files, DVI docs and other
+ documentation about the gimpprint library for photo-quality
+ printing
+ .
+ Install this package if you want to have lots of info about the
+ gimpprint library when you're programming.
+
 Package: libgimpprint#UPSTREAM_VERSION#
 Architecture: any
 Section: libs

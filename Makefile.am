@@ -59,7 +59,7 @@ ChangeLog:
 	fi
 
 dist-hook:
-	for dir in debian doc scripts ; do \
+	for dir in debian scripts ; do \
 	  if test -d $(top_srcdir)/$$dir ; then \
 	    mkdir $(distdir)/$$dir; \
 	    for dirfile in $(top_srcdir)/$$dir/*; do \

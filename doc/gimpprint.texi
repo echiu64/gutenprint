@@ -17,8 +17,7 @@
 
 @dircategory Libraries
 @direntry
-* GIMP-Print (gimpprint).  print plugin for the GIMP, and printing
-library
+* GIMP-Print: (gimpprint).      print plugin for the GIMP, and printing library
 @end direntry
 
 @ifinfo
