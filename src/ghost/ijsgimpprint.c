@@ -36,6 +36,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <locale.h>
 #include <ijs.h>
 #include <ijs_server.h>
 #include <errno.h>
@@ -164,8 +165,12 @@ get_float(const char *str, const char *name, float *pval,
 	  float min_value, float max_value)
 {
   float new_value;
+  /* Force locale to "C", because decimal numbers coming from the IJS
+     client are always with a decimal point, nver with a decimal comma */
+  setlocale(LC_ALL, "C");
   if (sscanf(str, "%f", &new_value) == 1)
     {
+      setlocale(LC_ALL, "");
       if ((new_value >= min_value) && (new_value <= max_value))
 	{
 	  *pval = new_value;
@@ -177,8 +182,11 @@ get_float(const char *str, const char *name, float *pval,
 		name, new_value, min_value, max_value);
     }
   else
-    fprintf(stderr, _("Unable to parse parameter %s=%s (expect a number)\n"),
-	    name, str);
+    {
+      setlocale(LC_ALL, "");
+      fprintf(stderr, _("Unable to parse parameter %s=%s (expect a number)\n"),
+	      name, str);
+    }
   return -1;
 }
 
@@ -225,7 +233,11 @@ gimp_parse_wxh (const char *val, int size,
 
   memcpy (buf, val, i);
   buf[i] = 0;
+  /* Force locale to "C", because decimal numbers coming from the IJS
+     client are always with a decimal point, nver with a decimal comma */
+  setlocale(LC_ALL, "C");
   *pw = strtod (buf, &tail);
+  setlocale(LC_ALL, "");
   if (tail == buf)
     return IJS_ESYNTAX;
 
@@ -234,7 +246,11 @@ gimp_parse_wxh (const char *val, int size,
 
   memcpy (buf, val + i + 1, size - i - 1);
   buf[size - i - 1] = 0;
+  /* Force locale to "C", because decimal numbers coming from the IJS
+     client are always with a decimal point, nver with a decimal comma */
+  setlocale(LC_ALL, "C");
   *ph = strtod (buf, &tail);
+  setlocale(LC_ALL, "");
   if (tail == buf)
     return IJS_ESYNTAX;
 
@@ -360,7 +376,11 @@ gimp_get_cb (void *get_cb_data,
 	(printer, v, &l, &r, &b, &t);
       h = t - b;
       w = r - l;
+      /* Force locale to "C", because decimal numbers sent to the IJS
+	 client must have a decimal point, nver a decimal comma */
+      setlocale(LC_ALL, "C");
       sprintf(buf, "%gx%g", (double) w / 72.0, (double) h / 72.0);
+      setlocale(LC_ALL, "");
       STP_DEBUG(fprintf(stderr, "PrintableArea %d %d %s\n", h, w, buf));
       val = buf;
     }
@@ -383,7 +403,11 @@ gimp_get_cb (void *get_cb_data,
       (*stp_printer_get_printfuncs(printer)->imageable_area)
 	(printer, v, &l, &r, &b, &t);
       t = h - t;
+      /* Force locale to "C", because decimal numbers sent to the IJS
+	 client must have a decimal point, nver a decimal comma */
+      setlocale(LC_ALL, "C");
       sprintf(buf, "%gx%g", (double) l / 72.0, (double) t / 72.0);
+      setlocale(LC_ALL, "");
       STP_DEBUG(fprintf(stderr, "PrintableTopLeft %d %d %s\n", t, l, buf));
       val = buf;
     }
