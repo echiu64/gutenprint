@@ -17,6 +17,9 @@ Gimp-Print 4.0.3 contains the following fixes over Gimp-Print 4.0.2:
 
 3) The HP DeskJet 1200C should now operate correctly in color mode.
 
+4) The CUPS utility named 'calibrate' has been renamed
+   'cups-calibrate' because of name collisions on some systems.
+
 
 Gimp-Print 4.0.2 contains the following fixes over Gimp-Print 4.0.1:
 
