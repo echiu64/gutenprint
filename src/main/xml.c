@@ -319,6 +319,31 @@ stp_xml_process_family(xmlNodePtr family)     /* The family node */
   return;
 }
 
+typedef struct
+{
+  const char *property;
+  const char *parameter;
+} stp_xml_prop_t;
+
+static const stp_xml_prop_t stp_xml_props[] =
+{
+  { "black", "Black" },
+  { "cyan", "Cyan" },
+  { "yellow", "Yellow" },
+  { "magenta", "Magenta" },
+  { "brightness", "Brightness" },
+  { "gamma", "Gamma" },
+  { "density", "Density" },
+  { "saturation", "Saturation" },
+  { "blackdensity", "BlackDensity" },
+  { "cyandensity", "CyanDensity" },
+  { "yellowdensity", "YellowDensity" },
+  { "magentadensity", "MagentaDensity" },
+  { "gcrlower", "GCRLower" },
+  { "gcrupper", "GCRupper" },
+  { NULL, NULL }
+};
+
 
 /*
  * Parse the printer node, and return the generated printer.  Returns
@@ -337,6 +362,7 @@ stp_xml_process_printer(xmlNodePtr printer,           /* The printer node */
     {
       "color",
       "model",
+      "black",
       "cyan",
       "yellow",
       "magenta",
@@ -344,6 +370,12 @@ stp_xml_process_printer(xmlNodePtr printer,           /* The printer node */
       "gamma",
       "density",
       "saturation",
+      "blackgamma",
+      "cyangamma",
+      "yellowgamma",
+      "magentagamma",
+      "gcrlower",
+      "gcrupper",
       NULL
       };*/
   stp_internal_printer_t *outprinter;                 /* Generated printer */
@@ -381,7 +413,7 @@ stp_xml_process_printer(xmlNodePtr printer,           /* The printer node */
   outprinter->printfuncs = printfuncs;
 
   prop = printer->children;
-  while(prop)
+  while (prop)
     {
       if (!xmlStrcmp(prop->name, (const xmlChar *) "color"))
 	{
@@ -393,68 +425,29 @@ stp_xml_process_printer(xmlNodePtr printer,           /* The printer node */
 	  xmlFree(stmp);
 	  color = 1;
 	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "model"))
+      else if (!xmlStrcmp(prop->name, (const xmlChar *) "model"))
 	{
 	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
 	  outprinter->model = xmlstrtol(stmp);
 	  xmlFree(stmp);
 	  model = 1;
 	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "cyan"))
+      else
 	{
-	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-	  stp_set_float_parameter(outprinter->printvars,
-				  "Cyan",
-				  xmlstrtof(stmp));
-	  xmlFree(stmp);
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "yellow"))
-	{
-	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-	  stp_set_float_parameter(outprinter->printvars,
-				  "Yellow",
-				  xmlstrtof(stmp));
-	  xmlFree(stmp);
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "magenta"))
-	{
-	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-	  stp_set_float_parameter(outprinter->printvars,
-				  "Magenta",
-				  xmlstrtof(stmp));
-	  xmlFree(stmp);
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "brightness"))
-	{
-	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-	  stp_set_float_parameter(outprinter->printvars,
-				  "Brightness",
-				  xmlstrtof(stmp));
-	  xmlFree(stmp);
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "gamma"))
-	{
-	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-	  stp_set_float_parameter(outprinter->printvars,
-				  "Gamma",
-				  xmlstrtof(stmp));
-	  xmlFree(stmp);
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "density"))
-	{
-	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-	  stp_set_float_parameter(outprinter->printvars,
-				  "Density",
-				  xmlstrtof(stmp));
-	  xmlFree(stmp);
-	}
-      if (!xmlStrcmp(prop->name, (const xmlChar *) "saturation"))
-	{
-	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-	  stp_set_float_parameter(outprinter->printvars,
-				  "Saturation",
-				  xmlstrtof(stmp));
-	  xmlFree(stmp);
+	  const stp_xml_prop_t *stp_prop = stp_xml_props;
+	  while (stp_prop->property)
+	    {
+	      if (!xmlStrcmp(prop->name, (const xmlChar *) stp_prop->property))
+		{
+		  stmp = xmlGetProp(prop, (const xmlChar *) "value");
+		  stp_set_float_parameter(outprinter->printvars,
+					  stp_prop->parameter,
+					  xmlstrtof(stmp));
+		  xmlFree(stmp);
+		  break;
+		}
+	      stp_prop++;
+	    }	  
 	}
       prop = prop->next;
     }

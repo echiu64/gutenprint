@@ -118,9 +118,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 <!--                    Printer                                    -->
 <!--                    Printer definition                         -->
-<!ELEMENT  printer          (color?, model, cyan?,
+<!ELEMENT  printer          (color?, model, black?, cyan?,
                              magenta?, yellow?, brightness?,
-                             gamma?, density?, saturation?)          >
+                             gamma?, density?, saturation?,
+                             blackgamma?, cyangamma?, magentagamma?,
+                             yellowgamma?, gcrlower?, gcrupper?)     >
 <!--         name       Model name
              driver     Family driver                              -->
 <!ATTLIST  printer

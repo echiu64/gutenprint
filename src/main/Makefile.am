@@ -29,10 +29,11 @@ include $(top_srcdir)/scripts/global.mk
 ## Variables
 
 INCLUDES = @LIBXML_CFLAGS@
-LOCAL_CFLAGS = -DPKGMODULEDIR=\"$(pkgmoduledir)\" -DPKGXMLDATADIR=\"$(pkgxmldatadir)\"
+LOCAL_CFLAGS = -DPKGMODULEDIR=\"$(pkgmoduledir)\" -DPKGXMLDATADIR=\"$(pkgxmldatadir)\" -DPKGMISCDATADIR=\"$(pkgmiscdatadir)\"
 
 pkgconfigdatadir = $(prefix)/lib/pkgconfig
 pkgxmldatadir = $(pkgdatadir)/$(VERSION)/xml
+pkgmiscdatadir = $(pkgdatadir)/$(VERSION)
 pkgmoduledir = $(pkglibdir)/$(VERSION)/modules
 
 
@@ -95,9 +96,6 @@ libgimpprint_la_SOURCES = \
 	image.h \
 	printers.h \
 	string-list.c \
-	quickmatrix257.h \
-	ran.367.179.h \
-	ran.509.131.h \
 	util.h \
 	vars.h \
 	weave.h \
@@ -134,6 +132,11 @@ pkgxmldata_DATA = \
 	papers.xml \
 	printers.xml
 
+pkgmiscdata_DATA = \
+	1x1.mat \
+	2x1.mat \
+	4x1.mat
+
 
 ## Rules
 
@@ -148,4 +151,4 @@ CLEANFILES = printers-oldlist.h papers-oldlist.h
 DISTCLEANFILES = gimpprint.pc gimpprint.pc.in
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = $(pkgxmldata_DATA) libgimpprint.sym
+EXTRA_DIST = $(pkgxmldata_DATA) $(pkgmiscdata_DATA) libgimpprint.sym

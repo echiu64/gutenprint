@@ -68,10 +68,6 @@ typedef struct stp_dither_matrix
   const void *data;
 } stp_dither_matrix_t;
 
-extern const stp_dither_matrix_short_t stp_dither_matrix_1_1;
-extern const stp_dither_matrix_short_t stp_dither_matrix_2_1;
-extern const stp_dither_matrix_short_t stp_dither_matrix_4_1;
-
 typedef struct dither_matrix
 {
   int base;
@@ -104,7 +100,8 @@ extern void stp_dither_matrix_init_short(dither_matrix_t *mat, int x_size,
 					 int transpose, int prescaled);
 extern int stp_dither_matrix_validate_curve(const stp_curve_t curve);
 extern void stp_dither_matrix_init_from_curve(dither_matrix_t *mat,
-					      const stp_curve_t curve);
+					      const stp_curve_t curve,
+					      int transpose);
 extern void stp_dither_matrix_destroy(dither_matrix_t *mat);
 extern void stp_dither_matrix_clone(const dither_matrix_t *src,
 				    dither_matrix_t *dest,
@@ -114,6 +111,7 @@ extern void stp_dither_matrix_copy(const dither_matrix_t *src,
 extern void stp_dither_matrix_scale_exponentially(dither_matrix_t *mat,
 						  double exponent);
 extern void stp_dither_matrix_set_row(dither_matrix_t *mat, int y);
+extern stp_curve_t stp_find_standard_dither_matrix(int x_aspect, int y_aspect);
 
 
 
@@ -172,7 +170,8 @@ extern void stp_dither_set_iterated_matrix(stp_vars_t v, size_t edge,
 extern void stp_dither_set_matrix(stp_vars_t v, const stp_dither_matrix_t *mat,
 				  int transpose, int x_shear, int y_shear);
 extern void stp_dither_set_matrix_from_curve(stp_vars_t v,
-					     const stp_curve_t curve);
+					     const stp_curve_t curve,
+					     int transpose);
 extern void stp_dither_set_transition(stp_vars_t v, double);
 extern void stp_dither_set_randomizer(stp_vars_t v, int color, double);
 extern void stp_dither_set_ranges(stp_vars_t v, int color, int nlevels,

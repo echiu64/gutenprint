@@ -48,6 +48,7 @@ elementFormDefault="qualified">
       <xsd:sequence>
 	<xsd:element ref="color" minOccurs="0" maxOccurs="1"/>
 	<xsd:element ref="model" minOccurs="1" maxOccurs="1"/>
+	<xsd:element ref="black" minOccurs="0" maxOccurs="1"/>
 	<xsd:element ref="cyan" minOccurs="0" maxOccurs="1"/>
 	<xsd:element ref="magenta" minOccurs="0" maxOccurs="1"/>
 	<xsd:element ref="yellow" minOccurs="0" maxOccurs="1"/>
@@ -55,6 +56,12 @@ elementFormDefault="qualified">
 	<xsd:element ref="gamma" minOccurs="0" maxOccurs="1"/>
 	<xsd:element ref="density" minOccurs="0" maxOccurs="1"/>
 	<xsd:element ref="saturation" minOccurs="0" maxOccurs="1"/>
+	<xsd:element ref="blackdensity" minOccurs="0" maxOccurs="1"/>
+	<xsd:element ref="cyandensity" minOccurs="0" maxOccurs="1"/>
+	<xsd:element ref="magentadensity" minOccurs="0" maxOccurs="1"/>
+	<xsd:element ref="yellowdensity" minOccurs="0" maxOccurs="1"/>
+	<xsd:element ref="gcrlower" minOccurs="0" maxOccurs="1"/>
+	<xsd:element ref="gcrupper" minOccurs="0" maxOccurs="1"/>
       </xsd:sequence>
     </xsd:complexType>
     <xsd:attributeGroup>
@@ -71,6 +78,9 @@ elementFormDefault="qualified">
     <xsd:attributeGroup>
       <xsd:attribute name="value" type="positiveInteger" use="required"/>
     </xsd:attributeGroup>
+  </xsd:element>
+  <xsd:element name="black">
+    <xsd:attributeGroup ref="colorattrs" use="required"/>
   </xsd:element>
   <xsd:element name="cyan">
     <xsd:attributeGroup ref="colorattrs" use="required"/>
@@ -95,6 +105,24 @@ elementFormDefault="qualified">
   </xsd:element>
   <xsd:element name="saturation">
     <xsd:attributeGroup ref="saturationattrs" use="required"/>
+  </xsd:element>
+  <xsd:element name="blackdensity">
+    <xsd:attributeGroup ref="densityattrs" use="required"/>
+  </xsd:element>
+  <xsd:element name="cyandensity">
+    <xsd:attributeGroup ref="densityattrs" use="required"/>
+  </xsd:element>
+  <xsd:element name="magentadensity">
+    <xsd:attributeGroup ref="densityattrs" use="required"/>
+  </xsd:element>
+  <xsd:element name="yellowdensity">
+    <xsd:attributeGroup ref="densityattrs" use="required"/>
+  </xsd:element>
+  <xsd:element name="gcrlower">
+    <xsd:attributeGroup ref="gcrlowerattrs" use="required"/>
+  </xsd:element>
+  <xsd:element name="gcrupper">
+    <xsd:attributeGroup ref="gcrupperattrs" use="required"/>
   </xsd:element>
   <xsd:element name="paperdef">
     <xsd:complexType>
@@ -194,6 +222,26 @@ elementFormDefault="qualified">
 	<xsd:restriction base="xsd:float" default="1.00">
 	  <xsd:minInclusive value="0.00"/>
 	  <xsd:maxInclusive value="9.00"/>
+	</xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="gcrlowerattrs">
+    <xsd:attribute name="value">
+      <xsd:simpleType>
+	<xsd:restriction base="xsd:float" default="0.2">
+	  <xsd:minInclusive value="0.00"/>
+	  <xsd:maxInclusive value="1.00"/>
+	</xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="gcrupperattrs">
+    <xsd:attribute name="value">
+      <xsd:simpleType>
+	<xsd:restriction base="xsd:float" default="0.5">
+	  <xsd:minInclusive value="0.00"/>
+	  <xsd:maxInclusive value="5.00"/>
 	</xsd:restriction>
       </xsd:simpleType>
     </xsd:attribute>

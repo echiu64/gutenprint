@@ -621,39 +621,23 @@ stp_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
 	    (stp_get_curve_parameter(v, "DitherMatrix"))))
     {
       stp_dither_set_matrix_from_curve
-	(v, stp_get_curve_parameter(v, "DitherMatrix"));
+	(v, stp_get_curve_parameter(v, "DitherMatrix"), 0);
     }
   else
     {
-      stp_dither_matrix_t *mat;
-      int transposed = 0;
-      if (d->y_aspect == d->x_aspect)
-	mat = (stp_dither_matrix_t *) &stp_dither_matrix_1_1;
-      else if (d->y_aspect > d->x_aspect)
+      stp_curve_t the_curve =
+	stp_find_standard_dither_matrix(d->y_aspect, d->x_aspect);
+      int transposed = d->y_aspect < d->x_aspect ? 1 : 0;
+      if (the_curve)
 	{
-	  transposed = 0;
-	  if (d->y_aspect / d->x_aspect == 2)
-	    mat = (stp_dither_matrix_t *) &stp_dither_matrix_2_1;
-	  else if (d->y_aspect / d->x_aspect == 3)
-	    mat = (stp_dither_matrix_t *) &stp_dither_matrix_4_1;
-	  else if (d->y_aspect / d->x_aspect == 4)
-	    mat = (stp_dither_matrix_t *) &stp_dither_matrix_4_1;
-	  else
-	    mat = (stp_dither_matrix_t *) &stp_dither_matrix_2_1;
+	  stp_dither_set_matrix_from_curve(v, the_curve, transposed);
+	  stp_curve_destroy(the_curve);
 	}
       else
 	{
-	  transposed = 1;
-	  if (d->x_aspect / d->y_aspect == 2)
-	    mat = (stp_dither_matrix_t *) &stp_dither_matrix_2_1;
-	  else if (d->x_aspect / d->y_aspect == 3)
-	    mat = (stp_dither_matrix_t *) &stp_dither_matrix_4_1;
-	  else if (d->x_aspect / d->y_aspect == 4)
-	    mat = (stp_dither_matrix_t *) &stp_dither_matrix_4_1;
-	  else
-	    mat = (stp_dither_matrix_t *) &stp_dither_matrix_2_1;
+	  stp_eprintf(v, "Cannot find dither matrix file!  Aborting.\n");
+	  stp_abort();
 	}
-      stp_dither_set_matrix(v, mat, transposed, 0, 0);
     }
 
   d->src_width = in_width;
@@ -732,11 +716,12 @@ stp_dither_set_matrix(stp_vars_t v, const stp_dither_matrix_t *matrix,
 }
 
 void
-stp_dither_set_matrix_from_curve(stp_vars_t v, const stp_curve_t curve)
+stp_dither_set_matrix_from_curve(stp_vars_t v, const stp_curve_t curve,
+				 int transpose)
 {
   dither_t *d = (dither_t *) stp_get_dither_data(v);
   preinit_matrix(v);
-  stp_dither_matrix_init_from_curve(&(d->dither_matrix), curve);
+  stp_dither_matrix_init_from_curve(&(d->dither_matrix), curve, transpose);
   postinit_matrix(v, 0, 0);
 }
 

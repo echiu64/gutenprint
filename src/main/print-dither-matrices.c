@@ -31,40 +31,139 @@
 #include "gimp-print-internal.h"
 #include <math.h>
 #include <string.h>
+#include "path.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 #ifdef __GNUC__
 #define inline __inline__
 #endif
 
-static const unsigned short mat_1_1[] =
+static stp_curve_t
+read_matrix_from_file(const char *pathname)
 {
-#include "quickmatrix257.h"
-};
+  stp_curve_t the_curve;
+  FILE *fp = fopen(pathname, "r");
+  if (!fp)
+    return NULL;
+  the_curve = stp_curve_allocate_read(fp);
+  (void) fclose(fp);
+  if (!the_curve)
+    return NULL;
+  if (stp_dither_matrix_validate_curve(the_curve))
+    return the_curve;
+  else
+    {
+      stp_curve_destroy(the_curve);
+      return NULL;
+    }
+}
 
-const stp_dither_matrix_short_t stp_dither_matrix_1_1 =
+static stp_curve_t
+try_file(const char *name, stp_list_t *file_list)
 {
-  257, 257, 2, 1, mat_1_1
-};
+  stp_list_item_t *item = stp_list_get_start(file_list);
+  while (item)
+    {
+      const char *pathname = stp_list_item_get_data(item);
+      if (pathname)
+	{
+	  const char *filename = rindex(pathname, '/');
+	  if (!filename)
+	    filename = pathname;
+	  else
+	    filename++;
+	  stp_erprintf("  Trying %s %s %s\n", name, filename, pathname);
+	  if (strcmp(name, filename) == 0)
+	    {
+	      stp_curve_t answer = read_matrix_from_file(pathname);
+	      if (answer)
+		{
+		  stp_list_destroy(file_list); /* WATCH OUT! */
+		  return answer;
+		}
+	    }
+	}
+      item = stp_list_item_next(item);
+    }
+  return NULL;
+}
 
-static const unsigned short mat_2_1[] =
+static unsigned
+gcd(unsigned a, unsigned b)
 {
-#include "ran.367.179.h"
-};
+  unsigned tmp;
+  if (b > a)
+    {
+      tmp = a;
+      a = b;
+      b = tmp;
+    }
+  while (1)
+    {
+      tmp = a % b;
+      if (tmp == 0)
+	return b;
+      a = b;
+      b = tmp;
+    }
+}
 
-const stp_dither_matrix_short_t stp_dither_matrix_2_1 =
+stp_curve_t
+stp_find_standard_dither_matrix(int x_aspect, int y_aspect)
 {
-  367, 179, 2, 1, mat_2_1
-};
+  stp_list_t *dir_list;                   /* List of directories to scan */
+  stp_list_t *file_list;                  /* List of files to load */
+  stp_curve_t answer;
+  int divisor = gcd(x_aspect, y_aspect);
+  char filename[64];
 
-static const unsigned short mat_4_1[] =
-{
-#include "ran.509.131.h"
-};
+  if (!(dir_list = stp_list_create()))
+    return NULL;
+  stp_erprintf("x_aspect %d _aspect %d divisor %d\n", x_aspect, y_aspect,
+	       divisor);
+  x_aspect /= divisor;
+  y_aspect /= divisor;
+  stp_list_set_freefunc(dir_list, stp_list_node_free_data);
+  stp_path_split(dir_list, getenv("STP_DATA_PATH"));
+  stp_path_split(dir_list, PKGMISCDATADIR);
+  file_list = stp_path_search(dir_list, ".mat");
+  stp_list_destroy(dir_list);
+  (void) snprintf(filename, 64, "%dx%d.mat", x_aspect, y_aspect);
+  answer = try_file(filename, file_list);
+  if (answer)
+    return answer;
+  (void) snprintf(filename, 64, "%dx%d.mat", y_aspect, x_aspect);
+  answer = try_file(filename, file_list);
+  if (answer)
+    return answer;
+  (void) snprintf(filename, 64, "%dx%d.mat", x_aspect + 1, y_aspect);
+  answer = try_file(filename, file_list);
+  if (answer)
+    return answer;
+  (void) snprintf(filename, 64, "%dx%d.mat", y_aspect + 1, x_aspect);
+  answer = try_file(filename, file_list);
+  if (answer)
+    return answer;
+  (void) snprintf(filename, 64, "%dx%d.mat", x_aspect - 1, y_aspect);
+  answer = try_file(filename, file_list);
+  if (answer)
+    return answer;
+  (void) snprintf(filename, 64, "%dx%d.mat", y_aspect - 1, x_aspect);
+  answer = try_file(filename, file_list);
+  if (answer)
+    return answer;
+  (void) snprintf(filename, 64, "%dx%d.mat", x_aspect - 1, y_aspect - 1);
+  answer = try_file(filename, file_list);
+  if (answer)
+    return answer;
+  (void) snprintf(filename, 64, "%dx%d.mat", y_aspect - 1, x_aspect - 1);
+  answer = try_file(filename, file_list);
+  if (answer)
+    return answer;
+  return NULL;
+}
 
-const stp_dither_matrix_short_t stp_dither_matrix_4_1 =
-{
-  509, 131, 2, 1, mat_4_1
-};
 
 static inline int
 calc_ordered_point(unsigned x, unsigned y, int steps, int multiplier,
@@ -169,8 +268,11 @@ stp_dither_matrix_validate_curve(const stp_curve_t curve)
 
 void
 stp_dither_matrix_init_from_curve(dither_matrix_t *mat,
-				  const stp_curve_t curve)
+				  const stp_curve_t curve,
+				  int transpose)
+				  
 {
+  int x, y;
   size_t count;
   const unsigned short *vec = stp_curve_get_ushort_data(curve, &count);
   mat->base = vec[0];
@@ -179,8 +281,14 @@ stp_dither_matrix_init_from_curve(dither_matrix_t *mat,
   mat->y_size = vec[1];
   mat->total_size = mat->x_size * mat->y_size;
   mat->matrix = stp_malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
-  memcpy(mat->matrix, vec + 2,
-	 mat->x_size * mat->y_size * sizeof(unsigned short));
+  for (x = 0; x < mat->x_size; x++)
+    for (y = 0; y < mat->y_size; y++)
+      {
+	if (transpose)
+	  mat->matrix[x + y * mat->x_size] = vec[2 + y + x * mat->y_size];
+	else
+	  mat->matrix[x + y * mat->x_size] = vec[2 + x + y * mat->x_size];
+      }
   mat->last_x = mat->last_x_mod = 0;
   mat->last_y = mat->last_y_mod = 0;
   mat->index = 0;
