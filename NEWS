@@ -1292,6 +1292,7 @@ Lexmark Z43
 Lexmark Z52
 Lexmark Z53
 Olympus P-10	(Experimental)
+Olympus P-200	(Experimental)
 Olympus P-300 series (Experimental)
 Olympus P-400	(Experimental)
 Olympus P-440	(Experimental)
@@ -1907,6 +1908,7 @@ Okidata Super 6e               pcl-4l          HP LaserJet 4L
 Olivetti JP350S                pcl-2           HP LaserJet II series
 Olivetti PG 306                pcl-2           HP LaserJet II series
 Olympus P-10                   olympus-p10     Olympus P10 
+Olympus P-200                  olympus-p200    Olympus P200
 Olympus P-300E                 olympus-p300    Olympus P300
 Olympus P-300U                 olympus-p300    Olympus P300
 Olympus P-330E                 olympus-p300    Olympus P300

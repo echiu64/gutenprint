@@ -270,6 +270,46 @@ static const laminate_list_t p10_laminate_list =
 };
 
 
+/* Olympus P-200 series */
+static const olymp_pagesize_t p200_page[] =
+{
+  { "ISOB7", "80x125mm", -1, -1, 16, 17, 33, 33},
+  { "Custom", NULL, -1, -1, 16, 17, 33, 33},
+};
+
+static const olymp_pagesize_list_t p200_page_list =
+{
+  p200_page, sizeof(p200_page) / sizeof(olymp_pagesize_t)
+};
+
+static const olymp_printsize_t p200_printsize[] =
+{
+  { "320x320", "ISOB7", 960, 1280},
+  { "320x320", "Custom", 960, 1280},
+};
+
+static const olymp_printsize_list_t p200_printsize_list =
+{
+  p200_printsize, sizeof(p200_printsize) / sizeof(olymp_printsize_t)
+};
+
+static void p200_printer_init_func(stp_vars_t *v)
+{
+  stp_zfwrite("S000001\0S010001\1", 1, 16, v);
+}
+
+static void p200_plane_init_func(stp_vars_t *v)
+{
+  stp_zprintf(v, "P0%d9999", 3 - privdata.plane+1 );
+  stp_put32_be(privdata.xsize * privdata.ysize, v);
+}
+
+static void p200_printer_end_func(stp_vars_t *v)
+{
+  stp_zprintf(v, "P000001\1");
+}
+
+
 /* Olympus P-300 series */
 static const olymp_resolution_t p300_res[] =
 {
@@ -908,8 +948,23 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &p10_printer_init_func, &p10_printer_end_func,
     NULL, NULL, 
     &p10_block_init_func, NULL,
-    NULL, NULL, NULL,
+    NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
     &p10_laminate_list,
+  },
+  { /* Olympus P-200 */
+    4, 		
+    &ymc_ink_list,
+    &res_320dpi_list,
+    &p200_page_list,
+    &p200_printsize_list,
+    OLYMPUS_INTERLACE_PLANE,
+    1280,
+    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_BLOCK_ALIGN,
+    &p200_printer_init_func, &p200_printer_end_func,
+    &p200_plane_init_func, NULL,
+    NULL, NULL,
+    NULL, NULL, NULL,
+    NULL,
   },
   { /* Olympus P-300 */
     0, 		
@@ -953,7 +1008,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &p440_printer_init_func, &p440_printer_end_func,
     NULL, NULL,
     &p440_block_init_func, &p440_block_end_func,
-    NULL, NULL, NULL,
+    NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
     &p10_laminate_list,
   },
   { /* Canon CP-100, CP-200, CP-300 */
