@@ -1441,6 +1441,21 @@ create_main_window (void)
   gtk_widget_show (print_dialog);
 }
 
+static void
+compute_scaling_limits(gdouble *min_ppi_scaling, gdouble *max_ppi_scaling)
+{
+  gdouble min_ppi_scaling1, min_ppi_scaling2;
+  min_ppi_scaling1 = FINCH * (gdouble) image_width / (gdouble) printable_width;
+  min_ppi_scaling2 = FINCH * (gdouble)image_height / (gdouble)printable_height;
+
+  if (min_ppi_scaling1 > min_ppi_scaling2)
+    *min_ppi_scaling = min_ppi_scaling1;
+  else
+    *min_ppi_scaling = min_ppi_scaling2;
+
+  *max_ppi_scaling = *min_ppi_scaling * 100 / (gdouble) MINIMUM_IMAGE_PERCENT;
+}
+
 /*
  *  scaling_update() - Update the scaling scale using the slider.
  */
@@ -1470,7 +1485,7 @@ static void
 scaling_callback (GtkWidget *widget)
 {
   gdouble max_ppi_scaling;
-  gdouble min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
+  gdouble min_ppi_scaling;
   gdouble current_scale;
 
   reset_preview ();
@@ -1478,15 +1493,7 @@ scaling_callback (GtkWidget *widget)
   if (suppress_scaling_callback)
     return;
 
-  min_ppi_scaling1 = FINCH * (gdouble) image_width / (gdouble) printable_width;
-  min_ppi_scaling2 = FINCH * (gdouble)image_height / (gdouble)printable_height;
-
-  if (min_ppi_scaling1 > min_ppi_scaling2)
-    min_ppi_scaling = min_ppi_scaling1;
-  else
-    min_ppi_scaling = min_ppi_scaling2;
-
-  max_ppi_scaling = min_ppi_scaling * 100 / (gdouble) MINIMUM_IMAGE_PERCENT;
+  compute_scaling_limits(&min_ppi_scaling, &max_ppi_scaling);
 
   if (widget == scaling_ppi)
     {
@@ -1631,19 +1638,10 @@ do_misc_updates (void)
     {
       gdouble tmp = -pv->scaling;
       gdouble max_ppi_scaling;
-      gdouble min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
+      gdouble min_ppi_scaling;
 
-      min_ppi_scaling1 = FINCH * (gdouble) image_width /
-	(gdouble) printable_width;
-      min_ppi_scaling2 = FINCH * (gdouble) image_height /
-	(gdouble) printable_height;
+      compute_scaling_limits(&min_ppi_scaling, &max_ppi_scaling);
 
-      if (min_ppi_scaling1 > min_ppi_scaling2)
-	min_ppi_scaling = min_ppi_scaling1;
-      else
-	min_ppi_scaling = min_ppi_scaling2;
-
-      max_ppi_scaling = min_ppi_scaling * 100 / (gdouble) MINIMUM_IMAGE_PERCENT;
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi), TRUE);
       GTK_ADJUSTMENT (scaling_adjustment)->lower = min_ppi_scaling;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = max_ppi_scaling;
@@ -2699,8 +2697,6 @@ preview_update (void)
 {
   gdouble max_ppi_scaling;   /* Maximum PPI for current page size */
   gdouble min_ppi_scaling;   /* Minimum PPI for current page size */
-  gdouble min_ppi_scaling1;  /* Minimum PPI for current page size */
-  gdouble min_ppi_scaling2;  /* Minimum PPI for current page size */
 
   stp_printer_get_media_size(current_printer, pv->v,
 			     &paper_width, &paper_height);
@@ -2715,15 +2711,8 @@ preview_update (void)
     {
       gdouble twidth;
 
-      min_ppi_scaling1 = FINCH * (gdouble) image_width / printable_width;
-      min_ppi_scaling2 = FINCH * (gdouble) image_height / printable_height;
+      compute_scaling_limits(&min_ppi_scaling, &max_ppi_scaling);
 
-      if (min_ppi_scaling1 > min_ppi_scaling2)
-	min_ppi_scaling = min_ppi_scaling1;
-      else
-	min_ppi_scaling = min_ppi_scaling2;
-
-      max_ppi_scaling = min_ppi_scaling * 100 / MINIMUM_IMAGE_PERCENT;
       if (pv->scaling < 0 && pv->scaling > -min_ppi_scaling)
 	pv->scaling = -min_ppi_scaling;
 
