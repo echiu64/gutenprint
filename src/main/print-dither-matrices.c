@@ -704,6 +704,15 @@ stpi_find_standard_dither_array(int x_aspect, int y_aspect)
   x_aspect /= divisor;
   y_aspect /= divisor;
 
+  if (x_aspect == 3)		/* We don't have x3 matrices */
+    x_aspect += 1;		/* so cheat */
+  if (y_aspect == 3)
+    y_aspect += 1;
+  
+  divisor = gcd(x_aspect, y_aspect);
+  x_aspect /= divisor;
+  y_aspect /= divisor;
+
   answer = stpi_xml_get_dither_array(x_aspect, y_aspect);
   if (answer)
     return answer;
