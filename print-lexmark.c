@@ -46,7 +46,7 @@
 #define false 0
 #define true  1
 
-int maxclen = 0;
+static int maxclen = 0;
 /*
  * Local functions...
  */
@@ -74,8 +74,8 @@ typedef struct {
 
 
 
-const int IDX_Z52ID=2;
-const int IDX_SEQLEN=3;
+static const int IDX_Z52ID=2;
+static const int IDX_SEQLEN=3;
 
 
 #define ODD_NOZZLES_V  1
@@ -127,7 +127,7 @@ const int IDX_SEQLEN=3;
 #define LX_Z52_PRINT_DIRECTION_POS 0x8
 
 #define LXM_Z52_HEADERSIZE 34
-char outbufHeader_z52[LXM_Z52_HEADERSIZE]={
+static char outbufHeader_z52[LXM_Z52_HEADERSIZE]={
   0x1B,0x2A,0x24,0x00,0x00,0xFF,0xFF,         /* number of packets ----     vvvvvvvvv */ 
   0x01,0x01,0x01,0x1a,0x03,0x01,              /* 0x7-0xc: resolution, direction, head */
   0x03,0x60,                                  /* 0xd-0xe HE */
@@ -154,7 +154,7 @@ char outbufHeader_z52[LXM_Z52_HEADERSIZE]={
 
 
 
-int lr_shift[10] = { 9, 18, 2*18 }; /* vertical distance between ever 2nd  inkjet (related to resolution) */
+static int lr_shift[10] = { 9, 18, 2*18 }; /* vertical distance between ever 2nd  inkjet (related to resolution) */
 
 
 static void lexmark_write_line(FILE *,
@@ -248,7 +248,8 @@ static lexmark_cap_t lexmark_model_capabilities[] =
 
 
 
-static lexmark_cap_t lexmark_get_model_capabilities(int model)
+static lexmark_cap_t
+lexmark_get_model_capabilities(int model)
 {
   int i;
   int models= sizeof(lexmark_model_capabilities) / sizeof(lexmark_cap_t);
@@ -609,7 +610,7 @@ lexmark_init_printer(FILE *prn, lexmark_cap_t caps,
 
 }
 
-void lexmark_deinit_printer(FILE *prn, lexmark_cap_t caps)
+static void lexmark_deinit_printer(FILE *prn, lexmark_cap_t caps)
 {
   char buffer[4];
 
@@ -625,7 +626,7 @@ void lexmark_deinit_printer(FILE *prn, lexmark_cap_t caps)
 
 /* paper_shift() -- shift paper in printer -- units are unknown :-)
  */
-void paper_shift(FILE *prn, int offset)
+static void paper_shift(FILE *prn, int offset)
 {
    unsigned char buf[5]={0x1b,0x2a,0x3,0x0,0x0};
 
@@ -639,12 +640,11 @@ void paper_shift(FILE *prn, int offset)
 }
 
 
-
-
 /*
  *  'alloc_buffer()' allocates buffer and fills it with 0
  */
-static unsigned char *lexmark_alloc_buffer(int size)
+static unsigned char *
+lexmark_alloc_buffer(int size)
 {
   unsigned char *buf= malloc(size);
   if (buf) memset(buf,0,size);
@@ -667,7 +667,9 @@ lexmark_advance_buffer(unsigned char *buf, int len, int num)
 }
 
 
-int clean_color(unsigned char *line, int len) {
+static int
+clean_color(unsigned char *line, int len) 
+{
   return 0;
 }
 
@@ -1273,7 +1275,7 @@ lexmark_print(const printer_t *printer,		/* I - Model */
    the printer specific initialization which has to be done bofor 
    the pixles of the image could be printed. 
 */
-unsigned char *
+static unsigned char *
 lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int direction,
 	      lexmark_cap_t   caps	        /* I - Printer model */
 ) {
@@ -1542,7 +1544,9 @@ lexmark_write(FILE *prn,		/* I - Print file or command */
 }
 
 
-int lexmark_getNextMode(int *mode, int *direction, int pass_height, int *lineStep, int *pass_shift, int *interlace) {
+static int
+lexmark_getNextMode(int *mode, int *direction, int pass_height, int *lineStep, int *pass_shift, int *interlace) 
+{
   /* This method should be printer independent */
   /* The method calculates, dependent from the resolution, the line step size. Additionally it sets the mode
      which should be used for printing (defines which pixles/nozzles have to be used for a pass).
