@@ -149,6 +149,22 @@ void set_bits(unsigned char *p,int index,int bpp,int value) {
 
 void mix_ink(ppmpixel p, int c, unsigned int a) {
 
+  /* this is pretty crude */
+
+  float ink[3];
+
+  switch (c) {
+    case 0: ink[0]=ink[1]=ink[2]=0; /* black */
+    case 1: ink[0]=1; ink[1]=0; ink[2]=1; /* magenta */
+    case 2: ink[1]=0; ink[1]=ink[2]=1; /* cyan */
+    case 3: ink[0]=ink[1]=1; ink[2]=0; /* yellow */
+    case 4: ink[0]=1; ink[1]=0.5; ink[2]=1; /* lmagenta */
+    case 5: ink[1]=0.5; ink[1]=ink[2]=1; /* lcyan */
+  }
+  for (i=0;i<3;i++) {
+    p[i]*=ink[i];
+  }
+
 }
 
 void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color){
@@ -253,7 +269,7 @@ void write_output(FILE *fp_w) {
   fprintf(fp_w,"255\n");
   for (l=first;l<=last;l++) {
     for (p=left;p<=right;p++) {
-      memset(pixel,255,3);
+      memset(pixel,255,3); /* start with white, add inks */
       for (c=0;c<MAX_INKS;c++) {
         if ((page[l])&&(page[l]->line[c])&&(page[l]->startx[c]<=p)&&(page[l]->stopx[c]>=p)) {
           if (pstate.dotsize==0x10) {
