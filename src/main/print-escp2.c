@@ -120,6 +120,7 @@ typedef struct escp2_init
   int resid;
   int initial_vertical_offset;
   int ncolors;
+  int channel_count;
   const char *paper_type;
   const char *media_source;
   const escp2_inkname_t *inkname;
@@ -717,7 +718,8 @@ escp2_set_color(const escp2_init_t *init)
   if (escp2_has_cap(init->model, MODEL_GRAYMODE, MODEL_GRAYMODE_YES,
 		    init->v))
     stp_zprintf(init->v, "\033(K\002%c%c%c", 0, 0,
-		(init->output_type == OUTPUT_GRAY ? 1 : 2));
+		(init->output_type == OUTPUT_GRAY && init->channel_count == 1 ?
+		 1 : 2));
 }
 
 static void
@@ -1263,6 +1265,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     {
       horizontal_passes = xdpi / physical_xdpi;
       if ((output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME) &&
+	  channel_count == 1 &&
 	  (escp2_max_black_resolution(model, nv) < 0 ||
 	   ydpi <= escp2_max_black_resolution(model, nv)) &&
 	  escp2_black_nozzles(model, nv))
@@ -1371,7 +1374,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   init.page_height = page_true_height;
   init.page_width = page_width;
   init.page_top = page_top;
-  if (init.output_type == OUTPUT_GRAY)
+  if (init.output_type == OUTPUT_GRAY && channel_count == 1)
     {
       if (escp2_max_black_resolution(model, nv) < 0 ||
 	  ydpi <= escp2_max_black_resolution(init.model, init.v))
@@ -1407,12 +1410,13 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   init.v = nv;
   init.ncolors = ncolors;
   init.inkname = ink_type;
+  init.channel_count = channel_count;
 
   escp2_init_printer(&init);
 
   weave = stp_initialize_weave(nozzles, nozzle_separation,
 			       horizontal_passes, vertical_passes,
-			       vertical_oversample, ncolors, bits,
+			       vertical_oversample, channel_count, bits,
 			       out_width, out_height, separation_rows,
 			       top * physical_ydpi / 72,
 			       (page_height * physical_ydpi / 72 +
