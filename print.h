@@ -73,13 +73,13 @@ typedef struct
 typedef struct					/* Plug-in variables */
 {
   char	output_to[255],		/* Name of file or command to print to */
-	driver[33],		/* Name of printer "driver" */
+	driver[64],		/* Name of printer "driver" */
 	ppd_file[255];		/* PPD file */
   int	output_type;		/* Color or grayscale output */
-  char	resolution[33],		/* Resolution */
-	media_size[33],		/* Media size */
-	media_type[33],		/* Media type */
-	media_source[33];	/* Media source */
+  char	resolution[64],		/* Resolution */
+	media_size[64],		/* Media size */
+	media_type[64],		/* Media type */
+	media_source[64];	/* Media source */
   int	brightness;		/* Output brightness */
   float	scaling;		/* Scaling, percent of printable area */
   int	orientation,		/* Orientation - 0 = port., 1 = land.,
