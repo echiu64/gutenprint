@@ -21,12 +21,12 @@ INTRODUCTION:
   for that reason.
 
   Gimp-Print includes another driver based on the new IJS protocol.
-  IJS is a relatively new (as of early 2002) initiative to improve the
-  quality and ease of use of printing with Ghostscript.  It permits
-  adding or upgrading drivers without recompiling Ghostscript.  An IJS
-  driver runs in a separate process that communicates with Ghostscript
-  via an IPC channel.  The Gimp-Print IJS driver may be used with AFPL
-  Ghostscript, as it runs in a separate process.
+  IJS is an initiative to improve the quality and ease of use of
+  printing with Ghostscript.  It permits adding or upgrading drivers
+  without recompiling Ghostscript.  An IJS driver runs in a separate
+  process that communicates with Ghostscript via an IPC channel.  The
+  Gimp-Print IJS driver may be used with AFPL Ghostscript, as it runs
+  in a separate process.
 
   The original stp driver will not be maintained beyond Gimp-Print
   4.2; it will be phased out and replaced by the IJS driver
@@ -454,6 +454,7 @@ escp2-c20sx             EPSON Stylus C20SX
 escp2-c20ux             EPSON Stylus C20UX
 escp2-c40sx             EPSON Stylus C40SX
 escp2-c40ux             EPSON Stylus C40UX
+escp2-c42ux             EPSON Stylus C42UX
 escp2-c60               EPSON Stylus C60
 escp2-c70               EPSON Stylus C70
 escp2-c80               EPSON Stylus C80
@@ -499,17 +500,23 @@ escp2-870               EPSON Stylus Photo 870
 escp2-875               EPSON Stylus Photo 875
 escp2-890               EPSON Stylus Photo 890
 escp2-895               EPSON Stylus Photo 895
+escp2-950               EPSON Stylus Photo 950
+escp2-960               EPSON Stylus Photo 960
 escp2-1200              EPSON Stylus Photo 1200
 escp2-1270              EPSON Stylus Photo 1270
 escp2-1280              EPSON Stylus Photo 1280
 escp2-1290              EPSON Stylus Photo 1290
 escp2-2000              EPSON Stylus Photo 2000P
+escp2-2100              EPSON Stylus Photo 2100
+escp2-2200              EPSON Stylus Photo 2200
 escp2-5000              EPSON Stylus Pro 5000
 escp2-5500              EPSON Stylus Pro 5500
 escp2-7000              EPSON Stylus Pro 7000
 escp2-7500              EPSON Stylus Pro 7500
+escp2-7600              EPSON Stylus Pro 7600
 escp2-9000              EPSON Stylus Pro 9000
 escp2-9500              EPSON Stylus Pro 9500
+escp2-9600              EPSON Stylus Pro 9600
 escp2-10000             EPSON Stylus Pro 10000
 escp2-scan2000          EPSON Stylus Scan 2000
 escp2-scan2500          EPSON Stylus Scan 2500
@@ -906,17 +913,15 @@ mixing black ink in.  The Epson Stylus Color 1500 cannot mix black ink
 with colored inks; on this printer, Three Color Composite must be
 used.
 
-As of this writing (September 2001), no seven color printers are sold
-in North America.  When such a printer is sold, the Seven Color
-Enhanced and Six Color Enhanced Composite modes will utilize all of
-these inks.
-
-Photo7          Seven Color Enhanced
-PhotoEnhance    Six Color Enhanced Composite
+Photo7          Seven Color Enhanced (CcMmYKk, for the Epson Stylus
+                Photo 2100 and 2200, and Stylus Pro 7600 and 9600).
 PhotoCMYK       Six Color Photo
 PhotoCMY        Five Color Photo Composite
 CMYK            Four Color Standard
 RGB             Three Color Composite
+Quadtone        Quadtone grayscale inks (special third party inksets
+                designed to produce superior results for grayscale
+                images).
 
 
 For Canon printers:

@@ -41,22 +41,9 @@
 #include <errno.h>
 #include <gimp-print/gimp-print-intl-internal.h>
 
-/* WARNING:
- * gimp-print wants to pull the raster data.  
- * We can't push the raster data to gimp-print.  
- * All gimp-print drivers as of 2001-11-02 read rows on increasing 
- * order, sometimes with skipped rows.  They never ask for an earlier 
- * row.  To avoid keeping the entire image in memory we only buffer 
- * one row at a time and hope that the gimp-print drivers don't change 
- * their behaviour.
- * An interface like gdk_draw_rgb_image() would have been easier.
- */
-
 static int stp_debug = 0;
 
 #define STP_DEBUG(x) do { if (stp_debug || getenv("STP_DEBUG")) x; } while (0)
-
-#define BUF_SIZE 4096
 
 typedef struct _GimpParamList GimpParamList;
 
@@ -91,6 +78,14 @@ typedef struct _IMAGE
 static const char DeviceGray[] = "DeviceGray";
 static const char DeviceRGB[] = "DeviceRGB";
 static const char DeviceCMYK[] = "DeviceCMYK";
+
+static char *
+c_strdup(const char *s)
+{
+  char *ret = malloc(strlen(s) + 1);
+  strcpy(ret, s);
+  return ret;
+}
 
 static int
 image_init(IMAGE *img, IjsPageHeader *ph)
@@ -435,7 +430,7 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
     {
       if (img->filename)
 	free(img->filename);
-      img->filename = strdup(vbuf);
+      img->filename = c_strdup(vbuf);
     }
   else if (strcmp(key, "OutputFD") == 0)
     img->fd = atoi(vbuf) + 1;
@@ -583,6 +578,18 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 		       stp_get_density(lower), stp_get_density(upper));
       if (code == 0)
 	stp_set_density(img->v, z);
+    }
+  else if (strcmp (key, "Duplex") == 0)
+    {
+    }
+  else if (strcmp (key, "PS:Duplex") == 0)
+    {
+    }
+  else if (strcmp (key, "Tumble") == 0)
+    {
+    }
+  else if (strcmp (key, "PS:Tumble") == 0)
+    {
     }
   else
     {

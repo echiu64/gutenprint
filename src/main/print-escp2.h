@@ -51,6 +51,18 @@ typedef unsigned long model_featureset_t;
 typedef int escp2_dot_size_t[13];
 
 /*
+ * Choose the number of bits to use at each resolution.
+ */
+
+typedef int escp2_bits_t[13];
+
+/*
+ * Choose the base resolution to use at each resolution.
+ */
+
+typedef int escp2_base_resolutions_t[13];
+
+/*
  * Specify the base density for each available resolution.
  * This obviously depends upon the dot size.
  */
@@ -72,15 +84,6 @@ typedef double escp2_densities_t[13];
  * this model very nicely, so we'll either have to special case it
  * or find some way of handling it in here.
  */
-
-#define INKTYPE_SINGLE	 0
-#define INKTYPE_VARIABLE 1
-#define INKTYPE_N	 2
-
-#define INKSET_4	 0
-#define INKSET_6	 1
-#define INKSET_7	 2
-#define INKSET_N	 3
 
 #define RES_120_M	 0
 #define RES_120		 1
@@ -111,7 +114,7 @@ typedef struct escp2_variable_ink
 
 typedef const escp2_variable_ink_t *escp2_variable_inkset_t[NCOLORS];
 
-typedef const escp2_variable_inkset_t *escp2_variable_inklist_t[INKTYPE_N][INKSET_N][RES_N / 2];
+typedef const escp2_variable_inkset_t *escp2_variable_inklist_t[][RES_N / 2];
 
 typedef struct
 {
@@ -145,89 +148,42 @@ typedef struct
 } paperlist_t;
 
 
-#define MODEL_INIT_MASK		0xful /* Is a special init sequence */
-#define MODEL_INIT_STANDARD	0x0ul /* required for this printer, and if */
-#define MODEL_INIT_NEW		0x1ul /* so, what */
+#define MODEL_COMMAND_MASK	0xful /* What general command set does */
+#define MODEL_COMMAND_1998	0x0ul
+#define MODEL_COMMAND_1999	0x1ul /* The 1999 series printers */
+#define MODEL_COMMAND_2000	0x2ul /* The 2000 series printers */
+#define MODEL_COMMAND_PRO	0x3ul /* Stylus Pro printers */
 
-#define MODEL_HASBLACK_MASK	0x10ul /* Can this printer print black ink */
-#define MODEL_HASBLACK_YES	0x00ul /* when it is also printing color? */
-#define MODEL_HASBLACK_NO	0x10ul
+#define MODEL_XZEROMARGIN_MASK	0x10ul /* Does this printer support */
+#define MODEL_XZEROMARGIN_NO	0x00ul /* zero margin mode? */
+#define MODEL_XZEROMARGIN_YES	0x10ul /* (print to edge of the paper) */
 
-#define MODEL_COLOR_MASK	0x60ul /* Is this a 6-color printer? */
-#define MODEL_COLOR_4		0x00ul
-#define MODEL_COLOR_6		0x20ul
-#define MODEL_COLOR_7		0x40ul
+#define MODEL_ROLLFEED_MASK	0x20ul /* Does this printer support */
+#define MODEL_ROLLFEED_NO	0x00ul /* a roll feed? */
+#define MODEL_ROLLFEED_YES	0x20ul
+
+#define MODEL_VARIABLE_DOT_MASK	0x40ul /* Does this printer support var */
+#define MODEL_VARIABLE_NO	0x00ul /* dot size printing? The newest */
+#define MODEL_VARIABLE_YES	0x40ul /* printers support multiple modes */
 
 #define MODEL_GRAYMODE_MASK	0x80ul /* Does this printer support special */
 #define MODEL_GRAYMODE_NO	0x00ul /* fast black printing? */
 #define MODEL_GRAYMODE_YES	0x80ul
 
-#define MODEL_720DPI_MODE_MASK	0x300ul /* Does this printer require old */
-#define MODEL_720DPI_DEFAULT	0x000ul /* or new setting for printing */
-#define MODEL_720DPI_600	0x100ul /* 720 dpi?  Only matters for */
-					 /* single dot size printers */
+#define MODEL_VACUUM_MASK	0x100ul
+#define MODEL_VACUUM_NO		0x000ul
+#define MODEL_VACUUM_YES	0x100ul
 
-#define MODEL_VARIABLE_DOT_MASK	0xc00ul /* Does this printer support var */
-#define MODEL_VARIABLE_NORMAL	0x000ul /* dot size printing? The newest */
-#define MODEL_VARIABLE_4	0x400ul /* printers support multiple modes */
-#define MODEL_VARIABLE_MULTI	0x800ul /* of variable dot sizes. */
-
-#define MODEL_COMMAND_MASK	0xf000ul /* What general command set does */
-#define MODEL_COMMAND_1998	0x0000ul
-#define MODEL_COMMAND_1999	0x1000ul /* The 1999 series printers */
-#define MODEL_COMMAND_2000	0x2000ul /* The 2000 series printers */
-#define MODEL_COMMAND_PRO	0x3000ul /* Stylus Pro printers */
-
-#define MODEL_INK_MASK		0x10000ul /* Does this printer support */
-#define MODEL_INK_NORMAL	0x00000ul /* different types of inks? */
-#define MODEL_INK_SELECTABLE	0x10000ul /* Only the Stylus Pro's do */
-
-#define MODEL_ROLLFEED_MASK	0x20000ul /* Does this printer support */
-#define MODEL_ROLLFEED_NO	0x00000ul /* a roll feed? */
-#define MODEL_ROLLFEED_YES	0x20000ul
-
-#define MODEL_XZEROMARGIN_MASK	0x40000ul /* Does this printer support */
-#define MODEL_XZEROMARGIN_NO	0x00000ul /* zero margin mode? */
-#define MODEL_XZEROMARGIN_YES	0x40000ul /* (print to the edge of the paper) */
-
-#define MODEL_YZEROMARGIN_MASK	0x80000ul /* Does this printer support */
-#define MODEL_YZEROMARGIN_NO	0x00000ul /* zero margin mode? */
-#define MODEL_YZEROMARGIN_YES	0x80000ul /* (print to the edge of the paper) */
-
-#define MODEL_MICROWEAVE_MASK		0x700000ul
-#define MODEL_MICROWEAVE_NO		0x000000ul
-#define MODEL_MICROWEAVE_YES		0x100000ul
-#define MODEL_MICROWEAVE_ENHANCED	0x200000ul
-
-#define MODEL_VACUUM_MASK		0x800000ul
-#define MODEL_VACUUM_NO			0x000000ul
-#define MODEL_VACUUM_YES		0x800000ul
-
-#define MODEL_MICROWEAVE_EXCEPTION_MASK   0x3000000ul
-#define MODEL_MICROWEAVE_EXCEPTION_NORMAL 0x0000000ul
-#define MODEL_MICROWEAVE_EXCEPTION_360    0x1000000ul
-#define MODEL_MICROWEAVE_EXCEPTION_BLACK  0x2000000ul
-
-#define MODEL_DEINITIALIZE_JE_MASK      0x4000000ul
-#define MODEL_DEINITIALIZE_JE_NO        0x0000000ul
-#define MODEL_DEINITIALIZE_JE_YES       0x4000000ul
-
-#define MODEL_INIT			(0)
-#define MODEL_HASBLACK			(1)
-#define MODEL_COLOR			(2)
-#define MODEL_GRAYMODE			(3)
-#define MODEL_720DPI_MODE		(4)
-#define MODEL_VARIABLE_DOT		(5)
-#define MODEL_COMMAND			(6)
-#define MODEL_INK			(7)
-#define MODEL_ROLLFEED			(8)
-#define MODEL_XZEROMARGIN		(9)
-#define MODEL_YZEROMARGIN		(10)
-#define MODEL_MICROWEAVE		(11)
-#define MODEL_VACUUM			(12)
-#define MODEL_MICROWEAVE_EXCEPTION	(13)
-#define MODEL_DEINITIALIZE_JE           (14)
-#define MODEL_LIMIT			(15)
+typedef enum
+{
+  MODEL_COMMAND,
+  MODEL_XZEROMARGIN,
+  MODEL_ROLLFEED,
+  MODEL_VARIABLE_DOT,
+  MODEL_GRAYMODE,
+  MODEL_VACUUM,
+  MODEL_LIMIT
+} escp2_model_option_t;
 
 typedef struct
 {
@@ -254,22 +210,69 @@ typedef struct
 
 typedef struct
 {
+  int color;
+  int density;
+  int head_offset;
+} physical_subchannel_t;
+
+typedef struct
+{
+  const physical_subchannel_t *channels;
+  int n_subchannels;
+} ink_channel_t;
+
+typedef enum
+{
+  INKSET_CMYK           = 0,
+  INKSET_CcMmYK         = 1,
+  INKSET_CcMmYyK        = 2,
+  INKSET_CcMmYKk        = 3,
+  INKSET_PIEZO_QUADTONE = 4
+} inkset_id_t;
+
+typedef struct
+{
   const char *name;
   const char *text;
-  int hasblack;
-  int ncolors;
+  int is_color;
+  inkset_id_t inkset;
+  double k_lower;
+  double k_upper;
+  const double *lum_adjustment;
+  const double *hue_adjustment;
+  const double *sat_adjustment;
+  const ink_channel_t *channels[NCOLORS];
 } escp2_inkname_t;
 
 typedef struct
 {
-  int n_inks;
-  const escp2_inkname_t *inknames;
+  const escp2_inkname_t *const *inknames;
+  size_t n_inks;
 } inklist_t;
+
+typedef struct
+{
+  const char *name;
+  const char *text;
+} input_slot_t;
+
+typedef struct
+{
+  const input_slot_t *slots;
+  size_t n_input_slots;
+} input_slot_list_t;
+
+typedef struct
+{
+  const char *data;
+  size_t length;
+} init_sequence_t;
 
 typedef struct escp2_printer
 {
-  model_cap_t	flags;		/* Bitmask of flags, see below */
+  model_cap_t	flags;		/* Bitmask of flags, see above */
 /*****************************************************************************/
+  /* Basic head configuration */
   int		nozzles;	/* Number of nozzles per color */
   int		min_nozzles;	/* Minimum number of nozzles per color */
   int		nozzle_separation; /* Separation between rows, in 1/360" */
@@ -277,12 +280,9 @@ typedef struct escp2_printer
   int		min_black_nozzles;	/* # of black nozzles (may be extra) */
   int		black_nozzle_separation; /* Separation between rows */
 /*****************************************************************************/
-  int		xres;		/* Normal distance between dots in */
-				/* softweave mode (inverse inches) */
-  int		enhanced_xres;	/* Distance between dots in highest */
-				/* quality modes */
+  /* Print head resolution */
   int		base_separation; /* Basic unit of row separation */
-  int		base_resolution; /* Base hardware spacing (above this */
+  int		base_resolution; /* Base hardware line spacing (above this */
 				/* always requires multiple passes) */
   int		enhanced_resolution;/* Above this we use the */
 				    /* enhanced_xres rather than xres */
@@ -296,11 +296,13 @@ typedef struct escp2_printer
   int		min_hres;
   int		min_vres;
 /*****************************************************************************/
+  /* Paper size limits */
   int		max_paper_width; /* Maximum paper width, in points */
   int		max_paper_height; /* Maximum paper height, in points */
   int		min_paper_width; /* Maximum paper width, in points */
   int		min_paper_height; /* Maximum paper height, in points */
 /*****************************************************************************/
+  /* Borders */
 				/* SHEET FED: */
 				/* Softweave: */
   int		left_margin;	/* Left margin, points */
@@ -324,6 +326,7 @@ typedef struct escp2_printer
   int		m_roll_top_margin;	/* Absolute top margin, points */
   int		m_roll_bottom_margin;	/* Absolute bottom margin, points */
 /*****************************************************************************/
+  /* Miscellaneous printer-specific data */
   int		extra_feed;	/* Extra distance the paper can be spaced */
 				/* beyond the bottom margin, in 1/360". */
 				/* (maximum useful value is */
@@ -335,24 +338,25 @@ typedef struct escp2_printer
 
   int           zero_margin_offset;   /* Offset to use to achieve */
 				      /* zero-margin printing */
-		 /* The stylus 480 and 580 have an unusual arrangement of
-				  color jets that need special handling */
-  const int *head_offset;
   int		initial_vertical_offset;
   int		black_initial_vertical_offset;
+  int		extra_720dpi_separation;
 
 /*****************************************************************************/
   const int *dot_sizes;		/* Vector of dot sizes for resolutions */
   const double *densities;	/* List of densities for each printer */
   const escp2_variable_inklist_t *inks; /* Choices of inks for this printer */
 /*****************************************************************************/
-  const double *lum_adjustment;
-  const double *hue_adjustment;
-  const double *sat_adjustment;
-/*****************************************************************************/
   const paperlist_t *paperlist;
   const res_t *reslist;
   const inklist_t *inklist;
+/*****************************************************************************/
+  const int *bits;
+  const int *base_resolutions;
+  const input_slot_list_t *input_slots;
+/*****************************************************************************/
+  const init_sequence_t *preinit_sequence;
+  const init_sequence_t *postinit_remote_sequence;
 } escp2_stp_printer_t;
 
 extern const escp2_stp_printer_t stp_escp2_model_capabilities[];

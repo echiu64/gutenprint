@@ -55,6 +55,7 @@ sub do_remote_command {
     while (substr($stuff, 0, 2) =~ /[A-Z0-9][A-Z0-9]/) {
 	print "\n";
 	printf "%08x    ", $curpos;
+	my ($cmd) = substr($stuff, 0, 2);
 	print substr($stuff, 0, 2);
 	substr($stuff, 0, 2) = "";
 	$curpos += 2;
@@ -62,7 +63,11 @@ sub do_remote_command {
 	$nlchar = unpack("C", $lchar);
 	$hchar = substr($stuff, 1, 1);
 	$nhchar = unpack("C", $hchar);
-	$skipchars = ($nhchar * 256) + $nlchar;
+	if ($cmd eq "DF") {
+	    $skipchars = 0;
+	} else {
+	    $skipchars = ($nhchar * 256) + $nlchar;
+	}
 	printf "%02x %02x ", $nlchar, $nhchar;
 	substr($stuff, 0, 2) = "";
 	$curpos += 2;

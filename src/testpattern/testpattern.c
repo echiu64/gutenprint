@@ -45,6 +45,8 @@
 #include <string.h>
 #include "testpattern.h"
 
+extern int yyparse(void);
+
 static const char *Image_get_appname(stp_image_t *image);
 static void Image_progress_conclude(stp_image_t *image);
 static void Image_note_progress(stp_image_t *image,
@@ -392,23 +394,23 @@ fill_black(unsigned short *data, size_t len, size_t scount)
 static void
 fill_colors(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
 {
-  double c_min = p->c_min == -2 ? global_c_level : p->c_min;
-  double m_min = p->m_min == -2 ? global_m_level : p->m_min;
-  double y_min = p->y_min == -2 ? global_y_level : p->y_min;
-  double k_min = p->k_min;
-  double c = p->c == -2 ? global_c_level : p->c;
-  double m = p->m == -2 ? global_m_level : p->m;
-  double y = p->y == -2 ? global_y_level : p->y;
-  double c_gamma = p->c_gamma * global_gamma * global_c_gamma;
-  double m_gamma = p->m_gamma * global_gamma * global_m_gamma;
-  double y_gamma = p->y_gamma * global_gamma * global_y_gamma;
-  double k_gamma = p->k_gamma * global_gamma * global_k_gamma;
-  double k = p->k;
-  double c_level = p->c_level == -2 ? global_c_level : p->c_level;
-  double m_level = p->m_level == -2 ? global_m_level : p->m_level;
-  double y_level = p->y_level == -2 ? global_y_level : p->y_level;
-  double lower = p->lower;
-  double upper = p->upper;
+  double c_min = p->d.p.c_min == -2 ? global_c_level : p->d.p.c_min;
+  double m_min = p->d.p.m_min == -2 ? global_m_level : p->d.p.m_min;
+  double y_min = p->d.p.y_min == -2 ? global_y_level : p->d.p.y_min;
+  double k_min = p->d.p.k_min;
+  double c = p->d.p.c == -2 ? global_c_level : p->d.p.c;
+  double m = p->d.p.m == -2 ? global_m_level : p->d.p.m;
+  double y = p->d.p.y == -2 ? global_y_level : p->d.p.y;
+  double c_gamma = p->d.p.c_gamma * global_gamma * global_c_gamma;
+  double m_gamma = p->d.p.m_gamma * global_gamma * global_m_gamma;
+  double y_gamma = p->d.p.y_gamma * global_gamma * global_y_gamma;
+  double k_gamma = p->d.p.k_gamma * global_gamma * global_k_gamma;
+  double k = p->d.p.k;
+  double c_level = p->d.p.c_level == -2 ? global_c_level : p->d.p.c_level;
+  double m_level = p->d.p.m_level == -2 ? global_m_level : p->d.p.m_level;
+  double y_level = p->d.p.y_level == -2 ? global_y_level : p->d.p.y_level;
+  double lower = p->d.p.lower;
+  double upper = p->d.p.upper;
   int i;
   int j;
   int pixels;
@@ -467,38 +469,53 @@ fill_colors(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
     }
 }
 
+extern FILE *yyin;
+
 static stp_image_status_t
 Image_get_row(stp_image_t *image, unsigned char *data, int row)
 {
-  static int previous_band = -1;
-  int band = row / bandheight;
-  if (previous_band == -2)
+  if (the_testpatterns[0].t == E_IMAGE)
     {
-      memset(data, 0, printer_width * 4 * sizeof(unsigned short));
-      fill_colors((unsigned short *)data, printer_width, levels,
-		  &(the_testpatterns[band]));
-      previous_band = band;
-    }
-  else if (row == printer_height - 1)
-    {
-      memset(data, 0, printer_width * 4 * sizeof(unsigned short));
-      fill_black((unsigned short *)data, printer_width, levels);
-    }
-  else if (band >= n_testpatterns)
-    memset(data, 0, printer_width * 4 * sizeof(unsigned short));
-  else if (band != previous_band && band > 0)
-    {
-      memset(data, 0, printer_width * 4 * sizeof(unsigned short));
-      if (noblackline)
+      testpattern_t *t = &(the_testpatterns[0]);
+      int total_read = fread(data, 1, t->d.i.x * 8, yyin);
+      if (total_read != t->d.i.x * 8)
 	{
+	  fprintf(stderr, "Read failed!\n");
+	  return STP_IMAGE_ABORT;
+	}
+    }
+  else
+    {
+      static int previous_band = -1;
+      int band = row / bandheight;
+      if (previous_band == -2)
+	{
+	  memset(data, 0, printer_width * 4 * sizeof(unsigned short));
 	  fill_colors((unsigned short *)data, printer_width, levels,
 		      &(the_testpatterns[band]));
 	  previous_band = band;
 	}
-      else
+      else if (row == printer_height - 1)
 	{
+	  memset(data, 0, printer_width * 4 * sizeof(unsigned short));
 	  fill_black((unsigned short *)data, printer_width, levels);
-	  previous_band = -2;
+	}
+      else if (band >= n_testpatterns)
+	memset(data, 0, printer_width * 4 * sizeof(unsigned short));
+      else if (band != previous_band && band > 0)
+	{
+	  memset(data, 0, printer_width * 4 * sizeof(unsigned short));
+	  if (noblackline)
+	    {
+	      fill_colors((unsigned short *)data, printer_width, levels,
+			  &(the_testpatterns[band]));
+	      previous_band = band;
+	    }
+	  else
+	    {
+	      fill_black((unsigned short *)data, printer_width, levels);
+	      previous_band = -2;
+	    }
 	}
     }
   return STP_IMAGE_OK;
@@ -513,13 +530,19 @@ Image_bpp(stp_image_t *image)
 static int
 Image_width(stp_image_t *image)
 {
-  return printer_width;
+  if (the_testpatterns[0].t == E_IMAGE)
+    return the_testpatterns[0].d.i.x;
+  else
+    return printer_width;
 }
 
 static int
 Image_height(stp_image_t *image)
 {
-  return printer_height;
+  if (the_testpatterns[0].t == E_IMAGE)
+    return the_testpatterns[0].d.i.y;
+  else
+    return printer_height;
 }
 
 static void

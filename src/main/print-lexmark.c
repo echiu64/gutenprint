@@ -1966,7 +1966,7 @@ densityDivisor /= 1.2;
 			       ncolors,                            /* colors */
 			       1,                                  /* bits/pixel */
 			       out_width,                          /* line width */
-			       out_height, 0,
+			       out_height,
 			       ((top * ydpi) / 72)+(((caps->offset_top_border+add_top_offset)*ydpi)
 						     /caps->y_raster_res),
 			       (page_height * ydpi) / 72,
@@ -2176,7 +2176,7 @@ densityDivisor /= 1.2;
 #endif
 
       stp_write_weave(weave, length, ydpi, model, out_width, left,
-		      xdpi, physical_xdpi, (const unsigned char **)cols.v);
+		      xdpi, physical_xdpi, (unsigned char **)cols.v);
 
       errval += errmod;
       errline += errdiv;
@@ -2790,7 +2790,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 
 #ifdef DEBUG
   stp_erprintf("Lexmark: flush_pass, here we are !\n");
-  stp_erprintf("  passno %i, sw->ncolors %i, width %d, lwidth %d, linecount k %d, linecount m %d, bitwidth %d, separation_rows  %d\n", passno, sw->ncolors, width, lwidth, linecount[0].p.k, linecount[0].p.m, sw->bitwidth, sw->separation_rows);
+  stp_erprintf("  passno %i, sw->ncolors %i, width %d, lwidth %d, linecount k %d, linecount m %d, bitwidth %d\n", passno, sw->ncolors, width, lwidth, linecount[0].p.k, linecount[0].p.m, sw->bitwidth);
   stp_erprintf("microoffset %d, vertical_subpass %d, sw->horizontal_weave %d\n", microoffset,vertical_subpass, sw->horizontal_weave);
 
   stp_erprintf("Lexmark: last_pass_offset %d, last_pass %d, logicalpassstart %d\n", sw->last_pass_offset, sw->last_pass, pass->logicalpassstart);

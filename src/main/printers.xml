@@ -251,6 +251,16 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus C42UX" driver="escp2-c42ux">
+<color>
+<model value=43>
+<gamma value=0.585>
+<density value=1.0>
+<magenta value=0.95>
+<yellow value=0.9>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus C60" driver="escp2-c60">
 <color>
 <model value=33>
@@ -623,6 +633,22 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Photo 950" driver="escp2-950">
+<color>
+<model value=46>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Photo 960" driver="escp2-960">
+<color>
+<model value=46>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Photo 1200" driver="escp2-1200">
 <color>
 <model value=15>
@@ -663,6 +689,22 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Photo 2100" driver="escp2-2100">
+<color>
+<model value=47>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Photo 2200" driver="escp2-2200">
+<color>
+<model value=47>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Pro 5000" driver="escp2-5000">
 <color>
 <model value=27>
@@ -697,6 +739,14 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Pro 7600" driver="escp2-7600">
+<color>
+<model value=48>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Pro 9000" driver="escp2-9000">
 <color>
 <model value=30>
@@ -709,6 +759,14 @@
 <color>
 <model value=31>
 <cyan value=0.8>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Pro 9600" driver="escp2-9600">
+<color>
+<model value=49>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>

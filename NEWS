@@ -21,6 +21,60 @@ or APFL GhostScript 7.04 or later.
 Please read the README file for full instructions on building and
 installing this package.
 
+Gimp-Print 4.2.2-pre3 has been synced up to the development mainline
+(4.3).  The changes are significant, and as a result this prerelease
+is somewhat riskier than most stable prereleases.  It contains the
+following major changes over Gimp-Print 4.2.2-pre2:
+
+  1) Printing at very low vertical resolution (typically less than 360
+     DPI; 360 DPI itself is fine) in black and white mode on some
+     Epson printers either failed or produced incorrect results.  This
+     bug has been present for a while.
+
+  2) A failure in the CUPS installation has been fixed.
+
+  3) The Even Tone dither algorithm now produces correct colors in
+     CMYK mode.
+
+  4) A portability issue in gimpprint-config has been fixed.
+
+  5) An installation problem with the CUPS PPD files on systems
+     lacking an appropriate install script has been fixed.
+
+  6) Partial translations for Spanish and Portuguese have been added.
+
+  7) Preliminary support for the Epson Stylus Photo 950 and 2100/2200,
+     and the Stylus Pro 7600 and 9600.  The Stylus Photo 950 has been
+     verified and partially tuned.  The other printers are untested
+     and may or may work.
+
+  8) The Gimp Print plugin will now compile properly on commercial
+     UNIX systems that do not have the asprintf function (which is
+     libc-specific).
+
+  9) Quad tone grayscale inks, such as the Piezography (TM) inks, are
+     now supported for most Epson Stylus printers.  This is not tuned
+     for a particular inkset at this time, so the results will not be
+     of top quality yet.
+
+  10) Various improvements to EvenTone dithering.
+
+  11) The printer data in the Epson driver has been substantially
+     reorganized.  This allows the driver to support the new
+     UltraChrome inks (for the Stylus Photo 2100/2200 and Stylus Pro
+     7600 and 9600).  This will also permit the driver to support
+     quadtone or hextone grayscale inks, although that capability is
+     not enabled at present.
+
+  12) The testpattern generator has some improvements, including the
+     ability to print 16-bit images.  The image format is not
+     documented, as this is likely to change, but people may wish to
+     study the code and experiment with it.
+
+The following bugs have been fixed in 4.2.2-pre2:
+
+554149 solaris x86 install erroe
+581446 Improper printing at very low resolution
 
 Gimp-Print 4.2.2-pre2 contains the following major changes over
 Gimp-Print 4.2.2-pre1:
@@ -447,16 +501,16 @@ Epson printers are fully supported, although not fully tuned in all
 cases; the Canon, HP, and Lexmark printers vary.  Many printers
 previously supported have greatly improved support.
 
-PostScript level 1
-PostScript level 2
-CANON BJC 30                            (NEW)
-CANON BJC 50                            (NEW)
-CANON BJC 55                            (NEW)
-CANON BJC 80                            (NEW)
-CANON BJC 85                            (NEW)
-CANON BJC 210                           (NEW)
-CANON BJC 240                           (NEW)
-CANON BJC 250                           (NEW)
+PostScript level 1        (GIMP Plugin only)
+PostScript level 2        (GIMP Plugin only)
+CANON BJC 30
+CANON BJC 50
+CANON BJC 55
+CANON BJC 80
+CANON BJC 85
+CANON BJC 210
+CANON BJC 240
+CANON BJC 250
 CANON BJC 1000
 CANON BJC 2000
 CANON BJC 3000
@@ -475,6 +529,7 @@ EPSON Stylus C20SX                      (NEW)
 EPSON Stylus C20UX                      (NEW)
 EPSON Stylus C40SX                      (NEW)
 EPSON Stylus C40UX                      (NEW)
+EPSON Stylus C42UX                      (NEW)
 EPSON Stylus C60                        (NEW)
 EPSON Stylus C70                        (NEW)
 EPSON Stylus C80                        (NEW)
@@ -514,16 +569,21 @@ EPSON Stylus Photo 780/785/790          (NEW)
 EPSON Stylus Photo 810/820              (NEW)
 EPSON Stylus Photo 870/875
 EPSON Stylus Photo 890/895              (NEW)
+EPSON Stylus Photo 950                  (NEW, partially tuned)
 EPSON Stylus Photo 1200
 EPSON Stylus Photo 1270
 EPSON Stylus Photo 1280/1290            (NEW)
 EPSON Stylus Photo 2000P
-EPSON Stylus Pro 5000                   (NEW, partially functional)
-EPSON Stylus Pro 5500                   (NEW, partially functional)
-EPSON Stylus Pro 7000                   (NEW, partially functional)
-EPSON Stylus Pro 7500                   (NEW, partially functional)
-EPSON Stylus Pro 9000                   (NEW, partially functional)
-EPSON Stylus Pro 9500                   (NEW, partially functional)
+EPSON Stylus Photo 2100                 (NEW, experimental)
+EPSON Stylus Photo 2200                 (NEW, experimental)
+EPSON Stylus Pro 5000                   (NEW)
+EPSON Stylus Pro 5500                   (NEW)
+EPSON Stylus Pro 7000                   (NEW)
+EPSON Stylus Pro 7500                   (NEW)
+EPSON Stylus Pro 7600                   (NEW, experimental)
+EPSON Stylus Pro 9000                   (NEW)
+EPSON Stylus Pro 9500                   (NEW)
+EPSON Stylus Pro 9600                   (NEW, experimental)
 EPSON Stylus Pro 10000                  (NEW, partially functional)
 EPSON Stylus Scan 2000                  (NEW)
 EPSON Stylus Scan 2500                  (NEW)

@@ -59,6 +59,9 @@ Karl Heinz Kremer	<khk@khk.net>
 	Liaison with Epson
 	Engineering and design
 
+Mark Tomlinson		<mark@southern.co.nz>
+	Implementation of Raph Levien's EvenTone dither
+
 Michael Natterer	<mitschel@cs.tu-berlin.de>
 	New user interface
 	Liaison with the Gimp development team
@@ -68,6 +71,9 @@ Mike Sweet		<mike@easysw.com>
 	Portability
 	Lots o'details
 	4.0 maintainer
+
+Peter Missel		<peter.missel@eplus-online.de>
+	Canon driver
 
 Richard Wisenoecker	<Richard.Wisenoecker@gmx.at>
 	Lexmark driver

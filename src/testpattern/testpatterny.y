@@ -34,7 +34,6 @@
 extern int mylineno;
 
 extern int yylex(void);
-int yyerror(const char *s);
 char *quotestrip(const char *i);
 char *endstrip(const char *i);
 
@@ -79,8 +78,9 @@ static int yyerror( const char *s )
 %token VSIZE
 %token BLACKLINE
 %token PATTERN
+%token IMAGE
 
-%start Rules
+%start Thing
 
 %%
 
@@ -159,25 +159,40 @@ pattern: PATTERN tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE
 	tDOUBLE tDOUBLE
 	{
 	  testpattern_t *t = get_next_testpattern();
-	  t->c_min = $2;
-	  t->c = $3;
-	  t->c_gamma = $4;
-	  t->m_min = $5;
-	  t->m = $6;
-	  t->m_gamma = $7;
-	  t->y_min = $8;
-	  t->y = $9;
-	  t->y_gamma = $10;
-	  t->k_min = $11;
-	  t->k = $12;
-	  t->k_gamma = $13;
-	  t->c_level = $14;
-	  t->m_level = $15;
-	  t->y_level = $16;
-	  t->lower = $17;
-	  t->upper = $18;
+	  t->t = E_PATTERN;
+	  t->d.p.c_min = $2;
+	  t->d.p.c = $3;
+	  t->d.p.c_gamma = $4;
+	  t->d.p.m_min = $5;
+	  t->d.p.m = $6;
+	  t->d.p.m_gamma = $7;
+	  t->d.p.y_min = $8;
+	  t->d.p.y = $9;
+	  t->d.p.y_gamma = $10;
+	  t->d.p.k_min = $11;
+	  t->d.p.k = $12;
+	  t->d.p.k_gamma = $13;
+	  t->d.p.c_level = $14;
+	  t->d.p.m_level = $15;
+	  t->d.p.y_level = $16;
+	  t->d.p.lower = $17;
+	  t->d.p.upper = $18;
 	}
 ;
+
+image: IMAGE tINT tINT
+	{
+	  testpattern_t *t = get_next_testpattern();
+	  t->t = E_IMAGE;
+	  t->d.i.x = $2;
+	  t->d.i.y = $3;
+	  if (t->d.i.x <= 0 || t->d.i.y <= 0)
+	    {
+	      fprintf(stderr, "image width and height must be greater than zero\n");
+	      exit(1);
+	    }
+	  return 0;
+	}
 
 Empty:
 
@@ -185,8 +200,16 @@ Rule: global_c_level | global_m_level | global_y_level
 	| global_c_gamma | global_m_gamma | global_y_gamma | global_k_gamma
 	| global_gamma | levels | ink_limit | printer | ink_type | resolution
 	| media_source | media_type | media_size | dither_algorithm | density
-	| top | left | hsize | vsize | blackline | pattern
+	| top | left | hsize | vsize | blackline
+
+Patterns: Patterns pattern | Empty
+
+Image: image
 
 Rules: Rules Rule | Empty
+
+Output: Patterns | Image
+
+Thing: Rules Output Empty
 
 %%
