@@ -37,7 +37,7 @@
  * Include necessary header files...
  */
 
-#include <stddef.h>	/* For size_t */
+#include <stddef.h>     /* For size_t */
 
 #ifdef __cplusplus
 extern "C" {
@@ -116,6 +116,55 @@ typedef enum stp_image_status
 /*
  * Abstract data type for interfacing with the image creation program
  * (in this case, the Gimp).
+ *
+ * The image layer need not implement transpose, hflip, vflip, crop,
+ * rotate_ccw, rotate_cw, and rotate_180 if it does not require that
+ * functionality or implements it internally.  This functionality will
+ * likely be dropped in future releases.
+ *
+ * The image layer must implement all of the other members.  The
+ * progress_init, note_progress, and progress_conclude members are used
+ * to enable the image layer to deliver notification of progress to the
+ * user.  It is likely that these functions will be dropped in the
+ * future, and if desired must be implemented in get_row().
+ *
+ * get_appname should return the name of the application.  This is
+ * embedded in the output by some drivers.
+ *
+ * width and height are the dimensions of the image in pixels.
+ *
+ * bpp, or bytes per pixel, is used in combination with the output type
+ * and presence of a color map, if supplied, to determine the format
+ * of the input:
+ *
+ * Output_type is OUTPUT_MONOCHROME, OUTPUT_COLOR, or OUTPUT_GRAY:
+ * 
+ *    bpp           No color map                Color map present
+ *     1            grayscale                   indexed color (256 colors)
+ *     2            grayscale w/alpha           indexed color w/alpha
+ *     3            RGB                         N/A
+ *     4            N/A                         RGB w/alpha (RGBA)
+ * 
+ * Output_type is OUTPUT_CMYK:
+ * 
+ *    bpp           No color map                Color map present
+ *     4            8 bits/plane CMYK           N/A
+ *     8            16 bits/plane CMYK          N/A
+ *
+ * init() is used to perform any initialization required by the image
+ * layer for the image.  It will be called once per image.  reset() is
+ * called to reset the image to the beginning.  It may (in principle)
+ * be called multiple times if a page is being printed more than once.
+ * The reset() call may be removed in the future.
+ *
+ * get_row() transfers the data from the image to the gimp-print
+ * library.  It is called from the driver layer.  It should copy WIDTH
+ * (as returned by the width() member) pixels of data into the data
+ * buffer.  It normally returns STP_IMAGE_OK; if something goes wrong,
+ * or the application wishes to stop producing any further output
+ * (e. g. because the user cancelled the print job), it should return
+ * STP_IMAGE_ABORT.  This will cause the driver to flush any remaining
+ * data to the output.
  */
 
 typedef struct stp_image
@@ -134,7 +183,7 @@ typedef struct stp_image
   int  (*width)(struct stp_image *image);
   int  (*height)(struct stp_image *image);
   stp_image_status_t (*get_row)(struct stp_image *image, unsigned char *data,
-				int row);
+                                int row);
   const char *(*get_appname)(struct stp_image *image);
   void (*progress_init)(struct stp_image *image);
   void (*note_progress)(struct stp_image *image, double current, double total);
@@ -270,7 +319,6 @@ typedef struct stp_image
 
 typedef void *stp_printer_t;
 typedef void *stp_vars_t;
-typedef void *stp_option_t;
 typedef void *stp_papersize_t;
 typedef struct
 {
@@ -292,7 +340,7 @@ typedef struct
                           int *left, int *right, int *bottom, int *top);
   void  (*limit)(const stp_printer_t printer, const stp_vars_t v,
                  int *max_width, int *max_height,
-		 int *min_width, int *min_height);
+                 int *min_width, int *min_height);
   void  (*print)(const stp_printer_t printer,
                  stp_image_t *image, const stp_vars_t v);
   const char *(*default_parameters)(const stp_printer_t printer,
@@ -303,6 +351,9 @@ typedef struct
   int   (*verify)(const stp_printer_t p, const stp_vars_t v);
 } stp_printfuncs_t;
 
+/*
+ * stp_init() must be called prior to any other use of the library.
+ */
 extern int stp_init (void);
 
 extern const char * stp_printer_get_long_name (const stp_printer_t p);
@@ -311,7 +362,7 @@ extern int stp_printer_get_model (const stp_printer_t p);
 extern const stp_printfuncs_t *stp_printer_get_printfuncs(const stp_printer_t);
 extern const stp_vars_t stp_printer_get_printvars (const stp_printer_t p);
 extern void stp_set_printer_defaults(stp_vars_t, const stp_printer_t,
-				     const char *ppd_file);
+                                     const char *ppd_file);
 
 extern stp_vars_t stp_allocate_vars (void);
 extern void stp_copy_vars (stp_vars_t vd, const stp_vars_t vs);
@@ -328,6 +379,10 @@ extern void stp_set_media_type (stp_vars_t vv, const char *val);
 extern void stp_set_media_source (stp_vars_t vv, const char *val);
 extern void stp_set_ink_type (stp_vars_t vv, const char *val);
 extern void stp_set_dither_algorithm (stp_vars_t vv, const char *val);
+
+/*
+ * The _n variants are used for strings that are not null-delimited.
+ */
 extern void stp_set_output_to_n (stp_vars_t vv, const char *val,
                                  int bytes);
 extern void stp_set_driver_n (stp_vars_t vv, const char *val,
@@ -346,6 +401,7 @@ extern void stp_set_ink_type_n (stp_vars_t vv, const char *val,
                                 int bytes);
 extern void stp_set_dither_algorithm_n (stp_vars_t vv, const char *val,
                                         int bytes);
+
 extern void stp_set_output_type (stp_vars_t vv, int val);
 extern void stp_set_orientation (stp_vars_t vv, int val);
 extern void stp_set_left (stp_vars_t vv, int val);
@@ -354,8 +410,19 @@ extern void stp_set_image_type (stp_vars_t vv, int val);
 extern void stp_set_unit (stp_vars_t vv, int val);
 extern void stp_set_page_width (stp_vars_t vv, int val);
 extern void stp_set_page_height (stp_vars_t vv, int val);
+
+/*
+ * Input color model refers to how the data is being sent to the
+ * driver library; the default is RGB.  Output color model refers to
+ * the characteristics of the device; the default is CMYK.  The output
+ * color model is set by the printer driver and cannot be overridden.
+ * It is provided to permit applications to generate previews using
+ * the color machinery in Gimp-Print.  If this is done, normally
+ * the output color model will be RGB.
+ */
 extern void stp_set_input_color_model (stp_vars_t vv, int val);
 extern void stp_set_output_color_model (stp_vars_t vv, int val);
+
 extern void stp_set_brightness (stp_vars_t vv, float val);
 extern void stp_set_scaling (stp_vars_t vv, float val);
 extern void stp_set_gamma (stp_vars_t vv, float val);
@@ -365,11 +432,34 @@ extern void stp_set_magenta (stp_vars_t vv, float val);
 extern void stp_set_yellow (stp_vars_t vv, float val);
 extern void stp_set_saturation (stp_vars_t vv, float val);
 extern void stp_set_density (stp_vars_t vv, float val);
+
+/*
+ * Application gamma is used to initially correct the input data
+ * for the application's characteristics.  This cannot be done by the
+ * application (except in 16-bit CMYK mode) without losing data.
+ */
 extern void stp_set_app_gamma (stp_vars_t vv, float val);
+
+/*
+ * Please see the source in print-color.c for an explanation of this.
+ */
 extern void stp_set_lut (stp_vars_t vv, void * val);
+
+/*
+ * For use with indexed color: the LUT should be an array of 256
+ * RGB values.
+ */
+extern void stp_set_cmap (stp_vars_t vv, unsigned char * val);
+
+/*
+ * These functions are used to print output and diagnostic information
+ * respectively.  These must be supplied by the caller.
+ */
+extern void stp_set_outfunc (const stp_vars_t vv, stp_outfunc_t val);
+extern void stp_set_errfunc (const stp_vars_t vv, stp_outfunc_t val);
 extern void stp_set_outdata (stp_vars_t vv, void * val);
 extern void stp_set_errdata (stp_vars_t vv, void * val);
-extern void stp_set_cmap (stp_vars_t vv, unsigned char * val);
+
 extern const char * stp_get_output_to (const stp_vars_t vv);
 extern const char * stp_get_driver (const stp_vars_t vv);
 extern const char * stp_get_ppd_file (const stp_vars_t vv);
@@ -400,18 +490,22 @@ extern float stp_get_saturation (const stp_vars_t vv);
 extern float stp_get_density (const stp_vars_t vv);
 extern float stp_get_app_gamma (const stp_vars_t vv);
 extern void * stp_get_lut (const stp_vars_t vv);
+extern stp_outfunc_t stp_get_outfunc (const stp_vars_t vv);
+extern stp_outfunc_t stp_get_errfunc (const stp_vars_t vv);
 extern void * stp_get_outdata (const stp_vars_t vv);
 extern void * stp_get_errdata (const stp_vars_t vv);
 extern unsigned char * stp_get_cmap (const stp_vars_t vv);
-extern void stp_set_outfunc (const stp_vars_t vv, stp_outfunc_t val);
-extern stp_outfunc_t stp_get_outfunc (const stp_vars_t vv);
-extern void stp_set_errfunc (const stp_vars_t vv, stp_outfunc_t val);
-extern stp_outfunc_t stp_get_errfunc (const stp_vars_t vv);
+
 
 /*
  * hue_map is an array of 49 doubles representing the mapping of hue
  * from (0..6) to (0..6) in increments of .125.  The hue_map is in CMY space,
- * so hue=0 is cyan.
+ * so hue=0 is cyan.  Interpolation between values is linear.
+ *
+ * lum_map and sat_map are correction factors for luminosity and saturation
+ * respectively.  Both of these are inverse exponential.  The degree of
+ * luminosity correction is scaled by the saturation of the particular
+ * pixel.  This is likely to change drastically in the future.
  */
 typedef void (*stp_convert_t) (const stp_vars_t vars, const unsigned char *in,
                                unsigned short *out, int *zero_mask,
@@ -420,9 +514,6 @@ typedef void (*stp_convert_t) (const stp_vars_t vars, const unsigned char *in,
                                const double *sat_map);
 
 extern void stp_merge_printvars (stp_vars_t user, const stp_vars_t print);
-extern void stp_allocate_lut (stp_vars_t v, size_t steps);
-extern void stp_free_lut (stp_vars_t v);
-extern void stp_compute_lut (stp_vars_t v, size_t steps);
 
 extern size_t stp_dither_algorithm_count (void);
 extern const char * stp_dither_algorithm_name (int id);
@@ -450,11 +541,22 @@ extern const stp_printer_t stp_get_printer_by_long_name (const char *long_name);
 extern const stp_printer_t stp_get_printer_by_driver (const char *driver);
 extern int stp_get_printer_index_by_driver (const char *driver);
 
+/*
+ * This is likely to change in the future.
+ */
 extern stp_convert_t stp_choose_colorfunc (int output_type, int image_bpp,
                                            const unsigned char *cmap,
                                            int *out_bpp,
                                            const stp_vars_t v);
+extern void stp_allocate_lut (stp_vars_t v, size_t steps);
+extern void stp_free_lut (stp_vars_t v);
+extern void stp_compute_lut (stp_vars_t v, size_t steps);
 
+/*
+ * This is likely to change in the future.  In particular, responsibility
+ * for orientation will likely be transferred to the application from
+ * the library.
+ */
 extern void stp_compute_page_parameters (int page_right, int page_left,
                                          int page_top, int page_bottom,
                                          double scaling, int image_width,
