@@ -9,40 +9,13 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_LN_S
 
-dnl ---------------------------------------------------------------------------
-dnl check for GTK
-dnl ---------------------------------------------------------------------------
-AM_PATH_GTK(1.0.5,
-        [SAVE_GTK_LIBS="$GTK_LIBS"
-        SAVE_GTK_CFLAGS="$GTK_CFLAGS"],
-        AC_MSG_ERROR(Cannot find GTK+: Is gtk-config in executable path?))
-
 AM_PATH_GIMP(1.1.9,
         [SAVE_GTK_LIBS="$GIMP_LIBS"
         SAVE_GTK_CFLAGS="$GIMP_CFLAGS"],
         AC_MSG_ERROR(Cannot find GIMP libs: Is gimptool in executable path?))
 
 dnl Checks for libraries.
-dnl Replace `main' with a function in -lX11:
-AC_CHECK_LIB(X11, main)
-dnl Replace `main' with a function in -lXext:
-AC_CHECK_LIB(Xext, main)
-dnl Replace `main' with a function in -lgdk:
-AC_CHECK_LIB(gdk, main)
-dnl I can't get the next two to work right
-dnl Replace `main' with a function in -lgimp:
-AC_CHECK_LIB(gimp,gimp_tile_height)
-dnl Replace `main' with a function in -lgimpui:
-AC_CHECK_LIB(gimpui, gimp_context_help)
-GIMP_LIBS="-lgimp -lgimpui"
-dnl Replace `main' with a function in -lglib:
-AC_CHECK_LIB(glib, main)
-dnl Replace `main' with a function in -lgmodule:
-AC_CHECK_LIB(gmodule, main)
-dnl Replace `main' with a function in -lgtk:
-AC_CHECK_LIB(gtk, main)
-dnl Replace `main' with a function in -lm:
-AC_CHECK_LIB(m, main)
+dnl Checking for the Gimp does all this
 
 dnl Checks for header files.
 AC_HEADER_STDC

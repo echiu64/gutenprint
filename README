@@ -1,84 +1,12 @@
-Print plugin for the Gimp.  Version 3.1 by Robert Krawitz
-<rlk@alum.mit.edu> based on version 2.0 by Michael Sweet
-<mike@easysw.com>.
+This is the Print plug-in for the Gimp, version 3.1 (development).
 
-This version has numerous enhancements:
+To build and install:
 
-1) Full support for the Epson Stylus Photo, Photo 700, and Photo EX
-   printers, including 6-color printing, 1440x720 dpi resolution, and
-   "soft" weave for much faster high quality printing.
+./configure
+make
+make install
 
-2) Many new controls, including:
+For developers, prior to running configure, you must
 
-   * Output gamma adjustment
-   * Contrast
-   * Red/green/blue levels
-   * Saturation
-   * Density
-   * Additional scaling options
+aclocal;autoconf;automake
 
-3) Improved tonal resolution.  Calculations are now done in 16 bit
-   rather than 8 bit resolution, which eliminates stair stepping.
-   Input levels do not map one to one onto output levels, so in 8 bit
-   output resolution multiple input levels will map to a single output
-   level.  Usually the density range is compressed in the light end of
-   the tonal range, so many different input levels will map to one
-   output level.  Use of 16 bit output resolution avoids this
-   undesirable behavior and results in smooth tonal gradations in
-   highlights.
-
-4) Saving of all settings between print jobs.
-
-
-This plugin has been optimized for the Epson Stylus Photo EX, since
-that's the printer I own.  I am interested in comments on performance
-both with Epson Stylus printers and with others.
-
-Some tips on tuning the output:
-
-* Start with the default settings
-
-* Brightness and density are not the same thing.  Density is a purely
-  linear adjustment; more density means more ink.  Brightness affects
-  perceived brightness.
-
-* Higher gamma values result in brighter images with compressed
-  highlights.  Lower gamma values are darker, but with better tonal
-  range in the highlights.
-
-* Different brands of ink yield different results.  I've found that
-  third party inks on Epson printers are generally too cyan.  The
-  correction for excessive cyan is to add red (or reduce blue and
-  green).
-
-* I've found that what creates good test patterns does not necessarily
-  create good photographs.  In particular, test patterns often print
-  well with gamma of .6 or thereabouts, but that gives washed out
-  photographs.  Perhaps when I implement a better contrast control
-  this can be improved.
-
-* The contrast control scales polynomially around the midpoint of the
-  range.  Lower contrast will reduce the contrast in the midtones, but
-  increase the contrast in the highlights and shadows.  Contrariwise,
-  a high contrast value will stretch the scale in midtones,
-  compressing the highlights and shadows.
-
-* There are many combinations of brightness, gamma, and density that
-  will create acceptable images.  You may find that you want different
-  settings for different images.
-
-* One group of settings you might want to start with for the Epson
-  Stylus Photo is:
-
-  Gamma 1.5
-  Brightness 40
-  Saturation 0.8
-
-
-Makefile.standalone enables you to build this plugin as a standalone
-plugin, without reference to a Gimp source tree.
-
-
-Enjoy!
-
--Robert Krawitz, January 19, 2000

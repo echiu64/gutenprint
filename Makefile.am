@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-libexecdir = $(gimpplugindir)/plug-ins
+libexecdir = $(gimptool_prefix)/plug-ins
 
 libexec_PROGRAMS = print
 
@@ -24,7 +24,7 @@ weavetest_SOURCES = weavetest.c
 
 INCLUDES = \
 	-I$(top_srcdir)			\
-	$(GTK_CFLAGS)			\
+	$(GIMP_CFLAGS)			\
 	-I$(includedir)
 
 AM_CPPFLAGS = \
@@ -36,6 +36,22 @@ AM_CPPFLAGS = \
 	@LPC_DEF@
 
 print_LDADD = $(GIMP_LIBS)
+
+install-libexecPROGRAMS: $(libexec_PROGRAMS)
+	@list='$(libexec_PROGRAMS)'; for p in $$list; do \
+		if test -f $$p; then \
+			echo $(GIMPTOOL) --install-admin-bin $$p; \
+			$(GIMPTOOL) --install-admin-bin $$p; \
+		else :; fi; \
+	done
+
+uninstall-libexecPROGRAMS: $(libexec_PROGRAMS)
+	@list='$(libexec_PROGRAMS)'; for p in $$list; do \
+		if test -f "$$p"; then \
+			echo $(GIMPTOOL) --uninstall-admin-bin "$$p"; \
+			$(GIMPTOOL) --uninstall-admin-bin "$$p"; \
+		else :; fi; \
+	done
 
 .PHONY: files ghost
 
