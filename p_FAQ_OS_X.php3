@@ -74,8 +74,9 @@ previews). The solution is to install a PostScript
 interpreter that has a plugin filter for the <a
 href="http://www.cups.org/" >CUPS</a> print spooler. <a href=
 "http://sourceforge.net/project/showfiles.php?group_id=18073&release_id=109322"
->ESP Ghostscript 7.05.5</a> (or later) is a good choice, and there is now a
-pre-built OS X installer available.
+>ESP Ghostscript 7.05.5</a> (or later) is a good choice, and there is now a <a
+href= "http://prdownloads.sourceforge.net/espgs/espgs-7.05.5-0.ppc.dmg?download"
+>OS X installer</a> available.
 <p>
 <li>
 <h3>
