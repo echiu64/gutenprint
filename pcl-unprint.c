@@ -293,8 +293,6 @@ void pcl_read_command(void)
     if (eof == 1)
 	return;
 
-/* First character must be ESC, otherwise we have gone wrong! */
-
     c = read_buffer[read_pointer++];
 #ifdef DEBUG
     fprintf(stderr, "Got %c\n", c);
@@ -1541,23 +1539,32 @@ int main(int argc, char *argv[])
 
 	    case PCL_PJL_COMMAND : {
 		    int c;
-		    fprintf(stderr, "%s: ", pcl_commands[command_index].description);
+		    fprintf(stderr, "%s\n", pcl_commands[command_index].description);
 
 /*
  * This is a special command, actually it is a PJL instruction. Read up
- * to the next NL and output it.
+ * to the next ESC and output it.
  */
 
 		    c = 0;
-		    while (c != '\n') {
+		    while (1) {
 			fill_buffer();
 			if (eof == 1) {
 			    fprintf(stderr, "\n");
 			    break;
 			}
 			c = read_buffer[read_pointer++];
+			if (c == '\033')
+			    break;
 			fprintf(stderr, "%c", c);
 		    }
+
+/*
+ * Now we are sitting at the "ESC" that is the start of the next command.
+ */
+		    read_pointer--;
+		    fprintf(stderr, "\n");
+		    fprintf(stderr, "End of %s\n", pcl_commands[command_index].description);
 		}
 		break;
 
