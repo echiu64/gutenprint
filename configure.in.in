@@ -151,7 +151,7 @@ elif test "`echo ${host_os} | sed 's/^\(irix\).*$/\1/'`" = "irix" ; then
 else
   OSTYPE="${host_os}"
 fi
-AC_DEFINE(OSTYPE, ["${OSTYPE}"], [The operating system to build for])
+AC_DEFINE_UNQUOTED(OSTYPE, ["${OSTYPE}"], [The operating system to build for])
 
 dnl Command line options.
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
