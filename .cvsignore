@@ -10,6 +10,7 @@ config.cache
 config.log
 config.h
 config.h.in
+config.rpath
 config.status
 configure
 configure.in
