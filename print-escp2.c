@@ -342,7 +342,7 @@ static escp2_printer_t model_capabilities[] =
   },
   /* 14: Stylus Photo 750, 870 */
   {
-    (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
+    (MODEL_INIT_900 | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES),
     48, 6, 48, 360, 0, 4, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
@@ -3102,6 +3102,10 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.140  2000/05/13 04:06:17  sharkey
+ *   Change the 750 from MODEL_INIT_STANDARD to MODEL_INIT_900.  Allows USB to
+ *   work without bending over backwards.
+ *
  *   Revision 1.139  2000/05/13 03:22:46  rlk
  *   Allow printing to the top edge and much closer to the bottom on Epson
  *   printers (major change in the softweave code).
