@@ -978,6 +978,10 @@ compute_a_curve_full(lut_t *lut, int channel)
   double pivot = .25;
   double ipivot = 1.0 - pivot;
   double xgamma = pow(pivot, lut->screen_gamma);
+  double print_gamma=1.0+9.0*(lut->print_gamma-1.0);
+  double pivot2 = .75;
+  double ipivot2 = 1.0 - pivot2;
+  double xgamma2 = pow(pivot2, print_gamma);
   stp_curve_t *curve = stp_curve_cache_get_curve(&(lut->channel_curves[channel]));
   int i;
   int isteps = lut->steps;
@@ -1011,7 +1015,12 @@ compute_a_curve_full(lut_t *lut, int channel)
        * Finally, fix up print gamma and scale
        */
 
-      pixel = 65535 * pow(pixel, lut->print_gamma);	/* was + 0.5 here */
+      /*
+       * Change to this function suggested by Alastair Robinson
+       * blackfive@fakenhamweb.co.uk
+       */
+      pixel = 65535 * (1.0 / (1.0 - xgamma2)) *
+	(pow(pivot2 + ipivot2 * pixel, print_gamma) - xgamma2);
       if (lut->output_color_description->color_model == COLOR_WHITE)
 	pixel = 65535 - pixel;
 
