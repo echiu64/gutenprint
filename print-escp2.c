@@ -1054,8 +1054,34 @@ escp2_print(const printer_t *printer,		/* I - Model */
   v->saturation *= printer->printvars.saturation;
 
   if (landscape)
-  {
     dither = init_dither(image_height, out_width, 1);
+  else
+    dither = init_dither(image_width, out_width, 1);
+  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+    {
+      dither_set_black_levels(dither, 1.5, 1.7, 1.7);
+      dither_set_black_lower(dither, .01);
+      dither_set_black_upper(dither, .4);
+      dither_set_light_inks(dither, .5, .5, .5);
+    }
+  switch (v->image_type)
+    {
+    case IMAGE_LINE_ART:
+      dither_set_ink_spread(dither, 19);
+      dither_set_black_lower(dither, .00001);
+      dither_set_randomizers(dither, 10, 10, 10, 10);
+      dither_set_black_upper(dither, .0005);
+      break;
+    case IMAGE_SOLID_TONE:
+      dither_set_ink_spread(dither, 15);
+      break;
+    case IMAGE_CONTINUOUS:
+      dither_set_ink_spread(dither, 13);
+      break;
+    }	    
+
+  if (landscape)
+  {
     scale_dither(dither, real_horizontal_passes);
     in  = malloc(image_height * image_bpp);
     out = malloc(image_height * out_bpp * 2);
@@ -1119,7 +1145,6 @@ escp2_print(const printer_t *printer,		/* I - Model */
   }
   else
   {
-    dither = init_dither(image_width, out_width, 1);
     scale_dither(dither, real_horizontal_passes);
     in  = malloc(image_width * image_bpp);
     out = malloc(image_width * out_bpp * 2);
@@ -1243,8 +1268,8 @@ escp2_fold(const unsigned char *line,
 static void
 escp2_split_2(int length,
 	      const unsigned char *in,
-	      unsigned char *outlo,
-	      unsigned char *outhi)
+	      unsigned char *outhi,
+	      unsigned char *outlo)
 {
   int i;
   for (i = 0; i < length; i++)
@@ -1258,8 +1283,8 @@ escp2_split_2(int length,
 static void
 escp2_split_2_2(int length,
 		const unsigned char *in,
-		unsigned char *outlo,
-		unsigned char *outhi)
+		unsigned char *outhi,
+		unsigned char *outlo)
 {
   int i;
   for (i = 0; i < length * 2; i++)
@@ -1282,10 +1307,10 @@ escp2_split_4(int length,
   for (i = 0; i < length; i++)
     {
       unsigned char inbyte = in[i];
-      out0[i] = inbyte & 0x11;
-      out1[i] = inbyte & 0x22;
-      out2[i] = inbyte & 0x44;
-      out3[i] = inbyte & 0x88;
+      out0[i] = inbyte & 0x88;
+      out1[i] = inbyte & 0x44;
+      out2[i] = inbyte & 0x22;
+      out3[i] = inbyte & 0x11;
     }
 }
 
@@ -1301,10 +1326,10 @@ escp2_split_4_2(int length,
   for (i = 0; i < length * 2; i++)
     {
       unsigned char inbyte = in[i];
-      out0[i] = inbyte & 0x03;
-      out1[i] = inbyte & 0x0c;
-      out2[i] = inbyte & 0x30;
-      out3[i] = inbyte & 0xc0;
+      out0[i] = inbyte & 0xc0;
+      out1[i] = inbyte & 0x30;
+      out2[i] = inbyte & 0x0c;
+      out3[i] = inbyte & 0x03;
     }
 }
 
@@ -2515,7 +2540,7 @@ escp2_write_weave(void *        vsw,
 		{
 		case 2:
 		  if (sw->bitwidth == 1)
-		    escp2_unpack_2(length, cols[j], s[0], s[1]);
+		    escp2_unpack_2(length, in, s[0], s[1]);
 		  else
 		    escp2_unpack_2_2(length, in, s[0], s[1]);
 		  break;
@@ -2587,6 +2612,9 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.114  2000/03/11 17:30:15  rlk
+ *   Significant dither changes; addition of line art/solid color/continuous tone modes
+ *
  *   Revision 1.113  2000/03/07 02:54:05  rlk
  *   Move CVS history logs to the end of the file
  *

@@ -1007,6 +1007,21 @@ canon_print(const printer_t *printer,		/* I - Model */
     dither = init_dither(image_height, out_width, 1);
   else
     dither = init_dither(image_width, out_width, 1);
+  switch (v->image_type)
+    {
+    case IMAGE_LINE_ART:
+      dither_set_ink_spread(dither, 19);
+      dither_set_black_lower(dither, .00001);
+      dither_set_randomizers(dither, 10, 10, 10, 10);
+      dither_set_black_upper(dither, .0005);
+      break;
+    case IMAGE_SOLID_TONE:
+      dither_set_ink_spread(dither, 15);
+      break;
+    case IMAGE_CONTINUOUS:
+      dither_set_ink_spread(dither, 14);
+      break;
+    }	    
 
   /*
   if (use_dmt) {
@@ -1513,6 +1528,9 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
 
 /*
  *   $Log$
+ *   Revision 1.34  2000/03/11 17:30:15  rlk
+ *   Significant dither changes; addition of line art/solid color/continuous tone modes
+ *
  *   Revision 1.33  2000/03/07 02:54:05  rlk
  *   Move CVS history logs to the end of the file
  *

@@ -276,6 +276,16 @@ dither_set_light_inks() takes three doubles between 0 and 1
    color mode, and only to those inks which have light versions
    (usually cyan and magenta).
 
+dither_set_ink_spread() takes a small integer representing the amount
+   of ink spread in the dither.  Larger numbers mean less spread.
+   Larger values are appropriate for line art and solid tones; they
+   will yield sharper transitions but more dither artifacts.  Smaller
+   values are more appropriate for photos.  They will reduce
+   resolution and sharpness but reduce dither artifacts up to a
+   point.  A value of 19 or higher implies minimum ink spread at any
+   resolution no matter what the overdensity.  A value of 14 is
+   typical for photos.
+
 
 dither_set_c_levels()
 dither_set_lc_levels()

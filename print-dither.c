@@ -55,6 +55,7 @@ typedef struct dither
   int dst_width;
   int horizontal_overdensity;
   int overdensity_bits;
+  int spread;
 
   int cbits;			/* Oversample counters for the various inks */
   int lcbits;
@@ -144,6 +145,7 @@ init_dither(int in_width, int out_width, int horizontal_overdensity)
       d->overdensity_bits = 3;
       break;
     }
+  d->spread = 13;
   d->src_width = in_width;
   d->dst_width = out_width;
   d->cbits = 1;
@@ -281,6 +283,20 @@ dither_get_black_upper(void *vd)
 {
   dither_t *d = (dither_t *) vd;
   return d->k_upper / 65536.0;
+}
+
+void
+dither_set_ink_spread(void *vd, int spread)
+{
+  dither_t *d = (dither_t *) vd;
+  d->spread = spread;
+}
+
+int
+dither_get_ink_spread(void *vd)
+{
+  dither_t *d = (dither_t *) vd;
+  return d->spread;
 }
 
 void
@@ -685,7 +701,7 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
   int terminate;
   int direction = row & 1 ? 1 : -1;
   int d_offset = 32768 - (32768 >> d->k_randomizer);
-  int odb = 13 - d->overdensity_bits;
+  int odb = d->spread - d->overdensity_bits;
   int ddw1 = d->dst_width - 1;
 
   bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
@@ -814,7 +830,6 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
 
 #define UPDATE_COLOR(r)				\
 do {						\
-  o##r = r;					\
   if (dither##r >= 0)				\
     r += dither##r >> 3;			\
   else						\
@@ -840,7 +855,7 @@ do {									     \
       if (r > comp0)							     \
 	{								     \
 	  DO_PRINT_COLOR(r);						     \
-	  r -= 65536;							     \
+	  r -= 65536 << d->overdensity_bits;				     \
 	}								     \
     }									     \
   else									     \
@@ -856,7 +871,7 @@ do {									     \
 	}								     \
       else if (r > compare)						     \
 	{								     \
-	  int cutoff = ((density - d->l##r##_level) * 65536 / l##r##_level); \
+	  int cutoff = ((density - d->l##r##_level) * 65536 / d->l##r##_level); \
 	  int sub;							     \
 	  if (cutoff >= 0)						     \
 	    sub = d->l##r##_level + ((l##r##_level * cutoff) >> 16);	     \
@@ -864,7 +879,7 @@ do {									     \
 	    sub = d->l##r##_level + (l##r##_level * cutoff / 65536);	     \
 	  if (ditherbit##d1 > cutoff)					     \
 	    {								     \
-	      DO_PRINT_COLOR(l##r);					     \
+	      DO_PRINT_COLOR(r);					     \
 	    }								     \
 	  else								     \
 	    {								     \
@@ -873,39 +888,58 @@ do {									     \
 	  if (sub < d->l##r##_level)					     \
 	    r -= d->l##r##_level << d->overdensity_bits;		     \
 	  else if (sub > 65535)						     \
-	    r -= 65536;							     \
+	    r -= 65536 << d->overdensity_bits;				     \
 	  else								     \
-	    r -= sub;							     \
+	    r -= sub << d->overdensity_bits;				     \
 	}								     \
     }									     \
 } while (0)
 
 #define UPDATE_DITHER(r, d2, x, width)				\
 do {								\
-  int offset = (65535 - (o##r & 0xffff)) >> odb;		\
   int tmp##r = r;						\
-  if (tmp##r > 65535)						\
-    tmp##r = 65535;						\
-  if (offset > x)						\
-    offset = x;							\
-  else if (offset > xdw1)					\
-    offset = xdw1;						\
-  if (ditherbit##d2 & bit)					\
+  int i, dist;							\
+  int offset;							\
+  int delta;							\
+  if (tmp##r != 0)						\
     {								\
-      r##error1[-offset] += tmp##r;				\
-      r##error1[0] += 3 * tmp##r;				\
-      r##error1[offset] += tmp##r;				\
-      if (x > 0 && 0 < xdw1)					\
-	dither##r    = r##error0[direction] + 3 * tmp##r;	\
+      offset = (65535 - (o##r & 0xffff)) >> odb;		\
+      if (tmp##r > 65535)					\
+	tmp##r = 65535;						\
+      if (offset > x)						\
+	offset = x;						\
+      else if (offset > xdw1)					\
+	offset = xdw1;						\
+      if (ditherbit##d2 & bit)					\
+	{							\
+	  if (offset == 0)					\
+	    dist = 5 * tmp##r;					\
+	  else							\
+	    dist = 5 * tmp##r / ((offset + 1) * (offset + 1));	\
+	  if (x > 0 && 0 < xdw1)				\
+	    dither##r    = r##error0[direction] + 3 * tmp##r;	\
+	}							\
+      else							\
+	{							\
+	  if (offset == 0)					\
+	    dist = 3 * tmp##r;					\
+	  else							\
+	    dist = 3 * tmp##r / ((offset + 1) * (offset + 1));	\
+	  if (x > 0 && 0 < xdw1)				\
+	    dither##r    = r##error0[direction] + 5 * tmp##r;	\
+	}							\
+      delta = dist;						\
+      for (i = -offset; i <= offset; i++)			\
+	{							\
+	  r##error1[i] += delta;				\
+	  if (i < 0)						\
+	    delta += dist;					\
+	  else							\
+	    delta -= dist;					\
+	}							\
     }								\
   else								\
-    {								\
-      r##error1[-offset] += tmp##r;				\
-      r##error1[0] +=  tmp##r;					\
-      r##error1[offset] += tmp##r;				\
-      if (x > 0 && 0 < xdw1)					\
-	dither##r    = r##error0[direction] + 5 * tmp##r;	\
-    }								\
+    dither##r = r##error0[direction];				\
 } while (0)
 
 void
@@ -980,7 +1014,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   int lc_level = 65536 - d->lc_level;
   int lm_level = 65536 - d->lm_level;
   int ly_level = 65536 - d->ly_level;
-  int odb = 13 - d->overdensity_bits;
+  int odb = d->spread - d->overdensity_bits;
   int ddw1 = d->dst_width - 1;
 
   bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
@@ -1391,7 +1425,7 @@ dither_black_n(unsigned short   *gray,		/* I - Grayscale pixels */
 #ifdef RANDOMIZE_VARIABLE_DOT_SIZE
   int d_offset = 32768 - (32768 >> d->k_randomizer);
 #endif
-  int odb = 13 - d->overdensity_bits;
+  int odb = d->spread - d->overdensity_bits;
   int ddw1 = d->dst_width - 1;
 
   bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
@@ -1698,7 +1732,7 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
   int lc_level = 65536 - d->lc_level;
   int lm_level = 65536 - d->lm_level;
   int ly_level = 65536 - d->ly_level;
-  int odb = 13 - d->overdensity_bits;
+  int odb = d->spread - d->overdensity_bits;
   int ddw1 = d->dst_width - 1;
 
   bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
@@ -2021,6 +2055,9 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.11  2000/03/11 17:30:15  rlk
+ *   Significant dither changes; addition of line art/solid color/continuous tone modes
+ *
  *   Revision 1.10  2000/03/09 02:50:17  rlk
  *   Performance optimizations, documentation
  *

@@ -168,6 +168,7 @@ static void	ink_type_callback(GtkWidget *, gint);
 static void	resolution_callback(GtkWidget *, gint);
 static void	output_type_callback(GtkWidget *, gint);
 static void	linear_callback(GtkWidget *, gint);
+static void	image_type_callback(GtkWidget *, gint);
 static void	orientation_callback(GtkWidget *, gint);
 static void	printandsave_callback(void);
 static void	print_callback(void);
@@ -230,7 +231,8 @@ vars_t vars =
 	100,			/* Blue */
 	0,			/* Linear */
 	1.0,			/* Output saturation */
-	1.0			/* Density */
+	1.0,			/* Density */
+	IMAGE_CONTINUOUS	/* Image type */
 };
 
 GtkWidget	*print_dialog,		/* Print dialog window */
@@ -269,8 +271,13 @@ GtkWidget	*print_dialog,		/* Print dialog window */
 		*gamma_entry,		/* Text entry widget for gamma */
 		*output_gray,		/* Output type toggle, black */
 		*output_color,		/* Output type toggle, color */
+		*image_line_art,
+		*image_solid_tone,
+		*image_continuous_tone,
+#if DO_LINEAR
 		*linear_on,		/* Linear toggle, on */
 		*linear_off,		/* Linear toggle, off */
+#endif
 		*setup_dialog,		/* Setup dialog window */
 		*printer_driver,	/* Printer driver widget */
 		*ppd_file,		/* PPD file entry */
@@ -382,6 +389,7 @@ query(void)
     { PARAM_INT32,	"green",	"Green level" },
     { PARAM_INT32,	"blue",		"Blue level" },
     { PARAM_INT32,	"linear",	"Linear output (0 = normal, 1 = linear)" },
+    { PARAM_INT32,	"image_type",	"Image type (0 = line art, 1 = solid tones, 2 = continuous tone)"},
     { PARAM_FLOAT,	"saturation",	"Saturation (0-1000%)" },
     { PARAM_FLOAT,	"density",	"Density (0-200%)" },
     { PARAM_STRING,	"ink_type",	"Type of ink or cartridge" },
@@ -602,16 +610,21 @@ run(char   *name,		/* I - Name of print program. */
             vars.linear = 0;
 
           if (nparams > 22)
+            vars.image_type = param[22].data.d_int32;
+          else
+            vars.image_type = IMAGE_CONTINUOUS;
+
+          if (nparams > 23)
             vars.saturation = param[22].data.d_float;
           else
             vars.saturation = 1.0;
 
-          if (nparams > 23)
+          if (nparams > 24)
             vars.density = param[23].data.d_float;
           else
             vars.density = 1.0;
 
-	  if (nparams > 24)
+	  if (nparams > 25)
 	    strcpy(vars.ink_type, param[24].data.d_string);
 	  else
 	    memset(vars.ink_type, 0, 64);
@@ -769,7 +782,10 @@ do_print_dialog(void)
 		*box;		/* Box container */
   GtkObject	*scale_data;	/* Scale data (limits) */
   GSList	*group;		/* Grouping for output type */
+#ifdef DO_LINEAR
   GSList	*linear_group;	/* Grouping for linear scale */
+#endif
+  GSList	*image_type_group; /* Grouping for image type */
   const	printer_t *the_printer = get_printer_by_index(0);
   static char	*orients[] =	/* Orientation strings */
   {
@@ -1066,13 +1082,14 @@ do_print_dialog(void)
   gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
   gtk_widget_show(button);
 
+#ifdef DO_LINEAR
   label = gtk_label_new(_("Output Level:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 2, 3, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 3, 4, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 3, 4, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 4, 5, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   linear_off = button = gtk_radio_button_new_with_label(NULL, _("Normal scale"));
@@ -1091,6 +1108,53 @@ do_print_dialog(void)
   gtk_signal_connect(GTK_OBJECT(button), "toggled",
 		     (GtkSignalFunc)linear_callback,
 		     (gpointer)1);
+  gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
+  gtk_widget_show(button);
+#endif
+
+  /*
+   * Image type
+   */
+
+  label = gtk_label_new(_("Image Type:"));
+  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(label);
+
+  box = gtk_hbox_new(FALSE, 8);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(box);
+
+
+  image_line_art= button =
+    gtk_radio_button_new_with_label(NULL, _("Line Art"));
+  image_type_group = gtk_radio_button_group(GTK_RADIO_BUTTON(button));
+  if (vars.image_type == IMAGE_LINE_ART)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
+  gtk_signal_connect(GTK_OBJECT(button), "toggled",
+		     (GtkSignalFunc)image_type_callback,
+		     (gpointer)IMAGE_LINE_ART);
+  gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
+  gtk_widget_show(button);
+
+  image_solid_tone= button =
+    gtk_radio_button_new_with_label(image_type_group, _("Solid Colors"));
+  if (vars.image_type == IMAGE_SOLID_TONE)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
+  gtk_signal_connect(GTK_OBJECT(button), "toggled",
+		     (GtkSignalFunc)image_type_callback,
+		     (gpointer)IMAGE_SOLID_TONE);
+  gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
+  gtk_widget_show(button);
+
+  image_continuous_tone= button =
+    gtk_radio_button_new_with_label(gtk_radio_button_group(GTK_RADIO_BUTTON(button)),
+							   _("Photograph"));
+  if (vars.image_type == IMAGE_CONTINUOUS)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
+  gtk_signal_connect(GTK_OBJECT(button), "toggled",
+		     (GtkSignalFunc)image_type_callback,
+		     (gpointer)IMAGE_CONTINUOUS);
   gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
   gtk_widget_show(button);
 
@@ -2367,10 +2431,29 @@ do_misc_updates()
   else
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_color), TRUE);
 
+#ifdef DO_LINEAR
   if (plist[plist_current].v.linear == 0)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linear_off), TRUE);
   else
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linear_off), TRUE);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linear_on), TRUE);
+#endif
+
+  switch (plist[plist_current].v.image_type)
+    {
+    case IMAGE_LINE_ART:
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(image_line_art), TRUE);
+      break;
+    case IMAGE_SOLID_TONE:
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(image_solid_tone), TRUE);
+      break;
+    case IMAGE_CONTINUOUS:
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(image_continuous_tone), TRUE);
+      break;
+    default:
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(image_continuous_tone), TRUE);
+      plist[plist_current].v.image_type = IMAGE_CONTINUOUS;
+      break;
+    }
 
   preview_update();
 }
@@ -2596,6 +2679,7 @@ output_type_callback(GtkWidget *widget,	/* I - Output type button */
   }
 }
 
+#ifdef DO_LINEAR
 /*
  * 'linear_callback()' - Update the current linear gradient mode...
  */
@@ -2608,6 +2692,22 @@ linear_callback(GtkWidget *widget,	/* I - Output type button */
   {
     vars.linear = data;
     plist[plist_current].v.linear = data;
+  }
+}
+#endif
+
+/*
+ * 'image_type_callback()' - Update the current linear gradient mode...
+ */
+
+static void
+image_type_callback(GtkWidget *widget,	/* I - Output type button */
+		    gint      data)	/* I - Data */
+{
+  if (GTK_TOGGLE_BUTTON(widget)->active)
+  {
+    vars.image_type = data;
+    plist[plist_current].v.image_type = data;
   }
 }
 
@@ -3036,6 +3136,7 @@ initialize_printer(plist_t *printer)
   printer->v.green = vars.green;
   printer->v.blue = vars.blue;
   printer->v.linear = vars.linear;
+  printer->v.image_type = vars.image_type;
   printer->v.saturation = vars.saturation;
   printer->v.density = vars.density;
 }
@@ -3306,7 +3407,7 @@ printrc_load(void)
 	  lineptr = commaptr + 1;
 	}
 
-      if (keepgoing == 0)
+      if (keepgoing == 0 || ((commaptr = strchr(lineptr, ',')) == NULL))
 	{
 	  keepgoing = 0;
 	  key.v.ink_type[0] = '\0';
@@ -3314,7 +3415,17 @@ printrc_load(void)
       else
 	{
 	  strncpy(key.v.ink_type, lineptr, 63);
-	  key.v.ink_type[strlen(key.v.ink_type) - 1] = '\0';  /* Drop NL */
+	  key.v.ink_type[strlen(key.v.ink_type) - 1] = '\0';
+	  lineptr = commaptr + 1;
+	}
+	  
+      if ((keepgoing == 0))
+	{
+	  keepgoing = 0;
+	}
+      else
+	{
+	  key.v.image_type = atoi(lineptr);
 	}
 
 /*
@@ -3422,13 +3533,14 @@ printrc_save(void)
     fputs("#PRINTRC " PLUG_IN_VERSION "\n", fp);
 
     for (i = 0, p = plist; i < plist_count; i ++, p ++)
-      fprintf(fp, "%s,%s,%s,%s,%d,%s,%s,%s,%s,%d,%.3f,%d,%d,%d,%.3f,%d,%d,%d,%d,%d,%.3f,%.3f,%s\n",
+      fprintf(fp, "%s,%s,%s,%s,%d,%s,%s,%s,%s,%d,%.3f,%d,%d,%d,%.3f,%d,%d,%d,%d,%d,%.3f,%.3f,%s,%d\n",
               p->name, p->v.output_to, p->v.driver, p->v.ppd_file,
 	      p->v.output_type, p->v.resolution, p->v.media_size,
 	      p->v.media_type, p->v.media_source, p->v.brightness,
 	      p->v.scaling, p->v.orientation, p->v.left, p->v.top,
 	      p->v.gamma, p->v.contrast, p->v.red, p->v.green, p->v.blue,
-	      p->v.linear, p->v.saturation, p->v.density, p->v.ink_type);
+	      p->v.linear, p->v.saturation, p->v.density, p->v.ink_type,
+	      p->v.image_type);
     fclose(fp);
   }
   g_free (filename);
