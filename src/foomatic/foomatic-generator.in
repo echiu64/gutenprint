@@ -89,6 +89,15 @@ while(<PIPE>) {
 close PIPE or die "Cannot run printer_options: $!\n";
 print STDERR "done.\n";
 
+if ($foomatic3) {
+    open PIPE, "./printer_margins|" or die "Cannot run printer_margins: $!\n";
+    print STDERR "Loading margins from ./printer_margins...";
+    $code = join('', <PIPE>);
+    close PIPE or die "Cannot run printer_margins: $!\n";
+    eval $code or die "Cannot run printer_margins: $!\n";
+    print STDERR "done.\n";
+}
+
 open PIPE, "./stp_limits|" or die "Cannot run stp_limits: $!\n";
 print STDERR "Loading options from ./stp_limits...";
 while(<PIPE>) {
@@ -194,8 +203,66 @@ push (@printerlist, " <printers>\n");
 my $p1;
 for $p1 (keys(%mapstp)) {
     push (@printerlist, "  <!-- gimp-print driver: $p1 -->\n");
-    for (@{$mapstp{$p1}}) {
-	push(@printerlist, "  <printer><id>$_</id></printer>\n");
+    for my $id (@{$mapstp{$p1}}) {
+	if ($foomatic3) {
+	    # Add unprintable margins (only Foonmatic 2.9.x)
+	    push(@printerlist, "  <printer>\n");
+	    push(@printerlist, "    <id>$id</id>\n");
+	    push(@printerlist, "    <margins>\n");
+	    my ($cleft, $cright, $ctop, $cbottom) = 
+		(undef, undef, undef, undef);
+	    if (defined($imageableareas{$p1}{'Custom'})) {
+		$cleft = $imageableareas{$p1}{'Custom'}{'left'};
+		$cright = $imageableareas{$p1}{'Custom'}{'right'};
+		$ctop = $imageableareas{$p1}{'Custom'}{'top'};
+		$cbottom = $imageableareas{$p1}{'Custom'}{'bottom'};
+		push(@printerlist, "      <general>\n");
+		push(@printerlist, "        <relative />\n");
+		push(@printerlist, "        <left>$cleft</left>\n");
+		push(@printerlist, "        <right>$cright</right>\n");
+		push(@printerlist, "        <top>$ctop</top>\n");
+		push(@printerlist, "        <bottom>$cbottom</bottom>\n");
+		push(@printerlist, "      </general>\n");
+	    }
+	    for my $ps (keys %{$imageableareas{$p1}}) {
+		next if $ps eq 'Custom'; # We have done "Custom" already
+		my ($left, $right, $top, $bottom, $width, $height);
+		$left = $imageableareas{$p1}{$ps}{'left'};
+		$right = $imageableareas{$p1}{$ps}{'right'};
+		$top = $imageableareas{$p1}{$ps}{'top'};
+		$bottom = $imageableareas{$p1}{$ps}{'bottom'};
+		$width = $imageableareas{$p1}{$ps}{'width'};
+		$height = $imageableareas{$p1}{$ps}{'height'};
+		# If the <general> section serves for this paper size,
+		# do not define an <exception>
+		next if ((defined($cleft)) &&
+			 ($left == $cleft) &&
+			 ($right == $width - $cright) &&
+			 ($top == $height - $ctop) &&
+			 ($bottom == $cbottom));
+		push(@printerlist, "      <exception PageSize=\"$ps\">\n");
+		push(@printerlist, "        <absolute />\n");
+		if ($left != $cleft) {
+		    push(@printerlist, "        <left>$left</left>\n");
+		}
+		if ($right != $width - $cright) {
+		    push(@printerlist, "        <right>$right</right>\n");
+		}
+		if ($top != $height - $ctop) {
+		    push(@printerlist, "        <top>$top</top>\n");
+		}
+		if ($bottom != $cbottom) {
+		    push(@printerlist, "        <bottom>$bottom" .
+			 "</bottom>\n");
+		}
+		push(@printerlist, "      </exception>\n");
+	    }
+	    push(@printerlist, "    </margins>\n");
+	    push(@printerlist, "  </printer>\n");
+	} else {
+	    # Printer IDs only
+	    push(@printerlist, "  <printer><id>$id</id></printer>\n");
+	}
     }
 }
 push (@printerlist, " </printers>\n");
