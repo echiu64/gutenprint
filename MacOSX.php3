@@ -225,7 +225,8 @@ require('standard_html_header.php3');
  <dd>621667 Very large prints on Epson 9500 fail
  <dd>622612 CUPS driver forbids custom page sizes
  <dd>625602 QUALITY Pale output on Stylus Pro 7500
- <br>
+ </dl>
+ <dl>
  <dt>The following bugs are open against Gimp-Print 4.2.3:
  <dd>409612 Minor positioning prob on 4x6 glossy
  <dd>538097 QUALITY-Poor quality printing on Canon s400
