@@ -351,7 +351,7 @@ main(int argc, char **argv)
 			&hpasses, &vpasses, &subpasses, &nrows, &first_line,
 			&phys_lines, &color_jet_arrangement);
 	  fflush(stdout);
-	  if (hpasses * subpasses > physjets)
+	  if (vpasses * subpasses > physjets)
 	    continue;
 	  printf("%d %d %d %d %d %d %d %d %d ", physjets, physsep, hpasses,
 			vpasses, subpasses, nrows, first_line, phys_lines,

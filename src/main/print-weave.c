@@ -1777,12 +1777,12 @@ stp_initialize_weave(int jets,	/* Width of print head */
   sw->oversample = osample * v_subpasses * v_subsample;
   if (sw->oversample > jets)
     {
-      for (i = 2; i <= v_subpasses; i++)
+      for (i = 2; i <= osample; i++)
 	{
-	  if ((v_subpasses % i == 0) && (sw->oversample / i <= jets))
+	  if ((osample % i == 0) && (sw->oversample / i <= jets))
 	    {
 	      sw->repeat_count = i;
-	      v_subpasses /= i;
+	      osample /= i;
 	      goto found;
 	    }
 	}
