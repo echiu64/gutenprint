@@ -39,6 +39,16 @@ Gimp-Print 4.1.99rc1 contains the following changes over 4.1.99b4:
 
 10) Repeated invocations of 'make clean' work correctly.
 
+11) The CUPS PPD files now define PostScript level 2 rather than level
+   3 by default.  The version of GhostScript used internally by CUPS
+   does not support all level 3 PostScript constructs; this will cause
+   certain jobs to fail (in particular, Corel Draw 9 is known to
+   generate some PostScript that fails).  Very few applications
+   currently generate PostScript level 3.  It is possible to define
+   level 3 PostScript; please see the README for more information.
+
+12) Minor quality improvements at 2880x720 on Epson printers.
+
 Known limitations of this release:
 
 1) The CUPS PPD files are not translated on all systems.  BSD systems
@@ -91,6 +101,8 @@ Known limitations of this release:
    little reason to use it outside of the GIMP.  This bug will not be
    fixed.
 
+10) The Epson Stylus Color 500 prints incorrectly in certain modes.
+
 List of bugs fixed in this release:
 
  480356 Gimp plugin misbuild w/latest GTK
@@ -101,9 +113,11 @@ List of bugs fixed in this release:
  475268 VPATH build broken in docs
  475830 Stylus Color 360 DPI micro regression
  475848 Libtool version for BSD
+ 480624 CUPS not PS L3 compliant
+ 480368 Use cups-config if available
+ 480368 PS driver generates bad comments
  480357 Makefiles include GIMP_CFLAGS spuriously
  478502 Stylus Pros don't need packet mode
- 480368 PS driver generates bad comments
 
 Gimp-Print 4.1.99b4 contains the following changes over 4.1.99b3:
 
