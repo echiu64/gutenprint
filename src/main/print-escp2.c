@@ -526,7 +526,7 @@ static const escp2_variable_ink_t standard_3pl_2880_ink =
 
 static const stp_simple_dither_range_t standard_multishot_pigment_dither_ranges[] =
 {
-  { 0.163, 0x1, 1, 1 },
+  { 0.410, 0x1, 1, 1 },
   { 1.0,   0x3, 1, 3 }
 };
 
@@ -539,22 +539,22 @@ static const escp2_variable_ink_t standard_multishot_pigment_ink =
 
 static stp_simple_dither_range_t standard_6pl_pigment_dither_ranges[] =
 {
-  { 0.40,  0x1, 1, 1 },
-  { 0.675, 0x2, 1, 2 },
+  { 0.350, 0x1, 1, 1 },
+  { 0.500, 0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
 
 static escp2_variable_ink_t standard_6pl_pigment_ink =
 {
   standard_6pl_pigment_dither_ranges,
-  sizeof(standard_6pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
+  sizeof(standard_6pl_pigment_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
 static const stp_simple_dither_range_t standard_3pl_pigment_dither_ranges[] =
 {
-  { 0.25,  0x1, 1, 1 },
-  { 0.61,  0x2, 1, 2 },
+  { 0.350, 0x1, 1, 1 },
+  { 0.500, 0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
 
@@ -566,23 +566,10 @@ static const escp2_variable_ink_t standard_3pl_pigment_ink =
 };
 
 
-static const stp_simple_dither_range_t standard_3pl_pigment_1440_dither_ranges[] =
-{
-  { 0.39, 0x1, 1, 1 },
-  { 1.0,  0x2, 1, 2 }
-};
-
-static const escp2_variable_ink_t standard_3pl_pigment_1440_ink =
-{
-  standard_3pl_pigment_1440_dither_ranges,
-  sizeof(standard_3pl_pigment_1440_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
-
-
 static const stp_simple_dither_range_t standard_3pl_pigment_2880_dither_ranges[] =
 {
-  { 1.0,   0x1, 1, 1 }
+  { 1.0,   0x1, 1, 1 },
+  { 1.5,   0x2, 1, 2 }
 };
 
 static const escp2_variable_ink_t standard_3pl_pigment_2880_ink =
@@ -830,14 +817,6 @@ static const escp2_variable_inkset_t escp2_3pl_pigment_standard_inks =
   &standard_3pl_pigment_ink,
   &standard_3pl_pigment_ink,
   &standard_3pl_pigment_ink
-};
-
-static const escp2_variable_inkset_t escp2_3pl_pigment_1440_standard_inks =
-{
-  &standard_3pl_pigment_1440_ink,
-  &standard_3pl_pigment_1440_ink,
-  &standard_3pl_pigment_1440_ink,
-  &standard_3pl_pigment_1440_ink
 };
 
 static const escp2_variable_inkset_t escp2_3pl_pigment_2880_standard_inks =
@@ -1160,10 +1139,10 @@ static const escp2_variable_inklist_t variable_3pl_pigment_4color_inks =
       &escp2_multishot_pigment_standard_inks,
       &escp2_multishot_pigment_standard_inks,
       &escp2_multishot_pigment_standard_inks,
+      &escp2_multishot_pigment_standard_inks,
       &escp2_6pl_pigment_standard_inks,
       &escp2_3pl_pigment_standard_inks,
-      &escp2_3pl_pigment_1440_standard_inks,
-      &escp2_3pl_pigment_1440_standard_inks,
+      &escp2_3pl_pigment_standard_inks,
       &escp2_3pl_pigment_2880_standard_inks,
       &escp2_3pl_pigment_2880_standard_inks,
     }
@@ -1844,7 +1823,7 @@ static const escp2_dot_size_t spro10000_dotsizes =
 {    4,   -1, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t c3pl_pigment_dotsizes =
-{   -1, 0x13,   -1, 0x10,   -1, 0x11,   -1, 0x11,   -1, 0x12,   -1, 0x12,   -1 };
+{   -1, 0x13,   -1, 0x10,   -1, 0x10,   -1, 0x11,   -1, 0x12,   -1, 0x12,   -1 };
 
 /*
  * Densities are for:
@@ -1906,7 +1885,7 @@ static const escp2_densities_t spro10000_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.710, 0.216, 0.784, 0.392, 0.392, 0.196 };
 
 static const escp2_densities_t c3pl_pigment_densities =
-{ 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.65,  0.65,  0.65,  0.65,  0.65,  0.65,  0.110 };
+{ 2.0, 2.0, 1.3, 1.3, 0.98, 0.98, 0.65,  0.65,  0.487, 0.487, 0.78,  0.78,  0.110 };
 
 /*
  For each printhead (=color), the offset in escp2_base_separation (1/360")
