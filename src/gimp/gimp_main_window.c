@@ -344,14 +344,6 @@ Combo_get_name(GtkWidget   *combo,
   return (NULL);
 }
 
-static gchar *
-c_strdup(const gchar *s)
-{
-  gchar *ret = xmalloc(strlen(s) + 1);
-  strcpy(ret, s);
-  return ret;
-}
-
 static void
 build_printer_combo(void)
 {
@@ -370,8 +362,8 @@ build_printer_combo(void)
     {
       if (plist[i].active)
 	{
-	  printer_list[i].name = c_strdup(plist[i].name);
-	  printer_list[i].text = c_strdup(plist[i].name);
+	  printer_list[i].name = g_strdup(plist[i].name);
+	  printer_list[i].text = g_strdup(plist[i].name);
 	}
       else
 	{
@@ -712,7 +704,7 @@ create_printer_dialog (void)
       if (strcmp (stp_printer_get_long_name (the_printer), "") != 0)
 	{
 	  gchar *tmp =
-	    c_strdup (gettext (stp_printer_get_long_name (the_printer)));
+	    g_strdup (gettext (stp_printer_get_long_name (the_printer)));
 
 	  gtk_clist_insert (GTK_CLIST (printer_driver), i, &tmp);
 	  gtk_clist_set_row_data (GTK_CLIST (printer_driver), i, (gpointer) i);
@@ -1457,7 +1449,7 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
     }
 
   for (i = 0; i < num_items; i ++)
-    list = g_list_append (list, c_strdup(items[i].text));
+    list = g_list_append (list, g_strdup(items[i].text));
 
   gtk_combo_set_popdown_strings (GTK_COMBO (combo), list);
 
@@ -1479,7 +1471,7 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
         i = 0;
     }
 
-  gtk_entry_set_text (entry, c_strdup (items[i].text));
+  gtk_entry_set_text (entry, g_strdup (items[i].text));
 
   gtk_combo_set_value_in_list (GTK_COMBO (combo), TRUE, FALSE);
   gtk_widget_set_sensitive (combo, TRUE);

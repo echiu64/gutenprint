@@ -98,52 +98,13 @@ do						\
   ((x)) = NULL;					\
 } while (0)
 
-static size_t
-c_strlen(const char *s)
-{
-  return strlen(s);
-}
-
-static char *
-c_strndup(const char *s, int n)
-{
-  char *ret;
-  if (!s || n < 0)
-    {
-      ret = xmalloc(1);
-      ret[0] = 0;
-      return ret;
-    }
-  else
-    {
-      ret = xmalloc(n + 1);
-      memcpy(ret, s, n);
-      ret[n] = 0;
-      return ret;
-    }
-}
-
-static char *
-c_strdup(const char *s)
-{
-  char *ret;
-  if (!s)
-    {
-      ret = xmalloc(1);
-      ret[0] = 0;
-      return ret;
-    }
-  else
-    return c_strndup(s, c_strlen(s));
-}
-
 void
 plist_set_output_to(gp_plist_t *p, const char *val)
 {
   if (p->output_to == val)
     return;
   SAFE_FREE(p->output_to);
-  p->output_to = c_strdup(val);
+  p->output_to = g_strdup(val);
 }
 
 void
@@ -152,7 +113,7 @@ plist_set_output_to_n(gp_plist_t *p, const char *val, int n)
   if (p->output_to == val)
     return;
   SAFE_FREE(p->output_to);
-  p->output_to = c_strndup(val, n);
+  p->output_to = g_strndup(val, n);
 }
 
 const char *
@@ -167,7 +128,7 @@ plist_set_name(gp_plist_t *p, const char *val)
   if (p->name == val)
     return;
   SAFE_FREE(p->name);
-  p->name = c_strdup(val);
+  p->name = g_strdup(val);
 }
 
 void
@@ -176,7 +137,7 @@ plist_set_name_n(gp_plist_t *p, const char *val, int n)
   if (p->name == val)
     return;
   SAFE_FREE(p->name);
-  p->name = c_strndup(val, n);
+  p->name = g_strndup(val, n);
 }
 
 const char *
