@@ -254,7 +254,7 @@ create_color_adjust_window (void)
   gtk_container_add (GTK_CONTAINER (event_box), GTK_WIDGET (swatch));
   gtk_widget_show (GTK_WIDGET (swatch));
 
-  gimp_help_set_help_data (GTK_WIDGET (event_box), _("Image preview"), NULL);
+  set_help_data (GTK_WIDGET (event_box), _("Image preview"));
   gtk_signal_connect (GTK_OBJECT (swatch), "expose_event",
                       GTK_SIGNAL_FUNC (redraw_color_swatch),
                       NULL);
@@ -270,7 +270,7 @@ create_color_adjust_window (void)
 			     (opt->accessor)(defvars) / (opt->scale * 10),
 			     (opt->accessor)(defvars) / opt->scale,
 			     3, TRUE, 0, 0, NULL, NULL);
-      set_adjustment_tooltip(opt->adjustment, _(opt->help), NULL);
+      set_adjustment_tooltip(opt->adjustment, _(opt->help));
       gtk_signal_connect(GTK_OBJECT(opt->adjustment), "value_changed",
 			 GTK_SIGNAL_FUNC(color_update), (gpointer) i);
     }
@@ -280,27 +280,25 @@ create_color_adjust_window (void)
    */
 
   event_box = gtk_event_box_new ();
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 9,
-                             _("Dither Algorithm:"), 1.0, 0.5,
-                             event_box, 1, TRUE);
+  table_attach_aligned(GTK_TABLE (table), 0, 9, _("Dither Algorithm:"),
+		       1.0, 0.5, event_box, 1, TRUE);
 
   dither_algo_combo = gtk_combo_new ();
   gtk_container_add (GTK_CONTAINER(event_box), dither_algo_combo);
   gtk_widget_show (dither_algo_combo);
 
-  gimp_help_set_help_data (GTK_WIDGET (event_box),
-                           _("Choose the dither algorithm to be used.\n"
-                             "Adaptive Hybrid usually produces the best "
-                             "all-around quality.\n"
-			     "EvenTone is a new, experimental algorithm "
-			     "that often produces excellent results.\n"
-                             "Ordered is faster and produces almost as good "
-                             "quality on photographs.\n"
-                             "Fast and Very Fast are considerably faster, and "
-                             "work well for text and line art.\n"
-                             "Hybrid Floyd-Steinberg generally produces "
-                             "inferior output."),
-                           NULL);
+  set_help_data(GTK_WIDGET (event_box),
+		_("Choose the dither algorithm to be used.\n"
+		  "Adaptive Hybrid usually produces the best "
+		  "all-around quality.\n"
+		  "EvenTone is a new, experimental algorithm "
+		  "that often produces excellent results.\n"
+		  "Ordered is faster and produces almost as good "
+		  "quality on photographs.\n"
+		  "Fast and Very Fast are considerably faster, and "
+		  "work well for text and line art.\n"
+		  "Hybrid Floyd-Steinberg generally produces "
+		  "inferior output."));
 
   build_dither_combo ();
 }

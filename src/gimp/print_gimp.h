@@ -145,8 +145,13 @@ extern void update_adjusted_thumbnail   (void);
 extern void create_main_window (void);
 extern void set_color_sliders_active(int active);
 extern void writefunc (void *file, const char *buf, size_t bytes);
-extern void set_adjustment_tooltip(GtkObject *adjustment,
-				   const gchar *tip, const gchar *private);
+extern void set_adjustment_tooltip(GtkObject *adjustment, const gchar *tip);
+extern void set_help_data(GtkWidget *widget, const gchar *tooltip);
+extern void table_attach_aligned(GtkTable *table, gint column, gint row,
+				 const gchar *label_text, gfloat xalign,
+				 gfloat yalign, GtkWidget *widget,
+				 gint colspan, gboolean left_align);
+
 
 extern void Image_transpose(stp_image_t *image);
 extern void Image_hflip(stp_image_t *image);
