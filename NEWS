@@ -43,6 +43,41 @@ Please read the README file for full instructions on installing this
 package.
 
 
+Gimp-Print 4.3.16 contains the following major changes over Gimp-Print
+4.3.15:
+
+1) There are many quality improvements for Epson Stylus printers.  All
+   users of 4.3 who are using an Epson printer (particularly newer
+   models of photo printers) should take this release.  Specific
+   improvements include:
+
+   * Most photo printers have been retuned for significantly improved
+     color quality.  In particular, color casts when printing grays
+     are greatly reduced.
+
+   * The Epson Stylus Photo 2200 (using Photo Black ink) now prints
+     correct blacks, and with correct density.
+
+   * The Epson Stylus Photo 950/960, 2100/2200, PM-950C, and PM-970C
+     had a minor color registration bug in 6 and 7 color modes; in
+     particular, the light inks were offset by 1/360" from the dark
+     inks.  The change is probably unnoticeable in continuous-tone
+     images, but may have been visible when printing solid colors with
+     sharply-defined edges.
+
+   * Internally, there have been many changes to the data organization
+     in the driver, which will permit adding additional ink sets, such
+     as matte black ink for models using UltraChrome inks.
+
+2) A few compilation problems have been fixed.
+
+3) A new modular interface to the color code has been created.  This
+   will permit addition of color management later.
+
+4) The user interface now enables and disables options based on other
+   option settings more accurately.
+
+
 Gimp-Print 4.3.15 contains the following major changes over Gimp-Print
 4.3.14:
 

@@ -37,7 +37,7 @@ dnl
 pushdef([GIMPPRINT_NAME],              [gimp-print])
 pushdef([GIMPPRINT_MAJOR_VERSION],     [4])
 pushdef([GIMPPRINT_MINOR_VERSION],     [3])
-pushdef([GIMPPRINT_MICRO_VERSION],     [15])
+pushdef([GIMPPRINT_MICRO_VERSION],     [16])
 pushdef([GIMPPRINT_EXTRA_VERSION],     [])
 pushdef([GIMPPRINT_CURRENT_INTERFACE], [1])
 pushdef([GIMPPRINT_INTERFACE_AGE],     [0])
