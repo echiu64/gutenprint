@@ -46,7 +46,6 @@
 /*
  * Constants for GUI...
  */
-#define PREVIEW_PPI        10  /* Pixels in preview per inch on paper */
 #define PREVIEW_SIZE_VERT  240 /* Assuming max media size of 24" A2 */
 #define PREVIEW_SIZE_HORIZ 240 /* Assuming max media size of 24" A2 */
 

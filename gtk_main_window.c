@@ -30,8 +30,6 @@
  */
 
 #include "print_gimp.h"
-#undef PREVIEW_PPI
-#define PREVIEW_PPI preview_ppi
 #define MAX_PREVIEW_PPI        (20)
 
 #include "print-intl.h"
@@ -2179,23 +2177,23 @@ static void gtk_preview_update(void)
   if (preview_ppi > MAX_PREVIEW_PPI)
     preview_ppi = MAX_PREVIEW_PPI;
 
-  paper_left = (PREVIEW_SIZE_HORIZ - PREVIEW_PPI * paper_width / 72) / 2;
-  paper_top  = (PREVIEW_SIZE_VERT - PREVIEW_PPI * paper_height / 72) / 2;
-  printable_left = paper_left +  PREVIEW_PPI * left / 72;
-  printable_top  = paper_top + PREVIEW_PPI * top / 72 ;
+  paper_left = (PREVIEW_SIZE_HORIZ - preview_ppi * paper_width / 72) / 2;
+  paper_top  = (PREVIEW_SIZE_VERT - preview_ppi * paper_height / 72) / 2;
+  printable_left = paper_left +  preview_ppi * left / 72;
+  printable_top  = paper_top + preview_ppi * top / 72 ;
 
   /* draw paper frame */
 
   gdk_draw_rectangle(preview->widget.window, gc, 0,
 		     paper_left, paper_top,
-                     PREVIEW_PPI * paper_width / 72,
-                     PREVIEW_PPI * paper_height / 72);
+                     preview_ppi * paper_width / 72,
+                     preview_ppi * paper_height / 72);
 
   /* draw printable frame */
   gdk_draw_rectangle(preview->widget.window, gc, 0,
                      printable_left, printable_top,
-                     PREVIEW_PPI * printable_width / 72,
-                     PREVIEW_PPI * printable_height / 72);
+                     preview_ppi * printable_width / 72,
+                     preview_ppi * printable_height / 72);
 
 
   if (vars.left < 0)		/* centre */
@@ -2251,26 +2249,26 @@ static void gtk_preview_update(void)
 
   /* draw image  */
   gdk_draw_rectangle(preview->widget.window, gc, 1,
-                     1 + printable_left + PREVIEW_PPI * vars.left / 72,
-                     1 + printable_top + PREVIEW_PPI * vars.top / 72,
-                     PREVIEW_PPI * print_width / 72,
-                     PREVIEW_PPI * print_height / 72);
+                     1 + printable_left + preview_ppi * vars.left / 72,
+                     1 + printable_top + preview_ppi * vars.top / 72,
+                     preview_ppi * print_width / 72,
+                     preview_ppi * print_height / 72);
 
   /* draw orientation arrow pointing to top-of-paper */
   {
     int ox, oy, u;
-    u = PREVIEW_PPI/2;
-    ox = paper_left + PREVIEW_PPI * paper_width / 72 / 2;
-    oy = paper_top + PREVIEW_PPI * paper_height / 72 / 2;
+    u = preview_ppi/2;
+    ox = paper_left + preview_ppi * paper_width / 72 / 2;
+    oy = paper_top + preview_ppi * paper_height / 72 / 2;
     if (orient == ORIENT_LANDSCAPE) {
-      ox += PREVIEW_PPI * paper_width / 72 / 4;
-      if (ox > paper_left + PREVIEW_PPI * paper_width / 72 - u)
-        ox = paper_left + PREVIEW_PPI * paper_width / 72 - u;
+      ox += preview_ppi * paper_width / 72 / 4;
+      if (ox > paper_left + preview_ppi * paper_width / 72 - u)
+        ox = paper_left + preview_ppi * paper_width / 72 - u;
       gdk_draw_line (preview->widget.window, gcinv, ox + u, oy, ox, oy - u);
       gdk_draw_line (preview->widget.window, gcinv, ox + u, oy, ox, oy + u);
       gdk_draw_line (preview->widget.window, gcinv, ox + u, oy, ox - u, oy);
     } else {
-      oy -= PREVIEW_PPI * paper_height / 72 / 4;
+      oy -= preview_ppi * paper_height / 72 / 4;
       if (oy < paper_top + u)
         oy = paper_top + u;
       gdk_draw_line (preview->widget.window, gcinv, ox, oy - u, ox - u, oy);
@@ -2312,8 +2310,8 @@ static void gtk_preview_motion_callback(GtkWidget      *w,
   }
 
   if (mouse_button == 1) {
-    vars.left += 72 * (event->x - mouse_x) / PREVIEW_PPI;
-    vars.top  += 72 * (event->y - mouse_y) / PREVIEW_PPI;
+    vars.left += 72 * (event->x - mouse_x) / preview_ppi;
+    vars.top  += 72 * (event->y - mouse_y) / preview_ppi;
   } else {
     vars.left += event->x - mouse_x;
     vars.top  += event->y - mouse_y;

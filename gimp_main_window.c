@@ -25,6 +25,7 @@
 #include "print_gimp.h"
 
 #ifndef GIMP_1_0
+#define MAX_PREVIEW_PPI        (20)
 
 #include "print-intl.h"
 
@@ -61,8 +62,7 @@ static GtkWidget *bottom_entry;
 static GtkWidget *height_entry;
 static GtkWidget *unit_inch;
 static GtkWidget *unit_cm;
-static GtkWidget *media_size;             /* Media size option button */
-static GtkWidget *media_size_menu=NULL;   /* Media size menu */
+static GtkWidget* media_size_combo=NULL;  /* Media size combo box */
 static GtkWidget *media_type;             /* Media type option button */
 static GtkWidget *media_type_menu=NULL;   /* Media type menu */
 static GtkWidget *media_source;           /* Media source option button */
@@ -92,8 +92,6 @@ static GtkWidget *adjust_color_button;
 
 static GtkObject *scaling_adjustment;	/* Adjustment object for scaling */
 
-static gint    num_media_sizes = 0;	/* Number of media sizes */
-static gchar **media_sizes;		/* Media size strings */
 static gint    num_media_types = 0;	/* Number of media types */
 static gchar **media_types;		/* Media type strings */
 static gint    num_media_sources = 0;	/* Number of media sources */
@@ -106,7 +104,8 @@ static gchar **resolutions;		/* Resolution strings */
 
 static GtkDrawingArea *preview;		/* Preview drawing area widget */
 static gint            mouse_x;		/* Last mouse X */
-static gint            mouse_y;		/* Last mouse Y */
+static gint            mouse_y,		/* Last mouse Y */
+  		       mouse_button;	/* Button being dragged with */
 
 static gint            printable_left;	/* Left pixel column of page */
 static gint            printable_top;	/* Top pixel row of page */
@@ -182,6 +181,8 @@ static void gimp_image_type_callback         (GtkWidget      *widget,
 extern void gimp_create_color_adjust_window  (void);
 extern void gimp_build_dither_menu    (void);
 
+static int preview_ppi = 10;
+
 /*
  *  gimp_create_main_window()
  */
@@ -204,6 +205,7 @@ gimp_create_main_window (void)
   GtkWidget* printer_crawler;      /* Scrolled Window for menu */
   GtkWidget *item;
   GtkWidget *option;
+  GtkWidget* combo;      /* Combo box */
   GtkWidget *box;
   GSList    *group;
 #ifdef DO_LINEAR
@@ -424,10 +426,10 @@ gimp_create_main_window (void)
    * Media size option menu...
    */
 
-  media_size = option = gtk_option_menu_new ();
+  media_size_combo = combo = gtk_combo_new();
   gimp_table_attach_aligned (GTK_TABLE (table), 0, 1,
                              _("Media Size:"), 1.0, 0.5,
-                             option, 1, TRUE);
+                             combo, 1, TRUE);
 
   /*
    * Media type option menu...
@@ -1000,6 +1002,57 @@ gimp_plist_build_menu (GtkWidget      *option,
     }
 }
 
+/****************************************************************************
+ *
+ * gimp_plist_build_combo
+ *
+ ****************************************************************************/
+static void 
+gimp_plist_build_combo(GtkWidget*  combo,     /* I - Combo widget */
+		       int         num_items, /* I - Number of items */
+		       char**      items,     /* I - Menu items */
+		       char*       cur_item,  /* I - Current item */
+		       void (*callback)(GtkWidget *, gint)) /* I - Callback */
+{
+  int		i;	/* Looping var */
+  GList		*list = 0;
+  GtkEntry	*entry = GTK_ENTRY(GTK_COMBO(combo)->entry);
+
+
+  if (num_items == 0)
+    {
+      list = g_list_append(list, _("Standard"));
+      gtk_combo_set_popdown_strings(GTK_COMBO(combo), list);
+      g_list_free(list);
+      gtk_widget_set_sensitive(combo, FALSE);
+      gtk_entry_set_editable(entry, FALSE);
+      gtk_widget_show(combo);
+      return;
+    }
+
+  for (i = 0; i < num_items; i ++)
+      list = g_list_append(list, gettext(items[i]));
+
+  gtk_combo_set_popdown_strings(GTK_COMBO(combo), list);
+
+  gtk_signal_connect(GTK_OBJECT(entry), "changed",
+		     (GtkSignalFunc)callback, 0);
+
+  gtk_entry_set_text(entry, cur_item);
+
+  for (i = 0; i < num_items; i ++)
+      if (strcmp(items[i], cur_item) == 0)
+	  break;
+
+  if (i == num_items)
+      gtk_entry_set_text(entry, gettext(items[0]));
+
+  gtk_combo_set_use_arrows(GTK_COMBO(combo), TRUE);
+  gtk_widget_set_sensitive(combo, TRUE);
+  gtk_entry_set_editable(entry, FALSE);
+  gtk_widget_show(combo);
+}
+
 /*
  *  gimp_do_misc_updates() - Build an option menu for the given parameters...
  */
@@ -1181,6 +1234,8 @@ gimp_plist_callback (GtkWidget *widget,
 {
   gint     i;
   plist_t *p;
+  int		num_media_sizes;
+  char		**media_sizes;
 
   plist_current = (gint) data;
   p             = plist + plist_current;
@@ -1209,24 +1264,20 @@ gimp_plist_callback (GtkWidget *widget,
 
   gimp_build_dither_menu();
 
-  if (num_media_sizes > 0)
-    {
-      for (i = 0; i < num_media_sizes; i ++)
-	free (media_sizes[i]);
-      free (media_sizes);
-  }
-
   media_sizes = (*(current_printer->parameters))(current_printer->model,
 						 p->v.ppd_file,
 						 "PageSize", &num_media_sizes);
   if (vars.media_size[0] == '\0')
     strcpy (vars.media_size, media_sizes[0]);
-  gimp_plist_build_menu (media_size,
-			 &media_size_menu,
+  gimp_plist_build_combo(media_size_combo,
 			 num_media_sizes,
 			 media_sizes,
 			 p->v.media_size,
 			 gimp_media_size_callback);
+
+  for (i = 0; i < num_media_sizes; i ++)
+    free(media_sizes[i]);
+  free(media_sizes);
 
   if (num_media_types > 0)
     {
@@ -1323,8 +1374,11 @@ static void
 gimp_media_size_callback(GtkWidget *widget,
 			 gpointer   data)
 {
-  strcpy (vars.media_size, media_sizes[(gint) data]);
-  strcpy (plist[plist_current].v.media_size, media_sizes[(gint) data]);
+  const char *new_media_size;
+  new_media_size
+    = gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(media_size_combo)->entry));
+  strcpy(vars.media_size, new_media_size);
+  strcpy(plist[plist_current].v.media_size, new_media_size);
   vars.left = -1;
   vars.top  = -1;
   plist[plist_current].v.left = vars.left;
@@ -1739,22 +1793,28 @@ gimp_preview_update (void)
     }
   }
 
-  paper_left = (PREVIEW_SIZE_HORIZ - PREVIEW_PPI * paper_width / 72) / 2;
-  paper_top  = (PREVIEW_SIZE_VERT - PREVIEW_PPI * paper_height / 72) / 2;
-  printable_left = paper_left +  PREVIEW_PPI * left / 72;
-  printable_top  = paper_top + PREVIEW_PPI * top / 72 ;
+  preview_ppi = PREVIEW_SIZE_HORIZ * 72 / paper_width;
+  if (PREVIEW_SIZE_VERT * 72 / paper_height < preview_ppi)
+    preview_ppi = PREVIEW_SIZE_VERT * 72 / paper_height;
+  if (preview_ppi > MAX_PREVIEW_PPI)
+    preview_ppi = MAX_PREVIEW_PPI;
+
+  paper_left = (PREVIEW_SIZE_HORIZ - preview_ppi * paper_width / 72) / 2;
+  paper_top  = (PREVIEW_SIZE_VERT - preview_ppi * paper_height / 72) / 2;
+  printable_left = paper_left +  preview_ppi * left / 72;
+  printable_top  = paper_top + preview_ppi * top / 72 ;
 
   /* draw paper frame */
   gdk_draw_rectangle(preview->widget.window, gc, 0,
  		     paper_left, paper_top,
-		     PREVIEW_PPI * paper_width / 72,
-		     PREVIEW_PPI * paper_height / 72);
+		     preview_ppi * paper_width / 72,
+		     preview_ppi * paper_height / 72);
 
   /* draw printable frame */
   gdk_draw_rectangle(preview->widget.window, gc, 0,
                      printable_left, printable_top,
-                     PREVIEW_PPI * printable_width / 72,
-                     PREVIEW_PPI * printable_height / 72);
+                     preview_ppi * printable_width / 72,
+                     preview_ppi * printable_height / 72);
 
   if (vars.left < 0)
     vars.left = (paper_width - print_width) / 2;
@@ -1810,33 +1870,35 @@ gimp_preview_update (void)
 
   /* draw image */
   gdk_draw_rectangle(preview->widget.window, gc, 1,
-		     1 + printable_left + PREVIEW_PPI * vars.left / 72,
-		     1 + printable_top + PREVIEW_PPI * vars.top / 72,
-                     PREVIEW_PPI * print_width / 72,
-                     PREVIEW_PPI * print_height / 72);
+		     1 + printable_left + preview_ppi * vars.left / 72,
+		     1 + printable_top + preview_ppi * vars.top / 72,
+                     preview_ppi * print_width / 72,
+                     preview_ppi * print_height / 72);
 
   /* draw orientation arrow pointing to top-of-paper */
   {
     int ox, oy, u;
-    if (paper_width < paper_height)
-      u = PREVIEW_PPI * paper_width / 72 / 4;
+    u = preview_ppi/2;
+    ox = paper_left + preview_ppi * paper_width / 72 / 2;
+    oy = paper_top + preview_ppi * paper_height / 72 / 2;
+    if (orient == ORIENT_LANDSCAPE)
+      {
+	ox += preview_ppi * paper_width / 72 / 4;
+	if (ox > paper_left + preview_ppi * paper_width / 72 - u)
+	  ox = paper_left + preview_ppi * paper_width / 72 - u;
+	gdk_draw_line (preview->widget.window, gcinv, ox + u, oy, ox, oy - u);
+	gdk_draw_line (preview->widget.window, gcinv, ox + u, oy, ox, oy + u);
+	gdk_draw_line (preview->widget.window, gcinv, ox + u, oy, ox - u, oy);
+      }
     else
-      u = PREVIEW_PPI * paper_height / 72 / 4;
-    ox = paper_left + PREVIEW_PPI * paper_width / 72;
-    oy = paper_top;
-    if (orient == ORIENT_LANDSCAPE) {
-      ox -= u;
-      oy += PREVIEW_PPI * paper_height / 72 / 2;
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox-u, oy-u);
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox-u, oy+u);
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox-2*u, oy);
-    } else {
-      ox -= PREVIEW_PPI * paper_width / 72 / 2;
-      oy += u;
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox-u, oy+u);
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox+u, oy+u);
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox, oy+2*u);
-    }
+      {
+	oy -= preview_ppi * paper_height / 72 / 4;
+	if (oy < paper_top + u)
+	  oy = paper_top + u;
+	gdk_draw_line (preview->widget.window, gcinv, ox, oy - u, ox - u, oy);
+	gdk_draw_line (preview->widget.window, gcinv, ox, oy - u, ox + u, oy);
+	gdk_draw_line (preview->widget.window, gcinv, ox, oy - u, ox, oy + u);
+      }
   }
 
   gdk_flush ();
@@ -1852,6 +1914,7 @@ gimp_preview_button_callback (GtkWidget      *widget,
 {
   mouse_x = event->x;
   mouse_y = event->y;
+  mouse_button = event->button;
 }
 
 /*
@@ -1868,8 +1931,16 @@ gimp_preview_motion_callback (GtkWidget      *widget,
       vars.top  = 72 * (printable_height - print_height) / 20;
     }
 
-  vars.left += 72 * (event->x - mouse_x) / PREVIEW_PPI;
-  vars.top  += 72 * (event->y - mouse_y) / PREVIEW_PPI;
+  if (mouse_button == 1)
+    {
+      vars.left += 72 * (event->x - mouse_x) / preview_ppi;
+      vars.top  += 72 * (event->y - mouse_y) / preview_ppi;
+    }
+  else
+    {
+      vars.left += event->x - mouse_x;
+      vars.top  += event->y - mouse_y;
+    }
 
   if (vars.left < 0)
     vars.left = 0;
