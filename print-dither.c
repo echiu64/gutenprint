@@ -1518,91 +1518,61 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
       if (black != NULL)
 	{
+	  ub = d->k_upper;    /* Upper bound */
+	  lb = d->k_lower;    /* Lower bound */
+	  
 	  /*
-	   * Since we're printing black, adjust the black level based upon
-	   * the amount of color in the pixel (colorful pixels get less
-	   * black)...
-	   */
-	  int xdiff = (iabs(c - m) + iabs(c - y) + iabs(m - y)) / 3;
-
-	  diff = 65536 - xdiff;
-	  diff = ((long long) diff * (long long) diff * (long long) diff)
-	    >> 32;
-	  diff--;
-	  if (diff < 0)
-	    diff = 0;
-	  k = (int) (((unsigned) diff * (unsigned) k) >> 16);
-	  ok = k;
-	  ak = k;
-
-	  /*
-	   * kdarkness is an artificially computed darkness value for deciding
-	   * how much black vs. CMY to use for the k component.  This is
-	   * empirically determined.
+	   * Calculate total ink amount over that of 100% of a single color.
+	   * If there is a lot of ink, black gets added sooner. Saves ink
+	   * and with a lot of ink the black doesn't show as speckles.
+	   * Colors have equal weight now so it is primarily preventing too
+	   * much ink from being used.
 	   *
-	   * Above k_upper, we print black components with all black ink.
-	   * Below k_lower, we print black components with all color inks.
-	   * In between we scale.  We actually choose, for each point,
-	   * whether we're going to print black or color.
+	   * k already contains the grey contained in CMY.
 	   */
-#if 0
-	  tk = (((oc * d->c_darkness) + (om * d->m_darkness) +
-		 (oy * d->y_darkness)) >> 6);
-#else
-	  tk = k;
-#endif
-	  kdarkness = tk;
-	  if (kdarkness < d->k_upper) /* Possibility of printing color */
+
+	  kdarkness = ((c + m + y) - 65535 ) / 2;
+
+	  if (kdarkness > k)
+	    ok = kdarkness;
+	  else
+	    ok = k;
+	    
+	   /* 
+	    * ok will be our index in determining how much of the black
+	    * available will be printed as CMY vs K. First we calculate where
+	    * it lies in the range between upper and lower bounds. Using 16K
+	    * as scaling to avoind those irritating overflows.
+	    */
+	    
+	  bk = (ok - lb) * 16384 / (ub - lb);
+	  
+	  if ( bk < 0)
+	    bk = 0;
+	  if ( bk > 16384 )
+	    bk = 16384;
+	    
+	   /*
+	    * bk now contains the scale factor.There is a possibility to
+	    * replace excess color (say in a full C + M color) by some
+	    * black by adding something to k here. Could be good for
+	    * plain paper printing and low values of black bounds.
+	    */
+	    
+	  k = bk * k / 16384;
+	  bk = k;
+	 
+	  if (k > 0)
 	    {
-	      int rb;
-	      ub = d->k_upper;	/* Upper bound */
-	      lb = d->k_lower;	/* Lower bound */
-	      rb = ub - lb;	/* Range */
-	      if (kdarkness <= lb) /* All color */
-		{
-		  bk = 0;
-		  ub = 0;
-		  lb = 1;
-		}
-	      else if (kdarkness < ub) /* Probabilistic */
-		{
-		  /*
-		   * Pick a range point, depending upon which dither
-		   * method we're using
-		   */
-#if 0
-		  if ((d->dither_type & ~D_ADAPTIVE_BASE) == D_FLOYD)
-		    ditherbit = ((xrand() & 0xffff000) >> 12);
-		  else
-		    ditherbit = (DITHERPOINT(d, row, x, 1) ^
-				 (DITHERPOINT(d, row, x, 3) >> 2));
-		  ditherbit = ditherbit * rb / 65536;
-		  if (rb == 0 || (ditherbit < (kdarkness - lb)))
-		    bk = ok;
-		  else
-		    bk = 0;
-#else
-		  bk = (ok - lb) * (ok - lb) / (ub - lb);
-#endif
-		}
-	      else		/* All black */
-		{
-		  ub = 1;
-		  lb = 1;
-		  bk = ok;
-		}
-	    }
-	  else			/* All black */
-	    {
-	      bk = ok;
-	    }
-	  ck = ok - bk;
-    
-	  if (bk > 0)
-	    {
-	      c -= (d->k_clevel * bk) >> 6;
-	      m -= (d->k_mlevel * bk) >> 6;
-	      y -= (d->k_ylevel * bk) >> 6;
+	    /*
+	     * Because black is always fairly neutral, we do not have to
+	     * calculate the amount to take out of CMY. The result will be
+	     * a bit dark but that is OK. If things are okay CMY cannot go
+	     * negative here - unless extra K is added in the previous block
+	     */  
+	      c -= k;
+	      m -= k;
+	      y -= k;
 	      if (c < 0)
 		c = 0;
 	      if (m < 0)
