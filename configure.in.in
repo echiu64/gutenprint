@@ -23,7 +23,7 @@ AM_INIT_AUTOMAKE(gimp-print,4.1.4)
 AM_CONFIG_HEADER(config.h)
 
 dnl Available languages (translations)
-ALL_LINGUAS=""
+ALL_LINGUAS="en_GB en_TEST"
 
 dnl Compiler options and definitions
 CFLAGS="${CFLAGS:=}"
