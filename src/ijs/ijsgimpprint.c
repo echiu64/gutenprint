@@ -49,6 +49,17 @@
  * An interface like gdk_draw_rgb_image() would have been easier.
  */
 
+#define BUF_SIZE 4096
+
+typedef struct _GimpParamList GimpParamList;
+
+struct _GimpParamList {
+  GimpParamList *next;
+  char *key;
+  char *value;
+  int value_size;
+};
+
 typedef struct _IMAGE
 {
   IjsServerCtx *ctx;
@@ -65,6 +76,7 @@ typedef struct _IMAGE
   char *row_buf;	/* buffer for raster */
   int total_bytes;	/* total size of raster */
   int bytes_left;	/* bytes remaining to be read */
+  GimpParamList *params;
 } IMAGE;
 
 static const char DeviceGray[] = "DeviceGray";
@@ -86,28 +98,33 @@ image_init(IMAGE *img, IjsPageHeader *ph)
   img->row_buf = (char *)malloc(img->row_width);
 
   if ((img->bps == 8) && (img->n_chan == 1) &&
-      (strcmp(ph->cs, DeviceGray) == 0))
+      (strncmp(ph->cs, DeviceGray, strlen(DeviceGray)) == 0))
     {
       /* 8-bit greyscale */
     }
   else if ((img->bps == 8) && (img->n_chan == 3) &&
-	   (strcmp(ph->cs, DeviceRGB) == 0))
+	   (strncmp(ph->cs, DeviceRGB, strlen(DeviceRGB)) == 0))
     {
       /* 24-bit colour */
     }
   else if ((img->bps == 8) && (img->n_chan == 4) && 
-	   (strcmp(ph->cs, DeviceCMYK) == 0))
+	   (strncmp(ph->cs, DeviceCMYK, strlen(DeviceCMYK)) == 0))
     {
       /* 32-bit CMYK colour */
     }
   else
     {
+      fprintf(stderr, "Bad cs, bps %d chan %d space %s\n",
+	      img->bps, img->n_chan, ph->cs);
       /* unsupported */
       return -1;
     }
 
   if (img->row_buf == NULL)
-    return -1;
+    {
+      fprintf(stderr, "No row buffer\n");
+      return -1;
+    }
 
   return 0;
 }
@@ -150,6 +167,215 @@ get_int(const char *str, int *pval, int min_value, int max_value)
   return -1;
 }
 
+/* A C implementation of /^(\d\.+\-eE)+x(\d\.+\-eE)+$/ */
+static int
+gimp_parse_wxh (const char *val, int size,
+		   double *pw, double *ph)
+{
+  char buf[256];
+  char *tail;
+  int i;
+
+  for (i = 0; i < size; i++)
+    if (val[i] == 'x')
+      break;
+
+  if (i + 1 >= size)
+    return IJS_ESYNTAX;
+
+  if (i >= sizeof(buf))
+    return IJS_EBUF;
+
+  memcpy (buf, val, i);
+  buf[i] = 0;
+  *pw = strtod (buf, &tail);
+  if (tail == buf)
+    return IJS_ESYNTAX;
+
+  if (size - i > sizeof(buf))
+    return IJS_EBUF;
+
+  memcpy (buf, val + i + 1, size - i - 1);
+  buf[size - i - 1] = 0;
+  *ph = strtod (buf, &tail);
+  if (tail == buf)
+    return IJS_ESYNTAX;
+
+  return 0;
+}
+
+/**
+ * gimp_find_key: Search parameter list for key.
+ *
+ * @key: key to look up
+ *
+ * Return value: GimpParamList entry matching @key, or NULL.
+ **/
+static GimpParamList *
+gimp_find_key (GimpParamList *pl, const char *key)
+{
+  GimpParamList *curs;
+
+  for (curs = pl; curs != NULL; curs = curs->next)
+    {
+      if (!strcmp (curs->key, key))
+	return curs;
+    }
+  return NULL;
+}
+
+static int
+gimp_status_cb (void *status_cb_data,
+		IjsServerCtx *ctx,
+		IjsJobId job_id)
+{
+  return 0;
+}
+
+static int
+gimp_list_cb (void *list_cb_data,
+	      IjsServerCtx *ctx,
+	      IjsJobId job_id,
+	      char *val_buf,
+	      int val_size)
+{
+  const char *param_list = "OutputFile,DeviceManufacturer,DeviceModel,Quality,MediaName,MediaType,MediaSource,InkType,Dither,OutputType,ImageType,Brightness,Gamma,Contrast,Cyan,Magenta,Yellow,Saturation,Density,PrintableArea,PrintableTopLeft,TopLeft,Dpi";
+  int size = strlen (param_list);
+
+  fprintf (stderr, "gimp_list_cb\n");
+
+  if (size > val_size)
+    return IJS_EBUF;
+
+  memcpy (val_buf, param_list, size);
+  return size;
+}
+
+static int
+gimp_enum_cb (void *enum_cb_data,
+	      IjsServerCtx *ctx,
+	      IjsJobId job_id,
+	      const char *key,
+	      char *val_buf,
+	      int val_size)
+{
+  const char *val = NULL;
+  if (!strcmp (key, "ColorSpace"))
+    val = "DeviceRGB,DeviceGray,DeviceCMYK";
+  else if (!strcmp (key, "DeviceManufacturer"))
+    val = "Gimp-Print";
+  else if (!strcmp (key, "DeviceModel"))
+    val = "gimp-print";
+  else if (!strcmp (key, "PageImageFormat"))
+    val = "Raster";
+
+  if (val == NULL)
+    return IJS_EUNKPARAM;
+  else
+    {
+      int size = strlen (val);
+
+      if (size > val_size)
+	return IJS_EBUF;
+      memcpy (val_buf, val, size);
+      return size;
+    }
+}
+
+static int
+gimp_get_cb (void *get_cb_data,
+	     IjsServerCtx *ctx,
+	     IjsJobId job_id,
+	     const char *key,
+	     char *val_buf,
+	     int val_size)
+{
+  IMAGE *img = (IMAGE *)get_cb_data;
+  stp_vars_t v = img->v;
+  stp_printer_t printer = stp_get_printer_by_driver(stp_get_driver(v));
+  GimpParamList *pl = img->params;
+  GimpParamList *curs;
+  const char *val;
+  char buf[256];
+  int code;
+
+  fprintf (stderr, "gimp_get_cb: %s\n", key);
+  if (!printer)
+    {
+      if (strlen(stp_get_driver(v)) == 0)
+	fprintf(stderr, "Printer must be specified with -sModel\n");
+      else
+	fprintf(stderr, "Printer %s is not a known model\n",
+		stp_get_driver(v));
+      return IJS_EUNKPARAM;
+    }
+  curs = gimp_find_key (pl, key);
+  if (curs != NULL)
+    {
+      if (curs->value_size > val_size)
+	return IJS_EBUF;
+      memcpy (val_buf, curs->value, curs->value_size);
+      return curs->value_size;
+    }
+
+  if (!strcmp(key, "PrintableArea"))
+    {
+      int l, r, b, t;
+      int h, w;
+      (*stp_printer_get_printfuncs(printer)->imageable_area)
+	(printer, v, &l, &r, &b, &t);
+      h = t - b;
+      w = r - l;
+      sprintf(buf, "%gx%g", (double) w / 72.0, (double) h / 72.0);
+      fprintf(stderr, "PrintableArea %d %d %s\n", h, w, buf);
+      val = buf;
+    }
+  if (!strcmp(key, "Dpi"))
+    {
+      int x, y;
+      (*stp_printer_get_printfuncs(printer)->describe_resolution)
+	(printer, stp_get_resolution(v), &x, &y);
+      sprintf(buf, "%d", x);
+      fprintf(stderr, "Dpi %d %d (%d) %s\n", x, y, x, buf);
+      stp_set_scaling(v, -x);
+      val = buf;
+    }
+
+  if (!strcmp(key, "PrintableTopLeft"))
+    {
+      int l, r, b, t;
+      int h, w;
+      double pa[2];
+      (*stp_printer_get_printfuncs(printer)->media_size)
+	(printer, v, &w, &h);
+      (*stp_printer_get_printfuncs(printer)->imageable_area)
+	(printer, v, &l, &r, &b, &t);
+      t = h - t;
+      sprintf(buf, "%gx%g", (double) l / 72.0, (double) t / 72.0);
+      fprintf(stderr, "PrintableTopLeft %d %d %s\n", t, l, buf);
+      val = buf;
+    }
+
+  if (!strcmp (key, "DeviceManufacturer"))
+    val = "Gimp-Print";
+  else if (!strcmp (key, "DeviceModel"))
+    val = stp_get_driver(img->v);
+  else if (!strcmp (key, "PageImageFormat"))
+    val = "Raster";
+
+  if (val == NULL)
+    return IJS_EUNKPARAM;
+  else
+    {
+      int size = strlen (val);
+
+      if (size > val_size)
+	return IJS_EBUF;
+      memcpy (val_buf, val, size);
+      return size;
+    }
+}
+
 static int
 gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	     const char *key, const char *value, int value_size)
@@ -171,14 +397,53 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 
   if (strcmp(key, "OutputFile") == 0)
     strncpy(img->filename, vbuf, sizeof(img->filename)-1);
-  else if (strcmp(key, "Model") == 0)
-    stp_set_driver(img->v, vbuf);
+  else if (strcmp(key, "DeviceManufacturer") == 0)
+    ;				/* We don't care who makes it */
+  else if (strcmp(key, "DeviceModel") == 0)
+    {
+      stp_printer_t printer = stp_get_printer_by_driver(vbuf);
+      stp_set_driver(img->v, vbuf);
+      if (printer)
+	{
+	  stp_set_printer_defaults(img->v, printer, NULL);
+	  if (strlen(stp_get_resolution(img->v)) == 0)
+	    stp_set_resolution(img->v,
+			       ((*stp_printer_get_printfuncs(printer)->default_parameters)
+				(printer, NULL, "Resolution")));
+	  if (strlen(stp_get_dither_algorithm(img->v)) == 0)
+	    stp_set_dither_algorithm(img->v, stp_default_dither_algorithm());
+	}
+      else
+	code = IJS_ERANGE;
+    }
   else if (strcmp(key, "PPDFile") == 0)
     stp_set_ppd_file(img->v, vbuf);
   else if (strcmp(key, "Quality") == 0)
     stp_set_resolution(img->v, vbuf);
   else if (strcmp(key, "MediaName") == 0)
     stp_set_media_size(img->v, vbuf);
+  else if (strcmp(key, "TopLeft") == 0)
+    {
+      double w, h;
+      code = gimp_parse_wxh(vbuf, strlen(vbuf), &w, &h);
+      if (code == 0)
+	{
+	  fprintf(stderr, "left top %f %f %s\n", w * 72, h * 72, vbuf);
+	  stp_set_left(img->v, w * 72);
+	  stp_set_top(img->v, h * 72);
+	}
+    }      
+  else if (strcmp(key, "PaperSize") == 0)
+    {
+      double w, h;
+      code = gimp_parse_wxh(vbuf, strlen(vbuf), &w, &h);
+      if (code == 0)
+	{
+	  fprintf(stderr, "paper size %f %f %s\n", w * 72, h * 72, vbuf);
+	  stp_set_page_width(img->v, w * 72);
+	  stp_set_page_height(img->v, h * 72);
+	}
+    }
   else if (strcmp(key, "MediaType") == 0)
     stp_set_media_type(img->v, vbuf);
   else if (strcmp(key, "MediaSource") == 0)
@@ -258,7 +523,31 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	stp_set_density(img->v, z);
     }
   else
-    code = -1;
+    {
+      fprintf(stderr, "Unknown key %s\n", key);
+      code = -1;
+    }
+
+  if (code == 0)
+    {
+      GimpParamList *pl = gimp_find_key (img->params, key);
+
+      if (pl == NULL)
+	{
+	  pl = (GimpParamList *)malloc (sizeof (GimpParamList));
+	  pl->next = img->params;
+	  pl->key = malloc (strlen(key) + 1);
+	  memcpy (pl->key, key, strlen(key) + 1);
+	  img->params = pl;
+	}
+      else
+	{
+	  free (pl->value);
+	}
+      pl->value = malloc (value_size);
+      memcpy (pl->value, value, value_size);
+      pl->value_size = value_size;
+    }
 
   return code;
 }
@@ -447,6 +736,10 @@ main (int argc, char **argv)
   si.progress_conclude = gimp_image_progress_conclude;
   si.rep = &img;
 
+  ijs_server_install_status_cb (img.ctx, gimp_status_cb, &img);
+  ijs_server_install_list_cb (img.ctx, gimp_list_cb, &img);
+  ijs_server_install_enum_cb (img.ctx, gimp_enum_cb, &img);
+  ijs_server_install_get_cb (img.ctx, gimp_get_cb, &img);
   ijs_server_install_set_cb(img.ctx, gimp_set_cb, &img);
 
   do
@@ -457,18 +750,30 @@ main (int argc, char **argv)
 	       ph.width, ph.height);
 
       status = image_init(&img, &ph);
-      if (status) break;
+      if (status)
+	{
+	  fprintf(stderr, "image_init failed %d\n", status);
+	  break;
+	}
 
       if (page == 0)
 	{
 	  if (strlen(img.filename) == 0)
 	    status = -1;
-	  if (status) break;
-	
+	  if (status) 
+	    {
+	      fprintf(stderr, "img.filename failed %d\n", status);
+	      break;
+	    }
+
 	  /* FIX - also support popen */
 	  if ((f = fopen(img.filename, "wb")) == (FILE *)NULL)
 	    status = -1;
-	  if (status) break;
+	  if (status) 
+	    {
+	      fprintf(stderr, "fopen img.filename failed %d\n", status);
+	      break;
+	    }
 
 	  /* Printer data to file */
 	  stp_set_outdata(img.v, f);
@@ -498,8 +803,6 @@ main (int argc, char **argv)
       stp_set_app_gamma(img.v, (float)1.7);
       stp_set_cmap(img.v, NULL);
       stp_set_scaling(img.v, (float)-img.xres); /* resolution of image */
-      stp_set_page_width(img.v, img.width * 72 / img.xres);
-      stp_set_page_height(img.v, img.height * 72 / img.yres);
       if (stp_printer_get_printfuncs(printer)->verify(printer, img.v))
 	{
 	  stp_printer_get_printfuncs(printer)->print(printer, &si, img.v);
@@ -508,13 +811,17 @@ main (int argc, char **argv)
 	{
 	  fprintf(stderr, "Couldn't verify gimp-print printer\n");
 	  status = -1;
+	  break;
 	}
 
       while (img.bytes_left)
 	{
 	  status = image_next_row(&img);
 	  if (status)
-	    break;
+	    {
+	      fprintf(stderr, "next row failed at %d\n", img.bytes_left);
+	      break;
+	    }
 	}
 
       image_finish(&img);
