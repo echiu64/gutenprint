@@ -245,6 +245,15 @@ typedef enum
   STP_CURVE_WRAP_AROUND		/* curve wraps to its starting point */
 } stp_curve_wrap_mode_t;
 
+typedef enum
+{
+  STP_CURVE_COMPOSE_ADD,
+  STP_CURVE_COMPOSE_SUBTRACT,
+  STP_CURVE_COMPOSE_MULTIPLY,
+  STP_CURVE_COMPOSE_DIVIDE,
+  STP_CURVE_COMPOSE_EXPONENTIATE
+} stp_curve_compose_t;
+
 /*
  * Representation of a choice list of strings.  The choices themselves
  * consist of a key and a human-readable name.  The list object is
@@ -534,8 +543,9 @@ extern stp_curve_type_t stp_curve_get_interpolation_type(const stp_curve_t curve
 /*
  * Set all data points of the curve.  If any of the data points fall outside
  * the bounds, the operation is not performed and FALSE is returned.  Count
- * (number of points) must be at least two.  Zero points destroys any
- * data of the curve.
+ * (number of points) must be at least two.
+ *
+ * The number of points must not exceed 65536 (65535 for a wrap-mode curve);
  */
 extern int stp_curve_set_data(stp_curve_t curve, size_t count, double *data);
 
@@ -557,11 +567,13 @@ extern const double *stp_curve_get_data(const stp_curve_t curve,
  * If the gamma value is illegal (0, infinity, or NaN), FALSE is returned.
  * It is also illegal, and FALSE is returned, to set gamma on a wrap-mode
  * curve.
+ *
+ * The number of points must not exceed 65536.
  */
 extern int stp_curve_set_gamma(stp_curve_t curve, size_t count, double gamma);
 
 /*
- * Return the gamma value of the curve.  A returned value of NaN indicates
+ * Return the gamma value of the curve.  A returned value of 0 indicates
  * that the curve does not have a valid gamma value.
  */
 extern double stp_curve_get_gamma(const stp_curve_t curve);
@@ -583,9 +595,10 @@ extern int stp_curve_get_point(const stp_curve_t curve, size_t where,
 
 /*
  * Interpolate a point along the curve.  If 'where' is less than 0 or
- * greater than 1, an error is returned.  If interpolation would
- * produce a value outside of the allowed range (as could happen with
- * spline interpolation), the value is clipped to the range.
+ * greater than the number of points, an error is returned.  If
+ * interpolation would produce a value outside of the allowed range
+ * (as could happen with spline interpolation), the value is clipped
+ * to the range.
  */
 extern int stp_curve_interpolate_value(const stp_curve_t curve,
 				       double where, double *result);
@@ -597,6 +610,8 @@ extern int stp_curve_interpolate_value(const stp_curve_t curve,
  * value of a curve.  Points are interpolated as required; any interpolation
  * that would place points outside of the bounds of the curve will be clipped
  * to the bounds.
+ *
+ * The number of points must not exceed 65536 (65535 for a wrap-mode curve).
  */
 extern int stp_curve_resample(stp_curve_t curve, size_t points);
 
@@ -604,6 +619,8 @@ extern int stp_curve_resample(stp_curve_t curve, size_t points);
  * Rescale a curve (multiply all points by a scaling constant).  This
  * also rescales the bounds.  Returns false if this would exceed floating
  * point limits.
+ *
+ * Note that this currently destroys the gamma property of the curve.
  */
 extern int stp_curve_rescale(stp_curve_t curve, double scale);
 
@@ -638,6 +655,35 @@ extern void stp_curve_print(FILE *f, const stp_curve_t curve);
  */
 extern int stp_curve_read(FILE *f, stp_curve_t curve);
 extern int stp_curve_read_string(const char *text, stp_curve_t curve);
+
+/*
+ * Compose two curves, creating a third curve.
+ *
+ * If element-wise composition fails, an error is returned.
+ *
+ * If the number of points requested in the output is -1, the resulting
+ * number of points will be the least common multiplier of the number of
+ * points in the input and output curves.
+ *
+ * The number of points must be at least two, unless the curve is a gamma
+ * curve and the operation chosen is multiplication or division.
+ *
+ * If both curves are gamma curves with the same sign, and the
+ * operation is multiplication or division, the returned curve is a
+ * gamma curve with the appropriate number of points.
+ *
+ * Both curves must have the same wraparound type.
+ *
+ * A new curve is created and returned.
+ *
+ * The number of points must not exceed 65536 (65535 for a wrap-mode curve);
+ * if the number of points requested is -1, the number of points will not
+ * be allowed to exceed 65535 or 65536.
+ */
+
+extern int stp_curve_compose(stp_curve_t *retval,
+			     const stp_curve_t a, const stp_curve_t b,
+			     stp_curve_compose_t mode, int points);
 
 
 /****************************************************************
