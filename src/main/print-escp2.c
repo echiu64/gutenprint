@@ -1752,6 +1752,20 @@ static escp2_stp_printer_t model_capabilities[] =
     &variable_4pl_6color_inks, x70_lum_adjustment, standard_hue_adjustment,
     standard_sat_adjustment
   },
+  /* 38: Stylus Color 580 */
+  {
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
+     | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
+     | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
+    15, 3, 47, 3, 360, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
+    COLOR_JET_ARRANGEMENT_NEW_X80,
+    1440, 720,
+    { -1, -1, 0x13, -1, 0x11, -1, -1, -1, -1, -1, -1 },
+    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .323, .365, .1825, .1825, .0913 },
+    &variable_6pl_4color_inks, standard_lum_adjustment, standard_hue_adjustment,
+    standard_sat_adjustment
+  },
 };
 
 typedef struct escp2_init
