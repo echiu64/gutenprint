@@ -107,9 +107,9 @@ void write_output(FILE *fp_w) {
   unsigned int amount;
   ppmpixel white,pixel;
 
-  for (first=0;(first<pstate.bottom_margin-pstate.top_margin)&&(!page[first]);
+  for (first=0;(first<pstate.bottom_margin)&&(!page[first]);
        first++);
-  for (last=pstate.bottom_margin-pstate.top_margin-1;(last>first)&&
+  for (last=pstate.bottom_margin-1;(last>first)&&
        (!page[last]);last--);
   if (page[first]) {
     height = last-first+1;
@@ -172,8 +172,7 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
      * with an ESC @ and allocate the default page.  Otherwise, we'll
      * have unpredictable results.  But, that's a pretty acurate statement
      * for a real printer, too!  */
-    page=(line_type **)mycalloc(pstate.bottom_margin-pstate.top_margin,
-                               sizeof(line_type *));
+    page=(line_type **)mycalloc(pstate.bottom_margin, sizeof(line_type *));
   }
   for (y=pstate.yposition;y<pstate.yposition+m;y++) {
     if (!(page[y])) {
@@ -193,7 +192,7 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
 
 main(int argc,char *argv[]){
 
-int currentcolor,currentbpp,density;
+int currentcolor,currentbpp,density,eject;
 
     if(argc == 1){
         fp_r = stdin;
@@ -220,7 +219,8 @@ int currentcolor,currentbpp,density;
                        sh=minibuf[0]+minibuf[1]*256;}
 #define getn(n,error) if (!fread(buf,1,n,fp_r)){fprintf(stderr,error);exit(-1);}
 
-    while (fread(&ch,1,1,fp_r)){
+    eject=0;
+    while ((!eject)&&(fread(&ch,1,1,fp_r))){
       if (ch!=0x1b) {
         fprintf(stderr,"Corrupt file?  No ESC found.\n");
         continue;
@@ -412,8 +412,8 @@ int currentcolor,currentbpp,density;
                        pstate.page_length) {
                     pstate.page_length=pstate.top_margin+pstate.bottom_margin;
                   }
-                  page=(line_type **)mycalloc(pstate.bottom_margin-
-                                  pstate.top_margin,sizeof(line_type *));
+                  page=(line_type **)mycalloc(pstate.bottom_margin,
+                                  sizeof(line_type *));
                   /* FIXME: what is cut sheet paper??? */
                 }
                 break;
@@ -426,13 +426,16 @@ int currentcolor,currentbpp,density;
                             pstate.absolute_vertical_units)>=pstate.yposition) {
                       pstate.yposition=i*(pstate.relative_vertical_units/
                             pstate.absolute_vertical_units);
-                      /* FIXME: handle page ejection? */
                     } else {
                        fprintf(stderr,"Warning: Setting Y position in negative direction ignored\n");
                     }
                     break;
                   default:
                     fprintf(stderr,"Malformed absolute vertical position set.\n");
+                }
+                if (pstate.yposition>pstate.bottom_margin) {
+                  fprintf(stderr,"Warning! Printer head moved past bottom margin.  Dumping output and exiting.\n");
+                  eject=1;
                 }
                 break;
               case 'v': /* set relative vertical position */
@@ -441,10 +444,13 @@ int currentcolor,currentbpp,density;
                     case 4:i=buf[2]<<16+buf[3]<<24;
                     case 2:i+=buf[0]+256*buf[1];
                       pstate.yposition=i;
-                      /* FIXME: handle page ejection? negatives? */
                     break;
                   default:
                     fprintf(stderr,"Malformed relative vertical position set.\n");
+                }
+                if (pstate.yposition>pstate.bottom_margin) {
+                  fprintf(stderr,"Warning! Printer head moved past bottom margin.  Dumping output and exiting.\n");
+                  eject=1;
                 }
                 break;
               case 'K':
