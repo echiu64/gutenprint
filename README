@@ -51,6 +51,10 @@ BASIC INSTALLATION
     make
     make install
 
+    Note: This package requires the use of GNU Make to compile.  On
+    systems with both GNU make and another make installed, GNU make
+    may be named `gmake' or `gnumake'
+
 
 THE GIMP
 
