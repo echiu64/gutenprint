@@ -88,6 +88,6 @@ fi
 
 if test "$echo_libs" = "yes"; then
       libdirs=-L@libdir@
-      echo $libdirs $gimpprint_libs @INTLLIBS@
+      echo $libdirs $gimpprint_libs
 fi
 
