@@ -163,10 +163,10 @@ global_gamma: GAMMA tDOUBLE
 	{ global_gamma = $2; }
 ;
 steps: STEPS tINT
-	{ steps = $2; }
+	{ global_steps = $2; }
 ;
 ink_limit: INK_LIMIT tDOUBLE
-	{ ink_limit = $2; }
+	{ global_ink_limit = $2; }
 ;
 printer: PRINTER tSTRING
 	{ printer = $2; }
@@ -194,7 +194,7 @@ vsize: VSIZE tDOUBLE
 	{ vsize = $2; }
 ;
 blackline: BLACKLINE tINT
-	{ noblackline = !($2); }
+	{ global_noblackline = !($2); }
 ;
 
 color_block1: tDOUBLE tDOUBLE tDOUBLE

@@ -73,26 +73,20 @@ stp_vars_t tv;
 double global_levels[STP_CHANNEL_LIMIT];
 double global_gammas[STP_CHANNEL_LIMIT];
 double global_gamma = 1.0;
-int steps = 256;
-double ink_limit = 1.0;
-char *printer = 0;
-char *ink_type = 0;
-char *resolution = 0;
-char *media_source = 0;
-char *media_type = 0;
-char *media_size = 0;
-char *dither_algorithm = 0;
+int global_steps = 256;
+double global_ink_limit = 1.0;
+int global_noblackline = 0;
+int global_printer_width, global_printer_height, global_band_height;
+int global_n_testpatterns = -1;
+int global_ink_depth = 0;
+char *printer;
 double density = 1.0;
 double xtop = 0;
 double xleft = 0;
 double hsize = 1.0;
 double vsize = 1.0;
-int noblackline = 0;
-int printer_width, printer_height, bandheight;
-int n_testpatterns = -1;
-int global_ink_depth = 0;
 
-testpattern_t *the_testpatterns = NULL;
+static testpattern_t *global_testpatterns = NULL;
 
 static size_t
 c_strlen(const char *s)
@@ -151,36 +145,36 @@ testpattern_t *
 get_next_testpattern(void)
 {
   static int internal_n_testpatterns = 0;
-  if (n_testpatterns == -1)
+  if (global_n_testpatterns == -1)
     {
-      the_testpatterns = malloc(sizeof(testpattern_t));
-      n_testpatterns = 0;
+      global_testpatterns = malloc(sizeof(testpattern_t));
+      global_n_testpatterns = 0;
       internal_n_testpatterns = 1;
-      clear_testpattern(&(the_testpatterns[0]));
-      return &(the_testpatterns[0]);
+      clear_testpattern(&(global_testpatterns[0]));
+      return &(global_testpatterns[0]);
     }
-  else if (n_testpatterns + 1 >= internal_n_testpatterns)
+  else if (global_n_testpatterns + 1 >= internal_n_testpatterns)
     {
       internal_n_testpatterns *= 2;
-      the_testpatterns =
-	realloc(the_testpatterns,
+      global_testpatterns =
+	realloc(global_testpatterns,
 		internal_n_testpatterns * sizeof(testpattern_t));
     }
-  n_testpatterns++;
-  clear_testpattern(&(the_testpatterns[n_testpatterns]));
-  return &(the_testpatterns[n_testpatterns]);
+  global_n_testpatterns++;
+  clear_testpattern(&(global_testpatterns[global_n_testpatterns]));
+  return &(global_testpatterns[global_n_testpatterns]);
 }
 
 static void
 do_help(void)
 {
   fprintf(stderr, "%s", "\
-Usage: testpattern -p printer [-n ramp_steps] [-I ink_limit] [-i ink_type]\n\
+Usage: testpattern -p printer [-n ramp_steps] [-I global_ink_limit]\n\
                    [-r resolution] [-s media_source] [-t media_type]\n\
                    [-z media_size] [-d dither_algorithm] [-e density]\n\
                    [-G gamma] [-q] [-H width] [-V height] [-T top] [-L left]\n\
        -H, -V, -T, -L expressed as fractions of the printable paper size\n\
-       0.0 < ink_limit <= 1.0\n\
+       0.0 < global_ink_limit <= 1.0\n\
        1 < ramp_steps <= 4096\n\
        0.1 <= density <= 2.0\n\
        0.0 < cyan_level <= 10.0 same for magenta and yellow.\n");
@@ -233,7 +227,7 @@ main(int argc, char **argv)
       switch (c)
 	{
 	case 'I':
-	  ink_limit = strtod(optarg, 0);
+	  global_ink_limit = strtod(optarg, 0);
 	  break;
 	case 'G':
 	  global_gamma = strtod(optarg, 0);
@@ -263,13 +257,13 @@ main(int argc, char **argv)
 	  stp_set_string_parameter(tv, "InkType", optarg);
 	  break;
 	case 'n':
-	  steps = atoi(optarg);
+	  global_steps = atoi(optarg);
 	  break;
 	case 'p':
 	  printer = optarg;
 	  break;
 	case 'q':
-	  noblackline = 1;
+	  global_noblackline = 1;
 	  break;
 	case 'r':
 	  stp_set_string_parameter(tv, "Resolution", optarg);
@@ -292,8 +286,8 @@ main(int argc, char **argv)
   v = stp_vars_create();
   the_printer = stp_get_printer_by_driver(printer);
   if (!printer ||
-      ink_limit <= 0 || ink_limit > 1.0 ||
-      steps < 1 || steps > 4096 ||
+      global_ink_limit <= 0 || global_ink_limit > 1.0 ||
+      global_steps < 1 || global_steps > 4096 ||
       xtop < 0 || xtop > 1 || xleft < 0 || xleft > 1 ||
       xtop + vsize > 1 || xleft + hsize > 1 ||
       hsize < 0 || hsize > 1 || vsize < 0 || vsize > 1)
@@ -346,7 +340,8 @@ main(int argc, char **argv)
   pt = stp_get_papersize_by_name(stp_get_string_parameter(v, "PageSize"));
   if (!pt)
     {
-      fprintf(stderr, "Papersize %s unknown\n", media_size);
+      fprintf(stderr, "Papersize %s unknown\n",
+	      stp_get_string_parameter(v, "PageSize"));
       return 1;
     }
 
@@ -361,20 +356,20 @@ main(int argc, char **argv)
   height = bottom - top;
   top += height * xtop;
   left += width * xleft;
-  if (steps > width)
-    steps = width;
+  if (global_steps > width)
+    global_steps = width;
 
 #if 0
-  width = (width / steps) * steps;
-  height = (height / n_testpatterns) * n_testpatterns;
+  width = (width / global_steps) * global_steps;
+  height = (height / global_n_testpatterns) * global_n_testpatterns;
 #endif
   stp_set_width(v, width * hsize);
   stp_set_height(v, height * vsize);
 
-  printer_width = width * x / 72;
-  printer_height = height * y / 72;
+  global_printer_width = width * x / 72;
+  global_printer_height = height * y / 72;
 
-  bandheight = printer_height / n_testpatterns;
+  global_band_height = global_printer_height / global_n_testpatterns;
   stp_set_left(v, left);
   stp_set_top(v, top);
 
@@ -382,287 +377,391 @@ main(int argc, char **argv)
   if (stp_print(v, &theImage) != 1)
     return 1;
   stp_vars_free(v);
-  free(the_testpatterns);
+  free(global_testpatterns);
   return 0;
 }
 
+/*
+ * Emulate templates with macros -- rlk 20031014
+ */
+
+#define FILL_BLACK_FUNCTION(T, bits)					\
+static void								\
+fill_black_##bits(unsigned char *data, size_t len, size_t scount)	\
+{									\
+  int i;								\
+  T *s_data = (T *) data;						\
+  unsigned black_val = global_ink_limit * ((1 << bits) - 1);		\
+  if (global_ink_depth)							\
+    {									\
+      for (i = 0; i < (len / scount) * scount; i++)			\
+	{								\
+	  memset(s_data, 0, sizeof(T) * global_ink_depth);		\
+	  s_data[0] = black_val;					\
+	  if (global_ink_depth == 3)					\
+	    {								\
+	      s_data[1] = black_val;					\
+	      s_data[2] = black_val;					\
+	    }								\
+	  else if (global_ink_depth == 5)				\
+	    {								\
+	      s_data[2] = black_val;					\
+	      s_data[4] = black_val;					\
+	    }								\
+	  s_data += global_ink_depth;					\
+	}								\
+    }									\
+  else									\
+    {									\
+      for (i = 0; i < (len / scount) * scount; i++)			\
+	{								\
+	  memset(s_data, 0, sizeof(unsigned short) * 4);		\
+	  s_data[3] = black_val;					\
+	  s_data += 4;							\
+	}								\
+    }									\
+}
+
+FILL_BLACK_FUNCTION(unsigned short, 16)
+FILL_BLACK_FUNCTION(unsigned char, 8)
+
 static void
-fill_black(unsigned char *data, size_t len, size_t scount)
+fill_black(unsigned char *data, size_t len, size_t scount, size_t bytes)
 {
-  int i;
-  unsigned short *s_data = (unsigned short *) data;
-  if (global_ink_depth)
+  switch (bytes)
     {
-      for (i = 0; i < (len / scount) * scount; i++)
-	{
-	  memset(s_data, 0, sizeof(unsigned short) * global_ink_depth);
-	  s_data[0] = ink_limit * 65535;
-	  if (global_ink_depth == 3)
-	    {
-	      s_data[1] = ink_limit * 65535;
-	      s_data[2] = ink_limit * 65535;
-	    }
-	  else if (global_ink_depth == 5)
-	    {
-	      s_data[2] = ink_limit * 65535;
-	      s_data[4] = ink_limit * 65535;
-	    }
-	  s_data += global_ink_depth;
-	}
-    }
-  else
-    {
-      for (i = 0; i < (len / scount) * scount; i++)
-	{
-	  memset(s_data, 0, sizeof(unsigned short) * 4);
-	  s_data[3] = ink_limit * 65535;
-	  s_data += 4;
-	}
+    case 1:
+      fill_black_8(data, len, scount);
+      break;
+    case 2:
+      fill_black_16(data, len, scount);
+      break;
     }
 }
 
+#define FILL_WHITE_FUNCTION(T, bits)					\
+static void								\
+fill_white_##bits(unsigned char *data, size_t len, size_t scount)	\
+{									\
+  T *s_data = (T *) data;						\
+  if (global_ink_depth)							\
+    {									\
+      memset(s_data, 0, sizeof(T) * global_ink_depth *			\
+	     ((len / scount) * scount));				\
+    }									\
+  else									\
+    {									\
+      memset(s_data, 0, sizeof(T) * 4 *					\
+	     ((len / scount) * scount));				\
+    }									\
+}
+
+FILL_WHITE_FUNCTION(unsigned short, 16)
+FILL_WHITE_FUNCTION(unsigned char, 8)
+
 static void
-fill_white(unsigned char *data, size_t len, size_t scount)
+fill_white(unsigned char *data, size_t len, size_t scount, size_t bytes)
 {
-  unsigned short *s_data = (unsigned short *) data;
-  if (global_ink_depth)
+  switch (bytes)
     {
-      memset(s_data, 0, sizeof(unsigned short) * global_ink_depth *
-	     ((len / scount) * scount));
-    }
-  else
-    {
-      memset(s_data, 0, sizeof(unsigned short) * 4 *
-	     ((len / scount) * scount));
+    case 1:
+      fill_white_8(data, len, scount);
+      break;
+    case 2:
+      fill_white_16(data, len, scount);
+      break;
     }
 }
 
-static void
-fill_grid(unsigned char *data, size_t len, size_t scount, testpattern_t *p)
-{
-  int i;
-  int xlen = (len / scount) * scount;
-  int depth = global_ink_depth;
-  int errdiv = (p->d.g.ticks) / (xlen - 1);
-  int errmod = (p->d.g.ticks) % (xlen - 1);
-  int errval  = 0;
-  int errlast = -1;
-  int errline  = 0;
-  unsigned short *s_data = (unsigned short *) data;
+#define FILL_GRID_FUNCTION(T, bits)					\
+static void								\
+fill_grid_##bits(unsigned char *data, size_t len, size_t scount,	\
+		 testpattern_t *p)					\
+{									\
+  int i;								\
+  int xlen = (len / scount) * scount;					\
+  int depth = global_ink_depth;						\
+  int errdiv = (p->d.g.ticks) / (xlen - 1);				\
+  int errmod = (p->d.g.ticks) % (xlen - 1);				\
+  int errval  = 0;							\
+  int errlast = -1;							\
+  int errline  = 0;							\
+  T *s_data = (T *) data;						\
+  unsigned multiplier = (1 << bits) - 1;				\
+									\
+  if (depth == 0)							\
+    depth = 4;								\
+  for (i = 0; i < xlen; i++)						\
+    {									\
+      if (errline != errlast)						\
+	{								\
+	  errlast = errline;						\
+	  s_data[0] = multiplier;					\
+	}								\
+      errval += errmod;							\
+      errline += errdiv;						\
+      if (errval >= xlen - 1)						\
+	{								\
+	  errval -= xlen - 1;						\
+	  errline++;							\
+	}								\
+      s_data += depth;							\
+    }									\
+}
 
-  if (depth == 0)
-    depth = 4;
-  for (i = 0; i < xlen; i++)
+FILL_GRID_FUNCTION(unsigned short, 16)
+FILL_GRID_FUNCTION(unsigned char, 8)
+
+static void
+fill_grid(unsigned char *data, size_t len, size_t scount,
+	  testpattern_t *p, size_t bytes)
+{
+  switch (bytes)
     {
-      if (errline != errlast)
-	{
-	  errlast = errline;
-	  s_data[0] = 65535;
-	}
-      errval += errmod;
-      errline += errdiv;
-      if (errval >= xlen - 1)
-	{
-	  errval -= xlen - 1;
-	  errline++;
-	}
-      s_data += depth;
+    case 1:
+      fill_grid_8(data, len, scount, p);
+      break;
+    case 2:
+      fill_grid_16(data, len, scount, p);
+      break;
     }
 }
 
+#define FILL_COLORS_FUNCTION(T, bits)					  \
+static void								  \
+fill_colors_##bits(unsigned char *data, size_t len, size_t scount,	  \
+		   testpattern_t *p)					  \
+{									  \
+  double mins[4];							  \
+  double vals[4];							  \
+  double gammas[4];							  \
+  double levels[4];							  \
+  double lower = p->d.p.lower;						  \
+  double upper = p->d.p.upper;						  \
+  int i;								  \
+  int j;								  \
+  int pixels;								  \
+  T *s_data = (T *) data;						  \
+  unsigned multiplier = (1 << bits) - 1;				  \
+									  \
+  vals[0] = p->d.p.vals[0];						  \
+  mins[0] = p->d.p.mins[0];						  \
+									  \
+  for (j = 1; j < 4; j++)						  \
+    {									  \
+      vals[j] = p->d.p.vals[j] == -2 ? global_levels[j] : p->d.p.vals[j]; \
+      mins[j] = p->d.p.mins[j] == -2 ? global_levels[j] : p->d.p.mins[j]; \
+      levels[j] = p->d.p.levels[j] ==					  \
+	-2 ? global_levels[j] : p->d.p.levels[j];			  \
+    }									  \
+  for (j = 0; j < 4; j++)						  \
+    {									  \
+      gammas[j] = p->d.p.gammas[j] * global_gamma * global_gammas[j];	  \
+      vals[j] -= mins[j];						  \
+    }									  \
+									  \
+  if (scount > len)							  \
+    scount = len;							  \
+  pixels = len / scount;						  \
+  for (i = 0; i < scount; i++)						  \
+    {									  \
+      int k;								  \
+      double where = (double) i / ((double) scount - 1);		  \
+      double cmyv;							  \
+      double kv;							  \
+      double val = where;						  \
+      double xvals[4];							  \
+      for (j = 0; j < 4; j++)						  \
+	{								  \
+	  if (j > 0)							  \
+	    xvals[j] = mins[j] + val * vals[j];				  \
+	  else								  \
+	    xvals[j] = mins[j] + vals[j];				  \
+	  xvals[j] = pow(xvals[j], gammas[j]);				  \
+	}								  \
+									  \
+      if (where <= lower)						  \
+	kv = 0;								  \
+      else if (where > upper)						  \
+	kv = where;							  \
+      else								  \
+	kv = (where - lower) * upper / (upper - lower);			  \
+      cmyv = vals[0] * (where - kv);					  \
+      xvals[0] *= kv;							  \
+      for (j = 1; j < 4; j++)						  \
+	xvals[j] += cmyv * levels[j];					  \
+      for (j = 0; j < 4; j++)						  \
+	{								  \
+	  if (xvals[j] > 1)						  \
+	    xvals[j] = 1;						  \
+	  xvals[j] *= global_ink_limit * multiplier;			  \
+	}								  \
+      for (k = 0; k < pixels; k++)					  \
+	{								  \
+	  switch (global_ink_depth)					  \
+	    {								  \
+	    case 0:							  \
+	      for (j = 0; j < 4; j++)					  \
+		s_data[j] = xvals[(j + 1) % 4];				  \
+	      s_data += 4;						  \
+	      break;							  \
+	    case 1:							  \
+	      s_data[0] = xvals[0];					  \
+	      break;							  \
+	    case 2:							  \
+	      s_data[0] = xvals[0];					  \
+	      s_data[1] = 0;						  \
+	      break;							  \
+	    case 4:							  \
+	      for (j = 0; j < 4; j++)					  \
+		s_data[j] = xvals[j];					  \
+	      break;							  \
+	    case 6:							  \
+	      s_data[0] = xvals[0];					  \
+	      s_data[1] = xvals[1];					  \
+	      s_data[2] = 0;						  \
+	      s_data[3] = xvals[2];					  \
+	      s_data[4] = 0;						  \
+	      s_data[5] = xvals[3];					  \
+	      break;							  \
+	    case 7:							  \
+	      for (j = 0; j < 4; j++)					  \
+		s_data[j * 2] = xvals[j];				  \
+	      for (j = 1; j < 6; j += 2)				  \
+		s_data[j] = 0;						  \
+	      break;							  \
+	    }								  \
+	  s_data += global_ink_depth;					  \
+	}								  \
+    }									  \
+}
+
+FILL_COLORS_FUNCTION(unsigned short, 16)
+FILL_COLORS_FUNCTION(unsigned char, 8)
+
 static void
-fill_colors(unsigned char *data, size_t len, size_t scount, testpattern_t *p)
+fill_colors(unsigned char *data, size_t len, size_t scount,
+	    testpattern_t *p, size_t bytes)
 {
-  double mins[4];
-  double vals[4];
-  double gammas[4];
-  double levels[4];
-  double lower = p->d.p.lower;
-  double upper = p->d.p.upper;
-  int i;
-  int j;
-  int pixels;
-  unsigned short *s_data = (unsigned short *) data;
-
-  vals[0] = p->d.p.vals[0];
-  mins[0] = p->d.p.mins[0];
-
-  for (j = 1; j < 4; j++)
+  switch (bytes)
     {
-      vals[j] = p->d.p.vals[j] == -2 ? global_levels[j] : p->d.p.vals[j];
-      mins[j] = p->d.p.mins[j] == -2 ? global_levels[j] : p->d.p.mins[j];
-      levels[j] = p->d.p.levels[j] == -2 ? global_levels[j] : p->d.p.levels[j];
-    }
-  for (j = 0; j < 4; j++)
-    {
-      gammas[j] = p->d.p.gammas[j] * global_gamma * global_gammas[j];
-      vals[j] -= mins[j];
-    }
-
-  if (scount > len)
-    scount = len;
-  pixels = len / scount;
-  for (i = 0; i < scount; i++)
-    {
-      int k;
-      double where = (double) i / ((double) scount - 1);
-      double cmyv;
-      double kv;
-      double val = where;
-      double xvals[4];
-      for (j = 0; j < 4; j++)
-	{
-	  if (j > 0)
-	    xvals[j] = mins[j] + val * vals[j];
-	  else
-	    xvals[j] = mins[j] + vals[j];
-	  xvals[j] = pow(xvals[j], gammas[j]);
-	}
-
-      if (where <= lower)
-	kv = 0;
-      else if (where > upper)
-	kv = where;
-      else
-	kv = (where - lower) * upper / (upper - lower);
-      cmyv = vals[0] * (where - kv);
-      xvals[0] *= kv;
-      for (j = 1; j < 4; j++)
-	xvals[j] += cmyv * levels[j];
-      for (j = 0; j < 4; j++)
-	{
-	  if (xvals[j] > 1)
-	    xvals[j] = 1;
-	  xvals[j] *= ink_limit * 65535;
-	}
-      for (k = 0; k < pixels; k++)
-	{
-	  switch (global_ink_depth)
-	    {
-	    case 0:
-	      for (j = 0; j < 4; j++)
-		s_data[j] = xvals[(j + 1) % 4];
-	      s_data += 4;
-	      break;
-	    case 1:
-	      s_data[0] = xvals[0];
-	      break;
-	    case 2:
-	      s_data[0] = xvals[0];
-	      s_data[1] = 0;
-	      break;
-	    case 4:
-	      for (j = 0; j < 4; j++)
-		s_data[j] = xvals[j];
-	      break;
-	    case 6:
-	      s_data[0] = xvals[0];
-	      s_data[1] = xvals[1];
-	      s_data[2] = 0;
-	      s_data[3] = xvals[2];
-	      s_data[4] = 0;
-	      s_data[5] = xvals[3];
-	      break;
-	    case 7:
-	      for (j = 0; j < 4; j++)
-		s_data[j * 2] = xvals[j];
-	      for (j = 1; j < 6; j += 2)
-		s_data[j] = 0;
-	      break;
-	    }
-	  s_data += global_ink_depth;
-	}
+    case 1:
+      fill_colors_8(data, len, scount, p);
+      break;
+    case 2:
+      fill_colors_16(data, len, scount, p);
+      break;
     }
 }
 
+#define FILL_COLORS_EXTENDED_FUNCTION(T, bits)				   \
+static void								   \
+fill_colors_extended_##bits(unsigned char *data, size_t len,		   \
+			    size_t scount, testpattern_t *p)		   \
+{									   \
+  double mins[STP_CHANNEL_LIMIT];					   \
+  double vals[STP_CHANNEL_LIMIT];					   \
+  double gammas[STP_CHANNEL_LIMIT];					   \
+  int i;								   \
+  int j;								   \
+  int k;								   \
+  int pixels;								   \
+  int channel_limit = global_ink_depth <= 7 ? 7 : global_ink_depth;	   \
+  T *s_data = (T *) data;						   \
+  unsigned multiplier = (1 << bits) - 1;				   \
+									   \
+  for (j = 0; j < channel_limit; j++)					   \
+    {									   \
+      mins[j] = p->d.p.mins[j] == -2 ? global_levels[j] : p->d.p.mins[j];  \
+      vals[j] = p->d.p.vals[j] == -2 ? global_levels[j] : p->d.p.vals[j];  \
+      gammas[j] = p->d.p.gammas[j] * global_gamma * global_gammas[j];	   \
+      vals[j] -= mins[j];						   \
+    }									   \
+  if (scount > len)							   \
+    scount = len;							   \
+  pixels = len / scount;						   \
+  for (i = 0; i < scount; i++)						   \
+    {									   \
+      double where = (double) i / ((double) scount - 1);		   \
+      double val = where;						   \
+      double xvals[STP_CHANNEL_LIMIT];					   \
+									   \
+      for (j = 0; j < channel_limit; j++)				   \
+	{								   \
+	  xvals[j] = mins[j] + val * vals[j];				   \
+	  xvals[j] = pow(xvals[j], gammas[j]);				   \
+	  xvals[j] *= global_ink_limit * multiplier;			   \
+	}								   \
+      for (k = 0; k < pixels; k++)					   \
+	{								   \
+	  switch (global_ink_depth)					   \
+	    {								   \
+	    case 1:							   \
+	      s_data[0] = xvals[0];					   \
+	      break;							   \
+	    case 2:							   \
+	      s_data[0] = xvals[0];					   \
+	      s_data[1] = xvals[4];					   \
+	      break;							   \
+	    case 3:							   \
+	      s_data[0] = xvals[1];					   \
+	      s_data[1] = xvals[2];					   \
+	      s_data[2] = xvals[3];					   \
+	      break;							   \
+	    case 4:							   \
+	      s_data[0] = xvals[0];					   \
+	      s_data[1] = xvals[1];					   \
+	      s_data[2] = xvals[2];					   \
+	      s_data[3] = xvals[3];					   \
+	      break;							   \
+	    case 5:							   \
+	      s_data[0] = xvals[1];					   \
+	      s_data[1] = xvals[5];					   \
+	      s_data[2] = xvals[2];					   \
+	      s_data[3] = xvals[6];					   \
+	      s_data[4] = xvals[3];					   \
+	      break;							   \
+	    case 6:							   \
+	      s_data[0] = xvals[0];					   \
+	      s_data[1] = xvals[1];					   \
+	      s_data[2] = xvals[5];					   \
+	      s_data[3] = xvals[2];					   \
+	      s_data[4] = xvals[6];					   \
+	      s_data[5] = xvals[3];					   \
+	      break;							   \
+	    case 7:							   \
+	      s_data[0] = xvals[0];					   \
+	      s_data[1] = xvals[4];					   \
+	      s_data[2] = xvals[1];					   \
+	      s_data[3] = xvals[5];					   \
+	      s_data[4] = xvals[2];					   \
+	      s_data[5] = xvals[6];					   \
+	      s_data[6] = xvals[3];					   \
+	      break;							   \
+	    default:							   \
+	      for (j = 0; j < global_ink_depth; j++)			   \
+		s_data[j] = xvals[j];					   \
+	    }								   \
+	  s_data += global_ink_depth;					   \
+	}								   \
+    }									   \
+}
+
+FILL_COLORS_EXTENDED_FUNCTION(unsigned short, 16)
+FILL_COLORS_EXTENDED_FUNCTION(unsigned char, 8)
+
 static void
-fill_colors_extended(unsigned char *data, size_t len,
-		     size_t scount, testpattern_t *p)
+fill_colors_extended(unsigned char *data, size_t len, size_t scount,
+	  testpattern_t *p, size_t bytes)
 {
-  double mins[STP_CHANNEL_LIMIT];
-  double vals[STP_CHANNEL_LIMIT];
-  double gammas[STP_CHANNEL_LIMIT];
-  int i;
-  int j;
-  int k;
-  int pixels;
-  int channel_limit = global_ink_depth <= 7 ? 7 : global_ink_depth;
-  unsigned short *s_data = (unsigned short *) data;
-
-  for (j = 0; j < channel_limit; j++)
+  switch (bytes)
     {
-      mins[j] = p->d.p.mins[j] == -2 ? global_levels[j] : p->d.p.mins[j];
-      vals[j] = p->d.p.vals[j] == -2 ? global_levels[j] : p->d.p.vals[j];
-      gammas[j] = p->d.p.gammas[j] * global_gamma * global_gammas[j];
-      vals[j] -= mins[j];
-    }
-  if (scount > len)
-    scount = len;
-  pixels = len / scount;
-  for (i = 0; i < scount; i++)
-    {
-      double where = (double) i / ((double) scount - 1);
-      double val = where;
-      double xvals[STP_CHANNEL_LIMIT];
-
-      for (j = 0; j < channel_limit; j++)
-	{
-	  xvals[j] = mins[j] + val * vals[j];
-	  xvals[j] = pow(xvals[j], gammas[j]);
-	  xvals[j] *= ink_limit * 65535;
-	}
-      for (k = 0; k < pixels; k++)
-	{
-	  switch (global_ink_depth)
-	    {
-	    case 1:
-	      s_data[0] = xvals[0];
-	      break;
-	    case 2:
-	      s_data[0] = xvals[0];
-	      s_data[1] = xvals[4];
-	      break;
-	    case 3:
-	      s_data[0] = xvals[1];
-	      s_data[1] = xvals[2];
-	      s_data[2] = xvals[3];
-	      break;
-	    case 4:
-	      s_data[0] = xvals[0];
-	      s_data[1] = xvals[1];
-	      s_data[2] = xvals[2];
-	      s_data[3] = xvals[3];
-	      break;
-	    case 5:
-	      s_data[0] = xvals[1];
-	      s_data[1] = xvals[5];
-	      s_data[2] = xvals[2];
-	      s_data[3] = xvals[6];
-	      s_data[4] = xvals[3];
-	      break;
-	    case 6:
-	      s_data[0] = xvals[0];
-	      s_data[1] = xvals[1];
-	      s_data[2] = xvals[5];
-	      s_data[3] = xvals[2];
-	      s_data[4] = xvals[6];
-	      s_data[5] = xvals[3];
-	      break;
-	    case 7:
-	      s_data[0] = xvals[0];
-	      s_data[1] = xvals[4];
-	      s_data[2] = xvals[1];
-	      s_data[3] = xvals[5];
-	      s_data[4] = xvals[2];
-	      s_data[5] = xvals[6];
-	      s_data[6] = xvals[3];
-	      break;
-	    default:
-	      for (j = 0; j < global_ink_depth; j++)
-		s_data[j] = xvals[j];
-	    }
-	  s_data += global_ink_depth;
-	}
+    case 1:
+      fill_colors_extended_8(data, len, scount, p);
+      break;
+    case 2:
+      fill_colors_extended_16(data, len, scount, p);
+      break;
     }
 }
 
@@ -672,17 +771,17 @@ static void
 fill_pattern(testpattern_t *p, unsigned char *data, size_t width,
 	     size_t s_count, size_t image_depth, size_t byte_depth)
 {
-  memset(data, 0, printer_width * image_depth * byte_depth);
+  memset(data, 0, global_printer_width * image_depth * byte_depth);
   switch (p->t)
     {
     case E_PATTERN:
-      fill_colors(data, width, s_count, p);
+      fill_colors(data, width, s_count, p, byte_depth);
       break;
     case E_XPATTERN:
-      fill_colors_extended(data, width, s_count, p);
+      fill_colors_extended(data, width, s_count, p, byte_depth);
       break;
     case E_GRID:
-      fill_grid(data, width, s_count, p);
+      fill_grid(data, width, s_count, p, byte_depth);
       break;
     default:
       break;
@@ -697,9 +796,9 @@ Image_get_row(stp_image_t *image, unsigned char *data,
   int depth = 4;
   if (global_ink_depth)
     depth = global_ink_depth;
-  if (the_testpatterns[0].t == E_IMAGE)
+  if (global_testpatterns[0].t == E_IMAGE)
     {
-      testpattern_t *t = &(the_testpatterns[0]);
+      testpattern_t *t = &(global_testpatterns[0]);
       int total_read = fread(data, 1, t->d.i.x * depth * 2, yyin);
       if (total_read != t->d.i.x * depth * 2)
 	{
@@ -710,21 +809,25 @@ Image_get_row(stp_image_t *image, unsigned char *data,
   else
     {
       static int previous_band = -1;
-      int band = row / bandheight;
+      int band = row / global_band_height;
       if (previous_band == -1)
 	{
-	  fill_pattern(&(the_testpatterns[band]), data, printer_width, steps,
-			 depth, sizeof(unsigned short));
+	  fill_pattern(&(global_testpatterns[band]), data,
+		       global_printer_width, global_steps, depth,
+		       sizeof(unsigned short));
 	  previous_band = band;
 	}
-      else if (row == printer_height - 1)
-	fill_black(data, printer_width, steps);
-      else if (band >= n_testpatterns)
-	fill_white(data, printer_width, steps);
+      else if (row == global_printer_height - 1)
+	fill_black(data, global_printer_width, global_steps,
+		   sizeof(unsigned short));
+      else if (band >= global_n_testpatterns)
+	fill_white(data, global_printer_width, global_steps,
+		   sizeof(unsigned short));
       else if (band != previous_band && band >= 0)
 	{
-	  fill_pattern(&(the_testpatterns[band]), data, printer_width, steps,
-			 depth, sizeof(unsigned short));
+	  fill_pattern(&(global_testpatterns[band]), data,
+		       global_printer_width, global_steps, depth,
+		       sizeof(unsigned short));
 	  previous_band = band;
 	}
     }
@@ -743,19 +846,19 @@ Image_bpp(stp_image_t *image)
 static int
 Image_width(stp_image_t *image)
 {
-  if (the_testpatterns[0].t == E_IMAGE)
-    return the_testpatterns[0].d.i.x;
+  if (global_testpatterns[0].t == E_IMAGE)
+    return global_testpatterns[0].d.i.x;
   else
-    return printer_width;
+    return global_printer_width;
 }
 
 static int
 Image_height(stp_image_t *image)
 {
-  if (the_testpatterns[0].t == E_IMAGE)
-    return the_testpatterns[0].d.i.y;
+  if (global_testpatterns[0].t == E_IMAGE)
+    return global_testpatterns[0].d.i.y;
   else
-    return printer_height;
+    return global_printer_height;
 }
 
 static void

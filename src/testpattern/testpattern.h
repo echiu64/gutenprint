@@ -67,15 +67,15 @@ extern int global_ink_depth;
 extern double global_levels[];
 extern double global_gammas[];
 extern double global_gamma;
-extern int steps;
-extern double ink_limit;
+extern int global_steps;
+extern double global_ink_limit;
 extern char *printer;
 extern double density;
 extern double xtop;
 extern double xleft;
 extern double hsize;
 extern double vsize;
-extern int noblackline;
+extern int global_noblackline;
 extern char *c_strdup(const char *s);
 extern testpattern_t *get_next_testpattern(void);
 
