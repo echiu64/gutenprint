@@ -1290,53 +1290,56 @@ static const double standard_hue_adjustment[49] =
  */
 
 /*   0     1     2     3     4     5     6     7     8     9    10    11 */
-							
-static const escp2_dot_size_t g1_dotsizes =			
+
+static const escp2_dot_size_t g1_dotsizes =
 {   -2,   -2,   -1,   -1,   -2,   -2,   -2,   -1,   -1,   -1,   -1,   -1 };
-							
-static const escp2_dot_size_t sc1500_dotsizes =			
+
+static const escp2_dot_size_t sc1500_dotsizes =
 {   -2,   -2,   -1,   -1,   -2,   -2,   -1,   -1,   -1,   -1,   -1,   -1 };
-							
-static const escp2_dot_size_t sc600_dotsizes =			
+
+static const escp2_dot_size_t sc600_dotsizes =
 {    4,    4,   -1,   -1,    3,    2,    2,   -1,    1,   -1,   -1,   -1 };
-							
-static const escp2_dot_size_t g3_dotsizes =			
+
+static const escp2_dot_size_t g3_dotsizes =
 {    3,    3,   -1,   -1,    2,    1,    1,   -1,    4,   -1,   -1,   -1 };
-							
-static const escp2_dot_size_t photo_dotsizes =			
+
+static const escp2_dot_size_t photo_dotsizes =
 {    3,    3,   -1,   -1,    2,   -1,    1,   -1,    4,   -1,   -1,   -1 };
-							
-static const escp2_dot_size_t sc440_dotsizes =			
+
+static const escp2_dot_size_t sc440_dotsizes =
 {    3,    3,   -1,   -1,    2,   -1,    1,   -1,   -1,   -1,   -1,   -1 };
-							
-static const escp2_dot_size_t sc640_dotsizes =			
+
+static const escp2_dot_size_t sc640_dotsizes =
 {    3,    3,   -1,   -1,    2,    1,    1,   -1,    1,   -1,   -1,   -1 };
-							
-static const escp2_dot_size_t c6pl_dotsizes =			
+
+static const escp2_dot_size_t c6pl_dotsizes =
 { 0x10,   -1, 0x10,   -1, 0x10,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1 };
-							
-static const escp2_dot_size_t c3pl_dotsizes =			
+
+static const escp2_dot_size_t c3pl_dotsizes =
 { 0x11,   -1, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1, 0x10, 0x10 };
-							
-static const escp2_dot_size_t c4pl_dotsizes =			
+
+static const escp2_dot_size_t c4pl_dotsizes =
 { 0x12,   -1, 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x10,   -1, 0x10, 0x10 };
-							
-static const escp2_dot_size_t sc660_dotsizes =			
+
+static const escp2_dot_size_t sc720_dotsizes =
+{ 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x11,   -1, 0x11,   -1,   -1,   -1 };
+
+static const escp2_dot_size_t sc660_dotsizes =
 {    3,    3,   -1,    3,    0,    3,    0,   -1,    0,   -1,   -1,   -1 };
-							
-static const escp2_dot_size_t sc480_dotsizes =			
+
+static const escp2_dot_size_t sc480_dotsizes =
 { 0x13,   -1, 0x13,   -1, 0x13,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1 };
-							
-static const escp2_dot_size_t sc670_dotsizes =			
+
+static const escp2_dot_size_t sc670_dotsizes =
 { 0x12,   -1, 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x11,   -1,   -1,   -1 };
-							
-static const escp2_dot_size_t sp2000_dotsizes =			
+
+static const escp2_dot_size_t sp2000_dotsizes =
 { 0x11,   -1, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1 };
-							
-static const escp2_dot_size_t spro_dotsizes =			
+
+static const escp2_dot_size_t spro_dotsizes =
 {    0,    0,   -1,    0,   -1,    0,   -1,    0,   -1,   -1,   -1,   -1 };
-							
-static const escp2_dot_size_t spro10000_dotsizes =			
+
+static const escp2_dot_size_t spro10000_dotsizes =
 {    4, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1,   -1 };
 
 
@@ -1854,7 +1857,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     32, 1, 4, 32, 1, 4, 360, 360, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
-    default_head_offset, 0, 0, 1440, 720, c6pl_dotsizes, c6pl_densities,
+    default_head_offset, 0, 0, 1440, 720, sc720_dotsizes, c6pl_densities,
     &variable_6pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
   },
@@ -3124,7 +3127,7 @@ escp2_find_resolution(const char *resolution)
       else if (!strcmp(res->name, ""))
 	return NULL;
     }
-}  
+}
 
 /*
  * 'escp2_imageable_area()' - Return the imageable area of the page.
