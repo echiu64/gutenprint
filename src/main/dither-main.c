@@ -43,7 +43,7 @@ static const stpi_dither_algorithm_t dither_algos[] =
 {
   /* Note to translators: "EvenTone" is the proper name, rather than a */
   /* descriptive name, of this algorithm. */
-  { "Default",  N_ ("Default"),                D_EVENTONE },
+  { "None",     N_ ("Default"),                D_EVENTONE },
   { "EvenTone", N_ ("EvenTone"),               D_EVENTONE },
   { "Adaptive",	N_ ("Adaptive Hybrid"),        D_ADAPTIVE_HYBRID },
   { "Ordered",	N_ ("Ordered"),                D_ORDERED },
@@ -75,7 +75,7 @@ static const stp_parameter_t dither_parameters[] =
        "paper or smears; increase the density if black "
        "regions are not solid."),
     STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-    STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, -1, 1
+    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, -1, 1
   },
   {
     "DitherAlgorithm", N_("Dither Algorithm"),

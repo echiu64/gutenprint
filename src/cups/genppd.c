@@ -132,6 +132,7 @@ const char *special_options[] =
   "Resolution",
   "OutputOrder",
   "Quality",
+  "ImageType",
   NULL
 };
 
@@ -186,16 +187,20 @@ is_special_option(const char *name)
 }
 
 static void
-print_group_open(FILE *fp, stp_parameter_level_t p_level)
+print_group_open(FILE *fp, stp_parameter_class_t p_class,
+		 stp_parameter_level_t p_level)
 {
-  gzprintf(fp, "*OpenSubGroup: %s %s\n\n", _("Gimp-Print"),
+  gzprintf(fp, "*OpenGroup: %s %s %s\n\n", _("Gimp-Print"),
+	   _(parameter_class_names[p_class]),
 	   _(parameter_level_names[p_level]));
 }
 
 static void
-print_group_close(FILE *fp, stp_parameter_level_t p_level)
+print_group_close(FILE *fp, stp_parameter_class_t p_class,
+		 stp_parameter_level_t p_level)
 {
-  gzprintf(fp, "*CloseSubGroup: %s %s\n\n", _("Gimp-Print"),
+  gzprintf(fp, "*CloseGroup: %s %s %s\n\n", _("Gimp-Print"),
+	   _(parameter_class_names[p_class]),
 	   _(parameter_level_names[p_level]));
 }
 
@@ -659,6 +664,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
   stp_parameter_list_t param_list;
   const stp_param_string_t *opt;
   int has_quality_parameter = 0;
+  int has_image_type_parameter = 0;
 
  /*
   * Initialize driver-specific variables...
@@ -1054,7 +1060,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
       stp_clear_string_parameter(v, "Resolution");
       has_quality_parameter = 1;
       gzprintf(fp, "*OpenUI *StpQuality/%s: PickOne\n", _(desc.text));
-      gzputs(fp, "*OrderDependency: 20 AnySetup *StpQuality\n");
+      gzputs(fp, "*OrderDependency: 5 AnySetup *StpQuality\n");
       gzprintf(fp, "*DefaultStpQuality: %s\n", desc.deflt.str);
       num_opts = stp_string_list_count(desc.bounds.str);
       for (i = 0; i < num_opts; i++)
@@ -1068,7 +1074,29 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	    gzprintf(fp, "*StpQuality %s/%s:\t\"<</HWResolution[%d %d]>>setpagedevice\"\n",
 		     opt->name, opt->text, xdpi, ydpi);
 	}
-      gzputs(fp, "*CloseUI: *Quality\n\n");
+      gzputs(fp, "*CloseUI: *StpQuality\n\n");
+    }
+  stp_parameter_description_free(&desc);
+  stp_clear_string_parameter(v, "Quality");
+
+ /*
+  * Image type
+  */
+
+  stp_describe_parameter(v, "ImageType", &desc);
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
+    {
+      has_image_type_parameter = 1;
+      gzprintf(fp, "*OpenUI *StpImageType/%s: PickOne\n", _(desc.text));
+      gzputs(fp, "*OrderDependency: 5 AnySetup *StpImageType\n");
+      gzprintf(fp, "*DefaultStpImageType: %s\n", desc.deflt.str);
+      num_opts = stp_string_list_count(desc.bounds.str);
+      for (i = 0; i < num_opts; i++)
+	{
+	  opt = stp_string_list_param(desc.bounds.str, i);
+	  gzprintf(fp, "*StpImageType %s/%s: \"\"\n", opt->name, opt->text);
+	}
+      gzputs(fp, "*CloseUI: *StpImageType\n\n");
     }
   stp_parameter_description_free(&desc);
 
@@ -1130,8 +1158,6 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 
   for (j = 0; j <= STP_PARAMETER_CLASS_OUTPUT; j++)
     {
-      gzprintf(fp, "*OpenGroup: %s %s\n\n", _("Gimp-Print"),
-	       _(parameter_class_names[j]));
       for (k = 0; k <= STP_PARAMETER_LEVEL_ADVANCED4; k++)
 	{
 	  int printed_open_group = 0;
@@ -1153,7 +1179,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 		  int printed_default_value = 0;
 		  if (!printed_open_group)
 		    {
-		      print_group_open(fp, k);
+		      print_group_open(fp, j, k);
 		      printed_open_group = 1;
 		    }
 		  gzprintf(fp, "*OpenUI *Stp%s/%s: PickOne\n",
@@ -1222,8 +1248,8 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 		      gzprintf(fp, "*CloseUI: *Stp%s\n\n", desc.name);
 		      gzprintf(fp, "*OpenUI *StpFine%s/%s %s: PickOne\n",
 			       desc.name, _(desc.text), _("Fine Adjustment"));
-		      gzprintf(fp, "*DefaultStpFine%s: None\n", desc.name);
-		      gzprintf(fp, "*StpFine%s: None/0.000: ""\n", desc.name);
+		      gzprintf(fp, "*DefaultStpFine%s:None\n", desc.name);
+		      gzprintf(fp, "*StpFine%s None/0.000: ""\n", desc.name);
 		      for (i = 0; i < 100; i += 5)
 			gzprintf(fp, "*StpFine%s %d/%.3f: \"\"\n",
 				 desc.name, i, ((double) i) * .001);
@@ -1240,10 +1266,8 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	      stp_parameter_description_free(&desc);
 	    }
 	  if (printed_open_group)
-	    print_group_close(fp, k);
+	    print_group_close(fp, j, k);
 	}
-      gzprintf(fp, "*CloseGroup: %s %s\n\n", _("Gimp-Print"),
-	       _(parameter_class_names[j]));
     }
   if (has_quality_parameter)
     {
@@ -1297,6 +1321,62 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 		}
 	    }
 	  stp_clear_string_parameter(v, "Quality");
+	  stp_parameter_description_free(&desc);
+	}
+      stp_parameter_description_free(&qdesc);
+    }
+  if (has_image_type_parameter)
+    {
+      stp_parameter_t qdesc;
+      const char *tname = NULL;
+      stp_describe_parameter(v, "ImageType", &qdesc);
+      if (qdesc.p_type == STP_PARAMETER_TYPE_STRING_LIST &&
+	  stp_string_list_count(qdesc.bounds.str) > 1)
+	{
+	  for (l = 0; l < stp_string_list_count(qdesc.bounds.str); l++)
+	    {
+	      opt = stp_string_list_param(qdesc.bounds.str, l);
+	      if (opt && strcmp(opt->name, "None") != 0)
+		{
+		  tname = opt->name;
+		  break;
+		}
+	    }
+	}
+      for (l = 0; l < stp_parameter_list_count(param_list); l++)
+	{
+	  const stp_parameter_t *lparam =
+	    stp_parameter_list_param(param_list, l);
+	  if (lparam->p_class > STP_PARAMETER_CLASS_OUTPUT ||
+	      lparam->p_level > STP_PARAMETER_LEVEL_ADVANCED4 ||
+	      strcmp(lparam->name, "ImageType") == 0 ||
+	      (lparam->p_type != STP_PARAMETER_TYPE_STRING_LIST &&
+	       lparam->p_type != STP_PARAMETER_TYPE_BOOLEAN &&
+	       lparam->p_type != STP_PARAMETER_TYPE_DOUBLE))
+	    continue;
+	  stp_clear_string_parameter(v, "ImageType");
+	  stp_describe_parameter(v, lparam->name, &desc);
+	  if (desc.is_active)
+	    {
+	      stp_parameter_description_free(&desc);
+	      stp_set_string_parameter(v, "ImageType", tname);
+	      stp_describe_parameter(v, lparam->name, &desc);
+	      if (!desc.is_active)
+		{
+		  gzprintf(fp, "*UIConstraints: *StpImageType *Stp%s\n",
+			   lparam->name);
+		  gzprintf(fp, "*UIConstraints: *Stp%s *StpImageType\n\n",
+			   lparam->name);
+		  if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
+		    {
+		      gzprintf(fp, "*UIConstraints: *StpImageType *StpFine%s\n",
+			       lparam->name);
+		      gzprintf(fp, "*UIConstraints: *StpFine%s *StpImageType\n\n",
+			       lparam->name);
+		    }		      
+		}
+	    }
+	  stp_clear_string_parameter(v, "ImageType");
 	  stp_parameter_description_free(&desc);
 	}
       stp_parameter_description_free(&qdesc);

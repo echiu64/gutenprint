@@ -86,7 +86,7 @@ static const float_param_t float_parameters[] =
       "ColorCorrection", N_("Color Correction"),
       N_("Color correction to be applied"),
       STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, -1, 1
+      STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1, 1
     }, 0.0, 0.0, 0.0, 0
   },
   {
@@ -2102,7 +2102,7 @@ stpi_color_traditional_init(stp_vars_t v,
       else
 	itype = 2;
     }
-  if (color_correction)
+  else if (color_correction)
     {
       if (strcmp(color_correction, "Uncorrected") == 0)
 	itype = 0;
@@ -2110,7 +2110,7 @@ stpi_color_traditional_init(stp_vars_t v,
 	itype = 1;
       else if (strcmp(color_correction, "Accurate") == 0)
 	itype = 2;
-      else if (strcmp(color_correction, "Default") == 0)
+      else if (strcmp(color_correction, "None") == 0)
 	itype = 2;
       else if (strcmp(color_correction, "HSLAdjust") == 0)
 	itype = 3;
@@ -2428,7 +2428,7 @@ stpi_color_traditional_describe_parameter(stp_const_vars_t v,
 		{
 		  description->bounds.str = stp_string_list_create();
 		  stp_string_list_add_string
-		    (description->bounds.str, "Default", _("Default"));
+		    (description->bounds.str, "None", _("Default"));
 		  stp_string_list_add_string
 		    (description->bounds.str, "Accurate", _("High Accuracy"));
 		  stp_string_list_add_string
@@ -2439,7 +2439,7 @@ stpi_color_traditional_describe_parameter(stp_const_vars_t v,
 		    (description->bounds.str, "HSLAdjust", _("HSL-corrected"));
 		  stp_string_list_add_string
 		    (description->bounds.str, "Uncorrected", _("Uncorrected"));
-		  description->deflt.str = "Accurate";
+		  description->deflt.str = "None";
 		}
 	      break;
 	    default:

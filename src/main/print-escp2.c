@@ -170,7 +170,7 @@ static const stp_parameter_t the_parameters[] =
   {
     "AdjustDotsize", N_("Adjust dot size as necessary"),
     N_("Adjust dot size as necessary to achieve desired density"),
-    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_OUTPUT,
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_ADVANCED4, 1, 1, -1, 1
   },
   PARAMETER_INT(max_hres),
