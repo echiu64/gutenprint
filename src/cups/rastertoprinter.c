@@ -654,7 +654,7 @@ main(int  argc,				/* I - Number of command-line arguments */
        * Setup printer driver variables...
        */
       v = initialize_page(&cups, default_settings);
-      stp_set_page_number(v, cups.page);
+      stp_set_int_parameter(v, "PageNumber", cups.page);
       cups.row = 0;
       fprintf(stderr, "DEBUG: Gimp-Print printing page %d\n", cups.page + 1);
       fprintf(stderr, "PAGE: %d 1\n", cups.page + 1);

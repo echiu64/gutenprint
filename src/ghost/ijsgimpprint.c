@@ -335,10 +335,21 @@ list_all_parameters(void)
 	      if ((param->p_level < STP_PARAMETER_LEVEL_ADVANCED4) &&
 		  (param->p_type != STP_PARAMETER_TYPE_RAW) &&
 		  (param->p_type != STP_PARAMETER_TYPE_FILE) &&
+		  (!param->read_only) &&
 		  (strcmp(param->name, "Resolution") != 0) &&
 		  (strcmp(param->name, "PageSize") != 0) &&
 		  (!stp_string_list_is_present(sl, param->name)))
 		stp_string_list_add_string(sl, param->name, NULL);
+	      if (param->p_type == STP_PARAMETER_TYPE_DOUBLE &&
+		  !param->read_only && param->is_active &&
+		  !param->is_mandatory)
+		{
+		  char *tmp =
+		    malloc(strlen(param->name) + strlen("Enable") + 1);
+		  sprintf(tmp, "Enable%s", param->name);
+		  stp_string_list_add_string(sl, tmp, NULL);
+		  free(tmp);
+		}
 	    }
 	  stp_parameter_list_free(params);
 	}
@@ -532,13 +543,15 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	free(img->filename);
       img->filename = c_strdup(vbuf);
     }
-  else if (strcmp(key, "OutputFD") == 0) {
-    /* Force locale to "C", because decimal numbers sent to the IJS
-       client must have a decimal point, nver a decimal comma */
-    setlocale(LC_ALL, "C");
-    img->fd = atoi(vbuf) + 1;
-    setlocale(LC_ALL, "");
-  } else if (strcmp(key, "DeviceManufacturer") == 0)
+  else if (strcmp(key, "OutputFD") == 0)
+    {
+      /* Force locale to "C", because decimal numbers sent to the IJS
+	 client must have a decimal point, nver a decimal comma */
+      setlocale(LC_ALL, "C");
+      img->fd = atoi(vbuf) + 1;
+      setlocale(LC_ALL, "");
+    }
+  else if (strcmp(key, "DeviceManufacturer") == 0)
     ;				/* We don't care who makes it */
   else if (strcmp(key, "DeviceModel") == 0)
     {
@@ -629,12 +642,9 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	    }
 	  break;
 	case STP_PARAMETER_TYPE_DOUBLE:
-	  if (! img->monochrome_flag || strcmp (key, "Contrast") != 0)
-	    {
-	      code = get_float(vbuf, key, &z);
-	      if (code == 0)
-		stp_set_float_parameter(img->v, key, z);
-	    }
+	  code = get_float(vbuf, key, &z);
+	  if (code == 0)
+	    stp_set_float_parameter(img->v, key, z);
 	  break;
 	case STP_PARAMETER_TYPE_INT:
 	  code = get_int(vbuf, key, &i);
@@ -647,7 +657,15 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	    stp_set_boolean_parameter(img->v, key, i);
 	  break;
 	default:
-	  STP_DEBUG(fprintf(stderr, "Bad parameter %s %d\n", key, desc.p_type));
+	  if (strncmp(key, "Enable", strlen("Enable")) == 0)
+	    {
+	      STP_DEBUG(fprintf(stderr,
+				"Setting dummy enable parameter %s %s\n",
+				key, vbuf));
+	      stp_set_string_parameter(img->v, key, vbuf);
+	    }
+	  else
+	    STP_DEBUG(fprintf(stderr, "Bad parameter %s %d\n", key, desc.p_type));
 	}
       stp_parameter_description_free(&desc);
     }
@@ -841,6 +859,40 @@ stp_dbg(const char *msg, stp_const_vars_t v)
 	  safe_get_string_parameter(v, "InkType"));
 }
 
+static void
+purge_unused_float_parameters(stp_vars_t v)
+{
+  int i;
+  stp_parameter_list_t params = stp_get_parameter_list(v);
+  size_t count = stp_parameter_list_count(params);
+  STP_DEBUG(fprintf(stderr, "Purging unused floating point parameters"));
+  for (i = 0; i < count; i++)
+    {
+      const stp_parameter_t *param = stp_parameter_list_param(params, i);
+      if (param->p_type == STP_PARAMETER_TYPE_DOUBLE &&
+	  !param->read_only && param->is_active && !param->is_mandatory)
+	{
+	  size_t bytes = strlen(param->name) + strlen("Enable") + 1;
+	  char *tmp = malloc(bytes);
+	  const char *value;
+	  sprintf(tmp, "Enable%s", param->name);
+	  STP_DEBUG(fprintf(stderr, "  Looking for parameter %s\n", tmp));
+	  value = stp_get_string_parameter(v, tmp);
+	  if (value)
+	    {
+	      STP_DEBUG(fprintf(stderr, "    Found %s: %s\n", tmp, value));
+	      if (strcmp(value, "Disabled") == 0)
+		{
+		  STP_DEBUG(fprintf(stderr, "    Clearing %s\n", param->name));
+		  stp_clear_float_parameter(v, param->name);
+		}
+	    }
+	  free(tmp);
+	}
+    }
+  stp_parameter_list_free(params);
+}
+
 int
 main (int argc, char **argv)
 {
@@ -900,7 +952,9 @@ main (int argc, char **argv)
   do
     {
 
+      STP_DEBUG(fprintf(stderr, "About to get page header\n"));
       status = ijs_server_get_page_header(img.ctx, &ph);
+      STP_DEBUG(fprintf(stderr, "Got page header %d\n", status));
       if (status)
 	{
 	  if (status < 0)
@@ -976,8 +1030,9 @@ main (int argc, char **argv)
       else
 	height = b - t;
       stp_set_height(img.v, height);
-      stp_set_page_number(img.v, page);
       stp_set_string_parameter(img.v, "JobMode", "Job");
+      stp_set_int_parameter(img.v, "PageNumber", page);
+      purge_unused_float_parameters(img.v);
       STP_DEBUG(stp_dbg("about to print", img.v));
       if (stp_verify(img.v))
 	{

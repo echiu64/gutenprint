@@ -772,8 +772,6 @@ stpi_verify_printer_params(stp_vars_t v)
 		   stp_get_left(v), stp_get_width(v), right);
     }
 
-  CHECK_INT_RANGE(v, page_number, 0, INT_MAX);
-
   params = stp_get_parameter_list(v);
   nparams = stp_parameter_list_count(params);
   for (i = 0; i < nparams; i++)

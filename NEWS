@@ -71,10 +71,17 @@ and changes from 4.2, as follows:
 
 * Major changes between Gimp-Print 5.0.0 alpha 1 and 5.0.0 alpha 2:
 
-  1) A fully functional Foomatic data generator is included with this
-     package.  This data generator permits Foomatic users to take full
+  1) A functional Foomatic data generator is included with this
+     package.  This data generator permits Foomatic users to take
      advantage of the new features in Gimp-Print 5.0, other than
      curves.
+
+     Due to limitations in the current Foomatic release, Foomatic sets
+     all numerical parameters to values, even options that are
+     optional.  Gimp-Print treats unset options differently from
+     options that are set to default values.  To work around this,
+     there are additional options added to the Foomatic data to permit
+     enabling specific options as desired.
 
   2) The color architecture has been extensively revised.  It now
      accepts data in 8 or 16 bit formats in grayscale, whitescale,
@@ -124,9 +131,8 @@ and changes from 4.2, as follows:
   9) Valgrind has been run over the package and a number of memory
      issues have been fixed.
 
-  10) This package does not currently work with the GIMP 2.0.  If you
-     have the GIMP 2.0 installed, you will need to use --disable-gimp
-     to build it successfully.
+  10) The Print plugin in this package does not currently work with
+     the GIMP 2.0 (only 1.2).
 
   Please see the change log for full information.
 

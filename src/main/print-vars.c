@@ -76,7 +76,6 @@ typedef struct					/* Plug-in variables */
   int	height;			/* ... */
   int	page_width;		/* Width of page in points */
   int	page_height;		/* Height of page in points */
-  int	page_number;
   stpi_list_t *params[STP_PARAMETER_TYPE_INVALID];
   stpi_list_t *internal_data;
   void (*outfunc)(void *data, const char *buffer, size_t bytes);
@@ -428,7 +427,6 @@ DEF_FUNCS(width, int, stp)
 DEF_FUNCS(height, int, stp)
 DEF_FUNCS(page_width, int, stp)
 DEF_FUNCS(page_height, int, stp)
-DEF_FUNCS(page_number, int, stp)
 DEF_FUNCS(outdata, void *, stp)
 DEF_FUNCS(errdata, void *, stp)
 DEF_FUNCS(outfunc, stp_outfunc_t, stp)
@@ -1268,7 +1266,6 @@ stp_vars_copy(stp_vars_t vd, stp_const_vars_t vs)
   stp_set_height(vd, stp_get_height(vs));
   stp_set_page_width(vd, stp_get_page_width(vs));
   stp_set_page_height(vd, stp_get_page_height(vs));
-  stp_set_page_number(vd, stp_get_page_number(vs));
   stp_set_outdata(vd, stp_get_outdata(vs));
   stp_set_errdata(vd, stp_get_errdata(vs));
   stp_set_outfunc(vd, stp_get_outfunc(vs));

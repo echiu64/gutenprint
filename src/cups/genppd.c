@@ -1205,7 +1205,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	      const stp_parameter_t *lparam =
 		stp_parameter_list_param(param_list, l);
 	      if (lparam->p_class != j || lparam->p_level != k ||
-		  is_special_option(lparam->name) ||
+		  is_special_option(lparam->name) || lparam->read_only ||
 		  (lparam->p_type != STP_PARAMETER_TYPE_STRING_LIST &&
 		   lparam->p_type != STP_PARAMETER_TYPE_BOOLEAN &&
 		   lparam->p_type != STP_PARAMETER_TYPE_DOUBLE))

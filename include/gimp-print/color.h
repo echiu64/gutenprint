@@ -22,7 +22,7 @@
  */
 
 /**
- * @file color.h
+ * @file include/gimp-print/color.h
  * @brief Color functions.
  */
 

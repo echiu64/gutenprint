@@ -743,10 +743,11 @@ populate_options(stp_const_vars_t v)
     {
       stp_parameter_t desc;
       const stp_parameter_t *param = stp_parameter_list_param(params, i);
-      if (param->p_class == STP_PARAMETER_CLASS_OUTPUT ||
-	  param->p_class == STP_PARAMETER_CLASS_FEATURE ||
-	  (param->p_class == STP_PARAMETER_CLASS_CORE &&
-	   strcmp(param->name, "PageSize") == 0))
+      if (!param->read_only &&
+	  (param->p_class == STP_PARAMETER_CLASS_OUTPUT ||
+	   param->p_class == STP_PARAMETER_CLASS_FEATURE ||
+	   (param->p_class == STP_PARAMETER_CLASS_CORE &&
+	    strcmp(param->name, "PageSize") == 0)))
 	{
 	  option_t *opt = &(current_options[idx]);
 	  opt->fast_desc = stp_parameter_list_param(params, i);
@@ -825,7 +826,7 @@ populate_option_table(GtkWidget *table, int p_class)
        * Specialize the core parameters (page size is the only one we want)
        * Yuck.
        */
-      if (desc->p_class == p_class &&
+      if (!desc->read_only && desc->p_class == p_class &&
 	  (desc->p_class != STP_PARAMETER_CLASS_CORE ||
 	   strcmp(desc->name, "PageSize") == 0))
 	{
@@ -870,7 +871,7 @@ populate_option_table(GtkWidget *table, int p_class)
       option_t *opt = &(current_options[i]);
       stp_const_curve_t xcurve;
       const stp_parameter_t *desc = opt->fast_desc;
-      if (desc->p_class == p_class &&
+      if (!desc->read_only && desc->p_class == p_class &&
 	  (desc->p_class != STP_PARAMETER_CLASS_CORE ||
 	   strcmp(desc->name, "PageSize") == 0))
 	{
@@ -4412,7 +4413,7 @@ set_color_defaults (void)
       option_t *opt = &(current_options[i]);
       if (opt->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL &&
 	  opt->fast_desc->p_class == STP_PARAMETER_CLASS_OUTPUT &&
-	  opt->is_active)
+	  opt->is_active && !opt->fast_desc->read_only)
 	{
 	  stp_parameter_activity_t active;
 	  switch (opt->fast_desc->p_type)

@@ -150,10 +150,11 @@ typedef struct
   stp_parameter_type_t p_type;
   stp_parameter_class_t p_class;
   stp_parameter_level_t p_level;
-  int is_mandatory;
-  int is_active;
-  int channel;
-  int verify_this_parameter;	/* Should the verify system check this? */
+  unsigned char is_mandatory;
+  unsigned char is_active;
+  unsigned char channel;
+  unsigned char verify_this_parameter;	/* Should the verify system check this? */
+  unsigned char read_only;
   union				/* Limits on the values */
   {				/* the parameter may take */
     stp_curve_t curve;
@@ -225,12 +226,6 @@ extern int stp_get_width(stp_const_vars_t v);
 
 extern void stp_set_height(stp_vars_t v, int val);
 extern int stp_get_height(stp_const_vars_t v);
-
-/*
- * Set/get job properties
- */
-extern void stp_set_page_number(stp_vars_t, int);
-extern int stp_get_page_number(stp_const_vars_t);
 
 /*
  * For custom page widths, these functions may be used.

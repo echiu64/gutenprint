@@ -26,6 +26,7 @@
 #include <gimp-print/gimp-print-intl-internal.h>
 #include "generic-options.h"
 #include <string.h>
+#include <limits.h>
 
 static const stpi_quality_t standard_qualities[] =
 {
@@ -61,19 +62,25 @@ static const stp_parameter_t the_parameters[] =
     "Quality", N_("Print Quality"), N_("Basic Output Adjustment"),
     N_("Print Quality"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0, 0
   },
   {
     "ImageType", N_("Image Type"), N_("Basic Image Adjustment"),
     N_("Type of image being printed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_OUTPUT,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0, 0
   },
   {
     "JobMode", N_("Job Mode"), N_("Job Mode"),
     N_("Job vs. page mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0, 0
+  },
+  {
+    "PageNumber", N_("Page Number"), N_("Job Mode"),
+    N_("Page number"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_CORE,
+    STP_PARAMETER_LEVEL_BASIC, 0, 1, -1, 1, 0
   },
 };
 
@@ -239,6 +246,12 @@ stpi_describe_generic_parameter(stp_const_vars_t v, const char *name,
 				     itype->text);
 	}
       description->deflt.str = "Page";
+    }
+  else if (strcmp(name, "PageNumber") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = 0;
+      description->bounds.integer.upper = INT_MAX;
     }
 }
 
