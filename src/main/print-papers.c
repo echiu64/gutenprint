@@ -44,7 +44,7 @@ static void stp_paper_freefunc(stp_list_item_t *item);
 static const char *stp_paper_namefunc(const stp_list_item_t *item);
 static const char *stp_paper_long_namefunc(const stp_list_item_t *item);
 
-stp_list_t *paper_list;
+static stp_list_t *paper_list;
 
 
 int

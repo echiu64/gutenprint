@@ -174,26 +174,6 @@ typedef struct stp_softweave
 extern void	stp_fold(const unsigned char *line, int single_height,
 			 unsigned char *outbuf);
 
-extern void	stp_split_2(int height, int bits, const unsigned char *in,
-			    unsigned char *outhi, unsigned char *outlo);
-
-extern void	stp_split_4(int height, int bits, const unsigned char *in,
-			    unsigned char *out0, unsigned char *out1,
-			    unsigned char *out2, unsigned char *out3);
-
-extern void	stp_unpack_2(int height, int bits, const unsigned char *in,
-			     unsigned char *outlo, unsigned char *outhi);
-
-extern void	stp_unpack_4(int height, int bits, const unsigned char *in,
-			     unsigned char *out0, unsigned char *out1,
-			     unsigned char *out2, unsigned char *out3);
-
-extern void	stp_unpack_8(int height, int bits, const unsigned char *in,
-			     unsigned char *out0, unsigned char *out1,
-			     unsigned char *out2, unsigned char *out3,
-			     unsigned char *out4, unsigned char *out5,
-			     unsigned char *out6, unsigned char *out7);
-
 extern int	stp_pack_tiff(const unsigned char *line, int height,
 			      unsigned char *comp_buf,
 			      unsigned char **comp_ptr,

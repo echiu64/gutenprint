@@ -792,7 +792,7 @@ stp_split_2_2(int length,
     }
 }
 
-void
+static void
 stp_split_2(int length,
 	      int bits,
 	      const unsigned char *in,
@@ -923,7 +923,7 @@ stp_split_4_2(int length,
     }
 }
 
-void
+static void
 stp_split_4(int length,
 	      int bits,
 	      const unsigned char *in,
@@ -1030,7 +1030,7 @@ stp_unpack_2_2(int length,
     }
 }
 
-void
+static void
 stp_unpack_2(int length,
 	       int bits,
 	       const unsigned char *in,
@@ -1180,7 +1180,7 @@ stp_unpack_4_2(int length,
     }
 }
 
-void
+static void
 stp_unpack_4(int length,
 	       int bits,
 	       const unsigned char *in,
@@ -1369,7 +1369,7 @@ stp_unpack_8_2(int length,
     }
 }
 
-void
+static void
 stp_unpack_8(int length,
 	       int bits,
 	       const unsigned char *in,
