@@ -92,7 +92,7 @@ et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
   eventone_t *et = (eventone_t *) d->aux_data;
 
   if (!et) {
-    int i,j;
+    int i;
     for (i = 0; i < CHANNEL_COUNT(d); i++) {
       int size = 2 * MAX_SPREAD + ((d->dst_width + 7) & ~7);
       CHANNEL(d, i).error_rows = 1;
@@ -118,13 +118,11 @@ et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
     }
 
     for (i = 0; i < CHANNEL_COUNT(d); i++) {
-      for (j = 0; j < CHANNEL(d, i).numshades; j++) {
-        int x;
-	CHANNEL(d, i).shades[j].dis = et->d_sq;
-	CHANNEL(d, i).shades[j].et_dis = stpi_malloc(sizeof(stpi_dis_t) * d->dst_width);
-	for (x = 0; x < d->dst_width; x++) {
-	  CHANNEL(d, i).shades[j].et_dis[x] = et->d_sq;
-	}
+      int x;
+      CHANNEL(d, i).shade.dis = et->d_sq;
+      CHANNEL(d, i).shade.et_dis = stpi_malloc(sizeof(stpi_dis_t) * d->dst_width);
+      for (x = 0; x < d->dst_width; x++) {
+	CHANNEL(d, i).shade.et_dis[x] = et->d_sq;
       }
     }
     d->aux_data = et;
@@ -145,11 +143,10 @@ et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
   if (d->last_line_was_empty >= 5) {
     return 0;
   } else if (d->last_line_was_empty == 4) {
-      int i,j;
-      for (i = 0; i < CHANNEL_COUNT(d); i++)
-	for (j = 0; j < CHANNEL(d, i).numshades; j++)
-	  memset(&CHANNEL(d, i).errs[0][MAX_SPREAD], 0, d->dst_width * sizeof(int));
-      return 0;
+    int i;
+    for (i = 0; i < CHANNEL_COUNT(d); i++)
+      memset(&CHANNEL(d, i).errs[0][MAX_SPREAD], 0, d->dst_width * sizeof(int));
+    return 0;
   }
   return 1;
 }
@@ -172,7 +169,7 @@ diffuse_error(stpi_dither_channel_t *dc, eventone_t *et, int diff_factor, int x,
 {
     /* Eventone updates */
 
-    { stpi_shade_segment_t *sp = &dc->shades[0];
+    { stpi_shade_segment_t *sp = &dc->shade;
       stpi_dis_t *etd = &sp->et_dis[x];
       int t = etd->r_sq + etd->dy;		/* r^2 from dot above */
       int u = sp->dis.r_sq + sp->dis.dy;	/* r^2 from dot on this line */
@@ -323,7 +320,7 @@ stpi_dither_et(stp_vars_t v,
 	{
 	  int inkspot, base;
 	  stpi_dither_channel_t *dc = &CHANNEL(d, i);
-	  stpi_shade_segment_t *sp = &dc->shades[0];
+	  stpi_shade_segment_t *sp = &dc->shade;
 	  stpi_ink_defn_t *inkp;
 	  stpi_ink_defn_t lower, upper;
 
@@ -331,8 +328,8 @@ stpi_dither_et(stp_vars_t v,
 
 	  /* Incorporate error data from previous line */
 	  base = raw[i];
-	  inkspot = dc->v + base + dc->errs[x + MAX_SPREAD];
-	  dc->v = inkspot + base;
+	  dc->v += 2 * base + dc->errs[0][x + MAX_SPREAD];
+	  inkspot = dc->v - base;
 
 	  /* Find which are the two candidate dot sizes */
 	  range += find_segment(sp, et, inkspot, base, &lower, &upper);

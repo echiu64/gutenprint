@@ -100,15 +100,8 @@ stpi_dither_channel_destroy(stpi_dither_channel_t *channel)
       SAFE_FREE(channel->errs);
     }
   SAFE_FREE(channel->ranges);
-  if (channel->shades)
-    {
-      for (i = 0; i < channel->numshades; i++)
-	{
-	  SAFE_FREE(channel->shades[i].dotsizes);
-	  SAFE_FREE(channel->shades[i].et_dis);
-	}
-      SAFE_FREE(channel->shades);
-    }
+  SAFE_FREE(channel->shade.dotsizes);
+  SAFE_FREE(channel->shade.et_dis);
   stpi_dither_matrix_destroy(&(channel->pick));
   stpi_dither_matrix_destroy(&(channel->dithermat));
 }  
@@ -388,20 +381,9 @@ stpi_dither_set_inks_full(stp_vars_t v, int color, int nshades,
       idx = stpi_dither_translate_channel(v, color, subchannel);
       assert(idx >= 0);
       dc = &(CHANNEL(d, idx));
+      SAFE_FREE(dc->shade.dotsizes);
 
-      if (dc->shades)
-	{
-	  for (j = 0; j < dc->numshades; j++)
-	    {
-	      SAFE_FREE(dc->shades[j].dotsizes);
-	    }
-	  SAFE_FREE(dc->shades);
-	}
-
-      dc->numshades = 1;
-      dc->shades = stpi_zalloc(dc->numshades * sizeof(stpi_shade_segment_t));
-
-      sp = &dc->shades[0];
+      sp = &dc->shade;
       stpi_channel_add(v, color, subchannel, shades[i].value);
       sp->numdotsizes = shades[subchannel].numsizes;
       sp->dotsizes = stpi_zalloc(sp->numdotsizes * sizeof(stpi_ink_defn_t));

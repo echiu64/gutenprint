@@ -78,7 +78,6 @@ typedef struct ink_defn
   unsigned value;
   unsigned bits;
   unsigned dot_size;
-  int subchannel;
 } stpi_ink_defn_t;
 
 /*
@@ -130,8 +129,7 @@ typedef struct dither_channel
 
   stpi_ink_defn_t *ink_list;
 
-  stpi_shade_segment_t *shades;
-  int numshades;
+  stpi_shade_segment_t shade;
 
   int nlevels;
   stpi_dither_segment_t *ranges;
@@ -150,8 +148,6 @@ typedef struct dither
 {
   int src_width;		/* Input width */
   int dst_width;		/* Output width */
-
-  float fdensity;
 
   int spread;			/* With Floyd-Steinberg, how widely the */
   int spread_mask;		/* error is distributed.  This should be */
@@ -172,12 +168,9 @@ typedef struct dither
 
   int d_cutoff;
 
-  int oversampling;
   int last_line_was_empty;
   int ptr_offset;
   int error_rows;
-
-  int dither_class;		/* mono, black, or CMYK */
 
   int finalized;		/* When dither is first called, calculate
 				 * some things */
@@ -190,7 +183,6 @@ typedef struct dither
   unsigned *channel_index;
   unsigned *subchannel_count;
 
-  unsigned short virtual_dot_scale[65536];
   stpi_ditherfunc_t *ditherfunc;
   void *aux_data;
   void (*aux_freefunc)(struct dither *);

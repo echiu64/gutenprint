@@ -244,17 +244,10 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
   stpi_allocate_component_data(v, "Dither", NULL, stpi_dither_free, d);
 
   d->finalized = 0;
-  d->dither_class = stp_get_output_type(v);
   d->error_rows = ERROR_ROWS;
   d->ditherfunc = stpi_set_dither_function(v, image_bpp);
-  if (stp_check_float_parameter(v, "Density", STP_PARAMETER_ACTIVE))
-    d->fdensity = stp_get_float_parameter(v, "Density");
-  else
-    d->fdensity = 1.0;
   d->d_cutoff = 4096;
 
-  stpi_init_debug_messages(v);
-  stpi_flush_debug_messages(v);
   d->offset0_table = NULL;
   d->offset1_table = NULL;
   if (xdpi > ydpi)
