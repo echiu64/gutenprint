@@ -957,25 +957,16 @@ EPSON CL-700
 EPSON CL-750
 EPSON EM-900C
 EPSON EM-930C
-EPSON MC-10000
 EPSON MC-2000
 EPSON MC-5000
 EPSON MC-7000
 EPSON MC-9000
+EPSON MC-10000
 EPSON MJ-520C
 EPSON MJ-930C
 EPSON MJ-5100C
 EPSON MJ-6000C
 EPSON MJ-8000C
-EPSON PM-10000
-EPSON PM-2000C
-EPSON PM-2200C
-EPSON PM-3000C
-EPSON PM-3300C
-EPSON PM-3500C
-EPSON PM-4000PX
-EPSON PM-5000C
-EPSON PM-7000C
 EPSON PM-700C
 EPSON PM-730C
 EPSON PM-750C
@@ -986,8 +977,17 @@ EPSON PM-790PT
 EPSON PM-800C
 EPSON PM-850PT
 EPSON PM-880C
-EPSON PM-9000C
 EPSON PM-950C
+EPSON PM-2000C
+EPSON PM-2200C
+EPSON PM-3000C
+EPSON PM-3300C
+EPSON PM-3500C
+EPSON PM-4000PX
+EPSON PM-5000C
+EPSON PM-7000C
+EPSON PM-9000C
+EPSON PM-10000
 EPSON PX-7000
 EPSON PX-9000
 HP DeskJet 340
@@ -1227,21 +1227,12 @@ Epson MC-2000                  escp2-mc2000    EPSON MC-2000
 Epson MC-5000                  escp2-mc5000    EPSON MC-5000
 Epson MC-7000                  escp2-mc7000    EPSON MC-7000
 Epson MC-9000                  escp2-mc9000    EPSON MC-9000
+Epson MC-10000                 escp2-mc10000   EPSON MC-10000
 Epson MJ-520C                  escp2-mj520c    EPSON MJ-520C
 Epson MJ-930C                  escp2-mj930c    EPSON MJ-930C
 Epson MJ-5100C                 escp2-mj5100c   EPSON MJ-5100C
 Epson MJ-6000C                 escp2-mj6000c   EPSON MJ-6000C
 Epson MJ-8000C                 escp2-mj8000c   EPSON MJ-8000C
-Epson MC-10000                 escp2-mc10000   EPSON MC-10000
-Epson PM-2000C                 escp2-pm2000c   EPSON PM-2000C
-Epson PM-2200C                 escp2-pm2200c   EPSON PM-2200C
-Epson PM-3000C                 escp2-pm3000c   EPSON PM-3000C
-Epson PM-3300C                 escp2-pm3300c   EPSON PM-3300C
-Epson PM-3500C                 escp2-pm3500c   EPSON PM-3500C
-Epson PM-4000PX                escp2-pm4000px  EPSON PM-4000PX
-Epson PM-5000C                 escp2-pm5000c   EPSON PM-5000C
-Epson PM-7000C                 escp2-pm7000c   EPSON PM-7000C
-Epson PM-10000                 escp2-pm10000   EPSON PM-10000
 Epson PM-700C                  escp2-pm700c    EPSON PM-700C
 Epson PM-730C                  escp2-pm730c    EPSON PM-730C
 Epson PM-750C                  escp2-pm750c    EPSON PM-750C
@@ -1252,8 +1243,17 @@ Epson PM-790PT                 escp2-pm790pt   EPSON PM-790PT
 Epson PM-800C                  escp2-pm800c    EPSON PM-800C
 Epson PM-850PT                 escp2-pm850pt   EPSON PM-850PT
 Epson PM-880C                  escp2-pm880c    EPSON PM-880C
-Epson PM-9000C                 escp2-pm9000c   EPSON PM-9000C
 Epson PM-950C                  escp2-pm950c    EPSON PM-950C
+Epson PM-2000C                 escp2-pm2000c   EPSON PM-2000C
+Epson PM-2200C                 escp2-pm2200c   EPSON PM-2200C
+Epson PM-3000C                 escp2-pm3000c   EPSON PM-3000C
+Epson PM-3300C                 escp2-pm3300c   EPSON PM-3300C
+Epson PM-3500C                 escp2-pm3500c   EPSON PM-3500C
+Epson PM-4000PX                escp2-pm4000px  EPSON PM-4000PX
+Epson PM-5000C                 escp2-pm5000c   EPSON PM-5000C
+Epson PM-7000C                 escp2-pm7000c   EPSON PM-7000C
+Epson PM-9000C                 escp2-pm9000c   EPSON PM-9000C
+Epson PM-10000                 escp2-pm10000   EPSON PM-10000
 Epson PX-7000                  escp2-px7000    EPSON PX-7000
 Epson PX-9000                  escp2-px9000    EPSON PX-9000
 Fujitsu PrintPartner 10V       pcl-4           HP LaserJet 4 series
