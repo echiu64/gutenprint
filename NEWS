@@ -25,8 +25,8 @@ Gimp-Print 4.2.2-pre4 contains the following major changes over
 Gimp-Print 4.2.2-pre3:
 
   1) A longstanding bug whereby printing to Windows-hosted printers
-     results in the last page not being completely printed has been
-     fixed.
+     resulted in some cases in the last page not being completely
+     printed has been fixed.
 
   2) Improvements for the Epson Stylus Photo 2200.
 
@@ -215,18 +215,6 @@ The following bugs have been fixed in 4.2.1:
 540307 Syntax error in CloseUI in PPD files
 543562 Portability issues
 548844 OS X support
-
-The following critical bug has been reported against all 4.2 releases
-to date and is unresolved in this release.  The symptoms are that
-prints to Windows-hosted printers are incomplete: the bottom of the
-last page will not be printed.  Some people have reported success when
-the host is an NT-based system rather than a Windows 95/98/ME-based
-system.  The only definitive workaround is to physically host the
-printer on a UNIX/Linux system.  It is not known at this time if the
-underlying problem is in Gimp-print or in other software.
-
-510185 Incomplete print to Windows-hosted printers
-
 
 
 Gimp-Print 4.2 contains the following major changes over Gimp-Print
