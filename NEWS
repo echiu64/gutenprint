@@ -40,6 +40,8 @@ available at http://gimp-print.sourceforge.net.
 Please read the README file for full instructions on installing this
 package.
 
+
+
 Gimp-Print 4.2.3 contains the following major changes over Gimp-Print
 4.2.2:
 
@@ -144,6 +146,8 @@ The following bugs are open against Gimp-Print 4.2.3:
 619299 QUALITY - brightness adjustment problem
 619537 QUALITY - Poor quality w/ Lexmark OprtaE+ & pcl-4
 621668 Full bleed prints have slight margin
+625602 QUALITY Pale output on Stylus Pro 7500
+
 
 
 Gimp-Print 4.2.2 contains the following major changes over Gimp-Print
@@ -273,17 +277,6 @@ The following bugs have been fixed in Gimp-Print 4.2.2:
 598341 get_system_printers() problem with duplicate entries
 599505 PS2 printing from GIMP broken with CUPS
 600249 gimp-print output too narrow in CUPS
-
-
-The following bugs are open against Gimp-Print 4.2.2:
-
-538097 Poor quality printing on Canon s400
-549677 Incorrect scaling on Canon BJC-1000
-581168 BJC 250 just spits out pages
-596538 Cutting on Epson Stylus Photo 925 does not work
-599029 Fast printing not supported on Epson 950, 960
-602933 Poor quality on Canon S800
-603702 HP LaserJet 5L print is too light
 
 
 

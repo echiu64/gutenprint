@@ -51,8 +51,9 @@ MACINTOSH OS X NOTE
     GhostScript, to permit printing from applications (such as most
     Adobe applications) that generate PostScript rather than PDF
     output.  NOTE THAT WITHOUT THIS PACKAGE, YOU WILL NOT BE ABLE TO
-    PRINT FROM ANY CARBON APPLICATIONS!  Directions for that are also
-    available at http://gimp-print.sourceforge.net/MacOSX.php3.
+    PRINT FROM ANY CARBON APPLICATIONS (in particular, many Adobe
+    applications)!  Directions for that are also available at
+    http://gimp-print.sourceforge.net/MacOSX.php3.
 
     Users installing these packages do not need any additional
     software packages.
@@ -182,9 +183,9 @@ CUPS
     CUPS front end (e. g. KUPS, or via the web interface) because they
     look something like this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.2(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.3(en)
 
-    If the version number (in this case, 4.2.2) does not match
+    If the version number (in this case, 4.2.3) does not match
     the version of Gimp-Print that you are installing, you must use
     Modify Printer to force the new PPD file to get installed.
     Failure to do so may lead to incorrect output and/or other errors!
@@ -215,15 +216,15 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     apparent when you use a CUPS front end to select a PPD file and
     you see something like this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.2(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.2(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.2(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.3(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.3(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.3(en)
 
     rather than this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.2(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.2(sv)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.2(fr)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.3(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.3(sv)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.3(fr)
 
     you may wish to turn off the translation of PPD files:
 
