@@ -523,6 +523,16 @@ int main(int argc,char *argv[]){
             }
         case '(': /* commands with a payload */
             get1("Corrupt file.  Incomplete extended command.\n");
+            if (ch=='R') { /* "remote mode" */
+              fprintf(stderr,"Warning!  Commands in remote mode ignored.\n");
+              do {
+                while((!eject)&&(ch!=0x1b)) {
+                  get1("Error in remote mode.\n");
+                }
+                get1("Error reading remote mode terminator\n");
+              } while ((!eject)&&(ch!=0));
+              continue;
+            }
             get2("Corrupt file.  Error reading buffer size.\n");
             bufsize=sh;
             /* fprintf(stderr,"Command %X bufsize %d.\n",ch,bufsize); */
