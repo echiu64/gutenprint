@@ -1,0 +1,64 @@
+#!/bin/csh -f
+#
+# makesrcdist - make a source distribution of GIMP-print.
+#
+
+# Set this to the SourceForge username you use...
+set username="easysw"
+
+# Get the current GIMP-print distribution...
+echo "Getting distribution..."
+
+cd /tmp
+cvs -d$username@cvs.gimp-print.sourceforge.net get -rprint-4_0_branch print >& /dev/null
+
+if ($#argv == 0) then
+	echo -n "Version number for distribution? "
+	set version = $<
+else
+	set version = $1
+endif
+
+if ($#argv == 2) then
+	set suffix="-$2"
+else
+	set suffix=""
+endif
+
+rm -rf print-$version
+mv print print-$version
+cd print-$version
+
+if ("$version" != "snapshot") then
+	echo "Tagging release..."
+
+	set tag = print-`echo $version$suffix | tr '.' '_' | tr '-' '_'`
+
+	cvs tag -F $tag
+endif
+
+echo "Making configuration script..."
+
+aclocal -I .
+automake
+autoconf
+
+echo "Removing CVS directories..."
+
+rm -rf CVS */CVS */*/CVS
+
+echo "Making .tar.gz distribution..."
+
+cd ..
+gtar czf print-$version$suffix-source.tar.gz print-$version
+
+echo "Making .tar.bz2 distribution..."
+
+rm -f print-$version$suffix-source.tar.bz2
+gunzip -c print-$version$suffix-source.tar.gz | bzip2 >print-$version$suffix-source.tar.bz2
+
+echo "Removing distribution directory..."
+
+rm -rf print-$version
+
+echo "Done\!"
