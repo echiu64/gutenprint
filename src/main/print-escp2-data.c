@@ -1855,9 +1855,9 @@ DECLARE_INK_CHANNEL(quadtone);
 
 static const physical_subchannel_t c80_quadtone_subchannels[] =
 {
-  { 4, -1, 0 },
+  { 4, -1, 240 },
   { 1, -1, 120 },
-  { 2, -1, 240 },
+  { 2, -1, 0 },
   { 0, -1, 0 }
 };
 
