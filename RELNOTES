@@ -1,5 +1,5 @@
 This is gimp-print version 4.0b2.  This is the second beta of the 4.0
-stable release.  It is not 4.0.
+stable release.  It is not 4.0, but it should be very close.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
 and CUPS drivers.  The support for printers in GhostScript and CUPS is
@@ -55,6 +55,23 @@ Gimp-Print 4.0b1:
    (that can only be done under software control with undocumented
    commands).
 
+14) A new paper size has been added that should be correct for Epson
+   4x6 photo paper (which is actually slightly larger than that, about
+   4.25x6.875).  Note, however, that you must still position the image
+   correctly in the plugin in order to get a correct printout; the
+   margins for this special paper will not be set automatically, and
+   if you are not careful you may get a print too large or not placed
+   correctly, overrunning the perforations.
+
+15) Newly added printers in the plugin often had their parameters set
+   incorrectly (most notably the gamma value, resulting in too-light
+   prints).  That is now believed to be fixed going forward.  However,
+   existing printers are not changed.  Therefore, when you first use a
+   printer in the print plugin, please use the color window to check
+   that the parameters are set to their correct defaults (use the Set
+   Defaults button in the Gimp 1.1/1.2 GUI, or set all of the
+   parameters to 1.0 in the Gimp 1.0 GUI).
+
 Errata:
 
 1) PostScript files (and PPD's) with embedded .setpagedevice commands
@@ -77,7 +94,18 @@ Errata:
    are not radical, but it may be hard to get a close match for
    extremely critical work.
 
-4) Red Hat 6.1 users cannot configure the plug-in.  The problem is
+   If the image is radically too light and washed out, please check
+   the color settings.  Fix (15) above fixes a problem whereby newly
+   added printers will often have an incorrect gamma setting, but it
+   does not retroactively fix printers that were misconfigured because
+   of this.  That must be fixed manually.
+
+4) As noted above, when using Epson 4x6 photo paper that is perforated
+   to allow tearing off the unprintable margins it is possible to
+   print part way into those margins.  This will not be fixed in the
+   release.
+
+5) Red Hat 6.1 users cannot configure the plug-in.  The problem is
    that neither the gimp nor the gimp-devel rpm's in that release
    include gimptool, which is necessary for configuration to work.
    This will not be fixed in the release.
@@ -87,9 +115,12 @@ Errata:
    gimptool, and you will then be able to build the plug-in.  This
    does not affect the Ghostscript driver.
 
-5) The CUPS drivers do not pass through the media type correctly, so
+6) The CUPS drivers do not pass through the media type correctly, so
    the driver always prints with the default media type, with CUPS
    1.1.3 and earlier.  CUPS 1.1.4 has the necessary fix.
+
+7) When printing text with CUPS, under some circumstances the margins
+   are not set correctly.  This is fixed in CUPS 1.1.4.
 
 
 Gimp-Print 4.0b1 contains the following improvements and changes over
