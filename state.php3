@@ -25,9 +25,9 @@ $supported_printers = array(
 		'EPSON Stylus Photo 700' => 'Fully Operational',
 		'EPSON Stylus Photo EX' => 'Fully Operational',
 		'EPSON Stylus Photo 750' => 'Fully Operational',
-		'EPSON Stylus Photo 1200' => 'Fully Operational'
+		'EPSON Stylus Photo 1200' => 'Fully Operational',
 		'EPSON Stylus Photo 870' => 'Fully Operational',
-		'EPSON Stylus Photo 1270' => 'Fully Operational
+		'EPSON Stylus Photo 1270' => 'Fully Operational'
 		),
 	'Stylus Color Range' => array(
 		'EPSON Stylus Color' => 'Fully Operational',
