@@ -92,21 +92,26 @@ main(int argc, char **argv)
 	    {
 	      printf("$defaults{'%s'}{'%s'} = '%s';\n",
 		     stp_printer_get_driver(p), "Color", "Color");
-	      printf("$stpdata{'%s'}{'%s'}{'%s'} = 1;\n",
-		     stp_printer_get_driver(p), "Color", "Color");
-	      printf("$stpdata{'%s'}{'%s'}{'%s'} = 1;\n",
-		     stp_printer_get_driver(p), "Color", "Grayscale");
-	      printf("$stpdata{'%s'}{'%s'}{'%s'} = 1;\n",
-		     stp_printer_get_driver(p), "Color", "BlackAndWhite");
+	      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
+		     stp_printer_get_driver(p), "Color", "Color",
+		     "Color");
+	      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
+		     stp_printer_get_driver(p), "Color", "Grayscale",
+		     "Gray Scale");
+	      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
+		     stp_printer_get_driver(p), "Color", "BlackAndWhite",
+		     "Black and White");
 	    }
 	  else
 	    {
 	      printf("$defaults{'%s'}{'%s'} = '%s';\n",
 		     stp_printer_get_driver(p), "Color", "Grayscale");
-	      printf("$stpdata{'%s'}{'%s'}{'%s'} = 1;\n",
-		     stp_printer_get_driver(p), "Color", "Grayscale");
-	      printf("$stpdata{'%s'}{'%s'}{'%s'} = 1;\n",
-		     stp_printer_get_driver(p), "Color", "BlackAndWhite");
+	      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
+		     stp_printer_get_driver(p), "Color", "Grayscale",
+		     "Grayscale");
+	      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
+		     stp_printer_get_driver(p), "Color", "BlackAndWhite",
+		     "Black and White");
 	    }
 	}
     }
