@@ -122,7 +122,7 @@ typedef struct escp2_printer
   int		black_nozzles;	/* Number of black nozzles (may be extra) */
   int		xres;		/* Normal distance between dots in */
 				/* softweave mode (inverse inches) */
-  int		lowres_dot_size;/* Dot size to use in softweave mode */
+  int		lowres_dot_size;/* Dot size to use in 360 DPI mode */
   int		softweave_dot_size;/* Dot size to use in softweave mode */
   int		microweave_dot_size; /* Dot size to use in microweave mode */
   int		max_paper_width; /* Maximum paper width, in points*/
@@ -165,6 +165,7 @@ typedef struct escp2_printer
 #define MODEL_VARIABLE_DOT_MASK	0xc00
 #define MODEL_VARIABLE_NORMAL	0x000
 #define MODEL_VARIABLE_4	0x400
+#define MODEL_VARIABLE_MULTI	0x800
 
 #define MODEL_COMMAND_MASK	0xf000
 #define MODEL_COMMAND_GENERIC	0x0000
@@ -179,85 +180,6 @@ typedef struct escp2_printer
 #define MODEL_ROLLFEED_YES	0x20000
 
 #define INCH(x)		(72 * x)
-
-typedef struct escp_init
-{
-  int model;
-  int output_type;
-  int ydpi;
-  int xdpi;
-  int use_softweave;
-  int page_length;
-  int page_width;
-  int page_top;
-  int page_bottom;
-  int top;
-  int nozzles;
-  int nozzle_separation;
-  int horizontal_passes;
-  int vertical_passes;
-  int vertical_oversample;
-  int bits;
-} escp_init_t;
-
-/*
- * SUGGESTED SETTINGS FOR STYLUS PHOTO EX:
- * Brightness 127
- * Blue 92
- * Saturation 1.2
- *
- * Another group of settings that has worked well for me is
- * Brightness 110
- * Gamma 1.2
- * Contrast 97
- * Blue 88
- * Saturation 1.1
- * Density 1.5
- *
- * With the current code, the following settings seem to work nicely:
- * Brightness ~110
- * Gamma 1.3
- * Contrast 80
- * Green 94
- * Blue 89
- * Saturation 1.15
- * Density 1.6
- *
- * The green and blue will vary somewhat with different inks
- */
-
-static double dot_sizes[] = { 0.550, 0.700, 1.0 };
-
-static simple_dither_range_t variable_dither_ranges[] =
-{
-  { 0.17, 0x1, 0, 1 },
-/*  { 0.233, 0x2, 0, 2 },
-  { 0.333, 0x3, 0, 3 }, */
-  { 0.550, 0x1, 1, 1 },
-  { 0.700, 0x2, 1, 2 },
-  { 1.0,   0x3, 1, 3 }
-};
-
-static simple_dither_range_t standard_dither_ranges[] =
-{
-  { 0.550, 0x1, 1, 1 },
-  { 0.7,   0x2, 1, 2 },
-  { 1.0,   0x3, 1, 3 }
-};
-
-static simple_dither_range_t mis_sixtone_ranges[] =
-{
-  { 0.15, 0x000001, 1, 1 },	/* LC */
-  { 0.25, 0x000010, 1, 1 },	/* C */
-  { 0.45, 0x000100, 1, 1 },	/* LM */
-  { 0.50, 0x001000, 1, 1 },	/* Y */
-  { 0.75, 0x010000, 1, 1 },	/* M */
-  { 1.00, 0x100000, 1, 1 }	/* K */
-};
-
-/*
- * A lot of these are guesses
- */
 
 static escp2_printer_t model_capabilities[] =
 {
@@ -402,7 +324,7 @@ static escp2_printer_t model_capabilities[] =
   /* 16: Stylus Color 860 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
+     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO),
     48, 6, 144, 360, 2, 0, 2, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0
@@ -410,7 +332,7 @@ static escp2_printer_t model_capabilities[] =
   /* 17: Stylus Color 1160 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
+     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO),
     48, 6, 144, 360, 2, 0, 2, INCH(13), INCH(44), 9, 9, 0, 9, 1, 0
@@ -426,7 +348,7 @@ static escp2_printer_t model_capabilities[] =
   /* 19: Stylus Color 760 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
+     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO),
     48, 6, 144, 360, 3, 0, 3, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0
@@ -450,18 +372,18 @@ static escp2_printer_t model_capabilities[] =
   /* 22: Stylus Photo 870 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
+     | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES),
-    48, 6, 48, 360, 2, 0, 4, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0
+    48, 6, 48, 360, 4, 0, 0, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0
   },
   /* 23: Stylus Photo 1270 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
-     | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_4
+     | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES),
-    48, 6, 48, 360, 2, 0, 4, INCH(13), INCH(44), 9, 9, 0, 9, 1, 0
+    48, 6, 48, 360, 4, 0, 0, INCH(13), INCH(44), 9, 9, 0, 9, 1, 0
   },
   /* 24: Stylus Color 3000 */
   {
@@ -512,6 +434,55 @@ static escp2_printer_t model_capabilities[] =
     64, 4, 64, 360, 2, 0, 4, INCH(44), INCH(1200), 9, 9, 0, 9, 1, 0
   },
 
+};
+
+typedef struct escp_init
+{
+  int model;
+  int output_type;
+  int ydpi;
+  int xdpi;
+  int use_softweave;
+  int page_length;
+  int page_width;
+  int page_top;
+  int page_bottom;
+  int top;
+  int nozzles;
+  int nozzle_separation;
+  int horizontal_passes;
+  int vertical_passes;
+  int vertical_oversample;
+  int bits;
+} escp_init_t;
+
+static double dot_sizes[] = { 0.550, 0.700, 1.0 };
+
+static simple_dither_range_t variable_dither_ranges[] =
+{
+  { 0.17, 0x1, 0, 1 },
+/*  { 0.233, 0x2, 0, 2 },
+  { 0.333, 0x3, 0, 3 }, */
+  { 0.550, 0x1, 1, 1 },
+  { 0.700, 0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static simple_dither_range_t standard_dither_ranges[] =
+{
+  { 0.550, 0x1, 1, 1 },
+  { 0.7,   0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static simple_dither_range_t mis_sixtone_ranges[] =
+{
+  { 0.15, 0x000001, 1, 1 },	/* LC */
+  { 0.25, 0x000010, 1, 1 },	/* C */
+  { 0.45, 0x000100, 1, 1 },	/* LM */
+  { 0.50, 0x001000, 1, 1 },	/* Y */
+  { 0.75, 0x010000, 1, 1 },	/* M */
+  { 1.00, 0x100000, 1, 1 }	/* K */
 };
 
 typedef struct {
@@ -834,7 +805,8 @@ escp2_set_graphics_mode(FILE *prn, escp_init_t *init)
 static void
 escp2_set_resolution(FILE *prn, escp_init_t *init)
 {
-  if (escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
+  if (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK,
+		     MODEL_VARIABLE_NORMAL)) &&
       init->use_softweave)
     fprintf(prn, "\033(U\005%c%c%c%c%c%c", 0, 1440 / init->ydpi,
 	    1440 / init->ydpi,
@@ -885,7 +857,13 @@ escp2_set_dot_size(FILE *prn, escp_init_t *init)
 	fprintf(prn, "\033(e\002%c%c%c", 0, 0, escp2_micro_ink(init->model));
     }
   else if (init->bits > 1)
-    fwrite("\033(e\002\000\000\020", 7, 1, prn); /* Variable dots */
+    {
+      if (escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK,
+			MODEL_VARIABLE_MULTI) && init->xdpi == 720)
+	fwrite("\033(e\002\000\000\021", 7, 1, prn); /* Variable 3 */
+      else
+	fwrite("\033(e\002\000\000\020", 7, 1, prn); /* Variable dots */
+    }
   else if (escp2_soft_ink(init->model) >= 0)
     fprintf(prn, "\033(e\002%c%c%c", 0, 0, escp2_soft_ink(init->model));
 }
@@ -894,7 +872,8 @@ static void
 escp2_set_page_length(FILE *prn, escp_init_t *init)
 {
   int l = init->ydpi * init->page_length / 72;
-  if (escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
+  if (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK,
+		      MODEL_VARIABLE_NORMAL)) &&
       init->use_softweave)
     fprintf(prn, "\033(C\004%c%c%c%c%c", 0,
 	    l & 0xff, (l >> 8) & 0xff, (l >> 16) & 0xff, (l >> 24) & 0xff);
@@ -907,7 +886,8 @@ escp2_set_margins(FILE *prn, escp_init_t *init)
 {
   int l = init->ydpi * init->page_length / 72;
   int t = init->ydpi * init->page_top / 72;
-  if (escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
+  if (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK,
+		      MODEL_VARIABLE_NORMAL)) &&
       init->use_softweave)
     {
       if (escp2_has_cap(init->model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
@@ -941,7 +921,8 @@ escp2_set_form_factor(FILE *prn, escp_init_t *init)
 static void
 escp2_set_printhead_resolution(FILE *prn, escp_init_t *init)
 {
-  if (escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
+  if (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK,
+		      MODEL_VARIABLE_NORMAL)) &&
       init->use_softweave)
     /* Magic resolution cookie */
     fprintf(prn, "\033(D%c%c%c%c%c%c", 4, 0, 14400 % 256, 14400 / 256,
@@ -954,8 +935,8 @@ escp2_set_initial_vertical_position(FILE *prn, escp_init_t *init)
 {
   if (!init->use_softweave || init->ydpi < 720)
     {
-      if (escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK,
-			MODEL_VARIABLE_4) && init->use_softweave)
+      if (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK,
+			  MODEL_VARIABLE_NORMAL)) && init->use_softweave)
 	fprintf(prn, "\033(v\004%c%c%c%c%c", 0,
 		init->top & 0xff,
 		(init->top >> 8) & 0xff,
@@ -1149,8 +1130,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	  return;
 	}
     }
-  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4)
-      && use_softweave && xdpi > 720)
+  if (!(escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_NORMAL))
+      && use_softweave)
     bits = 2;
   else
     bits = 1;
@@ -1250,6 +1231,9 @@ escp2_print(const printer_t *printer,		/* I - Model */
     nv.density = nv.density * escp2_xres(model) / 720.0;
   if (bits == 2)
     nv.density *= 3.3;
+  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_MULTI) &&
+      xdpi == 720)
+    nv.density /= 1.5;
   if (nv.density > 1.0)
     nv.density = 1.0;
   compute_lut(256, &nv);
@@ -2185,8 +2169,8 @@ escp2_write_microweave(FILE          *prn,	/* I - Print file or command */
 	  if (escp2_has_cap(model, MODEL_1440DPI_MASK, MODEL_1440DPI_YES) &&
 	      xdpi > 720)
 	    {
-	      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
-				MODEL_VARIABLE_4))
+	      if (!escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
+				 MODEL_VARIABLE_NORMAL))
 		{
 		  if (((offset * xdpi / 1440) + i) > 0)
 		    fprintf(prn, "\033($%c%c%c%c%c%c", 4, 0,
@@ -3161,7 +3145,8 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	    (sw->separation_rows - 1);
 	  int alo = advance % 256;
 	  int ahi = advance / 256;
-	  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
+	  if (!escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
+			     MODEL_VARIABLE_NORMAL))
 	    {
 	      int a3 = (advance >> 16) % 256;
 	      int a4 = (advance >> 24) % 256;
@@ -3175,7 +3160,8 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
       if (last_color != j)
 	{
 	  if (ydpi >= 720 &&
-	      escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
+	      !escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
+			     MODEL_VARIABLE_NORMAL))
 	    ;
 	  else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
 	    fprintf(prn, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
@@ -3209,7 +3195,8 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	  if (pos > 0)
 	    fprintf(prn, "\033\\%c%c", pos & 255, pos >> 8);
 	}
-      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
+      if (!escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
+			 MODEL_VARIABLE_NORMAL))
 	{
 	  int ncolor = (densities[j] << 4) | colors[j];
 	  int nlines = *linecount + pass->missingstartrows;
