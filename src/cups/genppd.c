@@ -915,7 +915,15 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   if (cups_ppd_ps_level == 2)
     gzputs(fp, "*PSVersion:	\"(2017.000) 550\"\n");
   else
-    gzputs(fp, "*PSVersion:	\"(3010.000) 705\"\n");
+    {
+      gzputs(fp, "*PSVersion:	\"(3010.000) 550\"\n");
+      gzputs(fp, "*PSVersion:	\"(3010.000) 651\"\n");
+      gzputs(fp, "*PSVersion:	\"(3010.000) 652\"\n");
+      gzputs(fp, "*PSVersion:	\"(3010.000) 653\"\n");
+      gzputs(fp, "*PSVersion:	\"(3010.000) 704\"\n");
+      gzputs(fp, "*PSVersion:	\"(3010.000) 705\"\n");
+      gzputs(fp, "*PSVersion:	\"(3010.000) 800\"\n");
+    }
   gzprintf(fp, "*LanguageLevel:	\"%d\"\n", cups_ppd_ps_level);
 
   /* Set Job Mode to "Job" as this enables the Duplex option */
