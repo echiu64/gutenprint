@@ -1058,6 +1058,73 @@ cmyk_8_to_cmyk(const stp_vars_t vars,
 }
 
 static void
+cmyk_8_to_monochrome(const stp_vars_t vars,
+		     const unsigned char *cmykin,
+		     unsigned short *grayout,
+		     int *zero_mask,
+		     int width,
+		     int bpp)
+{
+  int i;
+  int j;
+  int nz[4];
+
+  memset(nz, 0, sizeof(nz));
+  for (i = 0; i < width; i++)
+    {
+      j = *cmykin++;
+      if (j < 32768)
+	j = 0;
+      else
+	j = 65535;
+      nz[0] |= j;
+      *grayout++ = j;
+    }
+  if (zero_mask)
+    {
+      *zero_mask = nz[0] ? 0 : 1;
+    }
+}
+
+static void
+cmyk_8_to_gray(const stp_vars_t vars,
+	       const unsigned char *cmykin,
+	       unsigned short *grayout,
+	       int *zero_mask,
+	       int width,
+	       int bpp)
+{
+  int i;
+  int j;
+  int nz[4];
+  static unsigned short	lut[256];
+  static double density = -1.0;
+  static double print_gamma = -1.0;
+
+  memset(nz, 0, sizeof(nz));
+  if (density != stp_get_float_parameter(vars, "Density") ||
+      print_gamma != stp_get_float_parameter(vars, "Gamma"))
+  {
+    density     = stp_get_float_parameter(vars, "Density");
+    print_gamma = stp_get_float_parameter(vars, "Gamma");
+
+    for (i = 0; i < 256; i ++)
+      lut[i] = 65535.0 * density * pow((double)i / 255.0, print_gamma) + 0.5;
+  }
+
+  for (i = 0; i < width; i++)
+    {
+      j = *cmykin++;
+      nz[0] |= j;
+      *grayout++ = lut[j];
+    }
+  if (zero_mask)
+    {
+      *zero_mask = nz[0] ? 0 : 1;
+    }
+}
+
+static void
 raw_to_raw(const stp_vars_t vars,
 	   const unsigned char *rawin,
 	   unsigned short *rawout,
@@ -1122,6 +1189,63 @@ cmyk_to_cmyk(const stp_vars_t vars,
       *zero_mask |= nz[1] ? 0 : 2;
       *zero_mask |= nz[2] ? 0 : 4;
       *zero_mask |= nz[3] ? 0 : 8;
+    }
+}
+
+static void
+cmyk_to_gray(const stp_vars_t vars,
+	     const unsigned char *cmykin,
+	     unsigned short *grayout,
+	     int *zero_mask,
+	     int width,
+	     int bpp)
+{
+  int i;
+  int nz[4];
+  const unsigned short *scmykin = (const unsigned short *) cmykin;
+
+  memset(nz, 0, sizeof(nz));
+  for (i = 0; i < width; i++)
+    {
+      nz[0] |= scmykin[0];
+      grayout[0] = scmykin[0];
+      scmykin += 4;
+      grayout += 1;
+    }
+  if (zero_mask)
+    {
+      *zero_mask = nz[0] ? 0 : 1;
+    }
+}
+
+static void
+cmyk_to_monochrome(const stp_vars_t vars,
+		   const unsigned char *cmykin,
+		   unsigned short *grayout,
+		   int *zero_mask,
+		   int width,
+		   int bpp)
+{
+  int i;
+  int nz[4];
+  const unsigned short *scmykin = (const unsigned short *) cmykin;
+
+  memset(nz, 0, sizeof(nz));
+  for (i = 0; i < width; i++)
+    {
+      unsigned short out = scmykin[0];
+      if (out < 32768)
+	out = 0;
+      else
+	out = 65535;
+      nz[0] |= out;
+      grayout[0] = out;
+      scmykin += 4;
+      grayout += 1;
+    }
+  if (zero_mask)
+    {
+      *zero_mask = nz[0] ? 0 : 1;
     }
 }
 
@@ -1195,14 +1319,16 @@ stp_free_lut(stp_vars_t v)
 }
 
 void
-stp_compute_lut(stp_vars_t v, size_t steps,
-		stp_curve_t hue, stp_curve_t lum, stp_curve_t sat)
+stp_compute_lut(stp_vars_t v, size_t steps)
 {
   double	pixel,		/* Pixel value */
 		red_pixel,	/* Pixel value */
 		green_pixel,	/* Pixel value */
 		blue_pixel;	/* Pixel value */
   int i;
+  stp_curve_t hue = stp_get_curve_parameter(v, "HueMap");
+  stp_curve_t lum = stp_get_curve_parameter(v, "SatMap");
+  stp_curve_t sat = stp_get_curve_parameter(v, "LumMap");
   /*
    * Got an output file/command, now compute a brightness lookup table...
    */
@@ -1412,6 +1538,10 @@ stp_choose_colorfunc(const stp_vars_t v,
 	  RETURN_COLORFUNC(gray_to_monochrome);
 	case 3:
 	  RETURN_COLORFUNC(rgb_to_monochrome);
+	case 4:
+	  RETURN_COLORFUNC(cmyk_8_to_monochrome);
+	case 8:
+	  RETURN_COLORFUNC(cmyk_to_monochrome);
 	default:
 	  RETURN_COLORFUNC(NULL);
 	}
@@ -1466,6 +1596,10 @@ stp_choose_colorfunc(const stp_vars_t v,
 	  RETURN_COLORFUNC(gray_to_gray);
 	case 3:
 	  RETURN_COLORFUNC(rgb_to_gray);
+	case 4:
+	  RETURN_COLORFUNC(cmyk_8_to_gray);
+	case 8:
+	  RETURN_COLORFUNC(cmyk_to_gray);
 	default:
 	  RETURN_COLORFUNC(NULL);
 	}

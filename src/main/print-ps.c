@@ -169,15 +169,16 @@ ps_media_size(const stp_vars_t v,		/* I */
               int  *height)		/* O - Height in points */
 {
   char	*dimensions;			/* Dimensions of media size */
+  const char *pagesize = stp_get_string_parameter(v, "PageSize");
+  if (!pagesize)
+    pagesize = "";
 
   stp_dprintf(STP_DBG_PS, v,
 	      "ps_media_size(%d, \'%s\', \'%s\', %08x, %08x)\n",
-	      stp_get_model(v), stp_get_ppd_file(v),
-	      stp_get_string_parameter(v, "PageSize"),
-	      width, height);
+	      stp_get_model(v), stp_get_ppd_file(v), pagesize, width, height);
 
   if ((dimensions = ppd_find(stp_get_ppd_file(v), "PaperDimension",
-			     stp_get_string_parameter(v, "PageSize"), NULL))
+			     pagesize, NULL))
       != NULL)
     sscanf(dimensions, "%d%d", width, height);
   else
@@ -202,10 +203,12 @@ ps_imageable_area(const stp_vars_t v,      /* I */
 	fbottom,
 	ftop;
   int width, height;
+  const char *pagesize = stp_get_string_parameter(v, "PageSize");
+  if (!pagesize)
+    pagesize = "";
   ps_media_size(v, &width, &height);
 
-  if ((area = ppd_find(stp_get_ppd_file(v), "ImageableArea",
-		       stp_get_string_parameter(v, "PageSize"), NULL))
+  if ((area = ppd_find(stp_get_ppd_file(v), "ImageableArea", pagesize, NULL))
       != NULL)
     {
       stp_dprintf(STP_DBG_PS, v, "area = \'%s\'\n", area);
@@ -250,7 +253,8 @@ ps_describe_resolution(const stp_vars_t v, int *x, int *y)
   const char *resolution = stp_get_string_parameter(v, "Resolution");
   *x = -1;
   *y = -1;
-  sscanf(resolution, "%dx%d", x, y);
+  if (resolution)
+    sscanf(resolution, "%dx%d", x, y);
   return;
 }
 
@@ -303,6 +307,14 @@ ps_print(const stp_vars_t v, stp_image_t *image)
                 image_width,
                 image_bpp;
   stp_vars_t	nv = stp_allocate_copy(v);
+  if (!resolution)
+    resolution = "";
+  if (!media_size)
+    media_size = "";
+  if (!media_type)
+    media_type = "";
+  if (!media_source)
+    media_source = "";
 
   if (!stp_verify(nv))
     {
@@ -493,7 +505,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   in  = stp_zalloc(image_width * image_bpp);
   out = stp_zalloc((image_width * out_channels + 3) * 2);
 
-  stp_compute_lut(nv, 256, NULL, NULL, NULL);
+  stp_compute_lut(nv, 256);
 
   if (model == 0)
   {

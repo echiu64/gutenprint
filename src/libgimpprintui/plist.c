@@ -709,8 +709,9 @@ stpui_printrc_save(void)
 	      {
 	      case STP_PARAMETER_TYPE_STRING_LIST:
 	      case STP_PARAMETER_TYPE_FILE:
-		fprintf(fp, "%s: %s\n", param->name,
-			stp_get_string_parameter(p->v, param->name));
+		if (stp_get_string_parameter(p->v, param->name))
+		  fprintf(fp, "%s: %s\n", param->name,
+			  stp_get_string_parameter(p->v, param->name));
 		break;
 	      case STP_PARAMETER_TYPE_DOUBLE:
 		fprintf(fp, "%s: %f\n", param->name,
@@ -722,8 +723,12 @@ stpui_printrc_save(void)
 		break;
 	      case STP_PARAMETER_TYPE_CURVE:
 		curve = stp_get_curve_parameter(p->v, param->name);
-		stp_curve_print(fp, curve);
-		fprintf(fp, "\n");
+		if (curve)
+		  {
+		    fprintf(fp, "%s: ", param->name);
+		    stp_curve_print(fp, curve);
+		    fprintf(fp, "\n");
+		  }
 		break;
 	      default:
 		break;

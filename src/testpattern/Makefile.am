@@ -36,11 +36,16 @@ LIBGIMPPRINT_LIBS = $(GIMPPRINT_LIBS) $(GIMPPRINT_DEPLIBS)
 LIBPRINTUT = $(top_builddir)/lib/libprintut.la
 LIBS = $(INTLLIBS) @LIBS@
 
+TESTS = run-testpattern
 
 ## Programs
 
 if BUILD_TESTPATTERN
 bin_PROGRAMS = testpattern
+endif
+
+if BUILD_TESTPATTERN
+noinst_PROGRAMS = printers
 endif
 
 AM_LFLAGS = -i
@@ -51,6 +56,8 @@ testpattern_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
 
 testpatternl.o: testpatterny.o
 testpattern.o: testpatterny.o
+
+printers_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
 
 $(GIMPPRINT_LIBS):
 	cd ../main ; \

@@ -38,6 +38,7 @@
 #include "gimp-print-ui-internal.h"
 
 #include <string.h>
+#include <stdio.h>
 
 /*
  * Constants for GUI.
@@ -1670,9 +1671,10 @@ dither_algo_callback (GtkWidget *widget, gpointer data)
 {
   stp_parameter_t desc;
   const gchar *new_algo;
+  const gchar *algo = stp_get_string_parameter(pv->v, "DitherAlgorithm");
   stp_describe_parameter(pv->v, "DitherAlgorithm", &desc);
   new_algo = stpui_combo_get_name(dither_algo_combo, desc.bounds.str);
-  if (strcmp(stp_get_string_parameter(pv->v, "DitherAlgorithm"), new_algo) != 0)
+  if (!algo || strcmp(algo, new_algo) != 0)
     stp_set_string_parameter(pv->v, "DitherAlgorithm", new_algo);
 }
 
@@ -1681,13 +1683,14 @@ build_dither_combo (void)
 {
   stp_string_list_t vec = NULL;
   stp_parameter_t desc;
+  const gchar *algo = stp_get_string_parameter(pv->v, "DitherAlgorithm");
   stp_describe_parameter(pv->v, "DitherAlgorithm", &desc);
   if (desc.type == STP_PARAMETER_TYPE_STRING_LIST)
     {
       vec = desc.bounds.str;
       if (vec == NULL || stp_string_list_count(vec) == 0)
 	stp_set_string_parameter(pv->v, "DitherAlgorithm", NULL);
-      else if (stp_get_string_parameter(pv->v, "DitherAlgorithm")[0] == '\0')
+      else if (!algo || strlen(algo) == 0)
 	stp_set_string_parameter(pv->v, "DitherAlgorithm", desc.deflt.str);
     }
 
@@ -1793,11 +1796,12 @@ do_all_updates(void)
       stp_describe_parameter(pv->v, option->name, &desc);
       if (desc.type == STP_PARAMETER_TYPE_STRING_LIST)
 	{
+	  const gchar *val = stp_get_string_parameter(pv->v, option->name);
 	  option->params = desc.bounds.str;
 	  if (option->params == NULL ||
 	      stp_string_list_count(desc.bounds.str) == 0)
 	    stp_set_string_parameter(pv->v, option->name, NULL);
-	  else if (stp_get_string_parameter(pv->v, option->name)[0] == '\0')
+	  else if (!val || strlen(val) == 0)
 	    stp_set_string_parameter(pv->v, option->name, desc.deflt.str);
 	}
       plist_build_combo(option->combo, NULL, option->params,
@@ -1960,8 +1964,9 @@ combo_callback(GtkWidget *widget, gpointer data)
   list_option_t *option = (list_option_t *)data;
   const gchar *new_value =
     stpui_combo_get_name(option->combo, option->params);
+  const gchar *value = stp_get_string_parameter(pv->v, option->name);
   reset_preview();
-  if (strcmp(stp_get_string_parameter(pv->v, option->name), new_value) != 0)
+  if (!value || strcmp(value, new_value) != 0)
     {
       invalidate_frame();
       invalidate_preview_thumbnail();
@@ -2517,13 +2522,13 @@ update_adjusted_thumbnail (void)
 
       if (stp_verify(nv) != 1)
 	{
-	  stp_erprintf("did not verify!\n");
+	  fprintf(stderr, "did not verify!\n");
 	  stp_vars_free(nv);
 	  return;
 	}
       if (stp_print(nv, im) != 1)
 	{
-	  stp_erprintf("did not print thumbnail!\n");
+	  fprintf(stderr, "did not print thumbnail!\n");
 	  stp_vars_free(nv);
 	  return;
 	}

@@ -257,10 +257,13 @@ get_media_type(int model, const char *name, const stp_vars_t v)
   int i;
   const paperlist_t *p = escp2_paperlist(model, v);
   int paper_type_count = p->paper_count;
-  for (i = 0; i < paper_type_count; i++)
+  if (name)
     {
-      if (!strcmp(name, p->papers[i].name))
-	return &(p->papers[i]);
+      for (i = 0; i < paper_type_count; i++)
+	{
+	  if (!strcmp(name, p->papers[i].name))
+	    return &(p->papers[i]);
+	}
     }
   return NULL;
 }
@@ -476,7 +479,8 @@ escp2_imageable_area(const stp_vars_t v,   /* I */
 		     int  *top)		/* O - Top position in points */
 {
   int	width, height;			/* Size of page */
-  int	rollfeed;			/* Roll feed selected */
+  int	rollfeed = 0;			/* Roll feed selected */
+  const char *input_slot = stp_get_string_parameter(v, "InputSlot");
   int model = stp_get_model(v);
   if (model < 0 || model >= stp_escp2_model_limit)
     {
@@ -484,8 +488,20 @@ escp2_imageable_area(const stp_vars_t v,   /* I */
       return;
     }
 
-  rollfeed = (strcmp(stp_get_string_parameter(v, "InputSlot"), "Roll") == 0);
-  rollfeed &= escp2_has_cap(model, MODEL_ROLLFEED, MODEL_ROLLFEED_YES, v);
+  if (input_slot && strlen(input_slot) > 0)
+    {
+      int i;
+      const input_slot_list_t *slots = escp2_input_slots(model, v);
+      for (i = 0; i < slots->n_input_slots; i++)
+	{
+	  if (slots->slots[i].name &&
+	      strcmp(input_slot, slots->slots[i].name) == 0)
+	    {
+	      rollfeed = slots->slots[i].is_roll_feed;
+	      break;
+	    }
+	}
+    }
 
   stp_default_media_size(v, &width, &height);
 
@@ -537,7 +553,8 @@ escp2_describe_resolution(const stp_vars_t v, int *x, int *y)
 
   while (res->hres)
     {
-      if (!strcmp(resolution, res->name) && verify_resolution(res, model, v))
+      if (resolution && strcmp(resolution, res->name) == 0 &&
+	  verify_resolution(res, model, v))
 	{
 	  *x = res->external_hres;
 	  *y = res->external_vres;
@@ -566,7 +583,8 @@ escp2_reset_printer(const escp2_init_t *init)
 static void
 print_remote_param(const stp_vars_t v, const char *param, const char *value)
 {
-  stp_send_command(v, "\033(R", "bcscs", '\0', param, ':', value);
+  stp_send_command(v, "\033(R", "bcscs", '\0', param, ':',
+		   value ? value : "NULL");
   stp_send_command(v, "\033", "ccc", 0, 0, 0);
 }
 
@@ -957,8 +975,23 @@ adjust_print_quality(const escp2_init_t *init, void *dither)
   hue_adjustment = stp_read_and_compose_curves(init->inkname->hue_adjustment,
 					       pt ? pt->hue_adjustment : NULL,
 					       STP_CURVE_COMPOSE_ADD);
+  if (stp_get_curve_parameter(nv, "HueMap"))
+    stp_curve_compose(&hue_adjustment, hue_adjustment,
+		      stp_get_curve_parameter(nv, "HueMap"),
+		      STP_CURVE_COMPOSE_ADD, -1);
+  if (stp_get_curve_parameter(nv, "LumMap"))
+    stp_curve_compose(&lum_adjustment, lum_adjustment,
+		      stp_get_curve_parameter(nv, "LumMap"),
+		      STP_CURVE_COMPOSE_MULTIPLY, -1);
+  if (stp_get_curve_parameter(nv, "SatMap"))
+    stp_curve_compose(&sat_adjustment, sat_adjustment,
+		      stp_get_curve_parameter(nv, "SatMap"),
+		      STP_CURVE_COMPOSE_MULTIPLY, -1);
+  stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
+  stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
+  stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
 
-  stp_compute_lut(nv, 65536, hue_adjustment, lum_adjustment, sat_adjustment);
+  stp_compute_lut(nv, 65536);
   stp_curve_destroy(lum_adjustment);
   stp_curve_destroy(sat_adjustment);
   stp_curve_destroy(hue_adjustment);
@@ -1014,10 +1047,13 @@ get_inktype(const stp_vars_t v, int model)
   const inklist_t *ink_list = escp2_inklist(model, v);
   int i;
 
-  for (i = 0; i < ink_list->n_inks; i++)
+  if (ink_type)
     {
-      if (strcmp(ink_type, ink_list->inknames[i]->name) == 0)
-	return ink_list->inknames[i];
+      for (i = 0; i < ink_list->n_inks; i++)
+	{
+	  if (strcmp(ink_type, ink_list->inknames[i]->name) == 0)
+	    return ink_list->inknames[i];
+	}
     }
   return NULL;
 }
@@ -1160,7 +1196,8 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 	    inks->inknames[i]->channel_limit * 2 == stp_image_bpp(image))
 	  {
 	    stp_dprintf(STP_DBG_INK, nv, "Changing ink type from %s to %s\n",
-			stp_get_string_parameter(nv, "InkType"),
+			stp_get_string_parameter(nv, "InkType") ?
+			stp_get_string_parameter(nv, "InkType") : "NULL",
 			inks->inknames[i]->name);
 	    stp_set_string_parameter(nv, "InkType", inks->inknames[i]->name);
 	    found = 1;

@@ -212,13 +212,13 @@ typedef void *stp_vars_t;
  */
 typedef enum stp_parameter_type
 {
-  STP_PARAMETER_TYPE_INVALID,
   STP_PARAMETER_TYPE_STRING_LIST, /* Single string choice from a list */
   STP_PARAMETER_TYPE_INT,	/* Integer point number */
   STP_PARAMETER_TYPE_DOUBLE,	/* Floating point number */
   STP_PARAMETER_TYPE_CURVE,	/* Curve */
   STP_PARAMETER_TYPE_FILE,	/* Filename (NYI, need to consider security) */
-  STP_PARAMETER_TYPE_RAW	/* Raw, opaque data */
+  STP_PARAMETER_TYPE_RAW,	/* Raw, opaque data */
+  STP_PARAMETER_TYPE_INVALID
 } stp_parameter_type_t;
 
 /*
@@ -508,6 +508,10 @@ extern void stp_set_string_parameter(stp_vars_t v, const char *parameter,
 				     const char *value);
 extern void stp_set_string_parameter_n(stp_vars_t v, const char *parameter,
 				       const char *value, int bytes);
+extern void stp_set_file_parameter(stp_vars_t v, const char *parameter,
+				   const char *value);
+extern void stp_set_file_parameter_n(stp_vars_t v, const char *parameter,
+				     const char *value, int bytes);
 extern void stp_set_float_parameter(stp_vars_t v, const char *parameter,
 				    double value);
 extern void stp_set_int_parameter(stp_vars_t v, const char *parameter,
@@ -515,10 +519,12 @@ extern void stp_set_int_parameter(stp_vars_t v, const char *parameter,
 extern void stp_set_curve_parameter(stp_vars_t v, const char *parameter,
 				    const stp_curve_t value);
 extern void stp_set_raw_parameter(stp_vars_t v, const char *parameter,
-				  const stp_raw_t *value);
+				  const void *value, int bytes);
 
 extern const char *stp_get_string_parameter(const stp_vars_t v,
 					    const char *param);
+extern const char *stp_get_file_parameter(const stp_vars_t v,
+					  const char *param);
 extern const double stp_get_float_parameter(const stp_vars_t v,
 					    const char *param);
 extern const int stp_get_int_parameter(const stp_vars_t v,
@@ -527,6 +533,13 @@ extern const stp_curve_t stp_get_curve_parameter(const stp_vars_t v,
 						 const char *param);
 extern const stp_raw_t *stp_get_raw_parameter(const stp_vars_t v,
 					      const char *param);
+
+extern int stp_check_string_parameter(const stp_vars_t v, const char *param);
+extern int stp_check_file_parameter(const stp_vars_t v, const char *param);
+extern int stp_check_float_parameter(const stp_vars_t v, const char *param);
+extern int stp_check_int_parameter(const stp_vars_t v, const char *param);
+extern int stp_check_curve_parameter(const stp_vars_t v, const char *param);
+extern int stp_check_raw_parameter(const stp_vars_t v, const char *param);
 
 /*
  * Manipulate lists of strings.  This will likely be subsumed by a more

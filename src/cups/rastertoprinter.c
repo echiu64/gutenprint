@@ -394,7 +394,8 @@ main(int  argc,				/* I - Number of command-line arguments */
 	      {
 	      case STP_PARAMETER_TYPE_STRING_LIST:
 		fprintf(stderr, "DEBUG: stp_get_%s(v) |%s|\n",
-			p->name, stp_get_string_parameter(v, p->name));
+			p->name, stp_get_string_parameter(v, p->name) ?
+			stp_get_string_parameter(v, p->name) : "NULL");
 		break;
 	      case STP_PARAMETER_TYPE_DOUBLE:
 		fprintf(stderr, "DEBUG: stp_get_%s(v) |%.3f|\n",

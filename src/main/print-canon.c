@@ -1153,12 +1153,13 @@ static const paper_t *
 get_media_type(const char *name)
 {
   int i;
-  for (i = 0; i < paper_type_count; i++)
-    {
-      /* translate paper_t.name */
-      if (!strcmp(name, canon_paper_list[i].name))
-	return &(canon_paper_list[i]);
-    }
+  if (name)
+    for (i = 0; i < paper_type_count; i++)
+      {
+	/* translate paper_t.name */
+	if (!strcmp(name, canon_paper_list[i].name))
+	  return &(canon_paper_list[i]);
+      }
   return NULL;
 }
 
@@ -1180,9 +1181,12 @@ static int
 canon_source_type(const char *name, const canon_cap_t * caps)
 {
   /* used internally: do not translate */
-  if (!strcmp(name,"Auto"))    return 4;
-  if (!strcmp(name,"Manual"))    return 0;
-  if (!strcmp(name,"ManualNP")) return 1;
+  if (name)
+    {
+      if (!strcmp(name,"Auto"))    return 4;
+      if (!strcmp(name,"Manual"))    return 0;
+      if (!strcmp(name,"ManualNP")) return 1;
+    }
 
   stp_deprintf(STP_DBG_CANON,"canon: Unknown source type '%s' - reverting to auto\n",name);
   return 4;
@@ -1192,14 +1196,16 @@ static int
 canon_printhead_type(const char *name, const canon_cap_t * caps)
 {
   /* used internally: do not translate */
-  if (!strcmp(name,"Gray"))             return 0;
-  if (!strcmp(name,"RGB"))             return 1;
-  if (!strcmp(name,"CMYK"))       return 2;
-  if (!strcmp(name,"PhotoCMY"))       return 3;
-  if (!strcmp(name,"Photo"))             return 4;
-  if (!strcmp(name,"PhotoCMYK")) return 5;
-
-  if (*name == 0) {
+  if (name)
+    {
+      if (!strcmp(name,"Gray"))             return 0;
+      if (!strcmp(name,"RGB"))             return 1;
+      if (!strcmp(name,"CMYK"))       return 2;
+      if (!strcmp(name,"PhotoCMY"))       return 3;
+      if (!strcmp(name,"Photo"))             return 4;
+      if (!strcmp(name,"PhotoCMYK")) return 5;
+    }
+  if (name && *name == 0) {
     if (caps->inks & CANON_INK_CMYK) return 2;
     if (caps->inks & CANON_INK_CMY)  return 1;
     if (caps->inks & CANON_INK_K)    return 0;
@@ -1213,13 +1219,16 @@ static colormode_t
 canon_printhead_colors(const char *name, const canon_cap_t * caps)
 {
   /* used internally: do not translate */
-  if (!strcmp(name,"Gray"))             return COLOR_MONOCHROME;
-  if (!strcmp(name,"RGB"))             return COLOR_CMY;
-  if (!strcmp(name,"CMYK"))       return COLOR_CMYK;
-  if (!strcmp(name,"PhotoCMY"))       return COLOR_CCMMYK;
-  if (!strcmp(name,"PhotoCMYK")) return COLOR_CCMMYYK;
+  if (name)
+    {
+      if (!strcmp(name,"Gray"))             return COLOR_MONOCHROME;
+      if (!strcmp(name,"RGB"))             return COLOR_CMY;
+      if (!strcmp(name,"CMYK"))       return COLOR_CMYK;
+      if (!strcmp(name,"PhotoCMY"))       return COLOR_CCMMYK;
+      if (!strcmp(name,"PhotoCMYK")) return COLOR_CCMMYYK;
+    }
 
-  if (*name == 0) {
+  if (name && *name == 0) {
     if (caps->inks & CANON_INK_CMYK) return COLOR_CMYK;
     if (caps->inks & CANON_INK_CMY)  return COLOR_CMY;
     if (caps->inks & CANON_INK_K)    return COLOR_MONOCHROME;
@@ -1400,7 +1409,8 @@ canon_describe_resolution(const stp_vars_t v, int *x, int *y)
   const char *resolution = stp_get_string_parameter(v, "Resolution");
   *x = -1;
   *y = -1;
-  sscanf(resolution, "%dx%d", x, y);
+  if (resolution)
+    sscanf(resolution, "%dx%d", x, y);
   return;
 }
 
@@ -2321,7 +2331,23 @@ canon_print(const stp_vars_t v, stp_image_t *image)
 					       pt ? pt->sat_adjustment : NULL,
 					       STP_CURVE_COMPOSE_MULTIPLY);
 
-  stp_compute_lut(nv, 65536, hue_adjustment, lum_adjustment, sat_adjustment);
+  if (stp_get_curve_parameter(nv, "HueMap"))
+    stp_curve_compose(&hue_adjustment, hue_adjustment,
+		      stp_get_curve_parameter(nv, "HueMap"),
+		      STP_CURVE_COMPOSE_ADD, -1);
+  if (stp_get_curve_parameter(nv, "LumMap"))
+    stp_curve_compose(&lum_adjustment, lum_adjustment,
+		      stp_get_curve_parameter(nv, "LumMap"),
+		      STP_CURVE_COMPOSE_MULTIPLY, -1);
+  if (stp_get_curve_parameter(nv, "SatMap"))
+    stp_curve_compose(&sat_adjustment, sat_adjustment,
+		      stp_get_curve_parameter(nv, "SatMap"),
+		      STP_CURVE_COMPOSE_MULTIPLY, -1);
+  stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
+  stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
+  stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
+
+  stp_compute_lut(nv, 65536);
   stp_curve_destroy(lum_adjustment);
   stp_curve_destroy(sat_adjustment);
   stp_curve_destroy(hue_adjustment);

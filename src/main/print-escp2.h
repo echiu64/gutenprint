@@ -278,6 +278,7 @@ typedef struct
 {
   const char *name;
   const char *text;
+  int is_roll_feed;
   unsigned roll_feed_cut_flags;
   init_sequence_t init_sequence;
   init_sequence_t deinit_sequence;

@@ -2,6 +2,9 @@ testpatterny.c
 testpatterny.h
 testpatternl.c
 testpattern
+testpattern.test
+testp.out
+printers
 Makefile.in
 Makefile
 .deps

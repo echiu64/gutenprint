@@ -399,14 +399,17 @@ static ditherfunc_t *
 stp_set_dither_function(dither_t *d, int image_bpp)
 {
   int i;
+  const char *algorithm = stp_get_string_parameter(d->v, "DitherAlgorithm");
   d->dither_type = D_ADAPTIVE_HYBRID;
-  for (i = 0; i < num_dither_algos; i++)
+  if (algorithm)
     {
-      if (!strcmp(stp_get_string_parameter(d->v, "DitherAlgorithm"),
-		  _(dither_algos[i].name)))
+      for (i = 0; i < num_dither_algos; i++)
 	{
-	  d->dither_type = dither_algos[i].id;
-	  break;
+	  if (!strcmp(algorithm, _(dither_algos[i].name)))
+	    {
+	      d->dither_type = dither_algos[i].id;
+	      break;
+	    }
 	}
     }
   switch (d->dither_class)

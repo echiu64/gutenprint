@@ -46,21 +46,7 @@ typedef struct					/* Plug-in variables */
   int	cookie;
   const char *driver;		/* Name of printer "driver" */
   int	output_type;		/* Color or grayscale output */
-  float	brightness;		/* Output brightness */
-  float gamma;                  /* Gamma */
-  float contrast;		/* Output Contrast */
-  float	cyan;			/* Output red level */
-  float	magenta;		/* Output green level */
-  float	yellow;			/* Output blue level */
-  float	saturation;		/* Output saturation */
-  float	density;		/* Maximum output density */
   const char *ppd_file;		/* PPD file */
-  const char *resolution;	/* Resolution */
-  const char *media_size_name;	/* Media size */
-  const char *media_type;	/* Media type */
-  const char *media_source;	/* Media source */
-  const char *ink_type;		/* Ink or cartridge */
-  const char *dither_algorithm;	/* Dithering algorithm */
   int	left;			/* Offset from left-upper corner, points */
   int	top;			/* ... */
   int	width;			/* Width of the image, points */
@@ -73,6 +59,7 @@ typedef struct					/* Plug-in variables */
   int	output_color_model;	/* Color model for this device */
   int	page_number;
   stp_job_mode_t job_mode;
+  stp_list_t *params[STP_PARAMETER_TYPE_INVALID];
   void  *color_data;		/* Private data of the color module */
   void	*(*copy_color_data_func)(const stp_vars_t);
   void	(*destroy_color_data_func)(stp_vars_t);
@@ -86,26 +73,14 @@ typedef struct					/* Plug-in variables */
   int verified;			/* Ensure that params are OK! */
 } stp_internal_vars_t;
 
-static const stp_internal_vars_t default_vars =
+static int standard_vars_initialized = 0;
+
+static stp_internal_vars_t default_vars =
 {
 	COOKIE_VARS,
 	N_ ("ps2"),	       	/* Name of printer "driver" */
 	OUTPUT_COLOR,		/* Color or grayscale output */
-	1.0,			/* Output brightness */
-	1.0,			/* Screen gamma */
-	1.0,			/* Contrast */
-	1.0,			/* Cyan */
-	1.0,			/* Magenta */
-	1.0,			/* Yellow */
-	1.0,			/* Output saturation */
-	1.0,			/* Density */
 	"",			/* Name of PPD file */
-	"",			/* Output resolution */
-	"",			/* Size of output media */
-	"",			/* Type of output media */
-	"",			/* Source of output media */
-	"",			/* Ink type */
-	"",			/* Dither algorithm */
 	-1,			/* left */
 	-1,			/* top */
 	-1,			/* width */
@@ -120,26 +95,12 @@ static const stp_internal_vars_t default_vars =
 	STP_JOB_MODE_PAGE	/* Job mode */
 };
 
-static const stp_internal_vars_t min_vars =
+static stp_internal_vars_t min_vars =
 {
 	COOKIE_VARS,
 	N_ ("ps2"),		/* Name of printer "driver" */
 	0,			/* Color or grayscale output */
-	0,			/* Output brightness */
-	0.1,			/* Screen gamma */
-	0,			/* Contrast */
-	0,			/* Cyan */
-	0,			/* Magenta */
-	0,			/* Yellow */
-	0,			/* Output saturation */
-	.1,			/* Density */
 	"",			/* Name of PPD file */
-	"",			/* Output resolution */
-	"",			/* Size of output media */
-	"",			/* Type of output media */
-	"",			/* Source of output media */
-	"",			/* Ink type */
-	"",			/* Dither algorithm */
 	-1,			/* left */
 	-1,			/* top */
 	-1,			/* width */
@@ -154,26 +115,12 @@ static const stp_internal_vars_t min_vars =
 	STP_JOB_MODE_PAGE	/* Job mode */
 };
 
-static const stp_internal_vars_t max_vars =
+static stp_internal_vars_t max_vars =
 {
 	COOKIE_VARS,
 	N_ ("ps2"),		/* Name of printer "driver" */
 	OUTPUT_RAW_PRINTER,	/* Color or grayscale output */
-	2.0,			/* Output brightness */
-	4.0,			/* Screen gamma */
-	4.0,			/* Contrast */
-	4.0,			/* Cyan */
-	4.0,			/* Magenta */
-	4.0,			/* Yellow */
-	9.0,			/* Output saturation */
-	2.0,			/* Density */
 	"",			/* Name of PPD file */
-	"",			/* Output resolution */
-	"",			/* Size of output media */
-	"",			/* Type of output media */
-	"",			/* Source of output media */
-	"",			/* Ink type */
-	"",			/* Dither algorithm */
 	-1,			/* left */
 	-1,			/* top */
 	-1,			/* width */
@@ -314,11 +261,149 @@ stp_minimum_settings(void)
   return (stp_vars_t) &min_vars;
 }
 
+typedef struct
+{
+  char *name;
+  stp_parameter_type_t typ;
+  union
+  {
+    int ival;
+    double dval;
+    stp_curve_t cval;
+    stp_raw_t rval;
+  } value;
+} value_t;
+
+static const char *
+value_namefunc(const stp_list_item_t *item)
+{
+  const value_t *v = (value_t *)stp_list_item_get_data(item);
+  return v->name;
+}
+
+static void
+value_freefunc(stp_list_item_t *item)
+{
+  value_t *v = (value_t *)stp_list_item_get_data(item);
+  switch (v->typ)
+    {
+    case STP_PARAMETER_TYPE_STRING_LIST:
+    case STP_PARAMETER_TYPE_FILE:
+    case STP_PARAMETER_TYPE_RAW:
+      stp_free(v->value.rval.data);
+      break;
+    case STP_PARAMETER_TYPE_CURVE:
+      stp_curve_destroy(v->value.cval);
+      break;
+    default:
+      break;
+    }
+  stp_free(v->name);
+  stp_free(v);
+}
+
+static value_t *
+value_copy(const stp_list_item_t *item)
+{
+  value_t *ret = stp_malloc(sizeof(value_t));
+  const value_t *v = (value_t *)stp_list_item_get_data(item);
+  ret->name = stp_strdup(v->name);
+  ret->typ = v->typ;
+  switch (v->typ)
+    {
+    case STP_PARAMETER_TYPE_CURVE:
+      ret->value.cval = stp_curve_allocate_copy(ret->value.cval);
+      break;
+    case STP_PARAMETER_TYPE_STRING_LIST:
+    case STP_PARAMETER_TYPE_FILE:
+    case STP_PARAMETER_TYPE_RAW:
+      ret->value.rval.bytes = v->value.rval.bytes;
+      ret->value.rval.data = stp_malloc(ret->value.rval.bytes + 1);
+      memcpy(ret->value.rval.data, v->value.rval.data, v->value.rval.bytes);
+      ((char *) (ret->value.rval.data))[v->value.rval.bytes] = '\0';
+      break;
+    case STP_PARAMETER_TYPE_INT:
+      ret->value.ival = v->value.ival;
+      break;
+    case STP_PARAMETER_TYPE_DOUBLE:
+      ret->value.dval = v->value.dval;
+      break;
+    default:
+      break;
+    }
+  return ret;
+}
+
+static stp_list_t *
+create_vars_list(void)
+{
+  stp_list_t *ret = stp_list_create();
+  stp_list_set_freefunc(ret, value_freefunc);
+  stp_list_set_namefunc(ret, value_namefunc);
+  return ret;
+}
+  
+static stp_list_t *
+copy_value_list(const stp_list_t *src)
+{
+  stp_list_t *ret = create_vars_list();
+  stp_list_item_t *item = stp_list_get_start((stp_list_t *)src);
+  while (item)
+    {
+      stp_list_item_create(ret, NULL, value_copy(item));
+      item = stp_list_item_next(item);
+    }
+  return ret;
+}
+
+static void
+initialize_standard_vars(void)
+{
+  if (!standard_vars_initialized)
+    {
+      int i;
+      for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
+	{
+	  min_vars.params[i] = create_vars_list();
+	  max_vars.params[i] = create_vars_list();
+	  default_vars.params[i] = create_vars_list();
+	}
+      stp_set_float_parameter((stp_vars_t) &min_vars, "Brightness", 0.0);
+      stp_set_float_parameter((stp_vars_t) &max_vars, "Brightness", 2.0);
+      stp_set_float_parameter((stp_vars_t) &default_vars, "Brightness", 1.0);
+      stp_set_float_parameter((stp_vars_t) &min_vars, "Gamma", 0.1);
+      stp_set_float_parameter((stp_vars_t) &max_vars, "Gamma", 4.0);
+      stp_set_float_parameter((stp_vars_t) &default_vars, "Gamma", 1.0);
+      stp_set_float_parameter((stp_vars_t) &min_vars, "Contrast", 0.0);
+      stp_set_float_parameter((stp_vars_t) &max_vars, "Contrast", 4.0);
+      stp_set_float_parameter((stp_vars_t) &default_vars, "Contrast", 1.0);
+      stp_set_float_parameter((stp_vars_t) &min_vars, "Cyan", 0.0);
+      stp_set_float_parameter((stp_vars_t) &max_vars, "Cyan", 4.0);
+      stp_set_float_parameter((stp_vars_t) &default_vars, "Cyan", 1.0);
+      stp_set_float_parameter((stp_vars_t) &min_vars, "Magenta", 0.0);
+      stp_set_float_parameter((stp_vars_t) &max_vars, "Magenta", 4.0);
+      stp_set_float_parameter((stp_vars_t) &default_vars, "Magenta", 1.0);
+      stp_set_float_parameter((stp_vars_t) &min_vars, "Yellow", 0.0);
+      stp_set_float_parameter((stp_vars_t) &max_vars, "Yellow", 4.0);
+      stp_set_float_parameter((stp_vars_t) &default_vars, "Yellow", 1.0);
+      stp_set_float_parameter((stp_vars_t) &min_vars, "Saturation", 0.0);
+      stp_set_float_parameter((stp_vars_t) &max_vars, "Saturation", 9.0);
+      stp_set_float_parameter((stp_vars_t) &default_vars, "Saturation", 1.0);
+      stp_set_float_parameter((stp_vars_t) &min_vars, "Density", 0.1);
+      stp_set_float_parameter((stp_vars_t) &max_vars, "Density", 2.0);
+      stp_set_float_parameter((stp_vars_t) &default_vars, "Density", 1.0);
+    }
+}
+
 stp_vars_t
 stp_allocate_vars(void)
 {
+  int i;
   stp_internal_vars_t *retval = stp_zalloc(sizeof(stp_internal_vars_t));
+  initialize_standard_vars();
   retval->cookie = COOKIE_VARS;
+  for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
+    retval->params[i] = create_vars_list();
   stp_copy_vars(retval, (stp_vars_t)&default_vars);
   return (retval);
 }
@@ -344,20 +429,17 @@ check_vars(const stp_internal_vars_t *v)
 void
 stp_vars_free(stp_vars_t vv)
 {
+  int i;
   stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
   check_vars(v);
   if (stp_get_destroy_color_data_func(vv))
     (*stp_get_destroy_color_data_func(vv))(vv);
   if (stp_get_destroy_driver_data_func(vv))
     (*stp_get_destroy_driver_data_func(vv))(vv);
+  for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
+    stp_list_destroy(v->params[i]);
   SAFE_FREE(v->driver);
   SAFE_FREE(v->ppd_file);
-  SAFE_FREE(v->resolution);
-  SAFE_FREE(v->media_size_name);
-  SAFE_FREE(v->media_type);
-  SAFE_FREE(v->media_source);
-  SAFE_FREE(v->ink_type);
-  SAFE_FREE(v->dither_algorithm);
   stp_free(v);
 }
 
@@ -394,27 +476,6 @@ stp_get_##s(const stp_vars_t vv)			\
   return v->s;						\
 }
 
-#define DEF_STRING_FUNCS_INTERNAL(s)			\
-static void						\
-stp_set_##s##_n(stp_vars_t vv, const char *val, int n)	\
-{							\
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
-  check_vars(v);					\
-  if (v->s == val)					\
-    return;						\
-  SAFE_FREE(v->s);					\
-  v->s = stp_strndup(val, n);				\
-  v->verified = 0;					\
-}							\
-							\
-static const char *					\
-stp_get_##s(const stp_vars_t vv)			\
-{							\
-  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
-  check_vars(v);					\
-  return v->s;						\
-}
-
 #define DEF_FUNCS(s, t, u)				\
 u void							\
 stp_set_##s(stp_vars_t vv, t val)			\
@@ -434,7 +495,6 @@ stp_get_##s(const stp_vars_t vv)			\
 }
 
 DEF_STRING_FUNCS(driver)
-DEF_STRING_FUNCS(ppd_file)
 DEF_FUNCS(output_type, int, )
 DEF_FUNCS(left, int, )
 DEF_FUNCS(top, int, )
@@ -458,21 +518,24 @@ DEF_FUNCS(destroy_driver_data_func, destroy_data_func_t, )
 DEF_FUNCS(outfunc, stp_outfunc_t, )
 DEF_FUNCS(errfunc, stp_outfunc_t, )
 
-DEF_STRING_FUNCS_INTERNAL(resolution)
-DEF_STRING_FUNCS_INTERNAL(media_size_name)
-DEF_STRING_FUNCS_INTERNAL(media_type)
-DEF_STRING_FUNCS_INTERNAL(media_source)
-DEF_STRING_FUNCS_INTERNAL(ink_type)
-DEF_STRING_FUNCS_INTERNAL(dither_algorithm)
-DEF_FUNCS(brightness, float, static)
-DEF_FUNCS(gamma, float, static)
-DEF_FUNCS(contrast, float, static)
-DEF_FUNCS(cyan, float, static)
-DEF_FUNCS(magenta, float, static)
-DEF_FUNCS(yellow, float, static)
-DEF_FUNCS(saturation, float, static)
-DEF_FUNCS(density, float, static)
-DEF_FUNCS(app_gamma, float, static)
+void
+stp_set_ppd_file(stp_vars_t v, const char *ppd_file)
+{
+  stp_set_file_parameter(v, "PPDFile", ppd_file);
+}
+
+void
+stp_set_ppd_file_n(stp_vars_t v, const char *ppd_file, int bytes)
+{
+  stp_set_file_parameter_n(v, "PPDFile", ppd_file, bytes);
+}
+
+const char *
+stp_get_ppd_file(stp_vars_t v)
+{
+  return stp_get_file_parameter(v, "PPDFile");
+}
+
 
 void
 stp_set_verified(stp_vars_t vv, int val)
@@ -490,25 +553,43 @@ stp_get_verified(const stp_vars_t vv)
   return v->verified;
 }
 
+static void
+set_raw_parameter(stp_list_t *list, const char *parameter, const char *value,
+		  int bytes, int typ)
+{
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  if (value)
+    {
+      value_t *v;
+      if (item)
+	{
+	  v = (value_t *) stp_list_item_get_data(item);
+	  stp_free(v->value.rval.data);
+	}
+      else
+	{
+	  v = stp_malloc(sizeof(value_t));
+	  v->name = stp_strdup(parameter);
+	  v->typ = typ;
+	  stp_list_item_create(list, NULL, v);
+	}
+      v->value.rval.data = stp_malloc(bytes + 1);
+      memcpy(v->value.rval.data, value, bytes);
+      ((char *) v->value.rval.data)[bytes] = '\0';
+      v->value.rval.bytes = bytes;
+    }
+  else if (item)
+    stp_list_item_destroy(list, item);
+}
+
 void
 stp_set_string_parameter_n(stp_vars_t v, const char *parameter,
 			   const char *value, int bytes)
 {
-  if      (strcmp(parameter, "Resolution") == 0)
-    stp_set_resolution_n(v, value, bytes);
-  else if (strcmp(parameter, "PageSize") == 0)
-    stp_set_media_size_name_n(v, value, bytes);
-  else if (strcmp(parameter, "MediaType") == 0)
-    stp_set_media_type_n(v, value, bytes);
-  else if (strcmp(parameter, "InputSlot") == 0)
-    stp_set_media_source_n(v, value, bytes);
-  else if (strcmp(parameter, "InkType") == 0)
-    stp_set_ink_type_n(v, value, bytes);
-  else if (strcmp(parameter, "DitherAlgorithm") == 0)
-    stp_set_dither_algorithm_n(v, value, bytes);
-  else
-    stp_eprintf(v, "WARNING: Attempt to set unknown parameter %s to %s\n",
-		parameter, value);
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_STRING_LIST];
+  set_raw_parameter(list, parameter, value, bytes,
+		    STP_PARAMETER_TYPE_STRING_LIST);
 }
 
 void
@@ -521,110 +602,256 @@ stp_set_string_parameter(stp_vars_t v, const char *parameter,
   stp_set_string_parameter_n(v, parameter, value, byte_count);
 }
 
+const char *
+stp_get_string_parameter(const stp_vars_t v, const char *parameter)
+{
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_STRING_LIST];
+  value_t *val;
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  if (item)
+    {
+      val = (value_t *) stp_list_item_get_data(item);
+      return val->value.rval.data;
+    }
+  else
+    return NULL;
+}
+
+void
+stp_set_raw_parameter(stp_vars_t v, const char *parameter,
+		      const void *value, int bytes)
+{
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_RAW];
+  set_raw_parameter(list, parameter, value, bytes, STP_PARAMETER_TYPE_RAW);
+}
+
+const stp_raw_t *
+stp_get_raw_parameter(const stp_vars_t v, const char *parameter)
+{
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_RAW];
+  value_t *val;
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  if (item)
+    {
+      val = (value_t *) stp_list_item_get_data(item);
+      return &(val->value.rval);
+    }
+  else
+    return NULL;
+}
+
+void
+stp_set_file_parameter(stp_vars_t v, const char *parameter,
+		       const char *value)
+{
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
+  int byte_count = 0;
+  if (value)
+    byte_count = strlen(value);
+  set_raw_parameter(list, parameter, value, byte_count,
+		    STP_PARAMETER_TYPE_FILE);
+}
+
+void
+stp_set_file_parameter_n(stp_vars_t v, const char *parameter,
+			 const char *value, int byte_count)
+{
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
+  set_raw_parameter(list, parameter, value, byte_count,
+		    STP_PARAMETER_TYPE_FILE);
+}
+
+const char *
+stp_get_file_parameter(const stp_vars_t v, const char *parameter)
+{
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
+  value_t *val;
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  if (item)
+    {
+      val = (value_t *) stp_list_item_get_data(item);
+      return val->value.rval.data;
+    }
+  else
+    return NULL;
+}
+
 void
 stp_set_curve_parameter(stp_vars_t v, const char *parameter,
 			const stp_curve_t curve)
 {
-  stp_eprintf(v, "WARNING: Attempt to set unknown parameter %s\n",
-	      parameter);
-}
-
-void
-stp_set_int_parameter(stp_vars_t v, const char *parameter, int integer)
-{
-  stp_eprintf(v, "WARNING: Attempt to set unknown parameter %s\n",
-	      parameter);
-}
-
-void
-stp_set_float_parameter(stp_vars_t v, const char *parameter, double value)
-{
-  if (strcmp(parameter, "Brightness") == 0)
-    stp_set_brightness(v, value);
-  else if (strcmp(parameter, "Contrast") == 0)
-    stp_set_contrast(v, value);
-  else if (strcmp(parameter, "Density") == 0)
-    stp_set_density(v, value);
-  else if (strcmp(parameter, "Gamma") == 0)
-    stp_set_gamma(v, value);
-  else if (strcmp(parameter, "AppGamma") == 0)
-    stp_set_app_gamma(v, value);
-  else if (strcmp(parameter, "Cyan") == 0)
-    stp_set_cyan(v, value);
-  else if (strcmp(parameter, "Magenta") == 0)
-    stp_set_magenta(v, value);
-  else if (strcmp(parameter, "Yellow") == 0)
-    stp_set_yellow(v, value);
-  else if (strcmp(parameter, "Saturation") == 0)
-    stp_set_saturation(v, value);
-}
-
-const double
-stp_get_float_parameter(stp_vars_t v, const char *parameter)
-{
-  if (strcmp(parameter, "Brightness") == 0)
-    return stp_get_brightness(v);
-  else if (strcmp(parameter, "Contrast") == 0)
-    return stp_get_contrast(v);
-  else if (strcmp(parameter, "Density") == 0)
-    return stp_get_density(v);
-  else if (strcmp(parameter, "AppGamma") == 0)
-    return stp_get_app_gamma(v);
-  else if (strcmp(parameter, "Gamma") == 0)
-    return stp_get_gamma(v);
-  else if (strcmp(parameter, "Cyan") == 0)
-    return stp_get_cyan(v);
-  else if (strcmp(parameter, "Magenta") == 0)
-    return stp_get_magenta(v);
-  else if (strcmp(parameter, "Yellow") == 0)
-    return stp_get_yellow(v);
-  else if (strcmp(parameter, "Saturation") == 0)
-    return stp_get_saturation(v);
-  else
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_CURVE];
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  if (curve)
     {
-      stp_eprintf(v, "WARNING: Attempt to retrieve unknown parameter %s\n",
-		  parameter);
-      return 0;
+      value_t *val;
+      if (item)
+	{
+	  val = (value_t *) stp_list_item_get_data(item);
+	  stp_curve_destroy(val->value.cval);
+	}
+      else
+	{
+	  val = stp_malloc(sizeof(value_t));
+	  val->name = stp_strdup(parameter);
+	  val->typ = STP_PARAMETER_TYPE_CURVE;
+	  stp_list_item_create(list, NULL, val);
+	}
+      val->value.cval = stp_curve_allocate_copy(curve);
     }
+  else if (item)
+    stp_list_item_destroy(list, item);
 }
 
 const stp_curve_t
-stp_get_curve_parameter(stp_vars_t v, const char *parameter)
+stp_get_curve_parameter(const stp_vars_t v, const char *parameter)
 {
-  stp_eprintf(v, "WARNING: Attempt to retrieve unknown parameter %s\n",
-	      parameter);
-  return NULL;
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_CURVE];
+  value_t *val;
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  if (item)
+    {
+      val = (value_t *) stp_list_item_get_data(item);
+      return val->value.cval;
+    }
+  else
+    return NULL;
+}
+
+void
+stp_set_int_parameter(stp_vars_t v, const char *parameter, int ival)
+{
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_INT];
+  value_t *val;
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  if (item)
+    {
+      val = (value_t *) stp_list_item_get_data(item);
+    }
+  else
+    {
+      val = stp_malloc(sizeof(value_t));
+      val->name = stp_strdup(parameter);
+      val->typ = STP_PARAMETER_TYPE_INT;
+      stp_list_item_create(list, NULL, val);
+    }
+  val->value.ival = ival;
 }
 
 const int
-stp_get_int_parameter(stp_vars_t v, const char *parameter)
+stp_get_int_parameter(const stp_vars_t v, const char *parameter)
 {
-  stp_eprintf(v, "WARNING: Attempt to retrieve unknown parameter %s\n",
-	      parameter);
-  return 0;
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_INT];
+  value_t *val;
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  if (item)
+    {
+      val = (value_t *) stp_list_item_get_data(item);
+      return val->value.ival;
+    }
+  else
+    return 0;
 }
 
-const char *
-stp_get_string_parameter(stp_vars_t v, const char *parameter)
+void
+stp_set_float_parameter(stp_vars_t v, const char *parameter, double dval)
 {
-  if      (strcmp(parameter, "Resolution") == 0)
-    return stp_get_resolution(v);
-  else if (strcmp(parameter, "PageSize") == 0)
-    return stp_get_media_size_name(v);
-  else if (strcmp(parameter, "MediaType") == 0)
-    return stp_get_media_type(v);
-  else if (strcmp(parameter, "InputSlot") == 0)
-    return stp_get_media_source(v);
-  else if (strcmp(parameter, "InkType") == 0)
-    return stp_get_ink_type(v);
-  else if (strcmp(parameter, "DitherAlgorithm") == 0)
-    return stp_get_dither_algorithm(v);
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_DOUBLE];
+  value_t *val;
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  if (item)
+    {
+      val = (value_t *) stp_list_item_get_data(item);
+    }
   else
     {
-      stp_eprintf(v, "WARNING: Attempt to retrieve unknown parameter %s\n",
-		  parameter);
-      return NULL;
+      val = stp_malloc(sizeof(value_t));
+      val->name = stp_strdup(parameter);
+      val->typ = STP_PARAMETER_TYPE_DOUBLE;
+      stp_list_item_create(list, NULL, val);
     }
+  val->value.dval = dval;
+}
+
+const double
+stp_get_float_parameter(const stp_vars_t v, const char *parameter)
+{
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_DOUBLE];
+  value_t *val;
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  if (item)
+    {
+      val = (value_t *) stp_list_item_get_data(item);
+      return val->value.dval;
+    }
+  else
+    return 1.0;
+}
+
+int
+stp_check_string_parameter(const stp_vars_t v, const char *parameter)
+{
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_STRING_LIST];
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  return item ? 1 : 0;
+}
+
+int
+stp_check_file_parameter(const stp_vars_t v, const char *parameter)
+{
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_FILE];
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  return item ? 1 : 0;
+}
+
+int
+stp_check_float_parameter(const stp_vars_t v, const char *parameter)
+{
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_DOUBLE];
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  return item ? 1 : 0;
+}
+
+int
+stp_check_int_parameter(const stp_vars_t v, const char *parameter)
+{
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_INT];
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  return item ? 1 : 0;
+}
+
+int
+stp_check_curve_parameter(const stp_vars_t v, const char *parameter)
+{
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_CURVE];
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  return item ? 1 : 0;
+}
+
+int
+stp_check_raw_parameter(const stp_vars_t v, const char *parameter)
+{
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_RAW];
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  return item ? 1 : 0;
 }
 
 void
@@ -653,6 +880,9 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
   int count;
   int i;
   stp_parameter_list_t params;
+  stp_internal_vars_t *vvd = (stp_internal_vars_t *)vd;
+  const stp_internal_vars_t *vvs = (const stp_internal_vars_t *)vs;
+
   if (vs == vd)
     return;
   stp_set_driver(vd, stp_get_driver(vs));
@@ -664,6 +894,12 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
     stp_set_color_data(vd, (stp_get_copy_color_data_func(vs))(vs));
   else
     stp_set_color_data(vd, stp_get_color_data(vs));
+  for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
+    {
+      stp_list_destroy(vvd->params[i]);
+      vvd->params[i] = copy_value_list(vvs->params[i]);
+    }
+
   stp_set_copy_driver_data_func(vd, stp_get_copy_driver_data_func(vs));
   stp_set_copy_color_data_func(vd, stp_get_copy_color_data_func(vs));
   stp_set_ppd_file(vd, stp_get_ppd_file(vs));
@@ -683,32 +919,6 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
   stp_set_errfunc(vd, stp_get_errfunc(vs));
   params = stp_list_parameters(vs);
   count = stp_parameter_list_count(params);
-  for (i = 0; i < count; i++)
-    {
-      const stp_parameter_t *p = stp_parameter_list_param(params, i);
-      switch (p->type)
-	{
-	case STP_PARAMETER_TYPE_STRING_LIST:
-	case STP_PARAMETER_TYPE_FILE:
-	  stp_set_string_parameter(vd, p->name,
-				   stp_get_string_parameter(vs, p->name));
-	  break;
-	case STP_PARAMETER_TYPE_DOUBLE:
-	  stp_set_float_parameter(vd, p->name,
-				  stp_get_float_parameter(vs, p->name));
-	  break;
-	case STP_PARAMETER_TYPE_INT:
-	  stp_set_int_parameter(vd, p->name,
-				stp_get_int_parameter(vs, p->name));
-	  break;
-	case STP_PARAMETER_TYPE_CURVE:
-	  stp_set_curve_parameter(vd, p->name,
-				  stp_get_curve_parameter(vs, p->name));
-	  break;
-	default:
-	  break;
-	}
-    }
   stp_set_verified(vd, stp_get_verified(vs));
 }
 

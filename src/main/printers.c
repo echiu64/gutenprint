@@ -456,6 +456,7 @@ stp_verify_printer_params(const stp_vars_t v)
   int answer = 1;
   int left, top, bottom, right;
   const stp_vars_t printvars = stp_printer_get_printvars(p);
+  const char *pagesize = stp_get_string_parameter(v, "PageSize");
 
   /*
    * Note that in raw CMYK mode the user is responsible for not sending
@@ -467,7 +468,7 @@ stp_verify_printer_params(const stp_vars_t v)
       answer = 0;
       stp_eprintf(v, _("Printer does not support color output\n"));
     }
-  if (strlen(stp_get_string_parameter(v, "PageSize")) > 0)
+  if (pagesize && strlen(pagesize) > 0)
     {
       answer &= verify_param(v, "PageSize");
     }
@@ -533,7 +534,7 @@ stp_verify_printer_params(const stp_vars_t v)
   nparams = stp_parameter_list_count(params);
   for (i = 0; i < nparams; i++)
     {
-      stp_parameter_t *p = stp_parameter_list_param(params, i);
+      const stp_parameter_t *p = stp_parameter_list_param(params, i);
       if (p->class != STP_PARAMETER_CLASS_PAGE_SIZE)
 	answer &= verify_param(v, p->name);
     }

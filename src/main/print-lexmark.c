@@ -774,12 +774,14 @@ static const int paper_type_count = sizeof(lexmark_paper_list) / sizeof(paper_t)
 static const lexmark_inkname_t *
 lexmark_get_ink_type(const char *name, int output_type, const lexmark_cap_t * caps)
 {
-  int i;
+  int i = 0;
   const lexmark_inkname_t *ink_type = caps->ink_types;
 
-  for (i=0; ((ink_type[i].name != NULL) &&
-	     (strcmp(name, ink_type[i].name)  != 0)); i++) ;
+  if (name)
+    for (i=0; ((ink_type[i].name != NULL) &&
+	       (strcmp(name, ink_type[i].name)  != 0)); i++) ;
   return &(ink_type[i]);
+      
 }
 
 static const lexmark_inkparam_t *
@@ -801,10 +803,13 @@ static const paper_t *
 get_media_type(const char *name, const lexmark_cap_t * caps)
 {
   int i;
-  for (i = 0; i < paper_type_count; i++)
+  if (name)
     {
-      if (!strcmp(name, lexmark_paper_list[i].name))
-	return &(lexmark_paper_list[i]);
+      for (i = 0; i < paper_type_count; i++)
+	{
+	  if (!strcmp(name, lexmark_paper_list[i].name))
+	    return &(lexmark_paper_list[i]);
+	}
     }
   return NULL;
 }
@@ -812,9 +817,12 @@ get_media_type(const char *name, const lexmark_cap_t * caps)
 static int
 lexmark_source_type(const char *name, const lexmark_cap_t * caps)
 {
-  if (!strcmp(name,"Auto"))    return 4;
-  if (!strcmp(name,"Manual"))    return 0;
-  if (!strcmp(name,"ManualNP")) return 1;
+  if (name)
+    {
+      if (!strcmp(name,"Auto"))    return 4;
+      if (!strcmp(name,"Manual"))    return 0;
+      if (!strcmp(name,"ManualNP")) return 1;
+    }
 
 #ifdef DEBUG
   stp_erprintf("lexmark: Unknown source type '%s' - reverting to auto\n",name);
@@ -906,16 +914,18 @@ static const lexmark_res_t
 
   const lexmark_res_t *res = *(caps->res_parameters); /* get the resolution specific parameters of printer */
 
-
-  while (res->hres)
+  if (resolution)
     {
-      if ((res->vres <= caps->max_ydpi) && (caps->max_ydpi != -1) &&
-	  (res->hres <= caps->max_xdpi) && (caps->max_xdpi != -1) &&
-	  (!strcmp(resolution, res->name)))
+      while (res->hres)
 	{
-	  return res;
+	  if ((res->vres <= caps->max_ydpi) && (caps->max_ydpi != -1) &&
+	      (res->hres <= caps->max_xdpi) && (caps->max_xdpi != -1) &&
+	      (!strcmp(resolution, res->name)))
+	    {
+	      return res;
+	    }
+	  res++;
 	}
-      res++;
     }
   stp_erprintf("lexmark_get_resolution_para: resolution not found (%s)\n", resolution);
   return NULL;
@@ -1763,7 +1773,23 @@ densityDivisor /= 1.2;
 				media ? media->sat_adjustment : NULL,
 				STP_CURVE_COMPOSE_MULTIPLY);
 
-  stp_compute_lut(nv, 65536, hue_adjustment, lum_adjustment, sat_adjustment);
+  if (stp_get_curve_parameter(nv, "HueMap"))
+    stp_curve_compose(&hue_adjustment, hue_adjustment,
+		      stp_get_curve_parameter(nv, "HueMap"),
+		      STP_CURVE_COMPOSE_ADD, -1);
+  if (stp_get_curve_parameter(nv, "LumMap"))
+    stp_curve_compose(&lum_adjustment, lum_adjustment,
+		      stp_get_curve_parameter(nv, "LumMap"),
+		      STP_CURVE_COMPOSE_MULTIPLY, -1);
+  if (stp_get_curve_parameter(nv, "SatMap"))
+    stp_curve_compose(&sat_adjustment, sat_adjustment,
+		      stp_get_curve_parameter(nv, "SatMap"),
+		      STP_CURVE_COMPOSE_MULTIPLY, -1);
+  stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
+  stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
+  stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
+
+  stp_compute_lut(nv, 65536);
   stp_curve_destroy(lum_adjustment);
   stp_curve_destroy(sat_adjustment);
   stp_curve_destroy(hue_adjustment);

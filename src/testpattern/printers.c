@@ -30,6 +30,7 @@
 #include <gimp-print/gimp-print.h>
 #endif
 #include "../../lib/libprintut.h"
+#include <string.h>
 
 int
 main(int argc, char **argv)
@@ -40,8 +41,9 @@ main(int argc, char **argv)
   for (i = 0; i < stp_known_printers(); i++)
     {
       const stp_printer_t p = stp_get_printer_by_index(i);
-      printf("$printer_name{'%s'} = '%s';\n", stp_printer_get_driver(p),
-	     stp_printer_get_long_name(p));
+      if (strcmp(stp_printer_get_family(p), "ps") &&
+	  strcmp(stp_printer_get_family(p), "raw"))
+	printf("%s\n", stp_printer_get_driver(p));
     }
   return 0;
 }

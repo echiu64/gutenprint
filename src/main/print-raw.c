@@ -179,6 +179,7 @@ raw_print(const stp_vars_t v, stp_image_t *image)
   int		status = 1;
   int bytes_per_channel = raw_model_capabilities[model].output_bits / 8;
   int ink_channels = 1;
+  const char *ink_type = stp_get_string_parameter(nv, "InkType");
 
   if (!stp_verify(nv))
     {
@@ -192,13 +193,17 @@ raw_print(const stp_vars_t v, stp_image_t *image)
       stp_vars_free(nv);
       return 0;
     }
-  for (i = 0; i < ink_count; i++)
-    if (strcmp(stp_get_string_parameter(nv, "InkType"), inks[i].name) == 0)
-      {
-	stp_set_output_color_model(nv, inks[i].color_model);
-	ink_channels = inks[i].output_channels;
-	break;
-      }
+  stp_set_output_color_model(nv, COLOR_MODEL_CMY);
+  if (ink_type)
+    {
+      for (i = 0; i < ink_count; i++)
+	if (strcmp(ink_type, inks[i].name) == 0)
+	  {
+	    stp_set_output_color_model(nv, inks[i].color_model);
+	    ink_channels = inks[i].output_channels;
+	    break;
+	  }
+    }
   colorfunc = stp_choose_colorfunc(nv, stp_image_bpp(image), &out_channels);
   if (out_channels != ink_channels && out_channels != 1 && ink_channels != 1)
     {
@@ -213,7 +218,7 @@ raw_print(const stp_vars_t v, stp_image_t *image)
     final_out = stp_malloc(width * ink_channels * 2);
 
   stp_set_float_parameter(nv, "Density", 1.0);
-  stp_compute_lut(nv, 256, NULL, NULL, NULL);
+  stp_compute_lut(nv, 256);
 
   stp_image_progress_init(image);
 

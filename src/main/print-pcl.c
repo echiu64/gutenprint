@@ -240,13 +240,16 @@ pcl_describe_resolution(const stp_vars_t v, int *x, int *y)
 {
   int i;
   const char *resolution = stp_get_string_parameter(v, "Resolution");
-  for (i = 0; i < NUM_RESOLUTIONS; i++)
+  if (resolution)
     {
-      if (!strcmp(resolution, pcl_resolutions[i].pcl_name))
+      for (i = 0; i < NUM_RESOLUTIONS; i++)
 	{
-	  *x = pcl_resolutions[i].p0;
-	  *y = pcl_resolutions[i].p1;
-	  return;
+	  if (!strcmp(resolution, pcl_resolutions[i].pcl_name))
+	    {
+	      *x = pcl_resolutions[i].p0;
+	      *y = pcl_resolutions[i].p1;
+	      return;
+	    }
 	}
     }
   *x = -1;
@@ -1718,11 +1721,12 @@ pcl_parameters(const stp_vars_t v, const char *name,
   else if (strcmp(name, "Resolution") == 0)
   {
     description->bounds.str = stp_string_list_allocate();
+    description->deflt.str = NULL;
     for (i = 0; i < NUM_RESOLUTIONS; i++)
       if (caps->resolutions & pcl_resolutions[i].pcl_code)
 	{
 	  if (pcl_resolutions[i].pcl_code >= PCL_RES_300_300 &&
-	      description->bounds.str == NULL)
+	      description->deflt.str == NULL)
 	    description->deflt.str = 
 	      pcl_val_to_string(pcl_resolutions[i].pcl_code,
 				pcl_resolutions, NUM_RESOLUTIONS);
@@ -1733,6 +1737,8 @@ pcl_parameters(const stp_vars_t v, const char *name,
 	     pcl_val_to_text(pcl_resolutions[i].pcl_code,
 			     pcl_resolutions, NUM_RESOLUTIONS));
 	}
+    if (description->deflt.str == NULL)
+      stp_erprintf("No default resolution set!\n");
   }
   else if (strcmp(name, "InkType") == 0)
   {
@@ -1765,7 +1771,7 @@ pcl_imageable_area(const stp_vars_t v,     /* I */
   int	width, height;			/* Size of page */
   const pcl_cap_t *caps;		/* Printer caps */
   int	pcl_media_size;			/* Converted media size */
-  const char	*media_size;		/* Media size string */
+  const char *media_size = stp_get_string_parameter(v, "PageSize");
   stp_papersize_t pp;
 
   caps = pcl_get_model_capabilities(stp_get_model(v));
@@ -1777,13 +1783,12 @@ pcl_imageable_area(const stp_vars_t v,     /* I */
  * width for A4 as for letter. Go figure.
  */
 
-  if (strlen(stp_get_string_parameter(v, "PageSize")) > 0)
-    media_size = stp_get_string_parameter(v, "PageSize");
-  else if ((pp = stp_get_papersize_by_size(stp_get_page_height(v),
-					   stp_get_page_width(v))) != NULL)
-    media_size = stp_papersize_get_name(pp);
-  else
+  if (!media_size)
     media_size = "";
+  if (strlen(media_size) == 0 &&
+      ((pp = stp_get_papersize_by_size(stp_get_page_height(v),
+				       stp_get_page_width(v))) != NULL))
+    media_size = stp_papersize_get_name(pp);
 
   stp_deprintf(STP_DBG_PCL, "pcl_imageable_area(): media_size: '%s'\n",
 		media_size);
@@ -1831,7 +1836,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   int		status = 1;
   int		model = stp_get_model(v);
   const char	*resolution = stp_get_string_parameter(v, "Resolution");
-  const char	*media_size;
+  const char	*media_size = stp_get_string_parameter(v, "PageSize");
   const char	*media_type = stp_get_string_parameter(v, "MediaType");
   const char	*media_source = stp_get_string_parameter(v, "InputSlot");
   const char	*ink_type = stp_get_string_parameter(v, "InkType");
@@ -1872,10 +1877,10 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
                 image_bpp;
   void *	dither;
   const pcl_cap_t *caps;		/* Printer capabilities */
-  int		do_cret,	/* 300 DPI CRet printing */
-  		do_cretb,	/* 600 DPI CRet printing HP 840C*/
-		do_6color,	/* CMY + cmK printing */
-		planes;		/* # of output planes */
+  int		do_cret = 0,	/* 300 DPI CRet printing */
+  		do_cretb = 0,	/* 600 DPI CRet printing HP 840C*/
+		do_6color = 0,	/* CMY + cmK printing */
+		planes = 3;	/* # of output planes */
   int		pcl_media_size, /* PCL media size code */
 		pcl_media_type, /* PCL media type code */
 		pcl_media_source;	/* PCL media source code */
@@ -1921,13 +1926,16 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 
   xdpi = 0;
   ydpi = 0;
-  for (i = 0; i < NUM_RESOLUTIONS; i++)
+  if (resolution)
     {
-      if (!strcmp(resolution, pcl_resolutions[i].pcl_name))
+      for (i = 0; i < NUM_RESOLUTIONS; i++)
 	{
-	  xdpi = pcl_resolutions[i].p0;
-	  ydpi = pcl_resolutions[i].p1;
-	  break;
+	  if (!strcmp(resolution, pcl_resolutions[i].pcl_name))
+	    {
+	      xdpi = pcl_resolutions[i].p0;
+	      ydpi = pcl_resolutions[i].p1;
+	      break;
+	    }
 	}
     }
 
@@ -1973,7 +1981,8 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   stp_deprintf(STP_DBG_PCL, "do_cret = %d\n", do_cret);
   stp_deprintf(STP_DBG_PCL, "do_cretb = %d\n", do_cretb);
 
-  do_6color = (strcmp(ink_type, "Photo") == 0);
+  if (ink_type)
+    do_6color = (strcmp(ink_type, "Photo") == 0);
   stp_deprintf(STP_DBG_PCL, "do_6color = %d\n", do_6color);
 
  /*
@@ -2016,13 +2025,12 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   * Set media size
   */
 
-  if (strlen(stp_get_string_parameter(v, "PageSize")) > 0)
-    media_size = stp_get_string_parameter(v, "PageSize");
-  else if ((pp = stp_get_papersize_by_size(stp_get_page_height(v),
-					   stp_get_page_width(v))) != NULL)
-    media_size = stp_papersize_get_name(pp);
-  else
+  if (!media_size)
     media_size = "";
+  if (strlen(media_size) == 0 &&
+      ((pp = stp_get_papersize_by_size(stp_get_page_height(v),
+				       stp_get_page_width(v))) != NULL))
+    media_size = stp_papersize_get_name(pp);
 
   pcl_media_size = pcl_convert_media_size(media_size, model);
 
@@ -2050,7 +2058,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   * Convert media source string to the code, if specified.
   */
 
-  if (strlen(media_source) != 0) {
+  if (media_source && strlen(media_source) != 0) {
     pcl_media_source = pcl_string_to_val(media_source, pcl_media_sources,
                          sizeof(pcl_media_sources) / sizeof(pcl_t));
 
@@ -2072,7 +2080,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   * Convert media type string to the code, if specified.
   */
 
-  if (strlen(media_type) != 0) {
+  if (media_type && strlen(media_type) != 0) {
     pcl_media_type = pcl_string_to_val(media_type, pcl_media_types,
                        sizeof(pcl_media_types) / sizeof(pcl_t));
 
@@ -2329,8 +2337,18 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 					       STP_CURVE_COMPOSE_MULTIPLY);
   hue_adjustment = stp_read_and_compose_curves(standard_hue_adjustment, NULL,
 					       STP_CURVE_COMPOSE_ADD);
+  if (stp_get_curve_parameter(nv, "HueMap"))
+    stp_curve_compose(&hue_adjustment, hue_adjustment,
+		      stp_get_curve_parameter(nv, "HueMap"),
+		      STP_CURVE_COMPOSE_ADD, -1);
+  if (stp_get_curve_parameter(nv, "LumMap"))
+    stp_curve_compose(&lum_adjustment, lum_adjustment,
+		      stp_get_curve_parameter(nv, "LumMap"),
+		      STP_CURVE_COMPOSE_MULTIPLY, -1);
+  stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
+  stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
 
-  stp_compute_lut(nv, 65536, hue_adjustment, lum_adjustment, NULL);
+  stp_compute_lut(nv, 65536);
   stp_curve_destroy(lum_adjustment);
   stp_curve_destroy(hue_adjustment);
 
@@ -2423,25 +2441,37 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   for (y = 0; y < out_height; y ++)
   {
     int duplicate_line = 1;
-    stp_deprintf(STP_DBG_PCL,"pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
+    stp_deprintf(STP_DBG_PCL,"Xpcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
            y, errline, errval, errmod, out_height);
     if ((y & 63) == 0)
       stp_image_note_progress(image, y, out_height);
+    stp_deprintf(STP_DBG_PCL,"pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
+           y, errline, errval, errmod, out_height);
 
     if (errline != errlast)
     {
       errlast = errline;
       duplicate_line = 0;
+      stp_deprintf(STP_DBG_PCL,">pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
+		   y, errline, errval, errmod, out_height);
       if (stp_image_get_row(image, in, image_width * image_bpp, errline) !=
 	  STP_IMAGE_OK)
 	{
 	  status = 2;
 	  break;
 	}
+      stp_deprintf(STP_DBG_PCL,">pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
+		   y, errline, errval, errmod, out_height);
       (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp);
+      stp_deprintf(STP_DBG_PCL,">pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
+		   y, errline, errval, errmod, out_height);
     }
+    stp_deprintf(STP_DBG_PCL,"pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
+           y, errline, errval, errmod, out_height);
 
     stp_dither(out, y, dither, dt, duplicate_line, zero_mask);
+    stp_deprintf(STP_DBG_PCL,"pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
+           y, errline, errval, errmod, out_height);
 
     len_c = stp_dither_get_last_position(dither, ECOLOR_C, 0);
     len_lc = stp_dither_get_last_position(dither, ECOLOR_C, 1);
@@ -2460,6 +2490,8 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 
     is_blank = (do_blank && (len_c == -1) && (len_lc == -1) && (len_m == -1)
 	&& (len_lm == -1) && (len_y == -1) && (len_k == -1));
+    stp_deprintf(STP_DBG_PCL,"pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
+           y, errline, errval, errmod, out_height);
 
     if (is_blank && (blank_lines != 0))	/* repeated blank line */
     {
@@ -2549,6 +2581,8 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
         }
       }
     }
+    stp_deprintf(STP_DBG_PCL,"pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
+           y, errline, errval, errmod, out_height);
 
     errval += errmod;
     errline += errdiv;
