@@ -31,6 +31,9 @@ over Gimp-Print 4.2.1-pre4:
   2) Under some circumstances, the PCL driver could overflow an
      internal buffer, potentially causing a crash.
 
+  3) The user's manual has been updated, and a section on escputil
+     added.
+
 The following bugs are fixed in 4.2.1-pre5:
 
 539013 IJS driver mispositions image on page
