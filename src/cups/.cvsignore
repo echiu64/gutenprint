@@ -2,10 +2,10 @@
 .libs
 Makefile
 Makefile.in
-calibrate
 canon
 commandtocanon
 commandtoepson
+cups-calibrate
 epson
 genppd
 ppd
