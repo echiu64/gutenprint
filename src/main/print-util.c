@@ -560,6 +560,8 @@ static stp_internal_papersize_t paper_sizes[] =
     864, 1296, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
   { "SuperB",		N_ ("Super B 13x19"),
     936, 1368, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "EngineeringC",	N_ ("Engineering C 17x22"),
+    1224, 1584, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
 
   /* Other common photographic paper sizes */
   { "w576h864",		N_ ("8x12"),
