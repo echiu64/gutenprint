@@ -8,11 +8,44 @@ src/cups/README for more information on this.
 
 The Gimp Print plugin requires the Gimp 1.2.
 
-Gimp-Print 4.1.6 contains the following fixes and improvements over 4.1.6:
+Gimp-Print 4.1.6 contains the following changes over 4.1.6:
+
+1) As of this release, the Gimp 1.0 is no longer supported.  You must
+   use at least 1.1.21; 1.2 is strongly recommended.  In particular,
+   we will not fix bugs in the Gimp plugin unless they can be
+   reproduced with the Gimp 1.2.
+
+2) Foomatic is now supported in the 4.1 line.  Please read the README
+   for more information.  This requires a relatively recent version of
+   Foomatic and is not compatible with the version bundled with
+   Gimp-Print 4.0.
+
+3) Significant improvements to the Canon driver for many printers,
+   most notably the BJC-8200.  There may be some temporary new
+   problems with 4-color printing on some Canon printers; feedback on
+   this would be greatly appreciated.
+
+4) Significant improvements to the Lexmark driver.
+
+5) Further improvements to the Stylus Color 980.
+
+6) Support for printing 720x360 DPI on many Epson Stylus printers.
+   This mode offers a speed/quality tradeoff intermediate between 360
+   and 720 DPI.  It does not work very well on photo-quality paper.
+
+7) Improvements in the Fast dithering option on plain paper.
+
+8) Some improvements to the Epson Stylus Photo 870/1270 and newer
+   6-color printers.
+
+9) Internal architectural changes: the library now operates internally
+   in CMY rather than RGB space, and offers a raw CMYK input mode.
+   The former is not visible outside of the library; the latter has no
+   current uses and is untested.  Neither change should have any
+   user-visible effects; this is strictly for programmer use.
 
 
-
-Gimp-Print 4.1.5 contains the following fixes and improvements over 4.1.4:
+Gimp-Print 4.1.5 contains the following changes over 4.1.4:
 
 1) The old (Gimp 1.0 and early 1.1-compatible) print plugin UI is
    deprecated.  No further improvements will be made nor bugs fixed in
@@ -58,7 +91,7 @@ Gimp-Print 4.1.5 contains the following fixes and improvements over 4.1.4:
 The following problem with 4.1.5 is known to exist: printing in at
 least some modes on the Canon BJC-8200 is incorrect.
 
-Gimp-Print 4.1.4 contains the following fixes and improvements over 4.1.3:
+Gimp-Print 4.1.4 contains the following changes over 4.1.3:
 
 1) Major improvements to the Debian packaging.  It is compliant with
    Standards-Version 3.1.1, and is lintian-clean.  It should build
@@ -118,7 +151,7 @@ Gimp-Print 4.1.4 contains the following fixes and improvements over 4.1.3:
    libgimpprint (if the installed copy is current).
 
 
-Print 4.1.3 contains the following fixes and improvements over 4.1.2:
+Gimp-Print 4.1.3 contains the following changes over 4.1.2:
 
 1) The source has been completely reorganized.  Please read the README
    file for more information!
@@ -126,7 +159,7 @@ Print 4.1.3 contains the following fixes and improvements over 4.1.2:
 2) Improvements to the Lexmark driver.
 
 
-Print 4.1.2 contains the following fixes and improvements over 4.1.1:
+Gimp-Print 4.1.2 contains the following changes over 4.1.1:
 
 1) We believe this release contains an important bug fix that in some
    cases caused the Epson driver to seg fault upon completion.  This
@@ -160,7 +193,7 @@ Print 4.1.2 contains the following fixes and improvements over 4.1.1:
    invisible at user level.
 
 
-Print 4.1.1 contains the following fixes and improvements over 4.1.0:
+Gimp-Print 4.1.1 contains the following changes over 4.1.0:
 
 1) Further improvements in quality (we believe) in Photograph mode.
 
@@ -174,9 +207,9 @@ Print 4.1.1 contains the following fixes and improvements over 4.1.0:
 5) escputil now uses readline when available.
 
 
-Print 4.1.0 contains all fixes through the 4.0.4 release.  In
+Gimp-Print 4.1.0 contains all fixes through the 4.0.4 release.  In
 addition, it contains the following user-visible differences over
-Print 4.0.4:
+Gimp-Print 4.0.4:
 
 1) Greatly improved color quality in Photograph mode.  In particular,
    red, green, blue, and violet colors are much more accurate.  This
