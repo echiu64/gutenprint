@@ -52,12 +52,15 @@ typedef struct
   int	aspect;
   int	physical_aspect;
   int	diff_factor;
+  stpi_dither_channel_t *dummy_channel;
 } eventone_t;
 
 typedef struct shade_segment
 {
   distance_t dis;
   distance_t *et_dis;
+  stpi_ink_defn_t lower;
+  stpi_ink_defn_t upper;
 } shade_distance_t;
 
 
@@ -68,6 +71,7 @@ static void
 free_eventone_data(stpi_dither_t *d)
 {
   int i;
+  eventone_t *et = (eventone_t *) (d->aux_data);
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     {
       if (CHANNEL(d, i).aux_data)
@@ -77,21 +81,38 @@ free_eventone_data(stpi_dither_t *d)
 	  SAFE_FREE(CHANNEL(d, i).aux_data);
 	}
     }
-  SAFE_FREE(d->aux_data);
+  if (et->dummy_channel) {
+    stpi_dither_channel_t *dc = et->dummy_channel;
+    shade_distance_t *shade = (shade_distance_t *) dc->aux_data;
+    SAFE_FREE(shade->et_dis);
+    SAFE_FREE(dc->aux_data);
+    stpi_dither_channel_destroy(dc);
+    SAFE_FREE(et->dummy_channel);
+  }
+  SAFE_FREE(et);
 }
 
 static void
 et_setup(stpi_dither_t *d)
 {
+  int size = 2 * MAX_SPREAD + ((d->dst_width + 7) & ~7);
   static const int diff_factors[] = {1, 10, 16, 23, 32};
   eventone_t *et = stpi_zalloc(sizeof(eventone_t));
   int xa, ya;
   int i;
   for (i = 0; i < CHANNEL_COUNT(d); i++) {
-    int size = 2 * MAX_SPREAD + ((d->dst_width + 7) & ~7);
     CHANNEL(d, i).error_rows = 1;
     CHANNEL(d, i).errs = stpi_zalloc(1 * sizeof(int *));
     CHANNEL(d, i).errs[0] = stpi_zalloc(size * sizeof(int));
+  }
+  if (d->stpi_dither_type & D_ADAPTIVE_BASE) {
+    stpi_dither_channel_t *dc = stpi_zalloc(sizeof(stpi_dither_channel_t));
+    stpi_dither_matrix_clone(&(d->dither_matrix), &(dc->dithermat), 0, 0);
+    stpi_dither_matrix_clone(&(d->transition_matrix), &(dc->pick), 0, 0);
+    dc->error_rows = 1;
+    dc->errs = stpi_zalloc(1 * sizeof(int *));
+    dc->errs[0] = stpi_zalloc(size * sizeof(int));
+    et->dummy_channel = dc;
   }
 
   xa = d->x_aspect / d->y_aspect;
@@ -119,6 +140,17 @@ et_setup(stpi_dither_t *d)
     }
     CHANNEL(d, i).aux_data = shade;
   }
+  if (d->stpi_dither_type & D_ADAPTIVE_BASE) {
+    int x;
+    shade_distance_t *shade = stpi_zalloc(sizeof(shade_distance_t));
+    shade->dis = et->d_sq;
+    shade->et_dis = stpi_malloc(sizeof(distance_t) * d->dst_width);
+    for (x = 0; x < d->dst_width; x++) {
+      shade->et_dis[x] = et->d_sq;
+    }
+    et->dummy_channel->aux_data = shade;
+  }
+
   et->physical_aspect = d->y_aspect / d->x_aspect;
   if (et->physical_aspect >= 4)
     et->physical_aspect = 4;
@@ -136,9 +168,11 @@ static int
 et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
 {
   int i;
+  eventone_t *et;
   if (!d->aux_data)
     et_setup(d);
 
+  et = (eventone_t *) (d->aux_data);
   if (!duplicate_line) {
     if ((zero_mask & ((1 << CHANNEL_COUNT(d)) - 1)) !=
 	((1 << CHANNEL_COUNT(d)) - 1)) {
@@ -153,12 +187,17 @@ et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
   if (d->last_line_was_empty >= 5) {
     return 0;
   } else if (d->last_line_was_empty == 4) {
+    if (et->dummy_channel) {
+      memset(et->dummy_channel->errs[0], 0, d->dst_width * sizeof(int));
+    }
     for (i = 0; i < CHANNEL_COUNT(d); i++)
-      memset(&CHANNEL(d, i).errs[0][MAX_SPREAD], 0, d->dst_width * sizeof(int));
+      memset(&CHANNEL(d, i).errs[0], 0, d->dst_width * sizeof(int));
     return 0;
   }
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     CHANNEL(d, i).v = 0;
+  if (et->dummy_channel)
+    et->dummy_channel->v = 0;
   return 1;
 }
 
@@ -314,13 +353,13 @@ print_ink(stpi_dither_t *d, unsigned char *tptr, const stpi_ink_defn_t *ink,
     }
 }
 
-void
-stpi_dither_et(stp_vars_t v,
-	       int row,
-	       const unsigned short *raw,
-	       int duplicate_line,
-	       int zero_mask,
-	       const unsigned char *mask)
+static void
+stpi_dither_et_standard(stp_vars_t v,
+			int row,
+			const unsigned short *raw,
+			int duplicate_line,
+			int zero_mask,
+			const unsigned char *mask)
 {
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   eventone_t *et;
@@ -391,7 +430,7 @@ stpi_dither_et(stp_vars_t v,
 
 	  point_error += eventone_adjust(dc, et, inkspot, range_point);
 
-	  if ((d->stpi_dither_type & D_ADAPTIVE_BASE) &&
+	  if ((d->stpi_dither_type & D_ORDERED_BASE) &&
 	      point_error > 32768 - 2048 &&
 	      point_error < 32768 + 2048)
 	    comparison += (ditherpoint(d, &(dc->dithermat), x) / 16) - 2048;
@@ -427,4 +466,171 @@ stpi_dither_et(stp_vars_t v,
   }
   if (direction == -1)
     stpi_dither_reverse_row_ends(d);
+}
+
+static void
+stpi_dither_et_single(stp_vars_t v,
+		      int row,
+		      const unsigned short *raw,
+		      int duplicate_line,
+		      int zero_mask,
+		      const unsigned char *mask)
+{
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
+  eventone_t *et;
+
+  int		x,
+	        length;
+  unsigned char	bit;
+  int		i;
+
+  int		terminate;
+  int		direction;
+  int		xerror, xstep, xmod;
+  int		channel_count = CHANNEL_COUNT(d);
+  stpi_dither_channel_t *ddc;
+
+  if (!et_initializer(d, duplicate_line, zero_mask))
+    return;
+
+  et = (eventone_t *) d->aux_data;
+  ddc = et->dummy_channel;
+
+  length = (d->dst_width + 7) / 8;
+
+  if (row & 1) {
+    direction = 1;
+    x = 0;
+    terminate = d->dst_width;
+    d->ptr_offset = 0;
+  } else {
+    direction = -1;
+    x = d->dst_width - 1;
+    terminate = -1;
+    d->ptr_offset = length - 1;
+    raw += channel_count * (d->src_width - 1);
+  }
+  bit = 1 << (7 - (x & 7));
+  xstep  = channel_count * (d->src_width / d->dst_width);
+  xmod   = d->src_width % d->dst_width;
+  xerror = (xmod * x) % d->dst_width;
+
+  for (; x != terminate; x += direction) {
+
+    shade_distance_t *ssp = (shade_distance_t *) ddc->aux_data;
+    int total_inkspot;
+    int point_error = 0;
+    int total_error = 0;
+    int channels_to_print = 0;
+    int channels_printed = 0;
+
+    ddc->b = 0;
+    advance_eventone_pre(ssp, et, x);
+
+    for (i=0; i < channel_count; i++) {
+      if (CHANNEL(d, i).ptr)
+	{
+	  stpi_dither_channel_t *dc = &CHANNEL(d, i);
+	  shade_distance_t *sp = (shade_distance_t *) dc->aux_data;
+
+	  advance_eventone_pre(sp, et, x);
+
+	  /*
+	   * Find which are the two candidate dot sizes.
+	   * Rather than use the absolute value of the point to compute
+	   * the error, we will use the relative value of the point within
+	   * the range to find the two candidate dot sizes.
+	   */
+	  dc->b = find_segment_and_ditherpoint(dc, raw[i],
+					       &(sp->lower), &(sp->upper));
+	  ddc->b += dc->b;
+	}
+    }
+
+    ddc->v += 2 * ddc->b + (ddc->errs[0][x + MAX_SPREAD] + 8) / 16;
+    total_inkspot = ddc->v - ddc->b;
+    total_error += eventone_adjust(ddc, et, total_inkspot, ddc->b);
+    if (total_error > 32768 - 2048) {
+      int total_comparison = (ditherpoint(d, &(ddc->dithermat), x) / 16) -2048;
+
+      total_comparison += total_error + 32768;
+      channels_to_print = total_comparison / 65535;
+    }
+
+    for (i=0; i < channel_count; i++) {
+      if (CHANNEL(d, i).ptr)
+	{
+	  int inkspot;
+	  stpi_dither_channel_t *dc = &CHANNEL(d, i);
+	  shade_distance_t *sp = (shade_distance_t *) dc->aux_data;
+	  stpi_ink_defn_t *inkp;
+	  int comparison = 32768;
+
+	  /* Incorporate error data from previous line */
+	  dc->v += 2 * dc->b + (dc->errs[0][x + MAX_SPREAD] + 8) / 16;
+	  inkspot = dc->v - dc->b;
+
+	  point_error += eventone_adjust(dc, et, inkspot, dc->b);
+
+	  if ((d->stpi_dither_type & D_ORDERED_BASE) &&
+	      point_error > 32768 - 2048 &&
+	      point_error < 32768 + 2048)
+	    comparison += (ditherpoint(d, &(dc->dithermat), x) / 16) - 2048;
+
+	  /* Determine whether to print the larger or smaller dot */
+	  inkp = &(sp->lower);
+	  if (point_error >= comparison &&
+	      channels_printed < channels_to_print) {
+	    point_error -= 65535;
+	    inkp = &(sp->upper);
+	    dc->v -= 131070;
+	    sp->dis = et->d_sq;
+	    channels_printed++;
+	  }
+
+	  /* Adjust the error to reflect the dot choice */
+	  if (inkp->bits) {
+	    if (!mask || (*(mask + d->ptr_offset) & bit)) {
+	      set_row_ends(dc, x);
+
+	      /* Do the printing */
+	      print_ink(d, dc->ptr, inkp, bit, length);
+	    }
+	  }
+
+	  /* Spread the error around to the adjacent dots */
+	  eventone_update(dc, et, x, direction);
+	  diffuse_error(dc, et, x, direction);
+	}
+    }
+    if (channels_to_print > 0) {
+      int new_error = 65535 * channels_printed;
+      total_error -= new_error;
+      ddc->v -= 2 * new_error;
+      ssp->dis = et->d_sq;
+    }
+    eventone_update(ddc, et, x, direction);
+    diffuse_error(ddc, et, x, direction);
+    if (direction == 1)
+      ADVANCE_UNIDIRECTIONAL(d, bit, raw, channel_count, xerror, xstep, xmod);
+    else
+      ADVANCE_REVERSE(d, bit, raw, channel_count, xerror, xstep, xmod);
+  }
+  if (direction == -1)
+    stpi_dither_reverse_row_ends(d);
+}
+
+void
+stpi_dither_et(stp_vars_t v,
+	       int row,
+	       const unsigned short *raw,
+	       int duplicate_line,
+	       int zero_mask,
+	       const unsigned char *mask)
+{
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
+  if (d->stpi_dither_type & D_ADAPTIVE_BASE)
+    stpi_dither_et_single(v, row, raw, duplicate_line, zero_mask, mask);
+  else
+    stpi_dither_et_standard(v, row, raw, duplicate_line, zero_mask, mask);
 }

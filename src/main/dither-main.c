@@ -46,6 +46,8 @@ static const stpi_dither_algorithm_t dither_algos[] =
   { "None",           N_ ("Default"),                -1 },
   { "EvenTone",       N_ ("EvenTone"),               D_EVENTONE },
   { "HybridEvenTone", N_ ("Hybrid EvenTone"),        D_HYBRID_EVENTONE },
+  { "SingleEvenTone", N_ ("Single EvenTone"),        D_SINGLE_EVENTONE },
+  { "HybridSingleEvenTone", N_ ("Hybrid Single EvenTone"), D_HYBRID_SINGLE_EVENTONE },
   { "Adaptive",	      N_ ("Adaptive Hybrid"),        D_ADAPTIVE_HYBRID },
   { "Ordered",	      N_ ("Ordered"),                D_ORDERED },
   { "Fast",	      N_ ("Fast"),                   D_FAST },
