@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 4.2.1-pre4\n"
-"POT-Creation-Date: 2002-10-01 21:19-0400\n"
+"POT-Creation-Date: 2002-10-12 20:20-0400\n"
 "PO-Revision-Date: 2002-09-15 16:07+0200\n"
 "Last-Translator: Raymond Ostertag <r.ostertag@caramail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -860,15 +860,21 @@ msgstr "20x30"
 
 #. 24x30 for 35 mm
 #: src/main/print-util.c:567
+#, fuzzy
+msgid "22x30"
+msgstr "20x30"
+
+#. Common watercolor paper
+#: src/main/print-util.c:569
 msgid "24x30"
 msgstr "24x30"
 
-#: src/main/print-util.c:569
+#: src/main/print-util.c:571
 msgid "24x36"
 msgstr "24x36"
 
 #. Sometimes used for 35 mm
-#: src/main/print-util.c:571
+#: src/main/print-util.c:573
 msgid "30x40"
 msgstr "30x40"
 
@@ -881,67 +887,67 @@ msgstr "30x40"
 #. * millimetre.  Thus, A0 is 841mm x 1189mm.  Every other A
 #. * size is obtained by doubling or halving another A size.
 #.
-#: src/main/print-util.c:584
+#: src/main/print-util.c:586
 msgid "4A"
 msgstr "4A"
 
 #. 1682mm x 2378mm
-#: src/main/print-util.c:586
+#: src/main/print-util.c:588
 msgid "2A"
 msgstr "2A"
 
 #. 1189mm x 1682mm
-#: src/main/print-util.c:588
+#: src/main/print-util.c:590
 msgid "A0"
 msgstr "A0"
 
 #. 841mm x 1189mm
-#: src/main/print-util.c:590
+#: src/main/print-util.c:592
 msgid "A1"
 msgstr "A1"
 
 #. 594mm x  841mm
-#: src/main/print-util.c:592
+#: src/main/print-util.c:594
 msgid "A2"
 msgstr "A2"
 
 #. 420mm x  594mm
-#: src/main/print-util.c:594
+#: src/main/print-util.c:596
 msgid "A3"
 msgstr "A3"
 
 #. 297mm x  420mm
-#: src/main/print-util.c:596
+#: src/main/print-util.c:598
 msgid "A4"
 msgstr "A4"
 
 #. 210mm x  297mm
-#: src/main/print-util.c:598
+#: src/main/print-util.c:600
 msgid "A5"
 msgstr "A5"
 
 #. 148mm x  210mm
-#: src/main/print-util.c:600
+#: src/main/print-util.c:602
 msgid "A6"
 msgstr "A6"
 
 #. 105mm x  148mm
-#: src/main/print-util.c:602
+#: src/main/print-util.c:604
 msgid "A7"
 msgstr "A7"
 
 #. 74mm x  105mm
-#: src/main/print-util.c:604
+#: src/main/print-util.c:606
 msgid "A8"
 msgstr "A8"
 
 #. 52mm x   74mm
-#: src/main/print-util.c:606
+#: src/main/print-util.c:608
 msgid "A9"
 msgstr "A9"
 
 #. 37mm x   52mm
-#: src/main/print-util.c:608
+#: src/main/print-util.c:610
 msgid "A10"
 msgstr "A10"
 
@@ -950,27 +956,27 @@ msgstr "A10"
 #. * Stock sizes for normal trims.
 #. * Allowance for trim is 3 millimetres.
 #.
-#: src/main/print-util.c:615
+#: src/main/print-util.c:617
 msgid "RA0"
 msgstr "RA0"
 
 #. 860mm x 1220mm
-#: src/main/print-util.c:617
+#: src/main/print-util.c:619
 msgid "RA1"
 msgstr "RA1"
 
 #. 610mm x  860mm
-#: src/main/print-util.c:619
+#: src/main/print-util.c:621
 msgid "RA2"
 msgstr "RA2"
 
 #. 430mm x  610mm
-#: src/main/print-util.c:621
+#: src/main/print-util.c:623
 msgid "RA3"
 msgstr "RA3"
 
 #. 305mm x  430mm
-#: src/main/print-util.c:623
+#: src/main/print-util.c:625
 msgid "RA4"
 msgstr "RA4"
 
@@ -978,27 +984,27 @@ msgstr "RA4"
 #.
 #. * Stock sizes for bled work or extra trims.
 #.
-#: src/main/print-util.c:629
+#: src/main/print-util.c:631
 msgid "SRA0"
 msgstr "SRA0"
 
 #. 900mm x 1280mm
-#: src/main/print-util.c:631
+#: src/main/print-util.c:633
 msgid "SRA1"
 msgstr "SRA1"
 
 #. 640mm x  900mm
-#: src/main/print-util.c:633
+#: src/main/print-util.c:635
 msgid "SRA2"
 msgstr "SRA2"
 
 #. 450mm x  640mm
-#: src/main/print-util.c:635
+#: src/main/print-util.c:637
 msgid "SRA3"
 msgstr "SRA3"
 
 #. 320mm x  450mm
-#: src/main/print-util.c:637
+#: src/main/print-util.c:639
 msgid "SRA4"
 msgstr "SRA4"
 
@@ -1006,184 +1012,184 @@ msgstr "SRA4"
 #.
 #. * "B" series: Posters, wall charts and similar items.
 #.
-#: src/main/print-util.c:643
+#: src/main/print-util.c:645
 msgid "4B ISO"
 msgstr "4B ISO"
 
 #. 2000mm x 2828mm
-#: src/main/print-util.c:645
+#: src/main/print-util.c:647
 msgid "2B ISO"
 msgstr "2B ISO"
 
 #. 1414mm x 2000mm
-#: src/main/print-util.c:647
+#: src/main/print-util.c:649
 msgid "B0 ISO"
 msgstr "B0 ISO"
 
 #. 1000mm x 1414mm
-#: src/main/print-util.c:649
+#: src/main/print-util.c:651
 msgid "B1 ISO"
 msgstr "B1 ISO"
 
 #. 707mm x 1000mm
-#: src/main/print-util.c:651
+#: src/main/print-util.c:653
 msgid "B2 ISO"
 msgstr "B2 ISO"
 
 #. 500mm x  707mm
-#: src/main/print-util.c:653
+#: src/main/print-util.c:655
 msgid "B3 ISO"
 msgstr "B3 ISO"
 
 #. 353mm x  500mm
-#: src/main/print-util.c:655
+#: src/main/print-util.c:657
 msgid "B4 ISO"
 msgstr "B4 ISO"
 
 #. 250mm x  353mm
-#: src/main/print-util.c:657
+#: src/main/print-util.c:659
 msgid "B5 ISO"
 msgstr "B5 ISO"
 
 #. 176mm x  250mm
-#: src/main/print-util.c:659
+#: src/main/print-util.c:661
 msgid "B6 ISO"
 msgstr "B6 ISO"
 
 #. 125mm x  176mm
-#: src/main/print-util.c:661
+#: src/main/print-util.c:663
 msgid "B7 ISO"
 msgstr "B7 ISO"
 
 #. 88mm x  125mm
-#: src/main/print-util.c:663
+#: src/main/print-util.c:665
 msgid "B8 ISO"
 msgstr "B8 ISO"
 
 #. 62mm x   88mm
-#: src/main/print-util.c:665
+#: src/main/print-util.c:667
 msgid "B9 ISO"
 msgstr "B9 ISO"
 
 #. 44mm x   62mm
-#: src/main/print-util.c:667
+#: src/main/print-util.c:669
 msgid "B10 ISO"
 msgstr "B10 ISO"
 
 #. 31mm x   44mm
-#: src/main/print-util.c:670
+#: src/main/print-util.c:672
 msgid "B0 JIS"
 msgstr "B0 JIS"
 
-#: src/main/print-util.c:672
+#: src/main/print-util.c:674
 msgid "B1 JIS"
 msgstr "B1 JIS"
 
-#: src/main/print-util.c:674
+#: src/main/print-util.c:676
 msgid "B2 JIS"
 msgstr "B2 JIS"
 
-#: src/main/print-util.c:676
+#: src/main/print-util.c:678
 msgid "B3 JIS"
 msgstr "B3 JIS"
 
-#: src/main/print-util.c:678
+#: src/main/print-util.c:680
 msgid "B4 JIS"
 msgstr "B4 JIS"
 
-#: src/main/print-util.c:680
+#: src/main/print-util.c:682
 msgid "B5 JIS"
 msgstr "B5 JIS"
 
-#: src/main/print-util.c:682
+#: src/main/print-util.c:684
 msgid "B6 JIS"
 msgstr "B6 JIS"
 
-#: src/main/print-util.c:684
+#: src/main/print-util.c:686
 msgid "B7 JIS"
 msgstr "B7 JIS"
 
-#: src/main/print-util.c:686
+#: src/main/print-util.c:688
 msgid "B8 JIS"
 msgstr "B8 JIS"
 
-#: src/main/print-util.c:688
+#: src/main/print-util.c:690
 msgid "B9 JIS"
 msgstr "B9 JIS"
 
-#: src/main/print-util.c:690
+#: src/main/print-util.c:692
 msgid "B10 JIS"
 msgstr "B10 JIS"
 
 #.
 #. * "C" series: Envelopes or folders suitable for A size stationery.
 #.
-#: src/main/print-util.c:696
+#: src/main/print-util.c:698
 msgid "C0"
 msgstr "C0"
 
 #. 917mm x 1297mm
-#: src/main/print-util.c:698
+#: src/main/print-util.c:700
 msgid "C1"
 msgstr "C1"
 
 #. 648mm x  917mm
-#: src/main/print-util.c:700
+#: src/main/print-util.c:702
 msgid "C2"
 msgstr "C2"
 
 #. 458mm x  648mm
-#: src/main/print-util.c:702
+#: src/main/print-util.c:704
 msgid "C3"
 msgstr "C3"
 
 #. 324mm x  458mm
-#: src/main/print-util.c:704
+#: src/main/print-util.c:706
 msgid "C4"
 msgstr "C4"
 
 #. 229mm x  324mm
-#: src/main/print-util.c:706
+#: src/main/print-util.c:708
 msgid "C5"
 msgstr "C5"
 
 #. 162mm x  229mm
-#: src/main/print-util.c:708
+#: src/main/print-util.c:710
 msgid "B6-C4"
 msgstr "B6-C4"
 
 #. 125mm x  324mm
-#: src/main/print-util.c:710
+#: src/main/print-util.c:712
 msgid "C6"
 msgstr "C6"
 
 #. 114mm x  162mm
-#: src/main/print-util.c:712
+#: src/main/print-util.c:714
 msgid "DL"
 msgstr "DL"
 
 #. 110mm x  220mm
-#: src/main/print-util.c:714
+#: src/main/print-util.c:716
 msgid "C7-6"
 msgstr "C7-6"
 
 #. 81mm x  162mm
-#: src/main/print-util.c:716
+#: src/main/print-util.c:718
 msgid "C7"
 msgstr "C7"
 
 #. 81mm x  114mm
-#: src/main/print-util.c:718
+#: src/main/print-util.c:720
 msgid "C8"
 msgstr "C8"
 
 #. 57mm x   81mm
-#: src/main/print-util.c:720
+#: src/main/print-util.c:722
 msgid "C9"
 msgstr "C9"
 
 #. 40mm x   57mm
-#: src/main/print-util.c:722
+#: src/main/print-util.c:724
 msgid "C10"
 msgstr "C10"
 
@@ -1191,35 +1197,35 @@ msgstr "C10"
 #.
 #. * US CAD standard paper sizes
 #.
-#: src/main/print-util.c:728
+#: src/main/print-util.c:730
 msgid "ArchA"
 msgstr "ArchA"
 
-#: src/main/print-util.c:730
+#: src/main/print-util.c:732
 msgid "ArchB"
 msgstr "ArchB"
 
-#: src/main/print-util.c:732
+#: src/main/print-util.c:734
 msgid "ArchC"
 msgstr "ArchC"
 
-#: src/main/print-util.c:734
+#: src/main/print-util.c:736
 msgid "ArchD"
 msgstr "ArchD"
 
-#: src/main/print-util.c:736
+#: src/main/print-util.c:738
 msgid "ArchE"
 msgstr "ArchE"
 
 #.
 #. * Foolscap
 #.
-#: src/main/print-util.c:742
+#: src/main/print-util.c:744
 msgid "American foolscap"
 msgstr "Foolscap américain"
 
 #. American foolscap
-#: src/main/print-util.c:744
+#: src/main/print-util.c:746
 msgid "European foolscap"
 msgstr "Foolscap européen"
 
@@ -1229,44 +1235,44 @@ msgstr "Foolscap européen"
 #. * The BPIF and the Publishers Association jointly recommend ten
 #. * standard metric sizes for case-bound titles as follows:
 #.
-#: src/main/print-util.c:752
+#: src/main/print-util.c:754
 msgid "Crown Quarto"
 msgstr "Crown Quarto"
 
 #. 189mm x 246mm
-#: src/main/print-util.c:754
+#: src/main/print-util.c:756
 msgid "Large Crown Quarto"
 msgstr "Quatro couronne large"
 
 #. 201mm x 258mm
-#: src/main/print-util.c:756
+#: src/main/print-util.c:758
 msgid "Demy Quarto"
 msgstr "Demi-quatro"
 
 #. 219mm x 276mm
-#: src/main/print-util.c:758
+#: src/main/print-util.c:760
 msgid "Royal Quarto"
 msgstr "Quatro royal"
 
 #. 237mm x 312mm
 #. { "ISO A4",             595,
 #. 841, PAPERSIZE_METRIC, 0, 0, 0, 0 },    210mm x 297mm
-#: src/main/print-util.c:762
+#: src/main/print-util.c:764
 msgid "Crown Octavo"
 msgstr "Octave couronne"
 
 #. 123mm x 186mm
-#: src/main/print-util.c:764
+#: src/main/print-util.c:766
 msgid "Large Crown Octavo"
 msgstr "Octave couronne large"
 
 #. 129mm x 198mm
-#: src/main/print-util.c:766
+#: src/main/print-util.c:768
 msgid "Demy Octavo"
 msgstr "Demi-octave"
 
 #. 138mm x 216mm
-#: src/main/print-util.c:768
+#: src/main/print-util.c:770
 msgid "Royal Octavo"
 msgstr "Octave royale"
 
@@ -1274,134 +1280,134 @@ msgstr "Octave royale"
 #. { N_ ("ISO A5"),             419,
 #. 595, 0, 0, 0, 0, PAPERSIZE_METRIC },    148mm x 210mm
 #. Paperback sizes in common usage
-#: src/main/print-util.c:774
+#: src/main/print-util.c:776
 msgid "Small paperback"
 msgstr "Petite reliure"
 
 #. 111mm x 178mm
-#: src/main/print-util.c:776
+#: src/main/print-util.c:778
 msgid "Penguin small paperback"
 msgstr "Petite reliure Penguin"
 
 #. 111mm x 181mm
-#: src/main/print-util.c:778
+#: src/main/print-util.c:780
 msgid "Penguin large paperback"
 msgstr "Grande reliure Penguin"
 
 #. 129mm x 198mm
 #. Miscellaneous sizes
-#: src/main/print-util.c:782
+#: src/main/print-util.c:784
 msgid "Hagaki Card"
 msgstr "Carte Hagaki"
 
 #. 100 x 148 mm
-#: src/main/print-util.c:784
+#: src/main/print-util.c:786
 msgid "Oufuku Card"
 msgstr "Carte Oufuku"
 
 #. 148 x 200 mm
-#: src/main/print-util.c:786
+#: src/main/print-util.c:788
 msgid "Japanese long envelope #3"
 msgstr "Enveloppe longue japonaise n°3"
 
 #. Japanese long envelope #3
-#: src/main/print-util.c:788
+#: src/main/print-util.c:790
 msgid "Japanese long envelope #4"
 msgstr "Enveloppe longue japonaise n°4"
 
 #. Japanese long envelope #4
-#: src/main/print-util.c:790
+#: src/main/print-util.c:792
 msgid "Japanese Kaku envelope #4"
 msgstr "Enveloppe Kaku japonaise n°4"
 
 #. Japanese Kaku envelope #4
-#: src/main/print-util.c:792
+#: src/main/print-util.c:794
 msgid "Commercial 10"
 msgstr "Commercial 10"
 
 #. US Commercial 10 env
-#: src/main/print-util.c:794
+#: src/main/print-util.c:796
 msgid "A2 Invitation"
 msgstr "A2 Invitation"
 
 #. US A2 invitation
-#: src/main/print-util.c:796
+#: src/main/print-util.c:798
 msgid "Monarch Envelope"
 msgstr "Enveloppe Monarch"
 
 #. Monarch envelope (3.875 * 7.5)
-#: src/main/print-util.c:798
+#: src/main/print-util.c:800
 msgid "Custom"
 msgstr "Personnalisé"
 
-#: src/main/print-util.c:801
+#: src/main/print-util.c:803
 msgid "89 mm Roll Paper"
 msgstr "Rouleau 89mm"
 
-#: src/main/print-util.c:803
+#: src/main/print-util.c:805
 msgid "4 Inch Roll Paper"
 msgstr "Rouleau 4 pouces"
 
-#: src/main/print-util.c:805
+#: src/main/print-util.c:807
 msgid "5 Inch Roll Paper"
 msgstr "Rouleau 5 pouces"
 
-#: src/main/print-util.c:807
+#: src/main/print-util.c:809
 msgid "210 mm Roll Paper"
 msgstr "Rouleau 210mm"
 
-#: src/main/print-util.c:809
+#: src/main/print-util.c:811
 msgid "13 Inch Roll Paper"
 msgstr "Rouleau 13 pouces"
 
-#: src/main/print-util.c:811
+#: src/main/print-util.c:813
 msgid "22 Inch Roll Paper"
 msgstr "Rouleau 22 pouces"
 
-#: src/main/print-util.c:813
+#: src/main/print-util.c:815
 msgid "24 Inch Roll Paper"
 msgstr "Rouleau 24 pouces"
 
-#: src/main/print-util.c:815
+#: src/main/print-util.c:817
 msgid "36 Inch Roll Paper"
 msgstr "Rouleau 36 pouces"
 
-#: src/main/print-util.c:817
+#: src/main/print-util.c:819
 msgid "44 Inch Roll Paper"
 msgstr "Rouleau 44 pouces"
 
-#: src/main/print-util.c:1274 src/main/print-util.c:1283
+#: src/main/print-util.c:1276 src/main/print-util.c:1285
 #, c-format
 msgid "%s is not a valid parameter of type %s\n"
 msgstr "%s n'est pas un paramètre valide de type %s\n"
 
-#: src/main/print-util.c:1299
+#: src/main/print-util.c:1301
 #, c-format
 msgid "%s out of range (value %f, min %f, max %f)\n"
 msgstr "%s hors-intervalle (valeur %f, mini %f, maxi %f)\n"
 
-#: src/main/print-util.c:1314
+#: src/main/print-util.c:1316
 #, c-format
 msgid "%s out of range (value %d, min %d, max %d)\n"
 msgstr "%s hors-intervalle (valeur %d, mini %d, maxi %d)\n"
 
-#: src/main/print-util.c:1340
+#: src/main/print-util.c:1342
 msgid "Printer does not support color output\n"
 msgstr "L'imprimante ne supporte pas les sorties en couleur\n"
 
-#: src/main/print-util.c:1358
+#: src/main/print-util.c:1360
 msgid "Image size is not valid\n"
 msgstr "La taille d'image n'est pas valide\n"
 
-#: src/main/print-util.c:1365
+#: src/main/print-util.c:1367
 msgid "Top margin must not be less than zero\n"
 msgstr "La marge haute ne doit pas être moins que zéro\n"
 
-#: src/main/print-util.c:1371
+#: src/main/print-util.c:1373
 msgid "Left margin must not be less than zero\n"
 msgstr "La marge gauche ne doit pas être moins que zéro\n"
 
-#: src/main/print-util.c:1428
+#: src/main/print-util.c:1430
 #, c-format
 msgid "%s is not a valid dither algorithm\n"
 msgstr "%s n'est pas un algorithme de tramage valide\n"
@@ -3371,41 +3377,41 @@ msgstr "L'imprimante %s n'est pas un modèle connu\n"
 msgid "Unknown option %s\n"
 msgstr "Option inconnue %s\n"
 
-#: src/ghost/ijsgimpprint.c:778
+#: src/ghost/ijsgimpprint.c:809
 #, c-format
 msgid "%.0f of %.0f\n"
 msgstr "%.0f de %.0f\n"
 
-#: src/ghost/ijsgimpprint.c:884
+#: src/ghost/ijsgimpprint.c:915
 #, c-format
 msgid "ijs_server_get_page_header failed %d\n"
 msgstr "ijs_server_get_page_header échec %d\n"
 
-#: src/ghost/ijsgimpprint.c:895
+#: src/ghost/ijsgimpprint.c:926
 #, c-format
 msgid "image_init failed %d\n"
 msgstr "image_init échec %d\n"
 
-#: src/ghost/ijsgimpprint.c:906
+#: src/ghost/ijsgimpprint.c:937
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
 msgstr "Incapable d'ouvrir le descripteur de fichier : %s\n"
 
-#: src/ghost/ijsgimpprint.c:918
+#: src/ghost/ijsgimpprint.c:949
 #, c-format
 msgid "Unable to open %s: %s\n"
 msgstr "Incapable d'ouvrir %s : %s\n"
 
-#: src/ghost/ijsgimpprint.c:930
+#: src/ghost/ijsgimpprint.c:961
 #, c-format
 msgid "Unknown printer %s\n"
 msgstr "Imprimante inconnue %s\n"
 
-#: src/ghost/ijsgimpprint.c:961
+#: src/ghost/ijsgimpprint.c:992
 msgid "Bad parameters; cannot continue!\n"
 msgstr "Mauvais paramètres, ne peut pâs continuer !\n"
 
-#: src/ghost/ijsgimpprint.c:971
+#: src/ghost/ijsgimpprint.c:1002
 #, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr "Obtenir la ligne suivante à échoué à %.0f\n"
