@@ -336,6 +336,7 @@ stp_init(void)
       bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 #endif
       stp_init_debug();
+      stp_init_printer_list();
     }
   stp_is_initialised = 1;
   return (0);

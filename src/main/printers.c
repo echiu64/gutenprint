@@ -50,42 +50,144 @@ static const char *global_parameters[] =
     "DitherAlgorithm"
   };
 
+typedef struct stp_internal_printer
+{
+  const char *long_name,	/* Long name for UI */
+             *driver;	/* Short name for printrc file */
+  int        model;			/* Model number */
+  const stp_printfuncs_t *printfuncs;
+  stp_internal_vars_t printvars;
+} stp_internal_printer_t;
+
+
+#include "printers-oldlist.h"
+
+
+static const char* stp_printer_namefunc(const stp_list_item_t *item);
+static const char* stp_printer_long_namefunc(const stp_list_item_t *item);
+
+stp_list_t *stp_printer_list;
+
+
+int
+stp_init_printer_list(void)
+{
+  int i, len;
+  stp_internal_printer_t *printer;
+
+  len = sizeof(stp_old_printer_list)/sizeof(stp_internal_printer_t);
+
+  if(stp_printer_list)
+    stp_list_destroy(stp_printer_list);
+  stp_printer_list = stp_list_create();
+  stp_list_set_freefunc(stp_printer_list, stp_list_node_free_data);
+  stp_list_set_namefunc(stp_printer_list, stp_printer_namefunc);
+  stp_list_set_long_namefunc(stp_printer_list, stp_printer_long_namefunc);
+  /* stp_list_set_sortfunc(stp_printer_sortfunc); */
+
+  for (i=0; i < len; i++)
+    {
+      printer = stp_malloc(sizeof(stp_internal_printer_t));
+      memcpy(printer, &stp_old_printer_list[i], sizeof(stp_internal_printer_t));
+      stp_list_item_create(stp_printer_list,
+			   stp_list_get_end(stp_printer_list),
+			   (void *) printer);
+    }
+  return 0;
+}
+
+int
+stp_known_printers(void)
+{
+  return stp_list_get_length(stp_printer_list);
+}
+
+const stp_printer_t
+stp_get_printer_by_index(int idx)
+{
+  stp_list_item_t *printer;
+  printer = stp_list_get_item_by_index(stp_printer_list, idx);
+  if (printer == NULL)
+    return NULL;
+  return (const stp_printer_t) stp_list_item_get_data(printer);
+}
+
+static const char *
+stp_printer_namefunc(const stp_list_item_t *item)
+{
+  stp_printer_t printer = (stp_printer_t) stp_list_item_get_data(item);
+  return stp_printer_get_driver(printer);
+}
+
+static const char *
+stp_printer_long_namefunc(const stp_list_item_t *item)
+{
+  stp_printer_t printer = (stp_printer_t) stp_list_item_get_data(item);
+  return stp_printer_get_long_name(printer);
+}
+
+const char *
+stp_printer_get_long_name(const stp_printer_t p)
+{
+  const stp_internal_printer_t *val = (const stp_internal_printer_t *) p;
+  return val->long_name;
+}
+
+const char *
+stp_printer_get_driver(const stp_printer_t p)
+{
+  const stp_internal_printer_t *val = (const stp_internal_printer_t *) p;
+  return val->driver;
+}
+
+int
+stp_printer_get_model(const stp_printer_t p)
+{
+  const stp_internal_printer_t *val = (const stp_internal_printer_t *) p;
+  return val->model;
+}
+
+const stp_printfuncs_t *
+stp_printer_get_printfuncs(const stp_printer_t p)
+{
+  const stp_internal_printer_t *val = (const stp_internal_printer_t *) p;
+  return val->printfuncs;
+}
+
+const stp_vars_t
+stp_printer_get_printvars(const stp_printer_t p)
+{
+  const stp_internal_printer_t *val = (const stp_internal_printer_t *) p;
+  return (stp_vars_t) &(val->printvars);
+}
+
+
+
 const stp_printer_t
 stp_get_printer_by_long_name(const char *long_name)
 {
-  int i;
-  if (!long_name)
+  stp_list_item_t *printer;
+  printer = stp_list_get_item_by_long_name(stp_printer_list, long_name);
+  if (!printer)
     return NULL;
-  for (i = 0; i < stp_known_printers(); i++)
-    {
-      const stp_printer_t val = stp_get_printer_by_index(i);
-      if (!strcmp(stp_printer_get_long_name(val), long_name))
-	return val;
-    }
-  return NULL;
+  return (const stp_printer_t) stp_list_item_get_data(printer);
 }
 
 const stp_printer_t
 stp_get_printer_by_driver(const char *driver)
 {
-  int i;
-  if (!driver)
+  stp_list_item_t *printer;
+  printer = stp_list_get_item_by_name(stp_printer_list, driver);
+  if (!printer)
     return NULL;
-  for (i = 0; i < stp_known_printers(); i++)
-    {
-      const stp_printer_t val = stp_get_printer_by_index(i);
-      if (!strcmp(stp_printer_get_driver(val), driver))
-	return val;
-    }
-  return NULL;
+  return (const stp_printer_t) stp_list_item_get_data(printer);
 }
 
 int
 stp_get_printer_index_by_driver(const char *driver)
 {
+  /* There should be no need to ever know the index! */
   int idx = 0;
-  if (!driver)
-    return -1;
   for (idx = 0; idx < stp_known_printers(); idx++)
     {
       const stp_printer_t val = stp_get_printer_by_index(idx);
