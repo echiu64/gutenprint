@@ -45,7 +45,7 @@ driver, as the usage is completely different from all prior
 releases!</strong></p>
 
 <P>Please check out <a
-href="https://sourceforge.net/project/?group_id=1537">our
+href="http://sourceforge.net/project/?group_id=1537">our
 project page</a>, which contains a lot more information about us!</p>
 
 <p>This package was first written by Michael Sweet of <a
