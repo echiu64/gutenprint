@@ -353,6 +353,20 @@ static const escp2_variable_ink_t photo_4pl_2880_ink =
 };
 
 
+static const stp_simple_dither_range_t standard_680_6pl_dither_ranges[] =
+{
+  { 0.5,   0x1, 1, 1 },
+  { 0.66,  0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static const escp2_variable_ink_t standard_680_6pl_ink =
+{
+  standard_680_6pl_dither_ranges,
+  sizeof(standard_680_6pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
+  1.0
+};
+
 static const stp_simple_dither_range_t standard_6pl_dither_ranges[] =
 {
   { 0.25,  0x1, 1, 1 },
@@ -602,6 +616,21 @@ static const escp2_variable_ink_t photo_multishot_ink =
 };
 
 
+static const stp_simple_dither_range_t standard_680_multishot_dither_ranges[] =
+{
+  { 0.375, 0x1, 1, 1 },
+  { 0.75,  0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static const escp2_variable_ink_t standard_680_multishot_ink =
+{
+  standard_680_multishot_dither_ranges,
+  sizeof(standard_680_multishot_dither_ranges) / sizeof(stp_simple_dither_range_t),
+  1.0
+};
+
+
 static const stp_simple_dither_range_t standard_multishot_dither_ranges[] =
 {
   { 0.28,  0x1, 1, 1 },
@@ -631,6 +660,14 @@ static const escp2_variable_inkset_t photo_inks =
   &photo_cyan_ink,
   &photo_magenta_ink,
   NULL
+};
+
+static const escp2_variable_inkset_t escp2_680_6pl_standard_inks =
+{
+  &standard_680_6pl_ink,
+  &standard_680_6pl_ink,
+  &standard_680_6pl_ink,
+  &standard_680_6pl_ink
 };
 
 static const escp2_variable_inkset_t escp2_6pl_standard_inks =
@@ -783,6 +820,14 @@ static const escp2_variable_inkset_t escp2_3pl_2880_standard_inks =
   &standard_3pl_2880_ink,
   &standard_3pl_2880_ink,
   &standard_3pl_2880_ink
+};
+
+static const escp2_variable_inkset_t escp2_680_multishot_standard_inks =
+{
+  &standard_680_multishot_ink,
+  &standard_680_multishot_ink,
+  &standard_680_multishot_ink,
+  &standard_680_multishot_ink
 };
 
 static const escp2_variable_inkset_t escp2_multishot_standard_inks =
@@ -1159,6 +1204,36 @@ static const escp2_variable_inklist_t variable_3pl_pigment_4color_inks =
       &escp2_3pl_pigment_2880_standard_inks,
       &escp2_3pl_pigment_2880_standard_inks,
       &escp2_3pl_pigment_2880_standard_inks,
+    }
+  }
+};
+
+static const escp2_variable_inklist_t variable_680_4pl_4color_inks =
+{
+  {
+    {
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+    }
+  },
+  {
+    {
+      &escp2_680_multishot_standard_inks,
+      &escp2_680_multishot_standard_inks,
+      &escp2_680_multishot_standard_inks,
+      &escp2_680_multishot_standard_inks,
+      &escp2_680_6pl_standard_inks,
+      &escp2_4pl_standard_inks,
+      &escp2_4pl_2880_standard_inks,
+      &escp2_4pl_2880_standard_inks,
+      &escp2_4pl_2880_standard_inks,
     }
   }
 };
@@ -1671,7 +1746,7 @@ static const paper_t standard_papers[] =
     6, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x6d, 0x00, 0x01, NULL, NULL, NULL},
   { "Matte", N_("Matte Paper"),
-    7, 0, 0.85, 1.0, .999, 1.05, .9, 1.05, .9, 1.0, 1.1,
+    7, 0, 0.85, 1.0, .999, 1.05, 1.0, 0.95, .9, 1.0, 1.1,
     1, 1.0, 0x00, 0x00, 0x02, NULL, NULL, NULL},
   { "Inkjet", N_("Inkjet Paper"),
     7, 0, 0.85, .25, .6, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
@@ -1944,6 +2019,9 @@ static const escp2_densities_t c6pl_densities =
 
 static const escp2_densities_t c3pl_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.646, 0.73,  0.7,   0.7,   0.91,  0.91,  0.455 };
+
+static const escp2_densities_t sc680_densities =
+{ 2.0, 2.0, 1.2, 1.2, 0.60, 0.60, 0.792, 0.792, 0.792, 0.792, 0.594, 0.594, 0.297 };
 
 static const escp2_densities_t c4pl_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.568, 0.784, 0.784, 0.593, 0.593, 0.297 };
@@ -2744,7 +2822,7 @@ static const escp2_stp_printer_t model_capabilities[] =
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
-    c4pl_dotsizes, c4pl_densities, &variable_4pl_4color_inks,
+    c4pl_dotsizes, sc680_densities, &variable_680_4pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list
   },
