@@ -123,6 +123,13 @@ typedef struct dither_channel
   unsigned char **ptrs;
 } dither_channel_t;
 
+typedef struct {
+	int	d2x, d2y, dx2, dy2;
+	int	aspect;
+	int	**dx, **dy, **r_sq;
+	int	*recip;
+} eventone_t;
+
 typedef struct dither
 {
   int src_width;		/* Input width */
@@ -172,6 +179,7 @@ typedef struct dither
 
   unsigned short virtual_dot_scale[65536];
   void (*ditherfunc)(const unsigned short *, int, struct dither *, int, int);
+  eventone_t *eventone;
   stp_vars_t v;
 } dither_t;
 
@@ -1023,6 +1031,10 @@ stp_free_dither(void *vd)
   SAFE_FREE(d->offset1_table);
   stp_destroy_matrix(&(d->dither_matrix));
   stp_destroy_matrix(&(d->transition_matrix));
+  if (d->eventone) {
+    stp_free(d->eventone->recip);
+    stp_free(d->eventone);
+  }
   stp_free(d);
 }
 
@@ -1623,9 +1635,8 @@ print_color_fast(const dither_t *d, dither_channel_t *dc, int x, int y,
 static inline int
 pick_vertex(const int cmy[])
 {
-	int vmax;
 	int best;
-
+	int tmax, vmax;
 	int c,m,y;
 	
 	c = cmy[ECOLOR_C]; m = cmy[ECOLOR_M], y = cmy[ECOLOR_Y];
@@ -1636,32 +1647,32 @@ pick_vertex(const int cmy[])
 		if (m > vmax) { best = V_MAGENTA; vmax = m; }				/* Magenta */
 		if (y > vmax) { best = V_YELLOW; vmax = y; }				/* Yellow */
 	} else if (c+m+y >= 2*65535) {
-		best = V_BLACK; vmax = c+m+y-2*65535;					/* Black */
-		if (65535-y > vmax) {best = V_BLUE; vmax = 65535-y; }			/* Blue */
-		if (65535-m > vmax) {best = V_GREEN; vmax = 65535-m; }			/* Green */
-		if (65535-c > vmax) {best = V_RED; vmax = 65535-c; }			/* Red */
+		best = V_BLACK; vmax = c+m+y-2*65535; 					/* Black */
+		if ((tmax = 65535-y) > vmax) {best = V_BLUE; vmax = tmax; }		/* Blue */
+		if ((tmax = 65535-m) > vmax) {best = V_GREEN; vmax = tmax; }		/* Green */
+		if ((tmax = 65535-c) > vmax) {best = V_RED; vmax = tmax; }		/* Red */
 	} else if (m+c <= 65535) {
 		if (m+y <= 65535) {
 			best = V_GREEN; vmax = c+m+y-65535;				/* Green */
 			if (m > vmax) {best = V_MAGENTA; vmax = m;}			/* Magenta */
-			if (65535-m-y > vmax) {best = V_CYAN; vmax = 65535-m-y;}	/* Cyan */
-			if (65535-c-m > vmax) {best = V_YELLOW; vmax = 65535-c-m;}	/* Yellow */
+			if ((tmax = 65535-m-y) > vmax) {best = V_CYAN; vmax = tmax;}	/* Cyan */
+			if ((tmax = 65535-c-m) > vmax) {best = V_YELLOW; vmax = tmax;}	/* Yellow */
 		} else {
 			best = V_RED; vmax = m+y-65535;					/* Red */
 			if (c > vmax) { best = V_GREEN; vmax = c;}			/* Green */
-			if (65535-y > vmax) {best = V_MAGENTA; vmax = 65535-y;}		/* Magenta */
-			if (65535-m-c > vmax) {best = V_YELLOW; vmax = 65535-m-c;}	/* Yellow */
+			if ((tmax = 65535-y) > vmax) {best = V_MAGENTA; vmax = tmax;}	/* Magenta */
+			if ((tmax = 65535-m-c) > vmax) {best = V_YELLOW; vmax = tmax;}	/* Yellow */
 		}
 	} else {
 		if (m+y > 65535) {
 			best = V_MAGENTA; vmax = 2*65535-m-c-y;				/* Magenta */
-			if (c+m-65535 > vmax) { best = V_BLUE; vmax = c+m-65535;}	/* Blue */
-			if (y+m-65535 > vmax) { best = V_RED; vmax = y+m-65535;}	/* Red */
-			if (65535-m > vmax) { best = V_GREEN; vmax = 65535-m;}		/* Green */
+			if ((tmax = c+m-65535) > vmax) { best = V_BLUE; vmax = tmax; }	/* Blue */
+			if ((tmax = y+m-65535) > vmax) { best = V_RED; vmax = tmax; }	/* Red */
+			if ((tmax = 65535-m) > vmax) { best = V_GREEN; vmax = tmax; }	/* Green */
 		} else {
-			best = V_CYAN; vmax = 65535-y-m;				/* Cyan */
-			if (c+m-65535 > vmax) { best = V_BLUE; vmax = c+m-65535;}	/* Blue */
-			if (65535-c > vmax) { best = V_MAGENTA; vmax = 65535-c;}	/* Magenta */
+			best = V_CYAN; vmax = 65535-y-m; 				/* Cyan */
+			if ((tmax = c+m-65535) > vmax) { best = V_BLUE; vmax = tmax; }	/* Blue */
+			if ((tmax = 65535-c) > vmax) { best = V_MAGENTA; vmax = tmax; }	/* Magenta */
 			if (y > vmax) { best = V_GREEN; vmax = y;}			/* Green */
 		}
 	}
@@ -2676,6 +2687,61 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
     reverse_row_ends(d);
 }
 
+#define EVEN_C1 128
+
+static eventone_t *
+stp_setup_et(dither_t *d)
+{
+  eventone_t	*et;
+
+  et = stp_zalloc(sizeof(eventone_t));
+
+  { int xa, ya;
+    xa = d->x_aspect / d->y_aspect;
+    if (xa == 0) xa = 1;
+    et->dx2 = xa * xa;
+    et->d2x = 2 * et->dx2;
+  
+    ya = d->y_aspect / d->x_aspect;
+    if (ya == 0) ya = 1;
+    et->dy2 = ya * ya;
+    et->d2y = 2 * et->dy2;
+    
+    et->aspect = EVEN_C1 / (xa * ya);
+  }
+  
+  et->recip = stp_zalloc(65536 * sizeof(int));
+  et->dx = stp_zalloc(sizeof(int *) * d->n_channels);
+  et->dy = stp_zalloc(sizeof(int *) * d->n_channels);
+  et->r_sq = stp_zalloc(sizeof(int *) * d->n_channels);
+  
+  { int i;
+    int x;
+    for (i=1; i < d->n_channels; i++) {
+      et->dx[i] = stp_zalloc(sizeof(int) * d->dst_width);
+      et->dy[i] = stp_zalloc(sizeof(int) * d->dst_width);
+      et->r_sq[i] = stp_zalloc(sizeof(int) * d->dst_width);
+      for (x = 0; x < d->dst_width; x++) {
+        et->dx[i][x] = et->dx2;
+	et->dy[i][x] = et->dy2;
+      }
+    }
+  }
+
+  et->recip = stp_zalloc(65536 * sizeof(int));
+  { int i;
+    for (i=0; i < 65536; i++) {
+      if (i == 0)
+        et->recip[i] = EVEN_C1 * 65536;
+      else
+        et->recip[i] = EVEN_C1 * 65536 / i;
+    }
+  }
+
+  d->eventone = et;
+  return et;
+}
+
 static void
 stp_dither_cmyk_ed2(const unsigned short  *cmy,
 		   int           row,
@@ -2687,29 +2753,38 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	        length;
   unsigned char	bit;
   int		i;
+  int		blackmod;
   int		*ndither;
-  int		threshold[NCOLORS];
+  eventone_t	*et;
+  int		dx[NCOLORS], dy[NCOLORS], r_sq[NCOLORS];
   int		***error;
 
   int		terminate;
   int		direction = row & 1 ? 1 : -1;
   int		xerror, xstep, xmod;
-  double 	aspect = d->y_aspect / d->x_aspect;
-  int		divisor;
-
-  divisor = 4 + 4 * aspect;
+  double 	aspect = (double) d->y_aspect / d->x_aspect;
+  int		divisor = 4 + 4 * aspect;
 
   length = (d->dst_width + 7) / 8;
   if (!shared_ed_initializer(d, row, duplicate_line, zero_mask, length,
 			     direction, &error, &ndither))
     return;
 
+  et = d->eventone;
+  if (!et) {
+    et = stp_setup_et(d);
+    if (!et) return;
+  }
+
   for (i = 1; i < NCOLORS; i++)
     {
-      threshold[i] = CHANNEL(d, i).ranges[0].value[1] / 4 - 1;
       ndither[i] = 0;
+      dx[i] = et->dx2;
+      dy[i] = et->dy2;
+      r_sq[i] = 0;
     }
 
+  blackmod = 0;
   x = (direction == 1) ? 0 : d->dst_width - 1;
   bit = 1 << (7 - (x & 7));
   xstep  = 3 * (d->src_width / d->dst_width);
@@ -2731,8 +2806,17 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	value = cmy[i-1];
 	CHANNEL(d, i).o = value;				/* Remember value we want printed here */
 
+	if (r_sq[i] + dx[i] < et->r_sq[i][x]) {			/* Do our eventone calculations */
+	  r_sq[i] += dx[i];					/* Nearest pixel same as last one */
+	  dx[i] += et->d2x;
+	} else {
+	  dx[i] = et->dx[i][x];					/* Nearest pixel is from a previous line */
+	  dy[i] = et->dy[i][x];
+	  r_sq[i] = et->r_sq[i][x];
+	}
+
         ndither[i] += error[i][0][0];
-	value = threshold[i] + ndither[i] + CHANNEL(d, i).o / 2;
+	value = ndither[i] + CHANNEL(d, i).o / 2;
 								/* Compute colour for this pixel */
 								/* Only use half of cmy[] to avoid dark->light problems */
 	if (value < 0) value = 0;
@@ -2741,6 +2825,7 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	if (i == 1 || value < CHANNEL(d, ECOLOR_K).o)
 	  CHANNEL(d, ECOLOR_K).o = value;			/* Set black amount to minimum of CMY */
       }
+
 
       /* Adjust black amount based on black density */
       if (d->density != d->black_density) {
@@ -2767,13 +2852,29 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	    ri[i] = 0;
 	  } else if (dr[i]->value_span != 0) {
 	    ri[i] = (65535 * (CHANNEL(d, i).v - dr[i]->value[0])) / dr[i]->value_span;
+	    /* Adjust for Eventone here */
+	    if (dr[i]->value[0] == 0) {
+	      ri[i] += r_sq[i] * et->aspect - et->recip[ri[i]];
+	      if (ri[i] > 65535) ri[i] = 65535;
+	      else if (ri[i] < 0) ri[i] = 0;
+	    }
 	  } else {
 	    ri[i] = 32768;  /* doesn't matter really */
 	  }
 	}
         /* Now we can find out what to really print */
 
-        pick = pick_vertex(ri);
+        { unsigned int k = CHANNEL(d, ECOLOR_K).o;
+	  if (k > d->k_upper) blackmod += 65536;
+          else if (k > d->k_lower) blackmod += 65536 * k / d->bound_range;
+	}
+        if (blackmod > 65536) {
+          ri[ECOLOR_M] = 65535 - ri[ECOLOR_M];
+          pick = pick_vertex(ri) ^ V_MAGENTA;
+          blackmod -= 65536;
+        } else {
+          pick = pick_vertex(ri);
+        }
       }
 
       /* Compute the values we're going to use (ignoring black's influence) */
@@ -2789,7 +2890,7 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	}
 
         for (i=1; i < NCOLORS; i++) {
-          if (pick & (1 << i)) {
+	  if (pick & (1 << i)) {
 	    point[i] = dr[i]->value[1];
 	    if (point[i] < point[ECOLOR_K]) {
 	      blacksize = 0;		/* Use small black instead */
@@ -2800,6 +2901,14 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	      blacksize = 0;		/* Use small black instead */
 	    }
 	  }
+	  if (point[i] > 0) {
+	    r_sq[i] = 0;
+	    dx[i] = et->dx2;
+	    dy[i] = et->dy2;
+	  }
+	  et->r_sq[i][x] = r_sq[i] + dy[i];
+	  et->dx[i][x] = dx[i];
+	  et->dy[i][x] = dy[i] + et->d2y;
         }
 
         if (blacksize == 0) {
