@@ -42,7 +42,7 @@ DOCS = \
 
 info_TEXINFOS = gimpprint.texi
 
-gimpprint_TEXINFOS = overview.texi copying.texi gpl.texi introduction.texi using.texi types.texi functions.texi programs.texi problems.texi appendices.texi dither.texi weave.texi escp2.texi new-printer.texi indices.texi
+gimpprint_TEXINFOS = overview.texi copying.texi gpl.texi introduction.texi using.texi functions.texi programs.texi problems.texi appendices.texi dither.texi weave.texi escp2.texi new-printer.texi indices.texi
 
 
 ## Rules
@@ -58,7 +58,6 @@ html-stamp: gimpprint.texi $(gimpprint_TEXINFOS)
 	    $(TEXI2HTML_PROG) -menu -split_node -number -expandinfo \
 	    -I ../$(srcdir) ../$(srcdir)/gimpprint.texi ; \
 	fi
-	
 	touch html-stamp
 
 dist-hook: html
