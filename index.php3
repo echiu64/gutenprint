@@ -22,15 +22,17 @@ href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 
 </p>
 
-<P><strong><em><font color="#ff0000">New as of October 12,
-2000!</font></em></strong> Version 4.0b3 is now released.  This is the
-third beta release of 4.0, following the 3.1 development cycle.  We
-anticipate that this will be the last beta release before 4.0, barring
-unexpected problems.  This version contains GhostScript and CUPS
-drivers equal to the Print plugin in all respects, including supported
-printers.  <strong>Please read the Ghost/README file very carefully if
-you use the Ghostscript driver, as the usage is completely different
-from all prior releases!</strong></p>
+<H2><font color="#ff0000"><blink>Gimp-Print 4.0 is
+released!</blink></font></h2>
+
+<P><strong><em><font color="#ff0000">As of October 28, 2000,
+Gimp-Print 4.0.0 is out.</font></em></strong> This is the initial
+stable release of 4.0, following the 3.1 development cycle.  This
+version contains GhostScript and CUPS drivers equal to the Print
+plugin in all respects, including supported printers.  <strong>Please
+read the Ghost/README file very carefully if you use the Ghostscript
+driver, as the usage is completely different from all prior
+releases!</strong></p>
 
 <P>Please check out <a
 href="https://sourceforge.net/project/?group_id=1537">our
