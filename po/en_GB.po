@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-06-14 22:20+0100\n"
+"POT-Creation-Date: 2001-07-05 19:53-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -73,70 +73,70 @@ msgstr ""
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr ""
 
-#: src/main/print-canon.c:1058 src/main/print-canon.c:1350
-#: src/main/print-canon.c:1482 src/main/print-escp2.c:2251
+#: src/main/print-canon.c:1217 src/main/print-canon.c:1548
+#: src/main/print-canon.c:1680 src/main/print-escp2.c:2251
 #: src/main/print-lexmark.c:608 src/main/print-lexmark.c:861
 #: src/main/print-lexmark.c:981
 msgid "Plain Paper"
 msgstr ""
 
-#: src/main/print-canon.c:1059 src/main/print-canon.c:1351
-#: src/main/print-canon.c:1483 src/main/print-escp2.c:2263
+#: src/main/print-canon.c:1218 src/main/print-canon.c:1549
+#: src/main/print-canon.c:1681 src/main/print-escp2.c:2263
 #: src/main/print-lexmark.c:609 src/main/print-lexmark.c:862
 #: src/main/print-lexmark.c:982
 msgid "Transparencies"
 msgstr ""
 
-#: src/main/print-canon.c:1060 src/main/print-canon.c:1352
-#: src/main/print-canon.c:1484 src/main/print-lexmark.c:610
+#: src/main/print-canon.c:1219 src/main/print-canon.c:1550
+#: src/main/print-canon.c:1682 src/main/print-lexmark.c:610
 #: src/main/print-lexmark.c:863 src/main/print-lexmark.c:983
 msgid "Back Print Film"
 msgstr ""
 
-#: src/main/print-canon.c:1061 src/main/print-canon.c:1353
-#: src/main/print-canon.c:1485 src/main/print-lexmark.c:611
+#: src/main/print-canon.c:1220 src/main/print-canon.c:1551
+#: src/main/print-canon.c:1683 src/main/print-lexmark.c:611
 #: src/main/print-lexmark.c:864 src/main/print-lexmark.c:984
 msgid "Fabric Sheets"
 msgstr ""
 
-#: src/main/print-canon.c:1062 src/main/print-canon.c:1354
-#: src/main/print-canon.c:1486 src/main/print-lexmark.c:612
+#: src/main/print-canon.c:1221 src/main/print-canon.c:1552
+#: src/main/print-canon.c:1684 src/main/print-lexmark.c:612
 #: src/main/print-lexmark.c:865 src/main/print-lexmark.c:985
 msgid "Envelope"
 msgstr ""
 
-#: src/main/print-canon.c:1063 src/main/print-canon.c:1355
-#: src/main/print-canon.c:1487 src/main/print-lexmark.c:613
+#: src/main/print-canon.c:1222 src/main/print-canon.c:1553
+#: src/main/print-canon.c:1685 src/main/print-lexmark.c:613
 #: src/main/print-lexmark.c:866 src/main/print-lexmark.c:986
 msgid "High Resolution Paper"
 msgstr ""
 
-#: src/main/print-canon.c:1064 src/main/print-canon.c:1356
-#: src/main/print-canon.c:1488 src/main/print-lexmark.c:614
+#: src/main/print-canon.c:1223 src/main/print-canon.c:1554
+#: src/main/print-canon.c:1686 src/main/print-lexmark.c:614
 #: src/main/print-lexmark.c:867 src/main/print-lexmark.c:987
 msgid "T-Shirt Transfers"
 msgstr ""
 
-#: src/main/print-canon.c:1065 src/main/print-canon.c:1357
-#: src/main/print-canon.c:1489 src/main/print-lexmark.c:615
+#: src/main/print-canon.c:1224 src/main/print-canon.c:1555
+#: src/main/print-canon.c:1687 src/main/print-lexmark.c:615
 #: src/main/print-lexmark.c:868 src/main/print-lexmark.c:988
 msgid "High Gloss Film"
 msgstr ""
 
-#: src/main/print-canon.c:1066 src/main/print-canon.c:1358
-#: src/main/print-canon.c:1490 src/main/print-lexmark.c:616
+#: src/main/print-canon.c:1225 src/main/print-canon.c:1556
+#: src/main/print-canon.c:1688 src/main/print-lexmark.c:616
 #: src/main/print-lexmark.c:869 src/main/print-lexmark.c:989
 msgid "Glossy Photo Paper"
 msgstr ""
 
-#: src/main/print-canon.c:1067 src/main/print-canon.c:1359
-#: src/main/print-canon.c:1491 src/main/print-lexmark.c:617
+#: src/main/print-canon.c:1226 src/main/print-canon.c:1557
+#: src/main/print-canon.c:1689 src/main/print-lexmark.c:617
 #: src/main/print-lexmark.c:870 src/main/print-lexmark.c:990
 msgid "Glossy Photo Cards"
 msgstr ""
 
-#: src/main/print-canon.c:1068 src/main/print-canon.c:1360
-#: src/main/print-canon.c:1492 src/main/print-lexmark.c:618
+#: src/main/print-canon.c:1227 src/main/print-canon.c:1558
+#: src/main/print-canon.c:1690 src/main/print-lexmark.c:618
 #: src/main/print-lexmark.c:871 src/main/print-lexmark.c:991
 msgid "Photo Paper Pro"
 msgstr ""
@@ -156,114 +156,114 @@ msgstr ""
 #. { N_ ("Premium Glossy Photo Paper"), 0x00, 0.90, 1.00, .9 },
 #. { N_ ("Photo Quality Glossy Paper"), 0x00, 1.00, 1.00, .9 },
 #.
-#: src/main/print-canon.c:1084 src/main/print-escp2.c:2294
+#: src/main/print-canon.c:1243 src/main/print-escp2.c:2298
 msgid "Other"
 msgstr ""
 
 #. used internally: do not translate
-#: src/main/print-canon.c:1122 src/main/print-canon.c:1364
-#: src/main/print-canon.c:1496 src/main/print-lexmark.c:629
+#: src/main/print-canon.c:1281 src/main/print-canon.c:1562
+#: src/main/print-canon.c:1694 src/main/print-lexmark.c:629
 #: src/main/print-lexmark.c:875 src/main/print-lexmark.c:995
 msgid "Auto Sheet Feeder"
 msgstr ""
 
-#: src/main/print-canon.c:1123 src/main/print-canon.c:1365
-#: src/main/print-canon.c:1497 src/main/print-lexmark.c:630
+#: src/main/print-canon.c:1282 src/main/print-canon.c:1563
+#: src/main/print-canon.c:1695 src/main/print-lexmark.c:630
 #: src/main/print-lexmark.c:876 src/main/print-lexmark.c:996
 msgid "Manual with Pause"
 msgstr ""
 
-#: src/main/print-canon.c:1124 src/main/print-canon.c:1366
-#: src/main/print-canon.c:1498 src/main/print-lexmark.c:631
+#: src/main/print-canon.c:1283 src/main/print-canon.c:1564
+#: src/main/print-canon.c:1696 src/main/print-lexmark.c:631
 #: src/main/print-lexmark.c:877 src/main/print-lexmark.c:997
 msgid "Manual without Pause"
 msgstr ""
 
 #. used internally: do not translate
-#: src/main/print-canon.c:1136 src/main/print-canon.c:1159
-#: src/main/print-canon.c:1440 src/main/print-canon.c:1551
+#: src/main/print-canon.c:1295 src/main/print-canon.c:1318
+#: src/main/print-canon.c:1638 src/main/print-canon.c:1749
 #: src/main/print-lexmark.c:644 src/main/print-lexmark.c:938
 #: src/main/print-lexmark.c:1044
 msgid "Black"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:829 src/main/print-canon.c:1137
-#: src/main/print-canon.c:1160 src/main/print-canon.c:1442
-#: src/main/print-canon.c:1553 src/main/print-lexmark.c:645
+#: src/gimp/gimp_main_window.c:923 src/main/print-canon.c:1296
+#: src/main/print-canon.c:1319 src/main/print-canon.c:1640
+#: src/main/print-canon.c:1751 src/main/print-lexmark.c:645
 #: src/main/print-lexmark.c:940 src/main/print-lexmark.c:1046
 msgid "Color"
 msgstr "Colour"
 
-#: src/main/print-canon.c:1138 src/main/print-canon.c:1161
-#: src/main/print-canon.c:1444 src/main/print-canon.c:1555
+#: src/main/print-canon.c:1297 src/main/print-canon.c:1320
+#: src/main/print-canon.c:1642 src/main/print-canon.c:1753
 #: src/main/print-lexmark.c:646 src/main/print-lexmark.c:942
 #: src/main/print-lexmark.c:1048
 msgid "Black/Color"
 msgstr "Black/Colour"
 
-#: src/main/print-canon.c:1139 src/main/print-canon.c:1162
-#: src/main/print-canon.c:1446 src/main/print-canon.c:1557
+#: src/main/print-canon.c:1298 src/main/print-canon.c:1321
+#: src/main/print-canon.c:1644 src/main/print-canon.c:1755
 #: src/main/print-lexmark.c:647 src/main/print-lexmark.c:944
 #: src/main/print-lexmark.c:946 src/main/print-lexmark.c:1050
 #: src/main/print-lexmark.c:1052
 msgid "Photo/Color"
 msgstr "Photo/Colour"
 
-#: src/main/print-canon.c:1140 src/main/print-lexmark.c:648
+#: src/main/print-canon.c:1299 src/main/print-lexmark.c:648
 msgid "Photo"
 msgstr ""
 
-#: src/main/print-canon.c:1141 src/main/print-canon.c:1163
-#: src/main/print-canon.c:1448 src/main/print-canon.c:1559
+#: src/main/print-canon.c:1300 src/main/print-canon.c:1322
+#: src/main/print-canon.c:1646 src/main/print-canon.c:1757
 msgid "Black/Photo Color"
 msgstr "Black/Photo Color"
 
 #. used internally: do not translate
 #. built ins:
-#: src/main/print-canon.c:1187 src/main/print-lexmark.c:710
+#: src/main/print-canon.c:1346 src/main/print-lexmark.c:710
 #: src/main/print-pcl.c:110 src/main/print-util.c:710
 msgid "A5"
 msgstr ""
 
 #. ISO/JIS A5 (148 x 210 mm)
-#: src/main/print-canon.c:1188 src/main/print-lexmark.c:711
+#: src/main/print-canon.c:1347 src/main/print-lexmark.c:711
 #: src/main/print-pcl.c:111 src/main/print-util.c:709
 msgid "A4"
 msgstr ""
 
-#: src/main/print-canon.c:1189 src/main/print-lexmark.c:712
+#: src/main/print-canon.c:1348 src/main/print-lexmark.c:712
 msgid "B5"
 msgstr ""
 
 #. US Exec (7.25 x 10.5 in)
-#: src/main/print-canon.c:1190 src/main/print-lexmark.c:713
+#: src/main/print-canon.c:1349 src/main/print-lexmark.c:713
 #: src/main/print-pcl.c:105 src/main/print-util.c:664
 msgid "Letter"
 msgstr ""
 
 #. US Letter (8.5 x 11 in)
-#: src/main/print-canon.c:1191 src/main/print-lexmark.c:714
+#: src/main/print-canon.c:1350 src/main/print-lexmark.c:714
 #: src/main/print-pcl.c:106 src/main/print-util.c:665
 msgid "Legal"
 msgstr ""
 
-#: src/main/print-canon.c:1192 src/main/print-lexmark.c:715
+#: src/main/print-canon.c:1351 src/main/print-lexmark.c:715
 msgid "Envelope 10"
 msgstr ""
 
-#: src/main/print-canon.c:1193 src/main/print-lexmark.c:716
+#: src/main/print-canon.c:1352 src/main/print-lexmark.c:716
 msgid "Envelope DL"
 msgstr ""
 
-#: src/main/print-canon.c:1194 src/main/print-lexmark.c:717
+#: src/main/print-canon.c:1353 src/main/print-lexmark.c:717
 msgid "Letter+"
 msgstr ""
 
-#: src/main/print-canon.c:1195 src/main/print-lexmark.c:718
+#: src/main/print-canon.c:1354 src/main/print-lexmark.c:718
 msgid "A4+"
 msgstr ""
 
-#: src/main/print-canon.c:1196
+#: src/main/print-canon.c:1355
 msgid "Canon 4x2"
 msgstr ""
 
@@ -596,42 +596,46 @@ msgstr ""
 msgid "Photo Quality Glossy Paper"
 msgstr ""
 
-#: src/main/print-escp2.c:2310
+#: src/main/print-escp2.c:2294
+msgid "Ilford Heavy Paper"
+msgstr ""
+
+#: src/main/print-escp2.c:2314
 msgid "Seven Color Enhanced"
 msgstr "Seven Colour Enhanced"
 
-#: src/main/print-escp2.c:2311
+#: src/main/print-escp2.c:2315
 #, fuzzy
 msgid "Six Color Enhanced Composite"
 msgstr "Seven Colour Enhanced"
 
-#: src/main/print-escp2.c:2312
+#: src/main/print-escp2.c:2316
 msgid "Six Color Photo"
 msgstr "Six Colour Photo"
 
-#: src/main/print-escp2.c:2313
+#: src/main/print-escp2.c:2317
 #, fuzzy
 msgid "Five Color Photo Composite"
 msgstr "Six Colour Photo"
 
-#: src/main/print-escp2.c:2314
+#: src/main/print-escp2.c:2318
 msgid "Four Color Standard"
 msgstr "Four Colour Standard"
 
-#: src/main/print-escp2.c:2315
+#: src/main/print-escp2.c:2319
 msgid "Three Color Composite"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1154 src/main/print-escp2.c:2698
-#: src/main/print-escp2.c:2841 src/main/print-pcl.c:193
+#: src/gimp/gimp_main_window.c:1111 src/main/print-escp2.c:2702
+#: src/main/print-escp2.c:2845 src/main/print-pcl.c:193
 msgid "Standard"
 msgstr ""
 
 #. Size of page
 #. Roll feed selected
-#: src/main/print-escp2.c:2699 src/main/print-escp2.c:2723
-#: src/main/print-escp2.c:2909 src/main/print-escp2.c:2943
-#: src/main/print-escp2.c:3167
+#: src/main/print-escp2.c:2703 src/main/print-escp2.c:2727
+#: src/main/print-escp2.c:2913 src/main/print-escp2.c:2947
+#: src/main/print-escp2.c:3171
 msgid "Roll Feed"
 msgstr ""
 
@@ -1402,324 +1406,321 @@ msgstr ""
 msgid "44\" Roll Paper"
 msgstr ""
 
-#: src/gimp/gimp_color_window.c:156
+#: src/gimp/gimp_color_window.c:177
 msgid "Print Color Adjust"
 msgstr "Print Colour Adjust"
 
-#: src/gimp/gimp_color_window.c:161
+#: src/gimp/gimp_color_window.c:181
 msgid "Set Defaults"
 msgstr ""
 
-#: src/gimp/gimp_color_window.c:163
+#: src/gimp/gimp_color_window.c:183
 msgid "Close"
 msgstr ""
 
-#: src/gimp/gimp_color_window.c:198
+#: src/gimp/gimp_color_window.c:217
 msgid "Brightness:"
 msgstr ""
 
-#: src/gimp/gimp_color_window.c:214
+#: src/gimp/gimp_color_window.c:233
 msgid "Contrast:"
 msgstr ""
 
-#: src/gimp/gimp_color_window.c:230
+#: src/gimp/gimp_color_window.c:249
 msgid "Cyan:"
 msgstr ""
 
-#: src/gimp/gimp_color_window.c:246
+#: src/gimp/gimp_color_window.c:265
 msgid "Magenta:"
 msgstr ""
 
-#: src/gimp/gimp_color_window.c:262
+#: src/gimp/gimp_color_window.c:281
 msgid "Yellow:"
 msgstr ""
 
-#: src/gimp/gimp_color_window.c:278
+#: src/gimp/gimp_color_window.c:297
 msgid "Saturation:"
 msgstr ""
 
-#: src/gimp/gimp_color_window.c:294
+#: src/gimp/gimp_color_window.c:313
 msgid "Density:"
 msgstr ""
 
-#: src/gimp/gimp_color_window.c:310
+#: src/gimp/gimp_color_window.c:329
 msgid "Gamma:"
 msgstr ""
 
-#: src/gimp/gimp_color_window.c:326
+#: src/gimp/gimp_color_window.c:345
 msgid "Dither Algorithm:"
 msgstr ""
 
 #.
 #. * Create the main dialog
 #.
-#: src/gimp/gimp_main_window.c:282
+#: src/gimp/gimp_main_window.c:250
 #, c-format
 msgid "%s -- Print v%s"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:291
+#: src/gimp/gimp_main_window.c:259
 msgid ""
 "Print and\n"
 "Save Settings"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:293
+#: src/gimp/gimp_main_window.c:261
 msgid ""
 "Save\n"
 "Settings"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:295
+#: src/gimp/gimp_main_window.c:263
 msgid "Print"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:297 src/gimp/gimp_main_window.c:871
-#: src/gimp/gimp_main_window.c:994
+#: src/gimp/gimp_main_window.c:265 src/gimp/gimp_main_window.c:466
+#: src/gimp/gimp_main_window.c:595
 msgid "Cancel"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:322
+#: src/gimp/gimp_main_window.c:308
 msgid "Preview"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:363
+#: src/gimp/gimp_main_window.c:346
 msgid "Position"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:374
+#: src/gimp/gimp_main_window.c:357
 msgid "Center Image"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:385
+#: src/gimp/gimp_main_window.c:368
 msgid "Units:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:388
+#: src/gimp/gimp_main_window.c:372
 msgid "Inch"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:397
+#: src/gimp/gimp_main_window.c:380
 msgid "cm"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:414
+#: src/gimp/gimp_main_window.c:391
 msgid "Left:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:425
+#: src/gimp/gimp_main_window.c:398
 msgid "Top:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:436
+#: src/gimp/gimp_main_window.c:405
 msgid "Right:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:448
+#: src/gimp/gimp_main_window.c:413
 msgid "Right Border:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:459
+#: src/gimp/gimp_main_window.c:420
 msgid "Bottom:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:471
+#: src/gimp/gimp_main_window.c:428
 msgid "Bottom Border:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:480
+#: src/gimp/gimp_main_window.c:436
 msgid "Auto"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:483
+#: src/gimp/gimp_main_window.c:438
 msgid "Portrait"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:486
+#: src/gimp/gimp_main_window.c:440
 msgid "Landscape"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:489
+#: src/gimp/gimp_main_window.c:442
 msgid "Upside down"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:492
+#: src/gimp/gimp_main_window.c:444
 msgid "Seascape"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:497
+#: src/gimp/gimp_main_window.c:448
 msgid "Orientation:"
 msgstr ""
 
+#: src/gimp/gimp_main_window.c:460
+msgid "Setup"
+msgstr ""
+
+#: src/gimp/gimp_main_window.c:464 src/gimp/gimp_main_window.c:593
+msgid "OK"
+msgstr ""
+
 #.
-#. *  Printer settings frame...
+#. * Printer driver option menu.
 #.
-#: src/gimp/gimp_main_window.c:504
+#: src/gimp/gimp_main_window.c:487
+msgid "Printer Model:"
+msgstr ""
+
+#.
+#. * PPD file.
+#.
+#: src/gimp/gimp_main_window.c:523
+msgid "PPD File:"
+msgstr ""
+
+#: src/gimp/gimp_main_window.c:538
+msgid "Browse"
+msgstr ""
+
+#.
+#. * Print command.
+#.
+#: src/gimp/gimp_main_window.c:549
+msgid "Command:"
+msgstr ""
+
+#.
+#. * Output file selection dialog.
+#.
+#: src/gimp/gimp_main_window.c:564
+msgid "Print To File?"
+msgstr ""
+
+#.
+#. * PPD file selection dialog.
+#.
+#: src/gimp/gimp_main_window.c:575
+msgid "PPD File?"
+msgstr ""
+
+#: src/gimp/gimp_main_window.c:589
+msgid "Define New Printer"
+msgstr ""
+
+#: src/gimp/gimp_main_window.c:611
+msgid "Printer Name:"
+msgstr ""
+
+#: src/gimp/gimp_main_window.c:629
 msgid "Printer Settings"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:521
+#: src/gimp/gimp_main_window.c:646
 msgid "Printer:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:535
+#: src/gimp/gimp_main_window.c:660
 msgid "Setup..."
 msgstr ""
 
 #.
 #. * Define new printer dialog
 #.
-#: src/gimp/gimp_main_window.c:546
+#: src/gimp/gimp_main_window.c:671
 msgid "New..."
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:558
+#: src/gimp/gimp_main_window.c:682
 msgid "Media Size:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:565 src/gimp/gimp_main_window.c:720
+#.
+#. * Custom media size entries
+#.
+#: src/gimp/gimp_main_window.c:693 src/gimp/gimp_main_window.c:816
 msgid "Width:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:578 src/gimp/gimp_main_window.c:733
+#: src/gimp/gimp_main_window.c:705 src/gimp/gimp_main_window.c:827
 msgid "Height:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:598
+#: src/gimp/gimp_main_window.c:723
 msgid "Media Type:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:606
+#: src/gimp/gimp_main_window.c:731
 msgid "Media Source:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:614
+#: src/gimp/gimp_main_window.c:739
 msgid "Ink Type:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:622
+#: src/gimp/gimp_main_window.c:747
 msgid "Resolution:"
 msgstr ""
 
-#.
-#. * Scaling...
-#.
-#: src/gimp/gimp_main_window.c:627
+#: src/gimp/gimp_main_window.c:760
 msgid "Scaling"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:666 src/gimp/gimp_main_window.c:675
+#: src/gimp/gimp_main_window.c:777
 msgid "Scaling:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:689
+#: src/gimp/gimp_main_window.c:789
 msgid "Percent"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:698
+#: src/gimp/gimp_main_window.c:796
 msgid "PPI"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:706
+#: src/gimp/gimp_main_window.c:802
 msgid "Set Image Scale"
 msgstr ""
 
-#.
-#. * Image type
-#.
-#: src/gimp/gimp_main_window.c:749
+#: src/gimp/gimp_main_window.c:851
 msgid "Image Settings"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:758
+#: src/gimp/gimp_main_window.c:860
 msgid "Image Type:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:769
+#: src/gimp/gimp_main_window.c:870
 msgid "Line Art"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:780
+#: src/gimp/gimp_main_window.c:879
 msgid "Solid Colors"
 msgstr "Solid Colours"
 
-#: src/gimp/gimp_main_window.c:791
+#: src/gimp/gimp_main_window.c:888
 msgid "Photograph"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:807
+#.
+#. *  Color adjust button
+#.
+#: src/gimp/gimp_main_window.c:901
 #, fuzzy
 msgid "Adjust Color..."
 msgstr "Adjust Colour"
 
 #.
-#. * Output type toggles...
+#. * Output type toggles.
 #.
-#: src/gimp/gimp_main_window.c:819
+#: src/gimp/gimp_main_window.c:913
 msgid "Output Type:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:839
+#: src/gimp/gimp_main_window.c:932
 msgid "Grayscale"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:850
+#: src/gimp/gimp_main_window.c:941
 msgid "Black and White"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:865
-msgid "Setup"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:869 src/gimp/gimp_main_window.c:992
-msgid "OK"
-msgstr ""
-
-#.
-#. * Printer driver option menu...
-#.
-#: src/gimp/gimp_main_window.c:891
-msgid "Printer Model:"
-msgstr ""
-
-#.
-#. * PPD file...
-#.
-#: src/gimp/gimp_main_window.c:927
-msgid "PPD File:"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:942
-msgid "Browse"
-msgstr ""
-
-#.
-#. * Print command...
-#.
-#: src/gimp/gimp_main_window.c:953
-msgid "Command:"
-msgstr ""
-
-#.
-#. * Output file selection dialog...
-#.
-#: src/gimp/gimp_main_window.c:968
-msgid "Print To File?"
-msgstr ""
-
-#.
-#. * PPD file selection dialog...
-#.
-#: src/gimp/gimp_main_window.c:979
-msgid "PPD File?"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:988
-msgid "Define New Printer"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1010
-msgid "Printer Name:"
 msgstr ""
 
 #: src/gimp/print-image-gimp.c:316
@@ -1730,7 +1731,7 @@ msgstr ""
 msgid "<Image>/File/Print..."
 msgstr ""
 
-#: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:833
-#: src/gimp/print.c:1190
+#: src/gimp/print.c:732 src/gimp/print.c:733 src/gimp/print.c:831
+#: src/gimp/print.c:1182
 msgid "File"
 msgstr ""

@@ -1,4 +1,5 @@
-This is gimp-print version 4.1.9, a development release on the 4.1 line.
+This is gimp-print version 4.1.99a1, the first alpha release leading up
+to the 4.2 stable release.  This release is not 4.2.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
 and CUPS drivers.  The support for printers in GhostScript and CUPS is
@@ -6,7 +7,47 @@ identical to the support for these printers in the Print plugin --
 they use the identical code base.  Please read src/ghost/README and
 src/cups/README for more information on this.
 
+These release notes primarily describe changes visible to the end
+user.  Detailed descriptions of changes may be found in the ChangeLog.
+
 The Gimp Print plugin requires the Gimp 1.2.
+
+Gimp-Print 4.1.99a1 contains the following changes over 4.1.10:
+
+1) Print quality is substantially improved using Fast and Very Fast
+   dither algorithms with 6-color printers.
+
+2) Ilford heavy paper has been tuned for Epson printers.
+
+3) The print plugin now correctly saves and restores custom paper
+   sizes.
+
+4) The print plugin now defaults to the standard default resolution
+   for a given printer, rather than the lowest.
+
+5) The Epson Stylus Color 980 should print more accurately at 2880x720
+   resolution.
+
+6) The software will use substantially less memory at high resolutions
+   with Epson printers.
+
+7) The "unprint" test program (which creates a ppm file from a printer
+   output file) is considerably faster, more robust, and better
+   handles variable dot size and 6-color output.
+
+8) The preview window in the plugin uses its space more efficiently,
+   allowing for a larger preview in many cases.
+
+9) The Canon driver has been partially fixed.  This has resulted in
+   the (temporary) deactivation of 6-color mode on the BJC-8200 and
+   related printers.  This will be fixed before 4.2 release.  In
+   addition, there have been some other improvements to the Canon
+   driver.
+
+10) Initial support for the Canon BJC85.
+
+11) There is now texinfo and HTML documentation available.
+
 
 Gimp-Print 4.1.10 contains the following changes over 4.1.8:
 
@@ -15,6 +56,7 @@ Gimp-Print 4.1.10 contains the following changes over 4.1.8:
 
 2) The package will use about 1/3 as much virtual address space when
    printing very large images.
+
 
 Gimp-Print 4.1.10 has the following known issues:
 
