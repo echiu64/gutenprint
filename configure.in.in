@@ -228,11 +228,11 @@ AC_MSG_CHECKING([whether to turn on debugging in build])
 AC_ARG_ENABLE(debug,
 [  --enable-debug          turn on debugging [default=no]],
   [case "${enableval}" in
-    yes) CFLAGS="${CFLAGS:=} -g" ; AC_MSG_RESULT([yes]) ;;
-    no) CFLAGS="${CFLAGS:=-O}" ; AC_MSG_RESULT([no]) ;;
+    yes) ENABLE_DEBUG="yes" ; AC_MSG_RESULT([yes]) ;;
+    no) ENABLE_DEBUG="no" ; AC_MSG_RESULT([no]) ;;
     *) AC_MSG_RESULT([unknown])
        AC_MSG_ERROR([bad value ${enableval} for --enable-debug]) ;;
-  esac],[CFLAGS="${CFLAGS:=-O}" ; AC_MSG_RESULT([no])])
+  esac],[ENABLE_DEBUG="no" ; AC_MSG_RESULT([no])])
 
 AC_MSG_CHECKING([whether to use readline])
 AC_ARG_WITH(readline,
@@ -416,6 +416,15 @@ else
 fi
 
 dnl Compiler flags
+if test "$CC" = "gcc" ; then
+  :
+else
+  if test x$ENABLE_DEBUG = xyes ; then
+    CFLAGS="${CFLAGS:=} -g"
+  else
+    CFLAGS="${CFLAGS:=} -O"
+  fi
+fi
 if test "$CC" = "gcc" ; then
   GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -pedantic"
 fi
