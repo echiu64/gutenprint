@@ -1231,13 +1231,13 @@ static const int p4pl_2880_dotsizes[] =
  */
 
 static const double g1_densities[] =
-{ 2.0, 1.3, 0, .65, 0, .568, 0, 0, 0, 0, 0, 0, 0, 0 };
+{ 2.0, 1.3, 0, 1.3, 0, .568, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 static const double sc1500_densities[] =
-{ 2.0, 1.3, 0, .65, 0, .631, 0, 0, 0, 0, 0, 0, 0, 0 };
+{ 2.0, 1.3, 0, 1.3, 0, .631, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 static const double g3_densities[] =
-{ 2.0, 1.3, 1.3, .775, .775, .775, .775, .55, .55, .275, .275, .275, .275, .138 };
+{ 2.0, 1.3, 1.3, 1.3, 1.3, .775, .775, .55, .55, .275, .275, .275, .275, .138 };
 
 static const double sc440_densities[] =
 { 3.0, 2.0, 2.0, 1.0, 1.0, .900, .900, .45, .45, .45, .45, .225, .225, .113 };
@@ -1873,9 +1873,6 @@ static const res_t escp2_reslist[] = {
   {N_("360 DPI High Quality Unidirectional"),      360,  360,  1,0,2,1,1,1,5 },
   {N_("720 x 360 DPI Softweave"),                  720,  360,  1,0,1,1,0,2,7 },
   {N_("720 x 360 DPI Softweave Unidirectional"),   720,  360,  1,0,1,1,1,2,7 },
-  {N_("720 x 360 DPI High Quality"),               720,  360,  1,0,2,1,0,2,7 },
-  {N_("720 x 360 DPI High Quality Unidirectional"),720,  360,  1,0,2,1,1,2,7 },
-  {N_("720 x 360 DPI Highest Quality"),            720,  360,  1,0,4,1,1,2,7 },
   {N_("720 DPI Microweave"),                       720,  720,  0,1,1,1,0,1,8 },
   {N_("720 DPI Microweave Unidirectional"),        720,  720,  0,1,1,1,1,1,8 },
   {N_("720 DPI Softweave"),                        720,  720,  1,0,1,1,0,1,9 },
@@ -3151,7 +3148,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     for (i = 0; i < NCOLORS; i++)
       if ((*inks)[i])
 	stp_dither_set_ranges(dither, i, (*inks)[i]->count, (*inks)[i]->range,
-			  (*inks)[i]->density * k_upper *
+			      (*inks)[i]->density * k_upper *
 			      stp_get_density(nv));
 
   if (!strcmp(stp_get_dither_algorithm(nv), _("Ordered")))
