@@ -8,7 +8,12 @@ $dev_team = array(
 'Andy Thaller' => 'https://sourceforge.net/sendmessage.php?touser=2228',
 'Karl Heinz Kremer' => 'https://sourceforge.net/sendmessage.php?touser=2818',
 'Eric Sharkey' => 'https://sourceforge.net/sendmessage.php?touser=8749',
-'Nicholas Piper' => 'https://sourceforge.net/sendmessage.php?touser=8275'
+'Nicholas Piper' => 'https://sourceforge.net/sendmessage.php?touser=8275',
+'Dave Hill' => 'https://sourceforge.net/sendmessage.php?touser=8211',
+'Michael Natterer' => 'https://sourceforge.net/sendmessage.php?touser=34554',
+'Steve Miller' => 'https://sourceforge.net/sendmessage.php?touser=9570',
+'Thomas Tonino' => 'https://sourceforge.net/sendmessage.php?touser=20090',
+'Jean Marc Verbavatz' => 'https://sourceforge.net/sendmessage.php?touser=29508'
 );
 
 $navbar_text = 'Welcome to Gimp-Print.';
@@ -21,8 +26,8 @@ $supported_printers = array(
 		'EPSON Stylus Photo EX' => 'Fully Operational',
 		'EPSON Stylus Photo 750' => 'Needs Testing',
 		'EPSON Stylus Photo 1200' => 'Needs Testing',
-		'EPSON Stylus Photo 870' => 'In Testing',
-		'EPSON Stylus Photo 1270' => 'In Testing'
+		'EPSON Stylus Photo 870' => 'Operational; needs quality improvements',
+		'EPSON Stylus Photo 1270' => 'Operational; needs quality improvements'
 		),
 	'Stylus Color Range' => array(
 		'EPSON Stylus Color' => 'Fully Operational',
@@ -30,14 +35,14 @@ $supported_printers = array(
 		'EPSON Stylus Color Pro XL' => 'Fully Operational',
 		'EPSON Stylus Color 1500' => 'Fully Operational',
 		'EPSON Stylus Color 400' => 'Fully Operational',
-		'EPSON Stylus Color 440' => 'Needs Testing',
+		'EPSON Stylus Color 440' => 'Fully Operational',
 		'EPSON Stylus Color 460' => 'Needs Testing',
 		'EPSON Stylus Color 500' => 'Fully Operational',
 		'EPSON Stylus Color 600' => 'Fully Operational',
 		'EPSON Stylus Color 640' => 'Fully Operational',
 		'EPSON Stylus Color 660' => 'Fully Operational',
 		'EPSON Stylus Color 740' => 'Fully Operational',
-		'EPSON Stylus Color 760' => 'Needs Testing',
+		'EPSON Stylus Color 760' => 'Partially Operational',
 		'EPSON Stylus Color 800' => 'Fully Operational',
 		'EPSON Stylus Color 850' => 'Needs Testing',
 		'EPSON Stylus Color 860' => 'Needs Testing',
