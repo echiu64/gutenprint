@@ -1405,7 +1405,7 @@ static const paper_t escp2_paper_list[] = {
   { "Plain Paper", 1, 0, .5, .25, .5 },
   { "Plain Paper Fast Load", 5, 0, .5, .25, .5 },
   { "Postcard", 2, 0, .6, .25, .6 },
-  { "Glossy Film", 3, 0, 1.0, 1.0, .9 },
+  { "Glossy Film", 3, 0, 1.0, 1.0, .999 },
   { "Transparencies", 3, 0, 1.0, 1.0, .999 },
   { "Envelopes", 4, 0, .5, .25, .5 },
   { "Back Light Film", 6, 0, 1.0, 1.0, .999 },

@@ -43,7 +43,7 @@
 #include <stdarg.h>
 #include "print.h"
 
-#define DEBUG
+/* #define DEBUG */
 
 /*
  * For each printer, we can select from a variety of dot sizes.
