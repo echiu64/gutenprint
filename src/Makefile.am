@@ -23,7 +23,6 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
-NONGIMP_SUBDIRS =
 ## @-@-@-@-@ NO-GIMP @-@-@-@-@
 NONGIMP_SUBDIRS = ijs cups foomatic ghost testpattern
 ## @-@-@-@-@ YES-GIMP @-@-@-@-@

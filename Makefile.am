@@ -27,8 +27,6 @@ MAINT_CHARSET = latin1
 
 ## Variables
 
-NONGIMP_SUBDIRS =
-NONGIMP_DISTDIRS =
 ## @-@-@-@-@ NO-GIMP @-@-@-@-@
 NONGIMP_SUBDIRS = test
 NONGIMP_DISTDIRS = debian

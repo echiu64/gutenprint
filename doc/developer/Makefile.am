@@ -28,7 +28,7 @@ MAINT_CHARSET = latin1
 
 MANUAL = gimpprint
 HTMLDIR = developer-html
-DOCS = $(MANUAL).dvi $(MANUAL).ps html
+DOCS = $(MANUAL).dvi $(MANUAL).ps html-stamp
 
 IMAGES =
 
@@ -177,6 +177,6 @@ mostlyclean-aminfo:
 
 MAINTAINERCLEANFILES = Makefile.in html-stamp
 
-EXTRA_DIST = $(DOCS) $(IMAGES) $(EPS_IMAGES) html-stamp
+EXTRA_DIST = $(DOCS) $(IMAGES) $(EPS_IMAGES)
 
 .PHONY: html ps pdf docs
