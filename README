@@ -10,12 +10,17 @@ INTRODUCTION
     tasks.
 
     Please read this README, and the NEWS file carefully!  Many things
-    have changed from previous releases.
+    have changed from previous releases.  The package is quite
+    different in many ways from Gimp-Print 4.0, and you should read
+    these instructions carefully.
 
     A user's manual exists in doc/users_guide; it is normally
     installed in PDF and HTML form in /usr/local/share/gimp-print/doc.
     This manual covers setup and use of the GIMP Print plug-in and the
     CUPS driver.
+
+    We urge all distributors of this package to read the PACKAGING and
+    KNOWN BUILD ISSUES section below.
 
 
 BASIC INSTALLATION
@@ -134,7 +139,8 @@ FOOMATIC
     first version of Foomatic (the one used with Gimp-Print 4.0) is not
     compatible with Gimp-Print 4.2.  Note that the Foomatic driver is
     named `stp' in Gimp-Print 4.0; in Gimp-Print 4.2 it is named
-    `gimp-print'.
+    `gimp-print'.  The data for the Gimp-Print 4.0 driver is not
+    compatible with the 4.2 driver.
 
     To build the Foomatic data, you must run:
 
@@ -265,6 +271,108 @@ KNOWN BUILD ISSUES
       to build, we suggest using --with-readline=no.  The commands
       used within escputil are very short and seldom require
       significant editing.
+
+    * There is a known translation problem building the PPD files used
+      by the CUPS driver such that on many systems all of the PPD
+      files are in the English language.  This causes CUPS tools, such
+      as KUPS or http://localhost:631 to display many copies of each
+      PPD file, all in the English (en) language.  In fact, the PPD
+      files should be translated into Swedish, Norwegian, French,
+      Danish, and British English.  With CUPS 1.1.10 and lower, there
+      should be two copies of the (en) PPD file, and one copy each of
+      (sv), (no), (fr), and (da).  With CUPS 1.1.11 and above, there
+      should be (en), (en_GB), (sv), (no), (fr), and (da) PPD files.
+
+      The PPD files are created by a program named "genppd" in the
+      src/cups directory.  This program is called once for each
+      language, and creates all of the PPD files for the language in
+      one shot.
+
+      The command 'zgrep' can be used to determine if genppd is
+      creating the PPD files correctly, as follows:
+
+	  src/cups$ zgrep LanguageVersion ppd/*/pcl-4.ppd.gz
+	  ppd/C/pcl-4.ppd.gz:*LanguageVersion: English
+	  ppd/da/pcl-4.ppd.gz:*LanguageVersion: Danish
+	  ppd/en_GB/pcl-4.ppd.gz:*LanguageVersion: English-GB
+	  ppd/fr/pcl-4.ppd.gz:*LanguageVersion: French
+	  ppd/no/pcl-4.ppd.gz:*LanguageVersion: Norwegian
+	  ppd/sv/pcl-4.ppd.gz:*LanguageVersion: Swedish
+
+      If the PPD file for each language has a different language
+      version, the genppd program operated correctly.  If instead the
+      output looks like this:
+
+	  src/cups$ zgrep LanguageVersion ppd/*/pcl-4.ppd.gz
+	  ppd/C/pcl-4.ppd.gz:*LanguageVersion: English
+	  ppd/da/pcl-4.ppd.gz:*LanguageVersion: English
+	  ppd/en_GB/pcl-4.ppd.gz:*LanguageVersion: English
+	  ppd/fr/pcl-4.ppd.gz:*LanguageVersion: English
+	  ppd/no/pcl-4.ppd.gz:*LanguageVersion: English
+	  ppd/sv/pcl-4.ppd.gz:*LanguageVersion: English
+
+      the program did not operate correctly.
+
+      If you do not have 'zgrep' on your system, you can gunzip the
+      PPD files, and use 
+
+	  grep LanguageVersion ppd/*/pcl-4.ppd
+
+      to accomplish the same test.
+
+      The normal mechanism for performing translations is to set the
+      LANG environment variable to the appropriate language prior to
+      running the program.  This normally causes the program to search
+      the translations (normally in /usr/share/locale or
+      /usr/lib/locale) for the chosen language.  When a specially
+      marked string is used, a special macro calls `gettext()' on the
+      string to retrieve the translation, and substitutes the
+      translation for the string in question.
+
+      There are two problems with this approach in the context of
+      genppd.  The translation engine is intended to be used after
+      installation, not during build, and this causes problems.
+
+      1) At the time genppd is run, the translations have not been
+         installed in the normal system directories.  Fortunately,
+         it's possible to tell the translation machinery (via
+         bindtextdomain) to look elsewhere for the translation
+         catalogs.  What we do is install the catalogs in a temporary
+         directory under src/cups, and tell genppd to instruct the
+         translation machinery to look there.  This workaround is
+         straightforward, and doesn't normally cause problems.
+
+      2) LANG only lets us pick a valid locale (normally determined by
+         listing the directories in /usr/share/locale or
+         /usr/lib/locale).  Unfortunately, while language codes (which
+         form the base of locales) are standard, the actual locale
+         names aren't always.  On some systems, the locale names are
+         just the language base names; on others, they are the
+         language names concatenated with country codes (e. g. en_US),
+         while on others they are language codes concatenated with
+         character sets.  We are not aware of any workaround for this,
+         possibly short of actually running make install and then
+         rebuilding the PPD's.  'make install' will install the
+         message catalogs, and that may create the necessary locale
+         directories.  This is not exactly a very elegant approach.
+
+      The GNU gettext library (libintl.a) provides another environment
+      variable, LANGUAGE, which unconditionally looks up translations
+      according to the language, ignoring LANG and the LC_*
+      environment variables that are normally used for translation.
+      This library is included with the Gimp-Print tarball, but it is
+      not used unless --with-included-gettext is specified on the
+      configure command line.  This is because many systems provide
+      translation machinery in their standard libraries, and it may
+      not always be best to use foreign libraries to replace standard
+      system functionality.
+
+      We have chosen to explicitly link genppd against the included
+      gettext and use the LANGUAGE environment variable.  This
+      requires some rather ugly modifications to genppd.c.
+      Unfortunately, this does not work correctly on all systems, most
+      likely due to linker quirks.  We would like to know about any
+      problems experienced, and any workarounds.
 
 
 RECOMMENDED SETTINGS
