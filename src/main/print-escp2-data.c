@@ -1714,58 +1714,114 @@ static const ink_channel_t name##_channels =			\
 
 static const physical_subchannel_t standard_black_subchannels[] =
 {
-  { 0, -1 }
+  { 0, -1, 0 }
 };
 
 DECLARE_INK_CHANNEL(standard_black);
 
+static const physical_subchannel_t x80_black_subchannels[] =
+{
+  { 0, -1, 48 }
+};
+
+DECLARE_INK_CHANNEL(x80_black);
+
+static const physical_subchannel_t c80_black_subchannels[] =
+{
+  { 0, -1, 0 }
+};
+
+DECLARE_INK_CHANNEL(c80_black);
+
 static const physical_subchannel_t standard_cyan_subchannels[] =
 {
-  { 2, -1 }
+  { 2, -1, 0 }
 };
 
 DECLARE_INK_CHANNEL(standard_cyan);
 
+static const physical_subchannel_t x80_cyan_subchannels[] =
+{
+  { 2, -1, 96 }
+};
+
+DECLARE_INK_CHANNEL(x80_cyan);
+
+static const physical_subchannel_t c80_cyan_subchannels[] =
+{
+  { 2, -1, 0 }
+};
+
+DECLARE_INK_CHANNEL(c80_cyan);
+
 static const physical_subchannel_t standard_magenta_subchannels[] =
 {
-  { 1, -1 }
+  { 1, -1, 0 }
 };
 
 DECLARE_INK_CHANNEL(standard_magenta);
 
+static const physical_subchannel_t x80_magenta_subchannels[] =
+{
+  { 1, -1, 48 }
+};
+
+DECLARE_INK_CHANNEL(x80_magenta);
+
+static const physical_subchannel_t c80_magenta_subchannels[] =
+{
+  { 1, -1, 120 }
+};
+
+DECLARE_INK_CHANNEL(c80_magenta);
+
 static const physical_subchannel_t standard_yellow_subchannels[] =
 {
-  { 4, -1 }
+  { 4, -1, 0 }
 };
 
 DECLARE_INK_CHANNEL(standard_yellow);
 
+static const physical_subchannel_t x80_yellow_subchannels[] =
+{
+  { 4, -1, 0 }
+};
+
+DECLARE_INK_CHANNEL(x80_yellow);
+
+static const physical_subchannel_t c80_yellow_subchannels[] =
+{
+  { 4, -1, 240 }
+};
+
+DECLARE_INK_CHANNEL(c80_yellow);
+
 static const physical_subchannel_t photo_black_subchannels[] =
 {
-  { 0, 0 }
+  { 0, 0, 0 }
 };
 
 DECLARE_INK_CHANNEL(photo_black);
 
 static const physical_subchannel_t photo_cyan_subchannels[] =
 {
-  { 2, 0 },
-  { 2, 1 }
+  { 2, 0, 0 },
+  { 2, 1, 0 }
 };
 
 DECLARE_INK_CHANNEL(photo_cyan);
 
 static const physical_subchannel_t photo_magenta_subchannels[] =
 {
-  { 1, 0 },
-  { 1, 1 }
+  { 1, 0, 0 },
+  { 1, 1, 0 }
 };
 
 DECLARE_INK_CHANNEL(photo_magenta);
 
 static const physical_subchannel_t photo_yellow_subchannels[] =
 {
-  { 4, 0 }
+  { 4, 0, 0 }
 };
 
 DECLARE_INK_CHANNEL(photo_yellow);
@@ -1773,29 +1829,39 @@ DECLARE_INK_CHANNEL(photo_yellow);
 /* For Japanese 7-color printers, with dark yellow */
 static const physical_subchannel_t photo2_yellow_subchannels[] =
 {
-  { 4, 0 },
-  { 4, 1 }
+  { 4, 0, 0 },
+  { 4, 1, 0 }
 };
 
 DECLARE_INK_CHANNEL(photo2_yellow);
 
 static const physical_subchannel_t photo2_black_subchannels[] =
 {
-  { 0, 0 },
-  { 0, 1 }
+  { 0, 0, 0 },
+  { 0, 1, 0 }
 };
 
 DECLARE_INK_CHANNEL(photo2_black);
 
 static const physical_subchannel_t quadtone_subchannels[] =
 {
-  { 4, -1 },
-  { 1, -1 },
-  { 2, -1 },
-  { 0, -1 }
+  { 4, -1, 0 },
+  { 1, -1, 0 },
+  { 2, -1, 0 },
+  { 0, -1, 0 }
 };
 
 DECLARE_INK_CHANNEL(quadtone);
+
+static const physical_subchannel_t c80_quadtone_subchannels[] =
+{
+  { 4, -1, 0 },
+  { 1, -1, 120 },
+  { 2, -1, 240 },
+  { 0, -1, 0 }
+};
+
+DECLARE_INK_CHANNEL(c80_quadtone);
 
 static const escp2_inkname_t three_color_composite_inkset = 
 {
@@ -1807,6 +1873,26 @@ static const escp2_inkname_t three_color_composite_inkset =
   }
 };
 
+static const escp2_inkname_t x80_three_color_composite_inkset = 
+{
+  "RGB", N_ ("Three Color Composite"), 1, INKSET_CMYK, 0, 0,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    NULL, &x80_cyan_channels,
+    &x80_magenta_channels, &x80_yellow_channels
+  }
+};
+
+static const escp2_inkname_t c80_three_color_composite_inkset = 
+{
+  "RGB", N_ ("Three Color Composite"), 1, INKSET_CMYK, 0, 0,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    NULL, &c80_cyan_channels,
+    &c80_magenta_channels, &c80_yellow_channels
+  }
+};
+
 static const escp2_inkname_t four_color_standard_inkset =
 {
   "CMYK", N_ ("Four Color Standard"), 1, INKSET_CMYK, .25, 1.0,
@@ -1814,6 +1900,26 @@ static const escp2_inkname_t four_color_standard_inkset =
   {
     &standard_black_channels, &standard_cyan_channels,
     &standard_magenta_channels, &standard_yellow_channels
+  }
+};
+
+static const escp2_inkname_t x80_four_color_standard_inkset =
+{
+  "CMYK", N_ ("Four Color Standard"), 1, INKSET_CMYK, .25, 1.0,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    &x80_black_channels, &x80_cyan_channels,
+    &x80_magenta_channels, &x80_yellow_channels
+  }
+};
+
+static const escp2_inkname_t c80_four_color_standard_inkset =
+{
+  "CMYK", N_ ("Four Color Standard"), 1, INKSET_CMYK, .25, 1.0,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    &c80_black_channels, &c80_cyan_channels,
+    &c80_magenta_channels, &c80_yellow_channels
   }
 };
 
@@ -1876,6 +1982,15 @@ static const escp2_inkname_t piezo_quadtone_inkset =
   }
 };
 
+static const escp2_inkname_t c80_piezo_quadtone_inkset =
+{
+  "PiezoQuadtone", N_ ("Piezography (TM) Quadtone"), 0, INKSET_PIEZO_QUADTONE, 0, 0,
+  NULL, NULL, NULL,
+  {
+    &c80_quadtone_channels, NULL, NULL, NULL
+  }
+};
+
 #define DECLARE_INKLIST(name)				\
 static const inklist_t name##_inklist =			\
 {							\
@@ -1899,6 +2014,23 @@ static const escp2_inkname_t *standard_ink_types[] =
 };
 
 DECLARE_INKLIST(standard);
+
+static const escp2_inkname_t *c80_ink_types[] =
+{
+  &c80_four_color_standard_inkset,
+  &c80_three_color_composite_inkset,
+  &c80_piezo_quadtone_inkset
+};
+
+DECLARE_INKLIST(c80);
+
+static const escp2_inkname_t *x80_ink_types[] =
+{
+  &x80_four_color_standard_inkset,
+  &x80_three_color_composite_inkset,
+};
+
+DECLARE_INKLIST(x80);
 
 static const escp2_inkname_t *photo_ink_types[] =
 {
@@ -2338,21 +2470,6 @@ static const escp2_densities_t c4pl_pigment_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.568, 0.784, 0.784, 0.593, 0.593, 0.297 };
 
 
-/*
- For each printhead (=color), the offset in escp2_base_separation (1/360")
- units is defined here.
- */
-
-static const int default_head_offset[] =
-{0, 0, 0, 0, 0, 0, 0};
-
-static const int x80_head_offset[] =
-{48, 48, 96, 0, 0, 0, 0};
-
-static const int c80_head_offset[] =
-{0, 120, 0, 240, 0, 0, 0};
-
-
 static const res_t standard_reslist[] =
 {
   { "360x90dpi",        N_("360 x 90 DPI Fast Economy Draft"),
@@ -2607,7 +2724,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 720, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     g1_dotsizes, g1_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list
@@ -2623,7 +2740,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 720, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     g2_dotsizes, g1_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list
@@ -2639,7 +2756,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 720, 720, 90, 90,
     INCH(17), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     g1_dotsizes, sc1500_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &cmy_inklist,
     standard_bits, standard_base_res, &roll_feed_input_slot_list
@@ -2655,7 +2772,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     8, 9, 0, 30, 8, 9, 0, 30, 8, 9, 0, 0, 8, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     sc600_dotsizes, g3_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, g3_base_res, &default_input_slot_list
@@ -2671,7 +2788,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0,
-    0, 1, 4, 0, default_head_offset, 0, 0,
+    0, 1, 4, 0, 0, 0,
     g3_dotsizes, g3_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, g3_base_res, &default_input_slot_list
@@ -2687,7 +2804,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 4, 0, default_head_offset, 0, 0,
+    0, 1, 4, 0, 0, 0,
     g3_dotsizes, g3_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, g3_base_res, &default_input_slot_list
@@ -2703,7 +2820,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17), INCH(44), INCH(2), INCH(4),
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0,
-    0, 1, 4, 0, default_head_offset, 0, 0,
+    0, 1, 4, 0, 0, 0,
     g3_dotsizes, g3_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, g3_base_res, &roll_feed_input_slot_list
@@ -2721,7 +2838,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     photo_dotsizes, g3_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &photo_inklist,
     standard_bits, g3_base_res, &default_input_slot_list
@@ -2737,7 +2854,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(118 / 10), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     photo_dotsizes, g3_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &photo_inklist,
     standard_bits, g3_base_res, &default_input_slot_list
@@ -2753,7 +2870,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 720, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     photo_dotsizes, g3_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &photo_inklist,
     standard_bits, g3_base_res, &default_input_slot_list
@@ -2771,7 +2888,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 720, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     sc440_dotsizes, sc440_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list
@@ -2787,7 +2904,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     sc640_dotsizes, sc440_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list
@@ -2803,7 +2920,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     c6pl_dotsizes, c6pl_densities, &variable_6pl_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
@@ -2819,7 +2936,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     c3pl_dotsizes, c3pl_densities, &variable_3pl_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, stc900_base_res, &default_input_slot_list
@@ -2835,7 +2952,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     c6pl_dotsizes, c6pl_densities, &variable_6pl_inks,
     &standard_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
@@ -2851,7 +2968,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(13), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     c6pl_dotsizes, c6pl_densities, &variable_6pl_inks,
     &standard_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &roll_feed_input_slot_list
@@ -2867,7 +2984,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
@@ -2883,7 +3000,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(13), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
@@ -2899,7 +3016,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 26, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 8, 0, default_head_offset, 0, 0,
+    0, 1, 8, 0, 0, 0,
     sc660_dotsizes,sc660_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list
@@ -2915,7 +3032,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
@@ -2931,7 +3048,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     sc720_dotsizes, c6pl_densities, &variable_6pl_inks,
     &standard_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
@@ -2947,9 +3064,9 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, 360, 720, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, x80_head_offset, -99, 0,
+    0, 1, 0, 0, -99, 0,
     sc480_dotsizes, sc480_densities, &variable_x80_6pl_inks,
-    &standard_paper_list, standard_reslist, &standard_inklist,
+    &standard_paper_list, standard_reslist, &x80_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
   /* 22: Stylus Photo 870 */
@@ -2963,7 +3080,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1, 0, 97, default_head_offset, 0, 0,
+    0, 1, 0, 97, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
     &standard_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &roll_feed_input_slot_list
@@ -2979,7 +3096,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1, 0, 97, default_head_offset, 0, 0,
+    0, 1, 0, 97, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
     &standard_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &roll_feed_input_slot_list
@@ -2995,7 +3112,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17), INCH(44), INCH(2), INCH(4),
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0,
-    0, 1, 4, 0, default_head_offset, 0, 0,
+    0, 1, 4, 0, 0, 0,
     g3_dotsizes, g3_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, g3_base_res, &roll_feed_input_slot_list
@@ -3011,7 +3128,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     sc670_dotsizes, c6pl_densities, &variable_6pl_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
@@ -3027,7 +3144,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     sp2000_dotsizes, sp2000_densities, &variable_pigment_inks,
     &standard_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
@@ -3043,7 +3160,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, &simple_inks,
     &standard_paper_list, pro_reslist, &photo_inklist,
     standard_bits, pro_base_res, &roll_feed_input_slot_list
@@ -3059,7 +3176,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(24), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, &simple_inks,
     &standard_paper_list, pro_reslist, &photo_inklist,
     standard_bits, pro_base_res, &roll_feed_input_slot_list
@@ -3075,7 +3192,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(24), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, &simple_inks,
     &standard_paper_list, pro_reslist, &photo_inklist,
     standard_bits, pro_base_res, &roll_feed_input_slot_list
@@ -3091,7 +3208,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(44), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, &simple_inks,
     &standard_paper_list, pro_reslist, &photo_inklist,
     standard_bits, pro_base_res, &roll_feed_input_slot_list
@@ -3107,7 +3224,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(44), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, &simple_inks,
     &standard_paper_list, pro_reslist, &photo_inklist,
     standard_bits, pro_base_res, &roll_feed_input_slot_list
@@ -3123,7 +3240,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 2880, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     c4pl_dotsizes, sc680_densities, &variable_680_4pl_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
@@ -3139,7 +3256,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 2880, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
@@ -3155,7 +3272,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 2880, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    192, 1, 0, 0, default_head_offset, 0, 0,
+    192, 1, 0, 0, 0, 0,
     c3pl_dotsizes, sc980_densities, &variable_3pl_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
@@ -3171,7 +3288,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 2880, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1, 0, 55, default_head_offset, 0, 0,
+    0, 1, 0, 55, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
     &sp780_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
@@ -3187,7 +3304,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 2880, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1, 0, 55, default_head_offset, 0, 0,
+    0, 1, 0, 55, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
     &standard_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &roll_feed_input_slot_list
@@ -3203,7 +3320,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 2880, 720, 90, 90,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1, 0, 55, default_head_offset, 0, 0,
+    0, 1, 0, 55, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
     &standard_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &roll_feed_input_slot_list
@@ -3219,9 +3336,9 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, 360, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, x80_head_offset, -99, 0,
+    0, 1, 0, 0, -99, 0,
     sc480_dotsizes, sc480_densities, &variable_x80_6pl_inks,
-    &standard_paper_list, standard_reslist, &standard_inklist,
+    &standard_paper_list, standard_reslist, &x80_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
   /* 39: Stylus Color Pro XL */
@@ -3235,7 +3352,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 720, 720, 90, 90,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     g1_dotsizes, g1_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list
@@ -3251,7 +3368,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, &simple_inks,
     &standard_paper_list, pro_reslist, &photo_inklist,
     standard_bits, pro_base_res, &roll_feed_input_slot_list
@@ -3267,7 +3384,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(44), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     spro10000_dotsizes, spro10000_densities, &spro10000_inks,
     &standard_paper_list, pro_reslist, &photo_inklist,
     variable_bits, pro_base_res, &roll_feed_input_slot_list
@@ -3283,9 +3400,9 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 720, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, x80_head_offset, -99, 0,
+    0, 1, 0, 0, -99, 0,
     sc480_dotsizes, sc480_densities, &variable_x80_6pl_inks,
-    &standard_paper_list, standard_reslist, &standard_inklist,
+    &standard_paper_list, standard_reslist, &x80_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
   /* 43: Stylus C40SX/C40UX */
@@ -3299,9 +3416,9 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, x80_head_offset, -99, 0,
+    0, 1, 0, 0, -99, 0,
     sc480_dotsizes, sc480_densities, &variable_x80_6pl_inks,
-    &standard_paper_list, standard_reslist, &standard_inklist,
+    &standard_paper_list, standard_reslist, &x80_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
   /* 44: Stylus C80 */
@@ -3315,9 +3432,9 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, c80_head_offset, -240, 0,
+    0, 1, 0, 0, -240, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, &variable_3pl_pigment_inks,
-    &c80_paper_list, standard_reslist, &standard_inklist,
+    &c80_paper_list, standard_reslist, &c80_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
   /* 45: Stylus Color Pro */
@@ -3331,7 +3448,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 720, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     g1_dotsizes, g1_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list
@@ -3347,7 +3464,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1, 0, 190, default_head_offset, 0, 0,
+    0, 1, 0, 190, 0, 0,
     c2pl_dotsizes, c2pl_densities, &variable_2pl_inks,
     &sp780_paper_list, standard_reslist, &photo_inklist,
     stp950_bits, stp950_base_res, &default_input_slot_list
@@ -3363,7 +3480,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     c4pl_pigment_dotsizes, c4pl_pigment_densities, &variable_4pl_pigment_inks,
     &standard_paper_list, standard_reslist, &photo7_inklist,
     variable_bits, pro_base_res, &default_input_slot_list
@@ -3379,7 +3496,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
     INCH(24), INCH(1200), INCH(7), INCH(7),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     c4pl_pigment_dotsizes, c4pl_pigment_densities, &variable_4pl_pigment_inks,
     &standard_paper_list, pro_reslist, &photo7_inklist,
     variable_bits, pro_base_res, &roll_feed_input_slot_list
@@ -3395,7 +3512,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
     INCH(44), INCH(1200), INCH(7), INCH(7),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1, 0, 0, default_head_offset, 0, 0,
+    0, 1, 0, 0, 0, 0,
     c4pl_pigment_dotsizes, c4pl_pigment_densities, &variable_4pl_pigment_inks,
     &standard_paper_list, pro_reslist, &photo7_inklist,
     variable_bits, pro_base_res, &roll_feed_input_slot_list

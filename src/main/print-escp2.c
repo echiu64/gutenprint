@@ -181,7 +181,6 @@ DEF_SIMPLE_ACCESSOR(base_separation, int)
 DEF_SIMPLE_ACCESSOR(base_resolution, int)
 DEF_SIMPLE_ACCESSOR(enhanced_resolution, int)
 DEF_SIMPLE_ACCESSOR(resolution_scale, int)
-DEF_SIMPLE_ACCESSOR(head_offset, const int *)
 DEF_SIMPLE_ACCESSOR(initial_vertical_offset, int)
 DEF_SIMPLE_ACCESSOR(black_initial_vertical_offset, int)
 DEF_SIMPLE_ACCESSOR(max_black_resolution, int)
@@ -436,12 +435,13 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
   {
     const input_slot_list_t *slots = escp2_input_slots(model, v);
     int ninputslots = slots->n_input_slots;
-    valptrs = stp_malloc(sizeof(stp_param_t) * ninputslots);
     if (ninputslots == 0)
       {
+	valptrs = NULL;
 	*count = 0;
 	return NULL;
       }
+    valptrs = stp_malloc(sizeof(stp_param_t) * ninputslots);
     for (i = 0; i < ninputslots; i++)
     {
       valptrs[i].name = c_strdup(slots->slots[i].name);
@@ -1051,7 +1051,7 @@ get_inktype(const stp_printer_t printer, const stp_vars_t v, int model)
 
 static const physical_subchannel_t default_black_subchannels[] =
 {
-  { 0, 0 }
+  { 0, 0, 0 }
 };
 
 static const ink_channel_t default_black_channels =
@@ -1071,6 +1071,7 @@ static int
 setup_ink_types(const escp2_inkname_t *ink_type,
 		escp2_privdata_t *privdata,
 		unsigned char **cols,
+		int *head_offset,
 		stp_dither_data_t *dt,
 		int channel_limit,
 		int line_length)
@@ -1088,6 +1089,7 @@ setup_ink_types(const escp2_inkname_t *ink_type,
 	      cols[current_channel] = stp_zalloc(line_length);
 	      privdata->channels[current_channel] = &(channel->channels[j]);
 	      stp_add_channel(dt, cols[current_channel], i, j);
+	      head_offset[current_channel] = channel->channels[j].head_offset;
 	      current_channel++;
 	    }
 	}
@@ -1163,7 +1165,6 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   int max_vres;
   unsigned char **cols;
   int head_offset[8];
-  const int *offset_ptr;
   int max_head_offset;
   double lum_adjustment[49], sat_adjustment[49], hue_adjustment[49];
   int ncolors = 0;
@@ -1290,24 +1291,66 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   separation_rows = escp2_separation_rows(model, nv);
   bits = escp2_bits(model, resid, nv);
 
-  if (horizontal_passes == 0)
-    horizontal_passes = 1;
-  privdata.min_nozzles = min_nozzles;
+ /*
+  * Convert image size to printer resolution...
+  */
+
+  out_width  = xdpi * out_width / 72;
+  out_height = ydpi * out_height / 72;
 
   physical_ydpi = ydpi;
   if (ydpi > max_vres)
     physical_ydpi = max_vres;
 
-  offset_ptr = escp2_head_offset(model, nv);
+  left = physical_ydpi * undersample * left / 72 / undersample_denominator;
+
+ /*
+  * Adjust for zero-margin printing...
+  */
+
+  if (escp2_has_cap(model, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES, nv))
+    {
+     /*
+      * In zero-margin mode, the origin is about 3/20" to the left of the
+      * paper's left edge.
+      */
+      left += escp2_zero_margin_offset(model, nv) * physical_ydpi *
+	undersample / max_vres / undersample_denominator;
+    }
+
+  length = (out_width + 7) / 8;
+
+  dt = stp_create_dither_data();
+
+  cols = stp_zalloc(sizeof(unsigned char *) * channel_count);
+  privdata.channels =
+    stp_zalloc(sizeof(physical_subchannel_t *) * channel_count);
+  current_channel = 0;
+
+  memset(head_offset, 0, sizeof(head_offset));
+  channel_limit = NCOLORS;
+  if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
+    channel_limit = 1;
+  current_channel = setup_ink_types(ink_type, &privdata, cols, head_offset,
+				    dt, channel_limit, length * bits);
+  if (current_channel == 0)
+    {
+      ink_type = &default_black_ink;
+      current_channel = setup_ink_types(ink_type, &privdata, cols, head_offset,
+					dt, channel_limit, length * bits);
+    }
+
+  if (horizontal_passes == 0)
+    horizontal_passes = 1;
+  privdata.min_nozzles = min_nozzles;
+
   max_head_offset = 0;
-  if (ncolors > 1)
-    for (i = 0; i < ncolors; i++)
-      {
-	head_offset[i] = offset_ptr[i] * ydpi /
-	  escp2_base_separation(model, nv);
-	if (head_offset[i] > max_head_offset)
-	  max_head_offset = head_offset[i];
-      }
+  for (i = 0; i < ncolors; i++)
+    {
+      head_offset[i] = head_offset[i] * ydpi / escp2_base_separation(model,nv);
+      if (head_offset[i] > max_head_offset)
+	max_head_offset = head_offset[i];
+    }
 
  /*
   * Send ESC/P2 initialization commands...
@@ -1335,8 +1378,9 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	  escp2_base_separation(model, nv);
       else
 	init.initial_vertical_offset =
-	  (escp2_initial_vertical_offset(init.model, init.v) + offset_ptr[0]) *
-	  init.ydpi / escp2_base_separation(model, nv);
+	  head_offset[0] +
+	  (escp2_initial_vertical_offset(init.model, init.v) *
+	   init.ydpi / escp2_base_separation(model, nv));
     }
   else
     init.initial_vertical_offset =
@@ -1364,29 +1408,6 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 
   escp2_init_printer(&init);
 
- /*
-  * Convert image size to printer resolution...
-  */
-
-  out_width  = xdpi * out_width / 72;
-  out_height = ydpi * out_height / 72;
-
-  left = physical_ydpi * undersample * left / 72 / undersample_denominator;
-
- /*
-  * Adjust for zero-margin printing...
-  */
-
-  if (escp2_has_cap(model, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES, nv))
-    {
-     /*
-      * In zero-margin mode, the origin is about 3/20" to the left of the
-      * paper's left edge.
-      */
-      left += escp2_zero_margin_offset(model, nv) * physical_ydpi *
-	undersample / max_vres / undersample_denominator;
-    }
-
   weave = stp_initialize_weave(nozzles, nozzle_separation,
 			       horizontal_passes, vertical_passes,
 			       vertical_oversample, ncolors, bits,
@@ -1401,26 +1422,6 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
  /*
   * Allocate memory for the raster data...
   */
-
-  length = (out_width + 7) / 8;
-  dt = stp_create_dither_data();
-
-  cols = stp_zalloc(sizeof(unsigned char *) * channel_count);
-  privdata.channels =
-    stp_zalloc(sizeof(physical_subchannel_t *) * channel_count);
-  current_channel = 0;
-
-  channel_limit = NCOLORS;
-  if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
-    channel_limit = 1;
-  current_channel = setup_ink_types(ink_type, &privdata, cols, dt,
-				    channel_limit, length * bits);
-  if (current_channel == 0)
-    {
-      ink_type = &default_black_ink;
-      current_channel = setup_ink_types(ink_type, &privdata, cols, dt,
-					channel_limit, length * bits);
-    }
 
   in  = stp_malloc(image_width * image_bpp);
   out = stp_malloc(image_width * out_bpp * 2);
