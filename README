@@ -1,6 +1,6 @@
 INTRODUCTION
 
-    This is Gimp-Print version 4.2.2, a stable release in the 4.2
+    This is Gimp-Print version 4.2.3-pre1, a prerelease in the 4.2
     series.  Gimp-Print is a suite of printer drivers that may be used
     with most common UNIX print spooling systems, including CUPS, lpr,
     LPRng, or others.  These drivers provide high quality printing for
@@ -10,8 +10,8 @@ INTRODUCTION
     tasks.  A complete list of supported printers may be found in the
     NEWS file.
 
-    Gimp-Print 4.2.2 is backward compatible with other releases of
-    Gimp-Print 4.2 (4.2.0 and 4.2.1).
+    This release is backward compatible with other releases of
+    Gimp-Print 4.2 (4.2.0, 4.2.1, and 4.2.2).
 
     Gimp-Print also includes a plug-in for the GIMP image editor.
     This plug-in is also distributed with the GIMP.
@@ -38,8 +38,8 @@ MACINTOSH OS X NOTE
     quality, full-featured printing to a wide variety of printers.
 
     This package requires Macintosh OS X 10.2 or later; it will not
-    work with any 10.0 or 10.1 release, or any Macintosh OS prior to
-    OS X.
+    work with any 10.0 or 10.1 release (including 10.1.5), or any
+    Macintosh OS prior to OS X.
 
     We strongly recommend that Macintosh users download the
     precompiled installer package from
@@ -51,7 +51,7 @@ MACINTOSH OS X NOTE
     GhostScript, to permit printing from applications (such as most
     Adobe applications) that generate PostScript rather than PDF
     output.  NOTE THAT WITHOUT THIS PACKAGE, YOU WILL NOT BE ABLE TO
-    PRINT FROM ADOBE APPLICATIONS!  Directions for that are also
+    PRINT FROM ANY CARBON APPLICATIONS!  Directions for that are also
     available at http://gimp-print.sourceforge.net/MacOSX.php3.
 
     Users installing these packages do not need any additional

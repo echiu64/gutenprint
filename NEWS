@@ -25,18 +25,21 @@ The IJS GhostScript plugin driver requires GNU Ghostscript 6.53 or
 later, ESP Ghostscript 7.05 or later, or APFL GhostScript 7.04 or
 later.
 
-We recommend that Macintosh OS X (10.2 or later; this package will not
-work with any 10.0 or 10.1 release) users download the precompiled
-installer package from http://gimp-print.sourceforge.net rather than
-attempt to build this package from source, as using the installer is
-much simpler.  We further recommend that Macintosh OS X users install
-ESP GhostScript, to permit printing from applications (such as most
-Adobe applications) that generate PostScript rather than PDF output.
-Directions for that are also available at
-http://gimp-print.sourceforge.net.
+Users of Macintosh OS X 10.2 and above can use this package, as the
+printing system is based on CUPS, which is supported by Gimp-print.
+Note that Macintosh OS X 10.0 and 10.1 (including 10.1.5) cannot use
+this package.  We recommend that Macintosh OS X users download the
+precompiled installer package from http://gimp-print.sourceforge.net
+rather than attempt to build this package from source, as using the
+installer is much simpler.  We further recommend that Macintosh OS X
+users install ESP GhostScript, to permit printing from Carbon
+applications (such as most Adobe applications) that generate
+PostScript rather than PDF output.  Directions for that are also
+available at http://gimp-print.sourceforge.net.
 
 Please read the README file for full instructions on installing this
 package.
+
 
 Gimp-Print 4.2.3-pre1 contains the following changes and fixes over
 Gimp-Print 4.2.2:
@@ -45,7 +48,7 @@ Gimp-Print 4.2.2:
    at 1440x720 DPI.
 
 2) The package will now compile correctly on Solaris and BSD-based
-   systems.
+   systems (Regression in 4.2.2).
 
 3) Support for the Epson Stylus Photo EX3 and Stylus Photo 825, in
    addition to support for the Japanese equivalents of all supported
@@ -54,7 +57,7 @@ Gimp-Print 4.2.2:
 4) The Epson Stylus 660 margins have been corrected.
 
 5) The Epson Stylus C20/C40/C41/C42 and Stylus Color 480 and 580 now
-   print correctly in grayscale and black and white.
+   print correctly in grayscale and black and white (Regression in 4.2.2).
 
 6) The Epson driver positions correctly at 360x240 DPI.
 
