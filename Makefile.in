@@ -336,7 +336,7 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$/$$file $(distdir)/$$file; \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
@@ -348,32 +348,36 @@ print-escp2.o: print-escp2.c print.h ../../config.h ../../libgimp/gimp.h \
 	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
 	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
 	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
-	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
+	../../libgimp/gimpcompat.h ../../libgimp/stdplugins-intl.h \
+	../../libgimp/gimpintl.h
 print-pcl.o: print-pcl.c print.h ../../config.h ../../libgimp/gimp.h \
 	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
 	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
 	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
 	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
-	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
+	../../libgimp/gimpcompat.h ../../libgimp/stdplugins-intl.h \
+	../../libgimp/gimpintl.h
 print-ps.o: print-ps.c print.h ../../config.h ../../libgimp/gimp.h \
 	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
 	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
 	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
 	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
-	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
+	../../libgimp/gimpcompat.h ../../libgimp/stdplugins-intl.h \
+	../../libgimp/gimpintl.h
 print-util.o: print-util.c print.h ../../config.h ../../libgimp/gimp.h \
 	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
 	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
 	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
-	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h
+	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
+	../../libgimp/gimpcompat.h
 print.o: print.c print.h ../../config.h ../../libgimp/gimp.h \
 	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
 	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
 	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
 	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
-	../../libgimp/gimpui.h ../../libgimp/gimpmenu.h \
-	../../libgimp/gimpexport.h ../../libgimp/stdplugins-intl.h \
-	../../libgimp/gimpintl.h
+	../../libgimp/gimpcompat.h ../../libgimp/gimpui.h \
+	../../libgimp/gimpmenu.h ../../libgimp/gimpexport.h \
+	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
 
 info-am:
 info: info-am
