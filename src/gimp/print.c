@@ -172,7 +172,7 @@ run (char   *name,		/* I - Name of print program. */
   gint32         drawable_ID;   /* drawable ID */
   GimpExportReturnType export = GIMP_EXPORT_CANCEL;    /* return value of gimp_export_image() */
   gdouble xres, yres;
-  const char *image_filename;
+  char *image_filename;
   stp_image_t *image;
   if (getenv("STP_DEBUG_STARTUP"))
     while (SDEBUG)
