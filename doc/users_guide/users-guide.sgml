@@ -189,7 +189,7 @@ software!  For more information, please consult the GIMP-Print project
   </para>
   </chapter>
 
- <chapter id="ch_gimp_and_gimp-print"><title>GIMP and Gimp-Print</title>
+ <chapter id="ch-gimp-and-gimp-print"><title>GIMP and Gimp-Print</title>
 
   <sect1>
    <title>Running the GIMP</title>
@@ -262,7 +262,7 @@ Choose the
       <guimenuitem>Print</guimenuitem>
     </menuchoice>
 menu option. This will cause the Gimp-Print GUI window to appear (see
-<xref linkend="fig_gimp_print_gui">). Move the mouse cursor
+<xref linkend="fig-gimp-print-gui">). Move the mouse cursor
 over the various parts of the Gimp-Print GUI window, and notice that
 if you leave your mouse in one place for a short time without clicking
 any buttons, a small box appears.  This box contains helpful text.
@@ -271,8 +271,8 @@ about the function of each part of the graphical interface.
     </para>
     <para>
 The next several sections will continuously refer to
-<xref linkend="fig_gimp_print_gui"> and
-<xref linkend="fig_gimp_print_gui_1">.  The difference between
+<xref linkend="fig-gimp-print-gui"> and
+<xref linkend="fig-gimp-print-gui-1">.  The difference between
 the two figures can be seen in the top right corner of the window.
 Notice that there are two tabs, one which reads
 <guilabel>Printer Settings</guilabel> and another which reads
@@ -281,27 +281,27 @@ window is divided into several major sections which directly map to
 the major sections of this document:
   <itemizedlist>
     <listitem>
-      <para><link linkend="sec_preview">Preview</link></para>
+      <para><link linkend="sec-preview">Preview</link></para>
     </listitem>
     <listitem>
-      <para><link linkend="sec_printer_settings">Printer Settings</link></para>
+      <para><link linkend="sec-printer-settings">Printer Settings</link></para>
     </listitem>
     <listitem>
-      <para><link linkend="sec_printer_settings">Image/Output Settings</link></para>
+      <para><link linkend="sec-printer-settings">Image/Output Settings</link></para>
     </listitem>
     <listitem>
-      <para><link linkend="sec_position">Position</link></para>
+      <para><link linkend="sec-position">Position</link></para>
     </listitem>
     <listitem>
-      <para><link linkend="sec_scaling">Size</link></para>
+      <para><link linkend="sec-scaling">Size</link></para>
     </listitem>
     <listitem>
-      <para><link linkend="sec_printing_and_saving_settings">Printing and Saving Settings</link></para>
+      <para><link linkend="sec-printing-and-saving-settings">Printing and Saving Settings</link></para>
     </listitem>
   </itemizedlist>
   </para>
 
-   <figure id="fig_gimp_print_gui"><title>The Gimp-Print Graphical User Interface 1 (GUI)</title>
+   <figure id="fig-gimp-print-gui"><title>The Gimp-Print Graphical User Interface 1 (GUI)</title>
    <mediaobject>
    <imageobject>
    <imagedata scale="40" fileref="figures/gimp-print-gui.png" FORMAT="PNG">
@@ -312,7 +312,7 @@ the major sections of this document:
    </mediaobject>
    </figure>
 
-   <figure id="fig_gimp_print_gui_1"><title>The Gimp-Print Graphical User Interface 2 (GUI)</title>
+   <figure id="fig-gimp-print-gui-1"><title>The Gimp-Print Graphical User Interface 2 (GUI)</title>
    <mediaobject>
    <imageobject>
    <imagedata scale="40" fileref="figures/gimp-print-gui-1.png" FORMAT="PNG">
@@ -323,14 +323,14 @@ the major sections of this document:
    </mediaobject>
    </figure>
 
-  <sect2><title id="sec_printer_settings">Printer Settings</title>
-  <indexterm id="idx_printer_settings"><primary>Printer Settings</primary></indexterm>
+  <sect2><title id="sec-printer-settings">Printer Settings</title>
+  <indexterm id="idx-printer-settings"><primary>Printer Settings</primary></indexterm>
 
     <sect3><title>Printer</title>
     <para>
       Click on the <guilabel>Printer Settings</guilabel> tab near the
 top right hand corner of the window (see
-<xref linkend="fig_gimp_print_gui">).  Then, click on the downward
+<xref linkend="fig-gimp-print-gui">).  Then, click on the downward
 facing arrow to the right of the <guilabel>Printer</guilabel> combo
 box to see a list of the system printer queues.  Select the queue to which
 you would like the printed image to be sent.  One may also print the
@@ -599,7 +599,7 @@ time.
    </sect3>
    </sect2>
 
-  <sect2><title id="sec_preview">Preview</title>
+  <sect2><title id="sec-preview">Preview</title>
   <para>
    Notice in the upper left of the window is a preview of your image.
 This preview is a representation of where your picture will print on
@@ -649,7 +649,7 @@ is the first part of the media to enter the printer.
   </itemizedlist>
   </sect2>
 
-  <sect2><title id="sec_position">Position</title>
+  <sect2><title id="sec-position">Position</title>
 
    <sect3><title>Orientation</title>
    <para>
@@ -772,7 +772,7 @@ these GUI boxes.
 
   </sect2>
 
-  <sect2><title id="sec_scaling">Size</title>
+  <sect2><title id="sec-scaling">Size</title>
 
    <sect3><title>Slider Bar and Spin Box</title>
    <para>
@@ -857,11 +857,11 @@ top, bottom, bottom border) and the two size boxes (width and height).
 
   </sect2>
 
-  <sect2><title id="sec_image_settings">Image/Output Settings</title>
+  <sect2><title id="sec-image-settings">Image/Output Settings</title>
    <para>
    By clicking on the tab labeled <guilabel>Image/Output
 Settings</guilabel>, the Gimp-Print window will appear as shown in
-<xref linkend="fig_gimp_print_gui_1">.  Notice that there are
+<xref linkend="fig-gimp-print-gui-1">.  Notice that there are
 two sections to this portion of the window, namely,
 <guilabel>Image Type</guilabel> and
 <guilabel>Output Type</guilabel>.
@@ -913,7 +913,7 @@ setting can be seen in the preview window.
    <sect3><title>Adjust Output</title>
     <para>
       Clicking on this button causes the <guilabel>Print Color Adjust</guilabel> window to
-appear (see <xref linkend="fig_gimp-print-color-adjust">).  In
+appear (see <xref linkend="fig-gimp-print-color-adjust">).  In
 this window, one will see a representation of the image to be printed
 as well as several slider bars.  These slider bars collectively adjust
 many different aspects of the image.  The values can also be adjusted
@@ -921,7 +921,7 @@ by clicking the arrows or by typing a value into the appropriate spin
 box on the right side of each slider bar.
    </para>
 
-   <figure id="fig_gimp-print-color-adjust"><title>The Print Color Adjust Window</title>
+   <figure id="fig-gimp-print-color-adjust"><title>The Print Color Adjust Window</title>
    <mediaobject>
    <imageobject>
    <imagedata scale="50" fileref="figures/gimp-print-print-color-adjust.png" FORMAT="PNG">
@@ -1056,7 +1056,7 @@ Adjust</guilabel> window will close when the
 
   </sect2>
 
-  <sect2><title id="sec_printing_and_saving_settings">Printing and Saving Settings</title>
+  <sect2><title id="sec-printing-and-saving-settings">Printing and Saving Settings</title>
     <para>
     At the bottom of the Gimp-Print window, there are five buttons labeled
 <guibutton>About</guibutton>,
@@ -1242,10 +1242,10 @@ your printer was successfully installed.  Notice the sentence which
 reads "Printer your_printer has been added successfully".  Click on
 your_printer, which will be the underlined name for your printer.
 After doing so, your window will appear something
-<xref linkend="fig_cups_my_printer">.
+<xref linkend="fig-cups-my-printer">.
    </para>
 
-   <figure id="fig_cups_my_printer"><title>The CUPS Window for Your Printer</title>
+   <figure id="fig-cups-my-printer"><title>The CUPS Window for Your Printer</title>
    <mediaobject>
    <imageobject>
    <imagedata scale="45" fileref="figures/cups_my_printer.png" FORMAT="PNG">
@@ -1269,20 +1269,20 @@ revision.
    <sect1><title>Configuring your Printer in CUPS</title>
 
      <para>
-With reference to <xref linkend="fig_cups_my_printer">, click
+With reference to <xref linkend="fig-cups-my-printer">, click
 on the <guibutton>Configure Printer</guibutton> button.  A partial
 screenshot of the printer configuration window appears in
-<xref linkend="fig_cups_printer_config_window">.
+<xref linkend="fig-cups-printer-config-window">.
 The contents of this window will vary depending on precisely which
 printer you selected when you configured CUPS for your printer.  The
 screenshot shows the selections made by the author for his printer.
 The individual selections will not be explained in detail here, as
 they are the same selections which are available when using the
 Gimp-Print plugin to the GIMP.  These selections are explained in
-detail in various sections of <xref linkend="ch_gimp_and_gimp-print">.
+detail in various sections of <xref linkend="ch-gimp-and-gimp-print">.
    </para>
 
-   <figure id="fig_cups_printer_config_window"><title>The CUPS Printer Cofiguration Window</title>
+   <figure id="fig-cups-printer-config-window"><title>The CUPS Printer Cofiguration Window</title>
    <mediaobject>
    <imageobject>
    <imagedata scale="30" fileref="figures/cups_config_printer.png" FORMAT="PNG">
@@ -1354,7 +1354,7 @@ followed by some of the supported choices, are shown below:
    ]]>
    </programlisting>
 
-For more detailed information, consult the appropriate sections of <xref linkend="ch_gimp_and_gimp-print">.
+For more detailed information, consult the appropriate sections of <xref linkend="ch-gimp-and-gimp-print">.
    </para>
 
    </sect1>

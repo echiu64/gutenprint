@@ -26,7 +26,7 @@ MAINT_CHARSET = latin1
 
 ## Variables
 
-MANUAL = users_guide
+MANUAL = users-guide
 HTMLDIR = html
 
 OUTPUTS = \
@@ -122,10 +122,10 @@ pdf: $(MANUAL).pdf
 ps: $(MANUAL).ps
 
 $(MANUAL).ps:  $(MANUAL).sgml $(EPS_IMAGES)
-	sed -e 's/\.png"/.eps"/g' -e 's/FORMAT="PNG"/FORMAT="EPS"/g' $< > $(MANUAL)_eps.sgml
-	$(DB2PS) $(MANUAL)_eps.sgml
-	mv $(MANUAL)_eps.ps $(MANUAL).ps
-	$(RM) $(MANUAL)_eps.*
+	sed -e 's/\.png"/.eps"/g' -e 's/FORMAT="PNG"/FORMAT="EPS"/g' $< > $(MANUAL)-eps.sgml
+	$(DB2PS) $(MANUAL)-eps.sgml
+	mv $(MANUAL)-eps.ps $(MANUAL).ps
+	$(RM) $(MANUAL)-eps.*
 
 %.eps:
 	if test ! -d figures ; then mkdir figures ; fi
