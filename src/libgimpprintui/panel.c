@@ -459,7 +459,7 @@ stpui_create_curve(option_t *opt,
                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (opt->info.curve.label);
 
-  opt->info.curve.button = gtk_button_new_with_label(_("Edit"));
+  opt->info.curve.button = gtk_button_new_with_label(_("Edit Curve..."));
   gtk_signal_connect(GTK_OBJECT(opt->info.curve.button), "clicked",
 		     GTK_SIGNAL_FUNC(open_curve_editor), opt);
   gtk_table_attach (GTK_TABLE (table), opt->info.curve.button,
