@@ -84,9 +84,11 @@ html: html-stamp
 html-stamp: $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS) $(info_TEXINFOS))
 	$(RM) -rf $(HTMLDIR)-tmp
 	mkdir $(HTMLDIR)-tmp
-	for image in $(addprefix $(srcdir)/, $(IMAGES)) ; do \
-	  cp -p $$image $(HTMLDIR)-tmp ; \
-	done
+	if test -n "$(IMAGES)" ; then \
+	  for image in $(addprefix $(srcdir)/, $(IMAGES)) ; do \
+	    cp -p $$image $(HTMLDIR)-tmp ; \
+	  done ; \
+	fi
 	cd $(HTMLDIR)-tmp ; \
 	$(TEXI2HTML) -menu -split_node -number -expandinfo \
 	      -I ../$(srcdir) ../$(srcdir)/$(MANUAL).texi 2>&1
