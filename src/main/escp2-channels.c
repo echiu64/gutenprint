@@ -1607,7 +1607,7 @@ static const escp2_inkname_t *const cmykrb_matte_ink_types[] =
 
 DECLARE_INKLIST("cmykrbmatte", cmykrb_matte, cmykrb_matte,
 		N_("Matte Black"),
-		standard, standard, standard);
+		ultrachrome, ultrachrome_matte, ultrachrome_matte);
 
 static const escp2_inkname_t *const cmykrb_photo_ink_types[] =
 {
@@ -1629,7 +1629,7 @@ static const escp2_inkname_t *const cmykrb_photo_ink_types[] =
 
 DECLARE_INKLIST("cmykrbphoto", cmykrb_photo, cmykrb_photo,
 		N_("Photo Black"),
-		standard, standard, standard);
+		ultrachrome, ultrachrome_photo, ultrachrome_photo);
 
 
 #define DECLARE_INKGROUP(name)			\
