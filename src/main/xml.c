@@ -99,7 +99,9 @@ int stp_xml_init(void)
       fprintf(stderr, "stp-xml: source file: %s\n",
 	      (const char *) stp_list_item_get_data(item));
 #endif
+  xmlInitParser();
       stp_xml_parse_file((const char *) stp_list_item_get_data(item));
+  xmlCleanupParser();
       item = stp_list_item_next(item);
     }
   stp_list_destroy(file_list);
@@ -155,6 +157,7 @@ stp_xml_parse_file(const char *file) /* File to parse */
   /* The XML file was read and is the right format */
 
   stp_xml_process_gimpprint(cur);
+  xmlFreeDoc(doc);
 
   return 0;
 }
