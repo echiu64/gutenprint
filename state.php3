@@ -1,6 +1,6 @@
 <?
 
-$plugin_version_number = '3.1';
+$plugin_version_number = '4.0';
 
 $maintainer = '<a href="https://sourceforge.net/developer/index.php?form_dev=5436">Robert Krawitz</a>';
 
@@ -26,6 +26,7 @@ $supported_printers = array(
 		'EPSON Stylus Photo' => 'Fully Operational',
 		'EPSON Stylus Photo 700' => 'Fully Operational',
 		'EPSON Stylus Photo EX' => 'Fully Operational',
+		'EPSON Stylus Photo 720' => 'Needs Testing',
 		'EPSON Stylus Photo 750' => 'Fully Operational',
 		'EPSON Stylus Photo 1200' => 'Fully Operational',
 		'EPSON Stylus Photo 870' => 'Fully Operational',
@@ -36,21 +37,25 @@ $supported_printers = array(
 		'EPSON Stylus Color' => 'Fully Operational',
 		'EPSON Stylus Color Pro' => 'Fully Operational',
 		'EPSON Stylus Color Pro XL' => 'Fully Operational',
-		'EPSON Stylus Color 1500' => 'Fully Operational',
 		'EPSON Stylus Color 400' => 'Fully Operational',
 		'EPSON Stylus Color 440' => 'Fully Operational',
 		'EPSON Stylus Color 460' => 'Needs Testing',
+		'EPSON Stylus Color 480' => 'Needs Testing',
 		'EPSON Stylus Color 500' => 'Fully Operational',
 		'EPSON Stylus Color 600' => 'Fully Operational',
 		'EPSON Stylus Color 640' => 'Fully Operational',
 		'EPSON Stylus Color 660' => 'Fully Operational',
+		'EPSON Stylus Color 670' => 'Fully Operational',
 		'EPSON Stylus Color 740' => 'Fully Operational',
 		'EPSON Stylus Color 760' => 'Fully Operational',
 		'EPSON Stylus Color 800' => 'Fully Operational',
-		'EPSON Stylus Color 850' => 'Needs Testing',
-		'EPSON Stylus Color 860' => 'Needs Testing',
+		'EPSON Stylus Color 850' => 'Fully Operational',
+		'EPSON Stylus Color 860' => 'Fully Operational',
+		'EPSON Stylus Color 880' => 'Testing in Progress',
 		'EPSON Stylus Color 900' => 'Fully Operational',
-		'EPSON Stylus Color 1160' => 'Needs Testing',
+		'EPSON Stylus Color 980' => 'Testing in Progress',
+		'EPSON Stylus Color 1160' => 'Fully Operational',
+		'EPSON Stylus Color 1500' => 'Fully Operational',
 		'EPSON Stylus Color 1520' => 'Fully Operational',
 		'EPSON Stylus Color 3000' => 'Fully Operational'
 		)
@@ -60,10 +65,10 @@ $supported_printers = array(
 		'HP DeskJet 500, 520' => 'Fully Operational',
 		'HP DeskJet 500C, 540C' => 'Fully Operational',
 		'HP DeskJet 550C, 560C' => 'Fully Operational',
-		'HP DeskJet 600 series' => 'Fully Operational',
-		'HP DeskJet 800 series' => 'Fully Operational',
-		'HP DeskJet 1100C, 1120C' => 'Fully Operational',
-		'HP DeskJet 1200C, 1600C' => 'Fully Operational'
+		'HP DeskJet 600 series' => 'Operational',
+		'HP DeskJet 800 series' => 'Operational',
+		'HP DeskJet 1100C, 1120C' => 'Operational',
+		'HP DeskJet 1200C, 1600C' => 'Operational'
 		),
 	'LaserJet' => array(
 		'HP LaserJet II series' => 'Fully Operational',
