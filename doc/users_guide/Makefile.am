@@ -35,6 +35,7 @@ OUTPUTS = \
  html
 
 DISTHOOKDIRS = figures $(HTMLDIR)
+DISTHOOKFILES = $(MANUAL).pdf
 
 CATALOG_FILES = /etc/sgml/catalog
 
@@ -45,7 +46,7 @@ PDF_IMAGES = $(addsuffix .pdf,$(basename $(PNG_IMAGES)))
 
 ## Rules
 
-dist-hook: html
+dist-hook: html pdf
 	for dir in $(DISTHOOKDIRS) ; do \
 	  if test -d $(srcdir)/$$dir ; then \
 	    mkdir $(distdir)/$$dir; \
@@ -58,6 +59,11 @@ dist-hook: html
 	      fi ; \
 	    done \
 	  fi \
+	done
+	for file in $(DISTHOOKFILES) ; do \
+	  if test -f $$file ; then \
+	    cp -p $$file $(distdir) ; \
+	fi ; \
 	done
 
 #
