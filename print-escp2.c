@@ -51,19 +51,30 @@ typedef enum {
   COLOR_CCMMYK
 } colormode_t;
 
+/*
+ * Mapping between color and linear index.  The colors are
+ * black, magenta, cyan, yellow, light magenta, light cyan
+ */
+
+static const int color_indices[16] = { 0, 1, 2, -1,
+				       3, -1, -1, -1,
+				       -1, 4, 5, -1,
+				       -1, -1, -1, -1 };
+static const int colors[6] = { 0, 1, 2, 4, 1, 2 };
+static const int densities[6] = { 0, 0, 0, 0, 1, 1 };
+
 #ifndef WEAVETEST
 
 /*
  * Local functions...
  */
 
-static void escp2_write(FILE *, const unsigned char *, int, int, int, int, int,
-			int, int, int, int);
-static void escp2_write_all(FILE *, const unsigned char *,
-			    const unsigned char *, const unsigned char *,
-			    const unsigned char *, const unsigned char *,
-			    const unsigned char *, int, int, int, int, int,
-			    int, int);
+static void 
+escp2_write_microweave(FILE *, const unsigned char *,
+		       const unsigned char *, const unsigned char *,
+		       const unsigned char *, const unsigned char *,
+		       const unsigned char *, int, int, int, int, int,
+		       int, int);
 static void *initialize_weave(int jets, int separation, int oversample,
 			      int horizontal, int vertical,
 			      colormode_t colormode, int width, int linewidth);
@@ -341,7 +352,7 @@ res_t escp2_reslist[] = {
   { "720 DPI Softweave", 720, 720, 1, 1, 1, 1 },
   { "720 DPI High Quality", 720, 720, 1, 1, 2, 1 },
   { "720 DPI Highest Quality", 720, 720, 1, 1, 4, 1 },
-  { "1440 x 720 DPI Microweave", 1440, 720, 0, 1, 1, 1 },
+  { "1440 x 720 DPI Microweave", 1440, 720, 0, 2, 1, 1 },
   { "1440 x 720 DPI Softweave", 1440, 720, 1, 2, 1, 1 },
   { "1440 x 720 DPI Highest Quality", 1440, 720, 1, 2, 2, 1 },
   { "1440 x 1440 DPI Two-pass", 1440, 1440, 1, 2, 1, 2 },
@@ -1149,8 +1160,9 @@ escp2_print(const printer_t *printer,		/* I - Model */
 			  xdpi, cyan, magenta, yellow, black, lcyan, lmagenta);
       else
 	{
-	  escp2_write_all(prn, black, cyan, magenta, yellow, lcyan, lmagenta,
-			  length, xdpi, ydpi, model, out_width, left, bits);
+	  escp2_write_microweave(prn, black, cyan, magenta, yellow, lcyan,
+				 lmagenta, length, xdpi, ydpi, model,
+				 out_width, left, bits);
 	  fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
 	}
 
@@ -1213,8 +1225,9 @@ escp2_print(const printer_t *printer,		/* I - Model */
 			  xdpi, cyan, magenta, yellow, black, lcyan, lmagenta);
       else
 	{
-	  escp2_write_all(prn, black, cyan, magenta, yellow, lcyan, lmagenta,
-			  length, xdpi, ydpi, model, out_width, left, bits);
+	  escp2_write_microweave(prn, black, cyan, magenta, yellow, lcyan,
+				 lmagenta, length, xdpi, ydpi, model,
+				 out_width, left, bits);
 	  fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
 	}
       errval += errmod;
@@ -1655,70 +1668,29 @@ escp2_pack(const unsigned char *line,
   return active;
 }
 
+static unsigned char microweave_s[6][4][COMPBUFWIDTH];
+static unsigned char *microweave_comp_ptr[6][4];
+static int microweave_setactive[6][4];
 
-static void
-escp2_write_all(FILE          *prn,	/* I - Print file or command */
-		const unsigned char *k,	/* I - Output bitmap data */
-		const unsigned char *c,	/* I - Output bitmap data */
-		const unsigned char *m,	/* I - Output bitmap data */
-		const unsigned char *y,	/* I - Output bitmap data */
-		const unsigned char *lc,	/* I - Output bitmap data */
-		const unsigned char *lm,	/* I - Output bitmap data */
-		int           length,	/* I - Length of bitmap data */
-		int           xdpi,	/* I - Horizontal resolution */
-		int           ydpi,	/* I - Vertical resolution */
-		int           model,	/* I - Printer model */
-		int           width,	/* I - Printed width */
-		int           offset,	/* I - Offset from left side */
-		int	      bits)
+static int
+escp2_do_microweave_pack(const unsigned char *line,
+			 int length,
+			 int oversample,
+			 int bits,
+			 int color)
 {
-  if (k)
-    escp2_write(prn, k, length, 0, 0, xdpi, ydpi, model, width, offset, bits);
-  if (c)
-    escp2_write(prn, c, length, 0, 2, xdpi, ydpi, model, width, offset, bits);
-  if (m)
-    escp2_write(prn, m, length, 0, 1, xdpi, ydpi, model, width, offset, bits);
-  if (y)
-    escp2_write(prn, y, length, 0, 4, xdpi, ydpi, model, width, offset, bits);
-  if (lc)
-    escp2_write(prn, lc, length, 1, 2, xdpi, ydpi, model, width, offset, bits);
-  if (lm)
-    escp2_write(prn, lm, length, 1, 1, xdpi, ydpi, model, width, offset, bits);
-}
-	   
-/*
- * 'escp2_write()' - Send ESC/P2 graphics using TIFF packbits compression.
- */
-
-static void
-escp2_write(FILE          *prn,		/* I - Print file or command */
-	    const unsigned char *line,	/* I - Output bitmap data */
-	    int           length,	/* I - Length of bitmap data */
-	    int	   	  density,      /* I - 0 for dark, 1 for light */
-	    int           plane,	/* I - Which color */
-	    int           xdpi,		/* I - Horizontal resolution */
-	    int           ydpi,		/* I - Vertical resolution */
-	    int           model,	/* I - Printer model */
-	    int           width,	/* I - Printed width */
-	    int           offset,	/* I - Offset from left side */
-	    int	   	  bits)		/* I - bits/pixel */
-{
-  static unsigned char s[4][COMPBUFWIDTH];
-  static unsigned char comp_buf[COMPBUFWIDTH];
   static unsigned char pack_buf[COMPBUFWIDTH];
-  unsigned char *comp_ptr;
+  static unsigned char s[4][COMPBUFWIDTH];
   const unsigned char *in;
-  int setactive = 0;
-  int oversample = 1;
   int i;
-
-  /*
-   * Don't send blank lines...
-   */
-
-  if (line[0] == 0 && memcmp(line, line + 1, (bits * length) - 1) == 0)
-    return;
-
+  int retval = 0;
+  if (!line ||
+      (line[0] == 0 && memcmp(line, line + 1, (bits * length) - 1) == 0))
+    {
+      for (i = 0; i < 4; i++)
+	microweave_setactive[color][i] = 0;
+      return 0;
+    }
   if (bits == 1)
     in = line;
   else
@@ -1726,12 +1698,10 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
       escp2_fold(line, length, pack_buf);
       in = pack_buf;
     }
-  if (xdpi > 720)
-    oversample = xdpi / 720;
   switch (oversample)
     {
     case 1:
-      memcpy(s[0], in, length);
+      memcpy(s[0], in, bits * length);
       break;
     case 2:
       if (bits == 1)
@@ -1746,67 +1716,104 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
 	escp2_unpack_4_2(length, in, s[0], s[1], s[2], s[3]);
       break;
     }
-
-  /*
-   * Set the color
-   */
-
-  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
-    fprintf(prn, "\033(r\002%c%c%c", 0, density, plane);
-  else
-    fprintf(prn, "\033r%c", plane);
-
   for (i = 0; i < oversample; i++)
     {
-      setactive = escp2_pack(s[i], length * bits, comp_buf, &comp_ptr);
-      if (!setactive)
-	continue;
-      /*
-       * Set the print head position.
-       */
+      microweave_setactive[color][i] =
+	escp2_pack(s[i], length * bits, microweave_s[color][i],
+		   &(microweave_comp_ptr[color][i]));
+      retval |= microweave_setactive[color][i];
+    }
+  return retval;
+}
 
-      if (escp2_has_cap(model, MODEL_1440DPI_MASK, MODEL_1440DPI_YES) &&
-	  xdpi > 720)
+static void
+escp2_write_microweave(FILE          *prn,	/* I - Print file or command */
+		       const unsigned char *k,	/* I - Output bitmap data */
+		       const unsigned char *c,	/* I - Output bitmap data */
+		       const unsigned char *m,	/* I - Output bitmap data */
+		       const unsigned char *y,	/* I - Output bitmap data */
+		       const unsigned char *lc,	/* I - Output bitmap data */
+		       const unsigned char *lm,	/* I - Output bitmap data */
+		       int           length,	/* I - Length of bitmap data */
+		       int           xdpi,	/* I - Horizontal resolution */
+		       int           ydpi,	/* I - Vertical resolution */
+		       int           model,	/* I - Printer model */
+		       int           width,	/* I - Printed width */
+		       int           offset,	/* I - Offset from left side */
+		       int	     bits)
+{
+  int i, j;
+  int oversample = 1;
+  int gsetactive = 0;
+  if (xdpi > 720)
+    oversample = xdpi / 720;
+  gsetactive |= escp2_do_microweave_pack(k, length, oversample, bits, 0);
+  gsetactive |= escp2_do_microweave_pack(m, length, oversample, bits, 1);
+  gsetactive |= escp2_do_microweave_pack(c, length, oversample, bits, 2);
+  gsetactive |= escp2_do_microweave_pack(y, length, oversample, bits, 3);
+  gsetactive |= escp2_do_microweave_pack(lm, length, oversample, bits, 4);
+  gsetactive |= escp2_do_microweave_pack(lc, length, oversample, bits, 5);
+  if (!gsetactive)
+    return;
+  for (i = 0; i < oversample; i++)
+    {
+      for (j = 0; j < 6; j++)
 	{
-	  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
-			    MODEL_VARIABLE_4))
-	    fprintf(prn, "\033($%c%c%c%c%c%c", 4, 0,
-		    ((offset * 1440 / ydpi) + i) & 255,
-		    (((offset * 1440 / ydpi) >> 8) + i) & 255,
-		    (((offset * 1440 / ydpi) >> 16) + i) & 255,
-		    (((offset * 1440 / ydpi) >> 24) + i) & 255);
+	  /*
+	   * Set the print head position.
+	   */
+
+	  if (escp2_has_cap(model, MODEL_1440DPI_MASK, MODEL_1440DPI_YES) &&
+	      xdpi > 720)
+	    {
+	      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
+				MODEL_VARIABLE_4))
+		fprintf(prn, "\033($%c%c%c%c%c%c", 4, 0,
+			((offset * 1440 / ydpi) + i) & 255,
+			(((offset * 1440 / ydpi) >> 8) + i) & 255,
+			(((offset * 1440 / ydpi) >> 16) + i) & 255,
+			(((offset * 1440 / ydpi) >> 24) + i) & 255);
+	      else
+		fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
+			((offset * 1440 / ydpi) + i) & 255,
+			((offset * 1440 / ydpi) + i) >> 8);
+	    }
 	  else
-	    fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
-		    ((offset * 1440 / ydpi) + i) & 255,
-		    ((offset * 1440 / ydpi) + i) >> 8);
-	}
-      else
-	fprintf(prn, "\033\\%c%c", offset & 255, offset >> 8);
-
-      /*
-       * Send a line of raster graphics...
-       */
-
-      switch (ydpi)				/* Raster graphics header */
-	{
-	case 180 :
-	  fwrite("\033.\001\024\024\001", 6, 1, prn);
-	  break;
-	case 360 :
-	  fwrite("\033.\001\012\012\001", 6, 1, prn);
-	  break;
-	case 720 :
-	  if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK, MODEL_720DPI_600))
-	    fwrite("\033.\001\050\005\001", 6, 1, prn);
+	    fprintf(prn, "\033\\%c%c", offset & 255, offset >> 8);
+	  if (!microweave_setactive[j][i])
+	    continue;
+	  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+	    fprintf(prn, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
 	  else
-	    fwrite("\033.\001\005\005\001", 6, 1, prn);
-	  break;
-	}
-      putc(width & 255, prn);		/* Width of raster line in pixels */
-      putc(width >> 8, prn);
+	    fprintf(prn, "\033r%c", colors[j]);
+	  /*
+	   * Send a line of raster graphics...
+	   */
 
-      fwrite(comp_buf, comp_ptr - comp_buf, 1, prn);
-      putc('\r', prn);
+	  switch (ydpi)				/* Raster graphics header */
+	    {
+	    case 180 :
+	      fwrite("\033.\001\024\024\001", 6, 1, prn);
+	      break;
+	    case 360 :
+	      fwrite("\033.\001\012\012\001", 6, 1, prn);
+	      break;
+	    case 720 :
+	      if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK,
+				MODEL_720DPI_600))
+		fwrite("\033.\001\050\005\001", 6, 1, prn);
+	      else
+		fwrite("\033.\001\005\005\001", 6, 1, prn);
+	      break;
+	    }
+	  putc(width & 255, prn);	/* Width of raster line in pixels */
+	  putc(width >> 8, prn);
+
+	  fwrite(microweave_s[j][i],
+		 microweave_comp_ptr[j][i] - microweave_s[j][i],
+		 1, prn);
+	  putc('\r', prn);
+	}
     }
 }
 
@@ -2013,18 +2020,6 @@ typedef struct {
   int vertical_oversample;	/* Vertical oversampling */
   int current_vertical_subpass;
 } escp2_softweave_t;
-
-/*
- * Mapping between color and linear index.  The colors are
- * black, magenta, cyan, yellow, light magenta, light cyan
- */
-
-static const int color_indices[16] = { 0, 1, 2, -1,
-				       3, -1, -1, -1,
-				       -1, 4, 5, -1,
-				       -1, -1, -1, -1 };
-static const int colors[6] = { 0, 1, 2, 4, 1, 2 };
-static const int densities[6] = { 0, 0, 0, 0, 1, 1 };
 
 #ifndef WEAVETEST
 static int
@@ -2682,6 +2677,9 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.119  2000/03/27 13:51:09  rlk
+ *   Try again for microweave...
+ *
  *   Revision 1.118  2000/03/27 02:38:23  rlk
  *   Reactivate 1440x720 microweave
  *
