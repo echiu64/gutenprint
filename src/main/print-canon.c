@@ -1187,7 +1187,7 @@ static const double plain_paper_lum_adjustment[49] =
 };  
 
 typedef struct {
-  const char name[65];
+  const char *name;
   int media_code;
   double base_density;
   double k_lower_scale;

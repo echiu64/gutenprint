@@ -486,7 +486,7 @@ static const lexmark_cap_t lexmark_model_capabilities[] =
 {
   /* default settings for unkown models */
 
-  {   -1, 8*72,11*72,180,180,20,20,20,20, LEXMARK_INK_K, LEXMARK_SLOT_ASF1, 0 },
+  {   (Lex_model)-1, 8*72,11*72,180,180,20,20,20,20, LEXMARK_INK_K, LEXMARK_SLOT_ASF1, 0 },
 
   /* tested models */
 
@@ -559,7 +559,7 @@ static const lexmark_cap_t lexmark_model_capabilities[] =
 };
 
 
-static const int model_to_index(int model)
+static int model_to_index(int model)
 {
   int i;
   int models= sizeof(lexmark_model_capabilities) / sizeof(lexmark_cap_t);
@@ -763,7 +763,7 @@ c_strdup(const char *s)
 }
 
 typedef struct {
-  const char name[65];
+  const char *name;
   int hres;
   int vres;
   int softweave;

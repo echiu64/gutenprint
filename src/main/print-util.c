@@ -238,7 +238,7 @@ stp_allocate_vars(void)
 {
   void *retval = stp_malloc(sizeof(stp_internal_vars_t));
   memset(retval, 0, sizeof(stp_internal_vars_t));
-  stp_copy_vars(retval, (const stp_vars_t) &default_vars);
+  stp_copy_vars(retval, (stp_vars_t)&default_vars);
   return (retval);
 }
 
@@ -601,13 +601,13 @@ stp_option_count(const stp_vars_t vd)
   return i;
 }
 
-const stp_option_t
+stp_option_t
 stp_get_option_by_name(const stp_vars_t v, const char *name)
 {
   return stp_get_option_by_name_internal(v, name);
 }
 
-const stp_option_t
+stp_option_t
 stp_get_option_by_index(const stp_vars_t vd, size_t index)
 {
   const stp_internal_vars_t *v = (const stp_internal_vars_t *) vd;
@@ -659,7 +659,7 @@ stp_clear_all_options(stp_vars_t vd)
  * Sizes are converted to 1/72in, then rounded down so that we don't
  * print off the edge of the paper.
  */
-static const stp_internal_papersize_t paper_sizes[] =
+static stp_internal_papersize_t paper_sizes[] =
 {
   /* Common imperial page sizes */
   { N_ ("Letter"),   612,  792, 0, 0, 0, 0, PAPERSIZE_ENGLISH },	/* 8.5in x 11in */
@@ -907,7 +907,7 @@ stp_papersize_get_unit(const stp_papersize_t pt)
  * This is, of course, blatantly thread-unsafe.  However, it certainly
  * speeds up genppd by a lot!
  */
-const stp_papersize_t
+stp_papersize_t
 stp_get_papersize_by_name(const char *name)
 {
   static int last_used_papersize = 0;
@@ -927,27 +927,27 @@ stp_get_papersize_by_name(const char *name)
   return NULL;
 }
 #else
-const stp_papersize_t
+stp_papersize_t
 stp_get_papersize_by_name(const char *name)
 {
   const stp_internal_papersize_t *val = &(paper_sizes[0]);
   while (strlen(val->name) > 0)
     {
       if (!strcmp(_(val->name), name))
-	return (const stp_papersize_t) val;
+	return (stp_papersize_t) val;
       val++;
     }
   return NULL;
 }
 #endif
 
-const stp_papersize_t
+stp_papersize_t
 stp_get_papersize_by_index(int index)
 {
   if (index < 0 || index >= stp_known_papersizes())
     return NULL;
   else
-    return (const stp_papersize_t) &(paper_sizes[index]);
+    return (stp_papersize_t) &(paper_sizes[index]);
 }
 
 #define IABS(a) ((a) > 0 ? a : -(a))
@@ -960,7 +960,7 @@ paper_size_mismatch(int l, int w, const stp_internal_papersize_t *val)
   return hdiff + vdiff;
 }
 
-const stp_papersize_t
+stp_papersize_t
 stp_get_papersize_by_size(int l, int w)
 {
   int score = INT_MAX;
@@ -971,7 +971,7 @@ stp_get_papersize_by_size(int l, int w)
   for (i = 0; i < sizes; i++)
     {
       if (val->width == w && val->height == l)
-	return (const stp_papersize_t) val;
+	return (stp_papersize_t) val;
       else
 	{
 	  int myscore = paper_size_mismatch(l, w, val);
@@ -983,7 +983,7 @@ stp_get_papersize_by_size(int l, int w)
 	}
       val++;
     }
-  return (const stp_papersize_t) ref;
+  return (stp_papersize_t) ref;
 }
 
 void
@@ -1030,15 +1030,15 @@ stp_known_printers(void)
   return printer_count;
 }
 
-const stp_printer_t
+stp_printer_t
 stp_get_printer_by_index(int idx)
 {
   if (idx < 0 || idx >= printer_count)
     return NULL;
-  return (const stp_printer_t) &(printers[idx]);
+  return (stp_printer_t) &(printers[idx]);
 }
 
-const stp_printer_t
+stp_printer_t
 stp_get_printer_by_long_name(const char *long_name)
 {
   const stp_internal_printer_t *val = &(printers[0]);
@@ -1046,13 +1046,13 @@ stp_get_printer_by_long_name(const char *long_name)
   for (i = 0; i < stp_known_printers(); i++)
     {
       if (!strcmp(val->long_name, long_name))
-	return (const stp_printer_t) val;
+	return (stp_printer_t) val;
       val++;
     }
   return NULL;
 }
 
-const stp_printer_t
+stp_printer_t
 stp_get_printer_by_driver(const char *driver)
 {
   const stp_internal_printer_t *val = &(printers[0]);
@@ -1060,7 +1060,7 @@ stp_get_printer_by_driver(const char *driver)
   for (i = 0; i < stp_known_printers(); i++)
     {
       if (!strcmp(val->driver, driver))
-	return (const stp_printer_t) val;
+	return (stp_printer_t) val;
       val++;
     }
   return NULL;
@@ -1108,11 +1108,11 @@ stp_printer_get_printfuncs(const stp_printer_t p)
   return val->printfuncs;
 }
 
-const stp_vars_t
+stp_vars_t
 stp_printer_get_printvars(const stp_printer_t p)
 {
   const stp_internal_printer_t *val = (const stp_internal_printer_t *) p;
-  return (const stp_vars_t) &(val->printvars);
+  return (stp_vars_t) &(val->printvars);
 }
 
 const char *
@@ -1380,30 +1380,26 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
   return 0;
 }
 
-const stp_vars_t
+stp_vars_t
 stp_default_settings()
 {
   return (stp_vars_t) &default_vars;
 }
 
-const stp_vars_t
+stp_vars_t
 stp_maximum_settings()
 {
   return (stp_vars_t) &max_vars;
 }
 
-const stp_vars_t
+stp_vars_t
 stp_minimum_settings()
 {
   return (stp_vars_t) &min_vars;
 }
 
 #if defined DISABLE_NLS || !defined HAVE_VASPRINTF
-#if __STDC__
-# include <stdarg.h>
-#else
-# include <varargs.h>
-#endif
+#include <stdarg.h>
 
 static int vasprintf (char **result, const char *format, va_list args);
 static int int_vasprintf (char **result, const char *format, va_list *args);
