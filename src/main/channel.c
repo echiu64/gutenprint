@@ -45,8 +45,8 @@ typedef struct
   double value;
   double lower;
   double upper;
-  double density;
   double cutoff;
+  unsigned short s_density;
 } stpi_subchannel_t;
 
 typedef struct
@@ -174,7 +174,7 @@ stpi_channel_add(stp_vars_t v, unsigned channel, unsigned subchannel,
 	chan->subchannel_count = subchannel + 1;
     }
   chan->sc[subchannel].value = value;
-  chan->sc[subchannel].density = 1.0;
+  chan->sc[subchannel].s_density = 65535;
   chan->sc[subchannel].cutoff = 0.75;
 }
 
@@ -186,8 +186,8 @@ stpi_channel_set_density_adjustment(stp_vars_t v, int color, int subchannel,
   stpi_dprintf(STPI_DBG_INK, v,
 	       "channel_density channel %d subchannel %d adjustment %f\n",
 	       color, subchannel, adjustment);
-  if (sch && adjustment >= 0)
-    sch->density = adjustment;
+  if (sch && adjustment >= 0 && adjustment <= 1)
+    sch->s_density = adjustment * 65535;
 }
 
 void
@@ -312,7 +312,7 @@ stpi_channel_initialize(stp_vars_t v, stp_image_t *image,
 	}     
       cg->total_channels += c->subchannel_count;
       for (j = 0; j < c->subchannel_count; j++)
-	cg->max_density += 65535 * c->sc[j].density;
+	cg->max_density += c->sc[j].s_density;
     }
   cg->input_channels = input_channel_count;
   cg->width = width;
@@ -337,21 +337,33 @@ clear_channel(unsigned short *data, unsigned width, unsigned depth)
 
 static int
 scale_channel(unsigned short *data, unsigned width, unsigned depth,
-	      double density)
+	      unsigned short density)
 {
   int i;
   int retval = 0;
+  unsigned short previous_data = 0;
+  unsigned short previous_value = 0;
+  if (density > 65535)
+    density = 65535;
   width *= depth;
   for (i = 0; i < width; i += depth)
     {
-      int tval = 0.5 + (data[i] * density);
-      if (tval > 65535)
-	tval = 65535;
-      else if (tval < 0)
-	tval = 0;
-      if (tval)
-	retval = 1;
-      data[i] = (unsigned short) tval;
+      if (data[i] == previous_data)
+	data[i] = previous_value;
+      else if (data[i] == (unsigned short) 65535)
+	{
+	  data[i] = density;
+	  retval = 1;
+	}
+      else if (data[i] > 0)
+	{
+	  unsigned short tval = (32767u + data[i] * density) / 65535u;
+	  previous_data = data[i];
+	  if (tval)
+	    retval = 1;
+	  previous_value = (unsigned short) tval;
+	  data[i] = (unsigned short) tval;
+	}
     }
   return retval;
 }
@@ -408,6 +420,15 @@ limit_ink(stp_const_vars_t v)
   return retval;
 }
 
+static inline int
+mem_eq(const unsigned short *i1, const unsigned short *i2, int count)
+{
+  int i;
+  for (i = 0; i < count; i++)
+    if (i1[i] != i2[i])
+      return 0;
+  return 1;
+}
 
 void
 stpi_channel_convert(stp_const_vars_t v, unsigned *zero_mask)
@@ -415,95 +436,137 @@ stpi_channel_convert(stp_const_vars_t v, unsigned *zero_mask)
   stpi_channel_group_t *cg =
     ((stpi_channel_group_t *) stpi_get_component_data(v, "Channel"));
   int i, j, k;
-  int physical_channel;
   int nz[STP_CHANNEL_LIMIT];
+  int outbytes = cg->total_channels * sizeof(unsigned short);
+  const unsigned short *input_cache = NULL;
+  const unsigned short *output_cache = NULL;
   unsigned black_value = 0;
   unsigned l_val = 0;
   unsigned i_val = 0;
   unsigned o_val = 0;
   unsigned offset = 0;
   unsigned virtual_black = 0;
+  memset(nz, 0, sizeof(nz));
   if (input_needs_splitting(v))
     {
       const unsigned short *input = cg->input_data;
       unsigned short *output = cg->data;
+      const unsigned short *o_output;
       for (i = 0; i < cg->width; i++)
 	{
 	  int zero_ptr = 0;
-	  black_value = 0;
-	  if (cg->black_channel >= 0)
-	    black_value = input[cg->black_channel];
-	  virtual_black = 65535;
-	  for (j = 0; j < cg->channel_count; j++)
+	  if (input_cache && mem_eq(input_cache, input, cg->input_channels))
 	    {
-	      if (input[j] < virtual_black && j != cg->black_channel)
-		virtual_black = input[j];
+	      memcpy(output, output_cache, outbytes);
+	      input += cg->input_channels;
+	      output += cg->total_channels;
 	    }
-	  black_value += virtual_black / 4;
-	  for (j = 0; j < cg->channel_count; j++)
+	  else
 	    {
-	      stpi_channel_t *c = &(cg->c[j]);
-	      int s_count = c->subchannel_count;
-	      if (s_count >= 1)
+	      input_cache = input;
+	      black_value = 0;
+	      o_output = output;
+	      if (cg->black_channel >= 0)
+		black_value = input[cg->black_channel];
+	      virtual_black = 65535;
+	      for (j = 0; j < cg->channel_count; j++)
 		{
-		  i_val = *input++;
-		  if (s_count == 1)
-		    nz[zero_ptr++] |= *(output++) = i_val;
-		  else
+		  if (input[j] < virtual_black && j != cg->black_channel)
+		    virtual_black = input[j];
+		}
+	      black_value += virtual_black / 4;
+	      for (j = 0; j < cg->channel_count; j++)
+		{
+		  stpi_channel_t *c = &(cg->c[j]);
+		  int s_count = c->subchannel_count;
+		  if (s_count >= 1)
 		    {
-		      l_val = i_val;
-		      if (i_val > 0 && black_value && j != cg->black_channel)
+		      i_val = *input++;
+		      if (i_val == 0)
 			{
-			  l_val += black_value;
-			  if (l_val > 65535)
-			    l_val = 65535;
+			  for (k = 0; k < s_count; k++)
+			    *(output++) = 0;
 			}
-		      offset = l_val * s_count;
-		      for (k = 0; k < s_count; k++)
+		      else if (s_count == 1)
 			{
-			  o_val = c->lut[offset + k];
-			  if (i_val != l_val)
-			    o_val = o_val * (double) i_val / (double) l_val;
-			  *output++ = o_val;
-			  nz[zero_ptr++] |= o_val;
+			  if (c->sc[0].s_density < 65535)
+			    i_val = i_val * c->sc[0].s_density / 65535;
+			  nz[zero_ptr++] |= *(output++) = i_val;
+			}
+		      else
+			{
+			  l_val = i_val;
+			  if (i_val > 0 && black_value &&
+			      j != cg->black_channel)
+			    {
+			      l_val += black_value;
+			      if (l_val > 65535)
+				l_val = 65535;
+			    }
+			  offset = l_val * s_count;
+			  for (k = 0; k < s_count; k++)
+			    {
+			      if (c->sc[k].s_density > 0)
+				{
+				  o_val = c->lut[offset + k];
+				  if (i_val != l_val)
+				    o_val = o_val * i_val / l_val;
+				  if (c->sc[k].s_density < 65535)
+				    o_val = o_val * c->sc[k].s_density / 65535;
+				}
+			      else
+				o_val = 0;
+			      *output++ = o_val;
+			      nz[zero_ptr++] |= o_val;
+			    }
 			}
 		    }
 		}
+	      output_cache = o_output;
 	    }
 	}
+      if (zero_mask)
+	{
+	  for (i = 0; i < cg->total_channels; i++)
+	    if (!nz[i])
+	      *zero_mask |= 1 << i;
+	}
     }
-  if (zero_mask)
-    *zero_mask = 0;
-  physical_channel = 0;
-  for (i = 0; i < cg->channel_count; i++)
+  else
     {
-      stpi_channel_t *ch = &(cg->c[i]);
-      if (ch->subchannel_count > 0)
-	for (j = 0; j < ch->subchannel_count; j++)
-	  {
-	    stpi_subchannel_t *sch = &(ch->sc[j]);
-	    double density = sch->density;
-	    unsigned short *output = cg->data + physical_channel;
-	    if (density == 0.0)
+      int physical_channel = 0;
+      if (zero_mask)
+	*zero_mask = 0;
+      for (i = 0; i < cg->channel_count; i++)
+	{
+	  stpi_channel_t *ch = &(cg->c[i]);
+	  if (ch->subchannel_count > 0)
+	    for (j = 0; j < ch->subchannel_count; j++)
 	      {
-		clear_channel(output, cg->width, cg->total_channels);
-		if (zero_mask)
-		  *zero_mask |= 1 << physical_channel;
+		stpi_subchannel_t *sch = &(ch->sc[j]);
+		unsigned density = sch->s_density;
+		unsigned short *output = cg->data + physical_channel;
+		if (density == 0)
+		  {
+		    clear_channel(output, cg->width, cg->total_channels);
+		    if (zero_mask)
+		      *zero_mask |= 1 << physical_channel;
+		  }
+		else if (density != 65535)
+		  {
+		    if (scale_channel(output, cg->width, cg->total_channels,
+				      density) == 0)
+		      if (zero_mask)
+			*zero_mask |= 1 << physical_channel;
+		  }
+		else if (zero_mask)
+		  {
+		    if (scan_channel(output, cg->width, cg->total_channels) == 0)
+		      *zero_mask |= 1 << physical_channel;
+		  }
+		physical_channel++;
 	      }
-	    else if (density != 1)
-	      {
-		if (scale_channel(output, cg->width, cg->total_channels,
-				  density) == 0)
-		  *zero_mask |= 1 << physical_channel;
-	      }
-	    else
-	      {
-		if (scan_channel(output, cg->width, cg->total_channels) == 0)
-		  *zero_mask |= 1 << physical_channel;
-	      }
-	      
-	    physical_channel++;
-	  }
+	}
     }
   (void) limit_ink(v);
 }
