@@ -36,7 +36,6 @@
 #include "module.h"
 
 
-static void stpi_color_freefunc(void *item);
 static const char* stpi_color_namefunc(const void *item);
 static const char* stpi_color_long_namefunc(const void *item);
 
