@@ -94,7 +94,7 @@ dnl Specify a configuration file.
 AM_CONFIG_HEADER(config.h)
 
 dnl Available languages (translations)
-ALL_LINGUAS="en_GB sv no fr da pl sk"
+ALL_LINGUAS="en_GB sv no fr da pl sk el"
 AC_SUBST(ALL_LINGUAS)
 
 dnl Compiler options and definitions

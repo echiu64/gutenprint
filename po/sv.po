@@ -1,6 +1,6 @@
 # Swedish messages for gimp-print.
-# Copyright (C) 2001 Free Software Foundation, Inc.
-# Christian Rose <menthos@menthos.com>, 2001.
+# Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+# Christian Rose <menthos@menthos.com>, 2001, 2002.
 #
 # $Id$
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
 "POT-Creation-Date: 2002-02-15 21:03-0500\n"
-"PO-Revision-Date: 2001-10-21 16:32+0200\n"
+"PO-Revision-Date: 2002-02-16 03:18+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1313,39 +1313,38 @@ msgstr "44 tum rullpapper"
 #: src/main/print-util.c:1263 src/main/print-util.c:1272
 #, c-format
 msgid "%s is not a valid parameter of type %s\n"
-msgstr ""
+msgstr "%s är inte en giltig parameter av typen %s\n"
 
 #: src/main/print-util.c:1288
 #, c-format
 msgid "%s out of range (value %f, min %f, max %f)\n"
-msgstr ""
+msgstr "%s är utanför intervallet (värde %f, min %f, max %f)\n"
 
 #: src/main/print-util.c:1303
 #, c-format
 msgid "%s out of range (value %d, min %d, max %d)\n"
-msgstr ""
+msgstr "%s är utanför intervallet (värde %d, min %d, max %d)\n"
 
 #: src/main/print-util.c:1329
-#, fuzzy
 msgid "Printer does not support color output\n"
-msgstr "Skrivaren %s kräver inte justering av färgutskriftshuvudet.\n"
+msgstr "Skrivaren stöder inte färgutskrift\n"
 
 #: src/main/print-util.c:1347
 msgid "Image size is not valid\n"
-msgstr ""
+msgstr "Bildstorleken är inte giltig\n"
 
 #: src/main/print-util.c:1354
 msgid "Top margin must not be less than zero\n"
-msgstr ""
+msgstr "Övre marginalen får inte vara negativ\n"
 
 #: src/main/print-util.c:1360
 msgid "Left margin must not be less than zero\n"
-msgstr ""
+msgstr "Vänstermarginalen får inte vara negativ\n"
 
 #: src/main/print-util.c:1417
 #, c-format
 msgid "%s is not a valid dither algorithm\n"
-msgstr ""
+msgstr "%s är inte en giltig färgutjämningsalgoritm\n"
 
 # gzprintf(fp, "*LanguageVersion: %s\n", _("English"));
 #
@@ -3164,74 +3163,89 @@ msgstr "Fil"
 #: src/ghost/ijsgimpprint.c:135
 #, c-format
 msgid "Bad color space: bps %d channels %d space %s\n"
-msgstr ""
+msgstr "Felaktigt färgutrymme: bps %d kanaler %d utrymme %s\n"
 
 #: src/ghost/ijsgimpprint.c:143
 msgid "No row buffer\n"
-msgstr ""
+msgstr "Ingen radbuffert\n"
 
 #: src/ghost/ijsgimpprint.c:172
 #, c-format
 msgid "Parameter %s out of range (value %f, min %f, max %f)\n"
-msgstr ""
+msgstr "Parametern %s är utanför intervallet (värde %f, min %f, max %f)\n"
 
 #: src/ghost/ijsgimpprint.c:176 src/ghost/ijsgimpprint.c:198
 #, c-format
 msgid "Unable to parse parameter %s=%s (expect a number)\n"
-msgstr ""
+msgstr "Kan inte tolka parametern %s=%s (ett tal förväntas)\n"
 
 #: src/ghost/ijsgimpprint.c:194
 #, c-format
 msgid "Parameter %s out of range (value %d, min %d, max %d)\n"
-msgstr ""
+msgstr "Parametern %s är utanför intervallet (värde %d, min %d, max %d)\n"
 
 #: src/ghost/ijsgimpprint.c:336
 msgid "Printer must be specified with -sModel\n"
-msgstr ""
+msgstr "Skrivaren måste anges med -sModel\n"
 
 #: src/ghost/ijsgimpprint.c:338
-#, fuzzy, c-format
+#, c-format
 msgid "Printer %s is not a known model\n"
-msgstr "Skrivarmodellen %s är okänd.\n"
+msgstr "Skrivaren %s är inte en känd modell\n"
 
 #: src/ghost/ijsgimpprint.c:557
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown option %s\n"
-msgstr "Okänd flagga %c\n"
+msgstr "Okänd flagga %s\n"
 
 #: src/ghost/ijsgimpprint.c:704
 #, c-format
 msgid "%.0f of %.0f\n"
-msgstr ""
+msgstr "%.0f av %.0f\n"
 
 #: src/ghost/ijsgimpprint.c:816
 #, c-format
 msgid "image_init failed %d\n"
-msgstr ""
+msgstr "image_init misslyckades %d\n"
 
 #: src/ghost/ijsgimpprint.c:827
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
-msgstr ""
+msgstr "Kan inte öppna fildeskriptor: %s\n"
 
 #: src/ghost/ijsgimpprint.c:839
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to open %s: %s\n"
-msgstr "Kan inte öppna enheten %s: %s\n"
+msgstr "Kan inte öppna %s: %s\n"
 
 #: src/ghost/ijsgimpprint.c:851
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown printer %s\n"
-msgstr "Okänd flagga %c\n"
+msgstr "Okänd skrivare %s\n"
 
 #: src/ghost/ijsgimpprint.c:882
 msgid "Bad parameters; cannot continue!\n"
-msgstr ""
+msgstr "Felaktiga parametrar; kan inte fortsätta!\n"
 
 #: src/ghost/ijsgimpprint.c:892
 #, c-format
 msgid "Get next row failed at %d\n"
-msgstr ""
+msgstr "Hämtande av nästa rad misslyckades vid %d\n"
+
+#~ msgid "%s is not a valid %s\n"
+#~ msgstr "%s är inte en giltig %s\n"
+
+#~ msgid "%s is not a valid page size\n"
+#~ msgstr "%s är inte en giltig pappersstorlek\n"
+
+#~ msgid "%s is not a valid media source\n"
+#~ msgstr "%s är inte en giltig mediakälla\n"
+
+#~ msgid "%s is not a valid resolution\n"
+#~ msgstr "%s är inte en giltig upplösning\n"
+
+#~ msgid "%s is not a valid ink type\n"
+#~ msgstr "%s är inte en giltig bläcktyp\n"
 
 #~ msgid "flsa"
 #~ msgstr "flsa"

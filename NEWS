@@ -36,7 +36,7 @@ Gimp-Print 4.2.0:
      6.53 and 7.04.  This driver may be used with both GNU and AFPL
      Ghostscript.
 
-  6) A Slovak translation is now provided.
+  6) New Slovak and Greek translations are provided.
 
   7) Stylus Pro printers can now print to letter size (and smaller)
      paper.  In 4.2.0 the driver did not allow printing smaller than
