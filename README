@@ -71,8 +71,8 @@ make
 make install
 /etc/software/init.d/cups restart
 
-The last command varies with OS.  It may be /etc/init.d/cups,
-/etc/rc.d/cups, or even /etc/rc.d/init.d/cups.
+The last command varies with your operating system.  It is typically
+/etc/init.d/cups, /etc/rc.d/cups, or even /etc/rc.d/init.d/cups.
 
 Following this, you must reinstall any printers that you are using
 Gimp-Print PPD's with.  Such printers may be identified in any CUPS
@@ -86,9 +86,16 @@ of Gimp-Print that you are installing, you must use Modify Printer to
 force the new PPD file to get installed.  Failure to do so may lead to
 incorrect output and/or other errors.
 
+You may also have problems if you have a .lpoptions file that has old
+options set.  If you have problems printing, please remove any
+existing .lpoptions file in your home directory and try printing
+again.
+
 If you do not wish to build the Gimp Print plugin, you must run
 
 ./configure --with-cups --without-gimp
+
+You may also use CUPS with Foomatic.
 
 
 FOOMATIC

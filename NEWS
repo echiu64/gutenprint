@@ -38,10 +38,11 @@ Gimp-Print 4.1.99a2 contains the following changes over 4.1.99a1:
    dynamically.
 
 7) The native CUPS driver now supports all options supported by the
-   package, including color adjustments.  Also, the default output
-   type for this driver is now Line Art rather than Photograph.  This
-   will yield significantly better performance, and is in accord with
-   the rest of the package.
+   package, including color adjustments, in addition to direct CMYK
+   output, which is also new.  Also, the default output type for this
+   driver is now Line Art rather than Photograph.  This will yield
+   significantly better performance, and is in accord with the rest of
+   the package.
 
 8) The Foomatic data has been updated for the current state of the
    driver.  In addition, there are some improvements in the data
