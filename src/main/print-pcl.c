@@ -40,8 +40,8 @@
 /*
  * Local functions...
  */
-static void	pcl_mode0(FILE *, unsigned char *, int, int);
-static void	pcl_mode2(FILE *, unsigned char *, int, int);
+static void	pcl_mode0(const stp_vars_t *, unsigned char *, int, int);
+static void	pcl_mode2(const stp_vars_t *, unsigned char *, int, int);
 
 /*
  * Generic define for a name/value set
@@ -1572,7 +1572,6 @@ pcl_limit(const stp_printer_t *printer,	/* I - Printer model */
 
 static void
 pcl_print(const stp_printer_t *printer,		/* I - Model */
-          FILE      *prn,		/* I - File to print to */
           stp_image_t *image,		/* I - Image to print */
 	  const stp_vars_t    *v)
 {
@@ -1614,7 +1613,7 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
   stp_convert_t	colorfunc;	/* Color conversion function... */
-  void		(*writefunc)(FILE *, unsigned char *, int, int);
+  void		(*writefunc)(const stp_vars_t *, unsigned char *, int, int);
 				/* PCL output function */
   int           image_height,
                 image_width,
@@ -1735,12 +1734,12 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
 
   if (do_cretb)
     {
-      fputs("\033*rbC", prn);	/* End raster graphics */
+      stp_puts("\033*rbC", v);	/* End raster graphics */
     }
-  fputs("\033E", prn); 				/* PCL reset */
+  stp_puts("\033E", v); 				/* PCL reset */
   if (do_cretb)
     {
-      fprintf(prn, "\033%%-12345X@PJL ENTER LANGUAGE=PCL3GUI\n");
+      stp_zprintf(v, "\033%%-12345X@PJL ENTER LANGUAGE=PCL3GUI\n");
     }
 
  /*
@@ -1773,10 +1772,10 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
     pcl_media_size = PCL_PAPERSIZE_CUSTOM;			/* Custom */
   }
 
-  fprintf(prn, "\033&l%dA", pcl_media_size);
+  stp_zprintf(v, "\033&l%dA", pcl_media_size);
 
-  fputs("\033&l0L", prn);			/* Turn off perforation skip */
-  fputs("\033&l0E", prn);			/* Reset top margin to 0 */
+  stp_puts("\033&l0L", v);			/* Turn off perforation skip */
+  stp_puts("\033&l0E", v);			/* Reset top margin to 0 */
 
  /*
   * Convert media source string to the code, if specified.
@@ -1798,7 +1797,7 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
 /* Correct the value by taking the modulus */
 
       pcl_media_source = pcl_media_source % PAPERSOURCE_MOD;
-      fprintf(prn, "\033&l%dH", pcl_media_source);
+      stp_zprintf(v, "\033&l%dH", pcl_media_source);
     }
   }
 
@@ -1831,28 +1830,28 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
   {
     if ((caps.stp_printer_type & PCL_PRINTER_MEDIATYPE) == PCL_PRINTER_MEDIATYPE)
     {
-      fputs("\033*o1M", prn);			/* Quality = presentation */
-      fprintf(prn, "\033&l%dM", pcl_media_type);
+      stp_puts("\033*o1M", v);			/* Quality = presentation */
+      stp_zprintf(v, "\033&l%dM", pcl_media_type);
     }
     else
     {
-      fputs("\033*r2Q", prn);			/* Quality (high) */
-      fputs("\033*o2Q", prn);			/* Shingling (4 passes) */
+      stp_puts("\033*r2Q", v);			/* Quality (high) */
+      stp_puts("\033*o2Q", v);			/* Shingling (4 passes) */
 
  /* Depletion depends on media type and cart type. */
 
       if ((pcl_media_type == PCL_PAPERTYPE_PLAIN)
 	|| (pcl_media_type == PCL_PAPERTYPE_BOND)) {
       if ((caps.color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
-          fputs("\033*o2D", prn);			/* Depletion 25% */
+          stp_puts("\033*o2D", v);			/* Depletion 25% */
         else
-          fputs("\033*o5D", prn);			/* Depletion 50% with gamma correction */
+          stp_puts("\033*o5D", v);			/* Depletion 50% with gamma correction */
       }
 
       else if ((pcl_media_type == PCL_PAPERTYPE_PREMIUM)
              || (pcl_media_type == PCL_PAPERTYPE_GLOSSY)
              || (pcl_media_type == PCL_PAPERTYPE_TRANS))
-        fputs("\033*o1D", prn);			/* Depletion none */
+        stp_puts("\033*o1D", v);			/* Depletion none */
     }
   }
 
@@ -1876,84 +1875,84 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
     else
       planes = 1;
 
-    fprintf(prn, "\033*g%dW", 2 + (planes * 6));
-    putc(2, prn);				/* Format 2 (Complex Direct Planar) */
-    putc(planes, prn);				/* # output planes */
+    stp_zprintf(v, "\033*g%dW", 2 + (planes * 6));
+    stp_putc(2, v);				/* Format 2 (Complex Direct Planar) */
+    stp_putc(planes, v);				/* # output planes */
 
     if (planes != 3) {
-      putc(xdpi >> 8, prn);			/* Black resolution */
-      putc(xdpi, prn);
-      putc(ydpi >> 8, prn);
-      putc(ydpi, prn);
-      putc(0, prn);
+      stp_putc(xdpi >> 8, v);			/* Black resolution */
+      stp_putc(xdpi, v);
+      stp_putc(ydpi >> 8, v);
+      stp_putc(ydpi, v);
+      stp_putc(0, v);
       if (do_cretb){
-	putc(2, prn);
+	stp_putc(2, v);
       }else{
-	putc(do_cret ? 4 : 2, prn);
+	stp_putc(do_cret ? 4 : 2, v);
       }
     }
 
     if (planes != 1) {
-      putc(xdpi >> 8, prn);			/* Cyan resolution */
-      putc(xdpi, prn);
-      putc(ydpi >> 8, prn);
-      putc(ydpi, prn);
-      putc(0, prn);
-      putc(do_cret ? 4 : 2, prn);
+      stp_putc(xdpi >> 8, v);			/* Cyan resolution */
+      stp_putc(xdpi, v);
+      stp_putc(ydpi >> 8, v);
+      stp_putc(ydpi, v);
+      stp_putc(0, v);
+      stp_putc(do_cret ? 4 : 2, v);
 
-      putc(xdpi >> 8, prn);			/* Magenta resolution */
-      putc(xdpi, prn);
-      putc(ydpi >> 8, prn);
-      putc(ydpi, prn);
-      putc(0, prn);
-      putc(do_cret ? 4 : 2, prn);
+      stp_putc(xdpi >> 8, v);			/* Magenta resolution */
+      stp_putc(xdpi, v);
+      stp_putc(ydpi >> 8, v);
+      stp_putc(ydpi, v);
+      stp_putc(0, v);
+      stp_putc(do_cret ? 4 : 2, v);
 
-      putc(xdpi >> 8, prn);			/* Yellow resolution */
-      putc(xdpi, prn);
-      putc(ydpi >> 8, prn);
-      putc(ydpi, prn);
-      putc(0, prn);
-      putc(do_cret ? 4 : 2, prn);
+      stp_putc(xdpi >> 8, v);			/* Yellow resolution */
+      stp_putc(xdpi, v);
+      stp_putc(ydpi >> 8, v);
+      stp_putc(ydpi, v);
+      stp_putc(0, v);
+      stp_putc(do_cret ? 4 : 2, v);
     }
     if (planes == 6)
     {
-      putc(xdpi >> 8, prn);			/* Light Cyan resolution */
-      putc(xdpi, prn);
-      putc(ydpi >> 8, prn);
-      putc(ydpi, prn);
-      putc(0, prn);
-      putc(do_cret ? 4 : 2, prn);
+      stp_putc(xdpi >> 8, v);			/* Light Cyan resolution */
+      stp_putc(xdpi, v);
+      stp_putc(ydpi >> 8, v);
+      stp_putc(ydpi, v);
+      stp_putc(0, v);
+      stp_putc(do_cret ? 4 : 2, v);
 
-      putc(xdpi >> 8, prn);			/* Light Magenta resolution */
-      putc(xdpi, prn);
-      putc(ydpi >> 8, prn);
-      putc(ydpi, prn);
-      putc(0, prn);
-      putc(do_cret ? 4 : 2, prn);
+      stp_putc(xdpi >> 8, v);			/* Light Magenta resolution */
+      stp_putc(xdpi, v);
+      stp_putc(ydpi >> 8, v);
+      stp_putc(ydpi, v);
+      stp_putc(0, v);
+      stp_putc(do_cret ? 4 : 2, v);
     }
   }
   else
   {
-    fprintf(prn, "\033*t%dR", xdpi);		/* Simple resolution */
+    stp_zprintf(v, "\033*t%dR", xdpi);		/* Simple resolution */
     if (output_type != OUTPUT_GRAY)
     {
       if ((caps.color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
-        fputs("\033*r-3U", prn);		/* Simple CMY color */
+        stp_puts("\033*r-3U", v);		/* Simple CMY color */
       else
-        fputs("\033*r-4U", prn);		/* Simple KCMY color */
+        stp_puts("\033*r-4U", v);		/* Simple KCMY color */
     }
   }
 
 #ifndef PCL_DEBUG_DISABLE_COMPRESSION
   if ((caps.stp_printer_type & PCL_STP_PRINTER_TIFF) == PCL_STP_PRINTER_TIFF)
   {
-    fputs("\033*b2M", prn);			/* Mode 2 (TIFF) */
+    stp_puts("\033*b2M", v);			/* Mode 2 (TIFF) */
     writefunc = pcl_mode2;
   }
   else
 #endif
   {
-    fputs("\033*b0M", prn);			/* Mode 0 (no compression) */
+    stp_puts("\033*b0M", v);			/* Mode 0 (no compression) */
     writefunc = pcl_mode0;
   }
 
@@ -1970,20 +1969,20 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
 #endif
 
   if (!do_cretb) {
-    fprintf(prn, "\033&a%dH", 10 * left);		/* Set left raster position */
-    fprintf(prn, "\033&a%dV", 10 * (top + caps.top_margin));
+    stp_zprintf(v, "\033&a%dH", 10 * left);		/* Set left raster position */
+    stp_zprintf(v, "\033&a%dV", 10 * (top + caps.top_margin));
 				/* Set top raster position */
   }
-  fprintf(prn, "\033*r%dS", out_width);		/* Set raster width */
-  fprintf(prn, "\033*r%dT", out_height);	/* Set raster height */
+  stp_zprintf(v, "\033*r%dS", out_width);		/* Set raster width */
+  stp_zprintf(v, "\033*r%dT", out_height);	/* Set raster height */
 
   if (do_cretb)
     {
       /* Move to top left of printed area */
-      fprintf(prn, "\033*p%dY", (top + caps.top_margin)*4); /* Mesuret in dots. */
-      fprintf(prn, "\033*p%dX", left*4);
+      stp_zprintf(v, "\033*p%dY", (top + caps.top_margin)*4); /* Mesuret in dots. */
+      stp_zprintf(v, "\033*p%dX", left*4);
     }
-  fputs("\033*r1A", prn); 			/* Start GFX */
+  stp_puts("\033*r1A", v); 			/* Start GFX */
 
  /*
   * Allocate memory for the raster data...
@@ -2128,8 +2127,8 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
       if (output_type == OUTPUT_GRAY)
       {
 	stp_dither_black(out, y, dither, black, duplicate_line);
-        (*writefunc)(prn, black + height / 2, height / 2, 0);
-        (*writefunc)(prn, black, height / 2, 1);
+        (*writefunc)(v, black + height / 2, height / 2, 0);
+        (*writefunc)(v, black, height / 2, 1);
       }
       else
       {
@@ -2137,27 +2136,27 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
 		    yellow, NULL, black, duplicate_line);
 	
 	if(do_cretb){
-/*	  (*writefunc)(prn, black + height / 2, 0, 0); */
-	  (*writefunc)(prn, black, height/2, 0);
+/*	  (*writefunc)(v, black + height / 2, 0, 0); */
+	  (*writefunc)(v, black, height/2, 0);
 	}else{
-	  (*writefunc)(prn, black + height / 2, height / 2, 0);
-	  (*writefunc)(prn, black, height / 2, 0);
+	  (*writefunc)(v, black + height / 2, height / 2, 0);
+	  (*writefunc)(v, black, height / 2, 0);
 	}
-        (*writefunc)(prn, cyan + height / 2, height / 2, 0);
-        (*writefunc)(prn, cyan, height / 2, 0);
-        (*writefunc)(prn, magenta + height / 2, height / 2, 0);
-        (*writefunc)(prn, magenta, height / 2, 0);
-        (*writefunc)(prn, yellow + height / 2, height / 2, 0);
+        (*writefunc)(v, cyan + height / 2, height / 2, 0);
+        (*writefunc)(v, cyan, height / 2, 0);
+        (*writefunc)(v, magenta + height / 2, height / 2, 0);
+        (*writefunc)(v, magenta, height / 2, 0);
+        (*writefunc)(v, yellow + height / 2, height / 2, 0);
         if (do_6color)
         {
-          (*writefunc)(prn, yellow, height / 2, 0);
-          (*writefunc)(prn, lcyan + height / 2, height / 2, 0);
-          (*writefunc)(prn, lcyan, height / 2, 0);
-          (*writefunc)(prn, lmagenta + height / 2, height / 2, 0);
-          (*writefunc)(prn, lmagenta, height / 2, 1);		/* Last plane set on light magenta */
+          (*writefunc)(v, yellow, height / 2, 0);
+          (*writefunc)(v, lcyan + height / 2, height / 2, 0);
+          (*writefunc)(v, lcyan, height / 2, 0);
+          (*writefunc)(v, lmagenta + height / 2, height / 2, 0);
+          (*writefunc)(v, lmagenta, height / 2, 1);		/* Last plane set on light magenta */
         }
         else
-          (*writefunc)(prn, yellow, height / 2, 1);		/* Last plane set on yellow */
+          (*writefunc)(v, yellow, height / 2, 1);		/* Last plane set on yellow */
       }
     }
     else
@@ -2172,7 +2171,7 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
 	  stp_dither_monochrome(out, y, dither, black, duplicate_line);
 	else
 	  stp_dither_black(out, y, dither, black, duplicate_line);
-        (*writefunc)(prn, black, height, 1);
+        (*writefunc)(v, black, height, 1);
       }
       else
       {
@@ -2180,17 +2179,17 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
 		    yellow, NULL, black, duplicate_line);
 
         if (black != NULL)
-          (*writefunc)(prn, black, height, 0);
-        (*writefunc)(prn, cyan, height, 0);
-        (*writefunc)(prn, magenta, height, 0);
+          (*writefunc)(v, black, height, 0);
+        (*writefunc)(v, cyan, height, 0);
+        (*writefunc)(v, magenta, height, 0);
         if (do_6color)
         {
-          (*writefunc)(prn, yellow, height, 0);
-          (*writefunc)(prn, lcyan, height, 0);
-          (*writefunc)(prn, lmagenta, height, 1);		/* Last plane set on light magenta */
+          (*writefunc)(v, yellow, height, 0);
+          (*writefunc)(v, lcyan, height, 0);
+          (*writefunc)(v, lmagenta, height, 1);		/* Last plane set on light magenta */
         }
         else
-          (*writefunc)(prn, yellow, height, 1);		/* Last plane set on yellow */
+          (*writefunc)(v, yellow, height, 1);		/* Last plane set on yellow */
       }
     }
 
@@ -2230,16 +2229,16 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
   }
 
   if ((caps.stp_printer_type & PCL_PRINTER_NEW_ERG) == PCL_PRINTER_NEW_ERG)
-    fputs("\033*rC", prn);
+    stp_puts("\033*rC", v);
   else
-    fputs("\033*rB", prn);
+    stp_puts("\033*rB", v);
 
-  fputs("\033&l0H", prn);		/* Eject page */
+  stp_puts("\033&l0H", v);		/* Eject page */
   if (do_cretb)
     {
-      fprintf(prn, "\033%%-12345X\n");
+      stp_zprintf(v, "\033%%-12345X\n");
     }
-  fputs("\033E", prn); 				/* PCL reset */
+  stp_puts("\033E", v); 				/* PCL reset */
 }
 
 stp_printfuncs_t stp_pcl_printfuncs =
@@ -2259,13 +2258,13 @@ stp_printfuncs_t stp_pcl_printfuncs =
  */
 
 static void
-pcl_mode0(FILE          *prn,		/* I - Print file or command */
+pcl_mode0(const stp_vars_t          *v,		/* I - Print file or command */
           unsigned char *line,		/* I - Output bitmap data */
           int           height,		/* I - Height of bitmap data */
           int           last_plane)	/* I - True if this is the last plane */
 {
-  fprintf(prn, "\033*b%d%c", height, last_plane ? 'W' : 'V');
-  fwrite(line, height, 1, prn);
+  stp_zprintf(v, "\033*b%d%c", height, last_plane ? 'W' : 'V');
+  stp_zfwrite(line, height, 1, v);
 }
 
 
@@ -2274,7 +2273,7 @@ pcl_mode0(FILE          *prn,		/* I - Print file or command */
  */
 
 static void
-pcl_mode2(FILE          *prn,		/* I - Print file or command */
+pcl_mode2(const stp_vars_t          *v,		/* I - Print file or command */
           unsigned char *line,		/* I - Output bitmap data */
           int           height,		/* I - Height of bitmap data */
           int           last_plane)	/* I - True if this is the last plane */
@@ -2288,6 +2287,6 @@ pcl_mode2(FILE          *prn,		/* I - Print file or command */
   * Send a line of raster graphics...
   */
 
-  fprintf(prn, "\033*b%d%c", (int)(comp_ptr - comp_buf), last_plane ? 'W' : 'V');
-  fwrite(comp_buf, comp_ptr - comp_buf, 1, prn);
+  stp_zprintf(v, "\033*b%d%c", (int)(comp_ptr - comp_buf), last_plane ? 'W' : 'V');
+  stp_zfwrite(comp_buf, comp_ptr - comp_buf, 1, v);
 }

@@ -802,7 +802,7 @@ typedef struct canon_caps {
   canon_variable_inklist_t *inxs; /* Choices of inks for this printer */
 } canon_cap_t;
 
-static void canon_write_line(FILE *, canon_cap_t, int,
+static void canon_write_line(const stp_vars_t *, canon_cap_t, int,
 			     unsigned char *, int,
 			     unsigned char *, int,
 			     unsigned char *, int,
@@ -1539,7 +1539,7 @@ canon_limit(const stp_printer_t *printer,	/* I - Printer model */
  * 'canon_cmd()' - Sends a command with variable args
  */
 static void
-canon_cmd(FILE *prn, /* I - the printer         */
+canon_cmd(const stp_vars_t *v, /* I - the printer         */
 	  const char *ini, /* I - 2 bytes start code  */
 	  const char cmd,  /* I - command code        */
 	  int  num,  /* I - number of arguments */
@@ -1572,12 +1572,12 @@ canon_cmd(FILE *prn, /* I - the printer         */
     va_end(ap);
   }
 
-  fwrite(ini,2,1,prn);
+  stp_zfwrite(ini,2,1,v);
   if (cmd) {
-    fputc(cmd,prn);
-    fputc((num & 255),prn);
-    fputc((num >> 8 ),prn);
-    fwrite(buffer,num,1,prn);
+    stp_putc(cmd,v);
+    stp_putc((num & 255),v);
+    stp_putc((num >> 8 ),v);
+    stp_zfwrite(buffer,num,1,v);
   }
 }
 
@@ -1588,9 +1588,9 @@ canon_cmd(FILE *prn, /* I - the printer         */
 #endif
 
 static void
-canon_init_printer(FILE *prn, canon_cap_t caps,
+canon_init_printer(const stp_vars_t *v, canon_cap_t caps,
 		   int output_type, const paper_t *pt,
-		   const stp_vars_t *v, int print_head,
+		   int print_head,
 		   const char *source_str,
 		   int xdpi, int ydpi,
 		   int page_width, int page_height,
@@ -1677,53 +1677,52 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
 
   /* init printer */
 
-  canon_cmd(prn,ESC5b,0x4b, 2, 0x00,0x0f);
+  canon_cmd(v,ESC5b,0x4b, 2, 0x00,0x0f);
   if (caps.features & CANON_CAP_CMD61)
-    canon_cmd(prn,ESC28,0x61, 1, 0x01);
-  canon_cmd(prn,ESC28,0x62, 1, 0x01);
-  canon_cmd(prn,ESC28,0x71, 1, 0x01);
+    canon_cmd(v,ESC28,0x61, 1, 0x01);
+  canon_cmd(v,ESC28,0x62, 1, 0x01);
+  canon_cmd(v,ESC28,0x71, 1, 0x01);
 
   if (caps.features & CANON_CAP_CMD6d)
-    canon_cmd(prn,ESC28,0x6d,12, arg_6d_1,
+    canon_cmd(v,ESC28,0x6d,12, arg_6d_1,
 	      0xff,0xff,0x00,0x00,0x07,0x00,
 	      arg_6d_a,arg_6d_b,arg_6d_2,0x00,arg_6d_3);
 
   /* set resolution */
 
-  canon_cmd(prn,ESC28,0x64, 4, (ydpi >> 8 ), (ydpi & 255),
+  canon_cmd(v,ESC28,0x64, 4, (ydpi >> 8 ), (ydpi & 255),
 	                        (xdpi >> 8 ), (xdpi & 255));
 
-  canon_cmd(prn,ESC28,0x74, 3, arg_74_1, arg_74_2, arg_74_3);
+  canon_cmd(v,ESC28,0x74, 3, arg_74_1, arg_74_2, arg_74_3);
 
-  canon_cmd(prn,ESC28,0x63, 3, arg_63_1, arg_63_2, arg_63_3);
+  canon_cmd(v,ESC28,0x63, 3, arg_63_1, arg_63_2, arg_63_3);
 
   if (caps.features & CANON_CAP_CMD70)
-    canon_cmd(prn,ESC28,0x70, 8, arg_70_1, arg_70_2, 0x00, 0x00,
+    canon_cmd(v,ESC28,0x70, 8, arg_70_1, arg_70_2, 0x00, 0x00,
 	                         arg_70_3, arg_70_4, 0x00, 0x00);
 
-  canon_cmd(prn,ESC28,0x6c, 2, arg_6c_1, arg_6c_2);
+  canon_cmd(v,ESC28,0x6c, 2, arg_6c_1, arg_6c_2);
 
   if (caps.features & CANON_CAP_CMD72)
-    canon_cmd(prn,ESC28,0x72, 1, 0x61); /* whatever for - 8200 might need it */
+    canon_cmd(v,ESC28,0x72, 1, 0x61); /* whatever for - 8200 might need it */
 
   /* some linefeeds */
 
   top= (top*ydpi)/72;
   PUT("topskip ",top,ydpi);
-  canon_cmd(prn,ESC28,0x65, 2, (top >> 8 ),(top & 255));
+  canon_cmd(v,ESC28,0x65, 2, (top >> 8 ),(top & 255));
 }
 
-static void canon_deinit_printer(FILE *prn, canon_cap_t caps)
+static void canon_deinit_printer(const stp_vars_t *v, canon_cap_t caps)
 {
   /* eject page */
-  fputc(0x0c,prn);
+  stp_putc(0x0c,v);
 
   /* say goodbye */
-  canon_cmd(prn,ESC28,0x62,1,0);
+  canon_cmd(v,ESC28,0x62,1,0);
   if (caps.features & CANON_CAP_CMD61)
-    canon_cmd(prn,ESC28,0x61, 1, 0x00);
-  canon_cmd(prn,ESC40,0,0);
-  fflush(prn);
+    canon_cmd(v,ESC28,0x61, 1, 0x00);
+  canon_cmd(v,ESC40,0,0);
 }
 
 
@@ -1757,7 +1756,6 @@ canon_advance_buffer(unsigned char *buf, int len, int num)
  */
 static void
 canon_print(const stp_printer_t *printer,		/* I - Model */
-            FILE      *prn,		/* I - File to print to */
 	    stp_image_t *image,		/* I - Image to print */
 	    const stp_vars_t    *v)
 {
@@ -1925,8 +1923,8 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
 
   pt = get_media_type(nv.media_type);
 
-  canon_init_printer(prn, caps, output_type, pt,
-		     &nv, printhead, media_source,
+  canon_init_printer(&nv, caps, output_type, pt,
+		     printhead, media_source,
 		     xdpi, ydpi, page_width, page_height,
 		     top,left,(bits==2));
 
@@ -2013,13 +2011,13 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
 
 #ifdef DEBUG
   fprintf(stderr,"canon: driver will use colors ");
-  if (cyan)     fputc('C',stderr);
-  if (lcyan)    fputc('c',stderr);
-  if (magenta)  fputc('M',stderr);
-  if (lmagenta) fputc('m',stderr);
-  if (yellow)   fputc('Y',stderr);
-  if (lyellow)  fputc('y',stderr);
-  if (black)    fputc('K',stderr);
+  if (cyan)     stp_putc('C',stderr);
+  if (lcyan)    stp_putc('c',stderr);
+  if (magenta)  stp_putc('M',stderr);
+  if (lmagenta) stp_putc('m',stderr);
+  if (yellow)   stp_putc('Y',stderr);
+  if (lyellow)  stp_putc('y',stderr);
+  if (black)    stp_putc('K',stderr);
   fprintf(stderr,"\n");
 #endif
 
@@ -2166,7 +2164,7 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
     /* fprintf(stderr,","); */
 #endif
 
-    canon_write_line(prn, caps, ydpi,
+    canon_write_line(v, caps, ydpi,
 		     black,    delay_k,
 		     cyan,     delay_c,
 		     magenta,  delay_m,
@@ -2211,7 +2209,7 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
 #endif
     for (y= 0; y<delay_max; y++) {
 
-      canon_write_line(prn, caps, ydpi,
+      canon_write_line(v, caps, ydpi,
 		       black,    delay_k,
 		       cyan,     delay_c,
 		       magenta,  delay_m,
@@ -2251,7 +2249,7 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
   if (lmagenta != NULL) free(lmagenta);
   if (lyellow != NULL)  free(lyellow);
 
-  canon_deinit_printer(prn, caps);
+  canon_deinit_printer(v, caps);
 }
 
 stp_printfuncs_t stp_canon_printfuncs =
@@ -2338,7 +2336,7 @@ canon_fold_msb_lsb(const unsigned char *line,
  */
 
 static int
-canon_write(FILE          *prn,		/* I - Print file or command */
+canon_write(const stp_vars_t          *v,		/* I - Print file or command */
 	    canon_cap_t   caps,	        /* I - Printer model */
 	    unsigned char *line,	/* I - Output bitmap data */
 	    int           length,	/* I - Length of bitmap data */
@@ -2399,28 +2397,28 @@ canon_write(FILE          *prn,		/* I - Print file or command */
 #ifdef DEBUG
     /* fprintf(stderr,"<%d%c>",*empty,("CMYKcmy"[coloridx])); */
 #endif
-    fwrite("\x1b\x28\x65\x02\x00", 5, 1, prn);
-    fputc((*empty) >> 8 , prn);
-    fputc((*empty) & 255, prn);
+    stp_zfwrite("\x1b\x28\x65\x02\x00", 5, 1, v);
+    stp_putc((*empty) >> 8 , v);
+    stp_putc((*empty) & 255, v);
     *empty= 0;
   }
 
  /* Send a line of raster graphics... */
 
-  fwrite("\x1b\x28\x41", 3, 1, prn);
-  putc((newlength+1) & 255, prn);
-  putc((newlength+1) >> 8, prn);
+  stp_zfwrite("\x1b\x28\x41", 3, 1, v);
+  stp_putc((newlength+1) & 255, v);
+  stp_putc((newlength+1) >> 8, v);
   color= "CMYKcmy"[coloridx];
   if (!color) color= 'K';
-  putc(color,prn);
-  fwrite(comp_buf, newlength, 1, prn);
-  putc('\x0d', prn);
+  stp_putc(color,v);
+  stp_zfwrite(comp_buf, newlength, 1, v);
+  stp_putc('\x0d', v);
   return 1;
 }
 
 
 static void
-canon_write_line(FILE          *prn,	/* I - Print file or command */
+canon_write_line(const stp_vars_t    *v,	/* I - Print file or command */
 		 canon_cap_t   caps,	/* I - Printer model */
 		 int           ydpi,	/* I - Vertical resolution */
 		 unsigned char *k,	/* I - Output bitmap data */
@@ -2446,22 +2444,22 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
   int written= 0;
 
   if (k) written+=
-    canon_write(prn, caps, k+ dk*l,  l, 3, ydpi, &empty, width, offset, dmt);
+    canon_write(v, caps, k+ dk*l,  l, 3, ydpi, &empty, width, offset, dmt);
   if (y) written+=
-    canon_write(prn, caps, y+ dy*l,  l, 2, ydpi, &empty, width, offset, dmt);
+    canon_write(v, caps, y+ dy*l,  l, 2, ydpi, &empty, width, offset, dmt);
   if (m) written+=
-    canon_write(prn, caps, m+ dm*l,  l, 1, ydpi, &empty, width, offset, dmt);
+    canon_write(v, caps, m+ dm*l,  l, 1, ydpi, &empty, width, offset, dmt);
   if (c) written+=
-    canon_write(prn, caps, c+ dc*l,  l, 0, ydpi, &empty, width, offset, dmt);
+    canon_write(v, caps, c+ dc*l,  l, 0, ydpi, &empty, width, offset, dmt);
   if (ly) written+=
-    canon_write(prn, caps, ly+dly*l, l, 6, ydpi, &empty, width, offset, dmt);
+    canon_write(v, caps, ly+dly*l, l, 6, ydpi, &empty, width, offset, dmt);
   if (lm) written+=
-    canon_write(prn, caps, lm+dlm*l, l, 5, ydpi, &empty, width, offset, dmt);
+    canon_write(v, caps, lm+dlm*l, l, 5, ydpi, &empty, width, offset, dmt);
   if (lc) written+=
-    canon_write(prn, caps, lc+dlc*l, l, 4, ydpi, &empty, width, offset, dmt);
+    canon_write(v, caps, lc+dlc*l, l, 4, ydpi, &empty, width, offset, dmt);
 
   if (written)
-    fwrite("\x1b\x28\x65\x02\x00\x00\x01", 7, 1, prn);
+    stp_zfwrite("\x1b\x28\x65\x02\x00\x00\x01", 7, 1, v);
   else
     empty++;
 }

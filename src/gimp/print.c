@@ -288,6 +288,13 @@ usr1_handler (int signal)
   usr1_interrupt = 1;
 }
 
+static void
+gimp_writefunc(void *file, const char *buf, size_t bytes)
+{
+  FILE *prn = (FILE *)file;
+  fwrite(buf, 1, bytes, prn);
+}
+
 /*
  * 'run()' - Run the plug-in...
  */
@@ -644,9 +651,13 @@ run (char   *name,		/* I - Name of print program. */
 	   * and close the output file/command...
 	   */
 
+	  vars.outfunc = gimp_writefunc;
+	  vars.errfunc = gimp_writefunc;
+	  vars.outdata = prn;
+	  vars.errdata = stderr;
 	  if (stp_verify_printer_params(current_printer, &vars))
 	    (*current_printer->printfuncs->print) (current_printer,
-						   prn, image, &vars);
+						   image, &vars);
 	  else
 	    values[0].data.d_status = STATUS_EXECUTION_ERROR;
 

@@ -105,6 +105,13 @@ static stp_image_t theImage =
   NULL
 };
 
+static void
+cups_writefunc(void *file, const char *buf, size_t bytes)
+{
+  FILE *prn = (FILE *)file;
+  fwrite(buf, 1, bytes, prn);
+}
+
 /*
  * 'main()' - Main entry and processing of driver.
  */
@@ -280,6 +287,10 @@ main(int  argc,				/* I - Number of command-line arguments */
     v.orientation = ORIENT_PORTRAIT;
     v.gamma       = 1.0;
     v.image_type  = cups.header.cupsRowCount;
+    v.outfunc = cups_writefunc;
+    v.errfunc = cups_writefunc;
+    v.outdata = stdout;
+    v.errdata = stderr;
 
     if (cups.header.cupsColorSpace == CUPS_CSPACE_W)
       v.output_type = OUTPUT_GRAY;
@@ -324,7 +335,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: v.ink_type |%s|\n", v.ink_type);
     fprintf(stderr, "DEBUG: v.dither_algorithm |%s|\n", v.dither_algorithm);
     if (stp_verify_printer_params(printer, &v))
-      (*printer->printfuncs->print)(printer, stdout, &theImage, &v);
+      (*printer->printfuncs->print)(printer, &theImage, &v);
     else
       fputs("ERROR: Invalid printer settings!\n", stderr);
 

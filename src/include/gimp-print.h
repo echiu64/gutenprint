@@ -103,6 +103,10 @@ typedef struct					/* Plug-in variables */
   int	page_height;		/* Height of page in points */
   void  *lut;			/* Look-up table */
   unsigned char *cmap;		/* Color map */
+  void (*outfunc)(void *data, const char *buffer, size_t bytes);
+  void *outdata;
+  void (*errfunc)(void *data, const char *buffer, size_t bytes);
+  void *errdata;
 } stp_vars_t;
 
 typedef enum papersize_unit
@@ -214,7 +218,7 @@ typedef struct stp_image
  *       This is typically things like different input trays, manual feed,
  *       roll feed, and the like.
  *
- * void (*media_size)(const struct printer *printer,
+ * void (*media_size)(const struct stp_printer *printer,
  *                    const stp_vars_t *v,
  *                    int *width,
  *                    int *height)
@@ -224,7 +228,7 @@ typedef struct stp_image
  *   in V; it may look at other data in V to determine the physical page
  *   size.  WIDTH and HEIGHT are expressed in units of 1/72".
  *
- * void (*imageable_area)(const struct printer *printer,
+ * void (*imageable_area)(const struct stp_printer *printer,
  *                        const stp_vars_t *v,
  *                        int *left,
  *                        int *right,
@@ -239,7 +243,7 @@ typedef struct stp_image
  *   centering) on the page.  All returned values are in units of
  *   1/72".
  *
- * void (*limit)(const struct printer *printer,
+ * void (*limit)(const struct stp_printer *printer,
  *               const stp_vars_t *v,
  *               int *width,
  *               int *height)
@@ -247,9 +251,8 @@ typedef struct stp_image
  *   returns the maximum page size the printer can handle, in units of
  *   1/72".
  *
- * void (*print)(const struct printer *printer,
- *               FILE *prn,
- *               Image image,
+ * void (*print)(const struct stp_printer *printer,
+ *               stp_image_t *image,
  *               const stp_vars_t *v)
  *
  *   prints a page.  The variable settings provided in V are used to control
@@ -258,12 +261,12 @@ typedef struct stp_image
  *   data to the driver (the contents of which are opaque to the low level
  *   driver and are interpreted by the high level program).
  *
- * const char *(*default_resolution)(const struct printer *printer)
+ * const char *(*default_resolution)(const struct stp_printer *printer)
  *
  *   returns the name of the default resolution for the printer.  The
  *   caller must not attempt to free the returned value.
  *
- * void (*describe_resolution)(const struct printer *printer,
+ * void (*describe_resolution)(const struct stp_printer *printer,
  *                             const char *resolution,
  *                             int *x,
  *                             int *y)
@@ -274,26 +277,28 @@ typedef struct stp_image
  *   
  */
 
-struct printer;
+struct stp_printer;
 
 typedef struct
 {
-  char	**(*parameters)(const struct printer *printer, const char *ppd_file,
+  char	**(*parameters)(const struct stp_printer *printer,
+			const char *ppd_file,
                         const char *name, int *count);
-  void	(*media_size)(const struct printer *printer, const stp_vars_t *v,
+  void	(*media_size)(const struct stp_printer *printer, const stp_vars_t *v,
 		      int *width, int *height);
-  void	(*imageable_area)(const struct printer *printer, const stp_vars_t *v,
+  void	(*imageable_area)(const struct stp_printer *printer,
+			  const stp_vars_t *v,
                           int *left, int *right, int *bottom, int *top);
-  void	(*limit)(const struct printer *printer, const stp_vars_t *v,
+  void	(*limit)(const struct stp_printer *printer, const stp_vars_t *v,
 		 int *width, int *height);
-  void	(*print)(const struct printer *printer, FILE *prn,
+  void	(*print)(const struct stp_printer *printer,
 		 stp_image_t *image, const stp_vars_t *v);
-  const char *(*default_resolution)(const struct printer *printer);
-  void  (*describe_resolution)(const struct printer *printer,
+  const char *(*default_resolution)(const struct stp_printer *printer);
+  void  (*describe_resolution)(const struct stp_printer *printer,
 			       const char *resolution, int *x, int *y);
 } stp_printfuncs_t;
 
-typedef struct printer
+typedef struct stp_printer
 {
   const char	*long_name,			/* Long name for UI */
 	*driver;			/* Short name for printrc file */

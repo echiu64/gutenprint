@@ -51,8 +51,8 @@ static const char	*ps_ppd_file = NULL;
  * Local functions...
  */
 
-static void	ps_hex(FILE *, unsigned short *, int);
-static void	ps_ascii85(FILE *, unsigned short *, int, int);
+static void	ps_hex(const stp_vars_t *, unsigned short *, int);
+static void	ps_ascii85(const stp_vars_t *, unsigned short *, int, int);
 static char	*ppd_find(const char *, const char *, const char *, int *);
 
 
@@ -253,7 +253,6 @@ ps_describe_resolution(const stp_printer_t *printer,
 
 static void
 ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
-         FILE      *prn,		/* I - File to print to */
          stp_image_t *image,		/* I - Image to print */
 	 const stp_vars_t    *v)
 {
@@ -363,19 +362,19 @@ ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
 #endif /* DEBUG */
 
 #ifdef __EMX__
-  _fsetmode(prn, "t");
+  _fsetmode(v, "t");
 #endif
-  fputs("%!PS-Adobe-3.0\n", prn);
-  fprintf(prn, "%%%%Creator: %s\n", image->get_appname(image));
-  fprintf(prn, "%%%%CreationDate: %s", ctime(&curtime));
-  fputs("%%Copyright: 1997-2000 by Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)\n", prn);
-  fprintf(prn, "%%%%BoundingBox: %d %d %d %d\n",
+  stp_puts("%!PS-Adobe-3.0\n", v);
+  stp_zprintf(v, "%%%%Creator: %s\n", image->get_appname(image));
+  stp_zprintf(v, "%%%%CreationDate: %s", ctime(&curtime));
+  stp_puts("%%Copyright: 1997-2000 by Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)\n", v);
+  stp_zprintf(v, "%%%%BoundingBox: %d %d %d %d\n",
           left, top - out_height, left + out_width, top);
-  fputs("%%DocumentData: Clean7Bit\n", prn);
-  fprintf(prn, "%%%%LanguageLevel: %d\n", model + 1);
-  fputs("%%Pages: 1\n", prn);
-  fputs("%%Orientation: Portrait\n", prn);
-  fputs("%%EndComments\n", prn);
+  stp_puts("%%DocumentData: Clean7Bit\n", v);
+  stp_zprintf(v, "%%%%LanguageLevel: %d\n", model + 1);
+  stp_puts("%%Pages: 1\n", v);
+  stp_puts("%%Orientation: Portrait\n", v);
+  stp_puts("%%EndComments\n", v);
 
  /*
   * Find any printer-specific commands...
@@ -437,27 +436,27 @@ ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
 
   if (num_commands > 0)
   {
-    fputs("%%BeginProlog\n", prn);
+    stp_puts("%%BeginProlog\n", v);
 
     for (i = 0; i < num_commands; i ++)
     {
-      fputs(commands[i].command, prn);
-      fputs("\n", prn);
+      stp_puts(commands[i].command, v);
+      stp_puts("\n", v);
       free(commands[i].command);
     }
 
-    fputs("%%EndProlog\n", prn);
+    stp_puts("%%EndProlog\n", v);
   }
 
  /*
   * Output the page...
   */
 
-  fputs("%%Page: 1\n", prn);
-  fputs("gsave\n", prn);
+  stp_puts("%%Page: 1\n", v);
+  stp_puts("gsave\n", v);
 
-  fprintf(prn, "%d %d translate\n", left, top);
-  fprintf(prn, "%.3f %.3f scale\n",
+  stp_zprintf(v, "%d %d translate\n", left, top);
+  stp_zprintf(v, "%.3f %.3f scale\n",
           (double)out_width / ((double)image_width),
           (double)out_height / ((double)image_height));
 
@@ -468,16 +467,16 @@ ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
 
   if (model == 0)
   {
-    fprintf(prn, "/picture %d string def\n", image_width * out_bpp);
+    stp_zprintf(v, "/picture %d string def\n", image_width * out_bpp);
 
-    fprintf(prn, "%d %d 8\n", image_width, image_height);
+    stp_zprintf(v, "%d %d 8\n", image_width, image_height);
 
-    fputs("[ 1 0 0 -1 0 1 ]\n", prn);
+    stp_puts("[ 1 0 0 -1 0 1 ]\n", v);
 
     if (output_type == OUTPUT_GRAY)
-      fputs("{currentfile picture readhexstring pop} image\n", prn);
+      stp_puts("{currentfile picture readhexstring pop} image\n", v);
     else
-      fputs("{currentfile picture readhexstring pop} false 3 colorimage\n", prn);
+      stp_puts("{currentfile picture readhexstring pop} false 3 colorimage\n", v);
 
     for (y = 0; y < image_height; y ++)
     {
@@ -487,37 +486,37 @@ ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
       image->get_row(image, in, y);
       (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv, NULL, NULL, NULL);
 
-      ps_hex(prn, out, image_width * out_bpp);
+      ps_hex(v, out, image_width * out_bpp);
     }
   }
   else
   {
     if (output_type == OUTPUT_GRAY)
-      fputs("/DeviceGray setcolorspace\n", prn);
+      stp_puts("/DeviceGray setcolorspace\n", v);
     else
-      fputs("/DeviceRGB setcolorspace\n", prn);
+      stp_puts("/DeviceRGB setcolorspace\n", v);
 
-    fputs("<<\n", prn);
-    fputs("\t/ImageType 1\n", prn);
+    stp_puts("<<\n", v);
+    stp_puts("\t/ImageType 1\n", v);
 
-    fprintf(prn, "\t/Width %d\n", image_width);
-    fprintf(prn, "\t/Height %d\n", image_height);
-    fputs("\t/BitsPerComponent 8\n", prn);
+    stp_zprintf(v, "\t/Width %d\n", image_width);
+    stp_zprintf(v, "\t/Height %d\n", image_height);
+    stp_puts("\t/BitsPerComponent 8\n", v);
 
     if (output_type == OUTPUT_GRAY)
-      fputs("\t/Decode [ 0 1 ]\n", prn);
+      stp_puts("\t/Decode [ 0 1 ]\n", v);
     else
-      fputs("\t/Decode [ 0 1 0 1 0 1 ]\n", prn);
+      stp_puts("\t/Decode [ 0 1 0 1 0 1 ]\n", v);
 
-    fputs("\t/DataSource currentfile /ASCII85Decode filter\n", prn);
+    stp_puts("\t/DataSource currentfile /ASCII85Decode filter\n", v);
 
     if ((image_width * 72 / out_width) < 100)
-      fputs("\t/Interpolate true\n", prn);
+      stp_puts("\t/Interpolate true\n", v);
 
-    fputs("\t/ImageMatrix [ 1 0 0 -1 0 1 ]\n", prn);
+    stp_puts("\t/ImageMatrix [ 1 0 0 -1 0 1 ]\n", v);
 
-    fputs(">>\n", prn);
-    fputs("image\n", prn);
+    stp_puts(">>\n", v);
+    stp_puts("image\n", v);
 
     for (y = 0, out_offset = 0; y < image_height; y ++)
     {
@@ -532,12 +531,12 @@ ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
 
       if (y < (image_height - 1))
       {
-        ps_ascii85(prn, out, out_ps_height & ~3, 0);
+        ps_ascii85(v, out, out_ps_height & ~3, 0);
         out_offset = out_ps_height & 3;
       }
       else
       {
-        ps_ascii85(prn, out, out_ps_height, 1);
+        ps_ascii85(v, out, out_ps_height, 1);
         out_offset = 0;
       }
 
@@ -551,10 +550,10 @@ ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
   free(in);
   free(out);
 
-  fputs("grestore\n", prn);
-  fputs("showpage\n", prn);
-  fputs("%%EndPage\n", prn);
-  fputs("%%EOF\n", prn);
+  stp_puts("grestore\n", v);
+  stp_puts("showpage\n", v);
+  stp_puts("%%EndPage\n", v);
+  stp_puts("%%EOF\n", v);
 }
 
 
@@ -563,7 +562,7 @@ ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
  */
 
 static void
-ps_hex(FILE   *prn,	/* I - File to print to */
+ps_hex(const stp_vars_t   *v,	/* I - File to print to */
        unsigned short *data,	/* I - Data to print */
        int    length)	/* I - Number of bytes to print */
 {
@@ -580,19 +579,19 @@ ps_hex(FILE   *prn,	/* I - File to print to */
     * for speed reasons...
     */
 
-    putc(hex[pixel >> 4], prn);
-    putc(hex[pixel & 15], prn);
+    stp_putc(hex[pixel >> 4], v);
+    stp_putc(hex[pixel & 15], v);
 
     data ++;
     length --;
 
     col = (col + 1) & 31;
     if (col == 0)
-      putc('\n', prn);
+      stp_putc('\n', v);
   }
 
   if (col > 0)
-    putc('\n', prn);
+    stp_putc('\n', v);
 }
 
 
@@ -601,7 +600,7 @@ ps_hex(FILE   *prn,	/* I - File to print to */
  */
 
 static void
-ps_ascii85(FILE   *prn,		/* I - File to print to */
+ps_ascii85(const stp_vars_t   *v,		/* I - File to print to */
 	   unsigned short *data,	/* I - Data to print */
 	   int    length,	/* I - Number of bytes to print */
 	   int    last_line)	/* I - Last line of raster data? */
@@ -620,7 +619,7 @@ ps_ascii85(FILE   *prn,		/* I - File to print to */
     b = (((((d0 << 8) | d1) << 8) | d2) << 8) | d3;
 
     if (b == 0)
-      putc('z', prn);
+      stp_putc('z', v);
     else
     {
       c[4] = (b % 85) + '!';
@@ -633,7 +632,7 @@ ps_ascii85(FILE   *prn,		/* I - File to print to */
       b /= 85;
       c[0] = b + '!';
 
-      fwrite(c, 5, 1, prn);
+      stp_zfwrite(c, 5, 1, v);
     }
 
     data += 4;
@@ -656,10 +655,10 @@ ps_ascii85(FILE   *prn,		/* I - File to print to */
       b /= 85;
       c[0] = b + '!';
 
-      fwrite(c, length + 1, 1, prn);
+      stp_zfwrite(c, length + 1, 1, v);
     }
 
-    fputs("~>\n", prn);
+    stp_puts("~>\n", v);
   }
 }
 

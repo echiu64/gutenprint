@@ -1725,7 +1725,7 @@ stp_initialize_weave(int jets,	/* Width of print head */
 		     void (*flushfunc)(stp_softweave_t *sw, int passno,
 				       int model, int width, int hoffset,
 				       int ydpi, int xdpi, int physical_xdpi,
-				       FILE *prn, int vertical_subpass))
+				       int vertical_subpass))
 {
   int i;
   stp_softweave_t *sw = xmalloc(sizeof (stp_softweave_t));
@@ -1751,8 +1751,9 @@ stp_initialize_weave(int jets,	/* Width of print head */
   sw->flushfunc = flushfunc;
 
   if (sw->oversample > jets) {
-    fprintf(stderr, "Weave error: oversample (%d) > jets (%d)\n",
-                    sw->oversample, jets);
+    stp_eprintf((const stp_vars_t *) v,
+		"Weave error: oversample (%d) > jets (%d)\n",
+		sw->oversample, jets);
     free(sw);
     return 0;
   }
@@ -2024,14 +2025,14 @@ initialize_row(const stp_softweave_t *sw, int row, int width)
 	  for (j = 0; j < sw->ncolors; j++)
 	    {
 	      if (lineoffs[0].v[j] != 0)
-		fprintf(stderr,
+		    stp_eprintf((const stp_vars_t *) (sw->v),
 			"WARNING: pass %d subpass %d row %d: lineoffs %ld\n",
 			w.pass, i, row, lineoffs[0].v[j]);
 	      lineoffs[0].v[j] = 0;
 	      lineactive[0].v[j] = 0;
 	    }
 	  if (*linecount != 0)
-	    fprintf(stderr,
+	        stp_eprintf((const stp_vars_t *) (sw->v),
 		    "WARNING: pass %d subpass %d row %d: linecount %d\n",
 		    w.pass, i, row, *linecount);
 	  *linecount = 0;
@@ -2054,7 +2055,7 @@ add_to_row(stp_softweave_t *sw, int row, unsigned char *buf, size_t nbytes,
 
 static void
 escp2_flush(void *vsw, int model, int width, int hoffset,
-	    int ydpi, int xdpi, int physical_xdpi, FILE *prn)
+	    int ydpi, int xdpi, int physical_xdpi)
 {
   stp_softweave_t *sw = (stp_softweave_t *) vsw;
   while (1)
@@ -2067,13 +2068,13 @@ escp2_flush(void *vsw, int model, int width, int hoffset,
       if (pass->pass < 0 || pass->physpassend >= sw->lineno)
 	return;
       (sw->flushfunc)(sw, pass->pass, model, width, hoffset, ydpi, xdpi,
-		      physical_xdpi, prn, pass->subpass);
+		      physical_xdpi, pass->subpass);
     }
 }
 
 void
 stp_flush_all(void *vsw, int model, int width, int hoffset,
-	      int ydpi, int xdpi, int physical_xdpi, FILE *prn)
+	      int ydpi, int xdpi, int physical_xdpi)
 {
   stp_softweave_t *sw = (stp_softweave_t *) vsw;
   while (1)
@@ -2086,14 +2087,13 @@ stp_flush_all(void *vsw, int model, int width, int hoffset,
       if (pass->pass < 0)
 	return;
       (sw->flushfunc)(sw, pass->pass, model, width, hoffset, ydpi, xdpi,
-		      physical_xdpi, prn, pass->subpass);
+		      physical_xdpi, pass->subpass);
     }
 }
 
 static void
 finalize_row(stp_softweave_t *sw, int row, int model, int width,
-	     int hoffset, int ydpi, int xdpi, int physical_xdpi,
-	     FILE *prn)
+	     int hoffset, int ydpi, int xdpi, int physical_xdpi)
 {
   int i;
 #if 0
@@ -2110,14 +2110,13 @@ finalize_row(stp_softweave_t *sw, int row, int model, int width,
 #if 0
 	  printf("Pass=%d, physpassend=%d, row=%d, lineno=%d, trying to flush...\n", w.pass, w.physpassend, row, sw->lineno);
 #endif
-	  escp2_flush(sw, model, width, hoffset, ydpi, xdpi, physical_xdpi, prn);
+	  escp2_flush(sw, model, width, hoffset, ydpi, xdpi, physical_xdpi);
 	}
     }
 }
 
 void
 stp_write_weave(void *        vsw,
-		FILE          *prn,	/* I - Print file or command */
 		int           length,	/* I - Length of bitmap data */
 		int           ydpi,	/* I - Vertical resolution */
 		int           model,	/* I - Printer model */
@@ -2226,7 +2225,7 @@ stp_write_weave(void *        vsw,
 	      for (i = 0; i < h_passes; i++)
 		{
 		  setactive = stp_pack(s[i], sw->bitwidth * xlength,
-					 comp_buf, &comp_ptr);
+				       comp_buf, &comp_ptr);
 		  add_to_row(sw, sw->lineno, comp_buf, comp_ptr - comp_buf, j,
 			     setactive, lineoffs[i], lineactives[i], bufs[i]);
 		}
@@ -2234,8 +2233,9 @@ stp_write_weave(void *        vsw,
 	  else
 	    {
 	      setactive = stp_pack(in, length * sw->bitwidth,
-				     comp_buf, &comp_ptr);
-	      fprintf(stderr, "add_to_row length %d\n", comp_ptr - comp_buf);
+				   comp_buf, &comp_ptr);
+	      stp_eprintf((const stp_vars_t *) (sw->v),
+			  "add_to_row length %d\n", comp_ptr - comp_buf);
 	      add_to_row(sw, sw->lineno, comp_buf, comp_ptr - comp_buf, j,
 			 setactive, lineoffs[0], lineactives[0], bufs[0]);
 	    }
@@ -2245,7 +2245,7 @@ stp_write_weave(void *        vsw,
   if (sw->current_vertical_subpass >= sw->vertical_oversample)
     {
       finalize_row(sw, sw->lineno, model, width, offset, ydpi, xdpi,
-		   physical_xdpi, prn);
+		   physical_xdpi);
       sw->lineno++;
       sw->current_vertical_subpass = 0;
     }

@@ -71,11 +71,11 @@ typedef enum Lex_model { m_lex7500,   m_z52=10052, m_3200=3200 } Lex_model;
 
 
 #ifdef DEBUG
-FILE  *dbgfile;
+const stp_vars_t  *dbgfile;
 
-void lex_show_dither(FILE *file, unsigned char *y, unsigned char *c, unsigned char *m, unsigned char *ly, unsigned char *lc, unsigned char *lm, unsigned char *k, int length);
-FILE *lex_show_init(int x, int y);
-void lex_show_deinit(FILE *file);
+void lex_show_dither(const stp_vars_t *file, unsigned char *y, unsigned char *c, unsigned char *m, unsigned char *ly, unsigned char *lc, unsigned char *lm, unsigned char *k, int length);
+const stp_vars_t *lex_show_init(int x, int y);
+void lex_show_deinit(const stp_vars_t *file);
 #endif
 
 /*** resolution specific parameters */
@@ -325,7 +325,7 @@ static int lr_shift[10] = { 9, 18, 2*18 }; /* vertical distance between ever 2nd
 
 
 
-static void lexmark_write_line(FILE *,
+static void lexmark_write_line(const stp_vars_t *,
 			       unsigned char *prnBuf,/* mem block to buffer output */
 			       int printMode,
 			       int *direction,
@@ -513,7 +513,7 @@ lexmark_source_type(const char *name, lexmark_cap_t caps)
 static int
 lexmark_printhead_type(const char *name, lexmark_cap_t caps)
 {
-  FILE *dbfFile; 
+  const stp_vars_t *dbfFile; 
 
   if (!strcmp(name,_("Black")))       return 0;
   if (!strcmp(name,_("Color")))       return 1;
@@ -835,14 +835,14 @@ lexmark_limit(const stp_printer_t *printer,	/* I - Printer model */
 
 
 static void
-lexmark_init_printer(FILE *prn, lexmark_cap_t caps,
-		   int output_type, const char *media_str,
-		   const stp_vars_t *v, int print_head,
-		   const char *source_str,
-		   int xdpi, int ydpi,
-		   int page_width, int page_height,
-		   int top, int left,
-		   int use_dmt)
+lexmark_init_printer(const stp_vars_t *v, lexmark_cap_t caps,
+		     int output_type, const char *media_str,
+		     int print_head,
+		     const char *source_str,
+		     int xdpi, int ydpi,
+		     int page_width, int page_height,
+		     int top, int left,
+		     int use_dmt)
 {
 
   /* because the details of the header sequence are not known, we simply write it as one image. */
@@ -890,11 +890,11 @@ lexmark_init_printer(FILE *prn, lexmark_cap_t caps,
   switch(caps.model) 
 	{
 		case m_z52:
-			fwrite(startHeader_z52,LXM_Z52_STARTSIZE,1,prn);
+			stp_zfwrite(startHeader_z52,LXM_Z52_STARTSIZE,1,v);
 			break;
 
 		case m_3200:
-			fwrite(startHeader_3200, LXM_3200_STARTSIZE, 1, prn);
+			stp_zfwrite(startHeader_3200, LXM_3200_STARTSIZE, 1, v);
 			break;
 
 		default:
@@ -921,7 +921,7 @@ lexmark_init_printer(FILE *prn, lexmark_cap_t caps,
 
 }
 
-static void lexmark_deinit_printer(FILE *prn, lexmark_cap_t caps)
+static void lexmark_deinit_printer(const stp_vars_t *v, lexmark_cap_t caps)
 {
 
 	switch(caps.model)	{
@@ -934,7 +934,7 @@ static void lexmark_deinit_printer(FILE *prn, lexmark_cap_t caps)
 			buffer[3] = 0x65;
 
 			/* eject page */
-			fwrite(buffer, 4, 1, prn);
+			stp_zfwrite(buffer, 4, 1, v);
 		}
 		break;
 
@@ -959,7 +959,7 @@ static void lexmark_deinit_printer(FILE *prn, lexmark_cap_t caps)
 			buffer[12] = lxm3200_headpos & 0xff;
 			buffer[15] = lexmark_calc_3200_checksum(&buffer[8]);
 			
-			fwrite(buffer, 24, 1, prn);
+			stp_zfwrite(buffer, 24, 1, v);
 		}
 		break;
 
@@ -967,13 +967,12 @@ static void lexmark_deinit_printer(FILE *prn, lexmark_cap_t caps)
 			break;
 	}
 
-  fflush(prn);
 }
 
 
 /* paper_shift() -- shift paper in printer -- units are unknown :-)
  */
-static void paper_shift(FILE *prn, int offset, lexmark_cap_t caps)
+static void paper_shift(const stp_vars_t *v, int offset, lexmark_cap_t caps)
 {
 	switch(caps.model)	{
 		case m_z52:
@@ -982,7 +981,7 @@ static void paper_shift(FILE *prn, int offset, lexmark_cap_t caps)
 			if(offset == 0)return;
 			buf[3] = (unsigned char)(offset >> 8);
 			buf[4] = (unsigned char)(offset & 0xFF);
-			if(fwrite(buf, 1, 5, prn) != 5)fprintf(stderr,"paper_shift: short write\n");
+			stp_zfwrite(buf, 1, 5, v);
 		}
 		break;
 			
@@ -994,7 +993,7 @@ static void paper_shift(FILE *prn, int offset, lexmark_cap_t caps)
 			buf[3] = (unsigned char)(offset >> 8);
 			buf[4] = (unsigned char)(offset & 0xff);
 			buf[7] = lexmark_calc_3200_checksum(buf);
-			if(fwrite(buf, 1, 8, prn) != 8)fprintf(stderr,"paper_shift: short write\n");
+			stp_zfwrite(buf, 1, 8, v);
 		}
 		break;
 
@@ -1091,7 +1090,6 @@ static void setcol2(char *a, int al)
 */
 static void
 lexmark_print(const stp_printer_t *printer,		/* I - Model */
-	      FILE      *prn,		/* I - File to print to */
 	      stp_image_t *image,		/* I - Image to print */
 	      const stp_vars_t    *v)
 {
@@ -1347,8 +1345,8 @@ lexmark_describe_resolution(printer,
   image->progress_init(image);
 
 
-  lexmark_init_printer(prn, caps, output_type, media_type,
-		       &nv, printhead, media_source,
+  lexmark_init_printer(&nv, caps, output_type, media_type,
+		       printhead, media_source,
 		       xdpi, ydpi, page_width, page_height,
 		       top,left,use_dmt);
 
@@ -1547,7 +1545,7 @@ lexmark_describe_resolution(printer,
   */
 
   elinescount = (top*caps.y_multiplicator)+caps.offset_top_border;
-  paper_shift(prn, elinescount, caps);
+  paper_shift(v, elinescount, caps);
   elinescount=0;
 
 
@@ -1572,7 +1570,7 @@ lexmark_describe_resolution(printer,
 
   /********* TEST Mode *************/
 
-#define WLINE     lexmark_write_line(prn, outbuf, printMode, &direction, &elinescount, xresolution,  yresolution, interlace, pass_length, pass_shift, caps, ydpi, \
+#define WLINE     lexmark_write_line(v, outbuf, printMode, &direction, &elinescount, xresolution,  yresolution, interlace, pass_length, pass_shift, caps, ydpi, \
 		       black,    delay_k, \
 		       cyan,     delay_c, \
 		       magenta,  delay_m, \
@@ -1726,7 +1724,7 @@ lexmark_describe_resolution(printer,
 	  lexmark_advance_buffer(lyellow,  buf_length,(delay_ly+pass_length+pass_shift)*interlace);	 
 	}
 
-	lexmark_write_line(prn, outbuf, printMode, &direction, &elinescount, xresolution,  yresolution, interlace, pass_length, pass_shift, caps, ydpi,
+	lexmark_write_line(v, outbuf, printMode, &direction, &elinescount, xresolution,  yresolution, interlace, pass_length, pass_shift, caps, ydpi,
 			   black,    delay_k,
 			   cyan,     delay_c,
 			   magenta,  delay_m,
@@ -1761,7 +1759,7 @@ lexmark_describe_resolution(printer,
     if (lyellow != NULL)  free(lyellow);
 
 
-    lexmark_deinit_printer(prn, caps);
+    lexmark_deinit_printer(v, caps);
 
     return;
   }
@@ -1860,7 +1858,7 @@ lexmark_describe_resolution(printer,
 	lexmark_advance_buffer(lyellow,  buf_length,(delay_ly+pass_length+pass_shift)*interlace);	 
       }
 
-      lexmark_write_line(prn, outbuf, printMode, &direction, &elinescount, xresolution,  yresolution, interlace, pass_length, pass_shift, caps, ydpi,
+      lexmark_write_line(v, outbuf, printMode, &direction, &elinescount, xresolution,  yresolution, interlace, pass_length, pass_shift, caps, ydpi,
 			 black,    delay_k,
 			 cyan,     delay_c,
 			 magenta,  delay_m,
@@ -1914,7 +1912,7 @@ lexmark_describe_resolution(printer,
 	  lexmark_advance_buffer(lyellow,  buf_length,(delay_ly+pass_length+pass_shift)*interlace);
 	} /* for y */
 
-	lexmark_write_line(prn, outbuf, printMode, &direction, &elinescount, xresolution, yresolution, interlace, pass_length, pass_shift, caps, ydpi,
+	lexmark_write_line(v, outbuf, printMode, &direction, &elinescount, xresolution, yresolution, interlace, pass_length, pass_shift, caps, ydpi,
 			   black,    delay_k,
 			   cyan,     delay_c,
 			   magenta,  delay_m,
@@ -1948,7 +1946,7 @@ lexmark_describe_resolution(printer,
   lex_show_deinit(dbgfile);
 #endif
 
-  lexmark_deinit_printer(prn, caps);
+  lexmark_deinit_printer(v, caps);
 }
 
 stp_printfuncs_t stp_lexmark_printfuncs =
@@ -2153,7 +2151,7 @@ typedef struct Lexmark_head_colors {
    pixel lines (pixels, which could be printed with one pass by the printer. 
 */
 static int
-lexmark_write(FILE *prn,		/* I - Print file or command */
+lexmark_write(const stp_vars_t *v,		/* I - Print file or command */
 	      unsigned char *prnBuf,      /* mem block to buffer output */
 	      int *paperShift,
 	      int direction,
@@ -2374,12 +2372,11 @@ lexmark_write(FILE *prn,		/* I - Print file or command */
   
   if (anyCol) {
     /* fist, move the paper */
-    paper_shift(prn, (*paperShift), caps);   
+    paper_shift(v, (*paperShift), caps);   
     *paperShift=0;
 
     /* now we write the image line */
-    if ( fwrite(prnBuf,1,clen,prn)!=clen)
-      fprintf(stderr,"print_cols: short write\n");
+    stp_zfwrite(prnBuf,1,clen,v);
 #ifdef DEBUG
     fprintf(stderr,"lexmark: line written.\n");
 #endif
@@ -2553,7 +2550,7 @@ lexmark_getNextMode(int *mode, int *direction, int pass_length, int *lineStep, i
 
 
 static void
-lexmark_write_line(FILE *prn,	/* I - Print file or command */
+lexmark_write_line(const stp_vars_t *v,	/* I - Print file or command */
 		   unsigned char *prnBuf,/* mem block to buffer output */
 		   int printMode,
 		   int *direction,
@@ -2594,7 +2591,7 @@ lexmark_write_line(FILE *prn,	/* I - Print file or command */
 				      {0, NULL, 128/2, 192/2}};
 
   
-  /*  paper_shift(prn, *elinescount, caps);   
+  /*  paper_shift(v, *elinescount, caps);   
    *elinescount=0;*/
   pass_shift = 0;
   
@@ -2616,7 +2613,7 @@ lexmark_write_line(FILE *prn,	/* I - Print file or command */
 	head_colors[2].line = y+(l*dy)+(l*i*pass_shift);
       }
 
-      if (lexmark_write(prn, prnBuf, elinescount, *direction, pass_length, caps, xresolution, interlace,
+      if (lexmark_write(v, prnBuf, elinescount, *direction, pass_length, caps, xresolution, interlace,
 			head_colors,
 			l, printMode & ~(COLOR_MODE_LC | COLOR_MODE_K | COLOR_MODE_LM), /* we print colors only */
 			ydpi, &empty, width, offset, dmt))
@@ -2631,7 +2628,7 @@ lexmark_write_line(FILE *prn,	/* I - Print file or command */
       head_colors[1].line = k+(l*dk)+(l*i*pass_shift);
       head_colors[0].line = 0;
       head_colors[2].line = 0;
-      if (lexmark_write(prn, prnBuf, elinescount, *direction, pass_length, caps, xresolution,  interlace,
+      if (lexmark_write(v, prnBuf, elinescount, *direction, pass_length, caps, xresolution,  interlace,
 			head_colors, 
 			l, printMode & ~(COLOR_MODE_C | COLOR_MODE_M | COLOR_MODE_Y), /* we print black only */
 			ydpi, &empty, width, offset, dmt))
@@ -2655,7 +2652,7 @@ lexmark_write_line(FILE *prn,	/* I - Print file or command */
       head_colors[2].head_nozzle_end = 0;
       head_colors[2].line = NULL;
 
-      if (lexmark_write(prn, prnBuf, elinescount, *direction, pass_length, caps, xresolution,  interlace,
+      if (lexmark_write(v, prnBuf, elinescount, *direction, pass_length, caps, xresolution,  interlace,
 			head_colors, 
 			l, printMode, /* we print black only */
 			ydpi, &empty, width, offset, dmt))
@@ -2671,7 +2668,7 @@ lexmark_write_line(FILE *prn,	/* I - Print file or command */
       head_colors[0].line = lc+(l*dlc)+(l*i*pass_shift);
       head_colors[1].line = lm+(l*dlm)+(l*i*pass_shift);
       head_colors[2].line = k +(l*dk) +(l*i*pass_shift);
-      if (lexmark_write(prn, prnBuf, elinescount, *direction, pass_length, caps, xresolution, interlace,
+      if (lexmark_write(v, prnBuf, elinescount, *direction, pass_length, caps, xresolution, interlace,
 			head_colors,   
 			l, printMode & ~(COLOR_MODE_C | COLOR_MODE_M | COLOR_MODE_Y), 
 			ydpi, &empty, width, offset, dmt))
@@ -2683,15 +2680,15 @@ lexmark_write_line(FILE *prn,	/* I - Print file or command */
 
 
   if (written)
-    fwrite("\x1b\x28\x65\x02\x00\x00\x01", 7, 1, prn);
+    stp_zfwrite("\x1b\x28\x65\x02\x00\x00\x01", 7, 1, v);
   else
     empty++;
 }
 
 
 #ifdef DEBUG
-FILE *lex_show_init(int x, int y) {
-  FILE *ofile;
+const stp_vars_t *lex_show_init(int x, int y) {
+  const stp_vars_t *ofile;
 
   ofile = fopen("/tmp/xx.ppm", "wb");
   if (ofile == NULL) 
@@ -2710,7 +2707,7 @@ FILE *lex_show_init(int x, int y) {
   return ofile;
 }
 
-void lex_show_dither(FILE *file, unsigned char *y, unsigned char *c, unsigned char *m, unsigned char *ly, unsigned char *lc, unsigned char *lm, unsigned char *k, int length) {
+void lex_show_dither(const stp_vars_t *file, unsigned char *y, unsigned char *c, unsigned char *m, unsigned char *ly, unsigned char *lc, unsigned char *lm, unsigned char *k, int length) {
   int i;
   unsigned char col[3];
   unsigned char col1[3];
@@ -2782,12 +2779,11 @@ void lex_show_dither(FILE *file, unsigned char *y, unsigned char *c, unsigned ch
     col2[2] = col1[2];
 #endif
 
-    fwrite(&col, 1, 3, file);
+    stp_zfwrite(&col, 1, 3, file);
   }
 }
 
-void lex_show_deinit(FILE *file) {
-  fclose(file);
+void lex_show_deinit(const stp_vars_t *file) {
 }
 
 

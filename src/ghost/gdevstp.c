@@ -217,6 +217,13 @@ stp_print_debug(const char *msg, gx_device *pdev,
 }
 
 
+private void
+stp_writefunc(void *file, const char *buf, size_t bytes)
+{
+  FILE *prn = (FILE *)file;
+  fwrite(buf, 1, bytes, prn);
+}
+
 private int
 stp_print_page(gx_device_printer * pdev, FILE * file)
 {
@@ -274,9 +281,12 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
   gsImage.dev = pdev;
   gsImage.data = &stp_data;
   gsImage.raster = stp_raster;
+  stp_data.v.outfunc = stp_writefunc;
+  stp_data.v.errfunc = stp_writefunc;
+  stp_data.v.outdata = file;
+  stp_data.v.errdata = gs_stderr;
   if (stp_verify_printer_params(printer, &(stp_data.v)))
     (*printer->printfuncs->print)(printer,		/* I - Model */
-		      file,		/* I - File to print to */
 		      &theImage,	/* I - Image to print (dummy) */
 		      &stp_data.v);	/* stp_vars_t * */
   else

@@ -198,7 +198,6 @@ typedef struct stp_softweave
 		    int width, int hoffset,
 		    int ydpi, int xdpi,
 		    int physical_xdpi,
-		    FILE *prn,
 		    int vertical_subpass);
 } stp_softweave_t;
 
@@ -301,15 +300,13 @@ extern void *stp_initialize_weave(int jets, int separation, int oversample,
 						    int width, int hoffset,
 						    int ydpi, int xdpi,
 						    int physical_xdpi,
-						    FILE *prn,
 						    int vertical_subpass));
 
 extern void stp_flush_all(void *, int model, int width, int hoffset,
-			  int ydpi, int xdpi, int physical_xdpi, FILE *prn);
+			  int ydpi, int xdpi, int physical_xdpi);
 
 extern void
 stp_write_weave(void *        vsw,
-		FILE          *prn,	/* I - Print file or command */
 		int           length,	/* I - Length of bitmap data */
 		int           ydpi,	/* I - Vertical resolution */
 		int           model,	/* I - Printer model */
@@ -354,6 +351,17 @@ stp_weave_parameters_by_row(const stp_softweave_t *sw, int row,
 			    int vertical_subpass, stp_weave_t *w);
 
 extern void stp_destroy_weave(void *);
+
+extern void stp_zprintf(const stp_vars_t *v, const char *format, ...);
+
+extern void stp_zfwrite(const char *buf, size_t bytes, size_t nitems,
+			const stp_vars_t *v);
+
+extern void stp_putc(int ch, const stp_vars_t *v);
+
+extern void stp_puts(const char *s, const stp_vars_t *v);
+
+extern void stp_eprintf(const stp_vars_t *v, const char *format, ...);
 
 
 /* Uncomment the next line to get performance statistics:

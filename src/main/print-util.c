@@ -36,6 +36,7 @@
 #include <gimp-print-intl-internal.h>
 #include <math.h>
 #include <limits.h>
+#include <stdarg.h>
 
 #ifndef __GNUC__
 #  define inline
@@ -655,7 +656,7 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
 	    if (!strcmp(v->media_size, vptr[i]))
 	      goto good_page_size;
 	  answer = 0;
-	  fprintf(stderr, "%s is not a valid page size\n", v->media_size);
+	  stp_eprintf(v, "%s is not a valid page size\n", v->media_size);
 	good_page_size:
 	  for (i = 0; i < count; i++)
 	    free(vptr[i]);
@@ -668,14 +669,14 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
       int height, width;
       (*p->printfuncs->limit)(p, v, &width, &height);
 #if 0
-      fprintf(stderr, "limit %d %d dims %d %d\n", width, height,
-	      v->page_width, v->page_height);
+      stp_eprintf(v, "limit %d %d dims %d %d\n",
+		  width, height, v->page_width, v->page_height);
 #endif
       if (v->page_height <= 0 || v->page_height > height ||
 	  v->page_width <= 0 || v->page_width > width)
 	{
 	  answer = 0;
-	  fprintf(stderr, "Image size is not valid\n");
+	  stp_eprintf(v, "Image size is not valid\n");
 	}
     }
 
@@ -688,7 +689,7 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
 	    if (!strcmp(v->media_type, vptr[i]))
 	      goto good_media_type;
 	  answer = 0;
-	  fprintf(stderr, "%s is not a valid media type\n", v->media_type);
+	  stp_eprintf(v, "%s is not a valid media type\n", v->media_type);
 	good_media_type:
 	  for (i = 0; i < count; i++)
 	    free(vptr[i]);
@@ -706,7 +707,7 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
 	    if (!strcmp(v->media_source, vptr[i]))
 	      goto good_media_source;
 	  answer = 0;
-	  fprintf(stderr, "%s is not a valid media source\n", v->media_source);
+	  stp_eprintf(v, "%s is not a valid media source\n", v->media_source);
 	good_media_source:
 	  for (i = 0; i < count; i++)
 	    free(vptr[i]);
@@ -724,7 +725,7 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
 	    if (!strcmp(v->resolution, vptr[i]))
 	      goto good_resolution;
 	  answer = 0;
-	  fprintf(stderr, "%s is not a valid resolution\n", v->resolution);
+	  stp_eprintf(v, "%s is not a valid resolution\n", v->resolution);
 	good_resolution:
 	  for (i = 0; i < count; i++)
 	    free(vptr[i]);
@@ -742,7 +743,7 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
 	    if (!strcmp(v->ink_type, vptr[i]))
 	      goto good_ink_type;
 	  answer = 0;
-	  fprintf(stderr, "%s is not a valid ink type\n", v->ink_type);
+	  stp_eprintf(v, "%s is not a valid ink type\n", v->ink_type);
 	good_ink_type:
 	  for (i = 0; i < count; i++)
 	    free(vptr[i]);
@@ -755,7 +756,7 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
     if (!strcmp(v->dither_algorithm, stp_dither_algorithm_name(i)))
       return answer;
 
-  fprintf(stderr, "%s is not a valid dither algorithm\n", v->dither_algorithm);
+  stp_eprintf(v, "%s is not a valid dither algorithm\n", v->dither_algorithm);
   return 0;
 }
 
@@ -777,6 +778,55 @@ stp_minimum_settings()
   return &min_vars;
 }
 
+extern int vasprintf (char **result, const char *format, va_list args);
+
+void
+stp_zprintf(const stp_vars_t *v, const char *format, ...)
+{
+  va_list args;
+  int bytes;
+  char *result;
+  va_start(args, format);
+  bytes = vasprintf(&result, format, args);
+  va_end(args);
+  (v->outfunc)((void *)(v->outdata), result, bytes);
+  free(result);
+}
+
+void
+stp_zfwrite(const char *buf, size_t bytes, size_t nitems, const stp_vars_t *v)
+{
+  (v->outfunc)((void *)(v->outdata), buf, bytes * nitems);
+}
+
+void
+stp_putc(int ch, const stp_vars_t *v)
+{
+  char a = (char) ch;
+  (v->outfunc)((void *)(v->outdata), &a, 1);
+}
+
+void
+stp_puts(const char *s, const stp_vars_t *v)
+{
+  (v->outfunc)((void *)(v->outdata), s, strlen(s));
+}
+
+void
+stp_eprintf(const stp_vars_t *v, const char *format, ...)
+{
+  va_list args;
+  int bytes;
+  char *result;
+  va_start(args, format);
+  bytes = vasprintf(&result, format, args);
+  va_end(args);
+  (v->errfunc)((void *)(v->errdata), result, bytes);
+  free(result);
+}
+  
+
+
 #ifdef QUANTIFY
 unsigned quantify_counts[NUM_QUANTIFY_BUCKETS] = {0};
 struct timeval quantify_buckets[NUM_QUANTIFY_BUCKETS] = {{0,0}};
@@ -785,17 +835,23 @@ int quantify_first_time = 1;
 struct timeval quantify_cur_time;
 struct timeval quantify_prev_time;
 
-void print_timers() 
+void print_timers(const stp_vars_t *v)
 {
-    int i;
+  int i;
 
-    printf("Quantify timers:\n");
-    for (i = 0; i <= quantify_high_index; i++) {
-       if (quantify_counts[i] == 0) continue;
-        printf("Bucket %d:\t%ld.%ld s\thit %u times\n", i, quantify_buckets[i].tv_sec, quantify_buckets[i].tv_usec, quantify_counts[i]);
-        quantify_buckets[i].tv_sec = 0;
-        quantify_buckets[i].tv_usec = 0;
-        quantify_counts[i] = 0;
+  stp_eprintf(v, "%s", "Quantify timers:\n");
+  for (i = 0; i <= quantify_high_index; i++)
+    {
+      if (quantify_counts[i] > 0)
+	{
+	  stp_eprintf(v,
+		      "Bucket %d:\t%ld.%ld s\thit %u times\n", i,
+		      quantify_buckets[i].tv_sec, quantify_buckets[i].tv_usec,
+		      quantify_counts[i]);
+	  quantify_buckets[i].tv_sec = 0;
+	  quantify_buckets[i].tv_usec = 0;
+	  quantify_counts[i] = 0;
+	}
     }
 }
 #endif
