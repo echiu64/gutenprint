@@ -195,24 +195,22 @@ typedef struct escp2_printer
  * The green and blue will vary somewhat with different inks
  */
 
-static double dot_sizes[] = { 0.5, 0.67, 1.0 };
+static double dot_sizes[] = { 0.333, 0.5, 1.0 };
 
 static simple_dither_range_t variable_dither_ranges[] =
 {
-  { 0.152, 0x1, 0, 1 },
-  { 0.255, 0x2, 0, 2 },
-  { 0.38,  0x3, 0, 3 },
-#if 0
-  { 0.5,   0x1, 1, 1 },
-#endif
-  { 0.67,  0x2, 1, 2 },
+  { 0.083, 0x1, 0, 1 },
+  { 0.125, 0x2, 0, 2 },
+  { 0.25,  0x3, 0, 3 },
+  { 0.333, 0x1, 1, 1 },
+  { 0.5,   0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
 
 static simple_dither_range_t standard_dither_ranges[] =
 {
-  { 0.5,   0x1, 1, 1 },
-  { 0.67,  0x2, 1, 2 },
+  { 0.333, 0x1, 1, 1 },
+  { 0.5,   0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
 
@@ -1224,19 +1222,23 @@ escp2_print(const printer_t *printer,		/* I - Model */
   else
     dither = init_dither(image_width, out_width, v);
   dither_set_black_levels(dither, 1.5, 1.5, 1.5);
-  dither_set_black_lower(dither, .4);
+  dither_set_black_lower(dither, .4 / bits);
   if (use_glossy_film)
     dither_set_black_upper(dither, .999);
   else
     dither_set_black_upper(dither, .999);
   if (bits == 2)
     {
+      int dsize = (sizeof(variable_dither_ranges) /
+		   sizeof(simple_dither_range_t));
       dither_set_y_ranges_simple(dither, 3, dot_sizes, v->density);
       dither_set_k_ranges_simple(dither, 3, dot_sizes, v->density);
       if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
 	{
-	  dither_set_c_ranges(dither, 5, variable_dither_ranges, v->density);
-	  dither_set_m_ranges(dither, 5, variable_dither_ranges, v->density);
+	  dither_set_c_ranges(dither, dsize, variable_dither_ranges,
+			      v->density);
+	  dither_set_m_ranges(dither, dsize, variable_dither_ranges,
+			      v->density);
 	}
       else
 	{	
@@ -2825,6 +2827,7 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	  else
 	    fprintf(prn, "\033(v\002%c%c%c", 0, alo, ahi);
 	  sw->last_pass_offset = pass->logicalpassstart;
+	  initial_extra = 0;
 	}
       if (last_color != j)
 	{
