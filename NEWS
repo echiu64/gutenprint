@@ -178,8 +178,7 @@ Gimp-Print 4.2.6 contains the following major changes over Gimp-Print
      1) The cups-config provided by the CUPS driver adds
         -Wl,rpath=/usr/lib. This is done by some versions of CUPS
         reportedly because in some cases the runtime linker does not
-        pick up libraries out of /usr/lib.  This is not the case with
-        1.1.14 and 1.1.15, but is with 1.1.20.  This can be checked by
+        pick up libraries out of /usr/lib.  This can be checked by
         running
 
         cups-config --libs --ldflags
