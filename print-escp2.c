@@ -31,6 +31,12 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.53  2000/02/05 14:56:41  rlk
+ *   1) print-util.c: decrement rather than increment counter!
+ *
+ *   2) print-escp2.c: don't advance the paper a negative (or, with some printers,
+ *   a very large positive) amount.
+ *
  *   Revision 1.52  2000/02/04 02:07:52  rlk
  *   1440 dpi stupidity
  *
@@ -1819,33 +1825,33 @@ typedef struct {
   lineoff_t *lineoffsets;	/* Offsets within each row buffer */
   int *linecounts;		/* How many rows we've printed this pass */
   pass_t *passes;		/* Circular list of pass numbers */
-  int last_pass_offset;	/* Starting row (offset from the start of */
+  int last_pass_offset;		/* Starting row (offset from the start of */
 				/* the image) of the most recently printed */
 				/* pass (so we can determine how far to */
 				/* advance the paper) */
   int last_pass;		/* Number of the most recently printed pass */
 
-  int njets;		/* Number of jets in use */
+  int njets;			/* Number of jets in use */
   int separation;		/* Separation between jets */
 
   int weavefactor;		/* Interleave factor (jets / separation) */
-  int jetsused;		/* How many jets we can actually use */
-  int initialoffset;	/* Distance between the first row we're */
+  int jetsused;			/* How many jets we can actually use */
+  int initialoffset;		/* Distance between the first row we're */
 				/* printing and the logical first row */
 				/* (first nozzle of the first pass). */
 				/* Currently this is zero. */
-  int jetsleftover;	/* How many jets we're *not* using. */
+  int jetsleftover;		/* How many jets we're *not* using. */
 				/* This can be used to rotate exactly */
 				/* what jets we're using.  Currently this */
 				/* is not used. */
   int weavespan;		/* How many rows total are bracketed by */
 				/* one pass (separation * (jets - 1) */
-  int horizontal_weave;	/* Number of horizontal passes required */
+  int horizontal_weave;		/* Number of horizontal passes required */
 				/* This is > 1 for some of the ultra-high */
 				/* resolution modes */
   int vertical_subpasses;	/* Number of passes per line (for better */
 				/* quality) */
-  int vmod;		/* Number of banks of passes */
+  int vmod;			/* Number of banks of passes */
   int oversample;		/* Excess precision per row */
   int realjets;
   int pass_adjustment;
@@ -2194,7 +2200,9 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
   int *linecount = get_linecount_by_pass(sw, passno);
   int lwidth = (width + (sw->horizontal_weave - 1)) / sw->horizontal_weave;
   int microoffset = vertical_subpass & (sw->horizontal_weave - 1);
-  if (pass->physpassstart > sw->last_pass_offset)
+  if (passno == 0)
+    sw->last_pass_offset = pass->logicalpassstart;
+  else if (pass->logicalpassstart > sw->last_pass_offset)
     {
       int advance = pass->logicalpassstart - sw->last_pass_offset;
       int alo = advance % 256;

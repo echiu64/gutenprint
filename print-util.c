@@ -38,6 +38,12 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.63  2000/02/05 14:56:41  rlk
+ *   1) print-util.c: decrement rather than increment counter!
+ *
+ *   2) print-escp2.c: don't advance the paper a negative (or, with some printers,
+ *   a very large positive) amount.
+ *
  *   Revision 1.62  2000/02/04 09:40:28  gandy
  *   Models BJC-1000/2000/3000/6000/6100/7000/7100 ready for testing.
  *
@@ -1557,7 +1563,7 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
     else if (x > dst_width - offset - 1)
       offset = dst_width - x - 1;
 
-    for (i = d->nk_l; i > 0; i++)
+    for (i = d->nk_l; i > 0; i--)
       {
 	if (k > d->k_transitions[i])
 	  {
@@ -1635,7 +1641,7 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
 #define DO_PRINT_COLOR_4(base, r, ratio)		\
 do {							\
   int i;						\
-  for (i = d->n##r##_l; i > 0; i++)			\
+  for (i = d->n##r##_l; i > 0; i--)			\
     {							\
       if (base > d->r##_transitions[i])			\
 	{						\
