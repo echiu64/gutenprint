@@ -38,7 +38,7 @@ if BUILD_ESCPUTIL
 bin_PROGRAMS = escputil
 endif
 
-escputil_LDADD = $(LIBPRINUT) $(LIBREADLINE_DEPS)
+escputil_LDADD = $(LIBPRINTUT) $(LIBREADLINE_DEPS)
 
 
 ## Clean
