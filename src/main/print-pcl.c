@@ -2736,8 +2736,8 @@ pcl_module_exit(void)
 
 
 /* Module header */
-#define stp_module_version stp_pcl_LTX_stp_module_version
-#define stp_module_data stp_pcl_LTX_stp_module_data
+#define stp_module_version pcl_LTX_stp_module_version
+#define stp_module_data pcl_LTX_stp_module_data
 
 stp_module_version_t stp_module_version = {0, 0};
 

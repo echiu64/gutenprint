@@ -58,24 +58,24 @@ static stp_internal_module_class_t module_classes[] =
   };
 
 #if !defined(USE_LTDL) && !defined(USE_DLOPEN)
-extern stp_module_t stp_canon_LTX_stp_module_data;
-extern stp_module_t stp_escp2_LTX_stp_module_data;
-extern stp_module_t stp_lexmark_LTX_stp_module_data;
-extern stp_module_t stp_pcl_LTX_stp_module_data;
-extern stp_module_t stp_ps_LTX_stp_module_data;
-extern stp_module_t stp_raw_LTX_stp_module_data;
+extern stp_module_t canon_LTX_stp_module_data;
+extern stp_module_t escp2_LTX_stp_module_data;
+extern stp_module_t lexmark_LTX_stp_module_data;
+extern stp_module_t pcl_LTX_stp_module_data;
+extern stp_module_t ps_LTX_stp_module_data;
+extern stp_module_t raw_LTX_stp_module_data;
 
 /*
  * A list of modules, for use when the modules are linked statically.
  */
 static stp_module_t *static_modules[] =
   {
-    &stp_ps_LTX_stp_module_data,
-    &stp_canon_LTX_stp_module_data,
-    &stp_escp2_LTX_stp_module_data,
-    &stp_pcl_LTX_stp_module_data,
-    &stp_lexmark_LTX_stp_module_data,
-    &stp_raw_LTX_stp_module_data,
+    &ps_LTX_stp_module_data,
+    &canon_LTX_stp_module_data,
+    &escp2_LTX_stp_module_data,
+    &pcl_LTX_stp_module_data,
+    &lexmark_LTX_stp_module_data,
+    &raw_LTX_stp_module_data,
     NULL
   };
 #endif
