@@ -296,7 +296,7 @@ raw_print(const stp_vars_t v, stp_image_t *image)
   return status;
 }
 
-const stp_printfuncs_t stp_raw_printfuncs =
+static const stp_printfuncs_t stp_raw_printfuncs =
 {
   raw_list_parameters,
   raw_parameters,
