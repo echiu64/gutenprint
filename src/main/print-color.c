@@ -1750,6 +1750,18 @@ stp_compute_lut(stp_vars_t v, size_t steps)
 #endif
 }
 
+#ifdef DEBUG
+#define RETURN_COLORFUNC(x)						      \
+do									      \
+{									      \
+  stp_eprintf(v, "stp_choose_colorfunc(type %d bpp %d cmap %d) ==> %s, %d\n", \
+	      output_type, image_bpp, cmap, #x, *out_bpp);		      \
+  return (x);								      \
+} while (0)
+#else
+#define RETURN_COLORFUNC(x) return(x)
+#endif
+
 stp_convert_t
 stp_choose_colorfunc(int output_type,
 		     int image_bpp,
@@ -1764,20 +1776,20 @@ stp_choose_colorfunc(int output_type,
 	{
 	case 1:
 	  if (cmap)
-	    return indexed_to_monochrome;
+	    RETURN_COLORFUNC(indexed_to_monochrome);
 	  else
-	    return gray_to_monochrome;
+	    RETURN_COLORFUNC(gray_to_monochrome);
 	case 2:
 	  if (cmap)
-	    return indexed_alpha_to_monochrome;
+	    RETURN_COLORFUNC(indexed_alpha_to_monochrome);
 	  else
-	    return gray_alpha_to_monochrome;
+	    RETURN_COLORFUNC(gray_alpha_to_monochrome);
 	case 3:
-	  return rgb_to_monochrome;
+	  RETURN_COLORFUNC(rgb_to_monochrome);
 	case 4:
-	  return rgb_alpha_to_monochrome;
+	  RETURN_COLORFUNC(rgb_alpha_to_monochrome);
 	default:
-	  return NULL;
+	  RETURN_COLORFUNC(NULL);
 	}
     }
   else if (output_type == OUTPUT_RAW_CMYK)
@@ -1786,11 +1798,11 @@ stp_choose_colorfunc(int output_type,
       switch (image_bpp)
 	{
 	case 4:
-	  return cmyk_8_to_cmyk;
+	  RETURN_COLORFUNC(cmyk_8_to_cmyk);
 	case 8:
-	  return cmyk_to_cmyk;
+	  RETURN_COLORFUNC(cmyk_to_cmyk);
 	default:
-	  return NULL;
+	  RETURN_COLORFUNC(NULL);
 	}
     }
   else if (output_type == OUTPUT_COLOR)
@@ -1800,23 +1812,23 @@ stp_choose_colorfunc(int output_type,
       if (image_bpp >= 3)
 	{
 	  if (stp_get_image_type(v) == IMAGE_CONTINUOUS)
-	    return rgb_to_rgb;
+	    RETURN_COLORFUNC(rgb_to_rgb);
 	  else
-	    return fast_rgb_to_rgb;
+	    RETURN_COLORFUNC(fast_rgb_to_rgb);
 	}
       else if (cmap == NULL)
         {
           if (stp_get_image_type(v) == IMAGE_CONTINUOUS)
-	    return gray_to_rgb;
+	    RETURN_COLORFUNC(gray_to_rgb);
           else
-	    return fast_gray_to_rgb;
+	    RETURN_COLORFUNC(fast_gray_to_rgb);
         }
       else
 	{
 	  if (stp_get_image_type(v) == IMAGE_CONTINUOUS)
-	    return indexed_to_rgb;
+	    RETURN_COLORFUNC(indexed_to_rgb);
 	  else
-	    return fast_indexed_to_rgb;
+	    RETURN_COLORFUNC(fast_indexed_to_rgb);
 	}
     }
   else				/* Grayscale */
@@ -1826,20 +1838,20 @@ stp_choose_colorfunc(int output_type,
 	{
 	case 1:
 	  if (cmap)
-	    return indexed_to_gray;
+	    RETURN_COLORFUNC(indexed_to_gray);
 	  else
-	    return gray_to_gray;
+	    RETURN_COLORFUNC(gray_to_gray);
 	case 2:
 	  if (cmap)
-	    return indexed_alpha_to_gray;
+	    RETURN_COLORFUNC(indexed_alpha_to_gray);
 	  else
-	    return gray_alpha_to_gray;
+	    RETURN_COLORFUNC(gray_alpha_to_gray);
 	case 3:
-	  return rgb_to_gray;
+	  RETURN_COLORFUNC(rgb_to_gray);
 	case 4:
-	  return rgb_alpha_to_gray;
+	  RETURN_COLORFUNC(rgb_alpha_to_gray);
 	default:
-	  return NULL;
+	  RETURN_COLORFUNC(NULL);
 	}
     }
 }
