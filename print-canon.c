@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.14  2000/02/08 12:24:50  gandy
+ *   Beginning support for variable drop sizes (experimental stage)
+ *
  *   Revision 1.13  2000/02/07 17:03:19  gandy
  *   Major code-cleanups, prettified model capabilities
  *
@@ -92,18 +95,18 @@
  * Local functions...
  */
 
-static int  canon_write(FILE *, unsigned char *, int, int, int, int,
-			int*, int, int);
+static void canon_write_line(FILE *, int, int,
+			     unsigned char *, int,
+			     unsigned char *, int,
+			     unsigned char *, int,
+			     unsigned char *, int,
+			     unsigned char *, int,
+			     unsigned char *, int,
+			     unsigned char *, int,
+			     int, int, int, int);
 
-static void canon_write_line(FILE *,
-			     unsigned char *, int,
-			     unsigned char *, int,
-			     unsigned char *, int,
-			     unsigned char *, int,
-			     unsigned char *, int,
-			     unsigned char *, int,
-			     unsigned char *, int,
-			     int, int, int, int, int);
+static int  canon_write(FILE *, unsigned char *, int, int, int, int,
+			int*, int, int, int);
 
 #define PHYSICAL_BPI 1440
 #define MAX_OVERSAMPLED 4
@@ -121,7 +124,7 @@ typedef struct {
   int max_ydpi;
   int inks;           /* installable cartridges (CANON_INK_*) */
   int slots;          /* available paperslots */
-  int bjl;            /* special bjl settings */
+  int features;       /* special bjl settings */
 } canon_cap_t;
 
 /* Codes for possible ink-tank combinations. 
@@ -433,6 +436,8 @@ canon_parameters(int  model,		/* I - Printer model */
 	valptrs[c++]= c_strdup("180x180 DPI");
       if ( 360<=x && 360<=y)
 	valptrs[c++]= c_strdup("360x360 DPI");
+      if ( 360<=x && 360<=y && (caps.features&CANON_CAP_DMT))
+	valptrs[c++]= c_strdup("360x360 DPI w/ DMT");
       if ( 720<=x && 360<=y)
 	valptrs[c++]= c_strdup("720x360 DPI");
       if ( 720<=x && 720<=y)
@@ -554,9 +559,11 @@ static void
 canon_init_printer(FILE *prn, canon_cap_t caps, 
 		   int output_type, char *media_str, 
 		   char *size_str, int print_head, 
-		   char *source_str, int xdpi, 
-		   int ydpi, int page_width, int page_height,
-		   int page_length, int page_top, int page_bottom, int top)
+		   char *source_str, 
+		   int xdpi, int ydpi, 
+		   int page_width, int page_height,
+		   int top, int left,
+		   int use_dmt)
 {
 #define MEDIACODES 11
   static unsigned char mediacode_63[] = {
@@ -633,7 +640,7 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
   /* init printer */
 
   canon_cmd(prn,ESC5b,0x4b, 2, 0x00,0x0f);
-  if (caps.bjl & CANON_CAP_CMD61) 
+  if (caps.features & CANON_CAP_CMD61) 
     canon_cmd(prn,ESC5b,0x61, 1, 0x00,0x01);
   canon_cmd(prn,ESC28,0x62, 1, 0x01);
   canon_cmd(prn,ESC28,0x71, 1, 0x01);
@@ -743,6 +750,7 @@ canon_print(int       model,		/* I - Model */
 		temp_height,	/* Temporary height of image on page */
 		landscape,	/* True if we rotate the output 90 degrees */
 		length,		/* Length of raster data */
+                buf_length,     /* Length of raster data buffer (dmt) */
 		errdiv,		/* Error dividend */
 		errmod,		/* Error modulus */
 		errval,		/* Current error value */
@@ -752,7 +760,9 @@ canon_print(int       model,		/* I - Model */
   int           image_height,
                 image_width,
                 image_bpp;
+  int           use_dmt = 0;
   void *	dither;
+  double        the_levels[] = { 0.0, 0.5, 0.75, 1.0 };
 
   canon_cap_t caps= canon_get_model_capabilities(model);
   int printhead= canon_printhead_type(ink_type,caps);
@@ -808,6 +818,11 @@ canon_print(int       model,		/* I - Model */
 
   sscanf(resolution,"%dx%d",&xdpi,&ydpi);
   fprintf(stderr,"canon: resolution=%dx%d\n",xdpi,ydpi);
+  if (!strcmp(resolution+(strlen(resolution)-3),"DMT") && 
+      (caps.features & CANON_CAP_DMT)) {
+    use_dmt= 1;
+    fprintf(stderr,"canon: using drop modulation technology\n");
+  }
 
  /*
   * Compute the output size...
@@ -938,7 +953,7 @@ canon_print(int       model,		/* I - Model */
   canon_init_printer(prn, caps, output_type, media_type, 
 		     media_size, printhead, media_source, 
 		     xdpi, ydpi, page_width, page_height,
-		     page_length, page_top, page_bottom, top);
+		     top,left,use_dmt);
 
  /*
   * Convert image size to printer resolution...
@@ -978,9 +993,14 @@ canon_print(int       model,		/* I - Model */
 
   length = (out_width + 7) / 8;
 
+  if (use_dmt) {
+    buf_length= length*2;
+  } else {
+    buf_length= length;
+  }
 
   if (output_type == OUTPUT_GRAY) {
-    black   = canon_alloc_buffer(length*(delay_k+1));
+    black   = canon_alloc_buffer(buf_length*(delay_k+1));
     cyan    = NULL;
     magenta = NULL;
     lcyan   = NULL;
@@ -988,20 +1008,20 @@ canon_print(int       model,		/* I - Model */
     yellow  = NULL;
     lyellow = NULL;
   } else {
-    cyan    = canon_alloc_buffer(length*(delay_c+1));
-    magenta = canon_alloc_buffer(length*(delay_m+1));
-    yellow  = canon_alloc_buffer(length*(delay_y+1));
+    cyan    = canon_alloc_buffer(buf_length*(delay_c+1));
+    magenta = canon_alloc_buffer(buf_length*(delay_m+1));
+    yellow  = canon_alloc_buffer(buf_length*(delay_y+1));
   
     if ((caps.inks & CANON_INK_BLACK_MASK))
-      black = canon_alloc_buffer(length*(delay_k+1));
+      black = canon_alloc_buffer(buf_length*(delay_k+1));
     else
       black = NULL;
 
     if (printhead==3 && (caps.inks & (CANON_INK_PHOTO_MASK))) {
-      lcyan = canon_alloc_buffer(length*(delay_lc+1));
-      lmagenta = canon_alloc_buffer(length*(delay_lm+1));
+      lcyan = canon_alloc_buffer(buf_length*(delay_lc+1));
+      lmagenta = canon_alloc_buffer(buf_length*(delay_lm+1));
       if ((caps.inks & CANON_INK_CcMmYy)) 
-	lyellow = canon_alloc_buffer(length*(delay_lc+1));
+	lyellow = canon_alloc_buffer(buf_length*(delay_lc+1));
       else 
 	lyellow = NULL;
     } else {
@@ -1021,6 +1041,16 @@ canon_print(int       model,		/* I - Model */
   fprintf(stderr,"\n");
 
   dither = init_dither(image_width, out_width, 1);
+
+  if (use_dmt) {
+    if (cyan)     dither_set_c_levels(dither,4,the_levels);
+    if (lcyan)    dither_set_lc_levels(dither,4,the_levels);
+    if (magenta)  dither_set_m_levels(dither,4,the_levels);
+    if (lmagenta) dither_set_lm_levels(dither,4,the_levels);
+    if (yellow)   dither_set_y_levels(dither,4,the_levels);
+    if (lyellow)  dither_set_ly_levels(dither,4,the_levels);
+    if (black)    dither_set_k_levels(dither,4,the_levels);
+  }
     
  /*
   * Output the page, rotating as necessary...
@@ -1054,7 +1084,7 @@ canon_print(int       model,		/* I - Model */
 		    yellow, lyellow, black);
 
       /* fprintf(stderr,"."); */
-      canon_write_line(prn,
+      canon_write_line(prn, model, ydpi,
 		       black,    delay_k,
 		       cyan,     delay_c, 
 		       magenta,  delay_m, 
@@ -1062,16 +1092,16 @@ canon_print(int       model,		/* I - Model */
 		       lcyan,    delay_lc, 
 		       lmagenta, delay_lm,
 		       lyellow,  delay_ly, 
-		       length, ydpi, model, out_width, left);
+		       length, out_width, left, use_dmt);
       /* fprintf(stderr,"!"); */
  
-      canon_advance_buffer(black,   length,delay_k);
-      canon_advance_buffer(cyan,    length,delay_c);
-      canon_advance_buffer(magenta, length,delay_m);
-      canon_advance_buffer(yellow,  length,delay_y);
-      canon_advance_buffer(lcyan,   length,delay_lc);
-      canon_advance_buffer(lmagenta,length,delay_lm);
-      canon_advance_buffer(lyellow, length,delay_ly);
+      canon_advance_buffer(black,   buf_length,delay_k);
+      canon_advance_buffer(cyan,    buf_length,delay_c);
+      canon_advance_buffer(magenta, buf_length,delay_m);
+      canon_advance_buffer(yellow,  buf_length,delay_y);
+      canon_advance_buffer(lcyan,   buf_length,delay_lc);
+      canon_advance_buffer(lmagenta,buf_length,delay_lm);
+      canon_advance_buffer(lyellow, buf_length,delay_ly);
 
       errval += errmod;
       errline -= errdiv;
@@ -1081,7 +1111,7 @@ canon_print(int       model,		/* I - Model */
       }
     }
   } 
-  else /* ! landscape */
+  else /* portrait */
   {
     in  = malloc(image_width * image_bpp);
     out = malloc(image_width * out_bpp * 2);
@@ -1113,7 +1143,7 @@ canon_print(int       model,		/* I - Model */
 
       /* fprintf(stderr,","); */
 
-      canon_write_line(prn,
+      canon_write_line(prn, model, ydpi,
 		       black,    delay_k,
 		       cyan,     delay_c, 
 		       magenta,  delay_m, 
@@ -1121,16 +1151,16 @@ canon_print(int       model,		/* I - Model */
 		       lyellow,  delay_ly, 
 		       lcyan,    delay_lc, 
 		       lmagenta, delay_lm,
-		       length, ydpi, model, out_width, left);
+		       length, out_width, left, use_dmt);
       /* fprintf(stderr,"!"); */
 
-      canon_advance_buffer(black,   length,delay_k);
-      canon_advance_buffer(cyan,    length,delay_c);
-      canon_advance_buffer(magenta, length,delay_m);
-      canon_advance_buffer(yellow,  length,delay_y);
-      canon_advance_buffer(lcyan,   length,delay_lc);
-      canon_advance_buffer(lmagenta,length,delay_lm);
-      canon_advance_buffer(lyellow, length,delay_ly);
+      canon_advance_buffer(black,   buf_length,delay_k);
+      canon_advance_buffer(cyan,    buf_length,delay_c);
+      canon_advance_buffer(magenta, buf_length,delay_m);
+      canon_advance_buffer(yellow,  buf_length,delay_y);
+      canon_advance_buffer(lcyan,   buf_length,delay_lc);
+      canon_advance_buffer(lmagenta,buf_length,delay_lm);
+      canon_advance_buffer(lyellow, buf_length,delay_ly);
 
       errval += errmod;
       errline += errdiv;
@@ -1151,7 +1181,7 @@ canon_print(int       model,		/* I - Model */
     fprintf(stderr,"\ncanon: flushing %d possibly delayed buffers\n",
 	    delay_max);
     for (y= 0; y<delay_max; y++) {
-      canon_write_line(prn,
+      canon_write_line(prn, model, ydpi,
 		       black,    delay_k,
 		       cyan,     delay_c, 
 		       magenta,  delay_m, 
@@ -1159,20 +1189,18 @@ canon_print(int       model,		/* I - Model */
 		       lcyan,    delay_lc, 
 		       lmagenta, delay_lm,
 		       lyellow,  delay_ly, 
-		       length, ydpi, model, out_width, left);
+		       length, out_width, left, use_dmt);
       /* fprintf(stderr,"-"); */
 
-      canon_advance_buffer(black,   length,delay_k);
-      canon_advance_buffer(cyan,    length,delay_c);
-      canon_advance_buffer(magenta, length,delay_m);
-      canon_advance_buffer(yellow,  length,delay_y);
-      canon_advance_buffer(lcyan,   length,delay_lc);
-      canon_advance_buffer(lmagenta,length,delay_lm);
-      canon_advance_buffer(lyellow, length,delay_ly);
+      canon_advance_buffer(black,   buf_length,delay_k);
+      canon_advance_buffer(cyan,    buf_length,delay_c);
+      canon_advance_buffer(magenta, buf_length,delay_m);
+      canon_advance_buffer(yellow,  buf_length,delay_y);
+      canon_advance_buffer(lcyan,   buf_length,delay_lc);
+      canon_advance_buffer(lmagenta,buf_length,delay_lm);
+      canon_advance_buffer(lyellow, buf_length,delay_ly);
     }
   }
-
-  fprintf(stderr,"\ncanon: done\n");
 
  /*
   * Cleanup...
@@ -1194,9 +1222,10 @@ canon_print(int       model,		/* I - Model */
 
   /* say goodbye */
   canon_cmd(prn,ESC28,0x62,1,0);
-  if (caps.bjl & CANON_CAP_CMD61) 
+  if (caps.features & CANON_CAP_CMD61) 
     canon_cmd(prn,ESC5b,0x61, 1, 0x00,0x00);
   canon_cmd(prn,ESC40,0,0);
+  fflush(prn);
 }
 
 
@@ -1293,43 +1322,44 @@ canon_pack(unsigned char *line,
 
 static void
 canon_write_line(FILE          *prn,	/* I - Print file or command */
-		unsigned char *k,	/* I - Output bitmap data */
-		int           dk,	/* I -  */
-		unsigned char *c,	/* I - Output bitmap data */
-		int           dc,	/* I -  */
-		unsigned char *m,	/* I - Output bitmap data */
-		int           dm,	/* I -  */
-		unsigned char *y,	/* I - Output bitmap data */
-		int           dy,	/* I -  */
-		unsigned char *lc,	/* I - Output bitmap data */
-		int           dlc,	/* I -  */
-		unsigned char *lm,	/* I - Output bitmap data */
-		int           dlm,	/* I -  */
-		unsigned char *ly,	/* I - Output bitmap data */
-		int           dly,	/* I -  */
-		int           l,	/* I - Length of bitmap data */
-		int           ydpi,	/* I - Vertical resolution */
-		int           model,	/* I - Printer model */
-		int           width,	/* I - Printed width */
-		int           offset)
+		 int           model,	/* I - Printer model */
+		 int           ydpi,	/* I - Vertical resolution */
+		 unsigned char *k,	/* I - Output bitmap data */
+		 int           dk,	/* I -  */
+		 unsigned char *c,	/* I - Output bitmap data */
+		 int           dc,	/* I -  */
+		 unsigned char *m,	/* I - Output bitmap data */
+		 int           dm,	/* I -  */
+		 unsigned char *y,	/* I - Output bitmap data */
+		 int           dy,	/* I -  */
+		 unsigned char *lc,	/* I - Output bitmap data */
+		 int           dlc,	/* I -  */
+		 unsigned char *lm,	/* I - Output bitmap data */
+		 int           dlm,	/* I -  */
+		 unsigned char *ly,	/* I - Output bitmap data */
+		 int           dly,	/* I -  */
+		 int           l,	/* I - Length of bitmap data */
+		 int           width,	/* I - Printed width */
+		 int           offset,  /* I - horizontal offset */
+		 int           dmt)
 {
   static int empty= 0;
   int written= 0;
 
   if (k) written+= 
-    canon_write(prn,k+ dk*l, l, 3, ydpi, model, &empty, width, offset);
+    canon_write(prn,k+ dk*l, l, 3, ydpi, model, &empty, width, offset, dmt);
   if (y) written+= 
-    canon_write(prn,y+ dy*l, l, 2, ydpi, model, &empty, width, offset);
+    canon_write(prn,y+ dy*l, l, 2, ydpi, model, &empty, width, offset, dmt);
   if (m) written+= 
-    canon_write(prn,m+ dm*l, l, 1, ydpi, model, &empty, width, offset);
+    canon_write(prn,m+ dm*l, l, 1, ydpi, model, &empty, width, offset, dmt);
   if (c) written+= 
-    canon_write(prn,c+ dc*l, l, 0, ydpi, model, &empty, width, offset);
+    canon_write(prn,c+ dc*l, l, 0, ydpi, model, &empty, width, offset, dmt);
   if (ly) written+= 
-    canon_write(prn,ly+ dly*l, l, 6, ydpi, model, &empty, width, offset);
+    canon_write(prn,ly+ dly*l, l, 6, ydpi, model, &empty, width, offset, dmt);
   if (lm) written+= 
-    canon_write(prn,lm+ dlm*l, l, 5, ydpi, model, &empty, width, offset);
+    canon_write(prn,lm+ dlm*l, l, 5, ydpi, model, &empty, width, offset, dmt);
   if (lc) written+= 
-    canon_write(prn,lc+ dlc*l, l, 4, ydpi, model, &empty, width, offset);
+    canon_write(prn,lc+ dlc*l, l, 4, ydpi, model, &empty, width, offset, dmt);
 
   if (written)
     fwrite("\x1b\x28\x65\x02\x00\x00\x01", 7, 1, prn);
@@ -1350,13 +1380,19 @@ canon_write(FILE          *prn,		/* I - Print file or command */
 	    int           model,	/* I - Printer model */
 	    int           *empty,       /* IO- Preceeding empty lines */
 	    int           width,	/* I - Printed width */
-	    int           offset) 	/* I - Offset from left side */
+	    int           offset, 	/* I - Offset from left side */
+	    int           dmt)        
 {
   unsigned char	comp_buf[COMPBUFWIDTH],		/* Compression buffer */
     *comp_ptr, *comp_data;
   int newlength;
 
  /* Don't send blank lines... */
+
+  if (dmt) {
+    length*= 2;
+    offset*= 2;
+  }
 
   if (line[0] == 0 && memcmp(line, line + 1, length - 1) == 0)
     return 0;
