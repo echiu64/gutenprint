@@ -89,7 +89,7 @@ double hsize = 1.0;
 double vsize = 1.0;
 int noblackline = 0;
 int printer_width, printer_height, bandheight;
-int n_testpatterns = 0;
+int n_testpatterns = -1;
 int global_ink_depth = 0;
 
 testpattern_t *the_testpatterns = NULL;
@@ -133,24 +133,42 @@ c_strdup(const char *s)
     return c_strndup(s, c_strlen(s));
 }
 
+static void
+clear_testpattern(testpattern_t *p)
+{
+  int i;
+  for (i = 0; i < STP_CHANNEL_LIMIT; i++)
+    {
+      p->d.p.mins[i] = 0;
+      p->d.p.vals[i] = 0;
+      p->d.p.gammas[i] = 1;
+      p->d.p.levels[i] = 0;
+    }
+}
+  
+
 testpattern_t *
 get_next_testpattern(void)
 {
   static int internal_n_testpatterns = 0;
-  if (n_testpatterns == 0)
+  if (n_testpatterns == -1)
     {
       the_testpatterns = malloc(sizeof(testpattern_t));
-      n_testpatterns = internal_n_testpatterns = 1;
+      n_testpatterns = 0;
+      internal_n_testpatterns = 1;
+      clear_testpattern(&(the_testpatterns[0]));
       return &(the_testpatterns[0]);
     }
-  else if (n_testpatterns >= internal_n_testpatterns)
+  else if (n_testpatterns + 1 >= internal_n_testpatterns)
     {
       internal_n_testpatterns *= 2;
       the_testpatterns =
 	realloc(the_testpatterns,
 		internal_n_testpatterns * sizeof(testpattern_t));
     }
-  return &(the_testpatterns[n_testpatterns++]);
+  n_testpatterns++;
+  clear_testpattern(&(the_testpatterns[n_testpatterns]));
+  return &(the_testpatterns[n_testpatterns]);
 }
 
 static void
@@ -693,7 +711,7 @@ Image_get_row(stp_image_t *image, unsigned char *data,
     {
       static int previous_band = -1;
       int band = row / bandheight;
-      if (previous_band == -2)
+      if (previous_band == -1)
 	{
 	  fill_pattern(&(the_testpatterns[band]), data, printer_width, steps,
 			 depth, sizeof(unsigned short));

@@ -45,21 +45,40 @@ static int yyerror( const char *s )
 	return 0;
 }
 
-static int color_map[] =
+typedef struct
+{
+  const char *name;
+  int channel;
+} color_t;
+
+static color_t color_map[] =
   {
-    BLACK,
-    CYAN,
-    MAGENTA,
-    YELLOW,
-    L_BLACK,
-    L_CYAN,
-    L_MAGENTA,
-    D_YELLOW,
-    -1
+    { "black", 0 },
+    { "cyan", 1 },
+    { "magenta", 2 },
+    { "yellow", 3 },
+    { "l_black", 4 },
+    { "l_cyan", 5 },
+    { "l_magenta", 6 },
+    { "d_yellow", 4 },
+    { NULL, -1 }
   };
 
 static int current_index = 0;
-static testpattern_t *current_testpattern; 
+static testpattern_t *current_testpattern;
+
+static int
+find_color(const char *name)
+{
+  int i = 0;
+  while (color_map[i].name)
+    {
+      if (strcmp(color_map[i].name, name) == 0)
+	return color_map[i].channel;
+      i++;
+    }
+  return -1;
+}
 
 %}
 
@@ -79,8 +98,6 @@ static testpattern_t *current_testpattern;
 %token LEVEL
 %token STEPS
 %token INK_LIMIT
-%token INK
-%token WIDTH
 %token PRINTER
 %token PARAMETER
 %token DENSITY
@@ -95,6 +112,7 @@ static testpattern_t *current_testpattern;
 %token IMAGE
 %token GRID
 %token SEMI
+%token CHANNEL
 
 %start Thing
 
@@ -110,11 +128,9 @@ extended: EXTENDED tINT
 
 level: LEVEL COLOR tDOUBLE
 	{
-	  int i = 0;
-	  while (color_map[i] >= 0 && color_map[i] != $2.ival)
-	    i++;
-	  if (color_map[i] >= 0)
-	    global_levels[i] = $3;
+	  int channel = find_color($2.sval);
+	  if (channel >= 0)
+	    global_levels[channel] = $3;
 	}
 ;
 
@@ -127,11 +143,9 @@ channel_level: LEVEL tINT tDOUBLE
 
 gamma: GAMMA COLOR tDOUBLE
 	{
-	  int i = 0;
-	  while (color_map[i] >= 0 && color_map[i] != $2.ival)
-	    i++;
-	  if (color_map[i] >= 0)
-	    global_gammas[i] = $3;
+	  int channel = find_color($2.sval);
+	  if (channel >= 0)
+	    global_gammas[channel] = $3;
 	}
 ;
 
@@ -180,7 +194,7 @@ blackline: BLACKLINE tINT
 	{ noblackline = !($2); }
 ;
 
-color_block: tDOUBLE tDOUBLE tDOUBLE
+color_block1: tDOUBLE tDOUBLE tDOUBLE
 	{
 	  if (current_index < STP_CHANNEL_LIMIT)
 	    {
@@ -192,36 +206,68 @@ color_block: tDOUBLE tDOUBLE tDOUBLE
 	}
 ;
 
-color_blocks: color_blocks color_block | Empty
+color_blocks1a: color_block1 | color_blocks1a color_block1
+;
+
+color_blocks1b: /* empty */ | color_blocks1a
+;
+
+color_blocks1: color_block1 color_blocks1b
+;
+
+color_block2a: COLOR tDOUBLE tDOUBLE tDOUBLE
+	{
+	  int channel = find_color($1.sval);
+	  if (channel >= 0 && channel < STP_CHANNEL_LIMIT)
+	    {
+	      current_testpattern->d.p.mins[channel] = $2;
+	      current_testpattern->d.p.vals[channel] = $3;
+	      current_testpattern->d.p.gammas[channel] = $4;
+	    }
+	}
+;
+
+color_block2b: CHANNEL tINT tDOUBLE tDOUBLE tDOUBLE
+	{
+	  if ($2 >= 0 && $2 < STP_CHANNEL_LIMIT)
+	    {
+	      current_testpattern->d.p.mins[$2] = $3;
+	      current_testpattern->d.p.vals[$2] = $4;
+	      current_testpattern->d.p.gammas[$2] = $5;
+	    }
+	}
+;
+
+color_block2: color_block2a | color_block2b
+;
+
+color_blocks2a: color_block2 | color_blocks2a color_block2
+;
+
+color_blocks2: /* empty */ | color_blocks2a
+;
+
+color_blocks: color_blocks1 | color_blocks2
 ;
 
 patvars: tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE
 	{
-	  int i;
-	  current_testpattern = get_next_testpattern();
 	  current_testpattern->t = E_PATTERN;
 	  current_index = 0;
-	  for (i = 0; i < STP_CHANNEL_LIMIT; i++)
-	    {
-	      current_testpattern->d.p.mins[i] = 0;
-	      current_testpattern->d.p.vals[i] = 0;
-	      current_testpattern->d.p.gammas[i] = 1;
-	      current_testpattern->d.p.levels[i] = 0;
-	    }
 	  current_testpattern->d.p.lower = $1;
 	  current_testpattern->d.p.upper = $2;
 	  current_testpattern->d.p.levels[1] = $3;
 	  current_testpattern->d.p.levels[2] = $4;
 	  current_testpattern->d.p.levels[3] = $5;
+	  current_testpattern = get_next_testpattern();
 	}
+;
 
-pattern: PATTERN patvars color_block color_block color_block color_block SEMI
+pattern: PATTERN patvars color_blocks SEMI
 ;
 
 xpattern: XPATTERN color_blocks SEMI
 	{
-	  int i;
-	  current_testpattern = get_next_testpattern();
 	  if (global_ink_depth == 0)
 	    {
 	      fprintf(stderr, "xpattern may only be used with extended color depth\n");
@@ -229,27 +275,20 @@ xpattern: XPATTERN color_blocks SEMI
 	    }
 	  current_testpattern->t = E_XPATTERN;
 	  current_index = 0;
-	  for (i = 0; i < STP_CHANNEL_LIMIT; i++)
-	    {
-	      current_testpattern->d.p.mins[i] = 0;
-	      current_testpattern->d.p.vals[i] = 0;
-	      current_testpattern->d.p.gammas[i] = 1;
-	      current_testpattern->d.p.levels[i] = 1;
-	    }
+	  current_testpattern = get_next_testpattern();
 	}
 ;
 
 grid: GRID tINT SEMI
 	{
-	  current_testpattern = get_next_testpattern();
 	  current_testpattern->t = E_GRID;
 	  current_testpattern->d.g.ticks = $2;
+	  current_testpattern = get_next_testpattern();
 	}
 ;
 
 image: IMAGE tINT tINT
 	{
-	  current_testpattern = get_next_testpattern();
 	  current_testpattern->t = E_IMAGE;
 	  current_testpattern->d.i.x = $2;
 	  current_testpattern->d.i.y = $3;
@@ -266,8 +305,9 @@ image: IMAGE tINT tINT
 Empty:
 ;
 
-Rule:   gamma | level | global_gamma | steps | ink_limit | printer | parameter
-	| density | top | left | hsize | vsize | blackline | extended
+Rule:   gamma | channel_gamma | level | channel_level | global_gamma | steps
+	| ink_limit | printer | parameter | density | top | left | hsize
+	| vsize | blackline | extended
 ;
 
 A_Pattern: pattern | xpattern | grid
@@ -285,7 +325,11 @@ Rules: Rules Rule | Empty
 Output: Patterns | Image
 ;
 
-Thing: Rules Output Empty
+Thing: Rules
+	{
+	  current_testpattern = get_next_testpattern();
+	}
+	Output Empty
 ;
 
 %%

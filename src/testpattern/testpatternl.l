@@ -55,19 +55,18 @@ ws		[ \t]+
 
 %%
 
-cyan			DBG(CYAN); return CYAN;
-l_cyan			DBG(L_CYAN); return L_CYAN;
-magenta			DBG(MAGENTA); return MAGENTA;
-l_magenta		DBG(L_MAGENTA); return L_MAGENTA;
-yellow			DBG(YELLOW); return YELLOW;
-d_yellow		DBG(D_YELLOW); return D_YELLOW;
-black			DBG(BLACK); return BLACK;
-l_black			DBG(L_BLACK); return L_BLACK;
+cyan			yylval.sval = c_strdup(yytext);DBG(CYAN); return CYAN;
+l_cyan			yylval.sval = c_strdup(yytext);DBG(L_CYAN); return L_CYAN;
+magenta			yylval.sval = c_strdup(yytext);DBG(MAGENTA); return MAGENTA;
+l_magenta		yylval.sval = c_strdup(yytext);DBG(L_MAGENTA); return L_MAGENTA;
+yellow			yylval.sval = c_strdup(yytext);DBG(YELLOW); return YELLOW;
+d_yellow		yylval.sval = c_strdup(yytext);DBG(D_YELLOW); return D_YELLOW;
+black			yylval.sval = c_strdup(yytext);DBG(BLACK); return BLACK;
+l_black			yylval.sval = c_strdup(yytext);DBG(L_BLACK); return L_BLACK;
 gamma			DBG(GAMMA); return GAMMA;
 level			DBG(LEVEL); return LEVEL;
 steps			DBG(STEPS); return STEPS;
 ink_limit		DBG(INK_LIMIT); return INK_LIMIT;
-width			DBG(WIDTH); return WIDTH;
 printer			DBG(PRINTER); return PRINTER;
 parameter		DBG(PARAMETER); return PARAMETER;
 density			DBG(DENSITY); return DENSITY;
@@ -81,6 +80,7 @@ xpattern		DBG(XPATTERN); return XPATTERN;
 image			DBG(IMAGE); return IMAGE;
 extended		DBG(EXTENDED); return EXTENDED;
 grid			DBG(GRID); return GRID;
+channel			DBG(CHANNEL); return CHANNEL;
 ;			DBG(SEMI); return SEMI;
 
 {integer}		yylval.ival = atoi(yytext); DBG(tINT); return tINT;
