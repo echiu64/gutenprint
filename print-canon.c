@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.18  2000/02/08 20:25:17  gandy
+ *   Small fix that makes variable drop sizes work (in B/W)
+ *
  *   Revision 1.17  2000/02/08 17:55:25  gandy
  *   Added call to dither_cmyk4()
  *
@@ -937,12 +940,12 @@ canon_print(int       model,		/* I - Model */
   if (left < 0)
     left = (page_width - out_width) / 2 + page_left;
   else
-    left = left + page_left;
+    left = left /*+ page_left*/;
 
   if (top < 0)
     top  = (page_height + out_height) / 2 + page_top;
   else
-    top = top + page_top;
+    top = top /*+ page_top*/;
 
   /*
   PUT("top        ",top,72);
@@ -1274,40 +1277,6 @@ canon_fold_lsb_msb(const unsigned char *line,
   int i;
   for (i = 0; i < single_length; i++) {
     outbuf[0] =
-      ((line[0] & (1 << 7)) >> 0) |
-      ((line[0] & (1 << 6)) >> 1) |
-      ((line[0] & (1 << 5)) >> 2) |
-      ((line[0] & (1 << 4)) >> 3) |
-      ((line[single_length] & (1 << 7)) >> 1) |
-      ((line[single_length] & (1 << 6)) >> 2) |
-      ((line[single_length] & (1 << 5)) >> 3) |
-      ((line[single_length] & (1 << 4)) >> 4);
-    outbuf[1] =
-      ((line[0] & (1 << 3)) << 4) |
-      ((line[0] & (1 << 2)) << 3) |
-      ((line[0] & (1 << 1)) << 2) |
-      ((line[0] & (1 << 0)) << 1) |
-      ((line[single_length] & (1 << 3)) << 3) |
-      ((line[single_length] & (1 << 2)) << 2) |
-      ((line[single_length] & (1 << 1)) << 1) |
-      ((line[single_length] & (1 << 0)) << 0);
-    line++;
-    outbuf += 2;
-  }
-}
-
-/*
- * 'canon_fold_msb_lsb()' fold 2 lines in order msb/lsb
- */
-
-static void
-canon_fold_msb_lsb(const unsigned char *line,
-		   int single_length,
-		   unsigned char *outbuf)
-{
-  int i;
-  for (i = 0; i < single_length; i++) {
-    outbuf[0] =
       ((line[0] & (1 << 7)) >> 1) |
       ((line[0] & (1 << 6)) >> 2) |
       ((line[0] & (1 << 5)) >> 3) |
@@ -1325,6 +1294,40 @@ canon_fold_msb_lsb(const unsigned char *line,
       ((line[single_length] & (1 << 2)) << 3) |
       ((line[single_length] & (1 << 1)) << 2) |
       ((line[single_length] & (1 << 0)) << 1);
+    line++;
+    outbuf += 2;
+  }
+}
+
+/*
+ * 'canon_fold_msb_lsb()' fold 2 lines in order msb/lsb
+ */
+
+static void
+canon_fold_msb_lsb(const unsigned char *line,
+		   int single_length,
+		   unsigned char *outbuf)
+{
+  int i;
+  for (i = 0; i < single_length; i++) {
+    outbuf[0] =
+      ((line[0] & (1 << 7)) >> 0) |
+      ((line[0] & (1 << 6)) >> 1) |
+      ((line[0] & (1 << 5)) >> 2) |
+      ((line[0] & (1 << 4)) >> 3) |
+      ((line[single_length] & (1 << 7)) >> 1) |
+      ((line[single_length] & (1 << 6)) >> 2) |
+      ((line[single_length] & (1 << 5)) >> 3) |
+      ((line[single_length] & (1 << 4)) >> 4);
+    outbuf[1] =
+      ((line[0] & (1 << 3)) << 4) |
+      ((line[0] & (1 << 2)) << 3) |
+      ((line[0] & (1 << 1)) << 2) |
+      ((line[0] & (1 << 0)) << 1) |
+      ((line[single_length] & (1 << 3)) << 3) |
+      ((line[single_length] & (1 << 2)) << 2) |
+      ((line[single_length] & (1 << 1)) << 1) |
+      ((line[single_length] & (1 << 0)) << 0);
     line++;
     outbuf += 2;
   }
@@ -1453,7 +1456,7 @@ canon_write(FILE          *prn,		/* I - Print file or command */
 
   if (dmt) {
     if (1) {
-      if (1 || caps.features & CANON_CAP_MSB_FIRST) 
+      if (caps.features & CANON_CAP_MSB_FIRST) 
 	canon_fold_msb_lsb(line,length,in_fold);
       else
 	canon_fold_lsb_msb(line,length,in_fold);
