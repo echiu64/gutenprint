@@ -1,5 +1,5 @@
 printer escp2-ex
-resolution "180 DPI"
+resolution "180dpi"
 hsize 0.33
 vsize 0.33
 left 0.66
