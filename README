@@ -1,8 +1,8 @@
 INTRODUCTION
 
-    This is Gimp-Print version 4.3.0, the first development release in
-    the 4.3 line.  Gimp-print is the print facility for the Gimp, and
-    in addition a suite of drivers that may be used with common UNIX
+    This is Gimp-Print version 4.3.1, a development release in the 4.3
+    line.  Gimp-print is the print facility for the Gimp, and in
+    addition a suite of drivers that may be used with common UNIX
     spooling systems using GhostScript or CUPS.  These drivers provide
     printing quality for UNIX/Linux in many cases equal to or better
     than proprietary vendor-supplied drivers, and can be used for many

@@ -21,17 +21,18 @@ INTRODUCTION:
   for that reason.
 
   Gimp-Print includes another driver based on the new IJS protocol.
-  IJS is a relatively new (as of early 2002) initiative to improve the
-  quality and ease of use of printing with Ghostscript.  It permits
-  adding or upgrading drivers without recompiling Ghostscript.  An IJS
-  driver runs in a separate process that communicates with Ghostscript
-  via an IPC channel.  The Gimp-Print IJS driver may be used with AFPL
-  Ghostscript, as it runs in a separate process.
+  IJS is an initiative to improve the quality and ease of use of
+  printing with Ghostscript.  It permits adding or upgrading drivers
+  without recompiling Ghostscript.  An IJS driver runs in a separate
+  process that communicates with Ghostscript via an IPC channel.  The
+  Gimp-Print IJS driver may be used with AFPL Ghostscript, as it runs
+  in a separate process.
 
   The original stp driver will not be maintained beyond Gimp-Print
   4.2; it will be phased out and replaced by the IJS driver
-  (ijsgimpprint).  It currently has all of the capabilities of the stp
-  driver, but it is perhaps not as mature.
+  (ijsgimpprint).  It supports all of the capabilities of the stp
+  driver, but it is not as mature.  We strongly recommend all users
+  upgrade to a recent version of Ghostscript and use the IJS driver.
 
   IJS support was incorporated into Ghostscript in GNU Ghostscript
   6.53 and AFPL Ghostscript 7.04, as IJS 0.32.

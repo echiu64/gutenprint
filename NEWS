@@ -1,6 +1,6 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.3.0, released April 27, 2001, is a development release of
+Gimp-Print 4.3.1, released June 28, 2002, is a development release of
 this package.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
@@ -20,6 +20,48 @@ or APFL GhostScript 7.04 or later.
 
 Please read the README file for full instructions on building and
 installing this package.
+
+
+Gimp-Print 4.3.1 contains the following major changes over Gimp-Print
+4.3.0:
+
+1) A crash that happened in stp_vasprintf on many systems has been
+   fixed.
+
+2) A crash in the IJS driver when printing extremely large images,
+   such as banners on a wide format printer at high resolution, has
+   been fixed.
+
+3) A portability issue in gimpprint-config has been fixed.
+
+4) An installation problem with the CUPS PPD files on systems lacking
+   an appropriate install script has been fixed.
+
+5) Partial translations for German, Spanish, and Portuguese have been
+   added.
+
+6) The option to *not* build the Gimp-Print library (libgimpprint) has
+   been removed.
+
+7) The escputil alignment command has been improved.
+
+8) Preliminary support for the Epson Stylus Photo 950 and 2100/2200,
+   and the Stylus Pro 7600 and 9600.  The Stylus Photo 950 has been
+   verified and partially tuned.  The other printers are untested and
+   may or may work.
+
+9) Quality improvements to the Even Tone dither algorithm.
+
+10) The printer data in the Epson driver has been substantially
+   reorganized.  This allows the driver to support the new UltraChrome
+   inks (for the Stylus Photo 2100/2200 and Stylus Pro 7600 and 9600).
+   This will also permit the driver to support quadtone or hextone
+   grayscale inks, although that capability is not enabled at present.
+
+11) The testpattern generator has some improvements, including the
+   ability to print 16-bit images.  The image format is not
+   documented, as this is likely to change, but people may wish to
+   study the code and experiment with it.
 
 
 Gimp-Print 4.3.0 contains the following major changes over Gimp-Print
@@ -48,16 +90,16 @@ Epson printers are fully supported, although not fully tuned in all
 cases; the Canon, HP, and Lexmark printers vary.  Many printers
 previously supported have greatly improved support.
 
-PostScript level 1
-PostScript level 2
-CANON BJC 30                            (NEW)
-CANON BJC 50                            (NEW)
-CANON BJC 55                            (NEW)
-CANON BJC 80                            (NEW)
-CANON BJC 85                            (NEW)
-CANON BJC 210                           (NEW)
-CANON BJC 240                           (NEW)
-CANON BJC 250                           (NEW)
+PostScript level 1	  (GIMP Plugin only)
+PostScript level 2	  (GIMP Plugin only)
+CANON BJC 30
+CANON BJC 50
+CANON BJC 55
+CANON BJC 80
+CANON BJC 85
+CANON BJC 210
+CANON BJC 240
+CANON BJC 250
 CANON BJC 1000
 CANON BJC 2000
 CANON BJC 3000
@@ -68,40 +110,40 @@ CANON BJC 6100
 CANON BJC 7000
 CANON BJC 7100
 CANON BJC 8200
-CANON S400                              (NEW)
-CANON S450                              (NEW)
-CANON S800                              (NEW)
-CANON S4500                             (NEW)
-EPSON Stylus C20SX                      (NEW)
-EPSON Stylus C20UX                      (NEW)
-EPSON Stylus C40SX                      (NEW)
-EPSON Stylus C40UX                      (NEW)
-EPSON Stylus C60                        (NEW)
-EPSON Stylus C70                        (NEW)
-EPSON Stylus C80                        (NEW)
+CANON S400
+CANON S450
+CANON S800
+CANON S4500
+EPSON Stylus C20SX
+EPSON Stylus C20UX
+EPSON Stylus C40SX
+EPSON Stylus C40UX
+EPSON Stylus C60
+EPSON Stylus C70
+EPSON Stylus C80
 EPSON Stylus Color
 EPSON Stylus Color Pro
 EPSON Stylus Color Pro XL
 EPSON Stylus Color 400
 EPSON Stylus Color 440
 EPSON Stylus Color 460
-EPSON Stylus Color 480                  (NEW)
+EPSON Stylus Color 480
 EPSON Stylus Color 500
-EPSON Stylus Color 580                  (NEW)
+EPSON Stylus Color 580
 EPSON Stylus Color 600
 EPSON Stylus Color 640
 EPSON Stylus Color 660
 EPSON Stylus Color 670
-EPSON Stylus Color 680/777              (NEW)
+EPSON Stylus Color 680/777
 EPSON Stylus Color 740
 EPSON Stylus Color 760
 EPSON Stylus Color 800
 EPSON Stylus Color 850
 EPSON Stylus Color 860
-EPSON Stylus Color 880                  (NEW)
-EPSON Stylus Color 83                   (NEW)
+EPSON Stylus Color 880
+EPSON Stylus Color 83
 EPSON Stylus Color 900
-EPSON Stylus Color 980                  (NEW)
+EPSON Stylus Color 980
 EPSON Stylus Color 1160
 EPSON Stylus Color 1500
 EPSON Stylus Color 1520
@@ -111,23 +153,28 @@ EPSON Stylus Photo 700
 EPSON Stylus Photo EX
 EPSON Stylus Photo 720
 EPSON Stylus Photo 750
-EPSON Stylus Photo 780/785/790          (NEW)
-EPSON Stylus Photo 810/820              (NEW, not verified, expected to work)
+EPSON Stylus Photo 780/785/790
+EPSON Stylus Photo 810/820
 EPSON Stylus Photo 870/875
-EPSON Stylus Photo 890/895              (NEW)
+EPSON Stylus Photo 890/895
+EPSON Stylus Photo 950			(NEW, partially tuned)
 EPSON Stylus Photo 1200
 EPSON Stylus Photo 1270
-EPSON Stylus Photo 1280/1290            (NEW)
+EPSON Stylus Photo 1280/1290
 EPSON Stylus Photo 2000P
-EPSON Stylus Pro 5000                   (NEW, partially functional)
-EPSON Stylus Pro 5500                   (NEW, partially functional)
-EPSON Stylus Pro 7000                   (NEW, partially functional)
-EPSON Stylus Pro 7500                   (NEW, partially functional)
-EPSON Stylus Pro 9000                   (NEW, partially functional)
-EPSON Stylus Pro 9500                   (NEW, partially functional)
+EPSON Stylus Photo 2100			(NEW, experimental)
+EPSON Stylus Photo 2200			(NEW, experimental)
+EPSON Stylus Pro 5000
+EPSON Stylus Pro 5500
+EPSON Stylus Pro 7000
+EPSON Stylus Pro 7500
+EPSON Stylus Pro 7600                   (NEW, experimental)
+EPSON Stylus Pro 9000
+EPSON Stylus Pro 9500
+EPSON Stylus Pro 9600                   (NEW, experimental)
 EPSON Stylus Pro 10000                  (NEW, partially functional)
-EPSON Stylus Scan 2000                  (NEW)
-EPSON Stylus Scan 2500                  (NEW)
+EPSON Stylus Scan 2000
+EPSON Stylus Scan 2500
 HP DeskJet 340
 HP DeskJet 400
 HP DeskJet 500
@@ -139,7 +186,7 @@ HP DeskJet 560C
 HP DeskJet 600/600C (Single Cartridge)
 HP DeskJet 600 series (2 Cartridge)
 HP DeskJet 690 series (Photo-Ink capable)
-HP DesignJet 750                        (NEW)
+HP DesignJet 750
 HP DeskJet 810C
 HP DeskJet 812C
 HP DeskJet 840C
@@ -168,7 +215,7 @@ HP LaserJet 5 series
 HP LaserJet 5Si
 HP LaserJet 6 series
 Lexmark 4076
-Lexmark Z42                             (NEW)
-Lexmark Z43                             (NEW)
-Lexmark Z52                             (NEW)
-Lexmark Z53                             (NEW)
+Lexmark Z42
+Lexmark Z43
+Lexmark Z52
+Lexmark Z53
