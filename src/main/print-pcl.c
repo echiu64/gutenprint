@@ -227,7 +227,7 @@ const static pcl_t pcl_resolutions[] =
 static const char *
 pcl_default_resolution(const stp_printer_t *printer)
 {
-  return pcl_resolutions[0].pcl_name;
+  return _(pcl_resolutions[0].pcl_name);
 }
 
 static void
@@ -237,7 +237,7 @@ pcl_describe_resolution(const stp_printer_t *printer,
   int i;
   for (i = 0; i < NUM_RESOLUTIONS; i++)
     {
-      if (!strcmp(resolution, pcl_resolutions[i].pcl_name))
+      if (!strcmp(resolution, _(pcl_resolutions[i].pcl_name)))
 	{
 	  sscanf(resolution, "%dx%d", x, y);
 	  return;
@@ -1263,7 +1263,7 @@ static int pcl_string_to_val(const char *string,		/* I: String */
   */
 
   for (i=0; i<num_options; i++) {
-    if (!strcmp(string, options[i].pcl_name)) {
+    if (!strcmp(string, _(options[i].pcl_name))) {
        code=options[i].pcl_code;
        break;
        }

@@ -1750,7 +1750,7 @@ get_media_type(const char *name)
   int i;
   for (i = 0; i < paper_type_count; i++)
     {
-      if (!strcmp(name, escp2_paper_list[i].name))
+      if (!strcmp(name, _(escp2_paper_list[i].name)))
 	return &(escp2_paper_list[i]);
     }
   return NULL;
@@ -1980,8 +1980,8 @@ escp2_parameters(const stp_printer_t *printer,	/* I - Printer model */
 	      if (((horizontal_passes * res->vertical_passes) <= 8) &&
 		  (! res->softweave || (nozzles > 1 && nozzles > oversample)))
 		{
-		  valptrs[*count] = xmalloc(strlen(res->name) + 1);
-		  strcpy(valptrs[*count], res->name);
+		  valptrs[*count] = xmalloc(strlen(_(res->name)) + 1);
+		  strcpy(valptrs[*count], _(res->name));
 		  (*count)++;
 		}
 	    }
@@ -1999,8 +1999,8 @@ escp2_parameters(const stp_printer_t *printer,	/* I - Printer model */
 	  valptrs = xmalloc(sizeof(char *) * ninktypes);
 	  for (i = 0; i < ninktypes; i++)
 	    {
-	      valptrs[i] = xmalloc(strlen(ink_types[i]) + 1);
-	      strcpy(valptrs[i], ink_types[i]);
+	      valptrs[i] = xmalloc(strlen(_(ink_types[i])) + 1);
+	      strcpy(valptrs[i], _(ink_types[i]));
 	    }
 	  *count = ninktypes;
 	  return valptrs;
@@ -2012,8 +2012,8 @@ escp2_parameters(const stp_printer_t *printer,	/* I - Printer model */
       valptrs = xmalloc(sizeof(char *) * nmediatypes);
       for (i = 0; i < nmediatypes; i++)
 	{
-	  valptrs[i] = xmalloc(strlen(escp2_paper_list[i].name) + 1);
-	  strcpy(valptrs[i], escp2_paper_list[i].name);
+	  valptrs[i] = xmalloc(strlen(_(escp2_paper_list[i].name)) + 1);
+	  strcpy(valptrs[i], _(escp2_paper_list[i].name));
 	}
       *count = nmediatypes;
       return valptrs;
@@ -2098,7 +2098,7 @@ escp2_default_resolution(const stp_printer_t *printer)
 	  ((res->vres / nozzle_width) * nozzle_width) == res->vres)
 	{
 	  if (res->vres == 360 && res->hres == 360)
-	    return res->name;
+	    return _(res->name);
 	}
       res++;
     }
@@ -2119,7 +2119,7 @@ escp2_describe_resolution(const stp_printer_t *printer,
 	  res->vres <= escp2_max_vres(printer->model, &printer->printvars) &&
 	  res->hres <= escp2_max_hres(printer->model, &printer->printvars) &&
 	  ((res->vres / nozzle_width) * nozzle_width) == res->vres &&
-	  !strcmp(resolution, res->name))
+	  !strcmp(resolution, _(res->name)))
 	{
 	  *x = res->hres;
 	  *y = res->vres;
@@ -2536,7 +2536,7 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
   */
   for (res = &escp2_reslist[0];;res++)
     {
-      if (!strcmp(resolution, res->name))
+      if (!strcmp(resolution, _(res->name)))
 	{
 	  use_softweave = res->softweave;
 	  use_microweave = res->microweave;

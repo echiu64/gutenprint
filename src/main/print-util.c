@@ -43,7 +43,7 @@
 static stp_vars_t default_vars =
 {
 	"",			/* Name of file or command to print to */
-	"ps2",			/* Name of printer "driver" */
+	N_ ("ps2"),	       	/* Name of printer "driver" */
 	"",			/* Name of PPD file */
 	OUTPUT_COLOR,		/* Color or grayscale output */
 	"",			/* Output resolution */
@@ -76,7 +76,7 @@ static stp_vars_t default_vars =
 static stp_vars_t min_vars =
 {
 	"",			/* Name of file or command to print to */
-	"ps2",			/* Name of printer "driver" */
+	N_ ("ps2"),			/* Name of printer "driver" */
 	"",			/* Name of PPD file */
 	OUTPUT_COLOR,		/* Color or grayscale output */
 	"",			/* Output resolution */
@@ -109,7 +109,7 @@ static stp_vars_t min_vars =
 static stp_vars_t max_vars =
 {
 	"",			/* Name of file or command to print to */
-	"ps2",			/* Name of printer "driver" */
+	N_ ("ps2"),			/* Name of printer "driver" */
 	"",			/* Name of PPD file */
 	OUTPUT_COLOR,		/* Color or grayscale output */
 	"",			/* Output resolution */
@@ -368,7 +368,7 @@ stp_get_papersize_by_name(const char *name)
   const stp_papersize_t *val = &(paper_sizes[0]);
   while (strlen(val->name) > 0)
     {
-      if (!strcasecmp(val->name, name))
+      if (!strcasecmp(_(val->name), name))
 	return val;
       val++;
     }

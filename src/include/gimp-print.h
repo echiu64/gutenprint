@@ -277,6 +277,19 @@ typedef struct stp_image
  *   
  */
 
+
+/*
+ * Library versioning details
+ */
+extern const unsigned int gimpprint_major_version;
+extern const unsigned int gimpprint_minor_version;
+extern const unsigned int gimpprint_micro_version;
+extern const unsigned int gimpprint_binary_age;
+extern const unsigned int gimpprint_interface_age;
+char* stp_check_version (unsigned int required_major,
+			 unsigned int required_minor,
+			 unsigned int required_micro);
+
 struct stp_printer;
 
 typedef struct

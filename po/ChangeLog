@@ -1,3 +1,8 @@
+2001-02-08  Roger Leigh  <roger@whinlatter.uklinux.net>
+
+	* Created en_GB and en_TEST translations (en_TEST has all strings
+	  prefixed with 'TEST: ' for debugging purposes).
+
 2001-01-02  Roger Leigh  <roger@whinlatter.uklinux.net>
 
 	* Created po/POTFILES.in with current source locations.

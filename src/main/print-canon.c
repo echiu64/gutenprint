@@ -1107,19 +1107,19 @@ static const paper_t canon_paper_list[] = {
   { N_ ("Glossy Photo Cards"),         0x0a, 1.00, 1.00, 0.9 },
   { N_ ("Photo Paper Pro"),            0x09, 1.00, 1.00, 0.9 },
   /* escp2 paper:
-  { "Plain Paper",                0x00, 0.50, 0.25, .5 },
-  { "Plain Paper Fast Load",      0x00, 0.50, 0.25, .5 },
-  { "Postcard",                   0x00, 0.60, 0.25, .6 },
-  { "Glossy Film",                0x00, 1.00, 1.00, .9 }, 
-  { "Transparencies",             0x00, 1.00, 1.00, .9 }, 
-  { "Envelopes",                  0x00, 0.50, 0.25, .5 }, 
-  { "Back Light Film",            0x00, 1.00, 1.00, .9 }, 
-  { "Matte Paper",                0x00, 1.00, 1.00, .9 }, 
-  { "Inkjet Paper",               0x00, 0.78, 0.25, .6 }, 
-  { "Photo Quality Inkjet Paper", 0x00, 1.00, 1.00, .9 }, 
-  { "Photo Paper",                0x00, 1.00, 1.00, .9 }, 
-  { "Premium Glossy Photo Paper", 0x00, 0.90, 1.00, .9 }, 
-  { "Photo Quality Glossy Paper", 0x00, 1.00, 1.00, .9 }, 
+  { N_ ("Plain Paper"),                0x00, 0.50, 0.25, .5 },
+  { N_ ("Plain Paper Fast Load"),      0x00, 0.50, 0.25, .5 },
+  { N_ ("Postcard"),                   0x00, 0.60, 0.25, .6 },
+  { N_ ("Glossy Film"),                0x00, 1.00, 1.00, .9 }, 
+  { N_ ("Transparencies"),             0x00, 1.00, 1.00, .9 }, 
+  { N_ ("Envelopes"),                  0x00, 0.50, 0.25, .5 }, 
+  { N_ ("Back Light Film"),            0x00, 1.00, 1.00, .9 }, 
+  { N_ ("Matte Paper"),                0x00, 1.00, 1.00, .9 }, 
+  { N_ ("Inkjet Paper"),               0x00, 0.78, 0.25, .6 }, 
+  { N_ ("Photo Quality Inkjet Paper"), 0x00, 1.00, 1.00, .9 }, 
+  { N_ ("Photo Paper"),                0x00, 1.00, 1.00, .9 }, 
+  { N_ ("Premium Glossy Photo Paper"), 0x00, 0.90, 1.00, .9 }, 
+  { N_ ("Photo Quality Glossy Paper"), 0x00, 1.00, 1.00, .9 }, 
   */
   { N_ ("Other"),                      0x00, 0.50, 0.25, .5 },
 };
@@ -1133,7 +1133,8 @@ get_media_type(const char *name)
   int i;
   for (i = 0; i < paper_type_count; i++)
     {
-      if (!strcmp(name, canon_paper_list[i].name))
+      /* translate paper_t.name */
+      if (!strcmp(name, _(canon_paper_list[i].name)))
 	return &(canon_paper_list[i]);
     }
   return NULL;
@@ -1158,6 +1159,7 @@ static canon_cap_t canon_get_model_capabilities(int model)
 static int
 canon_source_type(const char *name, canon_cap_t caps)
 {
+  /* used internally: do not translate */
   if (!strcmp(name,_("Auto Sheet Feeder")))    return 4;
   if (!strcmp(name,_("Manual with Pause")))    return 0;
   if (!strcmp(name,_("Manual without Pause"))) return 1;
@@ -1171,6 +1173,7 @@ canon_source_type(const char *name, canon_cap_t caps)
 static int
 canon_printhead_type(const char *name, canon_cap_t caps)
 {
+  /* used internally: do not translate */
   if (!strcmp(name,_("Black")))             return 0;
   if (!strcmp(name,_("Color")))             return 1;
   if (!strcmp(name,_("Black/Color")))       return 2;
@@ -1193,6 +1196,7 @@ canon_printhead_type(const char *name, canon_cap_t caps)
 static colormode_t 
 canon_printhead_colors(const char *name, canon_cap_t caps)
 {
+  /* used internally: do not translate */
   if (!strcmp(name,_("Black")))             return COLOR_MONOCHROME;
   if (!strcmp(name,_("Color")))             return COLOR_CMY;
   if (!strcmp(name,_("Black/Color")))       return COLOR_CMYK;
@@ -1218,6 +1222,7 @@ canon_size_type(const stp_vars_t *v, canon_cap_t caps)
   if (pp)
     {
       const char *name = pp->name;
+      /* used internally: do not translate */
       /* built ins: */
       if (!strcmp(name,_("A5")))          return 0x01;
       if (!strcmp(name,_("A4")))          return 0x03;
@@ -1350,9 +1355,9 @@ canon_default_resolution(const stp_printer_t *printer)
 {
   canon_cap_t caps= canon_get_model_capabilities(printer->model);
   if (!(caps.max_xdpi%150))
-    return "150x150 DPI";
+    return _("150x150 DPI");
   else
-    return "180x180 DPI";
+    return _("180x180 DPI");
 }
 
 static void
@@ -1466,6 +1471,7 @@ canon_parameters(const stp_printer_t *printer,	/* I - Printer model */
   {
     int c= 0;
     valptrs = xmalloc(sizeof(char *) * 5);
+    /* used internally: do not translate */
     if ((caps.inks & CANON_INK_K))
       valptrs[c++]= c_strdup(_("Black"));
     if ((caps.inks & CANON_INK_CMY))
@@ -1494,7 +1500,8 @@ canon_parameters(const stp_printer_t *printer,	/* I - Printer model */
 
   valptrs = xmalloc(*count * sizeof(char *));
   for (i = 0; i < *count; i ++)
-    valptrs[i] = c_strdup(p[i]);
+    /* translate media_types and media_sources */
+    valptrs[i] = c_strdup(_(p[i]));
 
   return ((char **) valptrs);
 }
@@ -2104,6 +2111,7 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
       else
 	stp_dither_set_transition(dither, .5);
     }
+  /* used internally: do not translate */
   if (!strcmp(nv.dither_algorithm, _("Ordered")))
     stp_dither_set_transition(dither, 1);
 

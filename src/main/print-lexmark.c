@@ -643,9 +643,9 @@ lexmark_default_resolution(const stp_printer_t *printer)
 {
   lexmark_cap_t caps= lexmark_get_model_capabilities(printer->model);
   if (!(caps.max_xdpi%300))
-    return "300x300 DPI";
+    return _("300x300 DPI");
   else
-    return "180x180 DPI";
+    return _("180x180 DPI");
 }
 
 
@@ -662,12 +662,12 @@ typedef struct {
 } lexmark_res_t;
 
 static const lexmark_res_t lexmark_reslist[] = {
-  { N_ ("300 DPI"),                                  300,  300,  0, 1, 1, 0, 0 },
-  { N_ ("300 DPI Unidirectional"),                   300,  300,  0, 1, 1, 1, 0 },
-  { N_ ("600 DPI"),                                  600,  600,  0, 1, 1, 0, 1 },
-  { N_ ("600 DPI Unidirectional"),                   600,  600,  0, 1, 1, 1, 1 },
-  { N_ ("1200 DPI "),                               1200, 1200,  1, 2, 1, 0, 2 },
-  { N_ ("1200 DPI  Unidirectional"),                1200, 1200,  0, 1, 1, 1, 2 },
+  { N_ ("300 DPI"),			 300,  300,  0, 1, 1, 0, 0 },
+  { N_ ("300 DPI Unidirectional"),	 300,  300,  0, 1, 1, 1, 0 },
+  { N_ ("600 DPI"),			 600,  600,  0, 1, 1, 0, 1 },
+  { N_ ("600 DPI Unidirectional"),	 600,  600,  0, 1, 1, 1, 1 },
+  { N_ ("1200 DPI"),			1200, 1200,  1, 2, 1, 0, 2 },
+  { N_ ("1200 DPI  Unidirectional"),	1200, 1200,  0, 1, 1, 1, 2 },
   { "", 0, 0, 0, 0, 0, -1 }
 };
 
@@ -683,7 +683,7 @@ static const lexmark_res_t
     {
       if (res->vres <= caps.max_ydpi != -1 &&
 	  res->hres <= caps.max_xdpi != -1 &&
-	  !strcmp(resolution, res->name))
+	  !strcmp(resolution, _(res->name)))
 	{
 	  return res;
 	}
@@ -796,7 +796,7 @@ lexmark_parameters(const stp_printer_t *printer,	/* I - Printer model */
       while (res->hres)
 	{
 	  if ((supported_resolutions & 1) == 1) {
-	    valptrs[c++]= c_strdup(res->name);
+	    valptrs[c++]= c_strdup(_(res->name));
 	  }
 	  res++;
 	  supported_resolutions = supported_resolutions >> 1;
@@ -837,7 +837,8 @@ lexmark_parameters(const stp_printer_t *printer,	/* I - Printer model */
 
   valptrs = xmalloc(*count * sizeof(char *));
   for (i = 0; i < *count; i ++)
-    valptrs[i] = c_strdup(p[i]);
+    /* translate media_types and media_sources */
+    valptrs[i] = c_strdup(_(p[i]));
 
   return ((char **) valptrs);
 }

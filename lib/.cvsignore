@@ -1,9 +1,9 @@
 .deps
 Makefile
 Makefile.in
-lib/alloca.lo
-lib/strcspn.lo
-lib/getopt1.lo
-lib/getopt.lo
+alloca.lo
+strcspn.lo
+getopt1.lo
+getopt.lo
 libprintut.la
 lib/vasprintf.lo

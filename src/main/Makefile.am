@@ -29,6 +29,8 @@ AM_CPPFLAGS =\
  -DLOCALEDIR=\""$(localedir)"\"\
  @MAINTAINER_CFLAGS@
 
+bin_SCRIPTS = gimpprint-config
+
 lib_LTLIBRARIES = @MAIN_BIN@
 EXTRA_LTLIBRARIES = libgimpprint.la
 
@@ -44,11 +46,29 @@ libgimpprint_la_SOURCES = \
 	print-util.c \
 	print-color.c \
 	print-weave.c \
+	print-version.c \
 	quickmatrix257.h \
 	ran.367.179.h \
 	ran.509.131.h
 libgimpprint_la_LIBADD = ../../lib/libprintut.la -lm
+## Uncommment to build an unversioned library (version in soname)
 libgimpprint_la_LDFLAGS = -release $(VERSION) -rpath $(libdir)
+## Uncomment to build a versioned library with MAJOR and MINOR in soname
+##libgimpprint_la_LDFLAGS = @STRIP_BEGIN@ \
+##	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)    \
+##	-release $(LT_RELEASE)                                  \
+##	-export-dynamic                                         \
+##	-rpath $(libdir)                                        \
+##	@STRIP_END@
+## Uncomment to build a versioned library with static soname
+##libgimpprint_la_LDFLAGS = @STRIP_BEGIN@ \
+##	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)    \
+##	-export-dynamic                                         \
+##	-rpath $(libdir)                                        \
+##	@STRIP_END@
+
+m4datadir = $(datadir)/aclocal
+m4data_DATA = gimpprint.m4
 
 $(srcdir)/print-util.c: print-printers.c
 
@@ -61,6 +81,7 @@ printdefl.o: printdefy.o
 	$(MAKE) -C ../printdef
 
 CLEANFILES = print-printers.c
+DISTCLEANFILES = gimpprint-config
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = printers.xml
+EXTRA_DIST = gimpprint.m4 printers.xml

@@ -29,6 +29,14 @@
 /* Package release date*/
 #undef RELEASE_DATE
 
+/* Library versioning */
+#undef GIMPPRINT_MAJOR_VERSION
+#undef GIMPPRINT_MINOR_VERSION
+#undef GIMPPRINT_MICRO_VERSION
+#undef GIMPPRINT_INTERFACE_AGE
+#undef GIMPPRINT_BINARY_AGE
+#undef GIMPPRINT_VERSION
+
 /* CUPS data directory */
 #undef CUPS_DATADIR
 

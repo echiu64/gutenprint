@@ -19,11 +19,84 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT(src/main/print-dither.c)
 AC_CONFIG_AUX_DIR(scripts)
-AM_INIT_AUTOMAKE(gimp-print,4.1.4)
+
+dnl In the following, there are a the following variants
+dnl of gimpprint cflags and libs variables
+dnl
+dnl GIMPPRINT_CFLAGS:  cflags for compiling libraries and example progs
+dnl GIMPPRINT_LIBS:    libraries for linking example programs
+dnl GIMPPRINT_DEPLIBS: libraries for linking libraries against
+dnl gimpprint_cflags:  cflags to store in gimpprint-config
+dnl gimpprint_libs:    libs to store in gimpprint-config
+
+dnl Save this value here, since automake will set cflags later
+cflags_set=${CFLAGS+set}
+
+dnl we need to AC_DIVERT_PUSH/AC_DIVERT_POP these variable definitions so they
+dnl are available for $ac_help expansion (don't we all *love* autoconf?)
+AC_DIVERT_PUSH(AC_DIVERSION_NOTICE)dnl
+dnl
+dnl Making releases:
+dnl   GIMPPRINT_MICRO_VERSION += 1;
+dnl   GIMPPRINT_INTERFACE_AGE += 1;
+dnl   GIMPPRINT_BINARY_AGE += 1;
+dnl if any functions have been added, set GIMPPRINT_INTERFACE_AGE to 0.
+dnl if backwards compatibility has been broken,
+dnl set GIMPPRINT_BINARY_AGE and GIMPPRINT_INTERFACE_AGE to 0.
+dnl
+GIMPPRINT_MAJOR_VERSION=4
+GIMPPRINT_MINOR_VERSION=1
+GIMPPRINT_MICRO_VERSION=4
+GIMPPRINT_INTERFACE_AGE=0
+GIMPPRINT_BINARY_AGE=0
+GIMPPRINT_VERSION=$GIMPPRINT_MAJOR_VERSION.$GIMPPRINT_MINOR_VERSION.$GIMPPRINT_MICRO_VERSION
+dnl
+AC_DIVERT_POP()dnl
+
+AC_SUBST(GIMPPRINT_MAJOR_VERSION)
+AC_SUBST(GIMPPRINT_MINOR_VERSION)
+AC_SUBST(GIMPPRINT_MICRO_VERSION)
+AC_SUBST(GIMPPRINT_INTERFACE_AGE)
+AC_SUBST(GIMPPRINT_BINARY_AGE)
+AC_SUBST(GIMPPRINT_VERSION)
+AC_DEFINE_UNQUOTED(GIMPPRINT_MAJOR_VERSION,${GIMPPRINT_MAJOR_VERSION})
+AC_DEFINE_UNQUOTED(GIMPPRINT_MINOR_VERSION,${GIMPPRINT_MINOR_VERSION})
+AC_DEFINE_UNQUOTED(GIMPPRINT_MICRO_VERSION,${GIMPPRINT_MICRO_VERSION})
+AC_DEFINE_UNQUOTED(GIMPPRINT_INTERFACE_AGE,${GIMPPRINT_INTERFACE_AGE})
+AC_DEFINE_UNQUOTED(GIMPPRINT_BINARY_AGE,${GIMPPRINT_BINARY_AGE})
+AC_DEFINE_UNQUOTED(GIMPPRINT_VERSION,${GIMPPRINT_VERSION})
+
+dnl libtool versioning
+LT_RELEASE=$GIMPPRINT_MAJOR_VERSION.$GIMPPRINT_MINOR_VERSION
+LT_CURRENT=`expr $GIMPPRINT_MICRO_VERSION - $GIMPPRINT_INTERFACE_AGE`
+LT_REVISION=$GIMPPRINT_INTERFACE_AGE
+LT_AGE=`expr $GIMPPRINT_BINARY_AGE - $GIMPPRINT_INTERFACE_AGE`
+AC_SUBST(LT_RELEASE)
+AC_SUBST(LT_CURRENT)
+AC_SUBST(LT_REVISION)
+AC_SUBST(LT_AGE)
+
+dnl Save this value here, since automake will set cflags later.
+cflags_set=${CFLAGS+set}
+
+dnl Initialize automake stuff.
+AM_INIT_AUTOMAKE(gimp-print, $GIMPPRINT_VERSION)
+
+dnl Specify a configuration file.
 AM_CONFIG_HEADER(config.h)
 
 dnl Available languages (translations)
 ALL_LINGUAS="en_GB en_TEST"
+
+dnl Set up libtool scripts.
+dnl Disable static library building to speed up the build
+AC_DISABLE_STATIC
+AM_PROG_LIBTOOL
+AC_SUBST(LIBTOOL_DEPS)
+dnl define HAVE_GNU_LD if GNU ld is present
+if test "$ac_cv_prog_gnu_ld" = "yes" ; then
+  AC_DEFINE(HAVE_GNU_LD)
+fi
 
 dnl Compiler options and definitions
 CFLAGS="${CFLAGS:=}"
@@ -31,6 +104,8 @@ INCLUDES="${INCLUDES} -I\$(top_srcdir)/src/include"
 OPTIM=""
 
 dnl Defaults
+dnl figure defaults, prior to $ac_help setup
+AC_DIVERT_PUSH(AC_DIVERSION_NOTICE)dnl
 BUILD_CUPS=no
 BUILD_GIMP=yes
 BUILD_GHOST=no
@@ -38,6 +113,7 @@ BUILD_ESCPUTIL=yes
 BUILD_LIBGIMPPRINT=yes
 BUILD_TEST=no
 PLUG_IN_PATH="admin-bin"
+AC_DIVERT_POP()dnl
 
 AM_MAINTAINER_MODE
 if test x${USE_MAINTAINER_MODE} = xyes ; then
@@ -45,9 +121,7 @@ if test x${USE_MAINTAINER_MODE} = xyes ; then
   BUILD_TEST=yes
 fi
 
-dnl Check canonical system/host
-dnl (this is a kludge; replace with AC_PATH_XTRA
-dnl and a new m4 macro)
+dnl Check canonical system/host (a kludge: replace me with something better).
 AC_CANONICAL_HOST
 if test x${host_os} = xlinux-gnu ; then
   OSTYPE="linux"
@@ -60,7 +134,7 @@ else
 fi
 AC_DEFINE(OSTYPE,["${OSTYPE}"],[The operating system to build for])
 
-dnl Command line options
+dnl Command line options.
 AC_MSG_CHECKING([whether to enable debugging])
 AC_ARG_ENABLE(debug,
 [  --enable-debug          turn on debugging [default=no]],
@@ -73,7 +147,7 @@ AC_ARG_ENABLE(debug,
 
 AC_MSG_CHECKING([whether to build CUPS driver])
 AC_ARG_WITH(cups,
-[  --with-cups[=PREFIX]    build CUPS driver [default=no, default PREFIX=PREFIX]],
+[  --with-cups[=PREFIX]    build CUPS driver [default=${BUILD_CUPS}, default PREFIX=PREFIX]],
   [case "${withval}" in
     yes) BUILD_CUPS="yes" ; AC_MSG_RESULT([yes]) ; cups_prefix="/usr" ;;
     no) BUILD_CUPS="no" ; AC_MSG_RESULT([no]) ; cups_prefix="/usr" ;;
@@ -89,7 +163,7 @@ AC_ARG_WITH(cups,
 
 AC_MSG_CHECKING([whether to build GIMP plugin])
 AC_ARG_WITH(gimp,
-[  --with-gimp             build GIMP plugin [default=yes]],
+[  --with-gimp             build GIMP plugin [default=${BUILD_GIMP}]],
   [case "${withval}" in
     yes) BUILD_GIMP="yes" ; AC_MSG_RESULT([yes]) ;;
     no) BUILD_GIMP="no" ; AC_MSG_RESULT([no]) ;;
@@ -99,7 +173,7 @@ AC_ARG_WITH(gimp,
 
 AC_MSG_CHECKING([whether to build ghostscript driver])
 AC_ARG_WITH(ghost,
-[  --with-ghost            build ghostscript driver patch [default=no]],
+[  --with-ghost            build ghostscript driver patch [default=${BUILD_GHOST}]],
   [case "${withval}" in
     yes) BUILD_GHOST="yes" ; AC_MSG_RESULT([yes]) ;;
     no) BUILD_GHOST="no" ; AC_MSG_RESULT([no]) ;;
@@ -109,7 +183,7 @@ AC_ARG_WITH(ghost,
 
 AC_MSG_CHECKING([whether to build escputil])
 AC_ARG_ENABLE(escputil,
-[  --enable-escputil       build escputil [default=yes]],
+[  --enable-escputil       build escputil [default=${BUILD_ESCPUTIL}]],
   [case "${enableval}" in
     yes) BUILD_ESCPUTIL="yes" ; AC_MSG_RESULT([yes]) ;;
     no) BUILD_ESCPUTIL="no" ; AC_MSG_RESULT([no]) ;;
@@ -119,7 +193,7 @@ AC_ARG_ENABLE(escputil,
 
 AC_MSG_CHECKING([whether to build libgimpprint])
 AC_ARG_ENABLE(libgimpprint,
-[  --enable-libgimpprint   build libgimpprint [default=yes]],
+[  --enable-libgimpprint   build libgimpprint [default=${BUILD_LIBGIMPPRINT}]],
   [case "${enableval}" in
     yes) BUILD_LIBGIMPPRINT="yes" ; AC_MSG_RESULT([yes]) ;;
     no) BUILD_LIBGIMPPRINT="no" ; AC_MSG_RESULT([no]) ;;
@@ -129,7 +203,7 @@ AC_ARG_ENABLE(libgimpprint,
 
 AC_MSG_CHECKING([whether to build test programs])
 AC_ARG_ENABLE(test,
-[  --enable-test           build test programs [default=no]],
+[  --enable-test           build test programs [default=${BUILD_TEST}]],
   [case "${enableval}" in
     yes) BUILD_TEST="yes" ; AC_MSG_RESULT([yes]) ;;
     no) BUILD_TEST="no" ; AC_MSG_RESULT([no]) ;;
@@ -147,15 +221,9 @@ AC_ARG_ENABLE(user-install,
        AC_MSG_ERROR([bad value ${enableval} for --enable-user-install]) ;;
   esac],[PLUG_IN_PATH="admin-bin" ; AC_MSG_RESULT([no])])
 
-dnl Set up libtool scripts.
-dnl Disable static library building to speed up the build
-AC_DISABLE_STATIC
-AM_PROG_LIBTOOL
-AC_SUBST(LIBTOOL_DEPS)
-dnl define HAVE_GNU_LD if GNU ld is present
-if test "$ac_cv_prog_gnu_ld" = "yes" ; then
-  AC_DEFINE(HAVE_GNU_LD)
-fi
+
+dnl Honour aclocal flags.
+ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
 dnl Checks for programs.
 AC_ISC_POSIX
@@ -167,6 +235,22 @@ AC_PROG_YACC
 AM_PROG_LEX
 AC_PATH_PROG(BISON_PROG, bison)
 AC_PATH_PROG(YACC_PROG, yacc)
+
+AC_MSG_CHECKING(whether make is GNU Make)
+STRIP_BEGIN=
+STRIP_END=
+if $ac_make --version 2>/dev/null | grep '^GNU Make ' >/dev/null ; then
+  STRIP_BEGIN='$(strip $(STRIP_DUMMY)'
+  STRIP_END=')'
+  AC_MSG_RESULT(yes)
+else
+  AC_MSG_RESULT(no)
+fi
+dnl some Make 3.79 $(strip ) versions are broken and require an empty arg
+STRIP_DUMMY=
+AC_SUBST(STRIP_DUMMY)
+AC_SUBST(STRIP_BEGIN)
+AC_SUBST(STRIP_END)
 
 dnl GNU gettext checks.
 AM_GNU_GETTEXT
@@ -422,9 +506,11 @@ src/ghost/Makefile
 src/gimp/Makefile
 src/include/Makefile
 src/main/Makefile
+src/main/gimpprint-config
 src/printdef/Makefile
 test/Makefile
 ],[
+chmod +x src/main/gimpprint-config
 echo "Finished configuring."
 echo "Type 'make' to build the package"
 echo "then 'make install' to install it."
