@@ -1,10 +1,10 @@
-README.txt - 09/17/2000 - CUPS Drivers based on GIMP-print
+README.txt - 10/15/2000 - CUPS Drivers based on GIMP-print
 ----------------------------------------------------------
 
 This file describes the CUPS drivers based on the GIMP Print
 plug-in.
 
-Note: to use these drivers you must have CUPS 1.1.3 or higher.
+Note: to use these drivers you must have CUPS 1.1.4 or higher.
 
 All code is Copyright 1997-2000 by Easy Software Products and is
 provided under the terms of the GNU General Public License.  The
@@ -80,7 +80,7 @@ the print heads, etc.
 
 WHAT SOFTWARE DO I NEED?
 
-Currently, CUPS 1.1.3 or higher is required, as is an ANSI C
+Currently, CUPS 1.1.4 or higher is required, as is an ANSI C
 compliant compiler like GCC.  The code has been tested on a
 number of vendor compilers and should be fairly portable.
 
