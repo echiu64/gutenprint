@@ -343,6 +343,7 @@ main(int argc, char **argv)
   stp_set_float_parameter(v, "Density", global_density);
   stp_set_string_parameter(v, "Quality", "None");
   stp_set_string_parameter(v, "ImageType", "None");
+  stp_set_input_color_model(v, global_color_model);
 
   params = stp_get_parameter_list(v);
   count = stp_parameter_list_count(params);
