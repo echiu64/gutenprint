@@ -1,5 +1,8 @@
+Makefile
+Makefile.in
 config.guess
 config.sub
+config.rpath
 install-sh
 ltconfig
 ltmain.sh

@@ -5,6 +5,7 @@ ChangeLog
 Makefile
 Makefile.in
 aclocal.m4
+autom4te.cache
 config.cache
 config.log
 config.h
@@ -18,4 +19,5 @@ intl
 libtool
 m4local
 stamp-h
+stamp-h*
 stamp-h.in

@@ -9,4 +9,5 @@ paper_sizes
 gimp-print-version
 stp_limits
 foomatic-stamp
+mk_printerlist
 printers

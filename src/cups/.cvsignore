@@ -6,6 +6,8 @@ canon
 commandtocanon
 commandtoepson
 cups-calibrate
+cups-genppd
+cups-genppdconfig
 epson
 genppd
 ppd
