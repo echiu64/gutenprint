@@ -249,13 +249,13 @@ Examples:
 ---------
 
 Example 1 (print charts to file, color, 360 dpi):
-gs -sDEVICE=stp -dModel=8 -dDensity=0.7 -dGamma=1.5 -dSaturation=0.9 -dBrightness=40 -dImageType=1 foo.ps -sOutputFile=itsyourchoice.prn
+gs -sDEVICE=stp -dModel=8 -dDensity=0.7 -dGamma=1.5 -dSaturation=0.9 -dBrightness=40 -dImageType=1 -sOutputFile=itsyourchoice.prn foo.ps
 
 Example 2 (print color photograph to /dev/lp0 at maximum quality):
-gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -dModel=6 -dDensity=0.8 -r1440 -dQuality=6 -dImageType=2 foo.ps -sOutputFile=/dev/lp0
+gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -dModel=6 -dDensity=0.8 -r1440 -dQuality=6 -dImageType=2 -sOutputFile=/dev/lp0 foo.ps
 
 Example 3 (print pure black text to stdout)
-gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -dModel=6 -dDensity=0.8 -r720 -dQuality=2 -dImageType=3 foo.ps -sOutputFile=-
+gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -dModel=6 -dDensity=0.8 -r720 -dQuality=2 -dImageType=3 -sOutputFile=- foo.ps
 
 
 Settings you might try:
