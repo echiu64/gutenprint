@@ -210,9 +210,20 @@ BUILD AND INSTALLATION OF THE IJS GIMPPRINT DRIVER:
    make
    make install
 
+   or
+
+   ./configure --with-ijs --with-foomatic
+   make
+   make install
+
+   if you also want to have the Foomatic data for the IJS driver
+   (see the README file in the main directory of this package).
+
    If you do not wish to build the Gimp Print plugin, you may run
 
    ./configure --with-ijs --without-gimp
+
+   ./configure --with-ijs --with-foomatic --without-gimp
 
 
 OPTIONS:
