@@ -44,24 +44,28 @@ Gimp-Print 4.1.8 contains the following changes over 4.1.7:
    specifically designed for these printers, and may not give optimal
    results with older printers.
 
-8) Very dark tones and very saturated colors should be improved
+8) Partial color tuning for some papers on Epson printers.  In
+   particular, matte and plain paper should now produce more accurate
+   grays with default settings.
+
+9) Very dark tones and very saturated colors should be improved
    somewhat.  The result may be a bit darker and more contrasty; this
    will need some experimentation.
 
-9) The Gimp plugin should now build on systems not using GNU make.
+10) The Gimp plugin should now build on systems not using GNU make.
 
-10) The Gimp plugin now permits the user to define a new printer name.
+11) The Gimp plugin now permits the user to define a new printer name.
    This allows the user to define multiple "printers" with different
    settings.  A newly-defined printer will clone the settings in
    effect at the time the new printer is defined.
 
-11) The Gimp plugin now grays out settings that have no effect.
+12) The Gimp plugin now grays out settings that have no effect.
    Specifically, the custom page size boxes are grayed out unless a
    paper size allowing custom sizing is in use, and the color control
    sliders (cyan, magenta, yellow, and saturation) are grayed out when
    grayscale or black and white output is selected.
 
-12) The Gimp plugin now offers an extra option for positioning the
+13) The Gimp plugin now offers an extra option for positioning the
    image in the preview window.  The middle button moves the image in
    increments of the image size.  This can be useful in some cases
    when printing the same image multiple times on one page.
@@ -72,17 +76,17 @@ Gimp-Print 4.1.8 contains the following changes over 4.1.7:
    position, and does not respond to the mouse until you release all
    buttons.
 
-13) The Gimp plugin will no longer compile against any version of 1.1.
+14) The Gimp plugin will no longer compile against any version of 1.1.
    It no longer uses the transitional "compatibility" API; rather, it
    uses the 1.2 API.
 
-14) There has been a significant reorganization of the dither code.
+15) There has been a significant reorganization of the dither code.
    While this has been tested, it is quite possible that there are
    cases where the code has regressed.  Typical symptoms would be no
    output, grossly wrong output (likely with vertical bands or
    streaks), or crashes.  Please report any problems you may find.
 
-15) The package as a whole is compiled with more warnings enabled
+16) The package as a whole is compiled with more warnings enabled
    (when gcc is used).  While most of the warnings have been cleaned
    up, some of them cannot easily be removed (they're due to issues
    with external header files or other tools, for example).
