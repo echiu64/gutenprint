@@ -180,6 +180,26 @@ typedef struct escp2_printer
 
 #define INCH(x)		(72 * x)
 
+typedef struct escp_init
+{
+  int model;
+  int output_type;
+  int ydpi;
+  int xdpi;
+  int use_softweave;
+  int page_length;
+  int page_width;
+  int page_top;
+  int page_bottom;
+  int top;
+  int nozzles;
+  int nozzle_separation;
+  int horizontal_passes;
+  int vertical_passes;
+  int vertical_oversample;
+  int bits;
+} escp_init_t;
+
 /*
  * SUGGESTED SETTINGS FOR STYLUS PHOTO EX:
  * Brightness 127
@@ -613,12 +633,6 @@ escp2_has_cap(int model, model_featureset_t featureset,
   return ((model_capabilities[model].flags & featureset) == class);
 }
 
-static model_featureset_t
-escp2_cap(int model, model_featureset_t featureset)
-{
-  return (model_capabilities[model].flags & featureset);
-}
-
 static unsigned
 escp2_nozzles(int model)
 {
@@ -849,137 +863,195 @@ escp2_imageable_area(const printer_t *printer,	/* I - Printer model */
 }
 
 static void
-escp2_init_printer(FILE *prn,int model, int output_type, int ydpi, int xdpi,
-		   int use_softweave, int page_length, int page_width,
-		   int page_top, int page_bottom, int top, int nozzles,
-		   int nozzle_separation, int horizontal_passes,
-		   int vertical_passes, int vertical_oversample, int bits)
+escp2_reset_printer(FILE *prn, escp_init_t *init)
 {
-  int l, t;
-  if (ydpi > 720)
-    ydpi = 720;
-  l = ydpi * page_length / 72;
-  t = ydpi * page_top / 72;
-  top = ydpi * top / 72;
-
   /*
-   * Hack that seems to be necessary for these silly things to print.
-   * Apparently this lets USB port work if needed.
+   * Hack that seems to be necessary for these silly things to recognize
+   * the input.  It only needs to be done once per printer evidently, but
+   * it needs to be done.
    */
-  if (escp2_has_cap(model, MODEL_INIT_MASK, MODEL_INIT_900))
+  if (escp2_has_cap(init->model, MODEL_INIT_MASK, MODEL_INIT_900))
     fprintf(prn, "%c%c%c\033\001@EJL 1284.4\n@EJL     \n\033@", 0, 0, 0);
 
   fputs("\033@", prn); 				/* ESC/P2 reset */
+}
 
+static void
+escp2_set_remote_sequence(FILE *prn, escp_init_t *init)
+{
   /* Magic remote mode commands, whatever they do */
-  if (escp2_has_cap(model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999))
+  if (escp2_has_cap(init->model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999))
     fprintf(prn,
 	    "\033(R\010%c%cREMOTE1PM\002%c%c%cSN\003%c%c%c\001\033%c%c%c",
 	    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+}
 
+static void
+escp2_set_graphics_mode(FILE *prn, escp_init_t *init)
+{
   fwrite("\033(G\001\000\001", 6, 1, prn);	/* Enter graphics mode */
+}
 
-  /* Set up print resolution */
-  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
-      use_softweave)
-    fprintf(prn, "\033(U\005%c%c%c%c%c%c", 0, 1440 / ydpi, 1440 / ydpi,
-	    1440 / (ydpi * (horizontal_passes > 2 ? 2 : 1)),
+static void
+escp2_set_resolution(FILE *prn, escp_init_t *init)
+{
+  if (escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
+      init->use_softweave)
+    fprintf(prn, "\033(U\005%c%c%c%c%c%c", 0, 1440 / init->ydpi,
+	    1440 / init->ydpi,
+	    1440 / (init->ydpi * (init->horizontal_passes > 2 ? 2 : 1)),
 	    1440 % 256, 1440 / 256);
   else
-    fprintf(prn, "\033(U\001%c%c", 0, 3600 / ydpi);
+    fprintf(prn, "\033(U\001%c%c", 0, 3600 / init->ydpi);
+}
 
-  /* Gray/color */
-  if (escp2_has_cap(model, MODEL_GRAYMODE_MASK, MODEL_GRAYMODE_YES))
+static void
+escp2_set_color(FILE *prn, escp_init_t *init)
+{
+  if (escp2_has_cap(init->model, MODEL_GRAYMODE_MASK, MODEL_GRAYMODE_YES))
     fprintf(prn, "\033(K\002%c%c%c", 0, 0,
-	    (output_type == OUTPUT_GRAY ? 1 : 2));
+	    (init->output_type == OUTPUT_GRAY ? 1 : 2));
+}
 
-  /* Microweave? */
+static void
+escp2_set_microweave(FILE *prn, escp_init_t *init)
+{
   fprintf(prn, "\033(i\001%c%c", 0,
-	  (use_softweave || ydpi < 720) ? 0 : 1);
+	  (init->use_softweave || init->ydpi < 720) ? 0 : 1);
+}
 
-  /* Direction/speed */
-  if (horizontal_passes * vertical_passes * vertical_oversample > 2)
+static void
+escp2_set_printhead_speed(FILE *prn, escp_init_t *init)
+{
+  if (init->horizontal_passes * init->vertical_passes *
+      init->vertical_oversample > 2)
     {
       fprintf(prn, "\033U%c", 1);
-      if (xdpi > 720)		/* Slow mode if available */
+      if (init->xdpi > 720)		/* Slow mode if available */
 	fprintf(prn, "\033(s%c%c%c", 1, 0, 2);
     }
   else
     fprintf(prn, "\033U%c", 0);
+}
 
+static void
+escp2_set_dot_size(FILE *prn, escp_init_t *init)
+{
   /* Dot size */
-  if (ydpi < 720)
-    fprintf(prn, "\033(e\002%c%c%c", 0, 0, escp2_lowres_ink(model));
-  else if (!use_softweave)
+  if (init->ydpi < 720)
+    fprintf(prn, "\033(e\002%c%c%c", 0, 0, escp2_lowres_ink(init->model));
+  else if (!init->use_softweave)
     {
-      if (escp2_micro_ink(model) > 0)
-	fprintf(prn, "\033(e\002%c%c%c", 0, 0, escp2_micro_ink(model));
+      if (escp2_micro_ink(init->model) > 0)
+	fprintf(prn, "\033(e\002%c%c%c", 0, 0, escp2_micro_ink(init->model));
     }
-  else if (bits > 1)
+  else if (init->bits > 1)
     fwrite("\033(e\002\000\000\020", 7, 1, prn); /* Variable dots */
-  else if (escp2_soft_ink(model) >= 0)
-    fprintf(prn, "\033(e\002%c%c%c", 0, 0, escp2_soft_ink(model));
+  else if (escp2_soft_ink(init->model) >= 0)
+    fprintf(prn, "\033(e\002%c%c%c", 0, 0, escp2_soft_ink(init->model));
+}
 
-  /* Set up page */
-  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
-      use_softweave)
+static void
+escp2_set_page_length(FILE *prn, escp_init_t *init)
+{
+  int l = init->ydpi * init->page_length / 72;
+  if (escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
+      init->use_softweave)
+    fprintf(prn, "\033(C\004%c%c%c%c%c", 0,
+	    l & 0xff, (l >> 8) & 0xff, (l >> 16) & 0xff, (l >> 24) & 0xff);
+  else
+    fprintf(prn, "\033(C\002%c%c%c", 0, l & 255, l >> 8);
+}
+
+static void
+escp2_set_margins(FILE *prn, escp_init_t *init)
+{
+  int l = init->ydpi * init->page_length / 72;
+  int t = init->ydpi * init->page_top / 72;
+  if (escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
+      init->use_softweave)
     {
-      /* Page length */
-      fprintf(prn, "\033(C\004%c%c%c%c%c", 0,
-	      l & 0xff, (l >> 8) & 0xff, (l >> 16) & 0xff, (l >> 24) & 0xff);
-
-      /* Top/bottom margins */
-      if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+      if (escp2_has_cap(init->model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
 	fprintf(prn, "\033(c\010%c%c%c%c%c%c%c%c%c", 0,
 		t & 0xff, t >> 8, (t >> 16) & 0xff, (t >> 24) & 0xff,
 		l & 0xff, l >> 8, (l >> 16) & 0xff, (l >> 24) & 0xff);
       else
 	fprintf(prn, "\033(c\004%c%c%c%c%c", 0,
 		t & 0xff, t >> 8, l & 0xff, l >> 8);
-
-      /* Page form factor */
-      fprintf(prn, "\033(S\010%c%c%c%c%c%c%c%c%c", 0,
-	      (((page_width * 720 / 72) >> 0) & 0xff),
-	      (((page_width * 720 / 72) >> 8) & 0xff),
-	      (((page_width * 720 / 72) >> 16) & 0xff),
-	      (((page_width * 720 / 72) >> 24) & 0xff),
-	      (((page_length * 720 / 72) >> 0) & 0xff),
-	      (((page_length * 720 / 72) >> 8) & 0xff),
-	      (((page_length * 720 / 72) >> 16) & 0xff),
-	      (((page_length * 720 / 72) >> 24) & 0xff));
-
-      /* Magic resolution cookie */
-      fprintf(prn, "\033(D%c%c%c%c%c%c", 4, 0, 14400 % 256, 14400 / 256,
-	      escp2_nozzle_separation(model) * 14400 / 720,
-	      14400 / escp2_xres(model));
-
-      if (!use_softweave || ydpi < 720)
-	fprintf(prn, "\033(v\004%c%c%c%c%c", 0,
-		top & 0xff, (top >> 8) & 0xff, (top >> 16) & 0xff, (top >> 24) & 0xff);
     }
   else
+    fprintf(prn, "\033(c\004%c%c%c%c%c", 0,
+	    t & 0xff, t >> 8, l & 0xff, l >> 8);
+}
+
+static void
+escp2_set_form_factor(FILE *prn, escp_init_t *init)
+{
+  if (escp2_has_cap(init->model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999))
+    fprintf(prn, "\033(S\010%c%c%c%c%c%c%c%c%c", 0,
+	    (((init->page_width * 720 / 72) >> 0) & 0xff),
+	    (((init->page_width * 720 / 72) >> 8) & 0xff),
+	    (((init->page_width * 720 / 72) >> 16) & 0xff),
+	    (((init->page_width * 720 / 72) >> 24) & 0xff),
+	    (((init->page_length * 720 / 72) >> 0) & 0xff),
+	    (((init->page_length * 720 / 72) >> 8) & 0xff),
+	    (((init->page_length * 720 / 72) >> 16) & 0xff),
+	    (((init->page_length * 720 / 72) >> 24) & 0xff));
+}
+
+static void
+escp2_set_printhead_resolution(FILE *prn, escp_init_t *init)
+{
+  if (escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
+      init->use_softweave)
+    /* Magic resolution cookie */
+    fprintf(prn, "\033(D%c%c%c%c%c%c", 4, 0, 14400 % 256, 14400 / 256,
+	    escp2_nozzle_separation(init->model) * 14400 / 720,
+	    14400 / escp2_xres(init->model));
+}
+
+static void
+escp2_set_initial_vertical_position(FILE *prn, escp_init_t *init)
+{
+  if (!init->use_softweave || init->ydpi < 720)
     {
-      /* Page length */
-      fprintf(prn, "\033(C\002%c%c%c", 0, l & 255, l >> 8);
-
-      /* Top/bottom margins */
-      fprintf(prn, "\033(c\004%c%c%c%c%c", 0,
-	      t & 0xff, t >> 8, l & 0xff, l >> 8);
-
-      if (escp2_has_cap(model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999))
-	fprintf(prn, "\033(S\010%c%c%c%c%c%c%c%c%c", 0,
-		(((page_width * 720 / 72) >> 0) & 0xff),
-		(((page_width * 720 / 72) >> 8) & 0xff),
-		(((page_width * 720 / 72) >> 16) & 0xff),
-		(((page_width * 720 / 72) >> 24) & 0xff),
-		(((page_length * 720 / 72) >> 0) & 0xff),
-		(((page_length * 720 / 72) >> 8) & 0xff),
-		(((page_length * 720 / 72) >> 16) & 0xff),
-		(((page_length * 720 / 72) >> 24) & 0xff));
-
-      if (!use_softweave || ydpi < 720)
-	fprintf(prn, "\033(v\002%c%c%c", 0, top & 0xff, top >> 8);
+      if (escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK,
+			MODEL_VARIABLE_4) && init->use_softweave)
+	fprintf(prn, "\033(v\004%c%c%c%c%c", 0,
+		init->top & 0xff,
+		(init->top >> 8) & 0xff,
+		(init->top >> 16) & 0xff,
+		(init->top >> 24) & 0xff);
+      else
+	fprintf(prn, "\033(v\002%c%c%c", 0, init->top & 0xff, init->top >> 8);
     }
+}
+
+static void
+escp2_init_printer(FILE *prn, escp_init_t *init)
+{
+  int l, t;
+  if (init->ydpi > 720)
+    init->ydpi = 720;
+  l = init->ydpi * init->page_length / 72;
+  t = init->ydpi * init->page_top / 72;
+  init->top = init->ydpi * init->top / 72;
+
+  escp2_reset_printer(prn, init);
+  escp2_set_remote_sequence(prn, init);
+  escp2_set_graphics_mode(prn, init);
+  escp2_set_resolution(prn, init);
+  escp2_set_color(prn, init);
+  escp2_set_microweave(prn, init);
+  escp2_set_printhead_speed(prn, init);
+  escp2_set_dot_size(prn, init);
+  escp2_set_page_length(prn, init);
+  escp2_set_margins(prn, init);
+  escp2_set_form_factor(prn, init);
+  escp2_set_printhead_resolution(prn, init);
+
+  /* This really shouldn't be here */
+  escp2_set_initial_vertical_position(prn, init);
 }
 
 /*
@@ -1050,6 +1122,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   int		use_glossy_film = 0;
   int		ink_spread;
   vars_t	nv;
+  escp_init_t	init;
 
   memcpy(&nv, v, sizeof(vars_t));
 
@@ -1153,11 +1226,22 @@ escp2_print(const printer_t *printer,		/* I - Model */
 		  escp2_nozzle_separation(model)) / 10; /* Top and bottom */
   page_top = 0;
 
-  escp2_init_printer(prn, model, output_type, ydpi, xdpi, use_softweave,
-		     page_length, page_width, page_top, page_bottom,
-		     top, nozzles, nozzle_separation,
-		     horizontal_passes, vertical_passes, vertical_oversample,
-		     bits);
+  init.model = model;
+  init.output_type = output_type;
+  init.ydpi = ydpi;
+  init.xdpi = xdpi;
+  init.use_softweave = use_softweave;
+  init.page_length = page_length;
+  init.page_width = page_width;
+  init.page_top = page_top;
+  init.page_bottom = page_bottom;
+  init.top = top;
+  init.horizontal_passes = horizontal_passes;
+  init.vertical_passes = vertical_passes;
+  init.vertical_oversample = vertical_oversample;
+  init.bits = bits;
+
+  escp2_init_printer(prn, &init);
 
  /*
   * Convert image size to printer resolution...
