@@ -32,9 +32,9 @@ INCLUDE_LOCALE_H
 
 #if defined ENABLE_NLS && !defined DISABLE_NLS
 #    include <libintl.h>
-#    define _(String) dgettext ("gimp-print", String)
+#    define _(String) dgettext (PACKAGE, String)
 #    undef gettext
-#    define gettext(String) dgettext ("gimp-print", String)
+#    define gettext(String) dgettext (PACKAGE, String)
 #    ifdef gettext_noop
 #        define N_(String) gettext_noop (String)
 #    else

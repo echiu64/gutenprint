@@ -47,6 +47,8 @@ extern char *xgetcwd (void);
 
 #ifndef HAVE_GETOPT_LONG
 #include "getopt.h"
+#else
+#include <getopt.h>
 #endif
 
 #endif /* __LIBPRINTUT_H__ */
