@@ -2734,24 +2734,20 @@ preview_update(void)
 
 
   if (vars.left < 0)
-    left = (page_width - print_width) / 2;
-  else
-  {
-    left = 10 * vars.left / 72;
+    vars.left = 72 * (page_width - print_width) / 20;
 
-    if (left > (page_width - print_width))
+  left = 10 * vars.left / 72;
+
+  if (left > (page_width - print_width))
     {
       left      = page_width - print_width;
       vars.left = 72 * left / 10;
       plist[plist_current].v.left = vars.left;
     }
-  }
 
   if (vars.top < 0)
-    top = (page_height - print_height) / 2;
-  else
-  {
-    top  = 10 * vars.top / 72;
+    vars.top  = 72 * (page_height - print_height) / 20;
+  top  = 10 * vars.top / 72;
 
     if (top > (page_height - print_height))
     {
@@ -2759,7 +2755,6 @@ preview_update(void)
       vars.top = 72 * top / 10;
       plist[plist_current].v.top = vars.top;
     }
-  }
   
   sprintf(s, "%.3f", vars.top / 72.0);
   gtk_signal_handler_block_by_data(GTK_OBJECT(top_entry), NULL);
