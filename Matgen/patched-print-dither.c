@@ -1412,7 +1412,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   int		ditherbit;	/* Random dither bitmask */
   int		ck;
   int		bk = 0;
-  int		ub, lb;
+  int		ub, lb, rb;
   dither_t	*d = (dither_t *) vd;
 
   int		terminate;
@@ -1534,15 +1534,15 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	   * the amount of color in the pixel (colorful pixels get less
 	   * black)...
 	   */
-	  int xdiff = (iabs(c - m) + iabs(c - y) + iabs(m - y)) / 3;
+//	  int xdiff = (iabs(c - m) + iabs(c - y) + iabs(m - y)) / 3;
 
-	  diff = 65536 - xdiff;
-	  diff = ((long long) diff * (long long) diff * (long long) diff)
-	    >> 32;
-	  diff--;
-	  if (diff < 0)
-	    diff = 0;
-	  k = (int) (((unsigned) diff * (unsigned) k) >> 16);
+//	  diff = 65536 - xdiff;
+//	  diff = ((long long) diff * (long long) diff * (long long) diff)
+//	    >> 32;
+//	  diff--;
+//	  if (diff < 0)
+//	    diff = 0;
+//	  k = (int) (((unsigned) diff * (unsigned) k) >> 16);
 	  ok = k;
 	  ak = k;
 
@@ -1557,63 +1557,24 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	   * whether we're going to print black or color.
 	   */
 
-	  tk = (((oc * d->c_darkness) + (om * d->m_darkness) +
-		 (oy * d->y_darkness)) >> 6);
-
-	  kdarkness = tk;
-	  if (kdarkness < d->k_upper) /* Possibility of printing color */
-	    {
-	      int rb;
 	      ub = d->k_upper;	/* Upper bound */
 	      lb = d->k_lower;	/* Lower bound */
 	      rb = ub - lb;	/* Range */
-	      if (kdarkness <= lb) /* All color */
-		{
-		  bk = 0;
-		  ub = 0;
-		  lb = 1;
-		}
-	      else if (kdarkness < ub) /* Probabilistic */
-		{
-		  /*
-		   * Pick a range point, depending upon which dither
-		   * method we're using
-		   */
-#if 0
-		  if ((d->dither_type & ~D_ADAPTIVE_BASE) == D_FLOYD)
-		    ditherbit = ((xrand() & 0xffff000) >> 12);
-		  else
-		    ditherbit = (DITHERPOINT(d, x+150, row+50, 4);
-		  ditherbit = ditherbit * rb / 65536;
-		  if (rb == 0 || (ditherbit < (kdarkness - lb)))
-		    bk = ok;
-		  else
-		    bk = 0;
-#else
-		  bk = (ok - lb) * 65535 / (ub - lb);
-#endif
-		}
-	      else		/* All black */
-		{
-		  ub = 1;
-		  lb = 1;
-		  bk = ok;
-		}
-	    }
-	  else			/* All black */
-	    {
-	      bk = ok;
-	    }
-	  ck = ok - bk;
-    
+
+	      bk = (ok - lb) * d->density / (ub - lb);
+	      if ( bk < 0)
+	        bk = 0;
+	      if ( bk > d->density )
+	        bk = d->density;
+	      k = bk;
+	 
 	  if (bk > 0)
 	    {
-	      if ( bk >= 32000 )
-	        bk = 32000;
-	      bk = bk * bk / 65536;
-	      c -= (d->k_clevel * bk) /128;
-	      m -= (d->k_mlevel * bk) /128;
-	      y -= (d->k_ylevel * bk) /128;
+// Divide by 128 should really be by 64 and d->k_clevel etc adjusted instead
+	      bk = bk / 128;
+	      c -= (d->k_clevel * bk);
+	      m -= (d->k_mlevel * bk);
+	      y -= (d->k_ylevel * bk);
 	      if (c < 0)
 		c = 0;
 	      if (m < 0)
@@ -1622,7 +1583,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		y = 0;
 	    }
 
-	  k = bk;
 	  UPDATE_COLOR(k);
 	  tk = print_color(d, &(d->k_dither), bk, bk, k, x, row, kptr,
 			   NULL, bit, length, 0, 0, 0, 0, &ink_budget);
