@@ -585,6 +585,12 @@
         <gamma value="0.585"/>
         <density value="1.0"/>
       </printer>
+      <printer name="EPSON Stylus Photo 935" driver="escp2-935">
+        <color value="true"/>
+        <model value="51"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
+      </printer>
       <printer name="EPSON Stylus Photo 950" driver="escp2-950">
         <color value="true"/>
         <model value="46"/>
@@ -894,6 +900,12 @@
         <gamma value="0.585"/>
         <density value="1.0"/>
       </printer>
+      <printer name="EPSON PM-940C" driver="escp2-pm940c">
+        <color value="true"/>
+        <model value="58"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
+      </printer>
       <printer name="EPSON PM-950C" driver="escp2-pm950c">
         <color value="true"/>
         <model value="53"/>
@@ -901,6 +913,12 @@
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-970C" driver="escp2-pm970c">
+        <color value="true"/>
+        <model value="57"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
+      </printer>
+      <printer name="EPSON PM-980C" driver="escp2-pm980c">
         <color value="true"/>
         <model value="57"/>
         <gamma value="0.585"/>

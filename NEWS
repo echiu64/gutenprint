@@ -759,6 +759,7 @@ EPSON Stylus Photo 890/895
 EPSON Stylus Photo 900
 EPSON Stylus Photo 915
 EPSON Stylus Photo 925
+EPSON Stylus Photo 935 (Experimental)
 EPSON Stylus Photo 950
 EPSON Stylus Photo 960
 EPSON Stylus Photo 1200
@@ -807,8 +808,10 @@ EPSON PM-850PT
 EPSON PM-870C	(Experimental)
 EPSON PM-880C
 EPSON PM-930C	(Experimental)
+EPSON PM-940C	(Experimental)
 EPSON PM-950C
 EPSON PM-970C	(Experimental)
+EPSON PM-980C	(Experimental)
 EPSON PM-2000C
 EPSON PM-2200C
 EPSON PM-3000C
@@ -1096,8 +1099,10 @@ Epson PM-850PT                 escp2-pm850pt   EPSON PM-850PT
 Epson PM-870C                  escp2-pm870c    EPSON PM-870C
 Epson PM-880C                  escp2-pm880c    EPSON PM-880C
 Epson PM-930C                  escp2-pm930c    EPSON PM-930C
+Epson PM-940C                  escp2-pm940c    EPSON PM-940C
 Epson PM-950C                  escp2-pm950c    EPSON PM-950C
 Epson PM-970C                  escp2-pm970c    EPSON PM-970C
+Epson PM-980C                  escp2-pm980c    EPSON PM-980C
 Epson PM-2000C                 escp2-pm2000c   EPSON PM-2000C
 Epson PM-2200C                 escp2-pm2200c   EPSON PM-2200C
 Epson PM-3000C                 escp2-pm3000c   EPSON PM-3000C

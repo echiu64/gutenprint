@@ -158,6 +158,7 @@
 #gptofoo escp2-ph900 printer/Epson-Stylus_Photo_900
 #gptofoo escp2-915 printer/Epson-Stylus_Photo_915
 #gptofoo escp2-925 printer/Epson-Stylus_Photo_925
+#gptofoo escp2-935 printer/Epson-Stylus_Photo_935
 #gptofoo escp2-950 printer/Epson-Stylus_Photo_950
 #gptofoo escp2-960 printer/Epson-Stylus_Photo_960
 #gptofoo escp2-1200 printer/Epson-Stylus_Photo_1200
@@ -209,8 +210,10 @@
 #gptofoo escp2-pm870c printer/Epson-PM_870C
 #gptofoo escp2-pm880c printer/Epson-PM_880C
 #gptofoo escp2-pm930c printer/Epson-PM_930C
+#gptofoo escp2-pm940c printer/Epson-PM_940C
 #gptofoo escp2-pm950c printer/Epson-PM_950C
 #gptofoo escp2-pm970c printer/Epson-PM_970C
+#gptofoo escp2-pm980c printer/Epson-PM_980C
 #gptofoo escp2-pm2000c printer/Epson-PM_2000C
 #gptofoo escp2-pm2200c printer/Epson-PM_2200C
 #gptofoo escp2-pm3000c printer/Epson-PM_3000C
