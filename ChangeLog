@@ -1,3 +1,73 @@
+2000-10-04	<mitsch@sourceforge.net>
+
+	Files:	gimp_color_window.c (1.20) (+73 -67)
+		print.c (1.126) (+7 -2)
+		print-image-gimp.c (1.8) (+7 -2)
+		gimp_main_window.c (1.64) (+345 -314)
+	
+	- added some #ifdef's to make copying over to gimp easier
+	- added some prototypes
+	- g* types at some places and minimal changes (not changing the logic)
+	
+2000-10-03	<rlk@sourceforge.net>
+
+	Files:	print-util.c (1.148) (+2 -1)
+	
+	Epson 4x6 photo paper is really 4.25x6.875
+	
+2000-10-02	<rlk@sourceforge.net>
+
+	Files:	RELNOTES (1.29) (+12 -1)
+	
+	More updates
+	
+2000-10-02	<rlk@sourceforge.net>
+
+	Files:	README (1.33) (+3 -3)
+	
+	Minor updates
+	
+2000-10-02	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.263) (+2 -2)
+	
+	Attempt to fix 115794 microweave in addition to softweave modes.
+	
+2000-10-02	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.262) (+3 -3)
+	
+	Attempt to fix 115794
+	
+2000-10-01	<davehill@sourceforge.net>
+
+	Files:	print-pcl.c (1.85) (+50 -1)
+		printers.xml (1.25) (+1 -1)
+	
+	Created new model "901" for large format 900 series printers. Moved
+	DJ 1220C into it. [Bruce Burden]
+	
+2000-10-01	<rlk@sourceforge.net>
+
+	Files:	RELNOTES (1.28) (+22 -12)
+	
+	Updates
+	
+2000-10-01	<rlk@sourceforge.net>
+
+	Files:	print-util.c (1.147) (+2 -2)
+	
+	115774: photo mode default saturation is excessive.  It appears from
+	tests on my wedding photo and on the car photo that the saturation
+	boost is in fact harmful.
+	
+2000-09-30	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.49) (+29 -0)
+	
+	Turns out that it's really bad juju not to have the change log there
+	from the very start.  Oh well...
+	
 2000-09-30	<rlk@sourceforge.net>
 
 	Files:	ChangeLog (1.48) (+0 -0)

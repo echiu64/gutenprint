@@ -52,7 +52,7 @@ static GtkWidget* gamma_scale;		/* Scale for gamma */
 static GtkWidget* gamma_entry;         /* Text entry widget for gamma */
 static GtkWidget* dismiss_button;      /* Action area dismiss button */
 static GtkWidget* dither_algo_button;  /* Button for dither type menu */
-static GtkWidget* dither_algo_menu = NULL;  /* dither menu */
+GtkWidget* dither_algo_menu = NULL;  /* dither menu */
 
 static GtkObject* brightness_adjustment;  /* Adjustment object for brightness */
 static GtkObject* saturation_adjustment;  /* Adjustment object for saturation */

@@ -751,9 +751,10 @@ do_print_dialog (gchar *proc_name)
 static void
 initialize_printer(plist_t *printer)
 {
+  const vars_t *def = print_default_settings();
   printer->name[0] = '\0';
   printer->active=0;
-  memcpy(&(printer->v), &vars, sizeof(vars));
+  memcpy(&(printer->v), def, sizeof(vars_t));
 }
 
 #define GET_MANDATORY_STRING_PARAM(param)		\
