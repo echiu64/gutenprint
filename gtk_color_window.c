@@ -32,11 +32,7 @@
 #include "print.h"
 #include "print_gimp.h"
 
-#ifdef GIMP_1_0
-
-#define N_(x) x
-#define _(x) x
-#define gettext(x) x
+#include "print-intl.h"
 
 extern vars_t vars;
 extern int plist_count;	     /* Number of system printers */
@@ -63,14 +59,14 @@ static GtkWidget* gamma_scale;		/* Scale for gamma */
 static GtkWidget* gamma_entry;         /* Text entry widget for gamma */
 static GtkWidget* dismiss_button;      /* Action area dismiss button */
 
-GtkObject* brightness_adjustment;  /* Adjustment object for brightness */
-GtkObject* saturation_adjustment;  /* Adjustment object for saturation */
-GtkObject* density_adjustment;	   /* Adjustment object for density */
-GtkObject* contrast_adjustment;	   /* Adjustment object for contrast */
-GtkObject* red_adjustment;	   /* Adjustment object for red */
-GtkObject* green_adjustment;	   /* Adjustment object for green */
-GtkObject* blue_adjustment;	   /* Adjustment object for blue */
-GtkObject* gamma_adjustment;	   /* Adjustment object for gamma */
+extern GtkObject* brightness_adjustment;  /* Adjustment object for brightness */
+extern GtkObject* saturation_adjustment;  /* Adjustment object for saturation */
+extern GtkObject* density_adjustment;	   /* Adjustment object for density */
+extern GtkObject* contrast_adjustment;	   /* Adjustment object for contrast */
+extern GtkObject* red_adjustment;	   /* Adjustment object for red */
+extern GtkObject* green_adjustment;	   /* Adjustment object for green */
+extern GtkObject* blue_adjustment;	   /* Adjustment object for blue */
+extern GtkObject* gamma_adjustment;	   /* Adjustment object for gamma */
 
 
 static void gtk_brightness_update(GtkAdjustment *);
@@ -989,5 +985,3 @@ static void gtk_close_adjust_callback(void)
 {
     gtk_widget_hide(gtk_color_adjust_dialog);
 }
-
-#endif

@@ -60,53 +60,7 @@
 
 #include <libgimp/gimpui.h>
 
-#ifdef GIMP_1_0
-#define N_(x) x
-#define _(x) x
-#define INIT_I18N()
-#define INIT_I18N_UI()
-#define gettext(x) x
-#else
-#if 0
-#include <libgimp/stdplugins-intl.h>
-#else
-#include <libgimp/gimpintl.h>
-#include <locale.h>
-#include <stdio.h>
-
-#ifndef LOCALEDIR
-#define LOCALEDIR g_strconcat (gimp_data_directory (), \
-			       G_DIR_SEPARATOR_S, \
-			       "locale", \
-			       NULL)
-#endif
-#ifdef HAVE_LC_MESSAGES
-#define INIT_I18N() \
-  setlocale(LC_MESSAGES, ""); \
-  bindtextdomain("gimp-std-plugins", LOCALEDIR); \
-  textdomain("gimp-std-plugins")
-#define INIT_I18N_UI() \
-  gtk_set_locale(); \
-  setlocale (LC_NUMERIC, "C"); \
-  INIT_I18N();
-#else
-#define INIT_I18N() \
-  bindtextdomain("gimp-std-plugins", LOCALEDIR); \
-  textdomain("gimp-std-plugins")
-#define INIT_I18N_UI() \
-  gtk_set_locale(); \
-  setlocale (LC_NUMERIC, "C"); \
-  INIT_I18N();
-#endif
-#endif
-#endif
-
-/*
- * Constants for GUI...
- */
-
-#define SCALE_WIDTH		64
-#define ENTRY_WIDTH		64
+#include "print-intl.h"
 
 /*
  * Types...
@@ -132,31 +86,25 @@ static void	get_system_printers(void);
 static void	query(void);
 static void	run(char *, int, GParam *, int *, GParam **);
 static void     init_gtk (void);
-static int	do_print_dialog(void);
+static int	do_print_dialog(char *proc_name);
 
 #ifndef GIMP_1_0
 extern void     gimp_create_main_window(void);
-#else
-extern void     gtk_create_main_window(void);
 #endif
+extern void     gtk_create_main_window(void);
 
 #if 0
 static void	cleanupfunc(void);
 #endif
 
-/***
- * Externals
- ***/
-extern GtkWidget* gtk_color_adjust_dialog; /* color adjust popup */
-
-extern GtkObject* brightness_adjustment; /* Adjustment object for brightness */
-extern GtkObject* saturation_adjustment; /* Adjustment object for saturation */
-extern GtkObject* density_adjustment;	 /* Adjustment object for density */
-extern GtkObject* contrast_adjustment;	 /* Adjustment object for contrast */
-extern GtkObject* red_adjustment;	 /* Adjustment object for red */
-extern GtkObject* green_adjustment;	 /* Adjustment object for green */
-extern GtkObject* blue_adjustment;	 /* Adjustment object for blue */
-extern GtkObject* gamma_adjustment;	 /* Adjustment object for gamma */
+GtkObject* brightness_adjustment; /* Adjustment object for brightness */
+GtkObject* saturation_adjustment; /* Adjustment object for saturation */
+GtkObject* density_adjustment;	 /* Adjustment object for density */
+GtkObject* contrast_adjustment;	 /* Adjustment object for contrast */
+GtkObject* red_adjustment;	 /* Adjustment object for red */
+GtkObject* green_adjustment;	 /* Adjustment object for green */
+GtkObject* blue_adjustment;	 /* Adjustment object for blue */
+GtkObject* gamma_adjustment;	 /* Adjustment object for gamma */
 
 /*
  * Globals...
@@ -270,22 +218,41 @@ query(void)
     { PARAM_FLOAT,	"density",	"Density (0-200%)" },
     { PARAM_STRING,	"ink_type",	"Type of ink or cartridge" },
   };
-  static int		nargs = sizeof(args) / sizeof(args[0]);
+  static gint nargs = sizeof(args) / sizeof(args[0]);
 
-  gimp_install_procedure(
-      "file_print",
-      "This plug-in prints images from The GIMP.",
-      "Prints images to PostScript, PCL, or ESC/P2 printers.",
-      "Michael Sweet <mike@easysw.com> and Robert Krawitz <rlk@alum.mit.edu>",
-      "Copyright 1997-2000 by Michael Sweet and Robert Krawitz",
-      PLUG_IN_VERSION,
-      N_("<Image>/File/Print..."),
-      "RGB*,GRAY*,INDEXED*",
-      PROC_PLUG_IN,
-      nargs,
-      0,
-      args,
-      NULL);
+  static gchar *blurb = "This plug-in prints images from The GIMP.";
+  static gchar *help  = "Prints images to PostScript, PCL, or ESC/P2 printers.";
+  static gchar *auth  = "Michael Sweet <mike@easysw.com> and Robert Krawitz <rlk@alum.mit.edu>";
+  static gchar *copy  = "Copyright 1997-2000 by Michael Sweet and Robert Krawitz";
+  static gchar *types = "RGB*,GRAY*,INDEXED*";
+
+#ifndef GIMP_1_0
+  gimp_install_procedure ("file_print_gtk",
+			  blurb, help, auth, copy,
+			  PLUG_IN_VERSION,
+			  N_("<Image>/File/Print (Gtk)..."),
+			  types,
+			  PROC_PLUG_IN,
+			  nargs, 0,
+			  args, NULL);
+  gimp_install_procedure ("file_print_gimp",
+			  blurb, help, auth, copy,
+			  PLUG_IN_VERSION,
+			  N_("<Image>/File/Print (Gimp)..."),
+			  types,
+			  PROC_PLUG_IN,
+			  nargs, 0,
+			  args, NULL);
+#else
+  gimp_install_procedure ("file_print",
+			  blurb, help, auth, copy,
+			  PLUG_IN_VERSION,
+			  N_("<Image>/File/Print..."),
+			  types,
+			  PROC_PLUG_IN,
+			  nargs, 0,
+			  args, NULL);
+#endif
 }
 
 
@@ -315,17 +282,17 @@ get_tmp_filename()
 #define PRINT_LUT
 
 static void
-run(char   *name,		/* I - Name of print program. */
-    int    nparams,		/* I - Number of parameters passed in */
-    GParam *param,		/* I - Parameter values */
-    int    *nreturn_vals,	/* O - Number of return values */
-    GParam **return_vals)	/* O - Return values */
+run (char   *name,		/* I - Name of print program. */
+     int    nparams,		/* I - Number of parameters passed in */
+     GParam *param,		/* I - Parameter values */
+     int    *nreturn_vals,	/* O - Number of return values */
+     GParam **return_vals)	/* O - Return values */
 {
   GDrawable	*drawable;	/* Drawable for image */
-  GRunModeType	run_mode;	/* Current run mode */
+  GRunModeType	 run_mode;	/* Current run mode */
   FILE		*prn;		/* Print file/command */
   guchar	*cmap;		/* Colormap (indexed images only) */
-  int		ncolors;	/* Number of colors in colormap */
+  int		 ncolors;	/* Number of colors in colormap */
   GParam	*values;	/* Return values */
 #ifdef __EMX__
   char		*tmpfile;	/* temp filename */
@@ -335,16 +302,16 @@ run(char   *name,		/* I - Name of print program. */
   GimpExportReturnType export = EXPORT_CANCEL;    /* return value of gimp_export_image() */
 #endif
 
-  INIT_I18N_UI();
+  INIT_LOCALE ("gimp-print");
 
- /*
-  * Initialize parameter data...
-  */
+  /*
+   * Initialize parameter data...
+   */
 
-  current_printer = get_printer_by_index(0);
+  current_printer = get_printer_by_index (0);
   run_mode = param[0].data.d_int32;
 
-  values = g_new(GParam, 1);
+  values = g_new (GParam, 1);
 
   values[0].type          = PARAM_STATUS;
   values[0].data.d_status = STATUS_SUCCESS;
@@ -363,7 +330,9 @@ run(char   *name,		/* I - Name of print program. */
     case RUN_WITH_LAST_VALS:
       init_gtk ();
       export = gimp_export_image (&image_ID, &drawable_ID, "Print", 
-				  (CAN_HANDLE_RGB | CAN_HANDLE_GRAY | CAN_HANDLE_INDEXED |
+				  (CAN_HANDLE_RGB |
+				   CAN_HANDLE_GRAY |
+				   CAN_HANDLE_INDEXED |
 				   CAN_HANDLE_ALPHA));
       if (export == EXPORT_CANCEL)
 	{
@@ -377,56 +346,53 @@ run(char   *name,		/* I - Name of print program. */
     }
 #endif
 
-
- /*
-  * Get drawable...
-  */
+  /*
+   * Get drawable...
+   */
 
   drawable = gimp_drawable_get (drawable_ID);
 
   image_width  = drawable->width;
   image_height = drawable->height;
 
- /*
-  * See how we will run
-  */
+  /*
+   * See how we will run
+   */
 
   switch (run_mode)
-  {
-    case RUN_INTERACTIVE :
-       /*
-        * Possibly retrieve data...
-        */
+    {
+    case RUN_INTERACTIVE:
+      /*
+       * Possibly retrieve data...
+       */
+      gimp_get_data (PLUG_IN_NAME, &vars);
 
-        gimp_get_data(PLUG_IN_NAME, &vars);
+      current_printer = get_printer_by_driver (vars.driver);
 
-	current_printer = get_printer_by_driver(vars.driver);
+      /*
+       * Get information from the dialog...
+       */
 
-       /*
-        * Get information from the dialog...
-        */
+      if (!do_print_dialog (name))
+	return;
+      break;
 
-	if (!do_print_dialog())
-          return;
-        break;
-
-    case RUN_NONINTERACTIVE :
-       /*
-        * Make sure all the arguments are present...
-        */
-
-        if (nparams < 11)
-	  values[0].data.d_status = STATUS_CALLING_ERROR;
-	else
+    case RUN_NONINTERACTIVE:
+      /*
+       * Make sure all the arguments are present...
+       */
+      if (nparams < 11)
+	values[0].data.d_status = STATUS_CALLING_ERROR;
+      else
 	{
-	  strcpy(vars.output_to, param[3].data.d_string);
-	  strcpy(vars.driver, param[4].data.d_string);
-	  strcpy(vars.ppd_file, param[5].data.d_string);
+	  strcpy (vars.output_to, param[3].data.d_string);
+	  strcpy (vars.driver, param[4].data.d_string);
+	  strcpy (vars.ppd_file, param[5].data.d_string);
 	  vars.output_type = param[6].data.d_int32;
-	  strcpy(vars.resolution, param[7].data.d_string);
-	  strcpy(vars.media_size, param[8].data.d_string);
-	  strcpy(vars.media_type, param[9].data.d_string);
-	  strcpy(vars.media_source, param[10].data.d_string);
+	  strcpy (vars.resolution, param[7].data.d_string);
+	  strcpy (vars.media_size, param[8].data.d_string);
+	  strcpy (vars.media_type, param[9].data.d_string);
+	  strcpy (vars.media_source, param[10].data.d_string);
 
           if (nparams > 11)
 	    vars.brightness = param[11].data.d_int32;
@@ -499,120 +465,117 @@ run(char   *name,		/* I - Name of print program. */
             vars.density = 1.0;
 
 	  if (nparams > 25)
-	    strcpy(vars.ink_type, param[24].data.d_string);
+	    strcpy (vars.ink_type, param[24].data.d_string);
 	  else
-	    memset(vars.ink_type, 0, 64);
+	    memset (vars.ink_type, 0, 64);
 	}
 
-	current_printer = get_printer_by_driver(vars.driver);
-        break;
+      current_printer = get_printer_by_driver (vars.driver);
+      break;
 
-    case RUN_WITH_LAST_VALS :
-       /*
-        * Possibly retrieve data...
-        */
+    case RUN_WITH_LAST_VALS:
+      /*
+       * Possibly retrieve data...
+       */
+      gimp_get_data (PLUG_IN_NAME, &vars);
 
-	gimp_get_data(PLUG_IN_NAME, &vars);
+      current_printer = get_printer_by_driver (vars.driver);
+      break;
 
-	current_printer = get_printer_by_driver(vars.driver);
-	break;
+    default:
+      values[0].data.d_status = STATUS_CALLING_ERROR;
+      break;;
+    }
 
-    default :
-        values[0].data.d_status = STATUS_CALLING_ERROR;
-        break;;
-  }
-
- /*
-  * Print the image...
-  */
-
+  /*
+   * Print the image...
+   */
   if (values[0].data.d_status == STATUS_SUCCESS)
-  {
-   /*
-    * Set the tile cache size...
-    */
+    {
+      /*
+       * Set the tile cache size...
+       */
 
-    if (drawable->height > drawable->width)
-      gimp_tile_cache_ntiles((drawable->height + gimp_tile_width() - 1) /
-                             gimp_tile_width() + 1);
-    else
-      gimp_tile_cache_ntiles((drawable->width + gimp_tile_width() - 1) /
-                             gimp_tile_width() + 1);
+      if (drawable->height > drawable->width)
+	gimp_tile_cache_ntiles ((drawable->height + gimp_tile_width () - 1) /
+				gimp_tile_width () + 1);
+      else
+	gimp_tile_cache_ntiles ((drawable->width + gimp_tile_width () - 1) /
+				gimp_tile_width () + 1);
 
-   /*
-    * Open the file/execute the print command...
-    */
+      /*
+       * Open the file/execute the print command...
+       */
 
-    if (plist_current > 0)
+      if (plist_current > 0)
 #ifndef __EMX__
-      prn = popen(vars.output_to, "w");
+	prn = popen (vars.output_to, "w");
 #else
       /* OS/2 PRINT command doesn't support print from stdin, use temp file */
-      prn = (tmpfile = get_tmp_filename()) ? fopen(tmpfile, "w") : NULL;
+      prn = (tmpfile = get_tmp_filename ()) ? fopen (tmpfile, "w") : NULL;
 #endif
-    else
-      prn = fopen(vars.output_to, "wb");
+      else
+	prn = fopen (vars.output_to, "wb");
 
-    if (prn != NULL)
-      {
-	Gimp_Image_t image;
-	image.drawable = drawable;
-	compute_lut(&(current_printer->printvars), gimp_gamma(), &vars);
-	/*
-	 * Is the image an Indexed type?  If so we need the colormap...
-	 */
+      if (prn != NULL)
+	{
+	  Gimp_Image_t image;
+	  image.drawable = drawable;
+	  compute_lut (&(current_printer->printvars), gimp_gamma (), &vars);
+	  /*
+	   * Is the image an Indexed type?  If so we need the colormap...
+	   */
 
-	if (gimp_image_base_type (image_ID) == INDEXED)
-	  cmap = gimp_image_get_cmap (image_ID, &ncolors);
-	else
-	  {
-	    cmap    = NULL;
-	    ncolors = 0;
-	  }
+	  if (gimp_image_base_type (image_ID) == INDEXED)
+	    cmap = gimp_image_get_cmap (image_ID, &ncolors);
+	  else
+	    {
+	      cmap    = NULL;
+	      ncolors = 0;
+	    }
 
-	/*
-	 * Finally, call the print driver to send the image to the printer and
-	 * close the output file/command...
-	 */
+	  /*
+	   * Finally, call the print driver to send the image to the printer and
+	   * close the output file/command...
+	   */
 
-	(*current_printer->print)(current_printer, 1, prn, &image, cmap,
-				  &vars);
+	  (*current_printer->print) (current_printer, 1, prn, &image, cmap,
+				     &vars);
 
-	if (plist_current > 0)
+	  if (plist_current > 0)
 #ifndef __EMX__
-	  pclose(prn);
+	    pclose (prn);
 #else
-	{ /* PRINT temp file */
-	  char *s;
-	  fclose(prn);
-	  s = g_strconcat(vars.output_to, tmpfile, NULL);
-	  if (system(s) != 0)
-	    values[0].data.d_status = STATUS_EXECUTION_ERROR;
-	  g_free(s);
-	  remove(tmpfile);
-	  g_free(tmpfile);
-	}
+	  { /* PRINT temp file */
+	    char *s;
+	    fclose (prn);
+	    s = g_strconcat (vars.output_to, tmpfile, NULL);
+	    if (system(s) != 0)
+	      values[0].data.d_status = STATUS_EXECUTION_ERROR;
+	    g_free (s);
+	    remove (tmpfile);
+	    g_free( tmpfile);
+	  }
 #endif
-	else
-	  fclose(prn);
-	print_finished = 1;
-      }
-    else
-      values[0].data.d_status = STATUS_EXECUTION_ERROR;
+	  else
+	    fclose (prn);
+	  print_finished = 1;
+	}
+      else
+	values[0].data.d_status = STATUS_EXECUTION_ERROR;
 
-   /*
-    * Store data...
-    */
+      /*
+       * Store data...
+       */
 
-    if (run_mode == RUN_INTERACTIVE)
-      gimp_set_data(PLUG_IN_NAME, &vars, sizeof(vars));
-  }
+      if (run_mode == RUN_INTERACTIVE)
+	gimp_set_data (PLUG_IN_NAME, &vars, sizeof (vars));
+    }
 
- /*
-  * Detach from the drawable...
-  */
-
-  gimp_drawable_detach(drawable);
+  /*
+   * Detach from the drawable...
+   */
+  gimp_drawable_detach (drawable);
 
 #ifndef GIMP_1_0
   if (export == EXPORT_EXPORT)
@@ -621,7 +584,7 @@ run(char   *name,		/* I - Name of print program. */
 }
 
 static void 
-init_gtk ()
+init_gtk (void)
 {
   gchar **argv;
   gint argc;
@@ -640,49 +603,49 @@ init_gtk ()
  */
 
 int
-do_print_dialog(void)
+do_print_dialog (char *proc_name)
 {
-    /*
-     * Initialize the program's display...
-     */
-    init_gtk ();
-    gdk_set_use_xshm (gimp_use_xshm());
+  /*
+   * Initialize the program's display...
+   */
+  init_gtk ();
+  gdk_set_use_xshm (gimp_use_xshm());
 
 #ifdef SIGBUS
-    signal(SIGBUS, SIG_DFL);
+  signal (SIGBUS, SIG_DFL);
 #endif
-    signal(SIGSEGV, SIG_DFL);
+  signal (SIGSEGV, SIG_DFL);
 
-    /*
-     * Get printrc options...
-     */
+  /*
+   * Get printrc options...
+   */
+  printrc_load ();
 
-    printrc_load();
-
-    /*
-     * Print dialog window...
-     */
+  /*
+   * Print dialog window...
+   */
 #ifndef GIMP_1_0
-    gimp_create_main_window();
+  if (!strcmp (proc_name, "file_print_gimp"))
+    gimp_create_main_window ();
+  else
+    gtk_create_main_window ();
 #else
-    gtk_create_main_window();
+  gtk_create_main_window ();
 #endif
 
-    gtk_main();
-    gdk_flush();
+  gtk_main ();
+  gdk_flush ();
 
-    /*
-     * Set printrc options...
-     */
+  /*
+   * Set printrc options...
+   */
+  if (saveme)
+    printrc_save ();
 
-    if (saveme)
-	printrc_save();
-
-    /*
-     * Return ok/cancel...
-     */
-
-    return (runme);
+  /*
+   * Return ok/cancel...
+   */
+  return (runme);
 }
 
 static void

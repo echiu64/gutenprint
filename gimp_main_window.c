@@ -28,9 +28,7 @@
 
 #include <libgimp/gimpui.h>
 
-#define N_(x) x
-#define _(x) x
-#define gettext(x) x
+#include "print-intl.h"
 
 /*
  * Constants for GUI...
@@ -890,7 +888,7 @@ gimp_plist_build_menu (GtkWidget      *option,
       gtk_widget_show (item);
       gtk_option_menu_set_menu (GTK_OPTION_MENU (option), *menu);
       gtk_widget_set_sensitive (option, FALSE);
-      gtk_widget_show(option);
+      gtk_widget_show (option);
       return;
     }
   else

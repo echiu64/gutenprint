@@ -28,9 +28,7 @@
 
 #include <libgimp/gimpui.h>
 
-#define N_(x) x
-#define _(x) x
-#define gettext(x) x
+#include "print-intl.h"
 
 extern vars_t   vars;
 extern gint     plist_count;       /* Number of system printers */
@@ -40,14 +38,14 @@ extern plist_t  plist[MAX_PLIST];  /* System printers */
 
 GtkWidget *gimp_color_adjust_dialog;
 
-GtkObject *brightness_adjustment;
-GtkObject *saturation_adjustment;
-GtkObject *density_adjustment;
-GtkObject *contrast_adjustment;
-GtkObject *red_adjustment;
-GtkObject *green_adjustment;
-GtkObject *blue_adjustment;
-GtkObject *gamma_adjustment;
+extern GtkObject *brightness_adjustment;
+extern GtkObject *saturation_adjustment;
+extern GtkObject *density_adjustment;
+extern GtkObject *contrast_adjustment;
+extern GtkObject *red_adjustment;
+extern GtkObject *green_adjustment;
+extern GtkObject *blue_adjustment;
+extern GtkObject *gamma_adjustment;
 
 
 static void gimp_brightness_update (GtkAdjustment *adjustment);

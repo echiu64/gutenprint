@@ -32,11 +32,7 @@
 #include "print.h"
 #include "print_gimp.h"
 
-#ifdef GIMP_1_0
-
-#define N_(x) x
-#define _(x) x
-#define gettext(x) x
+#include "print-intl.h"
 
 /*
  * Constants for GUI...
@@ -2121,5 +2117,3 @@ static void gtk_show_adjust_button_callback(GtkWidget * w)
 {
     gtk_widget_show(gtk_color_adjust_dialog);
 }
-
-#endif

@@ -9,18 +9,20 @@ bin_PROGRAMS = unprint escp2-weavetest pcl-unprint
 noinst_PROGRAMS = printdef
 
 print_SOURCES = \
-	print-canon.c       \
-	print-dither.c	    \
-	print-escp2.c	    \
-	print-pcl.c	    \
-	print-ps.c          \
-	print-util.c	    \
-	print.c		    \
-	gimp_color_window.c \
-	gimp_main_window.c  \
-        gtk_color_window.c  \
-	gtk_main_window.c   \
-	print.h
+	print-canon.c   	\
+	print-dither.c		\
+	print-escp2.c		\
+	print-pcl.c		\
+	print-ps.c      	\
+	print-util.c		\
+	print-intl.h		\
+	print.c			\
+	print.h			\
+	gimp_color_window.c	\
+	gimp_main_window.c	\
+        gtk_color_window.c	\
+	gtk_main_window.c	\
+	print_gimp.h
 
 print-util.c: print-printers.c
 
