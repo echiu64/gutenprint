@@ -90,6 +90,12 @@ typedef struct
 static const stp_parameter_t the_parameters[] =
 {
   {
+    "AutoMode", N_("Automatic Printing Mode"),
+    N_("Automatic printing mode"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+  },
+  {
     "PageSize", N_("Page Size"),
     N_("Size of the paper being printed to"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
@@ -516,6 +522,16 @@ escp2_paperlist(stp_const_vars_t v)
 }
 
 static int
+using_automatic_settings(stp_const_vars_t v)
+{
+  if (stp_check_string_parameter(v, "AutoMode", STP_PARAMETER_ACTIVE) &&
+      strcmp(stp_get_string_parameter(v, "AutoMode"), "Manual") != 0)
+    return 1;
+  else
+    return 0;
+}    
+
+static int
 compute_resid(const res_t *res)
 {
   static int resolutions[RES_N] =
@@ -586,6 +602,41 @@ verify_resolution(stp_const_vars_t v, const res_t *res)
     (escp2_base_separation(v) / escp2_nozzle_separation(v));
   int nozzles = escp2_nozzles(v);
   int resid = compute_resid(res);
+  if (using_automatic_settings(v))
+    {
+      const paper_t *paper = get_media_type(v);
+      if (paper)
+	{
+	  switch (paper->paper_class)
+	    {
+	    case PAPER_PLAIN:
+	      if (res->vres > 720 || res->hres > 720)
+		return 0;
+	      break;
+	    case PAPER_GOOD:
+	      if (res->vres < 180 || res->hres < 360 ||
+		  res->vres > 720 || res->hres > 1440)
+		return 0;
+	      break;
+	    case PAPER_PHOTO:
+	      if (res->vres < 720 || 
+		  (res->hres < 720 && res->hres < escp2_max_hres(v)))
+		return 0;
+	      break;
+	    case PAPER_PREMIUM_PHOTO:
+	      if (res->vres < 720 ||
+		  (res->hres < 1440 && res->hres < escp2_max_hres(v)))
+		return 0;
+	      break;
+	    case PAPER_TRANSPARENCY:
+	      if (res->vres < 360 || res->hres < 360 ||
+		  res->vres > 720 || res->hres > 720)
+		return 0;
+	      break;
+	    }
+	}
+    }
+
   if (escp2_ink_type(v, resid) != -1 &&
       res->vres <= escp2_max_vres(v) &&
       res->hres <= escp2_max_hres(v) &&
@@ -791,7 +842,16 @@ escp2_parameters(stp_const_vars_t v, const char *name,
       }
 
   description->deflt.str = NULL;
-  if (strcmp(name, "PageSize") == 0)
+  if (strcmp(name, "AutoMode") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+      stp_string_list_add_string(description->bounds.str, "Manual",
+				 _("Manual Control"));
+      stp_string_list_add_string(description->bounds.str, "Auto",
+				 _("Automatic Setting Control"));
+      description->deflt.str = "Manual"; /* so CUPS and Foomatic don't break */
+    }      
+  else if (strcmp(name, "PageSize") == 0)
     {
       int papersizes = stp_known_papersizes();
       description->bounds.str = stp_string_list_create();
@@ -810,16 +870,14 @@ escp2_parameters(stp_const_vars_t v, const char *name,
       const res_t *const *res = escp2_reslist(v);
       description->bounds.str = stp_string_list_create();
       i = 0;
+      stp_string_list_add_string(description->bounds.str, "Standard",
+				 _("Default"));
+      description->deflt.str = "Standard";
       while (res[i])
 	{
 	  if (verify_resolution(v, res[i]))
-	    {
-	      stp_string_list_add_string(description->bounds.str,
-					 res[i]->name, _(res[i]->text));
-	      if (res[i]->vres >= 360 && res[i]->hres >= 360 &&
-		  description->deflt.str == NULL)
-		description->deflt.str = res[i]->name;
-	    }
+	    stp_string_list_add_string(description->bounds.str,
+				       res[i]->name, _(res[i]->text));
 	  i++;
 	}
     }
@@ -828,7 +886,7 @@ escp2_parameters(stp_const_vars_t v, const char *name,
       const inklist_t *inks = escp2_inklist(v);
       int ninktypes = inks->n_inks;
       description->bounds.str = stp_string_list_create();
-      if (ninktypes)
+      if (ninktypes && !using_automatic_settings(v))
 	{
 	  stp_string_list_add_string(description->bounds.str, "DEFAULT",
 				     _("Standard"));
@@ -847,7 +905,7 @@ escp2_parameters(stp_const_vars_t v, const char *name,
       const inkgroup_t *inks = escp2_inkgroup(v);
       int ninklists = inks->n_inklists;
       description->bounds.str = stp_string_list_create();
-      if (ninklists > 1)
+      if (ninklists > 1 && !using_automatic_settings(v))
 	{
 	  for (i = 0; i < ninklists; i++)
 	    stp_string_list_add_string(description->bounds.str,
@@ -896,14 +954,19 @@ escp2_parameters(stp_const_vars_t v, const char *name,
   else if (strcmp(name, "PrintingDirection") == 0)
     {
       description->bounds.str = stp_string_list_create();
-      stp_string_list_add_string
-	(description->bounds.str, "Auto", _("Auto"));
-      stp_string_list_add_string
-	(description->bounds.str, "Bidirectional", _("Bidirectional"));
-      stp_string_list_add_string
-	(description->bounds.str, "Unidirectional", _("Unidirectional"));
-      description->deflt.str =
-	stp_string_list_param(description->bounds.str, 0)->name;
+      if (!using_automatic_settings(v))
+	{
+	  stp_string_list_add_string
+	    (description->bounds.str, "Auto", _("Auto"));
+	  stp_string_list_add_string
+	    (description->bounds.str, "Bidirectional", _("Bidirectional"));
+	  stp_string_list_add_string
+	    (description->bounds.str, "Unidirectional", _("Unidirectional"));
+	  description->deflt.str =
+	    stp_string_list_param(description->bounds.str, 0)->name;
+	}
+      else
+	description->is_active = 0;
     }
   else if (strcmp(name, "FullBleed") == 0)
     {
@@ -937,6 +1000,17 @@ escp2_find_resolution(stp_const_vars_t v, const char *resolution)
   int i = 0;
   if (!resolution || !strcmp(resolution, ""))
     return NULL;
+  if (strcmp(resolution, "Standard") == 0)
+    {
+      while (res[i])
+	{
+	  if (verify_resolution(v, res[i]) &&
+	      (res[i]->vres >= 360 && res[i]->hres >= 360))
+	    return res[i];
+	  i++;
+	}
+      res = escp2_reslist(v);
+    }
   while (res[i])
     {
       if (!strcmp(resolution, res[i]->name))

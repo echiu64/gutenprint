@@ -121,10 +121,20 @@ typedef struct
   const paper_adjustment_t *papers;
 } paper_adjustment_list_t;
 
+typedef enum
+{
+  PAPER_PLAIN         = 0x01,
+  PAPER_GOOD          = 0x02,
+  PAPER_PHOTO         = 0x04,
+  PAPER_PREMIUM_PHOTO = 0x08,
+  PAPER_TRANSPARENCY  = 0x10
+} paper_class_t;
+
 typedef struct
 {
   const char *name;
   const char *text;
+  paper_class_t paper_class;
   short paper_feed_sequence;
   short platen_gap;
   short feed_adjustment;
