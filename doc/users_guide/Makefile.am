@@ -26,6 +26,27 @@ MAINT_CHARSET = latin1
 
 ## Variables
 
+UTIL_MANUAL = util-edition
+UTIL_MANUAL_SRC_FILES = $(srcdir)/$(UTIL_MANUAL).sgml \
+	$(srcdir)/title.sgml \
+	$(srcdir)/history.sgml \
+	$(srcdir)/utils.sgml \
+	$(srcdir)/gfdl.sgml
+
+GIMP_MANUAL = gimp-edition
+GIMP_MANUAL_SRC_FILES = $(srcdir)/$(GIMP_MANUAL).sgml \
+	$(srcdir)/title.sgml \
+	$(srcdir)/history.sgml \
+	$(srcdir)/gimp.sgml \
+	$(srcdir)/gfdl.sgml
+
+CUPS_MANUAL = cups-edition
+CUPS_MANUAL_SRC_FILES = $(srcdir)/$(CUPS_MANUAL).sgml \
+	$(srcdir)/title.sgml \
+	$(srcdir)/history.sgml \
+	$(srcdir)/cups.sgml \
+	$(srcdir)/gfdl.sgml
+
 MANUAL = users-guide
 MANUAL_SRC_FILES = $(srcdir)/$(MANUAL).sgml \
 	$(srcdir)/title.sgml \
@@ -34,13 +55,35 @@ MANUAL_SRC_FILES = $(srcdir)/$(MANUAL).sgml \
 	$(srcdir)/cups.sgml \
 	$(srcdir)/utils.sgml \
 	$(srcdir)/gfdl.sgml
+
+UTIL_HTMLDIR = util_html
+GIMP_HTMLDIR = gimp_html
+CUPS_HTMLDIR = cups_html
 HTMLDIR = html
+
+UTIL_OUTPUTS = \
+ $(UTIL_MANUAL).pdf \
+ $(UTIL_MANUAL).ps \
+ util_html
+
+GIMP_OUTPUTS = \
+ $(GIMP_MANUAL).pdf \
+ $(GIMP_MANUAL).ps \
+ gimp_html
+
+CUPS_OUTPUTS = \
+ $(CUPS_MANUAL).pdf \
+ $(CUPS_MANUAL).ps \
+ cups_html
 
 OUTPUTS = \
  $(MANUAL).pdf \
  $(MANUAL).ps \
  html
 
+UTIL_GUIDE = $(UTIL_MANUAL).pdf util_html $(UTIL_MANUAL).ps
+GIMP_GUIDE = $(GIMP_MANUAL).pdf gimp_html $(GIMP_MANUAL).ps
+CUPS_GUIDE = $(CUPS_MANUAL).pdf cups_html $(CUPS_MANUAL).ps
 USER_GUIDE = $(MANUAL).pdf html $(MANUAL).ps
 
 if INSTALL_USER_GUIDE
@@ -50,7 +93,10 @@ endif
 DISTHOOKDIRS = figures $(HTMLDIR)
 DISTHOOKFILES = $(STANDARD_TARGETS)
 
-PNG_IMAGES = figures/cups_admin.png			\
+UTIL_PNG_IMAGES = 
+
+CUPS_PNG_IMAGES = \
+	figures/cups_admin.png				\
 	figures/cups_admin_device.png			\
 	figures/cups_admin_make.png			\
 	figures/cups_admin_model.png			\
@@ -58,7 +104,9 @@ PNG_IMAGES = figures/cups_admin.png			\
 	figures/cups_config_printer.png			\
 	figures/cups_my_printer.png			\
 	figures/cups_printers.png			\
-	figures/cups_startup.png			\
+	figures/cups_startup.png
+
+GIMP_PNG_IMAGES = \
 	figures/gimp-print-gui-1.png			\
 	figures/gimp-print-gui.png			\
 	figures/gimp-print-new-printer.png		\
@@ -67,6 +115,13 @@ PNG_IMAGES = figures/cups_admin.png			\
 	figures/gimp_image.png				\
 	figures/gimp_startup.png
 
+PNG_IMAGES = \
+	$(CUPS_PNG_IMAGES) 				\
+	$(GIMP_PNG_IMAGES)
+	
+UTIL_EPS_IMAGES = $(addsuffix .eps,$(basename $(UTIL_PNG_IMAGES)))
+GIMP_EPS_IMAGES = $(addsuffix .eps,$(basename $(GIMP_PNG_IMAGES)))
+CUPS_EPS_IMAGES = $(addsuffix .eps,$(basename $(CUPS_PNG_IMAGES)))
 EPS_IMAGES = $(addsuffix .eps,$(basename $(PNG_IMAGES)))
 
 if MAINTAINER_MODE
@@ -103,6 +158,60 @@ dist-hook: $(USER_GUIDE)
 	fi ; \
 	done
 
+$(UTIL_MANUAL).pdf:  $(UTIL_MANUAL_SRC_FILES)
+	if test $(srcdir) = '.' ; then \
+	  : ; \
+	else \
+	  if test -L $(notdir $<) ; then \
+	    $(RM) $(notdir $<) ; \
+	  fi ; \
+	  $(LN_S) $< $(notdir $<) ; \
+	  if test -d figures ; then \
+	    : ; \
+	  else \
+	    mkdir figures ; \
+	  fi ; \
+	fi ; \
+	$(DB2PDF) $(UTIL_MANUAL).sgml
+
+$(GIMP_MANUAL).pdf:  $(GIMP_MANUAL_SRC_FILES)
+	if test $(srcdir) = '.' ; then \
+	  : ; \
+	else \
+	  if test -L $(notdir $<) ; then \
+	    $(RM) $(notdir $<) ; \
+	  fi ; \
+	  $(LN_S) $< $(notdir $<) ; \
+	  if test -d figures ; then \
+	    : ; \
+	  else \
+	    mkdir figures ; \
+	  fi ; \
+	  for image in $(addprefix $(srcdir)/, $(GIMP_PNG_IMAGES)) ; do \
+	    cp -p $$image figures/`basename $$image` ; \
+	  done ; \
+	fi ; \
+	$(DB2PDF) $(GIMP_MANUAL).sgml
+
+$(CUPS_MANUAL).pdf:  $(CUPS_MANUAL_SRC_FILES)
+	if test $(srcdir) = '.' ; then \
+	  : ; \
+	else \
+	  if test -L $(notdir $<) ; then \
+	    $(RM) $(notdir $<) ; \
+	  fi ; \
+	  $(LN_S) $< $(notdir $<) ; \
+	  if test -d figures ; then \
+	    : ; \
+	  else \
+	    mkdir figures ; \
+	  fi ; \
+	  for image in $(addprefix $(srcdir)/, $(CUPS_PNG_IMAGES)) ; do \
+	    cp -p $$image figures/`basename $$image` ; \
+	  done ; \
+	fi ; \
+	$(DB2PDF) $(CUPS_MANUAL).sgml
+
 $(MANUAL).pdf:  $(MANUAL_SRC_FILES)
 	if test $(srcdir) = '.' ; then \
 	  : ; \
@@ -122,13 +231,66 @@ $(MANUAL).pdf:  $(MANUAL_SRC_FILES)
 	fi ; \
 	$(DB2PDF) $(MANUAL).sgml
 
+editions:  docs cups_docs gimp_docs util_docs
+
+util_docs: util_html util_ps util_pdf
+gimp_docs: gimp_html gimp_ps gimp_pdf
+cups_docs: cups_html cups_ps cups_pdf
 docs: html ps pdf
 
 all-local: $(ALL_LOCAL_TARGETS)
 
+util_pdf: $(UTIL_MANUAL).pdf
+gimp_pdf: $(GIMP_MANUAL).pdf
+cups_pdf: $(CUPS_MANUAL).pdf
 pdf: $(MANUAL).pdf
 
+util_ps: $(UTIL_MANUAL).ps
+gimp_ps: $(GIMP_MANUAL).ps
+cups_ps: $(CUPS_MANUAL).ps
 ps: $(MANUAL).ps
+
+$(UTIL_MANUAL).ps:  $(UTIL_MANUAL_SRC_FILES) $(UTIL_EPS_IMAGES)
+	for i in $(UTIL_MANUAL_SRC_FILES); do \
+		j=`basename $$i .sgml`; \
+		sed -e 's/\.png"/.eps"/g' \
+		    -e 's/FORMAT="PNG"/FORMAT="EPS"/g' $$i > $$j-eps.sgml; \
+	done
+	cat $(UTIL_MANUAL).sgml | sed -e 's/\.sgml"/-eps.sgml"/g' > $(UTIL_MANUAL)-eps.sgml	
+	$(DB2PS) $(UTIL_MANUAL)-eps.sgml
+	mv $(UTIL_MANUAL)-eps.ps $(UTIL_MANUAL).ps
+	for i in $(UTIL_MANUAL_SRC_FILES); do \
+		j=`basename $$i .sgml`; \
+		$(RM) -f $${j}-eps.*; \
+	done
+
+$(GIMP_MANUAL).ps:  $(GIMP_MANUAL_SRC_FILES) $(GIMP_EPS_IMAGES)
+	for i in $(GIMP_MANUAL_SRC_FILES); do \
+		j=`basename $$i .sgml`; \
+		sed -e 's/\.png"/.eps"/g' \
+		    -e 's/FORMAT="PNG"/FORMAT="EPS"/g' $$i > $$j-eps.sgml; \
+	done
+	cat $(GIMP_MANUAL).sgml | sed -e 's/\.sgml"/-eps.sgml"/g' > $(GIMP_MANUAL)-eps.sgml	
+	$(DB2PS) $(GIMP_MANUAL)-eps.sgml
+	mv $(GIMP_MANUAL)-eps.ps $(GIMP_MANUAL).ps
+	for i in $(GIMP_MANUAL_SRC_FILES); do \
+		j=`basename $$i .sgml`; \
+		$(RM) -f $${j}-eps.*; \
+	done
+
+$(CUPS_MANUAL).ps:  $(CUPS_MANUAL_SRC_FILES) $(CUPS_EPS_IMAGES)
+	for i in $(CUPS_MANUAL_SRC_FILES); do \
+		j=`basename $$i .sgml`; \
+		sed -e 's/\.png"/.eps"/g' \
+		    -e 's/FORMAT="PNG"/FORMAT="EPS"/g' $$i > $$j-eps.sgml; \
+	done
+	cat $(CUPS_MANUAL).sgml | sed -e 's/\.sgml"/-eps.sgml"/g' > $(CUPS_MANUAL)-eps.sgml	
+	$(DB2PS) $(CUPS_MANUAL)-eps.sgml
+	mv $(CUPS_MANUAL)-eps.ps $(CUPS_MANUAL).ps
+	for i in $(CUPS_MANUAL_SRC_FILES); do \
+		j=`basename $$i .sgml`; \
+		$(RM) -f $${j}-eps.*; \
+	done
 
 $(MANUAL).ps:  $(MANUAL_SRC_FILES) $(EPS_IMAGES)
 	for i in $(MANUAL_SRC_FILES); do \
@@ -148,11 +310,68 @@ $(MANUAL).ps:  $(MANUAL_SRC_FILES) $(EPS_IMAGES)
 	if test ! -d figures ; then mkdir figures ; fi
 	$(CONVERT) $(srcdir)/$(basename $@).png EPS2:$@
 
+util_html: util-html-stamp
+gimp_html: gimp-html-stamp
+cups_html: cups-html-stamp
 html: html-stamp
 
 # This ugly workaround with SOURCE is because db2html doesn't seem to like
 # "./users-guide.sgml".  Note that db2ps does not have the same limitation.
 # html-stamp should *only* be called by html--it's just a timestamp!
+
+util-html-stamp: $(srcdir)/$(UTIL_MANUAL).sgml $(UTIL_PNG_IMAGES)
+	if test $(srcdir) = '.' ; then \
+	  : ; \
+	else \
+	  if test -L $(notdir $<) ; then \
+	    $(RM) $(notdir $<) ; \
+	  fi ; \
+	  $(LN_S) $< $(notdir $<) ; \
+	fi
+	$(DB2HTML) $(UTIL_MANUAL).sgml
+	-$(RM) -rf $(UTIL_HTMLDIR)
+	mv $(UTIL_MANUAL) $(UTIL_HTMLDIR)
+	chmod a+rx $(UTIL_HTMLDIR)
+	touch util-html-stamp
+
+gimp-html-stamp: $(srcdir)/$(GIMP_MANUAL).sgml $(GIMP_PNG_IMAGES)
+	if test $(srcdir) = '.' ; then \
+	  : ; \
+	else \
+	  if test -L $(notdir $<) ; then \
+	    $(RM) $(notdir $<) ; \
+	  fi ; \
+	  $(LN_S) $< $(notdir $<) ; \
+	fi
+	$(DB2HTML) $(GIMP_MANUAL).sgml
+	-mkdir $(GIMP_MANUAL)/figures
+	for image in $(addprefix $(srcdir)/, $(GIMP_PNG_IMAGES)) ; do \
+	  cp -p $$image $(GIMP_MANUAL)/figures/`basename $$image` ; \
+	done
+	-$(RM) -rf $(GIMP_HTMLDIR)
+	mv $(GIMP_MANUAL) $(GIMP_HTMLDIR)
+	chmod a+rx $(GIMP_HTMLDIR)
+	touch gimp-html-stamp
+
+cups-html-stamp: $(srcdir)/$(CUPS_MANUAL).sgml $(CUPS_PNG_IMAGES)
+	if test $(srcdir) = '.' ; then \
+	  : ; \
+	else \
+	  if test -L $(notdir $<) ; then \
+	    $(RM) $(notdir $<) ; \
+	  fi ; \
+	  $(LN_S) $< $(notdir $<) ; \
+	fi
+	$(DB2HTML) $(CUPS_MANUAL).sgml
+	-mkdir $(CUPS_MANUAL)/figures
+	for image in $(addprefix $(srcdir)/, $(CUPS_PNG_IMAGES)) ; do \
+	  cp -p $$image $(CUPS_MANUAL)/figures/`basename $$image` ; \
+	done
+	-$(RM) -rf $(CUPS_HTMLDIR)
+	mv $(CUPS_MANUAL) $(CUPS_HTMLDIR)
+	chmod a+rx $(CUPS_HTMLDIR)
+	touch cups-html-stamp
+
 html-stamp: $(srcdir)/$(MANUAL).sgml $(PNG_IMAGES)
 	if test $(srcdir) = '.' ; then \
 	  : ; \
@@ -212,8 +431,11 @@ uninstall-local:
 
 CLEAN_MANUALS = \
 	$(RM) -f $(MANUAL).pdf $(MANUAL).ps ;	\
-	$(RM) -rf html-stamp $(HTMLDIR) ;	\
-	$(RM) -f $(EPS_IMAGES)
+	$(RM) -f $(CUPS_MANUAL).pdf $(CUPS_MANUAL).ps ;	\
+	$(RM) -f $(GIMP_MANUAL).pdf $(GIMP_MANUAL).ps ;	\
+	$(RM) -f $(UTIL_MANUAL).pdf $(UTIL_MANUAL).ps ;	\
+	$(RM) -rf *html-stamp $(HTMLDIR) $(CUPS_HTMLDIR) $(GIMP_HTMLDIR) $(UTIL_HTMLDIR) ;	\
+	$(RM) -f $(EPS_IMAGES) $(CUPS_EPS_IMAGES) $(GIMP_EPS_IMAGES) $(UTIL_EPS_IMAGES)
 
 clean-local:
 	if test $(srcdir) = "." -a $(MAINT_MODE) = false ; then \
@@ -227,7 +449,8 @@ clean-local:
 	if test $(srcdir) = "." ; then \
 	  : ; \
 	else \
-	  $(RM) -f $(MANUAL_SRC_FILES); \
+	  $(RM) -f $(MANUAL_SRC_FILES) $(CUPS_MANUAL_SRC_FILES) ; \
+	  $(RM) -f $(GIMP_MANUAL_SRC_FILES) $(UTIL_CUPS_MANUAL_SRC_FILES) ; \
 	  $(RM) -rf figures ; \
 	fi
 	-$(RM) -rf *.tex *.log *.aux *.dvi *.gz *.out *.junk *.out *.fot
@@ -264,7 +487,8 @@ maintainer-clean-local:
 
 help:
 	@echo "  "
-	@echo "Supported targets in this Makefile:"
+	@echo "Targets for the complete user's guide:"
+	@echo "  "
 	@echo "    docs      - creates PS, PDF, and HTML documentation files"
 	@echo "    ps        - creates PostScript documentation"
 	@echo "    pdf       - creates PDF documentation"
@@ -272,14 +496,37 @@ help:
 	@echo "    clean     - deletes machine generated files, but not outputs"
 	@echo "    veryclean - deletes output files in addition"
 	@echo "    help      - prints this help text"
+	@echo ""
+	@echo "Targets for specific manual editions:"
+	@echo "  "
+	@echo "    cups_docs - generate HTML, PDF, and PS for CUPS edition of the manual"
+	@echo "    cups_html - generate HTML for CUPS edition of the manual"
+	@echo "    cups_pdf  - generate PDF for CUPS edition of the manual"
+	@echo "    cups_ps   - generate PS for CUPS edition of the manual"
+	@echo "  "
+	@echo "    gimp_docs - generate HTML, PDF, and PS for GIMP edition of the manual"
+	@echo "    gimp_html - generate HTML for GIMP edition of the manual"
+	@echo "    gimp_pdf  - generate PDF for GIMP edition of the manual"
+	@echo "    gimp_ps   - generate PS for GIMP edition of the manual"
+	@echo "  "
+	@echo "    util_docs - generate HTML, PDF, and PS for UTIL edition of the manual"
+	@echo "    util_html - generate HTML for UTIL edition of the manual"
+	@echo "    util_pdf  - generate PDF for UTIL edition of the manual"
+	@echo "    util_ps   - generate PS for UTIL edition of the manual"
+	@echo "  "
+	@echo "    editions  - generates HTML, PDF, and PS for ALL editions of the manual"
 	@echo "  "
 
 
 ## Clean
 
-MAINTAINERCLEANFILES = Makefile.in html-stamp
+MAINTAINERCLEANFILES = Makefile.in *html-stamp
 
 
 EXTRA_DIST = README $(MANUAL_SRC_FILES) html-stamp
 
-.PHONY: docs html ps pdf help
+.PHONY: docs cups_docs gimp_docs util_docs 
+.PHONY: html cups_html gimp_html util_html
+.PHONY: ps cups_ps gimp_ps util_ps
+.PHONY: pdf cups_pdf gimp_pdf util_pdf
+.PHONY: help
