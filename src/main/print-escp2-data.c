@@ -1342,6 +1342,22 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     c1_8_bits, c1_8_base_res, &cutter_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
+  /* 58: Japanese PM-930C */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
+     MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
+     MODEL_FAST_360_NO),
+    90, 90, 2, 90, 90, 2, 90, 90, 2, 6,
+    360, 720, 720, 14400, -1, 2880, 2880, 720, 360,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
+    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
+    0, 1, 0, 190, 0, 0, 0,
+    c1_8pl_dotsizes, c1_8pl_densities,
+    &stpi_escp2_variable_2pl_inks, &stpi_escp2_sp950_paper_list,
+    stpi_escp2_superfine_reslist, &stpi_escp2_photo_inklist,
+    c1_8_bits, c1_8_base_res, &cutter_roll_feed_input_slot_list,
+    &new_init_sequence, &je_deinit_sequence
+  },
 };
 
 const int stpi_escp2_model_limit =

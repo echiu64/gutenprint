@@ -739,6 +739,14 @@
         <gamma value="0.585"/>
         <density value="1.0"/>
       </printer>
+      <printer name="EPSON CL-760" driver="escp2-cl760">
+        <color value="true"/>
+        <model value="56"/>
+        <magenta value="0.95"/>
+        <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
+      </printer>
       <printer name="EPSON EM-900C" driver="escp2-em900c">
         <color value="true"/>
         <model value="13"/>
@@ -820,6 +828,12 @@
         <gamma value="0.585"/>
         <density value="1.0"/>
       </printer>
+      <printer name="EPSON PM-740C" driver="escp2-pm740c">
+        <color value="true"/>
+        <model value="35"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
+      </printer>
       <printer name="EPSON PM-750C" driver="escp2-pm750c">
         <color value="true"/>
         <model value="7"/>
@@ -862,9 +876,21 @@
         <gamma value="0.585"/>
         <density value="1.0"/>
       </printer>
+      <printer name="EPSON PM-870C" driver="escp2-pm870c">
+        <color value="true"/>
+        <model value="36"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
+      </printer>
       <printer name="EPSON PM-880C" driver="escp2-pm880c">
         <color value="true"/>
         <model value="36"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
+      </printer>
+      <printer name="EPSON PM-930C" driver="escp2-pm930c">
+        <color value="true"/>
+        <model value="58"/>
         <gamma value="0.585"/>
         <density value="1.0"/>
       </printer>
@@ -905,6 +931,12 @@
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-3500C" driver="escp2-pm3500c">
+        <color value="true"/>
+        <model value="37"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
+      </printer>
+      <printer name="EPSON PM-3700C" driver="escp2-pm3700c">
         <color value="true"/>
         <model value="37"/>
         <gamma value="0.585"/>
