@@ -1,5 +1,5 @@
 /*
- * "$Id$"
+ *  $Id$
  *
  *   Print plug-in header file for the GIMP.
  *
@@ -576,5 +576,5 @@ extern const stp_vars_t stp_minimum_settings (void);
 
 #endif /* __GIMP_PRINT_H__ */
 /*
- * End of "$Id$".
+ * End of $Id$
  */
