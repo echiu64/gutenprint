@@ -12,6 +12,7 @@ config.h.in
 config.status
 configure
 configure.in
+cups-gimpprint.list
 intl
 libtool
 stamp-h

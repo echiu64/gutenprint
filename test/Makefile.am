@@ -56,7 +56,8 @@ testdither_LDADD = $(LIBGIMPPRINT_LIBS)
 testdither_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 $(LIBGIMPPRINT_LIBS):
-	$(MAKE) -C ../src/main
+	cd ../src/main ; \
+	$(MAKE)
 
 
 ## Clean

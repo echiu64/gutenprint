@@ -88,7 +88,8 @@ foomatic-stamp: foomatic-generator $(EXTRA_PROGRAMS)
 	touch foomatic-stamp
 
 $(LIBGIMPPRINT_LIBS):
-	$(MAKE) -C ../../src/main
+	cd ../main ; \
+	$(MAKE)
 
 
 ## Clean

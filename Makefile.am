@@ -108,20 +108,25 @@ gimp-dist:
 	$(MAKE) dist distdir=$(PACKAGE)-$(VERSION)-GIMP-DIST
 
 install-cups: all
-	$(MAKE) -C src/cups install
+	cd src/cups ; \
+	$(MAKE) install
 
 install-ghost: all
-	$(MAKE) -C src/ghost install
+	cd src/ghost ; \
+	$(MAKE) install
 
 ## @-@-@-@-@ YES-GIMP @-@-@-@-@
 install-gimp: all
-	$(MAKE) -C src/gimp install
+	cd src/gimp ; \
+	$(MAKE) install
 
 html:
-	$(MAKE) -C doc html
+	cd doc ; \
+	$(MAKE) html
 
 ps:
-	$(MAKE) -C doc ps
+	cd doc ; \
+	$(MAKE) ps
 
 snapshot:
 	$(MAKE) dist distdir=$(PACKAGE)`date +"%Y%m%d"`

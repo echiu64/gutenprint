@@ -49,7 +49,8 @@ testpatternl.o: testpatterny.o
 testpattern.o: testpatterny.o
 
 $(LIBGIMPPRINT_LIBS):
-	$(MAKE) -C ../main
+	cd ../main ; \
+	$(MAKE)
 
 SAMPLE_IMAGES = testpattern.sample
 

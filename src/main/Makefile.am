@@ -84,7 +84,8 @@ print-printers.c: ../printdef/printdef $(srcdir)/printers.xml
 printdefl.o: printdefy.o
 
 ../printdef/printdef: $(addprefix ../printdef/, printdefl.l printdefy.y printdef.h)
-	$(MAKE) -C ../printdef
+	cd ../printdef ; \
+	$(MAKE)
 
 
 ## Clean

@@ -178,7 +178,8 @@ ppd-stamp: genppd
 	touch ppd-stamp
 
 $(LIBGIMPPRINT_LIBS):
-	$(MAKE) -C ../main
+	cd ../main ; \
+	$(MAKE)
 
 dist-hook:
 	for dir in commands ; do \

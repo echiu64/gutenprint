@@ -78,7 +78,8 @@ uninstall-libexecPROGRAMS: $(libexec_PROGRAMS)
 	done
 
 $(LIBGIMPPRINT_LIBS):
-	$(MAKE) -C ../main
+	cd ../main ; \
+	$(MAKE)
 
 
 ## Clean

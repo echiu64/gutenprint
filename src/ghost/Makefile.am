@@ -70,7 +70,8 @@ gdevstp-%: $(srcdir)/../main/print-% Makefile
 printdefl.o: printdefy.o
 
 ../printdef/printdef: $(addprefix ../printdef/, printdefl.l printdefy.y printdef.h)
-	        $(MAKE) -C ../printdef
+	cd ../printdef ; \
+	$(MAKE)
 
 
 ## Clean
