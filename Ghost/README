@@ -352,6 +352,7 @@ Dithering Algorithms:
 
 'Adaptive Hybrid'
 'Ordered'
+'Fast'
 'Adaptive Random'
 'Hybrid Floyd-Steinberg'
 'Random Floyd-Steinberg'
@@ -366,6 +367,14 @@ printers tend to be poor.  The adaptive algorithms do perform well on
 six color printers.
 
 Adaptive hybrid dithering usually gives the best results overall.
+
+The Fast algorithm gives the fastest results at the expense of color
+accuracy.  On simple four color printers (or other printers used in
+four color mode), the quality is similar to Ordered, although dark
+gray rendition is not as good.  It generally gives poor results in six
+color mode.  In black and white, it is an efficient way to render
+grayscale, but it may not give best results when used with variable
+dot size printers.
 
 
 Ink Types
@@ -497,8 +506,6 @@ Select the image type most representative of what's being printed.
 1  Primarily solid colors or smooth gradients (color or gray scale)
 2  Continuous-tone photographs (color or gray scale)
 3  Pure black and white or pre-screened (currently black only)
-4  Faster color mode (less accuracy and/or detail)
-5  Faster grayscale (less accuracy and/or detail)
 
 For mixed documents, options 0 or 1 will probably work best.  Option 0
 will dither faster and yield sharper text, but images will be
@@ -506,8 +513,7 @@ grainier.  Option 1 will yield smoother images, but text will not be
 as sharp and the dither process will be slower.  Option 2 will yield
 the best natural images, but is quite slow.  Option 3 is very fast and
 accurate, but should not be used if there are any tones other than
-pure black and white.  Option 4 is the fastest color option, and
-option 5 is the fastest grayscale option.
+pure black and white (or you want absolute black and white contrast).
 
 Note that any of the modes (except monochrome) may be used with either
 color or black & white output.  If black and white output is

@@ -39,16 +39,18 @@
 
 #define D_FLOYD_HYBRID 0
 #define D_FLOYD 1
-#define D_ADAPTIVE_BASE 2
+#define D_FAST 2
+#define D_ADAPTIVE_BASE 4
 #define D_ADAPTIVE_HYBRID (D_ADAPTIVE_BASE | D_FLOYD_HYBRID)
 #define D_ADAPTIVE_RANDOM (D_ADAPTIVE_BASE | D_FLOYD)
-#define D_ORDERED_BASE 4
+#define D_ORDERED_BASE 8
 #define D_ORDERED (D_ORDERED_BASE)
 
 char *dither_algo_names[] =
 {
   "Adaptive Hybrid",
   "Ordered",
+  "Fast",
   "Adaptive Random",
   "Hybrid Floyd-Steinberg",
   "Random Floyd-Steinberg",
@@ -556,6 +558,8 @@ init_dither(int in_width, int out_width, int horizontal_aspect,
     d->dither_type = D_ADAPTIVE_HYBRID;
   else if (!strcmp(v->dither_algorithm, "Adaptive Random"))
     d->dither_type = D_ADAPTIVE_RANDOM;
+  else if (!strcmp(v->dither_algorithm, "Fast"))
+    d->dither_type = D_FAST;
   else
     d->dither_type = D_FLOYD_HYBRID;
 
@@ -1632,6 +1636,60 @@ dither_monochrome(const unsigned short  *gray,	/* I - Grayscale pixels */
  */
 
 void
+dither_black_fast(const unsigned short   *gray,	/* I - Grayscale pixels */
+		  int           row,		/* I - Current Y coordinate */
+		  void 		*vd,
+		  unsigned char *black,		/* O - Black bitmap pixels */
+		  int		duplicate_line)
+{
+
+  int		x,		/* Current X coordinate */
+		xerror,		/* X error count */
+		xstep,		/* X step */
+		xmod,		/* X error modulus */
+		length;		/* Length of output bitmap in bytes */
+  unsigned char	bit,		/* Current bit */
+		*kptr;		/* Current black pixel */
+  int		k;
+  dither_t *d = (dither_t *) vd;
+
+  bit = 128;
+
+  xstep  = d->src_width / d->dst_width;
+  xmod   = d->src_width % d->dst_width;
+  length = (d->dst_width + 7) / 8;
+
+  memset(black, 0, length * d->k_dither.signif_bits);
+  kptr = black;
+  xerror = 0;
+
+  for (x = 0; x < d->dst_width; x++)
+    {
+      unsigned ink_budget = d->ink_limit;
+
+      k = 65535 - *gray;
+      print_color_fast(d, &(d->k_dither), k, k, k, x, row, kptr, NULL, bit,
+		       length, d->k_randomizer, 0, &ink_budget,
+		       &(d->k_pick), &(d->k_dithermat), d->dither_type);
+
+      gray   += xstep;
+      xerror += xmod;
+      if (bit == 1)
+	{
+	  kptr ++;
+	  bit = 128;
+	}
+      else
+	bit >>= 1;
+      if (xerror >= d->dst_width)
+	{
+	  xerror -= d->dst_width;
+	  gray++;
+	}
+    }
+}
+
+void
 dither_black(const unsigned short   *gray,	/* I - Grayscale pixels */
 	     int           	row,		/* I - Current Y coordinate */
 	     void 		*vd,
@@ -1655,6 +1713,12 @@ dither_black(const unsigned short   *gray,	/* I - Grayscale pixels */
   int direction = row & 1 ? 1 : -1;
   int odb = d->spread;
   int odb_mask = (1 << odb) - 1;
+
+  if (d->dither_type == D_FAST)
+    {
+      dither_black_fast(gray, row, vd, black, duplicate_line);
+      return;
+    }
 
   bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
   x = (direction == 1) ? 0 : d->dst_width - 1;
@@ -1738,60 +1802,6 @@ dither_black(const unsigned short   *gray,	/* I - Grayscale pixels */
 	      xerror += d->dst_width;
 	      gray--;
 	    }
-	}
-    }
-}
-
-void
-dither_black_fast(const unsigned short   *gray,	/* I - Grayscale pixels */
-		  int           row,		/* I - Current Y coordinate */
-		  void 		*vd,
-		  unsigned char *black,		/* O - Black bitmap pixels */
-		  int		duplicate_line)
-{
-
-  int		x,		/* Current X coordinate */
-		xerror,		/* X error count */
-		xstep,		/* X step */
-		xmod,		/* X error modulus */
-		length;		/* Length of output bitmap in bytes */
-  unsigned char	bit,		/* Current bit */
-		*kptr;		/* Current black pixel */
-  int		k;
-  dither_t *d = (dither_t *) vd;
-
-  bit = 128;
-
-  xstep  = d->src_width / d->dst_width;
-  xmod   = d->src_width % d->dst_width;
-  length = (d->dst_width + 7) / 8;
-
-  memset(black, 0, length * d->k_dither.signif_bits);
-  kptr = black;
-  xerror = 0;
-
-  for (x = 0; x < d->dst_width; x++)
-    {
-      unsigned ink_budget = d->ink_limit;
-
-      k = 65535 - *gray;
-      print_color_fast(d, &(d->k_dither), k, k, k, x, row, kptr, NULL, bit,
-		       length, d->k_randomizer, 0, &ink_budget,
-		       &(d->k_pick), &(d->k_dithermat), d->dither_type);
-
-      gray   += xstep;
-      xerror += xmod;
-      if (bit == 1)
-	{
-	  kptr ++;
-	  bit = 128;
-	}
-      else
-	bit >>= 1;
-      if (xerror >= d->dst_width)
-	{
-	  xerror -= d->dst_width;
-	  gray++;
 	}
     }
 }
@@ -2200,6 +2210,13 @@ dither_cmyk(const unsigned short  *rgb,	/* I - RGB pixels */
   int		odb = d->spread;
   int		odb_mask = (1 << odb) - 1;
   int		first_color = row % 3;
+
+  if (d->dither_type == D_FAST)
+    {
+      dither_cmyk_fast(rgb, row, vd, cyan, lcyan, magenta, lmagenta,
+		       yellow, lyellow, black, duplicate_line);
+      return;
+    }
 
   length = (d->dst_width + 7) / 8;
 
