@@ -84,6 +84,7 @@ typedef struct {
   int softweave;
   int horizontal_passes;
   int vertical_passes;
+  int vertical_subsample;
 } res_t;
 #endif
 
