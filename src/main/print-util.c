@@ -1363,29 +1363,9 @@ do									\
     }									\
 } while (0)
 
-typedef struct
-{
-  char *data;
-  size_t bytes;
-} errbuf_t;
-
-static void
-fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
-{
-  errbuf_t *errbuf = (errbuf_t *) priv;
-  if (errbuf->bytes == 0)
-    errbuf->data = stp_malloc(bytes + 1);
-  else
-    errbuf->data = stp_realloc(errbuf->data, errbuf->bytes + bytes + 1);
-  memcpy(errbuf->data + errbuf->bytes, buffer, bytes);
-  errbuf->bytes += bytes;
-  errbuf->data[errbuf->bytes] = '\0';
-}
-
 int
 stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
 {
-  errbuf_t errbuf;
   stp_param_t *vptr;
   int count;
   int i;
@@ -1393,14 +1373,6 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
   const stp_printfuncs_t *printfuncs = stp_printer_get_printfuncs(p);
   const stp_vars_t printvars = stp_printer_get_printvars(p);
   const char *ppd_file = stp_get_ppd_file(v);
-  stp_outfunc_t ofunc = stp_get_errfunc(v);
-  void *odata = stp_get_errdata(v);
-  int found_dither = 0;
-
-  stp_set_errfunc((stp_vars_t) v, fill_buffer_writefunc);
-  stp_set_errdata((stp_vars_t) v, &errbuf);
-  errbuf.data = NULL;
-  errbuf.bytes = 0;
 
   /*
    * Note that in raw CMYK mode the user is responsible for not sending
@@ -1495,25 +1467,14 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
   for (i = 0; i < stp_dither_algorithm_count(); i++)
     if (!strcmp(stp_get_dither_algorithm(v), stp_dither_algorithm_name(i)))
       {
-	found_dither = 1;
-	break;
+	stp_set_verified(v, answer);
+	return answer;
       }
 
-  if (!found_dither)
-    {
-      stp_eprintf(v, _("%s is not a valid dither algorithm\n"),
-		  stp_get_dither_algorithm(v));
-      answer = 0;
-    }
-  stp_set_errfunc((stp_vars_t) v, ofunc);
-  stp_set_errdata((stp_vars_t) v, odata);
-  stp_set_verified(v, answer);
-  if (errbuf.bytes > 0)
-    {
-      stp_eprintf(v, "%s", errbuf.data);
-      stp_free(errbuf.data);
-    }
-  return answer;
+  stp_eprintf(v, _("%s is not a valid dither algorithm\n"),
+	      stp_get_dither_algorithm(v));
+  stp_set_verified(v, 0);
+  return 0;
 }
 
 const stp_vars_t

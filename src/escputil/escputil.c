@@ -29,13 +29,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <fcntl.h>
 #if defined(HAVE_VARARGS_H) && !defined(HAVE_STDARG_H)
 #include <varargs.h>
 #else
 #include <stdarg.h>
-#endif
-#ifdef HAVE_FCNTL_H
-#include <fcntl.h>
 #endif
 #ifdef HAVE_POLL
 #include <sys/poll.h>
@@ -535,33 +533,20 @@ read_from_printer(int fd, char *buf, int bufsize)
 #endif
   int status;
   int retry = 5;
-
-#ifdef HAVE_FCNTL_H
-  fcntl(fd, F_SETFL,
-	O_NONBLOCK | fcntl(fd, F_GETFL));
-#endif
   memset(buf, 0, bufsize);
-
   do
     {
 #ifdef HAVE_POLL
       ufds.fd = fd;
       ufds.events = POLLIN;
       ufds.revents = 0;
-      if ((status = poll(&ufds, 1, 1000)) < 0)
-	break;
+      (void) poll(&ufds, 1, 1000);
 #endif
       status = read(fd, buf, bufsize - 1);
-      if (status < 0 && errno == EAGAIN)
-	status = 0; /* not an error (read would have blocked) */
+      if (status <= 0)
+	sleep(1);
     }
   while ((status == 0) && (--retry != 0));
-
-  if (status == 0 && retry == 0)
-    fprintf(stderr, _("Read from printer timed out\n"));
-  else if (status < 0)
-    fprintf(stderr, _("Cannot read from %s: %s\n"), raw_device, strerror(errno));
-
   return status;
 }
 
@@ -653,7 +638,11 @@ do_ink_level(void)
     }
   status = read_from_printer(fd, buf, 1024);
   if (status < 0)
-    exit(1);
+    {
+      fprintf(stderr, _("Cannot read from %s: %s\n"),
+	      raw_device,strerror(errno));
+      exit(1);
+    }
   ind = buf;
   do
     ind = strchr(ind, 'I');
@@ -689,7 +678,7 @@ do_ink_level(void)
   do_remote_cmd("ST", 2, 0, 0);
   add_resets(2);
   (void) write(fd, printer_cmd, bufpos);
-  (void) read_from_printer(fd, buf, 1024);
+  (void) read(fd, buf, 1024);
   (void) close(fd);
   exit(0);
 }
@@ -726,7 +715,11 @@ do_identify(void)
     }
   status = read_from_printer(fd, buf, 1024);
   if (status < 0)
-    exit(1);
+    {
+      fprintf(stderr, _("Cannot read from %s: %s\n"),
+	      raw_device, strerror(errno));
+      exit(1);
+    }
   printf("%s\n", buf);
   (void) close(fd);
   exit(0);
@@ -763,12 +756,16 @@ do_status(void)
     }
   status = read_from_printer(fd, buf, 1024);
   if (status < 0)
-    exit(1);
+    {
+      fprintf(stderr, _("Cannot read from %s: %s\n"),
+	      raw_device, strerror(errno));
+      exit(1);
+    }
   initialize_print_cmd();
   do_remote_cmd("ST", 2, 0, 0);
   add_resets(2);
   (void) write(fd, printer_cmd, bufpos);
-  (void) read_from_printer(fd, buf, 1024);
+  (void) read(fd, buf, 1024);
   while ((where = strchr(buf, ';')) != NULL)
     *where = '\n';
   printf("%s\n", buf);
@@ -913,7 +910,10 @@ get_printer(void)
 	}
       status = read_from_printer(fd, buf, 1024);
       if (status < 0)
-	exit(1);
+	{
+	  printf(_("\nCannot read from %s: %s\n"), raw_device,strerror(errno));
+	  exit(1);
+	}
       (void) close(fd);
       pos = strchr(buf, (int) ';');
       if (pos)

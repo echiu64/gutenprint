@@ -41,7 +41,6 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
-#include <errno.h>
 
 #include "print-intl.h"
 
@@ -210,12 +209,6 @@ gimp_writefunc(void *file, const char *buf, size_t bytes)
   fwrite(buf, 1, bytes, prn);
 }
 
-static void
-gimp_errfunc(void *file, const char *buf, size_t bytes)
-{
-  g_message(buf);
-}
-
 /*
  * 'run()' - Run the plug-in...
  */
@@ -246,10 +239,7 @@ run (char   *name,		/* I - Name of print program. */
   int		ppid = getpid (), /* PID of plugin */
 		opid,		/* PID of output process */
 		cpid = 0,	/* PID of control/monitor process */
-		pipefd[2],	/* Fds of the pipe connecting all the above */
-		errfd[2],	/* Fds of the pipe connecting all the above */
-		syncfd[2];	/* Sync the logger */
-  int		do_sync = 1;
+		pipefd[2];	/* Fds of the pipe connecting all the above */
   int		dummy;
 #ifdef DEBUG_STARTUP
   while (SDEBUG)
@@ -448,19 +438,14 @@ run (char   *name,		/* I - Name of print program. */
 	 */
 	usr1_interrupt = 0;
 	signal (SIGUSR1, usr1_handler);
-	if (pipe (syncfd) != 0) {
-	  do_sync = 0;
-	}
 	if (pipe (pipefd) != 0) {
 	  prn = NULL;
 	} else {
 	  cpid = fork ();
 	  if (cpid < 0) {
-	    do_sync = 0;
 	    prn = NULL;
 	  } else if (cpid == 0) {
 	    /* LPR monitor process.  Printer output is piped to us. */
-	    close(syncfd[0]);
 	    opid = fork ();
 	    if (opid < 0) {
 	      /* Errors will cause the plugin to get a SIGPIPE.  */
@@ -469,35 +454,6 @@ run (char   *name,		/* I - Name of print program. */
 	      dup2 (pipefd[0], 0);
 	      close (pipefd[0]);
 	      close (pipefd[1]);
-	      if (pipe(errfd) == 0) {
-		opid = fork();
-		if (opid == 0) { /* Child monitors stderr */
-		  char buf[4096]; /* calls g_message on anything it sees */
-		  close (pipefd[0]);
-		  close (pipefd[1]);
-		  while (1) {
-		    ssize_t bytes = read(errfd[0], buf, 4095);
-		    if (bytes == 0)
-		      break;
-		    else if (bytes > 0) {
-		      buf[bytes] = '\0';
-		      g_message(buf);
-		    } else {
-		      g_message("Read messages failed: %s\n", strerror(errno));
-		      break;
-		    }
-		  }
-		  write(syncfd[1], "Done", 5);
-		  _exit(0);
-		} else {
-		  dup2 (errfd[1], 2);
-		  dup2 (errfd[1], 1);
-		  close(errfd[1]);
-		  close (pipefd[0]);
-		  close (pipefd[1]);
-		}
-	      }
-	      close(syncfd[1]);
 	      execl("/bin/sh", "/bin/sh", "-c", stp_get_output_to(vars), NULL);
 	      /* NOTREACHED */
 	      exit (1);
@@ -508,7 +464,6 @@ run (char   *name,		/* I - Name of print program. */
 	       * finished printing normally, we close our end of the pipe,
 	       * and go away.
 	       */
-	      close (syncfd[1]);
 	      close (pipefd[0]);
 	      while (usr1_interrupt == 0) {
 	        if (kill (ppid, 0) < 0) {
@@ -537,7 +492,6 @@ run (char   *name,		/* I - Name of print program. */
 	      _exit (0);
 	    }
 	  } else {
-	    close (syncfd[1]);
 	    close (pipefd[0]);
 	    /* Parent process.  We generate the printer output. */
 	    prn = fdopen (pipefd[1], "w");
@@ -573,8 +527,9 @@ run (char   *name,		/* I - Name of print program. */
 	   */
 
 	  stp_set_outfunc(vars, gimp_writefunc);
-	  stp_set_errfunc(vars, gimp_errfunc);
+	  stp_set_errfunc(vars, gimp_writefunc);
 	  stp_set_outdata(vars, prn);
+	  stp_set_errdata(vars, stderr);
 	  if (stp_printer_get_printfuncs(current_printer)->verify
 	      (current_printer, vars))
 	    stp_printer_get_printfuncs(current_printer)->print
@@ -625,11 +580,6 @@ run (char   *name,		/* I - Name of print program. */
   if (export == GIMP_EXPORT_EXPORT)
     gimp_image_delete (image_ID);
   stp_free_vars(vars);
-  if (do_sync)
-    {
-      char buf[8];
-      int status = read(syncfd[0], buf, 8);
-    }
 }
 
 /*

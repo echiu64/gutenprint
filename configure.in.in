@@ -61,9 +61,9 @@ GIMPPRINT_MAJOR_VERSION=4
 GIMPPRINT_MINOR_VERSION=2
 GIMPPRINT_MICRO_VERSION=5
 GIMPPRINT_EXTRA_VERSION=
-GIMPPRINT_CURRENT_INTERFACE=2
-GIMPPRINT_INTERFACE_AGE=0
-GIMPPRINT_BINARY_AGE=1
+GIMPPRINT_CURRENT_INTERFACE=1
+GIMPPRINT_INTERFACE_AGE=4
+GIMPPRINT_BINARY_AGE=0
 GIMPPRINT_VERSION=$GIMPPRINT_MAJOR_VERSION.$GIMPPRINT_MINOR_VERSION.$GIMPPRINT_MICRO_VERSION$GIMPPRINT_EXTRA_VERSION
 dnl
 AC_DIVERT_POP()dnl
@@ -655,6 +655,7 @@ fi
 
 dnl Checks for header files.
 AC_HEADER_STDC
+AC_CHECK_HEADERS(unistd.h)
 AC_CHECK_HEADER(readline/readline.h,
   HAVE_READLINE_READLINE_H=true,
   HAVE_READLINE_READLINE_H=false)
@@ -664,13 +665,9 @@ if test x${HAVE_READLINE_READLINE_H} = xtrue ; then
     LIBREADLINE_DEPS="-lreadline $EXTRA_LIBREADLINE_DEPS"
   fi
 fi
+
 AC_CHECK_HEADERS(varargs.h)
 AC_CHECK_HEADERS(stdarg.h)
-AC_CHECK_HEADERS(fcntl.h)
-AC_CHECK_HEADERS(sys/time.h sys/types.h)
-AC_CHECK_HEADERS(time.h)
-AC_CHECK_HEADERS(unistd.h)
-AC_CHECK_HEADERS(varargs.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -683,7 +680,7 @@ dnl Checks for library functions.
 AC_FUNC_ALLOCA
 dnl [commented out while I find a memcmp.c for lib/] AC_FUNC_MEMCMP
 dnl GNU libc memcmp.c is too glibc-dependent to include.
-AC_CHECK_FUNCS(nanosleep poll usleep)
+AC_CHECK_FUNCS(poll)
 dnl The following is used to build a "utility library" in lib/
 AC_REPLACE_FUNCS(xgetcwd xmalloc)
 AC_CHECK_FUNC(asprintf,

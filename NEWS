@@ -67,15 +67,7 @@ Gimp-Print 4.2.5 contains the following major changes over Gimp-Print
   6) (bug 672846) A problem compiling rastertoprinter on Solaris with
      the gcc compiler has been fixed.
 
-  7) (bug 672848) escputil will no longer hang indefinitely if the
-     printer does not respond to a status inquiry; it will now time
-     out after 5 seconds.
-
-  8) (bug 672850) The Epson back end in CUPS will no longer hang
-     attempting to read back ink levels under some circumstances, and
-     it will also compute the ink levels correctly.
-
-  9) (bug 646158) DESTDIR now works correctly with make install (this
+  7) (bug 646158) DESTDIR now works correctly with make install (this
      is primarily of interest to packagers).
 
 
@@ -173,7 +165,6 @@ The following bugs have been fixed in Gimp-Print 4.2.5:
 659543 escputil Epson Photo 950 Ink level wrong
 672845 Buffer overflow in escputil
 672846 rastertoprinter does not compile on Solaris with gcc
-672848 escputil can hang forever waiting for printer status
 672850 Epson back end in CUPS driver can lock up
 
 The following bugs are currently open:
