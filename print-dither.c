@@ -1050,12 +1050,11 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
        * Fiddle the x and y coordinates.
        */
       if (invert_y)
-	{
-	  unsigned tmp = x;
-	  x = y + 33;
-	  y = tmp + 29;
-	      
-	}
+	y += 127;
+	
+      if (invert_x)
+	x += 127;
+	
 
       /*
        * Compute the comparison value to decide whether to print at
@@ -1117,8 +1116,8 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 		     * Improve the iterated-2 matrix.  A better matrix
 		     * may not need this treatment.
 		     */
-		    ix = x + y / 3;
-		    iy = y + x / 3;
+		    ix = x;
+		    iy = y;
 		  }
 		imatrix = DITHERPOINT(d, ix, iy, 6);
 
@@ -1137,16 +1136,6 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 		  vmatrix = imatrix;
 	      }
 	    }
-
-	  /*
-	   * Another way to get more use out of the matrix.  If the
-	   * matrix is evenly distributed, it doesn't matter which way
-	   * we do the comparison.  At this point vmatrix is simply
-	   * a number between 0 and 65536; subtracting it from 65536
-	   * won't change anything.
-	   */
-	  if (invert_x)
-	    vmatrix = 65536 - vmatrix;
 
 	  if (vmatrix == 65536 && virtual_value == 65536)
 	    /*
