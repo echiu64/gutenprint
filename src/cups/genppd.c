@@ -62,7 +62,7 @@
 #else
 #include <gimp-print/gimp-print.h>
 #endif
-#include <gimp-print/gimp-print-intl-internal.h>
+#include <gimp-print/gimp-print-intl.h>
 #include "../../lib/libprintut.h"
 
 
@@ -157,17 +157,9 @@ main(int  argc,			/* I - Number of command-line arguments */
 		  /* name,	has_arg,		flag	val */
 		  {"help",	no_argument,		0,	0},
 		  {"catalog",	required_argument,	0,	0},
-		  {"language",	required_argument,	0,	0},
 		  {"prefix",	required_argument,	0,	0},
 		  {0,		0,			0,	0}
 		};
-
-
- /*
-  * Initialise libgimpprint
-  */
-
-  stp_init();
 
  /*
   * Parse command-line args...
@@ -199,21 +191,21 @@ main(int  argc,			/* I - Number of command-line arguments */
 	    break;
           }
 
-	  if (strncmp(long_options[option_index].name, "language", 8) == 0)
-          {
-	    language = optarg;
-	    break;
-          }
-
 	  if (strncmp(long_options[option_index].name, "catalog", 7) == 0)
           {
 	    catalog = optarg;
+#ifdef DEBUG
+	    fprintf (stderr, "DEBUG: catalog: %s\n", catalog);
+#endif
 	    break;
           }
 
 	  if (strncmp(long_options[option_index].name, "prefix", 6) == 0)
           {
 	    prefix = optarg;
+#ifdef DEBUG
+	    fprintf (stderr, "DEBUG: prefix: %s\n", prefix);
+#endif
 	    break;
 	  }
 
@@ -223,12 +215,18 @@ main(int  argc,			/* I - Number of command-line arguments */
     }
   }
 
+/*
+ * Initialise libgimpprint
+ */
 
+  stp_init();
+    
+  
  /*
   * Set the language...
   */
 
-  setlocale(LC_MESSAGES, language);
+  setlocale(LC_ALL, "");
 
  /*
   * Set up the catalog
@@ -242,8 +240,21 @@ main(int  argc,			/* I - Number of command-line arguments */
               strerror(errno));
       exit(1);
     }
+#ifdef DEBUG
+    fprintf (stderr, "DEBUG: bound textdomain: %s\n", catalog);
+#endif
+    if ((textdomain(PACKAGE)) == NULL)
+    {
+      fprintf(stderr, "genppd: cannot select message catalog %s: %s\n",
+              catalog, strerror(errno));
+      exit(1);
+    }
+#ifdef DEBUG
+    fprintf (stderr, "DEBUG: textdomain set: %s\n", PACKAGE);
+#endif
   }
 
+  
  /*
   * Write PPD files...
   */
