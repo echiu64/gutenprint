@@ -84,10 +84,10 @@ Known limitations of this release:
 
 5) The Canon BJC-8200 and S800 do not produce optimum quality.
 
-7) The Lexmark Z52 driver does not print correctly at 2400x1200 or
+6) The Lexmark Z52 driver does not print correctly at 2400x1200 or
    1200x1200.
 
-8) Some HP printers print poorly at high resolutions using the Glossy
+7) Some HP printers print poorly at high resolutions using the Glossy
    Paper setting.  The workaround is to use the Premium Paper
    setting.
 
