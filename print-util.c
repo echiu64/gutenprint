@@ -151,15 +151,17 @@ calc_hsl_to_rgb(unsigned short *rgb, double h, double s, double l)
   else
     {
       double m1, m2;
+      double h1 = h + (2.0 / 6.0);
+      double h2 = h - (2.0 / 6.0);
 
       if (l < .5)
 	m2 = l * (1 + s);
       else
 	m2 = l + s - (l * s);
       m1 = (l * 2) - m2;
-      rgb[0] = 65535 * hsl_value(m1, m2, h + (2.0 / 6.0));
+      rgb[0] = 65535 * hsl_value(m1, m2, h1);
       rgb[1] = 65535 * hsl_value(m1, m2, h);
-      rgb[2] = 65535 * hsl_value(m1, m2, h - (2.0 / 6.0));
+      rgb[2] = 65535 * hsl_value(m1, m2, h2);
     }
 }
 
