@@ -369,6 +369,10 @@ void								\
 stp##i##_set_##s(stp_vars_t vv, const char *val)		\
 {								\
   stpi_internal_vars_t *v = get_vars(vv);			\
+  if (val)							\
+    stpi_dprintf(STPI_DBG_VARS, v, "set %s to %s\n", #s, val);	\
+  else								\
+    stpi_dprintf(STPI_DBG_VARS, v, "clear %s\n", #s);		\
   if (v->s == val)						\
     return;							\
   SAFE_FREE(v->s);						\
@@ -516,7 +520,14 @@ stp_set_string_parameter(stp_vars_t v, const char *parameter,
 {
   int byte_count = 0;
   if (value)
-    byte_count = strlen(value);
+    {
+      byte_count = strlen(value);
+      stpi_dprintf(STPI_DBG_VARS, v, "stp_set_string_parameter(%s, %s)\n",
+		   parameter, value);
+    }
+  else
+    stpi_dprintf(STPI_DBG_VARS, v, "stp_set_string_parameter(%s)\n",
+		 parameter);
   stp_set_string_parameter_n(v, parameter, value, byte_count);
   stpi_set_verified(v, 0);
 }
@@ -538,7 +549,15 @@ stp_set_default_string_parameter(stp_vars_t v, const char *parameter,
 {
   int byte_count = 0;
   if (value)
-    byte_count = strlen(value);
+    {
+      byte_count = strlen(value);
+      stpi_dprintf(STPI_DBG_VARS, v,
+		   "stp_set_default_string_parameter(%s, %s)\n",
+		   parameter, value);
+    }
+  else
+    stpi_dprintf(STPI_DBG_VARS, v, "stp_set_default_string_parameter(%s)\n",
+		 parameter);
   stp_set_default_string_parameter_n(v, parameter, value, byte_count);
   stpi_set_verified(v, 0);
 }

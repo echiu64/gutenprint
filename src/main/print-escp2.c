@@ -33,6 +33,7 @@
 #include <gimp-print/gimp-print-intl-internal.h>
 #include "gimp-print-internal.h"
 #include <string.h>
+#include <assert.h>
 #include "print-escp2.h"
 #include "module.h"
 #include "weave.h"
@@ -468,13 +469,12 @@ escp2_base_res(stp_const_vars_t v, int resid)
     }
 }
 
-static const escp2_variable_inkset_t *
-escp2_inks(stp_const_vars_t v, int resid, int inkset)
+static const escp2_dropsize_t *
+escp2_dropsizes(stp_const_vars_t v, int resid)
 {
   int model = stpi_get_model_id(v);
-  const escp2_variable_inklist_t *inks =
-    stpi_escp2_model_capabilities[model].inks;
-  return (*inks)[inkset][resid];
+  const escp2_drop_list_t *drops = stpi_escp2_model_capabilities[model].drops;
+  return (*drops)[resid];
 }
 
 static const inklist_t *
@@ -496,6 +496,13 @@ escp2_inklist(stp_const_vars_t v)
 	}
     }
   return inkgroup->inklists[0];
+}
+
+static const shade_t *
+escp2_shades(stp_const_vars_t v, int channel)
+{
+  const inklist_t *inklist = escp2_inklist(v);
+  return &((*inklist->shades)[channel]);
 }
 
 static const paperlist_t *
@@ -534,7 +541,7 @@ compute_resid(const res_t *res)
       
 
 static const input_slot_t *
-get_input_slot(stp_vars_t v)
+get_input_slot(stp_const_vars_t v)
 {
   int i;
   const char *input_slot = stp_get_string_parameter(v, "InputSlot");
@@ -626,7 +633,7 @@ verify_papersize(stp_const_vars_t v, const stp_papersize_t *pt)
 }
 
 static int
-verify_inktype( stp_const_vars_t v, const escp2_inkname_t *inks)
+verify_inktype(stp_const_vars_t v, const escp2_inkname_t *inks)
 {
   if (inks->inkset == INKSET_EXTENDED)
     return 0;
@@ -635,7 +642,7 @@ verify_inktype( stp_const_vars_t v, const escp2_inkname_t *inks)
 }
 
 static const char *
-get_default_inktype(stp_vars_t v)
+get_default_inktype(stp_const_vars_t v)
 {
   const inklist_t *ink_list = escp2_inklist(v);
   const paper_t *paper_type = get_media_type(v);
@@ -662,7 +669,7 @@ get_default_inktype(stp_vars_t v)
 
 
 static const escp2_inkname_t *
-get_inktype(stp_vars_t v)
+get_inktype(stp_const_vars_t v)
 {
   const char	*ink_type = stp_get_string_parameter(v, "InkType");
   const inklist_t *ink_list = escp2_inklist(v);
@@ -683,7 +690,7 @@ get_inktype(stp_vars_t v)
 }
 
 static const paper_adjustment_t *
-get_media_adjustment(stp_vars_t v)
+get_media_adjustment(stp_const_vars_t v)
 {
   const paper_t *pt = get_media_type(v);
   const escp2_inkname_t *inkname = get_inktype(v);
@@ -735,7 +742,7 @@ escp2_parameters(stp_const_vars_t v, const char *name,
 	description->deflt.dbl = float_parameters[i].defval;
 	description->bounds.dbl.upper = float_parameters[i].max;
 	description->bounds.dbl.lower = float_parameters[i].min;
-	return;
+	break;
       }
 
   for (i = 0; i < the_parameter_count; i++)
@@ -804,13 +811,12 @@ escp2_parameters(stp_const_vars_t v, const char *name,
       description->bounds.str = stp_string_list_create();
       if (ninklists > 1)
 	{
-	  stp_string_list_add_string(description->bounds.str, "DEFAULT",
-				     _("Standard"));
 	  for (i = 0; i < ninklists; i++)
 	    stp_string_list_add_string(description->bounds.str,
 				       inks->inklists[i]->name,
 				       _(inks->inklists[i]->text));
-	  description->deflt.str = "DEFAULT";
+	  description->deflt.str =
+	    stp_string_list_param(description->bounds.str, 0)->name;
 	}
       else
 	description->is_active = 0;
@@ -872,50 +878,100 @@ escp2_parameters(stp_const_vars_t v, const char *name,
     {
       description->deflt.boolean = 1;
     }
-#if 0
-  else if (strcmp(name, "LightCyanTransition") == 0 ||
-	   strcmp(name, "LightMagentaTransition") == 0 ||
-	   strcmp(name, "DarkYellowTransition") == 0 ||
-	   strcmp(name, "GrayTransition") == 0)
+  else if (strcmp(name, "GrayTransition") == 0)
     {
-#if 0
-      const escp2_inkname_t *inktype = get_inktype(v);
+      const escp2_inkname_t *ink_name = get_inktype(v);
       description->is_active = 0;
-      if (inktype)
+      if (ink_name)
 	{
-	  int channel_limit = inktype->channel_limit;
-	  if (stp_get_output_type(v) == OUTPUT_GRAY)
-	    channel_limit = 1;
-	  for (i = 0; i < channel_limit; i++)
+	  if (ink_name->channels[ECOLOR_K] && 
+	      ink_name->channels[ECOLOR_K]->n_subchannels == 2)
 	    {
-	      if (inktype->channel_parameter_names[i] &&
-		  strcmp(name, inktype->channel_parameter_names[i]) == 0)
+	      description->is_active = 1;
+	      description->bounds.dbl.lower = 0;
+	      description->bounds.dbl.upper = 5.0;
+	      description->deflt.dbl = 1.0;
+	    }
+	}
+    }
+  else if (strcmp(name, "Gray1Transition") == 0 ||
+	   strcmp(name, "Gray2Transition") == 0 ||
+	   strcmp(name, "Gray3Transition") == 0)
+    {
+      const escp2_inkname_t *ink_name = get_inktype(v);
+      description->is_active = 0;
+      if (ink_name)
+	{
+	  if (ink_name->channels[ECOLOR_K] && 
+	      ink_name->channels[ECOLOR_K]->n_subchannels == 4)
+	    {
+	      description->is_active = 1;
+	      description->bounds.dbl.lower = 0;
+	      description->bounds.dbl.upper = 5.0;
+	      description->deflt.dbl = 1.0;
+	    }
+	}
+    }
+  else if (strcmp(name, "LightCyanTransition") == 0)
+    {
+      description->is_active = 0;
+      if (stp_get_output_type(v) != OUTPUT_GRAY)
+	{
+	  const escp2_inkname_t *ink_name = get_inktype(v);
+	  if (ink_name)
+	    {
+	      if (ink_name->channel_limit == 4 &&
+		  ink_name->channels[ECOLOR_C] && 
+		  ink_name->channels[ECOLOR_C]->n_subchannels == 2)
 		{
 		  description->is_active = 1;
 		  description->bounds.dbl.lower = 0;
 		  description->bounds.dbl.upper = 5.0;
 		  description->deflt.dbl = 1.0;
-		  return;
-		}
+		}		
 	    }
 	}
-#else
-      /* For now, work around a problem with the GUI */
-      /* whereby we can't activate or deactivate an option based on a */
-      /* combo box setting -- rlk 20030317 */
-      if (stp_get_output_type(v) == OUTPUT_GRAY &&
-	  strcmp(name, "GrayTransition") != 0)
-	description->is_active = 0;
-      else
-	{
-	  description->is_active = 1;
-	  description->bounds.dbl.lower = 0;
-	  description->bounds.dbl.upper = 5.0;
-	  description->deflt.dbl = 1.0;
-	}
-#endif
     }
-#endif
+  else if (strcmp(name, "LightMagentaTransition") == 0)
+    {
+      description->is_active = 0;
+      if (stp_get_output_type(v) != OUTPUT_GRAY)
+	{
+	  const escp2_inkname_t *ink_name = get_inktype(v);
+	  if (ink_name)
+	    {
+	      if (ink_name->channel_limit == 4 &&
+		  ink_name->channels[ECOLOR_M] && 
+		  ink_name->channels[ECOLOR_M]->n_subchannels == 2)
+		{
+		  description->is_active = 1;
+		  description->bounds.dbl.lower = 0;
+		  description->bounds.dbl.upper = 5.0;
+		  description->deflt.dbl = 1.0;
+		}		
+	    }
+	}
+    }
+  else if (strcmp(name, "DarkYellowTransition") == 0)
+    {
+      description->is_active = 0;
+      if (stp_get_output_type(v) != OUTPUT_GRAY)
+	{
+	  const escp2_inkname_t *ink_name = get_inktype(v);
+	  if (ink_name)
+	    {
+	      if (ink_name->channel_limit == 4 &&
+		  ink_name->channels[ECOLOR_Y] && 
+		  ink_name->channels[ECOLOR_Y]->n_subchannels == 2)
+		{
+		  description->is_active = 1;
+		  description->bounds.dbl.lower = 0;
+		  description->bounds.dbl.upper = 5.0;
+		  description->deflt.dbl = 1.0;
+		}		
+	    }
+	}
+    }
 }
 
 static const res_t *
@@ -1278,7 +1334,7 @@ compute_channel_count(const escp2_inkname_t *ink_type, int channel_limit)
 }
 
 static double
-get_double_param(stp_vars_t v, const char *param)
+get_double_param(stp_const_vars_t v, const char *param)
 {
   if (param && stp_check_float_parameter(v, param, STP_PARAMETER_ACTIVE))
     return stp_get_float_parameter(v, param);
@@ -1291,36 +1347,37 @@ setup_inks(stp_vars_t v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   int i, j;
-  const escp2_variable_inkset_t *inks;
+  const escp2_dropsize_t *drops;
   const escp2_inkname_t *ink_type = pd->inkname;
 
-  inks = escp2_inks(v, pd->ink_resid, ink_type->inkset);
-  if (inks)
+  drops = escp2_dropsizes(v, pd->ink_resid);
+  stpi_init_debug_messages(v);
+  for (i = 0; i < pd->logical_channels; i++)
     {
-      stpi_init_debug_messages(v);
-      for (i = 0; i < pd->logical_channels; i++)
+      const ink_channel_t *channel = ink_type->channels[i];
+      if (channel && channel->n_subchannels > 0)
 	{
-	  const escp2_variable_ink_t *ink = (*inks)[i];
-	  const ink_channel_t *channel = ink_type->channels[i];
-	  if (ink && channel)
+	  const char *param = channel->subchannels[0].channel_density;
+	  const shade_t *shades = escp2_shades(v, i);
+	  double userval = get_double_param(v, param);
+	  if (shades->n_shades < channel->n_subchannels)
 	    {
-	      const char *param = channel->subchannels[0].channel_density;
-	      double userval = get_double_param(v, param);
-	      stpi_dither_set_inks(v, i, ink->darkness * userval,
-				   ink->numshades, ink->shades,
-				   ink->numdotsizes, ink->dotsizes);
-	      for (j = 0; j < channel->n_subchannels; j++)
-		{
-		  const char *subparam =
-		    channel->subchannels[j].subchannel_scale;
-		  double scale = userval * get_double_param(v, subparam);
-		  scale *= get_double_param(v, "Density");
-		  stpi_channel_set_density_adjustment(v, i, j, scale);
-		}
+	      stpi_erprintf("Not enough shades!\n");
+	    }      
+	  stpi_dither_set_inks(v, i, userval,
+			       channel->n_subchannels, shades->shades,
+			       drops->numdropsizes, drops->dropsizes);
+	  for (j = 0; j < channel->n_subchannels; j++)
+	    {
+	      const char *subparam =
+		channel->subchannels[j].subchannel_scale;
+	      double scale = userval * get_double_param(v, subparam);
+	      scale *= get_double_param(v, "Density");
+	      stpi_channel_set_density_adjustment(v, i, j, scale);
 	    }
 	}
-      stpi_flush_debug_messages(v);
     }
+  stpi_flush_debug_messages(v);
 }
 
 static void

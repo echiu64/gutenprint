@@ -24,8 +24,12 @@
 #ifndef GIMP_PRINT_INTERNAL_ESCP2_H
 #define GIMP_PRINT_INTERNAL_ESCP2_H
 
-
+/*
+ * Maximum number of channels in a printer.  If Epson comes out with an
+ * 8-head printer, this needs to be increased.
+ */
 #define PHYSICAL_CHANNEL_LIMIT 7
+#define MAX_DROP_SIZES 3
 
 /*
  * Printer capabilities.
@@ -85,19 +89,14 @@ typedef short escp2_base_resolutions_t[RES_N];
 
 typedef float escp2_densities_t[RES_N];
 
-typedef struct escp2_variable_ink
+typedef struct
 {
   const char *listname;
-  float darkness;
-  short numshades;
-  short numdotsizes;
-  const double *shades;
-  const double *dotsizes;
-} escp2_variable_ink_t;
+  short numdropsizes;
+  const double dropsizes[MAX_DROP_SIZES];
+} escp2_dropsize_t;
 
-typedef const escp2_variable_ink_t *escp2_variable_inkset_t[PHYSICAL_CHANNEL_LIMIT];
-
-typedef const escp2_variable_inkset_t *escp2_variable_inklist_t[][RES_N];
+typedef const escp2_dropsize_t *const escp2_drop_list_t[RES_N];
 
 typedef struct
 {
@@ -177,12 +176,12 @@ typedef struct
 
 typedef enum
 {
-  INKSET_CMYK           = 0,
-  INKSET_CcMmYK         = 1,
-  INKSET_CcMmYyK        = 2,
-  INKSET_CcMmYKk        = 3,
-  INKSET_PIEZO_QUADTONE = 4,
-  INKSET_EXTENDED	= 5
+  INKSET_CMYK             = 0,
+  INKSET_CcMmYK           = 1,
+  INKSET_CcMmYyK          = 2,
+  INKSET_CcMmYKk          = 3,
+  INKSET_QUADTONE         = 4,
+  INKSET_EXTENDED	  = 5
 } inkset_id_t;
 
 typedef struct
@@ -201,10 +200,19 @@ typedef struct
 
 typedef struct
 {
+  int n_shades;
+  const double shades[PHYSICAL_CHANNEL_LIMIT];
+} shade_t;
+
+typedef shade_t shade_set_t[PHYSICAL_CHANNEL_LIMIT];
+
+typedef struct
+{
   const char *name;
   const char *text;
   const escp2_inkname_t *const *inknames;
   const paperlist_t *papers;
+  shade_set_t *shades;
   short n_inks;
 } inklist_t;
 
@@ -352,7 +360,7 @@ typedef struct escp2_printer
 /*****************************************************************************/
   const short *dot_sizes;	/* Vector of dot sizes for resolutions */
   const float *densities;	/* List of densities for each printer */
-  const escp2_variable_inklist_t *inks; /* Choices of inks for this printer */
+  const escp2_drop_list_t *drops; /* Drop sizes */
 /*****************************************************************************/
   const res_t *const *reslist;
   const inkgroup_t *inkgroup;
@@ -368,17 +376,17 @@ typedef struct escp2_printer
 extern const stpi_escp2_printer_t stpi_escp2_model_capabilities[];
 extern const int stpi_escp2_model_limit;
 
-extern const escp2_variable_inklist_t stpi_escp2_simple_inks;
-extern const escp2_variable_inklist_t stpi_escp2_spro10000_inks;
-extern const escp2_variable_inklist_t stpi_escp2_variable_2pl_inks;
-extern const escp2_variable_inklist_t stpi_escp2_variable_3pl_inks;
-extern const escp2_variable_inklist_t stpi_escp2_variable_3pl_pigment_inks;
-extern const escp2_variable_inklist_t stpi_escp2_variable_4pl_inks;
-extern const escp2_variable_inklist_t stpi_escp2_variable_4pl_pigment_inks;
-extern const escp2_variable_inklist_t stpi_escp2_variable_680_4pl_inks;
-extern const escp2_variable_inklist_t stpi_escp2_variable_6pl_inks;
-extern const escp2_variable_inklist_t stpi_escp2_variable_pigment_inks;
-extern const escp2_variable_inklist_t stpi_escp2_variable_x80_6pl_inks;
+extern const escp2_drop_list_t stpi_escp2_simple_drops;
+extern const escp2_drop_list_t stpi_escp2_spro10000_drops;
+extern const escp2_drop_list_t stpi_escp2_variable_2pl_drops;
+extern const escp2_drop_list_t stpi_escp2_variable_3pl_drops;
+extern const escp2_drop_list_t stpi_escp2_variable_3pl_pigment_drops;
+extern const escp2_drop_list_t stpi_escp2_variable_4pl_drops;
+extern const escp2_drop_list_t stpi_escp2_variable_ultrachrome_drops;
+extern const escp2_drop_list_t stpi_escp2_variable_680_4pl_drops;
+extern const escp2_drop_list_t stpi_escp2_variable_6pl_drops;
+extern const escp2_drop_list_t stpi_escp2_variable_2000p_drops;
+extern const escp2_drop_list_t stpi_escp2_variable_x80_6pl_drops;
 
 extern const paperlist_t stpi_escp2_standard_paper_list;
 extern const paperlist_t stpi_escp2_c80_paper_list;
@@ -406,12 +414,12 @@ extern const inkgroup_t stpi_escp2_cmy_inkgroup;
 extern const inkgroup_t stpi_escp2_standard_inkgroup;
 extern const inkgroup_t stpi_escp2_c80_inkgroup;
 extern const inkgroup_t stpi_escp2_x80_inkgroup;
-extern const inkgroup_t stpi_escp2_photo_inkgroup;
-extern const inkgroup_t stpi_escp2_photo7_inkgroup;
+extern const inkgroup_t stpi_escp2_photo_gen1_inkgroup;
+extern const inkgroup_t stpi_escp2_photo_gen2_inkgroup;
+extern const inkgroup_t stpi_escp2_photo_pigment_inkgroup;
 extern const inkgroup_t stpi_escp2_photo7_japan_inkgroup;
 extern const inkgroup_t stpi_escp2_ultrachrome_inkgroup;
 extern const inkgroup_t stpi_escp2_f360_photo_inkgroup;
-extern const inkgroup_t stpi_escp2_f360_photo7_inkgroup;
 extern const inkgroup_t stpi_escp2_f360_photo7_japan_inkgroup;
 extern const inkgroup_t stpi_escp2_f360_ultrachrome_inkgroup;
 
