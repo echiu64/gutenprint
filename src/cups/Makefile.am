@@ -96,6 +96,14 @@ if BUILD_CUPS
 INSTALL_DATA_LOCAL_DEPS = ppd
 endif
 
+if BUILD_TRANSLATED_PPDS
+PPD_NLS = $(PPD_NLS_1)
+endif
+
+if USE_NLS
+PPD_NLS_1 = ppd-nls
+endif
+
 install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
 	  $(mkinstalldirs) $(DESTDIR)$(cups_modeldir); \
@@ -115,12 +123,14 @@ uninstall-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
 	  $(mkinstalldirs) $(DESTDIR)$(cups_modeldir); \
 	  cd ppd ; \
-	  for language in * ; do \
+	  for language in C $(ALL_LINGUAS) ; do \
 	    cd ..; \
 	    $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)/$$language; \
-	    cd ppd/$$language; \
+	    cd ppd/C ; \
 	    for ppdfile in * ; do \
-	      $(RM) $(DESTDIR)$(cups_modeldir)/$$language/$$ppdfile ; \
+	      if test -f "$(DESTDIR)$(cups_modeldir)/$$language/$$ppdfile" ; then \
+	        $(RM) $(DESTDIR)$(cups_modeldir)/$$language/$$ppdfile ; \
+	      fi ; \
 	    done; \
 	    cd ..; \
 	  done \
@@ -160,25 +170,40 @@ install-data-hook:
 
 ## Rules
 
-.PHONY: ppd
+.PHONY: ppd ppd-stamp-pre ppd-stamp-nonls ppd-stamp-nls ppd-stamp-phony
 
 all-local: $(INSTALL_DATA_LOCAL_DEPS)
 
 ppd: ppd-stamp
+
 ppd-stamp: genppd
+	$(MAKE) ppd-stamp-phony
+	touch ppd-stamp
+
+ppd-stamp-phony: ppd-stamp-pre ppd-nonls $(PPD_NLS)
+
+ppd-stamp-pre:
+	-$(RM) -r ppd
+	-mkdir ppd
+
+ppd-nonls: genppd
+	for language in C ; do \
+	  mkdir ppd/$$language ; \
+	  echo "$$language:" ; \
+	 ./genppd --prefix=ppd/$$language ; \
+	done
+
+ppd-nls: genppd
 	wdir=`pwd` ; \
 	cd $(top_builddir)/po ; \
 	$(MAKE) ; \
 	$(MAKE) prefix=$${wdir}/catalog datadir=$${wdir}/catalog/share install
-	-$(RM) -r ppd
-	-mkdir ppd
-	for language in C $(ALL_LINGUAS) ; do \
+	for language in $(ALL_LINGUAS) ; do \
 	  mkdir ppd/$$language ; \
 	  echo "$$language:" ; \
 	  LANGUAGE=$$language ./genppd --prefix=ppd/$$language --catalog=`pwd`/catalog/share/locale ; \
 	done
 	$(RM) -r catalog
-	touch ppd-stamp
 
 $(LIBGIMPPRINT_LIBS):
 	cd ../main ; \

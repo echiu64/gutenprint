@@ -117,6 +117,32 @@ CUPS
     existing .lpoptions file in your home directory and try printing
     again.
 
+    This package normally builds translated versions of the PPD
+    files.  This provides PPD files translated into the languages that
+    this package supports.  However, the translation process does not
+    work correctly on all systems; in particular, many BSD systems are
+    known to simply build multiple copies of the English PPD files.
+    If your system does not build these files correctly, which will be
+    apparent when you use a CUPS front end to select a PPD file and
+    you see something like this:
+
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-rc1(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-rc1(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-rc1(en)
+
+    rather than this:
+
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-rc1(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-rc1(sv)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-rc1(fr)
+
+    you may wish to turn off the translation of PPD files:
+
+    ./configure --with-cups --without-translated-ppds
+
+    You may also wish to do this to reduce the number of PPD files
+    installed on your system
+
     If you do not wish to build the Gimp Print plugin, you must run
 
     ./configure --with-cups --without-gimp
@@ -418,8 +444,9 @@ KNOWN BUILD ISSUES
       files should be translated into Swedish, Norwegian, French,
       Danish, and British English.  With CUPS 1.1.10 and lower, there
       should be two copies of the (en) PPD file, and one copy each of
-      (sv), (no), (fr), and (da).  With CUPS 1.1.11 and above, there
-      should be (en), (en_GB), (sv), (no), (fr), and (da) PPD files.
+      (sv), (no), (fr), (po) and (da).  With CUPS 1.1.11 and above,
+      there should be (en), (en_GB), (sv), (no), (fr), (po), and (da)
+      PPD files.
 
       The PPD files are created by a program named "genppd" in the
       src/cups directory.  This program is called once for each
@@ -505,13 +532,59 @@ KNOWN BUILD ISSUES
       not always be best to use foreign libraries to replace standard
       system functionality.
 
-      We have chosen to explicitly link genppd against the included
-      gettext and use the LANGUAGE environment variable.  This
-      requires some rather ugly modifications to genppd.c and what are
-      likely some questionably portable Makefile constructs.
-      Unfortunately, this may not work correctly on all systems, most
-      likely due to linker quirks.  We would like to know about any
-      problems experienced, and any workarounds.
+      We have chosen to use LANGUAGE for this purpose, as the GNU
+      gettext library appears to offer the most reliable translation,
+      and LANGUAGE appears to offer the most reliable mechanism.  We
+      have actually found that LANG and LC_* can interfere with
+      LANGUAGE, thus we do not use both.
+
+      To determine if the translations are working, you must actually
+      inspect the PPD files.  You will need to
+
+      cd src/cups/ppd/sv
+      gunzip *
+      more *
+
+      or the like to determine if this is successful.  In particular,
+      look for LanguageVersion, and make sure that it is correct (it
+      should be "Swedish" in the sv directory, for example), and also
+      make sure that the paper sizes are also translated.  We
+      currently suggest using the Swedish translation for this purpose
+      as it is the most complete.
+
+      If packagers find that the PPD files are all in English, rather
+      than translated into the appropriate languages, we suggest the
+      following:
+
+      1) Use --with-included-gettext to use the GNU gettext.  If your
+         system is not based on GNU libc (Linux usually is based on
+         GNU libc; BSD, Solaris, IRIX, etc. are not), you will need
+         this option to have any possibility of creating the
+         translated PPD files.
+
+      2) Run 'make install' to install the package (including the
+         message catalogs) onto the system first, and then do the
+         following:
+
+	 cd src/cups
+	 rm ppd-stamp
+	 make
+
+	 to rebuild the PPD files.  Having the message catalogs on the
+	 system may permit this to succeed.
+
+      3) Ensure that your system actually has locales named 'sv',
+         'pl', and all of the other supported languages, and change
+         LANGUAGE to something more appropriate (most likely LANG,
+         LC_MESSAGES, or LC_ALL).
+
+      4) Build the PPD files on a Linux-based system; they are
+         portable.
+
+      5) Use --without-translated-ppds on the configure command line
+         to suppress the translated PPD files altogether.
+
+      Please feel free to contact us about this issue.
 
 
 PACKAGING

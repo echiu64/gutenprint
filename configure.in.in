@@ -108,6 +108,7 @@ USE_READLINE=yes
 EXTRA_LIBREADLINE_DEPS=''
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 BUILD_CUPS=no
+BUILD_TRANSLATED_PPDS=yes
 BUILD_GHOST=no
 BUILD_FOOMATIC=no
 BUILD_TEST=no
@@ -169,6 +170,16 @@ AC_ARG_WITH(cups,
          AC_MSG_ERROR([${withval}: no such directory for --with-cups])
        fi ;;
   esac],[AC_MSG_RESULT([${BUILD_CUPS}]) ; cups_prefix="${prefix}"])
+
+AC_MSG_CHECKING([whether to build translated CUPS PPD files])
+AC_ARG_WITH(translated-ppds,
+[  --with-translated-ppds  build translated CUPS PPD files [default=${BUILD_TRANSLATED_PPDS}]],
+  [case "${withval}" in
+    yes) BUILD_TRANSLATED_PPDS="yes" ; AC_MSG_RESULT([yes]) ;;
+    no) BUILD_TRANSLATED_PPDS="no" ; AC_MSG_RESULT([no]) ;;
+    *) AC_MSG_RESULT([unknown])
+       AC_MSG_ERROR([bad value ${withval} for --with-translate_ppds]) ;;
+  esac],[AC_MSG_RESULT([${BUILD_TRANSLATED_PPDS}])])
 
 AC_MSG_CHECKING([whether to build ghostscript driver])
 AC_ARG_WITH(ghost,
@@ -592,6 +603,8 @@ if test x${BUILD_CUPS} = xyes ; then
   CUPS_CONF='$(CUPS_CONF)'
 fi
 AM_CONDITIONAL(BUILD_CUPS, test x${BUILD_CUPS} = xyes)
+
+AM_CONDITIONAL(BUILD_TRANSLATED_PPDS, test x${BUILD_TRANSLATED_PPDS} = xyes)
 
 AM_CONDITIONAL(BUILD_GHOST, test x${BUILD_GHOST} = xyes)
 

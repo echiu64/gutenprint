@@ -480,20 +480,20 @@ purposes:
           1440x720 highest quality, but twice as long to generate the
           output.
 
-1440x1440 An unsupported mode that may offer higher quality than
-          2880x720 for certain types of images on very high quality
-          paper.  It is unlikely that this will offer any significant
-          advantage on photographs, but it may offer improved quality
-          on line art with very fine detail due to the equal
-          resolution in both dimensions.  It takes as long to print as
-          2880x720.  1440x1440 highest quality takes twice as long to
-          print.
+1440x1440 An unsupported mode that offers higher quality than 2880x720
+          for certain types of images on very high quality paper.  It
+          does not appear to offer any advantage on smooth tones, but
+          fine detail (particularly vertical, and to a lesser extent
+          near-horizontal) it shows noticeable improvement.  It takes
+          as long to print as 2880x720.  1440x1440 highest quality
+          takes twice as long to print.
 
 2880x1440 An unsupported mode that may offer higher quality than
           2880x720 for certain types of images on very high quality
-          paper.  It takes twice as long to print as 2880x720 or
-          1440x1440, and as long to print as 1440x1440 highest
-          quality.
+          paper.  Experiments conducted thus far demonstrate little if
+          any improvement over 1440x1440.  It takes twice as long to
+          print as 2880x720 or 1440x1440, and as long to print as
+          1440x1440 highest quality.
 
 
 The following resolutions are supported on printers other than the

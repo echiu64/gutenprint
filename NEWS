@@ -45,7 +45,12 @@ Known limitations of this release:
    in particular are known to fail to translate these files.
 
    On some systems, using --with-included-gettext may work.  It is
-   known not to work on at least certain BSD systems.
+   known not to work on at least certain BSD systems.  If it does not
+   work (or you simply prefer not to build these files), you may use
+   --without-translated-ppds to suppress the translated versions of
+   these files.
+
+   The README covers this in more detail.
 
 2) The Epson Stylus C40UX (and very likely other printers in the C20
    and C40 lines) do not identify themselves.  Therefore,
@@ -86,6 +91,19 @@ Known limitations of this release:
    little reason to use it outside of the GIMP.  This bug will not be
    fixed.
 
+List of bugs fixed in this release:
+
+ 480356 Gimp plugin misbuild w/latest GTK
+ 478955 make clean fails
+ 478954 $(RM) fails on BSD
+ 476583 escputil fails on OpenBSD
+ 476714 doc/Makefile.in uses "make" not $(MAKE)
+ 475268 VPATH build broken in docs
+ 475830 Stylus Color 360 DPI micro regression
+ 475848 Libtool version for BSD
+ 480357 Makefiles include GIMP_CFLAGS spuriously
+ 478502 Stylus Pros don't need packet mode
+ 480368 PS driver generates bad comments
 
 Gimp-Print 4.1.99b4 contains the following changes over 4.1.99b3:
 
