@@ -26,25 +26,18 @@ MAINT_CHARSET = latin1
 
 ## Variables
 
-AM_CFLAGS = $(GNUCFLAGS)
+AM_CFLAGS = $(GNUCFLAGS) @LIBXML_CFLAGS@
 INCLUDES = @INCLUDES@
-
-LFLAGS = -i
-YFLAGS = -d
 
 
 ## Programs
 
 noinst_PROGRAMS = printdef
-printdef_SOURCES = printdefl.l printdefy.y printdef.h
+printdef_SOURCES = printdef.c printdef.h
+printdef_LDADD = @LIBXML_LIBS@
 
-printdefl.o: printdefy.o
-printdef.o: printdefy.o
 
 
 ## Clean
 
-DISTCLEANFILES = printdefl.c printdefy.c printdefy.h
 MAINTAINERCLEANFILES = Makefile.in
-
-EXTRA_DIST = printdefy.h

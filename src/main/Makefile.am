@@ -31,6 +31,7 @@ INCLUDES = @INCLUDES@
 
 m4datadir = $(datadir)/aclocal
 pkgconfigdatadir = $(prefix)/lib/pkgconfig
+pkgxmldatadir = $(pkgdatadir)/$(VERSION)/xml
 
 
 ## Programs
@@ -86,17 +87,17 @@ m4data_DATA = gimpprint.m4
 
 pkgconfigdata_DATA = gimpprint.pc
 
+pkgxmldata_DATA = printers.xml
+
 
 ## Rules
 
 $(srcdir)/printers-oldlist.h: ../printdef/printdef $(srcdir)/printers.xml
-	../printdef/printdef < $(srcdir)/printers.xml > $(srcdir)/printers-oldlist.h
+	../printdef/printdef $(srcdir)/printers.xml > $(srcdir)/printers-oldlist.h
 
-printdefl.o: printdefy.o
-
-../printdef/printdef: $(addprefix ../printdef/, printdefl.l printdefy.y printdef.h)
+../printdef/printdef: $(addprefix ../printdef/, printdef.c printdef.h)
 	cd ../printdef ; \
-	$(MAKE)
+	$(MAKE) printdef
 
 
 ## Clean
@@ -105,4 +106,4 @@ CLEANFILES = printers-oldlist.h
 DISTCLEANFILES = gimpprint-config gimpprint-config.in gimpprint.pc gimpprint.pc.in gimpprint.m4
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = gimpprint.m4.top printers.xml
+EXTRA_DIST = gimpprint.m4.top $(pkgxmldata)

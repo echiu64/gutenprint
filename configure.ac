@@ -481,6 +481,8 @@ else
   AC_DEFINE(HAVE_LIBREADLINE, [0])
 fi
 
+PKG_CHECK_MODULES(LIBXML, libxml-2.0)
+
 STP_CUPS_LIBS
 
 if test x$BUILD_LEXMARKUTIL = xyes ; then
