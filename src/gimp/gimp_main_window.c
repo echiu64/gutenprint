@@ -1648,6 +1648,7 @@ gimp_media_type_callback (GtkWidget *widget,
   const gchar *new_media_type = Combo_get_text (media_type_combo);
   strcpy (vars.media_type, new_media_type);
   strcpy (plist[plist_current].v.media_type, new_media_type);
+  gimp_preview_update ();
 }
 
 /*
@@ -1660,10 +1661,11 @@ gimp_media_source_callback (GtkWidget *widget,
   const gchar *new_media_source = Combo_get_text (media_source_combo);
   strcpy (vars.media_source, new_media_source);
   strcpy (plist[plist_current].v.media_source, new_media_source);
+  gimp_preview_update ();
 }
 
 /*
- *  gimp_ink_type_callback() - Update the current media source...
+ *  gimp_ink_type_callback() - Update the current ink type...
  */
 static void
 gimp_ink_type_callback (GtkWidget *widget,
@@ -1672,6 +1674,7 @@ gimp_ink_type_callback (GtkWidget *widget,
   const gchar *new_ink_type = Combo_get_text (ink_type_combo);
   strcpy (vars.ink_type, new_ink_type);
   strcpy (plist[plist_current].v.ink_type, new_ink_type);
+  gimp_preview_update ();
 }
 
 /*
@@ -1684,6 +1687,7 @@ gimp_resolution_callback (GtkWidget *widget,
   const gchar *new_resolution = Combo_get_text (resolution_combo);
   strcpy (vars.resolution, new_resolution);
   strcpy (plist[plist_current].v.resolution, new_resolution);
+  gimp_preview_update ();
 }
 
 /*
@@ -1718,6 +1722,7 @@ gimp_output_type_callback (GtkWidget *widget,
       plist[plist_current].v.output_type = (gint) data;
       gimp_update_adjusted_thumbnail();
     }
+  gimp_preview_update ();
 }
 
 /*
@@ -1748,6 +1753,7 @@ gimp_linear_callback (GtkWidget *widget,
       vars.linear = (gint) data;
       plist[plist_current].v.linear = (gint) data;
     }
+  gimp_preview_update ();
 }
 #endif
 
@@ -1764,6 +1770,7 @@ gimp_image_type_callback (GtkWidget *widget,
       gimp_update_adjusted_thumbnail();
       plist[plist_current].v.image_type = (gint) data;
     }
+  gimp_preview_update ();
 }
 
 /*

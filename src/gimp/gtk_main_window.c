@@ -1771,6 +1771,7 @@ static void gtk_media_type_callback(GtkWidget *widget, /* I- Media type menu */
 {
   strcpy(vars.media_type, media_types[data]);
   strcpy(plist[plist_current].v.media_type, media_types[data]);
+  gtk_preview_update();
 }
 
 
@@ -1784,11 +1785,12 @@ static void gtk_media_source_callback(GtkWidget *widget, /* I-Media source */
 {
   strcpy(vars.media_source, media_sources[data]);
   strcpy(plist[plist_current].v.media_source, media_sources[data]);
+  gtk_preview_update();
 }
 
 /****************************************************************************
  *
- * gtk_ink_type_callback() - Update the current media source...
+ * gtk_ink_type_callback() - Update the current ink type...
  *
  ****************************************************************************/
 static void gtk_ink_type_callback(GtkWidget *widget, /* I-Ink type menu */
@@ -1796,6 +1798,7 @@ static void gtk_ink_type_callback(GtkWidget *widget, /* I-Ink type menu */
 {
   strcpy(vars.ink_type, ink_types[data]);
   strcpy(plist[plist_current].v.ink_type, ink_types[data]);
+  gtk_preview_update();
 }
 
 /****************************************************************************
@@ -1808,6 +1811,7 @@ static void gtk_resolution_callback(GtkWidget *widget, /* I-Media size menu */
 {
   strcpy(vars.resolution, resolutions[data]);
   strcpy(plist[plist_current].v.resolution, resolutions[data]);
+  gtk_preview_update();
 }
 
 
@@ -1845,6 +1849,7 @@ static void gtk_output_type_callback(GtkWidget *widget,
     vars.output_type = data;
     plist[plist_current].v.output_type = data;
   }
+  gtk_preview_update();
 }
 
 /****************************************************************************
@@ -1877,6 +1882,7 @@ static void gtk_linear_callback(GtkWidget *widget, /* I - Output type button */
     vars.linear = data;
     plist[plist_current].v.linear = data;
   }
+  gtk_preview_update();
 }
 #endif
 
@@ -1893,6 +1899,7 @@ static void gtk_image_type_callback(GtkWidget *widget,
     vars.image_type = data;
     plist[plist_current].v.image_type = data;
   }
+  gtk_preview_update();
 }
 
 /****************************************************************************

@@ -2045,12 +2045,27 @@ escp2_imageable_area(const stp_printer_t *printer,	/* I - Printer model */
                      int  *top)		/* O - Top position in points */
 {
   int	width, height;			/* Size of page */
+  int	rollfeed;			/* Roll feed selected */
+
+  rollfeed = (strcmp(v->media_source, _("Roll Feed")) == 0);
 
   stp_default_media_size(printer, v, &width, &height);
   *left =	escp2_left_margin(printer->model, &printer->printvars);
   *right =	width - escp2_right_margin(printer->model, &printer->printvars);
-  *top =	height - escp2_top_margin(printer->model, &printer->printvars);
-  *bottom =	escp2_bottom_margin(printer->model, &printer->printvars);
+
+ /* 
+  * All printers should have 0 vertical margin capability in Roll Feed
+  * mode --  They waste any paper they need automatically, and the
+  * driver should print as much as the user wants 
+  */ 
+
+  if (rollfeed) {
+     *top =      height - 0;
+     *bottom =   0;
+  } else {
+    *top =	height - escp2_top_margin(printer->model, &printer->printvars);
+    *bottom =	escp2_bottom_margin(printer->model, &printer->printvars);
+  }
 }
 
 static void
