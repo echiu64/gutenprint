@@ -292,67 +292,71 @@ For Epson Stylus printers:
 
 -sQuality='quality'
 
-'180 DPI'				 (works on older printers)
-'180 DPI Unidirectional'		 (works on older printers)
-'360 DPI'                                (works on all printers)
-'360 DPI Unidirectional'                 (works on all printers)
-'360 DPI Microweave'                     (works on all printers)
-'360 DPI Microweave Unidirectional'      (works on all printers)
-'360 DPI Softweave'                      (works on printers that support
-					  variable dot sizes, such as
-					  the Epson Stylus Color 740
-					  and newer)
-'360 DPI High Quality'                   (works on printers that support
-					  variable dot sizes, such as
-					  the Epson Stylus Color 740
-					  and newer)
-'360 DPI High Quality Unidirectional'    (works on printers that support
-					  variable dot sizes, such as
-					  the Epson Stylus Color 740
-					  and newer)
-'720 DPI Microweave'                     (works on older printers)
-'720 DPI Microweave Unidirectional'      (works on older printers)
-'720 DPI Softweave'                      (works on all printers except
-					  for Stylus Color, Stylus
-					  Color 1500, Stylus Color
-					  1520, and Stylus Color 3000)
-'720 DPI Softweave Unidirectional'       (works on all printers except
-					  for Stylus Color, Stylus
-					  Color 1500, Stylus Color
-					  1520, and Stylus Color 3000)
-'720 DPI High Quality'                   (works on all printers except
-					  for Stylus Color, Stylus
-					  Color 1500, Stylus Color
-					  1520, and Stylus Color 3000)
-'720 DPI High Quality Unidirectional'    (works on all printers except
-					  for Stylus Color, Stylus
-					  Color 1500, Stylus Color
-					  1520, and Stylus Color 3000)
-'720 DPI Highest Quality'                (works on all printers except
-					  for Stylus Color, Stylus
-					  Color 1500, Stylus Color
-					  1520, and Stylus Color 3000)
-'1440 x 720 DPI Microweave'              (works on some older 1440x720 dpi
-					  printers)
-'1440 x 720 DPI Microweave Unidirectional'(works on some older 1440x720 dpi
-					   printers)
-'1440 x 720 DPI Softweave'               (works on all 1440x720 dpi
-					  printers except for Stylus
-					  Color 1520 and Stylus Color 3000)
-'1440 x 720 DPI Softweave Unidirectional'(works on all 1440x720 dpi
-					  printers except for Stylus
-					  Color 1520 and Stylus Color 3000)
-'1440 x 720 DPI Highest Quality'         (works on all 1440x720 dpi
-					  printers except for Stylus
-					  Color 1520 and Stylus Color 3000)
-'2880 x 720 DPI Softweave'               (works on Stylus Color 680,
-					  Stylus Color 777, Stylus
-					  Color 880, Stylus Color 980,
-					  and Stylus Photo 790)
-'2880 x 720 DPI Softweave Unidirectional'(works on Stylus Color 680,
-					  Stylus Color 777, Stylus
-					  Color 880, Stylus Color 980,
-					  and Stylus Photo 790)
+'180 DPI'				   (works on many printers)
+'180 DPI Unidirectional'		   (works on many printers)
+'180 x 120 DPI'				   (works on many printers)
+'180 x 120 DPI Unidirectional'		   (works on many printers)
+'360 x 120 DPI'				   (works on many printers)
+'360 x 120 DPI Unidirectional'		   (works on many printers)
+'360 DPI'                                  (works on all printers)
+'360 DPI Unidirectional'                   (works on all printers)
+'360 DPI Microweave'                       (works on all printers)
+'360 DPI Microweave Unidirectional'        (works on all printers)
+'360 DPI Softweave'                        (works on printers that support
+					    variable dot sizes, such as
+					    the Epson Stylus Color 740
+					    and newer)
+'360 DPI High Quality'                     (works on printers that support
+					    variable dot sizes, such as
+					    the Epson Stylus Color 740
+					    and newer)
+'360 DPI High Quality Unidirectional'      (works on printers that support
+					    variable dot sizes, such as
+					    the Epson Stylus Color 740
+					    and newer)
+'720 DPI Microweave'                       (works on older printers)
+'720 DPI Microweave Unidirectional'        (works on older printers)
+'720 DPI Softweave'                        (works on all printers except
+					    for Stylus Color, Stylus
+					    Color 1500, Stylus Color
+					    1520, and Stylus Color 3000)
+'720 DPI Softweave Unidirectional'         (works on all printers except
+					    for Stylus Color, Stylus
+					    Color 1500, Stylus Color
+					    1520, and Stylus Color 3000)
+'720 DPI High Quality'                     (works on all printers except
+					    for Stylus Color, Stylus
+					    Color 1500, Stylus Color
+					    1520, and Stylus Color 3000)
+'720 DPI High Quality Unidirectional'      (works on all printers except
+					    for Stylus Color, Stylus
+					    Color 1500, Stylus Color
+					    1520, and Stylus Color 3000)
+'720 DPI Highest Quality'                  (works on all printers except
+					    for Stylus Color, Stylus
+					    Color 1500, Stylus Color
+					    1520, and Stylus Color 3000)
+'1440 x 720 DPI Microweave'                (works on some older 1440x720 dpi
+					    printers)
+'1440 x 720 DPI Microweave Unidirectional' (works on some older 1440x720 dpi
+					    printers)
+'1440 x 720 DPI Softweave'                 (works on all 1440x720 dpi
+					    printers except for Stylus
+					    Color 1520 and Stylus Color 3000)
+'1440 x 720 DPI Softweave Unidirectional'  (works on all 1440x720 dpi
+					    printers except for Stylus
+					    Color 1520 and Stylus Color 3000)
+'1440 x 720 DPI Highest Quality'           (works on all 1440x720 dpi
+					    printers except for Stylus
+					    Color 1520 and Stylus Color 3000)
+'2880 x 720 DPI Softweave'                 (works on Stylus Color 680,
+					    Stylus Color 777, Stylus
+					    Color 880, Stylus Color 980,
+					    and Stylus Photo 790)
+'2880 x 720 DPI Softweave Unidirectional'  (works on Stylus Color 680,
+					    Stylus Color 777, Stylus
+					    Color 880, Stylus Color 980,
+					    and Stylus Photo 790)
 
 On most printers, unidirectional printing is higher quality than
 bidirectional printing, but somewhat slower.  This is most true on
@@ -378,7 +382,8 @@ yield less than ideal results, although for many purposes the quality
 will be sufficient.  It may not be possible to get really solid black
 at 360 DPI on coated photo paper.
 
-180 DPI is only useful as an economy mode on plain paper.
+180, 180x120, and 360x120 DPI are only useful as economy modes on
+plain paper.
 
 
 For PCL printers (including Hewlett-Packard and Lexmark 4076):
