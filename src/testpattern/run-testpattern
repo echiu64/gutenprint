@@ -13,7 +13,9 @@ if [ -z "$STP_MODULE_PATH" ] ; then
 fi
 
 valgrind=0
+valopts=''
 extra=''
+dontrun=
 
 set_opt() {
     opt=`echo $1 | awk -F= '{print $1}'`
@@ -28,6 +30,7 @@ set_message() {
 usage() {
     echo "Usage: run-testpattern [-v|--valgrind]"
     echo "                       [-p|--parameter parameter=value]"
+    echo "                       [-n|--dontrun]"
     echo "                       [--] [printers...]"
     exit 0;
 }
@@ -39,6 +42,7 @@ set_args() {
 	    -v|--valgrind) valgrind=`expr $valgrind + 1` ;;
 	    -g|--gdb-attach) valopts='--gdb-attach=yes' ;;
 	    -p|--parameter) shift; set_opt "$1" ;;
+    	    -n|--dontrun) dontrun=1 ;;
 	    --) shift; args="$@"; return ;;
 	    *) return ;;
 	esac
@@ -131,7 +135,7 @@ run_testpattern() {
     fi
 }
 
-set_args `getopt hgvp: "$@"`
+set_args `getopt hgvp:n "$@"`
 
 if [ -z "$args" ] ; then
     args=`./printers`
@@ -161,6 +165,10 @@ print_all_testpatterns() {
     fi
 }
 
-print_all_testpatterns | run_testpattern
+if [ -z "$dontrun" ] ; then
+    print_all_testpatterns | run_testpattern
+else
+    print_all_testpatterns
+fi
 
 exit $?
