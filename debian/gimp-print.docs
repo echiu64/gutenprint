@@ -1,2 +1,3 @@
 README
-doc/FAQ.html
+doc/*.html
+doc/*.png
