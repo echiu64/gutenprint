@@ -711,10 +711,13 @@ PhotoCMY        'Photo/Color'
 PhotoCMYK       'Photo'
 
 
-For PCL (Hewlett-Packard and Lexmark 4076) printers:
+For PCL (Hewlett-Packard and Lexmark 4076) color printers:
 
 CMYK            'Color + Black Cartridges'
 Photo           'Color + Photo Cartridges' (For Deskjet 69x only)
+
+Black and white PCL printers (laser printers, in particular) do not
+allow any value to be specified for the ink type.
 
 
 Media Types
@@ -728,7 +731,7 @@ is descriptive.
 -sMediaType=mediatype
 
 
-For Epson and Lexmark (other than the 4076) printers:
+For Epson and Lexmark (other than the 4076) inkjet printers:
 
 Plain           'Plain Paper'
 PlainFast       'Plain Paper Fast Load'
@@ -771,7 +774,7 @@ GlossyCards     'Glossy Photo Cards'
 GlossyPro       'Photo Paper Pro'
 
 
-For PCL (Hewlett-Packard and Lexmark 4076) printers:
+For PCL (Hewlett-Packard and Lexmark 4076) inkjet printers:
 
 Plain           'Plain'
 Bond            'Bond'
@@ -780,6 +783,8 @@ Glossy          'Glossy/Photo'
 Transparency    'Transparency'
 GlossyQD        'Quick-dry Photo'
 TransparencyQD  'Quick-dry Transparency'
+
+PCL laser printers do not allow specification of any media type.
 
 
 Media Sources
@@ -803,7 +808,8 @@ Manual          'Manual with Pause'
 ManualNP        'Manual without Pause'
 
 
-For PCL (Hewlett-Packard and Lexmark 4076) printers:
+For PCL (Hewlett-Packard and Lexmark 4076) printers.  Different
+printers allow different choices out of this set.
 
 Standard        'Standard'      (Feed from printer defined source)
 Manual          'Manual'
