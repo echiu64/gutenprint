@@ -98,7 +98,6 @@ static stpi_internal_vars_t default_vars =
 	NULL,		       	/* Name of printer "driver" */
 	NULL,                   /* Name of color module */
 	OUTPUT_COLOR,		/* Color or grayscale output */
-	1.0,			/* Application gamma placeholder */
 	COLOR_MODEL_RGB,	/* Input color model */
 	COLOR_MODEL_RGB,	/* Output color model */
 	STP_JOB_MODE_PAGE	/* Job mode */
