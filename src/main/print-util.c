@@ -565,7 +565,7 @@ static stp_internal_papersize_t paper_sizes[] =
   { "w1440h2160",	N_ ("20x30"),
     1440, 2160, 0, 0, 0, 0, PAPERSIZE_ENGLISH },	/* 24x30 for 35 mm */
   { "w1584h2160",	N_ ("22x30"),
-    1440, 2160, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* Common watercolor paper */
+    1584, 2160, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* Common watercolor paper */
   { "w1728h2160",	N_ ("24x30"),
     1728, 2160, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
   { "w1728h2592",	N_ ("24x36"),
