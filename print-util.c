@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.43  1999/12/22 03:24:34  rlk
+ *   round length up, not down
+ *
  *   Revision 1.42  1999/12/22 03:12:17  rlk
  *   More constant fiddling
  *
@@ -311,7 +314,7 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
 
   xstep  = src_width / dst_width;
   xmod   = src_width % dst_width;
-  length = (dst_width) / 8;
+  length = (dst_width + 7) / 8;
 
   kerror0 = error[row & 1][3];
   kerror1 = error[1 - (row & 1)][3];
