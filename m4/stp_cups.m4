@@ -105,6 +105,16 @@ if test x${BUILD_CUPS} = xyes ; then
       CUPS_CFLAGS=""
     fi
   fi
+fi
+])
+
+
+# STP_CUPS_PROGS
+# --------------
+# Check for programs needed by CUPS
+AC_DEFUN([STP_CUPS_PROGS],
+[dnl
+if test x${BUILD_CUPS} = xyes; then
   AC_PATH_PROG(DIALOG, dialog)
 fi
 ])
