@@ -42,7 +42,6 @@
  *   See ChangeLog
  */
 
-#include "config.h"
 #include "print.h"
 
 #include <gtk/gtk.h>
@@ -58,8 +57,8 @@
 #include <os2.h>
 #endif
 
-#include "libgimp/gimpui.h"
-#include "libgimp/stdplugins-intl.h"
+#include <libgimp/gimpui.h>
+#include <libgimp/stdplugins-intl.h>
 
 /*
  * Constants for GUI...
