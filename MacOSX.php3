@@ -122,14 +122,14 @@ require('standard_html_header.php3');
  Ghostscript 7.05.5 for Mac OS X (<b>download below and install, if
  necessary</b>).
  </p>
- <b>Gimp-Print 4.2.3-prerelease 1</b>
+ <b>Gimp-Print 4.2.3-prerelease 3</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
  "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.3-pre3.ppc.dmg?download"
- >gimp-print-4.2.3-pre3.ppc.dmg</a>&nbsp;(5.5 MB)
+ >gimp-print-4.2.3-pre3.ppc.dmg</a>&nbsp;(5.2 MB)
  </td>
  <td align="right" >
  (<a href=
@@ -152,7 +152,7 @@ require('standard_html_header.php3');
  <td bgcolor="#d0ffff" >
  <a href=
  "http://prdownloads.sourceforge.net/espgs/espgs-7.05.5-0.ppc.dmg?download"
- >espgs-7.05.5-0.ppc.dmg</a>&nbsp;(5.2 MB)
+ >espgs-7.05.5-0.ppc.dmg</a>&nbsp;(5.5 MB)
  </td>
  <td align="right" >
  (<a href=
@@ -236,14 +236,14 @@ require('standard_html_header.php3');
  4.2 series; it contains the following improvements over Gimp-Print 4.2.3-pre1:
  </p>
  <ul>
- <li>The CUPS driver now permits printing variable page sizes, using -o
- CustomPageSize.widthxheight, where width and height are in 1/72 of an inch
- (e. g. 200x400)</li>
+ <li>The CUPS driver now permits printing variable page sizes, using 
+ <pre>-o CustomPageSize.widthxheight</pre>
+ where width and height are in 1/72 of an inch (e. g. 200x400)</li>
  <li>A Japanese translation has been added.</li>
  <li>Two bugs in the IJS driver have been fixed.</li>
  <li>The change to the Epson Stylus 660 margins in 4.2.3-pre1 has been backed
  out; retesting demonstrated that the bug was in fact fixed in 4.2.2.</li>
- <li> A reported problem with very large prints (A0 or B0 size) failingto print
+ <li> A reported problem with very large prints (A0 or B0 size) failing to print
  correctly on Stylus Pro printers is likely fixed.</li>
  </ul>
  <dl>
