@@ -1208,7 +1208,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	if (inks->inknames[i]->inkset == INKSET_EXTENDED &&
 	    inks->inknames[i]->channel_limit * 2 == image_bpp)
 	  {
-	    stp_eprintf(nv, "Changing ink type from %s to %s\n",
+	    stp_dprintf(STP_DBG_INK, nv, "Changing ink type from %s to %s\n",
 			stp_get_ink_type(nv), inks->inknames[i]->name);
 	    stp_set_ink_type(nv, inks->inknames[i]->name);
 	    found = 1;
