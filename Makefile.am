@@ -162,7 +162,8 @@ cups/cups-%: $(srcdir)/print-% Makefile
 	cd $(srcdir) ; \
 	sed -e 's/print-printers.c/cups-printers.c/' $(CUPSCODE) $< > $@
 
-FORCE_ACLOCAL=PLEASE\ RUN\ make\ gdist\ rather\ than\ make\ dist
+#FORCE_ACLOCAL=PLEASE\ RUN\ make\ gdist\ rather\ than\ make\ dist
+FORCE_ACLOCAL=
 
 # If you are using a version of the Gimp from 1.1.25 through 1.1.28,
 # you will need to apply the following patch to your
