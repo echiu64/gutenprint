@@ -1,3 +1,300 @@
+2000-08-05	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.45) (+1 -1)
+		Ghost/gs-stp.pdq (1.7) (+286 -71)
+		Ghost/gdevstp.c (1.29) (+169 -134)
+		Ghost/devs.mak.addon-5.10 (1.3) (+17 -5)
+		Ghost/contrib.mak.addon (1.8) (+18 -6)
+		Ghost/com-stp.ppd (1.3) (+69 -18)
+		Ghost/README (1.29) (+274 -91)
+		printers.xml (1.19) (+52 -12)
+		printdefy.y (1.7) (+12 -1)
+		print.h (1.72) (+41 -33)
+		print.c (1.105) (+13 -4)
+		print-util.c (1.112) (+151 -9)
+		print-ps.c (1.37) (+31 -14)
+		print-pcl.c (1.67) (+29 -7)
+		print-escp2.c (1.200) (+89 -40)
+		print-canon.c (1.70) (+107 -24)
+		gtk_main_window.c (1.44) (+4 -5)
+		gimp_main_window.c (1.35) (+4 -5)
+		README.escp2 (1.12) (+1 -1)
+	
+	Major revamp to the Ghostscript driver.  This allows use of all supported
+	printers (not just Epson) with the stp driver.  Also, many of the options
+	have changed incompatibly.  This change was required in order to better
+	support the driver in the long run.
+	
+2000-08-05	<sharkey@sourceforge.net>
+
+	Files:	Ghost/devs.mak.addon-5.10 (1.2) (+4 -0)
+	
+	The main branch ghostscript also needs the addition of gdevstp-weave in
+	order to make properly.
+	
+2000-08-05	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.199) (+4 -2)
+	
+	The ESC 640 claims to use the new command set, and also claims to be a
+	1440 dpi printer, but it doesn't support the ESC($ command???
+	
+2000-08-04	<rlk@sourceforge.net>
+
+	Files:	escputil.c (1.7) (+49 -18)
+	
+	Open the raw printer device write only, not read only (testing?
+	What's testing?).
+	
+	Attempt to function on systems without GNU getopt.
+	
+2000-08-02	<davehill@sourceforge.net>
+
+	Files:	pcl-unprint.c (1.15) (+14 -7)
+	
+	Handle multiple "PJL" commands. Print out everything we see until the
+	next ESC.
+	
+2000-08-02	<davehill@sourceforge.net>
+
+	Files:	print-pcl.c (1.66) (+15 -14)
+	
+	Fixed the problem with the raster top position being wrong. This was
+	introduced with the use of "compute_page_parameters".
+	
+2000-08-02	<rlk@sourceforge.net>
+
+	Files:	print-util.c (1.111) (+2 -2)
+	
+	Very, very much to my surprise, the new photo mode doesn't require
+	bumping saturation up insanely.  Rescale saturation by 1.25 rather
+	than 2.5 works much better on the PDI target.
+	
+2000-08-02	<rlk@sourceforge.net>
+
+	Files:	print-util.c (1.110) (+5 -3)
+	
+	Workaround for a gcc 2.7.2.3 inlining bug
+	
+2000-08-02	<rlk@sourceforge.net>
+
+	Files:	gtk_color_window.c (1.15) (+1 -2)
+		print.h (1.71) (+4 -16)
+		print-util.c (1.109) (+219 -24)
+		print-ps.c (1.36) (+2 -2)
+		print-pcl.c (1.65) (+10 -10)
+		print-escp2.c (1.198) (+4 -4)
+		print-dither.c (1.76) (+3 -3)
+		print-canon.c (1.69) (+2 -2)
+	
+	Put the fast color functions back in for when we use something other
+	than photo mode.
+	
+	Declare more functions static to reduce namespace pollution.
+	
+	Change #ifdef __GCC__ to #ifdef __GNUC__ around inlining.  The correct
+	macro is __GNUC__.  This should result in a fairly significant speedup.
+	
+2000-08-01	<rlk@sourceforge.net>
+
+	Files:	escp2-weavetest.c (1.15) (+6 -1)
+		print-util.c (1.108) (+212 -99)
+		print-escp2.c (1.197) (+3 -3)
+	
+	Improve color and tone rendition substantially.  This is not based
+	on anything terribly scientific, but it seems to do a rather good
+	job based on various test images and patterns.
+	
+	Disallow certain out of bounds tests.
+	
+2000-08-01	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.196) (+3 -3)
+	
+	Finer tuning of zero margin
+	
+2000-08-01	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.195) (+3 -3)
+	
+	Fine tune zero-margin mode
+	
+2000-08-01	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.194) (+5 -5)
+	
+	Start microweave at the correct vertical position (how many times is
+	this going to get "fixed" and I'll break it in creative ways?)
+	
+2000-08-01	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.44) (+1 -1)
+	
+	print-weave.c needs to go into Ghostscript driver
+	
+2000-08-01	<rlk@sourceforge.net>
+
+	Files:	Ghost/contrib.mak.addon (1.7) (+4 -0)
+	
+	print-weave.c
+	
+2000-07-31	<cpbs@sourceforge.net>
+
+	Files:	Makefile.am (1.43) (+1 -0)
+		print.h (1.70) (+12 -2)
+		print-weave.c (1.1) ( )
+		print-escp2.c (1.193) (+85 -309)
+		escp2-weavetest.c (1.14) (+10 -18)
+		README.weave (1.1) ( )
+	
+	New weave algorithm.  The softweave calculations are now done in
+	print-weave.c.  print-escp2.c is modified to call the weave calculation
+	functions as appropriate.  Some other related changes require changes
+	to the test code in escp2-weavetest.c.  Declarations added to print.h.
+	Unfinished documentation for the algorithm is in README.weave.
+	
+2000-07-31	<rlk@sourceforge.net>
+
+	Files:	README.escp2 (1.11) (+35 -25)
+	
+	Update some of the remote mode stuff
+	
+2000-07-31	<easysw@sourceforge.net>
+
+	Files:	cups/README.txt (1.2) (+80 -57)
+		cups/rastertoepson.c (1.3) (+10 -4)
+		cups/dither.c (1.2) (+17 -10)
+	
+	Updated README a little bit.
+	
+	Some changes to the dithering code to get the density stuff to work right.
+	
+2000-07-30	<cpbs@sourceforge.net>
+
+	Files:	print-image-gimp.c (1.5) (+5 -6)
+	
+	Back out changes made in revision 1.4, which didn't fix anything but
+	broke landscape mode.
+	
+2000-07-30	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.192) (+28 -25)
+	
+	More constant tuning
+	
+2000-07-30	<easysw@sourceforge.net>
+
+	Files:	cups/Makefile.in (1.3) (+25 -6)
+		cups/util.h (1.1) ( )
+		cups/rastertoepson.c (1.2) (+884 -165)
+		cups/pack.c (1.1) ( )
+		cups/epson.drv (1.2) (+111 -188)
+		cups/dither.c (1.1) ( )
+		cups/check.c (1.1) ( )
+	
+	First working version of CUPS driver using gimp-print dithering.
+	
+2000-07-25	<rlk@sourceforge.net>
+
+	Files:	Ghost/README (1.28) (+11 -2)
+	
+	Additional instructions for installing Ghostscript driver from Matti
+	Ahokas <mattiaho@solutions.fi>.
+	
+2000-07-24	<cpbs@sourceforge.net>
+
+	Files:	debian/.cvsignore (1.1) ( )
+	
+	*** empty log message ***
+	
+2000-07-23	<rlk@sourceforge.net>
+
+	Files:	README.dither (1.7) (+8 -6)
+	
+	Clarify some wording.
+	
+2000-07-23	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.75) (+4 -4)
+		Ghost/gs-stp.pdq (1.6) (+4 -4)
+		Ghost/com-stp.ppd (1.2) (+4 -4)
+		Ghost/README (1.27) (+4 -4)
+	
+	Make adaptive hybrid be the default dither algorithm
+	
+2000-07-23	<rlk@sourceforge.net>
+
+	Files:	print-image-gimp.c (1.4) (+6 -5)
+	
+	Possible fix for gimp 1.0.4 problems.
+	
+2000-07-22	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.34) (+40 -20)
+		gtk_main_window.c (1.43) (+41 -17)
+	
+	Complete fix of PPI mode
+	
+2000-07-22	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.33) (+14 -4)
+		gtk_main_window.c (1.42) (+16 -2)
+	
+	Initialize PPI scale correctly
+	
+2000-07-21	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.26) (+10 -0)
+		print-dither.c (1.74) (+3 -3)
+		gtk_main_window.c (1.41) (+47 -10)
+		gimp_main_window.c (1.32) (+46 -10)
+	
+	Try to maintain the same image size when switching between PPI and
+	percent.  Currently this may be off by one point.  This also clamps
+	the PPI range to 5-100% of the paper size, just like the percentage.
+	It means that Set Image Resolution won't work correctly for a really
+	big image, but it's consistent with everything else.
+	
+	Try to improve dark grays for variable dot size printers.
+	
+2000-07-20	<cpbs@sourceforge.net>
+
+	Files:	README.escp2 (1.10) (+120 -20)
+		print-escp2.c (1.191) (+93 -46)
+	
+	Add support for zero-margin mode on the STP 870 and 1270.  Add some more
+	info gleaned about remote mode commands.
+	
+2000-07-20	<rlk@sourceforge.net>
+
+	Files:	print-util.c (1.107) (+15 -3)
+	
+	Prevent saturation blowout for saturation > 1.0.
+	
+2000-07-20	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.190) (+2 -2)
+	
+	Test prints of the PDI target really do suggest that the light inks
+	are 1/4 of the dark inks.  At 1/3, the skin tones took on a rather
+	strong yellow cast that went away at 1/4.
+	
+	The single dot size printers need to be retested, but I suspect they
+	should also be at 1/4 rather than 1/3.
+	
+2000-07-20	<rlk@sourceforge.net>
+
+	Files:	print-util.c (1.106) (+15 -3)
+	
+	Check both dimensions for scaling -- scaling should be for the tighter
+	fitting dimension.
+	
+2000-07-19	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.189) (+7 -2)
+	
+	Fine tuning for 4-color variable printers
+	
 2000-07-18	<rlk@sourceforge.net>
 
 	Files:	ChangeLog (1.25) (+18 -0)

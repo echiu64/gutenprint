@@ -58,7 +58,8 @@ AM_CPPFLAGS =					\
 	@LP_DEF@				\
 	@LPSTAT_DEF@				\
 	@LPR_DEF@				\
-	@LPC_DEF@
+	@LPC_DEF@				\
+	@RELDATE_DEF@
 
 print_LDADD = $(GIMP_LIBS)
 
@@ -70,7 +71,8 @@ GHOST_DIST= COPYING ChangeLog README contrib.mak.addon \
 
 EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
 	README.dither quickmatrix257.h ran.367.179.h make-deb.sh README.escp2 \
-	$(addprefix Ghost/, $(GHOST_DIST))
+	$(addprefix Ghost/, $(GHOST_DIST)) \
+	$(FORCE_ACLOCAL)
 
 install-libexecPROGRAMS: $(libexec_PROGRAMS)
 	@list='$(libexec_PROGRAMS)'; for p in $$list; do \
@@ -88,10 +90,10 @@ uninstall-libexecPROGRAMS: $(libexec_PROGRAMS)
 		else :; fi; \
 	done
 
-.PHONY: files ghost ChangeLog
+.PHONY: files ghost ChangeLog force_aclocal
 
-ChangeLog:
-	cvs log | perl ./mkchlog > ChangeLog
+#ChangeLog:
+#	cvs log | perl ./mkchlog > ChangeLog
 
 files:
 	@files=`ls $(DISTFILES) 2> /dev/null`; for p in $$files; do \
@@ -107,3 +109,15 @@ Ghost/gdevstp-%.h: %.h Makefile
 
 Ghost/gdevstp-%: print-% Makefile
 	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $@
+
+FORCE_ACLOCAL=PLEASE\ RUN\ make\ gdist\ rather\ than\ make\ dist
+
+echo:
+gdist: force_aclocal
+
+force_aclocal:
+	touch configure.in
+	$(MAKE) dist FORCE_ACLOCAL=
+
+print_gimp.h: Makefile
+	touch print_gimp.h

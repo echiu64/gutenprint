@@ -1,17 +1,49 @@
-This is the Print plugin for the Gimp, version 3.1.9.  This is a
-development release.  If this software causes your print head to zoom
-off the end of your printer, spilling ink all over your 1000 year old
-Persian rug, don't blame us.  Remember, you installed the software.
+This is the Print plugin for the Gimp, version 3.2a1.  This is the
+first pre-release of the 3.2 stable release.  It is not 3.2.  If this
+software causes your print head to fly off the end of your printer,
+spilling ink all over your 1000 year old Persian rug, you can yell and
+scream at us, and we will fix the bug.
 
 This software also comes with a GhostScript driver for Epson Stylus
 printers.  The support for Epson Stylus printers in the GhostScript
 driver is identical to the support for these printers in the Print
-plugin -- they use the identical code base.
+plugin -- they use the identical code base.  Please read Ghost/README
+for more information on this.
 
 This plugin can be compiled against either Gimp 1.1 or 1.0.
 
 
-Print 3.1.9 contains the following improvements over Print 3.1.8:
+Gimp-Print 3.2a1 contains the following improvements over Gimp-Print 3.1.9:
+
+1) The Ghostscript driver has been extensively revised.  IN
+   PARTICULAR, THE OPTIONS HAVE CHANGED TO A DEGREE MAKING IT
+   IMPOSSIBLE FOR ANY USES OF THE OLD DRIVER FROM WORKING WITH THE NEW
+   ONE.  Please read Ghost/README for a full explanation of the new
+   options.
+
+2) The Ghostscript driver now supports all printers supported by the
+   Gimp plug-in, including PCL and Canon printers in addition to Epson
+   Stylus inkjets.
+
+3) Photo mode has had major improvements in its color generation in
+   corner cases.  It is much slower than it used to be, unfortunately.
+
+4) The inks have been retuned for 6-color Epson printers; they should
+   now better match those of 4-color printers.
+
+5) It is now possible to print to the very edge of the top, left, and
+   right on Epson Stylus 870 and 1270 printers.
+
+6) An experimental CUPS driver is now in place in the Cups
+   subdirectory.  It will be redone before 3.2 release.
+
+7) Printing near the top and bottom of the paper is improved on Epson
+   Stylus printers.
+
+8) Printing on PCL printers is fixed.
+
+
+Gimp-Print 3.1.9 contains the following improvements over Gimp-Print 3.1.8:
 
 1) A bug in the GhostScript driver would cause the driver to go into
    an infinite loop on some systems with some printers, depending upon
@@ -35,7 +67,7 @@ Please see the README for more information.
 
 
 
-Print 3.1.8 contains the following improvements over 3.1.7:
+Gimp-Print 3.1.8 contains the following improvements over 3.1.7:
 
 1) The entries for printer model and paper size have been greatly
    improved.  There are many additional paper sizes offered.
@@ -86,14 +118,14 @@ Print 3.1.8 contains the following improvements over 3.1.7:
     output quality.
 
 
-Print 3.1.7 contains the following improvements over Print 3.1.6:
+Gimp-Print 3.1.7 contains the following improvements over Gimp-Print 3.1.6:
 
 1) Emergency GhostScript bug fix.
 
 2) escputil program now retrieves ink level from the printer.
 
 
-Print 3.1.6 contains the following improvements over Print 3.1.5:
+Gimp-Print 3.1.6 contains the following improvements over Gimp-Print 3.1.5:
 
 1) Print speed has been greatly improved for sparse pages.  This will
    not help too much for images, but it will help greatly for text and
@@ -127,7 +159,7 @@ Print 3.1.6 contains the following improvements over Print 3.1.5:
    (these are not tested).
 
 
-Print 3.1.5 contains the following improvements over Print 3.1.4:
+Gimp-Print 3.1.5 contains the following improvements over Gimp-Print 3.1.4:
 
 1) Greatly improved print quality.  In particular, ordered dithering
    and adaptive dithering methods are now much better than ever
@@ -160,7 +192,7 @@ Print 3.1.5 contains the following improvements over Print 3.1.4:
    Ghostscript driver.
 
 
-Print 3.1.4 contains the following improvements over Print 3.1.3:
+Gimp-Print 3.1.4 contains the following improvements over Gimp-Print 3.1.3:
 
 1) Support for the Hewlett-Packard DeskJet 960.
 
@@ -171,7 +203,7 @@ Print 3.1.4 contains the following improvements over Print 3.1.3:
 4) Major fix for hybrid Floyd-Steinberg dithering
 
 
-Print 3.1.3 contains the following improvements over Print 3.1.2:
+Gimp-Print 3.1.3 contains the following improvements over Gimp-Print 3.1.2:
 
 1) Completely revamped dithering algorithms.  These algorithms should
    be faster and easier to maintain in addition to better,
@@ -192,7 +224,7 @@ Print 3.1.3 contains the following improvements over Print 3.1.2:
    other things.
 
 
-Print 3.1.2 contains the following improvements over Print 3.1.1:
+Gimp-Print 3.1.2 contains the following improvements over Gimp-Print 3.1.1:
 
 1) Better dither quality.
 
@@ -209,7 +241,7 @@ Print 3.1.2 contains the following improvements over Print 3.1.1:
 
 
 
-Print 3.1.1 contains the following improvements over Print 3.1.0:
+Gimp-Print 3.1.1 contains the following improvements over Gimp-Print 3.1.0:
 
 1) Faster dithering speed.
 
@@ -220,8 +252,8 @@ Print 3.1.1 contains the following improvements over Print 3.1.0:
 4) Numerous bug fixes.
 
 
-Print 3.1.0 contains the following user-visible improvements over
-Print 3.0.5, the version distributed with the Gimp 1.1.17:
+Gimp-Print 3.1.0 contains the following user-visible improvements over
+Gimp-Print 3.0.5, the version distributed with the Gimp 1.1.17:
 
 1) Preliminary support for Canon BubbleJet printers (specifically the
    BJC6000).

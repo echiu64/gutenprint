@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(print.c)
-AM_INIT_AUTOMAKE(print,3.1.9)
+AM_INIT_AUTOMAKE(print,3.2a1)
 
 dnl Checks for programs.
 AC_PROG_AWK
@@ -15,6 +15,8 @@ AC_PATH_PROG(LPR_PROG, lpr)
 AC_PATH_PROG(LP_PROG, lp)
 AC_PATH_PROG(LPSTAT_PROG, lpstat, , $PATH:/usr/libexec:/usr/sbin:/usr/etc:/etc)
 AC_PATH_PROG(LPC_PROG, lpc, , $PATH:/usr/libexec:/usr/sbin:/usr/etc:/etc)
+
+RELDATE_DEF="-DRELEASE_DATE=\"\\\"`date '+%d %b %Y'`\\\"\""
 
 if test -n "$LP_PROG" ; then
   LP_DEF="-DLP_COMMAND=\\\"$LP_PROG\\\""
@@ -66,5 +68,6 @@ AC_SUBST(LPSTAT_DEF)
 AC_SUBST(LPR_DEF)
 AC_SUBST(LPC_DEF)
 AC_SUBST(GIMP_LIBS)
+AC_SUBST(RELDATE_DEF)
 
 AC_OUTPUT(Makefile)

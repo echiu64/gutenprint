@@ -1,9 +1,9 @@
-This is the Print plug-in for the Gimp, version 3.1.9 (development).
+This is the Print plug-in for the Gimp, version 3.2a1 (pre-release).
 
 
 BASIC INSTALLATION
 
-To build and install:
+To build and install the Gimp Print plug-in:
 
 ./configure
 make
@@ -25,6 +25,16 @@ contains additional files required to actually build new plugins.
 If you have installed the Gimp from source on Linux: after running
 make install, you must run ldconfig as root before attempting to build
 this plugin.
+
+
+GHOSTSCRIPT
+
+This package includes a Ghostscript driver that may be built, allowing
+use of this software for general printing purposes.  Please read
+Ghost/README for more information.
+
+NOTE THAT THE GHOSTSCRIPT DRIVER HAS CHANGED SUBSTANTIALLY FROM 3.1.9
+AND EARLIER RELEASES OF THIS PACKAGE!
 
 
 RECOMMENDED SETTINGS
